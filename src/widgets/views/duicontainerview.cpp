@@ -36,6 +36,20 @@
 #include "duiviewcreator.h"
 #include "duitheme.h"
 
+/*
+ * layout:
+ *
+ *   + controller +
+ *                |
+ *                +- mainLayout +- header -+- headerLayout  +- icon
+ *                              |                           |
+ *                              |                           +- title
+ *                              +- centralWidget            |
+ *                                                          +- text
+ *                                                          |
+ *                                                          +- spinner
+ */
+
 DuiContainerViewPrivate::DuiContainerViewPrivate()
     : controller(0)
     , headerLayout(0)
@@ -78,6 +92,8 @@ void DuiContainerViewPrivate::createHeader()
 
         headerLayout = new QGraphicsLinearLayout(Qt::Horizontal);
         headerLayout->setSizePolicy(QSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum));
+        header->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed));
+
         headerLayout->setContentsMargins(0, 0, 0, 0);
         header->setLayout(headerLayout);
 
@@ -141,7 +157,7 @@ void DuiContainerViewPrivate::setupIcon(const QSize &size)
         icon = new DuiImageWidget;
 
     icon->setImage(controller->model()->icon(), size);
-    icon->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    icon->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     // insert it if header is available
     if (header) {
