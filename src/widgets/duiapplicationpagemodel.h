@@ -52,12 +52,44 @@ public:
         Component is hidden
      */
 
+    /*!
+        This enum specifies the page's escape mode.
+        \sa DuiSceneManager::pageHistoryStack()
+     */
+    enum PageEscapeMode {
+        EscapeAuto, /*!< Default value. Escape button will automatically be set
+                         to either back or close according to the page navigation
+                         history.
+
+                         If the page history is not empty, the escape button
+                         will be set to back mode and its clicked signal connected
+                         to the page's dismiss() slot.
+
+                         If the page happens to be the root (page history is empty),
+                         escape button will be set to close mode. */
+
+        EscapeManualBack, /*!< Escape button will be set so back mode. All that
+                             happens when it gets clicked is the emission of the
+                             backButtonClicked() signal. It's up to the application
+                             developer to connect that signal to some useful slot. */
+
+        EscapeCloseWindow /*!< Escape button will be set to close mode. Clicking
+                               it will cause the application window to be closed. */
+    };
+
 private:
     DUI_MODEL_PROPERTY(DuiApplicationPageModel::ComponentDisplayMode, homeButtonDisplayMode, HomeButtonDisplayMode, true, DuiApplicationPageModel::Show)
 
     DUI_MODEL_PROPERTY(DuiApplicationPageModel::ComponentDisplayMode, escapeButtonDisplayMode, EscapeButtonDisplayMode, true, DuiApplicationPageModel::Show)
 
     DUI_MODEL_PROPERTY(DuiApplicationPageModel::ComponentDisplayMode, navigationBarDisplayMode, NavigationBarDisplayMode, true, DuiApplicationPageModel::Show)
+
+    /*!
+     * \property DuiApplicationPageModel::escapeMode
+     * \brief Page's escape mode.
+     * \sa DuiApplicationPageMode::EscapeMode
+     */
+    DUI_MODEL_PROPERTY(DuiApplicationPageModel::PageEscapeMode, escapeMode, EscapeMode, true, DuiApplicationPageModel::EscapeAuto)
 
     /*!
         \property DuiApplicationPageModel::progressIndicatorVisible

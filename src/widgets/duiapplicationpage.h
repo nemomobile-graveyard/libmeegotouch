@@ -80,7 +80,7 @@ class DUI_EXPORT DuiApplicationPage : public DuiSceneWindow
     Q_PROPERTY(bool autoMarginsForComponentsEnabled READ autoMarginsForComponentsEnabled WRITE setAutoMarginsForComponentsEnabled)
     Q_PROPERTY(QString title READ title WRITE setTitle)
     Q_PROPERTY(bool contentCreated READ isContentCreated)
-    Q_PROPERTY(DuiEscapeButtonPanelModel::EscapeMode escapeButtonMode READ escapeButtonMode WRITE setEscapeButtonMode)
+    Q_PROPERTY(DuiApplicationPageModel::PageEscapeMode escapeMode READ escapeMode WRITE setEscapeMode)
     Q_PROPERTY(bool pannableAreaInteractive READ isPannableAreaInteractive WRITE setPannableAreaInteractive)
     Q_PROPERTY(Qt::Orientations pannableAreaDirection READ pannableAreaDirection WRITE setPannableAreaDirection)
     Q_PROPERTY(bool rememberPosition READ rememberPosition WRITE setRememberPosition)
@@ -199,12 +199,6 @@ public:
      */
     const QString title() const;
 
-    /*!
-     * Returns the escape button mode for this application page.
-     * \sa DuiEscapeButtonPanelModel::EscapeMode
-     */
-    DuiEscapeButtonPanelModel::EscapeMode escapeButtonMode() const;
-
     /**
      * \brief Returns whether progress indicator is visible
      * \return <code>true</code> if the progress indicator is visible, otherwise <code>false</code>
@@ -212,9 +206,16 @@ public:
      */
     bool isProgressIndicatorVisible() const;
 
+    /*!
+     * \brief Returns the page's escape mode
+     *
+     * By default, it's EscapeAuto.
+     *
+     * \sa DuiApplicationPageMode::PageEscapeMode, setEscapeMode()
+     */
+    DuiApplicationPageModel::PageEscapeMode escapeMode() const;
+
 Q_SIGNALS:
-    //! Signal emitted when page changes mode of the escape button
-    void escapeButtonModeChanged(DuiEscapeButtonPanelModel::EscapeMode mode);
     //! Signal emitted when the page title changes.
     void pageTitleChanged(DuiApplicationPage *, const QString &title);
     //! Signal emitted when back button called
@@ -344,17 +345,16 @@ public Q_SLOTS:
     void setPannableAreaDirection(Qt::Orientations directions);
 
     /*!
-     * Sets the escape button mode for the page, which can serve either
-     * as a back or close button, or can be hidden.
-     * \sa DuiEscapeButtonPanelModel::EscapeMode
-     */
-    void setEscapeButtonMode(DuiEscapeButtonPanelModel::EscapeMode mode);
-
-    /*!
      * Sets the visible of progress indicator
      * \param bool visible
      */
     void setProgressIndicatorVisible(bool visible);
+
+    /*!
+     * \brief Sets the page escape mode
+     * \sa DuiApplicationPageModel::PageEscapeMode, escapeMode()
+     */
+    void setEscapeMode(DuiApplicationPageModel::PageEscapeMode mode);
 
 protected:
     //! \reimp

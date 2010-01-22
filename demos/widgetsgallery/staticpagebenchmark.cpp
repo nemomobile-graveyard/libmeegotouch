@@ -26,7 +26,6 @@ void StaticPageBenchmark::start()
 {
     if (!applicationPage->isActiveWindow()) {
         connect(applicationPage, SIGNAL(appeared()), this, SLOT(stabilizeFps()));
-        applicationPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
         applicationPage->appear();
     } else {
         QTimer::singleShot(0, this, SLOT(stabilizeFps()));

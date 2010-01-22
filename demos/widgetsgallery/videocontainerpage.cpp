@@ -400,10 +400,6 @@ void VideoContainerPage::openVideoDetailPage(const QString& itemid)
     ItemDetailPage* page = new ItemDetailPage();
     page->setVideoId(itemid);
     page->setParent(this);
-    
-    connect(page, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
-    
-    page->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
     page->appear(DestroyWhenDismissed);    
 }
 
@@ -412,10 +408,6 @@ void VideoContainerPage::openImageDetailPage(const QString& itemid)
     ItemDetailPage* page = new ItemDetailPage();
     page->setImageId(itemid);
     page->setParent(this);
-    
-    connect(page, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
-    
-    page->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
     page->appear(DestroyWhenDismissed); 
 }
 

@@ -268,8 +268,6 @@ void ListPage::addPage(TemplatePage *page)
     // Take ownership of page
     page->setParent(this);
     pages.append(page);
-
-    connect(page, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
 }
 
 void ListPage::handleListItemClick()
@@ -293,7 +291,6 @@ int ListPage::pageCount() const
 void ListPage::showPage(DuiApplicationPage *page)
 {
     if (page) {
-        page->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
         page->appear();
         shownPage = page;
     }

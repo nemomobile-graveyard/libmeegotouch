@@ -104,13 +104,19 @@ public:
     void addDuiStatusBarOverlayProperty();
 #endif
 
+    void setupPageEscape();
+    void setupPageEscapeAuto();
+    void setupPageEscapeBack();
+    void setupPageEscapeClose();
+    void tearDownPageEscape();
+    void _q_updatePageEscapeAuto();
+
 private:
     void init();
     void initAutoHideComponentsTimer();
     void removePageActions();
     QAction* findPageCheckedAction() const;
 public:
-    void _q_connectEscapeButton(DuiEscapeButtonPanelModel::EscapeMode);
     void _q_pageTitleChanged(DuiApplicationPage *, const QString &);
     void _q_actionUpdated(QActionEvent *e);
     void _q_placeToolBar(Dui::Orientation);

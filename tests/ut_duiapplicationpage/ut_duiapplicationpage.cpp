@@ -69,7 +69,7 @@ void Ut_DuiApplicationPage::testInitialValues()
     QVERIFY(m_subject->centralWidget());
 
     QCOMPARE(m_subject->isPannableAreaInteractive(), true);
-    QCOMPARE(m_subject->escapeButtonMode(), DuiEscapeButtonPanelModel::CloseMode);
+    QCOMPARE(m_subject->escapeMode(), DuiApplicationPageModel::EscapeAuto);
     QCOMPARE(m_subject->rememberPosition(), true);
 }
 
@@ -79,7 +79,7 @@ void Ut_DuiApplicationPage::testProperties()
     bool pannableAreaInteractive = true;
     Qt::Orientations pannableAreaDirection = Qt::Horizontal | Qt::Vertical;
     bool autoMarginsForComponents = true;
-    DuiEscapeButtonPanelModel::EscapeMode escapeMode = DuiEscapeButtonPanelModel::BackMode;
+    DuiApplicationPageModel::PageEscapeMode escapeMode = DuiApplicationPageModel::EscapeManualBack;
     bool rememberPosition = false;
 
     m_subject->setTitle(title);
@@ -90,8 +90,8 @@ void Ut_DuiApplicationPage::testProperties()
     QCOMPARE(m_subject->pannableAreaDirection(), pannableAreaDirection);
     m_subject->setAutoMarginsForComponentsEnabled(autoMarginsForComponents);
     QCOMPARE(m_subject->autoMarginsForComponentsEnabled(), autoMarginsForComponents);
-    m_subject->setEscapeButtonMode(escapeMode);
-    QCOMPARE(m_subject->escapeButtonMode(), escapeMode);
+    m_subject->setEscapeMode(escapeMode);
+    QCOMPARE(m_subject->escapeMode(), escapeMode);
     m_subject->setRememberPosition(rememberPosition);
     QCOMPARE(m_subject->rememberPosition(), rememberPosition);
 }
@@ -143,25 +143,6 @@ void Ut_DuiApplicationPage::testPageTitleChanged()
 
     QCOMPARE(spy.at(1).at(0).value<DuiApplicationPage *>(), m_subject);
     QCOMPARE(spy.at(1).at(1).toString(), QString());
-}
-
-void Ut_DuiApplicationPage::testEscapeButtonModeChanged()
-{
-    QSignalSpy spy(m_subject, SIGNAL(escapeButtonModeChanged(DuiEscapeButtonPanelModel::EscapeMode)));
-    DuiEscapeButtonPanelModel::EscapeMode backMode = DuiEscapeButtonPanelModel::BackMode;
-    DuiEscapeButtonPanelModel::EscapeMode closeMode = DuiEscapeButtonPanelModel::CloseMode;
-
-    m_subject->setEscapeButtonMode(m_subject->escapeButtonMode());
-    QCOMPARE(spy.count(), 0);
-    m_subject->setEscapeButtonMode(backMode);
-    QCOMPARE(spy.count(), 1);
-    m_subject->setEscapeButtonMode(backMode);
-    QCOMPARE(spy.count(), 1);
-    m_subject->setEscapeButtonMode(closeMode);
-    QCOMPARE(spy.count(), 2);
-
-    QCOMPARE(spy.at(0).at(0).value<DuiEscapeButtonPanelModel::EscapeMode>(), backMode);
-    QCOMPARE(spy.at(1).at(0).value<DuiEscapeButtonPanelModel::EscapeMode>(), closeMode);
 }
 
 void Ut_DuiApplicationPage::testRememberPosition()

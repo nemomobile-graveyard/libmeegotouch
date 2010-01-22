@@ -10,6 +10,25 @@
 
 - Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.
 
+- DuiApplicationPage escapeMode() property. Replaces escapeButtonMode() property.
+  Previously, the following code was necessary to implement a regular parentPage -> childPage navigation:
+
+    <CODE>
+    childPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
+    childPage->connect(childPage, SIGNAL(backButtonClicked()), SLOT(dismiss()));
+    childPage->appear(DestroyWhenDismissed);
+    </CODE>
+
+  Now only one line is needed:
+
+    <CODE>
+    childPage->appear(DestroyWhenDismissed);
+    </CODE>
+
+  Manual handling and wiring is still possible, but it's not the default behavior.
+
+\subsection removed Removed or Renamed
+- escapeButtonMode() property was removed from DuiApplicationPage. Use escapeMode() instead.
 
 \section v0190
 

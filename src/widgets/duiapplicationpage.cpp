@@ -274,23 +274,6 @@ bool DuiApplicationPage::isContentCreated() const
     return d->contentCreated;
 }
 
-DuiEscapeButtonPanelModel::EscapeMode DuiApplicationPage::escapeButtonMode() const
-{
-    Q_D(const DuiApplicationPage);
-
-    return d->escapeButtonMode;
-}
-
-void DuiApplicationPage::setEscapeButtonMode(DuiEscapeButtonPanelModel::EscapeMode mode)
-{
-    Q_D(DuiApplicationPage);
-
-    if (d->escapeButtonMode != mode) {
-        d->escapeButtonMode = mode;
-        emit escapeButtonModeChanged(mode);
-    }
-}
-
 void DuiApplicationPage::setRememberPosition(bool remember)
 {
     Q_D(DuiApplicationPage);
@@ -448,6 +431,16 @@ void DuiApplicationPage::setAutoMarginsForComponentsEnabled(bool enabled)
 bool DuiApplicationPage::autoMarginsForComponentsEnabled() const
 {
     return model()->autoMarginsForComponentsEnabled();
+}
+
+DuiApplicationPageModel::PageEscapeMode DuiApplicationPage::escapeMode() const
+{
+    return model()->escapeMode();
+}
+
+void DuiApplicationPage::setEscapeMode(DuiApplicationPageModel::PageEscapeMode mode)
+{
+    model()->setEscapeMode(mode);
 }
 
 #include "moc_duiapplicationpage.cpp"

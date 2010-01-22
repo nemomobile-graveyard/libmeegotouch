@@ -31,9 +31,9 @@ class NavigationBarPage : public TemplatePage
     Q_OBJECT
 public:
     enum ButtonIndex {
-        BackButton = 0,
-        CloseButton,
-        Hidden
+        Auto = 0,
+        ManualBack,
+        CloseWindow
     };
 
     enum DisplayModeComboBoxIndex {
@@ -50,7 +50,7 @@ public:
 
 public slots:
     void setButtonsState();
-    void changeEscapeButtonMode(int index);
+    void changeEscapeMode(int index);
     void changeNavigationBarDisplayMode(int index);
     void changeEscapeButtonDisplayMode(int index);
     void changeHomeButtonDisplayMode(int index);
