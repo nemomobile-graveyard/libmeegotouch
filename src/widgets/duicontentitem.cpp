@@ -25,10 +25,14 @@
 #include <QDebug>
 
 #include "duiwidgetcreator.h"
+#include "duiprogressindicator.h"
+#include "duilabel"
 DUI_REGISTER_WIDGET(DuiContentItem)
 
 DuiContentItemPrivate::DuiContentItemPrivate():
-    DuiWidgetControllerPrivate()
+    DuiWidgetControllerPrivate(),
+    additionalItem(0),
+    smallItem(0)
 {
 }
 
@@ -113,3 +117,58 @@ QVariant DuiContentItem::itemChange(GraphicsItemChange change, const QVariant &v
 
     return QGraphicsItem::itemChange(change, value);
 }
+
+void DuiContentItem::setOptionalPixmap(const QPixmap &pixmap)
+{
+    Q_D(DuiContentItem);
+    d->optionalPixmap = pixmap;
+    model()->setOptionalImage(d->optionalPixmap);
+}
+
+QPixmap DuiContentItem::optionalPixmap() const
+{
+    Q_D(const DuiContentItem);
+    return d->optionalPixmap;
+}
+
+void DuiContentItem::setAdditionalItem(DuiWidget* widget)
+{
+    Q_D(DuiContentItem);
+    d->additionalItem = widget;
+}
+
+DuiWidget* DuiContentItem::additionalItem() const
+{
+    Q_D(const DuiContentItem);
+    return d->additionalItem;
+}
+
+void DuiContentItem::enableProgressBar()
+{
+    Q_D(DuiContentItem);
+    DuiProgressIndicator* progressIndicator = new DuiProgressIndicator;
+    progressIndicator->setViewType(DuiProgressIndicator::barType);
+    progressIndicator->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
+    d->additionalItem = progressIndicator;
+}
+
+void DuiContentItem::setSmallItem(DuiWidget* widget)
+{
+    Q_D(DuiContentItem);
+    d->smallItem = widget;
+}
+
+DuiWidget* DuiContentItem::smallItem() const
+{
+    Q_D(const DuiContentItem);
+    return d->smallItem;
+}
+
+void DuiContentItem::setSmallText(QString text)
+{
+    Q_D(DuiContentItem);
+    DuiLabel* label = new DuiLabel(text);
+    label->setAlignment( Qt::AlignRight );
+    d->smallItem = label;
+}
+

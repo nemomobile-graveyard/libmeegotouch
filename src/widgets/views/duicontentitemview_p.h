@@ -38,13 +38,15 @@ public:
     DuiContentItemViewPrivate();
     virtual ~DuiContentItemViewPrivate();
 
-    inline DuiLabel *title();
-    inline DuiLabel *subtitle();
-    inline DuiImageWidget *image();
+    inline DuiLabel * title();
+    inline DuiLabel * subtitle();
+    inline DuiImageWidget * image();
+    inline DuiImageWidget * optionalImage();
 
-    inline void setTitle(const QString &string);
-    inline void setSubtitle(const QString &string);
-    inline void setImage(const QPixmap &pixmap);
+    inline void setTitle(const QString& string);
+    inline void setSubtitle(const QString& string);
+    inline void setImage(const QPixmap& pixmap);
+    inline void setOptionalImage(const QPixmap& pixmap);
 
     void initLayout(DuiContentItem::ContentItemStyle style);
     void clearLayout();
@@ -64,6 +66,7 @@ private:
     QGraphicsGridLayout *layout;
     int configuredStyle;
     bool down;
+    DuiImageWidget * optionalImageWidget;
 };
 
 #endif

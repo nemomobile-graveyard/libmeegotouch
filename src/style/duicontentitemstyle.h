@@ -49,6 +49,7 @@ class DUI_EXPORT DuiContentItemStyle : public DuiWidgetStyle
     DUI_STYLE_ATTRIBUTE(QString, titleObjectName, TitleObjectName)
     DUI_STYLE_ATTRIBUTE(QString, subtitleObjectName, SubtitleObjectName)
     DUI_STYLE_ATTRIBUTE(QString, imageObjectName, ImageObjectName)
+    DUI_STYLE_ATTRIBUTE(QString, optionalImageObjectName, OptionalImageObjectName)
 };
 
 class DUI_EXPORT DuiContentItemStyleContainer : public DuiWidgetStyleContainer

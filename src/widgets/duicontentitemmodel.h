@@ -71,6 +71,12 @@ public:
       \brief Contains selection status of item.
       */
     DUI_MODEL_PROPERTY(bool, selected, Selected, true, false)
+
+    /*!
+     \property DuiContentItemModel::optionalItemImage
+     \brief Contains optional icon on the right-hand side
+     */
+    DUI_MODEL_PROPERTY(QPixmap, optionalImage, OptionalImage, false, NULL)
 };
 
 #endif

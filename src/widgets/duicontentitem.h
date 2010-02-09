@@ -22,6 +22,7 @@
 
 #include <duiwidgetcontroller.h>
 #include "duicontentitemmodel.h"
+#include <DuiProgressIndicator>
 
 class DuiContentItemPrivate;
 
@@ -55,22 +56,23 @@ class DUI_EXPORT DuiContentItem : public DuiWidgetController
     DUI_CONTROLLER(DuiContentItem)
 
 public:
-
     /*!
       ContentItemStyle indicates how text and thumbnail should be shown. There are 4 predefined layouts.
       Exact look and feel depends on the view.
 
       \sa DuiContentItemView
       */
-    enum ContentItemStyle {
-        IconAndTwoTextLabels = 0,
-        SingleTextLabel,
-        IconAndSingleTextLabel,
-        TwoTextLabels,
-        SingleIcon,
-        IconAndSingleTextLabelVertical,
-        IconAndTwoTextLabelsVertical
-    };
+    enum ContentItemStyle
+    {
+         IconAndTwoTextLabels = 0,
+         SingleTextLabel,
+         IconAndSingleTextLabel,
+         TwoTextLabels,
+         SingleIcon,
+         IconAndSingleTextLabelVertical,
+         IconAndTwoTextLabelsVertical,
+         TwoIconsTwoWidgets
+     };
 
     /*!
       ContentItemMode indicates logical position of content item relative other items. Exact look and feel
@@ -95,7 +97,8 @@ public:
         SingleRowRight,
         SingleColumnTop,
         SingleColumnCenter,
-        SingleColumnBottom
+        SingleColumnBottom,
+        TwoIconsTextLabelVertical
     };
 
     /*!
@@ -127,6 +130,12 @@ public:
         \brief See DuiContentItemModel::subtitle
     */
     Q_PROPERTY(QString subtitle READ subtitle WRITE setSubtitle)
+
+    /*!
+        \property DuiContentItom::optionalPixmap
+        \brief Icon in the upper right corner which might be displayed.
+    */
+    Q_PROPERTY(QPixmap optionalPixmap READ optionalPixmap WRITE setOptionalPixmap)
 
 public:
 
@@ -170,6 +179,21 @@ public:
       */
     DuiContentItem::ContentItemStyle itemStyle() const;
 
+    /*!
+     \brief Returns a pointer to the additional item.
+     */
+    DuiWidget* additionalItem() const;
+
+    /*!
+     \brief Returns a pointer to the small widget.
+     */
+    DuiWidget* smallItem() const;
+
+    /*!
+      Returns optional pixmap (Icon)
+     */
+    QPixmap optionalPixmap() const;
+
 public Q_SLOTS:
     /**
         \brief Sets thumbnail pixmap.
@@ -193,6 +217,35 @@ public Q_SLOTS:
       \brief Sets item's mode. Mode defines how item's background should look. Exact look is defined in style.
       */
     void setItemMode(ContentItemMode mode);
+
+    /*!
+     \brief Sets a DuiWidget as e.g. progress bar, below the title.
+     \param widget DuiWidget
+      In case there is already a subtitle it will be replaced.
+     */
+    void setAdditionalItem(DuiWidget* widget);
+
+    /*!
+     \brief Convenience method which sets a progress bar as the additional item.
+     */
+    void enableProgressBar();
+
+    /*!
+     \brief Sets a DuiWidget as a widget below the right icon.
+     \param widget DuiWidget
+     */
+    void setSmallItem(DuiWidget* widget);
+
+    /*!
+     \brief Convenience method for setting a text below the right icon.
+     */
+    void setSmallText(QString text);
+
+    /*!
+        \brief Sets an optional pixmap (Icon).
+        \param pixmap QPixmap
+     */
+    void setOptionalPixmap(const QPixmap& pixmap);
 
     /*!
       \brief Makes content item to send clicked() signal.

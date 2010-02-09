@@ -30,6 +30,10 @@ public:
     virtual ~DuiContentItemPrivate();
 
     QPixmap pixmap;
+
+    QPixmap optionalPixmap;
+    DuiWidget* additionalItem;
+    DuiWidget* smallItem;
 };
 
 #endif

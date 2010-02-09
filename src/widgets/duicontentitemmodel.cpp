@@ -24,3 +24,9 @@ void DuiContentItemModel::setItemImage(const QPixmap &itemImage)
     _itemImage() = itemImage;
     memberModified(ItemImage);
 }
+
+void DuiContentItemModel::setOptionalImage(const QPixmap& pixmap)
+{
+    _optionalImage() = pixmap;
+    memberModified(OptionalImage);
+}

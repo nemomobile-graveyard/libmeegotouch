@@ -34,7 +34,7 @@ static const int NOCONTENTITEMSTYLE = -1;
 QVector<DuiContentItemViewPrivate::backgroundFunc> DuiContentItemViewPrivate::backgroundFunctions;
 
 DuiContentItemViewPrivate::DuiContentItemViewPrivate()
-    : titleLabel(NULL), subtitleLabel(NULL), imageWidget(NULL), configuredStyle(NOCONTENTITEMSTYLE), down(false)
+    : titleLabel(NULL), subtitleLabel(NULL), imageWidget(NULL), configuredStyle(NOCONTENTITEMSTYLE), down(false), optionalImageWidget(0)
 {
     layout = new QGraphicsGridLayout;
     layout->setContentsMargins(0, 0, 0, 0);
@@ -53,8 +53,8 @@ DuiContentItemViewPrivate::~DuiContentItemViewPrivate()
 
 void DuiContentItemViewPrivate::initBackgroundFunctions()
 {
-    if (backgroundFunctions.size() == 0) {
-        backgroundFunctions.resize(DuiContentItem::SingleColumnBottom + 1);
+    if(backgroundFunctions.size() == 0){
+        backgroundFunctions.resize(DuiContentItem::TwoIconsTextLabelVertical + 1);
         backgroundFunctions[DuiContentItem::Default] = &DuiContentItemStyle::backgroundImage;
         backgroundFunctions[DuiContentItem::TopLeft] = &DuiContentItemStyle::backgroundImageTopLeft;
         backgroundFunctions[DuiContentItem::Top] = &DuiContentItemStyle::backgroundImageTop;
@@ -72,6 +72,8 @@ void DuiContentItemViewPrivate::initBackgroundFunctions()
         backgroundFunctions[DuiContentItem::SingleColumnTop] = &DuiContentItemStyle::backgroundImageSinglecolumnTop;
         backgroundFunctions[DuiContentItem::SingleColumnCenter] = &DuiContentItemStyle::backgroundImageSinglecolumnCenter;
         backgroundFunctions[DuiContentItem::SingleColumnBottom] = &DuiContentItemStyle::backgroundImageSinglecolumnBottom;
+        backgroundFunctions[DuiContentItem::TwoIconsTextLabelVertical] = &DuiContentItemStyle::backgroundImageSinglecolumnBottom;
+
     }
 }
 
@@ -109,6 +111,18 @@ DuiImageWidget *DuiContentItemViewPrivate::image()
 
     return imageWidget;
 }
+
+DuiImageWidget * DuiContentItemViewPrivate::optionalImage()
+{
+    if(!optionalImageWidget){
+        optionalImageWidget = new DuiImageWidget(controller);
+        Q_Q(DuiContentItemView);
+        optionalImageWidget->setObjectName(q->style()->optionalImageObjectName());
+    }
+
+    return optionalImageWidget;
+}
+
 
 void DuiContentItemViewPrivate::initLayout(DuiContentItem::ContentItemStyle style)
 {
@@ -201,6 +215,32 @@ void DuiContentItemViewPrivate::initLayout(DuiContentItem::ContentItemStyle styl
         subtitle()->setVisible(true);
 
         break;
+
+    case DuiContentItem::TwoIconsTwoWidgets:
+
+        layout->addItem( image(), 0,0, 2,1, Qt::AlignCenter );
+        image()->setVisible(true);
+        image()->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+
+        layout->addItem( title(), 0,1, Qt::AlignLeft );
+
+        // first free widget or subtitle
+        int columnSpan = 1;
+        if( !controller->smallItem() )
+            columnSpan = 2;
+        if( controller->additionalItem() ) {
+            layout->addItem( controller->additionalItem(), 1,1, 1,columnSpan, Qt::AlignLeft );
+            subtitle()->setVisible( false );
+        } else
+            layout->addItem( subtitle(), 1,1, 1,columnSpan, Qt::AlignLeft );
+
+        layout->addItem( optionalImage(), 0,2, Qt::AlignRight );
+        optionalImage()->setVisible(true);
+
+        if( controller->smallItem() )
+            layout->addItem( controller->smallItem(), 1,2, Qt::AlignRight );
+
+        break;
     };
 }
 
@@ -223,6 +263,11 @@ void DuiContentItemViewPrivate::setSubtitle(const QString &string)
 void DuiContentItemViewPrivate::setImage(const QPixmap &pixmap)
 {
     image()->setPixmap(pixmap);
+}
+
+void DuiContentItemViewPrivate::setOptionalImage(const QPixmap& pixmap)
+{
+    optionalImage()->setPixmap(pixmap);
 }
 
 void DuiContentItemViewPrivate::applyStyle()
@@ -285,6 +330,8 @@ void DuiContentItemView::updateData(const QList<const char *> &modifications)
             d->setImage(d->controller->pixmap());
         } else if (member == DuiContentItemModel::Selected) {
             setSelected(model()->selected());
+        } else if(member == DuiContentItemModel::OptionalImage){
+            d->setOptionalImage(d->controller->optionalPixmap());
         }
     }
 }
@@ -301,6 +348,8 @@ void DuiContentItemView::setupModel()
         d->setSubtitle(model()->subtitle());
     if (!d->controller->pixmap().isNull())
         d->setImage(d->controller->pixmap());
+    if(!d->controller->optionalPixmap().isNull())
+        d->setOptionalImage(d->controller->optionalPixmap());
 
     d->initLayout(static_cast<DuiContentItem::ContentItemStyle>(model()->itemStyle()));
 }
