@@ -37,10 +37,16 @@ class DUI_EXPORT DuiAppletSettingsDialog
 {
 public:
     /*!
-     * \brief Default constructor. Constructs DuiAppletSettingsDialog.
+     * \brief Constructs DuiAppletSettingsDialog.
      * \param appletSettings the settings object that is used for the dialog
+     * \note DO NOT USE THIS CONSTRUCTOR
      */
     DuiAppletSettingsDialog(const DuiAppletSettings &appletSettings);
+
+    /*!
+     * Constructor.
+     */
+    DuiAppletSettingsDialog();
 
     /*!
      * \brief Destructor
@@ -51,6 +57,13 @@ public:
      * Creates the applet settings dialog showing applet instance and global settings.
      */
     void exec() const;
+
+    /*!
+     * Creates the applet settings dialog showing applet instance and global settings.
+     * Uses the applet settings object received as an argument.
+     * \param settings the applet settings object to use.
+     */
+    void exec(const DuiAppletSettings& settings) const;
 
 private:
     /*!

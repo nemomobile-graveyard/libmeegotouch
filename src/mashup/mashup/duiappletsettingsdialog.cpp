@@ -29,9 +29,18 @@
 #include "duiappletsettings.h"
 #include "duigconfdatastore.h"
 #include <QGraphicsLinearLayout>
+#include "duidebug.h"
 
 DuiAppletSettingsDialog::DuiAppletSettingsDialog(const DuiAppletSettings &appletSettings) :
-    appletSettings(appletSettings)
+        appletSettings("invalid", "invalid")
+{
+    Q_UNUSED(appletSettings);
+
+    duiWarning("DuiAppletSettingsDialog") << "DuiAppletSettingsDialog(const DuiAppletSettings&) constructor called, which is a no-op! Use the constructor without parameters instead!";
+}
+
+DuiAppletSettingsDialog::DuiAppletSettingsDialog() :
+        appletSettings("invalid", "invalid")
 {
 }
 
@@ -41,7 +50,12 @@ DuiAppletSettingsDialog::~DuiAppletSettingsDialog()
 
 void DuiAppletSettingsDialog::exec() const
 {
-    if (!appletSettings.hasSettings()) {
+    duiWarning("DuiAppletSettingsDialog") << "DuiAppletSettingsDialog::exec() called, which is no-op! Use DuiAppletSettingsDialog::exec(const DuiAppletSettings&) instead.";
+}
+
+void DuiAppletSettingsDialog::exec(const DuiAppletSettings& settings) const
+{
+    if (!settings.hasSettings()) {
         return;
     }
 
@@ -54,18 +68,18 @@ void DuiAppletSettingsDialog::exec() const
     layout->setSpacing(0);
     widget->setLayout(layout);
 
-    const DuiSettingsLanguageBinary *instanceSettingsBinary = appletSettings.instanceSettingsBinary();
+    const DuiSettingsLanguageBinary* instanceSettingsBinary = settings.instanceSettingsBinary();
     if (instanceSettingsBinary != NULL) {
         //~ uispec-document ??? FIXME
         //% "Applet Instance Settings"
-        layout->addItem(createAppletSettingsWidgets(widget, qtTrId("duiappletsettingsdialog_applet_instance_settings_title"), *instanceSettingsBinary, appletSettings.instanceDataStore()));
+        layout->addItem(createAppletSettingsWidgets(widget, qtTrId("duiappletsettingsdialog_applet_instance_settings_title"), *instanceSettingsBinary, settings.instanceDataStore()));
     }
 
-    const DuiSettingsLanguageBinary *globalSettingsBinary = appletSettings.globalSettingsBinary();
+    const DuiSettingsLanguageBinary* globalSettingsBinary = settings.globalSettingsBinary();
     if (globalSettingsBinary != NULL) {
         //~ uispec-document ??? FIXME
         //% "Applet Global Settings"
-        layout->addItem(createAppletSettingsWidgets(widget, qtTrId("duiappletsettingsdialog_applet_global_settings_title"), *globalSettingsBinary, appletSettings.globalDataStore()));
+        layout->addItem(createAppletSettingsWidgets(widget, qtTrId("duiappletsettingsdialog_applet_global_settings_title"), *globalSettingsBinary, settings.globalDataStore()));
     }
 
     // Create a dialog to show the applet instance and global settings
