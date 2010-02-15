@@ -22,6 +22,7 @@
 
 #include "duipageswitchanimation.h"
 #include "duiparallelanimationgroup_p.h"
+#include <QPointer>
 
 class DuiSceneWindow;
 class QPropertyAnimation;
@@ -33,8 +34,8 @@ public:
     DuiSceneWindow *sceneWindow;
 
 protected:
-    DuiSceneWindow *newPage;
-    DuiSceneWindow *oldPage;
+    QPointer<DuiSceneWindow> newPage;
+    QPointer<DuiSceneWindow> oldPage;
 
     QPropertyAnimation *positionNewPageAnimation;
     QPropertyAnimation *positionOldPageAnimation;
