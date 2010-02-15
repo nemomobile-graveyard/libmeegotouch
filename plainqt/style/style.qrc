@@ -1,0 +1,10 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+ <qresource>
+     <file>bg2.png</file>
+     <file alias="Icon-back.png">../icons/Icon-back.png</file>
+     <file alias="Icon-close.png">../icons/Icon-close.png</file>
+     <file alias="Icon-home.png">../icons/Icon-home.png</file>
+ </qresource>
+</RCC>
+

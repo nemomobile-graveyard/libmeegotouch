@@ -1,0 +1,112 @@
+@import "../../libdui/style/fonts.css";
+@import "../../libdui/style/colors.css";
+
+#listItem {
+}
+
+#feedbackButton2 {
+    press-feedback: press-babytoy;
+    release-feedback: release-babytoy;
+}
+
+#feedbackButton3 {
+    press-feedback: press-space;
+    release-feedback: release-space;
+}
+
+#feedbackButton4 {
+    press-feedback: ;
+    release-feedback: ;
+}
+
+#wgToggleButton {
+}
+
+#wgToggleButton:selected {
+}
+
+#wgIconLeft {
+    icon-align: left;
+}
+
+#wgIconRight {
+    icon-align: right;
+}
+
+#wgIconTop {
+    icon-align: top;
+}
+
+#wgIconBottom {
+    icon-align: bottom;
+}
+
+#header {
+    font: $FONT_SMALL;
+    color: $COLOR_INVERTED_FOREGROUND;
+    background-image: "Divider-with-label";
+    minimum-size: 32 32;
+}
+
+#richLabelStyle {
+    color: #FFA000;
+}
+
+#wgList {
+    margin-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+
+    group-header-object-name: "wgListGroupHeaders";
+}
+
+#labelListItemFile {
+    color: #FFFFFF;
+    font: "Nokia Sans Wide" 21px;
+}
+
+#labelListItemComments {
+    color: #F7941E;
+    font: "Nokia Sans Wide" 15px;
+}
+
+#wgListGroupHeaders {
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
+#wgViewmenuLabel {
+    font: "Nokia Sans" 16;
+}
+
+#wgSlider1 {
+  has-min-label-above-rail: false;
+  has-max-label-above-rail: false;
+  max-label-follows-thumb: false;
+  rail-dot-interval: 12;
+  rail-dot-image: "Slider-dot-normal";
+}
+#wgSlider2 {
+  has-min-label-above-rail: false;
+  has-max-label-above-rail: false;
+  max-label-follows-thumb: false;
+  rail-dot-interval: 12;
+  rail-dot-image: "Slider-dot-normal";
+}
+#wgSlider3 {
+  has-min-label-above-rail: false;
+  has-max-label-above-rail: false;
+  max-label-follows-thumb: false;
+  rail-dot-interval: 12;
+  rail-dot-image: "Slider-dot-normal";
+}
+#wgSeekBar4 {
+  has-min-label-above-rail: false;
+  has-max-label-above-rail: false;
+  max-label-follows-thumb: false;
+  rail-dot-interval: 12;
+  rail-dot-image: "Slider-dot-normal";
+  rail-dot-not-loaded-image: "Dot-empty";
+  rail-dot-played-image: "Slider-dot-selected";
+}

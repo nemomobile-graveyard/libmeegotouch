@@ -1,0 +1,92 @@
+/*! \page layouts Layout and Policies
+
+\section basics Basics
+
+libdui includes a set of layout management classes that are used to describe how widgets are laid out in an application's user interface. These layouts automatically position and resize widgets when the amount of space available for them changes, ensuring that they are consistently arranged and that the user interface as a whole remains usable.
+
+There are two different sets of layout classes.
+
+The first is provided by Qt, and inherit from QGraphicsLayout, including QGraphicsLinearLayout, QGraphicsGridLayout, etc.  These Qt classes provide an easy way to layout items as you want.
+
+The second set of layout classes is provided by libdui, and offer additional feature, at the cost of slightly more overhead.  The libdui classes work in a slightly different way - there is a single DuiLayout to which you can add one or more policies that inherit DuiAbstractLayoutPolicy.  This allows a single layout to have multiple policies, with one active at a given time.  A different policy can be made active at any time, causing the items within the layout to move into their new position.
+
+The multiple policies in a single DuiLayout do not even need to contain the same items.  New items will be shown and hidden as necessary (Unless the item is itself a layout, since a layout cannot be directly hidden itself, but a layout inside of a widget inside of a layout will be hidden.  See \ref layout-inside-layout).
+
+\section tips Tips for Using Layouts
+\li When you use a layout or layout policy, you do not need to pass a parent when constructing the child widgets. The layout will automatically reparent the widgets so that they are children of the widget on which the layout is installed.
+
+\li Widgets in a layout are children of the widget on which the layout is installed, not of the layout itself. Widgets can only have other widgets as parent, not layouts.  You can nest layouts using addLayout() on a layout; the inner layout then becomes a child of the layout it is inserted into.
+
+\li You can have one policy when in landscape mode and another policy when portrait mode.  You do not even need to have the same items in each case.
+
+\li If you only want to switch between a horizontal and vertical linear layout policy, you can use DuiLinearLayoutPolicy::setOrientation() instead of multiple policies.
+
+\li For a complex set of nested layouts it is easier and more lightweight to use nested \link QGraphicsLayout QGraphicsLayouts\endlink than to try to nest \link DuiLayout DuiLayouts \endlink.
+
+\li See the QLayout and QGraphicsLayout documentation for more information and tips, and see the examples.  
+
+\section rtl Right-to-left
+
+In right-to-left languages, such as arabic, the layouts are automatically reversed.  This is usually the correct behavior, however you can override this by directly calling
+QGraphicsWidget::setLayoutDirection().
+For example the calculator example has the following code snippet:
+
+\dontinclude calculator/calculatorwidget.cpp
+\skip CalculatorWidget::CalculatorWidget
+\until DuiLayout *layout
+
+\section main Main Policies
+\li DuiLinearLayoutPolicy - For placing items horizontally or vertically:
+
+\image html duilinearlayoutpolicy_small.png
+
+\li DuiGridLayoutPolicy - For placing items in a grid:
+
+\image html duigridlayoutpolicy_small.png
+
+\li DuiFlowLayoutPolicy - For placing items in a horizontal line, overflowing onto the next line:
+
+\image html duiflowlayoutpolicy_small.png 
+
+\li DuiFreestyleLayoutPolicy - For placing items freely, but still preventing items from overlapping:
+
+\image html duifreestylelayoutpolicy_small.png
+
+\section multiple Multiple Policies
+
+Multiple policies can be assigned to a layout.  This is particularly useful to have one policy when in portrait mode and another when in landscape mode. For \ref layout-multiplepolicies "example":
+
+\htmlonly <center><a href="layout-multiplepolicies.html"><img src="multiplepolicies.gif" width="432"></a></center> \endhtmlonly
+
+A more concrete example is given with the \ref example-calculator "example calculator" program.
+
+\htmlonly <center><a href="example-calculator.html"><img src="calculator_landscape_small.png"></a>
+<a href="example-calculator.html"><img src="calculator_portrait_small.png"></a></center> \endhtmlonly
+
+\sa \ref layout-multiplepolicies, \ref example-calculator, \ref layout-inside-layout, DuiLayout
+
+\section usingqgraphicslayout More complex layouting using QGraphicsLayout
+
+For a more complex layout of items, you can place multiple layouts together.  This is easiest using a mix of
+DuiLayouts and QGraphicsLayout, using a DuiLayout only when animations and multiple policies are required.
+
+For example using multiple \link QGraphicsLinearLayout QGraphicsLinearLayouts \endlink we can obtain a layout where items are laid in rows, but the items do not line up vertically. For \ref layout-qgraphicslayout "example":
+
+\image html qgraphicslayout_small.png
+
+\sa \ref layout-qgraphicslinearlayout, \ref layout-qgraphicsgridlayout, \ref layout-qgraphicslayout
+
+
+\section layouts-example Example code
+
+\li \ref layout-qgraphicslinearlayout
+\li \ref layout-qgraphicsgridlayout
+\li \ref layout-duilinearlayoutpolicy
+\li \ref layout-duigridlayoutpolicy
+\li \ref layout-duiflowlayoutpolicy
+\li \ref layout-duifreestylelayoutpolicy
+\li \ref layout-multiplepolicies
+\li \ref layout-inside-layout
+\li \ref example-calculator
+\li \ref layout-qgraphicslayout
+*/

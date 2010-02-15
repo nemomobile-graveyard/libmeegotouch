@@ -1,0 +1,7 @@
+usr/lib/libdui*.so*
+usr/lib/qt4/plugins/styles/libduiqtstyleplugin.so
+usr/bin/duithemedaemon
+usr/bin/duiservicemapper
+usr/share/dbus-1/services/com.nokia.servicefw.service
+usr/share/dui/shaders/*
+usr/lib/dui/applets/duiappletrunner

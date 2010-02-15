@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=DUIApplet
+Name=Gallery
+Icon=
+Exec=duiappletrunner
+
+[DUI]
+X-DUIApplet-Applet=libgalleryapplet.so
+X-DUIApplet-Identifier=galleryappletres

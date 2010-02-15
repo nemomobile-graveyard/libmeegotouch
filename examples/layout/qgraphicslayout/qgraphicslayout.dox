@@ -1,0 +1,19 @@
+/**
+\page layout-qgraphicslayout QGraphicsLayout Example
+
+Source code for a simple example showing how do place a QGraphicsLayout inside of another QGraphicsLayout.
+
+QGraphicsLayout (or DuiLayout) should always be attached to QGraphicsWidget (or DuiWidget) or inside another QGraphicsLayout.
+
+\image html qgraphicslayout.png
+
+Source code of qgraphicslayout.cpp:
+\include examples/layout/qgraphicslayout/qgraphicslayout.cpp
+
+Styled with the following qgraphicslayout.css file:
+\include examples/layout/qgraphicslayout/qgraphicslayout.css
+
+And compiled with the following qgraphicslayout.pro file:
+\include examples/layout/qgraphicslayout/qgraphicslayout.pro
+
+*/

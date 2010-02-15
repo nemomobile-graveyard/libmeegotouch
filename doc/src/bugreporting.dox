@@ -1,0 +1,9 @@
+/*! \page bugreporting How to Report a Bug
+
+Bugs can be entered in the <a href="https://bugs.maemo.org/enter_bug.cgi?classification=Maemo%206%20Tech%20Preview">Maemo Bugzilla</a>.
+
+Please check Bugzilla for existing bugs that might cover your problem before filing a new one.
+
+If possible, try to include a small test case or program that demonstrates the problem.
+
+*/

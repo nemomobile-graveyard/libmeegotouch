@@ -1,0 +1,52 @@
+DuiButtonStyle {
+    minimum-size: size(20, 20);  
+    maximum-size: size(400, 400);                                   
+    preferred-size: size(100, 100);                                   
+    normal-background-image: scalable(SB-normal, 40, 40, 0, 0);
+    pressed-background-image: scalable(SB-press, 40, 40, 0, 0);
+}
+
+.DuiButtonStyle#ft_test_button {
+    minimum-size: size(20, 20);  
+    maximum-size: size(400, 400);                                   
+    preferred-size: size(100, 100);                                   
+}
+
+.DuiButtonStyle#button2 {
+    normal-background-image: scalable(SB-press, 40, 40, 0, 0);
+    pressed-background-image: scalable(SB-press, 40, 40, 0, 0);
+}
+
+DuiButtonStyle#buttonNotBoxed {
+    horizontal-box-edge-percent: 0;                                                      
+}
+
+DuiButtonStyle#buttonBoxed {
+    horizontal-box-edge-percent: 10;                                                      
+}
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

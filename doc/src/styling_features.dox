@@ -1,0 +1,50 @@
+/*! \page styling_features Features
+
+    \section parent_child_relationship_based_styling Styling based on parent-child relationship
+        In DirectUI the style of the object may have a different style depending of a type of it's parent object. 
+        For example you can define a custom style for a button in view menu, making it look different just 
+        because the type of it's parent is a view menu.
+
+        Consider using the parent-child relationship in styling, when you want to have a custom style for the 
+        widgets inside another widget. Good examples are widgets, which are inside the child components like: 
+        label and background of a list item, button and text in view menu etc.
+
+    \section mode_based_styling Styling based on mode
+        It is also possible to style objects depending of their internal 'mode'. The word mode is actually quite 
+        flexible in this concept, meaning that whenever your stylable object changes its state, it notifies the 
+        style about it and the style attribute values are then automatically changed to reflect the new state. 
+        For example a list item could have a different modes based on it's selection state; having black text on 
+        white background in unselected state and white text on blue background one when being selected.
+
+        \image html mode_style.png "Styling using mode."
+
+        Consider using the mode in styling, when you clearly have a different states for your stylable object. 
+        Good examples are states like: selected/unselected, open/closed, night/day etc. 
+
+    \section objectname_based_styling Styling based on object naming
+        Object naming means that you give a name for your stylable object. It allows you to define a custom set 
+        of attributes for that specific object in your stylesheet. Basically what happens is that your object is 
+        being identified by the system and the custom styling is then being applied to it. The name acts as an 
+        identifier for your stylable object.
+
+        \image html named_style.png "Styling using object naming."
+
+        Use object naming when you need to have an unique object with an unique style assigned. There is no 
+        really good examples for this kind of styling, but if you need to have a custom look for just one widget 
+        in your application, you can make an exception and apply the custom styling with object naming. If you 
+        have a group of objects that needs to be styled in a similiar (but custom) way, consider using some other 
+        styling method (like parent-child-relationship) for that.
+
+    \section orientation_based_styling Styling based on device orientation
+        The style system supports styling in both orientations, in portrait and in landscape. It allows you to 
+        have different style for the widgets for both screen orientations. The style objects are automatically 
+        updated to reflect the new orientation when the device is rotated by the user.
+
+        \image html orientation_style.png "Styling using orientation."
+
+        Use orientation parameter when you have for example some margin & spacing values for landscape rotation 
+        and you want to have smaller ones in portrait mode. 
+
+    \section type_based_styling Styling based on type
+        \todo documentation missing
+*/

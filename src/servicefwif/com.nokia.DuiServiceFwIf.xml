@@ -1,0 +1,40 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.nokia.DuiServiceFwIf">
+        <!--
+            Returns a list of service names that implement the specified interface,
+            or, if none specified, all servicenames
+        -->
+        <method name="serviceNames">
+            <arg name="interfaceName" type="s" direction="in"/>
+            <arg type="as" direction="out"/>
+        </method>
+        <!--
+            Returns a (preferred) service name that implements the specified interface
+        -->
+        <method name="serviceName">
+            <arg name="interfaceName" type="s" direction="in"/>
+            <arg type="s" direction="out"/>
+        </method>
+        <!--
+            Returns the service path for the specified interface
+        -->
+        <method name="servicePath">
+            <arg name="interfaceName" type="s" direction="in"/>
+            <arg type="s" direction="out"/>
+        </method>
+        <!--
+            Signal for when a service becomes available
+        -->
+        <signal name="serviceAvailable">
+            <arg name="service" type="s" direction="out"/>
+            <arg name="interface" type="s" direction="out"/>
+        </signal>
+        <!--
+            Signal for when a service becomes unavailable
+        -->
+        <signal name="serviceUnavailable">
+            <arg name="service" type="s" direction="out"/>
+        </signal>
+    </interface>
+</node>

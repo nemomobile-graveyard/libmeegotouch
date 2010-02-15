@@ -1,0 +1,219 @@
+Source: libdui
+Section: libs
+Priority: extra
+Maintainer: Tomas Junnonen <tomas.junnonen@nokia.com>
+Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.6.0), libicu-dev, libx11-dev, doxygen (>=1.5.9), libgconf2-dev, libcontextsubscriber-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgles2-sgx-img-dev [arm armel], opengles-sgx-img-common-dev [arm armel], libgl-dev [i386], libgl1 [i386], libqt4-opengl-dev, pkg-config (>= 0.22), libxdamage-dev
+Standards-Version: 3.7.2
+
+Package: libdui0
+Architecture: any
+Depends:  libdui-l10n-engineering-english (= ${Source-Version}), libqtcore4 (>= 4.6.0), libqtgui4 (>= 4.6.0), libqt4-dbus (>= 4.6.0), dbus-x11, ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, duitheme (>= 0.5.0), libxdamage1
+Provides: libdui
+Conflicts: libdui
+Suggests: libdui-l10n-ar, libdui-l10n-de, libdui-l10n-en, libdui-l10n-fi, libdui-l10n-ur, libdui-l10n-zh-cn
+Description: DirectUI library
+ libdui framework libraries
+
+Package: libdui-dev
+Section: devel
+Architecture: any
+Depends: libdui0 (= ${Source-Version}), dui-dev-tools (=${Source-Version}), libqt4-dev (>= 4.6.0), libx11-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgconf2-dev, libcontextsubscriber-dev, libxdamage-dev
+Description: libdui development files
+ Development files for DirectUI
+
+Package: dui-dev-tools
+Section: devel
+Architecture: any
+Depends: ${shlibs:Depends}
+Suggests: perl (>= 5.10.0)
+Description: libdui specific development and testing tools
+ Collection of tools for testing and developing on top of libdui. Includes 
+ stuff like applettester and code/mock generation.
+
+Package: dui-demos
+Section: devel
+Architecture: any
+Depends: dui-demos-widgetsgallery, dui-demos-plainqt
+Description: Demo applications for DirectUI
+ Collection of demo applications for DirectUI
+
+Package: dui-demos-widgetsgallery
+Section: devel
+Architecture: any
+Depends: libdui0 (= ${Source-Version}), dui-demos-widgetsgallery-l10n-engineering-english (= ${Source-Version})
+Suggests: dui-demos-widgetsgallery-l10n-ar, dui-demos-widgetsgallery-l10n-de, dui-demos-widgetsgallery-l10n-en, dui-demos-widgetsgallery-l10n-fi, dui-demos-widgetsgallery-l10n-ur, dui-demos-widgetsgallery-l10n-zh-cn
+Description: Demo application for DirectUI
+
+Package: dui-demos-widgetsgallery-tests
+Section: devel
+Architecture: any
+Depends: libdui0 (= ${Source-Version}), duitestrunner, dui-demos-widgetsgallery (= ${Source-Version})
+Description: Demo application for DirectUI
+
+Package: dui-demos-widgetsgallery-dbg
+Section: devel
+Architecture: any
+Depends: dui-demos-widgetsgallery (= ${Source-Version})
+Description: Demo application for DirectUI.
+ .
+ This package contains the debug symbols.
+
+Package: dui-demos-widgetsgallery-l10n-engineering-english
+Section: devel
+Architecture: any
+Enhances: dui-demos-widgetsgallery
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Engineering English translations for widgetsgallery
+
+Package: dui-demos-widgetsgallery-l10n-ar
+Section: devel
+Architecture: any
+Enhances: dui-demos-widgetsgallery
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Arabic translations for widgetsgallery
+
+Package: dui-demos-widgetsgallery-l10n-de
+Section: devel
+Architecture: any
+Enhances: dui-demos-widgetsgallery
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: German translations for widgetsgallery
+
+Package: dui-demos-widgetsgallery-l10n-en
+Section: devel
+Architecture: any
+Enhances: dui-demos-widgetsgallery
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: English translations for widgetsgallery
+
+Package: dui-demos-widgetsgallery-l10n-fi
+Section: devel
+Architecture: any
+Enhances: dui-demos-widgetsgallery
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Finnish translations for widgetsgallery
+
+Package: dui-demos-widgetsgallery-l10n-hu
+Section: devel
+Architecture: any
+Enhances: dui-demos-widgetsgallery
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Hungarian translations for widgetsgallery
+
+Package: dui-demos-widgetsgallery-l10n-ur
+Section: devel
+Architecture: any
+Enhances: dui-demos-widgetsgallery
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Urdu translations for widgetsgallery
+
+Package: dui-demos-widgetsgallery-l10n-zh-cn
+Section: devel
+Architecture: any
+Enhances: dui-demos-widgetsgallery
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Simplified Chinese translations for widgetsgallery
+
+Package: dui-demos-plainqt
+Section: devel
+Architecture: any
+Depends: libdui0 (= ${Source-Version})
+Replaces: dui-demos-plainqt (<< 0.16.0-1)
+Description: Demo applications showing the capabilities of the plain qt style.
+
+Package: dui-demos-plainqt-dbg
+Section: devel
+Architecture: any
+Depends: dui-demos-plainqt (= ${Source-Version})
+Replaces: dui-demos-plainqt-dbg (<< 0.16.0-1)
+Description: debug symbols of the plain qt examples
+
+Package: dui-demos-appletinstallationsource
+Section: devel
+Architecture: any
+Depends: libdui0 (= ${Source-Version})
+Description: Demo applet installation source for the applet library.
+
+Package: dui-demos-appletinstallationsource-dbg
+Section: devel
+Architecture: any
+Depends: dui-demos-appletinstallationsource (= ${Source-Version})
+Description: Debug symbols of the demo applet installation source.
+
+Package: libdui-tests
+Section: extra
+Architecture: any
+Depends: libdui0 (= ${Source-Version}), libqtgui4, testrunner, locales, ${shlibs:Depends}
+Description: libdui unit tests
+ Unit testing binaries and shellscripts for testing libdui library
+
+Package: libdui-benchmarks
+Section: extra
+Architecture: any
+Depends: libdui0 (= ${Source-Version}), ${shlibs:Depends}
+Description: libdui benchmarks
+ Benchmarking binaries for testing libdui library
+
+Package: libdui0-dbg
+Architecture: any
+Section: devel
+Depends: libdui0 (= ${Source-Version})
+Description: libdui debug package
+ libdui debug symbols.
+
+Package: libdui-doc
+Section: doc
+Architecture: all
+Description: API documentation for libdui
+
+Package: libdui-l10n-engineering-english
+Section: devel
+Architecture: any
+Enhances: libdui0
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Engineering English translations for libdui
+
+Package: libdui-l10n-ar
+Section: devel
+Architecture: any
+Enhances: libdui0
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Arabic translations for libdui
+
+Package: libdui-l10n-de
+Section: devel
+Architecture: any
+Enhances: libdui0
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: German translations for libdui
+
+Package: libdui-l10n-en
+Section: devel
+Architecture: any
+Enhances: libdui0
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: English translations for libdui
+
+Package: libdui-l10n-fi
+Section: devel
+Architecture: any
+Enhances: libdui0
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Finnish translations for libdui
+
+Package: libdui-l10n-ur
+Section: devel
+Architecture: any
+Enhances: libdui0
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Urdu translations for libdui
+
+Package: libdui-l10n-zh-cn
+Section: devel
+Architecture: any
+Enhances: libdui0
+Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Description: Simplified Chinese translations for libdui
+
+
+

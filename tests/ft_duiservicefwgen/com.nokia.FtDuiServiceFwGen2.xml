@@ -1,0 +1,59 @@
+
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.nokia.fakegalleryserviceinterface">
+        <doc>
+            /* main documentation for the interface
+               main documentation for the interface2 */
+        </doc>
+        <method name="showPage">
+            <doc>
+                /* documentation for showPage() method */
+                /* documentation for showPage() method2 */
+            </doc>
+            <arg name="targetPage" type="s" direction="in" />
+            <arg name="previousPage" type="s" direction="in" />
+            <arg name="" type="b" direction="out"/>    
+        </method>
+
+        <method name="showImage">
+            <doc>
+                /* documentation for showImage(0) method */
+                /* documentation for showImage(0) method2 */
+            </doc>
+            <arg name="uri" type="s" direction="in" />
+            <arg name="playlistName" type="s" direction="in" />
+            <arg name="defaultBackPage" type="s" direction="in" />
+            <arg name="" type="b" direction="out"/>    
+        </method>
+
+        <method name="showImage" chainTask="true" asyncTask="true">
+            <doc>
+                /* documentation for showImage(1) method */
+                /* documentation for showImage(1) method2 */
+            </doc>
+            <arg name="uri" type="s" direction="in" />
+            <arg name="uriList" type="as" direction="in" />
+        </method>
+
+        <method name="showGridWithCapturedContent">
+            <doc>
+                /* documentation for showGridWithCapturedContent() method */
+                /* documentation for showGridWithCapturedContent() method2 */
+            </doc>
+            <arg name="limit" type="i" direction="in" />
+            <arg name="" type="b" direction="out" />
+        </method>
+
+        <method name="showSettings">      
+            <doc>
+                /* documentation for showSettings() method */
+                /* documentation for showSettings() method2 */
+            </doc>
+            <arg name="" type="b" direction="out" />
+        </method>
+
+
+    </interface>
+</node>

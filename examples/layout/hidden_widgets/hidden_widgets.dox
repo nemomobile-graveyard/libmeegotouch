@@ -1,0 +1,16 @@
+/**
+\page layout-hidden_widgets A layout with a hidden widget example
+
+Source code for a simple example of hiding a widget in a layout.
+
+\image html hidden_widgets.png
+
+\include examples/layout/hidden_widgets/hidden_widgets.cpp
+
+Styled with the following hidden_widgets.css file:
+\include examples/layout/hidden_widgets/hidden_widgets.css
+
+And compiled with the following hidden_widgets.pro file:
+\include examples/layout/hidden_widgets/hidden_widgets.pro
+
+*/

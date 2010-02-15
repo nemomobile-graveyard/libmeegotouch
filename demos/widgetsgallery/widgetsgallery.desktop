@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Widgets Gallery
+Icon=icon-l-video
+Exec=widgetsgallery
+X-Maemo-Service=com.nokia.widgetsgallery
+Categories=Demos;
+OnlyShowIn=X-DUI;

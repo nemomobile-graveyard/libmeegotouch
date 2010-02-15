@@ -1,0 +1,170 @@
+/*! \page prestart Prestartable application development How-To
+
+Prestarting reduces the launch time of an application to zero:
+applications are able to show their GUI immediately when
+requested. DUI supports prestarting for application services, that is,
+applications that are started from the Home screen (or some other
+canvas) by calling the \c launch() method in their DBus interface.
+
+The cost is that applications need to be started to a special \b
+prestarted \b state before launching, that is, they are running in the
+background and thus reserve some memory.
+
+
+\section terminology Terminology
+
+- \b Launch - user action that aims to starting an application
+  (tapping the application icon, for instance).
+
+- \b LazyShutdown - the prestart mode in which an application process
+  returns from the running state to the prestarted state when it is
+  closed by the user or by the \c close() method in the DBus
+  interface.
+
+- \b Prestarted \b state - the state where an application waits for
+  launching. In user point of view the application is not running, but
+  it can be launched (switched to the running state) much faster than
+  executing it from scratch.
+
+- \b Prestart \b mode - the property of an application that defines
+  what happens to the application when it is closed. If not set,
+  application does not support prestarting.
+
+- \b Running \b state - the state where an application is running in
+  the user point of view.
+
+- \b TerminateOnClose - the prestart mode in which an application
+  process is terminated when the application is closed by the user or
+  by the \c close() method in the DBus interface.
+
+
+\section prestarting Prestarting an application
+
+If an application supports prestarting, it should always set the
+prestart mode with \c DuiApplication::setPrestartMode(), regardless of
+the commandline parameters and before using any other parts of the
+prestarting API. A recommended place to do this is during or right
+after instantiating the \c DuiApplication class.
+
+An application enters the prestarted state if it is started with the
+\c -prestart commandline argument \b and it sets the prestart mode
+before showing any windows. If either one of these conditions does not
+hold, the application will enter to the running state.
+
+The \c DuiWindow::show() method can be called even if the application
+is entering the prestarted state. The window will not become visible
+to the user until the application is launched.
+
+\c DuiApplication::isPrestarted() can be used to check if the
+application is in the prestarted state.
+
+
+\section launching Launching an application
+
+If the \c launch() method in application's DBus interface is called
+(because of user tapping the application icon, for instance) and the
+application is in the prestarted state, the application is released
+from the prestarted state and allowed to continue to the running
+state.
+
+The application can react to launching by listening to the \c
+DuiApplication::prestartReleased() signal, or by overriding
+DuiApplication::releasePrestart() event handler. The default event
+handler shows the active application window, if there is such a thing.
+
+
+\section lazyshutdown Returning to the prestarted state
+
+Application returns from the running state to the prestarted state if
+its prestarted mode is set to \c Dui::LazyShutdown and user taps the
+close (or back) button.
+
+The application can react to restoring the prestarted state by
+listening to the \c DuiApplication::prestartRestored() signal, or by
+overriding the \c DuiApplication::restorePrestart() event handler. The
+default event handler hides the active application window.
+
+
+\section killing Sudden deaths in the prestarted state
+
+Applications in the prestarted state never interact with the user.
+Neither should they take care of any critical tasks, because whether
+or not the applications will be prestarted at all is up to the
+configuration politics.
+
+These facts make the applications in the prestarted state as number
+one candidates for suspending and killing when the system resources
+run low. Therefore, application developers must be aware that an
+application in the prestarted state may be killed with KILL signal at
+any time without any warning.
+
+
+\section example Example
+
+The following example presents a skeleton of a very simple single
+window application. If application is started with the \c -prestart
+commandline argument, it connects the signal about restoring the
+prestarted state to the slot that resets the page displayed on the
+window. Note that showing and hiding the window does not require any
+actions from the application developer in the single window
+applications (see the default event handlers above).
+
+\code
+// minimal lazyshutdown example
+#include <DuiApplication>
+#include <DuiApplicationWindow>
+#include <DuiApplicationPage>
+
+int main(int argc, char ** argv)
+{
+    DuiApplication app(argc, argv);
+    DuiApplication::setPrestartMode(Dui::LazyShutdown);
+
+    DuiApplicationWindow window;
+    window.show();
+
+    DuiApplicationPage page;
+    page.appearNow();
+
+    return app.exec();
+}
+\endcode
+
+
+
+\code
+// More complex lazyshutdown example
+
+TODO
+
+class MainPage: public DuiApplicationPage 
+{
+    public slots:
+
+    void activateWidgets();
+    
+};
+
+int main(int argc, char ** argv)
+{
+    DuiApplication app(argc, argv);
+    DuiApplication::setPrestartMode(Dui::LazyShutdown);
+
+    DuiApplicationWindow window;
+    window.show();
+
+    MainPage page;
+    page.appearNow();
+
+    if (app.isPrestarted()) {
+        // Reset the state of the page shown on the window
+	// when application returns from the running state
+	// to the prestarted state
+        app.connect(&app, SIGNAL(prestartRestored()), 
+                    &mainPage, SLOT(resetState()));
+    }
+    return app.exec();
+}
+\endcode
+
+*/

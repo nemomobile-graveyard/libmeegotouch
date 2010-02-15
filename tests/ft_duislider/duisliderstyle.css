@@ -1,0 +1,37 @@
+/* DuiSliderStyle : DuiWidgetStyle */
+DuiSliderStyle {
+    thumb-pixmap: "duislider-handle" 8.8mm 8.8mm;
+    thumb-pressed-pixmap: "duislider-handle-pressed" 8.8mm 8.8mm;
+    thumb-vertical-pixmap: "duislider-vertical-handle" 8.8mm 8.8mm;
+    thumb-vertical-pressed-pixmap: "duislider-vertical-handle-pressed" 8.8mm 8.8mm;
+
+    handle-pixmap: "duislider-handle" 8.8mm 8.8mm;
+    handle-pressed-pixmap: "duislider-handle-pressed" 8.8mm 8.8mm;
+    handle-vertical-pixmap: "duislider-vertical-handle" 8.8mm 8.8mm;
+    handle-vertical-pressed-pixmap: "duislider-vertical-handle-pressed" 8.8mm 8.8mm;
+ 
+    background-base-image: "duislider-background" 9px 9px 9px 9px;
+    background-elapsed-image: "duislider-background-elapsed" 9px 9px 9px 9px;
+    background-received-image: "duislider-background-received" 9px 9px 9px 9px;
+
+    background-vertical-base-image: "duislider-vertical-background" 9px 9px 9px 9px;
+    background-vertical-elapsed-image: "duislider-vertical-background-elapsed" 9px 9px 9px 9px;
+    background-vertical-received-image: "duislider-vertical-background-received" 9px 9px 9px 9px;
+
+    rail-thickness: 2mm;
+    groove-thickness: 2mm;
+
+    rail-end-padding: 0mm;
+
+    /* inherited from DuiWidgetStyle */
+    preferred-size: 60mm 12mm;
+    minimum-size: 40mm 12mm;
+    maximum-size: 200mm 12mm;
+}
+
+#DuiSliderLabel {
+}
+
+#DuiSliderImage {
+}
+

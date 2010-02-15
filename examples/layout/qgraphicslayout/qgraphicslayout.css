@@ -1,0 +1,8 @@
+DuiLabelStyle {
+    font: "Nokia Sans Wide" 21px;
+}
+DuiButtonStyle {
+    font: "Nokia Sans Wide" 16px;
+    normal-background-image: scalable(Toggle-btn-normal,0,0,0,0);
+    pressed-background-image: scalable(Toggle-btn-selected,0,0,0,0);
+}

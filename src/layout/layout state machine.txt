@@ -1,0 +1,60 @@
+This file describes the work flow of items being added, removed, shown, hidden and moved around.
+
+  DuiLayout::animatedDeleteAt()
+    If the item was already TO_BE_DELETED, do nothing more
+    Item is marked as TO_BE_DELETED
+    Call DuiLayout::updateItemState
+
+  DuiAbstractLayoutPolicy::addItem()
+    Invalidate policy and layout - this will trigger a DuiLayout::setGeometry() in the next event loop
+    Call DuiLayout::addItem() to make sure item is added to layout.
+    Add item internally to policy
+
+  DuiLayout::addItem()
+    If item already exists and is marked as TO_BE_DELETED, give an error and return
+    If there is no policy, item should be set to TO_BE_HIDDEN and moved immediately 
+    Call DuiLayout::updateItemState()
+
+  DuiLayout::setGeometry()
+    The current policy will call DuiItemState::setTargetGeometry for all the items
+    Call DuiLayout::updateItemState()
+
+  DuiItemState::setTargetGeometry()
+    set the target geometry
+    If the item was TO_BE_DELETED, do nothing more
+    If the item was not SHOWING, it should be set to TO_BE_SHOWN
+    If the item was TO_BE_HIDDEN and not TO_BE_DELETED, it should be to set to SHOWING
+
+  DuiLayout::updateItemState()
+    If there's no animator or item is not TO_BE_SHOWN and is not SHOWING
+      If the item was TO_BE_SHOWN, the item is moved into position.  State changed to SHOWING
+      If the item was TO_BE_HIDDEN, move offscreen.  Remove TO_BE_HIDDEN and SHOWING states
+      Call animationDone()
+    If there's an animator:
+      If the item was TO_BE_HIDDEN, call DuiLayoutAnimation::doItemHiddenAnimation(). Readd TO_BE_HIDDEN and remove TO_BE_SHOWN flags.
+      If the item was TO_BE_SHOWN, call DuiLayoutAnimation::doItemShownAnimation(). Clear TO_BE_SHOWN flag
+      Call startAnimation()
+
+  DuiBasicLayoutAnimation::doItemHiddenAnimation()
+    setTargetGeometry to current geometry resized to the minimum size.  
+    At the end of the animation, it should be moved offscreen
+
+  DuiBasicLayoutAnimation::doItemShownAnimation()
+    Set current geometry to target geometry resized to the minimum size
+    Call setTargetGeometry with target geometry
+    
+  DuiBasicLayoutAnimation::animationTick
+    Change geometry of item 
+    If the item was TO_BE_HIDDEN, readd TO_BE_HIDDEN and remove TO_BE_SHOWN flags.
+    At end, call animationDone()
+
+  DuiItemState::animationDone()
+    If the item was TO_BE_HIDDEN, remove TO_BE_HIDDEN and SHOWING flags
+    
+  DuiLayout::animationFinished()
+    If the item was TO_BE_DELETED, call DuiLayout::removeItem()
+
+  DuiLayout::removeItem()
+    Remove item immediately
+    If item was marked as TO_BE_DELETED, delete
+

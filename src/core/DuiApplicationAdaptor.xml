@@ -1,0 +1,18 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.nokia.widgetsgallery">
+        <method name="launch">
+            <arg name="query" type="s" direction="in"/>
+            <arg name="" type="s" direction="out"/>
+        </method>
+        <method name="close">
+            <arg name="" type="s" direction="out"/>
+        </method>
+        <method name="exit">
+        </method>
+        <method name="showPage">
+            <arg name="pageName" type="s" direction="in"/>
+            <arg name="" type="b" direction="out"/>
+        </method>
+    </interface>
+</node>

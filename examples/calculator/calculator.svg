@@ -1,0 +1,244 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="744.09448819"
+   height="1052.3622047"
+   id="svg5578"
+   sodipodi:version="0.32"
+   inkscape:version="0.46"
+   sodipodi:docname="drawing.svg"
+   inkscape:output_extension="org.inkscape.output.svg.inkscape">
+  <defs
+     id="defs5580">
+    <linearGradient
+       id="linearGradient3886">
+      <stop
+         id="stop4586"
+         offset="0"
+         style="stop-color:#001f1c;stop-opacity:0.49803922;" />
+      <stop
+         style="stop-color:#001f1c;stop-opacity:0.24705882;"
+         offset="0.75"
+         id="stop4588" />
+      <stop
+         style="stop-color:#001f1c;stop-opacity:0;"
+         offset="1"
+         id="stop3890" />
+    </linearGradient>
+    <pattern
+       x="-1.064"
+       y="0.947"
+       width="72"
+       height="72"
+       patternUnits="userSpaceOnUse"
+       id="_x36__lpi_60_x25_"
+       viewBox="24 -72 72 72"
+       overflow="visible">
+      <g
+         id="g158">
+        <polygon
+           fill="none"
+           points="24,0 24,-72 96,-72 96,0   "
+           id="polygon160" />
+        <line
+           fill="none"
+           stroke="#231F20"
+           stroke-width="7.2"
+           x1="23.75"
+           y1="-6"
+           x2="96.25"
+           y2="-6"
+           id="line162" />
+        <line
+           fill="none"
+           stroke="#231F20"
+           stroke-width="7.2"
+           x1="23.75"
+           y1="-30"
+           x2="96.25"
+           y2="-30"
+           id="line164" />
+        <line
+           fill="none"
+           stroke="#231F20"
+           stroke-width="7.2"
+           x1="23.75"
+           y1="-54"
+           x2="96.25"
+           y2="-54"
+           id="line166" />
+        <line
+           fill="none"
+           stroke="#231F20"
+           stroke-width="7.2"
+           x1="0"
+           y1="-54"
+           x2="16.5"
+           y2="-54"
+           id="line168" />
+        <line
+           fill="none"
+           stroke="#231F20"
+           stroke-width="7.2"
+           x1="23.75"
+           y1="-18"
+           x2="96.25"
+           y2="-18"
+           id="line170" />
+        <line
+           fill="none"
+           stroke="#231F20"
+           stroke-width="7.2"
+           x1="23.75"
+           y1="-42"
+           x2="96.25"
+           y2="-42"
+           id="line172" />
+        <line
+           fill="none"
+           stroke="#231F20"
+           stroke-width="7.2"
+           x1="23.75"
+           y1="-66"
+           x2="96.25"
+           y2="-66"
+           id="line174" />
+        <line
+           fill="none"
+           stroke="#231F20"
+           stroke-width="7.2"
+           x1="0"
+           y1="-66"
+           x2="16.5"
+           y2="-66"
+           id="line176" />
+      </g>
+    </pattern>
+    <pattern
+       id="SVGID_1_"
+       xlink:href="#_x36__lpi_60_x25_"
+       patternTransform="matrix(1.3498 -1.0565 1.3498 1.0565 4191.377 -6384.3438)" />
+    <inkscape:perspective
+       sodipodi:type="inkscape:persp3d"
+       inkscape:vp_x="0 : 526.18109 : 1"
+       inkscape:vp_y="0 : 1000 : 0"
+       inkscape:vp_z="744.09448 : 526.18109 : 1"
+       inkscape:persp3d-origin="372.04724 : 350.78739 : 1"
+       id="perspective5586" />
+  </defs>
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     gridtolerance="10000"
+     guidetolerance="10"
+     objecttolerance="10"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.64"
+     inkscape:cx="476.23778"
+     inkscape:cy="628.41532"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1680"
+     inkscape:window-height="943"
+     inkscape:window-x="-4"
+     inkscape:window-y="-2" />
+  <metadata
+     id="metadata5583">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       transform="matrix(0.126179,0,0,0.1849786,14.05211,9.536355)"
+       id="Background">
+      <rect
+         x="-1.064"
+         y="0.94700003"
+         width="5723.6821"
+         height="5579.498"
+         id="rect412"
+         style="fill:#333333" />
+      <pattern
+         id="pattern5602"
+         xlink:href="#_x36__lpi_60_x25_"
+         patternTransform="matrix(1.3498 -1.0565 1.3498 1.0565 4191.377 -6384.3438)" />
+      <rect
+         x="-1.064"
+         y="0.94700003"
+         width="5723.6821"
+         height="5579.498"
+         id="rect415"
+         style="fill:url(#SVGID_1_)" />
+    </g>
+    <path
+       style="fill:#ffffff;fill-opacity:1"
+       d="M 437.49129,495.80356 L 376.10909,510.39082 L 416.72709,554.12471 L 423.97509,533.76835 C 449.97439,553.31525 460.27839,588.28301 446.85569,619.16821 C 430.93669,655.79741 387.64089,672.87961 350.21329,657.30021 C 312.78569,641.72071 295.32889,599.34911 311.24789,562.71991 C 319.16679,544.49886 332.51429,531.62411 351.19329,524.18658 L 344.57729,508.32286 C 319.59079,517.78618 301.87009,534.61715 291.85209,558.40011 C 272.44349,604.47661 295.92539,656.88761 344.26409,675.38801 C 392.60289,693.88821 447.58499,671.51001 466.99369,625.43341 C 484.16839,584.66011 467.76009,538.92771 430.26059,516.12094 L 437.49129,495.80356 z M 342.92469,541.52184 L 339.38189,543.71801 L 379.55339,592.36821 L 379.94769,592.12301 L 380.12739,592.61901 C 380.37759,593.29851 381.13039,593.61041 381.81479,593.31581 L 409.33989,581.46541 C 410.02419,581.17091 410.37869,580.38921 410.12849,579.70961 L 408.62089,575.61821 C 408.37069,574.93871 407.61789,574.62701 406.93349,574.92141 L 380.05779,586.49311 L 342.92469,541.52184 z"
+       id="Icon-History"
+       inkscape:label="#path5625" />
+    <rect
+       style="opacity:1;fill:#f1a408;fill-opacity:1;stroke:#ffffff;stroke-width:3.05699992;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.31531528"
+       id="equals-button"
+       width="166.43947"
+       height="120.72518"
+       x="195.71777"
+       y="293.20496"
+       ry="7.9477906" />
+    <rect
+       style="opacity:1;fill:#181818;fill-opacity:1;stroke:#ffffff;stroke-width:2.80133343;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.49803922"
+       id="calc-button"
+       width="158.82709"
+       height="108.8271"
+       x="198.61322"
+       y="113.48434"
+       ry="10.913481" />
+    <rect
+       style="opacity:1;fill:#000000;fill-opacity:1;stroke:#ffffff;stroke-width:1;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:0.31531528"
+       id="calc-panel"
+       width="481.42856"
+       height="287.14285"
+       x="147.4375"
+       y="713.29077"
+       ry="0.91348064" />
+    <rect
+       style="opacity:1;fill:#241f1c;fill-opacity:0.19607843;stroke:#ffffff;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="calc-button-pressed"
+       width="173.4375"
+       height="104.6875"
+       x="437.5"
+       y="113.29968"
+       ry="15.625" />
+    <rect
+       style="opacity:1;fill:#ff770b;fill-opacity:1;stroke:#ffffff;stroke-width:4;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
+       id="equals-button-pressed"
+       width="178.125"
+       height="123.4375"
+       x="439.0625"
+       y="286.73718"
+       ry="15.625" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="new" />
+</svg>

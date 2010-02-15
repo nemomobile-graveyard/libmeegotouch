@@ -1,0 +1,25 @@
+/* TestWidgetStyle : DuiWidgetStyle */
+TestWidgetStyle {
+    color: #ff0000;
+}
+
+TestWidgetStyle:green {
+    color : #00ff00;
+}
+
+TestWidgetStyle:blue {
+    color : #0000ff;
+}
+
+TestWidgetStyle:yellow {
+    color : #ffff00;
+}
+
+TestWidgetStyle:cyan {
+    color : #00ffff;
+}
+
+TestWidgetStyle:purple {
+    color : #ff00ff;
+}
+

@@ -1,0 +1,17 @@
+/**
+\page layout-twocolumns Layout example with equal column sizes
+
+Source code for a simple example to demonstrate how to get equal column sizes with DuiLinearLayoutPolicy
+or DuiGridLayoutPolicy.  The key part is that we set the preferred size of items to be equal.
+
+\image html twocolumns.png
+
+\include examples/layout/two_columns/twocolumns.cpp
+
+Styled with the following twocolumns.css file:
+\include examples/layout/two_columns/twocolumns.css
+
+And compiled with the following twocolumns.pro file:
+\include examples/layout/two_columns/twocolumns.pro
+
+*/

@@ -1,0 +1,481 @@
+#!/bin/sh
+#
+# Configures the libdui build
+#
+# Copyright (C) 2010 Nokia Corporation.
+#
+# This file is provided AS IS with NO WARRANTY OF ANY KIND, INCLUDING THE
+# WARRANTY OF DESIGN, MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE.
+
+#-------------------------------------------------------------------------------
+# script initialization
+#-------------------------------------------------------------------------------
+
+# the name of this script
+relconf=`basename $0`
+# the directory of this script is the "source tree"
+relpath=`dirname $0`
+relpath=`(cd "$relpath"; /bin/pwd)`
+# the current directory is the "build tree" or "object tree"
+outpath=`/bin/pwd`
+
+#-------------------------------------------------------------------------------
+# operating system detection
+#-------------------------------------------------------------------------------
+
+# need that throughout the script
+UNAME_MACHINE=`(uname -m) 2>/dev/null` || UNAME_MACHINE=unknown
+UNAME_RELEASE=`(uname -r) 2>/dev/null` || UNAME_RELEASE=unknown
+UNAME_SYSTEM=`(uname -s) 2>/dev/null`  || UNAME_SYSTEM=unknown
+UNAME_VERSION=`(uname -v) 2>/dev/null` || UNAME_VERSION=unknown
+
+#-----------------------------------------------------------------------------
+# Dui version detection
+#-----------------------------------------------------------------------------
+DUI_MAJOR_VERSION=`grep -m1 DUI_MAJOR_VERSION src/dui_defines.prf |cut -f2 -d'='|sed 's/ //g'`
+DUI_MINOR_VERSION=`grep -m1 DUI_MINOR_VERSION src/dui_defines.prf |cut -f2 -d'='|sed 's/ //g'`
+DUI_PATCH_VERSION=`grep -m1 DUI_PATCH_VERSION src/dui_defines.prf |cut -f2 -d'='|sed 's/ //g'`
+DUI_VERSION=$DUI_MAJOR_VERSION.$DUI_MINOR_VERSION.$DUI_PATCH_VERSION
+
+if [ -z "$DUI_MAJOR_VERSION" ]; then
+   echo "Cannot process version from src/dui_defines.prf: $DUI_VERSION"
+   echo "Cannot proceed."
+   exit 1
+fi
+
+#-------------------------------------------------------------------------------
+# initalize variables
+#-------------------------------------------------------------------------------
+
+# initalize internal variables
+CFG_DEBUG=yes
+CFG_RELEASE=no
+CFG_OPENGL=yes
+CFG_TESTABLE=no
+CFG_COVERAGE=no
+CFG_TIMESTAMPS=no
+CFG_DEV=no
+
+DUI_DEFAULT_BUILD_PARTS="libs demos"
+CFG_BUILD_PARTS=""
+CFG_NOBUILD_PARTS=""
+
+HAVE_ICU=no
+HAVE_CONTEXTSUBSCRIBER=no
+HAVE_GCONF=no
+HAVE_GSTREAMER=no
+HAVE_DBUS=no
+   
+# initalize variables used for installation
+DUI_INSTALL_PREFIX=/usr/local
+
+#-------------------------------------------------------------------------------
+# parse command line arguments
+#-------------------------------------------------------------------------------
+
+# parse the arguments, setting things to "yes" or "no"
+while [ "$#" -gt 0 ]; do
+    CURRENT_OPT="$1"
+    UNKNOWN_ARG=no
+    case "$1" in
+    #Autoconf style options
+    --enable-*)
+        VAR=`echo $1 | sed "s,^--enable-\(.*\),\1,"`
+        VAL=yes
+        ;;
+    --disable-*)
+        VAR=`echo $1 | sed "s,^--disable-\(.*\),\1,"`
+        VAL=no
+        ;;
+    --*=*)
+        VAR=`echo $1 | sed "s,^--\(.*\)=.*,\1,"`
+        VAL=`echo $1 | sed "s,^--.*=\(.*\),\1,"`
+        ;;
+    --no-*)
+        VAR=`echo $1 | sed "s,^--no-\(.*\),\1,"`
+        VAL=no
+        ;;
+    --*)
+        VAR=`echo $1 | sed "s,^--\(.*\),\1,"`
+        VAL=yes
+        ;;
+    #Qt style no options
+    -no-*)
+        VAR=`echo $1 | sed "s,^-no-\(.*\),\1,"`
+        VAL=no
+        ;;
+    #Qt style yes options
+        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev)
+        VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
+        VAL=yes
+        ;;
+    #Qt style options that pass an argument
+    -prefix|-make|-nomake)
+        VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
+        shift
+        VAL="$1"
+        ;;
+    #Qt style complex options in one command
+    -enable-*|-disable-*)
+        VAR=`echo $1 | sed "s,^-\([^-]*\)-.*,\1,"`
+        VAL=`echo $1 | sed "s,^-[^-]*-\(.*\),\1,"`
+        ;;
+    #Qt Builtin/System style options
+    -no-*)
+        VAR=`echo $1 | sed "s,^-[^-]*-\(.*\),\1,"`
+        VAL=`echo $1 | sed "s,^-\([^-]*\)-.*,\1,"`
+        ;;
+    #Options that cannot be generalized
+    -opengl)
+        VAR=opengl
+        # this option may or may not be followed by an argument
+        if [ -z "$2" ] || echo "$2" | grep '^-' >/dev/null 2>&1; then
+            VAL=yes
+        else
+            shift;
+            VAL=$1
+        fi
+	;;
+    -*)
+        VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
+        VAL="unknown"
+        ;;
+    *)
+        UNKNOWN_ARG=yes
+        ;;
+    esac
+    if [ "$UNKNOWN_ARG" = "yes" ]; then
+        echo "$1: unknown argument"
+        OPT_HELP=yes
+        ERROR=yes
+        shift
+        continue
+     fi
+    shift
+
+    UNKNOWN_OPT=no
+    case "$VAR" in
+    prefix)
+        DUI_INSTALL_PREFIX="$VAL"
+        ;;
+    nomake)
+	CFG_NOBUILD_PARTS="$CFG_NOBUILD_PARTS $VAL"
+        ;;
+    make)
+	CFG_BUILD_PARTS="$CFG_BUILD_PARTS $VAL"
+        ;;
+    opengl)
+        if  [ "$VAL" = "auto" ] || [ "$VAL" = "desktop" ] ||
+            [ "$VAL" = "yes" ] || [ "$VAL" = "no" ] ||
+            [ "$VAL" = "es1cl" ] || [ "$VAL" = "es1" ] || [ "$VAL" = "es2" ]; then
+            CFG_OPENGL="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
+        ;;
+    release)
+        CFG_RELEASE="$VAL"
+	;;
+    debug)
+        CFG_DEBUG="$VAL"
+        ;;
+    testable)
+        CFG_TESTABLE="$VAL"
+        ;;
+    coverage)
+        CFG_COVERAGE="$VAL"
+        ;;
+    timestamps)
+        CFG_TIMESTAMPS="$VAL"
+        ;;
+    dev)
+        CFG_DEV="yes"
+        ;;
+    h|help)
+        if [ "$VAL" = "yes" ]; then
+            OPT_HELP="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
+        ;;
+    v|verbose)
+        if [ "$VAL" = "yes" ]; then
+            if [ "$OPT_VERBOSE" = "$VAL" ]; then            # takes two verboses to turn on qmake debugs
+                QMAKE_SWITCHES="$QMAKE_SWITCHES -d"
+            else
+                OPT_VERBOSE=yes
+            fi
+        elif [ "$VAL" = "no" ]; then
+            if [ "$OPT_VERBOSE" = "$VAL" ] && echo "$QMAKE_SWITCHES" | grep ' -d' >/dev/null 2>&1; then
+                QMAKE_SWITCHES=`echo $QMAKE_SWITCHES | sed "s, -d,,"`
+            else
+                OPT_VERBOSE=no
+            fi
+        else
+            UNKNOWN_OPT=yes
+        fi
+        ;;
+    silent)
+        CFG_SILENT="$VAL"
+        ;;
+    esac
+    if [ "$UNKNOWN_OPT" = "yes" ]; then
+        echo "${CURRENT_OPT}: invalid command-line switch"
+        OPT_HELP=yes
+        ERROR=yes
+    fi
+done
+
+if [ "$CFG_SILENT" = "yes" ]; then
+    QMAKE_CONFIG="$QMAKE_CONFIG silent"
+fi
+
+#-------------------------------------------------------------------------------
+# tests
+#-------------------------------------------------------------------------------
+
+#setup the build parts
+CFG_BUILD_PARTS="$CFG_BUILD_PARTS $DUI_DEFAULT_BUILD_PARTS"
+
+for nobuild in $CFG_NOBUILD_PARTS; do
+    CFG_BUILD_PARTS=`echo "$CFG_BUILD_PARTS" | sed "s, $nobuild,,g"`
+done
+
+if echo $CFG_BUILD_PARTS | grep -v libs >/dev/null 2>&1; then
+    echo
+    echo "WARNING: libs is a required part of the build."
+    echo
+    CFG_BUILD_PARTS="$CFG_BUILD_PARTS libs"
+fi
+
+if [ "$CFG_DEV" = "yes" ]; then
+    CFG_BUILD_PARTS="$CFG_BUILD_PARTS tests benchmarks plainqt"
+fi
+
+# Test for ICU
+which icu-config > /dev/null
+if [ $? -eq 0 ]; then
+    icu-config --exists
+    if [ $? -eq 0 ]; then
+        HAVE_ICU=yes
+    fi
+fi
+
+# Test for pkg-config enabled dependencies
+which pkg-config > /dev/null
+if [ $? -eq 0 ]; then
+
+    pkg-config --exists contextsubscriber-1.0
+    if [ $? -eq 0 ]; then
+        HAVE_CONTEXTSUBSCRIBER=yes
+    fi
+
+    pkg-config --exists gconf-2.0
+    if [ $? -eq 0 ]; then
+	HAVE_GCONF=yes
+    fi
+
+    pkg-config --exists gstreamer-0.10
+    if [ $? -eq 0 ]; then
+	HAVE_GSTREAMER=yes
+    fi
+
+    pkg-config --exists QtDBus
+    if [ $? -eq 0 ]; then
+	HAVE_DBUS=yes
+    fi    
+
+fi
+
+
+
+#-------------------------------------------------------------------------------
+# help - interactive parts of the script _after_ this section please
+#-------------------------------------------------------------------------------
+
+# next, emit a usage message if something failed.
+if [ "$OPT_HELP" = "yes" ]; then
+    [ "x$ERROR" = "xyes" ] && echo
+    cat <<EOF
+Usage:  $relconf [-prefix <dir>] [-release] [-debug] [-make <part>]
+        [-no-make <part>]
+
+Installation options:
+
+    -prefix <dir> ...... This will install everything relative to <dir>
+                         (default $DUI_INSTALL_PREFIX)
+
+Configure options:
+
+ The defaults (*) are usually acceptable. A plus (+) denotes a default value
+ that needs to be evaluated. If the evaluation succeeds, the feature is
+ included. Here is a short explanation of each option:
+
+    -release ........... Compile and link libdui in release mode
+ *  -debug ............. Compile and link libdui with debugging turned on
+
+    -testable .......... Enable the testability plugin interface in libdui
+    -timestamps ........ Enable time debug measurements in the code
+    -coverage .......... Enable code coverage calculation
+
+Additional options:
+
+    -make <part> ....... Add part to the list of parts to be built at make time
+                         (*libs *demos plainqt tests benchmarks)
+    -nomake <part> ..... Exclude part from the list of parts to be built
+
+    -dev ............... Compile and link with default developer options
+EOF
+
+exit 0
+
+fi
+
+#-------------------------------------------------------------------------------
+# save configuration into duiconfig.pri
+#-------------------------------------------------------------------------------
+
+DUICONFIG="$outpath/mkspecs/duiconfig.pri"
+[ -f "$DUICONFIG.tmp" ] && rm -f "$DUICONFIG.tmp"
+
+if [ "$CFG_DEBUG" = "yes" ]; then
+    DUICONFIG_CONFIG="$DUICONFIG_CONFIG debug"
+fi
+
+if [ "$CFG_RELEASE" = "yes" ]; then
+    DUICONFIG_CONFIG="$DUICONFIG_CONFIG release"
+fi
+
+
+if [ "$CFG_TESTABLE" = "yes" ]; then
+    DUICONFIG_FEATURES="$DUICONFIG_FEATURES testable"
+fi
+
+if [ "$CFG_TIMESTAMPS" = "yes" ]; then
+    DUICONFIG_FEATURES="$DUICONFIG_FEATURES timestamps"
+fi
+
+if [ "$CFG_COVERAGE" = "yes" ]; then
+    DUICONFIG_FEATURES="$DUICONFIG_FEATURES coverage"
+fi
+
+
+if [ "$HAVE_ICU" = "yes" ]; then
+    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_ICU"
+fi
+
+if [ "$HAVE_CONTEXTSUBSCRIBER" = "yes" ]; then
+    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_CONTEXTSUBSCRIBER"
+fi
+
+if [ "$HAVE_GCONF" = "yes" ]; then
+    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_GCONF"
+fi
+
+if [ "$HAVE_GSTREAMER" = "yes" ]; then
+    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_GSTREAMER"
+fi
+
+if [ "$HAVE_DBUS" = "yes" ]; then
+    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_DBUS"
+fi
+
+
+cat >>"$DUICONFIG.tmp" <<EOF
+# Autogenerated by configure script
+
+#build configuration
+CONFIG += $DUICONFIG_CONFIG
+
+DUI_BUILD_PARTS += $CFG_BUILD_PARTS
+
+DUI_BUILD_FEATURES += $DUICONFIG_FEATURES
+
+#versioning
+DUI_VERSION = $DUI_VERSION
+
+#paths
+DUI_INSTALL_PREFIX = $DUI_INSTALL_PREFIX
+
+#dependencies
+DEFINES += $DUICONFIG_DEPS
+
+EOF
+
+# replace duiconfig.pri if it differs from the newly created temp file
+if cmp -s "$DUICONFIG.tmp" "$DUICONFIG"; then
+    rm -f "$DUICONFIG.tmp"
+else
+    mv -f "$DUICONFIG.tmp" "$DUICONFIG"
+fi
+
+#-------------------------------------------------------------------------------
+# build makefiles based on the configuration
+#-------------------------------------------------------------------------------
+
+#echo "Finding project files. Please wait..."
+#"qmake" -r "${relpath}/projects.pro"
+#if [ -f "${relpath}/projects.pro" ]; then
+#    mkfile="${outpath}/Makefile"
+#    [ -f "$mkfile" ] && chmod +w "$mkfile"
+#fi
+
+if [ -z "$QTDIR" ]; then
+    which qmake > /dev/null
+    if [ $? -eq 0 ]; then
+        QMAKE_BIN=`which qmake`
+    else
+        echo "qmake was not found in your path\n"
+    fi
+elif [ -f "$QTDIR/bin/qmake" ]; then
+    QMAKE_BIN="$QTDIR/bin/qmake"
+else
+    echo "QTDIR variable was set but could not find $QTDIR/bin/qmake\n"
+fi
+
+if [ -z "$QMAKE_BIN" ]; then
+    echo "If your Qt is in a nonstandard location, try:"
+    echo "QTDIR=<path to your Qt directory> ./$relconf"
+    exit 1
+fi
+
+#Run qmake
+$QMAKE_BIN $QMAKE_CONFIG $QMAKE_SWITCHES
+
+#-------------------------------------------------------------------------------
+# give feedback on configuration
+#-------------------------------------------------------------------------------
+
+echo "\n\nOptional build dependencies found:"
+
+echo "ICU ...................... $HAVE_ICU"
+echo "Context Subscriber 1.0 ... $HAVE_CONTEXTSUBSCRIBER"
+echo "GConf 2.0 ................ $HAVE_GCONF"
+echo "GStreamer 0.10 ........... $HAVE_GSTREAMER"
+echo "DBus (incl. QtDBus) ...... $HAVE_DBUS"
+
+
+if [ "$CFG_DEV" = "yes" ]; then
+    echo "\n\nEnabling DirectUI developer's build\n"
+else
+  echo "\n"
+fi
+
+echo "DirectUI framework build configuration:"
+echo "Version ............. $DUI_VERSION"
+echo "Build ...............$CFG_BUILD_PARTS"
+echo "Extra features ......$DUICONFIG_FEATURES"
+echo "Release ............. $CFG_RELEASE"
+echo "Debug ............... $CFG_DEBUG"
+
+echo
+echo libdui is now configured for building. Just run \'make\'.
+if [ "$relpath" = "$DUI_INSTALL_PREFIX" ]; then
+    echo Once everything is built, libdui is installed.
+    echo You should not run \'make install\'.
+else
+    echo Once everything is built, you can run \'make install\'.
+    echo libdui will be installed into $DUI_INSTALL_PREFIX
+fi
+
+echo "\n"

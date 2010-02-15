@@ -1,0 +1,16 @@
+/**
+\page layout-duifreestylelayoutpolicy DuiFreestyleLayoutPolicy example
+
+Source code for a simple example of DuiFreestyleLayoutPolicy.
+
+\image html duifreestylelayoutpolicy.png
+
+\include examples/layout/duifreestylelayoutpolicy/duifreestylelayoutpolicy.cpp
+
+Styled with the following duifreestylelayoutpolicy.css file:
+\include examples/layout/duifreestylelayoutpolicy/duifreestylelayoutpolicy.css
+
+And compiled with the following duifreestylelayoutpolicy.pro file:
+\include examples/layout/duifreestylelayoutpolicy/duifreestylelayoutpolicy.pro
+
+*/

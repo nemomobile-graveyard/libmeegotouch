@@ -1,0 +1,629 @@
+/***************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (directui@nokia.com)
+**
+** This file is part of libdui.
+**
+** If you have questions regarding the use of this file, please contact
+** Nokia at directui@nokia.com.
+**
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation
+** and appearing in the file LICENSE.LGPL included in the packaging
+** of this file.
+**
+****************************************************************************/
+
+#include "ft_locales.h"
+
+void Ft_Locales::initTestCase()
+{
+    static int dummyArgc = 1;
+    static char *dummyArgv[1] = { (char *) "ft_locales" };
+    qap = new DuiApplication(dummyArgc, dummyArgv, "test");
+    QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
+}
+
+void Ft_Locales::cleanupTestCase()
+{
+    delete qap;
+}
+
+void Ft_Locales::init()
+{
+}
+
+void Ft_Locales::cleanup()
+{
+}
+
+void Ft_Locales::testDuiLocaleConstructor()
+{
+    DuiLocale *z = 0;
+    z = new DuiLocale();
+    QVERIFY2(z->isValid(), "new DuiLocale()");
+}
+
+void Ft_Locales::testCreateSystemLocale_data()
+{
+    QTest::addColumn<QString>("conf");
+    QTest::addColumn<QString>("env");
+    QTest::addColumn<QString>("locale");
+
+    // Test the ultimate fallback to POSIX
+    QTest::newRow("posix") << QString("") << QString("") << QString("en_US_POSIX");
+    // Test the fallback to the LANG environment variable. If the string
+    // found via gconf is empty, the value of LANG is used as a fallback
+    QTest::newRow("fi") << QString("") << QString("fi") << QString("fi");
+    QTest::newRow("fi") << QString("") << QString("fi.UTF-8") << QString("fi");
+    QTest::newRow("fi") << QString("") << QString("fi_FI") << QString("fi_FI");
+    QTest::newRow("fi") << QString("") << QString("fi_FI.UTF-8") << QString("fi_FI");
+    QTest::newRow("snd") << QString("") << QString("snd@Arab") << QString("snd_Arab");
+    QTest::newRow("snd") << QString("") << QString("snd_AF@Arab") << QString("snd_Arab_AF");
+    QTest::newRow("snd") << QString("") << QString("snd_AF.UTF-8@Arab") << QString("snd_Arab_AF");
+    // with bad data
+    QTest::newRow("snd") << QString("") << QString("+2eio") << QString("en_US_POSIX");
+    // Test values found via gconf and check that LANG is ignored:
+    QTest::newRow("fi") << QString("fi") << QString("en") << QString("fi");
+}
+
+bool confIsDown()
+{
+    DuiGConfItem languageItem("/Dui/i18n/Language");
+    QString originalValue = languageItem.value().toString();
+    int skipConf = 0;
+
+    if (originalValue.isEmpty()) {
+        languageItem.set("xx");
+        //GConf is not running here, so skip it
+        if (languageItem.value().toString() != "xx") {
+            skipConf = 1;
+        } else {
+            languageItem.set(originalValue);
+        }
+    }
+
+    return skipConf == 1;
+}
+
+void Ft_Locales::testSettingsChanged()
+{
+    if (confIsDown()) {
+        QSKIP("SettingsChanged is skipped", SkipSingle);
+        return;
+    }
+    DuiGConfItem languageItem("/Dui/i18n/Language");
+    QString originalValue = languageItem.value().toString();
+
+    // Test within DuiLocale
+    DuiLocale z;
+    QSignalSpy spy(&z, SIGNAL(settingsChanged()));
+    QCOMPARE(spy.count(), 0);
+
+    // Changes in languageItem should not trigger the signal
+    // settingsChanged() as long as the locale settings are
+    // disconnected:
+    languageItem.set(originalValue + "something");
+    QTest::qWait(100);
+    QCOMPARE(spy.count(), 0);
+
+    // After connecting, changes in languageItem should trigger the
+    // signal settingsChanged()
+    z.connectSettings();
+    languageItem.set("fr");
+    for (int i = 0; i < 100; ++i) {
+        QTest::qWait(50);
+        if (spy.count() != 0)
+            break;
+    }
+    QCOMPARE(spy.count(), 1);
+
+    languageItem.set("fi");
+    for (int i = 0; i < 100; ++i) {
+        QTest::qWait(50);
+        if (spy.count() != 1)
+            break;
+    }
+    QCOMPARE(spy.count(), 2);
+
+    // After disconnecting, the signal should not be triggered anymore:
+    z.disconnectSettings();
+    languageItem.set("en");
+    QTest::qWait(100);
+    QCOMPARE(spy.count(), 2);
+
+    // Test the signal localeSettingsChanged in DuiApplication
+    QSignalSpy spyapp(qap, SIGNAL(localeSettingsChanged()));
+    QCOMPARE(spyapp.count(), 0);
+
+    languageItem.set(originalValue + "something else");
+    for (int i = 0; i < 100; ++i) {
+        QTest::qWait(50);
+        if (spyapp.count() != 0)
+            break;
+    }
+    QCOMPARE(spyapp.count(), 1);
+
+    languageItem.set("fi");
+    for (int i = 0; i < 100; ++i) {
+        QTest::qWait(50);
+        if (spyapp.count() != 1)
+            break;
+    }
+    QCOMPARE(spyapp.count(), 2);
+
+    languageItem.set(originalValue);
+}
+
+void Ft_Locales::testCreateSystemLocale()
+{
+    DuiGConfItem languageItem("/Dui/i18n/Language");
+    QString originalValue = languageItem.value().toString();
+
+    QFETCH(QString, conf);
+    QFETCH(QString, env);
+    QFETCH(QString, locale);
+
+    setenv("LANG", env.toAscii().data(), 1);
+
+    languageItem.set(conf);
+    DuiLocale *z = DuiLocale::createSystemDuiLocale();
+
+    if (!originalValue.isEmpty()) {
+        languageItem.set(originalValue);
+    }
+
+    if (confIsDown() && ! conf.isEmpty()) {
+        QSKIP("CreateSystemLocale is skipped", SkipSingle);
+    } else {
+        QCOMPARE(z->name(), locale);
+    }
+
+    delete z;
+}
+
+void Ft_Locales::testDuiLocaleLanguage_data()
+{
+    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("language");
+
+    QTest::newRow("fi") << QString("fi_FI") << QString("fi");
+    QTest::newRow("snd") << QString("snd_AF_Arab") << QString("snd");
+    QTest::newRow("en") << QString("en") << QString("en");
+}
+
+void Ft_Locales::testDuiLocaleLanguage()
+{
+    QFETCH(QString, locale_name);
+    QFETCH(QString, language);
+
+    DuiLocale *z = new DuiLocale(locale_name);
+    QCOMPARE(z->language(), language);
+    delete z;
+}
+
+void Ft_Locales::testDuiLocaleCountry_data()
+{
+    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("country");
+
+    QTest::newRow("fi") << QString("fi_FI") << QString("FI");
+    QTest::newRow("snd") << QString("snd_Arab_AF") << QString("AF");
+    QTest::newRow("snd") << QString("snd_Arab") << QString("");
+    // this isn't a valid country, or is it?:
+    // should we refuse to accept something like this?
+    QTest::newRow("snd") << QString("snd_Arab_Egypt") << QString("Egypt");
+    QTest::newRow("en") << QString("en") << QString("");
+}
+
+void Ft_Locales::testDuiLocaleCountry()
+{
+    QFETCH(QString, locale_name);
+    QFETCH(QString, country);
+
+    DuiLocale *z = new DuiLocale(locale_name);
+
+    QCOMPARE(z->country(), country);
+    delete z;
+}
+
+void Ft_Locales::testDuiLocaleScript_data()
+{
+    QTest::addColumn<QString>("locale");
+    QTest::addColumn<QString>("script");
+
+    QTest::newRow("fi") << QString("fi_FI") << QString("Latn");
+    QTest::newRow("snd") << QString("snd_Arab_AF") << QString("Arab");
+    QTest::newRow("snd") << QString("snd_Deva") << QString("Deva");
+    QTest::newRow("en") << QString("en") << QString("Latn");
+    QTest::newRow("en") << QString("en_Arab") << QString("Arab");
+}
+
+void Ft_Locales::testDuiLocaleScript()
+{
+    QFETCH(QString, locale);
+    QFETCH(QString, script);
+
+    DuiLocale *z = new DuiLocale(locale);
+    QCOMPARE(z->script(), script);
+    delete z;
+}
+
+void Ft_Locales::testDuiLocaleVariant_data()
+{
+    QTest::addColumn<QString>("locale");
+    QTest::addColumn<QString>("variant");
+
+    QTest::newRow("fi") << QString("fi_FI") << QString("");
+    QTest::newRow("snd") << QString("snd_AF_XXX") << QString("XXX");
+    QTest::newRow("snd") << QString("snd_Arab_AF_XXX") << QString("XXX");
+    QTest::newRow("en") << QString("en") << QString("");
+}
+
+void Ft_Locales::testDuiLocaleVariant()
+{
+    QFETCH(QString, locale);
+    QFETCH(QString, variant);
+
+    DuiLocale *z = new DuiLocale(locale);
+    QCOMPARE(z->variant(), variant);
+    delete z;
+}
+
+void Ft_Locales::testDuiLocaleTextDirection_data()
+{
+    QTest::addColumn<QString>("locale");
+    QTest::addColumn<int>("direction");
+
+    QTest::newRow("fi") << QString("fi") << (int) Qt::LeftToRight;
+    QTest::newRow("ar") << QString("ar") << (int) Qt::RightToLeft;
+    QTest::newRow("he") << QString("he") << (int) Qt::RightToLeft;
+    QTest::newRow("ur") << QString("ur") << (int) Qt::RightToLeft;
+    QTest::newRow("fa") << QString("fa") << (int) Qt::RightToLeft;
+    QTest::newRow("am") << QString("am") << (int) Qt::RightToLeft;
+    QTest::newRow("ps") << QString("ps") << (int) Qt::RightToLeft;
+    QTest::newRow("snd") << QString("snd_Arab_AF") << (int) Qt::RightToLeft;
+    QTest::newRow("snd") << QString("snd_Arab_AF_XXX") << (int) Qt::RightToLeft;
+    QTest::newRow("snd") << QString("snd_Deva_AF_XXX") << (int) Qt::LeftToRight;
+}
+
+void Ft_Locales::testDuiLocaleTextDirection()
+{
+    QFETCH(QString, locale);
+    QFETCH(int, direction);
+
+    DuiLocale *z = new DuiLocale(locale);
+    QCOMPARE((int)z->textDirection(), direction);
+    delete z;
+}
+
+void Ft_Locales::testDuiLocaleConstructorWithParams_data()
+{
+    QTest::addColumn<QString>("language");
+    QTest::addColumn<QString>("country");
+    QTest::addColumn<QString>("name");
+
+    QTest::newRow("fi_FI") << QString("fi") << QString("FI") << QString("fi_FI");
+    QTest::newRow("ar_SA") << QString("ar") << QString("SA") << QString("ar_SA");
+    QTest::newRow("xx_YY") << QString("xx") << QString("YY") << QString("xx_YY");
+}
+
+void Ft_Locales::testDuiLocaleConstructorWithParams()
+{
+    QFETCH(QString, language);
+    QFETCH(QString, country);
+    QFETCH(QString, name);
+
+    DuiLocale *z = new DuiLocale(language + '_' +  country);
+    QVERIFY2(z->isValid(),
+             "new DuiLocale(language + '_' + country)");
+    QVERIFY2(z->name() == name, "z->name() differs from name");
+    delete z;
+
+    z = new DuiLocale(name);
+    QVERIFY2(z->isValid(), "new DuiLocale(name)");
+    QVERIFY2(z->name() == name, "z->name() differs from name");
+    delete z;
+}
+
+void Ft_Locales::testDuiLocaleConstructorAndCategoryWithParams_data()
+{
+    QTest::addColumn<QString>("default_language");
+    QTest::addColumn<QString>("default_country");
+    QTest::addColumn<QString>("default_name");
+
+    QTest::addColumn<QString>("category_language");
+    QTest::addColumn<QString>("category_country");
+    QTest::addColumn<QString>("category_name");
+
+    QTest::newRow("fi_FI")
+            << QString("fi")  << QString("FI") << QString("fi_FI")
+            << QString("en")  << QString("GB") << QString("en_GB");
+    QTest::newRow("ar_SA")
+            << QString("ar")  << QString("SA") << QString("ar_SA")
+            << QString("en")  << QString("GB") << QString("en_GB");
+    QTest::newRow("xx_YY")
+            << QString("xx")  << QString("YY") << QString("xx_YY")
+            << QString("aa")  << QString("BB") << QString("aa_BB");
+}
+
+void Ft_Locales::testDuiLocaleConstructorAndCategoryWithParams()
+{
+    QFETCH(QString, default_language);
+    QFETCH(QString, default_country);
+    QFETCH(QString, default_name);
+
+    QFETCH(QString, category_language);
+    QFETCH(QString, category_country);
+    QFETCH(QString, category_name);
+
+    DuiLocale *z = 0;
+
+    z = new DuiLocale(default_language + '_' + default_country);
+
+    QVERIFY2(z->isValid(),
+             "new DuiLocale(default_language + '_' + default_country)");
+    QVERIFY2(z->name() == default_name, "z->name() differs from default_name");
+
+    QVERIFY2(z->categoryName(DuiLocale::DuiLcTime) == default_name,
+             "TIME: category name does not point to default category");
+    z->setCategoryLocale(DuiLocale::DuiLcTime, category_language + '_' + category_country);
+    QVERIFY2(z->categoryName(DuiLocale::DuiLcTime) == category_name,
+             "TIME: category name does not point to category_name");
+
+    QVERIFY2(z->categoryName(DuiLocale::DuiLcCollate) == default_name,
+             "COLLATE: category name does not point to default category");
+
+    z->setCategoryLocale(DuiLocale::DuiLcCollate, category_language + '_' + category_country);
+    QVERIFY2(z->categoryName(DuiLocale::DuiLcCollate) == category_name,
+             "COLLATE: category name does not point to category_name");
+
+    QVERIFY2(z->categoryName(DuiLocale::DuiLcNumeric) == default_name,
+             "NUMERIC: category name does not point to default category");
+
+    z->setCategoryLocale(DuiLocale::DuiLcNumeric, category_language + '_' +  category_country);
+    QVERIFY2(z->categoryName(DuiLocale::DuiLcNumeric) == category_name,
+             "NUMERIC: category name does not point to category_name");
+    delete z;
+}
+
+void Ft_Locales::testDuiLocaleLanguageEndonum_data()
+{
+    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("endonym_result");
+
+    QTest::newRow("fi_FI")
+            << QString("fi_FI")
+            << QString("suomi");
+    QTest::newRow("de_DE")
+            << QString("de_DE")
+            << QString("Deutsch");
+    QTest::newRow("ja_JP")
+            << QString("ja_JP")
+            << QString("日本語");
+    QTest::newRow("zh_CN")
+            << QString("zh_CN")
+            << QString("中文");
+}
+
+void Ft_Locales::testDuiLocaleLanguageEndonum()
+{
+    QFETCH(QString, locale_name);
+    QFETCH(QString, endonym_result);
+    DuiLocale locale(locale_name);
+    QCOMPARE(locale.languageEndonym(), endonym_result);
+}
+
+void Ft_Locales::testDuiLocaleCountryEndonum_data()
+{
+    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("endonym_result");
+
+    QTest::newRow("fi_FI")
+            << QString("fi_FI")
+            << QString("Suomi");
+    QTest::newRow("de_DE")
+            << QString("de_DE")
+            << QString("Deutschland");
+    QTest::newRow("ja_JP")
+            << QString("ja_JP")
+            << QString("日本");
+    QTest::newRow("zh_CN")
+            << QString("zh_CN")
+            << QString("中国");
+}
+
+void Ft_Locales::testDuiLocaleCountryEndonum()
+{
+    QFETCH(QString, locale_name);
+    QFETCH(QString, endonym_result);
+    DuiLocale locale(locale_name);
+    QCOMPARE(locale.countryEndonym(), endonym_result);
+}
+
+/*
+ * To reduce the size of libicu, we customize the locale data included in
+ * our package of libicu and include only what needs to be there.
+ *
+ * This test checks whether our package of libicu still has all the
+ * locales which need to be supported to make sure we did not omit too
+ * much accidentally.
+ *
+ */
+void Ft_Locales::checkAvailableLocales()
+{
+    // For the list of locales which need to be supported see, the list
+    // in i18n.dox
+    QList<QString> requiredLocaleNames;
+    requiredLocaleNames << "ar";          // "Arabic"
+    requiredLocaleNames << "ar_AE";       // "Arabic (United Arab Emirates)"
+    requiredLocaleNames << "ar_BH";       // "Arabic (Bahrain)"
+    requiredLocaleNames << "ar_DZ";       // "Arabic (Algeria)"
+    requiredLocaleNames << "ar_EG";       // "Arabic (Egypt)"
+    requiredLocaleNames << "ar_IQ";       // "Arabic (Iraq)"
+    requiredLocaleNames << "ar_JO";       // "Arabic (Jordan)"
+    requiredLocaleNames << "ar_KW";       // "Arabic (Kuwait)"
+    requiredLocaleNames << "ar_LB";       // "Arabic (Lebanon)"
+    requiredLocaleNames << "ar_LY";       // "Arabic (Libya)"
+    requiredLocaleNames << "ar_MA";       // "Arabic (Morocco)"
+    requiredLocaleNames << "ar_OM";       // "Arabic (Oman)"
+    requiredLocaleNames << "ar_QA";       // "Arabic (Qatar)"
+    requiredLocaleNames << "ar_SA";       // "Arabic (Saudi Arabia)"
+    requiredLocaleNames << "ar_SD";       // "Arabic (Sudan)"
+    requiredLocaleNames << "ar_SY";       // "Arabic (Syria)"
+    requiredLocaleNames << "ar_TN";       // "Arabic (Tunisia)"
+    requiredLocaleNames << "ar_YE";       // "Arabic (Yemen)"
+    requiredLocaleNames << "ca";          // "Catalan"
+    requiredLocaleNames << "ca_ES";       // "Catalan (Spain)"
+    requiredLocaleNames << "da";          // "Danish"
+    requiredLocaleNames << "da_DK";       // "Danish (Denmark)"
+    requiredLocaleNames << "de";          // "German"
+    requiredLocaleNames << "de_AT";       // "German (Austria)"
+    requiredLocaleNames << "de_BE";       // "German (Belgium)"
+    requiredLocaleNames << "de_CH";       // "German (Switzerland)"
+    requiredLocaleNames << "de_DE";       // "German (Germany)"
+    requiredLocaleNames << "de_LI";       // "German (Liechtenstein)"
+    requiredLocaleNames << "de_LU";       // "German (Luxembourg)"
+    requiredLocaleNames << "el";          // "Greek"
+    requiredLocaleNames << "el_CY";       // "Greek (Cyprus)"
+    requiredLocaleNames << "el_GR";       // "Greek (Greece)"
+    requiredLocaleNames << "en";          // "English"
+    requiredLocaleNames << "en_AU";       // "English (Australia)"
+    requiredLocaleNames << "en_BE";       // "English (Belgium)"
+    requiredLocaleNames << "en_BW";       // "English (Botswana)"
+    requiredLocaleNames << "en_BZ";       // "English (Belize)"
+    requiredLocaleNames << "en_CA";       // "English (Canada)"
+    requiredLocaleNames << "en_GB";       // "English (United Kingdom)"
+    requiredLocaleNames << "en_HK";       // "English (Hong Kong SAR China)"
+    requiredLocaleNames << "en_IE";       // "English (Ireland)"
+    requiredLocaleNames << "en_IN";       // "English (India)"
+    requiredLocaleNames << "en_JM";       // "English (Jamaica)"
+    requiredLocaleNames << "en_MH";       // "English (Marshall Islands)"
+    requiredLocaleNames << "en_MT";       // "English (Malta)"
+    requiredLocaleNames << "en_NA";       // "English (Namibia)"
+    requiredLocaleNames << "en_NZ";       // "English (New Zealand)"
+    requiredLocaleNames << "en_PH";       // "English (Philippines)"
+    requiredLocaleNames << "en_PK";       // "English (Pakistan)"
+    requiredLocaleNames << "en_SG";       // "English (Singapore)"
+    requiredLocaleNames << "en_TT";       // "English (Trinidad and Tobago)"
+    requiredLocaleNames << "en_US";       // "English (United States)"
+    requiredLocaleNames << "en_US_POSIX"; // "English (United States, Computer)"
+    requiredLocaleNames << "en_VI";       // "English (U.S. Virgin Islands)"
+    requiredLocaleNames << "en_ZA";       // "English (South Africa)"
+    requiredLocaleNames << "en_ZW";       // "English (Zimbabwe)"
+    requiredLocaleNames << "es";          // "Spanish"
+    requiredLocaleNames << "es_AR";       // "Spanish (Argentina)"
+    requiredLocaleNames << "es_BO";       // "Spanish (Bolivia)"
+    requiredLocaleNames << "es_CL";       // "Spanish (Chile)"
+    requiredLocaleNames << "es_CO";       // "Spanish (Colombia)"
+    requiredLocaleNames << "es_CR";       // "Spanish (Costa Rica)"
+    requiredLocaleNames << "es_DO";       // "Spanish (Dominican Republic)"
+    requiredLocaleNames << "es_EC";       // "Spanish (Ecuador)"
+    requiredLocaleNames << "es_ES";       // "Spanish (Spain)"
+    requiredLocaleNames << "es_GT";       // "Spanish (Guatemala)"
+    requiredLocaleNames << "es_HN";       // "Spanish (Honduras)"
+    requiredLocaleNames << "es_MX";       // "Spanish (Mexico)"
+    requiredLocaleNames << "es_NI";       // "Spanish (Nicaragua)"
+    requiredLocaleNames << "es_PA";       // "Spanish (Panama)"
+    requiredLocaleNames << "es_PE";       // "Spanish (Peru)"
+    requiredLocaleNames << "es_PR";       // "Spanish (Puerto Rico)"
+    requiredLocaleNames << "es_PY";       // "Spanish (Paraguay)"
+    requiredLocaleNames << "es_SV";       // "Spanish (El Salvador)"
+    requiredLocaleNames << "es_US";       // "Spanish (United States)"
+    requiredLocaleNames << "es_UY";       // "Spanish (Uruguay)"
+    requiredLocaleNames << "es_VE";       // "Spanish (Venezuela)"
+    requiredLocaleNames << "eu";          // "Basque"
+    requiredLocaleNames << "eu_ES";       // "Basque (Spain)"
+    requiredLocaleNames << "fa";          // "Persian"
+    requiredLocaleNames << "fa_AF";       // "Persian (Afghanistan)"
+    requiredLocaleNames << "fa_IR";       // "Persian (Iran)"
+    requiredLocaleNames << "fi";          // "Finnish"
+    requiredLocaleNames << "fi_FI";       // "Finnish (Finland)"
+    requiredLocaleNames << "fr";          // "French"
+    requiredLocaleNames << "fr_BE";       // "French (Belgium)"
+    requiredLocaleNames << "fr_CA";       // "French (Canada)"
+    requiredLocaleNames << "fr_CH";       // "French (Switzerland)"
+    requiredLocaleNames << "fr_FR";       // "French (France)"
+    requiredLocaleNames << "fr_LU";       // "French (Luxembourg)"
+    requiredLocaleNames << "fr_MC";       // "French (Monaco)"
+    requiredLocaleNames << "fr_SN";       // "French (Senegal)"
+    requiredLocaleNames << "gl";          // "Galician"
+    requiredLocaleNames << "gl_ES";       // "Galician (Spain)"
+    requiredLocaleNames << "hi";          // "Hindi"
+    requiredLocaleNames << "hi_IN";       // "Hindi (India)"
+    requiredLocaleNames << "it";          // "Italian"
+    requiredLocaleNames << "it_CH";       // "Italian (Switzerland)"
+    requiredLocaleNames << "it_IT";       // "Italian (Italy)"
+    requiredLocaleNames << "ja";          // "Japanese"
+    requiredLocaleNames << "ja_JP";       // "Japanese (Japan)"
+    requiredLocaleNames << "nb";          // "Norwegian Bokml"
+    requiredLocaleNames << "nb_NO";       // "Norwegian Bokml (Norway)"
+    requiredLocaleNames << "nl";          // "Dutch"
+    requiredLocaleNames << "nl_BE";       // "Dutch (Belgium)"
+    requiredLocaleNames << "nl_NL";       // "Dutch (Netherlands)"
+    requiredLocaleNames << "nn";          // "Norwegian Nynorsk"
+    requiredLocaleNames << "nn_NO";       // "Norwegian Nynorsk (Norway)"
+    requiredLocaleNames << "pt";          // "Portuguese"
+    requiredLocaleNames << "pt_BR";       // "Portuguese (Brazil)"
+    requiredLocaleNames << "pt_PT";       // "Portuguese (Portugal)"
+    requiredLocaleNames << "ru";          // "Russian"
+    requiredLocaleNames << "ru_RU";       // "Russian (Russia)"
+    requiredLocaleNames << "ru_UA";       // "Russian (Ukraine)"
+    requiredLocaleNames << "sv";          // "Swedish"
+    requiredLocaleNames << "sv_FI";       // "Swedish (Finland)"
+    requiredLocaleNames << "sv_SE";       // "Swedish (Sweden)"
+    requiredLocaleNames << "th";          // "Thai"
+    requiredLocaleNames << "th_TH";       // "Thai (Thailand)"
+    requiredLocaleNames << "tr";          // "Turkish"
+    requiredLocaleNames << "tr_TR";       // "Turkish (Turkey)"
+    requiredLocaleNames << "uk";          // "Ukrainian"
+    requiredLocaleNames << "uk_UA";       // "Ukrainian (Ukraine)"
+    requiredLocaleNames << "ur";          // "Urdu"
+    requiredLocaleNames << "ur_IN";       // "Urdu (India)"
+    requiredLocaleNames << "ur_PK";       // "Urdu (Pakistan)"
+    requiredLocaleNames << "zh";          // "Chinese"
+    requiredLocaleNames << "zh_Hans" ;    // "Chinese (Simplified Han)"
+    requiredLocaleNames << "zh_Hans_CN";  // "Chinese (Simplified Han, China)"
+    requiredLocaleNames << "zh_Hans_HK";  // "Chinese (Simplified Han, Hong Kong SAR China)"
+    requiredLocaleNames << "zh_Hans_MO";  // "Chinese (Simplified Han, Macau SAR China)"
+    requiredLocaleNames << "zh_Hans_SG";  // "Chinese (Simplified Han, Singapore)"
+    requiredLocaleNames << "zh_Hant";     // "Chinese (Traditional Han)"
+    requiredLocaleNames << "zh_Hant_HK";  // "Chinese (Traditional Han, Hong Kong SAR China)"
+    requiredLocaleNames << "zh_Hant_MO";  // "Chinese (Traditional Han, Macau SAR China)"
+    requiredLocaleNames << "zh_Hant_TW";  // "Chinese (Traditional Han, Taiwan)"
+
+    QList<QString> availableLocaleNames;
+    QList<QString> availableDisplayNames;
+    int numberOfAvailableLocales = uloc_countAvailable();
+
+    for (int i = 0; i < numberOfAvailableLocales; ++i) {
+        int maxresultsize = 100;
+        UChar result[maxresultsize];
+        UErrorCode status = U_ZERO_ERROR;
+        availableLocaleNames << QString::fromUtf8(uloc_getAvailable(i));
+        uloc_getDisplayName(availableLocaleNames[i].toUtf8().constData(),
+                            "en_US", result, maxresultsize, &status);
+        if (U_SUCCESS(status))
+            availableDisplayNames << QString::fromUtf16(result);
+        else
+            availableDisplayNames << QString("What kind of locale is this?");
+    }
+    foreach(QString requiredLocaleName, requiredLocaleNames) {
+        // if (availableLocaleNames.contains(requiredLocaleName))
+        //     qDebug() << "available: "
+        //              << requiredLocaleName
+        //              << availableDisplayNames[availableLocaleNames.indexOf(requiredLocaleName)];
+        // else {
+        //     qDebug() << "missing: " << requiredLocaleName;
+        // }
+        QVERIFY2(availableLocaleNames.contains(requiredLocaleName),
+                 QString("The following required locale is missing: "
+                         + requiredLocaleName).toUtf8().constData());
+    }
+}
+
+QTEST_APPLESS_MAIN(Ft_Locales);
+

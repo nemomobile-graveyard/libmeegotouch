@@ -1,0 +1,182 @@
+libdui (0.19.0-1) unstable; urgency=low
+
+  * New version
+  * License changed
+  
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 15 Feb 2010 13:49:00 +0200
+
+libdui (0.18.9-2) unstable; urgency=low
+
+  * New version
+  * Unit test fixes
+  * Implemented: SWP#DUI-2901 
+ 
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 12 Feb 2010 14:30:00 +0200
+  
+libdui (0.18.8-1) unstable; urgency=low
+
+  * Fixes: NB#155940 - DuiDialog crashes at times if created with DuiSceneWindow::KeepWhenDone
+  * Fixes: NB#156148 - There is no way to change theme on non linux OS
+  * Fixes: NB#153770 - Closing a window when app has multiple windows causes exit with error code 1
+  * Fixes: NB#154831 - Widgetsgallery crash on first run
+  * Fixes: NB#155361 - Removed warnings and added -Werror
+  * Fixes: NB#155726 - Asynchronously handled dialog returns wrong result 
+  * Fixes: NB#154422 - Inserting rows to first group in DuiList does not update the list 
+  * Fixes: NB#156073 - Widgetsgallery : Broken Query dialog, yes and no Button double caption
+  * Fixes: NB#155116 - Pannable viewport doesn't come back to the very same position 
+  * Fixes: NB#152282 - DuiNavigationBar animates incorrectly when the screen is rotated
+  * Fixes: NB#154831 - Widgetsgallery -timedemo causes consistent segfault in CITA; occasionally on device
+  * Fixes: NB#154535 - Not possible to keep current window orientation angle with keepCurrentOrientation() 
+  * Fixes: NB#156155 - Widgets are invisible after layout policy switch 
+  * Fixes: NB#154584 - -remote-theme switch doesn't work
+  * Fixes: NB#154446 - <MemLeak> duistylesheet.cpp 
+  * Fixes: NB#154129 - DuiPopupList::scrollTo makes some items disappear
+  * Fixes: NB#154888 - performing click() on DuiComboBox is not working as expected 
+  * Fixes: NB#154891 - setting the icon & icon visibility for DuiComboBox is not working properly
+  * Fixes: NB#153911 - DuiStylableWidget shouldn't require the DUI_REGISTER_WIDGET macro, or default constructor 
+  * Fixes: NB#155682 - ta_duilistmod: complete List deletion causes segfault 
+  * Fixes: NB#155734 - Items under the last group of DuiList are duplicated 
+  * Fixes: NB#153100 - DuiList doesn't update when items are removed from a model with group headers 
+  * Fixes: NB#151937 - Incorrect include files libdui-dev package 
+  * Fixes: NB#155837 - DuiComboBox does not change current item text when item model is changed 
+  * Fixes: NB#152740 - <Logic> trid function is not marked as deprecated 
+  * Fixes: NB#152994 - Width of the view menu items differ from each other 
+  * Fixes: NB#155856 - Launching applications in Portrait is broken again 
+  * Fixes: NB#154449 - sorting does not work correctly neither in no_NO nor nb_NO locales 
+  * Fixes: NB#156115 - <CodeStyle> typo in doxygen documentation 
+  * Fixes: NB#154958 - libicudata is invalid shared library -> LD_AUDIT doesn't work for anything linking it (i.e. DUI) 
+  * Implemented: SWP#DUI-2143, SWP#DUI-2147, SWP#DUI-2201, SWP#DUI-2207
+  * Implemented: SWP#DUI-2145, SWP#DUI-2148, SWP#DUI-2140, SWP#DUI-2228
+  * Implemented: SWP#DUI-2135, SWP#DUI-2134, SWP#DUI-2139, SWP#DUI-2114
+  * Implemented: SWP#DUI-2051, SWP#DUI-2052, SWP#DUI-2191, SWP#DUI-2185
+  * Implemented: SWP#DUI-2186, SWP#DUI-2189, SWP#DUI-2190, SWP#DUI-2188
+  * Implemented: SWP#DUI-2187, SWP#DUI-1885, SWP#DUI-2053, SWP#DUI-2115
+  * Implemented: SWP#DUI-2132, SWP#DUI-2121, SWP#DUI-2120, SWP#DUI-2119
+  * Implemented: SWP#DUI-2117, SWP#DUI-2116, SWP#DUI-2166, SWP#DUI-2164
+  * Implemented: SWP#DUI-2162, SWP#DUI-2161, SWP#DUI-1546, SWP#DUI-2083
+  * Implemented: SWP#DUI-2169, SWP#DUI-2168
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Thu, 11 Feb 2010 15:26:00 +0200
+
+libdui (0.18.7-1) unstable; urgency=low
+
+  * Fixes: NB#154408 - displayExited doesn't get emitted when the DuiWindow gets closed
+  * Fixes: NB#154886 - setItemIconID() for DuiComboBox items is not working properly
+  * Fixes: NB#144088 - DuiList can't scroll to index
+  * Fixes: NB#153902 - DuiContainer crashes when ProgressIndicator is set visible and headerVisible property is toggled
+  * Fixes: NB#154433 - DuiButton's shape() is not within the button's bounding rectangle.
+  * Fixes: NB#155031 - Transaction support in DuiModel not functioning
+  * Fixes: NB#153437 - DuiTheme::pixmap() not working
+  * Fixes: NB#154878 - DuiList component does not react to some item model signals
+  * Fixes: NB#154961 - DuiList doesnt update cells correctly when deleting a row from the underlying model 
+  * Fixes: NB#113828 - Documentation for DUI Theme system is out of date and/or lacking
+  * Fixes: NB#152740 - <Logic> trid function is not marked as deprecated
+  * Fixes: NB#154240 - List has visual artefacts when run with Pineapple profile
+  * Fixes: NB#154907 - The background of tapped DuiContentItem in Single mode looks foggy 
+  * Fixes: NB#152990 - DuiList's setColumns() doesn't work
+  * Fixes: NB#148937 - Multiple slection is not possible in the duilist in libdui15
+  * Fixes: NB#137510 - DuiGrid performance is bad
+  * Implemented: SWP#DUI-2036, SWP#DUI-2035, SWP#DUI-2034, SWP#DUI-2033
+  * Implemented: SWP#DUI-2032, SWP#DUI-2031, SWP#DUI-2086, SWP#DUI-2084
+  * Implemented: SWP#DUI-2049, SWP#DUI-2097, SWP#DUI-2046, SWP#DUI-2045
+  * Implemented: SWP#DUI-1915, SWP#DUI-1903, SWP#DUI-1904, SWP#DUI-2081
+  * Implemented: SWP#DUI-2082, SWP#DUI-2047, SWP#DUI-2096, SWP#DUI-2080
+  * Implemented: SWP#DUI-2075, SWP#DUI-2095, SWP#DUI-2074, SWP#DUI-1882
+  * Implemented: SWP#DUI-514,  SWP#DUI-2054, SWP#DUI-2050, SWP#DUI-1776
+  * Implemented: SWP#DUI-1778, SWP#DUI-1880, SWP#DUI-2076, SWP#DUI-2048
+  * Implemented: SWP#DUI-1847, SWP#DUI-1503, SWP#DUI-2089, SWP#DUI-1798
+  * Implemented: SWP#DUI-2090
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Tue, 02 Feb 2010 10:21:00 +0200
+
+libdui (0.18.6-1) unstable; urgency=low
+
+  * Fixes: NB#149818 - Theming changes always causes segfaults
+  * Fixes: NB#154885 - DuiApplicationPage::setAutoMarginsForComponentsEnabled() does not work when page is open
+  * Fixes: NB#154860 - Theme switching doesn't work
+  * Fixes: NB#150496 - DuiDialog destructor crashes with a QGridLayoutEngine::setItemAt()
+  * Fixes: NB#153447 - Newly created widgets ignore calling hide()
+  * Fixes: NB#154005 - Page of the DuiImage in documentation tells about DuiPopupList and not DuiImage
+  * Fixes: NB#154417 - DuiList visible item update is broken when group headers are used
+  * Fixes: NB#154517 - DuiList component crahes when non-empty item model is given
+  * Unit test fixes
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 29 Jan 2010 17:55:00 +0200
+
+libdui (0.18.5-1) unstable; urgency=low
+
+  * Fixes: NB#153100 - DuiList doesn't update when items are removed from a model with group headers
+  * Fixes: NB#154445 - Multi column list does not refresh content (for non first columns)
+  * Fixes: NB#154304 - Crash when inserting (prepending) items into an empty DuiList
+  * Fixes: NB#154241 - WidgetsGallery does now show title area in Portrait for Pineapple target
+  * Unit test fixes
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Tue, 26 Jan 2010 16:50:00 +0200
+
+libdui (0.18.4-1) unstable; urgency=low
+
+  * Fixes: NB#153413 - Event cancellation does not work for DuiSlider (DuiSlider value is not reset when panning occurs)
+  * Fixes: NB#152102 - DuiLinearLayoutPolicy - make the documentation clearer about indexes
+  * Fixes: NB#153983 - DuiApplication(argc, argv) does not allow to open 2 app processes with the same name
+  * Fixes: NB#153978 - Broken applets can not be removed by clicking Remove in the broken applet dialog
+  * Unit test fixes
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 25 Jan 2010 11:54:00 +0200
+
+libdui (0.18.3-1) unstable; urgency=low
+
+  * Fixes: NB#151691 - Prestarted applications still visible in the switcher after lazy shutdown
+  * Fixes: NB#153483 - The background image can not be loaded for DuiInformBanner sometimes
+  * Fixes: NB#153952 - DuiApplicationPage::disappear() causes segmentation fault with DuiSceneWindow::DestroyWhenDone policy
+  * Fixes: NB#153800 - Setting application to full screen does not automatically remove toolbar offset from application page
+  * Unit test fixes
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Thu, 21 Jan 2010 16:58:00 +0200
+
+libdui (0.18.2-1) unstable; urgency=low
+
+  * Fixes: NB#153412 - Switch button interaction reverted in Portrait
+  * Fixes: NB#152770 - Styling system does not support QChar attributes
+  * Fixes: NB#153415 - Animations fail with recent Qt
+  * Fixes: NB#152804 - DuiList::itemClicked(QModelIndex) signal is never emitted for non DuiContentItem cells
+  * Unit test fixes
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 20 Jan 2010 17:01:00 +0200
+
+libdui (0.18.1-1) unstable; urgency=low
+
+  * New version
+  * Unit test fixes
+  
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Tue, 19 Jan 2010 09:50:00 +0200
+
+libdui (0.18.0-1) unstable; urgency=low
+
+  * Fixes: NB#150389 - Window modal dialogs do not work
+  * Fixes: NB#143497 - Can't add views from plugins
+  * Fixes: NB#153164 - Closing windows when multiple windows in application causes segfault
+  * Fixes: NB#151200 - DuiAction::setVisible( bool ) is not handled correctly in application menu
+  * Fixes: NB#153158 - Segmentation fault when using fast list without specified cell creators
+  * Fixes: NB#150040 - dui application using filtered duigrid crashes when clicking the items before repaint of grid finished
+  * Fixes: NB#150567 - Outdated list items appear out of list when DuiList model is updated
+  * Fixes: NB#151550 - Widgets inheriting DuiStylableWidget have no obvious size to paint to
+  * Fixes: NB#153314 - When Screen.IsCovered property is set to TRUE, dui apps crash on startup.
+  * Fixes: NB#147429 - DuiWidgetView::xxxChanged() methods break fundamental Qt API conventions
+  * Fixes: NB#147904 - Closing DuiApplicationWindow causes huge CPU usage
+  * Fixes: NB#149294 - Problem with tool dui-servicefwgen in dui 0.16
+  * Fixes: NB#144564 - Delayed model initialization in DuiWidgetController
+  * Fixes: NB#152624 - Page title doesn't change after DuiApplicationPage::disappear - appear sequence
+  * Fixes: NB#149214 - Clicked signal is not working with DuiGrid and DuiList
+  * Fixes: NB#152737 - [blocker proposal] Mapcanvas fails to compile with latest dui v0.17
+  * Fixes: NB#140299 - device is flickering while virtual key board is launching(Qt 4.6.0~git20090911-0maemo1+0m6)
+  * Fixes: NB#151978 - DuiLinearLayoutPolicy ignores addStretch()
+  * Implemented: SWP#DUI-1898, SWP#DUI-1897, SWP#DUI-1899, SWP#DUI-1936
+  * Implemented: SWP#DUI-1905, SWP#DUI-1900, SWP#DUI-1819, SWP#DUI-1901, SWP#DUI-1992
+  * Implemented: SWP#DUI-1909, SWP#DUI-1935, SWP#DUI-2013, SWP#DUI-1910, SWP#DUI-1912
+  * Implemented: SWP#DUI-1913, SWP#DUI-1920, SWP#DUI-1881, SWP#DUI-1919, SWP#DUI-1879
+  * Implemented: SWP#DUI-1877, SWP#DUI-1971, SWP#DUI-1872, SWP#DUI-1882, SWP#DUI-1932
+  * Implemented: SWP#DUI-1931, SWP#DUI-1916, SWP#DUI-1702, SWP#DUI-1793, SWP#DUI-1918
+  * Implemented: SWP#DUI-1572, SWP#DUI-1794, SWP#DUI-1798, SWP#DUI-1996, SWP#DUI-1995
+  * Implemented: SWP#DUI-1964, SWP#DUI-1963, SWP#DUI-1962, SWP#DUI-1961, SWP#DUI-1960
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Sun, 17 Jan 2010 18:02:00 +0200

@@ -1,0 +1,27 @@
+/* 
+ * This file contains style definitions for Object
+ */
+
+// General purpose style definitions for Qbject
+QObject
+{
+    object-name: "object";
+    
+    attribute-size: 100px 100px;
+    attribute-integer: 1;
+    attribute-real: 1.0;
+    attribute-font: "system" 10px;
+}
+
+.QObject
+{
+    private-string-attribute: "private string";
+}
+
+#Specialized
+{
+    object-name: "specialized object";
+    specialized-object: 1;
+}
+
+

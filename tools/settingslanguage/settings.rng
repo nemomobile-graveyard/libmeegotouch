@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<element xmlns="http://relaxng.org/ns/structure/1.0"
+         xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+         name="settings">
+  <a:documentation>A set of settings.</a:documentation>
+
+  <interleave>
+    <zeroOrMore>
+      <element name="group">
+      <a:documentation>A settings node representing a group of setting items. 
+        A group can contain one or more setting items.
+        </a:documentation>
+        <zeroOrMore>
+          <ref name="selection" />
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="text" />
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="boolean" />
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="integer" />
+        </zeroOrMore>
+      </element>
+    </zeroOrMore>
+
+    <zeroOrMore>
+      <element name="selection">
+        <a:documentation>A settings node representing a selection. A
+          selection can have a predefined set of possible options.</a:documentation>
+        <attribute name="key">
+          <a:documentation>The key (name) of the selection.</a:documentation>
+          <text/>
+        </attribute>
+        <oneOrMore>
+          <element name="option">
+            <a:documentation>A possible value for a selection.</a:documentation>
+            <data type="int">
+              <a:documentation>The type must be an integer.</a:documentation>
+            </data>
+            <attribute name="title">
+              <a:documentation>The title of the option.</a:documentation>
+              <text/>
+            </attribute>
+          </element>
+        </oneOrMore>
+      </element>
+    </zeroOrMore>
+
+    <zeroOrMore>
+      <element name="text">
+        <a:documentation>A settings node representing text. A text item can contain any string data.</a:documentation>
+        <attribute name="key">
+          <a:documentation>The key (name) of the text item.</a:documentation>
+          <text/>
+        </attribute>
+        <attribute name="title">
+          <a:documentation>The title of the text item.</a:documentation>
+          <text/>
+        </attribute>
+      </element>
+    </zeroOrMore>
+
+    <zeroOrMore>
+      <element name="boolean">
+        <a:documentation>A settings node representing boolean.</a:documentation>
+        <attribute name="key">
+          <a:documentation>The key (name) of the boolean item.</a:documentation>
+          <text/>
+        </attribute>
+        <attribute name="title">
+          <a:documentation>The title of the boolean item.</a:documentation>
+          <text/>
+        </attribute>
+      </element>
+    </zeroOrMore> 
+
+    <zeroOrMore>
+      <element name="integer">
+        <a:documentation>A settings node representing an integer from a range.</a:documentation>
+        <attribute name="key">
+          <a:documentation>The key (name) of the integer.</a:documentation>
+          <text/>
+        </attribute>
+        <attribute name="title">
+          <a:documentation>The title of the integer.</a:documentation>
+          <text/>
+        </attribute>
+        <attribute name="min">
+          <a:documentation>Minimum value that the integer can have.</a:documentation>
+          <text/>
+        </attribute>
+        <attribute name="max">
+          <a:documentation>Maximum value that the integer can have.</a:documentation>
+          <text/>
+        </attribute>
+      </element>
+    </zeroOrMore> 
+ </interleave>
+</element>

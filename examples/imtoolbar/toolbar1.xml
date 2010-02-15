@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE DUI_IM_TOOLBAR_WIDGET SYSTEM 'VirtualKeyboardToolbarDTD.dtd'>
+<toolbar>
+    <button name="test" group="test" priority="0" showon="always" alignment="right" icon="" text="&lt;I&gt;I&lt;&#x002F;I&gt;" text_id="">
+        <actions>
+            <sendstring string="insert/change text italic"> </sendstring>
+        </actions>
+    </button>
+    <button name="test2" group="test2" priority="0" showon="always" alignment="left" icon="" text="&lt;U&gt;U&lt;&#x002F;U&gt;" text_id="">
+        <actions>
+            <sendstring string="insert/change text underline"> </sendstring>
+        </actions>
+    </button>
+    <button name="test3" group="test4" priority="1" showon="always" alignment="left" icon="" text="&lt;B&gt;B&lt;&#x002F;B&gt;" text_id="">
+        <actions>
+            <sendstring string="insert/change text bold"> </sendstring>
+        </actions>
+    </button>
+</toolbar>

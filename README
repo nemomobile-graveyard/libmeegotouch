@@ -1,0 +1,47 @@
+This source tree contains the DirectUI library
+
+Building
+========
+./configure
+make
+sudo make install
+
+The library will be installed by default with a prefix of /usr/local,
+see ./configure -help for options.
+
+The reference documentation can be built with "make doc",
+if doxygen is available.
+
+Running
+=======
+The library ships with a demo application called "widgetsgallery"
+
+The duitheme package must be installed before running any DirectUI
+applications.
+
+duitheme is available separately from http://qt.gitorious.org and can
+be installed with the following commands:
+  cd duitheme
+  qmake
+  sudo make install
+
+
+Build dependencies
+==================
+- Development headers:
+  - Qt 4.6
+  - X11
+  - Mesa or vendor specific OpenGL libraries
+- pkg-config
+
+Optional dependencies
+=====================
+
+If found, the following libraries will enable additional
+features in the DirectUI library:
+
+- ICU: I18N and L10N extensions
+- GConf2: C++ abstraction layer for gconf settings system
+- ContextKit context subscriber: Automatic rotation on supported hardware
+- GStreamer 0.10: Media widgets
+- DBus: Out of process applet support, out of process theme server support

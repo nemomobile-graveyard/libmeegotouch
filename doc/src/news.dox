@@ -1,0 +1,183 @@
+/*! \page news What's New in DirectUI
+\section v0190
+
+\subsection New
+
+- License changed to LGPL, first public release
+
+- DuiWindow::orientationAngleLocked - this property allows to lock orientation angle changes
+  (use DuiWindow::orientationLocked to lock orientation changes)
+
+- DuiOnDisplayChangeEvent::PartiallyOnDisplay
+
+- DuiSceneWindow::DestroyWhenDismissed
+
+\subsection Deprecated
+
+- void installCategoryCatalog(Category category, const QString &name);
+  - was only useful for trid() no replacement needed
+- void removeCategoryCatalog(Category category, const QString &name);
+  - was only useful for trid() no replacement needed
+- bool hasCategoryCatalog(Category category, const QString &name);
+  - was only useful for trid() no replacement needed
+- DuiLayout::invalidateLayoutOnly() - this shouldn't be used by anyone.
+- DuiAbstractLayoutPolicy::aboutToBeRemovedFromLayout() - this was being used incorrectly instead of removeAt.  Use removeAt instead
+- DuiWindow::keepCurrentOrientation - replaced by DuiWindow::orientationLocked
+
+\section v0180 0.18.4
+
+\subsection New
+
+- Added "AllComponents" to DuiApplicationPage::Component enum.
+
+\section v0180 0.18.0
+
+\subsection New
+
+- DuiProgressIndicator, Changed runUnknown to unknownDuration in model/controller classes
+
+- DuiTheme, Changed boolean parameter from pixmap directory functions to enum
+- DuiTheme, Changed boolean parameter from css loading method to enum
+
+- DuiWindow::keepCurrentOrientation was provided to enable locking the window in
+  current orientation, making it ignore orientation changes.
+
+- On-display visibility for separate windows and widgets. Use
+  isOnDisplay() to check, and enteredDisplay(), exitedDisplay()
+  signals to track the changes of visibility of any window or widget
+  on the display.
+
+- DuiDialog now handles DuiButtonModels instead DuiButtons. DuiDialogModel now
+  contains the list of DuiButtonModels present in the dialog's button box.
+  StandardButtons enum was moved from DuiDialog to Dui namespace.
+  
+- Added separate view for checkboxes.
+
+- DuiApplicationWindow::currentPage() method was restored after previous removal.
+
+- Added documentation feature to dui-servicefwgen to allow documentation to be added to Service Framework interfaces.
+
+- Added "Done" to DuiDialog standard buttons.
+
+- Dui-servicefwgen now puts interface method definitions into a Cpp file instead of the H file, with a view to making it easier for app developers to write unit tests.
+
+\subsection removed Removed or Renamed
+
+- Applications theme directory has moved from /usr/share/<app>/ to /usr/share/themes/base/dui/<app>
+- DuiGrid removed
+- DuiAnimatedIcon removed
+- DuiSlideShow removed
+- DuiConf removed
+- Removed multiline support from simple DuiLabel.
+- Old DuiListView removed, now default view is "fast" one.
+- Removed DuiComboBox::showPopup(), DuiComboBox::hidePopup()
+- Removed signal   DuiComboBox::showPopupList(), DuiComboBox::hidePopupList()
+- DuiTheme, Removed library registration functions from public API
+- DuiTheme, Removed style container registration functions from public API
+- progressIndicatorVisibleChanged() signal from DuiApplicationPage. Use modified() signal from DuiApplicationPageModel instead.
+- DuiSceneWindow::windowVisible(). Use windowShown() instead.
+- DuiApplicationPage fullscreen property. Use autoMarginsForComponentsEnabled instead.
+- DuiApplication::appVisible() was removed. Use (entered|exited)Display() and isOnDisplay() from DuiWindow or DuiWidget instead.
+- DuiLayout::setAnimator() was renamed to setAnimation()
+- DuiLayout::animator() was renamed to animation()
+- DuiAbstractLayoutPolicy::size() was removed.  Use DuiAbstractLayoutPolicy::count() instead
+- DuiLinearLayoutPolicy::insertItem(item, index) was renamed to DuiLinearLayoutPolicy::insertItem(index, item) (to make it consistent with QGraphicsLinearLayout).
+- DuiObjectMenu. It's now a private class, not exported by libdui.
+- Functions exposing DuiItemState are removed, with the future removal of DuiItemState from the public API.
+  In 0.18 the following functions are removed, replaced with DuiAbstractLayoutPolicy::setItemGeometry() etc instead
+    - DuiAbstractLayoutPolicy::itemStateAt(int index) const
+    - DuiAbstractLayoutPolicy::updateLayout(const QList<DuiItemState> &states)
+    - DuiAbstractLayoutPolicy::updateLayout(const DuiItemState &state)
+    - DuiAbstractLayoutPolicy::layoutItemStates()
+    - DuiLayout::layoutItemStates()
+    - DuiLayout::itemStatesAt()
+- DuiDeclarativeSettingsParser, DuiDeclarativeSettingsFactory,
+  DuiDeclarativeSettingsBinary and DuiDeclarativeSettings have been renamed to
+  DuiSettingsLanguageParser, DuiSettingsLanguageWidgetFactory,
+  DuiSettingsLanguageBinary and DuiSettingsLanguageWidget, respectively.
+- DuiLayout::findIndexForItem() was renamed to DuiLayout::indexOf
+- DuiScene::totalFrameCount() removed
+- DuiWidgetAction::setDefaultWidget(DuiWidget* w) renamed to setWidget(DuiWidget* w)
+- DuiWidgetAction::defaultWidget() renamed to widget()
+- DuiWidgetView::modelChanged() renamed to DuiWidgetView::setupModel()
+- DuiWidgetController::modelChanged() renamed to DuiWidgetController::setupModel()
+- DuiWidgetView::modelModified() renamed to DuiWidgetView::updateData()
+- DuiWidgetView::styleChanged() renamed to DuiWidgetView::applyStyle()
+
+- The following previously deprecated items have now been removed:
+
+    - All deprecated functions from DuiList and DuiListModel removed
+    - DuiButtonDefaultView
+    - DuiApplication::setApplicationWindow, applicationWindow
+    - DuiTheme, Removed deprecated boxed pixmap functions
+    - DuiLocale::trid(), DuiLocale::tridcat(), DuiLocale::translateID(), DuiLocale::translateIDCat(), trid() and tridcat(): use qtTrId() instead.
+    - DuiLocale::DuiLocale(const char *language, const char *country, const char *script, const char *variant, QObject *parent)
+    - void DuiLocale::setCategoryLocale(Category category, const char *language, const char *country, const char *script, const char *variant)
+    - DuiBreakIteratorIf, DuiIcuBreakIterator, DuiNullBreakIterator, these are now private.
+    - DuiImageLabel
+    - DuiApplicationWindow::escapeButtonPanel()
+    - DuiApplicationWindow::minimize(). Use showMinimized() instead.
+    - systemModal property of DuiDialog. Use windowModal instead.
+    - done() signal of DuiSceneWindow.
+    - displayMode property of DuiApplicationPage. Use componentDisplayMode() and
+      setComponentsDisplayMode() instead.
+    - requestPageMove(), restorePageMove() and updateLayout() from DuiApplicationPage.
+    - closeMode property of DuiNavigationBarModel
+    - from Dui::InputMethodQueryExtensions enum values ContentTypeQuery, ImPredictionEnabledQuery,
+      ImAutoCapitalizationEnabledQuery, ImMaskedQuery. These are now covered by Qt's ImHints.
+    - DuiBasicLayoutAnimator has been renamed to DuiBasicLayoutAnimation.
+    - DuiAbstractLayoutAnimator has been renamed to DuiLayoutAnimation.
+    - DuiApplication::setAnimator has been removed.  Enable/disable animations on a per-layout basis.
+    - DuiAbstractAddress, DuiAddress, DuiAbstractName and DuiName have been removed.
+    - DuiLocale::nameFormat and DuiLocale::formatName have been removed.
+    - DuiDeviceProfile::loadDevice
+    - DuiDeviceProfile::name
+    - DuiOrientationTracker::OrientationAngle
+    - DuiProgressIndicatorCircularView
+    - DuiSeparator::mode and DuiSeparator::setMode: use orientation and setOrientation.
+    - DuiInfoBannerView, DuiInfoBanner: BannerState, click(), buttonClick(), DuiInfoBannerModel: state, down
+    - DuiSceneManager::instance(): use DuiApplication::activeApplicationWindow()->sceneManager()
+    - DuiSceneManager::orientationValue() and orientationChanging()
+    - DuiPannableWidget: evaluateTime() and setEvaluateTime()
+    - DuiButtonView::drawText()
+    - DuiLabel: textDirection and setTextDirection: use (set)LayoutDirection
+    - DuiImage::imageDataSize()
+    - DuiWidgetController::DuiWidgetController(QGraphicsItem*, DuiWidgetModel*): use the other constructor
+    - DuiWidget::orientationChanged()
+    - DuiImageModel: borderLeft, borderRight, borderTop, borderBottom
+    - DuiButtonDefaultStyle
+    - DuiContainerStyle: titlebarBackground, headerPressedBackgroundImage
+    - DuiDialogStyle: buttonBoxMargin
+    - DuiProgressIndicatorStyle: activeElement, inactiveElement, elementBoxedPercent
+    - DuiTextEditStyle: textBackgroundColor, borderColor, borderStyle, borderWidth, borderRoundness
+    - DuiHomeButtonPanel::homeButtonClicked
+    - DuiStyleCreator: removed deprecated constructor
+    - DuiStyleSheet::populateStyle() functions
+
+- The naming of DuiAction enums was changed:
+  DuiAction::None, DuiAction::ToolBar_Portrait, DuiAction::ToolBar_Landscape,
+  DuiAction::ToolBar, DuiAction::ApplicationMenu, DuiAction::ObjectMenu and
+  DuiAction::All are deprecated.
+  Please use DuiAction::NoLocation, DuiAction::ToolBarPortraitLocation,
+  DuiAction::ToolBarLandscapeLocation, DuiAction::ToolBarLocation,
+
+- The class DuiProxyWidget got fully removed without deprecation.
+  Usage of proxy widgets had however been discouraged since long for
+  Maemo team developers due to the obvious issues involved with
+  usage of a widget proxy.
+
+- DuiTextEdit got changes suggested in API review:
+  - QTextCursor * cursor() was replaced with QTextCursor textCursor()
+  - setMaskedInput() was replaced with setEchoMode() with similar enum values as in QLineEdit
+  - Im abbreviations in method names were changed to full version "InputMethod", this includes:
+    setImCorrectionEnabled(), imCorrectionEnabled(), setImPredictionEnabled(),
+    imPredictionEnabled, setImAutoCapitalizationEnabled, imAutoCapitalizationEnabled()
+
+- DuiImage was renamed to DuiImageWidget, and the following functions were changed:
+  - zoomin() and zoomOut were renamed to zoomIn() and zoomOut()
+  - zoomRatioMode() was renamed to aspectRatioMode
+  - setZoomRatioMode() was renamed to setAspectRatioMode
+  - cropSize(), setCropSize(), cropTopLeftPoint and setCropTopLeftPoint
+    were removed. use crop() and setCrop()
+
+*/

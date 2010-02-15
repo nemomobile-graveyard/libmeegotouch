@@ -1,0 +1,28 @@
+/**
+\page layout-inside-layout Hiding a QGraphicsLayout or DuiLayout
+
+Source code for a simple example showing how do hide a DuiLayout or QGraphicsLayout.
+
+A DuiLayout or QGraphicsLayout should always be attached to QGraphicsWidget (or DuiWidget) or inside another layout.
+If you place a layout inside of another layout, the inner layout cannot be hidden, because a layout by
+itself cannot be hidden (There is no hide() function in QGraphicsLayout).  Likewise if you remove the inner layout,
+it will remain visible because it needs to be attached to something.
+
+If you want to be able to hide a layout that is inside another layout, you can place the inner layout inside of
+a QGraphicsWidget, then place that QGraphicsWidget inside of the outer layout.  This example demonstrates this.
+
+\image html layout_inside_layout_landscape.png
+
+
+\image html layout_inside_layout_portrait.png
+
+Source code of layout_inside_layout.cpp:
+\include examples/layout_inside_layout/layout_inside_layout.cpp
+
+Styled with the following layout_inside_layout.css file:
+\include examples/layout_inside_layout/layout_inside_layout.css
+
+And compiled with the following layout_inside_layout.pro file:
+\include examples/layout_inside_layout/layout_inside_layout.pro
+
+*/

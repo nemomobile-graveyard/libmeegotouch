@@ -1,0 +1,8 @@
+/* DuiLabelStyle : DuiWidgetStyle */
+DuiLabelStyle {
+    color: #FFFFFF;
+    font: "Nokia Sans" 2.4mm;
+
+    /* inherited from DuiWidgetStyle */
+}
+

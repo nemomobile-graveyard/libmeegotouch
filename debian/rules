@@ -1,0 +1,147 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Uncomment this to turn on verbose mode.
+export DH_VERBOSE=1
+
+DEBDIR = ..
+
+comma :=,
+empty :=
+space := $(empty) $(empty)
+
+ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
+    INSTALL_PROGRAM += -s
+endif
+
+TMP_BUILD_OPTS = $(subst $(comma),$(space),$(DEB_BUILD_OPTIONS))
+
+ifneq (,$(filter parallel=%,$(TMP_BUILD_OPTS)))
+    NUMJOBS = $(patsubst parallel=%,%,$(filter parallel=%,$(TMP_BUILD_OPTS)))
+    PARALLEL_MAKEFLAGS += -j$(NUMJOBS)
+endif
+
+
+# Enable instrumentation by setting DEB_BUILD_OPTION=coverage,...
+ifneq (,$(filter coverage,$(TMP_BUILD_OPTS)))
+    OPTIONS += -coverage
+endif
+
+# Enable instrumentation by setting DEB_BUILD_OPTION=timestamps,...
+ifneq (,$(filter timestamps,$(TMP_BUILD_OPTS)))
+    OPTIONS += -timestamps
+endif
+
+# Disable building of tests by setting DEB_BUILD_OPTION=notests,...
+ifneq (,$(filter nocheck,$(TMP_BUILD_OPTS)))
+    OPTIONS += -nomake tests
+endif
+
+# Disable building of benchmarks by setting DEB_BUILD_OPTION=nobenchmarks,...
+ifneq (,$(filter nobenchmarks,$(TMP_BUILD_OPTS)))
+    OPTIONS += -nomake benchmarks
+endif
+
+# Disable building of demos by setting DEB_BUILD_OPTION=nodemos,...
+ifneq (,$(filter nodemos,$(TMP_BUILD_OPTS)))
+    OPTIONS += -nomake demos
+endif
+
+# When doing official releases, set TESTABILITY to off. Defaults to on now
+# because integration cannot pass DEB_BUILD_OPTIONS.
+ifeq (,$(findstring notestability,$(DEB_BUILD_OPTIONS)))
+     OPTIONS += -testable
+endif
+
+QMAKE_OPTIONS += -r
+
+BUILD_DIR=build-$(shell dpkg-architecture -qDEB_BUILD_ARCH)
+
+configure: configure-stamp
+configure-stamp:
+	dh_testdir
+
+	mkdir -p $(BUILD_DIR)
+	./configure --prefix=/usr -release -make "tests plainqt benchmarks" $(OPTIONS)
+	cd $(BUILD_DIR) && qmake $(QMAKE_OPTIONS) ../projects.pro
+
+	touch configure-stamp
+
+build: build-stamp
+build-stamp: configure-stamp 
+	dh_testdir
+
+	cd $(BUILD_DIR) && make $(PARALLEL_MAKEFLAGS)
+
+	touch build-stamp
+
+clean:
+	dh_testdir
+	dh_testroot
+
+	rm -f build-stamp configure-stamp
+
+	rm -rf $(BUILD_DIR)
+
+	dh_clean 
+
+install: build
+	dh_testdir
+	dh_testroot
+	dh_prep
+	dh_installdirs
+
+	# Add here commands to install the package into debian/tmp
+
+	#libdui-doc package
+ifeq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
+	cd $(BUILD_DIR) && make $(PARALLEL_MAKEFLAGS) doc
+endif
+
+	#libdui0 package 
+	cd $(BUILD_DIR) && INSTALL_ROOT=$(CURDIR)/debian/tmp make $(PARALLEL_MAKEFLAGS) install
+
+	install -m 644 -D -p $(BUILD_DIR)/demos/widgetsgallery/translations/widgetsgallery.ts $(CURDIR)/debian/tmp/usr/share/doc/dui-demos-widgetsgallery-l10n-engineering-english/widgetsgallery.ts
+
+	install -m 644 -D -p $(BUILD_DIR)/src/translations/libdui.ts $(CURDIR)/debian/tmp/usr/share/doc/libdui-l10n-engineering-english/libdui.ts
+
+# Build architecture-independent files here.
+binary-indep: build install
+# We have nothing to do by default.
+
+# Build architecture-dependent files here.
+binary-arch: build install
+	dh_testdir
+	dh_testroot
+	dh_installchangelogs 
+	dh_installdocs
+	dh_install --sourcedir=debian/tmp -v 
+#	dh_installexamples
+#	dh_install
+#	dh_installmenu
+#	dh_installdebconf	
+#	dh_installlogrotate
+#	dh_installemacsen
+#	dh_installpam
+#	dh_installmime
+#	dh_installinit
+#	dh_installcron
+#	dh_installinfo
+#	dh_installman
+	dh_link
+	dh_strip -p libdui0 --dbg-package=libdui0
+	dh_strip -p dui-demos-widgetsgallery --dbg-package=dui-demos-widgetsgallery
+	dh_strip -p dui-demos-plainqt --dbg-package=dui-demos-plainqt
+	dh_strip -p libdui-tests
+	dh_compress
+	dh_fixperms
+#	dh_perl
+#	dh_python
+	dh_makeshlibs
+	dh_installdeb
+	dh_shlibdeps
+	dh_gencontrol
+	dh_md5sums
+	dh_builddeb --destdir=$(DEBDIR)
+
+binary: binary-indep binary-arch
+.PHONY: build clean binary-indep binary-arch binary install configure

@@ -1,0 +1,11 @@
+README_extradata.txt
+extradata.dat
+extradata_static.lst
+extradata_static.mak
+libextradata.a
+root.res
+qtc-gdbmacros/
+Makefile.Debug
+Makefile.Release
+mashup/mashup/gen_*.*
+.gen/

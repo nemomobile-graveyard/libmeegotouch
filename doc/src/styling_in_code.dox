@@ -1,0 +1,267 @@
+/*! \page styling_in_code Styling in application code
+
+\section styling_in_application_code Styling in application code
+
+    \subsection architecture Architecture
+        In DirectUI, the theme acts as a base for all the styling. If the theme is changed runtime, the look and 
+        feel for the whole system can radically change. The following figure shows the basic building blocks of 
+        the DirectUI style system. It also illustrates how the styling is integrated to the widgets.
+
+        \image html widgets_style.png "Architecture of the DirectUI styling system."
+
+    \subsection duitheme DuiTheme
+        All the style objects are used by the theme class. Theme class provides services to create a new style 
+        object and to release it. It reference counts all the style objects and provides a cache, which allows 
+        multiple widgets to share same style objects, therefore optimizing the speed and memory consumption of 
+        the system.
+
+    \subsection duistylesheetparser DuiStyleSheetParser
+        This class is a simple parser for stylesheet files. It reads stylesheet files and converts them to data 
+        structure in memory. It also provides services to dump the whole data structure to disk and to read it 
+        back into memory. This is a huge optimization since the whole parsing process can be bypassed after the 
+        stylesheet has been processed once.
+
+    \subsection duistylesheet DuiStyleSheet
+        This class provides support for the actual cascading process when the style sheet is being processed 
+        runtime. It is responsible of populating the style classes and to handle all the style attributes in a 
+        type-safe manner.
+
+    \subsection duistyle DuiStyle
+        DuiStyle class is the actual container for all the style attributes. The attributes are stored as Qt 
+        properties and they can be therefore accessed easily and also they can be later on animated using 
+        property animators. DuiStyle is a base class for all the styles.
+
+    \subsection style_classes DuiWidgetStyle, DuiButtonStyle, DuiLabelStyle
+        These are DuiStyle-derived classes, providing a set of attributes for the same type of widget. 
+        Basically there is one style class per one stylable component in the DirectUI.
+
+    \subsection duistylecontainer DuiStyleContainer
+        DuiStyleContainer class groups multiple DuiStyle instances together. It provides services like 
+        indicating the mode of the stylable object to the style system; or later on, even animating attribute 
+        values between different styles. The style is always accessed through the container.
+
+
+    \subsection creating_new_style_class Creating a new style class
+        Creating a new style class is pretty simple process. Basically what you do is just derive from the style 
+        class you want inherit from and add the attributes you need. In this example, a new style is created for a 
+        custom widget, therefore we start by deriving the new style class from DuiWidgetStyle class.
+
+        An important thing to note is that when declaring a new style class, either DUI_STYLE or DUI_STYLE_INTERNAL 
+        macro needs to be declared inside the class in the header file. Use DUI_STYLE when you inherit your style 
+        class from a style class which is defined outside of your library/application. Use DUI_STYLE_INTERNAL when 
+        you inherit from style class which is defined in the same library/application you are working with. The 
+        macro will create a private data member to your class, which will later on during the process store the real 
+        attribute data of your style class.
+
+        \code
+        class MyWidgetStyle : public DuiWidgetStyle
+        {
+            Q_OBJECT
+            DUI_STYLE(MyWidgetStyle)
+        };
+        \endcode
+
+        \subsection defining_style_attributes Defining attributes for the style
+            Attributes are declared by using DUI_STYLE_ATTRIBUTE(type, name, Name) macro. This macro will 
+            generate accessor methods to your attribute and it will also create Q_PROPERTY definition for it, 
+            making your attribute exist in the Qt's meta object. DUI_STYLE_ATTRIBUTE has three parameters. The 
+            first one is datatype of the attribute (int, qreal etc..) the other two concentrate to the naming 
+            of the attribute and the accessor methods.
+
+            The name parameter of the macro will be converted to style sheet-attribute name so that every 
+            camelcase letter is converted to dash and lowercase letter (e.g. marginLeft becomes margin-left).
+
+            Here is an example of our the new style class, with two attributes defined:
+            \code
+            class MyWidgetStyle : public DuiWidgetStyle
+            {
+                Q_OBJECT
+                DUI_STYLE(MyWidgetStyle)
+                DUI_STYLE_ATTRIBUTE(int, borderWidth, BorderWidth)
+                DUI_STYLE_ATTRIBUTE(QColor, borderColor, BorderColor)
+            };
+            \endcode
+
+            Next step is to create a container class for the style objects of this type. Style container 
+            provides access to the actual style data and it also makes it possible to indicate the style system 
+            that your stylable object has changed from one mode into another. Once again there are two macros: 
+            
+            - DUI_STYLE_CONTAINER(style class name) 
+            - DUI_STYLE_CONTAINER_INTERNAL(style class name)
+
+            If you used DUI_STYLE in the style class you must use DUI_STYLE_CONTAINER in the container class. 
+            If you used DUI_STYLE_INTERNAL in style class you must use DUI_STYLE_CONTAINER_INTERNAL in the 
+            container class. This macro will automatically generate an accessor operator and reloading of the 
+            style data if the mode changes when the application is running. Note that the parameter of the macro 
+            needs to be the type of the style class you created above.
+
+            The style container needs to be inherited from corresponding container class, here's an example:
+            \code
+            MyWidgetStyleContainer : public DuiWidgetStyleContainer
+            {
+                DUI_STYLE_CONTAINER(MyWidgetStyle)
+            };
+            \endcode
+
+            \image html style_macros.png "A diagram showing how macros are used in different libraries & executables."
+
+        \subsection defining_modes_for_style Defining modes for the style
+            If you decide to support modes in your style class, those can be defined with DUI_STYLE_MODE macro. 
+            This macro will expand to a method, which will set the corresponding mode enabled. For example, 
+            DUI_STYLE_MODE(Indexing) will expand to setModeIndexing() method, which can be called to start 
+            retrieving attribute values from that mode.
+
+            Here's an example to add few modes to the container
+            \code
+            MyWidgetStyleContainer : public DuiWidgetStyleContainer
+            {
+                DUI_STYLE_CONTAINER(MyWidgetStyleContainer)
+                DUI_STYLE_MODE(Indexing)
+                DUI_STYLE_MODE(SecondMode)
+            };
+            \endcode
+
+            The new style class is now ready to be configured through the style sheets, see Styling with 
+            stylesheets for more details for that subject.
+
+        \subsection accessing_style_attributes Accessing to the style attributes
+        DirectUI provides a simple way to access the style attributes by providing a style instance for the 
+        stylable object. This class contains simple accessor methods which allows one to read the values of the 
+        attributes. The name of the accessor method is defined by the second parameter in the DUI_STYLE_ATTRIBUTE 
+        macro. See example of accessing the style below.
+
+        \code
+        // assuming that widget is using MyWidgetStyle 
+        void MyWidgetView::doSomePainting(QPainter& painter)
+        {
+        .
+        .
+            // at same point, access style attributes
+            int borderWidth = style()->borderWidth();
+            painter.setPen(style()->borderColor());
+        .
+        .
+        }
+        \endcode
+
+        \subsection runtime_style_changes Runtime style change for widgets
+            When the style changes in runtime, the DuiWidgetView::applyStyle method will be called. It means 
+            that the attributes are reloaded with new values and they are ready to be used. This method is 
+            virtual and it can be overridden in the derived classes. See example below.
+
+            \code
+            // in MyWidgetView.h
+            class DUI_EXPORT MyWidgetView : public DuiWidgetView
+            {
+                Q_OBJECT
+                DUI_VIEW(MyWidgetModel, MyWidgetStyle)
+            .
+            .
+            protected:
+                // we want to do something when the style changes
+                virtual void applyStyle();
+            .
+            .
+            };
+            
+            // in MyWidgetView.cpp
+            void MyWidgetView::applyStyle()
+            {
+                DuiWidgetView::applyStyle();
+                
+                // do whatever you want here...
+                
+            }
+            \endcode
+
+\section using_helper_tools Using helper tools
+    There are two helper tools which make the creation of new style classes easier. These tools are duigen and 
+    duimoc. It is important to note that one doesn't have to use these tools, everything can be done without 
+    them. So if you decide to bypass the toolchain, it means that you have to write all the private classes and 
+    attribute accessor methods by yourself. Writing all of those files is pretty much work and you also get 
+    responsibility to maintain all of those files. The toolchain does most of that stuff in compile time so 
+    maybe it's worth to have a look at it after all.
+
+    \subsection duigen Duigen
+        Duigen generates private data classes and their content for all the styles. It also generates the 
+        constructor/destructor code to your style class among with all the needed necessary accessor methods. 
+        Everything is generated and compiled during the make process.
+
+    \subsection duimoc Duimoc
+        Duimoc is a pretty simple script. Because Qt's moc doesn't know how to expand macros there needs to be 
+        a way to expand the DUI_STYLE_ATTRIBUTE macros for it. The duimoc expands them to Qt's Moccer so that 
+        the Q_PROPERTY macro gets translated by the Qt Moc.
+    
+    \image html toolchain.png "Graph showing how the duigen & duimoc are integrated into the build process."
+    
+    \subsection configuring_project_to_use_helper_tools Configuring your project to use helper tools
+        In order to use helper tools automatically, you need to add CONFIG += dui to your .pro file. In 
+        addition, you must declare your model & style header files to be processed by adding them into the 
+        MODEL_HEADERS and STYLE_HEADERS. Note that your style & model headers must also exist in common HEADER 
+        section. See example .pro file below how to do that.
+
+        \code
+        TEMPLATE = app
+        TARGET = mywidget
+        CONFIG += dui # Requires libdui to be installed
+        # Input
+        SOURCES += main.cpp mywidget.cpp
+        HEADERS += mywidget.h mywidgetstyle.h mywidgetmodel.h
+        MODEL_HEADERS += mywidgetmodel.h
+        STYLE_HEADERS += mywidgetstyle.h
+        INCLUDEPATH += ../../src/include
+        QMAKE_LIBDIR += ../../lib/
+        \endcode
+
+
+\section advanced_styling_in_app Advanced styling in application code
+
+    \subsection parent_child_relationship_in_app Parent-child relationship in application
+        Using parent-child relationship in styling needs nothing more than assigning a parent to the widget 
+        which needs to be styled. This can be achieved by calling QGraphicsItem::setParentItem method to the 
+        DuiWidgetController. After that the system is aware of the widgets parent, therefore being able to 
+        assign a proper style for it.
+
+    \subsection mode_in_app Mode in application
+        If the state of your stylable changes, you need to inform the styling system about it. This is done 
+        by calling the corresponding method in the DuiStyleContainer class. For example, if you have defined 
+        a mode 'Selected' to your style container class, you can call setModeSelected() method to enable that 
+        kind of styling. The styling system uses the mode as a parameter in DuiTheme::style call when it 
+        reloads the styles.
+
+        Here's an example:
+        \code
+        // assume that this is defined in the DuiWidgetStyleContainer class
+        DUI_STYLE_MODE(Selected)
+
+        void DuiWidgetView::myEventHandler()
+        {
+            // Access style container and change the mode to selected
+            style().setModeSelected();
+        }
+        \endcode
+
+    \subsection named_objects_in_app Styling based on object naming
+        By assigning object name to the stylable object, the system identifies that the object will need 
+        unique styling. If this styling is defined in the style sheet, it will be automatically applied by 
+        the system. The object name is assigned to the stylable object by using QObject::setObjectName method. 
+        The styling system uses the object name as a parameter in DuiTheme::style call when it reloads the 
+        styles.
+
+        Here's an example:
+        \code
+        // Assume that this is created earlier somewhere
+        DuiButton* button;
+
+        // this will assign a name for this widget, therefore enabling the named style for it
+        button->setObjectName("mybutton");
+        \endcode
+
+    \subsection orientation_in_app Orientation in application
+        Style changes & reloading during the device orientation change is somewhat automatic process, at least 
+        for the widgets. Basically all the styles get reloaded automatically and the styling system uses the 
+        device orientation as a parameter in DuiTheme::style call.
+
+    \subsection type_in_app Type in application
+        \todo Add documentation
+*/

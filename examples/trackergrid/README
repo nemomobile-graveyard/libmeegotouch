@@ -1,0 +1,75 @@
+This source example demonstrates using tracker to populate dui grid widget. 
+
+Preconditions
+=============
+This example is dependant on tracker and libqttracker. Make sure that both 
+are properly set up by running the following Sparql-query:
+
+tracker-sparql -q '
+SELECT ?GridItem_Mime ?GridItem_Path ?GridItem_Name
+WHERE 
+{
+    {
+    _:_1 <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#Image> .
+    _:_1 <http://www.semanticdesktop.org/ontologies/2007/01/19/nie#mimeType> ?GridItem_Mime .
+    _:_1 <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#belongsToContainer> ?GridItem_Path .
+    _:_1 <http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#fileName> ?GridItem_Name .
+    }
+}
+LIMIT 20
+'
+
+The output should be similar to this:
+
+  image/png, file:///home/mw/Desktop/misc, Screenshot.png
+  image/png, file:///home/mw/Desktop/misc, git-cheat-sheet-medium.png
+  image/png, file:///home/mw/Desktop/misc, logo.png
+  ...
+
+
+Limitations
+===========
+The current version of trackergrid doesn't support "live" data: changes on 
+tracker doesn't update grid contents without doing a new query.
+
+
+Building
+========
+qmake
+make
+
+
+Running
+=======
+./trackergrid
+
+
+Build dependencies
+==================
+- libraptor1-dev_1.4.18-1
+- libraptor1_1.4.18-1
+- vala-0.7.0
+- tracker
+- libqttracker-0.3.3
+
+Installing dependencies
+=======================
+sudo apt-get install libgmime2-dev libdbus-glib-1-dev uuid-dev libhal-dev libhal-storage-dev libsqlite3-dev libpango1.0-dev flex bison intltool libxml2-dev libgtk2.0-dev libexif-dev libjpeg62-dev libtiff4-dev
+
+wget http://download.librdf.org/binaries/debian/unstable/libraptor1-dev_1.4.18-1_i386.deb http://download.librdf.org/binaries/debian/unstable/libraptor1_1.4.18-1_i386.deb
+sudo dpkg -i libraptor1-dev_1.4.18-1_i386.deb libraptor1_1.4.18-1_i386.deb
+
+wget http://download.gnome.org/sources/vala/0.7/vala-0.7.0.tar.bz2
+tar jxf vala-0.7.0.tar.bz2
+cd vala-0.7.0
+./configure ; make ; sudo make install
+
+git clone git://git.gnome.org/tracker
+cd tracker
+./autogen.sh ; ./configure ; make ; sudo make install
+
+svn checkout https://projects.maemo.org/svn/af/projects/libqttracker/tags/0.3.3/ libqttracker
+cd libqttracker
+nano -w shared.pri # edit so that install_prefix = /usr
+qmake ; make ; sudo make install
+

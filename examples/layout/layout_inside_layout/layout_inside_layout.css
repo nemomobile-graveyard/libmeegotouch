@@ -1,0 +1,9 @@
+#item {
+    font: "Nokia Sans Wide" 21px;
+    background-color: #eeeeee;
+    preferred-size: 85 85;
+}
+#inneritem {
+    font: "Nokia Sans Wide" 16px;
+    background-color: #303030;
+}

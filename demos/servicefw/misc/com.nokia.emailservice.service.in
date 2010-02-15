@@ -1,0 +1,4 @@
+[D-BUS Service]
+Interface=com.nokia.EmailServiceIf
+Name=com.nokia.EmailService
+Exec=@DUI_INSTALL_BIN@/eternia -pname pageservicefwemailservice -display :2

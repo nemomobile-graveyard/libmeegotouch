@@ -1,0 +1,39 @@
+// This is a test file for Direct UI CSS parser.
+
+@import "ft_duistylesheetparser_constants1.css";
+@import "ft_duistylesheetparser_constants2.css";
+
+//define constants
+@const cInt: 10;
+@const cReal: 1.0;
+@const cName: "name";
+@const cColor: #0dead0;
+@const cBool: true;
+@const cPoint: 17px 11px;
+@const cFont: arial 10px;
+@const cInvalid1 Invalid;
+@const : Invalid
+
+//define selector and use the constants
+TestObject
+{
+    attr-int: $cInt;
+    attr-string1: "name";
+    attr-string2: "this is a string with constant $cName";
+    attr-bool: $cBool;
+    attr-pos1: $cWidth $cHeight; /* comment after the attribute */
+    attr-pos2: $cPoint;
+    attr-font1: $cFontFamily $cFontSize; // comment after the attribute
+    attr-font2: $cFont; /* multi-line
+    comment after the attribute 
+    */
+    attr-color: $cColor;
+    attr-invalid: $cInvalid1;
+    attr-void: $cVoid;
+    attr-logical-black: $COLOR_BLACK;
+    attr-logical-green: $COLOR_GREEN;
+} /* this is a comment in end of file */
+// another end-of-file-comment
+/* and still another one 
+   which is spread into multiple lines */
+

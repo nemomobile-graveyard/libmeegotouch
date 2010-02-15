@@ -1,0 +1,1209 @@
+%TOC%
+/*! \page  i18n  Internationalisation Guidelines
+
+\section  intro  Introduction
+
+This document provides guidelines on developing locale-aware
+applications for the DirectUI Framework. Developers, translators, and
+user interface designers are the main target audience of this
+document.
+
+Generally, as the DirectUI Framework uses Qt as it's base, some of the Qt
+internationalisation practices also applicable. However, DirectUI
+Framework provides additional functionalities, hence it is recommended
+that developers always use DirectUI Framework classes to achieve full
+internationalisation support in their applications.
+
+This document discusses several general internationalisation
+guidelines for user interface designers. They are general enough and
+may also be applicable in another projects and vice versa.
+
+\section  architecture  Architecture
+\image html i18n-class.png "" 
+
+\section  supportedlanguages  Supported Languages and calendar systems
+Below is the list of officially supported languages both for writing systems and text rendering.
+
+- British English
+- American English
+- French
+- Canadian French
+- German
+- Italian
+- Spanish
+- Latin American Spanish
+- Portuguese
+- Brazilian Portuguese
+- Danish
+- Swedish
+- Finnish
+- Norwegian
+- Russian
+- Dutch
+- Chinese Simplified
+- Chinese Traditional
+- Chinese Hongkong
+- Arabic
+- Urdu
+- <a href="http://en.wikipedia.org/wiki/Persian_language">Persian</a>
+- Thai
+- Indonesian
+- Hindi
+- Ukranian
+- Turkish
+- Galician
+- Catalan
+- <a href="http://en.wikipedia.org/wiki/Basque_language">Basque</a>
+- Greek
+- Hebrew
+
+Although the implementation contains support for several calendar systems, officially the DirectUI Framework currently supports only Gregorian and Islamic calendar.
+
+\section  localesystem  Locale system
+\subsection  localesystemsettings  Settings
+
+The DirectUI locale system uses 4 main settings:
+
+- Language: This setting tells the locale system about the UI language of the device. This affects all UI texts, writing direction and widget layouts, and date presentation. However, this does not affect the user content (browser content language, etc).
+- Region: This setting tells the locale system about the region of the device, which is in practice almost correlates with the country. This affects the formatting of numbers, date and time, and names.
+- Calendar: This setting affects the date presentation. If non-gregorian is chosen then all the dates are presented in the chosen calendar.
+- Collation: This setting affects how the textual data is sorted.
+
+There is a special case with date formatting. Dates are formatted
+according to the region setting, use the language setting to display
+month/weekday names, and use the calendar setting for the calendar
+system. For example, if the language setting is Finnish, and the
+region is United States of America and the calendar is Islamic, the
+date may be formatted as:
+
+\code
+ša'banta 28, 1429 11.07.37 AM
+\endcode
+
+The date format used is "MMMM dd, YYYY HH:mm:ss v", the month name is written in Finnish style but using Islamic calendar.
+
+There is also another case with address formatting. The addresses are formatted using the address format applicable for the country stated in the address information. For example if the address is in the United States of America then the address is formatted in US style, even if the device language or region setting is set to another language/country.
+ 
+\subsection  localesysteminitialisation  Initialisation
+
+A DirectUI application is normally using the system default DuiLocale object;
+
+\code
+DuiLocale myLocale; // get the current locale
+\endcode
+
+If the application needs to use different locale settings than the system locale, then DuiLocale is created by make an instance of the DuiLocale object.
+\code
+DuiLocale locale ("fi_FI");
+\endcode
+where "fi" and "FI" mean to use Finnish language in Finland.
+
+\subsection Collator Collator
+To do collation, get the comparator with \c DuiLocale::collator()  method or create it DuiCollator() for default locale collator. This object acts as a functor and can be passed to Qt's \c qSort()  or any other sorting methods. 
+The comparator basically does the comparison of two items as "lessThan" function and returns true if the first parameter should come before the second one. 
+
+If other collation system than the locale's default is needed, then use \c setCollation()  method before getting the comparator. After all are set then the sorting can be started by using Qt's \c qSort()  function.
+
+To use the default collation:
+\code
+QStringList sl; // This contains the strings needed to be sorted
+...
+DuiLocale myLocale; // get the current locale
+DuiCollator c = myLocale.collator(); // getting the comparator
+...
+qSort(sl.begin, sl.end, c); // start to sort!
+...
+\endcode
+
+To use the different collation:
+\code
+QStringList sl; // This contains the strings needed to be sorted
+...
+DuiLocale myLocale; // get the current locale
+myLocale.setCollation (DuiLocale::PhonebookCollation); // sort using German's phonebook sorting order
+DuiCollator c = myLocale.collator(); // getting the comparator
+...
+qSort(sl.begin, sl.end, c); // start to sort!
+...
+\endcode
+
+\subsection Formatter Formatter
+DirectUI comes with several formatters for several data types. (Almost) Always use the formatter before displaying locale-dependant data to the screen to achieve uniformity and consistency of the data presentation.
+
+\subsubsection Parameters Parameters
+
+The positional parameters used in QString is also applicable in the
+DirectUI Framework. The difference to Qt is that we don't use any
+parameter modifier, and just use number to tell the position of the
+parameter in the string. We don't distinguish the parameter whether it
+is string, numbers or anything, we just use it as a string.
+
+It is strongly recommended that developers use \c arg()  methods to
+arrange the parameters as DirectUI provides type based formatters,
+and don't use any format string. QString formatters shall not be used,
+as QString uses QLocale which is not used in DirectUI.
+
+The appearance of data is mainly driven using formatters API, not with
+the format string. However there are several APIs which accept custom
+format strings.
+
+\code
+   ...
+   DuiLocale myLocale; // get the current locale
+   ...
+   int number = 1234;
+   // format the number, the result is in QString
+   QString formattedNumber = myLocale.formatNumber(number);
+   ...
+   // Now use it in your string
+
+   //% "We have %1 new messages"
+   QString message = qtTrId("xx_%1_new_messages").arg(formattedNumber);
+\endcode
+
+The above message isn't a good example though because in the above
+message one would probably want to distinguish between singular and
+plural messages ("We have 0 new messages", "We have 1 new message",
+...)
+
+To do this correctly, one should use %n instead of %1 and pass the number
+as an additional argument, like this:
+
+\code
+   //% "We have %n new messages"
+   QString message = qtTrId("xx_%n_new_messages", number);
+\endcode
+
+\b <!-- translator --> Note for translators \par
+Parameters starts from %1 and the index can be shuffled around in the translations.
+
+*Example:*
+- Translation 1: "%1 missed calls from %2"
+- Translation 2: "%2 mencoba menelepon %1 kali"
+- Text parameter: "3"  "John"
+- Final text in language 1: "3 missed calls from John"
+- Final text in language 2: "John mencoba menelepon 3 kali"
+
+There is only one special  modifier which is '%%' to display the per cent sign.
+
+Again this isn't a very nice example because it ignores that the
+translation must be different for singular and plural.
+
+\subsubsection  numbers  Numbers
+To format a number use \c formatNumber()  method. It works with \c qlonglong , \c short , \c int , \c double , and \c float  data types.
+
+\code
+...
+DuiLocale myLocale; // get the current locale
+...
+int number = 1234;
+QString formattedNumber = myLocale.formatNumber(number); // format the number, the result is in QString
+...
+\endcode
+
+\subsubsection  dateandtime  Date and time
+Use \c formatDateTime()  to format the date and time.
+\code
+...
+DuiLocale myLocale; // get the current locale
+...
+QDateTime now = QDateTime::currentDateTime();
+QString formattedDateTime = myLocale.formatDateTime(now);
+...
+\endcode
+
+As mentioned previously, date format can also be affected by the device language, region, and calendar settings. 
+
+\code
+...
+DuiLocale myLocale; // get the current locale
+...
+QDateTime now = QDateTime::currentDateTime();
+QString formattedDateTime = myLocale.formatDateTime(now, DuiLocale::IslamicCalendar); // format using IslamicCalendar
+...
+\endcode
+
+Custom formatting is supported with ISO-14652 format (also used in libc's \c strftime ) by using \c formatDateTime() .
+
+\subsubsection  percentage  Percentage
+\c formatPercent()  is used to format a percentage value.
+\code
+...
+DuiLocale myLocale; // get the current locale
+...
+double percent = 0.29; // = 29%
+int decimals = 2;
+QString formattedPercentage = myLocale.formatPercent(percent, decimals);
+...
+\endcode
+
+\subsubsection Currency Currency
+To format any amount of money with a currency, use \c formatCurrency()  method.
+
+
+\code
+...
+DuiLocale myLocale; // get the current locale
+...
+double money = 150.40;
+QString currency = "EUR";
+QString formattedCurrency = myLocale.formatCurrency(money, currency);
+...
+\endcode
+
+\subsubsection Name Name
+Use DuiName class to populate the name information, and use \c DuiLocale::formatName()  method to format the name.
+
+\subsubsection Address Address
+Use DuiAddress class to populate the address information, and use \c format()  method to format the name using the format specified as parameter.
+
+\subsection Calendar Calendar
+DuiLocale provides Gregorian as well as non-Gregorian calendar support. Use \c formatDateTime()  to format the date according to the custom of the selected calendar.
+To set another calendar than the default Gregorian calendar, use \c setCalendar()  method.
+
+\code
+DuiLocale myLocale; // get the current locale
+...
+myLocale.setCalendar(DuiLocale::IslamicCalendar); // set the calendar to use Islamic calendar
+...
+\endcode
+
+Further date manipulations can be done using DuiCalendar object.
+
+\subsection  iteratingwords  Iterating words
+On general case iterating words in a string is not possible by searching whitespace: e.g. thai language just concatenates words and in chinese language a character is a word. For this need a DuiBreakIterator class can be used. It is constructed with a locale and a string and provides an interface for iterating word boundaries. Following example iterates word boundaries from beginning to the end:
+
+\code
+DuiLocale myLocale; // current locale
+QString text("this is text to be iterated");
+DuiBreakIterator iterator(myLocale, text, DuiBreakIterator::WordIterator);
+while (iterator.hasNext()) {
+  int next = iterator.next();
+  ...
+}
+\endcode
+
+\subsubsection  otainstallation  Over-the-air locale data installation
+
+FIXME: Should it be discussed?
+\subsubsection  localedatastorage  Locale data storage
+FIXME: Should it be discussed?
+
+\section  translationsystem  Translation system
+\subsection  logicalidandengineeringenglish  Logical ID and engineering English
+
+The DirectUI Framework can use both Qt standard \c tr()  method or the
+idbased
+<a href="http://qt.nokia.com/doc/4.6-snapshot/qtglobal.html#qtTrId">qtTrId()</a>
+method. For the Nokia internal localisation process, only \c qtTrId() 
+should be used.  Other parties using logical IDs instead of
+engineering English IDs for the UI messages might also find \c qtTrId() 
+useful.
+
+Contrary to the approach of using engineering English as the message
+ids, which is commonly practiced in the open source community, the
+logical ID approach uses message ids which are guaranteed to be
+globally unique.
+
+With \c qtTrId() , the logical ID is a argument of the function and the
+engineering English is supplied as a comment above. See the example in
+the Qt documentation of
+<a href="http://qt.nokia.com/doc/4.6-snapshot/qtglobal.html#qtTrId">qtTrId()</a>,
+reproduced here for convenience:
+
+\code
+   //% "%n fooish bar(s) found.\n"
+   //% "Do you want to continue?"
+   QString text = qtTrId("qtn_foo_bar", n);
+\endcode
+
+\subsection  translationsystemsetup  Translation system setup
+
+To setup the translation system using \c qtTrId() , you
+can use the following code snippets in your main function:
+
+By default, the system uses the name of the application executable
+(without the directory path) as the name for the file of the
+translation catalog and loads this catalog automatically. So you can
+start using \c qtTrId()  immediately:
+
+\code
+...
+int main(int argc, char** argv){
+...
+   DuiApplication app (argc, argv);
+...
+   //% "hello"
+   qtTrId("xxx_hello");
+...
+}
+...
+\endcode
+
+In the above example, if the application executable is for example
+\c /usr/bin/foo , i.e. the base file name of the executable is \c foo , the
+translation catalog =&lt;top-directory&gt;/foo_&lt;locale-code&gt;.qm= will be
+used.
+
+If you need to specify a file for the translation catalog wich differs
+from the name of the executable you can use the optional third
+parameter \c appIdentifier  of the DuiApplication constructor as in this
+example:
+
+\code
+...
+int main(int argc, char** argv){
+...
+   DuiApplication application(argc, argv, "bar");
+...
+   //% "hello"
+   qtTrId("xxx_hello");
+...
+}
+...
+\endcode
+
+In the above example, the translation catalog
+=&lt;top-directory&gt;/bar_&lt;locale-code&gt;.qm= will be used no matter
+what the file name of the application executable is.
+
+But note that the \c appIdentifier  is used not only for localization
+files but also for themes. I.e. changing the appIdentifier
+will also affect themes. Usually this should be no problem because
+in most cases these should be kept the same, if possible.
+
+When it is not possible to use the appIdentifier to specify the
+translation catalog which should be loaded, one can use the
+\c installTrCatalog()  function to load a translation catalog with a
+completely different name as in this example:
+
+\code
+...
+int main(int argc, char** argv){
+...
+   DuiApplication app (argc, argv);
+
+   // create a DuiLocale. Without parameters in the constructor,
+   // it uses defaults from the environment or gconf
+   DuiLocale locale;
+
+   // load a different translation catalog for this locale:
+   locale.installTrCatalog("othercatalog");
+
+   // the order is important, set the locale as the default *after*
+   // installing the translation catalog:
+   DuiLocale::setDefault(locale);
+...
+   // Now this call to qtTrId() will use messages from the translation catalog
+   // file othercatalog_<locale-code>.qm:
+
+   //% "hello"
+   qtTrId("xxx_hello");
+...
+}
+...
+\endcode
+
+To setup your translation using the \c tr()  method known from regular Qt
+programs, you can use the \c installTrCatalog()  method as in the
+following example:
+
+\code
+...
+int main(int argc, char** argv){
+...
+   DuiApplication app (argc, argv);
+   // create a DuiLocale. Without parameters in the constructor,
+   // it uses defaults from the environment or gconf
+   DuiLocale locale;
+
+   // install the catalog for use with tr(). It is probably
+   // a good idea to use the application name for "mycatalog":
+   locale.installTrCatalog("mycatalog");
+
+   // Make the locale the default to enable the message catalog just
+   // installed above for tr(). The order is important, do this *after*
+   // installing the translation catalog:
+   DuiLocale::setDefault(locale);
+...
+   // Now you can use tr() as in regular Qt programs:
+   tr("hello");
+...
+}
+...
+\endcode
+
+\subsection  translatingmessages  Translating messages
+
+\c qtTrId()  is used to translate the UI messages.
+
+\code
+   QString qtTrId ( const char * id, int n = -1 )
+\endcode
+
+\c id  is the logical name for a UI message which needs to be
+translated.
+If =n >= 0=, all occurrences of =%n= in the resulting string are replaced
+with a decimal representation of \c n . In addition, depending on \c n ’s
+value, the translation text may vary.
+
+\c qtTrId()  is useful only if the project is using logical names as the
+UI message. If your project is using English string then use \c tr() 
+instead.
+
+\subsection  pluralmessages  Plural messages
+
+In a plural message, pass the number into argument \c n  in \c qtTrId()  or
+(It is similar to how this is done with \c tr() )
+
+\code
+   int n = messages.count();
+   //% "%n message(s) saved"
+   showMessage(qtTrId("xx_%n_messages_saved", n));
+\endcode
+
+\subsection  translationdatastorage  Translation data storage
+
+The convention for the path to store the compiled translation data (in
+.qm format) on the device is:
+
+\code
+   <top-directory>/<catalog-name>_<locale-code>.qm
+\endcode
+
+\c top-directory  can be anywhere on the device. \c locale-code  is
+something like \c en_US  for US-English, \c en_GB  for Britisch English,
+\c zh_CN  for Simplified Chinese, \c de_DE  for German in Germany, \c de_CH 
+for Swiss German, etc. <catalog-name> is usually the name of the
+application. If a translation for a more specific locale name like
+\c en_US  cannot be found, a less specific locale name like \c en  is
+tried. For example, if the application name is \c foo  and the locale
+name is \c en_US , the first one of the following files which exists
+is used:
+
+\code
+<top-directory>/foo_en_US.qm
+<top-directory>/foo_en_US
+<top-directory>/foo_en.qm
+<top-directory>/foo_en
+<top-directory>/foo.qm
+<top-directory>/foo
+\endcode
+
+See also the documentation of
+<a href="http://doc.trolltech.com/4.5/qtranslator.html#load">QTranslator::load()</a>.
+
+The \c top-directory  used by default is `/usr/share/l10n/dui` (This is
+defined as \c DUI_TRANSLATION_DIR  in `common.pri` in the mkspecs
+directory of the libdui source code).
+
+`/usr/share/l10n/dui` is also the default directory used by
+translation packages to store the .qm files. Applications can set
+additional search paths by using \c DuiLocale::setTranslationPaths() 
+and \c DuiLocale::addTranslationPath() . This supports the variability
+needed for over-the-air translation installation as well as for user
+defined translations.
+
+\subsection  translationdatapackaging  Translation data packaging
+
+The packaging of translations into debian packages is illustrated here
+using the demo application “widgetsgallery” as an example.
+
+<table border="1">
+  <caption>
+     <big><b>
+        Example for package names and contents of translation packages
+     </b></big>
+  </caption>
+     <tr>
+        <td><b>Package name</b></td>
+        <td><b>Contents</b></td>
+     </tr>
+     <tr>
+        <td>
+           dui-demos-widgetsgallery-l10n-engineering-english<br>
+        </td>
+        <td>
+           /usr/share/l10n/dui/widgetsgallery.qm<br>
+           /usr/share/doc/dui-demos-widgetsgallery-l10n-engineering-english/widgetsgallery.ts<br>
+           /usr/share/doc/dui-demos-widgetsgallery-l10n-engineering-english/changelog.Debian.gz<br>
+        </td>
+     </tr>
+     <tr>
+        <td>
+           dui-demos-widgetsgallery-l10n-ar<br>
+        </td>
+        <td>
+           /usr/share/l10n/dui/widgetsgallery_ar.qm<br>
+           /usr/share/doc/dui-demos-widgetsgallery-l10n-ar/changelog.Debian.gz<br>
+        </td>
+     </tr>
+     <tr>
+        <td>
+           ...<br>
+        </td>
+        <td>
+           ...<br>
+        </td>
+     </tr>
+     <tr>
+        <td>
+           dui-demos-widgetsgallery-l10n-zh-cn<br>
+        </td>
+        <td>
+           /usr/share/l10n/dui/widgetsgallery_zh_CN.qm<br>
+           /usr/share/doc/dui-demos-widgetsgallery-l10n-zh-cn/changelog.Debian.gz<br>
+        </td>
+     </tr>
+</table>
+
+Every application needing translations should supply also a debian
+package containing the “engineering English” translations.  The
+package name for the engineering English translations should end with
+-l10n-engineering-english as in the above example.  The package name
+“...-engineering-english” should make it clear that these are not real
+translations, instead they are completely auto-generated from the
+source code.
+
+In the above example, the package
+“dui-demos-widgetsgallery-l10n-engineering-english” contains
+“widgetsgallery.qm” and “widgetsgallery.ts”. “widgetsgallery” is the
+name of the application executable. “widgetsgallery.ts” is
+automatically generated from the source code using
+“lupdate”. “widgetsgallery.qm” is automatically generated from
+“widgetsgallery.ts” using “lrelease”. The make files in the
+application source code should contain support to do this
+automatically when building the application without extra effort (The
+current source code of widgetsgallery already gives an example how
+this can be done).
+
+The “widgetsgallery.qm” file serves several purposes:
+
+<ol>
+<li>
+
+It is used at runtime by the application to display engineering
+English instead of message ids to make testing the application easier
+while no real translations are available yet.
+
+</li>
+<li>
+
+It supplies fallback engineering English when real translations are
+available but incomplete. Of course this should never happen in the
+final product but it will happen during the development and testing
+and then this fallback engineering English is useful.
+
+</li>
+<li>
+
+It gives us an easy way to extract a list of ids which are actually
+used in the source code. Using the tool “lconvert” one can easily
+extract all ids from a .qm file. If all dui-applications supply
+“...-l10n-engineering-english” packages, one can easily install all
+these packages (for example with “apt-get”) and then extract all ids
+which are actually used. Then these ids can be used for cross-checking
+with the ids used in the specifications and in the real translations.
+
+</li>
+</ol>
+
+“widgetsgallery” is only a test application used by the libdui
+developers for testing and demos. Therefore, the localisation
+department will not supply translations for “widgetsgallery”.  The
+libdui developers supply some demo translations for “widgetsgallery”
+to test their code and to make sure the system works.
+
+Only because of this, “widgetsgallery” has some “real” translation
+packages like “dui-demos-widgetsgallery-l10n-zh-cn” containing
+“/usr/share/l10n/dui/widgetsgallery_zh_CN.qm” (see the table above).
+In that respect, “widgetsgallery” is an exception.
+
+For a “real” application, say “camera” which is intended to be shipped
+to the customer, the “real” translation packages are supplied by the
+translation department, not by the developers. I.e. the developers
+will only supply “camera-l10n-engineering-english” and all the other
+packages “camera-l10n-ar”, “camera-l10n-zh-cn”, ..., will be supplied
+by the translation department.
+
+As long as the real translations are still missing, the engineering
+English is displayed. As soon as the real translations are available
+and installed, they are used automatically. As can be seen in the
+above table, there is no file conflict between the engineering English
+packages and the real translations, they can both be installed at the
+same time without problems.
+
+For the final product, the engineering English packages can be
+omitted. If it has been verified during the testing phase that the
+“real” translations are complete, the engineering English is not
+needed anymore.
+
+\subsection  translationfordotdesktop  Translation for .desktop files
+
+The translation of .desktop files for DUI differs a bit from the usual
+practise of Freedesktop.org. The rationale behind it is that we
+have different localisation processes which make it impossible to
+modify the source of .desktop files during build time. To accommodate
+the special needs of our localisation processes, the .desktop file
+shall contain at least two extra (key, value) pairs:
+
+- X-DUI-logical-id=&lt;logical name&gt;: The value for this key provides the logical name of the section name
+- X-DUI-translation-catalog=&lt;catalog name&gt;: The value for this key provides the catalog where the logical name exists
+
+For example:
+\code
+[DuiSettings]
+# engineering english
+Name=Setting
+# logical name of "Setting"
+X-DUI-logical-id=xx_setting_something
+# the catalog name
+X-DUI-translation-catalog=duisettings
+\endcode
+
+For the freedesktop specification of the .desktop files see
+
+<a href="http://standards.freedesktop.org/desktop-entry-spec/latest/">http://standards.freedesktop.org/desktop-entry-spec/latest/</a>
+
+In DUI, such .desktop files are parsed using DuiDesktopEntry.
+
+\subsection  otatranslationinstallation  Over-the-air translation installation
+FIXME: No settings available now
+
+Translation data can be downloaded to the device and the translation
+system can immediately use the new downloaded data.
+
+\section  uiprogramming  UI programming
+
+\subsection  localechange  Reacting to changes in the locale settings
+
+The current language setting is stored in the gconf key
+\c /Dui/i18n/Language . From the command line, the current language can
+be queried using \c gconftool-2  like this:
+
+\code
+    ~$ gconftool-2 -g /Dui/i18n/Language
+    ar
+\endcode
+
+In the above example, the current language is Arabic. Setting
+the current language from the command line can of course also be
+done with \c gconftool-2 :
+
+\code
+    ~$ gconftool-2 -t string -s /Dui/i18n/Language fi
+\endcode
+
+The above command sets the current language to Finnish.
+
+Querying the current language from a Dui program works like this:
+
+\code
+    DuiGConfItem languageItem("/Dui/i18n/Language");
+    QString language = languageItem.value().toString();
+\endcode
+
+and setting it from a Dui program works like this:
+
+\code
+    DuiGConfItem languageItem("/Dui/i18n/Language");
+    languageItem.set("fi");
+\endcode
+
+If the current language changes in gconf, a Dui application will emit
+the signal:
+
+\code
+    localeSettingsChanged()
+\endcode
+
+This signal can then be used to change the language of the
+UI of an application on the fly like this:
+
+\code
+main.cpp:
+
+    #include "fooretranslator.h"
+    ...
+    int main (int argc, char **argv)
+    {
+        ...
+        FooRetranslator fooRetranslator;
+        QObject::connect(&application, SIGNAL(localeSettingsChanged()), &fooRetranslator, SLOT(fooRetranslate()));
+        ...
+    }
+\endcode
+
+where the fooretranslator class looks like:
+
+\code
+fooretranslator.h:
+
+    class FooRetranslator : public QObject
+    {
+        Q_OBJECT
+
+    public slots:
+        void fooRetranslate();
+    };
+
+
+fooretranslator.cpp:
+
+    void FooRetranslator::fooRetranslate()
+    {
+        DuiGConfItem languageItem("/Dui/i18n/Language");
+        QString language = languageItem.value().toString();
+        DuiLocale locale(language);
+        // installs the catalog for the &#8220;Engineering English&#8221;:
+        locale.installTrCatalog("foo.qm");
+        // installs the catalog for the real translation:
+        locale.installTrCatalog("foo");
+        DuiLocale::setDefault(locale); // posts QEvent::LanguageChange
+    }
+\endcode
+
+When a new DuiLocale is set as the default as above, DuiLocale posts
+the event \c QEvent::LanguageChange  to the application.
+
+Note: if the direction of the new language is different, DuiLocale may
+also change the layout direction of the application and a
+\c QEvent::ApplicationLayoutDirectionChange  may be posted to the
+applicaton as well.
+
+DuiWindow then posts that event to all QGraphicsWidgets on the
+DuiScene. A DuiWidget which receives the \c QEvent::LanguageChange 
+calls its virtual method
+
+\code
+    virtual void retranslateUi();
+\endcode
+
+and forwards the event to all child QGraphicsWidgets. 
+
+DuiWidgets can reimplement this \c retranslateUi()  method to do whatever
+is necessary to retranslate itself, as in the following example:
+
+\code
+foopage.h
+
+    class FooPage : public DuiWidget
+    {
+    ...
+    private:
+    ...
+        DuiLabel* label;
+    ...
+    };
+
+foopage.cpp
+
+    void FooPage::createContent()
+    {
+
+        label = new DuiLabel();
+
+        retranslateUi();
+    }
+
+    void FooPage::retranslateUi()
+    {
+    ...
+        //% "Label Text"
+        propertiesLabel->setText(qtTrId("qtn_label_text"));
+    ...
+    }
+\endcode
+
+This can be quite tricky in some cases, therefore we are thinking
+about adding a convenience API for the DuiWidgets to make
+reimplementing \c retranslateUi()  not necessary in many cases.
+
+\subsection  widgetmirroring  Widget mirroring and layout direction
+Widget mirroring is the automatic behaviour of putting the widgets in the reverse direction when the language is switched to Right-to-left languages (such as Arabic or Hebrew). In this direction, the widgets are put following the natural flow of text writing direction. Widget mirroring works automatically when the widgets are arranged using QGraphicsLayout or DuiLayout, with some exceptions with the specialist DuiLayout policies.
+
+The layout direction will be automatically set to the correct value by DuiApplication when the language is changed. The current layout direction can be obtained from \c DuiApplication::layoutDirection() . Note that during the application lifetime, the direction may change if the user changes it from the global setting.
+
+If you are developing a widget in which it does not make sense for the layout to be reversed (for example, a number keypad), then use \c QGraphicsWidget::setLayoutDirection()  to override the layout direction.  If you need to paint your widget differently in right-to-left mode, simply call `qApp->layoutDirection()` and draw as appropriate.  If you are implementing a custom DuiAbstractLayoutPolicy, however, you should use the \c DuiLayout::layoutDirection() function instead so that the user can override it.
+
+In advanced situations you can handle the \c QEvent::ApplicationLayoutDirectionChange()  event directly in your widget's event handler.
+
+\section  currentstatusrtlsupportinduiwidgets  Current status of RTL support in DuiWidgets
+
+<table border="1">
+  <caption>
+  <big><b>
+    Current status of RTL support in DuiWidgets
+  </b></big>
+  </caption>
+    <tr>
+      <td><b>Widget</b></td>
+      <td><b>Works with RTL</b></td>
+      <td><b>Comments</b></td>
+    </tr>
+    <tr>
+      <td>DuiAnimatedIcon</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiApplicationMenu</td>
+      <td>broken?</td>
+      <td>
+In widgetsgallery, click "Application Menu", then click "Application
+Menu" in the navigation bar. A menu with offering the names "Plato",
+"Twain", "Einstein", "Adams" is openened. Hit Control-D to change the
+layout direction, you see that the these names which were originally
+"almost" centred are aligned right in RTL mode. They should be aligned
+in a mirrored way, i.e. if they are a bit left of the centre in LTR
+mode, they should be a bit right of the centre in RTL mode.
+Is this a problem with DuiApplicationMenu or with DuiAction?
+      </td>
+    </tr>
+    <tr>
+      <td>DuiApplicationPage</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiApplicationWindow</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiButton</td>
+      <td>OK</td>
+      <td>
+But the switches in the switchpage of widgetsgallery (which are
+DuiButtons) do not reverse the alignment of their ON/OFF texts.
+Problem in DuiButton or somewhere else?
+      </td>
+    </tr>
+    <tr>
+      <td>DuiButtonGroup</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiComboBox</td>
+      <td>OK</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>DuiContainer</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiDialog</td>
+      <td>OK</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>DuiDockWidget</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiEscapeButtonPanel</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiGrid</td>
+      <td>broken</td>
+      <td>
+
+There seems to be a grid with gray squares in the background and blue
+buttons in the foreground in the widgetsgallery grid page. In LTR
+mode, the gray squares align with the blue buttons, i.e. on top of
+each gray square is a blue button. In LTR mode, the two arrays
+are shifted against each other. This doesn't look right. 
+
+      </td>
+    </tr>
+    <tr>
+      <td>DuiHomeButtonPanel</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiImage</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiInfoBanner</td>
+      <td>broken</td>
+      <td>
+Always slides in from the left side, see "Dialogs and Notifications"
+page in widgetsgallery.
+      </td>
+    </tr>
+    <tr>
+      <td>DuiLabel</td>
+      <td>OK</td>
+      <td>
+It did not change alignment on the fly until recently but this is
+fixed now, see <a
+href="https://projects.maemo.org/bugzilla/show_bug.cgi?id=144377">NB#144377</a>
+      </td>
+    </tr>
+    <tr>
+      <td>DuiMessageBox</td>
+      <td>OK</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>DuiModalSceneWindow</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiNavigationBar</td>
+      <td>broken</td>
+      <td>Icon in the navigation bar is always on the left side</td>
+    </tr>
+    <tr>
+      <td>DuiObjectMenu</td>
+      <td>probably OK</td>
+      <td>Where is this used?</td>
+    </tr>
+    <tr>
+      <td>DuiPannableViewport</td>
+      <td>broken</td>
+      <td>Position indicator is always on the right side</td>
+    </tr>
+    <tr>
+      <td>DuiPannableWidget</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiPopupList</td>
+      <td>OK</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>DuiProgressIndicator</td>
+      <td>OK</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>DuiPositionIndicator</td>
+      <td>broken</td>
+      <td>
+Is always on the right side. Can be seen on the start page
+of Widgetsgallery.
+      </td>
+    </tr>
+    <tr>
+      <td>DuiSeekBar</td>
+      <td>broken</td>
+      <td>
+slides correctly from the right in RTL mode but the black
+area showing the "already" downloaded stuff is only visible in LTR mode.
+      </td>
+    </tr>
+    <tr>
+      <td>DuiSeparator</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiSlider</td>
+      <td>OK</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>DuiSlideShow</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+    <tr>
+      <td>DuiTextEdit</td>
+      <td>OK</td>
+      <td>
+<a href="https://projects.maemo.org/bugzilla/show_bug.cgi?id=104397">NB#104397</a>
+is very obvious here, but this is not the fault of DuiTextEdit.
+      </td>
+    </tr>
+    <tr>
+      <td>DuiToolBar</td>
+      <td>OK</td>
+      <td></td>
+    </tr>
+    <tr>
+      <td>DuiWindow</td>
+      <td>OK</td>
+      <td>Nothing to do for RTL</td>
+    </tr>
+</table>
+
+\section  charsetconversion  Charset Conversions
+
+The DirectUI Framework uses the Qt character set conversion
+mechanisms directly. Therefore, developers can follow the Qt
+documentation to find out how to use the character set conversion
+functionalities.
+
+\section  generalchecklist  General Checklist
+
+\subsection General General
+\subsubsection  fontsize  Fonts size
+
+Some languages require bigger font size than the one used in the
+English text. This may impact the layout design.
+
+\subsubsection Plural Plural
+
+Some languages use plural and some do not. Some other languages use
+more than one form of plurals.
+
+\subsubsection Sorting Sorting
+
+Sorting order is dependent on the language setting. Always use
+DirectUI collator to sort the strings.
+
+\subsubsection  wordboundaries  Word boundaries
+
+In some languages there is no space between words. In most cases the
+line wrapping will work and the system will break the sentence into
+smaller chunks. If it fails, translators shall use whitespace to force
+word boundaries.
+
+\subsubsection  wordorder  Word order, variables
+
+When a sentence contains several variables, the order of the words in
+other languages may be different. Use QString place marker to define
+the order of the variables.
+
+\code
+   //% "Download and install %1 from %2? (Size is %3 MB)"
+   QString s = qtTrId("xx_download_and_install_%1_from_%2_size_%3_mb")
+                   .arg(packageName).arg(repository).arg(size);
+\endcode
+
+When translating, translators shall also keep the place markers and
+put them in the correct places.
+
+\subsection Developers Developers
+\subsubsection  alwaysusedui  Always use DirectUI Framework API
+
+This is the general checklist which need to be confirmed during the
+development. Use only DirectUI Framework locale system API to gain
+full internationalisation support. Use of POSIX and libc API is not
+recommended and may cause discrepancies in the representation of the
+data.
+
+To do sorting, never use Qt's QString localeAwareCompare(), use
+DirectUI collation system instead.
+
+\subsubsection  avoidhardcoding  Avoid hardcoding
+
+Some data such as graphics, icons, sounds, etc sometimes need to be
+correctly loaded dependent on the regional setting. In this case,
+never hard code the data directory, instead use the regional setting
+information to build the string to point to the correct directory
+containing the data.
+
+\subsubsection  neverconcatstrings  Never concatenate strings
+
+If you need to construct a string involving variables, never concate
+the UI strings. The string order is never guaranteed to the same in
+all languages. Never do this:
+
+\code
+   QString message = "You have " + numMessages + " messages";
+\endcode
+
+Instead use a variable when constructing the string:
+\code
+   //% "You have %1 messages"
+   QString message = qtTrId("xx_you_have_%1_messages").arg(numMessages);
+\endcode
+
+\subsubsection  dataformat  Data formatting
+
+Date, time, numbers, name, address, currency data are required to be
+formatted before displayed on the screen. Never display unformatted
+data as it breaks the data presentation consistency. Formatted data
+always use the correct presentation according to the regional
+setting. Special case for address data, it shall be formatted
+according to the customary of the country which stated in the address.
+
+\subsection  uidesign  UI Designers
+\subsubsection Abbreviations Abbreviations
+
+In general, avoid using abbreviations as part of the UI string. The
+abbreviations ofter are misleading and confuse the
+translators. Instead, allow for more text expansion
+
+\subsubsection Emphasis Emphasis
+
+Never use casing when indicating functionality or emphasis. Some
+languages do not observe distinction between lowercase and
+uppercase. The translator may have difficulties to find out how to
+emphasise the string when the original English string uses uppercase for
+the emphasis.
+
+Other methods such as using certain typeface to show emphasis also
+discouraged as not all writing systems support them.
+
+\subsubsection  characterrepertoire  Character repertoire
+
+Never use characters outside the ASCII repertoire as part of original
+English strings. The font needed to display the character may not
+available in the device variant used for other languages.
+
+\subsubsection Compounds Compounds
+
+Some languages create words by combining a few words together. The
+resulting words are often longer than the original English
+string. Make sure that the UI allows the text expansion in these
+languages.
+
+\subsubsection Digits Digits
+
+Some languages use their own digits (term: national digits) to show
+the numbers. Allow the usage of national digits in some cases (for
+example when displaying general strings containing numbers) and force
+the UI to only use the Latin digits in other cases (for example when
+displaying IP addresses).
+
+\subsubsection  writingdirection  Writing direction
+
+Some languages use different writing direction than the Latin based
+languages. The UI presentation generally follows the natural flow of
+the writing direction. Therefore, the widget layout and composition is
+mirrored when the device language is set to the languages which use
+the right-to-left writing direction. The mirroring is done
+automatically by the DirectUI Framework. If the automatic mirroring is
+not sufficient then consult the developers to support different layout
+for right-to-left direction.
+
+DirectUI Framework currently only supports left-to-right and
+right-to-left writing directions.
+
+\subsubsection Gender Gender
+
+Some languages use gender when referring to objects or words. 
+
+\subsubsection  colorandgraphics  Colour and graphics
+
+Colours often have different meanings and connotations in different
+cultures. In Western culture, red is often used to indicate stop or
+danger. In China, red is symbolic of celebration, luck and
+prosperity. White signifies purity, virginity, or death. In Western
+culture it is the colour worn at weddings. In parts of Japan and China
+the colour worn at funerals.
+
+Never embed text and/or numbers in graphics, otherwise the graphics
+need to be translated and it may be difficult and expensive.
+
+Some icons or drawings considered offensive in some cultures. 
+
+\subsubsection  slitstrings  Split strings when containing date and time format
+
+See section "Translation involving date/time format" above.
+*/

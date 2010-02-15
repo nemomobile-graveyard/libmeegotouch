@@ -1,0 +1,72 @@
+/*! \page mainclasses Main Classes
+
+Core application classes
+<ul>
+<li>DuiApplication
+<li>DuiApplicationPage
+<li>DuiApplicationWindow
+</ul>
+
+Action extensions
+<ul>
+<li>DuiAction
+<li>DuiWidgetAction
+</ul>
+
+Notifications
+<ul>
+<li>DuiNotification
+<li>DuiNotificationGroup
+</ul>
+
+Widgets
+<ul>
+<li>DuiButton
+<li>DuiComboBox
+<li>DuiContainer
+<li>DuiDialog
+  <ul>
+    <li>DuiMessageBox
+  </ul>
+<li>DuiImageWidget
+<li>DuiInfoBanner
+<li>DuiLabel
+<li>DuiList
+  <ul>
+    <li>DuiContentItem
+    <li>DuiCellCreator
+    <li>DuiWidgetRecycler
+  </ul>
+<li>DuiMashupCanvas
+<li>DuiPannableViewport
+<li>DuiProgressIndicator
+<li>DuiSlider
+  <ul>
+    <li>DuiSeekBar
+  </ul>
+<li>DuiTextEdit
+</ul>
+
+Layouting and grouping
+<ul>
+<li>DuiButtonGroup
+<li>DuiLayout
+<ul>
+  <li>DuiLinearLayoutPolicy
+  <li>DuiGridLayoutPolicy
+  <li>DuiFlowLayoutPolicy
+  <li>DuiFreestyleLayoutPolicy
+</ul>
+</ul>
+
+Creating new widgets
+<ul>
+<li>DuiWidget
+<li>DuiStylableWidget
+<li>DuiWidgetController
+<li>DuiWidgetView
+<li>DuiSceneWindow
+<li>DuiTheme
+</ul>
+
+*/

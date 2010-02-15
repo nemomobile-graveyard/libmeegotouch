@@ -1,0 +1,4 @@
+[D-BUS Service]
+Interface=com.nokia.TextProcessorIf
+Name=com.nokia.TextProcessor
+Exec=@DUI_INSTALL_BIN@/com.nokia.textprocessor

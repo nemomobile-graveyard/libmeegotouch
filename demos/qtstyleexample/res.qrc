@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/icon-m-message-send-receive.svg</file>
+        <file>images/icon-m-save.svg</file>
+    </qresource>
+</RCC>

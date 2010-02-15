@@ -1,0 +1,9 @@
+usr/bin/qtstyledialogs
+usr/bin/qtstyleexample
+usr/share/applications/qtstyledialogs.desktop
+usr/share/applications/qtstyledialogs-windows-style.desktop
+usr/share/applications/qtstyleexample.desktop
+usr/share/applications/qtstyleexample-windows-style.desktop
+usr/share/dbus-1/services/com.nokia.qtstyledialogs.service
+usr/share/dbus-1/services/com.nokia.qtstyleexample.service
+usr/share/qtstyleexample/themes/style/qtstyleexample.css

@@ -1,0 +1,255 @@
+/*! \page styling_stylesheets Stylesheets
+
+    As stated earlier in this documentation, the application developer programs the style to the system 
+    (for e.g some Widget) a set of attributes are defined for the style. These attributes are defined by 
+    UI-Designers and they can be customized using the style sheets. Style sheets provide an easier way to 
+    customize the look and feel of the system, without a need to re-compile the system all over again if 
+    something needs to be changed. Style sheets are also intuitive and they are simple to use. When the 
+    system starts up, the style sheets are loaded and the styles are automatically initialized according 
+    the values defined in the style sheets.
+
+    \section syntax_reference Syntax reference
+    This section describes the syntax for stylesheet files. The following chapters contain the building blocks 
+    for the styleheet definition from top to bottom. Most of the syntax follows the basic CSS rules but there 
+    are also some DirectUI -specific additions.
+
+        \subsection import Import
+            Syntax: @import ""; or @import url("");
+
+            Description: Makes it possible to import other stylesheet files and in this way combine multiple 
+            stylesheets as one.
+
+            Details: All the import must reside in the top of the .css file, before any selectors are defined.
+
+            \code
+            @import "commonstylesheet.css";
+            @import "otherstylesheet.css";
+
+            // .. write other selectors here
+             MySelector#MySelectorName
+            {
+                // write attributes here...
+            }
+            \endcode
+        
+        \subsection selectors Selectors
+            Syntax: styleclassname { }
+
+            Full syntax: styleclassname[type]#name.orientation:mode (all the parameters are optional but their order 
+            needs to be correct)
+
+            Description: Groups attributes for a defined style
+            
+            Details: Selectors group attributes of the same category together. In DirectUI stylesheets, it 
+            basically means having one selector for each style class. Selector attributes follow the general 
+            inheritance rules, so if you declare base class selectors, their contents will by default, inherit 
+            to the subclasses. If you want to break this inheritance chain, you can add a dot character (.) in 
+            a front of the class name, meaning that those attributes are not derived to the subclasses but used 
+            only for that class. As a general rule, most of the attributes should derive and therefore you 
+            should consider before using the dot in a front of the class name.
+
+            \code
+            // these attributes will inherit to all subclasses of MyDuiWidgetStyle
+            MyDuiWidgetStyle
+            {
+                // my own font definition and text color
+                my-font: "sans" 15;
+                my-text-color: #FFFFFF;
+            }
+
+            // these attributes won't inherit to subclasses because of the dot in the front of the styleclassname
+            .MyDuiWidgetStyle 
+            {
+                attribute-that-does-not-derive: "this does not derive";
+            }
+            \endcode
+
+        \subsection Attributes
+            Syntax: attributename: &lt;attribute value&gt;;
+
+            Description: Sets value to attribute
+            
+            Details: Attributes and their values can be considered as the actual data of the style sheet. 
+            Application developer defines them in the style header file, according to instructions from the UI 
+            designer.
+
+            The attribute naming between C++ code and stylesheets follows the pattern where camelcase names are 
+            converted into lowercase strings with hyphens. See example below.
+
+            <table border="1">
+            <tr>
+            <th>C++ name</th>
+            <th>Attribute name in stylesheet</th>
+            </tr>
+            <tr>
+            <td>backgroundColor</td>
+            <td>background-color</td>
+            </tr>
+            <tr>
+            <td>underlineTextColor</td>
+            <td>underline-text-color</td>
+            </tr>
+            </table> 
+
+            <table border="1">
+            <tr><th>Datatype</th> <th>Syntax</th> <td>Example</td></tr>
+            <tr><td>bool</td> <td>true, false</td> <td>visible: false;</td></tr>
+            <tr><td>int</td> <td>numeric value</td> <td>age: 42;</td></tr>
+            <tr><td>QColor</td> <td>Color name. See QColor::setNamedColor for possible parameters</td> <td>color: #ffffff;</td></tr>
+            <tr><td>qreal</td> <td>decimal value</td> <td>distance: 31.5;</td></tr>
+            <tr><td>const QPixmap*</td> <td>image-id &lt;width height&gt;</td> <td>background: image_id; background: image_id 128 128;</td></tr>
+            <tr><td>const DuiScalableImage*</td> <td>image-id &lt;left right top bottom&gt;</td> <td>background: image_id; background: image_id 0 128 0 128;</td></tr>
+            <tr><td>QSize</td> <td>width height</td> <td>size: 25 25;</td></tr>
+            <tr><td>QSizeF</td> <td>width height</td> <td>size: 25.2 25.6;</td></tr>
+            <tr><td>QPoint</td> <td>x y</td> <td>position: 10 10;</td></tr>
+            <tr><td>QPointF</td> <td>x y</td> <td>position: 10.6 10.6;</td></tr>
+            <tr><td>QFont</td> <td>family size</td> <td>font: arial 20;</td></tr>
+            <tr><td>QString</td> <td>text</td> <td>name: "john";</td></tr>
+            <tr><td>Qt::Alignment</td> <td>left, right, hcenter, justify, top, bottom, vcenter, center, absolute</td> <td>align: center;</td></tr>
+            <tr><td>Qt::Orientation</td> <td>vertical, horizontal</td> <td>orientation: vertical;</td></tr>
+            <tr><td>QTextCharFormat::UnderlineStyle</td> <td>nounderline, singleunderline, dashunderline, dotline, dashdotline, dashdotdotline, waveunderline</td> <td>underlinetype: nounderline;</td></tr>
+            <tr><td>Qt::PenStyle</td> <td>nopen, solidline, dashline, dotline, dashdotline, dashdotdotline</td> <td>pen-type: solidline;</td></tr>
+            <tr><td>Qt::Axis</td> <td>x, y, z</td> <td>rotation-axis: x;</td></tr>
+            <tr><td>const DuiFeedback*</td> <td>feedback-effect-name</td> <td>press-feedback: press;</td></tr>
+            <tr><td>QEasingCurve</td> <td>type &lt;amplitude&gt; &lt;overshoot&gt; &lt;period&gt;</td> <td>easing-curve: linear;</td></tr>
+            </table>
+
+            <table border="1">
+            <tr><th>Dimension type</th> <th>Suffix</th> <th>Example</th></tr>
+            <tr><td>Relative</td> <td>%</td> <td>size: 25% 25%;</tr>
+            <tr><td>Absolute (pixels)</td> <td></td> <td>size: 25 25;</tr>
+            <tr><td>Pixels</td> <td></td>px<td>size: 25px 25px;</tr>
+            <tr><td>Millimeters</td> <td></td>mm<td>size: 25mm 25mm;</tr>
+            </table>
+
+        \subsection constants Constants
+            Syntax: @const constant-name: constant-value;
+
+            Description: Makes it possible define constant values in stylesheet, avoiding need to maintain 
+            duplicated data that is spread around the stylesheet.
+
+            Details: Constant variables are defined using similar syntax as with attributes. Constant 
+            definitions support the same types and suffices as the attributes do. Constants are assigned to 
+            attributes using '$' character as prefix.
+
+            \code
+            @const DEFAULT_FONT: "arial" 12;
+            @const DEFAULT_FONT_COLOR: #ff0000;
+            .
+            .
+            .
+            Object
+            {
+                font: $DEFAULT_FONT;
+                color: $DEFAULT_FONT_COLOR;
+            }
+            \endcode
+
+
+    \section advanced_styling_with_stylesheets Advanced styling with stylesheets
+
+        \subsection parent_child_in_stylesheet Parent-child relationship in stylesheet
+            Syntax: parentclassname styleclassname { }
+
+            Description: Makes it possible to define a set of attributes if the widget's parent is a 
+                         certain widget.
+
+            Details: The parent is defined using the name of the widget class, not a style class. This is because the look
+                     and feel of the parent is not important. It is not possible to add any other parameters to the parent.
+            \code
+
+            MyParentWidget MyWidgetStyle
+            {
+               font: "sans" 10;
+            }
+
+            // the selector can also contain other parameters
+            MyParentWidget MyWidgetStyle#Name.Orientation:selected
+            {
+               font: "sans" 20;
+            }
+            \endcode
+
+        \subsection mode_in_stylesheet Mode in stylesheet
+            Syntax: styleclassname:mode { }
+
+            Description: Makes it possible to define a set of attributes in certain mode.
+
+            Details: Mode parameter is separated with a colon and it must be the last one in selector 
+                     definition.
+
+            \code
+            MyWidgetStyle:selected
+            {
+               font: "sans" 10;
+               whatever-overridden-attribute: "overridden value"; 
+            }
+
+            // the selector can also contain other parameters
+            MyWidgetStyle#Name.Orientation:selected
+            {
+               font: "sans" 20;
+            }
+            \endcode
+
+        \subsection object_names_in_stylesheet Object names in stylesheet
+            Syntax: styleclassname#name { }
+
+            Description: Makes it possible to define a set of attributes for named object.
+
+            Details: Name parameter is separated with # character and it must be after the class name and 
+            type when defining the selector. The actual name is bind to widget in source-code level by the 
+            software developer as instructed by the UI Designer. This allows the person who creates the 
+            stylesheet to assign a custom style for the named widget. Consult your UI Designer for the 
+            object names in the application you are developing.
+
+            Here are some rules how the system assigns named attributes:
+            - The system automatically takes care that the named attributes are assigned to objects which are named in a similar way
+            - Attributes that are not named, are always assigned to object, even if a widget has a name
+            - Named attributes always override attributes which are not named 
+
+            \code
+            MyWidgetStyle#fancynamedwidget
+            {
+                // place the overriding attributes here
+                font: "courier" 30;
+            }
+            \endcode
+
+        \subsection orientation_in_stylesheet Orientation in stylesheet
+            Syntax: styleclassname.orientation { }
+
+            Description: Makes it possible to define a set of attributes depending on device orientation.
+
+            Details: Orientation parameter is separated with dot character and it must be the after the 
+            object name when defining the selector. Two orientations can be defined, "Portrait" and 
+            "Landscape".
+
+            \code
+            // style attribute where orientation doesn't matter
+            MyWidgetStyle
+            {
+                attribute: 0;
+            }
+
+            // style attribute in landscape orientation
+            MyWidgetStyle.Landscape
+            {
+                attribute: 1;
+            }
+
+            // style attributes in portrait orientation
+            MyWidgetStyle.Portrait
+            {
+                attribute: 2;
+            }
+            \endcode
+
+            Here are some rules how the orientation parameter affects to styling:
+            - The system automatically takes care that you will receive the proper attribute values from correct orientation
+            - If the orientation is not specified for the style, the attributes will be used in both orientations
+            - Style definition with orientation parameter defined, overrides the definition which has no orientation parameter defined 
+
+        \subsection type_in_stylesheet Type in stylesheet
+            \todo add documentation
+*/

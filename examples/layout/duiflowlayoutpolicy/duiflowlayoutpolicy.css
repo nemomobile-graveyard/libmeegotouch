@@ -1,0 +1,16 @@
+#item {
+    font: "Nokia Sans Wide" 21px;
+    background-color: #eeeeee;
+    preferred-size: 100 100;
+}
+
+DuiAbstractLayoutPolicyStyle#example {
+    horizontal-spacing: 10;
+    vertical-spacing: 10;
+}
+DuiAbstractLayoutPolicyStyle#example.Portrait {
+    vertical-spacing: 0;
+    horizontal-spacing: 0;
+}
+
+

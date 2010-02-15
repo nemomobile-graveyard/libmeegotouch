@@ -1,0 +1,211 @@
+/***************************************************************************
+**
+** Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+** All rights reserved.
+** Contact: Nokia Corporation (directui@nokia.com)
+**
+** This file is part of libdui.
+**
+** If you have questions regarding the use of this file, please contact
+** Nokia at directui@nokia.com.
+**
+** This library is free software; you can redistribute it and/or
+** modify it under the terms of the GNU Lesser General Public
+** License version 2.1 as published by the Free Software Foundation
+** and appearing in the file LICENSE.LGPL included in the packaging
+** of this file.
+**
+****************************************************************************/
+
+#ifndef DUIWIDGET_H
+#define DUIWIDGET_H
+
+#include "duiexport.h"
+
+#include <QGraphicsWidget>
+#include "duiwindow.h"
+
+class QGraphicsItem;
+class DuiWidgetPrivate;
+class DuiCancelEvent;
+class DuiOnDisplayChangeEvent;
+class DuiOrientationChangeEvent;
+class DuiSceneManager;
+class DuiApplicationPage;
+
+class DUI_EXPORT DuiWidget : public QGraphicsWidget
+{
+    Q_OBJECT
+
+    Q_PROPERTY(QSizePolicy sizePolicy READ sizePolicy WRITE setSizePolicy)
+    Q_PROPERTY(bool selected READ isSelected WRITE setSelected)
+
+public:
+    DuiWidget(QGraphicsItem *parent = 0);
+    virtual ~DuiWidget();
+
+    /*! \reimp */
+    virtual QPainterPath shape() const;
+    virtual void paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    /*! \reimp_end */
+
+    /*!
+     * Returns a pointer to the scene manager that manages the widget.
+     * If the widget's scene doesn't have a scene manager, returns a null pointer.
+     */
+    DuiSceneManager *sceneManager() const;
+
+    /*!
+     * Returns true if the widget can be seen.
+     */
+    virtual bool isOnDisplay() const;
+
+    /**
+    * Returns <code>true</code> if widget is selected otherwise <code>false</code>.
+    * \sa setSelected(bool)
+    */
+    bool isSelected() const;
+
+    /*! \reimp
+     *   We reimplement these to distinguish between the user hiding items
+     *   explicitly, and the layout hiding them.
+     */
+    void setVisible(bool visible);
+    void hide() {
+        setVisible(false);
+    }
+    void show() {
+        setVisible(true);
+    }
+    /*! \reimp_end */
+
+
+public Q_SLOTS:
+    /*! \reimp */
+    /** This is implement here because although the function already exists from
+     * QGraphicsWidget it was not virtual.  This means that calling DuiWidget's
+     * setObjectName would not call DuiWidgetController's setObjectName which
+     * calls updateStyle().  So without this, the widget would not be styled correctly.
+     */
+    virtual void setObjectName(const QString &name);
+
+    /**
+    * This is implemented here because of limitations of item selection which is provided by QGraphicsScene.
+    * There is no way to implement custom selection policies, because QGraphicsItem and QGraphicsScene have
+    * there own selection logic which is very limited and can't be extended.
+    *
+    * Notifies widget that it was selected or deselected depending on parameter. It's up to widget to decide
+    * how selection should be shown. By default widget is not selected.
+    * \a selected specify if widget is selected <code>true</code> or not
+    */
+    void setSelected(bool selected);
+    /*! \reimp_end */
+
+    /*!
+        Removes all the actions from the widget's action list.
+        Note: actions are not deleted after removal from the list.
+    */
+    virtual void clearActions();
+
+Q_SIGNALS:
+
+    /*!
+     * A signal that is emitted when the widget has entered the visible area of the display or
+     * the page containing the widget is not obscured anymore by another window / page.
+     * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     */
+    void displayEntered();
+
+    /*!
+     * A signal that is emitted when the widget has left the visible area of the display or
+     * the page containing the widget has become obscured by another window / page.
+     * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     */
+    void displayExited();
+
+    /*!
+     * \brief A signal that is emitted when item is shown/hidden
+     */
+    void visibilityChanged(bool visibility);
+
+protected:
+
+    /*!
+     * A handler that is called when the widget has entered the visible area of the display or
+     * the page containing the widget is not obscured anymore by another window / page.
+     */
+    virtual void enterDisplayEvent();
+
+    /*!
+     * A handler that is called when the widget has left the visible area of the display or
+     * the page containing the widget has become obscured by another window / page.
+     */
+    virtual void exitDisplayEvent();
+
+    /*!
+     * This event handler allows a widget to notify subscribers (and its children) about
+     * changes in its presence on the display. enterDisplayEvent() and exitDisplayEvent()
+     * convenience handlers are called by the default implementation. DuiOnDisplayChangeEvent
+     * may be sent e.g. if the widget gets panned out of display or the window gets obscured
+     * by another window.
+     */
+    virtual void onDisplayChangeEvent(DuiOnDisplayChangeEvent *event);
+
+    /*! \reimp */
+    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
+    bool event(QEvent *event);
+
+    /*!
+      This event handler is designed to allow widgets to cancel the effect of
+      previously received event. One example of that behavior is a situation
+      when the user starts to pan the view and the mousePress event that was
+      sent when the user touched the screen needs to be cancelled.
+     */
+    virtual void cancelEvent(DuiCancelEvent *event);
+
+    /*!
+     * This event handler is designed to allow widgets to react to the
+     * orientation change. Reimplement it to make your widget sensitive to
+     * orientation changes. Default implementation does nothing.
+     */
+    virtual void orientationChangeEvent(DuiOrientationChangeEvent *event);
+
+    virtual void actionEvent(QActionEvent *);
+
+    /*!
+        This event handler can be reimplemented in a subclass to process context
+        menu events. The \a event parameter contains details about the event to
+        be handled.
+    */
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+    /*! \reimp_end */
+
+    /*!
+        This virtual function is called when this widget received a
+        QEvent::LanguageChange event.
+
+        Reimplement this function in your own widgets to retranslate
+        user-visible strings.
+     */
+    virtual void retranslateUi();
+
+protected:
+    DuiWidgetPrivate *const d_ptr;
+    DuiWidget(DuiWidgetPrivate &dd, QGraphicsItem *parent);
+
+private:
+    Q_DECLARE_PRIVATE(DuiWidget)
+    Q_DISABLE_COPY(DuiWidget)
+
+    friend class DuiApplicationWindow;
+    friend class DuiScene;
+    friend class DuiPannableViewport;
+    friend class DuiApplicationPage;
+    friend class DuiLayoutPrivate;
+
+#ifdef UNIT_TEST
+    friend class Ut_DuiWidget;
+#endif
+};
+
+#endif

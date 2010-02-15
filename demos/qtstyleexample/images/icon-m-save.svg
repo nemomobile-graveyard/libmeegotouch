@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!-- Generator: Adobe Illustrator 14.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 43363)  -->
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg version="1.1" id="icon-m-save-layer" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px"
+	 y="0px" width="64px" height="64px" viewBox="0 0 64 64" style="enable-background:new 0 0 64 64;" xml:space="preserve">
+<symbol  id="background_x5F_64" viewBox="-31.999 -32 63.999 64">
+	<polygon style="fill:none;" points="32,-32 -32,-32 -32,32 32,32 	"/>
+</symbol>
+<g id="icon-m-save_1_">
+	
+		<use xlink:href="#background_x5F_64"  width="63.999" height="64" id="background_x5F_64_421_" x="-31.999" y="-32" transform="matrix(1 0 0 -1 31.9995 32)" style="overflow:visible;"/>
+	<g>
+		<g>
+			<g>
+				<rect x="21.945" y="33.199" style="fill:#231F20;" width="20.02" height="4"/>
+				<rect x="22.074" y="42.582" style="fill:#231F20;" width="12" height="4"/>
+				<path style="fill:#231F20;" d="M56.168,5.895h-9.775v13.008c0,0.551-0.449,1-1,1H18.609c-0.549,0-1-0.449-1-1V5.895H7.833
+					c-1.1,0-2,0.9-2,2v48.334c0,1.1,0.9,2,2,2h48.334c1.1,0,2-0.9,2-2V7.895C58.168,6.795,57.268,5.895,56.168,5.895z M48.623,50.1
+					c0,1.1-0.898,2-2,2H17.378c-1.1,0-2-0.9-2-2v-20.66c0-1.1,0.9-2,2-2h29.245c1.102,0,2,0.9,2,2V50.1z"/>
+			</g>
+		</g>
+		<path style="fill:#231F20;" d="M31.808,5.771v7.965c0,0.551,0.449,1,1,1h6.45c0.551,0,1-0.449,1-1V5.771H31.808z"/>
+	</g>
+</g>
+</svg>

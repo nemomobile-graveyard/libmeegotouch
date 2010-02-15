@@ -1,0 +1,16 @@
+DuiSliderDotStyle {
+    handle-mid-pixmap: "Slider-row-selected-press-big" 8mm 3mm;
+    handle-bottom-pixmap: "Slider-row-selected-press" 5mm 2mm;
+    handle-top-pixmap: "Slider-row-normal-press" 5mm 2mm;
+
+    active-tile-pixmap: "Slider-row-selected" 5mm 1mm;
+    inactive-tile-pixmap: "Slider-row-normal" 5mm 1mm;
+    active-root-pixmap: "Slider-dot-selected" 1mm 1mm;
+    inactive-root-pixmap: "Slider-dot-normal" 1mm 1mm;
+
+    /* inherited from DuiWidgetStyle */
+    preferred-size: 12mm 90%;
+    minimum-size: 7mm 10mm;
+    maximum-size: 90% 90%;
+}
+

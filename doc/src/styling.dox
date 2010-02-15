@@ -1,0 +1,38 @@
+/*! \page styling Overview
+
+DirectUI provides a powerful styling engine for applications to customize their look & feel. It provides following functionality to application development
+
+    \li Style sheets & style sheet parser
+    \li Type safe styling parameters
+    \li Automatic tools to populate the instantiated styles according to definitions in style sheet
+    \li Simple and robust interface for application developers to access to the styling parameters
+    \li Flexible but simple way to define and use style parameters using inheritance, modes etc. 
+
+\section responsibilities People involved & their responsibilities 
+
+    Styling involves several people to work tightly together. This is important since otherwise there is no 
+    way to ensure that the style is working properly and the way it is implemented is consistent in all 
+    the projects.
+
+    - UI Designer
+        - Has an idea how the widget should look and how it needs to be styled.
+        - Provides design for the styling and answers to questions about it.
+    - Software developer
+        - Implements the stylable object (widget, layout etc..).
+        - Creates enablers for the styling in source code level.
+        - Creates initial version of the stylesheet for testing.
+    - Tester
+        - Tests that the styling is actually working according to the design
+    - UI Designer / Theme implementor
+        - Fixes the style sheet to contain proper values for the application
+        - Ensures that the final version of the style sheet that ships out with the product is according 
+          to the requirements.
+
+\section links Documentation links 
+    \li <a href="styling_concepts.html">Basic concepts of styling</a>
+    \li <a href="styling_features.html">Features</a>
+    \li <a href="styling_support.html">Styling support for applications & external libraries</a>
+    \li <a href="styling_stylesheets.html">Stylesheet syntax reference & examples</a>
+    \li <a href="styling_in_code.html">Architecture & code examples</a>
+
+*/

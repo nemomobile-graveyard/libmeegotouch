@@ -1,0 +1,36 @@
+/**
+\page example-calculator Stylish Calculator example
+
+This demonstrates a simple calculator widget that can work in both portrait and landscape mode.
+It uses CSS and SVG to style the calculator, and separate portrait and landscape policies to dynamically change
+the layouting of the buttons.
+
+The calculator is not fully functional - completing the task is left as an exercise to the reader.
+
+\image html calculator_landscape.png
+
+
+\image html calculator_portrait.png
+
+Header file for calculator widget:
+\include examples/calculator/calculatorwidget.h
+
+The calculator widget:
+\include examples/calculator/calculatorwidget.cpp
+
+The calculator widget is added to an application page:
+\include examples/calculator/calculator.cpp
+
+The logic for the calculator buttons is in calculatorbutton.cpp:
+\include examples/calculator/calculatorbutton.cpp
+
+Header file for calculator button:
+\include examples/calculator/calculatorbutton.h
+
+Styled with the following calculator.css file:
+\include examples/calculator/calculator.css
+
+And compiled with the following calculator.pro file:
+\include examples/calculator/calculator.pro
+
+*/

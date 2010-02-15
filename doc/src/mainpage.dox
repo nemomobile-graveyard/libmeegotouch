@@ -1,0 +1,73 @@
+/*! \mainpage DirectUI Reference Documentation
+
+<table class="mainIndex" class="indextable" cellspacing="1" cellpadding="2" border="0" align="center" width="95%">
+  <tr>
+    <th>Getting Started</th>
+    <th>API Reference</th>
+    <th>Developer Resources</th>
+  </tr>
+  <tr>
+    <td>
+      <ul>
+       <li><strong><a href="introduction.html">Introduction to DirectUI</a></strong></li>
+      <li><a href="installation.html">Installation</a> and First Steps with DirectUI</li>
+      <li>Examples and Demos</li>
+      <li><strong><a href="news.html">What's New in DirectUI</a></strong></li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+       <li><a href="classes.html">All Classes</a></li>
+       <li><a href="mainclasses.html">Main Classes</a></li>
+       <li><a href="annotated.html">Annotated Classes</a></li>
+       <li><a href="namespaces.html">All Namespaces</a></li>
+       <li><a href="hierarchy.html">Inheritance Hierarchy</a></li>
+       <li><a href="deprecated.html">Deprecated List</a></li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+       <li><a href="http://qt.gitorious.com/maemo-6-ui-framework">Code repository</a></li>
+       <li><a href="http://qt.gitorious.com/maemo-6-ui-framework/pages/Home">DirectUI Wiki</a></li>
+      </ul>
+    </td>
+  </tr>
+
+  <tr>
+    <th>Fundamentals</th>
+    <th>User Interface Design</th>
+    <th>Contributing & Licenses</th>
+  </tr>
+  <tr>
+    <td>
+      <ul>
+       <li>The DirectUI Widget Model</li>
+       <li>DirectUI theme system</li>
+       <li><a href="servicefw.html">Maemo Service Framework</a></li>
+        <li><a href="i18n.html">Internationalization</a></li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+      <li><a href="styling.html">Styling</a></li>
+      <li><a href="layouts.html">Layouts</a></li>
+      <li><a href="rotation.html">Rotation</a></li>
+      <li><a href="appletdevelopment.html">Applets</a></li>
+      <li><a href="prestart.html">Prestarting</a></li>
+      <li><a href="notifications.html">Notifications</a></li>
+      <li><a href="settingslanguageschema.html">Settings language reference</a></li>
+      </ul>
+    </td>
+    <td>
+      <ul>
+       <li><a href="bugreporting.html">How to Report a Bug</a></li>
+       <li><a href="credits.html">Credits</a></li>
+       <li><a href="license.html">License</a></li>
+      </ul>
+    </td>
+  </tr>
+
+
+</table>
+
+*/

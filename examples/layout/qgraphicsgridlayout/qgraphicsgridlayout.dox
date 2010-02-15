@@ -1,0 +1,17 @@
+/**
+\page layout-qgraphicsgridlayout QGraphicsGridLayout example
+
+Source code for a simple example of QGraphicsGridLayout.
+
+\image html duigridlayoutpolicy.png
+
+Source code of qgraphicsgridlayout.cpp:
+\include examples/layout/qgraphicsgridlayout/qgraphicsgridlayout.cpp
+
+Styled with the following qgraphicsgridlayout.css file:
+\include examples/layout/qgraphicsgridlayout/qgraphicsgridlayout.css
+
+And compiled with the following qgraphicsgridlayout.pro file:
+\include examples/layout/qgraphicsgridlayout/qgraphicsgridlayout.pro
+
+*/

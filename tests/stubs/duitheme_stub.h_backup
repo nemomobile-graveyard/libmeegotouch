@@ -1,0 +1,391 @@
+#ifndef DUITHEME_STUB
+#define DUITHEME_STUB
+
+#include <duistyle.h>
+#include <duitheme.h>
+#include <duiwidgetview.h>
+#include <stubbase.h>
+
+
+// 1. DECLARE STUB
+// FIXME - stubgen is not yet finished
+class DuiThemeStub : public StubBase
+{
+public:
+    virtual void DuiThemeConstructor();
+    virtual void DuiThemeDestructor();
+    virtual bool connectThemeDaemon();
+    virtual DuiTheme * instance();
+    virtual QPixmap * getPixmap(const QString &id, const QSize &size);
+    virtual QPixmap * getPixmap(const QString &id, const QSizeF &size);
+    virtual QPixmap * getPixmap(const QString &id, int x, int y);
+    virtual QPixmap * getPixmap(const QString &id, qreal x, qreal y);
+    virtual QPixmap * pixmap(const QString &id, const QSize &size);
+    virtual QPixmap * pixmap(const QString &id, const QSizeF &size);
+    virtual QPixmap * pixmap(const QString &id, int x, int y);
+    virtual QPixmap * pixmap(const QString &id, qreal x, qreal y);
+    virtual void setApplicationName(const QString &name);
+    virtual void releasePixmap(QPixmap *pixmap);
+    virtual const DuiStyle * style(const QObject *object, const DuiStyleDescription &desc);
+    virtual void releaseStyle(const DuiStyle *style);
+    virtual DuiWidgetView * view(const QObject *object, DuiWidgetController *controller);
+    virtual bool loadSVG(const QString &filename);
+    virtual bool addCSS(const QString &filename);
+    virtual bool addPixmapDirectory(const QString &directoryName);
+    virtual bool addPixmapDirectoryRecursive(const QString &directoryName);
+    virtual void prepareThemeChange();
+    virtual void changeTheme();
+    virtual bool loadCSS(const QString &filename);
+    virtual bool deletePixmapSearchList(const QString &applicationName, int version);
+    virtual QPixmap * pixmapFromHandle(int handle);
+};
+
+// 2. IMPLEMENT STUB
+void DuiThemeStub::DuiThemeConstructor()
+{
+
+}
+void DuiThemeStub::DuiThemeDestructor()
+{
+
+}
+bool DuiThemeStub::connectThemeDaemon()
+{
+    stubMethodEntered("connectThemeDaemon");
+    return stubReturnValue<bool>("connectThemeDaemon");
+}
+
+static DuiTheme gTheme;
+
+DuiTheme * DuiThemeStub::instance()
+{
+    stubMethodEntered("instance");
+    // this is an exception to the regular pattern
+    // because duitheme has a single instance
+    return &gTheme;
+}
+
+QPixmap * DuiThemeStub::getPixmap(const QString &id, const QSize &size)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(id));
+    params.append( new Parameter<const QSize & >(size));
+    stubMethodEntered("getPixmap",params);
+    return stubReturnValue<QPixmap *>("getPixmap");
+}
+
+QPixmap * DuiThemeStub::getPixmap(const QString &id, const QSizeF &size)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(id));
+    params.append( new Parameter<const QSizeF & >(size));
+    stubMethodEntered("getPixmap",params);
+    return stubReturnValue<QPixmap *>("getPixmap");
+}
+
+QPixmap * DuiThemeStub::getPixmap(const QString &id, int x, int y)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(id));
+    params.append( new Parameter<int >(x));
+    params.append( new Parameter<int >(y));
+    stubMethodEntered("getPixmap",params);
+    return stubReturnValue<QPixmap *>("getPixmap");
+}
+
+QPixmap * DuiThemeStub::getPixmap(const QString &id, qreal x, qreal y)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(id));
+    params.append( new Parameter<qreal >(x));
+    params.append( new Parameter<qreal >(y));
+    stubMethodEntered("getPixmap",params);
+    return stubReturnValue<QPixmap *>("getPixmap");
+}
+
+QPixmap * DuiThemeStub::pixmap(const QString &id, const QSize &size)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(id));
+    params.append( new Parameter<const QSize & >(size));
+    stubMethodEntered("pixmap",params);
+    return stubReturnValue<QPixmap *>("pixmap");
+}
+
+QPixmap * DuiThemeStub::pixmap(const QString &id, const QSizeF &size)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(id));
+    params.append( new Parameter<const QSizeF & >(size));
+    stubMethodEntered("pixmap",params);
+    return stubReturnValue<QPixmap *>("pixmap");
+}
+
+QPixmap * DuiThemeStub::pixmap(const QString &id, int x, int y)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(id));
+    params.append( new Parameter<int >(x));
+    params.append( new Parameter<int >(y));
+    stubMethodEntered("pixmap",params);
+    return stubReturnValue<QPixmap *>("pixmap");
+}
+
+QPixmap * DuiThemeStub::pixmap(const QString &id, qreal x, qreal y)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(id));
+    params.append( new Parameter<qreal >(x));
+    params.append( new Parameter<qreal >(y));
+    stubMethodEntered("pixmap",params);
+    return stubReturnValue<QPixmap *>("pixmap");
+}
+
+void DuiThemeStub::setApplicationName(const QString &name)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(name));
+    stubMethodEntered("setApplicationName",params);
+}
+
+void DuiThemeStub::releasePixmap(QPixmap *pixmap)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<QPixmap * >(pixmap));
+    stubMethodEntered("releasePixmap",params);
+}
+
+const DuiStyle * DuiThemeStub::style(const QObject *object, const DuiStyleDescription &desc)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QObject * >(object));
+    params.append( new Parameter<const DuiStyleDescription & >(desc));
+    stubMethodEntered("style",params);
+    return stubReturnValue<const DuiStyle *>("style");
+}
+
+void DuiThemeStub::releaseStyle(const DuiStyle *style)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const DuiStyle * >(style));
+    stubMethodEntered("releaseStyle",params);
+}
+
+DuiWidgetView * DuiThemeStub::view(const QObject *object, DuiWidgetController *controller)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QObject * >(object));
+    params.append( new Parameter<DuiWidgetController * >(controller));
+    stubMethodEntered("view",params);
+    return stubReturnValue<DuiWidgetView *>("view");
+}
+
+bool DuiThemeStub::loadSVG(const QString &filename)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(filename));
+    stubMethodEntered("loadSVG",params);
+    return stubReturnValue<bool>("loadSVG");
+}
+
+bool DuiThemeStub::addCSS(const QString &filename)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(filename));
+    stubMethodEntered("addCSS",params);
+    return stubReturnValue<bool>("addCSS");
+}
+
+bool DuiThemeStub::addPixmapDirectory(const QString &directoryName)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(directoryName));
+    stubMethodEntered("addPixmapDirectory",params);
+    return stubReturnValue<bool>("addPixmapDirectory");
+}
+
+bool DuiThemeStub::addPixmapDirectoryRecursive(const QString &directoryName)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(directoryName));
+    stubMethodEntered("addPixmapDirectoryRecursive",params);
+    return stubReturnValue<bool>("addPixmapDirectoryRecursive");
+}
+
+void DuiThemeStub::prepareThemeChange()
+{
+    stubMethodEntered("prepareThemeChange");
+}
+
+void DuiThemeStub::changeTheme()
+{
+    stubMethodEntered("changeTheme");
+}
+
+bool DuiThemeStub::loadCSS(const QString &filename)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(filename));
+    stubMethodEntered("loadCSS",params);
+    return stubReturnValue<bool>("loadCSS");
+}
+
+bool DuiThemeStub::deletePixmapSearchList(const QString &applicationName, int version)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<const QString & >(applicationName));
+    params.append( new Parameter<int >(version));
+    stubMethodEntered("deletePixmapSearchList",params);
+    return stubReturnValue<bool>("deletePixmapSearchList");
+}
+
+QPixmap * DuiThemeStub::pixmapFromHandle(int handle)
+{
+    QList<ParameterBase*> params;
+    params.append( new Parameter<int >(handle));
+    stubMethodEntered("pixmapFromHandle",params);
+    return stubReturnValue<QPixmap *>("pixmapFromHandle");
+}
+
+
+
+// 3. CREATE A STUB INSTANCE
+DuiThemeStub gDefaultDuiThemeStub;
+DuiThemeStub* gDuiThemeStub = &gDefaultDuiThemeStub;
+
+
+// 4. CREATE A PROXY WHICH CALLS THE STUB
+DuiTheme::DuiTheme()
+{
+    // can't call this since DuiTheme is a global instance
+    //gDuiThemeStub->DuiThemeConstructor();
+}
+
+DuiTheme::~DuiTheme()
+{
+    // can't call this since DuiTheme is a global instance
+    //gDuiThemeStub->DuiThemeDestructor();
+}
+
+bool DuiTheme::connectThemeDaemon()
+{
+    return gDuiThemeStub->connectThemeDaemon();
+}
+
+DuiTheme * DuiTheme::instance()
+{
+    return gDuiThemeStub->instance();
+}
+
+QPixmap * DuiTheme::getPixmap(const QString &id, const QSize &size)
+{
+    return gDuiThemeStub->getPixmap(id, size);
+}
+
+QPixmap * DuiTheme::getPixmap(const QString &id, const QSizeF &size)
+{
+    return gDuiThemeStub->getPixmap(id, size);
+}
+
+QPixmap * DuiTheme::getPixmap(const QString &id, int x, int y)
+{
+    return gDuiThemeStub->getPixmap(id, x, y);
+}
+
+QPixmap * DuiTheme::getPixmap(const QString &id, qreal x, qreal y)
+{
+    return gDuiThemeStub->getPixmap(id, x, y);
+}
+
+QPixmap * DuiTheme::pixmap(const QString &id, const QSize &size)
+{
+    return gDuiThemeStub->pixmap(id, size);
+}
+
+QPixmap * DuiTheme::pixmap(const QString &id, const QSizeF &size)
+{
+    return gDuiThemeStub->pixmap(id, size);
+}
+
+QPixmap * DuiTheme::pixmap(const QString &id, int x, int y)
+{
+    return gDuiThemeStub->pixmap(id, x, y);
+}
+
+QPixmap * DuiTheme::pixmap(const QString &id, qreal x, qreal y)
+{
+    return gDuiThemeStub->pixmap(id, x, y);
+}
+
+void DuiTheme::setApplicationName(const QString &name)
+{
+    gDuiThemeStub->setApplicationName(name);
+}
+
+void DuiTheme::releasePixmap(QPixmap *pixmap)
+{
+    gDuiThemeStub->releasePixmap(pixmap);
+}
+
+const DuiStyle * DuiTheme::style(const QObject *object, const DuiStyleDescription &desc)
+{
+    return gDuiThemeStub->style(object, desc);
+}
+
+void DuiTheme::releaseStyle(const DuiStyle *style)
+{
+    gDuiThemeStub->releaseStyle(style);
+}
+
+DuiWidgetView * DuiTheme::view(const QObject *object, DuiWidgetController *controller)
+{
+    return gDuiThemeStub->view(object, controller);
+}
+
+bool DuiTheme::loadSVG(const QString &filename)
+{
+    return gDuiThemeStub->loadSVG(filename);
+}
+
+bool DuiTheme::addCSS(const QString &filename)
+{
+    return gDuiThemeStub->addCSS(filename);
+}
+
+bool DuiTheme::addPixmapDirectory(const QString &directoryName)
+{
+    return gDuiThemeStub->addPixmapDirectory(directoryName);
+}
+
+bool DuiTheme::addPixmapDirectoryRecursive(const QString &directoryName)
+{
+    return gDuiThemeStub->addPixmapDirectoryRecursive(directoryName);
+}
+
+void DuiTheme::prepareThemeChange()
+{
+    gDuiThemeStub->prepareThemeChange();
+}
+
+void DuiTheme::changeTheme()
+{
+    gDuiThemeStub->changeTheme();
+}
+
+bool DuiTheme::loadCSS(const QString &filename)
+{
+    return gDuiThemeStub->loadCSS(filename);
+}
+
+bool DuiTheme::deletePixmapSearchList(const QString &applicationName, int version)
+{
+    return gDuiThemeStub->deletePixmapSearchList(applicationName, version);
+}
+
+QPixmap * DuiTheme::pixmapFromHandle(int handle)
+{
+    return gDuiThemeStub->pixmapFromHandle(handle);
+}
+
+
+#endif

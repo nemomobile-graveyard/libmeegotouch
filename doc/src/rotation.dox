@@ -1,0 +1,74 @@
+/*! \page rotation Rotation
+
+\section basics Basics
+
+Libdui provides support for rotation of the screen (i.e. changing the orientation). Rotation consists of multiple (simultaneous) actions:
+
+- sending a DuiSceneManager::orientationAboutToChange signal
+- changing the transformation of DuiWindow over DuiScene
+- resizing and repositioning the scene windows
+- sending a DuiSceneManager::orientationChanged signal
+- animating objects during rotation
+
+'Scene windows' means more exactly the instances of the subclasses of DuiSceneWindow (e.g. DuiApplicationPage).
+
+\section coordinates Coordinate system
+
+Since the rotation is done by transforming DuiWindow over DuiScene, the coordinate system that scene elements see does not change.
+
+\section simple_case A simple use case
+
+In the simple case, no support is needed from widgets but just a few CSS parameters to control the relevant scene windows. This applies when widgets are inside layouts inside some scene windows (e.g. DuiApplicationPage) and only resizing is needed. Widgets get resized by relayouting which is triggered by DuiSceneManager resizing and repositioning the scene windows based on the information in CSS files.
+
+It is common to want to layout widgets differently in landscape and portrait mode.  For example:
+
+\htmlonly <a href="example-calculator.html"><img src="calculator_landscape.png" width="432"></a>
+<a href="example-calculator.html"><img src="calculator_portrait.png" width="432"></a> \endhtmlonly
+
+To layout items differently in portrait and landscape mode, simply create a separate policy for each, and add items to one or both policies.  For example:
+
+  \dontinclude calculator/calculatorwidget.cpp
+  \skip Create a DuiLayout
+  \until layout->setLandscapePolicy
+
+Alternatively you can use the same policy in both portrait and landscape mode, but tweak their CSS properties depending on the orientation.
+For example:
+
+  \code
+   DuiLayout *layout(centralWidget());
+   DuiLinearLayoutPolicy *policy = new DuiLinearLayoutPolicy(mylayout);
+   policy->setObjectName("address");
+  \endcode
+Could be styled in the .css file with
+  \code
+   DuiAbstractLayoutPolicyStyle#address {
+       vertical-spacing: 5;
+       landscape-spacing: 5;
+       margin-left: 10.0;
+       margin-right: 10.0;
+       margin-top: 10.0;
+       margin-bottom: 10.0;
+   }
+   DuiAbstractLayoutPolicyStyle#address.Landscape {
+       vertical-spacing: 0;
+   }
+  \endcode
+This sets the vertical spacing to be 0 pixels in landscape mode, and 5 pixels in portrait mode.
+
+
+\sa DuiLayout, DuiAbstractLayoutPolicy, \ref layouts, \ref styling_policies
+
+\section complex_case A bit more complex use case
+
+If widget or some other object needs to be aware of orientation change, it can connect to signal \c DuiSceneManager::orientationChanged. The signal is triggered once during the rotation animation, the exact moment depends on the animation in use.
+
+\section animations Animating the objects
+
+The animations seen during rotation currently come from two different sources:
+
+- DuiSceneManager animates DuiNavigationBar and DuiDockWidget during the rotation
+- DuiLayout animates the items in the layouts when layout policies are changed
+
+In the future, the intention is to unify the animations under the animation framework subsystem provided by libdui.
+
+*/

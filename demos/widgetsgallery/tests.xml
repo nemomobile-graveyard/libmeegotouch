@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<testdefinition version="0.1">
+  <suite timeout="100000" name="wg-timedemo" domain="Application Framework" type="Benchmark">
+    <set description="Time Demo for Widgets Gallery" name="TimeDemo">
+      <case description="we run the time demo to verify the performance of widgetsgallery timedemo" name="wg_test_timedemo">
+        <step expected_result="0">/usr/bin/widgetsgallery -timedemo -outputcsv /tmp/timedemo.csv</step>
+      </case>
+      <environments>
+        <scratchbox>false</scratchbox>
+        <hardware>true</hardware>
+      </environments>
+    </set>
+  </suite>
+</testdefinition>

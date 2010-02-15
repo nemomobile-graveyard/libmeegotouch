@@ -1,0 +1,17 @@
+/**
+\page layout-qgraphicslinearlayout QGraphicsLinearLayout example
+
+Source code for a simple example of QGraphicsLinearLayout.
+
+\image html duilinearlayoutpolicy.png
+
+Source code of qgraphicslinearlayout.cpp:
+\include examples/layout/qgraphicslinearlayout/qgraphicslinearlayout.cpp
+
+Styled with the following qgraphicslinearlayout.css file:
+\include examples/layout/qgraphicslinearlayout/qgraphicslinearlayout.css
+
+And compiled with the following qgraphicslinearlayout.pro file:
+\include examples/layout/qgraphicslinearlayout/qgraphicslinearlayout.pro
+
+*/
