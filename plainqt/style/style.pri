@@ -20,7 +20,8 @@ PRIVATE_HEADERS += \
   qtmaemo6window.h \
   qtmaemo6menuproxy.h \
   qtmaemo6menu.h \
-  qtmaemo6submenu.h
+  qtmaemo6submenu.h \
+  qtmaemo6comboboxpopup.h
 
 SOURCES = \
   qtmaemo6teststyle.cpp \
@@ -36,4 +37,5 @@ SOURCES = \
   qtmaemo6window.cpp \
   qtmaemo6menuproxy.cpp \
   qtmaemo6menu.cpp \
-  qtmaemo6submenu.cpp
+  qtmaemo6submenu.cpp \
+  qtmaemo6comboboxpopup.cpp

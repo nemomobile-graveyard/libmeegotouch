@@ -21,6 +21,7 @@
 #include "qtmaemo6style_p.h"
 #include "qtmaemo6windowdecoration.h"
 #include "qtmaemo6dialogproxy.h"
+#include "qtmaemo6comboboxpopup.h"
 
 #include <QWidget>
 #include <QEvent>
@@ -31,6 +32,7 @@
 #include <QPushButton>
 #include <QToolButton>
 #include <QTreeView>
+#include <QComboBox>
 
 #include <DuiComponentData>
 #include <duifeedbackplayer.h>
@@ -129,6 +131,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
 
     }
     break;
+    case QEvent::MouseButtonDblClick:
     case QEvent::MouseButtonPress: {
         //qDebug( "eventFilter got mousePress" );
 
@@ -138,9 +141,20 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
         if (feedbackPlayer) {
             feedbackPlayer->play(DuiFeedbackPlayer::Press);
         }
+        if(QComboBox* comboBox = qobject_cast<QComboBox*>(widget)) {
+            //done in mousePress, because in this way the original popup is completely suppressed
+            QtMaemo6ComboBoxPopup *comboBoxPopup = new QtMaemo6ComboBoxPopup(comboBox, NULL);
+            QtMaemo6WindowDecoration *decoration = new QtMaemo6WindowDecoration(comboBoxPopup, NULL);
+            decoration->showFastMaximized();
+            //these both must be done after the show, because the status- and
+            // menubar is added on show event
+            decoration->setStatusBar(NULL);
+            decoration->setMenuBar(NULL);
+            QtMaemo6StylePrivate::drawWindowBackground(decoration);
+            return true;
+        }
     }
     break;
-
     case QEvent::MouseButtonRelease: {
         //qDebug( "eventFilter got mouseRelease" );
 
@@ -151,7 +165,12 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
             feedbackPlayer->play(DuiFeedbackPlayer::Release);
         }
     }
-
+    break;
+    case QEvent::Wheel: {
+        if(qobject_cast<QComboBox*>(widget)) {
+            return true;
+        }
+    }
     break;
     default:
         break;

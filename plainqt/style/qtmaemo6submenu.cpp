@@ -21,12 +21,12 @@
 #include "qtmaemo6windowdecoration.h"
 #include "qtmaemo6style_p.h"
 
-#include <QHBoxLayout>
 #include <QMenu>
 
 QtMaemo6SubMenu::QtMaemo6SubMenu(QMenu *m, QWidget *parent) : QListWidget(parent)
 {
-    fillListWidget(m);
+    if(m)
+        fillListWidget(m);
 
     setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
 
