@@ -12,13 +12,15 @@ HEADERS += \
     $$EXTENSION_DIR/duiapplicationextensionareaview.h \
     $$EXTENSION_DIR/duiapplicationextensionareaview_p.h \
     $$EXTENSION_DIR/duiapplicationextensionarea.h \
-    $$EXTENSION_DIR/duiapplicationextensionarea_p.h
+    $$EXTENSION_DIR/duiapplicationextensionarea_p.h \
+    $$EXTENSION_DIR/duiapplicationextensionmanager.h
 
 SOURCES += $$EXTENSION_DIR/duiextensionarea.cpp \
     $$EXTENSION_DIR/duiapplicationextensionarea.cpp \
     $$EXTENSION_DIR/duiapplicationextensionareaview.cpp \
     $$EXTENSION_DIR/duiextensionareaview.cpp \
-    $$EXTENSION_DIR/duiextensionareamodel.cpp
+    $$EXTENSION_DIR/duiextensionareamodel.cpp \
+    $$EXTENSION_DIR/duiapplicationextensionmanager.cpp
 
 WIDGET_MODEL_HEADERS += $$EXTENSION_DIR/duiextensionareamodel.h \
     $$EXTENSION_DIR/duiapplicationextensionareamodel.h
