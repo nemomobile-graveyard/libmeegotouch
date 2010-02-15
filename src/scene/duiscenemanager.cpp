@@ -100,7 +100,6 @@ void DuiSceneManagerPrivate::init(DuiScene *scene)
     newAngle = angle;
 
     windows = new QList<DuiSceneWindow *>();
-    pageHistory = new QList<DuiSceneWindow *>();
 
     rootElement = new QGraphicsWidget();
     rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.0, q->visibleSceneSize().height() / 2.0));
@@ -120,7 +119,6 @@ void DuiSceneManagerPrivate::init(DuiScene *scene)
 DuiSceneManagerPrivate::~DuiSceneManagerPrivate()
 {
     delete windows;
-    delete pageHistory;
     delete orientationAnimation;
     delete pageSwitchAnimation;
 }
@@ -345,9 +343,6 @@ void DuiSceneManagerPrivate::attachWindow(DuiSceneWindow *window)
 {
     if (!windows->contains(window))
         windows->append(window);
-
-    if (window->windowType() == DuiSceneWindow::ApplicationPage)
-        pageHistory->append(window);
 }
 
 void DuiSceneManagerPrivate::detachWindow(DuiSceneWindow *window)
@@ -359,10 +354,6 @@ void DuiSceneManagerPrivate::detachWindow(DuiSceneWindow *window)
         window->setParentItem(rootElement);
         delete window->d_func()->effect;
         window->d_func()->effect = 0;
-    }
-
-    if (window->windowType() == DuiSceneWindow::ApplicationPage) {
-        pageHistory->removeOne(window);
     }
 }
 
@@ -729,6 +720,59 @@ void DuiSceneManagerPrivate::startPageSwitchAnimation(DuiSceneWindow *newPage,
     freezeUIForAnimationDuration(pageSwitchAnimation);
 }
 
+void DuiSceneManagerPrivate::pushPage(DuiSceneWindow *page, bool animatedTransition)
+{
+    DuiSceneWindow *previousPage = 0;
+
+    if (currentPage && currentPage != page) {
+        prepareWindowHide(currentPage);
+        produceSceneWindowEvent(DuiSceneWindowEvent::eventTypeDisappear(), currentPage,
+                animatedTransition);
+
+        previousPage = currentPage;
+        pageHistory.append(previousPage);
+    }
+
+    currentPage = page;
+
+    if (animatedTransition) {
+        startPageSwitchAnimation(currentPage, previousPage, DuiPageSwitchAnimation::LeftToRight);
+    } else {
+        if (previousPage) {
+            emit previousPage->windowHidden();
+        }
+        emit currentPage->windowShown();
+    }
+}
+
+void DuiSceneManagerPrivate::popPage(bool animatedTransition)
+{
+    DuiSceneWindow *previousPage = 0;
+
+    // Pages in the history might have been deleted overtime.
+    while (previousPage == 0 && !pageHistory.isEmpty()) {
+        previousPage = pageHistory.takeLast();
+    }
+
+    if (previousPage) {
+        prepareWindowShow(previousPage);
+        produceSceneWindowEvent(DuiSceneWindowEvent::eventTypeAppear(), previousPage,
+                animatedTransition);
+    }
+
+    if (animatedTransition) {
+        startPageSwitchAnimation(previousPage, currentPage, DuiPageSwitchAnimation::RightToLeft);
+    } else {
+        emit currentPage->windowHidden();
+
+        if (previousPage) {
+            emit previousPage->windowShown();
+        }
+    }
+
+    currentPage = previousPage;
+}
+
 void DuiSceneManagerPrivate::appearWindow(DuiSceneWindow *window,
         DuiSceneWindow::DeletionPolicy policy,
         bool animatedTransition)
@@ -754,22 +798,7 @@ void DuiSceneManagerPrivate::appearWindow(DuiSceneWindow *window,
     window->setOpacity(1.0);
 
     if (window->windowType() == DuiSceneWindow::ApplicationPage) {
-
-        if (currentPage && currentPage != window) {
-            prepareWindowHide(currentPage);
-            produceSceneWindowEvent(DuiSceneWindowEvent::eventTypeDisappear(), currentPage,
-                                    animatedTransition);
-        }
-
-        if (animatedTransition) {
-            startPageSwitchAnimation(window, currentPage, DuiPageSwitchAnimation::LeftToRight);
-        } else {
-            if (currentPage && currentPage != window) {
-                emit currentPage->windowHidden();
-            }
-            emit window->windowShown();
-        }
-
+        pushPage(window, animatedTransition);
     } else {
         if (animatedTransition && window->showAnimation()) {
             window->showAnimation()->resetToInitialState();
@@ -779,8 +808,6 @@ void DuiSceneManagerPrivate::appearWindow(DuiSceneWindow *window,
         }
     }
 
-    if (window->windowType() == DuiSceneWindow::ApplicationPage)
-        currentPage = window;
 }
 
 void DuiSceneManagerPrivate::prepareWindowHide(DuiSceneWindow *window)
@@ -818,6 +845,12 @@ void DuiSceneManagerPrivate::disappearWindow(DuiSceneWindow *window,
                             animatedTransition);
     prepareWindowHide(window);
 
+    if (window->windowType() == DuiSceneWindow::ApplicationPage) {
+        if (window == currentPage) {
+            currentPage = 0;
+        }
+    }
+
     if (animatedTransition && window->hideAnimation()) {
         window->hideAnimation()->start();
     } else {
@@ -848,19 +881,11 @@ void DuiSceneManagerPrivate::dismissWindow(DuiSceneWindow *window,
     window->d_func()->dismissed = true;
 
     if (window->windowType() == DuiSceneWindow::ApplicationPage) {
-        pageHistory->removeLast();
-        prepareWindowShow(pageHistory->last());
-        produceSceneWindowEvent(DuiSceneWindowEvent::eventTypeAppear(), pageHistory->last(),
-                                animatedTransition);
-
-        if (animatedTransition) {
-            startPageSwitchAnimation(pageHistory->last(), window, DuiPageSwitchAnimation::RightToLeft);
-        } else {
-            emit window->windowHidden();
-            emit pageHistory->last()->windowShown();
+        if (window == currentPage) {
+            popPage(animatedTransition);
         }
-
-        currentPage = pageHistory->last();
+        // If the window is not currentPage then it means that it's not
+        // currently being displayed and thus there's nothing to be done.
 
     } else if (animatedTransition && window->hideAnimation()) { // Fallback to legacy hide anim.
         window->hideAnimation()->start();
@@ -1132,6 +1157,36 @@ QSize DuiSceneManager::visibleSceneSize(Dui::Orientation orientation) const
 QSize DuiSceneManager::visibleSceneSize() const
 {
     return visibleSceneSize(orientation());
+}
+
+QList<DuiSceneWindow *> DuiSceneManager::pageHistory() const
+{
+    Q_D(const DuiSceneManager);
+    QList<DuiSceneWindow *> cleanList;
+    int pageCount = d->pageHistory.count();
+    DuiSceneWindow *page;
+
+    // We might have some null entries in the history.
+    for (int i = 0; i < pageCount; i++) {
+        page = d->pageHistory.at(i);
+        if (page) {
+            cleanList.append(page);
+        }
+    }
+
+    return cleanList;
+}
+
+void DuiSceneManager::setPageHistory(const QList<DuiSceneWindow *> &list)
+{
+    Q_D(DuiSceneManager);
+    int pageCount = list.count();
+
+    d->pageHistory.clear();
+
+    for (int i = 0; i < pageCount; i++) {
+        d->pageHistory.append(list.at(i));
+    }
 }
 
 #include "moc_duiscenemanager.cpp"

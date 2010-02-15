@@ -21,6 +21,7 @@
 #define DUISCENEMANAGER_P_H
 
 #include <QList>
+#include <QPointer>
 
 #include "duinamespace.h"
 #include "duiscenewindow.h"
@@ -104,6 +105,9 @@ public:
 
     void freezeUIForAnimationDuration(QAbstractAnimation *animation);
 
+    void pushPage(DuiSceneWindow *page, bool animatedTransition);
+    void popPage(bool animatedTransition);
+
     void prepareWindowShow(DuiSceneWindow *window);
 
     void appearWindow(DuiSceneWindow *window,
@@ -148,7 +152,7 @@ public:
     DuiPageSwitchAnimation *pageSwitchAnimation;
 
     QList<DuiSceneWindow *> *windows;
-    QList<DuiSceneWindow *> *pageHistory;
+    QList< QPointer<DuiSceneWindow> > pageHistory;
 
     Dui::OrientationAngle angle;
     Dui::OrientationAngle newAngle;

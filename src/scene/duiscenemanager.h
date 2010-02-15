@@ -25,6 +25,7 @@
 #include <QObject>
 #include <QPointF>
 #include <QSize>
+#include <QList>
 #include <DuiSceneWindow>
 
 #include "duinamespace.h"
@@ -105,6 +106,30 @@ public:
      * which you can get the scene size without querying the application window.
      */
     QSize visibleSceneSize() const;
+
+    /*!
+     * \brief Returns the list of application pages that comprises the current navigation history.
+     *
+     * The last page in the list is the previous application page, the one that
+     * will automatically reappear when the current one is dismissed.
+     *
+     * The first page in the list is the root application page. In regular
+     * navigation flows this is the first page that appeared to the user.
+     *
+     * \sa setPageHistory()
+     */
+    QList<DuiSceneWindow *> pageHistory() const;
+
+    /*!
+     * \brief Sets the list of application pages that comprises the navigation history.
+     *
+     * By getting the current history with pageHistory(), modifying it, and
+     * then feeding the modified version back to the scene manager with setPageHistory()
+     * an application can freely manipulate its page navigation history.
+     *
+     * \sa pageHistory()
+     */
+    void setPageHistory(const QList<DuiSceneWindow *> &list);
 
 public Q_SLOTS:
     /*!

@@ -61,6 +61,11 @@ private slots:
     void testWindowAnimationDone();
     void testPageSwitchingOnAppearNow();
     void testPageSwitchingOnDismissNow();
+    void testPageHistoryPushing();
+    void testPageHistoryPopping();
+    void testSettingPageHistory();
+    void testDeletePageInPageHistory();
+    void testPageHistoryAfterPageDeletion();
 };
 
 Q_DECLARE_METATYPE(Dui::Orientation)
