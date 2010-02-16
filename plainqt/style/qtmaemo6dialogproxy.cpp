@@ -30,7 +30,7 @@
 #include "qtmaemo6dialogtitle.h"
 #include "qtmaemo6style_p.h"
 
-QtMaemo6DialogProxy::QtMaemo6DialogProxy(QDialog *mw, QWidget *parent)
+QtMaemo6DialogProxy::QtMaemo6DialogProxy(QWidget *mw, QWidget *parent)
     : QtMaemo6Window(mw, parent)
 {
     setAttribute(Qt::WA_TranslucentBackground);
@@ -52,6 +52,7 @@ QtMaemo6DialogProxy::QtMaemo6DialogProxy(QDialog *mw, QWidget *parent)
     m_windowLayout->addWidget(m_scrollArea, 2, 1, 1, 1);
     m_windowLayout->addItem(rightSideSpacer, 1, 2, 2, 1);
 
+    //only works if mw is a QDialog, otherwise the connect simply fails
     connect(m_dialogTitle, SIGNAL(closeRequest()), mw, SLOT(reject()));
 }
 

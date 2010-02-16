@@ -37,7 +37,7 @@ class QtMaemo6DialogProxy : public QtMaemo6Window
 {
     Q_OBJECT
 public:
-    explicit QtMaemo6DialogProxy(QDialog *mw, QWidget *parent);
+    explicit QtMaemo6DialogProxy(QWidget *mw, QWidget *parent);
     ~QtMaemo6DialogProxy();
 
     /*!
@@ -52,6 +52,7 @@ public:
 
 protected:
     QtMaemo6DialogProxy() {};
+    void init();
 
     /*! \reimp */
     //bool eventFilter(QObject* watched, QEvent* ev);

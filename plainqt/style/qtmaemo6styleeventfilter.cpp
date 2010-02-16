@@ -65,7 +65,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
 
                     //ensure that the mainwindow takes at least the width of the screen
-                    widget->setMinimumWidth(m_style->m_windowDecoration->maxViewportSize().width());
+                    //widget->setMinimumWidth(m_style->m_windowDecoration->maxViewportSize().width());
                     return true;
                 }
                 if (QDialog *dialog = qobject_cast<QDialog *>(widget)) {
@@ -83,7 +83,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     QtMaemo6StylePrivate::drawWindowBackground(widget);
 
                     //ensure that the mainwindow takes at least the width of the screen
-                    widget->setMinimumWidth(dialogProxy->maxViewportSize().width());
+                    //widget->setMinimumWidth(dialogProxy->maxViewportSize().width());
                     return true;
                 }
             }
@@ -144,13 +144,10 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
         if(QComboBox* comboBox = qobject_cast<QComboBox*>(widget)) {
             //done in mousePress, because in this way the original popup is completely suppressed
             QtMaemo6ComboBoxPopup *comboBoxPopup = new QtMaemo6ComboBoxPopup(comboBox, NULL);
-            QtMaemo6WindowDecoration *decoration = new QtMaemo6WindowDecoration(comboBoxPopup, NULL);
-            decoration->showFastMaximized();
-            //these both must be done after the show, because the status- and
-            // menubar is added on show event
-            decoration->setStatusBar(NULL);
-            decoration->setMenuBar(NULL);
-            QtMaemo6StylePrivate::drawWindowBackground(decoration);
+            QtMaemo6DialogProxy* dialog = new QtMaemo6DialogProxy(comboBoxPopup, comboBox);
+            dialog->showFastMaximized();
+            dialog->setTitle(tr("Choose a value"));
+            QtMaemo6StylePrivate::drawWindowBackground(comboBoxPopup);
             return true;
         }
     }

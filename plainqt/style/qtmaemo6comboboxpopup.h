@@ -22,23 +22,31 @@
 
 #include "qtmaemo6window.h"
 
-#include <QListView>
+#include <QWidget>
 
+class QModelIndex;
+class QListView;
 class QComboBox;
+class QLineEdit;
 
 /*!
  * This class shows replaces combo box popups
  */
-class QtMaemo6ComboBoxPopup : public QListView
+class QtMaemo6ComboBoxPopup : public QWidget
 {
     Q_OBJECT
 public:
     explicit QtMaemo6ComboBoxPopup(QComboBox *comboBox, QWidget *parent);
     virtual ~QtMaemo6ComboBoxPopup();
 protected Q_SLOTS:
-    void listItemClicked(const QModelIndex &);
+    void selectItem(const QModelIndex &);
+    void closePopup();
+protected:
+    virtual void showEvent(QShowEvent *e);
 private:
     QComboBox* m_comboBox;
+    QListView* m_listView;
+    QLineEdit* m_lineEdit;
 };
 
 #endif

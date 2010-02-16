@@ -18,14 +18,14 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tabWidget">
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="Pizza">
        <attribute name="title">
         <string>Pizza</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_3">
-        <item row="6" column="0" colspan="2">
+        <item row="7" column="0" colspan="2">
          <spacer name="verticalSpacer">
           <property name="orientation">
            <enum>Qt::Vertical</enum>
@@ -38,10 +38,10 @@
           </property>
          </spacer>
         </item>
-        <item row="4" column="1">
+        <item row="5" column="1">
          <widget class="QLineEdit" name="lineEdit"/>
         </item>
-        <item row="3" column="1">
+        <item row="4" column="1">
          <widget class="QSpinBox" name="spinBox"/>
         </item>
         <item row="0" column="1">
@@ -51,14 +51,14 @@
           </property>
          </widget>
         </item>
-        <item row="2" column="1">
+        <item row="3" column="1">
          <widget class="QCheckBox" name="checkBox">
           <property name="text">
            <string>Extra cheese</string>
           </property>
          </widget>
         </item>
-        <item row="0" column="0" rowspan="5">
+        <item row="0" column="0" rowspan="6">
          <widget class="QGroupBox" name="groupBox">
           <property name="title">
            <string>Type</string>
@@ -103,11 +103,38 @@
           </item>
          </widget>
         </item>
-        <item row="5" column="1">
+        <item row="6" column="1">
          <widget class="QPushButton" name="pushButton">
           <property name="text">
            <string>PushButton</string>
           </property>
+         </widget>
+        </item>
+        <item row="2" column="1">
+         <widget class="QComboBox" name="comboBox_2">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <item>
+           <property name="text">
+            <string>Small</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Medium</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Large</string>
+           </property>
+          </item>
+          <item>
+           <property name="text">
+            <string>Extra Large</string>
+           </property>
+          </item>
          </widget>
         </item>
        </layout>
@@ -431,8 +458,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>900</width>
-                <height>337</height>
+                <width>122</width>
+                <height>225</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_9">

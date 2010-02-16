@@ -46,6 +46,9 @@
 #include <QAbstractItemView>
 #include <QStatusBar>
 #include <QMenuBar>
+#include <QComboBox>
+#include <QLineEdit>
+#include <QTime>
 
 #include <DuiComponentData>
 #include <DuiTheme>
@@ -812,6 +815,12 @@ void QtMaemo6Style::polish(QWidget *widget)
         if (d->m_menuBar)
             decoration->setMenuBar(d->m_menuBar);
     }
+
+    if(QComboBox* comboBox = qobject_cast<QComboBox*>(widget)) {
+        if(comboBox->isEditable()) {
+            comboBox->lineEdit()->setReadOnly(false);
+        }
+    }
 }
 
 void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
@@ -985,6 +994,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
                             p->setFont( style->font() );
                             p->setPen( QPen( style->color() ) );
              */
+
             QtMaemo6TestStyle::drawControl(element, cmb, p, widget);
         }
     }

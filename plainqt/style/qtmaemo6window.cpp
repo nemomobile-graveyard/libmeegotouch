@@ -138,6 +138,13 @@ void QtMaemo6Window::setCentralWidget(QWidget *widget)
             m_scrollArea->setFrameShape(QFrame::NoFrame);
             m_scrollArea->setWidget(widget);
         }
+
+        //If the widget has size policy expanding, then care for the widget to
+        //use at least the scroll area viewport's size
+        if(widget->sizePolicy().horizontalPolicy() == QSizePolicy::Expanding)
+            widget->setMinimumWidth(maxViewportSize().width());
+        if(widget->sizePolicy().verticalPolicy() == QSizePolicy::Expanding)
+            widget->setMinimumHeight(maxViewportSize().height());
         m_windowLayout->addWidget(m_centralWidget, 1, 1, 1, 1);
     }
 }
