@@ -21,6 +21,7 @@
 #define DUIGLES2RENDERER_H
 
 #include <QList>
+#include <QSize>
 #include <QString>
 #include "duiexport.h"
 
@@ -29,15 +30,16 @@ class DuiGLES2RendererPrivate;
 
 class QGLShader;
 class QGLShaderProgram;
-
-class QSizeF;
+class QPainter;
 
 //some definitions to enable building without gles2 libraries
 #ifdef QT_OPENGL_LIB
-#include <QtOpenGL>
-#ifdef QT_OPENGL_ES_2
-#define DUI_USE_OPENGL
-#endif
+# include <QtOpenGL>
+# ifdef QT_OPENGL_ES_2
+// TODO: It does not seem kosher to define a macro with global effect
+// in this place.
+#  define DUI_USE_OPENGL
+# endif
 #endif
 
 /*!
