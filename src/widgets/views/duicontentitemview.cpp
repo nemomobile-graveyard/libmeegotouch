@@ -79,6 +79,7 @@ DuiLabel *DuiContentItemViewPrivate::title()
 {
     if (!titleLabel) {
         titleLabel = new DuiLabel(controller);
+        titleLabel->setTextElide(true);
         Q_Q(DuiContentItemView);
         titleLabel->setObjectName(q->style()->titleObjectName());
     }
@@ -90,6 +91,7 @@ DuiLabel *DuiContentItemViewPrivate::subtitle()
 {
     if (!subtitleLabel) {
         subtitleLabel = new DuiLabel(controller);
+        subtitleLabel->setTextElide(true);
         Q_Q(DuiContentItemView);
         subtitleLabel->setObjectName(q->style()->subtitleObjectName());
     }
