@@ -365,11 +365,14 @@ void DuiContentItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void DuiContentItemView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
+    DuiWidgetView::drawBackground(painter,option);
 
     DuiContentItemViewPrivate::backgroundFunc func = DuiContentItemViewPrivate::backgroundFunctions[model()->itemMode()];
     const DuiContentItemStyle *itemStyle = style().operator ->();
     const DuiScalableImage *itemBackground = ((*itemStyle).*func)();
-    itemBackground->draw(0, 0, size().width(), size().height(), painter);
+
+    if( itemBackground )
+        itemBackground->draw(0, 0, size().width(), size().height(), painter);
 }
 
 void DuiContentItemView::setSelected(bool selected)
