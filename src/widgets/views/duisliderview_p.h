@@ -34,6 +34,7 @@ class DuiImageWidget;
 class QGraphicsAnchorLayout;
 class DuiLinearLayoutPolicy;
 class DuiSliderView;
+class QPropertyAnimation;
 
 class DuiSliderHandle : public DuiWidget
 {
@@ -205,6 +206,10 @@ public:
 
     DuiLinearLayoutPolicy *horizontalPolicy;
     DuiLinearLayoutPolicy *verticalPolicy;
+
+    QPropertyAnimation *valueAnimation;
+
+    int pressTimerId;
 
     int valueWhenPressed;
 

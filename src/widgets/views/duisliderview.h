@@ -131,6 +131,8 @@ protected:
      */
     virtual void updateData(const QList<const char *>& modifications);
 
+    void timerEvent(QTimerEvent* event);
+
 private:
     Q_DISABLE_COPY(DuiSliderView)
     Q_DECLARE_PRIVATE(DuiSliderView)

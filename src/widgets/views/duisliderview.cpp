@@ -28,6 +28,7 @@
 #include <QApplication>
 #include <QGraphicsAnchorLayout>
 #include <QGraphicsGridLayout>
+#include <QPropertyAnimation>
 #include <limits>
 
 #include "duitheme.h"
@@ -864,6 +865,8 @@ DuiSliderViewPrivate::DuiSliderViewPrivate() :
     maxIndicator(0),
     horizontalPolicy(0),
     verticalPolicy(0),
+    valueAnimation(0),
+    pressTimerId(0),
     valueWhenPressed(0)
 {
     sliderGroove = new DuiSliderGroove;
@@ -875,6 +878,9 @@ DuiSliderViewPrivate::DuiSliderViewPrivate() :
 DuiSliderViewPrivate::~DuiSliderViewPrivate()
 {
     sliderGroove->ensureSafeClosing();
+
+    if (valueAnimation)
+        delete valueAnimation;
 }
 
 //intializes main layout and layout policies
@@ -963,7 +969,14 @@ bool DuiSliderViewPrivate::isCollision(QGraphicsSceneMouseEvent *event) const
 //to mouse cursor position
 void DuiSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
 {
-    controller->setValue(sliderGroove->screenPointToValue(event->pos()));
+    if (valueAnimation == 0) {
+        valueAnimation = new QPropertyAnimation(controller, "value", controller);
+        valueAnimation->setDuration(150);
+        valueAnimation->setEasingCurve(QEasingCurve::OutSine);
+    }
+
+    valueAnimation->setEndValue(sliderGroove->screenPointToValue(event->pos()));
+    valueAnimation->start();
 }
 
 //refreshes slider groove (min, max and value, slider state)
@@ -1104,9 +1117,8 @@ void DuiSliderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (d->isCollision(event)) {
         d->valueWhenPressed = model()->value();
 
-        d->controller->setState(DuiSliderModel::Pressed);
         d->updateValue(event);
-        d->sliderGroove->raiseHandleIndicator();
+        d->pressTimerId = startTimer(100);
     }
 }
 
@@ -1127,7 +1139,13 @@ void DuiSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (d->isCollision(event) || model()->state() == DuiSliderModel::Pressed) {
         d->controller->setState(DuiSliderModel::Released);
         d->updateValue(event);
-        d->sliderGroove->lowerHandleIndicator();
+
+        if (d->pressTimerId) {
+            killTimer(d->pressTimerId);
+            d->pressTimerId = 0;
+        } else {
+            d->sliderGroove->lowerHandleIndicator();
+        }
     }
 }
 
@@ -1142,6 +1160,19 @@ void DuiSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         d->controller->setState(DuiSliderModel::Released);
         d->updateValue(event);
         d->sliderGroove->lowerHandleIndicator();
+    }
+}
+
+void DuiSliderView::timerEvent(QTimerEvent *event)
+{
+    Q_D(DuiSliderView);
+
+    if (event->timerId() == d->pressTimerId) {
+        killTimer(d->pressTimerId);
+        d->pressTimerId = 0;
+
+        d->controller->setState(DuiSliderModel::Pressed);
+        d->sliderGroove->raiseHandleIndicator();
     }
 }
 
