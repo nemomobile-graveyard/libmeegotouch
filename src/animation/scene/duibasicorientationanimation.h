@@ -73,8 +73,6 @@ Q_SIGNALS:
     */
     void orientationChanged();
 
-    void finished();
-
 protected:
     //! \reimp
     // from DuiOrientationAnimation
