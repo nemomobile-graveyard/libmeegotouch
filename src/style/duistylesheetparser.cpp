@@ -75,10 +75,10 @@ public:
 
     /**
      \brief Load a previously-cached binary version of the style.
-     \param filename The stylesheet file.
+     \param cssFileInfo The file info of the opened stylesheet file.
      \param binaryFilename The binary stylesheet file.
      */
-    bool loadBinary(const QString &filename, const QString &binaryFilename);
+    bool loadBinary(const QFileInfo &cssFileInfo, const QString &binaryFilename);
 
     /**
      \brief Write the binary stylesheet data to a file on disk.
@@ -356,8 +356,10 @@ bool DuiStyleSheetParserPrivate::load(const QString &filename, QHash<QString, QS
             fileInfoList.push_back(privateFileInfo);
 
             // dump this file to the disk for faster access in future?
-            if (binaryFileMode)
+            if (binaryFileMode) {
+                privateFileInfo->time_t = fileInfo.lastModified().toTime_t();
                 dump(*privateFileInfo, binaryFilename);
+            }
 
             privateFileInfo = NULL;
             return true;
@@ -855,7 +857,6 @@ QString DuiStyleSheetParserPrivate::createBinaryFilename(const QFileInfo &fileIn
     absoluteFilePathEncoded.replace('_', "__");
     absoluteFilePathEncoded.replace('/', "_.");
     binaryFilename += absoluteFilePathEncoded;
-    binaryFilename += fileInfo.lastModified().toString("-yyMMdd-hhmmss");
     return binaryFilename;
 }
 
@@ -933,7 +934,7 @@ void DuiStyleSheetParser::setBinaryFileGenerationEnabled(bool enabled)
     d->binaryFileMode = enabled;
 }
 
-bool DuiStyleSheetParserPrivate::loadBinary(const QString &filename, const QString &binaryFilename)
+bool DuiStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const QString &binaryFilename)
 {
     // Check that the file exists:
     if (!QFile::exists(binaryFilename))
@@ -953,10 +954,16 @@ bool DuiStyleSheetParserPrivate::loadBinary(const QString &filename, const QStri
         int file_version;
         stream >> file_version;
 
-        // This is how we read v0.9 files
-        if (file_version == FILE_VERSION(0, 9)) {
+        // This is how we read v0.10 files
+        if (file_version == FILE_VERSION(0, 10)) {
             // read fileinfo
             DuiStyleSheetParser::StylesheetFileInfo *fileinfo = new DuiStyleSheetParser::StylesheetFileInfo;
+            stream >> fileinfo->time_t;
+            if (fileinfo->time_t != cssFileInfo.lastModified().toTime_t()) {
+                // date of binary file does not match the one of the css
+                // binary file needs to be recreated
+                return false;
+            }
 
             stream >> fileinfo->filename;
             stream >> fileinfo->includes;
@@ -1004,7 +1011,7 @@ bool DuiStyleSheetParserPrivate::loadBinary(const QString &filename, const QStri
         return result;
     }
 
-    duiWarning("DuiStyleSheetParserPrivate") << "Failed to load binary stylesheet file:" << filename;
+    duiWarning("DuiStyleSheetParserPrivate") << "Failed to load binary stylesheet file:" << cssFileInfo.fileName();
 
     return false;
 }
@@ -1019,7 +1026,8 @@ bool DuiStyleSheetParserPrivate::dump(const DuiStyleSheetParser::StylesheetFileI
         QDataStream stream(&file);
 
         // write version number (32bit, 16 major, 16 minor)
-        stream << (int) FILE_VERSION(0, 9);
+        stream << (int) FILE_VERSION(0, 10);
+        stream << info.time_t;
         stream << info.filename;
         stream << info.includes;
         stream << info.constants;

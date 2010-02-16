@@ -42,7 +42,6 @@ class DuiLogicalValues;
 class DUI_EXPORT DuiStyleSheetParser
 {
 public:
-
     //! \cond
     struct StylesheetFileInfo {
         QString                         filename;
@@ -50,6 +49,7 @@ public:
         QList<DuiStyleSheetSelector *>   selectors;
         QList<DuiStyleSheetSelector *>   parentSelectors;
         QHash<QString, QString>         constants;
+        uint                            time_t;
     };
     //! \endcond
 
@@ -99,7 +99,6 @@ public:
     QList<DuiStyleSheetParser::StylesheetFileInfo *>& fileInfoList() const;
 
 protected:
-
     static void outputParseError(const QString &filename, const QString &description, int lineNum);
     static void outputParseWarning(const QString &filename, const QString &description, int lineNum);
 
