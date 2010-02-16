@@ -185,7 +185,7 @@ public:
     static DuiLocale *createSystemDuiLocale();
     static DuiLocale createCLocale();
 
-    DuiLocale(QObject *parent = 0);
+    explicit DuiLocale(QObject *parent = 0);
 
     /*!
      * Constructs a DuiLocale from a ICU format locale ID string
