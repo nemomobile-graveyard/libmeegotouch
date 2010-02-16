@@ -39,7 +39,7 @@ DuiDeviceProfilePrivate::DuiDeviceProfilePrivate()
 DuiDeviceProfilePrivate::~DuiDeviceProfilePrivate()
 {
     if (style) {
-        //DuiTheme::releaseStyle(style);
+        DuiTheme::releaseStyle(style);
         style = 0;
     }
 }

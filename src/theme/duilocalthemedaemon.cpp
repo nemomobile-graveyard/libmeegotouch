@@ -69,6 +69,8 @@ DuiLocalThemeDaemon::DuiLocalThemeDaemon(const QString &applicationName)
 DuiLocalThemeDaemon::~DuiLocalThemeDaemon()
 {
     daemon.removeClient(client);
+    delete client;
+    client = NULL;
 }
 
 void DuiLocalThemeDaemon::addDirectoryToPixmapSearchList(const QString &directoryName, Dui::RecursionMode recursive)
