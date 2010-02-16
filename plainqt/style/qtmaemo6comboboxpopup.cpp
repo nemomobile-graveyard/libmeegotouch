@@ -29,6 +29,8 @@
 #include <QCompleter>
 #include <QPushButton>
 
+//krazy:excludeall=qclasses
+
 QtMaemo6ComboBoxPopup::QtMaemo6ComboBoxPopup(QComboBox *comboBox, QWidget *parent)
     : QWidget(parent),
     m_comboBox(comboBox),

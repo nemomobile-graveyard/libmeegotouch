@@ -926,7 +926,7 @@ QString DuiLocale::formatNumber(qlonglong i) const
     UnicodeString str;
     // This might generate a warning by the Krazy code analyzer,
     // but it allows the code to compile with ICU 4.0
-    d->_numberFormat->format(static_cast<int64_t>(i), str);
+    d->_numberFormat->format(static_cast<int64_t>(i), str); //krazy:exclude=typedefs
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
     return QString::number(i);

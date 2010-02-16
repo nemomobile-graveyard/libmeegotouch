@@ -188,7 +188,7 @@ void CustomDirectIMWidget::keyReleaseEvent(QKeyEvent *event)
 {
     QString label;
     label = this->text();
-    label += "\n";
+    label += '\n';
     //% "<i>Key release</i> key:"
     label += qtTrId("xx_textentry_keyrelease");
     label += QString("%1, ").arg(event->key(), 0, 16);

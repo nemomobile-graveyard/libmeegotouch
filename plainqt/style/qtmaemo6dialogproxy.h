@@ -27,7 +27,6 @@
 #include "qtmaemo6window.h"
 
 class QtMaemo6DialogTitle;
-class QDialog;
 
 /*!
  * This class emulates the windowdecoration, for dialogs. It draws the the

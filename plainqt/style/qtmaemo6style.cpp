@@ -85,6 +85,8 @@
 #include "qtmaemo6dialogproxy.h"
 #include "qtmaemo6menu.h"
 
+//krazy:excludeall=qclasses
+
 //#include "duicontainerheader_p.h"
 
 #define WIDGET_OPACITY "widgetOpacity"

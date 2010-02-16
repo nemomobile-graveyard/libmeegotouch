@@ -41,6 +41,8 @@
 #include <duibuttonstyle.h>
 #include <DuiScalableImage>
 
+//krazy:excludeall=qclasses
+
 QtMaemo6StyleEventFilter::QtMaemo6StyleEventFilter(QtMaemo6TestStyle *parent)
     : QtMaemo6TestStyleEventFilter(parent)
 {

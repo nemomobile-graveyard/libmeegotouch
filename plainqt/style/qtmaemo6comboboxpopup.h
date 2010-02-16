@@ -22,6 +22,8 @@
 
 #include "qtmaemo6window.h"
 
+//krazy:excludeall=qclasses
+
 #include <QWidget>
 
 class QModelIndex;
