@@ -21,8 +21,6 @@
 #define DUIMASHUPCANVASVIEW_P_H_
 
 #include "private/duiwidgetview_p.h"
-#include "applicationextension/duiextensionareaview_p.h"
-#include "duimashupcanvasview.h"
 
 class DuiLayout;
 class DuiFlowLayoutPolicy;
@@ -31,12 +29,11 @@ class DuiButton;
 class DuiAppletInventory;
 class DuiPannableViewport;
 class DuiSceneWindow;
-class DuiMashupCanvas;
 
 /*!
  * DuiMashupCanvasViewPrivate is the private class for DuiMashupCanvasView.
  */
-class DuiMashupCanvasViewPrivate : public DuiExtensionAreaViewPrivate
+class DuiMashupCanvasViewPrivate : public DuiWidgetViewPrivate
 {
     Q_DECLARE_PUBLIC(DuiMashupCanvasView)
 
@@ -53,22 +50,57 @@ public:
     virtual ~DuiMashupCanvasViewPrivate();
 
     /*!
-     * Initializes the class
+     * Updates the geometry of each widget present in the layout into the data
+     * store.
      */
-    void init();
+    void updateAppletData();
 
     /*!
-     * Adds a widget to the layout
-     * \param widget the widget
-     * \param index the index to insert or -1 to add to the end
+     * Removes those widgets from the layout that are not present in the data
+     * store and adds those widgets to the layout which are present in the data
+     * store but not yet in the layout.
      */
-    virtual void addToLayout(DuiWidget *widget, int index = -1);
+    void updateAppletLayout();
+
+    /*!
+     * Used to check properties of applet and connect signals between applet and DuiContainer
+     */
+    void connectContainerToApplet(DuiContainer *container, DuiWidget *applet) const;
+
+    /*!
+     * Creates a new container and inserts the given \p widget into the container. 
+     * Sets up the container for the \p widget.
+     * \return Created container.
+     * \param widget Widget to be inserted into the container.
+     */
+    DuiContainer* createWidgetContainer(DuiWidget* widget) const;
+
+    /*!
+     * Sets up containers in this mashup canvas view. If the \p enabled is \c true the 
+     * containers are made visible for all widgets in this mashup view. 
+     * If the \p enabled is \c false all containers hidden in this mashup canvas
+     *
+     * \param enabled Whether containers are enabled or not.
+     */
+    void setupContainers(bool enabled);
+
+    /*!
+     * Toggles if the given container is visible or not. If the \p enabled is \c true the 
+     * containers are set to visible, otherwise they are hidden.
+     *
+     * \param container The container whos visibility to modify
+     * \param enabled Whether containers are enabled or not.
+     */
+    void setContainerEnabled(DuiContainer* container, bool enabled);
 
     //! The DuiMashupCanvas controller.
     DuiMashupCanvas *controller;
 
     //! The main layout of the mashup canvas.
     QGraphicsLinearLayout *mainLayout;
+
+    //! Layout used to layout the applet instances on this canvas.
+    DuiLayout *appletLayout;
 
     //! Layout policy used to layout the applet instances on this canvas.
     DuiFlowLayoutPolicy *layoutPolicy;
@@ -84,6 +116,8 @@ public:
 
     //! Pannable viewport in which the applet inventory is displayed
     DuiPannableViewport *appletInventoryViewport;
+
+
 };
 
 #endif /* DUIMASHUPCANVASVIEW_P_H_ */

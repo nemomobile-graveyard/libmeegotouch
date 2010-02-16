@@ -10,8 +10,7 @@ SOURCES += \
     ut_duimashupcanvas.cpp \
     $$DUISRCDIR/mashup/mashup/duimashupcanvas.cpp \
     $$DUISRCDIR/widgets/core/duiwidgetcontroller.cpp \
-    $$DUISRCDIR/widgets/core/duiwidget.cpp \
-    $$DUISRCDIR/applicationextension/duiextensionarea.cpp
+    $$DUISRCDIR/widgets/core/duiwidget.cpp
 
 # service classes
 SOURCES += \

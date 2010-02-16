@@ -54,8 +54,6 @@ WIDGET_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/duilayoutanimationstyle.h \
     $$STYLE_SRC_DIR/duiliststyle.h \
     $$STYLE_SRC_DIR/duimashupcanvasstyle.h \
-    $$STYLE_SRC_DIR/duiextensionareastyle.h \
-    $$STYLE_SRC_DIR/duiapplicationextensionareastyle.h \
     $$STYLE_SRC_DIR/duiapplicationmenustyle.h \
     $$STYLE_SRC_DIR/duiapplicationmenubuttonstyle.h \
     $$STYLE_SRC_DIR/duimessageboxstyle.h \

@@ -48,7 +48,7 @@ class DUI_EXPORT DuiMashupCanvas : public DuiWidgetController
 
 public:
     /*!
-     * Constructor
+     * Default constructor
      * \param identifier A unique identifier of this mashup canvas. The data of the instantiated
      * applets is stored and restored based on this identifier.
       \param parent Optional Object's parent
@@ -133,6 +133,11 @@ protected Q_SLOTS:
 private:
     Q_DECLARE_PRIVATE(DuiMashupCanvas)
     Q_DISABLE_COPY(DuiMashupCanvas)
+
+    /*!
+     * Initializes this object once its constructed.
+     */
+    void init();
 };
 
 #endif // DUIMASHUPCANVAS_H

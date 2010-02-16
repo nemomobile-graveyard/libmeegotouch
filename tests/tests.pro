@@ -141,9 +141,6 @@ SUBDIRS     =  \
     ut_translations \
     ut_translations/translations-tr \
     ut_translations/translations-qttrid \
-    ut_duiextensionarea \
-    ut_duiapplicationextensionarea \
-    ut_duiapplicationextensionareaview
 
 # enable only when we have icu available
 

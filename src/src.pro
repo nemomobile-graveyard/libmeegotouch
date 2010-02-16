@@ -24,7 +24,6 @@ include(widgets/widgets.pri)
 include(workspace/workspace.pri)
 # !macx:include(video/video.pri) DISABLED FOR NOW
 contains(DEFINES, HAVE_DBUS) {
-    include(applicationextension/applicationextension.pri)
     include(mashup/appletcommunication/appletcommunication.pri)
     include(mashup/appletinterface/appletinterface.pri)
     include(mashup/appletinstallation/appletinstallation.pri)

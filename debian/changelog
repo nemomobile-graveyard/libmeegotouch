@@ -9,8 +9,7 @@ libdui (0.18.9-2) unstable; urgency=low
 
   * New version
   * Unit test fixes
-  * Implemented: SWP#DUI-2901 
- 
+  
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 12 Feb 2010 14:30:00 +0200
   
 libdui (0.18.8-1) unstable; urgency=low

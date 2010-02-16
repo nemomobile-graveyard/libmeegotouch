@@ -2,6 +2,5 @@ usr/bin/duimoc
 usr/bin/duigen
 usr/bin/dui-servicefwgen
 usr/bin/duiapplettester
-usr/bin/duiapplicationextensiontester
 usr/bin/duinotificationtool
 usr/bin/duinotificationstresstest

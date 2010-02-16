@@ -33,7 +33,6 @@ DUI_REGISTER_WIDGET_NO_CREATE(DuiMashupCanvas)
 ///////////////////
 // PRIVATE CLASS //
 ///////////////////
-
 QSet<QString> DuiMashupCanvasPrivate::allMashupCanvasIdentifiers;
 
 DuiMashupCanvasPrivate::DuiMashupCanvasPrivate() : instanceManager(NULL)
@@ -47,19 +46,9 @@ DuiMashupCanvasPrivate::~DuiMashupCanvasPrivate()
 
 void DuiMashupCanvasPrivate::init(const QString &identifier)
 {
-    Q_Q(DuiMashupCanvas);
-
     this->identifier = provideUniqueIdentifier(identifier);
     this->serviceAddress = DuiComponentData::serviceName() + "/DuiAppletInstanceManager/" + this->identifier;
     instanceManager = new DuiAppletInstanceManager(this->identifier);
-
-    // Connect applet instance manager signals and restore applet instances
-    q->connect(instanceManager, SIGNAL(appletInstantiated(DuiWidget *, DuiDataStore &)), SLOT(addWidget(DuiWidget *, DuiDataStore &)));
-    q->connect(instanceManager, SIGNAL(appletRemoved(DuiWidget *)), SLOT(removeWidget(DuiWidget *)));
-    instanceManager->restoreApplets();
-
-    // Put the data stores into the model
-    q->model()->setDataStores(&dataStores);
 }
 
 QString DuiMashupCanvasPrivate::provideUniqueIdentifier(const QString &identifier)
@@ -80,49 +69,6 @@ QString DuiMashupCanvasPrivate::provideUniqueIdentifier(const QString &identifie
     return result;
 }
 
-void DuiMashupCanvasPrivate::addWidget(DuiWidget *widget, DuiDataStore &store)
-{
-    Q_Q(DuiMashupCanvas);
-
-    // TODO: when the current ABI freeze ends:
-    // - make DuiMashupCanvas inherit DuiExtensionArea
-    // - remove dataStore handling in this function and call DuiExtensionAreaPrivate's addWidget instead
-    //   (leave the DuiAction things here)
-    if (!dataStores.contains(widget)) {
-        // Add the remove action into the object menu of the applet widget
-        //: Object menu command. Removes e.g. applet from canvas.
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.7.pdf
-        //% "Remove Applet"
-        DuiAction *action = new DuiAction(qtTrId("qtn_comm_removewidget"), q);
-        instanceManager->connect(action, SIGNAL(triggered(bool)), SLOT(removeActionTriggered(bool)));
-        widget->addAction(action);
-
-        // Add data store to data stores map
-        dataStores[widget] = &store;
-
-        // Let the view know about the data store modification
-        q->model()->dataStoresModified();
-    } else {
-        // Widget is already added to the mashup canvas. Bail out.
-        duiWarning("DuiMashupCanvas") << "DuiMashupCanvas::addWidget() - Widget was already added to mashup canvas.";
-    }
-}
-
-void DuiMashupCanvasPrivate::removeWidget(DuiWidget *widget)
-{
-    Q_Q(DuiMashupCanvas);
-
-    // TODO: when the current ABI freeze ends:
-    // - make DuiMashupCanvas inherit DuiExtensionArea
-    // - remove this function (removeWidget in the base class works then)
-    if (dataStores.contains(widget)) {
-        // Remove data store from the data stores map
-        dataStores.remove(widget);
-        q->model()->dataStoresModified();
-    }
-}
-
-
 //////////////////
 // PUBLIC CLASS //
 //////////////////
@@ -133,6 +79,9 @@ DuiMashupCanvas::DuiMashupCanvas(const QString &identifier, QGraphicsItem *paren
     Q_D(DuiMashupCanvas);
     d->q_ptr = this;
     d->init(identifier);
+
+    // Initialize this object
+    init();
 }
 
 DuiMashupCanvas::DuiMashupCanvas(DuiMashupCanvasPrivate *dd, DuiMashupCanvasModel *model, QGraphicsItem *parent, const QString &identifier) :
@@ -142,10 +91,26 @@ DuiMashupCanvas::DuiMashupCanvas(DuiMashupCanvasPrivate *dd, DuiMashupCanvasMode
 
     // Initialize the private implementation
     d->init(identifier);
+
+    // Initialize this object
+    init();
 }
 
 DuiMashupCanvas::~DuiMashupCanvas()
 {
+}
+
+void DuiMashupCanvas::init()
+{
+    Q_D(DuiMashupCanvas);
+
+    // Connect applet instance manager signals and restore applet instances
+    connect(d->instanceManager, SIGNAL(appletInstantiated(DuiWidget*,DuiDataStore&)), this, SLOT(addWidget(DuiWidget*,DuiDataStore&)));
+    connect(d->instanceManager, SIGNAL(appletRemoved(DuiWidget*)), this, SLOT(removeWidget(DuiWidget*)));
+    d->instanceManager->restoreApplets();
+
+    // Put the data stores into the model
+    model()->setDataStores(&d->dataStores);
 }
 
 void DuiMashupCanvas::setCategories(const QStringList &categories)
@@ -176,14 +141,35 @@ void DuiMashupCanvas::addWidget(DuiWidget *widget, DuiDataStore &store)
 {
     Q_D(DuiMashupCanvas);
 
-    d->addWidget(widget, store);
+    if (!d->dataStores.contains(widget)) {
+        // Add data store to data stores map
+        d->dataStores[widget] = &store;
+
+        // Add the remove action into the object menu of the applet widget
+        //: Object menu command. Removes e.g. applet from canvas.
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.7.pdf
+        //% "Remove Applet"
+        DuiAction *action = new DuiAction( qtTrId( "qtn_comm_removewidget"), this);
+        connect(action, SIGNAL(triggered(bool)), d->instanceManager, SLOT(removeActionTriggered(bool)));
+        widget->addAction(action);
+
+        // Let the view know about the data store modification
+        model()->dataStoresModified();
+    } else {
+        // Widget is already added to the mashup canvas. Bail out.
+        duiWarning("DuiMashupCanvas") << "DuiMashupCanvas::addWidget() - Widget was already added to mashup canvas.";
+    }
 }
 
 void DuiMashupCanvas::removeWidget(DuiWidget *widget)
 {
     Q_D(DuiMashupCanvas);
 
-    d->removeWidget(widget);
+    if (d->dataStores.contains(widget)) {
+        // Remove data store from the data stores map
+        d->dataStores.remove(widget);
+        model()->dataStoresModified();
+    }
 }
 
 DuiAppletInstanceManager *DuiMashupCanvas::appletInstanceManager() const

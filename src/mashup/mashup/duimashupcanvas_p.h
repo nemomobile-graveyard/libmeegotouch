@@ -21,7 +21,6 @@
 #define DUIMASHUPCANVAS_P_H
 
 #include "private/duiwidgetcontroller_p.h"
-#include "applicationextension/duiextensionarea_p.h"
 
 class DuiDataStore;
 class DuiAppletInstanceManager;
@@ -29,7 +28,7 @@ class DuiAppletInstanceManager;
 /*!
  * Private class for DuiMashupCanvas.
  */
-class DuiMashupCanvasPrivate : public DuiExtensionAreaPrivate
+class DuiMashupCanvasPrivate : public DuiWidgetControllerPrivate
 {
     Q_DECLARE_PUBLIC(DuiMashupCanvas)
 
@@ -48,21 +47,15 @@ public:
      * Initializes this class. This method should be called before this class
      * is used for anything else.
      *
+     * This method could modify the provided identifier to ensure that all mashup
+     * canvases in a process have a unique identifier.
+     *
      * \param identifier the identifier for the mashup canvas.
      */
     void init(const QString &identifier);
 
-    /*!
-     * Adds a widget to the canvas.
-     * \see DuiMashupCanvas::addWidget()
-     */
-    virtual void addWidget(DuiWidget *widget, DuiDataStore &store);
-
-    /*!
-     * Removes a widget from the canvas.
-     * \see DuiMashupCanvas::removeWidget()
-     */
-    virtual void removeWidget(DuiWidget *widget);
+    //! Map to maintain DuiDataStore objects of associated widgets in.
+    QMap<DuiWidget*, DuiDataStore*> dataStores;
 
     //! Applet instance manager
     DuiAppletInstanceManager *instanceManager;
@@ -73,6 +66,7 @@ public:
     //! The D-Bus service address of this canvas
     QString serviceAddress;
 
+private:
     /*!
      * Provides a unique identifier in this process.
      * If the provided identifier is not previously used, the same identifier
@@ -87,6 +81,7 @@ public:
 
     //! A list of used mashup canvas identifiers in this process
     static QSet<QString> allMashupCanvasIdentifiers;
+
 };
 
 #endif // DUIMASHUPCANVAS_P_H

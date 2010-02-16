@@ -109,22 +109,22 @@ bool Ut_DuiMashupCanvasView::isWidgetInContainer(QGraphicsWidget *widget)
 
 void Ut_DuiMashupCanvasView::verifyWidgetContainerVisibility(QList<DuiWidget *> *widgetList, bool visible)
 {
-    QListIterator<DuiWidget *> iterator(*widgetList);
-    while (iterator.hasNext()) {
-        DuiWidget *widget = iterator.next();
-        DuiContainer *theContainer = container(widget);
-        QVERIFY(isWidgetInContainer(widget));
-        if (visible) {
-            QCOMPARE(theContainer->objectName(), QString(""));
-            QVERIFY(theContainer->headerVisible());
-        } else {
-            QCOMPARE(theContainer->objectName(), QString("DuiExtensionAreaInvisibleContainer"));
-            QVERIFY(!theContainer->headerVisible());
-        }
+  QListIterator<DuiWidget*> iterator(*widgetList);
+  while (iterator.hasNext()) {
+    DuiWidget* widget = iterator.next();
+    DuiContainer* theContainer = container(widget);
+    QVERIFY(isWidgetInContainer(widget));
+    if (visible) {
+      QCOMPARE(theContainer->objectName(), QString(""));
+      QVERIFY(theContainer->headerVisible());
+    } else {
+      QCOMPARE(theContainer->objectName(), QString("DuiMashupCanvasInvisibleContainer"));
+      QVERIFY(!theContainer->headerVisible());
     }
     QGraphicsLayout *appletLayout = dynamic_cast<QGraphicsLayout *>(mashupCanvas->layout()->itemAt(0));
     QVERIFY(appletLayout != NULL);
     QCOMPARE(appletLayout->count(), widgetList->size());
+  }
 }
 
 QList<DuiWidget *> *Ut_DuiMashupCanvasView::createWidgets(int numberOfWidgets, bool containerMode)
