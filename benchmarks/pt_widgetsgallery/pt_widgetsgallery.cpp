@@ -20,14 +20,20 @@
 #include "pt_widgetsgallery.h"
 
 #include <QProcess>
+#include <QFileInfo>
 
 #include <qtest.h>
 
 void Pt_WidgetsGallery::startupTime()
 {
     QProcess proc;
-    const QString program = "widgetsgallery";
+    QString program = "widgetsgallery";
     const QStringList arguments = QStringList() << "-quitimmediately" <<  "-remote-theme";
+
+    //execute local binary file
+    QString sLocalProgram("../../demos/widgetsgallery/widgetsgallery");
+    if(QFileInfo(sLocalProgram).exists())
+      program = sLocalProgram;
 
     QBENCHMARK {
         proc.start(program, arguments);
