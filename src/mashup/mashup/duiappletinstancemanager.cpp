@@ -31,6 +31,7 @@
 #include "duiappletpackagemetadata.h"
 #include "duiapplication.h"
 #include "duiscenemanager.h"
+#include "duiorientationtracker.h"
 #include "duiaction.h"
 
 const QString DuiAppletInstanceManager::PACKAGE_MANAGER_DBUS_SERVICE = "com.nokia.package_manager";
@@ -387,23 +388,17 @@ DuiAppletInstanceData *DuiAppletInstanceManager::createAppletInstanceDataFromPac
 
 void DuiAppletInstanceManager::setAppletHandleSizeHints(DuiAppletHandle &handle, DuiAppletInstanceData &data)
 {
-    // Set the size hints of the applet
-    DuiWindow *window = DuiApplication::activeWindow();
-    if (window != NULL) {
-        DuiSceneManager *sceneManager = window->sceneManager();
-        if (sceneManager != NULL) {
-            // Convert the size string to a QSizeF; it should be a non-zero size
-            QSizeF size = qStringToQSizeF(sceneManager->orientation() == Dui::Landscape ? data.sizeLandscape : data.sizePortrait);
-            if (!size.isEmpty()) {
-                // Set all size hints to the given size in the current orientation
-                QVector<QSizeF> sizeHints;
-                sizeHints.append(size);
-                sizeHints.append(size);
-                sizeHints.append(size);
-                sizeHints.append(size);
-                handle.setSizeHints(sizeHints);
-            }
-        }
+    // Set the size hints of the applet. Convert the size string to a QSizeF; it should be a non-zero size
+    Dui::OrientationAngle angle = DuiOrientationTracker::instance()->orientationAngle();
+    QSizeF size = qStringToQSizeF((angle == Dui::Angle0 || angle == Dui::Angle180) ? data.sizeLandscape : data.sizePortrait);
+    if (!size.isEmpty()) {
+        // Set all size hints to the given size in the current orientation
+        QVector<QSizeF> sizeHints;
+        sizeHints.append(size);
+        sizeHints.append(size);
+        sizeHints.append(size);
+        sizeHints.append(size);
+        handle.setSizeHints(sizeHints);
     }
 }
 

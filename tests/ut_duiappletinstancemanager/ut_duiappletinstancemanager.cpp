@@ -40,6 +40,7 @@
 #include "duiappletloader_stub.h"
 #include "duiappletid.h"
 #include "duiappletsettings_stub.h"
+#include "duiorientationtracker_stub.h"
 #include "duiapplication.h"
 #include "mockdatastore.h"
 
