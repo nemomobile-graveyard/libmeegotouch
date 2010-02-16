@@ -293,11 +293,15 @@ void DuiSceneManagerPrivate::_q_windowHideAnimationFinished()
 
 void DuiSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanelRect)
 {
+    Q_Q(DuiSceneManager);
     if (focusedInputWidget) {
-        const QRect widgetRect(
-            focusedInputWidget->mapRectToItem(rootElement, focusedInputWidget->boundingRect()).toRect());
         const QRect mappedInputPanelRect(rootElement->mapRectFromScene(inputPanelRect).toRect());
-
+        QRect widgetRect;
+        QVariant result = q->scene()->inputMethodQuery(Qt::ImMicroFocus);
+        if (result.isValid())
+            widgetRect = result.toRect();
+        else
+            widgetRect = focusedInputWidget->mapRectToItem(rootElement, focusedInputWidget->boundingRect()).toRect();
         if (widgetRect.intersects(mappedInputPanelRect)) {
             const QRect intersection(widgetRect.intersected(mappedInputPanelRect));
             const InputPanelPlacement panelPlacement(inputPanelPlacement(mappedInputPanelRect));
