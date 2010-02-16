@@ -20,7 +20,6 @@
 #include <DuiApplication>
 #include <DuiApplicationWindow>
 #include <DuiTheme>
-#include <DuiGConfItem>
 #include "imtoolbarpage.h"
 
 namespace
@@ -36,21 +35,6 @@ int main(int argc, char **argv)
     // Create application window and make it visible.
     DuiApplicationWindow window;
     window.show();
-
-    //register the toolbar
-    DuiGConfItem toolbarsGConf(InputMethodToolbars);
-    QStringList toolbars = toolbarsGConf.value().toStringList();
-    bool changed = false;
-    if (!toolbars.contains("toolbar1")) {
-        toolbars.append("toolbar1");
-        changed = true;
-    }
-    if (!toolbars.contains("toolbar2")) {
-        toolbars.append("toolbar2");
-        changed = true;
-    }
-    if (changed)
-        toolbarsGConf.set(QVariant(toolbars));
 
     // Create application page and make it visible.
     ImToolbarPage page;

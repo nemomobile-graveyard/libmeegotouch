@@ -20,4 +20,5 @@ SUBDIRS       = \
                 separatorTest \
                 testwidget \
                 trackergrid \
+                imtoolbar \
 
