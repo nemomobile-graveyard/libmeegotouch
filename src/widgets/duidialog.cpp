@@ -28,6 +28,11 @@
 #include <DuiScene>
 #include <DuiWindow>
 
+#ifdef Q_WS_X11
+#   include <QX11Info>
+#   include <X11/Xlib.h>
+#endif
+
 #include <QSignalMapper>
 
 #include <DuiApplication>
@@ -184,6 +189,9 @@ bool DuiDialogPrivate::prepareStandAloneAppearance(DuiSceneWindow::DeletionPolic
     if (standAloneWindow == 0) {
         standAloneWindow = new DuiWindow(new DuiSceneManager);
         standAloneWindow->setTranslucentBackground(true);
+#ifdef Q_WS_X11
+        XSetTransientForHint(QX11Info::display(), standAloneWindow->winId(), DuiApplication::activeWindow()->winId());
+#endif
         q->connect(q, SIGNAL(windowHidden()), SLOT(_q_onStandAloneDialogHidden()));
     }
 
