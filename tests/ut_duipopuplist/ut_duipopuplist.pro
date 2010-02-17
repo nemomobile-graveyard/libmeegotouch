@@ -12,6 +12,9 @@ SOURCES += \
     ../../src/widgets/core/duiwidgetview.cpp \
     ../../src/animation/widget/core/duiabstractwidgetanimation.cpp \
     ../../src/.moc/moc_duiabstractwidgetanimation.cpp \
+    ../../src/widgets/duicontentitemmodel.cpp \
+    ../../src/.moc/moc_duicontentitemmodel.cpp \
+    ../../src/.gen/gen_duicontentitemmodeldata.cpp \
 
 # unit test and unit
 HEADERS += \

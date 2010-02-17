@@ -71,6 +71,7 @@ protected Q_SLOTS:
 
     /*!
        \brief Called when position of pannable viewport changes
+       \deprecated
      */
     void sizePosChanged(const QSizeF &viewportSize, const QRectF &pannedRange, const QPointF &pannedPos);
 
@@ -79,16 +80,20 @@ protected Q_SLOTS:
         changed items are those from \a topLeft to \a bottomRight
         inclusive. If just one item is changed \a topLeft == \a
         bottomRight.
+       \deprecated
     */
     virtual void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
     /*!
         This slot is called when rows are inserted.
+       \deprecated
+
      */
     void rowsInserted(const QModelIndex &parent, int start, int end);
 
     /*!
         This slot is called when rows are removed.
+       \deprecated
      */
     void rowsRemoved(const QModelIndex &parent, int start, int end);
 
@@ -96,6 +101,7 @@ protected Q_SLOTS:
         This slot is called when the selection is changed. The previous
         selection (which may be empty), is specified by \a deselected, and the
         new selection by \a selected.
+        \deprecated
     */
     virtual void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
 
@@ -104,18 +110,7 @@ protected Q_SLOTS:
     */
     virtual void scrollTo(const QModelIndex &index) const;
 
-    //! \reimp
-    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual void updateData(const QList<const char *>& modifications);
-    //! \reimp_end
-
 protected:
-
-    //! \reimp
-    virtual void setupModel();
-    //! \reimp_end
 
     //! \internal
     DuiPopupListView(DuiPopupListViewPrivate &dd, DuiPopupList *controller);
@@ -124,12 +119,6 @@ protected:
 private:
     Q_DISABLE_COPY(DuiPopupListView)
     Q_DECLARE_PRIVATE(DuiPopupListView)
-
-    Q_PRIVATE_SLOT(d_func(), void _q_modelDestroyed())
-    Q_PRIVATE_SLOT(d_func(), void _q_modelReset())
-    Q_PRIVATE_SLOT(d_func(), void _q_layoutChanged())
-    Q_PRIVATE_SLOT(d_func(), void _q_arrangeWidget())
-
 };
 
 #endif

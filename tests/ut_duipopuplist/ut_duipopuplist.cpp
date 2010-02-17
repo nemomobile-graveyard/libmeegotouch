@@ -144,21 +144,20 @@ void Ut_DuiPopupList::testSetItemIconID()
     view->itemModel = itemModel;
     view->selectionModel = new QItemSelectionModel(itemModel);
 
-    DuiGridItem *item;
+    DuiContentItem *item;
+    DuiWidgetRecycler recycler;
 
     // First add item with text to model and build it
     itemModel->appendRow(new QStandardItem("Item"));
-    item = (DuiGridItem *)(view->buildItem(itemModel->index(0, 0)));
+    item = (DuiContentItem *)(view->createCell(itemModel->index(0, 0),recycler));
     // no icon was set to model, so it should be invisible
-    QCOMPARE(item->isImageVisible(), false);
+    QVERIFY(item->pixmap().isNull());
 
     // Add icon to previously set item
     itemModel->setData(itemModel->index(0, 0), "Icon-music", Qt::DecorationRole);
-    // do like DuiPopupListView::dataChanged() do, remove old widget then create new
-    view->recycleWidget(item);
-    item = (DuiGridItem *)(view->buildItem(itemModel->index(0, 0)));
+    view->updateCell(itemModel->index(0,0), item);
     // now, icon should be visible
-    QCOMPARE(item->isImageVisible(), true);
+    QVERIFY(!item->pixmap().isNull());
 
     delete itemModel;
     delete view;

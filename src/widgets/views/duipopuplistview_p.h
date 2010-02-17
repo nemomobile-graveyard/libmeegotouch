@@ -23,68 +23,40 @@
 #include "duidialogview_p.h"
 #include <QPointer>
 #include <QModelIndex>
-#include <QPersistentModelIndex>
+#include "duiabstractcellcreator.h"
+#include "duicontentitem.h"
 
 class DuiPopupList;
-class DuiPannableViewport;
-class QGraphicsWidget;
 class QAbstractItemModel;
 class QItemSelectionModel;
-class QGraphicsLinearLayout;
+class DuiList;
 
-class DuiPopupListViewPrivate : public DuiDialogViewPrivate
+class DuiPopupListItem : public DuiContentItem {
+public:
+    explicit DuiPopupListItem(QGraphicsItem *parent = NULL)
+        : DuiContentItem(DuiContentItem::IconAndSingleTextLabel, parent)
+    {
+        setObjectName("PopupListItem");
+    }
+};
+
+class DuiPopupListViewPrivate : public DuiDialogViewPrivate, public DuiAbstractCellCreator<DuiPopupListItem>
 {
     Q_DECLARE_PUBLIC(DuiPopupListView)
 
 public:
     DuiPopupListViewPrivate();
-    ~DuiPopupListViewPrivate();
+    virtual ~DuiPopupListViewPrivate();
 
     virtual void init();
 
-    void _q_modelDestroyed();
-    void _q_modelReset();
-    void _q_layoutChanged();
-    void _q_arrangeWidget();
+    virtual void updateCell(const QModelIndex& index, DuiWidget * cell) const;
 
-    void setLayoutDirty();
+    DuiPopupList*   controller;
 
-    void doItemsLayout() const;
-    inline void setSpacerFixedHeight(qreal height) const;
-    inline DuiWidget *buildItem(const QModelIndex &index) const;
-    inline void recycleWidget(DuiWidget *widget) const;
-    inline void setViewportRange(const QRectF &rect) const;
+    DuiList*    list;
 
-    QModelIndex indexAt(const QPointF &pos);
-    DuiWidget  *indexWidget(const QModelIndex &index);
-
-    DuiPopupList *controller;
-
-    DuiPannableViewport    *viewport;
-    QGraphicsLinearLayout  *layout;
-    QGraphicsWidget        *container;
-    QGraphicsWidget        *spacer;
-
-    QAbstractItemModel             *itemModel;
+    QAbstractItemModel* itemModel;
     QPointer<QItemSelectionModel>   selectionModel;
-
-    mutable int         itemDirty;
-    mutable bool        singlePass;
-    mutable int         batchSize;
-    mutable bool        gridItemMode;
-
-    mutable QPointF     lastPosition;
-    mutable int         itemStartIndex;
-    mutable qreal       itemHeight;
-    mutable bool        arrangingWidget;
-
-    QSizeF              viewportSize;
-    QPointF             pannedPos;
-
-    mutable QList<DuiWidget *>  widgetsList;
-    mutable QList<DuiWidget *>  objectsPool;
-
-    QPersistentModelIndex pressedIndex;
 };
-
 #endif

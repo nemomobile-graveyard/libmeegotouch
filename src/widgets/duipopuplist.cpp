@@ -19,7 +19,6 @@
 
 #include "duipopuplist.h"
 #include "duipopuplist_p.h"
-#include "duilistnamespace.h"
 
 #include <QItemSelectionModel>
 #include <QEventLoop>
@@ -65,14 +64,15 @@ void DuiPopupList::setItemModel(QAbstractItemModel *itemModel)
     if (d->itemModel == itemModel)
         return;
 
-    if (itemModel == NULL)
-        d->itemModel = duiEmptyModel();
-    else
-        d->itemModel = itemModel;
+    d->itemModel = itemModel;
 
     emit itemModelChanged(d->itemModel);
 
-    setSelectionModel(new QItemSelectionModel(d->itemModel, this));
+    if (d->itemModel) {
+        setSelectionModel(new QItemSelectionModel(d->itemModel, this));
+    } else {
+        setSelectionModel(0);
+    }
 }
 
 QAbstractItemModel *DuiPopupList::itemModel() const
@@ -83,8 +83,7 @@ QAbstractItemModel *DuiPopupList::itemModel() const
 
 void DuiPopupList::setSelectionModel(QItemSelectionModel *selectionModel)
 {
-    if (selectionModel == NULL) return;
-    if (selectionModel->model() != itemModel()) {
+    if (selectionModel && selectionModel->model() != itemModel()) {
         qWarning("DuiPopupList::setSelectionModel() failed: "
                  "Trying to set a selection model, which works on "
                  "a different model than the view.");
