@@ -58,18 +58,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     switch (event->type()) {
     case QEvent::Show: {
         if (NULL != widget) {
-            if (widget->windowFlags() & Qt::Window
-                    && (qobject_cast<QMainWindow *>(widget) || qobject_cast<QDialog *>(widget))) {
-                if (qobject_cast<QMainWindow *>(widget)) {
-                    qDebug() << "Generating and Showing DuiWindowDecoration";
-                    m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
-                    m_style->m_windowDecoration->showFastMaximized();
-                    QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
-
-                    //ensure that the mainwindow takes at least the width of the screen
-                    //widget->setMinimumWidth(m_style->m_windowDecoration->maxViewportSize().width());
-                    return true;
-                }
+            if (widget->isWindow()) {
                 if (QDialog *dialog = qobject_cast<QDialog *>(widget)) {
                     qCritical() << "Generating and Showing DuiDialog";
                     QtMaemo6DialogProxy *dialogProxy = new QtMaemo6DialogProxy(dialog, m_style->m_windowDecoration);
@@ -79,13 +68,21 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     const QPixmap *closePixmap = DuiTheme::pixmap("Icon-close", QSize(28, 28));
                     dialogProxy->setPixmap(*closePixmap);
 
-                    //connect( dialogProxy, SIGNAL( closeClicked() ),
-                    //         dialog, SLOT( reject() ) );
                     dialogProxy->showFastMaximized();
                     QtMaemo6StylePrivate::drawWindowBackground(widget);
 
                     //ensure that the mainwindow takes at least the width of the screen
                     //widget->setMinimumWidth(dialogProxy->maxViewportSize().width());
+                    return true;
+                }
+                else if (!qobject_cast<QtMaemo6Window *>(widget)) {
+                    qDebug() << "Generating and Showing DuiWindowDecoration";
+                    m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
+                    m_style->m_windowDecoration->showFastMaximized();
+                    QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
+
+                    //ensure that the mainwindow takes at least the width of the screen
+                    //widget->setMinimumWidth(m_style->m_windowDecoration->maxViewportSize().width());
                     return true;
                 }
             }
