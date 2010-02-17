@@ -68,22 +68,32 @@ DuiTheme *gTheme = 0;
 QHash<QString, DuiLibrary *>* DuiThemePrivate::libraries = NULL;
 DuiThemePrivate::RegisteredStyleContainers DuiThemePrivate::styleContainers;
 
-// "default_pixmap_MyPixmap_47_47"
-#define DEFAULT_PM_CACHE_ID(name, w, h) (QString("default_pixmap") + '_' + \
-        name + '_' + \
-        QString::number(w) + '_' + QString::number(h));
+namespace
+{
 
+// "default_pixmap_MyPixmap_47_47"
+static QString defaultPixmapCacheId(const QString &name, int width, int height)
+{
+    return QString::fromLatin1("default_pixmap_") + name
+        + QChar::fromLatin1('_') + QString::number(width)
+        + QChar::fromLatin1('_') + QString::number(height);
+}
 
 // "scalable_image_myscalable_5_5_5_5
-#define SCALABLE_IMAGE_CACHE_ID(name,l,t,r,b) (QString("scalable_image") + '_' + \
-        name + '_' + \
-        QString::number(l) + '_' + QString::number(t) + '_' + \
-        QString::number(r) + '_' + QString::number(b));
+static QString scalableImageCacheId(const QString &name, int left, int top, int right, int bottom)
+{
+    return QString::fromLatin1("scalable_image_") + name
+        + QChar::fromLatin1('_') + QString::number(left)
+        + QChar::fromLatin1('_') + QString::number(top)
+        + QChar::fromLatin1('_') + QString::number(right)
+        + QChar::fromLatin1('_') + QString::number(bottom);
+}
 
-DuiTheme::DuiTheme(const QString &applicationName, const QString &imglistFilename, ThemeService themeService) :
+} // anonymous namespace
+
+DuiTheme::DuiTheme(const QString &applicationName, const QString &, ThemeService themeService) :
     d_ptr(new DuiThemePrivate(applicationName, themeService))
 {
-    Q_UNUSED(imglistFilename);
     if (gTheme || (DuiComponentData::instance() && DuiComponentData::instance()->d_ptr->theme))
         qFatal("There cannot be multiple instances of DuiTheme, use DuiTheme::instance() instead of constructing a new one");
 
@@ -172,7 +182,7 @@ const QPixmap *DuiTheme::pixmap(const QString &id, const QSize &size)
     if (realSize.height() < 1)
         realSize.rheight() = 0;
 
-    QString identifier = DEFAULT_PM_CACHE_ID(id, realSize.width(), realSize.height());
+    QString identifier = defaultPixmapCacheId(id, realSize.width(), realSize.height());
     const QPixmap *p = instance()->d_ptr->fetchPixmapFromCache(identifier);
 
     // check if we found the pixmap from cache?
@@ -207,7 +217,7 @@ QPixmap *DuiTheme::pixmapCopy(const QString &id, const QSize &size)
     if (realSize.height() < 1)
         realSize.rheight() = 0;
 
-    QString identifier = DEFAULT_PM_CACHE_ID(id, realSize.width(), realSize.height());
+    QString identifier = defaultPixmapCacheId(id, realSize.width(), realSize.height());
     const QPixmap *p = instance()->d_ptr->fetchPixmapFromCache(identifier);
 
     // check if we found the pixmap from cache?
@@ -235,7 +245,7 @@ QPixmap *DuiTheme::pixmapCopy(const QString &id, const QSize &size)
 const DuiScalableImage *DuiTheme::scalableImage(const QString &id, int left, int right, int top, int bottom)
 {
     // check if we already have this scalable image in the cache
-    QString scalableidentifier = SCALABLE_IMAGE_CACHE_ID(id, left, top, right, bottom);
+    QString scalableidentifier = scalableImageCacheId(id, left, top, right, bottom);
     QHash<QString, CachedScalableImage>::iterator i = instance()->d_ptr->scalableImageIdentifiers.find(scalableidentifier);
     if (i != instance()->d_ptr->scalableImageIdentifiers.end()) {
         //image found, increase refcount and return it
@@ -244,7 +254,7 @@ const DuiScalableImage *DuiTheme::scalableImage(const QString &id, int left, int
     }
 
     //first try to fetch the used pixmap from the cache
-    QString pixmapidentifier = DEFAULT_PM_CACHE_ID(id, 0, 0);
+    QString pixmapidentifier = defaultPixmapCacheId(id, 0, 0);
     const QPixmap *p = instance()->d_ptr->fetchPixmapFromCache(pixmapidentifier);
     if (!p) {
         // we have to create temporary pixmap
@@ -644,7 +654,7 @@ void DuiThemePrivate::unregisterLibrary(DuiLibrary *library)
 
 void DuiThemePrivate::pixmapCreatedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle)
 {
-    QString identifier = DEFAULT_PM_CACHE_ID(imageId, size.width(), size.height());
+    QString identifier = defaultPixmapCacheId(imageId, size.width(), size.height());
     QHash<QString, CachedPixmap>::iterator iterator = pixmapIdentifiers.find(identifier);
     Q_ASSERT_X(iterator != pixmapIdentifiers.end(), "DuiThemePrivate::pixmapCreatedSlot", "Unknown pixmap");
 
@@ -674,7 +684,7 @@ void DuiThemePrivate::pixmapCreatedSlot(const QString &imageId, const QSize &siz
 
 void DuiThemePrivate::pixmapChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle)
 {
-    QString identifier = DEFAULT_PM_CACHE_ID(imageId, size.width(), size.height());
+    QString identifier = defaultPixmapCacheId(imageId, size.width(), size.height());
     QHash<QString, CachedPixmap>::iterator iterator = pixmapIdentifiers.find(identifier);
 
     if (iterator == pixmapIdentifiers.end()) {

@@ -80,15 +80,6 @@ namespace Dui
                 // The data type of the packet is undetermined, so NULL will do.
                 RequestClearPixmapDirectoriesPacket = 17,
 
-                // <::> QueryThemeListPacket doesn't work anymore, please do not use.
-                QueryThemeListPacket                = 24,
-
-                // <::> ThemeListPacket doesn't work anymore, please do not use.
-                ThemeListPacket                     = 25,
-
-                // <::> RequestThemeChangePacket doesn't work anymore, please do not use.
-                RequestThemeChangePacket            = 32,
-
                 // daemon will send this packet when the theme has changed
                 // data type of the packet is StringList, and contains
                 // the new inheritance chain of the theme
@@ -109,17 +100,23 @@ namespace Dui
                 ErrorPacket                         = 255
             };
 
-            Packet(PacketType type = Unknown, PacketData *data = NULL);
+            Packet() : m_type(Unknown), m_seq(0), m_data() {}
+            Packet(PacketType type, quint32 seq, PacketData *data = 0);
             ~Packet();
 
-            PacketType type() const;
-            void setType(PacketType type);
+            PacketType type() const { return m_type; }
+            void setType(PacketType type) { m_type = type; }
 
-            const PacketData *data() const;
+            quint32 sequenceNumber() const { return m_seq; }
+            void setSequenceNumber(quint32 seq) { m_seq = seq; }
+
+            const PacketData *data() const { return m_data.data(); }
             void setData(PacketData *data);
+
         private:
-            PacketType _type;
-            QSharedPointer<PacketData> _data;
+            PacketType m_type;
+            quint32 m_seq;
+            QSharedPointer<PacketData> m_data;
         };
 
 
@@ -132,9 +129,10 @@ namespace Dui
 
             QString imageId;
             QSize size;
-            bool operator==(const PixmapIdentifier &other) const {
-                return imageId == other.imageId && size == other.size;
-            }
+            bool operator==(const PixmapIdentifier &other) const
+                { return (imageId == other.imageId && size == other.size); }
+            bool operator!=(const PixmapIdentifier &other) const
+                { return (imageId != other.imageId || size != other.size); }
         };
         uint qHash(const PixmapIdentifier &id);
 

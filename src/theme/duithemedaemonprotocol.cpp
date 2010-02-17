@@ -45,61 +45,42 @@ PixmapHandle::~PixmapHandle()
 ClientList::~ClientList()
 {}
 
-Packet::Packet(PacketType type, PacketData *data) :
-    _type(type), _data(data)
-{
-}
+Packet::Packet(PacketType type, quint32 seq, PacketData *data)
+:
+    m_type (type),
+    m_seq  (seq),
+    m_data (data)
+{}
 
 Packet::~Packet()
-{
-}
-
-Packet::PacketType Packet::type() const
-{
-    return _type;
-}
-
-void Packet::setType(PacketType type)
-{
-    _type = type;
-}
-
-const PacketData *Packet::data() const
-{
-    return _data.data();
-}
+{}
 
 void Packet::setData(PacketData *data)
 {
-    _data = QSharedPointer<PacketData>(data);
+    m_data = QSharedPointer<PacketData>(data);
 }
-
-
 
 QDataStream &operator<<(QDataStream &stream, const Packet &packet)
 {
     Q_ASSERT(packet.type() != Packet::Unknown);
 
-    stream << (quint32)packet.type();
+    stream << quint32(packet.type());
+    stream << packet.sequenceNumber();
 
     switch (packet.type()) {
 
-        // NULL as data
+    // NULL as data
     case Packet::RequestClearPixmapDirectoriesPacket:
-        //case Packet::QueryThemeListPacket:
     case Packet::QueryThemeDaemonStatusPacket:
         break;
 
-        // string as data
+    // string as data
     case Packet::ErrorPacket:
-    case Packet::RequestRegistrationPacket:
-        //case Packet::RequestThemeChangePacket:
-    {
+    case Packet::RequestRegistrationPacket: {
         stream << static_cast<const String *>(packet.data())->string;
     } break;
 
     // string list as data
-    //case Packet::ThemeListPacket:
     case Packet::ThemeChangedPacket: {
         stream << static_cast<const StringList *>(packet.data())->stringList;
     } break;
@@ -120,7 +101,7 @@ QDataStream &operator<<(QDataStream &stream, const Packet &packet)
     // pixmap handle as data
     case Packet::PixmapUpdatedPacket: {
         const PixmapHandle *h = static_cast<const PixmapHandle *>(packet.data());
-        stream << h->identifier.imageId << h->identifier.size << (quint32)h->pixmapHandle;
+        stream << h->identifier.imageId << h->identifier.size << quint32(h->pixmapHandle);
     } break;
 
     // client list as data
@@ -169,30 +150,28 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
 {
     Q_ASSERT(!packet.data());
 
-    quint32 type;
-    stream >> type;
-    packet.setType((Packet::PacketType)type);
+    quint32 type = 0;
+    quint32 seq  = 0;
+    stream >> type >> seq;
+    packet.setType(Packet::PacketType(type));
+    packet.setSequenceNumber(seq);
 
     switch (packet.type()) {
 
-        // NULL as data
+    // NULL as data
     case Packet::RequestClearPixmapDirectoriesPacket:
-        //case Packet::QueryThemeListPacket:
     case Packet::QueryThemeDaemonStatusPacket:
         break;
 
-        // string as data
+    // string as data
     case Packet::ErrorPacket:
-    case Packet::RequestRegistrationPacket:
-        //case Packet::RequestThemeChangePacket:
-    {
+    case Packet::RequestRegistrationPacket: {
         QString string;
         stream >> string;
         packet.setData(new String(string));
     } break;
 
     // string list as data
-    //case Packet::ThemeListPacket:
     case Packet::ThemeChangedPacket: {
         QStringList stringList;
         stream >> stringList;
@@ -202,7 +181,7 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
     // stringbool as data
     case Packet::RequestNewPixmapDirectoryPacket: {
         QString string;
-        bool b;
+        bool b = false;
         stream >> string >> b;
         packet.setData(new StringBool(string, b));
     } break;
@@ -220,21 +199,21 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
     case Packet::PixmapUpdatedPacket: {
         QString imageId;
         QSize size;
-        quint32 pixmapHandle;
+        quint32 pixmapHandle = 0;
         stream >> imageId >> size >> pixmapHandle;
-        packet.setData(new PixmapHandle(PixmapIdentifier(imageId, size), (Qt::HANDLE)pixmapHandle));
+        packet.setData(new PixmapHandle(PixmapIdentifier(imageId, size), Qt::HANDLE(pixmapHandle)));
     } break;
 
 
     // client list as data
     case Packet::ThemeDaemonStatusPacket: {
         QList<ClientInfo> clients;
-        quint32 clientCount;
+        quint32 clientCount = 0;
         stream >> clientCount;
         while (clientCount) {
             ClientInfo info;
             stream >> info.name;
-            quint32 pixmapCount;
+            quint32 pixmapCount = 0;
             stream >> pixmapCount;
             while (pixmapCount) {
                 QString imageId;
@@ -243,7 +222,7 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
                 info.pixmaps.append(PixmapIdentifier(imageId, size));
                 --pixmapCount;
             }
-            quint32 requestedPixmapCount;
+            quint32 requestedPixmapCount = 0;
             stream >> requestedPixmapCount;
             while (requestedPixmapCount) {
                 QString imageId;
@@ -252,7 +231,7 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
                 info.requestedPixmaps.append(PixmapIdentifier(imageId, size));
                 --requestedPixmapCount;
             }
-            quint32 releasedPixmapCount;
+            quint32 releasedPixmapCount = 0;
             stream >> releasedPixmapCount;
             while (releasedPixmapCount) {
                 QString imageId;
@@ -279,5 +258,12 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
 
 uint Dui::DuiThemeDaemonProtocol::qHash(const PixmapIdentifier &id)
 {
-    return qHash(id.imageId + QString::number(id.size.width()) + QString::number(id.size.height()));
+    using ::qHash;
+
+    const uint idHash     = qHash(id.imageId);
+    const uint widthHash  = qHash(id.size.width());
+    const uint heightHash = qHash(id.size.height());
+
+    // Twiddle the bits a little, taking a cue from Qt's own qHash() overloads
+    return idHash ^ (widthHash << 8) ^ (widthHash >> 24) ^ (heightHash << 24) ^ (heightHash >> 8);
 }
