@@ -164,7 +164,7 @@ protected:
         FadeOut = 2
     };
 
-    QMap<QWidget *, QSequentialAnimationGroup *> m_pendingAnimations;
+    QMap<const QWidget *, QSequentialAnimationGroup *> m_pendingAnimations;
     bool m_scrollBarsAlwaysVisible;
     const int m_scrollAreaThumbnailMaxSize;
     const int m_scrollAreaThumbnailOffset;
