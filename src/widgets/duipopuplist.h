@@ -99,7 +99,7 @@ class DUI_EXPORT DuiPopupList : public DuiDialog
     /**
         \property DuiPopupList::batchSize
         \brief See DuiPopupListModel::batchSize
-        \deprecated
+        \deprecated Since 0.19
     */
     Q_PROPERTY(int batchSize READ batchSize WRITE setBatchSize)
 
@@ -159,7 +159,7 @@ public:
 
     /**
       \brief Returns the items size which created inside popuplist.
-      \deprecated
+      \deprecated Since 0.19
     */
     int batchSize() const;
 
@@ -196,7 +196,7 @@ public Q_SLOTS:
 
     /**
       \brief Set the item size which created inside popuplist.
-      \deprecated
+      \deprecated Since 0.19
     */
     void setBatchSize(int);
 

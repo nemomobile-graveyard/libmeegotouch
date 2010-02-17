@@ -39,7 +39,7 @@ class DUI_EXPORT DuiPopupListModel : public DuiDialogModel
         \property DuiPopupListModel::batchSize
         \brief This property holds the number of items laid out in each batch.
         The default value is 20.
-        \deprecated
+        \deprecated Since 0.19
     */
     DUI_MODEL_PROPERTY(int, batchSize, BatchSize, true, 20)
 
