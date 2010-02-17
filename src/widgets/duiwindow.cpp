@@ -594,9 +594,9 @@ bool DuiWindow::event(QEvent *event)
     if (event->type() == QEvent::Show || event->type() == QEvent::WindowActivate)
         DuiComponentData::setActiveWindow(this);
 
-    if (event->type() == QEvent::Close)
+    if (event->type() == QEvent::Close) {
 #if defined DUI_USE_OPENGL
-        if (!DuiApplication::softwareRendering()) {
+        if (!DuiApplication::softwareRendering())
             DuiGLES2Renderer::destroy(d->glWidget);
 #endif
         if (DuiComponentData::windows().size() > 1)
