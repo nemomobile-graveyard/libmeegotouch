@@ -20,6 +20,8 @@
 #ifndef QTMAEMO6STYLE_P_H
 #define QTMAEMO6STYLE_P_H
 
+#include <QPointer>
+
 #include "qtmaemo6style.h"
 #include "qtmaemo6teststyle_p.h"
 #include "qtmaemo6styleeventfilter.h"
@@ -295,7 +297,7 @@ public:
 public:
     QList<QToolButton *> m_toolButtonsInTitleBar;
     QList<QAction *> m_toolBarActions;
-    QStatusBar *m_statusBar;
+    QPointer<QStatusBar> m_statusBar;
 
     const int m_actionsInTitleBarCount;
 
