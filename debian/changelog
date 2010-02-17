@@ -1,9 +1,17 @@
 libdui (0.19.0-1) unstable; urgency=low
 
-  * New version
   * License changed
+  * Fixes: NB#149265 - Tap on close(X) "select internet connection" Fennec minimizes to home
+  * Fixes: NB#156977 - DuiFeedbackPlayer does not try to reconnect to duifeedbackd daemon
+  * Fixes: NB#155911 - <MemLeak> duiimagedirectory.cpp duistyle.cpp duilabel.cpp
+  * Fixes: NB#156583 - Problem with DUI window management?
+  * Fixes: NB#157052 - QT application crashes when launches
+  * Fixes: NB#155806 - Unable to change DuiContentItem background color
+  * Fixes: NB#156146 - Text overflows in list when run in different profile
+  * Fixes: NB#151726 - No text displayed with VKB during typing a SMS
+  * Fixes: NB#155734 - Items under the last group of DuiList are duplicated
   
- -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 15 Feb 2010 13:49:00 +0200
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 17 Feb 2010 17:53:00 +0200
 
 libdui (0.18.9-2) unstable; urgency=low
 
