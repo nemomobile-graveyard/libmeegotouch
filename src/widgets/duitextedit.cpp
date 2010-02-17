@@ -1530,6 +1530,7 @@ void DuiTextEdit::setContentType(Dui::TextContentType type)
         break;
 
     case Dui::UrlContentType:
+        setInputMethodCorrectionEnabled(false);
         setInputMethodAutoCapitalizationEnabled(false);
         //TODO: No check rule for URL yet
         newHint = Qt::ImhUrlCharactersOnly;
@@ -1643,6 +1644,7 @@ void DuiTextEdit::setEchoMode(DuiTextEditModel::EchoMode echoMode)
     if (echoMode != DuiTextEditModel::Normal) {
         setInputMethodHints(inputMethodHints() | Qt::ImhHiddenText);
         setInputMethodCorrectionEnabled(false);
+        setInputMethodAutoCapitalizationEnabled(false);
 
     } else {
         setInputMethodHints(inputMethodHints() & ~Qt::ImhHiddenText);
@@ -1682,8 +1684,11 @@ void DuiTextEdit::setAutoSelectionEnabled(bool enable)
 
 void DuiTextEdit::setInputMethodCorrectionEnabled(bool enabled)
 {
-    // only allow setting correction enabled for normal echo mode
-    if (echoMode() == DuiTextEditModel::Normal || enabled == false) {
+    // only allow to turn on correction for the text edit which is normal echo mode
+    // content type is free text or custom content type.
+    if ((enabled == false)
+        || (echoMode() == DuiTextEditModel::Normal
+            && (contentType() == Dui::FreeTextContentType || contentType() == Dui::CustomContentType))) {
         model()->setInputMethodCorrectionEnabled(enabled);
     }
 }
@@ -1748,8 +1753,15 @@ void DuiTextEdit::setMaxLength(int numChars)
 
 void DuiTextEdit::setInputMethodAutoCapitalizationEnabled(bool enabled)
 {
-    model()->setInputMethodAutoCapitalizationEnabled(enabled);
-    if (enabled) {
+    // only allow to turn on auto capitalization for the text edit which is normal echo mode
+    // content type is free text or custom content type.
+    if ((enabled == false)
+        || (echoMode() == DuiTextEditModel::Normal
+            && (contentType() == Dui::FreeTextContentType || contentType() == Dui::CustomContentType))) {
+        model()->setInputMethodAutoCapitalizationEnabled(enabled);
+    }
+
+    if (model()->inputMethodAutoCapitalizationEnabled()) {
         setInputMethodHints(inputMethodHints() & ~Qt::ImhNoAutoUppercase);
     } else {
         setInputMethodHints(inputMethodHints() | Qt::ImhNoAutoUppercase);
@@ -1824,6 +1836,7 @@ void DuiTextEdit::setCompleter(DuiCompleter *completer)
     if (d->completer) {
         d->completer->setWidget(this);
         setInputMethodCorrectionEnabled(false);
+        setInputMethodAutoCapitalizationEnabled(false);
 
         if (hasFocus()) {
             updateMicroFocus();
