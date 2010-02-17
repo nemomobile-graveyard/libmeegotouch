@@ -741,7 +741,11 @@ void DuiComponentData::setActiveWindow(DuiWindow *w)
     if (!gDuiComponentDataPrivate) {
         qFatal("DuiComponentData::setActiveWindow() - DuiComponentData instance not yet created.");
     }
+
     DuiWindow *activeWindow = DuiComponentData::activeWindow();
+    if (activeWindow == w)
+        return;
+
     if (activeWindow) {
         QObject::disconnect(activeWindow,
                             SIGNAL(orientationAngleChanged(Dui::OrientationAngle)),
