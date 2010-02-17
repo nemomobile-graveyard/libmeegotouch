@@ -235,7 +235,7 @@ void DuiItemState::setTargetOpacity(qreal opacity)
         return;
 
     d->sourceOpacity = currentOpacity();
-    if (d->targetOpacity != d->sourceOpacity) {
+    if (d->sourceOpacity != -1 && d->targetOpacity != d->sourceOpacity) {
         d->opacityProgress = 0;
         d->isAnimationDone = false;
     }
@@ -253,16 +253,16 @@ qreal DuiItemState::sourceOpacity() const
 qreal DuiItemState::currentOpacity() const
 {
     Q_D(const DuiItemState);
-    if (d->item)
-        return forAllGraphicsItems(d->item, GetOpacity());  //If this finds no visible QGraphicsItems it returns 0;
-    return 0;  //Treat no items as being transparent
+    if(d->item && d->item->graphicsItem())
+        return d->item->graphicsItem()->opacity();
+    return -1;
 }
 void DuiItemState::setCurrentOpacity(qreal opacity)
 {
     Q_D(DuiItemState);
-    if (isNull() || opacity == -1)
+    if (opacity == -1 || !d->item || !d->item->graphicsItem())
         return;
-    forAllGraphicsItems(d->item, SetOpacity(opacity));
+    d->item->graphicsItem()->setOpacity(opacity);
 }
 
 void DuiItemState::hide()
