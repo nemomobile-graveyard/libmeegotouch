@@ -1,6 +1,5 @@
 DUIROOT = ../..
 include($$DUIROOT/mkspecs/common.pri)
-
 DUILIB = $$DUIROOT/lib
 DUISRC = $$DUIROOT/src
 DUISRCINCLUDE = $$DUISRC/include
@@ -9,8 +8,8 @@ INCLUDEPATH += . \
     $$DUISRCINCLUDE \
     $$DUISRC
 QMAKE_LIBDIR += $$DUILIB
-win32|macx {
-    macx {
+win32|macx { 
+    macx { 
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework \
             dui
@@ -27,7 +26,7 @@ MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH
 CONFIG += qt
 QT += svg
-contains(DEFINES, HAVE_DBUS) {
+contains(DEFINES, HAVE_DBUS) { 
     CONFIG += qdbus
     QT += dbus
 }
@@ -59,7 +58,10 @@ SOURCES += main.cpp \
     phonebookmodel.cpp \
     timedemo.cpp \
     timingscene.cpp \
-    ../../benchmarks/performancebenchmark/emptymainloophelper.cpp
+    ../../benchmarks/performancebenchmark/emptymainloophelper.cpp \
+    timedemopage.cpp \
+    timedemobenchmark.cpp \
+    staticpagebenchmark.cpp \
 
 HEADERS += templatepage.h \
     listpage.h \
@@ -89,7 +91,9 @@ HEADERS += templatepage.h \
     timedemo.h \
     timingscene.h \
     ../../benchmarks/performancebenchmark/emptymainloophelper.h \
-    fpsstore.h
+    timedemopage.h \
+    timedemobenchmark.h \
+    staticpagebenchmark.h \
 
 # theme
 include(theme/theme.pri)

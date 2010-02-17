@@ -20,6 +20,7 @@
 #include "timedemo.h"
 #include "timingscene.h"
 #include "listpage.h"
+#include "timedemobenchmark.h"
 
 
 #include <DuiApplicationPage>
@@ -34,10 +35,13 @@ namespace
     const int pageDuration = 5000;
 }
 
-Timedemo::Timedemo(const TimingScene *timingScene, ListPage *listPage)
+Timedemo::Timedemo(TimingScene *timingScene, ListPage *listPage)
     : timingScene(timingScene)
     , m_pFrontPage(listPage)
     , m_currentPageIndex(0)
+    , m_currentBenchmarkIndex(0)
+    , timingStarted(false)
+    , timingStopped(false)
 {
     connect(m_pFrontPage, SIGNAL(windowShown()), this, SLOT(showFirstPage()));
 }
@@ -47,73 +51,96 @@ void Timedemo::setOutputCsv(const QString &filename)
     m_csvFilename = filename;
 }
 
+void Timedemo::startTiming()
+{
+    if (timingStopped || timingStarted) {
+        qFatal("New timing started, but old one not processed yet.");
+    }
+
+    timingStarted = true;
+    m_beginFrameCount = timingScene->frameCount();
+    m_beginTime = QTime::currentTime();
+    timingScene->setUpdateContinuously(true);
+}
+
+void Timedemo::stopTiming()
+{
+    if (timingStopped || !timingStarted) {
+        qFatal("Timing already processed or not running yet.");
+    }
+
+    timingScene->setUpdateContinuously(false);
+    QTime endTime = QTime::currentTime();
+    uint endFrameCount = timingScene->frameCount();
+
+    BenchmarkResult currentResult;
+    currentResult.runtime = m_beginTime.msecsTo(endTime);
+    currentResult.fps = qreal(endFrameCount - m_beginFrameCount)
+                / qMax<uint>(currentResult.runtime, 1) * 1000;
+
+    QSharedPointer<TimedemoBenchmark> benchmark = currentPage->benchmarks()[m_currentBenchmarkIndex];
+    benchmarkResults[m_currentPageIndex].insert(benchmark->name(), currentResult);
+
+    timingStopped = true;
+}
+
 void Timedemo::showFirstPage()
 {
     disconnect(m_pFrontPage, SIGNAL(windowShown()), this, SLOT(showFirstPage()));
     m_currentPageIndex = 0;
-    m_frameCounts.resize(m_pFrontPage->pageCount() + 1);
-    currentPage = m_pFrontPage->findPageByIndex(0);
+    benchmarkResults.resize(m_pFrontPage->pageCount() + 1);
+    currentPage = dynamic_cast<TimedemoPage*>(m_pFrontPage->findPageByIndex(0));
+    if(!currentPage) {
+        qFatal("%s does not inherit from TimedemoPage", qPrintable(currentPage->title()));
+    }
+    currentPage->createBenchmarks(this);
     beginBenchmark();
-    m_pFrontPage->showPageByIndex(0);
 }
 
 void Timedemo::beginBenchmark()
 {
-    // The windowShown() signal is emitted when the show animation
-    // of the scene window has finished.
-    connect(currentPage, SIGNAL(windowShown()), this, SLOT(pageLayoutFinished()));
+    if (m_currentBenchmarkIndex >= currentPage->benchmarks().count()) {
+        // all benchmarks have been processed, switch to the next page
+        showNextPage();
+        return;
+    }
 
-    m_beginFrameCount = timingScene->frameCount();
-    m_beginTime = QTime::currentTime();
+    QSharedPointer<TimedemoBenchmark> benchmark = currentPage->benchmarks()[m_currentBenchmarkIndex];
+    if (!allBenchmarks.contains(benchmark->name())) {
+        allBenchmarks.append(benchmark->name());
+    }
+
+    connect(benchmark.data(), SIGNAL(finished()), this, SLOT(benchmarkFinished()));
+
+    benchmark->start();
 }
 
 
-void Timedemo::endBenchmark()
+void Timedemo::benchmarkFinished()
 {
-    QTime endTime = QTime::currentTime();
-    uint endFrameCount = timingScene->frameCount();
+    if (!timingStopped) {
+        qFatal("Benchmark did not stop timing.");
+    }
 
-    qreal fps = qreal(endFrameCount - m_beginFrameCount)
-                / qMax(m_beginTime.msecsTo(endTime), 1) * 1000;
-
-    m_frameCounts[m_currentPageIndex].runtimeFps = fps;
+    timingStarted = false;
+    timingStopped = false;
+    ++m_currentBenchmarkIndex;
+    beginBenchmark();
 }
-
-
-void Timedemo::pageLayoutFinished()
-{
-    disconnect(currentPage, SIGNAL(windowShown()), this, SLOT(pageLayoutFinished()));
-
-    QTime endTime = QTime::currentTime();
-    uint endFrameCount = timingScene->frameCount();
-
-    PerfData &perf = m_frameCounts[m_currentPageIndex];
-    perf.startupTime = m_beginTime.msecsTo(endTime);
-    perf.startupFps = qreal(endFrameCount - m_beginFrameCount) / qMax(perf.startupTime, 1u) * 1000;
-
-    m_beginFrameCount = endFrameCount;
-    m_beginTime = endTime;
-
-    QTimer::singleShot(pageDuration, this, SLOT(showNextPage()));
-}
-
 
 void Timedemo::showNextPage()
 {
-    endBenchmark();
-
     ++m_currentPageIndex;
+    m_currentBenchmarkIndex = 0;
 
-    // if a page with this index exists, switch to it
     if (m_currentPageIndex < m_pFrontPage->pageCount()) {
-        currentPage = m_pFrontPage->findPageByIndex(m_currentPageIndex);
+        currentPage = static_cast<TimedemoPage*>(m_pFrontPage->findPageByIndex(m_currentPageIndex));
+        currentPage->createBenchmarks(this);
         beginBenchmark();
-        m_pFrontPage->showPageByIndex(m_currentPageIndex);
-
     } else if (m_currentPageIndex == m_pFrontPage->pageCount()) {
         currentPage = m_pFrontPage;
+        currentPage->createBenchmarks(this);
         beginBenchmark();
-        m_pFrontPage->appear();
     } else {
         // all pages shown, display results:
         displayBenchmarkResults();
@@ -124,45 +151,76 @@ void Timedemo::showNextPage()
 
 void Timedemo::displayBenchmarkResults()
 {
+
     QTextStream log(stdout, QIODevice::WriteOnly | QIODevice::Text);
 
     QFile csvFile;
     QTextStream csv;
 
-    if (!m_csvFilename.isEmpty()) {
+    if (m_csvFilename.isEmpty()) {
+        csvFile.setFileName("/dev/null");
+    } else {
         csvFile.setFileName(m_csvFilename);
+    }
         csvFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
         csv.setDevice(&csvFile);
+
+    const int pageTitleWidth = 30;
+    const int fpsWidth = 5;
+    const int fpsUnitWidth = 5;
+    const int runtimeWidth = 5;
+    const int runtimeUnitWidth = 2;
+    const int benchmarkWidth = fpsWidth + fpsUnitWidth + runtimeWidth + runtimeUnitWidth;
+    QHash<QString, int> actualWidth;
+
+    log.setRealNumberNotation(QTextStream::FixedNotation);
+    log.setRealNumberPrecision(2);
+    log << left << qSetFieldWidth(pageTitleWidth) << "Page name";
+    csv << "Page name";
+
+    foreach(const QString& name, allBenchmarks) {
+        int width = qMax(benchmarkWidth, name.length() + 2);
+        log << qSetFieldWidth(width) << name;
+        csv << ", \"" << name << " [fps]\", \"" << name << " [ms]\"";
+
+        actualWidth[name] = width;
     }
+    log << qSetFieldWidth(0) << '\n';
+    csv << '\n';
 
-    log << left
-        << qSetFieldWidth(20) << "Page name:"
-        << qSetFieldWidth(12) << "Start time" << "Start FPS" << "Run FPS"
-        << qSetFieldWidth(0)  << '\n';
-
-    if (!m_csvFilename.isEmpty()) {
-        csv << "#\"Page name\",\"Start-up time\",\"Start-up frames/s\",\"Run-time frames/s\"\n";
-    }
-
-    for (int i = 0; i < m_frameCounts.count(); ++i) {
+    for (int i = 0; i < benchmarkResults.count(); ++i) {
         DuiApplicationPage *page = (i < m_pFrontPage->pageCount()) ? m_pFrontPage->findPageByIndex(i) : m_pFrontPage;
-        const QString title = page->title();
-
-        log << qSetFieldWidth(20) << (title + ':');
-        if (!m_csvFilename.isEmpty()) {
-            csv << '"' << title << "\",";
+        QString title = page->title();
+        if (title.length() > pageTitleWidth) {
+            title.truncate(pageTitleWidth - 5);
+            title.append("...");
         }
+        log << qSetFieldWidth(pageTitleWidth) << title;
+        csv << "\"" << title << "\"";
 
-        const PerfData &perf = m_frameCounts[i];
-        const qreal startupSeconds = perf.startupTime / 1000.0;
-
-        log << qSetFieldWidth(12) << startupSeconds << perf.startupFps << perf.runtimeFps
-            << qSetFieldWidth(0)  << '\n';
-        if (!m_csvFilename.isEmpty()) {
-            csv << startupSeconds << ',' << perf.startupFps << ',' << perf.runtimeFps << '\n';
+        BenchmarkResultHash results = benchmarkResults[i];
+        foreach(const QString& name, allBenchmarks) {
+            csv << ", ";
+            BenchmarkResultHash::const_iterator resultIter = results.find(name);
+            if (resultIter != results.constEnd()) {
+                log << right
+                    << qSetFieldWidth(fpsWidth) << resultIter->fps
+                    << qSetFieldWidth(fpsUnitWidth) << "fps |"
+                    << qSetFieldWidth(runtimeWidth) << resultIter->runtime
+                    << qSetFieldWidth(runtimeUnitWidth) << "ms"
+                    << qSetFieldWidth(actualWidth[name] - benchmarkWidth) << ""
+                    << left;
+                csv << resultIter->fps << ", " << resultIter->runtime;
+            } else {
+                log << qSetFieldWidth(actualWidth[name]) << center << 'X' << left;
+                csv << "0";
+            }
         }
+        log << qSetFieldWidth(0) << '\n';
+        csv << '\n';
     }
 
     log.flush();
     csv.flush();
+
 }

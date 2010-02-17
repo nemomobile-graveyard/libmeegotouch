@@ -102,8 +102,7 @@ void MyContainer::addItem(QGraphicsLayoutItem *button)
 }
 
 ListPage::ListPage(const QString &title)
-    : DuiApplicationPage()
-    , shownPage(NULL)
+    : shownPage(NULL)
 {
     setTitle(title);
 }

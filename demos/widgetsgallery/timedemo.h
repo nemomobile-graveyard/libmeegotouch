@@ -23,19 +23,20 @@
 #include <QObject>
 #include <QVector>
 #include <QTime>
+#include <QHash>
 
 class QString;
 class ListPage;
 class TimingScene;
-class DuiApplicationPage;
+class TimedemoPage;
+class TimedemoBenchmark;
 
-struct PerfData {
-    uint  startupTime;
-    qreal startupFps;
-    qreal runtimeFps;
+struct BenchmarkResult {
+    uint  runtime;
+    qreal fps;
 
-    PerfData() : startupTime(0), startupFps(0.0), runtimeFps(0.0) {}
-    PerfData(uint st, qreal sf, qreal rf) : startupTime(st), startupFps(sf), runtimeFps(rf) {}
+    BenchmarkResult() : runtime(0), fps(0.) {}
+    BenchmarkResult(uint runtime, qreal fps) : runtime(runtime), fps(fps) {}
 };
 
 /**
@@ -46,32 +47,48 @@ class Timedemo : public QObject
 {
     Q_OBJECT
 public:
-    Timedemo(const TimingScene *timingScene, ListPage *listPage);
+    Timedemo(TimingScene *timingScene, ListPage *listPage);
 
     void setOutputCsv(const QString &filename);
 
+    /**
+      * Every TimedemoBenchmark must call this method once the benchmarking phase starts.
+      */
+    void startTiming();
+
+    /**
+      * Every TimedemoBenchmark must call this method once the benchmarking phase is finished.
+      */
+    void stopTiming();
+
 private:
-    void endBenchmark();
     void displayBenchmarkResults();
 
-    const TimingScene *timingScene;
+    TimingScene *timingScene;
 
     ListPage *m_pFrontPage;
 
-    QVector<PerfData> m_frameCounts;
+    typedef QHash<QString, BenchmarkResult> BenchmarkResultHash;
+    QVector<BenchmarkResultHash> benchmarkResults;
+    QList<QString> allBenchmarks;
+
     int m_currentPageIndex;
-    DuiApplicationPage *currentPage;
+    int m_currentBenchmarkIndex;
+    TimedemoPage *currentPage;
 
     uint m_beginFrameCount;
     QTime m_beginTime;
 
     QString m_csvFilename;
 
+    bool timingStarted;
+    bool timingStopped;
+
 
 private slots:
     void showFirstPage();
     void beginBenchmark();
-    void pageLayoutFinished();
+    void benchmarkFinished();
     void showNextPage();
 };
 

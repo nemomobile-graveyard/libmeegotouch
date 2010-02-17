@@ -20,9 +20,10 @@
 #ifndef LISTPAGE_H
 #define LISTPAGE_H
 
-#include <DuiApplicationPage>
 #include <DuiContainer>
 #include <QHash>
+
+#include "timedemopage.h"
 
 class TemplatePage;
 class QGraphicsLayoutItem;
@@ -45,7 +46,7 @@ public:
 
 };
 
-class ListPage : public DuiApplicationPage
+class ListPage : public TimedemoPage
 {
     Q_OBJECT
 

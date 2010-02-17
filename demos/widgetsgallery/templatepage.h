@@ -20,6 +20,8 @@
 #ifndef TEMPLATEPAGE_H
 #define TEMPLATEPAGE_H
 
+#include "timedemopage.h"
+
 #include <DuiApplicationPage>
 
 class DuiLayout;
@@ -30,7 +32,7 @@ class DuiSeparator;
 class DuiLabel;
 class QGraphicsLinearLayout;
 
-class TemplatePage : public DuiApplicationPage
+class TemplatePage  : public TimedemoPage
 {
     Q_OBJECT
 

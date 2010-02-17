@@ -69,7 +69,6 @@ int main(int argc, char **argv)
     ListPage listPage;
     Timedemo *timedemo = 0;
     if (qApp->arguments().indexOf("-timedemo") >= 0) {
-        scene.setUpdateContinuously(true);
         timedemo = new Timedemo(&scene, &listPage);
 
         const int idx = qApp->arguments().indexOf("-outputcsv");

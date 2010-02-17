@@ -29,7 +29,7 @@
 #include <DuiLocale>
 
 TemplatePage::TemplatePage() :
-    DuiApplicationPage(), gid(0),
+    gid(0),
     layout(0), landscapePolicy(0), portraitPolicy(0),
     container(0), separator(0), infoLabel(0),
     containerLayout(0), containerPolicy(0)
