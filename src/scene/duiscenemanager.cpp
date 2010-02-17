@@ -830,6 +830,7 @@ void DuiSceneManagerPrivate::startPageSwitchAnimation(DuiSceneWindow *newPage,
 
 void DuiSceneManagerPrivate::pushPage(DuiSceneWindow *page, bool animatedTransition)
 {
+    Q_Q(DuiSceneManager);
     DuiSceneWindow *previousPage = 0;
 
     if (currentPage && currentPage != page) {
@@ -839,6 +840,7 @@ void DuiSceneManagerPrivate::pushPage(DuiSceneWindow *page, bool animatedTransit
 
         previousPage = currentPage;
         pageHistory.append(previousPage);
+        emit q->pageHistoryChanged();
     }
 
     currentPage = page;
@@ -855,11 +857,13 @@ void DuiSceneManagerPrivate::pushPage(DuiSceneWindow *page, bool animatedTransit
 
 void DuiSceneManagerPrivate::popPage(bool animatedTransition)
 {
+    Q_Q(DuiSceneManager);
     DuiSceneWindow *previousPage = 0;
 
     // Pages in the history might have been deleted overtime.
     while (previousPage == 0 && !pageHistory.isEmpty()) {
         previousPage = pageHistory.takeLast();
+        emit q->pageHistoryChanged();
     }
 
     if (previousPage) {
@@ -1351,12 +1355,20 @@ void DuiSceneManager::setPageHistory(const QList<DuiSceneWindow *> &list)
 {
     Q_D(DuiSceneManager);
     int pageCount = list.count();
+    QList<DuiSceneWindow *> currentPageHistory = pageHistory();
+
+    if (currentPageHistory == list) {
+        // Nothing changes, thus nothing to be done.
+        return;
+    }
 
     d->pageHistory.clear();
 
     for (int i = 0; i < pageCount; i++) {
         d->pageHistory.append(list.at(i));
     }
+
+    emit pageHistoryChanged();
 }
 
 #include "moc_duiscenemanager.cpp"

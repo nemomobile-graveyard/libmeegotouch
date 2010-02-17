@@ -556,4 +556,86 @@ void Ut_DuiSceneManager::testPageHistoryAfterPageDeletion()
     QCOMPARE(pageHistory.at(0), firstPage);
 }
 
+void Ut_DuiSceneManager::testPageHistoryChangedWhenPushing()
+{
+    DuiApplicationPage *firstPage = new DuiApplicationPage;
+    DuiApplicationPage *secondPage = new DuiApplicationPage;
+    DuiApplicationPage *thirdPage = new DuiApplicationPage;
+    QSignalSpy pageHistoryChanged(sm, SIGNAL(pageHistoryChanged()));
+
+    sm->showWindowNow(firstPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 0);
+
+    sm->showWindowNow(secondPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 1);
+
+    sm->showWindowNow(thirdPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 2);
+}
+
+void Ut_DuiSceneManager::testPageHistoryChangedWhenPopping()
+{
+    DuiApplicationPage *firstPage = new DuiApplicationPage;
+    DuiApplicationPage *secondPage = new DuiApplicationPage;
+    DuiApplicationPage *thirdPage = new DuiApplicationPage;
+
+    sm->showWindowNow(firstPage);
+    sm->showWindowNow(secondPage);
+    sm->showWindowNow(thirdPage);
+
+    QSignalSpy pageHistoryChanged(sm, SIGNAL(pageHistoryChanged()));
+
+    sm->closeWindowNow(thirdPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 1);
+
+    sm->closeWindowNow(secondPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 2);
+
+    sm->closeWindowNow(firstPage);
+
+    // page history should not have been changed since it was already empty
+    QCOMPARE(pageHistoryChanged.count(), 2);
+}
+
+void Ut_DuiSceneManager::testPageHistoryChangedWhenSettingPageHistory()
+{
+    DuiApplicationPage firstPage;
+    DuiApplicationPage secondPage;
+    DuiApplicationPage thirdPage;
+    QList<DuiSceneWindow *> pageHistory;
+
+    sm->showWindowNow(&thirdPage);
+
+    pageHistory.append(&firstPage);
+    pageHistory.append(&secondPage);
+
+    QSignalSpy pageHistoryChanged(sm, SIGNAL(pageHistoryChanged()));
+    sm->setPageHistory(pageHistory);
+
+    QCOMPARE(pageHistoryChanged.count(), 1);
+}
+
+void Ut_DuiSceneManager::testPageHistoryChangedWhenSettingSamePageHistory()
+{
+    DuiApplicationPage *firstPage = new DuiApplicationPage;
+    DuiApplicationPage *secondPage = new DuiApplicationPage;
+    DuiApplicationPage *thirdPage = new DuiApplicationPage;
+    QList<DuiSceneWindow *> pageHistory;
+
+    sm->showWindowNow(firstPage);
+    sm->showWindowNow(secondPage);
+    sm->showWindowNow(thirdPage);
+
+    pageHistory = sm->pageHistory();
+
+    QSignalSpy pageHistoryChanged(sm, SIGNAL(pageHistoryChanged()));
+    sm->setPageHistory(pageHistory);
+    QCOMPARE(pageHistoryChanged.count(), 0);
+}
+
 QTEST_MAIN(Ut_DuiSceneManager);

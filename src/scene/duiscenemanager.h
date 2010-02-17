@@ -116,7 +116,7 @@ public:
      * The first page in the list is the root application page. In regular
      * navigation flows this is the first page that appeared to the user.
      *
-     * \sa setPageHistory()
+     * \sa setPageHistory(), pageHistoryChanged()
      */
     QList<DuiSceneWindow *> pageHistory() const;
 
@@ -127,7 +127,7 @@ public:
      * then feeding the modified version back to the scene manager with setPageHistory()
      * an application can freely manipulate its page navigation history.
      *
-     * \sa pageHistory()
+     * \sa pageHistory(), pageHistoryChanged()
      */
     void setPageHistory(const QList<DuiSceneWindow *> &list);
 
@@ -259,6 +259,17 @@ Q_SIGNALS:
      * \param orientation New orientation of the viewport
      */
     void orientationChangeFinished(Dui::Orientation orientation);
+
+    /*!
+     * This signal is emitted whenever the page history stack changes.
+     * That can happen due to the following reasons:
+     * \li The page navigation history was manually changed by a setPageHistoryStack() call.
+     * \li A new page appeared (and another page was being displayed before that).
+     * \li The current page was dismissed (and the history was not empty).
+     *
+     * \sa pageHistory(), setPageHistory()
+     */
+    void pageHistoryChanged();
 
 protected:
     //! \internal
