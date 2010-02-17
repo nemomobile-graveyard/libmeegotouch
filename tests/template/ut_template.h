@@ -20,27 +20,25 @@
 #ifndef UT_MKUTCLASSNAME_H
 #define UT_MKUTCLASSNAME_H
 
+#include <QtTest/QtTest>
 #include <QObject>
 
-class MkUtClassName;
+// the real unit/MkUtClassName class declaration
+#include <mkutclassname.h>
+
+Q_DECLARE_METATYPE(MkUtClassName *);
 
 class Ut_MkUtClassName : public QObject
 {
     Q_OBJECT
 
 private slots:
-    // Called before the first testfunction is executed
-    void initTestCase();
-    // Called after the last testfunction was executed
-    void cleanupTestCase();
-    // Called before each testfunction is executed
     void init();
-    // Called after every testfunction
     void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
 
     MKUTCLASSMEMBERS
-    
-    // Test cases
 
 private:
     MkUtClassName *m_subject;
