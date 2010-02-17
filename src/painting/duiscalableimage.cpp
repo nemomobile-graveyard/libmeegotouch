@@ -28,29 +28,29 @@
 
 
 DuiScalableImagePrivate::DuiScalableImagePrivate()
-    : m_imageType(DuiScalable9), m_imageSize(-1, -1), m_image(NULL),
-      m_useGLRenderer(false), m_left(0), m_right(0), m_top(0), m_bottom(0)
+    : m_imageType(DuiScalable9), m_image(NULL),
+      m_useGLRenderer(false)
 {
 }
 
 DuiScalableImagePrivate::~DuiScalableImagePrivate()
 {
-    m_imageBlocks.clear();
-    m_imageRects.clear();
 }
 
-void DuiScalableImagePrivate::validateSize(int &w, int &h) const
+void DuiScalableImagePrivate::validateSize() const
 {
-    if (w == -1)
-        w = m_image->width();
-    if (h == -1)
-        h = m_image->height();
+    if (!m_image) {
+        return;
+    }
+
+    int w = m_image->width();
+    int h = m_image->height();
 
     int cornerWidth = 0;
     int cornerHeight = 0;
     if (m_imageType == DuiScalable9) {
-        cornerWidth = m_imageRects[0].size().width() + m_imageRects[1].size().width();
-        cornerHeight = m_imageRects[0].size().height() + m_imageRects[2].size().height();
+        cornerWidth =  m_preferredMargins.left() + m_preferredMargins.right();
+        cornerHeight = m_preferredMargins.top() + m_preferredMargins.bottom();
     }
 
     if (w < cornerWidth) {
@@ -63,10 +63,7 @@ void DuiScalableImagePrivate::validateSize(int &w, int &h) const
 
 void DuiScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *painter) const
 {
-    int left = m_preferredLeft;
-    int right = m_preferredRight;
-    int top = m_preferredTop;
-    int bottom = m_preferredBottom;
+    QMargins margins = m_preferredMargins;
 
     if( w == -1 )
         w = m_image->width();
@@ -76,32 +73,21 @@ void DuiScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter
     int cornerWidth = 0;
     int cornerHeight = 0;
     if( m_imageType == DuiScalable9 ) {
-        cornerWidth = m_preferredLeft + m_preferredRight;
-        cornerHeight = m_preferredTop + m_preferredBottom;
+        cornerWidth = margins.left() + margins.right();
+        cornerHeight = margins.top() + margins.bottom();
     }
 
     //Make sure that the size of the drawn image is
     //bigger than the 4 corner blocks. If necessary,
     //use smaller border values than those set with setBorders API
     //call.
-
     if (w < cornerWidth || h < cornerHeight) {
-        left = qMax(0, left - (cornerWidth - w + 1) / 2);
-        right = qMax(0, right - (cornerWidth - w + 1) / 2);
-        top = qMax(0, top - (cornerHeight - h + 1) / 2);
-        bottom = qMax(0, bottom - (cornerHeight - h + 1) / 2);
-
+        margins.setLeft(qMax(0, margins.left() - (cornerWidth - w + 1) / 2));
+        margins.setRight(qMax(0, margins.right() - (cornerWidth - w + 1) / 2));
+        margins.setTop(qMax(0, margins.top() - (cornerHeight - h + 1) / 2));
+        margins.setBottom(qMax(0, margins.bottom() - (cornerHeight - h + 1) / 2));
     }
     
-    if (left != m_left || right != m_right || top != m_top || bottom != m_bottom) {
-        m_left = left;
-        m_right = right;
-        m_top = top;
-        m_bottom = bottom;
-        
-        calcImageRects();
-    }
-
     //the image is used in it's native size
     //no need to scale just draw it
     if (m_image->size() == QSize(w, h)) {
@@ -109,84 +95,7 @@ void DuiScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter
     }
     //the image needs some scaling
     else {
-        //calculate some common values
-        int cornerWidth   = m_imageRects[0].size().width() + m_imageRects[1].size().width();
-        int cornerHeight  = m_imageRects[0].size().height() + m_imageRects[2].size().height();
-
-        int edgeWidth = w - cornerWidth;
-        int edgeHeight = h - cornerHeight;
-        int rightX = x + m_imageRects[0].size().width() + edgeWidth;
-        int bottomY = y + m_imageRects[0].size().height() + edgeHeight;
-        int horEdgeX = x + m_imageRects[0].size().width();
-        int verEdgeY = y + m_imageRects[0].size().height();
-
-#ifdef DUI_USE_OPENGL
-#if QT_VERSION >= 0x040600
-        if (m_useGLRenderer && painter->paintEngine()->type() == QPaintEngine::OpenGL2) {
-#else
-        if (m_useGLRenderer && painter->paintEngine()->type() == QPaintEngine::OpenGL) {
-#endif
-            QList<QRect> targetRects;
-
-            targetRects.append(QRect(QPoint(x, y), m_imageRects[0].size()));
-            targetRects.append(QRect(QPoint(rightX, y), m_imageRects[1].size()));
-            targetRects.append(QRect(QPoint(x, bottomY), m_imageRects[2].size()));
-            targetRects.append(QRect(QPoint(rightX, bottomY), m_imageRects[3].size()));
-
-            targetRects.append(QRect(horEdgeX, y, edgeWidth, m_imageRects[0].size().height()));
-            targetRects.append(QRect(x, verEdgeY, m_imageRects[0].size().width(), edgeHeight));
-            targetRects.append(QRect(horEdgeX, bottomY, edgeWidth, m_imageRects[2].size().height()));
-            targetRects.append(QRect(rightX, verEdgeY, m_imageRects[1].size().width(), edgeHeight));
-
-            targetRects.append(QRect(x + m_imageRects[0].size().width(), y + m_imageRects[0].size().height(), edgeWidth, edgeHeight));
-
-            DuiGLES2Renderer *r = DuiGLES2Renderer::instance();
-            r->begin(painter);
-            r->bindTexture(*m_image);
-            r->draw(targetRects, m_imageRects);
-            r->end();
-        } else {
-#else
-        {
-#endif
-            //draw corners
-            //tl
-            if (m_imageRects[0].width() && m_imageRects[0].height())
-                painter->drawPixmap(QPoint(x, y), *m_image, m_imageRects[0]);
-            //tr
-            if (m_imageRects[1].width() && m_imageRects[1].height())
-                painter->drawPixmap(QPoint(rightX, y), *m_image, m_imageRects[1]);
-            //bl
-            if (m_imageRects[2].width() && m_imageRects[2].height())
-                painter->drawPixmap(QPoint(x, bottomY), *m_image, m_imageRects[2]);
-            //br
-            if (m_imageRects[3].width() && m_imageRects[3].height())
-                painter->drawPixmap(QPoint(rightX, bottomY), *m_image, m_imageRects[3]);
-
-            //draw edges
-            //top
-            if (m_imageRects[4].width() && m_imageRects[4].height())
-                painter->drawPixmap(QRect(horEdgeX, y, edgeWidth, m_imageRects[0].size().height()), *m_image, m_imageRects[4]);
-            //left
-            if (m_imageRects[5].width() && m_imageRects[5].height())
-                painter->drawPixmap(QRect(x, verEdgeY, m_imageRects[0].size().width(), edgeHeight), *m_image, m_imageRects[5]);
-            //bottom
-            if (m_imageRects[6].width() && m_imageRects[6].height())
-                painter->drawPixmap(QRect(horEdgeX, bottomY, edgeWidth, m_imageRects[2].size().height()), *m_image, m_imageRects[6]);
-            //right
-            if (m_imageRects[7].width() && m_imageRects[7].height())
-                painter->drawPixmap(QRect(rightX, verEdgeY, m_imageRects[1].size().width(), edgeHeight), *m_image, m_imageRects[7]);
-
-            //TODO: Future optimizations, uncomment these when the graphics are updated
-            //      to support solid center patch.
-            //draw center
-            //painter->setCompositionMode(QPainter::CompositionMode_Source);
-            if (m_imageRects[8].width() && m_imageRects[8].height()) {
-                painter->drawPixmap(QRect(x + m_imageRects[0].size().width(), y + m_imageRects[0].size().height(), edgeWidth, edgeHeight), *m_image, m_imageRects[8]);
-                //painter->fillRect(QRect(x+m_imageRects[0].size().width(),y+m_imageRects[0].size().height(), edgeWidth, edgeHeight), QColor(0, 255, 0));
-            }
-            //painter->setCompositionMode(QPainter::CompositionMode_SourceOver);
-        }
+        qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
     }
 }
 
@@ -194,88 +103,6 @@ void DuiScalableImagePrivate::drawScalable1(int x, int y, int w, int h, QPainter
 {
     painter->drawPixmap(QRect(x, y, w, h), *m_image, m_image->rect());
 }
-
-/*void DuiScalableImagePrivate::drawScalable3H(int x, int y, int w, int h, QPainter* painter) const
-{
-}
-
-void DuiScalableImagePrivate::drawScalable3V(int x, int y, int w, int h, QPainter* painter) const
-{
-}*/
-
-/*
-    0  4  1
-    *-----*
-    |xxxxx|
-  5 |xx8xx| 7
-    |xxxxx|
-    *-----*
-    2  6  3
-
-    0  2  1
-    |xxxxx|
-    |xxxxx|
-    |xxxxx|
-
-    0 -----
-      XXXXX
-    1 XXXXX
-      XXXXX
-    2 -----
-*/
-void DuiScalableImagePrivate::calcImageRects() const
-{
-    if (!m_image)
-        return;
-
-    if (m_imageType == DuiScalableImagePrivate::DuiScalable9) {
-        m_imageSize = m_image->size();
-        if (m_imageSize.width() < m_left + m_right) {
-            duiWarning("DuiScalableImagePrivate") << "DuiScalableImage - " << pixmapId << " : Width of horizontal borders"
-                                                  << m_left + m_right << "is bigger than the width of the whole image"
-                                                  << m_imageSize.width();
-        }
-        if (m_imageSize.height() < m_top + m_bottom) {
-            duiWarning("DuiScalableImagePrivate") << "DuiScalableImage - " << pixmapId << " : Height of vertical borders"
-                                                  << m_top + m_bottom << "is bigger than the height of the whole image"
-                                                  << m_imageSize.height();
-        }
-
-        //corner sizes
-        QSize szTl(m_left, m_top);
-        QSize szTr(m_right, m_top);
-        QSize szBl(m_left, m_bottom);
-        QSize szBr(m_right, m_bottom);
-
-        //edge widths
-        int h = m_imageSize.height() - m_top - m_bottom;
-        int w = m_imageSize.width() - m_left - m_right;
-
-        //bottom and right edge positions
-        int b = m_imageSize.height() - m_bottom;
-        int r = m_imageSize.width() - m_right;
-
-        //edge and center block sizes
-        QSize szL(m_left, h);
-        QSize szR(m_right, h);
-        QSize szT(w, m_top);
-        QSize szB(w, m_bottom);
-        QSize szC(w, h);
-
-        //insert the block rects into array
-        m_imageRects.clear();
-        m_imageRects.append(QRect(QPoint(0, 0), szTl));
-        m_imageRects.append(QRect(QPoint(r, 0), szTr));
-        m_imageRects.append(QRect(QPoint(0, b), szBl));
-        m_imageRects.append(QRect(QPoint(r, b), szBr));
-        m_imageRects.append(QRect(QPoint(m_left, 0), szT));
-        m_imageRects.append(QRect(QPoint(0, m_top), szL));
-        m_imageRects.append(QRect(QPoint(m_left, b), szB));
-        m_imageRects.append(QRect(QPoint(r, m_top), szR));
-        m_imageRects.append(QRect(QPoint(m_left, m_top), szC));
-    }
-}
-
 
 DuiScalableImage::DuiScalableImage()
     : d_ptr(new DuiScalableImagePrivate())
@@ -312,16 +139,16 @@ void DuiScalableImage::borders(int *left, int *right, int *top, int *bottom) con
     Q_D(const DuiScalableImage);
 
     if (left != NULL) {
-        *left = d->m_left;
+        *left = d->m_preferredMargins.left();
     }
     if (right != NULL) {
-        *right = d->m_right;
+        *right = d->m_preferredMargins.right();
     }
     if (top != NULL) {
-        *top = d->m_top;
+        *top = d->m_preferredMargins.top();
     }
     if (bottom != NULL) {
-        *bottom = d->m_bottom;
+        *bottom = d->m_preferredMargins.bottom();
     }
 }
 
@@ -329,17 +156,9 @@ void DuiScalableImage::setBorders(int left, int right, int top, int bottom)
 {
     Q_D(DuiScalableImage);
 
-    d->m_left   = left;
-    d->m_right  = right;
-    d->m_top    = top;
-    d->m_bottom = bottom;
+    d->m_preferredMargins = QMargins(left, top, right, bottom);
 
-    d->m_preferredLeft = left;
-    d->m_preferredRight = right;
-    d->m_preferredTop = top;
-    d->m_preferredBottom = bottom;
-
-    if (left == 0 && right == 0 && top == 0 && bottom == 0) {
+    if (d->m_preferredMargins.isNull()) {
         d->m_imageType = DuiScalableImagePrivate::DuiScalable1;
     }
     /*else if( (top == 0 && bottom == 0) ) {//&& (right != 0 && left != 0 ) ) {
@@ -353,8 +172,7 @@ void DuiScalableImage::setBorders(int left, int right, int top, int bottom)
     else {
         d->m_imageType = DuiScalableImagePrivate::DuiScalable9;
     }
-
-    d->calcImageRects();
+    d->validateSize();
 }
 
 void DuiScalableImage::setPixmap(const QPixmap *pixmap)
@@ -363,7 +181,8 @@ void DuiScalableImage::setPixmap(const QPixmap *pixmap)
 
     d->m_image = pixmap;
     d->pixmapId = "";
-    d->calcImageRects();
+
+    d->validateSize();
 }
 
 const QPixmap *DuiScalableImage::pixmap() const
@@ -381,9 +200,6 @@ void DuiScalableImage::draw(int x, int y, int w, int h, QPainter *painter) const
         painter->fillRect(QRect(x, y, w, h), QColor(255, 0, 0));
         return;
     }
-
-    if (d->m_imageSize != d->m_image->size())
-        d->calcImageRects();
 
     switch (d->m_imageType) {
     case DuiScalableImagePrivate::DuiScalable1:

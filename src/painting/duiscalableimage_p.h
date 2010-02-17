@@ -23,6 +23,7 @@
 #include <QSize>
 #include <QList>
 #include <QPixmap>
+#include <QMargins>
 
 #include "duiscalableimage.h"
 
@@ -41,41 +42,20 @@ public:
     DuiScalableImagePrivate();
     virtual ~DuiScalableImagePrivate();
 
-    void validateSize(int &w, int &h) const;
+    void validateSize() const;
 
     void drawScalable9(int x, int y, int w, int h, QPainter *painter) const;
     void drawScalable1(int x, int y, int w, int h, QPainter *painter) const;
     void drawScalable3H(int x, int y, int w, int h, QPainter *painter) const;
     void drawScalable3V(int x, int y, int w, int h, QPainter *painter) const;
 
-    QList<QPixmap> m_imageBlocks;
     DuiScalableImageType m_imageType;
-
-    //TODO: think some other solution for mutable:
-    //no precalculation, timer which is run until valid values are received,
-    //make m_imageRects and m_valid global variables.
-
-    //mutables here are used because we are doing some precalculations in the
-    //draw methods, the recalculation is done in the paint method because
-    //the pixmap given in setPixmap() method might still be invalid because of
-    //asynchronous pixmap loading.
-    void calcImageRects() const;
-    mutable QList<QRect> m_imageRects;
-    mutable QSize m_imageSize;
 
     const QPixmap *m_image;
 
     bool m_useGLRenderer;
 
-    mutable int m_left;
-    mutable int m_right;
-    mutable int m_top;
-    mutable int m_bottom;
-
-    int m_preferredLeft;
-    int m_preferredRight;
-    int m_preferredTop;
-    int m_preferredBottom;
+    QMargins m_preferredMargins;
 
     QString pixmapId;
 
