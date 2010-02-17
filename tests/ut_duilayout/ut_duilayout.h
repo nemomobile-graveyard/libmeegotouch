@@ -71,6 +71,7 @@ private slots:
     void testGridLayoutShaking_data();
     void testLayoutBoundingBox_data();
     void testLayoutBoundingBox();
+    void testBasicAnimationWithLayoutInsideLayout_data();
     void testBasicAnimationWithLayoutInsideLayout();
     void testBasicAnimationWithLayoutInsideLayout2_data();
     void testBasicAnimationWithLayoutInsideLayout2();

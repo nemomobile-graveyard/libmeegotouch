@@ -1651,9 +1651,15 @@ void Ut_DuiLayout::testGridLayoutShaking()
     }
 }
 
+void Ut_DuiLayout::testBasicAnimationWithLayoutInsideLayout_data()
+{
+    QTest::addColumn<bool>("useFixedSizePolicy");
+    QTest::newRow("Using preferred size policy") << false;
+    QTest::newRow("Using fixed size policy") << true;
+}
 void Ut_DuiLayout::testBasicAnimationWithLayoutInsideLayout()
 {
-    bool useFixedSizePolicy = false;
+    QFETCH(bool, useFixedSizePolicy);
     GraphicsWidgetTest *form = new GraphicsWidgetTest;
     DuiLayoutTest *layout = new DuiLayoutTest;
     QVERIFY(layout->animation());
@@ -1708,7 +1714,7 @@ void Ut_DuiLayout::testBasicAnimationWithLayoutInsideLayout()
             QVERIFY(layout->d_ptr->states.at(i).isSet(DuiItemState::STATE_FLAG_SHOWING) ||
                     layout->d_ptr->states.at(i).isSet(DuiItemState::STATE_FLAG_TO_BE_SHOWN));
         }
-        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag)) {
+        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag) && !useFixedSizePolicy) {
             //If the item can expand, its width will be expanded to the width of the layout - i.e. 204 pixels minus margins
             QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100));
             QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100).center());
@@ -1725,7 +1731,7 @@ void Ut_DuiLayout::testBasicAnimationWithLayoutInsideLayout()
         QCOMPARE(layout->d_ptr->states.at(i).geometryProgress(), 1.0);
         QCOMPARE(layout->d_ptr->states.at(i).opacityProgress(), 1.0);
         QCOMPARE(layout->d_ptr->states.at(i).flags(), DuiItemState::STATE_FLAG_SHOWING);
-        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag)) {
+        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag) && !useFixedSizePolicy) {
             //If the item can expand, its width will be expanded to the width of the layout - i.e. 204 pixels minus margins
             QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100));
             QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100).center());
