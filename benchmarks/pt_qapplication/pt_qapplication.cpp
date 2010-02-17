@@ -36,8 +36,8 @@ void Pt_QApplication::processCreationAndCtor()
 
 void Pt_QApplication::ctor()
 {
-    QApplication *a;
-    QBENCHMARK {
+    QApplication *a(NULL);
+    QBENCHMARK_ONCE {
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
         char appName[] = "./pt_qapplication";
@@ -49,8 +49,8 @@ void Pt_QApplication::ctor()
 
 void Pt_QApplication::ctor2()
 {
-    QApplication *a;
-    QBENCHMARK {
+    QApplication *a(NULL);
+    QBENCHMARK_ONCE {
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
         char appName[] = "./pt_qapplication2";
