@@ -28,7 +28,9 @@ void Pt_WidgetsGallery::startupTime()
 {
     QProcess proc;
     QString program = "widgetsgallery";
-    const QStringList arguments = QStringList() << "-quitimmediately" <<  "-remote-theme";
+    const QStringList arguments = QStringList() << "-quitimmediately";
+    //#MS - waiting for remote daemon get stucked the unit test..
+    //<<  "-remote-theme";
 
     //execute local binary file
     QString sLocalProgram("../../demos/widgetsgallery/widgetsgallery");
