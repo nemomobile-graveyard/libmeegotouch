@@ -260,7 +260,7 @@ void QtMaemo6ScrollBarEventFilter::cleanUpTimerMap()
     if (QAbstractAnimation *animation = qobject_cast<QAbstractAnimation *>(sender())) {
         //the event comes from the fadeOut-animation, so we need to get the group
         if ((animation = qobject_cast<QAbstractAnimation *>(animation->parent()))) {
-            foreach(const QWidget * w, m_pendingAnimations.keys()) {
+            foreach(QWidget * w, m_pendingAnimations.keys()) {
                 if (m_pendingAnimations.value(w) == animation) {
                     delete m_pendingAnimations.take(w);
                 }
