@@ -36,15 +36,20 @@ DuiFeedbackPlayerPrivate::DuiFeedbackPlayerPrivate(QObject *parent)
     reconnectionAttempts = 0;
 
     // TODO: Load from a config file?
+    reconnectionIntervalsList << 50;
     reconnectionIntervalsList << 300;
     reconnectionIntervalsList << 600;
+    reconnectionIntervalsList << 1000;
     reconnectionIntervalsList << 1000;
     reconnectionIntervalsList << 2000;
     reconnectionIntervalsList << 2000;
     reconnectionIntervalsList << 5000;
     reconnectionIntervalsList << 5000;
     reconnectionIntervalsList << 10000;
+    reconnectionIntervalsList << 10000;
     reconnectionIntervalsList << 30000;
+    reconnectionIntervalsList << 30000;
+    reconnectionIntervalsList << 300000;
     reconnectionIntervalsList << 300000; // 5*60*1000 (five minutes)
 }
 
@@ -90,17 +95,11 @@ void DuiFeedbackPlayerPrivate::onSocketError(QLocalSocket::LocalSocketError sock
 {
     Q_UNUSED(socketError);
 
-    if (reconnectionAttempts <= reconnectionIntervalsList.size()) {
+    if (reconnectionAttempts < reconnectionIntervalsList.size()) {
+        // Try to reconnect to duifeedbackd
+        QTimer::singleShot(reconnectionIntervalsList[reconnectionAttempts],
+                           this, SLOT(connectIdle()));
         reconnectionAttempts++;
-
-        if (reconnectionAttempts <= 1) {
-            // First reconnection attempt is done immediately
-            connectIdle();
-        } else {
-            // Following attempts are done after a delay
-            QTimer::singleShot(reconnectionIntervalsList[reconnectionAttempts-2],
-                               this, SLOT(connectIdle()));
-        }
     } else {
         // Give up
         qWarning("DuiFeedbackPlayer: Couldn't establish connection with duifeedbackd.");

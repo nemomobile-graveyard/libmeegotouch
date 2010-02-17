@@ -79,6 +79,10 @@ void Ut_DuiFeedbackPlayer::reconnect()
     testSocket->clearReceivedData();
     testSocket->suddenDisconnect();
 
+    // First reconnection takes place after 50ms, so wait
+    // for that reconnection.
+    QTest::qWait(60);
+
     QDataStream testStream(*testSocket->getWrittenData());
     testStream >> writtenString;
 
