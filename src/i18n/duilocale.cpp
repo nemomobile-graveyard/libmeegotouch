@@ -196,17 +196,64 @@ DuiTranslationCatalog::DuiTranslationCatalog(const DuiTranslationCatalog &other)
 
 bool DuiTranslationCatalog::loadWith(DuiLocale *duilocale, DuiLocale::Category category)
 {
-    QStringList localeDirs = DuiLocale::translationPaths();
-    QString categoryPathSuffix = '/' + DuiLocalePrivate::categoryToDirectoryName(category) + '/';
+    QStringList localeDirs;
+    QString fname;
+    if (QFileInfo(_name).isRelative()) {
+        localeDirs = DuiLocale::translationPaths();
+        fname = _name;
+    }
+    else {
+        localeDirs = (QStringList() << QFileInfo(_name).path());
+        fname = QFileInfo(_name).fileName();
+    }
 
     const int size = localeDirs.size();
     for (int i = 0; i < size; ++i) {
-        if (_translator.load(_name + '_' + duilocale->categoryName(category),
-                             QDir(localeDirs.at(i) + categoryPathSuffix).absolutePath()))
-            return true;
-        if (_translator.load(_name + '_' + duilocale->categoryName(category),
-                             QDir(localeDirs.at(i)).absolutePath()))
-            return true;
+        QString prefix = QDir(localeDirs.at(i)).absolutePath();
+        if (prefix.length() && !prefix.endsWith(QLatin1Char('/')))
+            prefix += QLatin1Char('/');
+        QString realname;
+
+        if (fname.endsWith(".qm")) {
+            // this is either engineering English or a the
+            // locale specific parts of the file name have been fully specified
+            // already. We don’t want any fallbacks in that case, we try to load
+            // only the exact file name:
+            realname = prefix + fname;
+            if(QFileInfo(realname).isReadable() && _translator.load(realname))
+                return true;
+        }
+        else {
+            QString delims("_.");
+            QString engineeringEnglishName = fname;
+            fname += '_' + duilocale->categoryName(category);
+            for (;;) {
+                realname = prefix + fname + ".qm";
+                if (QFileInfo(realname).isReadable() && _translator.load(realname))
+                    return true;
+                realname = prefix + fname;
+                if (QFileInfo(realname).isReadable() && _translator.load(realname))
+                    return true;
+
+                int rightmost = 0;
+                for (int i = 0; i < (int)delims.length(); i++) {
+                    int k = fname.lastIndexOf(delims[i]);
+                    if (k > rightmost)
+                        rightmost = k;
+                }
+
+                // no truncations?
+                if (rightmost == 0)
+                    break;
+
+                fname.truncate(rightmost);
+
+                // do not fall back to engineering English when trying
+                // to load real translations:
+                if (fname == engineeringEnglishName)
+                     break;
+            }
+        }
     }
 
     return false;
@@ -798,6 +845,10 @@ void DuiLocale::setDefault(const DuiLocale &locale)
     // tr translations have to be found from the qcoreapplication in order to
     // make QCoreApplication::translate() work
     s_systemDefault->insertTrToQCoreApp();
+    // QCoreApplication does not send the QEvent::LanguageChange to
+    // the widgets, so we send the language change event here.
+    QEvent ev(QEvent::LanguageChange);
+    qApp->sendEvent(qApp, &ev);
 
     qApp->setLayoutDirection(s_systemDefault->textDirection());
 }
@@ -1873,29 +1924,40 @@ void DuiLocale::copyCatalogsFrom(const DuiLocale &other)
 void DuiLocale::installTrCatalog(const QString &name)
 {
     Q_D(DuiLocale);
-    DuiTranslationCatalog *catalog = new DuiTranslationCatalog(name);
-    catalog->loadWith(this, DuiLcMessages);
+
+    DuiTranslationCatalog *catalog
+        = new DuiTranslationCatalog(name);
     d->_trTranslations.append(QExplicitlySharedDataPointer<DuiTranslationCatalog>(catalog));
+    if (!name.endsWith(".qm")) {
+        DuiTranslationCatalog *engineeringEnglishCatalog
+            = new DuiTranslationCatalog(name + ".qm");
+        d->_trTranslations.prepend(QExplicitlySharedDataPointer<DuiTranslationCatalog>(engineeringEnglishCatalog));
+    }
+    loadTrCatalogs();
+}
+
+void DuiLocale::loadTrCatalogs()
+{
+    Q_D(DuiLocale);
+    foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, d->_trTranslations) {
+        if(sharedCatalog->_translator.isEmpty()
+           || !sharedCatalog->_name.endsWith(".qm")) {
+            sharedCatalog->loadWith(this, DuiLcMessages);
+        }
+    }
 }
 
 void DuiLocale::insertTrToQCoreApp()
 {
     Q_D(DuiLocale);
-
     foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, d->_trTranslations) {
         QCoreApplication::installTranslator(&sharedCatalog->_translator);
     }
-
-    // QCoreApplication does not send the QEvent::LanguageChange to
-    // the widgets, so we send the language change event here.
-    QEvent ev(QEvent::LanguageChange);
-    qApp->sendEvent(qApp, &ev);
 }
 
 void DuiLocale::removeTrFromQCoreApp()
 {
     Q_D(DuiLocale);
-
     foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, d->_trTranslations) {
         QCoreApplication::removeTranslator(&sharedCatalog->_translator);
     }
@@ -2009,6 +2071,10 @@ void DuiLocale::refreshSettings()
     setCategoryLocale(DuiLcCollate, localeName);
     setCategoryLocale(DuiLcMonetary, localeName);
     setCategoryLocale(DuiLcName, localeName);
+
+    this->loadTrCatalogs();
+
+    setDefault(*this);
 
     emit settingsChanged();
 #endif

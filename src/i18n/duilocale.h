@@ -635,9 +635,12 @@ public:
     static QStringList translationPaths();
 
     /*!
-     * \brief Monitors all changes in settings
-     * After calling this method, all changes in the settings
-     * will emit settingsChanged() signal
+     * \brief Monitors all changes in the locale related gconf keys
+     *
+     * After calling this method, all changes in the locale related
+     * gconf keys will change this locale according to the changes in the
+     * gconf keys, set this locale as the new system default locale
+     * and emit the settingsChanged() signal.
      */
     void connectSettings();
 
@@ -654,12 +657,17 @@ Q_SIGNALS:
 
 protected:
     /*!
-     * \brief Installs the Tr compatibility translations into QCoreApplication
+     * \brief loads the QTranslators for all current catalogs
+     */
+    void loadTrCatalogs();
+
+    /*!
+     * \brief Installs the translations into QCoreApplication
      */
     void insertTrToQCoreApp();
 
     /*!
-     * \brief Removes the Tr compatibility translations from QCoreApplication
+     * \brief Removes the translations from QCoreApplication
      */
     void removeTrFromQCoreApp();
 

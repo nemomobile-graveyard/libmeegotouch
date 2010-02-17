@@ -27,18 +27,11 @@
 void WidgetsgalleryRetranslator::widgetsgalleryRetranslate()
 {
     qDebug() << __PRETTY_FUNCTION__;
-    DuiGConfItem languageItem("/Dui/i18n/Language");
-    QString language = languageItem.value().toString();
-    DuiLocale locale(language);
-    // installs the catalog for the “Engineering English”:
-    locale.installTrCatalog("libdui.qm");
-    // installs the catalog for the “Engineering English”:
-    locale.installTrCatalog("widgetsgallery.qm");
-    // installs the catalog for the real translation:
-    locale.installTrCatalog("libdui");
-    // installs the catalog for the real translation:
-    locale.installTrCatalog("common");
-    // installs the catalog for the real translation:
-    locale.installTrCatalog("widgetsgallery");
-    DuiLocale::setDefault(locale);
+    // When the gconf key /Dui/i18n/Language specifying the system
+    // language changes, the system default locale of a DuiApplication
+    // is changed automatically. All translation catalogs are reloaded
+    // according to the new locale settings. Therefore, in most cases,
+    // calling a slot like this one here is not needed, but it is
+    // possible to use it it to do something unusual when the language
+    // changes.
 }

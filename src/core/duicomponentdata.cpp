@@ -443,15 +443,11 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
         catalog = fileInfo.fileName();
 
     locale.addTranslationPath(TRANSLATION_DIR);
-    // installs the libdui translations for the “Engineering English”:
-    locale.installTrCatalog("libdui.qm");
-    // installs the catalog for the “Engineering English”:
-    locale.installTrCatalog(catalog + ".qm");
-    // installs the libdui translations for the real translation:
+    // installs the libdui translations
     locale.installTrCatalog("libdui");
-    // installs the real translations from the common translation catalog:
+    // installs the common translation catalog:
     locale.installTrCatalog("common");
-    // installs the catalog for the real translation:
+    // installs the translationi catalog of the application:
     locale.installTrCatalog(catalog);
     DuiLocale::setDefault(locale);
 
