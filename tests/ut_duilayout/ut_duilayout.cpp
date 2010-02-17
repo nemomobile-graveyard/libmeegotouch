@@ -1373,7 +1373,9 @@ void Ut_DuiLayout::testLinearPolicyChangingOrientationBasic()
             targetGeometry = QRectF(4, 4 + i * (100 + vertical_spacing), 100, 100);
 
         QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), targetGeometry);
-        QCOMPARE(dynamic_cast<QGraphicsWidget *>(layout->d_ptr->states.at(i).item())->isVisible(), true);
+        QGraphicsWidget *widget = dynamic_cast<QGraphicsWidget *>(layout->d_ptr->states.at(i).item());
+        QVERIFY(widget);
+        QCOMPARE(widget->isVisible(), true);
         QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), targetGeometry.center());
     }
 }

@@ -33,7 +33,7 @@ class DuiLayoutAnimationPrivate
 
 public:
     /** Constructor */
-    DuiLayoutAnimationPrivate() {}
+    DuiLayoutAnimationPrivate();
     /** Destructor */
     virtual ~DuiLayoutAnimationPrivate() {}
 

@@ -21,7 +21,9 @@
 #include "duilayout_p.h"
 
 DuiBasicLayoutAnimationPrivate::DuiBasicLayoutAnimationPrivate()
-{ }
+{
+    recordedTimeSinceLastUpdate = 0;
+}
 
 DuiBasicLayoutAnimationPrivate::~DuiBasicLayoutAnimationPrivate()
 { }

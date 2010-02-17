@@ -81,3 +81,8 @@ void DuiLayoutAnimation::hideItemNow(QGraphicsLayoutItem *item)
     Q_ASSERT(item);
     d->layout->d_ptr->hideItemNow(item);
 }
+void DuiLayoutAnimationPrivate()
+{
+    layout = NULL;
+    q_ptr = NULL;
+}
