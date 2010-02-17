@@ -26,156 +26,132 @@
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
-class DuiWindowStub : public StubBase {
-  public:
-  virtual void DuiWindowConstructor(QWidget *parent);
-  virtual void DuiWindowConstructor(DuiSceneManager *sceneManager, QWidget *parent);
-  virtual void DuiWindowDestructor();
-  virtual void setTranslucentBackground(bool enable);
-  virtual DuiScene * scene();
-  virtual void setSceneManager(DuiSceneManager *sceneManager);
-  virtual DuiSceneManager * sceneManager() const;
-  virtual DuiSceneManager * sceneManager();
-  virtual Dui::Orientation orientation() const;
-  virtual Dui::OrientationAngle orientationAngle() const;
-  virtual QSize visibleSceneSize(Dui::Orientation) const;
-  virtual QSize visibleSceneSize() const;
-  virtual bool keepCurrentOrientation() const;
-  virtual void setKeepCurrentOrientation(bool enabled);
-  virtual bool isOnDisplay() const;
-  virtual void setOrientationAngle(Dui::OrientationAngle angle, Dui::OrientationChangeMode mode);
-  virtual bool event(QEvent *event);
-  virtual void onDisplayChangeEvent(DuiOnDisplayChangeEvent *event);
-  virtual void enterDisplayEvent();
-  virtual void exitDisplayEvent();
-  virtual void DuiWindowConstructor(DuiWindowPrivate &dd, QWidget *parent);
-  virtual void DuiWindowConstructor(DuiWindowPrivate &dd, DuiScene *scene, QWidget *parent);
-  virtual void DuiWindowConstructor(DuiWindowPrivate &dd, DuiSceneManager *sceneManager, QWidget *parent);
+class DuiWindowStub : public StubBase
+{
+public:
+    virtual void DuiWindowConstructor(QWidget *parent);
+    virtual void DuiWindowDestructor();
+    virtual void setOrientationAnimationLength(DuiWindow::OrientationAnimationPhase phase, qreal lenghtInSecs);
+    virtual bool orientationChanging();
+    virtual qreal orientationChangePhase();
+    virtual void registerForPermanentOrientationChangeAnimation(DuiWidget *widget);
+    virtual void storeOrientationChangeParameters(DuiWidget *widget, DuiOrientationChangeParameters *parameters);
+    virtual DuiOrientationChangeParameters *orientationChangeParameters(DuiWidget *widget);
+    virtual void orientationAngleChanged(DuiDeviceProfile::DeviceOrientationAngle angle);
+    virtual void orientationAnimationChanged(qreal value);
+    virtual void orientationAnimationCompleted();
+    virtual void prepareOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, int startAngle, int endAngle);
+    virtual void executeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, qreal offset, int startAngle, int endAngle);
+    virtual void finalizeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase);
+    virtual bool event(QEvent *event);
 };
 
 // 2. IMPLEMENT STUB
-void DuiWindowStub::DuiWindowConstructor(QWidget *parent) {
-  Q_UNUSED(parent);
+void DuiWindowStub::DuiWindowConstructor(QWidget *parent)
+{
+    Q_UNUSED(parent);
 
 }
-void DuiWindowStub::DuiWindowConstructor(DuiSceneManager *sceneManager, QWidget *parent) {
-  Q_UNUSED(sceneManager);
-  Q_UNUSED(parent);
+void DuiWindowStub::DuiWindowDestructor()
+{
 
 }
-void DuiWindowStub::DuiWindowDestructor() {
-
-}
-void DuiWindowStub::setTranslucentBackground(bool enable) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<bool >(enable));
-  stubMethodEntered("setTranslucentBackground",params);
-}
-
-DuiScene * DuiWindowStub::scene() {
-  stubMethodEntered("scene");
-  return stubReturnValue<DuiScene *>("scene");
+void DuiWindowStub::setOrientationAnimationLength(DuiWindow::OrientationAnimationPhase phase, qreal lenghtInSecs)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiWindow::OrientationAnimationPhase >(phase));
+    params.append(new Parameter<qreal >(lenghtInSecs));
+    stubMethodEntered("setOrientationAnimationLength", params);
 }
 
-void DuiWindowStub::setSceneManager(DuiSceneManager *sceneManager) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<DuiSceneManager * >(sceneManager));
-  stubMethodEntered("setSceneManager",params);
+bool DuiWindowStub::orientationChanging()
+{
+    stubMethodEntered("orientationChanging");
+    return stubReturnValue<bool>("orientationChanging");
 }
 
-DuiSceneManager * DuiWindowStub::sceneManager() const {
-  stubMethodEntered("sceneManager");
-  return stubReturnValue<DuiSceneManager *>("sceneManager");
+qreal DuiWindowStub::orientationChangePhase()
+{
+    stubMethodEntered("orientationChangePhase");
+    return stubReturnValue<qreal>("orientationChangePhase");
 }
 
-DuiSceneManager * DuiWindowStub::sceneManager() {
-  stubMethodEntered("sceneManager");
-  return stubReturnValue<DuiSceneManager *>("sceneManager");
+void DuiWindowStub::registerForPermanentOrientationChangeAnimation(DuiWidget *widget)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiWidget * >(widget));
+    stubMethodEntered("registerForPermanentOrientationChangeAnimation", params);
 }
 
-Dui::Orientation DuiWindowStub::orientation() const {
-  stubMethodEntered("orientation");
-  return stubReturnValue<Dui::Orientation>("orientation");
+void DuiWindowStub::storeOrientationChangeParameters(DuiWidget *widget, DuiOrientationChangeParameters *parameters)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiWidget * >(widget));
+    params.append(new Parameter<DuiOrientationChangeParameters * >(parameters));
+    stubMethodEntered("storeOrientationChangeParameters", params);
 }
 
-Dui::OrientationAngle DuiWindowStub::orientationAngle() const {
-  stubMethodEntered("orientationAngle");
-  return stubReturnValue<Dui::OrientationAngle>("orientationAngle");
+DuiOrientationChangeParameters *DuiWindowStub::orientationChangeParameters(DuiWidget *widget)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiWidget * >(widget));
+    stubMethodEntered("orientationChangeParameters", params);
+    return stubReturnValue<DuiOrientationChangeParameters *>("orientationChangeParameters");
 }
 
-QSize DuiWindowStub::visibleSceneSize(Dui::Orientation orientation) const {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<Dui::Orientation >((orientation)));
-  stubMethodEntered("visibleSceneSize",params);
-  return stubReturnValue<QSize>("visibleSceneSize");
+void DuiWindowStub::orientationAngleChanged(DuiDeviceProfile::DeviceOrientationAngle angle)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiDeviceProfile::DeviceOrientationAngle >(angle));
+    stubMethodEntered("orientationAngleChanged", params);
 }
 
-QSize DuiWindowStub::visibleSceneSize() const {
-  stubMethodEntered("visibleSceneSize");
-  return stubReturnValue<QSize>("visibleSceneSize");
+void DuiWindowStub::orientationAnimationChanged(qreal value)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<qreal >(value));
+    stubMethodEntered("orientationAnimationChanged", params);
 }
 
-bool DuiWindowStub::keepCurrentOrientation() const {
-  stubMethodEntered("keepCurrentOrientation");
-  return stubReturnValue<bool>("keepCurrentOrientation");
+void DuiWindowStub::orientationAnimationCompleted()
+{
+    stubMethodEntered("orientationAnimationCompleted");
 }
 
-void DuiWindowStub::setKeepCurrentOrientation(bool enabled) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<bool >(enabled));
-  stubMethodEntered("setKeepCurrentOrientation",params);
+void DuiWindowStub::prepareOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, int startAngle, int endAngle)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiWindow::OrientationAnimationPhase >(phase));
+    params.append(new Parameter<int >(startAngle));
+    params.append(new Parameter<int >(endAngle));
+    stubMethodEntered("prepareOrientationAnimationPhase", params);
 }
 
-bool DuiWindowStub::isOnDisplay() const {
-  stubMethodEntered("isOnDisplay");
-  return stubReturnValue<bool>("isOnDisplay");
+void DuiWindowStub::executeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, qreal offset, int startAngle, int endAngle)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiWindow::OrientationAnimationPhase >(phase));
+    params.append(new Parameter<qreal >(offset));
+    params.append(new Parameter<int >(startAngle));
+    params.append(new Parameter<int >(endAngle));
+    stubMethodEntered("executeOrientationAnimationPhase", params);
 }
 
-void DuiWindowStub::setOrientationAngle(Dui::OrientationAngle angle, Dui::OrientationChangeMode mode) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<Dui::OrientationAngle >(angle));
-  params.append( new Parameter<Dui::OrientationChangeMode >(mode));
-  stubMethodEntered("setOrientationAngle",params);
+void DuiWindowStub::finalizeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<DuiWindow::OrientationAnimationPhase >(phase));
+    stubMethodEntered("finalizeOrientationAnimationPhase", params);
 }
 
-bool DuiWindowStub::event(QEvent *event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QEvent * >(event));
-  stubMethodEntered("event",params);
-  return stubReturnValue<bool>("event");
+bool DuiWindowStub::event(QEvent *event)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<QEvent * >(event));
+    stubMethodEntered("event", params);
+    return stubReturnValue<bool>("event");
 }
 
-void DuiWindowStub::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<DuiOnDisplayChangeEvent * >(event));
-  stubMethodEntered("onDisplayChangeEvent",params);
-}
-
-void DuiWindowStub::enterDisplayEvent() {
-  stubMethodEntered("enterDisplayEvent");
-}
-
-void DuiWindowStub::exitDisplayEvent() {
-  stubMethodEntered("exitDisplayEvent");
-}
-
-void DuiWindowStub::DuiWindowConstructor(DuiWindowPrivate &dd, QWidget *parent) {
-  Q_UNUSED(dd);
-  Q_UNUSED(parent);
-
-}
-void DuiWindowStub::DuiWindowConstructor(DuiWindowPrivate &dd, DuiScene *scene, QWidget *parent) {
-  Q_UNUSED(dd);
-  Q_UNUSED(scene);
-  Q_UNUSED(parent);
-
-}
-void DuiWindowStub::DuiWindowConstructor(DuiWindowPrivate &dd, DuiSceneManager *sceneManager, QWidget *parent) {
-  Q_UNUSED(dd);
-  Q_UNUSED(sceneManager);
-  Q_UNUSED(parent);
-
-}
 
 
 // 3. CREATE A STUB INSTANCE
@@ -184,106 +160,79 @@ DuiWindowStub *gDuiWindowStub = &gDefaultDuiWindowStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-DuiWindow::DuiWindow(QWidget *parent) :
-        d_ptr(NULL)
+DuiWindow::DuiWindow(QWidget *parent) : d_ptr(0)
 {
-  gDuiWindowStub->DuiWindowConstructor(parent);
+    gDuiWindowStub->DuiWindowConstructor(parent);
 }
 
-DuiWindow::DuiWindow(DuiSceneManager *sceneManager, QWidget *parent) :
-        d_ptr(NULL)
+DuiWindow::~DuiWindow()
 {
-  gDuiWindowStub->DuiWindowConstructor(sceneManager, parent);
+    gDuiWindowStub->DuiWindowDestructor();
 }
 
-DuiWindow::~DuiWindow() {
-  gDuiWindowStub->DuiWindowDestructor();
-}
-
-void DuiWindow::setTranslucentBackground(bool enable) {
-  gDuiWindowStub->setTranslucentBackground(enable);
-}
-
-DuiScene * DuiWindow::scene() {
-  return gDuiWindowStub->scene();
-}
-
-void DuiWindow::setSceneManager(DuiSceneManager *sceneManager) {
-  gDuiWindowStub->setSceneManager(sceneManager);
-}
-
-DuiSceneManager * DuiWindow::sceneManager() const {
-  return gDuiWindowStub->sceneManager();
-}
-
-DuiSceneManager * DuiWindow::sceneManager() {
-  return gDuiWindowStub->sceneManager();
-}
-
-Dui::Orientation DuiWindow::orientation() const {
-  return gDuiWindowStub->orientation();
-}
-
-Dui::OrientationAngle DuiWindow::orientationAngle() const {
-  return gDuiWindowStub->orientationAngle();
-}
-
-QSize DuiWindow::visibleSceneSize(Dui::Orientation) const {
-  return gDuiWindowStub->visibleSceneSize();
-}
-
-QSize DuiWindow::visibleSceneSize() const {
-  return gDuiWindowStub->visibleSceneSize();
-}
-
-bool DuiWindow::keepCurrentOrientation() const {
-  return gDuiWindowStub->keepCurrentOrientation();
-}
-
-void DuiWindow::setKeepCurrentOrientation(bool enabled) {
-  gDuiWindowStub->setKeepCurrentOrientation(enabled);
-}
-
-bool DuiWindow::isOnDisplay() const {
-  return gDuiWindowStub->isOnDisplay();
-}
-
-void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle, Dui::OrientationChangeMode mode) {
-  gDuiWindowStub->setOrientationAngle(angle, mode);
-}
-
-bool DuiWindow::event(QEvent *event) {
-  return gDuiWindowStub->event(event);
-}
-
-void DuiWindow::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event) {
-  gDuiWindowStub->onDisplayChangeEvent(event);
-}
-
-void DuiWindow::enterDisplayEvent() {
-  gDuiWindowStub->enterDisplayEvent();
-}
-
-void DuiWindow::exitDisplayEvent() {
-  gDuiWindowStub->exitDisplayEvent();
-}
-
-DuiWindow::DuiWindow(DuiWindowPrivate &dd, QWidget *parent) :
-        d_ptr(NULL)
+void DuiWindow::setOrientationAnimationLength(DuiWindow::OrientationAnimationPhase phase, qreal lenghtInSecs)
 {
-  gDuiWindowStub->DuiWindowConstructor(dd, parent);
+    gDuiWindowStub->setOrientationAnimationLength(phase, lenghtInSecs);
 }
 
-DuiWindow::DuiWindow(DuiWindowPrivate &dd, DuiScene *scene, QWidget *parent) :
-        d_ptr(NULL)
+bool DuiWindow::orientationChanging()
 {
-  gDuiWindowStub->DuiWindowConstructor(dd, scene, parent);
+    return gDuiWindowStub->orientationChanging();
 }
 
-DuiWindow::DuiWindow(DuiWindowPrivate &dd, DuiSceneManager *sceneManager, QWidget *parent) :
-        d_ptr(NULL)
+qreal DuiWindow::orientationChangePhase()
 {
-  gDuiWindowStub->DuiWindowConstructor(dd, sceneManager, parent);
+    return gDuiWindowStub->orientationChangePhase();
+}
+
+void DuiWindow::registerForPermanentOrientationChangeAnimation(DuiWidget *widget)
+{
+    gDuiWindowStub->registerForPermanentOrientationChangeAnimation(widget);
+}
+
+void DuiWindow::storeOrientationChangeParameters(DuiWidget *widget, DuiOrientationChangeParameters *parameters)
+{
+    gDuiWindowStub->storeOrientationChangeParameters(widget, parameters);
+}
+
+DuiOrientationChangeParameters *DuiWindow::orientationChangeParameters(DuiWidget *widget)
+{
+    return gDuiWindowStub->orientationChangeParameters(widget);
+}
+
+void DuiWindow::orientationAngleChanged(DuiDeviceProfile::DeviceOrientationAngle angle)
+{
+    gDuiWindowStub->orientationAngleChanged(angle);
+}
+
+void DuiWindow::orientationAnimationChanged(qreal value)
+{
+    gDuiWindowStub->orientationAnimationChanged(value);
+}
+
+void DuiWindow::orientationAnimationCompleted()
+{
+    gDuiWindowStub->orientationAnimationCompleted();
+}
+
+void DuiWindow::prepareOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, int startAngle, int endAngle)
+{
+    gDuiWindowStub->prepareOrientationAnimationPhase(phase, startAngle, endAngle);
+}
+
+void DuiWindow::executeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, qreal offset, int startAngle, int endAngle)
+{
+    gDuiWindowStub->executeOrientationAnimationPhase(phase, offset, startAngle, endAngle);
+}
+
+void DuiWindow::finalizeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase)
+{
+    gDuiWindowStub->finalizeOrientationAnimationPhase(phase);
+}
+
+bool DuiWindow::event(QEvent *event)
+{
+    return gDuiWindowStub->event(event);
 }
 
 
