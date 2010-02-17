@@ -26,6 +26,7 @@ class DuiGridLayoutPolicy;
 class DuiDialog;
 class DuiButton;
 class DuiLabel;
+class DuiContainer;
 
 class DialogsAndNotificationsPage : public TemplatePage
 {
@@ -55,7 +56,7 @@ private slots:
     void setDialogProgressIndicatorVisible(bool);
 
 private:
-    void populateLayout(DuiGridLayoutPolicy *layoutPolicy, int columns);
+    void populateLayout(DuiLinearLayoutPolicy *layoutPolicy);
 
     DuiDialog *dialog;
     DuiDialog *nestedDialog;
@@ -64,6 +65,9 @@ private:
     DuiLabel *label1;
     DuiLabel *label2;
     DuiLabel *label3;
+
+    DuiContainer *dialogsContainer;
+    DuiContainer *notificationsContainer;
 
     DuiButton *button1;
     DuiButton *button2;

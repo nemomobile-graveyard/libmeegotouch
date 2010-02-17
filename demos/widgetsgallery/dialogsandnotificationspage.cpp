@@ -30,7 +30,8 @@
 #include <DuiLabel>
 #include <DuiTextEdit>
 #include <QDebug>
-#include <DuiGridLayoutPolicy>
+#include <DuiContainer>
+#include <DuiLinearLayoutPolicy>
 
 #include <QGraphicsLinearLayout>
 
@@ -66,9 +67,9 @@ void DialogsAndNotificationsPage::createContent()
 {
     DuiApplicationPage::createContent();
 
-    DuiWidget *panel = centralWidget();
-    DuiGridLayoutPolicy *layoutPolicy = ListPage::createAndSetupGridPolicy(panel);
-    populateLayout(layoutPolicy, 1);
+    DuiLayout *layout = new DuiLayout(centralWidget());
+    DuiLinearLayoutPolicy *layoutPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    populateLayout(layoutPolicy);
 
     retranslateUi();
 }
@@ -291,118 +292,61 @@ void DialogsAndNotificationsPage::showSystemInformationBanner()
     QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
 
-void DialogsAndNotificationsPage::populateLayout(DuiGridLayoutPolicy *layoutPolicy, int columns)
+void DialogsAndNotificationsPage::populateLayout(DuiLinearLayoutPolicy *layoutPolicy)
 {
-    int column = 0, row = 0;
+    // Dialogs
 
-    ///////////
-    // DuiDialog
-    /////////
-    label1 = new DuiLabel(centralWidget());
-    label1->setObjectName("header");
-    label1->setMinimumHeight(32);
-    layoutPolicy->addItem(label1, row, 0, 1, 2);
-    row++;
+    dialogsContainer = new DuiContainer();
+    QGraphicsLinearLayout *dialogsLayout = new QGraphicsLinearLayout(Qt::Vertical, dialogsContainer->centralWidget());
+
+    layoutPolicy->addItem(dialogsContainer);
 
     button1 = new DuiButton(centralWidget());
-    button1->setObjectName("listItem");
     connect(button1, SIGNAL(clicked()), this, SLOT(openQuestionDialog()));
-    layoutPolicy->addItem(button1, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
+    dialogsLayout->addItem(button1);
 
     button2 = new DuiButton(centralWidget());
-    button2->setObjectName("listItem");
     connect(button2, SIGNAL(clicked()), this, SLOT(openEntryDialog()));
-    layoutPolicy->addItem(button2, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
+    dialogsLayout->addItem(button2);
 
     button3 = new DuiButton(centralWidget());
-    button3->setObjectName("listItem");
     connect(button3, SIGNAL(clicked()), this, SLOT(openLongDialog()));
-    layoutPolicy->addItem(button3, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
+    dialogsLayout->addItem(button3);
 
     buttonStackedDialogs = new DuiButton(centralWidget());
-    buttonStackedDialogs->setObjectName("listItem");
     connect(buttonStackedDialogs, SIGNAL(clicked()), this, SLOT(openStackedDialogs()));
-    layoutPolicy->addItem(buttonStackedDialogs, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
+    dialogsLayout->addItem(buttonStackedDialogs);
 
     buttonWindowModalDialog = new DuiButton(centralWidget());
-    buttonWindowModalDialog->setObjectName("listItem");
     connect(buttonWindowModalDialog, SIGNAL(clicked()), this, SLOT(openWindowModalDialog()));
-    layoutPolicy->addItem(buttonWindowModalDialog, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
+    dialogsLayout->addItem(buttonWindowModalDialog);
 
     buttonDialogWithProgressIndicator = new DuiButton(centralWidget());
-    buttonDialogWithProgressIndicator->setObjectName("listItem");
     connect(buttonDialogWithProgressIndicator, SIGNAL(clicked()), this, SLOT(openDialogWithProgressIndicator()));
-    layoutPolicy->addItem(buttonDialogWithProgressIndicator, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
-
-    ///////////
-    // DuiMessageBox
-    /////////
-
-    label2 = new DuiLabel(centralWidget());
-    label2->setObjectName("header");
-    label2->setMinimumHeight(32);
-    layoutPolicy->addItem(label2, row, 0, 1, 2);
-    row++;
+    dialogsLayout->addItem(buttonDialogWithProgressIndicator);
 
     button4 = new DuiButton(centralWidget());
-    button4->setObjectName("listItem");
     connect(button4, SIGNAL(clicked()), this, SLOT(openMessageBox()));
-    layoutPolicy->addItem(button4, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
+    dialogsLayout->addItem(button4);
 
-    /////////////////
-    // NOTIFICATIONS
-    ///////////////
+    // Notifications
 
-    label3 = new DuiLabel(centralWidget());
-    label3->setObjectName("header");
-    label3->setMinimumHeight(32);
-    layoutPolicy->addItem(label3, row, 0, 1, 2);
-    row++;
+    notificationsContainer = new DuiContainer();
+    QGraphicsLinearLayout *notificationsLayout = new QGraphicsLinearLayout(Qt::Vertical, notificationsContainer->centralWidget());
+
+    layoutPolicy->addItem(notificationsContainer);
 
     button5 = new DuiButton(centralWidget());
-    button5->setObjectName("listItem");
     connect(button5, SIGNAL(clicked()), this, SLOT(showEventBanner()));
-    layoutPolicy->addItem(button5, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
+    notificationsLayout->addItem(button5);
 
     button6 = new DuiButton(centralWidget());
-    button6->setObjectName("listItem");
     connect(button6, SIGNAL(clicked()), this, SLOT(showInformationBanner()));
-    layoutPolicy->addItem(button6, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
+    notificationsLayout->addItem(button6);
 
     button7 = new DuiButton(centralWidget());
-    button7->setObjectName("listItem");
     button7->connect(button7, SIGNAL(clicked()), this, SLOT(showSystemInformationBanner()));
-    layoutPolicy->addItem(button7, row, column);
-    column = ((column + 1) % columns);
-    if (column == 0)
-        row++;
+    notificationsLayout->addItem(button7);
 }
 
 void DialogsAndNotificationsPage::retranslateUi()
@@ -411,8 +355,8 @@ void DialogsAndNotificationsPage::retranslateUi()
     setTitle(qtTrId("xx_dialogs_and_notifications_title"));
     if (!isContentCreated())
         return;
-    //% "  DuiDialog examples"
-    label1->setText(qtTrId("xx_dialogs_and_notifications_label_dialogs"));
+    //% "Dialog examples"
+    dialogsContainer->setTitle(qtTrId("xx_dialogs_and_notifications_label_dialogs"));
     //% "Question Dialog"
     button1->setText(qtTrId("xx_dialogs_and_notifications_query_dialog"));
     //% "Entry Dialog"
@@ -429,12 +373,10 @@ void DialogsAndNotificationsPage::retranslateUi()
     //% "Dialog With Progress Indicator"
     buttonDialogWithProgressIndicator->setText(qtTrId("xx_dialogs_and_notifications_dialog_with_progress_indicator"));
 
-    //% "  DuiMessageBox examples"
-    label2->setText(qtTrId("xx_dialogs_and_notifications_label_messagebox"));
+    //% "Notifications and messages"
+    notificationsContainer->setTitle(qtTrId("xx_dialogs_and_notifications_label_notifications"));
     //% "Simple Message Box"
     button4->setText(qtTrId("xx_dialogs_and_notifications_messagebox"));
-    //% "  Notifications"
-    label3->setText(qtTrId("xx_dialogs_and_notifications_label_notifications"));
     //% "Event Banner"
     button5->setText(qtTrId("xx_dialogs_and_notifications_label_event_banner"));
     //% "Information Banner"
