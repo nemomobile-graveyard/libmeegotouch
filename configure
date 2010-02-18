@@ -56,6 +56,9 @@ CFG_TESTABLE=no
 CFG_COVERAGE=no
 CFG_TIMESTAMPS=no
 CFG_DEV=no
+CFG_BUILD_TESTS=no
+CFG_BUILD_BENCHMARKS=no
+CFG_BUILD_PLAINQT=no
 
 DUI_DEFAULT_BUILD_PARTS="libs demos"
 CFG_BUILD_PARTS=""
@@ -193,6 +196,18 @@ while [ "$#" -gt 0 ]; do
         ;;
     dev)
         CFG_DEV="yes"
+        CFG_BUILD_TESTS="yes"
+        CFG_BUILD_BENCHMARKS="yes"
+        CFG_BUILD_PLAINQT="yes"
+        ;;
+    tests)
+        CFG_BUILD_TESTS="yes"
+        ;;
+    benchmarks)
+        CFG_BUILD_BENCHMARKS="yes"
+        ;;
+    plainqt)
+        CFG_BUILD_PLAINQT="yes"
         ;;
     h|help)
         if [ "$VAL" = "yes" ]; then
@@ -251,8 +266,16 @@ if echo $CFG_BUILD_PARTS | grep -v libs >/dev/null 2>&1; then
     CFG_BUILD_PARTS="$CFG_BUILD_PARTS libs"
 fi
 
-if [ "$CFG_DEV" = "yes" ]; then
-    CFG_BUILD_PARTS="$CFG_BUILD_PARTS tests benchmarks plainqt"
+if [ "$CFG_BUILD_TESTS" = "yes" ]; then
+    CFG_BUILD_PARTS="$CFG_BUILD_PARTS tests"
+fi
+
+if [ "$CFG_BUILD_BENCHMARKS" = "yes" ]; then
+    CFG_BUILD_PARTS="$CFG_BUILD_PARTS benchmarks"
+fi
+
+if [ "$CFG_BUILD_PLAINQT" = "yes" ]; then
+    CFG_BUILD_PARTS="$CFG_BUILD_PARTS plainqt"
 fi
 
 # is this a shadow build?
@@ -339,7 +362,13 @@ Additional options:
                          (*libs *demos plainqt tests benchmarks)
     -nomake <part> ..... Exclude part from the list of parts to be built
 
-    -dev ............... Compile and link with default developer options
+    -dev ............... Compile and link with default developer options.
+                         This enables the benchmarks, tests and plainqt parts.
+
+    -tests ............. Build the tests.
+    -benchmarks ........ Build the benchmarks.
+    -plainqt ........... Build the Plain Qt style plugin.
+
 EOF
 
 exit 0
@@ -562,6 +591,11 @@ echo "Build ............... $CFG_BUILD_PARTS"
 echo "Extra features ...... $DUICONFIG_FEATURES"
 echo "Release ............. $CFG_RELEASE"
 echo "Debug ............... $CFG_DEBUG"
+
+echo
+echo "Benchmarks .......... $CFG_BUILD_BENCHMARKS"
+echo "Plain Qt support .... $CFG_BUILD_PLAINQT"
+echo "Tests ............... $CFG_BUILD_TESTS"
 
 echo
 echo libdui is now configured for building. Just run \'make\'.
