@@ -154,14 +154,18 @@ void DuiLabelView::updateData(const QList<const char *>& modifications)
 
     Q_D(DuiLabelView);
 
-    if (modifications.contains(DuiLabelModel::Text))  {
+    if (modifications.contains(DuiLabelModel::Text) || modifications.contains(DuiLabelModel::Highlighters)) {
         bool isRichText = Qt::mightBeRichText(model()->text());
+        
         // Check has label type changed since last call to this method. Re-allocate label with correct type.
-        if (d->impl->isRich() != isRichText)  {
+        bool shouldBeRich = isRichText || model()->highlighters().size() > 0;
+        bool shouldBeSimple = !shouldBeRich;
+
+        if ((shouldBeRich && !d->impl->isRich()) || (shouldBeSimple && d->impl->isRich())) {
             delete d->impl;
-            if (isRichText)
+            if (shouldBeRich) 
                 d->impl = new DuiLabelViewRich(d);
-            else
+            else 
                 d->impl = new DuiLabelViewSimple(d);
         }
     }
