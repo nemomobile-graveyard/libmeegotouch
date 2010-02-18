@@ -32,7 +32,7 @@ macx {
         isEmpty(DUIGEN_OUTDIR) {
             DUIGEN_OUTDIR = .
         }
-        
+
         duigenerator_model.name = duigenerator model
         duigenerator_model.input = MODEL_HEADERS
         duigenerator_model.output = $$DUIGEN_OUTDIR/gen_${QMAKE_FILE_BASE}data.cpp

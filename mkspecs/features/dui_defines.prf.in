@@ -9,10 +9,20 @@ DUI_MINOR_VERSION = 19
 DUI_PATCH_VERSION = 0
 DUI_VERSION=$${DUI_MAJOR_VERSION}.$${DUI_MINOR_VERSION}.$${DUI_PATCH_VERSION}
 
+# first set default value for dui prefix
+# the @@...@@ variable is filled from the libdui/configure script.
+unix {
+    DUI_PREFIX = @@DUI_UNIX_INSTALL_PREFIX@@
+}
+mac {
+    DUI_PREFIX = /usr
+}
+win32 {
+    DUI_PREFIX =
+}
+
 # Directories
 unix {
-    DUI_PREFIX = /usr
-
     DUI_INSTALL_BIN = $$DUI_PREFIX/bin
     DUI_INSTALL_LIBS = $$DUI_PREFIX/lib
     DUI_INSTALL_DATA = $$DUI_PREFIX/share
@@ -39,9 +49,8 @@ unix {
     DUI_SHADER_SOURCE_DIR = $$DUI_INSTALL_DATA/dui/shaders
     DUI_SHADER_BINARY_DIR = $$DUI_INSTALL_LOCALSTATE/cache/dui/shaders
 }
-mac {
-    DUI_PREFIX = /usr
 
+mac {
     DUI_INSTALL_BIN = $$DUI_PREFIX/bin
     DUI_INSTALL_LIBS = $$DUI_PREFIX/lib
     DUI_INSTALL_DATA = $$DUI_PREFIX/share
@@ -65,9 +74,8 @@ mac {
     DUI_SHADER_SOURCE_DIR = $$DUI_INSTALL_DATA/dui/shaders
     DUI_SHADER_BINARY_DIR = $$DUI_INSTALL_LOCALSTATE/cache/dui/shaders
 }
-win32 {
-    DUI_PREFIX =
 
+win32 {
     DUI_INSTALL_BIN = /bin
     DUI_INSTALL_LIBS = /bin
     DUI_INSTALL_DATA = /share

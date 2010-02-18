@@ -5,7 +5,7 @@
 # in the following example for “widgetsgallery”:
 #
 # Create a subdirectory “translations” in the source folder of the
-# application which contains a translations.po file and the .ts
+# application which contains a translations.pro file and the .ts
 # files, for example if the source dir is “libdui/demos/widgetsgallery”:
 #
 #    libdui/demos/widgetsgallery/translations.pro
@@ -21,7 +21,7 @@
 #    SOURCEDIR = $$PWD/..
 #    TRANSLATIONDIR = $$PWD
 #    include($$[QT_INSTALL_DATA]/mkspecs/features/dui_defines.prf)
-#    include($$[QT_INSTALL_DATA]/mkspecs/features/translations.prf)
+#    include($$[QT_INSTALL_DATA]/mkspecs/features/dui_translations.prf)
 #
 # It is better to have an extra translations.pro file in the directory
 # where the translations are instead of adding the stuff for the translations
@@ -107,7 +107,7 @@ isEmpty(vcproj) {
     updateeets.input = DUMMY_DEP
     updateeets.output = $$ENGINEERING_ENGLISH
     !isEmpty(vcproj):updateeets.variable_out = GENERATED_SOURCES
-    updateeets.commands = $$LUPDATE $$SOURCEDIR -ts $$ENGINEERING_ENGLISH
+    updateeets.commands = $$LUPDATE "$$SOURCEDIR" -ts \"$$ENGINEERING_ENGLISH\"
     updateeets.name = LUPDATE $$ENGINEERING_ENGLISH
     updateeets.CONFIG += no_link target_predeps
     QMAKE_EXTRA_COMPILERS += updateeets
@@ -141,7 +141,7 @@ isEmpty(vcproj) {
 
 # other .ts files besides the engineering English one should only be updated
 # on request, i.e. only when calling “make updatets” manually:
-updatets.commands = $$LUPDATE $$SOURCEDIR -ts $$TRANSLATIONS
+updatets.commands = $$LUPDATE "$$SOURCEDIR" -ts lala \"$$TRANSLATIONS\"
 updatets.target = updatets
 QMAKE_EXTRA_TARGETS += updatets
 

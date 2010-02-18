@@ -52,8 +52,6 @@ ifeq (,$(findstring notestability,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -testable
 endif
 
-QMAKE_OPTIONS += -r
-
 BUILD_DIR=build-$(shell dpkg-architecture -qDEB_BUILD_ARCH)
 
 configure: configure-stamp
@@ -61,8 +59,7 @@ configure-stamp:
 	dh_testdir
 
 	mkdir -p $(BUILD_DIR)
-	./configure --prefix=/usr -release -make "tests plainqt benchmarks" $(OPTIONS)
-	cd $(BUILD_DIR) && qmake $(QMAKE_OPTIONS) ../projects.pro
+	cd $(BUILD_DIR) && ../configure --prefix=/usr -release -make "tests plainqt benchmarks" $(OPTIONS)
 
 	touch configure-stamp
 

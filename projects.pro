@@ -6,7 +6,7 @@ CONFIG += ordered
 TEMPLATE = subdirs
 
 !win32:!macx {
-    !exists(mkspecs/duiconfig.pri) {
+    !exists($${OUT_PWD}/mkspecs/duiconfig.pri) {
         error("Please run ./configure before proceeding")
     }
 }

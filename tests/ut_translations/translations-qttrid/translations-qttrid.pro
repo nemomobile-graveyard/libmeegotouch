@@ -14,5 +14,5 @@ TRANSLATION_INSTALLDIR = $$[QT_INSTALL_LIBS]/libdui-tests/translations-qttrid
 DUIROOT = ../../..
 # these include files are installed to $$[QT_INSTALL_DATA]/mkspecs/features
 # and included in the "libdui-dev" package:
-include($$DUIROOT/src/dui_defines.prf)
-include($$DUIROOT/src/translations.prf)
+include($${DUI_BUILD_TREE}/mkspecs/features/dui_defines.prf)
+include($${DUIROOT}/mkspecs/features/dui_translations.prf)

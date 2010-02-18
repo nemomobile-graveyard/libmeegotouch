@@ -27,11 +27,11 @@ mac {
 
 # Load configure script results
 !win32:!macx {
-    include(duiconfig.pri)
+    include($${DUI_BUILD_TREE}/mkspecs/duiconfig.pri)
 }
 
 # Load global definitions
-include(../src/dui_defines.prf)
+include($${DUI_BUILD_TREE}/mkspecs/features/dui_defines.prf)
 
 # Defines for directories, for use in source code.
 {

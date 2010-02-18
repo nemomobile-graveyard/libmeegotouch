@@ -1,0 +1,11 @@
+# this is only a temporary .prf file to keep old code working
+# if you want to include translation features, use the
+# dui_translations.prf file.
+
+# we want to phase out the translations.prf file to
+# avoid possible name clashes in the future.
+
+message( WARNING: do not include translations.prf any more. )
+message( WARNING: do include dui_translations.prf instead. )
+
+include(dui_translations.prf)
