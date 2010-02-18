@@ -372,4 +372,89 @@ void Ut_DuiFastListViewGroupHeader::testPerformance()
     }
 }
 
-QTEST_APPLESS_MAIN(Ut_DuiFastListViewGroupHeader);
+void Ut_DuiFastListViewGroupHeader2::makePhoneBook()
+{
+    phoneBook = new QObject;
+
+    QObject *itemA = new QObject(phoneBook);
+    itemA->setObjectName("A");
+
+    QObject *itemB = new QObject(phoneBook);
+    itemB->setObjectName("B");
+}
+
+void Ut_DuiFastListViewGroupHeader2::makePhoneBookModel()
+{
+    phoneBookModel = new MyIndexedModel(phoneBook);
+}
+
+void Ut_DuiFastListViewGroupHeader2::initTestCase()
+{
+    makePhoneBook();
+    makePhoneBookModel();
+}
+
+void Ut_DuiFastListViewGroupHeader2::cleanupTestCase()
+{
+    delete phoneBookModel;
+}
+
+void Ut_DuiFastListViewGroupHeader2::init()
+{
+    fastListViewPrivate = new DuiFastGroupHeaderListViewPrivate;
+    fastListViewPrivate->model = phoneBookModel;
+    fastListViewPrivate->separator = new DuiWidget;
+    fastListViewPrivate->separator->setGeometry(0, 0, 300, 2);
+    fastListViewPrivate->itemHeight = 100;
+
+    fastListViewPrivate->setHeadersCreator(new DummyHeaderCreator);
+    fastListViewPrivate->hdrHeight = GroupHeaderHeight;
+
+    DuiListModel *model = new DuiListModel;
+    model->setItemModel(phoneBookModel);
+    model->setShowGroups(true);
+    fastListViewPrivate->controllerModel = model;
+
+    fastListViewPrivate->updateHeadersRows();
+    fastListViewPrivate->updateHeadersPositions();
+}
+
+void Ut_DuiFastListViewGroupHeader2::cleanup()
+{
+    delete fastListViewPrivate;
+    delete fastListViewPrivate->controllerModel;
+}
+
+void Ut_DuiFastListViewGroupHeader2::testPhoneBook()
+{
+    QCOMPARE(phoneBook->children().size(), 2);
+    QCOMPARE(phoneBook->children().at(0)->children().size(), 0);
+    QCOMPARE(phoneBook->children().at(1)->children().size(), 0);
+}
+
+void Ut_DuiFastListViewGroupHeader2::testLocateVisibleRowAt0()
+{
+    QCOMPARE(fastListViewPrivate->locateVisibleRowAt(0), 0);
+}
+
+void Ut_DuiFastListViewGroupHeader2::testLocateVisibleRowAt41()
+{
+    QCOMPARE(fastListViewPrivate->locateVisibleRowAt(41), 1);
+}
+
+void Ut_DuiFastListViewGroupHeader2::testLocateVisibleRowAt100()
+{
+    QCOMPARE(fastListViewPrivate->locateVisibleRowAt(100), 2);
+}
+
+void Ut_DuiFastListViewGroupHeader2::testOutOfBoundFlatRowToIndex()
+{
+    QCOMPARE(fastListViewPrivate->flatRowToIndex(2).row(), 1);
+}
+
+int main(int argc, char *argv[])
+{
+    Ut_DuiFastListViewGroupHeader tc;
+    Ut_DuiFastListViewGroupHeader2 tc2;
+    return QTest::qExec(&tc, argc, argv) | QTest::qExec(&tc2, argc, argv);
+}

@@ -80,8 +80,11 @@ void DuiFastListView::updateData(const QList<const char *>& modifications)
         member = modifications[i];
 
         if (member == DuiListModel::ItemModel || member == DuiListModel::ShowGroups || member == DuiListModel::Columns) {
-            init();
-            updateGeometry();
+            if(model()->itemModel())
+            {
+                init();
+                updateGeometry();
+            }
         } else if (member == DuiListModel::SelectionModel) {
             connectSelectionModel();
         } else if (member == DuiListModel::ScrollToIndex) {

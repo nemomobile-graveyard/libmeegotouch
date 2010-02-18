@@ -597,8 +597,14 @@ QModelIndex DuiFastGroupHeaderListViewPrivate::flatRowToIndex(int row) const
         QModelIndex parent(model->index(headerIndex, 0));
         int relativeRow = row - headersRows[headerIndex] - 1;
         int itemsCount = this->itemsCount(headerIndex);
+
+        // Check if header doesn't have any children
+        if(itemsCount == 0)
+            return parent;
+
         if (relativeRow >= itemsCount)
             relativeRow = itemsCount - 1;
+
         QModelIndex index(model->index(relativeRow, 0, parent));
         return index;
     }

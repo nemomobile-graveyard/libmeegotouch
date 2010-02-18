@@ -122,4 +122,31 @@ private:
     DuiFastGroupHeaderListViewPrivate *fastListViewPrivate;
 };
 
+class Ut_DuiFastListViewGroupHeader2 : public QObject
+{
+    Q_OBJECT
+
+private:
+    void makePhoneBook();
+    void makePhoneBookModel();
+
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
+    void init();
+    void cleanup();
+
+    void testPhoneBook();
+    void testLocateVisibleRowAt0();
+    void testLocateVisibleRowAt41();
+    void testLocateVisibleRowAt100();
+
+    void testOutOfBoundFlatRowToIndex();
+
+private:
+    QObject *phoneBook;
+    MyIndexedModel *phoneBookModel;
+    DuiFastGroupHeaderListViewPrivate *fastListViewPrivate;
+};
+
 #endif
