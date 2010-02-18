@@ -63,9 +63,44 @@ void DuiScalableImagePrivate::validateSize(int &w, int &h) const
 
 void DuiScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *painter) const
 {
-    //make sure that the size is of the drawn image is
-    //bigger or equal as the 4 corner blocks
-    validateSize(w, h);
+    int left = m_preferredLeft;
+    int right = m_preferredRight;
+    int top = m_preferredTop;
+    int bottom = m_preferredBottom;
+
+    if( w == -1 )
+        w = m_image->width();
+    if( h == -1 )
+        h = m_image->height();
+
+    int cornerWidth = 0;
+    int cornerHeight = 0;
+    if( m_imageType == DuiScalable9 ) {
+        cornerWidth = m_preferredLeft + m_preferredRight;
+        cornerHeight = m_preferredTop + m_preferredBottom;
+    }
+
+    //Make sure that the size of the drawn image is
+    //bigger than the 4 corner blocks. If necessary,
+    //use smaller border values than those set with setBorders API
+    //call.
+
+    if (w < cornerWidth || h < cornerHeight) {
+        left = qMax(0, left - (cornerWidth - w + 1) / 2);
+        right = qMax(0, right - (cornerWidth - w + 1) / 2);
+        top = qMax(0, top - (cornerHeight - h + 1) / 2);
+        bottom = qMax(0, bottom - (cornerHeight - h + 1) / 2);
+
+    }
+    
+    if (left != m_left || right != m_right || top != m_top || bottom != m_bottom) {
+        m_left = left;
+        m_right = right;
+        m_top = top;
+        m_bottom = bottom;
+        
+        calcImageRects();
+    }
 
     //the image is used in it's native size
     //no need to scale just draw it
@@ -298,6 +333,11 @@ void DuiScalableImage::setBorders(int left, int right, int top, int bottom)
     d->m_right  = right;
     d->m_top    = top;
     d->m_bottom = bottom;
+
+    d->m_preferredLeft = left;
+    d->m_preferredRight = right;
+    d->m_preferredTop = top;
+    d->m_preferredBottom = bottom;
 
     if (left == 0 && right == 0 && top == 0 && bottom == 0) {
         d->m_imageType = DuiScalableImagePrivate::DuiScalable1;

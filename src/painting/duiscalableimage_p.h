@@ -67,10 +67,16 @@ public:
 
     bool m_useGLRenderer;
 
-    int m_left;
-    int m_right;
-    int m_top;
-    int m_bottom;
+    mutable int m_left;
+    mutable int m_right;
+    mutable int m_top;
+    mutable int m_bottom;
+
+    int m_preferredLeft;
+    int m_preferredRight;
+    int m_preferredTop;
+    int m_preferredBottom;
+
     QString pixmapId;
 
 protected:
