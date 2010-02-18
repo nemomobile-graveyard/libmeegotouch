@@ -31,10 +31,9 @@ class Pt_DuiButton : public QObject
     Q_OBJECT
 
 public:
+    Pt_DuiButton():m_subject(NULL) {};
 
 private slots:
-    void init();
-    void cleanup();
     void initTestCase();
     void cleanupTestCase();
 

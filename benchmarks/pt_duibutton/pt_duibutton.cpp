@@ -29,7 +29,7 @@
 #include "duiclassfactory.h"
 #include "pt_duibutton.h"
 
-DuiApplication *app;
+DuiApplication *app(NULL);
 const int W = 250;
 const int H = 100;
 
@@ -37,7 +37,7 @@ const int H = 100;
 void Pt_DuiButton::initTestCase()
 {
     static int argc = 1;
-    static char *argv[1] = { (char *) "./pt_duibutton" };
+    char *argv[1] = { (char *) "./pt_duibutton" };
     app = new DuiApplication(argc, argv);
 
     //warmup
@@ -53,26 +53,15 @@ void Pt_DuiButton::initTestCase()
         QCoreApplication::processEvents();
     }
     warmupButton.paint(&painter, NULL);
+ 
+    m_subject = new DuiButton();
 }
 
 void Pt_DuiButton::cleanupTestCase()
 {
-    delete app;
+    delete m_subject; m_subject = NULL;
+    delete app; app = NULL;
 }
-
-
-void Pt_DuiButton::init()
-{
-    m_subject = new DuiButton();
-}
-
-void Pt_DuiButton::cleanup()
-{
-    delete m_subject;
-    m_subject = NULL;
-
-}
-
 
 void Pt_DuiButton::paintPerformance_data()
 {
