@@ -24,7 +24,6 @@ libdui (0.18.8-1) unstable; urgency=low
 
   * Fixes: NB#155940 - DuiDialog crashes at times if created with DuiSceneWindow::KeepWhenDone
   * Fixes: NB#156148 - There is no way to change theme on non linux OS
-  * Fixes: NB#153770 - Closing a window when app has multiple windows causes exit with error code 1
   * Fixes: NB#154831 - Widgetsgallery crash on first run
   * Fixes: NB#155361 - Removed warnings and added -Werror
   * Fixes: NB#155726 - Asynchronously handled dialog returns wrong result 
@@ -43,15 +42,12 @@ libdui (0.18.8-1) unstable; urgency=low
   * Fixes: NB#153911 - DuiStylableWidget shouldn't require the DUI_REGISTER_WIDGET macro, or default constructor 
   * Fixes: NB#155682 - ta_duilistmod: complete List deletion causes segfault 
   * Fixes: NB#155734 - Items under the last group of DuiList are duplicated 
-  * Fixes: NB#153100 - DuiList doesn't update when items are removed from a model with group headers 
   * Fixes: NB#151937 - Incorrect include files libdui-dev package 
   * Fixes: NB#155837 - DuiComboBox does not change current item text when item model is changed 
   * Fixes: NB#152740 - <Logic> trid function is not marked as deprecated 
   * Fixes: NB#152994 - Width of the view menu items differ from each other 
   * Fixes: NB#155856 - Launching applications in Portrait is broken again 
-  * Fixes: NB#154449 - sorting does not work correctly neither in no_NO nor nb_NO locales 
   * Fixes: NB#156115 - <CodeStyle> typo in doxygen documentation 
-  * Fixes: NB#154958 - libicudata is invalid shared library -> LD_AUDIT doesn't work for anything linking it (i.e. DUI) 
   * Implemented: SWP#DUI-2143, SWP#DUI-2147, SWP#DUI-2201, SWP#DUI-2207
   * Implemented: SWP#DUI-2145, SWP#DUI-2148, SWP#DUI-2140, SWP#DUI-2228
   * Implemented: SWP#DUI-2135, SWP#DUI-2134, SWP#DUI-2139, SWP#DUI-2114
