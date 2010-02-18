@@ -289,7 +289,14 @@ QList<QString> DuiGConfItem::listDirs() const
 
     withClient(client) {
         QByteArray k = convertKey(priv->key);
-        GSList *dirs = gconf_client_all_dirs(client, k.data(), NULL);
+        GError *error = NULL;
+        GSList *dirs = gconf_client_all_dirs(client, k.data(), &error);
+        if(error) {
+            duiWarning("DuiGConfItem") << error->message;
+            g_error_free(error);
+            return children;
+        }
+
         for (GSList *d = dirs; d; d = d->next) {
             children.append(convertKey((char *)d->data));
             g_free(d->data);
@@ -306,7 +313,14 @@ QList<QString> DuiGConfItem::listEntries() const
 
     withClient(client) {
         QByteArray k = convertKey(priv->key);
-        GSList *entries = gconf_client_all_entries(client, k.data(), NULL);
+        GError *error = NULL;
+        GSList *entries = gconf_client_all_entries(client, k.data(), &error);
+        if(error) {
+            duiWarning("DuiGConfItem") << error->message;
+            g_error_free(error);
+            return children;
+        }
+
         for (GSList *e = entries; e; e = e->next) {
             children.append(convertKey(((GConfEntry *)e->data)->key));
             gconf_entry_free((GConfEntry *)e->data);
@@ -325,10 +339,21 @@ DuiGConfItem::DuiGConfItem(const QString &key, QObject *parent)
     withClient(client) {
         update_value(false);
         QByteArray k = convertKey(priv->key);
-        gconf_client_add_dir(client, k.data(), GCONF_CLIENT_PRELOAD_ONELEVEL, NULL);
+        GError *error = NULL;
+        gconf_client_add_dir(client, k.data(), GCONF_CLIENT_PRELOAD_ONELEVEL, &error);
+        if(error) {
+            duiWarning("DuiGConfItem") << error->message;
+            g_error_free(error);
+            return;
+        }
         priv->notify_id = gconf_client_notify_add(client, k.data(),
                           DuiGConfItemPrivate::notify_trampoline, this,
-                          NULL, NULL);
+                          NULL, &error);
+        if(error) {
+            duiWarning("DuiGConfItem") << error->message;
+            g_error_free(error);
+            return;
+        }
     }
 }
 
@@ -337,7 +362,13 @@ DuiGConfItem::~DuiGConfItem()
     withClient(client) {
         QByteArray k = convertKey(priv->key);
         gconf_client_notify_remove(client, priv->notify_id);
-        gconf_client_remove_dir(client, k.data(), NULL);
+        GError *error = NULL;
+        gconf_client_remove_dir(client, k.data(), &error);
+        if(error) {
+            duiWarning("DuiGConfItem") << error->message;
+            g_error_free(error);
+            return;
+        }
     }
     delete priv;
 }
