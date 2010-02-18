@@ -86,6 +86,11 @@ Qt::Alignment DuiLabel::alignment() const
     return model()->alignment();
 }
 
+void DuiLabel::setWrapMode(QTextOption::WrapMode wrapMode)
+{
+    model()->setWrapMode(wrapMode);
+}
+
 void DuiLabel::setWordWrap(bool wrap)
 {
     model()->setWordWrap(wrap);
@@ -99,6 +104,11 @@ QString DuiLabel::text() const
 bool DuiLabel::wordWrap() const
 {
     return model()->wordWrap();
+}
+
+QTextOption::WrapMode DuiLabel::wrapMode() const
+{
+    return model()->wrapMode();
 }
 
 void DuiLabel::setTextElide(bool elide)

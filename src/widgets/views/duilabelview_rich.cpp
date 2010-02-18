@@ -203,7 +203,9 @@ QSizeF DuiLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 void DuiLabelViewRich::setupModel()
 {
     const DuiLabelModel *model = viewPrivate->model();
-    viewPrivate->textOptions.setWrapMode(model->wordWrap() ? QTextOption::WordWrap : QTextOption::NoWrap);
+
+    //NOTE!!: ManualWrap used instead of NoWrap. NoWrap works incorrectly in Qt 4.6
+    viewPrivate->textOptions.setWrapMode(model->wordWrap() ? QTextOption::WordWrap : QTextOption::ManualWrap);
     viewPrivate->textOptions.setTextDirection(model->textDirection());
     viewPrivate->textOptions.setAlignment(model->alignment());
 
@@ -230,11 +232,22 @@ bool DuiLabelViewRich::updateData(const QList<const char *>& modifications)
             textDocument.setTextWidth(viewPrivate->boundingRect().width());
             needUpdate = true;
             textDocumentDirty = true;
+        } else if(member == DuiLabelModel::WrapMode) {
+            if (model->wordWrap()) {
+                if (model->wrapMode() == QTextOption::NoWrap) {
+                    //NOTE!!: ManualWrap used instead of NoWrap. NoWrap works incorrectly in Qt 4.6
+                    viewPrivate->textOptions.setWrapMode(QTextOption::ManualWrap);
+                } else {
+                    viewPrivate->textOptions.setWrapMode(model->wrapMode());
+                }
+                textDocumentDirty = true;
+            }
         } else if (member == DuiLabelModel::WordWrap) {
             if (model->wordWrap()) {
-                viewPrivate->textOptions.setWrapMode(QTextOption::WordWrap);
+                viewPrivate->textOptions.setWrapMode(model->wrapMode());
             } else {
-                viewPrivate->textOptions.setWrapMode(QTextOption::NoWrap);
+                //NOTE!!: ManualWrap used instead of NoWrap. NoWrap works incorrectly in Qt 4.6
+                viewPrivate->textOptions.setWrapMode(QTextOption::ManualWrap);
             }
             textDocumentDirty = true;
         } else if (member == DuiLabelModel::TextDirection) {

@@ -46,12 +46,18 @@ class DUI_EXPORT DuiLabelModel : public DuiWidgetModel
 
     /*!
         \property DuiLabelModel::wordWrap
-        \brief Word wrapping mode of the label.
+        \brief Is Word wrapping active.
 
-        When set to true, the label automatically wraps the text into multiple
-        lines, if whole text does not fit into one line.
+        When set to true, the label wraps the text into multiple 
+        lines. This is done depending on which wrap mode is active.
     */
-    DUI_MODEL_PROPERTY(bool, wordWrap, WordWrap, true, false)
+    DUI_MODEL_PROPERTY(bool, wordWrap, WordWrap, true, true)
+
+    /*!
+      \property DuiLabelModel::wrapMode
+      \brief If 'wordwrap' is set, describes how text is wrapped in the label.
+    */
+    DUI_MODEL_PROPERTY(QTextOption::WrapMode, wrapMode, WrapMode, true, QTextOption::WordWrap)
 
     /*!
         \property DuiLabelModel::alignment

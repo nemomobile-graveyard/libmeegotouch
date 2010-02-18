@@ -27,6 +27,8 @@ class DuiLabelPrivate;
 class DuiLabelHighlighter;
 class QString;
 
+Q_DECLARE_METATYPE(QTextOption::WrapMode)
+
 /*!
     \class DuiLabel
     \brief DuiLabel provides functionality for displaying text.
@@ -137,11 +139,17 @@ class DUI_EXPORT DuiLabel : public DuiWidgetController
 
     /*!
         \property DuiLabel::wordWrap
-        \brief Word wrapping mode of the label.
-
-        See DuiLabelModel::wordWrap for details.
+        \brief Is word wrapping done or not
     */
     Q_PROPERTY(bool wordWrap READ wordWrap WRITE setWordWrap)
+        
+    /*!
+        \property DuiLabel::WrapMode
+        \brief Word wrapping mode of the label.
+
+        Used only if 'wordWrap' is true.
+    */
+    Q_PROPERTY(QTextOption::WrapMode wrapMode READ wrapMode WRITE setWrapMode)
 
     /*!
         \property DuiLabel::textElide
@@ -168,7 +176,7 @@ class DUI_EXPORT DuiLabel : public DuiWidgetController
     Q_PROPERTY(QColor color READ color WRITE setColor)
 
 public:
-
+    
     /*!
         \brief Constructs label widget.
         \param parent optional parent.
@@ -201,7 +209,27 @@ public:
     Qt::Alignment alignment() const;
 
     /*!
+        \brief Returns wrapping mode for the text in the label.
+
+        If the label doesn't have enough space to show the full text on one 
+        line, the text will be wrapped to multiple lines if a mode with
+        wrapping behavior is active.        
+
+        \return wrap mode
+     */
+    
+    QTextOption::WrapMode wrapMode() const;
+
+    /*!
+        \brief Set word wrapping mode.
+        \sa wrapMode
+    */
+    void setWrapMode(QTextOption::WrapMode wrapMode);
+
+    /*!
         \brief Enable/disable automatic word wrapping.
+
+        If true, wrapping is done according to the mode set with setWrapMode.
      */
     void setWordWrap(bool wrap);
 
@@ -330,3 +358,4 @@ private:
     Q_DECLARE_PRIVATE(DuiLabel)
 };
 #endif
+
