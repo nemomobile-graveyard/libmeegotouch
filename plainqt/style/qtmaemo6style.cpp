@@ -54,6 +54,7 @@
 #include <DuiTheme>
 #include <DuiScalableImage>
 #include <DuiLabel>
+#include <DuiApplicationWindow>
 #include <duibuttonstyle.h>
 #include <duiapplicationpagestyle.h>
 #include <duipositionindicatorstyle.h>
@@ -719,6 +720,9 @@ void QtMaemo6Style::polish(QApplication *app)
 
 void QtMaemo6Style::polish(QWidget *widget)
 {
+    if(qobject_cast<DuiApplicationWindow*>(widget))
+        return;
+
     Q_D(QtMaemo6Style);
     // Lazy initialization of the DuiFramework.
     // This is needed to guarantee that actual DuiApplications will work as well.

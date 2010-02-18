@@ -70,9 +70,6 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
 
                     dialogProxy->showFastMaximized();
                     QtMaemo6StylePrivate::drawWindowBackground(widget);
-
-                    //ensure that the mainwindow takes at least the width of the screen
-                    //widget->setMinimumWidth(dialogProxy->maxViewportSize().width());
                     return true;
                 }
                 else if (!qobject_cast<QtMaemo6Window *>(widget)) {
@@ -80,9 +77,6 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
                     m_style->m_windowDecoration->showFastMaximized();
                     QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
-
-                    //ensure that the mainwindow takes at least the width of the screen
-                    //widget->setMinimumWidth(m_style->m_windowDecoration->maxViewportSize().width());
                     return true;
                 }
             }
