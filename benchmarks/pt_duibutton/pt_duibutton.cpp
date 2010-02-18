@@ -53,16 +53,25 @@ void Pt_DuiButton::initTestCase()
         QCoreApplication::processEvents();
     }
     warmupButton.paint(&painter, NULL);
- 
-    m_subject = new DuiButton();
 }
 
 void Pt_DuiButton::cleanupTestCase()
 {
-    delete m_subject; m_subject = NULL;
-    delete app; app = NULL;
+    delete app;
+    app = NULL;
 }
 
+void Pt_DuiButton::init()
+{
+    m_subject = new DuiButton();
+}
+
+void Pt_DuiButton::cleanup()
+{
+    delete m_subject;
+    m_subject = NULL;
+
+}
 void Pt_DuiButton::paintPerformance_data()
 {
     QTest::addColumn<qint32>("width");
