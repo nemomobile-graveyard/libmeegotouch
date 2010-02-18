@@ -34,16 +34,6 @@
 
 using namespace Dui::DuiThemeDaemonProtocol;
 
-quint32 DuiRemoteThemeDaemonPrivate::nextSequenceNumber()
-{
-    // Ensure that 0 is never a valid sequence number
-    if (sequenceCounter < 0xFFFFFFFFu)
-        ++sequenceCounter;
-    else
-        sequenceCounter = 1;
-    return sequenceCounter;
-}
-
 DuiRemoteThemeDaemon::DuiRemoteThemeDaemon(const QString &applicationName, int timeout) :
     d_ptr(new DuiRemoteThemeDaemonPrivate)
 {
@@ -57,7 +47,7 @@ DuiRemoteThemeDaemon::DuiRemoteThemeDaemon(const QString &applicationName, int t
     if (d->waitForServer(Dui::DuiThemeDaemonProtocol::ServerAddress, timeout)) {
         d->stream.setDevice(&d->socket);
 
-        const quint32 seq = d->nextSequenceNumber();
+        const quint64 seq = ++d->sequenceCounter;
         d->stream << Packet(Packet::RequestRegistrationPacket, seq, new String(applicationName));
         Packet reply = d->waitForPacket(seq);
         if (reply.type() == Packet::ThemeChangedPacket) {
@@ -90,14 +80,14 @@ void DuiRemoteThemeDaemon::addDirectoryToPixmapSearchList(const QString &directo
                                                           Dui::RecursionMode recursive)
 {
     Q_D(DuiRemoteThemeDaemon);
-    d->stream << Packet(Packet::RequestNewPixmapDirectoryPacket, d->nextSequenceNumber(),
+    d->stream << Packet(Packet::RequestNewPixmapDirectoryPacket, ++d->sequenceCounter,
                         new StringBool(directoryName, recursive == Dui::Recursive));
 }
 
 void DuiRemoteThemeDaemon::clearPixmapSearchList()
 {
     Q_D(DuiRemoteThemeDaemon);
-    d->stream << Packet(Packet::RequestClearPixmapDirectoriesPacket, d->nextSequenceNumber());
+    d->stream << Packet(Packet::RequestClearPixmapDirectoriesPacket, ++d->sequenceCounter);
 }
 
 bool DuiRemoteThemeDaemonPrivate::waitForServer(const QString &serverAddress, int timeout)
@@ -127,7 +117,7 @@ bool DuiRemoteThemeDaemonPrivate::waitForServer(const QString &serverAddress, in
     }
 }
 
-Packet DuiRemoteThemeDaemonPrivate::waitForPacket(quint32 sequenceNumber)
+Packet DuiRemoteThemeDaemonPrivate::waitForPacket(quint64 sequenceNumber)
 {
     Q_Q(DuiRemoteThemeDaemon);
 
@@ -158,19 +148,19 @@ Packet DuiRemoteThemeDaemonPrivate::waitForPacket(quint32 sequenceNumber)
     return Packet();
 }
 
-quint32 DuiRemoteThemeDaemonPrivate::requestPixmap(const QString &imageId, const QSize &size)
+quint64 DuiRemoteThemeDaemonPrivate::requestPixmap(const QString &imageId, const QSize &size)
 {
     const PixmapIdentifier id (imageId, size);
     // check if we haven't yet asked for this pixmap
     // if there's no ongoing request, we'll make one
-    const QHash<PixmapIdentifier, quint32>::const_iterator req = pixmapRequests.constFind(id);
-    quint32 sequenceNumber;
+    const QHash<PixmapIdentifier, quint64>::const_iterator req = pixmapRequests.constFind(id);
+    quint64 sequenceNumber;
     if (req != pixmapRequests.constEnd()) {
         sequenceNumber = req.value();
         duiWarning("DuiRemoteThemeDaemon") << "requested pixmap which already exists in cache";
     }
     else {
-        sequenceNumber = nextSequenceNumber();
+        sequenceNumber = ++sequenceCounter;
         stream << Packet(Packet::RequestPixmapPacket, sequenceNumber, new PixmapIdentifier(id));
         // remember sequence number of ongoing request
         pixmapRequests.insert(id, sequenceNumber);
@@ -182,7 +172,7 @@ void DuiRemoteThemeDaemon::pixmapHandleSync(const QString &imageId, const QSize 
 {
     Q_D(DuiRemoteThemeDaemon);
 
-    const quint32 sequenceNumber = d->requestPixmap(imageId, size);
+    const quint64 sequenceNumber = d->requestPixmap(imageId, size);
     const Packet reply = d->waitForPacket(sequenceNumber);
 
     d->processOnePacket(reply);
@@ -205,7 +195,7 @@ void DuiRemoteThemeDaemon::releasePixmap(const QString &imageId, const QSize &si
     // so that subsequent calls to pixmapHandle() will issue a new request.
     d->pixmapRequests.remove(*id);
 
-    d->stream << Packet(Packet::ReleasePixmapPacket, d->nextSequenceNumber(),
+    d->stream << Packet(Packet::ReleasePixmapPacket, ++d->sequenceCounter,
                         id /*callee assumes ownership*/);
 }
 
@@ -267,7 +257,7 @@ void DuiRemoteThemeDaemonPrivate::pixmapUpdated(const PixmapHandle &handle)
 
     pixmapRequests.remove(handle.identifier);
     // The pixmap may have been updated either in response to a request or
-    // due to a theme change.  It may have be gone already, if a release
+    // due to a theme change.  It may have gone already, if a release
     // request was processed by the server in the meantime.  The recipient
     // of the signal must be able to handle such a situation gracefully.
     emit q->pixmapChanged(handle.identifier.imageId, handle.identifier.size, handle.pixmapHandle);

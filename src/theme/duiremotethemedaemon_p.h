@@ -30,16 +30,16 @@
 class DuiRemoteThemeDaemonPrivate
 {
 public:
-    QHash<Dui::DuiThemeDaemonProtocol::PixmapIdentifier, quint32> pixmapRequests;
+    QHash<Dui::DuiThemeDaemonProtocol::PixmapIdentifier, quint64> pixmapRequests;
 
     Dui::DuiThemeDaemonProtocol::Packet readOnePacket();
     void processOnePacket(const Dui::DuiThemeDaemonProtocol::Packet &packet);
     void connectionDataAvailable();
-    quint32 requestPixmap(const QString &imageId, const QSize &size);
+    quint64 requestPixmap(const QString &imageId, const QSize &size);
     void pixmapUpdated(const Dui::DuiThemeDaemonProtocol::PixmapHandle &handle);
     void themeChanged(const QStringList &themeInheritanceChain);
     bool waitForServer(const QString &serverAddress, int timeout);
-    Dui::DuiThemeDaemonProtocol::Packet waitForPacket(quint32 sequenceNumber);
+    Dui::DuiThemeDaemonProtocol::Packet waitForPacket(quint64 sequenceNumber);
 
     Q_DECLARE_PUBLIC(DuiRemoteThemeDaemon)
     DuiRemoteThemeDaemon *q_ptr;
@@ -48,10 +48,7 @@ public:
 
     QStringList themeInheritanceChain;
 
-    quint32 nextSequenceNumber();
-
-private:
-    quint32 sequenceCounter;
+    quint64 sequenceCounter;
 };
 
 #endif // DUITHEMEDAEMONSKELETON_P_H

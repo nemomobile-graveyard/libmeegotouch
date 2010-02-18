@@ -223,7 +223,7 @@ void DuiThemeDaemonServer::themeChanged()
         QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> >::iterator end = pixmapsToReload.end();
         for (; i != end; ++i) {
             DuiThemeDaemonClient *client = i.key();
-            const QList<PixmapIdentifier>& ids = i.value();
+            const QList<PixmapIdentifier> &ids = i.value();
 
             client->stream() << themeChangedPacket;
 
@@ -256,7 +256,7 @@ void DuiThemeDaemonServer::localeChanged()
     QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> >::iterator end = pixmapsToReload.end();
     for (; i != end; ++i) {
         DuiThemeDaemonClient *client = i.key();
-        const QList<PixmapIdentifier>& ids = i.value();
+        const QList<PixmapIdentifier> &ids = i.value();
 
         const QList<PixmapIdentifier>::const_iterator idsEnd = ids.end();
         for (QList<PixmapIdentifier>::const_iterator iId = ids.begin(); iId != idsEnd; ++iId) {
@@ -307,7 +307,7 @@ void DuiThemeDaemonServer::processOneQueueItem()
 }
 
 void DuiThemeDaemonServer::pixmapRequested(DuiThemeDaemonClient *client,
-                                           const PixmapIdentifier &id, quint32 sequenceNumber)
+                                           const PixmapIdentifier &id, quint64 sequenceNumber)
 {
     // if the client has requested a release for this pixmap, we'll remove the
     // release request, and reply with the existing pixmap handle
@@ -336,7 +336,7 @@ void DuiThemeDaemonServer::pixmapRequested(DuiThemeDaemonClient *client,
 
 void DuiThemeDaemonServer::pixmapReleaseRequested(DuiThemeDaemonClient *client,
                                                   const PixmapIdentifier &id,
-                                                  quint32 sequenceNumber)
+                                                  quint64 sequenceNumber)
 {
     // if the pixmap request is in queue, we can just remove it from there
     const QueueItem item (client, id, sequenceNumber);
@@ -349,7 +349,7 @@ void DuiThemeDaemonServer::pixmapReleaseRequested(DuiThemeDaemonClient *client,
 }
 
 void DuiThemeDaemonServer::themeDaemonStatus(DuiThemeDaemonClient *client,
-                                             quint32 sequenceNumber) const
+                                             quint64 sequenceNumber) const
 {
     QList<ClientInfo> clientList;
 

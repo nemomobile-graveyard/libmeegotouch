@@ -100,23 +100,23 @@ namespace Dui
                 ErrorPacket                         = 255
             };
 
-            Packet() : m_type(Unknown), m_seq(0), m_data() {}
-            Packet(PacketType type, quint32 seq, PacketData *data = 0);
+            Packet() : m_seq(0), m_data(), m_type(Unknown) {}
+            Packet(PacketType type, quint64 seq, PacketData *data = 0);
             ~Packet();
 
             PacketType type() const { return m_type; }
             void setType(PacketType type) { m_type = type; }
 
-            quint32 sequenceNumber() const { return m_seq; }
-            void setSequenceNumber(quint32 seq) { m_seq = seq; }
+            quint64 sequenceNumber() const { return m_seq; }
+            void setSequenceNumber(quint64 seq) { m_seq = seq; }
 
             const PacketData *data() const { return m_data.data(); }
             void setData(PacketData *data);
 
         private:
-            PacketType m_type;
-            quint32 m_seq;
+            quint64 m_seq;
             QSharedPointer<PacketData> m_data;
+            PacketType m_type;
         };
 
 

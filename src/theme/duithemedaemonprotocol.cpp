@@ -45,11 +45,11 @@ PixmapHandle::~PixmapHandle()
 ClientList::~ClientList()
 {}
 
-Packet::Packet(PacketType type, quint32 seq, PacketData *data)
+Packet::Packet(PacketType type, quint64 seq, PacketData *data)
 :
-    m_type (type),
     m_seq  (seq),
-    m_data (data)
+    m_data (data),
+    m_type (type)
 {}
 
 Packet::~Packet()
@@ -101,7 +101,8 @@ QDataStream &operator<<(QDataStream &stream, const Packet &packet)
     // pixmap handle as data
     case Packet::PixmapUpdatedPacket: {
         const PixmapHandle *h = static_cast<const PixmapHandle *>(packet.data());
-        stream << h->identifier.imageId << h->identifier.size << quint32(h->pixmapHandle);
+        stream << h->identifier.imageId << h->identifier.size
+               << quint64((quintptr) h->pixmapHandle);
     } break;
 
     // client list as data
@@ -151,7 +152,7 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
     Q_ASSERT(!packet.data());
 
     quint32 type = 0;
-    quint32 seq  = 0;
+    quint64 seq  = 0;
     stream >> type >> seq;
     packet.setType(Packet::PacketType(type));
     packet.setSequenceNumber(seq);
@@ -199,9 +200,10 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
     case Packet::PixmapUpdatedPacket: {
         QString imageId;
         QSize size;
-        quint32 pixmapHandle = 0;
+        quint64 pixmapHandle = 0;
         stream >> imageId >> size >> pixmapHandle;
-        packet.setData(new PixmapHandle(PixmapIdentifier(imageId, size), Qt::HANDLE(pixmapHandle)));
+        packet.setData(new PixmapHandle(PixmapIdentifier(imageId, size),
+                       (Qt::HANDLE) quintptr(pixmapHandle)));
     } break;
 
 

@@ -53,21 +53,21 @@ private slots:
 private:
     void pixmapRequested(DuiThemeDaemonClient *client,
                          const Dui::DuiThemeDaemonProtocol::PixmapIdentifier &id,
-                         quint32 sequenceNumber);
+                         quint64 sequenceNumber);
     void pixmapReleaseRequested(DuiThemeDaemonClient *client,
                                 const Dui::DuiThemeDaemonProtocol::PixmapIdentifier &id,
-                                quint32 sequenceNumber);
-    void themeDaemonStatus(DuiThemeDaemonClient *client, quint32 sequenceNumber) const;
+                                quint64 sequenceNumber);
+    void themeDaemonStatus(DuiThemeDaemonClient *client, quint64 sequenceNumber) const;
 
 private:
     struct QueueItem
     {
+        quint64                                       sequenceNumber;
         DuiThemeDaemonClient *                        client;
         Dui::DuiThemeDaemonProtocol::PixmapIdentifier pixmapId;
-        quint32                                       sequenceNumber;
 
         QueueItem(DuiThemeDaemonClient *c, Dui::DuiThemeDaemonProtocol::PixmapIdentifier p,
-                  quint32 s = 0) : client(c), pixmapId(p), sequenceNumber(s) {}
+                  quint64 s = 0) : sequenceNumber(s), client(c), pixmapId(p) {}
 
         // Ignore the sequence number when testing for equality.  A custom
         // predicate would be more appropriate, if Qt would support that.
