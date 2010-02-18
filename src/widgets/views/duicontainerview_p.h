@@ -51,9 +51,6 @@ public:
     void createProgressIndicator();
     void layoutProgressIndicator();
 
-    // vertical main layout
-    QGraphicsLinearLayout *mainLayout;
-
     // layout for the header component of the container
     QGraphicsLinearLayout *headerLayout;
 

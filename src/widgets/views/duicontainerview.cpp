@@ -38,7 +38,6 @@
 
 DuiContainerViewPrivate::DuiContainerViewPrivate()
     : controller(0)
-    , mainLayout(new QGraphicsLinearLayout(Qt::Vertical))
     , headerLayout(0)
     , header(0)
     , icon(0) // created only if needed
@@ -52,20 +51,18 @@ DuiContainerViewPrivate::DuiContainerViewPrivate()
 
 DuiContainerViewPrivate::~DuiContainerViewPrivate()
 {
-    // Remove the old central widget but don't destroy since the controller does it
-    mainLayout->removeAt(mainLayout->count() - 1);
 }
 
 void DuiContainerViewPrivate::init()
 {
     controller->setSizePolicy(QSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred));
 
+    QGraphicsLinearLayout* mainLayout = new QGraphicsLinearLayout(Qt::Vertical);
+
     // pack
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
-
     mainLayout->addItem(controller->centralWidget());
-
     controller->setLayout(mainLayout);
 }
 
@@ -105,7 +102,10 @@ void DuiContainerViewPrivate::createHeader()
             icon->show();
         }
 
-        mainLayout->insertItem(0, header);
+        QGraphicsLinearLayout* mainLayout = dynamic_cast<QGraphicsLinearLayout*>(controller->layout());
+        
+        if (mainLayout)
+            mainLayout->insertItem(0, header);
     }
 }
 
@@ -256,11 +256,13 @@ void DuiContainerView::updateData(const QList<const char *>& modifications)
     const char *member;
     foreach(member, modifications) {
         if (member == DuiContainerModel::CentralWidget) {
-            // Remove the old central widget but don't destroy since the controller does it
-            d->mainLayout->removeAt(d->mainLayout->count() - 1);
-            // Add the new central widget
-            d->mainLayout->addItem(d->controller->centralWidget());
-
+            QGraphicsLinearLayout* mainLayout = dynamic_cast<QGraphicsLinearLayout*>(d->controller->layout());
+            if (mainLayout) {
+                // Remove the old central widget but don't destroy since the controller does it
+                mainLayout->removeAt(mainLayout->count() - 1);
+                // Add the new central widget
+                mainLayout->addItem(d->controller->centralWidget());
+            }
             // icon value changed
         } else if (member == DuiContainerModel::Icon) {
             // set new icon
@@ -315,10 +317,12 @@ void DuiContainerView::setupModel()
     if (margin < 0 || margin > 100)
         margin = 0;
 
-    d->mainLayout->setContentsMargins(margin, margin, margin, margin);
-    d->mainLayout->setSpacing(spacing);
-
-    d->mainLayout->addItem(d->controller->centralWidget());
+    QGraphicsLinearLayout* mainLayout = dynamic_cast<QGraphicsLinearLayout*>(d->controller->layout());
+    if (mainLayout) {
+        mainLayout->setContentsMargins(margin, margin, margin, margin);
+        mainLayout->setSpacing(spacing);
+        mainLayout->addItem(d->controller->centralWidget());
+    }
 
     if (model()->progressIndicatorVisible()) {
         d->createProgressIndicator();
