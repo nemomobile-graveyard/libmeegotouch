@@ -26,24 +26,38 @@
 
 void Pt_WidgetsGallery::startupTime()
 {
-    QProcess proc;
-    QString program = "widgetsgallery";
     const QStringList arguments = QStringList() << "-quitimmediately";
-    //#MS - waiting for remote daemon get stucked the unit test..
-    //<<  "-remote-theme";
+
+    QBENCHMARK {
+        executeWidgetsgallery(arguments);
+    }
+}
+
+void Pt_WidgetsGallery::startupTimeWindowsStyle()
+{
+    const QStringList arguments = QStringList() << "-quitimmediately" << "-style" << "windows";
+
+    QBENCHMARK {
+        executeWidgetsgallery(arguments);
+    }
+}
+
+void Pt_WidgetsGallery::executeWidgetsgallery(const QStringList& arguments)
+{
+    QString program = "widgetsgallery";
 
     //execute local binary file
     QString sLocalProgram("../../demos/widgetsgallery/widgetsgallery");
-    if(QFileInfo(sLocalProgram).exists())
-      program = sLocalProgram;
-
-    QBENCHMARK {
-        proc.start(program, arguments);
-        QVERIFY(proc.waitForStarted());
-        QVERIFY(proc.waitForFinished());
-        QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
-        QCOMPARE(proc.exitCode(), 0);
+    if(QFileInfo(sLocalProgram).exists()) {
+        program = sLocalProgram;
     }
+
+    QProcess proc;
+    proc.start(program, arguments);
+    QVERIFY(proc.waitForStarted());
+    QVERIFY(proc.waitForFinished());
+    QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
+    QCOMPARE(proc.exitCode(), 0);
 }
 
 QTEST_APPLESS_MAIN(Pt_WidgetsGallery)

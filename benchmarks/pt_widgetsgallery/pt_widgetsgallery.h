@@ -31,6 +31,15 @@ private slots:
       * Benchmark startup time of widgetsgallery
       */
     void startupTime();
+
+    /**
+      * Benchmark startup time of widgetsgallery with enforced windows style.
+      * Allows us to see if the Maemo6 style slows down application startup.
+      */
+    void startupTimeWindowsStyle();
+
+private:
+    void executeWidgetsgallery(const QStringList& arguments);
 };
 
 #endif // PT_WIDGETSGALLERY_H
