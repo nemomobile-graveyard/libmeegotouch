@@ -51,11 +51,32 @@ private slots:
     void processOneQueueItem();
 
 private:
-    void pixmapRequested(DuiThemeDaemonClient *client, const Dui::DuiThemeDaemonProtocol::PixmapIdentifier &id);
-    void pixmapReleaseRequested(DuiThemeDaemonClient *client, const Dui::DuiThemeDaemonProtocol::PixmapIdentifier &id);
-    void themeDaemonStatus(DuiThemeDaemonClient *client) const;
+    void pixmapRequested(DuiThemeDaemonClient *client,
+                         const Dui::DuiThemeDaemonProtocol::PixmapIdentifier &id,
+                         quint64 sequenceNumber);
+    void pixmapReleaseRequested(DuiThemeDaemonClient *client,
+                                const Dui::DuiThemeDaemonProtocol::PixmapIdentifier &id,
+                                quint64 sequenceNumber);
+    void themeDaemonStatus(DuiThemeDaemonClient *client, quint64 sequenceNumber) const;
 
 private:
+    struct QueueItem
+    {
+        quint64                                       sequenceNumber;
+        DuiThemeDaemonClient *                        client;
+        Dui::DuiThemeDaemonProtocol::PixmapIdentifier pixmapId;
+
+        QueueItem(DuiThemeDaemonClient *c, Dui::DuiThemeDaemonProtocol::PixmapIdentifier p,
+                  quint64 s = 0) : sequenceNumber(s), client(c), pixmapId(p) {}
+
+        // Ignore the sequence number when testing for equality.  A custom
+        // predicate would be more appropriate, if Qt would support that.
+        bool operator==(const QueueItem &other) const
+            { return (client == other.client && pixmapId == other.pixmapId); }
+        bool operator!=(const QueueItem &other) const
+            { return (client != other.client || pixmapId != other.pixmapId); }
+    };
+
     QLocalServer server;
     QHash<QLocalSocket *, DuiThemeDaemonClient *> registeredClients;
     DuiThemeDaemon daemon;
@@ -63,8 +84,8 @@ private:
     DuiGConfItem currentTheme;
     DuiGConfItem currentLocale;
 
-    QQueue<QPair<DuiThemeDaemonClient *, Dui::DuiThemeDaemonProtocol::PixmapIdentifier> > loadPixmapsQueue;
-    QQueue<QPair<DuiThemeDaemonClient *, Dui::DuiThemeDaemonProtocol::PixmapIdentifier> > releasePixmapsQueue;
+    QQueue<QueueItem> loadPixmapsQueue;
+    QQueue<QueueItem> releasePixmapsQueue;
     QTimer processQueueTimer;
 };
 //! \internal_end

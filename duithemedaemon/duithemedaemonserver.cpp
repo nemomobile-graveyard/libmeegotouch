@@ -100,15 +100,15 @@ void DuiThemeDaemonServer::clientDisconnected()
             registeredClients.remove(socket);
 
             // remove all queued pixmap requests
-            QMutableListIterator<QPair<DuiThemeDaemonClient *, PixmapIdentifier> > pi = loadPixmapsQueue;
+            QMutableListIterator<QueueItem> pi = loadPixmapsQueue;
             while (pi.hasNext()) {
-                if (pi.next().first == client)
+                if (pi.next().client == client)
                     pi.remove();
             }
             // remove all queued pixmap releases
             pi = releasePixmapsQueue;
             while (pi.hasNext()) {
-                if (pi.next().first == client)
+                if (pi.next().client == client)
                     pi.remove();
             }
 
@@ -143,13 +143,15 @@ void DuiThemeDaemonServer::clientDataAvailable()
             // and check if it's a registration request
             if (packet.type() != Packet::RequestRegistrationPacket) {
                 // reply error
-                stream << Packet(Packet::ErrorPacket, new String("You must send registration packet befor requesting anything else!"));
+                stream << Packet(Packet::ErrorPacket, packet.sequenceNumber(),
+                                 new String("You must send registration packet before requesting anything else!"));
             } else {
                 // we got the registration packet so register the client, and continue normally
                 client = new DuiThemeDaemonClient(socket, static_cast<const String *>(packet.data())->string, daemon.themeInheritanceChain());
                 registeredClients.insert(socket, client);
                 daemon.addClient(client);
-                client->stream() << Packet(Packet::ThemeChangedPacket, new StringList(daemon.themeInheritanceChain()));
+                client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
+                                           new StringList(daemon.themeInheritanceChain()));
                 break;
             }
         }
@@ -167,20 +169,22 @@ void DuiThemeDaemonServer::clientDataAvailable()
 
         case Packet::RequestRegistrationPacket: {
             // client tried to register a second time
-            client->stream() << Packet(Packet::ErrorPacket, new String("You have already registered!"));
-            duiWarning("DuiThemeDaemonServer") << "Client with name" << client->name() << "tried to register a second time!";
+            client->stream() << Packet(Packet::ErrorPacket, packet.sequenceNumber(),
+                                       new String("You have already registered!"));
+            duiWarning("DuiThemeDaemonServer") << "Client with name" << client->name()
+                                               << "tried to register a second time!";
         } break;
 
         case Packet::RequestPixmapPacket: {
             // client requested a pixmap
             const PixmapIdentifier *id = static_cast<const PixmapIdentifier *>(packet.data());
-            pixmapRequested(client, *id);
+            pixmapRequested(client, *id, packet.sequenceNumber());
         } break;
 
         case Packet::ReleasePixmapPacket: {
             // client requested a pixmap release
             const PixmapIdentifier *id = static_cast<const PixmapIdentifier *>(packet.data());
-            pixmapReleaseRequested(client, *id);
+            pixmapReleaseRequested(client, *id, packet.sequenceNumber());
         } break;
 
         case Packet::RequestClearPixmapDirectoriesPacket: {
@@ -194,7 +198,7 @@ void DuiThemeDaemonServer::clientDataAvailable()
 
 
         case Packet::QueryThemeDaemonStatusPacket: {
-            themeDaemonStatus(client);
+            themeDaemonStatus(client, packet.sequenceNumber());
         } break;
 
 
@@ -213,18 +217,22 @@ void DuiThemeDaemonServer::themeChanged()
     QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
     if (daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToReload)) {
         // theme change succeeded, let's inform all clients + add the pixmaps to load-list
-        Packet themeChangedPacket(Packet::ThemeChangedPacket, new StringList(daemon.themeInheritanceChain()));
+        Packet themeChangedPacket(Packet::ThemeChangedPacket, 0, new StringList(daemon.themeInheritanceChain()));
 
         QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> >::iterator i = pixmapsToReload.begin();
         QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> >::iterator end = pixmapsToReload.end();
         for (; i != end; ++i) {
             DuiThemeDaemonClient *client = i.key();
-            const QList<PixmapIdentifier>& ids = i.value();
+            const QList<PixmapIdentifier> &ids = i.value();
 
             client->stream() << themeChangedPacket;
-            foreach(const PixmapIdentifier & id, ids) {
-                if (!releasePixmapsQueue.removeOne(qMakePair(client, id))) {
-                    loadPixmapsQueue.enqueue(qMakePair(client, id));
+
+            const QList<PixmapIdentifier>::const_iterator idsEnd = ids.end();
+            for (QList<PixmapIdentifier>::const_iterator iId = ids.begin(); iId != idsEnd; ++iId) {
+
+                const QueueItem item (client, *iId);
+                if (!releasePixmapsQueue.removeOne(item)) {
+                    loadPixmapsQueue.enqueue(item);
                 }
             }
         }
@@ -248,11 +256,14 @@ void DuiThemeDaemonServer::localeChanged()
     QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> >::iterator end = pixmapsToReload.end();
     for (; i != end; ++i) {
         DuiThemeDaemonClient *client = i.key();
-        const QList<PixmapIdentifier>& ids = i.value();
+        const QList<PixmapIdentifier> &ids = i.value();
 
-        foreach(const PixmapIdentifier & id, ids) {
-            if (!releasePixmapsQueue.removeOne(qMakePair(client, id))) {
-                loadPixmapsQueue.enqueue(qMakePair(client, id));
+        const QList<PixmapIdentifier>::const_iterator idsEnd = ids.end();
+        for (QList<PixmapIdentifier>::const_iterator iId = ids.begin(); iId != idsEnd; ++iId) {
+
+            const QueueItem item (client, *iId);
+            if (!releasePixmapsQueue.removeOne(item)) {
+                loadPixmapsQueue.enqueue(item);
             }
         }
     }
@@ -263,20 +274,30 @@ void DuiThemeDaemonServer::localeChanged()
 void DuiThemeDaemonServer::processOneQueueItem()
 {
     if (!loadPixmapsQueue.isEmpty()) {
-        QPair<DuiThemeDaemonClient *, PixmapIdentifier> p = loadPixmapsQueue.dequeue();
-        Qt::HANDLE handle;
-        if (daemon.pixmap(p.first, p.second, handle)) {
-            p.first->stream() << Packet(Packet::PixmapUpdatedPacket, new PixmapHandle(p.second, handle));
+        const QueueItem item = loadPixmapsQueue.dequeue();
+        Qt::HANDLE handle = 0;
+        if (daemon.pixmap(item.client, item.pixmapId, handle)) {
+            item.client->stream() << Packet(Packet::PixmapUpdatedPacket, item.sequenceNumber,
+                                            new PixmapHandle(item.pixmapId, handle));
         } else {
-            p.first->stream() << Packet(Packet::ErrorPacket,
-                                        new String(QString("You have already requested pixmap '%1' %2x%3! You cannot request same pixmap twice!").arg(p.second.imageId, QString::number(p.second.size.width()), QString::number(p.second.size.height()))));
+            const QString message =
+                QString::fromLatin1("requested pixmap '%1' %2x%3 already acquired by client").arg(
+                                    item.pixmapId.imageId,
+                                    QString::number(item.pixmapId.size.width()),
+                                    QString::number(item.pixmapId.size.height()));
+            item.client->stream() << Packet(Packet::ErrorPacket, item.sequenceNumber,
+                                            new String(message));
         }
-
     } else if (!releasePixmapsQueue.isEmpty()) {
-        QPair<DuiThemeDaemonClient *, PixmapIdentifier> p = releasePixmapsQueue.dequeue();
-        if (!daemon.releasePixmap(p.first, p.second)) {
-            p.first->stream() << Packet(Packet::ErrorPacket,
-                                        new String(QString("You cannot release pixmap '%1' %2x%3 because you have not requested it!").arg(p.second.imageId, QString::number(p.second.size.width()), QString::number(p.second.size.height()))));
+        const QueueItem item = releasePixmapsQueue.dequeue();
+        if (!daemon.releasePixmap(item.client, item.pixmapId)) {
+            const QString message =
+                QString::fromLatin1("pixmap to release '%1' %2x%3 not acquired by client").arg(
+                                    item.pixmapId.imageId,
+                                    QString::number(item.pixmapId.size.width()),
+                                    QString::number(item.pixmapId.size.height()));
+            item.client->stream() << Packet(Packet::ErrorPacket, item.sequenceNumber,
+                                            new String(message));
         }
     }
 
@@ -285,64 +306,71 @@ void DuiThemeDaemonServer::processOneQueueItem()
     }
 }
 
-void DuiThemeDaemonServer::pixmapRequested(DuiThemeDaemonClient *client, const PixmapIdentifier &id)
+void DuiThemeDaemonServer::pixmapRequested(DuiThemeDaemonClient *client,
+                                           const PixmapIdentifier &id, quint64 sequenceNumber)
 {
     // if the client has requested a release for this pixmap, we'll remove the
     // release request, and reply with the existing pixmap handle
-    if (releasePixmapsQueue.removeOne(qMakePair(client, id))) {
+    const QueueItem item (client, id, sequenceNumber);
+    if (releasePixmapsQueue.removeOne(item)) {
         // removeOne succeeds if there was a release request still on queue
         // find the resource for the requested pixmap
-        ImageResource *resource = client->pixmaps[id];
+        ImageResource *resource = client->pixmaps.value(id);
         // in case the resource is NULL, the pixmap is not loaded (it's not found from the current theme)
         if (!resource) {
-            client->stream() << Packet(Packet::PixmapUpdatedPacket, new PixmapHandle(id, 0));
+            client->stream() << Packet(Packet::PixmapUpdatedPacket, sequenceNumber,
+                                       new PixmapHandle(id, 0));
         } else {
 #ifndef Q_WS_MAC
-            client->stream() << Packet(Packet::PixmapUpdatedPacket, new PixmapHandle(id, resource->pixmapHandle(id.size)));
+            client->stream() << Packet(Packet::PixmapUpdatedPacket, sequenceNumber,
+                                       new PixmapHandle(id, resource->pixmapHandle(id.size)));
 #endif
         }
     } else {
-
         // the requested pixmap was not in release queue, so we'll queue the load
-        loadPixmapsQueue.enqueue(qMakePair(client, id));
+        loadPixmapsQueue.enqueue(item);
         if (!processQueueTimer.isActive())
             processQueueTimer.start();
     }
 }
 
-void DuiThemeDaemonServer::pixmapReleaseRequested(DuiThemeDaemonClient *client, const PixmapIdentifier &id)
+void DuiThemeDaemonServer::pixmapReleaseRequested(DuiThemeDaemonClient *client,
+                                                  const PixmapIdentifier &id,
+                                                  quint64 sequenceNumber)
 {
     // if the pixmap request is in queue, we can just remove it from there
-    if (!loadPixmapsQueue.removeOne(qMakePair(client, id))) {
+    const QueueItem item (client, id, sequenceNumber);
+    if (!loadPixmapsQueue.removeOne(item)) {
         // in case the removeOne fails, we need to queue the release request.
-        releasePixmapsQueue.enqueue(qMakePair(client, id));
+        releasePixmapsQueue.enqueue(item);
         if (!processQueueTimer.isActive())
             processQueueTimer.start();
     }
 }
 
-void DuiThemeDaemonServer::themeDaemonStatus(DuiThemeDaemonClient *client) const
+void DuiThemeDaemonServer::themeDaemonStatus(DuiThemeDaemonClient *client,
+                                             quint64 sequenceNumber) const
 {
     QList<ClientInfo> clientList;
 
     foreach(const DuiThemeDaemonClient * c, registeredClients.values()) {
         ClientInfo info;
         info.name = c->name();
-
         info.pixmaps = c->pixmaps.keys();
-        typedef QPair<DuiThemeDaemonClient *, PixmapIdentifier> c_pi;
-        foreach(const c_pi & p, loadPixmapsQueue) {
-            if (p.first == c)
-                info.requestedPixmaps.append(p.second);
+
+        foreach(const QueueItem &item, loadPixmapsQueue) {
+            if (item.client == c)
+                info.requestedPixmaps.append(item.pixmapId);
         }
-        foreach(const c_pi & p, releasePixmapsQueue) {
-            if (p.first == c)
-                info.releasedPixmaps.append(p.second);
+        foreach(const QueueItem &item, releasePixmapsQueue) {
+            if (item.client == c)
+                info.releasedPixmaps.append(item.pixmapId);
         }
 
         clientList.append(info);
     }
 
-    client->stream() << Packet(Packet::ThemeDaemonStatusPacket, new ClientList(clientList));
+    client->stream() << Packet(Packet::ThemeDaemonStatusPacket, sequenceNumber,
+                               new ClientList(clientList));
 }
 
