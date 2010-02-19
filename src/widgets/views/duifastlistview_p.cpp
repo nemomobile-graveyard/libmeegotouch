@@ -738,9 +738,9 @@ bool DuiFastGroupHeaderListViewPrivate::isGroupHeader(const QModelIndex &index)
 
 void DuiFastGroupHeaderListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRow)
 {
-    DuiFastListViewPrivate::createVisibleItems(firstVisibleRow, lastVisibleRow);
     updateHeadersPositions();
     updateHeadersRows();
+    DuiFastListViewPrivate::createVisibleItems(firstVisibleRow, lastVisibleRow);
 }
 
 ////////////

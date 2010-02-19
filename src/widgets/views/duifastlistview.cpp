@@ -231,20 +231,13 @@ void DuiFastListView::rowsInserted(const QModelIndex &parent, int start, int end
     Q_UNUSED(parent);
     Q_UNUSED(start);
     Q_UNUSED(end);
+
     // updateGeometry adjusts container scroll bars and reposition cells
     updateGeometry();
 
-    // if rows are inserted in visible chunk, update cells
-    QAbstractItemModel *itemModel = model()->itemModel();
-    if (itemModel) {
-        d_ptr->clearVisibleItemsArray();
-        d_ptr->createVisibleItems(start, end);
-        // using itemModel->index instead of parent.child() - parent is usually empty for lists
-        // TODO list with multiple columns?
-        int itemCount = itemModel->rowCount(parent);
-        // If we inserted somewhere in the middle, we should update all items after insertion point
-        dataChanged(itemModel->index(start, 0, parent), itemModel->index(itemCount, 0, parent));
-    }
+    d_ptr->clearVisibleItemsArray();
+    d_ptr->createVisibleItems(d_ptr->indexToFlatRow(model()->firstVisibleItem()),
+                              d_ptr->indexToFlatRow(model()->lastVisibleItem()));
 }
 
 /*!
