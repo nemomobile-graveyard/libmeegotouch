@@ -137,16 +137,19 @@ void DuiLogicalValues::load(const QStringList &themeInheritanceChain, const QStr
     // clear existing config
     d->data.clear();
 
+    // load locale-specific constant definitions
+    if (!locale.isEmpty()) {
+
+        // go through whole inheritance hierarchy
+        foreach(QString path, themeInheritanceChain) {
+
+            append(path + QString("dui") + QDir::separator() + QString("locale") + QDir::separator() + locale + QDir::separator() + QString("constants.ini"));
+        }
+    }
+
     // go through whole inheritance hierarchy
     foreach(QString path, themeInheritanceChain) {
 
-        // load locale-specific constant definitions
-        if (!locale.isEmpty()) {
-            QString localeFile = QString("dui") + QDir::separator() + QString("locale") + QDir::separator() + locale + QDir::separator() + QString("constants.ini");
-            append(path + localeFile);
-        }
-
-        // determine filename & append
         append(path + QString("dui") + QDir::separator() + QString("constants.ini"));
     }
 }
