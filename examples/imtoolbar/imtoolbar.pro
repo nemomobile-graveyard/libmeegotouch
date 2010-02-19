@@ -14,6 +14,6 @@ SOURCES += imtoolbarpage.cpp main.cpp
 
 install.files =  ./toolbar1.xml \
                 ./toolbar2.xml
-install.path = /usr/share/dui/virtual-keyboard/layouts/
+install.path = /usr/share/dui/imtoolbars/
 INSTALLS += install
 

@@ -52,13 +52,15 @@ void ImToolbarPage::createContent()
     DuiGridLayoutPolicy *layoutPolicy = ImToolbarPage::createAndSetupGridPolicy(panel);
 
     DuiTextEdit *multi1 =  new DuiTextEdit(DuiTextEditModel::MultiLine, "", centralWidget());
-    multi1->attachToolbar("toolbar1");
+    // can specify only the file name, then use the default path /usr/share/dui/imtoolbars/
+    multi1->attachToolbar("toolbar1.xml");
 
     Entries << multi1;
     Entries.at(0)->setPrompt("Example toolbar 1");
 
     DuiTextEdit *single1 = new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
-    single1->attachToolbar("toolbar2");
+    // can also specify the absolute name.
+    single1->attachToolbar("/usr/share/dui/imtoolbars/toolbar2.xml");
 
     Entries << single1;
     Entries.at(1)->setPrompt("Example toolbar 2");
