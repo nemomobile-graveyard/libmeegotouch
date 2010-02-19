@@ -25,8 +25,8 @@
 #include <QDebug>
 
 #include "duiwidgetcreator.h"
-#include "duiprogressindicator.h"
-#include "duilabel"
+#include <duiprogressindicator.h>
+#include <duilabel.h>
 DUI_REGISTER_WIDGET(DuiContentItem)
 
 DuiContentItemPrivate::DuiContentItemPrivate():
