@@ -28,6 +28,7 @@
 #include <QGraphicsLayout>
 #include <QApplication>
 #include <QGraphicsItem>
+#include <QTapAndHoldGesture>
 
 #include <duiapplicationwindow.h>
 #include <duipannableviewport.h>
@@ -168,6 +169,22 @@ QGraphicsView *DuiWidgetPrivate::fetchGraphicsView()
     return graphicsView;
 }
 
+void DuiWidgetPrivate::gestureEvent(QGestureEvent *event)
+{
+    foreach(QGesture* state, event->gestures()) {
+        if (Qt::TapAndHoldGesture == state->gestureType()) {
+            QTapAndHoldGesture* tapAndHoldState = static_cast<QTapAndHoldGesture *>(state);
+            tapAndHoldGesture(event,tapAndHoldState);
+        }
+    }
+}
+
+void DuiWidgetPrivate::tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture *state)
+{
+    Q_UNUSED(event);
+    Q_UNUSED(state);
+}
+
 void DuiWidget::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event)
 {
     Q_D(DuiWidget);
@@ -292,6 +309,8 @@ void DuiWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
 bool DuiWidget::event(QEvent *event)
 {
+    Q_D(DuiWidget);
+
 //    if (DuiTouchEvent::cast2TouchEvent(event))
 //        duiDebug("DuiWidget") << "touchevent in DuiWidget:" << event;
 //    if (DuiGestureEvent::cast2GestureEvent(event))
@@ -324,6 +343,8 @@ bool DuiWidget::event(QEvent *event)
         }
     } else if (type == DuiOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<DuiOnDisplayChangeEvent *>(event));
+    } else if (type == QEvent::Gesture) {
+        d->gestureEvent(static_cast<QGestureEvent*>(event));
     }
     return QGraphicsWidget::event(event);
 }

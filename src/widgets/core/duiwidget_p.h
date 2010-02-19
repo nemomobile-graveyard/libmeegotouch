@@ -22,6 +22,9 @@
 
 #include <duiwidget.h>
 
+class QGestureEvent;
+class QTapAndHoldGesture;
+
 class DuiWidgetPrivate
 {
     Q_DECLARE_PUBLIC(DuiWidget)
@@ -38,6 +41,9 @@ public:
 
     bool explicitlyHidden;  //< true if the user called hide(), as opposed to DuiLayout hiding it
     bool layoutHidden;  //< true if DuiLayout is currently hiding the widget
+
+    virtual void gestureEvent(QGestureEvent *event);
+    virtual void tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture* state);
 protected:
     DuiWidget *q_ptr;
     bool onDisplay;

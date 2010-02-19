@@ -19,6 +19,7 @@
 
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
+#include <QTapAndHoldGesture>
 
 #include "duipannablewidget.h"
 #include "duipannablewidget_p.h"
@@ -95,6 +96,9 @@ void copyGraphicsSceneMouseEvent(QGraphicsSceneMouseEvent &target, const QGraphi
 
 
 //! \cond
+
+class DuiPannableWidgetGlassPrivate;
+
 class DuiPannableWidgetGlass : public DuiWidget
 {
 public:
@@ -107,14 +111,39 @@ public:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void ungrabMouseEvent(QEvent *event);
-    virtual void timerEvent(QTimerEvent *event);
+    virtual void tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture* state);
 
     DuiPannableWidget *pannableWidget;
+
+    Q_DISABLE_COPY(DuiPannableWidgetGlass)
+    Q_DECLARE_PRIVATE(DuiPannableWidgetGlass)
 };
+
+class DuiPannableWidgetGlassPrivate : public DuiWidgetPrivate
+{
+public:
+    virtual void tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture* state);
+
+    Q_DECLARE_PUBLIC(DuiPannableWidgetGlass)
+};
+
 //! \endcond
 
+void DuiPannableWidgetGlassPrivate::tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture *state)
+{
+    Q_Q(DuiPannableWidgetGlass);
+    q->tapAndHoldGesture(event,state);
+}
+
+void DuiPannableWidgetGlass::tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture* gesture)
+{
+    if (gesture->state() == Qt::GestureFinished)
+        pannableWidget->glassLongTapEvent();
+    event->accept(gesture);
+}
+
 DuiPannableWidgetGlass::DuiPannableWidgetGlass(QGraphicsItem *parent) :
-    DuiWidget(parent)
+    DuiWidget(*new DuiPannableWidgetGlassPrivate(), parent)
 {
     this->pannableWidget = dynamic_cast<DuiPannableWidget *>(parent);
 }
@@ -153,19 +182,13 @@ void DuiPannableWidgetGlass::ungrabMouseEvent(QEvent *event)
     pannableWidget->glassUngrabMouseEvent(event);
 }
 
-void DuiPannableWidgetGlass::timerEvent(QTimerEvent *event)
-{
-    pannableWidget->glassTimeoutEvent(event);
-}
-
 DuiPannableWidgetPrivate::DuiPannableWidgetPrivate() :
     state(DuiPannableWidgetPrivate::Wait),
     itemCount(0),
     pressEvent(QEvent::GraphicsSceneMousePress),
     physics(0),
     mouseGrabber(0),
-    resentList(),
-    tapAndHoldTimerId(0)
+    resentList()
 {
 }
 
@@ -195,19 +218,6 @@ void DuiPannableWidgetPrivate::deliverMouseEvent(QGraphicsSceneMouseEvent *event
     if (mouseGrabber && q->scene()->items().contains(mouseGrabber)) {
         translateEventToItemCoordinates(glass, mouseGrabber, event);
         q->scene()->sendEvent(mouseGrabber, event);
-    }
-}
-
-void DuiPannableWidgetPrivate::tapAndHoldStartTimer()
-{
-    tapAndHoldTimerId = glass->startTimer(TapAndHoldTimeoutValue);
-}
-
-void DuiPannableWidgetPrivate::tapAndHoldStopTimer()
-{
-    if (tapAndHoldTimerId) {
-        glass->killTimer(tapAndHoldTimerId);
-        tapAndHoldTimerId = 0;
     }
 }
 
@@ -241,6 +251,7 @@ void DuiPannableWidget::init()
     d->glass->setZValue(ZValueGlass);
 
     d->glass->setObjectName("glass");
+    d->glass->grabGesture(Qt::TapAndHoldGesture);
 
     setPosition(QPointF());
     setRange(QRectF());
@@ -382,8 +393,6 @@ void DuiPannableWidget::glassMousePressEvent(QGraphicsSceneMouseEvent *event)
             d->mouseGrabber = scene()->mouseGrabberItem();
             d->itemCount = scene()->items().size();
             d->glass->grabMouse();
-
-            d->tapAndHoldStartTimer();
         }
 
         d->physics->pointerPress(event->pos());
@@ -400,9 +409,6 @@ void DuiPannableWidget::glassMousePressEvent(QGraphicsSceneMouseEvent *event)
 void DuiPannableWidget::glassMouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(DuiPannableWidget);
-
-    // This is not going to be tap&hold.
-    d->tapAndHoldStopTimer();
 
     if (!isEnabled()) {
         //Widget disabled in the middle of the gesture. We need to deliver
@@ -507,15 +513,9 @@ void DuiPannableWidget::glassMouseMoveEvent(QGraphicsSceneMouseEvent *event)
             sendCancel(&d->pressEvent);
             d->physics->pointerMove(event->pos());
 
-            // This is not going to be tap&hold.
-            d->tapAndHoldStopTimer();
-
             d->state = DuiPannableWidgetPrivate::Pan;
         } else if (distPass > panThreshold()) {
             d->physics->pointerRelease();
-
-            // This is not going to be tap&hold.
-            d->tapAndHoldStopTimer();
 
             if (!d->physics->inMotion()) {
 
@@ -564,16 +564,9 @@ void DuiPannableWidget::glassUngrabMouseEvent(QEvent *event)
     }
 }
 
-void DuiPannableWidget::glassTimeoutEvent(QTimerEvent *event)
+void DuiPannableWidget::glassLongTapEvent()
 {
     Q_D(DuiPannableWidget);
-
-    //If it's not our timer, we shouldn't do anything.
-    if (event->timerId() != d->tapAndHoldTimerId)
-        return;
-
-    //We don't need another timer event, and this is not a singleshot timer.
-    d->tapAndHoldStopTimer();
 
     //We will reset the state so that pannable widget
     //will be ready to receive next mousePress.

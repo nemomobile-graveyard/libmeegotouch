@@ -117,6 +117,8 @@ void DuiWindowPrivate::init()
 
     if (DuiApplication::fullScreen())
         q->showFullScreen();
+
+    q->viewport()->grabGesture(Qt::TapAndHoldGesture);
 }
 
 #ifdef Q_WS_X11

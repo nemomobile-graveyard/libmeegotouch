@@ -8,6 +8,8 @@ PRIVATE_HEADERS += \
 	$$EVENTS_SRC_DIR/duiorientationtracker.h \
         $$EVENTS_SRC_DIR/duiorientationtracker_p.h \
         $$EVENTS_SRC_DIR/duiscenewindowevent_p.h \
+        $$EVENTS_SRC_DIR/duitapandholdrecognizer_p.h \
+        $$EVENTS_SRC_DIR/duitapandholdgesture_p.h \
 
 HEADERS += \
         $$EVENTS_SRC_DIR/duicancelevent.h \
@@ -15,6 +17,7 @@ HEADERS += \
         $$EVENTS_SRC_DIR/duipreeditinjectionevent.h \
         $$EVENTS_SRC_DIR/duiondisplaychangeevent.h \
         $$EVENTS_SRC_DIR/duiorientationchangeevent.h \
+        $$EVENTS_SRC_DIR/duitapandholdrecognizer.h \
 
 SOURCES += \
 	$$EVENTS_SRC_DIR/duiorientationtracker.cpp \
@@ -24,3 +27,5 @@ SOURCES += \
         $$EVENTS_SRC_DIR/duiondisplaychangeevent.cpp \
     	$$EVENTS_SRC_DIR/duiorientationchangeevent.cpp \
         $$EVENTS_SRC_DIR/duiscenewindowevent_p.cpp \
+        $$EVENTS_SRC_DIR/duitapandholdgesture.cpp \
+        $$EVENTS_SRC_DIR/duitapandholdrecognizer.cpp \

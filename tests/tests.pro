@@ -149,7 +149,8 @@ SUBDIRS     =  \
     ut_duiapplicationextensionareaview \
     ut_duiapplicationextensionmanager \
     ut_duiextensionhandle \
-    ut_duiextensionhandleview
+    ut_duiextensionhandleview \
+    ut_duitapandholdrecognizer \
 
 # enable only when we have icu available
 

@@ -59,8 +59,6 @@ public:
     };
 
     QList<struct resentItem> resentList;
-
-    int tapAndHoldTimerId;
 public:
 
     /*!
@@ -79,16 +77,6 @@ public:
      * \brief Method used for delivering event to interested widget.
      */
     void deliverMouseEvent(QGraphicsSceneMouseEvent *event);
-
-    /*!
-     * \brief Method used for starting tap&hold timer.
-     */
-    void tapAndHoldStartTimer();
-
-    /*!
-     * \brief Method used for stopping tap&hold timer.
-     */
-    void tapAndHoldStopTimer();
 };
 
 #endif

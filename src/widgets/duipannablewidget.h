@@ -201,10 +201,9 @@ private:
     void glassUngrabMouseEvent(QEvent *event);
 
     /*!
-     * \brief Method for delivering timeout events when recognizing
-     * tap&hold gesture.
+     * \brief Method for delivering tap&hold gesture.
      */
-    void glassTimeoutEvent(QTimerEvent *event);
+    void glassLongTapEvent();
 
     /*!
      * \brief Method for checking if the event is on the resent list

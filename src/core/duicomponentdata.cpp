@@ -39,6 +39,7 @@
 #include "duicomponentdata_p.h"
 #include "duiwindow.h"
 #include "duiapplicationwindow.h"
+#include "duitapandholdrecognizer.h"
 #include <DuiDebug>
 
 #ifdef TESTABLE
@@ -514,6 +515,9 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
 #else
     Q_UNUSED(newService);
 #endif
+
+    QGestureRecognizer::unregisterRecognizer(Qt::TapAndHoldGesture);
+    QGestureRecognizer::registerRecognizer(new DuiTapAndHoldRecognizer());
 
     q->setShowCursor(showCursor);
 }
