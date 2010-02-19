@@ -150,7 +150,7 @@ Description: libdui unit tests
 Package: libdui-benchmarks
 Section: extra
 Architecture: any
-Depends: libdui0 (= ${Source-Version}), ${shlibs:Depends}
+Depends: libdui0 (= ${Source-Version}), ${shlibs:Depends}, dui-demos-widgetsgallery
 Description: libdui benchmarks
  Benchmarking binaries for testing libdui library
 
