@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
 #ifndef DUIDOCKWIDGET_H
 #define DUIDOCKWIDGET_H
 
@@ -27,6 +25,7 @@
 class DuiDockWidgetPrivate;
 class DuiToolBar;
 
+//! \internal
 /*!
  * \class DuiDockWidget
  * \brief DuiDockWidget implements a dock widget
@@ -68,5 +67,6 @@ private:
     friend class DuiApplicationWindow;
 };
 
+//! \internal_end
+
 #endif // DUIDOCKWIDGET
-//! \endcond

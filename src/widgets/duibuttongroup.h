@@ -314,9 +314,9 @@ Q_SIGNALS:
     void buttonReleased(int id);
 
 protected:
-    //! \cond
+    //! \internal
     DuiButtonGroupPrivate *const d_ptr;
-    //! \endcond
+    //! \internal_end
 
 private:
 
@@ -324,9 +324,9 @@ private:
     Q_DECLARE_PRIVATE(DuiButtonGroup)
 
 private:
-    //! \cond
+    //! \internal
     void validateExclusivity();
-    //! \endcond
+    //! \internal_end
 
 };
 

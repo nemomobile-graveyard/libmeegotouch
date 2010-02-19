@@ -210,9 +210,9 @@ public Q_SLOTS:
     void setUnknownDuration(bool unknownDuration);
 
 protected:
-    //! \cond
+    //! \internal
     DuiProgressIndicator(DuiProgressIndicatorPrivate *dd, DuiProgressIndicatorModel *model, QGraphicsItem *parent);
-    //! \endcond
+    //! \internal_end
 
 private:
     Q_DECLARE_PRIVATE(DuiProgressIndicator)

@@ -202,9 +202,9 @@ Q_SIGNALS:
     void pixmapChanged();
 
 protected:
-    //! \cond
+    //! \internal
     DuiGridItem(DuiGridItemPrivate *dd, DuiGridItemModel *model, QGraphicsItem *parent);
-    //! \endcond
+    //! \internal_end
 
 private:
     Q_DISABLE_COPY(DuiGridItem)

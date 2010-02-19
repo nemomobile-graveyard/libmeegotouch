@@ -86,10 +86,10 @@ private Q_SLOTS:
     void visibilityChangedSlot(bool);
 
 protected:
-    //! \cond
+    //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void setupModel();
-    //! \endcond
+    //! \reimp_end
 
 protected Q_SLOTS:
     //! \reimp

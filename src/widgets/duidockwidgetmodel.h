@@ -17,18 +17,17 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
 #ifndef DUIDOCKWIDGETMODEL_H
 #define DUIDOCKWIDGETMODEL_H
 
 #include <duiscenewindowmodel.h>
 
+//! \internal
 class DuiDockWidgetModel : public DuiSceneWindowModel
 {
     Q_OBJECT
     DUI_MODEL_INTERNAL(DuiDockWidgetModel)
 };
+//! \internal_end
 
 #endif
-//! \endcond

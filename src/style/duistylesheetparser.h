@@ -42,7 +42,7 @@ class DuiLogicalValues;
 class DUI_EXPORT DuiStyleSheetParser
 {
 public:
-    //! \cond
+    //! \internal
     struct StylesheetFileInfo {
         QString                         filename;
         QVector<QString>                includes;
@@ -51,7 +51,7 @@ public:
         QHash<QString, QString>         constants;
         uint                            time_t;
     };
-    //! \endcond
+    //! \internal_end
 
     /*!
      * Constructor for DuiStyleSheetParser.

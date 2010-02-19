@@ -69,9 +69,9 @@ protected:
 
     void setSelected(bool selected);
 
-    //! \cond
+    //! \internal
     DuiContentItemView(DuiContentItemViewPrivate &dd, DuiContentItem *controller);
-    //! \cond_end
+    //! \internal_end
 
 private:
     Q_DISABLE_COPY(DuiContentItemView)

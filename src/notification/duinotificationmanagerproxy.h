@@ -8,8 +8,7 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-// Make doxygen skip this internal class
-//! \cond
+
 #ifndef DUINOTIFICATIONMANAGERPROXY_H_1259674559
 #define DUINOTIFICATIONMANAGERPROXY_H_1259674559
 
@@ -22,6 +21,8 @@
 #include <QtCore/QVariant>
 #include <QtDBus/QtDBus>
 #include "metatypedeclarations.h"
+
+//! \internal
 
 /*
  * Proxy class for interface org.maemo.dui.NotificationManager
@@ -124,5 +125,7 @@ namespace org
         }
     }
 }
+
+//! \internal_end
+
 #endif
-//! \endcond

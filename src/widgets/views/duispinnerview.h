@@ -80,12 +80,12 @@ public:
     virtual ~DuiSpinnerView();
 
 protected:
-    //! \cond
+    //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     void resizeEvent(QGraphicsSceneResizeEvent *event);
     virtual void setupModel();
     virtual void applyStyle();
-    //! \endcond
+    //! \reimp_end
 
 protected slots:
     //! \reimp

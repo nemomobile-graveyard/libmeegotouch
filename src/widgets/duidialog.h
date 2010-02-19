@@ -188,12 +188,12 @@ public:
     DuiDialog(const QString &title, Dui::StandardButtons buttons);
 
 protected:
-    //! \cond
+    //! \internal
     DuiDialog(DuiDialogPrivate *dd, DuiDialogModel *model, DuiSceneWindow::WindowType windowType);
 
     DuiDialog(DuiDialogPrivate *dd, Dui::StandardButtons buttons,
               DuiDialogModel *model, DuiSceneWindow::WindowType windowType);
-    //! \endcond
+    //! \internal_end
 public:
 
     /*!

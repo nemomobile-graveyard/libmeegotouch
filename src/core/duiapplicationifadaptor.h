@@ -17,8 +17,7 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
+//! \internal
 
 // Command line was: qdbusxml2cpp -c DuiApplicationIfAdaptor -a duiapplicationadaptor.h:duiapplicationadaptor.cpp DuiApplicationIfAdaptor.xml
 
@@ -74,4 +73,4 @@ public Q_SLOTS: // METHODS
 };
 
 #endif
-//! \cond
+//! \internal_end

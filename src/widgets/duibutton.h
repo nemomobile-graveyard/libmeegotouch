@@ -382,10 +382,10 @@ public Q_SLOTS:
     void setTextVisible(bool);
 
 protected:
-    //! \cond
+    //! \internal
     DuiButton(DuiButtonPrivate *dd, DuiButtonModel *model, QGraphicsItem *parent);
     void setGroup(DuiButtonGroup *group);
-    //! \endcond
+    //! \internal_end
 
     //! \reimp
     virtual void setupModel();

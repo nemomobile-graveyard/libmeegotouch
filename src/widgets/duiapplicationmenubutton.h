@@ -86,9 +86,9 @@ public Q_SLOTS:
     void setArrowIconVisible(bool);
 
 protected:
-    //! \cond
+    //! \internal
     DuiApplicationMenuButton(DuiButtonPrivate *dd, DuiApplicationMenuButtonModel *model, QGraphicsItem *parent);
-    //! \endcond
+    //! \internal_end
 
 private:
     Q_DECLARE_PRIVATE(DuiApplicationMenuButton)

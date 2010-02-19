@@ -20,9 +20,6 @@
 #ifndef DUIICUBREAKITERATOR_H
 #define DUIICUBREAKITERATOR_H
 
-// Make doxygen skip this internal class
-//! \cond
-
 #include "duiexport.h"
 #include "duilocale.h"
 #include "duibreakiterator.h"
@@ -67,5 +64,4 @@ private:
 };
 //! \internal_end
 
-//! \endcond
 #endif

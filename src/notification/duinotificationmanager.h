@@ -17,12 +17,12 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
 #ifndef DUINOTIFICATIONMANAGER_H_
 #define DUINOTIFICATIONMANAGER_H_
 
 #include "duinotificationmanagerproxy.h"
+
+//! \internal
 
 /*!
  * An interface to the notification manager.
@@ -174,5 +174,6 @@ public:
     QList<uint> notificationIdList();
 };
 
+//! \internal_end
+
 #endif /* DUINOTIFICATIONMANAGER_H_ */
-//! \endcond

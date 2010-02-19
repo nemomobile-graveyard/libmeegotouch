@@ -69,9 +69,9 @@ protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
     //! \reimp_end
 
-    //! \cond
+    //! \internal
     DuiApplicationMenuButtonView(DuiApplicationMenuButtonViewPrivate &dd, DuiApplicationMenuButton *controller);
-    //! \endcond
+    //! \internal_end
 
 protected slots:
     //! \reimp

@@ -17,13 +17,12 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
 #ifndef DUIPANNABLEVIEWPORTLAYOUT_H
 #define DUIPANNABLEVIEWPORTLAYOUT_H
 
 #include <QGraphicsLinearLayout>
 
+//! \internal
 class DuiPannableViewportLayout : public QGraphicsLinearLayout
 {
 public:
@@ -41,6 +40,6 @@ private:
     QGraphicsWidget *pannedWidget;
     Qt::Orientations panningDirections;
 };
+//! \internal_end
 
 #endif
-//! \endcond

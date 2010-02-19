@@ -17,8 +17,7 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
+//! \internal
 
 // Command line was: qdbusxml2cpp -c DuiApplicationIfProxy -p duiapplicationifproxy.h:duiapplicationifproxy.cpp com.nokia.DuiApplicationIf.xml
 
@@ -67,4 +66,5 @@ namespace com
     }
 }
 #endif
-//! \cond
+
+//! \internal_end

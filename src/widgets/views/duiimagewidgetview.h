@@ -72,11 +72,11 @@ protected:
     //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
-    //! \reimp_end
+    //! \reimp_end
 
-    //! \cond
+    //! \internal
     DuiImageWidgetView(DuiImageWidgetViewPrivate &dd, DuiImageWidget *controller);
-    //! \endcond
+    //! \internal_end
 
 private:
     Q_DECLARE_PRIVATE(DuiImageWidgetView)

@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
 #ifndef DUIDOCKWIDGETVIEW_H
 #define DUIDOCKWIDGETVIEW_H
 
@@ -29,6 +27,7 @@
 class DuiDockWidgetViewPrivate;
 class DuiDockWidget;
 
+//! \internal
 class DuiDockWidgetView : public DuiSceneWindowView
 {
     Q_OBJECT
@@ -42,5 +41,6 @@ private:
     Q_DECLARE_PRIVATE(DuiDockWidgetView)
 };
 
+//! \internal_end
+
 #endif // DUIDOCKWIDGETVIEW
-//! \endcond

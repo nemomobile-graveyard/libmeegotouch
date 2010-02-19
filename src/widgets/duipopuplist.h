@@ -229,9 +229,9 @@ Q_SIGNALS:
 
 protected:
 
-    //! \cond
+    //! \internal
     DuiPopupList(DuiPopupListPrivate *dd, DuiPopupListModel *model, DuiSceneWindow::WindowType windowType);
-    //! \endcond
+    //! \internal_end
 
 private:
     Q_DECLARE_PRIVATE(DuiPopupList)

@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 // Make doxygen skip this internal class
-//! \cond
+//! \internal
 #ifndef DUIBASICORIENTATIONANIMATION_H
 #define DUIBASICORIENTATIONANIMATION_H
 
@@ -88,4 +88,4 @@ private:
 };
 
 #endif
-//! \endcond
+//! \internal_end

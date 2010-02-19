@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
 #ifndef DUISCENELAYEREFFECTDIMVIEW_H
 #define DUISCENELAYEREFFECTDIMVIEW_H
 
@@ -29,6 +27,7 @@
 class DuiSceneLayerEffect;
 class DuiSceneLayerEffectDimViewPrivate;
 
+//! \internal
 class DuiSceneLayerEffectDimView : public DuiSceneWindowView
 {
     Q_OBJECT
@@ -49,6 +48,6 @@ protected Q_SLOTS:
 private:
     Q_DECLARE_PRIVATE(DuiSceneLayerEffectDimView)
 };
+//! \internal_end
 
 #endif
-//! \endcond

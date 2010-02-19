@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
 #ifndef DUISERVICEFWBASEIF_H
 #define DUISERVICEFWBASEIF_H
 
@@ -29,6 +27,8 @@
 #include "duiservicefwproxy.h"
 
 class QDBusAbstractInterface;
+
+//! \internal
 
 /*!
  * \class DuiServiceFwBaseIf
@@ -164,5 +164,6 @@ protected:
 #endif // UNIT_TEST
 };
 
+//! \internal_end
+
 #endif
-//! \endcond

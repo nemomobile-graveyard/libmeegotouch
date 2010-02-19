@@ -7,8 +7,6 @@
  * This is an auto-generated file.
  * Do not edit! All changes made to it will be lost.
  */
-// Make doxygen skip this internal class
-//! \cond
 
 #ifndef DUISERVICEFWPROXY_H_1235929249
 #define DUISERVICEFWPROXY_H_1235929249

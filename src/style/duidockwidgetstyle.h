@@ -17,13 +17,12 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
 #ifndef DUIDOCKWIDGETSTYLE_H
 #define DUIDOCKWIDGETSTYLE_H
 
 #include <duiscenewindowstyle.h>
 
+//! \internal
 class DuiDockWidgetStyle : public DuiSceneWindowStyle
 {
     Q_OBJECT
@@ -34,6 +33,6 @@ class DuiDockWidgetStyleContainer : public DuiSceneWindowStyleContainer
 {
     DUI_STYLE_CONTAINER_INTERNAL(DuiDockWidgetStyle)
 };
+//! \internal_end
 
 #endif
-//! \endcond

@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-// Make doxygen skip this internal class
-//! \cond
 #ifndef DUISCENELAYEREFFECT_H
 #define DUISCENELAYEREFFECT_H
 
@@ -27,6 +25,7 @@
 
 class DuiSceneLayerEffectPrivate;
 
+//! \internal
 class DuiSceneLayerEffect : public DuiSceneWindow
 {
     Q_OBJECT
@@ -53,5 +52,5 @@ private:
     Q_DECLARE_PRIVATE(DuiSceneLayerEffect)
 };
 
+//! \internal
 #endif
-//! \endcond

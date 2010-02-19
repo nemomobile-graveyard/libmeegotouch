@@ -262,9 +262,7 @@ protected:
     //! \internal
     QVariant itemChange(GraphicsItemChange change, const QVariant &value);
 
-    //! \cond
     DuiContentItem(DuiContentItemPrivate *dd, DuiContentItemModel *model, QGraphicsItem *parent);
-    //! \endcond
     //! \internal_end
 
 private:

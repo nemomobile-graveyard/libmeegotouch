@@ -142,9 +142,9 @@ protected:
      */
     virtual void drawIcon(QPainter *painter, const QRectF &iconRect) const;
 
-    //! \cond
+    //! \internal
     DuiButtonView(DuiButtonViewPrivate &dd, DuiButton *controller);
-    //! \endcond
+    //! \internal_end
 
 protected Q_SLOTS:
     //! \reimp
