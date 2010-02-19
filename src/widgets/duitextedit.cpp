@@ -644,24 +644,6 @@ QEvent::Type DuiTextEditPrivate::translateGraphicsSceneMouseTypeToQMouse(QEvent:
     return result;
 }
 
-QRegion DuiTextEditPrivate::inputMethodArea()
-{
-    QRegion region;
-    QInputContext *ic = qApp->inputContext();
-    // This property is updated by DuiInputContext itself internally
-    QVariant prop = ic->property("InputMethodArea");
-    if (prop.isValid()) {
-        // The region is serialized to list of rects
-        // as QVariant doesn't support QRegion
-        QList<QVariant> areaList = prop.toList();
-        const int count = areaList.count();
-        for (int i = 0; i < count; ++i) {
-            region = region.united(areaList.at(i).toRect());
-        }
-    }
-
-    return region;
-}
 
 void DuiTextEditPrivate::_q_confirmCompletion(const QString &completion)
 {

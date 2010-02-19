@@ -72,8 +72,6 @@ public:
 
     static QEvent::Type translateGraphicsSceneMouseTypeToQMouse(QEvent::Type input);
 
-    QRegion inputMethodArea();
-
     void _q_confirmCompletion(const QString &);
 
 private:
