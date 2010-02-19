@@ -49,7 +49,10 @@ private:
     /*!
         \brief Number of pixmaps to keep in most used pixmaps cache
      */
-    static const qint32 CacheSize = 32;
+    static const qint32 CacheSize = 128;
+
+    void remove(const Dui::DuiThemeDaemonProtocol::PixmapIdentifier &id);
+    QString cachePath() const;
 
     /*!
         \brief Current minimum amount of requests for a pixmap to end up in cache

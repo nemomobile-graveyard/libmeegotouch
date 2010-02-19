@@ -29,6 +29,7 @@ SOURCES += main.cpp \
            ../src/theme/duiimagedirectory.cpp \
            ../src/theme/duithemedaemonclient.cpp \
            ../src/theme/duithemedaemonprotocol.cpp \
+           ../src/theme/duithemeresourcemanager.cpp \
            ../src/core/duigconfitem.cpp \
            ../src/core/duicpumonitor.cpp \
 
@@ -39,6 +40,7 @@ HEADERS += \
            ../src/theme/duiimagedirectory.h \
            ../src/theme/duithemedaemonclient.h \
            ../src/theme/duithemedaemonprotocol.h \
+           ../src/theme/duithemeresourcemanager.h \
            ../src/core/duigconfitem.h \
            ../src/core/duicpumonitor.h \
            keypresswaiter.h \

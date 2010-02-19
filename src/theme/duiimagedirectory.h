@@ -55,6 +55,9 @@ public:
 
     // returns a handle to pixmap, without increasing the refCount
     Qt::HANDLE pixmapHandle(const QSize &size);
+
+    bool save(QIODevice* device, const QSize& size) const;
+    bool load(QIODevice* device, const QSize& size);
 protected:
     virtual QPixmap *createPixmap(const QSize &size) = 0;
 private:
@@ -97,15 +100,15 @@ private:
 class SvgImageResource : public ImageResource
 {
 public:
-    SvgImageResource(const QString &imageId, const QSharedPointer<QSvgRenderer>& renderer) :
-        imageId(imageId), renderer(renderer) {}
+    SvgImageResource(const QString &imageId, const QString& absoluteFilePath) :
+        imageId(imageId), absoluteFilePath(absoluteFilePath) {}
     virtual ~SvgImageResource() {}
 
 protected:
     virtual QPixmap *createPixmap(const QSize &size);
 private:
     QString imageId;
-    QSharedPointer<QSvgRenderer> renderer;
+    QString absoluteFilePath;
 };
 
 

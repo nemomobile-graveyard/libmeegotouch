@@ -16,6 +16,7 @@ HEADERS += $$THEME_SRC_DIR/duitheme.h \
     $$THEME_SRC_DIR/duithemedaemon.h \
     $$THEME_SRC_DIR/iduithemedaemon.h \
     $$THEME_SRC_DIR/duithemedaemonprotocol.h \
+    $$THEME_SRC_DIR/duithemeresourcemanager.h \
 
 SOURCES += $$THEME_SRC_DIR/duitheme.cpp \
     $$THEME_SRC_DIR/duiimagedirectory.cpp \
@@ -28,3 +29,5 @@ SOURCES += $$THEME_SRC_DIR/duitheme.cpp \
     $$THEME_SRC_DIR/duipalette.cpp \
     $$THEME_SRC_DIR/duithemedaemon.cpp \
     $$THEME_SRC_DIR/duithemedaemonprotocol.cpp \
+    $$THEME_SRC_DIR/duithemeresourcemanager.cpp \
+

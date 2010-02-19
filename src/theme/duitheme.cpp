@@ -165,6 +165,11 @@ DuiTheme *DuiTheme::instance()
 
 const QPixmap *DuiTheme::pixmap(const QString &id, const QSize &size)
 {
+    if(id.isEmpty()) {
+        duiWarning("DuiTheme") << "requested pixmap without id";
+        return instance()->d_ptr->invalidPixmap;
+    }
+
     // TODO: check if needed
     QSize realSize = size;
     if (realSize.width() < 1)

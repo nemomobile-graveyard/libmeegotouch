@@ -20,6 +20,7 @@
 #include "duicommonpixmaps.h"
 #include "duithemedaemon.h"
 #include <QFile>
+#include <QDir>
 
 using namespace Dui::DuiThemeDaemonProtocol;
 
@@ -75,16 +76,35 @@ bool DuiCommonPixmaps::load(const QString &filename)
     if (version != PRELOAD_FILE_VERSION)
         return false;
 
+    QString path = cachePath();
+
     while (file.bytesAvailable()) {
         QString imageId;
         QSize size;
         quint32 requestCount;
         bool isMostUsed;
         stream >> imageId >> size >> requestCount >> isMostUsed;
-        requestCounts.insert(PixmapIdentifier(imageId, size), requestCount);
+
+        PixmapIdentifier id(imageId, size);
+        requestCounts.insert(id, requestCount);
         if (isMostUsed) {
+            bool resourceLoaded = false;
+            QFile pixmapFile(path + id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')');
+            if(pixmapFile.open(QIODevice::ReadOnly)) {
+                // find this resource
+                ImageResource* resource = daemon->findImageResource(imageId);
+                if(resource) {
+                    // try to load pre-rasterized pixmap from file
+                    resourceLoaded = resource->load(&pixmapFile, size);
+                }
+                pixmapFile.close();
+            }
+            // if there was no pre-rasterized pixmap for this resource, 
+            // it will be added to load list.
+            if(!resourceLoaded) {
+                toLoadList.insert(PixmapIdentifier(imageId, size));
+            }
             mostUsedPixmaps.insert(PixmapIdentifier(imageId, size));
-            toLoadList.insert(PixmapIdentifier(imageId, size));
         }
     }
 
@@ -92,6 +112,7 @@ bool DuiCommonPixmaps::load(const QString &filename)
         cpuMonitor.start(2000);
     }
 
+    file.close();
     return true;
 }
 
@@ -107,10 +128,29 @@ bool DuiCommonPixmaps::save(const QString &filename) const
 
     QHash<PixmapIdentifier, quint32>::const_iterator i = requestCounts.begin();
 
+    QString path = cachePath();
+
     for (; i != requestCounts.end(); ++i) {
-        stream << i.key().imageId << i.key().size << i.value() << mostUsedPixmaps.contains(i.key());
+        const PixmapIdentifier& id = i.key();
+
+        bool isMostUsed = mostUsedPixmaps.contains(id);
+        stream << id.imageId << id.size << i.value() << isMostUsed;
+        if(isMostUsed) {
+            QFile pixmapFile(path + id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')');
+            if(!pixmapFile.exists()) {
+                if(pixmapFile.open(QIODevice::WriteOnly)) {
+                    ImageResource* resource = daemon->findImageResource(id.imageId);
+                    if(resource && resource->save(&pixmapFile, id.size)) {
+                        pixmapFile.close();
+                    } else {
+                        pixmapFile.remove();
+                    }
+                }
+            }
+        }
     }
 
+    file.close();
     return true;
 }
 
@@ -131,6 +171,7 @@ void DuiCommonPixmaps::loadOne()
         ImageResource *resource = daemon->findImageResource(id.imageId);
         Q_ASSERT_X(resource, "DuiCommonPixmaps", "Theme daemon could not find resource while loading most used pixmaps! Please re-install current theme or clear the preload.list file");
         resource->fetchPixmap(id.size);
+
     } else {
         // the cpu usage was too high, so start start the timer with longer delay
         cpuMonitor.start(2000);
@@ -182,7 +223,7 @@ void DuiCommonPixmaps::increaseRequestCount(const Dui::DuiThemeDaemonProtocol::P
             return;
         }
 
-        // otherwice we have a new pixmap for the list
+        // otherwise we have a new pixmap for the list
 
         // update the limit, there may be duplicate request counts in the most used list
         minRequestsForCache = (secondlyLeastUsedRequests > requestCount.value()) ? requestCount.value() : secondlyLeastUsedRequests;
@@ -193,11 +234,11 @@ void DuiCommonPixmaps::increaseRequestCount(const Dui::DuiThemeDaemonProtocol::P
         // release the old one from the list
         if (!toLoadList.remove(*leastUsed)) {
             // resource was loaded
-            resource = daemon->findImageResource((*leastUsed).imageId);
-            resource->releasePixmap((*leastUsed).size);
+            resource = daemon->findImageResource(leastUsed->imageId);
+            resource->releasePixmap(leastUsed->size);
         }
 
-        mostUsedPixmaps.erase(leastUsed);
+        remove(*leastUsed);
         mostUsedPixmaps.insert(id);
     }
 }
@@ -212,3 +253,26 @@ void DuiCommonPixmaps::reload(const PixmapIdentifier &id, ImageResource *oldReso
     oldResource->releasePixmap(id.size);
     toLoadList.insert(id);
 }
+
+void DuiCommonPixmaps::remove(const Dui::DuiThemeDaemonProtocol::PixmapIdentifier &id)
+{
+    // path to theme-specific cache
+    QString path = cachePath() +
+                   id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')';
+
+    // remove pixmap file from disk if there is one
+    if(QFile::exists(path)) {
+        QFile::remove(path);
+    }
+
+    mostUsedPixmaps.remove(id);
+}
+
+QString DuiCommonPixmaps::cachePath() const
+{
+    return DuiThemeDaemon::systemThemeDirectory() + QDir::separator() +
+           daemon->currentTheme() + QDir::separator() +
+           QString("dui") + QDir::separator() +
+           QString("cache") + QDir::separator();
+}
+

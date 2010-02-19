@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "duiimagedirectory.h"
+#include "duithemeresourcemanager.h"
 
 #include "duidebug.h"
 #include <QDir>
@@ -79,6 +80,30 @@ Qt::HANDLE ImageResource::pixmapHandle(const QSize &size)
 #endif
 }
 
+bool ImageResource::save(QIODevice* device, const QSize& size) const
+{
+    QHash<QSize, PixmapCacheEntry>::const_iterator iterator = cachedPixmaps.find(size);
+    if(iterator == cachedPixmaps.constEnd())
+        return false;
+
+    return iterator.value().pixmap->save(device, "PNG");
+}
+
+bool ImageResource::load(QIODevice* device, const QSize& size)
+{
+    QPixmap* pixmap = new QPixmap();
+    if(!pixmap->loadFromData(device->readAll(), "PNG")) {
+        delete pixmap;
+        return false;
+    }
+
+    PixmapCacheEntry &cacheEntry = cachedPixmaps[size];
+    Q_ASSERT_X(!cacheEntry.pixmap, "ImageResource", "Tried to load pixmap that already exists.");
+    cacheEntry.pixmap = pixmap;
+    ++cacheEntry.refCount;
+    return true;
+}
+
 QPixmap *PixmapImageResource::createPixmap(const QSize &size)
 {
     if (!image) {
@@ -122,6 +147,9 @@ QPixmap *IconImageResource::createPixmap(const QSize &size)
 
 QPixmap *SvgImageResource::createPixmap(const QSize &size)
 {
+    QSvgRenderer* renderer = DuiThemeResourceManager::instance().svgRenderer(absoluteFilePath);
+    Q_ASSERT_X(renderer, "SvgImageResource", "SVG renderer not found");
+
     QSize svgImageSize = size;
     if (size.isNull()) {
         // the requested size is (0,0) so we need to fetch the default size from the svg.
@@ -220,6 +248,17 @@ DuiThemeImagesDirectory::DuiThemeImagesDirectory(const QString &path, const QStr
             if (i->isDir()) {
                 directories.append(i->absoluteFilePath());
             } else if (i->suffix() == "svg") {
+                if(QFile::exists(i->absoluteFilePath() + ".ids")) {
+                    // read file ids and create svg resources
+                    QFile file(i->absoluteFilePath() + ".ids");
+                    if(file.open(QIODevice::ReadOnly)) {
+                        while(!file.atEnd()) {
+                            QString id = file.readLine().trimmed();
+                            imageIds.insert(id, new SvgImageResource(id, i->absoluteFilePath()));
+                        }
+                    }
+                }
+                // insert this to svg lookup list, this acts as a fallback to old implementation
                 svgFiles.insert(i->absoluteFilePath(), QSharedPointer<QSvgRenderer>());
             }
         }
@@ -262,13 +301,13 @@ ImageResource *DuiThemeImagesDirectory::findImage(const QString &imageId)
         QHash< QString, QSharedPointer<QSvgRenderer> >::iterator end = svgFiles.end();
 
         for (; i != end; ++i) {
-            if (i.value().isNull()) {
-                i.value() = QSharedPointer<QSvgRenderer>(new QSvgRenderer(i.key()));
-            }
+            
+            QSvgRenderer* renderer = DuiThemeResourceManager::instance().svgRenderer(i.key());
+            Q_ASSERT_X(renderer, "SvgImageResource", "SVG renderer not found");
 
             // does this svg contain the element we're looking for?
-            if (i.value()->elementExists(imageId)) {
-                resource = new SvgImageResource(imageId, i.value());
+            if (renderer->elementExists(imageId)) {
+                resource = new SvgImageResource(imageId, i.key());
                 imageIds.insert(imageId, resource);
                 break;
             }
@@ -384,13 +423,12 @@ ImageResource *DuiImageDirectory::findImage(const QString &imageId)
         QHash< QString, QSharedPointer<QSvgRenderer> >::iterator end = svgFiles.end();
 
         for (; i != end; ++i) {
-            if (i.value().isNull()) {
-                i.value() = QSharedPointer<QSvgRenderer>(new QSvgRenderer(i.key()));
-            }
+            QSvgRenderer* renderer = DuiThemeResourceManager::instance().svgRenderer(i.key());
+            Q_ASSERT_X(renderer, "SvgImageResource", "SVG renderer not found");
 
             // does this svg contain the element we're looking for?
-            if (i.value()->elementExists(imageId)) {
-                resource = new SvgImageResource(imageId, i.value());
+            if (renderer->elementExists(imageId)) {
+                resource = new SvgImageResource(imageId, i.key());
                 imageIds.insert(imageId, resource);
                 break;
             }
