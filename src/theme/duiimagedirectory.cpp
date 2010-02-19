@@ -274,6 +274,7 @@ DuiThemeImagesDirectory::~DuiThemeImagesDirectory()
     qDeleteAll(localeSpecificIcons);
     localeSpecificIcons.clear();
     svgFiles.clear();
+    notFoundIds.clear();
 }
 
 ImageResource *DuiThemeImagesDirectory::findImage(const QString &imageId)
@@ -405,6 +406,7 @@ DuiImageDirectory::~DuiImageDirectory()
     qDeleteAll(imageIds);
     imageIds.clear();
     svgFiles.clear();
+    notFoundIds.clear();
 }
 
 ImageResource *DuiImageDirectory::findImage(const QString &imageId)
