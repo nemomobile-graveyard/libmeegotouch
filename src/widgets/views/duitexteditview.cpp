@@ -800,7 +800,7 @@ void DuiTextEditView::resizeEvent(QGraphicsSceneResizeEvent *event)
         qreal horizontalChange = event->newSize().width() - event->oldSize().width();
 
         if (horizontalChange > 0) {
-            d->hscroll = qMax(d->hscroll - horizontalChange, 0.0);
+            d->hscroll = qMax<qreal>(d->hscroll - horizontalChange, 0.0);
             d->doUpdate();
         }
     }
