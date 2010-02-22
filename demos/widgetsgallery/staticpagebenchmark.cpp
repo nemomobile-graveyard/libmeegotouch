@@ -8,7 +8,7 @@
 
 namespace
 {
-    const int pageDuration = 5000;
+    const int pageDuration = 4000;
 }
 
 StaticPageBenchmark::StaticPageBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo, Dui::OrientationAngle targetOrientationAngle)
@@ -25,12 +25,16 @@ QString StaticPageBenchmark::name()
 void StaticPageBenchmark::start()
 {
     if (!applicationPage->isActiveWindow()) {
-        connect(applicationPage, SIGNAL(windowShown()), this, SLOT(waitPageDuration()));
+        connect(applicationPage, SIGNAL(windowShown()), this, SLOT(stabilizeFps()));
         applicationPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
         applicationPage->appear();
     } else {
-        QTimer::singleShot(0, this, SLOT(waitPageDuration()));
+        QTimer::singleShot(0, this, SLOT(stabilizeFps()));
     }
+}
+
+void StaticPageBenchmark::stabilizeFps() {
+    QTimer::singleShot(1000, this, SLOT(waitPageDuration()));
 }
 
 void StaticPageBenchmark::waitPageDuration()

@@ -19,6 +19,7 @@ public:
     void start();
 
 private slots:
+    void stabilizeFps();
     void waitPageDuration();
     void terminateBenchmark();
 
