@@ -35,7 +35,6 @@ public:
     virtual ~DuiHomeButtonPanelViewPrivate();
 
     virtual void init();
-    virtual void setupButton();
 
     //! The actual home button
     DuiButton *button;

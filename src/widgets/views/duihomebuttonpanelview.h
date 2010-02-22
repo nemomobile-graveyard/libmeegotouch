@@ -21,6 +21,7 @@
 #define DUIHOMEBUTTONPANELVIEW_H
 
 #include "duiscenewindowview.h"
+#include <duihomebuttonpanelstyle.h>
 
 class DuiHomeButtonPanel;
 class DuiHomeButtonPanelViewPrivate;
@@ -34,11 +35,16 @@ class DuiHomeButtonPanelViewPrivate;
 class DUI_EXPORT DuiHomeButtonPanelView : public DuiSceneWindowView
 {
     Q_OBJECT
-    DUI_VIEW(DuiSceneWindowModel, DuiSceneWindowStyle)
+    DUI_VIEW(DuiSceneWindowModel, DuiHomeButtonPanelStyle)
 
 public:
     DuiHomeButtonPanelView(DuiHomeButtonPanel *controller);
     virtual ~DuiHomeButtonPanelView();
+
+protected:
+    //! \reimp
+    virtual void applyStyle();
+    //! \reimp_end
 
 private:
     Q_DISABLE_COPY(DuiHomeButtonPanelView)

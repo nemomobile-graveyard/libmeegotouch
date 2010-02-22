@@ -48,6 +48,7 @@ WIDGET_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/duiescapebuttonpanelstyle.h \
     $$STYLE_SRC_DIR/duigriditemstyle.h \
     $$STYLE_SRC_DIR/duigroupanimationstyle.h \
+    $$STYLE_SRC_DIR/duihomebuttonpanelstyle.h \
     $$STYLE_SRC_DIR/duiimagewidgetstyle.h \
     $$STYLE_SRC_DIR/duiinfobannerstyle.h \
     $$STYLE_SRC_DIR/duilabelstyle.h \

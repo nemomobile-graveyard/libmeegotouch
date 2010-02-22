@@ -47,14 +47,8 @@ void DuiEscapeButtonPanelViewPrivate::init()
 
     backButton = new DuiButton(controller);
     closeButton = new DuiButton(controller);
-
-    backButton->setObjectName("BackButton");
     backButton->setViewType("icon");
-    backButton->setIconID("Icon-back");
-
-    closeButton->setObjectName("CloseButton");
     closeButton->setViewType("icon");
-    closeButton->setIconID("Icon-close");
 
     mainLayout->addItem(closeButton, 0, 0);
     mainLayout->addItem(backButton, 0, 0);
@@ -126,6 +120,10 @@ void DuiEscapeButtonPanelView::applyStyle()
 
     DuiSceneWindowView::applyStyle();
 
+    d->backButton->setObjectName(style()->backButtonObjectName());
+    d->backButton->setIconID(style()->backButtonIconId());
+    d->closeButton->setObjectName(style()->closeButtonObjectName());
+    d->closeButton->setIconID(style()->closeButtonIconId());
     d->opacityTimeLine->setDuration(style()->buttonAnimationLength());
 }
 

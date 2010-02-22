@@ -17,28 +17,25 @@
 **
 ****************************************************************************/
 
-#ifndef DUIESCAPEBUTTONPANELSTYLE_H
-#define DUIESCAPEBUTTONPANELSTYLE_H
+#ifndef DUIHOMEBUTTONPANELSTYLE_H
+#define DUIHOMEBUTTONPANELSTYLE_H
 
 #include <duiscenewindowstyle.h>
 
-class DUI_EXPORT DuiEscapeButtonPanelStyle : public DuiSceneWindowStyle
+class DUI_EXPORT DuiHomeButtonPanelStyle : public DuiSceneWindowStyle
 {
     Q_OBJECT
-    DUI_STYLE_INTERNAL(DuiEscapeButtonPanelStyle)
+    DUI_STYLE_INTERNAL(DuiHomeButtonPanelStyle)
 
-    DUI_STYLE_ATTRIBUTE(int, buttonAnimationLength, ButtonAnimationLength)
-    DUI_STYLE_ATTRIBUTE(QString, backButtonObjectName, BackButtonObjectName)
-    DUI_STYLE_ATTRIBUTE(QString, closeButtonObjectName, CloseButtonObjectName)
-    DUI_STYLE_ATTRIBUTE(QString, backButtonIconId, BackButtonIconId)
-    DUI_STYLE_ATTRIBUTE(QString, closeButtonIconId, CloseButtonIconId)
+    DUI_STYLE_ATTRIBUTE(QString, homeButtonObjectName, HomeButtonObjectName)
+    DUI_STYLE_ATTRIBUTE(QString, homeButtonIconId, HomeButtonIconId)
 };
 
-class DUI_EXPORT DuiEscapeButtonPanelStyleContainer : public DuiSceneWindowStyleContainer
+class DUI_EXPORT DuiHomeButtonPanelStyleContainer : public DuiSceneWindowStyleContainer
 {
-    DUI_STYLE_CONTAINER_INTERNAL(DuiEscapeButtonPanelStyle)
+    DUI_STYLE_CONTAINER_INTERNAL(DuiHomeButtonPanelStyle)
     DUI_STYLE_MODE(Fullscreen)
 };
 
-#endif // DUIESCAPEBUTTONPANELSTYLE_H
+#endif // DUIHOMEBUTTONPANELSTYLE_H
 

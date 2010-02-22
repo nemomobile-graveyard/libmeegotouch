@@ -32,10 +32,8 @@ DuiHomeButtonPanelViewPrivate::DuiHomeButtonPanelViewPrivate()
 
 DuiHomeButtonPanelViewPrivate::~DuiHomeButtonPanelViewPrivate()
 {
-    if (button) {
-        delete button;
-        button = 0;
-    }
+    delete button;
+    button = 0;
 }
 
 void DuiHomeButtonPanelViewPrivate::init()
@@ -45,18 +43,12 @@ void DuiHomeButtonPanelViewPrivate::init()
     mainLayout->setSpacing(0);
 
     button = new DuiButton(controller);
+    button->setViewType("icon");
 
     mainLayout->addItem(button);
     controller->setLayout(mainLayout);
 
     QObject::connect(button, SIGNAL(clicked()), controller, SIGNAL(buttonClicked()));
-}
-
-void DuiHomeButtonPanelViewPrivate::setupButton()
-{
-    button->setObjectName("DuiHomeButton");
-    button->setViewType("icon");
-    button->setIconID("Icon-home");
 }
 
 DuiHomeButtonPanelView::DuiHomeButtonPanelView(DuiHomeButtonPanel *controller) :
@@ -65,11 +57,20 @@ DuiHomeButtonPanelView::DuiHomeButtonPanelView(DuiHomeButtonPanel *controller) :
     Q_D(DuiHomeButtonPanelView);
     d->controller = controller;
     d->init();
-    d->setupButton();
 }
 
 DuiHomeButtonPanelView::~DuiHomeButtonPanelView()
 {
+}
+
+void DuiHomeButtonPanelView::applyStyle()
+{
+    Q_D(DuiHomeButtonPanelView);
+
+    DuiSceneWindowView::applyStyle();
+
+    d->button->setObjectName(style()->homeButtonObjectName());
+    d->button->setIconID(style()->homeButtonIconId());
 }
 
 DUI_REGISTER_VIEW_NEW(DuiHomeButtonPanelView, DuiHomeButtonPanel)
