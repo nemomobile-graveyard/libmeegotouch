@@ -500,7 +500,7 @@ void DuiFastPlainMultiColumnListViewPrivate::createVisibleItems(const QModelInde
         }
     }
 
-    // Remove multicolumn specific visual items that are no longer visible 
+    // Remove multicolumn specific visual items that are no longer visible
     // After ABI-unfreeze this should be handled in multicolumn's removeInvisibleItems()
     for(int visibleIndex = visibleItems.count()-1; visibleIndex >= 0; --visibleIndex) {
         int visibleWidgetFlatRow =  widgetFlatRows[visibleItems[visibleIndex]];
@@ -768,8 +768,6 @@ bool DuiFastGroupHeaderListViewPrivate::isGroupHeader(const QModelIndex &index)
 
 void DuiFastGroupHeaderListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRow)
 {
-    updateHeadersPositions();
-    updateHeadersRows();
     DuiFastListViewPrivate::createVisibleItems(firstVisibleRow, lastVisibleRow);
 }
 
@@ -880,7 +878,7 @@ void DuiFastMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &fi
         }
     }
 
-    // Remove multicolumn specific visual items that are no longer visible 
+    // Remove multicolumn specific visual items that are no longer visible
     // After ABI-unfreeze this should be handled in multicolumn's removeInvisibleItems()
     for(int visibleIndex = visibleItems.count()-1; visibleIndex >= 0; --visibleIndex) {
         int visibleWidgetFlatRow =  widgetFlatRows[visibleItems[visibleIndex]];
