@@ -483,6 +483,16 @@ void DuiFastPlainMultiColumnListViewPrivate::createVisibleItems(const QModelInde
             }
         }
     }
+
+    // Remove multicolumn specific visual items that are no longer visible 
+    // After ABI-unfreeze this should be handled in multicolumn's removeInvisibleItems()
+    for(int visibleIndex = visibleItems.count()-1; visibleIndex >= 0; --visibleIndex) {
+        int visibleWidgetFlatRow =  widgetFlatRows[visibleItems[visibleIndex]];
+        if(visibleWidgetFlatRow < firstRow || visibleWidgetFlatRow > lastRow) {
+            deleteItem(visibleItems[visibleIndex]);
+            visibleItems.remove(visibleIndex);
+        }
+    }
 }
 
 ////////////
@@ -841,6 +851,16 @@ void DuiFastMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &fi
                 if (currentRow + column + 1 == itemsCount() + model->rowCount() || flatRowToColumn(currentRow + column + 1) == 0)
                     break;
             }
+        }
+    }
+
+    // Remove multicolumn specific visual items that are no longer visible 
+    // After ABI-unfreeze this should be handled in multicolumn's removeInvisibleItems()
+    for(int visibleIndex = visibleItems.count()-1; visibleIndex >= 0; --visibleIndex) {
+        int visibleWidgetFlatRow =  widgetFlatRows[visibleItems[visibleIndex]];
+        if(visibleWidgetFlatRow < firstRow || visibleWidgetFlatRow > lastRow) {
+            deleteItem(visibleItems[visibleIndex]);
+            visibleItems.remove(visibleIndex);
         }
     }
 }
