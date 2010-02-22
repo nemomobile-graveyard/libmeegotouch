@@ -1,5 +1,7 @@
 libdui (0.19.1-1) unstable; urgency=low
 
+  * PlainQt style plugin disabled
+  * Fixes: NB#156084 - DuiList does not refresh properly when dynamic tree model is used(setShowGroups())
   * Fixes: NB#122086 - DuiTextEdit partially hides text
   * Fixes: NB#153100 - DuiList doesn't update when items are removed from a model with group headers
   * Fixes: NB#155802 - <MemLeak> duiimagedirectory.cpp duiwidgetview.cpp duitheme.cpp
