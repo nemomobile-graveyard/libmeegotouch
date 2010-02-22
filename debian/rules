@@ -59,7 +59,7 @@ configure-stamp:
 	dh_testdir
 
 	mkdir -p $(BUILD_DIR)
-	cd $(BUILD_DIR) && ../configure --prefix=/usr -release -make "tests plainqt benchmarks" $(OPTIONS)
+	cd $(BUILD_DIR) && ../configure --prefix=/usr -release -make "tests benchmarks" $(OPTIONS)
 
 	touch configure-stamp
 
