@@ -19,6 +19,8 @@
 
 #include "emptymainloophelper.h"
 
+#include <DuiTheme>
+
 #include <QApplication>
 #include <QTimer>
 
@@ -37,7 +39,7 @@ void EmptyMainLoopHelper::triggerTermination(TerminationType type)
 
 void EmptyMainLoopHelper::terminateOnEmptyMainLoop()
 {
-    if (qApp->hasPendingEvents()) {
+    if (qApp->hasPendingEvents() || DuiTheme::hasPendingRequests()) {
         QTimer::singleShot(0, this, SLOT(terminateOnEmptyMainLoop()));
     } else {
         QTimer::singleShot(20, this, SLOT(terminateOnEmptyMainLoop2()));
