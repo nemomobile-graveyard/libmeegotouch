@@ -154,17 +154,17 @@ void QtMaemo6StylePrivate::initDui()
         qDebug("appName: %s", argv[ 0 ]);
     }
 
-    if (DuiComponentData::instance() != 0) {
-        m_isDuiApplication = true;
-    } else {
-        m_componentData = new DuiComponentData(argc, argv);
-    }
-
     m_windowEventFilter = new QtMaemo6StyleEventFilter(q);
     m_panGestureScrolling = new QtMaemo6PanGesture(q);
     m_scrollBarEventFilter = new QtMaemo6ScrollBarEventFilter(q);
     m_scrollBarEventFilter->setScrollBarsAlwaysVisible(false);
     m_panGestureScrolling = new QtMaemo6PanGesture(q);
+
+    if (DuiComponentData::instance() != 0) {
+        m_isDuiApplication = true;
+    } else {
+        m_componentData = new DuiComponentData(argc, argv);
+    }
 
     const DuiLabelStyle *style =
         static_cast<const DuiLabelStyle *>(duiStyle(QStyle::State_Active,
@@ -720,7 +720,7 @@ void QtMaemo6Style::polish(QApplication *app)
 
 void QtMaemo6Style::polish(QWidget *widget)
 {
-    if(qobject_cast<DuiApplicationWindow*>(widget))
+    if(qobject_cast<DuiWindow*>(widget))
         return;
 
     Q_D(QtMaemo6Style);
