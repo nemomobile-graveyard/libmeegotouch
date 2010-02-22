@@ -139,7 +139,6 @@ void DuiLocalThemeDaemon::themeChangedSlot()
             const QList<PixmapIdentifier>& ids = i.value();
 
             foreach(const PixmapIdentifier & id, ids) {
-                releasePixmap(id.imageId, id.size);
                 pixmapHandle(id.imageId, id.size);
             }
         }
