@@ -174,9 +174,9 @@ void DuiWindowPrivate::_q_sendOrientationChangedSignal()
     if (sceneManager == 0)
         return;
 
+    notifyWidgetsAboutOrientationChange();
     emit q->orientationAngleChanged(sceneManager->orientationAngle());
     emit q->orientationChanged(sceneManager->orientation());
-    notifyWidgetsAboutOrientationChange();
 }
 
 void DuiWindowPrivate::notifyWidgetsAboutOrientationChange()
