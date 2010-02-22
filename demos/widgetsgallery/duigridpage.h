@@ -17,16 +17,31 @@
 **
 ****************************************************************************/
 
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef DUIGRIDPAGE_H
+#define DUIGRIDPAGE_H
 
-#include <QString>
+#include <DuiList>
 
-namespace Utils
+#include "templatepage.h"
+
+class DuiGridPage: public TemplatePage
 {
-    QString contactsDir();
-    QString imagesDir();
-    QString mediaArtDir();
-}
+    Q_OBJECT
+
+public:
+    DuiGridPage();
+    virtual ~DuiGridPage();
+
+    virtual void createContent();
+    virtual QString timedemoTitle();
+
+public slots:
+
+protected:
+    void retranslateUi();
+
+private:
+    DuiList *list;
+};
 
 #endif

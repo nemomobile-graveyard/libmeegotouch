@@ -29,6 +29,7 @@
 #include "toolbarpage.h"
 #include "textentrypage.h"
 #include "duilistpage.h"
+#include "duigridpage.h"
 #include "sliderpage.h"
 #include "comboboxpage.h"
 #include "containerpage.h"
@@ -135,6 +136,7 @@ void ListPage::createContent()
     addPage(new ProgressBarPage);
     addPage(new SpinnerPage);
     addPage(new DuiListPage);
+    addPage(new DuiGridPage);
     addPage(new CheckboxPage);
     addPage(new ComboBoxPage);
     addPage(new TextEntryPage);

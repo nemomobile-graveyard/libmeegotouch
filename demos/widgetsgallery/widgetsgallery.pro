@@ -44,6 +44,8 @@ SOURCES += main.cpp \
     toolbarpage.cpp \
     textentrypage.cpp \
     duilistpage.cpp \
+    duigridpage.cpp \
+    gridmodel.cpp \
     sliderpage.cpp \
     comboboxpage.cpp \
     progressbarpage.cpp \
@@ -77,6 +79,8 @@ HEADERS += templatepage.h \
     toolbarpage.h \
     textentrypage.h \
     duilistpage.h \
+    duigridpage.h \
+    gridmodel.h \
     sliderpage.h \
     comboboxpage.h \
     progressbarpage.h \
@@ -118,6 +122,7 @@ testsxml.files = tests.xml
 testsxml.path = /usr/share/dui-demos-widgetsgallery-tests/
 DEFINES += CONTACTS_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/contacts/\\\"\"
 DEFINES += IMAGES_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/\\\"\"
+DEFINES += MEDIA_ART_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/media-art/\\\"\"
 
 # Install instructions
 INSTALLS += target \

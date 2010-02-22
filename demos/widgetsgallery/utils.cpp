@@ -56,4 +56,20 @@ namespace Utils
 #endif
     }
 
+    QString mediaArtDir()
+    {
+#ifdef Q_OS_WIN
+        QDir appDir(QCoreApplication::applicationDirPath());
+        appDir.cdUp();
+        appDir.cd("widgetsgallery");
+        appDir.cd("themes");
+        appDir.cd("images");
+        appDir.cd("media-art");
+
+        return appDir.path().append("/");
+#else
+        return QString(MEDIA_ART_DIR);
+#endif
+    }
+
 }
