@@ -27,14 +27,13 @@
 #include "qtmaemo6styleeventfilter.h"
 #include "qtmaemo6scrollbareventfilter.h"
 
-class QtMaemo6PanGesture;
-
 class DuiComponentData;
 class DuiWidgetController;
 class QToolButton;
 class QAction;
 class QStatusBar;
 class QMenuBar;
+class QtMaemo6KineticScrolling;
 
 class QtMaemo6StylePrivate : public QtMaemo6TestStylePrivate
 {
@@ -305,10 +304,11 @@ public:
     bool m_isDuiInitialized;
     bool m_isDuiApplication;
     QtMaemo6ScrollBarEventFilter *m_scrollBarEventFilter;
-    QtMaemo6PanGesture *m_panGestureScrolling;
     QtMaemo6StyleEventFilter *m_windowEventFilter;
 
     QMenuBar *m_menuBar;
+
+    QtMaemo6KineticScrolling* m_kinetic;
 
 };
 
