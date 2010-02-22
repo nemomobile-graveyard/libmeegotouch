@@ -1,5 +1,6 @@
 usr/bin/qtstyledialogs
 usr/bin/qtstyleexample
+usr/bin/qtstylekinetic
 usr/share/applications/qtstyledialogs.desktop
 usr/share/applications/qtstyledialogs-windows-style.desktop
 usr/share/applications/qtstyleexample.desktop

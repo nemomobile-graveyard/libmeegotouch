@@ -7,6 +7,7 @@ SUBDIRS     =  \
     animatedlayout/translations \
     qtstyleexample \
     qtstyledialogs \
+    qtstylekinetic \
     appletinstallationsource
     
 # we do not have compiled QtDBusd4

@@ -8,7 +8,6 @@ PRIVATE_HEADERS += \
   qtmaemo6teststyle.h \
   qtmaemo6teststyle_p.h \
   qtmaemo6style_p.h \
-  qtmaemo6pangesture.h \
   qtmaemo6styleeventfilter.h \
   qtmaemo6scrollbareventfilter.h \
   qtmaemo6styleplugin.h \
@@ -21,12 +20,12 @@ PRIVATE_HEADERS += \
   qtmaemo6menuproxy.h \
   qtmaemo6menu.h \
   qtmaemo6submenu.h \
-  qtmaemo6comboboxpopup.h
+  qtmaemo6comboboxpopup.h \
+  qtmaemo6kineticscrolling.h
 
 SOURCES = \
   qtmaemo6teststyle.cpp \
   qtmaemo6style.cpp \
-  qtmaemo6pangesture.cpp \
   qtmaemo6styleeventfilter.cpp \
   qtmaemo6scrollbareventfilter.cpp \
   qtmaemo6styleplugin.cpp \
@@ -38,4 +37,5 @@ SOURCES = \
   qtmaemo6menuproxy.cpp \
   qtmaemo6menu.cpp \
   qtmaemo6submenu.cpp \
-  qtmaemo6comboboxpopup.cpp
+  qtmaemo6comboboxpopup.cpp \
+  qtmaemo6kineticscrolling.cpp

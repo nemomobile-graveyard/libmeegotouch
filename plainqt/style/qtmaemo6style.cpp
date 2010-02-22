@@ -79,13 +79,12 @@
 #include <duiwidgetfadeoutanimationstyle.h>
 #include <duideviceprofile.h>
 
-#include "qtmaemo6pangesture.h"
 #include "qtmaemo6titlebar.h"
 #include "qtmaemo6dialogtitle.h"
 #include "qtmaemo6windowdecoration.h"
 #include "qtmaemo6dialogproxy.h"
 #include "qtmaemo6menu.h"
-
+#include "qtmaemo6kineticscrolling.h"
 //krazy:excludeall=qclasses
 
 //#include "duicontainerheader_p.h"
@@ -123,8 +122,8 @@ QtMaemo6StylePrivate::QtMaemo6StylePrivate()
       m_isDuiInitialized(false),
       m_isDuiApplication(false),
       m_scrollBarEventFilter(0),
-      m_panGestureScrolling(0),
-      m_menuBar(0)
+      m_menuBar(0),
+      m_kinetic(0)
 {
 }
 
@@ -155,10 +154,9 @@ void QtMaemo6StylePrivate::initDui()
     }
 
     m_windowEventFilter = new QtMaemo6StyleEventFilter(q);
-    m_panGestureScrolling = new QtMaemo6PanGesture(q);
     m_scrollBarEventFilter = new QtMaemo6ScrollBarEventFilter(q);
     m_scrollBarEventFilter->setScrollBarsAlwaysVisible(false);
-    m_panGestureScrolling = new QtMaemo6PanGesture(q);
+    m_kinetic = new QtMaemo6KineticScrolling(q);
 
     if (DuiComponentData::instance() != 0) {
         m_isDuiApplication = true;
@@ -710,7 +708,55 @@ void QtMaemo6Style::init()
 //    QPixmapCache::setCacheLimit( 1000 );
 }
 
+int QtMaemo6Style::kineticScrollStartDelay() const {
+    Q_D(const QtMaemo6Style);
+    return d->m_kinetic->scrollStartDelay();
+}
 
+void QtMaemo6Style::setKineticScrollStartDelay(int delay) {
+    Q_D(QtMaemo6Style);
+    d->m_kinetic->setScrollStartDelay(delay);
+}
+
+int QtMaemo6Style::kineticScrollStartOffset() const {
+    Q_D(const QtMaemo6Style);
+    return d->m_kinetic->scrollStartOffset();
+}
+
+void QtMaemo6Style::setKineticScrollStartOffset(int offset) {
+    Q_D(QtMaemo6Style);
+    d->m_kinetic->setScrollStartOffset(offset);
+}
+
+int QtMaemo6Style::kineticDeaccelerationInterval() const {
+    Q_D(const QtMaemo6Style);
+    return d->m_kinetic->deaccelerationInterval();
+}
+
+void QtMaemo6Style::setKineticDeaccelerationInterval(int interval) {
+    Q_D(QtMaemo6Style);
+    d->m_kinetic->setDeaccelerationInterval(interval);
+}
+
+int QtMaemo6Style::kineticDeaccelerationStrength() const {
+    Q_D(const QtMaemo6Style);
+    return d->m_kinetic->deaccelerationStrength();
+}
+
+void QtMaemo6Style::setKineticDeaccelerationStrength(int strength) {
+    Q_D(QtMaemo6Style);
+    d->m_kinetic->setDeaccelerationStrength(strength);
+}
+
+int QtMaemo6Style::kineticMaxKineticScrollSpeed() const {
+    Q_D(const QtMaemo6Style);
+    return d->m_kinetic->maxKineticScrollSpeed();
+}
+
+void QtMaemo6Style::setKineticMaxKineticScrollSpeed(int speed) {
+    Q_D(QtMaemo6Style);
+    d->m_kinetic->setMaxKineticScrollSpeed(speed);
+}
 
 
 void QtMaemo6Style::polish(QApplication *app)
@@ -772,7 +818,7 @@ void QtMaemo6Style::polish(QWidget *widget)
     }
 
     if (QAbstractScrollArea *abstractScrollArea = qobject_cast<QAbstractScrollArea *>(widget)) {
-        d->m_panGestureScrolling->enableOn(abstractScrollArea);
+        d->m_kinetic->enableOn(abstractScrollArea);
         d->m_scrollBarEventFilter->enableOn(abstractScrollArea);
         //FIXME: public API usage
         //widget->setAutoFillBackground(false);
