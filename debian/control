@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: libdui0
 Architecture: any
-Depends:  libdui-l10n-engineering-english (= ${Source-Version}), libqtcore4 (>= 4.6.0), libqtgui4 (>= 4.6.0), libqt4-dbus (>= 4.6.0), dbus-x11, ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, duitheme (>= 0.5.0), libxdamage1, system-services
+Depends:  libdui-l10n-engineering-english (= ${Source-Version}), libqtcore4 (>= 4.6.0), libqtgui4 (>= 4.6.0), libqt4-dbus (>= 4.6.0), dbus-x11, ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, duitheme (>= 0.5.0), libxdamage1
 Provides: libdui
 Conflicts: libdui
 Suggests: libdui-l10n-ar, libdui-l10n-de, libdui-l10n-en, libdui-l10n-fi, libdui-l10n-ur, libdui-l10n-zh-cn
