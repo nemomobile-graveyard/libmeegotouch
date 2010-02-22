@@ -246,8 +246,11 @@ void Pt_DuiButton::toggledPaintPerformance()
 
     m_subject->setDown(true);
     m_subject->setDown(false);
-    usleep(10000);
-    QCoreApplication::processEvents();
+
+    while (DuiTheme::hasPendingRequests()) {
+        usleep(10000);
+        QCoreApplication::processEvents();
+    }
     // actual benchmark
     QBENCHMARK {
         painter.save();
