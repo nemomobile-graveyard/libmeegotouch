@@ -137,8 +137,6 @@ void DuiList::selectItem(const QModelIndex &index)
         return;
     }
 
-    emit itemClicked(index);
-
     if (sModel != NULL) {
         if (selectionMode() == DuiList::MultiSelection) {
             if (sModel->isSelected(index)) {
@@ -150,6 +148,8 @@ void DuiList::selectItem(const QModelIndex &index)
             sModel->select(index, QItemSelectionModel::SelectCurrent);
         }
     }
+
+    emit itemClicked(index);
 }
 
 void DuiList::setCellCreator(DuiCellCreator *itemCreator)
