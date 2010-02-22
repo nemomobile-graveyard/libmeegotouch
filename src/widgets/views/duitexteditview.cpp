@@ -300,9 +300,9 @@ void DuiTextEditViewPrivate::checkScroll()
     } else if (activeDocument()->textWidth() != -1) {
         // checking scrolling with respect to size only if the size is set
 
-        if (currentX > (activeDocument()->textWidth() + hscroll
-                        - 2 * activeDocument()->documentMargin())) {
-            // ...or after widget (if the widget size is set)
+        if (currentX > (activeDocument()->textWidth() - 2 * activeDocument()->documentMargin()
+                        + hscroll)) {
+            // check cursor being after the widget (if the widget size is set)
             // FIXME: margins seem to be a bit funny. this avoids having cursor outside
             // visible area.
             hscroll = currentX - activeDocument()->textWidth()
@@ -794,6 +794,15 @@ void DuiTextEditView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     if (d->maskedTextDocument != 0) {
         d->maskedTextDocument->setTextWidth(textWidth);
+    }
+
+    if (event->oldSize().isValid()) {
+        qreal horizontalChange = event->newSize().width() - event->oldSize().width();
+
+        if (horizontalChange > 0) {
+            d->hscroll = qMax(d->hscroll - horizontalChange, 0.0);
+            d->doUpdate();
+        }
     }
 
     d->checkScroll();
