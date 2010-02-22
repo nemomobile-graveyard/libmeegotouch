@@ -143,17 +143,23 @@ void DuiFastListView::setGeometry(const QRectF &rect)
 void DuiFastListView::relayoutItemsInExposedRect()
 {
     if (d_ptr->model && model()->cellCreator()) {
-        QModelIndex firstVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y());
-        d_ptr->updateFirstVisibleRow(firstVisibleRow);
-        QModelIndex lastVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight);
-        d_ptr->updateLastVisibleRow(lastVisibleRow);
+        int rowCount = d_ptr->model->rowCount();
 
-        QPoint firstVisibleItemPos(0, d_ptr->locatePosOfItem(firstVisibleRow));
-        QPoint lastVisibleItemPos(0, d_ptr->locatePosOfItem(lastVisibleRow));
-        d_ptr->removeInvisibleItems(firstVisibleItemPos, lastVisibleItemPos);
+        if(rowCount)
+        {
+            QModelIndex firstVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y());
+            d_ptr->updateFirstVisibleRow(firstVisibleRow);
+            QModelIndex lastVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight);
+            d_ptr->updateLastVisibleRow(lastVisibleRow);
 
-        if (d_ptr->model->rowCount() > 0)
+            QPoint firstVisibleItemPos(0, d_ptr->locatePosOfItem(firstVisibleRow));
+            QPoint lastVisibleItemPos(0, d_ptr->locatePosOfItem(lastVisibleRow));
+            d_ptr->removeInvisibleItems(firstVisibleItemPos, lastVisibleItemPos);
+
             d_ptr->createVisibleItems(firstVisibleRow, lastVisibleRow);
+        } else {
+            d_ptr->clearVisibleItemsArray();
+        }
     }
 }
 
@@ -232,12 +238,7 @@ void DuiFastListView::rowsInserted(const QModelIndex &parent, int start, int end
     Q_UNUSED(start);
     Q_UNUSED(end);
 
-    // updateGeometry adjusts container scroll bars and reposition cells
-    updateGeometry();
-
-    d_ptr->clearVisibleItemsArray();
-    d_ptr->createVisibleItems(d_ptr->indexToFlatRow(model()->firstVisibleItem()),
-                              d_ptr->indexToFlatRow(model()->lastVisibleItem()));
+    layoutChanged();
 }
 
 /*!
@@ -257,8 +258,14 @@ void DuiFastListView::rowsRemoved(const QModelIndex &parent, int start, int end)
 
 void DuiFastListView::layoutChanged()
 {
-    relayoutItemsInExposedRect();
-    dataChanged(model()->firstVisibleItem(), model()->lastVisibleItem());
+    d_ptr->layoutChanged();
+
+    updateGeometry();
+    d_ptr->clearVisibleItemsArray();
+    if(d_ptr->model->rowCount())
+    {
+        d_ptr->createVisibleItems();
+    }
 }
 
 void DuiFastListView::modelReset()

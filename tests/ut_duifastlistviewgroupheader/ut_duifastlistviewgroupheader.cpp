@@ -452,9 +452,68 @@ void Ut_DuiFastListViewGroupHeader2::testOutOfBoundFlatRowToIndex()
     QCOMPARE(fastListViewPrivate->flatRowToIndex(2).row(), 1);
 }
 
+void Ut_DuiFastListViewGroupHeaderEmptyModel::makePhoneBook()
+{
+    phoneBook = new QObject;
+}
+
+void Ut_DuiFastListViewGroupHeaderEmptyModel::makePhoneBookModel()
+{
+    phoneBookModel = new MyIndexedModel(phoneBook);
+}
+
+void Ut_DuiFastListViewGroupHeaderEmptyModel::initTestCase()
+{
+    makePhoneBook();
+    makePhoneBookModel();
+}
+
+void Ut_DuiFastListViewGroupHeaderEmptyModel::cleanupTestCase()
+{
+    delete phoneBookModel;
+}
+
+void Ut_DuiFastListViewGroupHeaderEmptyModel::init()
+{
+    fastListViewPrivate = new DuiFastGroupHeaderListViewPrivate;
+    fastListViewPrivate->model = phoneBookModel;
+    fastListViewPrivate->separator = new DuiWidget;
+    fastListViewPrivate->separator->setGeometry(0, 0, 300, 2);
+    fastListViewPrivate->itemHeight = 100;
+
+    fastListViewPrivate->setHeadersCreator(new DummyHeaderCreator);
+    fastListViewPrivate->hdrHeight = GroupHeaderHeight;
+
+    DuiListModel *model = new DuiListModel;
+    model->setItemModel(phoneBookModel);
+    model->setShowGroups(true);
+    fastListViewPrivate->controllerModel = model;
+
+    fastListViewPrivate->updateHeadersRows();
+    fastListViewPrivate->updateHeadersPositions();
+}
+
+void Ut_DuiFastListViewGroupHeaderEmptyModel::cleanup()
+{
+    delete fastListViewPrivate;
+    delete fastListViewPrivate->controllerModel;
+}
+
+void Ut_DuiFastListViewGroupHeaderEmptyModel::testPhoneBook()
+{
+    QCOMPARE(phoneBook->children().size(), 0);
+}
+
+void Ut_DuiFastListViewGroupHeaderEmptyModel::testLocateVisibleRowAt0()
+{
+    QCOMPARE(fastListViewPrivate->locateVisibleRowAt(0), 0);
+}
+
 int main(int argc, char *argv[])
 {
     Ut_DuiFastListViewGroupHeader tc;
     Ut_DuiFastListViewGroupHeader2 tc2;
-    return QTest::qExec(&tc, argc, argv) | QTest::qExec(&tc2, argc, argv);
+    Ut_DuiFastListViewGroupHeaderEmptyModel tc3;
+
+    return QTest::qExec(&tc, argc, argv) | QTest::qExec(&tc2, argc, argv) | QTest::qExec(&tc3, argc, argv);
 }

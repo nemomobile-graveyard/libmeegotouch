@@ -98,6 +98,7 @@ public:
 
     void updateFirstVisibleRow(const QModelIndex &index);
     void updateLastVisibleRow(const QModelIndex &index);
+    void createVisibleItems();
 
 public:
     virtual void cellClicked(DuiWidget *source);
@@ -120,6 +121,7 @@ public:
     virtual int separatorsCount() const = 0;
     virtual QModelIndex locateVisibleIndexAt(int pos) = 0;
     virtual bool isGroupHeader(const QModelIndex &index);
+    virtual void layoutChanged();
 
 public slots:
     void movingDetectionTimerTimeout();
@@ -232,6 +234,7 @@ public:
                                     const QModelIndex &lastVisibleRow);
     virtual DuiWidget *createItem(int row);
     virtual bool isGroupHeader(const QModelIndex &index);
+    virtual void layoutChanged();
 
 public:
     QVector<int> headersPositions;

@@ -246,11 +246,27 @@ void DuiFastListViewPrivate::updateLastVisibleRow(const QModelIndex &index)
     controllerModel->setLastVisibleItem(index);
 }
 
+void DuiFastListViewPrivate::createVisibleItems()
+{
+    QModelIndex firstVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y()));
+    int firstVisibleRow = indexToFlatRow(firstVisibleIndex);
+
+    QModelIndex lastVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y() + viewportVisibleHeight));
+    int lastVisibleRow = indexToFlatRow(lastVisibleIndex);
+
+    createVisibleItems(firstVisibleRow, lastVisibleRow);
+}
+
 bool DuiFastListViewPrivate::isGroupHeader(const QModelIndex &index)
 {
     Q_UNUSED(index);
 
     return false;
+}
+
+void DuiFastListViewPrivate::layoutChanged()
+{
+
 }
 
 ////////////
@@ -586,6 +602,10 @@ int DuiFastGroupHeaderListViewPrivate::locatePosOfItem(int row)
 int DuiFastGroupHeaderListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
+
+    if(headersPositions.size() == 0)
+        return 0;
+
     int headerIndex = dFindLowerIndex(headersPositions, y);
 
     int headerPosition = headersPositions[headerIndex];
@@ -751,6 +771,12 @@ void DuiFastGroupHeaderListViewPrivate::createVisibleItems(int firstVisibleRow, 
     updateHeadersPositions();
     updateHeadersRows();
     DuiFastListViewPrivate::createVisibleItems(firstVisibleRow, lastVisibleRow);
+}
+
+void DuiFastGroupHeaderListViewPrivate::layoutChanged()
+{
+    updateHeadersPositions();
+    updateHeadersRows();
 }
 
 ////////////
