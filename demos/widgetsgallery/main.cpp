@@ -80,7 +80,7 @@ int main(int argc, char **argv)
     EmptyMainLoopHelper mainLoopHelper;
     if (qApp->arguments().indexOf("-quitimmediately") >= 0) {
         // terminate widgetsgallery as soon as the content is shown and main loop is idle
-        mainLoopHelper.triggerTermination(EmptyMainLoopHelper::ExitOnEmpty);
+        mainLoopHelper.triggerTermination(EmptyMainLoopHelper::QuitOnEmpty);
     }
 
     listPage.appearNow();
