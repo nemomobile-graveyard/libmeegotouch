@@ -32,7 +32,8 @@ const DuiTheme::ViewType DuiButton::iconType        = "icon";
 const DuiTheme::ViewType DuiButton::switchType      = "switch";
 
 DuiButtonPrivate::DuiButtonPrivate()
-    : buttonGroup(0)
+    : DuiWidgetControllerPrivate(),
+    buttonGroup(0)
 {
 }
 
