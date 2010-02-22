@@ -41,3 +41,4 @@ cscope.out
 .gen
 build-i386
 build-armel
+.qmake.cache
