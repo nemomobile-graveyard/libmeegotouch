@@ -90,24 +90,6 @@ DuiStyleSheet::~DuiStyleSheet()
 {
 }
 
-static QString makePropertyName(const QString &string)
-{
-    QString result;
-    const int length = string.length();
-    for (int i = 0; i < length; ++i) {
-        if (string[i] == '-') {
-            if (length > i + 1) {
-                i++;
-                result += QChar(string[i]).toUpper();
-            }
-        } else {
-            result += string[i];
-        }
-    }
-
-    return result;
-}
-
 bool DuiStyleSheetPrivate::populateStyle(const QList<const DuiStyleSheet *>& sheets,
         DuiStyle *style,
         const QString &objectName,
@@ -272,8 +254,7 @@ DuiStyleSheetPrivate::CacheEntry *DuiStyleSheetPrivate::buildCacheEntry(const QL
                 DuiAttributeList::const_iterator attributesEnd = selector->attributes()->constEnd();
 
                 for (DuiAttributeList::const_iterator j = selector->attributes()->constBegin(); j != attributesEnd; ++j) {
-                    // attribute name -> property name
-                    QString propertyName = makePropertyName(j.key());
+                    QString propertyName = j.key();
 
                     CacheEntry::iterator iter = (*entry).find(propertyName);
                     // Check if these settings are already in the list
@@ -323,10 +304,7 @@ bool DuiStyleSheetPrivate::combine(DuiStyle *style, const CacheEntry &entry, con
 
         // check all the attributes of this selector against the cached entry
         foreach(DuiStyleSheetAttribute * attribute, *(info.selector->attributes())) {
-            // attribute name -> property name
-            QString propertyName = makePropertyName(attribute->name);
-
-            DuiOriginContainer *old = data.value(propertyName, NULL);
+            DuiOriginContainer *old = data.value(attribute->name, NULL);
             if (old) {
                 // check which one has higher priority
                 if (!isHigherPriority(old, info.selector, info.classPriority, info.parentPriority)) {
@@ -336,7 +314,7 @@ bool DuiStyleSheetPrivate::combine(DuiStyle *style, const CacheEntry &entry, con
 
             // override
             DuiOriginContainer *tempDuiOriginCont =   new DuiOriginContainer(attribute, info.selector, info.classPriority, info.parentPriority, info.filename);
-            data[propertyName] = tempDuiOriginCont;
+            data[attribute->name] = tempDuiOriginCont;
             tempDuiOriginContainers.append(tempDuiOriginCont);
         }
     }

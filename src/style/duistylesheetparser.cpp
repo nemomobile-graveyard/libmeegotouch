@@ -38,6 +38,23 @@
 
 #include <sys/stat.h>
 
+static QString makePropertyName(const QString &string)
+{
+    QString result;
+    const int length = string.length();
+    for (int i = 0; i < length; ++i) {
+        if (string.at(i) == '-') {
+            if (length > i + 1) {
+                i++;
+                result += QChar(string.at(i)).toUpper();
+            }
+        } else {
+            result += string.at(i);
+        }
+    }
+
+    return result;
+}
 
 #define FILE_VERSION(major, minor) (int)((major<<16)|minor)
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -597,7 +614,8 @@ void DuiStyleSheetParserPrivate::setupConsts(QString &value) const
     bool result = false;
     int idx1 = 0;
     while ((idx1 = value.indexOf('$')) != -1) {
-        int idx2 = value.indexOf(QRegExp("[ ,()]"), idx1);
+        static QRegExp regexp("[ ,()]");
+        int idx2 = value.indexOf(regexp, idx1);
         if (idx2 == -1)
             idx2 = value.count();
         idx2 -= 1;
@@ -824,7 +842,7 @@ QPair<QString, DuiStyleSheetAttribute *> DuiStyleSheetParserPrivate::parseAttrib
 
         if (((character == ';') || (character == '}'))  && validValue(value)) {
             DuiStyleSheetAttribute *result = new DuiStyleSheetAttribute;
-            result->name = name;
+            result->name = makePropertyName(name);
             result->value = value;
             result->constValue = "";
             result->position = startReadPos;
@@ -839,7 +857,7 @@ QPair<QString, DuiStyleSheetAttribute *> DuiStyleSheetParserPrivate::parseAttrib
                 }
             }
 
-            return QPair<QString, DuiStyleSheetAttribute *> (name, result);
+            return QPair<QString, DuiStyleSheetAttribute *>(result->name, result);
         } else {
             outputParseError(parsedFileName, "Parse attribute failed, ';' or '}' is missing after value or the value is invalid. Multiline attributes are not supported.", getLineNum(stream, startReadPos));
         }
@@ -954,8 +972,8 @@ bool DuiStyleSheetParserPrivate::loadBinary(const QFileInfo &cssFileInfo, const 
         int file_version;
         stream >> file_version;
 
-        // This is how we read v0.10 files
-        if (file_version == FILE_VERSION(0, 10)) {
+        // This is how we read v0.11 files
+        if (file_version == FILE_VERSION(0, 11)) {
             // read fileinfo
             DuiStyleSheetParser::StylesheetFileInfo *fileinfo = new DuiStyleSheetParser::StylesheetFileInfo;
             stream >> fileinfo->time_t;
@@ -1026,7 +1044,7 @@ bool DuiStyleSheetParserPrivate::dump(const DuiStyleSheetParser::StylesheetFileI
         QDataStream stream(&file);
 
         // write version number (32bit, 16 major, 16 minor)
-        stream << (int) FILE_VERSION(0, 10);
+        stream << (int) FILE_VERSION(0, 11);
         stream << info.time_t;
         stream << info.filename;
         stream << info.includes;
