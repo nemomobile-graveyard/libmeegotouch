@@ -17,6 +17,8 @@
 **
 ****************************************************************************/
 
+static const int frameWidth =  4;  // width of line edit focus frame
+
 #include "qtmaemo6style.h"
 #include "qtmaemo6style_p.h"
 
@@ -963,14 +965,15 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
                     QtMaemo6StylePrivate::duiStyle(option->state, "DuiApplicationMenuStyle"));
             // draw widget background
             d->drawScalableImage(painter, option, widget->rect(), style->canvasImage(), style, "canvas-image");
-            //d->drawWidgetBackground( painter, option, widget->rect(), style );
         }
     }
     break;
 
     case PE_PanelLineEdit: {
-        if (const QStyleOptionFrame *panel = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
+        if (qobject_cast<QAbstractSpinBox *>(widget->parent()))
+            break;
 
+        if (const QStyleOptionFrame *panel = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
             const DuiTextEditStyle *style =
                 static_cast<const DuiTextEditStyle *>(QtMaemo6StylePrivate::duiStyle(panel->state,
                         "DuiTextEditStyle"));
@@ -1555,6 +1558,78 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
         p->restore();
     }
     break;
+    case CC_SpinBox: {
+        if (const QStyleOptionSpinBox *spinBox = qstyleoption_cast<const QStyleOptionSpinBox *>(opt)) {
+            p->save();
+
+            QStyleOptionFrame frameOpt;
+            if (QLineEdit *lineedit = qFindChild<QLineEdit *>(widget))
+                frameOpt.initFrom(lineedit);
+
+            frameOpt.rect = spinBox->rect;
+            frameOpt.state |= QStyle::State_Sunken;
+
+            drawPrimitive(QStyle::PE_PanelLineEdit, &frameOpt, p, widget);
+
+            bool upSunken = (spinBox->activeSubControls & SC_SpinBoxUp) && (spinBox->state & (State_Sunken | State_On));
+            bool downSunken = (spinBox->activeSubControls & SC_SpinBoxDown) && (spinBox->state & (State_Sunken | State_On));
+
+            // Rects
+            QRect upRect = proxy()->subControlRect(CC_SpinBox, opt, SC_SpinBoxUp, widget);
+            QRect downRect = proxy()->subControlRect(CC_SpinBox, opt, SC_SpinBoxDown, widget);
+            QRect frameEditRect = proxy()->subControlRect(CC_SpinBox, opt, SC_SpinBoxEditField, widget);
+
+
+            int offset = frameEditRect.height() / 6;
+            if (spinBox->buttonSymbols != QAbstractSpinBox::NoButtons) {
+                QPoint center;
+                if (spinBox->subControls & SC_SpinBoxUp) {
+                    center = upRect.center();
+                    if (upSunken) {
+                        ++center.rx();
+                        ++center.ry();
+                    }
+
+                    QPalette pal = spinBox->palette;
+                    if (!(spinBox->stepEnabled & QAbstractSpinBox::StepUpEnabled)) {
+                        pal.setCurrentColorGroup(QPalette::Disabled);
+                    }
+                    QBrush indicatorBrush = pal.buttonText();
+                    p->setPen(QPen(indicatorBrush, 2));
+
+                    p->drawLine(center.x(), center.y() - offset, center.x(), center.y() + offset);
+                    p->drawLine(center.x() - offset, center.y(), center.x() + offset, center.y());
+                }
+                if (spinBox->subControls & SC_SpinBoxDown) {
+                    center = downRect.center();
+                    if (downSunken) {
+                        ++center.rx();
+                        ++center.ry();
+                    }
+
+                    QPalette pal = spinBox->palette;
+                    if (!(spinBox->stepEnabled & QAbstractSpinBox::StepDownEnabled)) {
+                        pal.setCurrentColorGroup(QPalette::Disabled);
+                    }
+                    QBrush indicatorBrush = pal.buttonText();
+                    p->setPen(QPen(indicatorBrush, 2));
+
+                    p->drawLine(center.x() - offset, center.y(), center.x() + offset, center.y());
+                }
+            }
+
+            QPen separatorPen(Qt::DashLine);
+            p->setPen( separatorPen );
+
+            p->drawLine( frameEditRect.topRight() + QPoint(1,0),
+                         frameEditRect.bottomRight() + QPoint(1,0) );
+            p->drawLine( frameEditRect.topLeft() - QPoint(1,0),
+                         frameEditRect.bottomLeft() - QPoint(1,0) );
+
+            p->restore();
+        }
+    }
+    break;
     case CC_ScrollBar: {
         drawControl(CE_ScrollBarSlider, opt, p, widget);
     }
@@ -1710,7 +1785,49 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
         }
     }
     break;
+    case CC_SpinBox: {
+        QRect rect;
+        if (const QStyleOptionSpinBox *spinBox = qstyleoption_cast<const QStyleOptionSpinBox *>(option)) {
 
+            int widthPlusMinus = spinBox->rect.height();
+
+            switch (subControl) {
+            case SC_SpinBoxUp:
+                if (spinBox->buttonSymbols == QAbstractSpinBox::NoButtons)
+                    return QRect();
+                rect = visualRect(spinBox->direction, spinBox->rect, rect);
+                rect.setRect(spinBox->rect.right() - widthPlusMinus,
+                             spinBox->rect.top(),
+                             widthPlusMinus,
+                             spinBox->rect.height());
+                rect = visualRect(spinBox->direction, spinBox->rect, rect);
+                break;
+            case SC_SpinBoxDown:
+                if (spinBox->buttonSymbols == QAbstractSpinBox::NoButtons)
+                    return QRect();
+                rect = visualRect(spinBox->direction, spinBox->rect, rect);
+                rect.setRect(spinBox->rect.left(),
+                             spinBox->rect.top(),
+                             widthPlusMinus,
+                             spinBox->rect.height());
+                rect = visualRect(spinBox->direction, spinBox->rect, rect);
+                break;
+            case SC_SpinBoxEditField:
+                if (spinBox->buttonSymbols != QAbstractSpinBox::NoButtons) {
+                    rect = spinBox->rect.adjusted(widthPlusMinus, 0, -widthPlusMinus, 0);
+                } else {
+                    rect = spinBox->rect;
+                }
+                rect.adjust(frameWidth, frameWidth, -frameWidth, -frameWidth);
+                rect = visualRect(spinBox->direction, spinBox->rect, rect);
+                break;
+            default:
+                break;
+            }
+        }
+        return rect;
+    }
+    break;
     case CC_ScrollBar: {
         if (subControl == SC_ScrollBarSlider)
             return d->scrollBarSliderRect(option, widget);
