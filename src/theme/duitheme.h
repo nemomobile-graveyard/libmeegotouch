@@ -227,6 +227,22 @@ public:
      * Checks whether there are pending pixmap requests.
      */
     static bool hasPendingRequests();
+
+Q_SIGNALS:
+    /*!
+     * This signal is emitted when all pixmap requests have finished.
+     *
+     * The signal is emitted regardless of if the request was successfull or not.
+     *
+     * Note that for regular applications, listening for this signal is
+     * not necessary, since any change automatically triggers an update of
+     * the interface.
+     *
+     * Widget implementations must not connect to this signal. All widgets
+     * are repainted after the outstanding requests have finished.
+     */
+    void pixmapRequestsFinished();
+
 protected:
 
     /*!
@@ -234,8 +250,8 @@ protected:
      */
     void rebuildViewsForWidgets();
 
-protected:
     DuiThemePrivate *const d_ptr;
+
 private:
     Q_DISABLE_COPY(DuiTheme)
     Q_DECLARE_PRIVATE(DuiTheme)
@@ -255,6 +271,5 @@ private:
     friend class Ft_Theme;
 #endif
 };
-
 
 #endif

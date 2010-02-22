@@ -684,6 +684,18 @@ void DuiThemePrivate::unregisterLibrary(DuiLibrary *library)
     }
 }
 
+void DuiThemePrivate::pixmapRequestFinished()
+{
+    Q_Q(DuiTheme);
+
+    if (!DuiTheme::hasPendingRequests()) {
+        if (DuiApplication::activeWindow() && DuiApplication::activeWindow()->viewport()) {
+            DuiApplication::activeWindow()->viewport()->update();
+        }
+        emit q->pixmapRequestsFinished();
+    }
+}
+
 void DuiThemePrivate::pixmapCreatedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle)
 {
     QString identifier = defaultPixmapCacheId(imageId, size.width(), size.height());
@@ -695,9 +707,8 @@ void DuiThemePrivate::pixmapCreatedSlot(const QString &imageId, const QSize &siz
     if (pixmapHandle == 0) {
         duiWarning("DuiThemePrivate") << "pixmapCreatedSlot - pixmap creation failed (null handle):" << identifier;
         *pixmap = *invalidPixmap;
-        if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->viewport()) {
-            DuiApplication::activeWindow()->viewport()->update();
-        }
+
+        pixmapRequestFinished();
         return;
     }
 
@@ -709,9 +720,7 @@ void DuiThemePrivate::pixmapCreatedSlot(const QString &imageId, const QSize &siz
     *pixmap = *pixmapPointer;
 #endif
 
-    if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->viewport()) {
-        DuiApplication::activeWindow()->viewport()->update();
-    }
+    pixmapRequestFinished();
 }
 
 void DuiThemePrivate::pixmapChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle)
@@ -727,12 +736,10 @@ void DuiThemePrivate::pixmapChangedSlot(const QString &imageId, const QSize &siz
     QPixmap *pixmap = (QPixmap *) iterator.value().pixmap;
 
     if (pixmapHandle == 0) {
-        // the daemon couldn't reload the pixmap, so it sent a 0 as handle
-        qDebug() << "daemon failed to reload pixmap" << imageId << size;
-        if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->viewport()) {
-            DuiApplication::activeWindow()->viewport()->update();
-        }
+        duiWarning("DuiThemePrivate") << "pixmapChangedSlot - pixmap reload failed (null handle):" << identifier;
         *pixmap = *invalidPixmap;
+
+        pixmapRequestFinished();
         return;
     }
 
@@ -744,9 +751,7 @@ void DuiThemePrivate::pixmapChangedSlot(const QString &imageId, const QSize &siz
     *pixmap = *pixmapPointer;
 #endif
 
-    if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->viewport()) {
-        DuiApplication::activeWindow()->viewport()->update();
-    }
+    pixmapRequestFinished();
 }
 
 

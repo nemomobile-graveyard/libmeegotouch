@@ -76,6 +76,8 @@ struct CachedScalableImage {
 
 class DuiThemePrivate
 {
+    Q_DECLARE_PUBLIC(DuiTheme)
+
 public:
     DuiThemePrivate(const QString &applicationName, DuiTheme::ThemeService themeService);
     virtual ~DuiThemePrivate();
@@ -134,6 +136,11 @@ public:
      * will change the views and styles of all widgets.
      */
     void themeChangedSlot(const QStringList &themeInheritance, const QStringList& libraryNames);
+
+    /*!
+     * Finalize pixmap change or creation by updating the scene and/or emitting a signal
+     */
+    void pixmapRequestFinished();
 
     /*!
      * Theme daemon notifies pixmap updates to to this slot
