@@ -1,7 +1,14 @@
+libdui (0.19.2-1) unstable; urgency=low
+
+  * Fixes: NB#157409 - Item selected after itemClicked is emited
+  * Fixes: NB#157425 - DuiWidgetView returns wrong sizeHint in portrait orientation
+  * Fixes: NB#156084 - DuiList does not refresh properly when dynamic tree model is used(setShowGroups())
+  
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 22 Feb 2010 17:13:00 +0200
+  
 libdui (0.19.1-1) unstable; urgency=low
 
   * PlainQt style plugin disabled
-  * Fixes: NB#156084 - DuiList does not refresh properly when dynamic tree model is used(setShowGroups())
   * Fixes: NB#122086 - DuiTextEdit partially hides text
   * Fixes: NB#153100 - DuiList doesn't update when items are removed from a model with group headers
   * Fixes: NB#155802 - <MemLeak> duiimagedirectory.cpp duiwidgetview.cpp duitheme.cpp
@@ -17,7 +24,6 @@ libdui (0.19.1-1) unstable; urgency=low
 libdui (0.19.0-1) unstable; urgency=low
 
   * License changed
-  * Fixes: NB#149265 - Tap on close(X) "select internet connection" Fennec minimizes to home
   * Fixes: NB#156977 - DuiFeedbackPlayer does not try to reconnect to duifeedbackd daemon
   * Fixes: NB#155911 - <MemLeak> duiimagedirectory.cpp duistyle.cpp duilabel.cpp
   * Fixes: NB#156583 - Problem with DUI window management?
