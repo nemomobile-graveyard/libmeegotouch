@@ -42,7 +42,7 @@ public:
     /*!
       Default virtual destructor.
       */
-    virtual ~DuiCellCreator() {};
+    virtual ~DuiCellCreator() {}
 
     /*!
       \brief When DuiList needs a cell, it will call this function to get a pointer to a widget.
@@ -50,10 +50,12 @@ public:
       It's not required but highly recommended to use recycler. This function will be called very
       often during panning and to make panning smooth creator shouldn't allocate memory.
 
+      Function should return fully constructed and initialized object. All data has to be set.
+
       \param index is a model index of the row for which widget should be created
       \param recycler is a DuiWidgetRecycler which allows widget reusage. DuiList will put widgets to
         this recycler and its possible to get recycled widget from it
-      \param pointer to a created widget
+      \param pointer to fully created widget
 
       \sa DuiWidgetRecycler
       */
@@ -68,7 +70,9 @@ public:
     virtual void updateCell(const QModelIndex &index, DuiWidget *cell) const = 0;
 
     /*!
-      \brief This function should return cell size. At the moment cells can't be of different size.
+      \brief This function should return cell size. Minimum and maximum sizes of cell widget will be updated
+      if returned size bigger then maximum size or smaller then minimum size. Only height will be taken into account,
+      width of item will be calculate by DuiList.
 
       \return cell size
       */
@@ -110,6 +114,9 @@ public:
         should be created, with setCellViewType(const QString&viewType) you may specify what view type should
         be assigned and with setObjectName(const QString& objectName) you may specify object name of constructed
         cell.
+
+        If you wish to initialize cell differently, you need to override createCell function and provide
+        implementation for it.
 
         Only updateCell() function should be reimplemented to provide data to widget(cell).
 

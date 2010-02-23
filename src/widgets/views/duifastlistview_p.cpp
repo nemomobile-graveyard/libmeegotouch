@@ -117,7 +117,16 @@ DuiWidget *DuiFastListViewPrivate::createCell(int row)
     cell->setParent(NULL);
     cell->setParentItem(controller);
     cell->setVisible(true);
-    cell->resize(viewWidth, cell->preferredHeight());
+
+    if(cell->maximumHeight() < itemHeight)
+    {
+        cell->setMaximumSize(cell->maximumWidth(), itemHeight);
+    } else if(cell->minimumHeight() > itemHeight)
+    {
+        cell->setMinimumSize(cell->minimumWidth(), itemHeight);
+    }
+
+    cell->resize(viewWidth, itemHeight);
 
     // TODO this is not optimal, I'm pretty sure, need to find better way to keep
     // selection. Refactor into it's own function.
