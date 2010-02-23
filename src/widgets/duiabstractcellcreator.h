@@ -115,6 +115,9 @@ public:
         be assigned and with setObjectName(const QString& objectName) you may specify object name of constructed
         cell.
 
+        If you wish to initialize cell differently, you need to override createCell function and provide
+        implementation for it.
+
         Only updateCell() function should be reimplemented to provide data to widget(cell).
 
     \section DuiAbstractCellCreator Examples
