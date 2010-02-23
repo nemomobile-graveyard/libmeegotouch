@@ -82,7 +82,7 @@ QPixmap DuiLabelViewSimple::generatePixmap()
 void DuiLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
 {
     Q_UNUSED(size);
-    QPixmap pixmap;
+
     if (!QPixmapCache::find(viewPrivate->cacheKey, pixmap)) {
         pixmap = generatePixmap();
         QPixmapCache::insert(viewPrivate->cacheKey, pixmap);

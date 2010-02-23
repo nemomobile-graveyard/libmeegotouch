@@ -52,6 +52,8 @@ public:
 
     QSizeF preferredSize;
     QPoint textOffset;
+
+    QPixmap pixmap;
 };
 
 class DuiLabelViewRich : public DuiLabelViewSimple
