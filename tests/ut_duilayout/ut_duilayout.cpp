@@ -183,7 +183,7 @@ void Ut_DuiLayout::init()
     m_proxy = m_scene->addWidget(m_button);
     m_scene->addItem(m_form);
 
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0);
     Q_ASSERT(0 != m_button);
     Q_ASSERT(0 != m_scene);
     Q_ASSERT(0 != m_proxy);
@@ -1913,7 +1913,7 @@ void Ut_DuiLayout::testLayoutPolicyStylingSimple()
     QCOMPARE(bottom, -1.0);
 
     //Now rotate - the values should be read in from the CSS file
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90);
     policy->getContentsMargins(&left, &top, &right, &bottom);
     QCOMPARE(left, 4.0);
     QCOMPARE(top, 5.0);
@@ -1943,7 +1943,7 @@ void Ut_DuiLayout::testLayoutPolicyStylingSimpleWithSceneManager()
     QCOMPARE(bottom, -1.0);
 
     //Now rotate - the values should be read in from the CSS file
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90);
     policy->getContentsMargins(&left, &top, &right, &bottom);
     QCOMPARE(left, 4.0);
     QCOMPARE(top, 5.0);
@@ -2104,20 +2104,20 @@ void Ut_DuiLayout::testLayoutPolicyStyling()
     checkPolicies(layout, policy, isCurrent, policyType, -1.0, -1.0, -1.0, -1.0, 6.0, 7.0);
 
     // Now rotate to portrait
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90);
     checkPolicies(layout, policy, isCurrent, policyType, 4.0, 5.0, 2.0, 6.0, 2.0, 3.0);
     policy->setObjectName("packed");
     QCOMPARE(policy->objectName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, 1, 2.0, 3.0, 4.0, 5.0, 6.0);
 
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle180, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle180);
     QCOMPARE(policy->objectName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 0.0, 0.0);
     policy->setObjectName("spacing");
     QCOMPARE(policy->objectName(), QString("spacing"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 10.0, 11.0);
 
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle270, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle270);
     QCOMPARE(policy->objectName(), QString("spacing"));
     checkPolicies(layout, policy, isCurrent, policyType, -1, 0.0, 0.0, 0.0, 10.0, 11.0);
 
@@ -2125,7 +2125,7 @@ void Ut_DuiLayout::testLayoutPolicyStyling()
     QCOMPARE(policy->objectName(), QString("packed"));
     checkPolicies(layout, policy, isCurrent, policyType, 1, 2.0, 3.0, 4.0, 5.0, 6.0);
 
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0);
     policy->setObjectName(QString::null);
     QVERIFY(policy->objectName().isEmpty());
     checkPolicies(layout, policy, isCurrent, policyType, -1.0, -1.0, -1.0, -1.0, 6.0, 7.0);
@@ -2139,7 +2139,7 @@ void Ut_DuiLayout::testLayoutSwitchingWithOrientation()
     DuiLayoutTest *layout = new DuiLayoutTest(m_form);
     DuiAbstractLayoutPolicy *landscape_policy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
     QVERIFY(layout->policy() == landscape_policy); //Only policy, so it must be this one
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90);
     QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle90);
     DuiAbstractLayoutPolicy *portrait_policy = new DuiGridLayoutPolicy(layout);
     QVERIFY(layout->policy() == landscape_policy); //Still only policy, so it must be this one
@@ -2150,25 +2150,25 @@ void Ut_DuiLayout::testLayoutSwitchingWithOrientation()
     layout->setLandscapePolicy(landscape_policy);
     QVERIFY(layout->policy() == portrait_policy);
 
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange); //Set it to 90, again
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90); //Set it to 90, again
     QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle90);
     QVERIFY(layout->policy() == portrait_policy);
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle180, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle180);
     QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle180);
     QVERIFY(layout->policy() == landscape_policy);
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle270, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle270);
     QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle270);
     QVERIFY(layout->policy() == portrait_policy);
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90);
     QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle90);
     QVERIFY(layout->policy() == portrait_policy);
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0);
     QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle0);
     QVERIFY(layout->policy() == landscape_policy);
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0);
     QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle0);
     QVERIFY(layout->policy() == landscape_policy);
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle180, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle180);
     QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle180);
     QVERIFY(layout->policy() == landscape_policy);
 
@@ -3266,7 +3266,7 @@ void Ut_DuiLayout::testSwitchingPoliciesHidesItems()
     QCOMPARE(widgets[3]->isVisible(), false);
 
     //Rotate, to switch to policy2
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90);
 
     qApp->processEvents();
     while (layout->animation()->isAnimating())
@@ -3332,7 +3332,7 @@ void Ut_DuiLayout::testSwitchingPoliciesInsidePolicyHidesItems()
     QCOMPARE(widgets[2]->isVisible(), true);
     QCOMPARE(widgets[3]->isVisible(), true);
 
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0);
 
     innerLayout->setLandscapePolicy(innerPolicy1);
     innerLayout->setPortraitPolicy(innerPolicy2);
@@ -3347,7 +3347,7 @@ void Ut_DuiLayout::testSwitchingPoliciesInsidePolicyHidesItems()
     QCOMPARE(widgets[3]->isVisible(), false);
 
     //Rotate, to switch to innerPolicy2
-    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90);
 
     qApp->processEvents();
     while (layout->animation()->isAnimating() || innerLayout->animation()->isAnimating())

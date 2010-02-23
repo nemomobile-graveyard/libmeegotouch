@@ -513,7 +513,7 @@ Dui::OrientationAngle DuiWindow::orientationAngle() const
     }
 }
 
-void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle, Dui::OrientationChangeMode mode)
+void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle)
 {
     Q_D(DuiWindow);
 
@@ -522,6 +522,10 @@ void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle, Dui::Orientatio
         d->angle = angle;
 
         if (d->sceneManager) {
+            DuiSceneManager::OrientationChangeMode mode = isVisible() ?
+                DuiSceneManager::AnimatedOrientationChange :
+                DuiSceneManager::ImmediateOrientationChange;
+
             d->sceneManager->setOrientationAngle(angle, mode);
         } else {
             // first notify widgets, then emit the signal (in case someone

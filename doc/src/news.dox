@@ -30,8 +30,9 @@
 \subsection removed Removed or Renamed
 - escapeButtonMode() property was removed from DuiApplicationPage. Use escapeMode() instead.
 - DuiDialog::windowModal() was renamed to DuiDialog::systemModal().
-
 - DuiApplicationPage::pageTitleChanged(DuiApplicationPage *, const QString &title) signal was removed.
+- restored one-argument DuiWindow::setOrientationAngle(Dui::OrientationAngle), the rotation animation
+  is enabled by default and it's disabled if the window is hidden (DuiWindow::isVisible() returns false).
 
 \section v0190
 

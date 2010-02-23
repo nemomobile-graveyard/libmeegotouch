@@ -1287,14 +1287,14 @@ void DuiSceneManager::closeSoftwareInputPanel()
 }
 
 void DuiSceneManager::setOrientationAngle(Dui::OrientationAngle angle,
-        Dui::OrientationChangeMode mode)
+                                          OrientationChangeMode mode)
 {
     Q_D(DuiSceneManager);
 
     if (d->orientationAnimation->state() == QAbstractAnimation::Running)
         d->orientationAnimation->stop();
 
-    if (mode == Dui::AnimatedOrientationChange)
+    if (mode == AnimatedOrientationChange)
         d->rotateToAngle(angle);
     else
         d->setOrientationAngleWithoutAnimation(angle);

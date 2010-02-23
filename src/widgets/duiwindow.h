@@ -259,16 +259,16 @@ public:
 
 public Q_SLOTS:
     /*!
-     * Allows to set the orientation angle of the window. When reimplementing, you should emit
-     * orientationChanged() and orientationAngleChanged() signals when appropriate.
+     * Allows to set the orientation angle of the window. If the window is hidden or it hasn't been
+     * shown yet, the orientation angle change is immediate (i.e. without rotation animation).
+     * Otherwise a rotation animation is performed.
+     *
+     * When reimplementing, you should emit orientationChanged() and orientationAngleChanged()
+     * signals when appropriate.
      *
      * \param angle New orientation angle for the window
-     * \param mode Specifies whether the orientation change should be animated or not.
-     *
-     * \sa Dui::OrientationChangeMode
      */
-    virtual void setOrientationAngle(Dui::OrientationAngle angle,
-                                     Dui::OrientationChangeMode mode = Dui::AnimatedOrientationChange);
+    virtual void setOrientationAngle(Dui::OrientationAngle angle);
 
     /*!
      * Locks window's orientation angle changes. Equal to calling setOrientationAngleLocked(true).

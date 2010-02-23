@@ -132,9 +132,10 @@ Dui::Orientation DuiSceneManager::orientation() const
     return (gOrientationAngle == Dui::Angle90 || gOrientationAngle == Dui::Angle270) ? Dui::Portrait : Dui::Landscape;
 }
 
-void DuiSceneManager::setOrientationAngle(Dui::OrientationAngle angle, Dui::OrientationChangeMode mode)
+void DuiSceneManager::setOrientationAngle(Dui::OrientationAngle angle, DuiSceneManager::OrientationChangeMode mode)
 {
     Q_UNUSED(mode);
+
     Dui::Orientation newOrientation = (angle == Dui::Angle90 || angle == Dui::Angle270)
                                       ? Dui::Portrait
                                       : Dui::Landscape;
@@ -280,7 +281,7 @@ void Ut_DuiWindow::testOrientationChangedSignalPropagationFromSceneManager()
     win->sceneManager();
     Dui::OrientationAngle newAngle = (Dui::OrientationAngle)(win->orientationAngle() + 90);
 
-    win->sceneManager()->setOrientationAngle(newAngle, Dui::ImmediateOrientationChange);
+    win->sceneManager()->setOrientationAngle(newAngle, DuiSceneManager::ImmediateOrientationChange);
 
     QCOMPARE(orientationSpy.count(), 1);
     QCOMPARE(angleSpy.count(), 1);
@@ -295,7 +296,7 @@ void Ut_DuiWindow::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
     win->sceneManager();
     Dui::OrientationAngle newAngle = (Dui::OrientationAngle)(win->orientationAngle() + 180);
 
-    win->setOrientationAngle(newAngle, Dui::ImmediateOrientationChange);
+    win->setOrientationAngle(newAngle);
 
     QCOMPARE(orientationSpy.count(), 0);
     QCOMPARE(angleSpy.count(), 1);

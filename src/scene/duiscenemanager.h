@@ -61,6 +61,17 @@ class DUI_EXPORT DuiSceneManager : public QObject
 public:
 
     /*!
+     * This enum is used to describe whether the orientation change
+     * invoked manually should be animated or not.
+     *
+     * \sa setOrientationAngle()
+     */
+    enum OrientationChangeMode {
+        AnimatedOrientationChange,
+        ImmediateOrientationChange
+    };
+
+    /*!
      * Constructor of the DuiSceneManager class, constructs the manager for the given \a scene.
      *
      * \note You normally don't have to create an instance of this class,
@@ -133,11 +144,13 @@ public:
 
 public Q_SLOTS:
     /*!
-     * Sets the orientation to \a angle. The \a mode can be set to Dui::ImmediateOrientationChange
+     * Sets the orientation to \a angle. The \a mode can be set to ImmediateOrientationChange
      * to disable orientation animation.
+     *
+     * /sa OrientationChangeMode
      */
     void setOrientationAngle(Dui::OrientationAngle angle,
-                             Dui::OrientationChangeMode mode = Dui::AnimatedOrientationChange);
+                             OrientationChangeMode mode = AnimatedOrientationChange);
 
     /*!
      * Sends a request to the application's input context to open a software input

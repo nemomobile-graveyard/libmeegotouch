@@ -40,7 +40,7 @@ void StaticPageBenchmark::waitPageDuration()
 {
     formerOrientationAngle = DuiApplication::activeWindow()->orientationAngle();
     DuiApplication::activeWindow()->setOrientationAngleLocked(false);
-    DuiApplication::activeWindow()->setOrientationAngle(targetOrientationAngle, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
     DuiApplication::activeWindow()->setOrientationAngleLocked(true);
 
     timedemo->startTiming();
@@ -52,7 +52,7 @@ void StaticPageBenchmark::terminateBenchmark()
     timedemo->stopTiming();
 
     DuiApplication::activeWindow()->setOrientationAngleLocked(false);
-    DuiApplication::activeWindow()->setOrientationAngle(formerOrientationAngle, Dui::ImmediateOrientationChange);
+    DuiApplication::activeWindow()->setOrientationAngle(formerOrientationAngle);
     DuiApplication::activeWindow()->setOrientationAngleLocked(true);
     emit finished();
 }
