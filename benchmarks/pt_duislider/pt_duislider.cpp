@@ -44,7 +44,7 @@ void Pt_DuiSlider::cleanupTestCase()
 
 void Pt_DuiSlider::createView()
 {
-    new DuiSliderView(m_subject);
+    currentView = new DuiSliderView(m_subject);
 }
 
 void Pt_DuiSlider::fetchNewRow()
@@ -127,7 +127,10 @@ void Pt_DuiSlider::cleanup()
 
 void Pt_DuiSlider::paintPerformance()
 {
-    painter->translate(864 / 4, 864 / 4);
+    QFETCH(qint32, width);
+    QFETCH(qint32, height);
+
+    painter->translate(width, height);
     // actual benchmark
     QBENCHMARK {
         this->currentView->paint(painter, NULL);
@@ -136,12 +139,16 @@ void Pt_DuiSlider::paintPerformance()
 
 void Pt_DuiSlider::paintPerformance_data()
 {
+
+    QTest::addColumn<qint32>("width");
+    QTest::addColumn<qint32>("height");
     QTest::addColumn<qint32>("orientation");
 
     // horizontal max
-    QTest::newRow("864x32") << 864 / 2 << 32 << 0;
+    QTest::newRow("864x32") << 864  << 32 << 0;
+
     // vertical max
-    QTest::newRow("32x480") << 32 << 480 / 2 << 1;
+    QTest::newRow("32x480") << 32 << 480 << 1;
 }
 
 QTEST_APPLESS_MAIN(Pt_DuiSlider)
