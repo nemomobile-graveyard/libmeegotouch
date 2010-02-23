@@ -29,12 +29,12 @@
 #include <QTextDocument>
 #include "mt_duilabel.h"
 
-DuiApplication *app;
+DuiApplication *app(NULL);
 
 void Mt_DuiLabel::initTestCase()
 {
     int argc = 1;
-    const char *argv[1];
+    const char *argv[argc];
     char appName[] = "./mt_duilabel";
     argv[0] = appName;
     app = new DuiApplication(argc, (char **)argv);
@@ -42,7 +42,7 @@ void Mt_DuiLabel::initTestCase()
 
 void Mt_DuiLabel::cleanupTestCase()
 {
-    delete app;
+    delete app; app = NULL;
 }
 
 void Mt_DuiLabel::testLabelVsDuiWidgetController()
@@ -56,7 +56,7 @@ void Mt_DuiLabel::testLabelVsDuiWidgetController()
     qDebug() << "Memory consumption of DuiWidgetController + DuiWidgetView:";
     outputAllocatedMemorySize();
 
-    delete c;
+    delete c; c = NULL;
     QCoreApplication::processEvents();
     endMemoryBenchmark();
 
@@ -69,7 +69,7 @@ void Mt_DuiLabel::testLabelVsDuiWidgetController()
     qDebug() << "Memory consumption of DuiLabel + DuiLabelView:";
     outputAllocatedMemorySize();
 
-    delete l;
+    delete l; l = NULL;
     QCoreApplication::processEvents();
     endMemoryBenchmark();
 }
@@ -109,7 +109,7 @@ void Mt_DuiLabel::memoryBenchmark()
 
     // Release all labels
     for (int i = 0; i < count; ++i) {
-        delete labels[i];
+        delete labels[i]; labels[i] = NULL;
     }
     delete[] labels;
 
@@ -129,4 +129,4 @@ void Mt_DuiLabel::memoryBenchmark_data()
     }
 }
 
-QTEST_MAIN(Mt_DuiLabel)
+QTEST_APPLESS_MAIN(Mt_DuiLabel)
