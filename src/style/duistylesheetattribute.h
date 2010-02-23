@@ -61,6 +61,7 @@ public:
     static bool booleanFromString(const QString &string, bool *conversionOk);
     static QColor colorFromString(const QString &string, bool *conversionOk);
     static QFont fontFromString(const QString string, bool *conversionOk);
+    static QString attributeNameToPropertyName(const QString &attributeName);
 
     bool writeAttribute(const QString &filename,
                         DuiStyle *style,

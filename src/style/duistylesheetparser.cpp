@@ -38,24 +38,6 @@
 
 #include <sys/stat.h>
 
-static QString makePropertyName(const QString &string)
-{
-    QString result;
-    const int length = string.length();
-    for (int i = 0; i < length; ++i) {
-        if (string.at(i) == '-') {
-            if (length > i + 1) {
-                i++;
-                result += QChar(string.at(i)).toUpper();
-            }
-        } else {
-            result += string.at(i);
-        }
-    }
-
-    return result;
-}
-
 #define FILE_VERSION(major, minor) (int)((major<<16)|minor)
 #ifndef DOXYGEN_SHOULD_SKIP_THIS
 class DuiStyleSheetParserPrivate
@@ -842,7 +824,7 @@ QPair<QString, DuiStyleSheetAttribute *> DuiStyleSheetParserPrivate::parseAttrib
 
         if (((character == ';') || (character == '}'))  && validValue(value)) {
             DuiStyleSheetAttribute *result = new DuiStyleSheetAttribute;
-            result->name = makePropertyName(name);
+            result->name = DuiStyleSheetAttribute::attributeNameToPropertyName(name);
             result->value = value;
             result->constValue = "";
             result->position = startReadPos;

@@ -442,6 +442,23 @@ QFont DuiStyleSheetAttribute::fontFromString(const QString string, bool *convers
     return QFont();
 }
 
+QString DuiStyleSheetAttribute::attributeNameToPropertyName(const QString &attributeName) {
+    QString result;
+    const int length = attributeName.length();
+    for (int i = 0; i < length; ++i) {
+        if (attributeName.at(i) == '-') {
+            if (length > i + 1) {
+                i++;
+                result += QChar(attributeName.at(i)).toUpper();
+            }
+        } else {
+            result += attributeName.at(i);
+        }
+    }
+
+    return result;
+}
+
 bool DuiStyleSheetAttribute::writeAttribute(const QString &filename,
         DuiStyle *style,
         const QMetaProperty &property,
