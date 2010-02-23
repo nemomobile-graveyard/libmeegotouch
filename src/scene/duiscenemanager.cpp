@@ -29,7 +29,8 @@
 #include <QInputContext>
 #include <QTimer>
 
-#include <DuiOnDisplayChangeEvent>
+#include "duiondisplaychangeevent.h"
+#include "duiorientationchangeevent.h"
 #include "duiscenewindow.h"
 #include "duiscenewindow_p.h"
 #include "duideviceprofile.h"
@@ -197,16 +198,19 @@ void DuiSceneManagerPrivate::_q_changeGlobalOrientation()
 {
     Q_Q(DuiSceneManager);
 
+    Dui::Orientation oldOrientation = orientation(angle);
     angle = newAngle;
 
-    // Send a signal that the orientation is about to change
-    emit q->orientationAboutToChange(q->orientation());
+    if (oldOrientation != orientation(angle)) {
+        emit q->orientationAboutToChange(q->orientation());
 
-    // All scene windows are resized
-    setSceneWindowGeometries();
+        setSceneWindowGeometries();
+        notifyWidgetsAboutOrientationChange();
 
-    // Send a rotation event to the scene
-    emit q->orientationChanged(q->orientation());
+        // emit signal after sending the orientation event to widgets (in case someone
+        // would like to connect to the signal and get correct size hints for widgets)
+        emit q->orientationChanged(q->orientation());
+    }
 }
 
 void DuiSceneManagerPrivate::_q_emitOrientationChangeFinished()
@@ -405,6 +409,12 @@ void DuiSceneManagerPrivate::setSceneWindowGeometry(DuiSceneWindow *window)
     window->setPos(p);
 }
 
+void DuiSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
+{
+    DuiOrientationChangeEvent event(orientation(angle));
+    foreach(QGraphicsItem * item, scene->items())
+        scene->sendEvent(item, &event);
+}
 
 QPointF DuiSceneManagerPrivate::calculateSceneWindowPosition(DuiSceneWindow *window)
 {

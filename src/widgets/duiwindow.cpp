@@ -174,7 +174,6 @@ void DuiWindowPrivate::_q_sendOrientationChangedSignal()
     if (sceneManager == 0)
         return;
 
-    notifyWidgetsAboutOrientationChange();
     emit q->orientationAngleChanged(sceneManager->orientationAngle());
     emit q->orientationChanged(sceneManager->orientation());
 }
@@ -185,16 +184,14 @@ void DuiWindowPrivate::notifyWidgetsAboutOrientationChange()
 
     Dui::Orientation newOrientation = q->orientation();
 
-    if (oldOrientation != newOrientation) {
-        if (sceneManager == 0) {
-            emit q->orientationChanged(newOrientation);
-            emit q->orientationChangeFinished(newOrientation);
-        }
+    if (sceneManager == 0 && oldOrientation != newOrientation) {
+        emit q->orientationChanged(newOrientation);
+        emit q->orientationChangeFinished(newOrientation);
 
         if (q->scene()) {
             DuiOrientationChangeEvent event(newOrientation);
             foreach(QGraphicsItem * item, q->scene()->items())
-            q->scene()->sendEvent(item, &event);
+                q->scene()->sendEvent(item, &event);
         }
     }
 }
@@ -499,10 +496,11 @@ void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle, Dui::Orientatio
         if (d->sceneManager) {
             d->sceneManager->setOrientationAngle(angle, mode);
         } else {
-            emit orientationAngleChanged(angle);
+            // first notify widgets, then emit the signal (in case someone
+            // would like to connect to the signal and get correct size hints for widgets)
             d->notifyWidgetsAboutOrientationChange();
+            emit orientationAngleChanged(angle);
         }
-
     }
 }
 

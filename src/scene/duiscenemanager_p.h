@@ -84,6 +84,7 @@ public:
     QPointF calculateSceneWindowPosition(DuiSceneWindow *window);
     void setSceneWindowGeometry(DuiSceneWindow *window);
     void setSceneWindowGeometries();
+    void notifyWidgetsAboutOrientationChange();
     void rotateToAngle(Dui::OrientationAngle newAngle);
     void setOrientationAngleWithoutAnimation(Dui::OrientationAngle newAngle);
 
