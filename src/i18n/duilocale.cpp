@@ -463,8 +463,17 @@ QString DuiLocalePrivate::categoryName(DuiLocale::Category category) const
     return _defaultLocale;
 }
 
+void DuiLocalePrivate::loadTrCatalogs()
+{
+    Q_Q(DuiLocale);
+    foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, _trTranslations) {
+        if(sharedCatalog->_translator.isEmpty()
+           || !sharedCatalog->_name.endsWith(".qm")) {
+            sharedCatalog->loadWith(q, DuiLocale::DuiLcMessages);
+        }
+    }
+}
 
-// reloads translations
 void DuiLocalePrivate::reloadCatalogList(CatalogList &cataloglist,
         DuiLocale *duilocale,
         DuiLocale::Category category)
@@ -748,6 +757,8 @@ DuiLocale::DuiLocale(QObject *parent)
     : QObject(parent),
       d_ptr(new DuiLocalePrivate)
 {
+    Q_D(DuiLocale);
+    d->q_ptr = this;
     // copy the system default
     DuiLocale &defaultLocale = getDefault();
     *this = defaultLocale;
@@ -758,6 +769,7 @@ DuiLocale::DuiLocale(const QString &localeName, QObject *parent)
       d_ptr(new DuiLocalePrivate)
 {
     Q_D(DuiLocale);
+    d->q_ptr = this;
     d->_defaultLocale = qPrintable(localeName);
 
 #ifdef HAVE_ICU
@@ -779,7 +791,8 @@ DuiLocale::DuiLocale(const DuiLocale &other, QObject *parent)
     : QObject(parent),
       d_ptr(new DuiLocalePrivate(*other.d_ptr))
 {
-    // nothing
+    Q_D(DuiLocale);
+    d->q_ptr = this;
 }
 
 
@@ -1933,18 +1946,7 @@ void DuiLocale::installTrCatalog(const QString &name)
             = new DuiTranslationCatalog(name + ".qm");
         d->_trTranslations.prepend(QExplicitlySharedDataPointer<DuiTranslationCatalog>(engineeringEnglishCatalog));
     }
-    loadTrCatalogs();
-}
-
-void DuiLocale::loadTrCatalogs()
-{
-    Q_D(DuiLocale);
-    foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, d->_trTranslations) {
-        if(sharedCatalog->_translator.isEmpty()
-           || !sharedCatalog->_name.endsWith(".qm")) {
-            sharedCatalog->loadWith(this, DuiLcMessages);
-        }
-    }
+    d->loadTrCatalogs();
 }
 
 void DuiLocale::insertTrToQCoreApp()
@@ -2072,7 +2074,7 @@ void DuiLocale::refreshSettings()
     setCategoryLocale(DuiLcMonetary, localeName);
     setCategoryLocale(DuiLcName, localeName);
 
-    this->loadTrCatalogs();
+    d->loadTrCatalogs();
 
     setDefault(*this);
 

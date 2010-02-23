@@ -43,6 +43,8 @@ class DuiTranslationCatalog;
 
 class DuiLocalePrivate
 {
+    Q_DECLARE_PUBLIC(DuiLocale)
+
 public:
     DuiLocalePrivate();
     DuiLocalePrivate(const DuiLocalePrivate &other);
@@ -65,6 +67,11 @@ public:
 
     // return string for a category, default if category is not set
     QString categoryName(DuiLocale::Category category) const;
+
+    /*!
+     * \brief loads the QTranslators for all current catalogs
+     */
+    void loadTrCatalogs();
 
     void reloadCatalogList(CatalogList &cataloglist, DuiLocale *duilocale,
                            DuiLocale::Category category);
@@ -125,6 +132,8 @@ public:
     DuiGConfItem currentScriptItem;
     DuiGConfItem currentVariantItem;
 #endif
+
+    DuiLocale *q_ptr;
 };
 
 #endif

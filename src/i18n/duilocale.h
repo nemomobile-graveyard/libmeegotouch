@@ -657,17 +657,16 @@ Q_SIGNALS:
 
 protected:
     /*!
-     * \brief loads the QTranslators for all current catalogs
-     */
-    void loadTrCatalogs();
-
-    /*!
      * \brief Installs the translations into QCoreApplication
+     *
+     * This will move into the private class!
      */
     void insertTrToQCoreApp();
 
     /*!
      * \brief Removes the translations from QCoreApplication
+     *
+     * This should move into the private class!
      */
     void removeTrFromQCoreApp();
 
