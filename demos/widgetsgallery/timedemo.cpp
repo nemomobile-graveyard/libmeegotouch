@@ -139,6 +139,9 @@ void Timedemo::showNextPage()
         beginBenchmark();
     } else if (m_currentPageIndex == m_pFrontPage->pageCount()) {
         currentPage = m_pFrontPage;
+        // FIXME: the front page needs a special invitation.
+        // otherwise it does not show up again
+        currentPage->appearNow();
         currentPage->createBenchmarks(this);
         beginBenchmark();
     } else {
@@ -179,7 +182,7 @@ void Timedemo::displayBenchmarkResults()
     csv << "Page name";
 
     foreach(const QString& name, allBenchmarks) {
-        int width = qMax(benchmarkWidth, name.length() + 2);
+        int width = qMax(benchmarkWidth + 2, name.length() + 2);
         log << qSetFieldWidth(width) << name;
         csv << ", \"" << name << " [fps]\", \"" << name << " [ms]\"";
 
@@ -202,7 +205,7 @@ void Timedemo::displayBenchmarkResults()
         foreach(const QString& name, allBenchmarks) {
             csv << ", ";
             BenchmarkResultHash::const_iterator resultIter = results.find(name);
-            if (resultIter != results.constEnd()) {
+            if (resultIter != results.constEnd() && resultIter->fps != 0 && resultIter->runtime != 0) {
                 log << right
                     << qSetFieldWidth(fpsWidth) << resultIter->fps
                     << qSetFieldWidth(fpsUnitWidth) << "fps |"
@@ -212,7 +215,7 @@ void Timedemo::displayBenchmarkResults()
                     << left;
                 csv << resultIter->fps << ", " << resultIter->runtime;
             } else {
-                log << qSetFieldWidth(actualWidth[name]) << center << 'X' << left;
+                log << qSetFieldWidth(actualWidth[name]) << center << "n/a" << left;
                 csv << "0";
             }
         }
