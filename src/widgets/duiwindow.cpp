@@ -18,6 +18,8 @@
 ****************************************************************************/
 
 #ifdef QT_OPENGL_LIB
+#include "duiglrenderer.h"
+#include "duiglwidget.h"
 #include "duigles2renderer.h"
 #endif
 
@@ -320,16 +322,18 @@ void DuiWindow::setTranslucentBackground(bool enable)
             //d->glWidget->setAttribute(Qt::WA_TranslucentBackground);
 
             fmt.setAlpha(true); // Workaround for NB#153625
-            d->glWidget = new QGLWidget(fmt);
+            d->glWidget = new DuiGLWidget(fmt);
             QPalette palette;
             palette.setColor(QPalette::Base, Qt::transparent);
             d->glWidget->setAutoFillBackground(true);
             d->glWidget->setPalette(palette);
         } else {
-            d->glWidget = new QGLWidget(fmt);
+            d->glWidget = new DuiGLWidget(fmt);
             setViewport(d->glWidget);
         }
 #ifdef DUI_USE_OPENGL
+        DuiGLRenderer::instance()->setGLWidget(d->glWidget);
+        DuiGLRenderer::instance()->initGL(d->glWidget);
         DuiGLES2Renderer::instance(d->glWidget);
 #endif
         if (enable)
@@ -578,6 +582,7 @@ void DuiWindow::paintEvent(QPaintEvent *event)
 
     if (!DuiApplication::softwareRendering()) {
         DuiGLES2Renderer::activate(d->glWidget);
+        DuiGLRenderer::instance()->setGLWidget(d->glWidget);
     }
 #endif // DUI_USE_OPENGL
 
