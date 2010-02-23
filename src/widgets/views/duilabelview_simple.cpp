@@ -61,7 +61,9 @@ QPixmap DuiLabelViewSimple::generatePixmap()
     QPainter fontPainter(&fontImg);
     fontPainter.setFont(viewPrivate->controller->font());
     fontPainter.setLayoutDirection(model->textDirection());
-    QRectF fontBoundingRect = fontPainter.boundingRect(paintingRect, viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
+
+    Qt::TextFlag textFlag = viewPrivate->textOptions.wrapMode() == QTextOption::WordWrap ? Qt::TextWordWrap : Qt::TextSingleLine;
+    QRectF fontBoundingRect = fontPainter.boundingRect(paintingRect, viewPrivate->textOptions.alignment() | textFlag, textToRender);
 
     QPixmap pixmap(fontBoundingRect.size().toSize());
     if (!pixmap.isNull()) {
@@ -70,7 +72,9 @@ QPixmap DuiLabelViewSimple::generatePixmap()
         painter.setFont(viewPrivate->controller->font());
         painter.setPen(model->color().isValid() ? model->color() : style->color());
         painter.setLayoutDirection(model->textDirection());
-        painter.drawText(QRect(0, 0, fontBoundingRect.width(), fontBoundingRect.height()), viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
+
+        painter.drawText(QRect(0, 0, fontBoundingRect.width(), fontBoundingRect.height()), 
+                         viewPrivate->textOptions.alignment() | textFlag, textToRender);
 
         textOffset.setX(fontBoundingRect.x());
         textOffset.setY(fontBoundingRect.y());
@@ -126,7 +130,8 @@ QSizeF DuiLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint
             r.setHeight(QWIDGETSIZE_MAX);
         }
 
-        QRectF bR(fm.boundingRect(r, viewPrivate->textOptions.alignment() | Qt::TextSingleLine,
+        Qt::TextFlag textFlag = viewPrivate->textOptions.wrapMode() == QTextOption::WordWrap ? Qt::TextWordWrap : Qt::TextSingleLine;
+        QRectF bR(fm.boundingRect(r, viewPrivate->textOptions.alignment() | textFlag,
                                   viewPrivate->model()->text()));
 
         return QSizeF(fm.width(""), bR.height());
@@ -146,8 +151,11 @@ QSizeF DuiLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint
             h = preferredSize.height();
 
         QFontMetricsF fm(viewPrivate->controller->font());
-        QRectF bR(fm.boundingRect(QRectF(0, 0, w, h), viewPrivate->textOptions.alignment() | Qt::TextSingleLine,
+        
+        Qt::TextFlag textFlag = viewPrivate->textOptions.wrapMode() == QTextOption::WordWrap ? Qt::TextWordWrap : Qt::TextSingleLine;
+        QRectF bR(fm.boundingRect(QRectF(0, 0, w, h), viewPrivate->textOptions.alignment() | textFlag,
                                   viewPrivate->model()->text()));
+        
         return bR.size().boundedTo(QSizeF(w, h));
     }
     case Qt::MaximumSize: {

@@ -214,7 +214,6 @@ void Ut_DuiLabel::testTextWordWrap_data()
 void Ut_DuiLabel::testTextWordWrap()
 {
     QFETCH(QString, text);
-    QFETCH(bool, equal);
 
     label->setText(text);
     QVERIFY(text == label->text());
@@ -231,7 +230,7 @@ void Ut_DuiLabel::testTextWordWrap()
     //unwrapped.save("unwrapped", "PNG");
 
     //
-    QVERIFY(((wrapped == unwrapped) == equal));
+    QVERIFY(wrapped != unwrapped);
 }
 
 void Ut_DuiLabel::testTextElide_data()
