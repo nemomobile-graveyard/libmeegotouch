@@ -318,4 +318,3 @@ private:
 };
 
 #endif
-
