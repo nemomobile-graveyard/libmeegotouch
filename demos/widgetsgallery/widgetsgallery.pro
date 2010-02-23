@@ -55,6 +55,7 @@ SOURCES += main.cpp \
     languagepage.cpp \
     widgetsgalleryretranslator.cpp \
     utils.cpp \
+    panningbenchmark.cpp \
     phonebookmodel.cpp \
     timedemo.cpp \
     timingscene.cpp \
@@ -87,6 +88,7 @@ HEADERS += templatepage.h \
     languagepage.h \
     widgetsgalleryretranslator.h \
     utils.h \
+    panningbenchmark.h \
     phonebookmodel.h \
     timedemo.h \
     timingscene.h \

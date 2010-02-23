@@ -33,7 +33,7 @@ public:
       */
     QVector<QSharedPointer<TimedemoBenchmark> > benchmarks();
 
-private:
+protected:
     QVector<QSharedPointer<TimedemoBenchmark> > m_benchmarks;
 
 };
