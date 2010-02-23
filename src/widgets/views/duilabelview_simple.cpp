@@ -187,7 +187,7 @@ bool DuiLabelViewSimple::updateData(const QList<const char *>& modifications)
             if (viewPrivate->model()->wordWrap()) {
                 viewPrivate->textOptions.setWrapMode(QTextOption::WordWrap);
             } else {
-                viewPrivate->textOptions.setWrapMode(QTextOption::NoWrap);
+                viewPrivate->textOptions.setWrapMode(QTextOption::ManualWrap);
             }
         } else if (member == DuiLabelModel::TextDirection) {
             viewPrivate->textOptions.setTextDirection(viewPrivate->model()->textDirection());
