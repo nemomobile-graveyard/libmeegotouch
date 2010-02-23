@@ -290,7 +290,7 @@ DuiApplicationPage *ListPage::findPageByIndex(int index) const
     return 0;
 }
 
-QSettings *ListPage::themeFile(const QString &theme)
+QSettings *themeFile(const QString &theme)
 {
     // Determine whether this is a dui theme:
     // step 1: we need to have index.theme file
@@ -314,14 +314,20 @@ QSettings *ListPage::themeFile(const QString &theme)
     return themeIndexFile;
 }
 
-QStringList ListPage::findAvailableThemes()
+struct ThemeInfo {
+    QString theme;
+    QString themeName;
+    QString themeIcon;
+};
+QList<ThemeInfo> findAvailableThemes()
 {
-    QStringList themes;
+    QList<ThemeInfo> themes;
 
     // find all directories under the theme directory
     QDir themeDir(THEMEDIR);
     const QFileInfoList directories = themeDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot);
     foreach(const QFileInfo & dir, directories) {
+        ThemeInfo info;
 
         const QSettings *themeIndexFile = themeFile(dir.baseName());
         if (!themeIndexFile)
@@ -333,8 +339,12 @@ QStringList ListPage::findAvailableThemes()
             continue;
         }
 
+        info.theme = dir.baseName();
+        info.themeName = themeIndexFile->value("Desktop Entry/Name", "").toString();
+        info.themeIcon = themeIndexFile->value("X-DUI-Metatheme/X-Icon", "").toString();
+
         // ok it's a valid theme. Add it to list of themes
-        themes.append(dir.baseName());
+        themes.append(info);
         delete themeIndexFile;
     }
 
@@ -347,7 +357,7 @@ extern void Dui_changeTheme(const QString &theme);
 
 void ListPage::showThemeSelectionDialog()
 {
-    QStringList themes = findAvailableThemes();
+    QList<ThemeInfo> themes = findAvailableThemes();
 
     QPointer<DuiDialog> dialog = new DuiDialog("Select theme", Dui::OkButton | Dui::CancelButton);
 
@@ -358,10 +368,9 @@ void ListPage::showThemeSelectionDialog()
 
     const int themesCount = themes.count();
     for (int i = 0; i < themesCount; ++i) {
-        const QString &theme = themes[i];
-        DuiButton *button = new DuiButton(theme);
+        DuiButton *button = new DuiButton(themes[i].themeIcon, themes[i].themeName);
         button->setCheckable(true);
-        if (DuiTheme::currentTheme() == theme)
+        if (DuiTheme::currentTheme() == themes[i].theme)
             button->setChecked(true);
 
         layout->addItem(button);
@@ -373,9 +382,9 @@ void ListPage::showThemeSelectionDialog()
         if (index >= 0) {
 #ifdef HAVE_GCONF
             DuiGConfItem themeName("/Dui/theme/name");
-            themeName.set(themes[index]);
+            themeName.set(themes[index].theme);
 #else
-            Dui_changeTheme(themes[index]);
+            Dui_changeTheme(themes[index].theme);
 #endif
         }
     }

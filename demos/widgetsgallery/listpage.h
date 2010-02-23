@@ -75,8 +75,6 @@ protected:
 private:
     void populateLayout();
     void showPage(DuiApplicationPage *page);
-    QSettings *themeFile(const QString &theme);
-    QStringList findAvailableThemes();
 
 private:
     QList<TemplatePage *> pages;
