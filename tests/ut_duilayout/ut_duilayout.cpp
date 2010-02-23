@@ -1416,6 +1416,23 @@ void Ut_DuiLayout::testLinearPolicyChangingOrientation()
     policy->setSpacing(3);
     layout->setContentsMargins(4, 4, 4, 4);
 
+    /* The policy contents margins should come from the CSS file which
+     * specifies them to all be -1 */
+    qreal left, top, right, bottom;
+    policy->getContentsMargins(&left, &top, &right, &bottom);
+    QCOMPARE(left, -1.0);
+    QCOMPARE(top, -1.0);
+    QCOMPARE(right, -1.0);
+    QCOMPARE(bottom, -1.0);
+
+    /* Since the policy contents margins are all -1, the layout contents margin should be
+     * 4,4,4,4 that we just set it to */
+    layout->getContentsMargins(&left, &top, &right, &bottom);
+    QCOMPARE(left, 4.0);
+    QCOMPARE(top, 4.0);
+    QCOMPARE(right, 4.0);
+    QCOMPARE(bottom, 4.0);
+
     const int num_items = 5;
     //Add items to policy, vertically
     for (int i = 0; i < num_items; i++) {
@@ -1428,6 +1445,7 @@ void Ut_DuiLayout::testLinearPolicyChangingOrientation()
 
     qApp->processEvents();
     //After processing events, the animation should have started, but probably not finished
+    //Minimum size is the minimum width of an item plus its contents margins
     QCOMPARE(layout->effectiveSizeHint(Qt::MinimumSize), QSizeF(100 + 4 + 4, 4 + 4 + 100 * num_items + vertical_spacing*(num_items - 1)));
     QCOMPARE(form->effectiveSizeHint(Qt::MinimumSize), QSizeF(204, 4 + 4 + 100 * num_items + vertical_spacing*(num_items - 1)));
     QCOMPARE(form->geometry(), QRectF(0, 0, 204, 4 + 4 + 100 * num_items + vertical_spacing*(num_items - 1)));
