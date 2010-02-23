@@ -43,6 +43,7 @@
 
 #include <QGraphicsLayoutItem>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsGridLayout>
 #include <QApplication>
 #include <QPointer>
 #include <QDebug>
@@ -361,7 +362,7 @@ void ListPage::showThemeSelectionDialog()
 
     QPointer<DuiDialog> dialog = new DuiDialog("Select theme", Dui::OkButton | Dui::CancelButton);
 
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    QGraphicsGridLayout *layout = new QGraphicsGridLayout();
     dialog->centralWidget()->setLayout(layout);
 
     DuiButtonGroup *group = new DuiButtonGroup(dialog->centralWidget());
@@ -369,11 +370,12 @@ void ListPage::showThemeSelectionDialog()
     const int themesCount = themes.count();
     for (int i = 0; i < themesCount; ++i) {
         DuiButton *button = new DuiButton(themes[i].themeIcon, themes[i].themeName);
+        button->setObjectName("theme-selection-button");
         button->setCheckable(true);
         if (DuiTheme::currentTheme() == themes[i].theme)
             button->setChecked(true);
 
-        layout->addItem(button);
+        layout->addItem(button, i/4, i%4);
         group->addButton(button, i);
     }
 

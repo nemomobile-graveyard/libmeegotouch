@@ -1,6 +1,17 @@
 @import "../../libdui/style/fonts.css";
 @import "../../libdui/style/colors.css";
 
+DuiButtonStyle#theme-selection-button {
+    minimum-size: 10mm 10mm;
+    preferred-size: 15mm 15mm;
+    maximum-size: 20mm 20mm;
+    padding-top: 1mm;
+
+    icon-size: 10mm 10mm;
+    icon-align: center;
+}
+
+
 #listItem {
 }
 
