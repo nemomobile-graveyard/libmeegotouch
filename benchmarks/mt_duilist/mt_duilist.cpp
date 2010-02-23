@@ -28,7 +28,7 @@
 #include "memorybenchmark.inl"
 #include "mt_duilist.h"
 
-DuiApplication *app;
+DuiApplication *app(NULL);
 
 void Mt_DuiList::initTestCase()
 {
@@ -41,7 +41,7 @@ void Mt_DuiList::initTestCase()
 
 void Mt_DuiList::cleanupTestCase()
 {
-    delete app;
+    delete app; app = NULL;
 }
 
 void Mt_DuiList::memoryBenchmark_data()
@@ -60,8 +60,7 @@ void Mt_DuiList::memoryBenchmark_data()
 
 void Mt_DuiList::memoryBenchmark()
 {
-    /*
-     #MS - empty TC, should be tested some other way
+
     // get size dimensions for test
     QFETCH(qint32, width);
     QFETCH(qint32, height);
@@ -74,6 +73,7 @@ void Mt_DuiList::memoryBenchmark()
     QPixmap *pixmap = new QPixmap(width, height);
     pixmap->fill(QColor(0, 0, 0, 0));
     QPainter *painter = new QPainter(pixmap);
+    QStyleOptionGraphicsItem* option = new QStyleOptionGraphicsItem();
 
     beginMemoryBenchmark();
 
@@ -86,18 +86,18 @@ void Mt_DuiList::memoryBenchmark()
 
     list->setItemModel(stringModel);
 
-    list->paint(painter, NULL); //#MS - here is expected "option" param in DuiFastListView::drawForeground
+    list->paint(painter, option);
 
     // Print used memory, it will be recorded in a log
     outputAllocatedMemorySize();
 
-    delete list;
+    delete list; list = NULL;
 
     endMemoryBenchmark();
 
-    delete painter;
-    delete pixmap;
-    */
+    delete option; option = NULL;
+    delete painter;painter = NULL;
+    delete pixmap; pixmap = NULL;
 }
 
 QTEST_APPLESS_MAIN(Mt_DuiList)
