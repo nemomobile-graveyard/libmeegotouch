@@ -17,7 +17,6 @@
 **
 ****************************************************************************/
 
-static const int frameWidth =  4;  // width of line edit focus frame
 
 #include "qtmaemo6style.h"
 #include "qtmaemo6style_p.h"
@@ -1562,6 +1561,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
         if (const QStyleOptionSpinBox *spinBox = qstyleoption_cast<const QStyleOptionSpinBox *>(opt)) {
             p->save();
 
+            // Draw the line edit background
             QStyleOptionFrame frameOpt;
             if (QLineEdit *lineedit = qFindChild<QLineEdit *>(widget))
                 frameOpt.initFrom(lineedit);
@@ -1579,21 +1579,24 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             QRect downRect = proxy()->subControlRect(CC_SpinBox, opt, SC_SpinBoxDown, widget);
             QRect frameEditRect = proxy()->subControlRect(CC_SpinBox, opt, SC_SpinBoxEditField, widget);
 
-
+            // Best guess for size of +/- symbols
             int offset = frameEditRect.height() / 6;
             if (spinBox->buttonSymbols != QAbstractSpinBox::NoButtons) {
                 QPoint center;
                 if (spinBox->subControls & SC_SpinBoxUp) {
                     center = upRect.center();
+                    // offset for pressed state
                     if (upSunken) {
                         ++center.rx();
                         ++center.ry();
                     }
 
+                    // Choose correct palette for + symbol
                     QPalette pal = spinBox->palette;
                     if (!(spinBox->stepEnabled & QAbstractSpinBox::StepUpEnabled)) {
                         pal.setCurrentColorGroup(QPalette::Disabled);
                     }
+                    // Draw + symbol
                     QBrush indicatorBrush = pal.buttonText();
                     p->setPen(QPen(indicatorBrush, 2));
 
@@ -1602,15 +1605,18 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                 }
                 if (spinBox->subControls & SC_SpinBoxDown) {
                     center = downRect.center();
+                    // offset for pressed state
                     if (downSunken) {
                         ++center.rx();
                         ++center.ry();
                     }
 
+                    // Choose correct palette for - symbol
                     QPalette pal = spinBox->palette;
                     if (!(spinBox->stepEnabled & QAbstractSpinBox::StepDownEnabled)) {
                         pal.setCurrentColorGroup(QPalette::Disabled);
                     }
+                    // Draw - symbol
                     QBrush indicatorBrush = pal.buttonText();
                     p->setPen(QPen(indicatorBrush, 2));
 
@@ -1618,6 +1624,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                 }
             }
 
+            // Draw the separator lines between the edit rect and the buttons
             QPen separatorPen(Qt::DashLine);
             p->setPen( separatorPen );
 
@@ -1812,15 +1819,36 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
                              spinBox->rect.height());
                 rect = visualRect(spinBox->direction, spinBox->rect, rect);
                 break;
-            case SC_SpinBoxEditField:
-                if (spinBox->buttonSymbols != QAbstractSpinBox::NoButtons) {
-                    rect = spinBox->rect.adjusted(widthPlusMinus, 0, -widthPlusMinus, 0);
-                } else {
-                    rect = spinBox->rect;
+            case SC_SpinBoxEditField: {
+                    int frameLeft = 0;
+                    int frameRight = 0;
+                    int frameTop = 0;
+                    int frameBottom = 0;
+
+                    const DuiTextEditStyle *style =
+                        static_cast<const DuiTextEditStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Sunken,
+                                "DuiTextEditStyle"));
+
+                    if (style) {
+                        // Check the recommended border size ...
+                        if (style->backgroundImage()) {
+                            style->backgroundImage()->borders(&frameLeft, &frameRight,
+                                                            &frameTop, &frameBottom);
+                        }
+                    }
+
+                    if (spinBox->buttonSymbols != QAbstractSpinBox::NoButtons) {
+                        rect = spinBox->rect.adjusted(widthPlusMinus, 0, -widthPlusMinus, 0);
+                        frameLeft = 0;
+                        frameRight = 0;
+                    } else {
+                        rect = spinBox->rect;
+                    }
+                    rect.adjust( frameLeft / 2, frameTop / 2,
+                                 -frameRight / 2, -frameBottom / 2);
+                    rect = visualRect(spinBox->direction, spinBox->rect, rect);
+                    break;
                 }
-                rect.adjust(frameWidth, frameWidth, -frameWidth, -frameWidth);
-                rect = visualRect(spinBox->direction, spinBox->rect, rect);
-                break;
             default:
                 break;
             }
