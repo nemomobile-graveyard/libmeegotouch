@@ -332,12 +332,11 @@ int DuiFastPlainListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
     // Formula for calculating position of specific row is following:
-    // row * itemHeight + (row - 1) * separatorHeight = pos
+    // row * itemHeight + row * separatorHeight = pos
     // to calculate row lets do basic math:
-    // row = (pos + separatorHeight) / (itemHeight + separatorHeight)
-    // since row is integer, we need to round it properly, so adding half height of item
+    // row = pos / (separatorHeight + itemHeight)
     int separatorHeight = separator->boundingRect().height();
-    int row = (y + (itemHeight / 2) + separatorHeight) / (itemHeight + separatorHeight);
+    int row = y / (separatorHeight + itemHeight);
 
     int modelRowCount = model->rowCount();
     if (row >= modelRowCount)
