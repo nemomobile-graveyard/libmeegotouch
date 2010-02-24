@@ -141,6 +141,13 @@ public:
         m_maxKineticScrollSpeed = speed;
     };
 
+    /*!
+     * \brief If application has direction right to left, set this.
+     */
+    void setRightToLeft(bool rightToLeft) {
+        m_rightToLeft = rightToLeft;
+    }
+
 protected:
     void timerEvent(QTimerEvent *event);
     void installEventFilter(QObjectList list);
@@ -166,6 +173,8 @@ private:
     int m_deaccelerationInterval;
     int m_deaccelerationStrength;
     int m_maxKineticScrollSpeed;
+
+    bool m_rightToLeft;
 };
 
 #endif // QTMAEMO6KINETICSCROLLING_H

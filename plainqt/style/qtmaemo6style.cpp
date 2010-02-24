@@ -864,6 +864,7 @@ void QtMaemo6Style::polish(QWidget *widget)
 
     if (QAbstractScrollArea *abstractScrollArea = qobject_cast<QAbstractScrollArea *>(widget)) {
         d->m_kinetic->enableOn(abstractScrollArea);
+        d->m_kinetic->setRightToLeft(qApp->isRightToLeft());
         d->m_scrollBarEventFilter->enableOn(abstractScrollArea);
         //FIXME: public API usage
         //widget->setAutoFillBackground(false);
