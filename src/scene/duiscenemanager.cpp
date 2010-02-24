@@ -244,7 +244,7 @@ void DuiSceneManagerPrivate::_q_windowShowAnimationFinished()
         produceMustBeResolvedDisplayEvent(window);
     }
 
-    QObject::disconnect(window, SIGNAL(windowShown()), q, SLOT(_q_windowShowAnimationFinished()));
+    QObject::disconnect(window, SIGNAL(appeared()), q, SLOT(_q_windowShowAnimationFinished()));
 }
 
 void DuiSceneManagerPrivate::_q_windowHideAnimationFinished()
@@ -269,7 +269,7 @@ void DuiSceneManagerPrivate::_q_windowHideAnimationFinished()
 
     window->hide();
 
-    QObject::disconnect(window, SIGNAL(windowHidden()), q, SLOT(_q_windowHideAnimationFinished()));
+    QObject::disconnect(window, SIGNAL(disappeared()), q, SLOT(_q_windowHideAnimationFinished()));
 
     //check if the window has not yet been detached
     int i = windows->indexOf(window);
@@ -693,7 +693,7 @@ void DuiSceneManagerPrivate::prepareWindowShow(DuiSceneWindow *window)
             window->hideAnimation()->state() != QAbstractAnimation::Stopped) {
 
         window->hideAnimation()->stop();
-        QObject::disconnect(window, SIGNAL(windowHidden()),
+        QObject::disconnect(window, SIGNAL(disappeared()),
                             q, SLOT(_q_windowHideAnimationFinished()));
     }
 
@@ -710,7 +710,7 @@ void DuiSceneManagerPrivate::prepareWindowShow(DuiSceneWindow *window)
 
     orientationAnimation->addSceneWindow(window);
 
-    q->connect(window, SIGNAL(windowShown()), SLOT(_q_windowShowAnimationFinished()));
+    q->connect(window, SIGNAL(appeared()), SLOT(_q_windowShowAnimationFinished()));
     q->connect(window, SIGNAL(repositionNeeded()), SLOT(_q_setSenderGeometry()));
 }
 
@@ -723,8 +723,8 @@ void DuiSceneManagerPrivate::startPageSwitchAnimation(DuiSceneWindow *newPage,
     pageSwitchAnimation->setPageTransitionDirection(direction);
 
     pageSwitchAnimation->disconnect(SIGNAL(finished()));
-    QObject::connect(pageSwitchAnimation, SIGNAL(finished()), newPage, SIGNAL(windowShown()));
-    QObject::connect(pageSwitchAnimation, SIGNAL(finished()), oldPage, SIGNAL(windowHidden()));
+    QObject::connect(pageSwitchAnimation, SIGNAL(finished()), newPage, SIGNAL(appeared()));
+    QObject::connect(pageSwitchAnimation, SIGNAL(finished()), oldPage, SIGNAL(disappeared()));
 
     pageSwitchAnimation->start();
     freezeUIForAnimationDuration(pageSwitchAnimation);
@@ -749,9 +749,9 @@ void DuiSceneManagerPrivate::pushPage(DuiSceneWindow *page, bool animatedTransit
         startPageSwitchAnimation(currentPage, previousPage, DuiPageSwitchAnimation::LeftToRight);
     } else {
         if (previousPage) {
-            emit previousPage->windowHidden();
+            emit previousPage->disappeared();
         }
-        emit currentPage->windowShown();
+        emit currentPage->appeared();
     }
 }
 
@@ -773,10 +773,10 @@ void DuiSceneManagerPrivate::popPage(bool animatedTransition)
     if (animatedTransition) {
         startPageSwitchAnimation(previousPage, currentPage, DuiPageSwitchAnimation::RightToLeft);
     } else {
-        emit currentPage->windowHidden();
+        emit currentPage->disappeared();
 
         if (previousPage) {
-            emit previousPage->windowShown();
+            emit previousPage->appeared();
         }
     }
 
@@ -814,7 +814,7 @@ void DuiSceneManagerPrivate::appearWindow(DuiSceneWindow *window,
             window->showAnimation()->resetToInitialState();
             window->showAnimation()->start();
         } else {
-            emit window->windowShown();
+            emit window->appeared();
         }
     }
 
@@ -839,11 +839,11 @@ void DuiSceneManagerPrivate::prepareWindowHide(DuiSceneWindow *window)
             window->showAnimation()->state() != QAbstractAnimation::Stopped) {
 
         window->showAnimation()->stop();
-        QObject::disconnect(window, SIGNAL(windowShown()),
+        QObject::disconnect(window, SIGNAL(appeared()),
                             q, SLOT(_q_windowShowAnimationFinished()));
     }
 
-    q->connect(window, SIGNAL(windowHidden()), SLOT(_q_windowHideAnimationFinished()));
+    q->connect(window, SIGNAL(disappeared()), SLOT(_q_windowHideAnimationFinished()));
 }
 
 void DuiSceneManagerPrivate::disappearWindow(DuiSceneWindow *window,
@@ -864,7 +864,7 @@ void DuiSceneManagerPrivate::disappearWindow(DuiSceneWindow *window,
     if (animatedTransition && window->hideAnimation()) {
         window->hideAnimation()->start();
     } else {
-        emit window->windowHidden();
+        emit window->disappeared();
         q->scene()->update(); // is this really needed?
     }
 }
@@ -900,7 +900,7 @@ void DuiSceneManagerPrivate::dismissWindow(DuiSceneWindow *window,
     } else if (animatedTransition && window->hideAnimation()) { // Fallback to legacy hide anim.
         window->hideAnimation()->start();
     } else {
-        emit window->windowHidden();
+        emit window->disappeared();
         q->scene()->update(); // is this really needed?
     }
 }

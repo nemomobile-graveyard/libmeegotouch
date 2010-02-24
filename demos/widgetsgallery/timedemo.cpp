@@ -43,7 +43,7 @@ Timedemo::Timedemo(TimingScene *timingScene, ListPage *listPage)
     , timingStarted(false)
     , timingStopped(false)
 {
-    connect(m_pFrontPage, SIGNAL(windowShown()), this, SLOT(showFirstPage()));
+    connect(m_pFrontPage, SIGNAL(appeared()), this, SLOT(showFirstPage()));
 }
 
 void Timedemo::setOutputCsv(const QString &filename)
@@ -86,7 +86,7 @@ void Timedemo::stopTiming()
 
 void Timedemo::showFirstPage()
 {
-    disconnect(m_pFrontPage, SIGNAL(windowShown()), this, SLOT(showFirstPage()));
+    disconnect(m_pFrontPage, SIGNAL(appeared()), this, SLOT(showFirstPage()));
     m_currentPageIndex = 0;
     benchmarkResults.resize(m_pFrontPage->pageCount() + 1);
     currentPage = dynamic_cast<TimedemoPage*>(m_pFrontPage->findPageByIndex(0));

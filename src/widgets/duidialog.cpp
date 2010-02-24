@@ -153,12 +153,12 @@ void DuiDialogPrivate::updateStandAloneHomeButtonVisibility()
     }
 }
 
-void DuiDialogPrivate::_q_onStandAloneDialogHidden()
+void DuiDialogPrivate::_q_onStandAloneDialogDisappeared()
 {
     Q_Q(DuiDialog);
     Q_ASSERT(standAloneWindow != 0);
 
-    q->disconnect(SIGNAL(windowHidden()), q, SLOT(_q_onStandAloneDialogHidden()));
+    q->disconnect(SIGNAL(disappeared()), q, SLOT(_q_onStandAloneDialogDisappeared()));
 
     standAloneWindow->setScene(0);
     standAloneWindow->deleteLater();
@@ -192,7 +192,7 @@ bool DuiDialogPrivate::prepareStandAloneAppearance(DuiSceneWindow::DeletionPolic
 #ifdef Q_WS_X11
         XSetTransientForHint(QX11Info::display(), standAloneWindow->winId(), DuiApplication::activeWindow()->winId());
 #endif
-        q->connect(q, SIGNAL(windowHidden()), SLOT(_q_onStandAloneDialogHidden()));
+        q->connect(q, SIGNAL(disappeared()), SLOT(_q_onStandAloneDialogDisappeared()));
     }
 
     // We only have a home button in the stand-alone window if the

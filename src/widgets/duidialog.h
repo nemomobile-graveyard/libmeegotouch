@@ -595,7 +595,7 @@ private:
     Q_DECLARE_PRIVATE(DuiDialog)
     Q_DISABLE_COPY(DuiDialog)
     Q_PRIVATE_SLOT(d_func(), void _q_buttonClicked(QObject *))
-    Q_PRIVATE_SLOT(d_func(), void _q_onStandAloneDialogHidden())
+    Q_PRIVATE_SLOT(d_func(), void _q_onStandAloneDialogDisappeared())
 
     friend class DuiDialogView;
     friend class DuiDialogViewPrivate;

@@ -97,10 +97,10 @@ void DuiApplicationWindowPrivate::init()
     q->connect(navigationBar, SIGNAL(viewmenuTriggered()),
                q, SLOT(openMenu()));
 
-    q->connect(menu, SIGNAL(windowShown()),
-               q, SLOT(_q_menuShown()));
-    q->connect(menu, SIGNAL(windowHidden()),
-               q, SLOT(_q_menuHidden()));
+    q->connect(menu, SIGNAL(appeared()),
+               q, SLOT(_q_menuAppeared()));
+    q->connect(menu, SIGNAL(disappeared()),
+               q, SLOT(_q_menuDisappeared()));
 
     navigationBar->appearNow(q);
     homeButtonPanel->appearNow(q);
@@ -242,7 +242,7 @@ void DuiApplicationWindowPrivate::_q_updatePageAutoMarginsForComponents(const Du
     }
 }
 
-void DuiApplicationWindowPrivate::_q_menuShown()
+void DuiApplicationWindowPrivate::_q_menuAppeared()
 {
     Q_Q(DuiApplicationWindow);
     QObject::disconnect(navigationBar, SIGNAL(viewmenuTriggered()),
@@ -251,7 +251,7 @@ void DuiApplicationWindowPrivate::_q_menuShown()
                      q, SLOT(closeMenu()));
 }
 
-void DuiApplicationWindowPrivate::_q_menuHidden()
+void DuiApplicationWindowPrivate::_q_menuDisappeared()
 {
     Q_Q(DuiApplicationWindow);
     QObject::disconnect(navigationBar, SIGNAL(viewmenuTriggered()),

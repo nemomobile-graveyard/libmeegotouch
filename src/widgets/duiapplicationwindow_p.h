@@ -103,8 +103,8 @@ public:
     void _q_placeToolBar(const Dui::Orientation &);
     void _q_handlePageModelModifications(const QList<const char *>&);
     void _q_updatePageAutoMarginsForComponents(const Dui::Orientation &orientation);
-    void _q_menuShown();
-    void _q_menuHidden();
+    void _q_menuAppeared();
+    void _q_menuDisappeared();
 };
 
 #endif

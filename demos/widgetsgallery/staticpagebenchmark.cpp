@@ -25,7 +25,7 @@ QString StaticPageBenchmark::name()
 void StaticPageBenchmark::start()
 {
     if (!applicationPage->isActiveWindow()) {
-        connect(applicationPage, SIGNAL(windowShown()), this, SLOT(stabilizeFps()));
+        connect(applicationPage, SIGNAL(appeared()), this, SLOT(stabilizeFps()));
         applicationPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
         applicationPage->appear();
     } else {

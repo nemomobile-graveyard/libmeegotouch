@@ -39,7 +39,7 @@ public:
     void appear(bool now, DuiSceneWindow::DeletionPolicy policy);
     void addStandardButtons(Dui::StandardButtons standardButtons);
     void updateStandAloneHomeButtonVisibility();
-    void _q_onStandAloneDialogHidden();
+    void _q_onStandAloneDialogDisappeared();
     void _q_buttonClicked(QObject *obj);
     bool prepareStandAloneAppearance(DuiSceneWindow::DeletionPolicy policy);
     void updateButtonClickedMappings();

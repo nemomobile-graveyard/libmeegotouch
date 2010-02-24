@@ -64,11 +64,11 @@ void DuiSceneWindowView::applyStyle()
     Q_D(DuiSceneWindowView);
 
     if (showAnimation()) {
-        disconnect(showAnimation(), SIGNAL(finished()), d->controller, SIGNAL(windowShown()));
+        disconnect(showAnimation(), SIGNAL(finished()), d->controller, SIGNAL(appeared()));
     }
 
     if (hideAnimation()) {
-        disconnect(hideAnimation(), SIGNAL(finished()), d->controller, SIGNAL(windowHidden()));
+        disconnect(hideAnimation(), SIGNAL(finished()), d->controller, SIGNAL(disappeared()));
     }
 
     DuiWidgetView::applyStyle();
@@ -87,11 +87,11 @@ void DuiSceneWindowView::applyStyle()
 
 
     if (showAnimation()) {
-        connect(showAnimation(), SIGNAL(finished()), d->controller, SIGNAL(windowShown()));
+        connect(showAnimation(), SIGNAL(finished()), d->controller, SIGNAL(appeared()));
     }
 
     if (hideAnimation()) {
-        connect(hideAnimation(), SIGNAL(finished()), d->controller, SIGNAL(windowHidden()));
+        connect(hideAnimation(), SIGNAL(finished()), d->controller, SIGNAL(disappeared()));
     }
 
     emit geometryAttributesChanged();

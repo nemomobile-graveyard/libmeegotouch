@@ -336,46 +336,27 @@ void Ut_DuiSceneManager::testSceneSizes()
     QVERIFY(vSR.width() < vSR.height());
 }
 
-void Ut_DuiSceneManager::testWindowAnimationDone()
-{
-    DuiSceneWindow *window1 = new DuiOverlay;
-    DuiSceneWindow *window2 = new DuiOverlay;
-    QSignalSpy spyWindow1Shown(window1, SIGNAL(windowShown()));
-    QSignalSpy spyWindow1Hidden(window1, SIGNAL(windowHidden()));
-    QSignalSpy spyWindow2Shown(window2, SIGNAL(windowShown()));
-    window1->appearNow();
-    QCOMPARE(spyWindow1Shown.count(), 1);
-    QCOMPARE(spyWindow1Hidden.count(), 0);
-    QCOMPARE(spyWindow2Shown.count(), 0);
-    sm->hideWindowNow(window1);
-    QCOMPARE(spyWindow1Shown.count(), 1);
-    QCOMPARE(spyWindow1Hidden.count(), 1);
-    QCOMPARE(spyWindow2Shown.count(), 0);
-    delete window1;
-    delete window2;
-}
-
 void Ut_DuiSceneManager::testPageSwitchingOnAppearNow()
 {
     DuiApplicationPage firstPage;
     DuiApplicationPage secondPage;
 
-    QSignalSpy firstPageShown(&firstPage, SIGNAL(windowShown()));
-    QSignalSpy firstPageHidden(&firstPage, SIGNAL(windowHidden()));
-    QSignalSpy secondPageShown(&secondPage, SIGNAL(windowShown()));
+    QSignalSpy firstPageAppeared(&firstPage, SIGNAL(appeared()));
+    QSignalSpy firstPageDisappeared(&firstPage, SIGNAL(disappeared()));
+    QSignalSpy secondPageAppeared(&secondPage, SIGNAL(appeared()));
 
     sm->showWindowNow(&firstPage);
 
-    QCOMPARE(firstPageShown.count(), 1);
-    QCOMPARE(firstPageHidden.count(), 0);
-    QCOMPARE(secondPageShown.count(), 0);
-    firstPageShown.clear();
+    QCOMPARE(firstPageAppeared.count(), 1);
+    QCOMPARE(firstPageDisappeared.count(), 0);
+    QCOMPARE(secondPageAppeared.count(), 0);
+    firstPageAppeared.clear();
 
     sm->showWindowNow(&secondPage);
 
-    QCOMPARE(firstPageShown.count(), 0);
-    QCOMPARE(firstPageHidden.count(), 1);
-    QCOMPARE(secondPageShown.count(), 1);
+    QCOMPARE(firstPageAppeared.count(), 0);
+    QCOMPARE(firstPageDisappeared.count(), 1);
+    QCOMPARE(secondPageAppeared.count(), 1);
 }
 
 void Ut_DuiSceneManager::testPageSwitchingOnDismissNow()
@@ -386,17 +367,17 @@ void Ut_DuiSceneManager::testPageSwitchingOnDismissNow()
     sm->showWindowNow(&firstPage);
     sm->showWindowNow(&secondPage);
 
-    QSignalSpy firstPageShown(&firstPage, SIGNAL(windowShown()));
-    QSignalSpy firstPageHidden(&firstPage, SIGNAL(windowHidden()));
-    QSignalSpy secondPageShown(&secondPage, SIGNAL(windowShown()));
-    QSignalSpy secondPageHidden(&secondPage, SIGNAL(windowHidden()));
+    QSignalSpy firstPageAppeared(&firstPage, SIGNAL(appeared()));
+    QSignalSpy firstPageDisappeared(&firstPage, SIGNAL(disappeared()));
+    QSignalSpy secondPageAppeared(&secondPage, SIGNAL(appeared()));
+    QSignalSpy secondPageDisappeared(&secondPage, SIGNAL(disappeared()));
 
     sm->closeWindowNow(&secondPage);
 
-    QCOMPARE(firstPageShown.count(), 1);
-    QCOMPARE(firstPageHidden.count(), 0);
-    QCOMPARE(secondPageShown.count(), 0);
-    QCOMPARE(secondPageHidden.count(), 1);
+    QCOMPARE(firstPageAppeared.count(), 1);
+    QCOMPARE(firstPageDisappeared.count(), 0);
+    QCOMPARE(secondPageAppeared.count(), 0);
+    QCOMPARE(secondPageDisappeared.count(), 1);
 }
 
 void Ut_DuiSceneManager::testPageHistoryPushing()
@@ -476,31 +457,31 @@ void Ut_DuiSceneManager::testSettingPageHistory()
     // Now check that the history set above will actually be followed
     // by the scene manager
 
-    QSignalSpy firstPageShown(&firstPage, SIGNAL(windowShown()));
-    QSignalSpy firstPageHidden(&firstPage, SIGNAL(windowHidden()));
-    QSignalSpy secondPageShown(&secondPage, SIGNAL(windowShown()));
-    QSignalSpy secondPageHidden(&secondPage, SIGNAL(windowHidden()));
-    QSignalSpy thirdPageShown(&thirdPage, SIGNAL(windowShown()));
-    QSignalSpy thirdPageHidden(&thirdPage, SIGNAL(windowHidden()));
+    QSignalSpy firstPageAppeared(&firstPage, SIGNAL(appeared()));
+    QSignalSpy firstPageDisappeared(&firstPage, SIGNAL(disappeared()));
+    QSignalSpy secondPageAppeared(&secondPage, SIGNAL(appeared()));
+    QSignalSpy secondPageDisappeared(&secondPage, SIGNAL(disappeared()));
+    QSignalSpy thirdPageAppeared(&thirdPage, SIGNAL(appeared()));
+    QSignalSpy thirdPageDisappeared(&thirdPage, SIGNAL(disappeared()));
 
     sm->closeWindowNow(&thirdPage);
 
-    QCOMPARE(secondPageShown.count(), 1);
-    QCOMPARE(secondPageHidden.count(), 0);
-    QCOMPARE(thirdPageHidden.count(), 1);
-    secondPageShown.clear();
-    secondPageHidden.clear();
+    QCOMPARE(secondPageAppeared.count(), 1);
+    QCOMPARE(secondPageDisappeared.count(), 0);
+    QCOMPARE(thirdPageDisappeared.count(), 1);
+    secondPageAppeared.clear();
+    secondPageDisappeared.clear();
 
     sm->closeWindowNow(&secondPage);
 
-    QCOMPARE(firstPageShown.count(), 1);
-    QCOMPARE(firstPageHidden.count(), 0);
-    QCOMPARE(secondPageShown.count(), 0);
-    QCOMPARE(secondPageHidden.count(), 1);
+    QCOMPARE(firstPageAppeared.count(), 1);
+    QCOMPARE(firstPageDisappeared.count(), 0);
+    QCOMPARE(secondPageAppeared.count(), 0);
+    QCOMPARE(secondPageDisappeared.count(), 1);
 
     sm->closeWindowNow(&firstPage);
 
-    QCOMPARE(firstPageHidden.count(), 1);
+    QCOMPARE(firstPageDisappeared.count(), 1);
 }
 
 void Ut_DuiSceneManager::testDeletePageInPageHistory()
@@ -516,16 +497,16 @@ void Ut_DuiSceneManager::testDeletePageInPageHistory()
     delete secondPage;
     secondPage = 0;
 
-    QSignalSpy firstPageShown(firstPage, SIGNAL(windowShown()));
-    QSignalSpy firstPageHidden(firstPage, SIGNAL(windowHidden()));
-    QSignalSpy thirdPageHidden(thirdPage, SIGNAL(windowHidden()));
+    QSignalSpy firstPageAppeared(firstPage, SIGNAL(appeared()));
+    QSignalSpy firstPageDisappeared(firstPage, SIGNAL(disappeared()));
+    QSignalSpy thirdPageDisappeared(thirdPage, SIGNAL(disappeared()));
 
     sm->closeWindowNow(thirdPage);
 
     // Should go back straight to the first page since the second one was deleted.
-    QCOMPARE(firstPageShown.count(), 1);
-    QCOMPARE(firstPageHidden.count(), 0);
-    QCOMPARE(thirdPageHidden.count(), 1);
+    QCOMPARE(firstPageAppeared.count(), 1);
+    QCOMPARE(firstPageDisappeared.count(), 0);
+    QCOMPARE(thirdPageDisappeared.count(), 1);
 
     delete thirdPage;
 }

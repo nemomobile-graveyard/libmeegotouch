@@ -58,7 +58,6 @@ private slots:
     //void testNavBarDockWidgetVisibility();
     void testAngleBoundaryCases();
     void testSceneSizes();
-    void testWindowAnimationDone();
     void testPageSwitchingOnAppearNow();
     void testPageSwitchingOnDismissNow();
     void testPageHistoryPushing();

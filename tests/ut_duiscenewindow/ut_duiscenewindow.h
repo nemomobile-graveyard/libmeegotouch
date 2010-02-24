@@ -41,7 +41,11 @@ private slots:
     void testAppear();
     void testAppearWithoutSceneManager();
 
+    // TODO: Remove this along with deprecated windowShown() and windowHidden() signals
     void testWindowAnimationDone();
+
+    void testAppearedDisappearedSignals();
+
     void opacityAfterAppearNow();
     void opacityAfterAppear();
 

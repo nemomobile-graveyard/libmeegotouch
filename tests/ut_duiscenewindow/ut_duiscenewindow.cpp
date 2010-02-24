@@ -163,6 +163,7 @@ void Ut_DuiSceneWindow::testAppearWithoutSceneManager()
     QVERIFY(m_subject->scene() == static_cast<QGraphicsScene *>(window->scene()));
 }
 
+// TODO: Remove this along with deprecated windowShown() and windowHidden() signals
 void Ut_DuiSceneWindow::testWindowAnimationDone()
 {
     QSignalSpy spyWindowVisible(m_subject, SIGNAL(windowShown()));
@@ -173,6 +174,22 @@ void Ut_DuiSceneWindow::testWindowAnimationDone()
     m_subject->disappearNow();
     QCOMPARE(spyWindowVisible.count(), 1);
     QCOMPARE(spyWindowHidden.count(), 1);
+}
+
+void Ut_DuiSceneWindow::testAppearedDisappearedSignals()
+{
+    QSignalSpy spyAppeared(m_subject, SIGNAL(appeared()));
+    QSignalSpy spyDisappeared(m_subject, SIGNAL(disappeared()));
+
+    m_subject->appearNow();
+
+    QCOMPARE(spyAppeared.count(), 1);
+    QCOMPARE(spyDisappeared.count(), 0);
+
+    m_subject->disappearNow();
+
+    QCOMPARE(spyAppeared.count(), 1);
+    QCOMPARE(spyDisappeared.count(), 1);
 }
 
 void Ut_DuiSceneWindow::opacityAfterAppearNow()
@@ -196,13 +213,13 @@ void Ut_DuiSceneWindow::testDismiss()
 
     m_subject->appearNow();
 
-    QSignalSpy spyWindowShown(m_subject, SIGNAL(windowShown()));
-    QSignalSpy spyWindowHidden(m_subject, SIGNAL(windowHidden()));
+    QSignalSpy spyWindowAppeared(m_subject, SIGNAL(appeared()));
+    QSignalSpy spyWindowDisappeared(m_subject, SIGNAL(disappeared()));
 
     m_subject->dismissNow();
 
-    QCOMPARE(spyWindowShown.count(), 0);
-    QCOMPARE(spyWindowHidden.count(), 1);
+    QCOMPARE(spyWindowAppeared.count(), 0);
+    QCOMPARE(spyWindowDisappeared.count(), 1);
     // QCOMPARE(dismissEventFilter.count, 1); FIXME: Dismiss events are disabled in 0.18 due to ABI freeze
 }
 
