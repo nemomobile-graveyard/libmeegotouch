@@ -20,13 +20,23 @@
 #include "duithemedaemonserver.h"
 #include <QDebug>
 #include <QApplication>
+#include <signal.h>
 
 #ifdef CLOSE_ON_ENTER
 #include "keypresswaiter.h"
 #endif
 
+void sigclose(int)
+{
+    // kill the daemon so that it can save it's current state (caches, refcounts, etc)
+    qApp->quit();
+}
+
 int main(int argc, char **argv)
 {
+    signal(SIGTERM, sigclose);
+    signal(SIGINT, sigclose);
+
     QApplication::setGraphicsSystem(QLatin1String("native"));
 
     QApplication app(argc, argv);
