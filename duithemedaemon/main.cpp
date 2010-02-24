@@ -27,6 +27,8 @@
 
 int main(int argc, char **argv)
 {
+    QApplication::setGraphicsSystem(QLatin1String("native"));
+
     QApplication app(argc, argv);
 
     DuiThemeDaemonServer server;

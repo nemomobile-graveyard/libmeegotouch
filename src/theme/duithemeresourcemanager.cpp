@@ -85,3 +85,12 @@ void DuiThemeResourceManager::freeUnusedResources()
     }
 }
 
+void DuiThemeResourceManager::themeChanged()
+{
+    if(!timer.isActive()) {
+        timer.stop();
+    }
+
+    qDeleteAll(svgRendererInfos);
+    svgRendererInfos.clear();
+}

@@ -33,6 +33,7 @@
 #include "duithemedaemonclient.h"
 #include "duiimagedirectory.h"
 #include "duithemedaemonprotocol.h"
+#include "duithemeresourcemanager.h"
 
 using namespace Dui::DuiThemeDaemonProtocol;
 
@@ -290,6 +291,8 @@ bool DuiThemeDaemon::activateTheme(const QString &newTheme, const QString &local
 
         client->reloadImagePaths(themeInheritance);
     }
+
+    DuiThemeResourceManager::instance().themeChanged();
 
     // 5: release rest of the old theme resources and load the new ones
     reloadImagePaths(locale);

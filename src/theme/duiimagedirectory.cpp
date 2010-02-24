@@ -25,6 +25,11 @@
 #include <QPainter>
 #include <QPixmap>
 
+#ifdef  Q_WS_X11
+#include <X11/Xlib.h>
+#include <QX11Info>
+#endif
+
 uint qHash(const QSize &size)
 {
     return (size.width() & 0x0000ffff) | (size.height() << 16);
@@ -37,6 +42,11 @@ Qt::HANDLE ImageResource::fetchPixmap(const QSize &size)
     if (!cacheEntry.pixmap) {
         // we didn't have the correctly sized pixmap in cache, so we need to create one.
         cacheEntry.pixmap = createPixmap(size);
+
+#ifdef  Q_WS_X11
+        // Sync X-Server, without this the pixmap handle is still invalid in client-side
+        XSync(QX11Info::display(), false);
+#endif
     }
 
     ++cacheEntry.refCount;
@@ -101,6 +111,11 @@ bool ImageResource::load(QIODevice* device, const QSize& size)
     Q_ASSERT_X(!cacheEntry.pixmap, "ImageResource", "Tried to load pixmap that already exists.");
     cacheEntry.pixmap = pixmap;
     ++cacheEntry.refCount;
+
+#ifdef  Q_WS_X11
+    // Sync X-Server, without this the pixmap handle is still invalid in client-side
+    XSync(QX11Info::display(), false);
+#endif
     return true;
 }
 
@@ -139,9 +154,6 @@ QPixmap *IconImageResource::createPixmap(const QSize &size)
     QPainter painter(pixmap);
     renderer->render(&painter);
 
-    // TODO: remove when better solution found to ensure that the pixmap is fully ready
-    pixmap->save(QString("/dev/null"), "PNG");
-
     return pixmap;
 }
 
@@ -163,9 +175,6 @@ QPixmap *SvgImageResource::createPixmap(const QSize &size)
     pixmap->fill(QColor(Qt::transparent));
     QPainter painter(pixmap);
     renderer->render(&painter, imageId);
-
-    // TODO: remove when better solution found to ensure that the pixmap is fully ready
-    pixmap->save(QString("/dev/null"), "PNG");
 
     return pixmap;
 }

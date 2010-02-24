@@ -35,6 +35,8 @@ public:
 
     QSvgRenderer* svgRenderer(const QString& absoluteFilePath);
 
+    void themeChanged();
+
 private Q_SLOTS:
     void freeUnusedResources();
 
