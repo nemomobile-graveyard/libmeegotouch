@@ -275,6 +275,29 @@ public:
     QRect scrollBarSliderRect(const QStyleOptionComplex *option, const QWidget *widget = 0) const;
 
     /*!
+     * \brief returns a Pixmap with the given borders cropped away
+     * The given borders of the scalable image are cut away, the resulting pixmap will
+     * have size as size. If drawLines is true, lines are drawn on the cut away borders
+     * to close the pixmap. The color of these lines is taken from one of the pixmaps
+     * outermost pixels.
+     * \param image the image used as base
+     * \param size target size of the pixmap
+     * \param borders combined Borders flags that should be cut away
+     * \param borderLines optional draw closing lines on the given border sides. If not
+     *        given border lines are drawn for all cut borders
+     */
+    enum Borders {
+        leftBorder = 1,
+        topBorder = 2,
+        rightBorder = 4,
+        bottomBorder = 8
+    };
+    QPixmap borderCroppedPixmap(const DuiScalableImage* image, QSize size, int borders, int borderLines) const;
+    QPixmap borderCroppedPixmap(const DuiScalableImage* image, QSize size, int borders) const {
+        return borderCroppedPixmap(image, size, borders, borders);
+    }
+
+    /*!
      * returns an inverted Alignment, so align right will become align left, top
      * will become bottom and so on
      */

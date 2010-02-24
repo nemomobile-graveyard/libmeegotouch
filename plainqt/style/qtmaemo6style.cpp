@@ -49,6 +49,7 @@
 #include <QComboBox>
 #include <QLineEdit>
 #include <QTime>
+#include <QHeaderView>
 
 #include <DuiComponentData>
 #include <DuiTheme>
@@ -669,6 +670,50 @@ QRect QtMaemo6StylePrivate::scrollBarSliderRect(const QStyleOptionComplex *optio
     return QRect();
 }
 
+QPixmap QtMaemo6StylePrivate::borderCroppedPixmap(const DuiScalableImage* image,
+                                                  QSize size,
+                                                  int borders,
+                                                  int borderLines) const
+{
+    int usedLeftBorder, usedTopBorder, usedRightBorder, usedBottomBorder;
+    image->borders(&usedLeftBorder, &usedTopBorder, &usedRightBorder, &usedBottomBorder);
+
+    if(!(borders & topBorder))
+        usedTopBorder = 0;
+    if(!(borders & rightBorder))
+        usedRightBorder = 0;
+    if(!(borders & bottomBorder))
+        usedBottomBorder = 0;
+    if(!(borders & leftBorder))
+        usedLeftBorder = 0;
+
+    QSize tempPixmapSize = size;
+
+    QPixmap pix(tempPixmapSize + QSize(usedLeftBorder + usedRightBorder, usedTopBorder + usedBottomBorder));
+    pix.fill(Qt::transparent);
+    QPainter pixPainter(&pix);
+    image->draw(QRect(QPoint(0,0), pix.size()), &pixPainter);
+
+    //take the border color from the outermost top centered pixel
+    QColor borderColor = pix.copy(QRect(pix.size().width() / 2, 0, 1, 1)).toImage().pixel(0,0);
+
+    //cut away borders
+    QPixmap finalPix = pix.copy(QRect(QPoint(usedLeftBorder,usedTopBorder), size));
+
+    //draw the closing lines
+    QPainter finalPainter(&finalPix);
+    finalPainter.setPen(QPen(borderColor, 2));
+    if(borderLines & leftBorder)
+        finalPainter.drawLine(QPoint(1, 0), QPoint(1, finalPix.height()));
+    if(borderLines & topBorder)
+        finalPainter.drawLine(QPoint(0, 1), QPoint(finalPix.width(), 1));
+    if(borderLines & rightBorder)
+        finalPainter.drawLine(QPoint(finalPix.width()-1, 0), QPoint(finalPix.width()-1, finalPix.height()));
+    if(borderLines & bottomBorder)
+        finalPainter.drawLine(QPoint(0, finalPix.height()-1), QPoint(finalPix.width(), finalPix.height()-1));
+    return finalPix;
+}
+
 Qt::Alignment QtMaemo6StylePrivate::invertAlignment(Qt::Alignment align) const
 {
     Qt::Alignment retAlign;
@@ -872,6 +917,9 @@ void QtMaemo6Style::polish(QWidget *widget)
         if(comboBox->isEditable()) {
             comboBox->lineEdit()->setReadOnly(false);
         }
+    }
+    if(QHeaderView* hView = qobject_cast<QHeaderView*>(widget)) {
+        hView->viewport()->setBackgroundRole(QPalette::Window);
     }
 }
 
@@ -1324,6 +1372,61 @@ void QtMaemo6Style::drawControl(ControlElement element,
             p->setPen(labelTitle->color());
 
             p->drawText(rect, itemText, QTextOption(Qt::AlignLeft | Qt::AlignTop));
+        }
+    }
+    break;
+    case CE_HeaderSection: {
+        if (const QStyleOptionHeader *header = qstyleoption_cast<const QStyleOptionHeader *>(opt)) {
+            const DuiButtonStyle * style =
+                static_cast<const DuiButtonStyle *>( QtMaemo6StylePrivate::duiStyle( header->state,
+                                                       "DuiButtonStyle") );
+
+            int left, top, right, bottom;
+            style->backgroundImage()->borders(&left, &top, &right, &bottom);
+
+            p->fillRect(opt->rect, Qt::transparent);
+
+            QtMaemo6StylePrivate::Borders leftBorder = QtMaemo6StylePrivate::leftBorder;
+            QtMaemo6StylePrivate::Borders rightBorder = QtMaemo6StylePrivate::rightBorder;
+
+            if(opt->direction == Qt::RightToLeft) {
+                leftBorder = QtMaemo6StylePrivate::rightBorder;
+                rightBorder = QtMaemo6StylePrivate::leftBorder;
+            }
+
+            if(header->orientation == Qt::Horizontal) {
+                if(header->position == QStyleOptionHeader::Beginning) {
+                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                  QtMaemo6StylePrivate::bottomBorder | rightBorder);
+                    p->drawPixmap(opt->rect.topLeft(), pix);
+                } else if(header->position == QStyleOptionHeader::Middle) {
+                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                  QtMaemo6StylePrivate::bottomBorder | rightBorder | leftBorder,
+                                  QtMaemo6StylePrivate::bottomBorder | rightBorder);
+                    p->drawPixmap(opt->rect.topLeft(), pix);
+                } else if(header->position == QStyleOptionHeader::End) {
+                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                  QtMaemo6StylePrivate::bottomBorder | leftBorder,
+                                  QtMaemo6StylePrivate::bottomBorder);
+                    p->drawPixmap(opt->rect.topLeft(), pix);
+                }
+            } else if(header->orientation == Qt::Vertical) {
+                if(header->position == QStyleOptionHeader::Beginning) {
+                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                  QtMaemo6StylePrivate::bottomBorder | rightBorder);
+                    p->drawPixmap(opt->rect.topLeft(), pix);
+                } else if(header->position == QStyleOptionHeader::Middle) {
+                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                  QtMaemo6StylePrivate::bottomBorder | QtMaemo6StylePrivate::topBorder | rightBorder,
+                                  QtMaemo6StylePrivate::bottomBorder | rightBorder);
+                    p->drawPixmap(opt->rect.topLeft(), pix);
+                } else if(header->position == QStyleOptionHeader::End) {
+                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                  QtMaemo6StylePrivate::topBorder | rightBorder,
+                                  rightBorder);
+                    p->drawPixmap(opt->rect.topLeft(), pix);
+                }
+            }
         }
     }
     break;
