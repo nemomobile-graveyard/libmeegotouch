@@ -215,10 +215,10 @@ bool DuiTranslationCatalog::loadWith(DuiLocale *duilocale, DuiLocale::Category c
         QString realname;
 
         if (fname.endsWith(".qm")) {
-            // this is either engineering English or a the
-            // locale specific parts of the file name have been fully specified
-            // already. We don’t want any fallbacks in that case, we try to load
-            // only the exact file name:
+            // this is either engineering English or the locale
+            // specific parts of the file name have been fully
+            // specified already. We don’t want any fallbacks in that
+            // case, we try to load only the exact file name:
             realname = prefix + fname;
             if(QFileInfo(realname).isReadable() && _translator.load(realname))
                 return true;
@@ -1947,6 +1947,23 @@ void DuiLocale::installTrCatalog(const QString &name)
         d->_trTranslations.prepend(QExplicitlySharedDataPointer<DuiTranslationCatalog>(engineeringEnglishCatalog));
     }
     d->loadTrCatalogs();
+}
+
+void DuiLocale::removeTrCatalog(const QString &name)
+{
+    Q_D(DuiLocale);
+    DuiLocalePrivate::CatalogList::iterator it = d->_trTranslations.begin();
+    while (it != d->_trTranslations.end()) {
+        if ((*it)->_name == name || (*it)->_name == name + ".qm") {
+            // Reset to null but first decrement reference count of
+            // the shared data object and delete the shared data
+            // object if the reference count became 0:
+            (*it).reset();
+            it = d->_trTranslations.erase(it);
+        }
+        else
+            ++it;
+    }
 }
 
 void DuiLocale::insertTrToQCoreApp()

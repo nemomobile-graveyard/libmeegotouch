@@ -525,7 +525,6 @@ public:
     QString monthName(const DuiCalendar &duiCalendar, int monthNumber,
                       DateSymbolContext context, DateSymbolLength symbolLength) const;
 
-
     /*!
      * \brief Returns locale dependant weekday name
      */
@@ -538,10 +537,7 @@ public:
     QString weekdayName(const DuiCalendar &duiCalendar, int weekday,
                         DateSymbolContext context, DateSymbolLength symbolLength) const;
 
-
-
     // TODO: add versions for QDate and QTime?
-
 
     ////////////////////////////////
     //// ID translation scheme /////
@@ -586,9 +582,24 @@ public:
 
     /*!
      * \brief installs a translation catalog
-     * The catalog will be used when translating strings with qtTrId() or tr().
+     *
+     * Adds this translation catalog to the list of translation catalogs
+     * used by this DuiLocale.
+     *
+     * The list of catalogs used by the default locale is the list of
+     * catalogs which will be used when translating strings with qtTrId() or tr().
+     *
+     * \sa setDefault(const DuiLocale &locale)
      */
     void installTrCatalog(const QString &name);
+
+    /*!
+     * \brief removes a translation catalog
+     *
+     * Removes the catalog from the list of translation catalogs used by this
+     * DuiLocale.
+     */
+    void removeTrCatalog(const QString &name);
 
     /*!
      * \brief tr() compatibility translation method.
