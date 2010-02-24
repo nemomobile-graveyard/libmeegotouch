@@ -1,3 +1,12 @@
+libdui (0.19.3-1) unstable; urgency=low
+
+  * Fixes: NB#156878 - Possible race condition with remote theme server
+  * Fixes: NB#156075 Widgetsgallery: Broken button text after switching language
+  * Fixes: NB#155649 DuiLabel: line feed symbol is not processed properly
+  * Fixes: NB#144431 An application with a DuiLabel in it segfaults during shutdown when its window is closed
+  
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 24 Feb 2010 13:06:00 +0200
+
 libdui (0.19.2-1) unstable; urgency=low
 
   * Fixes: NB#157409 - Item selected after itemClicked is emited
