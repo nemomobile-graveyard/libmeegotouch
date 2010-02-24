@@ -45,7 +45,7 @@ DuiThemeDaemon::DuiThemeDaemon() :
                       "dui" + QDir::separator() + "libdui" + QDir::separator() + "style");
     if (!baseThemeDir.exists()) {
         // we don't have the base theme ("fallback") directory, so exit!
-        qFatal("DuiThemeDaemonServer - base theme directory not found: %s. Please (re)install duitheme package.",
+        qFatal("DuiThemeDaemon - base theme directory not found: %s. Please (re)install duitheme package.",
                qPrintable(baseThemeDir.absolutePath()));
     }
 }
@@ -53,7 +53,7 @@ DuiThemeDaemon::DuiThemeDaemon() :
 
 DuiThemeDaemon::~DuiThemeDaemon()
 {
-    if (!mostUsedPixmaps.save(systemThemeDirectory() + QDir::separator() + currentThemeName + QDir::separator() + "dui" + QDir::separator() + "preload.list")) {
+    if (!mostUsedPixmaps.save(systemThemeCacheDirectory() + QDir::separator() + currentThemeName + QDir::separator() + "preload.list")) {
         // TODO: print out warning
     }
     mostUsedPixmaps.clear();
@@ -71,6 +71,15 @@ QString DuiThemeDaemon::systemThemeDirectory()
     return appDir.absolutePath();
 #else
     return THEMEDIR;
+#endif
+}
+
+QString DuiThemeDaemon::systemThemeCacheDirectory()
+{
+#ifdef Q_WS_X11
+    return "/var/cache/dui/themedaemon";
+#else
+    return QDir::tempPath();
 #endif
 }
 
@@ -266,7 +275,7 @@ bool DuiThemeDaemon::activateTheme(const QString &newTheme, const QString &local
 
     // 2. save the most used list for the old theme
     if (!currentThemeName.isEmpty()) {
-        if (!mostUsedPixmaps.save(systemThemeDirectory() + QDir::separator() + currentThemeName + QDir::separator() + "dui" + QDir::separator() + "preload.list")) {
+        if (!mostUsedPixmaps.save(systemThemeCacheDirectory() + QDir::separator() + currentThemeName + QDir::separator() + "preload.list")) {
             // TODO: print out warning
         }
     }
@@ -298,7 +307,7 @@ bool DuiThemeDaemon::activateTheme(const QString &newTheme, const QString &local
     reloadImagePaths(locale);
 
     // 6. load the "preload" list
-    if (!mostUsedPixmaps.load(systemThemeDirectory() + QDir::separator() + currentThemeName + QDir::separator() + "dui" + QDir::separator() + "preload.list")) {
+    if (!mostUsedPixmaps.load(systemThemeCacheDirectory() + QDir::separator() + currentThemeName + QDir::separator() + "preload.list")) {
         // TODO: print out warning
     }
 

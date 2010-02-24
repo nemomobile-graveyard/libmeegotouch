@@ -883,7 +883,11 @@ DuiStyleSheetParser::DuiStyleSheetParser(const DuiLogicalValues *logicalValues) 
 {
     Q_D(DuiStyleSheetParser);
     d->privateFileInfo = 0;
+#ifdef Q_WS_X11
+    d->binaryDirectory = "/var/cache/dui/css/";
+#else
     d->binaryDirectory = QDir::tempPath() + QDir::separator();
+#endif
     d->binaryFileMode = true;
 }
 

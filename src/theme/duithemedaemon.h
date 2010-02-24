@@ -34,6 +34,7 @@ public:
     virtual ~DuiThemeDaemon();
 
     static QString systemThemeDirectory();
+    static QString systemThemeCacheDirectory();
 
     void addClient(DuiThemeDaemonClient *client);
     void removeClient(DuiThemeDaemonClient *client);

@@ -23,6 +23,7 @@
 #include <DuiNamespace>
 
 #include <QLocalSocket>
+#include <QDir>
 
 
 using namespace Dui::DuiThemeDaemonProtocol;
@@ -31,21 +32,44 @@ DuiThemeDaemonServer::DuiThemeDaemonServer() :
     currentTheme("/Dui/theme/name"),
     currentLocale("/Dui/i18n/Language")
 {
-    // find out the current theme
-    if (currentTheme.value().isNull())
-        currentTheme.set("devel");
-    connect(&currentTheme, SIGNAL(valueChanged()), SLOT(themeChanged()));
-    connect(&currentLocale, SIGNAL(valueChanged()), SLOT(localeChanged()));
+    const QString defaultTheme("devel");
 
-    // activate the current theme
+    // 1) make sure that gconf has some value for the current theme
+    if (currentTheme.value().isNull())
+        currentTheme.set(defaultTheme);
+
+    // 2) activate the current theme
     QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
     if (!daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), QList<DuiThemeDaemonClient *>(), pixmapsToReload)) {
         // could not activate current theme, change to devel
-        if (!daemon.activateTheme("devel", currentLocale.value().toString(), QList<DuiThemeDaemonClient *>(), pixmapsToReload)) {
+        if (!daemon.activateTheme(defaultTheme, currentLocale.value().toString(), QList<DuiThemeDaemonClient *>(), pixmapsToReload)) {
             qFatal("DuiThemeDaemonServer - Could not find themes, aborting!");
         }
+        currentTheme.set(defaultTheme);
     }
     Q_ASSERT(pixmapsToReload.isEmpty());
+
+    // 3) make sure we're notified if locale or theme changes
+    connect(&currentTheme, SIGNAL(valueChanged()), SLOT(themeChanged()));
+    connect(&currentLocale, SIGNAL(valueChanged()), SLOT(localeChanged()));
+
+    // 4) make sure we have a themedaemon directory in /var/cache/dui/
+    QDir cacheDir(DuiThemeDaemon::systemThemeCacheDirectory());
+    if(!cacheDir.exists()) {
+        if(!cacheDir.mkpath(DuiThemeDaemon::systemThemeCacheDirectory())) {
+            qFatal("DuiThemeDaemonServer - Could not create cache directory for themedaemon. No write permissions to %s",
+                qPrintable(cacheDir.absolutePath()));
+        }
+    }
+
+    // 5) make sure we have a cache directory for the current theme
+    if(!cacheDir.exists(currentTheme.value().toString())) {
+        if(!cacheDir.mkdir(currentTheme.value().toString())) {
+            qFatal("DuiThemeDaemonServer - Could not create cache directory for current theme. No write permissions to %s",
+                qPrintable(cacheDir.absolutePath()));
+        }
+    }
+
 
     // start socket server for client registeration
     // first remove the old one, if there's such
@@ -234,6 +258,15 @@ void DuiThemeDaemonServer::themeChanged()
                 if (!releasePixmapsQueue.removeOne(item)) {
                     loadPixmapsQueue.enqueue(item);
                 }
+            }
+        }
+
+        // make sure we have a cache directory for the current theme
+        QDir cacheDir(DuiThemeDaemon::systemThemeCacheDirectory());
+        if(!cacheDir.exists(currentTheme.value().toString())) {
+            if(!cacheDir.mkdir(currentTheme.value().toString())) {
+                qFatal("DuiThemeDaemonServer - Could not create cache directory for current theme. No write permissions to %s",
+                    qPrintable(cacheDir.absolutePath()));
             }
         }
 

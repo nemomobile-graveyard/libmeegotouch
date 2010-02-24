@@ -270,9 +270,7 @@ void DuiCommonPixmaps::remove(const Dui::DuiThemeDaemonProtocol::PixmapIdentifie
 
 QString DuiCommonPixmaps::cachePath() const
 {
-    return DuiThemeDaemon::systemThemeDirectory() + QDir::separator() +
-           daemon->currentTheme() + QDir::separator() +
-           QString("dui") + QDir::separator() +
-           QString("cache") + QDir::separator();
+    return DuiThemeDaemon::systemThemeCacheDirectory() + QDir::separator() +
+           daemon->currentTheme() + QDir::separator();
 }
 
