@@ -924,22 +924,10 @@ void generateStyleDataCpp(const StyleClass *c, const QList<QString>& modes, cons
         cpp << "}\n\n";
 
         // reloadStyles
+        // TODO: remove this once we are allowed again to break API
         cpp << "void " << c->name() << "Container::reloadStyles()\n";
         cpp << "{\n";
-        cpp << "    " << c->superClassName() << "Container::reloadStyles();\n";
-        if (modes.count() != 0) {
-            cpp << "    Q_D(" << c->name() << "Container);\n";
-            iterator = modes.begin();
-            for (; iterator != modes.end(); ++iterator) {
-                cpp << "    DuiTheme::releaseStyle(d->" << iterator->toLower() << "Style[Dui::Landscape]);\n";
-                cpp << "    d->" << iterator->toLower() << "Style[Dui::Landscape] = NULL;\n";
-                cpp << "    DuiTheme::releaseStyle(d->" << iterator->toLower() << "Style[Dui::Portrait]);\n";
-                cpp << "    d->" << iterator->toLower() << "Style[Dui::Portrait] = NULL;\n";
-                cpp << "    if ( currentMode() == \"" <<  iterator->toLower() << "\" ) {\n";
-                cpp << "        setMode" << *iterator << "();\n";
-                cpp << "    }\n";
-            }
-        }
+        cpp << "    " << "DuiStyleContainer::reloadStyles();\n";
         cpp << "}\n\n";
 
         // styleType
@@ -952,19 +940,7 @@ void generateStyleDataCpp(const StyleClass *c, const QList<QString>& modes, cons
         for (; iterator != modes.end(); ++iterator) {
             cpp << "void " << c->name() << "Container::setMode" << *iterator << "()\n";
             cpp << "{\n";
-            cpp << "    Q_D(" << c->name() << "Container);\n";
             cpp << "    setCurrentMode(\"" << iterator->toLower() << "\");\n";
-            cpp << "    if ( !d->" << iterator->toLower() << "Style[Dui::Landscape] ) {\n";
-            cpp << "        const DuiStyle* tmp = d->" << iterator->toLower() << "Style[Dui::Landscape];\n";
-            cpp << "        d->" << iterator->toLower() << "Style[Dui::Landscape] = DuiTheme::style(styleType(), objectName(), \"" << iterator->toLower() << "\", type(), Dui::Landscape, parent());\n";
-            cpp << "        DuiTheme::releaseStyle(tmp);\n";
-            cpp << "    }\n";
-            cpp << "    if ( !d->" << iterator->toLower() << "Style[Dui::Portrait] ) {\n";
-            cpp << "        const DuiStyle* tmp = d->" << iterator->toLower() << "Style[Dui::Portrait];\n";
-            cpp << "        d->" << iterator->toLower() << "Style[Dui::Portrait] = DuiTheme::style(styleType(), objectName(), \"" << iterator->toLower() << "\", type(), Dui::Portrait, parent());\n";
-            cpp << "        DuiTheme::releaseStyle(tmp);\n";
-            cpp << "    }\n";
-            cpp << "    setCurrentStyle(d->" << iterator->toLower() << "Style[Dui::Landscape], d->" << iterator->toLower() << "Style[Dui::Portrait]);\n";
             cpp << "}\n\n";
         }
     }

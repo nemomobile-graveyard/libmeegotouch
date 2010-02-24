@@ -21,6 +21,8 @@
 #define DUISTYLE_P_H
 
 #include <QObject>
+#include <QHash>
+
 class DuiStyle;
 class DuiWidgetController;
 
@@ -30,12 +32,16 @@ class DuiStyleContainerPrivate
 public:
     DuiStyleContainerPrivate();
     virtual ~DuiStyleContainerPrivate();
-    QString currentMode;
 private:
-    const DuiStyle *defaultStyle[2];
-    const DuiStyle **currentStyle[2];
+    void releaseStyles();
+
+    QHash<QString, const DuiStyle*> cachedStyles[2];
+    const DuiStyle *cachedCurrentStyle[2];
+
     QString objectName;
     QString type;
+    QString currentMode;
+
     DuiStyleContainer *q_ptr;
     const DuiWidgetController *parent;
 };

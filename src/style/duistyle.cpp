@@ -76,19 +76,29 @@ int DuiStyle::removeReference()
 }
 
 DuiStyleContainerPrivate::DuiStyleContainerPrivate() :
-    currentMode("default")
+    currentMode("")
 {
-    defaultStyle[Dui::Landscape] = NULL;
-    defaultStyle[Dui::Portrait] = NULL;
-    currentStyle[Dui::Landscape] = &defaultStyle[Dui::Landscape];
-    currentStyle[Dui::Portrait] = &defaultStyle[Dui::Portrait];
+    cachedCurrentStyle[0] = 0;
+    cachedCurrentStyle[1] = 0;
     parent = NULL;
 }
 
 DuiStyleContainerPrivate::~DuiStyleContainerPrivate()
 {
-    DuiTheme::releaseStyle(defaultStyle[Dui::Landscape]);
-    DuiTheme::releaseStyle(defaultStyle[Dui::Portrait]);
+    releaseStyles();
+}
+
+void DuiStyleContainerPrivate::releaseStyles()
+{
+    for (int i = 0; i < 2; ++i) {
+        QHashIterator<QString, const DuiStyle*> iter(cachedStyles[i]);
+        while (iter.hasNext()) {
+            iter.next();
+            DuiTheme::releaseStyle(iter.value());
+        }
+        cachedStyles[i].clear();
+        cachedCurrentStyle[i] = 0;
+    }
 }
 
 //////////////////
@@ -135,7 +145,7 @@ void DuiStyleContainer::initialize(const QString &objectName, const QString &typ
 // set the container objectName
 void DuiStyleContainer::setObjectName(const QString &objectName)
 {
-    if (!d_ptr->defaultStyle || objectName != d_ptr->objectName) {
+    if (objectName != d_ptr->objectName) {
         d_ptr->objectName = objectName;
         reloadStyles();
     }
@@ -149,7 +159,7 @@ void DuiStyleContainer::setType(const QString &type)
     // The caller probably means "" instead.
     Q_ASSERT(type != "default");
 
-    if (!d_ptr->defaultStyle || type != d_ptr->type) {
+    if (type != d_ptr->type) {
         d_ptr->type = type;
         reloadStyles();
     }
@@ -182,12 +192,8 @@ const DuiWidgetController *DuiStyleContainer::parent() const
 
 // this method is for this class and derived classes to set the current style
 // changes the pointer reference of current style
-void DuiStyleContainer::setCurrentStyle(const DuiStyle*& landscapeStyle, const DuiStyle*& portraitStyle)
+void DuiStyleContainer::setCurrentStyle(const DuiStyle*&, const DuiStyle*&)
 {
-    Q_ASSERT(landscapeStyle);
-    Q_ASSERT(portraitStyle);
-    d_ptr->currentStyle[Dui::Landscape] = &landscapeStyle;
-    d_ptr->currentStyle[Dui::Portrait] = &portraitStyle;
 }
 
 // getter for derived classes
@@ -198,15 +204,37 @@ const DuiStyle *DuiStyleContainer::currentStyle() const
     if (DuiApplication::activeWindow())
         orientation = DuiApplication::activeWindow()->orientation();
 
-    return *(d_ptr->currentStyle[orientation]);
+    if (d_ptr->cachedCurrentStyle[orientation] != 0) {
+        return d_ptr->cachedCurrentStyle[orientation];
+    }
+
+    const DuiStyle* style;
+    QHash<QString, const DuiStyle*>::iterator iter = d_ptr->cachedStyles[orientation].find(currentMode());
+    if (iter != d_ptr->cachedStyles[orientation].end()) {
+        style = *iter;
+    } else {
+        style = DuiTheme::style(styleType(), objectName(), currentMode(), type(), orientation, parent());
+        d_ptr->cachedStyles[orientation].insert(currentMode(), style);
+    }
+    d_ptr->cachedCurrentStyle[orientation] = style;
+    return style;
 }
 
 void DuiStyleContainer::setCurrentMode(const QString &mode)
 {
-    d_ptr->currentMode = mode;
+    if (mode != d_ptr->currentMode) {
+        d_ptr->cachedCurrentStyle[0] = 0;
+        d_ptr->cachedCurrentStyle[1] = 0;
+        d_ptr->currentMode = mode;
+    }
 }
 
 QString DuiStyleContainer::currentMode()
+{
+    return d_ptr->currentMode;
+}
+
+QString DuiStyleContainer::currentMode() const
 {
     return d_ptr->currentMode;
 }
@@ -216,7 +244,6 @@ const DuiStyle *DuiStyleContainer::operator->() const
 {
     return currentStyle();
 }
-
 
 // virtual method which returns the name of the style in this container instance
 const char *DuiStyleContainer::styleType() const
@@ -228,31 +255,11 @@ const char *DuiStyleContainer::styleType() const
 // this method will be called when e.g. objectName changes
 void DuiStyleContainer::reloadStyles()
 {
-    DuiTheme::releaseStyle(d_ptr->defaultStyle[Dui::Landscape]);
-    d_ptr->defaultStyle[Dui::Landscape] = NULL;
-
-    DuiTheme::releaseStyle(d_ptr->defaultStyle[Dui::Portrait]);
-    d_ptr->defaultStyle[Dui::Portrait] = NULL;
-
-    if (d_ptr->currentMode == "default") {
-        setModeDefault();
-    }
+    d_ptr->releaseStyles();
 }
 
 // sets the current style to default
 void DuiStyleContainer::setModeDefault()
 {
-    d_ptr->currentMode = "default";
-    if (!d_ptr->defaultStyle[Dui::Landscape]) {
-        const DuiStyle *tmp = d_ptr->defaultStyle[Dui::Landscape];
-        d_ptr->defaultStyle[Dui::Landscape] = DuiTheme::style(styleType(), objectName(), "", type(), Dui::Landscape, parent());
-        DuiTheme::releaseStyle(tmp);
-
-    }
-    if (!d_ptr->defaultStyle[Dui::Portrait]) {
-        const DuiStyle *tmp = d_ptr->defaultStyle[Dui::Portrait];
-        d_ptr->defaultStyle[Dui::Portrait] = DuiTheme::style(styleType(), objectName(), "", type(), Dui::Portrait, parent());
-        DuiTheme::releaseStyle(tmp);
-    }
-    setCurrentStyle(d_ptr->defaultStyle[Dui::Landscape], d_ptr->defaultStyle[Dui::Portrait]);
+    setCurrentMode("");
 }
