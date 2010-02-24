@@ -141,6 +141,7 @@ void DuiApplicationWindowPrivate::_q_connectEscapeButton(DuiEscapeButtonPanelMod
         break;
     case DuiEscapeButtonPanelModel::CloseMode:
         QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
+        QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(closeButtonClicked()));
         break;
     default:;
     }
@@ -614,13 +615,17 @@ void DuiApplicationWindowPrivate::connectPage(DuiApplicationPage *newPage)
                SLOT(_q_handlePageModelModifications(QList<const char *>)));
 
     DuiEscapeButtonPanelModel::EscapeMode pageEscapeMode = page->escapeButtonMode();
-    if (pageEscapeMode == DuiEscapeButtonPanelModel::BackMode &&
-            escapeButtonPanel->escapeMode() == DuiEscapeButtonPanelModel::BackMode) {
-        page->connect(escapeButtonPanel, SIGNAL(buttonClicked()), SIGNAL(backButtonClicked()));
+    if (pageEscapeMode != escapeButtonPanel->escapeMode()) {
+        // Change the mode of the escape button, which will trigger a reconnection
+        // between escape button and application window + page.
+        escapeButtonPanel->setEscapeMode(pageEscapeMode);
+    } else {
+        // Escape button is already in the correct mode.
+        // Force a reconnection between escape button and application window + page
+        _q_connectEscapeButton(page->escapeButtonMode());
     }
 
     navigationBar->setViewMenuDescription(page->title());
-    escapeButtonPanel->setEscapeMode(pageEscapeMode);
 
     setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
     setComponentDisplayMode(escapeButtonPanel, page->model()->escapeButtonDisplayMode());
@@ -654,6 +659,7 @@ void DuiApplicationWindowPrivate::disconnectPage(DuiApplicationPage *pageToDisco
                         q, SLOT(_q_handlePageModelModifications(QList<const char *>)));
 
     QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(backButtonClicked()));
+    QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(closeButtonClicked()));
 
     page = 0;
 }

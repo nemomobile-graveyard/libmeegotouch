@@ -219,6 +219,21 @@ Q_SIGNALS:
     void pageTitleChanged(DuiApplicationPage *, const QString &title);
     //! Signal emitted when back button called
     void backButtonClicked();
+
+    /*! \brief Signal emitted when close button is clicked.
+     * This can happen when escapeButtonMode() is set to DuiEscapeButtonPanelModel::CloseMode.
+     *
+     * Note that the close() slot of the associated DuiApplicationWindow will also get called
+     * when the close button is clicked.
+     *
+     * For code that should be executed when a DuiApplicationWindow is closed you should
+     * consider reimplementing the QWidget::closeEvent() method of your DuiApplicationWindow
+     * instead of listening to this signal.
+     *
+     * \sa QWidget::close()
+     */
+    void closeButtonClicked();
+
     /*! Signal emitted when action is added(removed) from the page.
      */
     void actionUpdated(QActionEvent *e);
