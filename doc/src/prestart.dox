@@ -10,6 +10,9 @@ The cost is that applications need to be started to a special \b
 prestarted \b state before launching, that is, they are running in the
 background and thus reserve some memory.
 
+Note that not every application should be prestarted during boot. Prestarting is only 
+for some carefully selected set of critical applications. There's a dedicated
+daemon, Applifed, which controls the prestarts according to its configuration.
 
 \section terminology Terminology
 
@@ -49,9 +52,16 @@ after instantiating the \c DuiApplication class.
 An application enters the prestarted state if it is started with the
 \c -prestart commandline argument \b and it sets the prestart mode
 before showing any windows. If either one of these conditions does not
-hold, the application will enter to the running state.
+hold, the application will enter to the running state. In order to make
+the application prestartable during device boot, \c -prestart must be
+added to the \b .service \b-file of the application:
 
-The \c DuiWindow::show() method can be called even if the application
+e.g. Exec=/usr/bin/myApplication -prestart
+
+Note that this doesn't automatically mean that the application will be 
+prestarted during boot. This only makes it possible.
+
+The \c DuiApplicationWindow::show() method can be called even if the application
 is entering the prestarted state. The window will not become visible
 to the user until the application is launched.
 
@@ -110,7 +120,9 @@ actions from the application developer in the single window
 applications (see the default event handlers above).
 
 \code
-// minimal lazyshutdown example
+
+// Minimal LazyShutdown example
+
 #include <DuiApplication>
 #include <DuiApplicationWindow>
 #include <DuiApplicationPage>
@@ -130,19 +142,21 @@ int main(int argc, char ** argv)
 }
 \endcode
 
-
-
 \code
-// More complex lazyshutdown example
 
-TODO
+// More complex LazyShutdown example using signals.
+// Using Dui::TerminateOnClose is just as simple, you'd just
+// set that mode without handling any prestart
+// restores or resets.
 
 class MainPage: public DuiApplicationPage 
 {
-    public slots:
-
+public slots:
+    // Activate widgets here
     void activateWidgets();
-    
+
+    // Deactivate widgets and reset state
+    void resetState();
 };
 
 int main(int argc, char ** argv)
@@ -153,18 +167,106 @@ int main(int argc, char ** argv)
     DuiApplicationWindow window;
     window.show();
 
-    MainPage page;
+    MainPage mainPage;
     page.appearNow();
 
+    // Check if app was run with -prestart
     if (app.isPrestarted()) {
+
         // Reset the state of the page shown on the window
-	// when application returns from the running state
-	// to the prestarted state
+        // when application returns from the running state
+        // to the prestarted state
         app.connect(&app, SIGNAL(prestartRestored()), 
                     &mainPage, SLOT(resetState()));
+
+        // Activate widgets when released from the prestarted state
+        app.connect(&app, SIGNAL(prestartReleased()), 
+                    &mainPage, SLOT(activateWidgets()));
     }
+
     return app.exec();
 }
+\endcode
+
+\code
+
+// Example of application that supports LazyShutdown -prestarting using virtual handlers 
+// (cannot be compiled due to missing implementation for the example page):
+
+class MyApplication : public DuiApplication
+{
+    Q_OBJECT
+
+public:
+    MyApplication(int argc, char ** argv);
+    ~MyApplication();
+
+    // Re-implementation
+    virtual void releasePrestart();
+
+    // Re-implementation
+    virtual void restorePrestart();
+
+private:
+
+    // Main window
+    DuiApplicationWindow * m_window;
+
+    // DuiApplicationPage -derived page
+    MainPage * m_page;
+};
+
+MyApplication::MyApplication(int argc, char ** argv) :
+    DuiApplication(argc, argv)
+{
+    // Use the LazyShutdown mode
+    setPrestartMode(Dui::LazyShutdown);
+
+    m_window = new DuiApplicationWindow;
+    m_window->show();
+
+    m_page = new DuiApplicationPage;
+    m_page->appearNow();
+
+    // Run activateWidgets() here to setup things 
+    // if app is NOT prestarted, otherwise it will be called
+    // from the handler method.
+
+    if (!isPrestarted()) {
+        m_page->activateWidgets();
+    }
+}
+
+void MyApplication::releasePrestart()
+{
+    // Your stuff here
+    m_page->activateWidgets();
+
+    // Call the default implementation to show the window.
+    DuiApplication::releasePrestart();
+}
+
+void MyApplication::restorePrestart()
+{
+    // Your stuff here
+    m_page->deactivateAndResetWidgets();
+
+    // Call the default implementation to hide the window.
+    DuiApplication::restorePrestart();
+}
+
+MyApplication::~MyApplication()
+{
+    delete m_window;
+    delete m_page;
+}
+
+int main(int argc, char ** argv)
+{
+    MyApplication app(argc, argv);
+    return app.exec();
+}
+
 \endcode
 
 */

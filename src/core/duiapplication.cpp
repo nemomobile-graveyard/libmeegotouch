@@ -80,9 +80,20 @@ void DuiApplicationPrivate::removeWindowsFromSwitcher(bool remove)
                 }
             } else {
                 Q_FOREACH(DuiWindow * win, DuiApplication::windows()) {
-                    XChangeProperty(dpy, win->winId(), stateAtom,
-                                    XA_ATOM, 32, PropModePrepend,
-                                    reinterpret_cast<unsigned char *>(&skipAtom), 1);
+                    XEvent ev;
+                    memset(&ev, 0, sizeof(ev));
+                    ev.xclient.type         = ClientMessage;
+                    ev.xclient.display      = dpy;
+                    ev.xclient.window       = win->winId();
+                    ev.xclient.message_type = XInternAtom(dpy, "_NET_WM_STATE", False);
+                    ev.xclient.format       = 32;
+                    ev.xclient.data.l[0]    = 0;
+                    ev.xclient.data.l[1]    = skipAtom;
+                    ev.xclient.data.l[2]    = 0;
+
+                    XSendEvent(dpy, QX11Info::appRootWindow(), False, SubstructureRedirectMask | SubstructureNotifyMask,
+                               &ev);
+                    XSync(dpy, False);
                 }
             }
         }
