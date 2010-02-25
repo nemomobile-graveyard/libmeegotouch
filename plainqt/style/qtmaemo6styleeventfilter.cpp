@@ -22,6 +22,7 @@
 #include "qtmaemo6windowdecoration.h"
 #include "qtmaemo6dialogproxy.h"
 #include "qtmaemo6comboboxpopup.h"
+#include "qtmaemo6submenu.h"
 
 #include <QWidget>
 #include <QEvent>
@@ -33,6 +34,7 @@
 #include <QToolButton>
 #include <QTreeView>
 #include <QComboBox>
+#include <QMenu>
 
 #include <DuiComponentData>
 #include <duifeedbackplayer.h>
@@ -71,9 +73,18 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     dialogProxy->showFastMaximized();
                     QtMaemo6StylePrivate::drawWindowBackground(widget);
                     return true;
-                }
-                else if (!qobject_cast<QtMaemo6Window *>(widget)) {
-                    qDebug() << "Generating and Showing DuiWindowDecoration";
+                } else if(QMenu* menu = qobject_cast<QMenu*>(widget)) {
+                    //also show menus styled like dui menus, even if they are not called from a menubar
+                    QtMaemo6SubMenu *subMenu = new QtMaemo6SubMenu(menu, NULL);
+                    QtMaemo6WindowDecoration *decoration = new QtMaemo6WindowDecoration(subMenu, NULL);
+                    decoration->showFastMaximized();
+                    //these both must be done after the show, because the status- and
+                    // menubar is added on show event
+                    decoration->setStatusBar(NULL);
+                    decoration->setMenuBar(NULL);
+                    QtMaemo6StylePrivate::drawWindowBackground(decoration);
+                } else if (!qobject_cast<QtMaemo6Window *>(widget)) {
+                    qCritical() << "Generating and Showing DuiWindowDecoration";
                     m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
                     m_style->m_windowDecoration->showFastMaximized();
                     QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
