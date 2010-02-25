@@ -3027,6 +3027,7 @@ void Ut_DuiLayout::testChildItems()
     QCOMPARE(form->children().count(), 0);
     if (innerLayoutInWidget)
         QCOMPARE(innerLayoutForm->children().count(), 0);
+    delete form;
 }
 
 void compareContentsMargins(DuiAbstractLayoutPolicy *policy, qreal _left, qreal _top, qreal _right, qreal _bottom)
@@ -3430,6 +3431,7 @@ void Ut_DuiLayout::testExplicitlyHidingItems()
     QCOMPARE(widget->isVisible(), false);
     QCOMPARE(widget->opacity(), qreal(1.0));
 
+    delete form;
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiLayout)
