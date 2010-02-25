@@ -27,6 +27,7 @@
 #include <QWidget>
 #include <QEvent>
 #include <QDebug>
+#include <QLayout>
 #include <QMainWindow>
 #include <QDialog>
 #include <QDialogButtonBox>
@@ -42,6 +43,8 @@
 #include <DuiTheme>
 #include <duibuttonstyle.h>
 #include <DuiScalableImage>
+
+#include "qtmaemo6clicklabel.h"
 
 //krazy:excludeall=qclasses
 

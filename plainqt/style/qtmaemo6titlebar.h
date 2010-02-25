@@ -43,6 +43,21 @@ public:
     QString title() const;
 
     /*!
+     * returns the title of titlebar
+     */
+    QColor titleColor() const;
+
+    /*!
+     * returns the margin
+     */
+    int margin() const;
+
+    /*!
+     * returns the spacing between the items
+     */
+    int itemSpacing() const;
+
+    /*!
      * hides or shows the Menu Button
      */
     void setMenuButtonVisible(bool visible);
@@ -51,6 +66,21 @@ public Q_SLOTS:
      * sets the title of the titlebar
      */
     void setTitle(const QString &title);
+
+    /*!
+     * sets the color of the title
+     */
+    void setTitleColor(const QColor &color);
+
+    /*!
+     * sets the margin
+     */
+    void setMargin(int spacing);
+
+    /*!
+     * sets the spacing between the items
+     */
+    void setItemSpacing(int spacing);
 
     /*!
      * adds a QAction to the titlebar

@@ -21,6 +21,7 @@
 #include "qtmaemo6clicklabel.h"
 #include "qtmaemo6style_p.h"
 
+#include "qtmaemo6clicklabel.h"
 #include <QToolButton>
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -37,13 +38,15 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
 {
     setObjectName(QString("Qt_Maemo6_TitleBar"));
 
-    QToolButton *minimize_button(new QToolButton(this));
+    QtMaemo6ClickLabel * minimizeButton = new QtMaemo6ClickLabel(this);
+    minimizeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Home" ) );
+/*
     minimize_button->setText("MinimizeButton");
     minimize_button->setIcon(QPixmap(":/Icon-home.png"));
     minimize_button->setAutoRaise(true);
     minimize_button->setIconSize(QSize(48, 48));
-
-    connect(minimize_button, SIGNAL(clicked()), this, SIGNAL(minimizeButtonClicked()));
+    */
+    connect(minimizeButton, SIGNAL(clicked()), this, SIGNAL(minimizeButtonClicked()));
 
     m_titleLabel = new QtMaemo6ClickLabel(this);
     connect(m_titleLabel, SIGNAL(clicked()), this, SIGNAL(menuLabelClicked()));
@@ -70,14 +73,17 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
         spacer->changeSize(spacerStyle->marginLeft(), 0);
     }
 
-    QToolButton *close_button(new QToolButton(this));
+    QtMaemo6ClickLabel * closeButton = new QtMaemo6ClickLabel(this);
+    closeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Close" ) );
+ /*
     close_button->setText("CloseButton");
     close_button->setIcon(QPixmap(":/Icon-close.png"));
     //FIXME: remove magic numbers!
     close_button->setIconSize(QSize(48, 48));
     close_button->setAutoRaise(true);
+    */
 
-    connect(close_button, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()));
+    connect(closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()));
 
     m_buttonsLayout = new QHBoxLayout;
     m_buttonsLayout->setMargin(0);
@@ -87,13 +93,12 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
     m_titleBarLayout = new QHBoxLayout(this);
     m_titleBarLayout->setMargin(0);
     m_titleBarLayout->setSpacing(0);
-    m_titleBarLayout->addWidget(minimize_button);
+    m_titleBarLayout->addWidget(minimizeButton);
     m_titleBarLayout->addWidget(m_titleLabel);
     m_titleBarLayout->addItem(spacer);
     m_titleBarLayout->addWidget(m_titleLabelMenuButton);
     m_titleBarLayout->addLayout(m_buttonsLayout);
-    m_titleBarLayout->addWidget(close_button);
-
+    m_titleBarLayout->addWidget(closeButton);
 }
 
 QtMaemo6TitleBar::~QtMaemo6TitleBar()
@@ -118,9 +123,41 @@ void QtMaemo6TitleBar::setTitle(const QString &title)
     m_titleLabel->setText(title);
 }
 
+void QtMaemo6TitleBar::setTitleColor(const QColor &color)
+{
+    QPalette pal;
+    pal.setColor( QPalette::Foreground, color );
+    m_titleLabel->setPalette( pal );
+}
+
+void QtMaemo6TitleBar::setMargin(int margin)
+{
+    m_titleBarLayout->setMargin( margin );
+}
+
+void QtMaemo6TitleBar::setItemSpacing(int spacing)
+{
+    m_titleBarLayout->setSpacing( spacing );
+}
+
 QString QtMaemo6TitleBar::title() const
 {
     return m_titleLabel->text();
+}
+
+QColor QtMaemo6TitleBar::titleColor() const
+{
+    return m_titleLabel->palette().color( QPalette::Foreground );
+}
+
+int QtMaemo6TitleBar::margin() const
+{
+    return m_titleBarLayout->margin();
+}
+
+int QtMaemo6TitleBar::itemSpacing() const
+{
+    return m_titleBarLayout->spacing();
 }
 
 void QtMaemo6TitleBar::setMenuButtonVisible(bool visible)

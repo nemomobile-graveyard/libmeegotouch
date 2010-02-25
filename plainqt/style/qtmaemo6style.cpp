@@ -718,7 +718,7 @@ QPixmap QtMaemo6StylePrivate::borderCroppedPixmap(const DuiScalableImage* image,
         finalPainter.drawLine(QPoint(finalPix.width()-1, 0), QPoint(finalPix.width()-1, finalPix.height()));
     if(borderLines & bottomBorder)
         finalPainter.drawLine(QPoint(0, finalPix.height()-1), QPoint(finalPix.width(), finalPix.height()-1));
-    
+
     QPixmapCache::insert(cacheKey, finalPix);
     return finalPix;
 }
@@ -841,6 +841,41 @@ void QtMaemo6Style::polish(QWidget *widget)
     }
 
     widget->installEventFilter(d->m_windowEventFilter);
+
+    if (QtMaemo6ClickLabel *lbl = qobject_cast<QtMaemo6ClickLabel *>(widget)) {
+        int navigationBarHeight = 0;
+        QWidget * parent = qobject_cast<QWidget *>( widget->parent() );
+        if ( parent ) {
+            navigationBarHeight = parent->height() - 2 * parent->layout()->margin();
+        }
+        QSize navigationBarSize = QSize( navigationBarHeight, navigationBarHeight );
+        if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Close") {
+            const QPixmap *closePixmap = DuiTheme::pixmap("Icon-close", navigationBarSize);
+            lbl->setPixmap(*closePixmap);
+        }
+        if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Home") {
+            const QPixmap *closePixmap = DuiTheme::pixmap("Icon-home", navigationBarSize);
+            lbl->setPixmap(*closePixmap);
+        }
+    }
+
+    if (QtMaemo6TitleBar *titleBar = qobject_cast<QtMaemo6TitleBar *>(widget)) {
+            // apply properties of the navigation bar style
+            const DuiNavigationBarStyle *style =
+                static_cast<const DuiNavigationBarStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Active,
+                        "DuiNavigationBarStyle"));
+            Q_UNUSED( style );
+            const DuiLabelStyle *menuStyle =
+                static_cast<const DuiLabelStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_None,
+                        "DuiLabelStyle", "NavigationBarMenuButtonLabel"));
+            Q_UNUSED( menuStyle );
+            //TODO: use style and menuStyle once the properties inside work actually.
+            // This would also remove the magic numbers.
+            titleBar->setTitleColor( Qt::white );
+            titleBar->setMargin( 10 );
+            titleBar->setItemSpacing( 20 );
+            titleBar->setFixedHeight( 70 );
+    }
 
 #ifdef MOVE_ACTIONS_FROM_TOOLBAR_TO_TITLEBAR
     if (QtMaemo6TitleBar *titleBar = qobject_cast<QtMaemo6TitleBar *>(widget)) {
