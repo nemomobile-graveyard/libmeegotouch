@@ -125,6 +125,7 @@ public:
     DuiLayoutTest(QGraphicsLayoutItem *parent = NULL) : DuiLayout(parent) {
         if (!animation())
             new DuiBasicLayoutAnimation(this);
+
     }
     virtual int addItem(QGraphicsLayoutItem *item) {
         return DuiLayout::addItem(item);
@@ -1201,11 +1202,13 @@ void Ut_DuiLayout::testLayoutInsideLayout()
     else
         policy2->addItem(itemInside2);
 
+    //Set the contents margins to something predictable
+    layout->setContentsMargins(4,4,4,4);
+    layout2->setContentsMargins(0,0,0,0);
+
     qreal left, top, right, bottom;
-    //Layout by itself should have a default margin of 4, according to QStyle
     layout->getContentsMargins(&left, &top, &right, &bottom);
     QCOMPARE(left, 4.0); QCOMPARE(top, 4.0); QCOMPARE(right, 4.0); QCOMPARE(bottom, 4.0);
-    //Layout inside a layout should have a default margin of 0, according to QStyle
     layout2->getContentsMargins(&left, &top, &right, &bottom);
     QCOMPARE(left, 0.0); QCOMPARE(top, 0.0); QCOMPARE(right, 0.0); QCOMPARE(bottom, 0.0);
 
