@@ -1024,46 +1024,49 @@ bool DuiStyleSheetParserPrivate::dump(const DuiStyleSheetParser::StylesheetFileI
 {
     QFile file(binaryFilename);
 
-    if (file.open(QFile::WriteOnly)) {
-
-        // Create writable datastream
-        QDataStream stream(&file);
-
-        // write version number (32bit, 16 major, 16 minor)
-        stream << (int) FILE_VERSION(0, 11);
-        stream << info.time_t;
-        stream << info.filename;
-        stream << info.includes;
-        stream << info.constants;
-
-        // write number of selectors
-        stream << info.selectors.count();
-
-        // write all selectors
-        QList<DuiStyleSheetSelector *>::const_iterator infoSelectorsEnd = info.selectors.constEnd();
-        for (QList<DuiStyleSheetSelector *>::const_iterator iterator = info.selectors.constBegin();
-                iterator != infoSelectorsEnd;
-                ++iterator) {
-            writeSelector(*iterator, stream);
+    if (!file.open(QFile::WriteOnly)) {
+        //Maybe it failed because the directory doesn't exist
+        QDir().mkpath( QFileInfo(binaryFilename).absolutePath() );
+        if (!file.open(QFile::WriteOnly)) {
+            duiWarning("DuiStyleSheetParserPrivate") << "Failed to dump stylesheet file:" << info.filename << "to" << binaryFilename;
+            return false;
         }
-
-        // write all selectors with parent
-        stream << info.parentSelectors.count();
-        infoSelectorsEnd = info.parentSelectors.constEnd();
-        for (QList<DuiStyleSheetSelector *>::const_iterator iterator = info.parentSelectors.constBegin();
-                iterator != infoSelectorsEnd;
-                ++iterator) {
-            writeSelector(*iterator, stream);
-        }
-
-        file.close();
-        return true;
     }
 
-    duiWarning("DuiStyleSheetParserPrivate") << "Failed to dump stylesheet file:" << info.filename;
+    // Create writable datastream
+    QDataStream stream(&file);
 
-    return false;
+    // write version number (32bit, 16 major, 16 minor)
+    stream << (int) FILE_VERSION(0, 11);
+    stream << info.time_t;
+    stream << info.filename;
+    stream << info.includes;
+    stream << info.constants;
+
+    // write number of selectors
+    stream << info.selectors.count();
+
+    // write all selectors
+    QList<DuiStyleSheetSelector *>::const_iterator infoSelectorsEnd = info.selectors.constEnd();
+    for (QList<DuiStyleSheetSelector *>::const_iterator iterator = info.selectors.constBegin();
+            iterator != infoSelectorsEnd;
+            ++iterator) {
+        writeSelector(*iterator, stream);
+    }
+
+    // write all selectors with parent
+    stream << info.parentSelectors.count();
+    infoSelectorsEnd = info.parentSelectors.constEnd();
+    for (QList<DuiStyleSheetSelector *>::const_iterator iterator = info.parentSelectors.constBegin();
+            iterator != infoSelectorsEnd;
+            ++iterator) {
+        writeSelector(*iterator, stream);
+    }
+
+    file.close();
+    return true;
 }
+
 
 DuiStyleSheetSelector *DuiStyleSheetParserPrivate::readSelector(const QString &file, QDataStream &stream)
 {
