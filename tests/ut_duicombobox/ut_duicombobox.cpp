@@ -266,7 +266,7 @@ void Ut_DuiComboBox::testBuiltinModel()
     // remove current item
     m_combobox->removeItem(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("Tap to Select"));
+    QCOMPARE(viewPrivate->subtitle->text(), QString("!! Tap to Select"));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
@@ -300,7 +300,7 @@ void Ut_DuiComboBox::testModelSwitching()
 
     // model changed selection should reset
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("Tap to Select"));
+    QCOMPARE(viewPrivate->subtitle->text(), QString("!! Tap to Select"));
 }
 
 void Ut_DuiComboBox::testStringListModel()
@@ -322,7 +322,7 @@ void Ut_DuiComboBox::testStringListModel()
     // remove current item
     strListModel->removeRow(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("Tap to Select"));
+    QCOMPARE(viewPrivate->subtitle->text(), QString("!! Tap to Select"));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
@@ -354,7 +354,7 @@ void Ut_DuiComboBox::testStringListModelSetStringList()
     // change string list completely
     strListModel->setStringList(QStringList() << "bar0" << "bar1" << "bar2" << "bar3");
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("Tap to Select"));
+    QCOMPARE(viewPrivate->subtitle->text(), QString("!! Tap to Select"));
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiComboBox)
