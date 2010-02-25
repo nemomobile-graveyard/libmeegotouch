@@ -72,7 +72,26 @@ void DuiDialogViewPrivate::createWidgetHierarchy()
     // of assigning it to a widget and then adding that widget)
     // the sizes go nuts.
     // Yet another bug in QGraphicsLayout...
-    horizontalWidget = new QGraphicsWidget;
+    // Widget with overloaded shape added to ensure that 
+    // horizontalWidget won't intercept mouse events
+    class DuiTransparentWidget : public QGraphicsWidget {
+	QGraphicsWidget *box;
+        public:
+	DuiTransparentWidget(QGraphicsWidget *widget){
+	    box = widget;
+	}
+	QPainterPath shape() const {
+	    QPainterPath path;
+	    QRectF rect;
+	    rect.setWidth(box->boundingRect().width());
+	    rect.setHeight(box->boundingRect().height());
+	    rect.setLeft(box->boundingRect().x());
+	    rect = box->mapRectToScene(rect);
+	    path.addRect(rect);
+	    return path;
+	}
+    };
+    horizontalWidget = new DuiTransparentWidget(dialogBox);
     horizontalWidget->setLayout(horizontalLayout);
     rootLayout->addItem(horizontalWidget);
     //rootLayout->addItem(horizontalLayout);
