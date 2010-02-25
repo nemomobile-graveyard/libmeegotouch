@@ -193,7 +193,6 @@ DuiThemeImagesDirectory::DuiThemeImagesDirectory(const QString &path, const QStr
     while (!directories.isEmpty()) {
         QDir dir(directories.takeFirst());
         if (!dir.exists()) {
-            duiWarning("DuiThemeDaemon") << "directory" << dir.absolutePath() << "does not exist!";
             continue;
         }
         QFileInfoList fileInfoList = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot);
@@ -219,7 +218,6 @@ DuiThemeImagesDirectory::DuiThemeImagesDirectory(const QString &path, const QStr
     while (!directories.isEmpty()) {
         QDir dir(directories.takeFirst());
         if (!dir.exists()) {
-            duiWarning("DuiThemeDaemon") << "directory" << dir.absolutePath() << "does not exist!";
             continue;
         }
         QFileInfoList fileInfoList = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot);
@@ -245,7 +243,6 @@ DuiThemeImagesDirectory::DuiThemeImagesDirectory(const QString &path, const QStr
     while (!directories.isEmpty()) {
         QDir dir(directories.takeFirst());
         if (!dir.exists()) {
-            duiWarning("DuiThemeDaemon") << "directory" << dir.absolutePath() << "does not exist!";
             continue;
         }
         QFileInfoList fileInfoList = dir.entryInfoList(QDir::AllEntries | QDir::NoDotAndDotDot);
@@ -264,15 +261,17 @@ DuiThemeImagesDirectory::DuiThemeImagesDirectory(const QString &path, const QStr
                         while(!file.atEnd()) {
                             QString id = file.readLine().trimmed();
                             if (imageIds.contains(id)) {
-                                duiWarning("DuiThemeDaemon") << "Path" << path + QDir::separator() + "dui" << "contains multiple images with id" << id;
+                                duiWarning("DuiThemeDaemon") << "Path" << path << "contains multiple images with id" << id;
                             } else {
                                 imageIds.insert(id, new SvgImageResource(id, i->absoluteFilePath()));
                             }
                         }
                     }
+                } else {
+                    duiWarning("DuiThemeDaemon") << "SLOW: SVG file" << i->absoluteFilePath() << "doesn't have .ids file!";
+                    // insert this to svg lookup list, this acts as a fallback to old implementation
+                    svgFiles.insert(i->absoluteFilePath(), QSharedPointer<QSvgRenderer>());
                 }
-                // insert this to svg lookup list, this acts as a fallback to old implementation
-                svgFiles.insert(i->absoluteFilePath(), QSharedPointer<QSvgRenderer>());
             }
         }
     }
