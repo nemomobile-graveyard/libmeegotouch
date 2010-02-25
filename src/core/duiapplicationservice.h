@@ -76,6 +76,17 @@ public Q_SLOTS: // METHODS
     virtual void launch();
 
     /**
+     * \brief Launch the application with parameters.
+     *
+     * \return void
+     * By default, this method will ignore the parameters and call launch()
+     *
+     * If you want to process the parameters, derive a class from
+     * DuiApplicationService and override launch(const QStringList&).
+     **/
+    virtual void launch(const QStringList& parameters);
+
+    /**
      * \brief Close the GUI.
      *
      * \return void

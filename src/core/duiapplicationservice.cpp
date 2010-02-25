@@ -55,6 +55,15 @@ void DuiApplicationService::launch()
     }
 }
 
+void DuiApplicationService::launch(const QStringList& parameters)
+{
+    Q_UNUSED(parameters);
+    duiDebug("DuiApplicationService") << "launch(QStringList)";
+
+    // Default implementation: ignore the parameters and just launch()
+    launch();
+}
+
 void DuiApplicationService::launchAnotherWithQProcess()
 {
     Q_D(DuiApplicationService);

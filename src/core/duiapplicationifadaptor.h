@@ -50,6 +50,9 @@ class DUI_EXPORT DuiApplicationIfAdaptor: public QDBusAbstractAdaptor
                 "  <interface name=\"com.nokia.DuiApplicationIf\" >\n"
                 "    <method name=\"launch\" >\n"
                 "    </method>\n"
+                "    <method name=\"launch\">\n"
+                "      <arg direction=\"in\" type=\"as\" name=\"parameters\"/>\n"
+                "    </method>\n"
                 "    <method name=\"close\" >\n"
                 "    </method>\n"
                 "    <method name=\"exit\" >\n"
@@ -70,6 +73,9 @@ public Q_SLOTS: // METHODS
 
     //! Launch the application.
     Q_NOREPLY void launch();
+
+    //! Launch the application with parameters.
+    Q_NOREPLY void launch(const QStringList& parameters);
 };
 
 #endif

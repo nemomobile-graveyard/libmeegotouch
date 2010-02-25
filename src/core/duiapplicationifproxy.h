@@ -54,6 +54,7 @@ public Q_SLOTS: // METHODS
     QDBusPendingReply<> close();
     QDBusPendingReply<> exit();
     QDBusPendingReply<> launch();
+    QDBusPendingReply<> launch(const QStringList& parameters);
 
 Q_SIGNALS: // SIGNALS
 };

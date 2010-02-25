@@ -45,3 +45,9 @@ QDBusPendingReply<> DuiApplicationIfProxy::launch()
     return asyncCallWithArgumentList(QLatin1String("launch"), QList<QVariant>());
 }
 
+QDBusPendingReply<> DuiApplicationIfProxy::launch(const QStringList &parameters)
+{
+    QList<QVariant> argumentList;
+    argumentList << qVariantFromValue(parameters);
+    return asyncCallWithArgumentList(QLatin1String("launch"), argumentList);
+}

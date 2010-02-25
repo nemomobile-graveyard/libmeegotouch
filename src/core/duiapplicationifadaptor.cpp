@@ -54,3 +54,8 @@ void DuiApplicationIfAdaptor::launch()
     QMetaObject::invokeMethod(parent(), "launch");
 }
 
+void DuiApplicationIfAdaptor::launch(const QStringList &parameters)
+{
+    duiDebug("DuiApplicationIfAdaptor") << "DuiApplicationIfAdaptor::launch(const QStringList&)";
+    QMetaObject::invokeMethod(parent(), "launch", Q_ARG(QStringList, parameters));
+}
