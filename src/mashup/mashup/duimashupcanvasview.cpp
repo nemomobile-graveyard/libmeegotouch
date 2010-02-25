@@ -111,6 +111,57 @@ void DuiMashupCanvasViewPrivate::addToLayout(DuiWidget *widget, int index)
     }
 }
 
+void DuiMashupCanvasViewPrivate::connectContainerToWidget(DuiContainer *container, DuiWidget *widget) const
+{
+    const QMetaObject *mob = widget->metaObject();
+
+    // use widget properties to fill header of the container
+    int iconProperty  = mob->indexOfProperty("appletIcon");
+    int titleProperty = mob->indexOfProperty("appletTitle");
+    int textProperty  = mob->indexOfProperty("appletText");
+
+    if (iconProperty != -1) {
+        container->setIconID((mob->property(iconProperty).read(widget)).toString());
+    }
+
+    if (titleProperty != -1) {
+        container->setTitle((mob->property(titleProperty).read(widget)).toString());
+        container->setHeaderVisible(true);
+    }
+
+    if (textProperty != -1) {
+        container->setText((mob->property(textProperty).read(widget)).toString());
+    }
+
+    // connect signals from widget to the container
+    if (mob->indexOfSignal("appletIconChanged(QString)") != -1) {
+        QObject::connect(widget, SIGNAL(appletIconChanged(QString)), container, SLOT(setIconID(QString)));
+    }
+
+    if (mob->indexOfSignal("appletTitleChanged(QString)") != -1) {
+        QObject::connect(widget, SIGNAL(appletTitleChanged(QString)), container, SLOT(setTitle(QString)));
+    }
+
+    if (mob->indexOfSignal("appletTextChanged(QString)") != -1) {
+        QObject::connect(widget, SIGNAL(appletTextChanged(QString)), container, SLOT(setText(QString)));
+    }
+
+    // connect deprecated signals from widget to the container
+    // TODO remove these after deprecation
+    if (mob->indexOfSignal("setAppletIcon(QString)") != -1) {
+        QObject::connect(widget, SIGNAL(setAppletIcon(QString)), container, SLOT(setIconID(QString)));
+    }
+    if (mob->indexOfSignal("setAppletTitle(QString)") != -1) {
+        QObject::connect(widget, SIGNAL(setAppletTitle(QString)), container, SLOT(setTitle(QString)));
+    }
+    if (mob->indexOfSignal("setAppletText(QString)") != -1) {
+        QObject::connect(widget, SIGNAL(setAppletText(QString)), container, SLOT(setText(QString)));
+    }
+
+    DuiExtensionAreaViewPrivate::connectContainerToWidget(container, widget);
+}
+
+
 DuiMashupCanvasView::DuiMashupCanvasView(DuiMashupCanvas *controller) :
     DuiWidgetView(* new DuiMashupCanvasViewPrivate, controller)
 {

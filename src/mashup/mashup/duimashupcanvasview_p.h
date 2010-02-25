@@ -64,6 +64,11 @@ public:
      */
     virtual void addToLayout(DuiWidget *widget, int index = -1);
 
+    /*!
+     * Used to check properties of widget and connect signals between it and the DuiContainer
+     */
+    virtual void connectContainerToWidget(DuiContainer *container, DuiWidget *widget) const;
+
     //! The DuiMashupCanvas controller.
     DuiMashupCanvas *controller;
 

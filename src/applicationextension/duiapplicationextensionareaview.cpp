@@ -19,6 +19,7 @@
 
 #include "duiviewcreator.h"
 #include <QGraphicsLinearLayout>
+#include <DuiContainer>
 #include "duiextensionareaview.h"
 #include "duiapplicationextensionareaview.h"
 #include "duiapplicationextensionareaview_p.h"
@@ -51,6 +52,45 @@ void DuiApplicationExtensionAreaViewPrivate::addToLayout(DuiWidget *widget, int 
     }
 
 }
+
+void DuiApplicationExtensionAreaViewPrivate::connectContainerToWidget(DuiContainer *container, DuiWidget *widget) const
+{
+    const QMetaObject *mob = widget->metaObject();
+
+    // use widget properties to fill header of the container
+    int iconProperty  = mob->indexOfProperty("applicationExtensionIcon");
+    int titleProperty = mob->indexOfProperty("applicationExtensionTitle");
+    int textProperty  = mob->indexOfProperty("applicationExtensionText");
+
+    if (iconProperty != -1) {
+        container->setIconID((mob->property(iconProperty).read(widget)).toString());
+    }
+
+    if (titleProperty != -1) {
+        container->setTitle((mob->property(titleProperty).read(widget)).toString());
+        container->setHeaderVisible(true);
+    }
+
+    if (textProperty != -1) {
+        container->setText((mob->property(textProperty).read(widget)).toString());
+    }
+
+    // connect signals from widget to the container
+    if (mob->indexOfSignal("applicationExtensionIconChanged(QString)") != -1) {
+        QObject::connect(widget, SIGNAL(applicationExtensionIconChanged(QString)), container, SLOT(setIconID(QString)));
+    }
+
+    if (mob->indexOfSignal("applicationExtensionTitleChanged(QString)") != -1) {
+        QObject::connect(widget, SIGNAL(applicationExtensionTitleChanged(QString)), container, SLOT(setTitle(QString)));
+    }
+
+    if (mob->indexOfSignal("applicationExtensionTextChanged(QString)") != -1) {
+        QObject::connect(widget, SIGNAL(applicationExtensionTextChanged(QString)), container, SLOT(setText(QString)));
+    }
+
+    DuiExtensionAreaViewPrivate::connectContainerToWidget(container, widget);
+}
+
 
 DuiApplicationExtensionAreaView::DuiApplicationExtensionAreaView(DuiApplicationExtensionArea *controller) :
     DuiExtensionAreaView(* new DuiApplicationExtensionAreaViewPrivate, controller)

@@ -39,6 +39,7 @@ for(PROJECT, $$list($$lower($$unique(DUI_BUILD_PARTS)))) {
        contains(DEFINES, HAVE_DBUS) {
            SUBDIRS += \
                   duiappletrunner \
+                  duiapplicationextensionrunner \
                   duiservicemapper \
                   duithemedaemon \
                   tools

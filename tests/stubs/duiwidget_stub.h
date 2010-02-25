@@ -24,138 +24,252 @@
 #include <stubbase.h>
 
 
-class DuiWidgetStub : public StubBase
-{
-public:
-    virtual void DuiWidgetConstructor(QGraphicsItem *parent);
-    virtual void DuiWidgetDestructor();
-    virtual QPainterPath shape() const;
-    virtual void paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    virtual void executeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, qreal offset, DuiOrientationChangeParameters *parameters);
-    virtual void finalizeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, DuiOrientationChangeParameters *parameters);
-    virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
-    virtual bool event(QEvent *event);
+// 1. DECLARE STUB
+// FIXME - stubgen is not yet finished
+class DuiWidgetStub : public StubBase {
+  public:
+  virtual void DuiWidgetConstructor(QGraphicsItem *parent);
+  virtual void DuiWidgetDestructor();
+  virtual QPainterPath shape() const;
+  virtual void paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+  virtual DuiSceneManager * sceneManager() const;
+  virtual bool isOnDisplay() const;
+  virtual bool isSelected() const;
+  virtual void setVisible(bool visible);
+  virtual void setObjectName(const QString &name);
+  virtual void setSelected(bool selected);
+  virtual void clearActions();
+  virtual void enterDisplayEvent();
+  virtual void exitDisplayEvent();
+  virtual void onDisplayChangeEvent(DuiOnDisplayChangeEvent *event);
+  virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
+  virtual bool event(QEvent *event);
+  virtual void cancelEvent(DuiCancelEvent *event);
+  virtual void orientationChangeEvent(DuiOrientationChangeEvent *event);
+  virtual void actionEvent(QActionEvent *event);
+  virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+  virtual void retranslateUi();
+  virtual void DuiWidgetConstructor(DuiWidgetPrivate &dd, QGraphicsItem *parent);
 };
 
-void DuiWidgetStub::DuiWidgetConstructor(QGraphicsItem *parent)
-{
-    Q_UNUSED(parent);
+// 2. IMPLEMENT STUB
+void DuiWidgetStub::DuiWidgetConstructor(QGraphicsItem *parent) {
+  Q_UNUSED(parent);
+
+}
+void DuiWidgetStub::DuiWidgetDestructor() {
+
+}
+QPainterPath DuiWidgetStub::shape() const {
+  stubMethodEntered("shape");
+  return stubReturnValue<QPainterPath>("shape");
 }
 
-void DuiWidgetStub::DuiWidgetDestructor()
-{
+void DuiWidgetStub::paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QPainter * >(painter));
+  params.append( new Parameter<const QStyleOptionGraphicsItem * >(option));
+  params.append( new Parameter<QWidget * >(widget));
+  stubMethodEntered("paintWindowFrame",params);
 }
 
-QPainterPath DuiWidgetStub::shape() const
-{
-    stubMethodEntered("shape");
-    return stubReturnValue<QPainterPath>("shape");
+DuiSceneManager * DuiWidgetStub::sceneManager() const {
+  stubMethodEntered("sceneManager");
+  return stubReturnValue<DuiSceneManager *>("sceneManager");
 }
 
-void DuiWidgetStub::paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QPainter * >(painter));
-    params.append(new Parameter<const QStyleOptionGraphicsItem * >(option));
-    params.append(new Parameter<QWidget * >(widget));
-    stubMethodEntered("paintWindowFrame", params);
+bool DuiWidgetStub::isOnDisplay() const {
+  stubMethodEntered("isOnDisplay");
+  return stubReturnValue<bool>("isOnDisplay");
 }
 
-void DuiWidgetStub::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QPainter * >(painter));
-    params.append(new Parameter<const QStyleOptionGraphicsItem * >(option));
-    params.append(new Parameter<QWidget * >(widget));
-    stubMethodEntered("paint", params);
+bool DuiWidgetStub::isSelected() const {
+  stubMethodEntered("isSelected");
+  return stubReturnValue<bool>("isSelected");
 }
 
-void DuiWidgetStub::executeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, qreal offset, DuiOrientationChangeParameters *parameters)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<DuiWindow::OrientationAnimationPhase >(phase));
-    params.append(new Parameter<qreal >(offset));
-    params.append(new Parameter<DuiOrientationChangeParameters * >(parameters));
-    stubMethodEntered("executeOrientationAnimationPhase", params);
+void DuiWidgetStub::setVisible(bool visible) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<bool >(visible));
+  stubMethodEntered("setVisible",params);
 }
 
-void DuiWidgetStub::finalizeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, DuiOrientationChangeParameters *parameters)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<DuiWindow::OrientationAnimationPhase >(phase));
-    params.append(new Parameter<DuiOrientationChangeParameters * >(parameters));
-    stubMethodEntered("finalizeOrientationAnimationPhase", params);
+void DuiWidgetStub::setObjectName(const QString &name) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const QString & >(name));
+  stubMethodEntered("setObjectName",params);
 }
 
-QVariant DuiWidgetStub::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QGraphicsItem::GraphicsItemChange >(change));
-    params.append(new Parameter<const QVariant & >(value));
-    stubMethodEntered("itemChange", params);
-    return stubReturnValue<QVariant>("itemChange");
+void DuiWidgetStub::setSelected(bool selected) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<bool >(selected));
+  stubMethodEntered("setSelected",params);
 }
 
-bool DuiWidgetStub::event(QEvent *event)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QEvent * >(event));
-    stubMethodEntered("event", params);
-    return stubReturnValue<bool>("event");
+void DuiWidgetStub::clearActions() {
+  stubMethodEntered("clearActions");
 }
 
+void DuiWidgetStub::enterDisplayEvent() {
+  stubMethodEntered("enterDisplayEvent");
+}
+
+void DuiWidgetStub::exitDisplayEvent() {
+  stubMethodEntered("exitDisplayEvent");
+}
+
+void DuiWidgetStub::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<DuiOnDisplayChangeEvent * >(event));
+  stubMethodEntered("onDisplayChangeEvent",params);
+}
+
+QVariant DuiWidgetStub::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGraphicsItem::GraphicsItemChange>(change));
+  params.append( new Parameter<const QVariant & >(value));
+  stubMethodEntered("itemChange",params);
+  return stubReturnValue<QVariant>("itemChange");
+}
+
+bool DuiWidgetStub::event(QEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QEvent * >(event));
+  stubMethodEntered("event",params);
+  return stubReturnValue<bool>("event");
+}
+
+void DuiWidgetStub::cancelEvent(DuiCancelEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<DuiCancelEvent * >(event));
+  stubMethodEntered("cancelEvent",params);
+}
+
+void DuiWidgetStub::orientationChangeEvent(DuiOrientationChangeEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<DuiOrientationChangeEvent * >(event));
+  stubMethodEntered("orientationChangeEvent",params);
+}
+
+void DuiWidgetStub::actionEvent(QActionEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QActionEvent *>(event));
+  stubMethodEntered("actionEvent",params);
+}
+
+void DuiWidgetStub::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGraphicsSceneContextMenuEvent * >(event));
+  stubMethodEntered("contextMenuEvent",params);
+}
+
+void DuiWidgetStub::retranslateUi() {
+  stubMethodEntered("retranslateUi");
+}
+
+void DuiWidgetStub::DuiWidgetConstructor(DuiWidgetPrivate &dd, QGraphicsItem *parent) {
+  Q_UNUSED(dd);
+  Q_UNUSED(parent);
+
+}
 
 
 // 3. CREATE A STUB INSTANCE
 DuiWidgetStub gDefaultDuiWidgetStub;
-DuiWidgetStub *gDuiWidgetStub = &gDefaultDuiWidgetStub;
+DuiWidgetStub* gDuiWidgetStub = &gDefaultDuiWidgetStub;
 
 
-// 4. CREATE A PROXY WHICH CALLS THE STUB  FIXME
-DuiWidget::DuiWidget(QGraphicsItem *parent) : d_ptr(0)
+// 4. CREATE A PROXY WHICH CALLS THE STUB
+DuiWidget::DuiWidget(QGraphicsItem *parent) :
+        d_ptr(NULL)
 {
-    gDuiWidgetStub->DuiWidgetConstructor(parent);
+  gDuiWidgetStub->DuiWidgetConstructor(parent);
 }
 
-DuiWidget::~DuiWidget()
-{
-    gDuiWidgetStub->DuiWidgetDestructor();
+DuiWidget::~DuiWidget() {
+  gDuiWidgetStub->DuiWidgetDestructor();
 }
 
-QPainterPath DuiWidget::shape() const
-{
-    return gDuiWidgetStub->shape();
+QPainterPath DuiWidget::shape() const {
+  return gDuiWidgetStub->shape();
 }
 
-void DuiWidget::paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    gDuiWidgetStub->paintWindowFrame(painter, option, widget);
+void DuiWidget::paintWindowFrame(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+  gDuiWidgetStub->paintWindowFrame(painter, option, widget);
 }
 
-void DuiWidget::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    gDuiWidgetStub->paint(painter, option, widget);
+DuiSceneManager * DuiWidget::sceneManager() const {
+  return gDuiWidgetStub->sceneManager();
 }
 
-void DuiWidget::executeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, qreal offset, DuiOrientationChangeParameters *parameters)
-{
-    gDuiWidgetStub->executeOrientationAnimationPhase(phase, offset, parameters);
+bool DuiWidget::isOnDisplay() const {
+  return gDuiWidgetStub->isOnDisplay();
 }
 
-void DuiWidget::finalizeOrientationAnimationPhase(DuiWindow::OrientationAnimationPhase phase, DuiOrientationChangeParameters *parameters)
-{
-    gDuiWidgetStub->finalizeOrientationAnimationPhase(phase, parameters);
+bool DuiWidget::isSelected() const {
+  return gDuiWidgetStub->isSelected();
 }
 
-QVariant DuiWidget::itemChange(GraphicsItemChange change, const QVariant &value)
-{
-    return gDuiWidgetStub->itemChange(change, value);
+void DuiWidget::setVisible(bool visible) {
+  gDuiWidgetStub->setVisible(visible);
 }
 
-bool DuiWidget::event(QEvent *event)
+void DuiWidget::setObjectName(const QString &name) {
+  gDuiWidgetStub->setObjectName(name);
+}
+
+void DuiWidget::setSelected(bool selected) {
+  gDuiWidgetStub->setSelected(selected);
+}
+
+void DuiWidget::clearActions() {
+  gDuiWidgetStub->clearActions();
+}
+
+void DuiWidget::enterDisplayEvent() {
+  gDuiWidgetStub->enterDisplayEvent();
+}
+
+void DuiWidget::exitDisplayEvent() {
+  gDuiWidgetStub->exitDisplayEvent();
+}
+
+void DuiWidget::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event) {
+  gDuiWidgetStub->onDisplayChangeEvent(event);
+}
+
+QVariant DuiWidget::itemChange(GraphicsItemChange change, const QVariant &value) {
+  return gDuiWidgetStub->itemChange(change, value);
+}
+
+bool DuiWidget::event(QEvent *event) {
+  return gDuiWidgetStub->event(event);
+}
+
+void DuiWidget::cancelEvent(DuiCancelEvent *event) {
+  gDuiWidgetStub->cancelEvent(event);
+}
+
+void DuiWidget::orientationChangeEvent(DuiOrientationChangeEvent *event) {
+  gDuiWidgetStub->orientationChangeEvent(event);
+}
+
+void DuiWidget::actionEvent(QActionEvent *event) {
+  gDuiWidgetStub->actionEvent(event);
+}
+
+void DuiWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event) {
+  gDuiWidgetStub->contextMenuEvent(event);
+}
+
+void DuiWidget::retranslateUi() {
+  gDuiWidgetStub->retranslateUi();
+}
+
+DuiWidget::DuiWidget(DuiWidgetPrivate &dd, QGraphicsItem *parent) :
+        d_ptr(NULL)
 {
-    return gDuiWidgetStub->event(event);
+  gDuiWidgetStub->DuiWidgetConstructor(dd, parent);
 }
 
 

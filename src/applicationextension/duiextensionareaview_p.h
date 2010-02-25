@@ -86,7 +86,7 @@ public:
     /*!
      * Used to check properties of widget and connect signals between it and the DuiContainer
      */
-    void connectContainerToWidget(DuiContainer *container, DuiWidget *widget) const;
+    virtual void connectContainerToWidget(DuiContainer *container, DuiWidget *widget) const;
 
     /*!
      * Adds a widget to the layout

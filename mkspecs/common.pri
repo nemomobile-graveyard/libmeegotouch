@@ -50,6 +50,12 @@ include($${DUI_BUILD_TREE}/mkspecs/features/dui_defines.prf)
     # APPLET_SETTINGS_DIR determines where the applet global and instance settings files are located
     DEFINES += APPLET_SETTINGS_DIR=\\\"\"$$DUI_APPLET_SETTINGS_DIR\"\\\"
 
+    # APPLICATION_EXTENSION_LIBS determines the location of application extension binaries
+    DEFINES += APPLICATION_EXTENSION_LIBS=\\\"\"$$DUI_APPLICATION_EXTENSION_DIR\"\\\"
+
+    # APPLICATION_EXTENSION_DATA_DIR determines the location of application extension .desktop files
+    DEFINES += APPLICATION_EXTENSION_DATA_DIR=\\\"\"$$DUI_APPLICATION_EXTENSION_DATA_DIR\"\\\"
+
     # TRANSLATION_DIR determines the default translation path
     DEFINES += TRANSLATION_DIR=\\\"\"$$DUI_TRANSLATION_DIR\"\\\"
 

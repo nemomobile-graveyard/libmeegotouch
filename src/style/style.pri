@@ -46,6 +46,7 @@ WIDGET_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/duidockwidgetstyle.h \
     $$STYLE_SRC_DIR/duiextendingbackgroundstyle.h \
     $$STYLE_SRC_DIR/duiescapebuttonpanelstyle.h \
+    $$STYLE_SRC_DIR/duiextensionhandlestyle.h \
     $$STYLE_SRC_DIR/duigriditemstyle.h \
     $$STYLE_SRC_DIR/duigroupanimationstyle.h \
     $$STYLE_SRC_DIR/duihomebuttonpanelstyle.h \

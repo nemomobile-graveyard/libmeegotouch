@@ -63,6 +63,11 @@ public:
      * \param index the index to insert or -1 to add to the end
      */
     virtual void addToLayout(DuiWidget *widget, int index = -1);
+
+    /*!
+     * Used to check properties of widget and connect signals between it and the DuiContainer
+     */
+    virtual void connectContainerToWidget(DuiContainer *container, DuiWidget *widget) const;
 };
 
 #endif /* DUIAPPLICATIONEXTENSIONAREAVIEW_P_H_ */

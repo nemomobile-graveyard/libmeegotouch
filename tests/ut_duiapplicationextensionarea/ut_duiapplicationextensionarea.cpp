@@ -20,6 +20,7 @@
 #include "ut_duiapplicationextensionarea.h"
 #include "duiapplication.h"
 #include "duiapplicationextensionarea.h"
+#include "duiapplicationextensionmanager.h"
 
 #include <QtTest/QtTest>
 

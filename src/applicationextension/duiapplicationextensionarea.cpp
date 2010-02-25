@@ -19,9 +19,10 @@
 
 #include "duiapplicationextensionarea.h"
 #include "duiapplicationextensionarea_p.h"
-#include "duiappletinstancemanager.h"
+#include "duiapplicationextensionmanager.h"
 #include "duidatastore.h"
 #include "duiwidgetcreator.h"
+#include "duiapplicationextensioninterface.h"
 
 DUI_REGISTER_WIDGET_NO_CREATE(DuiApplicationExtensionArea)
 
@@ -29,48 +30,58 @@ DUI_REGISTER_WIDGET_NO_CREATE(DuiApplicationExtensionArea)
 // PRIVATE CLASS //
 ///////////////////
 
-DuiApplicationExtensionAreaPrivate::DuiApplicationExtensionAreaPrivate() : instanceManager(NULL)
+DuiApplicationExtensionAreaPrivate::DuiApplicationExtensionAreaPrivate() : extensionManager(NULL)
 {
 }
 
 DuiApplicationExtensionAreaPrivate::~DuiApplicationExtensionAreaPrivate()
 {
-    delete instanceManager;
 }
 
-void DuiApplicationExtensionAreaPrivate::init(const QString &interface)
+void DuiApplicationExtensionAreaPrivate::init(const QString &interface, const bool enableInProcessExtensions)
 {
     Q_Q(DuiApplicationExtensionArea);
+    extensionManager = QSharedPointer<DuiApplicationExtensionManager>(new DuiApplicationExtensionManager(interface, enableInProcessExtensions));
+    QObject::connect(extensionManager.data(), SIGNAL(extensionInstantiated(DuiApplicationExtensionInterface *)), q, SIGNAL(extensionInstantiated(DuiApplicationExtensionInterface *)), Qt::QueuedConnection);
+    QObject::connect(extensionManager.data(), SIGNAL(extensionRemoved(DuiApplicationExtensionInterface*)), q, SIGNAL(extensionRemoved(DuiApplicationExtensionInterface*)), Qt::QueuedConnection);
+    QObject::connect(extensionManager.data(), SIGNAL(widgetCreated(DuiWidget*, DuiDataStore&)), q, SLOT(addWidget(DuiWidget*, DuiDataStore&)));
+    QObject::connect(extensionManager.data(), SIGNAL(widgetRemoved(DuiWidget*)), q, SLOT(removeWidget(DuiWidget*)));
+    extensionManager->init();
+}
 
-    instanceManager = new DuiAppletInstanceManager(interface);
-
-    // Connect applet instance manager signals and restore applet instances
-    q->connect(instanceManager, SIGNAL(appletInstantiated(DuiWidget *, DuiDataStore &)), SLOT(addWidget(DuiWidget *, DuiDataStore &)));
-    instanceManager->restoreApplets();
+QList<DuiApplicationExtensionInterface*> DuiApplicationExtensionAreaPrivate::extensions()
+{
+    return extensionManager.data()->extensions();
 }
 
 //////////////////
 // PUBLIC CLASS //
 //////////////////
-DuiApplicationExtensionArea::DuiApplicationExtensionArea(const QString &interface, QGraphicsItem *parent) :
+DuiApplicationExtensionArea::DuiApplicationExtensionArea(const QString &interface, const bool enableInProcessExtensions, QGraphicsItem *parent) :
     DuiExtensionArea(new DuiApplicationExtensionAreaPrivate, new DuiApplicationExtensionAreaModel, parent)
 {
     // Initialize the private implementation
     Q_D(DuiApplicationExtensionArea);
     d->q_ptr = this;
-    d->init(interface);
+    d->init(interface, enableInProcessExtensions);
 }
 
 DuiApplicationExtensionArea::DuiApplicationExtensionArea(DuiApplicationExtensionAreaPrivate *dd, DuiApplicationExtensionAreaModel *model,
-        QGraphicsItem *parent, const QString &interface) :
+        QGraphicsItem *parent, const QString &interface, const bool enableInProcessExtensions) :
     DuiExtensionArea(dd, model, parent)
 {
     Q_D(DuiApplicationExtensionArea);
 
     // Initialize the private implementation
-    d->init(interface);
+    d->init(interface, enableInProcessExtensions);
 }
 
 DuiApplicationExtensionArea::~DuiApplicationExtensionArea()
 {
+}
+
+QList<DuiApplicationExtensionInterface*> DuiApplicationExtensionArea::extensions()
+{
+    Q_D(DuiApplicationExtensionArea);
+    return d->extensions();
 }

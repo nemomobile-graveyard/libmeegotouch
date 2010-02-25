@@ -2,19 +2,19 @@ include(../common_top.pri)
 
 TARGET = ut_duiappletrunner
 
-APPLETRUNNERDIR = ../../duiappletrunner
-INCLUDEPATH += $$APPLETRUNNERDIR \
+INCLUDEPATH += $$DUISRCDIR/applicationextension \
+    $$DUISRCDIR/mashup/appletcommunication \
     $$DUISRCDIR/mashup/mashup \
-    $$DUISRCDIR/mashup/appletinterface \
-    $$DUISRCDIR/mashup/appletcommunication
+    ../../duiappletrunner
 
 QT += network xml
 
 SOURCES += ut_duiappletrunner.cpp \
-    $$APPLETRUNNERDIR/duiappletrunner.cpp \
+    ../../duiappletrunner/duiappletrunner.cpp \
     ../stubs/stubbase.cpp
 
 HEADERS += ut_duiappletrunner.h \
-    $$APPLETRUNNERDIR/duiappletrunner.h
+    ../../duiappletrunner/duiappletrunner.h \
+    $$DUISRCDIR/applicationextension/duiextensionrunner.h
 
 include(../common_bot.pri)

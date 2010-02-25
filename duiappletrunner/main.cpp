@@ -75,10 +75,10 @@ public:
 
 /**
  * The arguments to the executable must be:
+ * - applet communication server name
+ * - metadata file name
  * - applet ID as a string
  * - applet instance file data path
- * - metadata file name
- * - applet communication server name
  */
 int main(int argc, char **argv)
 {
@@ -89,15 +89,15 @@ int main(int argc, char **argv)
     }
 
     // Load applet metadata
-    DuiAppletMetaData metadata(argv[3]);
+    DuiAppletMetaData metadata(argv[2]);
     if (!metadata.isValid()) {
-        qWarning() << "Applet metadata " << argv[3] << "is not valid";
+        qWarning() << "Applet metadata " << argv[2] << "is not valid";
         return ERROR_APPLET_INIT_FAILED;
     }
 
     DuiApplication app(argc, argv, metadata.resourceIdentifier(), new MyApplicationService());
     DuiAppletRunner runner;
-    if (!runner.init(argv[1], argv[2], metadata, argv[4])) {
+    if (!runner.init(argv[1], metadata, argv[3], argv[4])) {
         qWarning() << "Applet initialization failed";
         return ERROR_APPLET_INIT_FAILED;
     }

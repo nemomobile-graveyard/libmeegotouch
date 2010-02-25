@@ -24,6 +24,7 @@
 #include "duiapplicationextensionareamodel.h"
 
 class DuiApplicationExtensionAreaPrivate;
+class DuiApplicationExtensionInterface;
 
 /*!
  * DuiApplicationExtensionArea is a widget which can be populated with application extensions. DuiApplicationExtensionArea
@@ -46,14 +47,37 @@ public:
      * Constructor
      * \param interface Specifies which interface the application extensions must implement in order to be loaded to
      * this application extension area.
+     * \param enableInProcessExtensions \c true if in process extensions should be loaded. \c false otherwise
      * \param parent Optional Object's parent
      */
-    explicit DuiApplicationExtensionArea(const QString &interface, QGraphicsItem *parent = NULL);
+    explicit DuiApplicationExtensionArea(const QString &interface, const bool enableInProcessExtensions = true, QGraphicsItem *parent = NULL);
+
+    /*!
+     * Returns a list of in process extensions loaded by this manager
+     *
+     * \return List of application extension interface pointers. Receving party should appropriately cast them.
+     */
+    QList<DuiApplicationExtensionInterface*> extensions();
 
     /*!
      * Destructor
      */
     virtual ~DuiApplicationExtensionArea();
+
+signals:
+    /*!
+     * Signal sent when an extension has been instantiated.
+     *
+     * \param extension the extension that was instantiated
+     */
+    void extensionInstantiated(DuiApplicationExtensionInterface *extension);
+
+    /*!
+     * Signal sent when an extension has been removed.
+     *
+     * \param extension the extension that was removed
+     */
+    void extensionRemoved(DuiApplicationExtensionInterface* extension);
 
 protected:
     /*!
@@ -61,7 +85,7 @@ protected:
      * hierarchy.
      */
     DuiApplicationExtensionArea(DuiApplicationExtensionAreaPrivate *dd, DuiApplicationExtensionAreaModel *model,
-                                QGraphicsItem *parent, const QString &interface);
+                                QGraphicsItem *parent, const QString &interface, const bool enableInProcessExtensions);
 
 private:
     Q_DECLARE_PRIVATE(DuiApplicationExtensionArea)

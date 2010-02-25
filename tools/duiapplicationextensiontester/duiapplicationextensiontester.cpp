@@ -37,19 +37,9 @@
 #include <QFileInfo>
 
 
-ApplicationExtensionPage::ApplicationExtensionPage(const char *metaDataFileName) :
-    metaDataFileName(metaDataFileName)
+ApplicationExtensionPage::ApplicationExtensionPage(const QString &interface) :
+    interface(interface)
 {
-    QString appName = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
-    QString path = QDir::homePath() + "/.config/" + appName;
-    if (!QDir::root().exists(path)) {
-        QDir::root().mkpath(path);
-    }
-
-    QFile f(path + "/extensionarea.data");
-    f.open(QFile::WriteOnly | QFile::Truncate);
-    QTextStream ts(&f);
-    ts << "[1]\ndesktopFile=" << metaDataFileName << "\nprivate\\layoutIndex=0\n";
 }
 
 void ApplicationExtensionPage::createContent()
@@ -58,14 +48,14 @@ void ApplicationExtensionPage::createContent()
     QGraphicsLinearLayout *vbox = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(vbox);
 
-    DuiApplicationExtensionArea *extArea = new DuiApplicationExtensionArea("extensionarea");
+    DuiApplicationExtensionArea *extArea = new DuiApplicationExtensionArea(interface);
     vbox->addItem(extArea);
 }
 
 void usage(const char *progName)
 {
-    qWarning("Usage: %s METADATAFILENAME", progName);
-    qWarning("  metadatafilename                   Defines the metadata file of the extension");
+    qWarning("Usage: %s INTERFACE", progName);
+    qWarning("  INTERFACE                          Defines which interface the extensions to be loaded must implement");
 }
 
 int main(int argc, char **argv)

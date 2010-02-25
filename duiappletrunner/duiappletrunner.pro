@@ -4,7 +4,8 @@ INCLUDEPATH += . \
     ../src/mashup/mashup \
     ../src/include \
     ../src/mashup/appletcommunication \
-    ../src/mashup/appletinterface
+    ../src/mashup/appletinterface \
+    ../src/applicationextension
 DEPENDPATH += $$INCLUDEPATH
 QMAKE_LIBDIR += ../lib
 TEMPLATE = app
@@ -20,10 +21,12 @@ QT += core \
 
 # Input
 SOURCES += main.cpp \
+    duiextensionrunner.cpp \
     duiappletrunner.cpp \
     ../src/mashup/mashup/duiappletsharedmutex.cpp
 
 HEADERS += duiappletrunner.h \
+    duiextensionrunner.h \
     duiappletsharedmutex.h
 
 QMAKE_EXTRA_TARGETS += check

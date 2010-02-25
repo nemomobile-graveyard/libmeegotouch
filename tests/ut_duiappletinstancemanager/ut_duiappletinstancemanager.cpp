@@ -138,6 +138,10 @@ DuiAppletHandleModel::~DuiAppletHandleModel()
 {
 }
 
+DuiExtensionHandleModel::~DuiExtensionHandleModel()
+{
+}
+
 bool Ut_DuiAppletInstanceManager::captureCalls = false;
 QString Ut_DuiAppletInstanceManager::callServiceName;
 QString Ut_DuiAppletInstanceManager::callObjectPath;
@@ -374,7 +378,8 @@ void Ut_DuiAppletInstanceManager::init()
 
     gDuiAppletSettingsStub->stubReset();
     gDuiAppletHandleStub->stubReset();
-    gDuiAppletHandleStub->stubSetReturnValue("state", DuiAppletHandleModel::RUNNING);
+    gDuiExtensionHandleStub->stubReset();
+    gDuiExtensionHandleStub->stubSetReturnValue("state", DuiExtensionHandleModel::RUNNING);
 
     dataDirectoryExists = false;
     fileCopy.first = QString();
@@ -454,7 +459,7 @@ void Ut_DuiAppletInstanceManager::testOutOfProcessAppletRestoration()
     QCOMPARE(setAppletTitleCalls[1]->parameter<QString>(0), QString("Title 4"));
 
     // Make sure size hints are set
-    QList<MethodCall *> setSizeHintsCalls = gDuiAppletHandleStub->stubCallsTo("setSizeHints");
+    QList<MethodCall *> setSizeHintsCalls = gDuiExtensionHandleStub->stubCallsTo("setSizeHints");
     QCOMPARE(setSizeHintsCalls.length(), 2);
     QCOMPARE(setSizeHintsCalls[0]->parameter<QVector<QSizeF> >(0).at(0), QSizeF(101, 201));
     QCOMPARE(setSizeHintsCalls[0]->parameter<QVector<QSizeF> >(0).at(1), QSizeF(101, 201));
@@ -627,7 +632,7 @@ void Ut_DuiAppletInstanceManager::testPreconfiguredAppletInstances()
 void Ut_DuiAppletInstanceManager::testOOPAppletStartsToBrokenState()
 {
     outOfProcess = true;
-    gDuiAppletHandleStub->stubSetReturnValue("state", DuiAppletHandleModel::BROKEN);
+    gDuiExtensionHandleStub->stubSetReturnValue("state", DuiAppletHandleModel::BROKEN);
 
     // Create a signal spy to investigate if appletInstantiated signal is emitted for all applets.
     QSignalSpy spy(manager, SIGNAL(appletInstantiated(DuiWidget *, DuiDataStore &)));
@@ -662,7 +667,7 @@ void Ut_DuiAppletInstanceManager::testInstallingAppletFromPackage()
     QCOMPARE(setAppletTitleCalls[0]->parameter<QString>(0), QString("Test Title"));
 
     // Make sure size hints are set
-    QList<MethodCall *> setSizeHintsCalls = gDuiAppletHandleStub->stubCallsTo("setSizeHints");
+    QList<MethodCall *> setSizeHintsCalls = gDuiExtensionHandleStub->stubCallsTo("setSizeHints");
     QCOMPARE(setSizeHintsCalls.length(), 1);
     QCOMPARE(setSizeHintsCalls[0]->parameter<QVector<QSizeF> >(0).at(0), QSizeF(600, 300));
     QCOMPARE(setSizeHintsCalls[0]->parameter<QVector<QSizeF> >(0).at(1), QSizeF(600, 300));

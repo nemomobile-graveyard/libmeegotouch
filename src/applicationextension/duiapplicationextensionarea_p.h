@@ -22,8 +22,10 @@
 
 #include "duiextensionarea_p.h"
 #include "duiapplicationextensionarea.h"
+#include <QSharedPointer>
 
-class DuiAppletInstanceManager;
+class DuiApplicationExtensionManager;
+class DuiApplicationExtensionInterface;
 
 /*!
  * Private class for DuiApplicationExtensionArea.
@@ -48,11 +50,19 @@ public:
      * is used for anything else.
      *
      * \param interface the extension interface name for the application extension area.
+     * \param enableInProcessExtensions \c true if in process extensions should be loaded. \c false otherwise
      */
-    void init(const QString &interface);
+    void init(const QString &interface, const bool enableInProcessExtensions);
 
-    //! Applet instance manager
-    DuiAppletInstanceManager *instanceManager;
+   /*!
+    * Returns a list of in process extensions loaded by this manager
+    *
+    * \return List of application extension interface pointers. Receving party should appropriately cast them correctly.
+    */
+    QList<DuiApplicationExtensionInterface*> extensions();
+
+    //! Application extension manager
+    QSharedPointer<DuiApplicationExtensionManager> extensionManager;
 };
 
 #endif // DUIAPPLICATIONEXTENSIONAREA_P_H

@@ -20,7 +20,7 @@
 #ifndef DUIAPPLETHANDLEVIEW_H
 #define DUIAPPLETHANDLEVIEW_H
 
-#include <duiwidgetview.h>
+#include "duiextensionhandleview.h"
 #include "duiapplethandle.h"
 #include "duiapplethandlemodel.h"
 #include "duiapplethandlestyle.h"
@@ -34,36 +34,18 @@ class DuiAppletHandleViewPrivate;
  * a broken state or not and displays a dialog if the applet
  * is broken and the user taps it.
  */
-class DuiAppletHandleView : public DuiWidgetView
+class DuiAppletHandleView : public DuiExtensionHandleView
 {
     Q_OBJECT
     DUI_VIEW(DuiAppletHandleModel, DuiAppletHandleStyle)
 
 public:
     /*!
-     * Constructs a DuiAppletHandleView.
-     *
-     * \param appletHandle the DuiAppletHandle controller to be used
-     */
-    DuiAppletHandleView(DuiAppletHandle *appletHandle);
-
-    /*!
      * Destroyes the DuiAppletHandleView.
      */
     virtual ~DuiAppletHandleView();
 
-    //! \reimp
-    virtual void setGeometry(const QRectF &rect);
-    virtual QRectF boundingRect() const;
-    //! \reimp_end
-
 protected:
-    //! \reimp
-    virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint) const;
-    //! \reimp_end
-
     /*!
      * Constructs a DuiAppletHandleView. Should be used from derived classes.
      *
@@ -80,16 +62,6 @@ protected slots:
     //! \reimp
     virtual void setupModel();
     //! \reimp_end
-
-    /*!
-     * \brief A slot for receiving information about pixmaps that have been taken into use
-     */
-    void pixmapTakenIntoUse(Qt::HANDLE pixmapHandle);
-
-    /*!
-     * \brief A slot for processing the applet pixmap modifications
-     */
-    void appletPixmapModified(const QRectF &rect);
 
     /*!
      * \brief A slot for opening applet settings

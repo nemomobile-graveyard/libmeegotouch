@@ -140,6 +140,18 @@ Architecture: any
 Depends: dui-demos-appletinstallationsource (= ${Source-Version})
 Description: Debug symbols of the demo applet installation source.
 
+Package: dui-demos-applicationextension
+Section: devel
+Architecture: any
+Depends: libdui0 (= ${Source-Version})
+Description: Demo application for application extensions
+
+Package: dui-demos-applicationextension-dbg
+Section: devel
+Architecture: any
+Depends: dui-demos-applicationextension (= ${Source-Version})
+Description: Debug symbols of the demo application for application extensions
+
 Package: libdui-tests
 Section: extra
 Architecture: any

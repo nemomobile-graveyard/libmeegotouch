@@ -24,7 +24,6 @@
 #include "duiapplethandle.h"
 #include "duiapplethandle_p.h"
 #include "duiapplethandlestyle.h"
-class DuiSettingsLanguageBinary;
 
 class DuiTestAppletHandlePrivate : public DuiAppletHandlePrivate
 {
@@ -36,20 +35,10 @@ class DuiTestAppletHandle : public DuiAppletHandle
 
 public:
     DuiTestAppletHandle();
-    void sendMouseEvent(QGraphicsSceneMouseEvent &event);
     void messageReceivedFromRunner(const DuiAppletMessage &message);
-    void aliveMessageResponseTimeout();
-    void connectionTimeout();
-    void sendContextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    DuiTestAppletHandlePrivate *privateClass();
-
-    DuiAppletHandleStyle *modifiableStyle() {
-        DuiAppletHandleStyleContainer &sc = dynamic_cast<DuiAppletHandleStyleContainer &>(style());
-        const DuiAppletHandleStyle *const_s = sc.operator ->();
-        DuiAppletHandleStyle *s = const_cast<DuiAppletHandleStyle *>(const_s);
-        return s;
-    }
 };
+
+class DuiApplication;
 
 // Test case must inherit QObject
 class Ut_DuiAppletHandle : public QObject
@@ -57,62 +46,21 @@ class Ut_DuiAppletHandle : public QObject
     Q_OBJECT
 
 private:
-    //! AppletHandle instance under testing.
+    // DUI Application for the test case
+    DuiApplication *app;
+    //! DuiAppletHandle instance under testing.
     DuiTestAppletHandle *handle;
-    //! Applet Id of the applet
-    DuiAppletId appletId;
-
-public:
-    //! Indicates whether communication server listens to incoming connections or not.
-    static bool listenForConnection;
-
-    //! Minimum size hint response
-    static QSizeF minSize;
-    //! Preferred size hint response
-    static QSizeF prefSize;
-    //! Maximum size hint response
-    static QSizeF maxSize;
-    //! The visible scene size returned by DuiSceneManager
-    static QSize visibleSceneSize;
-
-    //! Whether the shared memory is attached or not
-    static bool sharedMemoryAttached;
-    //! Whether the DuiWidget::contextMenuEvent() has been called
-    static bool contextMenuOpened;
 
 private slots:
     void initTestCase();
     void cleanupTestCase();
-
     void init();
     void cleanup();
 
-    void testInitializationWithCorrectData();
-    void testReinit();
-    void testAppletCommunicationFails();
-    void testAppletMalfunction();
-    void testAppletRunnerFailsToStart();
-    void testScaling();
-    void testMouseEventScaling();
-    void testAppletCommunication();
-    void testRelayingMousePress();
-    void testRelayingMouseRelease();
-    void testRelayingMouseMove();
-    void testThatAppletBreaksIfConnectionIsNotEstablished();
-    void testVisibility();
-    void testSettingAppletSpecificActions();
-    void testAppletSpecificActionsInBrokenState();
-    void testContextMenuTrigger();
-    void testObjectMenuMessage();
-    void testAppletSpecificActionTriggered();
-    void testPlaceHolderInitialization();
-    void testPlaceHolderInitializationWithError();
-    void testInstallationOperationCompleteWithError();
-    void testAppletInstallationProgess();
+    void testInitialization();
     void testAppletIconMessageReceived();
     void testAppletTitleMessageReceived();
     void testAppletTextMessageReceived();
-    void testSetSizeHints();
 
 signals:
     void messageReceived(const DuiAppletMessage &message);
@@ -122,4 +70,4 @@ signals:
     void operationComplete(const QString &operation, const QString &pkg, const QString &error);
     void operationProgress(const QString &operation, const QString &pkg, int);
 };
-#endif // UT_DUIAPPLETHANDLE
+#endif // UT_DUIEXTENSIONHANDLE

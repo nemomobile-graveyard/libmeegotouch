@@ -27,12 +27,12 @@ class ApplicationExtensionPage : public DuiApplicationPage
     Q_OBJECT
 
 public:
-    ApplicationExtensionPage(const char *metaDataFileName);
+    ApplicationExtensionPage(const QString &interface);
 
     virtual void createContent();
 
 private:
-    const char *metaDataFileName;
+    QString interface;
 };
 
 #endif
