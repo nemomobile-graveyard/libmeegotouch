@@ -43,10 +43,10 @@ public:
     virtual void destroyPixmaps();
 
     //! Draws graphics on top of the applet to show the broken state.
-    virtual void drawAppletBrokenState();
+    virtual void drawBrokenState();
 
     //! \reimp
-    virtual void drawAppletPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const;
+    virtual void drawPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const;
     //! \reimp_end
 };
 

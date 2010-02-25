@@ -20,14 +20,11 @@
 #ifndef DUIAPPLETHANDLEVIEW_P_H_
 #define DUIAPPLETHANDLEVIEW_P_H_
 
-#include "private/duiwidgetview_p.h"
+#include "duiextensionhandleview_p.h"
 
 class DuiAppletHandleView;
-class DuiAppletHandle;
-class QPixmap;
-class DuiProgressIndicator;
 
-class DuiAppletHandleViewPrivate : public DuiWidgetViewPrivate
+class DuiAppletHandleViewPrivate : public DuiExtensionHandleViewPrivate
 {
     Q_DECLARE_PUBLIC(DuiAppletHandleView)
 
@@ -35,78 +32,11 @@ public:
     DuiAppletHandleViewPrivate(DuiAppletHandle *appletHandle);
     virtual ~DuiAppletHandleViewPrivate();
 
-    //! The controller
-    DuiAppletHandle *appletHandle;
-
-    //! A local copy of the latest applet pixmap
-    QPixmap localPixmap;
-
-    //! The applet pixmap that has been taken into use
-    QPixmap *pixmapTakenIntoUse;
-
-    //! The applet pixmap to be taken into use
-    QPixmap *pixmapToBeTakenIntoUse;
-
-    //! The size for the pixmap not taken into use yet
-    QSizeF *pixmapSizeToBeTakenIntoUse;
-
-    //! Progress indicator for showing feedback about various applet handle states
-    DuiProgressIndicator *progressIndicator;
-
-    //! Unprocessed changed rectangle
-    QRectF pixmapModifiedRect;
-
-    //! Previous geometry
-    QRectF oldGeometry;
-
-    //! Connects the signals
-    void connectSignals();
-
-    //! Clears the view state for a newly initialized applet
-    void resetView();
-
-    //! Draws graphics on top of the applet to show the broken state.
-    virtual void drawAppletBrokenState();
-
-    //! Handles changes in the applet size
-    void appletSizeChanged(QSizeF size);
-
-    //! Allocates a new applet pixmap to be taken into use
-    void allocatePixmapToBeTakenIntoUse(QSizeF size);
-
-    //! Updates the local applet pixmap if necessary
-    void updateLocalPixmap();
-
     /*! Shows a dialog for deciding what to do with a broken applet. */
-    void showAppletBrokenDialog();
+    void showBrokenDialog();
 
     /*! Shows a dialog for deciding what to do with an installation failed applet. */
-    void showAppletInstallationFailedDialog(const QString &error);
-
-    /*! Deletes the pixmaps */
-    virtual void destroyPixmaps();
-
-    //! Sends the geometry of the applet handle to the applet
-    void sendGeometryMessage();
-
-    /*!
-     * \brief Draw the contents of the applet pixmap
-     *
-     * \param painter the painter to draw with
-     * \param sourceGeometry the part of the applet pixmap to use
-     * \param targetGeometry the part of the target pixmap to draw to
-     * \param brokenState \c true if the applet pixmap should be drawn in a broken state, \c false otherwise
-     */
-    virtual void drawAppletPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const;
-
-    //! Converts a size from host coordinates to applet coordinates
-    QSizeF hostToAppletCoordinates(const QSizeF &size) const;
-
-    //! Converts a size from applet coordinates to host coordinates
-    QSizeF appletToHostCoordinates(const QSizeF &size) const;
-
-    //! Calculates the applet scale based on the size hints and available size
-    void calculateAppletScale();
+    void showInstallationFailedDialog(const QString &error);
 };
 
 #endif /* DUIAPPLETHANDLEVIEW_P_H_ */

@@ -33,7 +33,7 @@ DuiAppletHandleSWViewPrivate::~DuiAppletHandleSWViewPrivate()
 {
 }
 
-void DuiAppletHandleSWViewPrivate::drawAppletPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool) const
+void DuiAppletHandleSWViewPrivate::drawPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool) const
 {
     // Draw the applet pixmap scaled so that it fits the screen
     painter->drawPixmap(targetGeometry, localPixmap, sourceGeometry);

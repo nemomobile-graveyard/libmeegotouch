@@ -8,7 +8,10 @@ SUBDIRS     =  \
     qtstyleexample \
     qtstyledialogs \
     qtstylekinetic \
-    appletinstallationsource
+    appletinstallationsource \
+    applicationextension \
+    applicationextension/demoextension \
+    applicationextension/demoextension2    
     
 # we do not have compiled QtDBusd4
 macx:SUBDIRS -= appletinstallationsource

@@ -21,28 +21,11 @@
 #define _UT_DUIAPPLETRUNNER_
 
 #include <QObject>
-#include <QLocalServer>
-#include <duiappletinterface.h>
-#include <QGraphicsSceneMouseEvent>
-#include <QRectF>
+#include <QHash>
 
 class DuiAppletRunner;
-class DuiAppletMessage;
 class DuiAppletMetaData;
-
-class MouseEventFilter : public QObject
-{
-    Q_OBJECT
-
-public:
-    ~MouseEventFilter();
-
-protected:
-    bool eventFilter(QObject *o, QEvent *e);
-
-public:
-    QList<QGraphicsSceneMouseEvent *> events;
-};
+class DuiWidget;
 
 // Test case must inherit QObject
 class Ut_DuiAppletRunner: public QObject
@@ -50,20 +33,17 @@ class Ut_DuiAppletRunner: public QObject
     Q_OBJECT
 
 private:
-
     /** DuiAppletRunner instance under testing. */
     DuiAppletRunner *m_instance;
     DuiAppletMetaData *meta;
+    DuiWidget *widget;
 
 public:
     static bool timerImmediateTimeout;
     static bool quitCalled;
     static QHash<QString, QString> gConfKeyMap;
-    static bool processingInstanceSettingsFile;
-    static bool processingGlobalSettingsFile;
 
 private slots:
-
     void init();
     void cleanup();
     void initTestCase();
@@ -73,21 +53,7 @@ private slots:
     void testInitializationFailInvalidAppletId();
     void testInitializationFailInvalidInstanceDataLocation();
     void testInitializationFailInvalidMetadata();
-    void testInitializationFailCommunicationFails();
     void testInitializationFailConstructWidgetFails();
-    void testInitializationFailSharedMemoryAttachFails();
-    void testRelayingMouseEvents();
-    void testAppletRunnerQuitsIfMessageReceivingTimeouts();
-    void testMessageReceivedBeforeAppletInit();
-    void testPaintingOnPixmap();
-    void testSendUpdateGeometryMessage();
-    void testSceneChanged();
-    void testObjectMenuRequestMessage();
-    void testObjectMenuRequestMessageGetsPropagated();
-
-signals:
-    void sendMessage(const DuiAppletMessage &message);
-    void changeScene(const QList<QRectF> &region);
 };
 
 #endif //_UT_DUIAPPLETRUNNER_

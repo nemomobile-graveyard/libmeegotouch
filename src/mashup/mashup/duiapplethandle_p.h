@@ -21,22 +21,14 @@
 #define DUIAPPLETHANDLE_P_H
 
 #include "duiapplethandle.h"
-#include "private/duiwidgetcontroller_p.h"
-#include "duiappletinstancemanager.h"
-#include "duiappletid.h"
-#include "duiappletserver.h"
-
-#include <QTime>
-#include <QTimer>
-#include <QProcess>
+#include "duiextensionhandle_p.h"
 
 class DuiSettingsLanguageBinary;
-class DuiAction;
 
 /*!
  * A private data class for DuiAppletHandle.
  */
-class DuiAppletHandlePrivate : public virtual QObject, public DuiWidgetControllerPrivate
+class DuiAppletHandlePrivate : public DuiExtensionHandlePrivate
 {
     Q_DECLARE_PUBLIC(DuiAppletHandle)
     Q_OBJECT
@@ -52,90 +44,11 @@ public:
      */
     virtual ~DuiAppletHandlePrivate();
 
-    //! The name for the applet communication server
-    QString serverName;
-
-    //! The arguments that were given to init()
-    QStringList arguments;
-
-    //! The name of the applet runner binary
-    QString runnerBinary;
-
-    //! The applet process
-    QProcess process;
-
-    //! The number of times this process has been restarted due to applet malfunction
-    int restartCount;
-
-    //! Time since the process was started, for checking how long the applet could run before breaking
-    QTime processStartTime;
-
-    //! A server for IPC communication between the processes
-    DuiAppletServer communicator;
-
-    //! Timer to send alive message requests to runner at constant intervals
-    QTimer aliveTimer;
-
-    //! Timer to verify that communication between runner process and applet handle is working
-    QTimer communicationTimer;
-
-    //! Timeout for applet instance to respond to applet alive request.
-    uint appletResponseTimeout;
-
-    //! Timeout for applet runner process to connect to applet handle
-    uint runnerConnectionTimeout;
-
-    //! Stored geometry of the applet
-    QRectF oldGeometry;
-
     //! A list of applet instance settings binaries read during initialization
     QList<DuiSettingsLanguageBinary *> instanceSettingsBinaries;
 
     //! A list of applet global settings binaries read during initialization
     QList<DuiSettingsLanguageBinary *> globalSettingsBinaries;
-
-    //! Application level visibility
-    bool applicationVisible;
-
-    //! Widget level visibility
-    bool widgetVisible;
-
-    //! A list of applet specific actions
-    QList<DuiAction *> appletSpecificActions;
-
-    //! D-Bus service of the Package Manager
-    static const QString PACKAGE_MANAGER_DBUS_SERVICE;
-
-    //! D-Bus path of the Package Manager
-    static const QString PACKAGE_MANAGER_DBUS_PATH;
-
-    //! D-Bus interface of the Package Manager
-    static const QString PACKAGE_MANAGER_DBUS_INTERFACE;
-
-    /*!
-     * Sends the necessary visibility change message when the application or
-     * widget level visibility has changed
-     */
-    void visibilityChanged();
-
-public slots:
-    /*!
-     * Slot for listening to operation complete signals from the Package Manager
-     *
-     * \param operation Name of the operation. Possible names are: Install, Uninstall and Upgrade
-     * \param pkg Name of the package that operation is performed on
-     * \param error Empty if operation was successful, DBus error name otherwise
-     */
-    void operationComplete(const QString &operation, const QString &pkg, const QString &error);
-
-    /*!
-      * Receives information about the progress of a Package Manager operation.
-      *
-      * \param operation Name of the operation. Possible names are: Install, Uninstall and Upgrade
-      * \param pkg Name of the package that operation is performed on.
-      * \param percentage Current progress percentage
-      */
-    void operationProgress(const QString &operation, const QString &pkg, int percentage);
 };
 
 #endif

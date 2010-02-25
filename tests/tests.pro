@@ -141,6 +141,15 @@ SUBDIRS     =  \
     ut_translations \
     ut_translations/translations-tr \
     ut_translations/translations-qttrid \
+    ut_duiextensionarea \
+    ut_duiextensionrunner \
+    ut_duiapplicationextensionloader \
+    ut_duiapplicationextensionrunner \
+    ut_duiapplicationextensionarea \
+    ut_duiapplicationextensionareaview \
+    ut_duiapplicationextensionmanager \
+    ut_duiextensionhandle \
+    ut_duiextensionhandleview
 
 # enable only when we have icu available
 

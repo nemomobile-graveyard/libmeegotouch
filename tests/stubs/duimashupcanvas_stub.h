@@ -25,19 +25,19 @@
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
-class DuiMashupCanvasStub : public StubBase {
-  public:
-  virtual void DuiMashupCanvasConstructor(const QString &identifier, QGraphicsItem *parent);
-  virtual void DuiMashupCanvasDestructor();
-  virtual DuiAppletInstanceManager * appletInstanceManager() const;
-  virtual void setCategories(const QStringList &categories);
-  virtual QStringList categories() const;
-  virtual QString identifier() const;
-  virtual QString serviceAddress() const;
-  virtual void DuiMashupCanvasConstructor(DuiMashupCanvasPrivate *dd, DuiMashupCanvasModel *model, QGraphicsItem *parent, const QString &identifier);
-  virtual void addWidget(DuiWidget *widget, DuiDataStore &store);
-  virtual void removeWidget(DuiWidget *widget);
-  virtual void init();
+class DuiMashupCanvasStub : public StubBase
+{
+public:
+    virtual void DuiMashupCanvasConstructor(const QString &identifier, QGraphicsItem *parent);
+    virtual void DuiMashupCanvasDestructor();
+    virtual DuiAppletInstanceManager *appletInstanceManager() const;
+    virtual void setCategories(const QStringList &categories);
+    virtual QStringList categories() const;
+    virtual QString identifier() const;
+    virtual QString serviceAddress() const;
+    virtual void DuiMashupCanvasConstructor(DuiMashupCanvasPrivate *dd, DuiMashupCanvasModel *model, QGraphicsItem *parent, const QString &identifier);
+    virtual void addWidget(DuiWidget *widget, DuiDataStore &store);
+    virtual void removeWidget(DuiWidget *widget);
 };
 
 // 2. IMPLEMENT STUB
@@ -105,12 +105,6 @@ void DuiMashupCanvasStub::removeWidget(DuiWidget *widget)
     stubMethodEntered("removeWidget", params);
 }
 
-void DuiMashupCanvasStub::init() {
-  stubMethodEntered("init");
-}
-
-
-
 // 3. CREATE A STUB INSTANCE
 DuiMashupCanvasStub gDefaultDuiMashupCanvasStub;
 DuiMashupCanvasStub *gDuiMashupCanvasStub = &gDefaultDuiMashupCanvasStub;
@@ -166,10 +160,5 @@ void DuiMashupCanvas::removeWidget(DuiWidget *widget)
 {
     gDuiMashupCanvasStub->removeWidget(widget);
 }
-
-void DuiMashupCanvas::init() {
-  gDuiMashupCanvasStub->init();
-}
-
 
 #endif

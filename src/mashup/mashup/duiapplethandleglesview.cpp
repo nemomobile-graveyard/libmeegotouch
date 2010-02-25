@@ -79,7 +79,7 @@ void DuiAppletHandleGLESViewPrivate::destroyPixmaps()
     DuiAppletHandleViewPrivate::destroyPixmaps();
 }
 
-void DuiAppletHandleGLESViewPrivate::drawAppletBrokenState()
+void DuiAppletHandleGLESViewPrivate::drawBrokenState()
 {
     Q_Q(const DuiAppletHandleGLESView);
 
@@ -88,7 +88,7 @@ void DuiAppletHandleGLESViewPrivate::drawAppletBrokenState()
 
         DuiAppletHandleViewUniformProvider uniforms(localPixmap.width(), localPixmap.height());
 
-        QSize newSize = localPixmap.size() * q->model()->appletScale();
+        QSize newSize = localPixmap.size() * q->model()->scale();
         QGLFramebufferObject fbo(newSize);
         fbo.bind();
         DuiGLRenderer::instance()->setViewportSize(newSize);
@@ -101,10 +101,10 @@ void DuiAppletHandleGLESViewPrivate::drawAppletBrokenState()
         fbo.release();
     }
 
-    DuiAppletHandleViewPrivate::drawAppletBrokenState();
+    DuiAppletHandleViewPrivate::drawBrokenState();
 }
 
-void DuiAppletHandleGLESViewPrivate::drawAppletPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const
+void DuiAppletHandleGLESViewPrivate::drawPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const
 {
     // Draw the applet pixmap scaled so that it fits the screen
     if (brokenState && !brokenAppletPixmap.isNull()) {

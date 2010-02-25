@@ -26,44 +26,39 @@
 
 // 1. DECLARE STUB
 // FIXME - stubgen is not yet finished
-class DuiAppletLoaderStub : public StubBase
-{
-public:
-    virtual DuiWidget *loadApplet(const DuiAppletMetaData &metadata, DuiDataStore &dataStore, DuiDataAccess &settings);
-    virtual void DuiAppletLoaderConstructor();
-};
+class DuiAppletLoaderStub : public StubBase {
+  public:
+  virtual DuiWidget * loadApplet(const DuiAppletMetaData &metadata, DuiDataStore &dataStore, DuiDataAccess &settings);
+  virtual void DuiAppletLoaderConstructor();
+}; 
 
 // 2. IMPLEMENT STUB
-DuiWidget *DuiAppletLoaderStub::loadApplet(const DuiAppletMetaData &metadata, DuiDataStore &dataStore, DuiDataAccess &settings)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QString >(metadata.fileName()));
-    params.append(new Parameter<DuiDataStore & >(dataStore));
-    params.append(new Parameter<DuiDataAccess & >(settings));
-    stubMethodEntered("loadApplet", params);
-    return stubReturnValue<DuiWidget *>("loadApplet");
+DuiWidget * DuiAppletLoaderStub::loadApplet(const DuiAppletMetaData &metadata, DuiDataStore &dataStore, DuiDataAccess &settings) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QString >(metadata.fileName()));
+  params.append( new Parameter<DuiDataStore & >(dataStore));
+  params.append( new Parameter<DuiDataAccess & >(settings));
+  stubMethodEntered("loadApplet",params);
+  return stubReturnValue<DuiWidget *>("loadApplet");
 }
 
-void DuiAppletLoaderStub::DuiAppletLoaderConstructor()
-{
+void DuiAppletLoaderStub::DuiAppletLoaderConstructor() {
 
 }
 
 
 // 3. CREATE A STUB INSTANCE
 DuiAppletLoaderStub gDefaultDuiAppletLoaderStub;
-DuiAppletLoaderStub *gDuiAppletLoaderStub = &gDefaultDuiAppletLoaderStub;
+DuiAppletLoaderStub* gDuiAppletLoaderStub = &gDefaultDuiAppletLoaderStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-DuiWidget *DuiAppletLoader::loadApplet(const DuiAppletMetaData &metadata, DuiDataStore &dataStore, DuiDataAccess &settings)
-{
-    return gDuiAppletLoaderStub->loadApplet(metadata, dataStore, settings);
+DuiWidget * DuiAppletLoader::loadApplet(const DuiAppletMetaData &metadata, DuiDataStore &dataStore, DuiDataAccess &settings) {
+  return gDuiAppletLoaderStub->loadApplet(metadata, dataStore, settings);
 }
 
-DuiAppletLoader::DuiAppletLoader()
-{
-    gDuiAppletLoaderStub->DuiAppletLoaderConstructor();
+DuiAppletLoader::DuiAppletLoader() {
+  gDuiAppletLoaderStub->DuiAppletLoaderConstructor();
 }
 
 

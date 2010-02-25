@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include "duiapplethandleview.h"
+#include "duiapplethandleview_p.h"
 
 class DuiTestAppletHandleView : public DuiAppletHandleView
 {
@@ -30,21 +31,25 @@ class DuiTestAppletHandleView : public DuiAppletHandleView
 public:
     DuiTestAppletHandleView(DuiAppletHandle *handle);
     void click();
-    QSizeF askSizeHints(Qt::SizeHint which, QSizeF &constraint);
-    void appletPixmapModified(const QRectF &rect);
+};
+
+class DuiTestAppletHandleViewPrivate : public DuiAppletHandleViewPrivate
+{
+    Q_DECLARE_PUBLIC(DuiTestAppletHandleView)
+
+public:
+    DuiTestAppletHandleViewPrivate(DuiAppletHandle *handle);
+    virtual ~DuiTestAppletHandleViewPrivate();
+
+    //! \reimp
+    virtual void drawPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const;
+    //! \reimp_end
 };
 
 // Test case must inherit QObject
 class Ut_DuiAppletHandleView : public QObject
 {
     Q_OBJECT
-
-public:
-    static int returnedPixmapWidth;
-    static int returnedPixmapHeight;
-    static QRectF updatedRect;
-    static QRectF drawnTargetRect;
-    static QRectF drawnSourceRect;
 
 private:
     //! DuiAppletHandleView instance under testing.
@@ -57,19 +62,11 @@ signals:
 private slots:
     void initTestCase();
     void cleanupTestCase();
-
     void init();
     void cleanup();
 
-    void testScaling_data();
-    void testScaling();
-    void testSetGeometry();
-    void testReturnedSizeHintManipulation();
-    void testStateFeedback();
-    void testBrokenAppletDialog();
-    void testPixmapCleanup();
     void testSettingsDialog();
-    void testPixmapModified();
+    void testBrokenAppletDialog();
     void testInstallationFailedDialog();
 };
 #endif // UT_DUIAPPLETHANDLEVIEW

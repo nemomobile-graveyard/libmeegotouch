@@ -34,7 +34,7 @@ public:
     virtual ~DuiAppletHandleSWViewPrivate();
 
     //! \reimp
-    virtual void drawAppletPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const;
+    virtual void drawPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const;
     //! \reimp_end
 };
 

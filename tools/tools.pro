@@ -3,11 +3,13 @@ include(../mkspecs/common.pri)
 TEMPLATE = subdirs
 SUBDIRS = \
     duiapplettester \
+    duiapplicationextensiontester \
     duinotificationtool \
     dui-servicefwgen.d \
 
 macx:SUBDIRS -= duinotificationtool
 macx:SUBDIRS -= duiapplettester
+macx:SUBDIRS -= duiapplicationextensiontester
 
 QMAKE_EXTRA_TARGETS += check
 check.depends =

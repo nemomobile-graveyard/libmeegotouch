@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=DUIApplicationExtension
+Name=DemoExtension
+
+[X-DUI]
+DUIApplicationExtension-Interface=com.nokia.dui.core.DemoApplicationExtensionInterface/1.0
+DUIApplicationExtension-Extension=libdemoextension.so

@@ -1,6 +1,6 @@
 include(../common_top.pri)
 TARGET = ut_duiappletinstancemanager
-INCLUDEPATH += $$DUISRCDIR/mashup/appletcommunication $$DUISRCDIR/mashup/appletinterface $$DUISRCDIR/mashup/mashup $$DUISRCDIR/events
+INCLUDEPATH += $$DUISRCDIR/mashup/appletcommunication $$DUISRCDIR/mashup/appletinterface $$DUISRCDIR/mashup/mashup $$DUISRCDIR/events $$DUISRCDIR/applicationextension
 
 QT += core network gui svg dbus
 
@@ -21,6 +21,8 @@ HEADERS += \
     $$DUISRCDIR/mashup/mashup/duiapplethandle.h \
     $$DUISRCDIR/mashup/mashup/duiapplethandlemodel.h \
     $$DUISRCDIR/mashup/mashup/duiappletinstancemanagerdbusadaptor.h \
+    $$DUISRCDIR/applicationextension/duiextensionhandle.h \
+    $$DUISRCDIR/applicationextension/duiextensionhandlemodel.h \
     $$DUISRCDIR/events/duiorientationtracker.h
 
 include(../common_bot.pri)

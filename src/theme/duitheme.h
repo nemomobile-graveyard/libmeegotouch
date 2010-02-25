@@ -240,10 +240,12 @@ private:
     Q_DISABLE_COPY(DuiTheme)
     Q_DECLARE_PRIVATE(DuiTheme)
 
+#ifndef UNIT_TEST
     Q_PRIVATE_SLOT(d_func(), void themeChangedSlot(const QStringList &))
     Q_PRIVATE_SLOT(d_func(), void pixmapChangedSlot(const QString &, const QSize &, Qt::HANDLE))
     Q_PRIVATE_SLOT(d_func(), void pixmapCreatedSlot(const QString &, const QSize &, Qt::HANDLE))
     Q_PRIVATE_SLOT(d_func(), void localeChangedSlot())
+#endif
 
     friend class DuiApplicationPrivate;
 

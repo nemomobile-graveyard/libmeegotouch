@@ -17,210 +17,412 @@
 **
 ****************************************************************************/
 
-#ifndef DUIWIDGETCONTROLLER_STUB_H
-#define DUIWIDGETCONTROLLER_STUB_H
+#ifndef DUIWIDGETCONTROLLER_STUB
+#define DUIWIDGETCONTROLLER_STUB
 
-#include <duiwidgetcontroller.h>
+#include "duiwidgetcontroller.h"
 #include <stubbase.h>
 
-class DuiWidgetView;
-class QGraphicsItem;
 
-/**
- * DuiWidgetController mocker base class.
- * To mock DuiWidgetController operations, derive from this class
- * and implement the methods you want to mock. Instantiate your
- * derived mock class and assign it to gDuiWidgetControllerStub
- * global variable.
- */
-class DuiWidgetControllerStub : public StubBase
-{
-public:
-    virtual void duiWidgetControllerConstructor(QGraphicsItem *parent, const QString &viewType);
-    virtual void duiWidgetControllerDestructor();
+// 1. DECLARE STUB
+// FIXME - stubgen is not yet finished
+class DuiWidgetControllerStub : public StubBase {
+  public:
+   const DuiTheme::ViewType defaultType ;
+  virtual void DuiWidgetControllerConstructor(QGraphicsItem *parent);
+  virtual void DuiWidgetControllerConstructor(DuiWidgetModel *model, QGraphicsItem *parent);
+  virtual void DuiWidgetControllerDestructor();
+  virtual DuiAbstractWidgetAnimation * showAnimation();
+  virtual DuiAbstractWidgetAnimation * hideAnimation();
+  virtual void setModel(DuiWidgetModel *model);
+  virtual DuiWidgetModel * model();
+  virtual const DuiWidgetModel * model() const;
+  virtual DuiTheme::ViewType viewType() const;
+  virtual bool isActive() const;
+  virtual void setView(DuiWidgetView *view);
+  virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
+  virtual void setGeometry(const QRectF &rect);
+  virtual QRectF boundingRect() const;
+  virtual QPainterPath shape() const;
+  virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint) const;
+  virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+  virtual void changeEvent(QEvent *event);
+  virtual void setViewType(const DuiTheme::ViewType &type);
+  virtual void setActive(bool active);
+  virtual void setObjectName(const QString &name);
+  virtual void updateData(const QList<const char *> &modifications);
+  virtual void setupModel();
+  virtual void updateMicroFocus();
+  virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+  virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+  virtual void cancelEvent(DuiCancelEvent *event);
+  virtual void orientationChangeEvent(DuiOrientationChangeEvent *event);
+  virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
+  virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
+  virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
+  virtual DuiWidgetStyleContainer & style();
+  virtual const DuiWidgetStyleContainer & style() const;
+  virtual void DuiWidgetControllerConstructor(DuiWidgetControllerPrivate *dd, DuiWidgetModel *model, QGraphicsItem *parent);
+  virtual const DuiWidgetView * view() const;
+}; 
 
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
-    virtual void setObjectName(const QString &name);
-    virtual void setGeometry(const QRectF &rect);
-    virtual QRectF boundingRect() const;
-    virtual QPainterPath shape() const;
-    virtual void setView(DuiWidgetView *view);
+// 2. IMPLEMENT STUB
+void DuiWidgetControllerStub::DuiWidgetControllerConstructor(QGraphicsItem *parent) {
+  Q_UNUSED(parent);
 
+}
+void DuiWidgetControllerStub::DuiWidgetControllerConstructor(DuiWidgetModel *model, QGraphicsItem *parent) {
+  Q_UNUSED(model);
+  Q_UNUSED(parent);
 
-    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint);
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
-};
+}
+void DuiWidgetControllerStub::DuiWidgetControllerDestructor() {
 
-void DuiWidgetControllerStub::duiWidgetControllerConstructor(QGraphicsItem *parent, const QString &viewType)
-{
-    Q_UNUSED(parent);
-    Q_UNUSED(viewType);
+}
+DuiAbstractWidgetAnimation * DuiWidgetControllerStub::showAnimation() {
+  stubMethodEntered("showAnimation");
+  return stubReturnValue<DuiAbstractWidgetAnimation *>("showAnimation");
 }
 
-void DuiWidgetControllerStub::duiWidgetControllerDestructor()
-{
+DuiAbstractWidgetAnimation * DuiWidgetControllerStub::hideAnimation() {
+  stubMethodEntered("hideAnimation");
+  return stubReturnValue<DuiAbstractWidgetAnimation *>("hideAnimation");
 }
 
-void DuiWidgetControllerStub::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QPainter *>(painter));
-    params.append(new Parameter<const QStyleOptionGraphicsItem *>(option));
-    params.append(new Parameter<QWidget *>(widget));
-    stubMethodEntered("paint", params);
+void DuiWidgetControllerStub::setModel(DuiWidgetModel *model) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<DuiWidgetModel * >(model));
+  stubMethodEntered("setModel",params);
 }
 
-void DuiWidgetControllerStub::setObjectName(const QString &name)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<const QString &>(name));
-    stubMethodEntered("setObjectName", params);
+DuiWidgetModel * DuiWidgetControllerStub::model() {
+  stubMethodEntered("model");
+  return stubReturnValue<DuiWidgetModel *>("model");
 }
 
-void DuiWidgetControllerStub::setGeometry(const QRectF &rect)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<const QRectF &>(rect));
-    stubMethodEntered("setGeometry", params);
+const DuiWidgetModel * DuiWidgetControllerStub::model() const {
+  stubMethodEntered("model");
+  return stubReturnValue<const DuiWidgetModel *>("model");
 }
 
-QRectF DuiWidgetControllerStub::boundingRect() const
-{
-    QList<ParameterBase *> params;
-    stubMethodEntered("boundingRect", params);
-    return stubReturnValue<QRectF>(QString("boundingRect"));
+DuiTheme::ViewType DuiWidgetControllerStub::viewType() const {
+  stubMethodEntered("viewType");
+  return stubReturnValue<DuiTheme::ViewType>("viewType");
 }
 
-QPainterPath DuiWidgetControllerStub::shape() const
-{
-    stubMethodEntered("shape");
-    return stubReturnValue<QPainterPath>("shape");
+bool DuiWidgetControllerStub::isActive() const {
+  stubMethodEntered("isActive");
+  return stubReturnValue<bool>("isActive");
 }
 
-QSizeF DuiWidgetControllerStub::sizeHint(Qt::SizeHint which, const QSizeF &constraint)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<Qt::SizeHint>(which));
-    params.append(new Parameter<const QSizeF &>(constraint));
-    stubMethodEntered("sizeHint", params);
-    return stubReturnValue<QSizeF>(QString("sizeHint"));
+void DuiWidgetControllerStub::setView(DuiWidgetView *view) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<DuiWidgetView * >(view));
+  stubMethodEntered("setView",params);
 }
 
-void DuiWidgetControllerStub::setView(DuiWidgetView *view)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<DuiWidgetView *>(view));
-    stubMethodEntered("setView", params);
+void DuiWidgetControllerStub::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QPainter * >(painter));
+  params.append( new Parameter<const QStyleOptionGraphicsItem * >(option));
+  params.append( new Parameter<QWidget * >(widget));
+  stubMethodEntered("paint",params);
 }
 
-void DuiWidgetControllerStub::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QGraphicsSceneMouseEvent *>(event));
-    stubMethodEntered("mousePressEvent", params);
+void DuiWidgetControllerStub::setGeometry(const QRectF &rect) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const QRectF & >(rect));
+  stubMethodEntered("setGeometry",params);
 }
 
-void DuiWidgetControllerStub::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QGraphicsSceneMouseEvent *>(event));
-    stubMethodEntered("mouseReleaseEvent", params);
+QRectF DuiWidgetControllerStub::boundingRect() const {
+  stubMethodEntered("boundingRect");
+  return stubReturnValue<QRectF>("boundingRect");
 }
 
-void DuiWidgetControllerStub::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QGraphicsSceneMouseEvent *>(event));
-    stubMethodEntered("mouseMoveEvent", params);
+QPainterPath DuiWidgetControllerStub::shape() const {
+  stubMethodEntered("shape");
+  return stubReturnValue<QPainterPath>("shape");
 }
 
-void DuiWidgetControllerStub::resizeEvent(QGraphicsSceneResizeEvent *event)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<QGraphicsSceneResizeEvent *>(event));
-    stubMethodEntered("resizeEvent", params);
+QSizeF DuiWidgetControllerStub::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<Qt::SizeHint >(which));
+  params.append( new Parameter<const QSizeF & >(constraint));
+  stubMethodEntered("sizeHint",params);
+  return stubReturnValue<QSizeF>("sizeHint");
 }
 
+void DuiWidgetControllerStub::resizeEvent(QGraphicsSceneResizeEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGraphicsSceneResizeEvent * >(event));
+  stubMethodEntered("resizeEvent",params);
+}
+
+void DuiWidgetControllerStub::changeEvent(QEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QEvent * >(event));
+  stubMethodEntered("changeEvent",params);
+}
+
+void DuiWidgetControllerStub::setViewType(const DuiTheme::ViewType &type) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const DuiTheme::ViewType & >(type));
+  stubMethodEntered("setViewType",params);
+}
+
+void DuiWidgetControllerStub::setActive(bool active) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<bool >(active));
+  stubMethodEntered("setActive",params);
+}
+
+void DuiWidgetControllerStub::setObjectName(const QString &name) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const QString & >(name));
+  stubMethodEntered("setObjectName",params);
+}
+
+void DuiWidgetControllerStub::updateData(const QList<const char *> &modifications) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const QList<const char *> & >(modifications));
+  stubMethodEntered("updateData",params);
+}
+
+void DuiWidgetControllerStub::setupModel() {
+  stubMethodEntered("setupModel");
+}
+
+void DuiWidgetControllerStub::updateMicroFocus() {
+  stubMethodEntered("updateMicroFocus");
+}
+
+void DuiWidgetControllerStub::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGraphicsSceneMouseEvent * >(event));
+  stubMethodEntered("mousePressEvent",params);
+}
+
+void DuiWidgetControllerStub::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGraphicsSceneMouseEvent * >(event));
+  stubMethodEntered("mouseReleaseEvent",params);
+}
+
+void DuiWidgetControllerStub::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGraphicsSceneMouseEvent * >(event));
+  stubMethodEntered("mouseMoveEvent",params);
+}
+
+void DuiWidgetControllerStub::cancelEvent(DuiCancelEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<DuiCancelEvent * >(event));
+  stubMethodEntered("cancelEvent",params);
+}
+
+void DuiWidgetControllerStub::orientationChangeEvent(DuiOrientationChangeEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<DuiOrientationChangeEvent * >(event));
+  stubMethodEntered("orientationChangeEvent",params);
+}
+
+bool DuiWidgetControllerStub::sceneEventFilter(QGraphicsItem *watched, QEvent *event) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGraphicsItem * >(watched));
+  params.append( new Parameter<QEvent * >(event));
+  stubMethodEntered("sceneEventFilter",params);
+  return stubReturnValue<bool>("sceneEventFilter");
+}
+
+QVariant DuiWidgetControllerStub::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGraphicsItem::GraphicsItemChange >(change));
+  params.append( new Parameter<const QVariant & >(value));
+  stubMethodEntered("itemChange",params);
+  return stubReturnValue<QVariant>("itemChange");
+}
+
+QVariant DuiWidgetControllerStub::inputMethodQuery(Qt::InputMethodQuery query) const {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<Qt::InputMethodQuery >(query));
+  stubMethodEntered("inputMethodQuery",params);
+  return stubReturnValue<QVariant>("inputMethodQuery");
+}
+
+DuiWidgetStyleContainer & DuiWidgetControllerStub::style() {
+  stubMethodEntered("style");
+  return *stubReturnValue<DuiWidgetStyleContainer *>("style");
+}
+
+const DuiWidgetStyleContainer & DuiWidgetControllerStub::style() const {
+  stubMethodEntered("style");
+  return *stubReturnValue<const DuiWidgetStyleContainer *>("style");
+}
+
+void DuiWidgetControllerStub::DuiWidgetControllerConstructor(DuiWidgetControllerPrivate *dd, DuiWidgetModel *model, QGraphicsItem *parent) {
+  Q_UNUSED(dd);
+  Q_UNUSED(model);
+  Q_UNUSED(parent);
+
+}
+const DuiWidgetView * DuiWidgetControllerStub::view() const {
+  stubMethodEntered("view");
+  return stubReturnValue<const DuiWidgetView *>("view");
+}
+
+
+
+// 3. CREATE A STUB INSTANCE
 DuiWidgetControllerStub gDefaultDuiWidgetControllerStub;
+DuiWidgetControllerStub* gDuiWidgetControllerStub = &gDefaultDuiWidgetControllerStub;
 
-/**
- * This is the mock class instance used in the mocking. If you want to alter mocking behaviour
- * derive your mocker from DuiWidgetControllerStub, implement the methods you want to
- * affect, create an instance of your mocker class and assign the instance into this global variable.
- */
-DuiWidgetControllerStub *gDuiWidgetControllerStub = &gDefaultDuiWidgetControllerStub;
 
-/**
- * These are the stub method implementations of DuiWidgetController. They will
- * call the mocking methods of the gDuiWidgetControllerStub.
- */
-DuiWidgetController::DuiWidgetController(QGraphicsItem *parent, const QString &viewType)
-    : DuiWidget(parent)
-{
-    gDuiWidgetControllerStub->duiWidgetControllerConstructor(parent, viewType);
+// 4. CREATE A PROXY WHICH CALLS THE STUB
+DuiWidgetController::DuiWidgetController(QGraphicsItem *parent) {
+  gDuiWidgetControllerStub->DuiWidgetControllerConstructor(parent);
 }
 
-DuiWidgetController::~DuiWidgetController()
-{
-    gDuiWidgetControllerStub->duiWidgetControllerDestructor();
+DuiWidgetController::DuiWidgetController(DuiWidgetModel *model, QGraphicsItem *parent) {
+  gDuiWidgetControllerStub->DuiWidgetControllerConstructor(model, parent);
 }
 
-void DuiWidgetController::setGeometry(const QRectF &rect)
-{
-    gDuiWidgetControllerStub->setGeometry(rect);
+DuiWidgetController::~DuiWidgetController() {
+  gDuiWidgetControllerStub->DuiWidgetControllerDestructor();
 }
 
-void DuiWidgetController::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
-{
-    gDuiWidgetControllerStub->paint(painter, option, widget);
+DuiAbstractWidgetAnimation * DuiWidgetController::showAnimation() {
+  return gDuiWidgetControllerStub->showAnimation();
 }
 
-void DuiWidgetController::setObjectName(const QString &name)
-{
-    gDuiWidgetControllerStub->setObjectName(name);
+DuiAbstractWidgetAnimation * DuiWidgetController::hideAnimation() {
+  return gDuiWidgetControllerStub->hideAnimation();
 }
 
-QRectF DuiWidgetController::boundingRect() const
-{
-    return gDuiWidgetControllerStub->boundingRect();
+void DuiWidgetController::setModel(DuiWidgetModel *model) {
+  gDuiWidgetControllerStub->setModel(model);
 }
 
-QPainterPath DuiWidgetController::shape() const
-{
-    return gDuiWidgetControllerStub->shape();
+DuiWidgetModel * DuiWidgetController::model() {
+  return gDuiWidgetControllerStub->model();
 }
 
-QSizeF DuiWidgetController::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
-{
-    return gDuiWidgetControllerStub->sizeHint(which, constraint);
+const DuiWidgetModel * DuiWidgetController::model() const {
+  return gDuiWidgetControllerStub->model();
 }
 
-void DuiWidgetController::setView(DuiWidgetView *view)
-{
-    gDuiWidgetControllerStub->setView(view);
+DuiTheme::ViewType DuiWidgetController::viewType() const {
+  return gDuiWidgetControllerStub->viewType();
 }
 
-void DuiWidgetController::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    gDuiWidgetControllerStub->mousePressEvent(event);
+bool DuiWidgetController::isActive() const {
+  return gDuiWidgetControllerStub->isActive();
 }
 
-void DuiWidgetController::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    gDuiWidgetControllerStub->mouseReleaseEvent(event);
+void DuiWidgetController::setView(DuiWidgetView *view) {
+  gDuiWidgetControllerStub->setView(view);
 }
 
-void DuiWidgetController::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    gDuiWidgetControllerStub->mouseMoveEvent(event);
+void DuiWidgetController::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) {
+  gDuiWidgetControllerStub->paint(painter, option, widget);
 }
 
-void DuiWidgetController::resizeEvent(QGraphicsSceneResizeEvent *event)
-{
-    gDuiWidgetControllerStub->resizeEvent(event);
+void DuiWidgetController::setGeometry(const QRectF &rect) {
+  gDuiWidgetControllerStub->setGeometry(rect);
 }
+
+QRectF DuiWidgetController::boundingRect() const {
+  return gDuiWidgetControllerStub->boundingRect();
+}
+
+QPainterPath DuiWidgetController::shape() const {
+  return gDuiWidgetControllerStub->shape();
+}
+
+QSizeF DuiWidgetController::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const {
+  return gDuiWidgetControllerStub->sizeHint(which, constraint);
+}
+
+void DuiWidgetController::resizeEvent(QGraphicsSceneResizeEvent *event) {
+  gDuiWidgetControllerStub->resizeEvent(event);
+}
+
+void DuiWidgetController::changeEvent(QEvent *event) {
+  gDuiWidgetControllerStub->changeEvent(event);
+}
+
+void DuiWidgetController::setViewType(const DuiTheme::ViewType &type) {
+  gDuiWidgetControllerStub->setViewType(type);
+}
+
+void DuiWidgetController::setActive(bool active) {
+  gDuiWidgetControllerStub->setActive(active);
+}
+
+void DuiWidgetController::setObjectName(const QString &name) {
+  gDuiWidgetControllerStub->setObjectName(name);
+}
+
+void DuiWidgetController::updateData(const QList<const char *> &modifications) {
+  gDuiWidgetControllerStub->updateData(modifications);
+}
+
+void DuiWidgetController::setupModel() {
+  gDuiWidgetControllerStub->setupModel();
+}
+
+void DuiWidgetController::updateMicroFocus() {
+  gDuiWidgetControllerStub->updateMicroFocus();
+}
+
+void DuiWidgetController::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+  gDuiWidgetControllerStub->mousePressEvent(event);
+}
+
+void DuiWidgetController::mouseReleaseEvent(QGraphicsSceneMouseEvent *event) {
+  gDuiWidgetControllerStub->mouseReleaseEvent(event);
+}
+
+void DuiWidgetController::mouseMoveEvent(QGraphicsSceneMouseEvent *event) {
+  gDuiWidgetControllerStub->mouseMoveEvent(event);
+}
+
+void DuiWidgetController::cancelEvent(DuiCancelEvent *event) {
+  gDuiWidgetControllerStub->cancelEvent(event);
+}
+
+void DuiWidgetController::orientationChangeEvent(DuiOrientationChangeEvent *event) {
+  gDuiWidgetControllerStub->orientationChangeEvent(event);
+}
+
+bool DuiWidgetController::sceneEventFilter(QGraphicsItem *watched, QEvent *event) {
+  return gDuiWidgetControllerStub->sceneEventFilter(watched, event);
+}
+
+QVariant DuiWidgetController::itemChange(GraphicsItemChange change, const QVariant &value) {
+  return gDuiWidgetControllerStub->itemChange(change, value);
+}
+
+QVariant DuiWidgetController::inputMethodQuery(Qt::InputMethodQuery query) const {
+  return gDuiWidgetControllerStub->inputMethodQuery(query);
+}
+
+DuiWidgetStyleContainer & DuiWidgetController::style() {
+  return gDuiWidgetControllerStub->style();
+}
+
+const DuiWidgetStyleContainer & DuiWidgetController::style() const {
+  return gDuiWidgetControllerStub->style();
+}
+
+DuiWidgetController::DuiWidgetController(DuiWidgetControllerPrivate *dd, DuiWidgetModel *model, QGraphicsItem *parent) {
+  gDuiWidgetControllerStub->DuiWidgetControllerConstructor(dd, model, parent);
+}
+
+const DuiWidgetView * DuiWidgetController::view() const {
+  return gDuiWidgetControllerStub->view();
+}
+
 
 #endif

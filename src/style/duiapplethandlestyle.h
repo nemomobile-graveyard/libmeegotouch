@@ -20,35 +20,15 @@
 #ifndef DUIAPPLETHANDLESTYLE_H
 #define DUIAPPLETHANDLESTYLE_H
 
-#include <duiwidgetstyle.h>
-#include <QPoint>
-#include <QSizeF>
+#include "duiextensionhandlestyle.h"
 
-class DUI_EXPORT DuiAppletHandleStyle : public DuiWidgetStyle
+class DuiAppletHandleStyle : public DuiExtensionHandleStyle
 {
     Q_OBJECT
     DUI_STYLE(DuiAppletHandleStyle)
-
-    //! The image to be drawn on top of the applet when it is in a broken state
-    DUI_STYLE_PTR_ATTRIBUTE(QPixmap *, brokenAppletImage, BrokenAppletImage)
-
-    //! Offset of the broken applet image relative to the top right corner of the applet
-    DUI_STYLE_ATTRIBUTE(QPoint, brokenAppletImageOffset, BrokenAppletImageOffset)
-
-    //! The radius of the blur to be applied in a broken applet
-    DUI_STYLE_ATTRIBUTE(int, brokenAppletBlurRadius, BrokenAppletBlurRadius)
-
-    //! The opacity of the applet when it is in a broken state
-    DUI_STYLE_ATTRIBUTE(qreal, brokenAppletOpacity, BrokenAppletOpacity)
-
-    //! The minimum size of the applet even when the applet states it could be smaller
-    DUI_STYLE_ATTRIBUTE(QSizeF, minimumAppletSize, MinimumAppletSize)
-
-    //! The maximum size of the applet even when the applet states it could be bigger
-    DUI_STYLE_ATTRIBUTE(QSizeF, maximumAppletSize, MaximumAppletSize)
 };
 
-class DUI_EXPORT DuiAppletHandleStyleContainer : public DuiWidgetStyleContainer
+class DuiAppletHandleStyleContainer : public DuiExtensionHandleStyleContainer
 {
     DUI_STYLE_CONTAINER(DuiAppletHandleStyle)
 };

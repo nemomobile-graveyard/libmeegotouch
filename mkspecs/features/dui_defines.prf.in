@@ -40,6 +40,9 @@ unix {
     DUI_APPLET_DATA_DIR = $$DUI_INSTALL_DATA/dui/applets
     DUI_APPLET_SETTINGS_DIR = $$DUI_INSTALL_DATA/dui/applets/settings
 
+    DUI_APPLICATION_EXTENSION_DIR = $$DUI_PREFIX/lib/dui/applicationextensions
+    DUI_APPLICATION_EXTENSION_DATA_DIR = $$DUI_INSTALL_DATA/dui/applicationextensions
+
     DUI_NOTIFICATIONS_EVENT_TYPES_DIR=$$DUI_INSTALL_DATA/dui/notifications/eventtypes
     DUI_XDG_DIR = $$DUI_INSTALL_SYSCONF/xdg
     DUI_TRANSLATION_DIR = $$DUI_INSTALL_DATA/l10n/dui
