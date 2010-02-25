@@ -675,6 +675,12 @@ QPixmap QtMaemo6StylePrivate::borderCroppedPixmap(const DuiScalableImage* image,
                                                   int borders,
                                                   int borderLines) const
 {
+    QPixmap finalPix;
+    quintptr pImage = reinterpret_cast<quintptr>(image);
+    QString cacheKey = QString("%1_%2_%3_%4_%5").arg(pImage).arg(size.width()).arg(size.height()).arg(borders).arg(borderLines);
+    if(QPixmapCache::find(cacheKey, finalPix))
+        return finalPix;
+
     int usedLeftBorder, usedTopBorder, usedRightBorder, usedBottomBorder;
     image->borders(&usedLeftBorder, &usedTopBorder, &usedRightBorder, &usedBottomBorder);
 
@@ -698,7 +704,7 @@ QPixmap QtMaemo6StylePrivate::borderCroppedPixmap(const DuiScalableImage* image,
     QColor borderColor = pix.copy(QRect(pix.size().width() / 2, 0, 1, 1)).toImage().pixel(0,0);
 
     //cut away borders
-    QPixmap finalPix = pix.copy(QRect(QPoint(usedLeftBorder,usedTopBorder), size));
+    finalPix = pix.copy(QRect(QPoint(usedLeftBorder,usedTopBorder), size));
 
     //draw the closing lines
     QPainter finalPainter(&finalPix);
@@ -711,6 +717,8 @@ QPixmap QtMaemo6StylePrivate::borderCroppedPixmap(const DuiScalableImage* image,
         finalPainter.drawLine(QPoint(finalPix.width()-1, 0), QPoint(finalPix.width()-1, finalPix.height()));
     if(borderLines & bottomBorder)
         finalPainter.drawLine(QPoint(0, finalPix.height()-1), QPoint(finalPix.width(), finalPix.height()-1));
+    
+    QPixmapCache::insert(cacheKey, finalPix);
     return finalPix;
 }
 
