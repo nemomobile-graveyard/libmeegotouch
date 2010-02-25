@@ -423,7 +423,6 @@ void Ft_DuiStyleSheetParser::test_constants()
     QCOMPARE(info->selectors[0]->attributes()->value(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-void"))->name, QString(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-void")));
     QCOMPARE(info->selectors[0]->attributes()->value(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-void"))->value, QString(""));
     QCOMPARE(info->selectors[0]->attributes()->value(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-logical-black"))->name, QString(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-logical-black")));
-    qDebug(qPrintable(info->selectors[0]->attributes()->value(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-logical-black"))->value));
     QCOMPARE(info->selectors[0]->attributes()->value(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-logical-black"))->value, QString("#000000"));
     QCOMPARE(info->selectors[0]->attributes()->value(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-logical-green"))->name, QString(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-logical-green")));
     QCOMPARE(info->selectors[0]->attributes()->value(DuiStyleSheetAttribute::attributeNameToPropertyName("attr-logical-green"))->value, QString("#00ff00"));
