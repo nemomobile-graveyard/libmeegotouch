@@ -263,7 +263,11 @@ DuiThemeImagesDirectory::DuiThemeImagesDirectory(const QString &path, const QStr
                     if(file.open(QIODevice::ReadOnly)) {
                         while(!file.atEnd()) {
                             QString id = file.readLine().trimmed();
-                            imageIds.insert(id, new SvgImageResource(id, i->absoluteFilePath()));
+                            if (imageIds.contains(id)) {
+                                duiWarning("DuiThemeDaemon") << "Path" << path + QDir::separator() + "dui" << "contains multiple images with id" << id;
+                            } else {
+                                imageIds.insert(id, new SvgImageResource(id, i->absoluteFilePath()));
+                            }
                         }
                     }
                 }
