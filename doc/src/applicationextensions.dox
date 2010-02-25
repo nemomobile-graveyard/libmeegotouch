@@ -1,6 +1,294 @@
 /*! \page applicationextensions Application extension development How-To
 
-Application extension is a way to extend the functionality of an application. They can be embedded into an application extension area.
+Application extensions are plugins that can be embedded into an application extension area. They can be run either in the same process as the application or a separate process in the application extension runner. An application extension can optionally have an UI.
+
+\section appextensiondevenv Development environment
+
+For developing application extensions you need:
+- libdui-dev
+
+\section appextensiondevelopment Developing application extensions and applications that use them
+
+From a developers point of view an application extension consists of a shared library, a desktop entry file and possibly some resources (such as images).
+All of these are put into a debian package to enable installation of application extensions to devices.
+
+An application extension is implemented as a Qt plugin. The interface class used as the base class of all application extensions is \c DuiApplicationExtensionInterface.
+The interface provides a method for initializing the plugin, which must be implemented by the application extension:
+\code bool DuiApplicationExtensionInterface::initialize() \endcode
+The boolean return value should indicate whether the initialization was successful or not.
+
+The interface also has an method for returning the widget used for the UI of the application extension:
+\code DuiWidget *widget() \endcode
+In this method you need to return a pointer to the \c DuiWidget of your application extension. In case an UI is not required, this method can be left out.
+\b Note: The ownership of the \c DuiWidget is left to the application extension, so you should destroy the widget yourself in the destructor of the extension.
+
+To use application extensions of particular interface in an application, an instance of \c DuiApplicationExtensionArea is created:
+
+\code
+new DuiApplicationExtensionArea(interface, enableInProcessExtensions, parent);
+\endcode
+
+where interface is the name of the interface the extensions in the area implement, enableInProcessExtensions is a boolean which tells whether
+the area can load in-process extensions and parent is the parent QGraphicsItem.
+
+\subsection appextensionprocdiff Differences between in-process and out-of-process application extensions
+
+Developing application extensions and the application that uses them is done differently depending whether the extensions can be run in-process or out-of-process.
+
+In-process
+- direct communication between application and extension supported by subclassing DuiApplicationExtensionInterface
+- the extension can open dialogs and views
+- the extension can extend the applications UI
+- the extension can crash the host application
+
+Out-of-process
+- direct communication between application and extension not supported
+- the extension can not open dialogs or views
+- the extension can not draw outside the extensions area
+- the extension can not crash the host application
+
+\subsection appextensionexample Example of an in-process extension
+\code
+// demoextensioninterface.h
+#ifndef DEMOEXTENSIONINTERFACE_H
+#define DEMOEXTENSIONINTERFACE_H
+
+#include <duiapplicationextensioninterface.h>
+
+class DemoExtensionInterface : public DuiApplicationExtensionInterface
+{
+    Q_INTERFACES(DuiApplicationExtensionInterface)
+
+public:
+    virtual void demoExtensionSpecificOperation() = 0;
+};
+
+Q_DECLARE_INTERFACE(DemoExtensionInterface, "com.nokia.dui.core.DemoExtensionInterface/1.0")
+
+#endif
+\endcode
+
+\code
+// demoextension.h
+#ifndef DEMOEXTENSION_H_
+#define DEMOEXTENSION_H_
+
+#include <QObject>
+#include <DuiApplicationExtensionInterface>
+
+class DuiButton;
+
+class DemoApplicationExtension : public QObject, public DemoExtensionInterface
+{
+    Q_OBJECT
+    Q_INTERFACES(DemoExtensionInterface DuiApplicationExtensionInterface)
+
+public:
+    DemoApplicationExtension();
+    virtual ~DemoApplicationExtension();
+
+    virtual void demoExtensionSpecificOperation();
+
+    //! methods derived from DuiApplicationExtensionInterface
+    virtual bool initialize();
+    virtual DuiWidget *widget();
+
+private:
+    DuiButton *button;
+};
+
+#endif
+\endcode
+
+\b Note that the Q_INTERFACES list must include both the demo specific interface DemoExtensionInterface and the base interface DuiApplicationExtensionInterface.
+
+\code
+ // demoextension.cpp
+#include <DuiButton>
+#include "demoextension.h"
+#include <DuiLibrary>
+
+DUI_LIBRARY
+Q_EXPORT_PLUGIN2(demoextension, DemoApplicationExtension)
+
+DemoApplicationExtension::DemoApplicationExtension() : button(0)
+{
+}
+
+DemoApplicationExtension::~DemoApplicationExtension()
+{
+    delete button;
+}
+
+void DemoApplicationExtension::demoExtensionSpecificOperation()
+{
+    // do something specific to the demo extension interface
+}
+
+bool DemoApplicationExtension::initialize()
+{
+    button = new DuiButton("Hello World");
+
+    return true;
+}
+
+DuiWidget *DemoApplicationExtension::widget()
+{
+    return button;
+}
+
+\endcode
+
+In the application that wants to use the extensions implementing the com.nokia.dui.core.DemoExtensionInterface/1.0 defined above,
+the application should create an application extension area like this:
+
+\code
+#include <duiapplicationextensionarea.h>
+#include <demoextensioninterface.h>
+
+...
+void DemoApp::createExtensionArea()
+{
+    DuiApplicationExtensionArea *extensionArea =
+        new DuiApplicationExtensionArea("com.nokia.dui.core.DemoApplicationExtensionInterface/1.0");
+    layout->addItem(extensionArea);
+
+    // Listen to signals about new and removed extensions
+    connect(area, SIGNAL(extensionInstantiated(DuiApplicationExtensionInterface*)),
+            this, SLOT(addExtension(DuiApplicationExtensionInterface*)));
+    connect(area, SIGNAL(extensionRemoved(DuiApplicationExtensionInterface*)),
+            this, SLOT(removeExtension(DuiApplicationExtensionInterface*)));
+}
+
+void DemoApp::addExtension(DuiApplicationExtensionInterface *extension)
+{
+    DemoExtensionInterface *demoExtension = static_cast<DemoExtensionInterface *>(extension);
+
+    // do some extension interface specific things with the extension
+    demoExtension->demoExtensionSpecificOperation();
+}
+...
+
+\endcode
+
+\subsection appextensiondesktopfile Application extension desktop file
+
+Application extension must have a \c .desktop file written according to <a href="http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec">freedesktop.org desktop entry specification</a>.
+The keys \c Type and \c Name are required as specified in the desktop entry specification.
+The \c Exec key is optionally used to specify a runner binary (usually duiapplicationextensionrunner) which is launched in separate process to run the application extension binary. If the key is not used, the application extension is run inside the host process.
+
+Application extensions extend the specification by defining a new type \b DuiApplicationExtension and the following new keys that are put inside the X-DUI group:
+
+<table>
+<tr>
+ <th>Key</th>
+ <th>Description</th>
+ <th>Value Type</th>
+ <th>Required</th>
+</tr>
+<tr>
+  <td>DUIApplicationExtension-Interface</td>
+  <td>Defines the name of the interface implemented by this extension.</td>
+  <td>string</td>
+  <td>YES</td>
+</tr>
+<tr>
+  <td>DUIApplicationExtension-Extension</td>
+  <td>Defines the application extension binary. This binary needs to be located in \c /usr/lib/dui/applicationextensions/ - directory.</td>
+  <td>string</td>
+  <td>YES</td>
+</tr>
+<tr>
+  <td>DUIApplicationExtension-Identifier</td>
+  <td>Defines an identifier for the application extension.
+  The identifier is used for example defining the application extension specific style resource locations when it's run as out-of-process.</td>
+  <td>string (can contain characters [a-zA-Z0-9_-])</td>
+  <td>NO</td>
+</tr>
+</table>
+
+Following is an example of application extension desktop file:
+
+\code
+[Desktop Entry]
+Type=DuiApplicationExtension
+Name=ExampleExtension
+Exec=duiapplicationextensionrunner
+
+[X-DUI]
+DUIApplicationExtension-Interface=com.nokia.dui.core.DemoExtensionInterface/1.0
+DUIApplicationExtension-Extension=libdemoextension.so
+\endcode
+
+\subsection appextensioncontainer Container communication API
+
+Application extension widgets are by default reparented to a DuiContainer.
+DuiContainer can expose optional application extension information on its titlebar, including icon, title and additional informative text.
+To make an application extension not reside in a container, set the container-mode property of the application extension area to false:
+
+\code
+DuiApplicationExtensionAreaStyle {
+    container-mode: false;
+}
+\endcode
+
+Use following properties and signals in your application extension widget class to communicate container information:
+
+\code
+Q_PROPERTY(QString applicationExtensionIcon  READ icon  WRITE setIcon)
+Q_PROPERTY(QString applicationExtensionTitle READ title WRITE setTitle)
+Q_PROPERTY(QString applicationExtensionText  READ text  WRITE setText)
+
+signals:
+    // change icon in DuiContainer
+    void applicationExtensionIconChanged(QString newIcon);
+
+    // change title in DuiContainer
+    void applicationExtensionTitleChanged(QString newTitle);
+
+    // change additional text in DuiContainer
+    void applicationExtensionTextChanged(QString newText);
+\endcode
+
+The property and signal names must be as stated above. The property access function names can differ.
+
+\subsection appextensionidentifier Application extension identifier
+
+Every application extension has an application extension identifier string that uniquely identifies the application extension.
+
+The application extension identifier is determined like this:
+- if an identifier (<tt>DUIApplicationExtension-Identifier</tt>) is specified in the  \ref appextensiondesktopfile desktop file (and it is valid), that is used
+- otherwise, an identifier is extracted from the application extension shared library name:
+  assuming your application extension is packaged to a shared library called <tt>lib<strong>exampleapplicationextension</strong>.so</tt>, the identifier will be <strong>exampleapplicationextension</strong>.
+
+\subsection appextensionstyling Application extension styling
+
+Application extensions can define their own styles just like any other application in the DUI world.
+Styling is done with style sheets and images in the \ref styling "usual way".
+The only important thing with application extensions is the location of the style resources.
+
+The \ref appextensionidentifier "application extension identifier" is used in the construction of the resource location when the application extension is run as out-of-process.
+The application extension identifier is used as the application name in the directory name.
+
+When the application extension is run as in-process, the resource location is constructed from the library name.
+
+See \ref theme_structure for more information about the directory locations.
+
+\section appextensiontools Tools to help development
+The <tt>dui-dev-tools</tt> package includes a tool called <tt>duiapplicationextensiontester</tt>. This tool can be used to test application extensions that have an UI.
+The tool loads application extensions implementing a specified interface to a window where they can be tested by interacting with them and visually checking the results.
+It's also easy to run the extension in a debugger with this tool.
+
+You can load an application extension with the tool by giving the command:
+
+\code
+duiapplicationextensiontester <interfacename>
+\endcode
+
+where &lt;interfacename&gt; is the interface the extensions to be loaded must implement.
+
+\b Note that the application extensions must be installed to the system before \c duiapplicationextensiontester can use them.
+
 
 */
 
