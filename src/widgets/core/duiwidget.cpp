@@ -302,14 +302,11 @@ bool DuiWidget::event(QEvent *event)
 
         // now I add AcitonEvnt here for Qt 4.5 not provide this in QGraphicsWidget, maybe changed later
         actionEvent((QActionEvent *)event);
-        return true;
     } else if (type == DuiCancelEvent::eventNumber()) {
         cancelEvent((DuiCancelEvent *)event);
-        return true;
     } else if (type == DuiOrientationChangeEvent::eventNumber()) {
         DuiOrientationChangeEvent *oce = static_cast<DuiOrientationChangeEvent *>(event);
         orientationChangeEvent(oce);
-        return true;
     } else if (type == QEvent::LanguageChange) {
         // retranslate the own ui strings
         retranslateUi();
@@ -325,14 +322,10 @@ bool DuiWidget::event(QEvent *event)
                 qApp->sendEvent(widget, &ev);
             }
         }
-
-        return true;
     } else if (type == DuiOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<DuiOnDisplayChangeEvent *>(event));
-        return true;
-    } else {
-        return QGraphicsWidget::event(event);
     }
+    return QGraphicsWidget::event(event);
 }
 
 void DuiWidget::cancelEvent(DuiCancelEvent *event)
