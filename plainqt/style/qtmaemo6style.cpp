@@ -850,11 +850,11 @@ void QtMaemo6Style::polish(QWidget *widget)
         }
         QSize navigationBarSize = QSize( navigationBarHeight, navigationBarHeight );
         if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Close") {
-            const QPixmap *closePixmap = DuiTheme::pixmap("Icon-close", navigationBarSize);
+            const QPixmap *closePixmap = DuiTheme::pixmapCopy("Icon-close", navigationBarSize);
             lbl->setPixmap(*closePixmap);
         }
         if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Home") {
-            const QPixmap *closePixmap = DuiTheme::pixmap("Icon-home", navigationBarSize);
+            const QPixmap *closePixmap = DuiTheme::pixmapCopy("Icon-home", navigationBarSize);
             lbl->setPixmap(*closePixmap);
         }
     }
@@ -1734,7 +1734,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             // Draw title
             if ((groupBox->subControls & QStyle::SC_GroupBoxLabel) && !groupBox->text.isEmpty()) {
 
-                QColor headerColor = Qt::black; //FIXME: = headerLabelStyle->color();
+                QColor headerColor = Qt::white; //FIXME: = headerLabelStyle->color();
                 if (headerColor.isValid()) {
                     p->setPen(headerColor);
                 }

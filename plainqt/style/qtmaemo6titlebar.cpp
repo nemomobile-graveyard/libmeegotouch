@@ -22,6 +22,7 @@
 #include "qtmaemo6style_p.h"
 
 #include "qtmaemo6clicklabel.h"
+#include <QCoreApplication>
 #include <QToolButton>
 #include <QPushButton>
 #include <QHBoxLayout>
@@ -60,7 +61,7 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
         static_cast<const DuiApplicationMenuButtonStyle *>(QtMaemo6StylePrivate::duiStyle(option.state,
                 "DuiApplicationMenuButtonStyle", "NavigationBarMenuButton"));
     if (iconStyle) {
-        m_titleLabelMenuButton->setPixmap(*DuiTheme::pixmap(iconStyle->arrowIcon(), iconStyle->arrowIconSize()));
+        m_titleLabelMenuButton->setPixmap(*DuiTheme::pixmapCopy(iconStyle->arrowIcon(), iconStyle->arrowIconSize()));
     }
     connect(m_titleLabelMenuButton, SIGNAL(clicked()), this, SIGNAL(menuLabelClicked()));
 
