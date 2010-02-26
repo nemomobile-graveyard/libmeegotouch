@@ -26,13 +26,14 @@
 #include <DuiApplication>
 #include <QStandardItemModel>
 #include <QVariant>
-#include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
 #include <DuiImageWidget>
 #include <DuiLabel>
 #include <DuiWindow>
 #include <DuiScene>
 #include <DuiSceneManager>
 #include <DuiPopupList>
+#include <DuiContentItem>
 
 #include "ut_duicombobox.h"
 #include "duicancelevent.h"
@@ -210,23 +211,25 @@ void Ut_DuiComboBox::testIconVisibility()
 
     m_combobox->setTitle("Title");
     view->updateData(QList<const char *>() << DuiComboBoxModel::Title);
-    QCOMPARE(viewPrivate->icon->isVisible(), false);
-    QCOMPARE(viewPrivate->layout->itemAt(0, 0), viewPrivate->title);
+    QCOMPARE(viewPrivate->contentItem->itemStyle(), DuiContentItem::TwoTextLabels);
+    QCOMPARE(viewPrivate->contentItem->title(), QString("Title"));
+    QVERIFY(viewPrivate->contentItem->pixmap().isNull());
 
     m_combobox->setIconID("Icon-music");
     view->updateData(QList<const char *>() << DuiComboBoxModel::IconID);
-    QCOMPARE(viewPrivate->icon->isVisible(), true);
-    QCOMPARE(viewPrivate->layout->itemAt(0, 0), viewPrivate->icon);
+    QCOMPARE(viewPrivate->contentItem->itemStyle(), DuiContentItem::IconAndTwoTextLabels);
+    QVERIFY(!viewPrivate->contentItem->pixmap().isNull());
 
     m_combobox->setIconVisible(false);
     view->updateData(QList<const char *>() << DuiComboBoxModel::IconVisible);
-    QCOMPARE(viewPrivate->icon->isVisible(), false);
-    QCOMPARE(viewPrivate->layout->itemAt(0, 0), viewPrivate->title);
+    QCOMPARE(viewPrivate->contentItem->itemStyle(), DuiContentItem::TwoTextLabels);
+    QCOMPARE(viewPrivate->contentItem->title(), QString("Title"));
+    QVERIFY(viewPrivate->contentItem->pixmap().isNull());
 
     m_combobox->setIconVisible(true);
     view->updateData(QList<const char *>() << DuiComboBoxModel::IconVisible);
-    QCOMPARE(viewPrivate->icon->isVisible(), true);
-    QCOMPARE(viewPrivate->layout->itemAt(0, 0), viewPrivate->icon);
+    QCOMPARE(viewPrivate->contentItem->itemStyle(), DuiContentItem::IconAndTwoTextLabels);
+    QVERIFY(!viewPrivate->contentItem->pixmap().isNull());
 }
 
 
@@ -258,29 +261,29 @@ void Ut_DuiComboBox::testBuiltinModel()
     // select item2
     m_combobox->setCurrentIndex(2);
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("item2"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item2"));
     // remove item1, index should change
     m_combobox->removeItem(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("item2"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item2"));
     // remove current item
     m_combobox->removeItem(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("!! Tap to Select"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("!! Tap to Select"));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("item3"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item3"));
     // add one item
     m_combobox->insertItem(0, QString("itemX"));
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("item3"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item3"));
 
     // change current item text
     m_combobox->setItemText(2, QString("beef"));
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("beef"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("beef"));
 }
 
 void Ut_DuiComboBox::testModelSwitching()
@@ -292,7 +295,7 @@ void Ut_DuiComboBox::testModelSwitching()
 
     m_combobox->setCurrentIndex(2);
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("item2"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item2"));
 
     QStringListModel *strListModel = new QStringListModel();
     strListModel->setStringList(QStringList() << "foo0" << "foo1" << "foo2" << "foo3");
@@ -300,7 +303,7 @@ void Ut_DuiComboBox::testModelSwitching()
 
     // model changed selection should reset
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("!! Tap to Select"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("!! Tap to Select"));
 }
 
 void Ut_DuiComboBox::testStringListModel()
@@ -314,30 +317,30 @@ void Ut_DuiComboBox::testStringListModel()
 
     // select item 2
     m_combobox->setCurrentIndex(2);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("foo2"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("foo2"));
     // remove item1, index should change
     strListModel->removeRow(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("foo2"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("foo2"));
     // remove current item
     strListModel->removeRow(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("!! Tap to Select"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("!! Tap to Select"));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("foo3"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("foo3"));
     // add one item
     strListModel->insertRow(0);
     strListModel->setData(strListModel->index(0, 0), QString("fooX"), Qt::DisplayRole);
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("foo3"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("foo3"));
 
     // change current item text
     strListModel->setData(strListModel->index(2, 0), QString("lamb"), Qt::DisplayRole);
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("lamb"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("lamb"));
 }
 
 void Ut_DuiComboBox::testStringListModelSetStringList()
@@ -354,7 +357,7 @@ void Ut_DuiComboBox::testStringListModelSetStringList()
     // change string list completely
     strListModel->setStringList(QStringList() << "bar0" << "bar1" << "bar2" << "bar3");
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->subtitle->text(), QString("!! Tap to Select"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("!! Tap to Select"));
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiComboBox)

@@ -526,20 +526,20 @@ void DuiApplicationMenuViewPrivate::updateComboboxMode(DuiComboBox *comboBox,
 
     if (columnsCount == 1) {
         if (index == itemCount - 1) {
-            comboBox->setObjectName("MenuComboBoxSingleColumnBottom");
+            comboBox->setViewType("singlecolumnbottom");
         } else {
-            comboBox->setObjectName("MenuComboBoxSingleColumnCenter");
+            comboBox->setViewType("singlecolumncenter");
         }
     } else {
         int rowCount = (itemCount + 1) / 2;
         int row = index / 2;
         int col = index % 2;
         if ((itemCount == 1) || (col == 0 && index == (itemCount - 1))) { //only one item in last row
-            comboBox->setObjectName("MenuComboBoxSingleColumnBottom");
+            comboBox->setViewType("singlecolumnbottom");
         } else if (row >= 0 && row < (rowCount - 1)) {
-            (col == 0) ? comboBox->setObjectName("MenuComboBoxLeft") : comboBox->setObjectName("MenuComboBoxRight");
+            (col == 0) ? comboBox->setViewType("left") : comboBox->setViewType("right");
         } else {
-            (col == 0) ? comboBox->setObjectName("MenuComboBoxBottomLeft") : comboBox->setObjectName("MenuComboBoxBottomRight");
+            (col == 0) ? comboBox->setViewType("bottomleft") : comboBox->setViewType("bottomright");
         }
     }
 }

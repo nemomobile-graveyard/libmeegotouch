@@ -30,12 +30,13 @@
 #include "duiapplicationwindow.h"
 #include "duiscenemanager.h"
 #include "duilocale.h"
+#include "duicontentitem.h"
 
-#include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 
 DuiComboBoxViewPrivate::DuiComboBoxViewPrivate()
-    : controller(0), layout(0), title(0), subtitle(0), icon(0), popuplist(0)
+    : controller(0), contentItem(0), popuplist(0)
 {
 }
 
@@ -49,53 +50,61 @@ void DuiComboBoxViewPrivate::init()
 {
     Q_Q(DuiComboBoxView);
 
-    layout = new QGraphicsGridLayout();
+    layout = new QGraphicsLinearLayout();
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     controller->setLayout(layout);
 
-    icon = new DuiImageWidget();
-    icon->setObjectName("DuiComboBoxIcon");
+    contentItem = new DuiContentItem(DuiContentItem::TwoTextLabels);
+    layout->addItem(contentItem);
+    updateSubtitle(controller->currentIndex());
 
-    title = new DuiLabel();
-    title->setObjectName("DuiComboBoxTitle");
-
-    subtitle = new DuiLabel();
-    subtitle->setObjectName("DuiComboBoxSubtitle");
-    _q_itemModelCurrentIndexChanged(-1);
-
+    QObject::connect(contentItem, SIGNAL(clicked()), controller, SLOT(click()));
     QObject::connect(controller, SIGNAL(currentIndexChanged(int)), q, SLOT(_q_itemModelCurrentIndexChanged(int)));
     QObject::connect(controller, SIGNAL(clicked()), q, SLOT(_q_showPopup()));
 }
 
 void DuiComboBoxViewPrivate::initLayout()
 {
-    int count = layout->count();
-    for (int i = count - 1; i >= 0; --i)
-        layout->removeAt(i);
+    Q_Q(DuiComboBoxView);
 
-    if (controller->isIconVisible() && !icon->image().isEmpty()) {
-        icon->show();
-        layout->addItem(icon, 0, 0, 2, 1);
-        layout->addItem(title, 0, 1);
-        layout->addItem(subtitle, 1, 1);
+    DuiContentItem::ContentItemStyle newStyle;;
+
+    if (controller->isIconVisible() && !controller->iconID().isEmpty())
+        newStyle = DuiContentItem::IconAndTwoTextLabels;
+    else
+        newStyle = DuiContentItem::TwoTextLabels;
+
+    if (contentItem->itemStyle() != newStyle) {
+        delete contentItem;
+
+        contentItem = new DuiContentItem(newStyle);
+        contentItem->setObjectName(q->style()->contentItemObjectName());
+        contentItem->setItemMode((DuiContentItem::ContentItemMode)q->style()->itemMode());
+        layout->addItem(contentItem);
+        updateSubtitle(controller->currentIndex());
+        contentItem->setTitle(controller->title());
+        if (newStyle == DuiContentItem::IconAndTwoTextLabels)
+            contentItem->setPixmap(*DuiTheme::pixmap(controller->iconID()));
+
+        QObject::connect(contentItem, SIGNAL(clicked()), controller, SLOT(click()));
+    }
+}
+
+void DuiComboBoxViewPrivate::updateSubtitle(int currentIndex) {
+    if (currentIndex != -1)  {
+        contentItem->setSubtitle(controller->itemText(currentIndex));
     } else {
-        icon->hide();
-        layout->addItem(title, 0, 0);
-        layout->addItem(subtitle, 1, 0);
+        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.7.doc
+        //: default value for Popup List button sublabel when nothing has been selected yet
+        //% "Tap to Select"
+        contentItem->setSubtitle(qtTrId("xx_ComboBoxSubtitle"));
     }
 }
 
 void DuiComboBoxViewPrivate::_q_itemModelCurrentIndexChanged(int currentIndex)
 {
-    if (currentIndex != -1)  {
-        subtitle->setText(controller->itemText(currentIndex));
-    } else {
-        //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.7.doc
-        //: default value for Popup List button sublabel when nothing has been selected yet
-        //% "Tap to Select"
-        subtitle->setText(qtTrId("xx_ComboBoxSubtitle"));
-    }
+    updateSubtitle(currentIndex);
 }
 
 void DuiComboBoxViewPrivate::_q_showPopup()
@@ -133,6 +142,16 @@ DuiComboBoxView::DuiComboBoxView(DuiComboBoxViewPrivate &dd, DuiComboBox *contro
 
 DuiComboBoxView::~DuiComboBoxView()
 {
+}
+
+void DuiComboBoxView::applyStyle()
+{
+    Q_D(DuiComboBoxView);
+
+    DuiWidgetView::applyStyle();
+
+    d->contentItem->setObjectName(style()->contentItemObjectName());
+    d->contentItem->setItemMode((DuiContentItem::ContentItemMode)style()->itemMode());
 }
 
 void DuiComboBoxView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -186,16 +205,13 @@ void DuiComboBoxView::updateData(const QList<const char *>& modifications)
     for (int i = 0; i < count; ++i) {
         member = modifications[i];
 
-        if (member == DuiComboBoxModel::IconID) {
-            d->icon->setImage(model()->iconID());
+        if (member == DuiComboBoxModel::IconID || member == DuiComboBoxModel::IconVisible) {
             d->initLayout();
         } else if (member == DuiComboBoxModel::Title) {
             QString text = model()->title();
-            d->title->setText(text);
+            d->contentItem->setTitle(text);
             if (d->popuplist)
                 d->popuplist->setTitle(text);
-        } else if (member == DuiComboBoxModel::IconVisible) {
-            d->initLayout();
         } else if (member == DuiComboBoxModel::Down) {
             if (model()->down())
                 style().setModePressed();
@@ -213,10 +229,7 @@ void DuiComboBoxView::setupModel()
 
     d->initLayout();
 
-    d->icon->setImage(model()->iconID());
-    d->title->setText(model()->title());
-    if (!d->controller->currentText().isEmpty())
-        d->subtitle->setText(d->controller->currentText());
+    d->contentItem->setTitle(model()->title());
 }
 
 DUI_REGISTER_VIEW_NEW(DuiComboBoxView, DuiComboBox)

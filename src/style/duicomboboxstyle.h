@@ -33,6 +33,19 @@ class DUI_EXPORT DuiComboBoxStyle : public DuiWidgetStyle
 {
     Q_OBJECT
     DUI_STYLE_INTERNAL(DuiComboBoxStyle)
+
+    /*!
+        \property DuiComboBoxStyle::itemMode
+        \brief itemMode of internal DuiContentItem.
+        \see DuiContentItem::itemMode
+    */
+    DUI_STYLE_ATTRIBUTE(int, itemMode, ItemMode)
+
+    /*!
+      \property DuiComboBoxStyle::contentItemObjectName
+      \brief Object name of internal DuiContentItem.
+    */
+    DUI_STYLE_ATTRIBUTE(QString, contentItemObjectName, ContentItemObjectName)
 };
 
 /*!

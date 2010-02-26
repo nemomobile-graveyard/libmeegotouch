@@ -21,12 +21,10 @@
 #define DUICOMBOBOXVIEW_P_H
 
 #include "private/duiwidgetview_p.h"
-#include <QModelIndex>
 
-class QGraphicsGridLayout;
+class QGraphicsLinearLayout;
 class DuiComboBox;
-class DuiImageWidget;
-class DuiLabel;
+class DuiContentItem;
 class DuiPopupList;
 
 class DuiComboBoxViewPrivate : public DuiWidgetViewPrivate
@@ -39,14 +37,14 @@ public:
 
     void init();
     void initLayout();
+    void updateSubtitle(int currentIndex);
+
     void _q_showPopup();
     void _q_itemModelCurrentIndexChanged(int currentIndex);
 
     DuiComboBox    *controller;
-    QGraphicsGridLayout    *layout;
-    DuiLabel       *title;
-    DuiLabel       *subtitle;
-    DuiImageWidget *icon;
+    QGraphicsLinearLayout    *layout;
+    DuiContentItem *contentItem;
     DuiPopupList   *popuplist;
 };
 

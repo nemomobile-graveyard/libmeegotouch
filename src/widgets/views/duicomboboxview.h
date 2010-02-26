@@ -57,6 +57,7 @@ public:
 
 protected slots:
     //! \reimp
+    virtual void applyStyle();
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(DuiCancelEvent *event);
