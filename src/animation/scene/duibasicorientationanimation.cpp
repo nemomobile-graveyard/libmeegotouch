@@ -258,6 +258,7 @@ DuiBasicOrientationAnimation::DuiBasicOrientationAnimation(const QSize &landscap
 {
     Q_D(DuiBasicOrientationAnimation);
 
+    d->rootElement = NULL;
     d->sequentialPhasesAnimation = new QSequentialAnimationGroup;
     addAnimation(d->sequentialPhasesAnimation);
 
