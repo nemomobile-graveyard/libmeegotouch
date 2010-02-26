@@ -6,9 +6,11 @@ TARGET = ut_duitapandholdrecognizer
 SOURCES += \
     ut_duitapandholdrecognizer.cpp \
     ../../src/events/duitapandholdrecognizer.cpp \
-
+    ../../src/events/duitapandholdgesture.cpp \
+    
 # unit test and unit classes
 HEADERS += \
     ut_duitapandholdrecognizer.h \
+    ../../src/events/duitapandholdgesture_p.h \
 
 include(../common_bot.pri)
