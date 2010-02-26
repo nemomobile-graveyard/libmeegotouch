@@ -112,27 +112,27 @@ void DuiComboBox::setItemModel(QAbstractItemModel *itemModel)
 
     QItemSelectionModel *oldSelModel = model()->selectionModel();
 
-    if (oldSelModel) {
+    if (oldSelModel)
         oldSelModel->clear();
-
-        if (oldSelModel->QObject::parent() == this) {
-            delete oldSelModel;
-        }
-    }
 
     if (oldModel) {
         disconnect(oldModel, SIGNAL(destroyed()), this, SLOT(_q_modelDestroyed()));
         disconnect(oldModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(_q_itemModelDataChanged(QModelIndex, QModelIndex)));
         disconnect(oldModel, SIGNAL(modelReset()), this, SLOT(_q_itemModelReset()));
-
-        if (oldModel->QObject::parent() == this)
-            delete oldModel;
     }
 
     QItemSelectionModel *itemSelectionModel = new QItemSelectionModel(itemModel, this);
 
     model()->setItemModel(itemModel);
+    emit itemModelChanged(itemModel);
     model()->setSelectionModel(itemSelectionModel);
+    emit selectionModelChanged(itemSelectionModel);
+
+    if (oldSelModel && oldSelModel->QObject::parent() == this)
+        delete oldSelModel;
+    if (oldModel && oldModel->QObject::parent() == this)
+        delete oldModel;
+
 
     connect(itemModel, SIGNAL(destroyed()), this, SLOT(_q_modelDestroyed()));
     connect(itemModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(_q_itemModelDataChanged(QModelIndex, QModelIndex)));

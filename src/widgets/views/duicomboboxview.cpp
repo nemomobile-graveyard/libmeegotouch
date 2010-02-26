@@ -62,6 +62,10 @@ void DuiComboBoxViewPrivate::init()
     QObject::connect(contentItem, SIGNAL(clicked()), controller, SLOT(click()));
     QObject::connect(controller, SIGNAL(currentIndexChanged(int)), q, SLOT(_q_itemModelCurrentIndexChanged(int)));
     QObject::connect(controller, SIGNAL(clicked()), q, SLOT(_q_showPopup()));
+    QObject::connect(controller, SIGNAL(itemModelChanged(QAbstractItemModel *)),
+                     q, SLOT(setItemModel(QAbstractItemModel *)));
+    QObject::connect(controller, SIGNAL(selectionModelChanged(QItemSelectionModel *)),
+                     q, SLOT(setSelectionModel(QItemSelectionModel *)));
 }
 
 void DuiComboBoxViewPrivate::initLayout()
@@ -114,10 +118,10 @@ void DuiComboBoxViewPrivate::_q_showPopup()
     if (controller->sceneManager()) {
         if (!popuplist) {
             popuplist = new DuiPopupList();
+            popuplist->setItemModel(controller->itemModel());
+            popuplist->setSelectionModel(controller->selectionModel());
         }
 
-        popuplist->setItemModel(controller->itemModel());
-        popuplist->setSelectionModel(controller->selectionModel());
         popuplist->setTitle(controller->title());
         controller->sceneManager()->showWindow(popuplist);
     }
@@ -231,6 +235,21 @@ void DuiComboBoxView::setupModel()
 
     d->contentItem->setTitle(model()->title());
 }
+
+void DuiComboBoxView::setItemModel(QAbstractItemModel *itemModel)
+{
+    Q_D(DuiComboBoxView);
+    if(d->popuplist)
+        d->popuplist->setItemModel(itemModel);
+}
+
+void DuiComboBoxView::setSelectionModel(QItemSelectionModel *selectionModel)
+{
+    Q_D(DuiComboBoxView);
+    if(d->popuplist)
+        d->popuplist->setSelectionModel(selectionModel);
+}
+
 
 DUI_REGISTER_VIEW_NEW(DuiComboBoxView, DuiComboBox)
 

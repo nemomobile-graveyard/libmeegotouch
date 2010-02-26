@@ -55,7 +55,7 @@ public:
      */
     virtual ~DuiComboBoxView();
 
-protected slots:
+protected Q_SLOTS:
     //! \reimp
     virtual void applyStyle();
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
@@ -63,6 +63,16 @@ protected slots:
     virtual void cancelEvent(DuiCancelEvent *event);
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
+
+    /*!
+       \brief Set the itemModel
+     */
+    virtual void setItemModel(QAbstractItemModel *itemModel);
+
+    /*!
+       \brief Set the selectionModel
+     */
+    virtual void setSelectionModel(QItemSelectionModel *selectionModel);
 
 protected:
     //! \reimp
