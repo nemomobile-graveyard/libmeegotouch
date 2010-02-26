@@ -86,7 +86,7 @@ void DuiDialogViewPrivate::createWidgetHierarchy()
 	    rect.setWidth(box->boundingRect().width());
 	    rect.setHeight(box->boundingRect().height());
 	    rect.setLeft(box->boundingRect().x());
-	    rect = box->mapRectToScene(rect);
+	    rect = box->mapRectToItem(this, rect);
 	    path.addRect(rect);
 	    return path;
 	}
