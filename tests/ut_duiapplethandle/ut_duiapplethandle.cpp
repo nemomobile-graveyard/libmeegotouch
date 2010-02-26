@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
+#include <QtGui>
 
 #include "ut_duiapplethandle.h"
 #include <duiextensionhandle.h>
@@ -36,6 +37,12 @@ DuiWidgetPrivate::DuiWidgetPrivate() : selected(false)
 }
 
 DuiWidgetPrivate::~DuiWidgetPrivate()
+{
+}
+void DuiWidgetPrivate::gestureEvent(QGestureEvent* )
+{
+}
+void  DuiWidgetPrivate::tapAndHoldGesture(QGestureEvent *, QTapAndHoldGesture* )
 {
 }
 

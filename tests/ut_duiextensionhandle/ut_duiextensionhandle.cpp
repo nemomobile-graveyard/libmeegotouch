@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
+#include <QtGui>
 #include <QLocalServer>
 #include <QPoint>
 #include <QGraphicsSceneMouseEvent>
@@ -74,8 +75,13 @@ bool Ut_DuiExtensionHandle::contextMenuOpened;
 DuiWidgetPrivate::DuiWidgetPrivate() : selected(false)
 {
 }
-
 DuiWidgetPrivate::~DuiWidgetPrivate()
+{
+}
+void DuiWidgetPrivate::gestureEvent(QGestureEvent* )
+{
+}
+void  DuiWidgetPrivate::tapAndHoldGesture(QGestureEvent *, QTapAndHoldGesture* )
 {
 }
 
