@@ -14,8 +14,8 @@ SUBDIRS     =  \
     applicationextension/demoextension2    
     
 # we do not have compiled QtDBusd4
-macx:SUBDIRS -= appletinstallationsource
-win32:SUBDIRS -= appletinstallationsource 
+macx:SUBDIRS -= appletinstallationsource applicationextension applicationextension/demoextension applicationextension/demoextension2
+win32:SUBDIRS -= appletinstallationsource applicationextension applicationextension/demoextension applicationextension/demoextension2
 
 contains(DEFINES, HAVE_DBUS) {
     SUBDIRS +=  servicefw
