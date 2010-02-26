@@ -36,6 +36,7 @@ public:
     virtual ~DuiLabelViewSimple();
 
     virtual QPixmap generatePixmap();
+    QImage generateImage();
     virtual void drawContents(QPainter *painter, const QSizeF &size);
     virtual bool resizeEvent(QGraphicsSceneResizeEvent *event);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
@@ -48,12 +49,15 @@ public:
     virtual void longPressEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void applyStyle();
 
+    void markDirty();
+
     DuiLabelViewPrivate *viewPrivate;
 
     QSizeF preferredSize;
     QPoint textOffset;
-
-    QPixmap pixmap;
+    bool dirty;
+    QImage cachedImage;
+    QPixmap cachedPixmap;
 };
 
 class DuiLabelViewRich : public DuiLabelViewSimple
@@ -88,6 +92,7 @@ public:
     bool textDocumentDirty;
     QPoint pixmapOffset;
     int mouseDownCursorPos;
+    QPixmap pixmap;
 };
 
 class DuiLabelViewPrivate : public DuiWidgetViewPrivate

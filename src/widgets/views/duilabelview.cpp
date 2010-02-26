@@ -74,6 +74,7 @@ void DuiLabelView::applyStyle()
     DuiWidgetView::applyStyle();
     Q_D(DuiLabelView);
     QPixmapCache::remove(d->cacheKey);
+    d->impl->dirty = true;
     d->impl->applyStyle();
     updateGeometry();
 }
@@ -95,6 +96,7 @@ void DuiLabelView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     Q_D(DuiLabelView);
     QPixmapCache::remove(d->cacheKey);
+    d->impl->dirty = true;
 
     QSizeF padding(style()->paddingLeft() + style()->paddingRight(),
                    style()->paddingTop() + style()->paddingBottom());
@@ -144,6 +146,7 @@ void DuiLabelView::setupModel()
     d->impl->setupModel();
 
     QPixmapCache::remove(d->cacheKey);
+    d->impl->dirty = true;
 }
 
 
@@ -173,6 +176,7 @@ void DuiLabelView::updateData(const QList<const char *>& modifications)
     if (d->impl->updateData(modifications))
         updateGeometry();
     QPixmapCache::remove(d->cacheKey);
+    d->impl->dirty = true;
     update();
 }
 

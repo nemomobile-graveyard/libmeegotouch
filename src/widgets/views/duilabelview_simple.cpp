@@ -39,11 +39,13 @@ DuiLabelViewSimple::DuiLabelViewSimple(DuiLabelViewPrivate *viewPrivate) :
 
 DuiLabelViewSimple::~DuiLabelViewSimple()
 {
-    QPixmapCache::remove(viewPrivate->cacheKey);
 }
 
-QPixmap DuiLabelViewSimple::generatePixmap()
+#ifdef __arm__
+void DuiLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
 {
+    Q_UNUSED(size);
+
     const DuiLabelModel *model = viewPrivate->model();
     const DuiLabelStyle *style = viewPrivate->style();
     QRectF paintingRect(viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom()));
@@ -54,42 +56,68 @@ QPixmap DuiLabelViewSimple::generatePixmap()
     }
 
     if (textToRender.isEmpty()) {
-        return QPixmap();
+        return;
     }
 
-    QImage fontImg(1, 1, QImage::Format_ARGB32_Premultiplied);
-    QPainter fontPainter(&fontImg);
-    fontPainter.setFont(viewPrivate->controller->font());
-    fontPainter.setLayoutDirection(model->textDirection());
-    QRectF fontBoundingRect = fontPainter.boundingRect(paintingRect, viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
-
-    QPixmap pixmap(fontBoundingRect.size().toSize());
-    if (!pixmap.isNull()) {
-        pixmap.fill(Qt::transparent);
-        QPainter painter(&pixmap);
-        painter.setFont(viewPrivate->controller->font());
-        painter.setPen(model->color().isValid() ? model->color() : style->color());
-        painter.setLayoutDirection(model->textDirection());
-        painter.drawText(QRect(0, 0, fontBoundingRect.width(), fontBoundingRect.height()), viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
-
-        textOffset.setX(fontBoundingRect.x());
-        textOffset.setY(fontBoundingRect.y());
-    }
-
-    return pixmap;
+    painter->setFont(viewPrivate->controller->font());
+    painter->setPen(model->color().isValid() ? model->color() : style->color());
+    painter->setLayoutDirection(model->textDirection());
+    painter->drawText(paintingRect, viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
 }
+
+#else
 
 void DuiLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
 {
     Q_UNUSED(size);
 
-    if (!QPixmapCache::find(viewPrivate->cacheKey, pixmap)) {
-        pixmap = generatePixmap();
-        QPixmapCache::insert(viewPrivate->cacheKey, pixmap);
+    painter->drawImage(textOffset, generateImage());
+}
+
+#endif
+
+QPixmap DuiLabelViewSimple::generatePixmap()
+{
+    return QPixmap();
+}
+
+QImage DuiLabelViewSimple::generateImage()
+{
+    if(!dirty)
+        return cachedImage;
+
+    dirty = false;
+    const DuiLabelModel *model = viewPrivate->model();
+    const DuiLabelStyle *style = viewPrivate->style();
+    QRectF paintingRect(viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom()));
+    QString textToRender = model->text();
+    if (model->textElide() && textToRender.size() > 4) {
+        QFontMetrics fm(viewPrivate->controller->font());
+        textToRender = fm.elidedText(model->text(), Qt::ElideRight, paintingRect.width());
     }
-    if (!pixmap.isNull()) {
-        painter->drawPixmap(textOffset, pixmap);
+
+    if (textToRender.isEmpty()) {
+        return QImage();
     }
+
+    if(cachedImage.size() != paintingRect.size().toSize())
+    {
+        cachedImage = QImage(paintingRect.size().toSize(), QImage::Format_ARGB32_Premultiplied);
+    }
+
+    QImage &image = cachedImage;
+
+    if (!image.isNull()) {
+        image.fill(0);
+        QPainter painter(&image);
+        painter.setRenderHint(QPainter::TextAntialiasing);
+        painter.setFont(viewPrivate->controller->font());
+        painter.setPen(model->color().isValid() ? model->color() : style->color());
+        painter.setLayoutDirection(model->textDirection());
+        painter.drawText(paintingRect, viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
+    }
+
+    return image;
 }
 
 bool DuiLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
