@@ -1,14 +1,4 @@
 /*! \page news What's New in DirectUI
-\section v0200
-
-\subsection New
-
-- DuiSceneWindow appeared() and disappeared() signals.
-
-\subsection Deprecated
-
-- DuiSceneWindow windowShown() and windowHidden() signals. Use the new appeared() and disappeared() signals isnstead.
-
 \section v0190
 
 \subsection New
@@ -21,6 +11,7 @@
 - DuiOnDisplayChangeEvent::PartiallyOnDisplay
 
 - DuiSceneWindow::DestroyWhenDismissed
+- DuiSceneWindow appeared() and disappeared() signals.
 
 \subsection Deprecated
 
@@ -33,6 +24,7 @@
 - DuiLayout::invalidateLayoutOnly() - this shouldn't be used by anyone.
 - DuiAbstractLayoutPolicy::aboutToBeRemovedFromLayout() - this was being used incorrectly instead of removeAt.  Use removeAt instead
 - DuiWindow::keepCurrentOrientation - replaced by DuiWindow::orientationLocked
+- DuiSceneWindow windowShown() and windowHidden() signals. Use the new appeared() and disappeared() signals isnstead.
 
 \section v0180 0.18.4
 
