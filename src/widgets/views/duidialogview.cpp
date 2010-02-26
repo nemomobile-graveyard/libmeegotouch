@@ -82,12 +82,8 @@ void DuiDialogViewPrivate::createWidgetHierarchy()
 	}
 	QPainterPath shape() const {
 	    QPainterPath path;
-	    QRectF rect;
-	    rect.setWidth(box->boundingRect().width());
-	    rect.setHeight(box->boundingRect().height());
-	    rect.setLeft(box->boundingRect().x());
-	    rect = box->mapRectToItem(this, rect);
-	    path.addRect(rect);
+	    path = box->shape();
+	    path.translate(box->pos());
 	    return path;
 	}
     };
