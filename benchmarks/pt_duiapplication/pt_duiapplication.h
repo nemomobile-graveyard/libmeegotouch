@@ -48,12 +48,15 @@ private slots:
       */
     void ctor();
 
+private:
+
     /**
-      * Execute the constructor a second time to evaluate caching possibilities.
-      */
+     * Execute the constructor a second time to evaluate caching possibilities.
+     * Disabled for now, because the DuiApplication cannot be created twice in 
+     * the same application. Will be reenabled when bug on Qt's side is fixed.
+     */
     void ctor2();
 
-private:
     /**
       * Executes the current programm with a given parameter.
       */
