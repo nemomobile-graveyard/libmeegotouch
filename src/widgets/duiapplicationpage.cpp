@@ -117,7 +117,10 @@ void DuiApplicationPagePrivate::placeCentralWidget(DuiWidget *widget)
 {
     if (widget) {
         // insert the new central widget between top and bottom spacers
-        mainLayout->insertItem(1,widget);
+        if (mainLayout->count() > 0)
+            mainLayout->insertItem(1,widget);
+        else
+            mainLayout->addItem(widget);
         centralWidget = widget;
     }
 }
