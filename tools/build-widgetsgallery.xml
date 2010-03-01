@@ -30,7 +30,13 @@
         <delete dir="duibuild"/>
     </target>
 
-    <target name="qmake" depends="init">
+    <target name="configure" depends="init">
+        <exec executable="/bin/sh" dir="${libdui.dir}">
+            <arg line="configure --prefix=/usr"/>
+        </exec>
+    </target>
+
+    <target name="qmake" depends="configure">
         <exec executable="qmake" dir="${libdui.dir}">
             <arg line="-spec macx-g++ -r"/>
         </exec>
