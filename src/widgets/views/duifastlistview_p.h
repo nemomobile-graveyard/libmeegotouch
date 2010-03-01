@@ -79,7 +79,6 @@ public:
     DuiFastListViewPrivate();
     virtual ~DuiFastListViewPrivate();
 
-    void clearVisibleItemsArray();
     void updateItemHeight();
 
     DuiWidget *createCell(int row);
@@ -87,8 +86,6 @@ public:
 
     void setSeparator(DuiWidget *separator);
     void setHeadersCreator(DuiCellCreator *headersCreator);
-
-    void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
 
     DuiWidget *findCellAtRow(int row);
 
@@ -101,6 +98,8 @@ public:
     void createVisibleItems();
 
 public:
+    virtual void clearVisibleItemsArray();
+    virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void cellClicked(DuiWidget *source);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual void updateItemSize();
@@ -185,6 +184,8 @@ public:
     int flatRowToColumn(int row) const;
 
 public:
+    virtual void clearVisibleItemsArray();
+    virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual int locatePosOfItem(int row);
     virtual int totalHeight();
     virtual DuiWidget *createItem(int row);
@@ -253,6 +254,8 @@ public:
     int flatRowToColumn(int row) const;
 
 public:
+    virtual void clearVisibleItemsArray();
+    virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void updateItemSize();
     virtual void cellClicked(DuiWidget *source);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);

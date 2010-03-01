@@ -377,7 +377,7 @@ void DuiFastPlainListViewPrivate::createVisibleItems(const QModelIndex &firstVis
 }
 
 ////////////
-// MultiColumn without group headers
+// Plain list MultiColumn
 ////////////
 DuiFastPlainMultiColumnListViewPrivate::DuiFastPlainMultiColumnListViewPrivate()
 {
@@ -457,7 +457,7 @@ void DuiFastPlainMultiColumnListViewPrivate::updateItemSize()
     int columnWidth = viewWidth / columns;
 
     foreach(DuiWidget * cell, visibleItems) {
-        int cellFlatRow = widgetFlatRows[cell];
+        int cellFlatRow = widgetFlatRows[cell] - 1;
         int cellColumn = flatRowToColumn(cellFlatRow);
         cell->resize(columnWidth, cell->preferredHeight());
         cell->setPos(QPointF(cellColumn * columnWidth, cell->pos().y()));
@@ -466,7 +466,7 @@ void DuiFastPlainMultiColumnListViewPrivate::updateItemSize()
 
 void DuiFastPlainMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
 {
-    int clickedFlatRow = widgetFlatRows.value(source);
+    int clickedFlatRow = widgetFlatRows.value(source) - 1;
     QModelIndex cellIndex(flatRowToIndex(clickedFlatRow));
     controller->selectItem(cellIndex);
 }
@@ -474,7 +474,7 @@ void DuiFastPlainMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
 void DuiFastPlainMultiColumnListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
 {
     foreach(DuiWidget * widget, visibleItems) {
-        int widgetFlatRow = widgetFlatRows.value(widget);
+        int widgetFlatRow = widgetFlatRows.value(widget) - 1;
         QModelIndex widgetIndex(flatRowToIndex(widgetFlatRow));
         if (selected.contains(widgetIndex))
             widget->setSelected(true);
@@ -483,38 +483,52 @@ void DuiFastPlainMultiColumnListViewPrivate::selectionChange(const QItemSelectio
     }
 }
 
+
+void DuiFastPlainMultiColumnListViewPrivate::clearVisibleItemsArray()
+{
+    DuiFastListViewPrivate::clearVisibleItemsArray();
+    widgetFlatRows.clear();
+}
+
+void DuiFastPlainMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
+        const QPoint &lastVisibleItemCoord)
+{
+    for (QVector<DuiWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
+        DuiWidget *cell = *iter;
+        qreal cellPosY = cell->pos().y();
+
+        if (cellPosY < firstVisibleItemCoord.y() || cellPosY > lastVisibleItemCoord.y() || widgetFlatRows[*iter] > itemsCount()) {
+            widgetFlatRows[*iter] = 0;
+            deleteItem(*iter);
+            iter = visibleItems.erase(iter);
+        } else {
+            ++iter;
+        }
+    }
+}
+
 void DuiFastPlainMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
         const QModelIndex &lastVisibleRow)
 {
-    if (!viewWidth) // required for x position
-        return;
-
     int firstRow = firstVisibleRow.row();
     int lastRow = lastVisibleRow.row();
 
+    if (!viewWidth || (!firstRow&&!lastRow&&itemsCount()>1)) // required for x position
+        return;
+
     for (int currentRow = firstRow; currentRow <= lastRow; currentRow++) {
         DuiWidget *cell = findCellAtRow(currentRow);
-        if (!cell && flatRowToColumn(currentRow) == 0) {
+        if (!widgetFlatRows[cell] && flatRowToColumn(currentRow) == 0) {
 
             // Create widgets to all columns in this row
             for (int column = 0; column < controllerModel->columns(); ++column) {
                 cell = createItem(currentRow + column);
                 visibleItems.append(cell);
-                widgetFlatRows[cell] = currentRow + column;
+                widgetFlatRows[cell] = currentRow + column + 1;
                 cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(currentRow + column)));
                 if (currentRow + column + 1 == itemsCount() || flatRowToColumn(currentRow + column + 1) == 0)
                     break;
             }
-        }
-    }
-
-    // Remove multicolumn specific visual items that are no longer visible
-    // After ABI-unfreeze this should be handled in multicolumn's removeInvisibleItems()
-    for(int visibleIndex = visibleItems.count()-1; visibleIndex >= 0; --visibleIndex) {
-        int visibleWidgetFlatRow =  widgetFlatRows[visibleItems[visibleIndex]];
-        if(visibleWidgetFlatRow < firstRow || visibleWidgetFlatRow > lastRow) {
-            deleteItem(visibleItems[visibleIndex]);
-            visibleItems.remove(visibleIndex);
         }
     }
 }
@@ -786,7 +800,7 @@ void DuiFastGroupHeaderListViewPrivate::layoutChanged()
 }
 
 ////////////
-// MultiColumn with group headers
+// Group Header MultiColumn
 ////////////
 
 DuiFastMultiColumnListViewPrivate::DuiFastMultiColumnListViewPrivate()
@@ -835,7 +849,7 @@ void DuiFastMultiColumnListViewPrivate::updateItemSize()
     int columnWidth = viewWidth / columns;
 
     foreach(DuiWidget * cell, visibleItems) {
-        int cellFlatRow = widgetFlatRows[cell];
+        int cellFlatRow = widgetFlatRows[cell] - 1;
         int cellColumn = flatRowToColumn(cellFlatRow);
         cell->resize(columnWidth, cell->preferredHeight());
         cell->setPos(QPointF(cellColumn * columnWidth, cell->pos().y()));
@@ -844,7 +858,7 @@ void DuiFastMultiColumnListViewPrivate::updateItemSize()
 
 void DuiFastMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
 {
-    int clickedFlatRow = widgetFlatRows.value(source);
+    int clickedFlatRow = widgetFlatRows.value(source) - 1;
     QModelIndex cellIndex(flatRowToIndex(clickedFlatRow));
     controller->selectItem(cellIndex);
 }
@@ -852,7 +866,7 @@ void DuiFastMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
 void DuiFastMultiColumnListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
 {
     foreach(DuiWidget * widget, visibleItems) {
-        int widgetFlatRow = widgetFlatRows.value(widget);
+        int widgetFlatRow = widgetFlatRows.value(widget) - 1;
         QModelIndex widgetIndex(flatRowToIndex(widgetFlatRow));
         if (selected.contains(widgetIndex))
             widget->setSelected(true);
@@ -861,38 +875,52 @@ void DuiFastMultiColumnListViewPrivate::selectionChange(const QItemSelection &se
     }
 }
 
+void DuiFastMultiColumnListViewPrivate::clearVisibleItemsArray()
+{
+    DuiFastListViewPrivate::clearVisibleItemsArray();
+    widgetFlatRows.clear();
+}
+
+void DuiFastMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
+        const QPoint &lastVisibleItemCoord)
+{
+    for (QVector<DuiWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
+        DuiWidget *cell = *iter;
+        qreal cellPosY = cell->pos().y();
+
+        if (cellPosY < firstVisibleItemCoord.y() || cellPosY > lastVisibleItemCoord.y()/* || widgetFlatRows[*iter] > itemsCount()*/) {
+            widgetFlatRows[*iter] = 0;
+            deleteItem(*iter);
+            iter = visibleItems.erase(iter);
+        } else {
+            ++iter;
+        }
+    }
+}
+
 void DuiFastMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
         const QModelIndex &lastVisibleRow)
 {
-    if (!viewWidth) // required for x position
-        return;
-
     int firstRow = indexToFlatRow(firstVisibleRow);
     int lastRow = indexToFlatRow(lastVisibleRow);
 
+    if (!viewWidth || (!firstRow&&!lastRow&&itemsCount()>1)) { // required for x position 
+        return;
+    }
+
     for (int currentRow = firstRow; currentRow <= lastRow; currentRow++) {
         DuiWidget *cell = findCellAtRow(currentRow);
-        if (!cell && flatRowToColumn(currentRow) == 0) {
+        if (!widgetFlatRows[cell] && flatRowToColumn(currentRow) == 0) {
 
             // Create widgets to all columns in this row
             for (int column = 0; column < controllerModel->columns(); ++column) {
                 cell = createItem(currentRow + column);
                 visibleItems.append(cell);
-                widgetFlatRows[cell] = currentRow + column;
+                widgetFlatRows[cell] = currentRow + column + 1;
                 cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(currentRow + column)));
                 if (currentRow + column + 1 == itemsCount() + model->rowCount() || flatRowToColumn(currentRow + column + 1) == 0)
                     break;
             }
-        }
-    }
-
-    // Remove multicolumn specific visual items that are no longer visible
-    // After ABI-unfreeze this should be handled in multicolumn's removeInvisibleItems()
-    for(int visibleIndex = visibleItems.count()-1; visibleIndex >= 0; --visibleIndex) {
-        int visibleWidgetFlatRow =  widgetFlatRows[visibleItems[visibleIndex]];
-        if(visibleWidgetFlatRow < firstRow || visibleWidgetFlatRow > lastRow) {
-            deleteItem(visibleItems[visibleIndex]);
-            visibleItems.remove(visibleIndex);
         }
     }
 }
