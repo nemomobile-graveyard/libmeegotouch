@@ -414,14 +414,23 @@ void DuiContentItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void DuiContentItemView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
-    DuiWidgetView::drawBackground(painter,option);
 
-    DuiContentItemViewPrivate::backgroundFunc func = DuiContentItemViewPrivate::backgroundFunctions[model()->itemMode()];
-    const DuiContentItemStyle *itemStyle = style().operator ->();
-    const DuiScalableImage *itemBackground = ((*itemStyle).*func)();
+    qreal oldOpacity = painter->opacity();
+    painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
 
-    if( itemBackground )
-        itemBackground->draw(0, 0, size().width(), size().height(), painter);
+    if (style()->backgroundImage()) {
+        DuiContentItemViewPrivate::backgroundFunc func = DuiContentItemViewPrivate::backgroundFunctions[model()->itemMode()];
+        const DuiContentItemStyle *itemStyle = style().operator ->();
+        const DuiScalableImage *itemBackground = ((*itemStyle).*func)();
+
+        if( itemBackground )
+            itemBackground->draw(0, 0, size().width(), size().height(), painter);
+    } else if (style()->backgroundColor().isValid()) {
+        painter->fillRect(boundingRect(), QBrush(style()->backgroundColor()));
+    }
+
+    painter->setOpacity(oldOpacity);
+
 }
 
 void DuiContentItemView::setSelected(bool selected)
