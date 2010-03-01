@@ -185,21 +185,25 @@ bool DuiTextEditPrivate::doTab()
 
 
 /*!
-  * \brief Inserts a line break
+  * \brief Inserts a line break if editor is multiline,
+  * otherwise emits signal returnPressed() if it is allowed by validator.
   */
-bool DuiTextEditPrivate::doLineBreak()
+bool DuiTextEditPrivate::onReturnPressed(QKeyEvent *event)
 {
     Q_Q(DuiTextEdit);
+    bool result = false;
 
-    // Ignore line breaks on single line widget.
     if (q->model()->line() == DuiTextEditModel::SingleLine) {
-        return false;
-
+        if (q->hasAcceptableInput()) {
+            emit q->returnPressed();
+        }
+        event->accept();
     } else {
-        return doTextInsert("\n");
+        result = doTextInsert("\n");
     }
-}
 
+    return result;
+}
 
 /*!
  * \brief Inserts sign before number or cycle between + and -
@@ -906,51 +910,51 @@ void DuiTextEdit::keyPressEvent(QKeyEvent *event)
         d->commitPreedit();
     }
 
-    bool accept = false;
+    bool modified = false;
 
     switch (key) {
     case Qt::Key_Backspace:
         // backspace and delete in selection mode are special cases, only selection is removed
         if (wasSelecting == false) {
-            accept = d->doBackspace();
+            modified = d->doBackspace();
         } else {
-            accept = true;
+            modified = true;
         }
         break;
 
     case Qt::Key_Delete:
         if (wasSelecting == false) {
-            accept = d->doDelete();
+            modified = d->doDelete();
         } else {
-            accept = true;
+            modified = true;
         }
         break;
 
     case Qt::Key_Tab:
-        accept = d->doTab();
+        modified = d->doTab();
         break;
 
     case Qt::Key_Space:
-        accept = d->doTextInsert(" ");
+        modified = d->doTextInsert(" ");
         break;
 
     case Qt::Key_Return:
-        accept = d->doLineBreak();
+        modified = d->onReturnPressed(event);
         break;
 
     case Qt::Key_plusminus:
-        accept = d->doSignCycle();
+        modified = d->doSignCycle();
         break;
 
     default: {
         QString text = event->text();
         if (!text.isEmpty() && text.at(0).isPrint()) {
-            accept = d->doTextInsert(event->text());
+            modified = d->doTextInsert(event->text());
         }
     }
     }
 
-    if (accept == true) {
+    if (modified == true) {
         event->accept();
 
         if (wasSelecting == true) {
@@ -1336,10 +1340,12 @@ void DuiTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     QString preedit = event->preeditString();
     QString commitString = event->commitString();
+    bool emitReturnPressed = false;
 
     if (lineMode() == DuiTextEditModel::SingleLine) {
-        preedit.replace('\n', ' ');
-        commitString.replace('\n', ' ');
+        emitReturnPressed = commitString.contains('\n');
+        preedit.remove('\n');
+        commitString.remove('\n');
     }
 
     // get and remove the current selection
@@ -1400,6 +1406,10 @@ void DuiTextEdit::inputMethodEvent(QInputMethodEvent *event)
         updateMicroFocus();
         emit textChanged();
         emit cursorPositionChanged();
+    }
+
+    if (emitReturnPressed && hasAcceptableInput()) {
+        emit returnPressed();
     }
 
     if (wasSelecting != hasSelectedText()) {

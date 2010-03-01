@@ -431,6 +431,13 @@ Q_SIGNALS:
      */
     void pasteFailed();
 
+    /*!
+     * \brief This signal is emitted when the Enter key is pressed in single line editor.
+     * Note that if there is a validator() set on the line edit, the returnPressed()
+     * signal will only be emitted if the validator() returns QValidator::Acceptable.
+     */
+    void returnPressed();
+
 protected:
     /*! \reimp */
     virtual void keyPressEvent(QKeyEvent *event);

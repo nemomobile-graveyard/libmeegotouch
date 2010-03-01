@@ -34,7 +34,7 @@ class Ut_DuiTextEdit : public QObject
     Q_OBJECT
 
 private:
-    void confirmKeyEventIgnored(DuiTextEdit *subject, int key);
+    void confirmKeyEventIgnored(DuiTextEdit *subject, int key, int expectedReturnPressed);
     void constraintTest(DuiTextEdit *subject, const QString &input, const QString &expectedOutput);
 
     DuiTextEdit *m_subject;
@@ -89,6 +89,15 @@ private slots:
     void testAttachToolbar();
 
     void testPasswordEchoOnEditClearing();
+
+    void testReturnKeyPressed_data();
+    void testReturnKeyPressed();
+
+    void testLineBreakSent_data();
+    void testLineBreakSent();
+
+    void testCommitLineBreakAfterPreedit_data();
+    void testCommitLineBreakAfterPreedit();
 };
 
 #endif

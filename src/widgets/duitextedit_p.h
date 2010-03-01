@@ -50,7 +50,7 @@ public:
     bool doDelete();
     bool doTab();
     bool doTextInsert(const QString &text);
-    bool doLineBreak();
+    bool onReturnPressed(QKeyEvent *event);
     bool doSignCycle();
 
     bool validateCurrentBlock();

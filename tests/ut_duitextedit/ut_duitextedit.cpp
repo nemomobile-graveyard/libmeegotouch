@@ -50,6 +50,7 @@
 
 Q_DECLARE_METATYPE(Dui::TextContentType);
 Q_DECLARE_METATYPE(Qt::InputMethodHints);
+Q_DECLARE_METATYPE(QValidator::State);
 
 const QString Ut_DuiTextEdit::testString = QString("jallajalla");
 
@@ -66,6 +67,22 @@ public:
         input.replace(QChar('a'), QChar('b'));
         return QValidator::Acceptable;
     }
+};
+
+class SimpleValidator : public QValidator
+{
+public:
+    SimpleValidator() : QValidator(0), state(Acceptable) {}
+    virtual ~SimpleValidator() {}
+
+    virtual State validate(QString &input, int &pos) const {
+        Q_UNUSED(input);
+        Q_UNUSED(pos);
+
+        return state;
+    }
+
+    QValidator::State state;
 };
 
 
@@ -127,10 +144,11 @@ void Ut_DuiTextEdit::cleanup()
  * Helper function for testSingleLineKeyPressEvent.
  * Makes sure that given key press event has no effect on widget.
  */
-void Ut_DuiTextEdit::confirmKeyEventIgnored(DuiTextEdit *subject, int key)
+void Ut_DuiTextEdit::confirmKeyEventIgnored(DuiTextEdit *subject, int key, int expectedReturnPressed)
 {
     subject->setText(testString);
     QSignalSpy textChangedSpy(subject, SIGNAL(textChanged()));
+    QSignalSpy returnPressedSpy(subject, SIGNAL(returnPressed()));
     int startCursorPos = subject->cursorPosition();
 
     // Send event
@@ -143,6 +161,7 @@ void Ut_DuiTextEdit::confirmKeyEventIgnored(DuiTextEdit *subject, int key)
     QString text = subject->text();
     QCOMPARE(text, testString);
     QCOMPARE(startCursorPos, subject->cursorPosition());
+    QCOMPARE(returnPressedSpy.count(), expectedReturnPressed);
 }
 
 
@@ -296,9 +315,9 @@ void Ut_DuiTextEdit::testSingleLineKeyPressEvent()
     DuiTextEditModel::LineMode mode = singleLine.lineMode();
     QCOMPARE(mode, DuiTextEditModel::SingleLine);
 
-    confirmKeyEventIgnored(&singleLine, Qt::Key_Return);
-    confirmKeyEventIgnored(&singleLine, Qt::Key_Up);
-    confirmKeyEventIgnored(&singleLine, Qt::Key_Down);
+    confirmKeyEventIgnored(&singleLine, Qt::Key_Return, 1);
+    confirmKeyEventIgnored(&singleLine, Qt::Key_Up, 0);
+    confirmKeyEventIgnored(&singleLine, Qt::Key_Down, 0);
 }
 
 #include <DuiEscapeButtonPanel>
@@ -1461,6 +1480,150 @@ void Ut_DuiTextEdit::testPasswordEchoOnEditClearing()
     QCOMPARE(m_subject->text().length(), 2);
 }
 
+void Ut_DuiTextEdit::testReturnKeyPressed_data()
+{
+    QTest::addColumn<DuiTextEditModel::LineMode>("lineMode");
+    QTest::addColumn<QValidator::State>("validatorState");
+    QTest::addColumn<int>("expectedSignals");
+
+    QTest::newRow("single line, invalid")      << DuiTextEditModel::SingleLine << QValidator::Invalid      << 0;
+    QTest::newRow("single line, intermediate") << DuiTextEditModel::SingleLine << QValidator::Intermediate << 0;
+    QTest::newRow("single line, acceptable")   << DuiTextEditModel::SingleLine << QValidator::Acceptable   << 1;
+    QTest::newRow("multi line,  invalid")      << DuiTextEditModel::MultiLine  << QValidator::Invalid      << 0;
+    QTest::newRow("multi line,  intermediate") << DuiTextEditModel::MultiLine  << QValidator::Intermediate << 0;
+    QTest::newRow("multi line,  acceptable")   << DuiTextEditModel::MultiLine  << QValidator::Acceptable   << 0;
+}
+
+/*!
+ * Verify that returnPressed() is emitted when all conditions are met:
+ *      user press return key on hardware keyboard
+ *      validator returns QValidator::Acceptable
+ *      text entry is single line entry
+ */
+void Ut_DuiTextEdit::testReturnKeyPressed()
+{
+    QFETCH(DuiTextEditModel::LineMode, lineMode);
+    QFETCH(QValidator::State, validatorState);
+    QFETCH(int, expectedSignals);
+
+    delete m_subject;
+    m_subject = new DuiTextEdit(lineMode, "");
+
+    SimpleValidator validator;
+    QKeyEvent event(QEvent::KeyPress, Qt::Key_Return, Qt::NoModifier, "\n");
+    QSignalSpy returnPressedSpy(m_subject, SIGNAL(returnPressed()));
+
+    validator.state = validatorState;
+    m_subject->setValidator(&validator);
+
+    m_subject->keyPressEvent(&event);
+    QCOMPARE(returnPressedSpy.count(), expectedSignals);
+}
+
+void Ut_DuiTextEdit::testLineBreakSent_data()
+{
+    QTest::addColumn<DuiTextEditModel::LineMode>("lineMode");
+    QTest::addColumn<QString>("preeditString");
+    QTest::addColumn<QString>("commitString");
+    QTest::addColumn<Dui::TextContentType>("contentType");
+    QTest::addColumn<int>("expectedSignals");
+
+    QTest::newRow("single line, empty") << DuiTextEditModel::SingleLine << "" << "" << Dui::FreeTextContentType << 0;
+    QTest::newRow("single line, preedit, no line break") << DuiTextEditModel::SingleLine << "preedit" << "" << Dui::FreeTextContentType << 0;
+    QTest::newRow("single line, commit, no line break")  << DuiTextEditModel::SingleLine << "" << "commit" << Dui::FreeTextContentType << 0;
+    QTest::newRow("single line, preedit, line break") << DuiTextEditModel::SingleLine << "preedit\n" << "" << Dui::FreeTextContentType << 0;
+    QTest::newRow("single line, commit, line break")  << DuiTextEditModel::SingleLine << "" << "commit\n" << Dui::FreeTextContentType << 1;
+    QTest::newRow("single line, commit, line break only")  << DuiTextEditModel::SingleLine << "" << "\n" << Dui::FreeTextContentType << 1;
+    QTest::newRow("single line, commit, multiple line breaks")  << DuiTextEditModel::SingleLine << "" << "commit\n\n\n" << Dui::FreeTextContentType << 1;
+    QTest::newRow("single line, invalid number") << DuiTextEditModel::SingleLine << "" << "abc\n" << Dui::NumberContentType << 0;
+    QTest::newRow("single line, valid number") << DuiTextEditModel::SingleLine << "" << "123\n" << Dui::NumberContentType << 1;
+
+    QTest::newRow("multi line, empty") << DuiTextEditModel::MultiLine << "" << "" << Dui::FreeTextContentType << 0;
+    QTest::newRow("multi line, preedit, no line break") << DuiTextEditModel::MultiLine << "preedit" << "" << Dui::FreeTextContentType << 0;
+    QTest::newRow("multi line, commit, no line break")  << DuiTextEditModel::MultiLine << "" << "commit" << Dui::FreeTextContentType << 0;
+    QTest::newRow("multi line, preedit, line break") << DuiTextEditModel::MultiLine << "preedit\n" << "" << Dui::FreeTextContentType << 0;
+    QTest::newRow("multi line, commit, line break only")  << DuiTextEditModel::MultiLine << "" << "\n" << Dui::FreeTextContentType << 0;
+    QTest::newRow("multi line, commit, line break")  << DuiTextEditModel::MultiLine << "" << "commit\n" << Dui::FreeTextContentType << 0;
+    QTest::newRow("multi line, commit, multiple line breaks")  << DuiTextEditModel::MultiLine << "" << "commit\n\n\n" << Dui::FreeTextContentType << 0;
+}
+
+/*!
+ * Verify that returnPressed() is emitted when all conditions are met:
+ *      user press return key on virtual keyboard
+ *      validator returns QValidator::Acceptable
+ *      text entry is single line entry
+ */
+void Ut_DuiTextEdit::testLineBreakSent()
+{
+    QFETCH(DuiTextEditModel::LineMode, lineMode);
+    QFETCH(QString, preeditString);
+    QFETCH(QString, commitString);
+    QFETCH(Dui::TextContentType, contentType);
+    QFETCH(int, expectedSignals);
+
+    delete m_subject;
+    m_subject = new DuiTextEdit(lineMode, "");
+    m_subject->setContentType(contentType);
+
+    QSignalSpy returnPressedSpy(m_subject, SIGNAL(returnPressed()));
+    QVERIFY(returnPressedSpy.isValid());
+
+    QInputMethodEvent event(preeditString, QList<QInputMethodEvent::Attribute>());
+    event.setCommitString(commitString);
+    m_subject->inputMethodEvent(&event);
+
+    QCOMPARE(returnPressedSpy.count(), expectedSignals);
+}
+
+void Ut_DuiTextEdit::testCommitLineBreakAfterPreedit_data()
+{
+    QTest::addColumn<QValidator::State>("validatorState");
+    QTest::addColumn<QString>("commitString");
+    QTest::addColumn<int>("expectedSignals");
+
+    QTest::newRow("123\\n, invalid")      << QValidator::Invalid      << "123\n" << 0;
+    QTest::newRow("123\\n, intermediate") << QValidator::Intermediate << "123\n" << 0;
+    QTest::newRow("123\\n, acceptable")   << QValidator::Acceptable   << "123\n" << 1;
+
+    QTest::newRow("\\n, invalid")      << QValidator::Invalid      << "\n" << 0;
+    QTest::newRow("\\n, intermediate") << QValidator::Intermediate << "\n" << 0;
+    QTest::newRow("\\n, acceptable")   << QValidator::Acceptable   << "\n" << 1;
+}
+
+/*!
+ * Verify more complicated scenario:
+ *      set preedit string
+ *      commit another string with different validator states
+ *
+ * returnPressed should be emitted when validator returns QValidator::Acceptable
+ */
+void Ut_DuiTextEdit::testCommitLineBreakAfterPreedit()
+{
+    QFETCH(QValidator::State, validatorState);
+    QFETCH(QString, commitString);
+    QFETCH(int, expectedSignals);
+
+    delete m_subject;
+    m_subject = new DuiTextEdit(DuiTextEditModel::SingleLine, "");
+
+    SimpleValidator validator;
+    validator.state = QValidator::Acceptable;
+    m_subject->setValidator(&validator);
+
+    QSignalSpy returnPressedSpy(m_subject, SIGNAL(returnPressed()));
+    QVERIFY(returnPressedSpy.isValid());
+
+    QInputMethodEvent preeditEvent("123\n", QList<QInputMethodEvent::Attribute>());
+    m_subject->inputMethodEvent(&preeditEvent);
+    QCOMPARE(returnPressedSpy.count(), 0);
+
+    validator.state = validatorState;
+
+    QInputMethodEvent commitEvent("", QList<QInputMethodEvent::Attribute>());
+    commitEvent.setCommitString(commitString);
+    m_subject->inputMethodEvent(&commitEvent);
+    QCOMPARE(returnPressedSpy.count(), expectedSignals);
+}
 
 QTEST_APPLESS_MAIN(Ut_DuiTextEdit);
 
