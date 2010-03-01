@@ -36,7 +36,9 @@ FeedbackPage::FeedbackPage() :
     feedbackButton1(0),
     feedbackButton2(0),
     feedbackButton3(0),
-    feedbackButton4(0)
+    feedbackButton4(0),
+    feedbackButton5(0),
+    feedbackButton6(0)
 {
     gid = TemplatePage::InputFeedback;
 }
@@ -67,6 +69,14 @@ void FeedbackPage::createContent()
     feedbackButton4->setObjectName("feedbackButton4");
     containerPolicy->addItem(feedbackButton4);
 
+    feedbackButton5 = new DuiButton();
+    feedbackButton5->setObjectName("feedbackButton5");
+    containerPolicy->addItem(feedbackButton5);
+
+    feedbackButton6 = new DuiButton();
+    feedbackButton6->setObjectName("feedbackButton6");
+    containerPolicy->addItem(feedbackButton6);
+
     retranslateUi();
 }
 
@@ -86,12 +96,16 @@ void FeedbackPage::retranslateUi()
     infoLabel->setText("<a></a>" + qtTrId("xx_input_feedback_page_info_label"));
     //% "Default"
     feedbackButton1->setText(qtTrId("xx_input_feedback_page_button1"));
-    //% "Babytoy"
+    //% "Different"
     feedbackButton2->setText(qtTrId("xx_input_feedback_page_button2"));
-    //% "Space"
+    //% "Sluggish"
     feedbackButton3->setText(qtTrId("xx_input_feedback_page_button3"));
-    //% "Silent"
+    //% "Babytoy"
     feedbackButton4->setText(qtTrId("xx_input_feedback_page_button4"));
+    //% "Space"
+    feedbackButton5->setText(qtTrId("xx_input_feedback_page_button5"));
+    //% "Silent"
+    feedbackButton6->setText(qtTrId("xx_input_feedback_page_button6"));
 }
 
 

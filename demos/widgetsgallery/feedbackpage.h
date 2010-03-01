@@ -45,6 +45,8 @@ private:
     DuiButton *feedbackButton2;
     DuiButton *feedbackButton3;
     DuiButton *feedbackButton4;
+    DuiButton *feedbackButton5;
+    DuiButton *feedbackButton6;
 };
 
 #endif

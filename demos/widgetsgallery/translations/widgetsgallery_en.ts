@@ -451,7 +451,7 @@ tooltip</source>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used fordisplaying playback status for multimedia content.</source>
-        <oldsource>Slider is used for contnuous set of values, among which user can choose one value. 
+        <oldsource>Slider is used for contnuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used for displaying playback status for multimedia content.</oldsource>
         <translation>Slider is used for continuous set of values, among which user can choose one value.
@@ -986,12 +986,12 @@ Switches are used to indicate e.g. settings values</translation>
         <translation>Infinite Improbability Drive</translation>
     </message>
     <message id="xx_input_feedback_page_title">
-        <location filename="../feedbackpage.cpp" line="57"/>
+        <location filename="../feedbackpage.cpp" line="86"/>
         <source>Input Feedback</source>
         <translation>Input Feedback</translation>
     </message>
     <message id="xx_input_feedback_page_info_label">
-        <location filename="../feedbackpage.cpp" line="67"/>
+        <location filename="../feedbackpage.cpp" line="96"/>
         <source>This page contains buttons with custom input feedbacks. Any DuiWidget can have input feedback for press and release events. Input feedback can be a sound effect and/or a haptic effect (piezo, vibra) depending on the product.
 
 Input feedbacks can be easily configured for different purposes using the theming system.</source>
@@ -1000,21 +1000,31 @@ Input feedbacks can be easily configured for different purposes using the themin
 Input feedbacks can be easily configured for different purposes using the theming system.</translation>
     </message>
     <message id="xx_input_feedback_page_button1">
-        <location filename="../feedbackpage.cpp" line="69"/>
+        <location filename="../feedbackpage.cpp" line="98"/>
         <source>Default</source>
         <translation>Default</translation>
     </message>
     <message id="xx_input_feedback_page_button2">
-        <location filename="../feedbackpage.cpp" line="71"/>
+        <location filename="../feedbackpage.cpp" line="100"/>
+        <source>Different</source>
+        <translation>Different</translation>
+    </message>
+    <message id="xx_input_feedback_page_button3">
+        <location filename="../feedbackpage.cpp" line="102"/>
+        <source>Sluggish</source>
+        <translation>Sluggish</translation>
+    </message>
+    <message id="xx_input_feedback_page_button4">
+        <location filename="../feedbackpage.cpp" line="104"/>
         <source>Babytoy</source>
         <translation>Babytoy</translation>
     </message>
-    <message id="xx_input_feedback_page_button3">
-        <location filename="../feedbackpage.cpp" line="73"/>
+    <message id="xx_input_feedback_page_button5">
+        <location filename="../feedbackpage.cpp" line="106"/>
         <source>Space</source>
         <translation>Space</translation>
     </message>
-    <message id="xx_input_feedback_page_button4">
+    <message id="xx_input_feedback_page_button6">
         <location filename="../feedbackpage.cpp" line="75"/>
         <source>Silent</source>
         <translation>Silent</translation>

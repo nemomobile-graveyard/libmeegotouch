@@ -16,16 +16,26 @@ DuiButtonStyle#theme-selection-button {
 }
 
 #feedbackButton2 {
+    press-feedback: press-different;
+    release-feedback: release-different;
+}
+
+#feedbackButton3 {
+    press-feedback: press-sluggish;
+    release-feedback: release-sluggish;
+}
+
+#feedbackButton4 {
     press-feedback: press-babytoy;
     release-feedback: release-babytoy;
 }
 
-#feedbackButton3 {
+#feedbackButton5 {
     press-feedback: press-space;
     release-feedback: release-space;
 }
 
-#feedbackButton4 {
+#feedbackButton6 {
     press-feedback: ;
     release-feedback: ;
 }
