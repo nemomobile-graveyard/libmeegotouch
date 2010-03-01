@@ -1,1 +1,1 @@
-<pkg-contents spec="1.12"/>
+<pkg-contents spec="1.12"><f n="devel" o="dubik" g="staff" p="16877" pt="/Users/dubik/Projects/DirectUI/duitheme/devel" m="false" t="file"><f n="dui" o="root" g="wheel" p="16877"><f n="icons" o="root" g="wheel" p="16877"><f n="icon-l-duitheme-devel.svg" o="root" g="wheel" p="33188"/></f><f n="libdui" o="root" g="wheel" p="16877"><f n="libdui.conf" o="root" g="wheel" p="33188"/><f n="style" o="root" g="wheel" p="16877"><f n="libdui.css" o="root" g="wheel" p="33188"/></f></f></f><f n="index.theme" o="root" g="wheel" p="33188"/></f></pkg-contents>
