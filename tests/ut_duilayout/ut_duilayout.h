@@ -25,7 +25,7 @@
 
 #include <duilayout.h>
 
-class QGraphicsScene;
+class DuiScene;
 class QGraphicsProxyWidget;
 class QPushButton;
 
@@ -61,6 +61,7 @@ private slots:
     void testDuiLabelOnLayout();
     void testHidingShowingWidgets_data();
     void testHidingShowingWidgets();
+    void testLayoutInsideLayoutOrientation();
     void testLayoutInsideLayout_data();
     void testLayoutInsideLayout();
     void testReparenting();
@@ -102,7 +103,8 @@ private slots:
     void testExplicitlyHidingItems();
 private:
     QPushButton *m_button;
-    QGraphicsScene *m_scene;
+    QGraphicsWidget *m_form;
+    DuiScene *m_scene;
     QGraphicsProxyWidget *m_proxy;
 };
 

@@ -135,10 +135,7 @@ void DuiAbstractLayoutPolicy::updateStyle()
 {
     Q_D(DuiAbstractLayoutPolicy);
 
-    Dui::Orientation orientation = Dui::Landscape;
-    if (DuiApplication::activeWindow()) {
-        orientation = DuiApplication::activeWindow()->orientation();
-    }
+    Dui::Orientation orientation = d->layout->d_ptr->orientation();
 
     const DuiAbstractLayoutPolicyStyle *style =
         static_cast<const DuiAbstractLayoutPolicyStyle *>(DuiTheme::style(

@@ -25,9 +25,9 @@
 #include "duiabstractlayoutpolicy_p.h"
 #include "duiitemstate.h"
 #include "duibasiclayoutanimation.h"
+#include "duiorientationchangeevent.h"
 
 #include <QGraphicsItem>
-#include <QGraphicsScene>
 #include <QApplication>
 #include <DuiDebug>
 
@@ -71,6 +71,10 @@ DuiLayout::~DuiLayout()
 void DuiLayout::invalidate()
 {
     Q_D(DuiLayout);
+    //We need to check if the orientation has changed.  This can cause the current policy to change
+    //Unfortunately, this is the only function called when widget->setLayout(layout)  is called.
+    d->recheckOrientation();
+
     if (d->current_policy)
         d->current_policy->invalidate();
     QGraphicsLayout::invalidate();
@@ -189,6 +193,7 @@ void DuiLayout::setGeometry(const QRectF &rect)
     //Note that setGeometry first adjusts rect to obey the sizehints, so our actual geometry
     //afterwards is not necessarily equal to the parameter 'rect'.
     QGraphicsLayout::setGeometry(rect);
+
     if (d->current_policy) {
         d->current_policy->relayout();
         //If the width really has changed and our height depends on the width, we need to recalculate
@@ -288,8 +293,7 @@ void DuiLayout::setLandscapePolicy(DuiAbstractLayoutPolicy *policy)
         return;
     d->landscapePolicy = policy;
     Q_ASSERT(!policy || policy->layout() == this);
-    if (d->landscapePolicy && DuiApplication::activeWindow()
-            && DuiApplication::activeWindow()->orientation() == Dui::Landscape) {
+    if (d->landscapePolicy && d->m_orientation == Dui::Landscape) {
         policy->activate();
     }
 }
@@ -306,8 +310,7 @@ void DuiLayout::setPortraitPolicy(DuiAbstractLayoutPolicy *policy)
         return;
     d->portraitPolicy = policy;
     Q_ASSERT(!policy || policy->layout() == this);
-    if (d->portraitPolicy && DuiApplication::activeWindow()
-            && DuiApplication::activeWindow()->orientation() == Dui::Portrait) {
+    if (d->portraitPolicy && d->m_orientation == Dui::Portrait) {
         policy->activate();
     }
 }
@@ -376,4 +379,17 @@ Qt::LayoutDirection DuiLayout::layoutDirection() const
             return static_cast<QGraphicsWidget *>(maybeWidget)->layoutDirection();
     }
     return QApplication::layoutDirection();
+}
+void DuiLayout::widgetEvent ( QEvent * event )
+{
+    Q_D(DuiLayout);
+    if(event->type() == QEvent::ParentChange || event->type() == QEvent::PolishRequest) {
+        d->recheckOrientation();
+    } else if(event->type() == DuiOrientationChangeEvent::eventNumber()) {
+        DuiOrientationChangeEvent *oce = static_cast<DuiOrientationChangeEvent *>(event);
+        d->setOrientation(oce->orientation());
+        activate();
+    }
+
+    QGraphicsLayout::widgetEvent(event);
 }

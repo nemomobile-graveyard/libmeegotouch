@@ -25,17 +25,15 @@
 
 #include <QtCore/QList>
 #include <QtCore/QPointer>
-
-#include <DuiSceneManager>
+#include <duinamespace.h>
 
 class QGraphicsLayoutItem;
 class DuiLayoutAnimation;
 
 /** Private Layout class.
  */
-class DuiLayoutPrivate : public QObject
+class DuiLayoutPrivate
 {
-    Q_OBJECT
 public:
 
     /** Constructor */
@@ -104,10 +102,12 @@ public:
     void showItemNow(QGraphicsLayoutItem *layoutItem);
     /** Only clear the flag in DuiWidget */
     void removeHiddenFlag(QGraphicsLayoutItem *layoutItem);
-protected slots:
-    /** This is called when the device's orientation has changed */
-    void orientationChanged(const Dui::Orientation &orientation);
-
+    /** This is called when the widget's orientation has changed (probably because the device has been rotated) */
+    void setOrientation(Dui::Orientation orientation);
+    /** Check the closest parent widget's scene to find out what orientation we are in */
+    void recheckOrientation();
+    /** Return the current orientation of the layout */
+    Dui::Orientation orientation() const;
 
 protected:
     Q_DECLARE_PUBLIC(DuiLayout)
@@ -124,6 +124,9 @@ protected:
 
     /** Policies that are associated with this layout. */
     QList<DuiAbstractLayoutPolicy *> policies;
+
+    /** The current orientation of the widget that this layout is in */
+    Dui::Orientation m_orientation;
 };
 
 #endif // Header Guard

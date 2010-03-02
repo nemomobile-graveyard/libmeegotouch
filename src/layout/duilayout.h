@@ -522,6 +522,10 @@ public:
      */
     Qt::LayoutDirection layoutDirection() const;
 
+    /*! \reimp */
+    virtual void widgetEvent ( QEvent * e );
+    /*! \reimp_end */
+
 protected:
     /*!
      * \brief Internal function to add a new item to this layout

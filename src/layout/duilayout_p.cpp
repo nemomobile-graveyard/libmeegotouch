@@ -28,20 +28,20 @@
 
 #include "duidebug.h"
 
+#include <DuiScene>
+
 DuiLayoutPrivate::DuiLayoutPrivate(DuiLayout *l) :
     q_ptr(l),
     portraitPolicy(NULL),
     landscapePolicy(NULL),
     current_policy(NULL),
-    animation(NULL)
+    animation(NULL),
+    m_orientation(Dui::Portrait)
 {
     Q_ASSERT(0 != q_ptr);
-    DuiWindow *window = DuiApplication::activeWindow();
-    if (window) {
-        connect(window,
-                SIGNAL(orientationChanged(Dui::Orientation)),
-                SLOT(orientationChanged(Dui::Orientation)));
-    }
+    if (DuiApplication::activeWindow())
+        m_orientation = DuiApplication::activeWindow()->orientation();
+
 }
 
 void DuiLayoutPrivate::registerPolicy(DuiAbstractLayoutPolicy *policy)
@@ -164,13 +164,18 @@ void DuiLayoutPrivate::hideItem(int index)
 
 }
 
-void DuiLayoutPrivate::orientationChanged(const Dui::Orientation &orientation)
+void DuiLayoutPrivate::setOrientation(Dui::Orientation orientation)
 {
+    Q_Q(DuiLayout);
+    if(orientation == m_orientation)
+        return;
+    m_orientation = orientation;
     if (orientation == Dui::Portrait) {
         if (portraitPolicy)
-            portraitPolicy->activate();
-    } else if (landscapePolicy)
-        landscapePolicy->activate();
+            q->setPolicy(portraitPolicy);
+    } else if (landscapePolicy) {
+        q->setPolicy(landscapePolicy);
+    }
     //since the rotation has changed, reread the values from the CSS config
     foreach(DuiAbstractLayoutPolicy * policy, policies) {
         Q_ASSERT(policy);
@@ -187,7 +192,29 @@ QGraphicsItem *DuiLayoutPrivate::parentItem() const
     }
     return parent ? parent->graphicsItem() : 0;
 }
-
+Dui::Orientation DuiLayoutPrivate::orientation() const {
+    return m_orientation;
+}
+void DuiLayoutPrivate::recheckOrientation() {
+    //We need to check if the orientation has changed.
+    QGraphicsItem *parent = parentItem();
+    if(parent) {
+        QGraphicsWidget *w;
+        if(parent->isWidget()) {
+            w = static_cast<QGraphicsWidget*>(parent); //We can't assume it is a DuiWidget
+        } else {
+            w = parent->parentWidget();
+            if(!w)
+                return;
+        }
+        if(w->scene() && !w->scene()->views().isEmpty()) {
+            DuiWindow *window = qobject_cast<DuiWindow *>(w->scene()->views().at(0));
+            if(window) {
+                setOrientation(window->orientation());
+            }
+        }
+    }
+}
 void DuiLayoutPrivate::showItemNow(QGraphicsLayoutItem *layoutItem)
 {
     QGraphicsItem *graphicsItem = layoutItem->graphicsItem();
@@ -221,7 +248,4 @@ void DuiLayoutPrivate::hideItemNow(QGraphicsLayoutItem *layoutItem)
     //The following code moves the item out of the way, but in practice this doesn't
     //really work since coordinates all relative
 }
-
-
-#include "moc_duilayout_p.cpp"
 

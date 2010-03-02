@@ -32,7 +32,6 @@
 #include <duibasiclayoutanimation.h>
 #include <duitheme.h>
 #include <duiwindow.h>
-#include <duiscene.h>
 
 #include "../src/layout/duilayout_p.h"
 
@@ -40,6 +39,7 @@
 #include <QtGui/QGraphicsProxyWidget>
 #include <QtGui/QGraphicsLinearLayout>
 #include <QtGui/QSizePolicy>
+
 class TestPolicy : public DuiAbstractLayoutPolicy
 {
 public:
@@ -152,6 +152,7 @@ Ut_DuiLayout::Ut_DuiLayout() :
     static char *argv[1] = { (char *) "./ut_duilayout" };
     app = new DuiApplication(argc, argv);
     appWin = new DuiWindow;
+    qRegisterMetaType<Dui::Orientation>("Dui::Orientation");
 }
 
 Ut_DuiLayout::~Ut_DuiLayout()
@@ -175,8 +176,11 @@ void Ut_DuiLayout::init()
 
     // setup a QGraphicsLayoutItem:
     m_scene = new DuiScene;
+    appWin->setScene(m_scene);
     m_button = new QPushButton("Test");
+    m_form = new QGraphicsWidget;
     m_proxy = m_scene->addWidget(m_button);
+    m_scene->addItem(m_form);
 
     Q_ASSERT(0 != m_button);
     Q_ASSERT(0 != m_scene);
@@ -190,6 +194,7 @@ void Ut_DuiLayout::cleanup()
     m_scene = 0;
     m_proxy = 0;
     m_button = 0;
+    m_form = 0;
 }
 
 void Ut_DuiLayout::itemState()
@@ -356,7 +361,6 @@ void Ut_DuiLayout::testDeletingItem()
     // Add graphics item:
     layout->addItem(m_proxy);
     QCOMPARE(layout->count(), 1);
-
 
     // Delete item directly, removing it from the layout
     delete layout->itemAt(0);
@@ -1089,6 +1093,24 @@ void Ut_DuiLayout::testHidingShowingWidgets()
     QCOMPARE(item1->isVisible(), false);
 }
 
+void Ut_DuiLayout::testLayoutInsideLayoutOrientation()
+{
+    /* A simple test to check that a layout inside of a layout respects the current window orientation */
+    DuiLayout *layout = new DuiLayout(m_form);
+    DuiLinearLayoutPolicy *policy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
+    DuiLayout *innerLayout = new DuiLayout;
+    DuiLinearLayoutPolicy *landscapePolicy = new DuiLinearLayoutPolicy(innerLayout, Qt::Horizontal);
+    DuiLinearLayoutPolicy *portraitPolicy = new DuiLinearLayoutPolicy(innerLayout, Qt::Horizontal);
+
+    innerLayout->setLandscapePolicy(landscapePolicy);
+    innerLayout->setPortraitPolicy(portraitPolicy);
+
+    policy->addItem(innerLayout);
+
+    QCOMPARE(appWin->orientation(), Dui::Landscape); //Default
+    QVERIFY(innerLayout->policy() == landscapePolicy);
+
+}
 /* We are testing a layout inside of a layout.  We test four combinations
  * to make sure that DuiLayout behaves exactly like QGraphicsLinearLayout
  */
@@ -1975,7 +1997,7 @@ void Ut_DuiLayout::testLayoutPolicyStyling()
     QFETCH(QString, policyType); // Whether the policy is a DuiLinearLayoutPolicy, DuiGridLayoutPolicy, ...
     QFETCH(bool, isCurrent);
 
-    DuiLayoutTest *layout = new DuiLayoutTest();
+    DuiLayoutTest *layout = new DuiLayoutTest(m_form);
     DuiAbstractLayoutPolicy *policy;
     if (!isCurrent) {
         // with out a setPolicy, the policy added to the layout first
@@ -2000,6 +2022,8 @@ void Ut_DuiLayout::testLayoutPolicyStyling()
 
     // The objectName of the policy should be empty be default, make sure it is:
     QVERIFY(policy->objectName().isEmpty());
+
+    QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle0);
 
     // The numbers which follow here are taken from the ut_duilayout.css file
     // if you change the css file, you need to keep them in sync:
@@ -2046,8 +2070,6 @@ void Ut_DuiLayout::testLayoutPolicyStyling()
     policy->setObjectName(QString::null);
     QVERIFY(policy->objectName().isEmpty());
     checkPolicies(layout, policy, isCurrent, policyType, -1.0, -1.0, -1.0, -1.0, 6.0, 7.0);
-
-    delete layout;
 }
 
 void Ut_DuiLayout::testLayoutSwitchingWithOrientation()
@@ -2055,7 +2077,7 @@ void Ut_DuiLayout::testLayoutSwitchingWithOrientation()
     //Test rotating the screen to make sure that the landscape/portrait policy is always correctly set
     //This was written in response to NB#144347 but the test passes, without finding any problems
     QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle0);
-    DuiLayoutTest *layout = new DuiLayoutTest();
+    DuiLayoutTest *layout = new DuiLayoutTest(m_form);
     DuiAbstractLayoutPolicy *landscape_policy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
     QVERIFY(layout->policy() == landscape_policy); //Only policy, so it must be this one
     DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90);
