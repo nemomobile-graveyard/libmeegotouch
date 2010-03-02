@@ -562,6 +562,12 @@ if [ "$QT_MAJOR_VERSION" -lt "$QT_MAJOR_VERSION_NEEDED" ] \
     exit 1
 fi
 
+# set special options for mac build
+if [ "$UNAME_SYSTEM" = "Darwin" ]; then
+    QMAKE_SWITCHES="$QMAKE_SWITCHES -spec macx-g++"
+fi
+
+
 #Run qmake
 cd "$outpath"
 $QMAKE_BIN "$relpath/projects.pro" $QMAKE_CONFIG $QMAKE_SWITCHES
