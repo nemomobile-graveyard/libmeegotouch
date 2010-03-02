@@ -25,6 +25,7 @@
 #include <pthread.h>
 
 DuiAppletSharedMutexPrivate::DuiAppletSharedMutexPrivate() :
+    q_ptr(NULL),
     sharedMemory(NULL),
     sharedMemoryId(-1)
 {

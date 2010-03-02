@@ -60,6 +60,7 @@ DuiContainerViewPrivate::DuiContainerViewPrivate()
     , background(0)
     , headerPressed(false)
     , progressIndicator(0)
+    , q_ptr(0)
 {
 }
 

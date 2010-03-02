@@ -19,7 +19,8 @@
 
 #include "duisettingslanguagesettings.h"
 
-DuiSettingsLanguageSettings::DuiSettingsLanguageSettings()
+DuiSettingsLanguageSettings::DuiSettingsLanguageSettings():
+        _group(false)
 {
 }
 

@@ -31,6 +31,7 @@
 #include "duicomponentdata_p.h"
 
 DuiDeviceProfilePrivate::DuiDeviceProfilePrivate()
+    : q_ptr(0)
 {
     QString filename = "/etc/dui/devices.conf";
 

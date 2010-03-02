@@ -33,7 +33,7 @@
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET(DuiList)
 
-DuiListPrivate::DuiListPrivate()
+        DuiListPrivate::DuiListPrivate() : selectionMode(DuiList::NoSelection)
 {
 }
 

@@ -40,6 +40,7 @@ DuiSceneWindowPrivate::DuiSceneWindowPrivate()
     dismissed = false;
     policy = DuiSceneWindow::KeepWhenDone;
     effect = NULL;
+    windowType = DuiSceneWindow::PlainSceneWindow;
 }
 
 void DuiSceneWindowPrivate::appear(bool now, DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)

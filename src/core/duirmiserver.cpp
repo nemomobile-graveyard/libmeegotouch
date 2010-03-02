@@ -34,7 +34,7 @@ QGenericArgument unmarshall(const char *name, const void *data)
 }
 
 DuiRmiServerPrivate::DuiRmiServerPrivate(const QString &key)
-    : _key(key), _obj(0)
+    : q_ptr(0), _key(key), _obj(0)
 {
 }
 
@@ -59,7 +59,7 @@ QString DuiRmiServerPrivate::key() const
 }
 
 DuiRmiServerPrivateSocket::DuiRmiServerPrivateSocket(const QString &key)
-    : DuiRmiServerPrivate(key), method_size(0)
+    : DuiRmiServerPrivate(key),  _sock(NULL), method_size(0)
 {
 }
 

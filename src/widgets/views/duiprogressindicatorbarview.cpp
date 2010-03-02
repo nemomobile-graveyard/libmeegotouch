@@ -37,6 +37,9 @@ const int ProgressBarUpdateInterval = 1000 / 30;
 
 DuiProgressIndicatorBarViewPrivate::DuiProgressIndicatorBarViewPrivate()
     :  controller(0),
+       elementSize(0),
+       activeElementCount(0),
+       speed(0),
        position(0),
        timer(0)
 {

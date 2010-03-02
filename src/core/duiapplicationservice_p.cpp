@@ -30,6 +30,7 @@ DuiApplicationServicePrivate::DuiApplicationServicePrivate(const QString &newSer
     serviceName(newServiceName),
     registered(false),
     instanceCounter(0),
+    q_ptr(NULL),
     dBusConnection(QDBusConnection::sessionBus()),
     duiApp(DuiApplication::instance())
 {

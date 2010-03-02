@@ -34,7 +34,7 @@ static const int NOCONTENTITEMSTYLE = -1;
 QVector<DuiContentItemViewPrivate::backgroundFunc> DuiContentItemViewPrivate::backgroundFunctions;
 
 DuiContentItemViewPrivate::DuiContentItemViewPrivate()
-    : titleLabel(NULL), subtitleLabel(NULL), imageWidget(NULL), configuredStyle(NOCONTENTITEMSTYLE), down(false), optionalImageWidget(0)
+    : controller(NULL), titleLabel(NULL), subtitleLabel(NULL), imageWidget(NULL), configuredStyle(NOCONTENTITEMSTYLE), down(false), optionalImageWidget(0)
 {
     layout = new QGraphicsGridLayout;
     layout->setContentsMargins(0, 0, 0, 0);

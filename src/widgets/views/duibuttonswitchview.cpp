@@ -39,6 +39,7 @@
 
 
 DuiButtonSwitchViewPrivate::DuiButtonSwitchViewPrivate() :
+    mouseOffset(0),
     m_thumbDown(false),
     m_thumbDragged(false),
     m_thumbPos(0, 0)

@@ -24,7 +24,8 @@
 #include <DuiDebug>
 
 DuiRmiClientPrivate:: DuiRmiClientPrivate(const QString &key)
-    : _key(key)
+    : q_ptr(0),
+    _key(key)
 {
 }
 
@@ -49,6 +50,7 @@ QString DuiRmiClientPrivate::key() const
 
 DuiRmiClientPrivateSocket::DuiRmiClientPrivateSocket(const QString &key, DuiRmiClient *q)
     : DuiRmiClientPrivate(key),
+      _stream(0),
       return_sz(0)
 {
     q_ptr = q;

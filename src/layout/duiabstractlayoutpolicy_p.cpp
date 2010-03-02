@@ -32,7 +32,8 @@ DuiAbstractLayoutPolicyPrivate::DuiAbstractLayoutPolicyPrivate(DuiLayout *l) :
     userSetHorizontalSpacing(false),
     userSetContentsMargins(false),
     style(NULL),
-    removingFromLayout(false)
+    removingFromLayout(false),
+    q_ptr(NULL)
 {
     Q_ASSERT(0 != layout);
 }

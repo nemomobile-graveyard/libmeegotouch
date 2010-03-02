@@ -21,7 +21,7 @@
 #include "duiaggregatedataaccess_p.h"
 
 DuiAggregateDataAccessPrivate::DuiAggregateDataAccessPrivate(DuiDataAccess &primaryAccess, DuiDataAccess &secondaryAccess) :
-    primaryAccess(primaryAccess), secondaryAccess(secondaryAccess)
+    primaryAccess(primaryAccess), secondaryAccess(secondaryAccess), q_ptr(NULL)
 {
 }
 

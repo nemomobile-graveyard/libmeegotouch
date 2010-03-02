@@ -36,7 +36,11 @@
 #include <X11/extensions/Xdamage.h>
 #endif
 
-DuiApplicationPrivate::DuiApplicationPrivate()
+DuiApplicationPrivate::DuiApplicationPrivate():
+        componentData(NULL),
+        xDamageEventBase(0),
+        xDamageErrorBase(0),
+        q_ptr(NULL)
 {
 #ifdef Q_WS_X11
     XDamageQueryExtension(QX11Info::display(), &xDamageEventBase, &xDamageErrorBase);

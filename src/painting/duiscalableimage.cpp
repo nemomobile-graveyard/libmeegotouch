@@ -29,7 +29,7 @@
 
 DuiScalableImagePrivate::DuiScalableImagePrivate()
     : m_imageType(DuiScalable9), m_image(NULL),
-      m_useGLRenderer(false)
+      m_useGLRenderer(false), q_ptr(NULL)
 {
 }
 

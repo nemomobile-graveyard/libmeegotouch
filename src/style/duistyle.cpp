@@ -84,6 +84,7 @@ DuiStyleContainerPrivate::DuiStyleContainerPrivate() :
     cachedCurrentStyle[0] = 0;
     cachedCurrentStyle[1] = 0;
     parent = NULL;
+    q_ptr = NULL;
 }
 
 DuiStyleContainerPrivate::~DuiStyleContainerPrivate()

@@ -51,7 +51,8 @@ const QString XMaemoPrestartedKey("Desktop Entry/X-Maemo-Prestarted");
 
 DuiDesktopEntryPrivate::DuiDesktopEntryPrivate(const QString &fileName) :
     sourceFileName(fileName),
-    valid(true)
+    valid(true),
+    q_ptr(NULL)
 {
     QFile file(fileName);
 

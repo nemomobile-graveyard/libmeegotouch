@@ -35,6 +35,7 @@
 #include "duiclassfactory.h"
 
 DuiWidgetViewPrivate::DuiWidgetViewPrivate() :
+    q_ptr(NULL),
     controller(NULL),
     model(NULL),
     styleContainer(NULL),

@@ -25,7 +25,8 @@
 TimingScene::TimingScene(QObject *parent)
     :
     DuiScene(parent),
-    m_updateContinuously(false)
+    m_updateContinuously(false),
+    m_frameCount(0)
 {}
 
 TimingScene::~TimingScene()

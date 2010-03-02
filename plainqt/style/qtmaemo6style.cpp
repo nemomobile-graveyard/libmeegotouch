@@ -127,6 +127,7 @@ QtMaemo6StylePrivate::QtMaemo6StylePrivate()
       m_isDuiInitialized(false),
       m_isDuiApplication(false),
       m_scrollBarEventFilter(0),
+      m_windowEventFilter(0),
       m_menuBar(0),
       m_kinetic(0)
 {

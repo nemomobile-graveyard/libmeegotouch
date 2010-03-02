@@ -39,12 +39,16 @@
 DUI_REGISTER_WIDGET(DuiApplicationPage)
 
 DuiApplicationPagePrivate::DuiApplicationPagePrivate() :
+    escapeButtonMode(DuiEscapeButtonPanelModel::CloseMode),
+    rememberPosition(false),
     topSpacer(NULL),
     bottomSpacer(NULL),
     mainWidget(NULL),
     mainLayout(NULL),
     pannableViewPort(NULL),
-    centralWidget(NULL)
+    centralWidget(NULL),
+    contentCreated(false),
+    backEnabled(false)
 {}
 
 void DuiApplicationPagePrivate::init()

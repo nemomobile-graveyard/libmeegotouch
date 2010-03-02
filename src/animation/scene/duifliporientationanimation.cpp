@@ -34,7 +34,7 @@
 ///////////////////
 // Private class //
 ///////////////////
-DuiFlipOrientationAnimationPrivate::DuiFlipOrientationAnimationPrivate()
+DuiFlipOrientationAnimationPrivate::DuiFlipOrientationAnimationPrivate() : angle(Dui::Angle0)
 {
 }
 

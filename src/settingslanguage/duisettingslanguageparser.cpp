@@ -34,7 +34,7 @@
 #define PARSER_WARNING duiWarning("DuiSettingsLanguageParser")
 
 DuiSettingsLanguageParserPrivate::DuiSettingsLanguageParserPrivate() :
-    document(NULL)
+    document(NULL), q_ptr(0)
 {
 }
 

@@ -45,6 +45,7 @@
 DuiWidgetPrivate::DuiWidgetPrivate() :
     explicitlyHidden(false),
     layoutHidden(false),
+    q_ptr(NULL),
     onDisplay(false),
     onDisplaySet(false),
     selected(false)

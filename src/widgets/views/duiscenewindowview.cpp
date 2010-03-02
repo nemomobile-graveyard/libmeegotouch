@@ -27,6 +27,7 @@
 #include "duiclassfactory.h"
 
 DuiSceneWindowViewPrivate::DuiSceneWindowViewPrivate() :
+    controller(0),
     dismissAnimation(0)
 {
 }
