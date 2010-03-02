@@ -72,7 +72,6 @@ public:
 
 private:
     DuiApplication *app;
-    DuiWindow *window;
     MockDataStore *defaultDataStore;
     DuiTestAppletInstanceManager *manager;
     QString dataPath;

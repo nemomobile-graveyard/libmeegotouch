@@ -332,14 +332,12 @@ DuiTestAppletInstanceManager::DuiTestAppletInstanceManager(const QString &identi
 void Ut_DuiAppletInstanceManager::initTestCase()
 {
     static int argc = 1;
-    static char *app_name[1] = { (char *) "./ut_duiappletinstancedata" };
+    static char *app_name[1] = { (char *) "./ut_duiappletinstancemanager" };
     app = new DuiApplication(argc, app_name);
-    window = new DuiWindow;
 }
 
 void Ut_DuiAppletInstanceManager::cleanupTestCase()
 {
-    delete window;
     delete app;
 }
 
