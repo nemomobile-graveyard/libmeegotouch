@@ -400,8 +400,10 @@ void DuiContentItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (d->down) {
         d->down = false;
         event->accept();
-
-        style().setModeDefault();
+        if(d->controller->isSelected())
+            style().setModeSelected();
+        else
+            style().setModeDefault();
         applyStyle();
         update();
 
