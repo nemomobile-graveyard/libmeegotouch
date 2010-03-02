@@ -674,9 +674,14 @@ bool DuiWindow::event(QEvent *event)
             updateNeeded = true;
         } else if (Qt::Key_L == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
             // switch language
+	    QString language;
 
+#ifdef Q_OS_WIN
+            language = qgetenv( "LANG" );
+#else
             DuiGConfItem languageItem("/Dui/i18n/Language");
-            QString language = languageItem.value().toString();
+            language = languageItem.value().toString();
+#endif
             if (language == "en_US_POSIX" || language.isEmpty())
                 language = "fi";
             else if (language == "fi")
@@ -692,9 +697,22 @@ bool DuiWindow::event(QEvent *event)
             else if (language == "ur")
                 language = "zh_CN";
             else
-                language = "";
-            languageItem.set(language);
+                // when no language is set, set to fi.
+                language = "fi";
 
+#ifdef Q_OS_WIN
+            qputenv( "LANG", qPrintable( language ) );
+            DuiLocale locale( language );
+
+            // remove again, when duilocale remembers its catalogs
+            locale.installTrCatalog( "libdui" );
+            locale.installTrCatalog( "common" );
+            locale.installTrCatalog( "widgetsgallery" );
+
+            DuiLocale::setDefault( locale );
+#else
+            languageItem.set(language);
+#endif
             updateNeeded = true;
         }
 

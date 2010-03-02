@@ -114,7 +114,8 @@ DuiComponentData *DuiComponentData::self = 0;
 
 DuiComponentDataPrivate::DuiComponentDataPrivate()
     :
-#ifdef QT_OPENGL_LIB
+// for some reason in windows 7 only software rendering works
+#if defined(QT_OPENGL_LIB) && !defined(Q_OS_WIN)
     softwareRendering(false),
 #else
     softwareRendering(true),
@@ -443,7 +444,20 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
     if (catalog.isEmpty())
         catalog = fileInfo.fileName();
 
+#ifdef Q_OS_WIN
+    // walk to translation dir relative to bin dir
+    QDir appDir(QCoreApplication::applicationDirPath());
+
+    appDir.cdUp();
+    appDir.cd("share");
+    appDir.cd("l10n");
+    appDir.cd("dui");
+
+    locale.addTranslationPath(appDir.absolutePath());
+#else
     locale.addTranslationPath(TRANSLATION_DIR);
+#endif
+
     // installs the libdui translations
     locale.installTrCatalog("libdui");
     // installs the common translation catalog:
