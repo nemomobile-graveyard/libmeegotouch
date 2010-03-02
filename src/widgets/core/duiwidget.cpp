@@ -319,7 +319,7 @@ bool DuiWidget::event(QEvent *event)
     if (type == QEvent::ActionAdded || type == QEvent::ActionChanged ||
             type == QEvent::ActionRemoved) {
 
-        // now I add AcitonEvnt here for Qt 4.5 not provide this in QGraphicsWidget, maybe changed later
+        // now I add ActionEvent here for Qt 4.5 not provide this in QGraphicsWidget, maybe changed later
         actionEvent((QActionEvent *)event);
     } else if (type == DuiCancelEvent::eventNumber()) {
         cancelEvent((DuiCancelEvent *)event);
