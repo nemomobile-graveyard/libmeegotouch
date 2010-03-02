@@ -24,13 +24,24 @@
 #include <DuiSceneManager>
 #include <DuiAction>
 
+#include <QGraphicsEffect>
+
 DuiAppletHandleViewPrivate::DuiAppletHandleViewPrivate(DuiAppletHandle *appletHandle) :
-    DuiExtensionHandleViewPrivate(appletHandle)
+    DuiExtensionHandleViewPrivate(appletHandle),
+    brokenAppletPixmap(QPixmap())
 {
 }
 
 DuiAppletHandleViewPrivate::~DuiAppletHandleViewPrivate()
 {
+    destroyPixmaps();
+}
+
+void DuiAppletHandleViewPrivate::destroyPixmaps()
+{
+    brokenAppletPixmap = QPixmap();
+
+    DuiExtensionHandleViewPrivate::destroyPixmaps();
 }
 
 void DuiAppletHandleViewPrivate::showBrokenDialog()
@@ -110,8 +121,68 @@ void DuiAppletHandleViewPrivate::showInstallationFailedDialog(const QString &err
     }
 }
 
-DuiAppletHandleView::DuiAppletHandleView(DuiAppletHandleViewPrivate &dd, DuiAppletHandle *appletHandle) :
-    DuiExtensionHandleView(dd, appletHandle)
+
+void DuiAppletHandleViewPrivate::drawPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const
+{
+    // Draw the applet pixmap scaled so that it fits the screen
+    if (brokenState && !brokenAppletPixmap.isNull()) {
+        painter->drawPixmap(targetGeometry, brokenAppletPixmap, sourceGeometry);
+    } else {
+        painter->drawPixmap(targetGeometry, localPixmap, sourceGeometry);
+    }
+}
+
+
+void DuiAppletHandleViewPrivate::blackAndWhite(QImage &img)
+{
+    int v;
+    QRgb* buffer;
+
+    for (int i = 0; i < img.height(); ++i) {
+        buffer = (QRgb*)img.scanLine(i);
+        for (int j = 0; j < img.width(); ++j) {
+            v = qRed(*buffer)*30;
+            v += qGreen(*buffer)*59;
+            v += qBlue(*buffer)*11;
+
+            v /= 100;
+
+            *buffer = qRgba(v, v, v, qAlpha(*buffer));
+            buffer++;
+        }
+    }
+}
+
+void DuiAppletHandleViewPrivate::drawBrokenState()
+{
+    Q_Q(DuiAppletHandleView);
+
+    if(brokenAppletPixmap.isNull()) {
+        QImage tmp = localPixmap.toImage();
+        tmp.convertToFormat(QImage::Format_ARGB32);
+
+        blackAndWhite(tmp);
+
+        QGraphicsScene scene;
+
+        QGraphicsPixmapItem* item = new QGraphicsPixmapItem(QPixmap::fromImage(tmp));
+        QGraphicsBlurEffect* blur = new QGraphicsBlurEffect;
+        blur->setBlurRadius(q->style()->brokenBlurRadius());
+        item->setGraphicsEffect(new QGraphicsBlurEffect);
+        scene.addItem(item);
+
+        brokenAppletPixmap = QPixmap(localPixmap.width(), localPixmap.height());
+        brokenAppletPixmap.fill(QColor(0, 0, 0, 0));
+
+        QPainter painter(&brokenAppletPixmap);
+        scene.render(&painter);
+    }
+
+    DuiExtensionHandleViewPrivate::drawBrokenState();
+}
+
+DuiAppletHandleView::DuiAppletHandleView(DuiAppletHandle *appletHandle) :
+    DuiExtensionHandleView(* new DuiAppletHandleViewPrivate(appletHandle), appletHandle)
 {
 }
 
@@ -165,3 +236,5 @@ void DuiAppletHandleView::updateData(const QList<const char *>& modifications)
         }
     }
 }
+
+DUI_REGISTER_VIEW_NEW(DuiAppletHandleView, DuiAppletHandle)

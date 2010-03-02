@@ -21,10 +21,6 @@ HEADERS += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.h \
     $$MASHUP_MASHUP_SRC_DIR/duiapplethandle_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duiapplethandleview.h \
     $$MASHUP_MASHUP_SRC_DIR/duiapplethandleview_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandleswview.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandleswview_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandleglesview.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandleglesview_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletinstancemanager.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletinstancedata.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletinventory.h \
@@ -54,8 +50,6 @@ SOURCES += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiappletsharedmutex.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiapplethandle.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiapplethandleview.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandleswview.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandleglesview.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiappletinstancemanager.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiappletinstancedata.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiappletinventory.cpp \

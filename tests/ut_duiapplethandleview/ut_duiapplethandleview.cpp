@@ -142,7 +142,7 @@ void DuiAppletSettingsDialog::exec(const DuiAppletSettings&) const {
 
 // A test applet handle implementation to allow mouse event sending
 DuiTestAppletHandleView::DuiTestAppletHandleView(DuiAppletHandle *handle) :
-        DuiAppletHandleView(*new DuiTestAppletHandleViewPrivate(handle), handle)
+        DuiAppletHandleView(handle)
 {
 }
 
@@ -151,19 +151,6 @@ void DuiTestAppletHandleView::click()
     QGraphicsSceneMouseEvent event;
     event.setButton(Qt::LeftButton);
     mouseReleaseEvent(&event);
-}
-
-DuiTestAppletHandleViewPrivate::DuiTestAppletHandleViewPrivate(DuiAppletHandle *handle) :
-    DuiAppletHandleViewPrivate(handle)
-{
-}
-
-DuiTestAppletHandleViewPrivate::~DuiTestAppletHandleViewPrivate()
-{
-}
-
-void DuiTestAppletHandleViewPrivate::drawPixmap(QPainter *, const QRectF &, const QRectF &, bool) const
-{
 }
 
 // Unit test cases

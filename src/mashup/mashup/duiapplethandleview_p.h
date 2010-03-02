@@ -28,15 +28,31 @@ class DuiAppletHandleViewPrivate : public DuiExtensionHandleViewPrivate
 {
     Q_DECLARE_PUBLIC(DuiAppletHandleView)
 
+private:
+    //! The applet pixmap with the broken state visuals applied
+    QPixmap brokenAppletPixmap;
+
+    /*! Convert the given image to black and white. */
+    void blackAndWhite(QImage &img);
+
 public:
     DuiAppletHandleViewPrivate(DuiAppletHandle *appletHandle);
     virtual ~DuiAppletHandleViewPrivate();
 
+    //! \reimp
     /*! Shows a dialog for deciding what to do with a broken applet. */
     void showBrokenDialog();
 
     /*! Shows a dialog for deciding what to do with an installation failed applet. */
     void showInstallationFailedDialog(const QString &error);
+
+    void drawPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const;
+
+    void drawBrokenState();
+
+    //! Deletes the pixmaps
+    virtual void destroyPixmaps();
+    //! \reimp_end
 };
 
 #endif /* DUIAPPLETHANDLEVIEW_P_H_ */

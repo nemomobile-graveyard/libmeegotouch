@@ -74,7 +74,6 @@ SUBDIRS     =  \
     ut_duiappletclient \
     ut_duiapplethandle \
     ut_duiapplethandleview \
-#    ut_duiapplethandleglesview \
     ut_duiappletsharedmutex \
     ut_duiappletinstancemanager \
     ut_duiappletinstancedata \

@@ -41,18 +41,16 @@ class DuiAppletHandleView : public DuiExtensionHandleView
 
 public:
     /*!
+     * Constructs a DuiAppletHandleView.
+     *
+     * \param appletHandle the DuiAppletHandle controller to be used
+     */
+    DuiAppletHandleView(DuiAppletHandle *appletHandle);
+
+    /*!
      * Destroyes the DuiAppletHandleView.
      */
     virtual ~DuiAppletHandleView();
-
-protected:
-    /*!
-     * Constructs a DuiAppletHandleView. Should be used from derived classes.
-     *
-     * \param dd the private class
-     * \param appletHandle the DuiAppletHandle controller to be used
-     */
-    DuiAppletHandleView(DuiAppletHandleViewPrivate &dd, DuiAppletHandle *appletHandle);
 
 protected slots:
     //! \reimp

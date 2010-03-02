@@ -116,12 +116,6 @@ DuiExtensionHandle::DuiExtensionHandle(QGraphicsItem *parent) :
 {
     Q_D(DuiExtensionHandle);
 
-#ifdef QT_OPENGL_ES_2
-    if (!DuiApplication::softwareRendering()) {
-        setViewType("gles");
-    }
-#endif
-
     // TODO: FIXME - this needs to have the scene specified,
     // temporarily uses currently active DuiWindow's scene.
     connect(DuiApplication::activeWindow(),
@@ -139,12 +133,6 @@ DuiExtensionHandle::DuiExtensionHandle(DuiExtensionHandlePrivate *dd, DuiExtensi
     DuiWidgetController(dd, model, parent)
 {
     Q_D(DuiExtensionHandle);
-
-#ifdef QT_OPENGL_ES_2
-    if (!DuiApplication::softwareRendering()) {
-        setViewType("gles");
-    }
-#endif
 
     // TODO: FIXME - this needs to have the scene specified,
     // temporarily uses currently active DuiWindow's scene.
