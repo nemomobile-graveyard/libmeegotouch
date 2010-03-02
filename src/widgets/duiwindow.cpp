@@ -692,7 +692,7 @@ bool DuiWindow::event(QEvent *event)
             // call setLayoutDirection_helper() for all top-level items
             foreach(QGraphicsItem * item, items) {
                 if (!item->parentItem())
-                    d->setLayoutDirection_helper(static_cast<QGraphicsWidget *>(item));
+                    d->setLayoutDirection_helper(item);
             }
         }
         return true;
