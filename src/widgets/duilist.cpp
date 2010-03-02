@@ -97,7 +97,6 @@ QAbstractItemModel *DuiList::itemModel() const
 
 void DuiList::scrollTo(const QModelIndex &index)
 {
-    emit scrollToIndex(index);
     scrollTo(index, DuiList::EnsureVisibleHint);
 }
 
