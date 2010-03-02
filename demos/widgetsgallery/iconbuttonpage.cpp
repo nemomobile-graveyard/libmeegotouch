@@ -43,6 +43,11 @@ IconButtonPage::~IconButtonPage()
 {
 }
 
+QString IconButtonPage::timedemoTitle()
+{
+    return "IconButton";
+}
+
 void IconButtonPage::createContent()
 {
     TemplatePage::createContent();

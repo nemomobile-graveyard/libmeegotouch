@@ -53,6 +53,11 @@ SpinnerPage::~SpinnerPage()
 {
 }
 
+QString SpinnerPage::timedemoTitle()
+{
+    return "Spinner";
+}
+
 void SpinnerPage::createContent()
 {
     TemplatePage::createContent();

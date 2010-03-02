@@ -34,6 +34,7 @@ class DialogsAndNotificationsPage : public TemplatePage
 public:
     DialogsAndNotificationsPage();
     virtual ~DialogsAndNotificationsPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

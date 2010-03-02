@@ -36,6 +36,11 @@ ToolBarPage::~ToolBarPage()
 {
 }
 
+QString ToolBarPage::timedemoTitle()
+{
+    return "ToolBar";
+}
+
 void ToolBarPage::createContent()
 {
     TemplatePage::createContent();

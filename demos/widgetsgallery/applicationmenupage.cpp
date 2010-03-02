@@ -49,6 +49,11 @@ ApplicationMenuPage::~ApplicationMenuPage()
 {
 }
 
+QString ApplicationMenuPage::timedemoTitle()
+{
+    return "ApplicationMenu";
+}
+
 void ApplicationMenuPage::retranslateUi()
 {
     //% "Application Menu"

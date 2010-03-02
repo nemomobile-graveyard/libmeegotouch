@@ -112,6 +112,11 @@ ListPage::~ListPage()
 {
 }
 
+QString ListPage::timedemoTitle()
+{
+    return "MainPage";
+}
+
 void ListPage::createContent()
 {
     DuiApplicationPage::createContent();
@@ -282,7 +287,7 @@ void ListPage::showPageByIndex(int index)
     showPage(findPageByIndex(index));
 }
 
-DuiApplicationPage *ListPage::findPageByIndex(int index) const
+TemplatePage *ListPage::findPageByIndex(int index) const
 {
     if (index >= 0 && index < pages.count()) {
         return pages[ index ];

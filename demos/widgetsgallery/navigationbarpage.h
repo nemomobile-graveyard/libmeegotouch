@@ -44,6 +44,7 @@ public:
 
     NavigationBarPage();
     virtual ~NavigationBarPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

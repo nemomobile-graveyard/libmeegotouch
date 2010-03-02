@@ -35,6 +35,7 @@ class ProgressBarPage : public TemplatePage
 public:
     ProgressBarPage();
     virtual ~ProgressBarPage();
+    virtual QString timedemoTitle();
     virtual void createContent();
 public slots:
     void timeout();

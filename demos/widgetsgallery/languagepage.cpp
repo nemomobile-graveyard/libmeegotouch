@@ -44,6 +44,11 @@ LanguagePage::~LanguagePage()
 {
 }
 
+QString LanguagePage::timedemoTitle()
+{
+    return "Language";
+}
+
 void LanguagePage::createContent()
 {
     DuiApplicationPage::createContent();

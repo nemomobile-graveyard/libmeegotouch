@@ -52,6 +52,11 @@ SliderPage::~SliderPage()
 {
 }
 
+QString SliderPage::timedemoTitle()
+{
+    return "Slider";
+}
+
 void SliderPage::createContent()
 {
     TemplatePage::createContent();

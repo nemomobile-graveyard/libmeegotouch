@@ -8,7 +8,7 @@
 
 namespace
 {
-    const int pageDuration = 4000;
+    const int pageDuration = 3000;
 }
 
 StaticPageBenchmark::StaticPageBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo, Dui::OrientationAngle targetOrientationAngle)

@@ -42,6 +42,7 @@ class SpinnerPage : public TemplatePage
 public:
     SpinnerPage();
     virtual ~SpinnerPage();
+    virtual QString timedemoTitle();
     virtual void createContent();
 public slots:
     void inContainerMainArea();

@@ -33,6 +33,7 @@ class ApplicationMenuPage : public TemplatePage
 public:
     ApplicationMenuPage();
     virtual ~ApplicationMenuPage();
+    virtual QString timedemoTitle();
     virtual void createContent();
 
 public Q_SLOTS:

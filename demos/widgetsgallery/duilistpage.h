@@ -54,6 +54,7 @@ public:
 
     DuiListPage();
     virtual ~DuiListPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

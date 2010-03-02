@@ -43,6 +43,11 @@ CheckboxPage::~CheckboxPage()
 {
 }
 
+QString CheckboxPage::timedemoTitle()
+{
+    return "Checkbox";
+}
+
 void CheckboxPage::createContent()
 {
     TemplatePage::createContent();

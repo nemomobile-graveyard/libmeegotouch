@@ -37,6 +37,7 @@ class FeedbackPage : public TemplatePage
 public:
     FeedbackPage();
     virtual ~FeedbackPage();
+    virtual QString timedemoTitle();
     virtual void createContent();
 protected:
     virtual void retranslateUi();

@@ -34,6 +34,7 @@ class SliderPage : public TemplatePage
 public:
     SliderPage();
     virtual ~SliderPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

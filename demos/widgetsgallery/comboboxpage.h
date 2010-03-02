@@ -36,6 +36,7 @@ class ComboBoxPage : public TemplatePage
 public:
     ComboBoxPage();
     virtual ~ComboBoxPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

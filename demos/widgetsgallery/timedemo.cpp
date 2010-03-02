@@ -21,6 +21,7 @@
 #include "timingscene.h"
 #include "listpage.h"
 #include "timedemobenchmark.h"
+#include "templatepage.h"
 
 
 #include <DuiApplicationPage>
@@ -168,13 +169,20 @@ void Timedemo::displayBenchmarkResults()
         csvFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
         csv.setDevice(&csvFile);
 
-    const int pageTitleWidth = 30;
+    int pageTitleWidth = 0;
     const int fpsWidth = 5;
     const int fpsUnitWidth = 5;
     const int runtimeWidth = 5;
     const int runtimeUnitWidth = 2;
     const int benchmarkWidth = fpsWidth + fpsUnitWidth + runtimeWidth + runtimeUnitWidth;
     QHash<QString, int> actualWidth;
+
+    for (int i = 0; i < benchmarkResults.count(); ++i) {
+        TimedemoPage *page = (i < m_pFrontPage->pageCount()) ? static_cast<TimedemoPage*>(m_pFrontPage->findPageByIndex(i)) : static_cast<TimedemoPage*>(m_pFrontPage);
+        QString title = page->timedemoTitle();
+        pageTitleWidth = qMax(pageTitleWidth, title.length());
+    }
+    pageTitleWidth += 2;
 
     log.setRealNumberNotation(QTextStream::FixedNotation);
     log.setRealNumberPrecision(2);
@@ -192,12 +200,9 @@ void Timedemo::displayBenchmarkResults()
     csv << '\n';
 
     for (int i = 0; i < benchmarkResults.count(); ++i) {
-        DuiApplicationPage *page = (i < m_pFrontPage->pageCount()) ? m_pFrontPage->findPageByIndex(i) : m_pFrontPage;
-        QString title = page->title();
-        if (title.length() > pageTitleWidth) {
-            title.truncate(pageTitleWidth - 5);
-            title.append("...");
-        }
+        TimedemoPage *page = (i < m_pFrontPage->pageCount()) ? static_cast<TimedemoPage*>(m_pFrontPage->findPageByIndex(i)) : static_cast<TimedemoPage*>(m_pFrontPage);
+        QString title = page->timedemoTitle();
+
         log << qSetFieldWidth(pageTitleWidth) << title;
         csv << "\"" << title << "\"";
 

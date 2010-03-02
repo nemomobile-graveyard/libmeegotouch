@@ -32,6 +32,7 @@ class ToolBarPage : public TemplatePage
 public:
     ToolBarPage();
     virtual ~ToolBarPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

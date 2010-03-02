@@ -29,13 +29,21 @@ public:
     virtual void createBenchmarks(Timedemo *timedemo);
 
     /**
+      * For visualizing the timedemo results this method should return an
+      * unique identifier for the page. Make sure to never change the
+      * returned title once your page has been in a release as this would
+      * invalidate older results.
+      * \return the title to show when visualizing timedemo results
+      */
+    virtual QString timedemoTitle() = 0;
+
+    /**
       * Returns the benchmarks for this page.
       */
     QVector<QSharedPointer<TimedemoBenchmark> > benchmarks();
 
 protected:
     QVector<QSharedPointer<TimedemoBenchmark> > m_benchmarks;
-
 };
 
 #endif // TIMEDEMOPAGE_H

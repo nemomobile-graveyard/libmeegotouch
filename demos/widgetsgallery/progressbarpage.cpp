@@ -43,6 +43,11 @@ ProgressBarPage::~ProgressBarPage()
 {
 }
 
+QString ProgressBarPage::timedemoTitle()
+{
+    return "ProgressBar";
+}
+
 void ProgressBarPage::createContent()
 {
     TemplatePage::createContent();

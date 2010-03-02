@@ -51,6 +51,11 @@ LabelPage::~LabelPage()
     delete commonHighlighter;
 }
 
+QString LabelPage::timedemoTitle()
+{
+    return "Label";
+}
+
 void LabelPage::createContent()
 {
     TemplatePage::createContent();

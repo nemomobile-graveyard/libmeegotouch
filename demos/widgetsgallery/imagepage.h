@@ -43,6 +43,7 @@ public:
 
     ImagePage();
     virtual ~ImagePage();
+    virtual QString timedemoTitle();
     virtual void createContent();
     void setImageZoom(float zoom);
     void setImageOpacity(float opacity);

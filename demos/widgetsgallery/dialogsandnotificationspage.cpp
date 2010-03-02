@@ -63,6 +63,11 @@ DialogsAndNotificationsPage::~DialogsAndNotificationsPage()
     delete nestedMessageBox;
 }
 
+QString DialogsAndNotificationsPage::timedemoTitle()
+{
+    return "DialogsAndNotifications";
+}
+
 void DialogsAndNotificationsPage::createContent()
 {
     DuiApplicationPage::createContent();

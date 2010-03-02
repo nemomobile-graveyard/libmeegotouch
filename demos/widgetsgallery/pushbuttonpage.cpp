@@ -43,6 +43,11 @@ PushButtonPage::~PushButtonPage()
 {
 }
 
+QString PushButtonPage::timedemoTitle()
+{
+    return "PushButton";
+}
+
 void PushButtonPage::createContent()
 {
     TemplatePage::createContent();

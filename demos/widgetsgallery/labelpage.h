@@ -32,6 +32,7 @@ class LabelPage : public TemplatePage
 public:
     LabelPage();
     virtual ~LabelPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

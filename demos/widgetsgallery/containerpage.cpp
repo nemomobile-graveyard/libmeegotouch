@@ -34,6 +34,11 @@ ContainerPage::~ContainerPage()
 {
 }
 
+QString ContainerPage::timedemoTitle()
+{
+    return "Container";
+}
+
 void ContainerPage::createContent()
 {
     DuiApplicationPage::createContent();

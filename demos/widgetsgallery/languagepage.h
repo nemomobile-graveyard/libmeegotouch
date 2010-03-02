@@ -34,6 +34,7 @@ class LanguagePage : public TemplatePage
 public:
     LanguagePage();
     virtual ~LanguagePage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

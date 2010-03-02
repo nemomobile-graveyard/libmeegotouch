@@ -57,6 +57,11 @@ DuiListPage::~DuiListPage()
     delete model;
 }
 
+QString DuiListPage::timedemoTitle()
+{
+    return "List";
+}
+
 class DuiContentItemCreator : public DuiAbstractCellCreator<DuiContentItem>
 {
 public:

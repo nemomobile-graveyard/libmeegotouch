@@ -213,6 +213,10 @@ TextEntryPage::~TextEntryPage()
     delete m_completer;
 }
 
+QString TextEntryPage::timedemoTitle()
+{
+    return "TextEntry";
+}
 
 void TextEntryPage::createContent()
 {

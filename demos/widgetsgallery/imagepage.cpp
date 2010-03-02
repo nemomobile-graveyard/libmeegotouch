@@ -54,6 +54,11 @@ ImagePage::~ImagePage()
 {
 }
 
+QString ImagePage::timedemoTitle()
+{
+    return "Image";
+}
+
 void ImagePage::createContent()
 {
     DuiApplicationPage::createContent();

@@ -37,6 +37,7 @@ class PushButtonPage : public TemplatePage
 public:
     PushButtonPage();
     virtual ~PushButtonPage();
+    virtual QString timedemoTitle();
     virtual void createContent();
 protected:
     virtual void retranslateUi();

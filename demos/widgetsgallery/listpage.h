@@ -53,12 +53,13 @@ class ListPage : public TimedemoPage
 public:
     ListPage(const QString &title = "");
     virtual ~ListPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 
     void addPage(TemplatePage *page);
     int pageCount() const;
-    DuiApplicationPage *findPageByIndex(int index) const;
+    TemplatePage *findPageByIndex(int index) const;
 
     static DuiGridLayoutPolicy *createAndSetupGridPolicy(DuiWidget *panel);
 

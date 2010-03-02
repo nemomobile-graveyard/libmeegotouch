@@ -47,6 +47,11 @@ SwitchPage::~SwitchPage()
 {
 }
 
+QString SwitchPage::timedemoTitle()
+{
+    return "Switch";
+}
+
 void SwitchPage::createContent()
 {
     TemplatePage::createContent();

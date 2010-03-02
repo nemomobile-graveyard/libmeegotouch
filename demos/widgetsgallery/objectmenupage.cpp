@@ -45,6 +45,11 @@ ObjectMenuPage::~ObjectMenuPage()
 {
 }
 
+QString ObjectMenuPage::timedemoTitle()
+{
+    return "ObjectMenu";
+}
+
 void ObjectMenuPage::createContent()
 {
     TemplatePage::createContent();

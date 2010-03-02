@@ -36,11 +36,15 @@ ComboBoxPage::ComboBoxPage()
       proxyModel(0)
 {
     gid = TemplatePage::ListsGridsAndMenus;
-
 }
 
 ComboBoxPage::~ComboBoxPage()
 {
+}
+
+QString ComboBoxPage::timedemoTitle()
+{
+    return "ComboBox";
 }
 
 void ComboBoxPage::createContent()

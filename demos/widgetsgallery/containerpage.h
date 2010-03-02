@@ -28,6 +28,7 @@ class ContainerPage : public TemplatePage
 public:
     ContainerPage();
     virtual ~ContainerPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

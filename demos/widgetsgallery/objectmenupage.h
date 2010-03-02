@@ -30,6 +30,7 @@ class ObjectMenuPage : public TemplatePage
 public:
     ObjectMenuPage();
     virtual ~ObjectMenuPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
 

@@ -37,6 +37,7 @@ class IconButtonPage : public TemplatePage
 public:
     IconButtonPage();
     virtual ~IconButtonPage();
+    virtual QString timedemoTitle();
     virtual void createContent();
 protected:
     virtual void retranslateUi();

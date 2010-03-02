@@ -47,6 +47,11 @@ FeedbackPage::~FeedbackPage()
 {
 }
 
+QString FeedbackPage::timedemoTitle()
+{
+    return "InputFeedback";
+}
+
 void FeedbackPage::createContent()
 {
     TemplatePage::createContent();

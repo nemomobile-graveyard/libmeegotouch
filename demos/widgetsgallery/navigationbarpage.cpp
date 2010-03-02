@@ -42,6 +42,11 @@ NavigationBarPage::~NavigationBarPage()
 {
 }
 
+QString NavigationBarPage::timedemoTitle()
+{
+    return "NavigationBar";
+}
+
 void NavigationBarPage::createContent()
 {
     QGraphicsLinearLayout *lytMain = new QGraphicsLinearLayout(Qt::Vertical);

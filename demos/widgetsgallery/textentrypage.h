@@ -42,6 +42,7 @@ class TextEntryPage : public TemplatePage
 public:
     TextEntryPage();
     virtual ~TextEntryPage();
+    virtual QString timedemoTitle();
 
     virtual void createContent();
     DuiGridLayoutPolicy *createAndSetupGridPolicy(DuiWidget *panel);
