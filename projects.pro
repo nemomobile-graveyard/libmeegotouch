@@ -5,7 +5,7 @@
 CONFIG += ordered
 TEMPLATE = subdirs
 
-!win32:!macx {
+!win32 {
     !exists($${OUT_PWD}/mkspecs/duiconfig.pri) {
         error("Please run ./configure before proceeding")
     }
@@ -67,7 +67,7 @@ for(PROJECT, $$list($$lower($$unique(DUI_BUILD_PARTS)))) {
 # note: proper way to clean up extradata would be running pkgdata --clean...
 # but listing *.a & *.o is easier with qmake
 QMAKE_CLEAN += lib/libdui* build-stamp configure-stamp tests/*/*.log.xml tests/*/*.log *.log.xml *.log **/*.gcda extradata/*.o extradata/*.a
-QMAKE_DISTCLEAN += lib/libdui* build-stamp configure-stamp tests/*/*.log.xml tests/*/*.log *.log.xml *.log **/*.gcda extradata/*.o extradata/*.a
+QMAKE_DISTCLEAN += lib/libdui* build-stamp configure-stamp tests/*/*.log.xml tests/*/*.log *.log.xml *.log **/*.gcda extradata/*.o extradata/*.a mkspecs/duiconfig.pri
 
 check.target = check
 check.CONFIG = recursive

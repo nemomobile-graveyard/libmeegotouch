@@ -383,6 +383,11 @@ if [ "$OPT_SHADOW" = "yes" ]; then
     if [ -f "$relpath/mkspecs/duiconfig.pri" ]; then
         echo >&2 "You cannot make a shadow build from a source tree containing a previous build."
         echo >&2 "Cannot proceed."
+        echo >&2 ""
+        echo >&2 "Please clean your source directory by executing this command:"
+        echo >&2 ""
+        echo >&2 "make distclean"
+        echo >&2 ""
         exit 1
     fi
 
