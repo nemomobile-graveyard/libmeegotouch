@@ -49,47 +49,6 @@ DuiButtonSwitchViewPrivate::~DuiButtonSwitchViewPrivate()
 {
 }
 
-void DuiButtonSwitchViewPrivate::createMaskedSlider()
-{
-    Q_Q(DuiButtonSwitchView);
-
-    //create images from pixmaps to get access to pixel data
-
-    //TODO this is only SW solution, the proper masking will be implemented with GLES2 shaders
-
-    //scale the mask to match the view size
-    if (q->size().isValid()) {
-        QPixmap scrollerPm(q->size().width(), q->size().height());
-        scrollerPm.fill(QColor(0, 0, 0, 0));
-        QPainter p0(&scrollerPm);
-        q->style()->sliderMask()->draw(QPoint(0, 0), scrollerPm.size(), &p0);
-        p0.end();
-        m_maskedSliderImage = scrollerPm.toImage().convertToFormat(QImage::Format_ARGB32);
-    }
-
-    //TODO: could be done only when style changes
-    m_sliderImage = q->style()->sliderImage()->pixmap()->toImage();
-}
-
-void DuiButtonSwitchViewPrivate::updateMaskedSlider()
-{
-    //TODO this is only SW solution, the proper masking solution will be done with gl shader
-
-    //mask the slider image, result is stored to m_maskedSliderImage
-    int width = m_maskedSliderImage.width();
-    int height = m_maskedSliderImage.height();
-    int offset = (m_sliderImage.width() / 2) - thumbPos().x() - (thumbSize().width() / 2);
-    for (int y = 0; y < height; ++y) {
-        const uint *scanline = (const uint *) m_sliderImage.scanLine(y) + offset;
-        uint *result = (uint *) m_maskedSliderImage.scanLine(y);
-        for (int x = 0; x < width; ++x) {
-            *result = ((*result) & 0xff000000) | ((*scanline) & 0x00ffffff);
-            scanline++;
-            result++;
-        }
-    }
-}
-
 QSize DuiButtonSwitchViewPrivate::thumbSize() const
 {
     Q_Q(const DuiButtonSwitchView);
@@ -124,25 +83,6 @@ QPoint DuiButtonSwitchViewPrivate::thumbPos() const
     }
 }
 
-void DuiButtonSwitchViewPrivate::updateImages()
-{
-    createMaskedSlider();
-
-    //TODO: Is there better solution for this?
-
-    //if the images are not yet valid due to asynchronous resource loading
-    //launch singleShot timer until everything has been loaded, this is needed
-    //to be able to optimize SW rendering for the masked slider background
-    if (m_maskedSliderImage.isNull() || m_sliderImage.isNull() ||
-            m_maskedSliderImage.size() == QSize(1, 1) || m_sliderImage.size() == QSize(1, 1)) {
-        const int timeout = 500;
-        //duiWarning("DuiButtonSwitchViewPrivate") << "updateImages() Images not valid yet, refreshing after" << timeout << "ms";
-        Q_Q(DuiButtonSwitchView);
-        QTimer::singleShot(timeout, q, SLOT(updateImages()));
-    } else
-        updateMaskedSlider();
-}
-
 DuiButtonSwitchView::DuiButtonSwitchView(DuiButton *controller) :
     DuiButtonView(* new DuiButtonSwitchViewPrivate, controller)
 {
@@ -155,11 +95,6 @@ DuiButtonSwitchView::~DuiButtonSwitchView()
 void DuiButtonSwitchView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     DuiWidgetView::resizeEvent(event);
-
-    Q_D(DuiButtonSwitchView);
-
-    //create and update slider image masking
-    d->updateImages();
 }
 
 void DuiButtonSwitchView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -167,47 +102,25 @@ void DuiButtonSwitchView::drawContents(QPainter *painter, const QStyleOptionGrap
     Q_UNUSED(option);
     Q_D(const DuiButtonSwitchView);
 
-    //((DuiButtonSwitchViewPrivate*)d)->createMaskedSlider();
-    //((DuiButtonSwitchViewPrivate*)d)->updateMaskedSlider();
-
-    painter->drawImage(QRect(QPoint(0, 0), size().toSize()), d->m_maskedSliderImage);
+    int offset = (style()->sliderImage()->pixmap()->width() / 2) - d->thumbPos().x() - (d->thumbSize().width() / 2);
+    style()->sliderMask()->draw(QRect(QPoint(0,0), size().toSize()), QPoint(offset,0), style()->sliderImage()->pixmap(), painter);
     style()->thumbImage()->draw(d->thumbPos(), d->thumbSize(), painter);
 }
 
 void DuiButtonSwitchView::applyStyle()
 {
     DuiButtonView::applyStyle();
-
-    Q_D(DuiButtonSwitchView);
-
-    //create and update slider image masking
-    d->updateImages();
 }
 
 void DuiButtonSwitchView::updateData(const QList<const char *>& modifications)
 {
     DuiButtonView::updateData(modifications);
-    Q_D(DuiButtonSwitchView);
-    const char *member;
-    foreach(member, modifications) {
-        if (member == DuiButtonModel::Checked) {
-            d->updateMaskedSlider();
-        }
-        //else if( member == DuiButtonModel::IconID ) {
-        //
-        //}
-    }
 }
 
 void DuiButtonSwitchView::setupModel()
 {
     DuiButtonView::setupModel();
-    Q_D(DuiButtonSwitchView);
-    d->updateMaskedSlider();
 }
-
-
-
 
 void DuiButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -274,7 +187,6 @@ void DuiButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         }
         //}
 
-        d->updateMaskedSlider();
     }
     //user just clicked the switch, act like normal checkable button
     else {
@@ -299,7 +211,6 @@ void DuiButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
         d->m_thumbPos.setX(x);
         d->m_thumbDragged = true;
-        d->updateMaskedSlider();
 
         update();
     }

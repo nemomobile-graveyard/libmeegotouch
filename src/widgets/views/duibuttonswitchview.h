@@ -129,8 +129,6 @@ private:
     Q_DISABLE_COPY(DuiButtonSwitchView)
     Q_DECLARE_PRIVATE(DuiButtonSwitchView)
 
-    Q_PRIVATE_SLOT(d_func(), void updateImages())
-
 #ifdef UNIT_TEST
     friend class Ut_DuiButtonSwitchView;
 #endif

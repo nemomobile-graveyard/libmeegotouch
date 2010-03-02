@@ -30,22 +30,15 @@ public:
     DuiButtonSwitchViewPrivate();
     ~DuiButtonSwitchViewPrivate();
 
-    void createMaskedSlider();
-    void updateMaskedSlider();
-
     QSize thumbSize() const;
     QPoint thumbPos() const;
 
-    void updateImages();
 
     int mouseOffset;
 
     bool m_thumbDown;
     bool m_thumbDragged;
     QPoint m_thumbPos;
-
-    QImage m_maskedSliderImage;
-    QImage m_sliderImage;
 };
 
 #endif

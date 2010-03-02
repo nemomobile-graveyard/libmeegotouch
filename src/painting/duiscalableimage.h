@@ -145,6 +145,15 @@ public:
      */
     void enableOptimizedRendering(bool enable);
 
+    /*!
+      \brief Draws the scalable image using color channel from pixmap and alpha channel from scalable image.
+      \param rect           Target rectangle, where scalable image is drawn into.
+      \param pixmapOffset   Start sampling offset of the pixmap to be filled.
+      \param pixmap         Pixmap to be used for filling the opaque areas of the scalable image, this can be NULL.
+      \param painter        Painter to be used for drawing.
+     */
+    void draw(const QRect &rect, const QPoint& pixmapOffset, const QPixmap* pixmap, QPainter *painter) const;
+
 protected:
     DuiScalableImagePrivate *const d_ptr;
     DuiScalableImage(DuiScalableImagePrivate *dd);

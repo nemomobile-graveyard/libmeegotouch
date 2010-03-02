@@ -229,3 +229,45 @@ void DuiScalableImage::enableOptimizedRendering(bool enable)
     d->m_useGLRenderer = enable;
 }
 
+void DuiScalableImage::draw(const QRect &rect, const QPoint& pixmapOffset, const QPixmap* pixmap, QPainter *painter) const
+{
+    if(!pixmap || pixmap->isNull()) {
+        // if the pixmap is not valid, draw without filling
+        draw(rect, painter);
+        return;
+    }
+    // TODO: create HW version with proper shaders (2 textures, 2 sets of texcoords + shader)
+
+    // SLOW: SW fallback, create temporary render target
+    QImage image(rect.size(), QImage::Format_ARGB32);
+    image.fill(Qt::transparent);
+
+    // paint scalable image to target
+    QPainter imagePainter(&image);
+    draw(QPoint(0,0), rect.size(), &imagePainter);
+
+    // post process the resulting image (add mask)
+    QImage fillImage = pixmap->toImage();
+    int sourceWidth = fillImage.width();
+    int sourceHeight = fillImage.height();
+
+    int width = image.width();
+    int height = image.height();
+
+    for (int y = 0; y < height; ++y) {
+        // target scanline
+        uint* target = (uint *) image.scanLine(y);
+        // source scanline (tiled)
+        const uint* source = (const uint *) fillImage.scanLine(pixmapOffset.y() + (y % sourceHeight));
+        for (int x = 0; x < width; ++x) {
+            // tile the x coordinate
+            uint color = *(source + ((pixmapOffset.x() + x) % sourceWidth));
+            // alpha comes from target, colour from source
+            *target = ((*target) & 0xff000000) | (color & 0x00ffffff);
+            target++;
+        }
+    }
+
+    painter->drawImage(rect, image);
+}
+
