@@ -23,6 +23,7 @@
 #include <QWidget>
 #include <QScrollArea>
 #include <QPointer>
+#include <QPen>
 
 class QGridLayout;
 
@@ -68,9 +69,29 @@ public:
     void showFastMaximized();
 
     /*!
-     * sets the widget that is shown inside the window
+     * \brief sets the widget that is shown inside the window
+     * the given widget will be used as the central widget within this window.
+     * The widget is not added to any layout, this must be done by the user.
+     * If the widget inherits QAbstractScrollArea, it will be added directly. If
+     * it does not, a scrollArea will be created and the widget is set as the
+     * scrollarea's viewport. Note: in this case, the centralWidget of the window
+     * will be the scrollArea, not the given widget!
      */
     void setCentralWidget(QWidget *widget);
+
+    /*!
+     * \brief returns the central widget of this window
+     * If no widget is set, this returns NULL. The returned widget may not be
+     * the widget, which was set with setCentralWidget().
+     * \see setCentralWidget()
+     */
+    QWidget* centralWidget() const;
+
+    /*!
+     * \brief returns the widget set with central widget
+     * in opposite to centralWidget() this always returns the added widget.
+     */
+    QWidget* widget() const { return m_window; };
 
 protected:
     QtMaemo6Window() {};
@@ -78,14 +99,16 @@ protected:
     /*! \reimp */
     void closeEvent(QCloseEvent *event);
     bool eventFilter(QObject *obj, QEvent *event);
+    void paintEvent(QPaintEvent* e);
     /*! \reimp_end */
 
 protected:
     QGridLayout *m_windowLayout;
+private:
+    QPointer<QWidget> m_window;
     QAbstractScrollArea *m_centralWidget;
     QScrollArea *m_scrollArea;
-    QPointer<QWidget> m_window;
-private:
+
     Qt::WindowFlags m_originalFlags;
     bool m_closeFromChild;
     bool m_hideFromChild;

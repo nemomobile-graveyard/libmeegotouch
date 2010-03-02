@@ -62,7 +62,6 @@ void QtMaemo6SubMenu::listItemClicked(QListWidgetItem *item)
             decoration->setStatusBar(NULL);
             decoration->setMenuBar(NULL);
             QtMaemo6StylePrivate::drawWindowBackground(decoration);
-            close();
         } else {
             action->activate(QAction::Trigger);
         }

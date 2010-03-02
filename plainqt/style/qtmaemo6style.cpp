@@ -834,10 +834,12 @@ void QtMaemo6Style::polish(QWidget *widget)
     if (!qobject_cast<QtMaemo6WindowDecoration *>(widget)
             && !qobject_cast<QMenu *>(widget)
             && !qobject_cast<QtMaemo6DialogProxy *>(widget)) {
-        //FIXME: public API usage
-        QPalette pal = widget->palette();
-        pal.setBrush(QPalette::Window, Qt::transparent);
-        widget->setPalette(pal);
+        if(!widget->testAttribute(Qt::WA_TranslucentBackground)) {
+            //FIXME: public API usage
+            QPalette pal = widget->palette();
+            pal.setBrush(QPalette::Window, Qt::transparent);
+            widget->setPalette(pal);
+        }
     }
 
     widget->installEventFilter(d->m_windowEventFilter);

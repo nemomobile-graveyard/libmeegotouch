@@ -43,7 +43,7 @@ QtMaemo6WindowDecoration::QtMaemo6WindowDecoration(QWidget *mw, QWidget *parent 
     m_titleBar->setTitle(mw->windowTitle());
 
     m_windowLayout->addWidget(m_titleBar, 0, 1);
-    m_windowLayout->addWidget(m_scrollArea, 1, 1);
+    m_windowLayout->addWidget(centralWidget(), 1, 1);
 
     connect(m_titleBar, SIGNAL(closeButtonClicked()), this, SLOT(close()));
     connect(m_titleBar, SIGNAL(minimizeButtonClicked()), this, SLOT(hide()));
@@ -92,7 +92,7 @@ void QtMaemo6WindowDecoration::setMenuBar(QMenuBar *menuBar)
 void QtMaemo6WindowDecoration::showMenuBar()
 {
     if (m_menuBar) {
-        QtMaemo6MenuProxy *menuProxy = new QtMaemo6MenuProxy(m_menuBar, this);
+        QtMaemo6MenuProxy* menuProxy = new QtMaemo6MenuProxy(m_menuBar, this);
         menuProxy->showFastMaximized();
     }
 }
@@ -100,7 +100,7 @@ void QtMaemo6WindowDecoration::showMenuBar()
 bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::WindowTitleChange) {
-        m_titleBar->setTitle(m_window->windowTitle());
+        m_titleBar->setTitle(widget()->windowTitle());
     } else if (event->type() == QEvent::Close) {
         hide();
     }

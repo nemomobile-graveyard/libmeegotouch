@@ -49,7 +49,7 @@ QtMaemo6DialogProxy::QtMaemo6DialogProxy(QWidget *mw, QWidget *parent)
     m_windowLayout->addItem(topSpacer, 0, 0, 1, 3);
     m_windowLayout->addItem(leftSideSpacer, 1, 0, 2, 1);
     m_windowLayout->addWidget(m_dialogTitle, 1, 1, 1, 1);
-    m_windowLayout->addWidget(m_scrollArea, 2, 1, 1, 1);
+    m_windowLayout->addWidget(centralWidget(), 2, 1, 1, 1);
     m_windowLayout->addItem(rightSideSpacer, 1, 2, 2, 1);
 
     //only works if mw is a QDialog, otherwise the connect simply fails

@@ -27,6 +27,7 @@
 #include <QCloseEvent>
 #include <QDialog>
 #include <QDebug>
+#include <QPainter>
 
 #include <duideviceprofile.h>
 
@@ -35,9 +36,9 @@
 
 QtMaemo6Window::QtMaemo6Window(QWidget *originalWidget, QWidget *parent /*= NULL*/)
     : QWidget(parent)
+    , m_window(originalWidget)
     , m_centralWidget(0)
     , m_scrollArea(0)
-    , m_window(originalWidget)
     , m_closeFromChild(false)
 {
     setWindowFlags(Qt::Window
@@ -56,7 +57,6 @@ QtMaemo6Window::QtMaemo6Window(QWidget *originalWidget, QWidget *parent /*= NULL
 
 QtMaemo6Window::~QtMaemo6Window()
 {
-    qCritical() << "QtMaemo6Window deleted";
 }
 
 QSize QtMaemo6Window::maxViewportSize() const
@@ -107,6 +107,15 @@ bool QtMaemo6Window::eventFilter(QObject *obj, QEvent *event)
     return QWidget::eventFilter(obj, event);
 }
 
+void QtMaemo6Window::paintEvent(QPaintEvent* e) {
+    //force drawing the background on windows
+    QPainter p(this);
+    p.setPen(Qt::NoPen);
+    p.setBrush(palette().window());
+    p.drawRect(e->rect());
+    QWidget::paintEvent(e);
+}
+
 void QtMaemo6Window::showFastMaximized()
 {
     // Size policy instead?
@@ -150,6 +159,11 @@ void QtMaemo6Window::setCentralWidget(QWidget *widget)
             widget->setMinimumWidth(maxViewportSize().width());
         if(widget->sizePolicy().verticalPolicy() == QSizePolicy::Expanding)
             widget->setMinimumHeight(maxViewportSize().height());
-        m_windowLayout->addWidget(m_centralWidget, 1, 1, 1, 1);
     }
+}
+
+QWidget* QtMaemo6Window::centralWidget() const {
+    if(!m_scrollArea)
+        return m_window;
+    return m_scrollArea;
 }

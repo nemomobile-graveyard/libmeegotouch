@@ -57,15 +57,11 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     QWidget *widget = qobject_cast<QWidget *>(obj);
 
-    //unused
-    //QWidget * parent = widget->parentWidget();
-
     switch (event->type()) {
     case QEvent::Show: {
         if (NULL != widget) {
             if (widget->isWindow()) {
                 if (QDialog *dialog = qobject_cast<QDialog *>(widget)) {
-                    qCritical() << "Generating and Showing DuiDialog";
                     QtMaemo6DialogProxy *dialogProxy = new QtMaemo6DialogProxy(dialog, m_style->m_windowDecoration);
 
                     dialogProxy->setTitle(widget->windowTitle());
@@ -86,8 +82,8 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     decoration->setStatusBar(NULL);
                     decoration->setMenuBar(NULL);
                     QtMaemo6StylePrivate::drawWindowBackground(decoration);
-                } else if (!qobject_cast<QtMaemo6Window *>(widget)) {
-                    qCritical() << "Generating and Showing DuiWindowDecoration";
+                } else if (!qobject_cast<QtMaemo6Window *>(widget) &&
+                           !widget->inherits("QTipLabel")) {  //don't create a new window for every tooltip!
                     m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
                     m_style->m_windowDecoration->showFastMaximized();
                     QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
