@@ -36,7 +36,8 @@ public:
     DuiWindowPrivate();
     virtual ~DuiWindowPrivate();
 
-    void setLayoutDirection_helper(QGraphicsItem *item);
+    void handleApplicationLayoutDirectionChangeEvent(QGraphicsItem *item);
+    void handleLanguageChangeEvent(QGraphicsItem *item);
     Dui::Orientation orientation(Dui::OrientationAngle angle) const;
 
 #ifdef Q_WS_X11

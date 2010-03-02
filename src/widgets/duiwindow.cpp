@@ -141,7 +141,7 @@ void DuiWindowPrivate::appendVisibilityChangeMask()
 }
 #endif
 
-void DuiWindowPrivate::setLayoutDirection_helper(QGraphicsItem *item)
+void DuiWindowPrivate::handleApplicationLayoutDirectionChangeEvent(QGraphicsItem *item)
 {
     if (item->isWidget()) {
         QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
@@ -152,17 +152,34 @@ void DuiWindowPrivate::setLayoutDirection_helper(QGraphicsItem *item)
                 || widget->testAttribute(Qt::WA_SetLayoutDirection))
             return;
         widget->setAttribute(Qt::WA_RightToLeft, (direction == Qt::RightToLeft));
+        // Send the notification event to this widget item.
+        QEvent e(QEvent::LayoutDirectionChange);
+        QApplication::sendEvent(widget, &e);
     }
     // Propagate this change to all children.
     const int size = item->childItems().size();
     for (int i = 0; i < size; ++i) {
         QGraphicsItem *childItem = item->childItems().at(i);
-        setLayoutDirection_helper(childItem);
+        handleApplicationLayoutDirectionChangeEvent(childItem);
     }
+}
+
+void DuiWindowPrivate::handleLanguageChangeEvent(QGraphicsItem *item)
+{
     if (item->isWidget()) {
-        // Send the notification event to this widget item.
-        QEvent e(QEvent::LayoutDirectionChange);
-        QApplication::sendEvent(static_cast<QGraphicsWidget *>(item), &e);
+        QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
+        if (qobject_cast<DuiWidget*> (widget)) {
+            // If it is a DuiWidget, sent it the language change event
+            // to trigger the retranslateUi() method of the DuiWidget:
+            QEvent e(QEvent::LanguageChange);
+            qApp->sendEvent(widget, &e);
+        }
+    }
+    // Propagate this change to all children.
+    const int size = item->childItems().size();
+    for (int i = 0; i < size; ++i) {
+        QGraphicsItem *childItem = item->childItems().at(i);
+        handleLanguageChangeEvent(childItem);
     }
 }
 
@@ -692,22 +709,22 @@ bool DuiWindow::event(QEvent *event)
             // call setLayoutDirection_helper() for all top-level items
             foreach(QGraphicsItem * item, items) {
                 if (!item->parentItem())
-                    d->setLayoutDirection_helper(item);
+                    d->handleApplicationLayoutDirectionChangeEvent(item);
             }
         }
         return true;
     } else if (event->type() == QEvent::LanguageChange) {
-        // tell the scene and its items about the language change
+        // Tell the scene and its top-level items about the language change
         if (scene()) {
             QList<QGraphicsItem *> items = scene()->items();
-
-            foreach(QGraphicsItem * item, items) {
-                if (item->isWidget()) {
-                    QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
-
-                    QEvent ev(QEvent::LanguageChange);
-                    qApp->sendEvent(widget, &ev);
-                }
+            // Call handler for language change event only for top
+            // level widgets. The handler then recurses over the
+            // children.
+            QList<QGraphicsItem *> itemsWithoutParents;
+            foreach(QGraphicsItem *item, items)
+                if(!item->parentItem()) itemsWithoutParents << item;
+            foreach(QGraphicsItem * item, itemsWithoutParents) {
+                d->handleLanguageChangeEvent(item);
             }
         }
         return true;

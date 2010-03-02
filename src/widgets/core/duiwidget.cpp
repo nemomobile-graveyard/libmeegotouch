@@ -327,20 +327,8 @@ bool DuiWidget::event(QEvent *event)
         DuiOrientationChangeEvent *oce = static_cast<DuiOrientationChangeEvent *>(event);
         orientationChangeEvent(oce);
     } else if (type == QEvent::LanguageChange) {
-        // retranslate the own ui strings
+        // retranslate the ui strings of this DuiWidget:
         retranslateUi();
-
-        // notify child widgets about language change
-        QList<QGraphicsItem *> items = childItems();
-
-        foreach(QGraphicsItem * item, items) {
-            if (item->isWidget()) {
-                QGraphicsWidget *widget = static_cast<QGraphicsWidget *>(item);
-
-                QEvent ev(QEvent::LanguageChange);
-                qApp->sendEvent(widget, &ev);
-            }
-        }
     } else if (type == DuiOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<DuiOnDisplayChangeEvent *>(event));
     } else if (type == QEvent::Gesture) {
