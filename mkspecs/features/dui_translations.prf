@@ -107,7 +107,7 @@ isEmpty(vcproj) {
     updateeets.input = DUMMY_DEP
     updateeets.output = $$ENGINEERING_ENGLISH
     !isEmpty(vcproj):updateeets.variable_out = GENERATED_SOURCES
-    updateeets.commands = $$LUPDATE "$$SOURCEDIR" -ts \"$$ENGINEERING_ENGLISH\"
+    updateeets.commands = $$LUPDATE "$$SOURCEDIR" -ts "$$ENGINEERING_ENGLISH"
     updateeets.name = LUPDATE $$ENGINEERING_ENGLISH
     updateeets.CONFIG += no_link target_predeps
     QMAKE_EXTRA_COMPILERS += updateeets
@@ -141,7 +141,7 @@ isEmpty(vcproj) {
 
 # other .ts files besides the engineering English one should only be updated
 # on request, i.e. only when calling “make updatets” manually:
-updatets.commands = $$LUPDATE "$$SOURCEDIR" -ts lala \"$$TRANSLATIONS\"
+updatets.commands = $$LUPDATE "$$SOURCEDIR" -ts "$$TRANSLATIONS"
 updatets.target = updatets
 QMAKE_EXTRA_TARGETS += updatets
 
