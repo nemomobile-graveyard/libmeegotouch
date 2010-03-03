@@ -8,9 +8,9 @@ INCLUDEPATH+=./widgets
 
 duigen_model.name = duigenerator model
 duigen_model.input = WIDGET_MODEL_HEADERS
-duigen_model.depends = ../duigen/duigen
+duigen_model.depends = $$DUIGEN_EXECUTABLE
 duigen_model.output = $$GEN_DIR/gen_${QMAKE_FILE_BASE}data.cpp
-duigen_model.commands += ../duigen/duigen --model ${QMAKE_FILE_NAME} $$GEN_DIR/
+duigen_model.commands += $$DUIGEN_EXECUTABLE --model ${QMAKE_FILE_NAME} $$GEN_DIR/
 duigen_model.clean += $$GEN_DIR/gen_*
 duigen_model.CONFIG = target_predeps no_link
 duigen_model.variable_out = GENERATED_SOURCES

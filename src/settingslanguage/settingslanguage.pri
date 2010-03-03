@@ -7,8 +7,8 @@ duigen_model_settingslanguage.name = duigenerator \
     model
 duigen_model_settingslanguage.input = SETTINGSLANGUAGE_MODEL_HEADERS
 duigen_model_settingslanguage.output = $$GEN_DIR/gen_${QMAKE_FILE_BASE}data.cpp
-duigen_model_settingslanguage.depends = ../duigen/duigen
-duigen_model_settingslanguage.commands += ../duigen/duigen --model \
+duigen_model_settingslanguage.depends = $$DUIGEN_EXECUTABLE
+duigen_model_settingslanguage.commands += $$DUIGEN_EXECUTABLE --model \
     ${QMAKE_FILE_NAME} \
     $$GEN_DIR/
 duigen_model_settingslanguage.clean += $$GEN_DIR/gen_*
@@ -18,9 +18,9 @@ QMAKE_EXTRA_COMPILERS += duigen_model_settingslanguage
 
 duigen_style_settingslanguage.name = duigenerator style
 duigen_style_settingslanguage.input = SETTINGSLANGUAGE_STYLE_HEADERS
-duigen_style_settingslanguage.depends = ../duigen/duigen
+duigen_style_settingslanguage.depends = $$DUIGEN_EXECUTABLE
 duigen_style_settingslanguage.output = $$GEN_DIR/gen_${QMAKE_FILE_BASE}data.cpp
-duigen_style_settingslanguage.commands += ../duigen/duigen --style ${QMAKE_FILE_NAME} $$GEN_DIR
+duigen_style_settingslanguage.commands += $$DUIGEN_EXECUTABLE --style ${QMAKE_FILE_NAME} $$GEN_DIR
 duigen_style_settingslanguage.clean += $$GEN_DIR/gen_*
 duigen_style_settingslanguage.CONFIG = target_predeps no_link
 duigen_style_settingslanguage.variable_out = GENERATED_SOURCES

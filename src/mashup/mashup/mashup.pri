@@ -7,8 +7,8 @@ duigen_model_mashup.name = duigenerator \
     model
 duigen_model_mashup.input = MASHUP_WIDGET_MODEL_HEADERS
 duigen_model_mashup.output = $$GEN_DIR/gen_${QMAKE_FILE_BASE}data.cpp
-duigen_model_mashup.depends = ../duigen/duigen
-duigen_model_mashup.commands += ../duigen/duigen --model ${QMAKE_FILE_NAME} $$GEN_DIR
+duigen_model_mashup.depends = $$DUIGEN_EXECUTABLE
+duigen_model_mashup.commands += $$DUIGEN_EXECUTABLE --model ${QMAKE_FILE_NAME} $$GEN_DIR
 duigen_model_mashup.clean += $$GEN_DIR/gen_*
 duigen_model_mashup.CONFIG = target_predeps no_link
 duigen_model_mashup.variable_out = GENERATED_SOURCES

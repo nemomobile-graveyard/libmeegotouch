@@ -44,9 +44,7 @@ INCLUDEPATH += $${OUT_PWD}/.gen
 
 QMAKE_STRIP = echo
 
-!win32 {
-    PRE_TARGETDEPS += ../duigen/duigen
-}
+PRE_TARGETDEPS += $$DUIGEN_EXECUTABLE
 
 CONFIG += qt warn_on depend_includepath qmake_cache target_qt dll create_prl
 !win32:CONFIG += link_pkgconfig
@@ -56,7 +54,7 @@ win32 {
     QMAKE_MOC = perl $${IN_PWD}\..\duimoc\duimoc
     INCLUDEPATH += .
 } else {
-    QMAKE_MOC = PATH=../duigen:$$(PATH) $${IN_PWD}/../duimoc/duimoc
+    QMAKE_MOC = $${IN_PWD}/../duimoc/duimoc
 }
 
 QMAKE_CFLAGS += -Werror

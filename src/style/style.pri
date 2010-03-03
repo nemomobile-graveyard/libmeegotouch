@@ -7,9 +7,9 @@ INCLUDEPATH+=./style
 
 duigen_style.name = duigenerator style
 duigen_style.input = WIDGET_STYLE_HEADERS
-duigen_style.depends = ../duigen/duigen
+duigen_style.depends = $$DUIGEN_EXECUTABLE
 duigen_style.output = $$GEN_DIR/gen_${QMAKE_FILE_BASE}data.cpp
-duigen_style.commands += ../duigen/duigen --style ${QMAKE_FILE_NAME} $$GEN_DIR
+duigen_style.commands += $$DUIGEN_EXECUTABLE --style ${QMAKE_FILE_NAME} $$GEN_DIR
 duigen_style.clean += $$GEN_DIR/gen_*
 duigen_style.CONFIG = target_predeps no_link
 duigen_style.variable_out = GENERATED_SOURCES
