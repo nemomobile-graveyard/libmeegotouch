@@ -21,13 +21,9 @@ QT += core \
 
 # Input
 SOURCES += main.cpp \
-    duiextensionrunner.cpp \
-    duiappletrunner.cpp \
-    ../src/mashup/mashup/duiappletsharedmutex.cpp
+    duiappletrunner.cpp
 
-HEADERS += duiappletrunner.h \
-    duiextensionrunner.h \
-    duiappletsharedmutex.h
+HEADERS += duiappletrunner.h
 
 QMAKE_EXTRA_TARGETS += check
 check.depends = $$TARGET

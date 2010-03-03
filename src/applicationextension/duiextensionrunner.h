@@ -25,6 +25,7 @@
 #include <QPixmap>
 
 #include <duinamespace.h>
+#include <duiexport.h>
 
 class DuiWidget;
 class DuiScene;
@@ -42,12 +43,16 @@ class QAction;
 class QGLContext;
 #endif
 
-
+//! \internal
 /**
  * DuiExtensionRunner is a class that is used to start and run oop (out of process)
  * extension widgets.
+ *
+ * W A R N I N G
+ * -------------
+ * This file is not part of the libdui API. It should only be used by applet runner developers.
  */
-class DuiExtensionRunner : public QObject
+class DUI_EXPORT DuiExtensionRunner : public QObject
 {
     Q_OBJECT
 
@@ -167,5 +172,6 @@ protected:
     friend class Ut_DuiExtensionRunner;
 #endif
 };
+//! \internal_end
 
 #endif /* DUIEXTENSIONRUNNER_H_ */

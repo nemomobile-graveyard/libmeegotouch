@@ -21,15 +21,11 @@ QT += core \
 
 # Input
 SOURCES += main.cpp \
-    duiextensionrunner.cpp \
     duiapplicationextensionrunner.cpp \
-    ../src/applicationextension/duiapplicationextensionloader.cpp \
-    ../src/mashup/mashup/duiappletsharedmutex.cpp
+    ../src/applicationextension/duiapplicationextensionloader.cpp
 
 HEADERS += duiapplicationextensionrunner.h \
-    duiextensionrunner.h \
-    duiapplicationextensionloader.h \
-    duiappletsharedmutex.h
+    duiapplicationextensionloader.h
 
 QMAKE_EXTRA_TARGETS += check
 check.depends = $$TARGET
