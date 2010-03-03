@@ -1,6 +1,6 @@
 ; HM NIS Edit Wizard helper defines
 !define PRODUCT_NAME "Widgets Gallery"
-!define PRODUCT_VERSION "0.15"
+!define PRODUCT_VERSION "0.19.3"
 !define PRODUCT_PUBLISHER "Nokia"
 !define PRODUCT_WEB_SITE "http://www.nokia.com"
 !define PRODUCT_DIR_REGKEY "Software\Microsoft\Windows\CurrentVersion\App Paths\widgetsgallery.exe"
