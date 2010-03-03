@@ -224,6 +224,15 @@ void Ut_Translations::testQtTrId()
     // now qtTrId should return the real translation, unless
     // the message is not translated at all:
     QCOMPARE(qtTrId(qPrintable(messageId)), translation);
+
+    // removes the catalogs for both the engineering English and the
+    // real translation:
+    locale.removeTrCatalog("ut_translations-qttrid");
+
+    DuiLocale::setDefault(locale);
+    // Everything should be untranslated now:
+    QCOMPARE(locale.translate("", qPrintable(messageId)), messageId);
+    QCOMPARE(qtTrId(qPrintable(messageId)), messageId);
 }
 
 void Ut_Translations::testQtTrIdLocalizedNumbers_data()
