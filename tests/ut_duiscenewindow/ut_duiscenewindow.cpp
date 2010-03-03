@@ -87,6 +87,14 @@ void DuiComponentData::setActiveWindow(DuiWindow *window)
     gActiveWindow = window;
 }
 
+QList<DuiWindow *> DuiComponentData::windows()
+{
+    QList<DuiWindow *> windowList;
+    if (gActiveWindow)
+       windowList.append(gActiveWindow);
+    return windowList;
+}
+
 DuiWindow *DuiComponentData::activeWindow()
 {
     return gActiveWindow;
