@@ -28,8 +28,54 @@ class DuiAppletInstanceManager;
 class DuiMashupCanvasPrivate;
 
 /*!
- * DuiMashupCanvas is a widget which can be populated with applet instances. DuiMashupCanvas
- * can be placed on any view that wants to leverage applet support.
+ * DuiMashupCanvas is a widget which can be populated with applet instances.
+ * A DuiMashupCanvas can be placed on any view that wants to leverage applet support.
+ *
+ * \section overview Overview
+ *
+ * Applets are small programs that are embedded into mashup canvases. The mashup canvas composites applet images as part of it's own visual presentation.
+ * Applets are primarily run in separate processes in order to safeguard against possible bugs in applets such as blocking the GUI or crashing.
+ * The mashup canvas contains an applet inventory (\c DuiAppletInventory), which is a special type of menu which populates its content from .desktop files that applets have installed during their package installation.
+ * It automatically registers applets (through \c DuiAppletInstanceManager) and implements state handling, memory management etc.
+ *
+ * \section metadata Applet metadata
+ *
+ * Each applet package installs a .desktop file into \c /usr/share/dui/applets/ in which the applet specifies its metadata. \c DuiAppletInventory monitors this directory and enables instantiation of installed applets onto mashup canvas. The applet inventory is opened by tapping a button on bottom of the mashup canvas area. The inventory shows the icon of each applet in a grid view. When icon is tapped the applet is instantiated to the mashup canvas. When applet is instantiated a new !DuiWidget - object from applet binary is constructed and added to the mashup canvas. The applet inventory can be closed/hidden by tapping 'x' on the top right corner.
+ *
+ * Applet metadata is defined in .desktop files following freedesktop.org <a href="http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec?action=show&redirect=Standards%2Fdesktop-entry-spec">desktop entry specification</a>. Applet metadata extends .desktop entry specification by defining a new type \c DUIApplet. Applet metadata specification follows desktop entry specification so that required keys (Type, Name and Exec) have to be defined in the applet metadata. \c Exec key in applet metadata defines the runner binary which is launched in separate process to run the applet binary. This key needs to be defined but can be left empty. If \c Exec key is left empty the applet is ran in the same process with the mashup canvas.
+ *
+ * Applet metadata extends the desktop specification with following new keys. These keys need to be defined under group \c DUI.
+ *
+ * <table>
+ * <tr><th>Key</th><th>Description</th><th>Value type</th><th>REQ</th></tr>
+ * <tr><td>\c X-DUIApplet-Applet</td><td>Defines the applet binary that will be loaded using the runner defined by the \c Exec key. This binary needs to be located in \c /usr/lib/dui/applets/ directory.</td><td>string</td><td>YES</td></tr>
+ * <tr><td>\c X-DUIApplet-Identifier</td><td>Defines an identifier for the applet. The identifier is used for example defining the applet specific style resource locations.</td><td>string (can contain characters [a-zA-Z0-9_-])</td><td>NO</td></tr>
+ * </table>
+ *
+ * Following is an example of applet metadata specification:
+ * \code
+ * [Desktop Entry]
+ * Type=DUIApplet
+ * Name=ExampleApplet
+ * Icon=Icon-music
+ * Exec=duiappletrunner
+ *
+ * [DUI]
+ * X-DUIApplet-Applet=libexampleapplet.so
+ * \endcode
+ *
+ * \section lifecycle Applet lifecycle
+ *
+ * Below is a list of events that define the applet lifecycle. These events can occur on an applet type (e.g. weather applet) or on an applet instance (e.g. weather applet instance that shows weather in London).
+ *
+ * - Install - A new applet type is installed. Package manager is invoked to install a new applet type from a debian package.
+ * - Add - A new applet instance is placed on the mashup canvas. Mashup canvas initiates an instance construction from applet binary. The same operation occurs when already added applet instance is restored after mashup canvas has been closed and reopened (e.g. when application has been turned off and back on). When applet instance is added for the first time to the canvas the applet instance specific data is empty. When applet instance is restored the applet instance specific data is restored from pre-closed state.
+ * - Close - An applet instance is closed. This might occur for instance when application with mashup canvas is shut down (e.g. when device is turned off). It's good to make a distinction between this and \b remove.
+ * - Update - An applet type is updated. This is the case where an already installed applet type (e.g. weather applet) is updated to a newer version. Applet developers should assure that instance specific applet data of an old applet type is compatible with the new applet version (new data can naturally be introduced when applet is updated to a newer version).
+ * - Remove - This occurs when an applet instance is removed from applet canvas. All applet instance specific data is removed. Also applet developer should remove any data it has stored for this particular applet instance. This means that applet instance is not added to the mashup canvas again when application is restarted the next time.
+ * - Uninstall - An already installed applet type is uninstalled. This will implicitly \b remove all applet instances of the specified type. Package manager will handle the exact package removal process.
+ *
+ * \section notes Notes
  *
  * Every DuiMashupCanvas has to be identified by a unique identifier that is passed in through
  * the constructor. The user of this class should ensure that they use unique identifiers for the

@@ -46,6 +46,21 @@ class QTimer;
  * If the extension insists that its minimum and preferred size hints are larger
  * than the width of the screen DuiExtensionHandle will draw the extension pixmap
  * downscaled so that it fits the screen.
+ *
+ * When the remote runner process dies the handle needs to either restart
+ * or go to a broken state. To detect that whether the runner is not
+ * responding/crashed (become a zombie), the handle sends
+ * APPLET_ALIVE_MESSAGE_REQUEST (pings) to the runner which replies to the
+ * requests with APPLET_ALIVE_MESSAGE_RESPONSE (pongs). The handle starts a
+ * timer after sending each ping request to check if the response is received
+ * in a certain time interval. If not, then it means the runner is not
+ * responding and it is set to a "broken" state.
+ *
+ * The handling of the broken state goes currently like this:
+ *
+ * - If the handle enters the broken state the first time, it is simply restarted.
+ * - If the handle enters the broken state a second time withing a given interval (currently 30 seconds) user interaction is required. It is up to the derived classes to determine what to do in this case.
+ * - If the handle doesn't enter the broken state within the time interval, it is considered to behave correctly and it re-enters the normal running state.
  */
 class DuiExtensionHandle : public DuiWidgetController
 {

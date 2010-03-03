@@ -36,21 +36,17 @@ class QDBusPendingCallWatcher;
 //! \internal
 
 /*!
- * DuiAppletInstanceManager maintains currently running applets.
+ * DuiAppletInstanceManager maintains currently running applets. The user needs to provide
+ * a unique identifier to identify a DuiAppletInstanceManager object in application's context.
+ *
+ * DuiAppletInstanceManager can be used to instantiate new applets and remove existing applet instances.
  *
  * DuiAppletInstanceManager ensures that data about running applet instances is stored in a permanent storage.
- * DuiAppletInstanceManager can be used to instantiate new applets and remove existing applet instances.
- * DuiAppletInstanceManager also monitors if out-of-process applets die or become unresponsive. If this occurs
- * DuiAppletInstanceManager tries to first restart them but if that fails the applet instance is removed
- * permanently from the manager.
- *
- * Other objects can observe state of the applet instance manager by subscribing to appletInstantiated
- * and appletRemoved signals.
- *
  * DuiAppletInstanceManager uses a data store to store the information about instantiated applets and their data.
  * The data store object is either given to the DuiAppletInstanceManager in the constructor or then the
- * DuiAppletInstanceManager creates its own file-based data storing mechanism. User needs to provide a unique
- * identifier to identify a DuiAppletInstanceManager object in application's context.
+ * DuiAppletInstanceManager creates its own file-based data storing mechanism under ~/.config/appName/canvasId.data.
+ * When initialized the applet instance manager reads in the data from the permanent storage and restores any applets
+ * that were previously instantiated when it was last shut down.
  *
  * \see \ref appletdevelopment
  */
