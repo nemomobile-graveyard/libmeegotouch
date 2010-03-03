@@ -483,6 +483,12 @@ void DuiFastPlainMultiColumnListViewPrivate::selectionChange(const QItemSelectio
     }
 }
 
+void DuiFastPlainMultiColumnListViewPrivate::createVisibleItems()
+{
+    QModelIndex firstVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y()));
+    QModelIndex lastVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y() + viewportVisibleHeight));
+    createVisibleItems(firstVisibleIndex, lastVisibleIndex);
+}
 
 void DuiFastPlainMultiColumnListViewPrivate::clearVisibleItemsArray()
 {
@@ -873,6 +879,13 @@ void DuiFastMultiColumnListViewPrivate::selectionChange(const QItemSelection &se
         if (deselected.contains(widgetIndex))
             widget->setSelected(false);
     }
+}
+
+void DuiFastMultiColumnListViewPrivate::createVisibleItems()
+{
+    QModelIndex firstVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y()));
+    QModelIndex lastVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y() + viewportVisibleHeight));
+    createVisibleItems(firstVisibleIndex, lastVisibleIndex);
 }
 
 void DuiFastMultiColumnListViewPrivate::clearVisibleItemsArray()

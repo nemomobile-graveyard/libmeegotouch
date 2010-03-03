@@ -95,9 +95,9 @@ public:
 
     void updateFirstVisibleRow(const QModelIndex &index);
     void updateLastVisibleRow(const QModelIndex &index);
-    void createVisibleItems();
 
 public:
+    virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void cellClicked(DuiWidget *source);
@@ -184,6 +184,7 @@ public:
     int flatRowToColumn(int row) const;
 
 public:
+    virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual int locatePosOfItem(int row);
@@ -254,6 +255,7 @@ public:
     int flatRowToColumn(int row) const;
 
 public:
+    virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void updateItemSize();
