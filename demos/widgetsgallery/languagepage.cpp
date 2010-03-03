@@ -32,6 +32,7 @@
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
 #include <QStringList>
+#include <QDebug>
 
 LanguagePage::LanguagePage()
     : comboBox(0),
@@ -58,7 +59,6 @@ void LanguagePage::createContent()
     comboBox = new DuiComboBox;
     comboBox->setIconID("Icon-browser");
     policy->addItem(comboBox, 1, 1);
-    connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLanguage(int)));
     retranslateUi();
 }
 
@@ -68,6 +68,8 @@ void LanguagePage::retranslateUi()
     setTitle(qtTrId("xx_language_title"));
     if (!isContentCreated())
         return;
+
+    disconnect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLanguage(int)));
 
     QList<QStringList> rows;
     //% "None"
@@ -86,6 +88,7 @@ void LanguagePage::retranslateUi()
          << (QStringList() << qtTrId("xx_language_hungarian") << "hu");
 
     QStandardItemModel *newModel = new QStandardItemModel(rows.count(), 2, this);
+    Q_CHECK_PTR(newModel);
     int rowsCount = rows.count();
     for (int i = 0; i < rowsCount; ++i)
         for (int j = 0; j < 2; ++j)
@@ -93,7 +96,7 @@ void LanguagePage::retranslateUi()
 
 //    comboBox->clear();
     comboBox->setItemModel(newModel);
-    if (model) delete model;
+    if (model && model->QObject::parent() == this) delete model;
     model = newModel;
     DuiGConfItem languageItem("/Dui/i18n/Language");
     QString currentLanguage = languageItem.value().toString();
@@ -104,12 +107,17 @@ void LanguagePage::retranslateUi()
     }
     //% "Please select language"
     comboBox->setTitle(qtTrId("xx_language_combobox_title"));
+
+    connect(comboBox, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLanguage(int)));
 }
 
 void LanguagePage::changeLanguage(int index)
 {
-    if ((uint) index >= model->rowCount())
+    if (index < 0 || index >= model->rowCount())
         return;
+    QString newLanguage = model->item(index, 1)->text();
     DuiGConfItem languageItem("/Dui/i18n/Language");
-    languageItem.set(model->item(index, 1)->text());
+    if (newLanguage != languageItem.value().toString()) {
+        languageItem.set(newLanguage);
+    }
 }
