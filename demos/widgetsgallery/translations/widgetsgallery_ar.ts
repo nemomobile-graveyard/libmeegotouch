@@ -4,52 +4,52 @@
 <context>
     <name></name>
     <message id="xx_application_title">
-        <location filename="../listpage.cpp" line="110"/>
+        <location filename="../listpage.cpp" line="176"/>
         <source>Widgets Gallery</source>
         <translation>معرض الحاجيات</translation>
     </message>
     <message id="xx_apporientation_auto">
-        <location filename="../listpage.cpp" line="330"/>
+        <location filename="../listpage.cpp" line="412"/>
         <source>Automatic</source>
         <translation>التلقائي</translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../listpage.cpp" line="338"/>
+        <location filename="../listpage.cpp" line="420"/>
         <source>Portrait</source>
         <translation>بورتريه</translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../listpage.cpp" line="346"/>
+        <location filename="../listpage.cpp" line="428"/>
         <source>Landscape</source>
         <translation>المشهد</translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../listpage.cpp" line="354"/>
+        <location filename="../listpage.cpp" line="436"/>
         <source>0 degrees</source>
         <translation>0 درجة</translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../listpage.cpp" line="362"/>
+        <location filename="../listpage.cpp" line="444"/>
         <source>90 degrees clockwise</source>
         <translation>90 درجة في اتجاه عقارب الساعة</translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../listpage.cpp" line="370"/>
+        <location filename="../listpage.cpp" line="452"/>
         <source>180 degrees clockwise</source>
         <translation>180 درجة في اتجاه عقارب الساعة</translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../listpage.cpp" line="378"/>
+        <location filename="../listpage.cpp" line="460"/>
         <source>270 degrees clockwise</source>
         <translation>270 درجة في اتجاه عقارب الساعة</translation>
     </message>
     <message id="xx_label_page_title">
-        <location filename="../labelpage.cpp" line="96"/>
+        <location filename="../labelpage.cpp" line="119"/>
         <source>Labels</source>
         <translation>تسميات</translation>
     </message>
     <message id="xx_label_page_info_label">
-        <location filename="../labelpage.cpp" line="106"/>
+        <location filename="../labelpage.cpp" line="129"/>
         <source>Simple Label is used mainly by other components, and it does not support any formatting or interaction.
 
 Rich Label supports multiple lines, HTML formatting and highlighting for links.
@@ -62,73 +62,73 @@ All Labels can be aligned left, right or center and will be automatically trunca
 جميع تسميات يمكن أن تكون محاذاة إلى اليسار أو اليمين أو الوسط ، وسيتم اقتطاعها تلقائيا إذا كان النص لا تناسب داخل منطقة معينة.</translation>
     </message>
     <message id="xx_simple_label">
-        <location filename="../labelpage.cpp" line="108"/>
+        <location filename="../labelpage.cpp" line="131"/>
         <source>Simple Label</source>
         <translation>بسيطة تسمية</translation>
     </message>
     <message id="xx_rich_label">
-        <location filename="../labelpage.cpp" line="111"/>
+        <location filename="../labelpage.cpp" line="134"/>
         <source>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</source>
         <oldsource>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italics&lt;/i&gt;, &lt;a href=&quot;http://www.nokia.com&quot;&gt;link&lt;/a&gt;</oldsource>
         <translation>الغنية تسمية &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="64"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="88"/>
         <source>Question Dialog Title</source>
         <translation>السؤال حوار العنوان</translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_content">
-        <location filename="../dialogsandnotificationspage.cpp" line="66"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="90"/>
         <source>Lorem ipsum dolor sit amet?</source>
         <translation>أبجد هوز دولور الجلوس امات؟</translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_label">
-        <location filename="../dialogsandnotificationspage.cpp" line="76"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="100"/>
         <source>Name</source>
         <translation>اسم</translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="88"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="112"/>
         <source>Please enter your name</source>
         <translation>الرجاء إدخال اسمك</translation>
     </message>
     <message id="xx_dialogs_and_notifications_long_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="103"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="127"/>
         <source>Select printer</source>
         <translation>حدد الطابعة</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_button">
-        <location filename="../dialogsandnotificationspage.cpp" line="153"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="177"/>
         <source>Click to spawn a nested dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>انقر لتفرخ الحوار متداخلة</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="155"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="179"/>
         <source>Stacked dialogs</source>
-        <translation type="unfinished"></translation>
+        <translation>حوارات مرصوف</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox">
-        <location filename="../dialogsandnotificationspage.cpp" line="167"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="191"/>
         <source>Click to open a nested message box</source>
-        <translation type="unfinished"></translation>
+        <translation>انقر لفتح متداخلة مربع رسالة</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="169"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="193"/>
         <source>This is a nested dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>هذا هو الحوار متداخلة</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_messagebox_text">
-        <location filename="../dialogsandnotificationspage.cpp" line="181"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="205"/>
         <source>I&apos;m a nested message box</source>
-        <translation type="unfinished"></translation>
+        <translation>أنا متداخلة مربع رسالة</translation>
     </message>
     <message id="xx_dialogs_and_notifications_window_modal_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="191"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="215"/>
         <source>Window Modal Dialog</source>
         <translation>نافذة حوار مشروط</translation>
     </message>
     <message id="xx_dialogs_and_notifications_window_modal_dialog_label">
-        <location filename="../dialogsandnotificationspage.cpp" line="195"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="219"/>
         <source>I&apos;m a window modal dialog.
 There&apos;s no way around me!
 Muwhahaha... [evil laugh]</source>
@@ -137,112 +137,112 @@ Muwhahaha... [evil laugh]</source>
 هاهاها... [الشر الضحك]</translation>
     </message>
     <message id="xx_dialogs_and_notifications_progress_indicator">
-        <location filename="../dialogsandnotificationspage.cpp" line="213"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="237"/>
         <source>Progress Indicator</source>
         <translation>مؤشرات التقدم</translation>
     </message>
     <message id="xx_dialogs_and_notifications_message_box_text">
-        <location filename="../dialogsandnotificationspage.cpp" line="232"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="256"/>
         <source>Hello World!</source>
         <translation>مرحبا العالم!</translation>
     </message>
     <message id="xx_dialogs_and_notifications_event_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="242"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="266"/>
         <source>&lt;b&gt;Ida Taipale&lt;/b&gt;&lt;br/&gt;Have you seen my dog?</source>
         <translation>&lt;b&gt;Ida Taipale&lt;/b&gt;&lt;br/&gt;هل رأيت كلبي؟</translation>
     </message>
     <message id="xx_dialogs_and_notifications_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="255"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="279"/>
         <source>&lt;b&gt;Battery is running low&lt;/b&gt;</source>
         <translation>&lt;b&gt;البطارية تتناقص&lt;/b&gt;</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="267"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="291"/>
         <source>&lt;b&gt;Incoming call&lt;/b&gt;</source>
         <translation>&lt;b&gt;مكالمة واردة&lt;/b&gt;</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_information_banner_accept">
-        <location filename="../dialogsandnotificationspage.cpp" line="269"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="293"/>
         <source>Accept</source>
         <translation>قبول</translation>
     </message>
     <message id="xx_dialogs_and_notifications_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="393"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="360"/>
         <source>Dialogs and Notifications</source>
         <translation>الحوارات والإشعارات</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_dialogs">
-        <location filename="../dialogsandnotificationspage.cpp" line="397"/>
-        <source>  DuiDialog examples</source>
-        <translation>الحوارات</translation>
+        <location filename="../dialogsandnotificationspage.cpp" line="364"/>
+        <source>Dialog examples</source>
+        <oldsource>  DuiDialog examples</oldsource>
+        <translation>أمثلة الحوار</translation>
     </message>
     <message id="xx_dialogs_and_notifications_query_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="399"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="366"/>
         <source>Question Dialog</source>
         <translation>الاستعلام حوار</translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="401"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="368"/>
         <source>Entry Dialog</source>
         <translation>بدء حوار</translation>
     </message>
     <message id="xx_dialogs_and_notifications_long_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="403"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="370"/>
         <source>A Long Dialog</source>
         <translation>وهناك حوار طويل</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialogs">
-        <location filename="../dialogsandnotificationspage.cpp" line="406"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="373"/>
         <source>Stacked Dialogs</source>
-        <translation type="unfinished"></translation>
+        <translation>حوارات مرصوف</translation>
     </message>
     <message id="xx_dialogs_and_notifications_window_modal_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="409"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="376"/>
         <source>Window Modal Dialog</source>
         <translation>نافذة حوار مشروط</translation>
     </message>
     <message id="xx_dialogs_and_notifications_dialog_with_progress_indicator">
-        <location filename="../dialogsandnotificationspage.cpp" line="412"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="379"/>
         <source>Dialog With Progress Indicator</source>
         <translation>الحوار مع تقدم المؤشر</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_messagebox">
-        <location filename="../dialogsandnotificationspage.cpp" line="415"/>
         <source>  DuiMessageBox examples</source>
-        <translation>أمثلة DuiMessageBox</translation>
+        <translation type="obsolete">أمثلة DuiMessageBox</translation>
     </message>
     <message id="xx_dialogs_and_notifications_messagebox">
-        <location filename="../dialogsandnotificationspage.cpp" line="417"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="384"/>
         <source>Simple Message Box</source>
         <translation>رسالة بسيطة مربع</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_notifications">
-        <location filename="../dialogsandnotificationspage.cpp" line="419"/>
-        <source>  Notifications</source>
-        <translation>الإخطارات</translation>
+        <location filename="../dialogsandnotificationspage.cpp" line="382"/>
+        <source>Notifications and messages</source>
+        <translation>الإخطارات والرسائل</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_event_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="421"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="386"/>
         <source>Event Banner</source>
         <translation>الحدث بانر</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="423"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="388"/>
         <source>Information Banner</source>
         <translation>معلومات بانر</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_system_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="425"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="390"/>
         <source>System Information Banner</source>
         <translation>نظام المعلومات بانر</translation>
     </message>
     <message id="xx_Image">
-        <location filename="../imagepage.cpp" line="94"/>
+        <location filename="../imagepage.cpp" line="118"/>
         <source>Image</source>
         <translation>الصور</translation>
     </message>
     <message id="xx_Image properties">
-        <location filename="../imagepage.cpp" line="98"/>
+        <location filename="../imagepage.cpp" line="122"/>
         <source>Image properties</source>
         <translation>خصائص الصورة</translation>
     </message>
@@ -259,207 +259,207 @@ Muwhahaha... [evil laugh]</source>
         <translation type="obsolete">توقف</translation>
     </message>
     <message id="xx_image_operations">
-        <location filename="../imagepage.cpp" line="116"/>
+        <location filename="../imagepage.cpp" line="140"/>
         <source>Image operations</source>
         <translation>عمليات صورة</translation>
     </message>
     <message id="xx_Zoom">
-        <location filename="../imagepage.cpp" line="104"/>
+        <location filename="../imagepage.cpp" line="128"/>
         <source>Zoom</source>
         <translation>التكبير</translation>
     </message>
     <message id="xx_Transparency">
-        <location filename="../imagepage.cpp" line="106"/>
+        <location filename="../imagepage.cpp" line="130"/>
         <source>Transparency</source>
         <translation>الشفافية</translation>
     </message>
     <message id="xx_Crop">
-        <location filename="../imagepage.cpp" line="108"/>
+        <location filename="../imagepage.cpp" line="132"/>
         <source>Crop</source>
         <translation>المحاصيل</translation>
     </message>
     <message id="xx_listpage_title">
-        <location filename="../duilistpage.cpp" line="308"/>
+        <location filename="../duilistpage.cpp" line="320"/>
         <source>List</source>
         <translation>قائمة</translation>
     </message>
     <message id="xx_textentry_title">
-        <location filename="../textentrypage.cpp" line="462"/>
+        <location filename="../textentrypage.cpp" line="486"/>
         <source>Text Entries</source>
         <translation>النص مداخل</translation>
     </message>
     <message id="xx_textentry_free_text">
-        <location filename="../textentrypage.cpp" line="478"/>
+        <location filename="../textentrypage.cpp" line="502"/>
         <source>Free text:</source>
         <translation>حرر النص :</translation>
     </message>
     <message id="xx_textentry_free_text_masked">
-        <location filename="../textentrypage.cpp" line="480"/>
+        <location filename="../textentrypage.cpp" line="504"/>
         <source>Free text(masked):</source>
         <translation>نص حر (الملثمين) :</translation>
     </message>
     <message id="xx_textentry_number_text">
-        <location filename="../textentrypage.cpp" line="482"/>
+        <location filename="../textentrypage.cpp" line="506"/>
         <source>Number text:</source>
         <translation>النص المرجعي :</translation>
     </message>
     <message id="xx_textentry_phone_number">
-        <location filename="../textentrypage.cpp" line="484"/>
+        <location filename="../textentrypage.cpp" line="508"/>
         <source>Phone number:</source>
         <translation>رقم الهاتف :</translation>
     </message>
     <message id="xx_textentry_email_text">
-        <location filename="../textentrypage.cpp" line="486"/>
+        <location filename="../textentrypage.cpp" line="510"/>
         <source>Email text:</source>
         <translation>نص البريد الالكتروني :</translation>
     </message>
     <message id="xx_textentry_url_text">
-        <location filename="../textentrypage.cpp" line="488"/>
+        <location filename="../textentrypage.cpp" line="512"/>
         <source>Url text:</source>
         <translation>عنوان النص :</translation>
     </message>
     <message id="xx_textentry_multiline">
-        <location filename="../textentrypage.cpp" line="490"/>
+        <location filename="../textentrypage.cpp" line="514"/>
         <source>Multiline:</source>
         <translation>متعدد :</translation>
     </message>
     <message id="xx_tooltip_entry0">
-        <location filename="../textentrypage.cpp" line="466"/>
+        <location filename="../textentrypage.cpp" line="490"/>
         <source>Enter text here</source>
         <translation>أدخل النص هنا</translation>
     </message>
     <message id="xx_textentry_click_here">
-        <location filename="../textentrypage.cpp" line="118"/>
-        <location filename="../textentrypage.cpp" line="140"/>
+        <location filename="../textentrypage.cpp" line="138"/>
+        <location filename="../textentrypage.cpp" line="160"/>
         <source>Click here</source>
         <translation>انقر هنا</translation>
     </message>
     <message id="xx_textentry_press_any_key">
-        <location filename="../textentrypage.cpp" line="131"/>
+        <location filename="../textentrypage.cpp" line="151"/>
         <source>Press any key</source>
         <translation>اضغط على أي مفتاح</translation>
     </message>
     <message id="xx_textentry_keypress">
-        <location filename="../textentrypage.cpp" line="159"/>
+        <location filename="../textentrypage.cpp" line="179"/>
         <source>&lt;i&gt;Key press&lt;/i&gt; key:</source>
         <translation>&lt;i&gt;اضغط على مفتاح&lt;/i&gt; مفتاح:</translation>
     </message>
     <message id="xx_textentry_text">
-        <location filename="../textentrypage.cpp" line="162"/>
-        <location filename="../textentrypage.cpp" line="176"/>
+        <location filename="../textentrypage.cpp" line="182"/>
+        <location filename="../textentrypage.cpp" line="196"/>
         <source>text:</source>
         <translation>النص :</translation>
     </message>
     <message id="xx_textentry_keyrelease">
-        <location filename="../textentrypage.cpp" line="173"/>
+        <location filename="../textentrypage.cpp" line="193"/>
         <source>&lt;i&gt;Key release&lt;/i&gt; key:</source>
         <translation>&lt;i&gt;الافراج عن مفتاح&lt;/i&gt; مفتاح:</translation>
     </message>
     <message id="xx_tooltip_entry1">
-        <location filename="../textentrypage.cpp" line="469"/>
+        <location filename="../textentrypage.cpp" line="493"/>
         <source>This tooltip is quite long and will be clipped on the display</source>
         <translation>هذا توولتيب طويلة جدا ، وسيتم قص على الشاشة</translation>
     </message>
     <message id="xx_textentry_noecho">
-        <location filename="../textentrypage.cpp" line="497"/>
+        <location filename="../textentrypage.cpp" line="521"/>
         <source>No Echo mode:</source>
         <translation>أي وضع الصدى :</translation>
     </message>
     <message id="xx_textentry_echoonedit">
-        <location filename="../textentrypage.cpp" line="500"/>
+        <location filename="../textentrypage.cpp" line="524"/>
         <source>Echo on edit:</source>
         <translation>صدى على تحرير :</translation>
     </message>
     <message id="xx_textentry_direct_input_mode">
-        <location filename="../textentrypage.cpp" line="503"/>
+        <location filename="../textentrypage.cpp" line="527"/>
         <source>Direct Input Mode:</source>
         <translation>مباشرة وضع الإدخال :</translation>
     </message>
     <message id="xx_auto_true_entry0">
-        <location filename="../textentrypage.cpp" line="536"/>
+        <location filename="../textentrypage.cpp" line="560"/>
         <source>Auto Capitalisation is active</source>
         <translation>السيارات رسملة نشط</translation>
     </message>
     <message id="xx_auto_false_entry0">
-        <location filename="../textentrypage.cpp" line="539"/>
+        <location filename="../textentrypage.cpp" line="563"/>
         <source>No Auto Capitalisation</source>
         <translation>لا رسملة للسيارات</translation>
     </message>
     <message id="xx_tooltip_entry6">
-        <location filename="../textentrypage.cpp" line="475"/>
+        <location filename="../textentrypage.cpp" line="499"/>
         <source>This is
 multiline
 tooltip</source>
         <translation>هذا هو\n ومتعدد\nتوولتيب</translation>
     </message>
     <message id="xx_textentry_singleselectall">
-        <location filename="../textentrypage.cpp" line="492"/>
+        <location filename="../textentrypage.cpp" line="516"/>
         <source>Singleline (selectall):</source>
         <translation>سطر واحد (حدد جميع)</translation>
     </message>
     <message id="xx_auto_capitalisation">
-        <location filename="../textentrypage.cpp" line="506"/>
+        <location filename="../textentrypage.cpp" line="530"/>
         <source>Auto capitalisation</source>
         <translation>القيمة السوقية للسيارات</translation>
     </message>
     <message id="xx_error_correction">
-        <location filename="../textentrypage.cpp" line="508"/>
+        <location filename="../textentrypage.cpp" line="532"/>
         <source>Error correction</source>
         <translation>تصحيح الخطأ</translation>
     </message>
     <message id="xx_continuous_slider_title">
-        <location filename="../continuoussliderpage.cpp" line="131"/>
+        <location filename="../continuoussliderpage.cpp" line="150"/>
         <source>Continuous Slider</source>
         <translation>مستمر المتزلج</translation>
     </message>
     <message id="xx_continuous_slider_with_icons">
-        <location filename="../continuoussliderpage.cpp" line="135"/>
+        <location filename="../continuoussliderpage.cpp" line="154"/>
         <source>with icons</source>
         <translation>مع أيقونات</translation>
     </message>
     <message id="xx_continuous_slider_plain_slider">
-        <location filename="../continuoussliderpage.cpp" line="137"/>
+        <location filename="../continuoussliderpage.cpp" line="156"/>
         <source>plain slider</source>
         <translation>سهل التمرير</translation>
     </message>
     <message id="xx_continuous_slider_with_labels">
-        <location filename="../continuoussliderpage.cpp" line="139"/>
+        <location filename="../continuoussliderpage.cpp" line="158"/>
         <source>with labels</source>
         <translation>مع تسميات</translation>
     </message>
     <message id="xx_continuous_slider_min">
-        <location filename="../continuoussliderpage.cpp" line="89"/>
-        <location filename="../continuoussliderpage.cpp" line="141"/>
-        <location filename="../continuoussliderpage.cpp" line="149"/>
+        <location filename="../continuoussliderpage.cpp" line="108"/>
+        <location filename="../continuoussliderpage.cpp" line="160"/>
+        <location filename="../continuoussliderpage.cpp" line="168"/>
         <source>Min</source>
         <translation>دقيقة</translation>
     </message>
     <message id="xx_continuous_slider_max">
-        <location filename="../continuoussliderpage.cpp" line="91"/>
-        <location filename="../continuoussliderpage.cpp" line="143"/>
-        <location filename="../continuoussliderpage.cpp" line="151"/>
+        <location filename="../continuoussliderpage.cpp" line="110"/>
+        <location filename="../continuoussliderpage.cpp" line="162"/>
+        <location filename="../continuoussliderpage.cpp" line="170"/>
         <source>Max</source>
         <translation>ماكس</translation>
     </message>
     <message id="xx_continuous_slider_thumb">
-        <location filename="../continuoussliderpage.cpp" line="93"/>
-        <location filename="../continuoussliderpage.cpp" line="145"/>
-        <location filename="../continuoussliderpage.cpp" line="153"/>
+        <location filename="../continuoussliderpage.cpp" line="112"/>
+        <location filename="../continuoussliderpage.cpp" line="164"/>
+        <location filename="../continuoussliderpage.cpp" line="172"/>
         <source>Thumb</source>
         <translation>الإبهام</translation>
     </message>
     <message id="xx_continuous_slider_seekbar">
-        <location filename="../continuoussliderpage.cpp" line="147"/>
+        <location filename="../continuoussliderpage.cpp" line="166"/>
         <source>seekbar</source>
         <translation>شريط البحث</translation>
     </message>
     <message id="xx_viewmenu_page_title">
-        <location filename="../applicationmenupage.cpp" line="36"/>
+        <location filename="../applicationmenupage.cpp" line="60"/>
         <source>Application Menu</source>
         <translation>عرض القائمة</translation>
     </message>
     <message id="xx_applicationmenu_page_info">
-        <location filename="../applicationmenupage.cpp" line="51"/>
+        <location filename="../applicationmenupage.cpp" line="75"/>
         <source>Application Menu is a menu element available to any view. &lt;ul&gt;&lt;li&gt;It can be opened by tapping on the menu title area.&lt;/li&gt;&lt;li&gt;It contains commands and view settings for the view in question and an optional area for style commands.&lt;/li&gt;&lt;li&gt;Each view of the application can have different menu contents.&lt;/li&gt;&lt;/ul&gt;&lt;b&gt;Guidelines&lt;/b&gt; for mandatory menu items: &lt;ul&gt;&lt;li&gt;Settings should be on the main View of the application, unless the settings are specific to a sub-View&lt;/li&gt;&lt;li&gt;Help should be available in each View &lt;/li&gt;&lt;li&gt;Exit task should be present in all Views except for the main View of the application.&lt;/li&gt;&lt;/ul&gt;</source>
         <oldsource>Application Menu is a menu element available to any view. It can be opened by tapping on the View Menu title area.
 Application Menu contains commands and view settings for the view in question and an optional area for View Style Commands. Each View of the application can have different View Menu contents.
@@ -527,38 +527,38 @@ Guidelines for mandatory application Menu items:
         <translation type="obsolete">اليابان</translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="72"/>
+        <location filename="../comboboxpage.cpp" line="94"/>
         <source>Title</source>
         <translation>العنوان</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="74"/>
+        <location filename="../comboboxpage.cpp" line="96"/>
         <source>Sort - DescendingOrder</source>
         <translation>فرز -- تنازلي</translation>
     </message>
     <message id="xx_container_page_title">
-        <location filename="../containerpage.cpp" line="41"/>
+        <location filename="../containerpage.cpp" line="65"/>
         <source>Container</source>
         <translation>الحاوية</translation>
     </message>
     <message id="xx_progressbar_page_title">
-        <location filename="../progressbarpage.cpp" line="56"/>
+        <location filename="../progressbarpage.cpp" line="80"/>
         <source>Progress Bar</source>
         <translation>التقدم بار</translation>
     </message>
     <message id="xx_progressbar_page_info_label">
-        <location filename="../progressbarpage.cpp" line="61"/>
+        <location filename="../progressbarpage.cpp" line="85"/>
         <source>A Progress Bar can indicate an ongoing process with either known or unknown durations.</source>
         <translation>شريط تقدم يمكن أن تشير إلى عملية مستمرة سواء مع المدد معروف أو غير معروف.</translation>
     </message>
     <message id="xx_progressindicator_unknown_duration_bar">
-        <location filename="../progressbarpage.cpp" line="65"/>
+        <location filename="../progressbarpage.cpp" line="89"/>
         <source>Installing CoolApp</source>
         <oldsource>unknown duration - bar</oldsource>
         <translation>المدة غير معروفة -- بار</translation>
     </message>
     <message id="xx_progressindicator_known_duration_bar">
-        <location filename="../progressbarpage.cpp" line="63"/>
+        <location filename="../progressbarpage.cpp" line="87"/>
         <source>Downloading nicepic.jpg</source>
         <oldsource>known duration - bar</oldsource>
         <translation>يعرف المدة -- بار</translation>
@@ -568,34 +568,34 @@ Guidelines for mandatory application Menu items:
         <translation type="obsolete">الشبكة</translation>
     </message>
     <message id="xx_toolbar_page_example1">
-        <location filename="../toolbarpage.cpp" line="25"/>
+        <location filename="../toolbarpage.cpp" line="49"/>
         <source>Example 1</source>
         <translation>المثال 1</translation>
     </message>
     <message id="xx_toolbar_page_example2">
-        <location filename="../toolbarpage.cpp" line="31"/>
+        <location filename="../toolbarpage.cpp" line="55"/>
         <source>Example 2</source>
         <translation>المثال 2</translation>
     </message>
     <message id="xx_toolbar_page_title">
-        <location filename="../toolbarpage.cpp" line="54"/>
+        <location filename="../toolbarpage.cpp" line="78"/>
         <source>ToolBar</source>
         <oldsource>Tool Bar</oldsource>
         <translation>أداة بار</translation>
     </message>
     <message id="xx_toolbar_page_info">
-        <location filename="../toolbarpage.cpp" line="65"/>
+        <location filename="../toolbarpage.cpp" line="89"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</source>
         <oldsource>Toolbar is a container which can contain up to 4 Icon Buttons (click Menu-&gt;Example 1), or a text input field with up to 2 Icon Buttons (click Menu-&gt;Example 2). It contains actions that are relevant to the view but not related to any individual item displayed directly within the content area.</oldsource>
         <translation>شريط الأدوات هو حاوية والتي يمكن أن تحتوي على ما يصل إلى 4 دلالات أزرار (انقر فوق القائمة → مثال 1) ، أو إدخال نص الميدان مع ما يصل الى 2 دلالات أزرار (انقر فوق القائمة → مثال 2). أنه يحتوي على الإجراءات التي تكون ذات صلة وجهة النظر ولكن لا علاقة لها أي بند من البنود الفردية عرضها مباشرة داخل منطقة محتوى.</translation>
     </message>
     <message id="xx_objectmenu_page_title">
-        <location filename="../objectmenupage.cpp" line="125"/>
+        <location filename="../objectmenupage.cpp" line="149"/>
         <source>Object menu</source>
         <translation>كائن القائمة</translation>
     </message>
     <message id="xx_objectmenu_page_info_label">
-        <location filename="../objectmenupage.cpp" line="137"/>
+        <location filename="../objectmenupage.cpp" line="161"/>
         <source>Object Menu is a popup menu of commands opened by long tapping an element. It is used for providing shortcuts to functions related to that particular element.
 
 The primary (single short tap) action of the element should not be duplicated in the Object Menu.</source>
@@ -604,205 +604,205 @@ The primary (single short tap) action of the element should not be duplicated in
 وينبغي في المقام الأول (واحد قصير الصنبور) العمل عنصر لا يكون لها مثيل في القائمة كائن.</translation>
     </message>
     <message id="xx_objectmenu_page_container_friends">
-        <location filename="../objectmenupage.cpp" line="140"/>
+        <location filename="../objectmenupage.cpp" line="164"/>
         <source>Friends</source>
         <translation>أصدقاء</translation>
     </message>
     <message id="xx_objectmenu_page_container_albums">
-        <location filename="../objectmenupage.cpp" line="142"/>
+        <location filename="../objectmenupage.cpp" line="166"/>
         <source>Favorite Albums</source>
         <translation>المفضلة البومات</translation>
     </message>
     <message id="xx_navigationbar_navbarcombo">
-        <location filename="../navigationbarpage.cpp" line="36"/>
+        <location filename="../navigationbarpage.cpp" line="60"/>
         <source>Navigation Bar</source>
         <translation>الملاحة بار</translation>
     </message>
     <message id="xx_navigationbar_escapebtncombo">
-        <location filename="../navigationbarpage.cpp" line="44"/>
+        <location filename="../navigationbarpage.cpp" line="68"/>
         <source>Escape Button</source>
         <translation>الهروب زر</translation>
     </message>
     <message id="xx_navigationbar_homebtncombo">
-        <location filename="../navigationbarpage.cpp" line="52"/>
+        <location filename="../navigationbarpage.cpp" line="76"/>
         <source>Home Button</source>
         <translation>زر الصفحة الرئيسية</translation>
     </message>
     <message id="xx_navigationbar_page_title">
-        <location filename="../navigationbarpage.cpp" line="101"/>
+        <location filename="../navigationbarpage.cpp" line="125"/>
         <source>Navigation Bar</source>
         <translation>الملاحة بار</translation>
     </message>
     <message id="xx_navigationbar_display_mode">
-        <location filename="../navigationbarpage.cpp" line="105"/>
+        <location filename="../navigationbarpage.cpp" line="129"/>
         <source>Components&apos; display mode:</source>
         <oldsource>Application Page&apos;s display mode:</oldsource>
         <translation>الصفحة تطبيق لوضع العرض :</translation>
     </message>
     <message id="xx_navigationbar_escapebutton_mode_label">
-        <location filename="../navigationbarpage.cpp" line="107"/>
+        <location filename="../navigationbarpage.cpp" line="131"/>
         <source>Escape Button mode:</source>
         <translation>وضع زر الهروب :</translation>
     </message>
     <message id="xx_navigationbar_back_button">
-        <location filename="../navigationbarpage.cpp" line="113"/>
+        <location filename="../navigationbarpage.cpp" line="137"/>
         <source>Back button</source>
         <translation>زر العودة</translation>
     </message>
     <message id="xx_navigationbar_close_button">
-        <location filename="../navigationbarpage.cpp" line="117"/>
+        <location filename="../navigationbarpage.cpp" line="141"/>
         <source>Close button</source>
         <translation>الزر إغلاق</translation>
     </message>
     <message id="xx_navigationbar_hidden">
-        <location filename="../navigationbarpage.cpp" line="120"/>
+        <location filename="../navigationbarpage.cpp" line="144"/>
         <source>Hidden</source>
         <translation>المخفي</translation>
     </message>
     <message id="xx_displaymode_show">
-        <location filename="../navigationbarpage.cpp" line="138"/>
+        <location filename="../navigationbarpage.cpp" line="162"/>
         <source>Show</source>
         <translation>يظهر</translation>
     </message>
     <message id="xx_displaymode_autohide">
-        <location filename="../navigationbarpage.cpp" line="140"/>
+        <location filename="../navigationbarpage.cpp" line="164"/>
         <source>Auto Hide</source>
         <translation>السيارات إخفاء</translation>
     </message>
     <message id="xx_displaymode_hide">
-        <location filename="../navigationbarpage.cpp" line="142"/>
+        <location filename="../navigationbarpage.cpp" line="166"/>
         <source>Hide</source>
         <translation>إخفاء</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="44"/>
+        <location filename="../languagepage.cpp" line="68"/>
         <source>Change Language</source>
         <translation>تغيير اللغة</translation>
     </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="82"/>
+        <location filename="../languagepage.cpp" line="109"/>
         <source>Please select language</source>
         <translation>الرجاء اختيار لغة جديدة :</translation>
     </message>
     <message id="xx_language_arabic">
-        <location filename="../languagepage.cpp" line="52"/>
+        <location filename="../languagepage.cpp" line="78"/>
         <source>Arabic</source>
         <translation>العربية (Arabic)</translation>
     </message>
     <message id="xx_language_english">
-        <location filename="../languagepage.cpp" line="54"/>
+        <location filename="../languagepage.cpp" line="80"/>
         <source>English</source>
         <translation>الإنكليزية (English)</translation>
     </message>
     <message id="xx_language_finnish">
-        <location filename="../languagepage.cpp" line="56"/>
+        <location filename="../languagepage.cpp" line="82"/>
         <source>Finnish</source>
         <translation>الفنلندية(Suomi)</translation>
     </message>
     <message id="xx_language_german">
-        <location filename="../languagepage.cpp" line="58"/>
+        <location filename="../languagepage.cpp" line="84"/>
         <source>German</source>
         <translation>الألمانية (Deutsch)</translation>
     </message>
     <message id="xx_language_simplified_chinese">
-        <location filename="../languagepage.cpp" line="60"/>
+        <location filename="../languagepage.cpp" line="86"/>
         <source>Simplified Chinese</source>
         <translation>الصينية (中文)</translation>
     </message>
     <message id="xx_language_hungarian">
-        <location filename="../languagepage.cpp" line="62"/>
+        <location filename="../languagepage.cpp" line="88"/>
         <source>Magyar</source>
         <oldsource>Hungarian</oldsource>
         <translation>الهنغارية(Magyar)</translation>
     </message>
     <message id="xx_language_none">
-        <location filename="../languagepage.cpp" line="50"/>
+        <location filename="../languagepage.cpp" line="76"/>
         <source>None</source>
         <translation>عدم وجود ترجمة (None)</translation>
     </message>
     <message id="xx_template_page_views_dialogs">
-        <location filename="../templatepage.cpp" line="29"/>
+        <location filename="../templatepage.cpp" line="47"/>
         <source>Views and Dialogs</source>
         <translation>آراء ومربعات</translation>
     </message>
     <message id="xx_template_page_contains_applets">
-        <location filename="../templatepage.cpp" line="31"/>
+        <location filename="../templatepage.cpp" line="49"/>
         <source>Contains and Applets</source>
         <translation>الحاويات وبريمجات</translation>
     </message>
     <message id="xx_template_page_layouts_visuals">
-        <location filename="../templatepage.cpp" line="33"/>
+        <location filename="../templatepage.cpp" line="51"/>
         <source>Layouts and Visuals</source>
         <translation>تصاميم وصور</translation>
     </message>
     <message id="xx_template_page_buttons">
-        <location filename="../templatepage.cpp" line="35"/>
+        <location filename="../templatepage.cpp" line="53"/>
         <source>Buttons</source>
         <translation>أزرار</translation>
     </message>
     <message id="xx_template_page_indicators_notifications">
-        <location filename="../templatepage.cpp" line="37"/>
+        <location filename="../templatepage.cpp" line="55"/>
         <source>Indicators and Notifications</source>
         <translation>المؤشرات والإشعارات</translation>
     </message>
     <message id="xx_template_page_lists_grids_menus">
-        <location filename="../templatepage.cpp" line="39"/>
+        <location filename="../templatepage.cpp" line="57"/>
         <source>Lists, Grids and Menus</source>
         <translation>القوائم ، والشبكات والقوائم</translation>
     </message>
     <message id="xx_template_page_user_input">
-        <location filename="../templatepage.cpp" line="41"/>
+        <location filename="../templatepage.cpp" line="59"/>
         <source>User input</source>
         <oldsource>User Input</oldsource>
         <translation>مستخدم الإدخال</translation>
     </message>
     <message id="xx_template_page_input_feedback">
-        <location filename="../templatepage.cpp" line="43"/>
+        <location filename="../templatepage.cpp" line="61"/>
         <source>Input Feedback</source>
         <translation>مدخلات اقتراحات</translation>
     </message>
     <message id="xx_image_page_info">
-        <location filename="../imagepage.cpp" line="122"/>
+        <location filename="../imagepage.cpp" line="146"/>
         <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired.</source>
         <translation>الصورة يسمح موضع الصور على واجهة المستخدم. الصور هي عموما غير عناصر تفاعلية. يمكن متنوع واحدة ومتعددة اللمس التفاعلات يمكن ان تضاف الى عنصر صورة إذا رغبت.</translation>
     </message>
     <message id="xx_sample template">
-        <location filename="../templatepage.cpp" line="106"/>
+        <location filename="../templatepage.cpp" line="124"/>
         <source>Sample template</source>
         <translation>قالب نموذج</translation>
     </message>
     <message id="xx_template_page_title">
-        <location filename="../templatepage.cpp" line="100"/>
+        <location filename="../templatepage.cpp" line="118"/>
         <source>Template</source>
         <translation>القالب</translation>
     </message>
     <message id="xx_textentry_completion_text">
-        <location filename="../textentrypage.cpp" line="494"/>
+        <location filename="../textentrypage.cpp" line="518"/>
         <source>Email suggestion text:</source>
         <translation>البريد الإلكتروني نص الاقتراح :</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="78"/>
+        <location filename="../comboboxpage.cpp" line="100"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>القطعة DuiComboBox هو زر مجتمعة وقائمة منبثقة. انها تشبه الى حد بعيد QComboBox ، ولكن لا يسمح بتحرير النص.</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="68"/>
+        <location filename="../comboboxpage.cpp" line="90"/>
         <source>ComboBox</source>
         <translation>مربع تحرير وسرد</translation>
     </message>
     <message id="xx_tooltip_entry8">
-        <location filename="../textentrypage.cpp" line="472"/>
+        <location filename="../textentrypage.cpp" line="496"/>
         <source>Provides email address suggestions</source>
         <translation>يقدم اقتراحات عنوان البريد الإلكتروني</translation>
     </message>
     <message id="xx_checkbox_page_title">
-        <location filename="../checkboxpage.cpp" line="51"/>
+        <location filename="../checkboxpage.cpp" line="75"/>
         <source>Checkbox</source>
         <translation>مربع</translation>
     </message>
     <message id="xx_checkbox_page_info_label">
-        <location filename="../checkboxpage.cpp" line="60"/>
+        <location filename="../checkboxpage.cpp" line="84"/>
         <source>The Checkbox is a variant of Button that allows users to set the state of variable or setting which has two values, On and Off.
 
 Checkbox essentially does the same thing as the Switch button, so please consider using a Switch instead.</source>
@@ -811,19 +811,19 @@ Checkbox essentially does the same thing as the Switch button, so please conside
 الاختيار أساسا يفعل الشيء نفسه على زر التبديل ، لذا يرجى النظر في استخدام التبديل بدلا من ذلك.</translation>
     </message>
     <message id="xx_checkbox_page_checkbox_label">
-        <location filename="../checkboxpage.cpp" line="63"/>
+        <location filename="../checkboxpage.cpp" line="87"/>
         <source>I have read and understood the
 instructions.</source>
         <translation>لقد قرأت وفهمت
 تعليمات.</translation>
     </message>
     <message id="xx_icon_button_page_title">
-        <location filename="../iconbuttonpage.cpp" line="57"/>
+        <location filename="../iconbuttonpage.cpp" line="81"/>
         <source>Icon Button</source>
         <translation>رمز زر</translation>
     </message>
     <message id="xx_icon_button_page_info_label">
-        <location filename="../iconbuttonpage.cpp" line="65"/>
+        <location filename="../iconbuttonpage.cpp" line="89"/>
         <source>Icon Buttons have an icon and can have a text label. Icon button differs from push button by its visual presentation: it does not have button-style edges like a Push Button does.
 
  Icon Buttons are used in e.g. Toolbars.</source>
@@ -832,17 +832,17 @@ instructions.</source>
  رمز أزرار تستخدم في مثل أشرطة الأدوات.</translation>
     </message>
     <message id="xx_icon_button_page_icon_button2">
-        <location filename="../iconbuttonpage.cpp" line="67"/>
+        <location filename="../iconbuttonpage.cpp" line="91"/>
         <source>Lorem ipsum</source>
         <translation>أبجد هوز</translation>
     </message>
     <message id="xx_push_button_page_title">
-        <location filename="../pushbuttonpage.cpp" line="50"/>
+        <location filename="../pushbuttonpage.cpp" line="74"/>
         <source>Push Button</source>
         <translation>ضغط على زر</translation>
     </message>
     <message id="xx_push_button_page_info_label">
-        <location filename="../pushbuttonpage.cpp" line="59"/>
+        <location filename="../pushbuttonpage.cpp" line="83"/>
         <source>Push Buttons can have an icon and a label. Push Button can be used in any container but usually it is used with Dialogs, Notifications and Main windows to invoke actions.
 
 A Push Button generally looks like a traditional button, with button-style edges.</source>
@@ -851,49 +851,49 @@ A Push Button generally looks like a traditional button, with button-style edges
 زر ضغط عموما يبدو وكأنه زر التقليدية ، مع زر حواف النمط.</translation>
     </message>
     <message id="xx_push_button_page_button1">
-        <location filename="../pushbuttonpage.cpp" line="61"/>
+        <location filename="../pushbuttonpage.cpp" line="85"/>
         <source>Lorem</source>
         <translation>أبجد</translation>
     </message>
     <message id="xx_push_button_page_button2">
-        <location filename="../pushbuttonpage.cpp" line="63"/>
+        <location filename="../pushbuttonpage.cpp" line="87"/>
         <source>Ipsum</source>
         <translation>هوز</translation>
     </message>
     <message id="xx_push_button_page_button3">
-        <location filename="../pushbuttonpage.cpp" line="65"/>
+        <location filename="../pushbuttonpage.cpp" line="89"/>
         <source>Dolor
 sit amet</source>
         <translation>دولور
 الجلوس امات</translation>
     </message>
     <message id="xx_spinner_page_container_main_area">
-        <location filename="../spinnerpage.cpp" line="42"/>
+        <location filename="../spinnerpage.cpp" line="66"/>
         <source>In container main area</source>
         <translation>في مجال نقل الحاويات الرئيسية</translation>
     </message>
     <message id="xx_spinner_page_container_header">
-        <location filename="../spinnerpage.cpp" line="48"/>
+        <location filename="../spinnerpage.cpp" line="72"/>
         <source>In container header</source>
         <translation>في حاوية الرأس</translation>
     </message>
     <message id="xx_spinner_page_menu">
-        <location filename="../spinnerpage.cpp" line="54"/>
+        <location filename="../spinnerpage.cpp" line="78"/>
         <source>In view menu</source>
         <translation>في عرض القائمة</translation>
     </message>
     <message id="xx_spinner_page_dialog">
-        <location filename="../spinnerpage.cpp" line="60"/>
+        <location filename="../spinnerpage.cpp" line="84"/>
         <source>In dialog</source>
         <translation>في عرض القائمة</translation>
     </message>
     <message id="xx_spinner_page_title">
-        <location filename="../spinnerpage.cpp" line="73"/>
+        <location filename="../spinnerpage.cpp" line="97"/>
         <source>Spinner</source>
         <translation>غزل</translation>
     </message>
     <message id="xx_spinner_page_info_label">
-        <location filename="../spinnerpage.cpp" line="82"/>
+        <location filename="../spinnerpage.cpp" line="106"/>
         <source>Spinner is used to indicate that a progress is ongoing and the duration is unknown.
 
 Spinners can also be used in situations when duration is known, but available space on screen does not permit using a Progress bar.
@@ -909,7 +909,7 @@ Spinners can also be used in situations when duration is known, but available sp
 انظر القائمة للحصول على أمثلة لحالات استخدام مختلفة.</translation>
     </message>
     <message id="xx_spinner_page_email_header">
-        <location filename="../spinnerpage.cpp" line="92"/>
+        <location filename="../spinnerpage.cpp" line="116"/>
         <source>From: John Doe
 Date: Today
 Subject: This is funny stuff!</source>
@@ -918,42 +918,42 @@ Date: اليوم
 Subject: هذه هي الاشياء مضحك!</translation>
     </message>
     <message id="xx_spinner_page_container_area_description">
-        <location filename="../spinnerpage.cpp" line="105"/>
+        <location filename="../spinnerpage.cpp" line="129"/>
         <source>Spinner can be used in container while e.g. content is being fetched.</source>
         <translation>سبينر يمكن أن تستخدم في حاوية في حين مثلا يتم جلب المحتوى.</translation>
     </message>
     <message id="xx_spinner_page_container_title">
-        <location filename="../spinnerpage.cpp" line="118"/>
+        <location filename="../spinnerpage.cpp" line="142"/>
         <source>Online albums</source>
         <translation>الألبومات على الانترنت</translation>
     </message>
     <message id="xx_spinner_page_container_header_description">
-        <location filename="../spinnerpage.cpp" line="137"/>
+        <location filename="../spinnerpage.cpp" line="161"/>
         <source>Spinner can be used in container header to indicate that the items inside the container are being updated, but visible items can be interacted with.</source>
         <translation>سبينر يمكن أن تستخدم في رأس حاوية للإشارة إلى أن العناصر الموجودة داخل الحاوية يتم تحديثها ، ولكن عناصر مرئية يمكن تفاعلت مع.</translation>
     </message>
     <message id="xx_spinner_page_application_menu_description">
-        <location filename="../spinnerpage.cpp" line="177"/>
+        <location filename="../spinnerpage.cpp" line="201"/>
         <source>Spinner in the application menu area indicates that the whole view is pending for update.</source>
         <translation>الدوار في القائمة تطبيق المجال يشير إلى أن وجهة النظر كلها معلقة على التحديث.</translation>
     </message>
     <message id="xx_spinner_page_dialog_header_description">
-        <location filename="../spinnerpage.cpp" line="191"/>
+        <location filename="../spinnerpage.cpp" line="215"/>
         <source>Spinner can be placed in dialog header to indicate changing content.</source>
         <translation>غزل يمكن وضعها في رأس الحوار تشير إلى تغيير المحتوى.</translation>
     </message>
     <message id="xx_spinner_page_dialog_header">
-        <location filename="../spinnerpage.cpp" line="212"/>
+        <location filename="../spinnerpage.cpp" line="236"/>
         <source>Select Internet connection</source>
         <translation>حدد اتصال بالإنترنت</translation>
     </message>
     <message id="xx_switch_page_title">
-        <location filename="../switchpage.cpp" line="105"/>
+        <location filename="../switchpage.cpp" line="129"/>
         <source>Switch</source>
         <translation>تبديل</translation>
     </message>
     <message id="xx_switch_page_info_label">
-        <location filename="../switchpage.cpp" line="115"/>
+        <location filename="../switchpage.cpp" line="139"/>
         <source>A Switch button differs from both a push button and an icon button visually. It looks like a switch, communicating that pressing this button will not go to another view or will not perform any other actions except to toggle the state of the button.
 
 Switches are used to indicate e.g. settings values</source>
@@ -962,37 +962,37 @@ Switches are used to indicate e.g. settings values</source>
 مفاتيح تستخدم للدلالة على سبيل المثال ضبط القيم</translation>
     </message>
     <message id="xx_switch_page_switch1">
-        <location filename="../switchpage.cpp" line="118"/>
+        <location filename="../switchpage.cpp" line="142"/>
         <source>Headlights</source>
         <translation>المصابيح الأمامية</translation>
     </message>
     <message id="xx_switch_page_switch2">
-        <location filename="../switchpage.cpp" line="120"/>
+        <location filename="../switchpage.cpp" line="144"/>
         <source>Autopilot</source>
         <translation>الطيار الآلي</translation>
     </message>
     <message id="xx_switch_page_switch3">
-        <location filename="../switchpage.cpp" line="122"/>
+        <location filename="../switchpage.cpp" line="146"/>
         <source>Warp Drive</source>
         <translation>محرك الإعوجاج</translation>
     </message>
     <message id="xx_switch_page_switch4">
-        <location filename="../switchpage.cpp" line="124"/>
+        <location filename="../switchpage.cpp" line="148"/>
         <source>Reactor Shields</source>
         <translation>مفاعل شيلدز</translation>
     </message>
     <message id="xx_switch_page_switch5">
-        <location filename="../switchpage.cpp" line="126"/>
+        <location filename="../switchpage.cpp" line="150"/>
         <source>Infinite Improbability Drive</source>
         <translation>لانهائي محرك اللا إحتمالية</translation>
     </message>
     <message id="xx_slider_page_title">
-        <location filename="../sliderpage.cpp" line="142"/>
+        <location filename="../sliderpage.cpp" line="166"/>
         <source>Sliders</source>
         <translation>المتزلجون</translation>
     </message>
     <message id="xx_slider_page_info_label">
-        <location filename="../sliderpage.cpp" line="150"/>
+        <location filename="../sliderpage.cpp" line="174"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used fordisplaying playback status for multimedia content.</source>
@@ -1001,37 +1001,37 @@ Seekbar is a special type of Slider used fordisplaying playback status for multi
 Seekbar هو نوع خاص من المتزلج المستخدمة fordisplaying حالة تشغيل لمحتوى الوسائط المتعددة.</translation>
     </message>
     <message id="xx_slider_personal_data_label">
-        <location filename="../sliderpage.cpp" line="153"/>
+        <location filename="../sliderpage.cpp" line="177"/>
         <source>Personal data</source>
         <translation>البيانات الشخصية</translation>
     </message>
     <message id="xx_slider_age_label">
-        <location filename="../sliderpage.cpp" line="156"/>
-        <source>Please select your age:</source>
-        <translation>من فضلك اختر العمر :</translation>
+        <location filename="../sliderpage.cpp" line="181"/>
+        <source>Please select your age:!! Select your age:!! Your age:!! Age:</source>
+        <translation type="unfinished">من فضلك اختر العمر :</translation>
     </message>
     <message id="xx_slider_player_label">
-        <location filename="../sliderpage.cpp" line="169"/>
+        <location filename="../sliderpage.cpp" line="194"/>
         <source>Player:</source>
         <translation>لاعب :</translation>
     </message>
     <message id="xx_slider_player_button_label">
-        <location filename="../sliderpage.cpp" line="172"/>
+        <location filename="../sliderpage.cpp" line="197"/>
         <source>Play</source>
         <translation>تشغيل</translation>
     </message>
     <message id="xx_slider_brightness_label">
-        <location filename="../sliderpage.cpp" line="191"/>
+        <location filename="../sliderpage.cpp" line="216"/>
         <source>Brightness:</source>
         <translation>سطوع :</translation>
     </message>
     <message id="xx_input_feedback_page_title">
-        <location filename="../feedbackpage.cpp" line="57"/>
+        <location filename="../feedbackpage.cpp" line="91"/>
         <source>Input Feedback</source>
         <translation>مدخلات اقتراحات</translation>
     </message>
     <message id="xx_input_feedback_page_info_label">
-        <location filename="../feedbackpage.cpp" line="67"/>
+        <location filename="../feedbackpage.cpp" line="101"/>
         <source>This page contains buttons with custom input feedbacks. Any DuiWidget can have input feedback for press and release events. Input feedback can be a sound effect and/or a haptic effect (piezo, vibra) depending on the product.
 
 Input feedbacks can be easily configured for different purposes using the theming system.</source>
@@ -1040,22 +1040,32 @@ Input feedbacks can be easily configured for different purposes using the themin
 الاحصائيات الإدخال يمكن بسهولة تهيئتها لأغراض مختلفة باستخدام نظام الموضوع.</translation>
     </message>
     <message id="xx_input_feedback_page_button1">
-        <location filename="../feedbackpage.cpp" line="69"/>
+        <location filename="../feedbackpage.cpp" line="103"/>
         <source>Default</source>
         <translation>افتراضي</translation>
     </message>
     <message id="xx_input_feedback_page_button2">
-        <location filename="../feedbackpage.cpp" line="71"/>
+        <location filename="../feedbackpage.cpp" line="105"/>
+        <source>Different</source>
+        <translation>مختلفة</translation>
+    </message>
+    <message id="xx_input_feedback_page_button3">
+        <location filename="../feedbackpage.cpp" line="107"/>
+        <source>Sluggish</source>
+        <translation>ركود</translation>
+    </message>
+    <message id="xx_input_feedback_page_button4">
+        <location filename="../feedbackpage.cpp" line="109"/>
         <source>Babytoy</source>
         <translation>لعبة طفل</translation>
     </message>
-    <message id="xx_input_feedback_page_button3">
-        <location filename="../feedbackpage.cpp" line="73"/>
+    <message id="xx_input_feedback_page_button5">
+        <location filename="../feedbackpage.cpp" line="111"/>
         <source>Space</source>
         <translation>الفضاء</translation>
     </message>
-    <message id="xx_input_feedback_page_button4">
-        <location filename="../feedbackpage.cpp" line="75"/>
+    <message id="xx_input_feedback_page_button6">
+        <location filename="../feedbackpage.cpp" line="113"/>
         <source>Silent</source>
         <translation>صامت</translation>
     </message>
