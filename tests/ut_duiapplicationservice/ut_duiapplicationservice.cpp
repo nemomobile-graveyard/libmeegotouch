@@ -54,17 +54,6 @@ bool    Ut_DuiApplicationService::windowRaised = false;
 bool    Ut_DuiApplicationService::windowClosed = false;
 bool    Ut_DuiApplicationService::windowShown = false;
 
-DuiWindow::DuiWindow(QWidget *):
-    d_ptr(0)
-{
-}
-
-DuiWindow *DuiComponentData::activeWindow()
-{
-    QWidget *qw = new QWidget();
-    return new DuiWindow(qw);
-}
-
 Dui::PrestartMode DuiComponentData::prestartMode()
 {
     return Dui::NoPrestart;
@@ -201,6 +190,27 @@ void DuiApplicationServicePrivate::registerObject(const QString &path, QObject *
 void DuiApplicationServicePrivate::unregisterObject(const QString &path)
 {
     Q_UNUSED(path);
+}
+void DuiApplicationServicePrivate::stdExit(int exitValue)
+{
+    DuiApplicationPrivate::stdExit(exitValue);
+}
+void DuiApplicationServicePrivate::closeAllWindows()
+{
+    duiApp->closeAllWindows();
+}
+
+DuiApplicationServicePrivate::DuiApplicationServicePrivate(const QString &newServiceName):
+    serviceName(newServiceName),
+    registered(false),
+    instanceCounter(0),
+    dBusConnection(QDBusConnection::sessionBus()),
+    duiApp(DuiApplication::instance())
+{
+}
+
+DuiApplicationServicePrivate::~DuiApplicationServicePrivate()
+{
 }
 
 void Ut_DuiApplicationService::init()
