@@ -40,7 +40,7 @@ desktop_entry.files = *.desktop
 
 contains(DUI_BUILD_FEATURES, testable) {
 INSTALLS += target desktop_entry
-desktop_entry.path = /tmp
+desktop_entry.path = /usr/share/dui/applicationextensions
 desktop_entry.files = *.desktop
 }
 
