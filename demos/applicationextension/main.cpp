@@ -35,6 +35,7 @@ void DemoPage::createContent()
     panel->setLayout(vbox);
 
     extensionValueLabel = new DuiLabel;
+    extensionValueLabel->setObjectName("ExtensionValueLabel");
     extensionValueLabel->setAlignment(Qt::AlignHCenter);
     vbox->addItem(extensionValueLabel);
 
@@ -68,6 +69,7 @@ void DemoPage::removeExtension(DuiApplicationExtensionInterface *extension)
     valueText = "";
     value = 0;
     updateLabel();
+    resetExtensions();
 }
 
 void DemoPage::resetExtensions()

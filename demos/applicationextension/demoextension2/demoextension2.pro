@@ -37,3 +37,10 @@ INSTALLS += target desktop_entry
 desktop_entry.path = $$DUI_APPLICATION_EXTENSION_DATA_DIR
 desktop_entry.files = *.desktop
 
+contains(DUI_BUILD_FEATURES, testable) {
+INSTALLS += target desktop_entry
+desktop_entry.path = /tmp
+desktop_entry.files = *.desktop
+}
+
+

@@ -56,9 +56,16 @@ bool DuiApplicationExtensionManager::init()
 
     updateAvailableExtensions(APPLICATION_EXTENSION_DATA_DIR);
 
+#ifdef TESTABLE
+    updateAvailableExtensions(QDir::temp().absolutePath());
+#endif
+
     // Start watching the application extensions directory for changes
     connect(&watcher, SIGNAL(directoryChanged(const QString)), this, SLOT(updateAvailableExtensions(QString)));
     watcher.addPath(APPLICATION_EXTENSION_DATA_DIR);
+#ifdef TESTABLE
+    watcher.addPath(QDir::temp().absolutePath());
+#endif
 
     return true;
 }
