@@ -64,16 +64,6 @@ protected Q_SLOTS:
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
 
-    /*!
-       \brief Set the itemModel
-     */
-    virtual void setItemModel(QAbstractItemModel *itemModel);
-
-    /*!
-       \brief Set the selectionModel
-     */
-    virtual void setSelectionModel(QItemSelectionModel *selectionModel);
-
 protected:
     //! \reimp
     virtual void setupModel();

@@ -351,16 +351,6 @@ Q_SIGNALS:
      */
     void currentIndexChanged(const QString &text);
 
-    /**
-        This signal is emitted when the item model has changed.
-     */
-    void itemModelChanged(QAbstractItemModel *);
-
-    /**
-        This signal is emitted when the selection model has changed.
-     */
-    void selectionModelChanged(QItemSelectionModel *);
-
 protected:
 
     //! \internal

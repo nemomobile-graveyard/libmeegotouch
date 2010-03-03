@@ -124,9 +124,7 @@ void DuiComboBox::setItemModel(QAbstractItemModel *itemModel)
     QItemSelectionModel *itemSelectionModel = new QItemSelectionModel(itemModel, this);
 
     model()->setItemModel(itemModel);
-    emit itemModelChanged(itemModel);
     model()->setSelectionModel(itemSelectionModel);
-    emit selectionModelChanged(itemSelectionModel);
 
     if (oldSelModel && oldSelModel->QObject::parent() == this)
         delete oldSelModel;
