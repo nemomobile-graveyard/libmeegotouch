@@ -32,9 +32,7 @@ public:
     explicit TimingScene(QObject *parent = 0);
     virtual ~TimingScene();
 
-    void setUpdateContinuously(bool value) {
-        m_updateContinuously = value;
-    }
+    void setUpdateContinuously(bool value);
 
     int frameCount() const {
         return m_frameCount;

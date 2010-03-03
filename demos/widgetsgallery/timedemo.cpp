@@ -218,11 +218,10 @@ void Timedemo::displayBenchmarkResults()
                     << qSetFieldWidth(runtimeUnitWidth) << "ms"
                     << qSetFieldWidth(actualWidth[name] - benchmarkWidth) << ""
                     << left;
-                csv << resultIter->fps << ", " << resultIter->runtime;
             } else {
                 log << qSetFieldWidth(actualWidth[name]) << center << "n/a" << left;
-                csv << "0";
             }
+            csv << resultIter->fps << ", " << resultIter->runtime;
         }
         log << qSetFieldWidth(0) << '\n';
         csv << '\n';

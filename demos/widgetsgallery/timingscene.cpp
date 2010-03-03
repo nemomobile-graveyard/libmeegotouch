@@ -31,6 +31,15 @@ TimingScene::TimingScene(QObject *parent)
 TimingScene::~TimingScene()
 {}
 
+void TimingScene::setUpdateContinuously(bool value)
+{
+    m_updateContinuously = value;
+    if (value) {
+        // trigger an update to enable continuos redrawing
+        update();
+    }
+}
+
 void TimingScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
     DuiScene::drawForeground(painter, rect);
