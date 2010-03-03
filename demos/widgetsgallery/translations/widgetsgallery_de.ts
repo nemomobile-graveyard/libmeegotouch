@@ -4,52 +4,52 @@
 <context>
     <name></name>
     <message id="xx_application_title">
-        <location filename="../listpage.cpp" line="110"/>
+        <location filename="../listpage.cpp" line="171"/>
         <source>Widgets Gallery</source>
         <translation>Dingsbums Galerie</translation>
     </message>
     <message id="xx_apporientation_auto">
-        <location filename="../listpage.cpp" line="330"/>
+        <location filename="../listpage.cpp" line="407"/>
         <source>Automatic</source>
         <translation>Automatisch</translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../listpage.cpp" line="338"/>
+        <location filename="../listpage.cpp" line="415"/>
         <source>Portrait</source>
         <translation>Hochformat</translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../listpage.cpp" line="346"/>
+        <location filename="../listpage.cpp" line="423"/>
         <source>Landscape</source>
         <translation>Querformat</translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../listpage.cpp" line="354"/>
+        <location filename="../listpage.cpp" line="431"/>
         <source>0 degrees</source>
         <translation>0 Grad</translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../listpage.cpp" line="362"/>
+        <location filename="../listpage.cpp" line="439"/>
         <source>90 degrees clockwise</source>
         <translation>90 Grad im Uhrzeigersinn</translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../listpage.cpp" line="370"/>
+        <location filename="../listpage.cpp" line="447"/>
         <source>180 degrees clockwise</source>
         <translation>180 Grad im Uhrzeigersinn</translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../listpage.cpp" line="378"/>
+        <location filename="../listpage.cpp" line="455"/>
         <source>270 degrees clockwise</source>
         <translation>270 Grad im Uhrzeigersinn</translation>
     </message>
     <message id="xx_label_page_title">
-        <location filename="../labelpage.cpp" line="96"/>
+        <location filename="../labelpage.cpp" line="114"/>
         <source>Labels</source>
         <translation>Labels</translation>
     </message>
     <message id="xx_label_page_info_label">
-        <location filename="../labelpage.cpp" line="106"/>
+        <location filename="../labelpage.cpp" line="124"/>
         <source>Simple Label is used mainly by other components, and it does not support any formatting or interaction.
 
 Rich Label supports multiple lines, HTML formatting and highlighting for links.
@@ -58,73 +58,73 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <translation>Das einfache Label wird hauptsächlicn von anderen Komponenten benutzt, es unterstützt keinerlei Formattierung und keinerlei Interaktion mit dem Benutzer. Das schicke Label unterstützt mehrere Zeilen, HTML-Formattierung und Hervorhebung von Querverweisen. Alle Labels können rechtsbündig oder linksbündig ausgerichtet werden oder auch zentriert werden. Wenn der Text nicht in die vorgegebene Fläche passt, wird er automatisch abgeschnitten</translation>
     </message>
     <message id="xx_simple_label">
-        <location filename="../labelpage.cpp" line="108"/>
+        <location filename="../labelpage.cpp" line="126"/>
         <source>Simple Label</source>
         <translation>Einfaches Label</translation>
     </message>
     <message id="xx_rich_label">
-        <location filename="../labelpage.cpp" line="111"/>
+        <location filename="../labelpage.cpp" line="129"/>
         <source>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</source>
         <oldsource>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italics&lt;/i&gt;, &lt;a href=&quot;http://www.nokia.com&quot;&gt;link&lt;/a&gt;</oldsource>
         <translation>Schickes Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="64"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="83"/>
         <source>Question Dialog Title</source>
         <translation>Fragedialogtitel</translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_content">
-        <location filename="../dialogsandnotificationspage.cpp" line="66"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="85"/>
         <source>Lorem ipsum dolor sit amet?</source>
         <translation>Lorem ipsum dolor sit amet?</translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_label">
-        <location filename="../dialogsandnotificationspage.cpp" line="76"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="95"/>
         <source>Name</source>
         <translation>Name</translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="88"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="107"/>
         <source>Please enter your name</source>
         <translation>Bitten geben Sie Ihren Namen ein</translation>
     </message>
     <message id="xx_dialogs_and_notifications_long_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="103"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="122"/>
         <source>Select printer</source>
         <translation>Wählen Sie einen Drucker aus</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_button">
-        <location filename="../dialogsandnotificationspage.cpp" line="153"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="172"/>
         <source>Click to spawn a nested dialog</source>
         <translation>Klicke um einen verschachtelten Dialog zu öffnen</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="155"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="174"/>
         <source>Stacked dialogs</source>
         <translation>Gestapelte Dialoge</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox">
-        <location filename="../dialogsandnotificationspage.cpp" line="167"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="186"/>
         <source>Click to open a nested message box</source>
         <translation>Klicke um eine verschachtelte Meldungsbox zu öffnen</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="169"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="188"/>
         <source>This is a nested dialog</source>
         <translation>Dies ist ein verschachtelter Dialog</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_messagebox_text">
-        <location filename="../dialogsandnotificationspage.cpp" line="181"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="200"/>
         <source>I&apos;m a nested message box</source>
         <translation>Ich bin eine verschachtelte Meldungsbox</translation>
     </message>
     <message id="xx_dialogs_and_notifications_window_modal_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="191"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="210"/>
         <source>Window Modal Dialog</source>
         <translation>Fenster-modaler Dialog</translation>
     </message>
     <message id="xx_dialogs_and_notifications_window_modal_dialog_label">
-        <location filename="../dialogsandnotificationspage.cpp" line="195"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="214"/>
         <source>I&apos;m a window modal dialog.
 There&apos;s no way around me!
 Muwhahaha... [evil laugh]</source>
@@ -133,37 +133,37 @@ Es gibt keinen Weg um mich herum!
 Hihihi...[böses Kichern]</translation>
     </message>
     <message id="xx_dialogs_and_notifications_progress_indicator">
-        <location filename="../dialogsandnotificationspage.cpp" line="213"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="232"/>
         <source>Progress Indicator</source>
         <translation>Fortschrittsanzeige</translation>
     </message>
     <message id="xx_dialogs_and_notifications_message_box_text">
-        <location filename="../dialogsandnotificationspage.cpp" line="232"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="251"/>
         <source>Hello World!</source>
         <translation>Hallo Welt</translation>
     </message>
     <message id="xx_dialogs_and_notifications_event_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="242"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="261"/>
         <source>&lt;b&gt;Ida Taipale&lt;/b&gt;&lt;br/&gt;Have you seen my dog?</source>
         <translation>&lt;b&gt;Ida Taipale&lt;/b&gt;&lt;br/&gt;Hast Du meinen Hund gesehen?</translation>
     </message>
     <message id="xx_dialogs_and_notifications_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="255"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="274"/>
         <source>&lt;b&gt;Battery is running low&lt;/b&gt;</source>
         <translation>&lt;b&gt;Die Batterie ist bald leer&lt;/b&gt;</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="267"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="286"/>
         <source>&lt;b&gt;Incoming call&lt;/b&gt;</source>
         <translation>&lt;b&gt;Ankommendes Gespräch&lt;/b&gt;</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_information_banner_accept">
-        <location filename="../dialogsandnotificationspage.cpp" line="269"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="288"/>
         <source>Accept</source>
         <translation>Annnehmen</translation>
     </message>
     <message id="xx_dialogs_and_notifications_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="393"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="355"/>
         <source>Dialogs and Notifications</source>
         <translation variants="yes">
             <lengthvariant>Dialoge und Meldungen</lengthvariant>
@@ -174,77 +174,78 @@ Hihihi...[böses Kichern]</translation>
         </translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_dialogs">
-        <location filename="../dialogsandnotificationspage.cpp" line="397"/>
-        <source>  DuiDialog examples</source>
-        <translation>Dialoge</translation>
+        <location filename="../dialogsandnotificationspage.cpp" line="359"/>
+        <source>Dialog examples</source>
+        <oldsource>  DuiDialog examples</oldsource>
+        <translation>Dialog Beispiele</translation>
     </message>
     <message id="xx_dialogs_and_notifications_query_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="399"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="361"/>
         <source>Question Dialog</source>
         <translation>Abfrage Dialog</translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="401"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="363"/>
         <source>Entry Dialog</source>
         <translation>Eingabe Dialog</translation>
     </message>
     <message id="xx_dialogs_and_notifications_long_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="403"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="365"/>
         <source>A Long Dialog</source>
         <translation>Langer Dialog</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialogs">
-        <location filename="../dialogsandnotificationspage.cpp" line="406"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="368"/>
         <source>Stacked Dialogs</source>
         <translation>Gestapelte Dialoge</translation>
     </message>
     <message id="xx_dialogs_and_notifications_window_modal_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="409"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="371"/>
         <source>Window Modal Dialog</source>
         <translation>Fenster-modaler Dialog</translation>
     </message>
     <message id="xx_dialogs_and_notifications_dialog_with_progress_indicator">
-        <location filename="../dialogsandnotificationspage.cpp" line="412"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="374"/>
         <source>Dialog With Progress Indicator</source>
         <translation>Dialog mit Fortschrittsanzeige</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_messagebox">
-        <location filename="../dialogsandnotificationspage.cpp" line="415"/>
         <source>  DuiMessageBox examples</source>
-        <translation>DuiMessageBox Beispiele</translation>
+        <translation type="obsolete">DuiMessageBox Beispiele</translation>
     </message>
     <message id="xx_dialogs_and_notifications_messagebox">
-        <location filename="../dialogsandnotificationspage.cpp" line="417"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="379"/>
         <source>Simple Message Box</source>
         <translation>Einfache DuiMessageBox</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_notifications">
-        <location filename="../dialogsandnotificationspage.cpp" line="419"/>
-        <source>  Notifications</source>
-        <translation>Meldungen</translation>
+        <location filename="../dialogsandnotificationspage.cpp" line="377"/>
+        <source>Notifications and messages</source>
+        <oldsource>  Notifications</oldsource>
+        <translation>Benachrichtigungen und Meldungen</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_event_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="421"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="381"/>
         <source>Event Banner</source>
         <translation>Ereignis Banner</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="423"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="383"/>
         <source>Information Banner</source>
         <translation>Informations Banner</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_system_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="425"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="385"/>
         <source>System Information Banner</source>
         <translation>System Informations Banner</translation>
     </message>
     <message id="xx_Image">
-        <location filename="../imagepage.cpp" line="94"/>
+        <location filename="../imagepage.cpp" line="113"/>
         <source>Image</source>
         <translation>Bild</translation>
     </message>
     <message id="xx_Image properties">
-        <location filename="../imagepage.cpp" line="98"/>
+        <location filename="../imagepage.cpp" line="117"/>
         <source>Image properties</source>
         <translation>Bildeigenschaften</translation>
     </message>
@@ -261,146 +262,146 @@ Hihihi...[böses Kichern]</translation>
         <translation type="obsolete">Stop</translation>
     </message>
     <message id="xx_image_operations">
-        <location filename="../imagepage.cpp" line="116"/>
+        <location filename="../imagepage.cpp" line="135"/>
         <source>Image operations</source>
         <translation>Bildbearbeitung</translation>
     </message>
     <message id="xx_Zoom">
-        <location filename="../imagepage.cpp" line="104"/>
+        <location filename="../imagepage.cpp" line="123"/>
         <source>Zoom</source>
         <translation>Zoom</translation>
     </message>
     <message id="xx_Transparency">
-        <location filename="../imagepage.cpp" line="106"/>
+        <location filename="../imagepage.cpp" line="125"/>
         <source>Transparency</source>
         <translation>Transparenz</translation>
     </message>
     <message id="xx_Crop">
-        <location filename="../imagepage.cpp" line="108"/>
+        <location filename="../imagepage.cpp" line="127"/>
         <source>Crop</source>
         <translation>Abschneiden</translation>
     </message>
     <message id="xx_listpage_title">
-        <location filename="../duilistpage.cpp" line="308"/>
+        <location filename="../duilistpage.cpp" line="315"/>
         <source>List</source>
         <translation>Liste</translation>
     </message>
     <message id="xx_textentry_title">
-        <location filename="../textentrypage.cpp" line="462"/>
+        <location filename="../textentrypage.cpp" line="482"/>
         <source>Text Entries</source>
         <translation>Texteinträge</translation>
     </message>
     <message id="xx_textentry_free_text">
-        <location filename="../textentrypage.cpp" line="478"/>
+        <location filename="../textentrypage.cpp" line="498"/>
         <source>Free text:</source>
         <translation>Freitext:</translation>
     </message>
     <message id="xx_textentry_free_text_masked">
-        <location filename="../textentrypage.cpp" line="480"/>
+        <location filename="../textentrypage.cpp" line="500"/>
         <source>Free text(masked):</source>
         <translation>Freitext(maskiert):</translation>
     </message>
     <message id="xx_textentry_number_text">
-        <location filename="../textentrypage.cpp" line="482"/>
+        <location filename="../textentrypage.cpp" line="502"/>
         <source>Number text:</source>
         <translation>Numerischer Text:</translation>
     </message>
     <message id="xx_textentry_phone_number">
-        <location filename="../textentrypage.cpp" line="484"/>
+        <location filename="../textentrypage.cpp" line="504"/>
         <source>Phone number:</source>
         <translation>Telefonnummer:</translation>
     </message>
     <message id="xx_textentry_email_text">
-        <location filename="../textentrypage.cpp" line="486"/>
+        <location filename="../textentrypage.cpp" line="506"/>
         <source>Email text:</source>
         <translation>E-Mail Text:</translation>
     </message>
     <message id="xx_textentry_url_text">
-        <location filename="../textentrypage.cpp" line="488"/>
+        <location filename="../textentrypage.cpp" line="508"/>
         <source>Url text:</source>
         <translation>URL Text:</translation>
     </message>
     <message id="xx_textentry_multiline">
-        <location filename="../textentrypage.cpp" line="490"/>
+        <location filename="../textentrypage.cpp" line="510"/>
         <source>Multiline:</source>
         <translation>Mehrzeilig:</translation>
     </message>
     <message id="xx_tooltip_entry0">
-        <location filename="../textentrypage.cpp" line="466"/>
+        <location filename="../textentrypage.cpp" line="486"/>
         <source>Enter text here</source>
         <translation>Geben Sie hier Text ein</translation>
     </message>
     <message id="xx_textentry_click_here">
-        <location filename="../textentrypage.cpp" line="118"/>
-        <location filename="../textentrypage.cpp" line="140"/>
+        <location filename="../textentrypage.cpp" line="138"/>
+        <location filename="../textentrypage.cpp" line="160"/>
         <source>Click here</source>
         <translation>Hier klicken</translation>
     </message>
     <message id="xx_textentry_press_any_key">
-        <location filename="../textentrypage.cpp" line="131"/>
+        <location filename="../textentrypage.cpp" line="151"/>
         <source>Press any key</source>
         <translation>Drücke irgendeine Taste</translation>
     </message>
     <message id="xx_textentry_keypress">
-        <location filename="../textentrypage.cpp" line="159"/>
+        <location filename="../textentrypage.cpp" line="179"/>
         <source>&lt;i&gt;Key press&lt;/i&gt; key:</source>
         <translation>&lt;i&gt;Tasten gedrückt&lt;/i&gt; Taste:</translation>
     </message>
     <message id="xx_textentry_text">
-        <location filename="../textentrypage.cpp" line="162"/>
-        <location filename="../textentrypage.cpp" line="176"/>
+        <location filename="../textentrypage.cpp" line="182"/>
+        <location filename="../textentrypage.cpp" line="196"/>
         <source>text:</source>
         <translation>Text:</translation>
     </message>
     <message id="xx_textentry_keyrelease">
-        <location filename="../textentrypage.cpp" line="173"/>
+        <location filename="../textentrypage.cpp" line="193"/>
         <source>&lt;i&gt;Key release&lt;/i&gt; key:</source>
         <translation>&lt;i&gt;Taste losgelassen&lt;/i&gt; Taste:</translation>
     </message>
     <message id="xx_tooltip_entry1">
-        <location filename="../textentrypage.cpp" line="469"/>
+        <location filename="../textentrypage.cpp" line="489"/>
         <source>This tooltip is quite long and will be clipped on the display</source>
         <translation>Dieser Tooltip ist recht lang und wird wohl abgeschnitten werden</translation>
     </message>
     <message id="xx_textentry_noecho">
-        <location filename="../textentrypage.cpp" line="497"/>
+        <location filename="../textentrypage.cpp" line="517"/>
         <source>No Echo mode:</source>
         <translation>Kein-Echo Modus:</translation>
     </message>
     <message id="xx_textentry_echoonedit">
-        <location filename="../textentrypage.cpp" line="500"/>
+        <location filename="../textentrypage.cpp" line="520"/>
         <source>Echo on edit:</source>
         <translation>Echo beim Editieren:</translation>
     </message>
     <message id="xx_textentry_direct_input_mode">
-        <location filename="../textentrypage.cpp" line="503"/>
+        <location filename="../textentrypage.cpp" line="523"/>
         <source>Direct Input Mode:</source>
         <translation>Direkteingabe Modus:</translation>
     </message>
     <message id="xx_auto_true_entry0">
-        <location filename="../textentrypage.cpp" line="536"/>
+        <location filename="../textentrypage.cpp" line="556"/>
         <source>Auto Capitalisation is active</source>
         <translation>Automatische Großschreibung ist aktiv</translation>
     </message>
     <message id="xx_auto_false_entry0">
-        <location filename="../textentrypage.cpp" line="539"/>
+        <location filename="../textentrypage.cpp" line="559"/>
         <source>No Auto Capitalisation</source>
         <translation>Keine automatische Großschreibung</translation>
     </message>
     <message id="xx_tooltip_entry6">
-        <location filename="../textentrypage.cpp" line="475"/>
+        <location filename="../textentrypage.cpp" line="495"/>
         <source>This is
 multiline
 tooltip</source>
         <translation>Dies ist\nein mehrzeiliger\nTooltip</translation>
     </message>
     <message id="xx_textentry_singleselectall">
-        <location filename="../textentrypage.cpp" line="492"/>
+        <location filename="../textentrypage.cpp" line="512"/>
         <source>Singleline (selectall):</source>
         <translation>Einzelne Zeile (alles auswählen)</translation>
     </message>
     <message id="xx_auto_capitalisation">
-        <location filename="../textentrypage.cpp" line="506"/>
+        <location filename="../textentrypage.cpp" line="526"/>
         <source>Auto capitalisation</source>
         <translation variants="yes">
             <lengthvariant>Automatische Großschreibung</lengthvariant>
@@ -409,12 +410,12 @@ tooltip</source>
         </translation>
     </message>
     <message id="xx_error_correction">
-        <location filename="../textentrypage.cpp" line="508"/>
+        <location filename="../textentrypage.cpp" line="528"/>
         <source>Error correction</source>
         <translation>Fehlerkorrektur</translation>
     </message>
     <message id="xx_slider_page_title">
-        <location filename="../sliderpage.cpp" line="142"/>
+        <location filename="../sliderpage.cpp" line="161"/>
         <source>Sliders</source>
         <translation variants="yes">
             <lengthvariant>Schieberegler</lengthvariant>
@@ -422,14 +423,14 @@ tooltip</source>
         </translation>
     </message>
     <message id="xx_slider_personal_data_label">
-        <location filename="../sliderpage.cpp" line="153"/>
+        <location filename="../sliderpage.cpp" line="172"/>
         <source>Personal data</source>
         <translation>Persönliche Daten</translation>
     </message>
     <message id="xx_slider_age_label">
-        <location filename="../sliderpage.cpp" line="156"/>
-        <source>Please select your age:</source>
-        <oldsource>Your age:</oldsource>
+        <location filename="../sliderpage.cpp" line="176"/>
+        <source>Please select your age:!! Select your age:!! Your age:!! Age:</source>
+        <oldsource>Please select your age:</oldsource>
         <translation variants="yes">
             <lengthvariant>Bitte wählen Sie Ihr Alter:</lengthvariant>
             <lengthvariant>Wählen Sie Ihr Alter:</lengthvariant>
@@ -438,22 +439,22 @@ tooltip</source>
         </translation>
     </message>
     <message id="xx_slider_brightness_label">
-        <location filename="../sliderpage.cpp" line="191"/>
+        <location filename="../sliderpage.cpp" line="211"/>
         <source>Brightness:</source>
         <translation>Helligkeit:</translation>
     </message>
     <message id="xx_slider_player_label">
-        <location filename="../sliderpage.cpp" line="169"/>
+        <location filename="../sliderpage.cpp" line="189"/>
         <source>Player:</source>
         <translation>Spieler:</translation>
     </message>
     <message id="xx_slider_player_button_label">
-        <location filename="../sliderpage.cpp" line="172"/>
+        <location filename="../sliderpage.cpp" line="192"/>
         <source>Play</source>
         <translation>Abspielen</translation>
     </message>
     <message id="xx_slider_page_info_label">
-        <location filename="../sliderpage.cpp" line="150"/>
+        <location filename="../sliderpage.cpp" line="169"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used fordisplaying playback status for multimedia content.</source>
@@ -465,12 +466,12 @@ Seekbar is a special type of Slider used for displaying playback status for mult
 Ein Suchbalken ist ein spezieller Typ eines Schiebereglers, der benutzt wird um den Abspielstatus von Multimediainhalten anzuzeigen.</translation>
     </message>
     <message id="xx_viewmenu_page_title">
-        <location filename="../applicationmenupage.cpp" line="36"/>
+        <location filename="../applicationmenupage.cpp" line="55"/>
         <source>Application Menu</source>
         <translation>Guck Menü</translation>
     </message>
     <message id="xx_applicationmenu_page_info">
-        <location filename="../applicationmenupage.cpp" line="51"/>
+        <location filename="../applicationmenupage.cpp" line="70"/>
         <source>Application Menu is a menu element available to any view. &lt;ul&gt;&lt;li&gt;It can be opened by tapping on the menu title area.&lt;/li&gt;&lt;li&gt;It contains commands and view settings for the view in question and an optional area for style commands.&lt;/li&gt;&lt;li&gt;Each view of the application can have different menu contents.&lt;/li&gt;&lt;/ul&gt;&lt;b&gt;Guidelines&lt;/b&gt; for mandatory menu items: &lt;ul&gt;&lt;li&gt;Settings should be on the main View of the application, unless the settings are specific to a sub-View&lt;/li&gt;&lt;li&gt;Help should be available in each View &lt;/li&gt;&lt;li&gt;Exit task should be present in all Views except for the main View of the application.&lt;/li&gt;&lt;/ul&gt;</source>
         <oldsource>Application Menu is a menu element available to any view. It can be opened by tapping on the View Menu title area.
 Application Menu contains commands and view settings for the view in question and an optional area for View Style Commands. Each View of the application can have different View Menu contents.
@@ -533,38 +534,38 @@ Guidelines for mandatory application Menu items:
         <translation type="obsolete">Japan</translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="72"/>
+        <location filename="../comboboxpage.cpp" line="90"/>
         <source>Title</source>
         <translation>Titel</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="74"/>
+        <location filename="../comboboxpage.cpp" line="92"/>
         <source>Sort - DescendingOrder</source>
         <translation>Sortieren — in absteigender Reihenfolge</translation>
     </message>
     <message id="xx_container_page_title">
-        <location filename="../containerpage.cpp" line="41"/>
+        <location filename="../containerpage.cpp" line="60"/>
         <source>Container</source>
         <translation>Behälter</translation>
     </message>
     <message id="xx_progressbar_page_title">
-        <location filename="../progressbarpage.cpp" line="56"/>
+        <location filename="../progressbarpage.cpp" line="75"/>
         <source>Progress Bar</source>
         <translation>Fortschrittsbalken</translation>
     </message>
     <message id="xx_progressbar_page_info_label">
-        <location filename="../progressbarpage.cpp" line="61"/>
+        <location filename="../progressbarpage.cpp" line="80"/>
         <source>A Progress Bar can indicate an ongoing process with either known or unknown durations.</source>
         <translation>Ein Fortschrittsbalken kann zur Zeit ablaufende Vorgänge mit bekannter oder unbekannter Dauer anzeigen</translation>
     </message>
     <message id="xx_progressindicator_unknown_duration_bar">
-        <location filename="../progressbarpage.cpp" line="65"/>
+        <location filename="../progressbarpage.cpp" line="84"/>
         <source>Installing CoolApp</source>
         <oldsource>unknown duration - bar</oldsource>
         <translation>Installiere tolles Programm</translation>
     </message>
     <message id="xx_progressindicator_known_duration_bar">
-        <location filename="../progressbarpage.cpp" line="63"/>
+        <location filename="../progressbarpage.cpp" line="82"/>
         <source>Downloading nicepic.jpg</source>
         <oldsource>known duration - bar</oldsource>
         <translation>Download vom nettesbild.jpg</translation>
@@ -574,34 +575,34 @@ Guidelines for mandatory application Menu items:
         <translation type="obsolete">Gitter</translation>
     </message>
     <message id="xx_toolbar_page_example1">
-        <location filename="../toolbarpage.cpp" line="25"/>
+        <location filename="../toolbarpage.cpp" line="44"/>
         <source>Example 1</source>
         <translation>Beispiel 1</translation>
     </message>
     <message id="xx_toolbar_page_example2">
-        <location filename="../toolbarpage.cpp" line="31"/>
+        <location filename="../toolbarpage.cpp" line="50"/>
         <source>Example 2</source>
         <translation>Beispiel 2</translation>
     </message>
     <message id="xx_toolbar_page_title">
-        <location filename="../toolbarpage.cpp" line="54"/>
+        <location filename="../toolbarpage.cpp" line="73"/>
         <source>ToolBar</source>
         <oldsource>Tool Bar</oldsource>
         <translation>Werkzeugleiste</translation>
     </message>
     <message id="xx_toolbar_page_info">
-        <location filename="../toolbarpage.cpp" line="65"/>
+        <location filename="../toolbarpage.cpp" line="84"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</source>
         <oldsource>Toolbar is a container which can contain up to 4 Icon Buttons (click Menu-&gt;Example 1), or a text input field with up to 2 Icon Buttons (click Menu-&gt;Example 2). It contains actions that are relevant to the view but not related to any individual item displayed directly within the content area.</oldsource>
         <translation>Die &lt;b&gt;Werkzeugleiste&lt;/b&gt; ist ein Behälter, der Aktionen enthält, die relevant für das “View“ sind aber nichts mit mit individuellen Gegenständen zu tun haben, die im Inhaltsbereich angezeigt werden. &lt;ul&gt;&lt;li&gt;Sie kann bis zu 4 Piktogramm Knöpfe enthalten (Klicke auf “Menü” und dann “Beispiel 1”)&lt;/li&gt; &lt;li&gt;Sie kann auch ein Texteingabefeld kann zusammen mit 2 Piktogrammknöpfen enthalten (Klicke auf “Menü” und dann “Beispiel 2”).&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message id="xx_objectmenu_page_title">
-        <location filename="../objectmenupage.cpp" line="125"/>
+        <location filename="../objectmenupage.cpp" line="144"/>
         <source>Object menu</source>
         <translation>Objektmenü</translation>
     </message>
     <message id="xx_objectmenu_page_info_label">
-        <location filename="../objectmenupage.cpp" line="137"/>
+        <location filename="../objectmenupage.cpp" line="156"/>
         <source>Object Menu is a popup menu of commands opened by long tapping an element. It is used for providing shortcuts to functions related to that particular element.
 
 The primary (single short tap) action of the element should not be duplicated in the Object Menu.</source>
@@ -610,289 +611,289 @@ The primary (single short tap) action of the element should not be duplicated in
 Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im Objectmenü dupliziert werden.</translation>
     </message>
     <message id="xx_objectmenu_page_container_friends">
-        <location filename="../objectmenupage.cpp" line="140"/>
+        <location filename="../objectmenupage.cpp" line="159"/>
         <source>Friends</source>
         <translation>Freunde</translation>
     </message>
     <message id="xx_objectmenu_page_container_albums">
-        <location filename="../objectmenupage.cpp" line="142"/>
+        <location filename="../objectmenupage.cpp" line="161"/>
         <source>Favorite Albums</source>
         <translation>Lieblings Alben</translation>
     </message>
     <message id="xx_navigationbar_navbarcombo">
-        <location filename="../navigationbarpage.cpp" line="36"/>
+        <location filename="../navigationbarpage.cpp" line="55"/>
         <source>Navigation Bar</source>
         <translation>Navigationsbalken</translation>
     </message>
     <message id="xx_navigationbar_escapebtncombo">
-        <location filename="../navigationbarpage.cpp" line="44"/>
+        <location filename="../navigationbarpage.cpp" line="63"/>
         <source>Escape Button</source>
         <translation>Fluchtknopf</translation>
     </message>
     <message id="xx_navigationbar_homebtncombo">
-        <location filename="../navigationbarpage.cpp" line="52"/>
+        <location filename="../navigationbarpage.cpp" line="71"/>
         <source>Home Button</source>
         <translation>Heimknopf</translation>
     </message>
     <message id="xx_navigationbar_page_title">
-        <location filename="../navigationbarpage.cpp" line="101"/>
+        <location filename="../navigationbarpage.cpp" line="120"/>
         <source>Navigation Bar</source>
         <translation>Navigationsbalken</translation>
     </message>
     <message id="xx_navigationbar_display_mode">
-        <location filename="../navigationbarpage.cpp" line="105"/>
+        <location filename="../navigationbarpage.cpp" line="124"/>
         <source>Components&apos; display mode:</source>
         <oldsource>Application Page&apos;s display mode:</oldsource>
         <translation>Anzeigemodus der Applikationsseite:</translation>
     </message>
     <message id="xx_navigationbar_escapebutton_mode_label">
-        <location filename="../navigationbarpage.cpp" line="107"/>
+        <location filename="../navigationbarpage.cpp" line="126"/>
         <source>Escape Button mode:</source>
         <translation>Escape-Knopf Modus:</translation>
     </message>
     <message id="xx_navigationbar_back_button">
-        <location filename="../navigationbarpage.cpp" line="113"/>
+        <location filename="../navigationbarpage.cpp" line="132"/>
         <source>Back button</source>
         <translation>„Zurück“-Knopf</translation>
     </message>
     <message id="xx_navigationbar_close_button">
-        <location filename="../navigationbarpage.cpp" line="117"/>
+        <location filename="../navigationbarpage.cpp" line="136"/>
         <source>Close button</source>
         <translation>Schließknopf</translation>
     </message>
     <message id="xx_navigationbar_hidden">
-        <location filename="../navigationbarpage.cpp" line="120"/>
+        <location filename="../navigationbarpage.cpp" line="139"/>
         <source>Hidden</source>
         <translation>Versteckt</translation>
     </message>
     <message id="xx_displaymode_show">
-        <location filename="../navigationbarpage.cpp" line="138"/>
+        <location filename="../navigationbarpage.cpp" line="157"/>
         <source>Show</source>
         <translation>Zeige</translation>
     </message>
     <message id="xx_displaymode_autohide">
-        <location filename="../navigationbarpage.cpp" line="140"/>
+        <location filename="../navigationbarpage.cpp" line="159"/>
         <source>Auto Hide</source>
         <translation>Auto-Zeigen</translation>
     </message>
     <message id="xx_displaymode_hide">
-        <location filename="../navigationbarpage.cpp" line="142"/>
+        <location filename="../navigationbarpage.cpp" line="161"/>
         <source>Hide</source>
         <translation>Verstecken</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="44"/>
+        <location filename="../languagepage.cpp" line="63"/>
         <source>Change Language</source>
         <translation>Sprache Ändern</translation>
     </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="82"/>
+        <location filename="../languagepage.cpp" line="104"/>
         <source>Please select language</source>
         <translation>Bitte wählen Sie die neue Sprache:</translation>
     </message>
     <message id="xx_language_arabic">
-        <location filename="../languagepage.cpp" line="52"/>
+        <location filename="../languagepage.cpp" line="73"/>
         <source>Arabic</source>
         <translation>Arabisch (العربية)</translation>
     </message>
     <message id="xx_language_english">
-        <location filename="../languagepage.cpp" line="54"/>
+        <location filename="../languagepage.cpp" line="75"/>
         <source>English</source>
         <translation>Englisch (English)</translation>
     </message>
     <message id="xx_language_finnish">
-        <location filename="../languagepage.cpp" line="56"/>
+        <location filename="../languagepage.cpp" line="77"/>
         <source>Finnish</source>
         <translation>Finnisch (Suomi)</translation>
     </message>
     <message id="xx_language_german">
-        <location filename="../languagepage.cpp" line="58"/>
+        <location filename="../languagepage.cpp" line="79"/>
         <source>German</source>
         <translation>Deutsch</translation>
     </message>
     <message id="xx_language_simplified_chinese">
-        <location filename="../languagepage.cpp" line="60"/>
+        <location filename="../languagepage.cpp" line="81"/>
         <source>Simplified Chinese</source>
         <translation>Vereinfachtes Chinesisch (中文)</translation>
     </message>
     <message id="xx_language_hungarian">
-        <location filename="../languagepage.cpp" line="62"/>
+        <location filename="../languagepage.cpp" line="83"/>
         <source>Magyar</source>
         <oldsource>Hungarian</oldsource>
         <translation>Ungarisch (Magyar)</translation>
     </message>
     <message id="xx_language_none">
-        <location filename="../languagepage.cpp" line="50"/>
+        <location filename="../languagepage.cpp" line="71"/>
         <source>None</source>
         <translation>Keine (None)</translation>
     </message>
     <message id="xx_template_page_views_dialogs">
-        <location filename="../templatepage.cpp" line="29"/>
+        <location filename="../templatepage.cpp" line="47"/>
         <source>Views and Dialogs</source>
         <translation>“Views” und Dialoge</translation>
     </message>
     <message id="xx_template_page_contains_applets">
-        <location filename="../templatepage.cpp" line="31"/>
+        <location filename="../templatepage.cpp" line="49"/>
         <source>Contains and Applets</source>
         <translation>Behälter und Applets</translation>
     </message>
     <message id="xx_template_page_layouts_visuals">
-        <location filename="../templatepage.cpp" line="33"/>
+        <location filename="../templatepage.cpp" line="51"/>
         <source>Layouts and Visuals</source>
         <translation>Layouts und Visualisierungen</translation>
     </message>
     <message id="xx_template_page_buttons">
-        <location filename="../templatepage.cpp" line="35"/>
+        <location filename="../templatepage.cpp" line="53"/>
         <source>Buttons</source>
         <translation>Knöpfe</translation>
     </message>
     <message id="xx_template_page_indicators_notifications">
-        <location filename="../templatepage.cpp" line="37"/>
+        <location filename="../templatepage.cpp" line="55"/>
         <source>Indicators and Notifications</source>
         <translation>Anzeigen und Notifikationen</translation>
     </message>
     <message id="xx_template_page_lists_grids_menus">
-        <location filename="../templatepage.cpp" line="39"/>
+        <location filename="../templatepage.cpp" line="57"/>
         <source>Lists, Grids and Menus</source>
         <translation>Listen, Gitter und Menüs</translation>
     </message>
     <message id="xx_template_page_user_input">
-        <location filename="../templatepage.cpp" line="41"/>
+        <location filename="../templatepage.cpp" line="59"/>
         <source>User input</source>
         <oldsource>User Input</oldsource>
         <translation>Benutzereingaben</translation>
     </message>
     <message id="xx_template_page_input_feedback">
-        <location filename="../templatepage.cpp" line="43"/>
+        <location filename="../templatepage.cpp" line="61"/>
         <source>Input Feedback</source>
         <translation>Eingaberückmeldung</translation>
     </message>
     <message id="xx_image_page_info">
-        <location filename="../imagepage.cpp" line="122"/>
+        <location filename="../imagepage.cpp" line="141"/>
         <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired.</source>
         <translation>“Image” erlaubt das Positionieren von Bildern auf die Benutzeroberfläche. Bilder sind gewöhnlich nicht-interaktive Elemente. Jedoch können auch verschiedene einfache und mehrfache Berührungsaktionen zu einer Bildkomponente hinzugefügt werden, falls gewünscht.</translation>
     </message>
     <message id="xx_sample template">
-        <location filename="../templatepage.cpp" line="106"/>
+        <location filename="../templatepage.cpp" line="124"/>
         <source>Sample template</source>
         <translation>Beispiel Vorlage</translation>
     </message>
     <message id="xx_template_page_title">
-        <location filename="../templatepage.cpp" line="100"/>
+        <location filename="../templatepage.cpp" line="118"/>
         <source>Template</source>
         <translation>Vorlage</translation>
     </message>
     <message id="xx_textentry_completion_text">
-        <location filename="../textentrypage.cpp" line="494"/>
+        <location filename="../textentrypage.cpp" line="514"/>
         <source>Email suggestion text:</source>
         <translation>E-Mail Vorschlags text:</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="78"/>
+        <location filename="../comboboxpage.cpp" line="96"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>Das DuiComboBox Widget ist eine Kombination aus einem Knopf und einer Popup List. Es ist sehr ähnlich zur QComboBox aber erlaubt nicht den Text zu editieren.</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="68"/>
+        <location filename="../comboboxpage.cpp" line="86"/>
         <source>ComboBox</source>
         <translation>Combobox</translation>
     </message>
     <message id="xx_tooltip_entry8">
-        <location filename="../textentrypage.cpp" line="472"/>
+        <location filename="../textentrypage.cpp" line="492"/>
         <source>Provides email address suggestions</source>
         <translation>Stellt Vorschläge für E-Mail Adressen zur Verfügung</translation>
     </message>
     <message id="xx_checkbox_page_title">
-        <location filename="../checkboxpage.cpp" line="51"/>
+        <location filename="../checkboxpage.cpp" line="70"/>
         <source>Checkbox</source>
         <translation>Kontrollkästchen</translation>
     </message>
     <message id="xx_checkbox_page_info_label">
-        <location filename="../checkboxpage.cpp" line="60"/>
+        <location filename="../checkboxpage.cpp" line="79"/>
         <source>The Checkbox is a variant of Button that allows users to set the state of variable or setting which has two values, On and Off.
 
 Checkbox essentially does the same thing as the Switch button, so please consider using a Switch instead.</source>
         <translation>Das Kontrollkästchen ist eine Variante des Knopfes, das Benutzern erlaubt den Zustand einer Variable oder einer Einstellung zu sehen, die zwei Werte hat, „An“ oder „Aus“.</translation>
     </message>
     <message id="xx_checkbox_page_checkbox_label">
-        <location filename="../checkboxpage.cpp" line="63"/>
+        <location filename="../checkboxpage.cpp" line="82"/>
         <source>I have read and understood the
 instructions.</source>
         <translation>Ich habe die Anleitung gelesen und verstanden.</translation>
     </message>
     <message id="xx_icon_button_page_title">
-        <location filename="../iconbuttonpage.cpp" line="57"/>
+        <location filename="../iconbuttonpage.cpp" line="76"/>
         <source>Icon Button</source>
         <translation>Pictogramm Knopf</translation>
     </message>
     <message id="xx_icon_button_page_info_label">
-        <location filename="../iconbuttonpage.cpp" line="65"/>
+        <location filename="../iconbuttonpage.cpp" line="84"/>
         <source>Icon Buttons have an icon and can have a text label. Icon button differs from push button by its visual presentation: it does not have button-style edges like a Push Button does.
 
  Icon Buttons are used in e.g. Toolbars.</source>
         <translation>Pictogrammknöpfe haben ein Piktogramm und können auch ein Text-Label haben. Ein Pictogrammknopf unterscheidet sich von einen Druckknopf durch seine graphische Darstellung: er hat nicht die knopfartigen Ränder wie ein Druckknopf.</translation>
     </message>
     <message id="xx_icon_button_page_icon_button2">
-        <location filename="../iconbuttonpage.cpp" line="67"/>
+        <location filename="../iconbuttonpage.cpp" line="86"/>
         <source>Lorem ipsum</source>
         <translation>Lorem ipsum</translation>
     </message>
     <message id="xx_push_button_page_title">
-        <location filename="../pushbuttonpage.cpp" line="50"/>
+        <location filename="../pushbuttonpage.cpp" line="69"/>
         <source>Push Button</source>
         <translation>Druckknopf</translation>
     </message>
     <message id="xx_push_button_page_info_label">
-        <location filename="../pushbuttonpage.cpp" line="59"/>
+        <location filename="../pushbuttonpage.cpp" line="78"/>
         <source>Push Buttons can have an icon and a label. Push Button can be used in any container but usually it is used with Dialogs, Notifications and Main windows to invoke actions.
 
 A Push Button generally looks like a traditional button, with button-style edges.</source>
         <translation>Ein Druckknopf kann ein Piktogramm und ein Label haben. Druckknöpfe können in jedem beliebigen Behälter benutzt werden, werden aber gewöhnlich in Dialogen, Meldungen und Hauptfenstern benutzt um Aktionen auszulösen.</translation>
     </message>
     <message id="xx_push_button_page_button1">
-        <location filename="../pushbuttonpage.cpp" line="61"/>
+        <location filename="../pushbuttonpage.cpp" line="80"/>
         <source>Lorem</source>
         <translation>Lorem</translation>
     </message>
     <message id="xx_push_button_page_button2">
-        <location filename="../pushbuttonpage.cpp" line="63"/>
+        <location filename="../pushbuttonpage.cpp" line="82"/>
         <source>Ipsum</source>
         <translation>Ipsum</translation>
     </message>
     <message id="xx_push_button_page_button3">
-        <location filename="../pushbuttonpage.cpp" line="65"/>
+        <location filename="../pushbuttonpage.cpp" line="84"/>
         <source>Dolor
 sit amet</source>
         <translation>Dolor
 sit amet</translation>
     </message>
     <message id="xx_spinner_page_container_main_area">
-        <location filename="../spinnerpage.cpp" line="42"/>
+        <location filename="../spinnerpage.cpp" line="61"/>
         <source>In container main area</source>
         <translation>Im Hauptbereich des Behälters</translation>
     </message>
     <message id="xx_spinner_page_container_header">
-        <location filename="../spinnerpage.cpp" line="48"/>
+        <location filename="../spinnerpage.cpp" line="67"/>
         <source>In container header</source>
         <translation>Im Kopfbereich des Behälters</translation>
     </message>
     <message id="xx_spinner_page_menu">
-        <location filename="../spinnerpage.cpp" line="54"/>
+        <location filename="../spinnerpage.cpp" line="73"/>
         <source>In view menu</source>
         <translation>Im Ansichtsmenü</translation>
     </message>
     <message id="xx_spinner_page_dialog">
-        <location filename="../spinnerpage.cpp" line="60"/>
+        <location filename="../spinnerpage.cpp" line="79"/>
         <source>In dialog</source>
         <translation>Im Dialog</translation>
     </message>
     <message id="xx_spinner_page_title">
-        <location filename="../spinnerpage.cpp" line="73"/>
+        <location filename="../spinnerpage.cpp" line="92"/>
         <source>Spinner</source>
         <translation>Wirbelräder</translation>
     </message>
     <message id="xx_spinner_page_info_label">
-        <location filename="../spinnerpage.cpp" line="82"/>
+        <location filename="../spinnerpage.cpp" line="101"/>
         <source>Spinner is used to indicate that a progress is ongoing and the duration is unknown.
 
 Spinners can also be used in situations when duration is known, but available space on screen does not permit using a Progress bar.
@@ -908,7 +909,7 @@ Wirbelräder können auch benutzt werden, wenn die Dauer bekannt ist aber der ve
 Siehe auch das Menü für Beispiele verschiedener Anwendungsfälle.</translation>
     </message>
     <message id="xx_spinner_page_email_header">
-        <location filename="../spinnerpage.cpp" line="92"/>
+        <location filename="../spinnerpage.cpp" line="111"/>
         <source>From: John Doe
 Date: Today
 Subject: This is funny stuff!</source>
@@ -917,125 +918,125 @@ Date: Heute
 Subject: Dies ist lustig!</translation>
     </message>
     <message id="xx_spinner_page_container_area_description">
-        <location filename="../spinnerpage.cpp" line="105"/>
+        <location filename="../spinnerpage.cpp" line="124"/>
         <source>Spinner can be used in container while e.g. content is being fetched.</source>
         <translation>Wirbelräder können in Behältern benutzt werden während zum Beispiel Inhalte heruntergeladen werden</translation>
     </message>
     <message id="xx_spinner_page_container_title">
-        <location filename="../spinnerpage.cpp" line="118"/>
+        <location filename="../spinnerpage.cpp" line="137"/>
         <source>Online albums</source>
         <translation>Online Alben</translation>
     </message>
     <message id="xx_spinner_page_container_header_description">
-        <location filename="../spinnerpage.cpp" line="137"/>
+        <location filename="../spinnerpage.cpp" line="156"/>
         <source>Spinner can be used in container header to indicate that the items inside the container are being updated, but visible items can be interacted with.</source>
         <translation>Wirbelräder können in Behälterkopfzeilen benutzt werden um anzuzeigen, dass die Dinge im Behälter auf den neuesten Stand gebracht werden, trotzdem kann man mit den sichtbaren Dingen weiter interagieren</translation>
     </message>
     <message id="xx_spinner_page_application_menu_description">
-        <location filename="../spinnerpage.cpp" line="177"/>
+        <location filename="../spinnerpage.cpp" line="196"/>
         <source>Spinner in the application menu area indicates that the whole view is pending for update.</source>
         <translation>Wirbelräder im Bereich des Applikationsmenüs zeigen, das der gesamte “View” auf den neuesten Stand gebracht wird</translation>
     </message>
     <message id="xx_spinner_page_dialog_header_description">
-        <location filename="../spinnerpage.cpp" line="191"/>
+        <location filename="../spinnerpage.cpp" line="210"/>
         <source>Spinner can be placed in dialog header to indicate changing content.</source>
         <translation>Wirbelräder können in Dialogkopfzeilen sein um sich ändernde Inhalte anzuzeigen</translation>
     </message>
     <message id="xx_spinner_page_dialog_header">
-        <location filename="../spinnerpage.cpp" line="212"/>
+        <location filename="../spinnerpage.cpp" line="231"/>
         <source>Select Internet connection</source>
         <translation>Wähle die Internetverbindung</translation>
     </message>
     <message id="xx_switch_page_title">
-        <location filename="../switchpage.cpp" line="105"/>
+        <location filename="../switchpage.cpp" line="124"/>
         <source>Switch</source>
         <translation>Schalthebel</translation>
     </message>
     <message id="xx_switch_page_info_label">
-        <location filename="../switchpage.cpp" line="115"/>
+        <location filename="../switchpage.cpp" line="134"/>
         <source>A Switch button differs from both a push button and an icon button visually. It looks like a switch, communicating that pressing this button will not go to another view or will not perform any other actions except to toggle the state of the button.
 
 Switches are used to indicate e.g. settings values</source>
         <translation>Ein Schalthebel unterscheidet sich optisch sowohl von einem Drucknopf als auch von einem Piktogrammknopf. Es sieht aus wie ein Hebel und zeigt so, daß das Umlegen dieses Hebels nicht in einen anderen Dialog wechseln wird und keine anderen Aktionen auslösen wird außer den Zustand dieses Hebels zu änderen.</translation>
     </message>
     <message id="xx_switch_page_switch1">
-        <location filename="../switchpage.cpp" line="118"/>
+        <location filename="../switchpage.cpp" line="137"/>
         <source>Headlights</source>
         <translation>Frontscheinwerfer</translation>
     </message>
     <message id="xx_switch_page_switch2">
-        <location filename="../switchpage.cpp" line="120"/>
+        <location filename="../switchpage.cpp" line="139"/>
         <source>Autopilot</source>
         <translation>Autopilot</translation>
     </message>
     <message id="xx_switch_page_switch3">
-        <location filename="../switchpage.cpp" line="122"/>
+        <location filename="../switchpage.cpp" line="141"/>
         <source>Warp Drive</source>
         <translation>Warpantrieb</translation>
     </message>
     <message id="xx_switch_page_switch4">
-        <location filename="../switchpage.cpp" line="124"/>
+        <location filename="../switchpage.cpp" line="143"/>
         <source>Reactor Shields</source>
         <translation>Reaktorschilde</translation>
     </message>
     <message id="xx_switch_page_switch5">
-        <location filename="../switchpage.cpp" line="126"/>
+        <location filename="../switchpage.cpp" line="145"/>
         <source>Infinite Improbability Drive</source>
         <translation>Unendliche-Unwahrscheinlichkeit-Antrieb</translation>
     </message>
     <message id="xx_continuous_slider_min">
-        <location filename="../continuoussliderpage.cpp" line="89"/>
-        <location filename="../continuoussliderpage.cpp" line="141"/>
-        <location filename="../continuoussliderpage.cpp" line="149"/>
+        <location filename="../continuoussliderpage.cpp" line="108"/>
+        <location filename="../continuoussliderpage.cpp" line="160"/>
+        <location filename="../continuoussliderpage.cpp" line="168"/>
         <source>Min</source>
         <translation>Min</translation>
     </message>
     <message id="xx_continuous_slider_max">
-        <location filename="../continuoussliderpage.cpp" line="91"/>
-        <location filename="../continuoussliderpage.cpp" line="143"/>
-        <location filename="../continuoussliderpage.cpp" line="151"/>
+        <location filename="../continuoussliderpage.cpp" line="110"/>
+        <location filename="../continuoussliderpage.cpp" line="162"/>
+        <location filename="../continuoussliderpage.cpp" line="170"/>
         <source>Max</source>
         <translation>Max</translation>
     </message>
     <message id="xx_continuous_slider_thumb">
-        <location filename="../continuoussliderpage.cpp" line="93"/>
-        <location filename="../continuoussliderpage.cpp" line="145"/>
-        <location filename="../continuoussliderpage.cpp" line="153"/>
+        <location filename="../continuoussliderpage.cpp" line="112"/>
+        <location filename="../continuoussliderpage.cpp" line="164"/>
+        <location filename="../continuoussliderpage.cpp" line="172"/>
         <source>Thumb</source>
         <translation>Daumen</translation>
     </message>
     <message id="xx_continuous_slider_title">
-        <location filename="../continuoussliderpage.cpp" line="131"/>
+        <location filename="../continuoussliderpage.cpp" line="150"/>
         <source>Continuous Slider</source>
         <translation>Kontinuierlicher Schieberegler</translation>
     </message>
     <message id="xx_continuous_slider_with_icons">
-        <location filename="../continuoussliderpage.cpp" line="135"/>
+        <location filename="../continuoussliderpage.cpp" line="154"/>
         <source>with icons</source>
         <translation>Mit Piktogrammen</translation>
     </message>
     <message id="xx_continuous_slider_plain_slider">
-        <location filename="../continuoussliderpage.cpp" line="137"/>
+        <location filename="../continuoussliderpage.cpp" line="156"/>
         <source>plain slider</source>
         <translation>Einfacher Schieberegler</translation>
     </message>
     <message id="xx_continuous_slider_with_labels">
-        <location filename="../continuoussliderpage.cpp" line="139"/>
+        <location filename="../continuoussliderpage.cpp" line="158"/>
         <source>with labels</source>
         <translation>Mit Labels</translation>
     </message>
     <message id="xx_continuous_slider_seekbar">
-        <location filename="../continuoussliderpage.cpp" line="147"/>
+        <location filename="../continuoussliderpage.cpp" line="166"/>
         <source>seekbar</source>
         <translation>Suchbalken</translation>
     </message>
     <message id="xx_input_feedback_page_title">
-        <location filename="../feedbackpage.cpp" line="57"/>
+        <location filename="../feedbackpage.cpp" line="86"/>
         <source>Input Feedback</source>
         <translation>Eingaberückmeldung</translation>
     </message>
     <message id="xx_input_feedback_page_info_label">
-        <location filename="../feedbackpage.cpp" line="67"/>
+        <location filename="../feedbackpage.cpp" line="96"/>
         <source>This page contains buttons with custom input feedbacks. Any DuiWidget can have input feedback for press and release events. Input feedback can be a sound effect and/or a haptic effect (piezo, vibra) depending on the product.
 
 Input feedbacks can be easily configured for different purposes using the theming system.</source>
@@ -1044,24 +1045,37 @@ Input feedbacks can be easily configured for different purposes using the themin
 Eingaberückmeldungen können mit Hilfe des Theming-Systems einfach für verschiedene Zwecke konfiguriert werden.</translation>
     </message>
     <message id="xx_input_feedback_page_button1">
-        <location filename="../feedbackpage.cpp" line="69"/>
+        <location filename="../feedbackpage.cpp" line="98"/>
         <source>Default</source>
         <translation>Voreinstellung</translation>
     </message>
     <message id="xx_input_feedback_page_button2">
-        <location filename="../feedbackpage.cpp" line="71"/>
-        <source>Babytoy</source>
-        <translation>Babyspielzeug</translation>
+        <location filename="../feedbackpage.cpp" line="100"/>
+        <source>Different</source>
+        <oldsource>Babytoy</oldsource>
+        <translation>Anders</translation>
     </message>
     <message id="xx_input_feedback_page_button3">
-        <location filename="../feedbackpage.cpp" line="73"/>
+        <location filename="../feedbackpage.cpp" line="102"/>
+        <source>Sluggish</source>
+        <oldsource>Space</oldsource>
+        <translation>Schwerfällig</translation>
+    </message>
+    <message id="xx_input_feedback_page_button4">
+        <location filename="../feedbackpage.cpp" line="104"/>
+        <source>Babytoy</source>
+        <oldsource>Silent</oldsource>
+        <translation>Babyspielzeug</translation>
+    </message>
+    <message id="xx_input_feedback_page_button5">
+        <location filename="../feedbackpage.cpp" line="106"/>
         <source>Space</source>
         <translation>Weltraum</translation>
     </message>
-    <message id="xx_input_feedback_page_button4">
-        <location filename="../feedbackpage.cpp" line="75"/>
+    <message id="xx_input_feedback_page_button6">
+        <location filename="../feedbackpage.cpp" line="108"/>
         <source>Silent</source>
-        <translation>Still</translation>
+        <translation>Stumm</translation>
     </message>
 </context>
 </TS>
