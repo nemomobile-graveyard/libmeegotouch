@@ -17,10 +17,11 @@ static GstStaticPadTemplate sinktemplate_rgb
 = GST_STATIC_PAD_TEMPLATE ("sink",
                            GST_PAD_SINK,
                            GST_PAD_ALWAYS,
-                           GST_STATIC_CAPS (GST_VIDEO_CAPS_RGBx ";" \
+                           GST_STATIC_CAPS (GST_VIDEO_CAPS_RGB));
+                           /*GST_STATIC_CAPS (GST_VIDEO_CAPS_RGBx ";" \
                                             GST_VIDEO_CAPS_BGRx ";" \
                                             GST_VIDEO_CAPS_RGB ";" \
-                                            GST_VIDEO_CAPS_BGR));
+                                            GST_VIDEO_CAPS_BGR));*/
 static GstStaticPadTemplate sinktemplate_yuv
 = GST_STATIC_PAD_TEMPLATE ("sink",
                            GST_PAD_SINK,
@@ -46,11 +47,6 @@ dui_gst_video_sink_render (GstBaseSink *bsink, GstBuffer *buffer)
 
   if (buffer == NULL || G_UNLIKELY (!GST_IS_BUFFER (buffer))) {
     return FALSE;
-  }
-
-  // skip this frame, blitter is not ready
-  if (!sink->blit_ready_cb(sink->user_data)) {
-    return GST_FLOW_OK;
   }
 
   // take ownership

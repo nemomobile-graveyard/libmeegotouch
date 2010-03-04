@@ -1,0 +1,2 @@
+#include "../video/duivideowidget.h"
+

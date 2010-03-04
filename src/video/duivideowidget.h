@@ -20,255 +20,217 @@
 #ifndef DUIVIDEOWIDGET_H
 #define DUIVIDEOWIDGET_H
 
-#include <duiwidget.h>
-
-#include <gst/gst.h>
-#include <gst/gstvalue.h>
-#include <gst/video/video.h>
-
-#include "duisink.h"
+#include <duiwidgetcontroller.h>
+#include <duivideowidgetmodel.h>
 
 class DuiVideoWidgetPrivate;
 
-// Temporarily removed from build
-//! \internal
 
 /*!
- * \class DuiVideoWidget
- * \brief DuiVideoWidget is a graphical widget displaying videostream from gstreamer sink.
- *
- * Video can be paused, seeked and scaled from original size.
- * Please note that every new DuiVideoWidget creates another worker thread
- * for video processing and may cause performance overhead is several videos
- * are running at once.
- *
- * Note that in you application main you *must* initialize gstreamer
- * subsystem by calling gst_init(argc, argv); and gst_deinit() after app.exec()
- *
- * Example:
- * \verbatim
- *
- * // gst_init called with the arguments given to application
- * gst_init(&argc, &argv);
- *
- * DuiVideoWidget video;
- * video.open("videos/ninja.avi");
- * layout()->addItem(video, x, y)
- * seek(video.length()/2); // seek to the middle of video
- *
- * app.exec();
- *
- * // gst_deinit called before returning from main
- * gst_deinit();
- *
- * \endverbatim
- */
-class DUI_EXPORT DuiVideoWidget : public DuiWidget
+    \class DuiVideoWidget
+    \brief DuiVideoWidget provides functionality for playing videos.
+
+    \ingroup widgets
+
+    \section DuiVideoWidgetOverview Overview
+        DuiVideoWidget supports following features:
+        
+        - Standard playback controlling through play(), pause(), stop(), seek() 
+        and setLooping() methods.
+        - Volume controlling through the setVolume() and setMute() methods.
+        - Automatic fitting and appearence of the video can be changed using the 
+        setScaleToFit(), setKeepAspectRatio() and setFullscreen()
+        methods.
+
+    \section DuiVideoWidgetUseGuidelines Usage guidelines
+
+    \section DuiVideoWidgetVariants Variants
+        \li \link DuiVideoWidgetView Default view. \endlink Standard view for 
+            displaying video frames without any visual controls.
+
+    \section DuiVideoWidgetOpenIssues Open issues
+
+    \section DuiVideoWidgetExamples Examples
+
+    \sa DuiVideoWidgetModel
+*/
+class DUI_EXPORT DuiVideoWidget : public DuiWidgetController
 {
     Q_OBJECT
+    DUI_CONTROLLER(DuiVideoWidget)
+
 public:
 
     /*!
-     * \brief Constructor
-     * \param parent Parent widget
-     */
-    DuiVideoWidget(QGraphicsItem *parent = NULL);
+      \brief Constructs a video widget.
+    */
+    DuiVideoWidget(QGraphicsItem *parent = 0, DuiVideoWidgetModel* model = 0);
 
     /*!
-     * \brief Destructor
-     */
+      \brief Destroys the video widget.
+    */
     virtual ~DuiVideoWidget();
 
     /*!
-     * Open a video file to be streamed
-     * \param filename a relative path to the file
-     * \param autoPlay If true playback of the video is started automatically
-     *                 when the video has been successfully opened. If false
-     *                 only the first frame of the video is buffered.
-     * \return boolean value to check if method succeeded.
-     */
-    bool open(const QString &filename, bool autoPlay = false);
+        \brief Opens a video from a file.
+    */
+    void open(const QString& filename);
 
     /*!
-     * Start playback
-     */
-    void play();
+        \brief Return the playback state.
+    */
+    DuiVideo::State state() const;
 
     /*!
-     * Pause playback
-     */
-    void pause();
+        \brief Seek video to a wanted position/time.
+
+        \a time is defined as milliseconds and it should be in a range of 0 to 
+        lenght of video.
+    */
+    void seek(quint64 time);
 
     /*!
-     * Stop playback
-     */
-    void stop();
+        \brief Query length of the video.
+
+        \return Length of video in milliseconds.
+    */
+    quint64 length() const;
 
     /*!
-     * Reset playback (seeks to start of the video stream)
-     * \return boolean value if method succeeded.
-     */
-    bool reset();
+        \brief Query the current position of the video.
+
+        \return Position of the video in milliseconds.
+    */
+    quint64 position() const;
 
     /*!
-     * Check the playback state
-     * \return boolean value if widget is playing a video
-     */
-    bool isPlaying();
+        \brief Set volume factor for the video's audio track.
 
-    /*!
-     * Seek to a defined position in the video stream
-     * \param time time in msecs
-     * \return boolean value if method succeeded.
-     */
-    bool seek(qint64 time);
-
-    /*!
-     * Check the length of the video stream
-     * \return length of the stream in msecs.
-     */
-    qint64 length();
-
-    /*!
-     * Check the current position of the video.
-     * \return Current position of the video.
-     */
-    qint64 currentPos();
-
-    /*!
-     * Set the volume for the video.
-     * \param volume Volume for the video in the range of 0.0 -> 1.0.
-     */
+        \a volume should be in a range of 0.0 -> 10.0. 1.0 means 100% volume. 
+        1.0 -> 10.0 are gain through amplification.
+    */
     void setVolume(qreal volume);
 
     /*!
-     * Get the current volume.
-     * \return Current volume.
-     */
-    qreal volume();
+        \brief Query current volume factor of the video's audio track.
+
+        \returns Audio volume. 0.0 if video does not contain audio track.
+    */
+    qreal volume() const;
 
     /*!
-     * Mute/unmute audio of the video.
-     * \param mute If true the audio is muted, if false the audio is unmuted.
-     */
-    void mute(bool mute);
+        \brief Mute the video's audio.
+    */
+    void setMuted(bool mute);
 
     /*!
-     * Check mute status.
-     * \returns True if the audio is muted and false if the audio is unmuted.
-     */
-    bool muted();
+        \brief Query current mute status.
+
+        \returns True if audio is muted or no audio track exists, false is audio is 
+                 not muted.
+    */
+    bool isMuted() const;
 
     /*!
      * Snapshot the current video frame.
      * \returns image of current video frame
      */
-    QImage currentFrame();
+    //QImage currentFrame() const;
 
     /*!
-     * Enables/disables scaling of the video.
-     * \param scaling If true the video is scaled depending of the size
-     *                      of the widget. If false the video is always rendered
-     *                      in it's native resolution.
-     */
-    void setScaling(bool scaling);
+        \brief Set scaling mode to video.
+
+        If \a mode is DuiVideoWidgetModel::ScaleToFit the video scaled to fit the widget size. If \a mode 
+        is DuiVideoWidgetModel::ScaleDisabled the video is rendered in it's native resolution into the middle 
+        of the widget.
+    */
+    void setScaleMode(DuiVideoWidgetModel::Scale mode);
 
     /*!
-     * \returns boolean state of scaling
-     */
-    bool scaling();
+        \brief Returns video scaling mode.
+    */
+    DuiVideoWidgetModel::Scale scaleMode() const;
 
     /*!
-     * Enables/disables locking of the aspect ratio.
-     * \param keepAspectRatio If true the original aspect ratio of the video will
-     *                        preserved when scaling. If false the aspect ratio
-     *                        is not preserved and the video is scaled to match
-     *                        exactly the size of the widget.
-     */
-    void setKeepAspectRatio(bool keepAspectRatio);
+        \brief Set aspect ratio
+
+        If \a aspectRatio is DuiVideoWidgetModel::AspectRatioOriginal, the video is scaled without breaking the 
+        native aspect ratio. If \a aspectRatio is DuiVideoWidgetModel::AspectRatioScaled, the native aspect 
+        ratio is not preserved and the video is scaled to match the size of the widget.
+    */
+    void setAspectRatioMode(DuiVideoWidgetModel::AspectRatio aspectRatio);
 
     /*!
-     * \returns boolean state of keepAspectRatio
-     */
-    bool keepAspectRatio();
+        \brief Return type of the aspect ratio.
+    */
+    DuiVideoWidgetModel::AspectRatio aspectRatioMode() const;
 
     /*!
-     * Enables / disables filling of background of the widget. Background is filled
-     * only if the size of the video (after scaling) is smaller than the widget
-     * itself.
-     * \param fillBg If true the background of the widget will be filled to the
-     *               wanted color when the video is not filling the whole widget
-     *               area. If false only the video frame is rendered.
-     */
-    void setBackgroundFill(bool fillBg);
+        \brief Enable / disable automatic looping of the video.
+    */
+    void setLooping(bool enabled);
 
     /*!
-     * \returns boolean status of background filling
-     */
-    bool backgroundFill();
+        \brief Query looping mode.
+
+        \returns looping mode.
+    */
+    bool isLooping() const;
 
     /*!
-     * Set the background color. The color is black by default.
-     * \param color  New color for the background.
-     */
-    void setBackgroundColor(const QColor &color);
-
+        \brief Enable / disable fullscreen mode.
+    */
+    void setFullscreen(bool fullscreen);
+    
     /*!
-     * \returns the current background color
-     */
-    QColor backgroundColor();
-
-    /*!
-     * Enable / disable automatica repeating of the video. Repeating is disabled
-     * by default.
-     * \param repeat If true video will be restarted from the beginning automatically.
-                     If false video will be stopped when the end is reached.
-     */
-    void setRepeat(bool repeat);
-
-    /*!
-     * \ returns boolean state of repeat
-     */
-    bool repeat();
-
-    /*!
-     * Get the name of the video that has been previously opened with open() method.
-     * The returned filename is absolute path to the video file.
-     * \return Filename of the previously opened video.
-     */
-    QString videoFilename();
-
-    //TODO figure workaround for this
-    //(emit signal from private class and route it to videoReady() signal)
-    void emitVideoReady();
+        \brief Query fullscreen mode.
+    */    
+    bool isFullscreen() const;
 
 Q_SIGNALS:
-    void clicked();
+
     void videoReady();
+
+public Q_SLOTS:
+    /*!
+        \brief Start video playback.
+    */
+    void play();
+
+    /*!
+        \brief Pause video playback.
+
+        When resuming the video playback with call to DuiVideoWidget::play(), 
+        video continues to play from the position it was left when pausing.
+    */
+    void pause();
+
+    /*!
+        \brief Stop video playback.
+
+        The video is rewinded to the beginning.
+    */
+    void stop();
+
+protected Q_SLOTS:
+
+    //! \reimp
+    virtual void updateData(const QList<const char*>& modifications);
+    //! \reimp_end
 
 protected:
 
-    void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
-    void constructPipeline();
+    //! \cond
+    DuiVideoWidget(DuiVideoWidgetPrivate* dd, DuiVideoWidgetModel* model, QGraphicsItem *parent);
+    //! \endcond
 
     //! \reimp
-    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
-    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
-    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+    virtual void setupModel();
     //! \reimp_end
 
 private:
 
-    //! Pointer to private implementation class object.
-    DuiVideoWidgetPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(DuiVideoWidget)
-
-#ifdef UNIT_TEST
-    friend class ft_duivideowidget;
-#endif
+    Q_DISABLE_COPY(DuiVideoWidget)
 };
-//! \internal_end
-
 #endif // DUIVIDEOWIDGET_H

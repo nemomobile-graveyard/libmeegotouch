@@ -73,12 +73,6 @@ struct _DuiGstVideoSink {
      */
     void (*ready_cb)(void *);
 
-    /*! is the renderer ready to blit?
-     * \param void pointer to user specified data
-     * \return boolean value if renderer is ready
-     */
-    uint(*blit_ready_cb)(void *);
-
     void *user_data;
 
     int frameskip;

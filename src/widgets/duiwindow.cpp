@@ -354,6 +354,7 @@ void DuiWindow::setTranslucentBackground(bool enable)
         DuiGLRenderer::instance()->setGLWidget(d->glWidget);
         DuiGLRenderer::instance()->initGL(d->glWidget);
         DuiGLES2Renderer::instance(d->glWidget);
+        DuiGLES2Renderer::activate(d->glWidget);
 #endif
         if (enable)
             setViewport(d->glWidget);
