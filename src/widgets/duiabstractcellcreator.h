@@ -115,8 +115,10 @@ public:
         be assigned and with setObjectName(const QString& objectName) you may specify object name of constructed
         cell.
 
-        If you wish to initialize cell differently, you need to override createCell function and provide
-        implementation for it.
+        If you wish to intitialize the cell widget differntly, or if you wish to create
+        different widget types for some rows, you should do so in an override of the
+        createCell() function. You may call the base class's createCell() when you
+        still want the default implementation for a particular row.
 
         Only updateCell() function should be reimplemented to provide data to widget(cell).
 
