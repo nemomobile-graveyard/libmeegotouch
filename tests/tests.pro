@@ -11,7 +11,6 @@ SUBDIRS     =  \
     ft_duiprogressindicator \
     ft_duiscenemanager \
     ft_duigconfitem \
-#    ft_duivideowidget \
     ft_theme \
 #    ft_duibutton \
     ft_duislider \
@@ -151,6 +150,7 @@ SUBDIRS     =  \
     ut_duiextensionhandle \
     ut_duiextensionhandleview \
     ut_duitapandholdrecognizer \
+    ut_duivideowidget \
 
 # enable only when we have icu available
 
