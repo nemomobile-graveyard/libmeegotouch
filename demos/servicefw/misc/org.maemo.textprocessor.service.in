@@ -1,4 +1,0 @@
-[D-BUS Service]
-Interface=com.nokia.TextProcessorIf
-Name=org.maemo.TextProcessor
-Exec=@DUI_INSTALL_BIN@/org.maemo.textprocessor

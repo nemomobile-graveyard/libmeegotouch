@@ -1,0 +1,4 @@
+SUBDIRS = \
+    textprocessorinterface \
+
+TEMPLATE = subdirs

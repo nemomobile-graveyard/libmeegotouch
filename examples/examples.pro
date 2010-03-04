@@ -22,3 +22,10 @@ SUBDIRS       = \
                 trackergrid \
                 imtoolbar \
 
+# for HAVE_DBUS
+include( ../mkspecs/common.pri )
+
+contains(DEFINES, HAVE_DBUS) {
+    SUBDIRS +=  servicefw
+}
+

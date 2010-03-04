@@ -17,10 +17,6 @@ SUBDIRS     =  \
 macx:SUBDIRS -= appletinstallationsource applicationextension applicationextension/demoextension applicationextension/demoextension2
 win32:SUBDIRS -= appletinstallationsource applicationextension applicationextension/demoextension applicationextension/demoextension2
 
-contains(DEFINES, HAVE_DBUS) {
-    SUBDIRS +=  servicefw
-}
-
 QMAKE_EXTRA_TARGETS += check
 check.commands = $$system(true)
 

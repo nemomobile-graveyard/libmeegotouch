@@ -8,8 +8,8 @@ The objectives of the service framework are :
 <ol>
 <li> to provide an IPC mechanism that is simple to use,</li>
 <li> to ensure there is no run time binary dependancy between the service user and provider,</li>
-<li> allow the user to just use an interface and not worry about the logic of choosing or connecting to an interface,</li>
-<li> allow the user to query a list of providers and choose one of them.</li>
+<li> to allow the user to just use an interface and not worry about the logic of choosing or connecting to an interface,</li>
+<li> to allow the user to query a list of providers and choose one of them.</li>
 </ol>
 
     \image html sfw_mechanism.png "The basic service framework mechanism."
@@ -52,7 +52,7 @@ Two things are required of the developer of an SP :
 <li>duiservicefwbaseif.h/cpp files that are common to all interfaces.<br/>
 The duiservicefwbaseif.h file is part of the libdui-dev package and the duiservicefwbaseif.cpp is compiled into libdui itself and so is part of the libdui0 package.</li>
 <li>XML file, header files, a library and a .service file for the interface being supplied.<br/>
-The interface specific header files should be made part of the maemo-service-dev package along with the interface's XML file, and the corresponding cpp files compiled into interface specific libs that are made part of the maemo-services package. The .service file should also be made part of the maemo-services package.</li>
+The interface specific header files should be made part of the maemo-interfaces-dev package along with the interface's XML file, and the corresponding cpp files compiled into interface specific libs that are made part of the maemo-interfaces package. The .service file should also be made part of the maemo-interfaces package.</li>
 </dd>
 </ul>
 </dl>
@@ -63,14 +63,14 @@ The interface specific header files should be made part of the maemo-service-dev
 <li>Create an XML file that defines the interface.</li>
 
       If you wish a method to be chained to the current application, you can add a 'chainTask="true"' attribute to the method tag.
-      If you wish a method to be asynchronous, you can add a 'asyncTask="true"' attribute to the method tag. Note that such methods should not have an 'out' parameter.
+      If you wish a method to be asynchronous, you can add an 'asyncTask="true"' attribute to the method tag. Note that such methods must not have any 'out' parameters.
 
       For example:
 
 \verbatim
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-    <interface name="com.nokia.TextProcessorIf">
+    <interface name="com.nokia.TextProcessorInterface">
         <method name="reverse" chainTask="true">
             <arg name="message" type="s" direction="in"/>
             <arg name="" type="s" direction="out"/>
@@ -85,7 +85,7 @@ The interface specific header files should be made part of the maemo-service-dev
 <li>Run the dui-servicefwgen tool to generate the adaptor h and cpp files, for example : </li>
 
 \verbatim
-dui-servicefwgen -a TextProcessorIfAdaptor 
+dui-servicefwgen -a com.nokia.TextProcessorInterface
 \endverbatim
 
 <li>Change your code.</li>
@@ -94,7 +94,7 @@ dui-servicefwgen -a TextProcessorIfAdaptor
 
 \verbatim
 // 1. Make an instance of the class that has methods that implement the interface functionality
-MyServiceName myService;
+MyService myService;
 
 // 2. Make an adaptor to link the dbus methods with the methods in myService
 // According to QDBusAbstractAdaptor(), this must be on the heap,
@@ -120,21 +120,21 @@ There are three steps to defining an interface.
 <li>Run the dui-servicefwgen tool to generate the proxy header and cpp files, and the wrapper header file. For example : </li>
 
 \verbatim
-dui-servicefwgen -p TextProcessorIf
+dui-servicefwgen -p com.nokia.TextProcessorInterface
 \endverbatim
 
 <li>You need to generate the service libraries.</li>
 </ul>
 
-The above files should be made part of the maemo-services package. The library should be in maemo-services, and the header and xml files should be in maemo-services-dev.
+The above files should be made part of the maemo-interfaces package. The library should be in maemo-interfaces, and the header and xml files should be in maemo-interfaces-dev.
 
-Documentation for an interface and its methods can be added between '<doc>' and '</doc>' tags, and the dui-servicefwgen scripts will copy the lines into the wrapper header file. Note that the tags need to be on their own lines.
+Documentation for an interface and its methods can be added between '<doc>' and '</doc>' tags, and the dui-servicefwgen script will copy the lines into the wrapper header file. Note that the tags need to be on their own lines.
 
 \subsection usagesu As a Service User
 
 <ol>
-<li>Install the libdui-dev debian package (gives you the service mapper dbus daemon, headers, and lib).</li>
-<li>Install the maemo-services-dev package (incudes the proxy header and lib, and the wrapper header file).</li>
+<li>Install the libdui-dev debian package. This gives you the service mapper dbus daemon, headers, and lib.</li>
+<li>Install the maemo-interfaces-dev package (incudes the proxy header and lib, and the wrapper header file).</li>
 <li>Add -ldui and -l<interfacename> to LIBS in your project file.</li>
 <li>In your source, include the interface header file and create an instance of the interface and call method serviceName() to get the provider for the interface.</li>
 <li>Check to see if the service was found OK using the 'isValid()' method.</li>
@@ -144,7 +144,7 @@ Documentation for an interface and its methods can be added between '<doc>' and 
 
 \section demos Demos and example code
 
-In libdui/demos/servicefw/ there is example code showing three service providers and a service user. The com.nokia.textprocessor and org.maemo.textprocessor services both implement the same interface - com.nokia.textprocessorif. There are two so that we are able to remove services and see that the service user is switched from one service to another/etc. There is one script tools/dui-servicefwgen, which is used to generate the source files that are used to define the interface to the service user. To run this demo :</li>
+In libdui/demos/servicefw/ there is example code showing three service providers and a service user. The com.nokia.textprocessor and org.maemo.textprocessor services both implement the same interface - com.nokia.TextProcessorInterface. There are two services so that we are able to remove services and see that the service user is switched from one service to another/etc. There is one script tools/dui-servicefwgen, which is used to generate the source files that are used to define the interface to the service user. To run this demo :</li>
 <ul>
 <li>cd libdui</li>
 <li>qmake && make && make install (or at least do a make install in the duiservicemapper directory)</li>
