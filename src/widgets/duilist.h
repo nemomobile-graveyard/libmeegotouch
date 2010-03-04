@@ -39,6 +39,12 @@ class DuiCellCreator;
   DuiList provides support for data that inherits QAbstractItemModel and can be set
   by setItemModel().
 
+  Unlike, Qt model/view widgets, DuiList only shows one "view" column. To show
+  multiple model columns in a DuiList, you should create a custom widget in your
+  DuiCellCreator::createCell() implementation and use your
+  DuiCellCreator::updateCell() implementation to show the various items of data
+  from each column in one widget.
+
   See http://doc.trolltech.com/4.5/model-view-creating-models.html#a-read-only-example-model
   for how to build a custom item model that can be used with DuiList.
 
@@ -232,6 +238,10 @@ public:
 
     /*!
         \brief Sets the amount of columns to be used for presenting list items. Set to 1 by default.
+
+        When columns is > 1, the rows will be split vertically, making the cell widget
+        narrower, with rows flowing from top-to-bottom into the next column. For
+        instance, this could be used to create a "grid" list.
      */
     void setColumns(int columns);
     int columns() const;
