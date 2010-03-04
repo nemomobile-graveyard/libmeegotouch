@@ -160,7 +160,7 @@ public:
 
     DuiNavigationBar *navBar;
     DuiSceneWindow *escapeButtonPanel;
-    DuiSceneWindow *currentPage;
+    QPointer<DuiSceneWindow> currentPage;
     bool navBarHidden;
     bool escapeButtonHidden;
 
