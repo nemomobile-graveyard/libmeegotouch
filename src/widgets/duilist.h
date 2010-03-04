@@ -287,7 +287,7 @@ public:
 
       DuiList will handle item model as a 2 level tree. First level will be headers and second level items for that header.
 
-      Customization of group header in the list is done through <code>group-header-object-name</code>. Group header is a label,
+      Customization of the group header's appearance in the list is done through <code>group-header-object-name</code>. Group header is a label,
       so all styles of label applies to group header.
       Example:
       Application.css

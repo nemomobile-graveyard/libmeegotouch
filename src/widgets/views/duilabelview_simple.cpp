@@ -33,7 +33,7 @@
 #include <QGraphicsSceneResizeEvent>
 
 DuiLabelViewSimple::DuiLabelViewSimple(DuiLabelViewPrivate *viewPrivate) :
-    viewPrivate(viewPrivate), preferredSize(-1, -1)
+    viewPrivate(viewPrivate), preferredSize(-1, -1), dirty(true)
 {
 }
 
@@ -90,6 +90,8 @@ QImage DuiLabelViewSimple::generateImage()
     const DuiLabelModel *model = viewPrivate->model();
     const DuiLabelStyle *style = viewPrivate->style();
     QRectF paintingRect(viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom()));
+    QSizeF paintingRectSize = paintingRect.size();
+    textOffset = paintingRect.topLeft().toPoint();
     QString textToRender = model->text();
     if (model->textElide() && textToRender.size() > 4) {
         QFontMetrics fm(viewPrivate->controller->font());
@@ -114,7 +116,8 @@ QImage DuiLabelViewSimple::generateImage()
         painter.setFont(viewPrivate->controller->font());
         painter.setPen(model->color().isValid() ? model->color() : style->color());
         painter.setLayoutDirection(model->textDirection());
-        painter.drawText(paintingRect, viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
+
+        painter.drawText(0, 0, paintingRectSize.width(), paintingRectSize.height(), viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
     }
 
     return image;
