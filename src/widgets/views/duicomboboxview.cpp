@@ -118,7 +118,9 @@ void DuiComboBoxViewPrivate::_q_showPopup()
         popuplist->setTitle(controller->title());
     }
 
-    popuplist->appear();
+    if (controller->sceneManager()) {
+        controller->sceneManager()->showWindow(popuplist);
+    }
 }
 
 DuiComboBoxView::DuiComboBoxView(DuiComboBox *controller) :
@@ -217,14 +219,14 @@ void DuiComboBoxView::updateData(const QList<const char *>& modifications)
                 style().setModeDefault();
             update();
         } else if (member == DuiComboBoxModel::ItemModel) {
-		    if (d->popuplist) {
-		        d->popuplist->setItemModel(model()->itemModel());
-		    }
-		} else if (member == DuiComboBoxModel::SelectionModel) {
-		    if (d->popuplist) {
-		        d->popuplist->setSelectionModel(model()->selectionModel());
-		    }
-		}
+            if (d->popuplist) {
+                d->popuplist->setItemModel(model()->itemModel());
+            }
+        } else if (member == DuiComboBoxModel::SelectionModel) {
+            if (d->popuplist) {
+                d->popuplist->setSelectionModel(model()->selectionModel());
+            }
+        }
     }
 }
 
