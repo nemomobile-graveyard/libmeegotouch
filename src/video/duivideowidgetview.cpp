@@ -369,7 +369,7 @@ void DuiVideoWidgetViewPrivate::blit(const uchar* data, int w, int h)
         // only downscaling supported
         duiDebug("DuiVideoWidgetPrivate::blit()") << "error - upscaling not supported with sw rendering";
         return;
-    }*/
+    }
 
     prepareBlit(w, h);
 
