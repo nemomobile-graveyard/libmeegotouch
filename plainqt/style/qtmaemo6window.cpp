@@ -91,6 +91,11 @@ bool QtMaemo6Window::eventFilter(QObject *obj, QEvent *event)
             return true;
         }
         break;
+    case QEvent::Resize:
+        if (!qobject_cast<QDialog*>(obj))
+            break;
+        // Fall through for all dialog cases.
+        // Both Resize and Show are needed to cover all cases
     case QEvent::Show: {
         if (m_scrollArea && m_scrollArea->widget())
             m_scrollArea->widget()->setMinimumWidth(maxViewportSize().width());
