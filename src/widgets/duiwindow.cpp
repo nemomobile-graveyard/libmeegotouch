@@ -206,14 +206,14 @@ void DuiWindowPrivate::notifyWidgetsAboutOrientationChange()
     Dui::Orientation newOrientation = q->orientation();
 
     if (sceneManager == 0 && oldOrientation != newOrientation) {
-        emit q->orientationChanged(newOrientation);
-        emit q->orientationChangeFinished(newOrientation);
-
         if (q->scene()) {
             DuiOrientationChangeEvent event(newOrientation);
             foreach(QGraphicsItem * item, q->scene()->items())
                 q->scene()->sendEvent(item, &event);
         }
+
+        emit q->orientationChanged(newOrientation);
+        emit q->orientationChangeFinished(newOrientation);
     }
 }
 
