@@ -725,8 +725,9 @@ bool DuiWindow::event(QEvent *event)
 
             // call setLayoutDirection_helper() for all top-level items
             foreach(QGraphicsItem * item, items) {
-                if (!item->parentItem())
+                if (!item->parentItem()) {
                     d->handleApplicationLayoutDirectionChangeEvent(item);
+                }
             }
         }
         return true;

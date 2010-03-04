@@ -129,7 +129,6 @@ DuiApplication::DuiApplication(int &argc, char **argv, DuiApplicationService *se
 void DuiApplicationPrivate::init(int &argc, char **argv, const QString &appIdentifier, DuiApplicationService *newService)
 {
     componentData = new DuiComponentData(argc, argv, appIdentifier, newService);
-    QObject::connect(componentData, SIGNAL(localeSettingsChanged()), qApp, SIGNAL(localeSettingsChanged()));
 }
 
 void DuiApplicationPrivate::releasePrestart()

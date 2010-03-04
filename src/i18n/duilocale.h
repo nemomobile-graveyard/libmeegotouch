@@ -663,8 +663,11 @@ public:
     void disconnectSettings();
 
 Q_SIGNALS:
-    // TODO: Connect with DuiGConfItem valueChanged()
     void settingsChanged();
+    /*!
+     * \brief Signal emitted when the default system locale changes.
+     */
+    void localeSettingsChanged();
 
 protected:
     /*!

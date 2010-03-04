@@ -276,8 +276,6 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
     Q_Q(DuiComponentData);
 
     gDuiComponentDataPrivate = this;
-    locale.connectSettings();
-    QObject::connect(&locale, SIGNAL(settingsChanged()), q, SIGNAL(localeSettingsChanged()));
 
     // Remember if we were given the -reverse parameter
     // (we have to do it this way, because the QApplication
@@ -444,6 +442,7 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
     if (catalog.isEmpty())
         catalog = fileInfo.fileName();
 
+    DuiLocale systemLocale; // gets the current system locale, creating it if necessary.
 #ifdef Q_OS_WIN
     // walk to translation dir relative to bin dir
     QDir appDir(QCoreApplication::applicationDirPath());
@@ -453,18 +452,17 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
     appDir.cd("l10n");
     appDir.cd("dui");
 
-    locale.addTranslationPath(appDir.absolutePath());
+    systemLocale.addTranslationPath(appDir.absolutePath());
 #else
-    locale.addTranslationPath(TRANSLATION_DIR);
+    systemLocale.addTranslationPath(TRANSLATION_DIR);
 #endif
-
     // installs the libdui translations
-    locale.installTrCatalog("libdui");
+    systemLocale.installTrCatalog("libdui");
     // installs the common translation catalog:
-    locale.installTrCatalog("common");
+    systemLocale.installTrCatalog("common");
     // installs the translationi catalog of the application:
-    locale.installTrCatalog(catalog);
-    DuiLocale::setDefault(locale);
+    systemLocale.installTrCatalog(catalog);
+    DuiLocale::setDefault(systemLocale);
 
     // DuiLocale::setDefault(locale) also sets the
     // layoutDirection(). This overrides the effects of the -reverse

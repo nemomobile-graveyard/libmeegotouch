@@ -845,25 +845,40 @@ void DuiLocale::setDefault(const DuiLocale &locale)
         defaultLocaleMutex.unlock();
         return;
     } else {
+        s_systemDefault->disconnectSettings();
+        QObject::disconnect(s_systemDefault, SIGNAL(settingsChanged()), qApp, SIGNAL(localeSettingsChanged()));
         // remove the previous tr translations
         s_systemDefault->removeTrFromQCoreApp();
         *s_systemDefault = locale;
     }
-    // Setting the default QLocale here is needed to get localized number
+    defaultLocaleMutex.unlock();
+
+#ifdef HAVE_GCONF
+    QString oldLanguage = (locale.d_ptr)->currentLanguageItem.value().toString();
+    QString newLanguage = (locale.d_ptr)->_defaultLocale;
+    if (oldLanguage != newLanguage)
+        (locale.d_ptr)->currentLanguageItem.set(newLanguage);
+#endif
+
+    QCoreApplication::processEvents();
+    // Setting the default QLocale is needed to get localized number
     // support in translations via %Ln, %L1, %L2, ...:
     QLocale qlocale(locale.language() + '_' + locale.country());
     QLocale::setDefault(qlocale);
-    defaultLocaleMutex.unlock();
-
-    // tr translations have to be found from the qcoreapplication in order to
-    // make QCoreApplication::translate() work
+    // sends QEvent::LanguageChange to qApp:
     s_systemDefault->insertTrToQCoreApp();
-    // QCoreApplication does not send the QEvent::LanguageChange to
-    // the widgets, so we send the language change event here.
-    QEvent ev(QEvent::LanguageChange);
-    qApp->sendEvent(qApp, &ev);
-
+    // sends QEvent::ApplicationLayoutDirectionChange to qApp:
     qApp->setLayoutDirection(s_systemDefault->textDirection());
+    // the following 2 events have already been sent above:
+    // QEvent ev(QEvent::LanguageChange);
+    // qApp->sendEvent(qApp, &ev);
+    // QEvent dirEv(QEvent::ApplicationLayoutDirectionChange);
+    // qApp->sendEvent(qApp, &dirEv);
+    QCoreApplication::processEvents();
+
+    QObject::connect(s_systemDefault, SIGNAL(settingsChanged()), qApp, SIGNAL(localeSettingsChanged()));
+    emit s_systemDefault->settingsChanged();
+    s_systemDefault->connectSettings();
 }
 
 DuiLocale &DuiLocale::getDefault()
@@ -2074,28 +2089,47 @@ Qt::LayoutDirection DuiLocale::textDirection() const
 
 void DuiLocale::refreshSettings()
 {
-#ifdef HAVE_GCONF
     Q_D(DuiLocale);
-
+#ifdef HAVE_GCONF
     QString language = d->currentLanguageItem.value().toString();
     QString country  = d->currentCountryItem.value().toString();
     QString script   = d->currentScriptItem.value().toString();
     QString variant  = d->currentVariantItem.value().toString();
     QString localeName = d->createLocaleString(language, country, script, variant);
 
-    d->_defaultLocale = localeName;
-    setCategoryLocale(DuiLcMessages, localeName);
-    setCategoryLocale(DuiLcTime, localeName);
-    setCategoryLocale(DuiLcNumeric, localeName);
-    setCategoryLocale(DuiLcCollate, localeName);
-    setCategoryLocale(DuiLcMonetary, localeName);
-    setCategoryLocale(DuiLcName, localeName);
+    if (localeName != d->_defaultLocale) {
+        d->_defaultLocale = localeName;
+        setCategoryLocale(DuiLcMessages, localeName);
+        setCategoryLocale(DuiLcTime, localeName);
+        setCategoryLocale(DuiLcNumeric, localeName);
+        setCategoryLocale(DuiLcCollate, localeName);
+        setCategoryLocale(DuiLcMonetary, localeName);
+        setCategoryLocale(DuiLcName, localeName);
 
-    d->loadTrCatalogs();
-
-    setDefault(*this);
-
-    emit settingsChanged();
+        if (this == s_systemDefault) {
+            QCoreApplication::processEvents();
+            // Setting the default QLocale is needed to get localized number
+            // support in translations via %Ln, %L1, %L2, ...:
+            QLocale qlocale(this->language() + '_' + this->country());
+            QLocale::setDefault(qlocale);
+            this->removeTrFromQCoreApp();
+            d->loadTrCatalogs();
+            // sends QEvent::LanguageChange to qApp:
+            this->insertTrToQCoreApp();
+            // sends QEvent::ApplicationLayoutDirectionChange to qApp:
+            qApp->setLayoutDirection(this->textDirection());
+            // the following 2 events have already been sent above:
+            // QEvent ev(QEvent::LanguageChange);
+            // qApp->sendEvent(qApp, &ev);
+            // QEvent dirEv(QEvent::ApplicationLayoutDirectionChange);
+            // qApp->sendEvent(qApp, &dirEv);
+            QCoreApplication::processEvents();
+        }
+        else {
+            d->loadTrCatalogs();
+        }
+        emit settingsChanged();
+    }
 #endif
 }
 

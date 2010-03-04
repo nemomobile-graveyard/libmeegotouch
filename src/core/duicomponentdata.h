@@ -164,8 +164,7 @@ public:
 
 Q_SIGNALS:
     /*!
-     * This signal is emitted when there is a change in any of the locale
-     * settings (language, country, script, and variant)
+     * \brief Signal emitted when the default system locale changes.
      */
     void localeSettingsChanged();
 
