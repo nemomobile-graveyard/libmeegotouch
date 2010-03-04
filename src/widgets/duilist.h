@@ -284,6 +284,33 @@ public:
 
     /*!
       \brief Specifies whether list should show groups or not.
+
+      DuiList will handle item model as a 2 level tree. First level will be headers and second level items for that header.
+
+      Customization of group header in the list is done through <code>group-header-object-name</code>. Group header is a label,
+      so all styles of label applies to group header.
+      Example:
+      Application.css
+      \code
+      DuiList#customList
+      {
+        group-header-object-name : "redLabelOnWhiteBackground";
+      }
+
+      #redLabelOnWhiteBackground
+      {
+        color : #FF0000;
+        background-color : #FFFFFF;
+      }
+      \endcode
+
+      Application.cpp
+      \code
+      DuiList * list = ....;
+      ...
+      list->setObjectName("customList");
+      ...
+      \endcode
       */
     void setShowGroups(bool showGroups);
 

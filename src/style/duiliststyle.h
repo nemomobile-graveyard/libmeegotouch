@@ -23,11 +23,39 @@
 #include <QSize>
 #include <duiwidgetstyle.h>
 
+/*!
+    \class DuiListStyle
+    \brief Style class for DuiList.
+
+    Example:
+    \code
+        DuiListStyle {
+            group-header-object-name : "myOwnGroupHeaderStyle";
+        }
+
+        #myOwnGroupHeaderStyle
+        {
+            color : #ff0000;
+        }
+    \endcode
+
+    \ingroup styles
+    \sa DuiLabelStyleContainer DuiWidgetStyle DuiLabelStyle \ref styling DuiList
+*/
 class DUI_EXPORT DuiListStyle : public DuiWidgetStyle
 {
     Q_OBJECT
     DUI_STYLE_INTERNAL(DuiListStyle)
 
+    /*!
+        \property DuiListStyle::groupHeaderObjectName
+        \brief Sets object name for a group header widget
+
+        Sets object name for a group header widget. Group header supports all styles
+        which DuiLabel supports.
+
+        \sa DuiLabelStyle
+    */
     DUI_STYLE_ATTRIBUTE(QString,         groupHeaderObjectName,       GroupHeaderObjectName)
 };
 
