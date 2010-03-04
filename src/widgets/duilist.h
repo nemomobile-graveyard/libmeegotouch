@@ -192,6 +192,25 @@ public:
     /*!
         \brief Sets object to fetch displayed items from. Similar to 'setModel' method in QListView.
      */
+
+    /*!
+        \brief Sets the model for the view to present.
+
+        This function will create and set a new selection model, replacing any model that was previously set with setSelectionModel().
+        However, the old selection model will not be deleted as it may be shared between several views.
+        We recommend that you delete the old selection model if it is no longer required. This is done with the following code:
+
+        \code
+        QItemSelectionModel *m = view->selectionModel();
+        view->setModel(new model);
+        delete m;
+        \endcode
+
+        If both the old model and the old selection model do not have parents, or if their parents are long-lived objects,
+        it may be preferable to call their deleteLater() functions to explicitly delete them.
+
+        DuiList does not take ownership of the model unless it is the model's parent object because the view may be shared between many different DuiList(s).
+    */
     void setItemModel(QAbstractItemModel *itemModel);
 
     /*!
