@@ -289,15 +289,6 @@ void DuiWidgetControllerPrivate::configureView(DuiWidgetView *view)
 
     // give our model to the view also
     view->setModel(model);
-
-    // set view active
-    view->setActive(active);
-
-    // tell the view whether we are enabled/selected
-    if (!q->isEnabled())
-        view->notifyItemChange(QGraphicsItem::ItemEnabledHasChanged, false);
-    else if (q->isSelected())
-        view->notifyItemChange(QGraphicsItem::ItemSelectedHasChanged, true);
 }
 
 void DuiWidgetController::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)

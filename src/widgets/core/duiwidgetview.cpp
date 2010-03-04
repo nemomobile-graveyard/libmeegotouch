@@ -164,6 +164,14 @@ void DuiWidgetView::setModel(DuiWidgetModel *model)
 
     d->styleContainer->initialize(d->model->objectName(), styleType, parent);
 
+    if (d->controller->isActive()) {
+        style().setModeActive();
+    } else if (!d->controller->isEnabled()) {
+        style().setModeDisabled();
+    } else if (d->controller->isSelected()) {
+        style().setModeSelected();
+    }
+
     // TODO: to be removed when scalable image is ready
     applyStyle();
 
