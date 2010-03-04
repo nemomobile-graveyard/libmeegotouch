@@ -10,7 +10,7 @@
 
 namespace {
     const int updateInterval = 20; // ms
-    const int yOffset = 20;
+    const qreal ySpeed = .5; // pixel/ms
 }
 
 PanningBenchmark::PanningBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo)
@@ -58,18 +58,19 @@ void PanningBenchmark::panDown()
         timedemo->startTiming();
         timingStarted = true;
         formerPosition = pannableViewport->physics()->position();
+        timer.start();
     }
 
     QPointF currentPosition = pannableViewport->physics()->position();
     QRectF range = pannableViewport->physics()->range();
 
     if (currentPosition.y() < range.height()) {
-        pannableViewport->physics()->setPosition(currentPosition + QPointF(0., yOffset));
-        QTimer::singleShot(20, this, SLOT(panDown()));
+        pannableViewport->physics()->setPosition(currentPosition + QPointF(0., ySpeed * timer.elapsed()));
+        timer.start();
+        QTimer::singleShot(updateInterval, this, SLOT(panDown()));
     } else {
         terminateBenchmark();
     }
-
 }
 
 void PanningBenchmark::terminateBenchmark()

@@ -4,6 +4,7 @@
 #include "timedemobenchmark.h"
 
 #include <DuiPannableViewport>
+#include <QTime>
 
 /**
   * PanningBenchmark emulates panning a page by scrolling down until the
@@ -29,6 +30,8 @@ private:
     bool timingStarted;
 
     QPointF formerPosition;
+
+    QTime timer;
 
 };
 

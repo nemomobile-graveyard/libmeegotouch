@@ -35,7 +35,7 @@ void TimingScene::setUpdateContinuously(bool value)
 {
     m_updateContinuously = value;
     if (value) {
-        // trigger an update to enable continuos redrawing
+        // trigger an update to enable continuous redrawing
         update();
     }
 }
