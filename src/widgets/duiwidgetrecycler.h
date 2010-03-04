@@ -30,48 +30,30 @@ class DuiWidget;
 /*!
   \class DuiWidgetRecycler
   \brief DuiWidgetRecycler allows to reuse widgets when they are created
-  and deleted frequently, for instance in DuiList or DuiGrid.
+  and deleted frequently, for instance in DuiList.
 
-  When widgets in DuiList/DuiGrid become invisible during panning,
+  When widgets in DuiList become invisible during panning,
   they are added to the recycler. New widgets that become visible are
   not constructed from scratch, instead the widgets that have been
   added to the recycler are reused.
 
-  The item model class 'data' function must be implemented as in the
-  following example. If the recycler has a widget of the needed class
-  already available, the data function must use that widget.
-  Otherwise the data function creates a new widget.
-
-  Example code with DuiButtons that have the row number as their text.
-
+  DuiWidgetRecycler "replaces" <code>new</code> and <code>delete</code> keywords. E.g.
+  when object needs to be delete it should be added to recycler:
   \code
-
-  QVariant ExampleModel::data(const QModelIndex &index, int role) const
-  {
-      if (role == Qt::DisplayRole) {
-          DuiButton* item;
-
-          DuiWidgetRecycler* recycler = DuiWidgetRecycler::instance();
-          DuiWidget* widget = recycler->take("DuiButton");
-
-          item = dynamic_cast<DuiButton*>(widget);
-          if (item == 0) {
-              item = new DuiButton;
-          }
-
-          QString s;
-          s.setNum(index.row());
-          item->setText(s);
-
-          QVariant v;
-          v.setValue(item);
-          return v;
-      }
-
-      return QVariant();
-  }
+  ....
+  // Checking if recycler has any objects with classname "DuiWidget". It doesn't
+  // have to be class name, but it has to identify DuiWidget uniqely.
+  DuiWidget * newItem = qobject_cast<DuiWidget*>(recycler->take(DuiWidget::metaObject()->className()));
+  if(newItem == NULL)
+    newItem = new DuiWidget;
+  ....
+  recycler->recycle(someItem); // item is not needed anymore, saving for future use
+  ...
 
   \endcode
+
+  DuiWidgetRecycler will delete widgets if there is not enough space. To change maximum number of
+  widgets in recycler check setMaxItemsPerClass(int).
 */
 
 class DUI_EXPORT DuiWidgetRecycler
@@ -83,6 +65,10 @@ public:
     */
     static DuiWidgetRecycler *instance();
 
+    /*!
+      \brief DuiWidgetRecycler constructor. To get system wide recycler please check
+      instance(), however it's perfectly fine to create recycler for special
+      */
     DuiWidgetRecycler();
 
     /*!
