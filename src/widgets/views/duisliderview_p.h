@@ -50,7 +50,7 @@ public:
 
     void setSliderState(DuiSliderModel::SliderState state);
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
@@ -78,7 +78,7 @@ public:
 
     void setText(const QString &text);
     void setImage(const QString &id);
-    void setVisible(bool visible);
+    void setVisibility(bool visibility);
 
 protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
@@ -87,6 +87,7 @@ private:
     DuiLabel *label;
     DuiImageWidget *image;
     QString imageName;
+    bool visibility;
 
     QGraphicsAnchorLayout *layout;
 
@@ -125,7 +126,7 @@ public:
 
     void setIndicatorText(const QString &text);
     void setIndicatorImage(const QString &id);
-    void setIndicatorVisible(bool visible);
+    void setIndicatorVisibility(bool visibility);
 
     int screenPointToValue(const QPointF &point) const;
 
@@ -139,12 +140,12 @@ public:
 
     void ensureSafeClosing();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
 
 protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
-    void setGeometry(const QRectF &rect);
+    virtual void setGeometry(const QRectF &rect);
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 private:

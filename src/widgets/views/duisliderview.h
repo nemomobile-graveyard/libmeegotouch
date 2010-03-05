@@ -85,8 +85,8 @@ protected:
         \brief Mouse press event handler.
 
         Accepted when clicking onto slider groove. Ignored clicking outside
-        of slider groove. Slider falls into Pressed state and DuiSlider::sliderPressed()
-        signal is emitted.
+        of slider groove. Timer event will be generated which set slider
+        state to Pressed
      */
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
@@ -131,7 +131,12 @@ protected:
      */
     virtual void updateData(const QList<const char *>& modifications);
 
-    void timerEvent(QTimerEvent* event);
+    /*!
+      \brief Timer event handler
+
+      Called when timer event occures.
+      */
+    virtual void timerEvent(QTimerEvent* event);
 
 private:
     Q_DISABLE_COPY(DuiSliderView)

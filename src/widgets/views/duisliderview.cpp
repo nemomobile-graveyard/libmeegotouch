@@ -160,6 +160,7 @@ DuiSliderIndicator::DuiSliderIndicator(bool isMinMax, QGraphicsItem *parent) :
     DuiWidget(parent),
     label(0),
     image(0),
+    visibility(false),
     layout(0)
 {
     layout = new QGraphicsAnchorLayout;
@@ -251,9 +252,10 @@ void DuiSliderIndicator::setImage(const QString &id)
     updateGeometry();
 }
 
-void DuiSliderIndicator::setVisible(bool visible)
+void DuiSliderIndicator::setVisibility(bool visibility)
 {
-    DuiWidget::setVisible(visible);
+    this->visibility = visibility;
+    DuiWidget::setVisible(visibility);
     updateGeometry();
 }
 
@@ -265,7 +267,7 @@ QSizeF DuiSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint
     qreal width = 0;
     qreal height = 0;
 
-    if (DuiWidget::isVisible()) {
+    if (visibility) {
         if (image && !imageName.isEmpty()) {
             width = qMax(width, image->sizeHint(Qt::PreferredSize).width());
             height = qMax(height, image->sizeHint(Qt::PreferredSize).height());
@@ -274,7 +276,7 @@ QSizeF DuiSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint
         if (label && !label->text().isEmpty()) {
             width = qMax(width, label->sizeHint(Qt::PreferredSize).width());
             height = qMax(height, label->sizeHint(Qt::PreferredSize).height());
-        }
+        }  
     }
 
     return QSizeF(width, height);
@@ -444,9 +446,9 @@ void DuiSliderGroove::setIndicatorImage(const QString &id)
     updateHandleIndicatorPos();
 }
 
-void DuiSliderGroove::setIndicatorVisible(bool visible)
+void DuiSliderGroove::setIndicatorVisibility(bool visibility)
 {
-    sliderHandleIndicator->setVisible(visible);
+    sliderHandleIndicator->setVisibility(visibility);
     updateHandleIndicatorPos();
 }
 
@@ -466,18 +468,20 @@ int DuiSliderGroove::screenPointToValue(const QPointF &point) const
     int offset = 0;
 
     if (minimum != maximum) {
+        QRectF clickableRect = clickableArea();
+
         if (orientation == Qt::Horizontal) {
-            coordinate = qBound(clickableArea().left(), coordinate, clickableArea().right());
+            coordinate = qBound(clickableRect.left(), coordinate, clickableRect.right());
 
             if (!reverse)
-                offset = qRound(((coordinate - clickableArea().left()) * (maximum - minimum)) / clickableArea().width());
+                offset = qRound(((coordinate - clickableRect.left()) * (maximum - minimum)) / clickableRect.width());
             else
-                offset = qRound(((clickableArea().right() - coordinate) * (maximum - minimum)) / clickableArea().width());
+                offset = qRound(((clickableRect.right() - coordinate) * (maximum - minimum)) / clickableRect.width());
         }
 
         if (orientation == Qt::Vertical) {
-            coordinate = qBound(clickableArea().top(), coordinate, clickableArea().bottom());
-            offset = qRound(((clickableArea().bottom() - coordinate) * (maximum - minimum)) / clickableArea().height());
+            coordinate = qBound(clickableRect.top(), coordinate, clickableRect.bottom());
+            offset = qRound(((clickableRect.bottom() - coordinate) * (maximum - minimum)) / clickableRect.height());
         }
     }
 
@@ -710,18 +714,21 @@ QSizeF DuiSliderGroove::sizeHint(Qt::SizeHint which, const QSizeF &constraint) c
             return QSizeF(minimumLength, sliderHandle->sizeHint(Qt::PreferredSize).height());
         if (orientation == Qt::Vertical)
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), minimumLength);
+            //return QSizeF(0, 0);
     }
     case Qt::PreferredSize: {
         if (orientation == Qt::Horizontal)
             return QSizeF(preferredLength, sliderHandle->sizeHint(Qt::PreferredSize).height());
         if (orientation == Qt::Vertical)
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), preferredLength);
+        //return QSizeF(0, 0);
     }
     case Qt::MaximumSize: {
         if (orientation == Qt::Horizontal)
             return QSizeF(maximumLength, sliderHandle->sizeHint(Qt::PreferredSize).height());
         if (orientation == Qt::Vertical)
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), maximumLength);
+        //return QSizeF(0, 0);
     }
     default:
         qWarning("DuiSliderView::sizeHint() don't know how to handle the value of 'which' ");
@@ -900,18 +907,12 @@ void DuiSliderViewPrivate::init(DuiSlider *controller)
 
     if (!reverse) {
         horizontalPolicy->addItem(minIndicator, Qt::AlignCenter);
-        horizontalPolicy->setStretchFactor(minIndicator, 0);
         horizontalPolicy->addItem(sliderGroove, Qt::AlignCenter);
-        horizontalPolicy->setStretchFactor(sliderGroove, 1);
         horizontalPolicy->addItem(maxIndicator, Qt::AlignCenter);
-        horizontalPolicy->setStretchFactor(maxIndicator, 0);
     } else {
         horizontalPolicy->addItem(maxIndicator, Qt::AlignCenter);
-        horizontalPolicy->setStretchFactor(maxIndicator, 0);
         horizontalPolicy->addItem(sliderGroove, Qt::AlignCenter);
-        horizontalPolicy->setStretchFactor(sliderGroove, 1);
         horizontalPolicy->addItem(minIndicator, Qt::AlignCenter);
-        horizontalPolicy->setStretchFactor(minIndicator, 0);
     }
 
     verticalPolicy = new DuiLinearLayoutPolicy(mainLayout, Qt::Vertical);
@@ -919,11 +920,8 @@ void DuiSliderViewPrivate::init(DuiSlider *controller)
     verticalPolicy->setContentsMargins(0, 0, 0, 0);
 
     verticalPolicy->addItem(maxIndicator, Qt::AlignCenter);
-    verticalPolicy->setStretchFactor(maxIndicator, 0);
     verticalPolicy->addItem(sliderGroove, Qt::AlignCenter);
-    verticalPolicy->setStretchFactor(sliderGroove, 1);
     verticalPolicy->addItem(minIndicator, Qt::AlignCenter);
-    verticalPolicy->setStretchFactor(minIndicator, 0);
 }
 
 //changes slider orientation by activating
@@ -956,8 +954,16 @@ void DuiSliderViewPrivate::updateOrientation()
 //or slider handle area and false otherwise
 bool DuiSliderViewPrivate::isCollision(QGraphicsSceneMouseEvent *event) const
 {
+    Q_Q(const DuiSliderView);
     QRectF clickableRect = sliderGroove->clickableArea();
-    clickableRect.translate(sliderGroove->pos());
+
+    //there are some margins around the view
+    //and those have to be considered
+    QPointF groovePos = sliderGroove->pos();
+    groovePos.setX(groovePos.x() - q->marginLeft());
+    groovePos.setY(groovePos.y() - q->marginTop());
+
+    clickableRect.translate(groovePos);
 
     QRectF clickableHandleRect = sliderGroove->clickableHandleArea();
     clickableHandleRect.translate(sliderGroove->pos());
@@ -975,7 +981,14 @@ void DuiSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
         valueAnimation->setEasingCurve(QEasingCurve::OutSine);
     }
 
-    valueAnimation->setEndValue(sliderGroove->screenPointToValue(event->pos()));
+    //there are some margins around the view
+    //and those have to be considered
+    Q_Q(DuiSliderView);
+    QPointF eventPos = event->pos();
+    eventPos.setX(eventPos.x() + q->marginLeft());
+    eventPos.setY(eventPos.y() + q->marginTop());
+
+    valueAnimation->setEndValue(sliderGroove->screenPointToValue(eventPos));
     valueAnimation->start();
 }
 
@@ -1048,11 +1061,11 @@ void DuiSliderView::updateData(const QList<const char *>& modifications)
         else if (member == DuiSliderModel::HandleLabelIcon)
             d->sliderGroove->setIndicatorImage(model()->handleLabelIcon());
         else if (member == DuiSliderModel::MinLabelVisible)
-            d->minIndicator->setVisible(model()->minLabelVisible());
+            d->minIndicator->setVisibility(model()->minLabelVisible());
         else if (member == DuiSliderModel::MaxLabelVisible)
-            d->maxIndicator->setVisible(model()->maxLabelVisible());
+            d->maxIndicator->setVisibility(model()->maxLabelVisible());
         else if (member == DuiSliderModel::HandleLabelVisible)
-            d->sliderGroove->setIndicatorVisible(model()->handleLabelVisible());
+            d->sliderGroove->setIndicatorVisibility(model()->handleLabelVisible());
     }
 }
 
@@ -1070,9 +1083,9 @@ void DuiSliderView::setupModel()
     d->maxIndicator->setImage(model()->maxLabelIcon());
     d->sliderGroove->setIndicatorImage(model()->handleLabelIcon());
 
-    d->minIndicator->setVisible(model()->minLabelVisible());
-    d->maxIndicator->setVisible(model()->maxLabelVisible());
-    d->sliderGroove->setIndicatorVisible(model()->handleLabelVisible());
+    d->minIndicator->setVisibility(model()->minLabelVisible());
+    d->maxIndicator->setVisibility(model()->maxLabelVisible());
+    d->sliderGroove->setIndicatorVisibility(model()->handleLabelVisible());
 
     d->updateOrientation();
     d->updateSliderGroove();
@@ -1128,6 +1141,12 @@ void DuiSliderView::cancelEvent(DuiCancelEvent *event)
     Q_D(DuiSliderView);
     d->controller->setState(DuiSliderModel::Released);
 
+
+    if (d->pressTimerId) {
+        killTimer(d->pressTimerId);
+        d->pressTimerId = 0;
+    }
+
     model()->setValue(d->valueWhenPressed);
     d->updateSliderGroove();
     d->sliderGroove->lowerHandleIndicator();
@@ -1143,9 +1162,9 @@ void DuiSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         if (d->pressTimerId) {
             killTimer(d->pressTimerId);
             d->pressTimerId = 0;
-        } else {
-            d->sliderGroove->lowerHandleIndicator();
         }
+
+        d->sliderGroove->lowerHandleIndicator();
     }
 }
 
