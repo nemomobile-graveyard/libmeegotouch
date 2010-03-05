@@ -105,10 +105,13 @@ QStringList DuiAppletInventory::categories() const
 void DuiAppletInventory::appletButtonClicked()
 {
     DuiAppletButton *button = dynamic_cast<DuiAppletButton *>(sender());
+
     Q_ASSERT(button != NULL);
 
-    mashupCanvas->appletInstanceManager()->instantiateApplet(button->metadataFilename());
-    emit hideAppletInventory();
+    if (button) {
+        mashupCanvas->appletInstanceManager()->instantiateApplet(button->metadataFilename());
+        emit hideAppletInventory();
+    }
 }
 
 void DuiAppletInventory::appletPathChanged(const QString &path)

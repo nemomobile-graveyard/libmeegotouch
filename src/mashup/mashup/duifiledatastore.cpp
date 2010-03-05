@@ -169,7 +169,6 @@ bool DuiFileDataStore::setValue(const QString &key, const QVariant &value)
     // QSettings has some kind of a cache so we'll prevent any temporary writes
     // by checking if the data can be actually stored before doing anything
     if (isWritable() && settings.contains(key)) {
-        bool originalValueSet = settings.contains(key);
         QVariant originalValue = settings.value(key);
         settings.setValue(key, value);
         bool syncOk = doSync(settings, watcher);
@@ -180,11 +179,9 @@ bool DuiFileDataStore::setValue(const QString &key, const QVariant &value)
                 settingsSnapshot[key] = value;
                 emit valueChanged(key, value);
             }
-        } else if (originalValueSet) {
+        } else {
             // if sync fails, make sure the value in memory is the original
             settings.setValue(key, originalValue);
-        } else {
-            settings.remove(key);
         }
     }
     return returnValue;

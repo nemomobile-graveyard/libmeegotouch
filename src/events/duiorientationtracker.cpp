@@ -65,12 +65,11 @@ void DuiOrientationTrackerPrivate::topEdgeChanged()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
     Dui::OrientationAngle angle;
-    Dui::Orientation orientation;
+    Dui::Orientation orientation = Dui::Landscape;
     QString edge = topEdgeProperty.value().toString();
 
     if (edge == "top") {
         angle = Dui::Angle0;
-        orientation = Dui::Landscape;
     } else if (edge == "left") {
         angle = Dui::Angle270;
         orientation = Dui::Portrait;
@@ -79,7 +78,6 @@ void DuiOrientationTrackerPrivate::topEdgeChanged()
         orientation = Dui::Portrait;
     } else if (edge == "bottom") {
         angle = Dui::Angle180;
-        orientation = Dui::Landscape;
     } else {
         angle = currentAngle;
     }
