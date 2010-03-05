@@ -1147,8 +1147,8 @@ void DuiSliderView::cancelEvent(DuiCancelEvent *event)
         d->pressTimerId = 0;
     }
 
+    d->valueAnimation->stop();
     model()->setValue(d->valueWhenPressed);
-    d->updateSliderGroove();
     d->sliderGroove->lowerHandleIndicator();
 }
 
@@ -1193,6 +1193,19 @@ void DuiSliderView::timerEvent(QTimerEvent *event)
         d->controller->setState(DuiSliderModel::Pressed);
         d->sliderGroove->raiseHandleIndicator();
     }
+}
+
+void DuiSliderView::hideEvent(QHideEvent* event)
+{
+    Q_UNUSED(event);
+
+    Q_D(DuiSliderView);
+    if (d->pressTimerId) {
+        killTimer(d->pressTimerId);
+        d->pressTimerId = 0;
+    }
+
+    d->sliderGroove->lowerHandleIndicator();
 }
 
 DUI_REGISTER_VIEW_NEW(DuiSliderView, DuiSlider)

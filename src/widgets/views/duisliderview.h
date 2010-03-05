@@ -138,6 +138,13 @@ protected:
       */
     virtual void timerEvent(QTimerEvent* event);
 
+    /*!
+      \brief Timer event handler
+
+      Called when timer event occures.
+      */
+    virtual void hideEvent(QHideEvent* event);
+
 private:
     Q_DISABLE_COPY(DuiSliderView)
     Q_DECLARE_PRIVATE(DuiSliderView)
