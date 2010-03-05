@@ -36,24 +36,26 @@ QtMaemo6TestStyleEventFilter::QtMaemo6TestStyleEventFilter(QtMaemo6TestStyle *pa
 bool QtMaemo6TestStyleEventFilter::eventFilter(QObject *obj, QEvent *event)
 {
     QWidget *widget = qobject_cast<QWidget *>(obj);
-    QWidget *parent = qobject_cast<QWidget *>(widget->parent());
+    if (widget) {
+        QWidget *parent = qobject_cast<QWidget *>(widget->parent());
 
-    switch (event->type()) {
-    case QEvent::Show: {
-        if (NULL != widget && (qobject_cast<QMainWindow *>(widget) || qobject_cast<QDialog *>(widget))) {
-            //QMainWindow* main_window(qobject_cast<QMainWindow*>(widget));
-            //if (NULL != main_window) {
-            if (widget->windowFlags() & Qt::Window) {
-                if (!parent || !qobject_cast<QtMaemo6WindowDecoration *>(parent)) {
-                    parent = m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
+        switch (event->type()) {
+        case QEvent::Show: {
+            if (NULL != widget && (qobject_cast<QMainWindow *>(widget) || qobject_cast<QDialog *>(widget))) {
+                //QMainWindow* main_window(qobject_cast<QMainWindow*>(widget));
+                //if (NULL != main_window) {
+                if (widget->windowFlags() & Qt::Window) {
+                    if (!parent || !qobject_cast<QtMaemo6WindowDecoration *>(parent)) {
+                        parent = m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
+                    }
+                    parent->showMaximized();
                 }
-                parent->showMaximized();
             }
         }
-    }
-    break;
-    default:
         break;
+        default:
+            break;
+        }
     }
     // standard event processing
     return QObject::eventFilter(obj, event);

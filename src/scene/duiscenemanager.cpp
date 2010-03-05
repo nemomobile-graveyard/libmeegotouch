@@ -1005,6 +1005,11 @@ void DuiSceneManager::showWindowNow(DuiSceneWindow *window, DuiSceneWindow::Dele
 
 int DuiSceneManager::execDialog(DuiDialog *dialog)
 {
+    if (dialog == 0) {
+        duiWarning("DuiSceneManager") << "Invalid dialog instance";
+        return DuiDialog::Rejected;
+    }
+
     QEventLoop eventLoop;
     QPointer<DuiDialog> dialog_ptr = dialog;
     connect(dialog, SIGNAL(finished(int)), &eventLoop, SLOT(quit()));
