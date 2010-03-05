@@ -287,12 +287,12 @@ Muwhahaha... [evil laugh]</source>
         <source>This is
 multiline
 tooltip</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_tooltip_entry8">
         <location filename="../textentrypage.cpp" line="496"/>
         <source>Provides email address suggestions</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_textentry_click_here">
         <location filename="../textentrypage.cpp" line="138"/>
@@ -569,12 +569,12 @@ Guidelines for mandatory application Menu items:
     <message id="xx_language_title">
         <location filename="../languagepage.cpp" line="68"/>
         <source>Change Language</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_none">
         <location filename="../languagepage.cpp" line="76"/>
         <source>None</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_arabic">
         <location filename="../languagepage.cpp" line="78"/>
@@ -610,7 +610,7 @@ Guidelines for mandatory application Menu items:
     <message id="xx_language_combobox_title">
         <location filename="../languagepage.cpp" line="109"/>
         <source>Please select language</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_navigationbar_navbarcombo">
         <location filename="../navigationbarpage.cpp" line="60"/>
@@ -630,7 +630,7 @@ Guidelines for mandatory application Menu items:
     <message id="xx_navigationbar_page_title">
         <location filename="../navigationbarpage.cpp" line="125"/>
         <source>Navigation Bar</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_navigationbar_display_mode">
         <location filename="../navigationbarpage.cpp" line="129"/>
@@ -641,22 +641,22 @@ Guidelines for mandatory application Menu items:
     <message id="xx_navigationbar_escapebutton_mode_label">
         <location filename="../navigationbarpage.cpp" line="131"/>
         <source>Escape Button mode:</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_navigationbar_back_button">
         <location filename="../navigationbarpage.cpp" line="137"/>
         <source>Back button</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_navigationbar_close_button">
         <location filename="../navigationbarpage.cpp" line="141"/>
         <source>Close button</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_navigationbar_hidden">
         <location filename="../navigationbarpage.cpp" line="144"/>
         <source>Hidden</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_displaymode_show">
         <location filename="../navigationbarpage.cpp" line="162"/>
@@ -676,7 +676,7 @@ Guidelines for mandatory application Menu items:
     <message id="xx_objectmenu_page_title">
         <location filename="../objectmenupage.cpp" line="149"/>
         <source>Object menu</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_objectmenu_page_info_label">
         <location filename="../objectmenupage.cpp" line="161"/>
@@ -739,12 +739,12 @@ The primary (single short tap) action of the element should not be duplicated in
     <message id="xx_template_page_title">
         <location filename="../templatepage.cpp" line="118"/>
         <source>Template</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_sample template">
         <location filename="../templatepage.cpp" line="124"/>
         <source>Sample template</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_toolbar_page_example1">
         <location filename="../toolbarpage.cpp" line="49"/>

@@ -27,7 +27,7 @@ Guidelines for mandatory application Menu items:
     <message id="xx_slider_page_title">
         <location filename="../sliderpage.cpp" line="166"/>
         <source>Sliders</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_slider_personal_data_label">
         <location filename="../sliderpage.cpp" line="177"/>

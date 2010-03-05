@@ -769,12 +769,12 @@ The primary (single short tap) action of the element should not be duplicated in
     <message id="xx_template_page_title">
         <location filename="../templatepage.cpp" line="118"/>
         <source>Template</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_sample template">
         <location filename="../templatepage.cpp" line="124"/>
         <source>Sample template</source>
-        <translation></translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_checkbox_page_title">
         <location filename="../checkboxpage.cpp" line="75"/>
