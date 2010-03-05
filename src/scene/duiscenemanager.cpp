@@ -1153,14 +1153,14 @@ Dui::Orientation DuiSceneManager::orientation() const
 {
     Q_D(const DuiSceneManager);
 
-    return d->orientation(d->newAngle);
+    return d->orientation(d->angle);
 }
 
 Dui::OrientationAngle DuiSceneManager::orientationAngle() const
 {
     Q_D(const DuiSceneManager);
 
-    return d->newAngle;
+    return d->angle;
 }
 
 QSize DuiSceneManager::visibleSceneSize(Dui::Orientation orientation) const

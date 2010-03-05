@@ -319,7 +319,7 @@ void Ut_DuiSceneManager::testSceneSizes()
     QVERIFY(vSR.width() > 0);
     QVERIFY(vSR.height() > 0);
 
-    sm->setOrientationAngle(Dui::Angle90);
+    sm->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange);
 
     // check scenerects are in correct orientation
     // what about square?
@@ -332,7 +332,7 @@ void Ut_DuiSceneManager::testSceneSizes()
     vSR = sm->visibleSceneSize(Dui::Landscape);
     QVERIFY(vSR.width() > vSR.height());
 
-    sm->setOrientationAngle(Dui::Angle180);
+    sm->setOrientationAngle(Dui::Angle180, Dui::ImmediateOrientationChange);
 
     QCOMPARE(sm->orientation(), Dui::Landscape);
     QCOMPARE(sm->visibleSceneSize(), sm->visibleSceneSize(Dui::Landscape));
