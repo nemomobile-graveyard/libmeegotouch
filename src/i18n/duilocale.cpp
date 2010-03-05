@@ -214,7 +214,7 @@ bool DuiTranslationCatalog::loadWith(DuiLocale *duilocale, DuiLocale::Category c
             prefix += QLatin1Char('/');
         QString realname;
 
-        if (fname.endsWith(".qm")) {
+        if (fname.endsWith(QLatin1String(".qm"))) {
             // this is either engineering English or the locale
             // specific parts of the file name have been fully
             // specified already. We don’t want any fallbacks in that
@@ -468,7 +468,7 @@ void DuiLocalePrivate::loadTrCatalogs()
     Q_Q(DuiLocale);
     foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, _trTranslations) {
         if(sharedCatalog->_translator.isEmpty()
-           || !sharedCatalog->_name.endsWith(".qm")) {
+           || !sharedCatalog->_name.endsWith(QLatin1String(".qm"))) {
             sharedCatalog->loadWith(q, DuiLocale::DuiLcMessages);
         }
     }
@@ -1956,7 +1956,7 @@ void DuiLocale::installTrCatalog(const QString &name)
     DuiTranslationCatalog *catalog
         = new DuiTranslationCatalog(name);
     d->_trTranslations.append(QExplicitlySharedDataPointer<DuiTranslationCatalog>(catalog));
-    if (!name.endsWith(".qm")) {
+    if (!name.endsWith(QLatin1String(".qm"))) {
         DuiTranslationCatalog *engineeringEnglishCatalog
             = new DuiTranslationCatalog(name + ".qm");
         d->_trTranslations.prepend(QExplicitlySharedDataPointer<DuiTranslationCatalog>(engineeringEnglishCatalog));
