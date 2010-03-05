@@ -51,7 +51,9 @@ DuiRemoteThemeDaemon::DuiRemoteThemeDaemon(const QString &applicationName, int t
         d->stream << Packet(Packet::RequestRegistrationPacket, seq, new String(applicationName));
         Packet reply = d->waitForPacket(seq);
         if (reply.type() == Packet::ThemeChangedPacket) {
-            d->themeInheritanceChain = static_cast<const StringList *>(reply.data())->stringList;
+            const ThemeChangeInfo* info = static_cast<const ThemeChangeInfo*>(reply.data());
+            d->themeInheritanceChain = info->themeInheritance;
+            d->themeLibraryNames = info->themeLibraryNames;
         } else {
             // TODO: print out warning, etc.
         }
@@ -213,6 +215,12 @@ QStringList DuiRemoteThemeDaemon::themeInheritanceChain()
     return d->themeInheritanceChain;
 }
 
+QStringList DuiRemoteThemeDaemon::themeLibraryNames()
+{
+    Q_D(DuiRemoteThemeDaemon);
+    return d->themeLibraryNames;
+}
+
 bool DuiRemoteThemeDaemon::hasPendingRequests() const
 {
     Q_D(const DuiRemoteThemeDaemon);
@@ -234,10 +242,11 @@ void DuiRemoteThemeDaemonPrivate::processOnePacket(const Packet &packet)
         pixmapUpdated(*static_cast<const PixmapHandle *>(packet.data()));
         break;
 
-    case Packet::ThemeChangedPacket:
-        themeChanged(static_cast<const StringList *>(packet.data())->stringList);
+    case Packet::ThemeChangedPacket: {
+        const ThemeChangeInfo* info = static_cast<const ThemeChangeInfo*>(packet.data());
+        themeChanged(info->themeInheritance, info->themeLibraryNames);
         break;
-
+    }
     default:
         duiDebug("DuiRemoteThemeDaemon") << "Couldn't process packet of type" << packet.type();
         break;
@@ -263,11 +272,12 @@ void DuiRemoteThemeDaemonPrivate::pixmapUpdated(const PixmapHandle &handle)
     emit q->pixmapChanged(handle.identifier.imageId, handle.identifier.size, handle.pixmapHandle);
 }
 
-void DuiRemoteThemeDaemonPrivate::themeChanged(const QStringList &themeInheritanceChain)
+void DuiRemoteThemeDaemonPrivate::themeChanged(const QStringList &themeInheritanceChain, const QStringList &themeLibraryNames)
 {
     Q_Q(DuiRemoteThemeDaemon);
     this->themeInheritanceChain = themeInheritanceChain;
-    emit q->themeChanged(themeInheritanceChain);
+    this->themeLibraryNames = themeLibraryNames;
+    emit q->themeChanged(themeInheritanceChain, themeLibraryNames);
 }
 
 #include "moc_duiremotethemedaemon.cpp"

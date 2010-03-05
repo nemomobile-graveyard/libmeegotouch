@@ -146,15 +146,6 @@ namespace Dui
             QString string;
         };
 
-        struct StringList : PacketData {
-            StringList(const QStringList &stringList) :
-                stringList(stringList)
-            {}
-            virtual ~StringList();
-
-            QStringList stringList;
-        };
-
         struct StringBool : PacketData {
             StringBool(const QString &string, bool b) :
                 string(string),
@@ -195,6 +186,16 @@ namespace Dui
             QList<ClientInfo> clients;
         };
 
+        struct ThemeChangeInfo : PacketData {
+            ThemeChangeInfo(const QStringList &themeInheritance, const QStringList &themeLibraryNames) :
+                themeInheritance(themeInheritance), 
+                themeLibraryNames(themeLibraryNames) 
+            {}
+            virtual ~ThemeChangeInfo();
+
+            QStringList themeInheritance;
+            QStringList themeLibraryNames;
+        };
     }
 }
 

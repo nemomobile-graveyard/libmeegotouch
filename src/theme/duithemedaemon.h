@@ -47,6 +47,7 @@ public:
     void changeLocale(const QString &newLocale, const QList<DuiThemeDaemonClient *>& clientList, QHash<DuiThemeDaemonClient *, QList<Dui::DuiThemeDaemonProtocol::PixmapIdentifier> >& pixmapsToReload);
 
     QStringList themeInheritanceChain() const;
+    QStringList themeLibraryNames() const;
 
     QString currentTheme() const;
 
@@ -58,6 +59,7 @@ private:
     DuiCommonPixmaps mostUsedPixmaps;
     QString currentThemeName;
     QStringList themeInheritance;
+    QStringList themeLibraries;
     QList<DuiThemeImagesDirectory *> themeImageDirs;
 };
 //! \internal_end

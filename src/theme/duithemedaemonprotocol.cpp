@@ -33,9 +33,6 @@ PixmapIdentifier::~PixmapIdentifier()
 String::~String()
 {}
 
-StringList::~StringList()
-{}
-
 StringBool::~StringBool()
 {}
 
@@ -43,6 +40,9 @@ PixmapHandle::~PixmapHandle()
 {}
 
 ClientList::~ClientList()
+{}
+
+ThemeChangeInfo::~ThemeChangeInfo()
 {}
 
 Packet::Packet(PacketType type, quint64 seq, PacketData *data)
@@ -80,9 +80,10 @@ QDataStream &operator<<(QDataStream &stream, const Packet &packet)
         stream << static_cast<const String *>(packet.data())->string;
     } break;
 
-    // string list as data
+    // two string lists as data
     case Packet::ThemeChangedPacket: {
-        stream << static_cast<const StringList *>(packet.data())->stringList;
+        const ThemeChangeInfo* info = static_cast<const ThemeChangeInfo*>(packet.data());
+        stream << info->themeInheritance << info->themeLibraryNames;
     } break;
 
     // stringbool as data
@@ -172,11 +173,11 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
         packet.setData(new String(string));
     } break;
 
-    // string list as data
+    // two string lists as data
     case Packet::ThemeChangedPacket: {
-        QStringList stringList;
-        stream >> stringList;
-        packet.setData(new StringList(stringList));
+        QStringList themeInheritance, themeLibraryNames;
+        stream >> themeInheritance >> themeLibraryNames;
+        packet.setData(new ThemeChangeInfo(themeInheritance, themeLibraryNames));
     } break;
 
     // stringbool as data
