@@ -153,16 +153,21 @@ protected:
     void installEventFilter(QObjectList list);
 
 private:
-    struct KineticData {
-        typedef enum { Waiting, Pressed, Panning, KineticScroll, Stop } State;
-        State state;
-        QWidget *widget;
+    class KineticData {
+    public:
+        typedef enum { Waiting, Pressed, Panning, KineticScroll, Bounce, BounceBack, Stop } State;
+        void setState(State state);
+        State state() const { return m_state; };
+        QAbstractScrollArea *scrollArea;
         QWidget* pressedWidget;
         QPoint pressPos;
         QPoint offset;
         QPoint dragPos;
         QPoint speed;
+        QPoint viewportOrigPos;
         QList<QEvent*> ignored;
+    protected:
+        State m_state;
     };
 
     QHash<QWidget*, KineticData*> m_kineticData;
