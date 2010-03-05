@@ -622,7 +622,6 @@ bool DuiWindow::event(QEvent *event)
 #ifdef DUI_USE_OPENGL
     if (event->type() == QEvent::Close && !DuiApplication::softwareRendering())
         DuiGLES2Renderer::destroy(d->glWidget);
-    }
 #endif
 
     if (event->type() == QEvent::Close || event->type() == QEvent::WindowDeactivate) {
