@@ -145,7 +145,10 @@ public:
      * \brief If application has direction right to left, set this.
      */
     void setRightToLeft(bool rightToLeft) {
-        m_rightToLeft = rightToLeft;
+        if(rightToLeft)
+            m_layoutDirection = Qt::RightToLeft;
+        else
+            m_layoutDirection = Qt::LeftToRight;
     }
 
 protected:
@@ -179,7 +182,7 @@ private:
     int m_deaccelerationStrength;
     int m_maxKineticScrollSpeed;
 
-    bool m_rightToLeft;
+    Qt::LayoutDirection m_layoutDirection;
 };
 
 #endif // QTMAEMO6KINETICSCROLLING_H

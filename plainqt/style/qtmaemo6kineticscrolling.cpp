@@ -39,7 +39,7 @@ QtMaemo6KineticScrolling::QtMaemo6KineticScrolling(QObject *parent)
     m_deaccelerationInterval(20),
     m_deaccelerationStrength(2),
     m_maxKineticScrollSpeed(64),
-    m_rightToLeft(false)
+    m_layoutDirection(Qt::LeftToRight)
 {
 }
 
@@ -85,7 +85,7 @@ static int scrollRange(QScrollBar* scrollBar)
     return scrollBar->maximum() - scrollBar->minimum();
 }
 
-static bool setScrollOffset(QAbstractScrollArea *scrollArea, const QPoint &p, bool rightToLeft)
+static bool setScrollOffset(QAbstractScrollArea *scrollArea, const QPoint &p, Qt::LayoutDirection direction)
 {
     bool ret = true;
     bool hasHorizontalScrolling = scrollRange(scrollArea->horizontalScrollBar()) > 0;
@@ -112,7 +112,7 @@ static bool setScrollOffset(QAbstractScrollArea *scrollArea, const QPoint &p, bo
     if(realScroll.y() > scrollArea->verticalScrollBar()->maximum())
         realScroll.setY(scrollArea->verticalScrollBar()->maximum());
 
-    if(rightToLeft)
+    if(direction == Qt::RightToLeft)
         scrollArea->horizontalScrollBar()->setValue(scrollArea->horizontalScrollBar()->maximum() - p.x());
     else
         scrollArea->horizontalScrollBar()->setValue(p.x());
@@ -191,7 +191,7 @@ bool QtMaemo6KineticScrolling::eventFilter(QObject *object, QEvent *event)
                 data->setState(KineticData::Pressed);
                 data->pressPos = mouseEvent->pos();
                 data->pressedWidget = qobject_cast<QWidget*>(object);
-                data->offset = scrollOffset(data->scrollArea, m_rightToLeft);
+                data->offset = scrollOffset(data->scrollArea, m_layoutDirection);
                 if (!m_ticker.isActive())
                     m_ticker.start(m_scrollStartDelay, this);
             }
@@ -234,7 +234,7 @@ bool QtMaemo6KineticScrolling::eventFilter(QObject *object, QEvent *event)
             if(speed != QPoint(0,0))
                 data->speed = speed;
             data->dragPos = QCursor::pos();
-            setScrollOffset(data->scrollArea, data->offset - delta, m_rightToLeft);
+            setScrollOffset(data->scrollArea, data->offset - delta, m_layoutDirection);
         }
         if (mouseEvent->type() == QEvent::MouseButtonRelease) {
             consumed = true;
@@ -296,10 +296,9 @@ void QtMaemo6KineticScrolling::timerEvent(QTimerEvent *event)
         }
         if (data->state() == KineticData::KineticScroll) {
             data->speed = deaccelerate(data->speed, m_deaccelerationStrength, m_maxKineticScrollSpeed);
-            QPoint p = scrollOffset(data->scrollArea, m_rightToLeft);
-            bool scrollOffsetSet = setScrollOffset(data->scrollArea, p - data->speed, m_rightToLeft);
+            QPoint p = scrollOffset(data->scrollArea, m_layoutDirection);
+            bool scrollOffsetSet = setScrollOffset(data->scrollArea, p - data->speed, m_layoutDirection);
 
-            qCritical()  << "Start Bounce" << scrollOffsetSet << data->speed.manhattanLength();
             if(!scrollOffsetSet && data->speed.manhattanLength() > 0) {
                 data->viewportOrigPos = data->scrollArea->viewport()->pos();
                 data->setState(KineticData::Bounce);
