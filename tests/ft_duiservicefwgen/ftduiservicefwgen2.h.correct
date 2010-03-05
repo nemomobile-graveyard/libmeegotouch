@@ -3,7 +3,7 @@
 
 /*
  * automatically generated with the command line :
- * /home/davidmaxwaterman/z/hi386/libdui/tests/ft_duiservicefwgen/../../tools/dui-servicefwgen -p /home/davidmaxwaterman/z/hi386/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen2
+ * /usr/bin/dui-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen2
  */
 
 #include <QObject>
@@ -11,40 +11,54 @@
 #include <duiservicefwbaseif.h>
 #include <ftduiservicefwgen2proxy.h>
 
-/* main documentation for the interface
-   main documentation for the interface2 */
+
+/**
+ * @brief main documentation for the interface
+ * @details main documentation for the interface2
+ */
 class FtDuiServiceFwGen2 : public DuiServiceFwBaseIf
 {
 Q_OBJECT
 
 public:
 
-    /* documentation for showGridWithCapturedContent() method */
-    /* documentation for showGridWithCapturedContent() method2 */
+    /**
+     * @brief documentation for showGridWithCapturedContent() method
+     * @details documentation for showGridWithCapturedContent()
+     *  method2
+     */
     bool showGridWithCapturedContent( int limit );
 
-    /* documentation for showImage(1) method */
-    /* documentation for showImage(1) method2 */
+    /**
+     * @brief documentation for showImage(1) method
+     * @details documentation for showImage(1) method2
+     */
     void showImage( const QString &uri, const QStringList &uriList );
 
-    /* documentation for showImage(0) method */
-    /* documentation for showImage(0) method2 */
+    /**
+     * @brief documentation for showImage() method
+     * @details documentation for showImage() method2
+     */
     bool showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage );
 
-    /* documentation for showPage() method */
-    /* documentation for showPage() method2 */
+    /**
+     * @brief documentation for showPage() method
+     * @details documentation for showPage() method2
+     */
     bool showPage( const QString &targetPage, const QString &previousPage );
 
-    /* documentation for showSettings() method */
-    /* documentation for showSettings() method2 */
+    /**
+     * @brief documentation for showSettings() method
+     * @details documentation for showSettings() method2
+     */
     bool showSettings(  );
 
 public:
     /*!
      * @brief Constructs a base interface
      * @param preferredService, define the preferred service provider. Leave
-       empty if no preferred provider. In most cases, this should be left
-       empty.
+     * empty if no preferred provider. In most cases, this should be left
+     * empty.
      * @param parent Parent object
      */
 
@@ -58,6 +72,6 @@ public:
     void setService(const QString & service);
 Q_SIGNALS:
 
-
 };
 #endif
+

@@ -1,0 +1,31 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
+"http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+    <interface name="com.nokia.mhello">
+        <doc>
+            <arg tag="class">MHello</arg>
+            <arg tag="brief">MHello is an example of Maemo Interface definition by a XML file</arg>
+            <arg tag="details">An interface to the Hello Service. Uses the com.nokia.HelloInterface D-Bus interface with which application developers can hello with themself.</arg>
+            <arg tag="state">Unstable</arg>
+            <arg tag="ingroup">MmExampleServices</arg>
+        </doc>
+        <method name="sayHelloMessage">
+            <doc>
+                <arg tag="brief">Say hello</arg>
+                <arg tag="details">Say a hello with a message. The message can be any string.</arg>
+                <arg tag="param" param="helloMessage">The message to say with hello</arg>
+                <arg tag="return">The respond message</arg>
+            </doc>
+            <arg name="message" type="s" direction="in" />
+            <arg name="" type="b" direction="out"/>
+        </method>
+        <method name="sayBye">
+            <doc>
+                <arg tag="brief">Say bye</arg>
+                <arg tag="details">Say bye bye and continue your conversation later</arg>
+                <arg tag="return">The respond message</arg>
+                <arg name="" type="b" direction="out"/>
+            </doc>
+        </method>
+     </interface>
+</node>

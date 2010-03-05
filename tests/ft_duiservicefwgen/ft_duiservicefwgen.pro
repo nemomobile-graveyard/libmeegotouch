@@ -23,10 +23,17 @@ QMAKE_CLEAN += \
     ftduiservicefwgen2.h \
     ftduiservicefwgen2proxy.cpp \
     ftduiservicefwgen2proxy.h \
+    ftduiservicefwgen3adaptor.cpp \
+    ftduiservicefwgen3adaptor.h \
+    ftduiservicefwgen3.cpp \
+    ftduiservicefwgen3.h \
+    ftduiservicefwgen3proxy.cpp \
+    ftduiservicefwgen3proxy.h \
 
 support_files.files += \
     com.nokia.FtDuiServiceFwGen1.xml \
     com.nokia.FtDuiServiceFwGen2.xml \
+    com.nokia.FtDuiServiceFwGen3.xml \
     ftduiservicefwgen1adaptor.cpp.correct \
     ftduiservicefwgen1adaptor.h.correct \
     ftduiservicefwgen1.cpp.correct \
@@ -39,5 +46,11 @@ support_files.files += \
     ftduiservicefwgen2.h.correct \
     ftduiservicefwgen2proxy.cpp.correct \
     ftduiservicefwgen2proxy.h.correct \
+    ftduiservicefwgen3adaptor.cpp.correct \
+    ftduiservicefwgen3adaptor.h.correct \
+    ftduiservicefwgen3.cpp.correct \
+    ftduiservicefwgen3.h.correct \
+    ftduiservicefwgen3proxy.cpp.correct \
+    ftduiservicefwgen3proxy.h.correct \
 
 include(../common_bot.pri)

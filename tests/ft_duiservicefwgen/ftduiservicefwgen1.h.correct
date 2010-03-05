@@ -3,7 +3,7 @@
 
 /*
  * automatically generated with the command line :
- * /home/davidmaxwaterman/z/hi386/libdui/tools/dui-servicefwgen -p /home/davidmaxwaterman/z/hi386/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen1
+ * /usr/bin/dui-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen1
  */
 
 #include <QObject>
@@ -17,8 +17,8 @@ Q_OBJECT
 
 public:
     bool showGridWithCapturedContent( int limit );
-    void showImage( const QString &uri, const QStringList &uriList );
     bool showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage );
+    void showImage( const QString &uri, const QStringList &uriList );
     bool showPage( const QString &targetPage, const QString &previousPage );
     bool showSettings(  );
 
@@ -26,8 +26,8 @@ public:
     /*!
      * @brief Constructs a base interface
      * @param preferredService, define the preferred service provider. Leave
-       empty if no preferred provider. In most cases, this should be left
-       empty.
+     * empty if no preferred provider. In most cases, this should be left
+     * empty.
      * @param parent Parent object
      */
 
@@ -41,6 +41,6 @@ public:
     void setService(const QString & service);
 Q_SIGNALS:
 
-
 };
 #endif
+

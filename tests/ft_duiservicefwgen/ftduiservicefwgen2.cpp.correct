@@ -1,6 +1,6 @@
 /*
  * automatically generated with the command line :
- * /home/davidmaxwaterman/z/hi386/libdui/tools/dui-servicefwgen -p /home/davidmaxwaterman/z/hi386/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen2
+ * /usr/bin/dui-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen2
  */
 
 #include "ftduiservicefwgen2.h"
@@ -64,3 +64,4 @@ void FtDuiServiceFwGen2::setService(const QString & service)
 
     }
 }
+

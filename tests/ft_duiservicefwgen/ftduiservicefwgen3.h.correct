@@ -1,0 +1,65 @@
+#ifndef FTDUISERVICEFWGEN3_H
+#define FTDUISERVICEFWGEN3_H
+
+/*
+ * automatically generated with the command line :
+ * /usr/bin/dui-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen3
+ */
+
+#include <QObject>
+
+#include <duiservicefwbaseif.h>
+#include <ftduiservicefwgen3proxy.h>
+
+
+/**
+ * @class MHello
+ * @brief MHello is an example of Maemo Interface definition by
+ *  a XML file
+ * @details An interface to the Hello Service. Uses the com.nokia.HelloInterface
+ *  D-Bus interface with which application developers can hello
+ *  with themself.
+ * @state Unstable
+ * @ingroup MmExampleServices
+ */
+class FtDuiServiceFwGen3 : public DuiServiceFwBaseIf
+{
+Q_OBJECT
+
+public:
+
+    /**
+     * @brief Say bye
+     * @details Say bye bye and continue your conversation later
+     */
+    void sayBye(  );
+
+    /**
+     * @brief Say hello
+     * @details Say a hello with a message. The message can be any
+     *  string.
+     */
+    bool sayHelloMessage( const QString &message );
+
+public:
+    /*!
+     * @brief Constructs a base interface
+     * @param preferredService, define the preferred service provider. Leave
+     * empty if no preferred provider. In most cases, this should be left
+     * empty.
+     * @param parent Parent object
+     */
+
+    FtDuiServiceFwGen3( const QString& preferredService = "", QObject* parent = 0 );
+
+    /*!
+     * @brief Set the service name
+     * @param service Name of the desired service
+     */
+
+    void setService(const QString & service);
+Q_SIGNALS:
+
+};
+#endif
+

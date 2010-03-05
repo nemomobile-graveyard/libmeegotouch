@@ -1,6 +1,6 @@
 /*
  * automatically generated with the command line :
- * /home/davidmaxwaterman/z/hi386/libdui/tools/dui-servicefwgen -p /home/davidmaxwaterman/z/hi386/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen1
+ * /usr/bin/dui-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen1
  */
 
 #include "ftduiservicefwgen1.h"
@@ -10,14 +10,14 @@ bool FtDuiServiceFwGen1::showGridWithCapturedContent( int limit )
     return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy)->showGridWithCapturedContent( limit ).value();
 }
 
-void FtDuiServiceFwGen1::showImage( const QString &uri, const QStringList &uriList )
-{
-    static_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy)->showImage( uri, uriList );
-}
-
 bool FtDuiServiceFwGen1::showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage )
 {
     return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy)->showImage( uri, playlistName, defaultBackPage ).value();
+}
+
+void FtDuiServiceFwGen1::showImage( const QString &uri, const QStringList &uriList )
+{
+    static_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy)->showImage( uri, uriList );
 }
 
 bool FtDuiServiceFwGen1::showPage( const QString &targetPage, const QString &previousPage )
@@ -64,3 +64,4 @@ void FtDuiServiceFwGen1::setService(const QString & service)
 
     }
 }
+
