@@ -56,7 +56,19 @@ public:
     DuiSceneManager *sceneManager() const;
 
     /*!
-     * Returns true if the widget can be seen.
+     * \brief Checks whether the widget might be seen on the display.
+     *
+     * Returning true means that:
+     * - Widget himself is not hidden (isVisible() property is true).
+     * - Widget lies within sight of some QGraphicsView that is currently being displayed.
+     *
+     * Note that it does not guarantee, however, that the widget actually <b>is</b> being shown
+     * on the display. There could be, for instance, some opaque QGraphicsItem on
+     * top of it (along the z axis) blocking it from getting rendered on the viewport.
+     *
+     * Returning false means that currently this widget cannot be seen
+     * on the display in any way. E.g.: If the widget happens to be out of sight of all the
+     * QGraphicsViews that are rendering his scene.
      */
     virtual bool isOnDisplay() const;
 

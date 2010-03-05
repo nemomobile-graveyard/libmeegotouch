@@ -230,8 +230,49 @@ void DuiWidget::exitDisplayEvent()
 
 bool DuiWidget::isOnDisplay() const
 {
-    Q_D(const DuiWidget);
-    return d->onDisplay;
+    bool result = false;
+
+    if (!isVisible()) {
+        return false;
+    }
+
+    if (!scene()) {
+        return false;
+    }
+
+    QList<QGraphicsView *> viewsList = scene()->views();
+    int viewCount = viewsList.count();
+    QGraphicsView *graphicsView;
+    DuiWindow *duiWindow;
+    QRect viewportRect; // viewport rectangle. (0, 0, width, height)
+    QRect widgetViewportRect; // widget bounding rect in viewport coordinates
+    int i = 0;
+
+    while (result == false && i < viewCount) {
+
+        graphicsView = viewsList.at(i);
+        ++i;
+
+        if (!graphicsView->isVisible() || graphicsView->isMinimized()) {
+            continue;
+        }
+
+        duiWindow = qobject_cast<DuiWindow *>(graphicsView);
+        if (duiWindow && !duiWindow->isOnDisplay()) {
+            continue;
+        }
+
+        widgetViewportRect = graphicsView->mapFromScene(sceneBoundingRect()).boundingRect();
+
+        viewportRect.setWidth(graphicsView->viewport()->width());
+        viewportRect.setHeight(graphicsView->viewport()->height());
+
+        if (widgetViewportRect.intersects(viewportRect)) {
+            result = true;
+        }
+    }
+
+    return result;
 }
 
 DuiSceneManager *DuiWidget::sceneManager() const

@@ -43,7 +43,10 @@ private slots:
     void testShape();
     void testClearActions();
 
-    void testOnDisplay();
+    void testIsOnDisplay_onView();
+    void testIsOnDisplay_offView();
+    void testIsOnDisplay_widgetHidden();
+
     void testEnteredDisplay();
     void testExitedDisplay();
 

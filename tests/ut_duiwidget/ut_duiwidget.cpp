@@ -69,23 +69,60 @@ void Ut_DuiWidget::testClearActions()
     QVERIFY(widget->actions().count() == 0);
 }
 
-void Ut_DuiWidget::testOnDisplay()
+void Ut_DuiWidget::testIsOnDisplay_onView()
 {
-    QRectF viewRect(0, 0, 864, 480);
-    {
-        DuiOnDisplayChangeEvent ev(DuiOnDisplayChangeEvent::FullyOnDisplay,
-                                   viewRect);
-        widget->event(&ev);
-    }
-    QVERIFY(widget->isOnDisplay() == true);
+    QGraphicsScene scene;
+    QGraphicsView view(&scene);
 
-    {
-        DuiOnDisplayChangeEvent ev(DuiOnDisplayChangeEvent::FullyOffDisplay,
-                                   viewRect);
-        widget->event(&ev);
-    }
-    QVERIFY(widget->isOnDisplay() == false);
+    view.resize(500, 500);
+    view.show();
+
+    scene.addItem(widget);
+
+    widget->show();
+    widget->setGeometry(10, 10, 50, 50);
+
+    QCOMPARE(widget->isOnDisplay(), true);
+
+    scene.removeItem(widget);
 }
+
+void Ut_DuiWidget::testIsOnDisplay_offView()
+{
+    QGraphicsScene scene;
+    QGraphicsView view(&scene);
+
+    view.resize(500, 500);
+    view.show();
+
+    scene.addItem(widget);
+
+    widget->show();
+    widget->setGeometry(-500, -500, 50, 50);
+
+    QCOMPARE(widget->isOnDisplay(), false);
+
+    scene.removeItem(widget);
+}
+
+void Ut_DuiWidget::testIsOnDisplay_widgetHidden()
+{
+    QGraphicsScene scene;
+    QGraphicsView view(&scene);
+
+    view.resize(500, 500);
+    view.show();
+
+    scene.addItem(widget);
+
+    widget->hide();
+    widget->setGeometry(10, 10, 50, 50);
+
+    QCOMPARE(widget->isOnDisplay(), false);
+
+    scene.removeItem(widget);
+}
+
 
 void Ut_DuiWidget::testEnteredDisplay()
 {
@@ -144,5 +181,4 @@ void Ut_DuiWidget::dummySlot()
     m_dummySlotCalled = true;
 }
 
-QTEST_APPLESS_MAIN(Ut_DuiWidget);
-
+QTEST_MAIN(Ut_DuiWidget);
