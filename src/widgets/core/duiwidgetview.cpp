@@ -165,11 +165,11 @@ void DuiWidgetView::setModel(DuiWidgetModel *model)
     d->styleContainer->initialize(d->model->objectName(), styleType, parent);
 
     if (d->controller->isActive()) {
-        style().setModeActive();
+        setActive(true);
     } else if (!d->controller->isEnabled()) {
-        style().setModeDisabled();
+        notifyItemChange(QGraphicsItem::ItemEnabledHasChanged, false);
     } else if (d->controller->isSelected()) {
-        style().setModeSelected();
+        notifyItemChange(QGraphicsItem::ItemSelectedHasChanged, true);
     }
 
     // TODO: to be removed when scalable image is ready
