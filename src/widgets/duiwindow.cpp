@@ -61,7 +61,8 @@ DuiWindowPrivate::DuiWindowPrivate() :
     orientationAngleLocked(false),
     orientationLocked(false),
     onDisplay(false),
-    onDisplaySet(false)
+    onDisplaySet(false),
+    q_ptr(NULL)
 {
     DuiWindow *window = DuiApplication::activeWindow();
 

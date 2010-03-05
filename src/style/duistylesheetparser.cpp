@@ -113,7 +113,7 @@ public:
 #endif
 
 DuiStyleSheetParserPrivate::DuiStyleSheetParserPrivate(const DuiLogicalValues *logicalValues) :
-    logicalValues(logicalValues)
+    privateFileInfo(0), binaryFileMode(true), startReadPos(0), logicalValues(logicalValues), globalConstants(NULL)
 {
 }
 

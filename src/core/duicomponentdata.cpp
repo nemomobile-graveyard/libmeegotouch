@@ -150,6 +150,8 @@ DuiComponentDataPrivate::DuiComponentDataPrivate()
     ,
     testabilityInterface(0)
 #endif
+    ,
+    q_ptr(NULL)
 {
 
 #ifdef TESTABLE
