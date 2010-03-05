@@ -94,7 +94,9 @@ void DuiWindowPrivate::init()
 
 #endif
 
-    q->resize(q->visibleSceneSize(q->orientation()));
+    // resize always to the size in landscape mode,
+    // since it's not the window but the scene content that is rotated
+    q->resize(q->visibleSceneSize(Dui::Landscape));
     q->setFrameStyle(0);
     q->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     q->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
