@@ -42,6 +42,7 @@ public:
     virtual void changeTheme(const QString &theme_id);
     void emitThemeChange();
     virtual QStringList themeInheritanceChain();
+    virtual QStringList themeLibraryNames();
     virtual bool hasPendingRequests() const;
 
 
