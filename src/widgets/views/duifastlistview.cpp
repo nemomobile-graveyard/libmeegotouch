@@ -79,8 +79,8 @@ void DuiFastListView::updateData(const QList<const char *>& modifications)
     for (int i = 0; i < modifications.count(); i++) {
         member = modifications[i];
 
-        if (member == DuiListModel::ItemModel || member == DuiListModel::ShowGroups || member == DuiListModel::Columns) {
-            if(model()->itemModel())
+        if (member == DuiListModel::ItemModel || member == DuiListModel::ShowGroups || member == DuiListModel::Columns || member == DuiListModel::CellCreator) {
+            if(model()->itemModel() || model()->cellCreator())
             {
                 init();
                 updateGeometry();
