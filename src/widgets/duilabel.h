@@ -44,9 +44,8 @@ Q_DECLARE_METATYPE(QTextOption::WrapMode)
         Following list summarizes the functionality of DuiLabel:
 
         - Text direction can be set.
-        - Support for auto wrapping and manual line changes. For manual line
-          changes use "\n" when displaying plain text and use "<br>" when
-          displaying rich text.
+        - Support for auto wrapping and manual line changes for rich text.
+          Use "<br>" to do a manual line change.
         - Support for automatic text eliding. If the label is not fitting into
           the given area, the label is truncated, and elision marks "..." are
           added in the end of the label. For truncation, the label has to be at
@@ -94,8 +93,6 @@ Q_DECLARE_METATYPE(QTextOption::WrapMode)
             //set/change the text of label
             label->setText("Text");
 
-            //manual line changes in label
-            label->setText("row1\nrow2\nrow3");
         \endcode
 
         Rich label:
