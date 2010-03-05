@@ -814,6 +814,14 @@ void DuiSceneManagerPrivate::appearWindow(DuiSceneWindow *window,
             window->showAnimation()->resetToInitialState();
             window->showAnimation()->start();
         } else {
+            // Animation needs to be fast forwarded to the end,
+            // even if not played, to ensure that window is in correct state
+            // to be shown with appearNow()
+            //  - Maciej Jablonski
+            if(window->showAnimation())
+                window->showAnimation()->setCurrentTime(
+                    window->showAnimation()->totalDuration());
+
             emit window->appeared();
         }
     }
