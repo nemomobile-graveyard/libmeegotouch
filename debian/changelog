@@ -1,3 +1,9 @@
+libdui (0.19.3-2) unstable; urgency=low
+
+  * Fixes: NB#159342 - Application UI is not visible in foreground after opening
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 05 Mar 2010 18:07:00 +0200
+
 libdui (0.19.3-1) unstable; urgency=low
 
   * Fixes: NB#156878 - Possible race condition with remote theme server
