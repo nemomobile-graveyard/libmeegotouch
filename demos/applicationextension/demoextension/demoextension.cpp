@@ -45,7 +45,6 @@ void DemoApplicationExtension::setDemoApplicationControlledValue(int value)
 bool DemoApplicationExtension::initialize()
 {
     slider = new DuiSlider;
-    slider->setObjectName("demo_slider");
     connect(slider, SIGNAL(valueChanged(int)), this, SLOT(informSliderValueToApplication(int)));
 
     return true;
