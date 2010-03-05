@@ -97,9 +97,9 @@ protected:
     QtMaemo6Window() {};
 
     /*! \reimp */
-    void closeEvent(QCloseEvent *event);
-    bool eventFilter(QObject *obj, QEvent *event);
-    void paintEvent(QPaintEvent* e);
+    virtual void closeEvent(QCloseEvent *event);
+    virtual bool eventFilter(QObject *obj, QEvent *event);
+    virtual void paintEvent(QPaintEvent* e);
     /*! \reimp_end */
 
 protected:

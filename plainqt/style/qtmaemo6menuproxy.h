@@ -41,12 +41,15 @@ public:
 
 protected:
     QtMaemo6MenuProxy() {};
-
+    void hideWindow();
+    /*! \reimp */
     virtual void mousePressEvent(QMouseEvent *event);
-
+    virtual void showEvent(QShowEvent *event);
+    /*! \reimp_end */
 protected:
     QMenuBar *m_menuBar;
     QtMaemo6Menu *m_menu;
+    QWidget* m_appArea;
 };
 
 #endif

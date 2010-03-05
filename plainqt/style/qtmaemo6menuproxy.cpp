@@ -29,8 +29,12 @@
 #include <QPushButton>
 #include <QPaintEvent>
 #include <QPainter>
+#include <QPropertyAnimation>
+#include <QParallelAnimationGroup>
 
 #include <duiapplicationmenustyle.h>
+#include <duiwidgetfadeinanimationstyle.h>
+#include <duiwidgetfadeoutanimationstyle.h>
 #include <QDebug>
 
 /* unforunately this is required to force widgets drawing it's background, even
@@ -64,15 +68,15 @@ QtMaemo6MenuProxy::QtMaemo6MenuProxy(QMenuBar *mb, QWidget *parent)
     palette.setBrush(QPalette::Window, Qt::transparent);
     setPalette(palette);
 
-    QWidget* appArea = new QWidget();
-    appArea->setObjectName("appArea");
-    appArea->installEventFilter(new DrawBackgroundEventFilter());
+    m_appArea = new QWidget();
+    m_appArea->setObjectName("appArea");
+    m_appArea->installEventFilter(new DrawBackgroundEventFilter());
 
-    appArea->setAttribute(Qt::WA_TranslucentBackground);
+    m_appArea->setAttribute(Qt::WA_TranslucentBackground);
     palette.setBrush(QPalette::Window, QBrush(QColor(0, 0, 0, 192)));
-    appArea->setPalette(palette);
+    m_appArea->setPalette(palette);
 
-    QGridLayout* gridLayout = new QGridLayout(appArea);
+    QGridLayout* gridLayout = new QGridLayout(m_appArea);
     gridLayout->setMargin(0);
     gridLayout->setSpacing(0);
 
@@ -100,7 +104,7 @@ QtMaemo6MenuProxy::QtMaemo6MenuProxy(QMenuBar *mb, QWidget *parent)
     gridLayout->addItem(bottomSpacer,      1, 0, 1, 3);
 
     m_windowLayout->addItem(topSpacer, 0, 0, 1, 1);
-    m_windowLayout->addWidget(appArea, 1, 0, 1, 1);
+    m_windowLayout->addWidget(m_appArea, 1, 0, 1, 1);
 }
 
 QtMaemo6MenuProxy::~QtMaemo6MenuProxy()
@@ -111,6 +115,80 @@ QtMaemo6MenuProxy::~QtMaemo6MenuProxy()
 
 void QtMaemo6MenuProxy::mousePressEvent(QMouseEvent *event)
 {
-    close();
-    QtMaemo6Window::mousePressEvent(event);
+    hideWindow(); //this also closes the window, after hide animation is done.
+    Q_UNUSED(event);
+}
+
+void QtMaemo6MenuProxy::showEvent(QShowEvent *event) {
+    Q_UNUSED(event);
+
+    const DuiWidgetFadeInAnimationStyle *fadeInStyle =
+        static_cast<const DuiWidgetFadeInAnimationStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Active,
+                "DuiWidgetFadeInAnimationStyle"));
+
+    layout()->activate();
+    QRect finalGeometry = QRect(m_menu->geometry().topLeft(), m_menu->sizeHint());
+    qCritical() << m_menu->geometry();
+    QRect startGeometry = finalGeometry;
+    startGeometry.moveTo(finalGeometry.x(), finalGeometry.y() - finalGeometry.height());
+    m_menu->setGeometry(startGeometry);
+
+    QParallelAnimationGroup* animationGroup = new QParallelAnimationGroup();
+    QPropertyAnimation *widgetFadeIn = new QPropertyAnimation(animationGroup);
+    widgetFadeIn->setTargetObject(m_menu);
+    widgetFadeIn->setPropertyName("geometry");
+    widgetFadeIn->setDuration(fadeInStyle->duration());
+    widgetFadeIn->setEasingCurve(fadeInStyle->easingCurve());
+    widgetFadeIn->setStartValue(startGeometry);
+    widgetFadeIn->setEndValue(finalGeometry);
+
+    QPalette finalPalette = m_appArea->palette();
+    QPalette startPalette = finalPalette;
+    startPalette.setBrush(QPalette::Window, QBrush(QColor(0, 0, 0, 0)));
+
+    QPropertyAnimation *backgroundFadeIn = new QPropertyAnimation(animationGroup);
+    backgroundFadeIn->setTargetObject(m_appArea);
+    backgroundFadeIn->setPropertyName("palette");
+    backgroundFadeIn->setDuration(fadeInStyle->duration());
+    backgroundFadeIn->setEasingCurve(fadeInStyle->easingCurve());
+    backgroundFadeIn->setStartValue(startPalette);
+    backgroundFadeIn->setEndValue(finalPalette);
+
+    animationGroup->start(QAbstractAnimation::DeleteWhenStopped);
+
+    QtMaemo6Window::showEvent(event);
+}
+
+void QtMaemo6MenuProxy::hideWindow() {
+    const DuiWidgetFadeOutAnimationStyle *fadeOutStyle =
+        static_cast<const DuiWidgetFadeOutAnimationStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Active,
+                "DuiWidgetFadeOutAnimationStyle"));
+
+    QRect startGeometry = m_menu->geometry();
+    QRect finalGeometry = startGeometry;
+    finalGeometry.moveTo(finalGeometry.x(), finalGeometry.y() - finalGeometry.height());
+
+    QParallelAnimationGroup* animationGroup = new QParallelAnimationGroup();
+    QPropertyAnimation *widgetFadeOut = new QPropertyAnimation(animationGroup);
+    widgetFadeOut->setTargetObject(m_menu);
+    widgetFadeOut->setPropertyName("geometry");
+    widgetFadeOut->setDuration(fadeOutStyle->duration());
+    widgetFadeOut->setEasingCurve(fadeOutStyle->easingCurve());
+    widgetFadeOut->setStartValue(startGeometry);
+    widgetFadeOut->setEndValue(finalGeometry);
+
+    QPalette startPalette = m_appArea->palette();
+    QPalette finalPalette = startPalette;
+    startPalette.setBrush(QPalette::Window, QBrush(QColor(0, 0, 0, 0)));
+
+    QPropertyAnimation *backgroundFadeOut = new QPropertyAnimation(animationGroup);
+    backgroundFadeOut->setTargetObject(m_appArea);
+    backgroundFadeOut->setPropertyName("palette");
+    backgroundFadeOut->setDuration(fadeOutStyle->duration());
+    backgroundFadeOut->setEasingCurve(fadeOutStyle->easingCurve());
+    backgroundFadeOut->setStartValue(startPalette);
+    backgroundFadeOut->setEndValue(finalPalette);
+
+    connect(animationGroup, SIGNAL(finished()), this, SLOT(close()));
+    animationGroup->start(QAbstractAnimation::DeleteWhenStopped);
 }
