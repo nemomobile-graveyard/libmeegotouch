@@ -38,6 +38,7 @@ public:
     void _q_selectionModelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void _q_itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void _q_itemModelReset();
+    void _q_itemClicked(const QModelIndex& index);
 };
 
 #endif

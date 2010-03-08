@@ -51,6 +51,7 @@ private slots:
     void testModelSwitching();
     void testStringListModel();
     void testStringListModelSetStringList();
+    void testActivatedSignal();
 
 private:
     DuiComboBox *m_combobox;

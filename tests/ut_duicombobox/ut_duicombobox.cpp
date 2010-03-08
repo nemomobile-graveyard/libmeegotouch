@@ -269,7 +269,7 @@ void Ut_DuiComboBox::testBuiltinModel()
     // remove current item
     m_combobox->removeItem(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("!! Tap to Select"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
@@ -303,7 +303,7 @@ void Ut_DuiComboBox::testModelSwitching()
 
     // model changed selection should reset
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("!! Tap to Select"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
 }
 
 void Ut_DuiComboBox::testStringListModel()
@@ -325,7 +325,7 @@ void Ut_DuiComboBox::testStringListModel()
     // remove current item
     strListModel->removeRow(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("!! Tap to Select"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
@@ -357,7 +357,57 @@ void Ut_DuiComboBox::testStringListModelSetStringList()
     // change string list completely
     strListModel->setStringList(QStringList() << "bar0" << "bar1" << "bar2" << "bar3");
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("!! Tap to Select"));
+    QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
+}
+
+void Ut_DuiComboBox::testActivatedSignal()
+{
+    DuiComboBoxView *view = (DuiComboBoxView *)m_combobox->view();
+    DuiComboBoxViewPrivate *viewPrivate = view->d_func();
+    m_combobox->addItems(QStringList() << "foo0" << "foo1" << "foo2" << "foo3");
+    m_combobox->click();
+
+    QSignalSpy activatedIntSpy(m_combobox, SIGNAL(activated(int)));
+    QSignalSpy activatedQStringSpy(m_combobox, SIGNAL(activated(QString)));
+    QSignalSpy currentItemChangedIntSpy(m_combobox, SIGNAL(currentIndexChanged(int)));
+    QSignalSpy currentItemChangedQStringSpy(m_combobox, SIGNAL(currentIndexChanged(QString)));
+
+    // click first item
+    viewPrivate->popuplist->click(m_combobox->itemModel()->index(1, 0));
+
+    QCOMPARE(activatedIntSpy.count(), 1);
+    QCOMPARE(activatedIntSpy.last()[0].toInt(), 1);
+    QCOMPARE(activatedQStringSpy.count(), 1);
+    QCOMPARE(activatedQStringSpy.last()[0].toString(), QString("foo1"));
+
+    QCOMPARE(currentItemChangedIntSpy.count(), 1);
+    QCOMPARE(currentItemChangedIntSpy.last()[0].toInt(), 1);
+    QCOMPARE(currentItemChangedQStringSpy.count(), 1);
+    QCOMPARE(currentItemChangedQStringSpy.last()[0].toString(), QString("foo1"));
+
+    // click first item again, currentItemChanged signal should not be emited
+    viewPrivate->popuplist->click(m_combobox->itemModel()->index(1, 0));
+
+    QCOMPARE(activatedIntSpy.count(), 2);
+    QCOMPARE(activatedIntSpy.last()[0].toInt(), 1);
+    QCOMPARE(activatedQStringSpy.count(), 2);
+    QCOMPARE(activatedQStringSpy.last()[0].toString(), QString("foo1"));
+
+    QCOMPARE(currentItemChangedIntSpy.count(), 1);
+    QCOMPARE(currentItemChangedQStringSpy.count(), 1);
+
+    // click second item
+    viewPrivate->popuplist->click(m_combobox->itemModel()->index(2, 0));
+
+    QCOMPARE(activatedIntSpy.count(), 3);
+    QCOMPARE(activatedIntSpy.last()[0].toInt(), 2);
+    QCOMPARE(activatedQStringSpy.count(), 3);
+    QCOMPARE(activatedQStringSpy.last()[0].toString(), QString("foo2"));
+
+    QCOMPARE(currentItemChangedIntSpy.count(), 2);
+    QCOMPARE(currentItemChangedIntSpy.last()[0].toInt(), 2);
+    QCOMPARE(currentItemChangedQStringSpy.count(), 2);
+    QCOMPARE(currentItemChangedQStringSpy.last()[0].toString(), QString("foo2"));
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiComboBox)

@@ -116,6 +116,7 @@ void DuiComboBoxViewPrivate::_q_showPopup()
         popuplist->setItemModel(controller->itemModel());
         popuplist->setSelectionModel(controller->selectionModel());
         popuplist->setTitle(controller->title());
+        QObject::connect(popuplist, SIGNAL(clicked(QModelIndex)), controller, SLOT(_q_itemClicked(QModelIndex)));
     }
 
     if (controller->sceneManager()) {

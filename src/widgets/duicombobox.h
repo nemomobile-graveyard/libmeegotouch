@@ -351,6 +351,22 @@ Q_SIGNALS:
      */
     void currentIndexChanged(const QString &text);
 
+    /**
+        \brief This signal is sent when the user chooses an item in the combobox. The item's index is passed.
+
+        Note that this signal is sent even when the choice is not changed.
+        If you need to know when the choice actually changes, use signal currentIndexChanged().
+      */
+    void activated(int index);
+
+    /**
+        \brief This signal is sent when the user chooses an item in the combobox. The item's text is passed.
+
+        Note that this signal is sent even when the choice is not changed.
+        If you need to know when the choice actually changes, use signal currentIndexChanged().
+     */
+    void activated(const QString &text);
+
 protected:
 
     //! \internal
@@ -366,6 +382,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_itemModelReset())
     Q_PRIVATE_SLOT(d_func(), void _q_selectionModelCurrentChanged(QModelIndex, QModelIndex))
     Q_PRIVATE_SLOT(d_func(), void _q_selectionModelSelectionChanged(QItemSelection, QItemSelection))
+    Q_PRIVATE_SLOT(d_func(), void _q_itemClicked(QModelIndex))
 
 #ifdef UNIT_TEST
     friend class Ut_DuiComboBox;

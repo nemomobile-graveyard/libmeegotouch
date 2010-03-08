@@ -85,6 +85,17 @@ void DuiComboBoxPrivate::_q_itemModelReset()
     emit q->currentIndexChanged(QString());
 }
 
+void DuiComboBoxPrivate::_q_itemClicked(const QModelIndex &index)
+{
+    Q_Q(DuiComboBox);
+
+    int row = index.row();
+
+    emit q->activated(row);
+    emit q->activated(q->itemText(row));
+}
+
+
 DuiComboBox::DuiComboBox(QGraphicsItem *parent)
     : DuiWidgetController(new DuiComboBoxPrivate(), new DuiComboBoxModel(), parent)
 {

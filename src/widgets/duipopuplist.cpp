@@ -128,11 +128,15 @@ void DuiPopupList::click(const QModelIndex &index)
     Q_D(DuiPopupList);
     if (index.model() != d->itemModel) return;
 
-    d->selectionModel->select(index, QItemSelectionModel::ClearAndSelect);
-    d->selectionModel->setCurrentIndex(index, QItemSelectionModel::Current);
+    if (index == currentIndex()) {
+        emit clicked(index);
+    } else {
+        d->selectionModel->select(index, QItemSelectionModel::ClearAndSelect);
+        d->selectionModel->setCurrentIndex(index, QItemSelectionModel::Current);
 
-    emit clicked(index);
-    emit currentIndexChanged(index);
+        emit clicked(index);
+        emit currentIndexChanged(index);
+    }
 
     accept();
 }
