@@ -340,7 +340,7 @@ All Labels can be aligned left, right or center and will be automatically trunca
     <message id="xx_application_title">
         <location filename="../listpage.cpp" line="176"/>
         <source>Widgets Gallery</source>
-        <translation type="unfinished"></translation>
+        <translation>WG Urdu اُردوُ</translation>
     </message>
     <message id="xx_apporientation_auto">
         <location filename="../listpage.cpp" line="412"/>
