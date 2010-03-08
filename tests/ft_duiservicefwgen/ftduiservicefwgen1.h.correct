@@ -9,7 +9,6 @@
 #include <QObject>
 
 #include <duiservicefwbaseif.h>
-#include <ftduiservicefwgen1proxy.h>
 
 class FtDuiServiceFwGen1 : public DuiServiceFwBaseIf
 {

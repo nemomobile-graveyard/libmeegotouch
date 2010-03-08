@@ -9,7 +9,6 @@
 #include <QObject>
 
 #include <duiservicefwbaseif.h>
-#include <ftduiservicefwgen2proxy.h>
 
 
 /**

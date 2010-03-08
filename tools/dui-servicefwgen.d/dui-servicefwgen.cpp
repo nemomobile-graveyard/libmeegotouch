@@ -473,8 +473,7 @@ QString Worker::topBitH()
 \n\
 #include <QObject>\n\
 \n\
-#include <duiservicefwbaseif.h>\n\
-#include <" + proxyHeaderFileName() + ">\n";
+#include <duiservicefwbaseif.h>\n";
 }
 
 
