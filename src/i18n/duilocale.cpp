@@ -255,7 +255,15 @@ bool DuiTranslationCatalog::loadWith(DuiLocale *duilocale, DuiLocale::Category c
             }
         }
     }
-
+    // Loading the new file into the QTranslator failed.
+    // Clear any old contents of the QTranslator before returning false.
+    // This is necessary because the QTranslator may still have old contents.
+    // For example, assume that we an Arabic translation "foo_ar.qm" has been loaded
+    // into the translator before and now this loadWith() function tries to
+    // load "foo_de.qm" because the language has been switched to German
+    // but "foo_de.qm" does not exist. We do *not* want to keep the previous
+    // "foo_ar.qm" contents in that case.
+    _translator.load("", 0);
     return false;
 }
 
