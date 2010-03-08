@@ -47,6 +47,7 @@ public:
     virtual QString currentTheme() = 0;
 
     virtual QStringList themeInheritanceChain() = 0;
+    virtual QStringList themeLibraryNames() = 0;
 
     virtual bool hasPendingRequests() const = 0;
 
@@ -56,7 +57,7 @@ signals:
     void pixmapCreated(const QString &imageId, const QSize &size, Qt::HANDLE handle);
 
     // emitted when theme has been changed
-    void themeChanged(const QStringList &themeInheritance);
+    void themeChanged(const QStringList &themeInheritance, const QStringList& libraryNames);
 
 };
 

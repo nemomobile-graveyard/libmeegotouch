@@ -69,7 +69,10 @@ int DuiStyle::removeReference()
     data->references--;
     if (data->references <= 0) {
         releaseAllocatedResourcesFromStyle(this);
+        /* TODO: deleteLater breaks theme change (when theme libraries are unloaded and deleteLater refs them)
         deleteLater(); // Use deleteLater() for QObjects instead of "delete this"
+        */
+        delete this;
         return 0;
     }
     return data->references;
