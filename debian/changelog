@@ -1,3 +1,9 @@
+libdui (0.19.4-2) unstable; urgency=low
+
+  * Unit test fixes
+  
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 08 Mar 2010 10:23:00 +0200
+  
 libdui (0.19.4-1) unstable; urgency=low
 
   * Fixes: NB#158361 - DuiLocale remembers old system locale and writes it back after a language change
