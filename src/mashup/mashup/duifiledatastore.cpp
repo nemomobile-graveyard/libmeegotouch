@@ -84,10 +84,25 @@ static void renameSettingFile(const QString &oldName,
 static void addPathsToWatcher(const QString &filePath,
                               QScopedPointer<QFileSystemWatcher>& watcher)
 {
-    // Watch the directory if it's not being watched yet
-    QString canonicalPath(QFileInfo(filePath).canonicalPath());
-    if (!watcher->directories().contains(canonicalPath)) {
-        watcher->addPath(canonicalPath);
+    QFileInfo fileInfo(filePath);
+    QString directory;
+    if (fileInfo.exists()) {
+        // If the file exists, we can take the canonical path directly
+        directory = fileInfo.canonicalPath();
+    } else {
+        // If the file doesn't exist, canonicalPath would return an empty string. That's why
+        // we need to get the parent directory first.
+        QFileInfo parentPath(fileInfo.absolutePath());
+        if (parentPath.exists()) {
+            directory = parentPath.canonicalFilePath();
+        }
+    }
+
+    if (!directory.isEmpty()) {
+        // Watch the directory if it's not being watched yet
+        if (!watcher->directories().contains(directory)) {
+            watcher->addPath(directory);
+        }
     }
 
     // Watch the file itself if it's not being watched yet
@@ -122,7 +137,7 @@ static bool doSync(QSettings &originalSettings, QScopedPointer<QFileSystemWatche
 }
 
 DuiFileDataStore::DuiFileDataStore(const QString &filePath) :
-    settings(QString(filePath), QSettings::IniFormat),
+    settings(filePath, QSettings::IniFormat),
     watcher(new QFileSystemWatcher())
 {
     settings.sync();
