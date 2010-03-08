@@ -689,8 +689,8 @@ bool DuiWindow::event(QEvent *event)
             else if (language == "ur")
                 language = "zh_CN";
             else
-                // when no language is set, set to fi.
-                language = "fi";
+                // engineering English:
+                language = "";
 
 #ifdef Q_OS_WIN
             qputenv( "LANG", qPrintable( language ) );
