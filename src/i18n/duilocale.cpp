@@ -482,40 +482,19 @@ void DuiLocalePrivate::loadTrCatalogs()
     }
 }
 
-void DuiLocalePrivate::reloadCatalogList(CatalogList &cataloglist,
-        DuiLocale *duilocale,
-        DuiLocale::Category category)
-{
-    DuiLocalePrivate::CatalogList::iterator end = cataloglist.end();
-    for (DuiLocalePrivate::CatalogList::iterator it = cataloglist.begin();
-            it != end; ++it) {
-        // if the duitranslationcatalog is shared we need to make a new copy
-        (*it).detach();
-        (*it)->loadWith(duilocale, category);
-    }
-}
-
 // sets category to specific locale
 void DuiLocalePrivate::setCategoryLocale(DuiLocale *duilocale,
         DuiLocale::Category category,
         const QString &localeName)
 {
+    Q_UNUSED(duilocale);
+
     if (category == DuiLocale::DuiLcMessages) {
         _messageLocale = localeName;
-
-        // detach message translations
-        reloadCatalogList(_messageTranslations, duilocale, DuiLocale::DuiLcMessages);
-        reloadCatalogList(_trTranslations, duilocale, DuiLocale::DuiLcMessages);
-
-
     } else if (category == DuiLocale::DuiLcTime) {
         _calendarLocale = localeName;
-        reloadCatalogList(_timeTranslations, duilocale, DuiLocale::DuiLcTime);
-
-
     } else if (category == DuiLocale::DuiLcNumeric) {
         _numericLocale = localeName;
-
 #ifdef HAVE_ICU
         // recreate the number formatter
         delete _numberFormat;
@@ -529,21 +508,16 @@ void DuiLocalePrivate::setCategoryLocale(DuiLocale *duilocale,
             _valid = false;
         }
 #endif
-
     } else if (category == DuiLocale::DuiLcCollate) {
         _collationLocale = localeName;
-
     } else if (category == DuiLocale::DuiLcMonetary) {
         _monetaryLocale = localeName;
-
     } else if (category == DuiLocale::DuiLcName) {
         _nameLocale = localeName;
-
     } else {
         //duiDebug("DuiLocalePrivate") << "unimplemented category change"; // DEBUG
     }
 }
-
 
 QString DuiLocalePrivate::parseLanguage(const QString &localeString)
 {
@@ -555,7 +529,6 @@ QString DuiLocalePrivate::parseLanguage(const QString &localeString)
         return localeString;
     }
 }
-
 
 QString DuiLocalePrivate::parseCountry(const QString &localeString)
 {

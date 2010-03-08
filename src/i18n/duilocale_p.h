@@ -73,10 +73,6 @@ public:
      */
     void loadTrCatalogs();
 
-    void reloadCatalogList(CatalogList &cataloglist, DuiLocale *duilocale,
-                           DuiLocale::Category category);
-
-
     void setCategoryLocale(DuiLocale *duilocale, DuiLocale::Category category,
                            const QString &localeName);
 
