@@ -1981,6 +1981,13 @@ void DuiLocale::removeTrCatalog(const QString &name)
     }
 }
 
+void DuiLocale::loadTrCatalogs()
+{
+    Q_D(DuiLocale);
+
+    d->loadTrCatalogs();
+}
+
 void DuiLocale::insertTrToQCoreApp()
 {
     Q_D(DuiLocale);

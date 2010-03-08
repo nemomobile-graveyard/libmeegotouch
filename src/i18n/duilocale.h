@@ -671,6 +671,13 @@ Q_SIGNALS:
 
 protected:
     /*!
+     * \brief loads the QTranslators for all current catalogs
+     *
+     * This will move into the private class!
+     */
+    void loadTrCatalogs();
+
+    /*!
      * \brief Installs the translations into QCoreApplication
      *
      * This will move into the private class!
