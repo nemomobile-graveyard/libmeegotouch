@@ -1,3 +1,25 @@
+libdui (0.19.4-1) unstable; urgency=low
+
+  * Fixes: NB#158361 - DuiLocale remembers old system locale and writes it back after a language change
+  * Fixes: NB#159550 - DuiDialog with windowModal set to true displays badly in portrait mode
+  * Fixes: NB#159293 - Division by zero near DuiFastListView::relayoutItemsInExposedRect()
+  * Fixes: NB#158384 - (PopupList::appearNow) Calling DuiPopupList::appearNow() after having called DuiPopupList::appear() shows an empty popup list.
+  * Fixes: NB#141825 - Broken applets are mirrored vertically and the blur is blocky
+  * Fixes: NB#155649 - DuiLabel: line feed symbol is not processed properly
+  * Fixes: NB#157925 -  QMessageBox has black background
+  * Fixes: NB#158175 - style().setModeXxx() is not applied correctly when the DuiWidgetView receives setupModel() call
+  * Fixes: NB#159282 - Crash on pressing back button
+  * Fixes: MB#9356 - DuiAbstractCellCreator documentation: Should say that it's for single column models
+  * Fixes: MB#9378 - Documentation: DuiList::setItemModel() should make ownership clear
+  * Fixes: MB#9378 - DuiWidgetRecycler documentation mentions non-existant DuiGrid
+  * Fixes: NB#158584 - File /etc/X11/Xsession.post/13duithemedaemon is obsolete and should be removed
+  * Fixes: NB#158314 -DuiList shows incorrect items when new item added to data model
+  * Fixes: NB#158975 - widgetsgallery crashes when changing language with the "Change Language" dialog
+  * Fixes: NB#158069 - ut_duiappletinstancemanager gets stuck
+  * Fixes: NB#158745 - Setting autoMarginsEnabled in Portrait mode adds too much margin
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 08 Mar 2010 09:27:00 +0200
+
 libdui (0.19.3-2) unstable; urgency=low
 
   * Fixes: NB#159342 - Application UI is not visible in foreground after opening
@@ -8,7 +30,6 @@ libdui (0.19.3-1) unstable; urgency=low
 
   * Fixes: NB#156878 - Possible race condition with remote theme server
   * Fixes: NB#156075 Widgetsgallery: Broken button text after switching language
-  * Fixes: NB#155649 DuiLabel: line feed symbol is not processed properly
   * Fixes: NB#144431 An application with a DuiLabel in it segfaults during shutdown when its window is closed
   
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 24 Feb 2010 13:06:00 +0200
@@ -43,7 +64,6 @@ libdui (0.19.0-1) unstable; urgency=low
   * Fixes: NB#155911 - <MemLeak> duiimagedirectory.cpp duistyle.cpp duilabel.cpp
   * Fixes: NB#156583 - Problem with DUI window management?
   * Fixes: NB#157052 - QT application crashes when launches
-  * Fixes: NB#155806 - Unable to change DuiContentItem background color
   * Fixes: NB#156146 - Text overflows in list when run in different profile
   * Fixes: NB#151726 - No text displayed with VKB during typing a SMS
   * Fixes: NB#155734 - Items under the last group of DuiList are duplicated
