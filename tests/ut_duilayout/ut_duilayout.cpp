@@ -182,6 +182,7 @@ void Ut_DuiLayout::init()
     m_proxy = m_scene->addWidget(m_button);
     m_scene->addItem(m_form);
 
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle0);
     Q_ASSERT(0 != m_button);
     Q_ASSERT(0 != m_scene);
     Q_ASSERT(0 != m_proxy);
