@@ -2096,8 +2096,8 @@ Qt::LayoutDirection DuiLocale::textDirection() const
 
 void DuiLocale::refreshSettings()
 {
-    Q_D(DuiLocale);
 #ifdef HAVE_GCONF
+    Q_D(DuiLocale);
     QString language = d->currentLanguageItem.value().toString();
     QString country  = d->currentCountryItem.value().toString();
     QString script   = d->currentScriptItem.value().toString();
