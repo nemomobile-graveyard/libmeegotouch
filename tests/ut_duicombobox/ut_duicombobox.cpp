@@ -34,6 +34,7 @@
 #include <DuiSceneManager>
 #include <DuiPopupList>
 #include <DuiContentItem>
+#include <DuiLocale>
 
 #include "ut_duicombobox.h"
 #include "duicancelevent.h"
@@ -48,6 +49,13 @@ void Ut_DuiComboBox::initTestCase()
     static int argc = 1;
     static char *argv[1] = { (char *) "./ut_duicombobox" };
     app = new DuiApplication(argc, argv);
+
+    // make sure that we only have engineering English loaded:
+    DuiLocale locale;
+    locale.removeTrCatalog("libdui"); // removes libdui.qm and libdui_<localeName>.qm
+    locale.removeTrCatalog("common"); // removes common.qm and common_<localeName>.qm
+    locale.installTrCatalog("libdui.qm"); // installs libdui.qm (engineering English)
+    DuiLocale::setDefault(locale);
 
     win = new DuiWindow();
     win->setSceneManager(new DuiSceneManager());
