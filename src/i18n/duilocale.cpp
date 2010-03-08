@@ -841,7 +841,6 @@ void DuiLocale::setDefault(const DuiLocale &locale)
         (locale.d_ptr)->currentLanguageItem.set(newLanguage);
 #endif
 
-    QCoreApplication::processEvents();
     // Setting the default QLocale is needed to get localized number
     // support in translations via %Ln, %L1, %L2, ...:
     QLocale qlocale(locale.language() + '_' + locale.country());
@@ -850,12 +849,6 @@ void DuiLocale::setDefault(const DuiLocale &locale)
     s_systemDefault->insertTrToQCoreApp();
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
     qApp->setLayoutDirection(s_systemDefault->textDirection());
-    // the following 2 events have already been sent above:
-    // QEvent ev(QEvent::LanguageChange);
-    // qApp->sendEvent(qApp, &ev);
-    // QEvent dirEv(QEvent::ApplicationLayoutDirectionChange);
-    // qApp->sendEvent(qApp, &dirEv);
-    QCoreApplication::processEvents();
 
     QObject::connect(s_systemDefault, SIGNAL(settingsChanged()), qApp, SIGNAL(localeSettingsChanged()));
     emit s_systemDefault->settingsChanged();
@@ -2095,7 +2088,6 @@ void DuiLocale::refreshSettings()
         setCategoryLocale(DuiLcName, localeName);
 
         if (this == s_systemDefault) {
-            QCoreApplication::processEvents();
             // Setting the default QLocale is needed to get localized number
             // support in translations via %Ln, %L1, %L2, ...:
             QLocale qlocale(this->language() + '_' + this->country());
@@ -2106,12 +2098,6 @@ void DuiLocale::refreshSettings()
             this->insertTrToQCoreApp();
             // sends QEvent::ApplicationLayoutDirectionChange to qApp:
             qApp->setLayoutDirection(this->textDirection());
-            // the following 2 events have already been sent above:
-            // QEvent ev(QEvent::LanguageChange);
-            // qApp->sendEvent(qApp, &ev);
-            // QEvent dirEv(QEvent::ApplicationLayoutDirectionChange);
-            // qApp->sendEvent(qApp, &dirEv);
-            QCoreApplication::processEvents();
         }
         else {
             d->loadTrCatalogs();
