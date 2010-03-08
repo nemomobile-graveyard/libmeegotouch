@@ -20,7 +20,7 @@ mac {
 }
 
 win32 {
-    DUI_PREFIX =
+    DUI_PREFIX = /
 }
 
 # Directories
@@ -81,22 +81,31 @@ mac {
 }
 
 win32 {
-    DUI_INSTALL_BIN = /bin
-    DUI_INSTALL_LIBS = /bin
-    DUI_INSTALL_DATA = /share
-    DUI_INSTALL_HEADERS = /include/dui
-    DUI_INSTALL_SYSCONF = /etc
-    DUI_INSTALL_LOCALSTATE = /var
+    DUI_INSTALL_BIN = $$DUI_PREFIX/bin
+    DUI_INSTALL_LIBS = $$DUI_PREFIX/bin
+    DUI_INSTALL_DATA = $$DUI_PREFIX/share
+    DUI_INSTALL_HEADERS = $$DUI_PREFIX/include/dui
+    DUI_INSTALL_SYSCONF = $$DUI_PREFIX/etc
+    DUI_INSTALL_XSESSION = $$DUI_INSTALL_SYSCONF/X11
+    DUI_INSTALL_LOCALSTATE = $$DUI_PREFIX/var
 
-    DUI_THEME_DIR = /themes
+    DUI_THEME_DIR = $$DUI_INSTALL_DATA/themes
+    DUI_THEME_PRELOAD_DIR = $$DUI_INSTALL_LOCALSTATE/lib/dui/theme/preload.d
+    DUI_THEME_POST_PRELOAD_DIR = $$DUI_INSTALL_LOCALSTATE/lib/dui/theme/preload.post
 
-    DUI_APPLET_DIR = /lib/dui/applets
-    DUI_APPLET_INSTALLATION_SOURCES_DIR = /lib/dui/appletinstallationsources
+    DUI_APPLET_DIR = $$DUI_PREFIX/lib/dui/applets
+    DUI_APPLET_INSTALLATION_SOURCES_DIR = $$DUI_PREFIX/lib/dui/appletinstallationsources
     DUI_APPLET_DATA_DIR = $$DUI_INSTALL_DATA/dui/applets
+    DUI_APPLET_SETTINGS_DIR = $$DUI_INSTALL_DATA/dui/applets/settings
+
+    DUI_APPLICATION_EXTENSION_DIR = $$DUI_PREFIX/lib/dui/applicationextensions
+    DUI_APPLICATION_EXTENSION_DATA_DIR = $$DUI_INSTALL_DATA/dui/applicationextensions
 
     DUI_NOTIFICATIONS_EVENT_TYPES_DIR=$$DUI_INSTALL_DATA/dui/notifications/eventtypes
+    DUI_XDG_DIR = $$DUI_INSTALL_SYSCONF/xdg
     DUI_TRANSLATION_DIR = $$DUI_INSTALL_DATA/l10n/dui
-    DUI_DBUS_INTERFACES_DIR = $$DUI_INSTALL_DATA/dbus-1/interfaces
+    DUI_DBUS_INTERFACES_DIR = /usr/share/dbus-1/interfaces
+#    DUI_DBUS_SERVICES_DIR = $$system(pkg-config --variable session_bus_services_dir dbus-1)
     DUI_DBUS_SERVICES_DIR = $$DUI_INSTALL_DATA/dbus-1/services
 
     DUI_SHADER_SOURCE_DIR = $$DUI_INSTALL_DATA/dui/shaders

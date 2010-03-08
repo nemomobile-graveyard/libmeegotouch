@@ -30,11 +30,13 @@ namespace Utils
 #ifdef Q_OS_WIN
         QDir appDir(QCoreApplication::applicationDirPath());
         appDir.cdUp();
-        appDir.cd("widgetsgallery");
+        appDir.cd("share");
         appDir.cd("themes");
+        appDir.cd("devel");
+        appDir.cd("dui");
+        appDir.cd("widgetsgallery");
         appDir.cd("images");
         appDir.cd("contacts");
-
         return appDir.path().append("/");
 #else
         return QString(CONTACTS_DIR);
@@ -46,10 +48,12 @@ namespace Utils
 #ifdef Q_OS_WIN
         QDir appDir(QCoreApplication::applicationDirPath());
         appDir.cdUp();
-        appDir.cd("widgetsgallery");
+        appDir.cd("share");
         appDir.cd("themes");
+        appDir.cd("devel");
+        appDir.cd("dui");
+        appDir.cd("widgetsgallery");
         appDir.cd("images");
-
         return appDir.path().append("/");
 #else
         return QString(IMAGES_DIR);
@@ -61,11 +65,13 @@ namespace Utils
 #ifdef Q_OS_WIN
         QDir appDir(QCoreApplication::applicationDirPath());
         appDir.cdUp();
-        appDir.cd("widgetsgallery");
+        appDir.cd("share");
         appDir.cd("themes");
+        appDir.cd("devel");
+        appDir.cd("dui");
+        appDir.cd("widgetsgallery");
         appDir.cd("images");
         appDir.cd("media-art");
-
         return appDir.path().append("/");
 #else
         return QString(MEDIA_ART_DIR);
