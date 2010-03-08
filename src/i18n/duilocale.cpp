@@ -482,6 +482,20 @@ void DuiLocalePrivate::loadTrCatalogs()
     }
 }
 
+void DuiLocalePrivate::insertTrToQCoreApp()
+{
+    foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, _trTranslations) {
+        QCoreApplication::installTranslator(&sharedCatalog->_translator);
+    }
+}
+
+void DuiLocalePrivate::removeTrFromQCoreApp()
+{
+    foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, _trTranslations) {
+        QCoreApplication::removeTranslator(&sharedCatalog->_translator);
+    }
+}
+
 // sets category to specific locale
 void DuiLocalePrivate::setCategoryLocale(DuiLocale *duilocale,
         DuiLocale::Category category,
@@ -829,7 +843,7 @@ void DuiLocale::setDefault(const DuiLocale &locale)
         s_systemDefault->disconnectSettings();
         QObject::disconnect(s_systemDefault, SIGNAL(settingsChanged()), qApp, SIGNAL(localeSettingsChanged()));
         // remove the previous tr translations
-        s_systemDefault->removeTrFromQCoreApp();
+        (s_systemDefault->d_ptr)->removeTrFromQCoreApp();
         *s_systemDefault = locale;
     }
     defaultLocaleMutex.unlock();
@@ -846,7 +860,7 @@ void DuiLocale::setDefault(const DuiLocale &locale)
     QLocale qlocale(locale.language() + '_' + locale.country());
     QLocale::setDefault(qlocale);
     // sends QEvent::LanguageChange to qApp:
-    s_systemDefault->insertTrToQCoreApp();
+    (s_systemDefault->d_ptr)->insertTrToQCoreApp();
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
     qApp->setLayoutDirection(s_systemDefault->textDirection());
 
@@ -1958,24 +1972,19 @@ void DuiLocale::removeTrCatalog(const QString &name)
 void DuiLocale::loadTrCatalogs()
 {
     Q_D(DuiLocale);
-
     d->loadTrCatalogs();
 }
 
 void DuiLocale::insertTrToQCoreApp()
 {
     Q_D(DuiLocale);
-    foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, d->_trTranslations) {
-        QCoreApplication::installTranslator(&sharedCatalog->_translator);
-    }
+    d->insertTrToQCoreApp();
 }
 
 void DuiLocale::removeTrFromQCoreApp()
 {
     Q_D(DuiLocale);
-    foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, d->_trTranslations) {
-        QCoreApplication::removeTranslator(&sharedCatalog->_translator);
-    }
+    d->removeTrFromQCoreApp();
 }
 
 /////////////////////////////
@@ -2092,10 +2101,10 @@ void DuiLocale::refreshSettings()
             // support in translations via %Ln, %L1, %L2, ...:
             QLocale qlocale(this->language() + '_' + this->country());
             QLocale::setDefault(qlocale);
-            this->removeTrFromQCoreApp();
+            d->removeTrFromQCoreApp();
             d->loadTrCatalogs();
             // sends QEvent::LanguageChange to qApp:
-            this->insertTrToQCoreApp();
+            d->insertTrToQCoreApp();
             // sends QEvent::ApplicationLayoutDirectionChange to qApp:
             qApp->setLayoutDirection(this->textDirection());
         }

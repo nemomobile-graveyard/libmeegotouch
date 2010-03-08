@@ -672,30 +672,29 @@ Q_SIGNALS:
 protected:
     /*!
      * \brief loads the QTranslators for all current catalogs
-     *
+     * \deprecated since 0.19.4-2
      * This will move into the private class!
      */
-    void loadTrCatalogs();
+    void Q_DECL_DEPRECATED loadTrCatalogs();
 
     /*!
      * \brief Installs the translations into QCoreApplication
-     *
+     * \deprecated since 0.19.4-2
      * This will move into the private class!
      */
-    void insertTrToQCoreApp();
+    void Q_DECL_DEPRECATED insertTrToQCoreApp();
 
     /*!
      * \brief Removes the translations from QCoreApplication
-     *
+     * \deprecated since 0.19.4-2
      * This should move into the private class!
      */
-    void removeTrFromQCoreApp();
+    void Q_DECL_DEPRECATED removeTrFromQCoreApp();
 
     /*!
      * \brief Returns the default locale object.
      */
     static DuiLocale &getDefault();
-
 
 private:
     // not implemented now

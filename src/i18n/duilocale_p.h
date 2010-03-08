@@ -73,6 +73,16 @@ public:
      */
     void loadTrCatalogs();
 
+    /*!
+     * \brief Installs the translations into QCoreApplication
+     */
+    void insertTrToQCoreApp();
+
+    /*!
+     * \brief Removes the translations from QCoreApplication
+     */
+    void removeTrFromQCoreApp();
+
     void setCategoryLocale(DuiLocale *duilocale, DuiLocale::Category category,
                            const QString &localeName);
 
