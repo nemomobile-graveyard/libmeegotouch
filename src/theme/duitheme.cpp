@@ -101,8 +101,8 @@ DuiTheme::DuiTheme(const QString &applicationName, const QString &, ThemeService
 
     d->q_ptr = this;
 
-    connect(d->themeDaemon, SIGNAL(themeChanged(QStringList, QStringList)),
-            SLOT(themeChangedSlot(QStringList, QStringList)));
+    connect(d->themeDaemon, SIGNAL(themeChanged(QStringList)),
+            SLOT(themeChangedSlot(QStringList)));
 
     connect(d->themeDaemon, SIGNAL(pixmapChanged(QString, QSize, Qt::HANDLE)),
             SLOT(pixmapChangedSlot(QString, QSize, Qt::HANDLE)));
@@ -136,9 +136,6 @@ DuiTheme::~DuiTheme()
     for (; i != end; ++i) {
         qWarning() << "DuiTheme - pixmap" << i.key() << "not released!" << "refcount:" << i.value().refcount;
     }
-
-    // unload all theme libraries
-    d_ptr->reloadThemeLibraries(QStringList());
 
     gTheme = NULL;
     delete d_ptr;
@@ -534,7 +531,6 @@ DuiThemePrivate::DuiThemePrivate(const QString &applicationName, DuiTheme::Theme
     invalidPixmap->fill(QColor(255, 64, 64, 255));
 
     // this loads the current theme
-    reloadThemeLibraries(themeDaemon->themeLibraryNames());
     refreshLocalThemeConfiguration(themeDaemon->themeInheritanceChain());
 }
 
@@ -600,11 +596,10 @@ const QPixmap *DuiThemePrivate::fetchPixmapFromCache(const QString &identifier)
     return NULL;
 }
 
-void DuiThemePrivate::themeChangedSlot(const QStringList &themeInheritance, const QStringList& libraryNames)
+void DuiThemePrivate::themeChangedSlot(const QStringList &themeInheritance)
 {
     refreshLocalThemeConfiguration(themeInheritance);
     q_ptr->rebuildViewsForWidgets();
-    reloadThemeLibraries(libraryNames);
 }
 
 void DuiThemePrivate::refreshLocalThemeConfiguration(const QStringList &themeInheritance)
@@ -635,35 +630,12 @@ void DuiThemePrivate::refreshLocalThemeConfiguration(const QStringList &themeInh
     DuiStyleSheet::cleanup(false);
 }
 
-void DuiThemePrivate::reloadThemeLibraries(const QStringList& libraryNames)
-{
-    // store list of libraries that needs to be unloaded
-    QSet<QLibrary*> toUnload = openedThemeLibraries;
-
-    // load all new libraries (if the library is already loaded, it will ref the loaded one)
-    openedThemeLibraries.clear();
-    foreach(const QString& libname, libraryNames) {
-        QLibrary* library = new QLibrary(libname);
-        if(library->load()) {
-            openedThemeLibraries.insert(library);
-        } else {
-            duiWarning("DuiTheme") << "Failed to open theme library:" << libname;
-            delete library;
-        }
-    }
-
-    // unload old themelibraries
-    foreach(QLibrary* library, toUnload) {
-        library->unload();
-        delete library;
-    }
-}
-
 void DuiThemePrivate::registerLibrary(DuiLibrary *library)
 {
     if (!DuiThemePrivate::libraries)
         DuiThemePrivate::libraries = new QHash<QString, DuiLibrary *>();
 
+    duiDebug("DuiTheme") << "DuiLibrary" << library->name() << "registered";
     DuiThemePrivate::libraries->insert(library->name(), library);
 
     // Load theme-specific content of this library (in case the lib was loaded after startup).
@@ -676,6 +648,7 @@ void DuiThemePrivate::registerLibrary(DuiLibrary *library)
 
 void DuiThemePrivate::unregisterLibrary(DuiLibrary *library)
 {
+    duiDebug("DuiTheme") << "DuiLibrary" << library->name() << "unregistered";
     DuiThemePrivate::libraries->remove(library->name());
 
     if (DuiThemePrivate::libraries->count() == 0) {
@@ -794,7 +767,7 @@ void DuiThemePrivate::unregisterStyleContainer(DuiStyleContainer *container)
 
 void DuiThemePrivate::localeChangedSlot()
 {
-    themeChangedSlot(themeDaemon->themeInheritanceChain(), themeDaemon->themeLibraryNames());
+    themeChangedSlot(themeDaemon->themeInheritanceChain());
 }
 
 #include "moc_duitheme.cpp"

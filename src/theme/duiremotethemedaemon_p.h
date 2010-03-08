@@ -37,7 +37,7 @@ public:
     void connectionDataAvailable();
     quint64 requestPixmap(const QString &imageId, const QSize &size);
     void pixmapUpdated(const Dui::DuiThemeDaemonProtocol::PixmapHandle &handle);
-    void themeChanged(const QStringList &themeInheritanceChain, const QStringList &themeLibraryNames);
+    void themeChanged(const QStringList &themeInheritanceChain);
     bool waitForServer(const QString &serverAddress, int timeout);
     Dui::DuiThemeDaemonProtocol::Packet waitForPacket(quint64 sequenceNumber);
 
@@ -47,7 +47,6 @@ public:
     QDataStream stream;
 
     QStringList themeInheritanceChain;
-    QStringList themeLibraryNames;
 
     quint64 sequenceCounter;
 };

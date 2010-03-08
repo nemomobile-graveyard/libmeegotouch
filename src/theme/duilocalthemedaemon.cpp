@@ -116,11 +116,6 @@ QStringList DuiLocalThemeDaemon::themeInheritanceChain()
     return daemon.themeInheritanceChain();
 }
 
-QStringList DuiLocalThemeDaemon::themeLibraryNames()
-{
-    return daemon.themeLibraryNames();
-}
-
 bool DuiLocalThemeDaemon::hasPendingRequests() const
 {
     return false;
@@ -148,7 +143,7 @@ void DuiLocalThemeDaemon::themeChangedSlot()
             }
         }
         // theme change succeeded, let's inform all clients + add the pixmaps to load-list
-        emit themeChanged(themeInheritanceChain(), themeLibraryNames());
+        emit themeChanged(themeInheritanceChain());
     } else {
         // theme change failed, so change the theme back also in gconf.
 #ifdef HAVE_GCONF

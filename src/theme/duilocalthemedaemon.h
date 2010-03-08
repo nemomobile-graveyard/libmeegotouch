@@ -47,8 +47,6 @@ public:
     virtual QString currentTheme();
 
     virtual QStringList themeInheritanceChain();
-    virtual QStringList themeLibraryNames();
-
     virtual bool hasPendingRequests() const;
 
 private slots:

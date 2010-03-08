@@ -175,7 +175,7 @@ void DuiThemeDaemonServer::clientDataAvailable()
                 registeredClients.insert(socket, client);
                 daemon.addClient(client);
                 client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
-                                           new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
+                                           new StringList(daemon.themeInheritanceChain()));
                 break;
             }
         }
@@ -241,7 +241,7 @@ void DuiThemeDaemonServer::themeChanged()
     QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
     if (daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToReload)) {
         // theme change succeeded, let's inform all clients + add the pixmaps to load-list
-        Packet themeChangedPacket(Packet::ThemeChangedPacket, 0, new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
+        Packet themeChangedPacket(Packet::ThemeChangedPacket, 0, new StringList(daemon.themeInheritanceChain()));
 
         QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> >::iterator i = pixmapsToReload.begin();
         QHash<DuiThemeDaemonClient *, QList<PixmapIdentifier> >::iterator end = pixmapsToReload.end();

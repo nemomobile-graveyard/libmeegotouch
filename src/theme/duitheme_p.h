@@ -31,7 +31,6 @@ class DuiLibrary;
 #include <QSet>
 #include <QSize>
 #include <QHash>
-#include <QLibrary>
 
 #include "duiassembly.h"
 #include "duilogicalvalues.h"
@@ -110,8 +109,6 @@ public:
     DuiPalette palette;
     DuiDefaultFonts fonts;
 
-    QSet<QLibrary*> openedThemeLibraries;
-
 #ifdef HAVE_GCONF
     DuiGConfItem locale;
 #endif
@@ -133,7 +130,7 @@ public:
      * Theme daemon notifies DuiTheme of a theme change. In this method DuiTheme
      * will change the views and styles of all widgets.
      */
-    void themeChangedSlot(const QStringList &themeInheritance, const QStringList& libraryNames);
+    void themeChangedSlot(const QStringList &themeInheritance);
 
     /*!
      * Theme daemon notifies pixmap updates to to this slot
@@ -150,7 +147,6 @@ public:
     bool loadCSS(const QString &filename, DuiTheme::InsertMode mode = DuiTheme::Append);
 
     void refreshLocalThemeConfiguration(const QStringList &themeInheritance);
-    void reloadThemeLibraries(const QStringList& libraryNames);
 
     static void registerStyleContainer(DuiStyleContainer *container);
     static void unregisterStyleContainer(DuiStyleContainer *container);

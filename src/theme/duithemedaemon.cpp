@@ -161,10 +161,7 @@ QStringList DuiThemeDaemon::themeInheritanceChain() const
     return themeInheritance;
 }
 
-QStringList DuiThemeDaemon::themeLibraryNames() const
-{
-    return themeLibraries;
-}
+
 
 ImageResource *DuiThemeDaemon::findImageResource(const QString &imageId)
 {
@@ -238,10 +235,8 @@ bool DuiThemeDaemon::activateTheme(const QString &newTheme, const QString &local
     // Change the theme
 
     // 1: find out the inheritance chain for the new theme
+    themeInheritance.clear();
     QString tmpTheme = newTheme;
-    QStringList newThemeInheritanceChain;
-    QSet<QString> themeLibraryNames;
-
     while (true) {
         const QSettings *themeIndexFile = themeFile(tmpTheme);
         if (!themeIndexFile) {
@@ -249,14 +244,8 @@ bool DuiThemeDaemon::activateTheme(const QString &newTheme, const QString &local
             return false;
         }
 
-        newThemeInheritanceChain.append(tmpTheme);
+        themeInheritance.append(tmpTheme);
         QString parentTheme = themeIndexFile->value("X-DUI-Metatheme/X-Inherits", "").toString();
-
-        QStringList libraryNames = themeIndexFile->value("X-DUI-Metatheme/X-Libraries", "").toString().split(",", QString::SkipEmptyParts);
-        foreach(const QString& libname, libraryNames) {
-            themeLibraryNames.insert(libname.trimmed());
-        }
-
         delete themeIndexFile;
 
         if (tmpTheme == "base")
@@ -268,17 +257,13 @@ bool DuiThemeDaemon::activateTheme(const QString &newTheme, const QString &local
         }
 
         // check that there is no cyclic dependencies
-        foreach(const QString & themeName, newThemeInheritanceChain) {
+        foreach(const QString & themeName, themeInheritance) {
             if (tmpTheme == themeName) {
                 duiWarning("DuiThemeDaemon") << "Cyclic dependency in theme:" << newTheme;
                 return false;
             }
         }
     }
-
-    themeLibraries = themeLibraryNames.toList();
-    themeInheritance = newThemeInheritanceChain;
-
 #ifdef DUITHEME_PRINT_DEBUG
     duiDebug("DuiThemeDaemon") << "    New theme inheritance chain is" << themeInheritance;
 #endif
