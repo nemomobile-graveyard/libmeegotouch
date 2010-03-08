@@ -105,7 +105,6 @@ SUBDIRS     =  \
     ut_duiserviceaction \
     ut_duiserviceinvoker \
     ut_duiscenewindow \
-    ut_duimodalscenewindow \
     ut_duinotification \
     ut_duinotificationmanager \
     ut_duisettingslanguageparser \
