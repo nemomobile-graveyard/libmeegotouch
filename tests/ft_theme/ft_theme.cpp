@@ -118,8 +118,8 @@ void Ft_Theme::initTestCase()
     testDaemon = new TestThemeDaemon;
     DuiTheme::instance()->d_ptr->themeDaemon = testDaemon;
     // a bit hackish, but connect the signals
-    connect(testDaemon, SIGNAL(themeChanged(QStringList, QStringList)),
-            DuiTheme::instance(), SLOT(themeChangedSlot(QStringList, QStringList)));
+    connect(testDaemon, SIGNAL(themeChanged(QStringList)),
+            DuiTheme::instance(), SLOT(themeChangedSlot(QStringList)));
 
     connect(testDaemon, SIGNAL(pixmapChanged(QString, QSize, Qt::HANDLE)),
             DuiTheme::instance(), SLOT(pixmapChangedSlot(QString, QSize, Qt::HANDLE)));
