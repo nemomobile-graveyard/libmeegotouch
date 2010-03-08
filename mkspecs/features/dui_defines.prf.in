@@ -11,9 +11,14 @@ DUI_VERSION=$${DUI_MAJOR_VERSION}.$${DUI_MINOR_VERSION}.$${DUI_PATCH_VERSION}
 
 # first set default value for dui prefix
 # the @@...@@ variable is filled from the libdui/configure script.
-unix:mac {
+unix {
     DUI_PREFIX = @@DUI_UNIX_INSTALL_PREFIX@@
 }
+
+mac {
+    DUI_PREFIX = @@DUI_UNIX_INSTALL_PREFIX@@
+}
+
 win32 {
     DUI_PREFIX =
 }
