@@ -120,24 +120,12 @@ public:
     *
     * then the function will try to load translation catalogs in the following order:
     *
-    *   /usr/share/l10n/dui/LC_MESSAGES/foo_en_US.qm
-    *   /usr/share/l10n/dui/LC_MESSAGES/foo_en_US
-    *   /usr/share/l10n/dui/LC_MESSAGES/foo_en.qm
-    *   /usr/share/l10n/dui/LC_MESSAGES/foo_en
-    *   /usr/share/l10n/dui/LC_MESSAGES/foo.qm
-    *   /usr/share/l10n/dui/LC_MESSAGES/foo
     *   /usr/share/l10n/dui/foo_en_US.qm
     *   /usr/share/l10n/dui/foo_en_US
     *   /usr/share/l10n/dui/foo_en.qm
     *   /usr/share/l10n/dui/foo_en
     *   /usr/share/l10n/dui/foo.qm
     *   /usr/share/l10n/dui/foo
-    *   /usr/share/l10n/LC_MESSAGES/foo_en_US.qm
-    *   /usr/share/l10n/LC_MESSAGES/foo_en_US
-    *   /usr/share/l10n/LC_MESSAGES/foo_en.qm
-    *   /usr/share/l10n/LC_MESSAGES/foo_en
-    *   /usr/share/l10n/LC_MESSAGES/foo.qm
-    *   /usr/share/l10n/LC_MESSAGES/foo
     *   /usr/share/l10n/foo_en_US.qm
     *   /usr/share/l10n/foo_en_US
     *   /usr/share/l10n/foo_en.qm
@@ -271,22 +259,6 @@ bool DuiTranslationCatalog::loadWith(DuiLocale *duilocale, DuiLocale::Category c
 //// Private stuff for DuiLocale
 
 QStringList DuiLocalePrivate::translationPaths;
-
-// categories have their translations in their own subdirectories.
-QString DuiLocalePrivate::categoryToDirectoryName(DuiLocale::Category category)
-{
-    switch (category) {
-    case DuiLocale::DuiLcMessages:
-        return "LC_MESSAGES";
-
-    case DuiLocale::DuiLcTime:
-        return "LC_TIME";
-
-    default:
-        return QString();
-    }
-}
-
 
 QString DuiLocalePrivate::createLocaleString(const QString &language,
         const QString &country,

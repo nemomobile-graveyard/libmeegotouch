@@ -54,9 +54,6 @@ public:
 
     DuiLocalePrivate &operator=(const DuiLocalePrivate &other);
 
-
-    static QString categoryToDirectoryName(DuiLocale::Category category);
-
     // returns string presentation for category.
     static QString createLocaleString(const QString &language,
                                       const QString &country,
