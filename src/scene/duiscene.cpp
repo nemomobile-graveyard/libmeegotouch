@@ -34,7 +34,7 @@
 
 const QFont     TextFont                = QFont("Sans", 10);
 const int       MillisecsInSec          = 1000;
-const int       FpsRefreshInterval      = 1000;
+const int       FpsRefreshInterval      = 250;
 const QSize     FpsBoxSize              = QSize(100, 40);
 const QColor    FpsTextColor            = QColor(0xFFFF00);
 const QFont     FpsFont                 = QFont("Sans", 15);
@@ -53,6 +53,7 @@ const int       MarginBorderWidth       = 2;
 static QTime lastUpdate;
 static int _frameCount = 0;
 static int fps = 0;
+static QString _stringToDraw;
 
 
 DuiScenePrivate::~DuiScenePrivate()
@@ -302,14 +303,14 @@ void DuiScene::drawForeground(QPainter *painter, const QRectF &rect)
             fps = (MillisecsInSec * _frameCount) / (lastUpdate.msecsTo(now));
             _frameCount = 0;
             lastUpdate = now;
+            _stringToDraw = QString("FPS: %1").arg(fps);
         }
 
-        QString stringToDraw = QString("FPS: %1").arg(fps);
         painter->setPen(FpsTextColor);
         painter->setFont(FpsFont);
         painter->drawText(fpsRect,
                           Qt::AlignCenter,
-                          stringToDraw);
+                          _stringToDraw);
 
         // this update call makes repainting work as fast
         // as possible, and by that prints useful fps numbers
