@@ -4,6 +4,7 @@
  */
 
 #include "ftduiservicefwgen1.h"
+#include "ftduiservicefwgen1proxy.h"
 
 bool FtDuiServiceFwGen1::showGridWithCapturedContent( int limit )
 {

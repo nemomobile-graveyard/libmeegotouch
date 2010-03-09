@@ -4,6 +4,7 @@
  */
 
 #include "ftduiservicefwgen3.h"
+#include "ftduiservicefwgen3proxy.h"
 
 void FtDuiServiceFwGen3::sayBye(  )
 {

@@ -527,7 +527,8 @@ QString Worker::topBitC()
  * " + commandLine + "\n\
  */\n\
 \n\
-#include \"" + wrapperHeaderFileName() + "\"\n";
+#include \"" + wrapperHeaderFileName() + "\"\n\
+#include \"" + proxyHeaderFileName() + "\"\n";
 }
 
 
