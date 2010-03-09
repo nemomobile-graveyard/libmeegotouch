@@ -1,3 +1,12 @@
+libdui (0.19.5-1) unstable; urgency=low
+
+  * NB#159396 - DuiComboBox emits an extraneous currentIndexChanged(-1) signal the first time an item is selected from the GUI
+  * NB#158821 - dui-servicefwgen should not force shipping of unnecessary include files.
+  * NB#159802 - DuiWindow setOrientationAngle is failed if it is during an orientation animation
+  * NB#158990 - DuiWidget's isOnDisplay() returns invalid values
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 09 Mar 2010 15:41:42 +0200
+
 libdui (0.19.4-2) unstable; urgency=low
 
   * Unit test fixes
