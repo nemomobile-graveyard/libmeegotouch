@@ -456,7 +456,6 @@ void DuiSceneManagerPrivate::rotateToAngle(Dui::OrientationAngle newAngle)
     if (this->newAngle == newAngle)
         return;
 
-    orientationAnimation->stop();
     this->newAngle = newAngle;
     orientationAnimation->setTargetRotationAngle(angle, newAngle);
     orientationAnimation->start();
@@ -1144,6 +1143,9 @@ void DuiSceneManager::setOrientationAngle(Dui::OrientationAngle angle,
         Dui::OrientationChangeMode mode)
 {
     Q_D(DuiSceneManager);
+
+    if (d->orientationAnimation->state() == QAbstractAnimation::Running)
+        d->orientationAnimation->stop();
 
     if (mode == Dui::AnimatedOrientationChange)
         d->rotateToAngle(angle);
