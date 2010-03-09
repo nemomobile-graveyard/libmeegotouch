@@ -75,18 +75,22 @@ void DuiGstVideo::setVideoState(DuiVideo::State state)
         gst_element_get_state(gst_elem_pipeline, &current_gst_state, NULL, 0);
         if( (current_gst_state == GST_STATE_READY || current_gst_state == GST_STATE_PAUSED || current_gst_state == GST_STATE_PLAYING) && state != DuiVideo::NotReady ) {
             GstState new_gst_state = (state == DuiVideo::Paused || state == DuiVideo::Stopped) ? GST_STATE_PAUSED : GST_STATE_PLAYING;
-            if( state == DuiVideo::Stopped )
-                seek(0);
             if( new_gst_state != current_gst_state ) {
                 if( GST_STATE_CHANGE_FAILURE == gst_element_set_state(gst_elem_pipeline, new_gst_state) ) {
                     duiWarning("DuiGstVideo::setVideoState()") << "Failed to set state to" << state;
                     new_state = DuiVideo::NotReady;
                 } 
-                else
+                else {
                     new_state = state;
+                }
             }
-            else
+            else {
                 new_state = state;
+            }
+
+            //when moving to stopped state rewind the video to beginning
+            if( new_state == DuiVideo::Stopped )
+                seek(0);     
         } 
         else {
             duiWarning("DuiGstVideo::setVideoState()") << "Video not ready yet, cannot set state to" << state;
