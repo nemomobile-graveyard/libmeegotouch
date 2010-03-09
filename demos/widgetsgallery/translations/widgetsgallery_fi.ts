@@ -4,42 +4,42 @@
 <context>
     <name></name>
     <message id="xx_application_title">
-        <location filename="../listpage.cpp" line="176"/>
+        <location filename="../listpage.cpp" line="178"/>
         <source>Widgets Gallery</source>
         <translation>Vekotinnäyttely</translation>
     </message>
     <message id="xx_apporientation_auto">
-        <location filename="../listpage.cpp" line="412"/>
+        <location filename="../listpage.cpp" line="414"/>
         <source>Automatic</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../listpage.cpp" line="420"/>
+        <location filename="../listpage.cpp" line="422"/>
         <source>Portrait</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../listpage.cpp" line="428"/>
+        <location filename="../listpage.cpp" line="430"/>
         <source>Landscape</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../listpage.cpp" line="436"/>
+        <location filename="../listpage.cpp" line="438"/>
         <source>0 degrees</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../listpage.cpp" line="444"/>
+        <location filename="../listpage.cpp" line="446"/>
         <source>90 degrees clockwise</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../listpage.cpp" line="452"/>
+        <location filename="../listpage.cpp" line="454"/>
         <source>180 degrees clockwise</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../listpage.cpp" line="460"/>
+        <location filename="../listpage.cpp" line="462"/>
         <source>270 degrees clockwise</source>
         <translation type="unfinished"></translation>
     </message>
@@ -1031,6 +1031,11 @@ Input feedbacks can be easily configured for different purposes using the themin
     <message id="xx_continuous_slider_seekbar">
         <location filename="../continuoussliderpage.cpp" line="166"/>
         <source>seekbar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_gridpage_title">
+        <location filename="../duigridpage.cpp" line="97"/>
+        <source>Grid page</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
