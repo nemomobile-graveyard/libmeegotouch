@@ -738,6 +738,10 @@ DuiLocale::DuiLocale(const QString &localeName, QObject *parent)
     Q_D(DuiLocale);
     d->q_ptr = this;
     d->_defaultLocale = qPrintable(localeName);
+    // If a system default locale exists already copy the translation
+    // catalogs and reload them for this locale:
+    if (s_systemDefault)
+        copyCatalogsFrom(*s_systemDefault);
 
 #ifdef HAVE_ICU
     // we cache the number formatter for better performance
