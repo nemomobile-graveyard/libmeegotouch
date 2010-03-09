@@ -1,0 +1,497 @@
+#! /usr/bin/perl -w                        # -*- mode: perl coding: utf-8 -*-
+########################################################################
+
+use strict;
+use utf8;
+use locale;
+use POSIX qw(locale_h);
+use POSIX qw(strftime);
+use Encode 'from_to','encode_utf8','decode_utf8';
+use English;
+use Getopt::Long;
+use File::Path;
+use XML::Parser;
+use Data::Dumper;
+
+binmode STDIN,  ":utf8";
+binmode STDOUT, ":utf8";
+binmode STDERR, ":utf8";
+
+#----------------------------------------------------------------------
+# global variables
+
+my $version = "0.20100309";
+
+my $original_wd;
+chomp ($original_wd = `pwd`);
+
+my @handoffFiles = ();
+my %handoffXmlTrees = ();
+
+my $totalNumberOfIdsNotFoundInSpec = 0;
+
+my $htmlOutTotal = "";
+my $htmlOutHeader = "";
+my $htmlOutFooter = "";
+my $htmlOutToc = "";
+my $htmlOutResults = "";
+
+my $OPT_VERBOSITY;
+my $OPT_VERSION;
+my $OPT_HELP;
+my $OPT_EEDIR;
+my $OPT_HANDOFF_URL;
+my $OPT_HANDOFF_DIR;
+my $OPT_HTTP_USER;
+my $OPT_HTTP_PASSWD;
+my $OPT_SKIP_DOWNLOAD;
+my $OPT_HTMLFILE;
+
+my @eePackages = (
+                  "accounts-ui-l10n-engineering-english",
+                  "backup-framework-l10n-engineering-english",
+                  "camera-ui-l10n-engineering-english",
+                  "cellular-adaptation-ui-l10n-engineering-english",
+                  "commhistory-daemon-l10n-engineering-english",
+                  "conn-dui-bluetooth-l10n-engineering-english",
+                  "conn-dui-cellular-l10n-engineering-english",
+                  "conn-dui-internet-l10n-engineering-english",
+                  "conn-dui-wlan-l10n-engineering-english",
+                  "contacts-l10n-engineering-english",
+                  "dui-demos-widgetsgallery-l10n-engineering-english",
+                  "duicontrolpanel-callandsimapplet-l10n-engineering-english",
+                  "duicontrolpanel-datetimeapplet-l10n-engineering-english",
+                  "duicontrolpanel-displaylanguageapplet-l10n-engineering-english",
+                  "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
+                  "duicontrolpanel-l10n-engineering-english",
+                  "duicontrolpanel-networkapplet-l10n-engineering-english",
+                  "duicontrolpanel-regionformatapplet-l10n-engineering-english",
+                  "duihelp-l10n-engineering-english",
+                  "duihomescreen-l10n-engineering-english",
+                  "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
+                  "duistartup-l10n-engineering-english",
+                  "duistatusind-connectivity-l10n-engineering-english",
+                  "keychain-ui-l10n-engineering-english",
+                  "libdatacounterdialog-l10n-engineering-english",
+                  "libdui-l10n-engineering-english",
+                  "libpresence0-l10n-engineering-english",
+                  "libshare-ui-l10n-engineering-english",
+                  "signon-ui-l10n-engineering-english",
+                  "systemui-applets-l10n-engineering-english",
+                  "systemui-l10n-engineering-english",
+                  "transfer-ui-l10n-engineering-english",
+                  "webupload-engine-l10n-engineering-english"
+                  );
+
+my @eeFiles = (
+               "/usr/share/l10n/dui/accounts-ui.qm",
+               "/usr/share/l10n/dui/backup-framework.qm",
+               "/usr/share/l10n/dui/camera-ui.qm",
+               "/usr/share/l10n/dui/celluid.qm",
+               "/usr/share/l10n/dui/conn-dui-bluetooth.qm",
+               "/usr/share/l10n/dui/conn-dui-cellular.qm",
+               "/usr/share/l10n/dui/conn-dui-internet.qm",
+               "/usr/share/l10n/dui/conn-dui-wlan.qm",
+               "/usr/share/l10n/dui/contacts.qm",
+               "/usr/share/l10n/dui/duicontrolpanel-callandsim.qm",
+               "/usr/share/l10n/dui/duicontrolpanel-datetime.qm",
+               "/usr/share/l10n/dui/duicontrolpanel-displaylanguage.qm",
+               "/usr/share/l10n/dui/duicontrolpanel-keyboardlanguage.qm",
+               "/usr/share/l10n/dui/duicontrolpanel-network.qm",
+               "/usr/share/l10n/dui/duicontrolpanel-regionformat.qm",
+               "/usr/share/l10n/dui/duicontrolpanel.qm",
+               "/usr/share/l10n/dui/duihelp.qm",
+               "/usr/share/l10n/dui/duihome.qm",
+               "/usr/share/l10n/dui/duistartup.qm",
+               "/usr/share/l10n/dui/duistatusindicatormenu-connectivityplugin.qm",
+               "/usr/share/l10n/dui/keychain-ui.qm",
+               "/usr/share/l10n/dui/libdatacounterdialog.qm",
+               "/usr/share/l10n/dui/libdui.qm",
+               "/usr/share/l10n/dui/libpresence0.qm",
+               "/usr/share/l10n/dui/messaging.qm",
+               "/usr/share/l10n/dui/plugin-webupload-engine.qm",
+               "/usr/share/l10n/dui/share-ui.qm",
+               "/usr/share/l10n/dui/signon-ui.qm",
+               "/usr/share/l10n/dui/systemui-applets.qm",
+               "/usr/share/l10n/dui/systemui.qm",
+               "/usr/share/l10n/dui/telephony.qm",
+               "/usr/share/l10n/dui/transfer-ui.qm",
+               "/usr/share/l10n/dui/weatherappletres.qm",
+               "/usr/share/l10n/dui/webupload-engine.qm",
+               );
+
+#----------------------------------------------------------------------
+# subroutines:
+
+sub usage {
+  printf STDERR "Usage: photo-gallery [option] ...\n";
+  printf STDERR "-v, --verbose           print some progress messages to standard output.\n";
+  printf STDERR "    --version           display version and exit.\n";
+  printf STDERR "-h, --help              display this help and exit.\n";
+  printf STDERR "    --eedir             directory where the ee .qm files are.\n";
+  printf STDERR "    --handoffurl        URL of the “handoff” .ts files.\n";
+  printf STDERR "    --handoffdir        directory to save the “handoff” .ts files.\n";
+  printf STDERR "    --http-user         user name to access the “handoff” .ts files.\n";
+  printf STDERR "    --http-passwd       password to access the “handoff” .ts files.\n";
+  printf STDERR "                        or use .netrc to store user name and password.\n";
+  printf STDERR "    --skip-dowload      skip download.\n";
+  printf STDERR "    --html-file         write the html output to this file\n";
+  exit 1;
+}
+
+sub mySystem {
+  my ($command) = @_;
+  if ($OPT_VERBOSITY >= 1) {
+    print "executing: $command\n";
+  }
+  return system ($command);
+}
+
+sub myExit {
+  my ($value) =@_;
+  chdir $original_wd || die "Can’t cd to $original_wd: $!\n";
+  exit ($value);
+}
+
+sub myBasename {
+  my ($path) =@_;
+  $path =~ /\/([^\/]+)$/; # basename (strip directory)
+  return $1;
+}
+
+sub writeHtml {
+  my $date = decode_utf8(`date`);
+  chomp($date);
+  my $title = "Results of messageid-check (version $version) run on " . $date;
+
+  $htmlOutHeader .= sprintf "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n";
+  $htmlOutHeader .= sprintf "<html>\n";
+  $htmlOutHeader .= sprintf "<head>\n";
+  $htmlOutHeader .= sprintf "<title>%s</title>\n", $title;
+  $htmlOutHeader .= sprintf "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n";
+  $htmlOutHeader .= sprintf "<style type=\"text/css\">\n";
+  $htmlOutHeader .= sprintf "body {\n";
+  $htmlOutHeader .= sprintf "  color:#000000;\n";
+  $htmlOutHeader .= sprintf "  background-color:#FFFFFF;\n";
+  $htmlOutHeader .= sprintf "  font-family: sans-serif;\n";
+  $htmlOutHeader .= sprintf "  font-size: 1em;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".okcolor {\n";
+  $htmlOutHeader .= sprintf "  color:#007F00;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".errorcolor {\n";
+  $htmlOutHeader .= sprintf "  color:#7F0000;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf "</style>\n";
+  $htmlOutHeader .= sprintf "</head>\n";
+  $htmlOutHeader .= sprintf "<body>\n";
+  $htmlOutHeader .= sprintf "<h1>%s</h1>\n", $title;
+
+  $htmlOutFooter .= sprintf "</body>\n";
+  $htmlOutFooter .= sprintf "</html>\n";
+
+  $htmlOutTotal = $htmlOutHeader . $htmlOutToc . $htmlOutResults . $htmlOutFooter;
+
+  open (HTML, ">$OPT_HTMLFILE") || die "can't open file $OPT_HTMLFILE: $!";
+  binmode HTML, ":utf8";
+  printf HTML "%s", $htmlOutTotal;
+  close (HTML);
+
+}
+
+sub download {
+  if (mySystem("fakeroot apt-get update")) {
+    printf (STDERR "“fakeroot apt-get update” didn’t work.\n");
+    exit (1);
+  }
+
+  for my $eePackage (@eePackages) {
+    if (mySystem("fakeroot apt-get -y --force-yes install $eePackage")) {
+      printf (STDERR "“fakeroot apt-get -y --force-yes install $eePackage” didn’t work.\n");
+      exit (1);
+    }
+    else {
+      printf (STDOUT "“fakeroot apt-get -y --force-yes install $eePackage” OK.\n");
+    }
+  }
+
+  if (-d "$OPT_HANDOFF_DIR") {
+    rmtree ("$OPT_HANDOFF_DIR", {verbose => 1});
+  }
+  mkdir ("$OPT_HANDOFF_DIR") || die "Can’t mkdir $OPT_HANDOFF_DIR: $!\n";
+  chdir ("$OPT_HANDOFF_DIR") || die "Can’t cd to $OPT_HANDOFF_DIR: $!\n";
+
+  my $wgetCommand = "wget -nd -r -l1 ";
+  if ($OPT_HTTP_USER ne "") {
+    $wgetCommand .= "--http-user=$OPT_HTTP_USER ";
+  }
+  if ($OPT_HTTP_PASSWD ne "") {
+    $wgetCommand .= "--http-passwd=$OPT_HTTP_PASSWD ";
+  }
+  $wgetCommand .= "$OPT_HANDOFF_URL";
+
+  if (mySystem($wgetCommand)) {
+    printf (STDERR "“wget $OPT_HANDOFF_URL” didn’t work.\n");
+    myExit (1);
+  }
+  @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
+  if ($#handoffFiles < 0) {
+    printf (STDERR "download of handoff .ts files failed.\n");
+    myExit(1);
+  }
+
+  # Convert handoff files mac2unix:
+  for my $file (@handoffFiles) {
+    printf(STDOUT "mac2unix %s\n", $file);
+    my $fileContents = "";
+    open (TS, "<:encoding(UTF-8)", "$file") || die "Can’t open file $file: $!";
+    while(<TS>) {
+      $ARG =~ s/\x{FEFF}//; # remove BOM
+      $ARG =~ s/\r/\n/gi;   # replace returns with newlines
+      $fileContents .= $ARG;
+    }
+    close (TS);
+    open (TS, ">:encoding(UTF-8)", "$file") || die "Can’t open file $file: $!";
+    printf(TS "%s", $fileContents);
+    close (TS);
+  }
+}
+
+sub readHandoffXmlTrees {
+  for my $handoffFile (glob ("$OPT_HANDOFF_DIR/*.ts")) {
+    my $xmlParser = new XML::Parser(Style => 'Tree', ProtocolEncoding => 'UTF-8');
+    $handoffXmlTrees{$handoffFile} = $xmlParser->parsefile($handoffFile);
+  }
+}
+
+sub checkMessageIdFromSourceAgainstHandoff {
+  my ($eeFile, $eeMessageId) = @_;
+  my $eeMessageIdIsInSpecCount = 0;
+
+  for my $handoffFile (@handoffFiles) {
+    my $tree = $handoffXmlTrees{$handoffFile};
+    my @tsTree = @{$tree->[1]};
+    # print Dumper(@tsTree);
+    my $extra_application_info = "";
+    my $extra_ui_spec_document = "";
+    my $extra_ts_date = "";
+    my $extra_ts_macroversion = "";
+    my @contextTree = ();
+    for (my $i = 0; $i < $#tsTree; ++$i) {
+    SWITCH: {
+        if ($tsTree[$i] eq "extra-application-info") {
+          $extra_application_info = $tsTree[$i+1][2];
+          last SWITCH;
+        }
+        if ($tsTree[$i] eq "extra-uispec-document") {
+          $extra_ui_spec_document = $tsTree[$i+1][2];
+          last SWITCH;
+        }
+        if ($tsTree[$i] eq "extra-ts-date") {
+          $extra_ts_date = $tsTree[$i+1][2];
+          last SWITCH;
+        }
+        if ($tsTree[$i] eq "extra-ts-macroversion") {
+          $extra_ts_macroversion = $tsTree[$i+1][2];
+          last SWITCH;
+        }
+        if ($tsTree[$i] eq "context") {
+          @contextTree = @{$tsTree[$i+1]};
+          last SWITCH;
+        }
+      }
+    }
+    for (my $i = 0; $i < $#contextTree; ++$i) {
+      if ($contextTree[$i] eq "message") {
+        my @messageTree = @{$contextTree[$i+1]};
+        my $messageId = $messageTree[0]{"id"};
+        my $source = "";
+        my $extracomment = "";
+        for (my $j = 0; $j < $#messageTree; ++$j) {
+        SWITCH: {
+            if ($messageTree[$j] eq "source") {
+              $source = $messageTree[$j+1][2];
+              last SWITCH;
+            }
+            if ($messageTree[$j] eq "extracomment") {
+              $extracomment = $messageTree[$j+1][2];
+              last SWITCH;
+            }
+          }
+        }
+        if ($messageId eq $eeMessageId) {
+          $eeMessageIdIsInSpecCount += 1;
+          if ($OPT_VERBOSITY >= 1) {
+            printf STDOUT "++++++OK: id “%s” spec “%s” (%s)\n",
+              $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
+          }
+          $htmlOutResults .= sprintf "<p>";
+          $htmlOutResults .= sprintf "<span class=\"okcolor\">";
+          $htmlOutResults .= sprintf "OK: ";
+          $htmlOutResults .= sprintf "id “%s” spec “%s” (%s)",
+            $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
+          $htmlOutResults .= sprintf "</span>";
+          $htmlOutResults .= sprintf "</p>\n";
+        }
+      }
+    }
+  }
+  if ($eeMessageIdIsInSpecCount == 0) {
+    if ($OPT_VERBOSITY >= 1) {
+      printf STDOUT "***ERROR: id “%s” not found in spec\n", $eeMessageId;
+    }
+    $htmlOutResults .= sprintf "<p>";
+    $htmlOutResults .= sprintf "<span class=\"errorcolor\">";
+    $htmlOutResults .= sprintf "Error: ";
+    $htmlOutResults .= sprintf "id “%s” not found in spec.", $eeMessageId;
+    $htmlOutResults .= sprintf "</span>";
+    $htmlOutResults .= sprintf "</p>\n";
+  }
+  return $eeMessageIdIsInSpecCount;
+}
+
+#----------------------------------------------------------------------
+# "main":
+
+# Process command line options
+my %opt;
+unless (GetOptions(\%opt,
+		   'verbosity=i',        \$OPT_VERBOSITY,
+		   'version',            \$OPT_VERSION,
+		   'help|h',             \$OPT_HELP,
+		   'eedir=s',            \$OPT_EEDIR,
+                   'handoffurl=s',       \$OPT_HANDOFF_URL,
+                   'handoffdir=s',       \$OPT_HANDOFF_DIR,
+                   'http-user=s',        \$OPT_HTTP_USER,
+                   'http-passwd=s',      \$OPT_HTTP_PASSWD,
+                   'skip-download',      \$OPT_SKIP_DOWNLOAD,
+                   'html-file=s',        \$OPT_HTMLFILE,
+		  )) {
+  &usage ();
+  exit 1;
+}
+
+if (!defined $OPT_VERBOSITY) {
+  $OPT_VERBOSITY = 1;
+}
+if (!defined $OPT_VERSION) {
+  $OPT_VERSION = 0;
+}
+if (!defined $OPT_HELP) {
+  $OPT_HELP = 0;
+}
+if (!defined $OPT_EEDIR) {
+  $OPT_EEDIR="/usr/share/l10n/dui";
+}
+if (!defined $OPT_HANDOFF_URL) {
+  $OPT_HANDOFF_URL="https://projects.maemo.org/svn/l10n/projects/harmattan/vendor/handoff/";
+}
+if (!defined $OPT_HANDOFF_DIR) {
+  $OPT_HANDOFF_DIR="/tmp/handoff";
+}
+if (!defined $OPT_HTTP_USER) {
+  $OPT_HTTP_USER="";
+}
+if (!defined $OPT_HTTP_PASSWD) {
+  $OPT_HTTP_PASSWD="";
+}
+if (!defined $OPT_SKIP_DOWNLOAD) {
+  $OPT_SKIP_DOWNLOAD = 0;
+}
+if (!defined $OPT_HTMLFILE) {
+  $OPT_HTMLFILE = "messageid-check-result.html";
+}
+
+if ($OPT_VERSION) {
+  print "messageid-check $version\n";
+  exit 0;
+}
+
+if ($OPT_HELP) {
+  &usage ();
+  exit 0;
+}
+
+if ($OPT_VERBOSITY >=1) {
+  select (STDOUT);
+  $OUTPUT_AUTOFLUSH = 1;
+  select (STDERR);
+  $OUTPUT_AUTOFLUSH = 1;
+}
+
+if (!$OPT_SKIP_DOWNLOAD) {
+  download();
+}
+else {
+  @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
+}
+
+readHandoffXmlTrees();
+
+$htmlOutToc .= sprintf "<hr>\n";
+$htmlOutToc .= sprintf "<h2>Result summary:</h2>\n";
+$htmlOutToc .= sprintf "<ul>\n";
+
+for my $eeFile (@eeFiles) {
+  my $errorCount = 0;
+  my $okCount = 0;
+  my $debianPackage = qx(dpkg -S $eeFile);
+  $debianPackage =~ s/:.*$//;
+  chomp($debianPackage);
+  if ($OPT_VERBOSITY >= 1) {
+    printf STDOUT "------------------------------------------------------------\n";
+    printf STDOUT "checking “%s” from package “%s”\n", $eeFile, $debianPackage;
+  }
+  $htmlOutResults .= sprintf "<hr>\n";
+  $htmlOutResults .= sprintf "<h2><a href=\"#%s-ref\" name=\"%s\">",
+    $eeFile, $eeFile;
+  $htmlOutResults .= sprintf "“%s”, package “%s”", $eeFile, $debianPackage;
+  $htmlOutResults .= sprintf "</a></h2>\n";
+  my $xmlParser = new XML::Parser(Style => 'Tree');
+  open (EEFILE, "lconvert -o - -i $eeFile |") || die "Can’t open file lconvert $eeFile | : $!";
+  my $tree = $xmlParser->parse(*EEFILE, ProtocolEncoding => 'UTF-8');
+  close(EEFILE);
+  my @contextTree = @{$tree->[1][4]};
+  for (my $i = 0; $i < $#contextTree; ++$i) {
+    if ($contextTree[$i] eq "message") {
+      my $source = $contextTree[$i+1][4][2];
+      my $eeMessageIdIsInSpecCount =
+        checkMessageIdFromSourceAgainstHandoff($eeFile, $source);
+      if ($eeMessageIdIsInSpecCount >= 1) {
+        ++$okCount;
+      }
+      else {
+        ++$errorCount;
+        ++$totalNumberOfIdsNotFoundInSpec;
+      }
+    }
+  }
+  $htmlOutToc .= sprintf "<li>";
+  if ($errorCount != 0) {
+    $htmlOutToc .= sprintf "<span class=\"errorcolor\">";
+  }
+  else {
+    $htmlOutToc .= sprintf "<span class=\"okcolor\">";
+  }
+  $htmlOutToc .= sprintf "“%s”, package “%s”: ", myBasename($eeFile), $debianPackage;
+  $htmlOutToc .= sprintf "OK=%d, errors=%d ", $okCount, $errorCount;
+  $htmlOutToc .= sprintf "</span>";
+  $htmlOutToc .= sprintf "<a href=\"#%s\" name=\"%s-ref\">details</a>", $eeFile, $eeFile;
+  $htmlOutToc .= sprintf "</li>\n";
+}
+
+$htmlOutToc .= sprintf "</ul>\n";
+
+if ($totalNumberOfIdsNotFoundInSpec != 0) {
+  $htmlOutToc .= sprintf "<span class=\"errorcolor\">";
+}
+else {
+  $htmlOutToc .= sprintf "<span class=\"okcolor\">";
+}
+$htmlOutToc .= sprintf "<p>Total number of Ids not found in the specification: %d</p>",
+        $totalNumberOfIdsNotFoundInSpec;
+$htmlOutToc .= sprintf "</span>";
+
+writeHtml();
+
+myExit (0);
