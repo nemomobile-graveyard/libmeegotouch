@@ -723,8 +723,10 @@ void DuiSceneManagerPrivate::startPageSwitchAnimation(DuiSceneWindow *newPage,
     pageSwitchAnimation->setPageTransitionDirection(direction);
 
     pageSwitchAnimation->disconnect(SIGNAL(finished()));
+
     QObject::connect(pageSwitchAnimation, SIGNAL(finished()), newPage, SIGNAL(appeared()));
-    QObject::connect(pageSwitchAnimation, SIGNAL(finished()), oldPage, SIGNAL(disappeared()));
+    if (oldPage)
+        QObject::connect(pageSwitchAnimation, SIGNAL(finished()), oldPage, SLOT(disappearNow()));
 
     pageSwitchAnimation->start();
     freezeUIForAnimationDuration(pageSwitchAnimation);

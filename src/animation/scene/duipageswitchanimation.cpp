@@ -62,12 +62,7 @@ void DuiPageSwitchAnimation::setOldPage(DuiSceneWindow *oldPage)
 {
     Q_D(DuiPageSwitchAnimation);
 
-    if (d->oldPage)
-        disconnect(this, SIGNAL(finished()), d->oldPage, SLOT(disappearNow()));
-
     d->oldPage = oldPage;
-
-    connect(this, SIGNAL(finished()), oldPage, SLOT(disappearNow()));
 }
 
 void DuiPageSwitchAnimation::setPageTransitionDirection(PageTransitionDirection direction)
