@@ -136,12 +136,16 @@ void DuiApplicationWindowPrivate::_q_connectEscapeButton(DuiEscapeButtonPanelMod
 
     switch (mode) {
     case DuiEscapeButtonPanelModel::BackMode:
-        QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(backButtonClicked()));
+        if (page)
+            QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(backButtonClicked()));
+
         QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), menu, SLOT(disappear()));
         break;
     case DuiEscapeButtonPanelModel::CloseMode:
+        if (page)
+            QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(closeButtonClicked()));
+
         QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
-        QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(closeButtonClicked()));
         break;
     default:;
     }
