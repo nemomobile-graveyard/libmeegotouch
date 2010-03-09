@@ -47,19 +47,15 @@ void DuiComboBoxPrivate::_q_modelDestroyed()
     q->model()->setItemModel(duiEmptyModel());
 }
 
-void DuiComboBoxPrivate::_q_selectionModelCurrentChanged(const QModelIndex &current, const QModelIndex &previous)
-{
-    Q_UNUSED(previous);
-    Q_Q(DuiComboBox);
-    emit q->currentIndexChanged(current.row());
-    emit q->currentIndexChanged(q->itemText(current.row()));
-}
-
 void DuiComboBoxPrivate::_q_selectionModelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
     Q_UNUSED(deselected);
     Q_Q(DuiComboBox);
-    if (selected.isEmpty()) {
+    if (!selected.isEmpty()) {
+        int currentRow = selected.indexes().first().row();
+        emit q->currentIndexChanged(currentRow);
+        emit q->currentIndexChanged(q->itemText(currentRow));
+    } else if (q->currentIndex() == -1) {
         emit q->currentIndexChanged(-1);
         emit q->currentIndexChanged(QString());
     }
@@ -69,10 +65,7 @@ void DuiComboBoxPrivate::_q_itemModelDataChanged(const QModelIndex &topLeft, con
 {
     Q_Q(DuiComboBox);
     int curRow = q->currentIndex();
-    if (curRow == -1) {
-        emit q->currentIndexChanged(-1);
-        emit q->currentIndexChanged(QString());
-    } else if (curRow >= topLeft.row() && curRow <= bottomRight.row()) {
+    if (curRow >= topLeft.row() && curRow <= bottomRight.row()) {
         emit q->currentIndexChanged(curRow);
         emit q->currentIndexChanged(q->itemText(curRow));
     }
@@ -146,7 +139,6 @@ void DuiComboBox::setItemModel(QAbstractItemModel *itemModel)
     connect(itemModel, SIGNAL(destroyed()), this, SLOT(_q_modelDestroyed()));
     connect(itemModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)), this, SLOT(_q_itemModelDataChanged(QModelIndex, QModelIndex)));
     connect(itemModel, SIGNAL(modelReset()), this, SLOT(_q_itemModelReset()));
-    connect(itemSelectionModel, SIGNAL(currentChanged(QModelIndex, QModelIndex)), this, SLOT(_q_selectionModelCurrentChanged(QModelIndex, QModelIndex)));
     connect(itemSelectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)), this, SLOT(_q_selectionModelSelectionChanged(QItemSelection, QItemSelection)));
 }
 
@@ -381,10 +373,9 @@ void DuiComboBox::setCurrentIndex(int index)
 
     QModelIndex item = model()->itemModel()->index(index, 0);
 
-    if (item.isValid()) {
-        itemSelectionModel->select(item, QItemSelectionModel::ClearAndSelect);
-        itemSelectionModel->setCurrentIndex(item, QItemSelectionModel::Current);
-    } else
+    if (item.isValid())
+        itemSelectionModel->setCurrentIndex(item, QItemSelectionModel::ClearAndSelect);
+    else
         itemSelectionModel->clear();
 }
 

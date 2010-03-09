@@ -131,8 +131,7 @@ void DuiPopupList::click(const QModelIndex &index)
     if (index == currentIndex()) {
         emit clicked(index);
     } else {
-        d->selectionModel->select(index, QItemSelectionModel::ClearAndSelect);
-        d->selectionModel->setCurrentIndex(index, QItemSelectionModel::Current);
+        d->selectionModel->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
 
         emit clicked(index);
         emit currentIndexChanged(index);
@@ -157,10 +156,9 @@ void DuiPopupList::setCurrentIndex(const QModelIndex &index)
     // Since we didn't change the current index, no new signals should not send
     if (index == currentIndex()) return;
 
-    if (index.isValid()) {
-        d->selectionModel->select(index, QItemSelectionModel::ClearAndSelect);
-        d->selectionModel->setCurrentIndex(index, QItemSelectionModel::Current);
-    } else
+    if (index.isValid())
+        d->selectionModel->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
+    else
         d->selectionModel->clear();
 
     emit currentIndexChanged(index);

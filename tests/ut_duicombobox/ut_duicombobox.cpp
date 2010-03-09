@@ -263,6 +263,7 @@ void Ut_DuiComboBox::testBuiltinModel()
 {
     DuiComboBoxView *view = (DuiComboBoxView *)m_combobox->view();
     DuiComboBoxViewPrivate *viewPrivate = view->d_func();
+    QSignalSpy spy(m_combobox, SIGNAL(currentIndexChanged(int)));
 
     m_combobox->addItems(QStringList() << "item0" << "item1" << "item2" << "item3");
 
@@ -270,6 +271,8 @@ void Ut_DuiComboBox::testBuiltinModel()
     m_combobox->setCurrentIndex(2);
     QCOMPARE(m_combobox->currentIndex(), 2);
     QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item2"));
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.takeLast()[0], QVariant(2));
     // remove item1, index should change
     m_combobox->removeItem(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
@@ -278,15 +281,20 @@ void Ut_DuiComboBox::testBuiltinModel()
     m_combobox->removeItem(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
     QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.takeLast()[0], QVariant(-1));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
     QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item3"));
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.takeLast()[0], QVariant(1));
     // add one item
     m_combobox->insertItem(0, QString("itemX"));
     QCOMPARE(m_combobox->currentIndex(), 2);
     QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item3"));
+    QCOMPARE(spy.count(), 0);
 
     // change current item text
     m_combobox->setItemText(2, QString("beef"));
@@ -298,12 +306,15 @@ void Ut_DuiComboBox::testModelSwitching()
 {
     DuiComboBoxView *view = (DuiComboBoxView *)m_combobox->view();
     DuiComboBoxViewPrivate *viewPrivate = view->d_func();
+    QSignalSpy spy(m_combobox, SIGNAL(currentIndexChanged(int)));
 
     m_combobox->addItems(QStringList() << "item0" << "item1" << "item2" << "item3");
 
     m_combobox->setCurrentIndex(2);
     QCOMPARE(m_combobox->currentIndex(), 2);
     QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item2"));
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.takeLast()[0], QVariant(2));
 
     QStringListModel *strListModel = new QStringListModel();
     strListModel->setStringList(QStringList() << "foo0" << "foo1" << "foo2" << "foo3");
@@ -312,6 +323,12 @@ void Ut_DuiComboBox::testModelSwitching()
     // model changed selection should reset
     QCOMPARE(m_combobox->currentIndex(), -1);
     QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.takeLast()[0], QVariant(-1));
+
+    // currentIndexChanged signals should not be emitted
+    m_combobox->insertItems(0, QStringList() << "bar1" << "bar2" << "bar3");
+    QCOMPARE(spy.count(), 0);
 }
 
 void Ut_DuiComboBox::testStringListModel()
@@ -355,6 +372,7 @@ void Ut_DuiComboBox::testStringListModelSetStringList()
 {
     DuiComboBoxView *view = (DuiComboBoxView *)m_combobox->view();
     DuiComboBoxViewPrivate *viewPrivate = view->d_func();
+    QSignalSpy spy(m_combobox, SIGNAL(currentIndexChanged(int)));
 
     QStringListModel *strListModel = new QStringListModel();
     strListModel->setStringList(QStringList() << "foo0" << "foo1" << "foo2" << "foo3");
@@ -362,10 +380,14 @@ void Ut_DuiComboBox::testStringListModelSetStringList()
 
     // select foo2
     m_combobox->setCurrentIndex(2);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.takeFirst()[0], QVariant(2));
     // change string list completely
     strListModel->setStringList(QStringList() << "bar0" << "bar1" << "bar2" << "bar3");
     QCOMPARE(m_combobox->currentIndex(), -1);
     QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.takeFirst()[0], QVariant(-1));
 }
 
 void Ut_DuiComboBox::testActivatedSignal()
@@ -416,6 +438,29 @@ void Ut_DuiComboBox::testActivatedSignal()
     QCOMPARE(currentItemChangedIntSpy.last()[0].toInt(), 2);
     QCOMPARE(currentItemChangedQStringSpy.count(), 2);
     QCOMPARE(currentItemChangedQStringSpy.last()[0].toString(), QString("foo2"));
+}
+
+void Ut_DuiComboBox::testSetCurrentIndex()
+{
+    win->scene()->addItem(m_combobox);
+
+    DuiComboBoxView *view = (DuiComboBoxView *)m_combobox->view();
+    DuiComboBoxViewPrivate *viewPrivate = view->d_func();
+
+    QSignalSpy spy(m_combobox, SIGNAL(currentIndexChanged(int)));
+
+    m_combobox->addItem("text1");
+    m_combobox->setCurrentIndex(0);
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.takeFirst()[0].toInt(), 0);
+
+    m_combobox->addItem("text2");
+    m_combobox->click();
+    viewPrivate->popuplist->click(m_combobox->itemModel()->index(1, 0));
+    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spy.takeFirst()[0].toInt(), 1);
+
+    win->scene()->removeItem(m_combobox);
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiComboBox)

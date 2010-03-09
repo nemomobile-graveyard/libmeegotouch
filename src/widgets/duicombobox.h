@@ -380,7 +380,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_modelDestroyed())
     Q_PRIVATE_SLOT(d_func(), void _q_itemModelDataChanged(QModelIndex, QModelIndex))
     Q_PRIVATE_SLOT(d_func(), void _q_itemModelReset())
-    Q_PRIVATE_SLOT(d_func(), void _q_selectionModelCurrentChanged(QModelIndex, QModelIndex))
     Q_PRIVATE_SLOT(d_func(), void _q_selectionModelSelectionChanged(QItemSelection, QItemSelection))
     Q_PRIVATE_SLOT(d_func(), void _q_itemClicked(QModelIndex))
 

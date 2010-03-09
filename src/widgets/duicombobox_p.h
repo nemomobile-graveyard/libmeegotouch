@@ -34,7 +34,6 @@ public:
 
     void init();
     void _q_modelDestroyed();
-    void _q_selectionModelCurrentChanged(const QModelIndex &current, const QModelIndex &previous);
     void _q_selectionModelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void _q_itemModelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
     void _q_itemModelReset();
