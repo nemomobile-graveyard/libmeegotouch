@@ -1,3 +1,9 @@
+libdui (0.19.6-1) unstable; urgency=low
+
+  * Removed some pictures from widgetsgallery to keep package size small.
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 09 Mar 2010 16:58:44 +0200
+
 libdui (0.19.5-1) unstable; urgency=low
 
   * NB#159396 - DuiComboBox emits an extraneous currentIndexChanged(-1) signal the first time an item is selected from the GUI
