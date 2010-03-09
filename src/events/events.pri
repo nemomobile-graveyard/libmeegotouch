@@ -10,6 +10,8 @@ PRIVATE_HEADERS += \
         $$EVENTS_SRC_DIR/duiscenewindowevent_p.h \
         $$EVENTS_SRC_DIR/duitapandholdrecognizer_p.h \
         $$EVENTS_SRC_DIR/duitapandholdgesture_p.h \
+        $$EVENTS_SRC_DIR/duikeyboardstatetracker.h \
+        $$EVENTS_SRC_DIR/duikeyboardstatetracker_p.h \
 
 HEADERS += \
         $$EVENTS_SRC_DIR/duicancelevent.h \
@@ -29,3 +31,4 @@ SOURCES += \
         $$EVENTS_SRC_DIR/duiscenewindowevent_p.cpp \
         $$EVENTS_SRC_DIR/duitapandholdgesture.cpp \
         $$EVENTS_SRC_DIR/duitapandholdrecognizer.cpp \
+        $$EVENTS_SRC_DIR/duikeyboardstatetracker.cpp \
