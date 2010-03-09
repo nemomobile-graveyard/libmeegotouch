@@ -52,6 +52,7 @@ protected:
 
 private slots:
     void initContextSubscriber();
+    void updateOrientationAngle();
 
 private:
     Q_DECLARE_PUBLIC(DuiOrientationTracker)

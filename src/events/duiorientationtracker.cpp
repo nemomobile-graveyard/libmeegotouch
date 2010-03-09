@@ -19,6 +19,7 @@
 
 #include "duiorientationtracker.h"
 #include "duiorientationtracker_p.h"
+#include "duikeyboardstatetracker.h"
 #include "duiapplication.h"
 #include "duiwindow.h"
 #include <QCoreApplication>
@@ -43,6 +44,8 @@ DuiOrientationTrackerPrivate::DuiOrientationTrackerPrivate(DuiOrientationTracker
             this, SLOT(topEdgeChanged()));
     connect(&isCoveredProperty, SIGNAL(valueChanged()),
             this, SLOT(isCoveredChanged()));
+    connect(DuiKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
+            this, SLOT(updateOrientationAngle()));
 #endif
 
     initContextSubscriber();
@@ -82,7 +85,9 @@ void DuiOrientationTrackerPrivate::topEdgeChanged()
         angle = currentAngle;
     }
 
-    if (angle != currentAngle) {
+    // if hardware keyboard is opened, don't allow orientation angle to be changed.
+    if (angle != currentAngle
+        && !DuiKeyboardStateTracker::instance()->isOpen()) {
         currentAngle = angle;
         // instead of emitting a signal we have to explicitely call setOrientationAngle
         // on windows, because this is very often excuted before the application's
@@ -114,6 +119,23 @@ void DuiOrientationTrackerPrivate::isCoveredChanged()
             emit q->faceUp();
     }
 #endif
+}
+
+void DuiOrientationTrackerPrivate::updateOrientationAngle()
+{
+    if (DuiKeyboardStateTracker::instance()->isOpen()) {
+        // if hardware keyboard is opened, set all window's orientation angle to 0.
+        foreach (DuiWindow *window, DuiApplication::windows()) {
+            if (!window->isOrientationAngleLocked()) {
+                if (!window->isOrientationLocked() || window->orientation() == Dui::Landscape)
+                    window->setOrientationAngle(Dui::Angle0);
+            }
+        }
+        currentAngle = Dui::Angle0;
+    } else {
+        // if hardware keyboard is closed, set the real orientation.
+        topEdgeChanged();
+    }
 }
 
 DuiOrientationTracker::DuiOrientationTracker() :
