@@ -668,12 +668,9 @@ bool DuiWindow::event(QEvent *event)
             // switch language
 	    QString language;
 
-#ifdef Q_OS_WIN
-            language = qgetenv( "LANG" );
-#else
-            DuiGConfItem languageItem("/Dui/i18n/Language");
-            language = languageItem.value().toString();
-#endif
+            DuiLocale oldLocale; // get current system default
+            language = oldLocale.name();
+
             if (language == "en_US_POSIX" || language.isEmpty())
                 language = "fi";
             else if (language == "fi")
@@ -692,19 +689,9 @@ bool DuiWindow::event(QEvent *event)
                 // engineering English:
                 language = "";
 
-#ifdef Q_OS_WIN
-            qputenv( "LANG", qPrintable( language ) );
-            DuiLocale locale( language );
+            DuiLocale newLocale(language);
+            DuiLocale::setDefault(newLocale);
 
-            // remove again, when duilocale remembers its catalogs
-            locale.installTrCatalog( "libdui" );
-            locale.installTrCatalog( "common" );
-            locale.installTrCatalog( "widgetsgallery" );
-
-            DuiLocale::setDefault( locale );
-#else
-            languageItem.set(language);
-#endif
             updateNeeded = true;
         }
 

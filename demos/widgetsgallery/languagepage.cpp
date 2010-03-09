@@ -116,8 +116,16 @@ void LanguagePage::changeLanguage(int index)
     if (index < 0 || index >= model->rowCount())
         return;
     QString newLanguage = model->item(index, 1)->text();
+#ifdef HAVE_GCONF
     DuiGConfItem languageItem("/Dui/i18n/Language");
     if (newLanguage != languageItem.value().toString()) {
         languageItem.set(newLanguage);
     }
+#else
+    DuiLocale oldLocale;
+    if (newLanguage != oldLocale.name()) {
+        DuiLocale newLocale(newLanguage);
+        DuiLocale::setDefault(newLocale);
+    }
+#endif
 }

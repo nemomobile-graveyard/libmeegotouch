@@ -824,12 +824,12 @@ void DuiLocale::setDefault(const DuiLocale &locale)
     }
     defaultLocaleMutex.unlock();
 
-#ifdef HAVE_GCONF
-    QString oldLanguage = (locale.d_ptr)->currentLanguageItem.value().toString();
-    QString newLanguage = (locale.d_ptr)->_defaultLocale;
-    if (oldLanguage != newLanguage)
-        (locale.d_ptr)->currentLanguageItem.set(newLanguage);
-#endif
+//#ifdef HAVE_GCONF
+//    QString oldLanguage = (locale.d_ptr)->currentLanguageItem.value().toString();
+//    QString newLanguage = (locale.d_ptr)->_defaultLocale;
+//    if (oldLanguage != newLanguage)
+//        (locale.d_ptr)->currentLanguageItem.set(newLanguage);
+//#endif
 
     // Setting the default QLocale is needed to get localized number
     // support in translations via %Ln, %L1, %L2, ...:
