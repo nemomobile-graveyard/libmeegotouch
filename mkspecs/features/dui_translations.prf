@@ -60,23 +60,23 @@ defineReplace(prependAll) {
     return($$result)
 }
 
+defineReplace(targetPath) {
+    return($$replace(1, /, $$QMAKE_DIR_SEP))
+}
 isEmpty(LRELEASE_OPTIONS) {
     LRELEASE_OPTIONS = -idbased
+    # add “-markuntranslated '!!\ '” if available (needs new Qt 4.6):
+    out = $$system($$targetPath($$[QT_INSTALL_BINS]/lrelease) -help)
+    # the second parameter of contains can be a regexp!
+    contains(out, .*markuntranslated.*) {
+    LRELEASE_OPTIONS += -markuntranslated '!!\ '
+    }
 }
 isEmpty(LUPDATE_OPTIONS) {
     LUPDATE_OPTIONS = -locations absolute -no-ui-lines -no-sort
 }
-defineReplace(targetPath) {
-    return($$replace(1, /, $$QMAKE_DIR_SEP))
-}
 LRELEASE = $$targetPath($$[QT_INSTALL_BINS]/lrelease) $$LRELEASE_OPTIONS
 LUPDATE = $$targetPath($$[QT_INSTALL_BINS]/lupdate) $$LUPDATE_OPTIONS
-# add “-markuntranslated '!!\ '” if available (needs new Qt 4.6):
-out = $$system($$LRELEASE -help)
-# the second parameter of contains can be a regexp!
-contains(out, .*markuntranslated.*) {
-    LRELEASE += -markuntranslated '!!\ '
-}
 
 TRANSLATIONS = $$prependAll(LANGUAGES, $$TRANSLATIONDIR/$${CATALOGNAME}_,.ts)
 
