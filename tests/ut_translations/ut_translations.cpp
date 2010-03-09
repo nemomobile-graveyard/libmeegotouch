@@ -19,6 +19,7 @@
 
 #include "ut_translations.h"
 #include <DuiGConfItem>
+#include <DuiApplication>
 
 bool confIsDown()
 {
@@ -42,8 +43,8 @@ bool confIsDown()
 void Ut_Translations::initTestCase()
 {
     static int argc = 0;
-    static char *argv[1] = { (char *) "" };
-    qap = new QCoreApplication(argc, argv);
+    static char *argv[1] = { (char *) "ut_translations" };
+    qap = new DuiApplication(argc, argv, "test");
     // could also use: QCoreApplication::applicationDirPath()
     // but it seems to have some problems under scratchbox
     DuiLocale::addTranslationPath(qApp->applicationDirPath() + "/translations-tr");
