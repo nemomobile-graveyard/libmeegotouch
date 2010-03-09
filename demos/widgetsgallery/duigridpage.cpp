@@ -88,11 +88,15 @@ void DuiGridPage::createContent()
 
     GridModel * model = new GridModel(QSize(250, 250), Utils::mediaArtDir());
     list->setItemModel(model);
+    retranslateUi();
 }
 
 void DuiGridPage::retranslateUi()
 {
+    //% "Grid page"
     setTitle(qtTrId("xx_gridpage_title"));
+    if (!isContentCreated())
+        return;
 }
 
 QString DuiGridPage::timedemoTitle()
