@@ -201,11 +201,13 @@ void DuiContainerView::drawBackground(QPainter *painter, const QStyleOptionGraph
     Q_D(const DuiContainerView);
 
     // draw the background
-    painter->setOpacity(0.9 * d->controller->effectiveOpacity());
+    qreal oldOpacity = painter->opacity();
+    painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
     if (style()->backgroundImage()) {
         const qreal headerHeight = d->header ? d->header->size().height() : 0;
         style()->backgroundImage()->draw(0, headerHeight, size().width(), size().height() - headerHeight, painter);
     }
+    painter->setOpacity(oldOpacity);
 }
 
 void DuiContainerView::applyStyle()
