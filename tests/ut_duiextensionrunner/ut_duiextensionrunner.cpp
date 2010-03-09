@@ -30,6 +30,7 @@
 #include <duiappletupdategeometrymessage.h>
 #include <duiappletobjectmenurequestmessage.h>
 #include <duiappletobjectmenumessage.h>
+#include <duicomponentdata.h>
 #include <duiappletsharedmutex_stub.h>
 #include <duiappletid_stub.h>
 #include <duiappletsettings_stub.h>
@@ -62,6 +63,12 @@ void QTimer::start(int)
 void QCoreApplication::quit()
 {
     Ut_DuiExtensionRunner::quitCalled = true;
+}
+
+// DuiComponentData stubs
+bool DuiComponentData::emulateTwoFingerGestures()
+{
+    return false;
 }
 
 // QGraphicsScene stubs

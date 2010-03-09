@@ -111,6 +111,11 @@ void DuiComponentData::unregisterWindow(DuiWindow *window)
         setActiveWindow(0);
 }
 
+bool DuiComponentData::emulateTwoFingerGestures()
+{
+    return false;
+}
+
 // Avoid creating unnecessary OpenGL stuff
 void DuiWindow::setTranslucentBackground(bool enable)
 {

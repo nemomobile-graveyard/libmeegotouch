@@ -122,6 +122,8 @@ public:
     static bool showObjectNames();
     //! Show cursor
     static bool showCursor();
+    //! Emulate two finger gestures
+    static bool emulateTwoFingerGestures();
     //! Sets if position of widgets should be shown or not
     static void setShowPosition(bool show);
     //! Sets if margins of widgets should be shown or not

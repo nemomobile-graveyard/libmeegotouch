@@ -28,7 +28,7 @@ class DuiScenePrivate
     Q_DECLARE_PUBLIC(DuiScene)
 
 public:
-    void init();
+    DuiScenePrivate();
     virtual ~DuiScenePrivate();
     void setSceneManager(DuiSceneManager *sceneManager);
 
@@ -40,9 +40,20 @@ public:
     QPen   boundingRectLinePen;
     QBrush boundingRectFillBrush;
 
+    void touchPointCopyPosToLastPos(QTouchEvent::TouchPoint &point);
+    void touchPointCopyMousePosToPointPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event);
+    void touchPointCopyMousePosToPointStartPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event);
+    bool eventEmulatePinch(QEvent* event);
+    bool eventEmulatePan(QEvent* event);
+
 protected:
     DuiScene *q_ptr;
     DuiSceneManager *manager;
+
+    //Two finger gestures emulation variables
+    QTouchEvent::TouchPoint emuPoint1, emuPoint2;
+    bool panEmulationEnabled;
+    bool pinchEmulationEnabled;
 };
 
 #endif // DUISCENE_P_H

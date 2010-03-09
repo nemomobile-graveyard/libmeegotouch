@@ -51,6 +51,7 @@ public:
 
 protected:
     //! \reimp
+    bool event(QEvent *event);    
     void drawForeground(QPainter *painter, const QRectF &rect);
     //! \reimp_end
 

@@ -229,6 +229,11 @@ bool DuiApplication::showCursor()
     return DuiComponentData::showCursor();
 }
 
+bool DuiApplication::emulateTwoFingerGestures()
+{
+    return DuiComponentData::emulateTwoFingerGestures();
+}
+
 void DuiApplication::setShowPosition(bool show)
 {
     DuiComponentData::setShowPosition(show);

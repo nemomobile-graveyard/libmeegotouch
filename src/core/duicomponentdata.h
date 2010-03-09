@@ -115,6 +115,8 @@ public:
     static bool prestarted();
     //! Returns the prestart mode
     static Dui::PrestartMode prestartMode();
+    //! Emulate two finger gestures
+    static bool emulateTwoFingerGestures();
     //! Sets if position of widgets should be shown or not
     static void setShowPosition(bool show);
     //! Sets if margins of widgets should be shown or not
@@ -133,6 +135,8 @@ public:
     static void setPrestarted(bool flag);
     //! Sets the prestart mode
     static void setPrestartMode(Dui::PrestartMode mode);
+    //! Set if two finger gestures should be emulated or not.
+    static void setEmulateTwoFingerGestures(bool flag);
 
     /*!
      * Returns the currently active application window.

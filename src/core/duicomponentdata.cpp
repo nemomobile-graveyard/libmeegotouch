@@ -305,6 +305,8 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
             showCursor = true;
         else if (s == "-show-object-names")
             q->setShowObjectNames(true);
+        else if (s == "-emulate-two-finger-gestures")
+            q->setEmulateTwoFingerGestures(true);
         else if (s == "-dev") {
             showSize = true;
             showPosition = true;
@@ -405,6 +407,8 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
                                          << "  [-no-output-prefix <prefix>] Only show debug messages that do not start with the given prefix\n"
                                          << "  [-target <name>] Use the target device profile\n"
                                          << "  [-prestart] Prestart the application (if supported)\n"
+                                         << "  [-emulate-two-finger-gestures] Emulate pinch gesture (alt + mid mouse button + mouse movement)\n"
+                                         << "                                 and two finger pan gesture (ctrl + mid mouse button + mouse movement)\n"
                                          << "\n";
             exit(0);
 
@@ -637,6 +641,14 @@ bool DuiComponentData::showCursor()
     return gDuiComponentDataPrivate->showCursor;
 }
 
+bool DuiComponentData::emulateTwoFingerGestures()
+{
+    if (!gDuiComponentDataPrivate) {
+        qFatal("DuiComponentData::emulateTwoFingerGestures() - DuiComponentData instance not yet created.");
+    }
+    return gDuiComponentDataPrivate->emulateTwoFingerGestures;
+}
+
 void DuiComponentData::setShowPosition(bool show)
 {
     if (!gDuiComponentDataPrivate) {
@@ -717,6 +729,14 @@ void DuiComponentData::setPrestartMode(Dui::PrestartMode mode)
         qFatal("DuiComponentData::setPrestartMode() - DuiComponentData instance not yet created.");
     }
     gDuiComponentDataPrivate->prestartMode = mode;
+}
+
+void DuiComponentData::setEmulateTwoFingerGestures(bool flag)
+{
+    if (!gDuiComponentDataPrivate) {
+        qFatal("DuiComponentData::setEmulateTwoFingerGestures() - DuiComponentData instance not yet created.");
+    }
+    gDuiComponentDataPrivate->emulateTwoFingerGestures = flag;
 }
 
 QList<DuiWindow *> DuiComponentData::windows()

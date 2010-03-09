@@ -109,6 +109,11 @@ Dui::PrestartMode DuiApplication::prestartMode()
     return fakeMode;
 }
 
+bool DuiComponentData::emulateTwoFingerGestures()
+{
+    return false;
+}
+
 // DuiSceneManager stubs
 void DuiSceneManager::setOrientationAngle(Dui::OrientationAngle angle, Dui::OrientationChangeMode mode)
 {

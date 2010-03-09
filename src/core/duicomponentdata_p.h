@@ -56,6 +56,7 @@ public:
     bool showCursor;
     bool reverseLayout;
     bool prestarted;
+    bool emulateTwoFingerGestures;
     Dui::PrestartMode prestartMode;
     DuiTheme *theme;
     DuiDeviceProfile *deviceProfile;

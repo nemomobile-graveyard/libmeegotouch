@@ -93,6 +93,11 @@ void DuiComponentData::unregisterWindow(DuiWindow *window)
         setActiveWindow(0);
 }
 
+bool DuiComponentData::emulateTwoFingerGestures()
+{
+    return false;
+}
+
 // WARNING: This restricts the unit test to the support one window only
 QList<DuiWindow *> DuiComponentData::windows()
 {

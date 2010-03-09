@@ -117,6 +117,11 @@ void DuiComponentData::unregisterWindow(DuiWindow *window)
         setActiveWindow(0);
 }
 
+bool DuiComponentData::emulateTwoFingerGestures()
+{
+    return false;
+}
+
 // Test class implementation
 
 void Ut_DuiSceneWindow::init()
