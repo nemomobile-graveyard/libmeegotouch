@@ -95,7 +95,7 @@ void TestThemeDaemon::changeTheme(const QString &theme_id)
 
 void TestThemeDaemon::emitThemeChange()
 {
-    emit themeChanged(themeInheritanceChain());
+    emit themeChanged(themeInheritanceChain(), QStringList());
 }
 
 QStringList TestThemeDaemon::themeInheritanceChain()
@@ -108,6 +108,11 @@ QStringList TestThemeDaemon::themeInheritanceChain()
     }
     themeInheritance << themeDirectory + "theme1" + QDir::separator();
     return themeInheritance;
+}
+
+QStringList TestThemeDaemon::themeLibraryNames()
+{
+    return QStringList();
 }
 
 bool TestThemeDaemon::hasPendingRequests() const
