@@ -1,3 +1,9 @@
+libdui (0.19.7-1) unstable; urgency=low
+
+  * Removed the remaning sample photos from widgetsgallery demo app.
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 10 Mar 2010 16:13:44 +0200
+
 libdui (0.19.6-1) unstable; urgency=low
 
   * Removed some pictures from widgetsgallery to keep package size small.
