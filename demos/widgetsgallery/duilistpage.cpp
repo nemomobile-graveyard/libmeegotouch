@@ -18,19 +18,17 @@
 ****************************************************************************/
 
 #include "duilistpage.h"
-#include "utils.h"
-#include "duiabstractcellcreator.h"
-#include "phonebookmodel.h"
+
 #include <QDir>
 #include <QTime>
-
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
 #include <QTextCodec>
 
+
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
-
+#include <DuiAbstractCellCreator>
 #include <DuiLocale>
 #include <DuiList>
 #include <DuiLabel>
@@ -45,6 +43,15 @@
 #include <DuiContentItem>
 #include <DuiWidgetAction>
 
+
+#include "utils.h"
+
+#ifdef HAVE_N900
+#include "contactmodel.h"
+#else
+#include "phonebookmodel.h"
+#endif
+
 DuiListPage::DuiListPage() :
     model(NULL), list(NULL), currentSortingIndex(0)
 {
@@ -55,6 +62,7 @@ DuiListPage::DuiListPage() :
 DuiListPage::~DuiListPage()
 {
     delete model;
+    delete imageLoader;
 }
 
 QString DuiListPage::timedemoTitle()
@@ -75,10 +83,29 @@ public:
             return;
 
         QVariant data = index.data(Qt::DisplayRole);
+
+#ifdef HAVE_N900
+        Contact *contact = data.value<Contact*>();
+        contentItem->setTitle(contact->getName());
+        QStringList numbers = contact->getPhoneNumbers();
+        if (numbers.size() > 0) {
+            contentItem->setSubtitle(numbers[0]);
+        } else {
+            QStringList addresses = contact->getEmailAddresses();
+            if (addresses.size() > 0) {
+                contentItem->setSubtitle(addresses[0]);
+            } else {
+                contentItem->setSubtitle(QString());
+            }
+        }
+
+        contentItem->setPixmap(contact->getAvatar());
+#else
         PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(data.value<void *>());
         contentItem->setTitle(entry->fullName);
         contentItem->setSubtitle(entry->phoneNumber);
         contentItem->setPixmap(entry->thumbnail);
+#endif
 
         contentItem->boundingRect();
 
@@ -132,6 +159,12 @@ void DuiListPage::setPlainListModel()
     cellCreator = new DuiContentItemCreator();
     list->setCellCreator(cellCreator);
 
+#ifdef HAVE_N900
+    model = new ContactModel();
+    list->setItemModel(model);
+
+    imageLoader = new ContactImageLoader();
+#else
     model = new PhoneBookModel();
 
     proxyModel = new PhoneBookSortedModel();
@@ -139,6 +172,7 @@ void DuiListPage::setPlainListModel()
     list->setItemModel(proxyModel);
 
     imageLoader = new PhoneBookImageLoader;
+#endif
 
     // when list is moving we shouldn't do any processing, which may happen
     connect(list, SIGNAL(panningStarted()), imageLoader, SLOT(stopLoadingPictures()));
@@ -147,7 +181,12 @@ void DuiListPage::setPlainListModel()
     // trigger initial pictures loading
     QTimer::singleShot(1500, this, SLOT(loadPicturesInVisibleItems()));
 
+
+#ifdef HAVE_N900
+    loadPicturesInVisibleItems();
+#else
     changeAmountOfItemInList(0);
+#endif
 }
 
 DuiComboBox *DuiListPage::createComboBoxAction(const QString &title, const QStringList &itemsList)
@@ -182,10 +221,12 @@ void DuiListPage::createActions()
     addAction(action);
     */
 
+#ifndef HAVE_N900
     QStringList amountOfItemsList;
     amountOfItemsList << "50 items" << "100 items" << "200 items" << "1000 items";
     combo = createComboBoxAction("Items in model", amountOfItemsList);
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeAmountOfItemInList(int)));
+#endif
 
     QStringList sortingOrderList;
     sortingOrderList << "None" << "Ascending" << "Descending";
@@ -226,17 +267,25 @@ void DuiListPage::changeSortingOrder(int index)
     case None:
         break;
     case Ascending:
+#ifdef HAVE_N900
+        model->sort(0, Qt::AscendingOrder);
+#else
         proxyModel->sort(0, Qt::AscendingOrder);
+#endif
         break;
     case Descending:
+#ifdef HAVE_N900
+        model->sort(0, Qt::DescendingOrder);
+#else
         proxyModel->sort(0, Qt::DescendingOrder);
+#endif
         break;
     }
-
     currentSortingIndex = index;
     loadPicturesInVisibleItems();
 }
 
+#ifndef HAVE_N900
 void DuiListPage::changeAmountOfItemInList(int index)
 {
     Q_ASSERT(index >= 0 && index < 4);
@@ -248,18 +297,23 @@ void DuiListPage::changeAmountOfItemInList(int index)
     model->insertRows(0, amountOfItems[index]);
     changeSortingOrder(currentSortingIndex);
 }
+#endif
 
 void DuiListPage::changeListMode(int index)
 {
     switch (index) {
     case Plain:
         list->setShowGroups(false);
+#ifndef HAVE_N900
         proxyModel->setShowGroups(false);
+#endif
         break;
 
     case Grouped:
         list->setShowGroups(true);
+#ifndef HAVE_N900
         proxyModel->setShowGroups(true);
+#endif
         break;
     }
     changeSortingOrder(currentSortingIndex);

@@ -69,6 +69,7 @@ HAVE_CONTEXTSUBSCRIBER=no
 HAVE_GCONF=no
 HAVE_GSTREAMER=no
 HAVE_DBUS=no
+HAVE_N900=no
    
 OPT_SHADOW=maybe
 
@@ -208,6 +209,9 @@ while [ "$#" -gt 0 ]; do
         ;;
     plainqt)
         CFG_BUILD_PLAINQT="yes"
+        ;;
+    n900)
+        HAVE_N900="yes"
         ;;
     h|help)
         if [ "$VAL" = "yes" ]; then
@@ -369,6 +373,8 @@ Additional options:
     -benchmarks ........ Build the benchmarks.
     -plainqt ........... Build the Plain Qt style plugin.
 
+    -n900 .............. Build libdui for the N900 device.
+
 EOF
 
 exit 0
@@ -439,6 +445,10 @@ fi
 
 if [ "$HAVE_DBUS" = "yes" ]; then
     DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_DBUS"
+fi
+
+if [ "$HAVE_N900" = "yes" ]; then
+    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_N900"
 fi
 
 
@@ -581,7 +591,9 @@ $QMAKE_BIN "$relpath/projects.pro" $QMAKE_CONFIG $QMAKE_SWITCHES
 # give feedback on configuration
 #-------------------------------------------------------------------------------
 
-echo -e "\n\nOptional build dependencies found:"
+echo ""
+echo ""
+echo "Optional build dependencies found:"
 
 echo "ICU ...................... $HAVE_ICU"
 echo "Context Subscriber 1.0 ... $HAVE_CONTEXTSUBSCRIBER"
@@ -591,9 +603,13 @@ echo "DBus (incl. QtDBus) ...... $HAVE_DBUS"
 
 
 if [ "$CFG_DEV" = "yes" ]; then
-    echo -e "\n\nEnabling DirectUI developer's build\n"
+    echo ""
+    echo ""
+    echo "Enabling DirectUI developer's build"
+    echo ""
 else
-  echo -e "\n"
+    echo ""
+    echo ""
 fi
 
 echo "DirectUI framework build configuration:"
@@ -608,7 +624,12 @@ echo "Benchmarks .......... $CFG_BUILD_BENCHMARKS"
 echo "Plain Qt support .... $CFG_BUILD_PLAINQT"
 echo "Tests ............... $CFG_BUILD_TESTS"
 
-echo
+if [ "$HAVE_N900" = "yes" ]; then
+    echo ""
+    echo "Building for Maemo 5 on N900"
+fi
+
+echo ""
 echo libdui is now configured for building. Just run \'make\'.
 if [ "$relpath" = "$DUI_INSTALL_PREFIX" ]; then
     echo Once everything is built, libdui is installed.
@@ -618,4 +639,5 @@ else
     echo libdui will be installed into $DUI_INSTALL_PREFIX
 fi
 
-echo -e "\n"
+echo ""
+echo ""

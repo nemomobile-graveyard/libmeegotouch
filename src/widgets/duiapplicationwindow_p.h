@@ -105,6 +105,9 @@ public:
     void _q_updatePageAutoMarginsForComponents(const Dui::Orientation &orientation);
     void _q_menuAppeared();
     void _q_menuDisappeared();
+#ifdef HAVE_N900
+    void _q_exitAppView();
+#endif
 };
 
 #endif

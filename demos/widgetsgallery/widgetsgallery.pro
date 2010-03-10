@@ -18,6 +18,7 @@ win32|macx {
         -ldui0
 }
 else:LIBS += ../../lib/libdui.so
+
 TEMPLATE = app
 TARGET = widgetsgallery
 target.path = $$DUI_INSTALL_BIN
@@ -58,7 +59,6 @@ SOURCES += main.cpp \
     widgetsgalleryretranslator.cpp \
     utils.cpp \
     panningbenchmark.cpp \
-    phonebookmodel.cpp \
     timedemo.cpp \
     timingscene.cpp \
     ../../benchmarks/performancebenchmark/emptymainloophelper.cpp \
@@ -93,7 +93,6 @@ HEADERS += templatepage.h \
     widgetsgalleryretranslator.h \
     utils.h \
     panningbenchmark.h \
-    phonebookmodel.h \
     timedemo.h \
     timingscene.h \
     ../../benchmarks/performancebenchmark/emptymainloophelper.h \
@@ -103,8 +102,29 @@ HEADERS += templatepage.h \
 
 # theme
 include(theme/theme.pri)
-desktop_entry.path = $$DUI_INSTALL_DATA/applications
-desktop_entry.files = widgetsgallery.desktop
+
+contains( DEFINES, HAVE_N900 ) {
+    SOURCES += contactmodel.cpp
+    HEADERS += contactmodel.h
+
+    PKGCONFIG += libosso-abook-1.0
+    CONFIG += release link_pkgconfig
+
+    desktop_icon.path = $$DUI_INSTALL_DATA/icons/hicolor/64x64/hildon
+    desktop_icon.files = widgetsgallery.png
+
+    INSTALLS += desktop_icon
+
+    desktop_entry.path = $$DUI_INSTALL_DATA/applications/hildon
+    desktop_entry.files = widgetsgallery-n900.desktop
+} else {
+    SOURCES += phonebookmodel.cpp
+    HEADERS += phonebookmodel.h
+
+    desktop_entry.path = $$DUI_INSTALL_DATA/applications
+    desktop_entry.files = widgetsgallery.desktop
+}
+
 myname = com.nokia.widgetsgallery
 services.CONFIG += no_check_exist
 services.target = $${myname}.service

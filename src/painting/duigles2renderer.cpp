@@ -52,14 +52,6 @@ namespace
     static const GLuint DUI_ATTR_TCOORD = 1;
     static const GLuint DUI_ATTR_VCOLOR = 2;
 
-    struct TexturePixmap {
-        TexturePixmap(): eglpixmap(0), texture(0) {}
-        EGLSurface eglpixmap;
-        quint32   texture;
-    };
-
-    typedef QHash<Qt::HANDLE, TexturePixmap> PixmapHash;
-
     static QString defaultVertexShader()
     {
         return QString::fromLatin1(DUI_SHADER_SOURCE_DIR "/default.vert");
@@ -104,6 +96,14 @@ public:
     QGLShaderProgram *m_defaultProgram;
 
     QSize m_viewportSize;
+
+    struct TexturePixmap {
+        TexturePixmap(): eglpixmap(0), texture(0) {}
+        EGLSurface eglpixmap;
+        quint32   texture;
+    };
+
+    typedef QHash<Qt::HANDLE, TexturePixmap> PixmapHash;
 
     EGLConfig config;
     EGLDisplay dpy;
@@ -444,7 +444,7 @@ quint32 DuiGLES2Renderer::bindX11Pixmap(Qt::HANDLE pixmap)
     }
 
     // Returns the cached texture if we have one already
-    TexturePixmap tp = d_ptr->bound_pixmaps.value(pixmap);
+    DuiGLES2RendererPrivate::TexturePixmap tp = d_ptr->bound_pixmaps.value(pixmap);
     if (tp.texture > 0)
         return tp.texture;
 
@@ -475,7 +475,7 @@ quint32 DuiGLES2Renderer::bindX11Pixmap(Qt::HANDLE pixmap)
 
 void DuiGLES2Renderer::unbindX11Pixmap(Qt::HANDLE pixmap)
 {
-    TexturePixmap tp = d_ptr->bound_pixmaps.value(pixmap);
+    DuiGLES2RendererPrivate::TexturePixmap tp = d_ptr->bound_pixmaps.value(pixmap);
     if (!tp.texture)
         return;
 
@@ -490,7 +490,7 @@ void DuiGLES2Renderer::unbindX11Pixmap(Qt::HANDLE pixmap)
 void DuiGLES2Renderer::updateX11Pixmap(Qt::HANDLE pixmap)
 {
     // catch updates to the pixmap here when they happen
-    TexturePixmap tp = d_ptr->bound_pixmaps.value(pixmap);
+    DuiGLES2RendererPrivate::TexturePixmap tp = d_ptr->bound_pixmaps.value(pixmap);
     if (!tp.texture)
         return;
 

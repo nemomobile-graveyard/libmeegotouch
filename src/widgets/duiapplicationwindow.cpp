@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "duiondisplaychangeevent.h"
+#include <QtDBus/QtDBus>
 
 #include <DuiDebug>
 #include <duiscenewindowevent_p.h>
@@ -90,7 +91,12 @@ void DuiApplicationWindowPrivate::init()
     q->connect(q, SIGNAL(orientationChanged(Dui::Orientation)),
                q, SLOT(_q_placeToolBar(Dui::Orientation)));
 
+#ifdef HAVE_N900
+    q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(_q_exitAppView()));
+#else
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(showMinimized()));
+#endif
+
     q->connect(escapeButtonPanel, SIGNAL(escapeModeChanged(DuiEscapeButtonPanelModel::EscapeMode)),
                q, SLOT(_q_connectEscapeButton(DuiEscapeButtonPanelModel::EscapeMode)));
 
@@ -263,6 +269,15 @@ void DuiApplicationWindowPrivate::_q_menuDisappeared()
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(openMenu()));
 }
+
+#ifdef HAVE_N900
+void DuiApplicationWindowPrivate::_q_exitAppView()
+{
+    QDBusConnection bus = QDBusConnection::sessionBus();
+    QDBusMessage message = QDBusMessage::createSignal("/", "com.nokia.hildon_desktop", "exit_app_view");
+    bus.send(message);
+}
+#endif
 
 void DuiApplicationWindowPrivate::manageActions()
 {

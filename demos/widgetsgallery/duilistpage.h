@@ -29,9 +29,15 @@
 #include <QMap>
 #include <QTimer>
 
+#ifdef HAVE_N900
+class ContactModel;
+class ContactImageLoader;
+#else
 class PhoneBookModel;
 class PhoneBookSortedModel;
 class PhoneBookImageLoader;
+#endif
+
 class DuiList;
 class DuiComboBox;
 class DuiContentItemCreator;
@@ -65,7 +71,9 @@ public slots:
     void setPlainListModel();
 
     void changeSortingOrder(int index);
+#ifndef HAVE_N900
     void changeAmountOfItemInList(int index);
+#endif
     void changeListMode(int index);
     void changeAmountOfColumns(int index);
     void changeSelectionMode(int index);
@@ -82,9 +90,16 @@ private:
     DuiComboBox *createComboBoxAction(const QString &title, const QStringList &itemsList);
 
 private:
+
+#ifdef HAVE_N900
+    ContactModel* model;
+    ContactImageLoader* imageLoader;
+#else
     PhoneBookModel *model;
     PhoneBookSortedModel *proxyModel;
     PhoneBookImageLoader *imageLoader;
+#endif
+
     DuiList *list;
     DuiContentItemCreator *cellCreator;
 

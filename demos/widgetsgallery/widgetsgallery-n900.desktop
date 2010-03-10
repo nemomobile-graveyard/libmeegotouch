@@ -1,0 +1,10 @@
+[Desktop Entry]
+Encoding=UTF-8
+Version=1.0
+Name=Widgets Gallery
+Comment=Widgets Gallery
+Exec=/usr/bin/widgetsgallery -target N900 -fullscreen -graphicssystem native
+Type=Application
+Icon=widgetsgallery
+X-App-Loading-Image=none
+X-Desktop-File-Install-Version=0.12

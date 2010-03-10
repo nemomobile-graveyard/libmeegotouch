@@ -26,6 +26,11 @@ ifneq (,$(filter coverage,$(TMP_BUILD_OPTS)))
     OPTIONS += -coverage
 endif
 
+# Enable build for n900
+ifneq (,$(filter n900,$(TMP_BUILD_OPTS)))
+    OPTIONS += -n900
+endif
+
 # Enable instrumentation by setting DEB_BUILD_OPTION=timestamps,...
 ifneq (,$(filter timestamps,$(TMP_BUILD_OPTS)))
     OPTIONS += -timestamps

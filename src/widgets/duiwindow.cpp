@@ -81,6 +81,11 @@ void DuiWindowPrivate::init()
 #ifdef Q_WS_X11
     // We do window decorations ourselves. Set env variable accordingly for
     // development purposes
+
+#ifdef HAVE_N900
+    if ( !DuiApplication::fullScreen() ) {
+#endif
+
     QString env = qgetenv("DUI_DECORATED");
     if (env.contains("0")) {
         q->setWindowFlags(Qt::FramelessWindowHint);
@@ -90,9 +95,13 @@ void DuiWindowPrivate::init()
     else if (env.isEmpty()) {
         q->setWindowFlags(Qt::FramelessWindowHint);
     }
+#endif // __arm__
+
+#ifdef HAVE_N900
+    }
 #endif
 
-#endif
+#endif // Q_WS_X11
 
     // resize always to the size in landscape mode,
     // since it's not the window but the scene content that is rotated
