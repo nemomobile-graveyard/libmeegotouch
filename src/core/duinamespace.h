@@ -30,6 +30,19 @@ namespace Dui
     };
 
     /*!
+     * setting a dynamic porperty to any QWidget or QApplication will cause the the object
+     * not to be styled like DUI does.
+     */
+#ifdef __GNUC__
+    static const char* NoDuiStyle __attribute__((__unused__)) = "NoDuiStyle";
+#elif defined _MSC_VER
+    #pragma warning(disable: Cxxxxx)
+    static const char* NoDuiStyle = "NoDuiStyle";
+#else
+    static const char* NoDuiStyle = "NoDuiStyle";
+#endif
+
+    /*!
      * This enum contains values of the orientation angle of windows in the application.
      *
      * \sa Orientation

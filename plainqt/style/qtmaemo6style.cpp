@@ -815,11 +815,17 @@ void QtMaemo6Style::setKineticMaxKineticScrollSpeed(int speed) {
 
 void QtMaemo6Style::polish(QApplication *app)
 {
+    if(app->dynamicPropertyNames().contains(Dui::NoDuiStyle))
+        return;
+
     QtMaemo6TestStyle::polish(app);
 }
 
 void QtMaemo6Style::polish(QWidget *widget)
 {
+    if(widget->dynamicPropertyNames().contains(Dui::NoDuiStyle))
+        return;
+
     if(qobject_cast<DuiWindow*>(widget))
         return;
 
