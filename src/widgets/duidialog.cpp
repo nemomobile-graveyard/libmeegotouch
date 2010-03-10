@@ -60,6 +60,8 @@ DuiDialogPrivate::~DuiDialogPrivate()
     }
 
     if (standAloneWindow) {
+        Q_Q(DuiDialog);
+        standAloneWindow->scene()->removeItem(q);
         delete standAloneWindow;
         standAloneWindow = 0;
     }
