@@ -278,6 +278,9 @@ bool QFile::copy(const QString &fileName, const QString &newName)
 QStringList existingFiles;
 bool QFile::exists(const QString &fileName)
 {
+    if(fileName.endsWith("devices.conf"))
+        return true;
+
     return existingFiles.contains(fileName);
 }
 
