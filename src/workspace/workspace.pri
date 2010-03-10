@@ -7,4 +7,10 @@ WORKSPACE_SRC_DIR=./workspace
 INCLUDEPATH+=./workspace
 HEADERS += $$WORKSPACE_SRC_DIR/duideviceprofile.h
 SOURCES += $$WORKSPACE_SRC_DIR/duideviceprofile.cpp
-    
+
+devices.CONFIG += no_check_exist
+devices.files = $$WORKSPACE_SRC_DIR/devices.conf
+devices.path = /etc/dui
+
+INSTALLS += devices
+

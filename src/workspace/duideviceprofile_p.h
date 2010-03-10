@@ -32,7 +32,10 @@ public:
     DuiDeviceProfilePrivate();
     virtual ~DuiDeviceProfilePrivate();
 
-    const DuiDeviceStyle *style;
+    bool load(const QString& filename);
+
+    QSize resolution;
+    QSize pixelsPerInch;
 
 protected:
     DuiDeviceProfile *q_ptr;

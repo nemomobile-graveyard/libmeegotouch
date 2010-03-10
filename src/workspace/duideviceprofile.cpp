@@ -19,29 +19,48 @@
 
 #include <QString>
 #include <QSize>
+#include <QSettings>
+#include <QFile>
 
 #include "duidebug.h"
 #include "duideviceprofile.h"
 #include "duideviceprofile_p.h"
-#include "duidevicestyle.h"
-#include "duitheme.h"
 
 #include "duiapplication.h"
 #include "duicomponentdata.h"
 #include "duicomponentdata_p.h"
 
 DuiDeviceProfilePrivate::DuiDeviceProfilePrivate()
-    : style(0)
 {
-    style = static_cast<const DuiDeviceStyle *>(DuiTheme::style("DuiDeviceStyle", DuiApplication::deviceName()));
+    QString filename = "/etc/dui/devices.conf";
+
+    if(!load(filename)) {
+        qFatal("Failed to load device profile.");
+    }
 }
 
 DuiDeviceProfilePrivate::~DuiDeviceProfilePrivate()
 {
-    if (style) {
-        DuiTheme::releaseStyle(style);
-        style = 0;
-    }
+}
+
+bool DuiDeviceProfilePrivate::load(const QString& filename)
+{
+    QString device = DuiApplication::deviceName();
+    if(device.isEmpty())
+        device = "Default";
+
+    if(!QFile::exists(filename))
+        return false;
+
+    QSettings settings(filename, QSettings::IniFormat);
+    if(settings.status() != QSettings::NoError)
+        return false;
+
+    resolution.setWidth(settings.value(device + "/resolutionX", 0).toInt());
+    resolution.setHeight(settings.value(device + "/resolutionY", 0).toInt());
+    pixelsPerInch.setWidth(settings.value(device + "/ppiX", 0).toInt());
+    pixelsPerInch.setHeight(settings.value(device + "/ppiY", 0).toInt());
+    return true;
 }
 
 /*
@@ -76,19 +95,11 @@ DuiDeviceProfile::~DuiDeviceProfile()
 QSize DuiDeviceProfile::resolution() const
 {
     Q_D(const DuiDeviceProfile);
-
-    if (d->style)
-        return d->style->resolution();
-    else
-        return QSize();
+    return d->resolution;
 }
 
 QSize DuiDeviceProfile::pixelsPerInch() const
 {
     Q_D(const DuiDeviceProfile);
-
-    if (d->style)
-        return d->style->pixelsPerInch();
-    else
-        return QSize();
+    return d->pixelsPerInch;
 }
