@@ -5,3 +5,5 @@ usr/bin/duiservicemapper
 usr/share/dbus-1/services/com.nokia.servicefw.service
 usr/share/dui/shaders/*
 usr/lib/dui/applets/duiappletrunner
+etc/dui/devices.conf
+
