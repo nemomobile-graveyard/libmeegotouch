@@ -35,9 +35,6 @@ namespace Dui
      */
 #ifdef __GNUC__
     static const char* NoDuiStyle __attribute__((__unused__)) = "NoDuiStyle";
-#elif defined _MSC_VER
-    #pragma warning(disable: Cxxxxx)
-    static const char* NoDuiStyle = "NoDuiStyle";
 #else
     static const char* NoDuiStyle = "NoDuiStyle";
 #endif
