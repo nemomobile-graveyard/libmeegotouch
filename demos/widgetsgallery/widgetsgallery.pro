@@ -142,7 +142,6 @@ testsxml.files = tests.xml
 testsxml.path = /usr/share/dui-demos-widgetsgallery-tests/
 DEFINES += CONTACTS_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/contacts/\\\"\"
 DEFINES += IMAGES_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/\\\"\"
-DEFINES += MEDIA_ART_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/media-art/\\\"\"
 
 # Install instructions
 INSTALLS += target \

@@ -74,7 +74,7 @@ namespace Utils
         appDir.cd("media-art");
         return appDir.path().append("/");
 #else
-        return QString(MEDIA_ART_DIR);
+        return QString(CONTACTS_DIR);
 #endif
     }
 
