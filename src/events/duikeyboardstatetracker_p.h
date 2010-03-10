@@ -22,6 +22,8 @@
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
 #include "contextproperty.h"
+#elif defined(HAVE_N900)
+#include "duigconfitem.h"
 #endif
 
 class DuiKeyboardStateTracker;
@@ -35,6 +37,8 @@ protected:
     static DuiKeyboardStateTracker *tracker;
 #ifdef HAVE_CONTEXTSUBSCRIBER
     ContextProperty keyboardOpenProperty;
+#elif defined(HAVE_N900)
+    DuiGConfItem keyboardOpenConf;
 #endif
     DuiKeyboardStateTracker *q_ptr;
 

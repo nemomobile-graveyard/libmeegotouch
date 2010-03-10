@@ -29,14 +29,20 @@ DuiKeyboardStateTracker *DuiKeyboardStateTrackerPrivate::tracker = 0;
 DuiKeyboardStateTrackerPrivate::DuiKeyboardStateTrackerPrivate(DuiKeyboardStateTracker *controller) :
 #ifdef HAVE_CONTEXTSUBSCRIBER
     keyboardOpenProperty("/maemo/InternalKeyboard/Open"),
+#elif defined(HAVE_N900)
+    keyboardOpenConf("/system/osso/af/slide-open"),
 #endif
     q_ptr(controller),
     present(false)
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
     Q_Q(DuiKeyboardStateTracker);
-    connect(&keyboardOpenProperty, SIGNAL(valueChanged()),
-            q, SIGNAL(stateChanged()));
+    QObject::connect(&keyboardOpenProperty, SIGNAL(valueChanged()),
+                     q, SIGNAL(stateChanged()));
+#elif defined(HAVE_N900)
+    Q_Q(DuiKeyboardStateTracker);
+    QObject::connect(&keyboardOpenConf, SIGNAL(valueChanged()),
+                     q, SIGNAL(stateChanged()));
 #endif
 
     initContextSubscriber();
@@ -48,6 +54,8 @@ void DuiKeyboardStateTrackerPrivate::initContextSubscriber()
     //waiting for properties to synchronize
     keyboardOpenProperty.waitForSubscription();
     // TODO: use actual ContextProperty for present, which is still unready.
+    present = true;
+#elif defined(HAVE_N900)
     present = true;
 #endif
 }
@@ -86,6 +94,9 @@ bool DuiKeyboardStateTracker::isOpen() const
     if (isPresent()) {
         val = d->keyboardOpenProperty.value().toBool();
     }
+#elif defined(HAVE_N900)
+    Q_D(const DuiKeyboardStateTracker);
+    val = d->keyboardOpenConf.value().toBool();
 #endif
     return val;
 }
