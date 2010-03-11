@@ -59,10 +59,10 @@ for(PROJECT, $$list($$lower($$unique(DUI_BUILD_PARTS)))) {
     } else {
        message(Unknown PROJECT: $$PROJECT)
     }
-
-    # Docs are always explicitly built with "make doc"
-    include(doc/doc.pri)
 }
+
+# Docs are always explicitly built with "make doc"
+include(doc/doc.pri)
 
 # note: proper way to clean up extradata would be running pkgdata --clean...
 # but listing *.a & *.o is easier with qmake
