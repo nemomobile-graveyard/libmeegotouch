@@ -31,6 +31,8 @@
 #include <QPropertyAnimation>
 #include <limits>
 
+#include "duidebug.h"
+
 #include "duitheme.h"
 #include "duiscalableimage.h"
 #include "duiwidgetview.h"
@@ -717,7 +719,7 @@ QSizeF DuiSliderGroove::sizeHint(Qt::SizeHint which, const QSizeF &constraint) c
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), maximumLength);
     }
     default:
-        qWarning("DuiSliderView::sizeHint() don't know how to handle the value of 'which' ");
+        duiWarning("DuiSliderView") << "DuiSliderView::sizeHint() don't know how to handle the value of 'which' ";
     }
 
     return QSizeF(0, 0);
@@ -918,7 +920,7 @@ void DuiSliderViewPrivate::updateOrientation()
 {
     DuiLayout *mainLayout = dynamic_cast<DuiLayout *>(controller->layout());
     if (!mainLayout || !horizontalPolicy || !verticalPolicy) {
-        qWarning("DuiSlider was not initialized properly");
+        duiWarning("DuiSliderView") << "DuiSlider was not initialized properly";
         return;
     }
 
@@ -940,7 +942,7 @@ void DuiSliderViewPrivate::updateOrientation()
 void DuiSliderViewPrivate::insertMinIndicatorToLayout()
 {
     if (!horizontalPolicy || !verticalPolicy) {
-        qWarning("DuiSlider was not initialized properly");
+        duiWarning("DuiSliderView") << "DuiSlider was not initialized properly";
         return;
     }
 
@@ -951,9 +953,9 @@ void DuiSliderViewPrivate::insertMinIndicatorToLayout()
         if (firstItem != minIndicator)
             horizontalPolicy->insertItem(0, minIndicator, Qt::AlignCenter);
     } else {
-        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
-        if (firstItem != minIndicator)
-            horizontalPolicy->insertItem(horizontalPolicy->count() - 1, minIndicator, Qt::AlignCenter);
+        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+        if (lastItem != minIndicator)
+            horizontalPolicy->insertItem(horizontalPolicy->count(), minIndicator, Qt::AlignCenter);
     }
 
     QGraphicsLayoutItem* firstItem = verticalPolicy->itemAt(0);
@@ -964,15 +966,15 @@ void DuiSliderViewPrivate::insertMinIndicatorToLayout()
 void DuiSliderViewPrivate::insertMaxIndicatorToLayout()
 {
     if (!horizontalPolicy || !verticalPolicy) {
-        qWarning("DuiSlider was not initialized properly");
+        duiWarning("DuiSliderView") << "DuiSlider was not initialized properly";
         return;
     }
 
     bool reverse = qApp->isRightToLeft();
 
     if (!reverse) {
-        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
-        if (lastItem != maxIndicator)
+        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+        if (firstItem != maxIndicator)
             horizontalPolicy->insertItem(horizontalPolicy->count(), maxIndicator, Qt::AlignCenter);
     } else {
         QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(0);
@@ -988,7 +990,7 @@ void DuiSliderViewPrivate::insertMaxIndicatorToLayout()
 void DuiSliderViewPrivate::removeMinIndicatorFromLayout()
 {
     if (!horizontalPolicy || !verticalPolicy) {
-        qWarning("DuiSlider was not initialized properly");
+        duiWarning("DuiSliderView") << "DuiSlider was not initialized properly";
         return;
     }
 
@@ -999,8 +1001,8 @@ void DuiSliderViewPrivate::removeMinIndicatorFromLayout()
         if (firstItem == minIndicator)
             horizontalPolicy->removeAt(0);
     } else {
-        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
-        if (firstItem == minIndicator)
+        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+        if (lastItem == minIndicator)
             horizontalPolicy->removeAt(horizontalPolicy->count() - 1);
     }
 
@@ -1012,7 +1014,7 @@ void DuiSliderViewPrivate::removeMinIndicatorFromLayout()
 void DuiSliderViewPrivate::removeMaxIndicatorFromLayout()
 {
     if (!horizontalPolicy || !verticalPolicy) {
-        qWarning("DuiSlider was not initialized properly");
+        duiWarning("DuiSliderView") << "DuiSlider was not initialized properly";
         return;
     }
 
@@ -1023,8 +1025,8 @@ void DuiSliderViewPrivate::removeMaxIndicatorFromLayout()
         if (lastItem == maxIndicator)
             horizontalPolicy->removeAt(horizontalPolicy->count() - 1);
     } else {
-        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(0);
-        if (lastItem == maxIndicator)
+        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
+        if (firstItem == maxIndicator)
             horizontalPolicy->removeAt(0);
     }
 
