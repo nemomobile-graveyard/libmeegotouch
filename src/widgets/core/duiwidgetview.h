@@ -391,8 +391,6 @@ protected:
 private:
     Q_DECLARE_PRIVATE(DuiWidgetView)
     Q_DISABLE_COPY(DuiWidgetView)
-
-    Q_PRIVATE_SLOT(d_func(), void orientationChanged())
 };
 
 #endif

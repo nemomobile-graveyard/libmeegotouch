@@ -55,12 +55,6 @@ DuiWidgetViewPrivate::~DuiWidgetViewPrivate()
 {
 }
 
-void DuiWidgetViewPrivate::orientationChanged()
-{
-    // notify views that the style has changed
-    q_ptr->applyStyle();
-}
-
 DuiWidgetView::DuiWidgetView() :
     d_ptr(new DuiWidgetViewPrivate)
 {

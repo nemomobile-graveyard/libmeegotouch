@@ -47,8 +47,6 @@ private:// public only to DuiWidgetView
 
     DuiAbstractWidgetAnimation *showAnimation;
     DuiAbstractWidgetAnimation *hideAnimation;
-
-    void orientationChanged();
 };
 
 #endif // DUIWIDGETVIEW_P_H

@@ -79,12 +79,6 @@ DuiWidgetViewPrivate::~DuiWidgetViewPrivate()
 {
 }
 
-void DuiWidgetViewPrivate::orientationChanged()
-{
-    // notify views that the style has changed
-    q_ptr->applyStyle();
-}
-
 // QGraphicsItem stubs (Used by DuiExtensionHandleView)
 void QGraphicsItem::update(const QRectF &rect)
 {
