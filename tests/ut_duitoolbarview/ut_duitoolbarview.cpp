@@ -22,6 +22,7 @@
 #include <DuiAction>
 #include <DuiToolBar>
 #include <DuiToolBarView>
+#include <DuiToolBarTabView>
 #include <DuiTextEdit>
 #include <DuiWidgetAction>
 #include <QGraphicsLinearLayout>
@@ -32,6 +33,7 @@ DuiApplication *app;
 DuiApplicationWindow *appWin;
 
 void Ut_DuiToolBarView::initTestCase()
+
 {
     static int argc = 1;
     static char *app_name[1] = { (char *) "./Ut_DuiToolBarView" };
@@ -77,6 +79,63 @@ void Ut_DuiToolBarView::testDeleteAddAction()
     QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
 
     QVERIFY(m_toolbar->actions().count() == 1);
+}
+
+void Ut_DuiToolBarView::testTabView()
+{
+    m_toolbar->clearActions();
+
+    DuiToolbarTabView* tabView = new DuiToolbarTabView(m_toolbar);
+    QVERIFY(tabView != 0);
+
+    m_toolbar->setView(tabView);
+}
+
+void Ut_DuiToolBarView::testTabActionExclusivity()
+{
+    m_toolbar->clearActions();
+    DuiToolbarTabView* tabView = new DuiToolbarTabView(m_toolbar);
+    QVERIFY(tabView != 0);
+    m_toolbar->setView(tabView);
+
+    DuiAction *action0 = new DuiAction("action0", m_toolbar);
+    action0->setLocation(DuiAction::ToolBarLandscapeLocation);
+    action0->setCheckable(true);
+    action0->setChecked(true);
+    m_toolbar->addAction(action0);
+    DuiAction* action = qobject_cast<DuiAction *>(m_toolbar->actions().at(0));
+    QVERIFY(action);
+    QVERIFY(action == action0);
+
+    QVERIFY(action0->isChecked() == true);
+
+    DuiAction *action1 = new DuiAction("action1", m_toolbar);
+    action1->setLocation(DuiAction::ToolBarPortraitLocation);
+    action1->setCheckable(true);
+    m_toolbar->addAction(action1);
+    action = qobject_cast<DuiAction *>(m_toolbar->actions().at(1));
+    QVERIFY(action);
+    QVERIFY(action == action1);
+
+    QVERIFY(action0->isChecked() == true);
+    QVERIFY(action1->isChecked() == false);
+
+    DuiAction *action2 = new DuiAction("action2", m_toolbar);
+    action2->setLocation(DuiAction::ToolBarLocation);
+    action2->setCheckable(true);
+    m_toolbar->addAction(action2);
+    action = qobject_cast<DuiAction *>(m_toolbar->actions().at(2));
+    QVERIFY(action);
+    QVERIFY(action == action2);
+
+    QVERIFY(action0->isChecked() == true);
+    QVERIFY(action1->isChecked() == false);
+    QVERIFY(action2->isChecked() == false);
+
+    action2->setChecked(true);
+    QVERIFY(action0->isChecked() == false);
+    QVERIFY(action1->isChecked() == false);
+    QVERIFY(action2->isChecked() == true);
 }
 
 DuiWidgetAction *Ut_DuiToolBarView::createTextEditAction(DuiWidget *parentWidget)

@@ -30,7 +30,10 @@
 #include "duiwidget.h"
 
 #include "duiwidgetcreator.h"
+
 DUI_REGISTER_WIDGET(DuiToolBar)
+
+const DuiTheme::ViewType DuiToolBar::tabType = "tab";
 
 DuiToolBarPrivate::DuiToolBarPrivate()
 {

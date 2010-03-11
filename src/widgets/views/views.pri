@@ -40,6 +40,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_VIEWS_SRC_DIR/duisliderview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duispinnerview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duitexteditview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/duitoolbartabview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbarview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duiseparatorview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duitexteditviewzoom.h \
@@ -60,7 +61,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_VIEWS_SRC_DIR/duifastlistview_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duicontentitemview_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duibuttongrouplayoutpolicy_p.h \
-
+    $$WIDGETS_VIEWS_SRC_DIR/duitoolbartabview_p.h \
 
 SOURCES += \
     $$WIDGETS_VIEWS_SRC_DIR/duiapplicationpageview.cpp \
@@ -99,6 +100,7 @@ SOURCES += \
     $$WIDGETS_VIEWS_SRC_DIR/duispinnerview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duitexteditview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duitexteditviewzoom.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/duitoolbartabview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbarview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duiseparatorview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duistylablewidgetview.cpp \

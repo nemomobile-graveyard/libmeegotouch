@@ -117,7 +117,6 @@ void DuiApplicationWindowPrivate::init()
         dockWidget->appearNow(q);
     }
 
-    // make toolbar
     _q_placeToolBar(q->orientation());
 
     q->setBackgroundBrush(Qt::black);
@@ -281,16 +280,32 @@ void DuiApplicationWindowPrivate::_q_exitAppView()
 
 void DuiApplicationWindowPrivate::manageActions()
 {
-    // empty toolbar and menu
+    Q_Q(DuiApplicationWindow);
+
+    QAction* pageCheckedAction = findPageCheckedAction();
+
     toolBar->clearActions();
     menu->clearActions();
 
+    // add page actions
     QAction *before = 0;
     QList<QAction *> actions = page->actions();
-    const int actionsSize = actions.size();
+    int actionsSize = actions.size();
     for (int i = 0; i < actionsSize; ++i) {
         distributeAction(actions[i], before);
     }
+
+    // add window actions
+    actions = q->actions();
+    actionsSize = actions.size();
+    for (int i = 0; i < actionsSize; ++i) {
+        distributeAction(actions[i], before);
+    }
+
+    if (pageCheckedAction) {
+        pageCheckedAction->setChecked(true);
+    }
+
     refreshArrowIconVisibility();
 }
 
@@ -551,6 +566,31 @@ void DuiApplicationWindow::show()
     DuiWindow::show();
 }
 
+bool DuiApplicationWindow::event(QEvent *event)
+{
+    Q_D(DuiApplicationWindow);
+
+    QActionEvent * actionEvent = (QActionEvent *)event;
+    QEvent::Type type = event->type();
+    switch (type) {
+        case QEvent::ActionRemoved: {
+            QAction *action = actionEvent->action();
+            if (action) {
+                action->disconnect(this);
+            }
+            //fall through is intentional
+        }
+        case QEvent::ActionAdded: {
+            d->_q_actionUpdated(actionEvent);
+            return true;
+        }
+        default: {
+            return DuiWindow::event(event);
+            break;
+        }
+    }
+}
+
 // We have to send this root message because the window itself is managing
 // its close events. In directUi, there's no WM with a close button
 void DuiApplicationWindow::closeEvent(QCloseEvent *event)
@@ -611,6 +651,12 @@ void DuiApplicationWindow::setWindowIconID(const QString &windowIconID)
 {
     Q_D(DuiApplicationWindow);
     d->navigationBar->setViewMenuIconID(windowIconID);
+}
+
+void DuiApplicationWindow::setToolbarViewType(const DuiTheme::ViewType& viewType)
+{
+    Q_D(DuiApplicationWindow);
+    d->toolBar->setViewType(viewType);
 }
 
 void DuiApplicationWindowPrivate::connectPage(DuiApplicationPage *newPage)
@@ -680,7 +726,56 @@ void DuiApplicationWindowPrivate::disconnectPage(DuiApplicationPage *pageToDisco
     QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(backButtonClicked()));
     QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(closeButtonClicked()));
 
+
+    removePageActions();
+
     page = 0;
+}
+
+void DuiApplicationWindowPrivate::removePageActions()
+{
+    QAction* checkedAction = findPageCheckedAction();
+
+    // remove all the page actions
+    QList<QAction *> actions = page->actions();
+    int actionsSize = actions.size();
+    for (int i = 0; i < actionsSize; ++i) {
+        QAction* action = actions[i];
+        QAction* toolbarAction = 0;
+        if (toolBar->viewType() == DuiToolBar::tabType &&
+            toolBar->actions().contains(action)) {
+            toolbarAction = action;
+        }
+        toolBar->removeAction(action);
+        menu->removeAction(action);
+        if (toolbarAction)
+            toolbarAction->setChecked(false);
+    }
+
+    // restore the checked action
+    if (checkedAction) {
+        checkedAction->setChecked(true);
+    }
+}
+
+QAction* DuiApplicationWindowPrivate::findPageCheckedAction() const
+{
+    QAction* checkedAction = 0;
+    QList<QAction *> actions = page->actions();
+    int actionsSize = actions.size();
+    if (toolBar->viewType() == DuiToolBar::tabType) {
+        for (int i = 0; i < actionsSize; ++i) {
+            QAction* action = actions[i];
+            DuiAction* duiAction = qobject_cast<DuiAction*>(action);
+            bool isToolbarAction = (!duiAction || duiAction->location().testFlag(DuiAction::ToolBarPortraitLocation) ||
+                             duiAction->location().testFlag(DuiAction::ToolBarLandscapeLocation));
+            if (action->isChecked() && isToolbarAction) {
+                checkedAction = action;
+                break;
+            }
+        }
+    }
+    return checkedAction;
 }
 
 int DuiApplicationWindowPrivate::navigationBarHeight() const
@@ -692,6 +787,12 @@ QString DuiApplicationWindow::windowIconID() const
 {
     Q_D(const DuiApplicationWindow);
     return d->navigationBar->viewMenuIconID();
+}
+
+DuiTheme::ViewType DuiApplicationWindow::toolbarViewType() const
+{
+    Q_D(const DuiApplicationWindow);
+    return d->toolBar->viewType();
 }
 
 void DuiApplicationWindow::mousePressEvent(QMouseEvent *event)

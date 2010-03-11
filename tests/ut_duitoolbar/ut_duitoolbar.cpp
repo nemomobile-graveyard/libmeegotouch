@@ -249,6 +249,65 @@ void Ut_DuiToolBar::testActionVisiblity()
     QVERIFY(widgetAction->widget()->isVisible() == false);   //visiblity should be changed, because there is no room for this anymore
 }
 
+void Ut_DuiToolBar::testAddTabAction()
+{
+    m_subject->clearActions();
+    QVERIFY(m_subject->actions().count() == 0);
+
+    m_subject->setViewType(DuiToolBar::tabType);
+
+    DuiAction *action0 = new DuiAction("action0", m_subject);
+    action0->setLocation(DuiAction::ToolBarLandscapeLocation);
+    action0->setCheckable(true);
+    action0->setChecked(true);
+    m_subject->addAction(action0);
+    QVERIFY(m_subject->actions().count() == 1);
+
+    DuiAction *action1 = new DuiAction("action1", m_subject);
+    action1->setLocation(DuiAction::ToolBarPortraitLocation);
+    action1->setCheckable(true);
+    m_subject->addAction(action1);
+    QVERIFY(m_subject->actions().count() == 2);
+
+    DuiAction *action2 = new DuiAction("action2", m_subject);
+    action2->setLocation(DuiAction::ToolBarLocation);
+    action2->setCheckable(true);
+    m_subject->addAction(action2);
+    QVERIFY(m_subject->actions().count() == 3);
+}
+
+void Ut_DuiToolBar::testRemoveTabAction()
+{
+    m_subject->clearActions();
+    QVERIFY(m_subject->actions().count() == 0);
+
+    m_subject->setViewType(DuiToolBar::tabType);
+
+    DuiAction *action0 = new DuiAction("action0", m_subject);
+    action0->setLocation(DuiAction::ToolBarLandscapeLocation);
+    action0->setCheckable(true);
+    action0->setChecked(true);
+    m_subject->addAction(action0);
+    QVERIFY(m_subject->actions().count() == 1);
+
+    DuiAction *action1 = new DuiAction("action1", m_subject);
+    action1->setLocation(DuiAction::ToolBarPortraitLocation);
+    action1->setCheckable(true);
+    m_subject->addAction(action1);
+    QVERIFY(m_subject->actions().count() == 2);
+    m_subject->removeAction(action1);
+    QVERIFY(m_subject->actions().count() == 1);
+
+    DuiAction *action2 = new DuiAction("action2", m_subject);
+    action2->setLocation(DuiAction::ToolBarLocation);
+    action2->setCheckable(true);
+    m_subject->addAction(action2);
+    QVERIFY(m_subject->actions().count() == 2);
+
+    m_subject->clearActions();
+    QVERIFY(m_subject->actions().count() == 0);
+}
+
 void Ut_DuiToolBar::actionSlot(bool)
 {
     senderAction = qobject_cast<DuiAction *>(sender());

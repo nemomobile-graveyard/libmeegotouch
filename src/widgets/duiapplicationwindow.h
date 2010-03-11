@@ -20,6 +20,7 @@
 #ifndef DUIAPPLICATIONWINDOW_H
 #define DUIAPPLICATIONWINDOW_H
 
+#include <duitheme.h>
 #include "duiwindow.h"
 #include "duinamespace.h"
 #include "duiexport.h"
@@ -65,6 +66,7 @@ class DuiOnDisplayChangeEvent;
 class DUI_EXPORT DuiApplicationWindow : public DuiWindow
 {
     Q_OBJECT
+    Q_PROPERTY(DuiTheme::ViewType toolbarViewType READ toolbarViewType WRITE setToolbarViewType)
 
 public:
     /*!
@@ -92,6 +94,12 @@ public:
      * Returns the iconID of the icon of the window.
      */
     QString windowIconID() const;
+
+    /**
+     * Returns the view type of the toolbar for the window.
+     * \sa setToolbarViewType()
+     */
+    DuiTheme::ViewType toolbarViewType() const;
 
 Q_SIGNALS:
     /*!
@@ -122,6 +130,13 @@ public Q_SLOTS:
      */
     void setWindowIconID(const QString &windowIconID);
 
+    /**
+     * Sets the view type of the toolbar for the window.
+     * \param view type of the toolbar; possible values are DuiToolBar::tabType, DuiToolBar::defaultType
+     * \sa DuiToolBar
+     */
+    void setToolbarViewType(const DuiTheme::ViewType& viewType);
+
 protected:
     //! \internal
     explicit DuiApplicationWindow(DuiApplicationWindowPrivate &dd, QWidget *parent = 0);
@@ -129,6 +144,7 @@ protected:
     //! \internal_end
 
     //! \reimp
+    virtual bool event(QEvent *event);
     virtual void closeEvent(QCloseEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);

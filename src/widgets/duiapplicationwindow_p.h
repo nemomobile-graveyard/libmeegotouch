@@ -95,7 +95,8 @@ public:
 private:
     void init();
     void initAutoHideComponentsTimer();
-
+    void removePageActions();
+    QAction* findPageCheckedAction() const;
 public:
     void _q_connectEscapeButton(DuiEscapeButtonPanelModel::EscapeMode);
     void _q_pageTitleChanged(DuiApplicationPage *, const QString &);

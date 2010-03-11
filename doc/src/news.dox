@@ -13,6 +13,9 @@
 - DuiSceneWindow::DestroyWhenDismissed
 - DuiSceneWindow appeared() and disappeared() signals.
 
+- DuiToolBar has one more view for tab actions called as DuiToolbarTabView
+
+
 \subsection Deprecated
 
 - void loadTrCatalogs(), void insertTrToQCoreApp(), void removeTrFromQCoreApp()

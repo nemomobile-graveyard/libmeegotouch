@@ -17,38 +17,35 @@
 **
 ****************************************************************************/
 
-#ifndef UT_DUITOOLBARVIEW_H
-#define UT_DUITOOLBARVIEW_H
+#ifndef DUITOOLBARTABSTYLE_H
+#define DUITOOLBARTABSTYLE_H
 
-#include <QObject>
-#include <QtTest/QtTest>
+#include <duitoolbarstyle.h>
 
-class DuiToolBar;
-class DuiToolBarView;
-class DuiWidget;
-class DuiWidgetAction;
+/*!
+    \class DuiToolbarTabStyle
+    \brief Style class for dui toolbar with tab mode.
 
-class Ut_DuiToolBarView : public QObject
+    \ingroup styles
+    \sa DuiToolbarTabStyleContainer DuiWidgetStyle \ref styling DuiToolBar DuiToolbarTabView
+*/
+
+class DUI_EXPORT DuiToolbarTabStyle : public DuiToolbarStyle
 {
     Q_OBJECT
-public:
+    DUI_STYLE_INTERNAL(DuiToolbarTabStyle)
+};
 
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
+/*!
+    \class DuiToolbarTabStyleContainer
+    \brief Style mode container class for DuiToolbarTabStyle.
 
-    void init();
-    void cleanup();
-
-    void testDeleteAddAction();
-    void testTabView();
-    void testTabActionExclusivity();
-
-private:
-    DuiToolBar *m_toolbar;
-    DuiToolBarView *m_subject;
-
-    DuiWidgetAction *createTextEditAction(DuiWidget *parentWidget);
+    \ingroup styles
+    \sa DuiToolbarTabStyle
+*/
+class DUI_EXPORT DuiToolbarTabStyleContainer : public DuiToolbarStyleContainer
+{
+    DUI_STYLE_CONTAINER_INTERNAL(DuiToolbarTabStyle)
 };
 
 #endif

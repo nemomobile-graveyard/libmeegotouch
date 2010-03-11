@@ -78,6 +78,7 @@ WIDGET_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/duispinnerstyle.h \
     $$STYLE_SRC_DIR/duitexteditstyle.h \
     $$STYLE_SRC_DIR/duicompleterstyle.h \
+    $$STYLE_SRC_DIR/duitoolbartabstyle.h \
     $$STYLE_SRC_DIR/duitoolbarstyle.h \
     $$STYLE_SRC_DIR/duiwidgetstyle.h \
     $$STYLE_SRC_DIR/duisettingslanguagesettingsfactorystyle.h \

@@ -31,9 +31,11 @@ class DuiToolBarPrivate;
     \ingroup widgets
 
     \section DuiToolBarOverview Overview
-        Toolbar is a container for buttons and text input field. It contains actions that are
-        relevant to the view but not related to any individual item displayed directly within
-        the content area.
+        Toolbar acts as a container for actions. Depending upon the view attached, it either acts as
+        a tab bar or is a container for buttons and text input field. Tab bar is a container for mutually
+        exclusive latch-down type of buttons. It contains navigational and sorting actions that are
+        relevant to the view but not related to any individual item displayed directly within the
+        content area.
 
         This class is not recommended to be used directly instead action can be added to
         the toolbar in the page using:
@@ -52,6 +54,23 @@ class DuiToolBarPrivate;
         action->setLocation(DuiAction::ToolBarLocation);
         action->setWidget(entry);
         toolbar->addAction(action);
+        \endcode
+
+        In case it is desired to add actions to tab bar view, it is necessary to set the view of the
+        the toolbar to be of tab type. Here is how the view of the toolbar can be changed to tab bar.
+        \code
+        toolbar->setViewType(DuiToolBar::tabType);
+        \endcode
+
+        Following demonstates how to add a tab action to the toolbar:
+        \code
+        DuiToolBar* toolbar = new DuiToolBar();
+        DuiAction *action = new DuiAction("Icon-pictures", NULL, this);
+        action->setLocation(DuiAction::ToolbarLocation);
+        action->setCheckable(true);
+        action->setChecked(true);
+        connect(action, SIGNAL(triggered()), this, SLOT(showPicture()));
+        addAction(action);
         \endcode
 
     \section DuiToolBarUseGuidelines Usage guidelines
@@ -85,8 +104,10 @@ class DuiToolBarPrivate;
         - The toolbar remains in a fixed position on screen, on top of contents that are displayed.
 
     \section DuiToolBarVariants Variants
-        \li \link DuiToolBarView Default toolbar view \endlink
-
+        \li \link DuiToolBarView Default toolbar view. \endlink View is used
+            to visualize buttons and text input field.
+        \li \link DuiToolbarTabView tab view. \endlink View is used to
+            visualize mutually exclusive latch-down type of buttons
     \section DuiToolBarOpenIssues Open issues
 
     \sa DuiToolbarStyle
@@ -97,6 +118,10 @@ class DUI_EXPORT DuiToolBar : public DuiWidgetController
     Q_OBJECT
 
 public:
+    /*!
+        \brief Variable that defines id for tab variant of the toolbar.
+    */
+    static const DuiTheme::ViewType tabType;
 
     /*!
         \brief Constructs a toolbar containing no actions with optional \a parent

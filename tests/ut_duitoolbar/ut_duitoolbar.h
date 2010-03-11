@@ -46,6 +46,8 @@ private Q_SLOTS:
     void testAddTextEditAction();
     void testInsertAction();
     void testActionVisiblity();
+    void testAddTabAction();
+    void testRemoveTabAction();
 
     void actionSlot(bool);
 

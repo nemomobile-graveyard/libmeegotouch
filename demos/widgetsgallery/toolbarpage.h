@@ -21,10 +21,40 @@
 #define TOOLBARPAGE_H
 
 #include "templatepage.h"
+#include <DuiList>
 
 class DuiToolBar;
 class DuiGridLayoutPolicy;
+class DuiList;
 
+class TestModel : public QAbstractListModel
+{
+   Q_OBJECT
+
+public:
+   enum CallMode {
+       MissedCall,
+       ReceivedCall,
+       InitiatedCall
+   };
+   TestModel(QObject *parent = 0);
+
+   int rowCount(const QModelIndex &parent = QModelIndex()) const;
+
+   QVariant data(const QModelIndex &index, int role) const;
+
+   void reloadData();
+
+   void setMode(CallMode mode);
+
+private:
+   CallMode mode;
+   int maxRowCount;
+   QStringList listNames;
+
+};
+
+class DuiContentItemCreator;
 class ToolBarPage : public TemplatePage
 {
     Q_OBJECT
@@ -43,10 +73,30 @@ protected:
 private slots:
     void fourButtons();
     void textEntryWithTwoButtons();
+    void selectToolbarDefaultView();
+    void selectToolbarTabView();
+    void populateCallMissed();
+    void populateCallReceived();
+    void populateCallInitiated();
+    void showCallDataAsList();
+    void showCallDataAsGrid();
 
 private:
     void addTextEntry();
     void clearToolbarActions();
+    void addButtonsToTabView();
+
+    DuiList* callList;
+    TestModel* callModel;
+    DuiContentItemCreator * cellCreator;
+
+    DuiAction * exampleAction1;
+    DuiAction * exampleAction2;
+    DuiAction * defaultViewAction;
+    DuiAction * tabViewAction;
+
+    bool isDefaultView;
+
 };
 
 #endif

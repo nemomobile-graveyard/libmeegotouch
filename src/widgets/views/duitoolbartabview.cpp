@@ -18,9 +18,9 @@
 ****************************************************************************/
 
 #include <QGraphicsLinearLayout>
+#include <QActionGroup>
 
 #include "duitoolbar.h"
-
 #include "duitheme.h"
 #include "duibutton.h"
 #include "duiviewcreator.h"
@@ -28,47 +28,46 @@
 #include "private/duiwidgetview_p.h"
 #include "duiapplication.h"
 #include "duiapplicationwindow.h"
+#include "duibuttongroup.h"
 
 #include "duilayout.h"
 #include "duilinearlayoutpolicy.h"
 #include "duitextedit.h"
-#include "duitoolbarview.h"
-#include "duitoolbarview_p.h"
+#include "duitoolbartabview.h"
+#include "duitoolbartabview_p.h"
 
-const int DuiToolBarViewPrivate::maxWidgets = 4;
 
-DuiToolBarViewPrivate::DuiToolBarViewPrivate(DuiToolBar *controller)
+const int DuiToolbarTabViewPrivate::maxWidgets = 4;
+
+DuiToolbarTabViewPrivate::DuiToolbarTabViewPrivate(DuiToolBar *controller)
     : DuiWidgetViewPrivate(),
       QObject(),
       widgetsContainer(0),
       layout(0),
       landscapePolicy(0),
       portraitPolicy(0),
-      leasedWidgets(),
-      buttons()
+      tabButtons()
 {
     this->controller = controller;
     controller->installEventFilter(this);
 }
 
 
-DuiToolBarViewPrivate::~DuiToolBarViewPrivate()
+DuiToolbarTabViewPrivate::~DuiToolbarTabViewPrivate()
 {
-    clearWidgets(leasedWidgets);
-    clearWidgets(buttons);
-    removeEventFilter(controller);
+    clearWidgets(tabButtons);
+    controller->removeEventFilter(this);
     QGraphicsLinearLayout *controllerlayout = (QGraphicsLinearLayout *)(controller->layout());
     controllerlayout->removeItem(widgetsContainer);
     delete widgetsContainer;
 }
 
-void DuiToolBarViewPrivate::init()
+void DuiToolbarTabViewPrivate::init()
 {
     widgetsContainer = new DuiWidget();
-    widgetsContainer->setObjectName("toolbarContainer");
+    widgetsContainer->setObjectName("toolbarTabContainer");
 
     layout = new DuiLayout(widgetsContainer);
-    layout->setAnimation(NULL);
     layout->setContentsMargins(0, 0, 0, 0);
 
     createPolicy(Dui::Landscape);
@@ -77,10 +76,13 @@ void DuiToolBarViewPrivate::init()
     QGraphicsLinearLayout *controllerlayout = (QGraphicsLinearLayout *)(controller->layout());
     controllerlayout->addItem(widgetsContainer);
 
+    buttonGroup = new DuiButtonGroup(controller);
+    buttonGroup->setExclusive(true);
+
     addActions();
 }
 
-void DuiToolBarViewPrivate::createPolicy(Dui::Orientation orientation)
+void DuiToolbarTabViewPrivate::createPolicy(Dui::Orientation orientation)
 {
     DuiLinearLayoutPolicy *policy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
     policy->setSpacing(0);
@@ -96,12 +98,11 @@ void DuiToolBarViewPrivate::createPolicy(Dui::Orientation orientation)
     }
 }
 
-void DuiToolBarViewPrivate::add(QAction *action, QAction *before, bool refreshSpacer)
+void DuiToolbarTabViewPrivate::add(QAction *action, QAction *before, bool refreshSpacer)
 {
     bool validLocation = (isLocationValid(action, DuiAction::ToolBarLandscapeLocation) ||
                           isLocationValid(action, DuiAction::ToolBarPortraitLocation));
-    if (!action || !validLocation ||
-            (hasWidget(action) && !isWidgetUsable(action))) {
+    if (!action || !validLocation || !action->isCheckable()) {
         return;
     }
 
@@ -110,11 +111,11 @@ void DuiToolBarViewPrivate::add(QAction *action, QAction *before, bool refreshSp
     // add to policies only if the action is visible
     if (action->isVisible()) {
         bool addToLandscape = refreshPolicyData(action,
-                                                DuiAction::ToolBarLandscapeLocation,
-                                                landscapeData);
-        bool addToPortrait  = refreshPolicyData(action,
-                                                DuiAction::ToolBarPortraitLocation,
-                                                portraitData);
+                                        DuiAction::ToolBarLandscapeLocation,
+                                        landscapeData);
+        bool addToPortrait = refreshPolicyData(action,
+                                      DuiAction::ToolBarPortraitLocation,
+                                      portraitData);
         if (addToLandscape || addToPortrait) {
             if (addToLandscape) {
                 landscapePolicy->insertItem(getItemIndex(landscapePolicy, before), w);
@@ -134,25 +135,23 @@ void DuiToolBarViewPrivate::add(QAction *action, QAction *before, bool refreshSp
     }
 }
 
-void DuiToolBarViewPrivate::remove(QAction *action, bool refreshPolicies)
+void DuiToolbarTabViewPrivate::remove(QAction *action, bool refreshPolicies)
 {
-    DuiWidget *button = buttons.value(action);
-    DuiWidget *leased = leasedWidgets.value(action);
-    DuiWidget *widget = (button != 0) ? button : leased;
+    Q_Q(DuiToolbarTabView);
+    DuiButton *widget = (DuiButton*)tabButtons.value(action);
 
     if (widget) {
         removeAction(landscapePolicy, landscapeData, action, widget);
         removeAction(portraitPolicy, portraitData, action, widget);
+
         layout->removeItem(widget);
+        tabButtons.remove(action);
+        buttonGroup->removeButton(widget);
+        delete widget;
+        widget = 0;
+        action->disconnect(q);
     }
 
-    if (button) {
-        buttons.remove(action);
-        delete button;
-    } else if (leased) {
-        releaseWidget(action, leased);
-        leasedWidgets.remove(action);
-    }
     if (refreshPolicies) {
         clearPolicy(landscapePolicy, landscapeData);
         clearPolicy(portraitPolicy, portraitData);
@@ -160,17 +159,36 @@ void DuiToolBarViewPrivate::remove(QAction *action, bool refreshPolicies)
     }
 }
 
-void DuiToolBarViewPrivate::change(QAction *action)
+void DuiToolbarTabViewPrivate::change(QAction *action)
 {
-    if (changeLocation(action) || changeVisibility(action)) {
+    if (changedLocation(action) || changedVisibility(action)) {
         clearPolicy(landscapePolicy, landscapeData);
         clearPolicy(portraitPolicy, portraitData);
         addActions();
     }
-    changeData(action);
+    changedData(action);
 }
 
-bool DuiToolBarViewPrivate::eventFilter(QObject *obj, QEvent *e)
+void DuiToolbarTabViewPrivate::_q_groupButtonClicked(bool)
+{
+    DuiButton *button = qobject_cast<DuiButton *>(sender());
+    if (button) {
+        button->setChecked(true);
+    }
+    updateActionChecked();
+}
+
+void DuiToolbarTabViewPrivate::_q_groupActionToggled(bool checked)
+{
+    QAction* action = qobject_cast<QAction *>(sender());
+    DuiButton *button = qobject_cast<DuiButton *>(tabButtons.value(action));
+    if (button) {
+        button->setChecked(checked);
+    }
+    updateActionChecked();
+}
+
+bool DuiToolbarTabViewPrivate::eventFilter(QObject *obj, QEvent *e)
 {
     QActionEvent *actionEvent = dynamic_cast<QActionEvent *>(e);
 
@@ -192,12 +210,14 @@ bool DuiToolBarViewPrivate::eventFilter(QObject *obj, QEvent *e)
             break;
         }
         }
+        updateActionChecked();
     }
+
 
     return QObject::eventFilter(obj, e);
 }
 
-void DuiToolBarViewPrivate::addActions()
+void DuiToolbarTabViewPrivate::addActions()
 {
     QList<QAction *> acts = controller->actions();
     int count = acts.count();
@@ -207,41 +227,41 @@ void DuiToolBarViewPrivate::addActions()
     refreshSpacers();
 }
 
-DuiWidget *DuiToolBarViewPrivate::createWidget(QAction *action)
+DuiWidget *DuiToolbarTabViewPrivate::createWidget(QAction *action)
 {
     // If widget is not already created then create it
-    DuiWidget *widget = buttons.value(action);
+    DuiWidget *widget = tabButtons.value(action);
     if (!widget) {
-        widget = leasedWidgets.value(action);
-    }
-    if (!widget) {
-        DuiWidgetAction *widgetAction = qobject_cast<DuiWidgetAction *>(action);
-        if (widgetAction) {
-            widget = requestWidget(widgetAction);
-            leasedWidgets.insert(action, widget);
-        } else {
-            widget = createButton(action);
-            buttons.insert(action, widget);
-        }
+        widget = createTabButton(action);
+        tabButtons.insert(action, widget);
     }
     widget->setVisible(true);
     widget->setEnabled(action->isEnabled());
     return widget;
 }
 
-DuiButton *DuiToolBarViewPrivate::createButton(QAction *action)
+DuiButton *DuiToolbarTabViewPrivate::createTabButton(QAction *action)
 {
-    DuiButton *button = new DuiButton(action->text());
+    Q_Q(DuiToolbarTabView);
+
+    DuiButton *button = new DuiButton();
     DuiAction *duiAction = qobject_cast<DuiAction *>(action);
     if (duiAction) {
         button->setIconID(duiAction->iconID());
     }
-    connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
-    button->setViewType("toolbar");
+    QObject::connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
+    QObject::connect(button, SIGNAL(clicked(bool)), q, SLOT(_q_groupButtonClicked(bool)));
+    QObject::connect(action, SIGNAL(toggled(bool)), q, SLOT(_q_groupActionToggled(bool)));
+
+    button->setViewType("toolbartab");
+    button->setCheckable(true);
+    button->setChecked(action->isChecked());
+    buttonGroup->addButton(button);
+
     return button;
 }
 
-bool DuiToolBarViewPrivate::isLocationValid(QAction *action, DuiAction::Location loc)
+bool DuiToolbarTabViewPrivate::isLocationValid(QAction *action, DuiAction::Location loc)
 {
     bool valid = true; //any QAction is valid to place on toolbar
     DuiAction *duiAction = qobject_cast<DuiAction *>(action);
@@ -251,114 +271,67 @@ bool DuiToolBarViewPrivate::isLocationValid(QAction *action, DuiAction::Location
     return valid;
 }
 
-bool DuiToolBarViewPrivate::isVisible(QAction *action)
+bool DuiToolbarTabViewPrivate::isVisible(QAction *action)
 {
     return action &&
            action->isVisible();
 }
 
-void DuiToolBarViewPrivate::clearWidgets(QHash<QAction *, DuiWidget *>& widgets)
+void DuiToolbarTabViewPrivate::updateActionChecked()
 {
-    QHashIterator<QAction *, DuiWidget *> iterator(widgets);
+    Q_Q(DuiToolbarTabView);
+
+    controller->removeEventFilter(this);
+
+    QHashIterator<QAction *, DuiWidget *> iterator(tabButtons);
     while (iterator.hasNext()) {
         iterator.next();
-        deleteWidget(iterator.key(), iterator.value());
+        DuiButton *button = qobject_cast<DuiButton *>(iterator.value());
+        QAction* action = iterator.key();
+        bool butChecked = button->isChecked();
+        if (button && butChecked != action->isChecked()) {
+            QObject::disconnect(action, SIGNAL(toggled(bool)), q, SLOT(_q_groupActionToggled(bool)));
+            action->setChecked(butChecked);
+            QObject::connect(action, SIGNAL(toggled(bool)), q, SLOT(_q_groupActionToggled(bool)));
+        }
     }
+
+    controller->installEventFilter(this);
+}
+
+void DuiToolbarTabViewPrivate::clearWidgets(QHash<QAction *, DuiWidget *>& widgets)
+{
+    qDeleteAll(widgets);
     widgets.clear();
 }
 
-void DuiToolBarViewPrivate::deleteWidget(QAction *action, DuiWidget *widget)
-{
-    if (!releaseWidget(action, widget)) {
-        delete widget;
-    }
-}
-
-bool DuiToolBarViewPrivate::releaseWidget(QAction *action, DuiWidget *widget)
-{
-    DuiWidgetAction *widgetAction = qobject_cast<DuiWidgetAction *>(action);
-    if (widgetAction) {
-        widgetAction->releaseWidget(widget);
-    }
-    return (widgetAction != 0);
-}
-
-DuiWidget *DuiToolBarViewPrivate::requestWidget(DuiAction *action)
-{
-    DuiWidget *widget = 0;
-    DuiWidgetAction *widgetAction = qobject_cast<DuiWidgetAction *>(action);
-    if (widgetAction) {
-        widget = widgetAction->requestWidget(widgetsContainer);
-    }
-    return widget;
-}
-
-bool DuiToolBarViewPrivate::isWidgetInUseByView(DuiWidgetAction *widgetAction)
-{
-    return (buttons.contains(widgetAction) || leasedWidgets.contains(widgetAction));
-}
-
-bool DuiToolBarViewPrivate::isWidgetUsable(QAction *action)
-{
-    DuiWidgetAction *widgetAction = qobject_cast<DuiWidgetAction *>(action);
-    return(widgetAction && isWidgetUsable(widgetAction));
-}
-
-bool DuiToolBarViewPrivate::hasWidget(QAction *action)
-{
-    DuiWidgetAction *widgetAction = qobject_cast<DuiWidgetAction *>(action);
-    return(widgetAction && widgetAction->widget());
-}
-
-bool DuiToolBarViewPrivate::hasTextEditWidget(QAction *action)
-{
-    DuiTextEdit *textEditWidget = 0;
-    DuiWidgetAction *widgetAction = qobject_cast<DuiWidgetAction *>(action);
-    if (widgetAction) {
-        textEditWidget = qobject_cast<DuiTextEdit *>(widgetAction->widget());
-    }
-    return (textEditWidget != 0);
-}
-
-void DuiToolBarViewPrivate::removeAction(DuiLinearLayoutPolicy *policy,
+void DuiToolbarTabViewPrivate::removeAction(DuiLinearLayoutPolicy *policy,
         ActionPlacementData &policyData,
         QAction *action)
 {
-    DuiWidget *button = buttons.value(action);
-    DuiWidget *leased = leasedWidgets.value(action);
-    DuiWidget *widget = (button != 0) ? button : leased;
-
+    DuiWidget *widget = tabButtons.value(action);
     removeAction(policy, policyData, action, widget);
 }
 
-void DuiToolBarViewPrivate::removeAction(DuiLinearLayoutPolicy *policy,
+void DuiToolbarTabViewPrivate::removeAction(DuiLinearLayoutPolicy *policy,
         ActionPlacementData &policyData,
         QAction *action,
         DuiWidget *widget)
 {
-    bool hasTextEdit = hasTextEditWidget(action);
+    Q_UNUSED(action);
     int index = policy->indexOf(widget);
     if (index >= 0) {
         policyData.placedActions--;
-        if (hasTextEdit) {
-            policyData.hasTextEditor = false;
-            policyData.placedActions--;
-        }
         policy->removeAt(index);
     }
 }
 
-bool DuiToolBarViewPrivate::isWidgetUsable(DuiWidgetAction *widgetAction)
+bool DuiToolbarTabViewPrivate::hasAction(QAction *action)
 {
-    return (!widgetAction->isWidgetInUse() || isWidgetInUseByView(widgetAction));
+    return (tabButtons.contains(action));
 }
 
-bool DuiToolBarViewPrivate::hasAction(QAction *action)
-{
-    return (buttons.contains(action) || leasedWidgets.contains(action));
-}
-
-int DuiToolBarViewPrivate::getItemIndex(DuiLinearLayoutPolicy *policy, QAction *before)
+int DuiToolbarTabViewPrivate::getItemIndex(DuiLinearLayoutPolicy *policy, QAction *before)
 {
     int index = policy->count();
     DuiWidget *w = getWidget(before);
@@ -371,14 +344,12 @@ int DuiToolBarViewPrivate::getItemIndex(DuiLinearLayoutPolicy *policy, QAction *
     return index;
 }
 
-DuiWidget *DuiToolBarViewPrivate::getWidget(QAction *action)
+DuiWidget *DuiToolbarTabViewPrivate::getWidget(QAction *action)
 {
-    DuiWidget *button = buttons.value(action);
-    DuiWidget *leased = leasedWidgets.value(action);
-    return (button != 0) ? button : leased;
+    return tabButtons.value(action);
 }
 
-bool DuiToolBarViewPrivate::changeLocation(QAction *action)
+bool DuiToolbarTabViewPrivate::changedLocation(QAction *action)
 {
     // If the location of an action gets changed, then remove it from the toolbar
     bool validInLandscape = isLocationValid(action, DuiAction::ToolBarLandscapeLocation);
@@ -390,13 +361,12 @@ bool DuiToolBarViewPrivate::changeLocation(QAction *action)
     return true;
 }
 
-void DuiToolBarViewPrivate::changeData(QAction *action)
+void DuiToolbarTabViewPrivate::changedData(QAction *action)
 {
-    DuiWidget *widget = buttons.value(action);
+    DuiWidget *widget = tabButtons.value(action);
     DuiButton *button = qobject_cast<DuiButton *>(widget);
     if (button) {
         // Update button data accordingly
-        button->setText(action->text());
         button->setEnabled(action->isEnabled());
         button->setCheckable(action->isCheckable());
         button->setChecked(action->isChecked());
@@ -407,7 +377,7 @@ void DuiToolBarViewPrivate::changeData(QAction *action)
     }
 }
 
-bool DuiToolBarViewPrivate::changeVisibility(QAction *action)
+bool DuiToolbarTabViewPrivate::changedVisibility(QAction *action)
 {
     DuiWidget *widget = getWidget(action);
     if (widget) {
@@ -420,8 +390,8 @@ bool DuiToolBarViewPrivate::changeVisibility(QAction *action)
     return false;
 }
 
-void DuiToolBarViewPrivate::clearPolicy(DuiLinearLayoutPolicy *policy,
-                                        ActionPlacementData &policyData)
+void DuiToolbarTabViewPrivate::clearPolicy(DuiLinearLayoutPolicy *policy,
+                               ActionPlacementData &policyData)
 {
     while (policy->count()) {
         policy->removeAt(0);
@@ -429,44 +399,33 @@ void DuiToolBarViewPrivate::clearPolicy(DuiLinearLayoutPolicy *policy,
     policyData.reset();
 }
 
-void DuiToolBarViewPrivate::refreshSpacers()
+void DuiToolbarTabViewPrivate::refreshSpacers()
 {
-    retrieveSpacers(landscapePolicy, landscapeData);
-    retrieveSpacers(portraitPolicy, portraitData);
+    retrieveSpacers(landscapePolicy);
+    retrieveSpacers(portraitPolicy);
 
-    insertSpacers(landscapePolicy, landscapeData);
-    insertSpacers(portraitPolicy, portraitData);
+    insertSpacers(landscapePolicy);
+    insertSpacers(portraitPolicy);
 }
 
-void DuiToolBarViewPrivate::retrieveSpacers(DuiLinearLayoutPolicy *policy,
-        ActionPlacementData &policyData)
+void DuiToolbarTabViewPrivate::retrieveSpacers(DuiLinearLayoutPolicy *policy)
 {
-    policyData.mode = Managed;
     QGraphicsLayoutItem *item = 0;
     int count = policy->count();
-    for (int i = count - 1; i >= 0; --i) {
+    for (int i = count-1; i >= 0; --i) {
         item = policy->itemAt(i);
         if (isItemSpacer(item)) {
             policy->removeAt(i);
             freeSpacers.append((QGraphicsWidget *)item);
-        } else {
-            DuiWidget *widget = (DuiWidget *)item;
-            QAction *action = leasedWidgets.key(widget);
-            if (action && !hasTextEditWidget(action)) {
-                policyData.mode = Unmanaged;
-            }
         }
     }
 }
 
-void DuiToolBarViewPrivate::insertSpacers(DuiLinearLayoutPolicy *policy,
-        const ActionPlacementData &policyData)
+void DuiToolbarTabViewPrivate::insertSpacers(DuiLinearLayoutPolicy *policy)
 {
-    // Add spacer(s) only if there is no text-editor action placed or
-    // the widgets are not placed in unmanaged way or there are some
-    // actions in the policy
+    // Add spacer(s) only if there are some/ actions in the policy
     int count = policy->count();
-    if (policyData.mode == Unmanaged || policyData.hasTextEditor || count <= 0)
+    if (count <= 0)
         return;
 
     // In landscape, spacer need to be added for right alignment
@@ -490,7 +449,7 @@ void DuiToolBarViewPrivate::insertSpacers(DuiLinearLayoutPolicy *policy,
 
 }
 
-void DuiToolBarViewPrivate::insertSpacer(DuiLinearLayoutPolicy *policy,
+void DuiToolbarTabViewPrivate::insertSpacer(DuiLinearLayoutPolicy *policy,
         int insertIndex)
 {
     QGraphicsWidget *item = 0;
@@ -503,7 +462,7 @@ void DuiToolBarViewPrivate::insertSpacer(DuiLinearLayoutPolicy *policy,
     policy->insertItem(insertIndex, item);
 }
 
-QGraphicsWidget *DuiToolBarViewPrivate::createSpacer()
+QGraphicsWidget *DuiToolbarTabViewPrivate::createSpacer()
 {
     QGraphicsWidget *spacer = new QGraphicsWidget(widgetsContainer);
     spacer->setMinimumSize(0, 0);
@@ -511,7 +470,7 @@ QGraphicsWidget *DuiToolBarViewPrivate::createSpacer()
     return spacer;
 }
 
-bool DuiToolBarViewPrivate::isItemSpacer(QGraphicsLayoutItem *item)
+bool DuiToolbarTabViewPrivate::isItemSpacer(QGraphicsLayoutItem *item)
 {
     // Since spacers are QGraphicsWidget object and if casting of widget
     // to DuiWidget fails, then its a policy specific spacer.
@@ -520,53 +479,35 @@ bool DuiToolBarViewPrivate::isItemSpacer(QGraphicsLayoutItem *item)
     return (!duiWidget && (widget->parentItem() == widgetsContainer));
 }
 
-bool DuiToolBarViewPrivate::refreshPolicyData(QAction *action,
-        DuiAction::Location location,
-        ActionPlacementData &policyData)
+bool DuiToolbarTabViewPrivate::refreshPolicyData(QAction *action, DuiAction::Location location, ActionPlacementData &policyData)
 {
     bool add = false;
     if ((policyData.placedActions < maxWidgets) && isLocationValid(action, location)) {
-        bool hasTextEdit = hasTextEditWidget(action);
-        // The action is not added if it has a text-edit widget and the toolbar location
-        // has already a text-edit widget placed or there is no space for new text-edit widget
-        // as text-edit widget takes space of two buttons
-        if (!hasTextEdit || (!policyData.hasTextEditor && (policyData.placedActions < maxWidgets - 1))) {
-            add = true;
-            if (hasTextEdit) {
-                //one text-edit widget takes space of two buttons
-                policyData.placedActions++;
-                policyData.hasTextEditor = true;
-            }
-            // If there is a widget that is usable and is not text-entry widget, then the widgets
-            // are placed as it is i.e. in unmanaged way.
-            if (hasWidget(action) && !hasTextEdit) {
-                policyData.mode = Unmanaged;
-            }
-        }
+        policyData.placedActions++;
+        add = true;
     }
-    policyData.placedActions += add;
     return add;
 }
 
-DuiToolBarView::DuiToolBarView(DuiToolBar *controller) :
-    DuiWidgetView(* new DuiToolBarViewPrivate(controller), controller)
+DuiToolbarTabView::DuiToolbarTabView(DuiToolBar *controller) :
+    DuiWidgetView(* new DuiToolbarTabViewPrivate(controller), controller)
 {
-    Q_D(DuiToolBarView);
+    Q_D(DuiToolbarTabView);
     d->init();
 }
 
-DuiToolBarView::DuiToolBarView(DuiToolBarViewPrivate &dd, DuiToolBar *controller) :
+DuiToolbarTabView::DuiToolbarTabView(DuiToolbarTabViewPrivate &dd, DuiToolBar *controller) :
     DuiWidgetView(dd, controller)
 {
-    Q_D(DuiToolBarView);
+    Q_D(DuiToolbarTabView);
     d->init();
 }
 
-DuiToolBarView::~DuiToolBarView()
+DuiToolbarTabView::~DuiToolbarTabView()
 {
 }
 
 // bind view and controller together
-DUI_REGISTER_VIEW_NEW(DuiToolBarView, DuiToolBar)
+DUI_REGISTER_VIEW_NEW(DuiToolbarTabView, DuiToolBar)
 
-#include "moc_duitoolbarview.cpp"
+#include "moc_duitoolbartabview.cpp"

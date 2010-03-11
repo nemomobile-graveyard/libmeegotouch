@@ -17,39 +17,5 @@
 **
 ****************************************************************************/
 
-#ifndef UT_DUITOOLBARVIEW_H
-#define UT_DUITOOLBARVIEW_H
-
-#include <QObject>
-#include <QtTest/QtTest>
-
-class DuiToolBar;
-class DuiToolBarView;
-class DuiWidget;
-class DuiWidgetAction;
-
-class Ut_DuiToolBarView : public QObject
-{
-    Q_OBJECT
-public:
-
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-
-    void init();
-    void cleanup();
-
-    void testDeleteAddAction();
-    void testTabView();
-    void testTabActionExclusivity();
-
-private:
-    DuiToolBar *m_toolbar;
-    DuiToolBarView *m_subject;
-
-    DuiWidgetAction *createTextEditAction(DuiWidget *parentWidget);
-};
-
-#endif
+#include "../widgets/views/duitoolbartabview.h"
 
