@@ -365,7 +365,12 @@ void DuiBasicOrientationAnimation::addSceneWindow(DuiSceneWindow *window)
     } else {
         DuiSceneWindow *layerEffect = d->fetchLayerEffect(window);
         if (layerEffect) {
-            d->addGenericSceneWindowAnimations(layerEffect);
+            // FIXME
+            // see also: DuiBasicOrientationAnimation::removeSceneWindow
+            // The change made below is workaround for nb#159308
+            // and should be reverted when solution is found.
+            // d->addGenericSceneWindowAnimations(layerEffect);
+            d->addGenericSceneWindowAnimations(window);
         } else {
             d->addGenericSceneWindowAnimations(window);
         }
@@ -414,7 +419,12 @@ void DuiBasicOrientationAnimation::removeSceneWindow(DuiSceneWindow *window)
     } else {
         DuiSceneWindow *layerEffect = d->fetchLayerEffect(window);
         if (layerEffect) {
-            d->removeGenericSceneWindowAnimations(layerEffect);
+            // FIXME
+            // see also: DuiBasicOrientationAnimation::addSceneWindow
+            // The change made below is workaround for nb#159308
+            // and should be reverted when solution is found.
+            // d->removeGenericSceneWindowAnimations(layerEffect);
+            d->removeGenericSceneWindowAnimations(window);
         } else {
             d->removeGenericSceneWindowAnimations(window);
         }
