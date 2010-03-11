@@ -5,7 +5,9 @@ QMAKE_TARGET_PRODUCT = DirectUI
 QMAKE_TARGET_DESCRIPTION = DirectUI Framework
 QMAKE_TARGET_COPYRIGHT = Copyright (C) 2010 Nokia
 
-QT += opengl network 
+contains( DEFINES, HAVE_N900 ) { 
+    QT += opengl network 
+}
 
 # Features
 # Parts to build. Options: libs tests benchmarks demos doc debian
