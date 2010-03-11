@@ -59,6 +59,7 @@ private slots:
     void testBigItemInSmallLayout();
     void testMarginsAndMinimumHeight();
     void testAddingRemovingAdding();
+    void testAlignment();
 private:
 
     DuiLayout *m_mockLayout;

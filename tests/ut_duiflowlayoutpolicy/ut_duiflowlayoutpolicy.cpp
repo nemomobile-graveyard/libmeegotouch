@@ -516,6 +516,7 @@ void Ut_DuiFlowLayoutPolicy::testHorizontalJustification()
 
         widget->setSizePolicy(horizontalPolicy, verticalPolicy);
         m_policy->addItem(widget);
+        m_policy->setAlignment(widget, Qt::AlignLeft | Qt::AlignTop);
         qApp->processEvents(); //for spacing change to trigger relayout
     }
     //test with all three items set to
@@ -697,5 +698,51 @@ void Ut_DuiFlowLayoutPolicy::testAddingRemovingAdding()
     QCOMPARE(w2->isVisible(), true);
     QCOMPARE(w3->isVisible(), true);
     QCOMPARE(w4->isVisible(), true);
+}
+void Ut_DuiFlowLayoutPolicy::testAlignment()
+{
+    //Add two items
+    m_policy->addItem(m_mockItem100);
+    m_mockItem200->setPreferredSize(200, 200);
+    m_policy->addItem(m_mockItem200);
+
+    m_form->setGeometry(QRectF(0, 0, 500, 500));
+
+    // Alignment is to center by default
+    QCOMPARE(m_policy->alignment(m_mockItem100), Qt::AlignCenter);
+    QCOMPARE(m_policy->alignment(m_mockItem200), Qt::AlignCenter);
+    qApp->processEvents();
+    QCOMPARE(m_mockItem100->geometry(), QRectF(0, 50, 100, 100));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(100, 0, 200, 200));
+
+    m_policy->setAlignment(m_mockItem200, Qt::AlignTop | Qt::AlignLeft);
+    QCOMPARE(m_policy->alignment(m_mockItem100), Qt::AlignCenter);
+    QCOMPARE(m_policy->alignment(m_mockItem200), Qt::AlignTop | Qt::AlignLeft);
+    qApp->processEvents();
+    QCOMPARE(m_mockItem100->geometry(), QRectF(0, 50, 100, 100));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(100, 0, 200, 200));
+
+    m_policy->setAlignment(m_mockItem200, Qt::AlignCenter);
+    QCOMPARE(m_policy->alignment(m_mockItem100), Qt::AlignCenter);
+    QCOMPARE(m_policy->alignment(m_mockItem200), Qt::AlignCenter);
+    qApp->processEvents();
+    QCOMPARE(m_mockItem100->geometry(), QRectF(0, 50, 100, 100));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(100, 0, 200, 200));
+
+    m_policy->setAlignment(m_mockItem100, Qt::AlignTop | Qt::AlignLeft);
+    QCOMPARE(m_policy->alignment(m_mockItem100), Qt::AlignTop | Qt::AlignLeft);
+    QCOMPARE(m_policy->alignment(m_mockItem200), Qt::AlignCenter);
+    qApp->processEvents();
+    qDebug() << "alignment" << (m_policy->alignment(m_mockItem100) & Qt::AlignVCenter);
+    QCOMPARE(m_mockItem100->geometry(), QRectF(0, 0, 100, 100));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(100, 0, 200, 200));
+
+    m_policy->setAlignment(m_mockItem100, Qt::AlignBottom | Qt::AlignLeft);
+    QCOMPARE(m_policy->alignment(m_mockItem100), Qt::AlignBottom | Qt::AlignLeft);
+    QCOMPARE(m_policy->alignment(m_mockItem200), Qt::AlignCenter);
+    qApp->processEvents();
+    QCOMPARE(m_mockItem100->geometry(), QRectF(0, 100, 100, 100));
+    QCOMPARE(m_mockItem200->geometry(), QRectF(100, 0, 200, 200));
+
 }
 QTEST_APPLESS_MAIN(Ut_DuiFlowLayoutPolicy)

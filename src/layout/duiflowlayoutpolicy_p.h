@@ -52,6 +52,9 @@ public:
 
     /** Maximum number of rows of items to show.  -1 if no limit */
     int rowLimit;
+
+    /** Alignment used for each row */
+    QList<Qt::Alignment> alignments;
 };
 
 #endif // Header Guard

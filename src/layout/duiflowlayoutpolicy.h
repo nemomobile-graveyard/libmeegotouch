@@ -98,11 +98,29 @@ public:
      *  The default is -1, indicating no row limit */
     int rowLimit() const;
 
+    /*! \brief Returns the alignment for @p item.
+     *
+     *  The default alignment is Qt::AlignCenter.
+     *
+     *  The alignment decides how the item is positioned within its assigned space in the
+     *  case where there's more space available in the layout than the widgets can occupy.
+     *
+     *  \see setAlignment()
+     */
+    Qt::Alignment alignment( QGraphicsLayoutItem * item ) const;
+
+    /*! \brief Sets the alignment of item to \p alignment.
+     *
+     * If item's alignment changes, the layout is automatically invalidated.
+     * \see alignment()
+     */
+    void setAlignment( QGraphicsLayoutItem * item, Qt::Alignment alignment );
+
     /*! \reimp */
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
     virtual void addItem(QGraphicsLayoutItem *item);
     virtual void insertItem(int index, QGraphicsLayoutItem *item);
-
+    virtual void removeAt(int index);
     virtual void invalidate();
 protected:
     virtual void relayout();

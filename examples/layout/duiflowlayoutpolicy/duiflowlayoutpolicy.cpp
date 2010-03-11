@@ -47,8 +47,12 @@ int main(int argc, char **argv)
     for (int i = 1; i <= 20; ++i) {
         DuiLabel *label = new DuiLabel(QString("Item %1").arg(i));
         policy->addItem(label);
+        policy->setAlignment(label, Qt::AlignCenter);
         label->setObjectName("item"); //Set CSS name, for styling
         label->setAlignment(Qt::AlignCenter);
+        int random = i*10;
+        label->setMaximumHeight(random);
+        label->setMinimumHeight(random);
     }
 
     /* Attach the layout to the page */

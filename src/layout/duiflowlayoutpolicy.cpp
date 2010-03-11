@@ -31,11 +31,29 @@ DuiFlowLayoutPolicy::~DuiFlowLayoutPolicy()
 
 void DuiFlowLayoutPolicy::addItem(QGraphicsLayoutItem *item)
 {
+    Q_D(DuiFlowLayoutPolicy);
     DuiAbstractLayoutPolicy::addItem(item);
+    int index = indexOf(item);
+    if(index >= 0)
+        d->alignments.insert(index, Qt::AlignCenter);
+
+    Q_ASSERT(count() == d->alignments.count());
 }
 void DuiFlowLayoutPolicy::insertItem(int index, QGraphicsLayoutItem *item)
 {
+    Q_D(DuiFlowLayoutPolicy);
     DuiAbstractLayoutPolicy::insertItem(index, item);
+    index = indexOf(item);
+    if(index >= 0)
+        d->alignments.insert(index, Qt::AlignCenter);
+    Q_ASSERT(count() == d->alignments.count());
+}
+void DuiFlowLayoutPolicy::removeAt(int index)
+{
+    Q_D(DuiFlowLayoutPolicy);
+    DuiAbstractLayoutPolicy::removeAt(index);
+    d->alignments.removeAt(index);
+    Q_ASSERT(count() == d->alignments.count());
 }
 QSizeF DuiFlowLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
@@ -194,9 +212,11 @@ void DuiFlowLayoutPolicy::relayout()
             if (expandable)
                 maxSize = item->effectiveSizeHint(Qt::MaximumSize);
             //let the items expand vertically if they want to
-            if (size.height() != current_rowheight && expandable.testFlag(Qt::Vertical)) {
-                //expand item to rowheight, making sure we don't exceed max size
-                size.setHeight(qMin(maxSize.height(), current_rowheight));
+            if (size.height() != current_rowheight) {
+                if (expandable.testFlag(Qt::Vertical)) {
+                    //expand item to rowheight, making sure we don't exceed max size
+                    size.setHeight(qMin(maxSize.height(), current_rowheight));
+                }
             }
 
             if (leftover_space > 0 && expandable.testFlag(Qt::Horizontal)) {
@@ -212,6 +232,13 @@ void DuiFlowLayoutPolicy::relayout()
             }
 
             QRectF geometry = QRectF(origin, size);
+
+            //Set vertical alignment as per flags
+            if(d->alignments[j] & Qt::AlignVCenter)
+                geometry.translate(0, (current_rowheight - size.height())/2);
+            else if(d->alignments[j] & Qt::AlignBottom)
+                geometry.translate(0, (current_rowheight - size.height()));
+
             if (layout()->layoutDirection() == Qt::LeftToRight)
                 geometry.translate(current_position);
             else
@@ -242,5 +269,24 @@ int DuiFlowLayoutPolicy::rowLimit() const
 {
     Q_D(const DuiFlowLayoutPolicy);
     return d->rowLimit;
+}
+Qt::Alignment DuiFlowLayoutPolicy::alignment( QGraphicsLayoutItem * item ) const
+{
+    Q_D(const DuiFlowLayoutPolicy);
+    int index = indexOf(item);
+    if(index < 0)
+        return Qt::AlignCenter;
+    return d->alignments[index];
+}
+
+void DuiFlowLayoutPolicy::setAlignment( QGraphicsLayoutItem * item, Qt::Alignment alignment )
+{
+    Q_D(DuiFlowLayoutPolicy);
+    int index = indexOf(item);
+    if(index < 0 || d->alignments[index] == alignment)
+        return;
+
+    d->alignments[index] = alignment;
+    invalidatePolicyAndLayout();
 }
 
