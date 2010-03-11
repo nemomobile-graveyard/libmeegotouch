@@ -2,65 +2,22 @@ Source: libdui
 Section: libs
 Priority: extra
 Maintainer: Tomas Junnonen <tomas.junnonen@nokia.com>
-Build-Depends:
-    debhelper (>= 5),
-    libqt4-dev (>= 4.6.0),
-    libicu-dev,
-    libx11-dev,
-    doxygen (>=1.5.9),
-    libgconf2-dev,
-    libcontextsubscriber-dev,
-    libgstreamer0.10-dev,
-    libgstreamer-plugins-base0.10-dev,
-    libgles2-sgx-img-dev [arm armel],
-    opengles-sgx-img-common-dev [arm armel],
-    libgl-dev [i386],
-    libgl1 [i386],
-    libqt4-opengl-dev,
-    pkg-config (>= 0.22),
-    libxdamage-dev,
-    libcontentaction-dev (>= 0.0.7)
+Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.6.0), libicu-dev, libx11-dev, doxygen (>=1.5.9), libgconf2-dev, libcontextsubscriber-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgles2-sgx-img-dev [arm armel], opengles-sgx-img-common-dev [arm armel], libgl-dev [i386], libgl1 [i386], libqt4-opengl-dev, pkg-config (>= 0.22), libxdamage-dev, libcontentaction-dev (>= 0.0.7)
 Standards-Version: 3.7.2
 
 Package: libdui0
 Architecture: any
-Depends:
-    libdui-l10n-engineering-english (= ${Source-Version}),
-    libqtcore4 (>= 4.6.0),
-    libqtgui4 (>= 4.6.0),
-    libqt4-dbus (>= 4.6.0),
-    dbus-x11,
-    ${misc:Depends},
-    ${launcher:Depends},
-    ${shlibs:Depends},
-    duitheme (>= 0.5.0),
-    libxdamage1,
-    libcontentaction0 (>= 0.0.7)
+Depends:  libdui-l10n-engineering-english (= ${Source-Version}), libqtcore4 (>= 4.6.0), libqtgui4 (>= 4.6.0), libqt4-dbus (>= 4.6.0), dbus-x11, ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, duitheme (>= 0.5.0), libxdamage1, libcontentaction0 (>= 0.0.7)
 Provides: libdui
 Conflicts: libdui
-Suggests:
-    libdui-l10n-ar,
-    libdui-l10n-de,
-    libdui-l10n-en,
-    libdui-l10n-fi,
-    libdui-l10n-ur,
-    libdui-l10n-zh-cn
+Suggests: libdui-l10n-ar, libdui-l10n-de, libdui-l10n-en, libdui-l10n-fi, libdui-l10n-ur, libdui-l10n-zh-cn
 Description: DirectUI library
  libdui framework libraries
 
 Package: libdui-dev
 Section: devel
 Architecture: any
-Depends:
-    libdui0 (= ${Source-Version}),
-    dui-dev-tools (=${Source-Version}),
-    libqt4-dev (>= 4.6.0),
-    libx11-dev,
-    libgstreamer0.10-dev,
-    libgstreamer-plugins-base0.10-dev,
-    libgconf2-dev,
-    libcontextsubscriber-dev,
-    libxdamage-dev
+Depends: libdui0 (= ${Source-Version}), dui-dev-tools (=${Source-Version}), libqt4-dev (>= 4.6.0), libx11-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgconf2-dev, libcontextsubscriber-dev, libxdamage-dev
 Description: libdui development files
  Development files for DirectUI
 
@@ -76,34 +33,21 @@ Description: libdui specific development and testing tools
 Package: dui-demos
 Section: devel
 Architecture: any
-Depends:
-    dui-demos-widgetsgallery,
-    dui-demos-plainqt
+Depends: dui-demos-widgetsgallery, dui-demos-plainqt
 Description: Demo applications for DirectUI
  Collection of demo applications for DirectUI
 
 Package: dui-demos-widgetsgallery
 Section: devel
 Architecture: any
-Depends:
-    libdui0 (= ${Source-Version}),
-    dui-demos-widgetsgallery-l10n-engineering-english (= ${Source-Version})
-Suggests:
-    dui-demos-widgetsgallery-l10n-ar,
-    dui-demos-widgetsgallery-l10n-de,
-    dui-demos-widgetsgallery-l10n-en,
-    dui-demos-widgetsgallery-l10n-fi,
-    dui-demos-widgetsgallery-l10n-ur,
-    dui-demos-widgetsgallery-l10n-zh-cn
+Depends: libdui0 (= ${Source-Version}), dui-demos-widgetsgallery-l10n-engineering-english (= ${Source-Version})
+Suggests: dui-demos-widgetsgallery-l10n-ar, dui-demos-widgetsgallery-l10n-de, dui-demos-widgetsgallery-l10n-en, dui-demos-widgetsgallery-l10n-fi, dui-demos-widgetsgallery-l10n-ur, dui-demos-widgetsgallery-l10n-zh-cn
 Description: Demo application for DirectUI
 
 Package: dui-demos-widgetsgallery-tests
 Section: devel
 Architecture: any
-Depends:
-    libdui0 (= ${Source-Version}),
-    duitestrunner,
-    dui-demos-widgetsgallery (= ${Source-Version})
+Depends: libdui0 (= ${Source-Version}), duitestrunner, dui-demos-widgetsgallery (= ${Source-Version})
 Description: Demo application for DirectUI
 
 Package: dui-demos-widgetsgallery-dbg
@@ -211,22 +155,14 @@ Description: Debug symbols of the demo application for application extensions
 Package: libdui-tests
 Section: extra
 Architecture: any
-Depends:
-    libdui0 (= ${Source-Version}),
-    libqtgui4,
-    testrunner,
-    locales,
-    ${shlibs:Depends}
+Depends: libdui0 (= ${Source-Version}), libqtgui4, testrunner, locales, ${shlibs:Depends}
 Description: libdui unit tests
  Unit testing binaries and shellscripts for testing libdui library
 
 Package: libdui-benchmarks
 Section: extra
 Architecture: any
-Depends:
-    libdui0 (= ${Source-Version}),
-    ${shlibs:Depends},
-    dui-demos-widgetsgallery
+Depends: libdui0 (= ${Source-Version}), ${shlibs:Depends}, dui-demos-widgetsgallery
 Description: libdui benchmarks
  Benchmarking binaries for testing libdui library
 
@@ -290,3 +226,6 @@ Architecture: any
 Enhances: libdui0
 Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
 Description: Simplified Chinese translations for libdui
+
+
+
