@@ -301,7 +301,7 @@ void DuiSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPan
         QRect widgetRect;
         QVariant result = q->scene()->inputMethodQuery(Qt::ImMicroFocus);
         if (result.isValid())
-            widgetRect = result.toRect();
+            widgetRect = rootElement->mapRectFromScene(result.toRect()).toRect();
         else
             widgetRect = focusedInputWidget->mapRectToItem(rootElement, focusedInputWidget->boundingRect()).toRect();
         if (widgetRect.intersects(mappedInputPanelRect)) {
