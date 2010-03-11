@@ -2,3 +2,4 @@ usr/bin/widgetsgallery
 usr/share/themes/*
 usr/share/applications/widgetsgallery.desktop
 usr/share/dbus-1/services/com.nokia.widgetsgallery.service
+usr/share/widgetsgallery/*

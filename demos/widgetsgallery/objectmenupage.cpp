@@ -82,6 +82,9 @@ void ObjectMenuPage::createContent()
         DuiContentItem *item = new DuiContentItem(DuiContentItem::IconAndTwoTextLabels, containerFriends->centralWidget());
         item->setItemMode(DuiContentItem::Single);
 
+        // set content uri to dummy contact.
+        item->setProperty("contentURI", QString("a.contact"));
+
         if (imageContacts.size() > 0) {
             item->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[i % imageContacts.size()]));
         }
@@ -111,6 +114,9 @@ void ObjectMenuPage::createContent()
     // Fill the albums
     for (int i = 0; i < 4; ++i) {
         DuiImageWidget *image = new DuiImageWidget(containerAlbums->centralWidget());
+
+        // set content uri to dummy album
+        image->setProperty("contentURI", QString("a.album"));
 
         if (imageContacts.size() > 0) {
             image->setImage(QImage(contactsDir + QDir::separator() + imageContacts[(i+5) % imageContacts.size()]));

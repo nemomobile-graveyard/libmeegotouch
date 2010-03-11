@@ -46,6 +46,10 @@ DuiObjectMenu::DuiObjectMenu(DuiWidget *target)
 
     model()->setActions(list);
 
+    QVariant contentURI = target->property("contentURI");
+    if(contentURI.isValid())
+        model()->setContentURI(contentURI.toString());
+
     // install event filter to the target widget, so we get notified
     // when actions are added,removed or changed.
     target->installEventFilter(this);

@@ -63,6 +63,8 @@ QMAKE_CXXFLAGS += -DDUI_EXPORTS
 !win32-msvc*:QMAKE_CXXFLAGS += -Wno-long-long -pedantic
 !win32:QMAKE_CXXFLAGS += -Werror -Wno-variadic-macros -fvisibility=hidden
 
+LIBS += -lcontentaction
+
 !win32-msvc*:LIBS += -lm -lX11
 macx:LIBS -= -lX11
 win32:LIBS -= -lX11

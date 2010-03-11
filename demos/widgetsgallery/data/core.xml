@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<actions>
+  <class name="http://www.semanticdesktop.org/ontologies/2007/03/22/nco#PersonContact">
+    <action name="com.nokia.Contacts.delete"
+            weight="100"/>
+    <action name="com.nokia.Contacts.call"
+            weight="100"/>
+  </class>
+  <class name="http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#ID3Audio">
+    <action name="com.nokia.Albums.delete"
+            weight="100"/>
+    <action name="com.nokia.Albums.play"
+            weight="100"/>
+    <action name="com.nokia.Albums.addToPlaylist"
+            weight="100"/>
+  </class>
+</actions>

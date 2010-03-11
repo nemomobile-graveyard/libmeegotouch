@@ -22,6 +22,7 @@
 
 #include "duiscenewindowview_p.h"
 #include "duiobjectmenuview.h"
+#include <contentaction/contentaction.h>
 
 class DuiButton;
 class DuiAction;
@@ -38,6 +39,7 @@ class DuiObjectMenuViewPrivate : public DuiSceneWindowViewPrivate
     void init();
 
     QHash<DuiAction *, DuiButton *> buttons;
+    QHash<DuiAction*, ContentAction::Action> contentActions;
 
     DuiPannableViewport *viewport;
     DuiWidget *container;
@@ -45,6 +47,8 @@ class DuiObjectMenuViewPrivate : public DuiSceneWindowViewPrivate
     DuiLayout *layout;
     DuiLinearLayoutPolicy *portraitPolicy;
     DuiGridLayoutPolicy *landscapePolicy;
+private:
+    void contentActionTriggered();
 };
 
 #endif

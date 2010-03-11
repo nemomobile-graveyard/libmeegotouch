@@ -88,6 +88,9 @@ Q_SIGNALS:
         \brief This signal is emitted when an action has been modified in actions list.
      */
     void actionModified(DuiAction *action);
+
+private:
+    DUI_MODEL_PROPERTY(QString, contentURI, ContentURI, true, QString())
 };
 
 #endif

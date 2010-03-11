@@ -79,6 +79,15 @@ DuiObjectMenuView::DuiObjectMenuView(DuiObjectMenuViewPrivate &dd, DuiObjectMenu
 
 DuiObjectMenuView::~DuiObjectMenuView()
 {
+    Q_D(DuiObjectMenuView);
+    QHash<DuiAction*, ContentAction::Action>::iterator i = d->contentActions.begin(),
+                                                       e = d->contentActions.end();
+    for(; i!=e; ++i) {
+        actionRemoved(i.key());
+        delete i.key();
+    }
+    d->contentActions.clear();
+
     DuiActionList actions = model()->actions();
     const int count = actions.count();
     for (int i = 0; i < count; ++i) {
@@ -158,6 +167,7 @@ void DuiObjectMenuView::updateData(const QList<const char *> &modifications)
     Q_D(DuiObjectMenuView);
 
     foreach(const char * member, modifications) {
+        // TODO: this could be done without first removing all actions.
         if (member == DuiObjectMenuModel::Actions) {
             foreach(DuiAction * action, d->buttons.keys()) {
                 actionRemoved(action);
@@ -167,6 +177,25 @@ void DuiObjectMenuView::updateData(const QList<const char *> &modifications)
             const int count = actions.count();
             for (int i = 0; i < count; ++i) {
                 actionAdded(actions.at(i));
+            }
+        } else if (member == DuiObjectMenuModel::ContentURI) {
+            // remove & release the old content uri dependant actions
+            QHash<DuiAction*, ContentAction::Action>::iterator i = d->contentActions.begin(),
+                                                               e = d->contentActions.end();
+            for(; i!=e; ++i) {
+                actionRemoved(i.key());
+                delete i.key();
+            }
+            d->contentActions.clear();
+
+            QList<ContentAction::Action> contentActionList = ContentAction::Action::actions(model()->contentURI());
+            foreach(ContentAction::Action contentAction, contentActionList) {
+                // TODO: fetch the correct text from contentAction and maybe also an icon
+                DuiAction* action = new DuiAction(contentAction.name(), this);
+                connect(action, SIGNAL(triggered()), SLOT(contentActionTriggered()));
+                d->contentActions.insert(action, contentAction);
+
+                actionAdded(action);
             }
         }
     }
@@ -178,6 +207,16 @@ void DuiObjectMenuView::setupModel()
 
     Q_D(DuiObjectMenuView);
 
+    // remove & release the old content uri dependant actions
+    QHash<DuiAction*, ContentAction::Action>::iterator i = d->contentActions.begin(),
+                                                       e = d->contentActions.end();
+    for(; i!=e; ++i) {
+        actionRemoved(i.key());
+        delete i.key();
+    }
+    d->contentActions.clear();
+
+    // remove & release the old manually added actions
     foreach(DuiAction * action, d->buttons.keys()) {
         actionRemoved(action);
     }
@@ -193,6 +232,16 @@ void DuiObjectMenuView::setupModel()
     const int count = actions.count();
     for (int i = 0; i < count; ++i) {
         actionAdded(actions.at(i));
+    }
+
+    QList<ContentAction::Action> contentActionList = ContentAction::Action::actions(model()->contentURI());
+    foreach(ContentAction::Action contentAction, contentActionList) {
+        // TODO: fetch the correct text from contentAction and maybe also an icon
+        DuiAction* action = new DuiAction(contentAction.name(), this);
+        connect(action, SIGNAL(triggered()), SLOT(contentActionTriggered()));
+        d->contentActions.insert(action, contentAction);
+
+        actionAdded(action);
     }
 }
 
@@ -237,4 +286,20 @@ void DuiObjectMenuView::drawBackground(QPainter *painter, const QStyleOptionGrap
     }
 }
 
+void DuiObjectMenuViewPrivate::contentActionTriggered()
+{
+    Q_Q(DuiObjectMenuView);
+
+    DuiAction* action = qobject_cast<DuiAction*>(q->sender());
+    if(!action)
+        return;
+
+    QHash<DuiAction*, ContentAction::Action>::iterator i = contentActions.find(action);
+    if(i == contentActions.end())
+        return;
+
+    i.value().trigger();
+}
+
 DUI_REGISTER_VIEW_NEW(DuiObjectMenuView, DuiObjectMenu)
+#include "moc_duiobjectmenuview.cpp"

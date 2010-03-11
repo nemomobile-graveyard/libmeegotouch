@@ -70,6 +70,8 @@ protected slots:
     void actionAdded(DuiAction *action);
     void actionModified(DuiAction *action);
     void actionRemoved(DuiAction *action);
+private:
+    Q_PRIVATE_SLOT(d_func(), void contentActionTriggered())
 };
 
 #endif

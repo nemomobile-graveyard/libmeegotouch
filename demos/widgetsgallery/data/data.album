@@ -1,0 +1,2 @@
+@prefix nid3: <http://www.semanticdesktop.org/ontologies/2007/05/10/nid3#> .
+<a.album> a nid3:ID3Audio .
