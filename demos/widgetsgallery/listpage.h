@@ -60,8 +60,14 @@ public:
     void addPage(TemplatePage *page);
     int pageCount() const;
     TemplatePage *findPageByIndex(int index) const;
+    TemplatePage *findPageByTimedemoTitle(const QString& title) const;
+    void showPageByTimedemoTitle(const QString& name);
 
     static DuiGridLayoutPolicy *createAndSetupGridPolicy(DuiWidget *panel);
+
+    void setInitialPageToShow(const QString& initialPageToShow);
+
+    QList<TemplatePage *> pages;
 
 public slots:
     void handleListItemClick();
@@ -69,6 +75,7 @@ public slots:
     void showPageByIndex(int index);
     void showOrientationSelectionDialog();
     void toggleFps();
+    void showInitialPage();
 
 protected:
     virtual void retranslateUi();
@@ -78,7 +85,6 @@ private:
     void showPage(DuiApplicationPage *page);
 
 private:
-    QList<TemplatePage *> pages;
     QList<DuiLabel *> groupLabels;
     QList<DuiContainer *> containers;
 
@@ -86,6 +92,8 @@ private:
     DuiLinearLayoutPolicy *policy;
 
     QHash<DuiButton *, TemplatePage *> buttons;
+
+    QString initialPageToShow;
 };
 
 #endif

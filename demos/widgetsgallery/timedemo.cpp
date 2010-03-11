@@ -36,11 +36,12 @@ namespace
     const int pageDuration = 5000;
 }
 
-Timedemo::Timedemo(TimingScene *timingScene, ListPage *listPage)
+Timedemo::Timedemo(TimingScene *timingScene, ListPage *listPage, const QStringList& demoPageTitles)
     : timingScene(timingScene)
     , m_pFrontPage(listPage)
     , m_currentPageIndex(0)
     , m_currentBenchmarkIndex(0)
+    , demoPageTitles(demoPageTitles)
     , timingStarted(false)
     , timingStopped(false)
 {
@@ -79,7 +80,7 @@ void Timedemo::stopTiming()
     currentResult.fps = qreal(endFrameCount - m_beginFrameCount)
                 / qMax<uint>(currentResult.runtime, 1) * 1000;
 
-    QSharedPointer<TimedemoBenchmark> benchmark = currentPage->benchmarks()[m_currentBenchmarkIndex];
+    QSharedPointer<TimedemoBenchmark> benchmark = demoPages[m_currentPageIndex]->benchmarks()[m_currentBenchmarkIndex];
     benchmarkResults[m_currentPageIndex].insert(benchmark->name(), currentResult);
 
     timingStopped = true;
@@ -87,26 +88,45 @@ void Timedemo::stopTiming()
 
 void Timedemo::showFirstPage()
 {
+    if (demoPageTitles.count() == 0) {
+        foreach(TimedemoPage *page, m_pFrontPage->pages) {
+            demoPages.append(page);
+        }
+    } else {
+        foreach(const QString title, demoPageTitles) {
+            TimedemoPage *page;
+            if (title == m_pFrontPage->timedemoTitle()) {
+                page = m_pFrontPage;
+            } else {
+                page = m_pFrontPage->findPageByTimedemoTitle(title);
+            }
+            if (page) {
+                demoPages.append(page);
+            }
+        }
+    }
+
+    if (demoPages.count() == 0) {
+        return;
+    }
+
     disconnect(m_pFrontPage, SIGNAL(appeared()), this, SLOT(showFirstPage()));
     m_currentPageIndex = 0;
-    benchmarkResults.resize(m_pFrontPage->pageCount() + 1);
-    currentPage = dynamic_cast<TimedemoPage*>(m_pFrontPage->findPageByIndex(0));
-    if(!currentPage) {
-        qFatal("%s does not inherit from TimedemoPage", qPrintable(currentPage->title()));
-    }
-    currentPage->createBenchmarks(this);
+    benchmarkResults.resize(demoPages.count());
+
+    demoPages[m_currentPageIndex]->createBenchmarks(this);
     beginBenchmark();
 }
 
 void Timedemo::beginBenchmark()
 {
-    if (m_currentBenchmarkIndex >= currentPage->benchmarks().count()) {
+    if (m_currentBenchmarkIndex >= demoPages[m_currentPageIndex]->benchmarks().count()) {
         // all benchmarks have been processed, switch to the next page
         showNextPage();
         return;
     }
 
-    QSharedPointer<TimedemoBenchmark> benchmark = currentPage->benchmarks()[m_currentBenchmarkIndex];
+    QSharedPointer<TimedemoBenchmark> benchmark = demoPages[m_currentPageIndex]->benchmarks()[m_currentBenchmarkIndex];
     if (!allBenchmarks.contains(benchmark->name())) {
         allBenchmarks.append(benchmark->name());
     }
@@ -134,16 +154,15 @@ void Timedemo::showNextPage()
     ++m_currentPageIndex;
     m_currentBenchmarkIndex = 0;
 
-    if (m_currentPageIndex < m_pFrontPage->pageCount()) {
-        currentPage = static_cast<TimedemoPage*>(m_pFrontPage->findPageByIndex(m_currentPageIndex));
-        currentPage->createBenchmarks(this);
-        beginBenchmark();
-    } else if (m_currentPageIndex == m_pFrontPage->pageCount()) {
-        currentPage = m_pFrontPage;
-        // FIXME: the front page needs a special invitation.
-        // otherwise it does not show up again
-        currentPage->appearNow();
-        currentPage->createBenchmarks(this);
+    if (m_currentPageIndex < demoPages.count()) {
+        TimedemoPage* currentPage = demoPages[m_currentPageIndex];
+        demoPages[m_currentPageIndex]->createBenchmarks(this);
+
+        if (currentPage == m_pFrontPage) {
+            // FIXME: the front page needs a special invitation.
+            // otherwise it does not show up again
+            demoPages[m_currentPageIndex]->appearNow();
+        }
         beginBenchmark();
     } else {
         // all pages shown, display results:
@@ -178,7 +197,7 @@ void Timedemo::displayBenchmarkResults()
     QHash<QString, int> actualWidth;
 
     for (int i = 0; i < benchmarkResults.count(); ++i) {
-        TimedemoPage *page = (i < m_pFrontPage->pageCount()) ? static_cast<TimedemoPage*>(m_pFrontPage->findPageByIndex(i)) : static_cast<TimedemoPage*>(m_pFrontPage);
+        TimedemoPage *page = demoPages[i];
         QString title = page->timedemoTitle();
         pageTitleWidth = qMax(pageTitleWidth, title.length());
     }
@@ -200,7 +219,7 @@ void Timedemo::displayBenchmarkResults()
     csv << '\n';
 
     for (int i = 0; i < benchmarkResults.count(); ++i) {
-        TimedemoPage *page = (i < m_pFrontPage->pageCount()) ? static_cast<TimedemoPage*>(m_pFrontPage->findPageByIndex(i)) : static_cast<TimedemoPage*>(m_pFrontPage);
+        TimedemoPage *page = demoPages[i];
         QString title = page->timedemoTitle();
 
         log << qSetFieldWidth(pageTitleWidth) << title;

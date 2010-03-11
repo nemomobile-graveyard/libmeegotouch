@@ -24,6 +24,7 @@
 #include <QVector>
 #include <QTime>
 #include <QHash>
+#include <QStringList>
 
 class QString;
 class ListPage;
@@ -47,7 +48,7 @@ class Timedemo : public QObject
 {
     Q_OBJECT
 public:
-    Timedemo(TimingScene *timingScene, ListPage *listPage);
+    Timedemo(TimingScene *timingScene, ListPage *listPage, const QStringList& demoPageTitles);
 
     void setOutputCsv(const QString &filename);
 
@@ -74,7 +75,8 @@ private:
 
     int m_currentPageIndex;
     int m_currentBenchmarkIndex;
-    TimedemoPage *currentPage;
+    QVector<TimedemoPage*> demoPages;
+    QStringList demoPageTitles;
 
     uint m_beginFrameCount;
     QTime m_beginTime;

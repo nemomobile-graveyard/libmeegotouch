@@ -107,6 +107,8 @@ ListPage::ListPage(const QString &title)
     : shownPage(NULL)
 {
     setTitle(title);
+
+    connect(this, SIGNAL(windowShown()), this, SLOT(showInitialPage()));
 }
 
 ListPage::~ListPage()
@@ -213,6 +215,12 @@ DuiGridLayoutPolicy *ListPage::createAndSetupGridPolicy(DuiWidget *panel)
     return policy;
 }
 
+void ListPage::setInitialPageToShow(const QString& initialPageToShow)
+{
+    this->initialPageToShow = initialPageToShow;
+}
+
+
 void ListPage::populateLayout()
 {
     QStringList groupNames = TemplatePage::groupNames();
@@ -296,6 +304,24 @@ TemplatePage *ListPage::findPageByIndex(int index) const
     }
 
     return 0;
+}
+
+TemplatePage *ListPage::findPageByTimedemoTitle(const QString& title) const
+{
+    for (int i = 0; i < pages.size(); ++i) {
+        if (pages.at(i)->timedemoTitle() == title) {
+            return pages.at(i);
+        }
+    }
+    return 0;
+}
+
+void ListPage::showPageByTimedemoTitle(const QString& name)
+{
+    TemplatePage *page = findPageByTimedemoTitle(name);
+    if (page) {
+        showPage(page);
+    }
 }
 
 QSettings *themeFile(const QString &theme)
@@ -504,4 +530,11 @@ void ListPage::showOrientationSelectionDialog()
 void ListPage::toggleFps()
 {
     DuiApplication::instance()->setShowFps(!DuiApplication::showFps());
+}
+
+void ListPage::showInitialPage()
+{
+    if (!initialPageToShow.isEmpty()) {
+        showPageByTimedemoTitle(initialPageToShow);
+    }
 }

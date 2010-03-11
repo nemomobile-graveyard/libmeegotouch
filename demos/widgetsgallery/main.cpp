@@ -69,12 +69,25 @@ int main(int argc, char **argv)
     ListPage listPage;
     Timedemo *timedemo = 0;
     if (qApp->arguments().indexOf("-timedemo") >= 0) {
-        timedemo = new Timedemo(&scene, &listPage);
+        QStringList demoPages;
+        int idx = qApp->arguments().indexOf("-demopages");
+        if (idx >= 0 && idx + 1 < qApp->arguments().count()) {
+            demoPages = qApp->arguments()[idx + 1].split(',');
+        }
 
-        const int idx = qApp->arguments().indexOf("-outputcsv");
+        timedemo = new Timedemo(&scene, &listPage, demoPages);
+
+        idx = qApp->arguments().indexOf("-outputcsv");
         if (idx >= 0 && idx + 1 < qApp->arguments().count()) {
             timedemo->setOutputCsv(qApp->arguments()[idx + 1]);
         }
+    }
+
+    int index = qApp->arguments().indexOf("-initialpage");
+    if (index >= 0) {
+      if (index + 1 < qApp->arguments().count()) {
+          listPage.setInitialPageToShow(qApp->arguments()[index + 1]);
+      }
     }
 
     EmptyMainLoopHelper mainLoopHelper;
