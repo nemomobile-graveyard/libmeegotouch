@@ -743,8 +743,6 @@ void DuiComponentData::setActiveWindow(DuiWindow *w)
     }
 
     DuiWindow *activeWindow = DuiComponentData::activeWindow();
-    if (activeWindow == w)
-        return;
 
     if (activeWindow) {
         QObject::disconnect(activeWindow,
