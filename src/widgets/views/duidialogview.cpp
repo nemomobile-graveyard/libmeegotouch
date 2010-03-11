@@ -471,11 +471,8 @@ int DuiDialogViewPrivate::stdButtonOrder(Dui::StandardButton buttonType)
 
 void DuiDialogViewPrivate::setCentralWidget(DuiWidget *newCentralWidget)
 {
-    if (centralWidget) {
+    if (centralWidget)
         contentsLayout->removeItem(centralWidget);
-        delete centralWidget;
-        centralWidget = 0;
-    }
 
     // Place the new one
     if (newCentralWidget) {

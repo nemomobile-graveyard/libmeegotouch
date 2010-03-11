@@ -23,6 +23,7 @@
 #include "duidialogview.h"
 #include "duiscenewindowview_p.h"
 #include <duinamespace.h>
+#include <QPointer>
 
 class DuiDialog;
 class DuiDialogPrivate;
@@ -124,7 +125,7 @@ public:
 
     DuiPannableViewport *contentsViewport;
 
-    DuiWidget *centralWidget;
+    QPointer<DuiWidget> centralWidget;
 
     DuiWidget *titleBar;
     DuiLabel *titleLabel;

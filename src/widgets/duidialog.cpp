@@ -361,6 +361,9 @@ DuiWidget *DuiDialog::centralWidget()
 
 void DuiDialog::setCentralWidget(DuiWidget *centralWidget)
 {
+    if (model()->centralWidget())
+        delete model()->centralWidget();
+
     model()->setCentralWidget(centralWidget);
 }
 
