@@ -78,7 +78,6 @@ public:
 
     void setText(const QString &text);
     void setImage(const QString &id);
-    void setVisibility(bool visibility);
 
 protected:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
@@ -87,7 +86,7 @@ private:
     DuiLabel *label;
     DuiImageWidget *image;
     QString imageName;
-    bool visibility;
+    //bool visibility;
 
     QGraphicsAnchorLayout *layout;
 
@@ -215,6 +214,11 @@ public:
     int valueWhenPressed;
 
     void init(DuiSlider *contoller);
+
+    void insertMinIndicatorToLayout();
+    void insertMaxIndicatorToLayout();
+    void removeMinIndicatorFromLayout();
+    void removeMaxIndicatorFromLayout();
 
     void updateOrientation();
     bool isCollision(QGraphicsSceneMouseEvent *event) const;

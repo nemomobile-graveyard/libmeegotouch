@@ -160,7 +160,6 @@ DuiSliderIndicator::DuiSliderIndicator(bool isMinMax, QGraphicsItem *parent) :
     DuiWidget(parent),
     label(0),
     image(0),
-    visibility(false),
     layout(0)
 {
     layout = new QGraphicsAnchorLayout;
@@ -252,13 +251,6 @@ void DuiSliderIndicator::setImage(const QString &id)
     updateGeometry();
 }
 
-void DuiSliderIndicator::setVisibility(bool visibility)
-{
-    this->visibility = visibility;
-    DuiWidget::setVisible(visibility);
-    updateGeometry();
-}
-
 QSizeF DuiSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_UNUSED(which);
@@ -267,16 +259,14 @@ QSizeF DuiSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint
     qreal width = 0;
     qreal height = 0;
 
-    if (visibility) {
-        if (image && !imageName.isEmpty()) {
-            width = qMax(width, image->sizeHint(Qt::PreferredSize).width());
-            height = qMax(height, image->sizeHint(Qt::PreferredSize).height());
-        }
+    if (image && !imageName.isEmpty()) {
+        width = qMax(width, image->sizeHint(Qt::PreferredSize).width());
+        height = qMax(height, image->sizeHint(Qt::PreferredSize).height());
+    }
 
-        if (label && !label->text().isEmpty()) {
-            width = qMax(width, label->sizeHint(Qt::PreferredSize).width());
-            height = qMax(height, label->sizeHint(Qt::PreferredSize).height());
-        }  
+    if (label && !label->text().isEmpty()) {
+        width = qMax(width, label->sizeHint(Qt::PreferredSize).width());
+        height = qMax(height, label->sizeHint(Qt::PreferredSize).height());
     }
 
     return QSizeF(width, height);
@@ -448,8 +438,7 @@ void DuiSliderGroove::setIndicatorImage(const QString &id)
 
 void DuiSliderGroove::setIndicatorVisibility(bool visibility)
 {
-    sliderHandleIndicator->setVisibility(visibility);
-    updateHandleIndicatorPos();
+    sliderHandleIndicator->setVisible(visibility);
 }
 
 //converts one of coordinates of point to slider value
@@ -714,21 +703,18 @@ QSizeF DuiSliderGroove::sizeHint(Qt::SizeHint which, const QSizeF &constraint) c
             return QSizeF(minimumLength, sliderHandle->sizeHint(Qt::PreferredSize).height());
         if (orientation == Qt::Vertical)
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), minimumLength);
-            //return QSizeF(0, 0);
     }
     case Qt::PreferredSize: {
         if (orientation == Qt::Horizontal)
             return QSizeF(preferredLength, sliderHandle->sizeHint(Qt::PreferredSize).height());
         if (orientation == Qt::Vertical)
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), preferredLength);
-        //return QSizeF(0, 0);
     }
     case Qt::MaximumSize: {
         if (orientation == Qt::Horizontal)
             return QSizeF(maximumLength, sliderHandle->sizeHint(Qt::PreferredSize).height());
         if (orientation == Qt::Vertical)
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), maximumLength);
-        //return QSizeF(0, 0);
     }
     default:
         qWarning("DuiSliderView::sizeHint() don't know how to handle the value of 'which' ");
@@ -876,10 +862,6 @@ DuiSliderViewPrivate::DuiSliderViewPrivate() :
     pressTimerId(0),
     valueWhenPressed(0)
 {
-    sliderGroove = new DuiSliderGroove;
-    //these are minmax indicators
-    minIndicator = new DuiSliderIndicator(true);
-    maxIndicator = new DuiSliderIndicator(true);
 }
 
 DuiSliderViewPrivate::~DuiSliderViewPrivate()
@@ -894,7 +876,12 @@ DuiSliderViewPrivate::~DuiSliderViewPrivate()
 void DuiSliderViewPrivate::init(DuiSlider *controller)
 {
     this->controller = controller;
+
+    sliderGroove = new DuiSliderGroove(controller);
     sliderGroove->init(controller);
+    //these are minmax indicators
+    minIndicator = new DuiSliderIndicator(controller);
+    maxIndicator = new DuiSliderIndicator(controller);
 
     bool reverse = qApp->isRightToLeft();
 
@@ -948,6 +935,102 @@ void DuiSliderViewPrivate::updateOrientation()
     }
 
     sliderGroove->setOrientation(q->model()->orientation());
+}
+
+void DuiSliderViewPrivate::insertMinIndicatorToLayout()
+{
+    if (!horizontalPolicy || !verticalPolicy) {
+        qWarning("DuiSlider was not initialized properly");
+        return;
+    }
+
+    bool reverse = qApp->isRightToLeft();
+
+    if (!reverse) {
+        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
+        if (firstItem != minIndicator)
+            horizontalPolicy->insertItem(0, minIndicator, Qt::AlignCenter);
+    } else {
+        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+        if (firstItem != minIndicator)
+            horizontalPolicy->insertItem(horizontalPolicy->count() - 1, minIndicator, Qt::AlignCenter);
+    }
+
+    QGraphicsLayoutItem* firstItem = verticalPolicy->itemAt(0);
+    if (firstItem != minIndicator)
+        verticalPolicy->insertItem(0, minIndicator, Qt::AlignCenter);
+}
+
+void DuiSliderViewPrivate::insertMaxIndicatorToLayout()
+{
+    if (!horizontalPolicy || !verticalPolicy) {
+        qWarning("DuiSlider was not initialized properly");
+        return;
+    }
+
+    bool reverse = qApp->isRightToLeft();
+
+    if (!reverse) {
+        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+        if (lastItem != maxIndicator)
+            horizontalPolicy->insertItem(horizontalPolicy->count(), maxIndicator, Qt::AlignCenter);
+    } else {
+        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(0);
+        if (lastItem != maxIndicator)
+            horizontalPolicy->insertItem(0, maxIndicator, Qt::AlignCenter);
+    }
+
+    QGraphicsLayoutItem* lastItem = verticalPolicy->itemAt(verticalPolicy->count() - 1);
+    if (lastItem != maxIndicator)
+        verticalPolicy->insertItem(verticalPolicy->count(), maxIndicator, Qt::AlignCenter);
+}
+
+void DuiSliderViewPrivate::removeMinIndicatorFromLayout()
+{
+    if (!horizontalPolicy || !verticalPolicy) {
+        qWarning("DuiSlider was not initialized properly");
+        return;
+    }
+
+    bool reverse = qApp->isRightToLeft();
+
+    if (!reverse) {
+        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
+        if (firstItem == minIndicator)
+            horizontalPolicy->removeAt(0);
+    } else {
+        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+        if (firstItem == minIndicator)
+            horizontalPolicy->removeAt(horizontalPolicy->count() - 1);
+    }
+
+    QGraphicsLayoutItem* firstItem = verticalPolicy->itemAt(0);
+    if (firstItem == minIndicator)
+        verticalPolicy->removeAt(0);
+}
+
+void DuiSliderViewPrivate::removeMaxIndicatorFromLayout()
+{
+    if (!horizontalPolicy || !verticalPolicy) {
+        qWarning("DuiSlider was not initialized properly");
+        return;
+    }
+
+    bool reverse = qApp->isRightToLeft();
+
+    if (!reverse) {
+        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+        if (lastItem == maxIndicator)
+            horizontalPolicy->removeAt(horizontalPolicy->count() - 1);
+    } else {
+        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(0);
+        if (lastItem == maxIndicator)
+            horizontalPolicy->removeAt(0);
+    }
+
+    QGraphicsLayoutItem* lastItem = verticalPolicy->itemAt(verticalPolicy->count() - 1);
+    if (lastItem != maxIndicator)
+        verticalPolicy->removeAt(verticalPolicy->count() - 1);
 }
 
 //returns true if user clicked on slider groove
@@ -1060,11 +1143,17 @@ void DuiSliderView::updateData(const QList<const char *>& modifications)
             d->maxIndicator->setImage(model()->maxLabelIcon());
         else if (member == DuiSliderModel::HandleLabelIcon)
             d->sliderGroove->setIndicatorImage(model()->handleLabelIcon());
-        else if (member == DuiSliderModel::MinLabelVisible)
-            d->minIndicator->setVisibility(model()->minLabelVisible());
-        else if (member == DuiSliderModel::MaxLabelVisible)
-            d->maxIndicator->setVisibility(model()->maxLabelVisible());
-        else if (member == DuiSliderModel::HandleLabelVisible)
+        else if (member == DuiSliderModel::MinLabelVisible) {
+            if (model()->minLabelVisible())
+                d->insertMinIndicatorToLayout();
+            else
+                d->removeMinIndicatorFromLayout();
+        } else if (member == DuiSliderModel::MaxLabelVisible) {
+            if (model()->maxLabelVisible())
+                d->insertMaxIndicatorToLayout();
+            else
+                d->removeMaxIndicatorFromLayout();
+        } else if (member == DuiSliderModel::HandleLabelVisible)
             d->sliderGroove->setIndicatorVisibility(model()->handleLabelVisible());
     }
 }
@@ -1083,8 +1172,16 @@ void DuiSliderView::setupModel()
     d->maxIndicator->setImage(model()->maxLabelIcon());
     d->sliderGroove->setIndicatorImage(model()->handleLabelIcon());
 
-    d->minIndicator->setVisibility(model()->minLabelVisible());
-    d->maxIndicator->setVisibility(model()->maxLabelVisible());
+    if (model()->minLabelVisible())
+        d->insertMinIndicatorToLayout();
+    else
+        d->removeMinIndicatorFromLayout();
+
+    if (model()->maxLabelVisible())
+        d->insertMaxIndicatorToLayout();
+    else
+        d->removeMaxIndicatorFromLayout();
+
     d->sliderGroove->setIndicatorVisibility(model()->handleLabelVisible());
 
     d->updateOrientation();
