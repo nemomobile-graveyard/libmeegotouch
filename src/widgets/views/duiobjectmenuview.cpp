@@ -79,6 +79,7 @@ DuiObjectMenuView::DuiObjectMenuView(DuiObjectMenuViewPrivate &dd, DuiObjectMenu
 
 DuiObjectMenuView::~DuiObjectMenuView()
 {
+#ifdef HAVE_CONTENTACTION
     Q_D(DuiObjectMenuView);
     QHash<DuiAction*, ContentAction::Action>::iterator i = d->contentActions.begin(),
                                                        e = d->contentActions.end();
@@ -87,6 +88,7 @@ DuiObjectMenuView::~DuiObjectMenuView()
         delete i.key();
     }
     d->contentActions.clear();
+#endif
 
     DuiActionList actions = model()->actions();
     const int count = actions.count();
@@ -179,6 +181,7 @@ void DuiObjectMenuView::updateData(const QList<const char *> &modifications)
                 actionAdded(actions.at(i));
             }
         } else if (member == DuiObjectMenuModel::ContentURI) {
+#ifdef HAVE_CONTENTACTION
             // remove & release the old content uri dependant actions
             QHash<DuiAction*, ContentAction::Action>::iterator i = d->contentActions.begin(),
                                                                e = d->contentActions.end();
@@ -197,6 +200,7 @@ void DuiObjectMenuView::updateData(const QList<const char *> &modifications)
 
                 actionAdded(action);
             }
+#endif
         }
     }
 }
@@ -207,6 +211,7 @@ void DuiObjectMenuView::setupModel()
 
     Q_D(DuiObjectMenuView);
 
+#ifdef HAVE_CONTENTACTION
     // remove & release the old content uri dependant actions
     QHash<DuiAction*, ContentAction::Action>::iterator i = d->contentActions.begin(),
                                                        e = d->contentActions.end();
@@ -215,6 +220,7 @@ void DuiObjectMenuView::setupModel()
         delete i.key();
     }
     d->contentActions.clear();
+#endif
 
     // remove & release the old manually added actions
     foreach(DuiAction * action, d->buttons.keys()) {
@@ -234,6 +240,7 @@ void DuiObjectMenuView::setupModel()
         actionAdded(actions.at(i));
     }
 
+#ifdef HAVE_CONTENTACTION
     QList<ContentAction::Action> contentActionList = ContentAction::Action::actions(model()->contentURI());
     foreach(ContentAction::Action contentAction, contentActionList) {
         // TODO: fetch the correct text from contentAction and maybe also an icon
@@ -243,6 +250,7 @@ void DuiObjectMenuView::setupModel()
 
         actionAdded(action);
     }
+#endif
 }
 
 void DuiObjectMenuView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -288,6 +296,7 @@ void DuiObjectMenuView::drawBackground(QPainter *painter, const QStyleOptionGrap
 
 void DuiObjectMenuViewPrivate::contentActionTriggered()
 {
+#ifdef HAVE_CONTENTACTION
     Q_Q(DuiObjectMenuView);
 
     DuiAction* action = qobject_cast<DuiAction*>(q->sender());
@@ -299,6 +308,7 @@ void DuiObjectMenuViewPrivate::contentActionTriggered()
         return;
 
     i.value().trigger();
+#endif
 }
 
 DUI_REGISTER_VIEW_NEW(DuiObjectMenuView, DuiObjectMenu)

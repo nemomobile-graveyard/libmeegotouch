@@ -22,7 +22,10 @@
 
 #include "duiscenewindowview_p.h"
 #include "duiobjectmenuview.h"
+
+#ifdef HAVE_CONTENTACTION
 #include <contentaction/contentaction.h>
+#endif
 
 class DuiButton;
 class DuiAction;
@@ -39,7 +42,10 @@ class DuiObjectMenuViewPrivate : public DuiSceneWindowViewPrivate
     void init();
 
     QHash<DuiAction *, DuiButton *> buttons;
+
+#ifdef HAVE_CONTENTACTION
     QHash<DuiAction*, ContentAction::Action> contentActions;
+#endif
 
     DuiPannableViewport *viewport;
     DuiWidget *container;

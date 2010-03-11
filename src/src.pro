@@ -63,8 +63,6 @@ QMAKE_CXXFLAGS += -DDUI_EXPORTS
 !win32-msvc*:QMAKE_CXXFLAGS += -Wno-long-long -pedantic
 !win32:QMAKE_CXXFLAGS += -Werror -Wno-variadic-macros -fvisibility=hidden
 
-LIBS += -lcontentaction
-
 !win32-msvc*:LIBS += -lm -lX11
 macx:LIBS -= -lX11
 win32:LIBS -= -lX11
@@ -111,6 +109,10 @@ contains(DEFINES, HAVE_ICU) {
 
 contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
     PKGCONFIG += contextsubscriber-1.0
+}
+
+contains(DEFINES, HAVE_CONTENTACTION) {
+    PKGCONFIG += contentaction-0.1
 }
 
 contains(DEFINES, HAVE_GSTREAMER) {

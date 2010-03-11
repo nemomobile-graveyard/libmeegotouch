@@ -69,6 +69,7 @@ HAVE_CONTEXTSUBSCRIBER=no
 HAVE_GCONF=no
 HAVE_GSTREAMER=no
 HAVE_DBUS=no
+HAVE_CONTENTACTION=no
 HAVE_N900=no
    
 OPT_SHADOW=maybe
@@ -327,6 +328,11 @@ if [ $? -eq 0 ]; then
 	HAVE_DBUS=yes
     fi    
 
+    pkg-config --exists contentaction-0.1
+    if [ $? -eq 0 ]; then
+	HAVE_CONTENTACTION=yes
+    fi
+
 fi
 
 
@@ -429,6 +435,10 @@ fi
 
 if [ "$HAVE_ICU" = "yes" ]; then
     DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_ICU"
+fi
+
+if [ "$HAVE_CONTENTACTION" = "yes" ]; then
+    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_CONTENTACTION"
 fi
 
 if [ "$HAVE_CONTEXTSUBSCRIBER" = "yes" ]; then
@@ -597,6 +607,7 @@ echo "Optional build dependencies found:"
 
 echo "ICU ...................... $HAVE_ICU"
 echo "Context Subscriber 1.0 ... $HAVE_CONTEXTSUBSCRIBER"
+echo "Content Action 0.1 ....... $HAVE_CONTENTACTION"
 echo "GConf 2.0 ................ $HAVE_GCONF"
 echo "GStreamer 0.10 ........... $HAVE_GSTREAMER"
 echo "DBus (incl. QtDBus) ...... $HAVE_DBUS"
