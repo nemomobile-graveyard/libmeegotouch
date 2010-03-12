@@ -20,7 +20,7 @@ binmode STDERR, ":utf8";
 #----------------------------------------------------------------------
 # global variables
 
-my $version = "0.20100309";
+my $version = "0.20100315";
 
 my $original_wd;
 chomp ($original_wd = `pwd`);
@@ -29,12 +29,6 @@ my @handoffFiles = ();
 my %handoffXmlTrees = ();
 
 my $totalNumberOfIdsNotFoundInSpec = 0;
-
-my $htmlOutTotal = "";
-my $htmlOutHeader = "";
-my $htmlOutFooter = "";
-my $htmlOutToc = "";
-my $htmlOutResults = "";
 
 my $OPT_VERBOSITY;
 my $OPT_VERSION;
@@ -45,7 +39,7 @@ my $OPT_HANDOFF_DIR;
 my $OPT_HTTP_USER;
 my $OPT_HTTP_PASSWD;
 my $OPT_SKIP_DOWNLOAD;
-my $OPT_HTMLFILE;
+my $OPT_OUTPUTDIR;
 
 my @eePackages = (
                   "accounts-ui-l10n-engineering-english",
@@ -135,7 +129,8 @@ sub usage {
   printf STDERR "    --http-passwd       password to access the “handoff” .ts files.\n";
   printf STDERR "                        or use .netrc to store user name and password.\n";
   printf STDERR "    --skip-dowload      skip download.\n";
-  printf STDERR "    --html-file         write the html output to this file\n";
+  printf STDERR "    --output-dir        directory to write the output files to.\n";
+  printf STDERR "                        default is ./messageid-check-results/\n";
   exit 1;
 }
 
@@ -160,9 +155,12 @@ sub myBasename {
 }
 
 sub writeHtml {
+  my ($htmlOutBody) =@_;
   my $date = decode_utf8(`date`);
   chomp($date);
   my $title = "Results of messageid-check (version $version) run on " . $date;
+
+  my $htmlOutHeader = "";
 
   $htmlOutHeader .= sprintf "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n";
   $htmlOutHeader .= sprintf "<html>\n";
@@ -177,22 +175,90 @@ sub writeHtml {
   $htmlOutHeader .= sprintf "  font-size: 1em;\n";
   $htmlOutHeader .= sprintf "}\n";
   $htmlOutHeader .= sprintf ".okcolor {\n";
-  $htmlOutHeader .= sprintf "  color:#007F00;\n";
+  $htmlOutHeader .= sprintf "  color:#00FF00;\n";
   $htmlOutHeader .= sprintf "}\n";
   $htmlOutHeader .= sprintf ".errorcolor {\n";
-  $htmlOutHeader .= sprintf "  color:#7F0000;\n";
+  $htmlOutHeader .= sprintf "  color:#FF0000;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".okbgcolor {\n";
+  $htmlOutHeader .= sprintf "  background-color:#ceeebc;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".errorbgcolor {\n";
+  $htmlOutHeader .= sprintf "  background-color:#ffcdcd;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".eefile {\n";
+  $htmlOutHeader .= sprintf "  border: solid 1px #88c3ff;\n";
+  $htmlOutHeader .= sprintf "  margin-bottom: 10px;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".title {\n";
+  $htmlOutHeader .= sprintf "  background-color: #5a9fe5;\n";
+  $htmlOutHeader .= sprintf "  font-weight: bold;\n";
+  $htmlOutHeader .= sprintf "  padding: 5px;\n";
+  $htmlOutHeader .= sprintf "  padding-left: 15px;\n";
+  $htmlOutHeader .= sprintf "  font-size: 20px;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".package {\n";
+  $htmlOutHeader .= sprintf "  background-color: #71b1f2;\n";
+  $htmlOutHeader .= sprintf "  font-weight: bold;\n";
+  $htmlOutHeader .= sprintf "  padding: 5px;\n";
+  $htmlOutHeader .= sprintf "  padding-left: 15px;\n";
+  $htmlOutHeader .= sprintf "  font-size: 20px;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf "table.summary {\n";
+  $htmlOutHeader .= sprintf "  text-align: right;\n";
+  $htmlOutHeader .= sprintf "  font-style: normal;\n";
+  $htmlOutHeader .= sprintf "  font-size: small;\n";
+  $htmlOutHeader .= sprintf "  border: 1;\n";
+  $htmlOutHeader .= sprintf "  margin-top: 0em;\n";
+  $htmlOutHeader .= sprintf "  margin-bottom: 0em;\n";
+  $htmlOutHeader .= sprintf "  margin-left: 0em;\n";
+  $htmlOutHeader .= sprintf "  margin-right: 0em;\n";
+  $htmlOutHeader .= sprintf "  padding-top: 1em;\n";
+  $htmlOutHeader .= sprintf "  padding-bottom: 1em;\n";
+  $htmlOutHeader .= sprintf "  padding-left: 0em;\n";
+  $htmlOutHeader .= sprintf "  padding-right: 0em;\n";
+  $htmlOutHeader .= sprintf "  clear: left;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf "table.summary td {\n";
+  $htmlOutHeader .= sprintf "  color: #000000;\n";
+  $htmlOutHeader .= sprintf "  padding-top: 0em;\n";
+  $htmlOutHeader .= sprintf "  padding-bottom: 0em;\n";
+  $htmlOutHeader .= sprintf "  padding-left: 0.5em;\n";
+  $htmlOutHeader .= sprintf "  padding-right: 0.5em;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".maintainer {\n";
+  $htmlOutHeader .= sprintf "  text-align: right;\n";
+  $htmlOutHeader .= sprintf "  font-size: 20px;\n";
+  $htmlOutHeader .= sprintf "  background-color: #88c3ff;\n";
+  $htmlOutHeader .= sprintf "  padding-right: 20px;\n";
+  $htmlOutHeader .= sprintf "  padding-bottom: 1px;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".errorlist {\n";
+  $htmlOutHeader .= sprintf "  text-align: left;\n";
+  $htmlOutHeader .= sprintf "  background-color: #ffcdcd;\n";
+  $htmlOutHeader .= sprintf "  padding-left: 20px;\n";
+  $htmlOutHeader .= sprintf "  padding-top: 20px;\n";
+  $htmlOutHeader .= sprintf "  padding-bottom: 1px;\n";
+  $htmlOutHeader .= sprintf "}\n";
+  $htmlOutHeader .= sprintf ".oklist {\n";
+  $htmlOutHeader .= sprintf "  text-align: left;\n";
+  $htmlOutHeader .= sprintf "  background-color: #ceeebc;\n";
+  $htmlOutHeader .= sprintf "  padding-left: 20px;\n";
+  $htmlOutHeader .= sprintf "  padding-top: 20px;\n";
+  $htmlOutHeader .= sprintf "  padding-bottom: 1px;\n";
   $htmlOutHeader .= sprintf "}\n";
   $htmlOutHeader .= sprintf "</style>\n";
   $htmlOutHeader .= sprintf "</head>\n";
   $htmlOutHeader .= sprintf "<body>\n";
   $htmlOutHeader .= sprintf "<h1>%s</h1>\n", $title;
 
+  my $htmlOutFooter = "";
   $htmlOutFooter .= sprintf "</body>\n";
   $htmlOutFooter .= sprintf "</html>\n";
 
-  $htmlOutTotal = $htmlOutHeader . $htmlOutToc . $htmlOutResults . $htmlOutFooter;
+  my $htmlOutTotal = $htmlOutHeader . $htmlOutBody . $htmlOutFooter;
 
-  open (HTML, ">$OPT_HTMLFILE") || die "can't open file $OPT_HTMLFILE: $!";
+  open (HTML, ">$OPT_OUTPUTDIR/messageid-check-result.html") || die "can't open file $OPT_OUTPUTDIR/messageid-check-result.html: $!";
   binmode HTML, ":utf8";
   printf HTML "%s", $htmlOutTotal;
   close (HTML);
@@ -234,6 +300,9 @@ sub download {
     printf (STDERR "“wget $OPT_HANDOFF_URL” didn’t work.\n");
     myExit (1);
   }
+
+  chdir $original_wd || die "Can’t cd to $original_wd: $!\n";
+
   @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
   if ($#handoffFiles < 0) {
     printf (STDERR "download of handoff .ts files failed.\n");
@@ -265,7 +334,7 @@ sub readHandoffXmlTrees {
 }
 
 sub checkMessageIdFromSourceAgainstHandoff {
-  my ($eeFile, $eeMessageId) = @_;
+  my ($eeFile, $eeMessageId, $htmlOutRef) = @_;
   my $eeMessageIdIsInSpecCount = 0;
 
   for my $handoffFile (@handoffFiles) {
@@ -325,13 +394,10 @@ sub checkMessageIdFromSourceAgainstHandoff {
             printf STDOUT "++++++OK: id “%s” spec “%s” (%s)\n",
               $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
           }
-          $htmlOutResults .= sprintf "<p>";
-          $htmlOutResults .= sprintf "<span class=\"okcolor\">";
-          $htmlOutResults .= sprintf "OK: ";
-          $htmlOutResults .= sprintf "id “%s” spec “%s” (%s)",
+          ${$htmlOutRef} .= sprintf "<li>";
+          ${$htmlOutRef} .= sprintf "%s found in spec “%s” (%s)",
             $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
-          $htmlOutResults .= sprintf "</span>";
-          $htmlOutResults .= sprintf "</p>\n";
+          ${$htmlOutRef} .= sprintf "</li>\n";
         }
       }
     }
@@ -340,13 +406,11 @@ sub checkMessageIdFromSourceAgainstHandoff {
     if ($OPT_VERBOSITY >= 1) {
       printf STDOUT "***ERROR: id “%s” not found in spec\n", $eeMessageId;
     }
-    $htmlOutResults .= sprintf "<p>";
-    $htmlOutResults .= sprintf "<span class=\"errorcolor\">";
-    $htmlOutResults .= sprintf "Error: ";
-    $htmlOutResults .= sprintf "id “%s” not found in spec.", $eeMessageId;
-    $htmlOutResults .= sprintf "</span>";
-    $htmlOutResults .= sprintf "</p>\n";
+    ${$htmlOutRef} .= sprintf "<li>";
+    ${$htmlOutRef} .= sprintf "%s", $eeMessageId;
+    ${$htmlOutRef} .= sprintf "</li>\n";
   }
+
   return $eeMessageIdIsInSpecCount;
 }
 
@@ -365,7 +429,7 @@ unless (GetOptions(\%opt,
                    'http-user=s',        \$OPT_HTTP_USER,
                    'http-passwd=s',      \$OPT_HTTP_PASSWD,
                    'skip-download',      \$OPT_SKIP_DOWNLOAD,
-                   'html-file=s',        \$OPT_HTMLFILE,
+                   'output-dir=s',       \$OPT_OUTPUTDIR,
 		  )) {
   &usage ();
   exit 1;
@@ -398,8 +462,8 @@ if (!defined $OPT_HTTP_PASSWD) {
 if (!defined $OPT_SKIP_DOWNLOAD) {
   $OPT_SKIP_DOWNLOAD = 0;
 }
-if (!defined $OPT_HTMLFILE) {
-  $OPT_HTMLFILE = "messageid-check-result.html";
+if (!defined $OPT_OUTPUTDIR) {
+  $OPT_OUTPUTDIR = "$original_wd/messageid-check-results/";
 }
 
 if ($OPT_VERSION) {
@@ -419,6 +483,14 @@ if ($OPT_VERBOSITY >=1) {
   $OUTPUT_AUTOFLUSH = 1;
 }
 
+if (! -d $OPT_OUTPUTDIR) {
+  mySystem("mkdir -p $OPT_OUTPUTDIR");
+  if (! -d $OPT_OUTPUTDIR) {
+    printf STDERR "Cannot create output directory %s", $OPT_OUTPUTDIR;
+    myExit(1);
+  }
+}
+
 if (!$OPT_SKIP_DOWNLOAD) {
   download();
 }
@@ -428,9 +500,9 @@ else {
 
 readHandoffXmlTrees();
 
-$htmlOutToc .= sprintf "<hr>\n";
-$htmlOutToc .= sprintf "<h2>Result summary:</h2>\n";
-$htmlOutToc .= sprintf "<ul>\n";
+my $htmlOutToc = "";
+my $htmlOutResultsDetail = "";
+my $csvOut = "Invalid Message ID, Engineering English .qm file, Package, Package version, Package maintainer\n";
 
 for my $eeFile (@eeFiles) {
   my $errorCount = 0;
@@ -438,15 +510,36 @@ for my $eeFile (@eeFiles) {
   my $debianPackage = qx(dpkg -S $eeFile);
   $debianPackage =~ s/:.*$//;
   chomp($debianPackage);
+  my $debianPackageMaintainerFull = "Unknown &lt;unknown\@unknown.com%gt;";
+  my $debianPackageMaintainerMail = "unknown\@unknown.com";
+  my $debianPackageVersion = "";
+  my $debianPackageDescription = "";
+  open (STATUS, "dpkg -s $debianPackage |") || die "Can’t open dpkg -s $debianPackage | : $!";
+  binmode STATUS, ":bytes";
+  while (<STATUS>) {
+    if ($ARG =~ /Maintainer:\s+(.+)$/) {
+      $debianPackageMaintainerFull = $1;
+      $debianPackageMaintainerFull =~ /<(.+)>/;
+      $debianPackageMaintainerMail = $1;
+      $debianPackageMaintainerFull =~ s/</&lt;/;
+      $debianPackageMaintainerFull =~ s/>/&gt;/;
+    }
+    if ($ARG =~ /Version:\s+(.+)$/) {
+      $debianPackageVersion = $1;
+    }
+    if ($ARG =~ /Description:\s+(.+)$/) {
+      $debianPackageDescription = $1;
+    }
+  }
+  my $dpkgStatusDetails = qx(dpkg -s $debianPackage);
   if ($OPT_VERBOSITY >= 1) {
     printf STDOUT "------------------------------------------------------------\n";
     printf STDOUT "checking “%s” from package “%s”\n", $eeFile, $debianPackage;
   }
-  $htmlOutResults .= sprintf "<hr>\n";
-  $htmlOutResults .= sprintf "<h2><a href=\"#%s-ref\" name=\"%s\">",
-    $eeFile, $eeFile;
-  $htmlOutResults .= sprintf "“%s”, package “%s”", $eeFile, $debianPackage;
-  $htmlOutResults .= sprintf "</a></h2>\n";
+
+  my $htmlOutOkList = "";
+  my $htmlOutErrorList = "";
+
   my $xmlParser = new XML::Parser(Style => 'Tree');
   open (EEFILE, "lconvert -o - -i $eeFile |") || die "Can’t open file lconvert $eeFile | : $!";
   my $tree = $xmlParser->parse(*EEFILE, ProtocolEncoding => 'UTF-8');
@@ -455,43 +548,180 @@ for my $eeFile (@eeFiles) {
   for (my $i = 0; $i < $#contextTree; ++$i) {
     if ($contextTree[$i] eq "message") {
       my $source = $contextTree[$i+1][4][2];
+      my $htmlOutMessage = "";
       my $eeMessageIdIsInSpecCount =
-        checkMessageIdFromSourceAgainstHandoff($eeFile, $source);
+        checkMessageIdFromSourceAgainstHandoff($eeFile, $source, \$htmlOutMessage);
       if ($eeMessageIdIsInSpecCount >= 1) {
         ++$okCount;
+        $htmlOutOkList .= $htmlOutMessage;
       }
       else {
         ++$errorCount;
         ++$totalNumberOfIdsNotFoundInSpec;
+        $htmlOutErrorList .= $htmlOutMessage;
+        $csvOut .= "$source,$eeFile,$debianPackage,$debianPackageVersion,$debianPackageMaintainerMail\n";
       }
     }
   }
-  $htmlOutToc .= sprintf "<li>";
+  $htmlOutResultsDetail .= sprintf "<div class=\"eefile\">\n";
+  $htmlOutResultsDetail .= sprintf "<div class=\"title\">";
+  $htmlOutResultsDetail .= sprintf "<a href=\"#%s-ref\" name=\"%s\">", $eeFile, $eeFile;
+  $htmlOutResultsDetail .= sprintf "%s", $eeFile;
+  $htmlOutResultsDetail .= sprintf "</a>";
+  $htmlOutResultsDetail .= sprintf " IDs in spec: ";
+  $htmlOutResultsDetail .= sprintf "<span class=\"okcolor\">";
+  $htmlOutResultsDetail .= sprintf "%d", $okCount;
+  $htmlOutResultsDetail .= sprintf "</span>";
+  $htmlOutResultsDetail .= sprintf " Invalid IDs: ";
+  $htmlOutResultsDetail .= sprintf "<span class=\"errorcolor\">";
+  $htmlOutResultsDetail .= sprintf "%d", $errorCount;
+  $htmlOutResultsDetail .= sprintf "</span>";
+  $htmlOutResultsDetail .= sprintf "</div>\n";
+  $htmlOutResultsDetail .= sprintf "<div class=\"package\">";
+  $htmlOutResultsDetail .= sprintf "%s %s", $debianPackage, $debianPackageVersion;
+  $htmlOutResultsDetail .= sprintf "</div>\n";
+  $htmlOutResultsDetail .= sprintf "<div class=\"maintainer\">";
+  $htmlOutResultsDetail .= sprintf "<a href=\"mailto:%s\">%s</a>",
+    $debianPackageMaintainerMail, $debianPackageMaintainerFull;
+  $htmlOutResultsDetail .= sprintf "</div>\n";
+  if ($errorCount > 0) {
+    $htmlOutResultsDetail .= sprintf "<div class=\"errorlist\">\n";
+    $htmlOutResultsDetail .= sprintf "List of invalid IDs not found in the UI specs:\n";
+    $htmlOutResultsDetail .= sprintf "<ul>\n";
+    $htmlOutResultsDetail .= $htmlOutErrorList;
+    $htmlOutResultsDetail .= sprintf "</ul>\n";
+    $htmlOutResultsDetail .= sprintf "</div>\n";
+  }
+  if ($okCount > 0) {
+    $htmlOutResultsDetail .= sprintf "<div class=\"oklist\">\n";
+    $htmlOutResultsDetail .= sprintf "List of IDs found in the UI specs:\n";
+    $htmlOutResultsDetail .= sprintf "<ul>\n";
+    $htmlOutResultsDetail .= $htmlOutOkList;
+    $htmlOutResultsDetail .= sprintf "</ul>\n";
+    $htmlOutResultsDetail .= sprintf "</div>\n";
+  }
+  $htmlOutResultsDetail .= sprintf "</div>\n";
+
+  # Table of Contents:
+  $htmlOutToc .= sprintf "<tr>\n";
   if ($errorCount != 0) {
-    $htmlOutToc .= sprintf "<span class=\"errorcolor\">";
+    $htmlOutToc .= sprintf "<td class=\"errorbgcolor\">\n";
   }
   else {
-    $htmlOutToc .= sprintf "<span class=\"okcolor\">";
+    $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
   }
-  $htmlOutToc .= sprintf "“%s”, package “%s”: ", myBasename($eeFile), $debianPackage;
-  $htmlOutToc .= sprintf "OK=%d, errors=%d ", $okCount, $errorCount;
-  $htmlOutToc .= sprintf "</span>";
-  $htmlOutToc .= sprintf "<a href=\"#%s\" name=\"%s-ref\">details</a>", $eeFile, $eeFile;
-  $htmlOutToc .= sprintf "</li>\n";
+  $htmlOutToc .= sprintf "%s", $debianPackage;
+  $htmlOutToc .= sprintf "</td>\n";
+  if ($errorCount != 0) {
+    $htmlOutToc .= sprintf "<td class=\"errorbgcolor\">\n";
+  }
+  else {
+    $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
+  }
+  $htmlOutToc .= sprintf "%s", $debianPackageVersion;
+  $htmlOutToc .= sprintf "</td>\n";
+  if ($errorCount != 0) {
+    $htmlOutToc .= sprintf "<td class=\"errorbgcolor\">\n";
+  }
+  else {
+    $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
+  }
+  $htmlOutToc .= sprintf "<a href=\"#%s\" name=\"%s-ref\">%s</a>: ",
+    $eeFile, $eeFile, myBasename($eeFile);
+  $htmlOutToc .= sprintf "</td>\n";
+  $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
+  $htmlOutToc .= sprintf "%d", $okCount;
+  $htmlOutToc .= sprintf "</td>\n";
+  if ($errorCount != 0) {
+    $htmlOutToc .= sprintf "<td class=\"errorbgcolor\">\n";
+  }
+  else {
+    $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
+  }
+  $htmlOutToc .= sprintf "%d", $errorCount;
+  $htmlOutToc .= sprintf "</td>\n";
+  $htmlOutToc .= sprintf "</tr>\n";
 }
 
-$htmlOutToc .= sprintf "</ul>\n";
+$htmlOutToc .= sprintf "</table>\n";
+$htmlOutToc .= sprintf "</center>\n";
 
+my $htmlOutTocHeader = "";
+$htmlOutTocHeader .= sprintf "<hr>\n";
+$htmlOutTocHeader .= sprintf "<h2>Summary of results:</h2>\n";
 if ($totalNumberOfIdsNotFoundInSpec != 0) {
-  $htmlOutToc .= sprintf "<span class=\"errorcolor\">";
+  $htmlOutTocHeader .= sprintf "<span class=\"errorcolor\">";
 }
 else {
-  $htmlOutToc .= sprintf "<span class=\"okcolor\">";
+  $htmlOutTocHeader .= sprintf "<span class=\"okcolor\">";
 }
-$htmlOutToc .= sprintf "<p>Total number of Ids not found in the specification: %d</p>",
+$htmlOutTocHeader .= sprintf "<p><b>Total number of Ids not found in the specification: %d</b></p>",
         $totalNumberOfIdsNotFoundInSpec;
-$htmlOutToc .= sprintf "</span>";
+$htmlOutTocHeader .= sprintf "</span>";
 
-writeHtml();
+$htmlOutTocHeader .= sprintf "<p>";
+$htmlOutTocHeader .= sprintf "<a href=\"messageid-check-result.csv\">";
+$htmlOutTocHeader .= sprintf "CVS file with a list of all invalid message IDs.";
+$htmlOutTocHeader .= sprintf "</a>";
+$htmlOutTocHeader .= sprintf "</p>";
+
+$htmlOutTocHeader .= sprintf "<center>";
+$htmlOutTocHeader .= sprintf "<table class=\"summary\">\n";
+$htmlOutTocHeader .= sprintf "<caption style=\"caption-side:top\">Overview of the number of IDs found or not found in the specifications. Click on the file name of the .qm file for details.</caption>\n";
+$htmlOutTocHeader .= sprintf "<tr>";
+$htmlOutTocHeader .= sprintf "<th>";
+$htmlOutTocHeader .= sprintf "Debian package name";
+$htmlOutTocHeader .= sprintf "</th>";
+$htmlOutTocHeader .= sprintf "<th>";
+$htmlOutTocHeader .= sprintf "version";
+$htmlOutTocHeader .= sprintf "</th>";
+$htmlOutTocHeader .= sprintf "<th>";
+$htmlOutTocHeader .= sprintf "Engineering English .qm file";
+$htmlOutTocHeader .= sprintf "</th>";
+$htmlOutTocHeader .= sprintf "<th>";
+$htmlOutTocHeader .= sprintf "IDs in spec";
+$htmlOutTocHeader .= sprintf "</th>";
+$htmlOutTocHeader .= sprintf "<th>";
+$htmlOutTocHeader .= sprintf "Invalid IDs";
+$htmlOutTocHeader .= sprintf "</th>";
+$htmlOutTocHeader .= sprintf "</tr>";
+
+my $htmlOutResultsDetailHeader = "";
+$htmlOutResultsDetailHeader .= "<hr>\n";
+$htmlOutResultsDetailHeader .= sprintf "<h2>Results in detail:</h2>\n";
+
+my $htmlOutIntroduction ="";
+$htmlOutIntroduction .= sprintf "<hr>\n";
+$htmlOutIntroduction .= sprintf "<h2>Introduction</h2>\n";
+
+$htmlOutIntroduction .= sprintf "This page lists IDs which are used in
+the code but which are missing in the specifications. For all IDs used
+in the code, but not defined in the UI specifications, please do the
+following:\n";
+
+$htmlOutIntroduction .= sprintf "<ol>\n";
+$htmlOutIntroduction .= sprintf "<li>Check your code if those IDs are really in use</li>\n";
+$htmlOutIntroduction .= sprintf "<li>Check if there is a typo in the ID</li>\n";
+$htmlOutIntroduction .= sprintf "</ol>\n";
+
+$htmlOutIntroduction .= sprintf "If there is no typo and the ID is
+really used, open a bug against the relevant UI Spec requesting a new
+ID: <ul><li>component: Specifications</li> <li>Keywords: l10n, PO</li>
+<li>CC: <a href=\"mailto:oksan.savasoglu-niemi\@nokia.com\">Oksan
+Savasoglu-Niemi</a></li></ul>";
+  
+my $htmlOutBody =
+  $htmlOutIntroduction
+  . $htmlOutTocHeader
+  . $htmlOutToc
+  . $htmlOutResultsDetailHeader
+  . $htmlOutResultsDetail;
+
+writeHtml($htmlOutBody);
+
+open (CSV, ">$OPT_OUTPUTDIR/messageid-check-result.csv") || die "can't open file $OPT_OUTPUTDIR/messageid-check-result.csv: $!";
+binmode CSV, ":utf8";
+printf CSV "%s", $csvOut;
+close (CSV);
 
 myExit (0);
