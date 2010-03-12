@@ -387,7 +387,12 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
                           argv[0]);
                 exit(EXIT_FAILURE);
             }
-
+        } else if (s == "-v" || s.startsWith("-version") || s.startsWith("--version")) {
+            duiDebug("DuiComponentData") << "Version info: " <<  "\n"
+                                         << "DUI_VERSION :" << DUI_VERSION << "\n" 
+                                         << "Compile time:" <<  __DATE__  << __TIME__ << "\n"
+                                         << "QT verison  :" << QT_VERSION_STR << "\n";
+            exit(EXIT_SUCCESS);
         } else if (s == "-h" || s.startsWith("-help") || s.startsWith("--help")) {
             duiDebug("DuiComponentData") << "Usage: " << argv[0] << "\n"
                                          << "  [-software] Enable software rendering\n"

@@ -37,6 +37,7 @@ contains(DEFINES, HAVE_DBUS) {
 ## Build configuration
 
 VERSION = $${DUI_VERSION}
+DEFINES += DUI_VERSION=\\\"$${DUI_VERSION}\\\"
 
 INCLUDEPATH += include
 INCLUDEPATH += $${OUT_PWD}/.moc
