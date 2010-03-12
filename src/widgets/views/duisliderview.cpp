@@ -973,12 +973,12 @@ void DuiSliderViewPrivate::insertMaxIndicatorToLayout()
     bool reverse = qApp->isRightToLeft();
 
     if (!reverse) {
-        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
-        if (firstItem != maxIndicator)
+        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(horizontalPolicy->count() - 1);
+        if (lastItem != maxIndicator)
             horizontalPolicy->insertItem(horizontalPolicy->count(), maxIndicator, Qt::AlignCenter);
     } else {
-        QGraphicsLayoutItem* lastItem = horizontalPolicy->itemAt(0);
-        if (lastItem != maxIndicator)
+        QGraphicsLayoutItem* firstItem = horizontalPolicy->itemAt(0);
+        if (firstItem != maxIndicator)
             horizontalPolicy->insertItem(0, maxIndicator, Qt::AlignCenter);
     }
 
