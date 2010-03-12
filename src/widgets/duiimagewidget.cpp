@@ -76,7 +76,7 @@ DuiImageWidgetPrivate &DuiImageWidgetPrivate::operator=(const DuiImageWidgetPriv
         if (other.deletePixmap)
             pixmap = new QPixmap(*(other.pixmap));
         else
-            pixmap = other.pixmap;
+            setImageName(other.imageName);
     }
     deletePixmap = other.deletePixmap;
 
