@@ -77,6 +77,9 @@ protected:
     DuiWidget *getWidget(QAction *action);
     bool canAddMoreActions(QAction *action);
     void visibleActionsCount(int &commandActionsCount, int &styleActionsCount);
+    void visibleActionsCount(QHash<QAction *, DuiWidget *>& widgets,
+                             int &commandActionsCount,
+                             int &styleActionsCount);
     bool changeLocation(QAction *action);
     void changeData(QAction *action);
     void changeVisibility(QAction *action);

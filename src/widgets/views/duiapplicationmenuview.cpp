@@ -358,13 +358,23 @@ void DuiApplicationMenuViewPrivate::visibleActionsCount(int &commandActionsCount
 {
     commandActionsCount = 0;
     styleActionsCount = 0;
-    QList<QAction *> acts = controller->actions();
-    int count = acts.count();
-    for (int i = 0; i < count; ++i) {
-        QAction *action = acts.at(i);
-        bool isStyle = isStyleAction(action);
-        styleActionsCount += isStyle;
-        commandActionsCount += (!isStyle);
+    visibleActionsCount(buttons, commandActionsCount, styleActionsCount);
+    visibleActionsCount(leasedWidgets, commandActionsCount, styleActionsCount);
+}
+
+void DuiApplicationMenuViewPrivate::visibleActionsCount(QHash<QAction *, DuiWidget *>& widgets,
+                                         int &commandActionsCount,
+                                         int &styleActionsCount)
+{
+    QHashIterator<QAction *, DuiWidget *> iterator(widgets);
+    while (iterator.hasNext()) {
+        iterator.next();
+        QAction *action = iterator.key();
+        if (action->isVisible()) {
+            bool isStyle = isStyleAction(action);
+            styleActionsCount += isStyle;
+            commandActionsCount += (!isStyle);
+        }
     }
 }
 
