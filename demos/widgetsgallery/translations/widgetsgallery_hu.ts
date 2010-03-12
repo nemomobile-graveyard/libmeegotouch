@@ -4,42 +4,42 @@
 <context>
     <name></name>
     <message id="xx_application_title">
-        <location filename="../listpage.cpp" line="178"/>
+        <location filename="../listpage.cpp" line="182"/>
         <source>Widgets Gallery</source>
         <translation>Grafikus Elemek Tárlata</translation>
     </message>
     <message id="xx_apporientation_auto">
-        <location filename="../listpage.cpp" line="414"/>
+        <location filename="../listpage.cpp" line="442"/>
         <source>Automatic</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../listpage.cpp" line="422"/>
+        <location filename="../listpage.cpp" line="450"/>
         <source>Portrait</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../listpage.cpp" line="430"/>
+        <location filename="../listpage.cpp" line="458"/>
         <source>Landscape</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../listpage.cpp" line="438"/>
+        <location filename="../listpage.cpp" line="466"/>
         <source>0 degrees</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../listpage.cpp" line="446"/>
+        <location filename="../listpage.cpp" line="474"/>
         <source>90 degrees clockwise</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../listpage.cpp" line="454"/>
+        <location filename="../listpage.cpp" line="482"/>
         <source>180 degrees clockwise</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../listpage.cpp" line="462"/>
+        <location filename="../listpage.cpp" line="490"/>
         <source>270 degrees clockwise</source>
         <translation type="unfinished"></translation>
     </message>
@@ -413,7 +413,7 @@ Muwhahaha... [röhögés]</translation>
         <translation>Levág</translation>
     </message>
     <message id="xx_listpage_title">
-        <location filename="../duilistpage.cpp" line="320"/>
+        <location filename="../duilistpage.cpp" line="374"/>
         <source>List</source>
         <translation>Lista</translation>
     </message>
@@ -553,7 +553,7 @@ eszközleíró</oldsource>
         <translation>Hiba kijavítása</translation>
     </message>
     <message id="xx_slider_page_title">
-        <location filename="../sliderpage.cpp" line="166"/>
+        <location filename="../sliderpage.cpp" line="168"/>
         <source>Sliders</source>
         <translation variants="yes">
             <lengthvariant>Csúszkák</lengthvariant>
@@ -561,32 +561,33 @@ eszközleíró</oldsource>
         </translation>
     </message>
     <message id="xx_slider_personal_data_label">
-        <location filename="../sliderpage.cpp" line="177"/>
+        <location filename="../sliderpage.cpp" line="179"/>
         <source>Personal data</source>
         <translation>Személyes adatok</translation>
     </message>
     <message id="xx_slider_age_label">
-        <location filename="../sliderpage.cpp" line="181"/>
-        <source>Please select your age:</source>
-        <translation>Korod:</translation>
+        <location filename="../sliderpage.cpp" line="183"/>
+        <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
+        <oldsource>Please select your age:</oldsource>
+        <translation type="unfinished">Korod:</translation>
     </message>
     <message id="xx_slider_brightness_label">
-        <location filename="../sliderpage.cpp" line="216"/>
+        <location filename="../sliderpage.cpp" line="218"/>
         <source>Brightness:</source>
         <translation>Fényesség:</translation>
     </message>
     <message id="xx_slider_player_label">
-        <location filename="../sliderpage.cpp" line="194"/>
+        <location filename="../sliderpage.cpp" line="196"/>
         <source>Player:</source>
         <translation>Lejátszó:</translation>
     </message>
     <message id="xx_slider_player_button_label">
-        <location filename="../sliderpage.cpp" line="197"/>
+        <location filename="../sliderpage.cpp" line="199"/>
         <source>Play</source>
         <translation>Lejátszás</translation>
     </message>
     <message id="xx_slider_page_info_label">
-        <location filename="../sliderpage.cpp" line="174"/>
+        <location filename="../sliderpage.cpp" line="176"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used fordisplaying playback status for multimedia content.</source>
@@ -795,34 +796,44 @@ Guidelines for mandatory application Menu items:
         <translation type="obsolete">Rács</translation>
     </message>
     <message id="xx_toolbar_page_example1">
-        <location filename="../toolbarpage.cpp" line="49"/>
+        <location filename="../toolbarpage.cpp" line="168"/>
         <source>Example 1</source>
         <translation>1. Példa</translation>
     </message>
     <message id="xx_toolbar_page_example2">
-        <location filename="../toolbarpage.cpp" line="55"/>
+        <location filename="../toolbarpage.cpp" line="174"/>
         <source>Example 2</source>
         <translation>2. Példa</translation>
     </message>
+    <message id="xx_toolbar_page_defaultview">
+        <location filename="../toolbarpage.cpp" line="180"/>
+        <source>Default View</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_toolbar_page_tabview">
+        <location filename="../toolbarpage.cpp" line="186"/>
+        <source>Tab View</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_toolbar_page_title">
-        <location filename="../toolbarpage.cpp" line="78"/>
+        <location filename="../toolbarpage.cpp" line="208"/>
         <source>ToolBar</source>
         <oldsource>Tool Bar</oldsource>
         <translation>Eszköztár</translation>
     </message>
     <message id="xx_toolbar_page_info">
-        <location filename="../toolbarpage.cpp" line="89"/>
-        <source>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>Toolbar is a container which can contain up to 4 Icon Buttons (click Menu-&gt;Example 1), or a text input field with up to 2 Icon Buttons (click Menu-&gt;Example 2). It contains actions that are relevant to the view but not related to any individual item displayed directly within the content area.</oldsource>
-        <translation>&lt;b&gt;Eszköztár&lt;/b&gt; egy tároló amelyik a nézethez szempontjaból fontos parancsokat tartalmaz amelyek kötődnek közvetlenül a nézetben megjelenített grafikus elemekhez. &lt;ul&gt;&lt;li&gt;4 Ikon Gombot tartalmazhat (kattints a Menüre, majd az első példáratlmazhat egy szöveges bemeneti mezőt is 2 Ikon Gombbal (kattints a Menüre, majd az második példára)&lt;/li&gt; &lt;l&lt;/li&gt;&lt;/ul&gt;</translation>
+        <location filename="../toolbarpage.cpp" line="215"/>
+        <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
+        <oldsource>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</oldsource>
+        <translation type="unfinished">&lt;b&gt;Eszköztár&lt;/b&gt; egy tároló amelyik a nézethez szempontjaból fontos parancsokat tartalmaz amelyek kötődnek közvetlenül a nézetben megjelenített grafikus elemekhez. &lt;ul&gt;&lt;li&gt;4 Ikon Gombot tartalmazhat (kattints a Menüre, majd az első példáratlmazhat egy szöveges bemeneti mezőt is 2 Ikon Gombbal (kattints a Menüre, majd az második példára)&lt;/li&gt; &lt;l&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message id="xx_objectmenu_page_title">
-        <location filename="../objectmenupage.cpp" line="149"/>
+        <location filename="../objectmenupage.cpp" line="155"/>
         <source>Object menu</source>
         <translation>Objektum menü</translation>
     </message>
     <message id="xx_objectmenu_page_info_label">
-        <location filename="../objectmenupage.cpp" line="161"/>
+        <location filename="../objectmenupage.cpp" line="167"/>
         <source>Object Menu is a popup menu of commands opened by long tapping an element. It is used for providing shortcuts to functions related to that particular element.
 
 The primary (single short tap) action of the element should not be duplicated in the Object Menu.</source>
@@ -831,12 +842,12 @@ The primary (single short tap) action of the element should not be duplicated in
 Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megismételni az Objektum Menüben.</translation>
     </message>
     <message id="xx_objectmenu_page_container_friends">
-        <location filename="../objectmenupage.cpp" line="164"/>
+        <location filename="../objectmenupage.cpp" line="170"/>
         <source>Friends</source>
         <translation>Barátok</translation>
     </message>
     <message id="xx_objectmenu_page_container_albums">
-        <location filename="../objectmenupage.cpp" line="166"/>
+        <location filename="../objectmenupage.cpp" line="172"/>
         <source>Favorite Albums</source>
         <translation>Kedvenc Albumok</translation>
     </message>
@@ -1358,6 +1369,21 @@ A visszajelzéseket a témarendszer segítségével lehet beállítani.</transla
     <message id="xx_gridpage_title">
         <location filename="../duigridpage.cpp" line="97"/>
         <source>Grid page</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_video_container_page_title">
+        <location filename="../videocontainerpage.cpp" line="294"/>
+        <source>Video container</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_video_container_page_info_label">
+        <location filename="../videocontainerpage.cpp" line="299"/>
+        <source>Video container page info label.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_video_container_header_title">
+        <location filename="../videocontainerpage.cpp" line="302"/>
+        <source>Gallery</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
