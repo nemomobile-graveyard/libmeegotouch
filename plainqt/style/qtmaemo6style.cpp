@@ -27,6 +27,7 @@
 #include <QStyleOptionButton>
 #include <QApplication>
 #include <QDialogButtonBox>
+#include <QFile>
 #include <QInputContext>
 #include <QInputContextFactory>
 #include <QPoint>
@@ -48,6 +49,7 @@
 #include <QStatusBar>
 #include <QMenuBar>
 #include <QComboBox>
+#include <QDesktopWidget>
 #include <QLineEdit>
 #include <QTime>
 #include <QHeaderView>
@@ -95,6 +97,7 @@
 #define SCROLLAREATHUMBVIEW "scrollAreaThumbView"
 
 //#define MOVE_ACTIONS_FROM_TOOLBAR_TO_TITLEBAR
+//#define DUI_LOG_POLISH
 
 QPixmap setPixmapOpacity(const QPixmap &pixmap, double opacity)
 {
@@ -823,11 +826,35 @@ void QtMaemo6Style::polish(QApplication *app)
 
 void QtMaemo6Style::polish(QWidget *widget)
 {
+    if(qobject_cast<QDesktopWidget*>(widget))
+        return;
+
     if(widget->dynamicPropertyNames().contains(Dui::NoDuiStyle))
         return;
 
     if(qobject_cast<DuiWindow*>(widget))
         return;
+
+    //skip the scrollbar container widgets of QAbstractScrollAreas
+    if( (widget->objectName().contains("qt_scrollarea_hcontainer")
+        || widget->objectName().contains("qt_scrollarea_vcontainer"))
+        && qobject_cast<DuiWindow*>(widget->parentWidget()))
+        return;
+
+#ifdef DUI_LOG_POLISH
+    QString filename = QString("/home/duistyle_%1.log").arg( QCoreApplication::applicationFilePath().section('/', -1 ) );
+
+
+    QFile file( filename );
+    if (file.open(QIODevice::Append | QIODevice::Text)) {
+        QTextStream out(&file);
+        out << filename << " polish: " <<  widget->metaObject()->className()
+                        << ' ' << widget->objectName() << "\n";
+    }
+    else {
+        qCritical() << "unable to open" << filename;
+    }
+#endif
 
     Q_D(QtMaemo6Style);
     // Lazy initialization of the DuiFramework.
@@ -847,8 +874,6 @@ void QtMaemo6Style::polish(QWidget *widget)
             widget->setPalette(pal);
         }
     }
-
-    widget->installEventFilter(d->m_windowEventFilter);
 
     if (QtMaemo6ClickLabel *lbl = qobject_cast<QtMaemo6ClickLabel *>(widget)) {
         int navigationBarHeight = 0;
@@ -909,6 +934,10 @@ void QtMaemo6Style::polish(QWidget *widget)
 #endif
 
     if (qobject_cast<QScrollBar *>(widget)) {
+        //skip the scrollbars if they are inside an DuiWindow
+        if(widget->parentWidget() &&
+           qobject_cast<DuiWindow*>(widget->parentWidget()->parentWidget()))
+            return;
         //FIXME: public API usage
         widget->setAttribute(Qt::WA_OpaquePaintEvent, false);
         d->m_scrollBarEventFilter->enableOn(widget);
@@ -974,6 +1003,8 @@ void QtMaemo6Style::polish(QWidget *widget)
     if(QHeaderView* hView = qobject_cast<QHeaderView*>(widget)) {
         hView->viewport()->setBackgroundRole(QPalette::Window);
     }
+
+    widget->installEventFilter(d->m_windowEventFilter);
 }
 
 void QtMaemo6Style::drawPrimitive(PrimitiveElement element,

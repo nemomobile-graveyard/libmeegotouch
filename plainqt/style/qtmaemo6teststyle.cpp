@@ -23,6 +23,7 @@
 
 #include <QApplication>
 #include <QDebug>
+#include <QDesktopWidget>
 #include <QMainWindow>
 #include <QFont>
 #include <QDialog>
@@ -124,6 +125,9 @@ void QtMaemo6TestStyle::polish(QPalette &palette)
 
 void QtMaemo6TestStyle::polish(QWidget *widget)
 {
+    if(qobject_cast<QDesktopWidget*>(widget))
+        return;
+
     widget->installEventFilter(m_windowEventFilter);
 }
 
