@@ -25,6 +25,8 @@ SOURCES += \
 install_shader_source.path = $$DUI_SHADER_SOURCE_DIR
 install_shader_source.files = \
     $$PAINTING_SRC_DIR/shaders/default.frag \
-    $$PAINTING_SRC_DIR/shaders/default.vert
+    $$PAINTING_SRC_DIR/shaders/default.vert \
+    $$PAINTING_SRC_DIR/shaders/yuv1.frag \
+    $$PAINTING_SRC_DIR/shaders/yuv3.frag
 
 INSTALLS += install_shader_source

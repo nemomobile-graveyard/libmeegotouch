@@ -593,7 +593,6 @@ void DuiGLES2Renderer::bindTexture(quint32 texId, const QSize &texSize, quint32 
     //been defined, the default texture uniforms (texture0,
     //texture1 etc.) was setup when creating the program
     if (d_ptr->m_activeProgram && !uniformName.isEmpty()) {
-        duiWarning("DuiGLES2Renderer") << "bindTexture()" << uniformName << unit;
         d_ptr->m_activeProgram->setUniformValue(uniformName.toStdString().c_str(), (GLuint)unit);
     }
 

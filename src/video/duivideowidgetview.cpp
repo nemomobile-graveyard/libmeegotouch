@@ -29,42 +29,8 @@
 #include "duisink.h"
 #include "duidebug.h"
 
-
-static const char* DuiYUV3FragSrc = "\
-    varying lowp vec2 fragTexCoord;\
-    uniform sampler2D textureY;\
-    uniform sampler2D textureU;\
-    uniform sampler2D textureV;\
-    uniform lowp float opacity; \
-    void main(void) \
-    {\
-        highp float y = texture2D(textureY, fragTexCoord).x; \
-        highp float u = texture2D(textureU, fragTexCoord).x; \
-        highp float v = texture2D(textureV, fragTexCoord).x; \
-        u = u - 0.5; \
-        v = v - 0.5; \
-        y = 1.164 * (y - 0.0625);\
-        gl_FragColor = vec4(y + 1.403 * v, y - (0.344 * u) - (0.714 * v), y + (1.770 * u), 1.0) * opacity; \
-    }";
-
-static const char* DuiYUV1FragSrc = "\
-    varying lowp vec2 fragTexCoord;\
-    uniform sampler2D textureYUV;\
-    uniform lowp float opacity; \
-    void main(void) \
-    {\
-        highp vec3  yuv = texture2D(textureYUV, fragTexCoord).xyz; \
-        highp float y = yuv.x; \
-        highp float u = yuv.y; \
-        highp float v = yuv.z; \
-        u = u - 0.5; \
-        v = v - 0.5; \
-        y = 1.164 * (y - 0.0625);\
-        gl_FragColor = vec4(y + 1.403 * v, y - (0.344 * u) - (0.714 * v), y + (1.770 * u), 1.0) * opacity; \
-    }";
-
 DuiVideoWidgetViewPrivate::DuiVideoWidgetViewPrivate()
-    :   m_useSingleYuvTexture(true),
+    :   m_useSingleYuvTexture(false),
         image(NULL),
         bits(NULL),
         scaleOffsets(NULL),
@@ -79,8 +45,8 @@ DuiVideoWidgetViewPrivate::DuiVideoWidgetViewPrivate()
 #ifdef DUI_USE_OPENGL
         glGenTextures(3, &m_textures[0]);
 #endif
-        yuv1 = r->getShaderProgram(DuiYUV1FragSrc);
-        yuv3 = r->getShaderProgram(DuiYUV3FragSrc);
+        yuv1 = r->getShaderProgram(DUI_SHADER_SOURCE_DIR "/yuv1.frag" );
+        yuv3 = r->getShaderProgram(DUI_SHADER_SOURCE_DIR "/yuv3.frag");
     }    
     else
         duiWarning("DuiVideoWidgetViewPrivate::DuiVideoWidgetViewPrivate()") << "DuiGLES2Renderer not ready yet, cannot init shaders.";
@@ -501,18 +467,15 @@ void DuiVideoWidgetView::drawContents(QPainter* painter, const QStyleOptionGraph
         if( yuv ) {
             if( d->m_useSingleYuvTexture ) {
                 r->begin(painter, d->yuv1);
-                //d->blitGLFrame();
                 r->bindTexture(d->m_textures[0], QSize(-1,-1), 0, "textureYUV");
             } else {
                 r->begin(painter, d->yuv3);
-                //d->blitGLFrame();
                 r->bindTexture(d->m_textures[0], QSize(-1,-1), 0, "textureY");
                 r->bindTexture(d->m_textures[1], QSize(-1,-1), 1, "textureU");
                 r->bindTexture(d->m_textures[2], QSize(-1,-1), 2, "textureV");
             }
         } else {
             r->begin(painter);
-            //d->blitGLFrame();
             r->bindTexture(d->m_textures[0]);
         }
         r->setInvertTexture(true);
