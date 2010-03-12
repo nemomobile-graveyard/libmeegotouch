@@ -250,7 +250,7 @@ void VideoContainerPage::createContent()
     container = new MyImageVideoContainer(centralWidget());
     containerPolicy->addItem(container);
 
-    QString contactsDir = Utils::contactsDir();
+    QString contactsDir = "/usr/share/widgetsgallery/media/";//Utils::contactsDir();
     QDir imagesDir(contactsDir);
     QStringList imageContacts = imagesDir.entryList(QDir::Files);
 
