@@ -65,6 +65,7 @@ SOURCES += main.cpp \
     timedemopage.cpp \
     timedemobenchmark.cpp \
     staticpagebenchmark.cpp \
+    videocontainerpage.cpp \
 
 HEADERS += templatepage.h \
     listpage.h \
@@ -99,6 +100,8 @@ HEADERS += templatepage.h \
     timedemopage.h \
     timedemobenchmark.h \
     staticpagebenchmark.h \
+    videocontainerpage.h \
+    
 
 # theme
 include(theme/theme.pri)

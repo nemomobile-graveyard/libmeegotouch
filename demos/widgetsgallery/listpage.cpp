@@ -41,6 +41,7 @@
 #include "languagepage.h"
 #include "feedbackpage.h"
 #include "timingscene.h"
+#include "videocontainerpage.h"
 
 #include <QGraphicsLayoutItem>
 #include <QGraphicsLinearLayout>
@@ -145,6 +146,7 @@ void ListPage::createContent()
     addPage(new SliderPage);
     addPage(new LanguagePage);
     addPage(new FeedbackPage);
+    addPage(new VideoContainerPage);
 
     DuiWidget *panel = centralWidget();
 
