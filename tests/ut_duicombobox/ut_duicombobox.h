@@ -45,7 +45,6 @@ private slots:
     void testCurrentIndex();
     void testFunctions();
     void testCancelEvent();
-    void testIconVisibility();
     void testClickSlot();
     void testBuiltinModel();
     void testModelSwitching();
@@ -55,6 +54,9 @@ private slots:
     void testSetCurrentIndex();
 
 private:
+    // disabled because of race conditions with DuiTheme daemon
+    void testIconVisibility();
+
     DuiComboBox *m_combobox;
     QStringListModel m_model;
     QStringList m_stringList;
