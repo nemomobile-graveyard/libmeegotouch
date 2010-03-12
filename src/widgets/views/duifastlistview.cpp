@@ -149,7 +149,8 @@ void DuiFastListView::relayoutItemsInExposedRect()
         {
             QModelIndex firstVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y());
             d_ptr->updateFirstVisibleRow(firstVisibleRow);
-            QModelIndex lastVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight);
+            QModelIndex lastVisibleRow = d_ptr->locateVisibleIndexAt(
+                d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight - 1); // - 1 to select from inside viewport
             d_ptr->updateLastVisibleRow(lastVisibleRow);
 
             QPoint firstVisibleItemPos(0, d_ptr->locatePosOfItem(firstVisibleRow));

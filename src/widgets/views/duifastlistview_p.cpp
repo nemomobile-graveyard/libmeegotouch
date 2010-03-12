@@ -644,8 +644,8 @@ int DuiFastGroupHeaderListViewPrivate::locateVisibleRowAt(int y, int x)
         return headerRow;
 
     int separatorHeight = separator->boundingRect().height();
-    int row = (relativePos + (itemHeight / 2) + separatorHeight - headerHeight) / (itemHeight + separatorHeight);
-    return headerRow + row + 1;
+    int row = relativePos / (separatorHeight + itemHeight) + headerRow + 1;
+    return row;
 }
 
 QModelIndex DuiFastGroupHeaderListViewPrivate::flatRowToIndex(int row) const
