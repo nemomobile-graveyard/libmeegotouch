@@ -199,17 +199,6 @@ Dui::Orientation DuiWindowPrivate::orientation(Dui::OrientationAngle angle) cons
     return (angle == Dui::Angle0 || angle == Dui::Angle180) ? Dui::Landscape : Dui::Portrait;
 }
 
-void DuiWindowPrivate::_q_sendOrientationChangedSignal()
-{
-    Q_Q(DuiWindow);
-
-    if (sceneManager == 0)
-        return;
-
-    emit q->orientationAngleChanged(sceneManager->orientationAngle());
-    emit q->orientationChanged(sceneManager->orientation());
-}
-
 void DuiWindowPrivate::notifyWidgetsAboutOrientationChange()
 {
     Q_Q(DuiWindow);
@@ -469,8 +458,10 @@ void DuiWindow::setSceneManager(DuiSceneManager *sceneManager)
     d->sceneManager = sceneManager;
 
     if (sceneManager) {
+        connect(sceneManager, SIGNAL(orientationAngleChanged(Dui::OrientationAngle)),
+                SIGNAL(orientationAngleChanged(Dui::OrientationAngle)));
         connect(sceneManager, SIGNAL(orientationChanged(Dui::Orientation)),
-                SLOT(_q_sendOrientationChangedSignal()));
+                SIGNAL(orientationChanged(Dui::Orientation)));
         connect(sceneManager, SIGNAL(orientationChangeFinished(Dui::Orientation)),
                 SIGNAL(orientationChangeFinished(Dui::Orientation)));
         sceneManager->setParent(this);

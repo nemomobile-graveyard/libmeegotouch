@@ -198,6 +198,7 @@ void DuiSceneManagerPrivate::_q_changeGlobalOrientation()
 {
     Q_Q(DuiSceneManager);
 
+    Dui::OrientationAngle oldAngle = angle;
     Dui::Orientation oldOrientation = orientation(angle);
     angle = newAngle;
 
@@ -211,6 +212,8 @@ void DuiSceneManagerPrivate::_q_changeGlobalOrientation()
         // would like to connect to the signal and get correct size hints for widgets)
         emit q->orientationChanged(q->orientation());
     }
+    if (oldAngle != angle)
+        emit q->orientationAngleChanged(angle);
 }
 
 void DuiSceneManagerPrivate::_q_emitOrientationChangeFinished()

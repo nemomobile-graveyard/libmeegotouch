@@ -115,14 +115,30 @@ bool DuiComponentData::emulateTwoFingerGestures()
 }
 
 // DuiSceneManager stubs
+Dui::OrientationAngle gOrientationAngle = Dui::Angle0;
+
+Dui::OrientationAngle DuiSceneManager::orientationAngle() const
+{
+    return gOrientationAngle;
+}
+
+Dui::Orientation DuiSceneManager::orientation() const
+{
+    return (gOrientationAngle == Dui::Angle90 || gOrientationAngle == Dui::Angle270) ? Dui::Portrait : Dui::Landscape;
+}
+
 void DuiSceneManager::setOrientationAngle(Dui::OrientationAngle angle, Dui::OrientationChangeMode mode)
 {
     Q_UNUSED(mode);
-    Dui::Orientation newOrientation = (angle == Dui::Angle90 || Dui::Angle270)
+    Dui::Orientation newOrientation = (angle == Dui::Angle90 || angle == Dui::Angle270)
                                       ? Dui::Portrait
                                       : Dui::Landscape;
 
-    emit orientationChanged(newOrientation);
+    if (orientationAngle() != angle)
+        emit orientationAngleChanged(angle);
+    if (orientation() != newOrientation)
+        emit orientationChanged(newOrientation);
+    gOrientationAngle = angle;
 }
 
 // DuiWindows' visibility handler re-imps
@@ -255,11 +271,28 @@ void Ut_DuiWindow::testOrientationChangedSignalPropagationFromSceneManager()
     QSignalSpy orientationSpy(win, SIGNAL(orientationChanged(Dui::Orientation)));
     QSignalSpy angleSpy(win, SIGNAL(orientationAngleChanged(Dui::OrientationAngle)));
 
+    // create the scene manager
+    win->sceneManager();
     Dui::OrientationAngle newAngle = (Dui::OrientationAngle)(win->orientationAngle() + 90);
 
-    win->sceneManager()->setOrientationAngle(newAngle);
+    win->sceneManager()->setOrientationAngle(newAngle, Dui::ImmediateOrientationChange);
 
     QCOMPARE(orientationSpy.count(), 1);
+    QCOMPARE(angleSpy.count(), 1);
+}
+
+void Ut_DuiWindow::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
+{
+    QSignalSpy orientationSpy(win, SIGNAL(orientationChanged(Dui::Orientation)));
+    QSignalSpy angleSpy(win, SIGNAL(orientationAngleChanged(Dui::OrientationAngle)));
+
+    // create the scene manager
+    win->sceneManager();
+    Dui::OrientationAngle newAngle = (Dui::OrientationAngle)(win->orientationAngle() + 180);
+
+    win->setOrientationAngle(newAngle, Dui::ImmediateOrientationChange);
+
+    QCOMPARE(orientationSpy.count(), 0);
     QCOMPARE(angleSpy.count(), 1);
 }
 

@@ -50,7 +50,6 @@ public:
 
     DuiSceneManager *sceneManager;
 
-    void _q_sendOrientationChangedSignal();
     void notifyWidgetsAboutOrientationChange();
 
     Dui::Orientation oldOrientation;

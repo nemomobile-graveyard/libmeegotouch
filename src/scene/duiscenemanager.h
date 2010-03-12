@@ -229,6 +229,18 @@ Q_SIGNALS:
 
     /*! \brief Signal emitted after scene geometry has changed for a rotation
      *
+     * In comparison to orientationChanged(), this signal is emmitted with every change
+     * of the orientation angle. Note, that orientationChanged() won't be emitted when
+     * changing e.g. from Dui::Angle180 to Dui::Angle0.
+     *
+     * Note that this is emitted at the start of the rotation animation.
+     *
+     * \param orientation New orientation of the viewport
+     */
+    void orientationAngleChanged(const Dui::OrientationAngle &orientationAngle);
+
+    /*! \brief Signal emitted after scene geometry has changed for a rotation
+     *
      * This is for widgets that need to react when the orientation is about to change,
      * and is emitted after the scene geometry has changed and the rotation animation
      * is about to start.

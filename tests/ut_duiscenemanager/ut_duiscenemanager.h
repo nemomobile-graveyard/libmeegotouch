@@ -55,6 +55,7 @@ private slots:
     void testSceneLayerEffect();
     void testInitialOrientation();
     void testOrientationChangedSignal();
+    void testNoOrientationChangedSignalWhenRotatingBy180Degrees();
     //void testNavBarDockWidgetVisibility();
     void testAngleBoundaryCases();
     void testSceneSizes();

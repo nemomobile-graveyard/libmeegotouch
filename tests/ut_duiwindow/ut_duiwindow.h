@@ -49,6 +49,7 @@ private slots:
     void testVisibleSceneSize_data();
     void testVisibleSceneSize();
     void testOrientationChangedSignalPropagationFromSceneManager();
+    void testNoOrientationChangedSignalWhenRotatingBy180Degrees();
     void testIsOnDisplay();
     void testEnterDisplayEventHandler();
     void testExitDisplayEventHandler();
