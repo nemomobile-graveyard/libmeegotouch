@@ -28,6 +28,7 @@
 #include "duiapplication.h"
 #include "duiscenewindowview.h"
 #include "duiwindow.h"
+#include "duidialog.h"
 
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET_NO_CREATE(DuiSceneWindow)
@@ -86,6 +87,13 @@ bool DuiSceneWindowPrivate::dismiss(bool now)
         return false;
     }
     */
+    // BEGIN WORKAROUND: Remove it after abi freeze.
+    DuiDialog* dlg = qobject_cast<DuiDialog*>(q);
+    if (dlg) {
+        dlg->done(DuiDialog::Rejected);
+        return true;
+    }
+    // END WORKAROUND
 
     if (q->sceneManager()) {
         if (now) {
