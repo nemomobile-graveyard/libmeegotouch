@@ -425,8 +425,17 @@ void DuiApplicationWindowPrivate::updateDockWidgetVisibility()
         return;
     }
 
-    int count = toolBar->actions().count();
-    if (count > 0) {
+    QList<QAction *> actions = toolBar->actions();
+    int count = actions.count();
+    bool toolbarHasVisibleActions = false;
+    for (int i = 0; i < count; ++i) {
+        if (actions[i]->isVisible()) {
+            toolbarHasVisibleActions = true;
+            break;
+        }
+    }
+
+    if (toolbarHasVisibleActions) {
         //TODO: no animation until appear/disappear starts working properly
         dockWidget->appearNow(q);
     } else {
