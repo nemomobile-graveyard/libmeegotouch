@@ -40,7 +40,7 @@ class PhoneBookImageLoader;
 
 class DuiList;
 class DuiComboBox;
-class DuiContentItemCreator;
+class DuiListContentItemCreator;
 
 class DuiListPage: public TemplatePage
 {
@@ -101,7 +101,7 @@ private:
 #endif
 
     DuiList *list;
-    DuiContentItemCreator *cellCreator;
+    DuiListContentItemCreator *cellCreator;
 
     int currentSortingIndex;
 };

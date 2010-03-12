@@ -70,10 +70,10 @@ QString DuiListPage::timedemoTitle()
     return "List";
 }
 
-class DuiContentItemCreator : public DuiAbstractCellCreator<DuiContentItem>
+class DuiListContentItemCreator : public DuiAbstractCellCreator<DuiContentItem>
 {
 public:
-    DuiContentItemCreator() : amountOfColumns(1) {
+    DuiListContentItemCreator() : amountOfColumns(1) {
 
     }
 
@@ -156,7 +156,7 @@ void DuiListPage::loadPicturesInVisibleItems()
 
 void DuiListPage::setPlainListModel()
 {
-    cellCreator = new DuiContentItemCreator();
+    cellCreator = new DuiListContentItemCreator();
     list->setCellCreator(cellCreator);
 
 #ifdef HAVE_N900
