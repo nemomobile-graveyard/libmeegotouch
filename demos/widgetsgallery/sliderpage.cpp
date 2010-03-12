@@ -67,6 +67,8 @@ void SliderPage::createContent()
     ageLayoutPolicy->setContentsMargins(0, 0, 0, 0);
 
     ageLabel = new DuiLabel;
+    ageLabel->setTextElide(true);
+
     ageLayoutPolicy->addItem(ageLabel);
     ageLayoutPolicy->setStretchFactor(ageLabel, 0);
 
@@ -177,7 +179,7 @@ void SliderPage::retranslateUi()
     ageContainer->setTitle(qtTrId("xx_slider_personal_data_label"));
 
     // The engineering English below has lengthvariants:
-    //% "Please select your age:\x9c!! Select your age:\x9c!! Your age:\x9c!! Age:"
+    //% "Please select your age:\x9c!! Please select your age:\x9c!! Please select your age:\x9c!! Age:"
     ageLabel->setText(qtTrId("xx_slider_age_label"));
 
     ageSlider->setRange(0, 100);

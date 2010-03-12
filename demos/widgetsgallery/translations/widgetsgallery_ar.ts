@@ -1007,8 +1007,8 @@ Seekbar هو نوع خاص من المتزلج المستخدمة fordisplaying 
     </message>
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="181"/>
-        <source>Please select your age:!! Select your age:!! Your age:!! Age:</source>
-        <translation type="unfinished">من فضلك اختر العمر :</translation>
+        <source>Please select your age:</source>
+        <translation>من فضلك اختر العمر :</translation>
     </message>
     <message id="xx_slider_player_label">
         <location filename="../sliderpage.cpp" line="194"/>

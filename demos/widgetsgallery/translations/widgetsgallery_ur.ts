@@ -36,8 +36,7 @@ Guidelines for mandatory application Menu items:
     </message>
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="181"/>
-        <source>Please select your age:!! Select your age:!! Your age:!! Age:</source>
-        <oldsource>Please select your age:</oldsource>
+        <source>Please select your age:</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_slider_brightness_label">

@@ -416,9 +416,8 @@ tooltip</source>
     </message>
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="181"/>
-        <source>Please select your age:!! Select your age:!! Your age:!! Age:</source>
-        <oldsource>Please select your age:</oldsource>
-        <translation type="unfinished">Your age:</translation>
+        <source>Please select your age:</source>
+        <translation>Valitse ikäsi:</translation>
     </message>
     <message id="xx_slider_brightness_label">
         <location filename="../sliderpage.cpp" line="216"/>
