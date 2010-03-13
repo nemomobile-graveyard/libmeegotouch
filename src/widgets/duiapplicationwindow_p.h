@@ -57,6 +57,7 @@ public:
     DuiHomeButtonPanel *homeButtonPanel;
     DuiEscapeButtonPanel *escapeButtonPanel;
     DuiApplicationMenu *menu;
+    QPointer<DuiSceneWindow> statusBar;
     QTimer autoHideComponentsTimer;
     QList<DuiSceneWindow *> componentsOnAutoHide;
 
@@ -91,6 +92,12 @@ public:
     void sceneWindowDismissEvent(DuiSceneWindowEvent *ev);
 
     void updatePageAutoMarginsForComponents(const Dui::Orientation &orientation);
+
+    void applicationPageAppearEvent(DuiSceneWindowEvent *ev);
+    void applicationPageDisappearEvent(DuiSceneWindowEvent *ev);
+
+    void statusBarAppearEvent(DuiSceneWindowEvent *ev);
+    void statusBarDisappearEvent(DuiSceneWindowEvent *ev);
 
 private:
     void init();

@@ -51,6 +51,7 @@ PUBLIC_HEADERS += \
 
 PRIVATE_HEADERS += \
     $$WIDGETS_VIEWS_SRC_DIR/duistylablewidgetview_p.h \
+    $$WIDGETS_VIEWS_SRC_DIR/duistatusbarview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duiextendingbackgroundview_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duitexteditview_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duiapplicationmenuview_p.h \
@@ -98,6 +99,7 @@ SOURCES += \
     $$WIDGETS_VIEWS_SRC_DIR/duiscenewindowview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duisliderview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duispinnerview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/duistatusbarview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duitexteditview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duitexteditviewzoom.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbartabview.cpp \

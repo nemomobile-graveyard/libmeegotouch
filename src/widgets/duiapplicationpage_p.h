@@ -53,6 +53,7 @@ public:
 
     // Note: Called by DuiApplicationWindow
     void updateAutoMarginsForComponents(const Dui::Orientation &orientation,
+                                        qreal statusBarHeight,
                                         qreal navigationBarHeight,
                                         qreal dockWidgetHeight,
                                         bool dockWidgetVisible);

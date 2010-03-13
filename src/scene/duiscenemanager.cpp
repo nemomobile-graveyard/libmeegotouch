@@ -85,6 +85,8 @@ void DuiSceneManagerPrivate::init(DuiScene *scene)
 
     pendingSIPClose = false;
 
+    statusBar = 0;
+
     // set the angle to that of the topmost window, if one exists
     DuiWindow *activeWindow = DuiApplication::activeWindow();
 
@@ -176,6 +178,9 @@ int DuiSceneManagerPrivate::zForWindowType(DuiSceneWindow::WindowType windowType
     case DuiSceneWindow::HomeButtonPanel:
         z = DuiSceneManagerPrivate::HomeButtonPanel;
         break;
+    case DuiSceneWindow::StatusBar:
+        z = DuiSceneManagerPrivate::StatusBar;
+        break;
     default:
         z = 0;
         // Should not get here. Only scene layer effect does not have it's
@@ -265,6 +270,14 @@ void DuiSceneManagerPrivate::_q_windowHideAnimationFinished()
 
     if (window->windowType() == DuiSceneWindow::EscapeButtonPanel && !escapeButtonHidden)
         escapeButtonPanel = 0;
+
+    if (window->windowType() == DuiSceneWindow::StatusBar) {
+        statusBar = 0;
+
+        // All other scene windows have to be repositioned since now there's more
+        // space available in the scene.
+        setSceneWindowGeometries();
+    }
 
     if (isOnDisplay()) {
         produceFullyOffDisplayEvents(window);
@@ -419,39 +432,77 @@ void DuiSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
         scene->sendEvent(item, &event);
 }
 
-QPointF DuiSceneManagerPrivate::calculateSceneWindowPosition(DuiSceneWindow *window)
+QRectF DuiSceneManagerPrivate::calculateAvailableSceneRect(DuiSceneWindow *window)
 {
     Q_Q(DuiSceneManager);
 
-    QSizeF s = q->visibleSceneSize(orientation(angle));
+    QRectF availableSceneRect;
+    QSizeF sceneSize = q->visibleSceneSize(orientation(angle));
+
+    if (statusBar && window->windowType() != DuiSceneWindow::StatusBar) {
+        QSizeF windowSize = window->effectiveSizeHint(Qt::PreferredSize);
+
+        qreal statusBarBottomEdge = statusBar->y() +
+            statusBar->effectiveSizeHint(Qt::PreferredSize).height();
+
+        if ((statusBarBottomEdge + windowSize.height()) < sceneSize.height()) {
+            // Window should still fit within the remaining scene space when shifted
+            // downwards due to the status bar presence
+            availableSceneRect.setX(0.0);
+            availableSceneRect.setY(statusBarBottomEdge);
+            availableSceneRect.setWidth(sceneSize.width());
+            availableSceneRect.setHeight(sceneSize.height() - statusBarBottomEdge);
+
+            Q_ASSERT(availableSceneRect.height() > 0.0);
+        } else {
+            // Use the whole scene
+            availableSceneRect.setX(0.0);
+            availableSceneRect.setY(0.0);
+            availableSceneRect.setWidth(sceneSize.width());
+            availableSceneRect.setHeight(sceneSize.height());
+        }
+    } else {
+        // Use the whole scene
+        availableSceneRect.setX(0.0);
+        availableSceneRect.setY(0.0);
+        availableSceneRect.setWidth(sceneSize.width());
+        availableSceneRect.setHeight(sceneSize.height());
+    }
+
+    return availableSceneRect;
+}
+
+QPointF DuiSceneManagerPrivate::calculateSceneWindowPosition(DuiSceneWindow *window)
+{
+    // The rectangle available for the positioning of the given scene window
+    QRectF availableSceneRect = calculateAvailableSceneRect(window);
+
     Qt::Alignment alignment = window->alignment();
     QSizeF windowSize = window->effectiveSizeHint(Qt::PreferredSize);
 
-    qreal xpos = window->x();
-    qreal ypos = window->y();
-    bool valid = true;
+    QPointF pos;
 
     if (alignment.testFlag(Qt::AlignLeft))
-        xpos = 0;
+        pos.rx() = availableSceneRect.x();
     else if (alignment.testFlag(Qt::AlignHCenter))
-        xpos = s.width() / 2 - windowSize.width() / 2;
+        pos.rx() = availableSceneRect.x() + (availableSceneRect.width() / 2 - windowSize.width() / 2);
     else if (alignment.testFlag(Qt::AlignRight))
-        xpos = s.width() - windowSize.width();
+        pos.rx() = availableSceneRect.x() + (availableSceneRect.width() - windowSize.width());
+    else
+        pos.rx() = availableSceneRect.x();
 
     if (alignment.testFlag(Qt::AlignTop))
-        ypos = 0;
+        pos.ry() = availableSceneRect.y();
     else if (alignment.testFlag(Qt::AlignVCenter))
-        ypos = s.height() / 2 - windowSize.height() / 2;
+        pos.ry() = availableSceneRect.y() + (availableSceneRect.height() / 2 - windowSize.height() / 2);
     else if (alignment.testFlag(Qt::AlignBottom))
-        ypos = s.height() - windowSize.height();
+        pos.ry() = availableSceneRect.y() + (availableSceneRect.height() - windowSize.height());
+    else
+        pos.ry() = availableSceneRect.y();
 
-    if (alignment.testFlag(Qt::AlignJustify))
-        valid = false;
+    pos += window->offset();
 
-    if (valid)
-        return QPointF(xpos, ypos) + window->offset();
-
-    return QPointF();
+    return pos;
 }
 
 void DuiSceneManagerPrivate::rotateToAngle(Dui::OrientationAngle newAngle)
@@ -704,6 +755,17 @@ void DuiSceneManagerPrivate::prepareWindowShow(DuiSceneWindow *window)
 
     if (window->windowType() == DuiSceneWindow::EscapeButtonPanel)
         escapeButtonPanel = window;
+
+    if (window->windowType() == DuiSceneWindow::StatusBar) {
+        // There can be only one status bar in the scene.
+        Q_ASSERT(statusBar == 0);
+
+        statusBar = window;
+
+        // All other scene windows have to be repositioned since now there's less
+        // space available in the scene for them.
+        setSceneWindowGeometries();
+    }
 
     window->show();
     window->d_func()->shown = true;

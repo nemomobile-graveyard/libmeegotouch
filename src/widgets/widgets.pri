@@ -51,6 +51,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/duiscenewindow.h \
     $$WIDGETS_SRC_DIR/duiseekbar.h \
     $$WIDGETS_SRC_DIR/duislider.h \
+    $$WIDGETS_SRC_DIR/duistatusbar.h \
     $$WIDGETS_SRC_DIR/duitextedit.h \
     $$WIDGETS_SRC_DIR/duicompleter.h \
     $$WIDGETS_SRC_DIR/duicompleter_p.h \
@@ -150,6 +151,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/duiseekbar.cpp \
     $$WIDGETS_SRC_DIR/duislider.cpp \
     $$WIDGETS_SRC_DIR/duislidermodel.cpp \
+    $$WIDGETS_SRC_DIR/duistatusbar.cpp \
     $$WIDGETS_SRC_DIR/duitextedit.cpp \
     $$WIDGETS_SRC_DIR/duicompleter.cpp \
     $$WIDGETS_SRC_DIR/duitoolbar.cpp \

@@ -28,6 +28,7 @@
 class DuiScene;
 class DuiOnDisplayChangeEvent;
 class DuiGLWidget;
+class DuiStatusBar;
 
 class DuiWindowPrivate
 {
@@ -42,6 +43,7 @@ public:
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();
+    void addDuiStatusBarOverlayProperty();
 #endif
 
     DuiGLWidget *glWidget;
@@ -56,6 +58,8 @@ public:
     bool orientationAngleLocked;
     bool orientationLocked;
 
+    void windowStateChangeEvent(QWindowStateChangeEvent *event);
+
     void doEnterDisplayEvent();
     void doExitDisplayEvent();
 
@@ -64,6 +68,9 @@ public:
     bool onDisplay;
     bool onDisplaySet;
 
+    DuiStatusBar *statusBar;
+
+    void _q_makeStatusBarAppear();
 
 protected:
     DuiWindow *q_ptr;

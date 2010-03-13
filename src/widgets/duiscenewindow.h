@@ -82,7 +82,8 @@ public:
         Overlay,                         // DuiOverlay
         Completer,                       // DuiCompleter
         HomeButtonPanel,                 // DuiHomeButtonPanel
-        PlainSceneWindow                 // DuiSceneWindow
+        PlainSceneWindow,                // DuiSceneWindow
+        StatusBar                        // DuiStatusBar
     };
 
     /*!

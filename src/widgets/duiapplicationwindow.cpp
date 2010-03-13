@@ -239,11 +239,22 @@ void DuiApplicationWindowPrivate::_q_placeToolBar(const Dui::Orientation &orient
 
 void DuiApplicationWindowPrivate::updatePageAutoMarginsForComponents(const Dui::Orientation &orientation)
 {
-    if (page) {
-        page->d_func()->updateAutoMarginsForComponents(orientation,
-                navigationBar->size().height(),
-                dockWidget->size().height(), dockWidget->isVisible());
+    if (!page) {
+        return;
     }
+
+    qreal statusBarHeight;
+
+    if (statusBar) {
+        statusBarHeight = statusBar->effectiveSizeHint(Qt::PreferredSize).height();
+    } else {
+        statusBarHeight = 0;
+    }
+
+    page->d_func()->updateAutoMarginsForComponents(orientation,
+            statusBarHeight,
+            navigationBar->size().height(),
+            dockWidget->size().height(), dockWidget->isVisible());
 }
 
 void DuiApplicationWindowPrivate::_q_menuAppeared()
@@ -440,15 +451,36 @@ void DuiApplicationWindowPrivate::updateDockWidgetVisibility()
 
 void DuiApplicationWindowPrivate::sceneWindowAppearEvent(DuiSceneWindowEvent *event)
 {
-    Q_Q(DuiApplicationWindow);
     DuiSceneWindow *sceneWindow = event->sceneWindow();
 
-    if (sceneWindow->windowType() != DuiSceneWindow::ApplicationPage) {
-        // We are only interested in application page transitions
-        return;
+    if (sceneWindow->windowType() == DuiSceneWindow::ApplicationPage) {
+        applicationPageAppearEvent(event);
+    } else if (sceneWindow->windowType() == DuiSceneWindow::StatusBar) {
+        statusBarAppearEvent(event);
     }
+}
 
-    DuiApplicationPage *pageFromEvent = static_cast<DuiApplicationPage *>(sceneWindow);
+void DuiApplicationWindowPrivate::sceneWindowDisappearEvent(DuiSceneWindowEvent *event)
+{
+    DuiSceneWindow *sceneWindow = event->sceneWindow();
+
+    if (sceneWindow->windowType() == DuiSceneWindow::ApplicationPage) {
+        applicationPageDisappearEvent(event);
+    } else if (sceneWindow->windowType() == DuiSceneWindow::StatusBar) {
+        statusBarDisappearEvent(event);
+    }
+}
+
+void DuiApplicationWindowPrivate::sceneWindowDismissEvent(DuiSceneWindowEvent *event)
+{
+    // Currently we handle it in the same way as for a regular disappearance.
+    sceneWindowDisappearEvent(event);
+}
+
+void DuiApplicationWindowPrivate::applicationPageAppearEvent(DuiSceneWindowEvent *event)
+{
+    Q_Q(DuiApplicationWindow);
+    DuiApplicationPage *pageFromEvent = static_cast<DuiApplicationPage *>(event->sceneWindow());
 
     // It cannot be the current page
     Q_ASSERT(pageFromEvent != page);
@@ -464,36 +496,33 @@ void DuiApplicationWindowPrivate::sceneWindowAppearEvent(DuiSceneWindowEvent *ev
     pageFromEvent->d_func()->prepareForAppearance();
 }
 
-void DuiApplicationWindowPrivate::sceneWindowDisappearEvent(DuiSceneWindowEvent *event)
+void DuiApplicationWindowPrivate::applicationPageDisappearEvent(DuiSceneWindowEvent *event)
 {
-    DuiSceneWindow *sceneWindow = event->sceneWindow();
-
-    if (sceneWindow->windowType() != DuiSceneWindow::ApplicationPage) {
-        // We are only interested in application page transitions
-        return;
-    }
-
-    DuiApplicationPage *pageFromEvent = static_cast<DuiApplicationPage *>(sceneWindow);
+    DuiApplicationPage *pageFromEvent = static_cast<DuiApplicationPage *>(event->sceneWindow());
 
     // Page is going away. Let's disconnect it if it's the current page.
     if (pageFromEvent == page)
         disconnectPage(pageFromEvent);
 }
 
-void DuiApplicationWindowPrivate::sceneWindowDismissEvent(DuiSceneWindowEvent *event)
+void DuiApplicationWindowPrivate::statusBarAppearEvent(DuiSceneWindowEvent *event)
 {
-    DuiSceneWindow *sceneWindow = event->sceneWindow();
+    Q_Q(DuiApplicationWindow);
+    Q_ASSERT(statusBar == 0);
 
-    if (sceneWindow->windowType() != DuiSceneWindow::ApplicationPage) {
-        // We are only interested in application page transitions
-        return;
-    }
+    statusBar = event->sceneWindow();
 
-    DuiApplicationPage *pageFromEvent = static_cast<DuiApplicationPage *>(sceneWindow);
+    updatePageAutoMarginsForComponents(q->orientation());
+}
 
-    // Page is going away. Let's disconnect it if it's the current page.
-    if (pageFromEvent == page)
-        disconnectPage(pageFromEvent);
+void DuiApplicationWindowPrivate::statusBarDisappearEvent(DuiSceneWindowEvent *event)
+{
+    Q_Q(DuiApplicationWindow);
+    Q_ASSERT(statusBar == event->sceneWindow());
+
+    statusBar = 0;
+
+    updatePageAutoMarginsForComponents(q->orientation());
 }
 
 // TODO: Remove that now useless method override after API freeze period

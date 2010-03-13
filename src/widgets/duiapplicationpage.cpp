@@ -364,23 +364,27 @@ void DuiApplicationPagePrivate::prepareForAppearance()
 }
 
 void DuiApplicationPagePrivate::updateAutoMarginsForComponents(const Dui::Orientation &orientation,
+        qreal statusBarHeight,
         qreal navigationBarHeight,
         qreal dockWidgetHeight,
         bool dockWidgetVisible)
 {
     Q_Q(DuiApplicationPage);
-    qreal topHeight = 0;
-    qreal bottomHeight = 0;
+
+    qreal topHeight = statusBarHeight;
+    qreal bottomHeight = 0.0;
+
     if (q->autoMarginsForComponentsEnabled()) {
 
         if (q->componentDisplayMode(DuiApplicationPage::NavigationBar) == DuiApplicationPageModel::Show) {
-            topHeight = navigationBarHeight;
+            topHeight += navigationBarHeight;
         }
 
         if (orientation == Dui::Portrait && dockWidgetVisible) {
-            bottomHeight = dockWidgetHeight;
+            bottomHeight += dockWidgetHeight;
         }
     }
+
     setSpacerHeight(topSpacer, topHeight);
     setSpacerHeight(bottomSpacer, bottomHeight);
 }

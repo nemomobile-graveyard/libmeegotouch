@@ -67,7 +67,8 @@ public:
         NotificationEvent = NotificationInformation, // DuiNotification - Event
         Overlay = 6000,                              // DuiOverlay
         Completer = Overlay,                         // DuiCompleter
-        HomeButtonPanel = 7000                       // DuiHomeButtonPanel
+        HomeButtonPanel = 7000,                      // DuiHomeButtonPanel
+        StatusBar = 8000                             // DuiStatusBar
     };
 
     enum InputPanelPlacement {
@@ -127,6 +128,8 @@ public:
                                   DuiSceneWindow *oldPage,
                                   DuiPageSwitchAnimation::PageTransitionDirection direction);
 
+    QRectF calculateAvailableSceneRect(DuiSceneWindow *window);
+
     void _q_setSenderGeometry();
     void _q_changeGlobalOrientation();
     void _q_emitOrientationChangeFinished();
@@ -170,6 +173,8 @@ public:
     static const int KeyboardSpacing;
 
     bool pendingSIPClose;
+
+    QPointer<DuiSceneWindow> statusBar;
 
     DuiSceneManager *q_ptr;
 };
