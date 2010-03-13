@@ -10,7 +10,6 @@ SOURCES += $$WORKSPACE_SRC_DIR/duideviceprofile.cpp
 
 devices.CONFIG += no_check_exist
 devices.files = $$WORKSPACE_SRC_DIR/devices.conf
-devices.path = /etc/dui
+devices.path = $$DUI_INSTALL_SYSCONF/dui
 
 INSTALLS += devices
-

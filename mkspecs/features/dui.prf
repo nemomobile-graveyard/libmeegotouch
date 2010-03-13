@@ -1,6 +1,8 @@
 ######################################################################
 # DuiFeature
 ######################################################################
+
+include(dui_defines.prf)
 macx {
     INCLUDEPATH += /Library/Frameworks/dui.framework/Headers
     LIBS += -framework dui
@@ -17,8 +19,8 @@ macx {
     }
 
     !contains(DEFINES, BUILD_DUI) {
-        DUI_INC_DIR = /usr/include/dui
-        DUI_LIB_DIR = /usr/lib
+        DUI_INC_DIR = $$DUI_PREFIX/include/dui
+        DUI_LIB_DIR = $$DUI_LIBDIR
 
         GSTREAMER_INC = /usr/include/gstreamer-0.10 /usr/include/glib-2.0 /usr/lib/glib-2.0/include /usr/include/libxml2
 

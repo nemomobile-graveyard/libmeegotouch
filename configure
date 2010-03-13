@@ -76,6 +76,8 @@ OPT_SHADOW=maybe
 
 # initalize variables used for installation
 DUI_INSTALL_PREFIX=/usr/local
+DUI_INSTALL_SYSCONFDIR=/etc
+DUI_INSTALL_LIBDIR=$DUI_INSTALL_PREFIX/lib
 
 #-------------------------------------------------------------------------------
 # parse command line arguments
@@ -118,7 +120,7 @@ while [ "$#" -gt 0 ]; do
         VAL=yes
         ;;
     #Qt style options that pass an argument
-    -prefix|-make|-nomake)
+    -prefix|-make|-nomake|-sysconfdir|-libdir)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         shift
         VAL="$1"
@@ -165,6 +167,12 @@ while [ "$#" -gt 0 ]; do
     case "$VAR" in
     prefix)
         DUI_INSTALL_PREFIX="$VAL"
+        ;;
+    sysconfdir)
+        DUI_INSTALL_SYSCONFDIR="$VAL"
+        ;;
+    libdir)
+        DUI_INSTALL_LIBDIR="$VAL"
         ;;
     nomake)
 	CFG_NOBUILD_PARTS="$CFG_NOBUILD_PARTS $VAL"
@@ -352,6 +360,10 @@ Installation options:
 
     -prefix <dir> ...... This will install everything relative to <dir>
                          (default $DUI_INSTALL_PREFIX)
+    -sysconfdir <dir> .. This will put configuration files in <dir>
+                         (default $DUI_INSTALL_SYSCONFDIR)
+    -libdir <dir> ...... This will put libraries in <dir>
+                         (default $DUI_INSTALL_LIBDIR)
 
 Configure options:
 
@@ -477,6 +489,8 @@ DUI_VERSION = $DUI_VERSION
 
 #paths
 DUI_INSTALL_PREFIX = $DUI_INSTALL_PREFIX
+DUI_INSTALL_SYSCONFDIR = $DUI_INSTALL_SYSCONFDIR
+DUI_INSTALL_LIBDIR = $DUI_INSTALL_LIBDIR
 
 #dependencies
 DEFINES += $DUICONFIG_DEPS
@@ -513,7 +527,9 @@ DUI_DEFINES_PRF="$outpath/mkspecs/features/dui_defines.prf"
 # and now we generate a dui_defines.prf that will contain the right
 # install prefix
 cat "$relpath/mkspecs/features/dui_defines.prf.in" \
-| sed -e "s,@@DUI_UNIX_INSTALL_PREFIX@@,$DUI_INSTALL_PREFIX,g" > "$DUI_DEFINES_PRF.tmp"
+| sed -e "s,@@DUI_UNIX_INSTALL_PREFIX@@,$DUI_INSTALL_PREFIX,g" \
+| sed -e "s,@@DUI_UNIX_INSTALL_SYSCONFDIR@@,$DUI_INSTALL_SYSCONFDIR,g" \
+| sed -e "s,@@DUI_UNIX_INSTALL_LIBDIR@@,$DUI_INSTALL_LIBDIR,g" > "$DUI_DEFINES_PRF.tmp"
 
 # replace dui_defines.prf if it differs from the newly created temp file
 if cmp -s "$DUI_DEFINES_PRF.tmp" "$DUI_DEFINES_PRF"; then

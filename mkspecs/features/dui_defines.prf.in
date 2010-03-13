@@ -13,10 +13,14 @@ DUI_VERSION=$${DUI_MAJOR_VERSION}.$${DUI_MINOR_VERSION}.$${DUI_PATCH_VERSION}
 # the @@...@@ variable is filled from the libdui/configure script.
 unix {
     DUI_PREFIX = @@DUI_UNIX_INSTALL_PREFIX@@
+    DUI_SYSCONFDIR = @@DUI_UNIX_INSTALL_SYSCONFDIR@@
+    DUI_LIBDIR = @@DUI_UNIX_INSTALL_LIBDIR@@
 }
 
 mac {
     DUI_PREFIX = @@DUI_UNIX_INSTALL_PREFIX@@
+    DUI_SYSCONFDIR = @@DUI_UNIX_INSTALL_SYSCONFDIR@@
+    DUI_LIBDIR = @@DUI_UNIX_INSTALL_LIBDIR@@
 }
 
 win32 {
@@ -26,10 +30,10 @@ win32 {
 # Directories
 unix|win32 {
     DUI_INSTALL_BIN = $$DUI_PREFIX/bin
-    DUI_INSTALL_LIBS = $$DUI_PREFIX/lib
+    DUI_INSTALL_LIBS = $$DUI_LIBDIR
     DUI_INSTALL_DATA = $$DUI_PREFIX/share
     DUI_INSTALL_HEADERS = $$DUI_PREFIX/include/dui
-    DUI_INSTALL_SYSCONF = /etc
+    DUI_INSTALL_SYSCONF = $$DUI_SYSCONFDIR
     DUI_INSTALL_XSESSION = $$DUI_INSTALL_SYSCONF/X11
     DUI_INSTALL_LOCALSTATE = /var
 
@@ -37,12 +41,12 @@ unix|win32 {
     DUI_THEME_PRELOAD_DIR = $$DUI_INSTALL_LOCALSTATE/lib/dui/theme/preload.d
     DUI_THEME_POST_PRELOAD_DIR = $$DUI_INSTALL_LOCALSTATE/lib/dui/theme/preload.post
 
-    DUI_APPLET_DIR = $$DUI_PREFIX/lib/dui/applets
-    DUI_APPLET_INSTALLATION_SOURCES_DIR = $$DUI_PREFIX/lib/dui/appletinstallationsources
+    DUI_APPLET_DIR = $$DUI_LIBDIR/dui/applets
+    DUI_APPLET_INSTALLATION_SOURCES_DIR = $$DUI_LIBDIR/dui/appletinstallationsources
     DUI_APPLET_DATA_DIR = $$DUI_INSTALL_DATA/dui/applets
     DUI_APPLET_SETTINGS_DIR = $$DUI_INSTALL_DATA/dui/applets/settings
 
-    DUI_APPLICATION_EXTENSION_DIR = $$DUI_PREFIX/lib/dui/applicationextensions
+    DUI_APPLICATION_EXTENSION_DIR = $$DUI_LIBDIR/dui/applicationextensions
     DUI_APPLICATION_EXTENSION_DATA_DIR = $$DUI_INSTALL_DATA/dui/applicationextensions
 
     DUI_NOTIFICATIONS_EVENT_TYPES_DIR=$$DUI_INSTALL_DATA/dui/notifications/eventtypes
@@ -57,16 +61,16 @@ unix|win32 {
 
 mac {
     DUI_INSTALL_BIN = $$DUI_PREFIX/bin
-    DUI_INSTALL_LIBS = $$DUI_PREFIX/lib
+    DUI_INSTALL_LIBS = $$DUI_LIBDIR
     DUI_INSTALL_DATA = $$DUI_PREFIX/share
     DUI_INSTALL_HEADERS = $$DUI_PREFIX/include/dui
-    DUI_INSTALL_SYSCONF = /etc
+    DUI_INSTALL_SYSCONF = $$DUI_SYSCONFDIR
     DUI_INSTALL_LOCALSTATE = /var
 
     DUI_THEME_DIR = $$DUI_INSTALL_DATA/themes
 
-    DUI_APPLET_DIR = $$DUI_PREFIX/lib/dui/applets
-    DUI_APPLET_INSTALLATION_SOURCES_DIR = $$DUI_PREFIX/lib/dui/appletinstallationsources
+    DUI_APPLET_DIR = $$DUI_LIBDIR/dui/applets
+    DUI_APPLET_INSTALLATION_SOURCES_DIR = $$DUI_LIBDIR/dui/appletinstallationsources
     DUI_APPLET_DATA_DIR = $$DUI_INSTALL_DATA/dui/applets
     DUI_APPLET_SETTINGS_DIR = $$DUI_INSTALL_DATA/dui/applets/settings
 
