@@ -210,6 +210,7 @@ public:
     /*!
      * Returns the value of X-Maemo-Prestarted key or false if it is
      * not defined in the input desktop entry file.
+     * \deprecated Since 0.19.3.
      */
     bool xMaemoPrestarted() const;
 

@@ -208,6 +208,7 @@ Q_SIGNALS:
 
     /*!
      * \brief The application is requested to release as much memory as possible
+     * \deprecated Since 0.19.3.
      */
     void releaseMemoryRequested();
 
