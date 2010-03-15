@@ -99,8 +99,10 @@ void SignalListener::widgetRemoved(DuiWidget *widget)
     removedWidgets.append(widget);
 }
 
-bool GoodExtension::initialize()
+QString initializedInterface;
+bool GoodExtension::initialize(const QString &interface)
 {
+    initializedInterface = interface;
     return success;
 }
 
@@ -122,6 +124,7 @@ void Ut_DuiApplicationExtensionManager::init()
 
     extensions.clear();
     goodExtensionCount = 0;
+    initializedInterface.clear();
 }
 
 void Ut_DuiApplicationExtensionManager::cleanup()
@@ -259,6 +262,7 @@ void Ut_DuiApplicationExtensionManager::testInstantiateInProcessExtensionWhichSu
     QCOMPARE(signalListener.instantiatedExtensions.at(0), extensions.at(0));
     QCOMPARE(signalListener.instantiatedExtensions.at(0)->widget(), (DuiWidget *)NULL);
     QCOMPARE(signalListener.createdWidgets.count(), 0);
+    QCOMPARE(initializedInterface, interfaceName);
 }
 
 void Ut_DuiApplicationExtensionManager::testInstantiateInProcessExtensionWhichSucceedsWithWidget()

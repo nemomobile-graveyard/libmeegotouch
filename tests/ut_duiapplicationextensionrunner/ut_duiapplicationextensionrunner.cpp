@@ -40,8 +40,9 @@ DuiWindow::~DuiWindow()
 {
 }
 
-bool TestExtension::initialize()
+bool TestExtension::initialize(const QString &interface)
 {
+    Q_UNUSED(interface);
     return true;
 }
 

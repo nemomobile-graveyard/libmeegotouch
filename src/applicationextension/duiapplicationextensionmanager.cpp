@@ -132,7 +132,7 @@ bool DuiApplicationExtensionManager::instantiateInProcessExtension(const QString
         if (object->inherits(interface.toUtf8().constData())) {
             DuiApplicationExtensionInterface *extension = qobject_cast<DuiApplicationExtensionInterface *>(object);
             if (extension != NULL) {
-                success = extension->initialize();
+                success = extension->initialize(interface);
                 if (success) {
                     DuiWidget *widget = extension->widget();
                     if (widget) {

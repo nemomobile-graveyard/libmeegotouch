@@ -14,7 +14,8 @@ All of these are put into a debian package to enable installation of application
 
 An application extension is implemented as a Qt plugin. The interface class used as the base class of all application extensions is \c DuiApplicationExtensionInterface.
 The interface provides a method for initializing the plugin, which must be implemented by the application extension:
-\code bool DuiApplicationExtensionInterface::initialize() \endcode
+\code bool DuiApplicationExtensionInterface::initialize(const QString &interface) \endcode
+The extension gets the name of the interface as a parameter. The extension can but does not need to use this information for any purpose.
 The boolean return value should indicate whether the initialization was successful or not.
 
 The interface also has an method for returning the widget used for the UI of the application extension:
@@ -90,7 +91,7 @@ public:
     virtual void demoExtensionSpecificOperation();
 
     //! methods derived from DuiApplicationExtensionInterface
-    virtual bool initialize();
+    virtual bool initialize(const QString &interface);
     virtual DuiWidget *widget();
 
 private:
@@ -125,7 +126,7 @@ void DemoApplicationExtension::demoExtensionSpecificOperation()
     // do something specific to the demo extension interface
 }
 
-bool DemoApplicationExtension::initialize()
+bool DemoApplicationExtension::initialize(const QString &)
 {
     button = new DuiButton("Hello World");
 

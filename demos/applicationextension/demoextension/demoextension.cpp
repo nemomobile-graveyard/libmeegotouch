@@ -42,7 +42,7 @@ void DemoApplicationExtension::setDemoApplicationControlledValue(int value)
     slider->setValue(value);
 }
 
-bool DemoApplicationExtension::initialize()
+bool DemoApplicationExtension::initialize(const QString &)
 {
     slider = new DuiSlider;
     connect(slider, SIGNAL(valueChanged(int)), this, SLOT(informSliderValueToApplication(int)));

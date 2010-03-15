@@ -53,9 +53,10 @@ public:
     /**
      * This method is called to initialize the application extension.
      *
+     * \param interface the name of the interface being initialized. The extension can but does not need to use this information for anything.
      * \return \c true if the initialization succeeded, \c false otherwise.
      */
-    virtual bool initialize() = 0;
+    virtual bool initialize(const QString &interface) = 0;
 
     /**
      * Returns a widget representing the application extension (if any).

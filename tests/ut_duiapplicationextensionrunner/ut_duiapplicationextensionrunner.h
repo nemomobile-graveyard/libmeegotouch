@@ -31,7 +31,7 @@ class DuiWidget;
 class TestExtension : public QObject, public DuiApplicationExtensionInterface
 {
 public:
-    virtual bool initialize();
+    virtual bool initialize(const QString &interface);
     virtual DuiWidget *widget();
 
     DuiWidget *widget_;

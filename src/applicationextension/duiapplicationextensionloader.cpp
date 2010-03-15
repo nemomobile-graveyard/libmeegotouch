@@ -35,7 +35,7 @@ DuiApplicationExtensionInterface *DuiApplicationExtensionLoader::loadExtension(c
         if (object->inherits(metadata.interface().toUtf8().constData())) {
             DuiApplicationExtensionInterface *extension = qobject_cast<DuiApplicationExtensionInterface *>(object);
             if (extension != NULL) {
-                if (extension->initialize()) {
+                if (extension->initialize(metadata.interface())) {
                     return extension;
                 }
             }

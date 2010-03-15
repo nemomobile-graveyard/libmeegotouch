@@ -61,7 +61,7 @@ class GoodExtension : public QObject, public DuiApplicationExtensionInterface
     Q_INTERFACES(DuiApplicationExtensionInterface)
 
 public:
-    virtual bool initialize();
+    virtual bool initialize(const QString &interface);
     virtual DuiWidget *widget();
 
     bool success;

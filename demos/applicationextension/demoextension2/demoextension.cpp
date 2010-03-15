@@ -41,7 +41,7 @@ void DemoApplicationExtension::setDemoApplicationControlledValue(int value)
     }
 }
 
-bool DemoApplicationExtension::initialize()
+bool DemoApplicationExtension::initialize(const QString &)
 {
     return true;
 }

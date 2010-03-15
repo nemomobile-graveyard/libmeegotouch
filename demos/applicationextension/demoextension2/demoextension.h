@@ -39,7 +39,7 @@ public:
     virtual void setDemoApplicationControlledValue(int value);
 
     //! methods derived from DuiApplicationExtensionInterface
-    virtual bool initialize();
+    virtual bool initialize(const QString &interface);
 
 private:
     DemoApplicationInterface *app;

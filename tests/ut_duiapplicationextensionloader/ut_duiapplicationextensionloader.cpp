@@ -32,8 +32,10 @@ SomeQObject::~SomeQObject()
 }
 
 // Good extension
-bool GoodExtension::initialize()
+QString initializedInterface;
+bool GoodExtension::initialize(const QString &interface)
 {
+    initializedInterface = interface;
     return success;
 }
 
@@ -80,6 +82,7 @@ void Ut_DuiApplicationExtensionLoader::init()
     gQPluginLoaderFileName.clear();
     QPluginLoader_instance_return = NULL;
     SomeQObject_destructor_called = false;
+    initializedInterface.clear();
 
     metadata = new DuiApplicationExtensionMetaData("testmetadata.desktop");
 }
@@ -109,6 +112,7 @@ void Ut_DuiApplicationExtensionLoader::testExtensionLoading()
     QVERIFY(extension != NULL);
     QCOMPARE(extension, dynamic_cast<DuiApplicationExtensionInterface *>(QPluginLoader_instance_return));
     QCOMPARE(gQPluginLoaderFileName, QString("TestExtensionBinary"));
+    QCOMPARE(initializedInterface, QString("com.nokia.dui.core.ApplicationExtensionInterface/1.0"));
 }
 
 void Ut_DuiApplicationExtensionLoader::testExtensionLoadingFailNullExtensionObject()
