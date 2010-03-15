@@ -51,7 +51,7 @@ QString DuiIcuConversions::unicodeStringToQString(const icu::UnicodeString &sour
                    sourceStr.length());
 }
 
-icu::DateFormat::EStyle DuiIcuConversions::toEStyle(DuiLocale::DateType &dateType)
+icu::DateFormat::EStyle DuiIcuConversions::toEStyle(DuiLocale::DateType dateType)
 {
     if (dateType == DuiLocale::DateNone) {
         return icu::DateFormat::kNone;
@@ -72,7 +72,7 @@ icu::DateFormat::EStyle DuiIcuConversions::toEStyle(DuiLocale::DateType &dateTyp
     return icu::DateFormat::kFull;
 }
 
-icu::DateFormat::EStyle DuiIcuConversions::toEStyle(DuiLocale::TimeType &timeType)
+icu::DateFormat::EStyle DuiIcuConversions::toEStyle(DuiLocale::TimeType timeType)
 {
     if (timeType == DuiLocale::TimeNone) {
         return icu::DateFormat::kNone;

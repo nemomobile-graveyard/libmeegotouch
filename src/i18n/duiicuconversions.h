@@ -57,7 +57,7 @@ namespace DuiIcuConversions
      *
      * \sa DuiIcuConversions::toEStyle(DuiLocale::TimeType &timeType)
      */
-    icu::DateFormat::EStyle toEStyle(DuiLocale::DateType &dateType);
+    icu::DateFormat::EStyle toEStyle(DuiLocale::DateType dateType);
 
     /*!
      * \brief transforms DuiLocale::TimeType enums to icu::DateFormat::EStyle enums
@@ -66,7 +66,7 @@ namespace DuiIcuConversions
      *
      * \sa DuiIcuConversions::toEStyle(DuiLocale::DateType &dateType)
      */
-    icu::DateFormat::EStyle toEStyle(DuiLocale::TimeType &timeType);
+    icu::DateFormat::EStyle toEStyle(DuiLocale::TimeType timeType);
 
     /*!
      * \brief transforms DuiLocale::Collation enum to icu string presentations
