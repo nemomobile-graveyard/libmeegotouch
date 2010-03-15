@@ -80,11 +80,6 @@ void DuiApplicationWindowPrivate::init()
 
     q->setOptimizationFlag(QGraphicsView::DontSavePainterState);
 
-    q->resize(q->visibleSceneSize(Dui::Landscape));
-    q->setFrameStyle(0);
-    q->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    q->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-
     q->setSceneRect(QRectF(QPointF(), q->visibleSceneSize(Dui::Landscape)));
     q->centerOn(q->sceneRect().center());
 
