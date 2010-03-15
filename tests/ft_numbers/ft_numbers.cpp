@@ -33,7 +33,7 @@ void Ft_Numbers::cleanup()
 
 void Ft_Numbers::testQLongLongs_data()
 {
-    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("localeName");
     QTest::addColumn<qlonglong>("val");
     QTest::addColumn<QString>("formatted");
     QTest::newRow("0_fi_FI")
@@ -60,6 +60,14 @@ void Ft_Numbers::testQLongLongs_data()
             << QString("ar_EG")
             << (qlonglong) 1542678073
             << QString("١٬٥٤٢٬٦٧٨٬٠٧٣");
+    QTest::newRow("0_ur_PK")
+            << QString("ur_PK")
+            << (qlonglong) 1542678073
+            << QString("1,542,678,073");
+    QTest::newRow("0_ur_IN")
+            << QString("ur_IN")
+            << (qlonglong) 1542678073
+            << QString("1,54,26,78,073");
     QTest::newRow("0_zh_CN")
             << QString("zh_CN")
             << (qlonglong) 1542678073
@@ -68,93 +76,25 @@ void Ft_Numbers::testQLongLongs_data()
             << QString("ja_JP")
             << (qlonglong) 1542678073
             << QString("1,542,678,073");
-    QTest::newRow("1_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 1238242553
-            << QString("1 238 242 553");
-    QTest::newRow("1_en_GB")
-            << QString("en_GB")
-            << (qlonglong) 1238242553
-            << QString("1,238,242,553");
-    QTest::newRow("2_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 1806969279
-            << QString("1 806 969 279");
-    QTest::newRow("2_en_GB")
-            << QString("en_GB")
-            << (qlonglong) 1806969279
-            << QString("1,806,969,279");
-    QTest::newRow("3_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 942184991
-            << QString("942 184 991");
-    QTest::newRow("3_en_GB")
-            << QString("en_GB")
-            << (qlonglong) 942184991
-            << QString("942,184,991");
-    QTest::newRow("4_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 1917307773
-            << QString("1 917 307 773");
-    QTest::newRow("4_en_GB")
-            << QString("en_GB")
-            << (qlonglong) 1917307773
-            << QString("1,917,307,773");
-    QTest::newRow("5_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 1009760633
-            << QString("1 009 760 633");
-    QTest::newRow("5_en_GB")
-            << QString("en_GB")
-            << (qlonglong) 1009760633
-            << QString("1,009,760,633");
-    QTest::newRow("6_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 258244588
-            << QString("258 244 588");
-    QTest::newRow("6_en_GB")
-            << QString("en_GB")
-            << (qlonglong) 258244588
-            << QString("258,244,588");
-    QTest::newRow("7_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 1664066775
-            << QString("1 664 066 775");
-    QTest::newRow("7_en_GB")
-            << QString("en_GB")
-            << (qlonglong) 1664066775
-            << QString("1,664,066,775");
-    QTest::newRow("8_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 816301636
-            << QString("816 301 636");
-    QTest::newRow("8_en_GB")
-            << QString("en_GB")
-            << (qlonglong) 816301636
-            << QString("816,301,636");
-    QTest::newRow("9_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 1537479491
-            << QString("1 537 479 491");
-    QTest::newRow("9_en_GB")
-            << QString("en_GB")
-            << (qlonglong) 1537479491
-            << QString("1,537,479,491");
+    QTest::newRow("0_hi_IN")
+            << QString("hi_IN")
+            << (qlonglong) 1542678073
+            << QString("१,५४,२६,७८,०७३");
 }
 
 void Ft_Numbers::testQLongLongs()
 {
-    QFETCH(QString, locale_name);
+    QFETCH(QString, localeName);
     QFETCH(qlonglong, val);
     QFETCH(QString, formatted);
-    DuiLocale loc(locale_name);
-//    printf("%s\n", loc.formatNumber(val).toUtf8().constData());
+    DuiLocale loc(localeName);
+    printf("printf %s\n", loc.formatNumber(val).toUtf8().constData());
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
 void Ft_Numbers::testShorts_data()
 {
-    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("localeName");
     QTest::addColumn<short>("val");
     QTest::addColumn<QString>("formatted");
     QTest::newRow("0_fi")
@@ -241,15 +181,15 @@ void Ft_Numbers::testShorts_data()
 
 void Ft_Numbers::testShorts()
 {
-    QFETCH(QString, locale_name);
+    QFETCH(QString, localeName);
     QFETCH(short, val);
-    DuiLocale loc(locale_name);
+    DuiLocale loc(localeName);
     QTEST(loc.formatNumber(val), "formatted");
 }
 
 void Ft_Numbers::testInts_data()
 {
-    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("localeName");
     QTest::addColumn<int>("val");
     QTest::addColumn<QString>("formatted");
     QTest::newRow("0_fi")
@@ -336,16 +276,16 @@ void Ft_Numbers::testInts_data()
 
 void Ft_Numbers::testInts()
 {
-    QFETCH(QString, locale_name);
+    QFETCH(QString, localeName);
     QFETCH(int, val);
     QFETCH(QString, formatted);
-    DuiLocale loc(locale_name);
+    DuiLocale loc(localeName);
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
 void Ft_Numbers::testDoubles_data()
 {
-    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("localeName");
     QTest::addColumn<double>("val");
     QTest::addColumn<QString>("formatted");
     QTest::newRow("0_fi")
@@ -472,16 +412,16 @@ void Ft_Numbers::testDoubles_data()
 
 void Ft_Numbers::testDoubles()
 {
-    QFETCH(QString, locale_name);
+    QFETCH(QString, localeName);
     QFETCH(double, val);
     QFETCH(QString, formatted);
-    DuiLocale loc(locale_name);
+    DuiLocale loc(localeName);
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
 void Ft_Numbers::testFloats_data()
 {
-    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("localeName");
     QTest::addColumn<float>("val");
     QTest::addColumn<QString>("formatted");
     QTest::newRow("0_fi")
@@ -608,16 +548,16 @@ void Ft_Numbers::testFloats_data()
 
 void Ft_Numbers::testFloats()
 {
-    QFETCH(QString, locale_name);
+    QFETCH(QString, localeName);
     QFETCH(float, val);
     QFETCH(QString, formatted);
-    DuiLocale loc(locale_name);
+    DuiLocale loc(localeName);
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
 void Ft_Numbers::testDoublesWithFormatting_data()
 {
-    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("localeName");
     QTest::addColumn<double>("val");
     QTest::addColumn<int>("prec");
     QTest::addColumn<QString>("formatted");
@@ -684,16 +624,16 @@ void Ft_Numbers::testDoublesWithFormatting_data()
 
 void Ft_Numbers::testDoublesWithFormatting()
 {
-    QFETCH(QString, locale_name);
+    QFETCH(QString, localeName);
     QFETCH(double, val);
     QFETCH(int, prec);
-    DuiLocale loc(locale_name);
+    DuiLocale loc(localeName);
     QTEST(loc.formatNumber(val, prec), "formatted");
 }
 
 void Ft_Numbers::testPercents_data()
 {
-    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("localeName");
     QTest::addColumn<double>("val");
     QTest::addColumn<int>("decimals");
     QTest::addColumn<QString>("formatted");
@@ -752,16 +692,16 @@ void Ft_Numbers::testPercents_data()
 
 void Ft_Numbers::testPercents()
 {
-    QFETCH(QString, locale_name);
+    QFETCH(QString, localeName);
     QFETCH(int, decimals);
     QFETCH(double, val);
-    DuiLocale loc(locale_name);
+    DuiLocale loc(localeName);
     QTEST(loc.formatPercent(val, decimals), "formatted");
 }
 
 void Ft_Numbers::testCurrencies_data()
 {
-    QTest::addColumn<QString>("locale_name");
+    QTest::addColumn<QString>("localeName");
     QTest::addColumn<double>("val");
     QTest::addColumn<QString>("currency");
     QTest::addColumn<QString>("formatted");
@@ -832,10 +772,10 @@ void Ft_Numbers::testCurrencies_data()
 
 void Ft_Numbers::testCurrencies()
 {
-    QFETCH(QString, locale_name);
+    QFETCH(QString, localeName);
     QFETCH(double, val);
     QFETCH(QString, currency);
-    DuiLocale loc(locale_name);
+    DuiLocale loc(localeName);
     QTEST(loc.formatCurrency(val, currency), "formatted");
 }
 
