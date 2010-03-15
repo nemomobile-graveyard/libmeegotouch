@@ -8,8 +8,8 @@ INCLUDEPATH += . \
     $$DUISRCINCLUDE \
     $$DUISRC
 QMAKE_LIBDIR += $$DUILIB
-win32|macx { 
-    macx { 
+win32|macx {
+    macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework \
             dui
@@ -27,7 +27,7 @@ MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH
 CONFIG += qt
 QT += svg
-contains(DEFINES, HAVE_DBUS) { 
+contains(DEFINES, HAVE_DBUS) {
     CONFIG += qdbus
     QT += dbus
 }
@@ -67,6 +67,8 @@ SOURCES += main.cpp \
     staticpagebenchmark.cpp \
     videocontainerpage.cpp \
 
+macx:SOURCES -= videocontainerpage.cpp
+
 HEADERS += templatepage.h \
     listpage.h \
     labelpage.h \
@@ -101,7 +103,8 @@ HEADERS += templatepage.h \
     timedemobenchmark.h \
     staticpagebenchmark.h \
     videocontainerpage.h \
-    
+
+macx:HEADERS -= videocontainerpage.h
 
 # theme
 include(theme/theme.pri)
