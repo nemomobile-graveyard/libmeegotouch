@@ -42,6 +42,7 @@ public:
     void hideComponents();
     void showComponents();
 
+    void setupNavigationBarAnimations();
     void setupHomeButtonAnimations();
     void setupEscapeButtonAnimations();
     void setupNavigationButtonAnimations(DuiSceneWindow *button,

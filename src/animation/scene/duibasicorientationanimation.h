@@ -81,6 +81,8 @@ protected:
 
     QGraphicsWidget *rootElement();
 
+    void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
+
 private:
     Q_PRIVATE_SLOT(d_func(), void _q_onPhase0Finished())
     Q_PRIVATE_SLOT(d_func(), void _q_onPhase1Finished())

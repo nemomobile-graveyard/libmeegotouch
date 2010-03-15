@@ -91,6 +91,17 @@ void DuiBasicOrientationAnimationPrivate::showComponents()
     }
 }
 
+void DuiBasicOrientationAnimationPrivate::setupNavigationBarAnimations()
+{
+    navigationBarSlideOutAnimation->setStartValue(navigationBar->y());
+    navigationBarSlideOutAnimation->setEndValue(-navigationBar->boundingRect().height());
+    navigationBarSlideOutAnimation->setTargetObject(navigationBar);
+
+    navigationBarSlideInAnimation->setTargetObject(navigationBar);
+    navigationBarSlideInAnimation->setStartValue(navigationBarSlideOutAnimation->endValue());
+    navigationBarSlideInAnimation->setEndValue(navigationBarSlideOutAnimation->startValue());
+}
+
 void DuiBasicOrientationAnimationPrivate::setupHomeButtonAnimations()
 {
     setupNavigationButtonAnimations(homeButtonPanel,
@@ -322,22 +333,6 @@ void DuiBasicOrientationAnimation::addSceneWindow(DuiSceneWindow *window)
     if (window->windowType() == DuiSceneWindow::NavigationBar) {
         d->navigationBar = window;
 
-        d->navigationBarSlideOutAnimation->setStartValue(window->y());
-        d->navigationBarSlideOutAnimation->setEndValue(-window->boundingRect().height());
-        d->navigationBarSlideOutAnimation->setTargetObject(window);
-
-        d->navigationBarSlideInAnimation->setTargetObject(window);
-        d->navigationBarSlideInAnimation->setStartValue(d->navigationBarSlideOutAnimation->endValue());
-        d->navigationBarSlideInAnimation->setEndValue(d->navigationBarSlideOutAnimation->startValue());
-
-        if (d->homeButtonPanel) {
-            d->setupHomeButtonAnimations();
-        }
-
-        if (d->escapeButtonPanel) {
-            d->setupEscapeButtonAnimations();
-        }
-
     } else if (window->windowType() == DuiSceneWindow::ApplicationPage) {
 
         d->addApplicationPageAnimations(window);
@@ -345,12 +340,10 @@ void DuiBasicOrientationAnimation::addSceneWindow(DuiSceneWindow *window)
     } else if (window->windowType() == DuiSceneWindow::HomeButtonPanel) {
 
         d->homeButtonPanel = window;
-        d->setupHomeButtonAnimations();
 
     } else if (window->windowType() == DuiSceneWindow::EscapeButtonPanel) {
 
         d->escapeButtonPanel = window;
-        d->setupEscapeButtonAnimations();
 
     } else if (window->windowType() == DuiSceneWindow::DockWidget) {
 
@@ -386,14 +379,6 @@ void DuiBasicOrientationAnimation::removeSceneWindow(DuiSceneWindow *window)
         d->navigationBar = 0;
         d->navigationBarSlideInAnimation->setTargetObject(0);
         d->navigationBarSlideOutAnimation->setTargetObject(0);
-
-        if (d->homeButtonPanel) {
-            d->setupHomeButtonAnimations();
-        }
-
-        if (d->escapeButtonPanel) {
-            d->setupEscapeButtonAnimations();
-        }
 
     } else if (window->windowType() == DuiSceneWindow::HomeButtonPanel) {
 
@@ -495,6 +480,25 @@ QGraphicsWidget *DuiBasicOrientationAnimation::rootElement()
 {
     Q_D(DuiBasicOrientationAnimation);
     return d->rootElement;
+}
+
+void DuiBasicOrientationAnimation::updateState(QAbstractAnimation::State newState,
+        QAbstractAnimation::State oldState)
+{
+    Q_D(DuiBasicOrientationAnimation);
+
+    if (newState == QAbstractAnimation::Running) {
+        if (d->navigationBar)
+            d->setupNavigationBarAnimations();
+
+        if (d->homeButtonPanel)
+            d->setupHomeButtonAnimations();
+
+        if (d->escapeButtonPanel)
+            d->setupEscapeButtonAnimations();
+    }
+
+    DuiParallelAnimationGroup::updateState(newState, oldState);
 }
 
 #include "moc_duibasicorientationanimation.cpp"
