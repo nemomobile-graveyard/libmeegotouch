@@ -51,7 +51,7 @@ class DUI_EXPORT DuiFeedbackPlayer : public QObject
      * \brief Constructor
      * \param parent Parent object
      */
-    DuiFeedbackPlayer(QObject *parent = 0);
+    explicit DuiFeedbackPlayer(QObject *parent = 0);
 
     /*!
      * \brief Destructor

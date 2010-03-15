@@ -52,7 +52,7 @@ public:
      *
      * \param parent Parent object
      */
-    DuiFeedback(QObject *parent = 0);
+    explicit DuiFeedback(QObject *parent = 0);
 
     /*!
      * \brief Copy constructor
@@ -68,7 +68,7 @@ public:
      * \param name Name of the feedback
      * \param parent Parent object
      */
-    DuiFeedback(const QString &name, QObject *parent = 0);
+    explicit DuiFeedback(const QString &name, QObject *parent = 0);
 
     /*!
      * \brief Assigment operator
