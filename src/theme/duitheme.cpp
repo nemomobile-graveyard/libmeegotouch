@@ -695,8 +695,8 @@ void DuiThemePrivate::pixmapCreatedSlot(const QString &imageId, const QSize &siz
     if (pixmapHandle == 0) {
         duiWarning("DuiThemePrivate") << "pixmapCreatedSlot - pixmap creation failed (null handle):" << identifier;
         *pixmap = *invalidPixmap;
-        if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->scene()) {
-            DuiApplication::activeWindow()->scene()->update();
+        if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->viewport()) {
+            DuiApplication::activeWindow()->viewport()->update();
         }
         return;
     }
@@ -709,8 +709,8 @@ void DuiThemePrivate::pixmapCreatedSlot(const QString &imageId, const QSize &siz
     *pixmap = *pixmapPointer;
 #endif
 
-    if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->scene()) {
-        DuiApplication::activeWindow()->scene()->update();
+    if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->viewport()) {
+        DuiApplication::activeWindow()->viewport()->update();
     }
 }
 
@@ -729,6 +729,9 @@ void DuiThemePrivate::pixmapChangedSlot(const QString &imageId, const QSize &siz
     if (pixmapHandle == 0) {
         // the daemon couldn't reload the pixmap, so it sent a 0 as handle
         qDebug() << "daemon failed to reload pixmap" << imageId << size;
+        if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->viewport()) {
+            DuiApplication::activeWindow()->viewport()->update();
+        }
         *pixmap = *invalidPixmap;
         return;
     }
@@ -741,8 +744,8 @@ void DuiThemePrivate::pixmapChangedSlot(const QString &imageId, const QSize &siz
     *pixmap = *pixmapPointer;
 #endif
 
-    if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->scene()) {
-        DuiApplication::activeWindow()->scene()->update();
+    if (!DuiTheme::hasPendingRequests() && DuiApplication::activeWindow() && DuiApplication::activeWindow()->viewport()) {
+        DuiApplication::activeWindow()->viewport()->update();
     }
 }
 
