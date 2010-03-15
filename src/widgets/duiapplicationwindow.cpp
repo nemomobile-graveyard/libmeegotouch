@@ -176,7 +176,7 @@ void DuiApplicationWindowPrivate::_q_actionUpdated(QActionEvent *event)
         setComponentDisplayMode(dockWidget,
                                 page->model()->navigationBarDisplayMode());
 
-        _q_updatePageAutoMarginsForComponents(q->orientation());
+        updatePageAutoMarginsForComponents(q->orientation());
     }
 }
 
@@ -202,13 +202,13 @@ void DuiApplicationWindowPrivate::_q_handlePageModelModifications(const QList<co
             setComponentDisplayMode(dockWidget,
                                     page->model()->navigationBarDisplayMode());
 
-            _q_updatePageAutoMarginsForComponents(q->orientation());
+            updatePageAutoMarginsForComponents(q->orientation());
 
         } else if (member == DuiApplicationPageModel::ProgressIndicatorVisible) {
             navigationBar->setProgressIndicatorVisible(page->model()->progressIndicatorVisible());
 
         } else if (member == DuiApplicationPageModel::AutoMarginsForComponentsEnabled) {
-            _q_updatePageAutoMarginsForComponents(q->orientation());
+            updatePageAutoMarginsForComponents(q->orientation());
         }
     }
 }
@@ -237,11 +237,11 @@ void DuiApplicationWindowPrivate::_q_placeToolBar(const Dui::Orientation &orient
     }
 }
 
-void DuiApplicationWindowPrivate::_q_updatePageAutoMarginsForComponents(const Dui::Orientation &orientation)
+void DuiApplicationWindowPrivate::updatePageAutoMarginsForComponents(const Dui::Orientation &orientation)
 {
     if (page) {
         page->d_func()->updateAutoMarginsForComponents(orientation,
-                navigationBarHeight(),
+                navigationBar->size().height(),
                 dockWidget->size().height(), dockWidget->isVisible());
     }
 }
@@ -460,7 +460,7 @@ void DuiApplicationWindowPrivate::sceneWindowAppearEvent(DuiSceneWindowEvent *ev
     }
 
     connectPage(pageFromEvent);
-    _q_updatePageAutoMarginsForComponents(q->orientation());
+    updatePageAutoMarginsForComponents(q->orientation());
     pageFromEvent->d_func()->prepareForAppearance();
 }
 
@@ -780,11 +780,6 @@ QAction* DuiApplicationWindowPrivate::findPageCheckedAction() const
         }
     }
     return checkedAction;
-}
-
-int DuiApplicationWindowPrivate::navigationBarHeight() const
-{
-    return navigationBar->minimumHeight();
 }
 
 QString DuiApplicationWindow::windowIconID() const

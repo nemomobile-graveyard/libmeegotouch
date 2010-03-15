@@ -79,8 +79,6 @@ public:
      */
     void disconnectPage(DuiApplicationPage *page);
 
-    int navigationBarHeight() const;
-
     /*!
         \brief Makes the dock widget either visible (when invisible) if a
         toolbar has been docked with some actions OR invisible (when visible)
@@ -91,6 +89,8 @@ public:
     void sceneWindowAppearEvent(DuiSceneWindowEvent *ev);
     void sceneWindowDisappearEvent(DuiSceneWindowEvent *ev);
     void sceneWindowDismissEvent(DuiSceneWindowEvent *ev);
+
+    void updatePageAutoMarginsForComponents(const Dui::Orientation &orientation);
 
 private:
     void init();
@@ -103,7 +103,6 @@ public:
     void _q_actionUpdated(QActionEvent *e);
     void _q_placeToolBar(const Dui::Orientation &);
     void _q_handlePageModelModifications(const QList<const char *>&);
-    void _q_updatePageAutoMarginsForComponents(const Dui::Orientation &orientation);
     void _q_menuAppeared();
     void _q_menuDisappeared();
 #ifdef HAVE_N900

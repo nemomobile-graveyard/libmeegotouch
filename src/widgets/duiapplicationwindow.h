@@ -163,7 +163,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_actionUpdated(QActionEvent *))
     Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar(const Dui::Orientation &))
     Q_PRIVATE_SLOT(d_func(), void _q_handlePageModelModifications(const QList<const char *>&))
-    Q_PRIVATE_SLOT(d_func(), void _q_updatePageAutoMarginsForComponents(const Dui::Orientation &))
     Q_PRIVATE_SLOT(d_func(), void _q_menuAppeared())
     Q_PRIVATE_SLOT(d_func(), void _q_menuDisappeared())
 #ifdef HAVE_N900

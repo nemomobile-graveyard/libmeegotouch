@@ -46,15 +46,15 @@ public:
 
     void deleteCurrentCentralWidget();
     void placeCentralWidget(DuiWidget *widget);
-    void setSpacerHeight(DuiWidget *spacer, int height);
+    void setSpacerHeight(DuiWidget *spacer, qreal height);
     void updatePannableViewportPosition();
 
     void propagateOnDisplayChangeEvent(bool visible);
 
     // Note: Called by DuiApplicationWindow
     void updateAutoMarginsForComponents(const Dui::Orientation &orientation,
-                                        int navigationBarHeight,
-                                        int dockWidgetHeight,
+                                        qreal navigationBarHeight,
+                                        qreal dockWidgetHeight,
                                         bool dockWidgetVisible);
 
     // FIXME: After API freeze move that code to enterDisplayEvent().

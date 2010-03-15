@@ -97,7 +97,7 @@ DuiWidget *DuiApplicationPagePrivate::createSpacer(QGraphicsItem *parent)
     return spacer;
 }
 
-void DuiApplicationPagePrivate::setSpacerHeight(DuiWidget *spacer, int height)
+void DuiApplicationPagePrivate::setSpacerHeight(DuiWidget *spacer, qreal height)
 {
     spacer->setMinimumHeight(height);
     spacer->setMaximumHeight(height);
@@ -364,13 +364,13 @@ void DuiApplicationPagePrivate::prepareForAppearance()
 }
 
 void DuiApplicationPagePrivate::updateAutoMarginsForComponents(const Dui::Orientation &orientation,
-        int navigationBarHeight,
-        int dockWidgetHeight,
+        qreal navigationBarHeight,
+        qreal dockWidgetHeight,
         bool dockWidgetVisible)
 {
     Q_Q(DuiApplicationPage);
-    int topHeight = 0;
-    int bottomHeight = 0;
+    qreal topHeight = 0;
+    qreal bottomHeight = 0;
     if (q->autoMarginsForComponentsEnabled()) {
 
         if (q->componentDisplayMode(DuiApplicationPage::NavigationBar) == DuiApplicationPageModel::Show) {
