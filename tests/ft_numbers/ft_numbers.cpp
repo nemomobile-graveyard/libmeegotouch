@@ -34,49 +34,77 @@ void Ft_Numbers::cleanup()
 void Ft_Numbers::testQLongLongs_data()
 {
     QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("localeNameLcNumeric");
     QTest::addColumn<qlonglong>("val");
     QTest::addColumn<QString>("formatted");
-    QTest::newRow("0_fi_FI")
-            << QString("fi_FI")
-            << (qlonglong) 1542678073
-            << QString("1 542 678 073");
-    QTest::newRow("0_en_GB")
-            << QString("en_GB")
+
+    QTest::newRow("en_US")
+            << QString("en_US")
+            << QString("en_US")
             << (qlonglong) 1542678073
             << QString("1,542,678,073");
-    QTest::newRow("0_de_DE")
+    QTest::newRow("en_US")
+            << QString("en_US")
             << QString("de_DE")
             << (qlonglong) 1542678073
             << QString("1.542.678.073");
-    QTest::newRow("0_de_CH")
+    QTest::newRow("fi_FI")
+            << QString("fi_FI")
+            << QString("fi_FI")
+            << (qlonglong) 1542678073
+            << QString("1 542 678 073");
+    QTest::newRow("en_GB")
+            << QString("en_GB")
+            << QString("en_GB")
+            << (qlonglong) 1542678073
+            << QString("1,542,678,073");
+    QTest::newRow("de_DE")
+            << QString("de_DE")
+            << QString("de_DE")
+            << (qlonglong) 1542678073
+            << QString("1.542.678.073");
+    QTest::newRow("de_CH")
+            << QString("de_CH")
             << QString("de_CH")
             << (qlonglong) 1542678073
             << QString("1'542'678'073");
-    QTest::newRow("0_fr_FR")
+    QTest::newRow("fr_FR")
+            << QString("fr_FR")
             << QString("fr_FR")
             << (qlonglong) 1542678073
             << QString("1 542 678 073");
-    QTest::newRow("0_ar_EG")
+    QTest::newRow("ar_EG")
+            << QString("ar_EG")
             << QString("ar_EG")
             << (qlonglong) 1542678073
             << QString("١٬٥٤٢٬٦٧٨٬٠٧٣");
-    QTest::newRow("0_ur_PK")
+    QTest::newRow("ar_EG")
+            << QString("ar_EG")
+            << QString("en_US")
+            << (qlonglong) 1542678073
+            << QString("1,542,678,073");
+    QTest::newRow("ur_PK")
+            << QString("ur_PK")
             << QString("ur_PK")
             << (qlonglong) 1542678073
             << QString("1,542,678,073");
-    QTest::newRow("0_ur_IN")
+    QTest::newRow("ur_IN")
+            << QString("ur_IN")
             << QString("ur_IN")
             << (qlonglong) 1542678073
             << QString("1,54,26,78,073");
-    QTest::newRow("0_zh_CN")
+    QTest::newRow("zh_CN")
+            << QString("zh_CN")
             << QString("zh_CN")
             << (qlonglong) 1542678073
             << QString("1,542,678,073");
-    QTest::newRow("0_ja_JP")
+    QTest::newRow("ja_JP")
+            << QString("ja_JP")
             << QString("ja_JP")
             << (qlonglong) 1542678073
             << QString("1,542,678,073");
-    QTest::newRow("0_hi_IN")
+    QTest::newRow("hi_IN")
+            << QString("hi_IN")
             << QString("hi_IN")
             << (qlonglong) 1542678073
             << QString("१,५४,२६,७८,०७३");
@@ -85,9 +113,12 @@ void Ft_Numbers::testQLongLongs_data()
 void Ft_Numbers::testQLongLongs()
 {
     QFETCH(QString, localeName);
+    QFETCH(QString, localeNameLcNumeric);
     QFETCH(qlonglong, val);
     QFETCH(QString, formatted);
     DuiLocale loc(localeName);
+    loc.setCategoryLocale(DuiLocale::DuiLcNumeric, localeNameLcNumeric);
+    qDebug() << "localeName:" << localeName << "localeNameLcNumeric" << localeNameLcNumeric;
     printf("printf %s\n", loc.formatNumber(val).toUtf8().constData());
     QCOMPARE(loc.formatNumber(val), formatted);
 }
