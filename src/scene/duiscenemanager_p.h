@@ -147,6 +147,8 @@ public:
 
     void _q_unFreezeUI();
 
+    void _q_applyQueuedSceneWindowTransitions();
+
 public:
 
     DuiScene *scene;
@@ -175,6 +177,23 @@ public:
     bool pendingSIPClose;
 
     QPointer<DuiSceneWindow> statusBar;
+
+    class SceneWindowTransition {
+        public:
+        DuiSceneWindow *sceneWindow;
+
+        enum TransitionType {
+            AppearTransition,
+            DisappearTransition,
+            DismissTransition
+        } type;
+
+        // Makes sense only for AppearTransition types.
+        DuiSceneWindow::DeletionPolicy policy;
+
+        bool animated;
+    };
+    QList<SceneWindowTransition> queuedTransitions;
 
     DuiSceneManager *q_ptr;
 };

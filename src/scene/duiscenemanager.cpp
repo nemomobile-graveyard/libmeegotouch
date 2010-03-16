@@ -113,6 +113,7 @@ void DuiSceneManagerPrivate::init(DuiScene *scene)
     orientationAnimation->setRootElement(rootElement);
     q->connect(orientationAnimation, SIGNAL(orientationChanged()), SLOT(_q_changeGlobalOrientation()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_emitOrientationChangeFinished()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_applyQueuedSceneWindowTransitions()));
 
     pageSwitchAnimation = new DuiPageSwitchAnimation;
 
@@ -239,6 +240,30 @@ void DuiSceneManagerPrivate::_q_unFreezeUI()
         return;
 
     QObject::disconnect(animation, SIGNAL(finished()), q, SLOT(_q_unFreezeUI()));
+}
+
+void DuiSceneManagerPrivate::_q_applyQueuedSceneWindowTransitions()
+{
+    SceneWindowTransition transition;
+
+    while (queuedTransitions.count() > 0) {
+        transition = queuedTransitions.takeFirst();
+
+        switch (transition.type) {
+            case SceneWindowTransition::AppearTransition:
+                appearWindow(transition.sceneWindow, transition.policy, transition.animated);
+                break;
+            case SceneWindowTransition::DisappearTransition:
+                disappearWindow(transition.sceneWindow, transition.animated);
+                break;
+            case SceneWindowTransition::DismissTransition:
+                dismissWindow(transition.sceneWindow, transition.animated);
+                break;
+            default:
+                // Should never occur.
+                qFatal("DuiSceneManager: Invalid SceneWindowTransition::TransitionType value.");
+        }
+    }
 }
 
 void DuiSceneManagerPrivate::_q_windowShowAnimationFinished()
@@ -853,6 +878,23 @@ void DuiSceneManagerPrivate::appearWindow(DuiSceneWindow *window,
         DuiSceneWindow::DeletionPolicy policy,
         bool animatedTransition)
 {
+    // Popping up scene windows during an orientation change is
+    // a grey area. We probably want to avoid them during that period.
+    // TODO: For now we are only queueing the status bar. We should
+    // think about out a policy to apply to all scene windows.
+    if (orientationAnimation->state() == QAbstractAnimation::Running
+            && window->windowType() == DuiSceneWindow::StatusBar) {
+
+        SceneWindowTransition transition;
+        transition.sceneWindow = window;
+        transition.type = SceneWindowTransition::AppearTransition;
+        transition.policy = policy;
+        transition.animated = animatedTransition;
+        queuedTransitions.append(transition);
+
+        return;
+    }
+
     if (!validateSceneWindowPreAppearanceStatus(window)) {
         return;
     }
@@ -925,6 +967,22 @@ void DuiSceneManagerPrivate::disappearWindow(DuiSceneWindow *window,
 {
     Q_Q(DuiSceneManager);
 
+    // Disappearing scene windows during an orientation change is
+    // a grey area. We probably want to avoid them during that period.
+    // TODO: For now we are only queueing the status bar. We should
+    // think about out a policy to apply to all scene windows.
+    if (orientationAnimation->state() == QAbstractAnimation::Running
+            && window->windowType() == DuiSceneWindow::StatusBar) {
+
+        SceneWindowTransition transition;
+        transition.sceneWindow = window;
+        transition.type = SceneWindowTransition::DisappearTransition;
+        transition.animated = animatedTransition;
+        queuedTransitions.append(transition);
+
+        return;
+    }
+
     produceSceneWindowEvent(DuiSceneWindowEvent::eventTypeDisappear(), window,
                             animatedTransition);
     prepareWindowHide(window);
@@ -957,6 +1015,22 @@ void DuiSceneManagerPrivate::dismissWindow(DuiSceneWindow *window,
         bool animatedTransition)
 {
     Q_Q(DuiSceneManager);
+
+    // Dismissing scene windows during an orientation change is
+    // a grey area. We probably want to avoid them during that period.
+    // TODO: For now we are only queueing the status bar. We should
+    // think about out a policy to apply to all scene windows.
+    if (orientationAnimation->state() == QAbstractAnimation::Running
+            && window->windowType() == DuiSceneWindow::StatusBar) {
+
+        SceneWindowTransition transition;
+        transition.sceneWindow = window;
+        transition.type = SceneWindowTransition::DismissTransition;
+        transition.animated = animatedTransition;
+        queuedTransitions.append(transition);
+
+        return;
+    }
 
     produceSceneWindowEvent(DuiSceneWindowEvent::eventTypeDismiss(), window,
                             animatedTransition);
