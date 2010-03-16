@@ -344,12 +344,14 @@ DuiWidget *DuiApplicationMenuViewPrivate::getWidget(QAction *action)
 bool DuiApplicationMenuViewPrivate::canAddMoreActions(QAction *action)
 {
     bool canAdd = true;
+    int commandActionsCount, styleActionsCount;
+    visibleActionsCount(commandActionsCount, styleActionsCount);
     if (!isStyleAction(action)) {
-        int commandActionsCount, styleActionsCount;
-        visibleActionsCount(commandActionsCount, styleActionsCount);
         canAdd = (commandActionsCount < maxCommandActions);
         if (styleActionsCount > 0)
             canAdd = (commandActionsCount < maxCommandActionsWithStyle);
+    } else {
+        canAdd = (commandActionsCount <= maxCommandActionsWithStyle);
     }
     return canAdd;
 }
