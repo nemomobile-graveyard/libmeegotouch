@@ -36,9 +36,11 @@ DuiKeyboardStateTrackerPrivate::DuiKeyboardStateTrackerPrivate(DuiKeyboardStateT
     present(false)
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
+#if 0
     Q_Q(DuiKeyboardStateTracker);
     QObject::connect(&keyboardOpenProperty, SIGNAL(valueChanged()),
                      q, SIGNAL(stateChanged()));
+#endif
 #elif defined(HAVE_N900)
     Q_Q(DuiKeyboardStateTracker);
     QObject::connect(&keyboardOpenConf, SIGNAL(valueChanged()),
@@ -51,8 +53,10 @@ DuiKeyboardStateTrackerPrivate::DuiKeyboardStateTrackerPrivate(DuiKeyboardStateT
 void DuiKeyboardStateTrackerPrivate::initContextSubscriber()
 {
 #ifdef HAVE_CONTEXTSUBSCRIBER
+#if 0
     //waiting for properties to synchronize
     keyboardOpenProperty.waitForSubscription();
+#endif
     // TODO: use actual ContextProperty for present, which is still unready.
     present = true;
 #elif defined(HAVE_N900)
@@ -90,10 +94,12 @@ bool DuiKeyboardStateTracker::isOpen() const
 {
     bool val = false;
 #ifdef HAVE_CONTEXTSUBSCRIBER
+#if 0
     Q_D(const DuiKeyboardStateTracker);
     if (isPresent()) {
         val = d->keyboardOpenProperty.value().toBool();
     }
+#endif
 #elif defined(HAVE_N900)
     Q_D(const DuiKeyboardStateTracker);
     val = d->keyboardOpenConf.value().toBool();
