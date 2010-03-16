@@ -147,23 +147,23 @@ public:
     /*!
      * Returns the current orientation of the window's scene.
      */
-    virtual Dui::Orientation orientation() const;
+    Dui::Orientation orientation() const;
 
     /*!
      * Returns the current orientation angle of the window's scene.
      */
-    virtual Dui::OrientationAngle orientationAngle() const;
+    Dui::OrientationAngle orientationAngle() const;
 
     /*!
      * Returns the visible size of the window (being also the size of its scene)
      * for the given \a orientation.
      */
-    virtual QSize visibleSceneSize(Dui::Orientation) const;
+    QSize visibleSceneSize(Dui::Orientation) const;
 
     /*!
      * Returns the visible size of the window (being also the size of its scene).
      */
-    virtual QSize visibleSceneSize() const;
+    QSize visibleSceneSize() const;
 
     /*!
      * \deprecated Since 0.18.7. Use isOrientationLocked() instead.
@@ -263,12 +263,9 @@ public Q_SLOTS:
      * shown yet, the orientation angle change is immediate (i.e. without rotation animation).
      * Otherwise a rotation animation is performed.
      *
-     * When reimplementing, you should emit orientationChanged() and orientationAngleChanged()
-     * signals when appropriate.
-     *
      * \param angle New orientation angle for the window
      */
-    virtual void setOrientationAngle(Dui::OrientationAngle angle);
+    void setOrientationAngle(Dui::OrientationAngle angle);
 
     /*!
      * Locks window's orientation angle changes. Equal to calling setOrientationAngleLocked(true).
