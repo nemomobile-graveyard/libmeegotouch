@@ -40,11 +40,18 @@
 #include "duiscenemanager.h"
 #include "duiapplication_p.h"
 #include "duiscene.h"
+#include "duistatusbar.h"
 
 #include <QList>
 #include <QEvent>
 #include <QRectF>
 #include <QActionEvent>
+
+#ifdef Q_WS_X11
+# include <QX11Info>
+# include <X11/Xatom.h>
+# include <X11/Xlib.h>
+#endif
 
 DuiApplicationWindowPrivate::DuiApplicationWindowPrivate()
     : DuiWindowPrivate()
@@ -55,6 +62,8 @@ DuiApplicationWindowPrivate::DuiApplicationWindowPrivate()
     , homeButtonPanel(new DuiHomeButtonPanel)
     , escapeButtonPanel(new DuiEscapeButtonPanel)
     , menu(new DuiApplicationMenu)
+    , statusBar(new DuiStatusBar)
+    , showingStatusBar(false)
 {
 }
 
@@ -72,6 +81,11 @@ DuiApplicationWindowPrivate::~DuiApplicationWindowPrivate()
     homeButtonPanel = 0;
     delete escapeButtonPanel;
     escapeButtonPanel = 0;
+
+    if (statusBar) {
+        delete statusBar;
+        statusBar = 0;
+    }
 }
 
 void DuiApplicationWindowPrivate::init()
@@ -85,6 +99,10 @@ void DuiApplicationWindowPrivate::init()
 
     q->connect(q, SIGNAL(orientationChanged(Dui::Orientation)),
                q, SLOT(_q_placeToolBar(Dui::Orientation)));
+
+#ifdef Q_WS_X11
+    addDuiStatusBarOverlayProperty();
+#endif
 
 #ifdef HAVE_N900
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(_q_exitAppView()));
@@ -103,6 +121,11 @@ void DuiApplicationWindowPrivate::init()
     q->connect(menu, SIGNAL(disappeared()),
                q, SLOT(_q_menuDisappeared()));
 
+    if (!DuiApplication::fullScreen()) {
+        statusBar->appearNow(q);
+        showingStatusBar = true;
+    }
+
     navigationBar->appearNow(q);
     homeButtonPanel->appearNow(q);
     escapeButtonPanel->appearNow(q);
@@ -119,6 +142,21 @@ void DuiApplicationWindowPrivate::init()
     initAutoHideComponentsTimer();
 }
 
+#ifdef Q_WS_X11
+void DuiWindowPrivate::addDuiStatusBarOverlayProperty()
+{
+    Q_Q(DuiWindow);
+
+    Atom atomDuiStatusBarOverlay = XInternAtom(QX11Info::display(), "_DUI_STATUSBAR_OVERLAY", False);
+    long propertyData = 1;
+
+    XChangeProperty(QX11Info::display(), q->winId(),
+            atomDuiStatusBarOverlay, XA_CARDINAL /* type */,
+            32 /* format, in bits */, PropModeReplace,
+            (unsigned char *) &propertyData, 1 /* number of elements */);
+}
+#endif
+
 void  DuiApplicationWindowPrivate::initAutoHideComponentsTimer()
 {
     // TODO: Get the interval from CSS or some system wide
@@ -126,6 +164,19 @@ void  DuiApplicationWindowPrivate::initAutoHideComponentsTimer()
     autoHideComponentsTimer.setInterval(2000);
 
     autoHideComponentsTimer.setSingleShot(true);
+}
+
+void DuiApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
+{
+    Q_Q(DuiApplicationWindow);
+    Q_ASSERT(statusBar != 0);
+
+    if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
+        q->sceneManager()->hideWindowNow(statusBar);
+
+    } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
+        q->sceneManager()->showWindowNow(statusBar);
+    }
 }
 
 void DuiApplicationWindowPrivate::_q_connectEscapeButton(DuiEscapeButtonPanelModel::EscapeMode mode)
@@ -245,7 +296,7 @@ void DuiApplicationWindowPrivate::updatePageAutoMarginsForComponents(const Dui::
 
     qreal statusBarHeight;
 
-    if (statusBar) {
+    if (showingStatusBar) {
         statusBarHeight = statusBar->effectiveSizeHint(Qt::PreferredSize).height();
     } else {
         statusBarHeight = 0;
@@ -451,23 +502,27 @@ void DuiApplicationWindowPrivate::updateDockWidgetVisibility()
 
 void DuiApplicationWindowPrivate::sceneWindowAppearEvent(DuiSceneWindowEvent *event)
 {
+    Q_Q(DuiApplicationWindow);
     DuiSceneWindow *sceneWindow = event->sceneWindow();
 
     if (sceneWindow->windowType() == DuiSceneWindow::ApplicationPage) {
         applicationPageAppearEvent(event);
     } else if (sceneWindow->windowType() == DuiSceneWindow::StatusBar) {
-        statusBarAppearEvent(event);
+        showingStatusBar = true;
+        updatePageAutoMarginsForComponents(q->orientation());
     }
 }
 
 void DuiApplicationWindowPrivate::sceneWindowDisappearEvent(DuiSceneWindowEvent *event)
 {
+    Q_Q(DuiApplicationWindow);
     DuiSceneWindow *sceneWindow = event->sceneWindow();
 
     if (sceneWindow->windowType() == DuiSceneWindow::ApplicationPage) {
         applicationPageDisappearEvent(event);
     } else if (sceneWindow->windowType() == DuiSceneWindow::StatusBar) {
-        statusBarDisappearEvent(event);
+        showingStatusBar = false;
+        updatePageAutoMarginsForComponents(q->orientation());
     }
 }
 
@@ -503,27 +558,6 @@ void DuiApplicationWindowPrivate::applicationPageDisappearEvent(DuiSceneWindowEv
     // Page is going away. Let's disconnect it if it's the current page.
     if (pageFromEvent == page)
         disconnectPage(pageFromEvent);
-}
-
-void DuiApplicationWindowPrivate::statusBarAppearEvent(DuiSceneWindowEvent *event)
-{
-    Q_Q(DuiApplicationWindow);
-    Q_ASSERT(statusBar == 0);
-
-    statusBar = event->sceneWindow();
-
-    updatePageAutoMarginsForComponents(q->orientation());
-}
-
-void DuiApplicationWindowPrivate::statusBarDisappearEvent(DuiSceneWindowEvent *event)
-{
-    Q_Q(DuiApplicationWindow);
-    Q_ASSERT(statusBar == event->sceneWindow());
-    Q_UNUSED(event);
-
-    statusBar = 0;
-
-    updatePageAutoMarginsForComponents(q->orientation());
 }
 
 // TODO: Remove that now useless method override after API freeze period
@@ -618,11 +652,17 @@ bool DuiApplicationWindow::event(QEvent *event)
             d->_q_actionUpdated(actionEvent);
             return true;
         }
-        default: {
-            return DuiWindow::event(event);
+
+        case QEvent::WindowStateChange:
+            d->windowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
             break;
-        }
+
+        default:
+            // Do nothing
+            break;
     }
+
+    return DuiWindow::event(event);
 }
 
 // We have to send this root message because the window itself is managing

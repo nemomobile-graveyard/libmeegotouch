@@ -21,7 +21,6 @@
 #define DUIWINDOW_P_H
 
 #include <QTimeLine>
-#include <QPointer>
 #include "duiwindow.h"
 
 #include <duiscenemanager.h>
@@ -59,8 +58,6 @@ public:
     bool orientationAngleLocked;
     bool orientationLocked;
 
-    void windowStateChangeEvent(QWindowStateChangeEvent *event);
-
     void doEnterDisplayEvent();
     void doExitDisplayEvent();
 
@@ -68,10 +65,6 @@ public:
 
     bool onDisplay;
     bool onDisplaySet;
-
-    QPointer<DuiStatusBar> statusBar;
-
-    void _q_makeStatusBarAppear();
 
 protected:
     DuiWindow *q_ptr;

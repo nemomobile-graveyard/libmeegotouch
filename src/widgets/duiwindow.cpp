@@ -24,7 +24,6 @@
 #endif
 
 #include <QTimeLine>
-#include <QTimer>
 #include <QSettings>
 
 #include "duiapplication.h"
@@ -38,7 +37,6 @@
 #include "duicomponentdata.h"
 #include "duiorientationchangeevent.h"
 #include <duiondisplaychangeevent.h>
-#include <duistatusbar.h>
 #include <DuiDebug>
 #include <DuiGConfItem>
 #include <DuiScene>
@@ -48,7 +46,6 @@
 
 #ifdef Q_WS_X11
 # include <QX11Info>
-# include <X11/Xatom.h>
 # include <X11/Xlib.h>
 // Avoid conflict with QEvent::KeyPress usage in DuiWindow::Event
 # undef KeyPress
@@ -63,8 +60,7 @@ DuiWindowPrivate::DuiWindowPrivate() :
     orientationAngleLocked(false),
     orientationLocked(false),
     onDisplay(false),
-    onDisplaySet(false),
-    statusBar(0)
+    onDisplaySet(false)
 {
     DuiWindow *window = DuiApplication::activeWindow();
 
@@ -76,7 +72,6 @@ DuiWindowPrivate::DuiWindowPrivate() :
 
 DuiWindowPrivate::~DuiWindowPrivate()
 {
-    delete statusBar;
 }
 
 void DuiWindowPrivate::init()
@@ -127,17 +122,9 @@ void DuiWindowPrivate::init()
 
 #ifdef Q_WS_X11
     appendVisibilityChangeMask();
-    addDuiStatusBarOverlayProperty();
 #endif
 
     q->setTranslucentBackground(false);
-
-    statusBar = new DuiStatusBar;
-    if (!DuiApplication::fullScreen()) {
-        // Let DuiWindow and his descendants (like DuiApplicationWindow)
-        // finish their initializations before making the status bar appear.
-        QTimer::singleShot(0, q, SLOT(_q_makeStatusBarAppear()));
-    }
 
     if (DuiApplication::fullScreen())
         q->showFullScreen();
@@ -162,19 +149,6 @@ void DuiWindowPrivate::appendVisibilityChangeMask()
     newAttributes.event_mask = existingAttributes.your_event_mask | VisibilityChangeMask;
 
     XChangeWindowAttributes(QX11Info::display(), q->winId(), CWEventMask, &newAttributes);
-}
-
-void DuiWindowPrivate::addDuiStatusBarOverlayProperty()
-{
-    Q_Q(DuiWindow);
-
-    Atom atomDuiStatusBarOverlay = XInternAtom(QX11Info::display(), "_DUI_STATUSBAR_OVERLAY", False);
-    long propertyData = 1;
-
-    XChangeProperty(QX11Info::display(), q->winId(),
-            atomDuiStatusBarOverlay, XA_CARDINAL /* type */,
-            32 /* format, in bits */, PropModeReplace,
-            (unsigned char *) &propertyData, 1 /* number of elements */);
 }
 #endif
 
@@ -243,27 +217,6 @@ void DuiWindowPrivate::notifyWidgetsAboutOrientationChange()
     }
 }
 
-void DuiWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
-{
-    Q_Q(DuiWindow);
-    Q_ASSERT(statusBar != 0);
-
-    // TODO: Remove this check when DuiStatusBar is fleshed out
-    // to be the actual status bar instead of just a place holder.
-    if (q->testAttribute(Qt::WA_X11NetWmWindowTypeDock)) {
-        // That window is the status bar itself.
-        // No sense in adding DuiStatusBar to the scene then.
-        return;
-    }
-
-    if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->hideWindow(statusBar);
-
-    } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->showWindow(statusBar);
-    }
-}
-
 void DuiWindowPrivate::doEnterDisplayEvent()
 {
     Q_Q(DuiWindow);
@@ -308,21 +261,6 @@ void DuiWindowPrivate::propagateDuiOnDisplayChangeEventToScene(DuiOnDisplayChang
     // would mess ABI compatibility. Calling the event handler directly for now
     q->scene()->d_func()->onDisplayChangeEvent(&ev);
 
-}
-
-void DuiWindowPrivate::_q_makeStatusBarAppear()
-{
-    Q_Q(DuiWindow);
-
-    // TODO: Remove this check when DuiStatusBar is fleshed out
-    // to be the actual status bar instead of just a place holder.
-    if (q->testAttribute(Qt::WA_X11NetWmWindowTypeDock)) {
-        // That window is the status bar itself.
-        // No sense in adding DuiStatusBar to the scene then.
-        return;
-    }
-
-    q->sceneManager()->showWindow(statusBar);
 }
 
 DuiWindow::DuiWindow(DuiWindowPrivate &dd, QWidget *parent)
@@ -791,8 +729,6 @@ bool DuiWindow::event(QEvent *event)
     } else if (event->type() == DuiOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<DuiOnDisplayChangeEvent *>(event));
         return true;
-    } else if (event->type() == QEvent::WindowStateChange) {
-        d->windowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
     }
 
     return QGraphicsView::event(event);

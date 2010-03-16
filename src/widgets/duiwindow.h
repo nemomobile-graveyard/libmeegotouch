@@ -386,8 +386,6 @@ private:
     Q_DISABLE_COPY(DuiWindow)
     Q_DECLARE_PRIVATE(DuiWindow)
 
-    Q_PRIVATE_SLOT(d_func(), void _q_makeStatusBarAppear())
-
 #ifdef UNIT_TEST
     // to call orientationAngleChanged()
     friend class Ut_DuiWindow;
