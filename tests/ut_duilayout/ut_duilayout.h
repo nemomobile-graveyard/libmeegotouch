@@ -89,6 +89,7 @@ private slots:
     void testLayoutItemOverlap_data();
     void testLayoutItemOverlap();
     void testLayoutPolicyStylingSimple();
+    void testLayoutPolicyStylingSimpleWithSceneManager();
     void testLayoutPolicyStyling_data();
     void testLayoutPolicyStyling();
     void testChildItems_data();
