@@ -23,6 +23,8 @@
 #include <QEvent>
 #include "duiexport.h"
 
+class DuiDismissEventPrivate;
+
 /*!
  * Dismiss events are sent to scene windows that the user wants to dismiss. Usually
  * by tapping the back button (for DuiApplicationPage), a close button (e.g. in the
@@ -70,6 +72,9 @@ public:
      * \brief Event type for DuiDismissEvent.
      */
     static QEvent::Type eventType();
+
+protected:
+    DuiDismissEventPrivate *const d_ptr;
 
 private:
     Q_DISABLE_COPY(DuiDismissEvent)

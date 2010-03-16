@@ -21,8 +21,11 @@
 
 static int duiCancelEventNumber = -1;
 
+// DuiCancelEventPrivate is currently emtpy - for future use (prevent ABI break)
+
 DuiCancelEvent::DuiCancelEvent()
-    : QGraphicsSceneEvent(DuiCancelEvent::eventNumber())
+    : QGraphicsSceneEvent(DuiCancelEvent::eventNumber()),
+      d_ptr(0)
 {
 
 }

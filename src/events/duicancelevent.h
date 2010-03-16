@@ -23,6 +23,8 @@
 #include <QGraphicsSceneEvent>
 #include "duiexport.h"
 
+class DuiCancelEventPrivate;
+
 /*!
  * Class instantiated when the result of previously sent event
  * should be cancelled.
@@ -45,6 +47,9 @@ public:
      * \brief Default constructor, no need for any parameters.
      */
     explicit DuiCancelEvent();
+
+protected:
+    DuiCancelEventPrivate *const d_ptr;
 
 private:
     Q_DISABLE_COPY(DuiCancelEvent)
