@@ -1,0 +1,193 @@
+%TOC%
+/*! \page plainqt How to develop Qt applications for Maemo 5 and Maemo 6
+
+
+This page covers the case where the author of a Qt application can't make use of the DUI classes in his source code ("libdui"). The recommendations which are made on this page are only made for this specific use case. For native DUI applications  please have a look at the documentation that covers native DUI applications instead.
+
+\section  intro  Introduction
+
+Qt is a cross platform development framework. So the same source code for a Qt application can be compiled on different operating systems without changes and without any custom code. As a result your application will visually integrate into the given environment no matter whether it's Linux, Windows or Mac OS X.
+
+Of course this is also true for Maemo 5 and Maemo 6: So compiling your Qt desktop application on the Maemo plattform will result in an application that will look and feel mostly natively: On Maemo 5 your application will mimic the theming and the habits of applications that are built on top of the Hildon framework. And on Maemo 6 it will emulate the appearance and the behavior of "native" DirectUI applications.
+
+However there are several cases where the mobile form factor and the philosophy behind DirectUI should be kept in mind when developing a Qt application that is developed for the Maemo platform. To address these and to guarantee a good experience for your users there are a few recommendations that you should keep in mind.
+
+\section  compiling How to compile a Qt application
+
+For deployment of your application on the target plattform you need to install the scratchbox environment. Please have a look at the following documents to find out more
+
+- about the <a href="http://maemo.org/development/sdks/maemo_5-0_installation">the Maemo 5 SDK</a>
+- about the <a href="https://projects.maemo.org/trac/sdk/wiki/Harmattan">the Maemo 6 SDK</a>
+
+Once the scratchbox environment is properly set up you can download the source code of your application into the home directory of the scratchbox.
+The ARM device should be selected as a target platform. You can do this at any time using the sb-menu tool. For packaging the Maemo 5/6 platform uses the debian package format. The following page gives more information on how to add the sources that are necessary to create a debian package of you application:
+
+- Debian packaging <a href="http://[TODO]">manual</a>
+
+Please also make sure that a .desktop file is installed into the proper place.
+
+You can build the package by entering the root directory of your application and by executing the command:
+
+\code
+fakeroot dpkg-buildpackage -b -us -uc
+\endcode
+
+
+\section  style  How Maemo 5 and Maemo 6 affect the look and feel of your application
+
+
+For both Maemo 5 and Maemo 6 your Qt application will get adjusted in terms of look and feel so that it will emulate the user interface of each plattform:
+
+- The "Maemo 5" style emulates the appearance of the Gtk-based Hildon framework. The Maemo 5 style is included with the special version of Qt that is shipped together with the N900 device series.
+- The "Maemo 6" style mimics the widgets and interaction that is typical for the Qt-based DirectUI framework. The Maemo 6 style is part of the libdui framework and is shipped as one of its packages.
+
+Both styles take theme changes automatically into account. But the style is only an approximation of what a truely native application would look like. So there might be slight differences in terms of look and behaviour compared to a "real" Maemo 5 or Maemo 6 application. These differences can be reduced by taking into account certain typical requirements of these platforms.
+
+While the target framework and the implementations are different both styles share several characteristics. So if your style looks fine on one of the two platforms then it's quite likely that it will have a comparable appearance on the other platform as well.
+
+The maemo styles not only modify the theming but they also ensure that your application becomes finger usable and makes use of the default services and resources provided through each framework.
+
+Compared to other Qt styles the Maemo 5 and Maemo 6 styles go way beyond simple widget styling. They have a significant impact on the way dialogs are shown:
+
+- The style automatically follows theme changes on Maemo 5 or Maemo 6.
+- Feedback and gesture support is automatically added.
+- The virtual keyboard is supported out of the box
+- Menubars are not shown on top of the window or the screen. Instead they are activated via the navigation bar and are provided as finger usable dialogs.
+- Dialogs are always displayed full screen.
+- Default dialogs (such as the file dialog) are automatically replaced by a Maemo conform replacement.
+- The style provides kinetic scrolling for lists and scroll areas.
+- Scroll bars are only provided as indicators and only appear during scrolling.
+
+
+In Qt the style can be changed via the command line:
+
+\code
+yourapp -style maemo5
+\endcode
+
+or
+
+\code
+yourapp -style maemo6
+\endcode
+
+Again note that the Maemo 5 style is only available as a part of the special Qt version that comes with Maemo 5 support. While the Maemo 6 style is provided via the Harmattan framework.
+
+If you want to change this style to a different style then you can either do this via the \c -style command line parameter or in your source code via the \c QStyle API. However in general this is not recommended since the default styles provided with Qt are not finger usable.
+
+If you want to disable styling for your own custom widget then you can do this via the dynamic property \c NoDuiStyle. For a custom widget instance "mywidget" it would look like this:
+
+\code
+    mywidget->setProperty("NoDuiStyle", true);
+\endcode
+
+Doing this should only be done if the style renders a certain custom widget unusable. In practice this should stay the rare exception.
+
+Here are a few screen shots comparing the very same view of the same application on both maemo plattforms:
+
+\image html qtstyleexample-pizza-freemantle.png "Example application on Maemo 5 (Freemantle)"
+
+\image html qtstyleexample-pizza-harmattan.png "Example application on Maemo 6 (Harmattan)"
+
+
+\section  usability  Achieving a good user experience
+
+The user interface of the Maemo platform is optimized for the specific requirements of  the device and for the needs of your target audience. This results in a user interface that is significantly different from the desktop paradigm.
+
+Taking a look at your plain Qt application there are in general two scenarios for deployment:
+
+- You're developing a true crossplatform plain Qt application. Your application uses the very same source code to cover all platforms.
+- Or you're working on a plain Qt application that is specifically optimized for use on the Maemo platform (or on mobile devices in general).
+
+In either case the resulting user experience will most likely not match the quality of a true DirectUI application. Nevertheless there's a set of recommendations we can provide. These recommendations can help you to come at least close and achieve a reasonable good user experience for your application:
+
+
+\subsection taskoriented Create a user interface that is tailored to the user's workflow
+
+First and foremost the user interface of Maemo applications is much more simplistic than a typical desktop application. This is due to the obvious limitations in terms of screen size. Due to these constrains the author of a mobile application needs to have a good understanding about the tasks that a user has got to perform. This will help to come up with a user interface that doesn't get in the way of the user and is easy to use.
+
+So if your application has been originally developed for the desktop then you should reconsider the user interface: Often enough desktop applications are unnecessarily cluttered with lots of controls. Such a "heavy" UI does not only exceed the space that is available on the Maemo platform. It also typically overwhelms novice users on the desktop.
+So "streamlining" the UI will not only help you to create a good user experience on the Maemo platform. It also has the benefit that your application will be easier to use on the desktop as well.
+"Streamlining" doesn't necessarily mean that you need to remove functionality. Often enough it means that you rearrange your UI so that it is more task driven and follows the actual workflow of the user.
+
+
+\subsection sizeindependent Make your application independent of resolution and available size
+
+The Maemo platform targets devices which are small but have a very high resolution compared to desktop computers. So it's important that inspite of the high resolution it's possible to easily recognize all visual parts of the UI from a reasonable distance.
+For normal ready-made QWidgets (like \c QPushButton, \c QMenu, etc.) the style will take care of this automatically.
+Note that for the styling of widgets we use the properties defined in the DirectUI CSS. Therefore in some cases (like for fonts and geometries) we don't use the properties provided by Qt itself.
+
+For custom widgets and views you should avoid hardcoding sizes whenever possible. Instead it's better to
+
+- either use layouts which grow to the available size
+- or use the dpi information provided by the style to calculate a reasonable physical size for the object that you want to display.
+
+Also it needs to be possible to resize the application window and dialogs so that they fit into the space that is horizontally available on the device. On the N900 the width of the display in landscape mode is 800 pixels. So your application needs to fit into this minimum screen width. Of course you should also consider lengthy translations when designing the UI of your application.
+
+Toolbars should only contain the most important features that are necessary for performing tasks. Ideally the whole toolbar should fit completely onto the screen.
+
+
+\subsection fingerusable Ensure that your application stays finger usable
+
+The Maemo 6 framework allows navigation via the touch of your fingers.
+This means that you need to carefully think about the size of custom widgets. But it also means that all available functionality needs to be accessible via a "left mouse button click" or gestures.
+In general there are a few common pitfalls which result from the faulty assumption that the user is using a mouse pointer:
+
+- Double click should be avoided.
+- Context menus (which usually get invoked via a right mouse button click) should either be avoided or at least not be mandatory for using the application.
+- For dragging operations you need to ensure that the dragging threshold is aware of the resolution and finger friendliness.
+- Touch displays don't support "hovering". So mouse hovering should be avoided as the only way to accessing functionality provided by the application.
+- The Maemo framework usually switches off the cursor ("mouse pointer") of the application. So your application should be usable even if the cursor isn't visible on the screen.
+- There is no concept such as a visible widget focus rect. So you application needs to be intuitively usable without those.
+
+
+\section avoid Things to avoid
+
+There are a few classes which don't get styled in the Maemo 6 style or look out of place. Please try to avoid these:
+
+- \c QDial
+- \c QLCDNumber
+- \c QMdiArea, \c QMdiSubWindow (as well as the whole MDI concept)
+- \c QSplitter
+- \c QSystemTrayIcon (since Maemo doesn't support the system tray)
+- \c QToolBox
+- \c QToolTip
+
+Furthermore there are a few more things you should avoid:
+
+- You should avoid hardcoding sizes and colors
+- Avoid complex layouts
+- Don't display multiple windows at once. Use a set of modal dialogs instead which appear in the order of the work flow.
+- Kinetic scrolling is provided by the Maemo styles already. So in order to avoid clashes you shouldn't provide your own custom kinetic scrolling implementation for listviews and scrollareas.
+- Don't use \c QObject::disconnect() to disconnect all signals from a widget and don't disconnect any signals from any widget, which were not connected by yourself.
+- Don't remove any eventFilter classes from any widgets you didn't install by yourself.
+- Avoid setting widget flags manually. Especially flags that affect the painting may cause screwed up results.
+
+There are also some non-standard practices that don't prevent the style from working, but should be considered when the style delivers unexpected results:
+
+- Qt untypical behavior of your application may cause problems, e.g. setting modal flag on a QWidget and then showing it with \c QWidget::show().
+- Custom widgets can't be fully adopted by the style and will be treated as blanc QWidgets. Their background may be removed and due to the widget will not be scaled, it may be unusable on the device's display. If this is the case then you might want to use the \c NoDuiStyle dynamic property as described above.
+
+\section maemo5widgets Maemo 5 widgets
+
+There are a few widgets which are specific for the Maemo 5 platform
+
+- \c QMaemo5AbstractPickSelector
+- \c QMaemo5DatePickSelector
+- \c QMaemo5DateTimePickSelector
+- \c QMaemo5EditBar
+- \c QMaemo5InformationBox
+- \c QMaemo5ListPickSelector
+- \c QMaemo5TimePickSelector
+- \c QMaemo5ValueButton
+
+If these widgets are available as part of the framework then they should receive accurate theming.
+
+\section  limitations Limitations of the Qt support compared to native DUI applications
+
+Since DirectUI and its widgets are based on \c QGraphicsView there are a few things that can't be emulated for plain \c QWidget based widgets. So these are features of DirectUI which can not be supported by the maemo styles:
+
+- Orientation change for ready-made \c QWidgets (not possible on Maemo 6). Orientation change notification for custom widgets can be accessed via the Qt Mobility framework.
+- Ready-made DirectUI widget animations and effects (except for some common ones)
+*/
+
