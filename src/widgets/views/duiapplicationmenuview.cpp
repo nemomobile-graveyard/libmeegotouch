@@ -665,7 +665,8 @@ void DuiApplicationMenuView::drawBackground(QPainter *painter, const QStyleOptio
         painter->setOpacity(d->controller->effectiveOpacity() * style()->canvasOpacity());
 
         QRectF layoutGeometry = d->controllerLayout->geometry();
-
+        layoutGeometry.setHeight(d->styleCommandLayout->geometry().height() +
+                                 d->actionCommandLayout->geometry().height());
         if (style()->canvasImage()) {
             style()->canvasImage()->draw(layoutGeometry.toRect(), painter);
         } else {
