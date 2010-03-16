@@ -88,7 +88,8 @@ dui_gst_video_sink_set_caps (GstBaseSink *bsink,
   gst_structure_get_int (structure, "width",  &sink->w);
   gst_structure_get_int (structure, "height", &sink->h);
 
-  sink->ready_cb(sink->user_data);
+  
+  //sink->ready_cb(sink->user_data);
   return TRUE;
 }
 

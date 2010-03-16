@@ -13,8 +13,8 @@
  * This material also contains confidential information which may not be
  * disclosed to others without the prior written consent of Nokia.
  */
-#ifndef DUIVIDEO_P_H
-#define DUIVIDEO_P_H
+#ifndef DUIVIDEO_H
+#define DUIVIDEO_H
 
 #include <QObject>
 #include <QSize>

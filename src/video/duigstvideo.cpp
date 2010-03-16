@@ -53,7 +53,7 @@ bool DuiGstVideo::open(const QString& filename)
     constructPipeline();
 
     //start playing, this is done to get the first frame of the video and thus be able to parse video format information
-    if( GST_STATE_CHANGE_FAILURE == gst_element_set_state(gst_elem_pipeline, GST_STATE_PLAYING) ) {
+    if( GST_STATE_CHANGE_FAILURE == gst_element_set_state(gst_elem_pipeline, GST_STATE_PAUSED) ) {
         duiWarning("DuiGstVideo::openVideoFromFile()") << "Failed to start playing" << m_filename;
         return false;
     }
@@ -101,7 +101,8 @@ void DuiGstVideo::setVideoState(DuiVideo::State state)
         duiWarning("DuiGstVideo::setVideoState()") << "Pipeline not created yet, cannot set state to" << state;
         new_state = DuiVideo::NotReady;
     }
-        
+
+    //TODO: state changes should be emit in bus message method.
     if( m_state != new_state ) {
         m_state = new_state;
         emit stateChanged();
@@ -223,7 +224,7 @@ gboolean DuiGstVideo::bus_cb(GstBus *bus, GstMessage *message, void *data)
 {
     Q_UNUSED(bus);
 
-    duiDebug("DuiGstVideo::bus_cb()") << gst_message_type_get_name(GST_MESSAGE_TYPE(message));
+    //duiDebug("DuiGstVideo::bus_cb()") << gst_message_type_get_name(GST_MESSAGE_TYPE(message));
 
     DuiGstVideo* gstVideo = (DuiGstVideo*) data;
 
@@ -251,6 +252,21 @@ gboolean DuiGstVideo::bus_cb(GstBus *bus, GstMessage *message, void *data)
         // stop pipeline, we are in trouble
         return false;
     }
+    else if ( GST_MESSAGE_TYPE(message)== GST_MESSAGE_STATE_CHANGED ) {
+        if( GST_IS_PIPELINE(message->src) ) {
+           
+            GstState oldState, newState, pendingState;
+            gst_message_parse_state_changed(message, &oldState, &newState, &pendingState);
+            
+            //GstPipeline* pipeline = GST_PIPELINE(message->src);
+            //duiDebug("DuiGstVideo::bus_cb()") << "src =" << pipeline << "gst_elem_pipeline=" << gstVideo->gst_elem_pipeline;
+            //duiDebug("DuiGstVideo::bus_cb()") << "oldState =" << oldState << "newState =" << newState << "pendingState =" << pendingState;
+
+            if( oldState == GST_STATE_READY && newState == GST_STATE_PAUSED ) {
+                video_ready_cb(data);            
+            }
+        }
+    }
     return true;
 }
 
@@ -259,6 +275,7 @@ gboolean DuiGstVideo::bus_cb(GstBus *bus, GstMessage *message, void *data)
  */
 void DuiGstVideo::video_ready_cb(void* user_data)
 {
+    //duiDebug("DuiGstVideo::video_ready_cb()") << user_data;
     if( user_data ) {
         DuiGstVideo* gstVideo = (DuiGstVideo*) user_data;
 
@@ -267,6 +284,7 @@ void DuiGstVideo::video_ready_cb(void* user_data)
         
         //automatically stop after buffering the first frame
         gstVideo->setVideoState(DuiVideo::Stopped);
+
         emit gstVideo->videoReady();
     }
 }
@@ -310,8 +328,8 @@ void DuiGstVideo::newpad_cb(GstElement  *decodebin,
 
     QString typeString = gst_structure_get_name(type);
 
-    duiDebug("DuiGstVideo::newpad_cb()") << typeString;
-    duiDebug("DuiGstVideo::newpad_cb()") << gst_caps_to_string(caps);
+    //duiDebug("DuiGstVideo::newpad_cb()") << typeString;
+    //duiDebug("DuiGstVideo::newpad_cb()") << gst_caps_to_string(caps);
 
     //FIXME
     //Find compatible pads more accurately, add more error checking.
@@ -322,18 +340,18 @@ void DuiGstVideo::newpad_cb(GstElement  *decodebin,
             yuv = true;
 
         sink = w->makeSink(yuv);
-        duiDebug("DuiGstVideo::newpad_cb()") << "YUV=" << yuv;
+        //duiDebug("DuiGstVideo::newpad_cb()") << "YUV=" << yuv;
         w->m_format = yuv ? YUV : RGB;
 
         pad2 = gst_element_get_compatible_pad(sink, pad, NULL);
         if( pad2 ) {
             caps2 = gst_pad_get_caps(pad2);
-            duiDebug("DuiGstVideo::newpad_cb()") << gst_caps_to_string(caps2);        
+            //duiDebug("DuiGstVideo::newpad_cb()") << gst_caps_to_string(caps2);        
         }
-        if( pad2 ) 
-            duiDebug("DuiGstVideo::newpad_cb()") << "COMPATIBLE pad!";
-        else
-            duiDebug("DuiGstVideo::newpad_cb()") << "INCOMPATIBLE pad!";
+        //if( pad2 ) 
+        //    duiDebug("DuiGstVideo::newpad_cb()") << "COMPATIBLE pad!";
+        //else
+        //    duiDebug("DuiGstVideo::newpad_cb()") << "INCOMPATIBLE pad!";
 
         //FIXME:
         //Add ffmpegcolorspace plugin only when necessary
@@ -403,7 +421,7 @@ void DuiGstVideo::render_frame_cb(void* pointer, void* user_data)
         //a new frame is currently being rendered so no need 
         //to create new one
         if( !gstVideo->lockFrameData() ) {
-            duiDebug("DuiGstVideo::render_frame_cb()") << "MUTEX LOCK CONFLICT!";
+            //duiDebug("DuiGstVideo::render_frame_cb()") << "MUTEX LOCK CONFLICT!";
             gst_buffer_unref(GST_BUFFER(pointer));    
             return;
         }
@@ -496,7 +514,7 @@ void DuiGstVideo::constructPipeline()
     gst_object_unref(gst_messagebus);
 
     //make the pipeline ready
-    gst_element_set_state(gst_elem_pipeline, GST_STATE_READY);
+    //gst_element_set_state(gst_elem_pipeline, GST_STATE_READY);
 }
 
 void DuiGstVideo::destroyPipeline()
