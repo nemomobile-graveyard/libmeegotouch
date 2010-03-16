@@ -239,12 +239,9 @@ void PhoneBookImageLoader::processJobQueue()
 void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
 {
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(index.model());
-    Q_ASSERT(model);
-    if (model) {
-        PhoneBookSortedModel *proxyModel = dynamic_cast<PhoneBookSortedModel *>(model);
-        Q_ASSERT(proxyModel);
-        proxyModel->thumbnailWasLoaded(index);
-    }
+    PhoneBookSortedModel *proxyModel = dynamic_cast<PhoneBookSortedModel *>(model);
+    Q_ASSERT(proxyModel);
+    proxyModel->thumbnailWasLoaded(index);
 }
 
 PhoneBookSortedModel::PhoneBookSortedModel() : QSortFilterProxyModel(NULL), showGroups(false)

@@ -65,7 +65,7 @@ private:
 };
 
 DuiGLWidgetPrivate::DuiGLWidgetPrivate() :
-        m_oldVert(NULL), m_oldCoord(NULL), m_oldColor(NULL), m_oldProgram(0), m_oldDepthTest(false), m_oldBlend(false), m_uniformProvider(0), q_ptr(NULL)
+    m_uniformProvider(0)
 {
     m_matProj = new GLfloat*[4];
     m_matWorld = new GLfloat*[4];

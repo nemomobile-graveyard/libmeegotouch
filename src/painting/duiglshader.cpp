@@ -29,7 +29,7 @@
 class DuiGLShaderPrivate
 {
 public:
-    DuiGLShaderPrivate() : shaderId(0), valid(false), type(DuiGLShader::VertexShader), ctx(0) {}
+    DuiGLShaderPrivate() : shaderId(0), valid(false), ctx(0) {}
 
     GLuint                  shaderId;
     QString                 source;

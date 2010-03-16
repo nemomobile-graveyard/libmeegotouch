@@ -170,29 +170,24 @@ void SpinnerPage::inContainerHeader()
 void SpinnerPage::timeout()
 {
     QGraphicsGridLayout *grid = dynamic_cast<QGraphicsGridLayout *>(container->centralWidget()->layout());
+    int row = grid->count() / 6;
+    int column = grid->count() % 6;
 
-    Q_ASSERT(grid != NULL);
+    QString contactsDir = Utils::contactsDir();
+    QDir imagesDir(contactsDir);
+    imagesDir.setNameFilters(QStringList() << "*.png");
 
-    if (grid) {
-        int row = grid->count() / 6;
-        int column = grid->count() % 6;
+    QStringList imageContacts = imagesDir.entryList(QDir::Files);
 
-        QString contactsDir = Utils::contactsDir();
-        QDir imagesDir(contactsDir);
-        imagesDir.setNameFilters(QStringList() << "*.png");
+    DuiImageWidget *image = new DuiImageWidget(container->centralWidget());
+    image->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[grid->count() % imageContacts.size()]));
+    image->setMinimumSize(ImageSize, ImageSize);
+    image->setMaximumSize(ImageSize, ImageSize);
+    grid->addItem(image, row, column);
 
-        QStringList imageContacts = imagesDir.entryList(QDir::Files);
-
-        DuiImageWidget *image = new DuiImageWidget(container->centralWidget());
-        image->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[grid->count() % imageContacts.size()]));
-        image->setMinimumSize(ImageSize, ImageSize);
-        image->setMaximumSize(ImageSize, ImageSize);
-        grid->addItem(image, row, column);
-
-        if (grid->count() < 12) {
-            timer.setSingleShot(true);
-            timer.start(2000);
-        }
+    if (grid->count() < 12) {
+        timer.setSingleShot(true);
+        timer.start(2000);
     }
 }
 
