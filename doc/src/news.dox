@@ -30,6 +30,9 @@
 - DuiAbstractLayoutPolicy::aboutToBeRemovedFromLayout() - this was being used incorrectly instead of removeAt.  Use removeAt instead
 - DuiWindow::keepCurrentOrientation - replaced by DuiWindow::orientationLocked
 - DuiSceneWindow windowShown() and windowHidden() signals. Use the new appeared() and disappeared() signals isnstead.
+- DuiApplication::releaseMemoryRequested() - will be replaced by Harmattan System Memory Notification API
+- DuiDesktopEntry::xMaemoPrestarted() - not relevant anymore. No replacement needed
+- DuiWindow enteredDisplay() and exitedDisplay() signals. Will be renamed to displayEntered() and displayExited() when ABI break is allowed.
 
 \section v0180 0.18.4
 
