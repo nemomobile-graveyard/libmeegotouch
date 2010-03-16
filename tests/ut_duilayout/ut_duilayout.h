@@ -88,6 +88,7 @@ private slots:
     void testLayoutGeometryOfItemsAddedToInactivePolicies();
     void testLayoutItemOverlap_data();
     void testLayoutItemOverlap();
+    void testLayoutPolicyStylingSimple();
     void testLayoutPolicyStyling_data();
     void testLayoutPolicyStyling();
     void testChildItems_data();

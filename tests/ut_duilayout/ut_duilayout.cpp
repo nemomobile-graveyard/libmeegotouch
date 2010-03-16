@@ -1893,6 +1893,33 @@ void Ut_DuiLayout::testQGraphicsLinearLayoutWithLayoutInsideLayout2()
     QCOMPARE(widget->geometry().width(), 204.0);
 }
 
+void Ut_DuiLayout::testLayoutPolicyStylingSimple()
+{
+    //This does a simple test to check that that layout is being restyled upon rotation
+    //The following test, testLayoutPolicyStyling does a much more indepth test, but this
+    //test is easier to follow if it fails
+    qreal left, top, right, bottom;
+    DuiLayoutTest *layout = new DuiLayoutTest(m_form);
+    DuiAbstractLayoutPolicy *policy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
+
+    QCOMPARE(DuiApplication::activeWindow()->orientationAngle(), Dui::Angle0);
+    // The numbers which follow here are taken from the ut_duilayout.css file
+    // if you change the css file, you need to keep them in sync:
+    policy->getContentsMargins(&left, &top, &right, &bottom);
+    QCOMPARE(left, -1.0);
+    QCOMPARE(top, -1.0);
+    QCOMPARE(right, -1.0);
+    QCOMPARE(bottom, -1.0);
+
+    //Now rotate - the values should be read in from the CSS file
+    DuiApplication::activeWindow()->setOrientationAngle(Dui::Angle90);
+    policy->getContentsMargins(&left, &top, &right, &bottom);
+    QCOMPARE(left, 4.0);
+    QCOMPARE(top, 5.0);
+    QCOMPARE(right, 2.0);
+    QCOMPARE(bottom, 6.0);
+}
+
 void Ut_DuiLayout::testLayoutPolicyStyling_data()
 {
     // Whether the policy is a DuiLinearLayoutPolicy, DuiGridLayoutPolicy, ...
