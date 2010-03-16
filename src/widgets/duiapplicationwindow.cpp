@@ -519,6 +519,7 @@ void DuiApplicationWindowPrivate::statusBarDisappearEvent(DuiSceneWindowEvent *e
 {
     Q_Q(DuiApplicationWindow);
     Q_ASSERT(statusBar == event->sceneWindow());
+    Q_UNUSED(event);
 
     statusBar = 0;
 
