@@ -64,10 +64,7 @@ SOURCES += main.cpp \
     ../../benchmarks/performancebenchmark/emptymainloophelper.cpp \
     timedemopage.cpp \
     timedemobenchmark.cpp \
-    staticpagebenchmark.cpp \
-    videocontainerpage.cpp \
-
-macx:SOURCES -= videocontainerpage.cpp
+    staticpagebenchmark.cpp
 
 HEADERS += templatepage.h \
     listpage.h \
@@ -101,10 +98,12 @@ HEADERS += templatepage.h \
     ../../benchmarks/performancebenchmark/emptymainloophelper.h \
     timedemopage.h \
     timedemobenchmark.h \
-    staticpagebenchmark.h \
-    videocontainerpage.h \
+    staticpagebenchmark.h
 
-macx:HEADERS -= videocontainerpage.h
+contains(DEFINES, HAVE_GSTREAMER) {
+  SOURCES += videocontainerpage.cpp
+  HEADERS += videocontainerpage.h
+}
 
 # theme
 include(theme/theme.pri)

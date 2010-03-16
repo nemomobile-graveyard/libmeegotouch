@@ -42,7 +42,7 @@
 #include "feedbackpage.h"
 #include "timingscene.h"
 
-#ifndef Q_WS_MACX
+#ifdef HAVE_GSTREAMER
 #include "videocontainerpage.h"
 #endif
 
@@ -149,7 +149,7 @@ void ListPage::createContent()
     addPage(new SliderPage);
     addPage(new LanguagePage);
     addPage(new FeedbackPage);
-#ifndef Q_WS_MACX
+#ifdef HAVE_GSTREAMER
     addPage(new VideoContainerPage);
 #endif
 
