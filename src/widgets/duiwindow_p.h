@@ -21,6 +21,7 @@
 #define DUIWINDOW_P_H
 
 #include <QTimeLine>
+#include <QPointer>
 #include "duiwindow.h"
 
 #include <duiscenemanager.h>
@@ -68,7 +69,7 @@ public:
     bool onDisplay;
     bool onDisplaySet;
 
-    DuiStatusBar *statusBar;
+    QPointer<DuiStatusBar> statusBar;
 
     void _q_makeStatusBarAppear();
 

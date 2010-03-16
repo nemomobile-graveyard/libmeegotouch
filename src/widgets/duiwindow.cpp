@@ -76,10 +76,7 @@ DuiWindowPrivate::DuiWindowPrivate() :
 
 DuiWindowPrivate::~DuiWindowPrivate()
 {
-    if (statusBar) {
-        delete statusBar;
-        statusBar = 0;
-    }
+    delete statusBar;
 }
 
 void DuiWindowPrivate::init()

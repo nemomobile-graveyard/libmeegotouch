@@ -32,6 +32,7 @@
 #include <duibasiclayoutanimation.h>
 #include <duitheme.h>
 #include <duiwindow.h>
+#include <duiscenemanager.h>
 
 #include "../src/layout/duilayout_p.h"
 
@@ -176,7 +177,7 @@ void Ut_DuiLayout::init()
 
     // setup a QGraphicsLayoutItem:
     m_scene = new DuiScene;
-    appWin->setScene(m_scene);
+    appWin->setSceneManager(new DuiSceneManager(m_scene)); // FIXME! fix DuiWindow::setSceneManager() to work with "used" scene
     m_button = new QPushButton("Test");
     m_form = new QGraphicsWidget;
     m_proxy = m_scene->addWidget(m_button);
