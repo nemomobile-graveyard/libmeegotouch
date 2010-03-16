@@ -98,7 +98,7 @@ QGestureRecognizer::Result DuiTapAndHoldRecognizer::recognize(QGesture *state, Q
         break;
     case QEvent::GraphicsSceneMouseMove:
         if (tapAndHoldState->state() != Qt::NoGesture) {
-            QPoint delta = ev->pos().toPoint() = tapAndHoldState->position().toPoint();
+            QPoint delta = ev->pos().toPoint() - tapAndHoldState->position().toPoint();
             if (delta.manhattanLength() <= d->movementThreshold)
                 result = QGestureRecognizer::TriggerGesture;
         }
