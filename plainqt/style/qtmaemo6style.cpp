@@ -749,7 +749,6 @@ Qt::Alignment QtMaemo6StylePrivate::invertAlignment(Qt::Alignment align) const
     return retAlign;
 }
 
-
 QtMaemo6Style::QtMaemo6Style()
     : QtMaemo6TestStyle(*new QtMaemo6StylePrivate)
 {
@@ -833,24 +832,34 @@ void QtMaemo6Style::polish(QWidget *widget)
     if(widget->dynamicPropertyNames().contains(Dui::NoDuiStyle))
         return;
 
-    if(qobject_cast<DuiWindow*>(widget))
+    if(qobject_cast<DuiWindow*>(widget)) {
         return;
+    }
 
+    /*
     //skip the scrollbar container widgets of QAbstractScrollAreas
     if( (widget->objectName().contains("qt_scrollarea_hcontainer")
-        || widget->objectName().contains("qt_scrollarea_vcontainer"))
+        || widget->objectName().contains("qt_scrollarea_vcontainer")
+        || widget->objectName().contains("qt_scrollarea_viewport"))
         && qobject_cast<DuiWindow*>(widget->parentWidget()))
         return;
+    */
+
+    //skip the viewports, they are done by the scrollarea
+    if( QAbstractScrollArea* sa = qobject_cast<QAbstractScrollArea*>(widget->parentWidget())) {
+        if(sa->viewport() == widget) //it's the viewport
+            return;
+    }
 
 #ifdef DUI_LOG_POLISH
     QString filename = QString("/home/duistyle_%1.log").arg( QCoreApplication::applicationFilePath().section('/', -1 ) );
 
-
     QFile file( filename );
     if (file.open(QIODevice::Append | QIODevice::Text)) {
         QTextStream out(&file);
-        out << filename << " polish: " <<  widget->metaObject()->className()
+        out << filename << " polish: " << (int)(widget) << " " <<  widget->metaObject()->className()
                         << ' ' << widget->objectName() << "\n";
+        file.close();
     }
     else {
         qCritical() << "unable to open" << filename;
@@ -858,6 +867,7 @@ void QtMaemo6Style::polish(QWidget *widget)
 #endif
 
     Q_D(QtMaemo6Style);
+
     // Lazy initialization of the DuiFramework.
     // This is needed to guarantee that actual DuiApplications will work as well.
     if (!d->m_isDuiInitialized) {

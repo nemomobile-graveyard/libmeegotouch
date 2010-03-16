@@ -25,8 +25,6 @@
 #include <QLabel>
 #include "qtmaemo6teststyle.h"
 
-
-
 #include <duiexport.h>
 
 class DuiComponentData;
@@ -41,6 +39,7 @@ class QSequentialAnimationGroup;
 class QAbstractScrollArea;
 
 class QtMaemo6StylePrivate;
+
 
 /*!
  * This global function adds opacity to a pixmap

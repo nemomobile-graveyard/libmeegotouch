@@ -136,8 +136,6 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     break;
     case QEvent::MouseButtonDblClick:
     case QEvent::MouseButtonPress: {
-        //qDebug( "eventFilter got mousePress" );
-
         // now send press feedback
         DuiFeedbackPlayer *feedbackPlayer = DuiComponentData::feedbackPlayer();
 
@@ -156,7 +154,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     }
     break;
     case QEvent::MouseButtonRelease: {
-        //qDebug( "eventFilter got mouseRelease" );
+        //qCritical( "eventFilter got mouseRelease" );
 
         // now send release feedback
         DuiFeedbackPlayer *feedbackPlayer = DuiComponentData::feedbackPlayer();
