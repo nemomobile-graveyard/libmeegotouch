@@ -1,3 +1,24 @@
+libdui (0.19.8-1) unstable; urgency=low
+
+  * Fixes: NB#125966 - DuiFlowLayoutPolicy - add setAlignment function
+  * Fixes: NB#155890 - All of the window's content is not visible because of the status bar.
+  * Fixes: NB#156017 - DuiList functions firstVisibleItem and lastVisibleItem don't return first and last visible items
+  * Fixes: NB#160391 - DuiImageWidget::DuiImageWidget(const DuiImageWidget &) does not copy, but takes ownership
+  * Fixes: NB#157036 - DuiDialog doesn't emit rejected when dialog is disposed on clicking the dimmed area.
+  * Fixes: NB#159694 - DuiApplicationPage's view menu not shown when more than 7 actions included.
+  * Fixes: NB#158420 - Bottom toolbar shown with hidden actions in portrait mode
+  * Fixes: NB#160393 - Setting orientation angle from 180 to 0 doesnt trigger orientationAngleChanged in DuiWindow
+  * Fixes: NB#156907 - Sliders page is all broken in Portrait
+  * Fixes: NB#157145 - DuiSlider draws outside of its geometry
+  * Fixes: NB#159538 - Slider handle label stays visible after letting go the handle
+  * Fixes: NB#160130 - Slider label is shown on another page if page changed during animation
+  * Fixes: NB#160373 - DuiInputMethodState updating
+  * Fixes: NB#159308 - Dialogs don't reappear after rotating the device  RevBy: TrustMe
+  * Fixes: NB#159946 - DuiDialog leaks memory when setCentralWidget called
+  * Fixes: NB#160114 - DuiDialog crashes the calling application if set to window modal
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 16 Mar 2010 09:21:17 +0200
+
 libdui (0.19.7-1) unstable; urgency=low
 
   * Removed the remaning sample photos from widgetsgallery demo app.
