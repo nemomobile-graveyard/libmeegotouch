@@ -1,3 +1,11 @@
+libdui (0.19.9-1) unstable; urgency=low
+
+  * Unit test fixes
+  * Temporarily disable orientation changes due to hardware keyboard state
+  * DuiWindow no longer gets laid out behind the status bar (Z-wise). Previous behavior kept.
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 16 Mar 2010 17:22:34 +0200
+
 libdui (0.19.8-1) unstable; urgency=low
 
   * Fixes: NB#125966 - DuiFlowLayoutPolicy - add setAlignment function
