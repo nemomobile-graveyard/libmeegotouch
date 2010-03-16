@@ -132,7 +132,7 @@ namespace DuiIcuConversions
      * ICU date patterns need to have 's escaped as ''
      *
      */
-    QString escapeIcuDatePattern(const QString &str);
+    QString icuDatePatternEscaped(const QString &str);
 
     /*!
      * \brief creates an icu::Locale based on a locale string and additional parameters

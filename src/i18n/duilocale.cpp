@@ -1305,7 +1305,7 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duiCalendar,
                 dateTime = df->format(*duiCalendar.d_ptr->_calendar, dateTime, fieldPos);
                 icuFormat.append('\'');
                 QString pattern = DuiIcuConversions::unicodeStringToQString(dateTime);
-                icuFormat.append(DuiIcuConversions::escapeIcuDatePattern(pattern));
+                icuFormat.append(DuiIcuConversions::icuDatePatternEscaped(pattern));
                 icuFormat.append('\'');
                 delete df;
                 break;
@@ -1468,7 +1468,7 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duiCalendar,
                 dateTime = df->format(*duiCalendar.d_ptr->_calendar, dateTime, fieldPos);
                 icuFormat.append('\'');
                 QString pattern = DuiIcuConversions::unicodeStringToQString(dateTime);
-                icuFormat.append(DuiIcuConversions::escapeIcuDatePattern(pattern));
+                icuFormat.append(DuiIcuConversions::icuDatePatternEscaped(pattern));
                 icuFormat.append('\'');
                 delete df;
                 break;
@@ -1485,7 +1485,7 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duiCalendar,
                 dateTime = df->format(*duiCalendar.d_ptr->_calendar, dateTime, fieldPos);
                 icuFormat.append('\'');
                 QString pattern = DuiIcuConversions::unicodeStringToQString(dateTime);
-                icuFormat.append(DuiIcuConversions::escapeIcuDatePattern(pattern));
+                icuFormat.append(DuiIcuConversions::icuDatePatternEscaped(pattern));
                 icuFormat.append('\'');
                 delete df;
                 break;

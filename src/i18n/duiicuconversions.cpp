@@ -172,7 +172,7 @@ int DuiIcuConversions::duiWeekday(int icuWeekday)
     }
 }
 
-QString DuiIcuConversions::escapeIcuDatePattern(const QString &str)
+QString DuiIcuConversions::icuDatePatternEscaped(const QString &str)
 {
     QString result = str;
     return result.replace('\'', "''");
