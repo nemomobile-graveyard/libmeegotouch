@@ -89,7 +89,6 @@ private slots:
     void testLayoutItemOverlap_data();
     void testLayoutItemOverlap();
     void testLayoutPolicyStylingSimple();
-    void testLayoutPolicyStylingSimpleWithSceneManager();
     void testLayoutPolicyStyling_data();
     void testLayoutPolicyStyling();
     void testChildItems_data();
@@ -103,6 +102,7 @@ private slots:
     void testAddingRemovingAddingToPolicy();
     void testExplicitlyHidingItems_data();
     void testExplicitlyHidingItems();
+    void testLayoutPolicyStylingSimpleWithSceneManager(); //Do this at the end, since it creates a scene manager
 private:
     QPushButton *m_button;
     QGraphicsWidget *m_form;
