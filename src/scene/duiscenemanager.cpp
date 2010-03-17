@@ -309,6 +309,13 @@ void DuiSceneManagerPrivate::_q_windowHideAnimationFinished()
     }
 
     window->hide();
+    // If the window was hidden using DuiSceneFadeAnimation it will be
+    // left with an opacity of 0.
+    // This might bite us back later if someone wants a window
+    // to appear straight away with, let's say, 0.5 opacity. If that happens
+    // we will have to think a better way of doing this DuiSceneFadeAnimation
+    // - Daniel d'Andrada
+    window->setOpacity(1.0);
 
     QObject::disconnect(window, SIGNAL(disappeared()), q, SLOT(_q_windowHideAnimationFinished()));
 
@@ -906,14 +913,6 @@ void DuiSceneManagerPrivate::appearWindow(DuiSceneWindow *window,
     prepareWindowShow(window);
 
     window->d_func()->policy = policy;
-
-    // If the window was hidden using DuiSceneFadeAnimation it will be
-    // left with an opacity of 0.
-    // This might bite us back later if someone wants a window
-    // to appear straight away with, let's say, 0.5 opacity. If that happens
-    // we will have to think a better way of doing this DuiSceneFadeAnimation
-    // - Daniel d'Andrada
-    window->setOpacity(1.0);
 
     if (window->windowType() == DuiSceneWindow::ApplicationPage) {
         pushPage(window, animatedTransition);
