@@ -134,13 +134,18 @@ DuiComponentDataPrivate::DuiComponentDataPrivate()
 #endif
     reverseLayout(false),
     prestarted(false),
+    emulateTwoFingerGestures(false),
     prestartMode(Dui::NoPrestart),
     theme(0),
     deviceProfile(0),
+    windows(),
     feedbackPlayer(0),
-    deviceName(0),
+    locale(),
+    imglistFilename(),
+    appName(),
+    binaryName(),
+    deviceName(),
     service(0)
-
 #ifdef TESTABLE
     ,
     testabilityInterface(0)
