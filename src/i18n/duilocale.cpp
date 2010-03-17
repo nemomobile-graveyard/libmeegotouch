@@ -40,6 +40,7 @@
 #include <QApplication>
 #include <QMutex>
 #include <QDateTime>
+#include <DuiApplication>
 
 #ifdef HAVE_ICU
 #include "duicollator.h"
@@ -817,7 +818,9 @@ void DuiLocale::setDefault(const DuiLocale &locale)
         return;
     } else {
         s_systemDefault->disconnectSettings();
-        QObject::disconnect(s_systemDefault, SIGNAL(settingsChanged()), qApp, SIGNAL(localeSettingsChanged()));
+        if (qobject_cast<DuiApplication *> (qApp))
+            QObject::disconnect(s_systemDefault, SIGNAL(settingsChanged()),
+                                qApp, SIGNAL(localeSettingsChanged()));
         // remove the previous tr translations
         (s_systemDefault->d_ptr)->removeTrFromQCoreApp();
         *s_systemDefault = locale;
@@ -840,7 +843,9 @@ void DuiLocale::setDefault(const DuiLocale &locale)
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
     qApp->setLayoutDirection(s_systemDefault->textDirection());
 
-    QObject::connect(s_systemDefault, SIGNAL(settingsChanged()), qApp, SIGNAL(localeSettingsChanged()));
+    if (qobject_cast<DuiApplication *> (qApp))
+        QObject::connect(s_systemDefault, SIGNAL(settingsChanged()),
+                         qApp, SIGNAL(localeSettingsChanged()));
     emit s_systemDefault->settingsChanged();
     s_systemDefault->connectSettings();
 }
