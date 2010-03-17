@@ -40,16 +40,16 @@ DuiVideoWidgetViewPrivate::DuiVideoWidgetViewPrivate()
 {
     qRegisterMetaType< QList<const char*> >("QList<const char*>");
     
+#ifdef DUI_USE_OPENGL
     DuiGLES2Renderer* r = DuiGLES2Renderer::instance();
     if( r ) {
-#ifdef DUI_USE_OPENGL
         glGenTextures(3, &m_textures[0]);
-#endif
         yuv1 = r->getShaderProgram(DUI_SHADER_SOURCE_DIR "/yuv1.frag" );
         yuv3 = r->getShaderProgram(DUI_SHADER_SOURCE_DIR "/yuv3.frag");
     }    
     else
         duiWarning("DuiVideoWidgetViewPrivate::DuiVideoWidgetViewPrivate()") << "DuiGLES2Renderer not ready yet, cannot init shaders.";
+#endif
 }
 
 DuiVideoWidgetViewPrivate::~DuiVideoWidgetViewPrivate()
@@ -375,6 +375,9 @@ void DuiVideoWidgetViewPrivate::blit(const uchar* data, int w, int h)
             ++y;
         }
     }
+    
+    //force change of QImage::cacheKey(), to make sure the gl texture caching works.
+    image->setPixel(0,0, image->pixel(0,0));    
 }
 
 /*
