@@ -196,18 +196,22 @@ void DuiPhysics2DPanning::stop()
 void DuiPhysics2DPanning::setRange(const QRectF &range)
 {
     Q_D(DuiPhysics2DPanning);
-    d->range = range;
+    
+    //update the range only if it has actually changed
+    if( d->range != range ) {
+        d->range = range;
 
-    // Updates position after range setting (but this is not enough to
-    // drag the position inside range in case range shrinks and puts
-    // position outside it)
-    emit updatePosition(QPointF(d->posX, d->posY));
+        // Updates position after range setting (but this is not enough to
+        // drag the position inside range in case range shrinks and puts
+        // position outside it)
+        emit updatePosition(QPointF(d->posX, d->posY));
 
-    // Starts physics to return the position into range (border spring
-    // activates). This does not cover the former case since physics
-    // emits no updatePosition signals in case the position is still
-    // inside range
-    start();
+        // Starts physics to return the position into range (border spring
+        // activates). This does not cover the former case since physics
+        // emits no updatePosition signals in case the position is still
+        // inside range
+        start();
+    }
 }
 
 
