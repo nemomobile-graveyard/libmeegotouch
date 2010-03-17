@@ -295,7 +295,7 @@ void VideoContainerPage::retranslateUi()
     if (!isContentCreated())
         return;
         
-    //% "Video container page info label."
+    //% "Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it's native size."
     infoLabel->setText("<a></a>" + qtTrId("xx_video_container_page_info_label"));
  
     //% "Gallery"

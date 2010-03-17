@@ -1098,8 +1098,8 @@ Input feedbacks can be easily configured for different purposes using the themin
     </message>
     <message id="xx_video_container_page_info_label">
         <location filename="../videocontainerpage.cpp" line="299"/>
-        <source>Video container page info label.</source>
-        <translation>Video container page info label.</translation>
+        <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
+        <translation>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</translation>
     </message>
     <message id="xx_video_container_header_title">
         <location filename="../videocontainerpage.cpp" line="302"/>
