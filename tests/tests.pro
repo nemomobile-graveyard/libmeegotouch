@@ -105,7 +105,6 @@ SUBDIRS     =  \
     ut_duiserviceaction \
     ut_duiserviceinvoker \
     ut_duiscenewindow \
-    ut_duimodalscenewindow \
     ut_duinotification \
     ut_duinotificationmanager \
     ut_duisettingslanguageparser \
@@ -164,10 +163,6 @@ SUBDIRS += \
     ut_duiappletinstantiator
 }
 
-contains(DUI_BUILD_PARTS, "plainqt") {
-SUBDIRS += \
-  ut_qtmaemo6style
-}
 
 QMAKE_STRIP = echo
 include(shell.pri)
