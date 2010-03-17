@@ -143,7 +143,7 @@ void DuiApplicationWindowPrivate::init()
 }
 
 #ifdef Q_WS_X11
-void DuiWindowPrivate::addDuiStatusBarOverlayProperty()
+void DuiApplicationWindowPrivate::addDuiStatusBarOverlayProperty()
 {
     Q_Q(DuiWindow);
 

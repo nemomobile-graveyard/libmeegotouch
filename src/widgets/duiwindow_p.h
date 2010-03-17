@@ -43,7 +43,6 @@ public:
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();
-    void addDuiStatusBarOverlayProperty();
 #endif
 
     DuiGLWidget *glWidget;

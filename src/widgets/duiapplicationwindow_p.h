@@ -99,6 +99,10 @@ public:
 
     void windowStateChangeEvent(QWindowStateChangeEvent *event);
 
+#ifdef Q_WS_X11
+    void addDuiStatusBarOverlayProperty();
+#endif
+
 private:
     void init();
     void initAutoHideComponentsTimer();
