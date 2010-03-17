@@ -32,6 +32,7 @@ struct DuiGConfItemPrivate {
     QString key;
     QVariant value;
     guint notify_id;
+    bool have_gconf;
 
     static void notify_trampoline(GConfClient *, guint, GConfEntry *, gpointer);
 };
@@ -336,6 +337,7 @@ DuiGConfItem::DuiGConfItem(const QString &key, QObject *parent)
 {
     priv = new DuiGConfItemPrivate;
     priv->key = key;
+    priv->notify_id = 0;
     withClient(client) {
         update_value(false);
         QByteArray k = convertKey(priv->key);
@@ -344,6 +346,7 @@ DuiGConfItem::DuiGConfItem(const QString &key, QObject *parent)
         if(error) {
             duiWarning("DuiGConfItem") << error->message;
             g_error_free(error);
+            priv->have_gconf = false;
             return;
         }
         priv->notify_id = gconf_client_notify_add(client, k.data(),
@@ -352,22 +355,26 @@ DuiGConfItem::DuiGConfItem(const QString &key, QObject *parent)
         if(error) {
             duiWarning("DuiGConfItem") << error->message;
             g_error_free(error);
+            priv->have_gconf = false;
             return;
         }
     }
+    priv->have_gconf = true;
 }
 
 DuiGConfItem::~DuiGConfItem()
 {
-    withClient(client) {
-        QByteArray k = convertKey(priv->key);
-        gconf_client_notify_remove(client, priv->notify_id);
-        GError *error = NULL;
-        gconf_client_remove_dir(client, k.data(), &error);
-        if(error) {
-            duiWarning("DuiGConfItem") << error->message;
-            g_error_free(error);
-            return;
+    if(priv->have_gconf) {
+        withClient(client) {
+            QByteArray k = convertKey(priv->key);
+            gconf_client_notify_remove(client, priv->notify_id);
+            GError *error = NULL;
+            gconf_client_remove_dir(client, k.data(), &error);
+            if(error) {
+                duiWarning("DuiGConfItem") << error->message;
+                g_error_free(error);
+                return;
+            }
         }
     }
     delete priv;
