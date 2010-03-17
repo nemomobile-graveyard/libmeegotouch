@@ -57,6 +57,7 @@ DuiCompleterViewPrivate::DuiCompleterViewPrivate(DuiCompleter *controller, DuiCo
     completionLabel = new DuiLabel(controller);
     completionLabel->setObjectName(CompleterCandidatesLabelObjectName);
     completionLabel->setTextElide(true);
+    completionLabel->setWordWrap(false);
     completionLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     completionsButton = new DuiButton(controller);
     completionsButton->setObjectName(CompleterTotalButtonObjectName);
@@ -92,12 +93,13 @@ DuiCompleterViewPrivate::~DuiCompleterViewPrivate()
 void DuiCompleterViewPrivate::init()
 {
     connect(completionsButton, SIGNAL(clicked()), this, SLOT(showPopup()));
-    //TODO: only connect the signal DuiSceneManager::orientationChanged(),
-    //which is still not correctly emitted by DuiSceneManager at the right time
-    connect(controller->widget(), SIGNAL(rotationChanged()),
-            this, SLOT(organizeContents()));
     connect(controller, SIGNAL(shown()), this, SLOT(createContents()));
     connect(controller, SIGNAL(hidden()), this, SLOT(clear()));
+    if (controller->widget()) {
+        connect(controller->widget()->sceneManager(),
+                SIGNAL(orientationChangeFinished(const Dui::Orientation &)),
+                this, SLOT(organizeContents()));
+    }
 }
 
 void DuiCompleterViewPrivate::organizeContents()
@@ -203,6 +205,7 @@ void DuiCompleterViewPrivate::createContents()
         //add controller to scence when first time to show, it is neccessary for later setFocusProxy
         if (!controller->widget()->scene()->items().contains(controller))
             controller->widget()->scene()->addItem(controller);
+
         QString text;
         if (q->model()->matchedModel()->rowCount() > q->model()->matchedIndex()) {
             QVariant var = q->model()->matchedModel()->data(
@@ -291,6 +294,7 @@ void DuiCompleterViewPrivate::showPopup()
     //hide completion widget before showing popup
     controller->hideCompleter();
     q->model()->setPopupActive(true);
+    controller->scene()->setFocusItem(popup);
     if (controller->sceneManager()->execDialog(popup) == DuiDialog::Accepted) {
         //only confirm when accept
         controller->scene()->setFocusItem(controller->widget());
@@ -318,13 +322,6 @@ DuiCompleterView::~DuiCompleterView()
     delete d;
 }
 
-void DuiCompleterView::applyStyle()
-{
-    Q_D(DuiCompleterView);
-    DuiSceneWindowView::applyStyle();
-    d->organizeContents();
-}
-
 QSizeF DuiCompleterView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_UNUSED(which);
@@ -335,7 +332,20 @@ QSizeF DuiCompleterView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 
 void DuiCompleterView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    style()->pressFeedback().play();
+    style().setModePressed();
+    applyStyle();
+    update();
+    event->accept();
+}
+
+void DuiCompleterView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
     Q_D(DuiCompleterView);
+    style()->releaseFeedback().play();
+    style().setModeDefault();
+    applyStyle();
+    update();
     if (d->controller && d->controller->isVisible())
         d->controller->confirm();
     event->accept();
