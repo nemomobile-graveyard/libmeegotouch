@@ -96,9 +96,10 @@ void Ft_DuiDialog::test_eventloop()
     // launch the dialog, it will start event loop and block here
     int result = m_subject->exec();
 
-    // The exec will return standard button id or NoStandardButton if no button
-    // was clicked as in this case.
-    QCOMPARE(result, (int)Dui::NoStandardButton);
+    // The exec will return standard button id; if the dialog was dismissed
+    // with either accept() or reject() (or the equivalent done() calls),
+    // a DialogCode result is returned instead.
+    QCOMPARE(result, 99);
 
     // result() will return the result set in timer() method.
     QCOMPARE(99, m_subject->result());
