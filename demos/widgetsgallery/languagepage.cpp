@@ -27,8 +27,9 @@
 #include <DuiButton>
 #include <DuiComboBox>
 #include <DuiTheme>
+#ifdef HAVE_GCONF
 #include <DuiGConfItem>
-
+#endif
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
 #include <QStringList>
@@ -98,8 +99,8 @@ void LanguagePage::retranslateUi()
     comboBox->setItemModel(newModel);
     if (model && model->QObject::parent() == this) delete model;
     model = newModel;
-    DuiGConfItem languageItem("/Dui/i18n/Language");
-    QString currentLanguage = languageItem.value().toString();
+    DuiLocale currentLocale;
+    QString currentLanguage = currentLocale.name();
     rowsCount = rows.count();
     for (int i = 0; i < rowsCount; ++i) {
         if (currentLanguage == model->item(i, 1)->text())
