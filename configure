@@ -77,7 +77,7 @@ OPT_SHADOW=maybe
 # initalize variables used for installation
 DUI_INSTALL_PREFIX=/usr/local
 DUI_INSTALL_SYSCONFDIR=/etc
-DUI_INSTALL_LIBDIR=$DUI_INSTALL_PREFIX/lib
+DUI_INSTALL_LIBDIR= # Will be $DUI_INSTALL_PREFIX/lib unless overriden
 
 #-------------------------------------------------------------------------------
 # parse command line arguments
@@ -264,6 +264,11 @@ fi
 #-------------------------------------------------------------------------------
 # tests
 #-------------------------------------------------------------------------------
+
+# Make default LIBDIR relative to prefix unless overriden
+if [ -z "$DUI_INSTALL_LIBDIR" ]; then
+    DUI_INSTALL_LIBDIR=$DUI_INSTALL_PREFIX/lib
+fi
 
 #setup the build parts
 CFG_BUILD_PARTS="$CFG_BUILD_PARTS $DUI_DEFAULT_BUILD_PARTS"
