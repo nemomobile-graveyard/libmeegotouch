@@ -1173,8 +1173,13 @@ int DuiSceneManager::execDialog(DuiDialog *dialog)
     eventLoop.exec();
 
     // use QPointer in case of the dialog being deleted in the meantime
-    if (dialog_ptr)
-        return dialog->standardButton(dialog->clickedButton());
+    if (dialog_ptr) {
+        DuiButtonModel *clickedButton = dialog->clickedButton();
+        if (clickedButton)
+            return dialog->standardButton(clickedButton);
+        else
+            return dialog->result();
+    }
 
     return DuiDialog::Rejected;
 }
