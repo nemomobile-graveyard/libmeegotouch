@@ -27,8 +27,6 @@
 #include <QString>
 #include <DuiDebug>
 
-static const QString NULL_STRING;
-
 class DuiClassFactoryPrivate
 {
 public:
@@ -85,7 +83,7 @@ QString DuiClassFactory::widgetAssemblyName(const QString &widgetClassName) cons
     const DuiWidgetCreatorBase *widgetCreator = d_ptr->widgetCreators.value(widgetClassName, NULL);
     if (!widgetCreator) {
         duiWarning("DuiClassFactory") << "could not find assembly name for" << widgetClassName;
-        return NULL_STRING;
+        return QString();
     }
     return widgetCreator->assemblyName();
 }
@@ -207,7 +205,7 @@ QString DuiClassFactory::styleAssemblyName(const char *styleClassName) const
     const DuiStyleCreatorBase *styleCreator = d_ptr->styleCreators.value(QString(styleClassName), NULL);
     if (!styleCreator) {
         duiWarning("DuiClassFactory") << "could not find assembly name for" << styleClassName;
-        return NULL_STRING;
+        return QString();
     }
     return styleCreator->assemblyName();
 }
