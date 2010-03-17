@@ -4,42 +4,42 @@
 <context>
     <name></name>
     <message id="xx_application_title">
-        <location filename="../listpage.cpp" line="182"/>
+        <location filename="../listpage.cpp" line="187"/>
         <source>Widgets Gallery</source>
         <translation>Dingsbums Galerie</translation>
     </message>
     <message id="xx_apporientation_auto">
-        <location filename="../listpage.cpp" line="442"/>
+        <location filename="../listpage.cpp" line="447"/>
         <source>Automatic</source>
         <translation>Automatisch</translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../listpage.cpp" line="450"/>
+        <location filename="../listpage.cpp" line="455"/>
         <source>Portrait</source>
         <translation>Hochformat</translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../listpage.cpp" line="458"/>
+        <location filename="../listpage.cpp" line="463"/>
         <source>Landscape</source>
         <translation>Querformat</translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../listpage.cpp" line="466"/>
+        <location filename="../listpage.cpp" line="471"/>
         <source>0 degrees</source>
         <translation>0 Grad</translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../listpage.cpp" line="474"/>
+        <location filename="../listpage.cpp" line="479"/>
         <source>90 degrees clockwise</source>
         <translation>90 Grad im Uhrzeigersinn</translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../listpage.cpp" line="482"/>
+        <location filename="../listpage.cpp" line="487"/>
         <source>180 degrees clockwise</source>
         <translation>180 Grad im Uhrzeigersinn</translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../listpage.cpp" line="490"/>
+        <location filename="../listpage.cpp" line="495"/>
         <source>270 degrees clockwise</source>
         <translation>270 Grad im Uhrzeigersinn</translation>
     </message>
@@ -431,7 +431,12 @@ tooltip</source>
         <location filename="../sliderpage.cpp" line="183"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
         <oldsource>Please select your age:</oldsource>
-        <translation type="unfinished">Bitte wählen Sie Ihr Alter:</translation>
+        <translation variants="yes">
+            <lengthvariant>Bitte wählen Sie Ihr Alter:</lengthvariant>
+            <lengthvariant>Wählen Sie Ihr Alter:</lengthvariant>
+            <lengthvariant>Ihr Alter:</lengthvariant>
+            <lengthvariant>Alter:</lengthvariant>
+        </translation>
     </message>
     <message id="xx_slider_brightness_label">
         <location filename="../sliderpage.cpp" line="218"/>
@@ -529,12 +534,12 @@ Guidelines for mandatory application Menu items:
         <translation type="obsolete">Japan</translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="94"/>
+        <location filename="../comboboxpage.cpp" line="95"/>
         <source>Title</source>
         <translation>Titel</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="96"/>
+        <location filename="../comboboxpage.cpp" line="97"/>
         <source>Sort - DescendingOrder</source>
         <translation>Sortieren — in absteigender Reihenfolge</translation>
     </message>
@@ -582,12 +587,12 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_defaultview">
         <location filename="../toolbarpage.cpp" line="180"/>
         <source>Default View</source>
-        <translation type="unfinished"></translation>
+        <translation>Standardansicht</translation>
     </message>
     <message id="xx_toolbar_page_tabview">
         <location filename="../toolbarpage.cpp" line="186"/>
         <source>Tab View</source>
-        <translation type="unfinished"></translation>
+        <translation>Karteireiteransicht</translation>
     </message>
     <message id="xx_toolbar_page_title">
         <location filename="../toolbarpage.cpp" line="208"/>
@@ -598,8 +603,7 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_info">
         <location filename="../toolbarpage.cpp" line="215"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</oldsource>
-        <translation type="unfinished">Die &lt;b&gt;Werkzeugleiste&lt;/b&gt; ist ein Behälter, der Aktionen enthält, die relevant für das “View“ sind aber nichts mit mit individuellen Gegenständen zu tun haben, die im Inhaltsbereich angezeigt werden. &lt;ul&gt;&lt;li&gt;Sie kann bis zu 4 Piktogramm Knöpfe enthalten (Klicke auf “Menü” und dann “Beispiel 1”)&lt;/li&gt; &lt;li&gt;Sie kann auch ein Texteingabefeld kann zusammen mit 2 Piktogrammknöpfen enthalten (Klicke auf “Menü” und dann “Beispiel 2”).&lt;/li&gt;&lt;/ul&gt;</translation>
+        <translation>Die &lt;b&gt;Werkzeugleiste&lt;/b&gt; dient als ein Behälter für Aktionen. Abhängig von View, das damit verbunden ist, verhält es sich wie eine Karteireiterleiste oder als ein Behälter für Knöpfe und Texteingabefelder. &lt;ul&gt;&lt;li&gt;Klicke auf das Menü um die Beispiele anzusehen.&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message id="xx_objectmenu_page_title">
         <location filename="../objectmenupage.cpp" line="155"/>
@@ -692,7 +696,7 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
         <translation>Sprache Ändern</translation>
     </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="109"/>
+        <location filename="../languagepage.cpp" line="110"/>
         <source>Please select language</source>
         <translation>Bitte wählen Sie die neue Sprache:</translation>
     </message>
@@ -794,12 +798,12 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
         <translation>E-Mail Vorschlags text:</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="100"/>
+        <location filename="../comboboxpage.cpp" line="101"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>Das DuiComboBox Widget ist eine Kombination aus einem Knopf und einer Popup List. Es ist sehr ähnlich zur QComboBox aber erlaubt nicht den Text zu editieren.</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="90"/>
+        <location filename="../comboboxpage.cpp" line="91"/>
         <source>ComboBox</source>
         <translation>Combobox</translation>
     </message>
@@ -1090,17 +1094,17 @@ Eingaberückmeldungen können mit Hilfe des Theming-Systems einfach für verschi
     <message id="xx_video_container_page_title">
         <location filename="../videocontainerpage.cpp" line="294"/>
         <source>Video container</source>
-        <translation type="unfinished"></translation>
+        <translation>Video Behälter</translation>
     </message>
     <message id="xx_video_container_page_info_label">
         <location filename="../videocontainerpage.cpp" line="299"/>
-        <source>Video container page info label.</source>
-        <translation type="unfinished"></translation>
+        <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
+        <translation>Klopfe auf das Video-Miniaturbild um abzuspielen oder anzuhalten. Klopfe und halte das Miniaturbild um das Video in Originalgröße anzusehen</translation>
     </message>
     <message id="xx_video_container_header_title">
         <location filename="../videocontainerpage.cpp" line="302"/>
         <source>Gallery</source>
-        <translation type="unfinished"></translation>
+        <translation>Galerie</translation>
     </message>
 </context>
 </TS>

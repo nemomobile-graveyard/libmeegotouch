@@ -4,42 +4,42 @@
 <context>
     <name></name>
     <message id="xx_application_title">
-        <location filename="../listpage.cpp" line="182"/>
+        <location filename="../listpage.cpp" line="187"/>
         <source>Widgets Gallery</source>
         <translation>معرض الحاجيات</translation>
     </message>
     <message id="xx_apporientation_auto">
-        <location filename="../listpage.cpp" line="442"/>
+        <location filename="../listpage.cpp" line="447"/>
         <source>Automatic</source>
         <translation>التلقائي</translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../listpage.cpp" line="450"/>
+        <location filename="../listpage.cpp" line="455"/>
         <source>Portrait</source>
         <translation>بورتريه</translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../listpage.cpp" line="458"/>
+        <location filename="../listpage.cpp" line="463"/>
         <source>Landscape</source>
         <translation>المشهد</translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../listpage.cpp" line="466"/>
+        <location filename="../listpage.cpp" line="471"/>
         <source>0 degrees</source>
         <translation>0 درجة</translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../listpage.cpp" line="474"/>
+        <location filename="../listpage.cpp" line="479"/>
         <source>90 degrees clockwise</source>
         <translation>90 درجة في اتجاه عقارب الساعة</translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../listpage.cpp" line="482"/>
+        <location filename="../listpage.cpp" line="487"/>
         <source>180 degrees clockwise</source>
         <translation>180 درجة في اتجاه عقارب الساعة</translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../listpage.cpp" line="490"/>
+        <location filename="../listpage.cpp" line="495"/>
         <source>270 degrees clockwise</source>
         <translation>270 درجة في اتجاه عقارب الساعة</translation>
     </message>
@@ -527,12 +527,12 @@ Guidelines for mandatory application Menu items:
         <translation type="obsolete">اليابان</translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="94"/>
+        <location filename="../comboboxpage.cpp" line="95"/>
         <source>Title</source>
         <translation>العنوان</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="96"/>
+        <location filename="../comboboxpage.cpp" line="97"/>
         <source>Sort - DescendingOrder</source>
         <translation>فرز -- تنازلي</translation>
     </message>
@@ -580,7 +580,7 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_defaultview">
         <location filename="../toolbarpage.cpp" line="180"/>
         <source>Default View</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض افتراضي</translation>
     </message>
     <message id="xx_toolbar_page_tabview">
         <location filename="../toolbarpage.cpp" line="186"/>
@@ -590,14 +590,13 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_title">
         <location filename="../toolbarpage.cpp" line="208"/>
         <source>ToolBar</source>
-        <oldsource>Tool Bar</oldsource>
         <translation>أداة بار</translation>
     </message>
     <message id="xx_toolbar_page_info">
         <location filename="../toolbarpage.cpp" line="215"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
         <oldsource>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</oldsource>
-        <translation type="unfinished">شريط الأدوات هو حاوية والتي يمكن أن تحتوي على ما يصل إلى 4 دلالات أزرار (انقر فوق القائمة → مثال 1) ، أو إدخال نص الميدان مع ما يصل الى 2 دلالات أزرار (انقر فوق القائمة → مثال 2). أنه يحتوي على الإجراءات التي تكون ذات صلة وجهة النظر ولكن لا علاقة لها أي بند من البنود الفردية عرضها مباشرة داخل منطقة محتوى.</translation>
+        <translation>شريط الأدوات هو حاوية والتي يمكن أن تحتوي على ما يصل إلى 4 دلالات أزرار (انقر فوق القائمة → مثال 1) ، أو إدخال نص الميدان مع ما يصل الى 2 دلالات أزرار (انقر فوق القائمة → مثال 2). أنه يحتوي على الإجراءات التي تكون ذات صلة وجهة النظر ولكن لا علاقة لها أي بند من البنود الفردية عرضها مباشرة داخل منطقة محتوى.</translation>
     </message>
     <message id="xx_objectmenu_page_title">
         <location filename="../objectmenupage.cpp" line="155"/>
@@ -690,7 +689,7 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>تغيير اللغة</translation>
     </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="109"/>
+        <location filename="../languagepage.cpp" line="110"/>
         <source>Please select language</source>
         <translation>الرجاء اختيار لغة جديدة :</translation>
     </message>
@@ -792,12 +791,12 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>البريد الإلكتروني نص الاقتراح :</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="100"/>
+        <location filename="../comboboxpage.cpp" line="101"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>القطعة DuiComboBox هو زر مجتمعة وقائمة منبثقة. انها تشبه الى حد بعيد QComboBox ، ولكن لا يسمح بتحرير النص.</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="90"/>
+        <location filename="../comboboxpage.cpp" line="91"/>
         <source>ComboBox</source>
         <translation>مربع تحرير وسرد</translation>
     </message>
@@ -1019,7 +1018,7 @@ Seekbar هو نوع خاص من المتزلج المستخدمة fordisplaying 
         <location filename="../sliderpage.cpp" line="183"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
         <oldsource>Please select your age:</oldsource>
-        <translation type="unfinished">من فضلك اختر العمر :</translation>
+        <translation>من فضلك اختر العمر :</translation>
     </message>
     <message id="xx_slider_player_label">
         <location filename="../sliderpage.cpp" line="196"/>
@@ -1088,17 +1087,17 @@ Input feedbacks can be easily configured for different purposes using the themin
     <message id="xx_video_container_page_title">
         <location filename="../videocontainerpage.cpp" line="294"/>
         <source>Video container</source>
-        <translation type="unfinished"></translation>
+        <translation>الفيديو الحاويات</translation>
     </message>
     <message id="xx_video_container_page_info_label">
         <location filename="../videocontainerpage.cpp" line="299"/>
-        <source>Video container page info label.</source>
-        <translation type="unfinished"></translation>
+        <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
+        <translation>اضغط على الصورة المصغرة للعب الفيديو / وقفة عليه. اضغط على الصورة المصغرة ، وعقد لفتح الفيديو في حجمه الأصلي.</translation>
     </message>
     <message id="xx_video_container_header_title">
         <location filename="../videocontainerpage.cpp" line="302"/>
         <source>Gallery</source>
-        <translation type="unfinished"></translation>
+        <translation>معرض</translation>
     </message>
 </context>
 </TS>

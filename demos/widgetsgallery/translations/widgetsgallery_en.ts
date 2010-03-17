@@ -4,42 +4,42 @@
 <context>
     <name></name>
     <message id="xx_application_title">
-        <location filename="../listpage.cpp" line="182"/>
+        <location filename="../listpage.cpp" line="187"/>
         <source>Widgets Gallery</source>
         <translation>Widgets Gallery</translation>
     </message>
     <message id="xx_apporientation_auto">
-        <location filename="../listpage.cpp" line="442"/>
+        <location filename="../listpage.cpp" line="447"/>
         <source>Automatic</source>
         <translation>Automatic</translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../listpage.cpp" line="450"/>
+        <location filename="../listpage.cpp" line="455"/>
         <source>Portrait</source>
         <translation>Portrait</translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../listpage.cpp" line="458"/>
+        <location filename="../listpage.cpp" line="463"/>
         <source>Landscape</source>
         <translation>Landscape</translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../listpage.cpp" line="466"/>
+        <location filename="../listpage.cpp" line="471"/>
         <source>0 degrees</source>
         <translation>0 degrees</translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../listpage.cpp" line="474"/>
+        <location filename="../listpage.cpp" line="479"/>
         <source>90 degrees clockwise</source>
         <translation>90 degrees clockwise</translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../listpage.cpp" line="482"/>
+        <location filename="../listpage.cpp" line="487"/>
         <source>180 degrees clockwise</source>
         <translation>180 degrees clockwise</translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../listpage.cpp" line="490"/>
+        <location filename="../listpage.cpp" line="495"/>
         <source>270 degrees clockwise</source>
         <translation>270 degrees clockwise</translation>
     </message>
@@ -430,7 +430,12 @@ tooltip</source>
         <location filename="../sliderpage.cpp" line="183"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
         <oldsource>Please select your age:</oldsource>
-        <translation type="unfinished">Please select your age:</translation>
+        <translation variants="yes">
+            <lengthvariant>Please select your age:</lengthvariant>
+            <lengthvariant>Select your age:</lengthvariant>
+            <lengthvariant>Your age:</lengthvariant>
+            <lengthvariant>Age:</lengthvariant>
+        </translation>
     </message>
     <message id="xx_slider_brightness_label">
         <location filename="../sliderpage.cpp" line="218"/>
@@ -528,12 +533,12 @@ Guidelines for mandatory application Menu items:
         <translation type="obsolete">Japan</translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="94"/>
+        <location filename="../comboboxpage.cpp" line="95"/>
         <source>Title</source>
         <translation>Title</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="96"/>
+        <location filename="../comboboxpage.cpp" line="97"/>
         <source>Sort - DescendingOrder</source>
         <translation>Sort — Descending order</translation>
     </message>
@@ -690,7 +695,7 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>Change Language</translation>
     </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="109"/>
+        <location filename="../languagepage.cpp" line="110"/>
         <source>Please select language</source>
         <translation>Please select new language:</translation>
     </message>
@@ -792,12 +797,12 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>Email suggestion text:</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="100"/>
+        <location filename="../comboboxpage.cpp" line="101"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="90"/>
+        <location filename="../comboboxpage.cpp" line="91"/>
         <source>ComboBox</source>
         <translation>ComboBox</translation>
     </message>
