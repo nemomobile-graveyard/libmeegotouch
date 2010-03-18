@@ -83,6 +83,9 @@ void DuiFastListViewPrivate::clearVisibleItemsArray()
     }
 
     visibleItems.clear();
+
+    updateFirstVisibleRow(QModelIndex());
+    updateLastVisibleRow(QModelIndex());
 }
 
 void DuiFastListViewPrivate::cellClicked(DuiWidget *source)
