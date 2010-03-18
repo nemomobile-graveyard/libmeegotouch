@@ -94,7 +94,8 @@ void MyVideoWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void MyVideoWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    emit longPressed();
+    DuiVideoWidget::contextMenuEvent(event);
+    //emit longPressed();
 }
 
 MyImageVideoContainer::MyImageVideoContainer(QGraphicsItem *parent)
@@ -196,16 +197,23 @@ void ItemDetailPage::createContent()
         video->open(videoId);
         policy->addItem(video);
 
+        QGraphicsLinearLayout* controlLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+        controlLayout->setContentsMargins(0,0,0,0);
+        button = new DuiButton(panel);
+        //button->setViewType(DuiButton::iconType);
+        button->setIconID("icon-m-common-pause");
+        button->setIconVisible(true);
+        button->setTextVisible(false);
+        connect(button, SIGNAL(clicked(bool)), this, SLOT(buttonClicked()));
+        controlLayout->addItem(button);
+        
         slider = new DuiSlider(panel);
-
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(videoSliderValueChanged(int)));
         connect(slider, SIGNAL(sliderPressed()), this, SLOT(sliderPressed()));
         connect(slider, SIGNAL(sliderReleased()), this, SLOT(sliderReleased()));
-        policy->addItem(slider);
+        controlLayout->addItem(slider);
         
-        button = new DuiButton("PAUSE", panel);
-        connect(button, SIGNAL(clicked(bool)), this, SLOT(buttonClicked()));
-        policy->addItem(button);
+        policy->addItem(controlLayout);
 
         QFileInfo info(videoId);        
         setTitle(info.fileName());    
@@ -257,10 +265,13 @@ void ItemDetailPage::buttonClicked()
 {
     if( video->state() == DuiVideo::Playing ) {
         video->pause();
-        button->setText("PLAY");
+        button->setIconID("icon-m-common-play");
+
+        //button->setText("PLAY");
     } else {
         video->play();
-        button->setText("PAUSE");
+        button->setIconID("icon-m-common-pause");
+        //button->setText("PAUSE");
     }
         
 }
@@ -310,10 +321,10 @@ void VideoContainerPage::createContent()
             image->setImage(QImage(filename));
             image->setId(filename);
             
-            DuiAction *action = new DuiAction("Show", image);
+            DuiAction *action = new DuiAction("Open", image);
             action->setLocation(DuiAction::ObjectMenuLocation);
-            
             image->addAction(action);
+
             image->setPreferredSize(92, 92);
             //image->setMinimumSize(92, 92);
             //image->setMaximumSize(92, 92);            
@@ -321,6 +332,11 @@ void VideoContainerPage::createContent()
         } 
         else if( info.suffix() == "mp4" || info.suffix() == "mov" ) {
             MyVideoWidget *video = new MyVideoWidget(container->centralWidget());
+
+            DuiAction *action = new DuiAction("Open", video);
+            action->setLocation(DuiAction::ObjectMenuLocation);
+            video->addAction(action);
+            
             //connect(video, SIGNAL(clicked()), this, SLOT(itemClicked()));
             //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
             connect(video, SIGNAL(clicked()), this, SLOT(itemLongPressed()));
@@ -331,7 +347,7 @@ void VideoContainerPage::createContent()
             video->setPreferredSize(92, 92);
             //video->setMinimumSize(92, 92);
             //video->setMaximumSize(92, 92);
-            container->addItem(video);        
+            container->addItem(video);   
         }
     }   
 
