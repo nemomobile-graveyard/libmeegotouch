@@ -1004,10 +1004,10 @@ Switches are used to indicate e.g. settings values</source>
         <location filename="../sliderpage.cpp" line="176"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
-Seekbar is a special type of Slider used fordisplaying playback status for multimedia content.</source>
+Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
         <translation>التمرير يستخدم لمجموعة متواصلة من القيم ، وبين الذي يمكن للمستخدم اختيار قيمة واحدة.
 
-Seekbar هو نوع خاص من المتزلج المستخدمة fordisplaying حالة تشغيل لمحتوى الوسائط المتعددة.</translation>
+شريط البحث هو نوع خاص من المتزلج تستخدم لتشغيل مركز لعرض محتوى الوسائط المتعددة.</translation>
     </message>
     <message id="xx_slider_personal_data_label">
         <location filename="../sliderpage.cpp" line="179"/>

@@ -171,7 +171,7 @@ void SliderPage::retranslateUi()
 
     //% "Slider is used for continuous set of values, "
     //% "among which user can choose one value.\n\n"
-    //% "Seekbar is a special type of Slider used for"
+    //% "Seekbar is a special type of Slider used for "
     //% "displaying playback status for multimedia content."
     infoLabel->setText("<a></a>" + qtTrId("xx_slider_page_info_label"));
 

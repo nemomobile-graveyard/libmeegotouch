@@ -59,7 +59,7 @@ Guidelines for mandatory application Menu items:
         <location filename="../sliderpage.cpp" line="176"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
-Seekbar is a special type of Slider used fordisplaying playback status for multimedia content.</source>
+Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
         <oldsource>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used for displaying playback status for multimedia content.</oldsource>

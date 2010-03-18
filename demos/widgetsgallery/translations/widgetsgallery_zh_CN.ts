@@ -464,7 +464,7 @@ tooltip</source>
         <location filename="../sliderpage.cpp" line="176"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
-Seekbar is a special type of Slider used fordisplaying playback status for multimedia content.</source>
+Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
         <translation>滑动条使用户可以在一系列数值中选择其一。
 播放条是一种特殊的滑动条用于在多媒体内容中控制播放，后退等信息。</translation>
     </message>
