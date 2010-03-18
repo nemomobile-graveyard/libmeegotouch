@@ -24,6 +24,8 @@
 #include "duiexport.h"
 #include "duinamespace.h"
 
+class DuiOrientationChangeEventPrivate;
+
 /*!
  * \brief This class contains event parameters for orientation change events.
  *
@@ -53,14 +55,20 @@ public:
     explicit DuiOrientationChangeEvent(Dui::Orientation newOrientation = Dui::Landscape);
 
     /*!
+     * Destructor
+     */
+    virtual ~DuiOrientationChangeEvent();
+
+    /*!
      * Holds the new orientation of the viewport.
      */
     Dui::Orientation orientation() const;
 
 protected:
-    Dui::Orientation o;
+    DuiOrientationChangeEventPrivate *const d_ptr;
 
 private:
+    Q_DECLARE_PRIVATE(DuiOrientationChangeEvent)
     Q_DISABLE_COPY(DuiOrientationChangeEvent)
 };
 
