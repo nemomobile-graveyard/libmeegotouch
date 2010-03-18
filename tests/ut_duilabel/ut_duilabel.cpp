@@ -491,4 +491,26 @@ void Ut_DuiLabel::testColor()
     QVERIFY(label->color() == color);
 }
 
+void Ut_DuiLabel::linefeedBeforeFirstTag()
+{
+    QString htmlData;
+    QChar wierd(10);
+    htmlData = "Hey,";
+    htmlData.append(wierd); 
+    htmlData.append(" <br />");
+    htmlData.append(wierd);
+    htmlData.append("<br /> I have some ");
+    htmlData.append(wierd);
+    htmlData.append("character in between <br /> B import A.");
+
+    DuiLabel label;
+    label.setText(htmlData);
+    QSizeF prefSizeHint = label.sizeHint(Qt::PreferredSize);
+
+    //This is true if label interprets <br> tags correctly 
+    QVERIFY(prefSizeHint.height() > prefSizeHint.width());
+
+
+}
+
 QTEST_APPLESS_MAIN(Ut_DuiLabel);

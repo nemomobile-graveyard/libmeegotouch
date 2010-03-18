@@ -84,6 +84,9 @@ private slots:
     void testColor_data();
     void testColor();
 
+    //regression test for bug  159042  DuiLabel: Unable to handle strings in presence of certain characters
+    void linefeedBeforeFirstTag();
+
 
 private:
     TestDuiLabel *label;

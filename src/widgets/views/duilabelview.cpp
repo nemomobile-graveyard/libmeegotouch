@@ -58,6 +58,13 @@ const QRectF DuiLabelViewPrivate::boundingRect() const
     return q->boundingRect();
 }
 
+bool DuiLabelViewPrivate::isRichText(QString text) const 
+{
+    //Qt::mightBeRichText stops at the first line break
+    text.replace("\n", " ");
+    return Qt::mightBeRichText(text);
+}
+
 DuiLabelView::DuiLabelView(DuiLabel *controller) :
     DuiWidgetView(new DuiLabelViewPrivate)
 {
@@ -134,7 +141,8 @@ void DuiLabelView::setupModel()
     DuiWidgetView::setupModel();
     Q_D(DuiLabelView);
 
-    bool isRichText = Qt::mightBeRichText(model()->text());
+    bool isRichText = d->isRichText(model()->text());
+    
     // Check has label type changed since last call to this method. Re-allocate label with correct type.
     if (d->impl->isRich() != isRichText) {
         delete d->impl;
@@ -149,7 +157,6 @@ void DuiLabelView::setupModel()
     d->impl->dirty = true;
 }
 
-
 void DuiLabelView::updateData(const QList<const char *>& modifications)
 {
 
@@ -158,7 +165,7 @@ void DuiLabelView::updateData(const QList<const char *>& modifications)
     Q_D(DuiLabelView);
 
     if (modifications.contains(DuiLabelModel::Text) || modifications.contains(DuiLabelModel::Highlighters)) {
-        bool isRichText = Qt::mightBeRichText(model()->text());
+        bool isRichText = d->isRichText(model()->text());
         
         // Check has label type changed since last call to this method. Re-allocate label with correct type.
         bool shouldBeRich = isRichText || model()->highlighters().size() > 0;
