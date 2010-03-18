@@ -88,6 +88,8 @@ public:
     DuiGridLayoutPolicy  *portraitPolicy;
 
     void addItem(QGraphicsLayoutItem *button);
+    void pauseAll();
+    void playAll();
 };
 
 //page for showing video or image in it's native size
@@ -114,6 +116,8 @@ public slots:
     void sliderReleased();
     void videoSliderValueChanged(int newValue);
     
+    void buttonClicked();
+    
     void updatePosition();
 
 protected:
@@ -125,6 +129,7 @@ private:
 
     DuiVideoWidget* video;
     DuiSlider* slider;
+    DuiButton* button;
     DuiImageWidget* image;
     
     QString imageId;
@@ -146,6 +151,10 @@ public:
 public slots:
     void itemClicked();
     void itemLongPressed();
+    
+    void videoReady();
+    
+    void visibilityChanged(bool visible);
 
 protected:
     virtual void retranslateUi();

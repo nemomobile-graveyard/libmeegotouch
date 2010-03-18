@@ -28,6 +28,7 @@
 #include <DuiTextEdit>
 #include <DuiAction>
 #include <DuiSlider>
+#include <DuiButton>
 
 #include <QDir>
 #include <QGraphicsLinearLayout>
@@ -132,6 +133,33 @@ void MyImageVideoContainer::addItem(QGraphicsLayoutItem* button)
     portraitPolicy->addItem(button, row, column);
 }
 
+void MyImageVideoContainer::pauseAll()
+{
+    DuiLayout *layout = dynamic_cast<DuiLayout*>(centralWidget()->layout());
+    if( layout ) {
+        for( int i = 0; i < layout->count(); ++i ) {
+            MyVideoWidget* video = dynamic_cast<MyVideoWidget*>(layout->itemAt(i));
+            if( video ) 
+                if( video->state() != DuiVideo::NotReady )
+                    video->pause();
+        }
+    }
+}
+
+void MyImageVideoContainer::playAll()
+{
+    DuiLayout *layout = dynamic_cast<DuiLayout*>(centralWidget()->layout());
+    if( layout ) {
+        for( int i = 0; i < layout->count(); ++i ) {
+            MyVideoWidget* video = dynamic_cast<MyVideoWidget*>(layout->itemAt(i));
+            if( video )
+                if( video->state() != DuiVideo::NotReady )
+                    video->play();
+        }
+    }
+}
+
+
 ItemDetailPage::ItemDetailPage()
 {
     video = NULL;
@@ -158,6 +186,7 @@ void ItemDetailPage::createContent()
     layout = new DuiLayout(panel);
 
     policy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    policy->setSpacing(0.0);
     layout->setLandscapePolicy(policy);
     layout->setPortraitPolicy(policy);
     
@@ -168,11 +197,16 @@ void ItemDetailPage::createContent()
         policy->addItem(video);
 
         slider = new DuiSlider(panel);
+
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(videoSliderValueChanged(int)));
         connect(slider, SIGNAL(sliderPressed()), this, SLOT(sliderPressed()));
         connect(slider, SIGNAL(sliderReleased()), this, SLOT(sliderReleased()));
         policy->addItem(slider);
         
+        button = new DuiButton("PAUSE", panel);
+        connect(button, SIGNAL(clicked(bool)), this, SLOT(buttonClicked()));
+        policy->addItem(button);
+
         QFileInfo info(videoId);        
         setTitle(info.fileName());    
     }
@@ -182,7 +216,7 @@ void ItemDetailPage::createContent()
         policy->addItem(image);
         
         QFileInfo info(imageId);        
-        setTitle(info.fileName());         
+        setTitle(info.fileName());
     }
     
     retranslateUi();
@@ -202,14 +236,14 @@ void ItemDetailPage::videoReady()
 
 void ItemDetailPage::sliderPressed()
 {
-    if( video )
-        video->pause();
+    //if( video )
+    //    video->pause();
 }
 
 void ItemDetailPage::sliderReleased()
 {
-    if( video )
-        video->play();
+    //if( video )
+    //    video->play();
 }
 
 void ItemDetailPage::videoSliderValueChanged(int newValue)
@@ -218,6 +252,19 @@ void ItemDetailPage::videoSliderValueChanged(int newValue)
         video->seek(newValue);
     }
 }
+
+void ItemDetailPage::buttonClicked()
+{
+    if( video->state() == DuiVideo::Playing ) {
+        video->pause();
+        button->setText("PLAY");
+    } else {
+        video->play();
+        button->setText("PAUSE");
+    }
+        
+}
+
 
 void ItemDetailPage::updatePosition()
 {
@@ -274,8 +321,11 @@ void VideoContainerPage::createContent()
         } 
         else if( info.suffix() == "mp4" || info.suffix() == "mov" ) {
             MyVideoWidget *video = new MyVideoWidget(container->centralWidget());
-            connect(video, SIGNAL(clicked()), this, SLOT(itemClicked()));
-            connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
+            //connect(video, SIGNAL(clicked()), this, SLOT(itemClicked()));
+            //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
+            connect(video, SIGNAL(clicked()), this, SLOT(itemLongPressed()));
+            //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
+            connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
             video->open(filename);
             video->setId(filename);
             video->setPreferredSize(92, 92);
@@ -286,6 +336,8 @@ void VideoContainerPage::createContent()
     }   
 
     retranslateUi();
+    
+    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
 }
 
 void VideoContainerPage::retranslateUi()
@@ -370,4 +422,25 @@ void VideoContainerPage::itemLongPressed()
         openVideoDetailPage(video->id());
     }
 }
+
+void VideoContainerPage::videoReady()
+{
+    MyVideoWidget* video = qobject_cast<MyVideoWidget*>(sender());
+    if( video )
+        video->play();
+}
+
+void VideoContainerPage::visibilityChanged(bool visible)
+{   
+    duiDebug("VideoContainerPage::visibilityChanged()") << isContentCreated();
+    if( isContentCreated() ) {
+        if( visible ) {
+            container->playAll();
+        } else {
+            container->pauseAll();
+        }
+    }
+}
+
+
 
