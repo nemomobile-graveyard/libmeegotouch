@@ -29,6 +29,8 @@
 class DuiApplicationPagePrivate;
 class DuiAction;
 class DuiApplicationWindow;
+class DuiPannableViewport;
+
 
 /*!
     \class DuiApplicationPage
@@ -214,6 +216,11 @@ public:
      * \sa DuiApplicationPageMode::PageEscapeMode, setEscapeMode()
      */
     DuiApplicationPageModel::PageEscapeMode escapeMode() const;
+
+    /*!
+     * Returns the viewport responsible for scrolling the page.
+     */
+    DuiPannableViewport *pannableArea();
 
 Q_SIGNALS:
     //! Signal emitted when back button called

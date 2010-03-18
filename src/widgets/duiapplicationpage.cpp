@@ -26,6 +26,7 @@
 #include <DuiTheme>
 #include <DuiApplication>
 #include <DuiApplicationWindow>
+#include <DuiPannableViewport>
 #include <DuiSceneManager>
 #include <DuiEscapeButtonPanel>
 #include <DuiAction>
@@ -427,6 +428,12 @@ DuiApplicationPageModel::PageEscapeMode DuiApplicationPage::escapeMode() const
 void DuiApplicationPage::setEscapeMode(DuiApplicationPageModel::PageEscapeMode mode)
 {
     model()->setEscapeMode(mode);
+}
+
+DuiPannableViewport * DuiApplicationPage::pannableArea()
+{
+    Q_D(DuiApplicationPage);
+    return d->pannableViewPort;
 }
 
 #include "moc_duiapplicationpage.cpp"
