@@ -78,6 +78,7 @@ OPT_SHADOW=maybe
 DUI_INSTALL_PREFIX=/usr/local
 DUI_INSTALL_SYSCONFDIR=/etc
 DUI_INSTALL_LIBDIR= # Will be $DUI_INSTALL_PREFIX/lib unless overriden
+DUI_INSTALL_DBUSSERVICESDIR= # Will be determined by pkc-config unless overridden
 
 #-------------------------------------------------------------------------------
 # parse command line arguments
@@ -120,7 +121,7 @@ while [ "$#" -gt 0 ]; do
         VAL=yes
         ;;
     #Qt style options that pass an argument
-    -prefix|-make|-nomake|-sysconfdir|-libdir)
+    -prefix|-make|-nomake|-sysconfdir|-libdir|-dbusservicesdir)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         shift
         VAL="$1"
@@ -173,6 +174,9 @@ while [ "$#" -gt 0 ]; do
         ;;
     libdir)
         DUI_INSTALL_LIBDIR="$VAL"
+        ;;
+    dbusservicesdir)
+        DUI_INSTALL_DBUSSERVICESDIR="$VAL"
         ;;
     nomake)
 	CFG_NOBUILD_PARTS="$CFG_NOBUILD_PARTS $VAL"
@@ -369,6 +373,8 @@ Installation options:
                          (default $DUI_INSTALL_SYSCONFDIR)
     -libdir <dir> ...... This will put libraries in <dir>
                          (default $DUI_INSTALL_LIBDIR)
+    -dbusservicesdir <dir> This will put dbus service files in <dir>
+                         (default is autodetected by pkg-config)
 
 Configure options:
 
@@ -496,6 +502,7 @@ DUI_VERSION = $DUI_VERSION
 DUI_INSTALL_PREFIX = $DUI_INSTALL_PREFIX
 DUI_INSTALL_SYSCONFDIR = $DUI_INSTALL_SYSCONFDIR
 DUI_INSTALL_LIBDIR = $DUI_INSTALL_LIBDIR
+DUI_INSTALL_DBUSSERVICESDIR = $DUI_INSTALL_DBUSSERVICESDIR
 
 #dependencies
 DEFINES += $DUICONFIG_DEPS
@@ -535,6 +542,10 @@ cat "$relpath/mkspecs/features/dui_defines.prf.in" \
 | sed -e "s,@@DUI_UNIX_INSTALL_PREFIX@@,$DUI_INSTALL_PREFIX,g" \
 | sed -e "s,@@DUI_UNIX_INSTALL_SYSCONFDIR@@,$DUI_INSTALL_SYSCONFDIR,g" \
 | sed -e "s,@@DUI_UNIX_INSTALL_LIBDIR@@,$DUI_INSTALL_LIBDIR,g" > "$DUI_DEFINES_PRF.tmp"
+
+if [ ! -z "$DUI_INSTALL_DBUSSERVICESDIR" ]; then
+    echo "DUI_DBUS_SERVICES_DIR=$DUI_INSTALL_DBUSSERVICESDIR" >> "$DUI_DEFINES_PRF.tmp"
+fi
 
 # replace dui_defines.prf if it differs from the newly created temp file
 if cmp -s "$DUI_DEFINES_PRF.tmp" "$DUI_DEFINES_PRF"; then
