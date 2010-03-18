@@ -37,6 +37,7 @@ void DemoPage::createContent()
     extensionValueLabel = new DuiLabel;
     extensionValueLabel->setAlignment(Qt::AlignHCenter);
     vbox->addItem(extensionValueLabel);
+    extensionValueLabel->setObjectName("ExtensionValueLabel");
 
     DuiButton *button = new DuiButton;
     button->setText("Reset Extensions");
