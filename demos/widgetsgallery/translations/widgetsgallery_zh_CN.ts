@@ -607,7 +607,6 @@ Seekbar is a special type of Slider used for displaying playback status for mult
     <message id="xx_toolbar_page_info">
         <location filename="../toolbarpage.cpp" line="215"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</oldsource>
         <translation type="unfinished">工具条包括很多</translation>
     </message>
     <message id="xx_objectmenu_page_title">
@@ -693,49 +692,164 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>隐藏</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="68"/>
+        <location filename="../languagepage.cpp" line="110"/>
         <source>Change Language</source>
         <translation>翻译</translation>
     </message>
-    <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="110"/>
-        <source>Please select language</source>
-        <translation>请选择翻译语言:</translation>
+    <message id="xx_locale_none">
+        <location filename="../languagepage.cpp" line="129"/>
+        <source>None</source>
+        <translation>默认</translation>
     </message>
-    <message id="xx_language_arabic">
-        <location filename="../languagepage.cpp" line="78"/>
+    <message id="xx_locale_ar">
+        <location filename="../languagepage.cpp" line="134"/>
         <source>Arabic</source>
-        <translation>阿拉伯语 (العربية)</translation>
+        <translation>阿拉伯语</translation>
     </message>
-    <message id="xx_language_english">
-        <location filename="../languagepage.cpp" line="80"/>
+    <message id="xx_locale_de">
+        <location filename="../languagepage.cpp" line="139"/>
+        <source>German</source>
+        <translation>德语</translation>
+    </message>
+    <message id="xx_locale_de_AT">
+        <location filename="../languagepage.cpp" line="144"/>
+        <source>German (Austria)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_de_CH">
+        <location filename="../languagepage.cpp" line="149"/>
+        <source>German (Switzerland)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_en">
+        <location filename="../languagepage.cpp" line="154"/>
         <source>English</source>
         <translation>英语</translation>
     </message>
-    <message id="xx_language_finnish">
-        <location filename="../languagepage.cpp" line="82"/>
+    <message id="xx_locale_fi">
+        <location filename="../languagepage.cpp" line="159"/>
         <source>Finnish</source>
-        <translation>芬兰语 (Suomi)</translation>
+        <translation>芬兰语</translation>
     </message>
-    <message id="xx_language_german">
-        <location filename="../languagepage.cpp" line="84"/>
-        <source>German</source>
-        <translation>德语 (Deutsch)</translation>
+    <message id="xx_locale_hi">
+        <location filename="../languagepage.cpp" line="164"/>
+        <source>Hindi</source>
+        <translation type="unfinished"></translation>
     </message>
-    <message id="xx_language_simplified_chinese">
-        <location filename="../languagepage.cpp" line="86"/>
-        <source>Simplified Chinese</source>
+    <message id="xx_locale_hu">
+        <location filename="../languagepage.cpp" line="169"/>
+        <source>Hungarian</source>
+        <translation>匈牙利语</translation>
+    </message>
+    <message id="xx_locale_ja">
+        <location filename="../languagepage.cpp" line="174"/>
+        <source>Japanese</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_ur">
+        <location filename="../languagepage.cpp" line="179"/>
+        <source>Urdu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_ur_PK">
+        <location filename="../languagepage.cpp" line="184"/>
+        <source>Urdu (Pakistan)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_ur_IN">
+        <location filename="../languagepage.cpp" line="189"/>
+        <source>Urdu (India)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_zh_CN">
+        <location filename="../languagepage.cpp" line="194"/>
+        <source>Chinese (China)</source>
         <translation>简体中文 (中文)</translation>
     </message>
+    <message id="xx_locale_zh_TW">
+        <location filename="../languagepage.cpp" line="199"/>
+        <source>Chinese (Taiwan)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_combobox_title">
+        <location filename="../languagepage.cpp" line="294"/>
+        <source>Please select language</source>
+        <translation>请选择翻译语言:</translation>
+    </message>
+    <message id="xx_language_combobox_lctime_title">
+        <location filename="../languagepage.cpp" line="296"/>
+        <source>Locale for time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_combobox_lccollate_title">
+        <location filename="../languagepage.cpp" line="298"/>
+        <source>Locale for collation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_combobox_lcnumeric_title">
+        <location filename="../languagepage.cpp" line="300"/>
+        <source>Locale for numbers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_combobox_lcmonetary_title">
+        <location filename="../languagepage.cpp" line="302"/>
+        <source>Locale for money</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_number_format">
+        <location filename="../languagepage.cpp" line="310"/>
+        <source>Number format example: %1</source>
+        <oldsource>&lt;b&gt;Number format example:&lt;/b&gt; %1</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_langage_date_time_format">
+        <location filename="../languagepage.cpp" line="314"/>
+        <source>Date and time format example: %1</source>
+        <oldsource>&lt;b&gt;Date and time format example:&lt;/b&gt; %1</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_currency_format">
+        <location filename="../languagepage.cpp" line="320"/>
+        <source>Currency format example: %1 %2 %3</source>
+        <oldsource>&lt;b&gt;Currency format example:&lt;/b&gt; %1 %2 %3</oldsource>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
+        <location filename="../languagepage.cpp" line="327"/>
+        <location filename="../languagepage.cpp" line="329"/>
+        <location filename="../languagepage.cpp" line="331"/>
+        <source>%Ln boxes with a total weight of %L1 kilogram</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message id="xx_language_arabic">
+        <source>Arabic</source>
+        <translation type="obsolete">阿拉伯语</translation>
+    </message>
+    <message id="xx_language_english">
+        <source>English</source>
+        <translation type="obsolete">英语</translation>
+    </message>
+    <message id="xx_language_finnish">
+        <source>Finnish</source>
+        <translation type="obsolete">芬兰语</translation>
+    </message>
+    <message id="xx_language_german">
+        <source>German</source>
+        <translation type="obsolete">德语</translation>
+    </message>
+    <message id="xx_language_simplified_chinese">
+        <source>Simplified Chinese</source>
+        <translation type="obsolete">简体中文 (中文)</translation>
+    </message>
     <message id="xx_language_hungarian">
-        <location filename="../languagepage.cpp" line="88"/>
         <source>Magyar</source>
-        <translation>匈牙利语 (Magyar)</translation>
+        <translation type="obsolete">匈牙利语</translation>
     </message>
     <message id="xx_language_none">
-        <location filename="../languagepage.cpp" line="76"/>
         <source>None</source>
-        <translation>默认</translation>
+        <translation type="obsolete">默认</translation>
     </message>
     <message id="xx_template_page_layouts_visuals">
         <location filename="../templatepage.cpp" line="51"/>
@@ -1067,18 +1181,18 @@ Input feedbacks can be easily configured for different purposes using the themin
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="294"/>
+        <location filename="../videocontainerpage.cpp" line="346"/>
         <source>Video container</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="299"/>
+        <location filename="../videocontainerpage.cpp" line="351"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
         <oldsource>Video container page info label.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="302"/>
+        <location filename="../videocontainerpage.cpp" line="354"/>
         <source>Gallery</source>
         <translation type="unfinished"></translation>
     </message>

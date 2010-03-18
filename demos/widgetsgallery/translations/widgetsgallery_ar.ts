@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en">
+<TS version="2.0" language="ar">
 <context>
     <name></name>
     <message id="xx_application_title">
@@ -585,7 +585,7 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_tabview">
         <location filename="../toolbarpage.cpp" line="186"/>
         <source>Tab View</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض التبويب</translation>
     </message>
     <message id="xx_toolbar_page_title">
         <location filename="../toolbarpage.cpp" line="208"/>
@@ -684,50 +684,167 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>إخفاء</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="68"/>
+        <location filename="../languagepage.cpp" line="110"/>
         <source>Change Language</source>
         <translation>تغيير اللغة</translation>
     </message>
+    <message id="xx_locale_none">
+        <location filename="../languagepage.cpp" line="129"/>
+        <source>None</source>
+        <translation>عدم وجود ترجمة</translation>
+    </message>
+    <message id="xx_locale_ar">
+        <location filename="../languagepage.cpp" line="134"/>
+        <source>Arabic</source>
+        <translation>العربية</translation>
+    </message>
+    <message id="xx_locale_de">
+        <location filename="../languagepage.cpp" line="139"/>
+        <source>German</source>
+        <translation>الألمانية</translation>
+    </message>
+    <message id="xx_locale_de_AT">
+        <location filename="../languagepage.cpp" line="144"/>
+        <source>German (Austria)</source>
+        <translation>الألمانية (النمسا)</translation>
+    </message>
+    <message id="xx_locale_de_CH">
+        <location filename="../languagepage.cpp" line="149"/>
+        <source>German (Switzerland)</source>
+        <translation>الألمانية (سويسرا)</translation>
+    </message>
+    <message id="xx_locale_en">
+        <location filename="../languagepage.cpp" line="154"/>
+        <source>English</source>
+        <translation>الإنكليزية</translation>
+    </message>
+    <message id="xx_locale_fi">
+        <location filename="../languagepage.cpp" line="159"/>
+        <source>Finnish</source>
+        <translation>الفنلندية</translation>
+    </message>
+    <message id="xx_locale_hi">
+        <location filename="../languagepage.cpp" line="164"/>
+        <source>Hindi</source>
+        <translation>الهندية</translation>
+    </message>
+    <message id="xx_locale_hu">
+        <location filename="../languagepage.cpp" line="169"/>
+        <source>Hungarian</source>
+        <translation>الهنغارية</translation>
+    </message>
+    <message id="xx_locale_ja">
+        <location filename="../languagepage.cpp" line="174"/>
+        <source>Japanese</source>
+        <translation>اليابانية</translation>
+    </message>
+    <message id="xx_locale_ur">
+        <location filename="../languagepage.cpp" line="179"/>
+        <source>Urdu</source>
+        <translation>الأردية</translation>
+    </message>
+    <message id="xx_locale_ur_PK">
+        <location filename="../languagepage.cpp" line="184"/>
+        <source>Urdu (Pakistan)</source>
+        <translation>الأوردو (باكستان)</translation>
+    </message>
+    <message id="xx_locale_ur_IN">
+        <location filename="../languagepage.cpp" line="189"/>
+        <source>Urdu (India)</source>
+        <translation>الأوردو (الهند)</translation>
+    </message>
+    <message id="xx_locale_zh_CN">
+        <location filename="../languagepage.cpp" line="194"/>
+        <source>Chinese (China)</source>
+        <translation>الصينية (الصين)</translation>
+    </message>
+    <message id="xx_locale_zh_TW">
+        <location filename="../languagepage.cpp" line="199"/>
+        <source>Chinese (Taiwan)</source>
+        <translation>الصينية (تايوان)</translation>
+    </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="110"/>
+        <location filename="../languagepage.cpp" line="294"/>
         <source>Please select language</source>
         <translation>الرجاء اختيار لغة جديدة :</translation>
     </message>
+    <message id="xx_language_combobox_lctime_title">
+        <location filename="../languagepage.cpp" line="296"/>
+        <source>Locale for time</source>
+        <translation>لغة للوقت</translation>
+    </message>
+    <message id="xx_language_combobox_lccollate_title">
+        <location filename="../languagepage.cpp" line="298"/>
+        <source>Locale for collation</source>
+        <translation>لغة لترتيب</translation>
+    </message>
+    <message id="xx_language_combobox_lcnumeric_title">
+        <location filename="../languagepage.cpp" line="300"/>
+        <source>Locale for numbers</source>
+        <translation>للغة الأرقام</translation>
+    </message>
+    <message id="xx_language_combobox_lcmonetary_title">
+        <location filename="../languagepage.cpp" line="302"/>
+        <source>Locale for money</source>
+        <translation>لغة من أجل المال</translation>
+    </message>
+    <message id="xx_language_number_format">
+        <location filename="../languagepage.cpp" line="310"/>
+        <source>Number format example: %1</source>
+        <translation>تنسيق رقم سبيل المثال : %1</translation>
+    </message>
+    <message id="xx_langage_date_time_format">
+        <location filename="../languagepage.cpp" line="314"/>
+        <source>Date and time format example: %1</source>
+        <translation>تنسيق التاريخ والوقت على سبيل المثال : %1</translation>
+    </message>
+    <message id="xx_language_currency_format">
+        <location filename="../languagepage.cpp" line="320"/>
+        <source>Currency format example: %1 %2 %3</source>
+        <translation>تنسيق العملة على سبيل المثال : %1 %2 %3</translation>
+    </message>
+    <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
+        <location filename="../languagepage.cpp" line="327"/>
+        <location filename="../languagepage.cpp" line="329"/>
+        <location filename="../languagepage.cpp" line="331"/>
+        <source>%Ln boxes with a total weight of %L1 kilogram</source>
+        <translation>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+        </translation>
+    </message>
     <message id="xx_language_arabic">
-        <location filename="../languagepage.cpp" line="78"/>
         <source>Arabic</source>
-        <translation>العربية (Arabic)</translation>
+        <translation type="obsolete">العربية (Arabic)</translation>
     </message>
     <message id="xx_language_english">
-        <location filename="../languagepage.cpp" line="80"/>
         <source>English</source>
-        <translation>الإنكليزية (English)</translation>
+        <translation type="obsolete">الإنكليزية (English)</translation>
     </message>
     <message id="xx_language_finnish">
-        <location filename="../languagepage.cpp" line="82"/>
         <source>Finnish</source>
-        <translation>الفنلندية(Suomi)</translation>
+        <translation type="obsolete">الفنلندية(Suomi)</translation>
     </message>
     <message id="xx_language_german">
-        <location filename="../languagepage.cpp" line="84"/>
         <source>German</source>
-        <translation>الألمانية (Deutsch)</translation>
+        <translation type="obsolete">الألمانية (Deutsch)</translation>
     </message>
     <message id="xx_language_simplified_chinese">
-        <location filename="../languagepage.cpp" line="86"/>
         <source>Simplified Chinese</source>
-        <translation>الصينية (中文)</translation>
+        <translation type="obsolete">الصينية (中文)</translation>
     </message>
     <message id="xx_language_hungarian">
-        <location filename="../languagepage.cpp" line="88"/>
         <source>Magyar</source>
         <oldsource>Hungarian</oldsource>
-        <translation>الهنغارية(Magyar)</translation>
+        <translation type="obsolete">الهنغارية(Magyar)</translation>
     </message>
     <message id="xx_language_none">
-        <location filename="../languagepage.cpp" line="76"/>
         <source>None</source>
-        <translation>عدم وجود ترجمة (None)</translation>
+        <translation type="obsolete">عدم وجود ترجمة (None)</translation>
     </message>
     <message id="xx_template_page_views_dialogs">
         <location filename="../templatepage.cpp" line="47"/>
@@ -1085,17 +1202,17 @@ Input feedbacks can be easily configured for different purposes using the themin
         <translation>شبكة الصفحة</translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="294"/>
+        <location filename="../videocontainerpage.cpp" line="346"/>
         <source>Video container</source>
         <translation>الفيديو الحاويات</translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="299"/>
+        <location filename="../videocontainerpage.cpp" line="351"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
         <translation>اضغط على الصورة المصغرة للعب الفيديو / وقفة عليه. اضغط على الصورة المصغرة ، وعقد لفتح الفيديو في حجمه الأصلي.</translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="302"/>
+        <location filename="../videocontainerpage.cpp" line="354"/>
         <source>Gallery</source>
         <translation>معرض</translation>
     </message>

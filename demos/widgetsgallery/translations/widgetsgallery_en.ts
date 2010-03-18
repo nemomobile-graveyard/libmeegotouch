@@ -586,12 +586,12 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_defaultview">
         <location filename="../toolbarpage.cpp" line="180"/>
         <source>Default View</source>
-        <translation type="unfinished"></translation>
+        <translation>Default View</translation>
     </message>
     <message id="xx_toolbar_page_tabview">
         <location filename="../toolbarpage.cpp" line="186"/>
         <source>Tab View</source>
-        <translation type="unfinished"></translation>
+        <translation>Tab View</translation>
     </message>
     <message id="xx_toolbar_page_title">
         <location filename="../toolbarpage.cpp" line="208"/>
@@ -602,8 +602,7 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_info">
         <location filename="../toolbarpage.cpp" line="215"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</oldsource>
-        <translation type="unfinished">&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</translation>
+        <translation>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message id="xx_objectmenu_page_title">
         <location filename="../objectmenupage.cpp" line="155"/>
@@ -690,50 +689,179 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>Hide</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="68"/>
+        <location filename="../languagepage.cpp" line="110"/>
         <source>Change Language</source>
         <translation>Change Language</translation>
     </message>
-    <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="110"/>
-        <source>Please select language</source>
-        <translation>Please select new language:</translation>
+    <message id="xx_locale_none">
+        <location filename="../languagepage.cpp" line="129"/>
+        <source>None</source>
+        <translation>None</translation>
     </message>
-    <message id="xx_language_arabic">
-        <location filename="../languagepage.cpp" line="78"/>
+    <message id="xx_locale_ar">
+        <location filename="../languagepage.cpp" line="134"/>
         <source>Arabic</source>
-        <translation>Arabic (العربية)</translation>
+        <translation>Arabic</translation>
     </message>
-    <message id="xx_language_english">
-        <location filename="../languagepage.cpp" line="80"/>
+    <message id="xx_locale_de">
+        <location filename="../languagepage.cpp" line="139"/>
+        <source>German</source>
+        <translation>German</translation>
+    </message>
+    <message id="xx_locale_de_AT">
+        <location filename="../languagepage.cpp" line="144"/>
+        <source>German (Austria)</source>
+        <translation></translation>
+    </message>
+    <message id="xx_locale_de_CH">
+        <location filename="../languagepage.cpp" line="149"/>
+        <source>German (Switzerland)</source>
+        <translation></translation>
+    </message>
+    <message id="xx_locale_en">
+        <location filename="../languagepage.cpp" line="154"/>
         <source>English</source>
         <translation>English</translation>
     </message>
-    <message id="xx_language_finnish">
-        <location filename="../languagepage.cpp" line="82"/>
+    <message id="xx_locale_fi">
+        <location filename="../languagepage.cpp" line="159"/>
         <source>Finnish</source>
-        <translation>Finnish (Suomi)</translation>
+        <translation>Finnish</translation>
+    </message>
+    <message id="xx_locale_hi">
+        <location filename="../languagepage.cpp" line="164"/>
+        <source>Hindi</source>
+        <translation>Hindi</translation>
+    </message>
+    <message id="xx_locale_hu">
+        <location filename="../languagepage.cpp" line="169"/>
+        <source>Hungarian</source>
+        <translation>Hungarian</translation>
+    </message>
+    <message id="xx_locale_ja">
+        <location filename="../languagepage.cpp" line="174"/>
+        <source>Japanese</source>
+        <translation>Japanese</translation>
+    </message>
+    <message id="xx_locale_ur">
+        <location filename="../languagepage.cpp" line="179"/>
+        <source>Urdu</source>
+        <translation>Urdu</translation>
+    </message>
+    <message id="xx_locale_ur_PK">
+        <location filename="../languagepage.cpp" line="184"/>
+        <source>Urdu (Pakistan)</source>
+        <translation>Urdu (Pakistan)</translation>
+    </message>
+    <message id="xx_locale_ur_IN">
+        <location filename="../languagepage.cpp" line="189"/>
+        <source>Urdu (India)</source>
+        <translation>Urdu (India)</translation>
+    </message>
+    <message id="xx_locale_zh_CN">
+        <location filename="../languagepage.cpp" line="194"/>
+        <source>Chinese (China)</source>
+        <translation>Chinese (China)</translation>
+    </message>
+    <message id="xx_locale_zh_TW">
+        <location filename="../languagepage.cpp" line="199"/>
+        <source>Chinese (Taiwan)</source>
+        <translation>Chinese Taiwan</translation>
+    </message>
+    <message id="xx_language_combobox_title">
+        <location filename="../languagepage.cpp" line="294"/>
+        <source>Please select language</source>
+        <translation>Please select language:</translation>
+    </message>
+    <message id="xx_language_combobox_lctime_title">
+        <location filename="../languagepage.cpp" line="296"/>
+        <source>Locale for time</source>
+        <translation>Locale for time</translation>
+    </message>
+    <message id="xx_language_combobox_lccollate_title">
+        <location filename="../languagepage.cpp" line="298"/>
+        <source>Locale for collation</source>
+        <translation>Locale for collation</translation>
+    </message>
+    <message id="xx_language_combobox_lcnumeric_title">
+        <location filename="../languagepage.cpp" line="300"/>
+        <source>Locale for numbers</source>
+        <translation>Locale for numbers</translation>
+    </message>
+    <message id="xx_language_combobox_lcmonetary_title">
+        <location filename="../languagepage.cpp" line="302"/>
+        <source>Locale for money</source>
+        <translation>Locale for money</translation>
+    </message>
+    <message id="xx_language_number_format">
+        <location filename="../languagepage.cpp" line="310"/>
+        <source>Number format example: %1</source>
+        <translation>Number format example: %1</translation>
+    </message>
+    <message id="xx_langage_date_time_format">
+        <location filename="../languagepage.cpp" line="314"/>
+        <source>Date and time format example: %1</source>
+        <translation variants="yes">
+            <lengthvariant>Date and time format example: %1</lengthvariant>
+            <lengthvariant>Date and time example: %1</lengthvariant>
+            <lengthvariant>Date and time: %1</lengthvariant>
+            <lengthvariant>Date: %1</lengthvariant>
+            <lengthvariant>%1</lengthvariant>
+        </translation>
+    </message>
+    <message id="xx_language_currency_format">
+        <location filename="../languagepage.cpp" line="320"/>
+        <source>Currency format example: %1 %2 %3</source>
+        <translation variants="yes">
+            <lengthvariant>Currency format example: %1 %2 %3</lengthvariant>
+            <lengthvariant>Currency example: %1 %2 %3</lengthvariant>
+            <lengthvariant>Currency: %1 %2 %3</lengthvariant>
+        </translation>
+    </message>
+    <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
+        <location filename="../languagepage.cpp" line="327"/>
+        <location filename="../languagepage.cpp" line="329"/>
+        <location filename="../languagepage.cpp" line="331"/>
+        <source>%Ln boxes with a total weight of %L1 kilogram</source>
+        <translation>
+            <numerusform variants="yes">
+                <lengthvariant>%Ln box with a total weight of %L1 kilogram</lengthvariant>
+                <lengthvariant>%Ln box with a total weight of %L1 kg</lengthvariant>
+            </numerusform>
+            <numerusform variants="yes">
+                <lengthvariant>%Ln boxes with a total weight of %L1 kilogram</lengthvariant>
+                <lengthvariant>%Ln boxes with a total weight of %L1 kg</lengthvariant>
+            </numerusform>
+        </translation>
+    </message>
+    <message id="xx_language_arabic">
+        <source>Arabic</source>
+        <translation type="obsolete">Arabic (العربية)</translation>
+    </message>
+    <message id="xx_language_english">
+        <source>English</source>
+        <translation type="obsolete">English</translation>
+    </message>
+    <message id="xx_language_finnish">
+        <source>Finnish</source>
+        <translation type="obsolete">Finnish (Suomi)</translation>
     </message>
     <message id="xx_language_german">
-        <location filename="../languagepage.cpp" line="84"/>
         <source>German</source>
-        <translation>German (Deutsch)</translation>
+        <translation type="obsolete">German (Deutsch)</translation>
     </message>
     <message id="xx_language_simplified_chinese">
-        <location filename="../languagepage.cpp" line="86"/>
         <source>Simplified Chinese</source>
-        <translation>Simplified Chinese (中文)</translation>
+        <translation type="obsolete">Simplified Chinese (中文)</translation>
     </message>
     <message id="xx_language_hungarian">
-        <location filename="../languagepage.cpp" line="88"/>
         <source>Magyar</source>
         <oldsource>Hungarian</oldsource>
-        <translation>Hungarian (Magyar)</translation>
+        <translation type="obsolete">Hungarian (Magyar)</translation>
     </message>
     <message id="xx_language_none">
-        <location filename="../languagepage.cpp" line="76"/>
         <source>None</source>
-        <translation>None</translation>
+        <translation type="obsolete">None</translation>
     </message>
     <message id="xx_template_page_views_dialogs">
         <location filename="../templatepage.cpp" line="47"/>
@@ -1097,17 +1225,17 @@ Input feedbacks can be easily configured for different purposes using the themin
         <translation>Grid page</translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="294"/>
+        <location filename="../videocontainerpage.cpp" line="346"/>
         <source>Video container</source>
         <translation>Video container</translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="299"/>
+        <location filename="../videocontainerpage.cpp" line="351"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
         <translation>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="302"/>
+        <location filename="../videocontainerpage.cpp" line="354"/>
         <source>Gallery</source>
         <translation>Gallery</translation>
     </message>
