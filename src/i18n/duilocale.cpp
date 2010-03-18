@@ -63,6 +63,10 @@ namespace
     const QString SettingsCountry("/Dui/i18n/Country");
     const QString SettingsScript("/Dui/i18n/Script");
     const QString SettingsVariant("/Dui/i18n/Variant");
+    const QString SettingsLcTime("/Dui/i18n/LcTime");
+    const QString SettingsLcCollate("/Dui/i18n/LcCollate");
+    const QString SettingsLcNumeric("/Dui/i18n/LcNumeric");
+    const QString SettingsLcMonetary("/Dui/i18n/LcMonetary");
 }
 
 /// Helper
@@ -315,7 +319,11 @@ DuiLocalePrivate::DuiLocalePrivate()
       , currentLanguageItem(SettingsLanguage),
       currentCountryItem(SettingsCountry),
       currentScriptItem(SettingsScript),
-      currentVariantItem(SettingsVariant)
+      currentVariantItem(SettingsVariant),
+      currentLcTimeItem(SettingsLcTime),
+      currentLcCollateItem(SettingsLcCollate),
+      currentLcNumericItem(SettingsLcNumeric),
+      currentLcMonetaryItem(SettingsLcMonetary)
 #endif
 {
 }
@@ -342,7 +350,11 @@ DuiLocalePrivate::DuiLocalePrivate(const DuiLocalePrivate &other)
       , currentLanguageItem(SettingsLanguage),
       currentCountryItem(SettingsCountry),
       currentScriptItem(SettingsScript),
-      currentVariantItem(SettingsVariant)
+      currentVariantItem(SettingsVariant),
+      currentLcTimeItem(SettingsLcTime),
+      currentLcCollateItem(SettingsLcCollate),
+      currentLcNumericItem(SettingsLcNumeric),
+      currentLcMonetaryItem(SettingsLcMonetary)
 #endif
 {
 #ifdef HAVE_ICU
@@ -635,11 +647,19 @@ DuiLocale::createSystemDuiLocale()
     DuiGConfItem countryItem(SettingsCountry);
     DuiGConfItem scriptItem(SettingsScript);
     DuiGConfItem variantItem(SettingsVariant);
+    DuiGConfItem lcTimeItem(SettingsLcTime);
+    DuiGConfItem lcCollateItem(SettingsLcCollate);
+    DuiGConfItem lcNumericItem(SettingsLcNumeric);
+    DuiGConfItem lcMonetaryItem(SettingsLcMonetary);
 
     QString language = languageItem.value().toString();
     QString country  = countryItem.value().toString();
     QString script   = scriptItem.value().toString();
     QString variant  = variantItem.value().toString();
+    QString lcTime = lcTimeItem.value().toString();
+    QString lcCollate = lcCollateItem.value().toString();
+    QString lcNumeric = lcNumericItem.value().toString();
+    QString lcMonetary = lcMonetaryItem.value().toString();
 
     DuiLocale *systemLocale;
 
@@ -660,6 +680,15 @@ DuiLocale::createSystemDuiLocale()
                     QString(variant)));
     }
 
+    if (!lcTime.isEmpty())
+        systemLocale->setCategoryLocale(DuiLocale::DuiLcTime, lcTime);
+    if (!lcCollate.isEmpty())
+        systemLocale->setCategoryLocale(DuiLocale::DuiLcCollate, lcCollate);
+    if (!lcNumeric.isEmpty())
+        systemLocale->setCategoryLocale(DuiLocale::DuiLcNumeric, lcNumeric);
+    if (!lcMonetary.isEmpty())
+        systemLocale->setCategoryLocale(DuiLocale::DuiLcMonetary, lcMonetary);
+
     return systemLocale;
 #else
     QString language = qgetenv("LANG");
@@ -670,7 +699,6 @@ DuiLocale::createSystemDuiLocale()
     return new DuiLocale(locale);
 #endif
 }
-
 
 //! creates a "C" locale
 DuiLocale DuiLocale::createCLocale()
@@ -686,14 +714,19 @@ DuiLocale::connectSettings()
 
     QObject::connect(&d->currentLanguageItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
-
     QObject::connect(&d->currentCountryItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
-
     QObject::connect(&d->currentScriptItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
-
     QObject::connect(&d->currentVariantItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcCollateItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcNumericItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcMonetaryItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
 #endif
 }
@@ -706,14 +739,19 @@ DuiLocale::disconnectSettings()
 
     QObject::disconnect(&d->currentLanguageItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
-
     QObject::disconnect(&d->currentCountryItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
-
     QObject::disconnect(&d->currentScriptItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
-
     QObject::disconnect(&d->currentVariantItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcCollateItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcNumericItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcMonetaryItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
 #endif
 }
@@ -836,7 +874,9 @@ void DuiLocale::setDefault(const DuiLocale &locale)
 
     // Setting the default QLocale is needed to get localized number
     // support in translations via %Ln, %L1, %L2, ...:
-    QLocale qlocale(locale.language() + '_' + locale.country());
+    QLocale qlocale(locale.categoryLanguage(DuiLcNumeric)
+                    + '_'
+                    + locale.categoryCountry(DuiLcNumeric));
     QLocale::setDefault(qlocale);
     // sends QEvent::LanguageChange to qApp:
     (s_systemDefault->d_ptr)->insertTrToQCoreApp();
@@ -2062,25 +2102,46 @@ void DuiLocale::refreshSettings()
 {
 #ifdef HAVE_GCONF
     Q_D(DuiLocale);
+    bool settingsHaveReallyChanged = false;
     QString language = d->currentLanguageItem.value().toString();
     QString country  = d->currentCountryItem.value().toString();
     QString script   = d->currentScriptItem.value().toString();
     QString variant  = d->currentVariantItem.value().toString();
     QString localeName = d->createLocaleString(language, country, script, variant);
+    QString lcTime = d->currentLcTimeItem.value().toString();
+    QString lcCollate = d->currentLcCollateItem.value().toString();
+    QString lcNumeric = d->currentLcNumericItem.value().toString();
+    QString lcMonetary = d->currentLcMonetaryItem.value().toString();
 
     if (localeName != d->_defaultLocale) {
+        settingsHaveReallyChanged = true;
         d->_defaultLocale = localeName;
-        setCategoryLocale(DuiLcMessages, localeName);
-        setCategoryLocale(DuiLcTime, localeName);
-        setCategoryLocale(DuiLcNumeric, localeName);
-        setCategoryLocale(DuiLcCollate, localeName);
-        setCategoryLocale(DuiLcMonetary, localeName);
-        setCategoryLocale(DuiLcName, localeName);
+    }
+    if (lcTime != d->_calendarLocale) {
+        settingsHaveReallyChanged = true;
+        setCategoryLocale(DuiLcTime, lcTime);
+    }
+    if (lcCollate != d->_collationLocale) {
+        settingsHaveReallyChanged = true;
+        setCategoryLocale(DuiLcCollate, lcCollate);
+    }
+    if (lcNumeric != d->_numericLocale) {
+        settingsHaveReallyChanged = true;
+        setCategoryLocale(DuiLcNumeric, lcNumeric);
+    }
+    if (lcMonetary != d->_monetaryLocale) {
+        settingsHaveReallyChanged = true;
+        setCategoryLocale(DuiLcMonetary, lcMonetary);
+    }
 
+    if (settingsHaveReallyChanged) {
         if (this == s_systemDefault) {
+            qDebug () << __PRETTY_FUNCTION__ << "***mike is s_systemDefault";
             // Setting the default QLocale is needed to get localized number
             // support in translations via %Ln, %L1, %L2, ...:
-            QLocale qlocale(this->language() + '_' + this->country());
+            QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
+                            + '_'
+                            + this->categoryCountry(DuiLcNumeric));
             QLocale::setDefault(qlocale);
             d->removeTrFromQCoreApp();
             d->loadTrCatalogs();

@@ -134,6 +134,10 @@ public:
     DuiGConfItem currentCountryItem;
     DuiGConfItem currentScriptItem;
     DuiGConfItem currentVariantItem;
+    DuiGConfItem currentLcTimeItem;
+    DuiGConfItem currentLcCollateItem;
+    DuiGConfItem currentLcNumericItem;
+    DuiGConfItem currentLcMonetaryItem;
 #endif
 
     DuiLocale *q_ptr;
