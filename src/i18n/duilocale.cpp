@@ -2116,6 +2116,10 @@ void DuiLocale::refreshSettings()
     if (localeName != d->_defaultLocale) {
         settingsHaveReallyChanged = true;
         d->_defaultLocale = localeName;
+        // force recreation of the number formatter if
+        // the numeric locale inherits from the default locale:
+        if(d->_numericLocale.isEmpty())
+            setCategoryLocale(DuiLcNumeric, "");
     }
     if (lcTime != d->_calendarLocale) {
         settingsHaveReallyChanged = true;
