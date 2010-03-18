@@ -90,19 +90,20 @@ void TemplatePage::createLayout()
     layout->setLandscapePolicy(landscapePolicy);
     layout->setPortraitPolicy(portraitPolicy);
 
-    // main container
-    QSize s = DuiApplication::activeWindow()->visibleSceneSize();
-
     container = new DuiWidget();
-    container->setMaximumWidth(s.height());
-    container->setMinimumWidth(s.height());
+    container->setMinimumWidth(0);
+    container->setPreferredWidth(0);
+    container->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
     separator = new DuiSeparator();
     separator->setOrientation(Qt::Vertical);
 
     infoLabel = new DuiLabel();
+    infoLabel->setMinimumWidth(0);
+    infoLabel->setPreferredWidth(0);
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
+    infoLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
     landscapePolicy->addItem(container);
     landscapePolicy->addItem(separator);

@@ -156,7 +156,7 @@ void ToolBarPage::createContent()
 {
     TemplatePage::createContent();
 
-    callList = new DuiList(this);
+    callList = new DuiList;
     cellCreator = new DuiContentItemCreator;
     callList->setCellCreator(cellCreator);
     callModel = new TestModel;
