@@ -40,13 +40,31 @@ public:
 
 public slots:
     void changeLanguage(int index);
+    void changeLcTime(int index);
+    void changeLcCollate(int index);
+    void changeLcNumeric(int index);
+    void changeLcMonetary(int index);
 
 protected:
     void retranslateUi();
 
 private:
-    DuiComboBox  *comboBox;
-    QStandardItemModel *model;
+    DuiComboBox *comboBoxLanguage;
+    QStandardItemModel *modelLanguage;
+    DuiComboBox *comboBoxLcTime;
+    QStandardItemModel *modelLcTime;
+    DuiComboBox *comboBoxLcCollate;
+    QStandardItemModel *modelLcCollate;
+    DuiComboBox *comboBoxLcNumeric;
+    QStandardItemModel *modelLcNumeric;
+    DuiComboBox *comboBoxLcMonetary;
+    QStandardItemModel *modelLcMonetary;
+    DuiLabel *labelExampleNumber;
+    DuiLabel *labelExampleDateTime;
+    DuiLabel *labelExampleCurrency;
+    DuiLabel *labelExampleTranslation1;
+    DuiLabel *labelExampleTranslation2;
+    DuiLabel *labelExampleTranslation3;
 };
 
 #endif
