@@ -65,7 +65,6 @@ All Labels can be aligned left, right or center and will be automatically trunca
     <message id="xx_rich_label">
         <location filename="../labelpage.cpp" line="134"/>
         <source>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</source>
-        <oldsource>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italics&lt;/i&gt;, &lt;a href=&quot;http://www.nokia.com&quot;&gt;link&lt;/a&gt;</oldsource>
         <translation>Schickes Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_title">
@@ -176,7 +175,6 @@ Hihihi...[böses Kichern]</translation>
     <message id="xx_dialogs_and_notifications_label_dialogs">
         <location filename="../dialogsandnotificationspage.cpp" line="364"/>
         <source>Dialog examples</source>
-        <oldsource>  DuiDialog examples</oldsource>
         <translation>Dialog Beispiele</translation>
     </message>
     <message id="xx_dialogs_and_notifications_query_dialog">
@@ -209,10 +207,6 @@ Hihihi...[böses Kichern]</translation>
         <source>Dialog With Progress Indicator</source>
         <translation>Dialog mit Fortschrittsanzeige</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_label_messagebox">
-        <source>  DuiMessageBox examples</source>
-        <translation type="obsolete">DuiMessageBox Beispiele</translation>
-    </message>
     <message id="xx_dialogs_and_notifications_messagebox">
         <location filename="../dialogsandnotificationspage.cpp" line="384"/>
         <source>Simple Message Box</source>
@@ -221,7 +215,6 @@ Hihihi...[böses Kichern]</translation>
     <message id="xx_dialogs_and_notifications_label_notifications">
         <location filename="../dialogsandnotificationspage.cpp" line="382"/>
         <source>Notifications and messages</source>
-        <oldsource>  Notifications</oldsource>
         <translation>Benachrichtigungen und Meldungen</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_event_banner">
@@ -248,18 +241,6 @@ Hihihi...[böses Kichern]</translation>
         <location filename="../imagepage.cpp" line="122"/>
         <source>Image properties</source>
         <translation>Bildeigenschaften</translation>
-    </message>
-    <message id="xx_Animation">
-        <source>Animation</source>
-        <translation type="obsolete">Animation</translation>
-    </message>
-    <message id="xx_Play">
-        <source>Play</source>
-        <translation type="obsolete">Abspielen</translation>
-    </message>
-    <message id="xx_Stop">
-        <source>Stop</source>
-        <translation type="obsolete">Stop</translation>
     </message>
     <message id="xx_image_operations">
         <location filename="../imagepage.cpp" line="140"/>
@@ -430,7 +411,6 @@ tooltip</source>
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="183"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
-        <oldsource>Please select your age:</oldsource>
         <translation variants="yes">
             <lengthvariant>Bitte wählen Sie Ihr Alter:</lengthvariant>
             <lengthvariant>Wählen Sie Ihr Alter:</lengthvariant>
@@ -458,9 +438,6 @@ tooltip</source>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
-        <oldsource>Slider is used for contnuous set of values, among which user can choose one value.
-
-Seekbar is a special type of Slider used for displaying playback status for multimedia content.</oldsource>
         <translation>Schieberegler werden benutzt für kontinuierliche Werte, unter denen der Benutzer einen auswählen kann.
 
 Ein Suchbalken ist ein spezieller Typ eines Schiebereglers, der benutzt wird um den Abspielstatus von Multimediainhalten anzuzeigen.</translation>
@@ -473,73 +450,15 @@ Ein Suchbalken ist ein spezieller Typ eines Schiebereglers, der benutzt wird um 
     <message id="xx_applicationmenu_page_info">
         <location filename="../applicationmenupage.cpp" line="75"/>
         <source>Application Menu is a menu element available to any view. &lt;ul&gt;&lt;li&gt;It can be opened by tapping on the menu title area.&lt;/li&gt;&lt;li&gt;It contains commands and view settings for the view in question and an optional area for style commands.&lt;/li&gt;&lt;li&gt;Each view of the application can have different menu contents.&lt;/li&gt;&lt;/ul&gt;&lt;b&gt;Guidelines&lt;/b&gt; for mandatory menu items: &lt;ul&gt;&lt;li&gt;Settings should be on the main View of the application, unless the settings are specific to a sub-View&lt;/li&gt;&lt;li&gt;Help should be available in each View &lt;/li&gt;&lt;li&gt;Exit task should be present in all Views except for the main View of the application.&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>Application Menu is a menu element available to any view. It can be opened by tapping on the View Menu title area.
-Application Menu contains commands and view settings for the view in question and an optional area for View Style Commands. Each View of the application can have different View Menu contents.
-Guidelines for mandatory application Menu items:
-    Settings should be on the main View of the application, unless the settings are specific to a sub-View
-    Help should be available in each View
-    Exit task should be present in all Views except for the main View of the application.</oldsource>
         <translation>“Application Menu” ist ein Menüelement, das für jedes “View” zur Verfügung steht. &lt;ul&gt;&lt;li&gt;Es kann geöffnet werden, in dem man auf den Titelbereich des Menüs klopft.&lt;/li&gt;&lt;li&gt;Es enthält Kommandos und “View”-Einstellungen für das relevante “View” und einen optionalen Bereich für Stil Kommandos.&lt;/li&gt;&lt;li&gt;Jedes “View” der Applikation kann unerschiedliche Menüinhalte haben.&lt;/li&gt;&lt;/ul&gt;&lt;b&gt;Richtlinien&lt;/b&gt; für zwingend erforderliche Menüeinträge: &lt;ul&gt;&lt;li&gt;Einstellungen sollten auf dem Haupt-“View” der Applikation zu finden sein, es sei denn, die Einstellungen sind spezifisch für ein Unter-“View”&lt;/li&gt;&lt;li&gt;In jedem “View” sollte eine Hilfe verfügbar sein &lt;/li&gt;&lt;li&gt;“Beenden der Aufgabe” sollte in jedem “View” verfügbar sein, ausgenommen im Haupt-“View” der Applikation.&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
-    <message id="xx_popup_country_of_residence">
-        <source>Country of residence</source>
-        <translation type="obsolete">Land des aktuellen Wohnorts</translation>
-    </message>
-    <message id="xx_popup_finland">
-        <source>Finland</source>
-        <translation type="obsolete">Finnland</translation>
-    </message>
-    <message id="xx_popup_brazil">
-        <source>Brazil</source>
-        <translation type="obsolete">Brasilien</translation>
-    </message>
-    <message id="xx_popup_ukraine">
-        <source>Ukraine</source>
-        <translation type="obsolete">Ukraine</translation>
-    </message>
-    <message id="xx_popup_italy">
-        <source>Italy</source>
-        <translation type="obsolete">Italien</translation>
-    </message>
-    <message id="xx_popup_chima">
-        <source>China</source>
-        <translation type="obsolete">China</translation>
-    </message>
-    <message id="xx_popup_india">
-        <source>India</source>
-        <translation type="obsolete">Indien</translation>
-    </message>
-    <message id="xx_popup_france">
-        <source>France</source>
-        <translation type="obsolete">Frankreich</translation>
-    </message>
-    <message id="xx_popup_england">
-        <source>England</source>
-        <translation type="obsolete">England</translation>
-    </message>
-    <message id="xx_popup_germany">
-        <source>Germany</source>
-        <translation type="obsolete">Deutschland</translation>
-    </message>
-    <message id="xx_popup_usa">
-        <source>USA</source>
-        <translation type="obsolete">Vereinigte Staaten von Amerika</translation>
-    </message>
-    <message id="xx_popup_canada">
-        <source>Canada</source>
-        <translation type="obsolete">Kanada</translation>
-    </message>
-    <message id="xx_popup_japan">
-        <source>Japan</source>
-        <translation type="obsolete">Japan</translation>
-    </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="95"/>
+        <location filename="../comboboxpage.cpp" line="94"/>
         <source>Title</source>
         <translation>Titel</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="97"/>
+        <location filename="../comboboxpage.cpp" line="96"/>
         <source>Sort - DescendingOrder</source>
         <translation>Sortieren — in absteigender Reihenfolge</translation>
     </message>
@@ -561,18 +480,12 @@ Guidelines for mandatory application Menu items:
     <message id="xx_progressindicator_unknown_duration_bar">
         <location filename="../progressbarpage.cpp" line="89"/>
         <source>Installing CoolApp</source>
-        <oldsource>unknown duration - bar</oldsource>
         <translation>Installiere tolles Programm</translation>
     </message>
     <message id="xx_progressindicator_known_duration_bar">
         <location filename="../progressbarpage.cpp" line="87"/>
         <source>Downloading nicepic.jpg</source>
-        <oldsource>known duration - bar</oldsource>
         <translation>Download vom nettesbild.jpg</translation>
-    </message>
-    <message id="xx_grid_title">
-        <source>Grid</source>
-        <translation type="obsolete">Gitter</translation>
     </message>
     <message id="xx_toolbar_page_example1">
         <location filename="../toolbarpage.cpp" line="168"/>
@@ -597,7 +510,6 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_title">
         <location filename="../toolbarpage.cpp" line="208"/>
         <source>ToolBar</source>
-        <oldsource>Tool Bar</oldsource>
         <translation>Werkzeugleiste</translation>
     </message>
     <message id="xx_toolbar_page_info">
@@ -652,7 +564,6 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
     <message id="xx_navigationbar_display_mode">
         <location filename="../navigationbarpage.cpp" line="129"/>
         <source>Components&apos; display mode:</source>
-        <oldsource>Application Page&apos;s display mode:</oldsource>
         <translation>Anzeigemodus der Applikationsseite:</translation>
     </message>
     <message id="xx_navigationbar_escapebutton_mode_label">
@@ -797,7 +708,7 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
     </message>
     <message id="xx_language_number_format">
         <location filename="../languagepage.cpp" line="310"/>
-        <source>Number format example: %1</source>
+        <source>Number format example: %1!! Number example: %1!! Number: %1</source>
         <translation variants="yes">
             <lengthvariant>Beispiel für Zahlenformatierung: %1</lengthvariant>
             <lengthvariant>Zahlenformatierung: %1</lengthvariant>
@@ -806,69 +717,40 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
     </message>
     <message id="xx_langage_date_time_format">
         <location filename="../languagepage.cpp" line="314"/>
-        <source>Date and time format example: %1</source>
+        <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
         <translation variants="yes">
-           <lengthvariant>Beispiel für Datums- und Zeitformatierung: %1</lengthvariant>
-           <lengthvariant>Datums- und Zeitformatierung: %1</lengthvariant>
-           <lengthvariant>Datum und Zeit: %1</lengthvariant>
-           <lengthvariant>Datums: %1</lengthvariant>
-           <lengthvariant>%1</lengthvariant>
+            <lengthvariant>Beispiel für Datums- und Zeitformatierung: %1</lengthvariant>
+            <lengthvariant>Datums- und Zeitformatierung: %1</lengthvariant>
+            <lengthvariant>Datum und Zeit: %1</lengthvariant>
+            <lengthvariant>Datums: %1</lengthvariant>
+            <lengthvariant>%1</lengthvariant>
         </translation>
     </message>
     <message id="xx_language_currency_format">
         <location filename="../languagepage.cpp" line="320"/>
-        <source>Currency format example: %1 %2 %3</source>
+        <source>Currency format example: %1 %2!! Currency: %1 %2</source>
         <translation variants="yes">
-            <lengthvariant>Beispiel für Geldbetragformatierung: %1 %2 %3</lengthvariant>
-            <lengthvariant>Geldbetragformatierung: %1 %2 %3</lengthvariant>
-            <lengthvariant>Geldbetrag: %1 %2 %3</lengthvariant>
-            <lengthvariant>Geld: %1 %2 %3</lengthvariant>
+            <lengthvariant>Beispiel für Geldbetragformatierung: %1 %2</lengthvariant>
+            <lengthvariant>Geldbetragformatierung: %1 %2</lengthvariant>
+            <lengthvariant>Geldbetrag: %1 %2</lengthvariant>
+            <lengthvariant>Geld: %1 %2</lengthvariant>
         </translation>
     </message>
     <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
-        <location filename="../languagepage.cpp" line="327"/>
-        <location filename="../languagepage.cpp" line="329"/>
-        <location filename="../languagepage.cpp" line="331"/>
-        <source>%Ln boxes with a total weight of %L1 kilogram</source>
+        <location filename="../languagepage.cpp" line="326"/>
+        <location filename="../languagepage.cpp" line="328"/>
+        <location filename="../languagepage.cpp" line="330"/>
+        <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
         <translation>
             <numerusform variants="yes">
-               <lengthvariant>%Ln Kiste mit Gesamtgewicht %L1 Kilogramm</lengthvariant>
-               <lengthvariant>%Ln Kiste mit Gesamtgewicht %L1 kg</lengthvariant>
+                <lengthvariant>%Ln Kiste mit Gesamtgewicht %L1 Kilogramm</lengthvariant>
+                <lengthvariant>%Ln Kiste mit Gesamtgewicht %L1 kg</lengthvariant>
             </numerusform>
             <numerusform variants="yes">
                 <lengthvariant>%Ln Kisten mit Gesamtgewicht %L1 Kilogramm</lengthvariant>
                 <lengthvariant>%Ln Kisten mit Gesamtgewicht %L1 kg</lengthvariant>
             </numerusform>
         </translation>
-    </message>
-    <message id="xx_language_arabic">
-        <source>Arabic</source>
-        <translation type="obsolete">Arabisch (العربية)</translation>
-    </message>
-    <message id="xx_language_english">
-        <source>English</source>
-        <translation type="obsolete">Englisch (English)</translation>
-    </message>
-    <message id="xx_language_finnish">
-        <source>Finnish</source>
-        <translation type="obsolete">Finnisch (Suomi)</translation>
-    </message>
-    <message id="xx_language_german">
-        <source>German</source>
-        <translation type="obsolete">Deutsch</translation>
-    </message>
-    <message id="xx_language_simplified_chinese">
-        <source>Simplified Chinese</source>
-        <translation type="obsolete">Vereinfachtes Chinesisch (中文)</translation>
-    </message>
-    <message id="xx_language_hungarian">
-        <source>Magyar</source>
-        <oldsource>Hungarian</oldsource>
-        <translation type="obsolete">Ungarisch (Magyar)</translation>
-    </message>
-    <message id="xx_language_none">
-        <source>None</source>
-        <translation type="obsolete">Keine (None)</translation>
     </message>
     <message id="xx_template_page_views_dialogs">
         <location filename="../templatepage.cpp" line="47"/>
@@ -903,7 +785,6 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
     <message id="xx_template_page_user_input">
         <location filename="../templatepage.cpp" line="59"/>
         <source>User input</source>
-        <oldsource>User Input</oldsource>
         <translation>Benutzereingaben</translation>
     </message>
     <message id="xx_template_page_input_feedback">
@@ -932,12 +813,12 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
         <translation>E-Mail Vorschlags text:</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="101"/>
+        <location filename="../comboboxpage.cpp" line="100"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>Das DuiComboBox Widget ist eine Kombination aus einem Knopf und einer Popup List. Es ist sehr ähnlich zur QComboBox aber erlaubt nicht den Text zu editieren.</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="91"/>
+        <location filename="../comboboxpage.cpp" line="90"/>
         <source>ComboBox</source>
         <translation>Combobox</translation>
     </message>
@@ -1042,9 +923,6 @@ sit amet</translation>
 Spinners can also be used in situations when duration is known, but available space on screen does not permit using a Progress bar.
 
 See the menu for examples of different use cases.</source>
-        <oldsource>Spinner is used to indicate that a process is ongoing and the duration is unknown.
-
-Spinners can also be used in situations when duration is known, but available space on screen does not permit using a Progress Bar.</oldsource>
         <translation>Wirbelräder werden benutzt um anzuzeigen, daß ein Vorgang abläuft, dessen Dauer unbekannt ist. 
 
 Wirbelräder können auch benutzt werden, wenn die Dauer bekannt ist aber der verfügbare Platz auf dem Bildschirm die Benutzung eines Fortschrittsbalkens nicht zuläßt.
@@ -1195,19 +1073,16 @@ Eingaberückmeldungen können mit Hilfe des Theming-Systems einfach für verschi
     <message id="xx_input_feedback_page_button2">
         <location filename="../feedbackpage.cpp" line="105"/>
         <source>Different</source>
-        <oldsource>Babytoy</oldsource>
         <translation>Anders</translation>
     </message>
     <message id="xx_input_feedback_page_button3">
         <location filename="../feedbackpage.cpp" line="107"/>
         <source>Sluggish</source>
-        <oldsource>Space</oldsource>
         <translation>Schwerfällig</translation>
     </message>
     <message id="xx_input_feedback_page_button4">
         <location filename="../feedbackpage.cpp" line="109"/>
         <source>Babytoy</source>
-        <oldsource>Silent</oldsource>
         <translation>Babyspielzeug</translation>
     </message>
     <message id="xx_input_feedback_page_button5">
@@ -1226,17 +1101,17 @@ Eingaberückmeldungen können mit Hilfe des Theming-Systems einfach für verschi
         <translation>Gitter Seite</translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="346"/>
+        <location filename="../videocontainerpage.cpp" line="362"/>
         <source>Video container</source>
         <translation>Video Behälter</translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="351"/>
+        <location filename="../videocontainerpage.cpp" line="367"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
         <translation>Klopfe auf das Video-Miniaturbild um abzuspielen oder anzuhalten. Klopfe und halte das Miniaturbild um das Video in Originalgröße anzusehen</translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="354"/>
+        <location filename="../videocontainerpage.cpp" line="370"/>
         <source>Gallery</source>
         <translation>Galerie</translation>
     </message>

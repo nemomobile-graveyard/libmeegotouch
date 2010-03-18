@@ -177,8 +177,7 @@ Muwhahaha... [evil laugh]</source>
     <message id="xx_dialogs_and_notifications_label_dialogs">
         <location filename="../dialogsandnotificationspage.cpp" line="364"/>
         <source>Dialog examples</source>
-        <oldsource>  DuiDialog examples</oldsource>
-        <translation type="unfinished">对话框</translation>
+        <translation>对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_query_dialog">
         <location filename="../dialogsandnotificationspage.cpp" line="366"/>
@@ -222,8 +221,7 @@ Muwhahaha... [evil laugh]</source>
     <message id="xx_dialogs_and_notifications_label_notifications">
         <location filename="../dialogsandnotificationspage.cpp" line="382"/>
         <source>Notifications and messages</source>
-        <oldsource>  Notifications</oldsource>
-        <translation type="unfinished">通知</translation>
+        <translation>通知</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_event_banner">
         <location filename="../dialogsandnotificationspage.cpp" line="386"/>
@@ -442,7 +440,6 @@ tooltip</source>
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="183"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
-        <oldsource>Please select your age:</oldsource>
         <translation>您的年龄：</translation>
     </message>
     <message id="xx_slider_brightness_label">
@@ -531,22 +528,22 @@ Seekbar is a special type of Slider used for displaying playback status for mult
         <translation type="obsolete">日本</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="101"/>
+        <location filename="../comboboxpage.cpp" line="100"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>选择对话框是按钮和弹出列表的组合。它非常类似于QComboBox, 但不允许编辑文本。</translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="95"/>
+        <location filename="../comboboxpage.cpp" line="94"/>
         <source>Title</source>
         <translation>标题</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="91"/>
+        <location filename="../comboboxpage.cpp" line="90"/>
         <source>ComboBox</source>
         <translation>组合对话框</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="97"/>
+        <location filename="../comboboxpage.cpp" line="96"/>
         <source>Sort - DescendingOrder</source>
         <translation>排序 — 降序</translation>
     </message>
@@ -798,27 +795,24 @@ The primary (single short tap) action of the element should not be duplicated in
     </message>
     <message id="xx_language_number_format">
         <location filename="../languagepage.cpp" line="310"/>
-        <source>Number format example: %1</source>
-        <oldsource>&lt;b&gt;Number format example:&lt;/b&gt; %1</oldsource>
+        <source>Number format example: %1!! Number example: %1!! Number: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_langage_date_time_format">
         <location filename="../languagepage.cpp" line="314"/>
-        <source>Date and time format example: %1</source>
-        <oldsource>&lt;b&gt;Date and time format example:&lt;/b&gt; %1</oldsource>
+        <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_currency_format">
         <location filename="../languagepage.cpp" line="320"/>
-        <source>Currency format example: %1 %2 %3</source>
-        <oldsource>&lt;b&gt;Currency format example:&lt;/b&gt; %1 %2 %3</oldsource>
+        <source>Currency format example: %1 %2!! Currency: %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
-        <location filename="../languagepage.cpp" line="327"/>
-        <location filename="../languagepage.cpp" line="329"/>
-        <location filename="../languagepage.cpp" line="331"/>
-        <source>%Ln boxes with a total weight of %L1 kilogram</source>
+        <location filename="../languagepage.cpp" line="326"/>
+        <location filename="../languagepage.cpp" line="328"/>
+        <location filename="../languagepage.cpp" line="330"/>
+        <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
         <translation type="unfinished">
             <numerusform></numerusform>
         </translation>
@@ -1150,30 +1144,27 @@ Input feedbacks can be easily configured for different purposes using the themin
     <message id="xx_input_feedback_page_button2">
         <location filename="../feedbackpage.cpp" line="105"/>
         <source>Different</source>
-        <oldsource>Babytoy</oldsource>
-        <translation type="unfinished">婴儿玩具</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_input_feedback_page_button3">
         <location filename="../feedbackpage.cpp" line="107"/>
         <source>Sluggish</source>
-        <oldsource>Space</oldsource>
-        <translation type="unfinished">空间</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_input_feedback_page_button4">
         <location filename="../feedbackpage.cpp" line="109"/>
         <source>Babytoy</source>
-        <oldsource>Silent</oldsource>
-        <translation type="unfinished">静音</translation>
+        <translation>婴儿玩具</translation>
     </message>
     <message id="xx_input_feedback_page_button5">
         <location filename="../feedbackpage.cpp" line="111"/>
         <source>Space</source>
-        <translation type="unfinished"></translation>
+        <translation>空间</translation>
     </message>
     <message id="xx_input_feedback_page_button6">
         <location filename="../feedbackpage.cpp" line="113"/>
         <source>Silent</source>
-        <translation type="unfinished"></translation>
+        <translation>静音</translation>
     </message>
     <message id="xx_gridpage_title">
         <location filename="../duigridpage.cpp" line="97"/>
@@ -1181,18 +1172,17 @@ Input feedbacks can be easily configured for different purposes using the themin
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="346"/>
+        <location filename="../videocontainerpage.cpp" line="362"/>
         <source>Video container</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="351"/>
+        <location filename="../videocontainerpage.cpp" line="367"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
-        <oldsource>Video container page info label.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="354"/>
+        <location filename="../videocontainerpage.cpp" line="370"/>
         <source>Gallery</source>
         <translation type="unfinished"></translation>
     </message>

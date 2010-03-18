@@ -305,24 +305,23 @@ void LanguagePage::retranslateUi()
     QTime time(14, 31, 0, 0);
     QDateTime datetime(date, time, Qt::UTC);
 
-    //% "Number format example: %1"
+    //% "Number format example: %1\x9c!! Number example: %1\x9c!! Number: %1"
     labelExampleNumber->setText(
         qtTrId("xx_language_number_format")
         .arg(currentLocale.formatNumber(12345670.89)));
-    //% "Date and time format example: %1"
+    //% "Date and time format example: %1\x9c!! Date and time: %1\x9c!! Date: %1\x9c!! %1"
     labelExampleDateTime->setText(
         qtTrId("xx_langage_date_time_format")
         .arg(currentLocale.formatDateTime(
                  datetime, DuiLocale::DateFull, DuiLocale::TimeFull,
                  DuiLocale::GregorianCalendar)));
-    //% "Currency format example: %1 %2 %3"
+    //% "Currency format example: %1 %2\x9c!! Currency: %1 %2"
     labelExampleCurrency->setText(
         qtTrId("xx_language_currency_format")
-        .arg(currentLocale.formatCurrency(1234.56, "USD"))
         .arg(currentLocale.formatCurrency(1234.56, "GBP"))
         .arg(currentLocale.formatCurrency(1234.56, "EUR")));
 
-    //% "%Ln boxes with a total weight of %L1 kilogram"
+    //% "%Ln boxes with a total weight of %L1 kilogram\x9c!! %Ln boxes, total weight of %L1 kg"
     labelExampleTranslation1->setText(
         qtTrId("xx_language_trans_%Ln_boxes_weight_%L1", 0).arg(1234.56));
     labelExampleTranslation2->setText(

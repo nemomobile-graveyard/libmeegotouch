@@ -11,12 +11,6 @@
     <message id="xx_applicationmenu_page_info">
         <location filename="../applicationmenupage.cpp" line="75"/>
         <source>Application Menu is a menu element available to any view. &lt;ul&gt;&lt;li&gt;It can be opened by tapping on the menu title area.&lt;/li&gt;&lt;li&gt;It contains commands and view settings for the view in question and an optional area for style commands.&lt;/li&gt;&lt;li&gt;Each view of the application can have different menu contents.&lt;/li&gt;&lt;/ul&gt;&lt;b&gt;Guidelines&lt;/b&gt; for mandatory menu items: &lt;ul&gt;&lt;li&gt;Settings should be on the main View of the application, unless the settings are specific to a sub-View&lt;/li&gt;&lt;li&gt;Help should be available in each View &lt;/li&gt;&lt;li&gt;Exit task should be present in all Views except for the main View of the application.&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>Application Menu is a menu element available to any view. It can be opened by tapping on the View Menu title area.
-Application Menu contains commands and view settings for the view in question and an optional area for View Style Commands. Each View of the application can have different View Menu contents.
-Guidelines for mandatory application Menu items:
-    Settings should be on the main View of the application, unless the settings are specific to a sub-View
-    Help should be available in each View
-    Exit task should be present in all Views except for the main View of the application.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_container_page_title">
@@ -37,7 +31,6 @@ Guidelines for mandatory application Menu items:
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="183"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
-        <oldsource>Please select your age:</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_slider_brightness_label">
@@ -60,9 +53,6 @@ Guidelines for mandatory application Menu items:
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
-        <oldsource>Slider is used for continuous set of values, among which user can choose one value.
-
-Seekbar is a special type of Slider used for displaying playback status for multimedia content.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_title">
@@ -165,7 +155,6 @@ Muwhahaha... [evil laugh]</source>
     <message id="xx_dialogs_and_notifications_label_dialogs">
         <location filename="../dialogsandnotificationspage.cpp" line="364"/>
         <source>Dialog examples</source>
-        <oldsource>  DuiDialog examples</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_query_dialog">
@@ -206,7 +195,6 @@ Muwhahaha... [evil laugh]</source>
     <message id="xx_dialogs_and_notifications_label_notifications">
         <location filename="../dialogsandnotificationspage.cpp" line="382"/>
         <source>Notifications and messages</source>
-        <oldsource>  Notifications</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_event_banner">
@@ -286,7 +274,6 @@ All Labels can be aligned left, right or center and will be automatically trunca
     <message id="xx_rich_label">
         <location filename="../labelpage.cpp" line="134"/>
         <source>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</source>
-        <oldsource>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italics&lt;/i&gt;, &lt;a href=&quot;http://www.nokia.com&quot;&gt;link&lt;/a&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_title">
@@ -396,27 +383,24 @@ All Labels can be aligned left, right or center and will be automatically trunca
     </message>
     <message id="xx_language_number_format">
         <location filename="../languagepage.cpp" line="310"/>
-        <source>Number format example: %1</source>
-        <oldsource>&lt;b&gt;Number format example:&lt;/b&gt; %1</oldsource>
+        <source>Number format example: %1!! Number example: %1!! Number: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_langage_date_time_format">
         <location filename="../languagepage.cpp" line="314"/>
-        <source>Date and time format example: %1</source>
-        <oldsource>&lt;b&gt;Date and time format example:&lt;/b&gt; %1</oldsource>
+        <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_currency_format">
         <location filename="../languagepage.cpp" line="320"/>
-        <source>Currency format example: %1 %2 %3</source>
-        <oldsource>&lt;b&gt;Currency format example:&lt;/b&gt; %1 %2 %3</oldsource>
+        <source>Currency format example: %1 %2!! Currency: %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
-        <location filename="../languagepage.cpp" line="327"/>
-        <location filename="../languagepage.cpp" line="329"/>
-        <location filename="../languagepage.cpp" line="331"/>
-        <source>%Ln boxes with a total weight of %L1 kilogram</source>
+        <location filename="../languagepage.cpp" line="326"/>
+        <location filename="../languagepage.cpp" line="328"/>
+        <location filename="../languagepage.cpp" line="330"/>
+        <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
         <translation type="unfinished">
             <numerusform></numerusform>
             <numerusform></numerusform>
@@ -485,7 +469,6 @@ All Labels can be aligned left, right or center and will be automatically trunca
     <message id="xx_navigationbar_display_mode">
         <location filename="../navigationbarpage.cpp" line="129"/>
         <source>Components&apos; display mode:</source>
-        <oldsource>Application Page&apos;s display mode:</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_navigationbar_escapebutton_mode_label">
@@ -546,22 +529,22 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="101"/>
+        <location filename="../comboboxpage.cpp" line="100"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="95"/>
+        <location filename="../comboboxpage.cpp" line="94"/>
         <source>Title</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="91"/>
+        <location filename="../comboboxpage.cpp" line="90"/>
         <source>ComboBox</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="97"/>
+        <location filename="../comboboxpage.cpp" line="96"/>
         <source>Sort - DescendingOrder</source>
         <translation type="unfinished"></translation>
     </message>
@@ -578,13 +561,11 @@ The primary (single short tap) action of the element should not be duplicated in
     <message id="xx_progressindicator_unknown_duration_bar">
         <location filename="../progressbarpage.cpp" line="89"/>
         <source>Installing CoolApp</source>
-        <oldsource>unknown duration - bar</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_progressindicator_known_duration_bar">
         <location filename="../progressbarpage.cpp" line="87"/>
         <source>Downloading nicepic.jpg</source>
-        <oldsource>known duration - bar</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_template_page_layouts_visuals">
@@ -620,7 +601,6 @@ The primary (single short tap) action of the element should not be duplicated in
     <message id="xx_template_page_user_input">
         <location filename="../templatepage.cpp" line="59"/>
         <source>User input</source>
-        <oldsource>User Input</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_template_page_input_feedback">
@@ -795,13 +775,11 @@ tooltip</source>
     <message id="xx_toolbar_page_title">
         <location filename="../toolbarpage.cpp" line="208"/>
         <source>ToolBar</source>
-        <oldsource>Tool Bar</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_toolbar_page_info">
         <location filename="../toolbarpage.cpp" line="215"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_checkbox_page_title">
@@ -899,9 +877,6 @@ sit amet</source>
 Spinners can also be used in situations when duration is known, but available space on screen does not permit using a Progress bar.
 
 See the menu for examples of different use cases.</source>
-        <oldsource>Spinner is used to indicate that a process is ongoing and the duration is unknown.
-
-Spinners can also be used in situations when duration is known, but available space on screen does not permit using a Progress Bar.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_spinner_page_email_header">
@@ -1044,19 +1019,16 @@ Input feedbacks can be easily configured for different purposes using the themin
     <message id="xx_input_feedback_page_button2">
         <location filename="../feedbackpage.cpp" line="105"/>
         <source>Different</source>
-        <oldsource>Babytoy</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_input_feedback_page_button3">
         <location filename="../feedbackpage.cpp" line="107"/>
         <source>Sluggish</source>
-        <oldsource>Space</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_input_feedback_page_button4">
         <location filename="../feedbackpage.cpp" line="109"/>
         <source>Babytoy</source>
-        <oldsource>Silent</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_input_feedback_page_button5">
@@ -1075,18 +1047,17 @@ Input feedbacks can be easily configured for different purposes using the themin
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="346"/>
+        <location filename="../videocontainerpage.cpp" line="362"/>
         <source>Video container</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="351"/>
+        <location filename="../videocontainerpage.cpp" line="367"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
-        <oldsource>Video container page info label.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="354"/>
+        <location filename="../videocontainerpage.cpp" line="370"/>
         <source>Gallery</source>
         <translation type="unfinished"></translation>
     </message>
