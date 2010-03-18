@@ -88,10 +88,11 @@ private:
     QDataStream stream;
     QSet<Dui::DuiThemeDaemonProtocol::PixmapIdentifier> requestedPixmaps;
     QSet<Dui::DuiThemeDaemonProtocol::PixmapIdentifier> readyPixmaps;
-    QDir imageDirectory;
     QString identifier;
     bool registered;
     int operationCount;
+    quint64 packetsSent;
+    QString currentTheme;
 };
 
 #endif

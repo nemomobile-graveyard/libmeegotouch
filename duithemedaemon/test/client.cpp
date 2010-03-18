@@ -25,6 +25,15 @@
 #include "duithemedaemon.h"
 #include "duithemedaemonprotocol.h"
 
+static const QString THEME_ROOT_DIRECTORY = QString("themes");
+
+QString getImageDirectory(const QString& identifier)
+{
+    return QString("dui") + QDir::separator() + 
+           QString(identifier) + QDir::separator() + 
+           QString("images");
+}
+
 void ClientThread::run()
 {
     Client client(identifier);
@@ -42,19 +51,31 @@ const QString &ClientThread::getId() const
 }
 
 using namespace Dui::DuiThemeDaemonProtocol;
-Client::Client(const QString &identifier) : identifier(identifier), registered(false)
+Client::Client(const QString &identifier) : identifier(identifier), registered(false), packetsSent(0)
 {
     operationCount = rand() % MAX_OPERATION_COUNT;
-    imageDirectory.setPath(QString(IMAGESDIR) + QDir::separator() + identifier);
 
-    int count = rand() % 200;
-    // create imagery
-    for (int i = 0; i < count; i++) {
-        QImage image(64, 64, QImage::Format_ARGB32);
-        image.fill(rand());
+    // list all themes
+    QDir themeDirectory(THEME_ROOT_DIRECTORY);
+    QStringList list = themeDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
+    for(int i=0; i<list.size(); i++) {
+        QString themeName = list.at(i);
 
-        QString filename = imageDirectory.absolutePath() + QDir::separator() + QString::number(i) + ".png";
-        image.save(filename, "PNG");
+        // create path for images
+        QString imagesPath = themeName + QDir::separator() + getImageDirectory(identifier);
+        if(themeDirectory.mkpath(imagesPath))
+        {
+            // create imagery
+            int count = rand() % 200;
+            // create imagery
+            for (int i = 0; i < count; i++) {
+                QImage image(64, 64, QImage::Format_ARGB32);
+                image.fill(rand());
+
+                QString filename = themeDirectory.absolutePath() + QDir::separator() + imagesPath + QDir::separator() + QString::number(i) + ".png";
+                image.save(filename, "PNG");
+            }
+        }
     }
 
     stream.setDevice(&socket);
@@ -100,16 +121,20 @@ Dui::DuiThemeDaemonProtocol::Packet Client::processOnePacket()
     case Packet::PixmapUpdatedPacket: {
         const PixmapHandle *handle = static_cast<const PixmapHandle *>(packet.data());
         if (requestedPixmaps.contains(handle->identifier)) {
+            // pixmap found from requested list -> new one
             requestedPixmaps.remove(handle->identifier);
             readyPixmaps.insert(handle->identifier);
+        } else if(readyPixmaps.contains(handle->identifier)) {
+            // this pixmap was already ready, so it is just updated (probably due to theme change)
         } else {
             qDebug() << "ERROR:" << identifier << "- pixmap reply to unknown request";
         }
     } break;
 
-    case Packet::ThemeChangedPacket:
-    case Packet::ThemeListPacket:
-        break;
+    case Packet::ThemeChangedPacket: {
+        const Dui::DuiThemeDaemonProtocol::ThemeChangeInfo *data = static_cast<const Dui::DuiThemeDaemonProtocol::ThemeChangeInfo *>(packet.data());
+        currentTheme = data->themeInheritance.at(0);
+    }break;
 
     case Packet::ThemeDaemonStatusPacket:
         break;
@@ -140,6 +165,7 @@ void Client::sendPacket()
             break;
 
         case RequestPixmap: {
+            QDir imageDirectory = currentTheme + QDir::separator() + getImageDirectory(identifier);
             QStringList list = imageDirectory.entryList(QDir::Files);
             if (list.count() > 0) {
                 // select image
@@ -200,11 +226,9 @@ void Client::registerToServer()
 #ifdef PRINT_INFO_MESSAGES
     qDebug() << "INFO:" << identifier << "- registering to server";
 #endif
-    Packet registration(Packet::RequestRegistrationPacket, new String(identifier));
+    Packet registration(Packet::RequestRegistrationPacket, packetsSent++);
+    registration.setData(new String(identifier));
     stream << registration;
-
-    Packet directory(Packet::RequestNewPixmapDirectoryPacket, new StringBool(imageDirectory.absolutePath(), false));
-    stream << directory;
 
     registered = true;
 }
@@ -214,7 +238,8 @@ void Client::requestPixmap(Dui::DuiThemeDaemonProtocol::PixmapIdentifier &pixmap
 #ifdef PRINT_INFO_MESSAGES
     qDebug() << "INFO:" << identifier << "- requesting pixmap" << pixmapIdentifier.imageId << pixmapIdentifier.size;
 #endif
-    Packet packet(Packet::RequestPixmapPacket, new PixmapIdentifier(pixmapIdentifier));
+    Packet packet(Packet::RequestPixmapPacket, packetsSent++);
+    packet.setData(new PixmapIdentifier(pixmapIdentifier));
     stream << packet;
 
     if (registered) {
@@ -227,7 +252,8 @@ void Client::releasePixmap(Dui::DuiThemeDaemonProtocol::PixmapIdentifier &pixmap
 #ifdef PRINT_INFO_MESSAGES
     qDebug() << "INFO:" << identifier << "- releasing pixmap" << pixmapIdentifier.imageId << pixmapIdentifier.size;
 #endif
-    Packet packet(Packet::ReleasePixmapPacket, new PixmapIdentifier(pixmapIdentifier));
+    Packet packet(Packet::ReleasePixmapPacket, packetsSent++);
+    packet.setData(new PixmapIdentifier(pixmapIdentifier));
     stream << packet;
     readyPixmaps.remove(pixmapIdentifier);
 }
@@ -243,7 +269,7 @@ void Client::checkConsistency()
     disconnect(&socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
 
     // send status query packet
-    Packet packet(Packet::QueryThemeDaemonStatusPacket);
+    Packet packet(Packet::QueryThemeDaemonStatusPacket, packetsSent++);
     stream << packet;
     if (!socket.flush()) {
         qDebug() << "ERROR:" << identifier << "- failed to write to socket" << socket.error();
@@ -297,32 +323,42 @@ bool Client::isDataConsistent(const Dui::DuiThemeDaemonProtocol::ClientList *lis
                 return false;
             }
 
+            // theme change may cause pixmaps to move from loaded list to request list in daemon side,
+            // so we'll compare both lists as one
+
+            // create list of daemon-side pixmaps (requests & loaded)
+            QList<PixmapIdentifier> daemon;
+            daemon.append(info.requestedPixmaps);
+            daemon.append(info.pixmaps);
+
+            // create list of client-side pixmaps (requests & loaded)
+            QList<PixmapIdentifier> client;
+            client.append(requestedPixmaps.toList());
+            client.append(readyPixmaps.toList());
+
             // check that the daemon has correct amount of pixmaps in load queue
-            if (info.requestedPixmaps.count() != requestedPixmaps.count()) {
-                qDebug() << "ERROR:" << identifier << "- incorrect requested pixmap count, Themedaemon says:" << info.requestedPixmaps.count() << "and client says:" << requestedPixmaps.count();
+            if (daemon.count() != client.count()) {
+                qDebug() << "ERROR:" << identifier << "- incorrect pixmap count, Themedaemon says:" << daemon.count() << "and client says:" << client.count();
                 break;
             }
 
-            // check that we can find all of these from our list
-            foreach(const PixmapIdentifier & pixmapIdentifier, requestedPixmaps) {
-                if (!info.requestedPixmaps.contains(pixmapIdentifier)) {
-                    // pixmap not found from us, but themedaemon reported it -> inconsistent state
-                    qDebug() << "ERROR:" << identifier << "- client-side requested pixmap not found:" << pixmapIdentifier.imageId << '(' << pixmapIdentifier.size << ')';
+            // check that we can find all daemon-side pixmaps from the client-side list
+            foreach(const PixmapIdentifier & pixmapIdentifier, daemon) {
+                if (!client.contains(pixmapIdentifier)) {
+                    // pixmap not found from client, but themedaemon reported it -> inconsistent state
+                    qDebug() << "ERROR:" << identifier << "- pixmap not found from client-side list:" << pixmapIdentifier.imageId << '(' << pixmapIdentifier.size << ')';
                     break;
+                } else {
+                    // found, we can remove this one from client list
+                    client.removeOne(pixmapIdentifier);
                 }
             }
 
-            // check that there is correct amount of pixmaps
-            if (info.pixmaps.count() - info.releasedPixmaps.count() != readyPixmaps.count()) {
-                qDebug() << "ERROR:" << identifier << "- incorrect pixmap count, Themedaemon says:" << info.pixmaps.count() + info.releasedPixmaps.count() << "and client says:" << readyPixmaps.count();
-                break;
-            }
-
-            // check that we can find all of these from our list
-            foreach(const PixmapIdentifier & pixmapIdentifier, readyPixmaps) {
-                if (!info.pixmaps.contains(pixmapIdentifier) && !info.releasedPixmaps.contains(pixmapIdentifier)) {
-                    // pixmap not found from us, but themedaemon reported it -> inconsistent state
-                    qDebug() << "ERROR:" << identifier << "- client-side pixmap not found:" << pixmapIdentifier.imageId << '(' << pixmapIdentifier.size << ')';
+            // check that we can find all client-side pixmaps from the daemon-side list
+            foreach(const PixmapIdentifier & pixmapIdentifier, client) {
+                if (!daemon.contains(pixmapIdentifier)) {
+                    // pixmap not found from daemon-side list, but exists in client-side list -> inconsistent state
+                    qDebug() << "ERROR:" << identifier << "- pixmap not found from daemon-side list:" << pixmapIdentifier.imageId << '(' << pixmapIdentifier.size << ')';
                     break;
                 }
             }

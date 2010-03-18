@@ -29,7 +29,7 @@ int main(int argc, char **argv)
     QApplication app(argc, argv);
 
     QProcess td;
-    td.start("../duithemedaemon", QStringList());
+    td.start("./testdaemon/testdaemon", QStringList());
     // start theme daemon
     if (td.waitForStarted()) {
         // This is the class that handles the test

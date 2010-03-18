@@ -20,6 +20,7 @@
 #include <QDebug>
 #include <QTimer>
 #include <QApplication>
+#include <DuiGConfItem>
 #include <QDir>
 #include "clientmanager.h"
 #include "client.h"
@@ -42,11 +43,30 @@ void removeDirectoryRecursive(const QString &path)
     }
 }
 
+static const QString THEME_ROOT_DIRECTORY = QString("themes");
+void cleanup()
+{
+    QDir themeDirectory(THEME_ROOT_DIRECTORY);
+    QStringList list = themeDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
+    for(int i=0; i<list.size(); i++) {
+        QString path = list.at(i);
+
+        QDir theme(themeDirectory.absolutePath() + QDir::separator() + path + QDir::separator() + QString("dui"));
+        // find all client directories
+        QStringList directories = theme.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
+        for(int j=0; j<directories.size(); j++) {
+            if(directories.at(j).startsWith("client"))
+            {
+                removeDirectoryRecursive(theme.absolutePath() + QDir::separator() + directories.at(j));
+                theme.rmdir(directories.at(j));
+            }
+        }
+    }
+}
+
 ClientManager::ClientManager(QProcess &process) : shutdown(false), themedaemon(process)
 {
-    removeDirectoryRecursive(QDir(IMAGESDIR).absolutePath());
-    QDir dir;
-    dir.mkdir(IMAGESDIR);
+    cleanup();
 
     // start the test after 1 sec (allow themedaemon to get online)
     QTimer::singleShot(1000, this, SLOT(start()));
@@ -55,7 +75,7 @@ ClientManager::ClientManager(QProcess &process) : shutdown(false), themedaemon(p
 ClientManager::~ClientManager()
 {
     // perform cleanup
-    removeDirectoryRecursive(IMAGESDIR);
+    cleanup();
 }
 
 void ClientManager::spawnClient()
@@ -65,21 +85,14 @@ void ClientManager::spawnClient()
     client->setId("client" + QString::number(clientId++));
 
     // generate imagery for testing purposes
-    QDir themeDirectory(IMAGESDIR);
-    if (themeDirectory.mkdir(client->getId())) {
-        connect(client, SIGNAL(started()), this, SLOT(clientStarted()));
-        connect(client, SIGNAL(finished()), this, SLOT(clientFinished()));
-        clients.insert(client);
+    connect(client, SIGNAL(started()), this, SLOT(clientStarted()));
+    connect(client, SIGNAL(finished()), this, SLOT(clientFinished()));
+    clients.insert(client);
 
-        client->start();
+    client->start();
 #ifdef PRINT_INFO_MESSAGES
-        qDebug() << "INFO: ClientManager - Client started, number of active clients:" << clients.count();
+    qDebug() << "INFO: ClientManager - Client started, number of active clients:" << clients.count();
 #endif
-    } else {
-        qDebug() << "ERROR: ClientManager - Failed to spawn new client" << client->getId();
-        delete client;
-        stop();
-    }
 }
 
 void ClientManager::start()
@@ -87,7 +100,8 @@ void ClientManager::start()
 #ifdef PRINT_INFO_MESSAGES
     qDebug() << "INFO: ClientManager - Starting up...";
 #endif
-    // make sure themedaemon is online
+    // change theme & begin theme switching
+    changeTheme();
 
     // start performing consistency checks & spawn new clients
     QTimer::singleShot(0, this, SLOT(checkConsistency()));
@@ -153,4 +167,28 @@ void ClientManager::checkConsistency()
         QTimer::singleShot(5000, this, SLOT(checkConsistency()));
     }
 }
+
+void ClientManager::changeTheme()
+{
+#ifdef HAVE_GCONF
+    // get list of themes
+    QDir themeDirectory(THEME_ROOT_DIRECTORY);
+    QStringList list = themeDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
+
+    if(list.size() == 0)
+        return;
+
+    int themeIndex = rand() % list.size();
+
+#ifdef PRINT_INFO_MESSAGES
+    qDebug() << "INFO: Changing theme to:" << list[themeIndex];
+#endif
+    DuiGConfItem themeName("/Dui/theme/name");
+    themeName.set(list[themeIndex]);
+
+    // change theme again after a short period of time
+    QTimer::singleShot(2000, this, SLOT(changeTheme()));
+#endif
+}
+
 

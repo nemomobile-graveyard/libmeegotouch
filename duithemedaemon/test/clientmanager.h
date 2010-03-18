@@ -47,6 +47,7 @@ private slots:
 
     void clientStarted();
     void clientFinished();
+    void changeTheme();
 
 private:
     QSet<ClientThread *> clients;
