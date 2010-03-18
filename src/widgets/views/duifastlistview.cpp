@@ -263,10 +263,6 @@ void DuiFastListView::layoutChanged()
 
     updateGeometry();
     d_ptr->clearVisibleItemsArray();
-    if(d_ptr->model->rowCount())
-    {
-        d_ptr->createVisibleItems();
-    }
 }
 
 void DuiFastListView::modelReset()
