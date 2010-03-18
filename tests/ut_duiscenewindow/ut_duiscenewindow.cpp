@@ -205,17 +205,19 @@ void Ut_DuiSceneWindow::testAppearedDisappearedSignals()
     QCOMPARE(spyDisappeared.count(), 1);
 }
 
-void Ut_DuiSceneWindow::opacityAfterAppearNow()
+void Ut_DuiSceneWindow::opacityAfterDisappearNow()
 {
     m_subject->setOpacity(0.0);
     m_subject->appearNow();
+    m_subject->disappearNow();
     QCOMPARE(m_subject->opacity(), 1.0);
 }
 
-void Ut_DuiSceneWindow::opacityAfterAppear()
+void Ut_DuiSceneWindow::opacityAfterDisappear()
 {
     m_subject->setOpacity(0.0);
-    m_subject->appear();
+    m_subject->appearNow();
+    m_subject->disappear();
     QCOMPARE(m_subject->opacity(), 1.0);
 }
 
