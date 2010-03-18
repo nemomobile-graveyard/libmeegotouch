@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "duifiledatastore.h"
+#include "duifiledatastore_p.h"
 #include <QTemporaryFile>
 #include <QFileInfo>
 
@@ -136,42 +137,54 @@ static bool doSync(QSettings &originalSettings, QScopedPointer<QFileSystemWatche
     return returnValue;
 }
 
-DuiFileDataStore::DuiFileDataStore(const QString &filePath) :
+DuiFileDataStorePrivate::DuiFileDataStorePrivate(const QString &filePath) :
     settings(filePath, QSettings::IniFormat),
     watcher(new QFileSystemWatcher())
 {
     settings.sync();
+}
+
+DuiFileDataStore::DuiFileDataStore(const QString &filePath) :
+    d_ptr(new DuiFileDataStorePrivate(filePath))
+{
+    Q_D(DuiFileDataStore);
     takeSnapshot();
-    addPathsToWatcher(filePath, watcher);
-    connect(watcher.data(), SIGNAL(fileChanged(QString)),
+    addPathsToWatcher(filePath, d->watcher);
+    connect(d->watcher.data(), SIGNAL(fileChanged(QString)),
             this, SLOT(fileChanged(QString)));
-    connect(watcher.data(), SIGNAL(directoryChanged(QString)),
+    connect(d->watcher.data(), SIGNAL(directoryChanged(QString)),
             this, SLOT(directoryChanged(QString)));
+}
+
+DuiFileDataStore::~DuiFileDataStore()
+{
+    delete d_ptr;
 }
 
 bool DuiFileDataStore::createValue(const QString &key, const QVariant &value)
 {
+    Q_D(DuiFileDataStore);
     bool returnValue = false;
     // QSettings has some kind of a cache so we'll prevent any temporary writes
     // by checking if the data can be actually stored before doing anything
     if (isWritable()) {
-        bool originalValueSet = settings.contains(key);
-        QVariant originalValue = settings.value(key);
-        settings.setValue(key, value);
-        bool syncOk = doSync(settings, watcher);
+        bool originalValueSet = d->settings.contains(key);
+        QVariant originalValue = d->settings.value(key);
+        d->settings.setValue(key, value);
+        bool syncOk = doSync(d->settings, d->watcher);
         if (syncOk) {
             returnValue = true;
             // Emit valueChanged signal when value is changed or a new key is added
             if ((originalValueSet && originalValue != value)
                     || !originalValueSet) {
-                settingsSnapshot[key] = value;
+                d->settingsSnapshot[key] = value;
                 emit valueChanged(key, value);
             }
         } else if (originalValueSet) {
             // if sync fails, make sure the value in memory is the original
-            settings.setValue(key, originalValue);
+            d->settings.setValue(key, originalValue);
         } else {
-            settings.remove(key);
+            d->settings.remove(key);
         }
 
     }
@@ -180,23 +193,24 @@ bool DuiFileDataStore::createValue(const QString &key, const QVariant &value)
 
 bool DuiFileDataStore::setValue(const QString &key, const QVariant &value)
 {
+    Q_D(DuiFileDataStore);
     bool returnValue = false;
     // QSettings has some kind of a cache so we'll prevent any temporary writes
     // by checking if the data can be actually stored before doing anything
-    if (isWritable() && settings.contains(key)) {
-        QVariant originalValue = settings.value(key);
-        settings.setValue(key, value);
-        bool syncOk = doSync(settings, watcher);
+    if (isWritable() && d->settings.contains(key)) {
+        QVariant originalValue = d->settings.value(key);
+        d->settings.setValue(key, value);
+        bool syncOk = doSync(d->settings, d->watcher);
         if (syncOk) {
             returnValue = true;
             // Emit valueChanged signal when value is changed
             if (originalValue != value) {
-                settingsSnapshot[key] = value;
+                d->settingsSnapshot[key] = value;
                 emit valueChanged(key, value);
             }
         } else {
             // if sync fails, make sure the value in memory is the original
-            settings.setValue(key, originalValue);
+            d->settings.setValue(key, originalValue);
         }
     }
     return returnValue;
@@ -204,33 +218,36 @@ bool DuiFileDataStore::setValue(const QString &key, const QVariant &value)
 
 QVariant DuiFileDataStore::value(const QString &key) const
 {
-    return settings.value(key);
+    Q_D(const DuiFileDataStore);
+    return d->settings.value(key);
 }
 
 QStringList DuiFileDataStore::allKeys() const
 {
-    return settings.allKeys();
+    Q_D(const DuiFileDataStore);
+    return d->settings.allKeys();
 }
 
 void DuiFileDataStore::remove(const QString &key)
 {
+    Q_D(DuiFileDataStore);
     // QSettings has some kind of a cache so we'll prevent any temporary writes
     // by checking if the data can be actually stored before doing anything
     if (isWritable()) {
-        bool originalValueSet = settings.contains(key);
+        bool originalValueSet = d->settings.contains(key);
         if (!originalValueSet) {
             return;
         }
-        QVariant originalValue = settings.value(key);
-        settings.remove(key);
-        bool syncOk = doSync(settings, watcher);
+        QVariant originalValue = d->settings.value(key);
+        d->settings.remove(key);
+        bool syncOk = doSync(d->settings, d->watcher);
         if (!syncOk) {
             if (originalValueSet) {
                 // if sync fails, make sure the value in memory is the original
-                settings.setValue(key, originalValue);
+                d->settings.setValue(key, originalValue);
             }
         } else {
-            settingsSnapshot.remove(key);
+            d->settingsSnapshot.remove(key);
             emit valueChanged(key, QVariant());
         }
     }
@@ -238,58 +255,64 @@ void DuiFileDataStore::remove(const QString &key)
 
 void DuiFileDataStore::clear()
 {
+    Q_D(DuiFileDataStore);
     // QSettings has some kind of a cache so we'll prevent any temporary writes
     // by checking if the data can be actually stored before doing anything
     if (isWritable()) {
-        settings.clear();
-        settings.sync();
+        d->settings.clear();
+        d->settings.sync();
         takeSnapshot();
     }
 }
 
 bool DuiFileDataStore::contains(const QString &key) const
 {
-    return settings.contains(key);
+    Q_D(const DuiFileDataStore);
+    return d->settings.contains(key);
 }
 
 bool DuiFileDataStore::isReadable() const
 {
-    return settings.status() == QSettings::NoError;
+    Q_D(const DuiFileDataStore);
+    return d->settings.status() == QSettings::NoError;
 }
 
 bool DuiFileDataStore::isWritable() const
 {
-    return settings.isWritable() && settings.status() == QSettings::NoError;
+    Q_D(const DuiFileDataStore);
+    return d->settings.isWritable() && d->settings.status() == QSettings::NoError;
 }
 
 void DuiFileDataStore::takeSnapshot()
 {
-    settingsSnapshot.clear();
-    foreach(const QString & key, settings.allKeys()) {
-        settingsSnapshot.insert(key, settings.value(key));
+    Q_D(DuiFileDataStore);
+    d->settingsSnapshot.clear();
+    foreach(const QString & key, d->settings.allKeys()) {
+        d->settingsSnapshot.insert(key, d->settings.value(key));
     }
 }
 
 void DuiFileDataStore::fileChanged(const QString &fileName)
 {
+    Q_D(DuiFileDataStore);
     // sync the settings and add the path, for observing
     // the file even if it was deleted
-    settings.sync();
-    addPathsToWatcher(settings.fileName(), watcher);
-    if (settings.fileName() == fileName && isWritable()) {
+    d->settings.sync();
+    addPathsToWatcher(d->settings.fileName(), d->watcher);
+    if (d->settings.fileName() == fileName && isWritable()) {
         // Check whether the values for existing keys have changed or
         // if keys have been deleted
-        foreach(const QString & key, settingsSnapshot.keys()) {
-            if ((settings.contains(key)
-                    && settings.value(key) != settingsSnapshot.value(key))
-                    || (!settings.contains(key))) {
-                emit valueChanged(key, settings.value(key));
+        foreach(const QString & key, d->settingsSnapshot.keys()) {
+            if ((d->settings.contains(key)
+                    && d->settings.value(key) != d->settingsSnapshot.value(key))
+                    || (!d->settings.contains(key))) {
+                emit valueChanged(key, d->settings.value(key));
             }
         }
         // Check whether new keys have been added
-        foreach(const QString & key, settings.allKeys()) {
-            if (!settingsSnapshot.contains(key)) {
-                emit valueChanged(key, settings.value(key));
+        foreach(const QString & key, d->settings.allKeys()) {
+            if (!d->settingsSnapshot.contains(key)) {
+                emit valueChanged(key, d->settings.value(key));
             }
         }
         takeSnapshot();
@@ -298,10 +321,11 @@ void DuiFileDataStore::fileChanged(const QString &fileName)
 
 void DuiFileDataStore::directoryChanged(const QString &fileName)
 {
-    if (fileName == QFileInfo(settings.fileName()).canonicalPath()) {
+    Q_D(DuiFileDataStore);
+    if (fileName == QFileInfo(d->settings.fileName()).canonicalPath()) {
         // we can't know which file changed, so we'll sync at this
         // point. This is not very optimal, but it at least works.
-        fileChanged(settings.fileName());
+        fileChanged(d->settings.fileName());
     }
 }
 

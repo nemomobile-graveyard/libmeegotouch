@@ -32,6 +32,7 @@ HEADERS += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.h \
     $$MASHUP_MASHUP_SRC_DIR/duiaggregatedataaccess.h \
     $$MASHUP_MASHUP_SRC_DIR/duiaggregatedataaccess_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duifiledatastore.h \
+    $$MASHUP_MASHUP_SRC_DIR/duifiledatastore_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvas.h \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvas_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasmodel.h \
