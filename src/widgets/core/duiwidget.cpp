@@ -170,22 +170,6 @@ QGraphicsView *DuiWidgetPrivate::fetchGraphicsView()
     return graphicsView;
 }
 
-void DuiWidgetPrivate::gestureEvent(QGestureEvent *event)
-{
-    foreach(QGesture* state, event->gestures()) {
-        if (Qt::TapAndHoldGesture == state->gestureType()) {
-            QTapAndHoldGesture* tapAndHoldState = static_cast<QTapAndHoldGesture *>(state);
-            tapAndHoldGesture(event,tapAndHoldState);
-        }
-    }
-}
-
-void DuiWidgetPrivate::tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture *state)
-{
-    Q_UNUSED(event);
-    Q_UNUSED(state);
-}
-
 void DuiWidget::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event)
 {
     Q_D(DuiWidget);
@@ -349,9 +333,55 @@ void DuiWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     }
 }
 
+void DuiWidget::gestureEvent(QGestureEvent *event)
+{
+    foreach(QGesture* gesture, event->gestures()) {
+        if (Qt::TapAndHoldGesture == gesture->gestureType()) {
+            QTapAndHoldGesture* tapAndHoldState = static_cast<QTapAndHoldGesture *>(gesture);
+            tapAndHoldGestureEvent(event,tapAndHoldState);
+        } else if (Qt::PanGesture == gesture->gestureType()) {
+            QPanGesture* panState = static_cast<QPanGesture *>(gesture);
+            panGestureEvent(event,panState);
+        } else if (Qt::PinchGesture == gesture->gestureType()) {
+            QPinchGesture* pinchState = static_cast<QPinchGesture *>(gesture);
+            pinchGestureEvent(event,pinchState);
+        } else if (Qt::TapGesture == gesture->gestureType()) {
+            QTapGesture* tapState = static_cast<QTapGesture *>(gesture);
+            tapGestureEvent(event,tapState);
+        } else if (Qt::SwipeGesture == gesture->gestureType()) {
+            QSwipeGesture* swipeState = static_cast<QSwipeGesture *>(gesture);
+            swipeGestureEvent(event,swipeState);
+        }
+    }
+}
+
+void DuiWidget::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    event->ignore(gesture);
+}
+
+void DuiWidget::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+    event->ignore(gesture);
+}
+
+void DuiWidget::pinchGestureEvent(QGestureEvent *event, QPinchGesture* gesture)
+{
+    event->ignore(gesture);
+}
+
+void DuiWidget::tapGestureEvent(QGestureEvent *event, QTapGesture* gesture)
+{
+    event->ignore(gesture);
+}
+
+void DuiWidget::swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture)
+{
+    event->ignore(gesture);
+}
+
 bool DuiWidget::event(QEvent *event)
 {
-    Q_D(DuiWidget);
 
 //    if (DuiTouchEvent::cast2TouchEvent(event))
 //        duiDebug("DuiWidget") << "touchevent in DuiWidget:" << event;
@@ -374,7 +404,7 @@ bool DuiWidget::event(QEvent *event)
     } else if (type == DuiOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<DuiOnDisplayChangeEvent *>(event));
     } else if (type == QEvent::Gesture) {
-        d->gestureEvent(static_cast<QGestureEvent*>(event));
+        gestureEvent(static_cast<QGestureEvent*>(event));
     }
     return QGraphicsWidget::event(event);
 }

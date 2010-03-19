@@ -39,13 +39,6 @@ DuiWidgetPrivate::DuiWidgetPrivate() : selected(false)
 DuiWidgetPrivate::~DuiWidgetPrivate()
 {
 }
-void DuiWidgetPrivate::gestureEvent(QGestureEvent* )
-{
-}
-void  DuiWidgetPrivate::tapAndHoldGesture(QGestureEvent *, QTapAndHoldGesture* )
-{
-}
-
 // AppletCommunicator stubs to get rid of IPC
 bool DuiAppletServer::startServer(const QString &)
 {
