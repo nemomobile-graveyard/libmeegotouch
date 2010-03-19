@@ -496,129 +496,141 @@ Seekbar is a special type of Slider used for displaying playback status for mult
         <translation type="unfinished">tunnettu aika - palkki</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="114"/>
+        <location filename="../languagepage.cpp" line="120"/>
         <source>Change Language</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_locale_none">
-        <location filename="../languagepage.cpp" line="133"/>
+        <location filename="../languagepage.cpp" line="139"/>
         <source>None</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_locale_ar">
-        <location filename="../languagepage.cpp" line="138"/>
+        <location filename="../languagepage.cpp" line="144"/>
         <source>Arabic</source>
         <translation>Arabia</translation>
     </message>
     <message id="xx_locale_de">
-        <location filename="../languagepage.cpp" line="143"/>
+        <location filename="../languagepage.cpp" line="149"/>
         <source>German</source>
         <translation>Saksaa</translation>
     </message>
     <message id="xx_locale_de_AT">
-        <location filename="../languagepage.cpp" line="148"/>
+        <location filename="../languagepage.cpp" line="154"/>
         <source>German (Austria)</source>
         <translation>Saksaa (Itävalta)</translation>
     </message>
     <message id="xx_locale_de_CH">
-        <location filename="../languagepage.cpp" line="153"/>
+        <location filename="../languagepage.cpp" line="159"/>
         <source>German (Switzerland)</source>
         <translation>Saksaa (Sveitsi)</translation>
     </message>
     <message id="xx_locale_en">
-        <location filename="../languagepage.cpp" line="158"/>
+        <location filename="../languagepage.cpp" line="164"/>
         <source>English</source>
         <translation>Englantia</translation>
     </message>
     <message id="xx_locale_fi">
-        <location filename="../languagepage.cpp" line="163"/>
+        <location filename="../languagepage.cpp" line="169"/>
         <source>Finnish</source>
         <translation>Suomi</translation>
     </message>
     <message id="xx_locale_hi">
-        <location filename="../languagepage.cpp" line="168"/>
+        <location filename="../languagepage.cpp" line="174"/>
         <source>Hindi</source>
         <translation>Hindi</translation>
     </message>
     <message id="xx_locale_hu">
-        <location filename="../languagepage.cpp" line="173"/>
+        <location filename="../languagepage.cpp" line="179"/>
         <source>Hungarian</source>
         <translation>Unkari</translation>
     </message>
     <message id="xx_locale_ja">
-        <location filename="../languagepage.cpp" line="178"/>
+        <location filename="../languagepage.cpp" line="184"/>
         <source>Japanese</source>
         <translation>Japani</translation>
     </message>
     <message id="xx_locale_ur">
-        <location filename="../languagepage.cpp" line="183"/>
+        <location filename="../languagepage.cpp" line="189"/>
         <source>Urdu</source>
         <translation>Urduksi</translation>
     </message>
     <message id="xx_locale_ur_PK">
-        <location filename="../languagepage.cpp" line="188"/>
+        <location filename="../languagepage.cpp" line="194"/>
         <source>Urdu (Pakistan)</source>
         <translation>Urduksi (Pakistan)</translation>
     </message>
     <message id="xx_locale_ur_IN">
-        <location filename="../languagepage.cpp" line="193"/>
+        <location filename="../languagepage.cpp" line="199"/>
         <source>Urdu (India)</source>
         <translation type="unfinished">Urduksi (Intia)</translation>
     </message>
     <message id="xx_locale_zh_CN">
-        <location filename="../languagepage.cpp" line="198"/>
+        <location filename="../languagepage.cpp" line="204"/>
         <source>Chinese (China)</source>
         <translation>Kiina (Kiina)</translation>
     </message>
     <message id="xx_locale_zh_TW">
-        <location filename="../languagepage.cpp" line="203"/>
+        <location filename="../languagepage.cpp" line="209"/>
         <source>Chinese (Taiwan)</source>
         <translation>Kiina (Taiwan)</translation>
     </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="298"/>
+        <location filename="../languagepage.cpp" line="304"/>
         <source>Please select language</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_combobox_lctime_title">
-        <location filename="../languagepage.cpp" line="300"/>
+        <location filename="../languagepage.cpp" line="306"/>
         <source>Locale for time</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_combobox_lccollate_title">
-        <location filename="../languagepage.cpp" line="302"/>
+        <location filename="../languagepage.cpp" line="308"/>
         <source>Locale for collation</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_combobox_lcnumeric_title">
-        <location filename="../languagepage.cpp" line="304"/>
+        <location filename="../languagepage.cpp" line="310"/>
         <source>Locale for numbers</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_combobox_lcmonetary_title">
-        <location filename="../languagepage.cpp" line="306"/>
+        <location filename="../languagepage.cpp" line="312"/>
         <source>Locale for money</source>
         <translation type="unfinished"></translation>
     </message>
+    <message id="qtn_comm_command_yes">
+        <location filename="../languagepage.cpp" line="316"/>
+        <location filename="../languagepage.cpp" line="323"/>
+        <source>Yes</source>
+        <translation>Kyllä</translation>
+    </message>
+    <message id="qtn_comm_command_no">
+        <location filename="../languagepage.cpp" line="319"/>
+        <location filename="../languagepage.cpp" line="326"/>
+        <source>No</source>
+        <translation>Ei</translation>
+    </message>
     <message id="xx_language_number_format">
-        <location filename="../languagepage.cpp" line="314"/>
+        <location filename="../languagepage.cpp" line="335"/>
         <source>Number format example: %1!! Number example: %1!! Number: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_langage_date_time_format">
-        <location filename="../languagepage.cpp" line="318"/>
+        <location filename="../languagepage.cpp" line="339"/>
         <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_currency_format">
-        <location filename="../languagepage.cpp" line="324"/>
+        <location filename="../languagepage.cpp" line="345"/>
         <source>Currency format example: %1 %2!! Currency: %1 %2</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
-        <location filename="../languagepage.cpp" line="330"/>
-        <location filename="../languagepage.cpp" line="332"/>
-        <location filename="../languagepage.cpp" line="334"/>
+        <location filename="../languagepage.cpp" line="351"/>
+        <location filename="../languagepage.cpp" line="353"/>
+        <location filename="../languagepage.cpp" line="355"/>
         <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
         <translation type="unfinished">
             <numerusform></numerusform>
@@ -626,7 +638,7 @@ Seekbar is a special type of Slider used for displaying playback status for mult
         </translation>
     </message>
     <message id="xx_language_font_test">
-        <location filename="../languagepage.cpp" line="338"/>
+        <location filename="../languagepage.cpp" line="359"/>
         <source>Font test:</source>
         <translation type="unfinished"></translation>
     </message>
