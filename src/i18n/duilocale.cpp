@@ -481,6 +481,15 @@ void DuiLocalePrivate::removeTrFromQCoreApp()
     }
 }
 
+QLocale::QLocale DuiLocalePrivate::createQLocale(DuiLocale::Category category) const
+{
+    Q_Q(const DuiLocale);
+    QLocale qlocale(q->categoryLanguage(category)
+                    + '_' +
+                    q->categoryCountry(category));
+    return qlocale;
+}
+
 // sets category to specific locale
 void DuiLocalePrivate::setCategoryLocale(DuiLocale *duilocale,
         DuiLocale::Category category,
@@ -874,10 +883,7 @@ void DuiLocale::setDefault(const DuiLocale &locale)
 
     // Setting the default QLocale is needed to get localized number
     // support in translations via %Ln, %L1, %L2, ...:
-    QLocale qlocale(locale.categoryLanguage(DuiLcNumeric)
-                    + '_'
-                    + locale.categoryCountry(DuiLcNumeric));
-    QLocale::setDefault(qlocale);
+    QLocale::setDefault((s_systemDefault->d_ptr)->createQLocale(DuiLcNumeric));
     // sends QEvent::LanguageChange to qApp:
     (s_systemDefault->d_ptr)->insertTrToQCoreApp();
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
@@ -1017,10 +1023,8 @@ QString DuiLocale::formatNumber(qlonglong i) const
     d->_numberFormat->format(static_cast<int64_t>(i), str); //krazy:exclude=typedefs
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
-                    + '_'
-                    + this->categoryLanguage(DuiLcNumeric));
-    return qlocale.toString(i);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i);
 #endif
 }
 
@@ -1033,10 +1037,8 @@ QString DuiLocale::formatNumber(short i) const
     d->_numberFormat->format(i, str);
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
-                    + '_'
-                    + this->categoryLanguage(DuiLcNumeric));
-    return qlocale.toString(i);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i);
 #endif
 }
 
@@ -1049,10 +1051,8 @@ QString DuiLocale::formatNumber(int i) const
     d->_numberFormat->format(i, str);
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
-                    + '_'
-                    + this->categoryLanguage(DuiLcNumeric));
-    return qlocale.toString(i);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i);
 #endif
 }
 
@@ -1085,10 +1085,8 @@ QString DuiLocale::formatNumber(double i, int prec) const
 
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
-                    + '_'
-                    + this->categoryLanguage(DuiLcNumeric));
-    return qlocale.toString(i, 'g', prec);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i, 'g', prec);
 #endif
 }
 
@@ -1101,7 +1099,8 @@ QString DuiLocale::formatNumber(float i) const
     d->_numberFormat->format(i, str, pos);
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i, 'g');
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i, 'g');
 #endif
 }
 
@@ -1155,10 +1154,8 @@ QString DuiLocale::formatCurrency(double amount, const QString &currency) const
 
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    QLocale qlocale(this->categoryLanguage(DuiLcMonetary)
-                    + '_'
-                    + this->categoryLanguage(DuiLcMonetary));
-    return (qlocale.toString(amount) + ' ' + currency);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcMonetary).toString(amount) + ' ' + currency;
 #endif
 }
 
@@ -1173,10 +1170,8 @@ QString DuiLocale::formatDateTime(const QDateTime &dateTime, DateType dateType,
     Q_UNUSED(dateType);
     Q_UNUSED(timeType);
     Q_UNUSED(calendarType);
-    QLocale qlocale(this->categoryLanguage(DuiLcTime)
-                    + '_'
-                    + this->categoryLanguage(DuiLcTime));
-    return qlocale.toString(dateTime);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcMonetary).toString(dateTime);
 #endif
 }
 
@@ -2169,10 +2164,7 @@ void DuiLocale::refreshSettings()
             qDebug () << __PRETTY_FUNCTION__ << "***mike is s_systemDefault";
             // Setting the default QLocale is needed to get localized number
             // support in translations via %Ln, %L1, %L2, ...:
-            QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
-                            + '_'
-                            + this->categoryCountry(DuiLcNumeric));
-            QLocale::setDefault(qlocale);
+            QLocale::setDefault(d->createQLocale(DuiLcNumeric));
             d->removeTrFromQCoreApp();
             d->loadTrCatalogs();
             // sends QEvent::LanguageChange to qApp:

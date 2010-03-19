@@ -24,6 +24,7 @@
 #include <QString>
 #include <QStringList>
 #include <QExplicitlySharedDataPointer>
+#include <QLocale>
 
 #ifdef HAVE_ICU
 #include <unicode/datefmt.h>
@@ -79,6 +80,8 @@ public:
      * \brief Removes the translations from QCoreApplication
      */
     void removeTrFromQCoreApp();
+
+    QLocale createQLocale(DuiLocale::Category catetory) const;
 
     void setCategoryLocale(DuiLocale *duilocale, DuiLocale::Category category,
                            const QString &localeName);
