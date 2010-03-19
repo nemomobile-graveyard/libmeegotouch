@@ -99,7 +99,8 @@ QImage DuiLabelViewSimple::generateImage()
     }
 
     if (textToRender.isEmpty()) {
-        return QImage();
+        cachedImage = QImage();
+        return cachedImage;
     }
 
     if(cachedImage.size() != paintingRect.size().toSize())
