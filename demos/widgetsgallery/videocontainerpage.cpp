@@ -201,13 +201,16 @@ void ItemDetailPage::createContent()
         controlLayout->setContentsMargins(0,0,0,0);
         button = new DuiButton(panel);
         //button->setViewType(DuiButton::iconType);
+        button->setObjectName("video-player-button");
         button->setIconID("icon-m-common-pause");
         button->setIconVisible(true);
         button->setTextVisible(false);
         connect(button, SIGNAL(clicked(bool)), this, SLOT(buttonClicked()));
         controlLayout->addItem(button);
+        controlLayout->setAlignment(button, Qt::AlignCenter);
         
         slider = new DuiSlider(panel);
+        slider->setObjectName("video-player-slider");
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(videoSliderValueChanged(int)));
         connect(slider, SIGNAL(sliderPressed()), this, SLOT(sliderPressed()));
         connect(slider, SIGNAL(sliderReleased()), this, SLOT(sliderReleased()));
