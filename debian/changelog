@@ -1,3 +1,9 @@
+libdui (0.20.0~1) unstable; urgency=low
+
+  * New version [UNRELEASED]
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 19 Mar 2010 11:20:34 +0200
+
 libdui (0.19.9-1) unstable; urgency=low
 
   * Unit test fixes
