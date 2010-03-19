@@ -80,21 +80,12 @@ bool DuiSceneWindowPrivate::dismiss(bool now)
 {
     Q_Q(DuiSceneWindow);
 
-    /* ABI FREEZE: Release this
     DuiDismissEvent dismissEvent;
     QApplication::sendEvent(q, &dismissEvent);
 
     if (!dismissEvent.isAccepted()) {
         return false;
     }
-    */
-    // BEGIN WORKAROUND: Remove it after abi freeze.
-    DuiDialog* dlg = qobject_cast<DuiDialog*>(q);
-    if (dlg) {
-        dlg->done(DuiDialog::Rejected);
-        return true;
-    }
-    // END WORKAROUND
 
     if (q->sceneManager()) {
         if (now) {
@@ -243,12 +234,10 @@ bool DuiSceneWindow::dismissNow()
     return d->dismiss(true);
 }
 
-/* ABI FREEZE: Release this
 void DuiSceneWindow::dismissEvent(DuiDismissEvent *event)
 {
     event->accept();
 }
-*/
 
 void DuiSceneWindow::closeEvent(QCloseEvent *event)
 {
@@ -258,11 +247,9 @@ void DuiSceneWindow::closeEvent(QCloseEvent *event)
 
 bool DuiSceneWindow::event(QEvent *event)
 {
-    /* ABI FREEZE: Release this
     if (event->type() == DuiDismissEvent::eventType()) {
         dismissEvent(static_cast<DuiDismissEvent *>(event));
     }
-    */
 
     return DuiWidgetController::event(event);
 }

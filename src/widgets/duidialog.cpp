@@ -597,7 +597,6 @@ void DuiDialog::setupModel()
     d->clickedButton = 0;
 }
 
-/* ABI FREEZE: Release this
 void DuiDialog::dismissEvent(DuiDismissEvent *event)
 {
     setResult(Rejected);
@@ -606,7 +605,6 @@ void DuiDialog::dismissEvent(DuiDismissEvent *event)
 
     event->accept();
 }
-*/
 
 void DuiDialog::closeEvent(QCloseEvent *event)
 {

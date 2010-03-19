@@ -586,9 +586,7 @@ protected:
      */
     virtual void Q_DECL_DEPRECATED closeEvent(QCloseEvent *event);
 
-    /* ABI FREEZE: Release this
     virtual void dismissEvent(DuiDismissEvent *event);
-    */
     //! \reimp_end
 
 private:

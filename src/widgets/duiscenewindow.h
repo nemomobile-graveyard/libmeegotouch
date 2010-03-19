@@ -280,9 +280,7 @@ protected:
      *
      * \sa dismiss()
      */
-    /* ABI FREEZE: Release this
     virtual void dismissEvent(DuiDismissEvent *event);
-    */
 
     /*!
      * Default implementation calls dismiss() and ignores the event.
