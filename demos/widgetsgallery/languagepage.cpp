@@ -52,7 +52,8 @@ LanguagePage::LanguagePage()
       labelExampleCurrency(0),
       labelExampleTranslation1(0),
       labelExampleTranslation2(0),
-      labelExampleTranslation3(0)
+      labelExampleTranslation3(0),
+      labelFontTest(0)
 {
     gid = TemplatePage::UserInput;
 }
@@ -89,6 +90,8 @@ void LanguagePage::createContent()
     labelExampleTranslation1 = new DuiLabel;
     labelExampleTranslation2 = new DuiLabel;
     labelExampleTranslation3 = new DuiLabel;
+    labelFontTest = new DuiLabel;
+    labelFontTest->setWordWrap(true);
 
     policy->addItem(comboBoxLcTime, 2, 1);
     policy->addItem(comboBoxLcCollate, 3, 1);
@@ -100,6 +103,7 @@ void LanguagePage::createContent()
     policy->addItem(labelExampleTranslation1, 9, 1);
     policy->addItem(labelExampleTranslation2, 10, 1);
     policy->addItem(labelExampleTranslation3, 11, 1);
+    policy->addItem(labelFontTest, 12, 1);
 
     retranslateUi();
 }
@@ -328,6 +332,22 @@ void LanguagePage::retranslateUi()
         qtTrId("xx_language_trans_%Ln_boxes_weight_%L1", 1).arg(2431.78));
     labelExampleTranslation3->setText(
         qtTrId("xx_language_trans_%Ln_boxes_weight_%L1", 2).arg(7891.32));
+
+    //% "Font test:"
+    labelFontTest->setText(
+        qtTrId("xx_language_font_test")
+        + QString::fromUtf8("<br>Russian: русский язык")
+        + QString::fromUtf8("<br>Arabic: العربية")
+        + QString::fromUtf8("<br>Urdu: اُردوُ")
+        + QString::fromUtf8("<br>Simplified Chinese: 简体字")
+        + QString::fromUtf8("<br>Traditional Chinese: 簡體字")
+        + QString::fromUtf8("<br>Thai: ภาษาไทย")
+        + QString::fromUtf8("<br>Hindi: हिन्दी, हिंदी")
+        + QString::fromUtf8("<br>Hebrew: עִבְרִית")
+        + QString::fromUtf8("<br>Greek: ελληνικά")
+        + QString::fromUtf8("<br>Japanese: 日本語")
+        + QString::fromUtf8("<br>Symbols: ⇥‟↵➡➨➯➔➞➽➹✩✿❥›⌘‽☁")
+        );
 
     connect(comboBoxLanguage, SIGNAL(currentIndexChanged(int)),
             this, SLOT(changeLanguage(int)));

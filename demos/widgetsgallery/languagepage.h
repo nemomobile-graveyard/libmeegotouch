@@ -65,6 +65,7 @@ private:
     DuiLabel *labelExampleTranslation1;
     DuiLabel *labelExampleTranslation2;
     DuiLabel *labelExampleTranslation3;
+    DuiLabel *labelFontTest;
 };
 
 #endif
