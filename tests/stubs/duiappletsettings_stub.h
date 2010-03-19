@@ -111,12 +111,14 @@ void DuiAppletSettingsStub::removeInstanceSettingValues() const
 DuiAppletSettingsStub gDefaultDuiAppletSettingsStub;
 DuiAppletSettingsStub *gDuiAppletSettingsStub = &gDefaultDuiAppletSettingsStub;
 
-DuiAppletSettings::DuiAppletSettings(const QString &metaDataFileName, const DuiAppletId &appletId)
+DuiAppletSettings::DuiAppletSettings(const QString &metaDataFileName, const DuiAppletId &appletId) :
+    d_ptr(0)
 {
     gDuiAppletSettingsStub->duiAppletSettingsConstructor(metaDataFileName, appletId);
 }
 
-DuiAppletSettings::DuiAppletSettings(const QString &metaDataFileName, const QString &appletId)
+DuiAppletSettings::DuiAppletSettings(const QString &metaDataFileName, const QString &appletId) :
+    d_ptr(0)
 {
     gDuiAppletSettingsStub->duiAppletSettingsConstructor(metaDataFileName, appletId);
 }

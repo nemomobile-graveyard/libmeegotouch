@@ -43,6 +43,7 @@ HEADERS += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletloader.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletid.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletsettings.h \
+    $$MASHUP_MASHUP_SRC_DIR/duiappletsettings_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletsettingsdialog.h \
     $$MASHUP_MASHUP_SRC_DIR/duigconfdatastore.h \
     $$MASHUP_MASHUP_SRC_DIR/duigconfdatastore_p.h \
