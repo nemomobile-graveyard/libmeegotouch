@@ -51,8 +51,7 @@ DuiAppletTester::DuiAppletTester() :
     m_appletInstanceDataStore(NULL),
     m_widget(NULL),
     m_window(NULL),
-    appletSettings(NULL),
-    settingsDialog(NULL)
+    appletSettings(NULL)
 {
 }
 
@@ -74,7 +73,6 @@ bool DuiAppletTester::init(const DuiAppletMetaData &metaData, DuiAppletId applet
 
     // Construct applet settings and a dialog for them
     appletSettings = new DuiAppletSettings(metaData.fileName(), appletId);
-    settingsDialog = new DuiAppletSettingsDialog(*appletSettings);
 
     // Load the applet
     m_widget = DuiAppletLoader::loadApplet(metaData, *m_appletInstanceDataStore, *appletSettings->dataAccess());
@@ -98,7 +96,8 @@ bool DuiAppletTester::init(const DuiAppletMetaData &metaData, DuiAppletId applet
 
 void DuiAppletTester::openAppletSettings()
 {
-    settingsDialog->exec();
+    if ( appletSettings )
+	DuiAppletSettingsDialog::exec(*appletSettings);
 }
 
 int DuiAppletTester::exec()
@@ -191,9 +190,6 @@ void DuiAppletTester::teardown()
     m_appletInstanceDataStore = NULL;
 
     m_metadata = NULL;
-
-    delete settingsDialog;
-    settingsDialog = NULL;
 
     delete appletSettings;
     appletSettings = NULL;

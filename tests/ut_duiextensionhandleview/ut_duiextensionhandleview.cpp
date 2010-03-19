@@ -268,7 +268,7 @@ DuiSettingsLanguageWidget *DuiSettingsLanguageWidgetFactory::createWidget(const 
 
 // DuiAppletSettingsDialog stubs
 bool gDuiAppletSettingsDialogExecCalled = false;
-void DuiAppletSettingsDialog::exec(const DuiAppletSettings&) const {
+void DuiAppletSettingsDialog::exec(const DuiAppletSettings&) {
     gDuiAppletSettingsDialogExecCalled = true;
 }
 

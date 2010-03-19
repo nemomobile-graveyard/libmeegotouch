@@ -23,11 +23,6 @@
 #include "duiexport.h"
 #include "duiappletsettings.h"
 
-class QGraphicsLayoutItem;
-class QGraphicsItem;
-class DuiSettingsLanguageBinary;
-class DuiDataStore;
-
 /*!
  * \class DuiAppletSettingsDialog
  * \brief DuiAppletSettingsDialog implements the applet settings dialog.
@@ -37,48 +32,19 @@ class DUI_EXPORT DuiAppletSettingsDialog
 {
 public:
     /*!
-     * \brief Constructs DuiAppletSettingsDialog.
-     * \param appletSettings the settings object that is used for the dialog
-     * \note DO NOT USE THIS CONSTRUCTOR
-     */
-    DuiAppletSettingsDialog(const DuiAppletSettings &appletSettings);
-
-    /*!
-     * Constructor.
-     */
-    DuiAppletSettingsDialog();
-
-    /*!
-     * \brief Destructor
-     */
-    virtual ~DuiAppletSettingsDialog();
-
-    /*!
-     * Creates the applet settings dialog showing applet instance and global settings.
-     */
-    void exec() const;
-
-    /*!
      * Creates the applet settings dialog showing applet instance and global settings.
      * Uses the applet settings object received as an argument.
      * \param settings the applet settings object to use.
      */
-    void exec(const DuiAppletSettings& settings) const;
+    static void exec(const DuiAppletSettings& settings);
 
 private:
     /*!
-     * Creates a container for showing applet instance/global settings
-     * Also places the widgets into the container
-     *
-     * \param parent The parent of the container
-     * \param title The title of the container
-     * \param settingsBinaryList a list of applet settings binaries
-     * \param settingsDataStore the settings data store for the settings
+     * Do not instantiate this class - use the static \ref exec(const
+     * DuiAppletSettings &) function instead.
      */
-    static QGraphicsLayoutItem *createAppletSettingsWidgets(QGraphicsItem *parent, const QString &title, const DuiSettingsLanguageBinary &settingsBinary, DuiDataStore *settingsDataStore);
-
-    //! The applet settings object that is used to construct the dialog
-    DuiAppletSettings appletSettings;
+    DuiAppletSettingsDialog();
+    ~DuiAppletSettingsDialog();
 };
 
 #endif // DUIAPPLETSETTINGSDIALOG_H

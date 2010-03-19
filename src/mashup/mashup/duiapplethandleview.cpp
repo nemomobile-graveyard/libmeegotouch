@@ -203,8 +203,7 @@ void DuiAppletHandleView::setupModel()
 void DuiAppletHandleView::openAppletSettings()
 {
     if (model()->appletSettings() != NULL) {
-        DuiAppletSettingsDialog settingsDialog;
-        settingsDialog.exec(*model()->appletSettings());
+        DuiAppletSettingsDialog::exec(*model()->appletSettings());
     }
 }
 
