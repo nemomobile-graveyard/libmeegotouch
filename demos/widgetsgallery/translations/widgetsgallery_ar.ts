@@ -600,129 +600,129 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>إخفاء</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="110"/>
+        <location filename="../languagepage.cpp" line="114"/>
         <source>Change Language</source>
         <translation>تغيير اللغة</translation>
     </message>
     <message id="xx_locale_none">
-        <location filename="../languagepage.cpp" line="129"/>
+        <location filename="../languagepage.cpp" line="133"/>
         <source>None</source>
         <translation>عدم وجود ترجمة</translation>
     </message>
     <message id="xx_locale_ar">
-        <location filename="../languagepage.cpp" line="134"/>
+        <location filename="../languagepage.cpp" line="138"/>
         <source>Arabic</source>
         <translation>العربية</translation>
     </message>
     <message id="xx_locale_de">
-        <location filename="../languagepage.cpp" line="139"/>
+        <location filename="../languagepage.cpp" line="143"/>
         <source>German</source>
         <translation>الألمانية</translation>
     </message>
     <message id="xx_locale_de_AT">
-        <location filename="../languagepage.cpp" line="144"/>
+        <location filename="../languagepage.cpp" line="148"/>
         <source>German (Austria)</source>
         <translation>الألمانية (النمسا)</translation>
     </message>
     <message id="xx_locale_de_CH">
-        <location filename="../languagepage.cpp" line="149"/>
+        <location filename="../languagepage.cpp" line="153"/>
         <source>German (Switzerland)</source>
         <translation>الألمانية (سويسرا)</translation>
     </message>
     <message id="xx_locale_en">
-        <location filename="../languagepage.cpp" line="154"/>
+        <location filename="../languagepage.cpp" line="158"/>
         <source>English</source>
         <translation>الإنكليزية</translation>
     </message>
     <message id="xx_locale_fi">
-        <location filename="../languagepage.cpp" line="159"/>
+        <location filename="../languagepage.cpp" line="163"/>
         <source>Finnish</source>
         <translation>الفنلندية</translation>
     </message>
     <message id="xx_locale_hi">
-        <location filename="../languagepage.cpp" line="164"/>
+        <location filename="../languagepage.cpp" line="168"/>
         <source>Hindi</source>
         <translation>الهندية</translation>
     </message>
     <message id="xx_locale_hu">
-        <location filename="../languagepage.cpp" line="169"/>
+        <location filename="../languagepage.cpp" line="173"/>
         <source>Hungarian</source>
         <translation>الهنغارية</translation>
     </message>
     <message id="xx_locale_ja">
-        <location filename="../languagepage.cpp" line="174"/>
+        <location filename="../languagepage.cpp" line="178"/>
         <source>Japanese</source>
         <translation>اليابانية</translation>
     </message>
     <message id="xx_locale_ur">
-        <location filename="../languagepage.cpp" line="179"/>
+        <location filename="../languagepage.cpp" line="183"/>
         <source>Urdu</source>
         <translation>الأردية</translation>
     </message>
     <message id="xx_locale_ur_PK">
-        <location filename="../languagepage.cpp" line="184"/>
+        <location filename="../languagepage.cpp" line="188"/>
         <source>Urdu (Pakistan)</source>
         <translation>الأوردو (باكستان)</translation>
     </message>
     <message id="xx_locale_ur_IN">
-        <location filename="../languagepage.cpp" line="189"/>
+        <location filename="../languagepage.cpp" line="193"/>
         <source>Urdu (India)</source>
         <translation>الأوردو (الهند)</translation>
     </message>
     <message id="xx_locale_zh_CN">
-        <location filename="../languagepage.cpp" line="194"/>
+        <location filename="../languagepage.cpp" line="198"/>
         <source>Chinese (China)</source>
         <translation>الصينية (الصين)</translation>
     </message>
     <message id="xx_locale_zh_TW">
-        <location filename="../languagepage.cpp" line="199"/>
+        <location filename="../languagepage.cpp" line="203"/>
         <source>Chinese (Taiwan)</source>
         <translation>الصينية (تايوان)</translation>
     </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="294"/>
+        <location filename="../languagepage.cpp" line="298"/>
         <source>Please select language</source>
         <translation>الرجاء اختيار لغة جديدة :</translation>
     </message>
     <message id="xx_language_combobox_lctime_title">
-        <location filename="../languagepage.cpp" line="296"/>
+        <location filename="../languagepage.cpp" line="300"/>
         <source>Locale for time</source>
         <translation>لغة للوقت</translation>
     </message>
     <message id="xx_language_combobox_lccollate_title">
-        <location filename="../languagepage.cpp" line="298"/>
+        <location filename="../languagepage.cpp" line="302"/>
         <source>Locale for collation</source>
         <translation>لغة لترتيب</translation>
     </message>
     <message id="xx_language_combobox_lcnumeric_title">
-        <location filename="../languagepage.cpp" line="300"/>
+        <location filename="../languagepage.cpp" line="304"/>
         <source>Locale for numbers</source>
         <translation>للغة الأرقام</translation>
     </message>
     <message id="xx_language_combobox_lcmonetary_title">
-        <location filename="../languagepage.cpp" line="302"/>
+        <location filename="../languagepage.cpp" line="306"/>
         <source>Locale for money</source>
         <translation>لغة من أجل المال</translation>
     </message>
     <message id="xx_language_number_format">
-        <location filename="../languagepage.cpp" line="310"/>
+        <location filename="../languagepage.cpp" line="314"/>
         <source>Number format example: %1!! Number example: %1!! Number: %1</source>
         <translation>تنسيق رقم سبيل المثال : %1</translation>
     </message>
     <message id="xx_langage_date_time_format">
-        <location filename="../languagepage.cpp" line="314"/>
+        <location filename="../languagepage.cpp" line="318"/>
         <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
         <translation>تنسيق التاريخ والوقت على سبيل المثال : %1</translation>
     </message>
     <message id="xx_language_currency_format">
-        <location filename="../languagepage.cpp" line="320"/>
+        <location filename="../languagepage.cpp" line="324"/>
         <source>Currency format example: %1 %2!! Currency: %1 %2</source>
-        <translation type="unfinished">تنسيق العملة على سبيل المثال : %1 %2</translation>
+        <translation>تنسيق العملة على سبيل المثال : %1 %2</translation>
     </message>
     <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
-        <location filename="../languagepage.cpp" line="326"/>
-        <location filename="../languagepage.cpp" line="328"/>
         <location filename="../languagepage.cpp" line="330"/>
+        <location filename="../languagepage.cpp" line="332"/>
+        <location filename="../languagepage.cpp" line="334"/>
         <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
         <translation>
             <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
@@ -732,6 +732,11 @@ The primary (single short tap) action of the element should not be duplicated in
             <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
             <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
         </translation>
+    </message>
+    <message id="xx_language_font_test">
+        <location filename="../languagepage.cpp" line="338"/>
+        <source>Font test:</source>
+        <translation>اختبار الخط :</translation>
     </message>
     <message id="xx_template_page_views_dialogs">
         <location filename="../templatepage.cpp" line="47"/>
@@ -1084,17 +1089,17 @@ Input feedbacks can be easily configured for different purposes using the themin
         <translation>شبكة الصفحة</translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="362"/>
+        <location filename="../videocontainerpage.cpp" line="365"/>
         <source>Video container</source>
         <translation>الفيديو الحاويات</translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="367"/>
+        <location filename="../videocontainerpage.cpp" line="370"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
         <translation>اضغط على الصورة المصغرة للعب الفيديو / وقفة عليه. اضغط على الصورة المصغرة ، وعقد لفتح الفيديو في حجمه الأصلي.</translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="370"/>
+        <location filename="../videocontainerpage.cpp" line="373"/>
         <source>Gallery</source>
         <translation>معرض</translation>
     </message>
