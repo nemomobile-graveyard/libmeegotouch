@@ -20,23 +20,30 @@
 #include <stdlib.h>
 #include <QTimer>
 #include <QDebug>
+#include <QPainter>
 #include <QImage>
+#include <DuiGConfItem>
 #include "client.h"
+#include "clientmanager.h"
 #include "duithemedaemon.h"
 #include "duithemedaemonprotocol.h"
 
+using namespace Dui::DuiThemeDaemonProtocol;
+
 static const QString THEME_ROOT_DIRECTORY = QString("themes");
 
-QString getImageDirectory(const QString& identifier)
+ClientThread::ClientThread(ClientManager* manager) : manager(manager)
 {
-    return QString("dui") + QDir::separator() + 
-           QString(identifier) + QDir::separator() + 
-           QString("images");
 }
 
 void ClientThread::run()
 {
     Client client(identifier);
+    connect(&client, 
+            SIGNAL(pixmapReady(const QString&, Client*, quint32, const QString&, const QSize&)), 
+            manager, 
+            SLOT(pixmapReady(const QString&, Client*, quint32, const QString&, const QSize&)));
+
     exec();
 }
 
@@ -50,11 +57,11 @@ const QString &ClientThread::getId() const
     return identifier;
 }
 
-using namespace Dui::DuiThemeDaemonProtocol;
 Client::Client(const QString &identifier) : identifier(identifier), registered(false), packetsSent(0)
 {
     operationCount = rand() % MAX_OPERATION_COUNT;
 
+    int count = 50;
     // list all themes
     QDir themeDirectory(THEME_ROOT_DIRECTORY);
     QStringList list = themeDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
@@ -62,11 +69,11 @@ Client::Client(const QString &identifier) : identifier(identifier), registered(f
         QString themeName = list.at(i);
 
         // create path for images
-        QString imagesPath = themeName + QDir::separator() + getImageDirectory(identifier);
+        QString imagesPath = themeName + QDir::separator() + getImageDirectory();
         if(themeDirectory.mkpath(imagesPath))
         {
             // create imagery
-            int count = rand() % 200;
+            //int count = rand() % 200;
             // create imagery
             for (int i = 0; i < count; i++) {
                 QImage image(64, 64, QImage::Format_ARGB32);
@@ -102,6 +109,11 @@ Client::~Client()
     }
 }
 
+const QString &Client::getId() const
+{
+    return identifier;
+}
+
 void Client::connected()
 {
 //    QLocalSocket* socket = qobject_cast<QLocalSocket*>(sender());
@@ -120,14 +132,14 @@ Dui::DuiThemeDaemonProtocol::Packet Client::processOnePacket()
     switch (packet.type()) {
     case Packet::PixmapUpdatedPacket: {
         const PixmapHandle *handle = static_cast<const PixmapHandle *>(packet.data());
-        if (requestedPixmaps.contains(handle->identifier)) {
-            // pixmap found from requested list -> new one
-            requestedPixmaps.remove(handle->identifier);
-            readyPixmaps.insert(handle->identifier);
-        } else if(readyPixmaps.contains(handle->identifier)) {
-            // this pixmap was already ready, so it is just updated (probably due to theme change)
+
+        if(handle->pixmapHandle) {
+            lock.lock();
+            emit pixmapReady(currentTheme, this, handle->pixmapHandle, handle->identifier.imageId, handle->identifier.size);
+            wait.wait(&lock);
+            lock.unlock();
         } else {
-            qDebug() << "ERROR:" << identifier << "- pixmap reply to unknown request";
+            qDebug() << "ERROR: daemon returned null handle for" << handle->identifier.imageId;
         }
     } break;
 
@@ -146,6 +158,24 @@ Dui::DuiThemeDaemonProtocol::Packet Client::processOnePacket()
     return packet;
 }
 
+void Client::pixmapVerified(const QString& imageId, const QSize& size)
+{
+
+    PixmapIdentifier identifier(imageId, size);
+
+    if (requestedPixmaps.contains(identifier)) {
+        // pixmap found from requested list -> new one
+        requestedPixmaps.remove(identifier);
+        readyPixmaps.insert(identifier);
+    } else if(readyPixmaps.contains(identifier)) {
+        // this pixmap was already ready, so it is just updated (probably due to theme change)
+    } else {
+        qDebug() << "ERROR:" << imageId << "- pixmap reply to unknown request";
+    }
+    wait.wakeAll();
+}
+
+
 void Client::readyRead()
 {
     while (socket.bytesAvailable() > 0) {
@@ -156,6 +186,7 @@ void Client::readyRead()
 void Client::sendPacket()
 {
     if (operationCount > 0) {
+
         // randomize a task to us
         Task task = (Task)(rand() % NumberOfTasks);
 
@@ -165,8 +196,19 @@ void Client::sendPacket()
             break;
 
         case RequestPixmap: {
-            QDir imageDirectory = currentTheme + QDir::separator() + getImageDirectory(identifier);
-            QStringList list = imageDirectory.entryList(QDir::Files);
+            // this directory contains all icons for this theme
+            QDir themeIconDirectory = currentTheme + QDir::separator() + QString("dui") + QDir::separator() + QString("icons");
+            QStringList iconList = themeIconDirectory.entryList(QDir::Files);
+
+            // this directory contains all images for this client
+            QDir imageDirectory = currentTheme + QDir::separator() + getImageDirectory();
+            QStringList imageList = imageDirectory.entryList(QDir::Files);
+
+            // combine both lists as one, we'll request something from this list
+            QStringList list;
+            list.append(iconList);
+            list.append(imageList);
+
             if (list.count() > 0) {
                 // select image
                 int index = rand() % list.count();
@@ -204,16 +246,18 @@ void Client::sendPacket()
         // do something else next time
         operationCount--;
         QTimer::singleShot(TASK_EXECUTION_INTERVAL, this, SLOT(sendPacket()));
-
     } else if (readyPixmaps.count() > 0 || requestedPixmaps.count() > 0) {
+
         while (readyPixmaps.count() > 0) {
             PixmapIdentifier toRemove = *readyPixmaps.begin();
             releasePixmap(toRemove);
         }
+
         while (requestedPixmaps.count() > 0) {
             PixmapIdentifier toRemove = *requestedPixmaps.begin();
             releasePixmap(toRemove);
         }
+
         QTimer::singleShot(1000, this, SLOT(sendPacket()));
     } else {
         checkConsistency();
@@ -371,4 +415,10 @@ bool Client::isDataConsistent(const Dui::DuiThemeDaemonProtocol::ClientList *lis
     return registered ? false : true;
 }
 
+QString Client::getImageDirectory() const
+{
+    return QString("dui") + QDir::separator() + 
+           QString(identifier) + QDir::separator() + 
+           QString("images");
+}
 

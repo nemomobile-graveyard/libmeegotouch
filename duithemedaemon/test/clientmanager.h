@@ -23,8 +23,10 @@
 #include <QObject>
 #include <QProcess>
 #include <QSet>
+#include <QSize>
 
 class ClientThread;
+class Client;
 
 class ClientManager : public QObject
 {
@@ -47,9 +49,15 @@ private slots:
 
     void clientStarted();
     void clientFinished();
-    void changeTheme();
+    void changeThemeAndLocale();
+
+    void pixmapReady(const QString& theme, Client* client, quint32 handle, const QString& imageId, const QSize& size);
 
 private:
+    void cleanup();
+    bool verifyPixmap(const QString& theme, Client* client, quint32 handle, const QString& imageId, const QSize& size);
+
+    QStringList locales;
     QSet<ClientThread *> clients;
     bool shutdown;
     QProcess &themedaemon;

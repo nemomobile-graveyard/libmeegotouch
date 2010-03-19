@@ -22,6 +22,10 @@
 #include <QApplication>
 #include <DuiGConfItem>
 #include <QDir>
+#include <QFile>
+#include <QPainter>
+#include <QSvgGenerator>
+#include <QSvgRenderer>
 #include "clientmanager.h"
 #include "client.h"
 
@@ -44,7 +48,7 @@ void removeDirectoryRecursive(const QString &path)
 }
 
 static const QString THEME_ROOT_DIRECTORY = QString("themes");
-void cleanup()
+void ClientManager::cleanup()
 {
     QDir themeDirectory(THEME_ROOT_DIRECTORY);
     QStringList list = themeDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
@@ -55,18 +59,88 @@ void cleanup()
         // find all client directories
         QStringList directories = theme.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
         for(int j=0; j<directories.size(); j++) {
-            if(directories.at(j).startsWith("client"))
+            if(directories.at(j).startsWith("client") || directories.at(j) == QString("icons"))
             {
                 removeDirectoryRecursive(theme.absolutePath() + QDir::separator() + directories.at(j));
                 theme.rmdir(directories.at(j));
             }
         }
+        // loop all locales
+        for(int localeIndex=1; localeIndex<locales.size(); localeIndex++)
+        {
+            // remove all locale-specific icons
+            QString localeSpecificIconsDirectory = theme.absolutePath() + QDir::separator() + 
+                                                   "locale" + QDir::separator() + 
+                                                   locales[localeIndex] + QDir::separator() + 
+                                                   QString("icons");
+            removeDirectoryRecursive(localeSpecificIconsDirectory);
+            theme.rmdir(localeSpecificIconsDirectory);
+        }
     }
+}
+
+void createSVGFile(const QString& path, int index)
+{
+    QString filename = path + QDir::separator() + QString("icon-") + QString::number(index) + ".svg";
+
+    QFile file(filename);
+    file.open(QIODevice::WriteOnly);
+
+    QSvgGenerator generator;
+    generator.setFileName(filename);
+    generator.setSize(QSize(200, 200));
+    generator.setViewBox(QRect(0, 0, 200, 200));
+    generator.setOutputDevice(&file);
+
+    QPainter painter;
+    painter.begin(&generator);
+
+    QColor color(rand() % 255, rand() % 255, rand() % 255);
+    painter.fillRect(generator.viewBox(), color);
+    painter.end();
+
+    file.close();
 }
 
 ClientManager::ClientManager(QProcess &process) : shutdown(false), themedaemon(process)
 {
+    locales.append("en");
+    locales.append("fi");
+
     cleanup();
+
+    int count = 50;
+    // create svg images for icons for all themes & locales
+    QDir themeDirectory(THEME_ROOT_DIRECTORY);
+    QStringList list = themeDirectory.entryList(QDir::Dirs|QDir::NoDotAndDotDot);
+    for(int i=0; i<list.size(); i++) {
+        QString themeName = list.at(i);
+
+        // create path for images
+        QString iconsPath = themeName + QDir::separator() + QString("dui") + QDir::separator() + QString("icons");
+        if(themeDirectory.mkpath(iconsPath))
+        {
+            // create svg icon
+            //int count = (rand() + 10) % 200;
+
+            // create imagery to theme's root icons dir
+            for (int imageIndex = 0; imageIndex < count; imageIndex++) {
+                createSVGFile(themeDirectory.absolutePath() + QDir::separator() + iconsPath, imageIndex);
+            }
+
+            // create locales
+            QString localeRoot = themeName + QDir::separator() + QString("dui") + QDir::separator() + QString("locale");
+            for(int localeIndex=1; localeIndex<locales.size(); localeIndex++) {
+                QString localeIconPath = localeRoot + QDir::separator() + locales[localeIndex] + QDir::separator() + QString("icons");
+                if(themeDirectory.mkpath(localeIconPath)) {
+                    // create svg imagery
+                    for (int imageIndex = 0; imageIndex < count; imageIndex++) {
+                        createSVGFile(themeDirectory.absolutePath() + QDir::separator() + localeIconPath, imageIndex);
+                    }
+                }
+            }
+        }
+    }
 
     // start the test after 1 sec (allow themedaemon to get online)
     QTimer::singleShot(1000, this, SLOT(start()));
@@ -81,7 +155,7 @@ ClientManager::~ClientManager()
 void ClientManager::spawnClient()
 {
     static unsigned int clientId = 0;
-    ClientThread *client = new ClientThread();
+    ClientThread *client = new ClientThread(this);
     client->setId("client" + QString::number(clientId++));
 
     // generate imagery for testing purposes
@@ -101,7 +175,7 @@ void ClientManager::start()
     qDebug() << "INFO: ClientManager - Starting up...";
 #endif
     // change theme & begin theme switching
-    changeTheme();
+    changeThemeAndLocale();
 
     // start performing consistency checks & spawn new clients
     QTimer::singleShot(0, this, SLOT(checkConsistency()));
@@ -147,7 +221,9 @@ void ClientManager::checkConsistency()
 {
     // check that themedaemon has not crashed
     if (themedaemon.state() != QProcess::Running) {
-        qDebug() << "ERROR: ClientManager - Themedaemon is not running";
+        qDebug() << "ERROR: ClientManager (consistency check)- Themedaemon is not running";
+        qDebug() << themedaemon.readAllStandardError();
+        qDebug() << themedaemon.readAllStandardOutput();
 
         shutdown = true;
         foreach(ClientThread * thread, clients) {
@@ -168,7 +244,7 @@ void ClientManager::checkConsistency()
     }
 }
 
-void ClientManager::changeTheme()
+void ClientManager::changeThemeAndLocale()
 {
 #ifdef HAVE_GCONF
     // get list of themes
@@ -184,11 +260,94 @@ void ClientManager::changeTheme()
     qDebug() << "INFO: Changing theme to:" << list[themeIndex];
 #endif
     DuiGConfItem themeName("/Dui/theme/name");
-    themeName.set(list[themeIndex]);
+    //themeName.set(list[themeIndex]);
 
-    // change theme again after a short period of time
-    QTimer::singleShot(2000, this, SLOT(changeTheme()));
+//    int localeIndex = rand() % locales.size();
+//    DuiGConfItem localeName("/Dui/i18n/Language");
+//    localeName.set(locales[localeIndex]);
+
+    // change theme and locale again after a short period of time
+    QTimer::singleShot(2000, this, SLOT(changeThemeAndLocale()));
 #endif
 }
 
+void ClientManager::pixmapReady(const QString& theme, Client* client, quint32 handle, const QString& imageId, const QSize& size)
+{
+    if(!verifyPixmap(theme, client, handle, imageId, size)) {
+        qDebug() << "ERROR:" << client->getId() << "- incorrect color found when verifying returned pixmap (" << imageId << ')';
+    } else {
+#ifdef PRINT_INFO_MESSAGES
+        qDebug() << "INFO:" << client->getId() << "- pixmap comparison OK (" << imageId << ')';
+#endif
+    }
+    client->pixmapVerified(imageId, size);
+}
 
+bool ClientManager::verifyPixmap(const QString& theme, Client* client, quint32 handle, const QString& imageId, const QSize& size)
+{
+    // this is what we got from daemon
+    QPixmap daemon = QPixmap::fromX11Pixmap(handle, QPixmap::ImplicitlyShared);
+
+    // this is what we have
+    QPixmap clientPixmap(size);
+
+    QDir themeDirectory(THEME_ROOT_DIRECTORY);
+
+    // either icon-<xx> or just <xx>
+    if(imageId.startsWith("icon"))
+    {
+#ifdef HAVE_GCONF
+//        DuiGConfItem localeName("/Dui/i18n/Language");
+//        QString locale = localeName.value().toString();
+        QDir iconDirectory;
+//        if(locale.isEmpty())
+        {
+            iconDirectory = QDir(theme + QDir::separator() + 
+                                 QString("dui") + QDir::separator() + QString("icons"));
+        }
+//        else
+//        {
+//            iconDirectory = QDir(theme + QDir::separator() + 
+//                                 QString("dui") + QDir::separator() + 
+//                                 QString("locale") + QDir::separator() + 
+//                                 locale + QDir::separator() + 
+//                                 QString("icons"));
+//        }
+
+        // create svg renderer
+        QString filename = iconDirectory.absolutePath() + QDir::separator() + imageId + ".svg";
+        QSvgRenderer renderer(filename);
+        if(!renderer.isValid())
+        {
+            qDebug() << "ERROR: Failed to construct SVG renderer for:" << filename;
+            return false;
+        }
+        // render pixmap
+        QPainter painter(&clientPixmap);
+        renderer.render(&painter);
+#else
+        return true;
+#endif
+    }
+    else
+    {
+        QDir imageDirectory = theme + QDir::separator() + client->getImageDirectory();
+        QString filename = imageDirectory.absolutePath() + QDir::separator() + imageId + ".png";
+        if(!clientPixmap.load(filename, "PNG"))
+            qDebug() << "ERROR: Failed to construct PNG image:" << filename;
+    }
+
+    // make sure that the pixel in the center of the pixmap is equal (these are always one-color images)
+    QImage d = daemon.toImage();
+    QImage c = clientPixmap.toImage();
+
+    QRgb color = d.pixel(size.width() / 2, size.height() / 2);
+    QRgb color2 = c.pixel(size.width() / 2, size.height() / 2);
+
+    if(color != color2) {
+        qDebug() << "ERROR: Colors don't match:" << theme << QColor(color) << QColor(color2);
+        return false;
+    }
+
+    return true;
+}
