@@ -47,6 +47,10 @@ DuiFileDataStore::DuiFileDataStore(const QString &) :
 {
 }
 
+DuiFileDataStore::~DuiFileDataStore()
+{
+}
+
 bool DuiFileDataStore::isReadable() const
 {
     return true;
