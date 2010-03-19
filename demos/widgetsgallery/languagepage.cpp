@@ -47,6 +47,8 @@ LanguagePage::LanguagePage()
       modelLcNumeric(0),
       comboBoxLcMonetary(0),
       modelLcMonetary(0),
+      labelHaveGconf(0),
+      labelHaveIcu(0),
       labelExampleNumber(0),
       labelExampleDateTime(0),
       labelExampleCurrency(0),
@@ -84,6 +86,8 @@ void LanguagePage::createContent()
     comboBoxLcNumeric->setIconID("Icon-browser");
     comboBoxLcMonetary = new DuiComboBox;
     comboBoxLcMonetary->setIconID("Icon-browser");
+    labelHaveGconf = new DuiLabel;
+    labelHaveIcu = new DuiLabel;
     labelExampleNumber = new DuiLabel;
     labelExampleDateTime = new DuiLabel;
     labelExampleCurrency = new DuiLabel;
@@ -97,13 +101,15 @@ void LanguagePage::createContent()
     policy->addItem(comboBoxLcCollate, 3, 1);
     policy->addItem(comboBoxLcNumeric, 4, 1);
     policy->addItem(comboBoxLcMonetary, 5, 1);
-    policy->addItem(labelExampleNumber, 6, 1);
-    policy->addItem(labelExampleDateTime, 7, 1);
-    policy->addItem(labelExampleCurrency, 8, 1);
-    policy->addItem(labelExampleTranslation1, 9, 1);
-    policy->addItem(labelExampleTranslation2, 10, 1);
-    policy->addItem(labelExampleTranslation3, 11, 1);
-    policy->addItem(labelFontTest, 12, 1);
+    policy->addItem(labelHaveGconf, 6, 1);
+    policy->addItem(labelHaveIcu, 7, 1);
+    policy->addItem(labelExampleNumber, 8, 1);
+    policy->addItem(labelExampleDateTime, 9, 1);
+    policy->addItem(labelExampleCurrency, 10, 1);
+    policy->addItem(labelExampleTranslation1, 11, 1);
+    policy->addItem(labelExampleTranslation2, 12, 1);
+    policy->addItem(labelExampleTranslation3, 13, 1);
+    policy->addItem(labelFontTest, 14, 1);
 
     retranslateUi();
 }
@@ -304,6 +310,21 @@ void LanguagePage::retranslateUi()
     comboBoxLcNumeric->setTitle(qtTrId("xx_language_combobox_lcnumeric_title"));
     //% "Locale for money"
     comboBoxLcMonetary->setTitle(qtTrId("xx_language_combobox_lcmonetary_title"));
+
+#ifdef HAVE_GCONF
+    //% "Yes"
+    labelHaveGconf->setText("Gconf: " + qtTrId("qtn_comm_command_yes"));
+#else
+    //% "No"
+    labelHaveGconf->setText("Gconf: " + qtTrId("qtn_comm_command_no"));
+#endif
+#ifdef HAVE_ICU
+    //% "Yes"
+    labelHaveIcu->setText("ICU: " + qtTrId("qtn_comm_command_yes"));
+#else
+    //% "No"
+    labelHaveIcu->setText("ICU: " + qtTrId("qtn_comm_command_no"));
+#endif
 
     QDate date(2008, 7, 21);
     QTime time(14, 31, 0, 0);

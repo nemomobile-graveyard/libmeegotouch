@@ -59,6 +59,8 @@ private:
     QStandardItemModel *modelLcNumeric;
     DuiComboBox *comboBoxLcMonetary;
     QStandardItemModel *modelLcMonetary;
+    DuiLabel *labelHaveGconf;
+    DuiLabel *labelHaveIcu;
     DuiLabel *labelExampleNumber;
     DuiLabel *labelExampleDateTime;
     DuiLabel *labelExampleCurrency;
