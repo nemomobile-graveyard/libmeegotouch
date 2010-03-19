@@ -79,6 +79,7 @@ DUI_INSTALL_PREFIX=/usr/local
 DUI_INSTALL_SYSCONFDIR=/etc
 DUI_INSTALL_LIBDIR= # Will be $DUI_INSTALL_PREFIX/lib unless overriden
 DUI_INSTALL_DBUSSERVICESDIR= # Will be determined by pkc-config unless overridden
+DUI_INSTALL_MKSPECSDIR= # Will be QT_INSTALL_DATA unless overrriden
 
 #-------------------------------------------------------------------------------
 # parse command line arguments
@@ -121,7 +122,7 @@ while [ "$#" -gt 0 ]; do
         VAL=yes
         ;;
     #Qt style options that pass an argument
-    -prefix|-make|-nomake|-sysconfdir|-libdir|-dbusservicesdir)
+    -prefix|-make|-nomake|-sysconfdir|-libdir|-dbusservicesdir|-mkspecsdir)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         shift
         VAL="$1"
@@ -177,6 +178,9 @@ while [ "$#" -gt 0 ]; do
         ;;
     dbusservicesdir)
         DUI_INSTALL_DBUSSERVICESDIR="$VAL"
+        ;;
+    mkspecsdir)
+        DUI_INSTALL_MKSPECSDIR="$VAL"
         ;;
     nomake)
 	CFG_NOBUILD_PARTS="$CFG_NOBUILD_PARTS $VAL"
@@ -375,6 +379,8 @@ Installation options:
                          (default $DUI_INSTALL_LIBDIR)
     -dbusservicesdir <dir> This will put dbus service files in <dir>
                          (default is autodetected by pkg-config)
+    -mkspecdir <dir> ... This will put dui qmake feature filed in <dir>
+                         (default is in QT_INSTALL_DIR)
 
 Configure options:
 
@@ -503,6 +509,7 @@ DUI_INSTALL_PREFIX = $DUI_INSTALL_PREFIX
 DUI_INSTALL_SYSCONFDIR = $DUI_INSTALL_SYSCONFDIR
 DUI_INSTALL_LIBDIR = $DUI_INSTALL_LIBDIR
 DUI_INSTALL_DBUSSERVICESDIR = $DUI_INSTALL_DBUSSERVICESDIR
+DUI_INSTALL_MKSPECSDIR = $DUI_INSTALL_MKSPECSDIR
 
 #dependencies
 DEFINES += $DUICONFIG_DEPS
@@ -545,6 +552,12 @@ cat "$relpath/mkspecs/features/dui_defines.prf.in" \
 
 if [ ! -z "$DUI_INSTALL_DBUSSERVICESDIR" ]; then
     echo "DUI_DBUS_SERVICES_DIR=$DUI_INSTALL_DBUSSERVICESDIR" >> "$DUI_DEFINES_PRF.tmp"
+fi
+
+if [ ! -z "$DUI_INSTALL_MKSPECSDIR" ]; then
+    echo "DUI_MKSPECS_DIR=$DUI_INSTALL_MKSPECSDIR" >> "$DUI_DEFINES_PRF.tmp"
+else
+    echo "DUI_MKSPECS_DIR="'$$[QT_INSTALL_DATA]' >> "$DUI_DEFINES_PRF.tmp"
 fi
 
 # replace dui_defines.prf if it differs from the newly created temp file
