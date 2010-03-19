@@ -1017,7 +1017,10 @@ QString DuiLocale::formatNumber(qlonglong i) const
     d->_numberFormat->format(static_cast<int64_t>(i), str); //krazy:exclude=typedefs
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i);
+    QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
+                    + '_'
+                    + this->categoryLanguage(DuiLcNumeric));
+    return qlocale.toString(i);
 #endif
 }
 
@@ -1030,7 +1033,10 @@ QString DuiLocale::formatNumber(short i) const
     d->_numberFormat->format(i, str);
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i);
+    QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
+                    + '_'
+                    + this->categoryLanguage(DuiLcNumeric));
+    return qlocale.toString(i);
 #endif
 }
 
@@ -1043,7 +1049,10 @@ QString DuiLocale::formatNumber(int i) const
     d->_numberFormat->format(i, str);
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i);
+    QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
+                    + '_'
+                    + this->categoryLanguage(DuiLcNumeric));
+    return qlocale.toString(i);
 #endif
 }
 
@@ -1076,7 +1085,10 @@ QString DuiLocale::formatNumber(double i, int prec) const
 
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i, 'g', prec);
+    QLocale qlocale(this->categoryLanguage(DuiLcNumeric)
+                    + '_'
+                    + this->categoryLanguage(DuiLcNumeric));
+    return qlocale.toString(i, 'g', prec);
 #endif
 }
 
@@ -1115,9 +1127,9 @@ QString DuiLocale::formatPercent(double i, int decimals) const
 }
 #endif
 
-#ifdef HAVE_ICU
 QString DuiLocale::formatCurrency(double amount, const QString &currency) const
 {
+#ifdef HAVE_ICU
     Q_D(const DuiLocale);
     UErrorCode status = U_ZERO_ERROR;
     icu::Locale monetaryLocale = d->getCategoryLocale(DuiLcMonetary);
@@ -1142,18 +1154,32 @@ QString DuiLocale::formatCurrency(double amount, const QString &currency) const
     delete nf;
 
     return DuiIcuConversions::unicodeStringToQString(str);
-}
+#else
+    QLocale qlocale(this->categoryLanguage(DuiLcMonetary)
+                    + '_'
+                    + this->categoryLanguage(DuiLcMonetary));
+    return (qlocale.toString(amount) + ' ' + currency);
 #endif
+}
 
-#ifdef HAVE_ICU
 QString DuiLocale::formatDateTime(const QDateTime &dateTime, DateType dateType,
                                   TimeType timeType, Calendar calendarType) const
 {
+#ifdef HAVE_ICU
     DuiCalendar calendar(calendarType);
     calendar.setDateTime(dateTime);
     return formatDateTime(calendar, dateType, timeType);
-}
+#else
+    Q_UNUSED(dateType);
+    Q_UNUSED(timeType);
+    Q_UNUSED(calendarType);
+    QLocale qlocale(this->categoryLanguage(DuiLcTime)
+                    + '_'
+                    + this->categoryLanguage(DuiLcTime));
+    return qlocale.toString(dateTime);
 #endif
+}
+
 
 #ifdef HAVE_ICU
 QString DuiLocale::formatDateTime(const DuiCalendar &duicalendar,
