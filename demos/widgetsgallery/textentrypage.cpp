@@ -501,7 +501,7 @@ void TextEntryPage::retranslateUi()
     //% "Provides email address suggestions"
     Entries.at(6)->setPrompt(qtTrId("xx_tooltip_entry8"));
 
-    //% "This is\nmultiline\ntooltip"
+    //% "This is a multiline text entry"
     Entries.at(8)->setPrompt(qtTrId("xx_tooltip_entry6"));
 
     //% "Free text:"
