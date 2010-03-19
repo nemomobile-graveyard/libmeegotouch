@@ -53,8 +53,8 @@ private slots:
     void testIsOnDisplay();
     void testEnterDisplayEventHandler();
     void testExitDisplayEventHandler();
-    void testEnteredDisplaySignal();
-    void testExitedDisplaySignal();
+    void testDisplayEnteredSignal();
+    void testDisplayExitedSignal();
     void testDisplayExitedOnClose();
     void testDisplayExitedOnCloseLazyShutdownApp();
 

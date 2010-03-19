@@ -208,13 +208,6 @@ public:
     QString xMaemoService() const;
 
     /*!
-     * Returns the value of X-Maemo-Prestarted key or false if it is
-     * not defined in the input desktop entry file.
-     * \deprecated Since 0.19.3.
-     */
-    bool xMaemoPrestarted() const;
-
-    /*!
      * Returns the value of the key- key or an empty string if it is
      * not defined in the input desktop entry file.
      */

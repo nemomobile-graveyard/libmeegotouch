@@ -226,7 +226,7 @@ void DuiWindowPrivate::doEnterDisplayEvent()
     onDisplaySet = true;
 
     q->enterDisplayEvent();
-    emit q->enteredDisplay();
+    emit q->displayEntered();
 }
 
 void DuiWindowPrivate::doExitDisplayEvent()
@@ -237,7 +237,7 @@ void DuiWindowPrivate::doExitDisplayEvent()
     onDisplaySet = true;
 
     q->exitDisplayEvent();
-    emit q->exitedDisplay();
+    emit q->displayExited();
 }
 
 void DuiWindowPrivate::propagateDuiOnDisplayChangeEventToScene(DuiOnDisplayChangeEvent *event)

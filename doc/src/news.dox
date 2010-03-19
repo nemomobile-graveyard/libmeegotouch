@@ -1,4 +1,11 @@
 /*! \page news What's New in DirectUI
+\section v0200
+
+\subsection New
+
+- DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be
+  displayEntered() and displayExited() 
+
 \section v0190
 
 \subsection New

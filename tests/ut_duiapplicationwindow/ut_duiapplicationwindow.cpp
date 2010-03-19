@@ -274,7 +274,7 @@ void Ut_DuiApplicationWindow::testDeleteOnClose()
 void Ut_DuiApplicationWindow::testDisplayExitedOnClose()
 {
     m_subject->show();
-    QSignalSpy spy(m_subject, SIGNAL(exitedDisplay()));
+    QSignalSpy spy(m_subject, SIGNAL(displayExited()));
     m_subject->close();
     QCOMPARE(spy.count(), 1);
 }
@@ -283,7 +283,7 @@ void Ut_DuiApplicationWindow::testDisplayExitedOnCloseLazyShutdownApp()
 {
     DuiApplication::setPrestartMode(Dui::LazyShutdown);
     m_subject->show();
-    QSignalSpy spy(m_subject, SIGNAL(exitedDisplay()));
+    QSignalSpy spy(m_subject, SIGNAL(displayExited()));
     m_subject->close();
     QCOMPARE(spy.count(), 1);
 }

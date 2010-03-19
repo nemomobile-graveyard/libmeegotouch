@@ -340,9 +340,9 @@ void Ut_DuiWindow::testExitDisplayEventHandler()
     QVERIFY(Ut_DuiWindow::m_onDisplayHandlerCalled == true);
 }
 
-void Ut_DuiWindow::testEnteredDisplaySignal()
+void Ut_DuiWindow::testDisplayEnteredSignal()
 {
-    connect(win, SIGNAL(enteredDisplay()), this, SLOT(onDisplayTestSlot()));
+    connect(win, SIGNAL(displayEntered()), this, SLOT(onDisplayTestSlot()));
 
     Ut_DuiWindow::m_onDisplaySignalSent = false;
 
@@ -354,12 +354,12 @@ void Ut_DuiWindow::testEnteredDisplaySignal()
 
     QVERIFY(Ut_DuiWindow::m_onDisplaySignalSent == true);
 
-    disconnect(win, SIGNAL(enteredDisplay()), this, SLOT(onDisplayTestSlot()));
+    disconnect(win, SIGNAL(displayEntered()), this, SLOT(onDisplayTestSlot()));
 }
 
-void Ut_DuiWindow::testExitedDisplaySignal()
+void Ut_DuiWindow::testDisplayExitedSignal()
 {
-    connect(win, SIGNAL(exitedDisplay()), this, SLOT(onDisplayTestSlot()));
+    connect(win, SIGNAL(displayExited()), this, SLOT(onDisplayTestSlot()));
 
     Ut_DuiWindow::m_onDisplaySignalSent = false;
 
@@ -371,7 +371,7 @@ void Ut_DuiWindow::testExitedDisplaySignal()
 
     QVERIFY(Ut_DuiWindow::m_onDisplaySignalSent == true);
 
-    disconnect(win, SIGNAL(exitedDisplay()), this, SLOT(onDisplayTestSlot()));
+    disconnect(win, SIGNAL(displayExited()), this, SLOT(onDisplayTestSlot()));
 }
 
 void Ut_DuiWindow::onDisplayTestSlot()
@@ -382,7 +382,7 @@ void Ut_DuiWindow::onDisplayTestSlot()
 void Ut_DuiWindow::testDisplayExitedOnClose()
 {
     win->show();
-    QSignalSpy spy(win, SIGNAL(exitedDisplay()));
+    QSignalSpy spy(win, SIGNAL(displayExited()));
     win->close();
     QCOMPARE(spy.count(), 1);
 }
@@ -391,7 +391,7 @@ void Ut_DuiWindow::testDisplayExitedOnCloseLazyShutdownApp()
 {
     DuiApplication::setPrestartMode(Dui::LazyShutdown);
     win->show();
-    QSignalSpy spy(win, SIGNAL(exitedDisplay()));
+    QSignalSpy spy(win, SIGNAL(displayExited()));
     win->close();
     QCOMPARE(spy.count(), 1);
 }

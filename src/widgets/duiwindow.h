@@ -337,16 +337,14 @@ Q_SIGNALS:
     /*!
      * A signal that is emitted when the window is shown or is not obscured anymore by another window.
      * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
-     * \deprecated Since 0.19.3. Use displayEntered() instead (available on week 12)
      */
-    void enteredDisplay();
+    void displayEntered();
 
     /*!
      * A signal that is emitted when the window gets obscured by another window.
      * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
-     * \deprecated Since 0.19.3. Use displayExited() instead (available on week 12)
      */
-    void exitedDisplay();
+    void displayExited();
 
 protected:
     //! \reimp
