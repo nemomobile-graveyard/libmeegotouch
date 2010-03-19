@@ -221,8 +221,8 @@ void SliderPage::retranslateUi()
     brightnessSlider->setMinLabelVisible(true);
     brightnessSlider->setMaxLabelVisible(true);
 
-    brightnessSlider->setMinLabelIconID("icon-l-brightness-min");
-    brightnessSlider->setMaxLabelIconID("icon-l-brightness-max");
+    brightnessSlider->setMinLabelIconID("icon-m-common-strength1");
+    brightnessSlider->setMaxLabelIconID("icon-m-common-strength5");
 
     modifyBrightnessSliderHandle(brightnessSlider->value());
 
