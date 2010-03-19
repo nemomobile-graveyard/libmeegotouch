@@ -27,6 +27,7 @@
 #include <QSettings>
 
 #include "duiapplication.h"
+#include "duiapplication_p.h"
 #include "duiapplicationwindow.h"
 #include "duiorientationtracker.h"
 #include "duideviceprofile.h"
@@ -604,20 +605,31 @@ void DuiWindow::paintEvent(QPaintEvent *event)
     QGraphicsView::paintEvent(event);
 }
 
-
 bool DuiWindow::event(QEvent *event)
 {
     Q_D(DuiWindow);
 
-    if (event->type() == QEvent::Show || event->type() == QEvent::WindowActivate)
+    if (event->type() == QEvent::Show || event->type() == QEvent::WindowActivate) {
         DuiComponentData::setActiveWindow(this);
+    }
 
+    if (event->type() == QEvent::Close) {
+        DuiOnDisplayChangeEvent ev(false, sceneRect());
+        onDisplayChangeEvent(&ev);
+        // Don't close if LazyShutdown enabled
+        if (DuiApplication::prestartMode() == Dui::LazyShutdown) {
+            DuiApplicationPrivate::restorePrestart();
+            event->ignore();
+            return true;
+        }
 #ifdef DUI_USE_OPENGL
-    if (event->type() == QEvent::Close && !DuiApplication::softwareRendering())
-        DuiGLES2Renderer::destroy(d->glWidget);
+        if (!DuiApplication::softwareRendering()) {
+            DuiGLES2Renderer::destroy(d->glWidget);
+        }
 #endif
+    }
 
-    if (event->type() == QEvent::Close || event->type() == QEvent::WindowDeactivate) {
+    if (event->type() == QEvent::WindowDeactivate) {
         DuiOnDisplayChangeEvent ev(false, sceneRect());
         onDisplayChangeEvent(&ev);
     }
@@ -666,7 +678,7 @@ bool DuiWindow::event(QEvent *event)
             updateNeeded = true;
         } else if (Qt::Key_L == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
             // switch language
-	    QString language;
+            QString language;
 
             DuiLocale oldLocale; // get current system default
             language = oldLocale.name();
@@ -732,6 +744,25 @@ bool DuiWindow::event(QEvent *event)
     }
 
     return QGraphicsView::event(event);
+}
+
+void DuiWindow::setVisible(bool visible)
+{
+    // This effectively overrides call to show() when in
+    // prestarted state.
+    if (visible) {
+        if (DuiApplication::isPrestarted()) {
+            switch (DuiApplication::prestartMode()) {
+            case Dui::LazyShutdown:
+            case Dui::TerminateOnClose:
+                return;
+            default:
+                break;
+            }
+        }
+    }
+
+    QGraphicsView::setVisible(visible);
 }
 
 #include "moc_duiwindow.cpp"

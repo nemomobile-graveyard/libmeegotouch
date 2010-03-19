@@ -159,20 +159,6 @@ void Ut_DuiApplicationWindow::cleanup()
     m_subject = 0;
 }
 
-// It's not possible to owerwrite inlined QWidget::show, setVisible is used instead
-bool Ut_DuiApplicationWindow::m_windowShown = false;
-void QWidget::setVisible(bool visible)
-{
-    Ut_DuiApplicationWindow::m_windowShown = visible;
-}
-
-bool Ut_DuiApplicationWindow::m_windowClosed = false;
-bool QWidget::close()
-{
-    Ut_DuiApplicationWindow::m_windowClosed = true;
-    return true;
-}
-
 void Ut_DuiApplicationWindow::testConstructorWithoutScene()
 {
     QVERIFY(m_subject->scene());
@@ -214,42 +200,29 @@ void Ut_DuiApplicationWindow::testIsOnDisplay()
 void Ut_DuiApplicationWindow::testPrestartNoPrestart()
 {
     DuiApplication::setPrestartMode(Dui::NoPrestart);
-    m_windowShown = false;
     m_subject->show();
-    QCOMPARE(m_windowShown, true);
-    m_prestartRestored = false;
-    m_windowClosed = false;
+    QCOMPARE(m_subject->isVisible(), true);
     m_subject->close();
-    QCOMPARE(m_prestartRestored, false);
-    QCOMPARE(m_windowClosed, true);
+    QCOMPARE(m_subject->isVisible(), false);
 }
 
 void Ut_DuiApplicationWindow::testPrestartTerminateOnClose()
 {
     DuiApplication::setPrestartMode(Dui::TerminateOnClose);
-    m_windowShown = false;
     m_subject->show();
-    QCOMPARE(m_windowShown, false);
-    m_prestartRestored = false;
-    m_windowClosed = false;
+    QCOMPARE(m_subject->isVisible(), false);
     m_subject->close();
-    QCOMPARE(m_prestartRestored, false);
-    QCOMPARE(m_windowClosed, true);
+    QCOMPARE(m_subject->isVisible(), false);
 }
 
 void Ut_DuiApplicationWindow::testPrestartLazyShutdown()
 {
     DuiApplication::setPrestartMode(Dui::LazyShutdown);
-    m_windowShown = false;
     m_subject->show();
-    QCOMPARE(Ut_DuiApplicationWindow::m_windowShown, false);
-    m_prestartRestored = false;
-    m_windowClosed = false;
+    QCOMPARE(m_subject->isVisible(), false);
     m_subject->close();
-    // For some reason the DuiApplicationPrivate::restorePrestart()
-    // stub never gets called.
-    // QCOMPARE( m_prestartRestored, true );
-    QCOMPARE(Ut_DuiApplicationWindow::m_windowClosed, false);
+    QCOMPARE(m_subject->isVisible(), false);
+    QCOMPARE(m_subject->isHidden(), true);
 }
 
 void Ut_DuiApplicationWindow::testWindowActivate()
@@ -314,6 +287,5 @@ void Ut_DuiApplicationWindow::testDisplayExitedOnCloseLazyShutdownApp()
     m_subject->close();
     QCOMPARE(spy.count(), 1);
 }
-
 
 QTEST_MAIN(Ut_DuiApplicationWindow)

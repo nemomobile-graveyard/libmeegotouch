@@ -108,11 +108,6 @@ Q_SIGNALS:
     void pageChanged(DuiApplicationPage *page);
 
 public Q_SLOTS:
-    //! \reimp
-    void show();
-
-    bool close();
-    //! \reimp_end
 
     /*!
      * Opens the application menu of the window, provided that there

@@ -382,6 +382,9 @@ protected:
     DuiWindowPrivate *const d_ptr;
     //! \internal_end
 
+    //! \reimp
+    virtual void setVisible(bool visible);
+
 private:
     Q_DISABLE_COPY(DuiWindow)
     Q_DECLARE_PRIVATE(DuiWindow)

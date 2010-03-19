@@ -617,23 +617,6 @@ DuiApplicationPage *DuiApplicationWindow::currentPage() const
     return d->page;
 }
 
-void DuiApplicationWindow::show()
-{
-    // Act differently if app is in prestarted mode
-    if (DuiApplication::isPrestarted()) {
-        switch (DuiApplication::prestartMode()) {
-        case Dui::LazyShutdown:
-        case Dui::TerminateOnClose:
-            return;
-
-        default:
-            break;
-        }
-    }
-
-    DuiWindow::show();
-}
-
 bool DuiApplicationWindow::event(QEvent *event)
 {
     Q_D(DuiApplicationWindow);
@@ -699,18 +682,6 @@ void DuiApplicationWindow::openMenu()
 
     if (d->menu->actions().count() > 0) {
         d->menu->appear(this);
-    }
-}
-
-bool DuiApplicationWindow::close()
-{
-    if (DuiApplication::prestartMode() == Dui::LazyShutdown) {
-        DuiApplicationPrivate::restorePrestart();
-        DuiOnDisplayChangeEvent ev(false, sceneRect());
-        onDisplayChangeEvent(&ev);
-        return true;
-    } else {
-        return DuiWindow::close();
     }
 }
 

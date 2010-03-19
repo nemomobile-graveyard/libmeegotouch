@@ -76,6 +76,11 @@ void DuiComponentData::setActiveWindow(DuiWindow *window)
     Q_UNUSED(window);
 }
 
+void DuiComponentData::setPrestarted(bool flag)
+{
+    Q_UNUSED(flag);
+}
+
 QList<DuiWindow *> DuiComponentData::windows()
 {
     QList<DuiWindow *> windowlist;
