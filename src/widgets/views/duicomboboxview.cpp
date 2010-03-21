@@ -42,8 +42,7 @@ DuiComboBoxViewPrivate::DuiComboBoxViewPrivate()
 
 DuiComboBoxViewPrivate::~DuiComboBoxViewPrivate()
 {
-    if (popuplist != 0)
-        delete popuplist;
+    delete popuplist;
 }
 
 void DuiComboBoxViewPrivate::init()
@@ -155,78 +154,25 @@ void DuiComboBoxView::applyStyle()
     d->contentItem->setItemMode((DuiContentItem::ContentItemMode)style()->itemMode());
 }
 
-void DuiComboBoxView::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event);
-    Q_D(DuiComboBoxView);
-
-    if (d->controller->isDown())
-        return;
-
-    d->controller->setDown(true);
-}
-
-void DuiComboBoxView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_D(DuiComboBoxView);
-
-    if (!d->controller->isDown())
-        return;
-
-    d->controller->setDown(false);
-
-    QPointF touch = event->scenePos();
-    QRectF rect  = d->controller->sceneBoundingRect();
-    if (rect.contains(touch)) {
-        d->controller->click();
-    }
-}
-
-void DuiComboBoxView::cancelEvent(DuiCancelEvent *event)
-{
-    Q_D(DuiComboBoxView);
-    Q_UNUSED(event);
-
-    if (!d->controller->isDown())
-        return;
-
-    d->controller->setDown(false);
-
-    update();
-}
-
 void DuiComboBoxView::updateData(const QList<const char *>& modifications)
 {
     Q_D(DuiComboBoxView);
 
     DuiWidgetView::updateData(modifications);
 
-    const char *member;
-    const int count = modifications.count();
-    for (int i = 0; i < count; ++i) {
-        member = modifications[i];
-
+    foreach(const char* member, modifications) {
         if (member == DuiComboBoxModel::IconID || member == DuiComboBoxModel::IconVisible) {
             d->initLayout();
         } else if (member == DuiComboBoxModel::Title) {
-            QString text = model()->title();
-            d->contentItem->setTitle(text);
+            d->contentItem->setTitle(model()->title());
             if (d->popuplist)
-                d->popuplist->setTitle(text);
-        } else if (member == DuiComboBoxModel::Down) {
-            if (model()->down())
-                style().setModePressed();
-            else
-                style().setModeDefault();
-            update();
+                d->popuplist->setTitle(model()->title());
         } else if (member == DuiComboBoxModel::ItemModel) {
-            if (d->popuplist) {
+            if (d->popuplist)
                 d->popuplist->setItemModel(model()->itemModel());
-            }
         } else if (member == DuiComboBoxModel::SelectionModel) {
-            if (d->popuplist) {
+            if (d->popuplist)
                 d->popuplist->setSelectionModel(model()->selectionModel());
-            }
         }
     }
 }

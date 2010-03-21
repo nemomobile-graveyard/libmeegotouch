@@ -6,6 +6,9 @@
 - DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be
   displayEntered() and displayExited() 
 
+- DuiComboBox's  down property removed.
+
+
 \section v0190
 
 \subsection New
@@ -67,7 +70,7 @@
 - DuiDialog now handles DuiButtonModels instead DuiButtons. DuiDialogModel now
   contains the list of DuiButtonModels present in the dialog's button box.
   StandardButtons enum was moved from DuiDialog to Dui namespace.
-  
+
 - Added separate view for checkboxes.
 
 - DuiApplicationWindow::currentPage() method was restored after previous removal.

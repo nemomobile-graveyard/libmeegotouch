@@ -93,12 +93,6 @@ class DUI_EXPORT DuiComboBox : public DuiWidgetController
     */
     Q_PROPERTY(QString title READ title WRITE setTitle)
 
-    /**
-        \property DuiComboBox::down
-        \brief See DuiComboBoxModel::down
-    */
-    Q_PROPERTY(bool down READ isDown WRITE setDown DESIGNABLE false)
-
     /*!
         \property DuiComboBox::itemModel  QAbstractItemModel which used by DuiComboBox
     */
@@ -279,18 +273,6 @@ public:
         \brief Sets the \a iconID for the item on the given \a index in the combobox.
     */
     void setItemIconID(int index, const QString &iconID);
-
-    /**
-        \brief Set the combobox down state programmatically.
-
-        Unless you are implementing your own combobox type, you should not need to call this.
-    */
-    void setDown(bool);
-
-    /**
-        \brief Returns true if the combobox is pressed down.
-    */
-    bool isDown() const;
 
 
 public Q_SLOTS:

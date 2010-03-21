@@ -57,12 +57,6 @@ class DUI_EXPORT DuiComboBoxModel : public DuiWidgetModel
     DUI_MODEL_PROPERTY(QString, title, Title, true, QString())
 
     /*!
-        \property DuiComboBoxModel::down
-        \brief Boolean value that defines whether comboBox is currently pressed down or not.
-    */
-    DUI_MODEL_PROPERTY(bool, down, Down, true, false)
-
-    /*!
         \property DuiComboBoxModel::itemModel
         \brief QAbstractItemModel which used by DuiComboBox
     */

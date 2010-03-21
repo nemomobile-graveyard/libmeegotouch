@@ -197,21 +197,6 @@ void Ut_DuiComboBox::testFunctions()
     QCOMPARE(m_combobox->itemIconID(0), value);
 }
 
-void Ut_DuiComboBox::testCancelEvent()
-{
-    QSignalSpy showPopupSpy(m_combobox, SIGNAL(showPopupList()));
-
-    QGraphicsSceneMouseEvent mouseEvent(QEvent::GraphicsSceneMousePress);
-    m_combobox->mousePressEvent(&mouseEvent);
-    QVERIFY(m_combobox->isDown() == true);
-
-    DuiCancelEvent event;
-    m_combobox->cancelEvent(&event);
-
-    QCOMPARE(showPopupSpy.count(), 0);
-    QVERIFY(m_combobox->isDown() == false);
-}
-
 void Ut_DuiComboBox::testIconVisibility()
 {
     DuiComboBoxView *view = (DuiComboBoxView *)m_combobox->view();
