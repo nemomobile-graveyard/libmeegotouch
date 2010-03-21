@@ -190,9 +190,11 @@ DuiGLRendererPrivate::DuiGLRendererPrivate()
 {
     dpy = eglGetDisplay(EGLNativeDisplayType(QX11Info::display()));
 
-    m_pixmapVertices[8] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-    m_pixmapTexCoords[8] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
-    m_pixmapTexCoordsInv[8] = {0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f};
+    for (int i = 0; i < 8; i++) {
+        m_pixmapVertices[i] = 0.0f;
+        m_pixmapTexCoords[i] = 0.0f;
+        m_pixmapTexCoordsInv[i] = 0.0f;
+    }
 }
 
 DuiGLRendererPrivate::~DuiGLRendererPrivate()
