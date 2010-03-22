@@ -31,12 +31,14 @@
 #include "testthemedaemon.h"
 #include "ft_theme_data.h"
 
+#ifdef HAVE_GCONF
 static QString languageGConfValue = "en";
 
 QVariant DuiGConfItem::value() const
 {
     return languageGConfValue;
 }
+#endif
 
 void removeDirectoryRecursive(const QString &path)
 {
