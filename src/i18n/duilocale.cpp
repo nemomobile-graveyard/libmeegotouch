@@ -2161,7 +2161,6 @@ void DuiLocale::refreshSettings()
 
     if (settingsHaveReallyChanged) {
         if (this == s_systemDefault) {
-            qDebug () << __PRETTY_FUNCTION__ << "***mike is s_systemDefault";
             // Setting the default QLocale is needed to get localized number
             // support in translations via %Ln, %L1, %L2, ...:
             QLocale::setDefault(d->createQLocale(DuiLcNumeric));
