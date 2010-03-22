@@ -1032,7 +1032,7 @@ void DuiTextEditView::informPasteFailed()
         //% "Cannot paste text here"
         qtTrId("qtn_vkb_cantpaste"));
 
-    d->controller->sceneManager()->showWindow(d->infoBanner, DuiSceneWindow::DestroyWhenDone);
+    d->controller->sceneManager()->appearSceneWindow(d->infoBanner, DuiSceneWindow::DestroyWhenDone);
     QTimer::singleShot(duration, this, SLOT(hideInfoBanner()));
 }
 

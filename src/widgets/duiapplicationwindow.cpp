@@ -173,10 +173,10 @@ void DuiApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent
     Q_ASSERT(statusBar != 0);
 
     if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->hideWindowNow(statusBar);
+        q->sceneManager()->disappearSceneWindowNow(statusBar);
 
     } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->showWindowNow(statusBar);
+        q->sceneManager()->appearSceneWindowNow(statusBar);
     }
 }
 

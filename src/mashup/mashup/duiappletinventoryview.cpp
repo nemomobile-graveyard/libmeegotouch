@@ -106,9 +106,9 @@ void DuiAppletInventoryView::updateData(const QList<const char *>& modifications
         } else if (member == DuiAppletInventoryModel::CloseButtonVisible) {
             // Set the visibility of the button
             if (model()->closeButtonVisible()) {
-                d->controller->sceneManager()->showWindow(d->closeButtonOverlay);
+                d->controller->sceneManager()->appearSceneWindow(d->closeButtonOverlay);
             } else {
-                d->controller->sceneManager()->hideWindow(d->closeButtonOverlay);
+                d->controller->sceneManager()->disappearSceneWindow(d->closeButtonOverlay);
             }
         } else if (member == DuiAppletInventoryModel::InstallationSources) {
             // Remove any existing source containers

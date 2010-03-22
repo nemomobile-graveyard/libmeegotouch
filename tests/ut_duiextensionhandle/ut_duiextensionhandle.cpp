@@ -91,7 +91,7 @@ void DuiWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *)
 }
 
 // DuiSceneManager stubs (used by DuiExtensionHandle)
-void DuiSceneManager::showWindow(DuiSceneWindow *, DuiSceneWindow::DeletionPolicy)
+void DuiSceneManager::appearSceneWindow(DuiSceneWindow *, DuiSceneWindow::DeletionPolicy)
 {
 }
 

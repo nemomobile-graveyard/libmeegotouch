@@ -58,9 +58,9 @@ void DuiSceneWindowPrivate::appear(bool now, DuiWindow *window, DuiSceneWindow::
     }
 
     if (now) {
-        window->sceneManager()->showWindowNow(q, policy);
+        window->sceneManager()->appearSceneWindowNow(q, policy);
     } else {
-        window->sceneManager()->showWindow(q, policy);
+        window->sceneManager()->appearSceneWindow(q, policy);
     }
 }
 
@@ -89,9 +89,9 @@ bool DuiSceneWindowPrivate::dismiss(bool now)
 
     if (q->sceneManager()) {
         if (now) {
-            q->sceneManager()->closeWindowNow(q);
+            q->sceneManager()->dismissSceneWindowNow(q);
         } else {
-            q->sceneManager()->closeWindow(q);
+            q->sceneManager()->dismissSceneWindow(q);
         }
     }
 
@@ -169,13 +169,13 @@ void DuiSceneWindow::appearNow(DuiSceneWindow::DeletionPolicy policy)
 void DuiSceneWindow::disappear()
 {
     if (sceneManager())
-        sceneManager()->hideWindow(this);
+        sceneManager()->disappearSceneWindow(this);
 }
 
 void DuiSceneWindow::disappearNow()
 {
     if (sceneManager())
-        sceneManager()->hideWindowNow(this);
+        sceneManager()->disappearSceneWindowNow(this);
 }
 
 Qt::Alignment DuiSceneWindow::alignment() const

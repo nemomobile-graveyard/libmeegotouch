@@ -458,7 +458,7 @@ void DuiDialog::done(int result)
         emit rejected();
 
     if (sceneManager())
-        sceneManager()->hideWindow(this);
+        sceneManager()->disappearSceneWindow(this);
 }
 
 int DuiDialog::exec(DuiWindow *window)

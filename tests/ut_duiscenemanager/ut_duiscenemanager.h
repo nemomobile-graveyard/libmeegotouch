@@ -48,10 +48,10 @@ private slots:
     void testConstructorWithSceneSpecified();
     void testSceneWindowAttaching();
     void testSceneWindowDetaching();
-    void testSceneWindowShowNow();
-    void testSceneWindowShow();
-    void testSceneWindowHideNow();
-    void testSceneWindowHide();
+    void testSceneWindowAppearNow();
+    void testSceneWindowAppear();
+    void testSceneWindowDisappearNow();
+    void testSceneWindowDisappear();
     void testSceneLayerEffect();
     void testInitialOrientation();
     void testOrientationChangedSignal();

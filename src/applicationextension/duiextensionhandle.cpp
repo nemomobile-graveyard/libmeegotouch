@@ -383,7 +383,7 @@ void DuiExtensionHandle::displayContextMenu(QList<QString> actions)
 {
     setRemoteActions(actions);
     DuiObjectMenu *menu = new DuiObjectMenu(this);
-    sceneManager()->showWindow(menu, DuiSceneWindow::DestroyWhenDone);
+    sceneManager()->appearSceneWindow(menu, DuiSceneWindow::DestroyWhenDone);
 }
 
 void DuiExtensionHandle::stopCommunication()

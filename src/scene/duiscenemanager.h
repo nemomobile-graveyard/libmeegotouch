@@ -176,7 +176,7 @@ public Q_SLOTS:
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::appear()
      * calls this method for you.
      */
-    void showWindow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
+    void appearSceneWindow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
 
     /*!
      * Attaches a \a window to the scene manager and shows it without animations (instantly).
@@ -185,7 +185,7 @@ public Q_SLOTS:
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::appearNow()
      * calls this method for you.
      */
-    void showWindowNow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
+    void appearSceneWindowNow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
 
     /*!
      * Shows a modal \a dialog using associated animation and returns its result code.
@@ -201,7 +201,7 @@ public Q_SLOTS:
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::disappear()
      * calls this method for you.
      */
-    void hideWindow(DuiSceneWindow *window);
+    void disappearSceneWindow(DuiSceneWindow *window);
 
     /*!
      * Hides a \a window without animations (instantly) and detaches it from the scene manager.
@@ -209,7 +209,7 @@ public Q_SLOTS:
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::disappearNow()
      * calls this method for you.
      */
-    void hideWindowNow(DuiSceneWindow *window);
+    void disappearSceneWindowNow(DuiSceneWindow *window);
 
     /*!
      * Closes a \a window using associated animation and detaches it from the scene manager.
@@ -217,7 +217,7 @@ public Q_SLOTS:
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::dismiss()
      * calls this method for you.
      */
-    void closeWindow(DuiSceneWindow *window);
+    void dismissSceneWindow(DuiSceneWindow *window);
 
     /*!
      * Closes a \a window without animations (instantly) and detaches it from the scene manager.
@@ -225,7 +225,7 @@ public Q_SLOTS:
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::dismissNow()
      * calls this method for you.
      */
-    void closeWindowNow(DuiSceneWindow *window);
+    void dismissSceneWindowNow(DuiSceneWindow *window);
 
 Q_SIGNALS:
     /*! \brief Signal emitted before scene geometry is changed for a rotation

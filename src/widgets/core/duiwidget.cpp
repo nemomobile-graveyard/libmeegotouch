@@ -343,7 +343,7 @@ void DuiWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
     if (hasObjectMenuActions) {
         DuiObjectMenu *menu = new DuiObjectMenu(this);
-        sceneManager()->showWindow(menu, DuiSceneWindow::DestroyWhenDone);
+        sceneManager()->appearSceneWindow(menu, DuiSceneWindow::DestroyWhenDone);
     } else {
         event->ignore();
     }

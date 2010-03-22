@@ -119,7 +119,7 @@ void DuiComboBoxViewPrivate::_q_showPopup()
     }
 
     if (controller->sceneManager()) {
-        controller->sceneManager()->showWindow(popuplist);
+        controller->sceneManager()->appearSceneWindow(popuplist);
     }
 }
 

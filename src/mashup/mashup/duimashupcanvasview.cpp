@@ -207,7 +207,7 @@ void DuiMashupCanvasView::showAppletInventory()
 {
     Q_D(DuiMashupCanvasView);
 
-    d->controller->sceneManager()->showWindow(d->appletInventoryWindow);
+    d->controller->sceneManager()->appearSceneWindow(d->appletInventoryWindow);
     d->appletInventory->setEnabled(true);
 }
 
@@ -219,7 +219,7 @@ void DuiMashupCanvasView::hideAppletInventory()
     // the dialog it's not possible to launch another applet
     d->appletInventory->setEnabled(false);
 
-    d->controller->sceneManager()->hideWindow(d->appletInventoryWindow);
+    d->controller->sceneManager()->disappearSceneWindow(d->appletInventoryWindow);
 }
 
 void DuiMashupCanvasView::setupModel()

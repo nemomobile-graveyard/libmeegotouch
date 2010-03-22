@@ -62,7 +62,7 @@ DuiTextEditViewZoom::DuiTextEditViewZoom(DuiTextEditView *textEditView, const QP
     //set the parent to a toplevel duiscenewindow
 
     // FIXME - verify if it's the correct scene manager
-    textEditViewD->controller->sceneManager()->showWindow(parent);
+    textEditViewD->controller->sceneManager()->appearSceneWindow(parent);
     this->setParentItem(parent);
 
     // set zoom target lower if possible -> currently focused point goes up a bit

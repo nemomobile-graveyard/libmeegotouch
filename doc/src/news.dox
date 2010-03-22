@@ -36,6 +36,12 @@
 - Dui::OrientationChangeMode was renamed to DuiSceneManager::TransitionMode,
   Dui::AnimatedOrientationChange was renamed to DuiSceneManager::AnimatedTransition,
   Dui::ImmediateOrientationChange was renamed to DuiSceneManager::ImmediateTransition.
+- DuiSceneManager::showWindow() was renamed to DuiSceneManager::appearSceneWindow(),
+  DuiSceneManager::showWindowNow() was renamed to DuiSceneManager::appearSceneWindowNow(),
+  DuiSceneManager::hideWindow() was renamed to DuiSceneManager::disappearSceneWindow(),
+  DuiSceneManager::hideWindowNow() was renamed to DuiSceneManager::disappearSceneWindowNow(),
+  DuiSceneManager::closeWindow() was renamed to DuiSceneManager::dismissSceneWindow(),
+  DuiSceneManager::closeWindowNow() was renamed to DuiSceneManager::dismissSceneWindowNow()
 
 \section v0190
 
