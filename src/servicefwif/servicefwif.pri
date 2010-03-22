@@ -7,6 +7,7 @@ SERVICEFWIF_SRC_DIR=./servicefwif
 INCLUDEPATH+=./servicefwif/include
 HEADERS += \
     $$SERVICEFWIF_SRC_DIR/duiservicefwbaseif.h \
+    $$SERVICEFWIF_SRC_DIR/duiservicefwbaseif_p.h \
     $$SERVICEFWIF_SRC_DIR/include/duiservicefwproxy.h \
 
 SOURCES += \

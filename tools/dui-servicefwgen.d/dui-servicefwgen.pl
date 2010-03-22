@@ -175,7 +175,7 @@ sub processAdaptorCppFile
                     print NEWADAPTOR "    DuiApplication::instance()->activeWindow()->setWindowTitle( windowTitle );\n";
                     print NEWADAPTOR "    DuiApplicationWindow *appWindow = DuiApplication::activeApplicationWindow();\n";
                     print NEWADAPTOR "    if (appWindow != 0) {\n";
-                    print NEWADAPTOR "        appWindow->currentPage()->setEscapeButtonMode( DuiEscapeButtonPanelModel::BackMode );\n";
+                    print NEWADAPTOR "        appWindow->currentPage()->setEscapeMode( DuiApplicationPageModel::EscapeManualBack );\n";
                     print NEWADAPTOR "        // connect to the back button - assumes the above 'showImage' opens a\n";
                     print NEWADAPTOR "        // new window and so the window referred to below is already the top one\n";
                     print NEWADAPTOR "        connect(appWindow->currentPage(), SIGNAL(backButtonClicked()),\n";
@@ -390,9 +390,9 @@ EOF
         print IFC "$returnType ${upperCamelServiceName}::$methodName( $parameters )\n";
         print IFC "{\n";
         if ( $returnType eq "void" ) {
-          print IFC "    static_cast<${upperCamelServiceName}Proxy*>(interfaceProxy)->${methodName}( ".join( ", ", @paramNames )." );\n";
+          print IFC "    static_cast<${upperCamelServiceName}Proxy*>(interfaceProxy())->${methodName}( ".join( ", ", @paramNames )." );\n";
         } else {
-          print IFC "    return qobject_cast<${upperCamelServiceName}Proxy*>(interfaceProxy)->${methodName}( ".join( ", ", @paramNames )." ).value();\n";
+          print IFC "    return qobject_cast<${upperCamelServiceName}Proxy*>(interfaceProxy())->${methodName}( ".join( ", ", @paramNames )." ).value();\n";
         }
         print IFC "}\n\n";
       }
@@ -416,7 +416,7 @@ EOF
     my $joinedTypes = join( ',', @typesOnly );
 
     push @connectSignals, <<EOF;
-             connect( interfaceProxy, SIGNAL( $signalName( $joinedTypes ) ),
+             connect( interfaceProxy(), SIGNAL( $signalName( $joinedTypes ) ),
                       this, SIGNAL( $signalName( $joinedTypes ) ) );
 EOF
   }
@@ -591,16 +591,17 @@ ${upperCamelServiceName}::$upperCamelServiceName( const QString& preferredServic
     : DuiServiceFwBaseIf( ${upperCamelProxyName}::staticInterfaceName(), parent )
 {
     // Resolve the provider service name
-    service = resolveServiceName( interface, preferredService );
+    QString service = resolveServiceName( interfaceName(), preferredService );
 
     bool serviceNameInvalid = service.contains( " " ); // "not provided" - when the service wouldn't run
     if ( serviceNameInvalid ) {
         service.clear();
     }
+    setServiceName( service );
 
     if (!service.isEmpty()) {
         // Construct the D-Bus proxy
-        interfaceProxy = new $upperCamelProxyName( service, "/", QDBusConnection::sessionBus(), this );
+        setInterfaceProxy( new $upperCamelProxyName( service, "/", QDBusConnection::sessionBus(), this ));
         // allConnectSignals go here (empty block if none)
 $allConnectSignals
     }
@@ -615,13 +616,8 @@ void ${upperCamelServiceName}::setService(const QString & service)
 {
     if (service.isEmpty()) return;
 
-    this->service = service;
-
-    if ( interfaceProxy ) {
-        delete interfaceProxy;
-        interfaceProxy = 0;
-    }
-    interfaceProxy = new $upperCamelProxyName( service, "/", QDBusConnection::sessionBus(), this );
+    setServiceName( service );
+    setInterfaceProxy( new $upperCamelProxyName( service, "/", QDBusConnection::sessionBus(), this ));
     {
 $allConnectSignals
     }

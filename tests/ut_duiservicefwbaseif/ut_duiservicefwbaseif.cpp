@@ -44,15 +44,16 @@ Q_SIGNALS: // SIGNALS
 class MyServiceFwIf : public DuiServiceFwBaseIf
 {
 public:
-    MyServiceFwIf() :
+    MyServiceFwIf(QDBusAbstractInterface *ifProxy) :
         DuiServiceFwBaseIf("com.nokia.TextProcessorIf", 0) {
+	setInterfaceProxy(ifProxy);
     };
 
     virtual ~MyServiceFwIf() {
     };
 
     virtual void setService(const QString &service) {
-        Q_UNUSED(service);
+        setServiceName(service);
     };
 };
 
@@ -60,10 +61,7 @@ void Ut_DuiServiceFwBaseIf::init()
 {
     Ut_DuiServiceFwBaseIf::serviceFwService = "";
 
-    m_subject = new MyServiceFwIf();
-
-    QDBusAbstractInterface *x = new EmailServiceIfProxy();
-    m_subject->interfaceProxy = x;
+    m_subject = new MyServiceFwIf(new EmailServiceIfProxy());
 
     // no point in testing these
     m_subject->isValid();
@@ -96,7 +94,7 @@ void Ut_DuiServiceFwBaseIf::testHandleServiceAvailable0()
     QSignalSpy serviceChangedSpy(m_subject,
                                  SIGNAL(serviceChanged(QString)));
 
-    m_subject->service = "";
+    m_subject->setService("");
 
     m_subject->handleServiceAvailable("com.google.TextProcessor", "com.google.TexrProcessorIf");
     QCOMPARE(serviceAvailableSpy.count(), 0);
@@ -113,12 +111,12 @@ void Ut_DuiServiceFwBaseIf::testHandleServiceAvailable1()
     QSignalSpy serviceChangedSpy(m_subject,
                                  SIGNAL(serviceChanged(QString)));
 
-    m_subject->service = "";
+    m_subject->setService("");
 
     QString thisService = "org.maemo.TextProcessor";
     serviceFwService = thisService;
 
-    m_subject->handleServiceAvailable(thisService, m_subject->interface);
+    m_subject->handleServiceAvailable(thisService, m_subject->interfaceName());
     QCOMPARE(serviceAvailableSpy.count(), 1);
     QCOMPARE(serviceChangedSpy.count(), 1);
 }
@@ -133,7 +131,7 @@ void Ut_DuiServiceFwBaseIf::testHandleServiceAvailable2()
     QSignalSpy serviceChangedSpy(m_subject,
                                  SIGNAL(serviceChanged(QString)));
 
-    m_subject->service = "org.maemo.TextProcessor";
+    m_subject->setService("org.maemo.TextProcessor");
 
     QString thisService = "com.nokia.TextProcessor";
     serviceFwService = thisService;
@@ -153,12 +151,12 @@ void Ut_DuiServiceFwBaseIf::testHandleServiceAvailable3()
     QSignalSpy serviceChangedSpy(m_subject,
                                  SIGNAL(serviceChanged(QString)));
 
-    m_subject->service = "org.maemo.TextProcessor";
+    m_subject->setService("org.maemo.TextProcessor");
 
     QString thisService = "com.nokia.TextProcessor";
     serviceFwService = thisService;
 
-    m_subject->handleServiceAvailable(thisService, m_subject->interface);
+    m_subject->handleServiceAvailable(thisService, m_subject->interfaceName());
     QCOMPARE(serviceAvailableSpy.count(), 0);
     QCOMPARE(serviceChangedSpy.count(), 1);
 }
@@ -173,7 +171,7 @@ void Ut_DuiServiceFwBaseIf::testHandleServiceUnavailable0()
     QSignalSpy serviceChangedSpy(m_subject,
                                  SIGNAL(serviceChanged(QString)));
 
-    m_subject->service = "";
+    m_subject->setService("");
 
     QString thisService = "com.nokia.TextProcessor";
     serviceFwService = "";
@@ -193,9 +191,9 @@ void Ut_DuiServiceFwBaseIf::testHandleServiceUnavailable1()
     QSignalSpy serviceChangedSpy(m_subject,
                                  SIGNAL(serviceChanged(QString)));
 
-    m_subject->service = "com.nokia.TextProcessor";
+    m_subject->setService("com.nokia.TextProcessor");
 
-    serviceFwService = m_subject->service;
+    serviceFwService = m_subject->serviceName();
 
     m_subject->handleServiceUnavailable("com.nokia.EmailService");
     QCOMPARE(serviceUnavailableSpy.count(), 0);
@@ -212,11 +210,11 @@ void Ut_DuiServiceFwBaseIf::testHandleServiceUnavailable2()
     QSignalSpy serviceChangedSpy(m_subject,
                                  SIGNAL(serviceChanged(QString)));
 
-    m_subject->service = "com.nokia.TextProcessor";
+    m_subject->setService("com.nokia.TextProcessor");
 
     serviceFwService = "org.maemo.TextProcessor";
 
-    m_subject->handleServiceUnavailable(m_subject->service);
+    m_subject->handleServiceUnavailable(m_subject->serviceName());
     QCOMPARE(serviceUnavailableSpy.count(), 0);
     QCOMPARE(serviceChangedSpy.count(), 1);
 }
@@ -231,11 +229,11 @@ void Ut_DuiServiceFwBaseIf::testHandleServiceUnavailable3()
     QSignalSpy serviceChangedSpy(m_subject,
                                  SIGNAL(serviceChanged(QString)));
 
-    m_subject->service = "com.nokia.TextProcessor";
+    m_subject->setService("com.nokia.TextProcessor");
 
     serviceFwService = "";
 
-    m_subject->handleServiceUnavailable(m_subject->service);
+    m_subject->handleServiceUnavailable(m_subject->serviceName());
     QCOMPARE(serviceUnavailableSpy.count(), 1);
     QCOMPARE(serviceChangedSpy.count(), 0);
 }

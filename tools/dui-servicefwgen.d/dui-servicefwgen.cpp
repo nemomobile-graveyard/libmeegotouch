@@ -539,16 +539,17 @@ QString Worker::botBitC()
     : DuiServiceFwBaseIf( " + upperCamelProxyName() + "::staticInterfaceName(), parent )\n\
 {\n\
     // Resolve the provider service name\n\
-    service = resolveServiceName( interface, preferredService );\n\
+    QString service = resolveServiceName( interfaceName(), preferredService );\n\
 \n\
     bool serviceNameInvalid = service.contains( \" \" ); // \"not provided\" - when the service wouldn't run\n\
     if ( serviceNameInvalid ) {\n\
         service.clear();\n\
     }\n\
+    setServiceName( service );\n\
 \n\
     if (!service.isEmpty()) {\n\
         // Construct the D-Bus proxy\n\
-        interfaceProxy = new " + upperCamelProxyName() + "( service, \"/\", QDBusConnection::sessionBus(), this );\n\
+        setInterfaceProxy( new " + upperCamelProxyName() + "( service, \"/\", QDBusConnection::sessionBus(), this ));\n\
         // allConnectSignals go here (empty block if none)\n\
 " + m_allConnectSignalCommands + "\n\
     }\n\
@@ -558,13 +559,8 @@ void " + upperCamelServiceName() + "::setService(const QString & service)\n\
 {\n\
     if (service.isEmpty()) return;\n\
 \n\
-    this->service = service;\n\
-\n\
-    if ( interfaceProxy ) {\n\
-        delete interfaceProxy;\n\
-        interfaceProxy = 0;\n\
-    }\n\
-    interfaceProxy = new " + upperCamelProxyName() + "( service, \"/\", QDBusConnection::sessionBus(), this );\n\
+    setServiceName( service );\n\
+    setInterfaceProxy( new " + upperCamelProxyName() + "( service, \"/\", QDBusConnection::sessionBus(), this ));\n\
     {\n\
 " + m_allConnectSignalCommands + "\n\
     }\n\
@@ -715,7 +711,7 @@ void Worker::createConnectSignalCommands( const QStringList& ifSignals )
         QString joinedTypes(typesOnly.join(","));
 
         connectSignals.append(
-"    connect( interfaceProxy, SIGNAL( " + signalName + "( " + joinedTypes + " ) ),\n\
+"    connect( interfaceProxy(), SIGNAL( " + signalName + "( " + joinedTypes + " ) ),\n\
              this, SIGNAL( " + signalName + "( " + joinedTypes + " ) ) );\n");
     }
 
@@ -1243,12 +1239,12 @@ returnType + " " + w.upperCamelServiceName() + "::" + methodName + "( " + parame
                     if (returnType == "void")
                     {
                         wrapperCppStream <<
-"    static_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy)->" + methodName + "( " + paramNames.join(", ") + " );" << endl;
+"    static_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "( " + paramNames.join(", ") + " );" << endl;
                     }
                     else
                     {
                         wrapperCppStream <<
-"    return qobject_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy)->" + methodName + "( " + paramNames.join(", ") + " ).value();" << endl;
+"    return qobject_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "( " + paramNames.join(", ") + " ).value();" << endl;
                     }
                     wrapperCppStream << "}\n" << endl;
                 }
