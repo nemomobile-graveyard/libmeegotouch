@@ -38,7 +38,7 @@ class DuiDismissEvent;
     DuiDialog is a top-level scene window mostly used for short-term tasks and
     brief communications with the user. It can either be embedded in an existing DuiWindow
     (and therefore be application modal) or displayed in its own separate DuiWindow
-    (which may be window modal). DuiDialogs are never modeless.
+    (which may be system modal). DuiDialogs are never modeless.
 
 
     A DuiDialog is comprised by three components:
@@ -51,12 +51,12 @@ class DuiDismissEvent;
     \li A button box, that can contain buttons for providing means of selection for simple queries.
         Can be hidden when central widget is customized.
 
-    DuiDialog may be application modal or window modal. When displayed inside a given
+    DuiDialog may be application modal or system modal. When displayed inside a given
     DuiWindow (by supplying a window parameter to appear(), appearNow() or exec())
-    it will ignore the windowModal property and will be application modal. If
-    no window is supplied and windowModal is set to true it will be displayed in its own
-    separate top-level DuiWindow and will be window modal. The home button is not accessible
-    when DuiDialog is window modal. DuiDialog is application modal by default.
+    it will ignore the systemModal property and will be application modal. If
+    no window is supplied and systemModal is set to true it will be displayed in its own
+    separate top-level DuiWindow and will be system modal. The home button is not accessible
+    when DuiDialog is system modal. DuiDialog is application modal by default.
 
     DuiDialog provides a return value, based on the user's choice. It also knows which button from
     the button box was pressed (if any).
@@ -148,7 +148,7 @@ class DUI_EXPORT DuiDialog : public DuiSceneWindow
     Q_PROPERTY(bool closeButtonVisible READ isCloseButtonVisible WRITE setCloseButtonVisible)
     Q_PROPERTY(bool titleBarVisible READ isTitleBarVisible WRITE setTitleBarVisible)
     Q_PROPERTY(QString title READ title WRITE setTitle)
-    Q_PROPERTY(bool windowModal READ isWindowModal WRITE setWindowModal)
+    Q_PROPERTY(bool systemModal READ isSystemModal WRITE setSystemModal)
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible)
 
 public:
@@ -303,23 +303,23 @@ public:
     void setTitleBarVisible(bool visible);
 
     /*!
-     * \brief Returns whether the dialog should be displayed as window modal.
+     * \brief Returns whether the dialog should be displayed as system modal.
      *
      * If false, dialog will be application modal.
-     * \sa setWindowModal()
+     * \sa setSystemModal()
      */
-    bool isWindowModal() const;
+    bool isSystemModal() const;
 
     /*!
-     * \brief Defines whether the dialog should be displayed as window modal.
+     * \brief Defines whether the dialog should be displayed as system modal.
      *
      * Changing this property will affect only subsequent calls to appear(), appearNow()
      * and exec(). I.e., if called between an appear() and a disappear() it won't affect
      * the modality of the ongoing appearance.
      *
-     * \sa isWindowModal()
+     * \sa isSystemModal()
      */
-    void setWindowModal(bool windowModal);
+    void setSystemModal(bool systemModal);
 
     /*!
      * \brief Adds a given \a button to the button box.
@@ -415,14 +415,14 @@ public Q_SLOTS:
      * Shows the dialog on the currently active window and registers it in the
      * associated DuiSceneManager. Uses an animation to show the window.
      *
-     * If windowModal property is true, it will be displayed as a separate top level
+     * If systemModal property is true, it will be displayed as a separate top level
      * DuiWindow regardless of whether there's an active window and the user
      * won't be able to switch to any other application or to the home screen until
      * the dialog is closed (the home button won't be accessible).
      *
      * \param policy    Deletion policy, defines the ownership for this window
      *
-     * \sa appearNow(), setWindowModal()
+     * \sa appearNow(), setSystemModal()
      */
     virtual void appear(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
 
@@ -431,7 +431,7 @@ public Q_SLOTS:
      * it in the associated DuiSceneManager. Uses animation to show the dialog.
      *
      * If \a window is 0, it functions just like appear() (without window parameter).
-     * Otherwise it ignores the windowModal property and is displayed as application
+     * Otherwise it ignores the systemModal property and is displayed as application
      * modal.
      *
      * \param window    The window on which the dialog is going to be shown.
@@ -455,7 +455,7 @@ public Q_SLOTS:
      * it in the associated DuiSceneManager. Doesn't use an animation to show the dialog.
      *
      * If \a window is 0, it functions just like appearNow() (without window parameter).
-     * Otherwise it ignores the windowModal property and is displayed as application
+     * Otherwise it ignores the systemModal property and is displayed as application
      * modal.
      *
      * \param window    The window on which the dialog is going to be shown.
@@ -498,13 +498,13 @@ public Q_SLOTS:
      * \brief Makes the dialog appear and returns only when the user dismisses it.
      *
      * If the \a window is specified, the dialog appears on the specified window
-     * and will be application modal, ignoring the value of windowModal property.
+     * and will be application modal, ignoring the value of systemModal property.
      *
-     * If no \a window is specified and windowModal property is false, the dialog
+     * If no \a window is specified and systemModal property is false, the dialog
      * will appear in the currently active window. If no window is currently
      * active, the method will fail.
      *
-     * If no \a window is specified and windowModal property is true, it will be
+     * If no \a window is specified and systemModal property is true, it will be
      * displayed as a separate top level DuiWindow regardless of whether there's
      * an active window and the user won't be able to switch to any other
      * application or to the home screen until the dialog is dismissed (the home
@@ -518,7 +518,7 @@ public Q_SLOTS:
      * If the dialog was dismissed with either accept() or reject() (or the equivalent done()
      * calls), a DialogCode result is returned instead.
      *
-     * \sa StandardButton, setWindowModal()
+     * \sa StandardButton, setSystemModal()
      */
     int exec(DuiWindow *window = 0);
 

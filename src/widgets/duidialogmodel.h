@@ -41,7 +41,7 @@ private:
     DUI_MODEL_PROPERTY(bool, buttonBoxVisible, ButtonBoxVisible, true, true)
     DUI_MODEL_PROPERTY(bool, titleBarVisible, TitleBarVisible, true, true)
     DUI_MODEL_PROPERTY(QString, title, Title, true, QString())
-    DUI_MODEL_PROPERTY(bool, windowModal, WindowModal, true, false)
+    DUI_MODEL_PROPERTY(bool, systemModal, SystemModal, true, false)
 
     /*!
         \property DuiDialogModel::progressIndicatorVisible

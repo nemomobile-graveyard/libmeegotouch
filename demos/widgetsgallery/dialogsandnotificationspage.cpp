@@ -51,7 +51,7 @@ DialogsAndNotificationsPage::DialogsAndNotificationsPage()
       button6(0),
       button7(0),
       buttonStackedDialogs(0),
-      buttonWindowModalDialog(0)
+      buttonSystemModalDialog(0)
 {
     gid = TemplatePage::ViewsAndDialogs;
 }
@@ -206,19 +206,19 @@ void DialogsAndNotificationsPage::openNestedMessageBox()
     nestedMessageBox->exec();
 }
 
-void DialogsAndNotificationsPage::openWindowModalDialog()
+void DialogsAndNotificationsPage::openSystemModalDialog()
 {
     if (dialog != NULL)
         delete dialog;
     dialog = new DuiDialog(
-        //% "Window Modal Dialog"
-        qtTrId("xx_dialogs_and_notifications_window_modal_dialog_title"),
+        //% "System Modal Dialog"
+        qtTrId("xx_dialogs_and_notifications_system_modal_dialog_title"),
         //% "I'm a window modal dialog.\n"
         //% "There's no way around me!\n"
         //% "Muwhahaha... [evil laugh]"
-        new DuiLabel(qtTrId("xx_dialogs_and_notifications_window_modal_dialog_label")),
+        new DuiLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label")),
         Dui::OkButton);
-    dialog->setWindowModal(true);
+    dialog->setSystemModal(true);
     dialog->exec();
 }
 
@@ -322,9 +322,9 @@ void DialogsAndNotificationsPage::populateLayout(DuiLinearLayoutPolicy *layoutPo
     connect(buttonStackedDialogs, SIGNAL(clicked()), this, SLOT(openStackedDialogs()));
     dialogsLayout->addItem(buttonStackedDialogs);
 
-    buttonWindowModalDialog = new DuiButton(centralWidget());
-    connect(buttonWindowModalDialog, SIGNAL(clicked()), this, SLOT(openWindowModalDialog()));
-    dialogsLayout->addItem(buttonWindowModalDialog);
+    buttonSystemModalDialog = new DuiButton(centralWidget());
+    connect(buttonSystemModalDialog, SIGNAL(clicked()), this, SLOT(openSystemModalDialog()));
+    dialogsLayout->addItem(buttonSystemModalDialog);
 
     buttonDialogWithProgressIndicator = new DuiButton(centralWidget());
     connect(buttonDialogWithProgressIndicator, SIGNAL(clicked()), this, SLOT(openDialogWithProgressIndicator()));
@@ -372,8 +372,8 @@ void DialogsAndNotificationsPage::retranslateUi()
     //% "Stacked Dialogs"
     buttonStackedDialogs->setText(qtTrId("xx_dialogs_and_notifications_stacked_dialogs"));
 
-    //% "Window Modal Dialog"
-    buttonWindowModalDialog->setText(qtTrId("xx_dialogs_and_notifications_window_modal_dialog"));
+    //% "System Modal Dialog"
+    buttonSystemModalDialog->setText(qtTrId("xx_dialogs_and_notifications_system_modal_dialog"));
 
     //% "Dialog With Progress Indicator"
     buttonDialogWithProgressIndicator->setText(qtTrId("xx_dialogs_and_notifications_dialog_with_progress_indicator"));

@@ -81,7 +81,7 @@ void DuiDialogPrivate::appear(bool now, DuiSceneWindow::DeletionPolicy policy)
     Q_Q(DuiDialog);
     DuiWindow *window;
 
-    if (q->isWindowModal()) {
+    if (q->isSystemModal()) {
         if (prepareStandAloneAppearance(policy)) {
             if (now) {
                 q->appearNow(standAloneWindow);
@@ -133,7 +133,7 @@ void DuiDialogPrivate::updateStandAloneHomeButtonVisibility()
 {
     Q_Q(DuiDialog);
 
-    if (q->isWindowModal()) {
+    if (q->isSystemModal()) {
         // Remove the home button if it's there.
         if (homeButtonPanel) {
             if (homeButtonPanel->scene() != 0) {
@@ -473,7 +473,7 @@ int DuiDialog::exec(DuiWindow *window)
     if (window) {
         targetSceneManager = window->sceneManager();
     } else {
-        if (isWindowModal()) {
+        if (isSystemModal()) {
             d->prepareStandAloneAppearance(KeepWhenDone);
             targetSceneManager = d->standAloneWindow->sceneManager();
         } else {
@@ -552,14 +552,14 @@ void DuiDialog::setTitleBarVisible(bool visible)
     model()->setTitleBarVisible(visible);
 }
 
-bool DuiDialog::isWindowModal() const
+bool DuiDialog::isSystemModal() const
 {
-    return model()->windowModal();
+    return model()->systemModal();
 }
 
-void DuiDialog::setWindowModal(bool windowModal)
+void DuiDialog::setSystemModal(bool systemModal)
 {
-    model()->setWindowModal(windowModal);
+    model()->setSystemModal(systemModal);
 }
 
 void DuiDialog::setLayout(QGraphicsLayout *layout)

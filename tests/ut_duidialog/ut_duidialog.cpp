@@ -112,8 +112,8 @@ void Ut_DuiDialog::settersAndGetters()
 
     for (int i = 0; i < 4; i++) {
         bool val = i % 2 ? false : true;
-        dialog->setWindowModal(val);
-        QCOMPARE(dialog->isWindowModal(), val);
+        dialog->setSystemModal(val);
+        QCOMPARE(dialog->isSystemModal(), val);
     }
 
     {

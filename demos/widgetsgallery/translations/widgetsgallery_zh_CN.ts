@@ -119,14 +119,14 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <source>I&apos;m a nested message box</source>
         <translation>我是多层对话框</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_window_modal_dialog_title">
+    <message id="xx_dialogs_and_notifications_system_modal_dialog_title">
         <location filename="../dialogsandnotificationspage.cpp" line="215"/>
-        <source>Window Modal Dialog</source>
+        <source>System Modal Dialog</source>
         <translation>模式对话框</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_window_modal_dialog_label">
+    <message id="xx_dialogs_and_notifications_system_modal_dialog_label">
         <location filename="../dialogsandnotificationspage.cpp" line="219"/>
-        <source>I&apos;m a window modal dialog.
+        <source>I&apos;m a System Modal dialog.
 There&apos;s no way around me!
 Muwhahaha... [evil laugh]</source>
         <translation>我是模式对话框。
@@ -199,9 +199,9 @@ Muwhahaha... [evil laugh]</source>
         <source>Stacked Dialogs</source>
         <translation>对话记录框</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_window_modal_dialog">
+    <message id="xx_dialogs_and_notifications_system_modal_dialog">
         <location filename="../dialogsandnotificationspage.cpp" line="376"/>
-        <source>Window Modal Dialog</source>
+        <source>System Modal Dialog</source>
         <translation>模式对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_dialog_with_progress_indicator">

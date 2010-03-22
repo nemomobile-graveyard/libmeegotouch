@@ -48,7 +48,7 @@ private slots:
     void openStackedDialogs();
     void openNestedDialog();
     void openNestedMessageBox();
-    void openWindowModalDialog();
+    void openSystemModalDialog();
     void openDialogWithProgressIndicator();
     void openMessageBox();
     void showEventBanner();
@@ -78,7 +78,7 @@ private:
     DuiButton *button6;
     DuiButton *button7;
     DuiButton *buttonStackedDialogs;
-    DuiButton *buttonWindowModalDialog;
+    DuiButton *buttonSystemModalDialog;
     DuiButton *buttonDialogWithProgressIndicator;
 };
 
