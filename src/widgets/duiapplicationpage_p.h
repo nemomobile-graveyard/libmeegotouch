@@ -52,7 +52,7 @@ public:
     void propagateOnDisplayChangeEvent(bool visible);
 
     // Note: Called by DuiApplicationWindow
-    void updateAutoMarginsForComponents(const Dui::Orientation &orientation,
+    void updateAutoMarginsForComponents(Dui::Orientation orientation,
                                         qreal statusBarHeight,
                                         qreal navigationBarHeight,
                                         qreal dockWidgetHeight,

@@ -354,7 +354,7 @@ void DuiExtensionHandle::visibilityEvent(bool visible) {
   gDuiExtensionHandleStub->visibilityEvent(visible);
 }
 
-void DuiExtensionHandle::orientationEvent(const Dui::Orientation &orientation) {
+void DuiExtensionHandle::orientationEvent(Dui::Orientation orientation) {
   gDuiExtensionHandleStub->orientationEvent(orientation);
 }
 

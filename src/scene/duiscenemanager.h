@@ -225,7 +225,7 @@ Q_SIGNALS:
      *
      * \param orientation New orientation of the viewport
      */
-    void orientationAboutToChange(const Dui::Orientation &orientation);
+    void orientationAboutToChange(Dui::Orientation orientation);
 
     /*! \brief Signal emitted after scene geometry has changed for a rotation
      *
@@ -237,7 +237,7 @@ Q_SIGNALS:
      *
      * \param orientation New orientation of the viewport
      */
-    void orientationAngleChanged(const Dui::OrientationAngle &orientationAngle);
+    void orientationAngleChanged(Dui::OrientationAngle orientationAngle);
 
     /*! \brief Signal emitted after scene geometry has changed for a rotation
      *
@@ -251,14 +251,14 @@ Q_SIGNALS:
      *
      * \param orientation New orientation of the viewport
      */
-    void orientationChanged(const Dui::Orientation &orientation);
+    void orientationChanged(Dui::Orientation orientation);
 
     /*!
      * This signal is emitted when the rotation animation has finished.
      *
      * \param orientation New orientation of the viewport
      */
-    void orientationChangeFinished(const Dui::Orientation &orientation);
+    void orientationChangeFinished(Dui::Orientation orientation);
 
 protected:
     //! \internal

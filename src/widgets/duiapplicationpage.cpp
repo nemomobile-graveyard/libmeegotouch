@@ -367,7 +367,7 @@ void DuiApplicationPagePrivate::prepareForAppearance()
     updatePannableViewportPosition();
 }
 
-void DuiApplicationPagePrivate::updateAutoMarginsForComponents(const Dui::Orientation &orientation,
+void DuiApplicationPagePrivate::updateAutoMarginsForComponents(Dui::Orientation orientation,
         qreal statusBarHeight,
         qreal navigationBarHeight,
         qreal dockWidgetHeight,

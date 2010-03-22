@@ -265,7 +265,7 @@ void DuiApplicationWindowPrivate::_q_handlePageModelModifications(const QList<co
     }
 }
 
-void DuiApplicationWindowPrivate::_q_placeToolBar(const Dui::Orientation &orientation)
+void DuiApplicationWindowPrivate::_q_placeToolBar(Dui::Orientation orientation)
 {
     // set position of toolbar according to orientation
     if (orientation == Dui::Portrait) {
@@ -289,7 +289,7 @@ void DuiApplicationWindowPrivate::_q_placeToolBar(const Dui::Orientation &orient
     }
 }
 
-void DuiApplicationWindowPrivate::updatePageAutoMarginsForComponents(const Dui::Orientation &orientation)
+void DuiApplicationWindowPrivate::updatePageAutoMarginsForComponents(Dui::Orientation orientation)
 {
     if (!page) {
         return;

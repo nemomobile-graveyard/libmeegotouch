@@ -309,7 +309,7 @@ Q_SIGNALS:
      * \note This signal is emitted at start of the rotation animation.
      * \sa orientationChanged()
      */
-    void orientationAngleChanged(const Dui::OrientationAngle &);
+    void orientationAngleChanged(Dui::OrientationAngle);
 
     /*!
      * Emitted after scene geometry has changed for a rotation.
@@ -321,7 +321,7 @@ Q_SIGNALS:
      * \note This signal is emitted at start of the rotation animation.
      * \sa orientationAngleChanged()
      */
-    void orientationChanged(const Dui::Orientation &);
+    void orientationChanged(Dui::Orientation);
 
     /*!
      * This signal is emitted when the rotation animation (if any) has finished.
@@ -332,7 +332,7 @@ Q_SIGNALS:
      *
      * \sa orientationChanged()
      */
-    void orientationChangeFinished(const Dui::Orientation &);
+    void orientationChangeFinished(Dui::Orientation);
 
     /*!
      * A signal that is emitted when the window is shown or is not obscured anymore by another window.

@@ -161,7 +161,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_connectEscapeButton(DuiEscapeButtonPanelModel::EscapeMode))
     Q_PRIVATE_SLOT(d_func(), void _q_pageTitleChanged(DuiApplicationPage *, const QString &))
     Q_PRIVATE_SLOT(d_func(), void _q_actionUpdated(QActionEvent *))
-    Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar(const Dui::Orientation &))
+    Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar(Dui::Orientation))
     Q_PRIVATE_SLOT(d_func(), void _q_handlePageModelModifications(const QList<const char *>&))
     Q_PRIVATE_SLOT(d_func(), void _q_menuAppeared())
     Q_PRIVATE_SLOT(d_func(), void _q_menuDisappeared())

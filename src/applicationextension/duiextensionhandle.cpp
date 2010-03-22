@@ -453,7 +453,7 @@ void DuiExtensionHandle::exitDisplayEvent()
     d->visibilityChanged();
 }
 
-void DuiExtensionHandle::orientationEvent(const Dui::Orientation &orientation)
+void DuiExtensionHandle::orientationEvent(Dui::Orientation orientation)
 {
     Q_D(DuiExtensionHandle);
 

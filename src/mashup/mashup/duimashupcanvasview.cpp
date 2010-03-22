@@ -190,7 +190,7 @@ void DuiMashupCanvasView::init(DuiMashupCanvas *controller)
     connect(DuiApplication::activeWindow(), SIGNAL(orientationChanged(Dui::Orientation)), this, SLOT(orientationChanged(Dui::Orientation)));
 }
 
-void DuiMashupCanvasView::orientationChanged(const Dui::Orientation &)
+void DuiMashupCanvasView::orientationChanged(Dui::Orientation)
 {
     Q_D(DuiMashupCanvasView);
 

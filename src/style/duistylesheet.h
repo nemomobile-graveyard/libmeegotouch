@@ -65,7 +65,7 @@ public:
                            const QString &objectName,
                            const QString &mode,
                            const QString &type,
-                           const Dui::Orientation &orientation,
+                           Dui::Orientation orientation,
                            const DuiWidgetController *parent);
 
     /*!
