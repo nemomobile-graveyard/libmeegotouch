@@ -1,3 +1,18 @@
+libdui (0.19.10-1) unstable; urgency=low
+
+  * Fixes: NB#160550 DuiLabel::setText() does not work when using "" as a parameter.
+  * Fixes: NB#159960 -  icons: icon-l-brightness-* are missing from theme
+  * Fixes: Object menu page "jumping" problem.
+  * Fixes: NB#159761 - DuiList does not update correctly on insertRows() and setData()
+  * Fixes: NB#159761 -  DuiList does not update correctly on insertRows() and setData()
+  * Fixes: NB#159042 DuiLabel: Unable to handle strings in presence of certain characters
+  * Fixes: NB#159345 - Applet Space doesn't reappear after rotating the device
+  * Fixes: NB#159180 - Startup crash in DuiGConfItem
+  * Fixes: NB#160887 -  DuiSceneManager::execDialog() should return actual resul
+  * Fixes: not working object menu on the device
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 22 Mar 2010 10:48:19 +0200
+
 libdui (0.19.9-1) unstable; urgency=low
 
   * Unit test fixes
