@@ -66,9 +66,9 @@ public:
      *
      * \sa setOrientationAngle()
      */
-    enum OrientationChangeMode {
-        AnimatedOrientationChange,
-        ImmediateOrientationChange
+    enum TransitionMode {
+        AnimatedTransition,
+        ImmediateTransition
     };
 
     /*!
@@ -144,13 +144,13 @@ public:
 
 public Q_SLOTS:
     /*!
-     * Sets the orientation to \a angle. The \a mode can be set to ImmediateOrientationChange
+     * Sets the orientation to \a angle. The \a mode can be set to ImmediateTransition
      * to disable orientation animation.
      *
-     * /sa OrientationChangeMode
+     * /sa TransitionMode
      */
     void setOrientationAngle(Dui::OrientationAngle angle,
-                             OrientationChangeMode mode = AnimatedOrientationChange);
+                             TransitionMode mode = AnimatedTransition);
 
     /*!
      * Sends a request to the application's input context to open a software input

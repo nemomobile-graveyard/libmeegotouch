@@ -263,7 +263,7 @@ void Ut_DuiSceneManager::testOrientationChangedSignal()
     newAngle %= 360;
 
     sm->setOrientationAngle((Dui::OrientationAngle) newAngle,
-                            DuiSceneManager::ImmediateOrientationChange);
+                            DuiSceneManager::ImmediateTransition);
     Dui::Orientation newOrientation = (newAngle == Dui::Angle0 || newAngle == Dui::Angle180)
                                       ? Dui::Landscape
                                       : Dui::Portrait;
@@ -280,7 +280,7 @@ void Ut_DuiSceneManager::testNoOrientationChangedSignalWhenRotatingBy180Degrees(
     newAngle %= 360;
 
     sm->setOrientationAngle((Dui::OrientationAngle) newAngle,
-                            DuiSceneManager::ImmediateOrientationChange);
+                            DuiSceneManager::ImmediateTransition);
 
     QCOMPARE(spy.count(), 0);
 }
@@ -318,12 +318,12 @@ void Ut_DuiSceneManager::testAngleBoundaryCases()
     int newAngle = sm->orientationAngle() + Dui::Angle270;
     newAngle %= 360;
     sm->setOrientationAngle((Dui::OrientationAngle) newAngle,
-                            DuiSceneManager::ImmediateOrientationChange);
+                            DuiSceneManager::ImmediateTransition);
 
     newAngle = sm->orientationAngle() + Dui::Angle90;
     newAngle %= 360;
     sm->setOrientationAngle((Dui::OrientationAngle) newAngle,
-                            DuiSceneManager::ImmediateOrientationChange);
+                            DuiSceneManager::ImmediateTransition);
 
     QCOMPARE(spyChanged.count(), 2);
 
@@ -337,7 +337,7 @@ void Ut_DuiSceneManager::testSceneSizes()
     QVERIFY(vSR.width() > 0);
     QVERIFY(vSR.height() > 0);
 
-    sm->setOrientationAngle(Dui::Angle90, DuiSceneManager::ImmediateOrientationChange);
+    sm->setOrientationAngle(Dui::Angle90, DuiSceneManager::ImmediateTransition);
 
     // check scenerects are in correct orientation
     // what about square?
@@ -350,7 +350,7 @@ void Ut_DuiSceneManager::testSceneSizes()
     vSR = sm->visibleSceneSize(Dui::Landscape);
     QVERIFY(vSR.width() > vSR.height());
 
-    sm->setOrientationAngle(Dui::Angle180, DuiSceneManager::ImmediateOrientationChange);
+    sm->setOrientationAngle(Dui::Angle180, DuiSceneManager::ImmediateTransition);
 
     QCOMPARE(sm->orientation(), Dui::Landscape);
     QCOMPARE(sm->visibleSceneSize(), sm->visibleSceneSize(Dui::Landscape));

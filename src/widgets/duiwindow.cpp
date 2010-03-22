@@ -522,9 +522,9 @@ void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle)
         d->angle = angle;
 
         if (d->sceneManager) {
-            DuiSceneManager::OrientationChangeMode mode = isVisible() ?
-                DuiSceneManager::AnimatedOrientationChange :
-                DuiSceneManager::ImmediateOrientationChange;
+            DuiSceneManager::TransitionMode mode = isVisible() ?
+                DuiSceneManager::AnimatedTransition :
+                DuiSceneManager::ImmediateTransition;
 
             d->sceneManager->setOrientationAngle(angle, mode);
         } else {

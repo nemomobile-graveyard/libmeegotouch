@@ -33,6 +33,9 @@
 - DuiApplicationPage::pageTitleChanged(DuiApplicationPage *, const QString &title) signal was removed.
 - restored one-argument DuiWindow::setOrientationAngle(Dui::OrientationAngle), the rotation animation
   is enabled by default and it's disabled if the window is hidden (DuiWindow::isVisible() returns false).
+- Dui::OrientationChangeMode was renamed to DuiSceneManager::TransitionMode,
+  Dui::AnimatedOrientationChange was renamed to DuiSceneManager::AnimatedTransition,
+  Dui::ImmediateOrientationChange was renamed to DuiSceneManager::ImmediateTransition.
 
 \section v0190
 

@@ -200,7 +200,7 @@ public:
      *    // Set the correct orientation angle.
      *    // Disable animations because we don't need them at startup.
      *    if (window.orientation() != Dui::Angle270)
-     *        window.setOrientationAngle(Dui::Angle270, Dui::ImmediateOrientationChange);
+     *        window.setOrientationAngle(Dui::Angle270);
      *    window.setOrientationAngleLocked(true);
      *
      *    window.show();
@@ -242,7 +242,7 @@ public:
      *    // Set the correct orientation angle.
      *    // Disable animations because we don't need them at startup.
      *    if (window.orientation() != Dui::Portrait)
-     *        window.setOrientationAngle(Dui::Angle270, Dui::ImmediateOrientationChange);
+     *        window.setOrientationAngle(Dui::Angle270);
      *    window.setOrientationLocked(true);
      *
      *    window.show();
