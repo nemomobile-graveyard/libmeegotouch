@@ -1,8 +1,13 @@
+include(../mkspecs/common.pri)
+
 CONFIG += ordered
 TEMPLATE    = subdirs
 SUBDIRS     =  \
     widgetsgallery \
     widgetsgallery/translations \
+
+!contains(DUI_BUILD_FEATURES, minimal) {
+    SUBDIRS += \
     animatedlayout \
     animatedlayout/translations \
     qtstyleexample \
@@ -12,7 +17,8 @@ SUBDIRS     =  \
     applicationextension \
     applicationextension/demoextension \
     applicationextension/demoextension2    
-    
+}
+
 # we do not have compiled QtDBusd4
 macx:SUBDIRS -= appletinstallationsource applicationextension applicationextension/demoextension applicationextension/demoextension2
 win32:SUBDIRS -= appletinstallationsource applicationextension applicationextension/demoextension applicationextension/demoextension2

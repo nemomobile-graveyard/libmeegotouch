@@ -56,6 +56,7 @@ CFG_TESTABLE=no
 CFG_COVERAGE=no
 CFG_TIMESTAMPS=no
 CFG_DEV=no
+CFG_MINIMAL=no
 CFG_BUILD_TESTS=no
 CFG_BUILD_BENCHMARKS=no
 CFG_BUILD_PLAINQT=no
@@ -115,7 +116,7 @@ while [ "$#" -gt 0 ]; do
         VAL=no
         ;;
     #Qt style yes options
-        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev)
+        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev|-minimal)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         VAL=yes
         ;;
@@ -209,6 +210,9 @@ while [ "$#" -gt 0 ]; do
         CFG_BUILD_TESTS="yes"
         CFG_BUILD_BENCHMARKS="yes"
         CFG_BUILD_PLAINQT="yes"
+        ;;
+    minimal)
+        CFG_MINIMAL="yes"
         ;;
     tests)
         CFG_BUILD_TESTS="yes"
@@ -447,6 +451,10 @@ fi
 
 if [ "$CFG_COVERAGE" = "yes" ]; then
     DUICONFIG_FEATURES="$DUICONFIG_FEATURES coverage"
+fi
+
+if [ "$CFG_MINIMAL" = "yes" ]; then
+    DUICONFIG_FEATURES="$DUICONFIG_FEATURES minimal"
 fi
 
 
