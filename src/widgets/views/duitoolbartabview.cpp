@@ -164,6 +164,8 @@ void DuiToolbarTabViewPrivate::change(QAction *action)
     if (changedLocation(action) || changedVisibility(action)) {
         clearPolicy(landscapePolicy, landscapeData);
         clearPolicy(portraitPolicy, portraitData);
+        DuiButton *widget = (DuiButton*)tabButtons.value(action);
+        buttonGroup->removeButton(widget);
         addActions();
     }
     changedData(action);
@@ -171,7 +173,8 @@ void DuiToolbarTabViewPrivate::change(QAction *action)
 
 void DuiToolbarTabViewPrivate::_q_groupButtonClicked(bool)
 {
-    DuiButton *button = qobject_cast<DuiButton *>(sender());
+    Q_Q(DuiToolbarTabView);
+    DuiButton *button = qobject_cast<DuiButton *>(q->sender());
     if (button) {
         button->setChecked(true);
     }
@@ -180,7 +183,8 @@ void DuiToolbarTabViewPrivate::_q_groupButtonClicked(bool)
 
 void DuiToolbarTabViewPrivate::_q_groupActionToggled(bool checked)
 {
-    QAction* action = qobject_cast<QAction *>(sender());
+    Q_Q(DuiToolbarTabView);
+    QAction* action = qobject_cast<QAction *>(q->sender());
     DuiButton *button = qobject_cast<DuiButton *>(tabButtons.value(action));
     if (button) {
         button->setChecked(checked);
@@ -225,6 +229,7 @@ void DuiToolbarTabViewPrivate::addActions()
         add(acts.at(i), 0, false);
     }
     refreshSpacers();
+    updateActionChecked();
 }
 
 DuiWidget *DuiToolbarTabViewPrivate::createWidget(QAction *action)
@@ -237,6 +242,8 @@ DuiWidget *DuiToolbarTabViewPrivate::createWidget(QAction *action)
     }
     widget->setVisible(true);
     widget->setEnabled(action->isEnabled());
+    buttonGroup->addButton((DuiButton *)widget);
+
     return widget;
 }
 
@@ -256,7 +263,6 @@ DuiButton *DuiToolbarTabViewPrivate::createTabButton(QAction *action)
     button->setViewType("toolbartab");
     button->setCheckable(true);
     button->setChecked(action->isChecked());
-    buttonGroup->addButton(button);
 
     return button;
 }
@@ -283,7 +289,19 @@ void DuiToolbarTabViewPrivate::updateActionChecked()
 
     controller->removeEventFilter(this);
 
+    // remove invisible actions from button group as this can update the checked button
     QHashIterator<QAction *, DuiWidget *> iterator(tabButtons);
+    while (iterator.hasNext()) {
+        iterator.next();
+        DuiButton *button = qobject_cast<DuiButton *>(iterator.value());
+        QAction* action = iterator.key();
+        if (!action->isVisible()) {
+            buttonGroup->removeButton(button);
+            button->setChecked(false);
+        }
+    }
+
+    iterator.toFront();
     while (iterator.hasNext()) {
         iterator.next();
         DuiButton *button = qobject_cast<DuiButton *>(iterator.value());
