@@ -553,11 +553,16 @@ void DuiApplicationWindowPrivate::applicationPageAppearEvent(DuiSceneWindowEvent
 
 void DuiApplicationWindowPrivate::applicationPageDisappearEvent(DuiSceneWindowEvent *event)
 {
+    Q_Q(DuiApplicationWindow);
+
     DuiApplicationPage *pageFromEvent = static_cast<DuiApplicationPage *>(event->sceneWindow());
+
+    q->closeMenu();
 
     // Page is going away. Let's disconnect it if it's the current page.
     if (pageFromEvent == page)
         disconnectPage(pageFromEvent);
+
 }
 
 // TODO: Remove that now useless method override after API freeze period
