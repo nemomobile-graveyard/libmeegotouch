@@ -4,9 +4,11 @@
 \subsection New
 
 - DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be
-  displayEntered() and displayExited() 
+  displayEntered() and displayExited()
 
 - DuiComboBox's  down property removed.
+
+- Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.
 
 
 \section v0190

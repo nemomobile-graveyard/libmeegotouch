@@ -28,7 +28,7 @@
 #include <QGraphicsLinearLayout>
 
 DuiPopupListViewPrivate::DuiPopupListViewPrivate()
-    : controller(0), list(0), itemModel(0), selectionModel(0)
+    : controller(0), list(0)
 {
 }
 
@@ -40,31 +40,13 @@ void DuiPopupListViewPrivate::init()
 {
     Q_Q(DuiPopupListView);
 
-    // container which contain the gridItems
     list = new DuiList();
     list->setCellCreator(this);
     list->setSelectionMode(DuiList::SingleSelection);
     q->contentsLayout()->insertItem(0, list);
 
-    QObject::connect(list, SIGNAL(itemClicked(QModelIndex)),
-                     controller, SLOT(click(QModelIndex)));
-
-    QObject::connect(controller, SIGNAL(itemModelChanged(QAbstractItemModel *)),
-                     q, SLOT(setItemModel(QAbstractItemModel *)));
-    QObject::connect(controller, SIGNAL(selectionModelChanged(QItemSelectionModel *)),
-                     q, SLOT(setSelectionModel(QItemSelectionModel *)));
-    QObject::connect(controller, SIGNAL(scrollToIndex(QModelIndex)),
-                     q, SLOT(scrollTo(QModelIndex)));
-
-    // just for preserving ABI
-    QObject::connect(q->contentsViewport(), SIGNAL(sizePosChanged(QSizeF, QRectF, QPointF)),
-                     q, SLOT(sizePosChanged(QSizeF, QRectF, QPointF)));
-
-    if (controller->itemModel() != NULL) {
-        q->setItemModel(controller->itemModel());
-        q->setSelectionModel(controller->selectionModel());
-    }
-
+    QObject::connect(list, SIGNAL(itemClicked(QModelIndex)), controller, SLOT(click(QModelIndex)));
+    QObject::connect(controller, SIGNAL(scrollToIndex(QModelIndex)),  q, SLOT(scrollTo(QModelIndex)));
 }
 
 void DuiPopupListViewPrivate::updateCell(const QModelIndex& index, DuiWidget * cell) const
@@ -75,18 +57,18 @@ void DuiPopupListViewPrivate::updateCell(const QModelIndex& index, DuiWidget * c
     QPixmap pixmap;
     QVariant value;
 
-    value = itemModel->data(index, Qt::DisplayRole);
+    value = list->itemModel()->data(index, Qt::DisplayRole);
     if (value != QVariant())
         title = value.toString();
 
-    value = itemModel->data(index, Qt::DecorationRole);
+    value = list->itemModel()->data(index, Qt::DecorationRole);
     if (value != QVariant())
         pixmap = *DuiTheme::pixmap(value.toString());
 
     item->setTitle(title);
     item->setPixmap(pixmap);
 
-    if (selectionModel->isSelected(index))
+    if (list->selectionModel()->isSelected(index))
         item->setSelected(true);
 }
 
@@ -112,89 +94,26 @@ DuiPopupListView::~DuiPopupListView()
 {
 }
 
-void DuiPopupListView::setItemModel(QAbstractItemModel *itemModel)
+void DuiPopupListView::updateData(const QList<const char *>& modifications)
 {
+    DuiDialogView::updateData(modifications);
+
     Q_D(DuiPopupListView);
-
-    // just for preserving ABI
-    if (d->itemModel) {
-        disconnect(d->itemModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-                   this, SLOT(dataChanged(QModelIndex, QModelIndex)));
-
-        disconnect(d->itemModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-                   this, SLOT(rowsInserted(QModelIndex, int, int)));
-
-        disconnect(d->itemModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
-                   this, SLOT(rowsRemoved(QModelIndex, int, int)));
-    }
-
-    d->itemModel = itemModel;
-    d->list->setItemModel(itemModel);
-
-    // just for preserving ABI
-    if (d->itemModel) {
-        connect(d->itemModel, SIGNAL(dataChanged(QModelIndex, QModelIndex)),
-                this, SLOT(dataChanged(QModelIndex, QModelIndex)));
-
-        connect(d->itemModel, SIGNAL(rowsInserted(QModelIndex, int, int)),
-                this, SLOT(rowsInserted(QModelIndex, int, int)));
-
-        connect(d->itemModel, SIGNAL(rowsRemoved(QModelIndex, int, int)),
-                this, SLOT(rowsRemoved(QModelIndex, int, int)));
+    foreach(const char* member, modifications) {
+        if (member == DuiPopupListModel::ItemModel)
+            d->list->setItemModel(model()->itemModel());
+        else if (member == DuiPopupListModel::SelectionModel)
+            d->list->setSelectionModel(model()->selectionModel());
     }
 }
 
-void DuiPopupListView::setSelectionModel(QItemSelectionModel *selectionModel)
+void DuiPopupListView::setupModel()
 {
+    DuiDialogView::setupModel();
+
     Q_D(DuiPopupListView);
-
-    // just for preserving ABI
-    if (d->selectionModel) {
-        disconnect(d->selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-                   this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
-    }
-
-    d->selectionModel = selectionModel;
-    d->list->setSelectionModel(selectionModel);
-
-    // just for preserving ABI
-    if (d->selectionModel) {
-        connect(d->selectionModel, SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
-                this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
-    }
-}
-
-void DuiPopupListView::sizePosChanged(const QSizeF &viewportSize, const QRectF &pannedRange, const QPointF &pannedPos)
-{
-    Q_UNUSED(viewportSize)
-    Q_UNUSED(pannedRange)
-    Q_UNUSED(pannedPos)
-}
-
-void DuiPopupListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
-{
-    Q_UNUSED(topLeft)
-    Q_UNUSED(bottomRight)
-}
-
-void DuiPopupListView::rowsInserted(const QModelIndex &parent, int start, int end)
-{
-    Q_UNUSED(parent)
-    Q_UNUSED(start)
-    Q_UNUSED(end)
-}
-
-void DuiPopupListView::rowsRemoved(const QModelIndex &parent, int start, int end)
-{
-    Q_UNUSED(parent)
-    Q_UNUSED(start)
-    Q_UNUSED(end)
-}
-
-void DuiPopupListView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
-{
-    Q_UNUSED(selected)
-    Q_UNUSED(deselected)
+    d->list->setItemModel(model()->itemModel());
+    d->list->setSelectionModel(model()->selectionModel());
 }
 
 void DuiPopupListView::scrollTo(const QModelIndex &index) const

@@ -20,24 +20,10 @@
 #include "duipopuplist.h"
 #include "duipopuplist_p.h"
 
-#include <QItemSelectionModel>
-#include <QEventLoop>
-
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiScene>
-
-#define MINBATCHSIZE 10
-
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET(DuiPopupList)
 
 DuiPopupListPrivate::DuiPopupListPrivate()
-    : itemModel(0), selectionModel(0)
-{
-}
-
-DuiPopupListPrivate::~DuiPopupListPrivate()
 {
 }
 
@@ -59,26 +45,17 @@ DuiPopupList::~DuiPopupList()
 
 void DuiPopupList::setItemModel(QAbstractItemModel *itemModel)
 {
-    Q_D(DuiPopupList);
+    model()->setItemModel(itemModel);
 
-    if (d->itemModel == itemModel)
-        return;
-
-    d->itemModel = itemModel;
-
-    emit itemModelChanged(d->itemModel);
-
-    if (d->itemModel) {
-        setSelectionModel(new QItemSelectionModel(d->itemModel, this));
-    } else {
-        setSelectionModel(0);
-    }
+    if (itemModel)
+        model()->setSelectionModel(new QItemSelectionModel(itemModel, this));
+    else
+        model()->setSelectionModel(0);
 }
 
 QAbstractItemModel *DuiPopupList::itemModel() const
 {
-    Q_D(const DuiPopupList);
-    return d->itemModel;
+    return model()->itemModel();
 }
 
 void DuiPopupList::setSelectionModel(QItemSelectionModel *selectionModel)
@@ -90,48 +67,36 @@ void DuiPopupList::setSelectionModel(QItemSelectionModel *selectionModel)
         return;
     }
 
-    Q_D(DuiPopupList);
-
-    d->selectionModel = selectionModel;
-    emit selectionModelChanged(selectionModel);
+    model()->setSelectionModel(selectionModel);
 }
 
 QItemSelectionModel *DuiPopupList::selectionModel() const
 {
-    Q_D(const DuiPopupList);
-    return d->selectionModel;
-}
-
-int DuiPopupList::batchSize() const
-{
-    return model()->batchSize();
+    return model()->selectionModel();
 }
 
 QModelIndex DuiPopupList::currentIndex() const
 {
-    Q_D(const DuiPopupList);
-    if (!d->selectionModel || !d->selectionModel->hasSelection())
+    if (!selectionModel() || !selectionModel()->hasSelection())
         return QModelIndex();
 
-    return d->selectionModel->currentIndex();
+    return selectionModel()->currentIndex();
 }
 
 void DuiPopupList::scrollTo(const QModelIndex &index)
 {
-    Q_D(DuiPopupList);
-    if (index.model() != d->itemModel) return;
+    if (index.model() != itemModel()) return;
     emit scrollToIndex(index);
 }
 
 void DuiPopupList::click(const QModelIndex &index)
 {
-    Q_D(DuiPopupList);
-    if (index.model() != d->itemModel) return;
+    if (index.model() != itemModel()) return;
 
     if (index == currentIndex()) {
         emit clicked(index);
     } else {
-        d->selectionModel->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
+        selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
 
         emit clicked(index);
         emit currentIndexChanged(index);
@@ -142,11 +107,10 @@ void DuiPopupList::click(const QModelIndex &index)
 
 void DuiPopupList::setCurrentIndex(const QModelIndex &index)
 {
-    Q_D(DuiPopupList);
-    if (d->itemModel == NULL)
+    if (itemModel() == NULL)
         return;
 
-    if (index.isValid() && d->selectionModel->model() != index.model()) {
+    if (index.isValid() && selectionModel()->model() != index.model()) {
         qWarning("DuiPopupList::selectItem() failed: "
                  "Trying to select an item that is for"
                  " a different model than the view ");
@@ -157,16 +121,9 @@ void DuiPopupList::setCurrentIndex(const QModelIndex &index)
     if (index == currentIndex()) return;
 
     if (index.isValid())
-        d->selectionModel->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
+        selectionModel()->setCurrentIndex(index, QItemSelectionModel::ClearAndSelect);
     else
-        d->selectionModel->clear();
+        selectionModel()->clear();
 
     emit currentIndexChanged(index);
 }
-
-void DuiPopupList::setBatchSize(int size)
-{
-    if (size < MINBATCHSIZE) return;
-    model()->setBatchSize(size);
-}
-

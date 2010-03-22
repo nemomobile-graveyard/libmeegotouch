@@ -21,21 +21,12 @@
 #define DUIPOPUPLIST_P_H
 
 #include "duidialog_p.h"
-#include <QPointer>
-
-class QAbstractItemModel;
-class QItemSelectionModel;
 
 class DuiPopupListPrivate : public DuiDialogPrivate
 {
-
-public:
     Q_DECLARE_PUBLIC(DuiPopupList)
+public:
     DuiPopupListPrivate();
-    virtual ~DuiPopupListPrivate();
-
-    QAbstractItemModel             *itemModel;
-    QPointer<QItemSelectionModel>   selectionModel;
 };
 
 #endif
