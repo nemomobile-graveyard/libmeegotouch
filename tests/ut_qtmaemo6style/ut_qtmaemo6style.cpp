@@ -65,7 +65,7 @@ void Ut_QtMaemo6Style::testLoadOtherStyle() {
     char *argv[3] = { (char *) "./ut_qtmaemo6style", (char *) "-style", (char *) "windows"};
     QApplication app(argc, argv);
     QStyle* style = app.style();
-    QVERIFY(style->inherits("QtMaemo6Style"));
+    QVERIFY(style->inherits("QWindowsStyle"));
 }
 
 void Ut_QtMaemo6Style::testWindowDecoration() {
