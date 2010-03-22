@@ -494,7 +494,7 @@ See also the documentation of
 <a href="http://doc.trolltech.com/4.5/qtranslator.html#load">QTranslator::load()</a>.
 
 The \c top-directory  used by default is `/usr/share/l10n/dui` (This is
-defined as \c DUI_TRANSLATION_DIR  in `common.pri` in the mkspecs
+defined as \c DUI_TRANSLATION_DIR  in `duiconfig.pri` in the top-level
 directory of the libdui source code).
 
 `/usr/share/l10n/dui` is also the default directory used by
@@ -691,97 +691,154 @@ the current language from the command line can of course also be
 done with \c gconftool-2 :
 
 \code
-    ~$ gconftool-2 -t string -s /Dui/i18n/Language fi
+    ~$ gconftool-2 -t string -s /Dui/i18n/Language zh_CN
 \endcode
 
-The above command sets the current language to Finnish.
+The above command sets the current language to simplified Chinese.
 
-Querying the current language from a Dui program works like this:
+The preferred way to query the current language from a \c DuiApplication 
+works like this:
+
+\code
+    DuiLocale currentLocale;
+    QString language = currentLocale.name();
+\endcode
+
+=DuiLocale currentLocale;= gets a copy of the system default locale
+which is connected to the gconf settings and follows the gconf
+settings.
+
+Alternatively it is possible to read the gconf settings directly:
 
 \code
     DuiGConfItem languageItem("/Dui/i18n/Language");
     QString language = languageItem.value().toString();
 \endcode
 
-and setting it from a Dui program works like this:
+This has the same effect as getting the current system locale and
+using =currentLocale.name()=.
+
+Setting the current language permanently from a \c DuiApplication  works like
+this:
 
 \code
     DuiGConfItem languageItem("/Dui/i18n/Language");
-    languageItem.set("fi");
+    languageItem.set("zh_CN");
 \endcode
 
-If the current language changes in gconf, a Dui application will emit
-the signal:
+One can also set a new current language temporarily from a \c DuiApplication 
+by doing:
 
 \code
-    localeSettingsChanged()
+    DuiLocale newLocale("zh_CN");
+    DuiLocale::setDefault(newLocale);
 \endcode
 
-This signal can then be used to change the language of the
-UI of an application on the fly like this:
+This does not change the gconf settings and therefore this change will
+be lost as soon as one of the locale related gconf keys changes
+again. And it will be lost when the application restarts. Nevertheless
+this can be useful for temporary changes for testing and it is
+currently the only way to change the current language on systems
+without gconf like Windows or Mac OSX.
+
+If a the system locale changes, either because a locale related gconf
+key changed or because \c DuiLocale::setDefault()  has been called
+explicitly by the application, the following things happen:
+
+<ul>
+<li>
+all translation catalogs are reloaded according to the new locale
+settings
+</li>
+<li>
+\c QEvent::LanguageChange  will be sent to the Application, if
+necessary. \c DuiWindow  will propagate a \c QEvent::LanguageChange  to all
+\c DuiWidgets  on the scene. A \c DuiWidget  which receives this event by
+calls its \c retranslateUi()  method.
+</li>
+<li>
+\c QEvent::ApplicationLayoutDirectionChange  will be sent to the
+Application, if necessary.  \c DuiWindow  will propagate a
+\c QEvent::LayoutDirectionChange  to all \c DuiWidgets  as appropriate to
+enable the widgets to change their layout on the fly.
+</li>
+<li>
+The signal \c settingsChanged()  will be emitted by the locale.
+</li>
+<li>
+The signal \c localeSettingsChanged()  will be emitted by the
+\c DuiApplication .
+</li>
+</ul>
+
+In most cases, an application doesn’t have to use the above signals
+\c settingsChanged()  and \c localeSettingsChanged()  because most
+stuff like reloading the translation catalogs already happens
+automatically. If \c retranslateUi()  methods are implemented
+for the widgets used in the application, the language of the
+user interface will already change automatically.
+
+Optionally, an application can use these signals though, if it
+wants to do additional special things which do not happen
+automatically.
+For example:
 
 \code
 main.cpp:
 
-    #include "fooretranslator.h"
+    #include "foohandlelocalechange.h"
     ...
     int main (int argc, char **argv)
     {
         ...
-        FooRetranslator fooRetranslator;
-        QObject::connect(&application, SIGNAL(localeSettingsChanged()), &fooRetranslator, SLOT(fooRetranslate()));
+        FooHandleLocaleChange fooHandleLocaleChange;
+        QObject::connect(&application, SIGNAL(localeSettingsChanged()), &fooHandleLocaleChange, SLOT(fooHandleLocaleChange()));
         ...
     }
 \endcode
 
-where the fooretranslator class looks like:
+where the FooHandleLocaleChange class looks like:
 
 \code
-fooretranslator.h:
+foohandlelocalechange.h:
 
-    class FooRetranslator : public QObject
+    class FooHandleLocaleChange : public QObject
     {
         Q_OBJECT
 
     public slots:
-        void fooRetranslate();
+        void fooHandleLocaleChange();
     };
 
 
-fooretranslator.cpp:
+foohandlelocalechange.cpp:
 
-    void FooRetranslator::fooRetranslate()
+    void FooHandleLocaleChange::fooHandleLocaleChange()
     {
-        DuiGConfItem languageItem("/Dui/i18n/Language");
-        QString language = languageItem.value().toString();
-        DuiLocale locale(language);
-        // installs the catalog for the &#8220;Engineering English&#8221;:
-        locale.installTrCatalog("foo.qm");
-        // installs the catalog for the real translation:
-        locale.installTrCatalog("foo");
-        DuiLocale::setDefault(locale); // posts QEvent::LanguageChange
+       // do whatever is needed when the system locale
+       // changes, but remember that the basic stuff like
+       // reloading the translation catalogs and  changing the layout
+       // direction already happens automatically.
+       //
+       // Therefore, unless you have very special needs, you do not
+       // need to do anything here.
+       //
+       // In any case, do *not* do anything here which changes the
+       // system default locale again because this would trigger
+       // an endless loop.
     }
 \endcode
 
-When a new DuiLocale is set as the default as above, DuiLocale posts
-the event \c QEvent::LanguageChange  to the application.
+----++++ <!-- retranslateui --> The retranslateUi() method of DuiWidget
 
-Note: if the direction of the new language is different, DuiLocale may
-also change the layout direction of the application and a
-\c QEvent::ApplicationLayoutDirectionChange  may be posted to the
-applicaton as well.
-
-DuiWindow then posts that event to all QGraphicsWidgets on the
-DuiScene. A DuiWidget which receives the \c QEvent::LanguageChange 
-calls its virtual method
+A \c DuiWidget  which receives the \c QEvent::LanguageChange  calls its
+virtual method
 
 \code
     virtual void retranslateUi();
 \endcode
 
-and forwards the event to all child QGraphicsWidgets. 
-
-DuiWidgets can reimplement this \c retranslateUi()  method to do whatever
+\c DuiWidgets  can reimplement this \c retranslateUi()  method to do whatever
 is necessary to retranslate itself, as in the following example:
 
 \code
@@ -815,9 +872,13 @@ foopage.cpp
     }
 \endcode
 
-This can be quite tricky in some cases, therefore we are thinking
-about adding a convenience API for the DuiWidgets to make
-reimplementing \c retranslateUi()  not necessary in many cases.
+This can be quite tricky in some cases but makes it possible to
+re-translate the user interface of an application on the fly if the
+locale settings change. 
+
+<!-- This can be quite tricky in some cases, therefore we are thinking -->
+<!-- about adding a convenience API for the DuiWidgets to make -->
+<!-- reimplementing \c retranslateUi()  not necessary in many cases. -->
 
 \subsection  widgetmirroring  Widget mirroring and layout direction
 Widget mirroring is the automatic behaviour of putting the widgets in the reverse direction when the language is switched to Right-to-left languages (such as Arabic or Hebrew). In this direction, the widgets are put following the natural flow of text writing direction. Widget mirroring works automatically when the widgets are arranged using QGraphicsLayout or DuiLayout, with some exceptions with the specialist DuiLayout policies.
