@@ -474,9 +474,6 @@ bool DuiStyleSheetAttribute::writeAttribute(const QString &filename,
             return property.write(style, result);
         }
     } else if (attributeType == types[INT_TYPE]) {
-        if(value == "none")
-            return property.write(style, 0);
-
         int integer = attributeToInt(value, &conversionOK);
         if (conversionOK) {
             return property.write(style, integer);
@@ -490,9 +487,6 @@ bool DuiStyleSheetAttribute::writeAttribute(const QString &filename,
             return property.write(style, color);
         }
     } else if (attributeType == types[REAL_TYPE]) {
-        if(value == "none")
-            return property.write(style, 0.0);
-
         qreal real = attributeToFloat(value, &conversionOK);
         if (conversionOK) {
             return property.write(style, real);
@@ -590,14 +584,6 @@ bool DuiStyleSheetAttribute::writeAttribute(const QString &filename,
             return property.write(style, qVariantFromValue(image));
         }
     } else if (attributeType == types[SIZE_TYPE] || attributeType == types[SIZEF_TYPE]) {
-        if(value == "none") {
-            if(attributeType == types[SIZE_TYPE])
-                return property.write(style, QSize(0, 0));
-            else
-                return property.write(style, QSizeF(0, 0));
-        }
-
-
         //size: 25px 25px;
 
         //just split into pieces and create QSize or QSizeF depending on the attributeType
@@ -614,13 +600,6 @@ bool DuiStyleSheetAttribute::writeAttribute(const QString &filename,
             }
         }
     } else if (attributeType == types[POINT_TYPE] || attributeType == types[POINTF_TYPE]) {
-        if(value == "none") {
-            if(attributeType == types[POINT_TYPE])
-                return property.write(style, QPoint(0, 0));
-            else
-                return property.write(style, QPointF(0, 0));
-        }
-
         //"point: 256px 123px;
 
         //just split into pieces and create QPoint or QPointF depending on the attributeType

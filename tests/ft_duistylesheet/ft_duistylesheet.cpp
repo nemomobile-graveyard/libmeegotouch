@@ -199,7 +199,7 @@ void Ft_DuiStyleSheet::test_objectnames()
     QCOMPARE(style->attributeReal(), 100.0);
     QCOMPARE(style->attributeString(), QString("specialized string"));
     QCOMPARE(style->attributePixmap(), (const QPixmap*)NULL);
-    QCOMPARE(style->attributePoint(), QPoint(0,0));
+    QCOMPARE(style->attributeColor(), QColor());
     DuiStyleSheet::releaseStyle(style);
 
     TestObject2Style *style2 = (TestObject2Style *) DuiStyleSheet::style(sheets, "TestObject2Style", "Specialized", "", "", Dui::Landscape, NULL);

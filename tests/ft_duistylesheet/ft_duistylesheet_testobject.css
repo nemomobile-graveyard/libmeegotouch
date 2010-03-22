@@ -57,7 +57,7 @@ TestObjectStyle#Specialized
     attribute-real: 100.0;
     attribute-string: "specialized string";
     attribute-pixmap: none;
-    attribute-point: none;
+    attribute-color: none;
 }
 
 TestObject2Style#Specialized
