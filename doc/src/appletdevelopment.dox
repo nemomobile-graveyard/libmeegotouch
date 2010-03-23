@@ -150,6 +150,8 @@ The instance and global settings are both accessed through this same interface. 
 
 The settings of an applet are defined with a <a href="settingslanguageschema.html">settings language</a>. The global and instance settings are defined in separate files. An applet can have both of the settings files present, either one or neither. It is totally up to the applet's use case what kind of settings it needs to have.
 
+The titles of the various settings can be localized, by providing a translation id as the value for the title attribute in the settings xml file. If localization of a title is not required, it can be written as such in the attribute. This requires that the translation catalogs contain only ids with some prefix so they don't conflict with common words.
+
 A part of the names of the settings files is taken from the applet metadata file basename. For example, if the applet's metadata file is <tt>myapplet.desktop</tt>, it's  basename is \c myapplet. The corresponding file names for the settings files would be \b myapplet-instance.xml and \b myapplet-global.xml for instance and global settings respectively.
 
 The installation location for both of these files is the <tt>/usr/share/dui/applets/settings</tt> directory.
