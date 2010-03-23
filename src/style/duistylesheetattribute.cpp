@@ -295,13 +295,16 @@ int DuiStyleSheetAttribute::attributeToInt(const QString &attribute, bool *conve
     if (attribute.endsWith(units[PERCENT_UNIT])) {
         int maximumValue = 0;
 
-        DuiWindow *window = DuiApplication::activeWindow();
-
-        if (window) {
+        if (orientation == Dui::Landscape) {
             if (type == WidthAttribute)
-                maximumValue = window->visibleSceneSize(orientation).width();
+                maximumValue = DuiDeviceProfile::instance()->resolution().width();
             else
-                maximumValue = window->visibleSceneSize(orientation).height();
+                maximumValue = DuiDeviceProfile::instance()->resolution().height();
+        } else {
+            if (type == WidthAttribute)
+                maximumValue = DuiDeviceProfile::instance()->resolution().height();
+            else
+                maximumValue = DuiDeviceProfile::instance()->resolution().width();
         }
 
         value.truncate(value.length() - 1);
@@ -341,13 +344,16 @@ qreal DuiStyleSheetAttribute::attributeToFloat(const QString &attribute, bool *c
     if (attribute.endsWith(units[PERCENT_UNIT])) {
         int maximumValue = 0;
 
-        DuiWindow *window = DuiApplication::activeWindow();
-
-        if (window) {
+        if (orientation == Dui::Landscape) {
             if (type == WidthAttribute)
-                maximumValue = window->visibleSceneSize(orientation).width();
+                maximumValue = DuiDeviceProfile::instance()->resolution().width();
             else
-                maximumValue = window->visibleSceneSize(orientation).height();
+                maximumValue = DuiDeviceProfile::instance()->resolution().height();
+        } else {
+            if (type == WidthAttribute)
+                maximumValue = DuiDeviceProfile::instance()->resolution().height();
+            else
+                maximumValue = DuiDeviceProfile::instance()->resolution().width();
         }
 
         value.truncate(value.length() - 1);
