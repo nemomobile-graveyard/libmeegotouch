@@ -28,7 +28,7 @@
 class DuiCalendarPrivate
 {
 public:
-    DuiCalendarPrivate(DuiLocale::Calendar calendar);
+    DuiCalendarPrivate(DuiLocale::CalendarType calendarType);
     DuiCalendarPrivate(const DuiCalendarPrivate &other);
 
     virtual ~DuiCalendarPrivate();
@@ -38,7 +38,7 @@ public:
     static DuiLocale::Weekday icuWeekdayToDuiWeekday(int uweekday);
 
     icu::Calendar *_calendar;
-    DuiLocale::Calendar _calendarType;
+    DuiLocale::CalendarType _calendarType;
     bool _valid;
 
 private:

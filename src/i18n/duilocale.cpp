@@ -337,7 +337,7 @@ icu::DateFormat *DuiLocalePrivate::createDateFormat(DuiLocale::DateType dateType
 
 DuiLocalePrivate::DuiLocalePrivate()
     : _valid(true),
-      _calendar(DuiLocale::DefaultCalendar),
+      _calendarType(DuiLocale::DefaultCalendar),
       _collation(DuiLocale::DefaultCollation)
 #ifdef HAVE_ICU
       , _numberFormat(0)
@@ -362,7 +362,7 @@ DuiLocalePrivate::DuiLocalePrivate(const DuiLocalePrivate &other)
       _calendarLocale(other._calendarLocale),
       _monetaryLocale(other._monetaryLocale),
       _nameLocale(other._nameLocale),
-      _calendar(other._calendar),
+      _calendarType(other._calendarType),
       _collation(other._collation),
 #ifdef HAVE_ICU
       _numberFormat(0),
@@ -404,7 +404,7 @@ DuiLocalePrivate &DuiLocalePrivate::operator=(const DuiLocalePrivate &other)
     _calendarLocale = other._calendarLocale;
     _monetaryLocale = other._monetaryLocale;
     _nameLocale = other._nameLocale;
-    _calendar = other._calendar;
+    _calendarType = other._calendarType;
     _collation = other._collation;
     _messageTranslations = other._messageTranslations;
     _timeTranslations = other._timeTranslations;
@@ -429,7 +429,7 @@ DuiLocalePrivate &DuiLocalePrivate::operator=(const DuiLocalePrivate &other)
 Locale DuiLocalePrivate::getCategoryLocale(DuiLocale::Category category) const
 {
     QString baseString = categoryName(category);
-    return DuiIcuConversions::createLocale(baseString, _calendar, _collation);
+    return DuiIcuConversions::createLocale(baseString, _calendarType, _collation);
 }
 #endif
 
@@ -938,17 +938,17 @@ DuiLocale::Collation DuiLocale::collation() const
     return d->_collation;
 }
 
-void DuiLocale::setCalendar(Calendar calendar)
+void DuiLocale::setCalendarType(CalendarType calendarType)
 {
     Q_D(DuiLocale);
-    d->_calendar = calendar;
+    d->_calendarType = calendarType;
 }
 
 
-DuiLocale::Calendar DuiLocale::calendar() const
+DuiLocale::CalendarType DuiLocale::calendarType() const
 {
     Q_D(const DuiLocale);
-    return d->_calendar;
+    return d->_calendarType;
 }
 
 #ifdef HAVE_ICU
@@ -1159,7 +1159,7 @@ QString DuiLocale::formatCurrency(double amount, const QString &currency) const
 }
 
 QString DuiLocale::formatDateTime(const QDateTime &dateTime, DateType dateType,
-                                  TimeType timeType, Calendar calendarType) const
+                                  TimeType timeType, CalendarType calendarType) const
 {
 #ifdef HAVE_ICU
     DuiCalendar calendar(calendarType);
@@ -1197,7 +1197,7 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duicalendar,
 #endif
 
 #ifdef HAVE_ICU
-QString DuiLocale::formatDateTime(const QDateTime &dateTime, Calendar calendarType) const
+QString DuiLocale::formatDateTime(const QDateTime &dateTime, CalendarType calendarType) const
 {
     return formatDateTime(dateTime, DateLong, TimeLong, calendarType);
 }
@@ -1595,7 +1595,7 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duiCalendar,
 
 #ifdef HAVE_ICU
 QDateTime DuiLocale::parseDateTime(const QString &dateTime, DateType dateType,
-                                   TimeType timeType, Calendar calendarType) const
+                                   TimeType timeType, CalendarType calendarType) const
 {
     if (dateType == DateNone && timeType == TimeNone)
         return QDateTime();
@@ -1620,7 +1620,7 @@ QDateTime DuiLocale::parseDateTime(const QString &dateTime, DateType dateType,
 #endif
 
 #ifdef HAVE_ICU
-QDateTime DuiLocale::parseDateTime(const QString &dateTime, Calendar calendarType) const
+QDateTime DuiLocale::parseDateTime(const QString &dateTime, CalendarType calendarType) const
 {
     return parseDateTime(dateTime, DateLong, TimeLong, calendarType);
 }

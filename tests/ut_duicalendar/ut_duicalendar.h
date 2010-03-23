@@ -26,7 +26,7 @@
 #include <DuiLocale>
 #include <DuiCalendar>
 
-Q_DECLARE_METATYPE(DuiLocale::Calendar);
+Q_DECLARE_METATYPE(DuiLocale::CalendarType);
 Q_DECLARE_METATYPE(DuiLocale);
 
 

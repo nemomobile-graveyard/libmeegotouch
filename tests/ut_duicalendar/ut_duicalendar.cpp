@@ -58,7 +58,7 @@ void Ut_DuiCalendar::cleanup()
 
 void Ut_DuiCalendar::testDuiLocaleCalendar_data()
 {
-    QTest::addColumn<DuiLocale::Calendar>("cal");
+    QTest::addColumn<DuiLocale::CalendarType>("cal");
     QTest::newRow("default") << DuiLocale::DefaultCalendar;
     QTest::newRow("gregorian") << DuiLocale::GregorianCalendar;
     QTest::newRow("islamic") << DuiLocale::IslamicCalendar;
@@ -81,12 +81,12 @@ void Ut_DuiCalendar::testDuiLocaleCalendar()
     z = new DuiLocale("fi");
     QVERIFY2(z->isValid(), "new DuiLocale() did not create a valid locale");
 
-    QFETCH(DuiLocale::Calendar, cal);
+    QFETCH(DuiLocale::CalendarType, cal);
 
-    QVERIFY2(z->calendar() == DuiLocale::DefaultCalendar,
+    QVERIFY2(z->calendarType() == DuiLocale::DefaultCalendar,
              "Constructor didn't set the default calendar");
-    z->setCalendar(cal);
-    QVERIFY2(z->calendar() == cal, "Calendar was not set properly");
+    z->setCalendarType(cal);
+    QVERIFY2(z->calendarType() == cal, "Calendar was not set properly");
     delete z;
 }
 
@@ -94,7 +94,7 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime_data
 {
     QTest::addColumn<QDateTime>("datetime");
     QTest::addColumn<QString>("localeName");
-    QTest::addColumn<DuiLocale::Calendar>("cal");
+    QTest::addColumn<DuiLocale::CalendarType>("cal");
     QTest::addColumn<QString>("dateShortResult");
     QTest::addColumn<QString>("dateMediumResult");
     QTest::addColumn<QString>("dateLongResult");
@@ -186,7 +186,7 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime()
 {
     QFETCH(QDateTime, datetime);
     QFETCH(QString, localeName);
-    QFETCH(DuiLocale::Calendar, cal);
+    QFETCH(DuiLocale::CalendarType, cal);
     QFETCH(QString, dateShortResult);
     QFETCH(QString, dateMediumResult);
     QFETCH(QString, dateLongResult);
@@ -238,7 +238,7 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromUTCQDateTime_data()
 {
     QTest::addColumn<QDateTime>("datetime");
     QTest::addColumn<QString>("localeName");
-    QTest::addColumn<DuiLocale::Calendar>("cal");
+    QTest::addColumn<DuiLocale::CalendarType>("cal");
     QTest::addColumn<QString>("short_result");
     QTest::addColumn<QString>("long_result");
     QTest::addColumn<QString>("full_result");
@@ -281,7 +281,7 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromUTCQDateTime()
 {
     QFETCH(QDateTime, datetime);
     QFETCH(QString, localeName);
-    QFETCH(DuiLocale::Calendar, cal);
+    QFETCH(DuiLocale::CalendarType, cal);
     QFETCH(QString, short_result);
     QFETCH(QString, long_result);
     QFETCH(QString, full_result);
@@ -302,7 +302,7 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromUTCQDateTime()
 void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromDuiCalendar_data()
 {
     QTest::addColumn<QString>("localeName");
-    QTest::addColumn<DuiLocale::Calendar>("cal");
+    QTest::addColumn<DuiLocale::CalendarType>("cal");
     QTest::addColumn<int>("year");
     QTest::addColumn<int>("month");
     QTest::addColumn<int>("day");
@@ -394,7 +394,7 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromDuiCalendar_data()
 void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromDuiCalendar()
 {
     QFETCH(QString, localeName);
-    QFETCH(DuiLocale::Calendar, cal);
+    QFETCH(DuiLocale::CalendarType, cal);
     QFETCH(int, year);
     QFETCH(int, month);
     QFETCH(int, day);
@@ -520,7 +520,7 @@ void Ut_DuiCalendar::testComparisons()
 void Ut_DuiCalendar::testIslamicCalendar()
 {
     DuiLocale loc("fi_FI");
-    loc.setCalendar(DuiLocale::IslamicCalendar);
+    loc.setCalendarType(DuiLocale::IslamicCalendar);
     DuiCalendar cal(loc);
     QDate date(2008, 1, 1); // use qdate to set date as gregorian
     cal.setDate(date);
@@ -540,7 +540,7 @@ void Ut_DuiCalendar::testIslamicCalendar()
 
 void Ut_DuiCalendar::testPosixFormatPattern_data()
 {
-    QTest::addColumn<DuiLocale::Calendar>("calendarType");
+    QTest::addColumn<DuiLocale::CalendarType>("calendarType");
     QTest::addColumn<int>("year");
     QTest::addColumn<int>("month");
     QTest::addColumn<int>("day");
@@ -1397,7 +1397,7 @@ void Ut_DuiCalendar::testPosixFormatPattern_data()
 
 void Ut_DuiCalendar::testPosixFormatPattern()
 {
-    QFETCH(DuiLocale::Calendar, calendarType);
+    QFETCH(DuiLocale::CalendarType, calendarType);
     QFETCH(int, year);
     QFETCH(int, month);
     QFETCH(int, day);
@@ -1409,7 +1409,7 @@ void Ut_DuiCalendar::testPosixFormatPattern()
     QFETCH(QString, result);
 
     DuiLocale locale(localeName);
-    locale.setCalendar(calendarType);
+    locale.setCalendarType(calendarType);
     DuiCalendar duical(locale);
     duical.setDate(year, month, day);
     duical.setTime(hour, minute, second);
@@ -1441,7 +1441,7 @@ void Ut_DuiCalendar::testPosixFormatPattern()
 void Ut_DuiCalendar::testWeekdaySymbols_data()
 {
     QTest::addColumn<QString>("localeName");
-    QTest::addColumn<DuiLocale::Calendar>("cal");
+    QTest::addColumn<DuiLocale::CalendarType>("cal");
     QTest::addColumn<QStringList>("symbols");
 
     // FIXME: better translations would be without -na suffix
@@ -1517,7 +1517,7 @@ void Ut_DuiCalendar::testWeekdaySymbols_data()
 void Ut_DuiCalendar::testWeekdaySymbols()
 {
     QFETCH(QString, localeName);
-    QFETCH(DuiLocale::Calendar, cal);
+    QFETCH(DuiLocale::CalendarType, cal);
     QFETCH(QStringList, symbols);
 
     DuiLocale locale(localeName);
@@ -1531,7 +1531,7 @@ void Ut_DuiCalendar::testWeekdaySymbols()
 void Ut_DuiCalendar::testMonthSymbols_data()
 {
     QTest::addColumn<QString>("localeName");
-    QTest::addColumn<DuiLocale::Calendar>("cal");
+    QTest::addColumn<DuiLocale::CalendarType>("cal");
     QTest::addColumn<QStringList>("symbols");
 
     // FIXME: again better translations without -ta
@@ -1627,7 +1627,7 @@ void Ut_DuiCalendar::testMonthSymbols_data()
 void Ut_DuiCalendar::testMonthSymbols()
 {
     QFETCH(QString, localeName);
-    QFETCH(DuiLocale::Calendar, cal);
+    QFETCH(DuiLocale::CalendarType, cal);
 
     DuiLocale locale(localeName);
     DuiCalendar duical(cal);
