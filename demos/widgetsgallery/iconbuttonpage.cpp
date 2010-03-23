@@ -53,23 +53,25 @@ void IconButtonPage::createContent()
     TemplatePage::createContent();
 
     QGraphicsWidget *w = new QGraphicsWidget();
-    w->setMinimumSize(container->minimumWidth(), 1);
-    w->setMaximumSize(container->minimumWidth(), 1);
+    w->setMinimumSize(container->minimumWidth(), 5);
+    w->setMaximumSize(container->minimumWidth(), 5);
 
+    containerPolicy->setSpacing(40);
     containerPolicy->addItem(w);
-    containerPolicy->addStretch();
+    //containerPolicy->addStretch();
 
     // Icon buttons
     iconButton1 = new DuiButton();
     iconButton1->setViewType(DuiButton::iconType);
-    iconButton1->setIconID("Icon-music");
+    iconButton1->setIconID("icon-l-common-video-playback");
 
     containerPolicy->addItem(iconButton1, Qt::AlignCenter);
 
     iconButton2 = new DuiButton();
     iconButton2->setViewType(DuiButton::iconType);
-    iconButton2->setIconID("Icon-contacts");
-
+    iconButton2->setIconID("icon-l-games");
+    iconButton2->setMaximumWidth(175);
+    
     containerPolicy->addItem(iconButton2, Qt::AlignCenter);
     containerPolicy->addStretch();
     retranslateUi();
