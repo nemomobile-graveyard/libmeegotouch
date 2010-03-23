@@ -35,7 +35,7 @@ class DUI_EXPORT DuiTextEditStyle : public DuiWidgetStyle
     DUI_STYLE_ATTRIBUTE(QColor,       selectionTextColor,       SelectionTextColor)
     DUI_STYLE_ATTRIBUTE(QColor,       selectionBackgroundColor, SelectionBackgroundColor)
     DUI_STYLE_ATTRIBUTE(qreal,        selectionThreshold,       SelectionThreshold)
-    DUI_STYLE_ATTRIBUTE(bool,         zoomable,                 Zoomable)
+    DUI_STYLE_ATTRIBUTE(bool,         allowViewReposition,      AllowViewReposition)
     DUI_STYLE_ATTRIBUTE(QString,      maskString,               MaskString)
     DUI_STYLE_ATTRIBUTE(QColor,       promptColor,              PromptColor)
     DUI_STYLE_ATTRIBUTE(QString,      pasteFailedIcon,          PasteFailedIcon)
