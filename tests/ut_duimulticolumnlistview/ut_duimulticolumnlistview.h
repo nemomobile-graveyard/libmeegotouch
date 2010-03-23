@@ -23,7 +23,7 @@
 #include <QtTest/QtTest>
 #include <QAbstractListModel>
 #include <DuiWidget>
-#include "duiabstractcellcreator.h"
+#include "duilistcellcreator.h"
 const int GroupHeaderHeight = 40;
 
 class DummyHeaderWidget : public DuiWidget
@@ -35,28 +35,21 @@ public:
     virtual QRectF boundingRect() const {
         return QRectF(QPointF(0, 0), QSizeF(800, GroupHeaderHeight));
     }
-
-    void setViewType(const QString &viewType) {
-        Q_UNUSED(viewType);
-    }
 };
 
-class DummyHeaderCreator : public DuiAbstractCellCreator<DummyHeaderWidget>
+class DummyHeaderCreator : public DuiListBaseCellCreator<DummyHeaderWidget>
 {
 public:
-    virtual ~DummyHeaderCreator() {
-    }
-
     virtual void updateCell(const QModelIndex &index, DuiWidget *cell) const {
         Q_UNUSED(index);
         Q_UNUSED(cell);
     }
 };
 
-class DuiFastMultiColumnListViewPrivate;
+class DuiGroupHeaderListViewPrivate;
 class MyIndexedModel;
 
-class Ut_DuiFastListViewMultiColumn : public QObject
+class Ut_DuiListNewView : public QObject
 {
     Q_OBJECT
 
@@ -78,54 +71,48 @@ private slots:
     void testHeaderHeightShouldBeZeroIfHeadersNotVisible();
     void testHeaderHeight();
     void testGroupSize();
-    void testRowsInGroup();
     void testSizeHint();
     void testItemCountIndexedModel();
     void testItemCount();
     void testSeparatorsCount();
 
-    void testLocateVisibleIndexAt0();
-    void testLocateVisibleIndexAt40();
-    void testLocateVisibleIndexAt142();
-    void testLocateVisibleIndexAt242();
-    void testLocateVisibleIndexAt282();
-    void testLocateVisibleIndexAt384();
-    void testLocateVisibleIndexAt484();
-    void testLocateVisibleIndexAt524();
+    void testFirstFlatRowToIndex();
+    void testSecondFlatRowToIndex();
+    void testLastFlatRowToIndex();
+    void testAfterLastFlatRowToIndex();
 
+    void testInvalidIndexToFlatRow();
+    void testFirstIndexWithoutParentToFlatRow();
+    void testIndexWithParentToFlatRow();
+    void testLastIndexWithParentToFlatRow();
+
+    void testLocateVisibleIndexAtZero();
+    void testLocateVisibleIndexAt41();
+    void testLocateVisibleIndexAtMiddleOfHeader();
     void testLocateVisibleRowAt0();
-    void testLocateVisibleRowAt40();
-    void testLocateVisibleRowAt40x151();
-    void testLocateVisibleRowAt142();
-    void testLocateVisibleRowAt242();
-    void testLocateVisibleRowAt282();
+    void testLocateVisibleRowAt41();
     void testLocateVisibleRowAt384();
-    void testLocateVisibleRowAt484();
-    void testLocateVisibleRowAt524();
+    void testLocateVisibleRowAt900();
+    void testLocateVisibleRowAt931();
 
     void testLocatePosOfItemAt0Row();
     void testLocatePosOfItemAt1Row();
     void testLocatePosOfItemAt3Row();
-    void testLocatePosOfItemAt4Row();
-    void testLocatePosOfItemAt5Row();
-    void testLocatePosOfItemAt7Row();
-    void testLocatePosOfItemAt9Row();
     void testLocatePosOfItemAt10Row();
 
     void testLocatePosOfItemAt0Index();
-    void testLocatePosOfItemAt1Index();
     void testLocatePosOfItemAt3Index();
 
-    void testLocatePosOfItemAt4Index();
-    void testLocatePosOfItemAt5Index();
-    void testLocatePosOfItemAt7Index();
-    void testLocatePosOfItemAt9Index();
-    void testLocatePosOfItemAt10Index();
+    void testFindLowerIndexInEmptyArray();
+    void testFindLowerIndexIn2ItemsArray();
+    void testFindLowerIndexIn3ItemsArray();
+
+    void testPerformance();
 
 private:
     QObject *phoneBook;
     MyIndexedModel *phoneBookModel;
-    DuiFastMultiColumnListViewPrivate *fastListViewPrivate;
+    DuiGroupHeaderListViewPrivate *listViewPrivate;
 };
 
 #endif

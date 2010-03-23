@@ -25,15 +25,15 @@
 
 #include "duicontentitem.h"
 #include "duiabstractcellcreator.h"
-#include "duifastlistview_p.h"
+#include "duilistview_p.h"
 
-#include "duifastlistview.h"
+#include "duilistview.h"
 
-using namespace DuiFastListViewPrivateNamespace;
+using namespace DuiListViewPrivateNamespace;
 
 static const int MOVINGDETECTORTIMEOUT = 500;
 
-DuiFastListViewPrivate::DuiFastListViewPrivate() : recycler(new DuiWidgetRecycler)
+DuiListViewPrivate::DuiListViewPrivate() : recycler(new DuiWidgetRecycler)
 {
     itemHeight = 0;
     viewWidth = 0;
@@ -49,7 +49,7 @@ DuiFastListViewPrivate::DuiFastListViewPrivate() : recycler(new DuiWidgetRecycle
     connect(&movingDetectorTimer, SIGNAL(timeout()), this, SLOT(movingDetectionTimerTimeout()));
 }
 
-DuiFastListViewPrivate::~DuiFastListViewPrivate()
+DuiListViewPrivate::~DuiListViewPrivate()
 {
     clearVisibleItemsArray();
     movingDetectorTimer.stop();
@@ -58,25 +58,25 @@ DuiFastListViewPrivate::~DuiFastListViewPrivate()
     delete recycler;
 }
 
-void DuiFastListViewPrivate::setSeparator(DuiWidget *separator)
+void DuiListViewPrivate::setSeparator(DuiWidget *separator)
 {
     this->separator = separator;
 }
 
-void DuiFastListViewPrivate::setHeadersCreator(DuiCellCreator *creator)
+void DuiListViewPrivate::setHeadersCreator(DuiCellCreator *creator)
 {
     delete headersCreator;
     headersCreator = creator;
 }
 
-void DuiFastListViewPrivate::movingDetectionTimerTimeout()
+void DuiListViewPrivate::movingDetectionTimerTimeout()
 {
     moving = false;
     controllerModel->setListIsMoving(false);
     movingDetectorTimer.stop();
 }
 
-void DuiFastListViewPrivate::clearVisibleItemsArray()
+void DuiListViewPrivate::clearVisibleItemsArray()
 {
     foreach(DuiWidget * item, visibleItems) {
         deleteItem(item);
@@ -88,14 +88,14 @@ void DuiFastListViewPrivate::clearVisibleItemsArray()
     updateLastVisibleRow(QModelIndex());
 }
 
-void DuiFastListViewPrivate::cellClicked(DuiWidget *source)
+void DuiListViewPrivate::cellClicked(DuiWidget *source)
 {
     DuiWidget *widget = source;
     QModelIndex cellIndex(locateVisibleIndexAt(widget->pos().y()));
     controller->selectItem(cellIndex);
 }
 
-void DuiFastListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
+void DuiListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
 {
     foreach(DuiWidget * widget, visibleItems) {
         // TODO convert into hashmap
@@ -107,12 +107,12 @@ void DuiFastListViewPrivate::selectionChange(const QItemSelection &selected, con
     }
 }
 
-void DuiFastListViewPrivate::deleteItem(DuiWidget *widget)
+void DuiListViewPrivate::deleteItem(DuiWidget *widget)
 {
     recycler->recycle(widget);
 }
 
-DuiWidget *DuiFastListViewPrivate::createCell(int row)
+DuiWidget *DuiListViewPrivate::createCell(int row)
 {
     const DuiCellCreator *cellCreator = controllerModel->cellCreator();
     QModelIndex index(flatRowToIndex(row));
@@ -145,7 +145,7 @@ DuiWidget *DuiFastListViewPrivate::createCell(int row)
     return cell;
 }
 
-void DuiFastListViewPrivate::exposedRectChanged(const QRectF &exposedRect)
+void DuiListViewPrivate::exposedRectChanged(const QRectF &exposedRect)
 {
     if (exposedRect.topLeft() != oldExposedRectPosition) {
         movingDetectorTimer.start(MOVINGDETECTORTIMEOUT);
@@ -159,14 +159,14 @@ void DuiFastListViewPrivate::exposedRectChanged(const QRectF &exposedRect)
     }
 }
 
-void DuiFastListViewPrivate::updateItemHeight()
+void DuiListViewPrivate::updateItemHeight()
 {
     const DuiCellCreator *cellCreator = controller->cellCreator();
     if (cellCreator)
         itemHeight = cellCreator->cellSize().height();
 }
 
-void DuiFastListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
+void DuiListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
         const QPoint &lastVisibleItemCoord)
 {
     for (QVector<DuiWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
@@ -182,7 +182,7 @@ void DuiFastListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItem
     }
 }
 
-DuiWidget *DuiFastListViewPrivate::findCellAtRow(int row)
+DuiWidget *DuiListViewPrivate::findCellAtRow(int row)
 {
     foreach(DuiWidget * widget, visibleItems) {
         QPointF pos(widget->pos());
@@ -194,7 +194,7 @@ DuiWidget *DuiFastListViewPrivate::findCellAtRow(int row)
     return NULL;
 }
 
-void DuiFastListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRow)
+void DuiListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRow)
 {
     for (int currentRow = firstVisibleRow; currentRow <= lastVisibleRow; currentRow++) {
         DuiWidget *existingCell = findCellAtRow(currentRow);
@@ -207,7 +207,7 @@ void DuiFastListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVis
     }
 }
 
-void DuiFastListViewPrivate::resetModel(DuiListModel *duiListModel)
+void DuiListViewPrivate::resetModel(DuiListModel *duiListModel)
 {
     forceRepaint = true;
 
@@ -235,36 +235,36 @@ void DuiFastListViewPrivate::resetModel(DuiListModel *duiListModel)
     }
 }
 
-void DuiFastListViewPrivate::updateItemSize()
+void DuiListViewPrivate::updateItemSize()
 {
     foreach(DuiWidget * cell, visibleItems) {
         cell->resize(cellSize(0));
     }
 }
 
-QSizeF DuiFastListViewPrivate::cellSize(int row) const
+QSizeF DuiListViewPrivate::cellSize(int row) const
 {
     Q_UNUSED(row);
     return QSizeF(viewWidth, itemHeight);
 }
 
-void DuiFastListViewPrivate::updateSeparatorSize()
+void DuiListViewPrivate::updateSeparatorSize()
 {
     QRectF separatorBoundingRect(separator->boundingRect());
     separator->setGeometry(QRectF(QPointF(0, 0), QSizeF(viewWidth, separatorBoundingRect.height())));
 }
 
-void DuiFastListViewPrivate::updateFirstVisibleRow(const QModelIndex &index)
+void DuiListViewPrivate::updateFirstVisibleRow(const QModelIndex &index)
 {
     controllerModel->setFirstVisibleItem(index);
 }
 
-void DuiFastListViewPrivate::updateLastVisibleRow(const QModelIndex &index)
+void DuiListViewPrivate::updateLastVisibleRow(const QModelIndex &index)
 {
     controllerModel->setLastVisibleItem(index);
 }
 
-void DuiFastListViewPrivate::createVisibleItems()
+void DuiListViewPrivate::createVisibleItems()
 {
     QModelIndex firstVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y()));
     int firstVisibleRow = indexToFlatRow(firstVisibleIndex);
@@ -275,14 +275,14 @@ void DuiFastListViewPrivate::createVisibleItems()
     createVisibleItems(firstVisibleRow, lastVisibleRow);
 }
 
-bool DuiFastListViewPrivate::isGroupHeader(const QModelIndex &index)
+bool DuiListViewPrivate::isGroupHeader(const QModelIndex &index)
 {
     Q_UNUSED(index);
 
     return false;
 }
 
-void DuiFastListViewPrivate::layoutChanged()
+void DuiListViewPrivate::layoutChanged()
 {
 
 }
@@ -290,22 +290,22 @@ void DuiFastListViewPrivate::layoutChanged()
 ////////////
 // Plain list
 ////////////
-DuiFastPlainListViewPrivate::DuiFastPlainListViewPrivate()
+DuiPlainListViewPrivate::DuiPlainListViewPrivate()
 {
 
 }
 
-DuiFastPlainListViewPrivate::~DuiFastPlainListViewPrivate()
+DuiPlainListViewPrivate::~DuiPlainListViewPrivate()
 {
 
 }
 
-int DuiFastPlainListViewPrivate::separatorsCount() const
+int DuiPlainListViewPrivate::separatorsCount() const
 {
     return itemsCount() - 1;
 }
 
-int DuiFastPlainListViewPrivate::totalHeight()
+int DuiPlainListViewPrivate::totalHeight()
 {
     int itemsCount = this->itemsCount();
     int separatorHeight = separator->boundingRect().height();
@@ -314,7 +314,7 @@ int DuiFastPlainListViewPrivate::totalHeight()
     return totalHeight;
 }
 
-int DuiFastPlainListViewPrivate::itemsCount() const
+int DuiPlainListViewPrivate::itemsCount() const
 {
     if (model == 0)
         return NULL;
@@ -322,22 +322,22 @@ int DuiFastPlainListViewPrivate::itemsCount() const
     return model->rowCount();
 }
 
-DuiWidget *DuiFastPlainListViewPrivate::createItem(int row)
+DuiWidget *DuiPlainListViewPrivate::createItem(int row)
 {
     return createCell(row);
 }
 
-int DuiFastPlainListViewPrivate::indexToFlatRow(const QModelIndex &index) const
+int DuiPlainListViewPrivate::indexToFlatRow(const QModelIndex &index) const
 {
     return index.row();
 }
 
-QModelIndex DuiFastPlainListViewPrivate::flatRowToIndex(int row) const
+QModelIndex DuiPlainListViewPrivate::flatRowToIndex(int row) const
 {
     return model->index(row, 0);
 }
 
-int DuiFastPlainListViewPrivate::locateVisibleRowAt(int y, int x)
+int DuiPlainListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
     // Formula for calculating position of specific row is following:
@@ -355,7 +355,7 @@ int DuiFastPlainListViewPrivate::locateVisibleRowAt(int y, int x)
 }
 
 // TODO write unit test for this
-int DuiFastPlainListViewPrivate::locatePosOfItem(int row)
+int DuiPlainListViewPrivate::locatePosOfItem(int row)
 {
     int itemHeights = row * itemHeight;
     int separatorHeights = 0;
@@ -365,12 +365,12 @@ int DuiFastPlainListViewPrivate::locatePosOfItem(int row)
     return itemHeights + separatorHeights;
 }
 
-int DuiFastPlainListViewPrivate::locatePosOfItem(const QModelIndex &index)
+int DuiPlainListViewPrivate::locatePosOfItem(const QModelIndex &index)
 {
     return locatePosOfItem(index.row());
 }
 
-QModelIndex DuiFastPlainListViewPrivate::locateVisibleIndexAt(int pos)
+QModelIndex DuiPlainListViewPrivate::locateVisibleIndexAt(int pos)
 {
     int row = locateVisibleRowAt(pos);
     if (row < 0)
@@ -379,24 +379,24 @@ QModelIndex DuiFastPlainListViewPrivate::locateVisibleIndexAt(int pos)
     return model->index(row, 0);
 }
 
-void DuiFastPlainListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
+void DuiPlainListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
         const QModelIndex &lastVisibleRow)
 {
-    DuiFastListViewPrivate::createVisibleItems(firstVisibleRow.row(), lastVisibleRow.row());
+    DuiListViewPrivate::createVisibleItems(firstVisibleRow.row(), lastVisibleRow.row());
 }
 
 ////////////
 // Plain list MultiColumn
 ////////////
-DuiFastPlainMultiColumnListViewPrivate::DuiFastPlainMultiColumnListViewPrivate()
+DuiPlainMultiColumnListViewPrivate::DuiPlainMultiColumnListViewPrivate()
 {
 }
 
-DuiFastPlainMultiColumnListViewPrivate::~DuiFastPlainMultiColumnListViewPrivate()
+DuiPlainMultiColumnListViewPrivate::~DuiPlainMultiColumnListViewPrivate()
 {
 }
 
-int DuiFastPlainMultiColumnListViewPrivate::itemsToRows(int items) const
+int DuiPlainMultiColumnListViewPrivate::itemsToRows(int items) const
 {
     int columns = controllerModel->columns();
     int rows = items / columns;
@@ -406,7 +406,7 @@ int DuiFastPlainMultiColumnListViewPrivate::itemsToRows(int items) const
     return rows;
 }
 
-int DuiFastPlainMultiColumnListViewPrivate::flatRowToColumn(int row) const
+int DuiPlainMultiColumnListViewPrivate::flatRowToColumn(int row) const
 {
     int columns = controllerModel->columns();
     int itemRow = row / columns;
@@ -415,7 +415,7 @@ int DuiFastPlainMultiColumnListViewPrivate::flatRowToColumn(int row) const
     return flatRowColumn;
 }
 
-int DuiFastPlainMultiColumnListViewPrivate::locatePosOfItem(int row)
+int DuiPlainMultiColumnListViewPrivate::locatePosOfItem(int row)
 {
     int columns = controllerModel->columns();
     int rows = row / columns;
@@ -427,7 +427,7 @@ int DuiFastPlainMultiColumnListViewPrivate::locatePosOfItem(int row)
     return itemHeights + separatorHeights;
 }
 
-int DuiFastPlainMultiColumnListViewPrivate::totalHeight()
+int DuiPlainMultiColumnListViewPrivate::totalHeight()
 {
     int rowsCount = itemsToRows(itemsCount());
     int separatorHeight = separator->boundingRect().height();
@@ -436,7 +436,7 @@ int DuiFastPlainMultiColumnListViewPrivate::totalHeight()
     return totalHeight;
 }
 
-DuiWidget *DuiFastPlainMultiColumnListViewPrivate::createItem(int row)
+DuiWidget *DuiPlainMultiColumnListViewPrivate::createItem(int row)
 {
     DuiWidget *cell = createCell(row);
     cell->resize(viewWidth / controllerModel->columns(), cell->preferredHeight());
@@ -444,7 +444,7 @@ DuiWidget *DuiFastPlainMultiColumnListViewPrivate::createItem(int row)
     return cell;
 }
 
-int DuiFastPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
+int DuiPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     int separatorHeight = separator->boundingRect().height();
     int columns = controllerModel->columns();
@@ -460,7 +460,7 @@ int DuiFastPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
     return row + column;
 }
 
-void DuiFastPlainMultiColumnListViewPrivate::updateItemSize()
+void DuiPlainMultiColumnListViewPrivate::updateItemSize()
 {
     foreach(DuiWidget * cell, visibleItems) {
         int cellRow = widgetFlatRows[cell] - 1;
@@ -470,21 +470,21 @@ void DuiFastPlainMultiColumnListViewPrivate::updateItemSize()
     }
 }
 
-QSizeF DuiFastPlainMultiColumnListViewPrivate::cellSize(int row) const
+QSizeF DuiPlainMultiColumnListViewPrivate::cellSize(int row) const
 {
     Q_UNUSED(row);
     int columns = controllerModel->columns();
     return QSizeF(viewWidth / columns, itemHeight);
 }
 
-void DuiFastPlainMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
+void DuiPlainMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
 {
     int clickedFlatRow = widgetFlatRows.value(source) - 1;
     QModelIndex cellIndex(flatRowToIndex(clickedFlatRow));
     controller->selectItem(cellIndex);
 }
 
-void DuiFastPlainMultiColumnListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
+void DuiPlainMultiColumnListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
 {
     foreach(DuiWidget * widget, visibleItems) {
         int widgetFlatRow = widgetFlatRows.value(widget) - 1;
@@ -496,20 +496,20 @@ void DuiFastPlainMultiColumnListViewPrivate::selectionChange(const QItemSelectio
     }
 }
 
-void DuiFastPlainMultiColumnListViewPrivate::createVisibleItems()
+void DuiPlainMultiColumnListViewPrivate::createVisibleItems()
 {
     QModelIndex firstVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y()));
     QModelIndex lastVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y() + viewportVisibleHeight));
     createVisibleItems(firstVisibleIndex, lastVisibleIndex);
 }
 
-void DuiFastPlainMultiColumnListViewPrivate::clearVisibleItemsArray()
+void DuiPlainMultiColumnListViewPrivate::clearVisibleItemsArray()
 {
-    DuiFastListViewPrivate::clearVisibleItemsArray();
+    DuiListViewPrivate::clearVisibleItemsArray();
     widgetFlatRows.clear();
 }
 
-void DuiFastPlainMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
+void DuiPlainMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
         const QPoint &lastVisibleItemCoord)
 {
     for (QVector<DuiWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
@@ -526,7 +526,7 @@ void DuiFastPlainMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &
     }
 }
 
-void DuiFastPlainMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
+void DuiPlainMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
         const QModelIndex &lastVisibleRow)
 {
     int firstRow = firstVisibleRow.row();
@@ -555,23 +555,23 @@ void DuiFastPlainMultiColumnListViewPrivate::createVisibleItems(const QModelInde
 ////////////
 // Group Header
 ////////////
-DuiFastGroupHeaderListViewPrivate::DuiFastGroupHeaderListViewPrivate()
+DuiGroupHeaderListViewPrivate::DuiGroupHeaderListViewPrivate()
 {
 
 }
 
-DuiFastGroupHeaderListViewPrivate::~DuiFastGroupHeaderListViewPrivate()
+DuiGroupHeaderListViewPrivate::~DuiGroupHeaderListViewPrivate()
 {
 
 }
 
-void DuiFastGroupHeaderListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
+void DuiGroupHeaderListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
         const QModelIndex &lastVisibleRow)
 {
-    DuiFastListViewPrivate::createVisibleItems(indexToFlatRow(firstVisibleRow), indexToFlatRow(lastVisibleRow));
+    DuiListViewPrivate::createVisibleItems(indexToFlatRow(firstVisibleRow), indexToFlatRow(lastVisibleRow));
 }
 
-QModelIndex DuiFastGroupHeaderListViewPrivate::locateVisibleIndexAt(int pos)
+QModelIndex DuiGroupHeaderListViewPrivate::locateVisibleIndexAt(int pos)
 {
     int row = locateVisibleRowAt(pos);
     if (row < 0)
@@ -580,7 +580,7 @@ QModelIndex DuiFastGroupHeaderListViewPrivate::locateVisibleIndexAt(int pos)
     return flatRowToIndex(row);
 }
 
-int DuiFastGroupHeaderListViewPrivate::separatorsCount() const
+int DuiGroupHeaderListViewPrivate::separatorsCount() const
 {
     int itemsCount = this->headersCount();
     int seperators = 0;
@@ -595,16 +595,16 @@ int DuiFastGroupHeaderListViewPrivate::separatorsCount() const
     return seperators;
 }
 
-void DuiFastGroupHeaderListViewPrivate::resetModel(DuiListModel *duiListModel)
+void DuiGroupHeaderListViewPrivate::resetModel(DuiListModel *duiListModel)
 {
-    DuiFastListViewPrivate::resetModel(duiListModel);
+    DuiListViewPrivate::resetModel(duiListModel);
 
     headersPositions.resize(this->headersCount());
     updateHeadersPositions();
     updateHeadersRows();
 }
 
-int DuiFastGroupHeaderListViewPrivate::locatePosOfItem(const QModelIndex &index)
+int DuiGroupHeaderListViewPrivate::locatePosOfItem(const QModelIndex &index)
 {
     if (index.parent().isValid()) {
         return locatePosOfItem(index.parent().row(), index.row());
@@ -613,7 +613,7 @@ int DuiFastGroupHeaderListViewPrivate::locatePosOfItem(const QModelIndex &index)
     }
 }
 
-int DuiFastGroupHeaderListViewPrivate::locatePosOfItem(int headerIndex, int itemIndex)
+int DuiGroupHeaderListViewPrivate::locatePosOfItem(int headerIndex, int itemIndex)
 {
     if (itemIndex == -1) {
         // we hitted header
@@ -633,14 +633,14 @@ int DuiFastGroupHeaderListViewPrivate::locatePosOfItem(int headerIndex, int item
     return pos;
 }
 
-int DuiFastGroupHeaderListViewPrivate::locatePosOfItem(int row)
+int DuiGroupHeaderListViewPrivate::locatePosOfItem(int row)
 {
     int headerIndex = dFindLowerIndex(headersRows, row);
     int relativeRow = row - headersRows[headerIndex] - 1; // we have to subtruct header
     return locatePosOfItem(headerIndex, relativeRow);
 }
 
-int DuiFastGroupHeaderListViewPrivate::locateVisibleRowAt(int y, int x)
+int DuiGroupHeaderListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
 
@@ -661,7 +661,7 @@ int DuiFastGroupHeaderListViewPrivate::locateVisibleRowAt(int y, int x)
     return row;
 }
 
-QModelIndex DuiFastGroupHeaderListViewPrivate::flatRowToIndex(int row) const
+QModelIndex DuiGroupHeaderListViewPrivate::flatRowToIndex(int row) const
 {
     if (!headersRows.contains(row)) {
         int headerIndex = dFindLowerIndex(headersRows, row);
@@ -684,7 +684,7 @@ QModelIndex DuiFastGroupHeaderListViewPrivate::flatRowToIndex(int row) const
     return model->index(headerIndex, 0);
 }
 
-void DuiFastGroupHeaderListViewPrivate::updateHeadersPositions()
+void DuiGroupHeaderListViewPrivate::updateHeadersPositions()
 {
     int headersCount = this->headersCount();
 
@@ -702,7 +702,7 @@ void DuiFastGroupHeaderListViewPrivate::updateHeadersPositions()
     }
 }
 
-void DuiFastGroupHeaderListViewPrivate::updateHeadersRows()
+void DuiGroupHeaderListViewPrivate::updateHeadersRows()
 {
     int headersCount = this->headersCount();
 
@@ -718,7 +718,7 @@ void DuiFastGroupHeaderListViewPrivate::updateHeadersRows()
     }
 }
 
-int DuiFastGroupHeaderListViewPrivate::indexToFlatRow(const QModelIndex &index) const
+int DuiGroupHeaderListViewPrivate::indexToFlatRow(const QModelIndex &index) const
 {
     if (!index.isValid())
         return -1;
@@ -731,7 +731,7 @@ int DuiFastGroupHeaderListViewPrivate::indexToFlatRow(const QModelIndex &index) 
     return headersRows[index.row()];
 }
 
-DuiWidget *DuiFastGroupHeaderListViewPrivate::createItem(int row)
+DuiWidget *DuiGroupHeaderListViewPrivate::createItem(int row)
 {
     if (!headersRows.contains(row)) {
         return createCell(row);
@@ -741,7 +741,7 @@ DuiWidget *DuiFastGroupHeaderListViewPrivate::createItem(int row)
     }
 }
 
-DuiWidget *DuiFastGroupHeaderListViewPrivate::createHeader(int headerIndex)
+DuiWidget *DuiGroupHeaderListViewPrivate::createHeader(int headerIndex)
 {
     DuiWidget *header = headersCreator->createCell(model->index(headerIndex, 0), *recycler);
     header->setParent(NULL);
@@ -751,7 +751,7 @@ DuiWidget *DuiFastGroupHeaderListViewPrivate::createHeader(int headerIndex)
     return header;
 }
 
-int DuiFastGroupHeaderListViewPrivate::headerHeight()
+int DuiGroupHeaderListViewPrivate::headerHeight()
 {
     if (!hdrHeight) {
         DuiWidget *header = createHeader(0);
@@ -761,18 +761,18 @@ int DuiFastGroupHeaderListViewPrivate::headerHeight()
     return hdrHeight;
 }
 
-int DuiFastGroupHeaderListViewPrivate::headersCount() const
+int DuiGroupHeaderListViewPrivate::headersCount() const
 {
     return model->rowCount();
 }
 
-int DuiFastGroupHeaderListViewPrivate::itemsCount(int headerIndex) const
+int DuiGroupHeaderListViewPrivate::itemsCount(int headerIndex) const
 {
     QModelIndex index(model->index(headerIndex, 0));
     return model->rowCount(index);
 }
 
-int DuiFastGroupHeaderListViewPrivate::itemsCount() const
+int DuiGroupHeaderListViewPrivate::itemsCount() const
 {
     if (!controllerModel->showGroups())
         return model->rowCount();
@@ -786,13 +786,13 @@ int DuiFastGroupHeaderListViewPrivate::itemsCount() const
     return totalItemsCount;
 }
 
-int DuiFastGroupHeaderListViewPrivate::groupSize(int headerIndex) const
+int DuiGroupHeaderListViewPrivate::groupSize(int headerIndex) const
 {
     int itemsCount = this->itemsCount(headerIndex);
     return ((itemsCount * itemHeight) + (itemsCount - 1) * separator->boundingRect().height());
 }
 
-int DuiFastGroupHeaderListViewPrivate::totalHeight()
+int DuiGroupHeaderListViewPrivate::totalHeight()
 {
     int headersCount = this->headersCount();
     int itemsCount = this->itemsCount();
@@ -802,25 +802,25 @@ int DuiFastGroupHeaderListViewPrivate::totalHeight()
     return totalHeight;
 }
 
-QSizeF DuiFastGroupHeaderListViewPrivate::cellSize(int row) const
+QSizeF DuiGroupHeaderListViewPrivate::cellSize(int row) const
 {
     if(headersRows.contains(row)) {
         return QSizeF(viewWidth, hdrHeight);
     }
-    return DuiFastListViewPrivate::cellSize(row);
+    return DuiListViewPrivate::cellSize(row);
 }
 
-bool DuiFastGroupHeaderListViewPrivate::isGroupHeader(const QModelIndex &index)
+bool DuiGroupHeaderListViewPrivate::isGroupHeader(const QModelIndex &index)
 {
     return !index.parent().isValid();
 }
 
-void DuiFastGroupHeaderListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRow)
+void DuiGroupHeaderListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRow)
 {
-    DuiFastListViewPrivate::createVisibleItems(firstVisibleRow, lastVisibleRow);
+    DuiListViewPrivate::createVisibleItems(firstVisibleRow, lastVisibleRow);
 }
 
-void DuiFastGroupHeaderListViewPrivate::layoutChanged()
+void DuiGroupHeaderListViewPrivate::layoutChanged()
 {
     updateHeadersPositions();
     updateHeadersRows();
@@ -830,15 +830,15 @@ void DuiFastGroupHeaderListViewPrivate::layoutChanged()
 // Group Header MultiColumn
 ////////////
 
-DuiFastMultiColumnListViewPrivate::DuiFastMultiColumnListViewPrivate()
+DuiMultiColumnListViewPrivate::DuiMultiColumnListViewPrivate()
 {
 }
 
-DuiFastMultiColumnListViewPrivate::~DuiFastMultiColumnListViewPrivate()
+DuiMultiColumnListViewPrivate::~DuiMultiColumnListViewPrivate()
 {
 }
 
-int DuiFastMultiColumnListViewPrivate::itemsToRows(int items) const
+int DuiMultiColumnListViewPrivate::itemsToRows(int items) const
 {
     int columns = controllerModel->columns();
     int rows = items / columns;
@@ -848,7 +848,7 @@ int DuiFastMultiColumnListViewPrivate::itemsToRows(int items) const
     return rows;
 }
 
-int DuiFastMultiColumnListViewPrivate::rowsInGroup(int headerIndex) const
+int DuiMultiColumnListViewPrivate::rowsInGroup(int headerIndex) const
 {
     int itemsInGroup = itemsCount(headerIndex);
     int rowsInGroup = itemsToRows(itemsInGroup);
@@ -856,7 +856,7 @@ int DuiFastMultiColumnListViewPrivate::rowsInGroup(int headerIndex) const
     return rowsInGroup;
 }
 
-int DuiFastMultiColumnListViewPrivate::flatRowToColumn(int row) const
+int DuiMultiColumnListViewPrivate::flatRowToColumn(int row) const
 {
     if (headersRows.contains(row))
         return 0; // group headers are always in column 0
@@ -870,7 +870,7 @@ int DuiFastMultiColumnListViewPrivate::flatRowToColumn(int row) const
     return flatRowColumn;
 }
 
-void DuiFastMultiColumnListViewPrivate::updateItemSize()
+void DuiMultiColumnListViewPrivate::updateItemSize()
 {
     foreach(DuiWidget * cell, visibleItems) {
         int cellFlatRow = widgetFlatRows[cell] - 1;
@@ -880,24 +880,24 @@ void DuiFastMultiColumnListViewPrivate::updateItemSize()
     }
 }
 
-QSizeF DuiFastMultiColumnListViewPrivate::cellSize(int row) const
+QSizeF DuiMultiColumnListViewPrivate::cellSize(int row) const
 {
     if(headersRows.contains(row)) {
-        return DuiFastGroupHeaderListViewPrivate::cellSize(row);
+        return DuiGroupHeaderListViewPrivate::cellSize(row);
     }
 
     int columns = controllerModel->columns();
     return QSizeF(viewWidth / columns, itemHeight);
 }
 
-void DuiFastMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
+void DuiMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
 {
     int clickedFlatRow = widgetFlatRows.value(source) - 1;
     QModelIndex cellIndex(flatRowToIndex(clickedFlatRow));
     controller->selectItem(cellIndex);
 }
 
-void DuiFastMultiColumnListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
+void DuiMultiColumnListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
 {
     foreach(DuiWidget * widget, visibleItems) {
         int widgetFlatRow = widgetFlatRows.value(widget) - 1;
@@ -909,20 +909,20 @@ void DuiFastMultiColumnListViewPrivate::selectionChange(const QItemSelection &se
     }
 }
 
-void DuiFastMultiColumnListViewPrivate::createVisibleItems()
+void DuiMultiColumnListViewPrivate::createVisibleItems()
 {
     QModelIndex firstVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y()));
     QModelIndex lastVisibleIndex(locateVisibleIndexAt(viewportTopLeft.y() + viewportVisibleHeight));
     createVisibleItems(firstVisibleIndex, lastVisibleIndex);
 }
 
-void DuiFastMultiColumnListViewPrivate::clearVisibleItemsArray()
+void DuiMultiColumnListViewPrivate::clearVisibleItemsArray()
 {
-    DuiFastListViewPrivate::clearVisibleItemsArray();
+    DuiListViewPrivate::clearVisibleItemsArray();
     widgetFlatRows.clear();
 }
 
-void DuiFastMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
+void DuiMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &firstVisibleItemCoord,
         const QPoint &lastVisibleItemCoord)
 {
     for (QVector<DuiWidget *>::iterator iter = visibleItems.begin(); iter != visibleItems.end();) {
@@ -939,7 +939,7 @@ void DuiFastMultiColumnListViewPrivate::removeInvisibleItems(const QPoint &first
     }
 }
 
-void DuiFastMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
+void DuiMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
         const QModelIndex &lastVisibleRow)
 {
     int firstRow = indexToFlatRow(firstVisibleRow);
@@ -966,7 +966,7 @@ void DuiFastMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &fi
     }
 }
 
-int DuiFastMultiColumnListViewPrivate::locatePosOfItem(int headerIndex, int itemIndex)
+int DuiMultiColumnListViewPrivate::locatePosOfItem(int headerIndex, int itemIndex)
 {
     if (itemIndex == -1)
         return headersPositions[headerIndex];
@@ -983,7 +983,7 @@ int DuiFastMultiColumnListViewPrivate::locatePosOfItem(int headerIndex, int item
     return pos;
 }
 
-int DuiFastMultiColumnListViewPrivate::locatePosOfItem(int row)
+int DuiMultiColumnListViewPrivate::locatePosOfItem(int row)
 {
     int headerIndex = dFindLowerIndex(headersRows, row);
     int relativeRow = row - headersRows[headerIndex] - 1;
@@ -991,12 +991,12 @@ int DuiFastMultiColumnListViewPrivate::locatePosOfItem(int row)
     return locatePosOfItem(headerIndex, relativeRow);
 }
 
-int DuiFastMultiColumnListViewPrivate::locatePosOfItem(const QModelIndex &index)
+int DuiMultiColumnListViewPrivate::locatePosOfItem(const QModelIndex &index)
 {
-    return DuiFastGroupHeaderListViewPrivate::locatePosOfItem(index);
+    return DuiGroupHeaderListViewPrivate::locatePosOfItem(index);
 }
 
-int DuiFastMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
+int DuiMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
     int headerIndex = dFindLowerIndex(headersPositions, y);
@@ -1018,7 +1018,7 @@ int DuiFastMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
     return headerRow + row + column + 1;
 }
 
-DuiWidget *DuiFastMultiColumnListViewPrivate::createItem(int row)
+DuiWidget *DuiMultiColumnListViewPrivate::createItem(int row)
 {
     if (!headersRows.contains(row)) {
         DuiWidget *cell = createCell(row);
@@ -1029,7 +1029,7 @@ DuiWidget *DuiFastMultiColumnListViewPrivate::createItem(int row)
     }
 }
 
-int DuiFastMultiColumnListViewPrivate::groupSize(int headerIndex) const
+int DuiMultiColumnListViewPrivate::groupSize(int headerIndex) const
 {
     int rows = rowsInGroup(headerIndex);
     int groupSize = rows * itemHeight + (rows - 1) * separator->boundingRect().height();
@@ -1037,7 +1037,7 @@ int DuiFastMultiColumnListViewPrivate::groupSize(int headerIndex) const
     return groupSize;
 }
 
-int DuiFastMultiColumnListViewPrivate::totalHeight()
+int DuiMultiColumnListViewPrivate::totalHeight()
 {
     int totalHeight = 0;
     for (int i = 0; i < headersCount(); ++i) {

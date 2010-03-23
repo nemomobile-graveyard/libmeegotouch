@@ -23,7 +23,7 @@
 #include <QtTest/QtTest>
 #include <QAbstractListModel>
 #include <DuiWidget>
-#include "duilistcellcreator.h"
+#include "duiabstractcellcreator.h"
 const int GroupHeaderHeight = 40;
 
 class DummyHeaderWidget : public DuiWidget
@@ -35,21 +35,28 @@ public:
     virtual QRectF boundingRect() const {
         return QRectF(QPointF(0, 0), QSizeF(800, GroupHeaderHeight));
     }
+
+    void setViewType(const QString &viewType) {
+        Q_UNUSED(viewType);
+    }
 };
 
-class DummyHeaderCreator : public DuiListBaseCellCreator<DummyHeaderWidget>
+class DummyHeaderCreator : public DuiAbstractCellCreator<DummyHeaderWidget>
 {
 public:
+    virtual ~DummyHeaderCreator() {
+    }
+
     virtual void updateCell(const QModelIndex &index, DuiWidget *cell) const {
         Q_UNUSED(index);
         Q_UNUSED(cell);
     }
 };
 
-class DuiFastGroupHeaderListViewPrivate;
+class DuiGroupHeaderListViewPrivate;
 class MyIndexedModel;
 
-class Ut_DuiListNewView : public QObject
+class Ut_DuiListViewGroupHeader : public QObject
 {
     Q_OBJECT
 
@@ -112,7 +119,57 @@ private slots:
 private:
     QObject *phoneBook;
     MyIndexedModel *phoneBookModel;
-    DuiFastGroupHeaderListViewPrivate *fastListViewPrivate;
+    DuiGroupHeaderListViewPrivate *listViewPrivate;
 };
 
+class Ut_DuiListViewGroupHeader2 : public QObject
+{
+    Q_OBJECT
+
+private:
+    void makePhoneBook();
+    void makePhoneBookModel();
+
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
+    void init();
+    void cleanup();
+
+    void testPhoneBook();
+    void testLocateVisibleRowAt0();
+    void testLocateVisibleRowAt41();
+    void testLocateVisibleRowAt100();
+
+    void testOutOfBoundFlatRowToIndex();
+
+private:
+    QObject *phoneBook;
+    MyIndexedModel *phoneBookModel;
+    DuiGroupHeaderListViewPrivate *listViewPrivate;
+};
+
+
+class Ut_DuiListViewGroupHeaderEmptyModel : public QObject
+{
+    Q_OBJECT
+
+private:
+    void makePhoneBook();
+    void makePhoneBookModel();
+
+private slots:
+    void initTestCase();
+    void cleanupTestCase();
+    void init();
+    void cleanup();
+
+    void testPhoneBook();
+
+    void testLocateVisibleRowAt0();
+private:
+    QObject *phoneBook;
+    MyIndexedModel *phoneBookModel;
+    DuiGroupHeaderListViewPrivate *listViewPrivate;
+};
 #endif

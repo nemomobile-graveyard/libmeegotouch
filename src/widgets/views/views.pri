@@ -44,7 +44,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbarview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duiseparatorview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duicompleterview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duifastlistview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/duilistview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duicontentitemview.h \
 
 
@@ -58,7 +58,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_VIEWS_SRC_DIR/duicompleterview_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duisliderview_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duispinnerview_p.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duifastlistview_p.h \
+    $$WIDGETS_VIEWS_SRC_DIR/duilistview_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duicontentitemview_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duibuttongrouplayoutpolicy_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbartabview_p.h \
@@ -106,7 +106,7 @@ SOURCES += \
     $$WIDGETS_VIEWS_SRC_DIR/duiseparatorview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duistylablewidgetview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duicompleterview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duifastlistview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duifastlistview_p.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/duilistview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/duilistview_p.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duicontentitemview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duibuttongrouplayoutpolicy_p.cpp \

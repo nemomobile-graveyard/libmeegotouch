@@ -27,21 +27,21 @@
 #include <DuiSeparator>
 #include <DuiPannableViewport>
 
-#include "duifastlistview.h"
-#include "duifastlistview_p.h"
+#include "duilistview.h"
+#include "duilistview_p.h"
 
-//// DuiFastListView /////
-DuiFastListView::DuiFastListView(DuiWidgetController *widgetController) : DuiWidgetView(widgetController), d_ptr(NULL)
+//// DuiListView /////
+DuiListView::DuiListView(DuiWidgetController *widgetController) : DuiWidgetView(widgetController), d_ptr(NULL)
 {
     controller = dynamic_cast<DuiList *>(widgetController);
 }
 
-DuiFastListView::~DuiFastListView()
+DuiListView::~DuiListView()
 {
     delete d_ptr;
 }
 
-void DuiFastListView::init()
+void DuiListView::init()
 {
     Q_ASSERT(controller);
 
@@ -49,14 +49,14 @@ void DuiFastListView::init()
 
     if (model()->columns() > 1) {
         if (model()->showGroups())
-            d_ptr = new DuiFastMultiColumnListViewPrivate;
+            d_ptr = new DuiMultiColumnListViewPrivate;
         else
-            d_ptr = new DuiFastPlainMultiColumnListViewPrivate;
+            d_ptr = new DuiPlainMultiColumnListViewPrivate;
     } else {
         if (model()->showGroups())
-            d_ptr = new DuiFastGroupHeaderListViewPrivate;
+            d_ptr = new DuiGroupHeaderListViewPrivate;
         else
-            d_ptr = new DuiFastPlainListViewPrivate;
+            d_ptr = new DuiPlainListViewPrivate;
     }
 
     if (model()->showGroups())
@@ -71,7 +71,7 @@ void DuiFastListView::init()
     d_ptr->resetModel(model());
 }
 
-void DuiFastListView::updateData(const QList<const char *>& modifications)
+void DuiListView::updateData(const QList<const char *>& modifications)
 {
     DuiWidgetView::updateData(modifications);
 
@@ -93,7 +93,7 @@ void DuiFastListView::updateData(const QList<const char *>& modifications)
     }
 }
 
-void DuiFastListView::connectSelectionModel()
+void DuiListView::connectSelectionModel()
 {
     disconnect(this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
     if (model()->selectionModel()) {
@@ -102,7 +102,7 @@ void DuiFastListView::connectSelectionModel()
     }
 }
 
-void DuiFastListView::setupModel()
+void DuiListView::setupModel()
 {
     DuiWidgetView::setupModel();
 
@@ -110,7 +110,7 @@ void DuiFastListView::setupModel()
     updateGeometry();
 }
 
-void DuiFastListView::applyStyle()
+void DuiListView::applyStyle()
 {
     DuiWidgetView::applyStyle();
 
@@ -120,7 +120,7 @@ void DuiFastListView::applyStyle()
     }
 }
 
-QSizeF DuiFastListView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
+QSizeF DuiListView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     if (!d_ptr)
         return DuiWidgetView::sizeHint(which, constraint);
@@ -128,7 +128,7 @@ QSizeF DuiFastListView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) c
     return QSizeF(-1, d_ptr->totalHeight());
 }
 
-void DuiFastListView::setGeometry(const QRectF &rect)
+void DuiListView::setGeometry(const QRectF &rect)
 {
     if (d_ptr) {
         d_ptr->viewWidth = rect.width();
@@ -140,7 +140,7 @@ void DuiFastListView::setGeometry(const QRectF &rect)
     DuiWidgetView::setGeometry(rect);
 }
 
-void DuiFastListView::relayoutItemsInExposedRect()
+void DuiListView::relayoutItemsInExposedRect()
 {
     if (d_ptr->model && model()->cellCreator()) {
         int rowCount = d_ptr->model->rowCount();
@@ -164,7 +164,7 @@ void DuiFastListView::relayoutItemsInExposedRect()
     }
 }
 
-void DuiFastListView::drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+void DuiListView::drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(painter);
 
@@ -177,11 +177,11 @@ void DuiFastListView::drawForeground(QPainter *painter, const QStyleOptionGraphi
             d_ptr->viewportVisibleHeight = exposedRect.height();
 
         d_ptr->exposedRectChanged(exposedRect);
-        const_cast<DuiFastListView *>(this)->relayoutItemsInExposedRect();
+        const_cast<DuiListView *>(this)->relayoutItemsInExposedRect();
     }
 }
 
-void DuiFastListView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+void DuiListView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
 
@@ -203,7 +203,7 @@ void DuiFastListView::drawBackground(QPainter *painter, const QStyleOptionGraphi
     }
 }
 
-void DuiFastListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+void DuiListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
     if (!model()->firstVisibleItem().isValid() && !model()->lastVisibleItem().isValid())
         return;
@@ -233,7 +233,7 @@ void DuiFastListView::dataChanged(const QModelIndex &topLeft, const QModelIndex 
  *
  * \sa QAbstractItemView::rowsInserted(), exposedRectUpdated()
  */
-void DuiFastListView::rowsInserted(const QModelIndex &parent, int start, int end)
+void DuiListView::rowsInserted(const QModelIndex &parent, int start, int end)
 {
     Q_UNUSED(parent);
     Q_UNUSED(start);
@@ -248,7 +248,7 @@ void DuiFastListView::rowsInserted(const QModelIndex &parent, int start, int end
  *
  * \sa rowsInserted(), exposedRectUpdated()
  */
-void DuiFastListView::rowsRemoved(const QModelIndex &parent, int start, int end)
+void DuiListView::rowsRemoved(const QModelIndex &parent, int start, int end)
 {
     Q_UNUSED(parent);
     Q_UNUSED(start);
@@ -257,7 +257,7 @@ void DuiFastListView::rowsRemoved(const QModelIndex &parent, int start, int end)
     layoutChanged();
 }
 
-void DuiFastListView::layoutChanged()
+void DuiListView::layoutChanged()
 {
     d_ptr->layoutChanged();
 
@@ -265,12 +265,12 @@ void DuiFastListView::layoutChanged()
     d_ptr->clearVisibleItemsArray();
 }
 
-void DuiFastListView::modelReset()
+void DuiListView::modelReset()
 {
     layoutChanged();
 }
 
-void DuiFastListView::rowsMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
+void DuiListView::rowsMoved(const QModelIndex &sourceParent, int sourceStart, int sourceEnd,
                                 const QModelIndex &destinationParent, int destinationRow)
 {
     Q_UNUSED(sourceParent);
@@ -282,12 +282,12 @@ void DuiFastListView::rowsMoved(const QModelIndex &sourceParent, int sourceStart
     layoutChanged();
 }
 
-void DuiFastListView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+void DuiListView::selectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
 {
     d_ptr->selectionChange(selected, deselected);
 }
 
-void DuiFastListView::itemClick()
+void DuiListView::itemClick()
 {
     QObject *s = sender();
     DuiWidget *senderWidget = qobject_cast<DuiWidget *>(s);
@@ -295,13 +295,13 @@ void DuiFastListView::itemClick()
         d_ptr->cellClicked(senderWidget);
 }
 
-void DuiFastListView::scrollTo(const QModelIndex &index, DuiList::ScrollHint hint)
+void DuiListView::scrollTo(const QModelIndex &index, DuiList::ScrollHint hint)
 {
     if (index.isValid()) {
         int cellPosition = d_ptr->locatePosOfItem(index);
 
         DuiPannableViewport *pannableViewport =
-            DuiFastListViewPrivateNamespace::findParentWidgetOfType<DuiPannableViewport>(controller);
+            DuiListViewPrivateNamespace::findParentWidgetOfType<DuiPannableViewport>(controller);
 
         if (pannableViewport) {
             QPointF targetPosition = pannableViewport->position();
@@ -339,4 +339,4 @@ void DuiFastListView::scrollTo(const QModelIndex &index, DuiList::ScrollHint hin
     }
 }
 
-DUI_REGISTER_VIEW_NEW(DuiFastListView, DuiList)
+DUI_REGISTER_VIEW_NEW(DuiListView, DuiList)

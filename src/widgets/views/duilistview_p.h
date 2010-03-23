@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef DUIFASTLISTVIEWPRIVATE_H__
-#define DUIFASTLISTVIEWPRIVATE_H__
+#ifndef DUILISTVIEWPRIVATE_H__
+#define DUILISTVIEWPRIVATE_H__
 
 #include <QObject>
 #include <QHash>
@@ -32,7 +32,7 @@
 #include "private/duiwidgetview_p.h"
 
 class DuiWidget;
-class DuiFastListView;
+class DuiListView;
 class DuiList;
 class DuiListModel;
 class DuiWidgetRecycler;
@@ -40,7 +40,7 @@ class QAbstractItemModel;
 class QItemSelectionModel;
 class QItemSelection;
 
-namespace DuiFastListViewPrivateNamespace
+namespace DuiListViewPrivateNamespace
 {
     template<class T>
     T *findParentWidgetOfType(QGraphicsItem *widget)
@@ -71,13 +71,13 @@ namespace DuiFastListViewPrivateNamespace
     }
 }
 
-class DuiFastListViewPrivate : public QObject
+class DuiListViewPrivate : public QObject
 {
     Q_OBJECT
 
 public:
-    DuiFastListViewPrivate();
-    virtual ~DuiFastListViewPrivate();
+    DuiListViewPrivate();
+    virtual ~DuiListViewPrivate();
 
     void updateItemHeight();
 
@@ -127,7 +127,7 @@ public slots:
     void movingDetectionTimerTimeout();
 
 public:
-    DuiFastListView *q_ptr;
+    DuiListView *q_ptr;
     DuiList *controller;
     DuiListModel *controllerModel;
     QAbstractItemModel *model;
@@ -151,11 +151,11 @@ public:
     QTimer movingDetectorTimer;
 };
 
-class DuiFastPlainListViewPrivate : public DuiFastListViewPrivate
+class DuiPlainListViewPrivate : public DuiListViewPrivate
 {
 public:
-    DuiFastPlainListViewPrivate();
-    virtual ~DuiFastPlainListViewPrivate();
+    DuiPlainListViewPrivate();
+    virtual ~DuiPlainListViewPrivate();
 
 public:
     virtual int totalHeight();
@@ -174,11 +174,11 @@ public:
     virtual DuiWidget *createItem(int row);
 };
 
-class DuiFastPlainMultiColumnListViewPrivate : public DuiFastPlainListViewPrivate
+class DuiPlainMultiColumnListViewPrivate : public DuiPlainListViewPrivate
 {
 public:
-    DuiFastPlainMultiColumnListViewPrivate();
-    virtual ~DuiFastPlainMultiColumnListViewPrivate();
+    DuiPlainMultiColumnListViewPrivate();
+    virtual ~DuiPlainMultiColumnListViewPrivate();
 
 public:
     int itemsToRows(int items) const;
@@ -203,11 +203,11 @@ public:
     DuiWidget *hseparator;
 };
 
-class DuiFastGroupHeaderListViewPrivate : public DuiFastListViewPrivate
+class DuiGroupHeaderListViewPrivate : public DuiListViewPrivate
 {
 public:
-    DuiFastGroupHeaderListViewPrivate();
-    virtual ~DuiFastGroupHeaderListViewPrivate();
+    DuiGroupHeaderListViewPrivate();
+    virtual ~DuiGroupHeaderListViewPrivate();
 
 public:
     DuiWidget *createHeader(int headerIndex);
@@ -246,11 +246,11 @@ public:
     QVector<int> headersRows;
 };
 
-class DuiFastMultiColumnListViewPrivate : public DuiFastGroupHeaderListViewPrivate
+class DuiMultiColumnListViewPrivate : public DuiGroupHeaderListViewPrivate
 {
 public:
-    DuiFastMultiColumnListViewPrivate();
-    virtual ~DuiFastMultiColumnListViewPrivate();
+    DuiMultiColumnListViewPrivate();
+    virtual ~DuiMultiColumnListViewPrivate();
 
 public:
     int itemsToRows(int items) const;

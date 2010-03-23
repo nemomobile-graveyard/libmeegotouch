@@ -53,10 +53,10 @@ public:
     }
 };
 
-class DuiFastGroupHeaderListViewPrivate;
+class DuiMultiColumnListViewPrivate;
 class MyIndexedModel;
 
-class Ut_DuiFastListViewGroupHeader : public QObject
+class Ut_DuiListViewMultiColumn : public QObject
 {
     Q_OBJECT
 
@@ -78,98 +78,54 @@ private slots:
     void testHeaderHeightShouldBeZeroIfHeadersNotVisible();
     void testHeaderHeight();
     void testGroupSize();
+    void testRowsInGroup();
     void testSizeHint();
     void testItemCountIndexedModel();
     void testItemCount();
     void testSeparatorsCount();
 
-    void testFirstFlatRowToIndex();
-    void testSecondFlatRowToIndex();
-    void testLastFlatRowToIndex();
-    void testAfterLastFlatRowToIndex();
+    void testLocateVisibleIndexAt0();
+    void testLocateVisibleIndexAt40();
+    void testLocateVisibleIndexAt142();
+    void testLocateVisibleIndexAt242();
+    void testLocateVisibleIndexAt282();
+    void testLocateVisibleIndexAt384();
+    void testLocateVisibleIndexAt484();
+    void testLocateVisibleIndexAt524();
 
-    void testInvalidIndexToFlatRow();
-    void testFirstIndexWithoutParentToFlatRow();
-    void testIndexWithParentToFlatRow();
-    void testLastIndexWithParentToFlatRow();
-
-    void testLocateVisibleIndexAtZero();
-    void testLocateVisibleIndexAt41();
-    void testLocateVisibleIndexAtMiddleOfHeader();
     void testLocateVisibleRowAt0();
-    void testLocateVisibleRowAt41();
+    void testLocateVisibleRowAt40();
+    void testLocateVisibleRowAt40x151();
+    void testLocateVisibleRowAt142();
+    void testLocateVisibleRowAt242();
+    void testLocateVisibleRowAt282();
     void testLocateVisibleRowAt384();
-    void testLocateVisibleRowAt900();
-    void testLocateVisibleRowAt931();
+    void testLocateVisibleRowAt484();
+    void testLocateVisibleRowAt524();
 
     void testLocatePosOfItemAt0Row();
     void testLocatePosOfItemAt1Row();
     void testLocatePosOfItemAt3Row();
+    void testLocatePosOfItemAt4Row();
+    void testLocatePosOfItemAt5Row();
+    void testLocatePosOfItemAt7Row();
+    void testLocatePosOfItemAt9Row();
     void testLocatePosOfItemAt10Row();
 
     void testLocatePosOfItemAt0Index();
+    void testLocatePosOfItemAt1Index();
     void testLocatePosOfItemAt3Index();
 
-    void testFindLowerIndexInEmptyArray();
-    void testFindLowerIndexIn2ItemsArray();
-    void testFindLowerIndexIn3ItemsArray();
-
-    void testPerformance();
-
-private:
-    QObject *phoneBook;
-    MyIndexedModel *phoneBookModel;
-    DuiFastGroupHeaderListViewPrivate *fastListViewPrivate;
-};
-
-class Ut_DuiFastListViewGroupHeader2 : public QObject
-{
-    Q_OBJECT
-
-private:
-    void makePhoneBook();
-    void makePhoneBookModel();
-
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-    void init();
-    void cleanup();
-
-    void testPhoneBook();
-    void testLocateVisibleRowAt0();
-    void testLocateVisibleRowAt41();
-    void testLocateVisibleRowAt100();
-
-    void testOutOfBoundFlatRowToIndex();
+    void testLocatePosOfItemAt4Index();
+    void testLocatePosOfItemAt5Index();
+    void testLocatePosOfItemAt7Index();
+    void testLocatePosOfItemAt9Index();
+    void testLocatePosOfItemAt10Index();
 
 private:
     QObject *phoneBook;
     MyIndexedModel *phoneBookModel;
-    DuiFastGroupHeaderListViewPrivate *fastListViewPrivate;
+    DuiMultiColumnListViewPrivate *listViewPrivate;
 };
 
-
-class Ut_DuiFastListViewGroupHeaderEmptyModel : public QObject
-{
-    Q_OBJECT
-
-private:
-    void makePhoneBook();
-    void makePhoneBookModel();
-
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-    void init();
-    void cleanup();
-
-    void testPhoneBook();
-
-    void testLocateVisibleRowAt0();
-private:
-    QObject *phoneBook;
-    MyIndexedModel *phoneBookModel;
-    DuiFastGroupHeaderListViewPrivate *fastListViewPrivate;
-};
 #endif

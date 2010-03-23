@@ -26,7 +26,7 @@
 #include "duiabstractcellcreator.h"
 const int GroupHeaderHeight = 40;
 
-class DuiFastPlainListViewPrivate;
+class DuiPlainListViewPrivate;
 
 class Ut_DuiListNewView : public QObject
 {
@@ -43,7 +43,7 @@ private slots:
     void cleanup();
 
 private:
-    DuiFastPlainListViewPrivate *fastListViewPrivate;
+    DuiPlainListViewPrivate *listViewPrivate;
 };
 
 #endif

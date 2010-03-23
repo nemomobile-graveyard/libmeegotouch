@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef DUIFASTLISTVIEW_H__
-#define DUIFASTLISTVIEW_H__
+#ifndef DUILISTVIEW_H__
+#define DUILISTVIEW_H__
 
 #include <DuiWidgetView>
 #include <duilist.h>
@@ -28,16 +28,16 @@
 class DuiController;
 class DuiList;
 class DuiListModel;
-class DuiFastListViewPrivate;
+class DuiListViewPrivate;
 
-class DUI_EXPORT DuiFastListView : public DuiWidgetView
+class DUI_EXPORT DuiListView : public DuiWidgetView
 {
     Q_OBJECT
     DUI_VIEW(DuiListModel, DuiListStyle)
 
 public:
-    DuiFastListView(DuiWidgetController *controller);
-    virtual ~DuiFastListView();
+    DuiListView(DuiWidgetController *controller);
+    virtual ~DuiListView();
 
     virtual void setGeometry(const QRectF &rect);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
@@ -71,9 +71,9 @@ private:
     void scrollTo(const QModelIndex &index, DuiList::ScrollHint hint);
 
 private:
-    DuiFastListViewPrivate *d_ptr;
+    DuiListViewPrivate *d_ptr;
     DuiList *controller;
-    friend class DuiFastListViewPrivate;
+    friend class DuiListViewPrivate;
 };
 
 #endif

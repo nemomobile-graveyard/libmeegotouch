@@ -18,9 +18,9 @@
 ****************************************************************************/
 
 #include <DuiWidget>
-#include "../../src/widgets/views/duifastlistview_p.h"
+#include "../../src/widgets/views/duilistview_p.h"
 #include "duilistmodel.h"
-#include "ut_duifastlistview.h"
+#include "ut_duilistview.h"
 
 void Ut_DuiListNewView::initTestCase()
 {
@@ -43,28 +43,28 @@ void Ut_DuiListNewView::cleanupTestCase()
 
 void Ut_DuiListNewView::init()
 {
-    fastListViewPrivate = new DuiFastGroupHeaderListViewPrivate;
-    fastListViewPrivate->model = phoneBookModel;
-    fastListViewPrivate->separator = new DuiWidget;
-    fastListViewPrivate->separator->setGeometry(0, 0, 300, 2);
-    fastListViewPrivate->itemHeight = 100;
+    listViewPrivate = new DuiGroupHeaderListViewPrivate;
+    listViewPrivate->model = phoneBookModel;
+    listViewPrivate->separator = new DuiWidget;
+    listViewPrivate->separator->setGeometry(0, 0, 300, 2);
+    listViewPrivate->itemHeight = 100;
 
-    fastListViewPrivate->setHeadersCreator(new DummyHeaderCreator);
-    fastListViewPrivate->hdrHeight = GroupHeaderHeight;
+    listViewPrivate->setHeadersCreator(new DummyHeaderCreator);
+    listViewPrivate->hdrHeight = GroupHeaderHeight;
 
     DuiListModel *model = new DuiListModel;
     model->setItemModel(phoneBookModel);
     model->setShowGroups(true);
-    fastListViewPrivate->controllerModel = model;
+    listViewPrivate->controllerModel = model;
 
-    fastListViewPrivate->updateHeadersRows();
-    fastListViewPrivate->updateHeadersPositions();
+    listViewPrivate->updateHeadersRows();
+    listViewPrivate->updateHeadersPositions();
 }
 
 void Ut_DuiListNewView::cleanup()
 {
-    delete fastListViewPrivate;
-    delete fastListViewPrivate->controllerModel;
+    delete listViewPrivate;
+    delete listViewPrivate->controllerModel;
 }
 
 void Ut_DuiListNewView::testPhoneBook()
@@ -78,76 +78,76 @@ void Ut_DuiListNewView::testPhoneBook()
 
 void Ut_DuiListNewView::testUpdateHeadersRows()
 {
-    QCOMPARE(3, fastListViewPrivate->headersRows.size());
-    QCOMPARE(0, fastListViewPrivate->headersRows[0]);
-    QCOMPARE(4, fastListViewPrivate->headersRows[1]);
-    QCOMPARE(9, fastListViewPrivate->headersRows[2]);
+    QCOMPARE(3, listViewPrivate->headersRows.size());
+    QCOMPARE(0, listViewPrivate->headersRows[0]);
+    QCOMPARE(4, listViewPrivate->headersRows[1]);
+    QCOMPARE(9, listViewPrivate->headersRows[2]);
 }
 
 void Ut_DuiListNewView::testUpdateHeadersPositions()
 {
-    QCOMPARE(fastListViewPrivate->headersPositions.size(), 3);
-    QCOMPARE(fastListViewPrivate->headersPositions[0], 0);
-    QCOMPARE(fastListViewPrivate->headersPositions[1], 344);
-    QCOMPARE(fastListViewPrivate->headersPositions[2], 790);
+    QCOMPARE(listViewPrivate->headersPositions.size(), 3);
+    QCOMPARE(listViewPrivate->headersPositions[0], 0);
+    QCOMPARE(listViewPrivate->headersPositions[1], 344);
+    QCOMPARE(listViewPrivate->headersPositions[2], 790);
 }
 
 void Ut_DuiListNewView::testHeaderHeightShouldBeZeroIfNoHeadersCreatorSpecified()
 {
-    fastListViewPrivate->setHeadersCreator(NULL);
-    QCOMPARE(0, fastListViewPrivate->headerHeight());
+    listViewPrivate->setHeadersCreator(NULL);
+    QCOMPARE(0, listViewPrivate->headerHeight());
 }
 
 void Ut_DuiListNewView::testHeaderHeightShouldBeZeroIfHeadersNotVisible()
 {
-    fastListViewPrivate->controllerModel->setShowGroups(false);
-    QCOMPARE(fastListViewPrivate->headerHeight(), 0);
+    listViewPrivate->controllerModel->setShowGroups(false);
+    QCOMPARE(listViewPrivate->headerHeight(), 0);
 }
 
 void Ut_DuiListNewView::testHeaderHeight()
 {
-    QCOMPARE(fastListViewPrivate->headerHeight(), GroupHeaderHeight);
+    QCOMPARE(listViewPrivate->headerHeight(), GroupHeaderHeight);
 }
 
 void Ut_DuiListNewView::testGroupSize()
 {
-    QCOMPARE(fastListViewPrivate->groupSize(0), 304);
-    QCOMPARE(fastListViewPrivate->groupSize(1), 406);
-    QCOMPARE(fastListViewPrivate->groupSize(2), 100);
+    QCOMPARE(listViewPrivate->groupSize(0), 304);
+    QCOMPARE(listViewPrivate->groupSize(1), 406);
+    QCOMPARE(listViewPrivate->groupSize(2), 100);
 }
 
 void Ut_DuiListNewView::testSizeHint()
 {
-    QCOMPARE(fastListViewPrivate->totalHeight(), 930);
+    QCOMPARE(listViewPrivate->totalHeight(), 930);
 }
 
 void Ut_DuiListNewView::testItemCountIndexedModel()
 {
-    QCOMPARE(fastListViewPrivate->itemsCount(), 8);
+    QCOMPARE(listViewPrivate->itemsCount(), 8);
 }
 
 void Ut_DuiListNewView::testItemCount()
 {
-    QCOMPARE(fastListViewPrivate->itemsCount(0), 3);
-    QCOMPARE(fastListViewPrivate->itemsCount(1), 4);
-    QCOMPARE(fastListViewPrivate->itemsCount(2), 1);
+    QCOMPARE(listViewPrivate->itemsCount(0), 3);
+    QCOMPARE(listViewPrivate->itemsCount(1), 4);
+    QCOMPARE(listViewPrivate->itemsCount(2), 1);
 }
 
 void Ut_DuiListNewView::testSeparatorsCount()
 {
-    QCOMPARE(fastListViewPrivate->separatorsCount(), 5);
+    QCOMPARE(listViewPrivate->separatorsCount(), 5);
 }
 
 void Ut_DuiListNewView::testFirstFlatRowToIndex()
 {
-    QModelIndex index(fastListViewPrivate->flatRowToIndex(0));
+    QModelIndex index(listViewPrivate->flatRowToIndex(0));
     QCOMPARE(index.row(), 0);
     QCOMPARE(index.parent(), QModelIndex());
 }
 
 void Ut_DuiListNewView::testSecondFlatRowToIndex()
 {
-    QModelIndex index(fastListViewPrivate->flatRowToIndex(1));
+    QModelIndex index(listViewPrivate->flatRowToIndex(1));
     QCOMPARE(index.row(), 0);
     QVERIFY(index.parent().isValid());
     QCOMPARE(index.parent().row(), 0);
@@ -155,7 +155,7 @@ void Ut_DuiListNewView::testSecondFlatRowToIndex()
 
 void Ut_DuiListNewView::testLastFlatRowToIndex()
 {
-    QModelIndex index(fastListViewPrivate->flatRowToIndex(10));
+    QModelIndex index(listViewPrivate->flatRowToIndex(10));
     QCOMPARE(index.row(), 0);
     QVERIFY(index.parent().isValid());
     QCOMPARE(index.parent().row(), 2);
@@ -163,7 +163,7 @@ void Ut_DuiListNewView::testLastFlatRowToIndex()
 
 void Ut_DuiListNewView::testAfterLastFlatRowToIndex()
 {
-    QModelIndex index(fastListViewPrivate->flatRowToIndex(11));
+    QModelIndex index(listViewPrivate->flatRowToIndex(11));
     QVERIFY(index.isValid());
     QCOMPARE(index.row(), 0);
     QVERIFY(index.parent().isValid());
@@ -173,30 +173,30 @@ void Ut_DuiListNewView::testAfterLastFlatRowToIndex()
 void Ut_DuiListNewView::testInvalidIndexToFlatRow()
 {
     QModelIndex index;
-    QCOMPARE(fastListViewPrivate->indexToFlatRow(index), -1);
+    QCOMPARE(listViewPrivate->indexToFlatRow(index), -1);
 }
 
 void Ut_DuiListNewView::testFirstIndexWithoutParentToFlatRow()
 {
-    QModelIndex index = fastListViewPrivate->model->index(1, 0);
-    QCOMPARE(fastListViewPrivate->indexToFlatRow(index), 4);
+    QModelIndex index = listViewPrivate->model->index(1, 0);
+    QCOMPARE(listViewPrivate->indexToFlatRow(index), 4);
 }
 
 void Ut_DuiListNewView::testIndexWithParentToFlatRow()
 {
-    QModelIndex index = fastListViewPrivate->model->index(1, 0, fastListViewPrivate->model->index(1, 0));
-    QCOMPARE(fastListViewPrivate->indexToFlatRow(index), 6);
+    QModelIndex index = listViewPrivate->model->index(1, 0, listViewPrivate->model->index(1, 0));
+    QCOMPARE(listViewPrivate->indexToFlatRow(index), 6);
 }
 
 void Ut_DuiListNewView::testLastIndexWithParentToFlatRow()
 {
-    QModelIndex index = fastListViewPrivate->model->index(0, 0, fastListViewPrivate->model->index(2, 0));
-    QCOMPARE(fastListViewPrivate->indexToFlatRow(index), 10);
+    QModelIndex index = listViewPrivate->model->index(0, 0, listViewPrivate->model->index(2, 0));
+    QCOMPARE(listViewPrivate->indexToFlatRow(index), 10);
 }
 
 void Ut_DuiListNewView::testLocateVisibleIndexAtZero()
 {
-    QModelIndex index(fastListViewPrivate->locateVisibleIndexAt(0));
+    QModelIndex index(listViewPrivate->locateVisibleIndexAt(0));
     QVERIFY(index.isValid());
     QCOMPARE(index.row(), 0);
     QVERIFY(!index.parent().isValid());
@@ -204,7 +204,7 @@ void Ut_DuiListNewView::testLocateVisibleIndexAtZero()
 
 void Ut_DuiListNewView::testLocateVisibleIndexAt41()
 {
-    QModelIndex index(fastListViewPrivate->locateVisibleIndexAt(41));
+    QModelIndex index(listViewPrivate->locateVisibleIndexAt(41));
     QVERIFY(index.isValid());
     QCOMPARE(index.row(), 0);
     QVERIFY(index.parent().isValid());
@@ -213,7 +213,7 @@ void Ut_DuiListNewView::testLocateVisibleIndexAt41()
 
 void Ut_DuiListNewView::testLocateVisibleIndexAtMiddleOfHeader()
 {
-    QModelIndex index(fastListViewPrivate->locateVisibleIndexAt(345));
+    QModelIndex index(listViewPrivate->locateVisibleIndexAt(345));
     QVERIFY(index.isValid());
     QCOMPARE(index.row(), 1);
     QVERIFY(!index.parent().isValid());
@@ -221,61 +221,61 @@ void Ut_DuiListNewView::testLocateVisibleIndexAtMiddleOfHeader()
 
 void Ut_DuiListNewView::testLocateVisibleRowAt0()
 {
-    QCOMPARE(fastListViewPrivate->locateVisibleRowAt(0), 0);
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(0), 0);
 }
 
 void Ut_DuiListNewView::testLocateVisibleRowAt41()
 {
-    QCOMPARE(fastListViewPrivate->locateVisibleRowAt(41), 1);
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(41), 1);
 }
 
 void Ut_DuiListNewView::testLocateVisibleRowAt384()
 {
-    QCOMPARE(fastListViewPrivate->locateVisibleRowAt(385), 5);
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(385), 5);
 }
 
 void Ut_DuiListNewView::testLocateVisibleRowAt900()
 {
     // last item
-    QCOMPARE(fastListViewPrivate->locateVisibleRowAt(900), 11);
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(900), 11);
 }
 
 void Ut_DuiListNewView::testLocateVisibleRowAt931()
 {
     // last item
-    QCOMPARE(fastListViewPrivate->locateVisibleRowAt(931), 11);
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(931), 11);
 }
 
 void Ut_DuiListNewView::testLocatePosOfItemAt0Row()
 {
-    QCOMPARE(fastListViewPrivate->locatePosOfItem(0), 0);
+    QCOMPARE(listViewPrivate->locatePosOfItem(0), 0);
 }
 
 void Ut_DuiListNewView::testLocatePosOfItemAt1Row()
 {
-    QCOMPARE(fastListViewPrivate->locatePosOfItem(1), 40);
+    QCOMPARE(listViewPrivate->locatePosOfItem(1), 40);
 }
 
 void Ut_DuiListNewView::testLocatePosOfItemAt3Row()
 {
-    QCOMPARE(fastListViewPrivate->locatePosOfItem(3), 244);
+    QCOMPARE(listViewPrivate->locatePosOfItem(3), 244);
 }
 
 void Ut_DuiListNewView::testLocatePosOfItemAt0Index()
 {
     QModelIndex index(phoneBookModel->index(0, 0));
-    QCOMPARE(fastListViewPrivate->locatePosOfItem(index), 0);
+    QCOMPARE(listViewPrivate->locatePosOfItem(index), 0);
 }
 
 void Ut_DuiListNewView::testLocatePosOfItemAt3Index()
 {
     QModelIndex index(phoneBookModel->index(2, 0, phoneBookModel->index(0, 0)));
-    QCOMPARE(fastListViewPrivate->locatePosOfItem(index), 244);
+    QCOMPARE(listViewPrivate->locatePosOfItem(index), 244);
 }
 
 void Ut_DuiListNewView::testLocatePosOfItemAt10Row()
 {
-    QCOMPARE(fastListViewPrivate->locatePosOfItem(10), 830);
+    QCOMPARE(listViewPrivate->locatePosOfItem(10), 830);
 }
 
 void Ut_DuiListNewView::testFindLowerIndexInEmptyArray()
@@ -309,25 +309,25 @@ void Ut_DuiListNewView::testFindLowerIndexIn3ItemsArray()
 void Ut_DuiListNewView::testPerformance()
 {
     QSKIP("currently doesn't work", SkipSingle);
-    fastListViewPrivate->viewportTopLeft = QPoint(0, 0);
-    fastListViewPrivate->viewportVisibleHeight = 800;
+    listViewPrivate->viewportTopLeft = QPoint(0, 0);
+    listViewPrivate->viewportVisibleHeight = 800;
     for (int i = 0; i < 10; i++) {
         if (i % 1 == 0)
-            fastListViewPrivate->viewportTopLeft = QPoint(0, 0);
+            listViewPrivate->viewportTopLeft = QPoint(0, 0);
         else
-            fastListViewPrivate->viewportTopLeft = QPoint(0, 800);
+            listViewPrivate->viewportTopLeft = QPoint(0, 800);
 
-        QModelIndex firstVisibleRow = fastListViewPrivate->locateVisibleIndexAt(fastListViewPrivate->viewportTopLeft.y());
-        fastListViewPrivate->updateFirstVisibleRow(firstVisibleRow);
-        QModelIndex lastVisibleRow = fastListViewPrivate->locateVisibleIndexAt(fastListViewPrivate->viewportTopLeft.y() + fastListViewPrivate->viewportVisibleHeight);
-        fastListViewPrivate->updateLastVisibleRow(lastVisibleRow);
+        QModelIndex firstVisibleRow = listViewPrivate->locateVisibleIndexAt(listViewPrivate->viewportTopLeft.y());
+        listViewPrivate->updateFirstVisibleRow(firstVisibleRow);
+        QModelIndex lastVisibleRow = listViewPrivate->locateVisibleIndexAt(listViewPrivate->viewportTopLeft.y() + listViewPrivate->viewportVisibleHeight);
+        listViewPrivate->updateLastVisibleRow(lastVisibleRow);
 
-        QPoint firstVisibleItemPos(0, fastListViewPrivate->locatePosOfItem(firstVisibleRow));
-        QPoint lastVisibleItemPos(0, fastListViewPrivate->locatePosOfItem(lastVisibleRow));
-        fastListViewPrivate->removeInvisibleItems(firstVisibleItemPos, lastVisibleItemPos);
+        QPoint firstVisibleItemPos(0, listViewPrivate->locatePosOfItem(firstVisibleRow));
+        QPoint lastVisibleItemPos(0, listViewPrivate->locatePosOfItem(lastVisibleRow));
+        listViewPrivate->removeInvisibleItems(firstVisibleItemPos, lastVisibleItemPos);
 
-        if (fastListViewPrivate->model->rowCount() > 0)
-            fastListViewPrivate->createVisibleItems(firstVisibleRow, lastVisibleRow);
+        if (listViewPrivate->model->rowCount() > 0)
+            listViewPrivate->createVisibleItems(firstVisibleRow, lastVisibleRow);
     }
 }
 
