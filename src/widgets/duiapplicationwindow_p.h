@@ -61,6 +61,7 @@ public:
     bool showingStatusBar;
     QTimer autoHideComponentsTimer;
     QList<DuiSceneWindow *> componentsOnAutoHide;
+    bool isMenuOpen;
 
     void manageActions();
     void distributeAction(QAction *action, QAction *before);

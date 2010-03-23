@@ -101,6 +101,11 @@ public:
      */
     DuiTheme::ViewType toolbarViewType() const;
 
+    /*!
+     * Returns true if the menu is opened otherwise false.
+     */
+    bool isMenuOpen() const;
+
 Q_SIGNALS:
     /*!
      This signal is emitted after \page has become shown.

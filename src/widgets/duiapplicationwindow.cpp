@@ -64,6 +64,7 @@ DuiApplicationWindowPrivate::DuiApplicationWindowPrivate()
     , menu(new DuiApplicationMenu)
     , statusBar(new DuiStatusBar)
     , showingStatusBar(false)
+    , isMenuOpen(false)
 {
 }
 
@@ -315,6 +316,7 @@ void DuiApplicationWindowPrivate::_q_menuAppeared()
                         q, SLOT(openMenu()));
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(closeMenu()));
+    isMenuOpen = true;
 }
 
 void DuiApplicationWindowPrivate::_q_menuDisappeared()
@@ -324,6 +326,7 @@ void DuiApplicationWindowPrivate::_q_menuDisappeared()
                         q, SLOT(closeMenu()));
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(openMenu()));
+    isMenuOpen = false;
 }
 
 #ifdef HAVE_N900
@@ -838,6 +841,12 @@ DuiTheme::ViewType DuiApplicationWindow::toolbarViewType() const
 {
     Q_D(const DuiApplicationWindow);
     return d->toolBar->viewType();
+}
+
+bool DuiApplicationWindow::isMenuOpen() const
+{
+    Q_D(const DuiApplicationWindow);
+    return d->isMenuOpen;
 }
 
 void DuiApplicationWindow::mousePressEvent(QMouseEvent *event)
