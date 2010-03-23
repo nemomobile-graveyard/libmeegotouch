@@ -200,42 +200,6 @@ DuiApplicationWindow *DuiApplicationPage::applicationWindow()
     return applicationWindow;
 }
 
-// TODO: Remove that now useless method override after API freeze period
-void DuiApplicationPage::appear(DuiSceneWindow::DeletionPolicy policy)
-{
-    DuiSceneWindow::appear(policy);
-}
-
-// TODO: Remove that now useless method after API freeze period
-void DuiApplicationPage::appear(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    DuiSceneWindow::appear(window, policy);
-}
-
-// TODO: Remove that now useless method override after API freeze period
-void DuiApplicationPage::appearNow(DuiSceneWindow::DeletionPolicy policy)
-{
-    DuiSceneWindow::appearNow(policy);
-}
-
-// TODO: Remove that now useless method after API freeze period
-void DuiApplicationPage::appearNow(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    DuiSceneWindow::appearNow(window, policy);
-}
-
-// TODO: Remove that now useless method override after API freeze period
-void DuiApplicationPage::disappear()
-{
-    DuiSceneWindow::disappear();
-}
-
-// TODO: Remove that now useless method override after API freeze period
-void DuiApplicationPage::disappearNow()
-{
-    DuiSceneWindow::disappearNow();
-}
-
 const QString DuiApplicationPage::title() const
 {
     return model()->title();

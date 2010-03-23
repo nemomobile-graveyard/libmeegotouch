@@ -246,50 +246,6 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     /*!
-     * \brief Makes page visible on the current window. Associated animation will be used to show page.
-     *
-     * Existing page will disappear.
-     */
-    // TODO: Remove that now useless method override after API freeze period
-    void appear(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * \brief Makes page visible immediately, skipping animation.
-     *
-     * Existing page will disappear.
-     */
-    // TODO: Remove that now useless method override after API freeze period
-    void appearNow(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * \brief Makes page visible on the application window specified by \a window.
-     *
-     * Uses associated animation will be used to show page. Existing page will disappear.
-     */
-    // TODO: Remove that now useless method after API freeze period
-    void appear(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * \brief Makes page visible immediately on the application window specified by \a window, skipping animation.
-     *
-     * Existing page will disappear.
-     */
-    // TODO: Remove that now useless method after API freeze period
-    void appearNow(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * \brief Makes page invisible with associated animation.
-     */
-    // TODO: Remove that now useless method override after API freeze period
-    void disappear();
-
-    /*!
-     * \brief Makes page invisible immediately.
-     */
-    // TODO: Remove that now useless method override after API freeze period
-    void disappearNow();
-
-    /*!
         \brief Whether extra margins will be automatically added around the central
                widget to avoid occlusion by other components.
 
