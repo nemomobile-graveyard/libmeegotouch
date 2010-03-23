@@ -1201,7 +1201,7 @@ QString DuiLocale::formatDateTime(const QDateTime &dateTime, DateType dateType,
     Q_UNUSED(timeType);
     Q_UNUSED(calendarType);
     Q_D(const DuiLocale);
-    return d->createQLocale(DuiLcMonetary).toString(dateTime);
+    return d->createQLocale(DuiLcTime).toString(dateTime);
 #endif
 }
 
