@@ -630,11 +630,6 @@ bool DuiWindow::event(QEvent *event)
 #endif
     }
 
-    if (event->type() == QEvent::WindowDeactivate) {
-        DuiOnDisplayChangeEvent ev(false, sceneRect());
-        onDisplayChangeEvent(&ev);
-    }
-
     if (QEvent::KeyPress == event->type()) {
         bool updateNeeded = false;
 
