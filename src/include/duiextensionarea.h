@@ -17,26 +17,4 @@
 **
 ****************************************************************************/
 
-#ifndef DUIMASHUPCANVASMODEL_H_
-#define DUIMASHUPCANVASMODEL_H_
-
-#include "duiextensionareamodel.h"
-#include <QStringList>
-
-class DuiWidget;
-class DuiDataStore;
-
-/*!
- * DuiMashupCanvasModel is the model class for DuiMashupCanvas.
- */
-class DUI_EXPORT DuiMashupCanvasModel : public DuiExtensionAreaModel
-{
-    Q_OBJECT
-    DUI_MODEL_INTERNAL(DuiMashupCanvasModel)
-
-public:
-    //! A list of names of the applet categories to show in this mashup canvas
-    DUI_MODEL_PROPERTY(QStringList, categories, Categories, true, QStringList())
-};
-
-#endif /* DUIMASHUPCANVASMODEL_H_ */
+#include "../applicationextension/duiextensionarea.h"

@@ -146,18 +146,6 @@ void DuiMashupCanvasViewPrivate::connectContainerToWidget(DuiContainer *containe
         QObject::connect(widget, SIGNAL(appletTextChanged(QString)), container, SLOT(setText(QString)));
     }
 
-    // connect deprecated signals from widget to the container
-    // TODO remove these after deprecation
-    if (mob->indexOfSignal("setAppletIcon(QString)") != -1) {
-        QObject::connect(widget, SIGNAL(setAppletIcon(QString)), container, SLOT(setIconID(QString)));
-    }
-    if (mob->indexOfSignal("setAppletTitle(QString)") != -1) {
-        QObject::connect(widget, SIGNAL(setAppletTitle(QString)), container, SLOT(setTitle(QString)));
-    }
-    if (mob->indexOfSignal("setAppletText(QString)") != -1) {
-        QObject::connect(widget, SIGNAL(setAppletText(QString)), container, SLOT(setText(QString)));
-    }
-
     DuiExtensionAreaViewPrivate::connectContainerToWidget(container, widget);
 }
 

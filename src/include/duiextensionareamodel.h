@@ -17,10 +17,4 @@
 **
 ****************************************************************************/
 
-#include "duimashupcanvasmodel.h"
-#include "gen_duimashupcanvasmodeldata.h"
-
-void DuiMashupCanvasModel::dataStoresModified()
-{
-    memberModified(DataStores);
-}
+#include "../applicationextension/duiextensionareamodel.h"

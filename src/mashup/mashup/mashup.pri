@@ -60,7 +60,6 @@ SOURCES += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiaggregatedataaccess.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duifiledatastore.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvas.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasmodel.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasview.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duisubdatastore.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiappletloader.cpp \

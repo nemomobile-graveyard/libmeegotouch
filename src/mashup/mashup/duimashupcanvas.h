@@ -20,7 +20,7 @@
 #ifndef DUIMASHUPCANVAS_H
 #define DUIMASHUPCANVAS_H
 
-#include <DuiWidgetController>
+#include "duiextensionarea.h"
 #include "duimashupcanvasmodel.h"
 
 class DuiDataStore;
@@ -87,7 +87,7 @@ class DuiMashupCanvasPrivate;
  *
  * \see \ref appletdevelopment
  */
-class DUI_EXPORT DuiMashupCanvas : public DuiWidgetController
+class DUI_EXPORT DuiMashupCanvas : public DuiExtensionArea
 {
     Q_OBJECT
     DUI_CONTROLLER(DuiMashupCanvas)
@@ -148,33 +148,6 @@ protected:
      * hierarchy.
      */
     DuiMashupCanvas(DuiMashupCanvasPrivate *dd, DuiMashupCanvasModel *model, QGraphicsItem *parent, const QString &identifier);
-
-protected Q_SLOTS:
-    /*!
-     * addWidget is invoked whenever a new applet is instantiated in the AppletInstanceManager
-     * associated with this DuiMashupCanvas. The DuiWidget that is passed in the argument is
-     * the graphical presentation of the instantiated applet. DuiMashupCanvas inserts the
-     * widget to the layout using the given layout data. The ownership of the widget remains
-     * on the AppletInstanceManager object that called this slot.
-     * This slot can be overridden in specialised mashup canvases to provide tailored functionality.
-     * \param widget Widget to be added onto the DuiMashupCanvas.
-     * \param store This DuiDataStore object can be used to store permanent mashup canvas data related
-     * to this particular applet instance. When the same applet instance is reinstantiated, this
-     * API will be called with the data that was stored to the permanent storage the last time around.
-     * This can be used to store for instance layout data of an applet instance or any other mashup
-     * canvas specific data.
-     */
-    virtual void addWidget(DuiWidget *widget, DuiDataStore &store);
-
-    /*!
-     * removeWidget is invoked whenever an existing applet instance is removed from the system.
-     * DuiMashupCanvas will remove the associated presentation from the canvas, but should not
-     * remove the DuiWidget object, since the ownership is maintained on whoever called the addWidget
-     * on the associated DuiWidget.
-     *
-     * \param widget The widget to be removed from the system.
-     */
-    virtual void removeWidget(DuiWidget *widget);
 
 private:
     Q_DECLARE_PRIVATE(DuiMashupCanvas)

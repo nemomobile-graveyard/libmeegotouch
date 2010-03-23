@@ -151,14 +151,4 @@ DuiMashupCanvas::DuiMashupCanvas(DuiMashupCanvasPrivate *dd, DuiMashupCanvasMode
     gDuiMashupCanvasStub->DuiMashupCanvasConstructor(dd, model, parent, identifier);
 }
 
-void DuiMashupCanvas::addWidget(DuiWidget *widget, DuiDataStore &store)
-{
-    gDuiMashupCanvasStub->addWidget(widget, store);
-}
-
-void DuiMashupCanvas::removeWidget(DuiWidget *widget)
-{
-    gDuiMashupCanvasStub->removeWidget(widget);
-}
-
 #endif
