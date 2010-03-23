@@ -397,7 +397,7 @@ public:
      *
      * \sa setCentralWidget()
      */
-    DuiWidget *centralWidget();
+    QGraphicsWidget *centralWidget();
 
     /**
      * \brief Sets the given widget to be the page's central widget.
@@ -408,7 +408,7 @@ public:
      * \b NOTE: DuiDialog takes ownership of the widget pointer and deletes it when needed.
      * \param  centralWidget the central widget.
      */
-    void setCentralWidget(DuiWidget *centralWidget);
+    void setCentralWidget(QGraphicsWidget *centralWidget);
 
 public Q_SLOTS:
     /*!

@@ -72,8 +72,8 @@ private slots:
 
 private:
     bool widgetInLayout(DuiWidget *widget);
-    void addWidgetToApplicationExtensionArea(DuiWidget *widget, DuiDataStore *dataStore);
-    void removeWidgetFromApplicationExtensionArea(DuiWidget *widget);
+    void addWidgetToApplicationExtensionArea(QGraphicsWidget *widget, DuiDataStore *dataStore);
+    void removeWidgetFromApplicationExtensionArea(QGraphicsWidget *widget);
 
     // Widget creation helpers
     QList<DuiWidget *> *createWidgets(int numberOfWidgets, bool containerMode = true);

@@ -45,7 +45,7 @@ public:
     virtual QString timedemoTitle();
 
     virtual void createContent();
-    DuiGridLayoutPolicy *createAndSetupGridPolicy(DuiWidget *panel);
+    DuiGridLayoutPolicy *createAndSetupGridPolicy(QGraphicsWidget *panel);
 
 public slots:
     //! switch Autocapitalisation on/off in every DuiTextEdit

@@ -54,6 +54,8 @@
 
 - DuiWindow::isOnDisplay() and DuiWidget::isOnDisplay() are no longer virtual. Those
   methods shouldn't be overridden.
+- DuiApplicationPage, DuiContainer, DuiContainerModel, DuiDialog, DuiDialogModel: centralWidget property type changed to QGraphicsWidget.
+- DuiExtensionAreaModel: DataStoreMap type changed to QMap<QGraphicsWidget *, DuiDataStore *>.
 
 \section v0190
 

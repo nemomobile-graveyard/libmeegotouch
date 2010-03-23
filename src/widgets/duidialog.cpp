@@ -354,12 +354,12 @@ void DuiDialog::setTitle(const QString &title)
     model()->setTitle(title);
 }
 
-DuiWidget *DuiDialog::centralWidget()
+QGraphicsWidget *DuiDialog::centralWidget()
 {
     return model()->centralWidget();
 }
 
-void DuiDialog::setCentralWidget(DuiWidget *centralWidget)
+void DuiDialog::setCentralWidget(QGraphicsWidget *centralWidget)
 {
     if (model()->centralWidget())
         delete model()->centralWidget();

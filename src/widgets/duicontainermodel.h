@@ -21,9 +21,8 @@
 #define DUICONTAINERMODEL_H
 
 #include <duiwidgetmodel.h>
-#include <duiwidget.h>
 
-class DuiWidget;
+class QGraphicsWidget;
 
 /*!
  * \class DuiContainerModel
@@ -43,7 +42,7 @@ private:
     DUI_MODEL_PROPERTY(QString, icon, Icon, true, QString())
     DUI_MODEL_PROPERTY(bool, headerVisible, HeaderVisible, true, true)
     DUI_MODEL_PROPERTY(bool, progressIndicatorVisible, ProgressIndicatorVisible, true, false)
-    DUI_MODEL_PTR_PROPERTY(DuiWidget *, centralWidget, CentralWidget, true, NULL)
+    DUI_MODEL_PTR_PROPERTY(QGraphicsWidget *, centralWidget, CentralWidget, true, NULL)
 };
 
 #endif

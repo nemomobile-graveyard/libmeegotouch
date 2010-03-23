@@ -72,7 +72,7 @@ QString LanguagePage::timedemoTitle()
 void LanguagePage::createContent()
 {
     DuiApplicationPage::createContent();
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     DuiLayout *layout = new DuiLayout(panel);
     DuiGridLayoutPolicy *policy = new DuiGridLayoutPolicy(layout);
     comboBoxLanguage = new DuiComboBox;

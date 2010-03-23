@@ -153,7 +153,7 @@ void ListPage::createContent()
     addPage(new VideoContainerPage);
 #endif
 
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
 
     DuiLayout *layout = new DuiLayout(panel);
     panel->setLayout(layout);

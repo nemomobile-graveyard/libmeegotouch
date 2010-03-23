@@ -92,7 +92,7 @@ class DUI_EXPORT DuiContainer : public DuiWidgetController
     DUI_CONTROLLER(DuiContainer)
 
     //! \brief Current widget in the container
-    Q_PROPERTY(DuiWidget *centralWidget READ centralWidget WRITE setCentralWidget)
+    Q_PROPERTY(QGraphicsWidget *centralWidget READ centralWidget WRITE setCentralWidget)
 
     //! \brief Title of the container
     Q_PROPERTY(QString title READ title WRITE setTitle)
@@ -129,12 +129,12 @@ public:
     /*!
      * \brief Returns the widget which is the 'container area'.
      */
-    DuiWidget *centralWidget();
+    QGraphicsWidget *centralWidget();
 
     /*!
      * \brief Sets the central widget for container.
      */
-    void setCentralWidget(DuiWidget *centralWidget, bool destroy = true);
+    void setCentralWidget(QGraphicsWidget *centralWidget, bool destroy = true);
 
     /*!
      * \brief Returns the title of the container.

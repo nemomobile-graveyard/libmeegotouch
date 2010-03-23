@@ -65,15 +65,15 @@ DuiContainer::~DuiContainer()
 {
 }
 
-DuiWidget *DuiContainer::centralWidget()
+QGraphicsWidget *DuiContainer::centralWidget()
 {
     return model()->centralWidget();
 }
 
-void DuiContainer::setCentralWidget(DuiWidget *centralWidget, bool destroy)
+void DuiContainer::setCentralWidget(QGraphicsWidget *centralWidget, bool destroy)
 {
     if (centralWidget != NULL) {
-        const DuiWidget *oldCentralWidget = model()->centralWidget();
+        const QGraphicsWidget *oldCentralWidget = model()->centralWidget();
 
         // Set the new central widget
         model()->setCentralWidget(centralWidget);

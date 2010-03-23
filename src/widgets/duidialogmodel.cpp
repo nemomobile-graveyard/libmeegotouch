@@ -196,10 +196,10 @@ DuiButtonModel *DuiDialogModelPrivate::createStandardButton(Dui::StandardButton 
     return button;
 }
 
-DuiWidget *DuiDialogModel::centralWidget()
+QGraphicsWidget *DuiDialogModel::centralWidget()
 {
     const DuiDialogModel *constThis = this;
-    return const_cast<DuiWidget *>(constThis->centralWidget());
+    return const_cast<QGraphicsWidget *>(constThis->centralWidget());
 }
 
 void DuiDialogModel::addButton(DuiButtonModel *button)

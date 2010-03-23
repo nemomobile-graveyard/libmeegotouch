@@ -44,7 +44,7 @@ ApplicationExtensionPage::ApplicationExtensionPage(const QString &interface) :
 
 void ApplicationExtensionPage::createContent()
 {
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     QGraphicsLinearLayout *vbox = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(vbox);
 

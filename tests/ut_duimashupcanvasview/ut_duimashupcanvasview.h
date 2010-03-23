@@ -78,7 +78,7 @@ private slots:
 
 private:
     bool widgetInLayout(DuiWidget *widget);
-    void addWidgetToMashupCanvas(DuiWidget *widget, DuiDataStore *dataStore);
+    void addWidgetToMashupCanvas(QGraphicsWidget *widget, DuiDataStore *dataStore);
     void removeWidgetFromMashupCanvas(DuiWidget *widget);
     DuiContainer *container(QGraphicsWidget *widget);
     bool isWidgetInContainer(QGraphicsWidget *widget);

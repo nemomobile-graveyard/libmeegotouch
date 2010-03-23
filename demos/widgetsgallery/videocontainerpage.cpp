@@ -183,7 +183,7 @@ QString ItemDetailPage::timedemoTitle()
 
 void ItemDetailPage::createContent()
 {
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     layout = new DuiLayout(panel);
 
     policy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
