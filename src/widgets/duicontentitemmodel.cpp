@@ -30,3 +30,13 @@ void DuiContentItemModel::setOptionalImage(const QPixmap& pixmap)
     _optionalImage() = pixmap;
     memberModified(OptionalImage);
 }
+
+const QPixmap &DuiContentItemModel::optionalImage() const
+{
+    return _optionalImage();
+}
+
+const QPixmap &DuiContentItemModel::itemImage() const
+{
+    return _itemImage();
+}
