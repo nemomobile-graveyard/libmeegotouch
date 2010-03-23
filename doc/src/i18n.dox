@@ -147,11 +147,6 @@ and \c en_US  formats the American English way (12,345,670.89).
 “LcMonetary” selects how currency amounts are formatted. If it is left
 empty the value of “Language” is used.
 
-Instead of exposing the above “Lc*” values to the user, an application
-can of course maintain its own, possibly more user-friendly gconf keys
-like for example “Region” or “NumberMode” and set the above “Lc*” keys
-appropriately to achieve the desired effect.
-
 \subsection  localesysteminitialisation  Initialisation
 
 A DirectUI application is normally using the system default DuiLocale object;
