@@ -62,6 +62,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_VIEWS_SRC_DIR/duicontentitemview_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duibuttongrouplayoutpolicy_p.h \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbartabview_p.h \
+    $$WIDGETS_VIEWS_SRC_DIR/duipannablewidgetview_p.h \
 
 SOURCES += \
     $$WIDGETS_VIEWS_SRC_DIR/duiapplicationpageview.cpp \

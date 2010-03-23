@@ -492,4 +492,44 @@ void Ut_DuiPannableWidget::testRightMouseButton()
     QVERIFY(static_cast<DuiPannableWidgetPrivate *>(_widget->d_ptr)->state == DuiPannableWidgetPrivate::Wait);
 }
 
+class CustomPhysics : public DuiPhysics2DPanning
+{
+public:
+    CustomPhysics(DuiPannableWidget *parent) : DuiPhysics2DPanning(parent)
+    {
+    }
+};
+
+void Ut_DuiPannableWidget::usingCustomPhysics()
+{
+    CustomPhysics *customPhysics = new CustomPhysics(_widget);
+    _widget->setPhysics(customPhysics);
+
+    QVERIFY(static_cast<DuiPannableWidgetPrivate *>(_widget->d_ptr)->physics == customPhysics);
+
+    _widget->setPhysics(new DuiPhysics2DPanning(_widget));
+}
+
+void Ut_DuiPannableWidget::settingNewPhysicsShouldEmitPhysicsChangeSignal()
+{
+    CustomPhysics *customPhysics = new CustomPhysics(_widget);
+
+    QSignalSpy spyPhysicsChange(_widget, SIGNAL(physicsChanged()));
+
+    _widget->setPhysics(customPhysics);
+
+    QCOMPARE(spyPhysicsChange.count(),1);
+
+    _widget->setPhysics(new DuiPhysics2DPanning(_widget));
+}
+
+
+void Ut_DuiPannableWidget::settingPhysicsToNULLShouldNotBreakTheWidget()
+{
+    _widget->setPhysics(NULL);
+    QVERIFY(static_cast<DuiPannableWidgetPrivate *>(_widget->d_ptr)->physics != NULL);
+
+}
+
+
 QTEST_APPLESS_MAIN(Ut_DuiPannableWidget);

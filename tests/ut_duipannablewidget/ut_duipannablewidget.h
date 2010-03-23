@@ -64,6 +64,10 @@ private slots:
     void testPanState();
     void testRightMouseButton();
 
+    void usingCustomPhysics();
+    void settingNewPhysicsShouldEmitPhysicsChangeSignal();
+    void settingPhysicsToNULLShouldNotBreakTheWidget();
+
 private:
 
     /**

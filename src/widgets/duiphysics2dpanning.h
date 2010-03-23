@@ -24,53 +24,11 @@
 
 #include <QObject>
 
-class QSizeF;
-class QRectF;
-class QPointF;
+#include <QRectF>
+#include <QPointF>
+#include <QSizeF>
 
-class DuiPannableWidget;
 class DuiPhysics2DPanningPrivate;
-
-/*!
- * @note Currently the physics works best using units which are not
- * consistent. The panning gestures are interpreted as meters, the
- * mass of the position works best when 1 (kg) and the time delta used
- * in formulas is 1 sec (although the integration is done 50
- * times/sec). This could be re-checked and values could be adjusted
- * to sensible magnitudes (gestures interpreted as millimeters, time delta
- * as 50 times/sec etc.)
- */
-
-class DUI_EXPORT DuiPhysics2DIntegrationStrategy
-{
-public:
-
-    /*!
-     * \brief Destructs an integrator strategy object.
-     */
-    virtual ~DuiPhysics2DIntegrationStrategy();
-
-    struct IntegrationData {
-        bool  pointer;
-        qreal pointerSpringK;
-        qreal frictionC;
-        qreal slideFrictionC;
-        qreal borderSpringK;
-        qreal borderFrictionC;
-    };
-
-    /*!
-     * \brief Method used to calculate values for next frame of
-     * panning movement.
-     */
-    virtual void integrate(qreal &position,
-                           qreal &velocity,
-                           qreal &pointerSpring,
-                           qreal &acceleration,
-                           qreal rangeStart,
-                           qreal rangeEnd,
-                           IntegrationData &data);
-};
 
 /*!
  * \class DuiPhysics2DPanning
@@ -78,6 +36,11 @@ public:
  * \brief This class is an integrator which integrates an
  * object/position in 1D or 2D space using Newtonian physics it is
  * typically used by DuiPannableWidget.
+ *
+ * The user can change the behaviour of the kinetic panning that the
+ * pannable widget is providing to some other algorithm. In order to
+ * do that, a new class inheriting from DuiPhysics2DPanning should be
+ * created.
  *
  * The main force in the physics is originating from the pointer via a
  * spring. Additional forces come into play if the position goes
@@ -88,11 +51,29 @@ class DUI_EXPORT DuiPhysics2DPanning : public QObject
 {
     Q_OBJECT
 
+    //! \brief Current panning orientations
+    Q_PROPERTY(Qt::Orientations panDirection READ panDirection WRITE setPanDirection)
+    //! \brief Current panning range
+    Q_PROPERTY(QRectF range READ range WRITE setRange)
+    //! \brief Current pointer spring K constant value
+    Q_PROPERTY(qreal pointerSpringK READ pointerSpringK WRITE setPointerSpringK)
+    //! \brief Current friction constant value
+    Q_PROPERTY(qreal friction READ friction WRITE setFriction)
+    //! \brief Current sliding friction constant value
+    Q_PROPERTY(qreal slidingFriction READ slidingFriction WRITE setSlidingFriction)
+    //! \brief Current border spring K constant value
+    Q_PROPERTY(qreal borderSpringK READ borderSpringK WRITE setBorderSpringK)
+    //! \brief Current border friction constant value
+    Q_PROPERTY(qreal borderFriction READ borderFriction WRITE setBorderFriction)
+    //! \brief Current position value
+    Q_PROPERTY(QPointF position READ position WRITE setPosition)
+
 public:
+
     /*!
-     * \brief Constructs an integrator used by \a parentPannableWidget.
+     * \brief Constructs an integrator.
      */
-    DuiPhysics2DPanning(DuiPannableWidget *parentPannableWidget);
+    DuiPhysics2DPanning(QObject *parent);
 
     /*!
      * \brief Destructs an integrator.
@@ -100,20 +81,19 @@ public:
     virtual ~DuiPhysics2DPanning();
 
     /*!
-     * \brief Sets the integration strategy object that will be used
-     * during simulation.
-     *
-     * In case that NULL object is provided, no action is taken and
-     * old integration strategy object will still be used.
-     * The DuiPhysics2DPanning class takes responsibility
-     * for deletion of the object.
+     * \brief Returns the allowed direction of panning movement.
      */
-    void setIntegrationStrategy(DuiPhysics2DIntegrationStrategy *strategy);
+    Qt::Orientations panDirection() const;
 
     /*!
-     * \brief Returns the currently used integration strategy object.
+     * \brief Sets the allowed orientations of panning movement.
      */
-    DuiPhysics2DIntegrationStrategy *integrationStrategy() const;
+    void setPanDirection(Qt::Orientations direction);
+
+    /*!
+     * \brief Returns the range of the physics.
+     */
+    QRectF range() const;
 
     /*!
      * \brief Sets the \a range of the physics.
@@ -124,44 +104,9 @@ public:
     void setRange(const QRectF &range);
 
     /*!
-     * \brief Returns the range of the physics.
+     * \brief Returns the physics parameter: K value for the pointer spring.
      */
-    QRectF range() const;
-
-    /*!
-     * \brief Sets the \a position of the physics.
-     *
-     * If the new position is in the border, the border springs are
-     * activated.
-     */
-    void setPosition(const QPointF &position);
-
-    /*!
-     * \brief Returns the current position of the physics.
-     */
-    QPointF position() const;
-
-    /*!
-     * \brief Returns the current velocity of the physics.
-     */
-    QPointF velocity() const;
-
-    /*!
-     * \brief Tells physics that pointer is pressed.
-     */
-    void pointerPress(const QPointF &pos);
-
-    /*!
-     * \brief Tells physics that pointer is moved.
-     *
-     * Tenses the pointer spring.
-     */
-    void pointerMove(const QPointF &pos);
-
-    /*!
-     * \brief Tells physics that pointer is release.
-     */
-    void pointerRelease();
+    qreal pointerSpringK() const;
 
     /*!
      * \brief Sets a physics parameter: K value for the pointer spring.
@@ -169,10 +114,22 @@ public:
     void setPointerSpringK(qreal value);
 
     /*!
+     * \brief Returns the physics parameter: friction when a pointer is down
+     * and position is not in the border.
+     */
+    qreal friction() const;
+
+    /*!
      * \brief Sets a physics parameter: Friction when a pointer is
-     * down and position is not in border.
+     * down and position is not in the border.
      */
     void setFriction(qreal value);
+
+    /*!
+     * \brief Returns the physics parameter: friction when a pointer is up
+     * and position is not in the border.
+     */
+    qreal slidingFriction() const;
 
     /*!
      * \brief Sets a physics parameter: Friction when a pointer is up
@@ -181,9 +138,20 @@ public:
     void setSlidingFriction(qreal value);
 
     /*!
+     * \brief Returns the physics parameter: K value for the border spring.
+     */
+    qreal borderSpringK() const;
+
+    /*!
      * \brief Sets a physics parameter: K value for the border spring.
      */
     void setBorderSpringK(qreal value);
+
+    /*!
+     * \brief Returns the physics parameter: Friction when a pointer is up
+     * and position is in border.
+     */
+    qreal borderFriction() const;
 
     /*!
      * \brief Sets a physics parameter: Friction when a pointer is up
@@ -192,23 +160,48 @@ public:
     void setBorderFriction(qreal value);
 
     /*!
+     * \brief Sets the \a position of the physics.
+     *
+     * If the new position is in the border, the border springs are
+     * activated.
+     */
+    virtual void setPosition(const QPointF &position);
+
+    /*!
+     * \brief Returns the current position of the physics.
+     */
+    virtual QPointF position() const;
+
+    /*!
      * \brief Returns the movement status of the integrated position.
      */
-    bool inMotion() const;
+    virtual bool inMotion() const;
 
     /*!
-     * \brief Stops the physics.
+     * \brief Returns the current velocity of the physics.
      */
-    void stop();
-
-public Q_SLOTS:
+    virtual QPointF velocity() const;
 
     /*!
-     * \brief Integrator for the physics.
-     *
-     * Called periodically by an internal timer.
+     * \brief Tells physics that pointer was pressed.
      */
-    void integrator(int frame);
+    virtual void pointerPress(const QPointF &pos);
+
+    /*!
+     * \brief Tells physics that pointer has moved.
+     */
+    virtual void pointerMove(const QPointF &pos);
+
+    /*!
+     * \brief Tells physics that pointer was released.
+     */
+    virtual void pointerRelease();
+
+    /*!
+     * \brief Stops the integration algorithm. The algorithm will
+     * be restarted when pointer will be pressed again.
+     */
+    virtual void stop();
 
 Q_SIGNALS:
     /*!
@@ -217,24 +210,36 @@ Q_SIGNALS:
     void updatePosition(const QPointF &position);
 
     /*!
-     * \brief Signals that the panning animation has stopped
+     * \brief Signals that the panning movement has stopped.
      */
     void panningStopped();
 
+protected Q_SLOTS:
+
+    /*!
+     * \brief Integrator for the physics.
+     *
+     * Called periodically by an internal timer.
+     */
+    virtual void integrator(int frame);
+
 protected:
+
+    /*!
+     * \brief Starts the physics algorithm. The engine will now
+     * call the integrator() method periodically.
+     */
+    virtual void start();
+
+private:
+
     /*!
      * \brief Pointer to private implementation.
      */
     DuiPhysics2DPanningPrivate *const d_ptr;
 
-private:
     Q_DISABLE_COPY(DuiPhysics2DPanning)
     Q_DECLARE_PRIVATE(DuiPhysics2DPanning)
-
-    /*!
-     * \brief Starts the physics by setting up a repetitive timer.
-     */
-    void start();
 
 #ifdef UNIT_TEST
     //! Test unit is defined as a friend of production code to access private members
