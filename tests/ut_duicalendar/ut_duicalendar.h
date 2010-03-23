@@ -45,6 +45,9 @@ private slots:
     void init();
     void cleanup();
 
+    void testConversionFromAndToQDateTime_data();
+    void testConversionFromAndToQDateTime();
+
     void testDuiLocaleCalendar_data();
     void testDuiLocaleCalendar();
 
