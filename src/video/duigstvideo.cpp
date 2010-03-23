@@ -1,4 +1,7 @@
 #include "duigstvideo.h"
+#include <gst/interfaces/xoverlay.h>
+#include <gst/video/gstvideosink.h>
+#include <gst/interfaces/propertyprobe.h>
 
 #include <QFileInfo>
 
@@ -13,6 +16,7 @@ DuiGstVideo::DuiGstVideo()
         gst_elem_volume(NULL),
         gst_elem_videosink(NULL),
         gst_elem_audiosink(NULL),
+        gst_elem_xvimagesink(NULL),
         gst_messagebus(NULL),
         gst_buffer(NULL),
         m_looping(true),
@@ -21,7 +25,12 @@ DuiGstVideo::DuiGstVideo()
         m_muted(false),
         m_volume(1.0),
         m_state(DuiVideo::NotReady),
-        m_format(DuiVideo::RGB)
+        m_format(DuiVideo::RGB),
+        m_renderTarget(DuiGstVideo::DuiSink),
+        m_storedState(DuiVideo::NotReady),
+        m_storedPosition(0),
+        m_winId(0),
+        m_colorKey(Qt::black)
 {
     GError* error = NULL;
     if(!gst_init_check(NULL, NULL, &error)) {
@@ -34,11 +43,15 @@ DuiGstVideo::~DuiGstVideo()
     // It is normally not needed to call this function in a normal application
     // as the resources will automatically be freed when the program terminates.
     // gst_deinit();
+    
     destroyPipeline();
 }
 
 bool DuiGstVideo::open(const QString& filename)
 {
+    m_storedState = DuiVideo::NotReady;
+    m_storedPosition = 0; 
+
     //create absolute name for file including path
     QFileInfo info(filename);
     m_filename = info.absoluteFilePath();
@@ -50,15 +63,7 @@ bool DuiGstVideo::open(const QString& filename)
     }
 
     //construct new video pipeline
-    constructPipeline();
-
-    //start playing, this is done to get the first frame of the video and thus be able to parse video format information
-    if( GST_STATE_CHANGE_FAILURE == gst_element_set_state(gst_elem_pipeline, GST_STATE_PAUSED) ) {
-        duiWarning("DuiGstVideo::openVideoFromFile()") << "Failed to start playing" << m_filename;
-        return false;
-    }
-
-    return true;
+    return constructPipeline();
 }
 
 bool DuiGstVideo::isReady() const 
@@ -100,8 +105,9 @@ void DuiGstVideo::setVideoState(DuiVideo::State state)
     else if ( state != DuiVideo::NotReady ) {
         duiWarning("DuiGstVideo::setVideoState()") << "Pipeline not created yet, cannot set state to" << state;
         new_state = DuiVideo::NotReady;
-    }
-
+    } else 
+        new_state = DuiVideo::NotReady;
+        
     //TODO: state changes should be emit in bus message method.
     if( m_state != new_state ) {
         m_state = new_state;
@@ -114,24 +120,42 @@ DuiVideo::State DuiGstVideo::videoState() const
     return m_state;
 }
 
-uchar* DuiGstVideo::frameData() const
+void DuiGstVideo::seek(quint64 time)
 {
-    return gst_buffer ? GST_BUFFER_DATA(gst_buffer) : NULL;
+    if( gst_elem_pipeline ) {
+        if( !gst_element_seek_simple(gst_elem_pipeline, GST_FORMAT_TIME,
+                                (GstSeekFlags)(GST_SEEK_FLAG_FLUSH),// | GST_SEEK_FLAG_KEY_UNIT),
+                                time * GST_MSECOND) )
+            duiWarning("DuiGstVideo::seek()") << "FAILED.";
+        /*gst_element_seek(gst_elem_pipeline, 1.0,
+                         GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH,
+                         GST_SEEK_TYPE_SET, time * GST_MSECOND,
+                         GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);*/
+    }
 }
 
-DuiVideo::DataFormat DuiGstVideo::frameDataFormat() const
+quint64 DuiGstVideo::position() const
 {
-    return m_format;
+    gint64 pos = 0;
+    if( gst_elem_pipeline ) {
+        GstFormat format = GST_FORMAT_TIME;
+        if( gst_element_query_position(gst_elem_pipeline, &format, &pos) ) {
+            pos /= 1000000;
+        }
+    }
+    return (qint64)pos;
 }
 
-bool DuiGstVideo::lockFrameData() 
+quint64 DuiGstVideo::length() const
 {
-    return m_mutex.tryLock();
-}
-
-void DuiGstVideo::unlockFrameData()
-{
-    m_mutex.unlock();
+    gint64 length = 0;
+    if( gst_elem_pipeline ) {
+        GstFormat format = GST_FORMAT_TIME;
+        if( gst_element_query_duration(gst_elem_pipeline, &format, &length) ) {
+            length /= 1000000;
+        }
+    }
+    return (qint64)length;
 }
 
 void DuiGstVideo::setMuted(bool muted)
@@ -174,46 +198,88 @@ QSize DuiGstVideo::resolution() const
 {
     if( gst_elem_videosink )
         return QSize(DUI_GST_VIDEO_SINK(gst_elem_videosink)->w, DUI_GST_VIDEO_SINK(gst_elem_videosink)->h);
+    else if( gst_elem_xvimagesink ) {
+        return QSize(GST_VIDEO_SINK_WIDTH(gst_elem_xvimagesink), GST_VIDEO_SINK_HEIGHT(gst_elem_xvimagesink));
+    }
     else
         return QSize(0,0);
 }
 
-void DuiGstVideo::seek(quint64 time)
+uchar* DuiGstVideo::frameData() const
 {
-    if( gst_elem_pipeline ) {
-    
-        gst_element_seek_simple(gst_elem_pipeline, GST_FORMAT_TIME,
-                                (GstSeekFlags)(GST_SEEK_FLAG_FLUSH),// | GST_SEEK_FLAG_KEY_UNIT),
-                                time * GST_MSECOND);
-        /*gst_element_seek(gst_elem_pipeline, 1.0,
-                         GST_FORMAT_TIME, GST_SEEK_FLAG_FLUSH,
-                         GST_SEEK_TYPE_SET, time * GST_MSECOND,
-                         GST_SEEK_TYPE_NONE, GST_CLOCK_TIME_NONE);*/
+    return gst_buffer ? GST_BUFFER_DATA(gst_buffer) : NULL;
+}
+
+DuiVideo::DataFormat DuiGstVideo::frameDataFormat() const
+{
+    return m_format;
+}
+
+bool DuiGstVideo::lockFrameData() 
+{
+    return m_mutex.tryLock();
+}
+
+void DuiGstVideo::unlockFrameData()
+{
+    m_mutex.unlock();
+}
+
+void DuiGstVideo::setRenderTarget(DuiGstVideo::RenderTarget targetSink)
+{
+    if( targetSink != m_renderTarget ) {
+        m_renderTarget = targetSink;
+        
+        //a video already been opened, we need to change the target on fly
+        if( isReady() ) {
+            //if the video is in paused or playing state store the position and state information,
+            //when the render target is succesfully changed apply the stored position and state
+            if( m_state == DuiVideo::Paused || m_state == DuiVideo::Playing ) {
+                m_storedState = m_state;
+                m_storedPosition = position();
+            } else {
+                m_storedState = DuiVideo::NotReady;
+                m_storedPosition = 0;            
+            }
+            
+            constructPipeline();
+        }
     }
 }
 
-quint64 DuiGstVideo::position() const
+DuiGstVideo::RenderTarget DuiGstVideo::renderTarget()
 {
-    gint64 pos = 0;
-    if( gst_elem_pipeline ) {
-        GstFormat format = GST_FORMAT_TIME;
-        if( gst_element_query_position(gst_elem_pipeline, &format, &pos) ) {
-            pos /= 1000000;
-        }
-    }
-    return (qint64)pos;
+    return m_renderTarget;
 }
 
-quint64 DuiGstVideo::length() const
+void DuiGstVideo::expose()
 {
-    gint64 length = 0;
-    if( gst_elem_pipeline ) {
-        GstFormat format = GST_FORMAT_TIME;
-        if( gst_element_query_duration(gst_elem_pipeline, &format, &length) ) {
-            length /= 1000000;
-        }
+    if( gst_elem_xvimagesink ) {
+        gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink), m_winId);
+        gst_x_overlay_expose(GST_X_OVERLAY(gst_elem_xvimagesink));
     }
-    return (qint64)length;
+}
+
+void DuiGstVideo::setWinId(unsigned long id) 
+{
+    m_winId = id;
+    if( gst_elem_xvimagesink )
+        gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink), m_winId);    
+}
+
+unsigned long DuiGstVideo::winId() 
+{
+    return m_winId;
+}
+
+void DuiGstVideo::setColorKey(const QColor& key) 
+{
+    m_colorKey = key;
+}
+
+QColor DuiGstVideo::colorKey() 
+{
+    return m_colorKey;
 }
 
 /*
@@ -281,9 +347,19 @@ void DuiGstVideo::video_ready_cb(void* user_data)
 
         //check if the video is seekable
         gstVideo->checkSeekable();
-        
-        //automatically stop after buffering the first frame
-        gstVideo->setVideoState(DuiVideo::Stopped);
+                
+        if( gstVideo->m_storedState != DuiVideo::NotReady ) {
+            //duiDebug("DuiGstVideo::video_ready_cb()")  << gstVideo->m_storedState << gstVideo->m_storedPosition;
+
+            //restore the stored state information
+            gstVideo->seek(gstVideo->m_storedPosition);
+            gstVideo->setVideoState(gstVideo->m_storedState);
+            gstVideo->m_storedState = DuiVideo::NotReady;
+            gstVideo->m_storedPosition = 0;
+        }
+        else
+            //automatically stop after buffering the first frame
+            gstVideo->setVideoState(DuiVideo::Stopped);
 
         emit gstVideo->videoReady();
     }
@@ -334,7 +410,6 @@ void DuiGstVideo::newpad_cb(GstElement  *decodebin,
     //FIXME
     //Find compatible pads more accurately, add more error checking.
     if (g_strrstr(gst_structure_get_name(type), "video")) {
-
         bool yuv = false;
         if (g_strrstr(gst_structure_get_name(type), "yuv"))
             yuv = true;
@@ -441,19 +516,63 @@ void DuiGstVideo::render_frame_cb(void* pointer, void* user_data)
 
 GstElement* DuiGstVideo::makeSink(bool yuv)
 {
-    if (gst_elem_videosink) {
+    if( gst_elem_videosink || gst_elem_xvimagesink ) {
+        duiWarning("DuiGstVideo::makeSink()") << "Sink already initialized. Call destroyPipeline() before initializing new sink.";
         return NULL;
     }
 
-    gst_elem_videosink = yuv ? dui_gst_video_sink_yuv_new() : dui_gst_video_sink_new();
+    //HW overlay rendering using xvimagesink
+    if( m_renderTarget == DuiGstVideo::XvSink ) {
+        gst_elem_xvimagesink = gst_element_factory_make("xvimagesink", "xvsink");
+        if( gst_elem_xvimagesink && GST_IS_ELEMENT(gst_elem_xvimagesink) ) {
+            gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink),
+                                         m_winId);    
 
-    DuiGstVideoSink *duisink = DUI_GST_VIDEO_SINK(gst_elem_videosink);
+            GValueArray* colorkey = gst_property_probe_get_values_name(GST_PROPERTY_PROBE(gst_elem_xvimagesink), "colorkey");
+            GValueArray* autopaint = gst_property_probe_get_values_name(GST_PROPERTY_PROBE(gst_elem_xvimagesink), "autopaint-colorkey");
+            if( colorkey && autopaint ) {
+                
+                g_value_array_free(colorkey);
+                g_value_array_free(autopaint);
+                
+                //g_object_set(gst_elem_xvimagesink,
+                //             "force-aspect-ratio", FALSE,
+                //             (void*) 0);
+                m_colorKey.setRgb(0xFF00);
+                g_object_set(gst_elem_xvimagesink,
+                             "colorkey", m_colorKey.rgb(),
+                             "autopaint-colorkey", FALSE,
+                             (void*) 0);
+                
+                return gst_elem_xvimagesink;
 
-    duisink->user_data = this;
-    duisink->frame_cb = render_frame_cb;
-    duisink->ready_cb  = video_ready_cb;
+            } else {
+                if( colorkey )
+                    g_value_array_free(colorkey);
+                if( autopaint )
+                    g_value_array_free(autopaint);
+                duiWarning("DuiGstVideo::makeSink()")   << "colorkey (" << colorkey 
+                                                        << ") or autopaint-colorkey (" << autopaint 
+                                                        <<") properties not found, falling back to texture rendering with duisink.";
+            }
+        }else {
+            duiWarning("DuiGstVideo::makeSink()") << "xvimagesink doest not exist, falling back to texture rendering with duisink.";
+        }
+    }
 
-    return gst_elem_videosink;
+    //render to texture using DuiSink
+    m_renderTarget = DuiGstVideo::DuiSink;
+    //if( m_renderTarget == DuiGstVideo::DuiSink ) {
+        gst_elem_videosink = yuv ? dui_gst_video_sink_yuv_new() : dui_gst_video_sink_new();
+
+        DuiGstVideoSink *duisink = DUI_GST_VIDEO_SINK(gst_elem_videosink);
+
+        duisink->user_data = this;
+        duisink->frame_cb = render_frame_cb;
+        duisink->ready_cb  = video_ready_cb;
+
+        return gst_elem_videosink;
+    //}
 }
 
 GstElement* DuiGstVideo::makeVolume()
@@ -464,7 +583,7 @@ GstElement* DuiGstVideo::makeVolume()
     return gst_elem_volume;
 }
 
-void DuiGstVideo::constructPipeline()
+bool DuiGstVideo::constructPipeline()
 {
     destroyPipeline();
 
@@ -496,7 +615,7 @@ void DuiGstVideo::constructPipeline()
         duiWarning("DuiGstVideo::constructPipeline()") << "Core gstreamer plugin(s) are missing, cannot construct pipeline.";
         gst_object_unref(gst_elem_source);
         gst_object_unref(gst_elem_decoder);
-        return;
+        return false;
     }
 
     //create pipeline from source and decoder elements
@@ -505,7 +624,7 @@ void DuiGstVideo::constructPipeline()
     if( !gst_element_link_many(gst_elem_source, gst_elem_decoder, NULL) ) {
         duiWarning("DuiGstVideo::constructPipeline()") << "Failed to link elements.";
         destroyPipeline();
-        return;
+        return false;
     }
 
     //setup callback for pipeline bus messages
@@ -513,8 +632,15 @@ void DuiGstVideo::constructPipeline()
     gst_bus_add_watch(gst_messagebus, bus_cb, this);
     gst_object_unref(gst_messagebus);
 
-    //make the pipeline ready
-    //gst_element_set_state(gst_elem_pipeline, GST_STATE_READY);
+    //start buiffering, this is done to get the first frame of the video and 
+    //thus be able to parse video format information
+    if( GST_STATE_CHANGE_FAILURE == gst_element_set_state(gst_elem_pipeline, GST_STATE_PAUSED) ) {
+        duiWarning("DuiGstVideo::constructPipeline()") << "Failed to start buffering.";
+        destroyPipeline();
+        return false;
+    }
+    
+    return true;
 }
 
 void DuiGstVideo::destroyPipeline()
@@ -537,7 +663,8 @@ void DuiGstVideo::destroyPipeline()
     gst_elem_volume    = NULL;
     gst_elem_videosink = NULL;
     gst_elem_audiosink = NULL;
-
+    gst_elem_xvimagesink = NULL;
+    
     setVideoState(DuiVideo::NotReady);
     
     m_mutex.unlock();

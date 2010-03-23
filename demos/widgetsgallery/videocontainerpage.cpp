@@ -240,9 +240,14 @@ void ItemDetailPage::retranslateUi()
 void ItemDetailPage::videoReady()
 {
     video->play();
+    video->setFullscreen(true);
     slider->setMinimum(0);
     slider->setMaximum(video->length());
     QTimer::singleShot(100, this, SLOT(updatePosition()));
+    
+    setAutoMarginsForComponentsEnabled(false);
+    setComponentsDisplayMode(DuiApplicationPage::NavigationBar/*DuiApplicationPage::AllComponents*/, DuiApplicationPageModel::Hide);
+    
 }
 
 void ItemDetailPage::sliderPressed()

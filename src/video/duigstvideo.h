@@ -18,6 +18,7 @@
 
 #include <QObject>
 #include <QMutex>
+#include <QColor>
 
 #include <gst/gst.h>
 #include <gst/gstvalue.h>
@@ -30,6 +31,12 @@ class DuiGstVideo : public DuiVideo
     Q_OBJECT
 
 public:
+
+    enum RenderTarget
+    {
+        DuiSink,
+        XvSink
+    };
 
     DuiGstVideo();
     virtual ~DuiGstVideo();
@@ -61,6 +68,15 @@ public:
     bool lockFrameData();
     void unlockFrameData();
 
+    void setRenderTarget(DuiGstVideo::RenderTarget targetSink);
+    DuiGstVideo::RenderTarget renderTarget();
+    
+    void expose();
+    void setWinId(unsigned long id);
+    unsigned long winId();
+    void setColorKey(const QColor& key);
+    QColor colorKey();
+
 private:
 
     static gboolean bus_cb(GstBus *bus, GstMessage *message, void *data);
@@ -78,7 +94,7 @@ private:
     GstElement* makeSink(bool yuv);
     GstElement* makeVolume();
         
-    void constructPipeline();
+    bool constructPipeline();
     void destroyPipeline();
         
     void checkSeekable();    
@@ -90,6 +106,8 @@ private:
 
     GstElement* gst_elem_videosink;
     GstElement* gst_elem_audiosink;
+
+    GstElement* gst_elem_xvimagesink;
 
     GstBus* gst_messagebus;
     GstBuffer* gst_buffer;
@@ -104,6 +122,13 @@ private:
     DuiVideo::DataFormat m_format;
 
     QMutex m_mutex;
+    
+    DuiGstVideo::RenderTarget m_renderTarget;
+    DuiVideo::State m_storedState;
+    quint64 m_storedPosition;
+    
+    unsigned long m_winId;
+    QColor m_colorKey;
 };
 
 

@@ -18,6 +18,7 @@
 #include "duivideowidget.h"
 
 #include "duiapplication.h"
+#include "duiapplicationwindow.h"
 
 #include <gst/gst.h>
 #include <gst/gstvalue.h>
@@ -39,7 +40,6 @@ DuiVideoWidgetViewPrivate::DuiVideoWidgetViewPrivate()
         m_gstVideo(new DuiGstVideo())
 {
     qRegisterMetaType< QList<const char*> >("QList<const char*>");
-    
 #ifdef DUI_USE_OPENGL
     DuiGLES2Renderer* r = DuiGLES2Renderer::instance();
     if( r ) {
@@ -457,37 +457,43 @@ void DuiVideoWidgetView::drawContents(QPainter* painter, const QStyleOptionGraph
 
     Q_D(const DuiVideoWidgetView);
 
-    if (d->m_needFillBg && style()->backgroundColor().isValid()) {
-        painter->fillRect(boundingRect(), style()->backgroundColor());
-    }
-
-    if( !d->m_gstVideo->isReady() )
-        return;
-
-    DuiGLES2Renderer* r = DuiGLES2Renderer::instance();
-    if( r ) {
-        bool yuv = d->m_gstVideo->frameDataFormat() == DuiGstVideo::YUV;
-        if( yuv ) {
-            if( d->m_useSingleYuvTexture ) {
-                r->begin(painter, d->yuv1);
-                r->bindTexture(d->m_textures[0], QSize(-1,-1), 0, "textureYUV");
-            } else {
-                r->begin(painter, d->yuv3);
-                r->bindTexture(d->m_textures[0], QSize(-1,-1), 0, "textureY");
-                r->bindTexture(d->m_textures[1], QSize(-1,-1), 1, "textureU");
-                r->bindTexture(d->m_textures[2], QSize(-1,-1), 2, "textureV");
-            }
-        } else {
-            r->begin(painter);
-            r->bindTexture(d->m_textures[0]);
+    if( d->m_gstVideo->renderTarget() == DuiGstVideo::DuiSink )  {
+        if (d->m_needFillBg && style()->backgroundColor().isValid()) {
+            painter->fillRect(boundingRect(), style()->backgroundColor());
         }
-        r->setInvertTexture(true);
-        r->draw(d->m_scaledVideoRect.toRect());
-        r->end();
-    } 
-    else if( d->image ) {
-        // SW rendering
-        painter->drawImage(d->m_scaledVideoRect, *d->image);
+
+        if( !d->m_gstVideo->isReady() )
+            return;
+
+        DuiGLES2Renderer* r = DuiGLES2Renderer::instance();
+        if( r ) {
+            bool yuv = d->m_gstVideo->frameDataFormat() == DuiGstVideo::YUV;
+            if( yuv ) {
+                if( d->m_useSingleYuvTexture ) {
+                    r->begin(painter, d->yuv1);
+                    r->bindTexture(d->m_textures[0], QSize(-1,-1), 0, "textureYUV");
+                } else {
+                    r->begin(painter, d->yuv3);
+                    r->bindTexture(d->m_textures[0], QSize(-1,-1), 0, "textureY");
+                    r->bindTexture(d->m_textures[1], QSize(-1,-1), 1, "textureU");
+                    r->bindTexture(d->m_textures[2], QSize(-1,-1), 2, "textureV");
+                }
+            } else {
+                r->begin(painter);
+                r->bindTexture(d->m_textures[0]);
+            }
+            r->setInvertTexture(true);
+            r->draw(d->m_scaledVideoRect.toRect());
+            r->end();
+        }
+        else if( d->image ) {
+            // SW rendering
+            painter->drawImage(d->m_scaledVideoRect, *d->image);
+        }
+    } else {
+        painter->fillRect(boundingRect(), d->m_gstVideo->colorKey());
+        QCoreApplication::flush();
+        d->m_gstVideo->expose();
     }
 }
 
@@ -569,6 +575,13 @@ void DuiVideoWidgetView::updateData(const QList<const char*>& modifications)
             d->m_gstVideo->setVolume(model()->volume());
         }
         else if( member == DuiVideoWidgetModel::Fullscreen ) {
+            if( model()->fullscreen() ) {
+                d->m_gstVideo->setWinId(DuiApplication::activeApplicationWindow()->viewport()->winId());
+                d->m_gstVideo->setRenderTarget(DuiGstVideo::XvSink);
+            }
+            else
+                d->m_gstVideo->setRenderTarget(DuiGstVideo::DuiSink);
+            
             updateGeometry();
             update();
         }
