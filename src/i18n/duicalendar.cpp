@@ -246,13 +246,12 @@ void DuiCalendar::setDateTime(QDateTime date)
     date.setTimeSpec(Qt::UTC);
     UDate icuDate = date.toTime_t() * 1000.0;
 
-    // time needs to be adjusted to UTC time
     if (originalTimeSpec == Qt::LocalTime) {
+        // convert from local time to UTC
         const icu::TimeZone &tz = d->_calendar->getTimeZone();
         qint32 rawOffset;
         qint32 dstOffset;
         tz.getOffset(icuDate, true /*local */, rawOffset, dstOffset, status);
-
         icuDate = icuDate - rawOffset - dstOffset;
     }
 
@@ -272,12 +271,12 @@ QDateTime DuiCalendar::qDateTime(Qt::TimeSpec spec) const
     UDate icuDate = d->_calendar->getTime(status);
 
     if (spec == Qt::LocalTime) {
-        // adjust to UTC
+        // convert from UTC to local time
         const icu::TimeZone &tz = d->_calendar->getTimeZone();
         qint32 rawOffset;
         qint32 dstOffset;
         tz.getOffset(icuDate, true /*local */, rawOffset, dstOffset, status);
-        icuDate = icuDate - rawOffset - dstOffset;
+        icuDate = icuDate + rawOffset + dstOffset;
     }
 
     time.setTime_t(icuDate / 1000.0); // takes time in seconds since epoch
