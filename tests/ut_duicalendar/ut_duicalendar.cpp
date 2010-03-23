@@ -971,7 +971,7 @@ void Ut_DuiCalendar::testPosixFormatPattern_data()
             << 3
             << "en_GB"
             << "%b" // locale's abbreviated month name (e.g., Jan)
-            << "helmi"; // probably wrong! FIXME!!
+            << "Feb";
     QTest::newRow("en_GB %c")
             << DuiLocale::GregorianCalendar
             << 2008
