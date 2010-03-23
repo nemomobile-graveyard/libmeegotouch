@@ -179,11 +179,9 @@ install_headers.files = \
 install_pkgconfig.path = $$DUI_INSTALL_LIBS/pkgconfig
 install_pkgconfig.files = Dui.pc
 
-### TODO API break: remove translations.prf
 install_prf.path = $$[QT_INSTALL_DATA]/mkspecs/features
 install_prf.files = ../mkspecs/features/dui.prf \
                     ../mkspecs/features/dui_translations.prf \
-                    ../mkspecs/features/translations.prf \
                     $${DUI_BUILD_TREE}/mkspecs/features/dui_defines.prf
 
 INSTALLS += \
