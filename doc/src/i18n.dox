@@ -8,8 +8,8 @@ applications for the DirectUI Framework. Developers, translators, and
 user interface designers are the main target audience of this
 document.
 
-Generally, as the DirectUI Framework uses Qt as it's base, some of the Qt
-internationalisation practices also applicable. However, DirectUI
+Generally, as the DirectUI Framework uses Qt as it’s base, some of the Qt
+internationalisation practices also applicable. However, the DirectUI
 Framework provides additional functionalities, hence it is recommended
 that developers always use DirectUI Framework classes to achieve full
 internationalisation support in their applications.
@@ -22,7 +22,9 @@ may also be applicable in another projects and vice versa.
 \image html i18n-class.png "" 
 
 \section  supportedlanguages  Supported Languages and calendar systems
-Below is the list of officially supported languages both for writing systems and text rendering.
+
+Below is the list of officially supported languages both for writing
+systems and text rendering:
 
 - British English
 - American English
@@ -57,33 +59,99 @@ Below is the list of officially supported languages both for writing systems and
 - Greek
 - Hebrew
 
-Although the implementation contains support for several calendar systems, officially the DirectUI Framework currently supports only Gregorian and Islamic calendar.
+Although the implementation contains support for several calendar
+systems, officially the DirectUI Framework currently supports only
+Gregorian and Islamic calendar.
 
 \section  localesystem  Locale system
 \subsection  localesystemsettings  Settings
 
-The DirectUI locale system uses 4 main settings:
+The DirectUI locale system uses the following main settings:
 
-- Language: This setting tells the locale system about the UI language of the device. This affects all UI texts, writing direction and widget layouts, and date presentation. However, this does not affect the user content (browser content language, etc).
-- Region: This setting tells the locale system about the region of the device, which is in practice almost correlates with the country. This affects the formatting of numbers, date and time, and names.
-- Calendar: This setting affects the date presentation. If non-gregorian is chosen then all the dates are presented in the chosen calendar.
-- Collation: This setting affects how the textual data is sorted.
+<table border="1">
+  <caption>
+  <big><b>
+    DuiLocale main settings
+  </b></big>
+  <tr>
+     <th>gconf key</th>
+     <th>description</th>
+     <th>example value</th>
+  </tr>
+  <tr>
+  <td>/Dui/i18n/Language</td>
+  <td>main language setting</td>
+  <td>en_US</td>
+  <tr>
+  <td>/Dui/i18n/LcTime</td>
+  <td>for date, time, and calendar</td>
+  <td>ar@calendar=islamic</td>
+  </tr>
+  <tr>
+  <td>/Dui/i18n/LcCollate</td>
+  <td>for sorting</td>
+  <td>de_DE@collation=phonebook</td>
+  </tr>
+  <tr>
+  <td>/Dui/i18n/LcNumeric</td>
+  <td>formatting of numbers</td>
+  <td>hi</td>
+  </tr>
+  <tr>
+  <td>/Dui/i18n/LcMonetary</td>
+  <td>for formatting of amounts of money</td>
+  <td>fi_FI@currency=EUR</td>
+  </tr>
+</table>
 
-There is a special case with date formatting. Dates are formatted
-according to the region setting, use the language setting to display
-month/weekday names, and use the calendar setting for the calendar
-system. For example, if the language setting is Finnish, and the
-region is United States of America and the calendar is Islamic, the
-date may be formatted as:
+Each of these settings can be set to a ICU locale specifier as
+described in the <a href="http://userguide.icu-project.org/locale">ICU
+User Guide</a>.
 
-\code
-ša'banta 28, 1429 11.07.37 AM
-\endcode
+The value of \c /Dui/i18n/Language  (“Language”) tells the locale system
+about the UI language of the device. This affects all UI texts,
+writing direction and widget layouts (It does not affect the user
+content, i.e.  it does not affect things like the browser content
+language etc.).
 
-The date format used is "MMMM dd, YYYY HH:mm:ss v", the month name is written in Finnish style but using Islamic calendar.
+“Language” is also used as the default for time, date, calendar,
+sorting, number formatting, and currency formatting if the more
+specific settings are empty.
 
-There is also another case with address formatting. The addresses are formatted using the address format applicable for the country stated in the address information. For example if the address is in the United States of America then the address is formatted in US style, even if the device language or region setting is set to another language/country.
- 
+“LcTime” selects how time and date are formatted. If it is left empty
+the value of “Language” is used. Examples: =ar@calendar\c islamic  means
+to format date and time the Arabic way using Islamic calendar,
+=ar@calendar\c gregorian  would use Arabic formatting but with Gregorian
+calendar, \c fi_FI  would use Finnish formatting rules for time and
+date.
+
+“LcCollate” selects how textual data is sorted. If it is left empty
+the value of “Language” is used. Examples: =de_DE@collation\c phonebook 
+sorts the way German phone books are sorted,
+=de_DE@collation\c standard  (or \c de_DE ) sorts the “normal” way German
+dictionaries are sorted. =zh_CN@collation\c pinyin  sorts Chinese
+according to the pinyin phonetics, =zh_CN@collation\c stroke  sorts
+Chinese according to the stroke count of the characters.
+
+“LcNumeric” selects how numbers are formatted. If it is left empty the
+value of “Language” is used. Examples: \c hi  formats numbers according
+to the rules for the Hindi language, using localized digits, i.e. <a
+href="http://en.wikipedia.org/wiki/Indian_numerals">Devanagari
+numerals</a> (&#2406;,&#2407;,&#2408;,&#2409;,&#2410;,&#2411;,&#2412;,&#2413;,&#2414;,&#2415;), \c ar  formats numbers
+using <a
+href="http://en.wikipedia.org/wiki/Eastern_Arabic_numerals">Eastern
+Arabic numerals</a> (&#1632;,&#1633;,&#1634;,&#1635;,&#1636;,&#1637;,&#1638;,&#1639;,&#1640;,&#1641;), \c de_CH  formats the Swiss
+German way with apostrophes as thousands separators (12'345'670.89),
+and \c en_US  formats the American English way (12,345,670.89).
+
+“LcMonetary” selects how currency amounts are formatted. If it is left
+empty the value of “Language” is used.
+
+Instead of exposing the above “Lc*” values to the user, an application
+can of course maintain its own, possibly more user-friendly gconf keys
+like for example “Region” or “NumberMode” and set the above “Lc*” keys
+appropriately to achieve the desired effect.
+
 \subsection  localesysteminitialisation  Initialisation
 
 A DirectUI application is normally using the system default DuiLocale object;
@@ -92,7 +160,10 @@ A DirectUI application is normally using the system default DuiLocale object;
 DuiLocale myLocale; // get the current locale
 \endcode
 
-If the application needs to use different locale settings than the system locale, then DuiLocale is created by make an instance of the DuiLocale object.
+If the application needs to use different locale settings than the
+system locale, then a DuiLocale is created by making an instance of a
+DuiLocale object:
+
 \code
 DuiLocale locale ("fi_FI");
 \endcode
@@ -1267,4 +1338,5 @@ Some icons or drawings considered offensive in some cultures.
 \subsubsection  slitstrings  Split strings when containing date and time format
 
 See section "Translation involving date/time format" above.
+
 */
