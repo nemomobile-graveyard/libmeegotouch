@@ -33,7 +33,6 @@ class QColor;
 class QTextDocument;
 class QTimer;
 class QTimeLine;
-class DuiTextEditViewZoom;
 class DuiInfoBanner;
 
 
@@ -57,9 +56,6 @@ public:
         return promptTextDocument;
     }
 
-    void mouseMoveInZooming(QGraphicsSceneMouseEvent *event);
-    void stopScrolling();
-
     void checkScroll();
 
     void setMouseTarget(const QPointF &point);
@@ -73,19 +69,15 @@ public:
 
     QTextDocument *activeDocument() const;
 
-    void doUpdate();
-
 protected slots:
     void scrolling();
     void hideUnmaskedText();
     void checkSize();
-    void createZoomView();
     void handleDocumentUpdate(int position, int charsRemoved, int charsAdded);
     void handleDocumentSizeChange(const QSizeF &newSize);
 
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);
-
     void checkStartOfSelection(QGraphicsSceneMouseEvent *event);
     void startSelection(QGraphicsSceneMouseEvent *event);
     void updateSelection(const QPointF &pos);
@@ -122,7 +114,7 @@ protected:
     int scrollSpeedVertical;
     int scrollSpeedHorizontal;
 
-    QTimer *zoomTimer;
+    QTimer *longPressTimer;
     QTimer *scrollTimer;
     QTimer *maskTimer;
 
@@ -134,9 +126,6 @@ protected:
     qreal documentHeight;
     QPointF mouseTarget; // known mouse position inside widget
 
-    bool zoomable;
-    QPointer<DuiTextEditViewZoom> zoomView;
-
     bool inAutoSelectionClick;
 
     DuiInfoBanner *infoBanner;
@@ -147,8 +136,6 @@ protected:
     friend class Ut_DuiTextEditView;
     friend class Ut_DuiTextEdit;
 #endif
-
-    friend class DuiTextEditViewZoom;
 };
 //! \internal_end
 

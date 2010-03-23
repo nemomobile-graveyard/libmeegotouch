@@ -35,7 +35,6 @@
 
 #include "../../src/widgets/duitextedit_p.h"
 #include "../../src/widgets/views/duitexteditview_p.h"
-#include "../../src/widgets/views/duitexteditviewzoom.h"
 
 void Ut_DuiTextEditView::initTestCase()
 {
@@ -171,18 +170,10 @@ void Ut_DuiTextEditView::testInputMethodQuery()
         result = m_subject->inputMethodQuery(query);
     }
 
-    m_subject->mousePressEvent(&event);
-    QTest::qWait(800); //this value must be greater than ZoomTimeInterval in duitexteditview.cpp
-
-    result = m_subject->inputMethodQuery(Qt::InputMethodQuery(Dui::VisualizationPriorityQuery));
-    QVERIFY(result.isValid());
-    QVERIFY(result.toBool() == true);
-
     foreach(Qt::InputMethodQuery query, queries) {
         //at least we should not crash
         result = m_subject->inputMethodQuery(query);
     }
-    m_appWindow->scene()->removeItem(m_controller);
 }
 
 /*
