@@ -231,16 +231,16 @@ public:
      If you require your window to be displayed only in a certain orientation angle,
      set the desired angle using setOrientationAngle() and set this property to true.
 
+     Note: Locking the orientation is discouraged by the DirectUI application style guidelines.
+
      Example of locking the window orientation angle:
 
      \code
         DuiApplication app;
         DuiWindow window;
 
-        // Set the correct orientation angle.
-        // Disable animations because we don't need them at startup.
-        if (window.orientation() != Dui::Angle270)
-            window.setOrientationAngle(Dui::Angle270, Dui::ImmediateOrientationChange);
+        // Forces an orientation angle.
+        window.setOrientationAngle(Dui::Angle270);
         window.setOrientationAngleLocked(true);
 
         window.show();
@@ -268,12 +268,14 @@ public:
      If you require your window to be displayed only in a certain orientation,
      set the desired angle using setOrientationAngle() and set this property to true.
 
+     Note: Locking the orientation is discouraged by the DirectUI application style guidelines.
+
      \note Setting this property to true locks orientation changes,
            but allows automatic adjustments of the angle for the given orientation.
            This means that a window locked in portrait mode will adjust between
            Dui::Angle90 and Dui::Angle270 to keep "top edge" always on top and avoid
-           upside-down situations. In order to lock specific orientation angle, use
-           setOrientationAngleLocked().
+           upside-down situations. In order to lock to a single specific orientation
+           angle, use setOrientationAngleLocked().
 
      Example of locking the window orientation:
 
@@ -281,10 +283,8 @@ public:
         DuiApplication app;
         DuiWindow window;
 
-        // Set the correct orientation angle.
-        // Disable animations because we don't need them at startup.
-        if (window.orientation() != Dui::Portrait)
-             window.setOrientationAngle(Dui::Angle270, Dui::ImmediateOrientationChange);
+        // Forces the orientation to be portrait
+        window.setPortraitOrientation();
         window.setOrientationLocked(true);
 
         window.show();
@@ -308,6 +308,30 @@ public Q_SLOTS:
      animated transition.
      */
     void setOrientationAngle(Dui::OrientationAngle angle);
+
+    /*!
+     Sets the orientation of the window to landscape.
+
+     This is a convenience function that sets the current orientation angle to 0 if
+     it is not already in a landscape orientation (either 0 or 180 degrees angle).
+
+     If the window is hidden or it hasn't been shown yet, the orientation change
+     is immediate (i.e. without an rotation animation), otherwise there may be an
+     animated transition.
+     */
+    void setLandscapeOrientation();
+
+    /*!
+     Sets the orientation of the window to portrait.
+
+     This is a convenience function that sets the current orientation angle to 270 if
+     it is not already in a portrait orientation (either 90 or 270 degrees angle).
+
+     If the window is hidden or it hasn't been shown yet, the orientation change
+     is immediate (i.e. without an rotation animation), otherwise there may be an
+     animated transition.
+     */
+    void setPortraitOrientation();
 
     /*!
      Locks window's orientation angle changes. Equal to calling setOrientationAngleLocked(true).

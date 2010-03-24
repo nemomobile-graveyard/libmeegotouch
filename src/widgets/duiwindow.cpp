@@ -536,6 +536,18 @@ void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle)
     }
 }
 
+void DuiWindow::setLandscapeOrientation()
+{
+    if (orientation() != Dui::Landscape)
+        setOrientationAngle(Dui::Angle0);
+}
+
+void DuiWindow::setPortraitOrientation()
+{
+    if (orientation() != Dui::Portrait)
+        setOrientationAngle(Dui::Angle270);
+}
+
 QSize DuiWindow::visibleSceneSize(Dui::Orientation orientation) const
 {
     QSize s;
