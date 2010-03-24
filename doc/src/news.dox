@@ -31,6 +31,8 @@
 - escapeButtonMode() property was removed from DuiApplicationPage. Use escapeMode() instead.
 - DuiDialog::windowModal() was renamed to DuiDialog::systemModal().
 
+- DuiApplicationPage::pageTitleChanged(DuiApplicationPage *, const QString &title) signal was removed.
+
 \section v0190
 
 \subsection New

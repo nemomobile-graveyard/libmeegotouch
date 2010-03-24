@@ -115,6 +115,14 @@ private:
         It's enabled by default.
     */
     DUI_MODEL_PROPERTY(bool, autoMarginsForComponentsEnabled, AutoMarginsForComponentsEnabled, true, true)
+
+    /*!
+        \property DuiApplicationPageModel::title
+        \brief Title for a page.
+
+        Title appears on the navigation bar.
+     */
+    DUI_MODEL_PROPERTY(QString, title, Title, true, QString())
 };
 
 #endif

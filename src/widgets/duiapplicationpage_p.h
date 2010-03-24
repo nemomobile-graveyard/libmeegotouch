@@ -69,7 +69,6 @@ private:
     QRectF range;
 
 public:
-    DuiEscapeButtonPanelModel::EscapeMode escapeButtonMode;
     bool rememberPosition;
     DuiWidget *topSpacer;
     DuiWidget *bottomSpacer;
@@ -78,7 +77,6 @@ public:
     DuiPannableViewport *pannableViewPort;
     DuiWidget *centralWidget;
 
-    QString title;
     bool contentCreated;
     bool backEnabled;
 };

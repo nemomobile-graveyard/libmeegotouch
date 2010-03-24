@@ -39,7 +39,6 @@
 DUI_REGISTER_WIDGET(DuiApplicationPage)
 
 DuiApplicationPagePrivate::DuiApplicationPagePrivate() :
-    escapeButtonMode(DuiEscapeButtonPanelModel::CloseMode),
     rememberPosition(false),
     topSpacer(NULL),
     bottomSpacer(NULL),
@@ -55,11 +54,9 @@ void DuiApplicationPagePrivate::init()
 {
     Q_Q(DuiApplicationPage);
 
-    title = "";
     contentCreated = false;
     backEnabled = false;
     rememberPosition = true;
-    escapeButtonMode = DuiEscapeButtonPanelModel::CloseMode;
 
     QGraphicsLinearLayout *layout = createLayout();
     q->setLayout(layout);
@@ -245,19 +242,12 @@ void DuiApplicationPage::disappearNow()
 
 const QString DuiApplicationPage::title() const
 {
-    Q_D(const DuiApplicationPage);
-
-    return d->title;
+    return model()->title();
 }
 
 void DuiApplicationPage::setTitle(const QString &title)
 {
-    Q_D(DuiApplicationPage);
-
-    if (title != d->title) {
-        d->title = title;
-        emit pageTitleChanged(this, title);
-    }
+    model()->setTitle(title);
 }
 
 void DuiApplicationPage::createContent()

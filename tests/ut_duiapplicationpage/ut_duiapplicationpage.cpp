@@ -126,23 +126,21 @@ void Ut_DuiApplicationPage::testCreateContent()
 
 void Ut_DuiApplicationPage::testPageTitleChanged()
 {
-    QSignalSpy spy(m_subject, SIGNAL(pageTitleChanged(DuiApplicationPage *, QString)));
+    qRegisterMetaType< QList<const char *> >("QList<const char *>");
+
+    QSignalSpy spy(m_subject->model(), SIGNAL(modified(QList<const char *>)));
     QString title("Title!");
 
     m_subject->setTitle(m_subject->title());
     QCOMPARE(spy.count(), 0);
     m_subject->setTitle(title);
     QCOMPARE(spy.count(), 1);
+    QCOMPARE(m_subject->model()->title(), title);
     m_subject->setTitle(title);
     QCOMPARE(spy.count(), 1);
     m_subject->setTitle(QString());
     QCOMPARE(spy.count(), 2);
-
-    QCOMPARE(spy.at(0).at(0).value<DuiApplicationPage *>(), m_subject);
-    QCOMPARE(spy.at(0).at(1).toString(), title);
-
-    QCOMPARE(spy.at(1).at(0).value<DuiApplicationPage *>(), m_subject);
-    QCOMPARE(spy.at(1).at(1).toString(), QString());
+    QCOMPARE(m_subject->model()->title(), QString());
 }
 
 void Ut_DuiApplicationPage::testRememberPosition()

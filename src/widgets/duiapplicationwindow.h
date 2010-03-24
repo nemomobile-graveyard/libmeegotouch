@@ -158,7 +158,6 @@ private:
 
     Q_DISABLE_COPY(DuiApplicationWindow)
     Q_DECLARE_PRIVATE(DuiApplicationWindow)
-    Q_PRIVATE_SLOT(d_func(), void _q_pageTitleChanged(DuiApplicationPage *, const QString &))
     Q_PRIVATE_SLOT(d_func(), void _q_actionUpdated(QActionEvent *))
     Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar(Dui::Orientation))
     Q_PRIVATE_SLOT(d_func(), void _q_handlePageModelModifications(const QList<const char *>&))

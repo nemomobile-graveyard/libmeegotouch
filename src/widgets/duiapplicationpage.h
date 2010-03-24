@@ -216,8 +216,6 @@ public:
     DuiApplicationPageModel::PageEscapeMode escapeMode() const;
 
 Q_SIGNALS:
-    //! Signal emitted when the page title changes.
-    void pageTitleChanged(DuiApplicationPage *, const QString &title);
     //! Signal emitted when back button called
     void backButtonClicked();
 

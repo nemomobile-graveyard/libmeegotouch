@@ -180,12 +180,6 @@ void DuiApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent
     }
 }
 
-void DuiApplicationWindowPrivate::_q_pageTitleChanged(DuiApplicationPage *page, const QString &title)
-{
-    if (page->isVisible())
-        navigationBar->setViewMenuDescription(title);
-}
-
 void DuiApplicationWindowPrivate::_q_actionUpdated(QActionEvent *event)
 {
     Q_Q(DuiApplicationWindow);
@@ -241,6 +235,11 @@ void DuiApplicationWindowPrivate::_q_handlePageModelModifications(const QList<co
 
         } else if (member == DuiApplicationPageModel::EscapeMode) {
             setupPageEscape();
+
+        } else if (member == DuiApplicationPageModel::Title) {
+            if (page->isVisible())
+                navigationBar->setViewMenuDescription(page->model()->title());
+
         }
     }
 }
@@ -788,9 +787,6 @@ void DuiApplicationWindowPrivate::connectPage(DuiApplicationPage *newPage)
     Q_ASSERT(newPage != 0);
     page = newPage;
 
-    q->connect(page, SIGNAL(pageTitleChanged(DuiApplicationPage *, QString)),
-               SLOT(_q_pageTitleChanged(DuiApplicationPage *, QString)));
-
     q->connect(page, SIGNAL(actionUpdated(QActionEvent *)), SLOT(_q_actionUpdated(QActionEvent *)));
 
     manageActions();
@@ -820,9 +816,6 @@ void DuiApplicationWindowPrivate::disconnectPage(DuiApplicationPage *pageToDisco
     Q_Q(DuiApplicationWindow);
 
     Q_ASSERT(pageToDisconnect == page);
-
-    QObject::disconnect(page, SIGNAL(pageTitleChanged(DuiApplicationPage *, QString)),
-                        q, SLOT(_q_pageTitleChanged(DuiApplicationPage *, QString)));
 
     QObject::disconnect(page, SIGNAL(actionUpdated(QActionEvent *)),
                         q, SLOT(_q_actionUpdated(QActionEvent *)));
