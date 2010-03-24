@@ -140,6 +140,8 @@ void Ut_DuiCalendar::testDuiLocaleCalendar()
 void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime_data()
 {
     QTest::addColumn<QDateTime>("datetime");
+    QTest::addColumn<QString>("timeZone");
+    QTest::addColumn<int>("dstOffsetSecs");
     QTest::addColumn<QString>("localeName");
     QTest::addColumn<DuiLocale::Calendar>("cal");
     QTest::addColumn<QString>("dateShortResult");
@@ -151,24 +153,24 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime_data
     QTest::addColumn<QString>("timeLongResult");
     QTest::addColumn<QString>("timeFullResult");
 
-    QDate date(2008, 7, 21);
-    QTime time(12, 31, 0, 0);
-    QDateTime datetime(date, time, Qt::LocalTime);
-
-    QTest::newRow("21.7.2008_fi_FI_Gregorian")
-            << datetime
-            << QString("fi_FI")
+    QTest::newRow("Europe/Helsinki Winter en_GB")
+            << QDateTime(QDate(2008, 1, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Europe/Helsinki"
+            << 0
+            << QString("en_GB")
             << DuiLocale::GregorianCalendar
-            << QString("21.7.2008")
-            << QString("21.7.2008")
-            << QString("21. heinäkuuta 2008")
-            << QString("maanantaina 21. heinäkuuta 2008")
-            << QString("12.31")
-            << QString("12.31.00")
-            << QString("12.31.00 UTC+3.00")
-            << QString("12.31.00 Itä-Euroopan kesäaika");
-    QTest::newRow("21.7.2008_en_GB_Gregorian")
-            << datetime
+            << QString("21/01/2008")
+            << QString("21 Jan 2008")
+            << QString("21 January 2008")
+            << QString("Monday, 21 January 2008")
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 EET")
+            << QString("12:31:00 Eastern European Time");
+    QTest::newRow("Europe/Helsinki Summer en_GB")
+            << QDateTime(QDate(2008, 7, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Europe/Helsinki"
+            << 3600
             << QString("en_GB")
             << DuiLocale::GregorianCalendar
             << QString("21/07/2008")
@@ -179,8 +181,52 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime_data
             << QString("12:31:00")
             << QString("12:31:00 EEST")
             << QString("12:31:00 Eastern European Summer Time");
-    QTest::newRow("21.7.2008_de_DE_Gregorian")
-            << datetime
+    QTest::newRow("Europe/Helsinki Winter fi_FI")
+            << QDateTime(QDate(2008, 1, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Europe/Helsinki"
+            << 0
+            << QString("fi_FI")
+            << DuiLocale::GregorianCalendar
+            << QString("21.1.2008")
+            << QString("21.1.2008")
+            << QString("21. tammikuuta 2008")
+            << QString("maanantaina 21. tammikuuta 2008")
+            << QString("12.31")
+            << QString("12.31.00")
+            << QString("12.31.00 UTC+2.00")
+            << QString("12.31.00 Itä-Euroopan normaaliaika");
+    QTest::newRow("Europe/Helsinki Summer fi_FI")
+            << QDateTime(QDate(2008, 7, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Europe/Helsinki"
+            << 3600
+            << QString("fi_FI")
+            << DuiLocale::GregorianCalendar
+            << QString("21.7.2008")
+            << QString("21.7.2008")
+            << QString("21. heinäkuuta 2008")
+            << QString("maanantaina 21. heinäkuuta 2008")
+            << QString("12.31")
+            << QString("12.31.00")
+            << QString("12.31.00 UTC+3.00")
+            << QString("12.31.00 Itä-Euroopan kesäaika");
+    QTest::newRow("Europe/Helsinki Winter de_DE")
+            << QDateTime(QDate(2008, 1, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Europe/Helsinki"
+            << 0
+            << QString("de_DE")
+            << DuiLocale::GregorianCalendar
+            << QString("21.01.08")
+            << QString("21.01.2008")
+            << QString("21. Januar 2008")
+            << QString("Montag, 21. Januar 2008")
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 GMT+02:00")
+            << QString("12:31:00 Osteuropäische Zeit");
+    QTest::newRow("Europe/Helsinki Summer de_DE")
+            << QDateTime(QDate(2008, 7, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Europe/Helsinki"
+            << 3600
             << QString("de_DE")
             << DuiLocale::GregorianCalendar
             << QString("21.07.08")
@@ -191,8 +237,38 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime_data
             << QString("12:31:00")
             << QString("12:31:00 GMT+03:00")
             << QString("12:31:00 Osteuropäische Sommerzeit");
-    QTest::newRow("21.7.2008_nn_NO_Gregorian")
-            << datetime
+    QTest::newRow("Japan Winter de_DE")
+            << QDateTime(QDate(2008, 1, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Japan"
+            << 0
+            << QString("de_DE")
+            << DuiLocale::GregorianCalendar
+            << QString("21.01.08")
+            << QString("21.01.2008")
+            << QString("21. Januar 2008")
+            << QString("Montag, 21. Januar 2008")
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 GMT+09:00")
+            << QString("12:31:00 GMT+09:00");
+    QTest::newRow("Japan Summer de_DE")
+            << QDateTime(QDate(2008, 7, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Japan"
+            << 0
+            << QString("de_DE")
+            << DuiLocale::GregorianCalendar
+            << QString("21.07.08")
+            << QString("21.07.2008")
+            << QString("21. Juli 2008")
+            << QString("Montag, 21. Juli 2008")
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 GMT+09:00")
+            << QString("12:31:00 GMT+09:00");
+    QTest::newRow("Europe/Helsinki Summer nn_NO")
+            << QDateTime(QDate(2008, 7, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Europe/Helsinki"
+            << 3600
             << QString("nn_NO")
             << DuiLocale::GregorianCalendar
             << QString("21.07.08")
@@ -203,8 +279,10 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime_data
             << QString("12.31.00")
             << QString("12.31.00 GMT+03.00")
             << QString("kl. 12.31.00 austeuropeisk sommartid");
-    QTest::newRow("21.7.2008_nb_NO_Gregorian")
-            << datetime
+    QTest::newRow("Europe/Helsinki Summer nb_NO")
+            << QDateTime(QDate(2008, 7, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Europe/Helsinki"
+            << 3600
             << QString("nb_NO")
             << DuiLocale::GregorianCalendar
             << QString("21.07.08")
@@ -215,8 +293,10 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime_data
             << QString("12.31.00")
             << QString("12.31.00 GMT+03.00")
             << QString("kl. 12.31.00 østeuropeisk sommertid");
-    QTest::newRow("21.7.2008_no_NO_Gregorian")
-            << datetime
+    QTest::newRow("Europe/Helsinki Summer no_NO")
+            << QDateTime(QDate(2008, 7, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Europe/Helsinki"
+            << 3600
             << QString("no_NO")
             << DuiLocale::GregorianCalendar
             << QString("21.07.08")
@@ -227,11 +307,41 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime_data
             << QString("12.31.00")
             << QString("12.31.00 GMT+03.00")
             << QString("kl. 12.31.00 østeuropeisk sommertid");
+    QTest::newRow("Japan Winter ja_JP")
+            << QDateTime(QDate(2008, 1, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Japan"
+            << 0
+            << QString("ja_JP")
+            << DuiLocale::GregorianCalendar
+            << QString("08/01/21")
+            << QString("2008/01/21")
+            << QString("2008年1月21日")
+            << QString("2008年1月21日月曜日")
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 JST")
+            << QString("12時31分00秒 日本標準時");
+    QTest::newRow("Japan Summer ja_JP")
+            << QDateTime(QDate(2008, 7, 21), QTime(12, 31, 0, 0), Qt::LocalTime)
+            << "Japan"
+            << 0
+            << QString("ja_JP")
+            << DuiLocale::GregorianCalendar
+            << QString("08/07/21")
+            << QString("2008/07/21")
+            << QString("2008年7月21日")
+            << QString("2008年7月21日月曜日")
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 JST")
+            << QString("12時31分00秒 日本標準時");
 }
 
 void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime()
 {
     QFETCH(QDateTime, datetime);
+    QFETCH(QString, timeZone);
+    QFETCH(int, dstOffsetSecs);
     QFETCH(QString, localeName);
     QFETCH(DuiLocale::Calendar, cal);
     QFETCH(QString, dateShortResult);
@@ -242,6 +352,8 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime()
     QFETCH(QString, timeMediumResult);
     QFETCH(QString, timeLongResult);
     QFETCH(QString, timeFullResult);
+
+    DuiCalendar::setSystemTimeZone(timeZone);
 
     DuiLocale locale(localeName);
 
@@ -268,15 +380,48 @@ void Ut_DuiCalendar::testDuiLocaleCalendarConversionsFromLocaltimeQDateTime()
             else if (timeType == DuiLocale::TimeNone)
                 result = dateResults[dateType];
             else
-                result = dateResults[dateType] + ' ' + timeResults[timeType];
-            qDebug() << "dateType" << dateType << "timeType" << timeType
-                     << "result" << result;
+                if(localeName == "ja_JP" &&
+                   (dateType == DuiLocale::DateLong
+                    || dateType == DuiLocale::DateFull)) {
+                    // no space after Japanese long and full dates:
+                    result = dateResults[dateType] + timeResults[timeType];
+                }
+                else
+                    result = dateResults[dateType] + ' ' + timeResults[timeType];
             QCOMPARE(
                 locale.formatDateTime(datetime,
                                       static_cast<DuiLocale::DateType>(dateType),
                                       static_cast<DuiLocale::TimeType>(timeType),
                                       cal),
                 result);
+            QDateTime dateTimeParsedFromResult;
+            dateTimeParsedFromResult
+                = locale.parseDateTime(result,
+                                       static_cast<DuiLocale::DateType>(dateType),
+                                       static_cast<DuiLocale::TimeType>(timeType),
+                                       cal);
+                qDebug() << "dateType" << dateType << "timeType" << timeType
+                         << "result" << result
+                         << "datetime" << datetime
+                         << "dateTimeParsedFromResult" << dateTimeParsedFromResult;
+            if (dateType == DuiLocale::DateNone && timeType == DuiLocale::TimeNone)
+                QVERIFY2(!dateTimeParsedFromResult.isValid(),
+                         "an invalid datetime should have been returned");
+            else if (dateType == DuiLocale::DateNone) {
+                if(timeType == DuiLocale::TimeLong
+                   || timeType == DuiLocale::TimeFull ) {
+                    dateTimeParsedFromResult =
+                        dateTimeParsedFromResult.addSecs(dstOffsetSecs);
+                }
+                QCOMPARE(dateTimeParsedFromResult.time(),
+                         datetime.time());
+            }
+            else if (timeType == DuiLocale::TimeNone) {
+                QCOMPARE(dateTimeParsedFromResult.date(), datetime.date());
+            }
+            else {
+                QCOMPARE(dateTimeParsedFromResult, datetime);
+            }
         }
     }
 }
