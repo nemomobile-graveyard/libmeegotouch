@@ -22,6 +22,7 @@
 
 #include <QtPlugin>
 #include "duiexport.h"
+#include <duiapplicationextensioninterface.h>
 
 class DuiWidget;
 class DuiAppletInstantiator;
@@ -35,21 +36,15 @@ class DuiAppletInstantiator;
  *
  * \see \ref appletdevelopment
  */
-class DUI_EXPORT DuiAppletInstallationSourceInterface
+class DUI_EXPORT DuiAppletInstallationSourceInterface : public DuiApplicationExtensionInterface
 {
+    Q_INTERFACES(DuiApplicationExtensionInterface)
+
 public:
     /*!
      * Destructor.
      */
     virtual ~DuiAppletInstallationSourceInterface() {}
-
-    /**
-     * This method is called to construct a new applet installation source.
-     * Caller will maintain the ownership of the constructed widget and
-     * will destroy it when it is no longer needed.
-     * \return New DuiWidget class instance that visualizes this installation source.
-     */
-    virtual DuiWidget *constructWidget() = 0;
 };
 
 Q_DECLARE_INTERFACE(DuiAppletInstallationSourceInterface, "com.nokia.dui.core.AppletInstallationSourceInterface/1.0")

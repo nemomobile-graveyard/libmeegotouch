@@ -24,15 +24,23 @@
 #include <QString>
 #include <DuiWidget>
 
+class InstallationSourceWidget;
+
 class FakeInstallationSource : public QObject, public DuiAppletInstallationSourceInterface
 {
     Q_OBJECT
-    Q_INTERFACES(DuiAppletInstallationSourceInterface)
+    Q_INTERFACES(DuiAppletInstallationSourceInterface DuiApplicationExtensionInterface)
 
 public:
-    virtual DuiWidget *constructWidget();
+
+    FakeInstallationSource();
+    virtual ~FakeInstallationSource();
+    //! Methods derived from DuiApplicationExtensionInterface
+    virtual bool initialize(const QString&);
+    virtual DuiWidget *widget();
 
 private:
+    InstallationSourceWidget *source;
 };
 
 class InstallationSourceWidget : public DuiWidget

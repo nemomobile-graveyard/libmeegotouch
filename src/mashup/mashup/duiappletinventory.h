@@ -23,6 +23,7 @@
 #include <QDir>
 #include <QStringList>
 #include "duiappletinventorymodel.h"
+#include <DuiApplicationExtensionInterface>
 
 class QFileSystemWatcher;
 class DuiWidget;
@@ -100,12 +101,6 @@ public:
      */
     void setEnabled(bool enabled);
 
-    /*!
-     * Sets the names of the installation sources to show in the inventory
-     * \param installationSources a list of the source names
-     */
-    void setInstallationSources(const QStringList &installationSources);
-
 signals:
     /*!
      * \brief Called when a .desktop file that used to be present is removed
@@ -137,6 +132,12 @@ private slots:
       */
     void instantiateAppletsFromPackage(const QString &packageName);
 
+    /*!
+     * Sets up the widget of the installation source for instantiating the applets
+     * \param extension the extension interface for the applet installation source
+     */
+    void setupInstallationSourceWidget(DuiApplicationExtensionInterface *extension);
+
 private:
     /*!
      * Initalizes the applet inventory if necessary.
@@ -144,24 +145,6 @@ private:
      * setMashupCanvas and starts monitoring the applet metadata files.
      */
     void initializeIfNecessary();
-
-    /*!
-     * Loads and instantiates an applet installation source from the given library
-     * \param path the path to the library
-     * \return the installation source widget
-     */
-    DuiWidget *loadAppletInstallationSource(const QString &path);
-
-    /*!
-     * Creates the applet installation source widgets and stores them into the model
-     */
-    void createInstallationSourceWidgets();
-
-    /*!
-     * Returns a list of paths to the available installation source binaries
-     * \return a list of absolute file paths
-     */
-    QStringList installationSourceBinaryPaths() const;
 
     //! Mashup canvas for the applet instances
     DuiMashupCanvas *mashupCanvas;
@@ -174,9 +157,6 @@ private:
 
     //! A list of names of the applet categories to show in this applet inventory. An empty list will show all applets.
     QStringList appletCategories;
-
-    //! A list of installation source names
-    QStringList installationSources;
 
     //! Whether the applet inventory has been initialized or not
     bool initialized;

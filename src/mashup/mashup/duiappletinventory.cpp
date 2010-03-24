@@ -28,6 +28,8 @@
 #include "duiappletinstallationsourceinterface.h"
 #include "private/duiwidgetcontroller_p.h"
 #include "duiappletinstantiator.h"
+#include <DuiApplicationExtensionInterface>
+#include <DuiAppletInstallationSourceInterface>
 
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET_NO_CREATE(DuiAppletInventory)
@@ -43,25 +45,16 @@ DuiAppletInventory::DuiAppletInventory(QGraphicsItem *parent) :
 
 DuiAppletInventory::~DuiAppletInventory()
 {
-    // Destroy the installation sources
-    foreach(DuiWidget * w, model()->installationSources()) {
-        delete w;
-    }
-
-    // Destroy the remaining applet buttons
+    // Destroy the applet buttons
     foreach(DuiWidget * w, model()->widgets()) {
         delete w;
     }
-
     delete watcher;
 }
 
 void DuiAppletInventory::initializeIfNecessary()
 {
     if (!initialized) {
-        // Create installation source widgets
-        createInstallationSourceWidgets();
-
         // Verify that the applet .desktop file path exists and is readable
         if (appletPath.exists() && appletPath.isReadable()) {
             // Start monitoring the applet desktop file path
@@ -74,7 +67,6 @@ void DuiAppletInventory::initializeIfNecessary()
                 appletPathChanged(appletPath.absolutePath());
             }
         }
-
         // The applet inventory has now been initialized
         initialized = true;
     }
@@ -201,75 +193,13 @@ void DuiAppletInventory::setEnabled(bool enabled)
     model()->setCloseButtonVisible(enabled);
 }
 
-void DuiAppletInventory::createInstallationSourceWidgets()
+void DuiAppletInventory::setupInstallationSourceWidget(DuiApplicationExtensionInterface *extension)
 {
-    // Destroy the existing installation sources
-    foreach(DuiWidget * w, model()->installationSources()) {
-        delete w;
+    DuiAppletInstallationSourceInterface *plugin = static_cast<DuiAppletInstallationSourceInterface* >(extension);
+    DuiWidget *widget = plugin->widget();
+    if (widget != NULL) {
+        QObject::connect(widget, SIGNAL(packageSelectedForInstallation(QString)), this, SLOT(instantiateAppletsFromPackage(QString)));
     }
-
-    QList<DuiWidget *> sourceWidgets;
-
-    // Load the installation sources
-    QStringList sourcePaths = installationSourceBinaryPaths();
-    foreach(const QString & path, sourcePaths) {
-        DuiWidget *widget = loadAppletInstallationSource(path);
-        if (widget) {
-            sourceWidgets.append(widget);
-        }
-    }
-
-    model()->setInstallationSources(sourceWidgets);
-}
-
-void DuiAppletInventory::setInstallationSources(const QStringList &installationSources)
-{
-    if (this->installationSources != installationSources) {
-        this->installationSources = installationSources;
-
-        if (initialized) {
-            // If the applet inventory has already been initialized, create installation source widgets
-            createInstallationSourceWidgets();
-        }
-    }
-}
-
-QStringList DuiAppletInventory::installationSourceBinaryPaths() const
-{
-    QStringList sourcePaths;
-
-    foreach(const QString & sourceName, installationSources) {
-        QFileInfo source(QString(APPLET_INSTALLATION_SOURCES), sourceName);
-        if (source.exists() && source.isFile()) {
-            sourcePaths.append(source.absoluteFilePath());
-        } else {
-            duiDebug("DuiAppletInventory") << "applet source" << source.absoluteFilePath() << "does not exist!";
-        }
-    }
-
-    return sourcePaths;
-}
-
-DuiWidget *DuiAppletInventory::loadAppletInstallationSource(const QString &path)
-{
-    QPluginLoader loader(path);
-    QObject *object = loader.instance();
-
-    DuiAppletInstallationSourceInterface *source = qobject_cast<DuiAppletInstallationSourceInterface *>(object);
-    DuiWidget *widget = NULL;
-    if (source != NULL) {
-        widget = source->constructWidget();
-        if (widget) {
-            const QMetaObject *mob = widget->metaObject();
-
-            // connect signals from widget to the applet inventory
-            if (mob->indexOfSignal("packageSelectedForInstallation(QString)") != -1) {
-                QObject::connect(widget, SIGNAL(packageSelectedForInstallation(QString)), this, SLOT(instantiateAppletsFromPackage(QString)));
-            }
-        }
-    }
-    delete object;
-    return widget;
 }
 
 void DuiAppletInventory::instantiateAppletsFromPackage(const QString &packageName)

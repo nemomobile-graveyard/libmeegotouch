@@ -29,6 +29,8 @@
 #include "duiappletinventory.h"
 #include "duiappletinventoryview.h"
 #include "duiappletinventoryview_p.h"
+#include "duiapplicationextensionarea.h"
+#include "duiapplicationextensioninterface.h"
 
 DuiAppletInventoryViewPrivate::DuiAppletInventoryViewPrivate() :
     controller(NULL),
@@ -73,6 +75,10 @@ void DuiAppletInventoryViewPrivate::init(DuiAppletInventory *controller)
     QObject::connect(closeButton, SIGNAL(clicked()), controller, SIGNAL(hideAppletInventory()));
 
     closeButtonOverlay->setObjectName("DuiAppletInventoryCloseButtonOverlay");
+
+    DuiApplicationExtensionArea *area = new DuiApplicationExtensionArea("com.nokia.dui.core.AppletInstallationSourceInterface/1.0");
+    QObject::connect(area, SIGNAL(extensionInstantiated(DuiApplicationExtensionInterface*)), controller, SLOT(setupInstallationSourceWidget(DuiApplicationExtensionInterface*)));
+    layoutPolicy->addItem(area);
 }
 
 DuiAppletInventoryView::DuiAppletInventoryView(DuiAppletInventory *container) :
@@ -110,26 +116,10 @@ void DuiAppletInventoryView::updateData(const QList<const char *>& modifications
             } else {
                 d->controller->sceneManager()->disappearSceneWindow(d->closeButtonOverlay);
             }
-        } else if (member == DuiAppletInventoryModel::InstallationSources) {
-            // Remove any existing source containers
-            foreach(DuiContainer * container, installationSourceContainers) {
-                d->layoutPolicy->removeItem(container);
-                delete container;
-            }
-
-            // Create containers for the source widgets
-            installationSourceContainers.clear();
-            foreach(DuiWidget * widget, model()->installationSources()) {
-                DuiContainer *sourceContainer = new DuiContainer(d->controller);
-                installationSourceContainers.append(sourceContainer);
-                sourceContainer->setObjectName("DuiAppletInventorySourceContainer");
-                sourceContainer->setCentralWidget(widget);
-                connectContainerToInstallationSource(sourceContainer, widget);
-                d->layoutPolicy->addItem(sourceContainer);
-            }
         }
     }
 }
+
 
 void DuiAppletInventoryView::connectContainerToInstallationSource(DuiContainer *container, DuiWidget *sourceWidget) const
 {

@@ -37,6 +37,7 @@
 #include "duiappletinstancemanager.h"
 #include "duidatastore.h"
 #include "duilocale.h"
+#include <DuiApplicationExtensionArea>
 
 DuiMashupCanvasViewPrivate::DuiMashupCanvasViewPrivate() :
     controller(NULL),
@@ -65,11 +66,6 @@ void DuiMashupCanvasViewPrivate::init()
 
     // Put the applet inventory inside a viewport
     appletInventoryViewport->setWidget(appletInventory);
-
-    // Set the applet installation source libraries for the applet inventory.
-    // TODO: this is currently a fake installation source to provide some demo functionality.
-    // Once the real installation sources are known, they will be added here.
-    appletInventory->setInstallationSources(QStringList("libfakeinstallationsource.so"));
 
     // TODO: FIXME - this needs to have the scene specified,
     // temporarily uses currently active DuiWindow's scene.
