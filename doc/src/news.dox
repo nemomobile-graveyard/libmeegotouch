@@ -27,6 +27,14 @@
 
   Manual handling and wiring is still possible, but it's not the default behavior.
 
+- DuiWidget got event handlers for gestures:
+    - DuiWidget::gestureEvent()
+    - DuiWidget::tapAndHoldGestureEvent()
+    - DuiWidget::panGestureEvent()
+    - DuiWidget::pinchGestureEvent()
+    - DuiWidget::tapGestureEvent()
+    - DuiWidget::swipeGestureEvent()
+
 \subsection removed Removed or Renamed
 - escapeButtonMode() property was removed from DuiApplicationPage. Use escapeMode() instead.
 - DuiDialog::windowModal() was renamed to DuiDialog::systemModal().
