@@ -1,3 +1,12 @@
+libdui (0.19.11-1) unstable; urgency=low
+
+  * Changes: Enable reading the keyboardOpen contextProperty
+  * Fixes: NB#159393 - DuiButton does not draw if reparented before creation of the first DuiWindow
+  * Changes: DBus registration path for dui notification manager to /notificationmanager
+  * Fixes: NB#161127 - App menu should hide when back button is tapped
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 24 Mar 2010 13:23:57 +0200
+
 libdui (0.19.10-1) unstable; urgency=low
 
   * Fixes: NB#160550 DuiLabel::setText() does not work when using "" as a parameter.
