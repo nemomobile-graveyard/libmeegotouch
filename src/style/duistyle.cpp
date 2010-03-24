@@ -193,13 +193,6 @@ const DuiWidgetController *DuiStyleContainer::parent() const
     return d_ptr->parent;
 }
 
-
-// this method is for this class and derived classes to set the current style
-// changes the pointer reference of current style
-void DuiStyleContainer::setCurrentStyle(const DuiStyle*&, const DuiStyle*&)
-{
-}
-
 // getter for derived classes
 const DuiStyle *DuiStyleContainer::currentStyle() const
 {
@@ -231,11 +224,6 @@ void DuiStyleContainer::setCurrentMode(const QString &mode)
         d_ptr->cachedCurrentStyle[1] = 0;
         d_ptr->currentMode = mode;
     }
-}
-
-QString DuiStyleContainer::currentMode()
-{
-    return d_ptr->currentMode;
 }
 
 QString DuiStyleContainer::currentMode() const
