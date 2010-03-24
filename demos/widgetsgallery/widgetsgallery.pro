@@ -144,12 +144,12 @@ services.commands = cat \
 services.files = $$OUT_PWD/$${myname}.service
 services.path = $$DUI_DBUS_SERVICES_DIR
 testsxml.files = tests.xml
-testsxml.path = /usr/share/dui-demos-widgetsgallery-tests/
+testsxml.path = $$DUI_INSTALL_DATA/dui-demos-widgetsgallery-tests/
 DEFINES += CONTACTS_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/contacts/\\\"\"
 DEFINES += IMAGES_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/\\\"\"
 
 data_files.files = data/*
-data_files.path = /usr/share/widgetsgallery/
+data_files.path = $$DUI_INSTALL_DATA/widgetsgallery/
 data_files.CONFIG += no_check_exist
 
 # Install instructions
