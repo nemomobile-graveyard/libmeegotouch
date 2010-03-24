@@ -217,9 +217,9 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
     case DuiAppletMessage::VISIBILITY_MESSAGE: {
         const DuiAppletVisibilityMessage *m = dynamic_cast<const DuiAppletVisibilityMessage *>(&message);
         if (m != NULL) {
-            if (m->visible() != visible) {
-                emit visibilityChanged(m->visible());
-                visible = m->visible();
+            if (m->isVisible() != visible) {
+                emit visibilityChanged(m->isVisible());
+                visible = m->isVisible();
                 if (visible) {
                     QList<QRectF> updateRegion;
                     updateRegion.append(changedRect);

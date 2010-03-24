@@ -46,9 +46,9 @@ void Ut_DuiAppletVisibilityMessage::testType()
 
 void Ut_DuiAppletVisibilityMessage::testVisibilityProperty()
 {
-    QVERIFY(message->visible());
+    QVERIFY(message->isVisible());
     message->setVisible(false);
-    QVERIFY(!message->visible());
+    QVERIFY(!message->isVisible());
 }
 
 void Ut_DuiAppletVisibilityMessage::testSerialization()
@@ -70,7 +70,7 @@ void Ut_DuiAppletVisibilityMessage::testUnserialization()
     buffer->seek(0);
     message->unserialize(*stream);
 
-    QVERIFY(!message->visible());
+    QVERIFY(!message->isVisible());
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiAppletVisibilityMessage)

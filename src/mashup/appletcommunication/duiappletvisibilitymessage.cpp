@@ -40,7 +40,7 @@ void DuiAppletVisibilityMessage::unserialize(QDataStream &stream)
     stream >> _visible;
 }
 
-bool DuiAppletVisibilityMessage::visible() const
+bool DuiAppletVisibilityMessage::isVisible() const
 {
     return _visible;
 }

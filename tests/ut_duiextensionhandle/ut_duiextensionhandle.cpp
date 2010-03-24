@@ -160,7 +160,7 @@ bool DuiAppletCommunicator::sendMessage(const DuiAppletMessage &message)
         contextMenuEventPos = (dynamic_cast<const DuiAppletObjectMenuRequestMessage &>(message)).pos();
         break;
     case DuiAppletMessage::VISIBILITY_MESSAGE:
-        visibility = (dynamic_cast<const DuiAppletVisibilityMessage &>(message)).visible();
+        visibility = (dynamic_cast<const DuiAppletVisibilityMessage &>(message)).isVisible();
         break;
     case DuiAppletMessage::OBJECT_MENU_ACTION_SELECTED_MESSAGE:
         remoteActionIndex = (dynamic_cast<const DuiAppletObjectMenuActionSelectedMessage &>(message)).index();
