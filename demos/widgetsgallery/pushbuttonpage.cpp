@@ -52,14 +52,12 @@ void PushButtonPage::createContent()
 {
     TemplatePage::createContent();
 
-    landscapePolicy->setContentsMargins(30, 0, 0, 0);
-
     // Push Buttons
     pushButton1 = new DuiButton();
     containerPolicy->addItem(pushButton1);
 
     pushButton2 = new DuiButton();
-    pushButton2->setIconID("Icon-music");
+    pushButton2->setIconID("icon-l-search");
     containerPolicy->addItem(pushButton2);
 
     pushButton3 = new DuiButton();
