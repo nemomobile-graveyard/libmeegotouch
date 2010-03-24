@@ -35,12 +35,12 @@ void Ut_DuiAppletMessageFactory::cleanup()
 void Ut_DuiAppletMessageFactory::testCreation()
 {
     // Try instantiating an object of unknown type
-    DuiAppletMessage *m = DuiAppletMessageFactory::create(DuiAppletMessage::INVALID);
+    DuiAppletMessage *m = DuiAppletMessageFactory::create(DuiAppletMessage::InvalidMessage);
     QVERIFY(m == NULL);
 
-    int i = (int)DuiAppletMessage::INVALID;
+    int i = (int)DuiAppletMessage::InvalidMessage;
     ++i;
-    for (; i < (int)DuiAppletMessage::NUM_TYPES; ++i) {
+    for (; i < (int)DuiAppletMessage::NumMessages; ++i) {
         m = DuiAppletMessageFactory::create((DuiAppletMessage::DuiAppletMessageType)i);
         QVERIFY(m != NULL);
         QCOMPARE(m->type(), (DuiAppletMessage::DuiAppletMessageType)i);

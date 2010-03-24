@@ -20,7 +20,7 @@
 #include "duiappletalivemessagerequest.h"
 
 DuiAppletAliveMessageRequest::DuiAppletAliveMessageRequest() :
-    DuiAppletMessage(APPLET_ALIVE_MESSAGE_REQUEST)
+    DuiAppletMessage(AppletAliveMessageRequest)
 {
 }
 

@@ -21,7 +21,7 @@
 #include <QAction>
 
 DuiAppletObjectMenuMessage::DuiAppletObjectMenuMessage(const QList<QAction *> actions) :
-    DuiAppletMessage(OBJECT_MENU_MESSAGE)
+    DuiAppletMessage(ObjectMenuMessage)
 {
     foreach(QAction * action, actions) {
         actionNamesList.append(action->text());

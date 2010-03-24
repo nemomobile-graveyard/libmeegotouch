@@ -21,7 +21,7 @@
 #include "duiappletmessagefactory.h"
 
 DuiAppletPixmapTakenIntoUseMessage::DuiAppletPixmapTakenIntoUseMessage(Qt::HANDLE handle) :
-    DuiAppletMessage(PIXMAP_TAKEN_INTO_USE_MESSAGE),
+    DuiAppletMessage(PixmapTakenIntoUseMessage),
     _handle(handle)
 {
 }

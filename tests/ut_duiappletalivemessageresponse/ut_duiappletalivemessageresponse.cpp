@@ -34,7 +34,7 @@ void Ut_DuiAppletAliveMessageResponse::cleanup()
 
 void Ut_DuiAppletAliveMessageResponse::testType()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::APPLET_ALIVE_MESSAGE_RESPONSE);
+    QCOMPARE(message->type(), DuiAppletMessage::AppletAliveMessageResponse);
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiAppletAliveMessageResponse)

@@ -41,7 +41,7 @@ void Ut_DuiAppletPixmapModifiedMessage::cleanup()
 
 void Ut_DuiAppletPixmapModifiedMessage::testType()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::PIXMAP_MODIFIED_MESSAGE);
+    QCOMPARE(message->type(), DuiAppletMessage::PixmapModifiedMessage);
 }
 
 void Ut_DuiAppletPixmapModifiedMessage::testGeometryProperty()

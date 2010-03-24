@@ -330,7 +330,7 @@ void DuiExtensionHandle::messageReceived(const DuiAppletMessage &message)
     Q_D(DuiExtensionHandle);
 
     switch (message.type()) {
-    case DuiAppletMessage::PIXMAP_TAKEN_INTO_USE_MESSAGE: {
+    case DuiAppletMessage::PixmapTakenIntoUseMessage: {
         const DuiAppletPixmapTakenIntoUseMessage *m = dynamic_cast<const DuiAppletPixmapTakenIntoUseMessage *>(&message);
 
         if (m != NULL) {
@@ -339,7 +339,7 @@ void DuiExtensionHandle::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::APPLET_ALIVE_MESSAGE_RESPONSE: {
+    case DuiAppletMessage::AppletAliveMessageResponse: {
         const DuiAppletAliveMessageResponse *m = dynamic_cast<const DuiAppletAliveMessageResponse *>(&message);
         if (m != NULL) {
             d->communicationTimer.stop();
@@ -347,7 +347,7 @@ void DuiExtensionHandle::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::UPDATE_GEOMETRY_MESSAGE: {
+    case DuiAppletMessage::UpdateGeometryMessage: {
         const DuiAppletUpdateGeometryMessage *m = dynamic_cast<const DuiAppletUpdateGeometryMessage *>(&message);
         if (m != NULL) {
             // Put the size hints in the model and update the geometry
@@ -357,7 +357,7 @@ void DuiExtensionHandle::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::PIXMAP_MODIFIED_MESSAGE: {
+    case DuiAppletMessage::PixmapModifiedMessage: {
         const DuiAppletPixmapModifiedMessage *m = dynamic_cast<const DuiAppletPixmapModifiedMessage *>(&message);
         if (m != NULL) {
             emit pixmapModified(m->geometry());
@@ -365,7 +365,7 @@ void DuiExtensionHandle::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::OBJECT_MENU_MESSAGE: {
+    case DuiAppletMessage::ObjectMenuMessage: {
         //Got the actions from the message. Now draw them.
         const DuiAppletObjectMenuMessage *m = dynamic_cast<const DuiAppletObjectMenuMessage *>(&message);
         if (m != NULL) {
@@ -465,7 +465,7 @@ void DuiExtensionHandle::mousePressEvent(QGraphicsSceneMouseEvent *event)
     Q_D(DuiExtensionHandle);
 
     // Scale the mouse events based on the current pixmap scaling factor
-    d->communicator.sendMessage(DuiAppletMouseMessage(DuiAppletMessage::MOUSE_PRESS_MESSAGE, event->pos() / model()->scale(), event->button(), event->buttons()));
+    d->communicator.sendMessage(DuiAppletMouseMessage(DuiAppletMessage::MousePressMessage, event->pos() / model()->scale(), event->button(), event->buttons()));
 }
 
 void DuiExtensionHandle::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
@@ -495,7 +495,7 @@ void DuiExtensionHandle::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         Q_D(DuiExtensionHandle);
 
         // Scale the mouse events based on the current pixmap scaling factor
-        d->communicator.sendMessage(DuiAppletMouseMessage(DuiAppletMessage::MOUSE_RELEASE_MESSAGE, event->pos() / model()->scale(), event->button(), event->buttons()));
+        d->communicator.sendMessage(DuiAppletMouseMessage(DuiAppletMessage::MouseReleaseMessage, event->pos() / model()->scale(), event->button(), event->buttons()));
     }
 }
 
@@ -504,7 +504,7 @@ void DuiExtensionHandle::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     Q_D(DuiExtensionHandle);
 
     // Scale the mouse events based on the current pixmap scaling factor
-    d->communicator.sendMessage(DuiAppletMouseMessage(DuiAppletMessage::MOUSE_MOVE_MESSAGE, event->pos() / model()->scale(), event->button(), event->buttons()));
+    d->communicator.sendMessage(DuiAppletMouseMessage(DuiAppletMessage::MouseMoveMessage, event->pos() / model()->scale(), event->button(), event->buttons()));
 }
 
 void DuiExtensionHandle::sendGeometryMessage(QRectF rect, Qt::HANDLE pixmapHandle)

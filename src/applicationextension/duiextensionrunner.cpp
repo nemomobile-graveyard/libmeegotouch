@@ -196,9 +196,9 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
     aliveTimer->start(ALIVE_TIMER_TIMEOUT);
 
     switch (message.type()) {
-    case DuiAppletMessage::MOUSE_PRESS_MESSAGE:
-    case DuiAppletMessage::MOUSE_RELEASE_MESSAGE:
-    case DuiAppletMessage::MOUSE_MOVE_MESSAGE: {
+    case DuiAppletMessage::MousePressMessage:
+    case DuiAppletMessage::MouseReleaseMessage:
+    case DuiAppletMessage::MouseMoveMessage: {
         const DuiAppletMouseMessage *m = dynamic_cast<const DuiAppletMouseMessage *>(&message);
         if (m != NULL) {
             handleMouseEvent(m);
@@ -206,7 +206,7 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::CANCEL_MESSAGE: {
+    case DuiAppletMessage::CancelMessage: {
         const DuiAppletCancelMessage *m = dynamic_cast<const DuiAppletCancelMessage *>(&message);
         if (m != NULL) {
             handleCancelEvent(m);
@@ -214,7 +214,7 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::VISIBILITY_MESSAGE: {
+    case DuiAppletMessage::VisibilityMessage: {
         const DuiAppletVisibilityMessage *m = dynamic_cast<const DuiAppletVisibilityMessage *>(&message);
         if (m != NULL) {
             if (m->isVisible() != visible) {
@@ -230,7 +230,7 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::ORIENTATION_MESSAGE: {
+    case DuiAppletMessage::OrientationMessage: {
         const DuiAppletOrientationMessage *m = dynamic_cast<const DuiAppletOrientationMessage *>(&message);
 
         if (m != NULL) {
@@ -247,7 +247,7 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::SET_GEOMETRY_MESSAGE: {
+    case DuiAppletMessage::SetGeometryMessage: {
         const DuiAppletSetGeometryMessage *m = dynamic_cast<const DuiAppletSetGeometryMessage *>(&message);
         if (m != NULL) {
             // Take the new X pixmap into use
@@ -269,7 +269,7 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::APPLET_ALIVE_MESSAGE_REQUEST: {
+    case DuiAppletMessage::AppletAliveMessageRequest: {
         const DuiAppletAliveMessageRequest *m = dynamic_cast<const DuiAppletAliveMessageRequest *>(&message);
         if (m != NULL) {
             communicator->sendMessage(DuiAppletAliveMessageResponse());
@@ -277,7 +277,7 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::OBJECT_MENU_REQUEST_MESSAGE: {
+    case DuiAppletMessage::ObjectMenuRequestMessage: {
         const DuiAppletObjectMenuRequestMessage *m = dynamic_cast<const DuiAppletObjectMenuRequestMessage *>(&message);
 
         if (m != NULL) {
@@ -306,7 +306,7 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::OBJECT_MENU_ACTION_SELECTED_MESSAGE: {
+    case DuiAppletMessage::ObjectMenuActionSelectedMessage: {
         const DuiAppletObjectMenuActionSelectedMessage *m = dynamic_cast<const DuiAppletObjectMenuActionSelectedMessage *>(&message);
 
         if (m != NULL) {
@@ -326,13 +326,13 @@ void DuiExtensionRunner::handleMouseEvent(const DuiAppletMouseMessage *message)
     // Convert our own event id to Qt mouse event id
     QEvent::Type type = QEvent::MouseButtonPress;
     switch (message->type()) {
-    case DuiAppletMessage::MOUSE_PRESS_MESSAGE:
+    case DuiAppletMessage::MousePressMessage:
         type = QEvent::MouseButtonPress;
         break;
-    case DuiAppletMessage::MOUSE_RELEASE_MESSAGE:
+    case DuiAppletMessage::MouseReleaseMessage:
         type = QEvent::MouseButtonRelease;
         break;
-    case DuiAppletMessage::MOUSE_MOVE_MESSAGE:
+    case DuiAppletMessage::MouseMoveMessage:
         type = QEvent::MouseMove;
         break;
     default:

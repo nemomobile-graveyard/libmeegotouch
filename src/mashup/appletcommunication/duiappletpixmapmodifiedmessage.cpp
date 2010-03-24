@@ -20,7 +20,7 @@
 #include "duiappletpixmapmodifiedmessage.h"
 
 DuiAppletPixmapModifiedMessage::DuiAppletPixmapModifiedMessage(const QRectF &geometry) :
-    DuiAppletMessage(PIXMAP_MODIFIED_MESSAGE),
+    DuiAppletMessage(PixmapModifiedMessage),
     _geometry(geometry)
 {
 }

@@ -23,7 +23,7 @@
 #include "duiappletmessagefactory.h"
 
 DuiAppletObjectMenuRequestMessage::DuiAppletObjectMenuRequestMessage(QPointF pos) :
-    DuiAppletMessage(OBJECT_MENU_REQUEST_MESSAGE),
+    DuiAppletMessage(ObjectMenuRequestMessage),
     _pos(pos)
 {
 }

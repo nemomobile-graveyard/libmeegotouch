@@ -21,7 +21,7 @@
 #include "duiappletmessagefactory.h"
 
 DuiAppletObjectMenuActionSelectedMessage::DuiAppletObjectMenuActionSelectedMessage(uint index) :
-    DuiAppletMessage(OBJECT_MENU_ACTION_SELECTED_MESSAGE),
+    DuiAppletMessage(ObjectMenuActionSelectedMessage),
     actionIndex(index)
 {
 }

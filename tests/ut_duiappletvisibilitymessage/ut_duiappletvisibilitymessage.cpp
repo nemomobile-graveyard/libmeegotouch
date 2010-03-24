@@ -41,7 +41,7 @@ void Ut_DuiAppletVisibilityMessage::cleanup()
 
 void Ut_DuiAppletVisibilityMessage::testType()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::VISIBILITY_MESSAGE);
+    QCOMPARE(message->type(), DuiAppletMessage::VisibilityMessage);
 }
 
 void Ut_DuiAppletVisibilityMessage::testVisibilityProperty()

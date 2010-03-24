@@ -114,13 +114,13 @@ QVector<QSizeF> DuiAppletCommunicator_sentUpdateGeometryMessageSizeHints;
 bool DuiAppletCommunicator::sendMessage(const DuiAppletMessage &message)
 {
     DuiAppletCommunicator_sentMessageType = message.type();
-    if (DuiAppletCommunicator_sentMessageType == DuiAppletMessage::PIXMAP_MODIFIED_MESSAGE) {
+    if (DuiAppletCommunicator_sentMessageType == DuiAppletMessage::PixmapModifiedMessage) {
         const DuiAppletPixmapModifiedMessage pixmapModifiedMessage = dynamic_cast<const DuiAppletPixmapModifiedMessage &>(message);
         DuiAppletCommunicator_sentPixmapModifiedMessageGeometry = pixmapModifiedMessage.geometry();
-    } else if (DuiAppletCommunicator_sentMessageType == DuiAppletMessage::UPDATE_GEOMETRY_MESSAGE) {
+    } else if (DuiAppletCommunicator_sentMessageType == DuiAppletMessage::UpdateGeometryMessage) {
         const DuiAppletUpdateGeometryMessage updateGeometryMessage = dynamic_cast<const DuiAppletUpdateGeometryMessage &>(message);
         DuiAppletCommunicator_sentUpdateGeometryMessageSizeHints = updateGeometryMessage.sizeHints();
-    } else if (DuiAppletCommunicator_sentMessageType == DuiAppletMessage::OBJECT_MENU_MESSAGE) {
+    } else if (DuiAppletCommunicator_sentMessageType == DuiAppletMessage::ObjectMenuMessage) {
         const DuiAppletObjectMenuMessage objectMenuMessage = dynamic_cast<const DuiAppletObjectMenuMessage &>(message);
         DuiAppletCommunicator_sentObjectMenuActionList = objectMenuMessage.actionList();
     }
@@ -150,7 +150,7 @@ void Ut_DuiExtensionRunner::init()
     gDuiAppletSharedMutexStub->stubSetReturnValue("unlock", true);
     gDuiAppletSharedMutexStub->stubSetReturnValue("tryLock", true);
     DuiAppletCommunicator_connectToProcessReturn = true;
-    DuiAppletCommunicator_sentMessageType = DuiAppletMessage::INVALID;
+    DuiAppletCommunicator_sentMessageType = DuiAppletMessage::InvalidMessage;
     DuiAppletCommunicator_sentPixmapModifiedMessageGeometry = QRectF();
     DuiAppletCommunicator_sentUpdateGeometryMessageSizeHints = QVector<QSizeF>(Qt::NSizeHints);
     sceneRenderCalled = false;
@@ -198,7 +198,7 @@ void Ut_DuiExtensionRunner::testRelayingMouseEvents()
     QCoreApplication::instance()->installEventFilter(&filter);
 
     // Emit mouse press message
-    DuiAppletMouseMessage message1(DuiAppletMessage::MOUSE_PRESS_MESSAGE, QPointF(-5, 2), Qt::RightButton, Qt::RightButton | Qt::MidButton);
+    DuiAppletMouseMessage message1(DuiAppletMessage::MousePressMessage, QPointF(-5, 2), Qt::RightButton, Qt::RightButton | Qt::MidButton);
     emit sendMessage(message1);
     QCOMPARE(filter.events.count(), 1);
     QCOMPARE(filter.events.at(0)->type(), QEvent::GraphicsSceneMousePress);
@@ -206,7 +206,7 @@ void Ut_DuiExtensionRunner::testRelayingMouseEvents()
     QCOMPARE(filter.events.at(0)->buttons(), Qt::RightButton | Qt::MidButton);
 
     // Emit mouse release message
-    DuiAppletMouseMessage message2(DuiAppletMessage::MOUSE_RELEASE_MESSAGE, QPointF(0, 4), Qt::LeftButton, Qt::LeftButton | Qt::MidButton);
+    DuiAppletMouseMessage message2(DuiAppletMessage::MouseReleaseMessage, QPointF(0, 4), Qt::LeftButton, Qt::LeftButton | Qt::MidButton);
     emit sendMessage(message2);
     QCOMPARE(filter.events.count(), 2);
     QCOMPARE(filter.events.at(1)->type(), QEvent::GraphicsSceneMouseRelease);
@@ -214,7 +214,7 @@ void Ut_DuiExtensionRunner::testRelayingMouseEvents()
     QCOMPARE(filter.events.at(1)->buttons(), Qt::LeftButton | Qt::MidButton);
 
     // Emit mouse move message
-    DuiAppletMouseMessage message3(DuiAppletMessage::MOUSE_MOVE_MESSAGE, QPointF(-5, 2), Qt::MidButton, Qt::MidButton);
+    DuiAppletMouseMessage message3(DuiAppletMessage::MouseMoveMessage, QPointF(-5, 2), Qt::MidButton, Qt::MidButton);
     emit sendMessage(message3);
     QCOMPARE(filter.events.count(), 3);
     QCOMPARE(filter.events.at(2)->type(), QEvent::GraphicsSceneMouseMove);
@@ -230,7 +230,7 @@ void Ut_DuiExtensionRunner::testAppletRunnerQuitsIfMessageReceivingTimeouts()
     m_instance->init("servername");
 
     // Verify that the quit is not always called
-    DuiAppletMouseMessage message1(DuiAppletMessage::MOUSE_PRESS_MESSAGE, QPointF(-5, 2), Qt::RightButton, Qt::RightButton | Qt::MidButton);
+    DuiAppletMouseMessage message1(DuiAppletMessage::MousePressMessage, QPointF(-5, 2), Qt::RightButton, Qt::RightButton | Qt::MidButton);
     emit sendMessage(message1);
     QVERIFY(!quitCalled);
 
@@ -245,7 +245,7 @@ void Ut_DuiExtensionRunner::testMessageReceivedBeforeAppletInit()
 {
     {
         // Mouse messages are more or less the same so it's enough to test only one
-        DuiAppletMouseMessage msg(DuiAppletMessage::MOUSE_PRESS_MESSAGE, QPointF(-5, 2), Qt::RightButton, Qt::RightButton | Qt::MidButton);
+        DuiAppletMouseMessage msg(DuiAppletMessage::MousePressMessage, QPointF(-5, 2), Qt::RightButton, Qt::RightButton | Qt::MidButton);
         emit sendMessage(msg);
     }
 
@@ -322,7 +322,7 @@ void Ut_DuiExtensionRunner::testSendUpdateGeometryMessage()
     layout->addItem(m_instance->widget);
 
     m_instance->sendUpdateGeometryMessage();
-    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::UPDATE_GEOMETRY_MESSAGE);
+    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::UpdateGeometryMessage);
     QCOMPARE(DuiAppletCommunicator_sentUpdateGeometryMessageSizeHints.at(Qt::MinimumSize), QSizeF(50, 50));
     QCOMPARE(DuiAppletCommunicator_sentUpdateGeometryMessageSizeHints.at(Qt::PreferredSize), QSizeF(100, 100));
     QCOMPARE(DuiAppletCommunicator_sentUpdateGeometryMessageSizeHints.at(Qt::MaximumSize), QSizeF(150, 150));
@@ -347,30 +347,30 @@ void Ut_DuiExtensionRunner::testSceneChanged()
     region.append(QRectF(10, 10, 10, 10));
     emit changeScene(region);
 
-    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::PIXMAP_MODIFIED_MESSAGE);
+    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::PixmapModifiedMessage);
     QCOMPARE(DuiAppletCommunicator_sentPixmapModifiedMessageGeometry, QRectF(0, 0, 20, 20));
     QVERIFY(sceneRenderCalled);
 
     // Check that no pixmap modified messages are sent when invisible
-    DuiAppletCommunicator_sentMessageType = DuiAppletMessage::INVALID;
+    DuiAppletCommunicator_sentMessageType = DuiAppletMessage::InvalidMessage;
     DuiAppletCommunicator_sentPixmapModifiedMessageGeometry = QRectF();
     sceneRenderCalled = false;
 
     emit sendMessage(DuiAppletVisibilityMessage(false));
     emit changeScene(region);
-    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::INVALID);
+    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::InvalidMessage);
     QCOMPARE(DuiAppletCommunicator_sentPixmapModifiedMessageGeometry, QRectF());
     QVERIFY(!sceneRenderCalled);
 
     region.append(QRectF(20, 20, 10, 10));
     emit changeScene(region);
-    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::INVALID);
+    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::InvalidMessage);
     QCOMPARE(DuiAppletCommunicator_sentPixmapModifiedMessageGeometry, QRectF());
     QVERIFY(!sceneRenderCalled);
 
     // Check that pixmap modified message with cumulated rect is sent when set visible again
     emit sendMessage(DuiAppletVisibilityMessage(true));
-    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::PIXMAP_MODIFIED_MESSAGE);
+    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::PixmapModifiedMessage);
     QCOMPARE(DuiAppletCommunicator_sentPixmapModifiedMessageGeometry, QRectF(0, 0, 30, 30));
     QVERIFY(sceneRenderCalled);
 
@@ -379,7 +379,7 @@ void Ut_DuiExtensionRunner::testSceneChanged()
     region.append(QRectF(5, 5, 15, 15));
     sceneRenderCalled = false;
     emit changeScene(region);
-    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::PIXMAP_MODIFIED_MESSAGE);
+    QCOMPARE(DuiAppletCommunicator_sentMessageType, DuiAppletMessage::PixmapModifiedMessage);
     QCOMPARE(DuiAppletCommunicator_sentPixmapModifiedMessageGeometry, QRectF(5, 5, 15, 15));
     QVERIFY(sceneRenderCalled);
 }

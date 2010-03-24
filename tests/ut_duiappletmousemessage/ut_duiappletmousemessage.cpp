@@ -29,7 +29,7 @@ void Ut_DuiAppletMouseMessage::init()
     buffer->open(QIODevice::ReadWrite);
     stream = new QDataStream(buffer);
 
-    message = new DuiAppletMouseMessage(DuiAppletMessage::MOUSE_PRESS_MESSAGE);
+    message = new DuiAppletMouseMessage(DuiAppletMessage::MousePressMessage);
 }
 
 void Ut_DuiAppletMouseMessage::cleanup()
@@ -41,15 +41,15 @@ void Ut_DuiAppletMouseMessage::cleanup()
 
 void Ut_DuiAppletMouseMessage::testTypes()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::MOUSE_PRESS_MESSAGE);
+    QCOMPARE(message->type(), DuiAppletMessage::MousePressMessage);
     delete message;
 
-    message = new DuiAppletMouseMessage(DuiAppletMessage::MOUSE_RELEASE_MESSAGE);
-    QCOMPARE(message->type(), DuiAppletMessage::MOUSE_RELEASE_MESSAGE);
+    message = new DuiAppletMouseMessage(DuiAppletMessage::MouseReleaseMessage);
+    QCOMPARE(message->type(), DuiAppletMessage::MouseReleaseMessage);
     delete message;
 
-    message = new DuiAppletMouseMessage(DuiAppletMessage::MOUSE_MOVE_MESSAGE);
-    QCOMPARE(message->type(), DuiAppletMessage::MOUSE_MOVE_MESSAGE);
+    message = new DuiAppletMouseMessage(DuiAppletMessage::MouseMoveMessage);
+    QCOMPARE(message->type(), DuiAppletMessage::MouseMoveMessage);
 }
 
 void Ut_DuiAppletMouseMessage::testPositionProperty()
@@ -59,7 +59,7 @@ void Ut_DuiAppletMouseMessage::testPositionProperty()
     QCOMPARE(message->position(), QPointF(1.0, 2.0));
 
     delete message;
-    message = new DuiAppletMouseMessage(DuiAppletMessage::MOUSE_PRESS_MESSAGE, QPointF(1.0, 2.0));
+    message = new DuiAppletMouseMessage(DuiAppletMessage::MousePressMessage, QPointF(1.0, 2.0));
     QCOMPARE(message->position(), QPointF(1.0, 2.0));
 }
 
@@ -70,7 +70,7 @@ void Ut_DuiAppletMouseMessage::testButtonProperty()
     QCOMPARE(message->button(), Qt::RightButton);
 
     delete message;
-    message = new DuiAppletMouseMessage(DuiAppletMessage::MOUSE_PRESS_MESSAGE, QPointF(1.0, 2.0), Qt::MidButton);
+    message = new DuiAppletMouseMessage(DuiAppletMessage::MousePressMessage, QPointF(1.0, 2.0), Qt::MidButton);
     QCOMPARE(message->button(), Qt::MidButton);
 }
 
@@ -81,7 +81,7 @@ void Ut_DuiAppletMouseMessage::testButtonsProperty()
     QCOMPARE(message->buttons(), Qt::LeftButton | Qt::RightButton);
 
     delete message;
-    message = new DuiAppletMouseMessage(DuiAppletMessage::MOUSE_PRESS_MESSAGE, QPointF(1.0, 2.0), Qt::MidButton, Qt::LeftButton | Qt::MidButton);
+    message = new DuiAppletMouseMessage(DuiAppletMessage::MousePressMessage, QPointF(1.0, 2.0), Qt::MidButton, Qt::LeftButton | Qt::MidButton);
     QCOMPARE(message->buttons(), Qt::LeftButton | Qt::MidButton);
 }
 

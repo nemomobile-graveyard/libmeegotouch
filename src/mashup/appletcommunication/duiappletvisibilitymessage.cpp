@@ -21,7 +21,7 @@
 #include "duiappletmessagefactory.h"
 
 DuiAppletVisibilityMessage::DuiAppletVisibilityMessage(bool visible) :
-    DuiAppletMessage(VISIBILITY_MESSAGE),
+    DuiAppletMessage(VisibilityMessage),
     _visible(visible)
 {
 }

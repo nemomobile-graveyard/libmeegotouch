@@ -42,7 +42,7 @@ void Ut_DuiAppletObjectMenuActionSelectedMessage::cleanup()
 
 void Ut_DuiAppletObjectMenuActionSelectedMessage::testType()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::OBJECT_MENU_ACTION_SELECTED_MESSAGE);
+    QCOMPARE(message->type(), DuiAppletMessage::ObjectMenuActionSelectedMessage);
 }
 
 void Ut_DuiAppletObjectMenuActionSelectedMessage::testSerialization()

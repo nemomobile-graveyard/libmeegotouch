@@ -21,7 +21,7 @@
 #include "duiappletmessagefactory.h"
 
 DuiAppletCancelMessage::DuiAppletCancelMessage() :
-    DuiAppletMessage(CANCEL_MESSAGE)
+    DuiAppletMessage(CancelMessage)
 {
 }
 

@@ -34,7 +34,7 @@ DuiAppletCommunicator::DuiAppletCommunicator() :
     socket(NULL),
     stream(NULL),
     readState(NEEDS_TYPE),
-    receivedMessageType(DuiAppletMessage::INVALID),
+    receivedMessageType(DuiAppletMessage::InvalidMessage),
     pendingMessagePayloadSize(-1),
     messagePayloadReceivingStream(&receivingBuffer)
 {

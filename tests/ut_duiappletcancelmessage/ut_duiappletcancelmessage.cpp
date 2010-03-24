@@ -34,7 +34,7 @@ void Ut_DuiAppletCancelMessage::cleanup()
 
 void Ut_DuiAppletCancelMessage::testDefaultAppletCancelMessageType()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::CANCEL_MESSAGE);
+    QCOMPARE(message->type(), DuiAppletMessage::CancelMessage);
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiAppletCancelMessage)
