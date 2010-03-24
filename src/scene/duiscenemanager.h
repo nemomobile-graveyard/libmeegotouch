@@ -170,25 +170,25 @@ public Q_SLOTS:
     void closeSoftwareInputPanel();
 
     /*!
-     * Attaches a \a window to the scene manager and shows it using associated animation.
-     * According to the given \a policy, a window can be kept or destroyed after hiding.
+     * Attaches a \a sceneWindow to the scene manager and makes it appear using associated animation.
+     * According to the given \a policy, a scene window can be kept or destroyed after disappearing.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::appear()
      * calls this method for you.
      */
-    void appearSceneWindow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
+    void appearSceneWindow(DuiSceneWindow *sceneWindow, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
 
     /*!
-     * Attaches a \a window to the scene manager and shows it without animations (instantly).
-     * According to the given \a policy, a window can be kept or destroyed after hiding.
+     * Attaches a \a sceneWindow to the scene manager and makes it appear without animations (instantly).
+     * According to the given \a policy, a scene window can be kept or destroyed after disappearing.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::appearNow()
      * calls this method for you.
      */
-    void appearSceneWindowNow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
+    void appearSceneWindowNow(DuiSceneWindow *sceneWindow, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
 
     /*!
-     * Shows a modal \a dialog using associated animation and returns its result code.
+     * Makes a \a dialog appear using associated animation and returns its result code.
      *
      * \note Normally you don't have to call this method explicitly.
      * DuiDialog::exec() calls this method for you.
@@ -196,36 +196,36 @@ public Q_SLOTS:
     int execDialog(DuiDialog *dialog);
 
     /*!
-     * Hides a \a window using associated animation and detaches it from the scene manager.
+     * Makes a \a sceneWindow disappear using associated animation and detaches it from the scene manager.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::disappear()
      * calls this method for you.
      */
-    void disappearSceneWindow(DuiSceneWindow *window);
+    void disappearSceneWindow(DuiSceneWindow *sceneWindow);
 
     /*!
-     * Hides a \a window without animations (instantly) and detaches it from the scene manager.
+     * Makes a \a sceneWindow disappear without animations (instantly) and detaches it from the scene manager.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::disappearNow()
      * calls this method for you.
      */
-    void disappearSceneWindowNow(DuiSceneWindow *window);
+    void disappearSceneWindowNow(DuiSceneWindow *sceneWindow);
 
     /*!
-     * Closes a \a window using associated animation and detaches it from the scene manager.
+     * Dismisses a \a sceneWindow using associated animation and detaches it from the scene manager.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::dismiss()
      * calls this method for you.
      */
-    void dismissSceneWindow(DuiSceneWindow *window);
+    void dismissSceneWindow(DuiSceneWindow *sceneWindow);
 
     /*!
-     * Closes a \a window without animations (instantly) and detaches it from the scene manager.
+     * Dismisses a \a sceneWindow without animations (instantly) and detaches it from the scene manager.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::dismissNow()
      * calls this method for you.
      */
-    void dismissSceneWindowNow(DuiSceneWindow *window);
+    void dismissSceneWindowNow(DuiSceneWindow *sceneWindow);
 
 Q_SIGNALS:
     /*! \brief Signal emitted before scene geometry is changed for a rotation
