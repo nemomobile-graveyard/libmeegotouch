@@ -34,22 +34,46 @@ class DuiOnDisplayChangeEvent;
 
 /*!
   \class DuiWindow
-  \brief DuiWindow is the base class for all Direct UI application windows
+  \brief DuiWindow is the base class for all DirectUI windows
 
-    Example: Showing scene windows on DuiWindow.
+  A DirectUI window is completely empty by default. For developing an application
+  conforming to the DirectUI style, use DuiApplicationWindow instead.
 
-    \code
-        DuiApplication app;
-        DuiWindow window;
-        DuiSceneWindow *sceneWindow = new DuiMessageBox("Hello World!");
+  A DirectUI window is a QGraphicsView widget that visualizes the contents
+  of the application scene. The key differences compared to the standard
+  QGraphicsView is:
 
-        window.show();
+  - The coordinate system of a DuiWindow starts with (0,0) in the top-left corner
+    and does typically not change during an application's execution.
+  - DuiWindows have an OpenGL viewport by default, which causes QPainter commands
+    for the window to use one of Qt's OpenGL backends.
+  - Fullscreen updates are enabled by default for the window, as OpenGL partial
+    updates are not supported in Qt.
+  - New concept of window orientation. DirectUI applications change orientation through
+    a scene graph transformation. The window widget coordinates stay the same
+    after an orientation change while the root element of the scene graph can have
+    an arbitary transformation angle. See \ref rotation.
+  - New concept of scene management. DirectUI supports in-scene variants of traditional
+    UI components such as dialogs, popups and menus. DuiSceneManager acts like an
+    in-application window manager to orchestrate the various components.
+  - New concept of display visibility. DirectUI applications typically operate in
+    a fully composited environment, meaning that a shown window still doesn't
+    guarantee that it is visible. Display visibility tells whether the user is
+    able to see the window.
 
-        sceneWindow->appear(&window);
+  Example: Showing scene windows on DuiWindow.
 
-        app.exec();
-    \endcode
+  \code
+      DuiApplication app;
+      DuiWindow window;
+      DuiSceneWindow *sceneWindow = new DuiMessageBox("Hello World!");
 
+      window.show();
+
+      sceneWindow->appear(&window);
+
+      app.exec();
+  \endcode
 */
 class DUI_EXPORT DuiWindow : public QGraphicsView
 {
@@ -61,107 +85,121 @@ class DUI_EXPORT DuiWindow : public QGraphicsView
      * \sa isOrientationLocked(), setOrientationLocked()
      */
     Q_PROPERTY(bool keepCurrentOrientation READ keepCurrentOrientation WRITE setKeepCurrentOrientation)
+    /*!
+     \property orientationAngleLocked
+     Is the orientation angle locked
+     */
     Q_PROPERTY(bool orientationAngleLocked READ isOrientationAngleLocked WRITE setOrientationAngleLocked)
+    /*!
+     \property orientationLocked
+     Is the orientation locked
+     */
     Q_PROPERTY(bool orientationLocked READ isOrientationLocked WRITE setOrientationLocked)
 
 public:
     /*!
-     * \brief Creates a DuiWindow without a scene manager.
-     *
-     * A scene manager can still be assigned later on by calling
-     * setSceneManager(). One will also be automatically created
-     * if needed by the non-const version of sceneManager().
-     *
-     * \param parent QWidget defaults to 0
-     * \sa setSceneManager(), sceneManager()
+     \brief Creates a DuiWindow without a scene manager.
+
+     \a parent is passed to QGraphicsView's constructor.
+
+     A scene manager can be assigned later by calling setSceneManager(),
+     however a default scene manager will be automatically created as
+     needed unless explicitly set whenever any scene management is required
+     (adding a managed class like DuiDialog to the application).
+
+     \sa setSceneManager(), sceneManager()
      */
     explicit DuiWindow(QWidget *parent = 0);
 
     /*!
-     * \brief Creates a DuiWindow with a provided scene manager.
-     * DuiWindow will take ownership over the given scene manager.
-     *
-     * \param sceneManager Scene manager to be used.
+     \brief Creates a DuiWindow with a provided \a scenemanager.
+
+     \a parent is passed to QGraphicsView's constructor.
+
+     DuiWindow will take ownership of the given scene manager.
      */
     explicit DuiWindow(DuiSceneManager *sceneManager,
                        QWidget *parent = 0);
 
+    /*!
+     \brief Destructs the DuiWindow object.
+
+     If a scene manager is associated with the window, it is destroyed as well.
+     */
     virtual ~DuiWindow();
 
     /*!
-     * \brief Sets the translucency of DuiWindow
-     *
-     * Having a translucent background means that any window behind it will be
-     * shown.
-     *
-     * Calling this method is costly since it involves recreating the viewport.
-     * This method usually should be called only once, before showing the window.
-     *
-     * Background translucency is disabled by default.
-     *
-     *  Platform notes:
-     *   - Device: This feature requires that a compositing manager is running
-     *     and an EGL surface with alpha channels
-     *   - Scratchbox: MesaGL does not support ARGB GLX visuals. Only workaround
-     *     is to run in software mode
-     *
-     * \param enable If true, DuiWindow will have a transparent background.
+     \brief Sets the translucency of the window.
+
+     Background translucency is disabled by default.
+
+     Having a translucent background means that any window behind it will
+     show through the parts not otherwise filled by the application, for example
+     by widgets.
+
+     Calling this method is costly since it involves recreating the window's viewport.
+     This method usually should be called only once, before showing the window.
+
+     Platform notes:
+      - Device: This feature requires that a compositing manager is running
+        and an EGL surface with alpha channels
+      - Desktop/Scratchbox: MesaGL does not support ARGB GLX visuals. As a
+        workaround, translucency also works in software mode.
      */
-    void setTranslucentBackground(bool enable);
+    void setTranslucentBackground(bool enabled);
 
     /*!
-     * Returns a pointer to the window's DuiScene.
+     \brief Returns the window's DuiScene.
      */
     DuiScene *scene();
 
     /*!
-     * \brief Assigns a scene manager to the DuiWindow
-     *
-     * The existing scene manager (if any) will be deleted and replaced by
-     * \a sceneManager.
-     *
-     * DuiWindow will take ownership over \a sceneManager and use
-     * the scene that is managed by it.
-     *
-     * \param sceneManager scene manager to be used. Can be 0.
+     \brief Assigns a scene manager to the window.
+
+     The existing scene manager (if any) will be deleted and replaced by
+     \a sceneManager. The new \a sceneManager can be 0.
+
+     DuiWindow will take ownership of the given scene manager.
      */
     void setSceneManager(DuiSceneManager *sceneManager);
 
     /*!
-     * Returns a pointer to the scene manager responsible for positioning scene windows
-     * in the window's DuiScene.
-     *
-     * \return scene manager being used or 0 (zero) if none was assigned.
+     \brief Returns the scene manager of the window, or 0 if not set.
+
+     The scene manager is responsible for positioning, animating and
+     generally managing DuiSceneWindows such as DuiDialog and DuiApplicationPage
+     inside the window's scene.
      */
     DuiSceneManager *sceneManager() const;
 
     /*!
-     * Returns a pointer to the scene manager responsible for positioning scene windows
-     * in the window's DuiScene.
-     *
-     * Non-const version. A scene manager will be automatically created if none
-     * was previously set.
+     \brief Returns the scene manager of the window. A scene manager will
+     be automatically created if none was previously set.
+
+     The scene manager is responsible for positioning, animating and
+     generally managing DuiSceneWindows such as DuiDialog and DuiApplicationPage
+     inside the window's scene.
      */
     DuiSceneManager *sceneManager();
 
     /*!
-     * Returns the current orientation of the window's scene.
+     \brief Returns the current orientation of the window's scene.
      */
     Dui::Orientation orientation() const;
 
     /*!
-     * Returns the current orientation angle of the window's scene.
+     \brief Returns the current orientation angle of the window's scene.
      */
     Dui::OrientationAngle orientationAngle() const;
 
     /*!
-     * Returns the visible size of the window (being also the size of its scene)
-     * for the given \a orientation.
+     \brief Returns the visible size of the window (being also the size of its scene)
+     for the given \a orientation.
      */
     QSize visibleSceneSize(Dui::Orientation) const;
 
     /*!
-     * Returns the visible size of the window (being also the size of its scene).
+     Returns the visible size of the window (being also the size of its scene).
      */
     QSize visibleSceneSize() const;
 
@@ -178,79 +216,83 @@ public:
     void setKeepCurrentOrientation(bool enabled);
 
     /*!
-     * Returns true if the window orientation angle is not allowed to change
-     * when device orientation changes, otherwise returns false.
-     * The default value is false.
-     *
-     * \sa setOrientationAngleLocked()
+     Returns true if the window orientation angle is not allowed to change
+     when device orientation changes.
+
+     The default value is false.
+
+     \sa setOrientationAngleLocked()
      */
     bool isOrientationAngleLocked() const;
 
     /*!
-     * Allows to control whether the window orientation angle should be updated with device orientation
-     * changes. If you need your window to be displayed only in certain orientation angle,
-     * set the desired angle using setOrientationAngle() and set this property to true.
-     *
-     * \example Locking window orientation angle
-     *
-     * \code
-     *    DuiApplication app;
-     *    DuiWindow window;
-     *
-     *    // Set the correct orientation angle.
-     *    // Disable animations because we don't need them at startup.
-     *    if (window.orientation() != Dui::Angle270)
-     *        window.setOrientationAngle(Dui::Angle270);
-     *    window.setOrientationAngleLocked(true);
-     *
-     *    window.show();
-     *
-     *    return app.exec();
-     * \endcode
-     *
-     * \sa lockOrientationAngle(), unlockOrientationAngle()
+     Controls whether the window orientation angle follows the device orientation.
+
+     If you require your window to be displayed only in a certain orientation angle,
+     set the desired angle using setOrientationAngle() and set this property to true.
+
+     Example of locking the window orientation angle:
+
+     \code
+        DuiApplication app;
+        DuiWindow window;
+
+        // Set the correct orientation angle.
+        // Disable animations because we don't need them at startup.
+        if (window.orientation() != Dui::Angle270)
+            window.setOrientationAngle(Dui::Angle270, Dui::ImmediateOrientationChange);
+        window.setOrientationAngleLocked(true);
+
+        window.show();
+
+        return app.exec();
+     \endcode
+
+     \sa lockOrientationAngle(), unlockOrientationAngle()
      */
     void setOrientationAngleLocked(bool locked);
 
     /*!
-     * Returns true if the window orientation is not allowed to change
-     * when device orientation changes, otherwise returns false.
-     * The default value is false.
-     *
-     * \sa setOrientationLocked()
+     Returns true if the window orientation is not allowed to change
+     when device orientation changes.
+
+     The default value is false.
+
+     \sa setOrientationLocked()
      */
     bool isOrientationLocked() const;
 
-    /*!
-     * Allows to control whether the window orientation should be updated with device orientation
-     * changes. If you need your window to be displayed only in certain orientation,
-     * set the desired angle using setOrientationAngle() and set this property to true.
-     *
-     * \note Setting this property to true locks orientation changes,
-     *       but allows automatic adjustments of the angle for the given orientation.
-     *       This means that a window locked in portrait mode will adjust between
-     *       Dui::Angle90 and Dui::Angle270 to keep "top edge" always on top and avoid
-     *       upside-down situations. In order to lock specific orientation angle, use
-     *       setOrientationAngleLocked().
-     *
-     * \example Locking window orientation
-     *
-     * \code
-     *    DuiApplication app;
-     *    DuiWindow window;
-     *
-     *    // Set the correct orientation angle.
-     *    // Disable animations because we don't need them at startup.
-     *    if (window.orientation() != Dui::Portrait)
-     *        window.setOrientationAngle(Dui::Angle270);
-     *    window.setOrientationLocked(true);
-     *
-     *    window.show();
-     *
-     *    return app.exec();
-     * \endcode
-     *
-     * \sa lockOrientationAngle(), unlockOrientationAngle()
+     /*!
+     Controls whether the window orientation follows the device orientation.
+
+     If you require your window to be displayed only in a certain orientation,
+     set the desired angle using setOrientationAngle() and set this property to true.
+
+     \note Setting this property to true locks orientation changes,
+           but allows automatic adjustments of the angle for the given orientation.
+           This means that a window locked in portrait mode will adjust between
+           Dui::Angle90 and Dui::Angle270 to keep "top edge" always on top and avoid
+           upside-down situations. In order to lock specific orientation angle, use
+           setOrientationAngleLocked().
+
+     Example of locking the window orientation:
+
+     \code
+        DuiApplication app;
+        DuiWindow window;
+
+        // Set the correct orientation angle.
+        // Disable animations because we don't need them at startup.
+        if (window.orientation() != Dui::Portrait)
+             window.setOrientationAngle(Dui::Angle270, Dui::ImmediateOrientationChange);
+        window.setOrientationLocked(true);
+
+        window.show();
+
+        return app.exec();
+     \endcode
+
+     \sa lockOrientationAngle(), unlockOrientationAngle()
      */
     void setOrientationLocked(bool locked);
 
@@ -259,87 +301,89 @@ public:
 
 public Q_SLOTS:
     /*!
-     * Allows to set the orientation angle of the window. If the window is hidden or it hasn't been
-     * shown yet, the orientation angle change is immediate (i.e. without rotation animation).
-     * Otherwise a rotation animation is performed.
-     *
-     * \param angle New orientation angle for the window
+     Sets the orientation \a angle of the window.
+
+     If the window is hidden or it hasn't been shown yet, the orientation angle change
+     is immediate (i.e. without an rotation animation), otherwise there may be an
+     animated transition.
      */
     void setOrientationAngle(Dui::OrientationAngle angle);
 
     /*!
-     * Locks window's orientation angle changes. Equal to calling setOrientationAngleLocked(true).
-     *
-     * \sa setOrientationAngleLocked(), unlockOrientationAngle()
+     Locks window's orientation angle changes. Equal to calling setOrientationAngleLocked(true).
+
+     \sa setOrientationAngleLocked(), unlockOrientationAngle()
      */
     void lockOrientationAngle();
 
     /*!
-     * Unlocks window's orientation angle changes. Equal to calling setOrientationAngleLocked(false).
-     *
-     * \sa setOrientationAngleLocked(), lockOrientationAngle()
+     Unlocks window's orientation angle changes. Equal to calling setOrientationAngleLocked(false).
+
+     \sa setOrientationAngleLocked(), lockOrientationAngle()
      */
     void unlockOrientationAngle();
 
     /*!
-     * Locks window's orientation changes. Equal to calling setOrientationLocked(true).
-     *
-     * \sa setOrientationLocked(), unlockOrientation()
+     Locks window's orientation changes. Equal to calling setOrientationLocked(true).
+
+     \sa setOrientationLocked(), unlockOrientation()
      */
     void lockOrientation();
 
     /*!
-     * Unlocks window's orientation changes. Equal to calling setOrientationLocked(false).
-     *
-     * \sa setOrientationLocked(), lockOrientation()
+      Unlocks window's orientation changes. Equal to calling setOrientationLocked(false).
+
+     \sa setOrientationLocked(), lockOrientation()
      */
     void unlockOrientation();
 
 Q_SIGNALS:
     /*!
-     * Emitted after scene geometry has changed for a rotation.
-     *
-     * This is for widgets that need to react when the orientation is about to change,
-     * and is emitted after the scene geometry has changed and the rotation animation
-     * is about to start.
-     *
-     * \note This signal is emitted at start of the rotation animation.
-     * \sa orientationChanged()
+     Emitted after the scene geometry has changed during rotation.
+
+     This is for widgets that need to react when the orientation is about to change,
+     and is emitted after the scene geometry has changed and the rotation animation
+     is about to start.
+
+     \note This signal is emitted at start of the rotation animation.
+     \sa orientationChanged()
      */
     void orientationAngleChanged(Dui::OrientationAngle);
 
     /*!
-     * Emitted after scene geometry has changed for a rotation.
-     *
-     * This is for widgets that need to react when the orientation is about to change,
-     * and is emitted after the scene geometry has changed and the rotation animation
-     * is about to start.
-     *
-     * \note This signal is emitted at start of the rotation animation.
-     * \sa orientationAngleChanged()
+     Emitted after scene geometry has changed for a rotation.
+
+     This is for widgets that need to react when the orientation is about to change,
+     and is emitted after the scene geometry has changed and the rotation animation
+     is about to start.
+
+     \note This signal is emitted at start of the rotation animation.
+     \sa orientationAngleChanged()
      */
     void orientationChanged(Dui::Orientation);
 
     /*!
-     * This signal is emitted when the rotation animation (if any) has finished.
-     * It's emitted in tandem with DuiSceneManager::orientationChangeComplete().
-     *
-     * If window doesn't have the scene manager, this signal is emitted together with
-     * orientationChanged().
-     *
-     * \sa orientationChanged()
+     This signal is emitted when the rotation animation (if any) has finished.
+     It's emitted in tandem with DuiSceneManager::orientationChangeComplete().
+
+     If window doesn't have the scene manager, this signal is emitted together with
+     orientationChanged().
+
+     \sa orientationChanged()
      */
     void orientationChangeFinished(Dui::Orientation);
 
     /*!
-     * A signal that is emitted when the window is shown or is not obscured anymore by another window.
-     * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     This signal is emitted when the window is shown or is not obscured anymore by another window.
+
+     Note: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
      */
     void displayEntered();
 
     /*!
-     * A signal that is emitted when the window gets obscured by another window.
-     * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     A signal that is emitted when the window gets obscured by another window.
+
+     Note: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
      */
     void displayExited();
 
@@ -350,22 +394,24 @@ protected:
     //! \reimp_end
 
     /*!
-     * This event handler allows a window to notify subscribers about
-     * changes in its presence on the display. enterDisplayEvent() and exitDisplayEvent()
-     * convenience handlers are called by the default implementation. DuiOnDisplayChangeEvent
-     * is sent e.g. if the window gets obscured by another window.
+     This event handler allows a window to notify subscribers about
+     changes in its presence on the display. enterDisplayEvent() and exitDisplayEvent()
+     convenience handlers are called by the default implementation. DuiOnDisplayChangeEvent
+     is sent e.g. if the window gets obscured by another window.
      */
     virtual void onDisplayChangeEvent(DuiOnDisplayChangeEvent *event);
 
     /*!
-     * A handler that is called when the window is shown or is not obscured anymore by another window.
-     * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     A handler that is called when the window is shown or is not obscured anymore by another window.
+
+     Note: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
      */
     virtual void enterDisplayEvent();
 
     /*!
-     * A handler that is called when the window gets obscured by another window.
-     * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     A handler that is called when the window gets obscured by another window.
+
+     Note: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
      */
     virtual void exitDisplayEvent();
 
@@ -374,11 +420,10 @@ protected:
     explicit DuiWindow(DuiWindowPrivate &dd, DuiScene *scene, QWidget *parent = 0);
     explicit DuiWindow(DuiWindowPrivate &dd, DuiSceneManager *sceneManager, QWidget *parent = 0);
 
+    virtual void setVisible(bool visible);
+
     DuiWindowPrivate *const d_ptr;
     //! \internal_end
-
-    //! \reimp
-    virtual void setVisible(bool visible);
 
 private:
     Q_DISABLE_COPY(DuiWindow)
