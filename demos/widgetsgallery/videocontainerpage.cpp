@@ -339,23 +339,24 @@ void VideoContainerPage::createContent()
             container->addItem(image);
         } 
         else if( info.suffix() == "mp4" || info.suffix() == "mov" ) {
-            MyVideoWidget *video = new MyVideoWidget(container->centralWidget());
-
-            DuiAction *action = new DuiAction("Open", video);
-            action->setLocation(DuiAction::ObjectMenuLocation);
-            video->addAction(action);
-            
-            //connect(video, SIGNAL(clicked()), this, SLOT(itemClicked()));
-            //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
-            connect(video, SIGNAL(clicked()), this, SLOT(itemLongPressed()));
-            //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
-            connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
-            video->open(filename);
-            video->setId(filename);
-            video->setPreferredSize(92, 92);
-            //video->setMinimumSize(92, 92);
-            //video->setMaximumSize(92, 92);
-            container->addItem(video);   
+            if( info.fileName().startsWith("thumb-") ) {
+                MyVideoWidget *video = new MyVideoWidget(container->centralWidget());
+                DuiAction *action = new DuiAction("Open", video);
+                action->setLocation(DuiAction::ObjectMenuLocation);
+                video->addAction(action);
+                
+                //connect(video, SIGNAL(clicked()), this, SLOT(itemClicked()));
+                //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
+                connect(video, SIGNAL(clicked()), this, SLOT(itemLongPressed()));
+                //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
+                connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
+                video->open(filename);
+                video->setId(info.absolutePath() + QDir::separator() + info.fileName().remove("thumb-"));
+                video->setPreferredSize(92, 92);
+                //video->setMinimumSize(92, 92);
+                //video->setMaximumSize(92, 92);
+                container->addItem(video);
+            }
         }
     }   
 
