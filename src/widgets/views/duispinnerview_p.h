@@ -38,7 +38,7 @@ public:
     virtual ~DuiSpinnerViewPrivate();
 
     void animationTimeout();
-    void visibilityChanged(bool);
+    void visibilityChanged();
     void calculateShape(QSizeF size);
 
     DuiProgressIndicator *controller;

@@ -83,7 +83,7 @@ public:
 
 private Q_SLOTS:
     void animationTimeout();
-    void visibilityChangedSlot(bool);
+    void visibilityChangedSlot();
 
 protected:
     //! \reimp

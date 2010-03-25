@@ -298,20 +298,6 @@ void DuiWidget::clearActions()
     }
 }
 
-QVariant DuiWidget::itemChange(GraphicsItemChange change, const QVariant &value)
-{
-    switch (change) {
-    case ItemVisibleHasChanged:
-        emit visibilityChanged(value.toBool());
-        break;
-
-    default:
-        break;
-    }
-
-    return QGraphicsWidget::itemChange(change, value);
-}
-
 void DuiWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     QList<QAction *> actionList = actions();

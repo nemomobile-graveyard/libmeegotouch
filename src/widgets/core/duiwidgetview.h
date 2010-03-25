@@ -154,10 +154,6 @@ public:
     virtual QFont font() const;
 
 Q_SIGNALS:
-    /*!
-     * \brief Signal to indicate visibility change
-     */
-    void visibilityChanged(bool visible);
 
 protected:
 
