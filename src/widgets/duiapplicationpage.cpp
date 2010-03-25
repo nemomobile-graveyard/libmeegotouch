@@ -152,11 +152,6 @@ void DuiApplicationPagePrivate::propagateOnDisplayChangeEvent(bool visible)
     }
 }
 
-// TODO: Remove this now useless method after ABI break period
-void DuiApplicationPage::updateOnDisplayAfterPanning()
-{
-}
-
 DuiApplicationPage::DuiApplicationPage(QGraphicsItem *parent)
     : DuiSceneWindow(new DuiApplicationPagePrivate, new DuiApplicationPageModel,
                      DuiSceneWindow::ApplicationPage, QString(), parent)

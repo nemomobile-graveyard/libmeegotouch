@@ -359,10 +359,6 @@ protected:
     virtual void actionEvent(QActionEvent *);
     //! \reimp_end
 
-private Q_SLOTS:
-    // TODO: Remove this now useless method after ABI break period
-    void updateOnDisplayAfterPanning();
-
 private:
 
 #ifdef UNIT_TEST
