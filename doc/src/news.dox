@@ -51,6 +51,9 @@
   DuiSceneManager::closeWindow() was renamed to DuiSceneManager::dismissSceneWindow(),
   DuiSceneManager::closeWindowNow() was renamed to DuiSceneManager::dismissSceneWindowNow()
 
+- DuiWindow::isOnDisplay() and DuiWidget::isOnDisplay() are no longer virtual. Those
+  methods shouldn't be overridden.
+
 \section v0190
 
 \subsection New

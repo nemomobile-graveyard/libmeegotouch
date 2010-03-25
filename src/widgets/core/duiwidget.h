@@ -77,7 +77,7 @@ public:
      * on the display in any way. E.g.: If the widget happens to be out of sight of all the
      * QGraphicsViews that are rendering his scene.
      */
-    virtual bool isOnDisplay() const;
+    bool isOnDisplay() const;
 
     /**
     * Returns <code>true</code> if widget is selected otherwise <code>false</code>.

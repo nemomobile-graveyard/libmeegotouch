@@ -297,7 +297,7 @@ public:
     void setOrientationLocked(bool locked);
 
     //! Returns the current visibility state of the window.
-    virtual bool isOnDisplay() const;
+    bool isOnDisplay() const;
 
 public Q_SLOTS:
     /*!
