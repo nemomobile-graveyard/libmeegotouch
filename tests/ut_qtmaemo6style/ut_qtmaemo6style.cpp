@@ -121,13 +121,13 @@ void Ut_QtMaemo6Style::testFonts() {
     button.setFont(QFont("Helvetica"));
     QSize size2 = button.sizeHint();
     //changing the font shouldn't effect the size
-    QVERIFY(size1 == size2);
+    QCOMPARE(size1, size2);
 
     QPixmap pix2(size2);
     pix2.fill(Qt::white);
     QPainter p2(&pix2);
     button.render(&p2);
-    QVERIFY(pix1.toImage() == pix2.toImage());
+    QCOMPARE(pix1.toImage(), pix2.toImage());
 }
 
 QTEST_APPLESS_MAIN(Ut_QtMaemo6Style)
