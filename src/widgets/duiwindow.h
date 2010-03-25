@@ -80,12 +80,6 @@ class DUI_EXPORT DuiWindow : public QGraphicsView
 
     Q_OBJECT
     /*!
-     * \property keepCurrentOrientation
-     * \deprecated Since 0.18.7. Use orientationLocked instead.
-     * \sa isOrientationLocked(), setOrientationLocked()
-     */
-    Q_PROPERTY(bool keepCurrentOrientation READ keepCurrentOrientation WRITE setKeepCurrentOrientation)
-    /*!
      \property orientationAngleLocked
      Is the orientation angle locked
      */
@@ -202,18 +196,6 @@ public:
      Returns the visible size of the window (being also the size of its scene).
      */
     QSize visibleSceneSize() const;
-
-    /*!
-     * \deprecated Since 0.18.7. Use isOrientationLocked() instead.
-     * \sa isOrientationLocked()
-     */
-    bool keepCurrentOrientation() const;
-
-    /*!
-     * \deprecated Since 0.18.7. Use setOrientationLocked() instead.
-     * \sa setOrientationLocked()
-     */
-    void setKeepCurrentOrientation(bool enabled);
 
     /*!
      Returns true if the window orientation angle is not allowed to change

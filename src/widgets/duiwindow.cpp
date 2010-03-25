@@ -374,18 +374,6 @@ DuiScene *DuiWindow::scene()
     return qobject_cast<DuiScene *>(QGraphicsView::scene());
 }
 
-bool DuiWindow::keepCurrentOrientation() const
-{
-    duiWarning("DuiWindow::keepCurrentOrientation()") << "THIS METHOD IS DEPRECATED - use isOrientationLocked()";
-    return isOrientationLocked();
-}
-
-void DuiWindow::setKeepCurrentOrientation(bool enabled)
-{
-    duiWarning("DuiWindow::keepCurrentOrientation()") << "THIS METHOD IS DEPRECATED - use setOrientationLocked()";
-    setOrientationLocked(enabled);
-}
-
 bool DuiWindow::isOrientationAngleLocked() const
 {
     Q_D(const DuiWindow);
