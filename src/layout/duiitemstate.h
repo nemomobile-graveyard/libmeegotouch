@@ -20,19 +20,18 @@
 #ifndef DUIITEMSTATE_H
 #define DUIITEMSTATE_H
 
-#include "duiexport.h"
-
 #include <QtGui/QGraphicsLayout>
 
 class DuiItemStatePrivate;
+class QGraphicsWidget;
 
 /*!
  * \brief Information on the items stored inside the layout.
  *
- * Class to hold additional information on the QGraphicsLayoutItems
+ * Class to hold additional information on the QGraphicsWidgets
  * this layout is working on.
  */
-class DUI_EXPORT DuiItemState
+class DuiItemState
 {
 public:
     /*!
@@ -64,9 +63,9 @@ public:
      * Constructs an DuiItemState item from the values provided. The
      * geometry settings are taken from the geometry of the item.
      *
-     * @param item  The QGraphicsLayoutItem.
+     * @param item  The QGraphicsWidget.
      */
-    explicit DuiItemState(QGraphicsLayoutItem *item);
+    explicit DuiItemState(QGraphicsWidget *item);
     /* Copy constructor */
     DuiItemState(const DuiItemState &);
     /* Assignment operator */
@@ -76,7 +75,7 @@ public:
      * \brief Equality operator.
      *
      * This operator checks whether both items refer to the
-     * same QGraphicsLayoutItem. It does not check any additional
+     * same QGraphicsWidget. It does not check any additional
      * information stored in the DuiItemState.
      *
      * @param other The item to compare with this one.
@@ -94,15 +93,15 @@ public:
     /*!
      * \brief Checks whether this is a null DuiItemState item?
      *
-     * @return true if this DuiItemState item has a null QGraphicsLayoutItem
+     * @return true if this DuiItemState item has a null QGraphicsWidget
      *              and false otherwise.
      */
     bool isNull() const;
 
     /*!
-     * \brief Getter for the QGraphicsLayoutItem.
+     * \brief Getter for the QGraphicsWidget.
      */
-    QGraphicsLayoutItem *item() const;
+    QGraphicsWidget *item() const;
 
     /*!
      * \brief Getter for the source position.
@@ -171,31 +170,6 @@ public:
      * @return -1 if setTargetOpacity has not been called, or between 0 and 1
      */
     qreal sourceOpacity() const;
-
-    /*!
-     * \brief Get the current opacity
-     *
-     * This looks at the item() and iterates over all the children that are
-     * QGraphicsItems and returns the highest opacity of the children.  Note
-     * that the children can have different opacities.
-     *
-     * The opacity of children that are not visible is not considered.
-     *
-     * An opacity of 0 is returned if no visible items are found
-     */
-    qreal currentOpacity() const;
-
-    /*!
-     * \brief Set the opacity for the item and all of its children
-     *
-     * This looks at the item() and iterates over all the children that are
-     * QGraphicsItem and sets their opacity.
-     *
-     * If this is set to 0, the items have their visibility set to false
-     *
-     * For convenience, if @p opacity = -1, nothing is done.
-     */
-    void setCurrentOpacity(qreal opacity);
 
     /*!
      * \brief Set new state flags.

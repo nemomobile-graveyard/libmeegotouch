@@ -42,38 +42,14 @@ public:
     /** \brief Destructor. */
     virtual ~DuiBasicLayoutAnimation();
 
-    /*! \brief This provides an animation to shown an item.
-     *
-     * This sets the item's current geometry to its minimum size, centering
-     * it on its DuiItemState::targetGeometry().  This provides an animation
-     * of the item 'growing' to its final size.
-     * */
-    virtual void doItemShownAnimation(DuiItemState *itemstate);
-
-    /*! \brief This provides an animation to hide an item.
-     *
-     * This sets the DuiItemState::targetGeometry() to the items minimum size, centering
-     * on its current position.  This provides an animation of the item 'shrinking' before being
-     * removed.
-     */
-    virtual void doItemHiddenAnimation(DuiItemState *itemstate);
+    virtual void itemRemovedFromLayout(int index);
+    virtual void itemAddedToLayout(int index);
+    virtual void animatedDeleteItem(int index);
+    virtual void setItemGeometry(int index, const QRectF &geometry);
+    virtual void hideItem(int index);
 
 protected:
-    /*!
-     * \brief This method animates an item.
-     *
-     * This method is doing the actual animation of the objects
-     * in the layouts.
-     *
-     * @param layout The layout containing the item to animate.
-     * @param state The info about the layout item to animate.
-     */
-    virtual void animate(DuiItemState &state);
-
     /*! \reimp */
-    virtual void layoutAnimationStarted(DuiItemState *itemstate);
-    virtual void layoutAnimationFinished();
-
     virtual void updateCurrentTime(int msecs);
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
     virtual int duration() const {

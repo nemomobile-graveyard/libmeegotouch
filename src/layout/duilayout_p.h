@@ -90,16 +90,13 @@ public:
      *  the item if it needs deleting */
     void itemAnimationFinished(int index);
 
-    /** The list of defined ItemState items known to the layout. */
-    QList<DuiItemState> states;
-
     /** Go up the parents and return the first parent that is not a layout */
     QGraphicsItem *parentItem() const;
 
     /** Hide the given item, setting a flag in DuiWidget to indicate that the layout hid it */
-    void hideItemNow(QGraphicsLayoutItem *layoutItem);
+    void hideItemNow(QGraphicsItem *layoutItem);
     /** Show the given item if it was hidden by the layout, clearing the flag in DuiWidget to indicate that the layout unhid it */
-    void showItemNow(QGraphicsLayoutItem *layoutItem);
+    void showItemNow(QGraphicsItem *layoutItem);
     /** Only clear the flag in DuiWidget */
     void removeHiddenFlag(QGraphicsLayoutItem *layoutItem);
     /** This is called when the widget's orientation has changed (probably because the device has been rotated) */
@@ -127,6 +124,14 @@ protected:
 
     /** The current orientation of the widget that this layout is in */
     Dui::Orientation m_orientation;
+
+    struct LayoutItem {
+        QGraphicsLayoutItem *item;
+        QRectF geometry;
+        bool toBeDeleted;
+    };
+    /** List of items */
+    QList<LayoutItem> items;
 };
 
 #endif // Header Guard

@@ -23,7 +23,6 @@
 #include "duiapplication.h"
 #include "duiabstractlayoutpolicy.h"
 #include "duiabstractlayoutpolicy_p.h"
-#include "duiitemstate.h"
 #include "duibasiclayoutanimation.h"
 #include "duiorientationchangeevent.h"
 
@@ -51,19 +50,18 @@ DuiLayout::~DuiLayout()
     d->current_policy = NULL;  //Make sure we have no policy before
 
     qDeleteAll(d->policies);
+    delete d->animation;
     //Remove all the items from the layout and delete any layouts
     //(which are ownedByLayout) inside this layout
     //Because we don't have any policies, this should be pretty fast
     for (int i = count() - 1; i >= 0; --i) {
-        bool deleteItem = (d->states.at(i).isSet(DuiItemState::STATE_FLAG_TO_BE_DELETED));
-        QGraphicsLayoutItem *item = itemAt(i);
-        if (item) {
-            item->setParentLayoutItem(0);
-            if (item->ownedByLayout() || deleteItem)
-                delete item;
+        const DuiLayoutPrivate::LayoutItem &item = d->items.at(i);
+        if (item.item) {
+            item.item->setParentLayoutItem(0);
+            if (item.item->ownedByLayout() || item.toBeDeleted)
+                delete item.item;
         }
     }
-    delete d->animation;
     delete d_ptr;
 }
 
@@ -91,12 +89,12 @@ void DuiLayout::invalidateLayoutOnly()
 int DuiLayout::count() const
 {
     Q_D(const DuiLayout);
-    return d->states.count();
+    return d->items.count();
 }
 bool DuiLayout::isEmpty() const
 {
     Q_D(const DuiLayout);
-    return d->states.isEmpty();
+    return d->items.isEmpty();
 }
 QGraphicsLayoutItem *DuiLayout::itemAt(int index) const
 {
@@ -105,7 +103,7 @@ QGraphicsLayoutItem *DuiLayout::itemAt(int index) const
         duiWarning("DuiLayout") << Q_FUNC_INFO << "Attempting to access item at index" << index << "when there are" << count() << "items";
         return NULL;
     }
-    return d->states.at(index).item();
+    return d->items.at(index).item;
 }
 
 void DuiLayout::removeAt(int index)
@@ -121,18 +119,20 @@ QGraphicsLayoutItem *DuiLayout::takeAt(int index)
             duiWarning("DuiLayout") << Q_FUNC_INFO << "Attempting to remove item at index" << index << "when there are" << count() << "items";
         return NULL;
     }
-    bool deleteItem = d->states.at(index).isSet(DuiItemState::STATE_FLAG_TO_BE_DELETED);
-    QGraphicsLayoutItem *item = d->states.at(index).item();
+    bool toBeDeleted = d->items.at(index).toBeDeleted;
+    QGraphicsLayoutItem *item = d->items.at(index).item;
     Q_ASSERT(item);
     foreach(DuiAbstractLayoutPolicy * policy, d->policies) {
         Q_ASSERT(policy);
         policy->d_ptr->aboutToBeRemovedFromLayout(item);
     }
+    if (d->animation)
+        d->animation->itemRemovedFromLayout(index);
 
-    d->states.removeAt(index);
+    d->items.removeAt(index);
     item->setParentLayoutItem(NULL);
     invalidate();
-    if (deleteItem) {
+    if (toBeDeleted) {
         delete item;
         return NULL;
     }
@@ -140,7 +140,7 @@ QGraphicsLayoutItem *DuiLayout::takeAt(int index)
     return item;
 }
 
-void DuiLayout::animatedDeleteItem(const QGraphicsLayoutItem *const item)
+void DuiLayout::animatedDeleteItem(const QGraphicsLayoutItem * item)
 {
     animatedDeleteAt(indexOf(item));
 }
@@ -154,21 +154,20 @@ void DuiLayout::animatedDeleteAt(int index)
         return;
     }
 
-    DuiItemState &state = d->states[index];
+    const DuiLayoutPrivate::LayoutItem &item = d->items.at(index);
     // Abort if already scheduled for deletion
     // (this can happen because a graphics layout item removes itself from its
     //  layout upon destruction and would lead to an infinite recursion here)
-    if (state.isSet(DuiItemState::STATE_FLAG_TO_BE_DELETED))
+    if (item.toBeDeleted)
         return;
 
-    if (!d->animation || (!state.isSet(DuiItemState::STATE_FLAG_SHOWING))) {
-        delete takeAt(index); //Delete immediately if its not visible
-    } else {
-        if (state.isSet(DuiItemState::STATE_FLAG_TO_BE_DELETED))
+    if (d->animation && item.item->graphicsItem() && item.item->graphicsItem()->isWidget()) {
+        if (item.toBeDeleted)
             return; //Already set
-        state.addFlags(DuiItemState::STATE_FLAG_TO_BE_DELETED);
-        d->animation->doItemDeletingAnimation(&state);
-        d->animation->startAnimation(&state);
+        d->items[index].toBeDeleted = true;
+        d->animation->animatedDeleteItem(index);
+    } else {
+        delete takeAt(index); //Delete immediately if we can't animate it
     }
 }
 
@@ -213,13 +212,20 @@ int DuiLayout::addItem(QGraphicsLayoutItem *item)
     int index = indexOf(item);
     if (index < 0) {
         // If the item is a layout, we need to add all of its items
-        DuiItemState state(item);
         addChildLayoutItem(item);
         // Add item
-        index = d->states.size();
-        d->states.append(state);
+        index = d->items.size();
+
+        DuiLayoutPrivate::LayoutItem layoutItem;
+        layoutItem.item = item;
+        layoutItem.toBeDeleted = false;
+        layoutItem.geometry = item->geometry();
+        d->items.append(layoutItem);
         // Hide item for now since we do not know where to place it
-        d->hideItemNow(item);
+        if(item->graphicsItem())
+            d->hideItemNow(item->graphicsItem());
+        if(d->animation)
+            d->animation->itemAddedToLayout(index);
     }
     return index;
 }
@@ -245,7 +251,7 @@ int DuiLayout::indexOf(const QGraphicsItem *item) const
 
     const int theCount = count();
     for (int i = 0; i < theCount; ++i) {
-        if (d->states.at(i).item()->graphicsItem() == item) {
+        if (d->items.at(i).item->graphicsItem() == item) {
             return i;
         }
     }
@@ -262,7 +268,7 @@ int DuiLayout::indexOf(const QGraphicsLayoutItem *item) const
 
     const int theCount = count();
     for (int i = 0; i < theCount; ++i) {
-        if (d->states.at(i).item() == item) {
+        if (d->items.at(i).item == item) {
             return i;
         }
     }

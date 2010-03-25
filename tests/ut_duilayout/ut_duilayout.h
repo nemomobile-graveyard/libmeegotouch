@@ -42,7 +42,6 @@ private slots:
     void init();
     void cleanup();
 
-    void itemState();
     void testTakeAt();
     void testDeletingItem();
     void policyInteraction();

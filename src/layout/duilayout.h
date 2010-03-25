@@ -324,7 +324,7 @@ public:
      *
      * Calls animatedDeleteAt()
      */
-    virtual void animatedDeleteItem(const QGraphicsLayoutItem *const item);
+    virtual void animatedDeleteItem(const QGraphicsLayoutItem *item);
 
     /*!
      * \brief Find the index of the given graphics item.

@@ -19,9 +19,9 @@
 
 #include "duiitemstate.h"
 #include "duiitemstate_p.h"
-#include "duilayouthelper_p.h"
+#include <QGraphicsWidget>
 
-DuiItemStatePrivate::DuiItemStatePrivate(QGraphicsLayoutItem *item) :
+DuiItemStatePrivate::DuiItemStatePrivate(QGraphicsWidget *item) :
     item(item),
     sourceOpacity(-1),
     targetOpacity(-1),
@@ -37,7 +37,7 @@ DuiItemState::DuiItemState()
 {
 }
 
-DuiItemState::DuiItemState(QGraphicsLayoutItem *i)
+DuiItemState::DuiItemState(QGraphicsWidget *i)
     : d_ptr(new DuiItemStatePrivate(i))
 {
 }
@@ -71,7 +71,7 @@ bool DuiItemState::isNull() const
     return (0 == d->item);
 }
 
-QGraphicsLayoutItem *DuiItemState::item() const
+QGraphicsWidget *DuiItemState::item() const
 {
     Q_D(const DuiItemState);
     return d->item;
@@ -122,7 +122,7 @@ void DuiItemState::setTargetGeometry(const QRectF &p)
     d->sourceGeometry = d->item->geometry();
 
     if (!isSet(STATE_FLAG_SHOWING) || isSet(STATE_FLAG_TO_BE_HIDDEN)) //If it's not being shown or we are in the middle of a showing animation
-        setFlags(STATE_FLAG_TO_BE_SHOWN);
+        addFlags(STATE_FLAG_TO_BE_SHOWN);
     removeFlags(STATE_FLAG_TO_BE_HIDDEN);
 
     d->isAnimationDone = false;
@@ -234,7 +234,7 @@ void DuiItemState::setTargetOpacity(qreal opacity)
     if (d->targetOpacity == -1)
         return;
 
-    d->sourceOpacity = currentOpacity();
+    d->sourceOpacity = d->item->opacity();
     if (d->sourceOpacity != -1 && d->targetOpacity != d->sourceOpacity) {
         d->opacityProgress = 0;
         d->isAnimationDone = false;
@@ -250,21 +250,6 @@ qreal DuiItemState::sourceOpacity() const
     Q_D(const DuiItemState);
     return d->sourceOpacity;
 }
-qreal DuiItemState::currentOpacity() const
-{
-    Q_D(const DuiItemState);
-    if(d->item && d->item->graphicsItem())
-        return d->item->graphicsItem()->opacity();
-    return -1;
-}
-void DuiItemState::setCurrentOpacity(qreal opacity)
-{
-    Q_D(DuiItemState);
-    if (opacity == -1 || !d->item || !d->item->graphicsItem())
-        return;
-    d->item->graphicsItem()->setOpacity(opacity);
-}
-
 void DuiItemState::hide()
 {
     Q_D(DuiItemState);

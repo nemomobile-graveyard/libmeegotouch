@@ -28,12 +28,12 @@ class QGraphicsLayoutItem;
 class DuiItemStatePrivate
 {
 public:
-    DuiItemStatePrivate(QGraphicsLayoutItem *item);
+    DuiItemStatePrivate(QGraphicsWidget *item);
 
     /*!
-     * \brief The item to lay out.
+     * \brief The item to layout.
      */
-    QGraphicsLayoutItem *item;
+    QGraphicsWidget *item;
 
     /*!
      * \brief The position of the item in the layout.

@@ -85,27 +85,18 @@ void DuiLayoutPrivate::setItemGeometry(int index, const QRectF &geometry)
         return;
     }
 
-    DuiItemState &state = states[index];
-    state.setTargetGeometry(geometry);
+    LayoutItem &item = items[index];
+    item.geometry = geometry;
 
-    // If no animator or the item is a layout then do not animate
-    if (!animation || state.item()->isLayout()) {
-        //Show item
-        showItemNow(state.item());
-        state.item()->setGeometry(state.targetGeometry());
-        state.animationDone();
-        itemAnimationFinished(index);
+    if (animation && item.item->graphicsItem() && item.item->graphicsItem()->isWidget()) {
+        animation->setItemGeometry(index, geometry);
     } else {
-        if (state.isSet(DuiItemState::STATE_FLAG_TO_BE_SHOWN)) {
-            animation->doItemShownAnimation(&state);
-            //we only want to call the item shown animation once, so clear the shown flags
-            state.removeFlags(DuiItemState::STATE_FLAG_TO_BE_SHOWN);
-            state.addFlags(DuiItemState::STATE_FLAG_SHOWING);
-        }
-        if (state.isAnimationDone()) //Set the geometry anyway, so that it can refresh
-            state.item()->setGeometry(state.targetGeometry());
-        else
-            animation->startAnimation(&state);
+        // If no animator or the item is not a widget then do not animate
+        Q_ASSERT(!item.toBeDeleted); //It should have been deleted immediately in there's no animator or it is a layout
+        //Show item
+        if(item.item->graphicsItem())
+            showItemNow(item.item->graphicsItem());
+        item.item->setGeometry(geometry);
     }
 }
 
@@ -117,51 +108,36 @@ QRectF DuiLayoutPrivate::itemGeometry(int index) const
         return QRectF();
     }
 
-    return states.at(index).targetGeometry();
+    return items.at(index).geometry;
 }
 void DuiLayoutPrivate::itemAnimationFinished(int index)
 {
     Q_Q(DuiLayout);
-    Q_ASSERT(states.at(index).isAnimationDone());
-    if (states.at(index).isSet(DuiItemState::STATE_FLAG_TO_BE_DELETED))
+    if (items.at(index).toBeDeleted)
         q->removeAt(index);  //This will delete the item as well
 }
 
 void DuiLayoutPrivate::animationFinished()
 {
+    Q_Q(DuiLayout);
     // check whether any item is now really deleted
-    for (int i = states.size() - 1; i >= 0; --i) {
-        if (states.at(i).isAnimationDone())
-            itemAnimationFinished(i);
+    for (int i = items.size() - 1; i >= 0; --i) {
+        if (items.at(i).toBeDeleted)
+            q->removeAt(i);  //This will delete the item as well
     }
 }
 
 void DuiLayoutPrivate::hideItem(int index)
 {
-    DuiItemState &state = states[index];
-    //Check if its being hidden or if it is hiding (i.e. not shown and not to-be-shown
-    if (state.isSet(DuiItemState::STATE_FLAG_TO_BE_HIDDEN) ||
-            (!state.isSet(DuiItemState::STATE_FLAG_TO_BE_SHOWN) &&
-             !state.isSet(DuiItemState::STATE_FLAG_SHOWING))) {
-        return; //It's already hiding/hidden.  Nothing to do
-    }
-    state.hide();
+    const LayoutItem &item = items.at(index);
+    QGraphicsItem *graphicsItem = item.item->graphicsItem();
+    if(!graphicsItem)
+        return;
 
-    QGraphicsItem *graphics_item = state.item()->graphicsItem();
-    if (!animation || (graphics_item && !graphics_item->isVisibleTo(NULL))) { //If it isn't visible, do not bother to animate it
-        //Hide item directly
-        hideItemNow(state.item());
-        //we can't do anything to hide something which isn't a QGraphicsItem
-        state.removeFlags(
-            DuiItemState::STATE_FLAG_TO_BE_HIDDEN |
-            DuiItemState::STATE_FLAG_TO_BE_SHOWN |
-            DuiItemState::STATE_FLAG_SHOWING);
-    } else {
-        animation->doItemHiddenAnimation(&state);
-        state.hide(); //setTargetGeometry clears TO_BE_HIDDEN, so re-add
-        animation->startAnimation(&state);
-    }
-
+    if (animation && graphicsItem->isWidget())
+        animation->hideItem(index);
+    else // If no animator, or the item is not a widget, or the widget is not visible, then do not animate
+        hideItemNow(graphicsItem);
 }
 
 void DuiLayoutPrivate::setOrientation(Dui::Orientation orientation)
@@ -215,18 +191,15 @@ void DuiLayoutPrivate::recheckOrientation() {
         }
     }
 }
-void DuiLayoutPrivate::showItemNow(QGraphicsLayoutItem *layoutItem)
+void DuiLayoutPrivate::showItemNow(QGraphicsItem *graphicsItem)
 {
-    QGraphicsItem *graphicsItem = layoutItem->graphicsItem();
-    if (graphicsItem) {
-        DuiWidget *widget = dynamic_cast<DuiWidget *>(graphicsItem);
-        if (widget) {
-            widget->d_ptr->layoutHidden = false;
-            if (!widget->d_ptr->explicitlyHidden)
-                graphicsItem->show(); //Show only if item was not set to invisible by the user
-        } else
-            graphicsItem->show(); //Show always for non-duiwidgets
-    }
+    DuiWidget *widget = dynamic_cast<DuiWidget *>(graphicsItem);
+    if (widget) {
+        widget->d_ptr->layoutHidden = false;
+        if (!widget->d_ptr->explicitlyHidden)
+            graphicsItem->show(); //Show only if item was not set to invisible by the user
+    } else
+        graphicsItem->show(); //Show always for non-duiwidgets
 }
 void DuiLayoutPrivate::removeHiddenFlag(QGraphicsLayoutItem *layoutItem)
 {
@@ -234,18 +207,11 @@ void DuiLayoutPrivate::removeHiddenFlag(QGraphicsLayoutItem *layoutItem)
     if (widget)
         widget->d_ptr->layoutHidden = false;
 }
-void DuiLayoutPrivate::hideItemNow(QGraphicsLayoutItem *layoutItem)
+void DuiLayoutPrivate::hideItemNow(QGraphicsItem *graphicsItem)
 {
-    QGraphicsItem *graphicsItem = layoutItem->graphicsItem();
-    if (graphicsItem) {
-        graphicsItem->hide();
-        DuiWidget *widget = dynamic_cast<DuiWidget *>(graphicsItem);
-        if (widget)
-            widget->d_ptr->layoutHidden = true;
-    }
-    //There's not really anything we can do to hide an item that isn't a QGraphicsItem
-    //DuiLayout, for example, is not a QGraphicsItem, but just a QGraphicsLayoutItem
-    //The following code moves the item out of the way, but in practice this doesn't
-    //really work since coordinates all relative
+    graphicsItem->hide();
+    DuiWidget *widget = dynamic_cast<DuiWidget *>(graphicsItem);
+    if (widget)
+        widget->d_ptr->layoutHidden = true;
 }
 

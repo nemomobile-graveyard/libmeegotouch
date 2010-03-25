@@ -84,40 +84,11 @@ class TestAnimation : public DuiBasicLayoutAnimation
 public:
     TestAnimation(DuiLayout *layout) :
         DuiBasicLayoutAnimation(layout) {
-        reset();
     }
 
     virtual ~TestAnimation()
     { }
 
-    void reset() {
-        layout_started = layout_to_animate = layout_done = false;
-    }
-
-    void animate(DuiItemState &i) {
-        QVERIFY(!i.isAnimationDone() || (i.flags() != 0));
-        layout_to_animate = true;
-        if (i.geometryProgress() == 0) {
-            i.setGeometryProgress(0.5);
-            return;
-        }
-        i.item()->setGeometry(i.targetGeometry());
-        i.animationDone();
-    }
-
-    void layoutAnimationStarted(DuiItemState *itemstate) {
-        layout_started = true;
-        DuiBasicLayoutAnimation::layoutAnimationStarted(itemstate);
-    }
-
-    void layoutAnimationFinished() {
-        QVERIFY(layout_started);
-        DuiBasicLayoutAnimation::layoutAnimationFinished();
-        layout_done = true;
-    }
-    bool layout_started;
-    bool layout_to_animate;
-    bool layout_done;
 };
 
 class DuiLayoutTest : public DuiLayout
@@ -197,105 +168,6 @@ void Ut_DuiLayout::cleanup()
     m_proxy = 0;
     m_button = 0;
     m_form = 0;
-}
-
-void Ut_DuiLayout::itemState()
-{
-    // ------------------------------------------------------------------
-    // Construction:
-    // ------------------------------------------------------------------
-
-    // Null item state:
-    DuiItemState null_state;
-    QVERIFY(null_state.isNull());
-    QVERIFY(null_state.item() == 0);
-    QVERIFY(null_state.targetGeometry() == QRectF());
-    QVERIFY(null_state.sourceGeometry() == QRectF());
-    QVERIFY(null_state.flags() == DuiItemState::STATE_FLAG_NONE);
-
-    QVERIFY(null_state.isAnimationDone());
-
-    // Ignore setting stuff on null items:
-    null_state.setTargetGeometry(QRectF(QPointF(1.0, 2.0), QSizeF(91.0, 92.0)));
-    QVERIFY(null_state.targetGeometry() == QRectF());
-    QVERIFY(null_state.sourceGeometry() == QRectF());
-    QVERIFY(null_state.flags() == DuiItemState::STATE_FLAG_NONE);
-
-    // item state:
-    QRectF geometry(m_proxy->geometry());
-    DuiItemState state1(m_proxy);
-    QVERIFY(!state1.isNull());
-    QVERIFY(state1.item() == m_proxy);
-    QCOMPARE(state1.geometryProgress(), 1.0);
-    QCOMPARE(state1.opacityProgress(), 1.0);
-    QCOMPARE(state1.item()->geometry(), geometry);
-    QVERIFY(state1.flags() == DuiItemState::STATE_FLAG_NONE);
-
-    QVERIFY(state1.isAnimationDone());
-
-    // Copy itemstate:
-    DuiItemState state2(state1);
-    QVERIFY(!state2.isNull());
-    QVERIFY(state2.item() == m_proxy);
-    QCOMPARE(state2.targetGeometry(), state1.targetGeometry());
-    QCOMPARE(state2.item()->geometry(), state1.item()->geometry());
-    QCOMPARE(state2.sourceGeometry(), state1.sourceGeometry());
-    QCOMPARE(state2.flags(), state1.flags());
-    QVERIFY(state2 == state1);
-
-    QCOMPARE(state2.isAnimationDone(), state1.isAnimationDone());
-
-    // Flag handling:
-    QVERIFY(state1.isSet(DuiItemState::STATE_FLAG_TO_BE_DELETED) == false);
-
-    state1.setFlags(DuiItemState::STATE_FLAG_TO_BE_DELETED);
-    QVERIFY(state1.isSet(DuiItemState::STATE_FLAG_TO_BE_DELETED) == true);
-
-    QVERIFY(state1.hasIdenticalLayout(state2) == false);
-    QVERIFY((state1 == state2) == true);
-
-    state1.removeFlags(DuiItemState::STATE_FLAG_TO_BE_DELETED);
-    QCOMPARE(state1.isSet(DuiItemState::STATE_FLAG_TO_BE_DELETED), false);
-
-    // Move state1 and setTargetGeometry():
-    QRectF new_target(state1.targetGeometry());
-    new_target.moveTop(state1.targetGeometry().height() + 5.0);
-
-    QRectF source(state1.item()->geometry());
-    state1.setTargetGeometry(new_target);
-
-    QCOMPARE(state1.targetGeometry(), new_target);
-    QCOMPARE(state1.item()->geometry(), geometry);
-    QCOMPARE(state1.sourceGeometry(), source);
-    QCOMPARE(state1.flags(), DuiItemState::STATE_FLAG_TO_BE_SHOWN);
-
-    // Comparisons:
-    QCOMPARE(state1.hasIdenticalLayout(null_state), false);
-    QCOMPARE(state1.hasIdenticalLayout(state1), true);
-    QCOMPARE(state1.hasIdenticalLayout(state2), false);
-    QCOMPARE((state1 == state2), true);
-    QCOMPARE((state1 == null_state), false);
-
-    // assignment:
-    state2 = state1;
-    QVERIFY(state1.hasIdenticalLayout(state2) == true);
-    QVERIFY((state1 == state2) == true);
-    state2.setTargetGeometry(source);
-    QCOMPARE(state2.targetGeometry(), source);
-    QCOMPARE(state1.item()->geometry(), geometry);
-    QCOMPARE(state1.sourceGeometry(), source);
-    QCOMPARE(state1.flags(), DuiItemState::STATE_FLAG_TO_BE_SHOWN);
-
-    // animation:
-    state1.setTargetGeometry(new_target);
-
-    QRectF animation_target(source);
-    animation_target.moveTop(source.height() + 2.5);
-    state1.item()->setGeometry(animation_target);
-    QCOMPARE(state1.targetGeometry(), new_target);
-    QCOMPARE(state1.item()->geometry(), animation_target);
-    QCOMPARE(state1.sourceGeometry(), source);
-    QCOMPARE(state1.flags(), DuiItemState::STATE_FLAG_TO_BE_SHOWN);
 }
 
 void Ut_DuiLayout::testTakeAt()
@@ -886,9 +758,6 @@ void Ut_DuiLayout::animationInteraction()
     QCOMPARE(layout1.count(), 0);
     layout1.addItem(m_proxy);
     QCOMPARE(layout1.count(), 1);
-    QVERIFY(!animation1->layout_started);
-    QVERIFY(!animation1->layout_done);
-    QVERIFY(!animation1->isAnimating());
     QVERIFY(m_proxy->parentLayoutItem() == &layout1);
 
     // Remove item from layout1
@@ -1041,25 +910,6 @@ void Ut_DuiLayout::testHidingShowingWidgets()
     policy2->addItem(item2);
     policy2->addItem(item3);
     qApp->processEvents();
-    QCOMPARE(layout->d_ptr->states.at(2).isAnimationDone(), true);
-
-    if (layout->d_ptr->states.at(0).isAnimationDone()) //probably wont be done, but if system really slow (e.g. running in valgrind) it can be finished
-        QCOMPARE(layout->d_ptr->states.at(0).flags(), DuiItemState::STATE_FLAG_SHOWING);
-    else {
-        QVERIFY(layout->d_ptr->states.at(0).isSet(DuiItemState::STATE_FLAG_SHOWING) ||
-                layout->d_ptr->states.at(0).isSet(DuiItemState::STATE_FLAG_TO_BE_SHOWN));
-    }
-
-    if (layout->d_ptr->states.at(1).isAnimationDone())
-        QCOMPARE(layout->d_ptr->states.at(0).flags(), DuiItemState::STATE_FLAG_SHOWING);
-    else {
-        QVERIFY(layout->d_ptr->states.at(0).isSet(DuiItemState::STATE_FLAG_SHOWING) ||
-                layout->d_ptr->states.at(0).isSet(DuiItemState::STATE_FLAG_TO_BE_SHOWN));
-    }
-    QCOMPARE(layout->d_ptr->states.at(2).flags(), DuiItemState::STATE_FLAG_NONE);
-
-    QCOMPARE(layout->d_ptr->states.at(0).targetGeometry(), geom11);
-    QCOMPARE(layout->d_ptr->states.at(1).targetGeometry(), geom12);
 
     QCOMPARE(item3->isVisible(), false);
 
@@ -1069,9 +919,6 @@ void Ut_DuiLayout::testHidingShowingWidgets()
 
     while (layout->animation()->isAnimating())
         QTest::qWait(50);
-    QCOMPARE(layout->d_ptr->states.at(0).flags(), DuiItemState::STATE_FLAG_SHOWING);
-    QCOMPARE(layout->d_ptr->states.at(1).flags(), DuiItemState::STATE_FLAG_SHOWING);
-    QCOMPARE(layout->d_ptr->states.at(2).flags(), DuiItemState::STATE_FLAG_NONE);
 
     layout->setPolicy(policy2);
     qApp->processEvents();
@@ -1079,15 +926,8 @@ void Ut_DuiLayout::testHidingShowingWidgets()
     QCOMPARE(form->geometry(), QRectF(0, 0, 212, 212));
     QCOMPARE(layout->geometry(), QRectF(0, 0, 212, 212));
 
-    QCOMPARE(layout->d_ptr->states.at(1).targetGeometry(), geom11);
-    QCOMPARE(layout->d_ptr->states.at(2).targetGeometry(), geom21);
-
     while (layout->animation()->isAnimating())
         QTest::qWait(50);
-
-    QCOMPARE(layout->d_ptr->states.at(0).flags(), DuiItemState::STATE_FLAG_NONE);
-    QCOMPARE(layout->d_ptr->states.at(1).flags(), DuiItemState::STATE_FLAG_SHOWING);
-    QCOMPARE(layout->d_ptr->states.at(2).flags(), DuiItemState::STATE_FLAG_SHOWING);
 
     QCOMPARE(item2->geometry(), geom11);
     QCOMPARE(item3->geometry(), geom21);
@@ -1386,24 +1226,17 @@ void Ut_DuiLayout::testLinearPolicyChangingOrientationBasic()
     QCOMPARE(form->effectiveSizeHint(Qt::MinimumSize), QSizeF(204, 4 + 4 + 100 * num_items + vertical_spacing*(num_items - 1)));
     QCOMPARE(form->geometry(), QRectF(0, 0, 204, 4 + 4 + 100 * num_items + vertical_spacing*(num_items - 1)));
     for (int i = 0; i < num_items; i++) {
-        if (layout->d_ptr->states.at(i).isAnimationDone()) //probably wont be done, but if system really slow (e.g. running in valgrind) it can be finished
-            QCOMPARE(layout->d_ptr->states.at(i).flags(), DuiItemState::STATE_FLAG_SHOWING);
-        else {
-            QVERIFY(layout->d_ptr->states.at(i).isSet(DuiItemState::STATE_FLAG_SHOWING) ||
-                    layout->d_ptr->states.at(i).isSet(DuiItemState::STATE_FLAG_TO_BE_SHOWN));
-        }
         QRectF targetGeometry;
         //If the item can expand, its width will be expanded to the width of the layout - i.e. 204 pixels minus margins
-        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag))
+        if (layout->itemAt(i)->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag))
             targetGeometry = QRectF(4, 4 + i * (100 + vertical_spacing), 204 - 4 - 4, 100);
         else
             targetGeometry = QRectF(4, 4 + i * (100 + vertical_spacing), 100, 100);
 
-        QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), targetGeometry);
-        QGraphicsWidget *widget = dynamic_cast<QGraphicsWidget *>(layout->d_ptr->states.at(i).item());
+        QGraphicsWidget *widget = dynamic_cast<QGraphicsWidget *>(layout->itemAt(i));
         QVERIFY(widget);
         QCOMPARE(widget->isVisible(), true);
-        QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), targetGeometry.center());
+        QCOMPARE(layout->itemAt(i)->geometry().center(), targetGeometry.center());
     }
 }
 void Ut_DuiLayout::testLinearPolicyChangingOrientation_data()
@@ -1477,22 +1310,15 @@ void Ut_DuiLayout::testLinearPolicyChangingOrientation()
     QCOMPARE(form->effectiveSizeHint(Qt::MinimumSize), QSizeF(204, 4 + 4 + 100 * num_items + vertical_spacing*(num_items - 1)));
     QCOMPARE(form->geometry(), QRectF(0, 0, 204, 4 + 4 + 100 * num_items + vertical_spacing*(num_items - 1)));
     for (int i = 0; i < num_items; i++) {
-        if (layout->d_ptr->states.at(i).isAnimationDone()) //probably wont be done, but if system really slow (e.g. running in valgrind) it can be finished
-            QCOMPARE(layout->d_ptr->states.at(i).flags(), DuiItemState::STATE_FLAG_SHOWING);
-        else {
-            QVERIFY(layout->d_ptr->states.at(i).isSet(DuiItemState::STATE_FLAG_SHOWING) ||
-                    layout->d_ptr->states.at(i).isSet(DuiItemState::STATE_FLAG_TO_BE_SHOWN));
-        }
         QRectF targetGeometry;
         //If the item can expand, its width will be expanded to the width of the layout - i.e. 204 pixels minus margins
-        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag))
+        if (layout->itemAt(i)->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag))
             targetGeometry = QRectF(4, 4 + i * (100 + vertical_spacing), 204 - 4 - 4, 100);
         else
             targetGeometry = QRectF(4, 4 + i * (100 + vertical_spacing), 100, 100);
 
-        QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), targetGeometry);
-        QCOMPARE(dynamic_cast<QGraphicsWidget *>(layout->d_ptr->states.at(i).item())->isVisible(), true);
-        QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), targetGeometry.center());
+        QCOMPARE(dynamic_cast<QGraphicsWidget *>(layout->itemAt(i))->isVisible(), true);
+        QCOMPARE(layout->itemAt(i)->geometry().center(), targetGeometry.center());
     }
     if (waitForFirstAnimation) {
         while (layout->animation()->isAnimating()) {
@@ -1500,16 +1326,11 @@ void Ut_DuiLayout::testLinearPolicyChangingOrientation()
         }
         //Animation is now done - the items should be in the correct place
         for (int i = 0; i < num_items; i++) {
-            QCOMPARE(layout->d_ptr->states.at(i).geometryProgress(), 1.0);
-            QCOMPARE(layout->d_ptr->states.at(i).opacityProgress(), 1.0);
-            QCOMPARE(layout->d_ptr->states.at(i).flags(), DuiItemState::STATE_FLAG_SHOWING);
-            if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag)) {
+            if (layout->itemAt(i)->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag)) {
                 //If the item can expand, its width will be expanded to the width of the layout - i.e. 204 pixels minus margins
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100));
-                QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100).center());
+                QCOMPARE(layout->itemAt(i)->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100).center());
             } else {
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4, 4 + i*(100 + vertical_spacing), 100, 100));
-                QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 100, 100).center());
+                QCOMPARE(layout->itemAt(i)->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 100, 100).center());
             }
 
         }
@@ -1521,55 +1342,24 @@ void Ut_DuiLayout::testLinearPolicyChangingOrientation()
 
     qApp->processEvents();
 
-    for (int i = 0; i < num_items; i++) {
-        if (waitForFirstAnimation)
-            QCOMPARE(layout->d_ptr->states.at(i).flags(), DuiItemState::STATE_FLAG_SHOWING);
-        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag)) {
-            //If the item can expand, its height will be expanded to the height of the layout which was made larger when in horizontal mode
-            qreal height = 100 * num_items + vertical_spacing * (num_items - 1);
-            if (! reverse) {
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(),
-                         QRectF(4 + i*(100 + horizontal_spacing), 4, 100, height));
-            } else {
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(),
-                         QRectF(4 + (num_items - i - 1) *(100 + horizontal_spacing), 4, 100, height));
-            }
-        } else {
-            if (! reverse) {
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(),
-                         QRectF(4 + i*(100 + horizontal_spacing), 4, 100, 100));
-            } else {
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(),
-                         QRectF(4 + (num_items - 1 - i)*(100 + horizontal_spacing), 4, 100, 100));
-            }
-        }
-    }
-
     //wait for the animation to finish, so that the items should now be in the right position
     while (layout->animation()->isAnimating())
         QTest::qWait(50);
 
     for (int i = 0; i < num_items; i++) {
-        QCOMPARE(layout->d_ptr->states.at(i).geometryProgress(), 1.0);
-        QCOMPARE(layout->d_ptr->states.at(i).opacityProgress(), 1.0);
-        QCOMPARE(layout->d_ptr->states.at(i).flags(), DuiItemState::STATE_FLAG_SHOWING);
-        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag)) {
+        if (layout->itemAt(i)->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag)) {
             //If the item can expand, its height will be expanded to the height of the layout which was made larger when in horizontal mode
             qreal height = 100 * num_items + vertical_spacing * (num_items - 1);
             if (! reverse) {
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4 + i*(100 + horizontal_spacing), 4, 100, height));
-                QCOMPARE(layout->d_ptr->states.at(i).item()->geometry(), QRectF(4 + i*(100 + horizontal_spacing), 4, 100, height));
+                QCOMPARE(layout->itemAt(i)->geometry(), QRectF(4 + i*(100 + horizontal_spacing), 4, 100, height));
             } else {
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4 + (num_items - i - 1)*(100 + horizontal_spacing), 4, 100, height));
-                QCOMPARE(layout->d_ptr->states.at(i).item()->geometry(), QRectF(4 + (num_items - i - 1)*(100 + horizontal_spacing), 4, 100, height));
+                QCOMPARE(layout->itemAt(i)->geometry(), QRectF(4 + (num_items - i - 1)*(100 + horizontal_spacing), 4, 100, height));
             }
         } else {
             if (! reverse) {
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4 + i*(100 + horizontal_spacing), 4, 100, 100));
-                QCOMPARE(layout->d_ptr->states.at(i).item()->geometry(), QRectF(4 + i*(100 + horizontal_spacing), 4, 100, 100));
+                QCOMPARE(layout->itemAt(i)->geometry(), QRectF(4 + i*(100 + horizontal_spacing), 4, 100, 100));
             } else {
-                QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4 + (num_items - i - 1)*(100 + horizontal_spacing), 4, 100, 100));
-                QCOMPARE(layout->d_ptr->states.at(i).item()->geometry(), QRectF(4 + (num_items - i - 1)*(100 + horizontal_spacing), 4, 100, 100));
+                QCOMPARE(layout->itemAt(i)->geometry(), QRectF(4 + (num_items - i - 1)*(100 + horizontal_spacing), 4, 100, 100));
             }
         }
 
@@ -1664,17 +1454,9 @@ void Ut_DuiLayout::testGridLayoutShaking()
      */
     for (int y = 0; y < num_rows; y++) {
         QGraphicsWidget *widget = dynamic_cast<QGraphicsWidget *>(policy->itemAt(y, 0));
-        DuiItemState itemState = layout->d_ptr->states.at(layout->indexOf((QGraphicsItem *)widget));
-        QVERIFY(itemState.item() == widget);
-
-        QCOMPARE(itemState.targetGeometry(), QRectF(orig + (wF * 100) + (dF * 1), 1 + (itemHeight + 1)*y, 100, itemHeight));
         QCOMPARE(widget->geometry().center(), QRectF(orig + (wF * 100) + (dF * 1), 1 + (itemHeight + 1)*y, 100, itemHeight).center());
 
         QGraphicsWidget *widget2 = dynamic_cast<QGraphicsWidget *>(policy->itemAt(y, 1));
-        DuiItemState itemState2 = layout->d_ptr->states.at(layout->indexOf((QGraphicsItem *)widget2));
-        QVERIFY(itemState2.item() == widget2);
-
-        QCOMPARE(itemState2.targetGeometry(),  QRectF(orig + (wF * 100) + (dF*(1 + 100 + 1)), 1 + (itemHeight + 1)*y, 100, itemHeight));
         QCOMPARE(widget2->geometry().center(), QRectF(orig + (wF * 100) + (dF*(1 + 100 + 1)), 1 + (itemHeight + 1)*y, 100, itemHeight).center());
     }
     while (layout->animation()->isAnimating())
@@ -1685,15 +1467,9 @@ void Ut_DuiLayout::testGridLayoutShaking()
      * actual geometry should be correct */
     for (int y = 0; y < num_rows; y++) {
         QGraphicsWidget *widget = dynamic_cast<QGraphicsWidget *>(policy->itemAt(y, 0));
-        DuiItemState itemState = layout->d_ptr->states.at(layout->indexOf((QGraphicsItem *)widget));
-        QVERIFY(itemState.item() == widget);
-        QCOMPARE(itemState.geometryProgress(), 1.0);
         QCOMPARE(widget->geometry(), QRectF(orig + (wF * 100) + (dF * 1), 1 + (itemHeight + 1)*y, 100, itemHeight));
 
         QGraphicsWidget *widget2 = dynamic_cast<QGraphicsWidget *>(policy->itemAt(y, 1));
-        DuiItemState itemState2 = layout->d_ptr->states.at(layout->indexOf((QGraphicsItem *)widget2));
-        QVERIFY(itemState2.item() == widget2);
-        QCOMPARE(itemState2.geometryProgress(), 1.0);
         QCOMPARE(widget2->geometry(), QRectF(orig + (wF * 100) + (dF*(1 + 100 + 1)), 1 + (itemHeight + 1)*y, 100, itemHeight));
     }
 }
@@ -1755,19 +1531,11 @@ void Ut_DuiLayout::testBasicAnimationWithLayoutInsideLayout()
     QCOMPARE(form->effectiveSizeHint(Qt::MinimumSize), QSizeF(204, 4 + 4 + 100 * num_items + vertical_spacing*(num_items - 1)));
     QCOMPARE(form->geometry(), QRectF(0, 0, 204, 4 + 4 + 100 * num_items + vertical_spacing*(num_items - 1)));
     for (int i = 0; i < num_items; i++) {
-        if (layout->d_ptr->states.at(i).isAnimationDone()) //probably wont be done, but if system really slow (e.g. running in valgrind) it can be finished
-            QCOMPARE(layout->d_ptr->states.at(i).flags(), DuiItemState::STATE_FLAG_SHOWING);
-        else {
-            QVERIFY(layout->d_ptr->states.at(i).isSet(DuiItemState::STATE_FLAG_SHOWING) ||
-                    layout->d_ptr->states.at(i).isSet(DuiItemState::STATE_FLAG_TO_BE_SHOWN));
-        }
-        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag) && !useFixedSizePolicy) {
+        if (layout->itemAt(i)->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag) && !useFixedSizePolicy) {
             //If the item can expand, its width will be expanded to the width of the layout - i.e. 204 pixels minus margins
-            QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100));
-            QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100).center());
+            QCOMPARE(layout->itemAt(i)->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100).center());
         } else {
-            QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4, 4 + i*(100 + vertical_spacing), 100, 100));
-            QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 100, 100).center());
+            QCOMPARE(layout->itemAt(i)->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 100, 100).center());
         }
     }
     while (layout->animation()->isAnimating()) {
@@ -1775,16 +1543,11 @@ void Ut_DuiLayout::testBasicAnimationWithLayoutInsideLayout()
     }
     //Animation is now done - the items should be in the correct place
     for (int i = 0; i < num_items; i++) {
-        QCOMPARE(layout->d_ptr->states.at(i).geometryProgress(), 1.0);
-        QCOMPARE(layout->d_ptr->states.at(i).opacityProgress(), 1.0);
-        QCOMPARE(layout->d_ptr->states.at(i).flags(), DuiItemState::STATE_FLAG_SHOWING);
-        if (layout->d_ptr->states.at(i).item()->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag) && !useFixedSizePolicy) {
+        if (layout->itemAt(i)->sizePolicy().horizontalPolicy() & (QSizePolicy::GrowFlag | QSizePolicy::IgnoreFlag) && !useFixedSizePolicy) {
             //If the item can expand, its width will be expanded to the width of the layout - i.e. 204 pixels minus margins
-            QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100));
-            QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100).center());
+            QCOMPARE(layout->itemAt(i)->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 204 - 4 - 4, 100).center());
         } else {
-            QCOMPARE(layout->d_ptr->states.at(i).targetGeometry(), QRectF(4, 4 + i*(100 + vertical_spacing), 100, 100));
-            QCOMPARE(layout->d_ptr->states.at(i).item()->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 100, 100).center());
+            QCOMPARE(layout->itemAt(i)->geometry().center(), QRectF(4, 4 + i*(100 + vertical_spacing), 100, 100).center());
         }
 
     }
@@ -2269,7 +2032,6 @@ void Ut_DuiLayout::testLayoutBoundingBox()
 
     foreach(QGraphicsWidget * w, widgets) {
         //qDebug() << "Ut_DuiLayout::testLayoutBoundingBox: policyType, outerLayout, layout, layoutContentsRect, widget geometry" << policyType << outerLayout->geometry() << layout->geometry() << layoutContentsRect << w->geometry();
-        QCOMPARE(w->geometry(), layout->d_ptr->states.at(layout->indexOf(w)).targetGeometry());
         QVERIFY(layoutContentsRect.contains(w->geometry()));
     }
     delete(layoutContainer);
@@ -3001,11 +2763,6 @@ void Ut_DuiLayout::testLayoutItemOverlap()
             if (w1 == w2)
                 continue;
 //            qDebug() << "Ut_DuiLayout::testLayoutItemOverlap: policyType, outerLayout, layout, layoutContentsRect, widget1 geometry, widget2 geometry" << policyType << outerLayout->geometry() << layout->geometry() << w1->geometry() << w2->geometry();
-//            qDebug() << layout->d_ptr->states.at(layout->indexOf(w1)).targetGeometry();
-//            qDebug() << layout->d_ptr->states.at(layout->indexOf(w2)).targetGeometry();
-
-            QCOMPARE(layout->d_ptr->states.at(layout->indexOf(w1)).targetGeometry(), w1->geometry());
-            QCOMPARE(layout->d_ptr->states.at(layout->indexOf(w2)).targetGeometry(), w2->geometry());
 
             QVERIFY(! w1->geometry().intersects(w2->geometry()));
         }

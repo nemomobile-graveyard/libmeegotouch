@@ -38,6 +38,35 @@ public:
     /** Destructor */
     virtual ~DuiBasicLayoutAnimationPrivate();
 
+    /** Trigger animation step. */
+    void tick();
+
+    /*! \brief This provides an animation to shown an item.
+     *
+     * This sets the item's current geometry to its minimum size, centering
+     * it on its DuiItemState::targetGeometry().  This provides an animation
+     * of the item 'growing' to its final size.
+     * */
+    void doItemShownAnimation(DuiItemState *itemstate);
+
+    /*! \brief This provides an animation to hide an item.
+     *
+     * This sets the DuiItemState::targetGeometry() to the items minimum size, centering
+     * on its current position.  This provides an animation of the item 'shrinking' before being
+     * removed.
+     */
+    void doItemHiddenAnimation(DuiItemState *itemstate);
+    /*!
+     * \brief This method animates an item.
+     *
+     * This method is doing the actual animation of the objects
+     * in the layouts.
+     *
+     * @param layout The layout containing the item to animate.
+     * @param state The info about the layout item to animate.
+     */
+    void animate(DuiItemState &state);
+
     /** Keep track of the time elapsed since the last update.
       * This is used because we may miss some timer events.
       */
@@ -47,8 +76,8 @@ public:
      * This records the value of timeSinceLastUpdate when an update happens
      */
     qreal recordedTimeSinceLastUpdate;
-    /** Trigger animation step. */
-    void tick();
+
+    QList<DuiItemState> states;
 };
 
 #endif // Header Guard

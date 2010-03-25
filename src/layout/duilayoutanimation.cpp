@@ -52,30 +52,18 @@ DuiLayoutAnimation::~DuiLayoutAnimation()
     delete d_ptr;
 }
 
-void DuiLayoutAnimation::startAnimation(DuiItemState *itemstate)
-{
-    layoutAnimationStarted(itemstate);
-}
 bool DuiLayoutAnimation::isAnimating() const
 {
     return state() == QAbstractAnimation::Running;
 }
-void DuiLayoutAnimation::stopAnimation()
-{
-    Q_D(DuiLayoutAnimation);
-    if (!isAnimating())
-        return;
-    d->layout->d_ptr->animationFinished();
-    layoutAnimationFinished();
-}
 
-void DuiLayoutAnimation::showItemNow(QGraphicsLayoutItem *item)
+void DuiLayoutAnimation::showItemNow(QGraphicsWidget *item)
 {
     Q_D(DuiLayoutAnimation);
     Q_ASSERT(item);
     d->layout->d_ptr->showItemNow(item);
 }
-void DuiLayoutAnimation::hideItemNow(QGraphicsLayoutItem *item)
+void DuiLayoutAnimation::hideItemNow(QGraphicsWidget *item)
 {
     Q_D(DuiLayoutAnimation);
     Q_ASSERT(item);
@@ -86,3 +74,4 @@ DuiLayoutAnimationPrivate::DuiLayoutAnimationPrivate()
     layout = NULL;
     q_ptr = NULL;
 }
+
