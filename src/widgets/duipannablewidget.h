@@ -163,9 +163,14 @@ public Q_SLOTS:
 Q_SIGNALS:
 
     /*!
-     * \brief this signal is emitted when the position of the pannableWidget changes
+     * \brief This signal is emitted when the position of the viewport changes.
      */
-    void positionChanged(QPointF newPosition);
+    void positionChanged(const QPointF &position);
+
+    /*!
+     * \brief When panned range changes this signal is emitted.
+     */
+    void rangeChanged(const QRectF &range);
 
     /*!
      * \brief Signals that the panning has stopped.

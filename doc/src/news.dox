@@ -127,6 +127,12 @@
 - DuiDialog::DuiDialog(title, centralWidget, standardButtons) was removed.
   Use DuiDialog::DuiDialog(title, standardButtons) and DuiDialog::setCentralWidget() instead.
 - Removed Dui::inputEnabledQuery (was deprecated in 0.16)
+- DuiPannableViewport::sizePosChanged() signal was split into three signals: positionChanged(),
+  rangeChanged() and viewportSizeChanged().
+- DuiPositionIndicator had several of its methods renamed:
+  - pannedRange() was renamed to range()
+  - pannedPos() was renamed to position()
+  - updateSizePosData() was split into three new methods: setPosition(), setViewportSize() and setRange().
 
 \section v0190
 

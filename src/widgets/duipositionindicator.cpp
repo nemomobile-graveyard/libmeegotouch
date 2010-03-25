@@ -47,28 +47,32 @@ QSizeF DuiPositionIndicator::viewportSize() const
     return model()->viewportSize();
 }
 
-QRectF DuiPositionIndicator::pannedRange() const
+QRectF DuiPositionIndicator::range() const
 {
-    return model()->pannedRange();
+    return model()->range();
 }
 
-QPointF DuiPositionIndicator::pannedPos() const
+QPointF DuiPositionIndicator::position() const
 {
-    return model()->pannedPos();
+    return model()->position();
 }
 
-void DuiPositionIndicator::updateSizePosData(const QSizeF &viewportSize, const QRectF &pannedRange, const QPointF &pannedPos)
+void DuiPositionIndicator::setPosition(const QPointF &newPosition)
 {
-    if (this->viewportSize() != viewportSize) {
-        model()->setViewportSize(viewportSize);
+    if (position() != newPosition) {
+        model()->setPosition(newPosition);
     }
-
-    if (this->pannedRange() != pannedRange) {
-        model()->setPannedRange(pannedRange);
-    }
-
-    if (this->pannedPos() != pannedPos) {
-        model()->setPannedPos(pannedPos);
+}
+void DuiPositionIndicator::setViewportSize(const QSizeF &newViewportSize)
+{
+    if (viewportSize() != newViewportSize) {
+        model()->setViewportSize(newViewportSize);
     }
 }
 
+void DuiPositionIndicator::setRange(const QRectF &newRange)
+{
+    if (range() != newRange) {
+        model()->setRange(newRange);
+    }
+}

@@ -69,11 +69,13 @@ void Ut_DuiPositionIndicator::updateSizePosData()
     QFETCH(QRectF, pannedRange);
     QFETCH(QPointF, pannedPos);
 
-    m_subject->updateSizePosData(viewportSize, pannedRange, pannedPos);
+    m_subject->setPosition(pannedPos);
+    m_subject->setRange(pannedRange);
+    m_subject->setViewportSize(viewportSize);
 
     QCOMPARE(m_subject->viewportSize(), viewportSize);
-    QCOMPARE(m_subject->pannedRange(), pannedRange);
-    QCOMPARE(m_subject->pannedPos(), pannedPos);
+    QCOMPARE(m_subject->range(), pannedRange);
+    QCOMPARE(m_subject->position(), pannedPos);
 
 }
 

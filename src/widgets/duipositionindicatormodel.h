@@ -33,8 +33,8 @@ class DUI_EXPORT DuiPositionIndicatorModel : public DuiWidgetModel
     DUI_MODEL_INTERNAL(DuiPositionIndicatorModel)
 
     DUI_MODEL_PROPERTY(QSizeF, viewportSize, ViewportSize, true, QSizeF())
-    DUI_MODEL_PROPERTY(QRectF, pannedRange, PannedRange, true, QRectF())
-    DUI_MODEL_PROPERTY(QPointF, pannedPos, PannedPos, true, QPointF())
+    DUI_MODEL_PROPERTY(QRectF, range, Range, true, QRectF())
+    DUI_MODEL_PROPERTY(QPointF, position, Position, true, QPointF())
 };
 
 #endif

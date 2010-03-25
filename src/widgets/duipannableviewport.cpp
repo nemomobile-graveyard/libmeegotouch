@@ -45,8 +45,7 @@ DuiPannableViewportPrivate::DuiPannableViewportPrivate()
       currentRange(QRectF()),
       pannedWidget(0),
       viewportLayout(0),
-      positionIndicator(0),
-      haveEmittedSizePosChanged(false)
+      positionIndicator(0)
 {
 }
 
@@ -54,26 +53,17 @@ DuiPannableViewportPrivate::~DuiPannableViewportPrivate()
 {
 }
 
-void DuiPannableViewportPrivate::emitSizePosChanged(const QSizeF &viewportSize,
-        const QRectF &pannedRange,
-        const QPointF &pannedPos)
+
+void DuiPannableViewportPrivate::setNewRange(const QRectF &newRange)
 {
     Q_Q(DuiPannableViewport);
 
-    if (!haveEmittedSizePosChanged ||
-            (lastEmittedViewportSize != viewportSize ||
-             lastEmittedPannedRange != pannedRange ||
-             lastEmittedPannedPos != pannedPos)) {
-
-        lastEmittedViewportSize = viewportSize;
-        lastEmittedPannedRange = pannedRange;
-        lastEmittedPannedPos = pannedPos;
-
-        haveEmittedSizePosChanged = true;
-
-        emit(q->sizePosChanged(viewportSize, pannedRange, pannedPos));
+    if (currentRange != newRange) {
+        currentRange = newRange;
+        emit q->rangeChanged(currentRange);
     }
 }
+
 
 void DuiPannableViewportPrivate::recalculatePhysRange()
 {
@@ -94,7 +84,6 @@ void DuiPannableViewportPrivate::recalculatePhysRange()
 
     q->physics()->setRange(QRectF(currentRange.topLeft(), physicsRangeSize));
 
-    emitSizePosChanged(q->size(), currentRange, q->position());
 }
 
 void DuiPannableViewportPrivate::sendOnDisplayChangeEventToDuiWidgets(QGraphicsItem *item,
@@ -153,9 +142,17 @@ DuiPannableViewport::DuiPannableViewport(QGraphicsItem *parent)
     d->positionIndicator = new DuiPositionIndicator(this);
     d->positionIndicator->setZValue(ZValuePosInd);
     connect(this,
-            SIGNAL(sizePosChanged(QSizeF, QRectF, QPointF)),
+            SIGNAL(viewportSizeChanged(QSizeF)),
             d->positionIndicator,
-            SLOT(updateSizePosData(QSizeF, QRectF, QPointF)));
+            SLOT(setViewportSize(QSizeF)));
+    connect(this,
+            SIGNAL(positionChanged(QPointF)),
+            d->positionIndicator,
+            SLOT(setPosition(QPointF)));
+    connect(this,
+            SIGNAL(rangeChanged(QRectF)),
+            d->positionIndicator,
+            SLOT(setRange(QRectF)));
 
     d->viewportLayout = new DuiPannableViewportLayout;
     d->viewportLayout->setPanningDirections(panDirection());
@@ -185,9 +182,9 @@ void DuiPannableViewport::setAutoRange(bool enable)
 
     if (enable) {
         if (d->pannedWidget) {
-            d->currentRange = QRectF(QPointF(), d->pannedWidget->size());
+            d->setNewRange(QRectF(QPointF(), d->pannedWidget->size()));
         } else {
-            d->currentRange = QRectF();
+            d->setNewRange(QRectF());
         }
 
         // Recalculates the physics range when automatic range is taken
@@ -231,9 +228,9 @@ void DuiPannableViewport::setWidget(QGraphicsWidget *widget)
 
     if (autoRange()) {
         if (widget) {
-            d->currentRange = QRectF(QPointF(), widget->size());
+            d->setNewRange(QRectF(QPointF(), widget->size()));
         } else {
-            d->currentRange = QRectF();
+            d->setNewRange(QRectF());
         }
     }
 
@@ -252,7 +249,7 @@ void DuiPannableViewport::setRange(const QRectF &r)
     Q_D(DuiPannableViewport);
 
     if (!autoRange()) {
-        d->currentRange = r;
+        d->setNewRange(r);
 
         // Recalculates the physics range for new manually set range
         d->recalculatePhysRange();
@@ -273,14 +270,16 @@ void DuiPannableViewport::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     if (autoRange()) {
         if (d->pannedWidget) {
-            d->currentRange = QRectF(QPointF(), d->pannedWidget->size());
+            d->setNewRange(QRectF(QPointF(), d->pannedWidget->size()));
         } else {
-            d->currentRange = QRectF();
+            d->setNewRange(QRectF());
         }
     }
 
     // Recalculates the physics range because viewport size has changed
     d->recalculatePhysRange();
+
+    emit viewportSizeChanged(event->newSize());
 
     d->positionIndicator->resize(event->newSize());
 }
@@ -298,12 +297,10 @@ void DuiPannableViewport::updatePosition(const QPointF &p)
     // because the panned widget needs to flow to the opposite direction of the
     // panning.
 
-    if (d->pannedWidget) {
+    if (d->pannedWidget && d->pannedWidget->pos() != -roundedP) {
         d->pannedWidget->setPos(-roundedP);
+        emit positionChanged(roundedP);
     }
-
-    // position has changed
-    d->emitSizePosChanged(size(), d->currentRange, roundedP);
 }
 
 void DuiPannableViewport::setPanDirection(const Qt::Orientations &panDirection)
@@ -325,9 +322,9 @@ void DuiPannableViewport::updateGeometry()
 
     if (autoRange()) {
         if (d->pannedWidget) {
-            d->currentRange = QRectF(QPointF(), d->pannedWidget->size());
+            d->setNewRange(QRectF(QPointF(), d->pannedWidget->size()));
         } else {
-            d->currentRange = QRectF();
+            d->setNewRange(QRectF());
         }
     }
 

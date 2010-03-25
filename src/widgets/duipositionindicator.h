@@ -36,9 +36,9 @@ class DuiPositionIndicatorPrivate;
  * The size of DuiPositionIndicator is set by the layout it is in but
  * it only draws on the area near the edges of its area.
  *
- * DuiPositionIndicator has a slot updateSizePosData() which needs to
- * be called when size of viewport, panned area inside the viewport or
- * panning position changes.
+ * DuiPositionIndicator slots setViewportSize, setRange and setPosition
+ * need to be called when size of viewport, panned area inside
+ * the viewport or panning position changes.
  *
  * DuiPositionIndicator is a non-interactive widget. It only shows the
  * current position, and it doesn't react to mouse events.
@@ -51,9 +51,9 @@ class DUI_EXPORT DuiPositionIndicator : public DuiWidgetController
 
     DUI_CONTROLLER(DuiPositionIndicator)
 
-    Q_PROPERTY(QSizeF viewportSize READ viewportSize)
-    Q_PROPERTY(QRectF pannedRange READ pannedRange)
-    Q_PROPERTY(QPointF pannedPos READ pannedPos)
+    Q_PROPERTY(QSizeF viewportSize READ viewportSize WRITE setViewportSize)
+    Q_PROPERTY(QRectF range READ range WRITE setRange)
+    Q_PROPERTY(QPointF position READ position WRITE setPosition)
 
 public:
     /*!
@@ -79,20 +79,30 @@ public:
      * (normally the size of the widget that is being panned, see
      * DuiPannableViewport).
      */
-    QRectF pannedRange() const;
+    QRectF range() const;
 
     /*!
      * \brief Returns the latest stored current position of the panned
      * widget.
      */
-    QPointF pannedPos() const;
+    QPointF position() const;
 
 public Q_SLOTS:
 
     /*!
-     * \brief Updates the size and position data.
+     * \brief Updates the position data.
      */
-    void updateSizePosData(const QSizeF &viewportSize, const QRectF &pannedRange, const QPointF &pannedPos);
+    void setPosition(const QPointF &newPosition);
+
+    /*!
+     * \brief Updates the viewport size data.
+     */
+    void setViewportSize(const QSizeF &newViewportSize);
+
+    /*!
+     * \brief Updates the panned range data.
+     */
+    void setRange(const QRectF &newRange);
 
 protected:
 

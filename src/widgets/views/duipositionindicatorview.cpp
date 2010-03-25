@@ -72,8 +72,8 @@ void DuiPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptio
     int dotDist = style()->pixmapDistance();
     QSize dotSize = style()->onPixmap()->size();
     QSizeF vpSize = model()->viewportSize();
-    QRectF pRange = model()->pannedRange();
-    QPointF pPos = model()->pannedPos();
+    QRectF pRange = model()->range();
+    QPointF pPos = model()->position();
     const QPixmap *pixOff = style()->offPixmap();
     const QPixmap *pixOn = style()->onPixmap();
 

@@ -40,14 +40,11 @@ public:
     DuiPannableViewportLayout *viewportLayout;
     DuiPositionIndicator *positionIndicator;
 
-    bool haveEmittedSizePosChanged;
-    QSizeF lastEmittedViewportSize;
-    QRectF lastEmittedPannedRange;
-    QPointF lastEmittedPannedPos;
-
-    void emitSizePosChanged(const QSizeF &viewportSize,
-                            const QRectF &pannedRange,
-                            const QPointF &pannedPos);
+    /*!
+     * \brief Sets new value of the range attribute with emitting
+     * rangeChanged() signal if needed.
+     */
+    void setNewRange(const QRectF &newRange);
 
     /*!
      * \brief Recalculates the range of the base class (i.e. range of

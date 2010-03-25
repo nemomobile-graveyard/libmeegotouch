@@ -158,10 +158,9 @@ public:
 Q_SIGNALS:
 
     /*!
-     * \brief When viewport size, the panning range or the panning
-     * position changes, this signal is emitted.
+     * \brief When viewport size changes this signal is emitted.
      */
-    void sizePosChanged(const QSizeF &viewportSize, const QRectF &pannedRange, const QPointF &pannedPos);
+    void viewportSizeChanged(const QSizeF &viewportSize);
 
 public Q_SLOTS:
 
