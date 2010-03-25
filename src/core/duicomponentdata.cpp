@@ -293,6 +293,15 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
     DuiTheme::ThemeService themeService = DuiTheme::AnyTheme;
     bool outputLevelSet = false;
 
+#ifdef HAVE_N900
+    //#MS - default commadline: /usr/bin/widgetsgallery -target N900 -fullscreen
+    // -graphicssystem native  this we have to set in themedaemon or before DuiApplication()
+    fullScreen = true;
+    deviceName = "N900";
+#endif //HAVE_N900
+
+
+
     // Configure application according to switches
     for (int i = 1; i < argc; ++i) {
         QString s(argv[i]);
