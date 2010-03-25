@@ -111,6 +111,8 @@
   - ...
   Use the supplied libdui/tools/migration-scripts/migrate_duiappletmessagetype 
   script for automatic replacement.
+- DuiSceneWindow::appearNow(), DuiSceneWindow::disappearNow(), DuiSceneWindow::dismissNow() -
+  use DuiSceneManager API to forcibly have scene window transitions without animations.
 
 \section v0190
 

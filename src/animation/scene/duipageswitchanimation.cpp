@@ -22,6 +22,13 @@
 #include "duipageswitchanimation.h"
 #include "duipageswitchanimation_p.h"
 #include "duiscenewindow.h"
+#include "duiscenemanager.h"
+
+void DuiPageSwitchAnimationPrivate::_q_animationFinished()
+{
+    if (oldPage && oldPage->sceneManager())
+        oldPage->sceneManager()->disappearSceneWindowNow(oldPage);
+}
 
 DuiPageSwitchAnimation::DuiPageSwitchAnimation(QObject *parent) :
     DuiParallelAnimationGroup(new DuiPageSwitchAnimationPrivate, parent)
@@ -44,6 +51,8 @@ DuiPageSwitchAnimation::DuiPageSwitchAnimation(QObject *parent) :
     d->positionOldPageAnimation->setDuration(style()->duration());
     d->positionOldPageAnimation->setStartValue(QPointF(0, 0));
     addAnimation(d->positionOldPageAnimation);
+
+    connect(this, SIGNAL(finished()), SLOT(_q_animationFinished()));
 }
 
 DuiPageSwitchAnimation::DuiPageSwitchAnimation(DuiPageSwitchAnimationPrivate *dd, QObject *parent) :
@@ -54,6 +63,11 @@ DuiPageSwitchAnimation::DuiPageSwitchAnimation(DuiPageSwitchAnimationPrivate *dd
 void DuiPageSwitchAnimation::setNewPage(DuiSceneWindow *newPage)
 {
     Q_D(DuiPageSwitchAnimation);
+
+    if (d->newPage)
+        disconnect(this, SIGNAL(finished()), d->newPage, SIGNAL(appeared()));
+
+    connect(this, SIGNAL(finished()), newPage, SIGNAL(appeared()));
 
     d->newPage = newPage;
 }
@@ -98,3 +112,5 @@ void DuiPageSwitchAnimation::updateState(QAbstractAnimation::State newState,
             d->positionOldPageAnimation->setEndValue(QPointF(d->oldPage->boundingRect().width(), 0));
     }
 }
+
+#include "moc_duipageswitchanimation.cpp"

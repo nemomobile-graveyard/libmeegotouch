@@ -53,6 +53,9 @@ protected:
 
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
+private:
+    Q_PRIVATE_SLOT(d_func(), void _q_animationFinished())
+
 };
 
 //! \internal_end

@@ -48,8 +48,8 @@ class DuiDismissEventPrivate;
  * animation will take place).
  *
  * If you want the scene window to be deleted after it disappears, pass
- * DuiSceneWindow::DestroyWhenDone when calling DuiSceneWindow::appear() or
- * DuiSceneWindow::appearNow(). This is very useful for independent scene windows.
+ * DuiSceneWindow::DestroyWhenDone when calling DuiSceneWindow::appear().
+ * This is very useful for independent scene windows.
  *
  * QObjects emits the destroyed() signal when they are deleted.
  *

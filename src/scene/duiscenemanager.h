@@ -181,9 +181,6 @@ public Q_SLOTS:
     /*!
      * Attaches a \a sceneWindow to the scene manager and makes it appear without animations (instantly).
      * According to the given \a policy, a scene window can be kept or destroyed after disappearing.
-     *
-     * \note Normally you don't have to call this method explicitly. DuiSceneWindow::appearNow()
-     * calls this method for you.
      */
     void appearSceneWindowNow(DuiSceneWindow *sceneWindow, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
 
@@ -205,9 +202,6 @@ public Q_SLOTS:
 
     /*!
      * Makes a \a sceneWindow disappear without animations (instantly) and detaches it from the scene manager.
-     *
-     * \note Normally you don't have to call this method explicitly. DuiSceneWindow::disappearNow()
-     * calls this method for you.
      */
     void disappearSceneWindowNow(DuiSceneWindow *sceneWindow);
 
@@ -221,9 +215,6 @@ public Q_SLOTS:
 
     /*!
      * Dismisses a \a sceneWindow without animations (instantly) and detaches it from the scene manager.
-     *
-     * \note Normally you don't have to call this method explicitly. DuiSceneWindow::dismissNow()
-     * calls this method for you.
      */
     void dismissSceneWindowNow(DuiSceneWindow *sceneWindow);
 

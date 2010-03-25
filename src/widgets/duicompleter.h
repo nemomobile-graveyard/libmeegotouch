@@ -292,12 +292,9 @@ public Q_SLOTS:
 protected Q_SLOTS:
 
     //! \reimp
-    virtual void appear(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-    virtual void appearNow(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
+    virtual void appear(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
     virtual void appear(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-    virtual void appearNow(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
     virtual void disappear();
-    virtual void disappearNow();
     virtual bool eventFilter(QObject *, QEvent *);
     //! \reimp_end
 

@@ -38,9 +38,9 @@ class DuiPannableViewport;
     By default the page creates a pannable viewport where a user can place his component by using
     centralWidget() or setCentralWidget(DuiWidget *).
 
-    There are two functions to show the page on the screen:
-    \li appear() shows the page with the associated animation.
-    \li appearNow() shows the page immediately on the screen.
+    The page can be shown on the screen using appear() method. A call to appear() involves running
+    the assiciated show animation for the page. If you want to show a page instantly, refer to
+    DuiSceneManager API.
 
     A page can contain actions, which will be shown in the navigation bar or on a view menu.
 
@@ -158,7 +158,7 @@ public:
 
     /*!
      * Returns true if the page is expected to rememeber its pannable viewport
-     * position when hidden and restore it when shown again using appear() or appearNow().
+     * position when hidden and restore it when shown again using appear().
      * \sa setRememberPosition()
      */
     bool rememberPosition() const;
@@ -186,7 +186,7 @@ public:
 
     /*!
      * Convenience function that returns a pointer to the application window into
-     * which the application page is shown or a null pointer if appear() or appearNow()
+     * which the application page is shown or a null pointer if appear()
      * hasn't been called yet. When you call appear() and the application window
      * specified as a parameter exists, this method will return it.
      *
@@ -288,7 +288,7 @@ public Q_SLOTS:
     /*!
      * Sets whether the page should remember its pannable viewport position when
      * hidden. Default value is true. Set it to false to have the viewport
-     * scrolled to the top with every call to appear() or appearNow(). The scrolling
+     * scrolled to the top with every call to appear(). The scrolling
      * is immediate, i.e. it's not animated at all.
      * \sa rememberPosition()
      */

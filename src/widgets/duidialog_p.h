@@ -36,7 +36,7 @@ public:
     DuiDialogPrivate();
     ~DuiDialogPrivate();
     void init();
-    void appear(bool now, DuiSceneWindow::DeletionPolicy policy);
+    void appear(DuiSceneWindow::DeletionPolicy policy);
     void addStandardButtons(Dui::StandardButtons standardButtons);
     void updateStandAloneHomeButtonVisibility();
     void _q_onStandAloneDialogDisappeared();

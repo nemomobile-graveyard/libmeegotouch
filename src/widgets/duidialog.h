@@ -52,7 +52,7 @@ class DuiDismissEvent;
         Can be hidden when central widget is customized.
 
     DuiDialog may be application modal or system modal. When displayed inside a given
-    DuiWindow (by supplying a window parameter to appear(), appearNow() or exec())
+    DuiWindow (by supplying a window parameter to appear() or exec())
     it will ignore the systemModal property and will be application modal. If
     no window is supplied and systemModal is set to true it will be displayed in its own
     separate top-level DuiWindow and will be system modal. The home button is not accessible
@@ -313,7 +313,7 @@ public:
     /*!
      * \brief Defines whether the dialog should be displayed as system modal.
      *
-     * Changing this property will affect only subsequent calls to appear(), appearNow()
+     * Changing this property will affect only subsequent calls to appear()
      * and exec(). I.e., if called between an appear() and a disappear() it won't affect
      * the modality of the ongoing appearance.
      *
@@ -422,7 +422,7 @@ public Q_SLOTS:
      *
      * \param policy    Deletion policy, defines the ownership for this window
      *
-     * \sa appearNow(), setSystemModal()
+     * \sa setSystemModal()
      */
     virtual void appear(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
 
@@ -437,33 +437,9 @@ public Q_SLOTS:
      * \param window    The window on which the dialog is going to be shown.
      * \param policy    Deletion policy, defines the ownership for this dialog
      *
-     * \sa appear(), appearNow(window, policy)
+     * \sa setSystemModal()
      */
     virtual void appear(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * \brief Shows the dialog immediately, without an animated transition.
-     *
-     * Same as appear(), but it won't use an animation to show the dialog.
-     *
-     * \sa appear()
-     */
-    virtual void appearNow(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * Shows the dialog on the window specified by \a window and registers
-     * it in the associated DuiSceneManager. Doesn't use an animation to show the dialog.
-     *
-     * If \a window is 0, it functions just like appearNow() (without window parameter).
-     * Otherwise it ignores the systemModal property and is displayed as application
-     * modal.
-     *
-     * \param window    The window on which the dialog is going to be shown.
-     * \param policy    Deletion policy, defines the ownership for this dialog
-     *
-     * \sa appearNow(), appear(window, policy)
-     */
-    virtual void appearNow(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
 
     /*!
      * \brief Dismisses the modal dialog and sets the result code to Accepted.

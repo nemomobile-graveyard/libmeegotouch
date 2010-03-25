@@ -23,6 +23,7 @@
 #include <DuiApplication>
 #include <DuiApplicationWindow>
 #include <DuiApplicationPage>
+#include <DuiSceneManager>
 #include <DuiLocale>
 
 #include <QProcess>
@@ -92,7 +93,7 @@ void Pt_minimalduiapplication::pageAppear()
     if (appearType == "appear") {
         MY_QBENCHMARK_ONCE(page->appear();)
     } else {
-        MY_QBENCHMARK_ONCE(page->appearNow();)
+        MY_QBENCHMARK_ONCE(window->sceneManager()->appearSceneWindowNow(page);)
     }
 }
 

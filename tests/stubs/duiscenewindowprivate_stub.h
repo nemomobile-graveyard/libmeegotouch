@@ -30,7 +30,6 @@ class DuiSceneWindowPrivateStub : public StubBase
 {
 public:
     virtual void DuiSceneWindowPrivateConstructor();
-    virtual void appear(bool now, DuiWindow *window, DuiSceneWindow::DeletionPolicy policy);
     DuiSceneWindow::WindowType windowType ;
     DuiSceneWindow::DeletionPolicy policy ;
     Qt::Alignment alignment ;
@@ -45,14 +44,6 @@ void DuiSceneWindowPrivateStub::DuiSceneWindowPrivateConstructor()
 {
 
 }
-void DuiSceneWindowPrivateStub::appear(bool now, DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    QList<ParameterBase *> params;
-    params.append(new Parameter<bool >(now));
-    params.append(new Parameter<DuiWindow * >(window));
-    params.append(new Parameter<DuiSceneWindow::DeletionPolicy >(policy));
-    stubMethodEntered("appear", params);
-}
 
 
 
@@ -65,11 +56,6 @@ DuiSceneWindowPrivateStub *gDuiSceneWindowPrivateStub = &gDefaultDuiSceneWindowP
 DuiSceneWindowPrivate::DuiSceneWindowPrivate()
 {
     gDuiSceneWindowPrivateStub->DuiSceneWindowPrivateConstructor();
-}
-
-void DuiSceneWindowPrivate::appear(bool now, DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    gDuiSceneWindowPrivateStub->appear(now, window, policy);
 }
 
 

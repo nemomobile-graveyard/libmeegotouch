@@ -22,6 +22,7 @@
 #include <DuiApplicationWindow>
 #include <DuiApplication>
 #include "duiapplicationpage_p.h"
+#include <DuiSceneManager>
 
 #include <DuiPannableViewport>
 #include <DuiAction>
@@ -147,7 +148,7 @@ void Ut_DuiApplicationPage::testRememberPosition()
 {
     m_subject->setRememberPosition(true);
     m_subject->d_func()->pannableViewPort->setPosition(QPointF(0, 10));
-    m_subject->appearNow();
+    appWin->sceneManager()->appearSceneWindowNow(m_subject);
     QCOMPARE(m_subject->d_func()->pannableViewPort->position() + QPointF(10, 10), QPointF(10, 20));
     QCOMPARE(m_subject->d_func()->pannableViewPort->physics()->position() + QPointF(10, 10),  QPointF(10, 20));
 }
@@ -156,7 +157,7 @@ void Ut_DuiApplicationPage::testForgetPosition()
 {
     m_subject->setRememberPosition(false);
     m_subject->d_func()->pannableViewPort->setPosition(QPointF(0, 10));
-    m_subject->appearNow();
+    appWin->sceneManager()->appearSceneWindowNow(m_subject);
     QCOMPARE(m_subject->d_func()->pannableViewPort->position() + QPointF(10, 10), QPointF(10, 10));
     QCOMPARE(m_subject->d_func()->pannableViewPort->physics()->position() + QPointF(10, 10),  QPointF(10, 10));
 }

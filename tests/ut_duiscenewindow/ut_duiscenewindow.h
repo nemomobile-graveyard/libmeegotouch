@@ -43,7 +43,7 @@ private slots:
 
     void testAppearedDisappearedSignals();
 
-    void opacityAfterDisappearNow();
+//    void opacityAfterDisappearNow();
     void opacityAfterDisappear();
 
     void testDismiss();

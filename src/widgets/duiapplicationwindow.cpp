@@ -120,20 +120,20 @@ void DuiApplicationWindowPrivate::init()
                q, SLOT(_q_menuDisappeared()));
 
     if (!DuiApplication::fullScreen()) {
-        statusBar->appearNow(q);
+        sceneManager->appearSceneWindowNow(statusBar);
         showingStatusBar = true;
     }
 
-    navigationBar->appearNow(q);
-    homeButtonPanel->appearNow(q);
-    escapeButtonPanel->appearNow(q);
+    sceneManager->appearSceneWindowNow(navigationBar);
+    sceneManager->appearSceneWindowNow(homeButtonPanel);
+    sceneManager->appearSceneWindowNow(escapeButtonPanel);
 
     // Initialize escape button to close mode.
     escapeButtonPanel->setEscapeMode(DuiEscapeButtonPanelModel::CloseMode);
     QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
 
     if (q->orientation() == Dui::Portrait) {
-        dockWidget->appearNow(q);
+        sceneManager->appearSceneWindowNow(dockWidget);
     }
 
     _q_placeToolBar(q->orientation());
@@ -421,7 +421,7 @@ void DuiApplicationWindowPrivate::setComponentDisplayMode(
                     // Dock widget is a special guy.
                     updateDockWidgetVisibility();
                 } else {
-                    component->appearNow(q);
+                    sceneManager->appearSceneWindowNow(component);
                 }
             } else {
                 component->disappear();
@@ -476,9 +476,9 @@ void DuiApplicationWindowPrivate::updateDockWidgetVisibility()
 
     if (toolbarHasVisibleActions) {
         //TODO: no animation until appear/disappear starts working properly
-        dockWidget->appearNow(q);
+        sceneManager->appearSceneWindowNow(dockWidget);
     } else {
-        dockWidget->disappearNow();
+        sceneManager->disappearSceneWindowNow(dockWidget);
     }
 }
 

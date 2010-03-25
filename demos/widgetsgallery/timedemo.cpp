@@ -24,6 +24,9 @@
 #include "templatepage.h"
 
 
+#include <DuiApplication>
+#include <DuiWindow>
+#include <DuiSceneManager>
 #include <DuiApplicationPage>
 
 #include <QApplication>
@@ -161,7 +164,10 @@ void Timedemo::showNextPage()
         if (currentPage == m_pFrontPage) {
             // FIXME: the front page needs a special invitation.
             // otherwise it does not show up again
-            demoPages[m_currentPageIndex]->appearNow();
+            if (DuiApplication::activeWindow()) {
+                // FIXME: why appearSceneWindowNow() and not appear()?
+                DuiApplication::activeWindow()->sceneManager()->appearSceneWindowNow(demoPages[m_currentPageIndex]);
+            }
         }
         beginBenchmark();
     } else {

@@ -818,12 +818,6 @@ void DuiSceneManagerPrivate::startPageSwitchAnimation(DuiSceneWindow *newPage,
     pageSwitchAnimation->setOldPage(oldPage);
     pageSwitchAnimation->setPageTransitionDirection(direction);
 
-    pageSwitchAnimation->disconnect(SIGNAL(finished()));
-
-    QObject::connect(pageSwitchAnimation, SIGNAL(finished()), newPage, SIGNAL(appeared()));
-    if (oldPage)
-        QObject::connect(pageSwitchAnimation, SIGNAL(finished()), oldPage, SLOT(disappearNow()));
-
     pageSwitchAnimation->start();
     freezeUIForAnimationDuration(pageSwitchAnimation);
 }
@@ -927,7 +921,7 @@ void DuiSceneManagerPrivate::appearSceneWindow(DuiSceneWindow *window,
         } else {
             // Animation needs to be fast forwarded to the end,
             // even if not played, to ensure that window is in correct state
-            // to be shown with appearNow()
+            // to be shown with appearSceneWindowNow()
             //  - Maciej Jablonski
             if(window->showAnimation())
                 window->showAnimation()->setCurrentTime(

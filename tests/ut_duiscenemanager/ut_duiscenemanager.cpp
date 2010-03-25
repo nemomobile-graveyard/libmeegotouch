@@ -234,8 +234,8 @@ void Ut_DuiSceneManager::testSceneLayerEffect()
     DuiDialog *m = new DuiMessageBox("test");
     DuiNavigationBar *n = new DuiNavigationBar();
 
-    m->appearNow();
-    n->appearNow();
+    sm->appearSceneWindowNow(m);
+    sm->appearSceneWindowNow(n);
 
     QVERIFY(m->parentItem() != 0);
     QVERIFY(n->parentItem() == sm->d_ptr->rootElement);
@@ -292,8 +292,8 @@ void Ut_DuiSceneManager::testNavBarDockWidgetVisibility()
     DuiNavigationBar *p = new DuiNavigationBar();
     DuiDockWidget *d = new DuiDockWidget();
 
-    p->appearNow();
-    d->appearNow();
+    sm->appearSceneWindowNow(p);
+    sm->appearSceneWindowNow(d);
 
     int newAngle = sm->orientationAngle() + Dui::Angle90;
     newAngle %= 360;
