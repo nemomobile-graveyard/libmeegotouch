@@ -124,6 +124,7 @@
   use DuiSceneManager API to forcibly have scene window transitions without animations.
 - DuiDialog::DuiDialog(title, centralWidget, standardButtons) was removed.
   Use DuiDialog::DuiDialog(title, standardButtons) and DuiDialog::setCentralWidget() instead.
+- Removed Dui::inputEnabledQuery (was deprecated in 0.16)
 
 \section v0190
 

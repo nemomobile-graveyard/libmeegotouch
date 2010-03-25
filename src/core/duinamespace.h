@@ -71,8 +71,7 @@ namespace Dui
 
     //! extensions for Qt::inputMethodQuery
     enum InputMethodQueryExtensions {
-        InputEnabledQuery = 10000, // as workaround for qgraphicsview inputmethod shortcomings - DEPRECATED
-        VisualizationPriorityQuery, //! Tells if input method widget wants to have high
+        VisualizationPriorityQuery = 10001, //! Tells if input method widget wants to have high
         //! priority for visualization. Input method should
         //! honor this and stay out of widgets space.
         PreeditRectangleQuery,      //! Retrieve bounding rectangle for current preedit text.

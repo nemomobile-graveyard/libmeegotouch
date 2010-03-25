@@ -171,8 +171,6 @@ QVariant CustomDirectIMWidget::inputMethodQuery(Qt::InputMethodQuery query) cons
     switch ((int) query) {
     case Dui::ImModeQuery:
         return QVariant(Dui::InputMethodModeDirect);
-    case Dui::InputEnabledQuery:
-        return QVariant(true);
     default:
         return DuiLabel::inputMethodQuery(query);
     }
