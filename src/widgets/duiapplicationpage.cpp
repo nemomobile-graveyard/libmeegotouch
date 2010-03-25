@@ -310,6 +310,7 @@ void DuiApplicationPage::actionEvent(QActionEvent *e)
             action->disconnect(this);
         //fall through is intentional.
     }
+    case QEvent::ActionChanged:
     case QEvent::ActionAdded: {
         emit actionUpdated(e);
         break;
