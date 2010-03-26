@@ -17,33 +17,39 @@
 **
 ****************************************************************************/
 
-#ifndef DUICONTAINERMODEL_H
-#define DUICONTAINERMODEL_H
+#ifndef UT_QTMAEMO6STYLE_H
+#define UT_QTMAEMO6STYLE_H
 
-#include <duiwidgetmodel.h>
+#include <QtTest/QtTest>
+#include <QObject>
 
-class QGraphicsWidget;
+class QMainWindow;
 
-/*!
- * \class DuiContainerModel
- * \brief The model class of DuiContainer.
- *
- * \sa DuiContainer, DuiContainerView
- */
+// the real unit/QtMaemo6Style class declaration
+#include <qtmaemo6style.h>
 
-class DUI_EXPORT DuiContainerModel : public DuiWidgetModel
+Q_DECLARE_METATYPE(QtMaemo6Style *);
+
+class Ut_QtMaemo6Style : public QObject
 {
     Q_OBJECT
-    DUI_MODEL_INTERNAL(DuiContainerModel)
+private slots:
+    void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
+
+    void testStyleLoadedByDefault();
+    void testLoadOtherStyle();
+
+    void testWindowDecoration();
+    void testWindowDecorationSlot();
+
+    void testFonts();
 
 private:
-    DUI_MODEL_PROPERTY(QString, title, Title, true, QString())
-    DUI_MODEL_PROPERTY(QString, text, Text, true, QString())
-    DUI_MODEL_PROPERTY(QString, icon, Icon, true, QString())
-    DUI_MODEL_PROPERTY(bool, headerVisible, HeaderVisible, true, true)
-    DUI_MODEL_PROPERTY(bool, progressIndicatorVisible, ProgressIndicatorVisible, true, false)
-    DUI_MODEL_PTR_PROPERTY(QGraphicsWidget *, centralWidget, CentralWidget, true, NULL)
+    QApplication* m_app;
+    QMainWindow* m_mw;
 };
 
 #endif
-

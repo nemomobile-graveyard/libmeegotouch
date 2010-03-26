@@ -53,7 +53,7 @@ private:
         \property DuiDialogModel::centralWidget
         \brief Central widget for the dialog.
     */
-    DUI_MODEL_PTR_PROPERTY(DuiWidget *, centralWidget, CentralWidget, true, new DuiWidget)
+    DUI_MODEL_PTR_PROPERTY(QGraphicsWidget *, centralWidget, CentralWidget, true, new DuiWidget)
 
     /*!
         \property DuiDialogModel::buttons
@@ -67,7 +67,7 @@ public:
      * Non-const getter for centralWidget property.
      * Used by view classes to add the central widget to their internal layouts.
      */
-    DuiWidget *centralWidget();
+    QGraphicsWidget *centralWidget();
 
     /*!
      * \brief Adds a given \a button to the button box.

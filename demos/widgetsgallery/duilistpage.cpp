@@ -354,7 +354,7 @@ void DuiListPage::createContent()
     createActions();
 
     DuiTheme::addPixmapDirectory(QDir(CONTACTS_DIR).canonicalPath());
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(layout);
 

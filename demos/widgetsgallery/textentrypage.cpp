@@ -227,7 +227,7 @@ QString TextEntryPage::timedemoTitle()
 void TextEntryPage::createContent()
 {
     DuiApplicationPage::createContent();
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     DuiGridLayoutPolicy *layoutPolicy = TextEntryPage::createAndSetupGridPolicy(panel);
     int row = 0;
 
@@ -541,7 +541,7 @@ void TextEntryPage::retranslateUi()
     changeErrorCorrection(m_errorCorrection);
 }
 
-DuiGridLayoutPolicy *TextEntryPage::createAndSetupGridPolicy(DuiWidget *panel)
+DuiGridLayoutPolicy *TextEntryPage::createAndSetupGridPolicy(QGraphicsWidget *panel)
 {
     DuiLayout *layout = new DuiLayout(panel);
     panel->setLayout(layout);

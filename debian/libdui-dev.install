@@ -3,4 +3,3 @@ usr/lib/pkgconfig/*
 usr/share/qt4/mkspecs/features/dui.prf
 usr/share/qt4/mkspecs/features/dui_defines.prf
 usr/share/qt4/mkspecs/features/dui_translations.prf
-usr/share/qt4/mkspecs/features/translations.prf

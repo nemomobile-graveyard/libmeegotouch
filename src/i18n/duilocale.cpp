@@ -306,6 +306,36 @@ icu::DateFormatSymbols *DuiLocalePrivate::createDateFormatSymbols(icu::Locale lo
 }
 #endif
 
+#ifdef HAVE_ICU
+icu::DateFormat *DuiLocalePrivate::createDateFormat(DuiLocale::DateType dateType,
+                                                    DuiLocale::TimeType timeType,
+                                                    const DuiCalendar& duicalendar) const
+{
+    // Create calLocale which has the time pattern we want to use
+    icu::Locale calLocale = DuiIcuConversions::createLocale(
+        categoryName(DuiLocale::DuiLcTime),
+        duicalendar.type());
+
+    icu::DateFormat::EStyle dateStyle = DuiIcuConversions::toEStyle(dateType);
+    icu::DateFormat::EStyle timeStyle = DuiIcuConversions::toEStyle(timeType);
+    icu::DateFormat *df
+    = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
+
+    // Symbols come from the messages locale
+    icu::Locale symbolLocale
+    = DuiIcuConversions::createLocale(categoryName(DuiLocale::DuiLcMessages),
+                                      duicalendar.type());
+
+    DateFormatSymbols *dfs = DuiLocalePrivate::createDateFormatSymbols(symbolLocale);
+
+    // This is not nice but seems to be the only way to set the
+    // symbols with the public API
+    static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
+
+    return df;
+}
+#endif
+
 // Constructors
 
 DuiLocalePrivate::DuiLocalePrivate()
@@ -1171,7 +1201,7 @@ QString DuiLocale::formatDateTime(const QDateTime &dateTime, DateType dateType,
     Q_UNUSED(timeType);
     Q_UNUSED(calendarType);
     Q_D(const DuiLocale);
-    return d->createQLocale(DuiLcMonetary).toString(dateTime);
+    return d->createQLocale(DuiLcTime).toString(dateTime);
 #endif
 }
 
@@ -1184,29 +1214,12 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duicalendar,
         return QString("");
 
     Q_D(const DuiLocale);
-    // Create calLocale which has the time pattern we want to use
-    icu::Locale calLocale = DuiIcuConversions::createLocale(d->categoryName(DuiLcTime),
-                            duicalendar.type());
-
-    icu::DateFormat::EStyle dateStyle = DuiIcuConversions::toEStyle(datetype);
-    icu::DateFormat::EStyle timeStyle = DuiIcuConversions::toEStyle(timetype);
-    icu::DateFormat *df
-    = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
-
-    // Symbols come from the messages locale
-    icu::Locale symbolLocale
-    = DuiIcuConversions::createLocale(d->categoryName(DuiLcMessages),
-                                      duicalendar.type());
-
-    DateFormatSymbols *dfs = DuiLocalePrivate::createDateFormatSymbols(symbolLocale);
-
-    // This is not nice but seems to be the only way to set the
-    // symbols with the public API
-    static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
 
     icu::FieldPosition pos;
     icu::UnicodeString resString;
     icu::Calendar *cal = duicalendar.d_ptr->_calendar;
+
+    icu::DateFormat *df = d->createDateFormat(datetype, timetype, duicalendar);
     df->format(*cal, resString, pos);
     delete df;
 
@@ -1608,6 +1621,39 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duiCalendar,
     }
 
     return formatDateTimeICU(duiCalendar, icuFormat);
+}
+#endif
+
+#ifdef HAVE_ICU
+QDateTime DuiLocale::parseDateTime(const QString &dateTime, DateType dateType,
+                                   TimeType timeType, Calendar calendarType) const
+{
+    if (dateType == DateNone && timeType == TimeNone)
+        return QDateTime();
+
+    Q_D(const DuiLocale);
+    DuiCalendar duicalendar(calendarType);
+
+    UnicodeString text = DuiIcuConversions::qStringToUnicodeString(dateTime);
+    icu::DateFormat *df = d->createDateFormat(dateType, timeType, duicalendar);
+    icu::ParsePosition pos(0);
+    UDate parsedDate = df->parse(text, pos);
+    delete df;
+
+    UErrorCode status = U_ZERO_ERROR;
+    icu::Calendar *cal = duicalendar.d_ptr->_calendar;
+    cal->setTime(parsedDate, status);
+    if (status != U_ZERO_ERROR)
+        return QDateTime();
+
+    return duicalendar.qDateTime();
+}
+#endif
+
+#ifdef HAVE_ICU
+QDateTime DuiLocale::parseDateTime(const QString &dateTime, Calendar calendarType) const
+{
+    return parseDateTime(dateTime, DateLong, TimeLong, calendarType);
 }
 #endif
 

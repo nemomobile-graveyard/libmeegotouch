@@ -105,7 +105,7 @@ void MainPage::indicatorHidden()
 
 void MainPage::buttonPress()
 {
-    anotherPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
+    anotherPage->setEscapeMode(DuiApplicationPageModel::EscapeManualBack);
     connect(anotherPage, SIGNAL(backButtonClicked()), this, SLOT(handleBackItemClick()));
     m_shownPage = anotherPage;
     anotherPage->appear();
@@ -113,7 +113,7 @@ void MainPage::buttonPress()
 
 void MainPage::button2Press()
 {
-    canvasPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
+    canvasPage->setEscapeMode(DuiApplicationPageModel::EscapeManualBack);
     connect(canvasPage, SIGNAL(backButtonClicked()), this, SLOT(handleBackItemClick()));
     m_shownPage = canvasPage;
     canvasPage->appear();

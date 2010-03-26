@@ -183,7 +183,7 @@ QString ItemDetailPage::timedemoTitle()
 
 void ItemDetailPage::createContent()
 {
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     layout = new DuiLayout(panel);
 
     policy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
@@ -194,6 +194,7 @@ void ItemDetailPage::createContent()
     if( !videoId.isEmpty() ) {
         video = new DuiVideoWidget(panel);
         connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
+        video->setFullscreen(true);
         video->open(videoId);
         policy->addItem(video);
 

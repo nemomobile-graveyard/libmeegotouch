@@ -32,6 +32,7 @@
 #include <duiappletinstancemanager_stub.h>
 #include <duiappletid_stub.h>
 #include <duiobjectmenu_stub.h>
+#include "duiapplicationextensionarea_stub.h"
 
 QStringList Ut_DuiAppletInventory::watchedDirectories;
 QStringList Ut_DuiAppletInventory::appletList;
@@ -154,7 +155,6 @@ void Ut_DuiAppletInventory::init()
     gDuiAppletButtonStub->stubSetReturnValue("initialize", true);
     gQFileInfoExists = false;
     gQFileInfoIsFile = false;
-
     appWin->scene()->addItem(inventory);
 }
 

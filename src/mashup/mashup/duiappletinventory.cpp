@@ -28,8 +28,8 @@
 #include "duiappletinstallationsourceinterface.h"
 #include "private/duiwidgetcontroller_p.h"
 #include "duiappletinstantiator.h"
-#include <DuiApplicationExtensionInterface>
-#include <DuiAppletInstallationSourceInterface>
+#include "duiapplicationextensioninterface.h"
+#include "duiappletinstallationsourceinterface.h"
 
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET_NO_CREATE(DuiAppletInventory)

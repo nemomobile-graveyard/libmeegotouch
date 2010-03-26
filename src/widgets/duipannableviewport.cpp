@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <cstdio>
 #include <QGraphicsLinearLayout>
 #include <QObject>
 #include <QRectF>
@@ -290,6 +291,8 @@ void DuiPannableViewport::updatePosition(const QPointF &p)
     Q_D(DuiPannableViewport);
 
     QPointF roundedP = QPointF(floor(p.x()), floor(p.y()));
+
+    printf("viewport->updatePosition(%.2f, %.2f)\n", p.x(), p.y());
 
     // Parameter p is in the local coordinate system of pannedWidget but
     // pannedWidget position is in pannable viewport's coordinate system.

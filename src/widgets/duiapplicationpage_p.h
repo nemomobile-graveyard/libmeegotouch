@@ -45,7 +45,7 @@ public:
     void init();
 
     void deleteCurrentCentralWidget();
-    void placeCentralWidget(DuiWidget *widget);
+    void placeCentralWidget(QGraphicsWidget *widget);
     void setSpacerHeight(DuiWidget *spacer, qreal height);
     void updatePannableViewportPosition();
 
@@ -75,7 +75,7 @@ public:
     DuiWidget *mainWidget;
     QGraphicsLinearLayout *mainLayout;
     DuiPannableViewport *pannableViewPort;
-    DuiWidget *centralWidget;
+    QGraphicsWidget *centralWidget;
 
     bool contentCreated;
     bool backEnabled;

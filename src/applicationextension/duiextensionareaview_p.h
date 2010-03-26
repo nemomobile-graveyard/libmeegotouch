@@ -63,7 +63,7 @@ public:
      * \return Created container.
      * \param widget Widget to be inserted into the container.
      */
-    DuiContainer *createWidgetContainer(DuiWidget *widget) const;
+    DuiContainer *createWidgetContainer(QGraphicsWidget *widget) const;
 
     /*!
      * Sets up containers in this mashup canvas view. If the \p enabled is \c true the
@@ -86,7 +86,7 @@ public:
     /*!
      * Used to check properties of widget and connect signals between it and the DuiContainer
      */
-    virtual void connectContainerToWidget(DuiContainer *container, DuiWidget *widget) const;
+    virtual void connectContainerToWidget(DuiContainer *container, QGraphicsWidget *widget) const;
 
     /*!
      * Adds a widget to the layout

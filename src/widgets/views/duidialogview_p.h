@@ -93,7 +93,7 @@ public:
     void removeButtonsNotInDialogModel();
     void addButtonsFromDialogModel();
     bool isButtonInButtonBox(DuiButtonModel *buttonModel);
-    void setCentralWidget(DuiWidget *newCentralWidget);
+    void setCentralWidget(QGraphicsWidget *newCentralWidget);
     void addButton(DuiButtonModel *buttonModel);
     void updateButtonBox();
 
@@ -125,7 +125,7 @@ public:
 
     DuiPannableViewport *contentsViewport;
 
-    QPointer<DuiWidget> centralWidget;
+    QPointer<QGraphicsWidget> centralWidget;
 
     DuiWidget *titleBar;
     DuiLabel *titleLabel;

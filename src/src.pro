@@ -183,7 +183,6 @@ install_pkgconfig.files = Dui.pc
 install_prf.path = $$DUI_MKSPECS_DIR/mkspecs/features
 install_prf.files = ../mkspecs/features/dui.prf \
                     ../mkspecs/features/dui_translations.prf \
-                    ../mkspecs/features/translations.prf \
                     $${DUI_BUILD_TREE}/mkspecs/features/dui_defines.prf
 
 INSTALLS += \

@@ -55,6 +55,7 @@ public:
 
     friend class DuiWidgetController;
     friend class DuiStyle;
+    friend class DuiWidgetControllerPrivate;
 
     typedef QString ViewType;
 
@@ -179,14 +180,6 @@ public:
     static void releasePixmap(const QPixmap *pixmap);
 
     /*!
-     * Returns a view for the given object.
-     * \param controller controller needing the view
-     * \return DuiWidgetView A theme-specific view for the object
-     * TODO: this should be protected or private method, and only DuiWidgetController should be able to access this.
-     */
-    static DuiWidgetView *view(const DuiWidgetController *controller);
-
-    /*!
      * \brief Returns system-wide logical colors.
      */
     static const DuiPalette &palette();
@@ -205,23 +198,6 @@ public:
      * \return boolean, true if the CSS file was loaded, otherwise false
      */
     static bool loadCSS(const QString &filename, InsertMode mode = Append);
-
-    /*!
-     * Returns the current theme in use
-     */
-    static QString currentTheme();
-
-    /*!
-     * Finds all available themes installed in the system.
-     */
-    static QStringList findAvailableThemes();
-
-    /*!
-     * Sends a signal to theme daemon to change the theme.
-     * \param theme_id ID of theme to be used
-     * TODO: check if we want to allow any application to change the theme.
-     */
-    void changeTheme(const QString &theme_id);
 
     /*!
      * Checks whether there are pending pixmap requests.

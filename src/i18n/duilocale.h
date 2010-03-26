@@ -560,6 +560,27 @@ public:
                            const QString &formatString) const;
 
     /*!
+     * \brief Creates a datetime object from a string with explicit format lengths.
+     * \param dateTime string to parse
+     * \param dateType style of date formatting
+     * \param timeType style of time formatting
+     * \param calendarType calendar to use for formatting
+     *
+     * If dateType is DuiLocale::DateNone <b>and</b> timeType is DuiLocale::TimeNone,
+     * an invalid QDateTime is returned.
+     */
+    QDateTime parseDateTime(const QString &dateTime, DateType dateType = DateLong,
+                            TimeType timeType = TimeLong,
+                            Calendar calendarType = DefaultCalendar) const;
+
+    /*!
+     * \brief Creates a datetime object from a string with explicit calendar type.
+     * \param dateTime string to parse
+     * \param calendarType calendar to use
+     */
+    QDateTime parseDateTime(const QString &dateTime, Calendar calendarType) const;
+
+    /*!
      * \brief Returns the locale dependant name for a month number
      */
     QString monthName(const DuiCalendar &duiCalendar, int monthNumber) const;

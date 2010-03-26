@@ -30,6 +30,8 @@
 #include "duisink.h"
 #include "duidebug.h"
 
+#include <duiscene.h>
+
 DuiVideoWidgetViewPrivate::DuiVideoWidgetViewPrivate()
     :   m_useSingleYuvTexture(false),
         image(NULL),
@@ -95,6 +97,7 @@ void DuiVideoWidgetViewPrivate::videoReady()
 
     updateVideoGeometry();
     updateGeometry();
+    update();
 }
 
 void DuiVideoWidgetViewPrivate::frameReady()
@@ -110,7 +113,22 @@ void DuiVideoWidgetViewPrivate::frameReady()
         blitSwFrame();
 #endif
     }
-    update();
+
+    //FIXME This is a workaround for a situation where Qt's animations/timers 
+    //get broken when there are too much update calls coming (multiple video 
+    //widgets visible and playing at a same time). Do not call update() for 
+    //each videowidget's frame separately. This can be replaced with a single 
+    //update() call when Qt side is fixed.
+    static QTimer timer;
+    if( !timer.isActive() ) {
+        Q_Q(DuiVideoWidgetView);
+        timer.setSingleShot(true);
+        q->connect(&timer, SIGNAL(timeout()), 
+                   DuiApplication::activeApplicationWindow()->scene(), SLOT(update()),
+                   Qt::UniqueConnection);
+        timer.start(0);
+    }
+    //update();
 }
 
 void DuiVideoWidgetViewPrivate::stateChanged()
@@ -160,7 +178,7 @@ void DuiVideoWidgetViewPrivate::blitGLFrame()
     //call when the new frame has been completely received so we
     //can safely skip the new frame texture creation for now
     if( !m_gstVideo->lockFrameData() ) {
-        duiDebug("DuiVideoWidgetViewPrivate::blitGLFrame()") << "MUTEX LOCK CONFLICT!";
+        duiWarning("DuiVideoWidgetViewPrivate::blitGLFrame()") << "MUTEX LOCK CONFLICT!";
         return;
     }
 
@@ -282,7 +300,7 @@ void DuiVideoWidgetViewPrivate::blitSwFrame()
     //can safely skip the new frame texture creation for now
     duiDebug("DuiVideoWidgetViewPrivate::blitSwFrame()"); 
     if( !m_gstVideo->lockFrameData() ) {
-        duiDebug("DuiVideoWidgetViewPrivate::blitSwFrame()") << "MUTEX LOCK CONFLICT!";
+        duiWarning("DuiVideoWidgetViewPrivate::blitSwFrame()") << "MUTEX LOCK CONFLICT!";
         return;
     }
 
@@ -333,7 +351,7 @@ void DuiVideoWidgetViewPrivate::blit(const uchar* data, int w, int h)
     }else*/
     if (w > videoSize.width() || h > videoSize.height()) {
         // only downscaling supported
-        duiDebug("DuiVideoWidgetPrivate::blit()") << "error - upscaling not supported with sw rendering";
+        duiWarning("DuiVideoWidgetPrivate::blit()") << "error - upscaling not supported with sw rendering";
         return;
     }
 
@@ -492,8 +510,8 @@ void DuiVideoWidgetView::drawContents(QPainter* painter, const QStyleOptionGraph
         }
     } else {
         painter->fillRect(boundingRect(), d->m_gstVideo->colorKey());
-        QCoreApplication::flush();
-        d->m_gstVideo->expose();
+        //QCoreApplication::flush();
+        //d->m_gstVideo->expose();
     }
 }
 
@@ -577,6 +595,7 @@ void DuiVideoWidgetView::updateData(const QList<const char*>& modifications)
         else if( member == DuiVideoWidgetModel::Fullscreen ) {
             if( model()->fullscreen() ) {
                 d->m_gstVideo->setWinId(DuiApplication::activeApplicationWindow()->viewport()->winId());
+                d->m_gstVideo->setColorKey(QColor(255,255,0));
                 d->m_gstVideo->setRenderTarget(DuiGstVideo::XvSink);
             }
             else
@@ -593,6 +612,14 @@ void DuiVideoWidgetView::setupModel()
     DuiWidgetView::setupModel();
 
     Q_D(DuiVideoWidgetView);
+    if( model()->fullscreen() ) {
+        d->m_gstVideo->setWinId(DuiApplication::activeApplicationWindow()->viewport()->winId());
+        d->m_gstVideo->setColorKey(QColor(255,255,0));
+        d->m_gstVideo->setRenderTarget(DuiGstVideo::XvSink);
+    }
+    else
+        d->m_gstVideo->setRenderTarget(DuiGstVideo::DuiSink);
+
     d->m_gstVideo->setLooping(model()->looping());
     d->m_gstVideo->open(model()->filename());
 

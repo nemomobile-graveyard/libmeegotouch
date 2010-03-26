@@ -114,7 +114,7 @@ void DuiApplicationPagePrivate::deleteCurrentCentralWidget()
     }
 }
 
-void DuiApplicationPagePrivate::placeCentralWidget(DuiWidget *widget)
+void DuiApplicationPagePrivate::placeCentralWidget(QGraphicsWidget *widget)
 {
     if (widget) {
         // insert the new central widget between top and bottom spacers
@@ -152,11 +152,6 @@ void DuiApplicationPagePrivate::propagateOnDisplayChangeEvent(bool visible)
     }
 }
 
-// TODO: Remove this now useless method after ABI break period
-void DuiApplicationPage::updateOnDisplayAfterPanning()
-{
-}
-
 DuiApplicationPage::DuiApplicationPage(QGraphicsItem *parent)
     : DuiSceneWindow(new DuiApplicationPagePrivate, new DuiApplicationPageModel,
                      DuiSceneWindow::ApplicationPage, QString(), parent)
@@ -170,7 +165,7 @@ DuiApplicationPage::~DuiApplicationPage()
 {
 }
 
-void DuiApplicationPage::setCentralWidget(DuiWidget *centralWidget)
+void DuiApplicationPage::setCentralWidget(QGraphicsWidget *centralWidget)
 {
     Q_D(DuiApplicationPage);
 
@@ -179,7 +174,7 @@ void DuiApplicationPage::setCentralWidget(DuiWidget *centralWidget)
     d->propagateOnDisplayChangeEvent(isOnDisplay());
 }
 
-DuiWidget *DuiApplicationPage::centralWidget()
+QGraphicsWidget *DuiApplicationPage::centralWidget()
 {
     Q_D(DuiApplicationPage);
 
@@ -315,6 +310,7 @@ void DuiApplicationPage::actionEvent(QActionEvent *e)
             action->disconnect(this);
         //fall through is intentional.
     }
+    case QEvent::ActionChanged:
     case QEvent::ActionAdded: {
         emit actionUpdated(e);
         break;

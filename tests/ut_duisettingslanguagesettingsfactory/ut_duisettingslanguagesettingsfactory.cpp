@@ -76,7 +76,7 @@ void DuiContainer::setIconID(const QString &iconId)
     Ut_DuiSettingsLanguageSettingsFactory::containerIndicators++;
 }
 
-void DuiContainer::setCentralWidget(DuiWidget *centralWidget, bool destroy)
+void DuiContainer::setCentralWidget(QGraphicsWidget *centralWidget, bool destroy)
 {
     Q_UNUSED(centralWidget);
     Q_UNUSED(destroy);

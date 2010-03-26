@@ -59,8 +59,6 @@
     private:
 
 // style container macro
-// TODO: remove reloadStyles() once we are allowed again to break API
-// should be a non-virtual method of DuiStyleContainer
 #define DUI_STYLE_CONTAINER(STYLE_CLASS) \
     public: \
     STYLE_CLASS##Container(); \
@@ -68,15 +66,12 @@
     const STYLE_CLASS* operator->() const; \
     protected: \
     STYLE_CLASS##Container(class STYLE_CLASS##ContainerPrivate* dd); \
-    virtual void reloadStyles(); \
     virtual const char* styleType() const; \
     class STYLE_CLASS##ContainerPrivate * const d_ptr; \
     private: \
     Q_DECLARE_PRIVATE(STYLE_CLASS##Container)
 
 // style container macro for internal styles
-// TODO: remove reloadStyles() once we are allowed again to break API
-// should be a non-virtual method of DuiStyleContainer
 #define DUI_STYLE_CONTAINER_INTERNAL(STYLE_CLASS) \
     public: \
     STYLE_CLASS##Container(); \
@@ -84,7 +79,6 @@
     const STYLE_CLASS* operator->() const; \
     protected: \
     STYLE_CLASS##Container(class STYLE_CLASS##ContainerPrivate* dd); \
-    virtual void reloadStyles(); \
     virtual const char* styleType() const; \
     private: \
     Q_DECLARE_PRIVATE(STYLE_CLASS##Container)
@@ -123,13 +117,10 @@ public:
     void setParent(const DuiWidgetController *parent);
     const DuiWidgetController *parent() const;
 protected:
-    // TODO: remove this method once we are allowed to break API
-    void setCurrentStyle(const DuiStyle*& landscapeStyle, const DuiStyle*& portraitStyle);
+    void reloadStyles();
     const DuiStyle *currentStyle() const;
 
     void setCurrentMode(const QString &mode);
-    // TODO: remove this method once we are allowed to break ABI
-    QString currentMode();
     QString currentMode() const;
 
     friend class DuiTheme;

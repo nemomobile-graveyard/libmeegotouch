@@ -137,7 +137,7 @@ void SliderPage::createContent()
 
 void SliderPage::createLayout()
 {
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     layout = new DuiLayout(panel);
 
     landscapePolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);

@@ -923,13 +923,6 @@ void generateStyleDataCpp(const StyleClass *c, const QList<QString>& modes, cons
         cpp << "    return static_cast<const " << c->name() << "*>(currentStyle());\n";
         cpp << "}\n\n";
 
-        // reloadStyles
-        // TODO: remove this once we are allowed again to break API
-        cpp << "void " << c->name() << "Container::reloadStyles()\n";
-        cpp << "{\n";
-        cpp << "    " << "DuiStyleContainer::reloadStyles();\n";
-        cpp << "}\n\n";
-
         // styleType
         cpp << "const char* " << c->name() << "Container::styleType() const\n";
         cpp << "{\n";

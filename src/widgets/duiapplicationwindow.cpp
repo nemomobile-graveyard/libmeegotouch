@@ -707,6 +707,8 @@ bool DuiApplicationWindow::event(QEvent *event)
             }
             //fall through is intentional
         }
+
+        case QEvent::ActionChanged:
         case QEvent::ActionAdded: {
             d->_q_actionUpdated(actionEvent);
             return true;

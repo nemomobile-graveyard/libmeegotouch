@@ -42,7 +42,7 @@ void DuiExtensionAreaViewPrivate::setContainerEnabled(DuiContainer *container, b
     }
 }
 
-DuiContainer *DuiExtensionAreaViewPrivate::createWidgetContainer(DuiWidget *widget) const
+DuiContainer *DuiExtensionAreaViewPrivate::createWidgetContainer(QGraphicsWidget *widget) const
 {
     DuiContainer *container = new DuiContainer(controller);
     container->setCentralWidget(widget);
@@ -71,7 +71,7 @@ void DuiExtensionAreaViewPrivate::updateData()
         for (int i = 0; i < count; ++i) {
             QGraphicsLayoutItem *layoutItem = layout->itemAt(i);
             DuiContainer *container = dynamic_cast<DuiContainer *>(layoutItem);
-            DuiWidget    *centralWidget = container->centralWidget();
+            QGraphicsWidget *centralWidget = container->centralWidget();
 
             // Change the data in the store if item is still valid and geometry has changed.
             if (centralWidget != NULL && dsMap->contains(centralWidget) &&
@@ -92,7 +92,7 @@ void DuiExtensionAreaViewPrivate::updateLayout()
         // that don't exist in the data store
         for (int i = layout->count() - 1; i >= 0; --i) {
             DuiContainer *container = dynamic_cast<DuiContainer *>(layout->itemAt(i));
-            DuiWidget *centralWidget = container->centralWidget();
+            QGraphicsWidget *centralWidget = container->centralWidget();
 
             if (container != NULL && !dsMap->contains(centralWidget)) {
                 // Remove widget from layout
@@ -105,7 +105,7 @@ void DuiExtensionAreaViewPrivate::updateLayout()
         }
 
         // Iterate through the items in the data store and add items that don't exist in the layout
-        foreach(DuiWidget * widget, dsMap->keys()) {
+        foreach(QGraphicsWidget * widget, dsMap->keys()) {
             bool alreadyInLayout = false;
             const int count = layout->count();
             for (int i = 0; i < count; ++i) {
@@ -148,7 +148,7 @@ void DuiExtensionAreaViewPrivate::addToLayout(DuiWidget *, int)
 {
 }
 
-void DuiExtensionAreaViewPrivate::connectContainerToWidget(DuiContainer *container, DuiWidget *widget) const
+void DuiExtensionAreaViewPrivate::connectContainerToWidget(DuiContainer *container, QGraphicsWidget *widget) const
 {
     // Copying actions from the widget to the container.
     container->addActions(widget->actions());

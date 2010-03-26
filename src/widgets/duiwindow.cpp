@@ -208,10 +208,11 @@ void DuiWindowPrivate::notifyWidgetsAboutOrientationChange()
     Dui::Orientation newOrientation = q->orientation();
 
     if (sceneManager == 0 && oldOrientation != newOrientation) {
-        if (q->scene()) {
+        QGraphicsScene *graphicsScene = q->QGraphicsView::scene();
+        if (graphicsScene) {
             DuiOrientationChangeEvent event(newOrientation);
-            foreach(QGraphicsItem * item, q->scene()->items())
-                q->scene()->sendEvent(item, &event);
+            foreach(QGraphicsItem * item, graphicsScene->items())
+                graphicsScene->sendEvent(item, &event);
         }
 
         emit q->orientationChanged(newOrientation);
@@ -373,18 +374,6 @@ DuiScene *DuiWindow::scene()
     return qobject_cast<DuiScene *>(QGraphicsView::scene());
 }
 
-bool DuiWindow::keepCurrentOrientation() const
-{
-    duiWarning("DuiWindow::keepCurrentOrientation()") << "THIS METHOD IS DEPRECATED - use isOrientationLocked()";
-    return isOrientationLocked();
-}
-
-void DuiWindow::setKeepCurrentOrientation(bool enabled)
-{
-    duiWarning("DuiWindow::keepCurrentOrientation()") << "THIS METHOD IS DEPRECATED - use setOrientationLocked()";
-    setOrientationLocked(enabled);
-}
-
 bool DuiWindow::isOrientationAngleLocked() const
 {
     Q_D(const DuiWindow);
@@ -536,6 +525,18 @@ void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle)
     }
 }
 
+void DuiWindow::setLandscapeOrientation()
+{
+    if (orientation() != Dui::Landscape)
+        setOrientationAngle(Dui::Angle0);
+}
+
+void DuiWindow::setPortraitOrientation()
+{
+    if (orientation() != Dui::Portrait)
+        setOrientationAngle(Dui::Angle270);
+}
+
 QSize DuiWindow::visibleSceneSize(Dui::Orientation orientation) const
 {
     QSize s;
@@ -598,6 +599,14 @@ void DuiWindow::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event)
 
 void DuiWindow::paintEvent(QPaintEvent *event)
 {
+    // Disable view updates if the theme is not fully loaded yet
+    // TODO: Alco check for "!isOnDisplay()" to block repaints if the
+    // window is not visible anyway. Enable this once this works in
+    // scratchbox.
+    if (!updatesEnabled() || DuiTheme::hasPendingRequests()) {
+        return;
+    }
+
 #ifdef DUI_USE_OPENGL
     Q_D(DuiWindow);
 

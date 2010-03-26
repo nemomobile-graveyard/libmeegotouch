@@ -74,16 +74,16 @@ void Ut_DuiMashupCanvasView::cleanup()
     delete m_subject;
 }
 
-void Ut_DuiMashupCanvasView::addWidgetToMashupCanvas(DuiWidget *widget, DuiDataStore *dataStore)
+void Ut_DuiMashupCanvasView::addWidgetToMashupCanvas(QGraphicsWidget *widget, DuiDataStore *dataStore)
 {
-    QMap<DuiWidget *, DuiDataStore *> *dataStores = const_cast<QMap<DuiWidget *, DuiDataStore *> *>(mashupCanvas->model()->dataStores());
+    QMap<QGraphicsWidget *, DuiDataStore *> *dataStores = const_cast<QMap<QGraphicsWidget *, DuiDataStore *> *>(mashupCanvas->model()->dataStores());
     (*dataStores)[widget] = dataStore;
     mashupCanvas->model()->dataStoresModified();
 }
 
 void Ut_DuiMashupCanvasView::removeWidgetFromMashupCanvas(DuiWidget *widget)
 {
-    QMap<DuiWidget *, DuiDataStore *> *dataStores = const_cast<QMap<DuiWidget *, DuiDataStore *> *>(mashupCanvas->model()->dataStores());
+    QMap<QGraphicsWidget *, DuiDataStore *> *dataStores = const_cast<QMap<QGraphicsWidget *, DuiDataStore *> *>(mashupCanvas->model()->dataStores());
     dataStores->remove(widget);
     mashupCanvas->model()->dataStoresModified();
 }
@@ -209,7 +209,7 @@ bool Ut_DuiMashupCanvasView::widgetInLayout(DuiWidget *widget)
 
     bool found = false;
     for (int i = 0; i < policy->count(); ++i) {
-        DuiWidget *w = NULL;
+        QGraphicsWidget *w = NULL;
 
         DuiContainer *container = dynamic_cast<DuiContainer *>(policy->itemAt(i));
         if (container != NULL) {

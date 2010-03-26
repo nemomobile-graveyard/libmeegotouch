@@ -180,7 +180,7 @@ public:
      * setCentralWidget(DuiWidget*) function.
      * \return the pointer to the central widget.
      */
-    DuiWidget *centralWidget();
+    QGraphicsWidget *centralWidget();
 
     /*!
      * Convenience function that returns a pointer to the application window into
@@ -313,7 +313,7 @@ public Q_SLOTS:
      * and deletes it when needed.
      * \param  centralWidget the central widget.
      */
-    void setCentralWidget(DuiWidget *centralWidget);
+    void setCentralWidget(QGraphicsWidget *centralWidget);
 
     /**
      * \brief Set the title for this page.
@@ -358,10 +358,6 @@ protected:
     //! \reimp
     virtual void actionEvent(QActionEvent *);
     //! \reimp_end
-
-private Q_SLOTS:
-    // TODO: Remove this now useless method after ABI break period
-    void updateOnDisplayAfterPanning();
 
 private:
 

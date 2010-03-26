@@ -17,6 +17,7 @@
 **
 ****************************************************************************/
 
+#include <cstdio>
 #include <QTimeLine>
 
 #include "duipannablewidget.h"
@@ -24,7 +25,7 @@
 #include "duiphysics2dpanning_p.h"
 
 static const int PanningTimelineDuration      = 1000000; /* in ms */
-static const int PanningTimelineInterval      =      20; /* in ms */
+//static const int PanningTimelineInterval      =      20; /* in ms */
 static const int PositionNoiseDampingDelta    =       2; /* in px */
 
 DuiPhysics2DIntegrationStrategy::~DuiPhysics2DIntegrationStrategy()
@@ -175,7 +176,7 @@ void DuiPhysics2DPanning::start()
         d->velY = 0.0;
 
         d->timeLine->setDuration(PanningTimelineDuration);
-        d->timeLine->setUpdateInterval(PanningTimelineInterval);
+        //d->timeLine->setUpdateInterval(PanningTimelineInterval);
         d->timeLine->setFrameRange(0, 29999);
         d->timeLine->setCurrentTime(0);
         d->timeLine->setCurveShape(QTimeLine::LinearCurve);
@@ -340,6 +341,7 @@ void DuiPhysics2DPanning::integrator(int frame)
     tempPosX = d->posX;
     tempPosY = d->posY;
 
+    printf("frame %d: %d\n", frame, d->timeLine->currentTime());
     while (frame > d->currFrame) {
         if (d->parentPannableWidget->panDirection().testFlag(Qt::Horizontal)) {
             d->integrationStrategy->integrate(d->posX,

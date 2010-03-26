@@ -56,6 +56,9 @@ public:
 
 int main(int argc, char **argv)
 {
+#ifdef HAVE_N900
+    QApplication::setGraphicsSystem(QLatin1String("native"));
+#endif
     //DuiApplication application(argc, argv, "widgetsgallery", new MyApplicationService() );
     DuiApplication application(argc, argv, "widgetsgallery");
 

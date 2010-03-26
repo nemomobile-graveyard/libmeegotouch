@@ -61,6 +61,23 @@ for(PROJECT, $$list($$lower($$unique(DUI_BUILD_PARTS)))) {
     }
 }
 
+# put duigen, src and plainqt dirs in right build order...
+
+contains( SUBDIRS, plainqt ) {
+    SUBDIRS -= plainqt
+    SUBDIRS = plainqt $$SUBDIRS
+}
+
+contains( SUBDIRS, src ) {
+    SUBDIRS -= src
+    SUBDIRS = src $$SUBDIRS
+}
+
+contains( SUBDIRS, duigen ) {
+    SUBDIRS -= duigen
+    SUBDIRS = duigen $$SUBDIRS
+}
+
 # Docs are always explicitly built with "make doc"
 include(doc/doc.pri)
 

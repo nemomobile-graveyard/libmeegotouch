@@ -91,6 +91,12 @@ public:
     icu::Locale getCategoryLocale(DuiLocale::Category category) const;
 
     static icu::DateFormatSymbols *createDateFormatSymbols(icu::Locale locale);
+
+    // creates a dateformat object for datetime formatting/parsing
+    // the caller is responsible for deleting the dateformat object
+    icu::DateFormat *createDateFormat(DuiLocale::DateType dateType,
+                                      DuiLocale::TimeType timeType,
+                                      const DuiCalendar& duicalendar) const;
 #endif
 
     // these return the requested part of a locale string,
