@@ -1,5 +1,5 @@
 %TOC%
-/*! \page plainqt How to develop Qt applications for Maemo 5 and Maemo 6
+/*! \page plainqt How to develop Qt applications for Maemo 5 and MeeGo
 
 
 This page covers the case where the author of a Qt application can't make use of the DUI classes in his source code ("libdui"). The recommendations which are made on this page are only made for this specific use case. For native DUI applications  please have a look at the documentation that covers native DUI applications instead.
@@ -8,48 +8,27 @@ This page covers the case where the author of a Qt application can't make use of
 
 Qt is a cross platform development framework. So the same source code for a Qt application can be compiled on different operating systems without changes and without any custom code. As a result your application will visually integrate into the given environment no matter whether it's Linux, Windows or Mac OS X.
 
-Of course this is also true for Maemo 5 and Maemo 6: So compiling your Qt desktop application on the Maemo plattform will result in an application that will look and feel mostly natively: On Maemo 5 your application will mimic the theming and the habits of applications that are built on top of the Hildon framework. And on Maemo 6 it will emulate the appearance and the behavior of "native" DirectUI applications.
+Of course this is also true for Maemo 5 and MeeGo: So compiling your Qt desktop application on the Maemo plattform will result in an application that will look and feel mostly natively: On Maemo 5 your application will mimic the theming and the habits of applications that are built on top of the Hildon framework. And on MeeGo it will emulate the appearance and the behavior of "native" DirectUI applications.
 
 However there are several cases where the mobile form factor and the philosophy behind DirectUI should be kept in mind when developing a Qt application that is developed for the Maemo platform. To address these and to guarantee a good experience for your users there are a few recommendations that you should keep in mind.
 
-\section  compiling How to compile a Qt application
-
-For deployment of your application on the target plattform you need to install the scratchbox environment. Please have a look at the following documents to find out more
-
-- about the <a href="http://maemo.org/development/sdks/maemo_5-0_installation">the Maemo 5 SDK</a>
-- about the <a href="https://projects.maemo.org/trac/sdk/wiki/Harmattan">the Maemo 6 SDK</a>
-
-Once the scratchbox environment is properly set up you can download the source code of your application into the home directory of the scratchbox.
-The ARM device should be selected as a target platform. You can do this at any time using the sb-menu tool. For packaging the Maemo 5/6 platform uses the debian package format. The following page gives more information on how to add the sources that are necessary to create a debian package of you application:
-
-- Debian packaging <a href="http://[TODO]">manual</a>
-
-Please also make sure that a .desktop file is installed into the proper place.
-
-You can build the package by entering the root directory of your application and by executing the command:
-
-\code
-fakeroot dpkg-buildpackage -b -us -uc
-\endcode
+\section  style  How Maemo 5 and MeeGo affect the look and feel of your application
 
 
-\section  style  How Maemo 5 and Maemo 6 affect the look and feel of your application
-
-
-For both Maemo 5 and Maemo 6 your Qt application will get adjusted in terms of look and feel so that it will emulate the user interface of each plattform:
+For both Maemo 5 and MeeGo your Qt application will get adjusted in terms of look and feel so that it will emulate the user interface of each plattform:
 
 - The "Maemo 5" style emulates the appearance of the Gtk-based Hildon framework. The Maemo 5 style is included with the special version of Qt that is shipped together with the N900 device series.
-- The "Maemo 6" style mimics the widgets and interaction that is typical for the Qt-based DirectUI framework. The Maemo 6 style is part of the libdui framework and is shipped as one of its packages.
+- The "MeeGo" style mimics the widgets and interaction that is typical for the Qt-based DirectUI framework. The MeeGo style is part of the libdui framework and is shipped as one of its packages.
 
-Both styles take theme changes automatically into account. But the style is only an approximation of what a truely native application would look like. So there might be slight differences in terms of look and behaviour compared to a "real" Maemo 5 or Maemo 6 application. These differences can be reduced by taking into account certain typical requirements of these platforms.
+Both styles take theme changes automatically into account. But the style is only an approximation of what a truely native application would look like. So there might be slight differences in terms of look and behaviour compared to a "real" Maemo 5 or MeeGo application. These differences can be reduced by taking into account certain typical requirements of these platforms.
 
 While the target framework and the implementations are different both styles share several characteristics. So if your style looks fine on one of the two platforms then it's quite likely that it will have a comparable appearance on the other platform as well.
 
 The maemo styles not only modify the theming but they also ensure that your application becomes finger usable and makes use of the default services and resources provided through each framework.
 
-Compared to other Qt styles the Maemo 5 and Maemo 6 styles go way beyond simple widget styling. They have a significant impact on the way dialogs are shown:
+Compared to other Qt styles the Maemo 5 and MeeGo styles go way beyond simple widget styling. They have a significant impact on the way dialogs are shown:
 
-- The style automatically follows theme changes on Maemo 5 or Maemo 6.
+- The style automatically follows theme changes on Maemo 5 or MeeGo.
 - Feedback and gesture support is automatically added.
 - The virtual keyboard is supported out of the box
 - Menubars are not shown on top of the window or the screen. Instead they are activated via the navigation bar and are provided as finger usable dialogs.
@@ -71,7 +50,7 @@ or
 yourapp -style maemo6
 \endcode
 
-Again note that the Maemo 5 style is only available as a part of the special Qt version that comes with Maemo 5 support. While the Maemo 6 style is provided via the Harmattan framework.
+Again note that the Maemo 5 style is only available as a part of the special Qt version that comes with Maemo 5 support. While the MeeGo style is provided via the DUI framework.
 
 If you want to change this style to a different style then you can either do this via the \c -style command line parameter or in your source code via the \c QStyle API. However in general this is not recommended since the default styles provided with Qt are not finger usable.
 
@@ -87,7 +66,7 @@ Here are a few screen shots comparing the very same view of the same application
 
 \image html qtstyleexample-pizza-freemantle.png "Example application on Maemo 5 (Freemantle)"
 
-\image html qtstyleexample-pizza-harmattan.png "Example application on Maemo 6 (Harmattan)"
+\image html qtstyleexample-pizza-harmattan.png "Example application on MeeGo"
 
 
 \section  usability  Achieving a good user experience
@@ -129,7 +108,7 @@ Toolbars should only contain the most important features that are necessary for 
 
 \subsection fingerusable Ensure that your application stays finger usable
 
-The Maemo 6 framework allows navigation via the touch of your fingers.
+The MeeGo framework allows navigation via the touch of your fingers.
 This means that you need to carefully think about the size of custom widgets. But it also means that all available functionality needs to be accessible via a "left mouse button click" or gestures.
 In general there are a few common pitfalls which result from the faulty assumption that the user is using a mouse pointer:
 
@@ -143,7 +122,7 @@ In general there are a few common pitfalls which result from the faulty assumpti
 
 \section avoid Things to avoid
 
-There are a few classes which don't get styled in the Maemo 6 style or look out of place. Please try to avoid these:
+There are a few classes which don't get styled in the MeeGo style or look out of place. Please try to avoid these:
 
 - \c QDial
 - \c QLCDNumber
@@ -181,13 +160,13 @@ There are a few widgets which are specific for the Maemo 5 platform
 - \c QMaemo5TimePickSelector
 - \c QMaemo5ValueButton
 
-If these widgets are available as part of the framework then they should receive accurate theming.
+Use of these widgets is discouraged since they will most likely not be part of the MeeGo platform.
 
 \section  limitations Limitations of the Qt support compared to native DUI applications
 
 Since DirectUI and its widgets are based on \c QGraphicsView there are a few things that can't be emulated for plain \c QWidget based widgets. So these are features of DirectUI which can not be supported by the maemo styles:
 
-- Orientation change for ready-made \c QWidgets (not possible on Maemo 6). Orientation change notification for custom widgets can be accessed via the Qt Mobility framework.
+- Orientation change for ready-made \c QWidgets (not possible on MeeGo). Orientation change notification for custom widgets can be accessed via the Qt Mobility framework.
 - Ready-made DirectUI widget animations and effects (except for some common ones)
 */
 
