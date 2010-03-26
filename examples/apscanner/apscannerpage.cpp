@@ -36,7 +36,7 @@ APScannerPage::~APScannerPage()
 
 void APScannerPage::createContent()
 {
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     DuiLayout *layout = new DuiLayout(panel);
     layout->setAnimation(NULL);
     panel->setLayout(layout);

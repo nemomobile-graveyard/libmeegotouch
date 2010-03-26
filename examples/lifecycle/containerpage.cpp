@@ -39,7 +39,7 @@ void ContainerPage::createContent()
 {
     DuiApplicationPage::createContent();
 
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
 
     QGraphicsLinearLayout *vbox = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(vbox);

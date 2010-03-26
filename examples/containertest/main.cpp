@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 
     // main layout
     QGraphicsLinearLayout *main = new QGraphicsLinearLayout(Qt::Vertical, NULL);
-    DuiWidget *panel = p.centralWidget();
+    QGraphicsWidget *panel = p.centralWidget();
     panel->setLayout(main);
 
     // QT hbox

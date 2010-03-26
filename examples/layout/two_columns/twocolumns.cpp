@@ -25,7 +25,6 @@
 #include <DuiApplicationPage>
 #include <DuiApplicationWindow>
 #include <DuiButton>
-#include <DuiImage>
 #include <DuiLabel>
 #include <DuiLayout>
 #include <DuiLinearLayoutPolicy>
