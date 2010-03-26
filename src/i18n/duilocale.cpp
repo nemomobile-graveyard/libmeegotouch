@@ -1850,109 +1850,6 @@ QString DuiLocale::countryEndonym() const
 }
 #endif
 
-void DuiLocale::installCategoryCatalog(Category category, const QString &name)
-{
-    Q_D(DuiLocale);
-
-    if (category != DuiLcMessages && category != DuiLcTime) {
-        duiDebug("DuiLocale") << __PRETTY_FUNCTION__ << ": unknown category";
-        return;
-    }
-
-    // don't load the catalog if it has been loaded already.
-    //
-    // The following function cannot be called because it is marked as
-    // deprecated, therefore, I copy the code from
-    // hasCategoryCatalog() here:
-    //
-    // if(hasCategoryCatalog(category, name)) {
-    //    return;
-    //}
-    bool hasCategoryCatalog = false;
-    if (category != DuiLcMessages && category != DuiLcTime) {
-        hasCategoryCatalog = false;
-    } else {
-        DuiLocalePrivate::CatalogList *catList;
-
-        if (category == DuiLcMessages) {
-            catList = &d->_messageTranslations;
-        } else {
-            catList = &d->_timeTranslations;
-        }
-
-        // find the DuiTranslationCatalog
-        for (DuiLocalePrivate::CatalogList::iterator i = catList->begin();
-                i != catList->end(); ++i) {
-            if (name == (*i)->_name) {
-                hasCategoryCatalog = true;
-            }
-        }
-    }
-    if (hasCategoryCatalog)
-        return;
-
-    DuiTranslationCatalog *catalog = new DuiTranslationCatalog(name);
-    catalog->loadWith(this, category);
-
-    if (category == DuiLcMessages) {
-        d->_messageTranslations.append(QExplicitlySharedDataPointer<DuiTranslationCatalog>(catalog));
-    } else {
-        d->_timeTranslations.append(QExplicitlySharedDataPointer<DuiTranslationCatalog>(catalog));
-    }
-}
-
-bool DuiLocale::hasCategoryCatalog(Category category, const QString &name)
-{
-    Q_D(DuiLocale);
-
-    if (category != DuiLcMessages && category != DuiLcTime) {
-        return false;
-    }
-
-    DuiLocalePrivate::CatalogList *catList;
-
-    if (category == DuiLcMessages) {
-        catList = &d->_messageTranslations;
-    } else {
-        catList = &d->_timeTranslations;
-    }
-
-    // find the DuiTranslationCatalog
-    for (DuiLocalePrivate::CatalogList::iterator i = catList->begin();
-            i != catList->end(); ++i) {
-        if (name == (*i)->_name) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void DuiLocale::removeCategoryCatalog(Category category, const QString &name)
-{
-    Q_D(DuiLocale);
-    if (category != DuiLcMessages && category != DuiLcTime) {
-        return;
-    }
-
-    DuiLocalePrivate::CatalogList *catList;
-
-    if (category == DuiLcMessages) {
-        catList = &d->_messageTranslations;
-    } else {
-        catList = &d->_timeTranslations;
-    }
-
-    // find, delete and remove the DuiTranslationCatalog
-    for (DuiLocalePrivate::CatalogList::iterator i = catList->begin();
-            i != catList->end(); ++i) {
-        if (name == (*i)->_name) {
-            // erasing should delete the duitranslationcatalog if necessary
-            catList->erase(i);
-        }
-    }
-}
-
 void DuiLocale::copyCatalogsFrom(const DuiLocale &other)
 {
     Q_D(DuiLocale);
@@ -2024,24 +1921,6 @@ void DuiLocale::removeTrCatalog(const QString &name)
         else
             ++it;
     }
-}
-
-void DuiLocale::loadTrCatalogs()
-{
-    Q_D(DuiLocale);
-    d->loadTrCatalogs();
-}
-
-void DuiLocale::insertTrToQCoreApp()
-{
-    Q_D(DuiLocale);
-    d->insertTrToQCoreApp();
-}
-
-void DuiLocale::removeTrFromQCoreApp()
-{
-    Q_D(DuiLocale);
-    d->removeTrFromQCoreApp();
 }
 
 /////////////////////////////

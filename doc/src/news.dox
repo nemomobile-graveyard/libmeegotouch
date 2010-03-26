@@ -36,6 +36,15 @@
     - DuiWidget::swipeGestureEvent()
 
 \subsection removed Removed or Renamed
+- removed void installCategoryCatalog(Category category, const QString &name);
+  (was deprecated since 0.18)
+- removed void removeCategoryCatalog(Category category, const QString &name);
+  (was deprecated since 0.18)
+- removed bool hasCategoryCatalog(Category category, const QString &name);
+  (was deprecated since 0.18)
+- removed void loadTrCatalogs(); (was deprecated since 0.19.4-2)
+- removed void insertTrToQCoreApp(); (was deprecated since 0.19.4-2)
+- removed void removeTrFromQCoreApp(); (was deprecated since 0.19.4-2)
 - removed support for unneeded gconf keys from DuiLocale.
   The keys /Dui/i18n/Country, /Dui/i18n/Script, and /Dui/i18n/Variant
   were never really used in DuiLocale.  These don’t make sense as

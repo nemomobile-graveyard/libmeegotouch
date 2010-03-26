@@ -809,24 +809,9 @@ QString DuiLocale::weekdayName(const DuiCalendar &duiCalendar, int weekday, DuiL
     return gDuiLocaleStub->weekdayName(duiCalendar, weekday, context, symbolLength);
 }
 
-void DuiLocale::installCategoryCatalog(DuiLocale::Category category, const QString &name)
-{
-    gDuiLocaleStub->installCategoryCatalog(category, name);
-}
-
-void DuiLocale::removeCategoryCatalog(DuiLocale::Category category, const QString &name)
-{
-    gDuiLocaleStub->removeCategoryCatalog(category, name);
-}
-
 void DuiLocale::copyCatalogsFrom(const DuiLocale &other)
 {
     gDuiLocaleStub->copyCatalogsFrom(other);
-}
-
-bool DuiLocale::hasCategoryCatalog(DuiLocale::Category category, const QString &name)
-{
-    return gDuiLocaleStub->hasCategoryCatalog(category, name);
 }
 
 void DuiLocale::installTrCatalog(const QString &name)
@@ -877,16 +862,6 @@ void DuiLocale::connectSettings()
 void DuiLocale::disconnectSettings()
 {
     gDuiLocaleStub->disconnectSettings();
-}
-
-void DuiLocale::insertTrToQCoreApp()
-{
-    gDuiLocaleStub->insertTrToQCoreApp();
-}
-
-void DuiLocale::removeTrFromQCoreApp()
-{
-    gDuiLocaleStub->removeTrFromQCoreApp();
 }
 
 DuiLocale &DuiLocale::getDefault()
