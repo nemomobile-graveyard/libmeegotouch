@@ -149,6 +149,7 @@ SUBDIRS     =  \
     ut_duiextensionhandleview \
     ut_duitapandholdrecognizer \
     ut_duivideowidget \
+    ut_duiservicefwgen \
 
 # enable only when we have icu available
 
