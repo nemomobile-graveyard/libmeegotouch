@@ -36,6 +36,11 @@
     - DuiWidget::swipeGestureEvent()
 
 \subsection removed Removed or Renamed
+- removed support for unneeded gconf keys from DuiLocale.
+  The keys /Dui/i18n/Country, /Dui/i18n/Script, and /Dui/i18n/Variant
+  were never really used in DuiLocale.  These don’t make sense as
+  separate keys if they are only parts of a full ICU locale name because it
+  is not possible to combine them arbitrarily to a full locale name.
 - escapeButtonMode() property was removed from DuiApplicationPage. Use escapeMode() instead.
 - DuiDialog::windowModal() was renamed to DuiDialog::systemModal().
 - DuiApplicationPage::pageTitleChanged(DuiApplicationPage *, const QString &title) signal was removed.

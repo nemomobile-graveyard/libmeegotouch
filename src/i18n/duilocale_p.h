@@ -140,9 +140,6 @@ public:
 
 #ifdef HAVE_GCONF
     DuiGConfItem currentLanguageItem;
-    DuiGConfItem currentCountryItem;
-    DuiGConfItem currentScriptItem;
-    DuiGConfItem currentVariantItem;
     DuiGConfItem currentLcTimeItem;
     DuiGConfItem currentLcCollateItem;
     DuiGConfItem currentLcNumericItem;

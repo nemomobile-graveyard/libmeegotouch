@@ -60,9 +60,6 @@ namespace
     const QString ScriptLatin("Latn");
 
     const QString SettingsLanguage("/Dui/i18n/Language");
-    const QString SettingsCountry("/Dui/i18n/Country");
-    const QString SettingsScript("/Dui/i18n/Script");
-    const QString SettingsVariant("/Dui/i18n/Variant");
     const QString SettingsLcTime("/Dui/i18n/LcTime");
     const QString SettingsLcCollate("/Dui/i18n/LcCollate");
     const QString SettingsLcNumeric("/Dui/i18n/LcNumeric");
@@ -347,9 +344,6 @@ DuiLocalePrivate::DuiLocalePrivate()
 #endif
 #ifdef HAVE_GCONF
       , currentLanguageItem(SettingsLanguage),
-      currentCountryItem(SettingsCountry),
-      currentScriptItem(SettingsScript),
-      currentVariantItem(SettingsVariant),
       currentLcTimeItem(SettingsLcTime),
       currentLcCollateItem(SettingsLcCollate),
       currentLcNumericItem(SettingsLcNumeric),
@@ -378,9 +372,6 @@ DuiLocalePrivate::DuiLocalePrivate(const DuiLocalePrivate &other)
       _trTranslations(other._trTranslations)
 #ifdef HAVE_GCONF
       , currentLanguageItem(SettingsLanguage),
-      currentCountryItem(SettingsCountry),
-      currentScriptItem(SettingsScript),
-      currentVariantItem(SettingsVariant),
       currentLcTimeItem(SettingsLcTime),
       currentLcCollateItem(SettingsLcCollate),
       currentLcNumericItem(SettingsLcNumeric),
@@ -683,18 +674,12 @@ DuiLocale::createSystemDuiLocale()
 {
 #ifdef HAVE_GCONF
     DuiGConfItem languageItem(SettingsLanguage);
-    DuiGConfItem countryItem(SettingsCountry);
-    DuiGConfItem scriptItem(SettingsScript);
-    DuiGConfItem variantItem(SettingsVariant);
     DuiGConfItem lcTimeItem(SettingsLcTime);
     DuiGConfItem lcCollateItem(SettingsLcCollate);
     DuiGConfItem lcNumericItem(SettingsLcNumeric);
     DuiGConfItem lcMonetaryItem(SettingsLcMonetary);
 
     QString language = languageItem.value().toString();
-    QString country  = countryItem.value().toString();
-    QString script   = scriptItem.value().toString();
-    QString variant  = variantItem.value().toString();
     QString lcTime = lcTimeItem.value().toString();
     QString lcCollate = lcCollateItem.value().toString();
     QString lcNumeric = lcNumericItem.value().toString();
@@ -712,11 +697,7 @@ DuiLocale::createSystemDuiLocale()
         // No need to set the category according to env here
         systemLocale = new DuiLocale(locale);
     } else {
-        systemLocale = new DuiLocale(
-            DuiLocalePrivate::createLocaleString(QString(language),
-                    QString(country),
-                    QString(script),
-                    QString(variant)));
+        systemLocale = new DuiLocale(language);
     }
 
     if (!lcTime.isEmpty())
@@ -753,12 +734,6 @@ DuiLocale::connectSettings()
 
     QObject::connect(&d->currentLanguageItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
-    QObject::connect(&d->currentCountryItem, SIGNAL(valueChanged()),
-                     this, SLOT(refreshSettings()));
-    QObject::connect(&d->currentScriptItem, SIGNAL(valueChanged()),
-                     this, SLOT(refreshSettings()));
-    QObject::connect(&d->currentVariantItem, SIGNAL(valueChanged()),
-                     this, SLOT(refreshSettings()));
     QObject::connect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
     QObject::connect(&d->currentLcCollateItem, SIGNAL(valueChanged()),
@@ -777,12 +752,6 @@ DuiLocale::disconnectSettings()
     Q_D(DuiLocale);
 
     QObject::disconnect(&d->currentLanguageItem, SIGNAL(valueChanged()),
-                        this, SLOT(refreshSettings()));
-    QObject::disconnect(&d->currentCountryItem, SIGNAL(valueChanged()),
-                        this, SLOT(refreshSettings()));
-    QObject::disconnect(&d->currentScriptItem, SIGNAL(valueChanged()),
-                        this, SLOT(refreshSettings()));
-    QObject::disconnect(&d->currentVariantItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
     QObject::disconnect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
@@ -2170,11 +2139,7 @@ void DuiLocale::refreshSettings()
 #ifdef HAVE_GCONF
     Q_D(DuiLocale);
     bool settingsHaveReallyChanged = false;
-    QString language = d->currentLanguageItem.value().toString();
-    QString country  = d->currentCountryItem.value().toString();
-    QString script   = d->currentScriptItem.value().toString();
-    QString variant  = d->currentVariantItem.value().toString();
-    QString localeName = d->createLocaleString(language, country, script, variant);
+    QString localeName = d->currentLanguageItem.value().toString();
     QString lcTime = d->currentLcTimeItem.value().toString();
     QString lcCollate = d->currentLcCollateItem.value().toString();
     QString lcNumeric = d->currentLcNumericItem.value().toString();
