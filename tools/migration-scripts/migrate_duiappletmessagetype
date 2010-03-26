@@ -1,0 +1,38 @@
+#/bin/sh
+#
+# Migrate old all-caps enum values of DuiAppletMessageType to new CamelCase values.
+#
+# Usage:
+#     migrate_duiappletmessagetype    (will search all *.cpp and *.h files from current directory and replace there)
+#
+#     migrate_duiappletmessagetype <FILESPEC> [<FILESPEC> ...]
+#
+# Author: Stefan.Hundhammer@basyskom.de
+
+FILES=$*
+if [ -z "$FILES" ] ; then
+    FILES=$(find . -name "*.cpp" -o -name "*.h")
+fi
+
+perl -p -i \
+    -e 's/DuiAppletMessage::INVALID/DuiAppletMessage::InvalidMessage/g;' \
+    -e 's/DuiAppletMessage::VISIBILITY_MESSAGE/DuiAppletMessage::VisibilityMessage/g;' \
+    -e 's/DuiAppletMessage::ORIENTATION_MESSAGE/DuiAppletMessage::OrientationMessage/g;' \
+    -e 's/DuiAppletMessage::MOUSE_PRESS_MESSAGE/DuiAppletMessage::MousePressMessage/g;' \
+    -e 's/DuiAppletMessage::MOUSE_RELEASE_MESSAGE/DuiAppletMessage::MouseReleaseMessage/g;' \
+    -e 's/DuiAppletMessage::MOUSE_MOVE_MESSAGE/DuiAppletMessage::MouseMoveMessage/g;' \
+    -e 's/DuiAppletMessage::CANCEL_MESSAGE/DuiAppletMessage::CancelMessage/g;' \
+    -e 's/DuiAppletMessage::SET_GEOMETRY_MESSAGE/DuiAppletMessage::SetGeometryMessage/g;' \
+    -e 's/DuiAppletMessage::PIXMAP_TAKEN_INTO_USE_MESSAGE/DuiAppletMessage::PixmapTakenIntoUseMessage/g;' \
+    -e 's/DuiAppletMessage::APPLET_ALIVE_MESSAGE_REQUEST/DuiAppletMessage::AppletAliveMessageRequest/g;' \
+    -e 's/DuiAppletMessage::APPLET_ALIVE_MESSAGE_RESPONSE/DuiAppletMessage::AppletAliveMessageResponse/g;' \
+    -e 's/DuiAppletMessage::APPLET_ICON_MESSAGE/DuiAppletMessage::AppletIconMessage/g;' \
+    -e 's/DuiAppletMessage::APPLET_TITLE_MESSAGE/DuiAppletMessage::AppletTitleMessage/g;' \
+    -e 's/DuiAppletMessage::APPLET_TEXT_MESSAGE/DuiAppletMessage::AppletTextMessage/g;' \
+    -e 's/DuiAppletMessage::UPDATE_GEOMETRY_MESSAGE/DuiAppletMessage::UpdateGeometryMessage/g;' \
+    -e 's/DuiAppletMessage::PIXMAP_MODIFIED_MESSAGE/DuiAppletMessage::PixmapModifiedMessage/g;' \
+    -e 's/DuiAppletMessage::OBJECT_MENU_REQUEST_MESSAGE/DuiAppletMessage::ObjectMenuRequestMessage/g;' \
+    -e 's/DuiAppletMessage::OBJECT_MENU_MESSAGE/DuiAppletMessage::ObjectMenuMessage/g;' \
+    -e 's/DuiAppletMessage::OBJECT_MENU_ACTION_SELECTED_MESSAGE/DuiAppletMessage::ObjectMenuActionSelectedMessage/g;' \
+    -e 's/DuiAppletMessage::NUM_TYPES/DuiAppletMessage::NumMessages/g;' \
+    $FILES

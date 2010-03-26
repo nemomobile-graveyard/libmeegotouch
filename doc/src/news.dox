@@ -35,6 +35,22 @@
     - DuiWidget::tapGestureEvent()
     - DuiWidget::swipeGestureEvent()
 
+- DuiAppletSettingsDialog is now reduced to a single static function: exec().
+  Do not instantiate DuiAppletSettingsDialog any more; use the static function directly:
+
+    <CODE>
+    // Old usage
+    DuiSettingsDialog dia;
+    dia.exec(mySettings);
+    </CODE>
+
+    <CODE>
+    // New usage
+    DuiSettingsDialog::exec(mySettings);
+    </CODE>
+
+- PIMPLed DuiServiceFwBaseIf: Moved private data out to private class
+
 \subsection removed Removed or Renamed
 - removed void installCategoryCatalog(Category category, const QString &name);
   (was deprecated since 0.18)
@@ -71,6 +87,17 @@
 - DuiApplicationPage, DuiContainer, DuiContainerModel, DuiDialog, DuiDialogModel: centralWidget property type changed to QGraphicsWidget.
 - DuiExtensionAreaModel: DataStoreMap type changed to QMap<QGraphicsWidget *, DuiDataStore *>.
 - DuiWidget::visibilityChanged(bool visibility) signal removed, use QGraphicsWidget::visibleChanged() instead.
+- enum DuiLocale::Calendar was renamed to DuiLocale::CalendarType.
+- DuiLocale::calendar() was renamed to DuiLocale::calendarType().
+- DuiLocale::setCalendar() was renamed to DuiLocale::setCalendarType().
+- DuiAppletVisibilityMessage::visible() was renamed to DuiAppletVisibilityMessage::isVisible()
+
+- All-caps enum DuiAppletMessageType values were renamed to CamelCase:
+  - DuiAppletMessage::VISIBILITY_MESSAGE was renamed to DuiAppletMessage::VisibilityMessage
+  - DuiAppletMessage::ORIENTATION_MESSAGE was renamed to DuiAppletMessage::OrientationMessage
+  - ...
+  Use the supplied libdui/tools/migration-scripts/migrate_duiappletmessagetype 
+  script for automatic replacement.
 
 \section v0190
 
