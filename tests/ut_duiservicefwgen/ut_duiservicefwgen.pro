@@ -2,8 +2,9 @@ include(../common_top.pri)
 
 TARGET = ut_duiservicefwgen
 
-system(dui-servicefwgen -p com.nokia.SomeInterface)
-system(dui-servicefwgen -a com.nokia.SomeInterface)
+DUISERVICEFWGEN_EXECUTABLE = $$DUI_BUILD_TREE/tools/dui-servicefwgen
+system($$DUISERVICEFWGEN_EXECUTABLE -p com.nokia.SomeInterface)
+system($$DUISERVICEFWGEN_EXECUTABLE -a com.nokia.SomeInterface)
 
 SFW_HEADERS += \
     someinterfaceadaptor.h \
