@@ -194,6 +194,7 @@ void ItemDetailPage::createContent()
     if( !videoId.isEmpty() ) {
         video = new DuiVideoWidget(panel);
         connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
+        video->setFullscreen(true);
         video->open(videoId);
         policy->addItem(video);
 

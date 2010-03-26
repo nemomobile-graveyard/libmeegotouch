@@ -275,6 +275,14 @@ unsigned long DuiGstVideo::winId()
 void DuiGstVideo::setColorKey(const QColor& key) 
 {
     m_colorKey = key;
+
+    if( gst_elem_xvimagesink ) {
+        g_object_set(gst_elem_xvimagesink,
+                     "autopaint-colorkey", FALSE,
+                     "colorkey", m_colorKey.rgba() & 0x00FFFFFF,
+                     //"force-aspect-ratio", FALSE,
+                     (void*) 0);
+    }
 }
 
 QColor DuiGstVideo::colorKey() 
@@ -341,7 +349,6 @@ gboolean DuiGstVideo::bus_cb(GstBus *bus, GstMessage *message, void *data)
  */
 void DuiGstVideo::video_ready_cb(void* user_data)
 {
-    //duiDebug("DuiGstVideo::video_ready_cb()") << user_data;
     if( user_data ) {
         DuiGstVideo* gstVideo = (DuiGstVideo*) user_data;
 
@@ -357,9 +364,10 @@ void DuiGstVideo::video_ready_cb(void* user_data)
             gstVideo->m_storedState = DuiVideo::NotReady;
             gstVideo->m_storedPosition = 0;
         }
-        else
+        else {
             //automatically stop after buffering the first frame
             gstVideo->setVideoState(DuiVideo::Stopped);
+		}
 
         emit gstVideo->videoReady();
     }
@@ -496,7 +504,7 @@ void DuiGstVideo::render_frame_cb(void* pointer, void* user_data)
         //a new frame is currently being rendered so no need 
         //to create new one
         if( !gstVideo->lockFrameData() ) {
-            //duiDebug("DuiGstVideo::render_frame_cb()") << "MUTEX LOCK CONFLICT!";
+            duiWarning("DuiGstVideo::render_frame_cb()") << "MUTEX LOCK CONFLICT!";
             gst_buffer_unref(GST_BUFFER(pointer));    
             return;
         }
@@ -523,11 +531,25 @@ GstElement* DuiGstVideo::makeSink(bool yuv)
 
     //HW overlay rendering using xvimagesink
     if( m_renderTarget == DuiGstVideo::XvSink ) {
+        //try to create xvimagesink, if it fails fallback to duisink rendering
         gst_elem_xvimagesink = gst_element_factory_make("xvimagesink", "xvsink");
         if( gst_elem_xvimagesink && GST_IS_ELEMENT(gst_elem_xvimagesink) ) {
+            //the order of the follwing steps is important
+            //otherwise the overlaying does not work
+
+            //1. set the needed xvimagesink properties
+            g_object_set(gst_elem_xvimagesink,
+                         "autopaint-colorkey", FALSE,
+                         "colorkey", m_colorKey.rgba() & 0x00FFFFFF,
+                         //"force-aspect-ratio", TRUE,
+                         //"draw-borders", TRUE,
+                         (void*) 0);
+
+            //2. set the overlay to wanted window
             gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink),
                                          m_winId);    
 
+            //3. check that the colorkey and autopaint really works, if not fallback to duisink rendering
             GValueArray* colorkey = gst_property_probe_get_values_name(GST_PROPERTY_PROBE(gst_elem_xvimagesink), "colorkey");
             GValueArray* autopaint = gst_property_probe_get_values_name(GST_PROPERTY_PROBE(gst_elem_xvimagesink), "autopaint-colorkey");
             if( colorkey && autopaint ) {
@@ -551,8 +573,14 @@ GstElement* DuiGstVideo::makeSink(bool yuv)
                     g_value_array_free(colorkey);
                 if( autopaint )
                     g_value_array_free(autopaint);
-                duiWarning("DuiGstVideo::makeSink()")   << "colorkey (" << colorkey 
-                                                        << ") or autopaint-colorkey (" << autopaint 
+
+                if( gst_elem_xvimagesink ) {
+                    gst_object_unref(GST_OBJECT(gst_elem_xvimagesink));
+                    gst_elem_xvimagesink = NULL;
+                }
+
+                duiWarning("DuiGstVideo::makeSink()")   << "\"colorkey\" (" << colorkey 
+                                                        << ") or \"autopaint-colorkey\" (" << autopaint 
                                                         <<") properties not found, falling back to texture rendering with duisink.";
             }
         }else {
@@ -560,19 +588,15 @@ GstElement* DuiGstVideo::makeSink(bool yuv)
         }
     }
 
-    //render to texture using DuiSink
+    //setup textured video rendering using duisink
     m_renderTarget = DuiGstVideo::DuiSink;
-    //if( m_renderTarget == DuiGstVideo::DuiSink ) {
-        gst_elem_videosink = yuv ? dui_gst_video_sink_yuv_new() : dui_gst_video_sink_new();
+    gst_elem_videosink = yuv ? dui_gst_video_sink_yuv_new() : dui_gst_video_sink_new();
+    DuiGstVideoSink *duisink = DUI_GST_VIDEO_SINK(gst_elem_videosink);
+    duisink->user_data = this;
+    duisink->frame_cb = render_frame_cb;
+    duisink->ready_cb  = video_ready_cb;
 
-        DuiGstVideoSink *duisink = DUI_GST_VIDEO_SINK(gst_elem_videosink);
-
-        duisink->user_data = this;
-        duisink->frame_cb = render_frame_cb;
-        duisink->ready_cb  = video_ready_cb;
-
-        return gst_elem_videosink;
-    //}
+    return gst_elem_videosink;
 }
 
 GstElement* DuiGstVideo::makeVolume()
