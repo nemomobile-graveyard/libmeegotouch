@@ -390,6 +390,7 @@ QList<ThemeInfo> findAvailableThemes()
 }
 
 #ifndef HAVE_GCONF
+extern QString Dui_currentTheme();
 extern void Dui_changeTheme(const QString &theme);
 #endif
 
@@ -404,12 +405,19 @@ void ListPage::showThemeSelectionDialog()
 
     DuiButtonGroup *group = new DuiButtonGroup(dialog->centralWidget());
 
+#ifdef HAVE_GCONF
+    DuiGConfItem themeName("/Dui/theme/name");
+    QString currentTheme = themeName.value().toString();
+#else
+    QString currentTheme = Dui_currentTheme();
+#endif
+
     const int themesCount = themes.count();
     for (int i = 0; i < themesCount; ++i) {
         DuiButton *button = new DuiButton(themes[i].themeIcon, themes[i].themeName);
         button->setObjectName("theme-selection-button");
         button->setCheckable(true);
-        if (DuiTheme::currentTheme() == themes[i].theme)
+        if (currentTheme == themes[i].theme)
             button->setChecked(true);
 
         layout->addItem(button, i/4, i%4);

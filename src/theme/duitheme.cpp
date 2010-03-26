@@ -401,10 +401,10 @@ void DuiTheme::releaseStyle(const DuiStyle *style)
     DuiStyleSheet::releaseStyle(style);
 }
 
-DuiWidgetView *DuiTheme::view(const DuiWidgetController *controller)
+DuiWidgetView *DuiThemePrivate::view(const DuiWidgetController *controller)
 {
     // Best matching view class name
-    QString viewClassName = instance()->d_ptr->determineViewClassForController(controller);
+    QString viewClassName = determineViewClassForController(controller);
 
     if (viewClassName.isEmpty()) {
         qWarning() << "Could not find view class for:" << controller->metaObject()->className() << "/" << controller->viewType();
@@ -477,22 +477,6 @@ bool DuiThemePrivate::loadCSS(const QString &filename, DuiTheme::InsertMode mode
 
     delete newStylesheet;
     return false;
-}
-
-QString DuiTheme::currentTheme()
-{
-    DuiThemePrivate *d = DuiTheme::instance()->d_func();
-    return d->themeDaemon->currentTheme();
-}
-
-QStringList DuiTheme::findAvailableThemes()
-{
-    return QStringList();
-}
-
-void DuiTheme::changeTheme(const QString &theme_id)
-{
-    Q_UNUSED(theme_id);
 }
 
 bool DuiTheme::hasPendingRequests()
