@@ -44,7 +44,6 @@ private slots:
     void testActions();
     void testCurrentIndex();
     void testFunctions();
-    void testCancelEvent();
     void testClickSlot();
     void testBuiltinModel();
     void testModelSwitching();

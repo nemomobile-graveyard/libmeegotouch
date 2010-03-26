@@ -201,7 +201,6 @@ bool DuiApplicationService::registerService()
             handleServiceRegistrationFailure();
             success = false;
         } else {
-            duiDebug("DuiApplicationService") << "registerService() registering successful";
             d->unregisterObject("/org/maemo/dui");
             d->registerObject("/org/maemo/dui", this);
             success = true;

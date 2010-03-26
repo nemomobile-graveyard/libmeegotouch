@@ -21,11 +21,15 @@
 #define UT_DUIAPPLICATIONWINDOW
 
 #include <QObject>
+#include <QList>
 #include <QtTest>
 #include <DuiNamespace>
 
+class QGraphicsItem;
+
 class DuiApplicationWindow;
 class DuiApplicationPage;
+class DuiEscapeButtonPanel;
 
 class Ut_DuiApplicationWindow : public QObject
 {
@@ -56,7 +60,12 @@ private slots:
     void testDisplayExitedOnClose();
     void testDisplayExitedOnCloseLazyShutdownApp();
 
+    void testPageEscapeAuto();
+    void testPageEscapeAutoWhenAddingPageHistory();
+    void testPageEscapeAutoWhenClearingPageHistory();
+
 private:
+    DuiEscapeButtonPanel *fetchEscapeButtonPanel(const QList<QGraphicsItem *> &itemsList) const;
     DuiApplicationWindow *m_subject;
 
 };

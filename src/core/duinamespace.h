@@ -69,17 +69,6 @@ namespace Dui
         NonRecursive
     };
 
-    /*!
-     * This enum is used to describe whether the orientation change
-     * invoked manually should be animated or not.
-     *
-     * \sa DuiWindow::setOrientationAngle()
-     */
-    enum OrientationChangeMode {
-        AnimatedOrientationChange,
-        ImmediateOrientationChange
-    };
-
     //! extensions for Qt::inputMethodQuery
     enum InputMethodQueryExtensions {
         InputEnabledQuery = 10000, // as workaround for qgraphicsview inputmethod shortcomings - DEPRECATED

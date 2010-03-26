@@ -58,9 +58,6 @@ public:
 protected Q_SLOTS:
     //! \reimp
     virtual void applyStyle();
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual void cancelEvent(DuiCancelEvent *event);
     virtual void updateData(const QList<const char *>& modifications);
     //! \reimp_end
 

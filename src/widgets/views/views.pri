@@ -43,7 +43,6 @@ PUBLIC_HEADERS += \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbartabview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbarview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duiseparatorview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duitexteditviewzoom.h \
     $$WIDGETS_VIEWS_SRC_DIR/duicompleterview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duifastlistview.h \
     $$WIDGETS_VIEWS_SRC_DIR/duicontentitemview.h \
@@ -101,7 +100,6 @@ SOURCES += \
     $$WIDGETS_VIEWS_SRC_DIR/duispinnerview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duistatusbarview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duitexteditview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duitexteditviewzoom.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbartabview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duitoolbarview.cpp \
     $$WIDGETS_VIEWS_SRC_DIR/duiseparatorview.cpp \

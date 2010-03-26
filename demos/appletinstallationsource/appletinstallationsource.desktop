@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=DUIApplicationExtension
+Name=FakeInstallationSource
+
+[X-DUI]
+DUIApplicationExtension-Interface=com.nokia.dui.core.AppletInstallationSourceInterface/1.0
+DUIApplicationExtension-Extension=libappletinventory-fakeinstallationsource.so

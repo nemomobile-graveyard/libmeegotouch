@@ -137,7 +137,7 @@ void SliderPage::createContent()
 
 void SliderPage::createLayout()
 {
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     layout = new DuiLayout(panel);
 
     landscapePolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
@@ -171,7 +171,7 @@ void SliderPage::retranslateUi()
 
     //% "Slider is used for continuous set of values, "
     //% "among which user can choose one value.\n\n"
-    //% "Seekbar is a special type of Slider used for"
+    //% "Seekbar is a special type of Slider used for "
     //% "displaying playback status for multimedia content."
     infoLabel->setText("<a></a>" + qtTrId("xx_slider_page_info_label"));
 
@@ -221,8 +221,8 @@ void SliderPage::retranslateUi()
     brightnessSlider->setMinLabelVisible(true);
     brightnessSlider->setMaxLabelVisible(true);
 
-    brightnessSlider->setMinLabelIconID("icon-l-brightness-min");
-    brightnessSlider->setMaxLabelIconID("icon-l-brightness-max");
+    brightnessSlider->setMinLabelIconID("icon-m-common-strength1");
+    brightnessSlider->setMaxLabelIconID("icon-m-common-strength5");
 
     modifyBrightnessSliderHandle(brightnessSlider->value());
 

@@ -34,7 +34,6 @@
 #include "duifeedback.h"
 #include "duitextedit.h"
 #include "duitheme.h"
-#include "duitexteditviewzoom.h"
 #include "duiviewcreator.h"
 #include "duiinfobanner.h"
 #include "duilocale.h"
@@ -43,7 +42,7 @@
 
 namespace
 {
-    const int ZoomTimeInterval = 600; //! how long to wait in tap&hold to start zooming
+    const int LongPressTime = 600; //! how long to wait in tap&hold to initiate long press action
     const int ScrollMargin = 20; // distance from the edge to start scrolling
     const int ScrollingTimeDuration = 100;
     const int ScrollStep = 10; // pixels to scroll at once
@@ -81,7 +80,7 @@ DuiTextEditViewPrivate::DuiTextEditViewPrivate(DuiTextEdit *control, DuiTextEdit
       hscroll(0.0),
       vscroll(0.0),
       scrollSpeedVertical(0),
-      zoomTimer(new QTimer(this)),
+      longPressTimer(new QTimer(this)),
       scrollTimer(new QTimer(this)),
       maskTimer(new QTimer(this)),
       selecting(false),
@@ -89,7 +88,6 @@ DuiTextEditViewPrivate::DuiTextEditViewPrivate(DuiTextEdit *control, DuiTextEdit
       startCursorPos(-1),
       documentHeight(0.0),
       mouseTarget(0, 0),
-      zoomable(true),
       inAutoSelectionClick(false),
       infoBanner(0),
       editActive(false)
@@ -101,11 +99,13 @@ DuiTextEditViewPrivate::DuiTextEditViewPrivate(DuiTextEdit *control, DuiTextEdit
     selectionFormat.setForeground(Qt::white);
     selectionFormat.setBackground(Qt::black);
 
-    zoomTimer->setSingleShot(true);
+    longPressTimer->setSingleShot(true);
+    longPressTimer->setInterval(LongPressTime);
+
     maskTimer->setSingleShot(true);
     maskTimer->setInterval(MaskedTimeInterval);
 
-    QObject::connect(zoomTimer, SIGNAL(timeout()), this, SLOT(createZoomView()));
+    QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
     QObject::connect(maskTimer, SIGNAL(timeout()), this, SLOT(hideUnmaskedText()));
 }
@@ -206,7 +206,7 @@ void DuiTextEditViewPrivate::scrolling()
         controller->setSelection(startCursorPos, cursorIndex - startCursorPos, true);
     }
 
-    doUpdate(); // need to redraw, widget supposedly changed.
+    q->doUpdate(); // need to redraw, widget supposedly changed.
 }
 
 
@@ -243,36 +243,6 @@ void DuiTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *eve
 }
 
 
-/*!
- * \brief handle mouse move in zooming. called from DuiTextViewZoom.
- * \param event the move event
- */
-void DuiTextEditViewPrivate::mouseMoveInZooming(QGraphicsSceneMouseEvent *event)
-{
-    // only move cursor if left mouse button is pressed
-    if ((event->buttons() & Qt::LeftButton) == 0) {
-        return;
-    }
-
-    setMouseTarget(event->pos());
-    int cursor = cursorPosition(event);
-
-    if (cursor >= 0) {
-        controller->setCursorPosition(cursor);
-    }
-
-    // also scroll in zoom.
-    // known issue: scrolling zoom view with mouse on a spot
-    // requires one another mouse move to start text scrolling
-    scrollingTestAndStart(event);
-}
-
-
-// stops text scrolling. Called from DuiTextEditViewZoom when mouse is released
-void DuiTextEditViewPrivate::stopScrolling()
-{
-    scrollTimer->stop();
-}
 
 
 //! validates hscroll and vscroll values so cursor stays visible
@@ -312,7 +282,7 @@ void DuiTextEditViewPrivate::checkScroll()
     }
 
     if (scrolled) {
-        doUpdate();
+        q->doUpdate();
     }
 }
 
@@ -442,17 +412,17 @@ QTextDocument *DuiTextEditViewPrivate::activeDocument() const
 }
 
 
-// notifies this and the possible zoom view about update
-void DuiTextEditViewPrivate::doUpdate()
+// notifies this and the possible derived classes about an update
+void DuiTextEditView::doUpdate()
 {
-    Q_Q(DuiTextEditView);
-    q->update();
-
-    if (zoomView) {
-        zoomView->update();
-    }
+    update();
 }
 
+const QPointF &DuiTextEditView::mouseTarget() const
+{
+    Q_D(const DuiTextEditView);
+    return d->mouseTarget;
+}
 
 void DuiTextEditViewPrivate::hideUnmaskedText()
 {
@@ -470,7 +440,8 @@ void DuiTextEditViewPrivate::hideUnmaskedText()
         unmaskPosition = -1;
         unmaskLength = 0;
 
-        doUpdate();
+        Q_Q(DuiTextEditView);
+        q->doUpdate();
     }
 }
 
@@ -490,26 +461,6 @@ void DuiTextEditViewPrivate::checkSize()
         q->updateGeometry();
     }
 }
-
-
-void DuiTextEditViewPrivate::createZoomView()
-{
-    Q_Q(DuiTextEditView);
-
-    delete zoomView;
-    zoomView = new DuiTextEditViewZoom(q, mouseTarget);
-    // assuming the zoom view receives the rest of mouse events
-    inAutoSelectionClick = false;
-    q->updateMicroFocus(); // visualization priority gained
-    // hide completer if there is active one
-    if (controller->completer() && controller->completer()->isActive()) {
-        controller->completer()->hideCompleter();
-    }
-
-    // destroying the zoom removes visualization priority
-    connect(zoomView, SIGNAL(destroyed()), q, SLOT(updateMicroFocus()));
-}
-
 
 // handles text document updates
 void DuiTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, int charsAdded)
@@ -554,7 +505,7 @@ void DuiTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved
         }
     }
 
-    doUpdate();
+    q->doUpdate();
 }
 
 
@@ -589,8 +540,8 @@ void DuiTextEditViewPrivate::startSelection(QGraphicsSceneMouseEvent *event)
         controller->selectAll();
     }
 
-    // selection won zooming timer in mouse press contest, we should stop it
-    zoomTimer->stop();
+    // selection won long press timer in mouse press contest, we should stop it
+    longPressTimer->stop();
 }
 
 
@@ -645,8 +596,6 @@ void DuiTextEditViewPrivate::checkStartOfSelection(QGraphicsSceneMouseEvent *eve
     }
 
     startSelection(event);
-
-    return;
 }
 
 
@@ -739,7 +688,6 @@ DuiTextEditView::DuiTextEditView(DuiTextEdit *controller)
                      SLOT(informPasteFailed()));
 }
 
-
 DuiTextEditView::~DuiTextEditView()
 {
     delete d_ptr;
@@ -801,7 +749,7 @@ void DuiTextEditView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
         if (horizontalChange > 0) {
             d->hscroll = qMax<qreal>(d->hscroll - horizontalChange, 0.0);
-            d->doUpdate();
+            doUpdate();
         }
     }
 
@@ -822,10 +770,8 @@ void DuiTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     int cursor = d->cursorPosition(event);
     d->setMouseTarget(event->pos());
 
-    if (d->zoomable) {
-        // start timer to check if still holding mouse after a while
-        d->zoomTimer->start(ZoomTimeInterval);
-    }
+    // start timer to check if still holding mouse after a while
+    d->longPressTimer->start();
 
     event->accept();
 
@@ -867,26 +813,33 @@ void DuiTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     d->selecting = false;
     d->inAutoSelectionClick = false;
-    d->zoomTimer->stop();
+    d->longPressTimer->stop();
     d->scrollTimer->stop();
 }
 
 
 void DuiTextEditView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
+    event->accept();
+    updateCursorPosition(event, true);
+}
+
+void DuiTextEditView::updateCursorPosition(QGraphicsSceneMouseEvent *event, const bool updateSelection)
+{
     Q_D(DuiTextEditView);
 
-    int cursor = d->cursorPosition(event);
-
+    const int cursor = d->cursorPosition(event);
     d->setMouseTarget(event->pos());
-    event->accept();
 
-    if (d->selecting) {
-        d->updateSelection(event);
-
-    } else {
-        d->checkStartOfSelection(event);
-        d->controller->handleMouseMove(cursor, event);
+    if (updateSelection) {
+        if (d->selecting) {
+            d->updateSelection(event);
+        } else {
+            d->checkStartOfSelection(event);
+            d->controller->handleMouseMove(cursor, event);
+        }
+    } else if (cursor >= 0) {
+        d->controller->setCursorPosition(cursor);
     }
 
     d->scrollingTestAndStart(event);
@@ -937,8 +890,13 @@ void DuiTextEditView::cancelEvent(DuiCancelEvent *event)
     Q_D(DuiTextEditView);
     d->selecting = false;
     d->inAutoSelectionClick = false;
-    d->zoomTimer->stop();
+    d->longPressTimer->stop();
     d->scrollTimer->stop();
+
+    // hide completer if there is active one
+    if (d->controller->completer() && d->controller->completer()->isActive()) {
+        d->controller->completer()->hideCompleter();
+    }
 }
 
 
@@ -951,10 +909,8 @@ QVariant DuiTextEditView::inputMethodQuery(Qt::InputMethodQuery query) const
 
     } else if (query == Qt::ImMicroFocus) {
         return QVariant(d->cursorRect());
-
     } else if (static_cast<int>(query) == Dui::VisualizationPriorityQuery) {
-        return QVariant(d->zoomView.isNull() == false);
-
+        return QVariant(false);
     } else if (static_cast<int>(query) == Dui::PreeditRectangleQuery) {
         return QVariant(d->preeditRectangle());
     } else {
@@ -999,7 +955,7 @@ void DuiTextEditView::updateData(const QList<const char *> &modifications)
     if (viewChanged) {
         d->checkSize();
         d->checkScroll();
-        d->doUpdate();
+        doUpdate();
     }
 
     DuiWidgetView::updateData(modifications);
@@ -1032,8 +988,12 @@ void DuiTextEditView::informPasteFailed()
         //% "Cannot paste text here"
         qtTrId("qtn_vkb_cantpaste"));
 
-    d->controller->sceneManager()->showWindow(d->infoBanner, DuiSceneWindow::DestroyWhenDone);
+    d->controller->sceneManager()->appearSceneWindow(d->infoBanner, DuiSceneWindow::DestroyWhenDone);
     QTimer::singleShot(duration, this, SLOT(hideInfoBanner()));
+}
+
+void DuiTextEditView::handleLongPress()
+{
 }
 
 void DuiTextEditView::hideInfoBanner()
@@ -1089,7 +1049,7 @@ void DuiTextEditView::setFocused(Qt::FocusReason reason)
     }
 
     d->focused = true;
-    d->doUpdate();
+    doUpdate();
 }
 
 
@@ -1101,7 +1061,7 @@ void DuiTextEditView::removeFocus(Qt::FocusReason reason)
     style().setModeDefault();
     d->focused = false;
     d->editActive = false;
-    d->doUpdate();
+    doUpdate();
 }
 
 
@@ -1119,8 +1079,6 @@ void DuiTextEditView::applyStyle()
     if (threshold > 0) {
         d->selectionThreshold = threshold;
     }
-
-    d->zoomable = style()->zoomable();
 
     QString maskString = style()->maskString();
     if (maskString.isEmpty() == false) {

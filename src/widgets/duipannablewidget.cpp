@@ -97,8 +97,6 @@ void copyGraphicsSceneMouseEvent(QGraphicsSceneMouseEvent &target, const QGraphi
 
 //! \cond
 
-class DuiPannableWidgetGlassPrivate;
-
 class DuiPannableWidgetGlass : public DuiWidget
 {
 public:
@@ -111,31 +109,14 @@ public:
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void ungrabMouseEvent(QEvent *event);
-    virtual void tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture* state);
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
 
     DuiPannableWidget *pannableWidget;
-
-    Q_DISABLE_COPY(DuiPannableWidgetGlass)
-    Q_DECLARE_PRIVATE(DuiPannableWidgetGlass)
-};
-
-class DuiPannableWidgetGlassPrivate : public DuiWidgetPrivate
-{
-public:
-    virtual void tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture* state);
-
-    Q_DECLARE_PUBLIC(DuiPannableWidgetGlass)
 };
 
 //! \endcond
 
-void DuiPannableWidgetGlassPrivate::tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture *state)
-{
-    Q_Q(DuiPannableWidgetGlass);
-    q->tapAndHoldGesture(event,state);
-}
-
-void DuiPannableWidgetGlass::tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture* gesture)
+void DuiPannableWidgetGlass::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture)
 {
     if (gesture->state() == Qt::GestureFinished)
         pannableWidget->glassLongTapEvent();
@@ -143,7 +124,7 @@ void DuiPannableWidgetGlass::tapAndHoldGesture(QGestureEvent *event, QTapAndHold
 }
 
 DuiPannableWidgetGlass::DuiPannableWidgetGlass(QGraphicsItem *parent) :
-    DuiWidget(*new DuiPannableWidgetGlassPrivate(), parent)
+    DuiWidget(parent)
 {
     this->pannableWidget = dynamic_cast<DuiPannableWidget *>(parent);
 }

@@ -78,12 +78,6 @@ DuiWidgetPrivate::DuiWidgetPrivate() : selected(false)
 DuiWidgetPrivate::~DuiWidgetPrivate()
 {
 }
-void DuiWidgetPrivate::gestureEvent(QGestureEvent* )
-{
-}
-void  DuiWidgetPrivate::tapAndHoldGesture(QGestureEvent *, QTapAndHoldGesture* )
-{
-}
 
 void DuiWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *)
 {
@@ -91,7 +85,7 @@ void DuiWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *)
 }
 
 // DuiSceneManager stubs (used by DuiExtensionHandle)
-void DuiSceneManager::showWindow(DuiSceneWindow *, DuiSceneWindow::DeletionPolicy)
+void DuiSceneManager::appearSceneWindow(DuiSceneWindow *, DuiSceneWindow::DeletionPolicy)
 {
 }
 

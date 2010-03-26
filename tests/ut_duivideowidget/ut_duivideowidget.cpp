@@ -62,12 +62,17 @@ bool ut_duivideowidget::waitPositionFreeze(int msec)
     QTime t;
     t.start();
     quint64 pos = m_subject->position();
+    int count = 0;
     do {
         pos = m_subject->position();
         usleep(100000);
         QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 500);
+        if( m_subject->position() == pos )
+            count++;
+        else
+            count = 0;
         qDebug() << pos << m_subject->position();
-    } while( m_subject->position() != pos && t.elapsed() < msec );
+    } while( count < 2 && t.elapsed() < msec );
     
     return m_subject->position() == pos;
 }
@@ -153,7 +158,7 @@ void ut_duivideowidget::testPlayback()
     
     //test play -> pause
     m_subject->pause();
-    ok = waitPositionFreeze(5000);
+    ok = waitPositionFreeze();
     QCOMPARE(m_subject->state(), DuiVideo::Paused);
     QVERIFY(ok);
     
@@ -225,7 +230,7 @@ void ut_duivideowidget::testPositionControl()
     waitPositionFreeze();
     m_subject->seek(0);
     m_subject->play();
-    waitPositionChange(5000);
+    waitPositionChange();
     QVERIFY(m_subject->position() < 500);
     
     //seeking when stopped

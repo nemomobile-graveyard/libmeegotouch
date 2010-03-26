@@ -101,6 +101,11 @@ public:
      */
     DuiTheme::ViewType toolbarViewType() const;
 
+    /*!
+     * Returns true if the menu is opened otherwise false.
+     */
+    bool isMenuOpen() const;
+
 Q_SIGNALS:
     /*!
      This signal is emitted after \page has become shown.
@@ -108,11 +113,6 @@ Q_SIGNALS:
     void pageChanged(DuiApplicationPage *page);
 
 public Q_SLOTS:
-    //! \reimp
-    void show();
-
-    bool close();
-    //! \reimp_end
 
     /*!
      * Opens the application menu of the window, provided that there
@@ -158,16 +158,15 @@ private:
 
     Q_DISABLE_COPY(DuiApplicationWindow)
     Q_DECLARE_PRIVATE(DuiApplicationWindow)
-    Q_PRIVATE_SLOT(d_func(), void _q_connectEscapeButton(DuiEscapeButtonPanelModel::EscapeMode))
-    Q_PRIVATE_SLOT(d_func(), void _q_pageTitleChanged(DuiApplicationPage *, const QString &))
     Q_PRIVATE_SLOT(d_func(), void _q_actionUpdated(QActionEvent *))
-    Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar(const Dui::Orientation &))
+    Q_PRIVATE_SLOT(d_func(), void _q_placeToolBar(Dui::Orientation))
     Q_PRIVATE_SLOT(d_func(), void _q_handlePageModelModifications(const QList<const char *>&))
     Q_PRIVATE_SLOT(d_func(), void _q_menuAppeared())
     Q_PRIVATE_SLOT(d_func(), void _q_menuDisappeared())
 #ifdef HAVE_N900
     Q_PRIVATE_SLOT(d_func(), void _q_exitAppView())
 #endif
+    Q_PRIVATE_SLOT(d_func(), void _q_updatePageEscapeAuto())
 };
 
 #endif

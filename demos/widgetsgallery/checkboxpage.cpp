@@ -57,7 +57,9 @@ void CheckboxPage::createContent()
     checkbox->setViewType(DuiButton::checkboxType);
     checkbox->setCheckable(true);
     checkboxLabel = new DuiLabel();
-
+    checkboxLabel->setWordWrap(true);
+    checkboxLabel->setTextElide(true);
+    
     // Layout for checkbox and it's infolabel
     QGraphicsLinearLayout *l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(checkbox);
@@ -65,7 +67,7 @@ void CheckboxPage::createContent()
     l->setAlignment(checkbox, Qt::AlignCenter);
     l->setAlignment(checkboxLabel, Qt::AlignCenter);
     containerPolicy->addItem(l);
-
+    containerPolicy->addStretch();
     retranslateUi();
 }
 
@@ -84,7 +86,7 @@ void CheckboxPage::retranslateUi()
     infoLabel->setText("<a></a>" + qtTrId("xx_checkbox_page_info_label"));
 
     //% "I have read and understood the\ninstructions."
-    checkboxLabel->setText(qtTrId("xx_checkbox_page_checkbox_label"));
+    checkboxLabel->setText("<a></a>" + qtTrId("xx_checkbox_page_checkbox_label"));
 }
 
 

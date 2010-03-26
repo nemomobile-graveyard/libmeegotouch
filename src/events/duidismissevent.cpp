@@ -21,8 +21,11 @@
 
 static int _duiDismissEventTypeValue = -1;
 
+// DuiDismissEventPrivate is currently emtpy - for future use (prevent ABI break)
+
 DuiDismissEvent::DuiDismissEvent()
-    : QEvent(eventType())
+    : QEvent(eventType()),
+      d_ptr(0)
 {
 
 }

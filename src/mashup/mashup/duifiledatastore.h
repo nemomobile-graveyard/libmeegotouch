@@ -21,10 +21,8 @@
 #define DUIFILEDATASTORE_H
 
 #include "duidatastore.h"
-#include <QSettings>
-#include <QScopedPointer>
-#include <QFileSystemWatcher>
-#include <QMap>
+
+class DuiFileDataStorePrivate;
 
 /*!
  * Concrete implementation of \c DuiDataStore interface. This class stores the data to the
@@ -39,6 +37,12 @@ public:
      * \param filePath Absolute path to the file that the settings will be written to and read from.
      */
     explicit DuiFileDataStore(const QString &filePath);
+
+    /*!
+     * Destructor
+     */
+    virtual ~DuiFileDataStore();
+
     //! \reimp
     /*!
      * If \c isWritable returns \c false, this method returns \c false.
@@ -110,15 +114,12 @@ private slots:
      */
     void directoryChanged(const QString &fileName);
 
+protected:
+    DuiFileDataStorePrivate * const d_ptr;
+
 private:
-    //! The used data storing backend
-    QSettings settings;
-
-    //! Snapshot of the settings, used for observing external file changes
-    QMap<QString, QVariant> settingsSnapshot;
-
-    //! File system watcher wrapped with QScopedPointer to monitor changes in the settings file
-    QScopedPointer<QFileSystemWatcher> watcher;
+    Q_DECLARE_PRIVATE(DuiFileDataStore)
+    Q_DISABLE_COPY(DuiFileDataStore)
 };
 
 #endif // DUIFILEDATASTORE_H

@@ -63,6 +63,10 @@ namespace
     const QString SettingsCountry("/Dui/i18n/Country");
     const QString SettingsScript("/Dui/i18n/Script");
     const QString SettingsVariant("/Dui/i18n/Variant");
+    const QString SettingsLcTime("/Dui/i18n/LcTime");
+    const QString SettingsLcCollate("/Dui/i18n/LcCollate");
+    const QString SettingsLcNumeric("/Dui/i18n/LcNumeric");
+    const QString SettingsLcMonetary("/Dui/i18n/LcMonetary");
 }
 
 /// Helper
@@ -302,6 +306,36 @@ icu::DateFormatSymbols *DuiLocalePrivate::createDateFormatSymbols(icu::Locale lo
 }
 #endif
 
+#ifdef HAVE_ICU
+icu::DateFormat *DuiLocalePrivate::createDateFormat(DuiLocale::DateType dateType,
+                                                    DuiLocale::TimeType timeType,
+                                                    const DuiCalendar& duicalendar) const
+{
+    // Create calLocale which has the time pattern we want to use
+    icu::Locale calLocale = DuiIcuConversions::createLocale(
+        categoryName(DuiLocale::DuiLcTime),
+        duicalendar.type());
+
+    icu::DateFormat::EStyle dateStyle = DuiIcuConversions::toEStyle(dateType);
+    icu::DateFormat::EStyle timeStyle = DuiIcuConversions::toEStyle(timeType);
+    icu::DateFormat *df
+    = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
+
+    // Symbols come from the messages locale
+    icu::Locale symbolLocale
+    = DuiIcuConversions::createLocale(categoryName(DuiLocale::DuiLcMessages),
+                                      duicalendar.type());
+
+    DateFormatSymbols *dfs = DuiLocalePrivate::createDateFormatSymbols(symbolLocale);
+
+    // This is not nice but seems to be the only way to set the
+    // symbols with the public API
+    static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
+
+    return df;
+}
+#endif
+
 // Constructors
 
 DuiLocalePrivate::DuiLocalePrivate()
@@ -315,7 +349,11 @@ DuiLocalePrivate::DuiLocalePrivate()
       , currentLanguageItem(SettingsLanguage),
       currentCountryItem(SettingsCountry),
       currentScriptItem(SettingsScript),
-      currentVariantItem(SettingsVariant)
+      currentVariantItem(SettingsVariant),
+      currentLcTimeItem(SettingsLcTime),
+      currentLcCollateItem(SettingsLcCollate),
+      currentLcNumericItem(SettingsLcNumeric),
+      currentLcMonetaryItem(SettingsLcMonetary)
 #endif
 {
 }
@@ -342,7 +380,11 @@ DuiLocalePrivate::DuiLocalePrivate(const DuiLocalePrivate &other)
       , currentLanguageItem(SettingsLanguage),
       currentCountryItem(SettingsCountry),
       currentScriptItem(SettingsScript),
-      currentVariantItem(SettingsVariant)
+      currentVariantItem(SettingsVariant),
+      currentLcTimeItem(SettingsLcTime),
+      currentLcCollateItem(SettingsLcCollate),
+      currentLcNumericItem(SettingsLcNumeric),
+      currentLcMonetaryItem(SettingsLcMonetary)
 #endif
 {
 #ifdef HAVE_ICU
@@ -467,6 +509,15 @@ void DuiLocalePrivate::removeTrFromQCoreApp()
     foreach(const QExplicitlySharedDataPointer<DuiTranslationCatalog>& sharedCatalog, _trTranslations) {
         QCoreApplication::removeTranslator(&sharedCatalog->_translator);
     }
+}
+
+QLocale::QLocale DuiLocalePrivate::createQLocale(DuiLocale::Category category) const
+{
+    Q_Q(const DuiLocale);
+    QLocale qlocale(q->categoryLanguage(category)
+                    + '_' +
+                    q->categoryCountry(category));
+    return qlocale;
 }
 
 // sets category to specific locale
@@ -635,11 +686,19 @@ DuiLocale::createSystemDuiLocale()
     DuiGConfItem countryItem(SettingsCountry);
     DuiGConfItem scriptItem(SettingsScript);
     DuiGConfItem variantItem(SettingsVariant);
+    DuiGConfItem lcTimeItem(SettingsLcTime);
+    DuiGConfItem lcCollateItem(SettingsLcCollate);
+    DuiGConfItem lcNumericItem(SettingsLcNumeric);
+    DuiGConfItem lcMonetaryItem(SettingsLcMonetary);
 
     QString language = languageItem.value().toString();
     QString country  = countryItem.value().toString();
     QString script   = scriptItem.value().toString();
     QString variant  = variantItem.value().toString();
+    QString lcTime = lcTimeItem.value().toString();
+    QString lcCollate = lcCollateItem.value().toString();
+    QString lcNumeric = lcNumericItem.value().toString();
+    QString lcMonetary = lcMonetaryItem.value().toString();
 
     DuiLocale *systemLocale;
 
@@ -660,6 +719,15 @@ DuiLocale::createSystemDuiLocale()
                     QString(variant)));
     }
 
+    if (!lcTime.isEmpty())
+        systemLocale->setCategoryLocale(DuiLocale::DuiLcTime, lcTime);
+    if (!lcCollate.isEmpty())
+        systemLocale->setCategoryLocale(DuiLocale::DuiLcCollate, lcCollate);
+    if (!lcNumeric.isEmpty())
+        systemLocale->setCategoryLocale(DuiLocale::DuiLcNumeric, lcNumeric);
+    if (!lcMonetary.isEmpty())
+        systemLocale->setCategoryLocale(DuiLocale::DuiLcMonetary, lcMonetary);
+
     return systemLocale;
 #else
     QString language = qgetenv("LANG");
@@ -670,7 +738,6 @@ DuiLocale::createSystemDuiLocale()
     return new DuiLocale(locale);
 #endif
 }
-
 
 //! creates a "C" locale
 DuiLocale DuiLocale::createCLocale()
@@ -686,14 +753,19 @@ DuiLocale::connectSettings()
 
     QObject::connect(&d->currentLanguageItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
-
     QObject::connect(&d->currentCountryItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
-
     QObject::connect(&d->currentScriptItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
-
     QObject::connect(&d->currentVariantItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcCollateItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcNumericItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcMonetaryItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
 #endif
 }
@@ -706,14 +778,19 @@ DuiLocale::disconnectSettings()
 
     QObject::disconnect(&d->currentLanguageItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
-
     QObject::disconnect(&d->currentCountryItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
-
     QObject::disconnect(&d->currentScriptItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
-
     QObject::disconnect(&d->currentVariantItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcCollateItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcNumericItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcMonetaryItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
 #endif
 }
@@ -836,8 +913,7 @@ void DuiLocale::setDefault(const DuiLocale &locale)
 
     // Setting the default QLocale is needed to get localized number
     // support in translations via %Ln, %L1, %L2, ...:
-    QLocale qlocale(locale.language() + '_' + locale.country());
-    QLocale::setDefault(qlocale);
+    QLocale::setDefault((s_systemDefault->d_ptr)->createQLocale(DuiLcNumeric));
     // sends QEvent::LanguageChange to qApp:
     (s_systemDefault->d_ptr)->insertTrToQCoreApp();
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
@@ -977,7 +1053,8 @@ QString DuiLocale::formatNumber(qlonglong i) const
     d->_numberFormat->format(static_cast<int64_t>(i), str); //krazy:exclude=typedefs
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i);
 #endif
 }
 
@@ -990,7 +1067,8 @@ QString DuiLocale::formatNumber(short i) const
     d->_numberFormat->format(i, str);
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i);
 #endif
 }
 
@@ -1003,7 +1081,8 @@ QString DuiLocale::formatNumber(int i) const
     d->_numberFormat->format(i, str);
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i);
 #endif
 }
 
@@ -1036,7 +1115,8 @@ QString DuiLocale::formatNumber(double i, int prec) const
 
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i, 'g', prec);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i, 'g', prec);
 #endif
 }
 
@@ -1049,7 +1129,8 @@ QString DuiLocale::formatNumber(float i) const
     d->_numberFormat->format(i, str, pos);
     return DuiIcuConversions::unicodeStringToQString(str);
 #else
-    return QString::number(i, 'g');
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcNumeric).toString(i, 'g');
 #endif
 }
 
@@ -1075,9 +1156,9 @@ QString DuiLocale::formatPercent(double i, int decimals) const
 }
 #endif
 
-#ifdef HAVE_ICU
 QString DuiLocale::formatCurrency(double amount, const QString &currency) const
 {
+#ifdef HAVE_ICU
     Q_D(const DuiLocale);
     UErrorCode status = U_ZERO_ERROR;
     icu::Locale monetaryLocale = d->getCategoryLocale(DuiLcMonetary);
@@ -1102,18 +1183,28 @@ QString DuiLocale::formatCurrency(double amount, const QString &currency) const
     delete nf;
 
     return DuiIcuConversions::unicodeStringToQString(str);
-}
+#else
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcMonetary).toString(amount) + ' ' + currency;
 #endif
+}
 
-#ifdef HAVE_ICU
 QString DuiLocale::formatDateTime(const QDateTime &dateTime, DateType dateType,
                                   TimeType timeType, Calendar calendarType) const
 {
+#ifdef HAVE_ICU
     DuiCalendar calendar(calendarType);
     calendar.setDateTime(dateTime);
     return formatDateTime(calendar, dateType, timeType);
-}
+#else
+    Q_UNUSED(dateType);
+    Q_UNUSED(timeType);
+    Q_UNUSED(calendarType);
+    Q_D(const DuiLocale);
+    return d->createQLocale(DuiLcTime).toString(dateTime);
 #endif
+}
+
 
 #ifdef HAVE_ICU
 QString DuiLocale::formatDateTime(const DuiCalendar &duicalendar,
@@ -1123,29 +1214,12 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duicalendar,
         return QString("");
 
     Q_D(const DuiLocale);
-    // Create calLocale which has the time pattern we want to use
-    icu::Locale calLocale = DuiIcuConversions::createLocale(d->categoryName(DuiLcTime),
-                            duicalendar.type());
-
-    icu::DateFormat::EStyle dateStyle = DuiIcuConversions::toEStyle(datetype);
-    icu::DateFormat::EStyle timeStyle = DuiIcuConversions::toEStyle(timetype);
-    icu::DateFormat *df
-    = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
-
-    // Symbols come from the messages locale
-    icu::Locale symbolLocale
-    = DuiIcuConversions::createLocale(d->categoryName(DuiLcMessages),
-                                      duicalendar.type());
-
-    DateFormatSymbols *dfs = DuiLocalePrivate::createDateFormatSymbols(symbolLocale);
-
-    // This is not nice but seems to be the only way to set the
-    // symbols with the public API
-    static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
 
     icu::FieldPosition pos;
     icu::UnicodeString resString;
     icu::Calendar *cal = duicalendar.d_ptr->_calendar;
+
+    icu::DateFormat *df = d->createDateFormat(datetype, timetype, duicalendar);
     df->format(*cal, resString, pos);
     delete df;
 
@@ -1547,6 +1621,39 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duiCalendar,
     }
 
     return formatDateTimeICU(duiCalendar, icuFormat);
+}
+#endif
+
+#ifdef HAVE_ICU
+QDateTime DuiLocale::parseDateTime(const QString &dateTime, DateType dateType,
+                                   TimeType timeType, Calendar calendarType) const
+{
+    if (dateType == DateNone && timeType == TimeNone)
+        return QDateTime();
+
+    Q_D(const DuiLocale);
+    DuiCalendar duicalendar(calendarType);
+
+    UnicodeString text = DuiIcuConversions::qStringToUnicodeString(dateTime);
+    icu::DateFormat *df = d->createDateFormat(dateType, timeType, duicalendar);
+    icu::ParsePosition pos(0);
+    UDate parsedDate = df->parse(text, pos);
+    delete df;
+
+    UErrorCode status = U_ZERO_ERROR;
+    icu::Calendar *cal = duicalendar.d_ptr->_calendar;
+    cal->setTime(parsedDate, status);
+    if (status != U_ZERO_ERROR)
+        return QDateTime();
+
+    return duicalendar.qDateTime();
+}
+#endif
+
+#ifdef HAVE_ICU
+QDateTime DuiLocale::parseDateTime(const QString &dateTime, Calendar calendarType) const
+{
+    return parseDateTime(dateTime, DateLong, TimeLong, calendarType);
 }
 #endif
 
@@ -2062,26 +2169,47 @@ void DuiLocale::refreshSettings()
 {
 #ifdef HAVE_GCONF
     Q_D(DuiLocale);
+    bool settingsHaveReallyChanged = false;
     QString language = d->currentLanguageItem.value().toString();
     QString country  = d->currentCountryItem.value().toString();
     QString script   = d->currentScriptItem.value().toString();
     QString variant  = d->currentVariantItem.value().toString();
     QString localeName = d->createLocaleString(language, country, script, variant);
+    QString lcTime = d->currentLcTimeItem.value().toString();
+    QString lcCollate = d->currentLcCollateItem.value().toString();
+    QString lcNumeric = d->currentLcNumericItem.value().toString();
+    QString lcMonetary = d->currentLcMonetaryItem.value().toString();
 
     if (localeName != d->_defaultLocale) {
+        settingsHaveReallyChanged = true;
         d->_defaultLocale = localeName;
-        setCategoryLocale(DuiLcMessages, localeName);
-        setCategoryLocale(DuiLcTime, localeName);
-        setCategoryLocale(DuiLcNumeric, localeName);
-        setCategoryLocale(DuiLcCollate, localeName);
-        setCategoryLocale(DuiLcMonetary, localeName);
-        setCategoryLocale(DuiLcName, localeName);
+        // force recreation of the number formatter if
+        // the numeric locale inherits from the default locale:
+        if(d->_numericLocale.isEmpty())
+            setCategoryLocale(DuiLcNumeric, "");
+    }
+    if (lcTime != d->_calendarLocale) {
+        settingsHaveReallyChanged = true;
+        setCategoryLocale(DuiLcTime, lcTime);
+    }
+    if (lcCollate != d->_collationLocale) {
+        settingsHaveReallyChanged = true;
+        setCategoryLocale(DuiLcCollate, lcCollate);
+    }
+    if (lcNumeric != d->_numericLocale) {
+        settingsHaveReallyChanged = true;
+        setCategoryLocale(DuiLcNumeric, lcNumeric);
+    }
+    if (lcMonetary != d->_monetaryLocale) {
+        settingsHaveReallyChanged = true;
+        setCategoryLocale(DuiLcMonetary, lcMonetary);
+    }
 
+    if (settingsHaveReallyChanged) {
         if (this == s_systemDefault) {
             // Setting the default QLocale is needed to get localized number
             // support in translations via %Ln, %L1, %L2, ...:
-            QLocale qlocale(this->language() + '_' + this->country());
-            QLocale::setDefault(qlocale);
+            QLocale::setDefault(d->createQLocale(DuiLcNumeric));
             d->removeTrFromQCoreApp();
             d->loadTrCatalogs();
             // sends QEvent::LanguageChange to qApp:

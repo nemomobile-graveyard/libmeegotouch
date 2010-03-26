@@ -31,12 +31,14 @@
 #include "testthemedaemon.h"
 #include "ft_theme_data.h"
 
+#ifdef HAVE_GCONF
 static QString languageGConfValue = "en";
 
 QVariant DuiGConfItem::value() const
 {
     return languageGConfValue;
 }
+#endif
 
 void removeDirectoryRecursive(const QString &path)
 {
@@ -160,8 +162,8 @@ void Ft_Theme::testViews()
     DuiWidgetController widget;
     widget.setViewType(viewType);
 
-    // Create view for a simple widget
-    DuiWidgetView *view = DuiTheme::view(&widget);
+    // Fetch view for a simple widget
+    const DuiWidgetView *view = widget.view();
 
     // Make sure that we got view at the first place
     if (!viewClass.isEmpty()) {

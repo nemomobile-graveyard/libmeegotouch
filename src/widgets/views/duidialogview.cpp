@@ -469,7 +469,7 @@ int DuiDialogViewPrivate::stdButtonOrder(Dui::StandardButton buttonType)
     return order;
 }
 
-void DuiDialogViewPrivate::setCentralWidget(DuiWidget *newCentralWidget)
+void DuiDialogViewPrivate::setCentralWidget(QGraphicsWidget *newCentralWidget)
 {
     if (centralWidget)
         contentsLayout->removeItem(centralWidget);

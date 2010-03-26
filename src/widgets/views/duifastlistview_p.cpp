@@ -83,6 +83,9 @@ void DuiFastListViewPrivate::clearVisibleItemsArray()
     }
 
     visibleItems.clear();
+
+    updateFirstVisibleRow(QModelIndex());
+    updateLastVisibleRow(QModelIndex());
 }
 
 void DuiFastListViewPrivate::cellClicked(DuiWidget *source)
@@ -126,7 +129,7 @@ DuiWidget *DuiFastListViewPrivate::createCell(int row)
         cell->setMinimumSize(cell->minimumWidth(), itemHeight);
     }
 
-    cell->resize(viewWidth, itemHeight);
+    cell->resize(cellSize(row));
 
     // TODO this is not optimal, I'm pretty sure, need to find better way to keep
     // selection. Refactor into it's own function.
@@ -235,8 +238,14 @@ void DuiFastListViewPrivate::resetModel(DuiListModel *duiListModel)
 void DuiFastListViewPrivate::updateItemSize()
 {
     foreach(DuiWidget * cell, visibleItems) {
-        cell->resize(viewWidth, cell->preferredHeight());
+        cell->resize(cellSize(0));
     }
+}
+
+QSizeF DuiFastListViewPrivate::cellSize(int row) const
+{
+    Q_UNUSED(row);
+    return QSizeF(viewWidth, itemHeight);
 }
 
 void DuiFastListViewPrivate::updateSeparatorSize()
@@ -453,15 +462,19 @@ int DuiFastPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 
 void DuiFastPlainMultiColumnListViewPrivate::updateItemSize()
 {
-    int columns = controllerModel->columns();
-    int columnWidth = viewWidth / columns;
-
     foreach(DuiWidget * cell, visibleItems) {
-        int cellFlatRow = widgetFlatRows[cell] - 1;
-        int cellColumn = flatRowToColumn(cellFlatRow);
-        cell->resize(columnWidth, cell->preferredHeight());
-        cell->setPos(QPointF(cellColumn * columnWidth, cell->pos().y()));
+        int cellRow = widgetFlatRows[cell] - 1;
+        int cellColumn = flatRowToColumn(cellRow);
+        cell->resize(cellSize(cellRow));
+        cell->setPos(QPointF(cellColumn * cell->size().width(), cell->pos().y()));
     }
+}
+
+QSizeF DuiFastPlainMultiColumnListViewPrivate::cellSize(int row) const
+{
+    Q_UNUSED(row);
+    int columns = controllerModel->columns();
+    return QSizeF(viewWidth / columns, itemHeight);
 }
 
 void DuiFastPlainMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
@@ -789,6 +802,14 @@ int DuiFastGroupHeaderListViewPrivate::totalHeight()
     return totalHeight;
 }
 
+QSizeF DuiFastGroupHeaderListViewPrivate::cellSize(int row) const
+{
+    if(headersRows.contains(row)) {
+        return QSizeF(viewWidth, hdrHeight);
+    }
+    return DuiFastListViewPrivate::cellSize(row);
+}
+
 bool DuiFastGroupHeaderListViewPrivate::isGroupHeader(const QModelIndex &index)
 {
     return !index.parent().isValid();
@@ -851,15 +872,22 @@ int DuiFastMultiColumnListViewPrivate::flatRowToColumn(int row) const
 
 void DuiFastMultiColumnListViewPrivate::updateItemSize()
 {
-    int columns = controllerModel->columns();
-    int columnWidth = viewWidth / columns;
-
     foreach(DuiWidget * cell, visibleItems) {
         int cellFlatRow = widgetFlatRows[cell] - 1;
         int cellColumn = flatRowToColumn(cellFlatRow);
-        cell->resize(columnWidth, cell->preferredHeight());
-        cell->setPos(QPointF(cellColumn * columnWidth, cell->pos().y()));
+        cell->resize(cellSize(cellFlatRow));
+        cell->setPos(QPointF(cellColumn * cell->size().width(), cell->pos().y()));
     }
+}
+
+QSizeF DuiFastMultiColumnListViewPrivate::cellSize(int row) const
+{
+    if(headersRows.contains(row)) {
+        return DuiFastGroupHeaderListViewPrivate::cellSize(row);
+    }
+
+    int columns = controllerModel->columns();
+    return QSizeF(viewWidth / columns, itemHeight);
 }
 
 void DuiFastMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
@@ -994,7 +1022,6 @@ DuiWidget *DuiFastMultiColumnListViewPrivate::createItem(int row)
 {
     if (!headersRows.contains(row)) {
         DuiWidget *cell = createCell(row);
-        cell->resize(viewWidth / controllerModel->columns(), cell->preferredHeight());
         return cell;
     } else {
         int headerIndex = dFindLowerIndex(headersRows, row);

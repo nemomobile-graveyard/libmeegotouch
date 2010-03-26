@@ -22,6 +22,9 @@
 
 #include "duifiledatastore.h"
 #include <stubbase.h>
+#include <QSettings>
+#include <QMap>
+#include <QScopedPointer>
 
 
 // 1. DECLARE STUB
@@ -41,15 +44,13 @@ class DuiFileDataStoreStub : public StubBase {
   virtual void takeSnapshot();
   virtual void fileChanged(const QString &fileName);
   virtual void directoryChanged(const QString &fileName);
-   QSettings settings ;
-   QMap<QString, QVariant> settingsSnapshot ;
-   QScopedPointer<QFileSystemWatcher> watcher ;
+  void * d_ptr;
 }; 
 
 // 2. IMPLEMENT STUB
 void DuiFileDataStoreStub::DuiFileDataStoreConstructor(const QString &filePath) {
   Q_UNUSED(filePath);
-
+  d_ptr=0;
 }
 bool DuiFileDataStoreStub::createValue(const QString &key, const QVariant &value) {
   QList<ParameterBase*> params;
@@ -130,8 +131,14 @@ DuiFileDataStoreStub* gDuiFileDataStoreStub = &gDefaultDuiFileDataStoreStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-DuiFileDataStore::DuiFileDataStore(const QString &filePath) {
+DuiFileDataStore::DuiFileDataStore(const QString &filePath) :
+  d_ptr(0)
+{
   gDuiFileDataStoreStub->DuiFileDataStoreConstructor(filePath);
+}
+
+DuiFileDataStore::~DuiFileDataStore()
+{
 }
 
 bool DuiFileDataStore::createValue(const QString &key, const QVariant &value) {

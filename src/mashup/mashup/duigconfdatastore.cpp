@@ -18,37 +18,48 @@
 ****************************************************************************/
 
 #include "duigconfdatastore.h"
+#include "duigconfdatastore_p.h"
 #include "duigconfitem.h"
 
-DuiGConfDataStore::DuiGConfDataStore(const QString &keyPath) :
+typedef DuiGConfDataStorePrivate::KeyContainer KeyContainer;
+
+DuiGConfDataStorePrivate::DuiGConfDataStorePrivate(const QString &keyPath) :
     keyContainer(),
     keyPath(keyPath)
 {
+}
+
+DuiGConfDataStore::DuiGConfDataStore(const QString &keyPath) :
+    d_ptr(new DuiGConfDataStorePrivate(keyPath))
+{
+    Q_D(DuiGConfDataStore);
     DuiGConfItem rootKey(keyPath, this);
-    this->keyPath += keyPath.endsWith('/') ? "" : "/";
+    d->keyPath += keyPath.endsWith('/') ? "" : "/";
 
     QList<QString> entries = rootKey.listEntries();
     foreach(const QString & entry, entries) {
         DuiGConfItem *item = new DuiGConfItem(entry, this);
-        keyContainer.insert(entry.mid(this->keyPath.length()), item);
+        d->keyContainer.insert(entry.mid(d->keyPath.length()), item);
         connect(item, SIGNAL(valueChanged()), this, SLOT(gconfValueChanged()));
     }
 }
 
 DuiGConfDataStore::~DuiGConfDataStore()
 {
+    delete d_ptr;
 }
 
 bool DuiGConfDataStore::setValue(const QString &key, const QVariant &value)
 {
+    Q_D(DuiGConfDataStore);
     // Don't allow setting keys below the key path of the datastore
     if (key.indexOf('/') != -1) {
         return false;
     }
 
     // Use an iterator and find() in order to avoid double search in the container
-    KeyContainer::const_iterator it = keyContainer.constFind(key);
-    if (it != keyContainer.constEnd()) {
+    KeyContainer::const_iterator it = d->keyContainer.constFind(key);
+    if (it != d->keyContainer.constEnd()) {
         it.value()->set(value);
         return true;
     } else {
@@ -58,9 +69,10 @@ bool DuiGConfDataStore::setValue(const QString &key, const QVariant &value)
 
 bool DuiGConfDataStore::createValue(const QString &key, const QVariant &value)
 {
+    Q_D(DuiGConfDataStore);
     // Use an iterator and find() in order to avoid double search in the container
-    KeyContainer::const_iterator it = keyContainer.constFind(key);
-    if (it != keyContainer.constEnd()) {
+    KeyContainer::const_iterator it = d->keyContainer.constFind(key);
+    if (it != d->keyContainer.constEnd()) {
         it.value()->set(value);
         return true;
     } else {
@@ -68,8 +80,8 @@ bool DuiGConfDataStore::createValue(const QString &key, const QVariant &value)
         if (key.indexOf('/') != -1) {
             return false;
         }
-        DuiGConfItem *item = new DuiGConfItem(keyPath + key, this);
-        keyContainer.insert(key, item);
+        DuiGConfItem *item = new DuiGConfItem(d->keyPath + key, this);
+        d->keyContainer.insert(key, item);
         item->set(value);
         return true;
     }
@@ -77,9 +89,10 @@ bool DuiGConfDataStore::createValue(const QString &key, const QVariant &value)
 
 QVariant DuiGConfDataStore::value(const QString &key) const
 {
+    Q_D(const DuiGConfDataStore);
     // Use an iterator and find() in order to avoid double search in the container
-    KeyContainer::const_iterator it = keyContainer.find(key);
-    if (it != keyContainer.end()) {
+    KeyContainer::const_iterator it = d->keyContainer.find(key);
+    if (it != d->keyContainer.end()) {
         return it.value()->value();
     } else {
         return QVariant(QVariant::Invalid);
@@ -88,12 +101,14 @@ QVariant DuiGConfDataStore::value(const QString &key) const
 
 QStringList DuiGConfDataStore::allKeys() const
 {
-    return keyContainer.keys();
+    Q_D(const DuiGConfDataStore);
+    return d->keyContainer.keys();
 }
 
 void DuiGConfDataStore::remove(const QString &key)
 {
-    DuiGConfItem *item = keyContainer.take(key);
+    Q_D(DuiGConfDataStore);
+    DuiGConfItem *item = d->keyContainer.take(key);
     if (item != NULL) {
         item->unset();
         delete item;
@@ -102,25 +117,28 @@ void DuiGConfDataStore::remove(const QString &key)
 
 void DuiGConfDataStore::clear()
 {
-    foreach(DuiGConfItem * item, keyContainer.values()) {
+    Q_D(DuiGConfDataStore);
+    foreach(DuiGConfItem * item, d->keyContainer.values()) {
         if (item != NULL) {
             item->unset();
             delete item;
         }
     }
-    keyContainer.clear();
+    d->keyContainer.clear();
 }
 
 bool DuiGConfDataStore::contains(const QString &key) const
 {
-    return keyContainer.contains(key);
+    Q_D(const DuiGConfDataStore);
+    return d->keyContainer.contains(key);
 }
 
 void DuiGConfDataStore::gconfValueChanged()
 {
+    Q_D(DuiGConfDataStore);
     DuiGConfItem *item = qobject_cast<DuiGConfItem *>(sender());
     if (item != NULL) {
-        QString  key   = item->key().mid(keyPath.length());
+        QString  key   = item->key().mid(d->keyPath.length());
         QVariant value = item->value();
         emit valueChanged(key, value);
     }

@@ -186,6 +186,12 @@ Vibra backend: This backend uses the Immersion player to play vibra effects. An 
 
 When an event happens (e.g. pressing on a button) then all feedback devices will play a sample at the same time (play an audio and vibra effect parallel). If a feedback directory does not contain an effect file for a backend (e.g. vibra.ivt) then there is a fallback mechanism to find a sample for the backend going back on the theme inheritance tree. If a zero sized sample file is placed somewhere in the inheritance tree then the backend is ignored. If it is not possible to load some samples for a specific event (e.g. "press-loud") then it tries to fallback to a generic event name (e.g. "press-loud" -> "press") and load the missing sample(s).
 
+The feedbacks can be played on three different global volume levels. This is a global setting of the feedback daemon, but the
+feedbacks should be prepared for. The Pulseaudio backend sets the appropriate playback volume for the audio, nothing should be done here.
+The vibra backend checks the vibra.ivt for three specific timeline effects named "low", "medium" and "high" which refers to
+low, medium and high volume levels. If these timeline effects are not available in the effect file then the fallback logic uses
+the first effect from the file (its type does not matter in this case).
+
 \subsection locale Locales Directory
 
 This directory contains directories for different locales. All locales needing some special icons of constant definitions can have their own directory. For example ar/ (for Arabic) could have different icon set than the normal theme (as Arabic has right-to-left layouts). Another example could be zh_CN/ (for Simplified Chinese) having bigger fonts.

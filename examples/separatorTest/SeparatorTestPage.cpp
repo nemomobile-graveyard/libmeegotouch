@@ -23,7 +23,6 @@
 #include <DuiButton>
 #include <DuiContainer>
 #include <DuiGridLayoutPolicy>
-#include <DuiImage>
 #include <DuiLocale>
 #include <DuiLabel>
 #include <DuiLayout>
@@ -45,7 +44,7 @@ SeparatorTestPage::~SeparatorTestPage()
 void SeparatorTestPage::createContent()
 {
     DuiApplicationPage::createContent();
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
 
     DuiLayout *layout = new DuiLayout(panel);
     panel->setLayout(layout);

@@ -61,6 +61,7 @@ public:
     bool showingStatusBar;
     QTimer autoHideComponentsTimer;
     QList<DuiSceneWindow *> componentsOnAutoHide;
+    bool isMenuOpen;
 
     void manageActions();
     void distributeAction(QAction *action, QAction *before);
@@ -92,7 +93,7 @@ public:
     void sceneWindowDisappearEvent(DuiSceneWindowEvent *ev);
     void sceneWindowDismissEvent(DuiSceneWindowEvent *ev);
 
-    void updatePageAutoMarginsForComponents(const Dui::Orientation &orientation);
+    void updatePageAutoMarginsForComponents(Dui::Orientation orientation);
 
     void applicationPageAppearEvent(DuiSceneWindowEvent *ev);
     void applicationPageDisappearEvent(DuiSceneWindowEvent *ev);
@@ -103,16 +104,22 @@ public:
     void addDuiStatusBarOverlayProperty();
 #endif
 
+    void setupPageEscape();
+    void setupPageEscapeAuto();
+    void setupPageEscapeBack();
+    void setupPageEscapeClose();
+    void tearDownPageEscape();
+    void _q_updatePageEscapeAuto();
+
 private:
     void init();
     void initAutoHideComponentsTimer();
     void removePageActions();
     QAction* findPageCheckedAction() const;
 public:
-    void _q_connectEscapeButton(DuiEscapeButtonPanelModel::EscapeMode);
     void _q_pageTitleChanged(DuiApplicationPage *, const QString &);
     void _q_actionUpdated(QActionEvent *e);
-    void _q_placeToolBar(const Dui::Orientation &);
+    void _q_placeToolBar(Dui::Orientation);
     void _q_handlePageModelModifications(const QList<const char *>&);
     void _q_menuAppeared();
     void _q_menuDisappeared();

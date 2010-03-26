@@ -81,7 +81,7 @@ void DuiDialogPrivate::appear(bool now, DuiSceneWindow::DeletionPolicy policy)
     Q_Q(DuiDialog);
     DuiWindow *window;
 
-    if (q->isWindowModal()) {
+    if (q->isSystemModal()) {
         if (prepareStandAloneAppearance(policy)) {
             if (now) {
                 q->appearNow(standAloneWindow);
@@ -133,7 +133,7 @@ void DuiDialogPrivate::updateStandAloneHomeButtonVisibility()
 {
     Q_Q(DuiDialog);
 
-    if (q->isWindowModal()) {
+    if (q->isSystemModal()) {
         // Remove the home button if it's there.
         if (homeButtonPanel) {
             if (homeButtonPanel->scene() != 0) {
@@ -354,12 +354,12 @@ void DuiDialog::setTitle(const QString &title)
     model()->setTitle(title);
 }
 
-DuiWidget *DuiDialog::centralWidget()
+QGraphicsWidget *DuiDialog::centralWidget()
 {
     return model()->centralWidget();
 }
 
-void DuiDialog::setCentralWidget(DuiWidget *centralWidget)
+void DuiDialog::setCentralWidget(QGraphicsWidget *centralWidget)
 {
     if (model()->centralWidget())
         delete model()->centralWidget();
@@ -458,7 +458,7 @@ void DuiDialog::done(int result)
         emit rejected();
 
     if (sceneManager())
-        sceneManager()->hideWindow(this);
+        sceneManager()->disappearSceneWindow(this);
 }
 
 int DuiDialog::exec(DuiWindow *window)
@@ -473,7 +473,7 @@ int DuiDialog::exec(DuiWindow *window)
     if (window) {
         targetSceneManager = window->sceneManager();
     } else {
-        if (isWindowModal()) {
+        if (isSystemModal()) {
             d->prepareStandAloneAppearance(KeepWhenDone);
             targetSceneManager = d->standAloneWindow->sceneManager();
         } else {
@@ -552,14 +552,14 @@ void DuiDialog::setTitleBarVisible(bool visible)
     model()->setTitleBarVisible(visible);
 }
 
-bool DuiDialog::isWindowModal() const
+bool DuiDialog::isSystemModal() const
 {
-    return model()->windowModal();
+    return model()->systemModal();
 }
 
-void DuiDialog::setWindowModal(bool windowModal)
+void DuiDialog::setSystemModal(bool systemModal)
 {
-    model()->setWindowModal(windowModal);
+    model()->setSystemModal(systemModal);
 }
 
 void DuiDialog::setLayout(QGraphicsLayout *layout)
@@ -597,7 +597,6 @@ void DuiDialog::setupModel()
     d->clickedButton = 0;
 }
 
-/* ABI FREEZE: Release this
 void DuiDialog::dismissEvent(DuiDismissEvent *event)
 {
     setResult(Rejected);
@@ -606,7 +605,6 @@ void DuiDialog::dismissEvent(DuiDismissEvent *event)
 
     event->accept();
 }
-*/
 
 void DuiDialog::closeEvent(QCloseEvent *event)
 {

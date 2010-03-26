@@ -49,10 +49,17 @@ class DuiPositionIndicator;
  * The viewport creates a position indicator widget on top of it which
  * shows the panning position.
  *
+ * By default, the viewport is created with minimum size of 0x0 pixels
+ * and preferred size of 1x1 pixels. In order to show the contents of
+ * the viewport it needs to be put into layout which will extend it
+ * or minimum size of it needs to be increased. This can be achived by
+ * styling the widget or as in line 2 of the example.
+ *
  * Example:
  *
  * \code
  *     DuiPannableViewport* viewport = new DuiPannableViewport(parent);
+ *     viewport->setMinimumSize(100,100);
  *     DuiImage* image = new DuiImage("myimage.png");
  *     viewport->setWidget(image);
  * \endcode

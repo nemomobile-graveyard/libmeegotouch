@@ -1,4 +1,62 @@
 /*! \page news What's New in DirectUI
+\section v0200
+
+\subsection New
+
+- DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be
+  displayEntered() and displayExited()
+
+- DuiComboBox's  down property removed.
+
+- Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.
+
+- DuiApplicationPage escapeMode() property. Replaces escapeButtonMode() property.
+  Previously, the following code was necessary to implement a regular parentPage -> childPage navigation:
+
+    <CODE>
+    childPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
+    childPage->connect(childPage, SIGNAL(backButtonClicked()), SLOT(dismiss()));
+    childPage->appear(DestroyWhenDismissed);
+    </CODE>
+
+  Now only one line is needed:
+
+    <CODE>
+    childPage->appear(DestroyWhenDismissed);
+    </CODE>
+
+  Manual handling and wiring is still possible, but it's not the default behavior.
+
+- DuiWidget got event handlers for gestures:
+    - DuiWidget::gestureEvent()
+    - DuiWidget::tapAndHoldGestureEvent()
+    - DuiWidget::panGestureEvent()
+    - DuiWidget::pinchGestureEvent()
+    - DuiWidget::tapGestureEvent()
+    - DuiWidget::swipeGestureEvent()
+
+\subsection removed Removed or Renamed
+- escapeButtonMode() property was removed from DuiApplicationPage. Use escapeMode() instead.
+- DuiDialog::windowModal() was renamed to DuiDialog::systemModal().
+- DuiApplicationPage::pageTitleChanged(DuiApplicationPage *, const QString &title) signal was removed.
+- restored one-argument DuiWindow::setOrientationAngle(Dui::OrientationAngle), the rotation animation
+  is enabled by default and it's disabled if the window is hidden (DuiWindow::isVisible() returns false).
+- Dui::OrientationChangeMode was renamed to DuiSceneManager::TransitionMode,
+  Dui::AnimatedOrientationChange was renamed to DuiSceneManager::AnimatedTransition,
+  Dui::ImmediateOrientationChange was renamed to DuiSceneManager::ImmediateTransition.
+- DuiSceneManager::showWindow() was renamed to DuiSceneManager::appearSceneWindow(),
+  DuiSceneManager::showWindowNow() was renamed to DuiSceneManager::appearSceneWindowNow(),
+  DuiSceneManager::hideWindow() was renamed to DuiSceneManager::disappearSceneWindow(),
+  DuiSceneManager::hideWindowNow() was renamed to DuiSceneManager::disappearSceneWindowNow(),
+  DuiSceneManager::closeWindow() was renamed to DuiSceneManager::dismissSceneWindow(),
+  DuiSceneManager::closeWindowNow() was renamed to DuiSceneManager::dismissSceneWindowNow()
+- DuiWindow::keepCurrentOrientation property was removed
+
+- DuiWindow::isOnDisplay() and DuiWidget::isOnDisplay() are no longer virtual. Those
+  methods shouldn't be overridden.
+- DuiApplicationPage, DuiContainer, DuiContainerModel, DuiDialog, DuiDialogModel: centralWidget property type changed to QGraphicsWidget.
+- DuiExtensionAreaModel: DataStoreMap type changed to QMap<QGraphicsWidget *, DuiDataStore *>.
+
 \section v0190
 
 \subsection New
@@ -60,7 +118,7 @@
 - DuiDialog now handles DuiButtonModels instead DuiButtons. DuiDialogModel now
   contains the list of DuiButtonModels present in the dialog's button box.
   StandardButtons enum was moved from DuiDialog to Dui namespace.
-  
+
 - Added separate view for checkboxes.
 
 - DuiApplicationWindow::currentPage() method was restored after previous removal.

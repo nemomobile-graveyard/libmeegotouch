@@ -30,6 +30,11 @@ using namespace Dui::DuiThemeDaemonProtocol;
 QString Dui_themeName;
 DuiLocalThemeDaemon *Dui_localDaemon;
 
+QString DUI_EXPORT Dui_currentTheme()
+{
+    return Dui_localDaemon->currentTheme();
+}
+
 void DUI_EXPORT Dui_changeTheme(const QString &theme)
 {
     Dui_themeName = theme;

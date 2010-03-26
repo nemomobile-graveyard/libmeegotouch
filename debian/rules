@@ -57,6 +57,12 @@ ifeq (,$(findstring notestability,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -testable
 endif
 
+ifeq (,$(findstring minimal,$(DEB_BUILD_OPTIONS)))
+     OPTIONS += -make "tests benchmarks"
+else
+     OPTIONS += -minimal
+endif
+
 BUILD_DIR=build-$(shell dpkg-architecture -qDEB_BUILD_ARCH)
 
 configure: configure-stamp
@@ -64,7 +70,7 @@ configure-stamp:
 	dh_testdir
 
 	mkdir -p $(BUILD_DIR)
-	cd $(BUILD_DIR) && ../configure --prefix=/usr -release -make "tests benchmarks" $(OPTIONS)
+	cd $(BUILD_DIR) && ../configure --prefix=/usr -release $(OPTIONS)
 
 	touch configure-stamp
 

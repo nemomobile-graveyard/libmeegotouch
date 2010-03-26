@@ -38,7 +38,8 @@ class TestAppletSource : public QObject, public DuiAppletInstallationSourceInter
 
 public:
     // methods derived from DuiAppletInstallationSourceInterface
-    virtual DuiWidget *constructWidget();
+    virtual bool initialize(const QString &);
+    virtual DuiWidget *widget();
 };
 
 class Ut_DuiAppletInventory : public QObject
@@ -88,7 +89,6 @@ private slots:
     void testCategories();
     void testEnabled();
     void testOnlyDotDesktopFilesAreParsed();
-    void testAppletInstallationSourcesLoading();
 };
 
 #endif // _UT_DUIAPPLETINVENTORY_

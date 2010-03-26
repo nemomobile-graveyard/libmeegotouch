@@ -68,16 +68,16 @@ void Ut_DuiApplicationExtensionAreaView::cleanup()
     delete m_subject;
 }
 
-void Ut_DuiApplicationExtensionAreaView::addWidgetToApplicationExtensionArea(DuiWidget *widget, DuiDataStore *dataStore)
+void Ut_DuiApplicationExtensionAreaView::addWidgetToApplicationExtensionArea(QGraphicsWidget *widget, DuiDataStore *dataStore)
 {
-    QMap<DuiWidget *, DuiDataStore *> *dataStores = const_cast<QMap<DuiWidget *, DuiDataStore *> *>(extensionArea->model()->dataStores());
+    QMap<QGraphicsWidget *, DuiDataStore *> *dataStores = const_cast<QMap<QGraphicsWidget *, DuiDataStore *> *>(extensionArea->model()->dataStores());
     (*dataStores)[widget] = dataStore;
     extensionArea->model()->dataStoresModified();
 }
 
-void Ut_DuiApplicationExtensionAreaView::removeWidgetFromApplicationExtensionArea(DuiWidget *widget)
+void Ut_DuiApplicationExtensionAreaView::removeWidgetFromApplicationExtensionArea(QGraphicsWidget *widget)
 {
-    QMap<DuiWidget *, DuiDataStore *> *dataStores = const_cast<QMap<DuiWidget *, DuiDataStore *> *>(extensionArea->model()->dataStores());
+    QMap<QGraphicsWidget *, DuiDataStore *> *dataStores = const_cast<QMap<QGraphicsWidget *, DuiDataStore *> *>(extensionArea->model()->dataStores());
     dataStores->remove(widget);
     extensionArea->model()->dataStoresModified();
 }
@@ -102,7 +102,7 @@ bool Ut_DuiApplicationExtensionAreaView::widgetInLayout(DuiWidget *widget)
 
     bool found = false;
     for (int i = 0; i < layout->count(); ++i) {
-        DuiWidget *w = NULL;
+        QGraphicsWidget *w = NULL;
 
         DuiContainer *container = dynamic_cast<DuiContainer *>(layout->itemAt(i));
         if (container != NULL) {

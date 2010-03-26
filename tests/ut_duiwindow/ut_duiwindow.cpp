@@ -76,6 +76,11 @@ void DuiComponentData::setActiveWindow(DuiWindow *window)
     Q_UNUSED(window);
 }
 
+void DuiComponentData::setPrestarted(bool flag)
+{
+    Q_UNUSED(flag);
+}
+
 QList<DuiWindow *> DuiComponentData::windows()
 {
     QList<DuiWindow *> windowlist;
@@ -127,9 +132,10 @@ Dui::Orientation DuiSceneManager::orientation() const
     return (gOrientationAngle == Dui::Angle90 || gOrientationAngle == Dui::Angle270) ? Dui::Portrait : Dui::Landscape;
 }
 
-void DuiSceneManager::setOrientationAngle(Dui::OrientationAngle angle, Dui::OrientationChangeMode mode)
+void DuiSceneManager::setOrientationAngle(Dui::OrientationAngle angle, DuiSceneManager::TransitionMode mode)
 {
     Q_UNUSED(mode);
+
     Dui::Orientation newOrientation = (angle == Dui::Angle90 || angle == Dui::Angle270)
                                       ? Dui::Portrait
                                       : Dui::Landscape;
@@ -275,7 +281,7 @@ void Ut_DuiWindow::testOrientationChangedSignalPropagationFromSceneManager()
     win->sceneManager();
     Dui::OrientationAngle newAngle = (Dui::OrientationAngle)(win->orientationAngle() + 90);
 
-    win->sceneManager()->setOrientationAngle(newAngle, Dui::ImmediateOrientationChange);
+    win->sceneManager()->setOrientationAngle(newAngle, DuiSceneManager::ImmediateTransition);
 
     QCOMPARE(orientationSpy.count(), 1);
     QCOMPARE(angleSpy.count(), 1);
@@ -290,7 +296,7 @@ void Ut_DuiWindow::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
     win->sceneManager();
     Dui::OrientationAngle newAngle = (Dui::OrientationAngle)(win->orientationAngle() + 180);
 
-    win->setOrientationAngle(newAngle, Dui::ImmediateOrientationChange);
+    win->setOrientationAngle(newAngle);
 
     QCOMPARE(orientationSpy.count(), 0);
     QCOMPARE(angleSpy.count(), 1);
@@ -335,9 +341,9 @@ void Ut_DuiWindow::testExitDisplayEventHandler()
     QVERIFY(Ut_DuiWindow::m_onDisplayHandlerCalled == true);
 }
 
-void Ut_DuiWindow::testEnteredDisplaySignal()
+void Ut_DuiWindow::testDisplayEnteredSignal()
 {
-    connect(win, SIGNAL(enteredDisplay()), this, SLOT(onDisplayTestSlot()));
+    connect(win, SIGNAL(displayEntered()), this, SLOT(onDisplayTestSlot()));
 
     Ut_DuiWindow::m_onDisplaySignalSent = false;
 
@@ -349,12 +355,12 @@ void Ut_DuiWindow::testEnteredDisplaySignal()
 
     QVERIFY(Ut_DuiWindow::m_onDisplaySignalSent == true);
 
-    disconnect(win, SIGNAL(enteredDisplay()), this, SLOT(onDisplayTestSlot()));
+    disconnect(win, SIGNAL(displayEntered()), this, SLOT(onDisplayTestSlot()));
 }
 
-void Ut_DuiWindow::testExitedDisplaySignal()
+void Ut_DuiWindow::testDisplayExitedSignal()
 {
-    connect(win, SIGNAL(exitedDisplay()), this, SLOT(onDisplayTestSlot()));
+    connect(win, SIGNAL(displayExited()), this, SLOT(onDisplayTestSlot()));
 
     Ut_DuiWindow::m_onDisplaySignalSent = false;
 
@@ -366,7 +372,7 @@ void Ut_DuiWindow::testExitedDisplaySignal()
 
     QVERIFY(Ut_DuiWindow::m_onDisplaySignalSent == true);
 
-    disconnect(win, SIGNAL(exitedDisplay()), this, SLOT(onDisplayTestSlot()));
+    disconnect(win, SIGNAL(displayExited()), this, SLOT(onDisplayTestSlot()));
 }
 
 void Ut_DuiWindow::onDisplayTestSlot()
@@ -377,7 +383,7 @@ void Ut_DuiWindow::onDisplayTestSlot()
 void Ut_DuiWindow::testDisplayExitedOnClose()
 {
     win->show();
-    QSignalSpy spy(win, SIGNAL(exitedDisplay()));
+    QSignalSpy spy(win, SIGNAL(displayExited()));
     win->close();
     QCOMPARE(spy.count(), 1);
 }
@@ -386,7 +392,7 @@ void Ut_DuiWindow::testDisplayExitedOnCloseLazyShutdownApp()
 {
     DuiApplication::setPrestartMode(Dui::LazyShutdown);
     win->show();
-    QSignalSpy spy(win, SIGNAL(exitedDisplay()));
+    QSignalSpy spy(win, SIGNAL(displayExited()));
     win->close();
     QCOMPARE(spy.count(), 1);
 }

@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "duiappletsettings.h"
+#include "duiappletsettings_p.h"
 #include "duisettingslanguageparser.h"
 #include "duiaggregatedataaccess.h"
 #include <duigconfdatastore.h>
@@ -28,6 +29,20 @@
 #include <DuiLocale>
 #include <DuiAppletMetaData>
 
+static void ensureSettingsBinaryObjectUptodate(bool &settingsBinaryUptodate,
+                                               DuiSettingsLanguageBinary **settingsBinaryObjectPointer,
+                                               const QString &settingsFileName);
+
+DuiAppletSettingsPrivate::DuiAppletSettingsPrivate() :
+    instanceSettingsBinaryObject(NULL),
+    instanceSettingsBinaryUptodate(false),
+    globalSettingsBinaryObject(NULL),
+    globalSettingsBinaryUptodate(false),
+    settingsAggregate(NULL),
+    instanceGConfDataStore(NULL),
+    globalGConfDataStore(NULL)
+{
+}
 
 /*
 Implementation note:
@@ -41,40 +56,29 @@ used to mark when changes to some objects are needed.
 */
 
 DuiAppletSettings::DuiAppletSettings(const QString &metaDataFileName, const DuiAppletId &appletId) :
-    instanceSettingsBinaryObject(NULL),
-    instanceSettingsBinaryUptodate(false),
-    globalSettingsBinaryObject(NULL),
-    globalSettingsBinaryUptodate(false),
-    settingsAggregate(NULL),
-    instanceGConfDataStore(NULL),
-    globalGConfDataStore(NULL)
+    d_ptr(new DuiAppletSettingsPrivate())
 {
     init(metaDataFileName, appletId.toString());
 }
 
 DuiAppletSettings::DuiAppletSettings(const QString &metaDataFileName, const QString &appletId) :
-    instanceSettingsBinaryObject(NULL),
-    instanceSettingsBinaryUptodate(false),
-    globalSettingsBinaryObject(NULL),
-    globalSettingsBinaryUptodate(false),
-    settingsAggregate(NULL),
-    instanceGConfDataStore(NULL),
-    globalGConfDataStore(NULL)
+    d_ptr(new DuiAppletSettingsPrivate())
 {
     init(metaDataFileName, appletId);
 }
 
 void DuiAppletSettings::init(const QString &metaDataFileName, const QString &appletId)
 {
+    Q_D(DuiAppletSettings);
     QString appletBaseName = QFileInfo(metaDataFileName).baseName();
     QFileInfo fileInfo(QDir(QString(APPLET_SETTINGS_DIR)), appletBaseName);
     QString settingsFileStub = fileInfo.absoluteFilePath();
 
-    instanceSettingsFileName = settingsFileStub + "-instance.xml";
-    globalSettingsFileName = settingsFileStub + "-global.xml";
+    d->instanceSettingsFileName = settingsFileStub + "-instance.xml";
+    d->globalSettingsFileName = settingsFileStub + "-global.xml";
 
-    instanceGConfPrefix = QString("/apps/") + appletId;
-    globalGConfPrefix = QString("/apps/") + appletBaseName;
+    d->instanceGConfPrefix = QString("/apps/") + appletId;
+    d->globalGConfPrefix = QString("/apps/") + appletBaseName;
 
     // Load the applet's translation catalog for translating settings titles
     DuiAppletMetaData metaData(metaDataFileName);
@@ -85,21 +89,25 @@ void DuiAppletSettings::init(const QString &metaDataFileName, const QString &app
 
 DuiAppletSettings::~DuiAppletSettings()
 {
-    delete globalSettingsBinaryObject;
-    delete instanceSettingsBinaryObject;
+    Q_D(DuiAppletSettings);
+    delete d->globalSettingsBinaryObject;
+    delete d->instanceSettingsBinaryObject;
     deleteDataStores();
+    delete d_ptr;
 }
 
 const DuiSettingsLanguageBinary *DuiAppletSettings::instanceSettingsBinary() const
 {
-    ensureSettingsBinaryObjectUptodate(instanceSettingsBinaryUptodate, &instanceSettingsBinaryObject, instanceSettingsFileName);
-    return instanceSettingsBinaryObject;
+    Q_D(const DuiAppletSettings);
+    ensureSettingsBinaryObjectUptodate(d->instanceSettingsBinaryUptodate, &(d->instanceSettingsBinaryObject), d->instanceSettingsFileName);
+    return d->instanceSettingsBinaryObject;
 }
 
 const DuiSettingsLanguageBinary *DuiAppletSettings::globalSettingsBinary() const
 {
-    ensureSettingsBinaryObjectUptodate(globalSettingsBinaryUptodate, &globalSettingsBinaryObject, globalSettingsFileName);
-    return globalSettingsBinaryObject;
+    Q_D(const DuiAppletSettings);
+    ensureSettingsBinaryObjectUptodate(d->globalSettingsBinaryUptodate, &(d->globalSettingsBinaryObject), d->globalSettingsFileName);
+    return d->globalSettingsBinaryObject;
 }
 
 bool DuiAppletSettings::hasSettings() const
@@ -109,59 +117,75 @@ bool DuiAppletSettings::hasSettings() const
 
 void DuiAppletSettings::deleteDataStores() const
 {
-    delete settingsAggregate;
-    delete instanceGConfDataStore;
-    delete globalGConfDataStore;
-    settingsAggregate = NULL;
-    instanceGConfDataStore = NULL;
-    globalGConfDataStore = NULL;
+    Q_D(const DuiAppletSettings);
+    delete d->settingsAggregate;
+    delete d->instanceGConfDataStore;
+    delete d->globalGConfDataStore;
+    d->settingsAggregate = NULL;
+    d->instanceGConfDataStore = NULL;
+    d->globalGConfDataStore = NULL;
 }
 
 void DuiAppletSettings::createDataStoresIfNeeded() const
 {
-    if (instanceGConfDataStore == NULL || globalGConfDataStore == NULL || settingsAggregate == NULL) {
+    Q_D(const DuiAppletSettings);
+    if (d->instanceGConfDataStore == NULL || d->globalGConfDataStore == NULL || d->settingsAggregate == NULL) {
         // Delete any previous data store
         deleteDataStores();
 
-        instanceGConfDataStore = new DuiGConfDataStore(instanceGConfPrefix);
-        globalGConfDataStore   = new DuiGConfDataStore(globalGConfPrefix);
-        settingsAggregate = new DuiAggregateDataAccess(*instanceGConfDataStore, *globalGConfDataStore);
+        d->instanceGConfDataStore = new DuiGConfDataStore(d->instanceGConfPrefix);
+        d->globalGConfDataStore   = new DuiGConfDataStore(d->globalGConfPrefix);
+        d->settingsAggregate = new DuiAggregateDataAccess(*d->instanceGConfDataStore, *d->globalGConfDataStore);
     }
 }
 
 DuiDataStore *DuiAppletSettings::instanceDataStore() const
 {
+    Q_D(const DuiAppletSettings);
     createDataStoresIfNeeded();
 
-    return instanceGConfDataStore;
+    return d->instanceGConfDataStore;
 }
 
 DuiDataStore *DuiAppletSettings::globalDataStore() const
 {
+    Q_D(const DuiAppletSettings);
     createDataStoresIfNeeded();
 
-    return globalGConfDataStore;
+    return d->globalGConfDataStore;
 }
 
 DuiDataAccess *DuiAppletSettings::dataAccess() const
 {
+    Q_D(const DuiAppletSettings);
     createDataStoresIfNeeded();
 
-    return settingsAggregate;
+    return d->settingsAggregate;
 }
 
 void DuiAppletSettings::removeInstanceSettingValues() const
 {
+    Q_D(const DuiAppletSettings);
     createDataStoresIfNeeded();
 
-    if (instanceGConfDataStore) {
-        instanceGConfDataStore->clear();
+    if (d->instanceGConfDataStore) {
+        d->instanceGConfDataStore->clear();
     }
 }
 
-void DuiAppletSettings::ensureSettingsBinaryObjectUptodate(bool &settingsBinaryUptodate,
-        DuiSettingsLanguageBinary **settingsBinaryObjectPointer,
-        const QString &settingsFileName)
+/*!
+ * A helper method to ensure that a settings binary object is uptodate.
+ * The "uptodateness" is determined by the \a settingsBinaryUptodate parameter.
+ * If the binary needs updating, it is updated by reading the settings file determined
+ * by the \a settingsFileName parameter.
+ * \param settingsBinaryUptodate determines if the settings binary is uptodate or not.
+ *        This parameter will be \c true after this method returns.
+ * \param settingsBinaryObjectPointer a pointer to the pointer variable of the binary to be manipulated.
+ * \param settingsFileName the file name of the settings file.
+ */
+static void ensureSettingsBinaryObjectUptodate(bool &settingsBinaryUptodate,
+					       DuiSettingsLanguageBinary **settingsBinaryObjectPointer,
+					       const QString &settingsFileName)
 {
     if (!settingsBinaryUptodate) {
         // Delete any previous object

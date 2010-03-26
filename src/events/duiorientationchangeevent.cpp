@@ -18,13 +18,19 @@
 ****************************************************************************/
 
 #include "duiorientationchangeevent.h"
+#include "duiorientationchangeevent_p.h"
 
 static int duiOrientationChangeEventNumber = -1;
 
 DuiOrientationChangeEvent::DuiOrientationChangeEvent(Dui::Orientation newOrientation) :
     QGraphicsSceneEvent(DuiOrientationChangeEvent::eventNumber()),
-    o(newOrientation)
+    d_ptr(new DuiOrientationChangeEventPrivate(newOrientation))
 {
+}
+
+DuiOrientationChangeEvent::~DuiOrientationChangeEvent()
+{
+    delete d_ptr;
 }
 
 QEvent::Type DuiOrientationChangeEvent::eventNumber()
@@ -36,5 +42,11 @@ QEvent::Type DuiOrientationChangeEvent::eventNumber()
 
 Dui::Orientation DuiOrientationChangeEvent::orientation() const
 {
-    return o;
+    Q_D(const DuiOrientationChangeEvent);
+    return d->orientation;
+}
+
+DuiOrientationChangeEventPrivate::DuiOrientationChangeEventPrivate(Dui::Orientation o) :
+    orientation(o)
+{
 }

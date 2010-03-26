@@ -56,7 +56,7 @@ public:
     virtual void removeWidget(DuiWidget *widget);
 
     //! Map to maintain DuiDataStore objects of associated widgets in.
-    QMap<DuiWidget *, DuiDataStore *> dataStores;
+    QMap<QGraphicsWidget *, DuiDataStore *> dataStores;
 
     /*!
      * Initializes this class. This method should be called before this class

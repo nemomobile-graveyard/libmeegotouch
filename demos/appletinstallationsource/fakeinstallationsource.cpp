@@ -30,11 +30,23 @@
 
 Q_EXPORT_PLUGIN2(fakeinstallationsource, FakeInstallationSource)
 
-DuiWidget *FakeInstallationSource::constructWidget()
+FakeInstallationSource::FakeInstallationSource() : source(new InstallationSourceWidget())
 {
-    InstallationSourceWidget *widget = new InstallationSourceWidget();
+}
 
-    return widget;
+FakeInstallationSource::~FakeInstallationSource()
+{
+    delete source;
+}
+
+DuiWidget *FakeInstallationSource::widget()
+{
+    return source;
+}
+
+bool FakeInstallationSource::initialize(const QString& )
+{
+    return true;
 }
 
 InstallationSourceWidget::InstallationSourceWidget()

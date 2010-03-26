@@ -52,17 +52,9 @@ public:
      */
     void init(const QString &identifier);
 
-    /*!
-     * Adds a widget to the canvas.
-     * \see DuiMashupCanvas::addWidget()
-     */
+    //! \reimp
     virtual void addWidget(DuiWidget *widget, DuiDataStore &store);
-
-    /*!
-     * Removes a widget from the canvas.
-     * \see DuiMashupCanvas::removeWidget()
-     */
-    virtual void removeWidget(DuiWidget *widget);
+    //! \reimp_end
 
     //! Applet instance manager
     DuiAppletInstanceManager *instanceManager;

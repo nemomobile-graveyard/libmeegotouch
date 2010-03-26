@@ -32,6 +32,7 @@ HEADERS += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.h \
     $$MASHUP_MASHUP_SRC_DIR/duiaggregatedataaccess.h \
     $$MASHUP_MASHUP_SRC_DIR/duiaggregatedataaccess_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duifiledatastore.h \
+    $$MASHUP_MASHUP_SRC_DIR/duifiledatastore_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvas.h \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvas_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasmodel.h \
@@ -42,8 +43,10 @@ HEADERS += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletloader.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletid.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletsettings.h \
+    $$MASHUP_MASHUP_SRC_DIR/duiappletsettings_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletsettingsdialog.h \
     $$MASHUP_MASHUP_SRC_DIR/duigconfdatastore.h \
+    $$MASHUP_MASHUP_SRC_DIR/duigconfdatastore_p.h \
     $$MASHUP_MASHUP_SRC_DIR/duiappletinstancemanagerdbusadaptor.h
 
 SOURCES += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.cpp \
@@ -57,7 +60,6 @@ SOURCES += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiaggregatedataaccess.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duifiledatastore.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvas.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasmodel.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasview.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duisubdatastore.cpp \
     $$MASHUP_MASHUP_SRC_DIR/duiappletloader.cpp \

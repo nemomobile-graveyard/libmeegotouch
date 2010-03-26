@@ -24,11 +24,10 @@
 #include "duiexport.h"
 
 class DuiSettingsLanguageBinary;
-class DuiGConfDataStore;
 class DuiAppletId;
-class DuiAggregateDataAccess;
 class DuiDataAccess;
 class DuiDataStore;
+class DuiAppletSettingsPrivate;
 
 /*!
  * \class DuiAppletSettings
@@ -105,57 +104,23 @@ public:
      */
     void removeInstanceSettingValues() const;
 
+protected:
+    DuiAppletSettingsPrivate * const d_ptr;
+
 private:
-    //! Applet instance settings file name
-    QString instanceSettingsFileName;
+    Q_DECLARE_PRIVATE(DuiAppletSettings)
+    Q_DISABLE_COPY(DuiAppletSettings)
 
-    //! Applet global settings file name
-    QString globalSettingsFileName;
-
-    //! The prefix that is used for instance specific gconf settings
-    QString instanceGConfPrefix;
-
-    //! The prefix that is used for global gconf settings
-    QString globalGConfPrefix;
-
-    //! The instance settings binary representation
-    mutable DuiSettingsLanguageBinary *instanceSettingsBinaryObject;
-    //! A flag to tell if the instance settings binary has been created and is uptodate
-    mutable bool instanceSettingsBinaryUptodate;
-
-    //! The global settings binary representation
-    mutable DuiSettingsLanguageBinary *globalSettingsBinaryObject;
-    //! A flag to tell if the global settings binary has been created and is uptodate
-    mutable bool globalSettingsBinaryUptodate;
-
-    //! Aggregate datastore of the instance and global settings datastores
-    mutable DuiAggregateDataAccess *settingsAggregate;
-
-    //! Instance specific gconf datastore
-    mutable DuiGConfDataStore *instanceGConfDataStore;
-    //! Global gconf datastore
-    mutable DuiGConfDataStore *globalGConfDataStore;
-
-    //! Called by the constructors to initialize the object. See the constructors for the parameter descriptions.
+    /*!
+     * Called by the constructors to initialize the object. See the constructors for
+     * the parameter descriptions.
+     */
     void init(const QString &metaDataFileName, const QString &appletId);
 
     //! Creates the datastores if they are not created yet
     void createDataStoresIfNeeded() const;
     //! Deletes all the datastore instances
     void deleteDataStores() const;
-
-    /*!
-     * A helper method to ensure that a settings binary object is uptodate.
-     * The "uptodateness" is determined by the \a settingsBinaryUptodate parameter.
-     * If the binary needs updating, it is updated by reading the settings file determined
-     * by the \a settingsFileName parameter.
-     * \param settingsBinaryUptodate determines if the settings binary is uptodate or not.
-     *        This parameter will be \c true after this method returns.
-     * \param settingsBinaryObjectPointer a pointer to the pointer variable of the binary to be manipulated.
-     * \param settingsFileName the file name of the settings file.
-     */
-    static void ensureSettingsBinaryObjectUptodate(bool &settingsBinaryUptodate, DuiSettingsLanguageBinary **settingsBinaryObjectPointer,
-            const QString &settingsFileName);
 };
 
 #endif // DUIAPPLETSETTINGS_H

@@ -27,7 +27,7 @@
 #include <X11/Xlib.h>
 #endif
 
-#include <duiapplicationwindow.h>
+#include <duiwindow.h>
 
 class DuiTheme;
 class DuiApplication;
@@ -68,7 +68,7 @@ private:
     static void removeWindowsFromSwitcher(bool remove);
 #endif
     friend class DuiApplicationServicePrivate;
-    friend bool DuiApplicationWindow::close();
+    friend class DuiWindow;
 };
 
 

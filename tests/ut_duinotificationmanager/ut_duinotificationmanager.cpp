@@ -42,7 +42,12 @@ QString DuiApplication::appName()
 }
 
 
-DuiFileDataStore::DuiFileDataStore(const QString &)
+DuiFileDataStore::DuiFileDataStore(const QString &) :
+    d_ptr(0)
+{
+}
+
+DuiFileDataStore::~DuiFileDataStore()
 {
 }
 

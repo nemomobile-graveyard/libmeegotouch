@@ -42,7 +42,7 @@
               <a:documentation>The type must be an integer.</a:documentation>
             </data>
             <attribute name="title">
-              <a:documentation>The title of the option.</a:documentation>
+              <a:documentation>The title of the option. Used as a translation id or as such if translation not found.</a:documentation>
               <text/>
             </attribute>
           </element>
@@ -58,7 +58,7 @@
           <text/>
         </attribute>
         <attribute name="title">
-          <a:documentation>The title of the text item.</a:documentation>
+          <a:documentation>The title of the text item. Used as a translation id or as such if translation not found.</a:documentation>
           <text/>
         </attribute>
       </element>
@@ -72,7 +72,7 @@
           <text/>
         </attribute>
         <attribute name="title">
-          <a:documentation>The title of the boolean item.</a:documentation>
+          <a:documentation>The title of the boolean item. Used as a translation id or as such if translation not found.</a:documentation>
           <text/>
         </attribute>
       </element>
@@ -86,7 +86,7 @@
           <text/>
         </attribute>
         <attribute name="title">
-          <a:documentation>The title of the integer.</a:documentation>
+          <a:documentation>The title of the integer. Used as a translation id or as such if translation not found.</a:documentation>
           <text/>
         </attribute>
         <attribute name="min">

@@ -61,6 +61,17 @@ class DUI_EXPORT DuiSceneManager : public QObject
 public:
 
     /*!
+     * This enum is used to describe whether the orientation change
+     * invoked manually should be animated or not.
+     *
+     * \sa setOrientationAngle()
+     */
+    enum TransitionMode {
+        AnimatedTransition,
+        ImmediateTransition
+    };
+
+    /*!
      * Constructor of the DuiSceneManager class, constructs the manager for the given \a scene.
      *
      * \note You normally don't have to create an instance of this class,
@@ -116,7 +127,7 @@ public:
      * The first page in the list is the root application page. In regular
      * navigation flows this is the first page that appeared to the user.
      *
-     * \sa setPageHistory()
+     * \sa setPageHistory(), pageHistoryChanged()
      */
     QList<DuiSceneWindow *> pageHistory() const;
 
@@ -127,17 +138,19 @@ public:
      * then feeding the modified version back to the scene manager with setPageHistory()
      * an application can freely manipulate its page navigation history.
      *
-     * \sa pageHistory()
+     * \sa pageHistory(), pageHistoryChanged()
      */
     void setPageHistory(const QList<DuiSceneWindow *> &list);
 
 public Q_SLOTS:
     /*!
-     * Sets the orientation to \a angle. The \a mode can be set to Dui::ImmediateOrientationChange
+     * Sets the orientation to \a angle. The \a mode can be set to ImmediateTransition
      * to disable orientation animation.
+     *
+     * /sa TransitionMode
      */
     void setOrientationAngle(Dui::OrientationAngle angle,
-                             Dui::OrientationChangeMode mode = Dui::AnimatedOrientationChange);
+                             TransitionMode mode = AnimatedTransition);
 
     /*!
      * Sends a request to the application's input context to open a software input
@@ -157,25 +170,25 @@ public Q_SLOTS:
     void closeSoftwareInputPanel();
 
     /*!
-     * Attaches a \a window to the scene manager and shows it using associated animation.
-     * According to the given \a policy, a window can be kept or destroyed after hiding.
+     * Attaches a \a sceneWindow to the scene manager and makes it appear using associated animation.
+     * According to the given \a policy, a scene window can be kept or destroyed after disappearing.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::appear()
      * calls this method for you.
      */
-    void showWindow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
+    void appearSceneWindow(DuiSceneWindow *sceneWindow, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
 
     /*!
-     * Attaches a \a window to the scene manager and shows it without animations (instantly).
-     * According to the given \a policy, a window can be kept or destroyed after hiding.
+     * Attaches a \a sceneWindow to the scene manager and makes it appear without animations (instantly).
+     * According to the given \a policy, a scene window can be kept or destroyed after disappearing.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::appearNow()
      * calls this method for you.
      */
-    void showWindowNow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
+    void appearSceneWindowNow(DuiSceneWindow *sceneWindow, DuiSceneWindow::DeletionPolicy policy = DuiSceneWindow::KeepWhenDone);
 
     /*!
-     * Shows a modal \a dialog using associated animation and returns its result code.
+     * Makes a \a dialog appear using associated animation and returns its result code.
      *
      * \note Normally you don't have to call this method explicitly.
      * DuiDialog::exec() calls this method for you.
@@ -183,36 +196,36 @@ public Q_SLOTS:
     int execDialog(DuiDialog *dialog);
 
     /*!
-     * Hides a \a window using associated animation and detaches it from the scene manager.
+     * Makes a \a sceneWindow disappear using associated animation and detaches it from the scene manager.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::disappear()
      * calls this method for you.
      */
-    void hideWindow(DuiSceneWindow *window);
+    void disappearSceneWindow(DuiSceneWindow *sceneWindow);
 
     /*!
-     * Hides a \a window without animations (instantly) and detaches it from the scene manager.
+     * Makes a \a sceneWindow disappear without animations (instantly) and detaches it from the scene manager.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::disappearNow()
      * calls this method for you.
      */
-    void hideWindowNow(DuiSceneWindow *window);
+    void disappearSceneWindowNow(DuiSceneWindow *sceneWindow);
 
     /*!
-     * Closes a \a window using associated animation and detaches it from the scene manager.
+     * Dismisses a \a sceneWindow using associated animation and detaches it from the scene manager.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::dismiss()
      * calls this method for you.
      */
-    void closeWindow(DuiSceneWindow *window);
+    void dismissSceneWindow(DuiSceneWindow *sceneWindow);
 
     /*!
-     * Closes a \a window without animations (instantly) and detaches it from the scene manager.
+     * Dismisses a \a sceneWindow without animations (instantly) and detaches it from the scene manager.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::dismissNow()
      * calls this method for you.
      */
-    void closeWindowNow(DuiSceneWindow *window);
+    void dismissSceneWindowNow(DuiSceneWindow *sceneWindow);
 
 Q_SIGNALS:
     /*! \brief Signal emitted before scene geometry is changed for a rotation
@@ -225,7 +238,7 @@ Q_SIGNALS:
      *
      * \param orientation New orientation of the viewport
      */
-    void orientationAboutToChange(const Dui::Orientation &orientation);
+    void orientationAboutToChange(Dui::Orientation orientation);
 
     /*! \brief Signal emitted after scene geometry has changed for a rotation
      *
@@ -237,7 +250,7 @@ Q_SIGNALS:
      *
      * \param orientation New orientation of the viewport
      */
-    void orientationAngleChanged(const Dui::OrientationAngle &orientationAngle);
+    void orientationAngleChanged(Dui::OrientationAngle orientationAngle);
 
     /*! \brief Signal emitted after scene geometry has changed for a rotation
      *
@@ -251,14 +264,25 @@ Q_SIGNALS:
      *
      * \param orientation New orientation of the viewport
      */
-    void orientationChanged(const Dui::Orientation &orientation);
+    void orientationChanged(Dui::Orientation orientation);
 
     /*!
      * This signal is emitted when the rotation animation has finished.
      *
      * \param orientation New orientation of the viewport
      */
-    void orientationChangeFinished(const Dui::Orientation &orientation);
+    void orientationChangeFinished(Dui::Orientation orientation);
+
+    /*!
+     * This signal is emitted whenever the page history stack changes.
+     * That can happen due to the following reasons:
+     * \li The page navigation history was manually changed by a setPageHistoryStack() call.
+     * \li A new page appeared (and another page was being displayed before that).
+     * \li The current page was dismissed (and the history was not empty).
+     *
+     * \sa pageHistory(), setPageHistory()
+     */
+    void pageHistoryChanged();
 
 protected:
     //! \internal

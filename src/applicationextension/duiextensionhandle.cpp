@@ -383,7 +383,7 @@ void DuiExtensionHandle::displayContextMenu(QList<QString> actions)
 {
     setRemoteActions(actions);
     DuiObjectMenu *menu = new DuiObjectMenu(this);
-    sceneManager()->showWindow(menu, DuiSceneWindow::DestroyWhenDone);
+    sceneManager()->appearSceneWindow(menu, DuiSceneWindow::DestroyWhenDone);
 }
 
 void DuiExtensionHandle::stopCommunication()
@@ -453,7 +453,7 @@ void DuiExtensionHandle::exitDisplayEvent()
     d->visibilityChanged();
 }
 
-void DuiExtensionHandle::orientationEvent(const Dui::Orientation &orientation)
+void DuiExtensionHandle::orientationEvent(Dui::Orientation orientation)
 {
     Q_D(DuiExtensionHandle);
 

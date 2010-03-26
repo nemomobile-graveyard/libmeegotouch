@@ -295,13 +295,16 @@ int DuiStyleSheetAttribute::attributeToInt(const QString &attribute, bool *conve
     if (attribute.endsWith(units[PERCENT_UNIT])) {
         int maximumValue = 0;
 
-        DuiWindow *window = DuiApplication::activeWindow();
-
-        if (window) {
+        if (orientation == Dui::Landscape) {
             if (type == WidthAttribute)
-                maximumValue = window->visibleSceneSize(orientation).width();
+                maximumValue = DuiDeviceProfile::instance()->resolution().width();
             else
-                maximumValue = window->visibleSceneSize(orientation).height();
+                maximumValue = DuiDeviceProfile::instance()->resolution().height();
+        } else {
+            if (type == WidthAttribute)
+                maximumValue = DuiDeviceProfile::instance()->resolution().height();
+            else
+                maximumValue = DuiDeviceProfile::instance()->resolution().width();
         }
 
         value.truncate(value.length() - 1);
@@ -341,13 +344,16 @@ qreal DuiStyleSheetAttribute::attributeToFloat(const QString &attribute, bool *c
     if (attribute.endsWith(units[PERCENT_UNIT])) {
         int maximumValue = 0;
 
-        DuiWindow *window = DuiApplication::activeWindow();
-
-        if (window) {
+        if (orientation == Dui::Landscape) {
             if (type == WidthAttribute)
-                maximumValue = window->visibleSceneSize(orientation).width();
+                maximumValue = DuiDeviceProfile::instance()->resolution().width();
             else
-                maximumValue = window->visibleSceneSize(orientation).height();
+                maximumValue = DuiDeviceProfile::instance()->resolution().height();
+        } else {
+            if (type == WidthAttribute)
+                maximumValue = DuiDeviceProfile::instance()->resolution().height();
+            else
+                maximumValue = DuiDeviceProfile::instance()->resolution().width();
         }
 
         value.truncate(value.length() - 1);
@@ -479,6 +485,9 @@ bool DuiStyleSheetAttribute::writeAttribute(const QString &filename,
             return property.write(style, integer);
         }
     } else if (attributeType == types[COLOR_TYPE]) {
+        if(value == "none")
+            return property.write(style, QColor());
+
         QColor color = colorFromString(value, &conversionOK);
         if (conversionOK) {
             return property.write(style, color);
@@ -489,6 +498,9 @@ bool DuiStyleSheetAttribute::writeAttribute(const QString &filename,
             return property.write(style, real);
         }
     } else if (attributeType == types[CONST_PIXMAP_TYPE]) {
+        if(value == "none")
+            return property.write(style, qVariantFromValue((const QPixmap *) NULL));
+
         //"image: image_id;"
         //"image: image_id 64px 64px;"
         //"image: "image id";"
@@ -558,7 +570,7 @@ bool DuiStyleSheetAttribute::writeAttribute(const QString &filename,
         }
 
         //no parameters
-        if (value.isEmpty()) {
+        if (value.isEmpty() || value == "none") {
             //init null image which is ok if someone does not want to use it
             return property.write(style, qVariantFromValue((const DuiScalableImage *) NULL));
         }

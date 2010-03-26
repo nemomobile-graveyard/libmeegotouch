@@ -47,7 +47,7 @@ public:
     };
 
     struct Key {
-        Key(const QString &className, const QString &objectName, const QString &mode, const QString &type, const Dui::Orientation &orientation, const QList<SelectorInfo>* parentInfo) :
+        Key(const QString &className, const QString &objectName, const QString &mode, const QString &type, Dui::Orientation orientation, const QList<SelectorInfo>* parentInfo) :
             className(className), objectName(objectName), mode(mode), type(type), orientation(orientation), parentInfo(parentInfo) {}
 
         QString uniqueId() const {
@@ -83,10 +83,10 @@ public:
                                        const QString &objectName,
                                        const QString &mode,
                                        const QString &type,
-                                       const Dui::Orientation &orientation,
+                                       Dui::Orientation orientation,
                                        const DuiWidgetController *parent);
 
-    static bool combine(DuiStyle *style, const CacheEntry &entry, const QList<SelectorInfo>& parentInfo, const Dui::Orientation &orientation);
+    static bool combine(DuiStyle *style, const CacheEntry &entry, const QList<SelectorInfo>& parentInfo, Dui::Orientation orientation);
 
     static bool isHigherPriority(DuiOriginContainer *prev, DuiStyleSheetSelector *n, unsigned int classPriority, unsigned int parentPriority);
 
@@ -97,7 +97,7 @@ public:
                               const QString &objectName,
                               const QString &mode,
                               const QString &type,
-                              const Dui::Orientation &orientation,
+                              Dui::Orientation orientation,
                               const DuiWidgetController *parent,
                               const QList<SelectorInfo>& parentInfo);
 
@@ -106,7 +106,7 @@ public:
                       const QString &objectName,
                       const QString &mode,
                       const QString &type,
-                      const Dui::Orientation &orientation,
+                      Dui::Orientation orientation,
                       const DuiWidgetController *parent,
                       unsigned int &classPriority,
                       unsigned int &parentPriority);
@@ -116,7 +116,7 @@ public:
             const QString &objectName,
             const QString &mode,
             const QString &type,
-            const Dui::Orientation &orientation,
+            Dui::Orientation orientation,
             const DuiWidgetController *parent,
             QList<SelectorInfo>& results);
 };

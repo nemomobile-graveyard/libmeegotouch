@@ -21,7 +21,10 @@
 #define DUIPOPUPLISTMODEL_H
 
 #include "duidialogmodel.h"
+#include <QPointer>
+#include <QItemSelectionModel>
 
+class QAbstractItemModel;
 /*!
     \class DuiPopupListModel
     \brief Data model class for DuiPopupList.
@@ -36,13 +39,16 @@ class DUI_EXPORT DuiPopupListModel : public DuiDialogModel
     DUI_MODEL_INTERNAL(DuiPopupListModel)
 
     /*!
-        \property DuiPopupListModel::batchSize
-        \brief This property holds the number of items laid out in each batch.
-        The default value is 20.
-        \deprecated Since 0.19
+        \property DuiPopupListModel::itemModel
+        \brief QAbstractItemModel which used by DuiPopupList
     */
-    DUI_MODEL_PROPERTY(int, batchSize, BatchSize, true, 20)
+    DUI_MODEL_PTR_PROPERTY(QAbstractItemModel *, itemModel, ItemModel, true, 0)
 
+    /*!
+        \property DuiPopupListModel::selectionModel
+        \brief selectionModel keeps track of itemModel's selected items
+    */
+    DUI_MODEL_PROPERTY(QPointer<QItemSelectionModel>, selectionModel, SelectionModel, true, 0)
 };
 
 #endif

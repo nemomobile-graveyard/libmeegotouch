@@ -25,7 +25,7 @@
 static const QString DATA_PATH = QDir::homePath() + QString("/.config/libdui/notifications/");
 
 DuiNotificationManager::DuiNotificationManager() :
-    proxy("org.maemo.dui.NotificationManager", "/", QDBusConnection::sessionBus()),
+    proxy("org.maemo.dui.NotificationManager", "/notificationmanager", QDBusConnection::sessionBus()),
     userId(0)
 {
     if (!DuiApplication::instance()) {

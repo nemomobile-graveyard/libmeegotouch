@@ -202,13 +202,13 @@ public:
      *   </b></big>
      * </caption>
      * <tr>
-     *   <td>Locale ID</td>
-     *   <td>Language</td>
-     *   <td>Script</td>
-     *   <td>Country</td>
-     *   <td>Variant</td>
-     *   <td>Keywords</td>
-     *   <td>Comment</td>
+     *   <th>Locale ID</th>
+     *   <th>Language</th>
+     *   <th>Script</th>
+     *   <th>Country</th>
+     *   <th>Variant</th>
+     *   <th>Keywords</th>
+     *   <th>Comment</th>
      * </tr>
      * <tr>
      *   <td>fi_FI</td>
@@ -288,12 +288,57 @@ public:
     DuiCollator collator() const;
 
     /*!
-     * \brief Returns the endonym of the language of the locale, which is the name of the language which is used by the native speaker of this language.
+     * \brief Returns the endonym of the language of the locale
+     *
+     * The language <a href="http://en.wikipedia.org/wiki/Endonym">endonym</a> is the
+     * name of the language which is used by the native speakers of
+     * this language.
+     *
+     * <table border="1">
+     * <caption>
+     *  <big><b>Examples for language endonyms</b></big>
+     * </caption>
+     * <tr>
+     *    <th>English exonym</th><th>Language endonym</th>
+     * </tr>
+     * <tr>
+     *    <td>German</td><td>Deutsch</td>
+     * </tr>
+     * <tr>
+     *    <td>Russian</td><td>русский язык</td>
+     * </tr>
+     * <tr>
+     *    <td>Japanese</td><td>日本語</td>
+     * </tr>
+     * </table>
+     *
      */
     QString languageEndonym() const;
 
     /*!
-     * \brief Returns the endonym of the country of the locale, which is the name of the country which is used by the inhabitant of the country.
+     * \brief Returns the endonym of the country of the locale
+     *
+     * The country <a href="http://en.wikipedia.org/wiki/Endonym">endonym</a>
+     * is the name of the country which is used by the inhabitants of that country.
+     *
+     * <table border="1">
+     * <caption>
+     *  <big><b>Examples for country endonyms</b></big>
+     * </caption>
+     * <tr>
+     *    <th>English exonym</th><th>Language endonym</th>
+     * </tr>
+     * <tr>
+     *    <td>Germany</td><td>Deutschland</td>
+     * </tr>
+     * <tr>
+     *    <td>Russia</td><td>Россия</td>
+     * </tr>
+     * <tr>
+     *    <td>Japan</td><td>日本</td>
+     * </tr>
+     * </table>
+     *
      */
     QString countryEndonym() const;
 
@@ -513,6 +558,27 @@ public:
     */
     QString formatDateTime(const DuiCalendar &duiCalendar,
                            const QString &formatString) const;
+
+    /*!
+     * \brief Creates a datetime object from a string with explicit format lengths.
+     * \param dateTime string to parse
+     * \param dateType style of date formatting
+     * \param timeType style of time formatting
+     * \param calendarType calendar to use for formatting
+     *
+     * If dateType is DuiLocale::DateNone <b>and</b> timeType is DuiLocale::TimeNone,
+     * an invalid QDateTime is returned.
+     */
+    QDateTime parseDateTime(const QString &dateTime, DateType dateType = DateLong,
+                            TimeType timeType = TimeLong,
+                            Calendar calendarType = DefaultCalendar) const;
+
+    /*!
+     * \brief Creates a datetime object from a string with explicit calendar type.
+     * \param dateTime string to parse
+     * \param calendarType calendar to use
+     */
+    QDateTime parseDateTime(const QString &dateTime, Calendar calendarType) const;
 
     /*!
      * \brief Returns the locale dependant name for a month number

@@ -207,12 +207,6 @@ public:
 Q_SIGNALS:
 
     /*!
-     * \brief The application is requested to release as much memory as possible
-     * \deprecated Since 0.19.3.
-     */
-    void releaseMemoryRequested();
-
-    /*!
      * \brief Signal emitted when the default system locale changes.
      */
     void localeSettingsChanged();

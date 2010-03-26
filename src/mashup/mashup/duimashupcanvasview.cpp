@@ -37,6 +37,7 @@
 #include "duiappletinstancemanager.h"
 #include "duidatastore.h"
 #include "duilocale.h"
+#include <DuiApplicationExtensionArea>
 
 DuiMashupCanvasViewPrivate::DuiMashupCanvasViewPrivate() :
     controller(NULL),
@@ -65,11 +66,6 @@ void DuiMashupCanvasViewPrivate::init()
 
     // Put the applet inventory inside a viewport
     appletInventoryViewport->setWidget(appletInventory);
-
-    // Set the applet installation source libraries for the applet inventory.
-    // TODO: this is currently a fake installation source to provide some demo functionality.
-    // Once the real installation sources are known, they will be added here.
-    appletInventory->setInstallationSources(QStringList("libfakeinstallationsource.so"));
 
     // TODO: FIXME - this needs to have the scene specified,
     // temporarily uses currently active DuiWindow's scene.
@@ -146,18 +142,6 @@ void DuiMashupCanvasViewPrivate::connectContainerToWidget(DuiContainer *containe
         QObject::connect(widget, SIGNAL(appletTextChanged(QString)), container, SLOT(setText(QString)));
     }
 
-    // connect deprecated signals from widget to the container
-    // TODO remove these after deprecation
-    if (mob->indexOfSignal("setAppletIcon(QString)") != -1) {
-        QObject::connect(widget, SIGNAL(setAppletIcon(QString)), container, SLOT(setIconID(QString)));
-    }
-    if (mob->indexOfSignal("setAppletTitle(QString)") != -1) {
-        QObject::connect(widget, SIGNAL(setAppletTitle(QString)), container, SLOT(setTitle(QString)));
-    }
-    if (mob->indexOfSignal("setAppletText(QString)") != -1) {
-        QObject::connect(widget, SIGNAL(setAppletText(QString)), container, SLOT(setText(QString)));
-    }
-
     DuiExtensionAreaViewPrivate::connectContainerToWidget(container, widget);
 }
 
@@ -202,7 +186,7 @@ void DuiMashupCanvasView::init(DuiMashupCanvas *controller)
     connect(DuiApplication::activeWindow(), SIGNAL(orientationChanged(Dui::Orientation)), this, SLOT(orientationChanged(Dui::Orientation)));
 }
 
-void DuiMashupCanvasView::orientationChanged(const Dui::Orientation &)
+void DuiMashupCanvasView::orientationChanged(Dui::Orientation)
 {
     Q_D(DuiMashupCanvasView);
 
@@ -219,7 +203,7 @@ void DuiMashupCanvasView::showAppletInventory()
 {
     Q_D(DuiMashupCanvasView);
 
-    d->controller->sceneManager()->showWindow(d->appletInventoryWindow);
+    d->controller->sceneManager()->appearSceneWindow(d->appletInventoryWindow);
     d->appletInventory->setEnabled(true);
 }
 
@@ -231,7 +215,7 @@ void DuiMashupCanvasView::hideAppletInventory()
     // the dialog it's not possible to launch another applet
     d->appletInventory->setEnabled(false);
 
-    d->controller->sceneManager()->hideWindow(d->appletInventoryWindow);
+    d->controller->sceneManager()->disappearSceneWindow(d->appletInventoryWindow);
 }
 
 void DuiMashupCanvasView::setupModel()

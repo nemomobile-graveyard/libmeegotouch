@@ -42,8 +42,8 @@ public:
 
 protected:
     //! \reimp
-    virtual void applyStyle();
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     //! \reimp_end
 
 private:

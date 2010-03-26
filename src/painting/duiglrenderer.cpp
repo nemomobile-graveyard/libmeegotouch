@@ -170,9 +170,31 @@ public:
 EGLConfig DuiGLRendererPrivate::config = 0;
 
 DuiGLRendererPrivate::DuiGLRendererPrivate()
-    : m_glWidget(NULL), m_uniformProvider(NULL), m_viewportSize(0)
+    : m_vertices(NULL),
+    m_texCoords(NULL),
+    m_color(NULL),
+    m_indices(NULL),
+    m_glWidget(NULL),
+    m_shaderCache(NULL),
+    m_programCache(NULL),
+    m_defaultProgram(NULL),
+    m_uniformProvider(NULL),
+    m_viewportSize(0),
+    bound_pixmaps(NULL),
+    m_oldVert(NULL),
+    m_oldCoord(NULL),
+    m_oldColor(NULL),
+    m_oldProgram(NULL),
+    m_oldDepthTest(NULL),
+    m_oldBlend(NULL)
 {
     dpy = eglGetDisplay(EGLNativeDisplayType(QX11Info::display()));
+
+    for (int i = 0; i < 8; i++) {
+        m_pixmapVertices[i] = 0.0f;
+        m_pixmapTexCoords[i] = 0.0f;
+        m_pixmapTexCoordsInv[i] = 0.0f;
+    }
 }
 
 DuiGLRendererPrivate::~DuiGLRendererPrivate()

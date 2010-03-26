@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE TS>
-<TS version="2.0" language="en">
+<TS version="2.0" language="ar">
 <context>
     <name></name>
     <message id="xx_application_title">
@@ -69,7 +69,6 @@ All Labels can be aligned left, right or center and will be automatically trunca
     <message id="xx_rich_label">
         <location filename="../labelpage.cpp" line="134"/>
         <source>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</source>
-        <oldsource>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italics&lt;/i&gt;, &lt;a href=&quot;http://www.nokia.com&quot;&gt;link&lt;/a&gt;</oldsource>
         <translation>الغنية تسمية &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_title">
@@ -122,14 +121,14 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <source>I&apos;m a nested message box</source>
         <translation>أنا متداخلة مربع رسالة</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_window_modal_dialog_title">
+    <message id="xx_dialogs_and_notifications_system_modal_dialog_title">
         <location filename="../dialogsandnotificationspage.cpp" line="215"/>
-        <source>Window Modal Dialog</source>
+        <source>System Modal Dialog</source>
         <translation>نافذة حوار مشروط</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_window_modal_dialog_label">
+    <message id="xx_dialogs_and_notifications_system_modal_dialog_label">
         <location filename="../dialogsandnotificationspage.cpp" line="219"/>
-        <source>I&apos;m a window modal dialog.
+        <source>I&apos;m a System Modal dialog.
 There&apos;s no way around me!
 Muwhahaha... [evil laugh]</source>
         <translation>أنا نافذة حوار مشروط.
@@ -174,7 +173,6 @@ Muwhahaha... [evil laugh]</source>
     <message id="xx_dialogs_and_notifications_label_dialogs">
         <location filename="../dialogsandnotificationspage.cpp" line="364"/>
         <source>Dialog examples</source>
-        <oldsource>  DuiDialog examples</oldsource>
         <translation>أمثلة الحوار</translation>
     </message>
     <message id="xx_dialogs_and_notifications_query_dialog">
@@ -197,19 +195,15 @@ Muwhahaha... [evil laugh]</source>
         <source>Stacked Dialogs</source>
         <translation>حوارات مرصوف</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_window_modal_dialog">
+    <message id="xx_dialogs_and_notifications_system_modal_dialog">
         <location filename="../dialogsandnotificationspage.cpp" line="376"/>
-        <source>Window Modal Dialog</source>
+        <source>System Modal Dialog</source>
         <translation>نافذة حوار مشروط</translation>
     </message>
     <message id="xx_dialogs_and_notifications_dialog_with_progress_indicator">
         <location filename="../dialogsandnotificationspage.cpp" line="379"/>
         <source>Dialog With Progress Indicator</source>
         <translation>الحوار مع تقدم المؤشر</translation>
-    </message>
-    <message id="xx_dialogs_and_notifications_label_messagebox">
-        <source>  DuiMessageBox examples</source>
-        <translation type="obsolete">أمثلة DuiMessageBox</translation>
     </message>
     <message id="xx_dialogs_and_notifications_messagebox">
         <location filename="../dialogsandnotificationspage.cpp" line="384"/>
@@ -245,18 +239,6 @@ Muwhahaha... [evil laugh]</source>
         <location filename="../imagepage.cpp" line="122"/>
         <source>Image properties</source>
         <translation>خصائص الصورة</translation>
-    </message>
-    <message id="xx_Animation">
-        <source>Animation</source>
-        <translation type="obsolete">الرسوم المتحركة</translation>
-    </message>
-    <message id="xx_Play">
-        <source>Play</source>
-        <translation type="obsolete">تشغيل</translation>
-    </message>
-    <message id="xx_Stop">
-        <source>Stop</source>
-        <translation type="obsolete">توقف</translation>
     </message>
     <message id="xx_image_operations">
         <location filename="../imagepage.cpp" line="140"/>
@@ -461,12 +443,6 @@ tooltip</source>
     <message id="xx_applicationmenu_page_info">
         <location filename="../applicationmenupage.cpp" line="75"/>
         <source>Application Menu is a menu element available to any view. &lt;ul&gt;&lt;li&gt;It can be opened by tapping on the menu title area.&lt;/li&gt;&lt;li&gt;It contains commands and view settings for the view in question and an optional area for style commands.&lt;/li&gt;&lt;li&gt;Each view of the application can have different menu contents.&lt;/li&gt;&lt;/ul&gt;&lt;b&gt;Guidelines&lt;/b&gt; for mandatory menu items: &lt;ul&gt;&lt;li&gt;Settings should be on the main View of the application, unless the settings are specific to a sub-View&lt;/li&gt;&lt;li&gt;Help should be available in each View &lt;/li&gt;&lt;li&gt;Exit task should be present in all Views except for the main View of the application.&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>Application Menu is a menu element available to any view. It can be opened by tapping on the View Menu title area.
-Application Menu contains commands and view settings for the view in question and an optional area for View Style Commands. Each View of the application can have different View Menu contents.
-Guidelines for mandatory application Menu items:
-    Settings should be on the main View of the application, unless the settings are specific to a sub-View
-    Help should be available in each View
-    Exit task should be present in all Views except for the main View of the application.</oldsource>
         <translation>تطبيق القائمة هو عنصر القائمة المتاحة لأية وجهة نظر. ويمكن فتحها عن طريق النقر على قائمة عرض عنوان المنطقة.
 تطبيق القائمة تحتوي على الأوامر والإعدادات لعرض وجهة النظر في مسألة اختيارية ، ومساحة لعرض أوامر نمط. كل عرض للتطبيق ويمكن أن يكون مختلفا عرض محتويات القائمة.
 مبادئ توجيهية لتطبيق البنود الإلزامية القائمة :
@@ -474,65 +450,13 @@ Guidelines for mandatory application Menu items:
     مساعدة يجب أن تكون متوفرة في كل عرض
     إنهاء المهمة ينبغي أن تكون حاضرة في جميع المشاهدات باستثناء لمشاهدة الرئيسي للتطبيق.</translation>
     </message>
-    <message id="xx_popup_country_of_residence">
-        <source>Country of residence</source>
-        <translation type="obsolete">بلد الإقامة</translation>
-    </message>
-    <message id="xx_popup_finland">
-        <source>Finland</source>
-        <translation type="obsolete">فنلندا</translation>
-    </message>
-    <message id="xx_popup_brazil">
-        <source>Brazil</source>
-        <translation type="obsolete">البرازيل</translation>
-    </message>
-    <message id="xx_popup_ukraine">
-        <source>Ukraine</source>
-        <translation type="obsolete">أوكرانيا</translation>
-    </message>
-    <message id="xx_popup_italy">
-        <source>Italy</source>
-        <translation type="obsolete">ايطاليا</translation>
-    </message>
-    <message id="xx_popup_chima">
-        <source>China</source>
-        <translation type="obsolete">الصين</translation>
-    </message>
-    <message id="xx_popup_india">
-        <source>India</source>
-        <translation type="obsolete">الهند</translation>
-    </message>
-    <message id="xx_popup_france">
-        <source>France</source>
-        <translation type="obsolete">فرنسا</translation>
-    </message>
-    <message id="xx_popup_england">
-        <source>England</source>
-        <translation type="obsolete">انكلترا</translation>
-    </message>
-    <message id="xx_popup_germany">
-        <source>Germany</source>
-        <translation type="obsolete">ألمانيا</translation>
-    </message>
-    <message id="xx_popup_usa">
-        <source>USA</source>
-        <translation type="obsolete">الولايات المتحدة الأمريكية.</translation>
-    </message>
-    <message id="xx_popup_canada">
-        <source>Canada</source>
-        <translation type="obsolete">كندا</translation>
-    </message>
-    <message id="xx_popup_japan">
-        <source>Japan</source>
-        <translation type="obsolete">اليابان</translation>
-    </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="95"/>
+        <location filename="../comboboxpage.cpp" line="94"/>
         <source>Title</source>
         <translation>العنوان</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="97"/>
+        <location filename="../comboboxpage.cpp" line="96"/>
         <source>Sort - DescendingOrder</source>
         <translation>فرز -- تنازلي</translation>
     </message>
@@ -554,18 +478,12 @@ Guidelines for mandatory application Menu items:
     <message id="xx_progressindicator_unknown_duration_bar">
         <location filename="../progressbarpage.cpp" line="89"/>
         <source>Installing CoolApp</source>
-        <oldsource>unknown duration - bar</oldsource>
         <translation>المدة غير معروفة -- بار</translation>
     </message>
     <message id="xx_progressindicator_known_duration_bar">
         <location filename="../progressbarpage.cpp" line="87"/>
         <source>Downloading nicepic.jpg</source>
-        <oldsource>known duration - bar</oldsource>
         <translation>يعرف المدة -- بار</translation>
-    </message>
-    <message id="xx_grid_title">
-        <source>Grid</source>
-        <translation type="obsolete">الشبكة</translation>
     </message>
     <message id="xx_toolbar_page_example1">
         <location filename="../toolbarpage.cpp" line="168"/>
@@ -585,7 +503,7 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_tabview">
         <location filename="../toolbarpage.cpp" line="186"/>
         <source>Tab View</source>
-        <translation type="unfinished"></translation>
+        <translation>عرض التبويب</translation>
     </message>
     <message id="xx_toolbar_page_title">
         <location filename="../toolbarpage.cpp" line="208"/>
@@ -595,7 +513,6 @@ Guidelines for mandatory application Menu items:
     <message id="xx_toolbar_page_info">
         <location filename="../toolbarpage.cpp" line="215"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</oldsource>
         <translation>شريط الأدوات هو حاوية والتي يمكن أن تحتوي على ما يصل إلى 4 دلالات أزرار (انقر فوق القائمة → مثال 1) ، أو إدخال نص الميدان مع ما يصل الى 2 دلالات أزرار (انقر فوق القائمة → مثال 2). أنه يحتوي على الإجراءات التي تكون ذات صلة وجهة النظر ولكن لا علاقة لها أي بند من البنود الفردية عرضها مباشرة داخل منطقة محتوى.</translation>
     </message>
     <message id="xx_objectmenu_page_title">
@@ -645,7 +562,6 @@ The primary (single short tap) action of the element should not be duplicated in
     <message id="xx_navigationbar_display_mode">
         <location filename="../navigationbarpage.cpp" line="129"/>
         <source>Components&apos; display mode:</source>
-        <oldsource>Application Page&apos;s display mode:</oldsource>
         <translation>الصفحة تطبيق لوضع العرض :</translation>
     </message>
     <message id="xx_navigationbar_escapebutton_mode_label">
@@ -684,50 +600,155 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>إخفاء</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="68"/>
+        <location filename="../languagepage.cpp" line="120"/>
         <source>Change Language</source>
         <translation>تغيير اللغة</translation>
     </message>
+    <message id="xx_locale_none">
+        <location filename="../languagepage.cpp" line="139"/>
+        <source>None</source>
+        <translation>عدم وجود ترجمة</translation>
+    </message>
+    <message id="xx_locale_ar">
+        <location filename="../languagepage.cpp" line="144"/>
+        <source>Arabic</source>
+        <translation>العربية</translation>
+    </message>
+    <message id="xx_locale_de">
+        <location filename="../languagepage.cpp" line="149"/>
+        <source>German</source>
+        <translation>الألمانية</translation>
+    </message>
+    <message id="xx_locale_de_AT">
+        <location filename="../languagepage.cpp" line="154"/>
+        <source>German (Austria)</source>
+        <translation>الألمانية (النمسا)</translation>
+    </message>
+    <message id="xx_locale_de_CH">
+        <location filename="../languagepage.cpp" line="159"/>
+        <source>German (Switzerland)</source>
+        <translation>الألمانية (سويسرا)</translation>
+    </message>
+    <message id="xx_locale_en">
+        <location filename="../languagepage.cpp" line="164"/>
+        <source>English</source>
+        <translation>الإنكليزية</translation>
+    </message>
+    <message id="xx_locale_fi">
+        <location filename="../languagepage.cpp" line="169"/>
+        <source>Finnish</source>
+        <translation>الفنلندية</translation>
+    </message>
+    <message id="xx_locale_hi">
+        <location filename="../languagepage.cpp" line="174"/>
+        <source>Hindi</source>
+        <translation>الهندية</translation>
+    </message>
+    <message id="xx_locale_hu">
+        <location filename="../languagepage.cpp" line="179"/>
+        <source>Hungarian</source>
+        <translation>الهنغارية</translation>
+    </message>
+    <message id="xx_locale_ja">
+        <location filename="../languagepage.cpp" line="184"/>
+        <source>Japanese</source>
+        <translation>اليابانية</translation>
+    </message>
+    <message id="xx_locale_ur">
+        <location filename="../languagepage.cpp" line="189"/>
+        <source>Urdu</source>
+        <translation>الأردية</translation>
+    </message>
+    <message id="xx_locale_ur_PK">
+        <location filename="../languagepage.cpp" line="194"/>
+        <source>Urdu (Pakistan)</source>
+        <translation>الأوردو (باكستان)</translation>
+    </message>
+    <message id="xx_locale_ur_IN">
+        <location filename="../languagepage.cpp" line="199"/>
+        <source>Urdu (India)</source>
+        <translation>الأوردو (الهند)</translation>
+    </message>
+    <message id="xx_locale_zh_CN">
+        <location filename="../languagepage.cpp" line="204"/>
+        <source>Chinese (China)</source>
+        <translation>الصينية (الصين)</translation>
+    </message>
+    <message id="xx_locale_zh_TW">
+        <location filename="../languagepage.cpp" line="209"/>
+        <source>Chinese (Taiwan)</source>
+        <translation>الصينية (تايوان)</translation>
+    </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="110"/>
+        <location filename="../languagepage.cpp" line="304"/>
         <source>Please select language</source>
         <translation>الرجاء اختيار لغة جديدة :</translation>
     </message>
-    <message id="xx_language_arabic">
-        <location filename="../languagepage.cpp" line="78"/>
-        <source>Arabic</source>
-        <translation>العربية (Arabic)</translation>
+    <message id="xx_language_combobox_lctime_title">
+        <location filename="../languagepage.cpp" line="306"/>
+        <source>Locale for time</source>
+        <translation>لغة للوقت</translation>
     </message>
-    <message id="xx_language_english">
-        <location filename="../languagepage.cpp" line="80"/>
-        <source>English</source>
-        <translation>الإنكليزية (English)</translation>
+    <message id="xx_language_combobox_lccollate_title">
+        <location filename="../languagepage.cpp" line="308"/>
+        <source>Locale for collation</source>
+        <translation>لغة لترتيب</translation>
     </message>
-    <message id="xx_language_finnish">
-        <location filename="../languagepage.cpp" line="82"/>
-        <source>Finnish</source>
-        <translation>الفنلندية(Suomi)</translation>
+    <message id="xx_language_combobox_lcnumeric_title">
+        <location filename="../languagepage.cpp" line="310"/>
+        <source>Locale for numbers</source>
+        <translation>للغة الأرقام</translation>
     </message>
-    <message id="xx_language_german">
-        <location filename="../languagepage.cpp" line="84"/>
-        <source>German</source>
-        <translation>الألمانية (Deutsch)</translation>
+    <message id="xx_language_combobox_lcmonetary_title">
+        <location filename="../languagepage.cpp" line="312"/>
+        <source>Locale for money</source>
+        <translation>لغة من أجل المال</translation>
     </message>
-    <message id="xx_language_simplified_chinese">
-        <location filename="../languagepage.cpp" line="86"/>
-        <source>Simplified Chinese</source>
-        <translation>الصينية (中文)</translation>
+    <message id="qtn_comm_command_yes">
+        <location filename="../languagepage.cpp" line="316"/>
+        <location filename="../languagepage.cpp" line="323"/>
+        <source>Yes</source>
+        <translation>نعم</translation>
     </message>
-    <message id="xx_language_hungarian">
-        <location filename="../languagepage.cpp" line="88"/>
-        <source>Magyar</source>
-        <oldsource>Hungarian</oldsource>
-        <translation>الهنغارية(Magyar)</translation>
+    <message id="qtn_comm_command_no">
+        <location filename="../languagepage.cpp" line="319"/>
+        <location filename="../languagepage.cpp" line="326"/>
+        <source>No</source>
+        <translation>لا</translation>
     </message>
-    <message id="xx_language_none">
-        <location filename="../languagepage.cpp" line="76"/>
-        <source>None</source>
-        <translation>عدم وجود ترجمة (None)</translation>
+    <message id="xx_language_number_format">
+        <location filename="../languagepage.cpp" line="335"/>
+        <source>Number format example: %1!! Number example: %1!! Number: %1</source>
+        <translation>تنسيق رقم سبيل المثال : %1</translation>
+    </message>
+    <message id="xx_langage_date_time_format">
+        <location filename="../languagepage.cpp" line="339"/>
+        <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
+        <translation>تنسيق التاريخ والوقت على سبيل المثال : %1</translation>
+    </message>
+    <message id="xx_language_currency_format">
+        <location filename="../languagepage.cpp" line="345"/>
+        <source>Currency format example: %1 %2!! Currency: %1 %2</source>
+        <translation>تنسيق العملة على سبيل المثال : %1 %2</translation>
+    </message>
+    <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
+        <location filename="../languagepage.cpp" line="351"/>
+        <location filename="../languagepage.cpp" line="353"/>
+        <location filename="../languagepage.cpp" line="355"/>
+        <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
+        <translation>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+            <numerusform>مربعات سطر %Ln مع الوزن الكلي لل%L1 كيلو غرام</numerusform>
+        </translation>
+    </message>
+    <message id="xx_language_font_test">
+        <location filename="../languagepage.cpp" line="359"/>
+        <source>Font test:</source>
+        <translation>اختبار الخط :</translation>
     </message>
     <message id="xx_template_page_views_dialogs">
         <location filename="../templatepage.cpp" line="47"/>
@@ -762,7 +783,6 @@ The primary (single short tap) action of the element should not be duplicated in
     <message id="xx_template_page_user_input">
         <location filename="../templatepage.cpp" line="59"/>
         <source>User input</source>
-        <oldsource>User Input</oldsource>
         <translation>مستخدم الإدخال</translation>
     </message>
     <message id="xx_template_page_input_feedback">
@@ -791,12 +811,12 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>البريد الإلكتروني نص الاقتراح :</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="101"/>
+        <location filename="../comboboxpage.cpp" line="100"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>القطعة DuiComboBox هو زر مجتمعة وقائمة منبثقة. انها تشبه الى حد بعيد QComboBox ، ولكن لا يسمح بتحرير النص.</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="91"/>
+        <location filename="../comboboxpage.cpp" line="90"/>
         <source>ComboBox</source>
         <translation>مربع تحرير وسرد</translation>
     </message>
@@ -908,9 +928,6 @@ sit amet</source>
 Spinners can also be used in situations when duration is known, but available space on screen does not permit using a Progress bar.
 
 See the menu for examples of different use cases.</source>
-        <oldsource>Spinner is used to indicate that a process is ongoing and the duration is unknown.
-
-Spinners can also be used in situations when duration is known, but available space on screen does not permit using a Progress Bar.</oldsource>
         <translation>زل يستخدم للدلالة على أن التقدم مستمر والمدة غير معروفة.
 
 الغزالون يمكن أن تستخدم أيضا في الحالات عندما المدة هو معروف ، ولكن المساحة المتوفرة على الشاشة لا تسمح باستخدام شريط التقدم.
@@ -1004,10 +1021,10 @@ Switches are used to indicate e.g. settings values</source>
         <location filename="../sliderpage.cpp" line="176"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
-Seekbar is a special type of Slider used fordisplaying playback status for multimedia content.</source>
+Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
         <translation>التمرير يستخدم لمجموعة متواصلة من القيم ، وبين الذي يمكن للمستخدم اختيار قيمة واحدة.
 
-Seekbar هو نوع خاص من المتزلج المستخدمة fordisplaying حالة تشغيل لمحتوى الوسائط المتعددة.</translation>
+شريط البحث هو نوع خاص من المتزلج تستخدم لتشغيل مركز لعرض محتوى الوسائط المتعددة.</translation>
     </message>
     <message id="xx_slider_personal_data_label">
         <location filename="../sliderpage.cpp" line="179"/>
@@ -1017,7 +1034,6 @@ Seekbar هو نوع خاص من المتزلج المستخدمة fordisplaying 
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="183"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
-        <oldsource>Please select your age:</oldsource>
         <translation>من فضلك اختر العمر :</translation>
     </message>
     <message id="xx_slider_player_label">
@@ -1085,17 +1101,17 @@ Input feedbacks can be easily configured for different purposes using the themin
         <translation>شبكة الصفحة</translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="294"/>
+        <location filename="../videocontainerpage.cpp" line="365"/>
         <source>Video container</source>
         <translation>الفيديو الحاويات</translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="299"/>
+        <location filename="../videocontainerpage.cpp" line="370"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
         <translation>اضغط على الصورة المصغرة للعب الفيديو / وقفة عليه. اضغط على الصورة المصغرة ، وعقد لفتح الفيديو في حجمه الأصلي.</translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="302"/>
+        <location filename="../videocontainerpage.cpp" line="373"/>
         <source>Gallery</source>
         <translation>معرض</translation>
     </message>

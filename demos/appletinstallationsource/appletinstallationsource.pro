@@ -16,7 +16,7 @@ CONFIG += plugin \
     link_pkgconfig
 
 INCLUDEPATH += $$DUISRCINCLUDE
-HEADERS = fakeinstallationsource.h 
+HEADERS = fakeinstallationsource.h
 SOURCES = fakeinstallationsource.cpp
 
 win32|macx {
@@ -30,20 +30,12 @@ win32|macx {
 }
 else:LIBS += ../../lib/libdui.so
 
-TARGET = $$qtLibraryTarget(fakeinstallationsource)
+TARGET = $$qtLibraryTarget(appletinventory-fakeinstallationsource)
 DESTDIR = ../../lib
-target.path += $$DUI_APPLET_INSTALLATION_SOURCES_DIR
+target.path += $$DUI_APPLICATION_EXTENSION_DIR
 INSTALLS += target \
     style \
-    view_conf \
-    svg \
-    images
+    desktop_entry
 
-style.path = $$DUI_THEME_DIR/../fakeinstallationsource/themes/style
-style.files = *.css
-view_conf.path = $$DUI_THEME_DIR/../fakeinstallationsource/themes
-view_conf.files = *.conf
-svg.path = $$DUI_THEME_DIR/../fakeinstallationsource/themes/svg
-svg.files = images/*.svg
-images.path = $$DUI_THEME_DIR/../fakeinstallationsource/themes/images
-images.files = images/*.png
+desktop_entry.path = $$DUI_APPLICATION_EXTENSION_DATA_DIR
+desktop_entry.files = *.desktop

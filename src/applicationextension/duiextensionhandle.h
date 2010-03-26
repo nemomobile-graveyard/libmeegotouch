@@ -206,7 +206,7 @@ protected slots:
     /*!
      * \brief A slot for notifying that the orientation has changed
      */
-    void orientationEvent(const Dui::Orientation &);
+    void orientationEvent(Dui::Orientation);
 
     /*!
      * \brief A slot for notifying that there is data to be read from the runner's standard error stream

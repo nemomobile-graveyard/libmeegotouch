@@ -26,6 +26,8 @@
 #include <duiapplicationpage.h>
 #include <DuiComponentData>
 #include <DuiScene>
+#include <DuiSceneManager>
+#include <DuiEscapeButtonPanel>
 
 #include <QSignalSpy>
 #include <QEvent>
@@ -159,20 +161,6 @@ void Ut_DuiApplicationWindow::cleanup()
     m_subject = 0;
 }
 
-// It's not possible to owerwrite inlined QWidget::show, setVisible is used instead
-bool Ut_DuiApplicationWindow::m_windowShown = false;
-void QWidget::setVisible(bool visible)
-{
-    Ut_DuiApplicationWindow::m_windowShown = visible;
-}
-
-bool Ut_DuiApplicationWindow::m_windowClosed = false;
-bool QWidget::close()
-{
-    Ut_DuiApplicationWindow::m_windowClosed = true;
-    return true;
-}
-
 void Ut_DuiApplicationWindow::testConstructorWithoutScene()
 {
     QVERIFY(m_subject->scene());
@@ -214,42 +202,29 @@ void Ut_DuiApplicationWindow::testIsOnDisplay()
 void Ut_DuiApplicationWindow::testPrestartNoPrestart()
 {
     DuiApplication::setPrestartMode(Dui::NoPrestart);
-    m_windowShown = false;
     m_subject->show();
-    QCOMPARE(m_windowShown, true);
-    m_prestartRestored = false;
-    m_windowClosed = false;
+    QCOMPARE(m_subject->isVisible(), true);
     m_subject->close();
-    QCOMPARE(m_prestartRestored, false);
-    QCOMPARE(m_windowClosed, true);
+    QCOMPARE(m_subject->isVisible(), false);
 }
 
 void Ut_DuiApplicationWindow::testPrestartTerminateOnClose()
 {
     DuiApplication::setPrestartMode(Dui::TerminateOnClose);
-    m_windowShown = false;
     m_subject->show();
-    QCOMPARE(m_windowShown, false);
-    m_prestartRestored = false;
-    m_windowClosed = false;
+    QCOMPARE(m_subject->isVisible(), false);
     m_subject->close();
-    QCOMPARE(m_prestartRestored, false);
-    QCOMPARE(m_windowClosed, true);
+    QCOMPARE(m_subject->isVisible(), false);
 }
 
 void Ut_DuiApplicationWindow::testPrestartLazyShutdown()
 {
     DuiApplication::setPrestartMode(Dui::LazyShutdown);
-    m_windowShown = false;
     m_subject->show();
-    QCOMPARE(Ut_DuiApplicationWindow::m_windowShown, false);
-    m_prestartRestored = false;
-    m_windowClosed = false;
+    QCOMPARE(m_subject->isVisible(), false);
     m_subject->close();
-    // For some reason the DuiApplicationPrivate::restorePrestart()
-    // stub never gets called.
-    // QCOMPARE( m_prestartRestored, true );
-    QCOMPARE(Ut_DuiApplicationWindow::m_windowClosed, false);
+    QCOMPARE(m_subject->isVisible(), false);
+    QCOMPARE(m_subject->isHidden(), true);
 }
 
 void Ut_DuiApplicationWindow::testWindowActivate()
@@ -301,7 +276,7 @@ void Ut_DuiApplicationWindow::testDeleteOnClose()
 void Ut_DuiApplicationWindow::testDisplayExitedOnClose()
 {
     m_subject->show();
-    QSignalSpy spy(m_subject, SIGNAL(exitedDisplay()));
+    QSignalSpy spy(m_subject, SIGNAL(displayExited()));
     m_subject->close();
     QCOMPARE(spy.count(), 1);
 }
@@ -310,10 +285,90 @@ void Ut_DuiApplicationWindow::testDisplayExitedOnCloseLazyShutdownApp()
 {
     DuiApplication::setPrestartMode(Dui::LazyShutdown);
     m_subject->show();
-    QSignalSpy spy(m_subject, SIGNAL(exitedDisplay()));
+    QSignalSpy spy(m_subject, SIGNAL(displayExited()));
     m_subject->close();
     QCOMPARE(spy.count(), 1);
 }
 
+void Ut_DuiApplicationWindow::testPageEscapeAuto()
+{
+    DuiApplicationPage *firstPage = new DuiApplicationPage;
+    DuiApplicationPage *secondPage = new DuiApplicationPage;
+    DuiEscapeButtonPanel *escapeButtonPanel = fetchEscapeButtonPanel(m_subject->scene()->items());
+
+    QVERIFY(escapeButtonPanel != 0);
+
+    firstPage->appearNow(m_subject);
+
+    QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::CloseMode);
+
+    secondPage->appearNow(m_subject);
+
+    QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::BackMode);
+
+    secondPage->dismissNow();
+
+    QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::CloseMode);
+}
+
+void Ut_DuiApplicationWindow::testPageEscapeAutoWhenAddingPageHistory()
+{
+    DuiApplicationPage *firstPage = new DuiApplicationPage;
+    DuiApplicationPage *secondPage = new DuiApplicationPage;
+    DuiEscapeButtonPanel *escapeButtonPanel = fetchEscapeButtonPanel(m_subject->scene()->items());
+    QList<DuiSceneWindow *> pageHistory;
+
+    QVERIFY(escapeButtonPanel != 0);
+
+    secondPage->appearNow(m_subject);
+
+    QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::CloseMode);
+
+    pageHistory.append(firstPage);
+    m_subject->sceneManager()->setPageHistory(pageHistory);
+
+    QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::BackMode);
+}
+
+void Ut_DuiApplicationWindow::testPageEscapeAutoWhenClearingPageHistory()
+{
+    DuiApplicationPage *firstPage = new DuiApplicationPage;
+    DuiApplicationPage *secondPage = new DuiApplicationPage;
+    DuiEscapeButtonPanel *escapeButtonPanel = fetchEscapeButtonPanel(m_subject->scene()->items());
+    QList<DuiSceneWindow *> pageHistory;
+
+    QVERIFY(escapeButtonPanel != 0);
+
+    firstPage->appearNow(m_subject);
+    secondPage->appearNow(m_subject);
+
+    QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::BackMode);
+
+    m_subject->sceneManager()->setPageHistory(pageHistory);
+
+    QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::CloseMode);
+}
+
+DuiEscapeButtonPanel *Ut_DuiApplicationWindow::fetchEscapeButtonPanel(
+        const QList<QGraphicsItem *> &itemsList) const
+{
+    int i = 0;
+    int itemsCount = itemsList.count();
+    QGraphicsItem *item;
+    QGraphicsWidget *widget;
+    DuiEscapeButtonPanel *escapeButtonPanel = 0;
+
+    while (escapeButtonPanel == 0 && i < itemsCount) {
+        item = itemsList.at(i);
+        if (item->isWidget()) {
+            widget = static_cast<QGraphicsWidget *>(item);
+            escapeButtonPanel = qobject_cast<DuiEscapeButtonPanel*>(widget);
+        }
+
+        ++i;
+    }
+
+    return escapeButtonPanel;
+}
 
 QTEST_MAIN(Ut_DuiApplicationWindow)

@@ -1006,7 +1006,6 @@ void DuiTextEdit::focusInEvent(QFocusEvent *event)
     }
 
     emit gainedFocus(event->reason());
-    updateMicroFocus();
 }
 
 

@@ -64,6 +64,7 @@ DuiApplicationWindowPrivate::DuiApplicationWindowPrivate()
     , menu(new DuiApplicationMenu)
     , statusBar(new DuiStatusBar)
     , showingStatusBar(false)
+    , isMenuOpen(false)
 {
 }
 
@@ -110,9 +111,6 @@ void DuiApplicationWindowPrivate::init()
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(showMinimized()));
 #endif
 
-    q->connect(escapeButtonPanel, SIGNAL(escapeModeChanged(DuiEscapeButtonPanelModel::EscapeMode)),
-               q, SLOT(_q_connectEscapeButton(DuiEscapeButtonPanelModel::EscapeMode)));
-
     q->connect(navigationBar, SIGNAL(viewmenuTriggered()),
                q, SLOT(openMenu()));
 
@@ -129,7 +127,10 @@ void DuiApplicationWindowPrivate::init()
     navigationBar->appearNow(q);
     homeButtonPanel->appearNow(q);
     escapeButtonPanel->appearNow(q);
-    _q_connectEscapeButton(escapeButtonPanel->escapeMode());
+
+    // Initialize escape button to close mode.
+    escapeButtonPanel->setEscapeMode(DuiEscapeButtonPanelModel::CloseMode);
+    QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
 
     if (q->orientation() == Dui::Portrait) {
         dockWidget->appearNow(q);
@@ -172,40 +173,11 @@ void DuiApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent
     Q_ASSERT(statusBar != 0);
 
     if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->hideWindowNow(statusBar);
+        q->sceneManager()->disappearSceneWindowNow(statusBar);
 
     } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->showWindowNow(statusBar);
+        q->sceneManager()->appearSceneWindowNow(statusBar);
     }
-}
-
-void DuiApplicationWindowPrivate::_q_connectEscapeButton(DuiEscapeButtonPanelModel::EscapeMode mode)
-{
-    Q_Q(DuiApplicationWindow);
-
-    QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), 0, 0);
-
-    switch (mode) {
-    case DuiEscapeButtonPanelModel::BackMode:
-        if (page)
-            QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(backButtonClicked()));
-
-        QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), menu, SLOT(disappear()));
-        break;
-    case DuiEscapeButtonPanelModel::CloseMode:
-        if (page)
-            QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(closeButtonClicked()));
-
-        QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
-        break;
-    default:;
-    }
-}
-
-void DuiApplicationWindowPrivate::_q_pageTitleChanged(DuiApplicationPage *page, const QString &title)
-{
-    if (page->isVisible())
-        navigationBar->setViewMenuDescription(title);
 }
 
 void DuiApplicationWindowPrivate::_q_actionUpdated(QActionEvent *event)
@@ -260,11 +232,19 @@ void DuiApplicationWindowPrivate::_q_handlePageModelModifications(const QList<co
 
         } else if (member == DuiApplicationPageModel::AutoMarginsForComponentsEnabled) {
             updatePageAutoMarginsForComponents(q->orientation());
+
+        } else if (member == DuiApplicationPageModel::EscapeMode) {
+            setupPageEscape();
+
+        } else if (member == DuiApplicationPageModel::Title) {
+            if (page->isVisible())
+                navigationBar->setViewMenuDescription(page->model()->title());
+
         }
     }
 }
 
-void DuiApplicationWindowPrivate::_q_placeToolBar(const Dui::Orientation &orientation)
+void DuiApplicationWindowPrivate::_q_placeToolBar(Dui::Orientation orientation)
 {
     // set position of toolbar according to orientation
     if (orientation == Dui::Portrait) {
@@ -288,7 +268,7 @@ void DuiApplicationWindowPrivate::_q_placeToolBar(const Dui::Orientation &orient
     }
 }
 
-void DuiApplicationWindowPrivate::updatePageAutoMarginsForComponents(const Dui::Orientation &orientation)
+void DuiApplicationWindowPrivate::updatePageAutoMarginsForComponents(Dui::Orientation orientation)
 {
     if (!page) {
         return;
@@ -315,6 +295,7 @@ void DuiApplicationWindowPrivate::_q_menuAppeared()
                         q, SLOT(openMenu()));
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(closeMenu()));
+    isMenuOpen = true;
 }
 
 void DuiApplicationWindowPrivate::_q_menuDisappeared()
@@ -324,6 +305,7 @@ void DuiApplicationWindowPrivate::_q_menuDisappeared()
                         q, SLOT(closeMenu()));
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(openMenu()));
+    isMenuOpen = false;
 }
 
 #ifdef HAVE_N900
@@ -541,9 +523,8 @@ void DuiApplicationWindowPrivate::applicationPageAppearEvent(DuiSceneWindowEvent
     Q_ASSERT(pageFromEvent != page);
 
     if (page != 0) {
-        // We are going to change pages.
-
-        q->closeMenu();
+        menu->disappear();
+        disconnectPage(page);
     }
 
     connectPage(pageFromEvent);
@@ -556,8 +537,103 @@ void DuiApplicationWindowPrivate::applicationPageDisappearEvent(DuiSceneWindowEv
     DuiApplicationPage *pageFromEvent = static_cast<DuiApplicationPage *>(event->sceneWindow());
 
     // Page is going away. Let's disconnect it if it's the current page.
-    if (pageFromEvent == page)
+    if (pageFromEvent == page) {
+        menu->disappear();
         disconnectPage(pageFromEvent);
+    }
+}
+
+void DuiApplicationWindowPrivate::setupPageEscape()
+{
+    if (!page) {
+        // Nothing to be done.
+        return;
+    }
+
+    // Tear down any previous page escape setup.
+    tearDownPageEscape();
+
+    switch (page->escapeMode()) {
+        case DuiApplicationPageModel::EscapeAuto:
+            setupPageEscapeAuto();
+            break;
+
+        case DuiApplicationPageModel::EscapeManualBack:
+            setupPageEscapeBack();
+            break;
+
+        case DuiApplicationPageModel::EscapeCloseWindow:
+            setupPageEscapeClose();
+            break;
+
+        default:
+            qFatal("DuiApplicationWindow: Invalid page escape mode");
+    };
+}
+
+void DuiApplicationWindowPrivate::setupPageEscapeAuto()
+{
+    Q_Q(DuiApplicationWindow);
+    QList<DuiSceneWindow*> pageHistory = q->sceneManager()->pageHistory();
+
+    if (pageHistory.isEmpty()) {
+        setupPageEscapeClose();
+    } else {
+        setupPageEscapeBack();
+        page->connect(escapeButtonPanel, SIGNAL(buttonClicked()), SLOT(dismiss()));
+    }
+
+    // We must update the wiring of our escape button if the application manually
+    // changes the page history while a page in EscapeAuto mode is being displayed.
+    q->connect(q->sceneManager(), SIGNAL(pageHistoryChanged()), SLOT(_q_updatePageEscapeAuto()));
+}
+
+void DuiApplicationWindowPrivate::setupPageEscapeBack()
+{
+    escapeButtonPanel->setEscapeMode(DuiEscapeButtonPanelModel::BackMode);
+    page->connect(escapeButtonPanel, SIGNAL(buttonClicked()), SIGNAL(backButtonClicked()));
+}
+
+void DuiApplicationWindowPrivate::setupPageEscapeClose()
+{
+    Q_Q(DuiApplicationWindow);
+
+    escapeButtonPanel->setEscapeMode(DuiEscapeButtonPanelModel::CloseMode);
+    page->connect(escapeButtonPanel, SIGNAL(buttonClicked()), SIGNAL(closeButtonClicked()));
+    QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
+}
+
+void DuiApplicationWindowPrivate::tearDownPageEscape()
+{
+    Q_Q(DuiApplicationWindow);
+
+    QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), 0, 0);
+
+    QObject::disconnect(q->sceneManager(), SIGNAL(pageHistoryChanged()),
+            q, SLOT(_q_updatePageEscapeAuto()));
+}
+
+void DuiApplicationWindowPrivate::_q_updatePageEscapeAuto()
+{
+    Q_Q(DuiApplicationWindow);
+    QList<DuiSceneWindow*> pageHistory = q->sceneManager()->pageHistory();
+
+    Q_ASSERT(page != 0);
+    Q_ASSERT(page->escapeMode() == DuiApplicationPageModel::EscapeAuto);
+
+    if (pageHistory.isEmpty() &&
+            (escapeButtonPanel->escapeMode() != DuiEscapeButtonPanelModel::CloseMode)) {
+
+        QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), 0, 0);
+        setupPageEscapeClose();
+
+    } else if (!pageHistory.isEmpty() &&
+            (escapeButtonPanel->escapeMode() != DuiEscapeButtonPanelModel::BackMode)) {
+
+        QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), 0, 0);
+        setupPageEscapeBack();
+        page->connect(escapeButtonPanel, SIGNAL(buttonClicked()), SLOT(dismiss()));
+    }
 }
 
 // TODO: Remove that now useless method override after API freeze period
@@ -617,23 +693,6 @@ DuiApplicationPage *DuiApplicationWindow::currentPage() const
     return d->page;
 }
 
-void DuiApplicationWindow::show()
-{
-    // Act differently if app is in prestarted mode
-    if (DuiApplication::isPrestarted()) {
-        switch (DuiApplication::prestartMode()) {
-        case Dui::LazyShutdown:
-        case Dui::TerminateOnClose:
-            return;
-
-        default:
-            break;
-        }
-    }
-
-    DuiWindow::show();
-}
-
 bool DuiApplicationWindow::event(QEvent *event)
 {
     Q_D(DuiApplicationWindow);
@@ -648,6 +707,8 @@ bool DuiApplicationWindow::event(QEvent *event)
             }
             //fall through is intentional
         }
+
+        case QEvent::ActionChanged:
         case QEvent::ActionAdded: {
             d->_q_actionUpdated(actionEvent);
             return true;
@@ -702,18 +763,6 @@ void DuiApplicationWindow::openMenu()
     }
 }
 
-bool DuiApplicationWindow::close()
-{
-    if (DuiApplication::prestartMode() == Dui::LazyShutdown) {
-        DuiApplicationPrivate::restorePrestart();
-        DuiOnDisplayChangeEvent ev(false, sceneRect());
-        onDisplayChangeEvent(&ev);
-        return true;
-    } else {
-        return DuiWindow::close();
-    }
-}
-
 void DuiApplicationWindow::closeMenu()
 {
     Q_D(DuiApplicationWindow);
@@ -740,29 +789,14 @@ void DuiApplicationWindowPrivate::connectPage(DuiApplicationPage *newPage)
     Q_ASSERT(newPage != 0);
     page = newPage;
 
-    q->connect(page, SIGNAL(pageTitleChanged(DuiApplicationPage *, QString)),
-               SLOT(_q_pageTitleChanged(DuiApplicationPage *, QString)));
-
     q->connect(page, SIGNAL(actionUpdated(QActionEvent *)), SLOT(_q_actionUpdated(QActionEvent *)));
 
     manageActions();
 
-    QObject::connect(page, SIGNAL(escapeButtonModeChanged(DuiEscapeButtonPanelModel::EscapeMode)),
-                     escapeButtonPanel, SLOT(setEscapeMode(DuiEscapeButtonPanelModel::EscapeMode)));
-
     q->connect(page->model(), SIGNAL(modified(QList<const char *>)),
                SLOT(_q_handlePageModelModifications(QList<const char *>)));
 
-    DuiEscapeButtonPanelModel::EscapeMode pageEscapeMode = page->escapeButtonMode();
-    if (pageEscapeMode != escapeButtonPanel->escapeMode()) {
-        // Change the mode of the escape button, which will trigger a reconnection
-        // between escape button and application window + page.
-        escapeButtonPanel->setEscapeMode(pageEscapeMode);
-    } else {
-        // Escape button is already in the correct mode.
-        // Force a reconnection between escape button and application window + page
-        _q_connectEscapeButton(page->escapeButtonMode());
-    }
+    setupPageEscape();
 
     navigationBar->setViewMenuDescription(page->title());
 
@@ -785,20 +819,13 @@ void DuiApplicationWindowPrivate::disconnectPage(DuiApplicationPage *pageToDisco
 
     Q_ASSERT(pageToDisconnect == page);
 
-    QObject::disconnect(page, SIGNAL(pageTitleChanged(DuiApplicationPage *, QString)),
-                        q, SLOT(_q_pageTitleChanged(DuiApplicationPage *, QString)));
-
     QObject::disconnect(page, SIGNAL(actionUpdated(QActionEvent *)),
                         q, SLOT(_q_actionUpdated(QActionEvent *)));
-
-    QObject::disconnect(page, SIGNAL(escapeButtonModeChanged(DuiEscapeButtonPanelModel::EscapeMode)),
-                        escapeButtonPanel, SLOT(setEscapeMode(DuiEscapeButtonPanelModel::EscapeMode)));
 
     QObject::disconnect(page->model(), SIGNAL(modified(QList<const char *>)),
                         q, SLOT(_q_handlePageModelModifications(QList<const char *>)));
 
-    QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(backButtonClicked()));
-    QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), page, SIGNAL(closeButtonClicked()));
+    tearDownPageEscape();
 
 
     removePageActions();
@@ -862,6 +889,12 @@ DuiTheme::ViewType DuiApplicationWindow::toolbarViewType() const
 {
     Q_D(const DuiApplicationWindow);
     return d->toolBar->viewType();
+}
+
+bool DuiApplicationWindow::isMenuOpen() const
+{
+    Q_D(const DuiApplicationWindow);
+    return d->isMenuOpen;
 }
 
 void DuiApplicationWindow::mousePressEvent(QMouseEvent *event)

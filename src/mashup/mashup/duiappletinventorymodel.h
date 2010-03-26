@@ -36,9 +36,6 @@ private:
     //! The list of widgets in the applet inventory
     DUI_MODEL_PROPERTY(WidgetList, widgets, Widgets, true, WidgetList())
 
-    //! The list of installation source widgets
-    DUI_MODEL_PROPERTY(WidgetList, installationSources, InstallationSources, true, WidgetList())
-
     //! Whether the close button should be visible or not
     DUI_MODEL_PROPERTY(bool, closeButtonVisible, CloseButtonVisible, true, false)
 };

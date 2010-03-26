@@ -62,16 +62,11 @@ void Ut_DuiPopupList::setContent()
     model.setStringList(buffer);
 
     qRegisterMetaType<QAbstractItemModel *>("QAbstractItemModel*");
-    QSignalSpy modelChangedSpy(m_popuplist, SIGNAL(itemModelChanged(QAbstractItemModel *)));
-    // Check the signal does actually exist still
-    QVERIFY(modelChangedSpy.isValid());
 
     model.setStringList(m_stringList);
     m_popuplist->setItemModel(&model);
     // Check that setModel worked for an empty model
     QCOMPARE(&model, m_popuplist->itemModel());
-    // Check a modelChanged signal was sent
-    QCOMPARE(modelChangedSpy.count(), 1);
 
     m_stringList << "one" << "two";
     m_model.setStringList(m_stringList);
@@ -79,17 +74,13 @@ void Ut_DuiPopupList::setContent()
 
     // Check that changing the model works and doesn't delete our old model
     QCOMPARE(&m_model, m_popuplist->itemModel());
-    // Check another modelChanged signal was sent
-    QCOMPARE(modelChangedSpy.count(), 2);
 
     // Check selectionModel
     qRegisterMetaType<QItemSelectionModel *>("QItemSelectionModel*");
-    QSignalSpy selectionChangedSpy(m_popuplist, SIGNAL(selectionModelChanged(QItemSelectionModel *)));
 
     QItemSelectionModel *smodel = new QItemSelectionModel(&m_model, m_popuplist);
     m_popuplist->setSelectionModel(smodel);
     QCOMPARE(smodel, m_popuplist->selectionModel());
-    QCOMPARE(selectionChangedSpy.count(), 1);
 }
 
 void Ut_DuiPopupList::testCurrentIndex()
@@ -141,8 +132,8 @@ void Ut_DuiPopupList::testSetItemIconID()
 {
     DuiPopupListViewPrivate *view = new DuiPopupListViewPrivate;
     QStandardItemModel *itemModel = new QStandardItemModel;
-    view->itemModel = itemModel;
-    view->selectionModel = new QItemSelectionModel(itemModel);
+    view->list->setItemModel(itemModel);
+    view->list->setSelectionModel(new QItemSelectionModel(itemModel));
 
     DuiContentItem *item;
     DuiWidgetRecycler recycler;

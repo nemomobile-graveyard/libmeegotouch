@@ -119,14 +119,14 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <source>I&apos;m a nested message box</source>
         <translation>我是多层对话框</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_window_modal_dialog_title">
+    <message id="xx_dialogs_and_notifications_system_modal_dialog_title">
         <location filename="../dialogsandnotificationspage.cpp" line="215"/>
-        <source>Window Modal Dialog</source>
+        <source>System Modal Dialog</source>
         <translation>模式对话框</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_window_modal_dialog_label">
+    <message id="xx_dialogs_and_notifications_system_modal_dialog_label">
         <location filename="../dialogsandnotificationspage.cpp" line="219"/>
-        <source>I&apos;m a window modal dialog.
+        <source>I&apos;m a System Modal dialog.
 There&apos;s no way around me!
 Muwhahaha... [evil laugh]</source>
         <translation>我是模式对话框。
@@ -177,8 +177,7 @@ Muwhahaha... [evil laugh]</source>
     <message id="xx_dialogs_and_notifications_label_dialogs">
         <location filename="../dialogsandnotificationspage.cpp" line="364"/>
         <source>Dialog examples</source>
-        <oldsource>  DuiDialog examples</oldsource>
-        <translation type="unfinished">对话框</translation>
+        <translation>对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_query_dialog">
         <location filename="../dialogsandnotificationspage.cpp" line="366"/>
@@ -200,9 +199,9 @@ Muwhahaha... [evil laugh]</source>
         <source>Stacked Dialogs</source>
         <translation>对话记录框</translation>
     </message>
-    <message id="xx_dialogs_and_notifications_window_modal_dialog">
+    <message id="xx_dialogs_and_notifications_system_modal_dialog">
         <location filename="../dialogsandnotificationspage.cpp" line="376"/>
-        <source>Window Modal Dialog</source>
+        <source>System Modal Dialog</source>
         <translation>模式对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_dialog_with_progress_indicator">
@@ -222,8 +221,7 @@ Muwhahaha... [evil laugh]</source>
     <message id="xx_dialogs_and_notifications_label_notifications">
         <location filename="../dialogsandnotificationspage.cpp" line="382"/>
         <source>Notifications and messages</source>
-        <oldsource>  Notifications</oldsource>
-        <translation type="unfinished">通知</translation>
+        <translation>通知</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_event_banner">
         <location filename="../dialogsandnotificationspage.cpp" line="386"/>
@@ -442,7 +440,6 @@ tooltip</source>
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="183"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
-        <oldsource>Please select your age:</oldsource>
         <translation>您的年龄：</translation>
     </message>
     <message id="xx_slider_brightness_label">
@@ -464,7 +461,7 @@ tooltip</source>
         <location filename="../sliderpage.cpp" line="176"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
-Seekbar is a special type of Slider used fordisplaying playback status for multimedia content.</source>
+Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
         <translation>滑动条使用户可以在一系列数值中选择其一。
 播放条是一种特殊的滑动条用于在多媒体内容中控制播放，后退等信息。</translation>
     </message>
@@ -531,22 +528,22 @@ Seekbar is a special type of Slider used fordisplaying playback status for multi
         <translation type="obsolete">日本</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="101"/>
+        <location filename="../comboboxpage.cpp" line="100"/>
         <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>选择对话框是按钮和弹出列表的组合。它非常类似于QComboBox, 但不允许编辑文本。</translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="95"/>
+        <location filename="../comboboxpage.cpp" line="94"/>
         <source>Title</source>
         <translation>标题</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="91"/>
+        <location filename="../comboboxpage.cpp" line="90"/>
         <source>ComboBox</source>
         <translation>组合对话框</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="97"/>
+        <location filename="../comboboxpage.cpp" line="96"/>
         <source>Sort - DescendingOrder</source>
         <translation>排序 — 降序</translation>
     </message>
@@ -607,7 +604,6 @@ Seekbar is a special type of Slider used fordisplaying playback status for multi
     <message id="xx_toolbar_page_info">
         <location filename="../toolbarpage.cpp" line="215"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
-        <oldsource>&lt;b&gt;Toolbar&lt;/b&gt; is a container which contains actions that are relevant to the view but not related to any individual item displayed directly within the content area. &lt;ul&gt;&lt;li&gt;It can contain up to 4 Icon Buttons (click Menu and then Example 1)&lt;/li&gt; &lt;li&gt;A text input field can also be added along with up to 2 Icon Buttons (click Menu and then Example 2).&lt;/li&gt;&lt;/ul&gt;</oldsource>
         <translation type="unfinished">工具条包括很多</translation>
     </message>
     <message id="xx_objectmenu_page_title">
@@ -693,49 +689,178 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>隐藏</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="68"/>
+        <location filename="../languagepage.cpp" line="120"/>
         <source>Change Language</source>
         <translation>翻译</translation>
     </message>
-    <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="110"/>
-        <source>Please select language</source>
-        <translation>请选择翻译语言:</translation>
+    <message id="xx_locale_none">
+        <location filename="../languagepage.cpp" line="139"/>
+        <source>None</source>
+        <translation>默认</translation>
     </message>
-    <message id="xx_language_arabic">
-        <location filename="../languagepage.cpp" line="78"/>
+    <message id="xx_locale_ar">
+        <location filename="../languagepage.cpp" line="144"/>
         <source>Arabic</source>
-        <translation>阿拉伯语 (العربية)</translation>
+        <translation>阿拉伯语</translation>
     </message>
-    <message id="xx_language_english">
-        <location filename="../languagepage.cpp" line="80"/>
+    <message id="xx_locale_de">
+        <location filename="../languagepage.cpp" line="149"/>
+        <source>German</source>
+        <translation>德语</translation>
+    </message>
+    <message id="xx_locale_de_AT">
+        <location filename="../languagepage.cpp" line="154"/>
+        <source>German (Austria)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_de_CH">
+        <location filename="../languagepage.cpp" line="159"/>
+        <source>German (Switzerland)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_en">
+        <location filename="../languagepage.cpp" line="164"/>
         <source>English</source>
         <translation>英语</translation>
     </message>
-    <message id="xx_language_finnish">
-        <location filename="../languagepage.cpp" line="82"/>
+    <message id="xx_locale_fi">
+        <location filename="../languagepage.cpp" line="169"/>
         <source>Finnish</source>
-        <translation>芬兰语 (Suomi)</translation>
+        <translation>芬兰语</translation>
     </message>
-    <message id="xx_language_german">
-        <location filename="../languagepage.cpp" line="84"/>
-        <source>German</source>
-        <translation>德语 (Deutsch)</translation>
+    <message id="xx_locale_hi">
+        <location filename="../languagepage.cpp" line="174"/>
+        <source>Hindi</source>
+        <translation type="unfinished"></translation>
     </message>
-    <message id="xx_language_simplified_chinese">
-        <location filename="../languagepage.cpp" line="86"/>
-        <source>Simplified Chinese</source>
+    <message id="xx_locale_hu">
+        <location filename="../languagepage.cpp" line="179"/>
+        <source>Hungarian</source>
+        <translation>匈牙利语</translation>
+    </message>
+    <message id="xx_locale_ja">
+        <location filename="../languagepage.cpp" line="184"/>
+        <source>Japanese</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_ur">
+        <location filename="../languagepage.cpp" line="189"/>
+        <source>Urdu</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_ur_PK">
+        <location filename="../languagepage.cpp" line="194"/>
+        <source>Urdu (Pakistan)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_ur_IN">
+        <location filename="../languagepage.cpp" line="199"/>
+        <source>Urdu (India)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_locale_zh_CN">
+        <location filename="../languagepage.cpp" line="204"/>
+        <source>Chinese (China)</source>
         <translation>简体中文 (中文)</translation>
     </message>
+    <message id="xx_locale_zh_TW">
+        <location filename="../languagepage.cpp" line="209"/>
+        <source>Chinese (Taiwan)</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_combobox_title">
+        <location filename="../languagepage.cpp" line="304"/>
+        <source>Please select language</source>
+        <translation>请选择翻译语言:</translation>
+    </message>
+    <message id="xx_language_combobox_lctime_title">
+        <location filename="../languagepage.cpp" line="306"/>
+        <source>Locale for time</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_combobox_lccollate_title">
+        <location filename="../languagepage.cpp" line="308"/>
+        <source>Locale for collation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_combobox_lcnumeric_title">
+        <location filename="../languagepage.cpp" line="310"/>
+        <source>Locale for numbers</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_combobox_lcmonetary_title">
+        <location filename="../languagepage.cpp" line="312"/>
+        <source>Locale for money</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="qtn_comm_command_yes">
+        <location filename="../languagepage.cpp" line="316"/>
+        <location filename="../languagepage.cpp" line="323"/>
+        <source>Yes</source>
+        <translation>是</translation>
+    </message>
+    <message id="qtn_comm_command_no">
+        <location filename="../languagepage.cpp" line="319"/>
+        <location filename="../languagepage.cpp" line="326"/>
+        <source>No</source>
+        <translation>否</translation>
+    </message>
+    <message id="xx_language_number_format">
+        <location filename="../languagepage.cpp" line="335"/>
+        <source>Number format example: %1!! Number example: %1!! Number: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_langage_date_time_format">
+        <location filename="../languagepage.cpp" line="339"/>
+        <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_currency_format">
+        <location filename="../languagepage.cpp" line="345"/>
+        <source>Currency format example: %1 %2!! Currency: %1 %2</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
+        <location filename="../languagepage.cpp" line="351"/>
+        <location filename="../languagepage.cpp" line="353"/>
+        <location filename="../languagepage.cpp" line="355"/>
+        <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
+        <translation type="unfinished">
+            <numerusform></numerusform>
+        </translation>
+    </message>
+    <message id="xx_language_font_test">
+        <location filename="../languagepage.cpp" line="359"/>
+        <source>Font test:</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_language_arabic">
+        <source>Arabic</source>
+        <translation type="obsolete">阿拉伯语</translation>
+    </message>
+    <message id="xx_language_english">
+        <source>English</source>
+        <translation type="obsolete">英语</translation>
+    </message>
+    <message id="xx_language_finnish">
+        <source>Finnish</source>
+        <translation type="obsolete">芬兰语</translation>
+    </message>
+    <message id="xx_language_german">
+        <source>German</source>
+        <translation type="obsolete">德语</translation>
+    </message>
+    <message id="xx_language_simplified_chinese">
+        <source>Simplified Chinese</source>
+        <translation type="obsolete">简体中文 (中文)</translation>
+    </message>
     <message id="xx_language_hungarian">
-        <location filename="../languagepage.cpp" line="88"/>
         <source>Magyar</source>
-        <translation>匈牙利语 (Magyar)</translation>
+        <translation type="obsolete">匈牙利语</translation>
     </message>
     <message id="xx_language_none">
-        <location filename="../languagepage.cpp" line="76"/>
         <source>None</source>
-        <translation>默认</translation>
+        <translation type="obsolete">默认</translation>
     </message>
     <message id="xx_template_page_layouts_visuals">
         <location filename="../templatepage.cpp" line="51"/>
@@ -1036,30 +1161,27 @@ Input feedbacks can be easily configured for different purposes using the themin
     <message id="xx_input_feedback_page_button2">
         <location filename="../feedbackpage.cpp" line="105"/>
         <source>Different</source>
-        <oldsource>Babytoy</oldsource>
-        <translation type="unfinished">婴儿玩具</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_input_feedback_page_button3">
         <location filename="../feedbackpage.cpp" line="107"/>
         <source>Sluggish</source>
-        <oldsource>Space</oldsource>
-        <translation type="unfinished">空间</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_input_feedback_page_button4">
         <location filename="../feedbackpage.cpp" line="109"/>
         <source>Babytoy</source>
-        <oldsource>Silent</oldsource>
-        <translation type="unfinished">静音</translation>
+        <translation>婴儿玩具</translation>
     </message>
     <message id="xx_input_feedback_page_button5">
         <location filename="../feedbackpage.cpp" line="111"/>
         <source>Space</source>
-        <translation type="unfinished"></translation>
+        <translation>空间</translation>
     </message>
     <message id="xx_input_feedback_page_button6">
         <location filename="../feedbackpage.cpp" line="113"/>
         <source>Silent</source>
-        <translation type="unfinished"></translation>
+        <translation>静音</translation>
     </message>
     <message id="xx_gridpage_title">
         <location filename="../duigridpage.cpp" line="97"/>
@@ -1067,18 +1189,17 @@ Input feedbacks can be easily configured for different purposes using the themin
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="294"/>
+        <location filename="../videocontainerpage.cpp" line="365"/>
         <source>Video container</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="299"/>
+        <location filename="../videocontainerpage.cpp" line="370"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
-        <oldsource>Video container page info label.</oldsource>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="302"/>
+        <location filename="../videocontainerpage.cpp" line="373"/>
         <source>Gallery</source>
         <translation type="unfinished"></translation>
     </message>

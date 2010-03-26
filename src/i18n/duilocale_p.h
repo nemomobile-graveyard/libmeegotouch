@@ -24,6 +24,7 @@
 #include <QString>
 #include <QStringList>
 #include <QExplicitlySharedDataPointer>
+#include <QLocale>
 
 #ifdef HAVE_ICU
 #include <unicode/datefmt.h>
@@ -80,6 +81,8 @@ public:
      */
     void removeTrFromQCoreApp();
 
+    QLocale createQLocale(DuiLocale::Category catetory) const;
+
     void setCategoryLocale(DuiLocale *duilocale, DuiLocale::Category category,
                            const QString &localeName);
 
@@ -88,6 +91,12 @@ public:
     icu::Locale getCategoryLocale(DuiLocale::Category category) const;
 
     static icu::DateFormatSymbols *createDateFormatSymbols(icu::Locale locale);
+
+    // creates a dateformat object for datetime formatting/parsing
+    // the caller is responsible for deleting the dateformat object
+    icu::DateFormat *createDateFormat(DuiLocale::DateType dateType,
+                                      DuiLocale::TimeType timeType,
+                                      const DuiCalendar& duicalendar) const;
 #endif
 
     // these return the requested part of a locale string,
@@ -134,6 +143,10 @@ public:
     DuiGConfItem currentCountryItem;
     DuiGConfItem currentScriptItem;
     DuiGConfItem currentVariantItem;
+    DuiGConfItem currentLcTimeItem;
+    DuiGConfItem currentLcCollateItem;
+    DuiGConfItem currentLcNumericItem;
+    DuiGConfItem currentLcMonetaryItem;
 #endif
 
     DuiLocale *q_ptr;

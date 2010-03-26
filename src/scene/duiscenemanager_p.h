@@ -112,16 +112,16 @@ public:
 
     void prepareWindowShow(DuiSceneWindow *window);
 
-    void appearWindow(DuiSceneWindow *window,
+    void appearSceneWindow(DuiSceneWindow *window,
                       DuiSceneWindow::DeletionPolicy policy,
                       bool animatedTransition);
 
     void prepareWindowHide(DuiSceneWindow *window);
 
-    void disappearWindow(DuiSceneWindow *window,
+    void disappearSceneWindow(DuiSceneWindow *window,
                          bool animatedTransition);
 
-    void dismissWindow(DuiSceneWindow *window,
+    void dismissSceneWindow(DuiSceneWindow *window,
                        bool animatedTransition);
 
     void startPageSwitchAnimation(DuiSceneWindow *newPage,

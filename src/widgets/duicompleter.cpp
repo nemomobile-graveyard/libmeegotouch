@@ -208,7 +208,7 @@ void DuiCompleterPrivate::_q_complete()
     if (matchedModel->rowCount() > 0) {
         q->model()->setMatchedIndex(0);
         q->model()->setActive(true);
-        q->widget()->sceneManager()->showWindow(q);
+        q->widget()->sceneManager()->appearSceneWindow(q);
         emit q->shown();
     } else if (q->isActive()) {
         reset();
@@ -343,7 +343,7 @@ QAbstractItemModel *DuiCompleter::matchedCandidateModel() const
 void DuiCompleter::hideCompleter()
 {
     if (isActive()) {
-        widget()->sceneManager()->hideWindow(this);
+        widget()->sceneManager()->disappearSceneWindow(this);
         model()->setActive(false);
         emit hidden();
     }

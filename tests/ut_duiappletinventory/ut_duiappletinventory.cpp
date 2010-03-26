@@ -32,6 +32,7 @@
 #include <duiappletinstancemanager_stub.h>
 #include <duiappletid_stub.h>
 #include <duiobjectmenu_stub.h>
+#include "duiapplicationextensionarea_stub.h"
 
 QStringList Ut_DuiAppletInventory::watchedDirectories;
 QStringList Ut_DuiAppletInventory::appletList;
@@ -44,7 +45,7 @@ bool Ut_DuiAppletInventory::tooManyMonitoredPaths = false;
 // Test applet source
 QList<DuiWidget *> gTestAppletSourceCreatedWidgets;
 bool gTestAppletSourceCreateWidget = true;
-DuiWidget *TestAppletSource::constructWidget()
+DuiWidget *TestAppletSource::widget()
 {
     if (gTestAppletSourceCreateWidget) {
         DuiWidget *sourceWidget = new DuiWidget;
@@ -53,6 +54,11 @@ DuiWidget *TestAppletSource::constructWidget()
     } else {
         return NULL;
     }
+}
+
+bool TestAppletSource::initialize(const QString &)
+{
+    return gTestAppletSourceCreateWidget;
 }
 
 // QPluginLoader stubs
@@ -149,7 +155,6 @@ void Ut_DuiAppletInventory::init()
     gDuiAppletButtonStub->stubSetReturnValue("initialize", true);
     gQFileInfoExists = false;
     gQFileInfoIsFile = false;
-
     appWin->scene()->addItem(inventory);
 }
 
@@ -403,56 +408,6 @@ void Ut_DuiAppletInventory::testOnlyDotDesktopFilesAreParsed()
 
     // There should be two widgets in the view
     QCOMPARE(inventory->model()->widgets().count(), 2);
-}
-
-void Ut_DuiAppletInventory::testAppletInstallationSourcesLoading()
-{
-    // No sources initially
-    inventory->setEnabled(true);
-    QCOMPARE(inventory->model()->installationSources().count(), 0);
-
-    // Add some sources
-    gQFileInfoExists = true;
-    gQFileInfoIsFile = true;
-    QString sourceName1 = "libFooAppletSource.so";
-    QString sourceName2 = "libBarAppletSource.so";
-    QStringList sourceList;
-    sourceList << sourceName1 << sourceName2;
-    inventory->setInstallationSources(QStringList() << sourceName1 << sourceName2);
-
-    // Test that correct plugin is loaded
-    QCOMPARE(gQPluginLoaderFileNames[0], QFileInfo(QString(APPLET_INSTALLATION_SOURCES), sourceName1).absoluteFilePath());
-    QCOMPARE(inventory->model()->installationSources().count(), 2);
-    QCOMPARE(inventory->model()->installationSources(), gTestAppletSourceCreatedWidgets);
-
-    // Try to instantiate an applet from a package and check inventory is closed
-    QSignalSpy spy(inventory, SIGNAL(hideAppletInventory()));
-    emit instantiateAppletsFromPackage("FooAppletSource");
-    QCOMPARE(spy.count(), 1);
-    spy.clear();
-
-    // Nonexisting sources are not added
-    gQFileInfoExists = false;
-    inventory->setInstallationSources(QStringList() << sourceName1);
-    QCOMPARE(inventory->model()->installationSources().count(), 0);
-
-    // Nonfile sources are not added
-    gQFileInfoIsFile  = false;
-    inventory->setInstallationSources(QStringList() << sourceName2);
-    QCOMPARE(inventory->model()->installationSources().count(), 0);
-
-    // If plugin doesn't return correct interface, source is not added
-    gQFileInfoExists = true;
-    gQFileInfoIsFile = true;
-    gQPluginLoaderInstanceCreate = false;
-    inventory->setInstallationSources(QStringList() << sourceName1 << sourceName2);
-    QCOMPARE(inventory->model()->installationSources().count(), 0);
-
-    // If plugin returns null widget, source is not added
-    gTestAppletSourceCreateWidget = false;
-    gQPluginLoaderInstanceCreate = true;
-    inventory->setInstallationSources(QStringList() << sourceName1);
-    QCOMPARE(inventory->model()->installationSources().count(), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiAppletInventory)

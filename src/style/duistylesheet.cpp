@@ -95,7 +95,7 @@ bool DuiStyleSheetPrivate::populateStyle(const QList<const DuiStyleSheet *>& she
         const QString &objectName,
         const QString &mode,
         const QString &type,
-        const Dui::Orientation &orientation,
+        Dui::Orientation orientation,
         const DuiWidgetController *parent,
         const QList<SelectorInfo>& parentInfo)
 {
@@ -132,7 +132,7 @@ DuiStyle *DuiStyleSheet::style(const QList<const DuiStyleSheet *>& sheets,
                                const QString &objectName,
                                const QString &mode,
                                const QString &type,
-                               const Dui::Orientation &orientation,
+                               Dui::Orientation orientation,
                                const DuiWidgetController *parent)
 {
     const QMetaObject *styleMetaObject = DuiClassFactory::instance()->styleMetaObject(styleClassName.toStdString().c_str());
@@ -235,7 +235,7 @@ DuiStyleSheetPrivate::CacheEntry *DuiStyleSheetPrivate::buildCacheEntry(const QL
         const QString &objectName,
         const QString &mode,
         const QString &type,
-        const Dui::Orientation &orientation,
+        Dui::Orientation orientation,
         const DuiWidgetController *parent)
 {
     CacheEntry *entry = new CacheEntry;
@@ -287,7 +287,7 @@ DuiStyleSheetPrivate::CacheEntry *DuiStyleSheetPrivate::buildCacheEntry(const QL
     return entry;
 }
 
-bool DuiStyleSheetPrivate::combine(DuiStyle *style, const CacheEntry &entry, const QList<SelectorInfo>& parentInfo, const Dui::Orientation &orientation)
+bool DuiStyleSheetPrivate::combine(DuiStyle *style, const CacheEntry &entry, const QList<SelectorInfo>& parentInfo, Dui::Orientation orientation)
 {
     // we need to match data with parent information for the cache entry, this will
     // result to a combined list of attributes, which can be populated for the style
@@ -488,7 +488,7 @@ bool DuiStyleSheetPrivate::match(DuiStyleSheetSelector *selector,
                                  const QString &objectName,
                                  const QString &mode,
                                  const QString &type,
-                                 const Dui::Orientation &orientation,
+                                 Dui::Orientation orientation,
                                  const DuiWidgetController *parent,
                                  unsigned int &classPriority,
                                  unsigned int &parentPriority)
@@ -583,7 +583,7 @@ void DuiStyleSheetPrivate::getMatchingSelectorsWithParent(const QList<const DuiS
         const QString &objectName,
         const QString &mode,
         const QString &type,
-        const Dui::Orientation &orientation,
+        Dui::Orientation orientation,
         const DuiWidgetController *parent,
         QList<SelectorInfo>& results)
 {

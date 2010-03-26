@@ -19,7 +19,6 @@
 
 #include "duicombobox.h"
 #include "duicombobox_p.h"
-#include "duilistnamespace.h"
 
 #include <QStandardItemModel>
 #include <QItemSelectionModel>
@@ -44,7 +43,7 @@ void DuiComboBoxPrivate::init()
 void DuiComboBoxPrivate::_q_modelDestroyed()
 {
     Q_Q(DuiComboBox);
-    q->model()->setItemModel(duiEmptyModel());
+    q->model()->setItemModel(NULL);
 }
 
 void DuiComboBoxPrivate::_q_selectionModelSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
@@ -144,13 +143,11 @@ void DuiComboBox::setItemModel(QAbstractItemModel *itemModel)
 
 QAbstractItemModel *DuiComboBox::itemModel() const
 {
-    QAbstractItemModel *itemModel = model()->itemModel();
-    if (itemModel == duiEmptyModel()) {
+    if (model()->itemModel() == NULL) {
         DuiComboBox *that = const_cast<DuiComboBox *>(this);
         that->setItemModel(new QStandardItemModel(0, 1, that));
     }
-
-    return itemModel;
+    return model()->itemModel();
 }
 
 void DuiComboBox::setSelectionModel(QItemSelectionModel *selectionModel)
@@ -245,16 +242,6 @@ QString DuiComboBox::itemIconID(int index) const
         return itemModel->data(mi, Qt::DecorationRole).toString();
     else
         return QString();
-}
-
-bool DuiComboBox::isDown() const
-{
-    return model()->down();
-}
-
-void DuiComboBox::setDown(bool status)
-{
-    model()->setDown(status);
 }
 
 void DuiComboBox::insertItem(int index, const QString &text)

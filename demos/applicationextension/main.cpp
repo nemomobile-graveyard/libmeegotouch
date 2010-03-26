@@ -30,13 +30,14 @@
 
 void DemoPage::createContent()
 {
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     QGraphicsLinearLayout *vbox = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(vbox);
 
     extensionValueLabel = new DuiLabel;
     extensionValueLabel->setAlignment(Qt::AlignHCenter);
     vbox->addItem(extensionValueLabel);
+    extensionValueLabel->setObjectName("ExtensionValueLabel");
 
     DuiButton *button = new DuiButton;
     button->setText("Reset Extensions");

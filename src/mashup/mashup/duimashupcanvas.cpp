@@ -84,10 +84,6 @@ void DuiMashupCanvasPrivate::addWidget(DuiWidget *widget, DuiDataStore &store)
 {
     Q_Q(DuiMashupCanvas);
 
-    // TODO: when the current ABI freeze ends:
-    // - make DuiMashupCanvas inherit DuiExtensionArea
-    // - remove dataStore handling in this function and call DuiExtensionAreaPrivate's addWidget instead
-    //   (leave the DuiAction things here)
     if (!dataStores.contains(widget)) {
         // Add the remove action into the object menu of the applet widget
         //: Object menu command. Removes e.g. applet from canvas.
@@ -96,38 +92,18 @@ void DuiMashupCanvasPrivate::addWidget(DuiWidget *widget, DuiDataStore &store)
         DuiAction *action = new DuiAction(qtTrId("qtn_comm_removewidget"), q);
         instanceManager->connect(action, SIGNAL(triggered(bool)), SLOT(removeActionTriggered(bool)));
         widget->addAction(action);
-
-        // Add data store to data stores map
-        dataStores[widget] = &store;
-
-        // Let the view know about the data store modification
-        q->model()->dataStoresModified();
-    } else {
-        // Widget is already added to the mashup canvas. Bail out.
-        duiWarning("DuiMashupCanvas") << "DuiMashupCanvas::addWidget() - Widget was already added to mashup canvas.";
     }
+
+    DuiExtensionAreaPrivate::addWidget(widget, store);
 }
 
-void DuiMashupCanvasPrivate::removeWidget(DuiWidget *widget)
-{
-    Q_Q(DuiMashupCanvas);
-
-    // TODO: when the current ABI freeze ends:
-    // - make DuiMashupCanvas inherit DuiExtensionArea
-    // - remove this function (removeWidget in the base class works then)
-    if (dataStores.contains(widget)) {
-        // Remove data store from the data stores map
-        dataStores.remove(widget);
-        q->model()->dataStoresModified();
-    }
-}
 
 
 //////////////////
 // PUBLIC CLASS //
 //////////////////
 DuiMashupCanvas::DuiMashupCanvas(const QString &identifier, QGraphicsItem *parent) :
-    DuiWidgetController(new DuiMashupCanvasPrivate, new DuiMashupCanvasModel, parent)
+    DuiExtensionArea(new DuiMashupCanvasPrivate, new DuiMashupCanvasModel, parent)
 {
     // Initialize the private implementation
     Q_D(DuiMashupCanvas);
@@ -136,7 +112,7 @@ DuiMashupCanvas::DuiMashupCanvas(const QString &identifier, QGraphicsItem *paren
 }
 
 DuiMashupCanvas::DuiMashupCanvas(DuiMashupCanvasPrivate *dd, DuiMashupCanvasModel *model, QGraphicsItem *parent, const QString &identifier) :
-    DuiWidgetController(dd, model, parent)
+    DuiExtensionArea(dd, model, parent)
 {
     Q_D(DuiMashupCanvas);
 
@@ -170,20 +146,6 @@ QString DuiMashupCanvas::serviceAddress() const
     Q_D(const DuiMashupCanvas);
 
     return d->serviceAddress;
-}
-
-void DuiMashupCanvas::addWidget(DuiWidget *widget, DuiDataStore &store)
-{
-    Q_D(DuiMashupCanvas);
-
-    d->addWidget(widget, store);
-}
-
-void DuiMashupCanvas::removeWidget(DuiWidget *widget)
-{
-    Q_D(DuiMashupCanvas);
-
-    d->removeWidget(widget);
 }
 
 DuiAppletInstanceManager *DuiMashupCanvas::appletInstanceManager() const

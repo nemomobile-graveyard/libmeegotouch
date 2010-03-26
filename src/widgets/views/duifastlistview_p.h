@@ -103,6 +103,7 @@ public:
     virtual void cellClicked(DuiWidget *source);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual void updateItemSize();
+    virtual QSizeF cellSize(int row) const;
     virtual void resetModel(DuiListModel *controllerModel);
     virtual int locateVisibleRowAt(int y, int x = 0) = 0;
 
@@ -192,6 +193,7 @@ public:
     virtual DuiWidget *createItem(int row);
     virtual int locateVisibleRowAt(int y, int x = 0);
     virtual void updateItemSize();
+    virtual QSizeF cellSize(int row) const;
     virtual void cellClicked(DuiWidget *source);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual void createVisibleItems(const QModelIndex &firstVisibleRow,
@@ -221,6 +223,7 @@ public:
     virtual int groupSize(int headerIndex) const;
     virtual void resetModel(DuiListModel *controllerModel);
     virtual int totalHeight();
+    virtual QSizeF cellSize(int row) const;
 
     virtual QModelIndex locateVisibleIndexAt(int pos);
     virtual int locateVisibleRowAt(int y, int x = 0);
@@ -259,6 +262,7 @@ public:
     virtual void clearVisibleItemsArray();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void updateItemSize();
+    virtual QSizeF cellSize(int row) const;
     virtual void cellClicked(DuiWidget *source);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual int locatePosOfItem(int headerIndex, int itemIndex);

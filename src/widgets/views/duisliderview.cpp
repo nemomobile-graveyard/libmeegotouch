@@ -303,19 +303,6 @@ DuiSliderGroove::DuiSliderGroove(QGraphicsItem *parent) :
 
 DuiSliderGroove::~DuiSliderGroove()
 {
-    if (backgroundBaseImage)
-        DuiTheme::releaseScalableImage(backgroundBaseImage);
-    if (backgroundElapsedImage)
-        DuiTheme::releaseScalableImage(backgroundElapsedImage);
-    if (backgroundReceivedImage)
-        DuiTheme::releaseScalableImage(backgroundReceivedImage);
-    if (backgroundVerticalBaseImage)
-        DuiTheme::releaseScalableImage(backgroundVerticalBaseImage);
-    if (backgroundVerticalElapsedImage)
-        DuiTheme::releaseScalableImage(backgroundVerticalElapsedImage);
-    if (backgroundVerticalReceivedImage)
-        DuiTheme::releaseScalableImage(backgroundVerticalReceivedImage);
-
     ensureSafeClosing();
 }
 

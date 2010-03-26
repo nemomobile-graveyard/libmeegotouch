@@ -251,13 +251,13 @@ void DuiSceneManagerPrivate::_q_applyQueuedSceneWindowTransitions()
 
         switch (transition.type) {
             case SceneWindowTransition::AppearTransition:
-                appearWindow(transition.sceneWindow, transition.policy, transition.animated);
+                appearSceneWindow(transition.sceneWindow, transition.policy, transition.animated);
                 break;
             case SceneWindowTransition::DisappearTransition:
-                disappearWindow(transition.sceneWindow, transition.animated);
+                disappearSceneWindow(transition.sceneWindow, transition.animated);
                 break;
             case SceneWindowTransition::DismissTransition:
-                dismissWindow(transition.sceneWindow, transition.animated);
+                dismissSceneWindow(transition.sceneWindow, transition.animated);
                 break;
             default:
                 // Should never occur.
@@ -644,7 +644,7 @@ bool DuiSceneManagerPrivate::validateSceneWindowPreAppearanceStatus(DuiSceneWind
 
             DuiSceneWindow::DeletionPolicy currentPolicy = sceneWindow->deletionPolicy();
 
-            otherSceneManager->hideWindowNow(sceneWindow);
+            otherSceneManager->disappearSceneWindowNow(sceneWindow);
 
             if (currentPolicy == DuiSceneWindow::DestroyWhenDone) {
                 // Window is gone.
@@ -830,6 +830,7 @@ void DuiSceneManagerPrivate::startPageSwitchAnimation(DuiSceneWindow *newPage,
 
 void DuiSceneManagerPrivate::pushPage(DuiSceneWindow *page, bool animatedTransition)
 {
+    Q_Q(DuiSceneManager);
     DuiSceneWindow *previousPage = 0;
 
     if (currentPage && currentPage != page) {
@@ -839,6 +840,7 @@ void DuiSceneManagerPrivate::pushPage(DuiSceneWindow *page, bool animatedTransit
 
         previousPage = currentPage;
         pageHistory.append(previousPage);
+        emit q->pageHistoryChanged();
     }
 
     currentPage = page;
@@ -855,11 +857,13 @@ void DuiSceneManagerPrivate::pushPage(DuiSceneWindow *page, bool animatedTransit
 
 void DuiSceneManagerPrivate::popPage(bool animatedTransition)
 {
+    Q_Q(DuiSceneManager);
     DuiSceneWindow *previousPage = 0;
 
     // Pages in the history might have been deleted overtime.
     while (previousPage == 0 && !pageHistory.isEmpty()) {
         previousPage = pageHistory.takeLast();
+        emit q->pageHistoryChanged();
     }
 
     if (previousPage) {
@@ -881,7 +885,7 @@ void DuiSceneManagerPrivate::popPage(bool animatedTransition)
     currentPage = previousPage;
 }
 
-void DuiSceneManagerPrivate::appearWindow(DuiSceneWindow *window,
+void DuiSceneManagerPrivate::appearSceneWindow(DuiSceneWindow *window,
         DuiSceneWindow::DeletionPolicy policy,
         bool animatedTransition)
 {
@@ -961,7 +965,7 @@ void DuiSceneManagerPrivate::prepareWindowHide(DuiSceneWindow *window)
     q->connect(window, SIGNAL(disappeared()), SLOT(_q_windowHideAnimationFinished()));
 }
 
-void DuiSceneManagerPrivate::disappearWindow(DuiSceneWindow *window,
+void DuiSceneManagerPrivate::disappearSceneWindow(DuiSceneWindow *window,
         bool animatedTransition)
 {
     Q_Q(DuiSceneManager);
@@ -1010,7 +1014,7 @@ void DuiSceneManagerPrivate::freezeUIForAnimationDuration(QAbstractAnimation *an
     }
 }
 
-void DuiSceneManagerPrivate::dismissWindow(DuiSceneWindow *window,
+void DuiSceneManagerPrivate::dismissSceneWindow(DuiSceneWindow *window,
         bool animatedTransition)
 {
     Q_Q(DuiSceneManager);
@@ -1064,11 +1068,11 @@ void DuiSceneManagerPrivate::_q_inputPanelOpened()
     const bool widgetOnPage = onApplicationPage(focusedInputWidget);
     if (navBar && widgetOnPage) {
         navBarHidden = true;
-        q->hideWindow(navBar);
+        q->disappearSceneWindow(navBar);
     }
     if (escapeButtonPanel && (widgetOnPage || (navBar && navBar->isAncestorOf(focusedInputWidget)))) {
         escapeButtonHidden = true;
-        q->hideWindow(escapeButtonPanel);
+        q->disappearSceneWindow(escapeButtonPanel);
     }
 
     DuiInputMethodState *inputMethodState = DuiInputMethodState::instance();
@@ -1088,11 +1092,11 @@ void DuiSceneManagerPrivate::_q_inputPanelClosed()
     focusedInputWidget = 0;
 
     if (navBar && navBarHidden) {
-        q->showWindow(navBar);
+        q->appearSceneWindow(navBar);
         navBarHidden = false;
     }
     if (escapeButtonPanel && escapeButtonHidden) {
-        q->showWindow(escapeButtonPanel);
+        q->appearSceneWindow(escapeButtonPanel);
         escapeButtonHidden = false;
     }
 
@@ -1129,17 +1133,17 @@ DuiScene *DuiSceneManager::scene()
     return d->scene;
 }
 
-void DuiSceneManager::showWindow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy)
+void DuiSceneManager::appearSceneWindow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy)
 {
     Q_D(DuiSceneManager);
 
-    d->appearWindow(window, policy, true);
+    d->appearSceneWindow(window, policy, true);
 }
 
-void DuiSceneManager::showWindowNow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy)
+void DuiSceneManager::appearSceneWindowNow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy)
 {
     Q_D(DuiSceneManager);
-    d->appearWindow(window, policy, false);
+    d->appearSceneWindow(window, policy, false);
 }
 
 int DuiSceneManager::execDialog(DuiDialog *dialog)
@@ -1168,7 +1172,7 @@ int DuiSceneManager::execDialog(DuiDialog *dialog)
     if (g)
         g->ungrabMouse();
 
-    showWindow(dialog);
+    appearSceneWindow(dialog);
     eventLoop.exec();
 
     // use QPointer in case of the dialog being deleted in the meantime
@@ -1183,28 +1187,28 @@ int DuiSceneManager::execDialog(DuiDialog *dialog)
     return DuiDialog::Rejected;
 }
 
-void DuiSceneManager::hideWindow(DuiSceneWindow *window)
+void DuiSceneManager::disappearSceneWindow(DuiSceneWindow *window)
 {
     Q_D(DuiSceneManager);
-    d->disappearWindow(window, true);
+    d->disappearSceneWindow(window, true);
 }
 
-void DuiSceneManager::hideWindowNow(DuiSceneWindow *window)
+void DuiSceneManager::disappearSceneWindowNow(DuiSceneWindow *window)
 {
     Q_D(DuiSceneManager);
-    d->disappearWindow(window, false);
+    d->disappearSceneWindow(window, false);
 }
 
-void DuiSceneManager::closeWindow(DuiSceneWindow *window)
+void DuiSceneManager::dismissSceneWindow(DuiSceneWindow *window)
 {
     Q_D(DuiSceneManager);
-    d->dismissWindow(window, true);
+    d->dismissSceneWindow(window, true);
 }
 
-void DuiSceneManager::closeWindowNow(DuiSceneWindow *window)
+void DuiSceneManager::dismissSceneWindowNow(DuiSceneWindow *window)
 {
     Q_D(DuiSceneManager);
-    d->dismissWindow(window, false);
+    d->dismissSceneWindow(window, false);
 }
 
 bool DuiSceneManager::eventFilter(QObject *watched, QEvent *event)
@@ -1283,14 +1287,14 @@ void DuiSceneManager::closeSoftwareInputPanel()
 }
 
 void DuiSceneManager::setOrientationAngle(Dui::OrientationAngle angle,
-        Dui::OrientationChangeMode mode)
+                                          TransitionMode mode)
 {
     Q_D(DuiSceneManager);
 
     if (d->orientationAnimation->state() == QAbstractAnimation::Running)
         d->orientationAnimation->stop();
 
-    if (mode == Dui::AnimatedOrientationChange)
+    if (mode == AnimatedTransition)
         d->rotateToAngle(angle);
     else
         d->setOrientationAngleWithoutAnimation(angle);
@@ -1351,12 +1355,20 @@ void DuiSceneManager::setPageHistory(const QList<DuiSceneWindow *> &list)
 {
     Q_D(DuiSceneManager);
     int pageCount = list.count();
+    QList<DuiSceneWindow *> currentPageHistory = pageHistory();
+
+    if (currentPageHistory == list) {
+        // Nothing changes, thus nothing to be done.
+        return;
+    }
 
     d->pageHistory.clear();
 
     for (int i = 0; i < pageCount; i++) {
         d->pageHistory.append(list.at(i));
     }
+
+    emit pageHistoryChanged();
 }
 
 #include "moc_duiscenemanager.cpp"

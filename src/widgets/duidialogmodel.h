@@ -41,7 +41,7 @@ private:
     DUI_MODEL_PROPERTY(bool, buttonBoxVisible, ButtonBoxVisible, true, true)
     DUI_MODEL_PROPERTY(bool, titleBarVisible, TitleBarVisible, true, true)
     DUI_MODEL_PROPERTY(QString, title, Title, true, QString())
-    DUI_MODEL_PROPERTY(bool, windowModal, WindowModal, true, false)
+    DUI_MODEL_PROPERTY(bool, systemModal, SystemModal, true, false)
 
     /*!
         \property DuiDialogModel::progressIndicatorVisible
@@ -53,7 +53,7 @@ private:
         \property DuiDialogModel::centralWidget
         \brief Central widget for the dialog.
     */
-    DUI_MODEL_PTR_PROPERTY(DuiWidget *, centralWidget, CentralWidget, true, new DuiWidget)
+    DUI_MODEL_PTR_PROPERTY(QGraphicsWidget *, centralWidget, CentralWidget, true, new DuiWidget)
 
     /*!
         \property DuiDialogModel::buttons
@@ -67,7 +67,7 @@ public:
      * Non-const getter for centralWidget property.
      * Used by view classes to add the central widget to their internal layouts.
      */
-    DuiWidget *centralWidget();
+    QGraphicsWidget *centralWidget();
 
     /*!
      * \brief Adds a given \a button to the button box.

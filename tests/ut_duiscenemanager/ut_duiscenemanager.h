@@ -48,10 +48,10 @@ private slots:
     void testConstructorWithSceneSpecified();
     void testSceneWindowAttaching();
     void testSceneWindowDetaching();
-    void testSceneWindowShowNow();
-    void testSceneWindowShow();
-    void testSceneWindowHideNow();
-    void testSceneWindowHide();
+    void testSceneWindowAppearNow();
+    void testSceneWindowAppear();
+    void testSceneWindowDisappearNow();
+    void testSceneWindowDisappear();
     void testSceneLayerEffect();
     void testInitialOrientation();
     void testOrientationChangedSignal();
@@ -66,6 +66,10 @@ private slots:
     void testSettingPageHistory();
     void testDeletePageInPageHistory();
     void testPageHistoryAfterPageDeletion();
+    void testPageHistoryChangedWhenPushing();
+    void testPageHistoryChangedWhenPopping();
+    void testPageHistoryChangedWhenSettingPageHistory();
+    void testPageHistoryChangedWhenSettingSamePageHistory();
 };
 
 Q_DECLARE_METATYPE(Dui::Orientation)

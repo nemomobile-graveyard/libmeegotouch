@@ -94,7 +94,8 @@ void MyVideoWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 void MyVideoWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    emit longPressed();
+    DuiVideoWidget::contextMenuEvent(event);
+    //emit longPressed();
 }
 
 MyImageVideoContainer::MyImageVideoContainer(QGraphicsItem *parent)
@@ -182,7 +183,7 @@ QString ItemDetailPage::timedemoTitle()
 
 void ItemDetailPage::createContent()
 {
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     layout = new DuiLayout(panel);
 
     policy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
@@ -193,19 +194,30 @@ void ItemDetailPage::createContent()
     if( !videoId.isEmpty() ) {
         video = new DuiVideoWidget(panel);
         connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
+        video->setFullscreen(true);
         video->open(videoId);
         policy->addItem(video);
 
+        QGraphicsLinearLayout* controlLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+        controlLayout->setContentsMargins(0,0,0,0);
+        button = new DuiButton(panel);
+        //button->setViewType(DuiButton::iconType);
+        button->setObjectName("video-player-button");
+        button->setIconID("icon-m-common-pause");
+        button->setIconVisible(true);
+        button->setTextVisible(false);
+        connect(button, SIGNAL(clicked(bool)), this, SLOT(buttonClicked()));
+        controlLayout->addItem(button);
+        controlLayout->setAlignment(button, Qt::AlignCenter);
+        
         slider = new DuiSlider(panel);
-
+        slider->setObjectName("video-player-slider");
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(videoSliderValueChanged(int)));
         connect(slider, SIGNAL(sliderPressed()), this, SLOT(sliderPressed()));
         connect(slider, SIGNAL(sliderReleased()), this, SLOT(sliderReleased()));
-        policy->addItem(slider);
+        controlLayout->addItem(slider);
         
-        button = new DuiButton("PAUSE", panel);
-        connect(button, SIGNAL(clicked(bool)), this, SLOT(buttonClicked()));
-        policy->addItem(button);
+        policy->addItem(controlLayout);
 
         QFileInfo info(videoId);        
         setTitle(info.fileName());    
@@ -229,9 +241,14 @@ void ItemDetailPage::retranslateUi()
 void ItemDetailPage::videoReady()
 {
     video->play();
+    video->setFullscreen(true);
     slider->setMinimum(0);
     slider->setMaximum(video->length());
     QTimer::singleShot(100, this, SLOT(updatePosition()));
+    
+    setAutoMarginsForComponentsEnabled(false);
+    setComponentsDisplayMode(DuiApplicationPage::NavigationBar/*DuiApplicationPage::AllComponents*/, DuiApplicationPageModel::Hide);
+    
 }
 
 void ItemDetailPage::sliderPressed()
@@ -257,10 +274,13 @@ void ItemDetailPage::buttonClicked()
 {
     if( video->state() == DuiVideo::Playing ) {
         video->pause();
-        button->setText("PLAY");
+        button->setIconID("icon-m-common-play");
+
+        //button->setText("PLAY");
     } else {
         video->play();
-        button->setText("PAUSE");
+        button->setIconID("icon-m-common-pause");
+        //button->setText("PAUSE");
     }
         
 }
@@ -310,28 +330,34 @@ void VideoContainerPage::createContent()
             image->setImage(QImage(filename));
             image->setId(filename);
             
-            DuiAction *action = new DuiAction("Show", image);
+            DuiAction *action = new DuiAction("Open", image);
             action->setLocation(DuiAction::ObjectMenuLocation);
-            
             image->addAction(action);
+
             image->setPreferredSize(92, 92);
             //image->setMinimumSize(92, 92);
             //image->setMaximumSize(92, 92);            
             container->addItem(image);
         } 
         else if( info.suffix() == "mp4" || info.suffix() == "mov" ) {
-            MyVideoWidget *video = new MyVideoWidget(container->centralWidget());
-            //connect(video, SIGNAL(clicked()), this, SLOT(itemClicked()));
-            //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
-            connect(video, SIGNAL(clicked()), this, SLOT(itemLongPressed()));
-            //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
-            connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
-            video->open(filename);
-            video->setId(filename);
-            video->setPreferredSize(92, 92);
-            //video->setMinimumSize(92, 92);
-            //video->setMaximumSize(92, 92);
-            container->addItem(video);        
+            if( info.fileName().startsWith("thumb-") ) {
+                MyVideoWidget *video = new MyVideoWidget(container->centralWidget());
+                DuiAction *action = new DuiAction("Open", video);
+                action->setLocation(DuiAction::ObjectMenuLocation);
+                video->addAction(action);
+                
+                //connect(video, SIGNAL(clicked()), this, SLOT(itemClicked()));
+                //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
+                connect(video, SIGNAL(clicked()), this, SLOT(itemLongPressed()));
+                //connect(video, SIGNAL(longPressed()), this, SLOT(itemLongPressed()));
+                connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
+                video->open(filename);
+                video->setId(info.absolutePath() + QDir::separator() + info.fileName().remove("thumb-"));
+                video->setPreferredSize(92, 92);
+                //video->setMinimumSize(92, 92);
+                //video->setMaximumSize(92, 92);
+                container->addItem(video);
+            }
         }
     }   
 
@@ -376,10 +402,6 @@ void VideoContainerPage::openVideoDetailPage(const QString& itemid)
     ItemDetailPage* page = new ItemDetailPage();
     page->setVideoId(itemid);
     page->setParent(this);
-    
-    connect(page, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
-    
-    page->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
     page->appear(DestroyWhenDismissed);    
 }
 
@@ -388,10 +410,6 @@ void VideoContainerPage::openImageDetailPage(const QString& itemid)
     ItemDetailPage* page = new ItemDetailPage();
     page->setImageId(itemid);
     page->setParent(this);
-    
-    connect(page, SIGNAL(backButtonClicked()), page, SLOT(dismiss()));
-    
-    page->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
     page->appear(DestroyWhenDismissed); 
 }
 

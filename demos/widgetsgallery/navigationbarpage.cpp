@@ -87,7 +87,7 @@ void NavigationBarPage::createContent()
     lblEscapeModeDesc = new DuiLabel(this);
     comboEscapeMode = new DuiComboBox(this);
 
-    connect(comboEscapeMode, SIGNAL(currentIndexChanged(int)), SLOT(changeEscapeButtonMode(int)));
+    connect(comboEscapeMode, SIGNAL(currentIndexChanged(int)), SLOT(changeEscapeMode(int)));
 
     lytMain->addItem(lblDisplayMode);
     lytMain->addItem(lytButtons);
@@ -128,20 +128,20 @@ void NavigationBarPage::retranslateUi()
     //% "Components' display mode:"
     lblDisplayMode->setText(qtTrId("xx_navigationbar_display_mode"));
     //% "Escape Button mode:"
-    lblEscapeModeDesc->setText(qtTrId("xx_navigationbar_escapebutton_mode_label"));
+    lblEscapeModeDesc->setText(qtTrId("xx_navigationbar_escape_mode_label"));
     int oldIndex = comboEscapeMode->currentIndex();
     comboEscapeMode->clear();
-    comboEscapeMode->insertItem(BackButton,
+    comboEscapeMode->insertItem(Auto,
+                                //% "Auto"
+                                qtTrId("xx_navigationbar_auto"));
+    comboEscapeMode->insertItem(ManualBack,
                                 "Icon-back",
-                                //% "Back button"
-                                qtTrId("xx_navigationbar_back_button"));
-    comboEscapeMode->insertItem(CloseButton,
+                                //% "Manual Back"
+                                qtTrId("xx_navigationbar_manual_back"));
+    comboEscapeMode->insertItem(CloseWindow,
                                 "Icon-close",
-                                //% "Close button"
-                                qtTrId("xx_navigationbar_close_button"));
-    comboEscapeMode->insertItem(Hidden,
-                                //% "Hidden"
-                                qtTrId("xx_navigationbar_hidden"));
+                                //% "Close Window"
+                                qtTrId("xx_navigationbar_close_window"));
 
     if (oldIndex == -1)
         comboEscapeMode->setCurrentIndex(0);
@@ -171,15 +171,20 @@ void NavigationBarPage::retranslateDisplayModeComboBox(DuiComboBox *combo)
         combo->setCurrentIndex(oldIndex);
 }
 
-void NavigationBarPage::changeEscapeButtonMode(int index)
+void NavigationBarPage::changeEscapeMode(int index)
 {
     switch (index) {
-    case BackButton:
-        setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
-        break;
-    case CloseButton:
-        setEscapeButtonMode(DuiEscapeButtonPanelModel::CloseMode);
-        break;
+        case Auto:
+            setEscapeMode(DuiApplicationPageModel::EscapeAuto);
+            break;
+        case ManualBack:
+            setEscapeMode(DuiApplicationPageModel::EscapeManualBack);
+            break;
+        case CloseWindow:
+            setEscapeMode(DuiApplicationPageModel::EscapeCloseWindow);
+            break;
+        default:
+            qFatal("Invalid index");
     }
 }
 
@@ -227,6 +232,18 @@ void NavigationBarPage::changeHomeButtonDisplayMode(int index)
 
 void NavigationBarPage::setButtonsState()
 {
-    comboEscapeMode->setCurrentIndex(escapeButtonMode());
+    switch (escapeMode()) {
+        case DuiApplicationPageModel::EscapeAuto:
+            comboEscapeMode->setCurrentIndex(Auto);
+            break;
+        case DuiApplicationPageModel::EscapeManualBack:
+            comboEscapeMode->setCurrentIndex(ManualBack);
+            break;
+        case DuiApplicationPageModel::EscapeCloseWindow:
+            comboEscapeMode->setCurrentIndex(CloseWindow);
+            break;
+        default:
+            qFatal("Invalid page escape mode.");
+    }
 }
 

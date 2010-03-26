@@ -20,35 +20,23 @@
 #ifndef DUIMASHUPCANVASMODEL_H_
 #define DUIMASHUPCANVASMODEL_H_
 
-#include <DuiWidgetModel>
+#include "duiextensionareamodel.h"
 #include <QStringList>
 
 class DuiWidget;
 class DuiDataStore;
 
-typedef QMap<DuiWidget *, DuiDataStore *> DataStoreMap;
-
 /*!
  * DuiMashupCanvasModel is the model class for DuiMashupCanvas.
  */
-class DUI_EXPORT DuiMashupCanvasModel : public DuiWidgetModel
+class DUI_EXPORT DuiMashupCanvasModel : public DuiExtensionAreaModel
 {
     Q_OBJECT
     DUI_MODEL_INTERNAL(DuiMashupCanvasModel)
 
 public:
-    //! A list of widgets
-    DUI_MODEL_PTR_PROPERTY(DataStoreMap *, dataStores, DataStores, true, NULL)
-
     //! A list of names of the applet categories to show in this mashup canvas
     DUI_MODEL_PROPERTY(QStringList, categories, Categories, true, QStringList())
-
-public:
-    /*!
-     * Emits the memberModified() signal for dataStores. Can be used
-     * when the data pointed to by dataStores has changed.
-     */
-    void dataStoresModified();
 };
 
 #endif /* DUIMASHUPCANVASMODEL_H_ */

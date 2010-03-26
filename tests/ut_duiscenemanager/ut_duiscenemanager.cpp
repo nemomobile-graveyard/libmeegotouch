@@ -164,7 +164,7 @@ void Ut_DuiSceneManager::testConstructorWithSceneSpecified()
 void Ut_DuiSceneManager::testSceneWindowAttaching()
 {
     DuiOverlay *p = new DuiOverlay();
-    sm->showWindowNow(p);
+    sm->appearSceneWindowNow(p);
 
     QCOMPARE(sm->d_ptr->windows->size(), 1);
     delete p;
@@ -173,17 +173,17 @@ void Ut_DuiSceneManager::testSceneWindowAttaching()
 void Ut_DuiSceneManager::testSceneWindowDetaching()
 {
     DuiOverlay *p = new DuiOverlay();
-    sm->showWindowNow(p);
+    sm->appearSceneWindowNow(p);
 
     QCOMPARE(sm->d_ptr->windows->size(), 1);
     delete p;
     QCOMPARE(sm->d_ptr->windows->size(), 0);
 }
 
-void Ut_DuiSceneManager::testSceneWindowShowNow()
+void Ut_DuiSceneManager::testSceneWindowAppearNow()
 {
     DuiOverlay *p = new DuiOverlay();
-    sm->showWindowNow(p);
+    sm->appearSceneWindowNow(p);
 
     QCOMPARE((int)p->zValue(), (int)DuiSceneManagerPrivate::Overlay);
     QCOMPARE(p->scene(), qobject_cast<const QGraphicsScene *>(sm->scene()));
@@ -192,10 +192,10 @@ void Ut_DuiSceneManager::testSceneWindowShowNow()
     delete p;
 }
 
-void Ut_DuiSceneManager::testSceneWindowShow()
+void Ut_DuiSceneManager::testSceneWindowAppear()
 {
     DuiNavigationBar *p = new DuiNavigationBar();
-    sm->showWindow(p);
+    sm->appearSceneWindow(p);
 
     QCOMPARE((int)p->zValue(), (int)DuiSceneManagerPrivate::NavigationBar);
     QCOMPARE(p->scene(), qobject_cast<const QGraphicsScene *>(sm->scene()));
@@ -204,12 +204,12 @@ void Ut_DuiSceneManager::testSceneWindowShow()
     delete p;
 }
 
-void Ut_DuiSceneManager::testSceneWindowHideNow()
+void Ut_DuiSceneManager::testSceneWindowDisappearNow()
 {
     DuiNavigationBar *p = new DuiNavigationBar();
 
-    sm->showWindowNow(p);
-    sm->hideWindowNow(p);
+    sm->appearSceneWindowNow(p);
+    sm->disappearSceneWindowNow(p);
 
     QCOMPARE(sm->d_ptr->navBar, (DuiNavigationBar *)0);
     QCOMPARE(p->isVisible(), false);
@@ -217,11 +217,11 @@ void Ut_DuiSceneManager::testSceneWindowHideNow()
     delete p;
 }
 
-void Ut_DuiSceneManager::testSceneWindowHide()
+void Ut_DuiSceneManager::testSceneWindowDisappear()
 {
     DuiNavigationBar *p = new DuiNavigationBar();
-    sm->showWindow(p);
-    sm->hideWindow(p);
+    sm->appearSceneWindow(p);
+    sm->disappearSceneWindow(p);
 
     QCOMPARE(sm->d_ptr->navBar, (DuiNavigationBar *)0);
     QCOMPARE(p->isVisible(), false);
@@ -242,8 +242,8 @@ void Ut_DuiSceneManager::testSceneLayerEffect()
 
     QCOMPARE((int)m->parentItem()->zValue(), (int)DuiSceneManagerPrivate::MessageBox);
 
-    sm->hideWindowNow(m);
-    sm->hideWindowNow(n);
+    sm->disappearSceneWindowNow(m);
+    sm->disappearSceneWindowNow(n);
 
     delete m;
     delete n;
@@ -263,7 +263,7 @@ void Ut_DuiSceneManager::testOrientationChangedSignal()
     newAngle %= 360;
 
     sm->setOrientationAngle((Dui::OrientationAngle) newAngle,
-                            Dui::ImmediateOrientationChange);
+                            DuiSceneManager::ImmediateTransition);
     Dui::Orientation newOrientation = (newAngle == Dui::Angle0 || newAngle == Dui::Angle180)
                                       ? Dui::Landscape
                                       : Dui::Portrait;
@@ -280,7 +280,7 @@ void Ut_DuiSceneManager::testNoOrientationChangedSignalWhenRotatingBy180Degrees(
     newAngle %= 360;
 
     sm->setOrientationAngle((Dui::OrientationAngle) newAngle,
-                            Dui::ImmediateOrientationChange);
+                            DuiSceneManager::ImmediateTransition);
 
     QCOMPARE(spy.count(), 0);
 }
@@ -303,8 +303,8 @@ void Ut_DuiSceneManager::testNavBarDockWidgetVisibility()
     QCOMPARE(p->isVisible(), true);
     QCOMPARE(d->isVisible(), true);
 
-    sm->hideWindowNow(p);
-    sm->hideWindowNow(d);
+    sm->disappearSceneWindowNow(p);
+    sm->disappearSceneWindowNow(d);
 
     delete p;
     delete d;
@@ -318,12 +318,12 @@ void Ut_DuiSceneManager::testAngleBoundaryCases()
     int newAngle = sm->orientationAngle() + Dui::Angle270;
     newAngle %= 360;
     sm->setOrientationAngle((Dui::OrientationAngle) newAngle,
-                            Dui::ImmediateOrientationChange);
+                            DuiSceneManager::ImmediateTransition);
 
     newAngle = sm->orientationAngle() + Dui::Angle90;
     newAngle %= 360;
     sm->setOrientationAngle((Dui::OrientationAngle) newAngle,
-                            Dui::ImmediateOrientationChange);
+                            DuiSceneManager::ImmediateTransition);
 
     QCOMPARE(spyChanged.count(), 2);
 
@@ -337,7 +337,7 @@ void Ut_DuiSceneManager::testSceneSizes()
     QVERIFY(vSR.width() > 0);
     QVERIFY(vSR.height() > 0);
 
-    sm->setOrientationAngle(Dui::Angle90, Dui::ImmediateOrientationChange);
+    sm->setOrientationAngle(Dui::Angle90, DuiSceneManager::ImmediateTransition);
 
     // check scenerects are in correct orientation
     // what about square?
@@ -350,7 +350,7 @@ void Ut_DuiSceneManager::testSceneSizes()
     vSR = sm->visibleSceneSize(Dui::Landscape);
     QVERIFY(vSR.width() > vSR.height());
 
-    sm->setOrientationAngle(Dui::Angle180, Dui::ImmediateOrientationChange);
+    sm->setOrientationAngle(Dui::Angle180, DuiSceneManager::ImmediateTransition);
 
     QCOMPARE(sm->orientation(), Dui::Landscape);
     QCOMPARE(sm->visibleSceneSize(), sm->visibleSceneSize(Dui::Landscape));
@@ -371,14 +371,14 @@ void Ut_DuiSceneManager::testPageSwitchingOnAppearNow()
     QSignalSpy firstPageDisappeared(&firstPage, SIGNAL(disappeared()));
     QSignalSpy secondPageAppeared(&secondPage, SIGNAL(appeared()));
 
-    sm->showWindowNow(&firstPage);
+    sm->appearSceneWindowNow(&firstPage);
 
     QCOMPARE(firstPageAppeared.count(), 1);
     QCOMPARE(firstPageDisappeared.count(), 0);
     QCOMPARE(secondPageAppeared.count(), 0);
     firstPageAppeared.clear();
 
-    sm->showWindowNow(&secondPage);
+    sm->appearSceneWindowNow(&secondPage);
 
     QCOMPARE(firstPageAppeared.count(), 0);
     QCOMPARE(firstPageDisappeared.count(), 1);
@@ -390,15 +390,15 @@ void Ut_DuiSceneManager::testPageSwitchingOnDismissNow()
     DuiApplicationPage firstPage;
     DuiApplicationPage secondPage;
 
-    sm->showWindowNow(&firstPage);
-    sm->showWindowNow(&secondPage);
+    sm->appearSceneWindowNow(&firstPage);
+    sm->appearSceneWindowNow(&secondPage);
 
     QSignalSpy firstPageAppeared(&firstPage, SIGNAL(appeared()));
     QSignalSpy firstPageDisappeared(&firstPage, SIGNAL(disappeared()));
     QSignalSpy secondPageAppeared(&secondPage, SIGNAL(appeared()));
     QSignalSpy secondPageDisappeared(&secondPage, SIGNAL(disappeared()));
 
-    sm->closeWindowNow(&secondPage);
+    sm->dismissSceneWindowNow(&secondPage);
 
     QCOMPARE(firstPageAppeared.count(), 1);
     QCOMPARE(firstPageDisappeared.count(), 0);
@@ -415,17 +415,17 @@ void Ut_DuiSceneManager::testPageHistoryPushing()
 
     QCOMPARE(sm->pageHistory().count(), 0);
 
-    sm->showWindowNow(&firstPage);
+    sm->appearSceneWindowNow(&firstPage);
 
     QCOMPARE(sm->pageHistory().count(), 0);
 
-    sm->showWindowNow(&secondPage);
+    sm->appearSceneWindowNow(&secondPage);
 
     pageHistory = sm->pageHistory();
     QCOMPARE(pageHistory.count(), 1);
     QCOMPARE(pageHistory.at(0), &firstPage);
 
-    sm->showWindowNow(&thirdPage);
+    sm->appearSceneWindowNow(&thirdPage);
 
     pageHistory = sm->pageHistory();
     QCOMPARE(pageHistory.count(), 2);
@@ -440,26 +440,26 @@ void Ut_DuiSceneManager::testPageHistoryPopping()
     DuiApplicationPage thirdPage;
     QList<DuiSceneWindow *> pageHistory;
 
-    sm->showWindowNow(&firstPage);
-    sm->showWindowNow(&secondPage);
-    sm->showWindowNow(&thirdPage);
+    sm->appearSceneWindowNow(&firstPage);
+    sm->appearSceneWindowNow(&secondPage);
+    sm->appearSceneWindowNow(&thirdPage);
 
     pageHistory = sm->pageHistory();
     QCOMPARE(pageHistory.count(), 2);
     QCOMPARE(pageHistory.at(0), &firstPage);
     QCOMPARE(pageHistory.at(1), &secondPage);
 
-    sm->closeWindowNow(&thirdPage);
+    sm->dismissSceneWindowNow(&thirdPage);
 
     pageHistory = sm->pageHistory();
     QCOMPARE(pageHistory.count(), 1);
     QCOMPARE(pageHistory.at(0), &firstPage);
 
-    sm->closeWindowNow(&secondPage);
+    sm->dismissSceneWindowNow(&secondPage);
 
     QCOMPARE(sm->pageHistory().count(), 0);
 
-    sm->closeWindowNow(&firstPage);
+    sm->dismissSceneWindowNow(&firstPage);
 
     QCOMPARE(sm->pageHistory().count(), 0);
 }
@@ -471,7 +471,7 @@ void Ut_DuiSceneManager::testSettingPageHistory()
     DuiApplicationPage thirdPage;
     QList<DuiSceneWindow *> pageHistory;
 
-    sm->showWindowNow(&thirdPage);
+    sm->appearSceneWindowNow(&thirdPage);
 
     pageHistory.append(&firstPage);
     pageHistory.append(&secondPage);
@@ -490,7 +490,7 @@ void Ut_DuiSceneManager::testSettingPageHistory()
     QSignalSpy thirdPageAppeared(&thirdPage, SIGNAL(appeared()));
     QSignalSpy thirdPageDisappeared(&thirdPage, SIGNAL(disappeared()));
 
-    sm->closeWindowNow(&thirdPage);
+    sm->dismissSceneWindowNow(&thirdPage);
 
     QCOMPARE(secondPageAppeared.count(), 1);
     QCOMPARE(secondPageDisappeared.count(), 0);
@@ -498,14 +498,14 @@ void Ut_DuiSceneManager::testSettingPageHistory()
     secondPageAppeared.clear();
     secondPageDisappeared.clear();
 
-    sm->closeWindowNow(&secondPage);
+    sm->dismissSceneWindowNow(&secondPage);
 
     QCOMPARE(firstPageAppeared.count(), 1);
     QCOMPARE(firstPageDisappeared.count(), 0);
     QCOMPARE(secondPageAppeared.count(), 0);
     QCOMPARE(secondPageDisappeared.count(), 1);
 
-    sm->closeWindowNow(&firstPage);
+    sm->dismissSceneWindowNow(&firstPage);
 
     QCOMPARE(firstPageDisappeared.count(), 1);
 }
@@ -516,9 +516,9 @@ void Ut_DuiSceneManager::testDeletePageInPageHistory()
     DuiApplicationPage *secondPage = new DuiApplicationPage;
     DuiApplicationPage *thirdPage = new DuiApplicationPage;
 
-    sm->showWindowNow(firstPage);
-    sm->showWindowNow(secondPage);
-    sm->showWindowNow(thirdPage);
+    sm->appearSceneWindowNow(firstPage);
+    sm->appearSceneWindowNow(secondPage);
+    sm->appearSceneWindowNow(thirdPage);
 
     delete secondPage;
     secondPage = 0;
@@ -527,7 +527,7 @@ void Ut_DuiSceneManager::testDeletePageInPageHistory()
     QSignalSpy firstPageDisappeared(firstPage, SIGNAL(disappeared()));
     QSignalSpy thirdPageDisappeared(thirdPage, SIGNAL(disappeared()));
 
-    sm->closeWindowNow(thirdPage);
+    sm->dismissSceneWindowNow(thirdPage);
 
     // Should go back straight to the first page since the second one was deleted.
     QCOMPARE(firstPageAppeared.count(), 1);
@@ -544,9 +544,9 @@ void Ut_DuiSceneManager::testPageHistoryAfterPageDeletion()
     DuiApplicationPage *thirdPage = new DuiApplicationPage;
     QList<DuiSceneWindow *> pageHistory;
 
-    sm->showWindowNow(firstPage);
-    sm->showWindowNow(secondPage);
-    sm->showWindowNow(thirdPage);
+    sm->appearSceneWindowNow(firstPage);
+    sm->appearSceneWindowNow(secondPage);
+    sm->appearSceneWindowNow(thirdPage);
 
     delete secondPage;
     secondPage = 0;
@@ -554,6 +554,88 @@ void Ut_DuiSceneManager::testPageHistoryAfterPageDeletion()
     pageHistory = sm->pageHistory();
     QCOMPARE(pageHistory.count(), 1);
     QCOMPARE(pageHistory.at(0), firstPage);
+}
+
+void Ut_DuiSceneManager::testPageHistoryChangedWhenPushing()
+{
+    DuiApplicationPage *firstPage = new DuiApplicationPage;
+    DuiApplicationPage *secondPage = new DuiApplicationPage;
+    DuiApplicationPage *thirdPage = new DuiApplicationPage;
+    QSignalSpy pageHistoryChanged(sm, SIGNAL(pageHistoryChanged()));
+
+    sm->appearSceneWindowNow(firstPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 0);
+
+    sm->appearSceneWindowNow(secondPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 1);
+
+    sm->appearSceneWindowNow(thirdPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 2);
+}
+
+void Ut_DuiSceneManager::testPageHistoryChangedWhenPopping()
+{
+    DuiApplicationPage *firstPage = new DuiApplicationPage;
+    DuiApplicationPage *secondPage = new DuiApplicationPage;
+    DuiApplicationPage *thirdPage = new DuiApplicationPage;
+
+    sm->appearSceneWindowNow(firstPage);
+    sm->appearSceneWindowNow(secondPage);
+    sm->appearSceneWindowNow(thirdPage);
+
+    QSignalSpy pageHistoryChanged(sm, SIGNAL(pageHistoryChanged()));
+
+    sm->dismissSceneWindowNow(thirdPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 1);
+
+    sm->dismissSceneWindowNow(secondPage);
+
+    QCOMPARE(pageHistoryChanged.count(), 2);
+
+    sm->dismissSceneWindowNow(firstPage);
+
+    // page history should not have been changed since it was already empty
+    QCOMPARE(pageHistoryChanged.count(), 2);
+}
+
+void Ut_DuiSceneManager::testPageHistoryChangedWhenSettingPageHistory()
+{
+    DuiApplicationPage firstPage;
+    DuiApplicationPage secondPage;
+    DuiApplicationPage thirdPage;
+    QList<DuiSceneWindow *> pageHistory;
+
+    sm->appearSceneWindowNow(&thirdPage);
+
+    pageHistory.append(&firstPage);
+    pageHistory.append(&secondPage);
+
+    QSignalSpy pageHistoryChanged(sm, SIGNAL(pageHistoryChanged()));
+    sm->setPageHistory(pageHistory);
+
+    QCOMPARE(pageHistoryChanged.count(), 1);
+}
+
+void Ut_DuiSceneManager::testPageHistoryChangedWhenSettingSamePageHistory()
+{
+    DuiApplicationPage *firstPage = new DuiApplicationPage;
+    DuiApplicationPage *secondPage = new DuiApplicationPage;
+    DuiApplicationPage *thirdPage = new DuiApplicationPage;
+    QList<DuiSceneWindow *> pageHistory;
+
+    sm->appearSceneWindowNow(firstPage);
+    sm->appearSceneWindowNow(secondPage);
+    sm->appearSceneWindowNow(thirdPage);
+
+    pageHistory = sm->pageHistory();
+
+    QSignalSpy pageHistoryChanged(sm, SIGNAL(pageHistoryChanged()));
+    sm->setPageHistory(pageHistory);
+    QCOMPARE(pageHistoryChanged.count(), 0);
 }
 
 QTEST_MAIN(Ut_DuiSceneManager);

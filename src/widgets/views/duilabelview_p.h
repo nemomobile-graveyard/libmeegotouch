@@ -106,7 +106,9 @@ public:
     const DuiLabelModel *model() const;
     const DuiLabelStyle *style() const;
     const QRectF boundingRect() const;
-
+    
+    bool isRichText(QString text) const;
+    
     // need define this for there are overload functions in controller
     DuiLabel *controller;
 

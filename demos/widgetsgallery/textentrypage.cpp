@@ -37,14 +37,14 @@ namespace
     const int MiniminTextEntryWidth = 225;
 }
 
-class CompleterTestModel : public  QAbstractTableModel
+class CompleterTestModel : public QAbstractTableModel
 {
 public :
     CompleterTestModel(const QStringList &, const QStringList &, QObject *parent = 0);
     ~CompleterTestModel();
 
-
     void setData(const QStringList &, const QStringList &);
+
     //! \reimp
     virtual QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const;
     virtual QModelIndex parent(const QModelIndex &index) const;
@@ -52,11 +52,13 @@ public :
     virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
     virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
     //! \reimp_end
+
 private:
     QStringList column1, column2;
 };
 
-CompleterTestModel::CompleterTestModel(const QStringList &list1, const QStringList &list2, QObject *parent)
+CompleterTestModel::CompleterTestModel(const QStringList &list1, const QStringList &list2,
+                                       QObject *parent)
     : QAbstractTableModel(parent),
       column1(list1),
       column2(list2)
@@ -114,11 +116,14 @@ QVariant CompleterTestModel::data(const QModelIndex &index, int role) const
     return QVariant(value);
 }
 
+
+
 class CustomDirectIMWidget : public DuiLabel
 {
 public:
     CustomDirectIMWidget(QGraphicsItem *parent = 0);
     ~CustomDirectIMWidget();
+
     //! \reimp
     virtual void focusInEvent(QFocusEvent *event);
     virtual void focusOutEvent(QFocusEvent *event);
@@ -127,6 +132,7 @@ public:
     virtual void keyReleaseEvent(QKeyEvent *event);
     //! \reimp_end
 };
+
 
 CustomDirectIMWidget::CustomDirectIMWidget(QGraphicsItem *parent)
     : DuiLabel(parent)
@@ -162,7 +168,7 @@ void CustomDirectIMWidget::focusOutEvent(QFocusEvent *event)
 
 QVariant CustomDirectIMWidget::inputMethodQuery(Qt::InputMethodQuery query) const
 {
-    switch ((int)query) {
+    switch ((int) query) {
     case Dui::ImModeQuery:
         return QVariant(Dui::InputMethodModeDirect);
     case Dui::InputEnabledQuery:
@@ -221,7 +227,7 @@ QString TextEntryPage::timedemoTitle()
 void TextEntryPage::createContent()
 {
     DuiApplicationPage::createContent();
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     DuiGridLayoutPolicy *layoutPolicy = TextEntryPage::createAndSetupGridPolicy(panel);
     int row = 0;
 
@@ -495,7 +501,7 @@ void TextEntryPage::retranslateUi()
     //% "Provides email address suggestions"
     Entries.at(6)->setPrompt(qtTrId("xx_tooltip_entry8"));
 
-    //% "This is\nmultiline\ntooltip"
+    //% "This is a multiline text entry"
     Entries.at(8)->setPrompt(qtTrId("xx_tooltip_entry6"));
 
     //% "Free text:"
@@ -535,7 +541,7 @@ void TextEntryPage::retranslateUi()
     changeErrorCorrection(m_errorCorrection);
 }
 
-DuiGridLayoutPolicy *TextEntryPage::createAndSetupGridPolicy(DuiWidget *panel)
+DuiGridLayoutPolicy *TextEntryPage::createAndSetupGridPolicy(QGraphicsWidget *panel)
 {
     DuiLayout *layout = new DuiLayout(panel);
     panel->setLayout(layout);

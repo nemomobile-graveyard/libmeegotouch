@@ -45,14 +45,14 @@ public:
     void init();
 
     void deleteCurrentCentralWidget();
-    void placeCentralWidget(DuiWidget *widget);
+    void placeCentralWidget(QGraphicsWidget *widget);
     void setSpacerHeight(DuiWidget *spacer, qreal height);
     void updatePannableViewportPosition();
 
     void propagateOnDisplayChangeEvent(bool visible);
 
     // Note: Called by DuiApplicationWindow
-    void updateAutoMarginsForComponents(const Dui::Orientation &orientation,
+    void updateAutoMarginsForComponents(Dui::Orientation orientation,
                                         qreal statusBarHeight,
                                         qreal navigationBarHeight,
                                         qreal dockWidgetHeight,
@@ -69,16 +69,14 @@ private:
     QRectF range;
 
 public:
-    DuiEscapeButtonPanelModel::EscapeMode escapeButtonMode;
     bool rememberPosition;
     DuiWidget *topSpacer;
     DuiWidget *bottomSpacer;
     DuiWidget *mainWidget;
     QGraphicsLinearLayout *mainLayout;
     DuiPannableViewport *pannableViewPort;
-    DuiWidget *centralWidget;
+    QGraphicsWidget *centralWidget;
 
-    QString title;
     bool contentCreated;
     bool backEnabled;
 };

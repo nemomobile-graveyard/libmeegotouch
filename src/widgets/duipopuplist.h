@@ -22,12 +22,11 @@
 
 #include "duidialog.h"
 #include "duipopuplistmodel.h"
-#include <QModelIndex>
 
 class DuiPopupListPrivate;
-class DuiPannableViewport;
 class QAbstractItemModel;
 class QItemSelectionModel;
+class QModelIndex;
 
 /**
     \class DuiPopupList
@@ -96,13 +95,6 @@ class DUI_EXPORT DuiPopupList : public DuiDialog
     Q_OBJECT
     DUI_CONTROLLER(DuiPopupList)
 
-    /**
-        \property DuiPopupList::batchSize
-        \brief See DuiPopupListModel::batchSize
-        \deprecated Since 0.19
-    */
-    Q_PROPERTY(int batchSize READ batchSize WRITE setBatchSize)
-
 public:
 
     /**
@@ -158,12 +150,6 @@ public:
     QItemSelectionModel *selectionModel() const;
 
     /**
-      \brief Returns the items size which created inside popuplist.
-      \deprecated Since 0.19
-    */
-    int batchSize() const;
-
-    /**
         Scrolls the view if necessary to ensure that the item at \a index is visible.
     */
     virtual void scrollTo(const QModelIndex &index);
@@ -194,23 +180,7 @@ public Q_SLOTS:
      */
     void setCurrentIndex(const QModelIndex &index);
 
-    /**
-      \brief Set the item size which created inside popuplist.
-      \deprecated Since 0.19
-    */
-    void setBatchSize(int);
-
 Q_SIGNALS:
-
-    /**
-        This signal is emitted when the item model has changed.
-     */
-    void itemModelChanged(QAbstractItemModel *);
-
-    /**
-        This signal is emitted when the selection model has changed.
-     */
-    void selectionModelChanged(QItemSelectionModel *);
 
     /**
         This signal is emitted when the item is clicked.
@@ -220,7 +190,7 @@ Q_SIGNALS:
     /**
         This signal is emitted when the current selected item is changed.
      */
-    void currentIndexChanged(QModelIndex index);
+    void currentIndexChanged(const QModelIndex &index);
 
     /**
         This signal is emitted when scrollTo(index) is called to tell the view to scroll to the given item index.

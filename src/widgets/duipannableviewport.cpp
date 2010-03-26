@@ -333,6 +333,7 @@ void DuiPannableViewport::updateGeometry()
 
     // Recalculates the physics range because panned widget size has changed
     d->recalculatePhysRange();
+    updatePosition(position());
 
     DuiPannableWidget::updateGeometry();
 }

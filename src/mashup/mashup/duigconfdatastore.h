@@ -24,6 +24,7 @@
 #include "duidatastore.h"
 
 class DuiGConfItem;
+class DuiGConfDataStorePrivate;
 
 /*!
  * A data store class that uses GConf as the backend.
@@ -79,15 +80,12 @@ private slots:
      */
     void gconfValueChanged();
 
+protected:
+    DuiGConfDataStorePrivate * const d_ptr;
+
 private:
-    //! Type for a container that maps strings to GConf items.
-    typedef QHash<QString, DuiGConfItem *> KeyContainer;
-
-    //! A container for the GConf items.
-    KeyContainer keyContainer;
-
-    //! The gconf path of this datastore
-    QString keyPath;
+    Q_DECLARE_PRIVATE(DuiGConfDataStore)
+    Q_DISABLE_COPY(DuiGConfDataStore)
 };
 
 #endif  /* DUIGCONFDATASTORE_H */

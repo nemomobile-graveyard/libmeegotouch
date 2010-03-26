@@ -39,7 +39,6 @@
 DUI_REGISTER_WIDGET(DuiApplicationPage)
 
 DuiApplicationPagePrivate::DuiApplicationPagePrivate() :
-    escapeButtonMode(DuiEscapeButtonPanelModel::CloseMode),
     rememberPosition(false),
     topSpacer(NULL),
     bottomSpacer(NULL),
@@ -55,11 +54,9 @@ void DuiApplicationPagePrivate::init()
 {
     Q_Q(DuiApplicationPage);
 
-    title = "";
     contentCreated = false;
     backEnabled = false;
     rememberPosition = true;
-    escapeButtonMode = DuiEscapeButtonPanelModel::CloseMode;
 
     QGraphicsLinearLayout *layout = createLayout();
     q->setLayout(layout);
@@ -117,7 +114,7 @@ void DuiApplicationPagePrivate::deleteCurrentCentralWidget()
     }
 }
 
-void DuiApplicationPagePrivate::placeCentralWidget(DuiWidget *widget)
+void DuiApplicationPagePrivate::placeCentralWidget(QGraphicsWidget *widget)
 {
     if (widget) {
         // insert the new central widget between top and bottom spacers
@@ -155,11 +152,6 @@ void DuiApplicationPagePrivate::propagateOnDisplayChangeEvent(bool visible)
     }
 }
 
-// TODO: Remove this now useless method after ABI break period
-void DuiApplicationPage::updateOnDisplayAfterPanning()
-{
-}
-
 DuiApplicationPage::DuiApplicationPage(QGraphicsItem *parent)
     : DuiSceneWindow(new DuiApplicationPagePrivate, new DuiApplicationPageModel,
                      DuiSceneWindow::ApplicationPage, QString(), parent)
@@ -173,7 +165,7 @@ DuiApplicationPage::~DuiApplicationPage()
 {
 }
 
-void DuiApplicationPage::setCentralWidget(DuiWidget *centralWidget)
+void DuiApplicationPage::setCentralWidget(QGraphicsWidget *centralWidget)
 {
     Q_D(DuiApplicationPage);
 
@@ -182,7 +174,7 @@ void DuiApplicationPage::setCentralWidget(DuiWidget *centralWidget)
     d->propagateOnDisplayChangeEvent(isOnDisplay());
 }
 
-DuiWidget *DuiApplicationPage::centralWidget()
+QGraphicsWidget *DuiApplicationPage::centralWidget()
 {
     Q_D(DuiApplicationPage);
 
@@ -245,19 +237,12 @@ void DuiApplicationPage::disappearNow()
 
 const QString DuiApplicationPage::title() const
 {
-    Q_D(const DuiApplicationPage);
-
-    return d->title;
+    return model()->title();
 }
 
 void DuiApplicationPage::setTitle(const QString &title)
 {
-    Q_D(DuiApplicationPage);
-
-    if (title != d->title) {
-        d->title = title;
-        emit pageTitleChanged(this, title);
-    }
+    model()->setTitle(title);
 }
 
 void DuiApplicationPage::createContent()
@@ -272,23 +257,6 @@ bool DuiApplicationPage::isContentCreated() const
     Q_D(const DuiApplicationPage);
 
     return d->contentCreated;
-}
-
-DuiEscapeButtonPanelModel::EscapeMode DuiApplicationPage::escapeButtonMode() const
-{
-    Q_D(const DuiApplicationPage);
-
-    return d->escapeButtonMode;
-}
-
-void DuiApplicationPage::setEscapeButtonMode(DuiEscapeButtonPanelModel::EscapeMode mode)
-{
-    Q_D(DuiApplicationPage);
-
-    if (d->escapeButtonMode != mode) {
-        d->escapeButtonMode = mode;
-        emit escapeButtonModeChanged(mode);
-    }
 }
 
 void DuiApplicationPage::setRememberPosition(bool remember)
@@ -342,6 +310,7 @@ void DuiApplicationPage::actionEvent(QActionEvent *e)
             action->disconnect(this);
         //fall through is intentional.
     }
+    case QEvent::ActionChanged:
     case QEvent::ActionAdded: {
         emit actionUpdated(e);
         break;
@@ -367,7 +336,7 @@ void DuiApplicationPagePrivate::prepareForAppearance()
     updatePannableViewportPosition();
 }
 
-void DuiApplicationPagePrivate::updateAutoMarginsForComponents(const Dui::Orientation &orientation,
+void DuiApplicationPagePrivate::updateAutoMarginsForComponents(Dui::Orientation orientation,
         qreal statusBarHeight,
         qreal navigationBarHeight,
         qreal dockWidgetHeight,
@@ -448,6 +417,16 @@ void DuiApplicationPage::setAutoMarginsForComponentsEnabled(bool enabled)
 bool DuiApplicationPage::autoMarginsForComponentsEnabled() const
 {
     return model()->autoMarginsForComponentsEnabled();
+}
+
+DuiApplicationPageModel::PageEscapeMode DuiApplicationPage::escapeMode() const
+{
+    return model()->escapeMode();
+}
+
+void DuiApplicationPage::setEscapeMode(DuiApplicationPageModel::PageEscapeMode mode)
+{
+    model()->setEscapeMode(mode);
 }
 
 #include "moc_duiapplicationpage.cpp"

@@ -1,5 +1,3 @@
-usr/bin/applicationextensiondemo
-usr/lib/dui/applicationextensions/libdemoextension.so
-usr/lib/dui/applicationextensions/libdemoextension2.so
-usr/share/dui/applicationextensions/demoextension.desktop
-usr/share/dui/applicationextensions/demoextension2.desktop
+usr/bin/applicationextension*
+usr/lib/dui/applicationextensions/*
+usr/share/dui/applicationextensions/*

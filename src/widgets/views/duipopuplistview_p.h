@@ -55,8 +55,5 @@ public:
     DuiPopupList*   controller;
 
     DuiList*    list;
-
-    QAbstractItemModel* itemModel;
-    QPointer<QItemSelectionModel>   selectionModel;
 };
 #endif

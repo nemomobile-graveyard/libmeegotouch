@@ -28,7 +28,7 @@
 #include "testwidget.h"
 
 TestWidget::TestWidget(DuiWidget *parent) :
-    DuiWidgetController(NULL, new TestWidgetModel)
+    DuiWidgetController(new TestWidgetModel, parent)
 {
 
 }

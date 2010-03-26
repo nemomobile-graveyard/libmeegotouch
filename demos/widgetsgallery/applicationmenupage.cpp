@@ -81,7 +81,7 @@ void ApplicationMenuPage::createContent()
 {
     TemplatePage::createContent();
 
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
 
     DuiAction *action = new DuiAction("Italic", panel);
     action->setLocation(DuiAction::ApplicationMenuLocation);

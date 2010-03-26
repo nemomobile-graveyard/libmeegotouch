@@ -47,7 +47,6 @@ const QString URLKey("Desktop Entry/URL");
 const QString LogicalIdKey("Desktop Entry/X-DUI-logical-id");
 const QString TranslationCatalogKey("Desktop Entry/X-DUI-translation-catalog");
 const QString XMaemoServiceKey("Desktop Entry/X-Maemo-Service");
-const QString XMaemoPrestartedKey("Desktop Entry/X-Maemo-Prestarted");
 
 DuiDesktopEntryPrivate::DuiDesktopEntryPrivate(const QString &fileName) :
     sourceFileName(fileName),
@@ -372,11 +371,6 @@ QStringList DuiDesktopEntry::categories() const
 bool DuiDesktopEntry::startupNotify() const
 {
     return d_ptr->boolValue(StartupNotifyKey);
-}
-
-bool DuiDesktopEntry::xMaemoPrestarted() const
-{
-    return d_ptr->boolValue(XMaemoPrestartedKey);
 }
 
 QString DuiDesktopEntry::startupWMClass() const

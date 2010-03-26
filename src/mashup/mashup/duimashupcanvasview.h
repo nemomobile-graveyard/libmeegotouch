@@ -84,7 +84,7 @@ protected slots:
     /*!
      * \brief A slot for getting information about orientation changes
      */
-    void orientationChanged(const Dui::Orientation &);
+    void orientationChanged(Dui::Orientation);
 
     //! \reimp
     virtual void updateData(const QList<const char *>& modifications);

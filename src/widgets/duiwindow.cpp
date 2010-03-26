@@ -27,6 +27,7 @@
 #include <QSettings>
 
 #include "duiapplication.h"
+#include "duiapplication_p.h"
 #include "duiapplicationwindow.h"
 #include "duiorientationtracker.h"
 #include "duideviceprofile.h"
@@ -60,7 +61,8 @@ DuiWindowPrivate::DuiWindowPrivate() :
     orientationAngleLocked(false),
     orientationLocked(false),
     onDisplay(false),
-    onDisplaySet(false)
+    onDisplaySet(false),
+    q_ptr(NULL)
 {
     DuiWindow *window = DuiApplication::activeWindow();
 
@@ -206,10 +208,11 @@ void DuiWindowPrivate::notifyWidgetsAboutOrientationChange()
     Dui::Orientation newOrientation = q->orientation();
 
     if (sceneManager == 0 && oldOrientation != newOrientation) {
-        if (q->scene()) {
+        QGraphicsScene *graphicsScene = q->QGraphicsView::scene();
+        if (graphicsScene) {
             DuiOrientationChangeEvent event(newOrientation);
-            foreach(QGraphicsItem * item, q->scene()->items())
-                q->scene()->sendEvent(item, &event);
+            foreach(QGraphicsItem * item, graphicsScene->items())
+                graphicsScene->sendEvent(item, &event);
         }
 
         emit q->orientationChanged(newOrientation);
@@ -225,7 +228,7 @@ void DuiWindowPrivate::doEnterDisplayEvent()
     onDisplaySet = true;
 
     q->enterDisplayEvent();
-    emit q->enteredDisplay();
+    emit q->displayEntered();
 }
 
 void DuiWindowPrivate::doExitDisplayEvent()
@@ -236,7 +239,7 @@ void DuiWindowPrivate::doExitDisplayEvent()
     onDisplaySet = true;
 
     q->exitDisplayEvent();
-    emit q->exitedDisplay();
+    emit q->displayExited();
 }
 
 void DuiWindowPrivate::propagateDuiOnDisplayChangeEventToScene(DuiOnDisplayChangeEvent *event)
@@ -371,18 +374,6 @@ DuiScene *DuiWindow::scene()
     return qobject_cast<DuiScene *>(QGraphicsView::scene());
 }
 
-bool DuiWindow::keepCurrentOrientation() const
-{
-    duiWarning("DuiWindow::keepCurrentOrientation()") << "THIS METHOD IS DEPRECATED - use isOrientationLocked()";
-    return isOrientationLocked();
-}
-
-void DuiWindow::setKeepCurrentOrientation(bool enabled)
-{
-    duiWarning("DuiWindow::keepCurrentOrientation()") << "THIS METHOD IS DEPRECATED - use setOrientationLocked()";
-    setOrientationLocked(enabled);
-}
-
 bool DuiWindow::isOrientationAngleLocked() const
 {
     Q_D(const DuiWindow);
@@ -511,7 +502,7 @@ Dui::OrientationAngle DuiWindow::orientationAngle() const
     }
 }
 
-void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle, Dui::OrientationChangeMode mode)
+void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle)
 {
     Q_D(DuiWindow);
 
@@ -520,6 +511,10 @@ void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle, Dui::Orientatio
         d->angle = angle;
 
         if (d->sceneManager) {
+            DuiSceneManager::TransitionMode mode = isVisible() ?
+                DuiSceneManager::AnimatedTransition :
+                DuiSceneManager::ImmediateTransition;
+
             d->sceneManager->setOrientationAngle(angle, mode);
         } else {
             // first notify widgets, then emit the signal (in case someone
@@ -528,6 +523,18 @@ void DuiWindow::setOrientationAngle(Dui::OrientationAngle angle, Dui::Orientatio
             emit orientationAngleChanged(angle);
         }
     }
+}
+
+void DuiWindow::setLandscapeOrientation()
+{
+    if (orientation() != Dui::Landscape)
+        setOrientationAngle(Dui::Angle0);
+}
+
+void DuiWindow::setPortraitOrientation()
+{
+    if (orientation() != Dui::Portrait)
+        setOrientationAngle(Dui::Angle270);
 }
 
 QSize DuiWindow::visibleSceneSize(Dui::Orientation orientation) const
@@ -592,6 +599,14 @@ void DuiWindow::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event)
 
 void DuiWindow::paintEvent(QPaintEvent *event)
 {
+    // Disable view updates if the theme is not fully loaded yet
+    // TODO: Alco check for "!isOnDisplay()" to block repaints if the
+    // window is not visible anyway. Enable this once this works in
+    // scratchbox.
+    if (!updatesEnabled() || DuiTheme::hasPendingRequests()) {
+        return;
+    }
+
 #ifdef DUI_USE_OPENGL
     Q_D(DuiWindow);
 
@@ -604,22 +619,28 @@ void DuiWindow::paintEvent(QPaintEvent *event)
     QGraphicsView::paintEvent(event);
 }
 
-
 bool DuiWindow::event(QEvent *event)
 {
     Q_D(DuiWindow);
 
-    if (event->type() == QEvent::Show || event->type() == QEvent::WindowActivate)
+    if (event->type() == QEvent::Show || event->type() == QEvent::WindowActivate) {
         DuiComponentData::setActiveWindow(this);
+    }
 
-#ifdef DUI_USE_OPENGL
-    if (event->type() == QEvent::Close && !DuiApplication::softwareRendering())
-        DuiGLES2Renderer::destroy(d->glWidget);
-#endif
-
-    if (event->type() == QEvent::Close || event->type() == QEvent::WindowDeactivate) {
+    if (event->type() == QEvent::Close) {
         DuiOnDisplayChangeEvent ev(false, sceneRect());
         onDisplayChangeEvent(&ev);
+        // Don't close if LazyShutdown enabled
+        if (DuiApplication::prestartMode() == Dui::LazyShutdown) {
+            DuiApplicationPrivate::restorePrestart();
+            event->ignore();
+            return true;
+        }
+#ifdef DUI_USE_OPENGL
+        if (!DuiApplication::softwareRendering()) {
+            DuiGLES2Renderer::destroy(d->glWidget);
+        }
+#endif
     }
 
     if (QEvent::KeyPress == event->type()) {
@@ -666,7 +687,7 @@ bool DuiWindow::event(QEvent *event)
             updateNeeded = true;
         } else if (Qt::Key_L == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
             // switch language
-	    QString language;
+            QString language;
 
             DuiLocale oldLocale; // get current system default
             language = oldLocale.name();
@@ -732,6 +753,25 @@ bool DuiWindow::event(QEvent *event)
     }
 
     return QGraphicsView::event(event);
+}
+
+void DuiWindow::setVisible(bool visible)
+{
+    // This effectively overrides call to show() when in
+    // prestarted state.
+    if (visible) {
+        if (DuiApplication::isPrestarted()) {
+            switch (DuiApplication::prestartMode()) {
+            case Dui::LazyShutdown:
+            case Dui::TerminateOnClose:
+                return;
+            default:
+                break;
+            }
+        }
+    }
+
+    QGraphicsView::setVisible(visible);
 }
 
 #include "moc_duiwindow.cpp"

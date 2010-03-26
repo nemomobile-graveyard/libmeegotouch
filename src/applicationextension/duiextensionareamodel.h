@@ -24,7 +24,7 @@
 
 class DuiDataStore;
 
-typedef QMap<DuiWidget *, DuiDataStore *> DataStoreMap;
+typedef QMap<QGraphicsWidget *, DuiDataStore *> DataStoreMap;
 
 /*!
  * DuiExtensionAreaModel is the model class for DuiExtensionArea.

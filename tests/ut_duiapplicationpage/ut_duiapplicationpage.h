@@ -47,7 +47,6 @@ private slots:
     void testCentralWidget();
     void testCreateContent();
     void testPageTitleChanged();
-    void testEscapeButtonModeChanged();
     void testRememberPosition();
     void testForgetPosition();
     void testActionUpdated();

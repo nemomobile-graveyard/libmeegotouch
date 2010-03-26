@@ -68,6 +68,18 @@ protected:
     virtual void cancelEvent(DuiCancelEvent *event);
     //! \reimp_end
 
+    //! \brief Notifies this and possibly derived views about the need for redraw.
+    virtual void doUpdate();
+
+    //! \brief Gets the last mouse position.
+    const QPointF &mouseTarget() const;
+
+    //! \brief Updates cursor position based on mouse \a event.
+    //! \param event Event that contains the mouse position, buttons, etc.
+    //! \param updateSelection Tells whether or not to update text selection.
+    //! If false, only cursor moves without selecting any text.
+    void updateCursorPosition(QGraphicsSceneMouseEvent *event, bool updateSelection);
+
 protected Q_SLOTS:
     /*!
      * \brief Set view focused
@@ -88,9 +100,12 @@ protected Q_SLOTS:
      */
     virtual void informPasteFailed();
 
+    //! \brief Handler for long press event.
+    virtual void handleLongPress();
+
     void hideInfoBanner();
 
-private :
+private:
     Q_DISABLE_COPY(DuiTextEditView)
     Q_DECLARE_PRIVATE(DuiTextEditView)
 
@@ -100,8 +115,6 @@ private :
     friend class Ut_DuiTextEditView;
     friend class Ut_DuiTextEdit;
 #endif
-
-    friend class DuiTextEditViewZoom;
 };
 
 #endif
