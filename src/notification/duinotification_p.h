@@ -37,7 +37,28 @@ public:
     virtual ~DuiNotificationPrivate();
 
     //! The ID of the notification
-    unsigned int _id;
+    uint id;
+
+    //! Notification group of the notification.
+    uint groupId;
+
+    //! The event type of the notification.
+    QString eventType;
+
+    //! The summary text to be used in the notification. Defaults to no summary text.
+    QString summary;
+
+    //! The body text to be used in the notification. Defaults to no body text.
+    QString body;
+
+    //! The name of the image to be used in the notification. Defaults to no image.
+    QString image;
+
+    //! The action to be executed when the notification is activated. Defaults to no action.
+    QString action;
+
+    //! The number of items inside this notification
+    uint count;
 };
 
 #endif // DUINOTIFICATION_P_H

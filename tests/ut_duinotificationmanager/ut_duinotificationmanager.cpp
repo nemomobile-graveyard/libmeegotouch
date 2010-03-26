@@ -25,6 +25,59 @@
 #include "duifiledatastore.h"
 #include <DuiApplication>
 
+// Subclasses to gain access to the IDs
+class TestNotification : public DuiNotification
+{
+public:
+    explicit TestNotification(const QString &eventType, const QString &summary = QString(), const QString &body = QString());
+    explicit TestNotification(uint id);
+    virtual ~TestNotification();
+    uint id() const;
+};
+
+class TestNotificationGroup : public DuiNotificationGroup
+{
+public:
+    explicit TestNotificationGroup(const QString &eventType, const QString &summary = QString(), const QString &body = QString());
+    explicit TestNotificationGroup(uint id);
+    virtual ~TestNotificationGroup();
+    uint id() const;
+};
+
+TestNotification::TestNotification(const QString &eventType, const QString &summary, const QString &body) : DuiNotification(eventType, summary, body)
+{
+}
+
+TestNotification::TestNotification(uint id) : DuiNotification(id)
+{
+}
+
+TestNotification::~TestNotification()
+{
+}
+
+uint TestNotification::id() const
+{
+    return DuiNotification::id();
+}
+
+TestNotificationGroup::TestNotificationGroup(const QString &eventType, const QString &summary, const QString &body) : DuiNotificationGroup(eventType, summary, body)
+{
+}
+
+TestNotificationGroup::TestNotificationGroup(uint id) : DuiNotificationGroup(id)
+{
+}
+
+TestNotificationGroup::~TestNotificationGroup()
+{
+}
+
+uint TestNotificationGroup::id() const
+{
+    return DuiNotificationGroup::id();
+}
+
 bool Ut_DuiNotificationManager::captureCalls = false;
 QList<QString> Ut_DuiNotificationManager::asyncCallMethods;
 QList< QList<QVariant> > Ut_DuiNotificationManager::asyncCallArguments;
@@ -152,6 +205,7 @@ void Ut_DuiNotificationManager::initTestCase()
 
     // The manager should ask for the notification user ID (which will be stubbed to be 1)
     DuiNotification notification1("event");
+    notification1.publish();
     QCOMPARE(asyncCallMethods.count(), 2);
     QCOMPARE(asyncCallMethods.at(0), QString("notificationUserId"));
     QCOMPARE(asyncCallArguments.count(), 2);
@@ -182,78 +236,80 @@ void Ut_DuiNotificationManager::cleanup()
 void Ut_DuiNotificationManager::testAddNotification()
 {
     DuiNotification notification1("event");
+    QCOMPARE(asyncCallMethods.count(), 0);
+    notification1.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 4);
+    QCOMPARE(asyncCallArguments.at(0).count(), 3);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(0));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-    QCOMPARE(asyncCallArguments.at(0).at(3), QVariant(false));
 
     asyncCallMethods.clear();
     asyncCallArguments.clear();
 
     QList<QVariant> arguments;
     TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    DuiNotification notification2("event", "summary", "body", "imageURI", action, 42, true);
+    DuiNotification notification2("event");
+    notification2.setSummary("summary");
+    QCOMPARE(asyncCallMethods.count(), 0);
+    notification2.setBody("body");
+    QCOMPARE(asyncCallMethods.count(), 0);
+    notification2.setImage("image");
+    QCOMPARE(asyncCallMethods.count(), 0);
+    notification2.setAction(action);
+    QCOMPARE(asyncCallMethods.count(), 0);
+    notification2.setCount(42);
+    QCOMPARE(asyncCallMethods.count(), 0);
+    notification2.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 9);
+    QCOMPARE(asyncCallArguments.at(0).count(), 8);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(0));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
     QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("summary"));
     QCOMPARE(asyncCallArguments.at(0).at(4), QVariant("body"));
     QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("imageURI"));
+    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("42"));
-    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant(true));
 }
 
 void Ut_DuiNotificationManager::testUpdateNotification()
 {
-    DuiNotification notification1("event");
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    notification1.update("event");
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("updateNotification"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 3);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(notification1.id()));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    DuiNotification notification2("event");
+    TestNotification notification("event");
+    notification.publish();
     asyncCallMethods.clear();
     asyncCallArguments.clear();
 
     QList<QVariant> arguments;
     TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    notification2.update("event", "summary", "body", "imageURI", 42, action);
+    notification.setSummary("summary");
+    notification.setBody("body");
+    notification.setImage("image");
+    notification.setCount(42);
+    notification.setAction(action);
+    notification.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("updateNotification"));
     QCOMPARE(asyncCallArguments.count(), 1);
     QCOMPARE(asyncCallArguments.at(0).count(), 8);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(notification2.id()));
+    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(notification.id()));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
     QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("summary"));
     QCOMPARE(asyncCallArguments.at(0).at(4), QVariant("body"));
     QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("imageURI"));
+    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("42"));
 }
 
 void Ut_DuiNotificationManager::testRemoveNotification()
 {
-    DuiNotification notification("event");
+    TestNotification notification("event");
+    notification.publish();
     asyncCallMethods.clear();
     asyncCallArguments.clear();
 
@@ -270,70 +326,71 @@ void Ut_DuiNotificationManager::testRemoveNotification()
 void Ut_DuiNotificationManager::testAddGroup()
 {
     DuiNotificationGroup group1("event");
+    QCOMPARE(asyncCallMethods.count(), 0);
+    group1.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("addGroup"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 3);
+    QCOMPARE(asyncCallArguments.at(0).count(), 2);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant("event"));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant(false));
 
     asyncCallMethods.clear();
     asyncCallArguments.clear();
 
     QList<QVariant> arguments;
     TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    DuiNotificationGroup group2("event", "summary", "body", "imageURI", action, 42, false);
+    TestNotificationGroup group2("event");
+    group2.setSummary("summary");
+    QCOMPARE(asyncCallMethods.count(), 0);
+    group2.setBody("body");
+    QCOMPARE(asyncCallMethods.count(), 0);
+    group2.setImage("image");
+    QCOMPARE(asyncCallMethods.count(), 0);
+    group2.setAction(action);
+    QCOMPARE(asyncCallMethods.count(), 0);
+    group2.setCount(42);
+    QCOMPARE(asyncCallMethods.count(), 0);
+    group2.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("addGroup"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 8);
+    QCOMPARE(asyncCallArguments.at(0).count(), 7);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant("event"));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("summary"));
     QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("body"));
     QCOMPARE(asyncCallArguments.at(0).at(4), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(5), QVariant("imageURI"));
+    QCOMPARE(asyncCallArguments.at(0).at(5), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("42"));
-    QCOMPARE(asyncCallArguments.at(0).at(7), QVariant(false));
 }
 
 void Ut_DuiNotificationManager::testUpdateGroup()
 {
-    DuiNotificationGroup group1("event");
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
-    group1.update("event");
-    QCOMPARE(asyncCallMethods.count(), 1);
-    QCOMPARE(asyncCallMethods.at(0), QString("updateGroup"));
-    QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 3);
-    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group1.id()));
-    QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-
-    asyncCallMethods.clear();
-    asyncCallArguments.clear();
-
     QList<QVariant> arguments;
     TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    DuiNotificationGroup group2("event", "summary", "body", "imageURI", action);
+    TestNotificationGroup group("event");
+    group.publish();
     asyncCallMethods.clear();
     asyncCallArguments.clear();
 
-    group2.update("event", "summary", "body", "imageURI", 42, action);
+    group.setSummary("summary");
+    group.setBody("body");
+    group.setImage("image");
+    group.setCount(42);
+    group.setAction(action);
+    group.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("updateGroup"));
     QCOMPARE(asyncCallArguments.count(), 1);
     QCOMPARE(asyncCallArguments.at(0).count(), 8);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
-    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group2.id()));
+    QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group.id()));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
     QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("summary"));
     QCOMPARE(asyncCallArguments.at(0).at(4), QVariant("body"));
     QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("imageURI"));
+    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("42"));
 }
 
@@ -341,7 +398,8 @@ void Ut_DuiNotificationManager::testRemoveGroup()
 {
     QList<QVariant> arguments;
     TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    DuiNotificationGroup group("event", "summary", "body", "imageURI", action);
+    TestNotificationGroup group("event");
+    group.publish();
     asyncCallMethods.clear();
     asyncCallArguments.clear();
 
@@ -357,40 +415,52 @@ void Ut_DuiNotificationManager::testRemoveGroup()
 
 void Ut_DuiNotificationManager::testAddToGroup()
 {
-    DuiNotificationGroup group1("event");
+    TestNotificationGroup group1("event");
+    group1.publish();
     asyncCallMethods.clear();
     asyncCallArguments.clear();
 
-    DuiNotification notification1(group1, "event");
+    TestNotification notification1("event");
+    notification1.setGroup(group1);
+    notification1.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 4);
+    QCOMPARE(asyncCallArguments.at(0).count(), 3);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group1.id()));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
-    QCOMPARE(asyncCallArguments.at(0).at(3), QVariant(false));
 
     QList<QVariant> arguments;
     TestRemoteAction action("serviceName", "objectPath", "interface", "methodName", arguments);
-    DuiNotificationGroup group2("event", "summary", "body", "imageURI", action);
+    TestNotificationGroup group2("event");
+    group2.setSummary("summary");
+    group2.setBody("body");
+    group2.setImage("image");
+    group2.setAction(action);
+    group2.publish();
     asyncCallMethods.clear();
     asyncCallArguments.clear();
 
-    DuiNotification notification2(group2, "event", "summary", "body", "imageURI", action);
+    TestNotification notification2("event");
+    notification2.setGroup(group2);
+    notification2.setSummary("summary");
+    notification2.setBody("body");
+    notification2.setImage("image");
+    notification2.setAction(action);
+    notification2.publish();
     QCOMPARE(asyncCallMethods.count(), 1);
     QCOMPARE(asyncCallMethods.at(0), QString("addNotification"));
     QCOMPARE(asyncCallArguments.count(), 1);
-    QCOMPARE(asyncCallArguments.at(0).count(), 9);
+    QCOMPARE(asyncCallArguments.at(0).count(), 8);
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(notificationUserId));
     QCOMPARE(asyncCallArguments.at(0).at(1), QVariant(group2.id()));
     QCOMPARE(asyncCallArguments.at(0).at(2), QVariant("event"));
     QCOMPARE(asyncCallArguments.at(0).at(3), QVariant("summary"));
     QCOMPARE(asyncCallArguments.at(0).at(4), QVariant("body"));
     QCOMPARE(asyncCallArguments.at(0).at(5), QVariant(action.toString()));
-    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("imageURI"));
+    QCOMPARE(asyncCallArguments.at(0).at(6), QVariant("image"));
     QCOMPARE(asyncCallArguments.at(0).at(7), QVariant("1"));
-    QCOMPARE(asyncCallArguments.at(0).at(8), QVariant(false));
 }
 
 void Ut_DuiNotificationManager::testNotificationIdList()

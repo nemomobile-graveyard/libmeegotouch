@@ -26,7 +26,7 @@
 
 /*!
  * An interface to the notification manager.
- * Uses the org.maemo.dui.NotificationManager D-Bus interface with which
+ * Uses the com.nokia.dui.NotificationManager D-Bus interface with which
  * application developers can create and manage notifications.
  */
 class DuiNotificationManager
@@ -65,19 +65,17 @@ public:
      * \param action the ID of the content to be used in the notification
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this group
-     * \param persistent \c true if the notification group should be persistent, \c false otherwise
      * \return the ID of the new notification group
      */
-    uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent);
+    uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
 
     /*!
      * Adds a new notification group.
      *
      * \param eventType the event type of the notification
-     * \param persistent \c true if the notification group should be persistent, \c false otherwise
      * \return the ID of the new notification group
      */
-    uint addGroup(const QString &eventType, bool persistent = false);
+    uint addGroup(const QString &eventType);
 
     /*!
      * Adds a new notification.
@@ -89,20 +87,18 @@ public:
      * \param action the ID of the content to be used in the notification
      * \param imageURI the ID of the icon to be used in the notification
      * \param count the number of items inside this notification
-     * \param persistent \c true if the notification group should be persistent, \c false otherwise
      * \return the ID of the new notification
      */
-    uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count = 1, bool persistent = false);
+    uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count = 1);
 
     /*!
      * Adds a new notification.
      *
      * \param groupId the ID of the notification group to put the notification in
      * \param eventType the event type of the notification
-     * \param persistent \c true if the notification group should be persistent, \c false otherwise
      * \return the ID of the new notification
      */
-    uint addNotification(uint groupId, const QString &eventType, bool persistent = false);
+    uint addNotification(uint groupId, const QString &eventType);
 
     /*!
      * Removes a notification group and all notifications in the group.

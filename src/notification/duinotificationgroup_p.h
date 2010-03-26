@@ -20,10 +20,12 @@
 #ifndef DUI_NOTIFICATION_GROUP_P_H
 #define DUI_NOTIFICATION_GROUP_P_H
 
+#include "duinotification_p.h"
+
 /*!
  * A private class for DuiNotificationGroup
  */
-class DuiNotificationGroupPrivate
+class DuiNotificationGroupPrivate : public DuiNotificationPrivate
 {
 public:
     /*!
@@ -35,9 +37,6 @@ public:
      * Destructor
      */
     virtual ~DuiNotificationGroupPrivate();
-
-    //! The ID of the notification group
-    unsigned int _id;
 };
 
 #endif // DUI_NOTIFICATION_GROUP_P_H

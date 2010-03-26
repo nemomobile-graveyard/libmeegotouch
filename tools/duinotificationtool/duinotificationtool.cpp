@@ -35,6 +35,61 @@
 #include <QApplication>
 #include <duinotificationmanager.h>
 
+// Subclasses to gain access to the IDs
+class DuiNotificationToolNotification : public DuiNotification
+{
+public:
+    explicit DuiNotificationToolNotification(const QString &eventType, const QString &summary, const QString &body);
+    explicit DuiNotificationToolNotification(uint id);
+    uint id() const;
+    void setEventType(const QString &eventType);
+};
+
+class DuiNotificationToolNotificationGroup : public DuiNotificationGroup
+{
+public:
+    explicit DuiNotificationToolNotificationGroup(const QString &eventType, const QString &summary, const QString &body);
+    explicit DuiNotificationToolNotificationGroup(uint id);
+    uint id() const;
+    void setEventType(const QString &eventType);
+};
+
+DuiNotificationToolNotification::DuiNotificationToolNotification(const QString &eventType, const QString &summary, const QString &body) : DuiNotification(eventType, summary, body)
+{
+}
+
+DuiNotificationToolNotification::DuiNotificationToolNotification(uint id) : DuiNotification(id)
+{
+}
+
+uint DuiNotificationToolNotification::id() const
+{
+    return DuiNotification::id();
+}
+
+void DuiNotificationToolNotification::setEventType(const QString &eventType)
+{
+    DuiNotification::setEventType(eventType);
+}
+
+DuiNotificationToolNotificationGroup::DuiNotificationToolNotificationGroup(const QString &eventType, const QString &summary, const QString &body) : DuiNotificationGroup(eventType, summary, body)
+{
+}
+
+DuiNotificationToolNotificationGroup::DuiNotificationToolNotificationGroup(uint id) : DuiNotificationGroup(id)
+{
+}
+
+uint DuiNotificationToolNotificationGroup::id() const
+{
+    return DuiNotificationGroup::id();
+}
+
+void DuiNotificationToolNotificationGroup::setEventType(const QString &eventType)
+{
+    DuiNotificationGroup::setEventType(eventType);
+}
+
 // The actions for this tool
 enum ToolAction {
     Undefined,
@@ -49,9 +104,6 @@ ToolAction toolAction = Undefined;
 // Whether to operate on notification groups instead of notifications
 bool groupMode = false;
 
-// Persistent mode in use
-bool persistentMode = false;
-
 // Notifications list mode in use
 bool listMode = false;
 
@@ -59,15 +111,15 @@ bool listMode = false;
 QString applicationName("duinotificationtool");
 
 // The notification/notification group ID to use
-unsigned int id = 0;
+uint id = 0;
 
 // The notification/notification group ID to use
-unsigned int count = 1;
+uint count = 1;
 
 // Prints usage information
 int usage(const char *program)
 {
-    std::cerr << std::setw(7) << "Usage: " << program << " [OPTION]... EVENTTYPE [SUMMARY BODY IMAGEURI SERVICENAME OBJECTPATH INTERFACE METHODNAME ARG...]" << std::endl;
+    std::cerr << std::setw(7) << "Usage: " << program << " [OPTION]... EVENTTYPE [SUMMARY BODY IMAGE SERVICENAME OBJECTPATH INTERFACE METHODNAME ARG...]" << std::endl;
     std::cerr << std::setw(7) << "Manage notifications." << std::endl;
     std::cerr << std::setw(7) << std::endl;
     std::cerr << std::setw(7) << "Mandatory arguments to long options are mandatory for short options too." << std::endl;
@@ -78,7 +130,6 @@ int usage(const char *program)
     std::cerr << std::setw(7) << "  -g, --group                Whether to operate on notification groups instead of notifications." << std::endl;
     std::cerr << std::setw(7) << "  -i, --id=ID                The notification/notification group ID to use." << std::endl;
     std::cerr << std::setw(7) << "  -c, --count=NUMBER         The number of notifications. This parameter has no effect when the action is 'remove'" << std::endl;
-    std::cerr << std::setw(7) << "  -p, --persistent           Set notification/group to persistent. This parameter has no effect when the action is 'remove'" << std::endl;
     std::cerr << std::setw(7) << "  -l, --list=APPLICATION     List all notifications that belong to an application name. Returns a count of notifications as an exit value." << std::endl;
     std::cerr << std::setw(7) << "      --help     display this help and exit" << std::endl;
     return -1;
@@ -96,7 +147,6 @@ int parseArguments(int argc, char *argv[])
             { "count", 1, NULL, 'c' },
             { "help", 0, NULL, 'h' },
             { "list", 1, NULL, 'l'},
-            { "persistent", 0, NULL, 'p'},
             { 0, 0, 0, 0 }
         };
 
@@ -122,9 +172,6 @@ int parseArguments(int argc, char *argv[])
             break;
         case 'g':
             groupMode = true;
-            break;
-        case 'p':
-            persistentMode = true;
             break;
         case 'l':
             listMode = true;
@@ -168,8 +215,8 @@ int main(int argc, char *argv[])
         QList<DuiNotification *> list = DuiNotification::notifications();
         std::cout << "\n" << applicationName.toUtf8().data() << " has " << list.size() << " notifications." << std::endl;
         std::cout << "Notification id(s):" << std::endl;
-        foreach(DuiNotification * notification, list) {
-            std::cout << notification->id() << std::endl;
+        foreach(DuiNotification *notification, list) {
+            std::cout << static_cast<DuiNotificationToolNotification *>(notification)->id() << std::endl;
         }
         return list.size();
     }
@@ -180,7 +227,7 @@ int main(int argc, char *argv[])
     case Update: {
         // Get the parameters for adding and updating notifications/notification groups
         QString eventType = QString(argv[optind]);
-        QString summary, body, imageURI;
+        QString summary, body, image;
         if (argc >= optind + 1) {
             summary = QString(argv[optind + 1]);
         }
@@ -188,7 +235,7 @@ int main(int argc, char *argv[])
             body = QString(argv[optind + 2]);
         }
         if (argc >= optind + 3) {
-            imageURI = QString(argv[optind + 3]);
+            image = QString(argv[optind + 3]);
         }
 
         // Create an action if one is defined
@@ -211,22 +258,50 @@ int main(int argc, char *argv[])
         if (toolAction == Add) {
             // Add a notification/notification group
             if (groupMode) {
-                result = DuiNotificationGroup(eventType, summary, body, imageURI, *remoteAction, count, persistentMode).id();
+                DuiNotificationToolNotificationGroup group(eventType, summary, body);
+                group.setImage(image);
+                group.setAction(*remoteAction);
+                group.setCount(count);
+                group.publish();
+                result = group.id();
             } else {
                 if (id != 0) {
-                    result = DuiNotification(DuiNotificationGroup(id), eventType, summary, body, imageURI, *remoteAction).id();
+                    DuiNotificationToolNotification notification(eventType, summary, body);
+                    notification.setGroup(DuiNotificationToolNotificationGroup(id));
+                    notification.setImage(image);
+                    notification.setAction(*remoteAction);
+                    notification.setCount(count);
+                    notification.publish();
+                    result = notification.id();
                 } else {
-                    result = DuiNotification(eventType, summary, body, imageURI, *remoteAction, count, persistentMode).id();
+                    DuiNotificationToolNotification notification(eventType, summary, body);
+                    notification.setImage(image);
+                    notification.setAction(*remoteAction);
+                    notification.setCount(count);
+                    notification.publish();
+                    result = notification.id();
                 }
             }
         } else {
             // Update a notification/notification group
             if (groupMode) {
-                DuiNotificationGroup group(id);
-                group.update(eventType, summary, body, imageURI, count, *remoteAction);
+                DuiNotificationToolNotificationGroup group(id);
+                group.setEventType(eventType);
+                group.setSummary(summary);
+                group.setBody(body);
+                group.setImage(image);
+                group.setAction(*remoteAction);
+                group.setCount(count);
+                group.publish();
             } else {
-                DuiNotification notification(id);
-                notification.update(eventType, summary, body, imageURI, count, *remoteAction);
+                DuiNotificationToolNotification notification(id);
+                notification.setEventType(eventType);
+                notification.setSummary(summary);
+                notification.setBody(body);
+                notification.setImage(image);
+                notification.setAction(*remoteAction);
+                notification.setCount(count);
+                notification.publish();
             }
         }
 
@@ -235,10 +310,10 @@ int main(int argc, char *argv[])
     }
     case Remove:
         if (groupMode) {
-            DuiNotificationGroup group(id);
+            DuiNotificationToolNotificationGroup group(id);
             group.remove();
         } else {
-            DuiNotification notification(id);
+            DuiNotificationToolNotification notification(id);
             notification.remove();
         }
         break;

@@ -20,18 +20,17 @@
 #ifndef DUINOTIFICATION_H_
 #define DUINOTIFICATION_H_
 
-#include "duinotificationgroup.h"
-
 #include <DuiExport>
 #include <QtGlobal>
 #include <duiremoteaction.h>
 
 class DuiNotificationPrivate;
+class DuiNotificationGroup;
 class QString;
 
 /*!
     \class DuiNotification
-    \brief A class that represents a system notification.
+    \brief A class that represents a notification.
 
     \ingroup widgets
 
@@ -49,12 +48,13 @@ class QString;
         and notifications relating to application and system behaviour (like connection lost, battery low etc.).
         Communication activities display incoming event notifications.
 
-        When an instance of this class is created a notification is created unless the instance represents an
-        already existing notification and is created using a known notification ID.
+        A notification is not created or updated until the publish() function is called.
 
         A list of notifications already created can be requested, but in this case a DuiApplication
         instance must have been created before any notifications were created and before the request
-        itself.
+        itself. It should also be noted that currently all properties of such notifications need to be
+        set before publishing changes to the notification. Otherwise the properties of the notification
+        will be lost.
 
         \sa \ref notifications
 
@@ -79,65 +79,70 @@ class QString;
             can either be dismissed or then reacted upon. The interactive elements are essentially shortcut
             functions, intended to save time from the users. No use case should fail because the user fails to
             press the interactive status banner.
-        \li DuiInfoBanner class can be used to show in-process notifications directly without having to use the
-            notification framework.
+        \li DuiInfoBanner class can be used to show information banners in a single application. However,
+            such banners are only shown inside the application using them, no sounds or other feedbacks are
+            played and the banners are not aware of the current policy or profile in any way.
 
     \section DuiNotificationPersistence Persistence
         Notifications created as persistent are stored by the notification system and are returned by the
-        DuiNotification::notifications() even after a reboot.
+        DuiNotification::notifications() even after a reboot. It should be noted that currently all properties
+        of such notifications need to be set before publishing changes to the notification. Otherwise the
+        properties of the notification will be lost.
 
         \note A DuiApplication instance must be created before creating any persistent notifications.
-
-    \section DuiNotificationVariants Variants
-        The notification component has the following variants:
-        - \link DuiInfoBannerEventView Event banner \endlink
-        - \link DuiInfoBannerInformationView Information banner \endlink (for status, progress and errors)
-
-    \section ExampleWidgetOpenIssues Open issues
-        \li Rules about system modal notifications to be added.
-        \li Now there is no separation between foreground application status banners vs. background and system
-            status banners.
 */
 
-class DUI_EXPORT DuiNotification
+class DUI_EXPORT DuiNotification : public QObject
 {
+    Q_OBJECT
+
+    /*!
+        \property DuiNotification::summary
+        \brief The summary text to be used in the notification.
+    */
+    Q_PROPERTY(QString summary READ summary WRITE setSummary)
+
+    /*!
+        \property DuiNotification::body
+        \brief The body text to be used in the notification.
+    */
+    Q_PROPERTY(QString body READ body WRITE setBody)
+
+    /*!
+        \property DuiNotification::image
+        \brief The name of the image to be used in the notification.
+     */
+    Q_PROPERTY(QString image READ image WRITE setImage)
+
+    /*!
+        \property DuiNotification::count
+        \brief The number of items represented by this notification.
+     */
+    Q_PROPERTY(uint count READ count WRITE setCount)
+
 public:
     /*!
-     * Creates a new representation of a notification. A notification is
-     * automatically created and is given an ID by the notification manager.
-     *
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification. Defaults to no summary text.
-     * \param body the body text to be used in the notification. Defaults to no body text.
-     * \param imageURI the ID of the icon to be used in the notification. Defaults to no image URI.
-     * \param action the action to be executed when the notification is activated. Defaults to no action.
-     * \param count the number of items inside this notification
-     * \param persistent \c true if the notification should be persistent, \c false otherwise
+     * Predefined event types. These are just the known types; applications
+     * may use other types as well if the event type string is known.
      */
-    explicit DuiNotification(const QString &eventType, const QString &summary = QString(), const QString &body = QString(), const QString &imageURI = QString(), const DuiRemoteAction &action = DuiRemoteAction(), uint count = 1, bool persistent = false);
+    //! Event type for SMS & MMS
+    static const QString EVENT_MESSAGE;
+    //! Event type for instant messages
+    static const QString EVENT_CHAT;
+    //! Event type for new email alert
+    static const QString EVENT_EMAIL;
 
     /*!
-     * Creates a new representation of a notification. A notification is
-     * automatically created into the given notification group and is given
-     * an ID by the notification manager.
+     * Creates a new representation of a notification. The notification will
+     * not be published until publish() is called. Only the event type needs
+     * to be defined. If no summary or body text is defined the notification
+     * will not have a visual representation.
      *
-     * \param group the notification group to put the notification in
      * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification. Defaults to no summary text.
-     * \param body the body text to be used in the notification. Defaults to no body text.
-     * \param imageURI the ID of the icon to be used in the notification. Defaults to no image URI.
-     * \param action the action to be executed when the notification is activated. Defaults to no action.
+     * \param summary the summary text to be used in the notification. Can be omitted (defaults to no summary text).
+     * \param body the body text to be used in the notification. Can be omitted (defaults to no body text).
      */
-    explicit DuiNotification(const DuiNotificationGroup &group, const QString &eventType, const QString &summary = QString(), const QString &body = QString(), const QString &imageURI = QString(), const DuiRemoteAction &action = DuiRemoteAction());
-
-    /*!
-     * Creates a representation of an existing notification.
-     * Should be used to get a handle to an existing notification
-     * with a known ID.
-     *
-     * \param id the ID of the existing notification
-     */
-    explicit DuiNotification(unsigned int id);
+    explicit DuiNotification(const QString &eventType, const QString &summary = QString(), const QString &body = QString());
 
     /*!
      * Destroys the class that represents a notification.
@@ -145,38 +150,102 @@ public:
     virtual ~DuiNotification();
 
     /*!
-     * Returns the ID of the notification.
+     * Sets the notification group the notification belongs to.
      *
-     * \return the ID of the notification
+     * \param group the notification group the notification belongs to.
      */
-    unsigned int id() const;
+    void setGroup(const DuiNotificationGroup &group);
 
     /*!
-     * Updates the notification.
+     * Sets the summary text to be used in the notification.
      *
-     * \param eventType the event type of the notification
-     * \param summary the summary text to be used in the notification. Defaults to no summary text.
-     * \param body the body text to be used in the notification. Defaults to no body text.
-     * \param imageURI the ID of the icon to be used in the notification. Defaults to no image URI.
-     * \param count the number of items inside this notification
-     * \param action the action to be executed when the notification is activated. Defaults to no action.
-     * \return true if the update succeeded, false otherwise
+     * \param summary the summary text to be used in the notification.
      */
-    bool update(const QString &eventType, const QString &summary = QString(), const QString &body = QString(), const QString &imageURI = QString(), uint count = 1, const DuiRemoteAction &action = DuiRemoteAction());
+    void setSummary(const QString &summary);
+
+    /*!
+     * Gets the summary text to be used in the notification.
+     *
+     * \return the summary text to be used in the notification.
+     */
+    QString summary() const;
+
+    /*!
+     * Sets the body text to be used in the notification.
+     *
+     * \param body the body text to be used in the notification.
+     */
+    void setBody(const QString &body);
+
+    /*!
+     * Gets the body text to be used in the notification.
+     *
+     * \return the body text to be used in the notification.
+     */
+    QString body() const;
+
+    /*!
+     * Sets the name of the image to be used in the notification. If the name
+     * is an absolute path (begins with a /) an image located in that path is
+     * used. Otherwise the image name is interpreted to be an icon ID.
+     *
+     * \param image the name of the image to be used in the notification.
+     */
+    void setImage(const QString &image);
+
+    /*!
+     * Gets the name of the image to be used in the notification.
+     *
+     * \return the name of the image to be used in the notification.
+     */
+    QString image() const;
+
+    /*!
+     * Sets the action to be executed when the notification is activated.
+     *
+     * \param action the action to be executed when the notification is activated.
+     */
+    void setAction(const DuiRemoteAction &action);
+
+    /*!
+     * Sets the number of items represented by this notification (cardinality).
+     * For example a single notification may represent 5 new e-mails, in which
+     * case the count of the notification should be 5.
+     *
+     * \param count the number of items represented by this notification
+     */
+    void setCount(uint count);
+
+    /*!
+     * Gets the number of items represented by this notification (cardinality).
+     *
+     * \return the number of items represented by this notification
+     */
+    uint count() const;
+
+    /*!
+     * Publishes the notification. If the notification has not yet been
+     * published a notification is created into the given notification
+     * group (if any) and is given an ID by the notification manager.
+     * Otherwise the existing notification is updated.
+     *
+     * \return true if the publishing succeeded, false otherwise
+     */
+    virtual bool publish();
 
     /*!
      * Removes a notification.
      *
      * \return true if the removal succeeded, false otherwise
      */
-    bool remove();
+    virtual bool remove();
 
     /*!
-     * Returns whether the notification is valid
+     * Returns whether the notification is published
      *
-     * \return true if the notification is valid, false otherwise
+     * \return true if the notification is published, false otherwise
      */
-    bool isValid() const;
+    bool isPublished() const;
 
     /*!
      * Returns a list of notifications created by this application but which
@@ -188,17 +257,38 @@ public:
     static QList<DuiNotification *> notifications();
 
 protected:
+    //! \internal
+    //! A pointer to the private implementation class
+    DuiNotificationPrivate *d_ptr;
+
     /*!
      * A constructor to be called by the derived classes.
      * \param dd a derived private class object.
      */
     DuiNotification(DuiNotificationPrivate &dd);
 
-    //! A pointer to the private implementation class
-    DuiNotificationPrivate *d_ptr;
+    /*!
+     * Creates a representation of an existing notification.
+     * Should be used to get a handle to an existing notification
+     * with a known ID.
+     *
+     * \param id the ID of the existing notification
+     */
+    explicit DuiNotification(uint id);
+
+    //! Returns the ID of the notification.
+    uint id() const;
+
+    /*!
+     * Sets the event type of the notification.
+     *
+     * \param eventType the event type of the notification
+     */
+    void setEventType(const QString &eventType);
+    //! \internal_end
 
     Q_DECLARE_PRIVATE(DuiNotification)
-
+    Q_DISABLE_COPY(DuiNotification)
 };
 
 #endif /* DUINOTIFICATION_H_ */

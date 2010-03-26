@@ -20,10 +20,8 @@
 #include "duinotificationgroup.h"
 #include "duinotificationgroup_p.h"
 #include "duinotificationmanager.h"
-#include "duiremoteaction.h"
 
-DuiNotificationGroupPrivate::DuiNotificationGroupPrivate() :
-    _id(0)
+DuiNotificationGroupPrivate::DuiNotificationGroupPrivate() : DuiNotificationPrivate()
 {
 }
 
@@ -31,62 +29,56 @@ DuiNotificationGroupPrivate::~DuiNotificationGroupPrivate()
 {
 }
 
-DuiNotificationGroup::DuiNotificationGroup(DuiNotificationGroupPrivate &dd) :
-    d_ptr(&dd)
-{
-}
-
-DuiNotificationGroup::DuiNotificationGroup(const QString &eventType, const QString &summary, const QString &body, const QString &imageURI, const DuiRemoteAction &action, uint count, bool persistent) :
-    d_ptr(new DuiNotificationGroupPrivate)
+DuiNotificationGroup::DuiNotificationGroup(const QString &eventType, const QString &summary, const QString &body) :
+    DuiNotification(*new DuiNotificationGroupPrivate)
 {
     Q_D(DuiNotificationGroup);
-    if (!summary.isNull() || !body.isNull() || !imageURI.isNull() || !action.toString().isNull())
-        d->_id = DuiNotificationManager::instance()->addGroup(eventType, summary, body, action.toString(), imageURI, count, persistent);
-    else
-        d->_id = DuiNotificationManager::instance()->addGroup(eventType, persistent);
-}
-
-DuiNotificationGroup::DuiNotificationGroup(unsigned int id) :
-    d_ptr(new DuiNotificationGroupPrivate)
-{
-    Q_D(DuiNotificationGroup);
-    d->_id = id;
+    d->eventType = eventType;
+    d->summary = summary;
+    d->body = body;
 }
 
 DuiNotificationGroup::~DuiNotificationGroup()
 {
-    delete d_ptr;
 }
 
-uint DuiNotificationGroup::id() const
+DuiNotificationGroup::DuiNotificationGroup(uint id) : DuiNotification(id)
 {
-    Q_D(const DuiNotificationGroup);
-    return d->_id;
 }
 
-bool DuiNotificationGroup::update(const QString &eventType, const QString &summary, const QString &body, const QString &imageURI, uint count, const DuiRemoteAction &action)
+bool DuiNotificationGroup::publish()
 {
     Q_D(DuiNotificationGroup);
-    if (!summary.isNull() || !body.isNull() || !imageURI.isNull() || !action.toString().isNull())
-        return DuiNotificationManager::instance()->updateGroup(d->_id, eventType, summary, body, action.toString(), imageURI, count);
-    else
-        return DuiNotificationManager::instance()->updateGroup(d->_id, eventType);
+
+    bool success = false;
+
+    if (d->id == 0) {
+        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull()) {
+            d->id = DuiNotificationManager::instance()->addGroup(d->eventType, d->summary, d->body, d->action, d->image, d->count);
+        } else {
+            d->id = DuiNotificationManager::instance()->addGroup(d->eventType);
+        }
+
+        success = d->id != 0;
+    } else {
+        if (!d->summary.isNull() || !d->body.isNull() || !d->image.isNull() || !d->action.isNull()) {
+            success = DuiNotificationManager::instance()->updateGroup(d->id, d->eventType, d->summary, d->body, d->action, d->image, d->count);
+        } else {
+            success = DuiNotificationManager::instance()->updateGroup(d->id, d->eventType);
+        }
+    }
+
+    return success;
 }
 
 bool DuiNotificationGroup::remove()
 {
-    if (!isValid()) {
+    if (!isPublished()) {
         return false;
     } else {
         Q_D(DuiNotificationGroup);
-        uint id = d->_id;
-        d->_id = 0;
+        uint id = d->id;
+        d->id = 0;
         return DuiNotificationManager::instance()->removeGroup(id);
     }
-}
-
-bool DuiNotificationGroup::isValid() const
-{
-    Q_D(const DuiNotificationGroup);
-    return d->_id != 0;
 }

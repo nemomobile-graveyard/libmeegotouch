@@ -24,6 +24,18 @@
 #include <duiaction_stub.h>
 #include <duinotificationgroup_stub.h>
 
+// Subclasses to gain access to the IDs
+class TestNotification : public DuiNotification
+{
+public:
+    uint id() const;
+};
+
+uint TestNotification::id() const
+{
+    return DuiNotification::id();
+}
+
 void Ut_DuiNotification::initTestCase()
 {
 }
@@ -49,7 +61,7 @@ void Ut_DuiNotification::testGettingAllNotifications()
     QList<DuiNotification *> notificationList = DuiNotification::notifications();
     QCOMPARE(notificationList.count(), idList.count());
     foreach(DuiNotification * notification, notificationList) {
-        QVERIFY(idList.contains(notification->id()));
+        QVERIFY(idList.contains(static_cast<TestNotification *>(notification)->id()));
     }
 }
 

@@ -31,10 +31,10 @@ class DuiNotificationManagerStub : public StubBase
 public:
     virtual void DuiNotificationManagerConstructor();
     virtual void DuiNotificationManagerDestructor();
-    virtual uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent);
-    virtual uint addGroup(const QString &eventType, bool persistent);
-    virtual uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent);
-    virtual uint addNotification(uint groupId, const QString &eventType, bool persistent);
+    virtual uint addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    virtual uint addGroup(const QString &eventType);
+    virtual uint addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
+    virtual uint addNotification(uint groupId, const QString &eventType);
     virtual bool removeGroup(uint groupId);
     virtual bool removeNotification(uint notificationId);
     virtual bool updateGroup(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
@@ -54,7 +54,7 @@ void DuiNotificationManagerStub::DuiNotificationManagerDestructor()
 
 }
 
-uint DuiNotificationManagerStub::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent)
+uint DuiNotificationManagerStub::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<const QString & >(eventType));
@@ -63,21 +63,19 @@ uint DuiNotificationManagerStub::addGroup(const QString &eventType, const QStrin
     params.append(new Parameter<const QString & >(action));
     params.append(new Parameter<const QString & >(imageURI));
     params.append(new Parameter<uint >(count));
-    params.append(new Parameter<bool >(persistent));
     stubMethodEntered("addGroup", params);
     return stubReturnValue<uint>("addGroup");
 }
 
-uint DuiNotificationManagerStub::addGroup(const QString &eventType, bool persistent)
+uint DuiNotificationManagerStub::addGroup(const QString &eventType)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<const QString & >(eventType));
-    params.append(new Parameter<bool >(persistent));
     stubMethodEntered("addGroup", params);
     return stubReturnValue<uint>("addGroup");
 }
 
-uint DuiNotificationManagerStub::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent)
+uint DuiNotificationManagerStub::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<uint >(groupId));
@@ -87,17 +85,15 @@ uint DuiNotificationManagerStub::addNotification(uint groupId, const QString &ev
     params.append(new Parameter<const QString & >(action));
     params.append(new Parameter<const QString & >(imageURI));
     params.append(new Parameter<uint >(count));
-    params.append(new Parameter<bool >(persistent));
     stubMethodEntered("addNotification", params);
     return stubReturnValue<uint>("addNotification");
 }
 
-uint DuiNotificationManagerStub::addNotification(uint groupId, const QString &eventType, bool persistent)
+uint DuiNotificationManagerStub::addNotification(uint groupId, const QString &eventType)
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<uint >(groupId));
     params.append(new Parameter<const QString & >(eventType));
-    params.append(new Parameter<bool >(persistent));
     stubMethodEntered("addNotification", params);
     return stubReturnValue<uint>("addNotification");
 }
@@ -194,24 +190,24 @@ DuiNotificationManager *DuiNotificationManager::instance()
     return &manager;
 }
 
-uint DuiNotificationManager::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent)
+uint DuiNotificationManager::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    return gDuiNotificationManagerStub->addGroup(eventType, summary, body, action, imageURI, count, persistent);
+    return gDuiNotificationManagerStub->addGroup(eventType, summary, body, action, imageURI, count);
 }
 
-uint DuiNotificationManager::addGroup(const QString &eventType, bool persistent)
+uint DuiNotificationManager::addGroup(const QString &eventType)
 {
-    return gDuiNotificationManagerStub->addGroup(eventType, persistent);
+    return gDuiNotificationManagerStub->addGroup(eventType);
 }
 
-uint DuiNotificationManager::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent)
+uint DuiNotificationManager::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    return gDuiNotificationManagerStub->addNotification(groupId, eventType, summary, body, action, imageURI, count, persistent);
+    return gDuiNotificationManagerStub->addNotification(groupId, eventType, summary, body, action, imageURI, count);
 }
 
-uint DuiNotificationManager::addNotification(uint groupId, const QString &eventType, bool persistent)
+uint DuiNotificationManager::addNotification(uint groupId, const QString &eventType)
 {
-    return gDuiNotificationManagerStub->addNotification(groupId, eventType, persistent);
+    return gDuiNotificationManagerStub->addNotification(groupId, eventType);
 }
 
 bool DuiNotificationManager::removeGroup(uint groupId)

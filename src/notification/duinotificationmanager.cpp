@@ -25,7 +25,7 @@
 static const QString DATA_PATH = QDir::homePath() + QString("/.config/libdui/notifications/");
 
 DuiNotificationManager::DuiNotificationManager() :
-    proxy("org.maemo.dui.NotificationManager", "/notificationmanager", QDBusConnection::sessionBus()),
+    proxy("com.nokia.dui.NotificationManager", "/notificationmanager", QDBusConnection::sessionBus()),
     userId(0)
 {
     if (!DuiApplication::instance()) {
@@ -66,24 +66,24 @@ DuiNotificationManager *DuiNotificationManager::instance()
     return &notificationManagerInstance;
 }
 
-uint DuiNotificationManager::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent)
+uint DuiNotificationManager::addGroup(const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    return proxy.addGroup(userId, eventType, summary, body, action, imageURI, count, persistent);
+    return proxy.addGroup(userId, eventType, summary, body, action, imageURI, count);
 }
 
-uint DuiNotificationManager::addGroup(const QString &eventType, bool persistent)
+uint DuiNotificationManager::addGroup(const QString &eventType)
 {
-    return proxy.addGroup(userId, eventType, persistent);
+    return proxy.addGroup(userId, eventType);
 }
 
-uint DuiNotificationManager::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count, bool persistent)
+uint DuiNotificationManager::addNotification(uint groupId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count)
 {
-    return proxy.addNotification(userId, groupId, eventType, summary, body, action, imageURI, count, persistent);
+    return proxy.addNotification(userId, groupId, eventType, summary, body, action, imageURI, count);
 }
 
-uint DuiNotificationManager::addNotification(uint groupId, const QString &eventType, bool persistent)
+uint DuiNotificationManager::addNotification(uint groupId, const QString &eventType)
 {
-    return proxy.addNotification(userId, groupId, eventType, persistent);
+    return proxy.addNotification(userId, groupId, eventType);
 }
 
 bool DuiNotificationManager::removeGroup(uint groupId)
