@@ -56,53 +56,6 @@ void Ut_DuiCalendar::cleanup()
 {
 }
 
-void Ut_DuiCalendar::testConversionFromAndToQDateTime_data()
-{
-    QTest::addColumn<QDate>("qDate");
-    QTest::addColumn<QTime>("qTime");
-    QTest::addColumn<int>("qTimeSpec");
-    QTest::addColumn<QString>("timeZone");
-
-    QTest::newRow("2008-07-21 Qt::Localtime UTC")
-            << QDate(2008, 7, 21)
-            << QTime(12, 31, 0, 0)
-            << (int) Qt::LocalTime
-            << "UTC";
-
-    QTest::newRow("2008-07-21 Qt::UTC UTC")
-            << QDate(2008, 7, 21)
-            << QTime(12, 31, 0, 0)
-            << (int) Qt::UTC
-            << "UTC";
-
-    QTest::newRow("2008-07-21 Qt::LocalTime Europe/Helsinki")
-            << QDate(2008, 7, 21)
-            << QTime(12, 31, 0, 0)
-            << (int) Qt::LocalTime
-            << "Europe/Helsinki";
-
-    QTest::newRow("2008-07-21 Qt::UTC Europe/Helsinki")
-            << QDate(2008, 7, 21)
-            << QTime(12, 31, 0, 0)
-            << (int) Qt::UTC
-            << "Europe/Helsinki";
-}
-
-void Ut_DuiCalendar::testConversionFromAndToQDateTime()
-{
-    QFETCH(QDate, qDate);
-    QFETCH(QTime, qTime);
-    QFETCH(int, qTimeSpec);
-    QFETCH(QString, timeZone);
-
-    DuiCalendar::setSystemTimeZone(timeZone);
-
-    DuiCalendar duical;
-    QDateTime datetime(qDate, qTime, (Qt::TimeSpec) qTimeSpec);
-    duical.setDateTime(datetime);
-    QCOMPARE(datetime, duical.qDateTime((Qt::TimeSpec) qTimeSpec));
-}
-
 void Ut_DuiCalendar::testDuiLocaleCalendar_data()
 {
     QTest::addColumn<DuiLocale::Calendar>("cal");
