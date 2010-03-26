@@ -28,8 +28,6 @@
 
 int qQGraphicsWidgetSizeHintCallCount;
 int modelSetupCount;
-QList<DuiWidgetView *> Ut_DuiWidgetController::createdViews;
-QList<const DuiWidgetController *> Ut_DuiWidgetController::viewCreatingControllers;
 bool Ut_DuiWidgetController::viewCreatesChildWidgets = false;
 bool Ut_DuiWidgetController::viewSetsItselfActive = false;
 
@@ -107,17 +105,6 @@ void TestWidgetController::setupModel()
     modelSetupCount++;
 }
 
-// DuiTheme stubs (used by DuiWidgetController)
-DuiWidgetView *DuiTheme::view(const DuiWidgetController *const_controller)
-{
-    DuiWidgetController *controller = const_cast<DuiWidgetController *>(const_controller);
-    if (Ut_DuiWidgetController::viewCreatingControllers.contains(controller)) {
-        DuiWidgetView *view = new MockWidgetView(controller, QSizeF(-1, -1), Ut_DuiWidgetController::viewCreatesChildWidgets, Ut_DuiWidgetController::viewSetsItselfActive);
-        Ut_DuiWidgetController::createdViews.append(view);
-        return view;
-    }
-    return NULL;
-}
 
 // QGraphicsWidget stubs (used by DuiWidgetController)
 QSizeF QGraphicsWidget::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -147,8 +134,6 @@ void Ut_DuiWidgetController::init()
     controller = new TestWidgetController;
     viewCreatesChildWidgets = false;
     viewSetsItselfActive = false;
-    viewCreatingControllers.clear();
-    createdViews.clear();
 }
 
 void Ut_DuiWidgetController::cleanup()
@@ -177,16 +162,6 @@ void Ut_DuiWidgetController::testSetGeometry()
 
 void Ut_DuiWidgetController::testSizeHint()
 {
-    QCOMPARE(modelSetupCount, 0);
-
-    // Test size hint without view
-    controller->sizeHint(Qt::MinimumSize);
-    controller->sizeHint(Qt::PreferredSize);
-    controller->sizeHint(Qt::MaximumSize);
-    QCOMPARE(qQGraphicsWidgetSizeHintCallCount, 3);
-
-    QCOMPARE(modelSetupCount, 0);
-
     // Test size hint with invalid view
     DuiWidgetView *view = new MockWidgetView(controller);
     //view->updateStyle();
@@ -248,53 +223,6 @@ void Ut_DuiWidgetController::testActiveStateWhenViewIsUnset()
     MockWidgetView *view = new MockWidgetView(controller);
     controller->setView(view);
     QCOMPARE(view->active, true);
-}
-
-void Ut_DuiWidgetController::testAddingToSceneWhenViewCreatesChildWidgets()
-{
-    DuiWidgetController *testController = new TestWidgetController;
-
-    // Setup testing environment:
-    // - A MockWidgetView should be created by DuiTheme for this controller.
-    // - The MockWidgetView should create child widgets for this widget.
-    viewCreatingControllers.append(testController);
-    viewCreatesChildWidgets = true;
-
-    // Add the widget to scene
-    QGraphicsScene *scene = new QGraphicsScene;
-    QGraphicsView *view = new QGraphicsView(scene);
-    view->setFixedSize(380, 92);
-    scene->addItem(testController);
-
-    // Verify that only one view is created
-    QCOMPARE(createdViews.count(), 1);
-
-    delete view;
-    delete scene;
-}
-
-void Ut_DuiWidgetController::testSettingActiveWhenViewCreatesChildWidgets()
-{
-    DuiWidgetController *testController = new TestWidgetController;
-
-    // Setup testing environment:
-    // - A MockWidgetView should be created by DuiTheme for this controller.
-    // - The MockWidgetView should set widget active when its constructed.
-    viewCreatingControllers.append(testController);
-    viewSetsItselfActive = true;
-
-    // Set geometry call will create view
-    testController->setGeometry(QRect(0, 0, 100, 100));
-
-    // Verify that only one view is created
-    QCOMPARE(createdViews.count(), 1);
-
-    // Verify that controller's view is active
-    const MockWidgetView *view = dynamic_cast<const MockWidgetView *>(testController->view());
-    QVERIFY(view != NULL);
-    QCOMPARE(view->active, true);
-
-    delete testController;
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiWidgetController);

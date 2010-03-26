@@ -33,8 +33,6 @@ class Ut_DuiWidgetController : public QObject
     Q_OBJECT
 
 public:
-    static QList<DuiWidgetView *> createdViews;
-    static QList<const DuiWidgetController *> viewCreatingControllers;
     static bool viewCreatesChildWidgets;
     static bool viewSetsItselfActive;
 
@@ -54,8 +52,6 @@ private slots:
     void testSizeHint();
     void testActiveStateWhenViewIsSet();
     void testActiveStateWhenViewIsUnset();
-    void testAddingToSceneWhenViewCreatesChildWidgets();
-    void testSettingActiveWhenViewCreatesChildWidgets();
 };
 
 #endif // UT_DUIWIDGETCONTROLLER_H
