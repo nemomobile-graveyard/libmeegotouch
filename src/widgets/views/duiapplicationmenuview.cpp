@@ -399,6 +399,7 @@ void DuiApplicationMenuViewPrivate::changeData(QAction *action)
 {
     DuiWidget *widget = buttons.value(action);
     DuiButton *button = qobject_cast<DuiButton *>(widget);
+
     if (button) {
         // Update button data accordingly
         button->setText(action->text());
@@ -409,6 +410,10 @@ void DuiApplicationMenuViewPrivate::changeData(QAction *action)
         if (duiAction) {
             button->setIconID(duiAction->iconID());
         }
+    } else {
+        DuiContentItem *item = qobject_cast<DuiContentItem *>(widget);
+        if (item)
+            item->setTitle(action->text());
     }
 }
 
