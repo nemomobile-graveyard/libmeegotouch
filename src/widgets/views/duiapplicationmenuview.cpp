@@ -153,6 +153,7 @@ void DuiApplicationMenuViewPrivate::remove(QAction *action)
         leasedWidgets.remove(action);
     }
     disconnect(action, SIGNAL(triggered()), controller, SLOT(disappear()));
+    refreshPolicies(true);
 }
 
 void DuiApplicationMenuViewPrivate::change(QAction *action)
@@ -173,10 +174,12 @@ bool DuiApplicationMenuViewPrivate::eventFilter(QObject *obj, QEvent *e)
         switch (e->type()) {
         case QEvent::ActionRemoved: {
             remove(actionEvent->action());
+            makeLandscapePolicyColumnsEqual();
             break;
         }
         case QEvent::ActionAdded: {
             add(actionEvent->action(), actionEvent->before());
+            makeLandscapePolicyColumnsEqual();
             break;
         }
         case QEvent::ActionChanged: {
@@ -489,10 +492,9 @@ void DuiApplicationMenuViewPrivate::updateItemMode()
     int columnsCount = 2;
     DuiWindow *window = DuiApplication::instance()->activeWindow();
     if (window && Dui::Portrait == window->orientation()) {
-        policy = portraitPolicy;
-        columnsCount = 1;
-    }
-
+            policy = portraitPolicy;
+            columnsCount = 1;
+     }
     int count = policy->count();
 
     for (int index = 0; index < count; index++) {
@@ -636,9 +638,14 @@ void DuiApplicationMenuViewPrivate::makeLandscapePolicyColumnsEqual()
     int width = (sceneSize.width() -
                  q->style()->marginLeft() - q->style()->marginRight() -
                  q->style()->paddingLeft() - q->style()->paddingRight() -
-                 l - r) / 2;
-    landscapePolicy->setColumnPreferredWidth(0, width);
-    landscapePolicy->setColumnPreferredWidth(1, width);
+                 l - r) ;
+    if (landscapePolicy->count()  > 1) {
+        landscapePolicy->setColumnPreferredWidth(0, width/2);
+        landscapePolicy->setColumnPreferredWidth(1, width/2);
+    } else {
+        landscapePolicy->setColumnPreferredWidth(0, width);
+        landscapePolicy->setColumnPreferredWidth(1, 0);
+    }
 }
 
 DuiApplicationMenuView::DuiApplicationMenuView(DuiApplicationMenu *controller) :
