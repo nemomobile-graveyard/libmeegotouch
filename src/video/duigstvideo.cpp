@@ -553,21 +553,9 @@ GstElement* DuiGstVideo::makeSink(bool yuv)
             GValueArray* colorkey = gst_property_probe_get_values_name(GST_PROPERTY_PROBE(gst_elem_xvimagesink), "colorkey");
             GValueArray* autopaint = gst_property_probe_get_values_name(GST_PROPERTY_PROBE(gst_elem_xvimagesink), "autopaint-colorkey");
             if( colorkey && autopaint ) {
-                
                 g_value_array_free(colorkey);
                 g_value_array_free(autopaint);
-                
-                //g_object_set(gst_elem_xvimagesink,
-                //             "force-aspect-ratio", FALSE,
-                //             (void*) 0);
-                m_colorKey.setRgb(0xFF00);
-                g_object_set(gst_elem_xvimagesink,
-                             "colorkey", m_colorKey.rgb(),
-                             "autopaint-colorkey", FALSE,
-                             (void*) 0);
-                
                 return gst_elem_xvimagesink;
-
             } else {
                 if( colorkey )
                     g_value_array_free(colorkey);
