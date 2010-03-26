@@ -389,52 +389,6 @@ tooltip</source>
         <source>Error correction</source>
         <translation>تصحيح الخطأ</translation>
     </message>
-    <message id="xx_continuous_slider_title">
-        <location filename="../continuoussliderpage.cpp" line="150"/>
-        <source>Continuous Slider</source>
-        <translation>مستمر المتزلج</translation>
-    </message>
-    <message id="xx_continuous_slider_with_icons">
-        <location filename="../continuoussliderpage.cpp" line="154"/>
-        <source>with icons</source>
-        <translation>مع أيقونات</translation>
-    </message>
-    <message id="xx_continuous_slider_plain_slider">
-        <location filename="../continuoussliderpage.cpp" line="156"/>
-        <source>plain slider</source>
-        <translation>سهل التمرير</translation>
-    </message>
-    <message id="xx_continuous_slider_with_labels">
-        <location filename="../continuoussliderpage.cpp" line="158"/>
-        <source>with labels</source>
-        <translation>مع تسميات</translation>
-    </message>
-    <message id="xx_continuous_slider_min">
-        <location filename="../continuoussliderpage.cpp" line="108"/>
-        <location filename="../continuoussliderpage.cpp" line="160"/>
-        <location filename="../continuoussliderpage.cpp" line="168"/>
-        <source>Min</source>
-        <translation>دقيقة</translation>
-    </message>
-    <message id="xx_continuous_slider_max">
-        <location filename="../continuoussliderpage.cpp" line="110"/>
-        <location filename="../continuoussliderpage.cpp" line="162"/>
-        <location filename="../continuoussliderpage.cpp" line="170"/>
-        <source>Max</source>
-        <translation>ماكس</translation>
-    </message>
-    <message id="xx_continuous_slider_thumb">
-        <location filename="../continuoussliderpage.cpp" line="112"/>
-        <location filename="../continuoussliderpage.cpp" line="164"/>
-        <location filename="../continuoussliderpage.cpp" line="172"/>
-        <source>Thumb</source>
-        <translation>الإبهام</translation>
-    </message>
-    <message id="xx_continuous_slider_seekbar">
-        <location filename="../continuoussliderpage.cpp" line="166"/>
-        <source>seekbar</source>
-        <translation>شريط البحث</translation>
-    </message>
     <message id="xx_viewmenu_page_title">
         <location filename="../applicationmenupage.cpp" line="60"/>
         <source>Application Menu</source>
@@ -1033,7 +987,7 @@ Seekbar is a special type of Slider used for displaying playback status for mult
     </message>
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="183"/>
-        <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
+        <source>Please select your age:</source>
         <translation>من فضلك اختر العمر :</translation>
     </message>
     <message id="xx_slider_player_label">
