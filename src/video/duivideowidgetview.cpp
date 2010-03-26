@@ -30,6 +30,8 @@
 #include "duisink.h"
 #include "duidebug.h"
 
+#include <duiscene.h>
+
 DuiVideoWidgetViewPrivate::DuiVideoWidgetViewPrivate()
     :   m_useSingleYuvTexture(false),
         image(NULL),
@@ -112,11 +114,21 @@ void DuiVideoWidgetViewPrivate::frameReady()
 #endif
     }
 
-    //FIXME Create workaround for this. Qt's animations get broken 
-    //when there too much update calls coming (multiple video widgets 
-    //visible at same time). Create somekind of centralized updating 
-    //for all the videos.
-    update();
+    //FIXME This is a workaround for a situation where Qt's animations/timers 
+    //get broken when there are too much update calls coming (multiple video 
+    //widgets visible and playing at a same time). Do not call update() for 
+    //each videowidget's frame separately. This can be replaced with a single 
+    //update() call when Qt side is fixed.
+    static QTimer timer;
+    if( !timer.isActive() ) {
+        Q_Q(DuiVideoWidgetView);
+        timer.setSingleShot(true);
+        q->connect(&timer, SIGNAL(timeout()), 
+                   DuiApplication::activeApplicationWindow()->scene(), SLOT(update()),
+                   Qt::UniqueConnection);
+        timer.start(0);
+    }
+    //update();
 }
 
 void DuiVideoWidgetViewPrivate::stateChanged()
