@@ -117,14 +117,6 @@ public:
 #endif
 
 public:
-
-    /*!
-     * Returns a view for the given object.
-     * \param controller controller needing the view
-     * \return DuiWidgetView A theme-specific view for the object
-     */
-    DuiWidgetView *view(const DuiWidgetController *controller);
-
     /*!
      * Check if the theme has defined a view for this controller, if not, go towards base class
      * to find one.

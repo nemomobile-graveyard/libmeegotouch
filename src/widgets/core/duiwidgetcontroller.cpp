@@ -24,7 +24,6 @@
 #include "duiwidgetview.h"
 #include "duiwidgetview_p.h"
 #include "duitheme.h"
-#include "duitheme_p.h"
 
 #include <DuiDebug>
 #include <QSet>
@@ -271,7 +270,7 @@ void DuiWidgetControllerPrivate::createView()
 
     if (!constructingView) {
         constructingView = true;
-        view = DuiTheme::instance()->d_func()->view(q);
+        view = DuiTheme::view(q);
         constructingView = false;
     }
 

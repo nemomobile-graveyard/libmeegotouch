@@ -328,7 +328,6 @@ private:
     friend class Ut_DuiOverlay;
     friend class Ut_DuiPannableViewport;
     friend class Ut_DuiGrid;
-    friend class Ft_Theme;
 #endif
 
 };
