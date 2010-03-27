@@ -24,7 +24,7 @@
 #include <QSortFilterProxyModel>
 #include <QStringList>
 #include <QVector>
-#include <QPixmap>
+#include <QImage>
 
 // Structure which contain data for each row
 struct PhoneBookEntry {
@@ -32,7 +32,7 @@ struct PhoneBookEntry {
     QString lastName;
     QString fullName; // store fullname so that we don't need to concantenate first and last name
     QString phoneNumber;
-    QPixmap thumbnail; // will be filled with empty image, after real image will be loaded it will replace old one
+    QImage thumbnail; // will be filled with empty image, after real image will be loaded it will replace old one
     QString thumbnailId; // thumbnail will represent an id of image to load, if it's empty, no loading will be triggered
 };
 
@@ -94,7 +94,7 @@ private:
     QVector<PhoneBookEntry *> phoneBookEntries;
     QStringList namesList;
     QStringList imageIdList;
-    QPixmap defaultThumbnail;
+    QImage defaultThumbnail;
 };
 
 class PhoneBookSortedModel : public QSortFilterProxyModel

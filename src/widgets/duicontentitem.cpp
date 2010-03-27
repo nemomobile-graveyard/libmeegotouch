@@ -62,6 +62,12 @@ QPixmap DuiContentItem::pixmap() const
     return d->pixmap;
 }
 
+QImage DuiContentItem::image() const
+{
+    Q_D(const DuiContentItem);
+    return d->image;
+}
+
 QString DuiContentItem::title() const
 {
     return model()->title();
@@ -87,6 +93,13 @@ void DuiContentItem::setPixmap(const QPixmap &pixmap)
     Q_D(DuiContentItem);
     d->pixmap = pixmap;
     model()->setItemImage(d->pixmap);
+}
+
+void DuiContentItem::setImage(const QImage &image)
+{
+    Q_D(DuiContentItem);
+    d->image = image;
+    model()->setItemQImage(d->image);
 }
 
 void DuiContentItem::setTitle(const QString &text)
@@ -125,10 +138,23 @@ void DuiContentItem::setOptionalPixmap(const QPixmap &pixmap)
     model()->setOptionalImage(d->optionalPixmap);
 }
 
+void DuiContentItem::setOptionalImage(const QImage &image)
+{
+    Q_D(DuiContentItem);
+    d->optionalImage = image;
+    model()->setOptionalQImage(d->optionalImage);
+}
+
 QPixmap DuiContentItem::optionalPixmap() const
 {
     Q_D(const DuiContentItem);
     return d->optionalPixmap;
+}
+
+QImage DuiContentItem::optionalImage() const
+{
+    Q_D(const DuiContentItem);
+    return d->optionalImage;
 }
 
 void DuiContentItem::setAdditionalItem(DuiWidget* widget)

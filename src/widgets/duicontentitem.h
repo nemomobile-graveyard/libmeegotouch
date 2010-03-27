@@ -119,6 +119,8 @@ public:
     */
     Q_PROPERTY(QPixmap pixmap READ pixmap WRITE setPixmap)
 
+    Q_PROPERTY(QImage image READ image WRITE setImage)
+
     /*!
         \property DuiContentItem::title
         \brief See DuiContentItemModel::title
@@ -136,6 +138,8 @@ public:
         \brief Icon in the upper right corner which might be displayed.
     */
     Q_PROPERTY(QPixmap optionalPixmap READ optionalPixmap WRITE setOptionalPixmap)
+
+    Q_PROPERTY(QImage optionalImage READ optionalImage WRITE setOptionalImage)
 
 public:
 
@@ -156,6 +160,12 @@ public:
         \return thumbnail pixmap
      */
     QPixmap pixmap() const;
+
+    /*!
+        \brief Get the thumbnail image
+        \return thumbnail image
+     */
+    QImage image() const;
 
     /*!
         \brief Get the title.
@@ -194,12 +204,23 @@ public:
      */
     QPixmap optionalPixmap() const;
 
+    /*!
+      Returns optional image (Icon)
+     */
+    QImage optionalImage() const;
+
 public Q_SLOTS:
     /**
         \brief Sets thumbnail pixmap.
         \param pixmap QPixmap
      */
     void setPixmap(const QPixmap &pixmap);
+
+    /**
+        \brief Sets thumbnail image.
+        \param pixmap Image
+     */
+    void setImage(const QImage &pixmap);
 
     /**
         \brief Set title text. This is first line.
@@ -246,6 +267,12 @@ public Q_SLOTS:
         \param pixmap QPixmap
      */
     void setOptionalPixmap(const QPixmap& pixmap);
+
+    /*!
+        \brief Sets an optional image (Icon).
+        \param image QImage
+     */
+    void setOptionalImage(const QImage& image);
 
     /*!
       \brief Makes content item to send clicked() signal.

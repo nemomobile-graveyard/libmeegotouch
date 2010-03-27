@@ -23,6 +23,7 @@
 #include <duiwidgetmodel.h>
 
 class QPixmap;
+class QImage;
 
 class DuiContentItemModel : public DuiWidgetModel
 {
@@ -66,6 +67,8 @@ public:
       */
     DUI_MODEL_PROPERTY(QPixmap, itemImage, ItemImage, false, NULL)
 
+    DUI_MODEL_PROPERTY(QImage, itemQImage, ItemQImage, false, QImage())
+
     /*!
       \property DuiContentItemModel::selected
       \brief Contains selection status of item.
@@ -77,6 +80,8 @@ public:
      \brief Contains optional icon on the right-hand side
      */
     DUI_MODEL_PROPERTY(QPixmap, optionalImage, OptionalImage, false, NULL)
+
+    DUI_MODEL_PROPERTY(QImage, optionalQImage, OptionalQImage, false, QImage() )
 };
 
 #endif

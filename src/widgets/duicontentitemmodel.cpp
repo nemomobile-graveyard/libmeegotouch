@@ -40,3 +40,25 @@ const QPixmap &DuiContentItemModel::itemImage() const
 {
     return _itemImage();
 }
+
+void DuiContentItemModel::setItemQImage(const QImage &itemImage)
+{
+    _itemQImage() = itemImage;
+    memberModified(ItemQImage);
+}
+
+void DuiContentItemModel::setOptionalQImage(const QImage& pixmap)
+{
+    _optionalQImage() = pixmap;
+    memberModified(OptionalQImage);
+}
+
+const QImage &DuiContentItemModel::optionalQImage() const
+{
+    return _optionalQImage();
+}
+
+const QImage &DuiContentItemModel::itemQImage() const
+{
+    return _itemQImage();
+}

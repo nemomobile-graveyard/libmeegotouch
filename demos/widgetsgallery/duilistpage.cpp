@@ -103,7 +103,7 @@ public:
         PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(data.value<void *>());
         contentItem->setTitle(entry->fullName);
         contentItem->setSubtitle(entry->phoneNumber);
-        contentItem->setPixmap(entry->thumbnail);
+        contentItem->setImage(entry->thumbnail);
 #endif
 
         contentItem->boundingRect();
