@@ -33,7 +33,7 @@
 #include <QGraphicsSceneResizeEvent>
 
 DuiLabelViewSimple::DuiLabelViewSimple(DuiLabelViewPrivate *viewPrivate) :
-    viewPrivate(viewPrivate), preferredSize(-1, -1), dirty(true)
+    viewPrivate(viewPrivate), preferredSize(-1, -1), dirty(true), cachedElidedText("")
 {
 }
 
@@ -51,8 +51,12 @@ void DuiLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
     QRectF paintingRect(viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom()));
     QString textToRender = model->text();
     if (model->textElide() && textToRender.size() > 4) {
-        QFontMetrics fm(viewPrivate->controller->font());
-        textToRender = fm.elidedText(model->text(), Qt::ElideRight, paintingRect.width());
+        if(cachedElidedText.isEmpty()) {
+            QFontMetrics fm(viewPrivate->controller->font());
+            cachedElidedText = fm.elidedText(model->text(), Qt::ElideRight, paintingRect.width());
+        }
+
+        textToRender = cachedElidedText;
     }
 
     if (textToRender.isEmpty()) {
@@ -251,4 +255,10 @@ void DuiLabelViewSimple::longPressEvent(QGraphicsSceneContextMenuEvent *event)
 
 void DuiLabelViewSimple::applyStyle()
 {
+}
+
+void DuiLabelViewSimple::markDirty()
+{
+    dirty = true;
+    cachedElidedText = "";
 }

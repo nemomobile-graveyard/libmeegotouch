@@ -58,7 +58,7 @@ const QRectF DuiLabelViewPrivate::boundingRect() const
     return q->boundingRect();
 }
 
-bool DuiLabelViewPrivate::isRichText(QString text) const 
+bool DuiLabelViewPrivate::isRichText(QString text) const
 {
     //Qt::mightBeRichText stops at the first line break
     text.replace("\n", " ");
@@ -81,7 +81,7 @@ void DuiLabelView::applyStyle()
     DuiWidgetView::applyStyle();
     Q_D(DuiLabelView);
     QPixmapCache::remove(d->cacheKey);
-    d->impl->dirty = true;
+    d->impl->markDirty();
     d->impl->applyStyle();
     updateGeometry();
 }
@@ -103,7 +103,7 @@ void DuiLabelView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     Q_D(DuiLabelView);
     QPixmapCache::remove(d->cacheKey);
-    d->impl->dirty = true;
+    d->impl->markDirty();
 
     QSizeF padding(style()->paddingLeft() + style()->paddingRight(),
                    style()->paddingTop() + style()->paddingBottom());
@@ -142,7 +142,7 @@ void DuiLabelView::setupModel()
     Q_D(DuiLabelView);
 
     bool isRichText = d->isRichText(model()->text());
-    
+
     // Check has label type changed since last call to this method. Re-allocate label with correct type.
     if (d->impl->isRich() != isRichText) {
         delete d->impl;
@@ -154,7 +154,7 @@ void DuiLabelView::setupModel()
     d->impl->setupModel();
 
     QPixmapCache::remove(d->cacheKey);
-    d->impl->dirty = true;
+    d->impl->markDirty();
 }
 
 void DuiLabelView::updateData(const QList<const char *>& modifications)
@@ -166,16 +166,16 @@ void DuiLabelView::updateData(const QList<const char *>& modifications)
 
     if (modifications.contains(DuiLabelModel::Text) || modifications.contains(DuiLabelModel::Highlighters)) {
         bool isRichText = d->isRichText(model()->text());
-        
+
         // Check has label type changed since last call to this method. Re-allocate label with correct type.
         bool shouldBeRich = isRichText || model()->highlighters().size() > 0;
         bool shouldBeSimple = !shouldBeRich;
 
         if ((shouldBeRich && !d->impl->isRich()) || (shouldBeSimple && d->impl->isRich())) {
             delete d->impl;
-            if (shouldBeRich) 
+            if (shouldBeRich)
                 d->impl = new DuiLabelViewRich(d);
-            else 
+            else
                 d->impl = new DuiLabelViewSimple(d);
         }
     }
@@ -183,7 +183,7 @@ void DuiLabelView::updateData(const QList<const char *>& modifications)
     if (d->impl->updateData(modifications))
         updateGeometry();
     QPixmapCache::remove(d->cacheKey);
-    d->impl->dirty = true;
+    d->impl->markDirty();
     update();
 }
 
