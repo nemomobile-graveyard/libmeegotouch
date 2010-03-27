@@ -3,21 +3,17 @@
 
 \subsection New
 
+- DuiWidget now has event handlers for gestures:
+    - DuiWidget::gestureEvent()
+    - DuiWidget::tapAndHoldGestureEvent()
+    - DuiWidget::panGestureEvent()
+    - DuiWidget::pinchGestureEvent()
+    - DuiWidget::tapGestureEvent()
+    - DuiWidget::swipeGestureEvent()
+
 - The DuiApplicationPage's DuiPannableViewport is now accessible through the pannableViewport() method.
-- DuiApplicationPage method renaming:
-   - pannableAreaInteractive -> isPannable
-   - setPannableAreaInteractive -> setPannable
-   - pannableAreaDirection -> panningDirection
-   - setPannableAreaDirection -> setPanningDirection
 
-- DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be
-  displayEntered() and displayExited()
-
-- DuiComboBox's  down property removed.
-
-- Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.
-
-- DuiApplicationPage escapeMode() property. Replaces escapeButtonMode() property.
+- New DuiApplicationPage escapeMode() property. Replaces the old escapeButtonMode() property.
   Previously, the following code was necessary to implement a regular parentPage -> childPage navigation:
 
     <CODE>
@@ -34,14 +30,6 @@
 
   Manual handling and wiring is still possible, but it's not the default behavior.
 
-- DuiWidget got event handlers for gestures:
-    - DuiWidget::gestureEvent()
-    - DuiWidget::tapAndHoldGestureEvent()
-    - DuiWidget::panGestureEvent()
-    - DuiWidget::pinchGestureEvent()
-    - DuiWidget::tapGestureEvent()
-    - DuiWidget::swipeGestureEvent()
-
 - DuiAppletSettingsDialog is now reduced to a single static function: exec().
   Do not instantiate DuiAppletSettingsDialog any more; use the static function directly:
 
@@ -56,23 +44,37 @@
     DuiSettingsDialog::exec(mySettings);
     </CODE>
 
-- PIMPLed DuiServiceFwBaseIf: Moved private data out to private class
-
 \subsection removed Removed or Renamed
-- removed DuiSceneWindow::windowShown, DuiSceneWindow::windowHidden signals, use appeared and disappeared instead
+
+- Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.
+
+- DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be
+  displayEntered() and displayExited()
+
+- DuiActionProvider class removed. There was no implementation for the API.
+
+- DuiComboBox's down property removed.
+
+- DuiApplicationPage method renaming:
+   - pannableAreaInteractive -> isPannable
+   - setPannableAreaInteractive -> setPannable
+   - pannableAreaDirection -> panningDirection
+   - setPannableAreaDirection -> setPanningDirection
+
+- Removed DuiSceneWindow::windowShown, DuiSceneWindow::windowHidden signals, use appeared and disappeared instead
   (was deprecated since 0.19)
-- removed DuiSceneWindowView::dismissAnimation
+- Removed DuiSceneWindowView::dismissAnimation
   (was deprecated since 0.18)
-- removed void installCategoryCatalog(Category category, const QString &name);
+- Removed void DuiLocale::installCategoryCatalog(Category category, const QString &name);
   (was deprecated since 0.18)
-- removed void removeCategoryCatalog(Category category, const QString &name);
+- Removed void DuiLocale::removeCategoryCatalog(Category category, const QString &name);
   (was deprecated since 0.18)
-- removed bool hasCategoryCatalog(Category category, const QString &name);
+- Removed bool DuiLocale::hasCategoryCatalog(Category category, const QString &name);
   (was deprecated since 0.18)
-- removed void loadTrCatalogs(); (was deprecated since 0.19.4-2)
-- removed void insertTrToQCoreApp(); (was deprecated since 0.19.4-2)
-- removed void removeTrFromQCoreApp(); (was deprecated since 0.19.4-2)
-- removed support for unneeded gconf keys from DuiLocale.
+- Removed void DuiLocale::loadTrCatalogs(); (was deprecated since 0.19.4-2)
+- Removed void DuiLocale::insertTrToQCoreApp(); (was deprecated since 0.19.4-2)
+- Removed void DuiLocale::removeTrFromQCoreApp(); (was deprecated since 0.19.4-2)
+- Removed support for unneeded gconf keys from DuiLocale.
   The keys /Dui/i18n/Country, /Dui/i18n/Script, and /Dui/i18n/Variant
   were never really used in DuiLocale.  These don’t make sense as
   separate keys if they are only parts of a full ICU locale name because it
@@ -80,7 +82,7 @@
 - escapeButtonMode() property was removed from DuiApplicationPage. Use escapeMode() instead.
 - DuiDialog::windowModal() was renamed to DuiDialog::systemModal().
 - DuiApplicationPage::pageTitleChanged(DuiApplicationPage *, const QString &title) signal was removed.
-- restored one-argument DuiWindow::setOrientationAngle(Dui::OrientationAngle), the rotation animation
+- Restored one-argument DuiWindow::setOrientationAngle(Dui::OrientationAngle), the rotation animation
   is enabled by default and it's disabled if the window is hidden (DuiWindow::isVisible() returns false).
 - Dui::OrientationChangeMode was renamed to DuiSceneManager::TransitionMode,
   Dui::AnimatedOrientationChange was renamed to DuiSceneManager::AnimatedTransition,
