@@ -116,6 +116,7 @@ void DuiListView::applyStyle()
 
     if (d_ptr) {
         d_ptr->updateItemSize();
+        d_ptr->updateSeparatorSize();
         d_ptr->setHeadersCreator(new DuiDefaultHeadersCreator(style()->groupHeaderObjectName()));
     }
 }
