@@ -133,6 +133,7 @@ public:
     QAbstractItemModel *model;
     DuiWidgetRecycler *recycler;
     DuiWidget *separator;
+    int separatorHeight;
     DuiCellCreator *headersCreator;
 
     QVector<DuiWidget *> visibleItems;

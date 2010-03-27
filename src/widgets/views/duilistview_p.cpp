@@ -45,6 +45,7 @@ DuiListViewPrivate::DuiListViewPrivate() : recycler(new DuiWidgetRecycler)
     forceRepaint = false;
     viewportTopLeft = QPointF();
     viewportVisibleHeight = 0;
+    separatorHeight = 0;
     movingDetectorTimer.setSingleShot(true);
     connect(&movingDetectorTimer, SIGNAL(timeout()), this, SLOT(movingDetectionTimerTimeout()));
 }
@@ -61,6 +62,8 @@ DuiListViewPrivate::~DuiListViewPrivate()
 void DuiListViewPrivate::setSeparator(DuiWidget *separator)
 {
     this->separator = separator;
+    if(separator)
+        this->separatorHeight = separator->boundingRect().height();
 }
 
 void DuiListViewPrivate::setHeadersCreator(DuiCellCreator *creator)
@@ -252,6 +255,7 @@ void DuiListViewPrivate::updateSeparatorSize()
 {
     QRectF separatorBoundingRect(separator->boundingRect());
     separator->setGeometry(QRectF(QPointF(0, 0), QSizeF(viewWidth, separatorBoundingRect.height())));
+    separatorHeight = separatorBoundingRect.height();
 }
 
 void DuiListViewPrivate::updateFirstVisibleRow(const QModelIndex &index)
@@ -308,7 +312,6 @@ int DuiPlainListViewPrivate::separatorsCount() const
 int DuiPlainListViewPrivate::totalHeight()
 {
     int itemsCount = this->itemsCount();
-    int separatorHeight = separator->boundingRect().height();
     int separatorsCount = this->separatorsCount();
     int totalHeight = itemsCount * itemHeight + separatorsCount * separatorHeight;
     return totalHeight;
@@ -344,7 +347,6 @@ int DuiPlainListViewPrivate::locateVisibleRowAt(int y, int x)
     // row * itemHeight + row * separatorHeight = pos
     // to calculate row lets do basic math:
     // row = pos / (separatorHeight + itemHeight)
-    int separatorHeight = separator->boundingRect().height();
     int row = y / (separatorHeight + itemHeight);
 
     int modelRowCount = model->rowCount();
@@ -360,7 +362,7 @@ int DuiPlainListViewPrivate::locatePosOfItem(int row)
     int itemHeights = row * itemHeight;
     int separatorHeights = 0;
     if (row > 0)
-        separatorHeights = row * separator->boundingRect().height();
+        separatorHeights = row * separatorHeight;
 
     return itemHeights + separatorHeights;
 }
@@ -422,7 +424,7 @@ int DuiPlainMultiColumnListViewPrivate::locatePosOfItem(int row)
     int itemHeights = rows * itemHeight;
     int separatorHeights = 0;
     if (rows > 0)
-        separatorHeights = rows * separator->boundingRect().height();
+        separatorHeights = rows * separatorHeight;
 
     return itemHeights + separatorHeights;
 }
@@ -430,7 +432,6 @@ int DuiPlainMultiColumnListViewPrivate::locatePosOfItem(int row)
 int DuiPlainMultiColumnListViewPrivate::totalHeight()
 {
     int rowsCount = itemsToRows(itemsCount());
-    int separatorHeight = separator->boundingRect().height();
     int separatorsCount = this->separatorsCount();
     int totalHeight = rowsCount * itemHeight + separatorsCount * separatorHeight;
     return totalHeight;
@@ -446,7 +447,6 @@ DuiWidget *DuiPlainMultiColumnListViewPrivate::createItem(int row)
 
 int DuiPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 {
-    int separatorHeight = separator->boundingRect().height();
     int columns = controllerModel->columns();
     int row = y * columns / (separatorHeight + itemHeight);
 
@@ -625,7 +625,6 @@ int DuiGroupHeaderListViewPrivate::locatePosOfItem(int headerIndex, int itemInde
         return pos;
 
     int itemHeights = itemIndex * itemHeight;
-    int separatorHeight = separator->boundingRect().height();
     int separatorHeights = 0;
     separatorHeights = itemIndex * separatorHeight;
 
@@ -656,7 +655,6 @@ int DuiGroupHeaderListViewPrivate::locateVisibleRowAt(int y, int x)
     if (relativePos < headerHeight)
         return headerRow;
 
-    int separatorHeight = separator->boundingRect().height();
     int row = relativePos / (separatorHeight + itemHeight) + headerRow + 1;
     return row;
 }
@@ -789,14 +787,13 @@ int DuiGroupHeaderListViewPrivate::itemsCount() const
 int DuiGroupHeaderListViewPrivate::groupSize(int headerIndex) const
 {
     int itemsCount = this->itemsCount(headerIndex);
-    return ((itemsCount * itemHeight) + (itemsCount - 1) * separator->boundingRect().height());
+    return ((itemsCount * itemHeight) + (itemsCount - 1) * separatorHeight);
 }
 
 int DuiGroupHeaderListViewPrivate::totalHeight()
 {
     int headersCount = this->headersCount();
     int itemsCount = this->itemsCount();
-    int separatorHeight = separator->boundingRect().height();
     int separatorsCount = this->separatorsCount();
     int totalHeight = headersCount * headerHeight() + itemsCount * itemHeight + separatorsCount * separatorHeight;
     return totalHeight;
@@ -945,7 +942,7 @@ void DuiMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstV
     int firstRow = indexToFlatRow(firstVisibleRow);
     int lastRow = indexToFlatRow(lastVisibleRow);
 
-    if (!viewWidth || (!firstRow&&!lastRow&&itemsCount()>1)) { // required for x position 
+    if (!viewWidth || (!firstRow&&!lastRow&&itemsCount()>1)) { // required for x position
         return;
     }
 
@@ -977,7 +974,7 @@ int DuiMultiColumnListViewPrivate::locatePosOfItem(int headerIndex, int itemInde
 
     int rows = itemsToRows(itemIndex + 1) - 1; // rows after the 1st one
     int itemHeights = rows * itemHeight;
-    int separatorHeights = rows * separator->boundingRect().height();
+    int separatorHeights = rows * separatorHeight;
     pos += separatorHeights + itemHeights;
 
     return pos;
@@ -1007,7 +1004,6 @@ int DuiMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
         return headerRow;
 
     relativePos -= headerHeight;
-    int separatorHeight = separator->boundingRect().height();
     int columns = controllerModel->columns();
 
     // row/columns * itemHeight + row/columns * separatorHeight = pos  ->  r/c*i + r/c*s = p  ->  r = p*c/(s+i)
@@ -1032,7 +1028,7 @@ DuiWidget *DuiMultiColumnListViewPrivate::createItem(int row)
 int DuiMultiColumnListViewPrivate::groupSize(int headerIndex) const
 {
     int rows = rowsInGroup(headerIndex);
-    int groupSize = rows * itemHeight + (rows - 1) * separator->boundingRect().height();
+    int groupSize = rows * itemHeight + (rows - 1) * separatorHeight;
 
     return groupSize;
 }
