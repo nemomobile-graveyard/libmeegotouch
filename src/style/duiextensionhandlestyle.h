@@ -24,6 +24,8 @@
 #include <QPoint>
 #include <QSizeF>
 
+//! \internal
+
 class DuiExtensionHandleStyle : public DuiWidgetStyle
 {
     Q_OBJECT
@@ -52,5 +54,7 @@ class DuiExtensionHandleStyleContainer : public DuiWidgetStyleContainer
 {
     DUI_STYLE_CONTAINER(DuiExtensionHandleStyle)
 };
+
+//! \internal_end
 
 #endif // DUIEXTENSIONHANDLESTYLE_H

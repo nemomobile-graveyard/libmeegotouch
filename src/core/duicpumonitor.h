@@ -26,6 +26,7 @@
 
 class DuiCpuMonitorPrivate;
 
+//! \internal
 
 /*!
  * Utility class to monitor CPU usage on system
@@ -77,6 +78,6 @@ private:
     Q_DECLARE_PRIVATE(DuiCpuMonitor)
 };
 
+//! \internal_end
 
 #endif
-

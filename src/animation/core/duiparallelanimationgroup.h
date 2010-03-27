@@ -76,7 +76,7 @@ class DuiParallelAnimationGroupPrivate;
  \endcode
 
  */
-class DuiParallelAnimationGroup : public QParallelAnimationGroup
+class DUI_EXPORT DuiParallelAnimationGroup : public QParallelAnimationGroup
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(DuiParallelAnimationGroup)

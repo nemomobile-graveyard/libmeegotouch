@@ -31,7 +31,7 @@ class DuiKeyboardStateTrackerPrivate;
  * hardware keyboard or not. If hardware keyboard is supported, using isOpen() to query
  * its current state. Signal stateChanged will be emitted when hardware keyboard state is changed.
  */
-class DUI_EXPORT DuiKeyboardStateTracker: public QObject
+class DUI_EXPORT DuiKeyboardStateTracker : public QObject
 {
     Q_OBJECT
 public:

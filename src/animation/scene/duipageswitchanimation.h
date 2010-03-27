@@ -28,6 +28,8 @@
 class DuiPageSwitchAnimationPrivate;
 class DuiSceneWindow;
 
+//! \internal
+
 class DuiPageSwitchAnimation : public DuiParallelAnimationGroup
 {
     Q_OBJECT
@@ -52,5 +54,7 @@ protected:
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
 };
+
+//! \internal_end
 
 #endif

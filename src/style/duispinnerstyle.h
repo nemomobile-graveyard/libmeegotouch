@@ -73,7 +73,7 @@ class DUI_EXPORT DuiSpinnerStyle : public DuiWidgetStyle
 };
 
 /*!
-    \class DuiSpinnerStyleStyleContainer
+    \class DuiSpinnerStyleContainer
     \brief This class groups all the styling modes for progress indicator.
 
     \ingroup styles

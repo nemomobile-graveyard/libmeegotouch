@@ -70,7 +70,7 @@
 //! The number of milliseconds to wait for a message from the host process until it is considered to be dead
 #define ALIVE_TIMER_TIMEOUT 20000
 
-//! An internal widget for listening to LayoutRequests
+//! \internal An internal widget for listening to LayoutRequests
 class LayoutRequestListenerWidget : public QGraphicsWidget
 {
 public:
@@ -80,6 +80,7 @@ protected:
     DuiExtensionRunner *parentRunner;
     bool event(QEvent *event);
 };
+//! \internal_end
 
 LayoutRequestListenerWidget::LayoutRequestListenerWidget(DuiExtensionRunner *parentRunner) :
     parentRunner(parentRunner)
