@@ -60,12 +60,20 @@ public:
     DUI_MODEL_PROPERTY(int, itemMode, ItemMode, true, 0)
 
     /*!
+      \property DuiContentItemModel::itemPixmap
+      \brief Item thumbnail.
+
+      \sa DuiContentItemView
+      */
+    DUI_MODEL_PROPERTY(QPixmap, itemPixmap, ItemPixmap, false, NULL)
+
+    /*!
       \property DuiContentItemModel::itemImage
       \brief Item thumbnail.
 
       \sa DuiContentItemView
       */
-    DUI_MODEL_PROPERTY(QPixmap, itemImage, ItemImage, false, NULL)
+    DUI_MODEL_PROPERTY(QImage, itemImage, ItemImage, false, QImage())
 
     DUI_MODEL_PROPERTY(QImage, itemQImage, ItemQImage, false, QImage())
 
@@ -76,12 +84,16 @@ public:
     DUI_MODEL_PROPERTY(bool, selected, Selected, true, false)
 
     /*!
+     \property DuiContentItemModel::optionalItemPixmap
+     \brief Contains optional icon on the right-hand side
+     */
+    DUI_MODEL_PROPERTY(QPixmap, optionalPixmap, OptionalPixmap, false, NULL)
+
+    /*!
      \property DuiContentItemModel::optionalItemImage
      \brief Contains optional icon on the right-hand side
      */
-    DUI_MODEL_PROPERTY(QPixmap, optionalImage, OptionalImage, false, NULL)
-
-    DUI_MODEL_PROPERTY(QImage, optionalQImage, OptionalQImage, false, QImage() )
+    DUI_MODEL_PROPERTY(QImage, optionalImage, OptionalImage, false, QImage()) 
 };
 
 #endif

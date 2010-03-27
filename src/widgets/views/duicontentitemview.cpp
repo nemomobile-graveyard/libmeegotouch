@@ -260,14 +260,24 @@ void DuiContentItemViewPrivate::setSubtitle(const QString &string)
     subtitle()->setText(string);
 }
 
-void DuiContentItemViewPrivate::setImage(const QPixmap &pixmap)
+void DuiContentItemViewPrivate::setPixmap(const QPixmap &pixmap)
 {
     image()->setPixmap(pixmap);
 }
 
-void DuiContentItemViewPrivate::setOptionalImage(const QPixmap& pixmap)
+void DuiContentItemViewPrivate::setOptionalPixmap(const QPixmap& pixmap)
 {
     optionalImage()->setPixmap(pixmap);
+}
+
+void DuiContentItemViewPrivate::setImage(const QImage &i)
+{
+    image()->setImage(i);
+}
+
+void DuiContentItemViewPrivate::setOptionalImage(const QImage& i)
+{
+    optionalImage()->setImage(i);
 }
 
 void DuiContentItemViewPrivate::applyStyle()
@@ -326,16 +336,16 @@ void DuiContentItemView::updateData(const QList<const char *> &modifications)
             d->setTitle(model()->title());
         } else if (member == DuiContentItemModel::Subtitle) {
             d->setSubtitle(model()->subtitle());
-        } else if (member == DuiContentItemModel::ItemImage) {
-            d->setImage(d->controller->pixmap());
+        } else if (member == DuiContentItemModel::ItemPixmap) {
+            d->setPixmap(model()->itemPixmap());
         } else if (member == DuiContentItemModel::Selected) {
             setSelected(model()->selected());
-        } else if(member == DuiContentItemModel::OptionalImage){
+        } else if(member == DuiContentItemModel::OptionalPixmap){
             d->setOptionalImage(d->controller->optionalPixmap());
-        } else if(member == DuiContentItemModel::OptionalQImage){
-            d->optionalImage()->setImage(model()->optionalQImage());
-        } else if(member == DuiContentItemModel::ItemQImage) {
-            d->image()->setImage(model()->itemQImage());
+        } else if(member == DuiContentItemModel::OptionalImage){
+            d->setOptionalImage(model()->optionalImage());
+        } else if(member == DuiContentItemModel::ItemImage) {
+            d->setImage(model()->itemImage());
         }
     }
 }
@@ -351,9 +361,13 @@ void DuiContentItemView::setupModel()
     if (!model()->subtitle().isEmpty())
         d->setSubtitle(model()->subtitle());
     if (!d->controller->pixmap().isNull())
-        d->setImage(d->controller->pixmap());
+        d->setPixmap(d->controller->pixmap());
     if(!d->controller->optionalPixmap().isNull())
-        d->setOptionalImage(d->controller->optionalPixmap());
+        d->setOptionalPixmap(d->controller->optionalPixmap());
+    if(!d->controller->optionalImage().isNull())
+        d->setOptionalImage(d->controller->optionalImage());
+    if(!d->controller->image().isNull())
+        d->setImage(d->controller->image());
 
     d->initLayout(static_cast<DuiContentItem::ContentItemStyle>(model()->itemStyle()));
 }

@@ -45,8 +45,10 @@ public:
 
     inline void setTitle(const QString& string);
     inline void setSubtitle(const QString& string);
-    inline void setImage(const QPixmap& pixmap);
-    inline void setOptionalImage(const QPixmap& pixmap);
+    inline void setPixmap(const QPixmap& pixmap);
+    inline void setOptionalPixmap(const QPixmap& pixmap);
+    inline void setImage(const QImage& image);
+    inline void setOptionalImage(const QImage& image);
 
     void initLayout(DuiContentItem::ContentItemStyle style);
     void clearLayout();

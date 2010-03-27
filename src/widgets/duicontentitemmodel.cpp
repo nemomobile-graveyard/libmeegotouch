@@ -19,24 +19,46 @@
 
 #include "duicontentitemmodel.h"
 
-void DuiContentItemModel::setItemImage(const QPixmap &itemImage)
+void DuiContentItemModel::setItemPixmap(const QPixmap &itemImage)
+{
+    _itemPixmap() = itemImage;
+    memberModified(ItemPixmap);
+}
+
+void DuiContentItemModel::setOptionalPixmap(const QPixmap& pixmap)
+{
+    _optionalPixmap() = pixmap;
+    memberModified(OptionalPixmap);
+}
+
+const QPixmap &DuiContentItemModel::optionalPixmap() const
+{
+    return _optionalPixmap();
+}
+
+const QPixmap &DuiContentItemModel::itemPixmap() const
+{
+    return _itemPixmap();
+}
+
+void DuiContentItemModel::setItemImage(const QImage &itemImage)
 {
     _itemImage() = itemImage;
     memberModified(ItemImage);
 }
 
-void DuiContentItemModel::setOptionalImage(const QPixmap& pixmap)
+void DuiContentItemModel::setOptionalImage(const QImage& image)
 {
-    _optionalImage() = pixmap;
+    _optionalImage() = image;
     memberModified(OptionalImage);
 }
 
-const QPixmap &DuiContentItemModel::optionalImage() const
+const QImage &DuiContentItemModel::optionalImage() const
 {
     return _optionalImage();
 }
 
-const QPixmap &DuiContentItemModel::itemImage() const
+const QImage &DuiContentItemModel::itemImage() const
 {
     return _itemImage();
 }

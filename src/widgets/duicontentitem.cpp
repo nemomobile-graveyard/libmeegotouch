@@ -92,7 +92,14 @@ void DuiContentItem::setPixmap(const QPixmap &pixmap)
 {
     Q_D(DuiContentItem);
     d->pixmap = pixmap;
-    model()->setItemImage(d->pixmap);
+    model()->setItemPixmap(d->pixmap);
+}
+
+void DuiContentItem::setImage(const QImage &image)
+{
+    Q_D(DuiContentItem);
+    d->image = image;
+    model()->setItemImage(d->image);
 }
 
 void DuiContentItem::setImage(const QImage &image)
@@ -135,7 +142,14 @@ void DuiContentItem::setOptionalPixmap(const QPixmap &pixmap)
 {
     Q_D(DuiContentItem);
     d->optionalPixmap = pixmap;
-    model()->setOptionalImage(d->optionalPixmap);
+    model()->setOptionalPixmap(d->optionalPixmap);
+}
+
+void DuiContentItem::setOptionalImage(const QImage &image)
+{
+    Q_D(DuiContentItem);
+    d->optionalImage = image;
+    model()->setOptionalImage(d->optionalImage);
 }
 
 void DuiContentItem::setOptionalImage(const QImage &image)
