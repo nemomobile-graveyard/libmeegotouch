@@ -274,28 +274,28 @@ bool DuiApplicationPage::rememberPosition() const
     return d->rememberPosition;
 }
 
-void DuiApplicationPage::setPannableAreaInteractive(bool interactive)
+void DuiApplicationPage::setPannable(bool pannable)
 {
     Q_D(DuiApplicationPage);
 
-    d->pannableViewPort->setEnabled(interactive);
+    d->pannableViewPort->setEnabled(pannable);
 }
 
-bool DuiApplicationPage::isPannableAreaInteractive() const
+bool DuiApplicationPage::isPannable() const
 {
     Q_D(const DuiApplicationPage);
 
     return d->pannableViewPort->isEnabled();
 }
 
-Qt::Orientations DuiApplicationPage::pannableAreaDirection() const
+Qt::Orientations DuiApplicationPage::panningDirection() const
 {
     Q_D(const DuiApplicationPage);
 
     return d->pannableViewPort->panDirection();
 }
 
-void DuiApplicationPage::setPannableAreaDirection(Qt::Orientations directions)
+void DuiApplicationPage::setPanningDirection(Qt::Orientations directions)
 {
     Q_D(DuiApplicationPage);
 
@@ -430,7 +430,7 @@ void DuiApplicationPage::setEscapeMode(DuiApplicationPageModel::PageEscapeMode m
     model()->setEscapeMode(mode);
 }
 
-DuiPannableViewport * DuiApplicationPage::pannableArea()
+DuiPannableViewport * DuiApplicationPage::pannableViewport()
 {
     Q_D(DuiApplicationPage);
     return d->pannableViewPort;

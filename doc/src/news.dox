@@ -3,6 +3,13 @@
 
 \subsection New
 
+- The DuiApplicationPage's DuiPannableViewport is now accessible through the pannableViewport() method.
+- DuiApplicationPage method renaming:
+   - pannableAreaInteractive -> isPannable
+   - setPannableAreaInteractive -> setPannable
+   - pannableAreaDirection -> panningDirection
+   - setPannableAreaDirection -> setPanningDirection
+
 - DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be
   displayEntered() and displayExited()
 

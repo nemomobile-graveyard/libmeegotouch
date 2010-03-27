@@ -55,7 +55,6 @@
 DuiListPage::DuiListPage() :
     model(NULL), list(NULL), currentSortingIndex(0)
 {
-    setPannableAreaInteractive(true);
     gid = TemplatePage::ListsGridsAndMenus;
 }
 

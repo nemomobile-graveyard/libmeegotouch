@@ -35,7 +35,7 @@ class DuiPannableViewport;
 /*!
     \class DuiApplicationPage
     \brief DuiApplicationPage provides a framework for building an application's user interface.
-    By default the page creates a pannable area where a user can place his component by using
+    By default the page creates a pannable viewport where a user can place his component by using
     centralWidget() or setCentralWidget(DuiWidget *).
 
     There are two functions to show the page on the screen:
@@ -49,8 +49,8 @@ class DuiPannableViewport;
     \li clearActions()
 
     To switch off panning, or change direction of panning:
-    \li setPannableAreaInteractive()
-    \li setPannableAreaDirection()
+    \li setPannable()
+    \li setPanningDirection()
 
     A minimal application which would show a toolbar would look like this:
 
@@ -83,8 +83,8 @@ class DUI_EXPORT DuiApplicationPage : public DuiSceneWindow
     Q_PROPERTY(QString title READ title WRITE setTitle)
     Q_PROPERTY(bool contentCreated READ isContentCreated)
     Q_PROPERTY(DuiApplicationPageModel::PageEscapeMode escapeMode READ escapeMode WRITE setEscapeMode)
-    Q_PROPERTY(bool pannableAreaInteractive READ isPannableAreaInteractive WRITE setPannableAreaInteractive)
-    Q_PROPERTY(Qt::Orientations pannableAreaDirection READ pannableAreaDirection WRITE setPannableAreaDirection)
+    Q_PROPERTY(bool pannable READ isPannable WRITE setPannable)
+    Q_PROPERTY(Qt::Orientations panningDirection READ panningDirection WRITE setPanningDirection)
     Q_PROPERTY(bool rememberPosition READ rememberPosition WRITE setRememberPosition)
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible)
 
@@ -164,16 +164,16 @@ public:
     bool rememberPosition() const;
 
     /*!
-     * Returns true if page's pannable are is interactive, e.g. can be panned.
-     * \sa setPannableAreaInteractive(bool)
+     * Returns true if page's is pannable.
+     * \sa setPannable(bool)
      */
-    bool isPannableAreaInteractive() const;
+    bool isPannable() const;
 
     /*!
-     * Returns combination of orientation flags in which pannable area pans. It can be
+     * Returns the orientations in which the page pans. The value can be
      * Qt::Horizontal, Qt::Vertical or Qt::Horizontal | Qt::Vertical.
      */
-    Qt::Orientations pannableAreaDirection() const;
+    Qt::Orientations panningDirection() const;
 
     /**
      * \brief Returns the central widget for the page.
@@ -218,9 +218,9 @@ public:
     DuiApplicationPageModel::PageEscapeMode escapeMode() const;
 
     /*!
-     * Returns the viewport responsible for scrolling the page.
+     * Returns the viewport responsible for panning the page.
      */
-    DuiPannableViewport *pannableArea();
+    DuiPannableViewport *pannableViewport();
 
 Q_SIGNALS:
     //! Signal emitted when back button called
@@ -339,15 +339,15 @@ public Q_SLOTS:
     void setRememberPosition(bool remember);
 
     /*!
-     * Sets if pannable area should be interactive, e.g. if page should pan.
+     * Sets if the page should pan
      */
-    void setPannableAreaInteractive(bool interactive);
+    void setPannable(bool pannable);
 
     /*!
-     * Sets to which direction(s) page should be. Possible values:
+     * Sets to which direction(s) page should be pannable. Possible values:
      * Qt::Horizontal, Qt::Vertical or Qt::Horizontal | Qt::Vertical.
      */
-    void setPannableAreaDirection(Qt::Orientations directions);
+    void setPanningDirection(Qt::Orientations directions);
 
     /*!
      * Sets the visible of progress indicator

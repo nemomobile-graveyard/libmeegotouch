@@ -61,7 +61,6 @@ QSizeF ContentItemCreator::cellSize() const
 
 DuiGridPage::DuiGridPage()
 {
-    setPannableAreaInteractive(true);
     gid = TemplatePage::ListsGridsAndMenus;
 }
 

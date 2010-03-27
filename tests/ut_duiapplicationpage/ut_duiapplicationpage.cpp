@@ -68,7 +68,7 @@ void Ut_DuiApplicationPage::testInitialValues()
     QCOMPARE(m_subject->isContentCreated(), false);
     QVERIFY(m_subject->centralWidget());
 
-    QCOMPARE(m_subject->isPannableAreaInteractive(), true);
+    QCOMPARE(m_subject->isPannable(), true);
     QCOMPARE(m_subject->escapeMode(), DuiApplicationPageModel::EscapeAuto);
     QCOMPARE(m_subject->rememberPosition(), true);
 }
@@ -76,18 +76,18 @@ void Ut_DuiApplicationPage::testInitialValues()
 void Ut_DuiApplicationPage::testProperties()
 {
     QString title("Title of the page");
-    bool pannableAreaInteractive = true;
-    Qt::Orientations pannableAreaDirection = Qt::Horizontal | Qt::Vertical;
+    bool pannable = true;
+    Qt::Orientations panningDirection = Qt::Horizontal | Qt::Vertical;
     bool autoMarginsForComponents = true;
     DuiApplicationPageModel::PageEscapeMode escapeMode = DuiApplicationPageModel::EscapeManualBack;
     bool rememberPosition = false;
 
     m_subject->setTitle(title);
     QCOMPARE(m_subject->title(), title);
-    m_subject->setPannableAreaInteractive(pannableAreaInteractive);
-    QCOMPARE(m_subject->isPannableAreaInteractive(), pannableAreaInteractive);
-    m_subject->setPannableAreaDirection(pannableAreaDirection);
-    QCOMPARE(m_subject->pannableAreaDirection(), pannableAreaDirection);
+    m_subject->setPannable(pannable);
+    QCOMPARE(m_subject->isPannable(), pannable);
+    m_subject->setPanningDirection(panningDirection);
+    QCOMPARE(m_subject->panningDirection(), panningDirection);
     m_subject->setAutoMarginsForComponentsEnabled(autoMarginsForComponents);
     QCOMPARE(m_subject->autoMarginsForComponentsEnabled(), autoMarginsForComponents);
     m_subject->setEscapeMode(escapeMode);
