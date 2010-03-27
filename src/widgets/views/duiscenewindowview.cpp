@@ -117,9 +117,4 @@ QPointF DuiSceneWindowView::offset() const
     return style()->offset();
 }
 
-DuiAbstractWidgetAnimation *DuiSceneWindowView::dismissAnimation()
-{
-    return NULL;
-}
-
 DUI_REGISTER_VIEW_NEW(DuiSceneWindowView, DuiSceneWindow)

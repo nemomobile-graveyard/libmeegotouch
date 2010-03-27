@@ -70,10 +70,6 @@ DuiSceneWindow::DuiSceneWindow(QGraphicsItem *parent) :
     Q_D(DuiSceneWindow);
 
     d->windowType = PlainSceneWindow;
-
-    // TODO: Remove this along with deprecated windowShown() and windowHidden()
-    connect(this, SIGNAL(appeared()), SIGNAL(windowShown()));
-    connect(this, SIGNAL(disappeared()), SIGNAL(windowHidden()));
 }
 
 bool DuiSceneWindowPrivate::dismiss(bool now)
@@ -106,10 +102,6 @@ DuiSceneWindow::DuiSceneWindow(DuiSceneWindowPrivate *dd, DuiSceneWindowModel *m
     setViewType(viewType);
 
     d->windowType = windowType;
-
-    // TODO: Remove this along with deprecated windowShown() and windowHidden()
-    connect(this, SIGNAL(appeared()), SIGNAL(windowShown()));
-    connect(this, SIGNAL(disappeared()), SIGNAL(windowHidden()));
 }
 
 DuiSceneWindow::~DuiSceneWindow()

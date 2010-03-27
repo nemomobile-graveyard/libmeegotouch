@@ -176,19 +176,6 @@ void Ut_DuiSceneWindow::testAppearWithoutSceneManager()
     QVERIFY(m_subject->scene() == static_cast<QGraphicsScene *>(window->scene()));
 }
 
-// TODO: Remove this along with deprecated windowShown() and windowHidden() signals
-void Ut_DuiSceneWindow::testWindowAnimationDone()
-{
-    QSignalSpy spyWindowVisible(m_subject, SIGNAL(windowShown()));
-    QSignalSpy spyWindowHidden(m_subject, SIGNAL(windowHidden()));
-    m_subject->appearNow();
-    QCOMPARE(spyWindowVisible.count(), 1);
-    QCOMPARE(spyWindowHidden.count(), 0);
-    m_subject->disappearNow();
-    QCOMPARE(spyWindowVisible.count(), 1);
-    QCOMPARE(spyWindowHidden.count(), 1);
-}
-
 void Ut_DuiSceneWindow::testAppearedDisappearedSignals()
 {
     QSignalSpy spyAppeared(m_subject, SIGNAL(appeared()));

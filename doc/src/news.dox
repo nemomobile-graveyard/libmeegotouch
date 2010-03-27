@@ -59,6 +59,10 @@
 - PIMPLed DuiServiceFwBaseIf: Moved private data out to private class
 
 \subsection removed Removed or Renamed
+- removed DuiSceneWindow::windowShown, DuiSceneWindow::windowHidden signals, use appeared and disappeared instead
+  (was deprecated since 0.19)
+- removed DuiSceneWindowView::dismissAnimation
+  (was deprecated since 0.18)
 - removed void installCategoryCatalog(Category category, const QString &name);
   (was deprecated since 0.18)
 - removed void removeCategoryCatalog(Category category, const QString &name);

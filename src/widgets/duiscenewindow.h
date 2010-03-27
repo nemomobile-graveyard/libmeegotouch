@@ -219,20 +219,6 @@ public:
 
 Q_SIGNALS:
     /*!
-        \brief Emitted when the show animation of the scene window has been finished.
-        \deprecated Since 0.19. Use appeared() instead.
-     */
-    // TODO: check if these should be transferred to DuiWidgetController
-    // as the showAnimation and hideAnimation are stored in there.
-    void windowShown() const;
-
-    /*!
-        \brief windowHidden() signal is emitted when the hide animation of the scene window has been finished.
-        \deprecated Since 0.19. Use disappeared() instead.
-     */
-    void windowHidden() const;
-
-    /*!
         \brief Emitted when the scene window has finished its appearance transition.
         \sa appear(), appearNow()
      */
