@@ -100,7 +100,6 @@ SUBDIRS     =  \
     ut_duimashupcanvas \
     ut_duimashupcanvasview \
     ut_duisubdatastore \
-    ut_duiactionprovider \
     ut_duiremoteaction \
     ut_duiserviceaction \
     ut_duiserviceinvoker \
