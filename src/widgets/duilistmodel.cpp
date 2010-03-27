@@ -29,3 +29,27 @@ const QModelIndex &DuiListModel::scrollToIndex() const
 {
     return _scrollToIndex();
 }
+
+const QModelIndex& DuiListModel::firstVisibleItem() const
+{
+    return _firstVisibleItem();
+}
+
+void DuiListModel::setFirstVisibleItem(const QModelIndex& firstVisibleItem)
+{
+    _firstVisibleItem() = firstVisibleItem;
+    // Do not calling memberModified function to save CPU, controller doesn't need
+    // to know when this value is changed, it will just read the current
+}
+
+const QModelIndex& DuiListModel::lastVisibleItem() const
+{
+    return _lastVisibleItem();
+}
+
+void DuiListModel::setLastVisibleItem(const QModelIndex& lastVisibleItem)
+{
+    _lastVisibleItem() = lastVisibleItem;
+    // Do not calling memberModified function to save CPU, controller doesn't need
+    // to know when this value is changed, it will just read the current
+}
