@@ -55,6 +55,7 @@ CFG_OPENGL=yes
 CFG_TESTABLE=no
 CFG_COVERAGE=no
 CFG_TIMESTAMPS=no
+CFG_PCH=yes
 CFG_DEV=no
 CFG_MINIMAL=no
 CFG_BUILD_TESTS=no
@@ -204,6 +205,9 @@ while [ "$#" -gt 0 ]; do
         ;;
     timestamps)
         CFG_TIMESTAMPS="$VAL"
+        ;;
+    pch)
+        CFG_PCH="$VAL"
         ;;
     dev)
         CFG_DEV="yes"
@@ -386,6 +390,7 @@ Configure options:
     -testable .......... Enable the testability plugin interface in libdui
     -timestamps ........ Enable time debug measurements in the code
     -coverage .......... Enable code coverage calculation
+    -pch ............... Enable pre-compiled header
 
 Additional options:
 
@@ -451,6 +456,10 @@ fi
 
 if [ "$CFG_COVERAGE" = "yes" ]; then
     DUICONFIG_FEATURES="$DUICONFIG_FEATURES coverage"
+fi
+
+if [ "$CFG_PCH" = "yes" ]; then
+    DUICONFIG_FEATURES="$DUICONFIG_FEATURES pch"
 fi
 
 if [ "$CFG_MINIMAL" = "yes" ]; then

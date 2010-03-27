@@ -92,10 +92,16 @@ contains(DUI_BUILD_FEATURES, testable) {
   HEADERS += ./core/testabilityinterface.h
 }
 
+contains(DUI_BUILD_FEATURES, pch) {
+  DEFINES += USING_PCH
+  PRECOMPILED_HEADER = pch/stable_pch.h
+  HEADERS += pch/stable_pch.h
+  CONFIG += precompile_header
+}
+
 contains(DUI_PROFILE_PARTS, theme) {
   DEFINES += DUI_THEMESYSTEM_PROFILING_SUPPORT
 }
-
 
 ## Dependencies
 
