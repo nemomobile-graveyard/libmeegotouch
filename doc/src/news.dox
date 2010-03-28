@@ -17,15 +17,15 @@
   Previously, the following code was necessary to implement a regular parentPage -> childPage navigation:
 
     <CODE>
-    childPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
-    childPage->connect(childPage, SIGNAL(backButtonClicked()), SLOT(dismiss()));
-    childPage->appear(DestroyWhenDismissed);
+    childPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);<BR>
+    childPage->connect(childPage, SIGNAL(backButtonClicked()), SLOT(dismiss()));<BR>
+    childPage->appear(DestroyWhenDismissed);<BR>
     </CODE>
 
   Now only one line is needed:
 
     <CODE>
-    childPage->appear(DestroyWhenDismissed);
+    childPage->appear(DestroyWhenDismissed);<BR>
     </CODE>
 
   Manual handling and wiring is still possible, but it's not the default behavior.
@@ -34,14 +34,14 @@
   Do not instantiate DuiAppletSettingsDialog any more; use the static function directly:
 
     <CODE>
-    // Old usage
-    DuiSettingsDialog dia;
-    dia.exec(mySettings);
+    // Old usage<BR>
+    DuiAppletSettingsDialog dialog;<BR>
+    dialog.exec(mySettings);<BR>
     </CODE>
 
     <CODE>
-    // New usage
-    DuiSettingsDialog::exec(mySettings);
+    // New usage<BR>
+    DuiAppletSettingsDialog::exec(mySettings);<BR>
     </CODE>
 
 - When a scene is off display, all scene window transitions (appearance, disappearance,
