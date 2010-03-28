@@ -485,16 +485,6 @@ QString DuiTheme::currentTheme()
     return d->themeDaemon->currentTheme();
 }
 
-QStringList DuiTheme::findAvailableThemes()
-{
-    return QStringList();
-}
-
-void DuiTheme::changeTheme(const QString &theme_id)
-{
-    Q_UNUSED(theme_id);
-}
-
 bool DuiTheme::hasPendingRequests()
 {
     return instance()->d_ptr->themeDaemon->hasPendingRequests();

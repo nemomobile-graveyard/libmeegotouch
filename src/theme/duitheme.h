@@ -42,10 +42,22 @@ class DuiPalette;
 class DuiDefaultFonts;
 
 /*!
- * Singleton theme class for Direct UI
- *
- * Theme maintains all the graphics for the whole UI. It is also responsible
- * of managing the style objects for all the objects that need styling.
+ \class DuiTheme
+ \brief DuiTheme abstracts the theming and styling of DirectUI applications and widgets
+
+ DuiTheme is a singleton class providing runtime access to the DirectUI theming parameters,
+ as well as factory methods for instantiating various theming resources such as shared
+ graphical assets in the form of QPixmaps and DuiScalableImages as well as style and view
+ objects for widgets.
+
+ DuiTheme communicates asynchronously with a theme server whenever a graphical asset
+ is requested. The theme server is responsible for loading the graphics (either from
+ static image files, by rasterizing SVG or through procedural generation) and sharing them.
+ The sharing of graphics assets is platform specific, DirectUI ships with a reference theme
+ server called DuiThemeDaemon that shares assets using X11. A local theme server can also
+ be created in-process, however in this case no sharing occurs and each graphical asset
+ instantiated is duplicated for the application.
+
  */
 class DUI_EXPORT DuiTheme : public QObject
 {
@@ -53,55 +65,72 @@ class DUI_EXPORT DuiTheme : public QObject
 
 public:
 
-    friend class DuiWidgetController;
-    friend class DuiStyle;
-
+    /*!
+    ViewTypes are standardized widget variant names, as defined by the widgets themselves. For example,
+    DuiButton::checkboxType can be expected to be implemented by each theme, while a random non-standard
+    type is unlikely to be. There is a mapping of view types to view implementation class names in the
+    theme configurations.
+    */
     typedef QString ViewType;
 
-    /*!
-     * Defines what kind of theme daemon should be used.
-     */
+    //! Defines the type of theme service the process will use.
     enum ThemeService {
-        AnyTheme = 0,   //!< Default theme daemon will be used.
-        RemoteTheme,    //!< Remote theme daemon will be used.
-        LocalTheme      //!< Local theme daemon will be used.
+        AnyTheme = 0,   //!< Default theme service will be used.
+        RemoteTheme,    //!< Remote theme service will be used.
+        LocalTheme      //!< Local theme service will be used.
     };
 
+    //! Defines the how resources that are registered with the theme at runtime are handled
     enum InsertMode {
-        Overwrite,
-        Append
+        Overwrite, //!< The resource replaces any existing resource of the same type.
+        Append     //!< The resource is appended to the theme data, leaving any existing resources active. The existing resources may be prioritized when making requests.
     };
 
     /*!
-     * Constructor for theme class.
-     * Tries to connect to theme daemon, if couldn't connect then creates a local theme daemon.
-     * \param themeIdentifier an identifier for the theme. The identifier is
-     * used as the first part of the search path for resources.
-     * \param imglistFilename file name for image list file. If set, DuiTheme will create local
-     * theme daemon which will output list of used images to the file @p imglistFilename.
-     * \param themeService what kind of theme daemon should be used. If RemoteTheme is supplied
-     * as themeService, the constructor won't return until remote theme daemon is available.
-     * RemoteTheme parameter cannot be used if imglistFilename is set.
+     Constructs the DuiTheme instance.
+
+     By default the theme system firsrt attempts to connect to a remote theme service,
+     if this fails a local theme service is created unless overriden by the \a themeService parameter.
+     Note that on some platforms failing to connect to a remote theme service at startup may be a fatal error.
+     If the \a themeService is RemoteTheme, the constructor will not return until a remote theme service becomes
+     available. This option should be used when the application may potentially start before the theme service
+     during system bootup. The RemoteTheme option can also be toggled by the -remote-theme command line parameter
+     as passed to DuiApplication. The RemoteTheme option cannot be used if imglistFilename is also set.
+
+
+     \a applicationName is used as the first part of the search path for resources, ensuring that application
+     specific theme resources are prioritized. If \a imglistFilename is passed, DuiTheme will create a local
+     theme daemon and output the list of used images to the specified file.
      */
     DuiTheme(const QString &applicationName, const QString &imglistFilename = QString(), ThemeService themeService = AnyTheme);
 
     /*!
-     * Destructor for theme class
+     * Destroys the theme instance.
      */
     virtual ~DuiTheme();
 
     /*!
-     * Returns the style object with the given parameters.
-     * This method does not transfer ownership.
-     * \param styleClassName the name of the class (e.g. "DuiLabelStyle" )
-     * \param objectName the name of the object (e.g. "MyButton" )
-     * \param mode the name of the mode of the widget
-     * (e.g. "active", "selected", "disabled" )
-     * \param type the type of view that is used
-     * (e.g. for the button: "default", "checkbox", "toggle" )
-     * \param orientation the orientation that the style should be optimized for:
-     * portrait or landscape
-     * \param parent the controller of the widget for which the style is used
+     Returns the style object matching the given parameters.
+
+     A style object is a collection of data properties, from which widget views (or any other
+     type of class) access their run time parameters. The data is in the form of standard Qt properties
+     and the style object is automatically filled through Qt property introspection based
+     on values defined in CSS sylesheets.
+
+     Ownership of the returned object remains with DuiTheme, the caller must
+     not delete it as it may be shared by multiple users. Once the caller no longer needs the
+     object, it should be passed to the releaseStyle method of DuiTheme.
+
+     The parameters are:
+
+     - \a styleClassName, the name of the class (e.g. "DuiLabelStyle")
+     - \a objectName, the name of the object (e.g. "MyButton")
+     - \a mode, the name of the mode of the widget (e.g. "active", "selected", "disabled")
+     - \a type, the type of view that is used (e.g. for the button: "default", "checkbox", "toggle")
+     - \a orientation, the orientation that the style should be optimized for (e.g portrait or landscape)
+     - \a parent (optional), the controller of the widget for which the style is used
+
+     \sa releaseStyle
      */
     static const DuiStyle *style(const char *styleClassName,
                                  const QString &objectName,
@@ -112,145 +141,171 @@ public:
 
     /*!
       This is an overloaded function.
+
       Returns the style object with the given \a styleClassName and \a objectName
     */
     static const DuiStyle *style(const char *styleClassName,
                                  const QString &objectName = "");
 
     /*!
-      \brief Called when style is no longer needed, performs clean up.
+      This method should be called on style objects when they are no longer needed.
+
+      releaseStyle performs cleanup and frees the style if there are no other clients using it.
     */
     static void releaseStyle(const DuiStyle *style);
 
     /*!
-     * Adds directory for the daemon to search .png and .svg -files for this application.
-     * \param directoryName relative or absolute path to the directory.
-     * \param recursive should the directory be added recursively.
-     * \return boolean, true if operation successful.
+     Adds a directory to the theme service search path for this application.
+
+     The theme service will look for PNG and SVG files in the location specified by
+     \a directoryName, which can be either an relative or absolute path. If \a mode
+     is defined as Recursive, subdirectories of the specified directory are searched as well.
+     The default is not to search subdirectories.
      */
     static bool addPixmapDirectory(const QString &directoryName, Dui::RecursionMode mode = Dui::NonRecursive);
 
     /*!
-     * Clear all pixmap directories from this application.
+     Clear all pixmap directories from the theme service search path for this application.
      */
     static void clearPixmapDirectories();
 
     /*!
-     * Returns singleton DuiTheme object
-     * \return DuiTheme object
+     Returns the singleton DuiTheme instance.
      */
     static DuiTheme *instance();
 
     /*!
-     * Returns QPixmap from element id
-     * Loads the requested pixmap asynchronously. Pixmap returned can be one of following:
-     * 1) 50x50 red pixmap which marks that pixmap with requested id was not found.
-     * 2) Transparent gray 1x1 or \a size sized pixmap which marks that the pixmap is not yet loaded.
-     * 3) The real pixmap if the pixmap was already loaded by the system.
-     * in cases 2) and 3) the pixmap data can be changed at any time by the theme (when theme changes,
-     * images update, images get loaded or any other reason)
-     * \param id element id of the requested image
-     * \param size Size of the requested image. QSize(0,0) marks
-     * that the original size of the pixmap is used.
-     * \note Returned pixmap should be released using releasePixmap(const QPixmap*) method.
-     * \return QPixmap, which matches the given parameters but does not necessary contain the real data yet.
+     Returns a QPixmap that contains the graphical asset specified by the logical identifier.
+
+     The \a id is a logical identifier for a single graphical theme asset. The source format of the
+     graphics is abstracted and determined by the theme service. The default DuiThemeDaemon theme
+     policy is as follows:
+
+     - Static images such as PNG have a higher priority than assets which are dynamic or require
+     rasterization (SVG), thus allowing for caching of dynamic assets. For static images the
+     id is the filename without the suffix.
+     - Application supplied assets have higher priority than base theme assets, while assets in
+     a theme for a specific application has higher priority than assets supplied by the application itself.
+
+     The \a size parameter determines the size of the returned pixmap. The default \a size of QSize(0,0) marks
+     that the original pixmap size should be used.
+
+     The requested pixmap is loaded asynchronously. The returned pixmap can therefore be one of the following:
+
+     - The real pixmap if the pixmap was already loaded by the system.
+     - A transparent gray 1x1 or \a size sized pixmap, serving as a placeholder while the pixmap is loading.
+     - A red pixmap of 50x50 pixels size, indicating that the pixmap with the requested id was not found.
+
+     In the first two cases, the pixmap data can be changed at any time by the theme. This may happen when
+     the theme changes, pixmaps are updated, pixmaps finish loading or for any other reason.
+
+     \sa releasePixmap
+
      */
     static const QPixmap *pixmap(const QString &id, const QSize &size = QSize(0, 0));
 
     /*!
-     * Returns a QPixmap copy from element id. This pixmap can be modified.
-     * *The ownership of the pixmap is transferred to caller*.
-     * Loads the pixmap synchorously and makes a copy and returns it to caller.
-     * This method can be very slow, so use asynchronous \see pixmap method instead.
-     * \param id element id of the requested image
-     * \param size Size of the requested image. QSize(0,0) marks
-     * that the original size of the pixmap is used.
-     * \return QPixmap, which matches the given parameters but does not necessary contain the real data yet.
+     Returns a copy of graphical asset with the given logical identifier.
+
+     Loads the pixmap specified by \a id of size \a size synchorously and returns a copy to the caller.
+     This method can be very slow, use the asynchronous pixmap method instead if possible.
+
+     The ownership of the returned pixmap is transferred to caller, and the pixmap may be modified.
      */
     static QPixmap *pixmapCopy(const QString &id, const QSize &size = QSize(0, 0));
 
+    /*!
+     Returns a DuiScalableImage that contains the graphical asset specified by the logical identifier.
+
+     The logic for acquiring a scalable image is the same as that for a regular pixmap.
+     The \a left, \a right, \a top and \a bottom parameters specify the non-scaled border values of the
+     image.
+
+     \sa pixmap
+     */
     static const DuiScalableImage *scalableImage(const QString &id, int left, int right, int top, int bottom);
+
+    /*!
+     Releases a shared DuiScalableImage acquired through DuiTheme.
+
+     releaseScalableImage performs cleanup and frees the image if there are no other clients using it.
+     */
     static void releaseScalableImage(const DuiScalableImage *image);
 
     /*!
-     * Releases pixmap
-     * \param pixmap QPixmap being released by the application
+     Releases a shared QPixmap acquired through DuiTheme.
+
+     releasePixmap performs cleanup and frees the pixmap if there are no other clients using it.
      */
     static void releasePixmap(const QPixmap *pixmap);
 
     /*!
-     * Returns a view for the given object.
-     * \param controller controller needing the view
-     * \return DuiWidgetView A theme-specific view for the object
-     * TODO: this should be protected or private method, and only DuiWidgetController should be able to access this.
+     Returns a view instance for the given \a controller.
+
+     The returned view is theme specific and can be changed in the theme configuration.
      */
     static DuiWidgetView *view(const DuiWidgetController *controller);
 
     /*!
-     * \brief Returns system-wide logical colors.
+     Returns the theme's logical color palette.
+
+     The palette can be used to programmatically query the common colors defined in the theme.
      */
     static const DuiPalette &palette();
 
     /*!
-     * \brief Returns system-wide logical fonts.
+     Returns the theme's logical font information.
+
+     The font information can be used to programmatically query the common fonts defined in the theme.
      */
     static const DuiDefaultFonts &fonts();
 
     /*!
-     * Loads the requested CSS file to the current theme.
-     * Note that CSS files should be loaded before constructing
-     * the style objects.
-     * \param filename Filename of the CSS file
-     * \param mode Defines how the loaded stylesheet is inserted into theming system.
-     * \return boolean, true if the CSS file was loaded, otherwise false
+     Loads the requested CSS file to the current active theme.
+
+     Either appends to or replaces the existing theme CSS using the style
+     sheet located by \a filename, depending on the \mode. The method
+     returns true if the CSS file was successfully loaded.
+
+     Note that CSS files should be loaded before constructing the style objects.
      */
     static bool loadCSS(const QString &filename, InsertMode mode = Append);
 
     /*!
-     * Returns the current theme in use
+     Returns the name of the current theme in use.
      */
     static QString currentTheme();
 
     /*!
-     * Finds all available themes installed in the system.
-     */
-    static QStringList findAvailableThemes();
-
-    /*!
-     * Sends a signal to theme daemon to change the theme.
-     * \param theme_id ID of theme to be used
-     * TODO: check if we want to allow any application to change the theme.
-     */
-    void changeTheme(const QString &theme_id);
-
-    /*!
-     * Checks whether there are pending pixmap requests.
+     Returns true if there are pending asynchronous pixmap requests in the system.
      */
     static bool hasPendingRequests();
 
 Q_SIGNALS:
     /*!
-     * This signal is emitted when all pixmap requests have finished.
-     *
-     * The signal is emitted regardless of if the request was successfull or not.
-     *
-     * Note that for regular applications, listening for this signal is
-     * not necessary, since any change automatically triggers an update of
-     * the interface.
-     *
-     * Widget implementations must not connect to this signal. All widgets
-     * are repainted after the outstanding requests have finished.
+     This signal is emitted when all pixmap requests have finished.
+
+     The signal is emitted regardless of if the request was successfull or not.
+
+     Note that for regular applications, listening for this signal is
+     not necessary, since any change automatically triggers an update of
+     the interface.
+
+     Widget implementations must not connect to this signal. All widgets
+     are repainted after the outstanding requests have finished.
      */
     void pixmapRequestsFinished();
 
 protected:
 
     /*!
-     * Causes all widgets to update their views when theme is changed
+     Causes all widgets to update their views when the theme is changed.
      */
     void rebuildViewsForWidgets();
 
+    //! \internal
     DuiThemePrivate *const d_ptr;
+    //! \internal_end
 
 private:
     Q_DISABLE_COPY(DuiTheme)
@@ -264,6 +319,8 @@ private:
 #endif
 
     friend class DuiApplicationPrivate;
+    friend class DuiWidgetController;
+    friend class DuiStyle;
 
 #ifdef QT_TESTLIB_LIB
     //! Test unit is defined as a friend of production code to access private members
