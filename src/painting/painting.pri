@@ -5,8 +5,6 @@
 PAINTING_SRC_DIR=./painting
 INCLUDEPATH+=./painting
 HEADERS += \
-    $$PAINTING_SRC_DIR/duiglwidget.h \
-    $$PAINTING_SRC_DIR/duiglrenderer.h \
     $$PAINTING_SRC_DIR/duigles2renderer.h \
     $$PAINTING_SRC_DIR/duiglshader.h \
     $$PAINTING_SRC_DIR/duiglshaderprogram.h \
@@ -14,8 +12,6 @@ HEADERS += \
     $$PAINTING_SRC_DIR/duiscalableimage.h
 
 SOURCES += \
-    $$PAINTING_SRC_DIR/duiglwidget.cpp \
-    $$PAINTING_SRC_DIR/duiglrenderer.cpp \
     $$PAINTING_SRC_DIR/duigles2renderer.cpp \
     $$PAINTING_SRC_DIR/duiglshader.cpp \
     $$PAINTING_SRC_DIR/duiglshaderprogram.cpp \
