@@ -101,25 +101,33 @@ public:
 
 public Q_SLOTS:
     /*!
-     * Shows the scene window on the window specified by \a window and registers
-     * it in the associated DuiSceneManager. Uses animation to show the window.
+     * Makes the scene window appear on \a window and registers it with the associated
+     * DuiSceneManager.
+     *
      * \param window    The window on which the scene window is going to be shown.
      * \param policy    Deletion policy, defines the ownership for this window
+     *
+     * \sa DuiSceneManager::appearSceneWindow()
      */
     virtual void appear(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
 
     /*!
-     * Shows the scene window on the currently active window and registers
-     * it in the associated DuiSceneManager. Uses the animation to show the window.
+     * Makes the scene window appear on the currently active window and registers
+     * it with the associated DuiSceneManager.
      * \param policy    Deletion policy, defines the ownership for this window
      *
-     * \sa DuiApplication::activeWindow()
+     * \sa DuiApplication::activeWindow(), DuiSceneManager::appearSceneWindow()
      */
     virtual void appear(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
 
     /*!
-     * Hides this window and unregisters it from the DuiSceneManager.
-     * Uses the associated animation to hide the window.
+     * Makes this scene window disappear and unregisters it from the associated
+     * DuiSceneManager.
+     *
+     * This is the same as calling:
+     * <code>sceneWindow->sceneManager()->disappearSceneWindow(sceneWindow);</code>
+     *
+     * \sa DuiSceneManager::disappearSceneWindow()
      */
     virtual void disappear();
 
@@ -137,7 +145,8 @@ public Q_SLOTS:
      *
      * Please refer to DuiDismissEvent documentation for more information.
      *
-     * \sa dismissNow(), dismissEvent(), disappear(), deleteWhenDone()
+     * \sa dismissNow(), dismissEvent(), disappear(), deleteWhenDone(),
+     *     DuiSceneManager::dismissSceneWindow()
      */
     bool dismiss();
 

@@ -116,12 +116,19 @@ bool DuiComponentData::emulateTwoFingerGestures()
     return false;
 }
 
+// DuiWindow stubs
+
 // Avoid creating unnecessary OpenGL stuff
 void DuiWindow::setTranslucentBackground(bool enable)
 {
     Q_UNUSED(enable);
 }
 
+bool gDuiWindowIsOnDisplay = false;
+bool DuiWindow::isOnDisplay() const
+{
+    return gDuiWindowIsOnDisplay;
+}
 
 // Test class implementation
 
@@ -636,6 +643,73 @@ void Ut_DuiSceneManager::testPageHistoryChangedWhenSettingSamePageHistory()
     QSignalSpy pageHistoryChanged(sm, SIGNAL(pageHistoryChanged()));
     sm->setPageHistory(pageHistory);
     QCOMPARE(pageHistoryChanged.count(), 0);
+}
+
+void Ut_DuiSceneManager::testTransitionModeWhenOffDisplay()
+{
+    QObject debugInterface;
+    DuiSceneWindow sceneWindow;
+
+    debugInterface.setObjectName("debugInterface");
+    debugInterface.setParent(sm);
+
+    gDuiWindowIsOnDisplay = false;
+
+    sm->appearSceneWindow(&sceneWindow);
+
+    QCOMPARE((DuiSceneManager::TransitionMode)(debugInterface.property("transitionMode").toInt()),
+             DuiSceneManager::ImmediateTransition);
+
+    // clean up
+    sm->disappearSceneWindowNow(&sceneWindow);
+    if (sceneWindow.scene())
+        sceneWindow.scene()->removeItem(&sceneWindow);
+}
+
+void Ut_DuiSceneManager::testTransitionModeWhenOnDisplay()
+{
+    QObject debugInterface;
+    DuiSceneWindow sceneWindow;
+
+    debugInterface.setObjectName("debugInterface");
+    debugInterface.setParent(sm);
+
+    gDuiWindowIsOnDisplay = true;
+
+    sm->appearSceneWindow(&sceneWindow);
+
+    QCOMPARE((DuiSceneManager::TransitionMode)(debugInterface.property("transitionMode").toInt()),
+             DuiSceneManager::AnimatedTransition);
+
+    // clean up
+    sm->disappearSceneWindowNow(&sceneWindow);
+    if (sceneWindow.scene())
+        sceneWindow.scene()->removeItem(&sceneWindow);
+}
+
+void Ut_DuiSceneManager::testTransitionModeWhenNoWindow()
+{
+    QObject debugInterface;
+    DuiSceneWindow sceneWindow;
+    DuiSceneManager sceneManager;
+
+    debugInterface.setObjectName("debugInterface");
+    debugInterface.setParent(&sceneManager);
+
+    gDuiWindowIsOnDisplay = true;
+
+    sceneManager.appearSceneWindow(&sceneWindow);
+
+    QCOMPARE((DuiSceneManager::TransitionMode)(debugInterface.property("transitionMode").toInt()),
+             DuiSceneManager::ImmediateTransition);
+
+    // clean up
+    debugInterface.setParent(0); // don't get deleted by sceneManager
+    sceneManager.disappearSceneWindowNow(&sceneWindow);
+    if (sceneWindow.scene()) {
+         // don't get deleted by QGraphicsScene
+        sceneWindow.scene()->removeItem(&sceneWindow);
+    }
 }
 
 QTEST_MAIN(Ut_DuiSceneManager);

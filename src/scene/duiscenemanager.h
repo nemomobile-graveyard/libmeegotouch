@@ -170,8 +170,12 @@ public Q_SLOTS:
     void closeSoftwareInputPanel();
 
     /*!
-     * Attaches a \a sceneWindow to the scene manager and makes it appear using associated animation.
+     * Attaches a \a sceneWindow to the scene manager and makes it appear.
      * According to the given \a policy, a scene window can be kept or destroyed after disappearing.
+     *
+     * If the scene is currently being displayed by any DuiWindow (according to
+     * DuiWindow::isOnDisplay()), the appearance transition will be animated.
+     * Otherwise, it will be immediate.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::appear()
      * calls this method for you.
@@ -193,7 +197,11 @@ public Q_SLOTS:
     int execDialog(DuiDialog *dialog);
 
     /*!
-     * Makes a \a sceneWindow disappear using associated animation and detaches it from the scene manager.
+     * Makes a \a sceneWindow disappear and detaches it from the scene manager.
+     *
+     * If the scene is currently being displayed by any DuiWindow (according to
+     * DuiWindow::isOnDisplay()), the disappearance transition will be animated.
+     * Otherwise, it will be immediate.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::disappear()
      * calls this method for you.
@@ -206,7 +214,11 @@ public Q_SLOTS:
     void disappearSceneWindowNow(DuiSceneWindow *sceneWindow);
 
     /*!
-     * Dismisses a \a sceneWindow using associated animation and detaches it from the scene manager.
+     * Dismisses a \a sceneWindow and detaches it from the scene manager.
+     *
+     * If the scene is currently being displayed by any DuiWindow (according to
+     * DuiWindow::isOnDisplay()), the dismissal transition will be animated.
+     * Otherwise, it will be immediate.
      *
      * \note Normally you don't have to call this method explicitly. DuiSceneWindow::dismiss()
      * calls this method for you.
@@ -282,6 +294,7 @@ protected:
 
     //! \reimp
     virtual bool eventFilter(QObject *watched, QEvent *event);
+    virtual void childEvent(QChildEvent *event);
     //! \reimp_end
 
 private:

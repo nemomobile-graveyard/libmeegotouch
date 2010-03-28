@@ -883,6 +883,14 @@ void DuiSceneManagerPrivate::appearSceneWindow(DuiSceneWindow *window,
         DuiSceneWindow::DeletionPolicy policy,
         bool animatedTransition)
 {
+    if (debugInterface) {
+        if (animatedTransition)
+            debugInterface->setProperty("transitionMode", DuiSceneManager::AnimatedTransition);
+        else
+            debugInterface->setProperty("transitionMode", DuiSceneManager::ImmediateTransition);
+    }
+
+
     // Popping up scene windows during an orientation change is
     // a grey area. We probably want to avoid them during that period.
     // TODO: For now we are only queueing the status bar. We should
@@ -1131,7 +1139,9 @@ void DuiSceneManager::appearSceneWindow(DuiSceneWindow *window, DuiSceneWindow::
 {
     Q_D(DuiSceneManager);
 
-    d->appearSceneWindow(window, policy, true);
+    bool animatedTransition = d->isOnDisplay();
+
+    d->appearSceneWindow(window, policy, animatedTransition);
 }
 
 void DuiSceneManager::appearSceneWindowNow(DuiSceneWindow *window, DuiSceneWindow::DeletionPolicy policy)
@@ -1184,7 +1194,10 @@ int DuiSceneManager::execDialog(DuiDialog *dialog)
 void DuiSceneManager::disappearSceneWindow(DuiSceneWindow *window)
 {
     Q_D(DuiSceneManager);
-    d->disappearSceneWindow(window, true);
+
+    bool animatedTransition = d->isOnDisplay();
+
+    d->disappearSceneWindow(window, animatedTransition);
 }
 
 void DuiSceneManager::disappearSceneWindowNow(DuiSceneWindow *window)
@@ -1196,7 +1209,10 @@ void DuiSceneManager::disappearSceneWindowNow(DuiSceneWindow *window)
 void DuiSceneManager::dismissSceneWindow(DuiSceneWindow *window)
 {
     Q_D(DuiSceneManager);
-    d->dismissSceneWindow(window, true);
+
+    bool animatedTransition = d->isOnDisplay();
+
+    d->dismissSceneWindow(window, animatedTransition);
 }
 
 void DuiSceneManager::dismissSceneWindowNow(DuiSceneWindow *window)
@@ -1363,6 +1379,17 @@ void DuiSceneManager::setPageHistory(const QList<DuiSceneWindow *> &list)
     }
 
     emit pageHistoryChanged();
+}
+
+void DuiSceneManager::childEvent(QChildEvent *event)
+{
+    Q_D(DuiSceneManager);
+
+    if (event->added() && event->child()->objectName() == "debugInterface") {
+        d->debugInterface = event->child();
+    } else if (event->child()->objectName() == "debugInterface") {
+        d->debugInterface = 0;
+    }
 }
 
 #include "moc_duiscenemanager.cpp"

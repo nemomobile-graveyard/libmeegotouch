@@ -44,6 +44,10 @@
     DuiSettingsDialog::exec(mySettings);
     </CODE>
 
+- When a scene is off display, all scene window transitions (appearance, disappearance,
+  dismissal) on it will be done immediately by the scene manager (instead of being animated).
+  Check DuiSceneManager::appearSceneWindow() documentation for more information.
+
 \subsection removed Removed or Renamed
 
 - Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.

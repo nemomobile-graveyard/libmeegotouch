@@ -70,6 +70,9 @@ private slots:
     void testPageHistoryChangedWhenPopping();
     void testPageHistoryChangedWhenSettingPageHistory();
     void testPageHistoryChangedWhenSettingSamePageHistory();
+    void testTransitionModeWhenOffDisplay();
+    void testTransitionModeWhenOnDisplay();
+    void testTransitionModeWhenNoWindow();
 };
 
 Q_DECLARE_METATYPE(Dui::Orientation)

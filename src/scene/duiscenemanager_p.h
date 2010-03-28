@@ -195,6 +195,8 @@ public:
     };
     QList<SceneWindowTransition> queuedTransitions;
 
+    QPointer<QObject> debugInterface;
+
     DuiSceneManager *q_ptr;
 };
 
