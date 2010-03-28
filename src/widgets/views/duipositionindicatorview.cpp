@@ -66,12 +66,9 @@ void DuiPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptio
         Q_D(const DuiPositionIndicatorView);
     */
     Q_UNUSED(option);
-    Q_UNUSED(painter);
-
     /*
         if(d->visible) {
     */
-    /*
     int dotDist = style()->pixmapDistance();
     QSize dotSize = style()->onPixmap()->size();
     QSizeF vpSize = model()->viewportSize();
@@ -124,7 +121,6 @@ void DuiPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptio
             currPos += posAdd;
         }
     }
-    */
     /*
         }
     */
