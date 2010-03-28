@@ -84,8 +84,12 @@ void Ut_DuiListViewMultiColumn::init()
 {
     listViewPrivate = new DuiMultiColumnListViewPrivate;
     listViewPrivate->model = phoneBookModel;
-    listViewPrivate->separator = new DuiWidget;
-    listViewPrivate->separator->setGeometry(0, 0, 300, 2);
+
+    DuiWidget * separator = new DuiWidget;
+    separator->setGeometry(0, 0, 300, 2);
+    separator->setPreferredHeight(2);
+    listViewPrivate->setSeparator(separator);
+
     listViewPrivate->hseparator = new DuiWidget;
     listViewPrivate->hseparator->setGeometry(0, 0, 2, 100);
     listViewPrivate->itemHeight = 100;
