@@ -102,13 +102,6 @@ void DuiContentItem::setImage(const QImage &image)
     model()->setItemImage(d->image);
 }
 
-void DuiContentItem::setImage(const QImage &image)
-{
-    Q_D(DuiContentItem);
-    d->image = image;
-    model()->setItemQImage(d->image);
-}
-
 void DuiContentItem::setTitle(const QString &text)
 {
     model()->setTitle(text);
@@ -150,13 +143,6 @@ void DuiContentItem::setOptionalImage(const QImage &image)
     Q_D(DuiContentItem);
     d->optionalImage = image;
     model()->setOptionalImage(d->optionalImage);
-}
-
-void DuiContentItem::setOptionalImage(const QImage &image)
-{
-    Q_D(DuiContentItem);
-    d->optionalImage = image;
-    model()->setOptionalQImage(d->optionalImage);
 }
 
 QPixmap DuiContentItem::optionalPixmap() const

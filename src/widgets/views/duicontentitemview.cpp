@@ -341,7 +341,7 @@ void DuiContentItemView::updateData(const QList<const char *> &modifications)
         } else if (member == DuiContentItemModel::Selected) {
             setSelected(model()->selected());
         } else if(member == DuiContentItemModel::OptionalPixmap){
-            d->setOptionalImage(d->controller->optionalPixmap());
+            d->setOptionalPixmap(d->controller->optionalPixmap());
         } else if(member == DuiContentItemModel::OptionalImage){
             d->setOptionalImage(model()->optionalImage());
         } else if(member == DuiContentItemModel::ItemImage) {
