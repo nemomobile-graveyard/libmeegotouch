@@ -33,6 +33,8 @@ class DuiPageSwitchAnimationPrivate : public DuiParallelAnimationGroupPrivate
 public:
     DuiSceneWindow *sceneWindow;
 
+    void _q_animationFinished();
+
 protected:
     QPointer<DuiSceneWindow> newPage;
     QPointer<DuiSceneWindow> oldPage;

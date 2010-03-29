@@ -26,6 +26,7 @@
 #include <DuiTheme>
 #include <DuiApplication>
 #include <DuiApplicationWindow>
+#include <DuiPannableViewport>
 #include <DuiSceneManager>
 #include <DuiEscapeButtonPanel>
 #include <DuiAction>
@@ -199,42 +200,6 @@ DuiApplicationWindow *DuiApplicationPage::applicationWindow()
     return applicationWindow;
 }
 
-// TODO: Remove that now useless method override after API freeze period
-void DuiApplicationPage::appear(DuiSceneWindow::DeletionPolicy policy)
-{
-    DuiSceneWindow::appear(policy);
-}
-
-// TODO: Remove that now useless method after API freeze period
-void DuiApplicationPage::appear(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    DuiSceneWindow::appear(window, policy);
-}
-
-// TODO: Remove that now useless method override after API freeze period
-void DuiApplicationPage::appearNow(DuiSceneWindow::DeletionPolicy policy)
-{
-    DuiSceneWindow::appearNow(policy);
-}
-
-// TODO: Remove that now useless method after API freeze period
-void DuiApplicationPage::appearNow(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    DuiSceneWindow::appearNow(window, policy);
-}
-
-// TODO: Remove that now useless method override after API freeze period
-void DuiApplicationPage::disappear()
-{
-    DuiSceneWindow::disappear();
-}
-
-// TODO: Remove that now useless method override after API freeze period
-void DuiApplicationPage::disappearNow()
-{
-    DuiSceneWindow::disappearNow();
-}
-
 const QString DuiApplicationPage::title() const
 {
     return model()->title();
@@ -273,28 +238,28 @@ bool DuiApplicationPage::rememberPosition() const
     return d->rememberPosition;
 }
 
-void DuiApplicationPage::setPannableAreaInteractive(bool interactive)
+void DuiApplicationPage::setPannable(bool pannable)
 {
     Q_D(DuiApplicationPage);
 
-    d->pannableViewPort->setEnabled(interactive);
+    d->pannableViewPort->setEnabled(pannable);
 }
 
-bool DuiApplicationPage::isPannableAreaInteractive() const
+bool DuiApplicationPage::isPannable() const
 {
     Q_D(const DuiApplicationPage);
 
     return d->pannableViewPort->isEnabled();
 }
 
-Qt::Orientations DuiApplicationPage::pannableAreaDirection() const
+Qt::Orientations DuiApplicationPage::panningDirection() const
 {
     Q_D(const DuiApplicationPage);
 
     return d->pannableViewPort->panDirection();
 }
 
-void DuiApplicationPage::setPannableAreaDirection(Qt::Orientations directions)
+void DuiApplicationPage::setPanningDirection(Qt::Orientations directions)
 {
     Q_D(DuiApplicationPage);
 
@@ -427,6 +392,12 @@ DuiApplicationPageModel::PageEscapeMode DuiApplicationPage::escapeMode() const
 void DuiApplicationPage::setEscapeMode(DuiApplicationPageModel::PageEscapeMode mode)
 {
     model()->setEscapeMode(mode);
+}
+
+DuiPannableViewport * DuiApplicationPage::pannableViewport()
+{
+    Q_D(DuiApplicationPage);
+    return d->pannableViewPort;
 }
 
 #include "moc_duiapplicationpage.cpp"

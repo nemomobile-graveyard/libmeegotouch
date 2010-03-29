@@ -83,10 +83,6 @@ private slots:
     void integrating_data();
     void integrating();
 
-    // Custom integration policy
-    void usingCustomIntegrationPolicy();
-    void settingIntegrationPolicyToNULLShouldNotBreakThePhysics();
-
     // Integration algorithm convergence and border behaviour
     void positionShouldReturnToStartRangeAfterMovingViewportBeyondStartRange();
     void positionShouldReturnToEndRangeAfterMovingViewportBeyondEndRange();

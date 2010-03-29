@@ -159,11 +159,11 @@ public:
                    };
 
     //! Calendar type.
-    enum Calendar {DefaultCalendar, GregorianCalendar, IslamicCalendar,
-                   ChineseCalendar, IslamicCivilCalendar, HebrewCalendar,
-                   JapaneseCalendar, BuddhistCalendar, PersianCalendar,
-                   CopticCalendar, EthiopicCalendar
-                  };
+    enum CalendarType {DefaultCalendar, GregorianCalendar, IslamicCalendar,
+                       ChineseCalendar, IslamicCivilCalendar, HebrewCalendar,
+                       JapaneseCalendar, BuddhistCalendar, PersianCalendar,
+                       CopticCalendar, EthiopicCalendar
+                      };
 
     enum Weekday {Monday = 1, Tuesday, Wednesday, Thursday, Friday,
                   Saturday, Sunday
@@ -273,14 +273,14 @@ public:
     Collation collation() const;
 
     /*!
-     * \brief Sets calendar
+     * \brief Sets calendar type
      */
-    void setCalendar(Calendar calendar);
+    void setCalendarType(CalendarType calendar);
 
     /*!
-     * \brief Returns calendar
+     * \brief Returns calendar type
      */
-    Calendar calendar() const;
+    CalendarType calendarType() const;
 
     /*!
      * \brief Returns a DuiCollator which compares QStrings based on language/country/collation rules
@@ -445,21 +445,21 @@ public:
      * \param dateTime time object to create representation from
      * \param dateType style of date formatting
      * \param timeType style of time formatting
-     * \param calendarType calendar to use for formatting
+     * \param calendarType calendar type to use for formatting
      *
      * If dateType is DuiLocale::DateNone <b>and</b> timeType is DuiLocale::TimeNone,
      * an empty string is returned.
      */
     QString formatDateTime(const QDateTime &dateTime, DateType dateType = DateLong,
                            TimeType timeType = TimeLong,
-                           Calendar calendarType = DefaultCalendar) const;
+                           CalendarType calendarType = DefaultCalendar) const;
 
     /*!
      * \brief String presentation with explicit calendar type
      * \param dateTime time to format
      * \param calendarType calendar to use
      */
-    QString formatDateTime(const QDateTime &dateTime, Calendar calendarType) const;
+    QString formatDateTime(const QDateTime &dateTime, CalendarType calendarType) const;
 
     /*!
      * \brief Formats DuiCalendar using its native calendar system
@@ -571,14 +571,14 @@ public:
      */
     QDateTime parseDateTime(const QString &dateTime, DateType dateType = DateLong,
                             TimeType timeType = TimeLong,
-                            Calendar calendarType = DefaultCalendar) const;
+                            CalendarType calendarType = DefaultCalendar) const;
 
     /*!
      * \brief Creates a datetime object from a string with explicit calendar type.
      * \param dateTime string to parse
      * \param calendarType calendar to use
      */
-    QDateTime parseDateTime(const QString &dateTime, Calendar calendarType) const;
+    QDateTime parseDateTime(const QString &dateTime, CalendarType calendarType) const;
 
     /*!
      * \brief Returns the locale dependant name for a month number
@@ -609,42 +609,10 @@ public:
     //// ID translation scheme /////
 
     /*!
-     * \brief Adds a catalog of translations. If the catalog is already installed,
-     * it doesn't do anything.
-     * \deprecated This method is deprecated since 0.18.
-     * It was used to load translations for
-     * trid() which has already been removed from libdui (qtTrId() is used instead
-     * of trid() now). Translations for qtTrId() are added with installTrCatalog().
-     * Therefore, installCategoryCatalog() has become useless
-     *
-     * \param category Category to load the catalog for
-     * \param name abstract name for the catalog. Concrete file is searched based on this.
-     */
-    void Q_DECL_DEPRECATED installCategoryCatalog(Category category, const QString &name);
-
-    /*!
-     * \brief removes a translation catalog
-     * \deprecated This method is deprecated since 0.18
-     * It was needed to remove translation catalogs loaded for trid().
-     * trid() has been removed already from libdui, therefore this
-     * method has become useless.
-     */
-    void Q_DECL_DEPRECATED removeCategoryCatalog(Category category, const QString &name);
-
-    /*!
      * \brief Copies translations from another DuiLocale
      * the catalogs are reloaded based on the locale settings
      */
     void copyCatalogsFrom(const DuiLocale &other);
-
-    /*!
-     * \brief Searches the installed catalogs by name and returns true if found
-     * \deprecated This method is deprecated since 0.18
-     * It was needed to check whether translation catalogs were loaded for trid().
-     * trid() has been removed already from libdui, therefore this
-     * method has become useless.
-     */
-    bool Q_DECL_DEPRECATED hasCategoryCatalog(Category category, const QString &name);
 
     /*!
      * \brief installs a translation catalog
@@ -736,26 +704,6 @@ Q_SIGNALS:
     void localeSettingsChanged();
 
 protected:
-    /*!
-     * \brief loads the QTranslators for all current catalogs
-     * \deprecated since 0.19.4-2
-     * This will move into the private class!
-     */
-    void Q_DECL_DEPRECATED loadTrCatalogs();
-
-    /*!
-     * \brief Installs the translations into QCoreApplication
-     * \deprecated since 0.19.4-2
-     * This will move into the private class!
-     */
-    void Q_DECL_DEPRECATED insertTrToQCoreApp();
-
-    /*!
-     * \brief Removes the translations from QCoreApplication
-     * \deprecated since 0.19.4-2
-     * This should move into the private class!
-     */
-    void Q_DECL_DEPRECATED removeTrFromQCoreApp();
 
     /*!
      * \brief Returns the default locale object.

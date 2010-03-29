@@ -27,7 +27,7 @@
 
 namespace
 {
-// string presentations for DuiLocale::Collate and DuiLocale::Calendar
+// string presentations for DuiLocale::Collate and DuiLocale::CalendarType
 // Keep in sync!
 
     const char *const CollationNames[] = {"", "phonebook", "pinyin", "traditional", "stroke", "direct",
@@ -102,7 +102,7 @@ QString DuiIcuConversions::collationToString(DuiLocale::Collation coll)
     return CollationNames[coll];
 }
 
-QString DuiIcuConversions::calendarToString(DuiLocale::Calendar cal)
+QString DuiIcuConversions::calendarToString(DuiLocale::CalendarType cal)
 {
     if (static_cast<unsigned int>(cal) >= (sizeof(CalendarNames) / sizeof(char *))) {
         return "";
@@ -179,10 +179,10 @@ QString DuiIcuConversions::icuDatePatternEscaped(const QString &str)
 }
 
 icu::Locale DuiIcuConversions::createLocale(const QString &baseString,
-        DuiLocale::Calendar calendar,
+        DuiLocale::CalendarType calendarType,
         DuiLocale::Collation collation)
 {
-    // calendar and collation are appended as @keyword=value;keyword2=value2;
+    // calendarType and collation are appended as @keyword=value;keyword2=value2;
     // first create the attribute part keyword=value;...
     QString attributeAccu;
 
@@ -194,9 +194,9 @@ icu::Locale DuiIcuConversions::createLocale(const QString &baseString,
         attributeAccu.append(";");
     }
 
-    if (calendar != DuiLocale::DefaultCalendar) {
+    if (calendarType != DuiLocale::DefaultCalendar) {
         attributeAccu.append("calendar=");
-        QString calendarName = DuiIcuConversions::calendarToString(calendar);
+        QString calendarName = DuiIcuConversions::calendarToString(calendarType);
         attributeAccu.append(calendarName);
     }
 

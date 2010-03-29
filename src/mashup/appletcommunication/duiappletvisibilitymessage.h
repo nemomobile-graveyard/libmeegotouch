@@ -59,7 +59,7 @@ public:
      * is \c false.
      * \return the visibility.
      */
-    bool visible() const;
+    bool isVisible() const;
 
     /*!
      * Sets the visibility value of the message. Visible is \c true, invisible

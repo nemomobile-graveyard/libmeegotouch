@@ -21,7 +21,7 @@
 #include "duiappletmessagefactory.h"
 
 DuiAppletSetGeometryMessage::DuiAppletSetGeometryMessage(const QRectF &geometry, Qt::HANDLE handle) :
-    DuiAppletMessage(SET_GEOMETRY_MESSAGE),
+    DuiAppletMessage(SetGeometryMessage),
     _geometry(geometry),
     _handle(handle)
 {

@@ -249,6 +249,26 @@ DuiPhysics2DPanning *DuiPannableWidget::physics() const
     return d->physics;
 }
 
+void DuiPannableWidget::setPhysics(DuiPhysics2DPanning *newPhysics)
+{
+    Q_D(DuiPannableWidget);
+
+    if (!newPhysics) return;
+
+    delete d->physics;
+    d->physics = newPhysics;
+
+    connect(d->physics, SIGNAL(updatePosition(QPointF)),
+            this,       SLOT(updatePosition(QPointF)));
+
+    connect(d->physics, SIGNAL(panningStopped()),
+            this,       SIGNAL(panningStopped()));
+
+    emit physicsChanged();
+
+    setPosition(QPointF());
+    setRange(QRectF());
+}
 
 void DuiPannableWidget::setEnabled(bool enabled)
 {
@@ -707,7 +727,9 @@ void DuiPannableWidget::sendCancel(QGraphicsSceneMouseEvent *event)
 
 void DuiPannableWidget::setPanDirection(const Qt::Orientations &panDirection)
 {
+    Q_D(DuiPannableWidget);
     model()->setPanDirection(panDirection);
+    d->physics->setPanDirection(panDirection);
 }
 
 Qt::Orientations DuiPannableWidget::panDirection()

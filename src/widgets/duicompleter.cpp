@@ -457,15 +457,9 @@ void DuiCompleter::queryAll()
     d->match(-1);
 }
 
-void DuiCompleter::appear(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy)
+void DuiCompleter::appear(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)
 {
     DuiSceneWindow::appear(window, policy);
-    model()->setActive(true);
-}
-
-void DuiCompleter::appearNow(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    DuiSceneWindow::appearNow(window, policy);
     model()->setActive(true);
 }
 
@@ -474,20 +468,9 @@ void DuiCompleter::appear(DuiSceneWindow::DeletionPolicy policy)
     appear(0, policy);
 }
 
-void DuiCompleter::appearNow(DuiSceneWindow::DeletionPolicy policy)
-{
-    appearNow(0, policy);
-}
-
 void DuiCompleter::disappear()
 {
     DuiSceneWindow::disappear();
-    model()->setActive(false);
-}
-
-void DuiCompleter::disappearNow()
-{
-    DuiSceneWindow::disappearNow();
     model()->setActive(false);
 }
 

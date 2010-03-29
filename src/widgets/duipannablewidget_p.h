@@ -62,7 +62,7 @@ public:
 public:
 
     /*!
-     * \brief Internal method neccessary to correctly handle event positions.
+     * \brief Internal method necessary to correctly handle event positions.
      */
     void translateEventToItemCoordinates(const QGraphicsItem *srcItem,
                                          const QGraphicsItem *destItem,

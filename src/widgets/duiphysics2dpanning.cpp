@@ -28,19 +28,39 @@ static const int PanningTimelineDuration      = 1000000; /* in ms */
 //static const int PanningTimelineInterval      =      20; /* in ms */
 static const int PositionNoiseDampingDelta    =       2; /* in px */
 
-DuiPhysics2DIntegrationStrategy::~DuiPhysics2DIntegrationStrategy()
+DuiPhysics2DPanningPrivate::DuiPhysics2DPanningPrivate() :
+    range(QRectF(0.0, 0.0, 0.0, 0.0)),
+    posX(0.0),
+    posY(0.0),
+    velX(0.0),
+    velY(0.0),
+    pointerSpringX(0.0),
+    pointerSpringY(0.0),
+    sceneLastPos(QPointF()),
+    timeLine(new QTimeLine()),
+    currFrame(0),
+    pointerPressed(false),
+    pointerSpringK(0.0),
+    frictionC(0.0),
+    slideFrictionC(0.0),
+    borderSpringK(0.0),
+    borderFrictionC(0.0),
+    panDirection(0)
 {
-
 }
 
-void DuiPhysics2DIntegrationStrategy::integrate(qreal &pos,
-        qreal &vel,
-        qreal &pointerSpring,
-        qreal &acc,
-        qreal rangeStart,
-        qreal rangeEnd,
-        IntegrationData &data
-                                               )
+
+DuiPhysics2DPanningPrivate::~DuiPhysics2DPanningPrivate()
+{
+    delete timeLine;
+}
+
+void DuiPhysics2DPanningPrivate::integrate(qreal &pos,
+                                           qreal &vel,
+                                           qreal &pointerSpring,
+                                           qreal &acc,
+                                           qreal rangeStart,
+                                           qreal rangeEnd )
 {
     qreal force;
 
@@ -48,34 +68,34 @@ void DuiPhysics2DIntegrationStrategy::integrate(qreal &pos,
     if (pos >= rangeStart && pos <= rangeEnd) {
 
         // Inside range
-        if (data.pointer) {
-            force = -data.frictionC * vel;
+        if (pointerPressed) {
+            force = -frictionC * vel;
         } else {
-            force = -data.slideFrictionC * vel;
+            force = -slideFrictionC * vel;
         }
     } else {
         // Outside range (in border)
-        force = -data.borderFrictionC * vel;
+        force = -borderFrictionC * vel;
     }
 
     // Border springs
     if (pos < rangeStart) {
-        force += data.borderSpringK * (rangeStart - pos);
+        force += borderSpringK * (rangeStart - pos);
         //Special case - when the border is crossed,
         //we don't want the view to "bounce" from the border.
         //We snap in this place to rangeStart value;
-        if ((data.pointer == false) && (pos + vel + force >= rangeStart)) {
+        if ((pointerPressed == false) && (pos + vel + force >= rangeStart)) {
             vel = force = 0;
             pos = rangeStart;
         }
     }
 
     if (pos > rangeEnd) {
-        force += -data.borderSpringK * (pos - rangeEnd);
+        force += -borderSpringK * (pos - rangeEnd);
         //Special case - when the border is crossed
         //we don't want the view to "bounce" from the border.
         //We snap in this place to rangeEnd value;
-        if ((data.pointer == false) && (pos + vel + force <= rangeEnd)) {
+        if ((pointerPressed == false) && (pos + vel + force <= rangeEnd)) {
             vel = force = 0;
             pos = rangeEnd;
         }
@@ -83,10 +103,10 @@ void DuiPhysics2DIntegrationStrategy::integrate(qreal &pos,
 
     // Integration. Currently does not use time_delta or mass (assumed as 1.0)
 
-    if (data.pointer) {
+    if (pointerPressed) {
 
         // Damping of acceleration with pointer spring values.
-        force += data.pointerSpringK * pointerSpring;
+        force += pointerSpringK * pointerSpring;
         // Increasing the speed by the last movement of the pointer
         acc = force - pointerSpring;
         vel += acc;
@@ -106,41 +126,11 @@ void DuiPhysics2DIntegrationStrategy::integrate(qreal &pos,
     }
 }
 
-DuiPhysics2DPanningPrivate::DuiPhysics2DPanningPrivate(DuiPannableWidget *parentPannableWidget) :
-    parentPannableWidget(parentPannableWidget),
-    range(QRectF(0.0, 0.0, 0.0, 0.0)),
-    posX(0.0),
-    posY(0.0),
-    velX(0.0),
-    velY(0.0),
-    pointerSpringX(0.0),
-    pointerSpringY(0.0),
-    sceneLastPos(QPointF()),
-    timeLine(new QTimeLine()),
-    currFrame(0),
-    integrationStrategy(0)
-{
-    integrationData.pointerSpringK = 0.0;
-    integrationData.frictionC = 0.0;
-    integrationData.slideFrictionC = 0.0;
-    integrationData.borderSpringK = 0.0;
-    integrationData.borderFrictionC = 0.0;
-    integrationData.pointer = false;
-}
-
-
-DuiPhysics2DPanningPrivate::~DuiPhysics2DPanningPrivate()
-{
-    delete timeLine;
-}
-
-
-DuiPhysics2DPanning::DuiPhysics2DPanning(DuiPannableWidget *parentPannableWidget)
-    : QObject(),
-      d_ptr(new DuiPhysics2DPanningPrivate(parentPannableWidget))
+DuiPhysics2DPanning::DuiPhysics2DPanning(QObject *parent)
+    : QObject(parent),
+      d_ptr(new DuiPhysics2DPanningPrivate())
 {
     Q_D(DuiPhysics2DPanning);
-    d->integrationStrategy = new DuiPhysics2DIntegrationStrategy();
     connect(d->timeLine, SIGNAL(frameChanged(int)),
             this, SLOT(integrator(int)));
 }
@@ -148,24 +138,67 @@ DuiPhysics2DPanning::DuiPhysics2DPanning(DuiPannableWidget *parentPannableWidget
 
 DuiPhysics2DPanning::~DuiPhysics2DPanning()
 {
-    Q_D(DuiPhysics2DPanning);
-    delete d->integrationStrategy;
     delete d_ptr;
 }
 
-void DuiPhysics2DPanning::setIntegrationStrategy(DuiPhysics2DIntegrationStrategy *strategy)
+Qt::Orientations DuiPhysics2DPanning::panDirection() const
 {
-    if (!strategy) return;
-
-    Q_D(DuiPhysics2DPanning);
-    delete d->integrationStrategy;
-    d->integrationStrategy = strategy;
+    return d_ptr->panDirection;
 }
 
-DuiPhysics2DIntegrationStrategy *DuiPhysics2DPanning::integrationStrategy() const
+void DuiPhysics2DPanning::setPanDirection(Qt::Orientations direction)
 {
-    Q_D(const DuiPhysics2DPanning);
-    return d->integrationStrategy;
+    d_ptr->panDirection = direction;
+}
+
+qreal DuiPhysics2DPanning::pointerSpringK() const
+{
+    return d_ptr->pointerSpringK;
+}
+
+void DuiPhysics2DPanning::setPointerSpringK(qreal value)
+{
+    d_ptr->pointerSpringK = value;
+}
+
+qreal DuiPhysics2DPanning::friction() const
+{
+    return d_ptr->frictionC;
+}
+
+void DuiPhysics2DPanning::setFriction(qreal value)
+{
+    d_ptr->frictionC = value;
+}
+
+qreal DuiPhysics2DPanning::slidingFriction() const
+{
+    return d_ptr->slideFrictionC;
+}
+
+void DuiPhysics2DPanning::setSlidingFriction(qreal value)
+{
+    d_ptr->slideFrictionC = value;
+}
+
+qreal DuiPhysics2DPanning::borderSpringK() const
+{
+    return d_ptr->borderSpringK;
+}
+
+void DuiPhysics2DPanning::setBorderSpringK(qreal value)
+{
+    d_ptr->borderSpringK = value;
+}
+
+qreal DuiPhysics2DPanning::borderFriction() const
+{
+    return d_ptr->borderFrictionC;
+}
+
+void DuiPhysics2DPanning::setBorderFriction(qreal value)
+{
+    d_ptr->borderFrictionC = value;
 }
 
 void DuiPhysics2DPanning::start()
@@ -271,7 +304,7 @@ void DuiPhysics2DPanning::pointerPress(const QPointF &pos)
     // Enables the pointer spring, sets it to zero length and
     // starts the integrator
 
-    d->integrationData.pointer = true;
+    d->pointerPressed = true;
     d->sceneLastPos = pos;
 
     d->pointerSpringX = 0.0;
@@ -301,32 +334,7 @@ void DuiPhysics2DPanning::pointerRelease()
 
     // Disables the pointer spring
 
-    d->integrationData.pointer = false;
-}
-
-void DuiPhysics2DPanning::setPointerSpringK(qreal value)
-{
-    d_ptr->integrationData.pointerSpringK = value;
-}
-
-void DuiPhysics2DPanning::setFriction(qreal value)
-{
-    d_ptr->integrationData.frictionC = value;
-}
-
-void DuiPhysics2DPanning::setSlidingFriction(qreal value)
-{
-    d_ptr->integrationData.slideFrictionC = value;
-}
-
-void DuiPhysics2DPanning::setBorderSpringK(qreal value)
-{
-    d_ptr->integrationData.borderSpringK = value;
-}
-
-void DuiPhysics2DPanning::setBorderFriction(qreal value)
-{
-    d_ptr->integrationData.borderFrictionC = value;
+    d->pointerPressed = false;
 }
 
 void DuiPhysics2DPanning::integrator(int frame)
@@ -343,30 +351,28 @@ void DuiPhysics2DPanning::integrator(int frame)
 
     printf("frame %d: %d\n", frame, d->timeLine->currentTime());
     while (frame > d->currFrame) {
-        if (d->parentPannableWidget->panDirection().testFlag(Qt::Horizontal)) {
-            d->integrationStrategy->integrate(d->posX,
-                                              d->velX,
-                                              d->pointerSpringX,
-                                              accX,
-                                              d->range.left(),
-                                              d->range.right(),
-                                              d->integrationData
-                                             );
+        if (d->panDirection.testFlag(Qt::Horizontal)) {
+            d->integrate(d->posX,
+                         d->velX,
+                         d->pointerSpringX,
+                         accX,
+                         d->range.left(),
+                         d->range.right()
+                         );
         } else {
             d->posX = 0.0;
             d->velX = 0.0;
             accX = 0.0;
         }
 
-        if (d->parentPannableWidget->panDirection().testFlag(Qt::Vertical)) {
-            d->integrationStrategy->integrate(d->posY,
-                                              d->velY,
-                                              d->pointerSpringY,
-                                              accY,
-                                              d->range.top(),
-                                              d->range.bottom(),
-                                              d->integrationData
-                                             );
+        if (d->panDirection.testFlag(Qt::Vertical)) {
+            d->integrate(d->posY,
+                         d->velY,
+                         d->pointerSpringY,
+                         accY,
+                         d->range.top(),
+                         d->range.bottom()
+                         );
 
         } else {
             d->posY = 0.0;
@@ -376,10 +382,10 @@ void DuiPhysics2DPanning::integrator(int frame)
 
         // Checking if the viewport is currently dragged beyond it's borders and the integration should
         // continue even though the speed is low.
-        bool inRangeX = (d->parentPannableWidget->panDirection().testFlag(Qt::Horizontal) == false) ||
+        bool inRangeX = (d->panDirection.testFlag(Qt::Horizontal) == false) ||
                         (d->posX >= d->range.left() && d->posX <= d->range.right());
 
-        bool inRangeY = (d->parentPannableWidget->panDirection().testFlag(Qt::Vertical) == false) ||
+        bool inRangeY = (d->panDirection.testFlag(Qt::Vertical) == false) ||
                         (d->posY >= d->range.top()  && d->posY <= d->range.bottom());
 
         // Integration stop condition.
@@ -388,7 +394,7 @@ void DuiPhysics2DPanning::integrator(int frame)
                 qAbs(accY) < 1 &&
                 qAbs(d->velX) < 1 &&
                 qAbs(d->velY) < 1 &&
-                !d->integrationData.pointer) {
+                !d->pointerPressed) {
             d->timeLine->stop();
 
             emit panningStopped();

@@ -390,14 +390,14 @@ public Q_SLOTS:
      * \brief Copies the selected text to the clipboard.
      * If there is no selected text nothing happens.
      */
-    void copy();
+    virtual void copy();
 
     /*!
      * \brief Pastes the plain text from the clipboard into the text edit at the current cursor position.
      * If there is no text in the clipboard nothing happens.
      * If clipboard content is rejected by assigned validator then signal pasteFailed() is emitted.
      */
-    void paste();
+    virtual void paste();
 
 Q_SIGNALS:
     /**

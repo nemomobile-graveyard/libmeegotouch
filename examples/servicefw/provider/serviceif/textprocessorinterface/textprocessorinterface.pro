@@ -2,7 +2,7 @@ DUIROOT = ../../../../..
 include($$DUIROOT/mkspecs/common.pri)
 
 DUILIB = $$DUIROOT/lib
-DUISIF = $$DUIROOT/demos/servicefw
+DUISIF = $$DUIROOT/examples/servicefw
 DUISFW = $$DUIROOT/duiservicemapper
 DUISIFLIB = $$DUISIF/lib
 DUISIFINCLUDE = $$DUISIF/include

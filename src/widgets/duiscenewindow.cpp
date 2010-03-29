@@ -43,59 +43,12 @@ DuiSceneWindowPrivate::DuiSceneWindowPrivate()
     windowType = DuiSceneWindow::PlainSceneWindow;
 }
 
-void DuiSceneWindowPrivate::appear(bool now, DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    Q_Q(DuiSceneWindow);
-
-    if (!window) {
-        window = DuiApplication::activeWindow();
-        if (!window) {
-            // TODO: Create and show() a Dui[Application]Window on the fly?
-            duiWarning("DuiSceneWindow")
-                    << "Construct and show DuiWindow before showing a scene window";
-            return;
-        }
-    }
-
-    if (now) {
-        window->sceneManager()->appearSceneWindowNow(q, policy);
-    } else {
-        window->sceneManager()->appearSceneWindow(q, policy);
-    }
-}
-
 DuiSceneWindow::DuiSceneWindow(QGraphicsItem *parent) :
     DuiWidgetController(new DuiSceneWindowPrivate, new DuiSceneWindowModel, parent)
 {
     Q_D(DuiSceneWindow);
 
     d->windowType = PlainSceneWindow;
-
-    // TODO: Remove this along with deprecated windowShown() and windowHidden()
-    connect(this, SIGNAL(appeared()), SIGNAL(windowShown()));
-    connect(this, SIGNAL(disappeared()), SIGNAL(windowHidden()));
-}
-
-bool DuiSceneWindowPrivate::dismiss(bool now)
-{
-    Q_Q(DuiSceneWindow);
-
-    DuiDismissEvent dismissEvent;
-    QApplication::sendEvent(q, &dismissEvent);
-
-    if (!dismissEvent.isAccepted()) {
-        return false;
-    }
-
-    if (q->sceneManager()) {
-        if (now) {
-            q->sceneManager()->dismissSceneWindowNow(q);
-        } else {
-            q->sceneManager()->dismissSceneWindow(q);
-        }
-    }
-
-    return true;
 }
 
 
@@ -106,10 +59,6 @@ DuiSceneWindow::DuiSceneWindow(DuiSceneWindowPrivate *dd, DuiSceneWindowModel *m
     setViewType(viewType);
 
     d->windowType = windowType;
-
-    // TODO: Remove this along with deprecated windowShown() and windowHidden()
-    connect(this, SIGNAL(appeared()), SIGNAL(windowShown()));
-    connect(this, SIGNAL(disappeared()), SIGNAL(windowHidden()));
 }
 
 DuiSceneWindow::~DuiSceneWindow()
@@ -144,38 +93,28 @@ void DuiSceneWindow::setManagedManually(bool managedManually)
 
 void DuiSceneWindow::appear(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)
 {
-    Q_D(DuiSceneWindow);
-    d->appear(false, window, policy);
-}
+    if (!window) {
+        window = DuiApplication::activeWindow();
+        if (!window) {
+            // TODO: Create and show() a Dui[Application]Window on the fly?
+            duiWarning("DuiSceneWindow")
+                    << "Construct and show DuiWindow before showing a scene window";
+            return;
+        }
+    }
 
-void DuiSceneWindow::appearNow(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    Q_D(DuiSceneWindow);
-    d->appear(true, window, policy);
+    window->sceneManager()->appearSceneWindow(this, policy);
 }
 
 void DuiSceneWindow::appear(DuiSceneWindow::DeletionPolicy policy)
 {
-    Q_D(DuiSceneWindow);
-    d->appear(false, 0, policy);
-}
-
-void DuiSceneWindow::appearNow(DuiSceneWindow::DeletionPolicy policy)
-{
-    Q_D(DuiSceneWindow);
-    d->appear(true, 0, policy);
+    appear(0, policy);
 }
 
 void DuiSceneWindow::disappear()
 {
     if (sceneManager())
         sceneManager()->disappearSceneWindow(this);
-}
-
-void DuiSceneWindow::disappearNow()
-{
-    if (sceneManager())
-        sceneManager()->disappearSceneWindowNow(this);
 }
 
 Qt::Alignment DuiSceneWindow::alignment() const
@@ -224,14 +163,18 @@ QPointF DuiSceneWindow::offset() const
 
 bool DuiSceneWindow::dismiss()
 {
-    Q_D(DuiSceneWindow);
-    return d->dismiss(false);
-}
+    DuiDismissEvent dismissEvent;
+    QApplication::sendEvent(this, &dismissEvent);
 
-bool DuiSceneWindow::dismissNow()
-{
-    Q_D(DuiSceneWindow);
-    return d->dismiss(true);
+    if (!dismissEvent.isAccepted()) {
+        return false;
+    }
+
+    if (sceneManager()) {
+        sceneManager()->dismissSceneWindow(this);
+    }
+
+    return true;
 }
 
 void DuiSceneWindow::dismissEvent(DuiDismissEvent *event)

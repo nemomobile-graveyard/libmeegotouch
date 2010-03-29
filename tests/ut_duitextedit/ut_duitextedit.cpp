@@ -330,7 +330,7 @@ void Ut_DuiTextEdit::testFocusInEvent()
     DuiTextEdit *m_subject = new DuiTextEdit(DuiTextEditModel::MultiLine, "");
 
     page->setCentralWidget(m_subject);
-    page->appearNow();
+    m_appWindow->sceneManager()->appearSceneWindowNow(page);
 
     // Set up spies on gainedFocus and lostFocus signals
     QSignalSpy spyGainedFocus(m_subject, SIGNAL(gainedFocus(Qt::FocusReason)));

@@ -46,9 +46,10 @@ protected:
     virtual void applyStyle();
     //! \reimp_end
 
-protected:
-    DuiPannableWidgetViewPrivate *const d_ptr;
 private:
+
+    Q_PRIVATE_SLOT(d_func(), void _q_applyStyleToPhysics())
+
     Q_DECLARE_PRIVATE(DuiPannableWidgetView)
     Q_DISABLE_COPY(DuiPannableWidgetView)
 };

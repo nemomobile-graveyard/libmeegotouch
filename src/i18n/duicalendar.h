@@ -32,7 +32,7 @@ class QDate;
 class DUI_EXPORT DuiCalendar
 {
 public:
-    explicit DuiCalendar(DuiLocale::Calendar calendar = DuiLocale::DefaultCalendar,
+    explicit DuiCalendar(DuiLocale::CalendarType calendarType = DuiLocale::DefaultCalendar,
                          const QString &timezone = QString());
     explicit DuiCalendar(const DuiLocale &duiLocale, const QString &timezone = QString());
 
@@ -45,7 +45,7 @@ public:
 
     bool isValid() const;
 
-    DuiLocale::Calendar type() const;
+    DuiLocale::CalendarType type() const;
 
     // TODO: do we need to set era, week of year, week of month, day of year etc?
 

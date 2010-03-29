@@ -41,7 +41,7 @@ void Ut_DuiAppletSetGeometryMessage::cleanup()
 
 void Ut_DuiAppletSetGeometryMessage::testType()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::SET_GEOMETRY_MESSAGE);
+    QCOMPARE(message->type(), DuiAppletMessage::SetGeometryMessage);
 }
 
 void Ut_DuiAppletSetGeometryMessage::testGeometryProperty()

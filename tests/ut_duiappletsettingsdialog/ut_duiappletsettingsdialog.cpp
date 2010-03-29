@@ -89,26 +89,22 @@ void Ut_DuiAppletSettingsDialog::init()
     dialogCreated = false;
     containerTitle.clear();
     gDuiAppletSettingsStub->stubReset();
-
-    m_subject = new DuiAppletSettingsDialog(*appletSettings);
 }
 
 void Ut_DuiAppletSettingsDialog::cleanup()
 {
-    delete m_subject;
-    m_subject = NULL;
 }
 
 void Ut_DuiAppletSettingsDialog::testSettingsDialogCreation()
 {
     // Check that dialog is not created when there are no applet settings present
     gDuiAppletSettingsStub->stubSetReturnValue("hasSettings", false);
-    m_subject->exec(DuiAppletSettings("foo", "foo"));
+    DuiAppletSettingsDialog::exec(DuiAppletSettings("foo", "foo"));
     QCOMPARE(dialogCreated, false);
 
     // Check that dialog is created when there are instance applet settings present
     gDuiAppletSettingsStub->stubSetReturnValue("hasSettings", true);
-    m_subject->exec(DuiAppletSettings("foo", "foo"));
+    DuiAppletSettingsDialog::exec(DuiAppletSettings("foo", "foo"));
     QCOMPARE(dialogCreated, true);
 }
 
@@ -117,7 +113,7 @@ void Ut_DuiAppletSettingsDialog::testSettingsContainerCreation()
     // Check that when instance binaries are present, widgets are created in a container
     gDuiAppletSettingsStub->stubSetReturnValue("hasSettings", true);
     gDuiAppletSettingsStub->stubSetReturnValue("instanceSettingsBinary", &instanceSettingsBinary);
-    m_subject->exec(DuiAppletSettings("foo", "foo"));
+    DuiAppletSettingsDialog::exec(DuiAppletSettings("foo", "foo"));
     QCOMPARE(instanceSettingsWidgetsCount, 1);
     QCOMPARE(globalSettingsWidgetsCount, 0);
     // the message id used here comes from
@@ -131,7 +127,7 @@ void Ut_DuiAppletSettingsDialog::testSettingsContainerCreation()
     gDuiAppletSettingsStub->stubReset();
     gDuiAppletSettingsStub->stubSetReturnValue("hasSettings", true);
     gDuiAppletSettingsStub->stubSetReturnValue("globalSettingsBinary", &globalSettingsBinary);
-    m_subject->exec(DuiAppletSettings("foo", "foo"));
+    DuiAppletSettingsDialog::exec(DuiAppletSettings("foo", "foo"));
     QCOMPARE(instanceSettingsWidgetsCount, 0);
     QCOMPARE(globalSettingsWidgetsCount, 1);
     // the message id used here comes from

@@ -58,7 +58,7 @@ DuiProgressIndicatorBarView::DuiProgressIndicatorBarView(DuiProgressIndicator *c
     Q_D(DuiProgressIndicatorBarView);
 
     d->controller = controller;
-    connect(controller, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChangedSlot(bool)));
+    connect(controller, SIGNAL(visibleChanged()), this, SLOT(visibilityChangedSlot()));
 
 }
 
@@ -213,11 +213,11 @@ void DuiProgressIndicatorBarView::drawContents(QPainter *painter, const QStyleOp
     }
 }
 
-void DuiProgressIndicatorBarView::visibilityChangedSlot(bool visible)
+void DuiProgressIndicatorBarView::visibilityChangedSlot()
 {
     Q_D(DuiProgressIndicatorBarView);
     if (d->timer) {
-        if (visible) {
+        if (d->controller->isVisible()) {
             d->timer->start(ProgressBarUpdateInterval);
         } else {
             d->timer->stop();

@@ -20,24 +20,17 @@
 #ifndef DUIPHYSICS2DPANNING_P_H
 #define DUIPHYSICS2DPANNING_P_H
 
-#include <QSizeF>
 #include <QRectF>
 #include <QPointF>
 #include "duiphysics2dpanning.h"
 
-class DuiStyle;
 class QTimeLine;
-class DuiPannableWidget;
 
 class DuiPhysics2DPanningPrivate
 {
 public:
-    DuiPhysics2DPanningPrivate(DuiPannableWidget *parentPannableWidget);
+    DuiPhysics2DPanningPrivate();
     virtual ~DuiPhysics2DPanningPrivate();
-
-    DuiPannableWidget *parentPannableWidget;
-
-    DuiPhysics2DIntegrationStrategy::IntegrationData   integrationData;
 
     QRectF  range;
     qreal   posX;
@@ -51,7 +44,23 @@ public:
     QTimeLine *timeLine;
     int currFrame;
 
-    DuiPhysics2DIntegrationStrategy *integrationStrategy;
+    // Integration algorithm constants
+    bool  pointerPressed;
+    qreal pointerSpringK;
+    qreal frictionC;
+    qreal slideFrictionC;
+    qreal borderSpringK;
+    qreal borderFrictionC;
+    Qt::Orientations panDirection;
+
+    void integrate(qreal &position,
+                   qreal &velocity,
+                   qreal &pointerSpring,
+                   qreal &acceleration,
+                   qreal rangeStart,
+                   qreal rangeEnd
+                   );
+
 };
 
 #endif

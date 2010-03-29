@@ -3,31 +3,7 @@
 
 \subsection New
 
-- DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be
-  displayEntered() and displayExited()
-
-- DuiComboBox's  down property removed.
-
-- Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.
-
-- DuiApplicationPage escapeMode() property. Replaces escapeButtonMode() property.
-  Previously, the following code was necessary to implement a regular parentPage -> childPage navigation:
-
-    <CODE>
-    childPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);
-    childPage->connect(childPage, SIGNAL(backButtonClicked()), SLOT(dismiss()));
-    childPage->appear(DestroyWhenDismissed);
-    </CODE>
-
-  Now only one line is needed:
-
-    <CODE>
-    childPage->appear(DestroyWhenDismissed);
-    </CODE>
-
-  Manual handling and wiring is still possible, but it's not the default behavior.
-
-- DuiWidget got event handlers for gestures:
+- DuiWidget now has event handlers for gestures:
     - DuiWidget::gestureEvent()
     - DuiWidget::tapAndHoldGestureEvent()
     - DuiWidget::panGestureEvent()
@@ -35,11 +11,89 @@
     - DuiWidget::tapGestureEvent()
     - DuiWidget::swipeGestureEvent()
 
+- The DuiApplicationPage's DuiPannableViewport is now accessible through the pannableViewport() method.
+
+- New DuiApplicationPage escapeMode() property. Replaces the old escapeButtonMode() property.
+  Previously, the following code was necessary to implement a regular parentPage -> childPage navigation:
+
+    <CODE>
+    childPage->setEscapeButtonMode(DuiEscapeButtonPanelModel::BackMode);<BR>
+    childPage->connect(childPage, SIGNAL(backButtonClicked()), SLOT(dismiss()));<BR>
+    childPage->appear(DestroyWhenDismissed);<BR>
+    </CODE>
+
+  Now only one line is needed:
+
+    <CODE>
+    childPage->appear(DestroyWhenDismissed);<BR>
+    </CODE>
+
+  Manual handling and wiring is still possible, but it's not the default behavior.
+
+- DuiAppletSettingsDialog is now reduced to a single static function: exec().
+  Do not instantiate DuiAppletSettingsDialog any more; use the static function directly:
+
+    <CODE>
+    // Old usage<BR>
+    DuiAppletSettingsDialog dialog;<BR>
+    dialog.exec(mySettings);<BR>
+    </CODE>
+
+    <CODE>
+    // New usage<BR>
+    DuiAppletSettingsDialog::exec(mySettings);<BR>
+    </CODE>
+
+- When a scene is off display, all scene window transitions (appearance, disappearance,
+  dismissal) on it will be done immediately by the scene manager (instead of being animated).
+  Check DuiSceneManager::appearSceneWindow() documentation for more information.
+
+- Prestarting functionality extended to support multi-window applications. New enums
+  Dui::LazyShutdownMultiWindow and Dui::TerminateOnCloseMultiWindow to select wanted mode.
+- static void DuiApplication::setPrestarted(bool) to manually force release/restore if
+  a custom D-Bus service is used to show a specific window.
+- DuiWindow::setCloseOnLazyShutdown(bool) (and bool closeOnLazyShutdown() const) to
+  force close instead of hide during lazy shutdown.
+
 \subsection removed Removed or Renamed
+
+- Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.
+
+- DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be
+  displayEntered() and displayExited()
+
+- DuiActionProvider class removed. There was no implementation for the API.
+
+- DuiComboBox's down property removed.
+
+- DuiApplicationPage method renaming:
+   - pannableAreaInteractive -> isPannable
+   - setPannableAreaInteractive -> setPannable
+   - pannableAreaDirection -> panningDirection
+   - setPannableAreaDirection -> setPanningDirection
+
+- Removed DuiSceneWindow::windowShown, DuiSceneWindow::windowHidden signals, use appeared and disappeared instead
+  (was deprecated since 0.19)
+- Removed DuiSceneWindowView::dismissAnimation
+  (was deprecated since 0.18)
+- Removed void DuiLocale::installCategoryCatalog(Category category, const QString &name);
+  (was deprecated since 0.18)
+- Removed void DuiLocale::removeCategoryCatalog(Category category, const QString &name);
+  (was deprecated since 0.18)
+- Removed bool DuiLocale::hasCategoryCatalog(Category category, const QString &name);
+  (was deprecated since 0.18)
+- Removed void DuiLocale::loadTrCatalogs(); (was deprecated since 0.19.4-2)
+- Removed void DuiLocale::insertTrToQCoreApp(); (was deprecated since 0.19.4-2)
+- Removed void DuiLocale::removeTrFromQCoreApp(); (was deprecated since 0.19.4-2)
+- Removed support for unneeded gconf keys from DuiLocale.
+  The keys /Dui/i18n/Country, /Dui/i18n/Script, and /Dui/i18n/Variant
+  were never really used in DuiLocale.  These don’t make sense as
+  separate keys if they are only parts of a full ICU locale name because it
+  is not possible to combine them arbitrarily to a full locale name.
 - escapeButtonMode() property was removed from DuiApplicationPage. Use escapeMode() instead.
 - DuiDialog::windowModal() was renamed to DuiDialog::systemModal().
 - DuiApplicationPage::pageTitleChanged(DuiApplicationPage *, const QString &title) signal was removed.
-- restored one-argument DuiWindow::setOrientationAngle(Dui::OrientationAngle), the rotation animation
+- Restored one-argument DuiWindow::setOrientationAngle(Dui::OrientationAngle), the rotation animation
   is enabled by default and it's disabled if the window is hidden (DuiWindow::isVisible() returns false).
 - Dui::OrientationChangeMode was renamed to DuiSceneManager::TransitionMode,
   Dui::AnimatedOrientationChange was renamed to DuiSceneManager::AnimatedTransition,
@@ -51,11 +105,26 @@
   DuiSceneManager::closeWindow() was renamed to DuiSceneManager::dismissSceneWindow(),
   DuiSceneManager::closeWindowNow() was renamed to DuiSceneManager::dismissSceneWindowNow()
 - DuiWindow::keepCurrentOrientation property was removed
-
 - DuiWindow::isOnDisplay() and DuiWidget::isOnDisplay() are no longer virtual. Those
   methods shouldn't be overridden.
 - DuiApplicationPage, DuiContainer, DuiContainerModel, DuiDialog, DuiDialogModel: centralWidget property type changed to QGraphicsWidget.
 - DuiExtensionAreaModel: DataStoreMap type changed to QMap<QGraphicsWidget *, DuiDataStore *>.
+- DuiWidget::visibilityChanged(bool visibility) signal removed, use QGraphicsWidget::visibleChanged() instead.
+- enum DuiLocale::Calendar was renamed to DuiLocale::CalendarType.
+- DuiLocale::calendar() was renamed to DuiLocale::calendarType().
+- DuiLocale::setCalendar() was renamed to DuiLocale::setCalendarType().
+- DuiAppletVisibilityMessage::visible() was renamed to DuiAppletVisibilityMessage::isVisible()
+- All-caps enum DuiAppletMessageType values were renamed to CamelCase:
+  - DuiAppletMessage::VISIBILITY_MESSAGE was renamed to DuiAppletMessage::VisibilityMessage
+  - DuiAppletMessage::ORIENTATION_MESSAGE was renamed to DuiAppletMessage::OrientationMessage
+  - ...
+  Use the supplied libdui/tools/migration-scripts/migrate_duiappletmessagetype 
+  script for automatic replacement.
+- DuiSceneWindow::appearNow(), DuiSceneWindow::disappearNow(), DuiSceneWindow::dismissNow() -
+  use DuiSceneManager API to forcibly have scene window transitions without animations.
+- DuiDialog::DuiDialog(title, centralWidget, standardButtons) was removed.
+  Use DuiDialog::DuiDialog(title, standardButtons) and DuiDialog::setCentralWidget() instead.
+- Removed Dui::inputEnabledQuery (was deprecated in 0.16)
 
 \section v0190
 

@@ -7,7 +7,7 @@ Standards-Version: 3.7.2
 
 Package: libdui0
 Architecture: any
-Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libdui-l10n-engineering-english (= ${Source-Version}), dbus-x11, duitheme (>= 0.19.7)
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libdui-l10n-engineering-english (= ${Source-Version}), dbus-x11, duitheme (>= 0.20.0~)
 Provides: libdui
 Conflicts: libdui
 Suggests: libdui-l10n-ar, libdui-l10n-de, libdui-l10n-en, libdui-l10n-fi, libdui-l10n-ur, libdui-l10n-zh-cn

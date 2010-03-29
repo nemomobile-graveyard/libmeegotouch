@@ -54,7 +54,7 @@ class DUI_EXPORT DuiSceneWindow : public DuiWidgetController
 
 public:
     /*!
-     * This enum defines how to handle scene window after hiding it using disappear() or disappearNow().
+     * This enum defines how to handle scene window after hiding it using disappear() or dismiss().
      */
     enum DeletionPolicy {
         KeepWhenDone,    //!< Window is kept alive after being dismissed or disappeared
@@ -101,58 +101,35 @@ public:
 
 public Q_SLOTS:
     /*!
-     * Shows the scene window on the window specified by \a window and registers
-     * it in the associated DuiSceneManager. Uses animation to show the window.
+     * Makes the scene window appear on \a window and registers it with the associated
+     * DuiSceneManager.
+     *
      * \param window    The window on which the scene window is going to be shown.
      * \param policy    Deletion policy, defines the ownership for this window
      *
-     * \sa appearNow()
+     * \sa DuiSceneManager::appearSceneWindow()
      */
     virtual void appear(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
 
     /*!
-     * Shows the scene window on the window specified by \a window and registers
-     * it in the associated DuiSceneManager. Doesn't use the animation to show the window.
-     * \param window    The window on which the scene window is going to be shown.
+     * Makes the scene window appear on the currently active window and registers
+     * it with the associated DuiSceneManager.
      * \param policy    Deletion policy, defines the ownership for this window
      *
-     * \sa appear()
-     */
-    virtual void appearNow(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * Shows the scene window on the currently active window and registers
-     * it in the associated DuiSceneManager. Uses the animation to show the window.
-     * \param policy    Deletion policy, defines the ownership for this window
-     *
-     * \sa appearNow(), DuiApplication::activeWindow()
+     * \sa DuiApplication::activeWindow(), DuiSceneManager::appearSceneWindow()
      */
     virtual void appear(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
 
     /*!
-     * Shows the scene window on the currently active window and registers
-     * it in the associated DuiSceneManager. Doesn't use the animation to show the window.
-     * \param policy    Deletion policy, defines the ownership for this window
+     * Makes this scene window disappear and unregisters it from the associated
+     * DuiSceneManager.
      *
-     * \sa appear(), DuiApplication::activeWindow()
-     */
-    virtual void appearNow(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * Hides this window and unregisters it from the DuiSceneManager.
-     * Uses the associated animation to hide the window.
+     * This is the same as calling:
+     * <code>sceneWindow->sceneManager()->disappearSceneWindow(sceneWindow);</code>
      *
-     * \sa disappearNow()
+     * \sa DuiSceneManager::disappearSceneWindow()
      */
     virtual void disappear();
-
-    /*!
-     * Hides this window and unregisters it from the DuiSceneManager.
-     * Doesn't use the animation to hide the window.
-     *
-     * \sa disappear()
-     */
-    virtual void disappearNow();
 
     /* !
      * \brief Dismisses the scene window.
@@ -162,25 +139,16 @@ public Q_SLOTS:
      * not accept the event. If the event was ignored, nothing happens. If the event
      * was accepted, it will disappear() the scene window.
      *
-     * If DestroyWhenDone was used on the last appear() or appearNow() call and
+     * If DestroyWhenDone was used on the last appear() call and
      * the event was accepted, the scene window will be deleted after its
      * disappearance is finished.
      *
      * Please refer to DuiDismissEvent documentation for more information.
      *
-     * \sa dismissNow(), dismissEvent(), disappear(), deleteWhenDone()
+     * \sa dismissNow(), dismissEvent(), disappear(), deleteWhenDone(),
+     *     DuiSceneManager::dismissSceneWindow()
      */
     bool dismiss();
-
-    /* !
-     * \brief Dismisses the scene window immediately.
-     *
-     * Same as dismiss() differing only that it will cause disappearNow() to be called
-     * if event is accepted instead of disappear()
-     *
-     * \sa dismiss(), disappearNow()
-     */
-    bool dismissNow();
 
 public:
     /*!
@@ -219,28 +187,14 @@ public:
 
 Q_SIGNALS:
     /*!
-        \brief Emitted when the show animation of the scene window has been finished.
-        \deprecated Since 0.19. Use appeared() instead.
-     */
-    // TODO: check if these should be transferred to DuiWidgetController
-    // as the showAnimation and hideAnimation are stored in there.
-    void windowShown() const;
-
-    /*!
-        \brief windowHidden() signal is emitted when the hide animation of the scene window has been finished.
-        \deprecated Since 0.19. Use disappeared() instead.
-     */
-    void windowHidden() const;
-
-    /*!
         \brief Emitted when the scene window has finished its appearance transition.
-        \sa appear(), appearNow()
+        \sa appear()
      */
     void appeared();
 
     /*!
         \brief Emitted when the scene window has finished its disappearance transition.
-        \sa disappear(), disappearNow()
+        \sa disappear()
      */
     void disappeared();
 

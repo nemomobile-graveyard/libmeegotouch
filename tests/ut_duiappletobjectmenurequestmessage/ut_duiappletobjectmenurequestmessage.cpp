@@ -41,7 +41,7 @@ void Ut_DuiAppletObjectMenuRequestMessage::cleanup()
 
 void Ut_DuiAppletObjectMenuRequestMessage::testType()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::OBJECT_MENU_REQUEST_MESSAGE);
+    QCOMPARE(message->type(), DuiAppletMessage::ObjectMenuRequestMessage);
 }
 
 void Ut_DuiAppletObjectMenuRequestMessage::testSerialization()

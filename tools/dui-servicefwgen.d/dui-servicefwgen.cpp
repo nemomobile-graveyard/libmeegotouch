@@ -831,7 +831,7 @@ void processAdaptorCppFile()
 "    DuiApplication::instance()->activeWindow()->setWindowTitle( windowTitle );\n"\
 "    DuiApplicationWindow *appWindow = DuiApplication::activeApplicationWindow();\n"\
 "    if (appWindow != 0) {\n"\
-"        appWindow->currentPage()->setEscapeButtonMode( DuiEscapeButtonPanelModel::BackMode );\n"\
+"        appWindow->currentPage()->setEscapeMode( DuiApplicationPageModel::EscapeManualBack );\n"\
 "        // connect to the back button - assumes the above 'showImage' opens a\n"\
 "        // new window and so the window referred to below is already the top one\n"\
 "        connect(appWindow->currentPage(), SIGNAL(backButtonClicked()),\n"\

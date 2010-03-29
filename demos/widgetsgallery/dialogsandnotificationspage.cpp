@@ -86,9 +86,10 @@ void DialogsAndNotificationsPage::openQuestionDialog()
     dialog = new DuiDialog(
         //%  "Question Dialog Title"
         qtTrId("xx_dialogs_and_notifications_question_dialog_title"),
-        //% "Lorem ipsum dolor sit amet?"
-        new DuiLabel(qtTrId("xx_dialogs_and_notifications_question_dialog_content")),
         Dui::YesButton | Dui::NoButton);
+    dialog->setCentralWidget(
+        //% "Lorem ipsum dolor sit amet?"
+        new DuiLabel(qtTrId("xx_dialogs_and_notifications_question_dialog_content")));
     dialog->exec();
 }
 
@@ -110,8 +111,8 @@ void DialogsAndNotificationsPage::openEntryDialog()
         delete dialog;
     //% "Please enter your name"
     dialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_entry_dialog_title"),
-                           centralWidget,
                            Dui::OkButton | Dui::ResetButton);
+    dialog->setCentralWidget(centralWidget);
 
     dialog->exec();
 }
@@ -124,7 +125,8 @@ void DialogsAndNotificationsPage::openLongDialog()
     if (dialog != NULL)
         delete dialog;
     //% "Select printer"
-    dialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), centralWidget, Dui::CancelButton);
+    dialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), Dui::CancelButton);
+    dialog->setCentralWidget(centralWidget);
     DuiButton *button = 0;
 
     centralWidget->setLayout(layout);
@@ -176,7 +178,8 @@ void DialogsAndNotificationsPage::openStackedDialogs()
     //% "Click to spawn a nested dialog"
     DuiButton *button = new DuiButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_button"));
     //% "Stacked dialogs"
-    dialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_title"), button, Dui::CancelButton);
+    dialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_title"), Dui::CancelButton);
+    dialog->setCentralWidget(button);
 
     connect(button, SIGNAL(clicked()), SLOT(openNestedDialog()));
     dialog->exec();
@@ -190,7 +193,8 @@ void DialogsAndNotificationsPage::openNestedDialog()
     //% "Click to open a nested message box"
     DuiButton *button = new DuiButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox"));
     //% "This is a nested dialog"
-    nestedDialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title"), button, Dui::CancelButton);
+    nestedDialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title"), Dui::CancelButton);
+    nestedDialog->setCentralWidget(button);
     connect(button, SIGNAL(clicked()), SLOT(openNestedMessageBox()));
 
     nestedDialog->exec();
@@ -213,11 +217,12 @@ void DialogsAndNotificationsPage::openSystemModalDialog()
     dialog = new DuiDialog(
         //% "System Modal Dialog"
         qtTrId("xx_dialogs_and_notifications_system_modal_dialog_title"),
+        Dui::OkButton);
+    dialog->setCentralWidget(
         //% "I'm a window modal dialog.\n"
         //% "There's no way around me!\n"
         //% "Muwhahaha... [evil laugh]"
-        new DuiLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label")),
-        Dui::OkButton);
+        new DuiLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label")));
     dialog->setSystemModal(true);
     dialog->exec();
 }

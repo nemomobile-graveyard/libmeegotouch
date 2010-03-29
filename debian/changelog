@@ -1,6 +1,7 @@
 libdui (0.20.0~1) unstable; urgency=low
 
   * New version [UNRELEASED]
+  * Fixes: NB#158420 - Bottom toolbar shown with hidden actions in portrait mode
 
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 19 Mar 2010 11:20:34 +0200
 

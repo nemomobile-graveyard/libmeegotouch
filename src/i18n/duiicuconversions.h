@@ -73,18 +73,18 @@ namespace DuiIcuConversions
      *
      * @param coll DuiLocale::Collation enum
      *
-     * \sa DuiIcuConversions::calendarToString(DuiLocale::Calendar cal)
+     * \sa DuiIcuConversions::calendarToString(DuiLocale::CalendarType cal)
      */
     QString collationToString(DuiLocale::Collation coll);
 
     /*!
-     * \brief transforms DuiLocale::Calendar enum to icu string presentations
+     * \brief transforms DuiLocale::CalendarType enum to icu string presentations
      *
-     * @param cal DuiLocale::Calendar enum
+     * @param cal DuiLocale::CalendarType enum
      *
      * \sa DuiIcuConversions::collationToString(DuiLocale::Collation coll);
      */
-    QString calendarToString(DuiLocale::Calendar cal);
+    QString calendarToString(DuiLocale::CalendarType cal);
 
     /*!
      * \brief transforms DuiLocale::DateSymbolContext to icu::DateFormatSymbols::DtContextType
@@ -138,7 +138,7 @@ namespace DuiIcuConversions
      * \brief creates an icu::Locale based on a locale string and additional parameters
      */
     icu::Locale createLocale(const QString &baseString,
-                             DuiLocale::Calendar calendar = DuiLocale::DefaultCalendar,
+                             DuiLocale::CalendarType calendarType = DuiLocale::DefaultCalendar,
                              DuiLocale::Collation collation = DuiLocale::DefaultCollation);
 }
 

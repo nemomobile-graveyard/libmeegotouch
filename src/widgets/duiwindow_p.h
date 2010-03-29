@@ -27,8 +27,8 @@
 
 class DuiScene;
 class DuiOnDisplayChangeEvent;
-class DuiGLWidget;
 class DuiStatusBar;
+class QGLWidget;
 
 class DuiWindowPrivate
 {
@@ -45,7 +45,7 @@ public:
     void appendVisibilityChangeMask();
 #endif
 
-    DuiGLWidget *glWidget;
+    QGLWidget *glWidget;
 
     Dui::OrientationAngle angle;
 
@@ -56,6 +56,9 @@ public:
     Dui::Orientation oldOrientation;
     bool orientationAngleLocked;
     bool orientationLocked;
+
+    bool isLogicallyClosed;
+    bool closeOnLazyShutdown;
 
     void doEnterDisplayEvent();
     void doExitDisplayEvent();

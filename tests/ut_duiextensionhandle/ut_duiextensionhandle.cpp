@@ -143,26 +143,26 @@ bool DuiAppletCommunicator::sendMessage(const DuiAppletMessage &message)
 {
     const DuiAppletMouseMessage *mouseMessage = 0;
     switch (message.type()) {
-    case DuiAppletMessage::MOUSE_PRESS_MESSAGE:
-    case DuiAppletMessage::MOUSE_RELEASE_MESSAGE:
-    case DuiAppletMessage::MOUSE_MOVE_MESSAGE:
+    case DuiAppletMessage::MousePressMessage:
+    case DuiAppletMessage::MouseReleaseMessage:
+    case DuiAppletMessage::MouseMoveMessage:
         mouseMessage = dynamic_cast<const DuiAppletMouseMessage *>(&message);
         mouseEventButton = mouseMessage->button();
         mouseEventButtons = mouseMessage->buttons();
-        if (message.type() == DuiAppletMessage::MOUSE_PRESS_MESSAGE)
+        if (message.type() == DuiAppletMessage::MousePressMessage)
             mousePressPosition = (dynamic_cast<const DuiAppletMouseMessage &>(message)).position();
-        else if (message.type() == DuiAppletMessage::MOUSE_RELEASE_MESSAGE)
+        else if (message.type() == DuiAppletMessage::MouseReleaseMessage)
             mouseReleasePosition = (dynamic_cast<const DuiAppletMouseMessage &>(message)).position();
-        else if (message.type() == DuiAppletMessage::MOUSE_MOVE_MESSAGE)
+        else if (message.type() == DuiAppletMessage::MouseMoveMessage)
             mouseMovePosition = (dynamic_cast<const DuiAppletMouseMessage &>(message)).position();
         break;
-    case DuiAppletMessage::OBJECT_MENU_REQUEST_MESSAGE:
+    case DuiAppletMessage::ObjectMenuRequestMessage:
         contextMenuEventPos = (dynamic_cast<const DuiAppletObjectMenuRequestMessage &>(message)).pos();
         break;
-    case DuiAppletMessage::VISIBILITY_MESSAGE:
-        visibility = (dynamic_cast<const DuiAppletVisibilityMessage &>(message)).visible();
+    case DuiAppletMessage::VisibilityMessage:
+        visibility = (dynamic_cast<const DuiAppletVisibilityMessage &>(message)).isVisible();
         break;
-    case DuiAppletMessage::OBJECT_MENU_ACTION_SELECTED_MESSAGE:
+    case DuiAppletMessage::ObjectMenuActionSelectedMessage:
         remoteActionIndex = (dynamic_cast<const DuiAppletObjectMenuActionSelectedMessage &>(message)).index();
         break;
     default:

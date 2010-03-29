@@ -71,14 +71,13 @@ namespace Dui
 
     //! extensions for Qt::inputMethodQuery
     enum InputMethodQueryExtensions {
-        InputEnabledQuery = 10000, // as workaround for qgraphicsview inputmethod shortcomings - DEPRECATED
-        VisualizationPriorityQuery, //! Tells if input method widget wants to have high
-        //! priority for visualization. Input method should
-        //! honor this and stay out of widgets space.
-        PreeditRectangleQuery,      //! Retrieve bounding rectangle for current preedit text.
-        ImCorrectionEnabledQuery,   //! explicit correction enabling for text entries
-        ImModeQuery,                //! Retrieve mode: normal, direct or proxy
-        InputMethodToolbarQuery     //! custom toolbar for text entry
+        VisualizationPriorityQuery = 10001, //!< Tells if input method widget wants to have high
+        //!< priority for visualization. Input method should
+        //!< honor this and stay out of widgets space.
+        PreeditRectangleQuery,      //!< Retrieve bounding rectangle for current preedit text.
+        ImCorrectionEnabledQuery,   //!< explicit correction enabling for text entries
+        ImModeQuery,                //!< Retrieve mode: normal, direct or proxy
+        InputMethodToolbarQuery     //!< custom toolbar for text entry
     };
 
     enum PreeditFace {
@@ -131,7 +130,18 @@ namespace Dui
          * enable prestart mode and restart automatically
          * after being launched and closed
          */
-        TerminateOnClose
+        TerminateOnClose,
+
+        /*! enable multi-windowed prestart mode and return back
+         *  to the prestarted state after being launched and closed
+         */
+        LazyShutdownMultiWindow,
+
+        /*!
+         * enable multi-windowed prestart mode and restart automatically
+         * after being launched and closed
+         */
+        TerminateOnCloseMultiWindow
     };
 
     /*!

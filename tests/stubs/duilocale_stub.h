@@ -42,8 +42,8 @@ public:
     virtual void setCategoryLocale(DuiLocale::Category category, const QString &localeName);
     virtual void setCollation(DuiLocale::Collation collation);
     virtual DuiLocale::Collation collation() const;
-    virtual void setCalendar(DuiLocale::Calendar calendar);
-    virtual DuiLocale::Calendar calendar() const;
+    virtual void setCalendarType(DuiLocale::CalendarType calendarType);
+    virtual DuiLocale::CalendarType calendarType() const;
     virtual DuiCollator collator() const;
     virtual QString languageEndonym() const;
     virtual QString countryEndonym() const;
@@ -64,8 +64,8 @@ public:
     virtual QString formatNumber(float i) const;
     virtual QString formatPercent(double i, int decimals) const;
     virtual QString formatCurrency(double amount, const QString &currency) const;
-    virtual QString formatDateTime(const QDateTime &dateTime, DuiLocale::DateType dateType, DuiLocale::TimeType timeType, DuiLocale::Calendar calendarType) const;
-    virtual QString formatDateTime(const QDateTime &dateTime, DuiLocale::Calendar calendarType) const;
+    virtual QString formatDateTime(const QDateTime &dateTime, DuiLocale::DateType dateType, DuiLocale::TimeType timeType, DuiLocale::CalendarType calendarType) const;
+    virtual QString formatDateTime(const QDateTime &dateTime, DuiLocale::CalendarType calendarType) const;
     virtual QString formatDateTime(const DuiCalendar &duiCalendar, DuiLocale::DateType datetype, DuiLocale::TimeType timetype) const;
     virtual QString formatDateTimeICU(const QDateTime &dateTime, const QString &formatString) const;
     virtual QString formatDateTimeICU(const DuiCalendar &duiCalendar, const QString &formatString) const;
@@ -173,17 +173,17 @@ DuiLocale::Collation DuiLocaleStub::collation() const
     return stubReturnValue<DuiLocale::Collation>("collation");
 }
 
-void DuiLocaleStub::setCalendar(DuiLocale::Calendar calendar)
+void DuiLocaleStub::setCalendarType(DuiLocale::CalendarType calendarType)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<DuiLocale::Calendar >(calendar));
-    stubMethodEntered("setCalendar", params);
+    params.append(new Parameter<DuiLocale::CalendarType >(calendarType));
+    stubMethodEntered("setCalendarType", params);
 }
 
-DuiLocale::Calendar DuiLocaleStub::calendar() const
+DuiLocale::CalendarType DuiLocaleStub::calendarType() const
 {
-    stubMethodEntered("calendar");
-    return stubReturnValue<DuiLocale::Calendar>("calendar");
+    stubMethodEntered("calendarType");
+    return stubReturnValue<DuiLocale::CalendarType>("calendarType");
 }
 
 DuiCollator DuiLocaleStub::collator() const
@@ -331,22 +331,22 @@ QString DuiLocaleStub::formatCurrency(double amount, const QString &currency) co
     return stubReturnValue<QString>("formatCurrency");
 }
 
-QString DuiLocaleStub::formatDateTime(const QDateTime &dateTime, DuiLocale::DateType dateType, DuiLocale::TimeType timeType, DuiLocale::Calendar calendarType) const
+QString DuiLocaleStub::formatDateTime(const QDateTime &dateTime, DuiLocale::DateType dateType, DuiLocale::TimeType timeType, DuiLocale::CalendarType calendarType) const
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<const QDateTime & >(dateTime));
     params.append(new Parameter<DuiLocale::DateType >(dateType));
     params.append(new Parameter<DuiLocale::TimeType >(timeType));
-    params.append(new Parameter<DuiLocale::Calendar >(calendarType));
+    params.append(new Parameter<DuiLocale::CalendarType >(calendarType));
     stubMethodEntered("formatDateTime", params);
     return stubReturnValue<QString>("formatDateTime");
 }
 
-QString DuiLocaleStub::formatDateTime(const QDateTime &dateTime, DuiLocale::Calendar calendarType) const
+QString DuiLocaleStub::formatDateTime(const QDateTime &dateTime, DuiLocale::CalendarType calendarType) const
 {
     QList<ParameterBase *> params;
     params.append(new Parameter<const QDateTime & >(dateTime));
-    params.append(new Parameter<DuiLocale::Calendar >(calendarType));
+    params.append(new Parameter<DuiLocale::CalendarType >(calendarType));
     stubMethodEntered("formatDateTime", params);
     return stubReturnValue<QString>("formatDateTime");
 }
@@ -644,14 +644,14 @@ DuiLocale::Collation DuiLocale::collation() const
     return gDuiLocaleStub->collation();
 }
 
-void DuiLocale::setCalendar(DuiLocale::Calendar calendar)
+void DuiLocale::setCalendarType(DuiLocale::CalendarType calendarType)
 {
-    gDuiLocaleStub->setCalendar(calendar);
+    gDuiLocaleStub->setCalendarType(calendarType);
 }
 
-DuiLocale::Calendar DuiLocale::calendar() const
+DuiLocale::CalendarType DuiLocale::calendarType() const
 {
-    return gDuiLocaleStub->calendar();
+    return gDuiLocaleStub->calendarType();
 }
 
 DuiCollator DuiLocale::collator() const
@@ -754,12 +754,12 @@ QString DuiLocale::formatCurrency(double amount, const QString &currency) const
     return gDuiLocaleStub->formatCurrency(amount, currency);
 }
 
-QString DuiLocale::formatDateTime(const QDateTime &dateTime, DuiLocale::DateType dateType, DuiLocale::TimeType timeType, DuiLocale::Calendar calendarType) const
+QString DuiLocale::formatDateTime(const QDateTime &dateTime, DuiLocale::DateType dateType, DuiLocale::TimeType timeType, DuiLocale::CalendarType calendarType) const
 {
     return gDuiLocaleStub->formatDateTime(dateTime, dateType, timeType, calendarType);
 }
 
-QString DuiLocale::formatDateTime(const QDateTime &dateTime, DuiLocale::Calendar calendarType) const
+QString DuiLocale::formatDateTime(const QDateTime &dateTime, DuiLocale::CalendarType calendarType) const
 {
     return gDuiLocaleStub->formatDateTime(dateTime, calendarType);
 }
@@ -809,24 +809,9 @@ QString DuiLocale::weekdayName(const DuiCalendar &duiCalendar, int weekday, DuiL
     return gDuiLocaleStub->weekdayName(duiCalendar, weekday, context, symbolLength);
 }
 
-void DuiLocale::installCategoryCatalog(DuiLocale::Category category, const QString &name)
-{
-    gDuiLocaleStub->installCategoryCatalog(category, name);
-}
-
-void DuiLocale::removeCategoryCatalog(DuiLocale::Category category, const QString &name)
-{
-    gDuiLocaleStub->removeCategoryCatalog(category, name);
-}
-
 void DuiLocale::copyCatalogsFrom(const DuiLocale &other)
 {
     gDuiLocaleStub->copyCatalogsFrom(other);
-}
-
-bool DuiLocale::hasCategoryCatalog(DuiLocale::Category category, const QString &name)
-{
-    return gDuiLocaleStub->hasCategoryCatalog(category, name);
 }
 
 void DuiLocale::installTrCatalog(const QString &name)
@@ -877,16 +862,6 @@ void DuiLocale::connectSettings()
 void DuiLocale::disconnectSettings()
 {
     gDuiLocaleStub->disconnectSettings();
-}
-
-void DuiLocale::insertTrToQCoreApp()
-{
-    gDuiLocaleStub->insertTrToQCoreApp();
-}
-
-void DuiLocale::removeTrFromQCoreApp()
-{
-    gDuiLocaleStub->removeTrFromQCoreApp();
 }
 
 DuiLocale &DuiLocale::getDefault()

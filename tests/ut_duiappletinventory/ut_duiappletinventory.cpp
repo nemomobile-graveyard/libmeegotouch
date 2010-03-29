@@ -36,6 +36,7 @@
 
 QStringList Ut_DuiAppletInventory::watchedDirectories;
 QStringList Ut_DuiAppletInventory::appletList;
+QList<DuiAppletInventoryInterface *> Ut_DuiAppletInventory::appletInstallationSource;
 bool Ut_DuiAppletInventory::addPathCalled = false;
 bool Ut_DuiAppletInventory::directoriesCalled = false;
 bool Ut_DuiAppletInventory::pluginPathExists = true;
@@ -43,22 +44,40 @@ bool Ut_DuiAppletInventory::pluginPathIsReadable = true;
 bool Ut_DuiAppletInventory::tooManyMonitoredPaths = false;
 
 // Test applet source
-QList<DuiWidget *> gTestAppletSourceCreatedWidgets;
-bool gTestAppletSourceCreateWidget = true;
+TestAppletSource::TestAppletSource() : appletInventory(NULL)
+{
+}
+
+TestAppletSource::~TestAppletSource()
+{
+    delete appletInventory;
+    delete sourceWidget;
+}
+
 DuiWidget *TestAppletSource::widget()
 {
-    if (gTestAppletSourceCreateWidget) {
-        DuiWidget *sourceWidget = new DuiWidget;
-        gTestAppletSourceCreatedWidgets.append(sourceWidget);
-        return sourceWidget;
-    } else {
-        return NULL;
-    }
+    return sourceWidget = new DuiWidget;
 }
 
 bool TestAppletSource::initialize(const QString &)
 {
-    return gTestAppletSourceCreateWidget;
+    return true;
+}
+
+void TestAppletSource::setDuiAppletInventoryInterface(DuiAppletInventoryInterface &installationSource)
+{
+    appletInventory = &installationSource;
+    Ut_DuiAppletInventory::appletInstallationSource.append(&installationSource);
+}
+
+DuiAppletInventoryInterface *TestAppletSource::appletInventoryInterface() const
+{
+    return appletInventory;
+}
+
+void TestAppletSource::instantiateAppletsInPackage(const QString &packageName)
+{
+    this->appletInventoryInterface()->instantiateAppletsInPackage(packageName);
 }
 
 // QPluginLoader stubs
@@ -147,6 +166,7 @@ void Ut_DuiAppletInventory::init()
 
     watchedDirectories.clear();
     appletList.clear();
+    appletInstallationSource.clear();
     addPathCalled = false;
     directoriesCalled = false;
     pluginPathExists = true;
@@ -408,6 +428,24 @@ void Ut_DuiAppletInventory::testOnlyDotDesktopFilesAreParsed()
 
     // There should be two widgets in the view
     QCOMPARE(inventory->model()->widgets().count(), 2);
+}
+
+void Ut_DuiAppletInventory::testInstantiateAppletsInPackage()
+{
+    // Start inventory with no source interface initially
+    inventory->setEnabled(true);
+    QVERIFY(appletInstallationSource.isEmpty());
+
+    // Check that intallation source interface is correctly set by inventory
+    QSignalSpy spy1(inventory, SIGNAL(hideAppletInventory()));
+    TestAppletSource *source = new TestAppletSource;
+    inventory->setDuiAppletInventoryInterface(source);
+    QCOMPARE(appletInstallationSource.count(), 1);
+    QCOMPARE(appletInstallationSource.at(0), source->appletInventoryInterface());
+
+    //Check that applet inventory is closed when package is selected for installation
+    source->instantiateAppletsInPackage("package");
+    QCOMPARE(spy1.count(), 1);
 }
 
 QTEST_APPLESS_MAIN(Ut_DuiAppletInventory)

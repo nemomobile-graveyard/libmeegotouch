@@ -9,6 +9,8 @@ comma :=,
 empty :=
 space := $(empty) $(empty)
 
+MAKEDOCS = 1
+
 ifeq (,$(findstring nostrip,$(DEB_BUILD_OPTIONS)))
     INSTALL_PROGRAM += -s
 endif
@@ -57,10 +59,17 @@ ifeq (,$(findstring notestability,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -testable
 endif
 
+# Perform a minimal build by setting DEB_BUILD_OPTION=minimal,...
 ifeq (,$(findstring minimal,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -make "tests benchmarks"
 else
      OPTIONS += -minimal
+     MAKEDOCS = 0
+endif
+
+# Don't build documentation by setting DEB_BUILD_OPTION=nodocs,...
+ifneq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
+     MAKEDOCS = 0
 endif
 
 BUILD_DIR=build-$(shell dpkg-architecture -qDEB_BUILD_ARCH)
@@ -101,7 +110,7 @@ install: build
 	# Add here commands to install the package into debian/tmp
 
 	#libdui-doc package
-ifeq (,$(findstring nodocs,$(DEB_BUILD_OPTIONS)))
+ifneq (0,$(MAKEDOCS))
 	cd $(BUILD_DIR) && make $(PARALLEL_MAKEFLAGS) doc
 endif
 

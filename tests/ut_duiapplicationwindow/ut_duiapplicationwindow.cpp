@@ -185,7 +185,7 @@ void Ut_DuiApplicationWindow::testIsOnDisplay()
     QVERIFY(page2->isOnDisplay() == false);
 
     // Window is not visible => page should not become visible
-    page2->appearNow();
+    m_subject->sceneManager()->appearSceneWindowNow(page2);
     QVERIFY(page1->isOnDisplay() == false);
     QVERIFY(page2->isOnDisplay() == false);
 
@@ -252,8 +252,8 @@ void Ut_DuiApplicationWindow::testPageChanged()
     QSignalSpy spy(m_subject, SIGNAL(pageChanged(DuiApplicationPage *)));
     DuiApplicationPage *page = new DuiApplicationPage;
     DuiApplicationPage *page2 = new DuiApplicationPage;
-    page->appearNow(m_subject);
-    page2->appearNow(m_subject);
+    m_subject->sceneManager()->appearSceneWindowNow(page);
+    m_subject->sceneManager()->appearSceneWindowNow(page2);
 
     QCOMPARE(spy.count(), 2);
     QCOMPARE(spy.at(0).at(0).value<DuiApplicationPage *>(), page);
@@ -298,15 +298,15 @@ void Ut_DuiApplicationWindow::testPageEscapeAuto()
 
     QVERIFY(escapeButtonPanel != 0);
 
-    firstPage->appearNow(m_subject);
+    m_subject->sceneManager()->appearSceneWindowNow(firstPage);
 
     QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::CloseMode);
 
-    secondPage->appearNow(m_subject);
+    m_subject->sceneManager()->appearSceneWindowNow(secondPage);
 
     QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::BackMode);
 
-    secondPage->dismissNow();
+    m_subject->sceneManager()->dismissSceneWindowNow(secondPage);
 
     QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::CloseMode);
 }
@@ -320,7 +320,7 @@ void Ut_DuiApplicationWindow::testPageEscapeAutoWhenAddingPageHistory()
 
     QVERIFY(escapeButtonPanel != 0);
 
-    secondPage->appearNow(m_subject);
+    m_subject->sceneManager()->appearSceneWindowNow(secondPage);
 
     QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::CloseMode);
 
@@ -339,8 +339,8 @@ void Ut_DuiApplicationWindow::testPageEscapeAutoWhenClearingPageHistory()
 
     QVERIFY(escapeButtonPanel != 0);
 
-    firstPage->appearNow(m_subject);
-    secondPage->appearNow(m_subject);
+    m_subject->sceneManager()->appearSceneWindowNow(firstPage);
+    m_subject->sceneManager()->appearSceneWindowNow(secondPage);
 
     QCOMPARE(escapeButtonPanel->escapeMode(), DuiEscapeButtonPanelModel::BackMode);
 

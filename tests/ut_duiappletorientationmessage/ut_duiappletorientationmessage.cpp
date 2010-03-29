@@ -41,7 +41,7 @@ void Ut_DuiAppletOrientationMessage::cleanup()
 
 void Ut_DuiAppletOrientationMessage::testType()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::ORIENTATION_MESSAGE);
+    QCOMPARE(message->type(), DuiAppletMessage::OrientationMessage);
 }
 
 void Ut_DuiAppletOrientationMessage::testOrientationProperty()

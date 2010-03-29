@@ -44,58 +44,58 @@ DuiAppletMessageFactory::DuiAppletMessageFactory()
 DuiAppletMessage *DuiAppletMessageFactory::create(DuiAppletMessage::DuiAppletMessageType messageType)
 {
     switch (messageType) {
-    case DuiAppletMessage::VISIBILITY_MESSAGE:
+    case DuiAppletMessage::VisibilityMessage:
         return new DuiAppletVisibilityMessage();
 
-    case DuiAppletMessage::ORIENTATION_MESSAGE:
+    case DuiAppletMessage::OrientationMessage:
         return new DuiAppletOrientationMessage();
 
-    case DuiAppletMessage::MOUSE_PRESS_MESSAGE:
-        return new DuiAppletMouseMessage(DuiAppletMessage::MOUSE_PRESS_MESSAGE);
+    case DuiAppletMessage::MousePressMessage:
+        return new DuiAppletMouseMessage(DuiAppletMessage::MousePressMessage);
 
-    case DuiAppletMessage::MOUSE_RELEASE_MESSAGE:
-        return new DuiAppletMouseMessage(DuiAppletMessage::MOUSE_RELEASE_MESSAGE);
+    case DuiAppletMessage::MouseReleaseMessage:
+        return new DuiAppletMouseMessage(DuiAppletMessage::MouseReleaseMessage);
 
-    case DuiAppletMessage::MOUSE_MOVE_MESSAGE:
-        return new DuiAppletMouseMessage(DuiAppletMessage::MOUSE_MOVE_MESSAGE);
+    case DuiAppletMessage::MouseMoveMessage:
+        return new DuiAppletMouseMessage(DuiAppletMessage::MouseMoveMessage);
 
-    case DuiAppletMessage::CANCEL_MESSAGE:
+    case DuiAppletMessage::CancelMessage:
         return new DuiAppletCancelMessage();
 
-    case DuiAppletMessage::SET_GEOMETRY_MESSAGE:
+    case DuiAppletMessage::SetGeometryMessage:
         return new DuiAppletSetGeometryMessage();
 
-    case DuiAppletMessage::PIXMAP_TAKEN_INTO_USE_MESSAGE:
+    case DuiAppletMessage::PixmapTakenIntoUseMessage:
         return new DuiAppletPixmapTakenIntoUseMessage();
 
-    case DuiAppletMessage::APPLET_ALIVE_MESSAGE_REQUEST:
+    case DuiAppletMessage::AppletAliveMessageRequest:
         return new DuiAppletAliveMessageRequest();
 
-    case DuiAppletMessage::APPLET_ALIVE_MESSAGE_RESPONSE:
+    case DuiAppletMessage::AppletAliveMessageResponse:
         return new DuiAppletAliveMessageResponse();
 
-    case DuiAppletMessage::APPLET_ICON_MESSAGE:
+    case DuiAppletMessage::AppletIconMessage:
         return new DuiAppletIconChangedMessage();
 
-    case DuiAppletMessage::APPLET_TITLE_MESSAGE:
+    case DuiAppletMessage::AppletTitleMessage:
         return new DuiAppletTitleChangedMessage();
 
-    case DuiAppletMessage::APPLET_TEXT_MESSAGE:
+    case DuiAppletMessage::AppletTextMessage:
         return new DuiAppletTextChangedMessage();
 
-    case DuiAppletMessage::UPDATE_GEOMETRY_MESSAGE:
+    case DuiAppletMessage::UpdateGeometryMessage:
         return new DuiAppletUpdateGeometryMessage();
 
-    case DuiAppletMessage::PIXMAP_MODIFIED_MESSAGE:
+    case DuiAppletMessage::PixmapModifiedMessage:
         return new DuiAppletPixmapModifiedMessage();
 
-    case DuiAppletMessage::OBJECT_MENU_REQUEST_MESSAGE:
+    case DuiAppletMessage::ObjectMenuRequestMessage:
         return new DuiAppletObjectMenuRequestMessage();
 
-    case DuiAppletMessage::OBJECT_MENU_MESSAGE:
+    case DuiAppletMessage::ObjectMenuMessage:
         return new DuiAppletObjectMenuMessage();
 
-    case DuiAppletMessage::OBJECT_MENU_ACTION_SELECTED_MESSAGE:
+    case DuiAppletMessage::ObjectMenuActionSelectedMessage:
         return new DuiAppletObjectMenuActionSelectedMessage();
 
     default:

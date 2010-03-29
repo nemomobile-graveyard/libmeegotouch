@@ -20,7 +20,7 @@
 #include "duiapplettextchangedmessage.h"
 
 DuiAppletTextChangedMessage::DuiAppletTextChangedMessage() :
-    DuiAppletMessage(APPLET_TEXT_MESSAGE)
+    DuiAppletMessage(AppletTextMessage)
 {
 }
 

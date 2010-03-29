@@ -123,11 +123,12 @@ void Ut_DuiPhysics2DPanning::init()
     physics = new DuiPhysics2DPanning(pannable);
 
     // no style object available, just set some default values
-    physics->d_ptr->integrationData.pointerSpringK = 0.09;
-    physics->d_ptr->integrationData.frictionC = 0.6;
-    physics->d_ptr->integrationData.slideFrictionC = 0.02;
-    physics->d_ptr->integrationData.borderSpringK = 0.09;
-    physics->d_ptr->integrationData.borderFrictionC = 0.6;
+    physics->d_ptr->pointerSpringK = 0.09;
+    physics->d_ptr->frictionC = 0.6;
+    physics->d_ptr->slideFrictionC = 0.02;
+    physics->d_ptr->borderSpringK = 0.09;
+    physics->d_ptr->borderFrictionC = 0.6;
+    physics->d_ptr->panDirection = Qt::Vertical | Qt::Horizontal;
 
     Ut_DuiPhysics2DPanning::timeLineActions.clear();
     Ut_DuiPhysics2DPanning::timeLineState = QTimeLine::NotRunning;
@@ -147,17 +148,18 @@ void Ut_DuiPhysics2DPanning::initValues()
     QCOMPARE(physics->d_ptr->posY, 0.0);
     QCOMPARE(physics->d_ptr->velX, 0.0);
     QCOMPARE(physics->d_ptr->velY, 0.0);
-    QCOMPARE(physics->d_ptr->integrationData.pointerSpringK, 0.09);
-    QCOMPARE(physics->d_ptr->integrationData.frictionC, 0.6);
-    QCOMPARE(physics->d_ptr->integrationData.slideFrictionC, 0.6 / 30.0);
-    QCOMPARE(physics->d_ptr->integrationData.borderSpringK, 0.09);
-    QCOMPARE(physics->d_ptr->integrationData.borderFrictionC, 0.6);
-    QCOMPARE(physics->d_ptr->integrationData.pointer, false);
+    QCOMPARE(physics->d_ptr->pointerSpringK, 0.09);
+    QCOMPARE(physics->d_ptr->frictionC, 0.6);
+    QCOMPARE(physics->d_ptr->slideFrictionC, 0.6 / 30.0);
+    QCOMPARE(physics->d_ptr->borderSpringK, 0.09);
+    QCOMPARE(physics->d_ptr->borderFrictionC, 0.6);
+    QCOMPARE(physics->d_ptr->pointerPressed, false);
     QCOMPARE(physics->d_ptr->pointerSpringX, 0.0);
     QCOMPARE(physics->d_ptr->pointerSpringY, 0.0);
     QCOMPARE(physics->d_ptr->sceneLastPos, QPointF());
     QCOMPARE(physics->d_ptr->timeLine != NULL, true);
     QCOMPARE(physics->d_ptr->currFrame, 0);
+    QCOMPARE(physics->d_ptr->panDirection, Qt::Vertical | Qt::Horizontal);
 }
 
 
@@ -280,7 +282,7 @@ void Ut_DuiPhysics2DPanning::pointerPress()
 {
     physics->pointerPress(QPointF(-5.0, 10.5));
 
-    QCOMPARE(physics->d_ptr->integrationData.pointer, true);
+    QCOMPARE(physics->d_ptr->pointerPressed, true);
     QCOMPARE(physics->d_ptr->sceneLastPos, QPointF(-5.0, 10.5));
     QFLOATCOMPARE(physics->d_ptr->pointerSpringX, 0.0);
     QFLOATCOMPARE(physics->d_ptr->pointerSpringY, 0.0);
@@ -334,7 +336,7 @@ void Ut_DuiPhysics2DPanning::pointerMove()
 
 void Ut_DuiPhysics2DPanning::pointerRelease()
 {
-    QCOMPARE(physics->d_ptr->integrationData.pointer, false);
+    QCOMPARE(physics->d_ptr->pointerPressed, false);
 }
 
 
@@ -455,52 +457,6 @@ void Ut_DuiPhysics2DPanning::integrating()
     y /= 1000.0;
 
     QCOMPARE(QPointF(x, y), endPosition);
-}
-
-class CustomIntegrationStrategy : public DuiPhysics2DIntegrationStrategy
-{
-public:
-    CustomIntegrationStrategy() {
-        integrateMethodExecuted = false;
-    }
-
-    virtual void integrate(qreal &position,
-                           qreal &velocity,
-                           qreal &pointerSpring,
-                           qreal &acceleration,
-                           qreal rangeStart,
-                           qreal rangeEnd,
-                           IntegrationData &data);
-
-    bool integrateMethodExecuted;
-};
-
-void CustomIntegrationStrategy::integrate(qreal &,
-        qreal &,
-        qreal &,
-        qreal &,
-        qreal,
-        qreal,
-        IntegrationData &)
-{
-    integrateMethodExecuted = true;
-}
-
-void Ut_DuiPhysics2DPanning::usingCustomIntegrationPolicy()
-{
-    CustomIntegrationStrategy *strategyObject = new CustomIntegrationStrategy();
-    physics->setIntegrationStrategy(strategyObject);
-    physics->integrator(1);
-
-    QVERIFY(strategyObject->integrateMethodExecuted);
-
-    physics->setIntegrationStrategy(new DuiPhysics2DIntegrationStrategy());
-}
-
-void Ut_DuiPhysics2DPanning::settingIntegrationPolicyToNULLShouldNotBreakThePhysics()
-{
-    physics->setIntegrationStrategy(NULL);
-    physics->integrator(1);
 }
 
 void Ut_DuiPhysics2DPanning::positionShouldReturnToStartRangeAfterMovingViewportBeyondStartRange()

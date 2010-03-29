@@ -26,6 +26,8 @@
 
 #include "duivideo.h"
 
+//! \internal
+
 class DuiGstVideo : public DuiVideo
 {
     Q_OBJECT
@@ -131,5 +133,6 @@ private:
     QColor m_colorKey;
 };
 
+//! \internal_end
 
 #endif

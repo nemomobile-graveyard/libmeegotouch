@@ -29,16 +29,18 @@
 class DuiApplicationPagePrivate;
 class DuiAction;
 class DuiApplicationWindow;
+class DuiPannableViewport;
+
 
 /*!
     \class DuiApplicationPage
     \brief DuiApplicationPage provides a framework for building an application's user interface.
-    By default the page creates a pannable area where a user can place his component by using
+    By default the page creates a pannable viewport where a user can place his component by using
     centralWidget() or setCentralWidget(DuiWidget *).
 
-    There are two functions to show the page on the screen:
-    \li appear() shows the page with the associated animation.
-    \li appearNow() shows the page immediately on the screen.
+    The page can be shown on the screen using appear() method. A call to appear() involves running
+    the assiciated show animation for the page. If you want to show a page instantly, refer to
+    DuiSceneManager API.
 
     A page can contain actions, which will be shown in the navigation bar or on a view menu.
 
@@ -47,8 +49,8 @@ class DuiApplicationWindow;
     \li clearActions()
 
     To switch off panning, or change direction of panning:
-    \li setPannableAreaInteractive()
-    \li setPannableAreaDirection()
+    \li setPannable()
+    \li setPanningDirection()
 
     A minimal application which would show a toolbar would look like this:
 
@@ -81,8 +83,8 @@ class DUI_EXPORT DuiApplicationPage : public DuiSceneWindow
     Q_PROPERTY(QString title READ title WRITE setTitle)
     Q_PROPERTY(bool contentCreated READ isContentCreated)
     Q_PROPERTY(DuiApplicationPageModel::PageEscapeMode escapeMode READ escapeMode WRITE setEscapeMode)
-    Q_PROPERTY(bool pannableAreaInteractive READ isPannableAreaInteractive WRITE setPannableAreaInteractive)
-    Q_PROPERTY(Qt::Orientations pannableAreaDirection READ pannableAreaDirection WRITE setPannableAreaDirection)
+    Q_PROPERTY(bool pannable READ isPannable WRITE setPannable)
+    Q_PROPERTY(Qt::Orientations panningDirection READ panningDirection WRITE setPanningDirection)
     Q_PROPERTY(bool rememberPosition READ rememberPosition WRITE setRememberPosition)
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible)
 
@@ -156,22 +158,22 @@ public:
 
     /*!
      * Returns true if the page is expected to rememeber its pannable viewport
-     * position when hidden and restore it when shown again using appear() or appearNow().
+     * position when hidden and restore it when shown again using appear().
      * \sa setRememberPosition()
      */
     bool rememberPosition() const;
 
     /*!
-     * Returns true if page's pannable are is interactive, e.g. can be panned.
-     * \sa setPannableAreaInteractive(bool)
+     * Returns true if page's is pannable.
+     * \sa setPannable(bool)
      */
-    bool isPannableAreaInteractive() const;
+    bool isPannable() const;
 
     /*!
-     * Returns combination of orientation flags in which pannable area pans. It can be
+     * Returns the orientations in which the page pans. The value can be
      * Qt::Horizontal, Qt::Vertical or Qt::Horizontal | Qt::Vertical.
      */
-    Qt::Orientations pannableAreaDirection() const;
+    Qt::Orientations panningDirection() const;
 
     /**
      * \brief Returns the central widget for the page.
@@ -184,7 +186,7 @@ public:
 
     /*!
      * Convenience function that returns a pointer to the application window into
-     * which the application page is shown or a null pointer if appear() or appearNow()
+     * which the application page is shown or a null pointer if appear()
      * hasn't been called yet. When you call appear() and the application window
      * specified as a parameter exists, this method will return it.
      *
@@ -215,6 +217,11 @@ public:
      */
     DuiApplicationPageModel::PageEscapeMode escapeMode() const;
 
+    /*!
+     * Returns the viewport responsible for panning the page.
+     */
+    DuiPannableViewport *pannableViewport();
+
 Q_SIGNALS:
     //! Signal emitted when back button called
     void backButtonClicked();
@@ -238,50 +245,6 @@ Q_SIGNALS:
     void actionUpdated(QActionEvent *e);
 
 public Q_SLOTS:
-    /*!
-     * \brief Makes page visible on the current window. Associated animation will be used to show page.
-     *
-     * Existing page will disappear.
-     */
-    // TODO: Remove that now useless method override after API freeze period
-    void appear(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * \brief Makes page visible immediately, skipping animation.
-     *
-     * Existing page will disappear.
-     */
-    // TODO: Remove that now useless method override after API freeze period
-    void appearNow(DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * \brief Makes page visible on the application window specified by \a window.
-     *
-     * Uses associated animation will be used to show page. Existing page will disappear.
-     */
-    // TODO: Remove that now useless method after API freeze period
-    void appear(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * \brief Makes page visible immediately on the application window specified by \a window, skipping animation.
-     *
-     * Existing page will disappear.
-     */
-    // TODO: Remove that now useless method after API freeze period
-    void appearNow(DuiApplicationWindow *window, DuiSceneWindow::DeletionPolicy policy = KeepWhenDone);
-
-    /*!
-     * \brief Makes page invisible with associated animation.
-     */
-    // TODO: Remove that now useless method override after API freeze period
-    void disappear();
-
-    /*!
-     * \brief Makes page invisible immediately.
-     */
-    // TODO: Remove that now useless method override after API freeze period
-    void disappearNow();
-
     /*!
         \brief Whether extra margins will be automatically added around the central
                widget to avoid occlusion by other components.
@@ -325,22 +288,22 @@ public Q_SLOTS:
     /*!
      * Sets whether the page should remember its pannable viewport position when
      * hidden. Default value is true. Set it to false to have the viewport
-     * scrolled to the top with every call to appear() or appearNow(). The scrolling
+     * scrolled to the top with every call to appear(). The scrolling
      * is immediate, i.e. it's not animated at all.
      * \sa rememberPosition()
      */
     void setRememberPosition(bool remember);
 
     /*!
-     * Sets if pannable area should be interactive, e.g. if page should pan.
+     * Sets if the page should pan
      */
-    void setPannableAreaInteractive(bool interactive);
+    void setPannable(bool pannable);
 
     /*!
-     * Sets to which direction(s) page should be. Possible values:
+     * Sets to which direction(s) page should be pannable. Possible values:
      * Qt::Horizontal, Qt::Vertical or Qt::Horizontal | Qt::Vertical.
      */
-    void setPannableAreaDirection(Qt::Orientations directions);
+    void setPanningDirection(Qt::Orientations directions);
 
     /*!
      * Sets the visible of progress indicator

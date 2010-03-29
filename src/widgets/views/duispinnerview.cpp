@@ -65,7 +65,7 @@ DuiSpinnerView::DuiSpinnerView(DuiProgressIndicator *controller) :
 {
     Q_D(DuiSpinnerView);
     d->controller = controller;
-    connect(controller, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityChanged(bool)));
+    connect(controller, SIGNAL(visibleChanged()), this, SLOT(visibilityChanged()));
 }
 
 
@@ -238,10 +238,10 @@ void DuiSpinnerView::applyStyle()
 }
 
 
-void DuiSpinnerViewPrivate::visibilityChanged(bool visible)
+void DuiSpinnerViewPrivate::visibilityChanged()
 {
     if (timer) {
-        if (visible) {
+        if (controller->isVisible()) {
             timer->start(SpinnerRefreshRate);
         } else {
             timer->stop();

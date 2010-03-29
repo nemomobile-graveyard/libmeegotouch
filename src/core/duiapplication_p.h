@@ -61,11 +61,14 @@ private:
 
     static void releasePrestart();
     static void restorePrestart();
-
     static void stdExit(int status);
+    static bool prestartModeIsLazyShutdown();
+    static bool prestartModeIsMultiWindowed();
+
 #ifdef Q_WS_X11
     static void setWindowVisibility(Window window, bool visible);
     static void removeWindowsFromSwitcher(bool remove);
+    static void removeWindowFromSwitcher(Window window, bool remove);
 #endif
     friend class DuiApplicationServicePrivate;
     friend class DuiWindow;

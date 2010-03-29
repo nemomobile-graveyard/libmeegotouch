@@ -60,9 +60,6 @@ namespace
     const QString ScriptLatin("Latn");
 
     const QString SettingsLanguage("/Dui/i18n/Language");
-    const QString SettingsCountry("/Dui/i18n/Country");
-    const QString SettingsScript("/Dui/i18n/Script");
-    const QString SettingsVariant("/Dui/i18n/Variant");
     const QString SettingsLcTime("/Dui/i18n/LcTime");
     const QString SettingsLcCollate("/Dui/i18n/LcCollate");
     const QString SettingsLcNumeric("/Dui/i18n/LcNumeric");
@@ -340,16 +337,13 @@ icu::DateFormat *DuiLocalePrivate::createDateFormat(DuiLocale::DateType dateType
 
 DuiLocalePrivate::DuiLocalePrivate()
     : _valid(true),
-      _calendar(DuiLocale::DefaultCalendar),
+      _calendarType(DuiLocale::DefaultCalendar),
       _collation(DuiLocale::DefaultCollation)
 #ifdef HAVE_ICU
       , _numberFormat(0)
 #endif
 #ifdef HAVE_GCONF
       , currentLanguageItem(SettingsLanguage),
-      currentCountryItem(SettingsCountry),
-      currentScriptItem(SettingsScript),
-      currentVariantItem(SettingsVariant),
       currentLcTimeItem(SettingsLcTime),
       currentLcCollateItem(SettingsLcCollate),
       currentLcNumericItem(SettingsLcNumeric),
@@ -368,7 +362,7 @@ DuiLocalePrivate::DuiLocalePrivate(const DuiLocalePrivate &other)
       _calendarLocale(other._calendarLocale),
       _monetaryLocale(other._monetaryLocale),
       _nameLocale(other._nameLocale),
-      _calendar(other._calendar),
+      _calendarType(other._calendarType),
       _collation(other._collation),
 #ifdef HAVE_ICU
       _numberFormat(0),
@@ -378,9 +372,6 @@ DuiLocalePrivate::DuiLocalePrivate(const DuiLocalePrivate &other)
       _trTranslations(other._trTranslations)
 #ifdef HAVE_GCONF
       , currentLanguageItem(SettingsLanguage),
-      currentCountryItem(SettingsCountry),
-      currentScriptItem(SettingsScript),
-      currentVariantItem(SettingsVariant),
       currentLcTimeItem(SettingsLcTime),
       currentLcCollateItem(SettingsLcCollate),
       currentLcNumericItem(SettingsLcNumeric),
@@ -413,7 +404,7 @@ DuiLocalePrivate &DuiLocalePrivate::operator=(const DuiLocalePrivate &other)
     _calendarLocale = other._calendarLocale;
     _monetaryLocale = other._monetaryLocale;
     _nameLocale = other._nameLocale;
-    _calendar = other._calendar;
+    _calendarType = other._calendarType;
     _collation = other._collation;
     _messageTranslations = other._messageTranslations;
     _timeTranslations = other._timeTranslations;
@@ -438,7 +429,7 @@ DuiLocalePrivate &DuiLocalePrivate::operator=(const DuiLocalePrivate &other)
 Locale DuiLocalePrivate::getCategoryLocale(DuiLocale::Category category) const
 {
     QString baseString = categoryName(category);
-    return DuiIcuConversions::createLocale(baseString, _calendar, _collation);
+    return DuiIcuConversions::createLocale(baseString, _calendarType, _collation);
 }
 #endif
 
@@ -683,18 +674,12 @@ DuiLocale::createSystemDuiLocale()
 {
 #ifdef HAVE_GCONF
     DuiGConfItem languageItem(SettingsLanguage);
-    DuiGConfItem countryItem(SettingsCountry);
-    DuiGConfItem scriptItem(SettingsScript);
-    DuiGConfItem variantItem(SettingsVariant);
     DuiGConfItem lcTimeItem(SettingsLcTime);
     DuiGConfItem lcCollateItem(SettingsLcCollate);
     DuiGConfItem lcNumericItem(SettingsLcNumeric);
     DuiGConfItem lcMonetaryItem(SettingsLcMonetary);
 
     QString language = languageItem.value().toString();
-    QString country  = countryItem.value().toString();
-    QString script   = scriptItem.value().toString();
-    QString variant  = variantItem.value().toString();
     QString lcTime = lcTimeItem.value().toString();
     QString lcCollate = lcCollateItem.value().toString();
     QString lcNumeric = lcNumericItem.value().toString();
@@ -712,11 +697,7 @@ DuiLocale::createSystemDuiLocale()
         // No need to set the category according to env here
         systemLocale = new DuiLocale(locale);
     } else {
-        systemLocale = new DuiLocale(
-            DuiLocalePrivate::createLocaleString(QString(language),
-                    QString(country),
-                    QString(script),
-                    QString(variant)));
+        systemLocale = new DuiLocale(language);
     }
 
     if (!lcTime.isEmpty())
@@ -753,12 +734,6 @@ DuiLocale::connectSettings()
 
     QObject::connect(&d->currentLanguageItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
-    QObject::connect(&d->currentCountryItem, SIGNAL(valueChanged()),
-                     this, SLOT(refreshSettings()));
-    QObject::connect(&d->currentScriptItem, SIGNAL(valueChanged()),
-                     this, SLOT(refreshSettings()));
-    QObject::connect(&d->currentVariantItem, SIGNAL(valueChanged()),
-                     this, SLOT(refreshSettings()));
     QObject::connect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
     QObject::connect(&d->currentLcCollateItem, SIGNAL(valueChanged()),
@@ -777,12 +752,6 @@ DuiLocale::disconnectSettings()
     Q_D(DuiLocale);
 
     QObject::disconnect(&d->currentLanguageItem, SIGNAL(valueChanged()),
-                        this, SLOT(refreshSettings()));
-    QObject::disconnect(&d->currentCountryItem, SIGNAL(valueChanged()),
-                        this, SLOT(refreshSettings()));
-    QObject::disconnect(&d->currentScriptItem, SIGNAL(valueChanged()),
-                        this, SLOT(refreshSettings()));
-    QObject::disconnect(&d->currentVariantItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
     QObject::disconnect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
@@ -969,17 +938,17 @@ DuiLocale::Collation DuiLocale::collation() const
     return d->_collation;
 }
 
-void DuiLocale::setCalendar(Calendar calendar)
+void DuiLocale::setCalendarType(CalendarType calendarType)
 {
     Q_D(DuiLocale);
-    d->_calendar = calendar;
+    d->_calendarType = calendarType;
 }
 
 
-DuiLocale::Calendar DuiLocale::calendar() const
+DuiLocale::CalendarType DuiLocale::calendarType() const
 {
     Q_D(const DuiLocale);
-    return d->_calendar;
+    return d->_calendarType;
 }
 
 #ifdef HAVE_ICU
@@ -1190,7 +1159,7 @@ QString DuiLocale::formatCurrency(double amount, const QString &currency) const
 }
 
 QString DuiLocale::formatDateTime(const QDateTime &dateTime, DateType dateType,
-                                  TimeType timeType, Calendar calendarType) const
+                                  TimeType timeType, CalendarType calendarType) const
 {
 #ifdef HAVE_ICU
     DuiCalendar calendar(calendarType);
@@ -1228,7 +1197,7 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duicalendar,
 #endif
 
 #ifdef HAVE_ICU
-QString DuiLocale::formatDateTime(const QDateTime &dateTime, Calendar calendarType) const
+QString DuiLocale::formatDateTime(const QDateTime &dateTime, CalendarType calendarType) const
 {
     return formatDateTime(dateTime, DateLong, TimeLong, calendarType);
 }
@@ -1626,7 +1595,7 @@ QString DuiLocale::formatDateTime(const DuiCalendar &duiCalendar,
 
 #ifdef HAVE_ICU
 QDateTime DuiLocale::parseDateTime(const QString &dateTime, DateType dateType,
-                                   TimeType timeType, Calendar calendarType) const
+                                   TimeType timeType, CalendarType calendarType) const
 {
     if (dateType == DateNone && timeType == TimeNone)
         return QDateTime();
@@ -1651,7 +1620,7 @@ QDateTime DuiLocale::parseDateTime(const QString &dateTime, DateType dateType,
 #endif
 
 #ifdef HAVE_ICU
-QDateTime DuiLocale::parseDateTime(const QString &dateTime, Calendar calendarType) const
+QDateTime DuiLocale::parseDateTime(const QString &dateTime, CalendarType calendarType) const
 {
     return parseDateTime(dateTime, DateLong, TimeLong, calendarType);
 }
@@ -1881,109 +1850,6 @@ QString DuiLocale::countryEndonym() const
 }
 #endif
 
-void DuiLocale::installCategoryCatalog(Category category, const QString &name)
-{
-    Q_D(DuiLocale);
-
-    if (category != DuiLcMessages && category != DuiLcTime) {
-        duiDebug("DuiLocale") << __PRETTY_FUNCTION__ << ": unknown category";
-        return;
-    }
-
-    // don't load the catalog if it has been loaded already.
-    //
-    // The following function cannot be called because it is marked as
-    // deprecated, therefore, I copy the code from
-    // hasCategoryCatalog() here:
-    //
-    // if(hasCategoryCatalog(category, name)) {
-    //    return;
-    //}
-    bool hasCategoryCatalog = false;
-    if (category != DuiLcMessages && category != DuiLcTime) {
-        hasCategoryCatalog = false;
-    } else {
-        DuiLocalePrivate::CatalogList *catList;
-
-        if (category == DuiLcMessages) {
-            catList = &d->_messageTranslations;
-        } else {
-            catList = &d->_timeTranslations;
-        }
-
-        // find the DuiTranslationCatalog
-        for (DuiLocalePrivate::CatalogList::iterator i = catList->begin();
-                i != catList->end(); ++i) {
-            if (name == (*i)->_name) {
-                hasCategoryCatalog = true;
-            }
-        }
-    }
-    if (hasCategoryCatalog)
-        return;
-
-    DuiTranslationCatalog *catalog = new DuiTranslationCatalog(name);
-    catalog->loadWith(this, category);
-
-    if (category == DuiLcMessages) {
-        d->_messageTranslations.append(QExplicitlySharedDataPointer<DuiTranslationCatalog>(catalog));
-    } else {
-        d->_timeTranslations.append(QExplicitlySharedDataPointer<DuiTranslationCatalog>(catalog));
-    }
-}
-
-bool DuiLocale::hasCategoryCatalog(Category category, const QString &name)
-{
-    Q_D(DuiLocale);
-
-    if (category != DuiLcMessages && category != DuiLcTime) {
-        return false;
-    }
-
-    DuiLocalePrivate::CatalogList *catList;
-
-    if (category == DuiLcMessages) {
-        catList = &d->_messageTranslations;
-    } else {
-        catList = &d->_timeTranslations;
-    }
-
-    // find the DuiTranslationCatalog
-    for (DuiLocalePrivate::CatalogList::iterator i = catList->begin();
-            i != catList->end(); ++i) {
-        if (name == (*i)->_name) {
-            return true;
-        }
-    }
-
-    return false;
-}
-
-void DuiLocale::removeCategoryCatalog(Category category, const QString &name)
-{
-    Q_D(DuiLocale);
-    if (category != DuiLcMessages && category != DuiLcTime) {
-        return;
-    }
-
-    DuiLocalePrivate::CatalogList *catList;
-
-    if (category == DuiLcMessages) {
-        catList = &d->_messageTranslations;
-    } else {
-        catList = &d->_timeTranslations;
-    }
-
-    // find, delete and remove the DuiTranslationCatalog
-    for (DuiLocalePrivate::CatalogList::iterator i = catList->begin();
-            i != catList->end(); ++i) {
-        if (name == (*i)->_name) {
-            // erasing should delete the duitranslationcatalog if necessary
-            catList->erase(i);
-        }
-    }
-}
-
 void DuiLocale::copyCatalogsFrom(const DuiLocale &other)
 {
     Q_D(DuiLocale);
@@ -2055,24 +1921,6 @@ void DuiLocale::removeTrCatalog(const QString &name)
         else
             ++it;
     }
-}
-
-void DuiLocale::loadTrCatalogs()
-{
-    Q_D(DuiLocale);
-    d->loadTrCatalogs();
-}
-
-void DuiLocale::insertTrToQCoreApp()
-{
-    Q_D(DuiLocale);
-    d->insertTrToQCoreApp();
-}
-
-void DuiLocale::removeTrFromQCoreApp()
-{
-    Q_D(DuiLocale);
-    d->removeTrFromQCoreApp();
 }
 
 /////////////////////////////
@@ -2170,11 +2018,7 @@ void DuiLocale::refreshSettings()
 #ifdef HAVE_GCONF
     Q_D(DuiLocale);
     bool settingsHaveReallyChanged = false;
-    QString language = d->currentLanguageItem.value().toString();
-    QString country  = d->currentCountryItem.value().toString();
-    QString script   = d->currentScriptItem.value().toString();
-    QString variant  = d->currentVariantItem.value().toString();
-    QString localeName = d->createLocaleString(language, country, script, variant);
+    QString localeName = d->currentLanguageItem.value().toString();
     QString lcTime = d->currentLcTimeItem.value().toString();
     QString lcCollate = d->currentLcCollateItem.value().toString();
     QString lcNumeric = d->currentLcNumericItem.value().toString();

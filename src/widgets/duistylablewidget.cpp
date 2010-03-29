@@ -23,6 +23,8 @@
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET(DuiStylableWidget)
 
+
+//! \internal
 /* Private class acting as a creator for stylable widgets
    subclasses. It also takes responsibility for deleting
    creators when the application is quitting.
@@ -75,6 +77,7 @@ private:
     static CreatorInstanceHolder creatorInstanceHolder;
     const QMetaObject *widgetMetaObject;
 };
+//! \internal_end
 
 DuiStylableWidgetCreator::CreatorInstanceHolder DuiStylableWidgetCreator::creatorInstanceHolder;
 

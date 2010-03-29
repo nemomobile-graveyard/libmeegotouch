@@ -239,8 +239,8 @@ void SpinnerPage::launchDialog()
 
     //% "Select Internet connection"
     DuiDialog dialog(qtTrId("xx_spinner_page_dialog_header"),
-                     container,
                      Dui::NoStandardButton);
+    dialog.setCentralWidget(container);
     dialog.setProgressIndicatorVisible(true);
     dialog.exec();
 }

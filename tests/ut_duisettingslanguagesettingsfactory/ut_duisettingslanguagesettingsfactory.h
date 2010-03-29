@@ -48,8 +48,6 @@ public:
     static QList<DuiDataStore *> settingsBooleansDataStores;
     static QList<DuiDataStore *> settingsIntegersDataStores;
     static DuiWidgetController *duiSettingsLanguageSelectionFactoryWidget;
-    static QString duiActionProvider_getDefaultActionUri;
-    static DuiAction *duiActionProvider_action;
 
 private:
     DuiApplication *app;

@@ -122,17 +122,16 @@ void DuiApplicationServicePrivate::closeAllWindows()
 
 bool DuiApplicationServicePrivate::prestartModeIsLazyShutdown()
 {
-    bool retVal = (DuiApplication::prestartMode() == Dui::LazyShutdown);
-
-    return retVal;
+    return DuiApplication::prestartMode() == Dui::LazyShutdown ||
+            DuiApplication::prestartMode() == Dui::LazyShutdownMultiWindow;
 }
 
 void DuiApplicationServicePrivate::releasePrestart()
 {
-    DuiApplicationPrivate::releasePrestart();
+    DuiApplication::setPrestarted(false);
 }
 
 void DuiApplicationServicePrivate::restorePrestart()
 {
-    DuiApplicationPrivate::restorePrestart();
+    DuiApplication::setPrestarted(true);
 }

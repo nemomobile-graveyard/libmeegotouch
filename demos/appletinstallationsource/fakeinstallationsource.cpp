@@ -30,13 +30,15 @@
 
 Q_EXPORT_PLUGIN2(fakeinstallationsource, FakeInstallationSource)
 
-FakeInstallationSource::FakeInstallationSource() : source(new InstallationSourceWidget())
+FakeInstallationSource::FakeInstallationSource() : source(new InstallationSourceWidget(*this)),
+    appletInventory(NULL)
 {
 }
 
 FakeInstallationSource::~FakeInstallationSource()
 {
     delete source;
+    delete appletInventory;
 }
 
 DuiWidget *FakeInstallationSource::widget()
@@ -49,7 +51,18 @@ bool FakeInstallationSource::initialize(const QString& )
     return true;
 }
 
-InstallationSourceWidget::InstallationSourceWidget()
+void FakeInstallationSource::setDuiAppletInventoryInterface(DuiAppletInventoryInterface &appletInventory)
+{
+    this->appletInventory = &appletInventory;
+}
+
+DuiAppletInventoryInterface* FakeInstallationSource::appletInventoryInterface() const
+{
+    return appletInventory;
+}
+
+InstallationSourceWidget::InstallationSourceWidget(FakeInstallationSource &source) :
+        installationSource(source)
 {
     QGraphicsGridLayout *layout = new QGraphicsGridLayout;
     setLayout(layout);
@@ -91,39 +104,47 @@ void InstallationSourceWidget::installApplet()
 {
     if (char *package = getenv("FAKEAPPLETINSTALLATIONSOURCEPACKAGE")) {
         qDebug() << "Local package" << package;
-        emit packageSelectedForInstallation(package);
+        instantiateAppletsInPackage(package);
     } else {
         qDebug() << "Local Installable package";
-        emit packageSelectedForInstallation("./fakeappletpackage-installable.deb");
+        instantiateAppletsInPackage("./fakeappletpackage-installable.deb");
     }
 }
 
 void InstallationSourceWidget::installableApplet()
 {
     qDebug() << "Installable package";
-    emit packageSelectedForInstallation("fakeappletpackage-installable.deb");
+    instantiateAppletsInPackage("fakeappletpackage-installable.deb");
 }
 
 void InstallationSourceWidget::uninstallableApplet()
 {
     qDebug() << "UnInstallable package";
-    emit packageSelectedForInstallation("fakeappletpackage-uninstallable.deb");
+    instantiateAppletsInPackage("fakeappletpackage-uninstallable.deb");
 }
 
 void InstallationSourceWidget::notDownloadableApplet()
 {
     qDebug() << "Not downloadable package";
-    emit packageSelectedForInstallation("fakeappletpackage-notdownloadable.deb");
+    instantiateAppletsInPackage("fakeappletpackage-notdownloadable.deb");
 }
 
 void InstallationSourceWidget::metadataOnly()
 {
     qDebug() << "Metadata only";
-    emit packageSelectedForInstallation("fakeappletpackage-metadataonly.deb");
+    instantiateAppletsInPackage("fakeappletpackage-metadataonly.deb");
 }
 
 void InstallationSourceWidget::nonExistent()
 {
     qDebug() << "Non existent package";
-    emit packageSelectedForInstallation("fakeappletpackage-nonexistent.deb");
+    instantiateAppletsInPackage("fakeappletpackage-nonexistent.deb");
+}
+
+void InstallationSourceWidget::instantiateAppletsInPackage(const QString &packageName)
+{
+    DuiAppletInventoryInterface *inventory = installationSource.appletInventoryInterface();
+    if (inventory != NULL) {
+        inventory->instantiateAppletsInPackage(packageName);
+    }
 }

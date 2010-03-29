@@ -37,7 +37,6 @@
 #include <DuiImageWidget>
 #include <DuiButton>
 #include <DuiContainer>
-#include <DuiActionProvider>
 #include <DuiDataStore>
 #include "../stubs/mockdatastore.h"
 
@@ -54,8 +53,6 @@ QList<DuiDataStore *> Ut_DuiSettingsLanguageSettingsFactory::settingsTextsDataSt
 QList<DuiDataStore *> Ut_DuiSettingsLanguageSettingsFactory::settingsBooleansDataStores;
 QList<DuiDataStore *> Ut_DuiSettingsLanguageSettingsFactory::settingsIntegersDataStores;
 DuiWidgetController *Ut_DuiSettingsLanguageSettingsFactory::duiSettingsLanguageSelectionFactoryWidget = NULL;
-QString Ut_DuiSettingsLanguageSettingsFactory::duiActionProvider_getDefaultActionUri;
-DuiAction *Ut_DuiSettingsLanguageSettingsFactory::duiActionProvider_action = NULL;
 
 // QCoreApplication stubs to avoid crashing in processEvents()
 QStringList QCoreApplication::arguments()
@@ -81,14 +78,6 @@ void DuiContainer::setCentralWidget(QGraphicsWidget *centralWidget, bool destroy
     Q_UNUSED(centralWidget);
     Q_UNUSED(destroy);
     Ut_DuiSettingsLanguageSettingsFactory::containers.append(title());
-}
-
-// DuiActionProvider stubs
-DuiAction *DuiActionProvider::getDefaultAction(const QUrl &uri)
-{
-    Ut_DuiSettingsLanguageSettingsFactory::duiActionProvider_getDefaultActionUri = uri.toString();
-    Ut_DuiSettingsLanguageSettingsFactory::duiActionProvider_action = new DuiAction(NULL);
-    return Ut_DuiSettingsLanguageSettingsFactory::duiActionProvider_action;
 }
 
 // Tests
@@ -120,8 +109,6 @@ void Ut_DuiSettingsLanguageSettingsFactory::init()
     settingsBooleansDataStores.clear();
     settingsIntegersDataStores.clear();
     duiSettingsLanguageSelectionFactoryWidget = NULL;
-    duiActionProvider_getDefaultActionUri.clear();
-    duiActionProvider_action = NULL;
     dataStore = new MockDataStore;
     gDuiSettingsLanguageSettingsStub->stubReset();
 }

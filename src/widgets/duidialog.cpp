@@ -76,27 +76,19 @@ void DuiDialogPrivate::init()
     q->setFocusPolicy(Qt::ClickFocus);
 }
 
-void DuiDialogPrivate::appear(bool now, DuiSceneWindow::DeletionPolicy policy)
+void DuiDialogPrivate::appear(DuiSceneWindow::DeletionPolicy policy)
 {
     Q_Q(DuiDialog);
     DuiWindow *window;
 
     if (q->isSystemModal()) {
         if (prepareStandAloneAppearance(policy)) {
-            if (now) {
-                q->appearNow(standAloneWindow);
-            } else {
-                q->appear(standAloneWindow);
-            }
+            q->appear(standAloneWindow);
         }
     } else {
         window = DuiApplication::activeWindow();
         if (window) {
-            if (now) {
-                q->appearNow(window, policy);
-            } else {
-                q->appear(window, policy);
-            }
+            q->appear(window, policy);
         } else {
             duiWarning("DuiDialog") << "Cannot appear. No DuiWindow currently active.";
         }
@@ -138,7 +130,7 @@ void DuiDialogPrivate::updateStandAloneHomeButtonVisibility()
         if (homeButtonPanel) {
             if (homeButtonPanel->scene() != 0) {
                 Q_ASSERT(homeButtonPanel->scene() == standAloneWindow->scene());
-                homeButtonPanel->disappearNow();
+                standAloneWindow->sceneManager()->disappearSceneWindowNow(homeButtonPanel);
             }
 
             delete homeButtonPanel;
@@ -151,7 +143,7 @@ void DuiDialogPrivate::updateStandAloneHomeButtonVisibility()
         standAloneWindow->connect(homeButtonPanel,
                                   SIGNAL(buttonClicked()), SLOT(showMinimized()));
 
-        homeButtonPanel->appearNow(standAloneWindow);
+        standAloneWindow->sceneManager()->appearSceneWindowNow(homeButtonPanel);
     }
 }
 
@@ -173,7 +165,8 @@ void DuiDialogPrivate::_q_onStandAloneDialogDisappeared()
     }
 
     if (homeButtonPanel) {
-        homeButtonPanel->disappearNow();
+        if (homeButtonPanel->sceneManager())
+            homeButtonPanel->sceneManager()->disappearSceneWindowNow(homeButtonPanel);
         delete homeButtonPanel;
         homeButtonPanel = 0;
     }
@@ -211,7 +204,7 @@ bool DuiDialogPrivate::prepareStandAloneAppearance(DuiSceneWindow::DeletionPolic
     // Check whether the dialog is already present in some scene manager
     if (shown) {
         if (q->sceneManager() != standAloneWindow->sceneManager()) {
-            q->disappearNow();
+            q->sceneManager()->disappearSceneWindowNow(q);
         } else {
             ok = false;
         }
@@ -285,22 +278,6 @@ DuiDialog::DuiDialog() :
     d->init();
 
     model()->setResultCode(DuiDialog::Rejected);
-}
-
-DuiDialog::DuiDialog(const QString &title, DuiWidget *centralWidget, Dui::StandardButtons buttons) :
-    DuiSceneWindow(new DuiDialogPrivate(), new DuiDialogModel(), DuiSceneWindow::Dialog, QString())
-{
-    Q_D(DuiDialog);
-
-    d->init();
-
-    model()->setResultCode(DuiDialog::Rejected);
-
-    setTitle(title);
-
-    d->addStandardButtons(buttons);
-
-    setCentralWidget(centralWidget);
 }
 
 DuiDialog::DuiDialog(const QString &title, Dui::StandardButtons buttons) :
@@ -406,7 +383,7 @@ Dui::StandardButton DuiDialog::standardButton(DuiButtonModel *buttonModel) const
 void DuiDialog::appear(DuiSceneWindow::DeletionPolicy policy)
 {
     Q_D(DuiDialog);
-    d->appear(false, policy);
+    d->appear(policy);
 }
 
 void DuiDialog::appear(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)
@@ -416,24 +393,7 @@ void DuiDialog::appear(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)
     if (window) {
         DuiSceneWindow::appear(window, policy);
     } else {
-        d->appear(false, policy);
-    }
-}
-
-void DuiDialog::appearNow(DuiSceneWindow::DeletionPolicy policy)
-{
-    Q_D(DuiDialog);
-    d->appear(true, policy);
-}
-
-void DuiDialog::appearNow(DuiWindow *window, DuiSceneWindow::DeletionPolicy policy)
-{
-    Q_D(DuiDialog);
-
-    if (window) {
-        DuiSceneWindow::appearNow(window, policy);
-    } else {
-        d->appear(true, policy);
+        d->appear(policy);
     }
 }
 

@@ -42,7 +42,7 @@
 #include <unicode/putil.h> // u_setDataDirectory
 #endif
 
-Q_DECLARE_METATYPE(DuiLocale::Calendar);
+Q_DECLARE_METATYPE(DuiLocale::CalendarType);
 Q_DECLARE_METATYPE(DuiLocale);
 
 

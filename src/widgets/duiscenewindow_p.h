@@ -33,13 +33,6 @@ class DuiSceneWindowPrivate : public DuiWidgetControllerPrivate
 public:
     DuiSceneWindowPrivate();
 
-    // helper function for the public appear() and appearNow()
-    // since both are very similar
-    void appear(bool now, DuiWindow *window, DuiSceneWindow::DeletionPolicy policy);
-
-    // helper function for the public dismiss() and dismissNow()
-    bool dismiss(bool now);
-
     DuiSceneWindow::WindowType      windowType;
     DuiSceneWindow::DeletionPolicy  policy;
 

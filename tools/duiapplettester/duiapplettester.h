@@ -32,7 +32,6 @@ class DuiAppletTesterWindow;
 class DuiApplication;
 class DuiSettingsLanguageBinary;
 class DuiAppletSettings;
-class DuiAppletSettingsDialog;
 class DuiGConfDataStore;
 
 /*!
@@ -121,9 +120,6 @@ private:
 
     //! Applet settings
     DuiAppletSettings *appletSettings;
-
-    //! Applet settings dialog
-    DuiAppletSettingsDialog *settingsDialog;
 };
 
 #endif // DUIAPPLETTESTER_H

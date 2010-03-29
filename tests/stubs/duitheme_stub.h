@@ -47,8 +47,6 @@ class DuiThemeStub : public StubBase {
   virtual const DuiDefaultFonts & fonts();
   virtual bool loadCSS(const QString &filename, DuiTheme::InsertMode mode);
   virtual QString currentTheme();
-  virtual QStringList findAvailableThemes();
-  virtual void changeTheme(const QString &theme_id);
   virtual bool hasPendingRequests();
   virtual void rebuildViewsForWidgets();
 }; 
@@ -175,17 +173,6 @@ QString DuiThemeStub::currentTheme() {
   return stubReturnValue<QString>("currentTheme");
 }
 
-QStringList DuiThemeStub::findAvailableThemes() {
-  stubMethodEntered("findAvailableThemes");
-  return stubReturnValue<QStringList>("findAvailableThemes");
-}
-
-void DuiThemeStub::changeTheme(const QString &theme_id) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(theme_id));
-  stubMethodEntered("changeTheme",params);
-}
-
 bool DuiThemeStub::hasPendingRequests() {
   stubMethodEntered("hasPendingRequests");
   return stubReturnValue<bool>("hasPendingRequests");
@@ -275,14 +262,6 @@ bool DuiTheme::loadCSS(const QString &filename, InsertMode mode) {
 
 QString DuiTheme::currentTheme() {
   return gDuiThemeStub->currentTheme();
-}
-
-QStringList DuiTheme::findAvailableThemes() {
-  return gDuiThemeStub->findAvailableThemes();
-}
-
-void DuiTheme::changeTheme(const QString &theme_id) {
-  gDuiThemeStub->changeTheme(theme_id);
 }
 
 bool DuiTheme::hasPendingRequests() {

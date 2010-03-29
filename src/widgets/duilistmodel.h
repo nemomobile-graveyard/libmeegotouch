@@ -38,8 +38,8 @@ private:
 
     DUI_MODEL_PTR_PROPERTY(QAbstractItemModel *, itemModel, ItemModel, true, 0)
     DUI_MODEL_PTR_PROPERTY(DuiCellCreator *, cellCreator, CellCreator, true, 0)
-    DUI_MODEL_PROPERTY(QModelIndex, firstVisibleItem, FirstVisibleItem, true, QModelIndex())
-    DUI_MODEL_PROPERTY(QModelIndex, lastVisibleItem, LastVisibleItem, true, QModelIndex())
+    DUI_MODEL_PROPERTY(QModelIndex, firstVisibleItem, FirstVisibleItem, false, QModelIndex())
+    DUI_MODEL_PROPERTY(QModelIndex, lastVisibleItem, LastVisibleItem, false, QModelIndex())
     DUI_MODEL_PROPERTY(bool, showGroups, ShowGroups, true, false)
     DUI_MODEL_PROPERTY(int, columns, Columns, true, 1)
     DUI_MODEL_PTR_PROPERTY(QItemSelectionModel *, selectionModel, SelectionModel, true, NULL)

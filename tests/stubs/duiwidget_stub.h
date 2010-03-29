@@ -42,7 +42,6 @@ class DuiWidgetStub : public StubBase {
   virtual void enterDisplayEvent();
   virtual void exitDisplayEvent();
   virtual void onDisplayChangeEvent(DuiOnDisplayChangeEvent *event);
-  virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
   virtual bool event(QEvent *event);
   virtual void cancelEvent(DuiCancelEvent *event);
   virtual void orientationChangeEvent(DuiOrientationChangeEvent *event);
@@ -128,14 +127,6 @@ void DuiWidgetStub::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event) {
   QList<ParameterBase*> params;
   params.append( new Parameter<DuiOnDisplayChangeEvent * >(event));
   stubMethodEntered("onDisplayChangeEvent",params);
-}
-
-QVariant DuiWidgetStub::itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<QGraphicsItem::GraphicsItemChange>(change));
-  params.append( new Parameter<const QVariant & >(value));
-  stubMethodEntered("itemChange",params);
-  return stubReturnValue<QVariant>("itemChange");
 }
 
 bool DuiWidgetStub::event(QEvent *event) {
@@ -288,10 +279,6 @@ void DuiWidget::exitDisplayEvent() {
 
 void DuiWidget::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event) {
   gDuiWidgetStub->onDisplayChangeEvent(event);
-}
-
-QVariant DuiWidget::itemChange(GraphicsItemChange change, const QVariant &value) {
-  return gDuiWidgetStub->itemChange(change, value);
 }
 
 bool DuiWidget::event(QEvent *event) {

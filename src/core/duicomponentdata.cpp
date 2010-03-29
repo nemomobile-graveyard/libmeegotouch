@@ -300,7 +300,8 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
     deviceName = "N900";
 #endif //HAVE_N900
 
-
+    // Assume every argument is used and mark those that are not
+    QVector<bool> usedArguments(argc, true);
 
     // Configure application according to switches
     for (int i = 1; i < argc; ++i) {
@@ -435,7 +436,27 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
 
         } else if (s == "-prestart") {
             prestarted = true;
+        } else {
+            usedArguments[i] = false;
         }
+    }
+
+    // remove used arguments from argc/argv by overwriting the used ones
+    unsigned int currentTgt = 1;
+
+    for (int currentSrc = 1; currentSrc < usedArguments.size(); ++currentSrc) {
+        argv[currentTgt] = argv[currentSrc];
+
+        if (!usedArguments[currentSrc]) {
+            ++currentTgt;
+        } else {
+            --argc;
+        }
+    }
+
+    // and cleaning up the rest, just in case
+    for (int i = currentTgt+1; i < usedArguments.size(); ++i) {
+        argv[i] = 0;
     }
 
     //Setup duiDebug()

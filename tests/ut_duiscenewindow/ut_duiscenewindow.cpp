@@ -176,47 +176,34 @@ void Ut_DuiSceneWindow::testAppearWithoutSceneManager()
     QVERIFY(m_subject->scene() == static_cast<QGraphicsScene *>(window->scene()));
 }
 
-// TODO: Remove this along with deprecated windowShown() and windowHidden() signals
-void Ut_DuiSceneWindow::testWindowAnimationDone()
-{
-    QSignalSpy spyWindowVisible(m_subject, SIGNAL(windowShown()));
-    QSignalSpy spyWindowHidden(m_subject, SIGNAL(windowHidden()));
-    m_subject->appearNow();
-    QCOMPARE(spyWindowVisible.count(), 1);
-    QCOMPARE(spyWindowHidden.count(), 0);
-    m_subject->disappearNow();
-    QCOMPARE(spyWindowVisible.count(), 1);
-    QCOMPARE(spyWindowHidden.count(), 1);
-}
-
 void Ut_DuiSceneWindow::testAppearedDisappearedSignals()
 {
     QSignalSpy spyAppeared(m_subject, SIGNAL(appeared()));
     QSignalSpy spyDisappeared(m_subject, SIGNAL(disappeared()));
 
-    m_subject->appearNow();
+    window->sceneManager()->appearSceneWindowNow(m_subject);
 
     QCOMPARE(spyAppeared.count(), 1);
     QCOMPARE(spyDisappeared.count(), 0);
 
-    m_subject->disappearNow();
+    window->sceneManager()->disappearSceneWindowNow(m_subject);
 
     QCOMPARE(spyAppeared.count(), 1);
     QCOMPARE(spyDisappeared.count(), 1);
 }
 
-void Ut_DuiSceneWindow::opacityAfterDisappearNow()
-{
-    m_subject->setOpacity(0.0);
-    m_subject->appearNow();
-    m_subject->disappearNow();
-    QCOMPARE(m_subject->opacity(), 1.0);
-}
+//void Ut_DuiSceneWindow::opacityAfterDisappearNow()
+//{
+//    m_subject->setOpacity(0.0);
+//    window->sceneManager()->appearSceneWindowNow(m_subject);
+//    window->sceneManager()->disappearSceneWindowNow(m_subject);
+//    QCOMPARE(m_subject->opacity(), 1.0);
+//}
 
 void Ut_DuiSceneWindow::opacityAfterDisappear()
 {
     m_subject->setOpacity(0.0);
-    m_subject->appearNow();
+    window->sceneManager()->appearSceneWindowNow(m_subject);
     m_subject->disappear();
     QCOMPARE(m_subject->opacity(), 1.0);
 }
@@ -226,12 +213,12 @@ void Ut_DuiSceneWindow::testDismiss()
     MyDuiDismissEventFilter dismissEventFilter;
     m_subject->installEventFilter(&dismissEventFilter);
 
-    m_subject->appearNow();
+    window->sceneManager()->appearSceneWindowNow(m_subject);
 
     QSignalSpy spyWindowAppeared(m_subject, SIGNAL(appeared()));
     QSignalSpy spyWindowDisappeared(m_subject, SIGNAL(disappeared()));
 
-    m_subject->dismissNow();
+    window->sceneManager()->dismissSceneWindowNow(m_subject);
 
     QCOMPARE(spyWindowAppeared.count(), 0);
     QCOMPARE(spyWindowDisappeared.count(), 1);
@@ -240,11 +227,11 @@ void Ut_DuiSceneWindow::testDismiss()
 
 void Ut_DuiSceneWindow::testDestroyWhenDoneCallingDisappear()
 {
-    m_subject->appearNow(DuiSceneWindow::DestroyWhenDone);
+    window->sceneManager()->appearSceneWindowNow(m_subject, DuiSceneWindow::DestroyWhenDone);
 
     QSignalSpy spyDestroyed(m_subject, SIGNAL(destroyed()));
 
-    m_subject->disappearNow();
+    window->sceneManager()->disappearSceneWindowNow(m_subject);
 
     processPendingEvents();
 
@@ -255,11 +242,11 @@ void Ut_DuiSceneWindow::testDestroyWhenDoneCallingDisappear()
 
 void Ut_DuiSceneWindow::testDestroyWhenDoneCallingDismiss()
 {
-    m_subject->appearNow(DuiSceneWindow::DestroyWhenDone);
+    window->sceneManager()->appearSceneWindowNow(m_subject, DuiSceneWindow::DestroyWhenDone);
 
     QSignalSpy spyDestroyed(m_subject, SIGNAL(destroyed()));
 
-    m_subject->dismissNow();
+    window->sceneManager()->dismissSceneWindowNow(m_subject);
 
     processPendingEvents();
 
@@ -270,11 +257,11 @@ void Ut_DuiSceneWindow::testDestroyWhenDoneCallingDismiss()
 
 void Ut_DuiSceneWindow::testDestroyWhenDismissedCallingDisappear()
 {
-    m_subject->appearNow(DuiSceneWindow::DestroyWhenDismissed);
+    window->sceneManager()->appearSceneWindowNow(m_subject, DuiSceneWindow::DestroyWhenDismissed);
 
     QSignalSpy spyDestroyed(m_subject, SIGNAL(destroyed()));
 
-    m_subject->disappearNow();
+    window->sceneManager()->disappearSceneWindowNow(m_subject);
 
     processPendingEvents();
 
@@ -283,11 +270,11 @@ void Ut_DuiSceneWindow::testDestroyWhenDismissedCallingDisappear()
 
 void Ut_DuiSceneWindow::testDestroyWhenDismissedCallingDismiss()
 {
-    m_subject->appearNow(DuiSceneWindow::DestroyWhenDismissed);
+    window->sceneManager()->appearSceneWindowNow(m_subject, DuiSceneWindow::DestroyWhenDismissed);
 
     QSignalSpy spyDestroyed(m_subject, SIGNAL(destroyed()));
 
-    m_subject->dismissNow();
+    window->sceneManager()->dismissSceneWindowNow(m_subject);
 
     processPendingEvents();
 
@@ -298,15 +285,15 @@ void Ut_DuiSceneWindow::testDestroyWhenDismissedCallingDismiss()
 
 void Ut_DuiSceneWindow::testDismissedStateReset()
 {
-    m_subject->appearNow();
-    m_subject->dismissNow();
+    window->sceneManager()->appearSceneWindowNow(m_subject);
+    window->sceneManager()->dismissSceneWindowNow(m_subject);
 
     // internal "dismissed" state should be reset to false on next reappearance
     // Therefore the disappearance below should not cause self-destruction
 
-    m_subject->appearNow(DuiSceneWindow::DestroyWhenDismissed);
+    window->sceneManager()->appearSceneWindowNow(m_subject, DuiSceneWindow::DestroyWhenDismissed);
     QSignalSpy spyDestroyed(m_subject, SIGNAL(destroyed()));
-    m_subject->disappearNow();
+    window->sceneManager()->disappearSceneWindowNow(m_subject);
 
     processPendingEvents();
 

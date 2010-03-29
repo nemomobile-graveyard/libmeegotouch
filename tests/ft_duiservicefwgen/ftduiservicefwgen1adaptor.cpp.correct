@@ -74,7 +74,7 @@ void FtDuiServiceFwGen1Adaptor::showImage(const QString &backServiceName, const 
     DuiApplication::instance()->activeWindow()->setWindowTitle( windowTitle );
     DuiApplicationWindow *appWindow = DuiApplication::activeApplicationWindow();
     if (appWindow != 0) {
-        appWindow->currentPage()->setEscapeButtonMode( DuiEscapeButtonPanelModel::BackMode );
+        appWindow->currentPage()->setEscapeMode( DuiApplicationPageModel::EscapeManualBack );
         // connect to the back button - assumes the above 'showImage' opens a
         // new window and so the window referred to below is already the top one
         connect(appWindow->currentPage(), SIGNAL(backButtonClicked()),

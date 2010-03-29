@@ -22,6 +22,7 @@
 #include <DuiApplicationWindow>
 #include <DuiApplicationPage>
 #include <DuiButton>
+#include <DuiSceneManager>
 #include <DuiSlider>
 #include <DuiLabel>
 #include <duiapplicationextensionarea.h>
@@ -105,7 +106,7 @@ int main(int argc, char **argv)
     DuiApplicationWindow window;
     DemoPage page;
     window.show();
-    page.appearNow();
+    window.sceneManager()->appearSceneWindowNow(&page);
 
     return app.exec();
 }

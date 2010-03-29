@@ -26,6 +26,8 @@
 
 class DuiOrientationTrackerPrivate;
 
+//! \internal
+
 /*!
  * Class responsible for tracking the accelerometer properties and signaling events
  * when the device should change it's orientation.
@@ -33,7 +35,7 @@ class DuiOrientationTrackerPrivate;
  * Initially designed as singleton as DuiDeviceProfile might need to access some more information about
  * the concrete phone position, that is not available from fired events.
  */
-class DuiOrientationTracker: public QObject
+class DuiOrientationTracker : public QObject
 {
     Q_OBJECT
 public:
@@ -57,5 +59,7 @@ private:
 
     friend class DuiDeviceProfile;
 };
+
+//! \internal_end
 
 #endif // DUIORIENTATIONTRACKER_H

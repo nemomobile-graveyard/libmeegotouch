@@ -39,8 +39,14 @@ public:
     virtual bool initialize(const QString&);
     virtual DuiWidget *widget();
 
+    //! Methods derived from DuiAppletInstallationSourceInterface
+    void setDuiAppletInventoryInterface(DuiAppletInventoryInterface &installationSource) ;
+
+    //! For accessing applet inventory interface
+    DuiAppletInventoryInterface *appletInventoryInterface() const;
 private:
     InstallationSourceWidget *source;
+    DuiAppletInventoryInterface *appletInventory;
 };
 
 class InstallationSourceWidget : public DuiWidget
@@ -51,7 +57,7 @@ class InstallationSourceWidget : public DuiWidget
     Q_PROPERTY(QString installationSourceIcon READ installationSourceIcon)
 
 public:
-    InstallationSourceWidget();
+    InstallationSourceWidget(FakeInstallationSource &source);
 
     QString installationSourceTitle() {
         return "Applet Store";
@@ -63,15 +69,15 @@ public:
         return "icon-s-alarm";
     };
 
-signals:
+private slots:
+
     /*!
       * Called to instantiate an applet from a package
       *
       * \param packageName the name of the applet package to be instantiated
       */
-    void packageSelectedForInstallation(const QString &packageName);
+    void instantiateAppletsInPackage(const QString &packageName);
 
-private slots:
     /*!
      * Installs an applet from a local debian package. The package name is fetched
      * from an environment variable called FAKEAPPLETINSTALLATIONSOURCEPACKAGE.
@@ -104,11 +110,8 @@ private slots:
     void nonExistent();
 
 private:
-    /*!
-     * Installs an applet package.
-     * \param packageName the name of the package to install
-     */
-    void installAppletPackage(const QString &packageName);
+    //! For accessing installation source
+    FakeInstallationSource &installationSource;
 };
 
 #endif // FAKEINSTALLATIONSOURCE_H

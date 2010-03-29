@@ -25,12 +25,11 @@ contains(TEMPLATE, app) {
 }
 
 mac {
-    DUI_BUILD_FEATURES = debug
     INCLUDEPATH += include
 }
 
 # Load configure script results
-!win32:!macx {
+!win32: {
     include($${DUI_BUILD_TREE}/mkspecs/duiconfig.pri)
 }
 

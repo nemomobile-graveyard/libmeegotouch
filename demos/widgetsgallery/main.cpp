@@ -29,6 +29,7 @@
 #include <DuiAction>
 #include <DuiLocale>
 #include <DuiGConfItem>
+#include <DuiSceneManager>
 
 #include "timingscene.h"
 #include "listpage.h"
@@ -99,7 +100,7 @@ int main(int argc, char **argv)
         mainLoopHelper.triggerTermination(EmptyMainLoopHelper::QuitOnEmpty);
     }
 
-    listPage.appearNow();
+    window.sceneManager()->appearSceneWindowNow(&listPage);
 
     int exitCode = application.exec();
     delete timedemo;

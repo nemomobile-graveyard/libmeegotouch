@@ -41,7 +41,7 @@ void Ut_DuiAppletPixmapTakenIntoUseMessage::cleanup()
 
 void Ut_DuiAppletPixmapTakenIntoUseMessage::testType()
 {
-    QCOMPARE(message->type(), DuiAppletMessage::PIXMAP_TAKEN_INTO_USE_MESSAGE);
+    QCOMPARE(message->type(), DuiAppletMessage::PixmapTakenIntoUseMessage);
 }
 
 void Ut_DuiAppletPixmapTakenIntoUseMessage::testHandleProperty()

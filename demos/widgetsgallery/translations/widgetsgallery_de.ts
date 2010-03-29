@@ -410,13 +410,8 @@ tooltip</source>
     </message>
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="183"/>
-        <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
-        <translation variants="yes">
-            <lengthvariant>Bitte wählen Sie Ihr Alter:</lengthvariant>
-            <lengthvariant>Wählen Sie Ihr Alter:</lengthvariant>
-            <lengthvariant>Ihr Alter:</lengthvariant>
-            <lengthvariant>Alter:</lengthvariant>
-        </translation>
+        <source>Please select your age:</source>
+        <translation>Bitte wählen Sie Ihr Alter:</translation>
     </message>
     <message id="xx_slider_brightness_label">
         <location filename="../sliderpage.cpp" line="218"/>

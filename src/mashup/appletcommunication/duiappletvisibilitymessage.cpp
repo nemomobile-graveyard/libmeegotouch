@@ -21,7 +21,7 @@
 #include "duiappletmessagefactory.h"
 
 DuiAppletVisibilityMessage::DuiAppletVisibilityMessage(bool visible) :
-    DuiAppletMessage(VISIBILITY_MESSAGE),
+    DuiAppletMessage(VisibilityMessage),
     _visible(visible)
 {
 }
@@ -40,7 +40,7 @@ void DuiAppletVisibilityMessage::unserialize(QDataStream &stream)
     stream >> _visible;
 }
 
-bool DuiAppletVisibilityMessage::visible() const
+bool DuiAppletVisibilityMessage::isVisible() const
 {
     return _visible;
 }

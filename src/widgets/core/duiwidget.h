@@ -142,11 +142,6 @@ Q_SIGNALS:
      */
     void displayExited();
 
-    /*!
-     * \brief A signal that is emitted when item is shown/hidden
-     */
-    void visibilityChanged(bool visibility);
-
 protected:
 
     /*!
@@ -171,8 +166,8 @@ protected:
     virtual void onDisplayChangeEvent(DuiOnDisplayChangeEvent *event);
 
     /*! \reimp */
-    virtual QVariant itemChange(GraphicsItemChange change, const QVariant &value);
     bool event(QEvent *event);
+    /*! \reimp_end */
 
     /*!
       This event handler is designed to allow widgets to cancel the effect of

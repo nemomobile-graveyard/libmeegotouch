@@ -1556,9 +1556,6 @@ QVariant DuiTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     case Qt::ImCurrentSelection:
         return QVariant(selectedText());
 
-    case Dui::InputEnabledQuery:
-        return QVariant(!isReadOnly());
-
     case Dui::ImCorrectionEnabledQuery:
         return QVariant(inputMethodCorrectionEnabled());
 

@@ -29,23 +29,52 @@ class DuiSceneManager;
 class DuiScenePrivate;
 class DuiWindowPrivate;
 
-//! DUISCene stub
+/*!
+ \class DuiScene
+ \brief DuiScene is the scene graph of DirectUI applications
+
+ The scene of an application is a virtual infinite surface on which primitive items or
+ full featured widgets can be placed. For general information of how the scene functions,
+ please refer to the QGraphicsScene documentation.
+
+ DuiScene inherits from and extends QGraphicsScene with the following features:
+
+ - Automatic scene management. DuiSceneWindow derived classes such as DuiApplicationPage or DuiDialog
+   become managed by a DuiSceneManager instance when they appear in a DuiSceene. The feature is comparable
+   to how native windows are managed by a window manager in desktop environments.
+ - Emulation of multitouch events for single-touch enviroments, as in a development environment.
+ - Calcuation of the widget on-display property, see DuiWidget::isOnDisplay()
+ - Development mode visual overlays, providing information to help debug applications:
+    - Bounding rectangles, toggled by <Ctrl>-B
+    - Margins, toggled by <Ctrl>-M
+    - Positions, toggled by <Ctrl>-P
+    - Sizes, toggled by <Ctrl>-S
+    - Object names, toggled by <Ctrl>-N
+    - Frames per second, toggled by <Ctrl>-F
+
+  \sa DuiWindow, DuiApplicationWindow
+ */
 class DUI_EXPORT DuiScene : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
-    //! DuiScene constructor
     /*!
-     * \param parent QObject* defaults to 0
-     * \return DuiScene
-     * */
+     Constructs a DuiScene.
+     */
     explicit DuiScene(QObject *parent = 0);
+
+    /*!
+     Destroys the DuiScene.
+     */
     virtual ~DuiScene();
 
     /*!
-     * Returns a pointer to the scene manager that manages this scene.
-     * If no manager is assigned, a null pointer is returned.
+     Returns the scene manager of the scene.
+
+     Note that the scene is not owned by the manager, instead the manager owns the scene.
+
+     If no manager is assigned, 0 is returned.
      */
     DuiSceneManager *sceneManager();
 
@@ -55,7 +84,9 @@ protected:
     void drawForeground(QPainter *painter, const QRectF &rect);
     //! \reimp_end
 
+    //! \internal
     DuiScenePrivate *const d_ptr;
+    //! \internal_end
 
 private:
     Q_DISABLE_COPY(DuiScene)

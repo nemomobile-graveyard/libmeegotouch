@@ -27,8 +27,8 @@ SUBDIRS     =  \
      ut_duidialog \
      ut_duidialogview \
      ut_duinavigationbar \
-    ut_duifastlistviewgroupheader \
-    ut_duifastlistviewmulticolumn \
+    ut_duilistviewgroupheader \
+    ut_duilistviewmulticolumn \
      ut_duiflowlayoutpolicy \
      ut_duifreestylelayoutpolicy \
      ut_duigridlayoutpolicy \
@@ -100,7 +100,6 @@ SUBDIRS     =  \
     ut_duimashupcanvas \
     ut_duimashupcanvasview \
     ut_duisubdatastore \
-    ut_duiactionprovider \
     ut_duiremoteaction \
     ut_duiserviceaction \
     ut_duiserviceinvoker \
@@ -149,6 +148,7 @@ SUBDIRS     =  \
     ut_duiextensionhandleview \
     ut_duitapandholdrecognizer \
     ut_duivideowidget \
+    ut_duiservicefwgen \
 
 # enable only when we have icu available
 

@@ -35,36 +35,37 @@ public:
     /*!
      * A type for the message.
      */
+
     enum DuiAppletMessageType {
-        INVALID = 0,
-        VISIBILITY_MESSAGE,
-        ORIENTATION_MESSAGE,
+        InvalidMessage = 0,
+        VisibilityMessage,
+        OrientationMessage,
 
-        MOUSE_PRESS_MESSAGE,
-        MOUSE_RELEASE_MESSAGE,
-        MOUSE_MOVE_MESSAGE,
-        CANCEL_MESSAGE,
+        MousePressMessage,
+        MouseReleaseMessage,
+        MouseMoveMessage,
+        CancelMessage,
 
-        SET_GEOMETRY_MESSAGE,
+        SetGeometryMessage,
 
-        PIXMAP_TAKEN_INTO_USE_MESSAGE,
+        PixmapTakenIntoUseMessage,
 
-        APPLET_ALIVE_MESSAGE_REQUEST,
-        APPLET_ALIVE_MESSAGE_RESPONSE,
+        AppletAliveMessageRequest,
+        AppletAliveMessageResponse,
 
-        APPLET_ICON_MESSAGE,
-        APPLET_TITLE_MESSAGE,
-        APPLET_TEXT_MESSAGE,
+        AppletIconMessage,
+        AppletTitleMessage,
+        AppletTextMessage,
 
-        UPDATE_GEOMETRY_MESSAGE,
+        UpdateGeometryMessage,
 
-        PIXMAP_MODIFIED_MESSAGE,
+        PixmapModifiedMessage,
 
-        OBJECT_MENU_REQUEST_MESSAGE,
-        OBJECT_MENU_MESSAGE,
-        OBJECT_MENU_ACTION_SELECTED_MESSAGE,
+        ObjectMenuRequestMessage,
+        ObjectMenuMessage,
+        ObjectMenuActionSelectedMessage,
 
-        NUM_TYPES
+        NumMessages
     };
 
 private:

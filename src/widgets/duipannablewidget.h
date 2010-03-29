@@ -70,16 +70,24 @@ public:
 
     /*!
      * \brief Returns the physics class instance used in
-     * panning. Normally only used by the view.
+     * panning.
      */
     DuiPhysics2DPanning *physics() const;
 
     /*!
+     * \brief Sets the physics engine object used when the widget is
+     * panning the view.
+     *
+     * This method can be used to modify the behaviour of the widget
+     * so that the kinetic panning effect is different than default.
+     *
+     * The DuiPannableWidget will take ownership of the physics engine
+     * object.
+     */
+    void setPhysics(DuiPhysics2DPanning *physics);
+
+    /*!
      * \brief Sets the enabled status of the pannable widget.
-     *
-     * If pannable widget is disabled but panning gesture is ongoing,
-     * the pointer is forced programmatically up.
-     *
      */
     void setEnabled(bool enabled);
 
@@ -163,6 +171,11 @@ Q_SIGNALS:
      * \brief Signals that the panning has stopped.
      */
     void panningStopped();
+
+    /*!
+     * \brief Signals that physics engine changed.
+     */
+    void physicsChanged();
 
 protected:
     /*!

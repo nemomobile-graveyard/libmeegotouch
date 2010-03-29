@@ -26,6 +26,9 @@ SUBDIRS       = \
 include( ../mkspecs/common.pri )
 
 contains(DEFINES, HAVE_DBUS) {
-    SUBDIRS +=  servicefw
+    SUBDIRS += \
+	    servicefw \
+	    chaining \
+
 }
 

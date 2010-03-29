@@ -193,16 +193,28 @@ public:
     static bool isPrestarted();
 
     /*!
-     * \brief Called when DuiApplication returns to prestarted state (if supported by the mode)
-     *  Re-imp this if desired
+     * \brief Called when DuiApplication returns to prestarted state (if supported by the mode).
+     *  Re-imp this if desired. Does nothing by default.
      */
     virtual void restorePrestart();
 
     /*!
-     * \brief Called when DuiApplication is released from the prestarted state
-     *  Re-imp this if desired
+     * \brief Called when DuiApplication is released from the prestarted state.
+     *  Effectively this method just shows DuiApplication::activeWindow().
+     *  Re-imp this if desired. Does nothing by default if multi-windowed prestart is
+     *  selected.
      */
     virtual void releasePrestart();
+
+    /*!
+     * \brief Manually release/restore the application from/to the prestarted state.
+     *  Multi-window applications may need this if they want to show some
+     *  specific window using some other D-Bus service than DuiApplicationService.
+     *  This triggers corresponding signals and handlers if the state changes.
+     * \param enable If set to true, prestart is restored if lazy shutdown selected.
+     *        If set to false, prestart is released.
+     */
+    static void setPrestarted(bool enable);
 
 Q_SIGNALS:
 

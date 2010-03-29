@@ -32,7 +32,7 @@ PhoneBookModel::PhoneBookModel()
 {
     namesList = loadFakeNames();
     imageIdList = loadFakeImageIds();
-    defaultThumbnail = QPixmap(Utils::imagesDir() + "DefaultAvatar.png");
+    defaultThumbnail = QImage(Utils::imagesDir() + "DefaultAvatar.png");
 }
 
 PhoneBookModel::~PhoneBookModel()
@@ -223,7 +223,7 @@ void PhoneBookImageLoader::processJobQueue()
     Job job = thumbnailLoadingJobs.takeFirst();
 
     PhoneBookEntry *entry = job.entry;
-    entry->thumbnail = QPixmap(Utils::contactsDir() + entry->thumbnailId + ".png");
+    entry->thumbnail = QImage(Utils::contactsDir() + entry->thumbnailId + ".png");
     // indicate that thumbnail was loaded
     entry->thumbnailId = "";
 

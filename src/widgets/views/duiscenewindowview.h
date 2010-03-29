@@ -75,12 +75,6 @@ protected:
     virtual void setupModel();
     //! \reimp_end
 
-    /*!
-     \deprecated Since 0.18.
-     \brief Returns an animation which animates this view to hidden state with dismiss animation.
-     */
-    DuiAbstractWidgetAnimation *Q_DECL_DEPRECATED dismissAnimation();
-
 signals:
     /*!
      * \brief Emitted every time when the style of the scene window changes.

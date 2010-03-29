@@ -162,8 +162,8 @@ void Ft_Theme::testViews()
     DuiWidgetController widget;
     widget.setViewType(viewType);
 
-    // Fetch view for a simple widget
-    const DuiWidgetView *view = widget.view();
+    // Create view for a simple widget
+    DuiWidgetView *view = DuiTheme::view(&widget);
 
     // Make sure that we got view at the first place
     if (!viewClass.isEmpty()) {

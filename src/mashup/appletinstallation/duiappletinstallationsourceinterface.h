@@ -27,6 +27,21 @@
 class DuiWidget;
 class DuiAppletInstantiator;
 
+
+/**
+  * DuiAppletInventoryInterface is an interface the applet installation sources can use to instantiate applets in a package
+  */
+class DuiAppletInventoryInterface
+{
+public:
+/*!
+ * Called to instantiate an applet from a package
+ *
+ * \param packageName the name of the applet package to be instantiated
+ */
+virtual void instantiateAppletsInPackage(const QString &packageName) = 0;
+};
+
 /**
  * DuiAppletInstallationSourceInterface is the base class for applet installation source classes.
  *
@@ -41,10 +56,17 @@ class DUI_EXPORT DuiAppletInstallationSourceInterface : public DuiApplicationExt
     Q_INTERFACES(DuiApplicationExtensionInterface)
 
 public:
-    /*!
-     * Destructor.
-     */
-    virtual ~DuiAppletInstallationSourceInterface() {}
+ /*!
+  * Destructor.
+  */
+ virtual ~DuiAppletInstallationSourceInterface() {}
+
+  /*!
+   * Tells the extension about an implementation of the applet inventory interface.
+   *
+   * \param installationSource Applet inventory interface for instantiating applets
+   */
+  virtual void setDuiAppletInventoryInterface(DuiAppletInventoryInterface &installationSource) = 0;
 };
 
 Q_DECLARE_INTERFACE(DuiAppletInstallationSourceInterface, "com.nokia.dui.core.AppletInstallationSourceInterface/1.0")

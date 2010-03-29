@@ -24,6 +24,7 @@
 #include <QStringList>
 #include "duiappletinventorymodel.h"
 #include <DuiApplicationExtensionInterface>
+#include "duiappletinstallationsourceinterface.h"
 
 class QFileSystemWatcher;
 class DuiWidget;
@@ -50,7 +51,7 @@ class DuiMashupCanvas;
  * freedesktop.org desktop file format.
  */
 
-class DuiAppletInventory : public DuiWidgetController
+class DuiAppletInventory : public DuiWidgetController, public DuiAppletInventoryInterface
 {
     Q_OBJECT
     DUI_CONTROLLER(DuiAppletInventory)
@@ -125,18 +126,14 @@ private slots:
      */
     void appletButtonClicked();
 
-    /*!
-      * Called to instantiate applets from a package
-      *
-      * \param packageName the name of the applet package to be instantiated
-      */
-    void instantiateAppletsFromPackage(const QString &packageName);
+    //! \reimp
+    void instantiateAppletsInPackage(const QString &packageName);
+    //! \reimp_end
 
     /*!
-     * Sets up the widget of the installation source for instantiating the applets
-     * \param extension the extension interface for the applet installation source
+     * \brief Lets the extension know about the applet inventory interface
      */
-    void setupInstallationSourceWidget(DuiApplicationExtensionInterface *extension);
+    void setDuiAppletInventoryInterface(DuiApplicationExtensionInterface *extension);
 
 private:
     /*!

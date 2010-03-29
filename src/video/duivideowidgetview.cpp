@@ -123,9 +123,10 @@ void DuiVideoWidgetViewPrivate::frameReady()
     if( !timer.isActive() ) {
         Q_Q(DuiVideoWidgetView);
         timer.setSingleShot(true);
-        q->connect(&timer, SIGNAL(timeout()), 
-                   DuiApplication::activeApplicationWindow()->scene(), SLOT(update()),
-                   Qt::UniqueConnection);
+        if( DuiApplication::activeApplicationWindow() )
+            q->connect(&timer, SIGNAL(timeout()),
+                       DuiApplication::activeApplicationWindow()->viewport(), SLOT(update()),
+                       Qt::UniqueConnection);
         timer.start(0);
     }
     //update();
@@ -298,7 +299,6 @@ void DuiVideoWidgetViewPrivate::blitSwFrame()
     //a new frame is currently being received and there will update
     //call when the new frame has been completely received so we
     //can safely skip the new frame texture creation for now
-    duiDebug("DuiVideoWidgetViewPrivate::blitSwFrame()"); 
     if( !m_gstVideo->lockFrameData() ) {
         duiWarning("DuiVideoWidgetViewPrivate::blitSwFrame()") << "MUTEX LOCK CONFLICT!";
         return;

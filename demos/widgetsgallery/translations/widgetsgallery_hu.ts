@@ -403,7 +403,7 @@ Muwhahaha... [röhögés]</translation>
     <message id="xx_Transparency">
         <location filename="../imagepage.cpp" line="130"/>
         <source>Transparency</source>
-        <translation>Átteszőség</translation>
+        <translation>Áttetszőség</translation>
     </message>
     <message id="xx_Crop">
         <location filename="../imagepage.cpp" line="132"/>
@@ -562,8 +562,8 @@ tooltip</source>
     </message>
     <message id="xx_slider_age_label">
         <location filename="../sliderpage.cpp" line="183"/>
-        <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
-        <translation type="unfinished">Korod:</translation>
+        <source>Please select your age:</source>
+        <translation>Korod:</translation>
     </message>
     <message id="xx_slider_brightness_label">
         <location filename="../sliderpage.cpp" line="218"/>
@@ -856,17 +856,17 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_navigationbar_navbarcombo">
         <location filename="../navigationbarpage.cpp" line="60"/>
         <source>Navigation Bar</source>
-        <translation type="unfinished">Tájoló Csík</translation>
+        <translation>Tájoló Csík</translation>
     </message>
     <message id="xx_navigationbar_escapebtncombo">
         <location filename="../navigationbarpage.cpp" line="68"/>
         <source>Escape Button</source>
-        <translation type="unfinished"></translation>
+        <translation>Escape Gomb</translation>
     </message>
     <message id="xx_navigationbar_homebtncombo">
         <location filename="../navigationbarpage.cpp" line="76"/>
         <source>Home Button</source>
-        <translation type="unfinished"></translation>
+        <translation>Főoldal Gomb</translation>
     </message>
     <message id="xx_navigationbar_escapebutton_mode_label">
         <location filename="../navigationbarpage.cpp" line="131"/>
@@ -891,17 +891,17 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_displaymode_show">
         <location filename="../navigationbarpage.cpp" line="162"/>
         <source>Show</source>
-        <translation type="unfinished"></translation>
+        <translation>Megjelenít</translation>
     </message>
     <message id="xx_displaymode_autohide">
         <location filename="../navigationbarpage.cpp" line="164"/>
         <source>Auto Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatikusan eltűntet</translation>
     </message>
     <message id="xx_displaymode_hide">
         <location filename="../navigationbarpage.cpp" line="166"/>
         <source>Hide</source>
-        <translation type="unfinished"></translation>
+        <translation>Eltűntet</translation>
     </message>
     <message id="xx_language_title">
         <location filename="../languagepage.cpp" line="120"/>
@@ -926,12 +926,12 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_locale_de_AT">
         <location filename="../languagepage.cpp" line="154"/>
         <source>German (Austria)</source>
-        <translation type="unfinished"></translation>
+        <translation>Német (Ausztria)</translation>
     </message>
     <message id="xx_locale_de_CH">
         <location filename="../languagepage.cpp" line="159"/>
         <source>German (Switzerland)</source>
-        <translation type="unfinished"></translation>
+        <translation>Német (Svájc)</translation>
     </message>
     <message id="xx_locale_en">
         <location filename="../languagepage.cpp" line="164"/>
@@ -946,7 +946,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_locale_hi">
         <location filename="../languagepage.cpp" line="174"/>
         <source>Hindi</source>
-        <translation type="unfinished"></translation>
+        <translation>Hindu</translation>
     </message>
     <message id="xx_locale_hu">
         <location filename="../languagepage.cpp" line="179"/>
@@ -956,22 +956,22 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_locale_ja">
         <location filename="../languagepage.cpp" line="184"/>
         <source>Japanese</source>
-        <translation type="unfinished"></translation>
+        <translation>Japán</translation>
     </message>
     <message id="xx_locale_ur">
         <location filename="../languagepage.cpp" line="189"/>
         <source>Urdu</source>
-        <translation type="unfinished"></translation>
+        <translation>Urdu</translation>
     </message>
     <message id="xx_locale_ur_PK">
         <location filename="../languagepage.cpp" line="194"/>
         <source>Urdu (Pakistan)</source>
-        <translation type="unfinished"></translation>
+        <translation>Urdu (Pakisztán)</translation>
     </message>
     <message id="xx_locale_ur_IN">
         <location filename="../languagepage.cpp" line="199"/>
         <source>Urdu (India)</source>
-        <translation type="unfinished"></translation>
+        <translation>Urdu (India)</translation>
     </message>
     <message id="xx_locale_zh_CN">
         <location filename="../languagepage.cpp" line="204"/>
@@ -981,7 +981,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_locale_zh_TW">
         <location filename="../languagepage.cpp" line="209"/>
         <source>Chinese (Taiwan)</source>
-        <translation type="unfinished"></translation>
+        <translation>Kínai (Taiwan)</translation>
     </message>
     <message id="xx_language_combobox_title">
         <location filename="../languagepage.cpp" line="304"/>
@@ -991,22 +991,22 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_language_combobox_lctime_title">
         <location filename="../languagepage.cpp" line="306"/>
         <source>Locale for time</source>
-        <translation type="unfinished"></translation>
+        <translation>Időformátum honosítása</translation>
     </message>
     <message id="xx_language_combobox_lccollate_title">
         <location filename="../languagepage.cpp" line="308"/>
         <source>Locale for collation</source>
-        <translation type="unfinished"></translation>
+        <translation>Összeolvasás honosítása</translation>
     </message>
     <message id="xx_language_combobox_lcnumeric_title">
         <location filename="../languagepage.cpp" line="310"/>
         <source>Locale for numbers</source>
-        <translation type="unfinished"></translation>
+        <translation>Számok honosítása</translation>
     </message>
     <message id="xx_language_combobox_lcmonetary_title">
         <location filename="../languagepage.cpp" line="312"/>
         <source>Locale for money</source>
-        <translation type="unfinished"></translation>
+        <translation>Pénznem honosítása</translation>
     </message>
     <message id="qtn_comm_command_yes">
         <location filename="../languagepage.cpp" line="316"/>
@@ -1023,32 +1023,44 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_language_number_format">
         <location filename="../languagepage.cpp" line="335"/>
         <source>Number format example: %1!! Number example: %1!! Number: %1</source>
-        <translation type="unfinished"></translation>
+        <translation variants="yes">
+            <lengthvariant>Számformátum példa: %1</lengthvariant>
+            <lengthvariant>Számpélda: %1</lengthvariant>
+            <lengthvariant>Szám: %1</lengthvariant>
+        </translation>
     </message>
     <message id="xx_langage_date_time_format">
         <location filename="../languagepage.cpp" line="339"/>
         <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
-        <translation type="unfinished"></translation>
+        <translation variants="yes">
+            <lengthvariant>Dátum- és időformátum példa: %1</lengthvariant>
+            <lengthvariant>Dátum és idő: %1</lengthvariant>
+            <lengthvariant>Dátum: %1</lengthvariant>
+            <lengthvariant>%1</lengthvariant>
+        </translation>
     </message>
     <message id="xx_language_currency_format">
         <location filename="../languagepage.cpp" line="345"/>
         <source>Currency format example: %1 %2!! Currency: %1 %2</source>
-        <translation type="unfinished"></translation>
+        <translation variants="yes">
+            <lengthvariant>Pénznemformátum példa: %1 %2</lengthvariant>
+            <lengthvariant>Pénznem: %1 %2</lengthvariant>
+        </translation>
     </message>
     <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
         <location filename="../languagepage.cpp" line="351"/>
         <location filename="../languagepage.cpp" line="353"/>
         <location filename="../languagepage.cpp" line="355"/>
         <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
-        <translation type="unfinished">
-            <numerusform></numerusform>
-            <numerusform></numerusform>
+        <translation variants="yes">
+            <numerusform>%Ln láda %L1 kilogramm összsúllyal</numerusform>
+            <numerusform>!! %Ln láda %L1 kilogramm összsúllyal</numerusform>
         </translation>
     </message>
     <message id="xx_language_font_test">
         <location filename="../languagepage.cpp" line="359"/>
         <source>Font test:</source>
-        <translation type="unfinished"></translation>
+        <translation>Betűtípus teszt:</translation>
     </message>
     <message id="xx_template_page_views_containers_dialogs">
         <source>Views, Containers and Dialogs</source>
@@ -1108,7 +1120,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_image_page_info">
         <location filename="../imagepage.cpp" line="146"/>
         <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired.</source>
-        <translation>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired.</translation>
+        <translation>A felhasználó a kép segítségével külömböző képeket jeleníthet meg. A képek általában passzív elemek, bár szükség esetén reagálhatnak egyszerű érintésszerű felhasználói bemenetetre.</translation>
     </message>
     <message id="xx_label_checkboxes">
         <source>Checkboxes:</source>
@@ -1179,7 +1191,7 @@ utasításokat.</translation>
         <source>Icon Buttons have an icon and can have a text label. Icon button differs from push button by its visual presentation: it does not have button-style edges like a Push Button does.
 
  Icon Buttons are used in e.g. Toolbars.</source>
-        <translation type="unfinished">Az Ikon Gombok tartalmazhatnak egy szöveges címet és egy ikonKinézetre külömböznek a nyomógomboktól: az Ikon Gomboknak külömbözik a széle.
+        <translation type="unfinished">Az Ikon Gombok tartalmazhatnak egy szöveges címet és egy ikont. Kinézetre külömböznek a nyomógomboktól: az Ikon Gomboknak külömbözik a széle.
 
 Ikon Gombokat használnak például az Eszköztárakban.</translation>
     </message>
@@ -1385,78 +1397,32 @@ A visszajelzéseket a témarendszer segítségével lehet beállítani.</transla
     <message id="xx_input_feedback_page_button5">
         <location filename="../feedbackpage.cpp" line="111"/>
         <source>Space</source>
-        <translation type="unfinished"></translation>
+        <translation>Szünet</translation>
     </message>
     <message id="xx_input_feedback_page_button6">
         <location filename="../feedbackpage.cpp" line="113"/>
         <source>Silent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_min">
-        <location filename="../continuoussliderpage.cpp" line="108"/>
-        <location filename="../continuoussliderpage.cpp" line="160"/>
-        <location filename="../continuoussliderpage.cpp" line="168"/>
-        <source>Min</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_max">
-        <location filename="../continuoussliderpage.cpp" line="110"/>
-        <location filename="../continuoussliderpage.cpp" line="162"/>
-        <location filename="../continuoussliderpage.cpp" line="170"/>
-        <source>Max</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_thumb">
-        <location filename="../continuoussliderpage.cpp" line="112"/>
-        <location filename="../continuoussliderpage.cpp" line="164"/>
-        <location filename="../continuoussliderpage.cpp" line="172"/>
-        <source>Thumb</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_title">
-        <location filename="../continuoussliderpage.cpp" line="150"/>
-        <source>Continuous Slider</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_with_icons">
-        <location filename="../continuoussliderpage.cpp" line="154"/>
-        <source>with icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_plain_slider">
-        <location filename="../continuoussliderpage.cpp" line="156"/>
-        <source>plain slider</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_with_labels">
-        <location filename="../continuoussliderpage.cpp" line="158"/>
-        <source>with labels</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_seekbar">
-        <location filename="../continuoussliderpage.cpp" line="166"/>
-        <source>seekbar</source>
-        <translation type="unfinished"></translation>
+        <translation>Csendes</translation>
     </message>
     <message id="xx_gridpage_title">
         <location filename="../duigridpage.cpp" line="97"/>
         <source>Grid page</source>
-        <translation type="unfinished"></translation>
+        <translation>Rács</translation>
     </message>
     <message id="xx_video_container_page_title">
         <location filename="../videocontainerpage.cpp" line="365"/>
         <source>Video container</source>
-        <translation type="unfinished"></translation>
+        <translation>Videó</translation>
     </message>
     <message id="xx_video_container_page_info_label">
         <location filename="../videocontainerpage.cpp" line="370"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
-        <translation type="unfinished"></translation>
+        <translation>Lejátszáshoz / megállításhoz érintsd meg az indexképet. Hosszabb érintéssel eredeti méretben játsza le a videót.</translation>
     </message>
     <message id="xx_video_container_header_title">
         <location filename="../videocontainerpage.cpp" line="373"/>
         <source>Gallery</source>
-        <translation type="unfinished"></translation>
+        <translation>Galéria</translation>
     </message>
 </context>
 </TS>

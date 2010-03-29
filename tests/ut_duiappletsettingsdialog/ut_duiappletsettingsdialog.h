@@ -56,7 +56,6 @@ private slots:
 
 private:
     DuiAppletSettings *appletSettings;
-    DuiAppletSettingsDialog *m_subject;
 };
 
 #endif

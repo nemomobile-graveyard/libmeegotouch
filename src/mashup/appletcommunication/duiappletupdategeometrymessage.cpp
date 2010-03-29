@@ -20,7 +20,7 @@
 #include "duiappletupdategeometrymessage.h"
 
 DuiAppletUpdateGeometryMessage::DuiAppletUpdateGeometryMessage(const QVector<QSizeF> &sizeHints) :
-    DuiAppletMessage(UPDATE_GEOMETRY_MESSAGE),
+    DuiAppletMessage(UpdateGeometryMessage),
     _sizeHints(sizeHints)
 {
 }

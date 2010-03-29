@@ -26,6 +26,8 @@
 
 class QSvgRenderer;
 
+//! \internal
+
 class DuiThemeResourceManager : public QObject
 {
     Q_OBJECT
@@ -53,4 +55,7 @@ private:
     QMap<QString, SvgRendererInfo*> svgRendererInfos;
     QTimer timer;
 };
+
+//! \internal_end
+
 #endif

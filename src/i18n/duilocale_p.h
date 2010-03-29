@@ -119,7 +119,7 @@ public:
     QString _nameLocale;
 
     // the used calendar and collation may be overridden
-    DuiLocale::Calendar _calendar;
+    DuiLocale::CalendarType _calendarType;
     DuiLocale::Collation _collation;
     // add currency?
 
@@ -140,9 +140,6 @@ public:
 
 #ifdef HAVE_GCONF
     DuiGConfItem currentLanguageItem;
-    DuiGConfItem currentCountryItem;
-    DuiGConfItem currentScriptItem;
-    DuiGConfItem currentVariantItem;
     DuiGConfItem currentLcTimeItem;
     DuiGConfItem currentLcCollateItem;
     DuiGConfItem currentLcNumericItem;

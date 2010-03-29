@@ -96,7 +96,7 @@ private:
     Q_DISABLE_COPY(DuiSpinnerView)
     Q_DECLARE_PRIVATE(DuiSpinnerView)
 
-    Q_PRIVATE_SLOT(d_func(), void visibilityChanged(bool))
+    Q_PRIVATE_SLOT(d_func(), void visibilityChanged())
     Q_PRIVATE_SLOT(d_func(), void animationTimeout())
 };
 

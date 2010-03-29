@@ -2,8 +2,8 @@ include(../../../mkspecs/common.pri)
 
 DUIROOT = ../../..
 DUILIB = $$DUIROOT/lib
-DUISIF = $$DUIROOT/demos/servicefw
-DUISIFINCLUDE = $$DUIROOT/demos/servicefw/include
+DUISIF = $$DUIROOT/examples/servicefw
+DUISIFINCLUDE = $$DUIROOT/examples/servicefw/include
 DUISFWINCLUDE = $$DUIROOT/src/servicefwif
 TARGET     = user
 DESTDIR = $$DUISIF/bin

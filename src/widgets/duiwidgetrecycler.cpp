@@ -33,7 +33,9 @@ DuiWidgetRecyclerPrivate::~DuiWidgetRecyclerPrivate()
 
 void DuiWidgetRecyclerPrivate::resetWidgetState(DuiWidget *widget)
 {
-    widget->setVisible(false);
+    // lets just move it far far away, so that noone can see it
+    widget->setPos(-QWIDGETSIZE_MAX, -QWIDGETSIZE_MAX);
+    //widget->setVisible(false);
     //widget->setParentItem(NULL);
     //widget->setParentLayoutItem(NULL);
 }

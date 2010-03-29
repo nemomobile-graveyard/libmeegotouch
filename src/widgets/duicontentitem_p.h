@@ -22,6 +22,7 @@
 
 #include "private/duiwidgetcontroller_p.h"
 #include <QPixmap>
+#include <QImage>
 
 class DuiContentItemPrivate : public DuiWidgetControllerPrivate
 {
@@ -30,8 +31,9 @@ public:
     virtual ~DuiContentItemPrivate();
 
     QPixmap pixmap;
-
+    QImage image;
     QPixmap optionalPixmap;
+    QImage optionalImage;
     DuiWidget* additionalItem;
     DuiWidget* smallItem;
 };

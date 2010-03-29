@@ -120,20 +120,20 @@ void DuiApplicationWindowPrivate::init()
                q, SLOT(_q_menuDisappeared()));
 
     if (!DuiApplication::fullScreen()) {
-        statusBar->appearNow(q);
+        sceneManager->appearSceneWindowNow(statusBar);
         showingStatusBar = true;
     }
 
-    navigationBar->appearNow(q);
-    homeButtonPanel->appearNow(q);
-    escapeButtonPanel->appearNow(q);
+    sceneManager->appearSceneWindowNow(navigationBar);
+    sceneManager->appearSceneWindowNow(homeButtonPanel);
+    sceneManager->appearSceneWindowNow(escapeButtonPanel);
 
     // Initialize escape button to close mode.
     escapeButtonPanel->setEscapeMode(DuiEscapeButtonPanelModel::CloseMode);
     QObject::connect(escapeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(close()));
 
     if (q->orientation() == Dui::Portrait) {
-        dockWidget->appearNow(q);
+        sceneManager->appearSceneWindowNow(dockWidget);
     }
 
     _q_placeToolBar(q->orientation());
@@ -421,7 +421,7 @@ void DuiApplicationWindowPrivate::setComponentDisplayMode(
                     // Dock widget is a special guy.
                     updateDockWidgetVisibility();
                 } else {
-                    component->appearNow(q);
+                    sceneManager->appearSceneWindowNow(component);
                 }
             } else {
                 component->disappear();
@@ -476,9 +476,9 @@ void DuiApplicationWindowPrivate::updateDockWidgetVisibility()
 
     if (toolbarHasVisibleActions) {
         //TODO: no animation until appear/disappear starts working properly
-        dockWidget->appearNow(q);
+        sceneManager->appearSceneWindowNow(dockWidget);
     } else {
-        dockWidget->disappearNow();
+        sceneManager->disappearSceneWindowNow(dockWidget);
     }
 }
 
@@ -730,6 +730,15 @@ bool DuiApplicationWindow::event(QEvent *event)
 // its close events. In directUi, there's no WM with a close button
 void DuiApplicationWindow::closeEvent(QCloseEvent *event)
 {
+    // Don't really close if lazy shutdown used.
+    if (!closeOnLazyShutdown()) {
+        if (DuiApplication::prestartMode() == Dui::LazyShutdownMultiWindow ||
+            DuiApplication::prestartMode() == Dui::LazyShutdown) {
+            event->accept();
+            return;
+        }
+    }
+
 #ifdef Q_WS_X11
 
     if (testAttribute(Qt::WA_QuitOnClose) && (windowState() & Qt::WindowNoState)) {
@@ -751,6 +760,7 @@ void DuiApplicationWindow::closeEvent(QCloseEvent *event)
         XSync(dpy, False);
     }
 #endif
+
     event->accept();
 }
 

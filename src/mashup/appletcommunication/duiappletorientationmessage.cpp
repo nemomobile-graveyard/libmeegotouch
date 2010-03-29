@@ -21,7 +21,7 @@
 #include "duiappletmessagefactory.h"
 
 DuiAppletOrientationMessage::DuiAppletOrientationMessage(Dui::Orientation orientation) :
-    DuiAppletMessage(ORIENTATION_MESSAGE),
+    DuiAppletMessage(OrientationMessage),
     _orientation(orientation)
 {
 }

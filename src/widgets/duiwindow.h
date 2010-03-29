@@ -281,6 +281,14 @@ public:
     //! Returns the current visibility state of the window.
     bool isOnDisplay() const;
 
+    /*!
+     * Allows to force close instead of hide during lazy shutdown.
+     */
+    void setCloseOnLazyShutdown(bool enable);
+
+    //! Returns true if window closes on lazy shutdown.
+    bool closeOnLazyShutdown() const;
+
 public Q_SLOTS:
     /*!
      Sets the orientation \a angle of the window.

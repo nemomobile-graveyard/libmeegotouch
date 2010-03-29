@@ -20,7 +20,7 @@
 #include "duiapplettitlechangedmessage.h"
 
 DuiAppletTitleChangedMessage::DuiAppletTitleChangedMessage() :
-    DuiAppletMessage(APPLET_TITLE_MESSAGE)
+    DuiAppletMessage(AppletTitleMessage)
 {
 }
 

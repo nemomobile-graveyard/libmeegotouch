@@ -38,7 +38,6 @@
 #include <DuiImageWidget>
 #include <DuiContainer>
 #include <DuiAction>
-#include <DuiActionProvider>
 #include <DuiWidgetView>
 
 DuiWidgetController *DuiSettingsLanguageSettingsFactory::createWidget(const DuiSettingsLanguageSettings &settingsItem, DuiSettingsLanguageWidget &rootWidget, DuiDataStore *dataStore)

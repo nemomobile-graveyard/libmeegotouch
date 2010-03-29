@@ -114,7 +114,7 @@ QString DuiAppletHandle::appletText() const
 void DuiAppletHandle::messageReceived(const DuiAppletMessage &message)
 {
     switch (message.type()) {
-    case DuiAppletMessage::APPLET_ICON_MESSAGE: {
+    case DuiAppletMessage::AppletIconMessage: {
         const DuiAppletIconChangedMessage *m = dynamic_cast<const DuiAppletIconChangedMessage *>(&message);
         if (m != NULL) {
             setAppletIcon(m->icon());
@@ -122,7 +122,7 @@ void DuiAppletHandle::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::APPLET_TITLE_MESSAGE: {
+    case DuiAppletMessage::AppletTitleMessage: {
         const DuiAppletTitleChangedMessage *m = dynamic_cast<const DuiAppletTitleChangedMessage *>(&message);
         if (m != NULL) {
             setAppletTitle(m->title());
@@ -130,7 +130,7 @@ void DuiAppletHandle::messageReceived(const DuiAppletMessage &message)
         break;
     }
 
-    case DuiAppletMessage::APPLET_TEXT_MESSAGE: {
+    case DuiAppletMessage::AppletTextMessage: {
         const DuiAppletTextChangedMessage *m = dynamic_cast<const DuiAppletTextChangedMessage *>(&message);
         if (m != NULL) {
             setAppletText(m->text());

@@ -27,12 +27,12 @@
 #include "duiicuconversions.h"
 
 
-DuiCalendarPrivate::DuiCalendarPrivate(DuiLocale::Calendar calendar)
-    : _calendar(0), _calendarType(calendar), _valid(true)
+DuiCalendarPrivate::DuiCalendarPrivate(DuiLocale::CalendarType calendarType)
+    : _calendar(0), _calendarType(calendarType), _valid(true)
 {
     if (_calendarType == DuiLocale::DefaultCalendar) {
         DuiLocale defaultLocale;
-        _calendarType = defaultLocale.calendar();
+        _calendarType = defaultLocale.calendarType();
     }
 }
 
@@ -113,8 +113,8 @@ DuiLocale::Weekday DuiCalendarPrivate::icuWeekdayToDuiWeekday(int uweekday)
 //! \param timezone Timezone to be used. Default is timezone of the default locale.
 //! Possible values: id, e.g. PST, country/city, e.g. Europe/Helsinki or GMT offset, e.g. GTM+2:00.
 //! supportedTimezones() can be used to enumerate choices.
-DuiCalendar::DuiCalendar(DuiLocale::Calendar calendar,
-                         const QString &timezone) : d_ptr(new DuiCalendarPrivate(calendar))
+DuiCalendar::DuiCalendar(DuiLocale::CalendarType calendarType,
+                         const QString &timezone) : d_ptr(new DuiCalendarPrivate(calendarType))
 {
     Q_D(DuiCalendar);
 
@@ -123,7 +123,7 @@ DuiCalendar::DuiCalendar(DuiLocale::Calendar calendar,
 
     QString timeCategory = defaultLocale.d_ptr->categoryName(DuiLocale::DuiLcTime);
 
-    icu::Locale calLocale = DuiIcuConversions::createLocale(timeCategory, calendar);
+    icu::Locale calLocale = DuiIcuConversions::createLocale(timeCategory, calendarType);
 
     UErrorCode status = U_ZERO_ERROR;
 
@@ -147,7 +147,7 @@ DuiCalendar::DuiCalendar(DuiLocale::Calendar calendar,
 
 //! Constructs a DuiCalendar based on calendar system used by given DuiLocale
 DuiCalendar::DuiCalendar(const DuiLocale &duiLocale, const QString &timezone)
-    : d_ptr(new DuiCalendarPrivate(duiLocale.calendar()))
+    : d_ptr(new DuiCalendarPrivate(duiLocale.calendarType()))
 {
     Q_D(DuiCalendar);
 
@@ -208,7 +208,7 @@ bool DuiCalendar::isValid() const
 
 
 //! returns the used calendar system
-DuiLocale::Calendar DuiCalendar::type() const
+DuiLocale::CalendarType DuiCalendar::type() const
 {
     Q_D(const DuiCalendar);
 
