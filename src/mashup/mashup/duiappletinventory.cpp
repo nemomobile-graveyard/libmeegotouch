@@ -193,16 +193,13 @@ void DuiAppletInventory::setEnabled(bool enabled)
     model()->setCloseButtonVisible(enabled);
 }
 
-void DuiAppletInventory::setupInstallationSourceWidget(DuiApplicationExtensionInterface *extension)
+void DuiAppletInventory::setDuiAppletInventoryInterface(DuiApplicationExtensionInterface *extension)
 {
     DuiAppletInstallationSourceInterface *plugin = static_cast<DuiAppletInstallationSourceInterface* >(extension);
-    DuiWidget *widget = plugin->widget();
-    if (widget != NULL) {
-        QObject::connect(widget, SIGNAL(packageSelectedForInstallation(QString)), this, SLOT(instantiateAppletsFromPackage(QString)));
-    }
+    plugin->setDuiAppletInventoryInterface(*this);
 }
 
-void DuiAppletInventory::instantiateAppletsFromPackage(const QString &packageName)
+void DuiAppletInventory::instantiateAppletsInPackage(const QString &packageName)
 {
     DuiAppletInstantiator::instance()->instantiateAppletsInPackage(packageName, mashupCanvas->serviceAddress());
     emit hideAppletInventory();

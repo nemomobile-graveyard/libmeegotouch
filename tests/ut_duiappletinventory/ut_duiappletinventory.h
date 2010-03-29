@@ -37,9 +37,19 @@ class TestAppletSource : public QObject, public DuiAppletInstallationSourceInter
     Q_INTERFACES(DuiAppletInstallationSourceInterface)
 
 public:
+    TestAppletSource();
+    virtual ~TestAppletSource();
     // methods derived from DuiAppletInstallationSourceInterface
     virtual bool initialize(const QString &);
     virtual DuiWidget *widget();
+    virtual void setDuiAppletInventoryInterface(DuiAppletInventoryInterface &installationSource);
+    //! For accessing applet inventory interface
+    DuiAppletInventoryInterface *appletInventoryInterface() const;
+    void instantiateAppletsInPackage(const QString &packageName);
+
+private:
+    DuiAppletInventoryInterface *appletInventory;
+    DuiWidget *sourceWidget;
 };
 
 class Ut_DuiAppletInventory : public QObject
@@ -49,6 +59,7 @@ class Ut_DuiAppletInventory : public QObject
 public:
     static QStringList watchedDirectories;
     static QStringList appletList;
+    static QList<DuiAppletInventoryInterface *> appletInstallationSource;
     static bool addPathCalled;
     static bool directoriesCalled;
     static bool pluginPathExists;
@@ -89,6 +100,7 @@ private slots:
     void testCategories();
     void testEnabled();
     void testOnlyDotDesktopFilesAreParsed();
+    void testInstantiateAppletsInPackage();
 };
 
 #endif // _UT_DUIAPPLETINVENTORY_

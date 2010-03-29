@@ -77,8 +77,8 @@ void DuiAppletInventoryViewPrivate::init(DuiAppletInventory *controller)
     closeButtonOverlay->setObjectName("DuiAppletInventoryCloseButtonOverlay");
 
     DuiApplicationExtensionArea *area = new DuiApplicationExtensionArea("com.nokia.dui.core.AppletInstallationSourceInterface/1.0");
-    QObject::connect(area, SIGNAL(extensionInstantiated(DuiApplicationExtensionInterface*)), controller, SLOT(setupInstallationSourceWidget(DuiApplicationExtensionInterface*)));
     layoutPolicy->addItem(area);
+    QObject::connect(area, SIGNAL(extensionInstantiated(DuiApplicationExtensionInterface*)), controller, SLOT(setDuiAppletInventoryInterface(DuiApplicationExtensionInterface*)));
 }
 
 DuiAppletInventoryView::DuiAppletInventoryView(DuiAppletInventory *container) :
