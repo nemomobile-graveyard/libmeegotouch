@@ -24,6 +24,7 @@
 
 class DuiButton;
 
+//! \internal
 /*!
  * An interaction controller for selection items in settings language.
  */
@@ -54,5 +55,6 @@ public slots:
     void buttonClicked(DuiButton *button);
 
 };
+//! \internal_end
 
 #endif /* DUISETTINGSLANGUAGESELECTIONCONTROLLER_H_ */

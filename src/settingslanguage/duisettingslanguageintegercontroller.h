@@ -22,6 +22,7 @@
 
 #include <QObject>
 
+//! \internal
 /*!
  * An interaction controller for integer items in settings language.
  */
@@ -52,5 +53,6 @@ public slots:
      */
     void changeValue(int newValue);
 };
+//! \internal_end
 
 #endif /* DUISETTINGSLANGUAGEINTEGERCONTROLLER_H_ */

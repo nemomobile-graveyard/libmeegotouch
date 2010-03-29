@@ -27,6 +27,7 @@
 class DuiAppletInstantiatorPrivate;
 class QDBusPendingCallWatcher;
 
+//! \internal
 /*!
  * Instantiates applets from a given package to the given mashup canvas.
  */
@@ -68,5 +69,6 @@ private:
     Q_DECLARE_PRIVATE(DuiAppletInstantiator)
     Q_PRIVATE_SLOT(d_func(), void receivePackageData(QDBusPendingCallWatcher *))
 };
+//! \internal_end
 
 #endif /* DUIAPPLETINSTANTIATOR_H_ */

@@ -22,6 +22,8 @@
 
 #include <QString>
 #include "duisettingslanguagenode.h"
+
+//! \internal
 /*!
  * \brief A settings node representing text.
  */
@@ -56,6 +58,6 @@ private:
     //! The title of this object.
     QString title_;
 };
-
+//! \internal_end
 
 #endif // DUISETTINGSLANGUAGETEXT_H

@@ -27,6 +27,7 @@
 
 class DuiSettingsLanguageOption;
 
+//! \internal
 /*!
  * \brief A settings node representing a selection.
  *
@@ -88,5 +89,6 @@ private:
     QString _key;
 
 };
+//! \internal_end
 
 #endif // DUISETTINGSLANGUAGESELECTION_H

@@ -23,6 +23,7 @@
 #include "duisettingslanguagenode.h"
 #include <QString>
 
+//! \internal
 /*!
  * \brief A settings node representing a selection option.
  *
@@ -61,5 +62,6 @@ private:
     int value_;
 
 };
+//! \internal_end
 
 #endif // DUISETTINGSLANGUAGEOPTION_H

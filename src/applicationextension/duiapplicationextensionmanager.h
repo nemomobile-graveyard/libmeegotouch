@@ -34,7 +34,6 @@ class DuiApplicationExtensionInterface;
 class DuiFileDataStore;
 
 //! \internal
-
 class DuiApplicationExtensionManager : public QObject
 {
     Q_OBJECT
@@ -200,7 +199,6 @@ private:
     friend class Ut_DuiApplicationExtensionManager;
 #endif
 };
-
 //! \internal_end
 
 #endif // DUIAPPLICATIONEXTENSIONMANAGER_H

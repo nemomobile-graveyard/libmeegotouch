@@ -26,6 +26,7 @@
 class DuiApplicationExtensionInterface;
 class DuiApplicationExtensionMetaData;
 
+//! \internal
 /*!
  * \brief A class that loads DUI application extensions.
  */
@@ -46,5 +47,6 @@ private:
      */
     DuiApplicationExtensionLoader();
 };
+//! \internal_end
 
 #endif /* DUIAPPLICATIONEXTENSIONLOADER_H_ */

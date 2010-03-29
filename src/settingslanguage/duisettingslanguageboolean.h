@@ -25,6 +25,7 @@
 
 #include "duisettingslanguagenode.h"
 
+//! \internal
 /*!
  * \brief A settings node representing a boolean.
  */
@@ -59,5 +60,6 @@ private:
     //! The title of this boolean.
     QString title_;
 };
+//! \internal_end
 
 #endif // DUISETTINGSLANGUAGEBOOLEAN_H

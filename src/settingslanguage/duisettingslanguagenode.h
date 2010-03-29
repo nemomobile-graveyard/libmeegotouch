@@ -22,6 +22,7 @@
 
 #include <QList>
 
+//! \internal
 /*!
  * \brief An abstract base class for the different settings binary nodes.
  *
@@ -69,5 +70,6 @@ private:
      */
     QList<DuiSettingsLanguageNode *> _children;
 };
+//! \internal_end
 
 #endif // DUISETTINGSLANGUAGENODE_H

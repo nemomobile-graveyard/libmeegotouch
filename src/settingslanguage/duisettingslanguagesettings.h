@@ -23,6 +23,7 @@
 #include <QString>
 #include "duisettingslanguagenode.h"
 
+//! \internal
 /*!
  * \brief A settings node representing a "settings root node 'settings'".
  */
@@ -49,5 +50,6 @@ private:
     //! The IRI of the content this is linked to
     QString _content;
 };
+//! \internal_end
 
 #endif // DUISETTINGSLANGUAGESETTINGS_H

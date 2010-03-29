@@ -27,6 +27,7 @@ class DuiWidget;
 class DuiDataStore;
 class DuiDataAccess;
 
+//! \internal
 /*!
  * \brief A class that loads Dui applets.
  */
@@ -48,7 +49,7 @@ private:
      * A private default constructor so no objects of this class can be created.
      */
     DuiAppletLoader();
-
 };
+//! \internal_end
 
 #endif  // DUIAPPLETLOADER_H

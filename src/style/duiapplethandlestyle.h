@@ -23,7 +23,6 @@
 #include "duiextensionhandlestyle.h"
 
 //! \internal
-
 class DuiAppletHandleStyle : public DuiExtensionHandleStyle
 {
     Q_OBJECT
@@ -34,7 +33,6 @@ class DuiAppletHandleStyleContainer : public DuiExtensionHandleStyleContainer
 {
     DUI_STYLE_CONTAINER(DuiAppletHandleStyle)
 };
-
 //! \internal_end
 
 #endif // DUIAPPLETHANDLESTYLE_H

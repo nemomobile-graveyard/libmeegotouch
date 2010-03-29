@@ -27,6 +27,7 @@ class DuiSettingsLanguageText;
 class DuiSettingsLanguageWidget;
 class DuiDataStore;
 
+//! \internal
 /*!
  * A factory for translating settings binaries to widgets.
  */
@@ -49,5 +50,6 @@ public:
      */
     static DuiWidgetController *createWidget(const DuiSettingsLanguageText &settingsText, DuiSettingsLanguageWidget &rootWidget, DuiDataStore *dataStore = NULL);
 };
+//! \internal_end
 
 #endif /* DUISETTINGSLANGUAGETEXTFACTORY_H_ */

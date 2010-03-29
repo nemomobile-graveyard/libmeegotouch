@@ -22,6 +22,7 @@
 
 #include "duisettingslanguagenode.h"
 
+//! \internal
 /*!
  * \brief A settings node representing a group of setting items.
  *
@@ -37,5 +38,6 @@ public:
 
     virtual ~DuiSettingsLanguageGroup() {}
 };
+//! \internal_end
 
 #endif // DUISETTINGSLANGUAGEGROUP_H

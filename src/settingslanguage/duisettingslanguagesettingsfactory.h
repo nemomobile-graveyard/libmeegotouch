@@ -29,6 +29,7 @@ class DuiSettingsLanguageNode;
 class DuiSettingsLanguageSettings;
 class DuiSettingsLanguageWidget;
 
+//! \internal
 /*!
  * A factory for translating settings binaries to widgets.
  */
@@ -63,5 +64,6 @@ private:
     */
     static void createChildren(QGraphicsLinearLayout &layout, const DuiSettingsLanguageNode &node, DuiSettingsLanguageWidget &rootWidget, DuiDataStore *dataStore);
 };
+//! \internal_end
 
 #endif /* DUISETTINGSLANGUAGESETTINGSFACTORY_H_ */

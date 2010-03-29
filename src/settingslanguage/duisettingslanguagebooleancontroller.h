@@ -24,6 +24,7 @@
 
 class DuiButton;
 
+//! \internal
 /*!
  * An interaction controller for boolean items in settings language.
  */
@@ -54,5 +55,6 @@ public slots:
     void buttonToggled(bool checked);
 
 };
+//! \internal_end
 
 #endif // DUISETTINGSLANGUAGEBOOLEANCONTROLLER_H

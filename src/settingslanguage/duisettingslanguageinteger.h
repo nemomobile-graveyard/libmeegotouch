@@ -23,6 +23,7 @@
 #include <QString>
 #include "duisettingslanguagenode.h"
 
+//! \internal
 /*!
  * \brief A settings node representing an integer within a given range.
  */
@@ -100,6 +101,6 @@ private:
     //! The maximum value.
     MinMaxValue maxValue_;
 };
-
+//! \internal_end
 
 #endif // DUISETTINGSLANGUAGEINTEGER_H

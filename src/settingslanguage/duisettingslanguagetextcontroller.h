@@ -24,6 +24,7 @@
 
 class DuiTextEdit;
 
+//! \internal
 /*!
  * An interaction controller for text items in settings language.
  */
@@ -55,5 +56,6 @@ public slots:
      */
     void textEditLostFocus(Qt::FocusReason reason);
 };
+//! \internal_end
 
 #endif /* DUISETTINGSLANGUAGETEXTCONTROLLER_H_ */
