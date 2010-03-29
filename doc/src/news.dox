@@ -98,7 +98,6 @@
   DuiSceneManager::closeWindow() was renamed to DuiSceneManager::dismissSceneWindow(),
   DuiSceneManager::closeWindowNow() was renamed to DuiSceneManager::dismissSceneWindowNow()
 - DuiWindow::keepCurrentOrientation property was removed
-
 - DuiWindow::isOnDisplay() and DuiWidget::isOnDisplay() are no longer virtual. Those
   methods shouldn't be overridden.
 - DuiApplicationPage, DuiContainer, DuiContainerModel, DuiDialog, DuiDialogModel: centralWidget property type changed to QGraphicsWidget.
@@ -108,7 +107,6 @@
 - DuiLocale::calendar() was renamed to DuiLocale::calendarType().
 - DuiLocale::setCalendar() was renamed to DuiLocale::setCalendarType().
 - DuiAppletVisibilityMessage::visible() was renamed to DuiAppletVisibilityMessage::isVisible()
-
 - All-caps enum DuiAppletMessageType values were renamed to CamelCase:
   - DuiAppletMessage::VISIBILITY_MESSAGE was renamed to DuiAppletMessage::VisibilityMessage
   - DuiAppletMessage::ORIENTATION_MESSAGE was renamed to DuiAppletMessage::OrientationMessage
@@ -117,6 +115,8 @@
   script for automatic replacement.
 - DuiSceneWindow::appearNow(), DuiSceneWindow::disappearNow(), DuiSceneWindow::dismissNow() -
   use DuiSceneManager API to forcibly have scene window transitions without animations.
+- DuiDialog::DuiDialog(title, centralWidget, standardButtons) was removed.
+  Use DuiDialog::DuiDialog(title, standardButtons) and DuiDialog::setCentralWidget() instead.
 
 \section v0190
 

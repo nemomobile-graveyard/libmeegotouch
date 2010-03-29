@@ -94,8 +94,8 @@ void DuiAppletSettingsDialog::exec(const DuiAppletSettings& settings)
     // Create a dialog to show the applet instance and global settings
     //~ uispec-document ??? FIXME
     //% "Applet Settings"
-    DuiDialog dialog(qtTrId("duiapplethandle_applet_settings_title"), widget,
-                     Dui::NoStandardButton);
+    DuiDialog dialog(qtTrId("duiapplethandle_applet_settings_title"), Dui::NoStandardButton);
+    dialog.setCentralWidget(widget);
     dialog.setObjectName("AppletSettingsDialog");
     dialog.exec();
 }

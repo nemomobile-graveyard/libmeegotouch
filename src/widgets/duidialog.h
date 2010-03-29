@@ -174,14 +174,6 @@ public:
     DuiDialog();
 
     /*!
-     * \brief Constructs a dialog with the given \a title, \a centralWidget and
-     *        set of standard buttons specified by \a buttons.
-     *
-     * \sa setCentralWidget()
-     */
-    DuiDialog(const QString &title, DuiWidget *centralWidget, Dui::StandardButtons buttons);
-
-    /*!
      * \brief Constructs a dialog with a given \a title and a set of standard buttons
      *        specified by \a buttons.
      */

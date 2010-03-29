@@ -392,8 +392,8 @@ void VideoContainerPage::openImageDialog(const QString& itemid)
 
     QFileInfo info(itemid);
     DuiDialog* dialog = new DuiDialog(info.fileName(),
-                           centralWidget,
                            Dui::OkButton);
+    dialog->setCentralWidget(centralWidget);
     dialog->exec();
 }
 

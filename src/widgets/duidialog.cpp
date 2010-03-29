@@ -280,22 +280,6 @@ DuiDialog::DuiDialog() :
     model()->setResultCode(DuiDialog::Rejected);
 }
 
-DuiDialog::DuiDialog(const QString &title, DuiWidget *centralWidget, Dui::StandardButtons buttons) :
-    DuiSceneWindow(new DuiDialogPrivate(), new DuiDialogModel(), DuiSceneWindow::Dialog, QString())
-{
-    Q_D(DuiDialog);
-
-    d->init();
-
-    model()->setResultCode(DuiDialog::Rejected);
-
-    setTitle(title);
-
-    d->addStandardButtons(buttons);
-
-    setCentralWidget(centralWidget);
-}
-
 DuiDialog::DuiDialog(const QString &title, Dui::StandardButtons buttons) :
     DuiSceneWindow(new DuiDialogPrivate(), new DuiDialogModel(), DuiSceneWindow::Dialog, QString())
 {
