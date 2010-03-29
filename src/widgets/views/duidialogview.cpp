@@ -190,7 +190,7 @@ void DuiDialogViewPrivate::createTitleBar()
     closeButton = new DuiButton(titleBar);
     closeButton->setObjectName("DuiDialogCloseButton");
     closeButton->setViewType("icon");
-    closeButton->setIconID("Icon-close");
+    closeButton->setIconID("icon-m-framework-close");
     layout->addItem(closeButton);
     layout->setAlignment(closeButton, Qt::AlignVCenter | Qt::AlignHCenter);
     QObject::connect(closeButton, SIGNAL(clicked()), controller, SLOT(reject()));
