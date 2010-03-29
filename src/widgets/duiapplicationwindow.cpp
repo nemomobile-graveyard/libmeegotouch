@@ -730,6 +730,15 @@ bool DuiApplicationWindow::event(QEvent *event)
 // its close events. In directUi, there's no WM with a close button
 void DuiApplicationWindow::closeEvent(QCloseEvent *event)
 {
+    // Don't really close if lazy shutdown used.
+    if (!closeOnLazyShutdown()) {
+        if (DuiApplication::prestartMode() == Dui::LazyShutdownMultiWindow ||
+            DuiApplication::prestartMode() == Dui::LazyShutdown) {
+            event->accept();
+            return;
+        }
+    }
+
 #ifdef Q_WS_X11
 
     if (testAttribute(Qt::WA_QuitOnClose) && (windowState() & Qt::WindowNoState)) {
@@ -751,6 +760,7 @@ void DuiApplicationWindow::closeEvent(QCloseEvent *event)
         XSync(dpy, False);
     }
 #endif
+
     event->accept();
 }
 

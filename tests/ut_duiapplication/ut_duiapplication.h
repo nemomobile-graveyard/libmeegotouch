@@ -66,12 +66,18 @@ private slots:
     void testPrestartMode();
     void testReleasePrestartModeLazyShutdown();
     void testReleasePrestartModeTerminateOnClose();
+    void testReleasePrestartModeLazyShutdownMultiWindow();
+    void testReleasePrestartModeTerminateOnCloseMultiWindow();
     void testRestorePrestartModeLazyShutdown();
     void testRestorePrestartModeTerminateOnClose();
+    void testRestorePrestartModeLazyShutdownMultiWindow();
+    void testRestorePrestartModeTerminateOnCloseMultiWindow();
     void testIsPrestartedNoPrestart();
     void testIsPrestartedTerminateOnClose();
     void testIsPrestartedLazyShutdown();
-
+    void testIsPrestartedTerminateOnCloseMultiWindow();
+    void testIsPrestartedLazyShutdownMultiWindow();
+    void testPrestartedProperty();
 public slots:
 
     // Test slots for prestart signals

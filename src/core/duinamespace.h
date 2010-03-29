@@ -131,7 +131,18 @@ namespace Dui
          * enable prestart mode and restart automatically
          * after being launched and closed
          */
-        TerminateOnClose
+        TerminateOnClose,
+
+        /*! enable multi-windowed prestart mode and return back
+         *  to the prestarted state after being launched and closed
+         */
+        LazyShutdownMultiWindow,
+
+        /*!
+         * enable multi-windowed prestart mode and restart automatically
+         * after being launched and closed
+         */
+        TerminateOnCloseMultiWindow
     };
 
     /*!

@@ -22,6 +22,7 @@
 #include <DuiComponentData>
 #include <DuiSceneManager>
 #include "duiondisplaychangeevent.h"
+#include "widgets/duiwindow_p.h"
 
 #include "ut_duiwindow.h"
 
@@ -395,6 +396,14 @@ void Ut_DuiWindow::testDisplayExitedOnCloseLazyShutdownApp()
     QSignalSpy spy(win, SIGNAL(displayExited()));
     win->close();
     QCOMPARE(spy.count(), 1);
+}
+
+void Ut_DuiWindow::testCloseOnLazyShutdown()
+{
+    win->setCloseOnLazyShutdown(true);
+    QVERIFY(win->closeOnLazyShutdown() == true);
+    win->setCloseOnLazyShutdown(false);
+    QVERIFY(win->closeOnLazyShutdown() == false);
 }
 
 QTEST_MAIN(Ut_DuiWindow);

@@ -57,6 +57,7 @@ private slots:
     void testDisplayExitedSignal();
     void testDisplayExitedOnClose();
     void testDisplayExitedOnCloseLazyShutdownApp();
+    void testCloseOnLazyShutdown();
 
 public slots:
     void onDisplayTestSlot();

@@ -72,34 +72,37 @@ int DuiApplicationPrivate::handleXError(Display *, XErrorEvent *)
 void DuiApplicationPrivate::removeWindowsFromSwitcher(bool remove)
 {
     if (!DuiApplication::windows().empty()) {
-        Display *dpy  = QX11Info::display();
-        Atom stateAtom = XInternAtom(dpy, "_NET_WM_STATE", True);
-        if (stateAtom != None) {
-            Atom skipAtom = XInternAtom(dpy, "_NET_WM_STATE_SKIP_TASKBAR", True);
-            if (remove) {
-                Q_FOREACH(DuiWindow * win, DuiApplication::windows()) {
-                    XChangeProperty(dpy, win->winId(), stateAtom,
-                                    XA_ATOM, 32, PropModeAppend,
-                                    reinterpret_cast<unsigned char *>(&skipAtom), 1);
-                }
-            } else {
-                Q_FOREACH(DuiWindow * win, DuiApplication::windows()) {
-                    XEvent ev;
-                    memset(&ev, 0, sizeof(ev));
-                    ev.xclient.type         = ClientMessage;
-                    ev.xclient.display      = dpy;
-                    ev.xclient.window       = win->winId();
-                    ev.xclient.message_type = XInternAtom(dpy, "_NET_WM_STATE", False);
-                    ev.xclient.format       = 32;
-                    ev.xclient.data.l[0]    = 0;
-                    ev.xclient.data.l[1]    = skipAtom;
-                    ev.xclient.data.l[2]    = 0;
+        Q_FOREACH(DuiWindow * win, DuiApplication::windows()) {
+            removeWindowFromSwitcher(win->winId(), remove);
+        }
+    }
+}
 
-                    XSendEvent(dpy, QX11Info::appRootWindow(), False, SubstructureRedirectMask | SubstructureNotifyMask,
-                               &ev);
-                    XSync(dpy, False);
-                }
-            }
+void DuiApplicationPrivate::removeWindowFromSwitcher(Window window, bool remove)
+{
+    Display *dpy  = QX11Info::display();
+    Atom stateAtom = XInternAtom(dpy, "_NET_WM_STATE", True);
+    if (stateAtom != None) {
+        Atom skipAtom = XInternAtom(dpy, "_NET_WM_STATE_SKIP_TASKBAR", True);
+        if (remove) {
+            XChangeProperty(dpy, window, stateAtom,
+                            XA_ATOM, 32, PropModeAppend,
+                            reinterpret_cast<unsigned char *>(&skipAtom), 1);
+        } else {
+            XEvent ev;
+            memset(&ev, 0, sizeof(ev));
+            ev.xclient.type         = ClientMessage;
+            ev.xclient.display      = dpy;
+            ev.xclient.window       = window;
+            ev.xclient.message_type = XInternAtom(dpy, "_NET_WM_STATE", False);
+            ev.xclient.format       = 32;
+            ev.xclient.data.l[0]    = 0;
+            ev.xclient.data.l[1]    = skipAtom;
+            ev.xclient.data.l[2]    = 0;
+
+            XSendEvent(dpy, QX11Info::appRootWindow(), False, SubstructureRedirectMask | SubstructureNotifyMask,
+                       &ev);
+            XSync(dpy, False);
         }
     }
 }
@@ -137,7 +140,7 @@ void DuiApplicationPrivate::init(int &argc, char **argv, const QString &appIdent
 
 void DuiApplicationPrivate::releasePrestart()
 {
-    if (DuiApplication::prestartMode() != Dui::NoPrestart) {
+    if (DuiApplication::isPrestarted()) {
 
         DuiComponentData::setPrestarted(false);
 
@@ -150,7 +153,7 @@ void DuiApplicationPrivate::releasePrestart()
 
 #ifdef Q_WS_X11
         // Ensure that windows are visible in the switcher again
-        if (DuiApplication::prestartMode() == Dui::LazyShutdown) {
+        if (prestartModeIsLazyShutdown()) {
             removeWindowsFromSwitcher(false);
         }
 #endif
@@ -159,7 +162,7 @@ void DuiApplicationPrivate::releasePrestart()
 
 void DuiApplicationPrivate::restorePrestart()
 {
-    if (DuiApplication::prestartMode() == Dui::LazyShutdown) {
+    if (!DuiApplication::isPrestarted() && prestartModeIsLazyShutdown()) {
 
         DuiComponentData::setPrestarted(true);
 
@@ -176,6 +179,27 @@ void DuiApplicationPrivate::restorePrestart()
         removeWindowsFromSwitcher(true);
 #endif
     }
+}
+
+void DuiApplication::setPrestarted(bool enable)
+{
+    if (enable) {
+        DuiApplicationPrivate::restorePrestart();
+    } else {
+        DuiApplicationPrivate::releasePrestart();
+    }
+}
+
+bool DuiApplicationPrivate::prestartModeIsLazyShutdown()
+{
+    return DuiApplication::prestartMode() == Dui::LazyShutdown ||
+            DuiApplication::prestartMode() == Dui::LazyShutdownMultiWindow;
+}
+
+bool DuiApplicationPrivate::prestartModeIsMultiWindowed()
+{
+    return DuiApplication::prestartMode() == Dui::TerminateOnCloseMultiWindow ||
+            DuiApplication::prestartMode() == Dui::LazyShutdownMultiWindow;
 }
 
 DuiApplication::~DuiApplication()
@@ -371,11 +395,14 @@ void DuiApplication::setPrestartMode(Dui::PrestartMode mode)
 {
     // Set prestart mode only if the app was started with -prestart.
     // This way we can later check if the app was originally prestarted or not.
+    // Prevent application from exiting after the last window has been closed if
+    // lazy shutdown was set.
+
     if (DuiComponentData::prestarted()) {
-        if (mode == Dui::LazyShutdown) {
+        DuiComponentData::setPrestartMode(mode);
+        if (DuiApplicationPrivate::prestartModeIsLazyShutdown()) {
             DuiApplication::setQuitOnLastWindowClosed(false);
         }
-        DuiComponentData::setPrestartMode(mode);
     }
 }
 
@@ -386,20 +413,17 @@ Dui::PrestartMode DuiApplication::prestartMode()
 
 void DuiApplication::releasePrestart()
 {
-    if (DuiApplication::activeApplicationWindow()) {
-        DuiApplication::activeApplicationWindow()->show();
-        DuiApplication::activeApplicationWindow()->activateWindow();
-        DuiApplication::activeApplicationWindow()->raise();
+    if (!DuiApplicationPrivate::prestartModeIsMultiWindowed()) {
+        if (DuiApplication::activeWindow()) {
+            DuiApplication::activeWindow()->show();
+            DuiApplication::activeWindow()->activateWindow();
+            DuiApplication::activeWindow()->raise();
+        }
     }
 }
 
 void DuiApplication::restorePrestart()
-{
-    if (DuiApplication::activeApplicationWindow()) {
-        DuiApplication::activeApplicationWindow()->hide();
-        DuiApplication::activeApplicationWindow()->lower();
-    }
-}
+{}
 
 bool DuiApplication::isPrestarted()
 {

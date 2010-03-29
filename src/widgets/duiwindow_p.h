@@ -57,6 +57,9 @@ public:
     bool orientationAngleLocked;
     bool orientationLocked;
 
+    bool isLogicallyClosed;
+    bool closeOnLazyShutdown;
+
     void doEnterDisplayEvent();
     void doExitDisplayEvent();
 

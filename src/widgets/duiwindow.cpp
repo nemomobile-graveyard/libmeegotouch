@@ -58,6 +58,8 @@ DuiWindowPrivate::DuiWindowPrivate() :
     oldOrientation(Dui::Landscape), // the initial value is not used at all
     orientationAngleLocked(false),
     orientationLocked(false),
+    isLogicallyClosed(true),
+    closeOnLazyShutdown(false),
     onDisplay(false),
     onDisplaySet(false),
     q_ptr(NULL)
@@ -623,19 +625,51 @@ bool DuiWindow::event(QEvent *event)
     }
 
     if (event->type() == QEvent::Close) {
-        DuiOnDisplayChangeEvent ev(false, sceneRect());
-        onDisplayChangeEvent(&ev);
-        // Don't close if LazyShutdown enabled
-        if (DuiApplication::prestartMode() == Dui::LazyShutdown) {
-            DuiApplicationPrivate::restorePrestart();
-            event->ignore();
+
+        // Call close event manually here, because we want to check if the
+        // event got ignored before executing lazy shutdown routines.
+        closeEvent(static_cast<QCloseEvent *>(event));
+
+        if (!event->isAccepted()) {
             return true;
         }
+
+        d->isLogicallyClosed = true;
+
+        if (DuiApplication::prestartMode() == Dui::LazyShutdownMultiWindow ||
+            DuiApplication::prestartMode() == Dui::LazyShutdown) {
+
+            DuiApplicationPrivate::removeWindowFromSwitcher(winId(), true);
+
+            // Check if all windows are closed. If so,
+            // return to the prestarted state.
+            bool allWindowsLogicallyClosed = true;
+            Q_FOREACH(DuiWindow * win, DuiApplication::windows()) {
+                if (!win->d_ptr->isLogicallyClosed) {
+                    allWindowsLogicallyClosed = false;
+                }
+            }
+
+            if (allWindowsLogicallyClosed) {
+                DuiApplication::setPrestarted(true);
+            }
+
+            if (!closeOnLazyShutdown()) {
+                hide();
+                lower();
+                event->ignore();
+                return true;
+            }
+        }
+
 #ifdef DUI_USE_OPENGL
         if (!DuiApplication::softwareRendering()) {
             DuiGLES2Renderer::destroy(d->glWidget);
         }
 #endif
+
+        // closeEvent() already called.
+        return true;
     }
 
     if (QEvent::KeyPress == event->type()) {
@@ -752,21 +786,40 @@ bool DuiWindow::event(QEvent *event)
 
 void DuiWindow::setVisible(bool visible)
 {
-    // This effectively overrides call to show() when in
-    // prestarted state.
+    Q_D(DuiWindow);
+
     if (visible) {
+
+        // This effectively overrides call to show() when in
+        // prestarted state.
         if (DuiApplication::isPrestarted()) {
-            switch (DuiApplication::prestartMode()) {
-            case Dui::LazyShutdown:
-            case Dui::TerminateOnClose:
-                return;
-            default:
-                break;
-            }
+            return;
+        } else {
+            d->isLogicallyClosed = false;
         }
+
+        DuiApplicationPrivate::removeWindowFromSwitcher(winId(), false);
+
+    } else {
+        DuiOnDisplayChangeEvent ev(false, sceneRect());
+        onDisplayChangeEvent(&ev);
     }
 
     QGraphicsView::setVisible(visible);
+}
+
+void DuiWindow::setCloseOnLazyShutdown(bool enable)
+{
+    Q_D(DuiWindow);
+
+    d->closeOnLazyShutdown = enable;
+}
+
+bool DuiWindow::closeOnLazyShutdown() const
+{
+    Q_D(const DuiWindow);
+
+    return d->closeOnLazyShutdown;
 }
 
 #include "moc_duiwindow.cpp"

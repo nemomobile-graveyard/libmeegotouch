@@ -381,6 +381,10 @@ void Ut_DuiApplication::testPrestartMode()
     QCOMPARE(app->prestartMode(), Dui::TerminateOnClose);
     app->setPrestartMode(Dui::LazyShutdown);
     QCOMPARE(app->prestartMode(), Dui::LazyShutdown);
+    app->setPrestartMode(Dui::TerminateOnCloseMultiWindow);
+    QCOMPARE(app->prestartMode(), Dui::TerminateOnCloseMultiWindow);
+    app->setPrestartMode(Dui::LazyShutdownMultiWindow);
+    QCOMPARE(app->prestartMode(), Dui::LazyShutdownMultiWindow);
     delete app;
 
     // Test that mode is not set when not started with -prestart
@@ -414,6 +418,40 @@ void Ut_DuiApplication::testReleasePrestartModeLazyShutdown()
     app = buildPrestartApp(2, "appName -prestart", service);
     app->connect(app, SIGNAL(prestartReleased()), this, SLOT(prestartReleased()));
     app->setPrestartMode(Dui::LazyShutdown);
+    service->launch();
+    // Test that we have the correct mode set
+    QCOMPARE(app->isPrestarted(), false);
+    // Test that the signal was sent
+    QCOMPARE(m_prestartReleased, true);
+    // Test that the handler is called
+    QCOMPARE(m_releasePrestart, true);
+    delete app;
+}
+
+void Ut_DuiApplication::testReleasePrestartModeTerminateOnCloseMultiWindow()
+{
+    // Test that app releases correctly from prestart
+    DuiApplicationService *service = new DuiApplicationService("com.nokia.appName");
+    app = buildPrestartApp(2, "appName -prestart", service);
+    app->connect(app, SIGNAL(prestartReleased()), this, SLOT(prestartReleased()));
+    app->setPrestartMode(Dui::TerminateOnCloseMultiWindow);
+    service->launch();
+    // Test that we have the correct mode set
+    QCOMPARE(app->isPrestarted(), false);
+    // Test that the signal was sent
+    QCOMPARE(m_prestartReleased, true);
+    // Test that the handler is called
+    QCOMPARE(m_releasePrestart, true);
+    delete app;
+}
+
+void Ut_DuiApplication::testReleasePrestartModeLazyShutdownMultiWindow()
+{
+    // Test that app releases correctly from prestart
+    DuiApplicationService *service = new DuiApplicationService("com.nokia.appName");
+    app = buildPrestartApp(2, "appName -prestart", service);
+    app->connect(app, SIGNAL(prestartReleased()), this, SLOT(prestartReleased()));
+    app->setPrestartMode(Dui::LazyShutdownMultiWindow);
     service->launch();
     // Test that we have the correct mode set
     QCOMPARE(app->isPrestarted(), false);
@@ -464,6 +502,46 @@ void Ut_DuiApplication::testRestorePrestartModeTerminateOnClose()
     delete app;
 }
 
+void Ut_DuiApplication::testRestorePrestartModeLazyShutdownMultiWindow()
+{
+    // Test that app restores correctly to prestart
+    // if in LazyShutdown mode
+    DuiApplicationService *service = new DuiApplicationService("com.nokia.appName");
+    app = buildPrestartApp(2, "appName -prestart", service);
+    app->connect(app, SIGNAL(prestartRestored()), this, SLOT(prestartRestored()));
+    app->setPrestartMode(Dui::LazyShutdownMultiWindow);
+    service->launch();
+    QCOMPARE(app->isPrestarted(), false);
+    service->close();
+    // Test that we have the correct mode set
+    QCOMPARE(app->isPrestarted(), true);
+    // Test that the signal was sent
+    QCOMPARE(m_prestartRestored, true);
+    // Test that the handler is called
+    QCOMPARE(m_restorePrestart, true);
+    delete app;
+}
+
+void Ut_DuiApplication::testRestorePrestartModeTerminateOnCloseMultiWindow()
+{
+    // Test that app won't restore to prestart
+    // if not in LazyShutdown mode
+    DuiApplicationService *service = new DuiApplicationService("com.nokia.appName");
+    app = buildPrestartApp(2, "appName -prestart", service);
+    app->connect(app, SIGNAL(prestartRestored()), this, SLOT(prestartRestored()));
+    app->setPrestartMode(Dui::TerminateOnCloseMultiWindow);
+    service->launch();
+    QCOMPARE(app->isPrestarted(), false);
+    service->close();
+    // Test that we have the correct mode set
+    QCOMPARE(app->isPrestarted(), false);
+    // Test that the signal was not sent
+    QCOMPARE(m_prestartRestored, false);
+    // Test that the handler is called
+    QCOMPARE(m_restorePrestart, false);
+    delete app;
+}
+
 void Ut_DuiApplication::testIsPrestartedLazyShutdown()
 {
     // Test that app restores correctly to prestart
@@ -496,6 +574,39 @@ void Ut_DuiApplication::testIsPrestartedTerminateOnClose()
     delete app;
 }
 
+void Ut_DuiApplication::testIsPrestartedLazyShutdownMultiWindow()
+{
+    // Test that app restores correctly to prestart
+    // if in LazyShutdown mode
+    DuiApplicationService *service = new DuiApplicationService("com.nokia.appName");
+    app = buildPrestartApp(2, "appName -prestart", service);
+    QCOMPARE(app->isPrestarted(), false);
+    app->setPrestartMode(Dui::LazyShutdownMultiWindow);
+    QCOMPARE(app->isPrestarted(), true);
+    service->launch();
+    QCOMPARE(app->isPrestarted(), false);
+    service->close();
+    QCOMPARE(app->isPrestarted(), true);
+    delete app;
+}
+
+void Ut_DuiApplication::testIsPrestartedTerminateOnCloseMultiWindow()
+{
+    // Test that app won't restore to prestart
+    // if not in LazyShutdown mode
+    DuiApplicationService *service = new DuiApplicationService("com.nokia.appName");
+    app = buildPrestartApp(2, "appName -prestart", service);
+    QCOMPARE(app->isPrestarted(), false);
+    app->setPrestartMode(Dui::TerminateOnCloseMultiWindow);
+    QCOMPARE(app->isPrestarted(), true);
+    service->launch();
+    QCOMPARE(app->isPrestarted(), false);
+    service->close();
+    QCOMPARE(app->isPrestarted(), false);
+    delete app;
+}
+
+
 void Ut_DuiApplication::testIsPrestartedNoPrestart()
 {
     // Test that app won't enter prestart
@@ -511,6 +622,34 @@ void Ut_DuiApplication::testIsPrestartedNoPrestart()
     QCOMPARE(app->isPrestarted(), false);
     delete app;
 }
+
+void Ut_DuiApplication::testPrestartedProperty()
+{
+    DuiApplicationService *service = new DuiApplicationService("com.nokia.appName");
+    app = buildPrestartApp(2, "appName -prestart", service);
+    app->setPrestartMode(Dui::LazyShutdown);
+    app->connect(app, SIGNAL(prestartReleased()), this, SLOT(prestartReleased()));
+    app->connect(app, SIGNAL(prestartRestored()), this, SLOT(prestartRestored()));
+
+    QCOMPARE(app->isPrestarted(), true);
+
+    app->setPrestarted(false);
+    QCOMPARE(app->isPrestarted(), false);
+    // Test that the signal was sent
+    QCOMPARE(m_prestartReleased, true);
+    // Test that the handler is called
+    QCOMPARE(m_releasePrestart, true);
+
+    app->setPrestarted(true);
+    QCOMPARE(app->isPrestarted(), true);
+    // Test that the signal was sent
+    QCOMPARE(m_prestartRestored, true);
+    // Test that the handler is called
+    QCOMPARE(m_restorePrestart, true);
+
+    delete app;
+}
+
 
 void Ut_DuiApplication::prestartReleased()
 {
