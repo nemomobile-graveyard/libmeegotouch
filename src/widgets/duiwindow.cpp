@@ -639,7 +639,9 @@ bool DuiWindow::event(QEvent *event)
         if (DuiApplication::prestartMode() == Dui::LazyShutdownMultiWindow ||
             DuiApplication::prestartMode() == Dui::LazyShutdown) {
 
+#ifdef Q_WS_X11
             DuiApplicationPrivate::removeWindowFromSwitcher(winId(), true);
+#endif
 
             // Check if all windows are closed. If so,
             // return to the prestarted state.
@@ -798,7 +800,9 @@ void DuiWindow::setVisible(bool visible)
             d->isLogicallyClosed = false;
         }
 
+#ifdef Q_WS_X11
         DuiApplicationPrivate::removeWindowFromSwitcher(winId(), false);
+#endif
 
     } else {
         DuiOnDisplayChangeEvent ev(false, sceneRect());
