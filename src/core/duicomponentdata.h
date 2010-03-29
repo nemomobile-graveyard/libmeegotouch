@@ -101,6 +101,8 @@ public:
     static bool showBoundingRect();
     //! Show frame rate command line option set
     static bool showFps();
+    //! Log frame rate command line option set
+    static bool logFps();
     //! Show widgets sizes
     static bool showSize();
     //! Show widgets positions
@@ -129,6 +131,8 @@ public:
     static void setShowBoundingRect(bool show);
     //! Sets if a frames-per-second counter should be shown or not
     static void setShowFps(bool show);
+    //! Sets if whether fps logging should be enabled or not
+    static void setLogFps(bool show);
     //! Sets if the cursor should be shown or not
     static void setShowCursor(bool show);
     //! Sets the prestarted flag

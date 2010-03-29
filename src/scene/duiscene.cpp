@@ -22,7 +22,9 @@
 #include <QPainter>
 #include <QTime>
 #include <QTimer>
+#include <QFileInfo>
 
+#include "duidebug.h"
 #include <duiondisplaychangeevent.h>
 #include "duiapplication.h"
 #include "duiapplicationwindow.h"
@@ -33,11 +35,10 @@
 #include "duiscene_p.h"
 
 const QFont     TextFont                = QFont("Sans", 10);
-const int       MillisecsInSec          = 1000;
-const int       FpsRefreshInterval      = 250;
 const QSize     FpsBoxSize              = QSize(100, 40);
 const QColor    FpsTextColor            = QColor(0xFFFF00);
 const QFont     FpsFont                 = QFont("Sans", 15);
+const int       FpsRefreshInterval      = 1000;
 const QString   FpsBackgroundColor      = "#000000";
 const qreal     FpsBackgroundOpacity    = 0.35;
 const QString   BoundingRectLineColor   = "#00F000";
@@ -49,13 +50,6 @@ const int       MarginBorderWidth       = 2;
 const QColor    GesturePointColor       = QColor(0xEE7621);
 const int       GesturePointSize        = 4;
 
-
-
-// FIXME: Probably we should have a DuiScenePrivate class as a matter of policy
-static QTime lastUpdate;
-static int _frameCount = 0;
-static int fps = 0;
-static QString _stringToDraw;
 
 DuiScenePrivate::DuiScenePrivate() :
         emuPoint1(1),
@@ -338,6 +332,56 @@ bool DuiScenePrivate::eventEmulatePan(QEvent* event)
     return false;
 }
 
+void DuiScenePrivate::showFpsCounter(QPainter *painter, float fps)
+{
+    Q_Q(DuiScene);
+
+    QString display = QString("FPS: %1").arg((int)(fps + 0.5f));
+    /* Draw a simple FPS counter in the lower right corner */
+    static QRectF fpsRect(0, 0, FpsBoxSize.width(), FpsBoxSize.height());
+    if (!q->views().isEmpty()) {
+        DuiApplicationWindow *window = qobject_cast<DuiApplicationWindow *>(q->views().at(0));
+        if (window) {
+            if (manager && manager->orientation() == Dui::Portrait)
+                fpsRect.moveTo(QPointF(window->visibleSceneSize().height() - FpsBoxSize.width(),
+                                       window->visibleSceneSize().width() - FpsBoxSize.height()));
+            else
+                fpsRect.moveTo(QPointF(window->visibleSceneSize().width() - FpsBoxSize.width(),
+                                       window->visibleSceneSize().height() - FpsBoxSize.height()));
+        }
+    }
+
+    painter->fillRect(fpsRect, fpsBackgroundBrush);
+
+    painter->setPen(FpsTextColor);
+    painter->setFont(FpsFont);
+    painter->drawText(fpsRect,
+                      Qt::AlignCenter,
+                      display);
+}
+
+void DuiScenePrivate::logFpsCounter(const QTime *timeStamp, float fps)
+{
+    /* Open fps log-file, if needed */
+    if (!fpsLog.output.isOpen()) {
+        QFileInfo fi(qApp->arguments().at(0));
+        QString appName = fi.baseName();
+        QString pid = QString().setNum(getpid());
+
+        QString fileName = QString("%1-%2.fps").arg(appName, pid);
+        fpsLog.output.setFileName(fileName);
+        if (!fpsLog.output.open(QIODevice::WriteOnly | QIODevice::Text)) {
+            duiWarning("DuiScene::logFpsCounter") << "Could not open fps log file " << fileName;
+            DuiApplication::setLogFps(false);
+            return;
+        } else {
+            fpsLog.stream.setDevice(&fpsLog.output);
+        }
+    }
+    fpsLog.stream << timeStamp->toString();
+    fpsLog.stream << " " << QString("%1").arg(fps, 0, 'f', 1) << endl;
+}
+
 DuiScene::DuiScene(QObject *parent)
     : QGraphicsScene(parent),
       d_ptr(new DuiScenePrivate)
@@ -472,41 +516,35 @@ void DuiScene::drawForeground(QPainter *painter, const QRectF &rect)
         }
     }
 
-    /* Draw a simple FPS counter in the lower right corner */
-    if (DuiApplication::showFps()) {
-        static QRectF fpsRect(0, 0, FpsBoxSize.width(), FpsBoxSize.height());
-        if (!views().isEmpty()) {
-            DuiApplicationWindow *window = qobject_cast<DuiApplicationWindow *>(views().at(0));
-            if (window) {
-                if (d->manager && d->manager->orientation() == Dui::Portrait)
-                    fpsRect.moveTo(QPointF(window->visibleSceneSize().height() - FpsBoxSize.width(),
-                                           window->visibleSceneSize().width() - FpsBoxSize.height()));
-                else
-                    fpsRect.moveTo(QPointF(window->visibleSceneSize().width() - FpsBoxSize.width(),
-                                           window->visibleSceneSize().height() - FpsBoxSize.height()));
+    bool countingFps = DuiApplication::logFps() || DuiApplication::showFps();
+    if (countingFps) {
+        if (d->fps.frameCount < 0) {
+            d->fps.time.restart();
+            d->fps.frameCount = 0;
+        }
+        ++d->fps.frameCount;
+
+        int ms = d->fps.time.elapsed();
+        if (ms > FpsRefreshInterval) {
+            float fps = d->fps.frameCount * 1000.0f / ms;
+            d->fps.time.restart();
+            d->fps.frameCount = 0;
+            if (DuiApplication::logFps()) {
+                QTime time = d->fps.time.currentTime();
+                d->logFpsCounter(&time, fps);
             }
+            d->fps.fps = fps;
         }
 
-        painter->fillRect(fpsRect, d->fpsBackgroundBrush);
-        QTime now = QTime::currentTime();
-        ++_frameCount;
-
-        if (lastUpdate.msecsTo(now) > FpsRefreshInterval) {
-            fps = (MillisecsInSec * _frameCount) / (lastUpdate.msecsTo(now));
-            _frameCount = 0;
-            lastUpdate = now;
-            _stringToDraw = QString("FPS: %1").arg(fps);
+        if (DuiApplication::showFps()) {
+            d->showFpsCounter(painter, d->fps.fps);
         }
-
-        painter->setPen(FpsTextColor);
-        painter->setFont(FpsFont);
-        painter->drawText(fpsRect,
-                          Qt::AlignCenter,
-                          _stringToDraw);
 
         // this update call makes repainting work as fast
         // as possible, and by that prints useful fps numbers
         QTimer::singleShot(0, this, SLOT(update()));
+    } else {
+        d->fps.frameCount = -1;
     }
 
     if (DuiApplication::emulateTwoFingerGestures() &&

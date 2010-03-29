@@ -20,12 +20,29 @@
 #ifndef DUISCENE_P_H
 #define DUISCENE_P_H
 
+#include <QTime>
+#include <QFile>
+#include <QTextStream>
+
 class DuiSceneManager;
 class DuiOnDisplayChangeEvent;
 
 class DuiScenePrivate
 {
     Q_DECLARE_PUBLIC(DuiScene)
+
+    struct Fps
+    {
+        Fps() : frameCount(-1), fps(0.0f) {}
+        int frameCount;
+        QTime time;
+        float fps;
+    };
+    struct FpsLog
+    {
+        QTextStream stream;
+        QFile output;
+    };
 
 public:
     DuiScenePrivate();
@@ -39,6 +56,9 @@ public:
     QBrush fpsBackgroundBrush;
     QPen   boundingRectLinePen;
     QBrush boundingRectFillBrush;
+
+    void showFpsCounter(QPainter *painter, float fps);
+    void logFpsCounter(const QTime *timestamp, float fps);
 
     void touchPointCopyPosToLastPos(QTouchEvent::TouchPoint &point);
     void touchPointCopyMousePosToPointPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event);
@@ -54,6 +74,9 @@ protected:
     QTouchEvent::TouchPoint emuPoint1, emuPoint2;
     bool panEmulationEnabled;
     bool pinchEmulationEnabled;
+
+    Fps fps;
+    FpsLog fpsLog;
 };
 
 #endif // DUISCENE_P_H

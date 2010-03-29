@@ -232,6 +232,11 @@ bool DuiApplication::showFps()
     return DuiComponentData::showFps();
 }
 
+bool DuiApplication::logFps()
+{
+    return DuiComponentData::logFps();
+}
+
 bool DuiApplication::showSize()
 {
     return DuiComponentData::showSize();
@@ -290,6 +295,11 @@ void DuiApplication::setShowBoundingRect(bool show)
 void DuiApplication::setShowFps(bool show)
 {
     DuiComponentData::setShowFps(show);
+}
+
+void DuiApplication::setLogFps(bool show)
+{
+    DuiComponentData::setLogFps(show);
 }
 
 void DuiApplication::setShowCursor(bool show)

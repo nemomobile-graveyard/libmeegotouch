@@ -127,6 +127,7 @@ DuiComponentDataPrivate::DuiComponentDataPrivate()
     showMargins(false),
     showObjectNames(false),
     showFps(false),
+    logFps(false),
 #ifdef __arm__
     showCursor(false),
 #else
@@ -314,6 +315,8 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
             showBoundingRect = true;
         else if (s == "-show-fps")
             showFps = true;
+        else if (s == "-log-fps")
+            logFps = true;
         else if (s == "-show-size")
             showSize = true;
         else if (s == "-show-position")
@@ -416,6 +419,7 @@ void DuiComponentDataPrivate::init(int &argc, char **argv, const QString &appIde
                                          << "  [-fullscreen] Make the application fullscreen\n"
                                          << "  [-show-br] Show the bounding rectangle for all scene items\n"
                                          << "  [-show-fps] Show the FPS for the view (only with OpenGL rendering)\n"
+                                         << "  [-log-fps] Log the FPS for the application\n"
                                          << "  [-show-size] Show widget sizes in the scene\n"
                                          << "  [-show-object-names] Show the names of the objects in the scene\n"
                                          << "  [-show-position] Show widget positions in the scene\n"
@@ -643,6 +647,14 @@ bool DuiComponentData::showFps()
     return gDuiComponentDataPrivate->showFps;
 }
 
+bool DuiComponentData::logFps()
+{
+    if (!gDuiComponentDataPrivate) {
+        qFatal("DuiComponentData::logFps() - DuiComponentData instance not yet created.");
+    }
+    return gDuiComponentDataPrivate->logFps;
+}
+
 bool DuiComponentData::showSize()
 {
     if (!gDuiComponentDataPrivate) {
@@ -737,6 +749,14 @@ void DuiComponentData::setShowFps(bool show)
         qFatal("DuiComponentData::setShowFps() - DuiComponentData instance not yet created.");
     }
     gDuiComponentDataPrivate->showFps = show;
+}
+
+void DuiComponentData::setLogFps(bool show)
+{
+    if (!gDuiComponentDataPrivate) {
+        qFatal("DuiComponentData::setLogFps() - DuiComponentData instance not yet created.");
+    }
+    gDuiComponentDataPrivate->logFps = show;
 }
 
 void DuiComponentData::setShowCursor(bool show)

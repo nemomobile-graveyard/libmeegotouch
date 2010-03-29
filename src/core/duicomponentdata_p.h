@@ -53,6 +53,7 @@ public:
     bool showMargins;
     bool showObjectNames;
     bool showFps;
+    bool logFps;
     bool showCursor;
     bool reverseLayout;
     bool prestarted;
