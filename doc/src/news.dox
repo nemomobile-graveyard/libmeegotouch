@@ -57,6 +57,8 @@
 
 \subsection removed Removed or Renamed
 
+- DuiRmiClient and DuiRmiServer was removed.
+
 - Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.
 
 - DuiWindow's visibility signals enteredDisplay() and exitedDisplay() renamed to be

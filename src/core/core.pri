@@ -16,8 +16,6 @@ HEADERS += \
     $$CORE_SRC_DIR/duidesktopentry.h \
     $$CORE_SRC_DIR/duidesktopentry_p.h \
     $$CORE_SRC_DIR/duinamespace.h \
-    $$CORE_SRC_DIR/duirmiclient.h \
-    $$CORE_SRC_DIR/duirmiserver.h \
     $$CORE_SRC_DIR/duiexport.h \
     $$CORE_SRC_DIR/duiclassfactory.h \
     $$CORE_SRC_DIR/duicpumonitor.h \
@@ -46,8 +44,6 @@ SOURCES += \
     $$CORE_SRC_DIR/duilibrary.cpp \
     $$CORE_SRC_DIR/duiwidgetaction.cpp \
     $$CORE_SRC_DIR/duidesktopentry.cpp \
-    $$CORE_SRC_DIR/duirmiclient.cpp \
-    $$CORE_SRC_DIR/duirmiserver.cpp \
     $$CORE_SRC_DIR/duiclassfactory.cpp \
     $$CORE_SRC_DIR/duicpumonitor.cpp \
         $$CORE_SRC_DIR/duishareddata.cpp \
