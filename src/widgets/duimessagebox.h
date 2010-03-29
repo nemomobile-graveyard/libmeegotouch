@@ -39,6 +39,7 @@ class DUI_EXPORT DuiMessageBox : public DuiDialog
 {
     Q_OBJECT
     DUI_CONTROLLER(DuiMessageBox)
+    Q_PROPERTY(QString text READ text WRITE setText)
 
 public:
     /*!
