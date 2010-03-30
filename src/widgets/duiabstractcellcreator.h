@@ -155,7 +155,7 @@ public:
         \endcode
   */
 template <class T>
-class DuiAbstractCellCreator : public DuiCellCreator
+class DUI_EXPORT DuiAbstractCellCreator : public DuiCellCreator
 {
 public:
     DuiAbstractCellCreator() : size(QSizeF(-1, -1)), cellViewType(QString()),
