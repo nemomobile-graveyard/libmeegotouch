@@ -61,7 +61,7 @@ int main(int argc, char **argv)
     window.show();
 
     MainPage mainPage;
-    mainPage.appearNow();
+    mainPage.appear();
 
     (void) signal(SIGINT, emitMemorySignal);
     App = &app;
