@@ -28,8 +28,10 @@ class QTimeLine;
 
 class DuiPhysics2DPanningPrivate
 {
+    Q_DECLARE_PUBLIC(DuiPhysics2DPanning)
+
 public:
-    DuiPhysics2DPanningPrivate();
+    DuiPhysics2DPanningPrivate(DuiPhysics2DPanning *publicClass);
     virtual ~DuiPhysics2DPanningPrivate();
 
     QRectF  range;
@@ -53,14 +55,10 @@ public:
     qreal borderFrictionC;
     Qt::Orientations panDirection;
 
-    void integrate(qreal &position,
-                   qreal &velocity,
-                   qreal &pointerSpring,
-                   qreal &acceleration,
-                   qreal rangeStart,
-                   qreal rangeEnd
-                   );
+    void _q_integrator(int frame);
 
+protected:
+    DuiPhysics2DPanning *q_ptr;
 };
 
 #endif

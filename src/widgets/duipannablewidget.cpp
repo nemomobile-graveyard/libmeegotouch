@@ -222,7 +222,7 @@ void DuiPannableWidget::init()
 
     d->physics = new DuiPhysics2DPanning(this);
 
-    connect(d->physics, SIGNAL(updatePosition(QPointF)),
+    connect(d->physics, SIGNAL(positionChanged(QPointF)),
             this,       SLOT(updatePosition(QPointF)));
 
     connect(d->physics, SIGNAL(panningStopped()),
@@ -258,7 +258,7 @@ void DuiPannableWidget::setPhysics(DuiPhysics2DPanning *newPhysics)
     delete d->physics;
     d->physics = newPhysics;
 
-    connect(d->physics, SIGNAL(updatePosition(QPointF)),
+    connect(d->physics, SIGNAL(positionChanged(QPointF)),
             this,       SLOT(updatePosition(QPointF)));
 
     connect(d->physics, SIGNAL(panningStopped()),

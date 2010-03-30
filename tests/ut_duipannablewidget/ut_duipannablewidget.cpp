@@ -209,7 +209,7 @@ void DuiPhysics2DPanning::pointerRelease()
     gTester->_currentResult->_outputEvents.push_back(PHYS_MOUSE_RELEASE);
 }
 
-void DuiPhysics2DPanning::integrator(int /*frame*/)
+void DuiPhysics2DPanningPrivate::_q_integrator(int /*frame*/)
 {
 }
 

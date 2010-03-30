@@ -165,22 +165,22 @@ public:
      * If the new position is in the border, the border springs are
      * activated.
      */
-    virtual void setPosition(const QPointF &position);
+    void setPosition(const QPointF &position);
 
     /*!
      * \brief Returns the current position of the physics.
      */
-    virtual QPointF position() const;
+    QPointF position() const;
 
     /*!
      * \brief Returns the movement status of the integrated position.
      */
-    virtual bool inMotion() const;
+    bool inMotion() const;
 
     /*!
      * \brief Returns the current velocity of the physics.
      */
-    virtual QPointF velocity() const;
+    QPointF velocity() const;
 
     /*!
      * \brief Tells physics that pointer was pressed.
@@ -201,27 +201,18 @@ public:
      * \brief Stops the integration algorithm. The algorithm will
      * be restarted when pointer will be pressed again.
      */
-    virtual void stop();
+    void stop();
 
 Q_SIGNALS:
     /*!
      * \brief Signals a change in the \a position of the physics.
      */
-    void updatePosition(const QPointF &position);
+    void positionChanged(const QPointF &position);
 
     /*!
      * \brief Signals that the panning movement has stopped.
      */
     void panningStopped();
-
-protected Q_SLOTS:
-
-    /*!
-     * \brief Integrator for the physics.
-     *
-     * Called periodically by an internal timer.
-     */
-    virtual void integrator(int frame);
 
 protected:
 
@@ -229,7 +220,28 @@ protected:
      * \brief Starts the physics algorithm. The engine will now
      * call the integrator() method periodically.
      */
-    virtual void start();
+    void start();
+
+    /*!
+     * \brief Single axis integration algorithm implementation.
+     *
+     * This method will be called for each integration axis that
+     * is set by setPanDirection() method.
+     * \a orientation - currently integrated axis.
+     * \a position - position calculated in previous step of integration.
+     * \a velocity - velocity calculated in previous step of integration.
+     * \a acceleration - acceleration calculated in previous step of integration.
+     * \a pointerDifference - distance between current mouse position and
+     * previously received mouse position.
+     * \a pointerPressed - state of the pointer.
+     */
+    virtual void integrateAxis( Qt::Orientation orientation,
+                                qreal &position,
+                                qreal &velocity,
+                                qreal &acceleration,
+                                qreal &pointerDifference,
+                                bool pointerPressed
+                                );
 
 private:
 
@@ -240,6 +252,7 @@ private:
 
     Q_DISABLE_COPY(DuiPhysics2DPanning)
     Q_DECLARE_PRIVATE(DuiPhysics2DPanning)
+    Q_PRIVATE_SLOT(d_func(),void _q_integrator(int))
 
 #ifdef UNIT_TEST
     //! Test unit is defined as a friend of production code to access private members

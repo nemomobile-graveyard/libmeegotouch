@@ -422,7 +422,7 @@ void Ut_DuiPhysics2DPanning::integrating()
         switch (actionList[i].type) {
         case tick:
             for (j = 0; j < actionList[i].value_int; j++) {
-                physics->integrator(frame++);
+                physics->d_ptr->_q_integrator(frame++);
             }
             break;
         case press:
@@ -468,7 +468,7 @@ void Ut_DuiPhysics2DPanning::positionShouldReturnToStartRangeAfterMovingViewport
     QCOMPARE(physics->position(), QPointF(10, -30));
 
     for (int i = 1; i < 500; i++) {
-        physics->integrator(i);
+        physics->d_ptr->_q_integrator(i);
     }
 
 
@@ -479,7 +479,7 @@ void Ut_DuiPhysics2DPanning::positionShouldReturnToStartRangeAfterMovingViewport
     QCOMPARE(physics->position(), QPointF(10, -30));
 
     for (int i = 1; i < 500; i++) {
-        physics->integrator(i);
+        physics->d_ptr->_q_integrator(i);
     }
 
     QVERIFY2(abs(physics->position().y() - 10) < 1, "Position (rounded to 1px) should be equal 10");
@@ -494,7 +494,7 @@ void Ut_DuiPhysics2DPanning::positionShouldReturnToEndRangeAfterMovingViewportBe
     QCOMPARE(physics->position(), QPointF(10, 130));
 
     for (int i = 1; i < 500; i++) {
-        physics->integrator(i);
+        physics->d_ptr->_q_integrator(i);
     }
 
     QVERIFY2(abs(physics->position().y() - 110) < 1, "Position (rounded to 1px) should be equal 110");
@@ -504,7 +504,7 @@ void Ut_DuiPhysics2DPanning::positionShouldReturnToEndRangeAfterMovingViewportBe
     QCOMPARE(physics->position(), QPointF(10, 130));
 
     for (int i = 1; i < 500; i++) {
-        physics->integrator(i);
+        physics->d_ptr->_q_integrator(i);
     }
 
     QVERIFY2(abs(physics->position().y() - 110) < 1, "Position (rounded to 1px) should be equal 110");
@@ -519,7 +519,7 @@ void Ut_DuiPhysics2DPanning::integrationShouldStopAfterReachingPositionInsideRan
     QCOMPARE(physics->position(), QPointF(10, -30));
 
     for (int i = 1; i < 500; i++) {
-        physics->integrator(i);
+        physics->d_ptr->_q_integrator(i);
     }
 
     QVERIFY2(abs(physics->velocity().y()) < 1, "Velocity should be smaller than 1px");
@@ -528,7 +528,7 @@ void Ut_DuiPhysics2DPanning::integrationShouldStopAfterReachingPositionInsideRan
     QCOMPARE(physics->position(), QPointF(10, -30));
 
     for (int i = 1; i < 500; i++) {
-        physics->integrator(i);
+        physics->d_ptr->_q_integrator(i);
     }
 
     QVERIFY2(abs(physics->velocity().y()) < 1, "Velocity should be smaller than 1px");
