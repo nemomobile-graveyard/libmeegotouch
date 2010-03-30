@@ -36,15 +36,14 @@ int main(int argc, char **argv)
        the Home and Back/Close framework controls, Navigation bar,
        View menu and Toolbar components */
     DuiApplicationWindow w;
-    w.show();
 
     /* Pages represent one "view" of an application, into which you
        can add your application's contents. An application can have
        any number of pages with transitions between them */
     TrackerGridPage p;
-    p.appearNow(); /* appearNow causes the page to be visible without
-                      a transition animation, which is recommended
-                      for the initial application page */
+    p.appear();
+
+    w.show();
 
     return app.exec();
 }

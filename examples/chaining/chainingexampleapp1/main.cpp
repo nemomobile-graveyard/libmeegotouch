@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     w.show();
 
     DuiApplicationPage p;
-    p.appearNow();
+    p.appear();
 
     DuiButton b(p.centralWidget());
     b.setText("IMAGE");

@@ -43,8 +43,8 @@ int main(int argc, char **argv)
     DuiApplicationPage page;
     /* Attach the layout to the page */
     page.centralWidget()->setLayout(layout);
+    page.appear();
     window.show();
-    page.appearNow();
 
     int n = 20;
     for (int i = 0; i < n; ++i) {

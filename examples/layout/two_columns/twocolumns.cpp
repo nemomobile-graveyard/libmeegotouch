@@ -67,9 +67,8 @@ int main(int argc, char **argv)
     nameLayout->setPreferredWidth(1);
     labelLayout->setPreferredWidth(1);
 
-    /* Attach the layout to the page */
+    page.appear();
     window.show();
-    page.appearNow();
 
     return app.exec();
 }

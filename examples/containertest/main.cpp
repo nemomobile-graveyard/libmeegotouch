@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     DuiApplicationWindow w;
     w.show();
     DuiApplicationPage p;
-    p.appearNow();
+    p.appear();
 
     // main layout
     QGraphicsLinearLayout *main = new QGraphicsLinearLayout(Qt::Vertical, NULL);

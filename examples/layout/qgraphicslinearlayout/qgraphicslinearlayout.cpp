@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 
     /* Attach the layout to the page */
     page.centralWidget()->setLayout(layout);
+    page.appear();
     window.show();
-    page.appearNow();
     return app.exec();
 }

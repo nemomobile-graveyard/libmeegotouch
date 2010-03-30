@@ -41,9 +41,7 @@ int main(int argc, char **argv)
        can add your application's contents. An application can have
        any number of pages with transitions between them */
     DuiApplicationPage p;
-    p.appearNow(); /* appearNow causes the page to be visible without
-                      a transition animation, which is recommended
-                      for the initial application page */
+    p.appear();
 
     /* Let's add a simple push button to our page */
     DuiButton b(p.centralWidget()); /* The (optional) constructor parameter

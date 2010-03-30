@@ -49,7 +49,7 @@ int main(int argc, char **argv)
     secondRow->addItem(new DuiButton("Button 2"));
     secondRow->addStretch();
 
+    page.appear();
     window.show();
-    page.appearNow();
     return app.exec();
 }
