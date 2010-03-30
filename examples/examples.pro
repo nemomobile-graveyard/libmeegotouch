@@ -19,7 +19,7 @@ SUBDIRS       = \
                 multipleinstances \
                 separatorTest \
                 testwidget \
-                trackergrid \
+                #trackergrid \
                 imtoolbar \
 
 # for HAVE_DBUS
