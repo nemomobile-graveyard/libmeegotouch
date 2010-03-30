@@ -165,7 +165,7 @@ class DUI_EXPORT DuiLabel : public DuiWidgetController
     Q_PROPERTY(QString text READ text WRITE setText)
 
     /*!
-        \property DuiLabel::text
+        \property DuiLabel::color
         \brief Color of the label text.
 
         See DuiLabelModel::color for details.
