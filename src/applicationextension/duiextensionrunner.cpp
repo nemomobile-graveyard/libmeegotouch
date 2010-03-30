@@ -41,6 +41,7 @@
 #include <duiappletsettings.h>
 #include <duifiledatastore.h>
 #include <duicancelevent.h>
+#include <duiondisplaychangeevent.h>
 #include <DuiWidget>
 #include <DuiScene>
 #include <DuiSceneManager>
@@ -219,12 +220,20 @@ void DuiExtensionRunner::messageReceived(const DuiAppletMessage &message)
         const DuiAppletVisibilityMessage *m = dynamic_cast<const DuiAppletVisibilityMessage *>(&message);
         if (m != NULL) {
             if (m->isVisible() != visible) {
+                // Visible area rectangle is irrelevant when sending
+                // on or off display events.
+                QRectF dummyRectangle;
                 emit visibilityChanged(m->isVisible());
                 visible = m->isVisible();
                 if (visible) {
+                    DuiOnDisplayChangeEvent event(DuiOnDisplayChangeEvent::FullyOnDisplay, dummyRectangle);
                     QList<QRectF> updateRegion;
                     updateRegion.append(changedRect);
                     sceneChanged(updateRegion);
+                    scene->sendEvent(widget, &event);
+                } else {
+                    DuiOnDisplayChangeEvent event(DuiOnDisplayChangeEvent::FullyOffDisplay, dummyRectangle);
+                    scene->sendEvent(widget, &event);
                 }
             }
         }
