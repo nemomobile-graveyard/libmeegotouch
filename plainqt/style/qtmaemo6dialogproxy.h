@@ -56,6 +56,7 @@ protected:
     /*! \reimp */
     //bool eventFilter(QObject* watched, QEvent* ev);
     //void closeEvent(QCloseEvent* event);
+    bool eventFilter(QObject *obj, QEvent *event);
     /*! \reimp_end */
 
 private:

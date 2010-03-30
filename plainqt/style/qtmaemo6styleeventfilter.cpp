@@ -84,10 +84,12 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     QtMaemo6StylePrivate::drawWindowBackground(decoration);
                 } else if (!qobject_cast<QtMaemo6Window *>(widget) &&
                            !widget->inherits("QTipLabel")) {  //don't create a new window for every tooltip!
-                    m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
-                    m_style->m_windowDecoration->showFastMaximized();
-                    QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
-                    return true;
+                    if(0 == qobject_cast<QtMaemo6WindowDecoration*>(widget->parent())) {
+                        m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
+                        m_style->m_windowDecoration->showFastMaximized();
+                        QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
+                        return true;
+                    }
                 }
             }
             // Unfortunately this can't be safely done in polish:

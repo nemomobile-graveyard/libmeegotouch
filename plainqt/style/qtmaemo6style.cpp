@@ -820,7 +820,6 @@ void QtMaemo6Style::polish(QApplication *app)
 {
     if(app->dynamicPropertyNames().contains(Dui::NoDuiStyle))
         return;
-
     QtMaemo6TestStyle::polish(app);
 }
 
