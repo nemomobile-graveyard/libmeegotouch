@@ -23,28 +23,28 @@
 #include "duinotificationgroup.h"
 #include "duiremoteaction.h"
 
-const QString DeviceEvent = "device";
-const QString DeviceAddedEvent = "device.added";
-const QString DeviceErrorEvent = "device.error";
-const QString DeviceRemovedEvent = "device.removed";
-const QString EmailEvent = "email";
-const QString EmailArrivedEvent = "email.arrived";
-const QString EmailBouncedEvent = "email.bounced";
-const QString ImEvent = "im";
-const QString ImErrorEvent = "im.error";
-const QString ImReceivedEvent = "im.received";
-const QString NetworkEvent = "network";
-const QString NetworkConnectedEvent = "network.connected";
-const QString NetworkDisconnectedEvent = "network.disconnected";
-const QString NetworkErrorEvent = "network.error";
-const QString PresenceEvent = "presence";
-const QString PresenceOfflineEvent = "presence.offline";
-const QString PresenceOnlineEvent = "presence.online";
-const QString TransferEvent = "transfer";
-const QString TransferCompleteEvent = "transfer.complete";
-const QString TransferErrorEvent = "transfer.error";
-const QString MessageEvent = "x-nokia.message";
-const QString MessageArrivedEvent = "x-nokia.message.arrived";
+const QString DuiNotification::DeviceEvent = "device";
+const QString DuiNotification::DeviceAddedEvent = "device.added";
+const QString DuiNotification::DeviceErrorEvent = "device.error";
+const QString DuiNotification::DeviceRemovedEvent = "device.removed";
+const QString DuiNotification::EmailEvent = "email";
+const QString DuiNotification::EmailArrivedEvent = "email.arrived";
+const QString DuiNotification::EmailBouncedEvent = "email.bounced";
+const QString DuiNotification::ImEvent = "im";
+const QString DuiNotification::ImErrorEvent = "im.error";
+const QString DuiNotification::ImReceivedEvent = "im.received";
+const QString DuiNotification::NetworkEvent = "network";
+const QString DuiNotification::NetworkConnectedEvent = "network.connected";
+const QString DuiNotification::NetworkDisconnectedEvent = "network.disconnected";
+const QString DuiNotification::NetworkErrorEvent = "network.error";
+const QString DuiNotification::PresenceEvent = "presence";
+const QString DuiNotification::PresenceOfflineEvent = "presence.offline";
+const QString DuiNotification::PresenceOnlineEvent = "presence.online";
+const QString DuiNotification::TransferEvent = "transfer";
+const QString DuiNotification::TransferCompleteEvent = "transfer.complete";
+const QString DuiNotification::TransferErrorEvent = "transfer.error";
+const QString DuiNotification::MessageEvent = "x-nokia.message";
+const QString DuiNotification::MessageArrivedEvent = "x-nokia.message.arrived";
 
 DuiNotificationPrivate::DuiNotificationPrivate() :
     id(0),
