@@ -60,8 +60,7 @@ DuiServiceFwBaseIf::DuiServiceFwBaseIf(const QString &iface, QObject *parent) :
 
 DuiServiceFwBaseIf::~DuiServiceFwBaseIf()
 {
-    if (d_ptr)
-        delete d_ptr;
+    delete d_ptr;
 }
 
 bool DuiServiceFwBaseIf::isValid() const
@@ -79,8 +78,9 @@ QDBusAbstractInterface *DuiServiceFwBaseIf::interfaceProxy() const
 void DuiServiceFwBaseIf::setInterfaceProxy(QDBusAbstractInterface *newInterfaceProxy)
 {
     Q_D(DuiServiceFwBaseIf);
-    if (d->interfaceProxy)
+    if (d->interfaceProxy) {
         delete d->interfaceProxy;
+    }
     d->interfaceProxy=newInterfaceProxy;
 }
 
