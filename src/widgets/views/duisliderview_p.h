@@ -125,7 +125,6 @@ public:
 
     void setIndicatorText(const QString &text);
     void setIndicatorImage(const QString &id);
-    void setIndicatorVisibility(bool visibility);
 
     int screenPointToValue(const QPointF &point) const;
 

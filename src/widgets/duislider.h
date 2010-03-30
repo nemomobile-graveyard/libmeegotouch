@@ -62,25 +62,6 @@ class DuiSliderPrivate;
                 slider->setHandleLabel(QString::number(newValue));
             }
         \endcode
-        Show / hide slider handle when slider is pressed / released:
-        \code
-            //connect sliderPressed signal to showSliderHandle local slot
-            QObject::connect(slider, SIGNAL(sliderPressed()), this, SLOT(showSliderHandle(int)));
-
-            //connect sliderReleased signal to hideSliderHandle local slot
-            QObject::connect(slider, SIGNAL(sliderReleased()), this, SLOT(hideSliderHandle(int)));
-
-            //modifySliderValue
-            void SliderTesterPage::showSliderHandle()
-            {
-                slider->setHandleLabelVisible(true);
-            }
-
-            void SliderTesterPage::hideSliderHandle()
-            {
-                slider->setHandleLabelVisible(false);
-            }
-        \endcode
 
     \sa DuiSliderModel DuiSliderStyle
 */
@@ -171,7 +152,7 @@ class DUI_EXPORT DuiSlider : public DuiWidgetController
 
     /*!
         \property DuiSlider::handleLabelVisible
-        \brief Slider handle indicator visibility.
+        \brief Slider handle indicator visibility, when slider is pressed (handle indicator is always hidden when slider is released).
 
         See DuiSliderModel::handleLabelVisible for details.
     */

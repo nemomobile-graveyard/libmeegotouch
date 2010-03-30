@@ -129,16 +129,13 @@ void SliderPage::createContent()
     containerPolicy->addItem(brightnessContainer);
 
     QObject::connect(brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(modifyBrightnessSliderHandle(int)));
-    QObject::connect(brightnessSlider, SIGNAL(sliderPressed()), this, SLOT(showBrightnessSliderHandle()));
-    QObject::connect(brightnessSlider, SIGNAL(sliderReleased()), this, SLOT(hideBrightnessSliderHandle()));
 
     retranslateUi();
 }
 
 void SliderPage::createLayout()
 {
-    QGraphicsWidget *panel = centralWidget();
-    layout = new DuiLayout(panel);
+    layout = new DuiLayout(centralWidget());
 
     landscapePolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
     landscapePolicy->setContentsMargins(0, 30, 0, 0);
@@ -201,6 +198,7 @@ void SliderPage::retranslateUi()
     playerSeekBar->setMinLabelVisible(true);
     playerSeekBar->setMaxLabelVisible(true);
     playerSeekBar->setHandleLabelVisible(true);
+
     playerSeekBar->setMinimum(0);
     playerSeekBar->setMaximum(playTime);
 
@@ -220,6 +218,7 @@ void SliderPage::retranslateUi()
     brightnessSlider->setRange(0, 100);
     brightnessSlider->setMinLabelVisible(true);
     brightnessSlider->setMaxLabelVisible(true);
+    brightnessSlider->setHandleLabelVisible(true);
 
     brightnessSlider->setMinLabelIconID("icon-m-common-strength1");
     brightnessSlider->setMaxLabelIconID("icon-m-common-strength5");
@@ -233,6 +232,7 @@ void SliderPage::modifyAgeSliderHandle(int newValue)
 {
     ageSlider->setHandleLabel(QString::number(newValue));
 }
+
 void SliderPage::playerButtonClicked()
 {
     QTimer::singleShot(0, this, SLOT(playTimesliceElapsed()));
@@ -296,14 +296,4 @@ void SliderPage::playerOutOfLoadedContentRange()
 void SliderPage::modifyBrightnessSliderHandle(int newValue)
 {
     brightnessSlider->setHandleLabel(QString::number(newValue) + '%');
-}
-
-void SliderPage::showBrightnessSliderHandle()
-{
-    brightnessSlider->setHandleLabelVisible(true);
-}
-
-void SliderPage::hideBrightnessSliderHandle()
-{
-    brightnessSlider->setHandleLabelVisible(false);
 }

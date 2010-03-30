@@ -299,6 +299,7 @@ DuiSliderGroove::DuiSliderGroove(QGraphicsItem *parent) :
 {
     sliderHandle = new DuiSliderHandle(this);
     sliderHandleIndicator = new DuiSliderIndicator(false, this);
+    sliderHandleIndicator->setVisible(false);
 }
 
 DuiSliderGroove::~DuiSliderGroove()
@@ -425,11 +426,6 @@ void DuiSliderGroove::setIndicatorImage(const QString &id)
     updateHandleIndicatorPos();
 }
 
-void DuiSliderGroove::setIndicatorVisibility(bool visibility)
-{
-    sliderHandleIndicator->setVisible(visibility);
-}
-
 //converts one of coordinates of point to slider value
 int DuiSliderGroove::screenPointToValue(const QPointF &point) const
 {
@@ -523,15 +519,23 @@ QRectF DuiSliderGroove::boundingRect() const
 void DuiSliderGroove::raiseHandleIndicator()
 {
     QGraphicsItem *newParent = topLevelItem();
-    if (newParent)
+    if (newParent) {
         sliderHandleIndicator->setParentItem(newParent);
+
+        //by raising handle indicator will be shown
+        sliderHandleIndicator->setVisible(true);
+    }
 
     updateHandleIndicatorPos();
 }
 
 void DuiSliderGroove::lowerHandleIndicator()
 {
+    //by lowering  handle indicator will be also hidden
+    sliderHandleIndicator->setVisible(false);
+
     sliderHandleIndicator->setParentItem(this);
+
     updateHandleIndicatorPos();
 }
 
@@ -945,9 +949,9 @@ void DuiSliderViewPrivate::insertMinIndicatorToLayout()
             horizontalPolicy->insertItem(horizontalPolicy->count(), minIndicator, Qt::AlignCenter);
     }
 
-    QGraphicsLayoutItem* firstItem = verticalPolicy->itemAt(0);
-    if (firstItem != minIndicator)
-        verticalPolicy->insertItem(0, minIndicator, Qt::AlignCenter);
+    QGraphicsLayoutItem* lastItem = verticalPolicy->itemAt(verticalPolicy->count() - 1);
+    if (lastItem != minIndicator)
+        verticalPolicy->insertItem(verticalPolicy->count(), minIndicator, Qt::AlignCenter);
 }
 
 void DuiSliderViewPrivate::insertMaxIndicatorToLayout()
@@ -969,9 +973,9 @@ void DuiSliderViewPrivate::insertMaxIndicatorToLayout()
             horizontalPolicy->insertItem(0, maxIndicator, Qt::AlignCenter);
     }
 
-    QGraphicsLayoutItem* lastItem = verticalPolicy->itemAt(verticalPolicy->count() - 1);
-    if (lastItem != maxIndicator)
-        verticalPolicy->insertItem(verticalPolicy->count(), maxIndicator, Qt::AlignCenter);
+    QGraphicsLayoutItem* firstItem = verticalPolicy->itemAt(0);
+    if (firstItem != maxIndicator)
+        verticalPolicy->insertItem(0, maxIndicator, Qt::AlignCenter);
 }
 
 void DuiSliderViewPrivate::removeMinIndicatorFromLayout()
@@ -993,9 +997,9 @@ void DuiSliderViewPrivate::removeMinIndicatorFromLayout()
             horizontalPolicy->removeAt(horizontalPolicy->count() - 1);
     }
 
-    QGraphicsLayoutItem* firstItem = verticalPolicy->itemAt(0);
-    if (firstItem == minIndicator)
-        verticalPolicy->removeAt(0);
+    QGraphicsLayoutItem* lastItem = verticalPolicy->itemAt(verticalPolicy->count() - 1);
+    if (lastItem == minIndicator)
+        verticalPolicy->removeAt(verticalPolicy->count() - 1);
 }
 
 void DuiSliderViewPrivate::removeMaxIndicatorFromLayout()
@@ -1017,9 +1021,9 @@ void DuiSliderViewPrivate::removeMaxIndicatorFromLayout()
             horizontalPolicy->removeAt(0);
     }
 
-    QGraphicsLayoutItem* lastItem = verticalPolicy->itemAt(verticalPolicy->count() - 1);
-    if (lastItem != maxIndicator)
-        verticalPolicy->removeAt(verticalPolicy->count() - 1);
+    QGraphicsLayoutItem* firstItem = verticalPolicy->itemAt(0);
+    if (firstItem == maxIndicator)
+        verticalPolicy->removeAt(0);
 }
 
 //returns true if user clicked on slider groove
@@ -1142,8 +1146,7 @@ void DuiSliderView::updateData(const QList<const char *>& modifications)
                 d->insertMaxIndicatorToLayout();
             else
                 d->removeMaxIndicatorFromLayout();
-        } else if (member == DuiSliderModel::HandleLabelVisible)
-            d->sliderGroove->setIndicatorVisibility(model()->handleLabelVisible());
+        }
     }
 }
 
@@ -1171,7 +1174,7 @@ void DuiSliderView::setupModel()
     else
         d->removeMaxIndicatorFromLayout();
 
-    d->sliderGroove->setIndicatorVisibility(model()->handleLabelVisible());
+    d->sliderGroove->lowerHandleIndicator();
 
     d->updateOrientation();
     d->updateSliderGroove();
@@ -1260,7 +1263,9 @@ void DuiSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     if (d->isCollision(event)) {
         d->controller->setState(DuiSliderModel::Pressed);
         d->updateValue(event);
-        d->sliderGroove->raiseHandleIndicator();
+
+        if (model()->handleLabelVisible())
+            d->sliderGroove->raiseHandleIndicator();
     } else if (model()->state() == DuiSliderModel::Pressed) {
         d->controller->setState(DuiSliderModel::Released);
         d->updateValue(event);
@@ -1277,7 +1282,9 @@ void DuiSliderView::timerEvent(QTimerEvent *event)
         d->pressTimerId = 0;
 
         d->controller->setState(DuiSliderModel::Pressed);
-        d->sliderGroove->raiseHandleIndicator();
+
+        if (model()->handleLabelVisible())
+            d->sliderGroove->raiseHandleIndicator();
     }
 }
 
@@ -1286,6 +1293,8 @@ void DuiSliderView::hideEvent(QHideEvent* event)
     Q_UNUSED(event);
 
     Q_D(DuiSliderView);
+    d->controller->setState(DuiSliderModel::Released);
+
     if (d->pressTimerId) {
         killTimer(d->pressTimerId);
         d->pressTimerId = 0;

@@ -72,8 +72,6 @@ private slots:
     void playerOutOfLoadedContentRange();
 
     void modifyBrightnessSliderHandle(int newValue);
-    void showBrightnessSliderHandle();
-    void hideBrightnessSliderHandle();
 };
 
 #endif // SLIDERPAGE_H

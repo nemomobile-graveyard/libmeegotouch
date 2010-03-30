@@ -28,7 +28,7 @@ class DuiSliderViewPrivate;
 class DuiSlider;
 
 /*!
-    \class DuiLabelView
+    \class DuiSliderView
     \brief Standard view is used to visualize sliders and seekbars.
 
     \ingroup views
