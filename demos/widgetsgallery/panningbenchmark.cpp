@@ -38,7 +38,7 @@ QString PanningBenchmark::name() {
 void PanningBenchmark::start()
 {
     if (!applicationPage->isActiveWindow()) {
-        connect(applicationPage, SIGNAL(windowShown()), this, SLOT(waitBeforePanning()));
+        connect(applicationPage, SIGNAL(appeared()), this, SLOT(waitBeforePanning()));
         applicationPage->appear();
     } else {
         QTimer::singleShot(0, this, SLOT(panDown()));

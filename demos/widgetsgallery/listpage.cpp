@@ -112,7 +112,7 @@ ListPage::ListPage(const QString &title)
 {
     setTitle(title);
 
-    connect(this, SIGNAL(windowShown()), this, SLOT(showInitialPage()));
+    connect(this, SIGNAL(appeared()), this, SLOT(showInitialPage()));
 }
 
 ListPage::~ListPage()
