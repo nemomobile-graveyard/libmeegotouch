@@ -1,6 +1,8 @@
 DUIROOT = ../../../../..
 include($$DUIROOT/mkspecs/common.pri)
 
+system(dui-servicefwgen -p com.nokia.TextProcessorInterface)
+
 DUILIB = $$DUIROOT/lib
 DUISIF = $$DUIROOT/examples/servicefw
 DUISFW = $$DUIROOT/duiservicemapper
