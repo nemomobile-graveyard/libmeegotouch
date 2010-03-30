@@ -169,7 +169,8 @@ void DuiCommonPixmaps::loadOne()
         }
 
         ImageResource *resource = daemon->findImageResource(id.imageId);
-        Q_ASSERT_X(resource, "DuiCommonPixmaps", "Theme daemon could not find resource while loading most used pixmaps! Please re-install current theme or clear the preload.list file");
+        if(!resource)
+            qFatal("DuiCommonPixmaps - Theme daemon could not find resource %s while loading most used pixmaps! Please re-install current theme or clear the preload.list file", qPrintable(id.imageId));
         resource->fetchPixmap(id.size);
 
     } else {
