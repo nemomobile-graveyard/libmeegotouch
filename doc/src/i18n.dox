@@ -718,7 +718,7 @@ shall contain at least two extra (key, value) pairs:
 
 For example:
 \code
-[DuiSettings]
+[Desktop Entry]
 # engineering english
 Name=Setting
 # logical name of "Setting"
