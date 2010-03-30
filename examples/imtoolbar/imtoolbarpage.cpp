@@ -48,7 +48,7 @@ ImToolbarPage::~ImToolbarPage()
 void ImToolbarPage::createContent()
 {
     DuiApplicationPage::createContent();
-    DuiWidget *panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
     DuiGridLayoutPolicy *layoutPolicy = ImToolbarPage::createAndSetupGridPolicy(panel);
 
     DuiTextEdit *multi1 =  new DuiTextEdit(DuiTextEditModel::MultiLine, "", centralWidget());
@@ -89,7 +89,7 @@ void ImToolbarPage::createContent()
     layoutPolicy->addItem(labelHeader1, Entries.count(), 0);
 }
 
-DuiGridLayoutPolicy *ImToolbarPage::createAndSetupGridPolicy(DuiWidget *panel)
+DuiGridLayoutPolicy *ImToolbarPage::createAndSetupGridPolicy(QGraphicsWidget *panel)
 {
     DuiLayout *layout = new DuiLayout(panel);
     panel->setLayout(layout);

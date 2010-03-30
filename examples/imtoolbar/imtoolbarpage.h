@@ -33,7 +33,7 @@ public:
     virtual ~ImToolbarPage();
 
     virtual void createContent();
-    DuiGridLayoutPolicy *createAndSetupGridPolicy(DuiWidget *panel);
+    DuiGridLayoutPolicy *createAndSetupGridPolicy(QGraphicsWidget *panel);
 };
 
 #endif
