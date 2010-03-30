@@ -40,6 +40,13 @@ class DuiCancelEvent;
 class DuiOrientationChangeEvent;
 class DuiAbstractWidgetAnimation;
 
+class QGestureEvent;
+class QTapAndHoldGesture;
+class QPanGesture;
+class QPinchGesture;
+class QTapGesture;
+class QSwipeGesture;
+
 class QGraphicsSceneResizeEvent;
 
 
@@ -214,6 +221,51 @@ protected:
      * orientation change.
      */
     virtual void orientationChangeEvent(DuiOrientationChangeEvent *event);
+
+    /*!
+     * This event handler is designed to allow widgets to react to the
+     * tap&hold gesture event. Default implementation does nothing.
+     *
+     * Gesture events are ignored by default. If you want to specifically accept
+     * a gesture state, you need to call QGestureEvent::accept(QGesture*) or similar.
+     */
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
+
+    /*!
+     * This event handler is designed to allow widgets to react to the
+     * pan gesture event. Default implementation does nothing.
+     *
+     * Gesture events are ignored by default. If you want to specifically accept
+     * a gesture state, you need to call QGestureEvent::accept(QGesture*) or similar.
+     */
+    virtual void panGestureEvent(QGestureEvent *event, QPanGesture* gesture);
+
+    /*!
+     * This event handler is designed to allow widgets to react to the
+     * pinch gesture event. Default implementation does nothing.
+     *
+     * Gesture events are ignored by default. If you want to specifically accept
+     * a gesture state, you need to call QGestureEvent::accept(QGesture*) or similar.
+     */
+    virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture* gesture);
+
+    /*!
+     * This event handler is designed to allow widgets to react to the
+     * tap gesture event. Default implementation does nothing.
+     *
+     * Gesture events are ignored by default. If you want to specifically accept
+     * a gesture state, you need to call QGestureEvent::accept(QGesture*) or similar.
+     */
+    virtual void tapGestureEvent(QGestureEvent *event, QTapGesture* gesture);
+
+    /*!
+     * This event handler is designed to allow widgets to react to the
+     * swipe gesture event. Default implementation does nothing.
+     *
+     * Gesture events are ignored by default. If you want to specifically accept
+     * a gesture state, you need to call QGestureEvent::accept(QGesture*) or similar.
+     */
+    virtual void swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture);
 
     /*!
      * Returns margins in pixels. These margins can be defined in css.

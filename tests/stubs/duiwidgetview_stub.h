@@ -37,6 +37,11 @@ public:
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint) const;
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
+    virtual void panGestureEvent(QGestureEvent *event, QPanGesture* gesture);
+    virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture* gesture);
+    virtual void tapGestureEvent(QGestureEvent *event, QTapGesture* gesture);
+    virtual void swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture);
 };
 
 // 2. IMPLEMENT STUB
@@ -91,6 +96,46 @@ QSizeF DuiWidgetViewStub::sizeHint(Qt::SizeHint which, const QSizeF &constraint)
     return stubReturnValue<QSizeF>("sizeHint");
 }
 
+void DuiWidgetViewStub::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QTapAndHoldGesture * >(gesture));
+  stubMethodEntered("tapAndHoldGesture",params);
+}
+
+void DuiWidgetViewStub::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QPanGesture * >(gesture));
+  stubMethodEntered("panGesture",params);
+}
+
+void DuiWidgetViewStub::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QPinchGesture * >(gesture));
+  stubMethodEntered("pinchGesture",params);
+}
+
+void DuiWidgetViewStub::tapGestureEvent(QGestureEvent *event, QTapGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QTapGesture * >(gesture));
+  stubMethodEntered("tapGesture",params);
+}
+
+void DuiWidgetViewStub::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QSwipeGesture * >(gesture));
+  stubMethodEntered("swipeGesture",params);
+}
+
 // 3. CREATE A STUB INSTANCE
 DuiWidgetViewStub gDefaultDuiWidgetViewStub;
 DuiWidgetViewStub *gDuiWidgetViewStub = &gDefaultDuiWidgetViewStub;
@@ -140,6 +185,30 @@ QSizeF DuiWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
     return gDuiWidgetViewStub->sizeHint(which, constraint);
 }
 
+void DuiWidgetView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+  gDuiWidgetViewStub->tapAndHoldGestureEvent(event,gesture);
+}
+
+void DuiWidgetView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+  gDuiWidgetViewStub->panGestureEvent(event,gesture);
+}
+
+void DuiWidgetView::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
+{
+  gDuiWidgetViewStub->pinchGestureEvent(event,gesture);
+}
+
+void DuiWidgetView::tapGestureEvent(QGestureEvent *event, QTapGesture *gesture)
+{
+  gDuiWidgetViewStub->tapGestureEvent(event,gesture);
+}
+
+void DuiWidgetView::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture)
+{
+  gDuiWidgetViewStub->swipeGestureEvent(event, gesture);
+}
 
 #endif
 

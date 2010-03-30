@@ -272,6 +272,41 @@ protected:
     virtual void orientationChangeEvent(DuiOrientationChangeEvent *event);
 
     /*!
+     DuiWidgetController's implementation of tapAndHoldGestureEvent() forwards the call to the view.
+
+     \sa DuiWidgetView::tapAndHoldGestureEvent()
+     */
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
+
+    /*!
+     DuiWidgetController's implementation of panGestureEvent() forwards the call to the view.
+
+     \sa DuiWidgetView::panGestureEvent()
+     */
+    virtual void panGestureEvent(QGestureEvent *event, QPanGesture* gesture);
+
+    /*!
+     DuiWidgetController's implementation of pinchGestureEvent() forwards the call to the view.
+
+     \sa DuiWidgetView::pinchGestureEvent()
+     */
+    virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture* gesture);
+
+    /*!
+     DuiWidgetController's implementation of tapGestureEvent() forwards the call to the view.
+
+     \sa DuiWidgetView::tapGestureEvent()
+     */
+    virtual void tapGestureEvent(QGestureEvent *event, QTapGesture* gesture);
+
+    /*!
+     DuiWidgetController's implementation of swipeGestureEvent() forwards the call to the view.
+
+     \sa DuiWidgetView::swipeGestureEvent()
+     */
+    virtual void swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture);
+
+    /*!
      DuiWidgetController's implementation of sceneEventFilter() forwards the call to the view.
 
      \sa DuiWidgetView::sceneEventFilter()

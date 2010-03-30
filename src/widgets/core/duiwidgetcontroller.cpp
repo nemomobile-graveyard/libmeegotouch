@@ -392,6 +392,41 @@ void DuiWidgetController::orientationChangeEvent(DuiOrientationChangeEvent *even
         d->view->orientationChangeEvent(event);
 }
 
+void DuiWidgetController::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    Q_D(DuiWidgetController);
+    if (view())
+        d->view->tapAndHoldGestureEvent(event,gesture);
+}
+
+void DuiWidgetController::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+    Q_D(DuiWidgetController);
+    if (view())
+        d->view->panGestureEvent(event,gesture);
+}
+
+void DuiWidgetController::pinchGestureEvent(QGestureEvent *event, QPinchGesture* gesture)
+{
+    Q_D(DuiWidgetController);
+    if (view())
+        d->view->pinchGestureEvent(event,gesture);
+}
+
+void DuiWidgetController::tapGestureEvent(QGestureEvent *event, QTapGesture* gesture)
+{
+    Q_D(DuiWidgetController);
+    if (view())
+        d->view->tapGestureEvent(event,gesture);
+}
+
+void DuiWidgetController::swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture)
+{
+    Q_D(DuiWidgetController);
+    if (view())
+        d->view->swipeGestureEvent(event,gesture);
+}
+
 QVariant DuiWidgetController::itemChange(GraphicsItemChange change, const QVariant &value)
 {
     Q_D(DuiWidgetController);

@@ -3,13 +3,12 @@
 
 \subsection New
 
-- DuiWidget now has event handlers for gestures:
-    - DuiWidget::gestureEvent()
-    - DuiWidget::tapAndHoldGestureEvent()
-    - DuiWidget::panGestureEvent()
-    - DuiWidget::pinchGestureEvent()
-    - DuiWidget::tapGestureEvent()
-    - DuiWidget::swipeGestureEvent()
+- DuiWidget, DuiWidgetController and DuiWidgetView now have event handlers for gestures:
+    - tapAndHoldGestureEvent()
+    - panGestureEvent()
+    - pinchGestureEvent()
+    - tapGestureEvent()
+    - swipeGestureEvent()
 
 - The DuiApplicationPage's DuiPannableViewport is now accessible through the pannableViewport() method.
 

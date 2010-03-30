@@ -34,6 +34,13 @@
 #include "duiabstractwidgetanimation.h"
 #include "duiclassfactory.h"
 
+#include <QGestureEvent>
+#include <QTapAndHoldGesture>
+#include <QPanGesture>
+#include <QPinchGesture>
+#include <QTapGesture>
+#include <QSwipeGesture>
+
 DuiWidgetViewPrivate::DuiWidgetViewPrivate() :
     q_ptr(NULL),
     controller(NULL),
@@ -413,6 +420,31 @@ void DuiWidgetView::orientationChangeEvent(DuiOrientationChangeEvent *event)
 {
     Q_UNUSED(event);
     applyStyle();
+}
+
+void DuiWidgetView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    event->ignore(gesture);
+}
+
+void DuiWidgetView::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+    event->ignore(gesture);
+}
+
+void DuiWidgetView::pinchGestureEvent(QGestureEvent *event, QPinchGesture* gesture)
+{
+    event->ignore(gesture);
+}
+
+void DuiWidgetView::tapGestureEvent(QGestureEvent *event, QTapGesture* gesture)
+{
+    event->ignore(gesture);
+}
+
+void DuiWidgetView::swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture)
+{
+    event->ignore(gesture);
 }
 
 void DuiWidgetView::setGeometry(const QRectF &rect)

@@ -28,7 +28,13 @@
 #include <QGraphicsLayout>
 #include <QApplication>
 #include <QGraphicsItem>
+
+#include <QGestureEvent>
 #include <QTapAndHoldGesture>
+#include <QPanGesture>
+#include <QPinchGesture>
+#include <QTapGesture>
+#include <QSwipeGesture>
 
 #include <duiapplicationwindow.h>
 #include <duipannableviewport.h>

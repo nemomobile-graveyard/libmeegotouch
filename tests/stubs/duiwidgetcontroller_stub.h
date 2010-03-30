@@ -58,6 +58,11 @@ class DuiWidgetControllerStub : public StubBase {
   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
   virtual void cancelEvent(DuiCancelEvent *event);
   virtual void orientationChangeEvent(DuiOrientationChangeEvent *event);
+  virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
+  virtual void panGestureEvent(QGestureEvent *event, QPanGesture* gesture);
+  virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture* gesture);
+  virtual void tapGestureEvent(QGestureEvent *event, QTapGesture* gesture);
+  virtual void swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture);
   virtual bool sceneEventFilter(QGraphicsItem *watched, QEvent *event);
   virtual QVariant itemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
   virtual QVariant inputMethodQuery(Qt::InputMethodQuery query) const;
@@ -228,6 +233,46 @@ void DuiWidgetControllerStub::orientationChangeEvent(DuiOrientationChangeEvent *
   stubMethodEntered("orientationChangeEvent",params);
 }
 
+void DuiWidgetControllerStub::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QTapAndHoldGesture * >(gesture));
+  stubMethodEntered("tapAndHoldGesture",params);
+}
+
+void DuiWidgetControllerStub::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QPanGesture * >(gesture));
+  stubMethodEntered("panGesture",params);
+}
+
+void DuiWidgetControllerStub::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QPinchGesture * >(gesture));
+  stubMethodEntered("pinchGesture",params);
+}
+
+void DuiWidgetControllerStub::tapGestureEvent(QGestureEvent *event, QTapGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QTapGesture * >(gesture));
+  stubMethodEntered("tapGesture",params);
+}
+
+void DuiWidgetControllerStub::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QGestureEvent * >(event));
+  params.append( new Parameter<QSwipeGesture * >(gesture));
+  stubMethodEntered("swipeGesture",params);
+}
+
 bool DuiWidgetControllerStub::sceneEventFilter(QGraphicsItem *watched, QEvent *event) {
   QList<ParameterBase*> params;
   params.append( new Parameter<QGraphicsItem * >(watched));
@@ -396,6 +441,31 @@ void DuiWidgetController::orientationChangeEvent(DuiOrientationChangeEvent *even
   gDuiWidgetControllerStub->orientationChangeEvent(event);
 }
 
+void DuiWidgetController::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+  gDuiWidgetControllerStub->tapAndHoldGestureEvent(event,gesture);
+}
+
+void DuiWidgetController::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
+{
+  gDuiWidgetControllerStub->panGestureEvent(event,gesture);
+}
+
+void DuiWidgetController::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
+{
+  gDuiWidgetControllerStub->pinchGestureEvent(event,gesture);
+}
+
+void DuiWidgetController::tapGestureEvent(QGestureEvent *event, QTapGesture *gesture)
+{
+  gDuiWidgetControllerStub->tapGestureEvent(event,gesture);
+}
+
+void DuiWidgetController::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture)
+{
+  gDuiWidgetControllerStub->swipeGestureEvent(event, gesture);
+}
+
 bool DuiWidgetController::sceneEventFilter(QGraphicsItem *watched, QEvent *event) {
   return gDuiWidgetControllerStub->sceneEventFilter(watched, event);
 }
@@ -423,6 +493,4 @@ DuiWidgetController::DuiWidgetController(DuiWidgetControllerPrivate *dd, DuiWidg
 const DuiWidgetView * DuiWidgetController::view() const {
   return gDuiWidgetControllerStub->view();
 }
-
-
 #endif
