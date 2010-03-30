@@ -125,12 +125,50 @@ public:
      * Predefined event types. These are just the known types; applications
      * may use other types as well if the event type string is known.
      */
-    //! Event type for SMS & MMS
-    static const QString EVENT_MESSAGE;
-    //! Event type for instant messages
-    static const QString EVENT_CHAT;
-    //! Event type for new email alert
-    static const QString EVENT_EMAIL;
+    //! A generic device-related notification that doesn't fit into any other category.
+    static const QString DeviceEvent;
+    //! A device, such as a USB device, was added to the system.
+    static const QString DeviceAddedEvent;
+    //! A device had some kind of error.
+    static const QString DeviceErrorEvent;
+    //! A device, such as a USB device, was removed from the system.
+    static const QString DeviceRemovedEvent;
+    //! A generic e-mail-related notification that doesn't fit into any other category.
+    static const QString EmailEvent;
+    //! A new e-mail notification.
+    static const QString EmailArrivedEvent;
+    //! A notification stating that an e-mail has bounced.
+    static const QString EmailBouncedEvent;
+    //! A generic instant message-related notification that doesn't fit into any other category.
+    static const QString ImEvent;
+    //! An instant message error notification.
+    static const QString ImErrorEvent;
+    //! A received instant message notification.
+    static const QString ImReceivedEvent;
+    //! A generic network notification that doesn't fit into any other category.
+    static const QString NetworkEvent;
+    //! A network connection notification, such as successful sign-on to a network service. This should not be confused with device.added for new network devices.
+    static const QString NetworkConnectedEvent;
+    //! A network disconnected notification. This should not be confused with device.removed for disconnected network devices.
+    static const QString NetworkDisconnectedEvent;
+    //! A network-related or connection-related error.
+    static const QString NetworkErrorEvent;
+    //! A generic presence change notification that doesn't fit into any other category, such as going away or idle.
+    static const QString PresenceEvent;
+    //! An offline presence change notification.
+    static const QString PresenceOfflineEvent;
+    //! An online presence change notification.
+    static const QString PresenceOnlineEvent;
+    //! A generic file transfer or download notification that doesn't fit into any other category.
+    static const QString TransferEvent;
+    //! A file transfer or download complete notification.
+    static const QString TransferCompleteEvent;
+    //! A file transfer or download error.
+    static const QString TransferErrorEvent;
+    //! A generic SMS/MMS-related notification that doesn't fit into any other category.
+    static const QString MessageEvent;
+    //! A new SMS/MMS notification.
+    static const QString MessageArrivedEvent;
 
     /*!
      * Creates a new representation of a notification. The notification will
@@ -138,7 +176,7 @@ public:
      * to be defined. If no summary or body text is defined the notification
      * will not have a visual representation.
      *
-     * \param eventType the event type of the notification
+     * \param eventType the event type of the notification. Types are in the format defined in Desktop Notifications Specification. Known constants (such as EmailArrivedEvent) are provided by the DuiNotification class but custom strings can also be used.
      * \param summary the summary text to be used in the notification. Can be omitted (defaults to no summary text).
      * \param body the body text to be used in the notification. Can be omitted (defaults to no body text).
      */

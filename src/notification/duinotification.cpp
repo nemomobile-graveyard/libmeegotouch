@@ -23,6 +23,29 @@
 #include "duinotificationgroup.h"
 #include "duiremoteaction.h"
 
+const QString DeviceEvent = "device";
+const QString DeviceAddedEvent = "device.added";
+const QString DeviceErrorEvent = "device.error";
+const QString DeviceRemovedEvent = "device.removed";
+const QString EmailEvent = "email";
+const QString EmailArrivedEvent = "email.arrived";
+const QString EmailBouncedEvent = "email.bounced";
+const QString ImEvent = "im";
+const QString ImErrorEvent = "im.error";
+const QString ImReceivedEvent = "im.received";
+const QString NetworkEvent = "network";
+const QString NetworkConnectedEvent = "network.connected";
+const QString NetworkDisconnectedEvent = "network.disconnected";
+const QString NetworkErrorEvent = "network.error";
+const QString PresenceEvent = "presence";
+const QString PresenceOfflineEvent = "presence.offline";
+const QString PresenceOnlineEvent = "presence.online";
+const QString TransferEvent = "transfer";
+const QString TransferCompleteEvent = "transfer.complete";
+const QString TransferErrorEvent = "transfer.error";
+const QString MessageEvent = "x-nokia.message";
+const QString MessageArrivedEvent = "x-nokia.message.arrived";
+
 DuiNotificationPrivate::DuiNotificationPrivate() :
     id(0),
     groupId(0),
