@@ -566,10 +566,4 @@ void DuiDialog::dismissEvent(DuiDismissEvent *event)
     event->accept();
 }
 
-void DuiDialog::closeEvent(QCloseEvent *event)
-{
-    event->ignore();
-    reject();
-}
-
 #include "moc_duidialog.cpp"

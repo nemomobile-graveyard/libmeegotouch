@@ -549,11 +549,6 @@ protected Q_SLOTS:
 
 protected:
     //! \reimp
-    /*!
-      \deprecated Since 0.18.
-     */
-    virtual void Q_DECL_DEPRECATED closeEvent(QCloseEvent *event);
-
     virtual void dismissEvent(DuiDismissEvent *event);
     //! \reimp_end
 
