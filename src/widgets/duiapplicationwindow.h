@@ -148,9 +148,6 @@ protected:
     virtual void closeEvent(QCloseEvent *event);
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void mouseReleaseEvent(QMouseEvent *event);
-
-    // TODO: Remove that now useless method override after API freeze period
-    virtual void onDisplayChangeEvent(DuiOnDisplayChangeEvent *event);
     //! \reimp_end
 
 private:

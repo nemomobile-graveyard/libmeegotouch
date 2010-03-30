@@ -636,12 +636,6 @@ void DuiApplicationWindowPrivate::_q_updatePageEscapeAuto()
     }
 }
 
-// TODO: Remove that now useless method override after API freeze period
-void DuiApplicationWindow::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event)
-{
-    DuiWindow::onDisplayChangeEvent(event);
-}
-
 DuiApplicationWindow::DuiApplicationWindow(DuiApplicationWindowPrivate &dd, QWidget *parent)
     : DuiWindow(dd, new DuiSceneManager, parent)
 {
