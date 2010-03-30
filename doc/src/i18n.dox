@@ -73,6 +73,7 @@ The DirectUI locale system uses the following main settings:
   <big><b>
     DuiLocale main settings
   </b></big>
+  </caption>
   <tr>
      <th>gconf key</th>
      <th>description</th>
