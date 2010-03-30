@@ -130,6 +130,39 @@ void DuiPannableViewportPrivate::_q_resolvePannedWidgetIsOnDisplay()
     }
 }
 
+void DuiPannableViewportPrivate::_q_positionIndicatorEnabledChanged()
+{
+    Q_Q(DuiPannableViewport);
+
+    if (positionIndicator->isEnabled()) {
+        q->connect(q,
+                   SIGNAL(viewportSizeChanged(QSizeF)),
+                   positionIndicator,
+                   SLOT(setViewportSize(QSizeF)), Qt::UniqueConnection);
+        q->connect(q,
+                   SIGNAL(positionChanged(QPointF)),
+                   positionIndicator,
+                   SLOT(setPosition(QPointF)), Qt::UniqueConnection);
+        q->connect(q,
+                   SIGNAL(rangeChanged(QRectF)),
+                   positionIndicator,
+                   SLOT(setRange(QRectF)), Qt::UniqueConnection);
+    } else {
+        q->disconnect(q,
+                      SIGNAL(viewportSizeChanged(QSizeF)),
+                      positionIndicator,
+                      SLOT(setViewportSize(QSizeF)));
+        q->disconnect(q,
+                      SIGNAL(positionChanged(QPointF)),
+                      positionIndicator,
+                      SLOT(setPosition(QPointF)));
+        q->disconnect(q,
+                      SIGNAL(rangeChanged(QRectF)),
+                      positionIndicator,
+                      SLOT(setRange(QRectF)));
+    }
+}
+
 DuiPannableViewport::DuiPannableViewport(QGraphicsItem *parent)
     : DuiPannableWidget(new DuiPannableViewportPrivate(), new DuiPannableViewportModel, parent)
 {
@@ -141,18 +174,12 @@ DuiPannableViewport::DuiPannableViewport(QGraphicsItem *parent)
 
     d->positionIndicator = new DuiPositionIndicator(this);
     d->positionIndicator->setZValue(ZValuePosInd);
-    connect(this,
-            SIGNAL(viewportSizeChanged(QSizeF)),
-            d->positionIndicator,
-            SLOT(setViewportSize(QSizeF)));
-    connect(this,
-            SIGNAL(positionChanged(QPointF)),
-            d->positionIndicator,
-            SLOT(setPosition(QPointF)));
-    connect(this,
-            SIGNAL(rangeChanged(QRectF)),
-            d->positionIndicator,
-            SLOT(setRange(QRectF)));
+    d->_q_positionIndicatorEnabledChanged();
+
+    connect(d->positionIndicator,
+            SIGNAL(enabledChanged()),
+            SLOT(_q_positionIndicatorEnabledChanged()));
+
 
     d->viewportLayout = new DuiPannableViewportLayout;
     d->viewportLayout->setPanningDirections(panDirection());
@@ -333,6 +360,35 @@ void DuiPannableViewport::updateGeometry()
     updatePosition(position());
 
     DuiPannableWidget::updateGeometry();
+}
+
+void DuiPannableViewport::setPositionIndicator(DuiPositionIndicator *positionIndicator)
+{
+    Q_D(DuiPannableViewport);
+
+    if (!positionIndicator) {
+        return;
+    }
+
+    delete d->positionIndicator;
+
+    d->positionIndicator = positionIndicator;
+    d->positionIndicator->setZValue(ZValuePosInd);
+    d->positionIndicator->setParent(this);
+    d->positionIndicator->setParentItem(this);
+
+    d->_q_positionIndicatorEnabledChanged();
+
+    connect(d->positionIndicator,
+            SIGNAL(enabledChanged()),
+            SLOT(_q_positionIndicatorEnabledChanged()));
+}
+
+DuiPositionIndicator* DuiPannableViewport::positionIndicator() const
+{
+    Q_D(const DuiPannableViewport);
+
+    return d->positionIndicator;
 }
 
 #include "moc_duipannableviewport.cpp"

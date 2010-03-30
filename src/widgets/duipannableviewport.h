@@ -47,7 +47,9 @@ class DuiPositionIndicator;
  * panning range.
  *
  * The viewport creates a position indicator widget on top of it which
- * shows the panning position.
+ * shows the panning position. The position indicator is accesible by
+ * the positionIndicator() accessor and can be disabled by using
+ * setEnabled(bool) method.
  *
  * By default, the viewport is created with minimum size of 0x0 pixels
  * and preferred size of 1x1 pixels. In order to show the contents of
@@ -149,6 +151,19 @@ public:
      */
     virtual QRectF range() const;
 
+    /*!
+     * \brief Sets the \a positionIndicator which will be used instead
+     * of the current one.
+     *
+     * Ownership of the indicator is transferred to pannable viewport.
+     */
+    void setPositionIndicator(DuiPositionIndicator *positionIndicator);
+
+    /*!
+     * \brief Returns the position indicator which is currently used.
+     */
+    DuiPositionIndicator *positionIndicator() const;
+
     //! \reimp
     void setPanDirection(const Qt::Orientations &panDirection);
     void resizeEvent(QGraphicsSceneResizeEvent *event);
@@ -176,7 +191,7 @@ private:
     Q_DISABLE_COPY(DuiPannableViewport)
     Q_DECLARE_PRIVATE(DuiPannableViewport)
     Q_PRIVATE_SLOT(d_func(), void _q_resolvePannedWidgetIsOnDisplay())
-
+    Q_PRIVATE_SLOT(d_func(), void _q_positionIndicatorEnabledChanged())
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members
     friend class Ut_DuiPannableViewport;

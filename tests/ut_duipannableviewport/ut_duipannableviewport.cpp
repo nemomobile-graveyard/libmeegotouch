@@ -19,6 +19,7 @@
 
 #include "ut_duipannableviewport.h"
 #include <duitheme.h>
+#include <duipositionindicator.h>
 #include <duipannableviewport.h>
 #include "../../src/widgets/duipannableviewport_p.h"
 #include <QGraphicsWidget>
@@ -259,5 +260,19 @@ void Ut_DuiPannableViewport::sizePosChangedAfterPopulatingPannedWidget()
     }
 }
 
+void Ut_DuiPannableViewport::settingNewPositionIndicator()
+{
+    DuiPositionIndicator* newPositionIndicator = new DuiPositionIndicator();
+    subject->setPositionIndicator(newPositionIndicator);
+
+    QVERIFY(subject->positionIndicator() == newPositionIndicator);
+}
+
+void Ut_DuiPannableViewport::settingNULLPositionIndicatorShouldNotBeAccepted()
+{
+    subject->setPositionIndicator(NULL);
+
+    QVERIFY(subject->positionIndicator() != NULL);
+}
 
 QTEST_APPLESS_MAIN(Ut_DuiPannableViewport)

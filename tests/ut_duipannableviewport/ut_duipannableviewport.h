@@ -45,6 +45,10 @@ private slots:
     void updateSamePosition();
     void sizePosChangedAfterPopulatingPannedWidget();
 
+    //Changing position indicator in the viewport
+    void settingNewPositionIndicator();
+    void settingNULLPositionIndicatorShouldNotBeAccepted();
+
 private:
     DuiPannableViewport *subject;
 };

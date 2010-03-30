@@ -55,6 +55,8 @@
 - DuiWindow::setCloseOnLazyShutdown(bool) (and bool closeOnLazyShutdown() const) to
   force close instead of hide during lazy shutdown.
 
+- DuiPannableViewport now allows changing the position indicator to a custom made one.
+
 \subsection removed Removed or Renamed
 
 - DuiRmiClient and DuiRmiServer was removed.

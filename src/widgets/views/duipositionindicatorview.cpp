@@ -148,6 +148,21 @@ void DuiPositionIndicatorView::resizeEvent(QGraphicsSceneResizeEvent *event)
     update();
 }
 
+void DuiPositionIndicatorView::changeEvent(QEvent *event)
+{
+    Q_D(DuiPositionIndicatorView);
+
+    DuiWidgetView::changeEvent(event);
+
+    if (event->type() == QEvent::EnabledChange) {
+        if (d->controller->isEnabled()) {
+            d->controller->setVisible(true);
+        } else {
+            d->controller->setVisible(false);
+        }
+    }
+}
+
 void DuiPositionIndicatorView::hide()
 {
     Q_D(DuiPositionIndicatorView);

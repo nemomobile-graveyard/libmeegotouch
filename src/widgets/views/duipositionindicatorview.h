@@ -59,6 +59,7 @@ public:
 
     //! \reimp
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+    virtual void changeEvent(QEvent *event);
     //! \reimp_end
 
 protected:

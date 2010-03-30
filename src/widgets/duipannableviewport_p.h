@@ -55,6 +55,7 @@ public:
     void sendOnDisplayChangeEventToDuiWidgets(QGraphicsItem *item,
             DuiOnDisplayChangeEvent *event);
     void _q_resolvePannedWidgetIsOnDisplay();
+    void _q_positionIndicatorEnabledChanged();
 
     friend class Ut_DuiPannableViewport;
 };
