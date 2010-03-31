@@ -107,7 +107,6 @@ void ApplicationMenuPage::createContent()
     comboBox->setTitle("ComboBox");
     comboBox->setCurrentIndex(0);
     widgetAction->setWidget(comboBox);
-    connect(comboBox, SIGNAL(clicked()), widgetAction, SIGNAL(triggered()));
 
     action = new DuiAction(NULL, "Window Icon", panel);
     action->setLocation(DuiAction::ApplicationMenuLocation);

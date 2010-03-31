@@ -217,6 +217,10 @@ DuiWidget *DuiApplicationMenuViewPrivate::createWidget(QAction *action)
         DuiWidgetAction *widgetAction = qobject_cast<DuiWidgetAction *>(action);
         if (widgetAction) {
             widget = requestWidget(widgetAction);
+            DuiComboBox *comboBox = qobject_cast<DuiComboBox *>(widget);
+            if (comboBox) {
+                connect(comboBox, SIGNAL(clicked()), widgetAction, SIGNAL(triggered()));
+            }
             leasedWidgets.insert(action, widget);
         } else {
             widget = createButton(action);
@@ -302,6 +306,10 @@ bool DuiApplicationMenuViewPrivate::releaseWidget(QAction *action, DuiWidget *wi
 {
     DuiWidgetAction *widgetAction = qobject_cast<DuiWidgetAction *>(action);
     if (widgetAction) {
+        DuiComboBox *comboBox = qobject_cast<DuiComboBox *>(widget);
+        if (comboBox) {
+            disconnect(comboBox, SIGNAL(clicked()), widgetAction, SIGNAL(triggered()));
+        }
         widgetAction->releaseWidget(widget);
     }
     return (widgetAction != 0);
