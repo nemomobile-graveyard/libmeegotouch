@@ -23,13 +23,13 @@
 #include <duiscenewindowstyle.h>
 
 //! \internal
-class DuiDockWidgetStyle : public DuiSceneWindowStyle
+class DUI_EXPORT DuiDockWidgetStyle : public DuiSceneWindowStyle
 {
     Q_OBJECT
     DUI_STYLE_INTERNAL(DuiDockWidgetStyle)
 };
 
-class DuiDockWidgetStyleContainer : public DuiSceneWindowStyleContainer
+class DUI_EXPORT DuiDockWidgetStyleContainer : public DuiSceneWindowStyleContainer
 {
     DUI_STYLE_CONTAINER_INTERNAL(DuiDockWidgetStyle)
 };

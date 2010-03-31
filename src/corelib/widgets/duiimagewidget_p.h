@@ -24,7 +24,7 @@
 
 class DuiImageWidget;
 
-class DuiImageWidgetPrivate : public DuiWidgetControllerPrivate
+class DUI_EXPORT DuiImageWidgetPrivate : public DuiWidgetControllerPrivate
 {
     Q_DECLARE_PUBLIC(DuiImageWidget)
 

@@ -40,7 +40,7 @@ class DuiAbstractWidgetAnimationPrivate;
   \brief DuiAbstractWidgetAnimation class is a base class for all widget animations.
 
  */
-class DuiAbstractWidgetAnimation : public DuiAnimation
+class DUI_EXPORT DuiAbstractWidgetAnimation : public DuiAnimation
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(DuiAbstractWidgetAnimation)

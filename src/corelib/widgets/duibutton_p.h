@@ -25,7 +25,7 @@
 class DuiStyle;
 class DuiButtonGroup;
 
-class DuiButtonPrivate : protected DuiWidgetControllerPrivate
+class DUI_EXPORT DuiButtonPrivate : protected DuiWidgetControllerPrivate
 {
 public:
     Q_DECLARE_PUBLIC(DuiButton)

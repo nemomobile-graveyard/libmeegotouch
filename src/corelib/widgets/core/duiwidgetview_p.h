@@ -27,7 +27,7 @@ class QPixmap;
 class DuiScalableImage;
 class DuiAbstractWidgetAnimation;
 
-class DuiWidgetViewPrivate
+class DUI_EXPORT DuiWidgetViewPrivate
 {
     Q_DECLARE_PUBLIC(DuiWidgetView)
 
