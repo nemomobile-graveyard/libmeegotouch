@@ -20,7 +20,6 @@
 #include <duitheme.h>
 #include "duipositionindicator.h"
 #include "duipositionindicator_p.h"
-#include "duipositionindicatorview.h"
 
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET(DuiPositionIndicator)

@@ -43,6 +43,8 @@ class DUI_EXPORT DuiSceneWindowView : public DuiWidgetView
 {
     Q_OBJECT
     DUI_VIEW(DuiSceneWindowModel, DuiSceneWindowStyle)
+    Q_PROPERTY(Qt::Alignment alignment READ alignment)
+    Q_PROPERTY(QPointF offset READ offset)
 
 public:
     /*!

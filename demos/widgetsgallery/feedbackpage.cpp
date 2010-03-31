@@ -26,7 +26,6 @@
 #include <DuiGridLayoutPolicy>
 #include <DuiLinearLayoutPolicy>
 #include <DuiButton>
-#include <DuiButtonIconView>
 #include <DuiButtonGroup>
 #include <DuiDebug>
 #include <DuiApplication>

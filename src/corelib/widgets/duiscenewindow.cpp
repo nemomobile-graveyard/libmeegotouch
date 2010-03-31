@@ -26,12 +26,14 @@
 #include "duiscenemanager.h"
 #include "duiscenemanager_p.h"
 #include "duiapplication.h"
-#include "duiscenewindowview.h"
+#include "duiwidgetview.h"
 #include "duiwindow.h"
 #include "duidialog.h"
 
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET_NO_CREATE(DuiSceneWindow)
+
+Q_DECLARE_METATYPE(Qt::Alignment)
 
 DuiSceneWindowPrivate::DuiSceneWindowPrivate()
 {
@@ -121,12 +123,14 @@ Qt::Alignment DuiSceneWindow::alignment() const
 {
     Qt::Alignment result = 0;
 
+    // There is an implicit property interface between the controller and the views
+    // The controller expects the view to provide an "alignment" property.
     if (view()) {
-        const DuiSceneWindowView *sceneWindowView =
-            qobject_cast<const DuiSceneWindowView *>(view());
-
-        if (sceneWindowView) {
-            result = sceneWindowView->alignment();
+        QVariant v = view()->property("alignment");
+        if (v.isValid()) {
+            result = qvariant_cast<Qt::Alignment>(v);
+        }
+        else {
         }
     }
 
@@ -147,12 +151,12 @@ QPointF DuiSceneWindow::offset() const
 {
     QPointF result;
 
+    // There is an implicit property interface between the controller and the views
+    // The controller expects the view to provide an "offset" property.
     if (view()) {
-        const DuiSceneWindowView *sceneWindowView =
-            qobject_cast<const DuiSceneWindowView *>(view());
-
-        if (sceneWindowView) {
-            result = sceneWindowView->offset();
+        QVariant v = view()->property("offset");
+        if (v.isValid()) {
+            result = v.toPointF();
         }
     } else {
         result = QPointF(0, 0);
