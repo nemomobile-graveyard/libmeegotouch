@@ -460,8 +460,13 @@ void DuiSceneManagerPrivate::setSceneWindowGeometry(DuiSceneWindow *window)
 void DuiSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
 {
     DuiOrientationChangeEvent event(orientation(angle));
-    foreach(QGraphicsItem * item, scene->items())
-        scene->sendEvent(item, &event);
+
+    foreach(QGraphicsItem * item, scene->items()) {
+        // event handlers might remove items from the scene
+        // so we must check if item it's still there
+        if (scene->items().contains(item))
+            scene->sendEvent(item, &event);
+    }
 }
 
 QRectF DuiSceneManagerPrivate::calculateAvailableSceneRect(DuiSceneWindow *window)

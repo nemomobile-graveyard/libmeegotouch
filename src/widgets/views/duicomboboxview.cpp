@@ -42,6 +42,7 @@ DuiComboBoxViewPrivate::DuiComboBoxViewPrivate()
 
 DuiComboBoxViewPrivate::~DuiComboBoxViewPrivate()
 {
+    delete contentItem;
     delete popuplist;
 }
 
