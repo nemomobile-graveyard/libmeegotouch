@@ -22,7 +22,7 @@
 #include "duiwidgetview.h"
 #include "duilabelhighlighter.h"
 
-#include "duilabelview.h"
+//#include "duilabelview.h"
 
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET(DuiLabel)
@@ -64,11 +64,12 @@ void DuiLabel::changeEvent(QEvent *event)
 
 void DuiLabel::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
+    Q_UNUSED(event);
     //FIXME
     //Temporary remove this when proper longPressEvents are coming to view.
-    const DuiLabel *t = (const DuiLabel *) this;
-    DuiLabelView *labelView = (DuiLabelView *)(t->view());
-    labelView->longPressEvent(event);
+//    const DuiLabel *t = (const DuiLabel *) this;
+//    DuiLabelView *labelView = (DuiLabelView *)(t->view());
+//    labelView->longPressEvent(event);
 }
 
 void DuiLabel::setText(const QString &text)
