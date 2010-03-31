@@ -19,50 +19,72 @@
 
 #include "duiwidgetslideoutanimation.h"
 #include "duiwidgetslideoutanimation_p.h"
-#include "duiwidgetview.h"
 #include "duianimationcreator.h"
 
-DUI_REGISTER_ANIMATION(DuiWidgetSlideOutAnimation)
+#include <QPropertyAnimation>
+#include <duiwidgetcontroller.h>
 
 DuiWidgetSlideOutAnimation::DuiWidgetSlideOutAnimation(DuiWidgetSlideOutAnimationPrivate *dd, QObject *parent) :
     DuiAbstractWidgetAnimation(dd, parent)
 {
+    Q_D(DuiWidgetSlideOutAnimation);
+
+    d->positionAnimation = new QPropertyAnimation;
+    d->positionAnimation->setPropertyName("pos");
+    addAnimation(d->positionAnimation);
 }
 
 DuiWidgetSlideOutAnimation::DuiWidgetSlideOutAnimation(QObject *parent) :
     DuiAbstractWidgetAnimation(new DuiWidgetSlideOutAnimationPrivate, parent)
 {
+    Q_D(DuiWidgetSlideOutAnimation);
+
+    d->positionAnimation = new QPropertyAnimation;
+    d->positionAnimation->setPropertyName("pos");
+    addAnimation(d->positionAnimation);
 }
 
 DuiWidgetSlideOutAnimation::~DuiWidgetSlideOutAnimation()
 {
 }
 
-void DuiWidgetSlideOutAnimation::updateCurrentTime(int currentTime)
+void DuiWidgetSlideOutAnimation::setTargetWidget(DuiWidgetController *widget)
 {
     Q_D(DuiWidgetSlideOutAnimation);
+    DuiAbstractWidgetAnimation::setTargetWidget(widget);
 
-    qreal progress = ((qreal)currentTime) / ((qreal)style()->duration());
-    qreal value = style()->easingCurve().valueForProgress(progress);
+    d->played = false;
+    d->positionAnimation->setTargetObject(targetWidget());
+}
 
-    view()->setContentPosition(d->startPos + (d->endPos - d->startPos)*value);
+void DuiWidgetSlideOutAnimation::restoreTargetWidgetState()
+{
+    Q_D(DuiWidgetSlideOutAnimation);
+    if (d->played)
+        targetWidget()->setPos(d->originalPos);
 }
 
 void DuiWidgetSlideOutAnimation::updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState)
 {
     Q_D(DuiWidgetSlideOutAnimation);
     if (oldState == QAbstractAnimation::Stopped && newState == QAbstractAnimation::Running) {
-        d->startPos = view()->contentPosition();
+        d->originalPos = targetWidget()->pos();
+        d->played = true;
+
+        QPointF endPos;
+
         if (style()->to() == "top") {
-            d->endPos = QPointF(0, -view()->boundingRect().height());
+            endPos = QPointF(0, -targetWidget()->boundingRect().height());
         } else if (style()->to() == "right") {
-            d->endPos = QPointF(view()->boundingRect().width(), 0);
+            endPos = QPointF(targetWidget()->boundingRect().width(), 0);
         } else if (style()->to() == "bottom") {
-            d->endPos = QPointF(0, view()->boundingRect().height());
+            endPos = QPointF(0, targetWidget()->boundingRect().height());
         } else if (style()->to() == "left") {
-            d->endPos = QPointF(-view()->boundingRect().width(), 0);
+            endPos = QPointF(-targetWidget()->boundingRect().width(), 0);
         }
-    } else if (oldState == QAbstractAnimation::Running && newState == QAbstractAnimation::Stopped) {
-        view()->hide();
+
+        d->positionAnimation->setStartValue(d->originalPos);
+        d->positionAnimation->setEndValue(endPos);
+        d->positionAnimation->setDuration(style()->duration());
     }
 }

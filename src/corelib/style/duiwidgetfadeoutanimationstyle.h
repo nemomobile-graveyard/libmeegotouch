@@ -24,7 +24,7 @@
 #include <QEasingCurve>
 
 //! \internal
-class DUI_EXPORT DuiWidgetFadeOutAnimationStyle : public DuiAbstractWidgetAnimationStyle
+class DuiWidgetFadeOutAnimationStyle : public DuiAbstractWidgetAnimationStyle
 {
     Q_OBJECT
     DUI_STYLE_INTERNAL(DuiWidgetFadeOutAnimationStyle)
@@ -33,7 +33,7 @@ class DUI_EXPORT DuiWidgetFadeOutAnimationStyle : public DuiAbstractWidgetAnimat
     DUI_STYLE_ATTRIBUTE(QEasingCurve, easingCurve, EasingCurve)
 };
 
-class DUI_EXPORT DuiWidgetFadeOutAnimationStyleContainer : public DuiAbstractWidgetAnimationStyleContainer
+class DuiWidgetFadeOutAnimationStyleContainer : public DuiAbstractWidgetAnimationStyleContainer
 {
     DUI_STYLE_CONTAINER_INTERNAL(DuiWidgetFadeOutAnimationStyle)
 };

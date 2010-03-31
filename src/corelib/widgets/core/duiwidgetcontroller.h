@@ -81,26 +81,6 @@ public:
     virtual ~DuiWidgetController();
 
     /*!
-        \brief Returns an animation which can be used for animating the widget visible state.
-
-        This method can also return NULL, if there is no animation defined.
-        This method doesn't give the ownership of the animation to the caller, so
-        if you add this animation to a QAnimationGroup, be sure to remove it from there
-        before the group deletes the animation.
-     */
-    DuiAbstractWidgetAnimation *showAnimation();
-
-    /*!
-        \brief Returns an animation which can be used from animating the widget to hidden state.
-
-        This method can also return NULL, if there is no animation defined.
-        This method doesn't give the ownership of the animation to the caller, so
-        if you add this animation to a QAnimationGroup, be suer to remove it from there
-        before the group deletes the animation.
-     */
-    DuiAbstractWidgetAnimation *hideAnimation();
-
-    /*!
      Sets the \a model of the widget.
 
      This function will increase the reference count on the given model. If a model was already set

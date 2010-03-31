@@ -113,24 +113,6 @@ DuiWidgetController::~DuiWidgetController()
     DuiWidgetControllerPrivate::allSystemWidgets.remove(this);
 }
 
-DuiAbstractWidgetAnimation *DuiWidgetController::showAnimation()
-{
-    Q_D(DuiWidgetController);
-    if (view())
-        return d->view->showAnimation();
-
-    return NULL;
-}
-
-DuiAbstractWidgetAnimation *DuiWidgetController::hideAnimation()
-{
-    Q_D(DuiWidgetController);
-    if (view())
-        return d->view->hideAnimation();
-
-    return NULL;
-}
-
 // const getter for model
 const DuiWidgetModel *DuiWidgetController::model() const
 {

@@ -31,7 +31,6 @@
 #include "duiwidgetmodel.h"
 #include "duiapplication.h"
 #include "duiapplicationwindow.h"
-#include "duiabstractwidgetanimation.h"
 #include "duiclassfactory.h"
 
 #include <QGestureEvent>
@@ -45,9 +44,7 @@ DuiWidgetViewPrivate::DuiWidgetViewPrivate() :
     q_ptr(NULL),
     controller(NULL),
     model(NULL),
-    styleContainer(NULL),
-    showAnimation(NULL),
-    hideAnimation(NULL)
+    styleContainer(NULL)
 {
 }
 
@@ -94,8 +91,6 @@ DuiWidgetView::~DuiWidgetView()
     d->model->decreaseReferenceCount();
     d->model = 0;
     delete d->styleContainer;
-    delete d->showAnimation;
-    delete d->hideAnimation;
     delete d_ptr;
 }
 
@@ -108,18 +103,6 @@ void DuiWidgetView::destroy()
     // TODO: replace this with something when there's a better solution available.
     // deleteLater() breaks theme change.
     delete this;
-}
-
-DuiAbstractWidgetAnimation *DuiWidgetView::showAnimation()
-{
-    Q_D(DuiWidgetView);
-    return d->showAnimation;
-}
-
-DuiAbstractWidgetAnimation *DuiWidgetView::hideAnimation()
-{
-    Q_D(DuiWidgetView);
-    return d->hideAnimation;
 }
 
 void DuiWidgetView::setActive(bool active)
@@ -219,42 +202,18 @@ void DuiWidgetView::applyStyle()
 {
     Q_D(DuiWidgetView);
 
-    if (style()->showAnimation() == "none") {
-        delete d->showAnimation;
-        d->showAnimation = NULL;
-    } else {
-        if (!d->showAnimation || style()->showAnimation() != d->showAnimation->metaObject()->className()) {
-            delete d->showAnimation;
-            d->showAnimation = dynamic_cast<DuiAbstractWidgetAnimation *>(DuiClassFactory::instance()->createAnimation(style()->showAnimation().toStdString().c_str()));
-            if (d->showAnimation)
-                d->showAnimation->setView(this);
-        }
-    }
-
-    if (style()->hideAnimation() == "none") {
-        delete d->hideAnimation;
-        d->hideAnimation = NULL;
-    } else {
-        if (!d->hideAnimation || style()->hideAnimation() != d->hideAnimation->metaObject()->className()) {
-            delete d->hideAnimation;
-            d->hideAnimation = dynamic_cast<DuiAbstractWidgetAnimation *>(DuiClassFactory::instance()->createAnimation(style()->hideAnimation().toStdString().c_str()));
-            if (d->hideAnimation)
-                d->hideAnimation->setView(this);
-        }
-    }
-
     if (d->controller->layoutDirection() == Qt::RightToLeft)
         d->controller->setContentsMargins(
-            style()->paddingRight() + style()->marginRight() + d->contentPosition.x(),
-            style()->paddingTop() + style()->marginTop() + d->contentPosition.y(),
-            style()->paddingLeft() + style()->marginLeft() - d->contentPosition.x(),
-            style()->paddingBottom() + style()->marginBottom() - d->contentPosition.y());
+            style()->paddingRight() + style()->marginRight(),
+            style()->paddingTop() + style()->marginTop(),
+            style()->paddingLeft() + style()->marginLeft(),
+            style()->paddingBottom() + style()->marginBottom());
     else
         d->controller->setContentsMargins(
-            style()->paddingLeft() + style()->marginLeft() + d->contentPosition.x(),
-            style()->paddingTop() + style()->marginTop() + d->contentPosition.y(),
-            style()->paddingRight() + style()->marginRight() - d->contentPosition.x(),
-            style()->paddingBottom() + style()->marginBottom() - d->contentPosition.y());
+            style()->paddingLeft() + style()->marginLeft(),
+            style()->paddingTop() + style()->marginTop(),
+            style()->paddingRight() + style()->marginRight(),
+            style()->paddingBottom() + style()->marginBottom());
 
     updateGeometry();
 }
@@ -521,34 +480,6 @@ void DuiWidgetView::hide()
     d->controller->hide();
 }
 
-QPointF DuiWidgetView::contentPosition() const
-{
-    Q_D(const DuiWidgetView);
-    return d->contentPosition;
-}
-
-void DuiWidgetView::setContentPosition(const QPointF &p)
-{
-    Q_D(DuiWidgetView);
-    d->contentPosition = p;
-
-    if (d->controller->layoutDirection() == Qt::RightToLeft)
-        d->controller->setContentsMargins(
-            style()->paddingRight() + style()->marginRight() + p.x(),
-            style()->paddingTop() + style()->marginTop() + p.y(),
-            style()->paddingLeft() + style()->marginLeft() - p.x(),
-            style()->paddingBottom() + style()->marginBottom() - p.y());
-    else
-        d->controller->setContentsMargins(
-            style()->paddingLeft() + style()->marginLeft() + p.x(),
-            style()->paddingTop() + style()->marginTop() + p.y(),
-            style()->paddingRight() + style()->marginRight() - p.x(),
-            style()->paddingBottom() + style()->marginBottom() - p.y());
-
-//    update();
-}
-
-
 qreal DuiWidgetView::effectiveOpacity() const
 {
     Q_D(const DuiWidgetView);
@@ -619,7 +550,7 @@ QSizeF DuiWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
 void DuiWidgetView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     Q_UNUSED(widget);
-    painter->translate(marginLeft() + contentPosition().x(), marginTop() + contentPosition().y());
+    painter->translate(marginLeft(), marginTop());
     drawBackground(painter, option);
     drawContents(painter, option);
     painter->translate(-marginLeft(), -marginTop());

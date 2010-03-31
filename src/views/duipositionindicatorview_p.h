@@ -25,6 +25,7 @@
 class DuiPositionIndicator;
 class QPixmap;
 class QPoint;
+class QPropertyAnimation;
 
 class DuiPositionIndicatorViewPrivate : public DuiWidgetViewPrivate
 {
@@ -35,6 +36,8 @@ public:
     DuiPositionIndicator *controller;
     QTimer *hideTimer;
     bool visible;
+
+    QPropertyAnimation *fadeAnimation;
 };
 
 #endif

@@ -23,18 +23,15 @@
 #include "duiscenewindow_p.h"
 #include "duiscenewindowview.h"
 #include "duiscenewindowview_p.h"
-#include "duiabstractwidgetanimation.h"
 #include "duiclassfactory.h"
 
 DuiSceneWindowViewPrivate::DuiSceneWindowViewPrivate() :
-    controller(0),
-    dismissAnimation(0)
+    controller(0)
 {
 }
 
 DuiSceneWindowViewPrivate::~DuiSceneWindowViewPrivate()
 {
-    delete dismissAnimation;
 }
 
 
@@ -62,38 +59,7 @@ DuiSceneWindowView::~DuiSceneWindowView()
 
 void DuiSceneWindowView::applyStyle()
 {
-    Q_D(DuiSceneWindowView);
-
-    if (showAnimation()) {
-        disconnect(showAnimation(), SIGNAL(finished()), d->controller, SIGNAL(appeared()));
-    }
-
-    if (hideAnimation()) {
-        disconnect(hideAnimation(), SIGNAL(finished()), d->controller, SIGNAL(disappeared()));
-    }
-
     DuiWidgetView::applyStyle();
-
-    if (style()->dismissAnimation() == "none") {
-        delete d->dismissAnimation;
-        d->dismissAnimation = NULL;
-    } else {
-        if (!d->dismissAnimation || style()->dismissAnimation() != d->dismissAnimation->metaObject()->className()) {
-            delete d->dismissAnimation;
-            d->dismissAnimation = dynamic_cast<DuiAbstractWidgetAnimation *>(DuiClassFactory::instance()->createAnimation(style()->dismissAnimation().toStdString().c_str()));
-            if (d->dismissAnimation)
-                d->dismissAnimation->setView(this);
-        }
-    }
-
-
-    if (showAnimation()) {
-        connect(showAnimation(), SIGNAL(finished()), d->controller, SIGNAL(appeared()));
-    }
-
-    if (hideAnimation()) {
-        connect(hideAnimation(), SIGNAL(finished()), d->controller, SIGNAL(disappeared()));
-    }
 
     emit geometryAttributesChanged();
 }

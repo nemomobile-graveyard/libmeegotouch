@@ -146,16 +146,6 @@ public:
     void setScale(qreal scale);
 
     /*!
-        \brief Returns the content position, which is used by animations.
-     */
-    QPointF contentPosition() const;
-
-    /*!
-        \brief Sets a new content position.
-     */
-    void setContentPosition(const QPointF &p);
-
-    /*!
        \brief return the used QFont.
      */
     virtual QFont font() const;
@@ -163,18 +153,6 @@ public:
 Q_SIGNALS:
 
 protected:
-
-    /*!
-        \brief Returns an animation which animates this view to visible state.
-     */
-    DuiAbstractWidgetAnimation *showAnimation();
-
-    /*!
-        \brief Returns an animation which animates this view to hidden state.
-     */
-    DuiAbstractWidgetAnimation *hideAnimation();
-
-
 
     /*
       \brief Reimplementation that takes the CSS specified sizes into account.

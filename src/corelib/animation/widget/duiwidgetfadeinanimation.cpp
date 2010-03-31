@@ -19,48 +19,62 @@
 
 #include "duiwidgetfadeinanimation.h"
 #include "duiwidgetfadeinanimation_p.h"
-#include "duiwidgetview.h"
 #include "duianimationcreator.h"
 
-DUI_REGISTER_ANIMATION(DuiWidgetFadeInAnimation)
+#include <QPropertyAnimation>
+#include <duiwidgetcontroller.h>
 
 DuiWidgetFadeInAnimation::DuiWidgetFadeInAnimation(DuiWidgetFadeInAnimationPrivate *dd, QObject *parent) :
     DuiAbstractWidgetAnimation(dd, parent)
 {
-    dd->startOpacity = 255;
+    Q_D(DuiWidgetFadeInAnimation);
+
+    d->opacityAnimation = new QPropertyAnimation;
+    d->opacityAnimation->setPropertyName("opacity");
+    addAnimation(d->opacityAnimation);
 }
 
 DuiWidgetFadeInAnimation::DuiWidgetFadeInAnimation(QObject *parent) :
     DuiAbstractWidgetAnimation(new DuiWidgetFadeInAnimationPrivate, parent)
 {
     Q_D(DuiWidgetFadeInAnimation);
-    d->startOpacity = 255;
+
+    d->opacityAnimation = new QPropertyAnimation;
+    d->opacityAnimation->setPropertyName("opacity");
+    addAnimation(d->opacityAnimation);
 }
 
 DuiWidgetFadeInAnimation::~DuiWidgetFadeInAnimation()
 {
 }
 
-void DuiWidgetFadeInAnimation::resetToInitialState()
-{
-    view()->setOpacity(0.0);
-}
-
-void DuiWidgetFadeInAnimation::updateCurrentTime(int currentTime)
+void DuiWidgetFadeInAnimation::setTargetWidget(DuiWidgetController *widget)
 {
     Q_D(DuiWidgetFadeInAnimation);
+    DuiAbstractWidgetAnimation::setTargetWidget(widget);
 
-    qreal progress = ((qreal)currentTime) / ((qreal)style()->duration());
-    qreal value = style()->easingCurve().valueForProgress(progress);
+    d->played = false;
+    d->opacityAnimation->setTargetObject(targetWidget());
+}
 
-    view()->setOpacity(d->startOpacity + (style()->opacity() - d->startOpacity)*value);
+void DuiWidgetFadeInAnimation::restoreTargetWidgetState()
+{
+    Q_D(DuiWidgetFadeInAnimation);
+    if (d->played)
+        targetWidget()->setOpacity(d->originalOpacity);
 }
 
 void DuiWidgetFadeInAnimation::updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState)
 {
     Q_D(DuiWidgetFadeInAnimation);
     if (oldState == QAbstractAnimation::Stopped && newState == QAbstractAnimation::Running) {
-        view()->show();
-        d->startOpacity = view()->opacity();
+        targetWidget()->show();
+
+        d->originalOpacity = targetWidget()->opacity();
+        d->played = true;
+
+        d->opacityAnimation->setStartValue(0.0);
+        d->opacityAnimation->setEndValue(style()->opacity());
+        d->opacityAnimation->setDuration(style()->duration());
     }
 }

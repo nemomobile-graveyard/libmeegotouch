@@ -19,61 +19,73 @@
 
 #include "duiwidgetslideinanimation.h"
 #include "duiwidgetslideinanimation_p.h"
-#include "duiwidgetview.h"
 #include "duianimationcreator.h"
 
-DUI_REGISTER_ANIMATION(DuiWidgetSlideInAnimation)
+#include <QPropertyAnimation>
+#include <duiwidgetcontroller.h>
 
 DuiWidgetSlideInAnimation::DuiWidgetSlideInAnimation(DuiWidgetSlideInAnimationPrivate *dd, QObject *parent) :
     DuiAbstractWidgetAnimation(dd, parent)
 {
+    Q_D(DuiWidgetSlideInAnimation);
+
+    d->positionAnimation = new QPropertyAnimation;
+    d->positionAnimation->setPropertyName("pos");
+    addAnimation(d->positionAnimation);
 }
 
 DuiWidgetSlideInAnimation::DuiWidgetSlideInAnimation(QObject *parent) :
     DuiAbstractWidgetAnimation(new DuiWidgetSlideInAnimationPrivate, parent)
 {
+    Q_D(DuiWidgetSlideInAnimation);
+
+    d->positionAnimation = new QPropertyAnimation;
+    d->positionAnimation->setPropertyName("pos");
+    addAnimation(d->positionAnimation);
 }
 
 DuiWidgetSlideInAnimation::~DuiWidgetSlideInAnimation()
 {
 }
 
-void DuiWidgetSlideInAnimation::resetToInitialState()
-{
-    if (style()->from() == "top") {
-        view()->setContentPosition(QPointF(0, -view()->boundingRect().height()));
-    } else if (style()->from() == "right") {
-        view()->setContentPosition(QPointF(view()->boundingRect().width(), 0));
-    } else if (style()->from() == "bottom") {
-        view()->setContentPosition(QPointF(0, view()->boundingRect().height()));
-    } else if (style()->from() == "left") {
-        view()->setContentPosition(QPointF(-view()->boundingRect().width(), 0));
-    }
-}
-
-void DuiWidgetSlideInAnimation::updateCurrentTime(int currentTime)
+void DuiWidgetSlideInAnimation::setTargetWidget(DuiWidgetController *widget)
 {
     Q_D(DuiWidgetSlideInAnimation);
+    DuiAbstractWidgetAnimation::setTargetWidget(widget);
 
-    qreal progress = ((qreal)currentTime) / ((qreal)style()->duration());
-    qreal value = style()->easingCurve().valueForProgress(progress);
+    d->played = false;
+    d->positionAnimation->setTargetObject(targetWidget());
+}
 
-    view()->setContentPosition((1.0 - value) * d->startPos);
+void DuiWidgetSlideInAnimation::restoreTargetWidgetState()
+{
+    Q_D(DuiWidgetSlideInAnimation);
+    if (d->played)
+        targetWidget()->setPos(d->originalPos);
 }
 
 void DuiWidgetSlideInAnimation::updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState)
 {
     Q_D(DuiWidgetSlideInAnimation);
     if (oldState == QAbstractAnimation::Stopped && newState == QAbstractAnimation::Running) {
-        view()->show();
+        targetWidget()->show();
+        d->originalPos = targetWidget()->pos();
+        d->played = true;
+
+        QPointF startPos;
+
         if (style()->from() == "top") {
-            d->startPos = QPointF(0, -view()->boundingRect().height());
+            startPos = QPointF(0, -targetWidget()->boundingRect().height());
         } else if (style()->from() == "right") {
-            d->startPos = QPointF(view()->boundingRect().width(), 0);
+            startPos = QPointF(targetWidget()->boundingRect().width(), 0);
         } else if (style()->from() == "bottom") {
-            d->startPos = QPointF(0, view()->boundingRect().height());
+            startPos = QPointF(0, targetWidget()->boundingRect().height());
         } else if (style()->from() == "left") {
-            d->startPos = QPointF(-view()->boundingRect().width(), 0);
+            startPos = QPointF(-targetWidget()->boundingRect().width(), 0);
         }
+
+        d->positionAnimation->setStartValue(startPos);
+        d->positionAnimation->setEndValue(d->originalPos);
+        d->positionAnimation->setDuration(style()->duration());
     }
 }

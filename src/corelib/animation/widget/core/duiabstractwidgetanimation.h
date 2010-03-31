@@ -20,19 +20,9 @@
 #ifndef DUIABSTRACTWIDGETANIMATION_H
 #define DUIABSTRACTWIDGETANIMATION_H
 
-#include <duianimation.h>
 #include <duiabstractwidgetanimationstyle.h>
+#include <duiparallelanimationgroup.h>
 
-#define DUI_WIDGET_ANIMATION(STYLE,VIEW) \
-    DUI_ANIMATION(STYLE) \
-    public: \
-    inline virtual const char* viewType() const { return #VIEW; } \
-    private: \
-    inline VIEW* view() { return static_cast<VIEW*>(DuiAbstractWidgetAnimation::view()); } \
-    inline const VIEW* view() const { return static_cast<const VIEW*>(DuiAbstractWidgetAnimation::view()); }
-
-
-class DuiWidgetView;
 class DuiAbstractWidgetAnimationPrivate;
 
 /*!
@@ -40,14 +30,11 @@ class DuiAbstractWidgetAnimationPrivate;
   \brief DuiAbstractWidgetAnimation class is a base class for all widget animations.
 
  */
-class DUI_EXPORT DuiAbstractWidgetAnimation : public DuiAnimation
+class DUI_EXPORT DuiAbstractWidgetAnimation : public DuiParallelAnimationGroup
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(DuiAbstractWidgetAnimation)
-    DUI_ANIMATION(DuiAbstractWidgetAnimationStyle)
-
-    friend class DuiWidgetView;
-    friend class DuiSceneWindowView;
+    DUI_ANIMATION_GROUP(DuiAbstractWidgetAnimationStyle)
 
 protected:
     /*!
@@ -71,34 +58,15 @@ public:
     virtual ~DuiAbstractWidgetAnimation();
 
     /*!
-        \brief Resets the initial state to the widget.
-
-        Reimplement this method in your animation in so when the animation starts it
-        will animate from initial state to target values.
-        If this method is not called, then the animation should animate from
-        the current values to target values.
+        Restores the properties of the target widget back to their
+        original state, before the animation changed them.
      */
-    virtual void resetToInitialState();
+    virtual void restoreTargetWidgetState() = 0;
 
-    //! \reimp
-    virtual int duration() const;
-    //! \reimp_end
+    virtual void setTargetWidget(DuiWidgetController *widget);
 
-    /*!
-        \brief Returns the type of the view which this animation supports.
-
-        This method gets automatically overriden by DUI_WIDGET_ANIMATION macro.
-     */
-    virtual const char *viewType() const {
-        return "DuiWidgetView";
-    }
-
-protected:
-    DuiWidgetView *view();
-    const DuiWidgetView *view() const;
-
-private:
-    bool setView(DuiWidgetView *view);
+    DuiWidgetController *targetWidget();
+    const DuiWidgetController *targetWidget() const;
 };
 
 #endif

@@ -22,13 +22,17 @@
 
 #include "duiabstractwidgetanimation_p.h"
 
+class QPropertyAnimation;
+
 class DuiWidgetFadeOutAnimationPrivate : public DuiAbstractWidgetAnimationPrivate
 {
     Q_DECLARE_PUBLIC(DuiWidgetFadeOutAnimation)
 public:
     virtual ~DuiWidgetFadeOutAnimationPrivate() {}
 private:
-    qreal startOpacity;
+    qreal originalOpacity;
+    bool played;
+    QPropertyAnimation *opacityAnimation;
 };
 
 #endif

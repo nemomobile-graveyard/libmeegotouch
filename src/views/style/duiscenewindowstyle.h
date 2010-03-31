@@ -28,8 +28,6 @@ class DUI_EXPORT DuiSceneWindowStyle : public DuiWidgetStyle
     Q_OBJECT
     DUI_STYLE(DuiSceneWindowStyle)
 
-    DUI_STYLE_ATTRIBUTE(QString,        dismissAnimation,     DismissAnimation)
-
     DUI_STYLE_ATTRIBUTE(Qt::Alignment,  horizontalAlign,      HorizontalAlign)
     DUI_STYLE_ATTRIBUTE(Qt::Alignment,  verticalAlign,        VerticalAlign)
     DUI_STYLE_ATTRIBUTE(QPointF,        offset,               Offset)

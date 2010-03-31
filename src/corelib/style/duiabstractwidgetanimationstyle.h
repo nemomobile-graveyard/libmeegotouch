@@ -21,8 +21,9 @@
 #define DUIABSTRACTWIDGETANIMATIONSTYLE_H
 
 #include <duianimationstyle.h>
+#include <duiexport.h>
 
-class DUI_EXPORT DuiAbstractWidgetAnimationStyle : public DuiAnimationStyle
+class DuiAbstractWidgetAnimationStyle : public DuiAnimationStyle
 {
     Q_OBJECT
     DUI_STYLE_INTERNAL(DuiAbstractWidgetAnimationStyle)

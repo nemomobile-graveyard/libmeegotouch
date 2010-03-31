@@ -32,9 +32,6 @@ public:
     virtual ~DuiSceneWindowViewPrivate();
 
     DuiSceneWindow *controller;
-
-private:
-    DuiAbstractWidgetAnimation *dismissAnimation;
 };
 
 #endif

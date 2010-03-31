@@ -25,6 +25,7 @@
 
 class DuiWindow;
 class DuiSceneLayerEffect;
+class DuiAbstractWidgetAnimation;
 
 class DuiSceneWindowPrivate : public DuiWidgetControllerPrivate
 {
@@ -44,6 +45,9 @@ public:
     bool dismissed;
 
     DuiSceneLayerEffect *effect;
+
+    DuiAbstractWidgetAnimation *appearanceAnimation;
+    DuiAbstractWidgetAnimation *disappearanceAnimation;
 };
 
 

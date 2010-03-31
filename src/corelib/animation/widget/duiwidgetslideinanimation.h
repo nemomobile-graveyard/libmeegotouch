@@ -30,7 +30,7 @@ class DuiWidgetSlideInAnimation : public DuiAbstractWidgetAnimation
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(DuiWidgetSlideInAnimation)
-    DUI_WIDGET_ANIMATION(DuiWidgetSlideInAnimationStyle, DuiWidgetView)
+    DUI_ANIMATION_GROUP(DuiWidgetSlideInAnimationStyle)
 
     /*!
       \brief Constructs the widget animation.
@@ -53,12 +53,12 @@ public:
     virtual ~DuiWidgetSlideInAnimation();
 
     //! \reimp
-    virtual void resetToInitialState();
+    virtual void restoreTargetWidgetState();
+    virtual void setTargetWidget(DuiWidgetController *widget);
     //! \reimp_end
 
 protected:
     //! \reimp
-    virtual void updateCurrentTime(int currentTime);
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
     //! \reimp_end
 };

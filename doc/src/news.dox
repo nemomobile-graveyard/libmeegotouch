@@ -134,6 +134,7 @@
   - pannedRange() was renamed to range()
   - pannedPos() was renamed to position()
   - updateSizePosData() was split into three new methods: setPosition(), setViewportSize() and setRange().
+
 - Libdui modularization:
   - moved src/applicationextension and src/mashup into new library libduiextensions.
   - moved src/settingslanguage into new library libduisettings.
@@ -146,6 +147,9 @@
   - Also make sure that you update duitheme in sync with this update, as
     it requires some changes in duitheme.
 
+- DuiWidgetController::showAnimation() and hideAnimation() methods were removed.
+- Removed DuiWidgetView::contentPosition().
+- dismissAnimation() was removed from DuiSceneWindowStyle.
 
 \section v0190
 

@@ -23,14 +23,17 @@
 #include "duiabstractwidgetanimation_p.h"
 #include <QPointF>
 
+class QPropertyAnimation;
+
 class DuiWidgetSlideOutAnimationPrivate : public DuiAbstractWidgetAnimationPrivate
 {
     Q_DECLARE_PUBLIC(DuiWidgetSlideOutAnimation)
 public:
     virtual ~DuiWidgetSlideOutAnimationPrivate() {}
 private:
-    QPointF startPos;
-    QPointF endPos;
+    QPointF originalPos;
+    bool played;
+    QPropertyAnimation *positionAnimation;
 };
 
 #endif

@@ -43,6 +43,8 @@ DuiSceneWindowPrivate::DuiSceneWindowPrivate()
     policy = DuiSceneWindow::KeepWhenDone;
     effect = NULL;
     windowType = DuiSceneWindow::PlainSceneWindow;
+    appearanceAnimation = 0;
+    disappearanceAnimation = 0;
 }
 
 DuiSceneWindow::DuiSceneWindow(QGraphicsItem *parent) :

@@ -23,14 +23,11 @@
 #include <QString>
 #include <QTimer>
 #include <QStyleOptionGraphicsItem>
+#include <QPropertyAnimation>
 
-#include "duipositionindicator_p.h"  // For the member indexes of the model
 #include "duitheme.h"
 #include "duiviewcreator.h"
 #include "duipositionindicator.h"
-#include "duiabstractwidgetanimation.h"
-#define NODEBUG
-
 
 DuiPositionIndicatorViewPrivate::DuiPositionIndicatorViewPrivate()
     : controller(0),
@@ -52,6 +49,8 @@ DuiPositionIndicatorView::DuiPositionIndicatorView(DuiPositionIndicator *control
 
     connect(d->hideTimer, SIGNAL(timeout()), this, SLOT(hide()));
     d->hideTimer->setSingleShot(true);
+
+    d->fadeAnimation = new QPropertyAnimation(controller, "opacity", this);
 }
 
 DuiPositionIndicatorView::~DuiPositionIndicatorView()
@@ -167,10 +166,9 @@ void DuiPositionIndicatorView::hide()
 {
     Q_D(DuiPositionIndicatorView);
     d->visible = false;
-    if (showAnimation())
-        showAnimation()->stop();
-    if (hideAnimation())
-        hideAnimation()->start();
+    d->fadeAnimation->stop();
+    d->fadeAnimation->setEndValue(0.0f);
+    d->fadeAnimation->start();
     update();
 }
 
@@ -178,10 +176,9 @@ void DuiPositionIndicatorView::resetHideTimer()
 {
     Q_D(DuiPositionIndicatorView);
     if (!d->visible) {
-        if (hideAnimation())
-            hideAnimation()->stop();
-        if (showAnimation())
-            showAnimation()->start();
+        d->fadeAnimation->stop();
+        d->fadeAnimation->setEndValue(1.0f);
+        d->fadeAnimation->start();
         d->visible = true;
     }
     d->hideTimer->stop();

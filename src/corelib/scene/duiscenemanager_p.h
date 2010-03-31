@@ -130,12 +130,15 @@ public:
 
     QRectF calculateAvailableSceneRect(DuiSceneWindow *window);
 
+    void createAppearanceAnimationForSceneWindow(DuiSceneWindow *sceneWindow);
+    void createDisappearanceAnimationForSceneWindow(DuiSceneWindow *sceneWindow);
+
     void _q_setSenderGeometry();
     void _q_changeGlobalOrientation();
     void _q_emitOrientationChangeFinished();
     void _q_pageShowAnimationFinished();
-    void _q_windowShowAnimationFinished();
-    void _q_windowHideAnimationFinished();
+    void _q_onSceneWindowAppeared();
+    void _q_onSceneWindowDisappeared();
     void _q_restoreSceneWindow();
     void _q_relocateWindowByInputPanel(const QRect &inputPanelRect);
 

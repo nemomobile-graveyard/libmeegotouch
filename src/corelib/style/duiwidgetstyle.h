@@ -40,9 +40,6 @@ class DUI_EXPORT DuiWidgetStyle : public DuiStyle
     Q_OBJECT
     DUI_STYLE_INTERNAL(DuiWidgetStyle)
 
-    DUI_STYLE_ATTRIBUTE(QString, showAnimation, ShowAnimation)
-    DUI_STYLE_ATTRIBUTE(QString, hideAnimation, HideAnimation)
-
     DUI_STYLE_ATTRIBUTE(int, marginLeft, MarginLeft)
     DUI_STYLE_ATTRIBUTE(int, marginTop, MarginTop)
     DUI_STYLE_ATTRIBUTE(int, marginRight, MarginRight)

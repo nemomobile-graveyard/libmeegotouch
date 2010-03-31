@@ -32,8 +32,6 @@ class DuiWidgetControllerStub : public StubBase {
   virtual void DuiWidgetControllerConstructor(QGraphicsItem *parent);
   virtual void DuiWidgetControllerConstructor(DuiWidgetModel *model, QGraphicsItem *parent);
   virtual void DuiWidgetControllerDestructor();
-  virtual DuiAbstractWidgetAnimation * showAnimation();
-  virtual DuiAbstractWidgetAnimation * hideAnimation();
   virtual void setModel(DuiWidgetModel *model);
   virtual DuiWidgetModel * model();
   virtual const DuiWidgetModel * model() const;
@@ -84,15 +82,6 @@ void DuiWidgetControllerStub::DuiWidgetControllerConstructor(DuiWidgetModel *mod
 }
 void DuiWidgetControllerStub::DuiWidgetControllerDestructor() {
 
-}
-DuiAbstractWidgetAnimation * DuiWidgetControllerStub::showAnimation() {
-  stubMethodEntered("showAnimation");
-  return stubReturnValue<DuiAbstractWidgetAnimation *>("showAnimation");
-}
-
-DuiAbstractWidgetAnimation * DuiWidgetControllerStub::hideAnimation() {
-  stubMethodEntered("hideAnimation");
-  return stubReturnValue<DuiAbstractWidgetAnimation *>("hideAnimation");
 }
 
 void DuiWidgetControllerStub::setModel(DuiWidgetModel *model) {
@@ -335,14 +324,6 @@ DuiWidgetController::DuiWidgetController(DuiWidgetModel *model, QGraphicsItem *p
 
 DuiWidgetController::~DuiWidgetController() {
   gDuiWidgetControllerStub->DuiWidgetControllerDestructor();
-}
-
-DuiAbstractWidgetAnimation * DuiWidgetController::showAnimation() {
-  return gDuiWidgetControllerStub->showAnimation();
-}
-
-DuiAbstractWidgetAnimation * DuiWidgetController::hideAnimation() {
-  return gDuiWidgetControllerStub->hideAnimation();
 }
 
 void DuiWidgetController::setModel(DuiWidgetModel *model) {

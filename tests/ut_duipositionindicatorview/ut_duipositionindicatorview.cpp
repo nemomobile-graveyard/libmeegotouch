@@ -19,7 +19,6 @@
 
 #include <QTest>
 #include <duipositionindicatorview.h>
-#include "views/duipositionindicatorview_p.h"
 #include <duipositionindicator.h>
 #include <duitheme.h>
 #include <duiapplication.h>

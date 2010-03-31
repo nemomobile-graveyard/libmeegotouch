@@ -300,8 +300,8 @@ protected:
 private:
     Q_DECLARE_PRIVATE(DuiSceneManager)
 
-    Q_PRIVATE_SLOT(d_func(), void _q_windowShowAnimationFinished())
-    Q_PRIVATE_SLOT(d_func(), void _q_windowHideAnimationFinished())
+    Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowAppeared())
+    Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowDisappeared())
     Q_PRIVATE_SLOT(d_func(), void _q_setSenderGeometry())
     Q_PRIVATE_SLOT(d_func(), void _q_changeGlobalOrientation())
     Q_PRIVATE_SLOT(d_func(), void _q_emitOrientationChangeFinished())

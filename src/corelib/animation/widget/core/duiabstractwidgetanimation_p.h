@@ -20,17 +20,18 @@
 #ifndef DUIABSTRACTWIDGETANIMATION_P_H
 #define DUIABSTRACTWIDGETANIMATION_P_H
 
-#include "duianimation_p.h"
+#include "duiparallelanimationgroup_p.h"
 
-class DuiWidgetView;
+class DuiWidgetController;
 
-class DuiAbstractWidgetAnimationPrivate : public DuiAnimationPrivate
+class DuiAbstractWidgetAnimationPrivate : public DuiParallelAnimationGroupPrivate
 {
     Q_DECLARE_PUBLIC(DuiAbstractWidgetAnimation)
 public:
+    DuiAbstractWidgetAnimationPrivate();
     virtual ~DuiAbstractWidgetAnimationPrivate() {}
 private:
-    DuiWidgetView *view;
+    DuiWidgetController *targetWidget;
 };
 
 #endif

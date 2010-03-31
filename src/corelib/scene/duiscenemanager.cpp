@@ -58,6 +58,11 @@
 #include "duiabstractwidgetanimation.h"
 #include "duipageswitchanimation.h"
 
+#include <duiwidgetslideinanimation.h>
+#include <duiwidgetfadeinanimation.h>
+#include <duiwidgetslideoutanimation.h>
+#include <duiwidgetfadeoutanimation.h>
+
 const int DuiSceneManagerPrivate::KeyboardSpacing = 20;
 
 namespace
@@ -266,7 +271,7 @@ void DuiSceneManagerPrivate::_q_applyQueuedSceneWindowTransitions()
     }
 }
 
-void DuiSceneManagerPrivate::_q_windowShowAnimationFinished()
+void DuiSceneManagerPrivate::_q_onSceneWindowAppeared()
 {
     Q_Q(DuiSceneManager);
     DuiSceneWindow *window = dynamic_cast<DuiSceneWindow *>(q->sender());
@@ -277,10 +282,10 @@ void DuiSceneManagerPrivate::_q_windowShowAnimationFinished()
         produceMustBeResolvedDisplayEvent(window);
     }
 
-    QObject::disconnect(window, SIGNAL(appeared()), q, SLOT(_q_windowShowAnimationFinished()));
+    QObject::disconnect(window, SIGNAL(appeared()), q, SLOT(_q_onSceneWindowAppeared()));
 }
 
-void DuiSceneManagerPrivate::_q_windowHideAnimationFinished()
+void DuiSceneManagerPrivate::_q_onSceneWindowDisappeared()
 {
     Q_Q(DuiSceneManager);
     //TODO: There could be a mapping between windows and animations so that
@@ -309,15 +314,11 @@ void DuiSceneManagerPrivate::_q_windowHideAnimationFinished()
     }
 
     window->hide();
-    // If the window was hidden using DuiSceneFadeAnimation it will be
-    // left with an opacity of 0.
-    // This might bite us back later if someone wants a window
-    // to appear straight away with, let's say, 0.5 opacity. If that happens
-    // we will have to think a better way of doing this DuiSceneFadeAnimation
-    // - Daniel d'Andrada
-    window->setOpacity(1.0);
 
-    QObject::disconnect(window, SIGNAL(disappeared()), q, SLOT(_q_windowHideAnimationFinished()));
+    if (window->d_func()->disappearanceAnimation)
+        window->d_func()->disappearanceAnimation->restoreTargetWidgetState();
+
+    QObject::disconnect(window, SIGNAL(disappeared()), q, SLOT(_q_onSceneWindowDisappeared()));
 
     //check if the window has not yet been detached
     int i = windows->indexOf(window);
@@ -784,12 +785,14 @@ void DuiSceneManagerPrivate::prepareWindowShow(DuiSceneWindow *window)
 
     // Check whether we are trying to show a window while it is in the middle of
     // a hide animation. If that's the case, we stop it.
-    if (window->hideAnimation() &&
-            window->hideAnimation()->state() != QAbstractAnimation::Stopped) {
+    if (window->d_func()->disappearanceAnimation) {
+        DuiAbstractWidgetAnimation *disappearanceAnimation = window->d_func()->disappearanceAnimation;
 
-        window->hideAnimation()->stop();
+        disappearanceAnimation->stop();
         QObject::disconnect(window, SIGNAL(disappeared()),
-                            q, SLOT(_q_windowHideAnimationFinished()));
+                            q, SLOT(_q_onSceneWindowDisappeared()));
+
+        disappearanceAnimation->restoreTargetWidgetState();
     }
 
     if (window->windowType() == DuiSceneWindow::NavigationBar)
@@ -816,7 +819,7 @@ void DuiSceneManagerPrivate::prepareWindowShow(DuiSceneWindow *window)
 
     orientationAnimation->addSceneWindow(window);
 
-    q->connect(window, SIGNAL(appeared()), SLOT(_q_windowShowAnimationFinished()));
+    q->connect(window, SIGNAL(appeared()), SLOT(_q_onSceneWindowAppeared()));
     q->connect(window, SIGNAL(repositionNeeded()), SLOT(_q_setSenderGeometry()));
 }
 
@@ -933,18 +936,11 @@ void DuiSceneManagerPrivate::appearSceneWindow(DuiSceneWindow *window,
     if (window->windowType() == DuiSceneWindow::ApplicationPage) {
         pushPage(window, animatedTransition);
     } else {
-        if (animatedTransition && window->showAnimation()) {
-            window->showAnimation()->resetToInitialState();
-            window->showAnimation()->start();
+        if (animatedTransition) {
+            if (!window->d_func()->appearanceAnimation)
+                createAppearanceAnimationForSceneWindow(window);
+            window->d_func()->appearanceAnimation->start();
         } else {
-            // Animation needs to be fast forwarded to the end,
-            // even if not played, to ensure that window is in correct state
-            // to be shown with appearSceneWindowNow()
-            //  - Maciej Jablonski
-            if(window->showAnimation())
-                window->showAnimation()->setCurrentTime(
-                    window->showAnimation()->totalDuration());
-
             emit window->appeared();
         }
     }
@@ -966,22 +962,22 @@ void DuiSceneManagerPrivate::prepareWindowHide(DuiSceneWindow *window)
 
     // Check whether we are trying to hide a window while it is in the middle of
     // a show animation. If that's the case, we stop it.
-    if (window->showAnimation() &&
-            window->showAnimation()->state() != QAbstractAnimation::Stopped) {
+    if (window->d_func()->appearanceAnimation) {
+        DuiAbstractWidgetAnimation *appearanceAnimation = window->d_func()->appearanceAnimation;
 
-        window->showAnimation()->stop();
+        appearanceAnimation->stop();
         QObject::disconnect(window, SIGNAL(appeared()),
-                            q, SLOT(_q_windowShowAnimationFinished()));
+                            q, SLOT(_q_onSceneWindowAppeared()));
+
+        appearanceAnimation->restoreTargetWidgetState();
     }
 
-    q->connect(window, SIGNAL(disappeared()), SLOT(_q_windowHideAnimationFinished()));
+    q->connect(window, SIGNAL(disappeared()), SLOT(_q_onSceneWindowDisappeared()));
 }
 
 void DuiSceneManagerPrivate::disappearSceneWindow(DuiSceneWindow *window,
         bool animatedTransition)
 {
-    Q_Q(DuiSceneManager);
-
     // Disappearing scene windows during an orientation change is
     // a grey area. We probably want to avoid them during that period.
     // TODO: For now we are only queueing the status bar. We should
@@ -1008,11 +1004,12 @@ void DuiSceneManagerPrivate::disappearSceneWindow(DuiSceneWindow *window,
         }
     }
 
-    if (animatedTransition && window->hideAnimation()) {
-        window->hideAnimation()->start();
+    if (animatedTransition) {
+        if (!window->d_func()->disappearanceAnimation)
+            createDisappearanceAnimationForSceneWindow(window);
+        window->d_func()->disappearanceAnimation->start();
     } else {
         emit window->disappeared();
-        q->scene()->update(); // is this really needed?
     }
 }
 
@@ -1029,8 +1026,6 @@ void DuiSceneManagerPrivate::freezeUIForAnimationDuration(QAbstractAnimation *an
 void DuiSceneManagerPrivate::dismissSceneWindow(DuiSceneWindow *window,
         bool animatedTransition)
 {
-    Q_Q(DuiSceneManager);
-
     // Dismissing scene windows during an orientation change is
     // a grey area. We probably want to avoid them during that period.
     // TODO: For now we are only queueing the status bar. We should
@@ -1060,12 +1055,63 @@ void DuiSceneManagerPrivate::dismissSceneWindow(DuiSceneWindow *window,
         // If the window is not currentPage then it means that it's not
         // currently being displayed and thus there's nothing to be done.
 
-    } else if (animatedTransition && window->hideAnimation()) { // Fallback to legacy hide anim.
-        window->hideAnimation()->start();
+    } else if (animatedTransition) { // Fallback to legacy disappearance anim.
+        if (!window->d_func()->disappearanceAnimation)
+            createDisappearanceAnimationForSceneWindow(window);
+        window->d_func()->disappearanceAnimation->start();
     } else {
         emit window->disappeared();
-        q->scene()->update(); // is this really needed?
     }
+}
+
+void DuiSceneManagerPrivate::createAppearanceAnimationForSceneWindow(DuiSceneWindow *sceneWindow)
+{
+    Q_ASSERT(sceneWindow->d_func()->appearanceAnimation == 0);
+    DuiAbstractWidgetAnimation *animation;
+
+    // TODO: Get this from theme/CSS
+    switch(sceneWindow->windowType()) {
+        case DuiSceneWindow::Dialog:
+        case DuiSceneWindow::NotificationInformation:
+        case DuiSceneWindow::NotificationEvent:
+        case DuiSceneWindow::ApplicationMenu:
+        case DuiSceneWindow::NavigationBar:
+        case DuiSceneWindow::PopupList:
+            animation = new DuiWidgetSlideInAnimation(sceneWindow);
+            break;
+        default:
+            animation = new DuiWidgetFadeInAnimation(sceneWindow);
+            break;
+    }
+
+    animation->setTargetWidget(sceneWindow);
+    sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(appeared()));
+    sceneWindow->d_func()->appearanceAnimation = animation;
+}
+
+void DuiSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(DuiSceneWindow *sceneWindow)
+{
+    Q_ASSERT(sceneWindow->d_func()->disappearanceAnimation == 0);
+    DuiAbstractWidgetAnimation *animation;
+
+    // TODO: Get this from theme/CSS
+    switch(sceneWindow->windowType()) {
+        case DuiSceneWindow::Dialog:
+        case DuiSceneWindow::NotificationInformation:
+        case DuiSceneWindow::NotificationEvent:
+        case DuiSceneWindow::ApplicationMenu:
+        case DuiSceneWindow::NavigationBar:
+        case DuiSceneWindow::PopupList:
+            animation = new DuiWidgetSlideOutAnimation(sceneWindow);
+            break;
+        default:
+            animation = new DuiWidgetFadeOutAnimation(sceneWindow);
+            break;
+    }
+
+    animation->setTargetWidget(sceneWindow);
+    sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(disappeared()));
+    sceneWindow->d_func()->disappearanceAnimation = animation;
 }
 
 void DuiSceneManagerPrivate::_q_inputPanelOpened()

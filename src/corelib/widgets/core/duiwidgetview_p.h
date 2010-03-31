@@ -42,11 +42,6 @@ public: // public to inherited classes
 private:// public only to DuiWidgetView
     DuiWidgetModel *model;
     DuiWidgetStyleContainer *styleContainer;
-
-    QPointF contentPosition;
-
-    DuiAbstractWidgetAnimation *showAnimation;
-    DuiAbstractWidgetAnimation *hideAnimation;
 };
 
 #endif // DUIWIDGETVIEW_P_H

@@ -20,16 +20,19 @@
 #include "duiabstractwidgetanimation.h"
 #include "duiabstractwidgetanimation_p.h"
 
-#include "duiwidgetview.h"
-#include "private/duiwidgetview_p.h"
+
+DuiAbstractWidgetAnimationPrivate::DuiAbstractWidgetAnimationPrivate()
+{
+    targetWidget = 0;
+}
 
 DuiAbstractWidgetAnimation::DuiAbstractWidgetAnimation(DuiAbstractWidgetAnimationPrivate *dd, QObject *parent) :
-    DuiAnimation(dd, parent)
+   DuiParallelAnimationGroup(dd, parent)
 {
 }
 
 DuiAbstractWidgetAnimation::DuiAbstractWidgetAnimation(QObject *parent) :
-    DuiAnimation(new DuiAbstractWidgetAnimationPrivate, parent)
+    DuiParallelAnimationGroup(new DuiAbstractWidgetAnimationPrivate, parent)
 {
 }
 
@@ -37,46 +40,23 @@ DuiAbstractWidgetAnimation::~DuiAbstractWidgetAnimation()
 {
 }
 
-void DuiAbstractWidgetAnimation::resetToInitialState()
-{
-}
-
-int DuiAbstractWidgetAnimation::duration() const
-{
-    return style()->duration();
-}
-
-DuiWidgetView *DuiAbstractWidgetAnimation::view()
-{
-    Q_D(DuiAbstractWidgetAnimation);
-    return d->view;
-}
-
-const DuiWidgetView *DuiAbstractWidgetAnimation::view() const
+const DuiWidgetController *DuiAbstractWidgetAnimation::targetWidget() const
 {
     Q_D(const DuiAbstractWidgetAnimation);
-    return d->view;
+    return d->targetWidget;
 }
 
-bool DuiAbstractWidgetAnimation::setView(DuiWidgetView *view)
+DuiWidgetController *DuiAbstractWidgetAnimation::targetWidget()
 {
     Q_D(DuiAbstractWidgetAnimation);
-    bool inherits = false;
-    const QMetaObject *mobj = view->metaObject();
-    while (mobj) {
-        if (strcmp(viewType(), mobj->className()) == 0) {
-            inherits = true;
-            break;
-        }
-        mobj = mobj->superClass();
-    }
+    return d->targetWidget;
+}
 
-    if (!inherits)
-        return false;
+void DuiAbstractWidgetAnimation::setTargetWidget(DuiWidgetController *widget)
+{
+    Q_D(DuiAbstractWidgetAnimation);
 
-    d->view = view;
+    d->targetWidget = widget;
 
-    style().setParent(view->d_func()->controller);
-
-    return true;
+    style().setParent(widget);
 }

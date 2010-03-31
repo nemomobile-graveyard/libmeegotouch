@@ -69,9 +69,7 @@ void DuiClassFactory::unregisterViewCreator(DuiViewCreatorBase *)
 DuiWidgetViewPrivate::DuiWidgetViewPrivate() :
     controller(NULL),
     model(NULL),
-    styleContainer(NULL),
-    showAnimation(NULL),
-    hideAnimation(NULL)
+    styleContainer(NULL)
 {
 }
 
