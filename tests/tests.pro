@@ -29,6 +29,7 @@ SUBDIRS     =  \
      ut_duinavigationbar \
     ut_duilistviewgroupheader \
     ut_duilistviewmulticolumn \
+    ut_duilistviewseparators \
      ut_duiflowlayoutpolicy \
      ut_duifreestylelayoutpolicy \
      ut_duigridlayoutpolicy \

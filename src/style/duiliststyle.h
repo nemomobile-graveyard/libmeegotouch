@@ -57,6 +57,22 @@ class DUI_EXPORT DuiListStyle : public DuiWidgetStyle
         \sa DuiLabelStyle
     */
     DUI_STYLE_ATTRIBUTE(QString,         groupHeaderObjectName,       GroupHeaderObjectName)
+
+    /*!
+        \property DuiListStyle::horizontalSeparatorObjectName
+        \brief Sets object name for a horizontal separator widget
+
+        Sets object name for a horizontal separator widget.
+    */
+    DUI_STYLE_ATTRIBUTE(QString, horizontalSeparatorObjectName, HorizontalSeparatorObjectName)
+
+    /*!
+        \property DuiListStyle::verticalSeparatorObjectName
+        \brief Sets object name for a vertical separator widget
+
+        Sets object name for a vertical separator widget.
+    */
+    DUI_STYLE_ATTRIBUTE(QString, verticalSeparatorObjectName, VerticalSeparatorObjectName)
 };
 
 class DUI_EXPORT DuiListStyleContainer : public DuiWidgetStyleContainer

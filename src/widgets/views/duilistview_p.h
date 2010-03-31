@@ -89,20 +89,24 @@ public:
 
     DuiWidget *findCellAtRow(int row);
 
-    void updateSeparatorSize();
-
     void exposedRectChanged(const QRectF &exposedRect);
 
     void updateFirstVisibleRow(const QModelIndex &index);
     void updateLastVisibleRow(const QModelIndex &index);
 
+    void drawHorizontalSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
+
 public:
+    virtual void createSeparators();
+    virtual void updateSeparators();
+
     virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void cellClicked(DuiWidget *source);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual void updateItemSize();
+    virtual void updateSeparatorSize();
     virtual QSizeF cellSize(int row) const;
     virtual void resetModel(DuiListModel *controllerModel);
     virtual int locateVisibleRowAt(int y, int x = 0) = 0;
@@ -123,6 +127,9 @@ public:
     virtual bool isGroupHeader(const QModelIndex &index);
     virtual void layoutChanged();
 
+    virtual void drawSeparators(QPainter *painter, const QStyleOptionGraphicsItem *option);
+    virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
+
 public slots:
     void movingDetectionTimerTimeout();
 
@@ -132,8 +139,8 @@ public:
     DuiListModel *controllerModel;
     QAbstractItemModel *model;
     DuiWidgetRecycler *recycler;
-    DuiWidget *separator;
-    int separatorHeight;
+    DuiWidget *hseparator;
+    int hseparatorHeight;
     DuiCellCreator *headersCreator;
 
     QVector<DuiWidget *> visibleItems;
@@ -182,10 +189,14 @@ public:
     virtual ~DuiPlainMultiColumnListViewPrivate();
 
 public:
+    void setVerticalSeparator(DuiWidget *separator);
     int itemsToRows(int items) const;
     int flatRowToColumn(int row) const;
 
 public:
+    virtual void createSeparators();
+    virtual void updateSeparators();
+
     virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
@@ -194,14 +205,19 @@ public:
     virtual DuiWidget *createItem(int row);
     virtual int locateVisibleRowAt(int y, int x = 0);
     virtual void updateItemSize();
+    virtual void updateSeparatorSize();
     virtual QSizeF cellSize(int row) const;
     virtual void cellClicked(DuiWidget *source);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual void createVisibleItems(const QModelIndex &firstVisibleRow,
                                     const QModelIndex &lastVisibleRow);
+
+    virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
+    virtual void drawVerticalSeparator(int row, int column, QPainter *painter, const QStyleOptionGraphicsItem *option);
 public:
     QHash<DuiWidget *, int> widgetFlatRows;
-    DuiWidget *hseparator;
+    DuiWidget *vseparator;
+    int vseparatorWidth;
 };
 
 class DuiGroupHeaderListViewPrivate : public DuiListViewPrivate
@@ -242,6 +258,7 @@ public:
     virtual bool isGroupHeader(const QModelIndex &index);
     virtual void layoutChanged();
 
+    virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 public:
     QVector<int> headersPositions;
     QVector<int> headersRows;
@@ -254,15 +271,20 @@ public:
     virtual ~DuiMultiColumnListViewPrivate();
 
 public:
+    void setVerticalSeparator(DuiWidget *separator);
     int itemsToRows(int items) const;
     int rowsInGroup(int headerIndex) const;
     int flatRowToColumn(int row) const;
 
 public:
+    virtual void createSeparators();
+    virtual void updateSeparators();
+
     virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void updateItemSize();
+    virtual void updateSeparatorSize();
     virtual QSizeF cellSize(int row) const;
     virtual void cellClicked(DuiWidget *source);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
@@ -276,9 +298,12 @@ public:
                                     const QModelIndex &lastVisibleRow);
     virtual DuiWidget *createItem(int row);
 
+    virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
+    virtual void drawVerticalSeparator(int row, int column, QPainter *painter, const QStyleOptionGraphicsItem *option);
 public:
     QHash<DuiWidget *, int> widgetFlatRows;
-    DuiWidget *hseparator;
+    DuiWidget *vseparator;
+    int vseparatorWidth;
 };
 
 class DuiDefaultHeadersCreator : public DuiAbstractCellCreator<DuiLabel>

@@ -39,13 +39,13 @@ DuiListViewPrivate::DuiListViewPrivate() : recycler(new DuiWidgetRecycler)
     viewWidth = 0;
     model = NULL;
     moving = false;
-    separator = NULL;
+    hseparator = NULL;
     headersCreator = NULL;
     hdrHeight = NULL;
     forceRepaint = false;
     viewportTopLeft = QPointF();
     viewportVisibleHeight = 0;
-    separatorHeight = 0;
+    hseparatorHeight = 0;
     movingDetectorTimer.setSingleShot(true);
     connect(&movingDetectorTimer, SIGNAL(timeout()), this, SLOT(movingDetectionTimerTimeout()));
 }
@@ -55,15 +55,31 @@ DuiListViewPrivate::~DuiListViewPrivate()
     clearVisibleItemsArray();
     movingDetectorTimer.stop();
     delete headersCreator;
-    delete separator;
+    delete hseparator;
     delete recycler;
 }
 
 void DuiListViewPrivate::setSeparator(DuiWidget *separator)
 {
-    this->separator = separator;
+    if(hseparator)
+        delete hseparator;
+
+    hseparator = separator;
     if(separator)
-        this->separatorHeight = separator->boundingRect().height();
+        hseparatorHeight = separator->preferredHeight();
+    else
+        hseparatorHeight = 0;
+}
+
+void DuiListViewPrivate::createSeparators()
+{
+    setSeparator(new DuiSeparator);
+}
+
+void DuiListViewPrivate::updateSeparators()
+{
+    if(hseparator)
+        hseparator->setObjectName(q_ptr->style()->horizontalSeparatorObjectName());
 }
 
 void DuiListViewPrivate::setHeadersCreator(DuiCellCreator *creator)
@@ -253,9 +269,10 @@ QSizeF DuiListViewPrivate::cellSize(int row) const
 
 void DuiListViewPrivate::updateSeparatorSize()
 {
-    QRectF separatorBoundingRect(separator->boundingRect());
-    separator->setGeometry(QRectF(QPointF(0, 0), QSizeF(viewWidth, separatorBoundingRect.height())));
-    separatorHeight = separatorBoundingRect.height();
+    if(hseparator) {
+        hseparatorHeight = hseparator->preferredHeight();
+        hseparator->setGeometry(QRectF(QPointF(0, 0), QSizeF(viewWidth, hseparatorHeight)));
+    }
 }
 
 void DuiListViewPrivate::updateFirstVisibleRow(const QModelIndex &index)
@@ -291,6 +308,36 @@ void DuiListViewPrivate::layoutChanged()
 
 }
 
+void DuiListViewPrivate::drawSeparators(QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    if(!controllerModel->firstVisibleItem().isValid() || !controllerModel->lastVisibleItem().isValid())
+        return;
+
+    int firstRow = indexToFlatRow(controllerModel->firstVisibleItem());
+    int lastRow = indexToFlatRow(controllerModel->lastVisibleItem());
+
+    for (int currentRow = firstRow; currentRow <= lastRow; currentRow++) {
+        drawSeparator(currentRow, painter, option);
+    }
+}
+
+void DuiListViewPrivate::drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    drawHorizontalSeparator(row, painter, option);
+}
+
+void DuiListViewPrivate::drawHorizontalSeparator(int row, QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    if(row == 0 || hseparatorHeight == 0)
+        return;
+
+    QPointF pos(-q_ptr->marginLeft(), locatePosOfItem(row) - hseparatorHeight - q_ptr->marginTop());
+
+    painter->translate(pos.x(), pos.y());
+    hseparator->paint(painter, option);
+    painter->translate(-pos.x(), -pos.y());
+}
+
 ////////////
 // Plain list
 ////////////
@@ -313,7 +360,7 @@ int DuiPlainListViewPrivate::totalHeight()
 {
     int itemsCount = this->itemsCount();
     int separatorsCount = this->separatorsCount();
-    int totalHeight = itemsCount * itemHeight + separatorsCount * separatorHeight;
+    int totalHeight = itemsCount * itemHeight + separatorsCount * hseparatorHeight;
     return totalHeight;
 }
 
@@ -344,10 +391,10 @@ int DuiPlainListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
     // Formula for calculating position of specific row is following:
-    // row * itemHeight + row * separatorHeight = pos
+    // row * itemHeight + row * hseparatorHeight = pos
     // to calculate row lets do basic math:
-    // row = pos / (separatorHeight + itemHeight)
-    int row = y / (separatorHeight + itemHeight);
+    // row = pos / (hseparatorHeight + itemHeight)
+    int row = y / (hseparatorHeight + itemHeight);
 
     int modelRowCount = model->rowCount();
     if (row >= modelRowCount)
@@ -360,11 +407,11 @@ int DuiPlainListViewPrivate::locateVisibleRowAt(int y, int x)
 int DuiPlainListViewPrivate::locatePosOfItem(int row)
 {
     int itemHeights = row * itemHeight;
-    int separatorHeights = 0;
+    int hseparatorHeights = 0;
     if (row > 0)
-        separatorHeights = row * separatorHeight;
+        hseparatorHeights = row * hseparatorHeight;
 
-    return itemHeights + separatorHeights;
+    return itemHeights + hseparatorHeights;
 }
 
 int DuiPlainListViewPrivate::locatePosOfItem(const QModelIndex &index)
@@ -392,10 +439,41 @@ void DuiPlainListViewPrivate::createVisibleItems(const QModelIndex &firstVisible
 ////////////
 DuiPlainMultiColumnListViewPrivate::DuiPlainMultiColumnListViewPrivate()
 {
+    vseparatorWidth = 0;
+    vseparator = NULL;
 }
 
 DuiPlainMultiColumnListViewPrivate::~DuiPlainMultiColumnListViewPrivate()
 {
+    if(vseparator)
+        delete vseparator;
+}
+
+void DuiPlainMultiColumnListViewPrivate::createSeparators()
+{
+    DuiListViewPrivate::createSeparators();
+
+    //create vertical separators
+    setVerticalSeparator(new DuiSeparator(NULL, Qt::Vertical));
+}
+
+void DuiPlainMultiColumnListViewPrivate::updateSeparators()
+{
+    DuiListViewPrivate::updateSeparators();
+    if(vseparator)
+        vseparator->setObjectName(q_ptr->style()->verticalSeparatorObjectName());
+}
+
+void DuiPlainMultiColumnListViewPrivate::setVerticalSeparator(DuiWidget *separator)
+{
+    if(vseparator)
+        delete vseparator;
+
+    vseparator = separator;
+    if(vseparator)
+        vseparatorWidth = vseparator->preferredWidth();
+    else
+        vseparatorWidth = 0;
 }
 
 int DuiPlainMultiColumnListViewPrivate::itemsToRows(int items) const
@@ -422,25 +500,24 @@ int DuiPlainMultiColumnListViewPrivate::locatePosOfItem(int row)
     int columns = controllerModel->columns();
     int rows = row / columns;
     int itemHeights = rows * itemHeight;
-    int separatorHeights = 0;
+    int hseparatorHeights = 0;
     if (rows > 0)
-        separatorHeights = rows * separatorHeight;
+        hseparatorHeights = rows * hseparatorHeight;
 
-    return itemHeights + separatorHeights;
+    return itemHeights + hseparatorHeights;
 }
 
 int DuiPlainMultiColumnListViewPrivate::totalHeight()
 {
     int rowsCount = itemsToRows(itemsCount());
     int separatorsCount = this->separatorsCount();
-    int totalHeight = rowsCount * itemHeight + separatorsCount * separatorHeight;
+    int totalHeight = rowsCount * itemHeight + separatorsCount * hseparatorHeight;
     return totalHeight;
 }
 
 DuiWidget *DuiPlainMultiColumnListViewPrivate::createItem(int row)
 {
     DuiWidget *cell = createCell(row);
-    cell->resize(viewWidth / controllerModel->columns(), cell->preferredHeight());
 
     return cell;
 }
@@ -448,7 +525,7 @@ DuiWidget *DuiPlainMultiColumnListViewPrivate::createItem(int row)
 int DuiPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     int columns = controllerModel->columns();
-    int row = y * columns / (separatorHeight + itemHeight);
+    int row = y * columns / (hseparatorHeight + itemHeight);
 
     if (row >= itemsCount())
         row = itemsCount() - 1;
@@ -466,7 +543,18 @@ void DuiPlainMultiColumnListViewPrivate::updateItemSize()
         int cellRow = widgetFlatRows[cell] - 1;
         int cellColumn = flatRowToColumn(cellRow);
         cell->resize(cellSize(cellRow));
-        cell->setPos(QPointF(cellColumn * cell->size().width(), cell->pos().y()));
+        cell->setPos(QPointF(cellColumn * viewWidth / controllerModel->columns(), cell->pos().y()));
+    }
+}
+
+void DuiPlainMultiColumnListViewPrivate::updateSeparatorSize()
+{
+    DuiListViewPrivate::updateSeparatorSize();
+
+    //Update vertical separator
+    if(vseparator) {
+        vseparatorWidth = vseparator->preferredWidth();
+        vseparator->setGeometry(QRectF(QPointF(0, 0), QSizeF(vseparatorWidth, itemHeight)));
     }
 }
 
@@ -474,7 +562,7 @@ QSizeF DuiPlainMultiColumnListViewPrivate::cellSize(int row) const
 {
     Q_UNUSED(row);
     int columns = controllerModel->columns();
-    return QSizeF(viewWidth / columns, itemHeight);
+    return QSizeF(viewWidth / columns - vseparatorWidth, itemHeight);
 }
 
 void DuiPlainMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
@@ -552,17 +640,42 @@ void DuiPlainMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &f
     }
 }
 
+void DuiPlainMultiColumnListViewPrivate::drawSeparator(int row, QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    int columns = controllerModel->columns();
+    int column = flatRowToColumn(row);
+
+    if(row >= columns && column == 0) {
+        drawHorizontalSeparator(row, painter, option);
+        return;
+    }
+
+    if(column > 0)
+        drawVerticalSeparator(row, column, painter, option);
+}
+
+void DuiPlainMultiColumnListViewPrivate::drawVerticalSeparator(int row, int column, QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    if(vseparatorWidth == 0)
+        return;
+
+    int itemWidth = viewWidth / controllerModel->columns();
+
+    QPointF pos(column*itemWidth - q_ptr->marginLeft() - vseparatorWidth, locatePosOfItem(row) - q_ptr->marginTop());
+    painter->translate(pos.x(), pos.y());
+    vseparator->paint(painter, option);
+    painter->translate(-pos.x(), -pos.y());
+}
+
 ////////////
 // Group Header
 ////////////
 DuiGroupHeaderListViewPrivate::DuiGroupHeaderListViewPrivate()
 {
-
 }
 
 DuiGroupHeaderListViewPrivate::~DuiGroupHeaderListViewPrivate()
 {
-
 }
 
 void DuiGroupHeaderListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
@@ -625,10 +738,10 @@ int DuiGroupHeaderListViewPrivate::locatePosOfItem(int headerIndex, int itemInde
         return pos;
 
     int itemHeights = itemIndex * itemHeight;
-    int separatorHeights = 0;
-    separatorHeights = itemIndex * separatorHeight;
+    int hseparatorHeights = 0;
+    hseparatorHeights = itemIndex * hseparatorHeight;
 
-    pos += separatorHeights + itemHeights;
+    pos += hseparatorHeights + itemHeights;
     return pos;
 }
 
@@ -655,7 +768,7 @@ int DuiGroupHeaderListViewPrivate::locateVisibleRowAt(int y, int x)
     if (relativePos < headerHeight)
         return headerRow;
 
-    int row = relativePos / (separatorHeight + itemHeight) + headerRow + 1;
+    int row = relativePos / (hseparatorHeight + itemHeight) + headerRow + 1;
     return row;
 }
 
@@ -787,7 +900,7 @@ int DuiGroupHeaderListViewPrivate::itemsCount() const
 int DuiGroupHeaderListViewPrivate::groupSize(int headerIndex) const
 {
     int itemsCount = this->itemsCount(headerIndex);
-    return ((itemsCount * itemHeight) + (itemsCount - 1) * separatorHeight);
+    return ((itemsCount * itemHeight) + (itemsCount - 1) * hseparatorHeight);
 }
 
 int DuiGroupHeaderListViewPrivate::totalHeight()
@@ -795,7 +908,7 @@ int DuiGroupHeaderListViewPrivate::totalHeight()
     int headersCount = this->headersCount();
     int itemsCount = this->itemsCount();
     int separatorsCount = this->separatorsCount();
-    int totalHeight = headersCount * headerHeight() + itemsCount * itemHeight + separatorsCount * separatorHeight;
+    int totalHeight = headersCount * headerHeight() + itemsCount * itemHeight + separatorsCount * hseparatorHeight;
     return totalHeight;
 }
 
@@ -823,16 +936,53 @@ void DuiGroupHeaderListViewPrivate::layoutChanged()
     updateHeadersRows();
 }
 
+void DuiGroupHeaderListViewPrivate::drawSeparator(int row, QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    if(headersRows.contains(row) || headersRows.contains(row - 1))
+        return;
+
+    drawHorizontalSeparator(row, painter, option);
+}
+
 ////////////
 // Group Header MultiColumn
 ////////////
 
 DuiMultiColumnListViewPrivate::DuiMultiColumnListViewPrivate()
 {
+    vseparatorWidth = 0;
+    vseparator = NULL;
 }
 
 DuiMultiColumnListViewPrivate::~DuiMultiColumnListViewPrivate()
 {
+    if(vseparator)
+        delete vseparator;
+}
+
+void DuiMultiColumnListViewPrivate::setVerticalSeparator(DuiWidget *separator)
+{
+    if(vseparator)
+        delete vseparator;
+
+    vseparator = separator;
+    if(vseparator)
+        vseparatorWidth = vseparator->preferredWidth();
+    else
+        vseparatorWidth = 0;
+}
+
+void DuiMultiColumnListViewPrivate::createSeparators()
+{
+    DuiListViewPrivate::createSeparators();
+    setVerticalSeparator(new DuiSeparator(NULL, Qt::Vertical));
+}
+
+void DuiMultiColumnListViewPrivate::updateSeparators()
+{
+    DuiListViewPrivate::updateSeparators();
+    if(vseparator)
+        vseparator->setObjectName(q_ptr->style()->verticalSeparatorObjectName());
 }
 
 int DuiMultiColumnListViewPrivate::itemsToRows(int items) const
@@ -873,7 +1023,18 @@ void DuiMultiColumnListViewPrivate::updateItemSize()
         int cellFlatRow = widgetFlatRows[cell] - 1;
         int cellColumn = flatRowToColumn(cellFlatRow);
         cell->resize(cellSize(cellFlatRow));
-        cell->setPos(QPointF(cellColumn * cell->size().width(), cell->pos().y()));
+        cell->setPos(QPointF(cellColumn * viewWidth / controllerModel->columns(), cell->pos().y()));
+    }
+}
+
+void DuiMultiColumnListViewPrivate::updateSeparatorSize()
+{
+    DuiListViewPrivate::updateSeparatorSize();
+
+    //Update vertical separator
+    if(vseparator) {
+        vseparatorWidth = vseparator->preferredWidth();
+        vseparator->setGeometry(QRectF(QPointF(0, 0), QSizeF(vseparatorWidth, itemHeight)));
     }
 }
 
@@ -884,7 +1045,7 @@ QSizeF DuiMultiColumnListViewPrivate::cellSize(int row) const
     }
 
     int columns = controllerModel->columns();
-    return QSizeF(viewWidth / columns, itemHeight);
+    return QSizeF(viewWidth / columns - vseparatorWidth, itemHeight);
 }
 
 void DuiMultiColumnListViewPrivate::cellClicked(DuiWidget *source)
@@ -974,8 +1135,8 @@ int DuiMultiColumnListViewPrivate::locatePosOfItem(int headerIndex, int itemInde
 
     int rows = itemsToRows(itemIndex + 1) - 1; // rows after the 1st one
     int itemHeights = rows * itemHeight;
-    int separatorHeights = rows * separatorHeight;
-    pos += separatorHeights + itemHeights;
+    int hseparatorHeights = rows * hseparatorHeight;
+    pos += hseparatorHeights + itemHeights;
 
     return pos;
 }
@@ -1006,8 +1167,8 @@ int DuiMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
     relativePos -= headerHeight;
     int columns = controllerModel->columns();
 
-    // row/columns * itemHeight + row/columns * separatorHeight = pos  ->  r/c*i + r/c*s = p  ->  r = p*c/(s+i)
-    int row = relativePos * columns / (separatorHeight + itemHeight);
+    // row/columns * itemHeight + row/columns * hseparatorHeight = pos  ->  r/c*i + r/c*s = p  ->  r = p*c/(s+i)
+    int row = relativePos * columns / (hseparatorHeight + itemHeight);
     int column = 0;
     if (viewWidth)
         column = x / (viewWidth / columns);
@@ -1028,7 +1189,7 @@ DuiWidget *DuiMultiColumnListViewPrivate::createItem(int row)
 int DuiMultiColumnListViewPrivate::groupSize(int headerIndex) const
 {
     int rows = rowsInGroup(headerIndex);
-    int groupSize = rows * itemHeight + (rows - 1) * separatorHeight;
+    int groupSize = rows * itemHeight + (rows - 1) * hseparatorHeight;
 
     return groupSize;
 }
@@ -1041,4 +1202,33 @@ int DuiMultiColumnListViewPrivate::totalHeight()
     }
 
     return totalHeight;
+}
+
+void DuiMultiColumnListViewPrivate::drawSeparator(int row, QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    if(headersRows.contains(row))
+        return;
+
+    int columns = controllerModel->columns();
+    int column = flatRowToColumn(row);
+    if(row >= columns && column == 0) {
+        drawHorizontalSeparator(row, painter, option);
+        return;
+    }
+
+    if(column > 0) {
+        drawVerticalSeparator(row, column, painter, option);
+    }
+}
+
+void DuiMultiColumnListViewPrivate::drawVerticalSeparator(int row, int column, QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    if(vseparatorWidth == 0)
+        return;
+    int itemWidth = viewWidth / controllerModel->columns();
+
+    QPointF pos(column*itemWidth - vseparatorWidth - q_ptr->marginLeft(), locatePosOfItem(row) - q_ptr->marginTop());
+    painter->translate(pos.x(), pos.y());
+    vseparator->paint(painter, option);
+    painter->translate(-pos.x(), -pos.y());
 }

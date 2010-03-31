@@ -64,7 +64,8 @@ void DuiListView::init()
 
     d_ptr->q_ptr = this;
     d_ptr->controller = dynamic_cast<DuiList *>(controller);
-    d_ptr->setSeparator(new DuiSeparator);
+    d_ptr->createSeparators();
+    d_ptr->updateSeparators();
 
     connectSelectionModel();
 
@@ -116,6 +117,7 @@ void DuiListView::applyStyle()
 
     if (d_ptr) {
         d_ptr->updateItemSize();
+        d_ptr->updateSeparators();
         d_ptr->updateSeparatorSize();
         d_ptr->setHeadersCreator(new DuiDefaultHeadersCreator(style()->groupHeaderObjectName()));
     }
@@ -184,24 +186,7 @@ void DuiListView::drawForeground(QPainter *painter, const QStyleOptionGraphicsIt
 
 void DuiListView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
-    Q_UNUSED(option);
-
-    // Temporarely disable separator drawing when group headers are shown
-    if (d_ptr->separator->boundingRect().height() == 0 || model()->showGroups())
-        return;
-
-    // TODO move this code to private class
-    for (int currentRow = model()->firstVisibleItem().row(); currentRow <= model()->lastVisibleItem().row(); currentRow++) {
-        if (currentRow == 0)
-            continue;
-
-        QPointF itemPos(0, d_ptr->locatePosOfItem(currentRow));
-        int separatorPos = itemPos.y() - d_ptr->separator->boundingRect().height();
-
-        painter->translate(0, separatorPos);
-        d_ptr->separator->paint(painter, option);
-        painter->translate(0, -separatorPos);
-    }
+    d_ptr->drawSeparators(painter, option);
 }
 
 void DuiListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)

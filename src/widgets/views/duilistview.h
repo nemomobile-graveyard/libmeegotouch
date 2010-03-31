@@ -29,6 +29,9 @@ class DuiController;
 class DuiList;
 class DuiListModel;
 class DuiListViewPrivate;
+class DuiPlainMultiColumnListViewPrivate;
+class DuiGroupHeaderListViewPrivate;
+class DuiMultiColumnListViewPrivate;
 
 class DUI_EXPORT DuiListView : public DuiWidgetView
 {
@@ -74,6 +77,9 @@ private:
     DuiListViewPrivate *d_ptr;
     DuiList *controller;
     friend class DuiListViewPrivate;
+    friend class DuiPlainMultiColumnListViewPrivate;
+    friend class DuiGroupHeaderListViewPrivate;
+    friend class DuiMultiColumnListViewPrivate;
 };
 
 #endif

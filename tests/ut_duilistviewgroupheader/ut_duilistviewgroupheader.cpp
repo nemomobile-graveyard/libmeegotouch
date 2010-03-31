@@ -407,8 +407,8 @@ void Ut_DuiListViewGroupHeader2::init()
 {
     listViewPrivate = new DuiGroupHeaderListViewPrivate;
     listViewPrivate->model = phoneBookModel;
-    listViewPrivate->separator = new DuiWidget;
-    listViewPrivate->separator->setGeometry(0, 0, 300, 2);
+    listViewPrivate->hseparator = new DuiWidget;
+    listViewPrivate->hseparator->setGeometry(0, 0, 300, 2);
     listViewPrivate->itemHeight = 100;
 
     listViewPrivate->setHeadersCreator(new DummyHeaderCreator);
@@ -481,8 +481,8 @@ void Ut_DuiListViewGroupHeaderEmptyModel::init()
 {
     listViewPrivate = new DuiGroupHeaderListViewPrivate;
     listViewPrivate->model = phoneBookModel;
-    listViewPrivate->separator = new DuiWidget;
-    listViewPrivate->separator->setGeometry(0, 0, 300, 2);
+    listViewPrivate->hseparator = new DuiWidget;
+    listViewPrivate->hseparator->setGeometry(0, 0, 300, 2);
     listViewPrivate->itemHeight = 100;
 
     listViewPrivate->setHeadersCreator(new DummyHeaderCreator);
