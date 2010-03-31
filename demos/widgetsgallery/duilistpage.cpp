@@ -112,35 +112,66 @@ public:
     }
 
     void updateContentItemMode(const QModelIndex &index, DuiContentItem *contentItem) const {
-        int row = index.row();
+        int flatRow = index.row();
+        int row = flatRow / amountOfColumns;
+        int column = flatRow % amountOfColumns;
 
-        bool thereIsNextRow;
+        int columns = amountOfColumns;
+        int rows = index.model()->rowCount() / amountOfColumns;
+        if(index.model()->rowCount() % amountOfColumns)
+            rows += 1;
 
-        if (amountOfColumns == 1) {
-            thereIsNextRow = index.sibling(row + 1, 0).isValid();
+        bool last = (row == (rows - 1) && flatRow == (index.model()->rowCount() - 1));
 
-            if (row == 0) {
-                contentItem->setItemMode(DuiContentItem::SingleColumnTop);
-            } else if (thereIsNextRow) {
-                contentItem->setItemMode(DuiContentItem::SingleColumnCenter);
+        if (columns == 1) {
+            if (rows > 1){
+                if (row == 0)
+                    contentItem->setItemMode(DuiContentItem::SingleColumnTop);
+                else if (row < rows - 1)
+                    contentItem->setItemMode(DuiContentItem::SingleColumnCenter);
+                else
+                    contentItem->setItemMode(DuiContentItem::SingleColumnBottom);
             } else {
-                contentItem->setItemMode(DuiContentItem::SingleColumnBottom);
+                contentItem->setItemMode(DuiContentItem::Single);
             }
-        } else {
-            bool left = ((row % 2) == 0);
-            thereIsNextRow = left ? index.sibling(row + 2, 0).isValid() : index.sibling(row + 1, 0).isValid();
-            if (row == 0 || row == 1) {
-                left ? contentItem->setItemMode(DuiContentItem::TopLeft) : contentItem->setItemMode(DuiContentItem::TopRight);
-            } else if (thereIsNextRow) {
-                left ? contentItem->setItemMode(DuiContentItem::Left) : contentItem->setItemMode(DuiContentItem::Right);
+        } else if (columns > 0) {
+            if (rows > 1) {
+                if (row == 0) {
+                    if (column == 0)
+                        contentItem->setItemMode(DuiContentItem::TopLeft);
+                    else if (column > 0 && column < columns - 1 && !last)
+                        contentItem->setItemMode(DuiContentItem::Top);
+                    else
+                        contentItem->setItemMode(DuiContentItem::TopRight);
+                } else if (row < rows - 1) {
+                    if (column == 0)
+                        contentItem->setItemMode(DuiContentItem::Left);
+                    else if (column > 0 && column < columns - 1 && !last)
+                        contentItem->setItemMode(DuiContentItem::Center);
+                    else
+                        contentItem->setItemMode(DuiContentItem::Right);
+                }
+                else {
+                    if (column == 0)
+                        contentItem->setItemMode(DuiContentItem::BottomLeft);
+                    else if (column > 0 && column < columns - 1 && !last)
+                        contentItem->setItemMode(DuiContentItem::Bottom);
+                    else
+                        contentItem->setItemMode(DuiContentItem::BottomRight);
+                }
             } else {
-                left ? contentItem->setItemMode(DuiContentItem::BottomLeft) : contentItem->setItemMode(DuiContentItem::BottomRight);
+                if (column == 0)
+                    contentItem->setItemMode(DuiContentItem::SingleRowLeft);
+                else if (column > 0 && column < columns - 1 && !last)
+                    contentItem->setItemMode(DuiContentItem::SingleRowCenter);
+                else
+                    contentItem->setItemMode(DuiContentItem::SingleRowRight);
             }
         }
     }
 
     void setColumns(int columns) {
-        Q_ASSERT(columns > 0 && columns < 3);
+        Q_ASSERT(columns > 0 && columns < 5);
         amountOfColumns = columns;
     }
 
@@ -192,7 +223,7 @@ DuiComboBox *DuiListPage::createComboBoxAction(const QString &title, const QStri
 {
     DuiWidgetAction *widgetAction = new DuiWidgetAction(centralWidget());
     widgetAction->setLocation(DuiAction::ApplicationMenuLocation);
-    DuiComboBox *comboBox = new DuiComboBox;
+    DuiComboBox *comboBox = new DuiComboBox();
     comboBox->setTitle(title);
     comboBox->setIconVisible(false);
     comboBox->addItems(itemsList);
@@ -240,7 +271,7 @@ void DuiListPage::createActions()
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListMode(int)));
 
     QStringList amountOfColumnList;
-    amountOfColumnList << "1 column" << "2 columns";
+    amountOfColumnList << "1 column" << "2 columns" << "3 columns" << "4 columns";
     combo = createComboBoxAction("Amount of columns", amountOfColumnList);
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeAmountOfColumns(int)));
 
@@ -248,6 +279,11 @@ void DuiListPage::createActions()
     selectionModes << "None" << "Single" << "Multi";
     combo = createComboBoxAction("Selection mode", selectionModes);
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSelectionMode(int)));
+
+    QStringList separatorsModes;
+    separatorsModes << "Off" << "On";
+    combo = createComboBoxAction("Separators", separatorsModes);
+    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSeparatorsMode(int)));
 }
 
 void DuiListPage::scrollToBottom()
@@ -340,6 +376,17 @@ void DuiListPage::changeSelectionMode(int index)
         list->setSelectionMode(DuiList::MultiSelection);
         break;
     }
+}
+
+void DuiListPage::changeSeparatorsMode(int index)
+{
+    Q_ASSERT(index >= 0 && index <= 1);
+    bool enableSeparators = index;
+
+    if(enableSeparators)
+        list->setObjectName("wgListWithSeparators");
+    else
+        list->setObjectName("wgList");
 }
 
 void DuiListPage::itemClick(const QModelIndex &index)

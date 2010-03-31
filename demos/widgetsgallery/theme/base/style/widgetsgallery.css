@@ -82,6 +82,17 @@ DuiButtonStyle#theme-selection-button {
     group-header-object-name: "wgListGroupHeaders";
 }
 
+#wgListWithSeparators {
+    margin-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+
+    group-header-object-name: "wgListGroupHeaders";
+    horizontal-separator-object-name: "";
+    vertical-separator-object-name: "";
+}
+
 #labelListItemFile {
     color: #FFFFFF;
     font: "Nokia Sans Wide" 21px;
