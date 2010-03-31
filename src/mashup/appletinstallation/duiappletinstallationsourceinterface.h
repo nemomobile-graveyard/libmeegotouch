@@ -49,7 +49,7 @@ virtual void instantiateAppletsInPackage(const QString &packageName) = 0;
  * and export their implementation from the library. The applet inventory will instantiate
  * the available installation sources when needed.
  *
- * \see \ref appletdevelopment
+ * \see \ref appletinstallationsource
  */
 class DUI_EXPORT DuiAppletInstallationSourceInterface : public DuiApplicationExtensionInterface
 {

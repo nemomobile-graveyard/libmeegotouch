@@ -49,6 +49,13 @@ class DuiMashupCanvas;
  * Available applets are defined as .desktop metadata files in
  * /usr/share/applications/dui/applets. The files conform to the
  * freedesktop.org desktop file format.
+ *
+ * DuiAppletInventory inherits from DuiAppletInventoryInterface interface which
+ * applet installation sources can use to instantiate applets in a package. DuiAppletInventory
+ * will create an instance of application extension area and instantiate the available
+ * installation sources when needed.
+ *
+ * \see appletinstallationsource
  */
 
 class DuiAppletInventory : public DuiWidgetController, public DuiAppletInventoryInterface

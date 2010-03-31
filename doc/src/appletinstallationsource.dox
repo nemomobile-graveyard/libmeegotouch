@@ -1,0 +1,118 @@
+/*! \page appletinstallationsource Applet installation source development How-To
+
+Applet installation sources are specific type of application extensions that can add plugins to applet library for applet installation. Application extensions are defined in detail in \ref applicationextensions page.
+
+\section appsourcedevenv Development environment
+
+For developing applet installation sources you need:
+- libdui-dev
+
+\section appsourcedevelopment Developing applet installation sources
+
+An applet installation source is implemented as a Qt plugin. The interface class used as the base class of all applet installation sources is DuiAppletInstallationSourceInterface which in turn inherits from base class DuiApplicationExtensionInterface. DuiAppletInstallationSourceInterface inherits the following methods from DuiApplicationExtensionInterface and must be implemented by the source:
+
+\code bool DuiApplicationExtensionInterface::initialize(const QString &interface)
+ DuiWidget *widget() \endcode
+These methods are described in \ref appextensiondevelopment section.
+
+DuiAppletInstallationSourceInterface also contains a method which provides the source means to access the applet inventory interface. The following method must be implemented by the source:
+
+\code void setDuiAppletInventoryInterface(DuiAppletInventoryInterface &installationSource) \endcode
+As a parameter it takes a reference to the DuiAppletInventoryInterface. Applet installation sources can use this interface for instantiating applets from an installation source package using the method:
+\code void instantiateAppletsInPackage(const QString &packageName) \endcode
+It takes the applet package name to be instantiated as a parameter.
+
+Applet installation source developers need to implement DuiAppletInstallationSourceInterface interface in a plugin library and export their implementation from the library. The applet inventory will create an instance of application extension area and instantiate the available installation sources when needed.
+
+\subsection appsourceexample Example of demo applet installation source
+
+\code
+// demoappletsource.h
+#ifndef DEMOAPPLETSOURCE_H
+#define DEMOAPPLETSOURCE_H
+
+#include <duiappletinstallationsourceinterface.h>
+
+class DemoAppletInstallationSource : public QObject, public DuiAppletInstallationSourceInterface
+{
+    Q_OBJECT
+    Q_INTERFACES(DuiAppletInstallationSourceInterface DuiApplicationExtensionInterface)
+
+public:
+    DemoAppletInstallationSource();
+    virtual ~DemoAppletInstallationSource();
+    // methods derived from DuiAppletInstallationSourceInterface
+    virtual bool initialize(const QString &);
+    virtual DuiWidget *widget();
+    virtual void setDuiAppletInventoryInterface(DuiAppletInventoryInterface &installationSource);
+
+    //! Helper method for accessing applet inventory interface
+    DuiAppletInventoryInterface *appletInventoryInterface() const;
+
+private:
+    DuiAppletInventoryInterface *appletInventory;
+    DuiWidget *sourceWidget;
+};
+
+#endif
+
+\endcode
+
+\b Note that the Q_INTERFACES list must include both DuiAppletInstallationSourceInterface and its base interface DuiApplicationExtensionInterface.
+
+\code
+
+// demoappletsource.cpp
+#include "demoappletsource.h"
+#include <DuiLibrary>
+
+DemoAppletInstallationSource::DemoAppletInstallationSource() : appletInventory(NULL)
+{
+}
+
+DemoAppletInstallationSource::~DemoAppletInstallationSource()
+{
+    delete sourceWidget;
+}
+
+DuiWidget *DemoAppletInstallationSource::widget()
+{
+    return sourceWidget;
+}
+
+bool DemoAppletInstallationSource::initialize(const QString &)
+{
+    sourceWidget = new DuiWidget;
+    return true;
+}
+
+void DemoAppletInstallationSource::setDuiAppletInventoryInterface(DuiAppletInventoryInterface &installationSource)
+{
+    appletInventory = &installationSource;
+}
+
+DuiAppletInventoryInterface *DemoAppletInstallationSource::appletInventoryInterface() const
+{
+    return appletInventory;
+}
+
+\endcode
+
+\subsection appsourcedesktopfile Applet installation source desktop file
+
+Following is an example of applet installation source desktop file:
+
+\code
+
+[Desktop Entry]
+Type=DUIApplicationExtension
+Name=DemoAppletInstallationSource
+
+[X-DUI]
+DUIApplicationExtension-Interface=com.nokia.dui.core.AppletInstallationSourceInterface/1.0
+DUIApplicationExtension-Extension=libappletinventory-demoinstallationsource.so
+
+\endcode
+
+*/
+
