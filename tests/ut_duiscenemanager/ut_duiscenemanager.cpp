@@ -264,7 +264,8 @@ void Ut_DuiSceneManager::testInitialOrientation()
 
 void Ut_DuiSceneManager::testOrientationChangedSignal()
 {
-    QSignalSpy spy(sm, SIGNAL(orientationChanged(Dui::Orientation)));
+    QSignalSpy changedSpy(sm, SIGNAL(orientationChanged(Dui::Orientation)));
+    QSignalSpy finishedSpy(sm, SIGNAL(orientationChangeFinished(Dui::Orientation)));
 
     int newAngle = sm->orientationAngle() + Dui::Angle90;
     newAngle %= 360;
@@ -275,13 +276,16 @@ void Ut_DuiSceneManager::testOrientationChangedSignal()
                                       ? Dui::Landscape
                                       : Dui::Portrait;
 
-    QCOMPARE(spy.count(), 1);
-    QCOMPARE(spy.at(0).at(0).value<Dui::Orientation>(), newOrientation);
+    QCOMPARE(changedSpy.count(), 1);
+    QCOMPARE(changedSpy.at(0).at(0).value<Dui::Orientation>(), newOrientation);
+    QCOMPARE(finishedSpy.count(), 1);
+    QCOMPARE(finishedSpy.at(0).at(0).value<Dui::Orientation>(), newOrientation);
 }
 
 void Ut_DuiSceneManager::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
 {
-    QSignalSpy spy(sm, SIGNAL(orientationChanged(Dui::Orientation)));
+    QSignalSpy changedSpy(sm, SIGNAL(orientationChanged(Dui::Orientation)));
+    QSignalSpy finishedSpy(sm, SIGNAL(orientationChangeFinished(Dui::Orientation)));
 
     int newAngle = sm->orientationAngle() + Dui::Angle180;
     newAngle %= 360;
@@ -289,7 +293,8 @@ void Ut_DuiSceneManager::testNoOrientationChangedSignalWhenRotatingBy180Degrees(
     sm->setOrientationAngle((Dui::OrientationAngle) newAngle,
                             DuiSceneManager::ImmediateTransition);
 
-    QCOMPARE(spy.count(), 0);
+    QCOMPARE(changedSpy.count(), 0);
+    QCOMPARE(finishedSpy.count(), 0);
 }
 
 // Test uses non-exported symbol "DuiDockWidget".

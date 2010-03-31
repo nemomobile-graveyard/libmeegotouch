@@ -557,6 +557,7 @@ void DuiSceneManagerPrivate::setOrientationAngleWithoutAnimation(Dui::Orientatio
 {
     Q_Q(DuiSceneManager);
 
+    Dui::Orientation oldOrientation = orientation(angle);
     this->newAngle = newAngle;
     _q_changeGlobalOrientation();
 
@@ -573,6 +574,10 @@ void DuiSceneManagerPrivate::setOrientationAngleWithoutAnimation(Dui::Orientatio
         rootElement->setTransformOriginPoint(landscapeScreenSize.height() / 2,
                                              landscapeScreenSize.width() / 2);
     }
+
+    Dui::Orientation newOrientation = orientation(angle);
+    if (oldOrientation != newOrientation)
+        emit q->orientationChangeFinished(newOrientation);
 }
 
 bool DuiSceneManagerPrivate::onApplicationPage(QGraphicsItem *item)
