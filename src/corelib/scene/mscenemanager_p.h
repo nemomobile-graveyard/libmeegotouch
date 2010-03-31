@@ -72,13 +72,6 @@ public:
         StatusBar = 8000                             // MStatusBar
     };
 
-    // TODO: remove!
-    enum InputPanelPlacement {
-        North,
-        South,
-        Invalid
-    };
-
     int zForWindowType(MSceneWindow::WindowType windowType);
     MSceneLayerEffect *createLayerEffectForWindow(MSceneWindow *window);
 
@@ -96,7 +89,6 @@ public:
 
     bool onApplicationPage(QGraphicsItem *item);
     MSceneWindow *parentSceneWindow(QGraphicsItem *item);
-    InputPanelPlacement inputPanelPlacement(const QRect &inputPanelRect);
     void moveSceneWindowUp(MSceneWindow *window, int adjustment, int visibleHeight);
     int scrollPageContents(MSceneWindow *window, int adjustment) const;
 

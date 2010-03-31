@@ -642,25 +642,6 @@ MSceneWindow *MSceneManagerPrivate::parentSceneWindow(QGraphicsItem *item)
     return parentSceneWindow;
 }
 
-MSceneManagerPrivate::InputPanelPlacement MSceneManagerPrivate::inputPanelPlacement(
-    const QRect &inputPanelRect)
-{
-    Q_Q(MSceneManager);
-
-    InputPanelPlacement placement = Invalid;
-    QRect sceneRect(QPoint(), q->visibleSceneSize());
-
-    if (inputPanelRect.topLeft() == sceneRect.topLeft() &&
-            inputPanelRect.topRight() == sceneRect.topRight()) {
-        placement = North;
-    } else if (inputPanelRect.bottomLeft() == sceneRect.bottomLeft() &&
-               inputPanelRect.bottomRight() == sceneRect.bottomRight()) {
-        placement = South;
-    }
-
-    return placement;
-}
-
 int MSceneManagerPrivate::scrollPageContents(MSceneWindow *window, int adjustment) const
 {
     // TODO: find out at which amount this logic breaks - see NB #162913
