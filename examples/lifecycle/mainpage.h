@@ -45,7 +45,6 @@ public slots:
 
 private slots:
     void updateProgressBars();
-    void handleBackItemClick();
     void indicatorVisible();
     void indicatorHidden();
 
@@ -59,7 +58,6 @@ private:
     DuiProgressIndicator *bar1;
     AnotherPage *anotherPage;
     ContainerPage *canvasPage;
-    DuiApplicationPage *m_shownPage;
     QTimer *m_pTimer;
     int m_pbarValue;
 };

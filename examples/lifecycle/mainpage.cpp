@@ -35,7 +35,6 @@ MainPage::MainPage() :
     bar1(NULL),
     anotherPage(new AnotherPage()),
     canvasPage(new ContainerPage()),
-    m_shownPage(NULL),
     m_pTimer(new QTimer(this))
 {
     setTitle("MainPage");
@@ -105,24 +104,12 @@ void MainPage::indicatorHidden()
 
 void MainPage::buttonPress()
 {
-    anotherPage->setEscapeMode(DuiApplicationPageModel::EscapeManualBack);
-    connect(anotherPage, SIGNAL(backButtonClicked()), this, SLOT(handleBackItemClick()));
-    m_shownPage = anotherPage;
-    anotherPage->appear();
+    anotherPage->appear(KeepWhenDone);
 }
 
 void MainPage::button2Press()
 {
-    canvasPage->setEscapeMode(DuiApplicationPageModel::EscapeManualBack);
-    connect(canvasPage, SIGNAL(backButtonClicked()), this, SLOT(handleBackItemClick()));
-    m_shownPage = canvasPage;
-    canvasPage->appear();
-}
-
-void MainPage::handleBackItemClick()
-{
-    m_shownPage->disconnect(this, SLOT(handleBackItemClick()));
-    appear();
+    canvasPage->appear(KeepWhenDone);
 }
 
 void MainPage::updateProgressBars()
