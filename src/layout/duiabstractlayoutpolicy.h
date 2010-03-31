@@ -71,7 +71,7 @@ class QGraphicsLayoutItem;
  * \code
  *  DuiAbstractLayoutPolicyStyle#address {
  *    vertical-spacing: 5;
- *    landscape-spacing: 5;
+ *    horizontal-spacing: 5;
  *    margin-left: 10.0;
  *    margin-right: 10.0;
  *    margin-top: 10.0;
