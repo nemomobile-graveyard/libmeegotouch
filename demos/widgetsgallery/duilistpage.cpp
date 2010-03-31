@@ -134,7 +134,7 @@ public:
             } else {
                 contentItem->setItemMode(DuiContentItem::Single);
             }
-        } else if (columns > 0) {
+        } else if (columns > 1) {
             if (rows > 1) {
                 if (row == 0) {
                     if (column == 0)
@@ -223,7 +223,7 @@ DuiComboBox *DuiListPage::createComboBoxAction(const QString &title, const QStri
 {
     DuiWidgetAction *widgetAction = new DuiWidgetAction(centralWidget());
     widgetAction->setLocation(DuiAction::ApplicationMenuLocation);
-    DuiComboBox *comboBox = new DuiComboBox();
+    DuiComboBox *comboBox = new DuiComboBox;
     comboBox->setTitle(title);
     comboBox->setIconVisible(false);
     comboBox->addItems(itemsList);
