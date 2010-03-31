@@ -51,6 +51,7 @@
     <target name="macdeployqt" depends="deploy-dui-framework">
         <exec executable="${macdeployqt}" dir="${widgetsgallery.dir}">
             <arg line="widgetsgallery.app"/>
+            <arg line="-verbose=2"/>
         </exec>
         <!-- Deleting dui.framework, so that it doesn't clash with other projects -->
         <delete includeemptydirs="true">
