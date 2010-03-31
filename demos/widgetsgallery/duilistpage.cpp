@@ -381,7 +381,7 @@ void DuiListPage::changeSelectionMode(int index)
 void DuiListPage::changeSeparatorsMode(int index)
 {
     Q_ASSERT(index >= 0 && index <= 1);
-    bool enableSeparators = index;
+    bool enableSeparators = (index == 1);
 
     if(enableSeparators)
         list->setObjectName("wgListWithSeparators");

@@ -116,7 +116,7 @@ void DuiListView::applyStyle()
     DuiWidgetView::applyStyle();
 
     if (d_ptr) {
-        d_ptr->updateItemSize();
+        d_ptr->clearVisibleItemsArray();
         d_ptr->updateSeparators();
         d_ptr->updateSeparatorSize();
         d_ptr->setHeadersCreator(new DuiDefaultHeadersCreator(style()->groupHeaderObjectName()));
