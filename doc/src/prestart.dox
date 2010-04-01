@@ -8,26 +8,27 @@ canvas) by calling the \c launch() method in their DBus interface.
 
 The cost is that applications need to be started to a special \b
 prestarted \b state before launching, that is, they are running in the
-background and thus reserve some memory.
+background in their mainloop but not showing anything.
 
 Note that not every application should be prestarted during boot. Prestarting is only 
 for some carefully selected set of critical applications. There's a dedicated
-daemon, Applifed, which controls the prestarts according to its configuration.
+daemon, \b Applifed, which controls the prestarts according to its configuration.
 
 \section terminology Terminology
 
 - \b Launch - user action that aims to starting an application
   (tapping the application icon, for instance).
 
-- \b LazyShutdown - the prestart mode in which an application process
-  returns from the running state to the prestarted state when it is
-  closed by the user or by the \c close() method in the DBus
-  interface.
+- \b LazyShutdown and \b LazyShutdownMultiWindow - prestart modes in
+  which an application process returns from the running state to the
+  prestarted state when it is closed by the user or by the \c close()
+  method in the DBus interface.
 
 - \b Prestarted \b state - the state where an application waits for
   launching. In user point of view the application is not running, but
   it can be launched (switched to the running state) much faster than
-  executing it from scratch.
+  executing it from scratch. Attempts to show a window in this state
+  are suppressed.
 
 - \b Prestart \b mode - the property of an application that defines
   what happens to the application when it is closed. If not set,
@@ -36,9 +37,10 @@ daemon, Applifed, which controls the prestarts according to its configuration.
 - \b Running \b state - the state where an application is running in
   the user point of view.
 
-- \b TerminateOnClose - the prestart mode in which an application
-  process is terminated when the application is closed by the user or
-  by the \c close() method in the DBus interface.
+- \b TerminateOnClose and \b TerminateOnCloseMultiWindow- prestart
+  modes in which an application process is terminated when the
+  application is closed by the user or by the \c close() method in the
+  DBus interface.
 
 
 \section prestarting Prestarting an application
@@ -49,21 +51,42 @@ the commandline parameters and before using any other parts of the
 prestarting API. A recommended place to do this is during or right
 after instantiating the \c DuiApplication class.
 
-An application enters the prestarted state if it is started with the
-\c -prestart commandline argument \b and it sets the prestart mode
-before showing any windows. If either one of these conditions does not
-hold, the application will enter to the running state. In order to make
-the application prestartable during device boot, \c -prestart must be
-added to the \b .service \b-file of the application:
+Example:
 
-e.g. Exec=/usr/bin/myApplication -prestart
+\code
+// example.cpp
+// Minimal LazyShutdown example
 
-Note that this doesn't automatically mean that the application will be 
-prestarted during boot. This only makes it possible.
+#include <DuiApplication>
+#include <DuiApplicationWindow>
 
-The \c DuiApplicationWindow::show() method can be called even if the application
-is entering the prestarted state. The window will not become visible
-to the user until the application is launched.
+int main(int argc, char ** argv)
+{
+    DuiApplication app(argc, argv);
+    DuiApplication::setPrestartMode(Dui::LazyShutdown);
+
+    DuiApplicationWindow window;
+    window.show();
+
+    return app.exec();
+}
+\endcode
+
+Start the application to the prestarted state as follows.
+
+\code
+$ ./example -prestart &
+\endcode
+
+An application enters the prestarted state if and only if it is
+started with the \c -prestart commandline argument \b and it sets the
+prestart mode before showing any windows. If either one of these
+conditions does not hold, the application will enter to the running
+state.
+
+The \c DuiApplicationWindow::show() method can be called even if the
+application is in the prestarted state. The window will not become
+visible to the user until the application is launched.
 
 \c DuiApplication::isPrestarted() can be used to check if the
 application is in the prestarted state.
@@ -77,7 +100,14 @@ application is in the prestarted state, the application is released
 from the prestarted state and allowed to continue to the running
 state.
 
-The application can react to launching by listening to the \c
+For instance, launch the example application (see above) running on
+the prestarted state as follows:
+
+\code
+$ dbus-send --dest=com.nokia.example --type="method_call" /org/maemo/dui com.nokia.DuiApplicationIf.launch
+\endcode
+
+The application can react to launching by connecting the \c
 DuiApplication::prestartReleased() signal, or by overriding
 DuiApplication::releasePrestart() event handler. The default event
 handler shows the active application window, if there is such a thing.
@@ -90,9 +120,39 @@ its prestarted mode is set to \c Dui::LazyShutdown and user taps the
 close (or back) button.
 
 The application can react to restoring the prestarted state by
-listening to the \c DuiApplication::prestartRestored() signal, or by
+connecting the \c DuiApplication::prestartRestored() signal, or by
 overriding the \c DuiApplication::restorePrestart() event handler. The
 default event handler hides the active application window.
+
+
+\section automaticprestart Automatic prestarting
+
+In order to enable lazy shutdown of the application and make the
+application prestartable during device boot, \c -prestart must be
+added to the \b .service \b-file of the application:
+
+\code
+[D-BUS Service]
+Name=com.nokia.example
+Exec=/usr/bin/example -prestart
+\endcode
+
+Note: modifying the service file will not cause starting up the
+application at boot, it only makes it possible.
+
+If \b Applifed is used for prestarting applications at boot,
+application-specific configuration files are located in \c
+/etc/prestart. The files contain the name of the DBus service and the
+prestarting priority. For instance (/etc/prestart/example.prestart):
+
+\code
+Service=com.nokia.example
+Priority=1
+\endcode
+
+Boot time prestart configuration files are typically part of
+platform-specific configurations, and \b not provided in application
+packages.
 
 
 \section killing Sudden deaths in the prestarted state
@@ -109,38 +169,106 @@ application in the prestarted state may be killed with KILL signal at
 any time without any warning.
 
 
-\section example Example
+\section multiwindow Prestarting multiwindow applications
 
-The following example presents a skeleton of a very simple single
-window application. If application is started with the \c -prestart
+Multiwindow applications can be prestarted by using
+LazyShutdownMultiWindow and TerminateOnCloseMultiWindow modes. The
+difference to the single-window applications is that no window is
+shown by default when the launch() method is called from the DBus
+interface. The window to be shown must be shown in the slot or handler
+executed when application is released from the prestarted state.
+
+A multiwindow application enters the prestarted state when its windows
+are closed.
+
+\section windowclose Controlling window closing
+
+The default behavior on window close varies depending on the prestart
+mode. On LazyShutdown and LazyShutdownMultiWindow windows are
+hidden. On TerminateOnClose and TerminateOnCloseMultWindow windows are
+really closed, just like when application has not been prestarted.
+
+Closing behavior can be altered by overriding the closeEvent handler
+of the window. This is demonstrated by the following example.
+
+\code
+#include <DuiApplication>
+#include <DuiApplicationWindow>
+#include <DuiApplicationPage>
+#include <DuiComboBox>
+#include <DuiDebug>
+#include <QStringList>
+
+class MyWindow : public DuiApplicationWindow
+{
+public:
+   MyWindow();
+
+protected:
+    virtual void closeEvent(QCloseEvent *event);
+
+private:
+    DuiApplicationPage *page;
+    DuiComboBox *comboBox;
+};
+
+MyWindow::MyWindow() 
+{
+    page=new DuiApplicationPage();
+    page->setTitle("closeEvent example app");
+    comboBox = new DuiComboBox();
+    comboBox->setTitle("What should closeEvent do?");
+    QStringList stringList;
+    stringList << "Ignore closeEvent" << "Hide window (LazyShutdown)" << "Really close window";
+    comboBox->addItems(stringList);
+    page->setCentralWidget(comboBox);
+    page->appear();
+}
+
+void MyWindow::closeEvent(QCloseEvent *event)
+{
+    switch (comboBox->currentIndex()) {
+    case 0: 
+        duiDebug("MyWindow") << "Ignore closeEvent(). Window is not closed.";
+        event->ignore(); 
+        break;
+    case 1: 
+        duiDebug("MyWindow") << "Lazy shutdown - hide window";
+        setCloseOnLazyShutdown(false);
+        event->accept(); 
+        break;
+    case 2:
+    default: 
+        duiDebug("MyWindow") << "Really close window";
+        setCloseOnLazyShutdown(true);
+        event->accept(); 
+        break;
+    }
+}
+
+int main(int argc, char **argv)
+{
+    DuiApplication app(argc, argv);
+    DuiApplication::setPrestartMode(Dui::LazyShutdown);
+
+    MyWindow *window = new MyWindow();
+    window->show();
+ 
+    return app.exec();
+}
+\endcode
+
+
+\section example Example on using handlers
+
+The following example presents a skeleton of a single window
+application. If application is started with the \c -prestart
 commandline argument, it connects the signal about restoring the
 prestarted state to the slot that resets the page displayed on the
 window. Note that showing and hiding the window does not require any
 actions from the application developer in the single window
 applications (see the default event handlers above).
 
-\code
-
-// Minimal LazyShutdown example
-
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiApplicationPage>
-
-int main(int argc, char ** argv)
-{
-    DuiApplication app(argc, argv);
-    DuiApplication::setPrestartMode(Dui::LazyShutdown);
-
-    DuiApplicationWindow window;
-    window.show();
-
-    DuiApplicationPage page;
-    page.appearNow();
-
-    return app.exec();
-}
-\endcode
 
 \code
 
@@ -168,7 +296,7 @@ int main(int argc, char ** argv)
     window.show();
 
     MainPage mainPage;
-    page.appearNow();
+    page.appear();
 
     // Check if app was run with -prestart
     if (app.isPrestarted()) {
@@ -226,7 +354,7 @@ MyApplication::MyApplication(int argc, char ** argv) :
     m_window->show();
 
     m_page = new DuiApplicationPage;
-    m_page->appearNow();
+    m_page->appear();
 
     // Run activateWidgets() here to setup things 
     // if app is NOT prestarted, otherwise it will be called
