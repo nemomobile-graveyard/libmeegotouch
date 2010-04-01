@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duitexteditmodel.h"
+#include "../corelib/widgets/duitexteditmodel.h"
 

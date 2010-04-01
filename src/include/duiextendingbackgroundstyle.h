@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duiextendingbackgroundstyle.h"
+#include "../views/style/duiextendingbackgroundstyle.h"
 

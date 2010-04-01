@@ -6,12 +6,12 @@ TARGET = ut_duiapplication
 
 #holger FIXME check DEFINES += TRANSLATION_DIR=\'$$quote(\"$$[QT_INSTALL_DATA]/share/l10n/dui/\")\'
 
-TEST_HEADERS = $$DUISRCDIR/core/duiapplication.h
+TEST_HEADERS = $$DUISRCDIR/corelib/core/duiapplication.h
 
-INCLUDEPATH += $$DUISRCDIR/feedback
+INCLUDEPATH += $$DUISRCDIR/corelib/feedback
 
 TEST_SOURCES = \
-    $$DUISRCDIR/core/duiapplication.cpp
+    $$DUISRCDIR/corelib/core/duiapplication.cpp
 
 # Input
 HEADERS += \

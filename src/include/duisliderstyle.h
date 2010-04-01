@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duisliderstyle.h"
+#include "../views/style/duisliderstyle.h"
 

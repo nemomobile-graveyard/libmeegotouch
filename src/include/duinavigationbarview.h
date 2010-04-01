@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duinavigationbarview.h"
+#include "../views/duinavigationbarview.h"
 

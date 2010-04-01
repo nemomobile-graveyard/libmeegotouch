@@ -1,6 +1,5 @@
 include(../common_top.pri)
-TARGET = ut_duimashupcanvasview
-INCLUDEPATH += $$DUISRCDIR/mashup/appletcommunication $$DUISRCDIR/mashup/appletinterface  $$DUISRCDIR/mashup/mashup $$DUISRCDIR/layout $$DUISRCDIR/style
+include(../common_duiextensions.pri)
 
 QT += core network gui svg dbus
 

@@ -5,3 +5,5 @@ TARGET = pt_duiprogressindicator
 
 SOURCES += pt_duiprogressindicator.cpp
 HEADERS += pt_duiprogressindicator.h
+
+LIBS += -lduiviews

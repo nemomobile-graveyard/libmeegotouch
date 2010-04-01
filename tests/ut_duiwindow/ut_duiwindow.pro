@@ -2,7 +2,7 @@ include(../common_top.pri)
 
 TARGET = ut_duiwindow
 
-INCLUDEPATH += $$DUISRCDIR/events
+INCLUDEPATH += $$DUISRCDIR/corelib/events
 
 # Input
 HEADERS += \

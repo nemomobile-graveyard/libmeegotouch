@@ -21,7 +21,7 @@
 #define TESTTHEMEDAEMON_H
 
 #include <QMultiMap>
-#include "../../src/theme/iduithemedaemon.h"
+#include "../../src/corelib/theme/iduithemedaemon.h"
 
 class QPixmap;
 

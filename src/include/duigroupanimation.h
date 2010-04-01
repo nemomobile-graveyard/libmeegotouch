@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../animation/core/duigroupanimation.h"
+#include "../corelib/animation/core/duigroupanimation.h"
 

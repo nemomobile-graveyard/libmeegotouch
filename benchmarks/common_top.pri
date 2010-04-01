@@ -1,6 +1,16 @@
 DUISRCDIR = ../../src/
 STUBSDIR = ../stubs
-INCLUDEPATH += . $$DUISRCDIR $$STUBSDIR $$DUISRCDIR/include $$DUISRCDIR/core $$DUISRCDIR/widgets $$DUISRCDIR/workspace $$DUISRCDIR/style ../memorybenchmark/
+INCLUDEPATH += \
+    . \
+    $$STUBSDIR \
+    $$DUISRCDIR/include \
+    $$DUISRCDIR/corelib/core \
+    $$DUISRCDIR/corelib/widgets \
+    $$DUISRCDIR/corelib/workspace \
+    $$DUISRCDIR/corelib/style \
+    $$DUISRCDIR/views \
+    $$DUISRCDIR/views/style \
+    ../memorybenchmark/
 
 DEPENDPATH = $$INCLUDEPATH
 QMAKE_LIBDIR += ../../lib
@@ -17,9 +27,9 @@ win32|macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework dui
     }
-    win32:LIBS += -L../../lib -ldui0
+    win32:LIBS += -lduicore0
 } else {
-    LIBS += ../../lib/libdui.so
+    LIBS += -lduicore
 }
 
 QMAKE_CXXFLAGS += -Werror

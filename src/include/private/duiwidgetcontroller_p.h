@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/core/duiwidgetcontroller_p.h"
+#include "../corelib/widgets/core/duiwidgetcontroller_p.h"

@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../style/duibasiclayoutanimationstyle.h"
+#include "../corelib/style/duibasiclayoutanimationstyle.h"

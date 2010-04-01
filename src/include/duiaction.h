@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../core/duiaction.h"
+#include "../corelib/core/duiaction.h"
 

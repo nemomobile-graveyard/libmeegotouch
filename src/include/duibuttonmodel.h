@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duibuttonmodel.h"
+#include "../corelib/widgets/duibuttonmodel.h"
 

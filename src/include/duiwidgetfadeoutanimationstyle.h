@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../style/duiwidgetfadeoutanimationstyle.h"
+#include "../corelib/style/duiwidgetfadeoutanimationstyle.h"

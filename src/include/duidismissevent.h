@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../events/duidismissevent.h"
+#include "../corelib/events/duidismissevent.h"

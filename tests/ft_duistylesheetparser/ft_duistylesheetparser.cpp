@@ -22,11 +22,11 @@
 #include <time.h>
 #include <QtTest>
 #include <duistylesheetselector.h>
-#include "../../src/style/duistylesheetattribute.h"
-#include "../../src/theme/duilogicalvalues.h"
+#include "../../src/corelib/style/duistylesheetattribute.h"
+#include "../../src/corelib/theme/duilogicalvalues.h"
 
 // include this to get theme profiling support
-//#include "../../src/theme/duitheme_p.h"
+//#include "../../src/corelib/theme/duitheme_p.h"
 
 const int NUMBER_OF_LOOPS = 100;
 

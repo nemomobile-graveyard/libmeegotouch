@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../events/duipreeditinjectionevent.h"
+#include "../corelib/events/duipreeditinjectionevent.h"
 

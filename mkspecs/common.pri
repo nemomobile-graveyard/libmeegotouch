@@ -86,4 +86,6 @@ contains(USE_CCACHE, "true") {
     QMAKE_CXX = ccache g++
 }
 
+QMAKE_LIBDIR += $${DUI_BUILD_TREE}/lib
+
 include(shared.pri)

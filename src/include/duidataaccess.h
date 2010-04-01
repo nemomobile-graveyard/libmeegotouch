@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../mashup/mashup/duidataaccess.h"
+#include "../corelib/core/duidataaccess.h"

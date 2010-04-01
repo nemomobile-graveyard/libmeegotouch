@@ -1,11 +1,10 @@
 include(../common_top.pri)
-TARGET = ut_duiapplicationextensionarea
+include(../common_duiextensions.pri)
+
 INCLUDEPATH += \
-    $$DUISRCDIR/applicationextension \
-    $$DUISRCDIR/mashup/mashup \
-    $$DUISRCDIR/widgets \
-    $$DUISRCDIR/style \
-    $$DUISRCDIR/core \
+    $$DUISRCDIR/corelib/widgets \
+    $$DUISRCDIR/corelib/style \
+    $$DUISRCDIR/corelib/core \
 
 # unit test and unit classes
 SOURCES += \

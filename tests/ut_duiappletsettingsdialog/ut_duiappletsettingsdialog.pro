@@ -1,19 +1,16 @@
 include(../common_top.pri)
-include(../../mkspecs/common.pri)
+include(../common_duiextensions.pri)
 
-TARGET = ut_duiappletsettingsdialog
-INCLUDEPATH += $$DUISRCDIR/mashup/mashup \
-    $$DUISRCDIR/mashup/appletcommunication \
-    $$DUISRCDIR/widgets
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets
 
 QT += xml
 
 SOURCES += ut_duiappletsettingsdialog.cpp  \
-    $$DUISRCDIR/mashup/mashup/duiappletsettingsdialog.cpp \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletsettingsdialog.cpp \
     ../stubs/stubbase.cpp
 
 HEADERS += ut_duiappletsettingsdialog.h \
-    $$DUISRCDIR/mashup/mashup/duiappletsettingsdialog.h \
-    $$DUISRCDIR/mashup/mashup/duiappletid.h
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletsettingsdialog.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletid.h
 
 include(../common_bot.pri)

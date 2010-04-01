@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../scene/duiscenelayereffect.h"
+#include "../corelib/scene/duiscenelayereffect.h"
 

@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiphysics2dpanning.h"
+#include "../corelib/widgets/duiphysics2dpanning.h"
 

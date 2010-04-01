@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duitexteditstyle.h"
+#include "../views/style/duitexteditstyle.h"
 

@@ -3,7 +3,7 @@ include(../common_top.pri)
 # need to copy the units here in order to avoid force the inclusion of the local duiservicefwproxy.h
 # which contains the stubbed proxy that does not rely on qdbus
 # see further down for a failed attempt to get this to work some other way
-SFWDIR = $$DUISRCDIR/servicefwif
+SFWDIR = $$DUISRCDIR/corelib/servicefwif
 TEST_SOURCE = duiservicefwbaseif.cpp
 TEST_SRC_FROM = $$SFWDIR/$$TEST_SOURCE
 TEST_HEADER = duiservicefwbaseif.h

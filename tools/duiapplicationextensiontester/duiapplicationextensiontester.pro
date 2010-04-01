@@ -6,15 +6,11 @@ DEPENDPATH += $$INCLUDEPATH
 TEMPLATE = app
 TARGET = duiapplicationextensiontester
 
-win32|macx {
-    macx {
-        QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework dui
-    }
-    win32:LIBS += -L../../lib -ldui0
-} else {
-    LIBS += ../../lib/libdui.so
-}
+LIBS += \
+    -lduicore \
+    -lduiviews \
+    -lduisettings \
+    -lduiextensions \
 
 # Input
 HEADERS += duiapplicationextensiontester.h

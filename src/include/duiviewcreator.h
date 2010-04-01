@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiviewcreator.h"
+#include "../corelib/widgets/duiviewcreator.h"

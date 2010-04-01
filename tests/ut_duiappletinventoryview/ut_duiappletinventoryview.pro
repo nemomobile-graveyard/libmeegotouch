@@ -2,10 +2,10 @@ include(../common_top.pri)
 TARGET = ut_duiappletinventoryview
 INCLUDEPATH += $$DUISRCDIR/mashup/mashup
 INCLUDEPATH += $$DUISRCDIR/mashup/appletinstallation
-INCLUDEPATH += $$DUISRCDIR/style
-INCLUDEPATH += $$DUISRCDIR/widgets
-INCLUDEPATH += $$DUISRCDIR/widgets/core
-INCLUDEPATH += $$DUISRCDIR/core
+INCLUDEPATH += $$DUISRCDIR/corelib/style
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets/core
+INCLUDEPATH += $$DUISRCDIR/corelib/core
 
 DUIGEN_OUTDIR = .
 duigenerator_model.name = duigenerator model
@@ -18,8 +18,8 @@ duigenerator_model.CONFIG = target_predeps no_link
 duigenerator_model.variable_out = GENERATED_SOURCES
 QMAKE_EXTRA_COMPILERS += duigenerator_model
 
-STYLE_HEADERS += $$DUISRCDIR/style/duiappletinventorystyle.h
-MODEL_HEADERS += $$DUISRCDIR/widgets/duiwidgetmodel.h \
+STYLE_HEADERS += $$DUISRCDIR/corelib/style/duiappletinventorystyle.h
+MODEL_HEADERS += $$DUISRCDIR/corelib/widgets/duiwidgetmodel.h \
     $$DUISRCDIR/mashup/mashup/duiappletinventorymodel.h
 
 # unit test and unit
@@ -30,9 +30,9 @@ SOURCES += \
 
 # base classes
 SOURCES += \
-    $$DUISRCDIR/widgets/core/duiwidgetcontroller.cpp \
-    $$DUISRCDIR/widgets/core/duiwidget.cpp \
-    $$DUISRCDIR/widgets/duiwidgetmodel.cpp
+    $$DUISRCDIR/corelib/widgets/core/duiwidgetcontroller.cpp \
+    $$DUISRCDIR/corelib/widgets/core/duiwidget.cpp \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel.cpp
 
 # service classes
 SOURCES += \
@@ -41,14 +41,14 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_duiappletinventoryview.h \
-    $$DUISRCDIR/widgets/core/duiwidgetcontroller_p.h \
-    $$DUISRCDIR/widgets/views/duiextendingbackgroundview_p.h \
+    $$DUISRCDIR/corelib/widgets/core/duiwidgetcontroller_p.h \
+    $$DUISRCDIR/corelib/widgets/views/duiextendingbackgroundview_p.h \
     $$DUISRCDIR/mashup/mashup/duiappletbutton.h \
     $$DUISRCDIR/mashup/mashup/duiappletinventory.h \
     $$DUISRCDIR/mashup/mashup/duiappletinventoryview.h \
     $$DUISRCDIR/mashup/mashup/duiappletinventorymodel.h \
-    $$DUISRCDIR/widgets/duiwidgetmodel_p.h \
-    $$DUISRCDIR/widgets/duiscenewindow_p.h \
-    $$DUISRCDIR/widgets/duiobjectmenu.h
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel_p.h \
+    $$DUISRCDIR/corelib/widgets/duiscenewindow_p.h \
+    $$DUISRCDIR/corelib/widgets/duiobjectmenu.h
 
 include(../common_bot.pri)

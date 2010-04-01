@@ -1,18 +1,15 @@
 include(../common_top.pri)
-TARGET = ut_duiappletmetadata
-INCLUDEPATH += $$DUISRCDIR/mashup/appletcommunication \
-    $$DUISRCDIR/mashup/appletinterface \
-    $$DUISRCDIR/mashup/mashup
+include(../common_duiextensions.pri)
 
 # unit test and unit classes
 SOURCES += \
     ut_duiappletmetadata.cpp \
-    $$DUISRCDIR/mashup/appletinterface/duiappletmetadata.cpp
+    $$DUISRCDIR/extensions/mashup/appletinterface/duiappletmetadata.cpp
 
 # unit test and unit classes
 HEADERS += \
     ut_duiappletmetadata.h \
-    $$DUISRCDIR/mashup/appletinterface/duiappletmetadata.h
+    $$DUISRCDIR/extensions/mashup/appletinterface/duiappletmetadata.h
 
 DEFINES += DUI_INSTALL_LIBS=\\\"\"$$DUI_INSTALL_LIBS\"\\\"
 

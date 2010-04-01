@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duitoolbarview.h"
+#include "../views/duitoolbarview.h"
 

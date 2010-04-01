@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duislidermodel.h"
+#include "../corelib/widgets/duislidermodel.h"
 

@@ -1,10 +1,9 @@
 include(../common_top.pri)
-TARGET = ut_duiappletbutton
-INCLUDEPATH += $$DUISRCDIR/mashup/mashup $$DUISRCDIR/mashup/appletinterface
+include(../common_duiextensions.pri)
 
 SOURCES += \
     ut_duiappletbutton.cpp \
-    $$DUISRCDIR/mashup/mashup/duiappletbutton.cpp
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletbutton.cpp
 
 # service classes
 SOURCES += \
@@ -13,6 +12,6 @@ SOURCES += \
 # unit test and unit classes
 HEADERS += \
     ut_duiappletbutton.h \
-    $$DUISRCDIR/mashup/mashup/duiappletbutton.h
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletbutton.h
 
 include(../common_bot.pri)

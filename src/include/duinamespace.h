@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../core/duinamespace.h"
+#include "../corelib/core/duinamespace.h"
 

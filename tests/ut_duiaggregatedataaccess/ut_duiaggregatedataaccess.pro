@@ -1,6 +1,5 @@
 include(../common_top.pri)
-TARGET = ut_duiaggregatedataaccess
-INCLUDEPATH += $$DUISRCDIR/mashup/mashup
+include(../common_duiextensions.pri)
 
 # unit test and unit
 SOURCES += \

@@ -1,11 +1,9 @@
 include(../common_top.pri)
+include(../common_duiextensions.pri)
 
-TARGET = ut_duiapplethandle
-INCLUDEPATH += $$DUISRCDIR/applicationextension \
-    $$DUISRCDIR/mashup/mashup \
-    $$DUISRCDIR/mashup/appletcommunication \
-    $$DUISRCDIR/widgets \
-    $$DUISRCDIR/style
+INCLUDEPATH += \
+    $$DUISRCDIR/corelib/widgets \
+    $$DUISRCDIR/corelib/style
 QT += xml
 
 win32 {
@@ -34,36 +32,39 @@ duigenerator_style.CONFIG = target_predeps no_link
 duigenerator_style.variable_out = GENERATED_SOURCES
 QMAKE_EXTRA_COMPILERS += duigenerator_model duigenerator_style
 
-MODEL_HEADERS += $$DUISRCDIR/widgets/duiwidgetmodel.h \
-    $$DUISRCDIR/applicationextension/duiextensionhandlemodel.h \
-    $$DUISRCDIR/mashup/mashup/duiapplethandlemodel.h
+MODEL_HEADERS += \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel.h \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandlemodel.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiapplethandlemodel.h
 
-STYLE_HEADERS += $$DUISRCDIR/style/duiextensionhandlestyle.h \
-    $$DUISRCDIR/style/duiapplethandlestyle.h
+STYLE_HEADERS += \
+    $$DUISRCDIR/extensions/style/duiextensionhandlestyle.h \
+    $$DUISRCDIR/extensions/style/duiapplethandlestyle.h
 
-SOURCES += ut_duiapplethandle.cpp \
-    $$DUISRCDIR/applicationextension/duiextensionhandle.cpp \
-    $$DUISRCDIR/mashup/mashup/duiapplethandle.cpp \
-    $$DUISRCDIR/widgets/core/duiwidgetcontroller.cpp \
-    $$DUISRCDIR/widgets/duiwidgetmodel.cpp
+SOURCES += \
+    ut_duiapplethandle.cpp \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandle.cpp \
+    $$DUISRCDIR/extensions/mashup/mashup/duiapplethandle.cpp \
+    $$DUISRCDIR/corelib/widgets/core/duiwidgetcontroller.cpp \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel.cpp
 
 # service classes
 SOURCES += \
     $$STUBSDIR/stubbase.cpp \
 
-HEADERS += ut_duiapplethandle.h \
-    $$DUISRCDIR/applicationextension/duiextensionhandle.h \
-    $$DUISRCDIR/applicationextension/duiextensionhandle_p.h \
-    $$DUISRCDIR/applicationextension/duiextensionhandlemodel.h \
-    $$DUISRCDIR/mashup/mashup/duiapplethandle.h \
-    $$DUISRCDIR/mashup/mashup/duiapplethandle_p.h \
-    $$DUISRCDIR/mashup/mashup/duiapplethandlemodel.h \
-    $$DUISRCDIR/widgets/core/duiwidgetcontroller_p.h \
-    $$DUISRCDIR/widgets/core/duiwidget_p.h \
-    $$DUISRCDIR/widgets/duiwidgetmodel_p.h \
-    $$DUISRCDIR/widgets/duiscenewindow_p.h \
-    $$DUISRCDIR/widgets/duiobjectmenu.h \
-    $$DUISRCDIR/style/duiextensionhandlestyle.h \
-    $$DUISRCDIR/style/duiapplethandlestyle.h
+HEADERS += \
+    ut_duiapplethandle.h \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandle.h \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandle_p.h \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandlemodel.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiapplethandle.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiapplethandle_p.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiapplethandlemodel.h \
+    $$DUISRCDIR/corelib/widgets/core/duiwidgetcontroller_p.h \
+    $$DUISRCDIR/corelib/widgets/core/duiwidget_p.h \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel_p.h \
+    $$DUISRCDIR/corelib/widgets/duiscenewindow_p.h \
+    $$DUISRCDIR/corelib/widgets/duiobjectmenu.h \
+    $$STYLE_HEADERS
 
 include(../common_bot.pri)

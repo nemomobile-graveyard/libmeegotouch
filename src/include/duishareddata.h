@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../core/duishareddata.h"
+#include "../corelib/core/duishareddata.h"

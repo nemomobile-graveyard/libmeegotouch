@@ -13,19 +13,16 @@ DUISFWINCLUDE = $$DUIROOT/servicefw/include
 
 INCLUDEPATH += . \
     $$DUISRCINCLUDE \
-    $$DUISRC \
-
-QMAKE_LIBDIR += \
-    $$DUILIB \
+    $$DUIROOT/src/corelib/style \
 
 win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework dui
     }
-    win32:LIBS += -L../../lib -ldui0
+    win32:LIBS += -lduicore0
 } else {
-    LIBS += ../../lib/libdui.so
+    LIBS += -lduicore
 }
 
 TEMPLATE = lib

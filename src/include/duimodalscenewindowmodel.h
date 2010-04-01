@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duimodalscenewindowmodel.h"
+#include "../corelib/widgets/duimodalscenewindowmodel.h"
 

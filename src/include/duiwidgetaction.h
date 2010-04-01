@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../core/duiwidgetaction.h"
+#include "../corelib/core/duiwidgetaction.h"
 

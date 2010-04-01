@@ -1,6 +1,6 @@
 include(../common_top.pri)
 TARGET = ut_duiapplicationpage
-INCLUDEPATH += $$DUISRCDIR/widgets \
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets \
 
 SOURCES += \
     ut_duiapplicationpage.cpp

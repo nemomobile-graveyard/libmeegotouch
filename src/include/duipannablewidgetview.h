@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duipannablewidgetview.h"
+#include "../views/duipannablewidgetview.h"
 

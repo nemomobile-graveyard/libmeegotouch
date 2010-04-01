@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duinavigationbar.h"
+#include "../corelib/widgets/duinavigationbar.h"
 

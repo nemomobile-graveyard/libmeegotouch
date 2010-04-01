@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiapplicationwindow.h"
+#include "../corelib/widgets/duiapplicationwindow.h"

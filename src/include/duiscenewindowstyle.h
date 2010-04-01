@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duiscenewindowstyle.h"
+#include "../views/style/duiscenewindowstyle.h"
 

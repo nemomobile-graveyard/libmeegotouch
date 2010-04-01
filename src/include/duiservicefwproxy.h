@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../servicefwif/include/duiservicefwproxy.h"
+#include "../corelib/servicefwif/include/duiservicefwproxy.h"

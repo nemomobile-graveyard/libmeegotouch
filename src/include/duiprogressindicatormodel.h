@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiprogressindicatormodel.h"
+#include "../corelib/widgets/duiprogressindicatormodel.h"

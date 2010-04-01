@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duianimationstyle.h"
+#include "../corelib/style/duianimationstyle.h"
 

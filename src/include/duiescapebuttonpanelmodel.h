@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiescapebuttonpanelmodel.h"
+#include "../corelib/widgets/duiescapebuttonpanelmodel.h"

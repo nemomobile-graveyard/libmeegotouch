@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duipositionindicatorview.h"
+#include "../views/duipositionindicatorview.h"
 

@@ -27,7 +27,7 @@
 #include <QTextStream>
 
 #include "duicomponentdata.h"
-#include "../../src/theme/duitheme_p.h"
+#include "../../src/corelib/theme/duitheme_p.h"
 #include "testthemedaemon.h"
 #include "ft_theme_data.h"
 
@@ -71,10 +71,26 @@ void makeFile(const QString &path, const QString &content)
 void Ft_Theme::init()
 {
     QStringList paths;
-    paths << QString("Ft_Theme") + QDir::separator() + "theme1" + QDir::separator() + "dui" + QDir::separator() + "libdui" + QDir::separator() + "style";
-    paths << QString("Ft_Theme") + QDir::separator() + "theme2" + QDir::separator() + "dui" + QDir::separator() + "libdui" + QDir::separator() + "style";
-    paths << QString("Ft_Theme") + QDir::separator() + "theme2" + QDir::separator() + "dui" + QDir::separator() + "Ft_Theme" + QDir::separator() + "style";
-    paths << QString("Ft_Theme") + QDir::separator() + "theme1" + QDir::separator() + "dui" + QDir::separator() + "locale" + QDir::separator() + "fi";
+    paths << QString("Ft_Theme") + QDir::separator()
+      + "theme1" + QDir::separator()
+      + "dui" + QDir::separator()
+      + "libduicore" + QDir::separator()
+      + "style";
+    paths << QString("Ft_Theme") + QDir::separator()
+      + "theme2" + QDir::separator()
+      + "dui" + QDir::separator()
+      + "libduicore" + QDir::separator()
+      + "style";
+    paths << QString("Ft_Theme") + QDir::separator()
+      + "theme2" + QDir::separator()
+      + "dui" + QDir::separator()
+      + "Ft_Theme" + QDir::separator()
+      + "style";
+    paths << QString("Ft_Theme") + QDir::separator()
+      + "theme1" + QDir::separator()
+      + "dui" + QDir::separator()
+      + "locale" + QDir::separator()
+      + "fi";
 
     foreach(QString path, paths) {
         // create test theme to tmp/
@@ -89,14 +105,38 @@ void Ft_Theme::init()
     makeFile(QString("theme1") + QDir::separator() + QString("dui") + QDir::separator() +  QString("locale") + QDir::separator() + QString("fi") + QDir::separator() + QString("constants.ini"), FINNISH_CONSTANTS_INI);
 
     // create view configuration files
-    makeFile(QString("theme1") + QDir::separator() + QString("dui") + QDir::separator() + QString("libdui") + QDir::separator() + QString("libdui.conf"), LIBDUI_THEME_1_VIEW_CONFIGURATION);
-    makeFile(QString("theme2") + QDir::separator() + QString("dui") + QDir::separator() + QString("libdui") + QDir::separator() + QString("libdui.conf"), LIBDUI_THEME_2_VIEW_CONFIGURATION);
-    makeFile(QString("theme2") + QDir::separator() + QString("dui") + QDir::separator() + QString("Ft_Theme") + QDir::separator() + QString("Ft_Theme.conf"), TESTAPP_VIEW_CONFIGURATION);
+    makeFile( QString("theme1") + QDir::separator()
+	      + QString("dui") + QDir::separator()
+	      + QString("libduicore") + QDir::separator()
+	      + QString("libduicore.conf"), LIBDUI_THEME_1_VIEW_CONFIGURATION);
+
+    makeFile( QString("theme2") + QDir::separator()
+	      + QString("dui") + QDir::separator()
+	      + QString("libduicore") + QDir::separator()
+	      + QString("libduicore.conf"), LIBDUI_THEME_2_VIEW_CONFIGURATION);
+    makeFile( QString("theme2") + QDir::separator()
+	      + QString("dui") + QDir::separator()
+	      + QString("Ft_Theme") + QDir::separator()
+	      + QString("Ft_Theme.conf"), TESTAPP_VIEW_CONFIGURATION);
 
     // create stylesheets
-    makeFile(QString("theme1") + QDir::separator() + QString("dui") + QDir::separator() + QString("libdui") + QDir::separator() + QString("style") + QDir::separator() + QString("libdui.css"), THEME_1_LIBDUI_CSS);
-    makeFile(QString("theme2") + QDir::separator() + QString("dui") + QDir::separator() + QString("libdui") + QDir::separator() + QString("style") + QDir::separator() + QString("libdui.css"), THEME_2_LIBDUI_CSS);
-    makeFile(QString("theme2") + QDir::separator() + QString("dui") + QDir::separator() + QString("Ft_Theme") + QDir::separator() + QString("style") + QDir::separator() + QString("Ft_Theme.css"), THEME_2_APP_CSS);
+    makeFile( QString("theme1") + QDir::separator()
+	      + QString("dui") + QDir::separator()
+	      + QString("libduicore") + QDir::separator()
+	      + QString("style") + QDir::separator()
+	      + QString("libduicore.css"), THEME_1_LIBDUI_CSS);
+
+    makeFile( QString("theme2") + QDir::separator()
+	      + QString("dui") + QDir::separator()
+	      + QString("libduicore") + QDir::separator()
+	      + QString("style") + QDir::separator()
+	      + QString("libduicore.css"), THEME_2_LIBDUI_CSS);
+
+    makeFile(QString("theme2") + QDir::separator()
+	     + QString("dui") + QDir::separator()
+	     + QString("Ft_Theme") + QDir::separator()
+	     + QString("style") + QDir::separator()
+	     + QString("Ft_Theme.css"), THEME_2_APP_CSS);
 }
 
 void Ft_Theme::cleanup()

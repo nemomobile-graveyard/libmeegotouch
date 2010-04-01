@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../theme/duithemedaemon.h"
+#include "../corelib/theme/duithemedaemon.h"
 

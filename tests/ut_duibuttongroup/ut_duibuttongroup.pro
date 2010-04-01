@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += $$DUISRCDIR/widgets
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets
 
 TARGET = ut_duibuttongroup
 

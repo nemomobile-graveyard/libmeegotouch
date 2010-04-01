@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../core/duiexport.h"
+#include "../corelib/core/duiexport.h"

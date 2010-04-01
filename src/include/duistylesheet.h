@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../style/duistylesheet.h"
+#include "../corelib/style/duistylesheet.h"

@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duilistmodel.h"
+#include "../corelib/widgets/duilistmodel.h"
 

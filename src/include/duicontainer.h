@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duicontainer.h"
+#include "../corelib/widgets/duicontainer.h"

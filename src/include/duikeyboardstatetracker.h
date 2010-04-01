@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../events/duikeyboardstatetracker.h"
+#include "../corelib/events/duikeyboardstatetracker.h"
 

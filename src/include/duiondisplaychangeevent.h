@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../events/duiondisplaychangeevent.h"
+#include "../corelib/events/duiondisplaychangeevent.h"

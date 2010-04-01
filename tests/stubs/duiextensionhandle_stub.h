@@ -250,7 +250,7 @@ DuiExtensionHandleStub* gDuiExtensionHandleStub = &gDefaultDuiExtensionHandleStu
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-DuiExtensionHandle::DuiExtensionHandle(QGraphicsItem *parent) {
+DuiExtensionHandle::DuiExtensionHandle(QGraphicsItem *parent) : d_ptr(NULL) {
   gDuiExtensionHandleStub->DuiExtensionHandleConstructor(parent);
 }
 
@@ -298,7 +298,7 @@ void DuiExtensionHandle::setSizeHints(const QVector<QSizeF> &sizeHints) {
   gDuiExtensionHandleStub->setSizeHints(sizeHints);
 }
 
-DuiExtensionHandle::DuiExtensionHandle(DuiExtensionHandlePrivate *dd, DuiExtensionHandleModel *model, QGraphicsItem *parent) {
+DuiExtensionHandle::DuiExtensionHandle(DuiExtensionHandlePrivate *dd, DuiExtensionHandleModel *model, QGraphicsItem *parent) : d_ptr(NULL)  {
   gDuiExtensionHandleStub->DuiExtensionHandleConstructor(dd, model, parent);
 }
 

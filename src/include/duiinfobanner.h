@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiinfobanner.h"
+#include "../corelib/widgets/duiinfobanner.h"
 

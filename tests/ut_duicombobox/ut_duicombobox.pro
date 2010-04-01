@@ -13,7 +13,8 @@ HEADERS += \
     ut_duicombobox.h
 
 INCLUDEPATH += \
-    ../../src/widgets/views \
-    ../../src/widgets \
+    ../../src/corelib/widgets/views \
+    ../../src/corelib/widgets \
+    ../../src/views \
 
 include(../common_bot.pri)

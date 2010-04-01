@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duipannableviewport.h"
+#include "../corelib/widgets/duipannableviewport.h"

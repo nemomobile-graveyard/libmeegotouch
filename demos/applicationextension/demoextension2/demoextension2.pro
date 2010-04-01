@@ -24,10 +24,9 @@ win32|macx {
         LIBS += -framework \
             dui
     }
-    win32:LIBS += -L../../../lib \
-        -ldui0
+    win32:LIBS += -lduicore0
 }
-else:LIBS += ../../../lib/libdui.so
+else:LIBS += -lduicore
 
 TARGET = $$qtLibraryTarget(demoextension2)
 DESTDIR = ../../../lib

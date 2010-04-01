@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duioverlayview.h"
+#include "../views/duioverlayview.h"

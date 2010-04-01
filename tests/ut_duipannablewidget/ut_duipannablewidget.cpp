@@ -21,8 +21,8 @@
 #include "duiapplication.h"
 #include <duitheme.h>
 #include <duipannablewidget.h>
-#include "../../src/widgets/duipannablewidget_p.h"
-#include "../../src/widgets/duiphysics2dpanning_p.h"
+#include "../../src/corelib/widgets/duipannablewidget_p.h"
+#include "../../src/corelib/widgets/duiphysics2dpanning_p.h"
 #include <duiapplication.h>
 
 #include <QMetaType>

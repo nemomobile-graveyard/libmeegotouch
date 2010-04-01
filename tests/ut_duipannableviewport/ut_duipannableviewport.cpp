@@ -21,7 +21,7 @@
 #include <duitheme.h>
 #include <duipositionindicator.h>
 #include <duipannableviewport.h>
-#include "../../src/widgets/duipannableviewport_p.h"
+#include "../../src/corelib/widgets/duipannableviewport_p.h"
 #include <QGraphicsWidget>
 #include <QGraphicsLinearLayout>
 #include <QTest>

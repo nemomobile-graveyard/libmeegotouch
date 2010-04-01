@@ -1,10 +1,9 @@
 include(../common_top.pri)
-TARGET = ut_duiappletinventory
-INCLUDEPATH += $$DUISRCDIR/mashup/appletcommunication \
-    $$DUISRCDIR/mashup/appletinterface \
-    $$DUISRCDIR/mashup/appletinstallation \
-    $$DUISRCDIR/mashup/mashup \
-    $$DUISRCDIR/widgets \
+include(../common_duiextensions.pri)
+
+INCLUDEPATH += \
+    $$DUISRCDIR/include \
+    $$DUISRCDIR/corelib/widgets \
     $$DUISRCDIR/events
 
 win32 {
@@ -25,16 +24,17 @@ duigenerator_model.CONFIG = target_predeps no_link
 duigenerator_model.variable_out = GENERATED_SOURCES
 QMAKE_EXTRA_COMPILERS += duigenerator_model
 
-MODEL_HEADERS += $$DUISRCDIR/widgets/duiwidgetmodel.h \
-    $$DUISRCDIR/mashup/mashup/duiappletinventorymodel.h
+MODEL_HEADERS += \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletinventorymodel.h
 
 SOURCES += \
     ut_duiappletinventory.cpp \
-    $$DUISRCDIR/mashup/mashup/duiappletinventory.cpp \
-    $$DUISRCDIR/mashup/appletinstallation/duiappletinstantiator.cpp \
-    $$DUISRCDIR/widgets/core/duiwidgetcontroller.cpp \
-    $$DUISRCDIR/widgets/core/duiwidget.cpp \
-    $$DUISRCDIR/widgets/duiwidgetmodel.cpp
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletinventory.cpp \
+    $$DUISRCDIR/extensions/mashup/appletinstallation/duiappletinstantiator.cpp \
+    $$DUISRCDIR/corelib/widgets/core/duiwidgetcontroller.cpp \
+    $$DUISRCDIR/corelib/widgets/core/duiwidget.cpp \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel.cpp
 
 # service classes
 SOURCES += \
@@ -43,17 +43,17 @@ SOURCES += \
 # unit test and unit classes
 HEADERS += \
     ut_duiappletinventory.h \
-    $$DUISRCDIR/mashup/mashup/duiappletinventory.h \
-    $$DUISRCDIR/mashup/mashup/duiappletinventorymodel.h \
-    $$DUISRCDIR/mashup/appletinstallation/duiappletinstantiator.h \
-    $$DUISRCDIR/mashup/appletinstallation/duiappletinstantiator_p.h \
-    $$DUISRCDIR/mashup/mashup/duiappletbutton.h \
-    $$DUISRCDIR/mashup/mashup/duiappletinstancemanager.h \
-    $$DUISRCDIR/mashup/mashup/duiappletid.h \
-    $$DUISRCDIR/widgets/core/duiwidgetcontroller_p.h \
-    $$DUISRCDIR/widgets/core/duiwidget_p.h \
-    $$DUISRCDIR/widgets/duiwidgetmodel_p.h \
-    $$DUISRCDIR/widgets/duiscenewindow_p.h \
-    $$DUISRCDIR/widgets/duiobjectmenu.h
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletinventory.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletinventorymodel.h \
+    $$DUISRCDIR/extensions/mashup/appletinstallation/duiappletinstantiator.h \
+    $$DUISRCDIR/extensions/mashup/appletinstallation/duiappletinstantiator_p.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletbutton.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletinstancemanager.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletid.h \
+    $$DUISRCDIR/corelib/widgets/core/duiwidgetcontroller_p.h \
+    $$DUISRCDIR/corelib/widgets/core/duiwidget_p.h \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel_p.h \
+    $$DUISRCDIR/corelib/widgets/duiscenewindow_p.h \
+    $$DUISRCDIR/corelib/widgets/duiobjectmenu.h
 
 include(../common_bot.pri)

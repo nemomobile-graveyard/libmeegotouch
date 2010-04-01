@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duiwidgetstyle.h"
+#include "../corelib/style/duiwidgetstyle.h"
 

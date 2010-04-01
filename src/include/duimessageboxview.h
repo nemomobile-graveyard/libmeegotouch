@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duimessageboxview.h"
+#include "../views/duimessageboxview.h"
 

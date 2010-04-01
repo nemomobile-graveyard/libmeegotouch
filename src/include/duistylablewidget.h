@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duistylablewidget.h"
+#include "../corelib/widgets/duistylablewidget.h"

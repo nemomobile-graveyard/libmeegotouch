@@ -1,17 +1,17 @@
 include(../common_top.pri)
-TARGET = ut_duiappletinstantiator
+
 INCLUDEPATH += \
-    $$DUISRCDIR/mashup/appletinstallation
+    $$DUISRCDIR/extensions/mashup/appletinstallation
 
 # unit test and unit classes
 SOURCES += \
     ut_duiappletinstantiator.cpp \
-    $$DUISRCDIR/mashup/appletinstallation/duiappletinstantiator.cpp
+    $$DUISRCDIR/extensions/mashup/appletinstallation/duiappletinstantiator.cpp
 
 # unit test and unit classes
 HEADERS += \
    ut_duiappletinstantiator.h \
-   $$DUISRCDIR/mashup/appletinstallation/duiappletinstantiator_p.h \
-   $$DUISRCDIR/mashup/appletinstallation/duiappletinstantiator.h
+   $$DUISRCDIR/extensions/mashup/appletinstallation/duiappletinstantiator_p.h \
+   $$DUISRCDIR/extensions/mashup/appletinstallation/duiappletinstantiator.h
 
 include(../common_bot.pri)

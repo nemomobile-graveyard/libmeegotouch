@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../core/duiinputmethodstate.h"
+#include "../corelib/core/duiinputmethodstate.h"

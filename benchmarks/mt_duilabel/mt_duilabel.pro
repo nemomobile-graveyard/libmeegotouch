@@ -6,3 +6,5 @@ TARGET = mt_duilabel
 SOURCES += mt_duilabel.cpp
 HEADERS += mt_duilabel.h
 CONFIG += release
+
+LIBS += -lduiviews

@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../mashup/appletinstallation/duiappletinstallationsourceinterface.h"
+#include "../extensions/mashup/appletinstallation/duiappletinstallationsourceinterface.h"

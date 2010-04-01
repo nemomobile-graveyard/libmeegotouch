@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duiinfobannerinformationview.h"
+#include "../views/duiinfobannerinformationview.h"
 

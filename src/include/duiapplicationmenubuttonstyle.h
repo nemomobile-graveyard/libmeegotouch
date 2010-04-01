@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../style/duiapplicationmenubuttonstyle.h"
+#include "../views/style/duiapplicationmenubuttonstyle.h"

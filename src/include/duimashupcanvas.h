@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../mashup/mashup/duimashupcanvas.h"
+#include "../extensions/mashup/mashup/duimashupcanvas.h"

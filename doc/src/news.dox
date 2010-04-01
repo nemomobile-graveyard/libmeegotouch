@@ -134,6 +134,18 @@
   - pannedRange() was renamed to range()
   - pannedPos() was renamed to position()
   - updateSizePosData() was split into three new methods: setPosition(), setViewportSize() and setRange().
+- Libdui modularization:
+  - moved src/applicationextension and src/mashup into new library libduiextensions.
+  - moved src/settingslanguage into new library libduisettings.
+  - moved part of the views in src/widgets/views to new library libduiviews.
+  - moved the rest of src/ to new library libduicore.
+  - You possibly have to update your include pathes.
+  - You possibly have to update your linking statement in the .pro
+    file. Before: -ldui, now: -lduicore -lduiviews -lduisettings -lduiextensions.
+    Or a subset of these four libs.
+  - Also make sure that you update duitheme in sync with this update, as
+    it requires some changes in duitheme.
+
 
 \section v0190
 

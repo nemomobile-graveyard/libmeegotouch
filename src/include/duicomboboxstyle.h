@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duicomboboxstyle.h"
+#include "../views/style/duicomboboxstyle.h"
 

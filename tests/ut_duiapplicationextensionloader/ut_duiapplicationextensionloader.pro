@@ -1,9 +1,8 @@
 include(../common_top.pri)
-TARGET = ut_duiapplicationextensionloader
-INCLUDEPATH += $$DUISRCDIR/applicationextension
+include(../common_duiextensions.pri)
 
 TEST_SOURCES = \
-    $$DUISRCDIR/applicationextension/duiapplicationextensionloader.cpp \
+    $$DUISRCDIR/extensions/applicationextension/duiapplicationextensionloader.cpp \
 
 # unit test and unit
 SOURCES += \
@@ -17,6 +16,6 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_duiapplicationextensionloader.h \
-    $$DUISRCDIR/applicationextension/duiapplicationextensionloader.h \
+    $$DUISRCDIR/extensions/applicationextension/duiapplicationextensionloader.h \
 
 include(../common_bot.pri)

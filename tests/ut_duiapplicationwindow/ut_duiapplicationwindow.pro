@@ -1,7 +1,7 @@
 include(../common_top.pri)
 
 TARGET = ut_duiapplicationwindow
-INCLUDEPATH += $$DUISRCDIR/core $$DUISRCDIR/scene $$DUISRCDIR/widgets
+INCLUDEPATH += $$DUISRCDIR/corelib/core $$DUISRCDIR/scene $$DUISRCDIR/corelib/widgets
 
 SOURCES += \
     ut_duiapplicationwindow.cpp \

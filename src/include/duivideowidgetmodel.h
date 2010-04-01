@@ -1,2 +1,2 @@
-#include "../video/duivideowidgetmodel.h"
+#include "../corelib/video/duivideowidgetmodel.h"
 

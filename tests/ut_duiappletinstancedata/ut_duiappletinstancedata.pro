@@ -1,11 +1,15 @@
 include(../common_top.pri)
 TARGET = ut_duiappletinstancedata
-INCLUDEPATH += $$DUISRCDIR/mashup/appletcommunication $$DUISRCDIR/mashup/appletinterface  $$DUISRCDIR/mashup/mashup $$DUISRCDIR/widgets
+INCLUDEPATH += \
+    $$DUISRCDIR/extensions/mashup/appletcommunication \
+    $$DUISRCDIR/extensions/mashup/appletinterface \
+    $$DUISRCDIR/extensions/mashup/mashup \
+    $$DUISRCDIR/corelib/widgets
 
 # unit test and unit classes
 SOURCES += \
     ut_duiappletinstancedata.cpp \
-    $$DUISRCDIR/mashup/mashup/duiappletinstancedata.cpp
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletinstancedata.cpp
 
 # service classes
 SOURCES += \
@@ -14,7 +18,7 @@ SOURCES += \
 # unit test and unit classes
 HEADERS += \
     ut_duiappletinstancedata.h \
-    $$DUISRCDIR/mashup/mashup/duiappletinstancedata.h \
-    $$DUISRCDIR/mashup/mashup/duiappletid.h
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletinstancedata.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletid.h
 
 include(../common_bot.pri)

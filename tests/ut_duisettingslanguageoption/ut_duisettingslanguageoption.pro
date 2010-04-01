@@ -1,14 +1,11 @@
 include(../common_top.pri)
-
-INCLUDEPATH += $$DUISRCDIR/settingslanguage
-
-TARGET = ut_duisettingslanguageoption
+include(../common_duisettings.pri)
 
 # unit test and unit
 SOURCES += \
     ut_duisettingslanguageoption.cpp \
-    $$DUISRCDIR/settingslanguage/duisettingslanguageoption.cpp \
-    $$DUISRCDIR/settingslanguage/duisettingslanguagenode.cpp
+    $$DUISRCDIR/settings/settingslanguage/duisettingslanguageoption.cpp \
+    $$DUISRCDIR/settings/settingslanguage/duisettingslanguagenode.cpp
 
 # service classes
 SOURCES += \
@@ -17,7 +14,7 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_duisettingslanguageoption.h \
-    $$DUISRCDIR/settingslanguage/duisettingslanguageoption.h \
-    $$DUISRCDIR/settingslanguage/duisettingslanguagenode.h
+    $$DUISRCDIR/settings/settingslanguage/duisettingslanguageoption.h \
+    $$DUISRCDIR/settings/settingslanguage/duisettingslanguagenode.h
 
 include(../common_bot.pri)

@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../style/duiabstractwidgetanimationstyle.h"
+#include "../corelib/style/duiabstractwidgetanimationstyle.h"

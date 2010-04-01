@@ -1,9 +1,8 @@
 include(../common_top.pri)
-TARGET = ut_duiappletsharedmutex
-INCLUDEPATH += $$DUISRCDIR/mashup/mashup
+INCLUDEPATH += $$DUISRCDIR/extensions/mashup/mashup
 
 TEST_SOURCES = \
-    $$DUISRCDIR/mashup/mashup/duiappletsharedmutex.cpp \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletsharedmutex.cpp \
 
 # unit test and unit
 SOURCES += \
@@ -17,6 +16,6 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_duiappletsharedmutex.h \
-    $$DUISRCDIR/mashup/mashup/duiappletsharedmutex.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletsharedmutex.h \
 
 include(../common_bot.pri)

@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../style/duigroupanimationstyle.h"
+#include "../corelib/style/duigroupanimationstyle.h"

@@ -1,6 +1,5 @@
 include(../common_top.pri)
-TARGET = ut_duiappletserver
-INCLUDEPATH += $$DUISRCDIR/mashup/appletcommunication $$DUISRCDIR/mashup/appletinterface  $$DUISRCDIR/mashup/mashup
+include(../common_duiextensions.pri)
 
 QT += core network gui svg dbus
 

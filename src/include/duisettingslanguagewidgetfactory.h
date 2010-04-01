@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../settingslanguage/duisettingslanguagewidgetfactory.h"
+#include "../settings/settingslanguage/duisettingslanguagewidgetfactory.h"

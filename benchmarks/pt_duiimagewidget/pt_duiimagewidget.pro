@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += ../../src/include ../../src/theme
+INCLUDEPATH += ../../src/include
 DEPENDPATH += $$INCLUDEPATH
 TARGET = pt_duiimagewidget
 

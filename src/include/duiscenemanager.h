@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../scene/duiscenemanager.h"
+#include "../corelib/scene/duiscenemanager.h"
 

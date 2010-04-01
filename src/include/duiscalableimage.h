@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../painting/duiscalableimage.h"
+#include "../corelib/painting/duiscalableimage.h"

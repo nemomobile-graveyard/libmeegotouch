@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../style/duistylecreator.h"
+#include "../corelib/style/duistylecreator.h"

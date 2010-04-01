@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duicompleterview.h"
+#include "../views/duicompleterview.h"

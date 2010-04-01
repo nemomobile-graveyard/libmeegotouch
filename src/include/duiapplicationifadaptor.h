@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../core/duiapplicationifadaptor.h"
+#include "../corelib/core/duiapplicationifadaptor.h"

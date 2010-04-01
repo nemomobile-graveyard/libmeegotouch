@@ -28,7 +28,7 @@ macx {
         DEPENDPATH += $${DUI_INC_DIR}
 
         unix: QMAKE_LFLAGS += $${QMAKE_RPATH}$${DUI_LIB_DIR}
-        LIBS += -L$${DUI_LIB_DIR} -ldui
+        LIBS += -L$${DUI_LIB_DIR} -lduicore -lduiviews -lduisettings -lduiextensions
         QMAKE_MOC = duimoc
 
         isEmpty(DUIGEN_OUTDIR) {

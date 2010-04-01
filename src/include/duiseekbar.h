@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiseekbar.h"
+#include "../corelib/widgets/duiseekbar.h"
 

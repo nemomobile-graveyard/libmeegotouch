@@ -1,56 +1,16 @@
-#include(../common_top.pri)
+include(../common_top.pri)
 
-# ****************************************************************************
-# This is the contents of "../common_top.pri" modified so that libdui library
-# is not included. (It's not needed with this test)
-# ****************************************************************************
-include(../check.pri)
+#FIXME holger check
 
-# for defines
-include(../../mkspecs/common.pri)
-
-DUISRCDIR = ../../src
-#STUBSDIR = ../stubs
-INCLUDEPATH += . $$DUISRCDIR/include
-#DEPENDPATH = $$INCLUDEPATH
-#QMAKE_LIBDIR += ../../lib /usr/local/lib
-CONFIG += debug
-QT += testlib
-TEMPLATE = app
-# DEFINES += QT_NO_DEBUG_OUTPUT
-DEFINES += UNIT_TEST
-target.path = $$[QT_INSTALL_LIBS]/libdui-tests
-INSTALLS += target
-
-#win32|macx {
-#    macx {
-#        QMAKE_LFLAGS += -F../../lib
-#        LIBS += -framework dui
-#    }
-#    win32:LIBS += -L../../lib -ldui0
-#} else {
-#    LIBS += ../../lib/libdui.so
-#}
-
-QMAKE_CXXFLAGS += -Werror
-
-support_files.files =
-support_files.path = $$[QT_INSTALL_LIBS]/libdui-tests
-INSTALLS += support_files
-
-# ****************************************************************************
-# "../common_top.pri" ends.
-# ****************************************************************************
-
-INCLUDEPATH += $$DUISRCDIR/feedback
+INCLUDEPATH += $$DUISRCDIR/corelib/feedback
 
 TARGET = ut_duifeedbackplayer
 
-TESTED_SOURCES = $$DUISRCDIR/feedback/duifeedbackplayer.cpp \
-                 $$DUISRCDIR/feedback/duifeedbackplayer_p.cpp
+TESTED_SOURCES = $$DUISRCDIR/corelib/feedback/duifeedbackplayer.cpp \
+                 $$DUISRCDIR/corelib/feedback/duifeedbackplayer_p.cpp
 
-TESTED_HEADERS = $$DUISRCDIR/feedback/duifeedbackplayer.h \
-                 $$DUISRCDIR/feedback/duifeedbackplayer_p.h
+TESTED_HEADERS = $$DUISRCDIR/corelib/feedback/duifeedbackplayer.h \
+                 $$DUISRCDIR/corelib/feedback/duifeedbackplayer_p.h
 
 copysourcefiles.input = TESTED_SOURCES
 copysourcefiles.output = ${QMAKE_FILE_BASE}.cpp

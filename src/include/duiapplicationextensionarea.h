@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../applicationextension/duiapplicationextensionarea.h"
+#include "../extensions/applicationextension/duiapplicationextensionarea.h"

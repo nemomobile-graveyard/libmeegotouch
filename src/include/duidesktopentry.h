@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../core/duidesktopentry.h"
+#include "../corelib/core/duidesktopentry.h"
 

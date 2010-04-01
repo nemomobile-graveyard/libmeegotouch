@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duiprogressindicatorbarview.h"
+#include "../views/duiprogressindicatorbarview.h"

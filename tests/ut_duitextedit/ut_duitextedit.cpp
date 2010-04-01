@@ -45,7 +45,7 @@
 #include <duiapplicationpage.h>
 
 //TODO:using other way instead of using relative paths
-#include "../../src/widgets/duitextedit_p.h"
+#include "../../src/corelib/widgets/duitextedit_p.h"
 
 
 Q_DECLARE_METATYPE(Dui::TextContentType);

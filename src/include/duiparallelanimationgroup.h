@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../animation/core/duiparallelanimationgroup.h"
+#include "../corelib/animation/core/duiparallelanimationgroup.h"

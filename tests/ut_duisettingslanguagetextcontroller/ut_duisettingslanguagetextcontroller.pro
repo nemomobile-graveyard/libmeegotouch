@@ -1,18 +1,15 @@
 include(../common_top.pri)
-
-INCLUDEPATH += $$DUISRCDIR/settingslanguage
-
-TARGET = ut_duisettingslanguagetextcontroller
+include(../common_duisettings.pri)
 
 # unit test and unit
 SOURCES += \
     ut_duisettingslanguagetextcontroller.cpp \
-    $$DUISRCDIR/settingslanguage/duisettingslanguagetextcontroller.cpp
+    $$DUISRCDIR/settings/settingslanguage/duisettingslanguagetextcontroller.cpp
 
 # unit test and unit
 HEADERS += \
     ut_duisettingslanguagetextcontroller.h \
-    $$DUISRCDIR/settingslanguage/duisettingslanguagetextcontroller.h
+    $$DUISRCDIR/settings/settingslanguage/duisettingslanguagetextcontroller.h
 
 include(../common_bot.pri)
 

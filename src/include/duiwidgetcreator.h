@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/core/duiwidgetcreator.h"
+#include "../corelib/widgets/core/duiwidgetcreator.h"

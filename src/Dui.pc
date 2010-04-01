@@ -8,4 +8,4 @@ Description: DirectUI Framework
 Version: 0.18.0
 Requires: QtGui
 Cflags: -I${includedir}
-Libs: -L${libdir} -ldui
+Libs: -L${libdir} -lduicore -lduiviews -lduisettings -lduiextensions

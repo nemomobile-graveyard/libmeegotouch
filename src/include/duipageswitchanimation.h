@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../animation/scene/duipageswitchanimation.h"
+#include "../corelib/animation/scene/duipageswitchanimation.h"

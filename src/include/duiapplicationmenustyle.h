@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../style/duiapplicationmenustyle.h"
+#include "../views/style/duiapplicationmenustyle.h"

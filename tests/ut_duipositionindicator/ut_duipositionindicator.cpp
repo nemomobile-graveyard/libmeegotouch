@@ -19,7 +19,7 @@
 
 #include "ut_duipositionindicator.h"
 #include <duipositionindicator.h>
-#include "../../src/widgets/duipositionindicator_p.h"
+#include "../../src/corelib/widgets/duipositionindicator_p.h"
 #include <duipositionindicatorview.h>
 #include <duiapplication.h>
 

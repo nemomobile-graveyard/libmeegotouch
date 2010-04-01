@@ -1,7 +1,7 @@
 include(../common_top.pri)
 TARGET = ut_duiapplicationmenuview
 
-INCLUDEPATH += $$DUISRCDIR/widgets $$DUISRCDIR/style
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets $$DUISRCDIR/corelib/style
 
 # unit test and unit
 SOURCES += \

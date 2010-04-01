@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../core/duiapplication.h"
+#include "../corelib/core/duiapplication.h"

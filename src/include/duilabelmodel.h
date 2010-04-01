@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duilabelmodel.h"
+#include "../corelib/widgets/duilabelmodel.h"
 

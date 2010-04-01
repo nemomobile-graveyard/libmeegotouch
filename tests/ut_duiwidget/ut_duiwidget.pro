@@ -1,6 +1,6 @@
 include(../common_top.pri)
 
-INCLUDEPATH += $$DUISRCDIR/widgets
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets
 
 TEST_SOURCES +=  \
 #    $$DUISRCDIR/duiwidget.cpp \

@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../layout/duilayoutanimation.h"
+#include "../corelib/layout/duilayoutanimation.h"

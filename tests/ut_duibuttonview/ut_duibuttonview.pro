@@ -1,6 +1,6 @@
 
 include(../common_top.pri)
-INCLUDEPATH += $$DUISRCDIR/widgets $$DUISRCDIR/style
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets $$DUISRCDIR/corelib/style
 
 TARGET = ut_duibuttonview
 

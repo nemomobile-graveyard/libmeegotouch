@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include <DuiWidget>
-#include "../../src/widgets/views/duilistview_p.h"
+#include "../../src/corelib/widgets/views/duilistview_p.h"
 #include "duilistmodel.h"
 #include "myindexedmodel.h"
 #include "ut_duilistview.h"

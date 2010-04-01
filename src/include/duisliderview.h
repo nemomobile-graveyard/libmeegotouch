@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duisliderview.h"
+#include "../views/duisliderview.h"
 

@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../layout/duiflowlayoutpolicy.h"
+#include "../corelib/layout/duiflowlayoutpolicy.h"
 

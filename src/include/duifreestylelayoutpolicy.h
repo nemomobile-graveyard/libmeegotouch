@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../layout/duifreestylelayoutpolicy.h"
+#include "../corelib/layout/duifreestylelayoutpolicy.h"
 

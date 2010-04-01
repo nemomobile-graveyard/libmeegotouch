@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += ../../src/include ../../src/theme
+INCLUDEPATH += ../../src/include ../../src/corelib/theme
 DEPENDPATH += $$INCLUDEPATH
 TARGET = pt_duibutton
 

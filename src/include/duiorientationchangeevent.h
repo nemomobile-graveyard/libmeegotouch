@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../events/duiorientationchangeevent.h"
+#include "../corelib/events/duiorientationchangeevent.h"

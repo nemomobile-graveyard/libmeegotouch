@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duinavigationbarstyle.h"
+#include "../views/style/duinavigationbarstyle.h"
 

@@ -2,7 +2,7 @@ include(../common_top.pri)
 TARGET = ut_duitoolbarview
 
 
-INCLUDEPATH += $$DUISRCDIR/widgets $$DUISRCDIR/style
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets $$DUISRCDIR/corelib/style
 
 SOURCES += \
     ut_duitoolbarview.cpp \

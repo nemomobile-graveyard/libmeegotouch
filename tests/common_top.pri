@@ -5,7 +5,13 @@ include(../mkspecs/common.pri)
 
 DUISRCDIR = ../../src
 STUBSDIR = ../stubs
-INCLUDEPATH += . $$DUISRCDIR $$STUBSDIR  $$DUISRCDIR/include
+INCLUDEPATH += \
+    . \
+    $$DUISRCDIR \
+    $$STUBSDIR \
+    $$DUISRCDIR/include \
+    $$DUISRCDIR/views/style \
+
 DEPENDPATH = $$INCLUDEPATH
 QMAKE_LIBDIR += ../../lib /usr/local/lib
 CONFIG += debug
@@ -22,9 +28,9 @@ win32|macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework dui
     }
-    win32:LIBS += -L../../lib -ldui0
+    win32:LIBS += -lduicore0 -lduiviews0
 } else {
-    LIBS += ../../lib/libdui.so
+    LIBS += -lduicore -lduiviews
 }
 
 QMAKE_CXXFLAGS += -Werror

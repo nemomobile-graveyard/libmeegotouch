@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duiextendingbackgroundview.h"
+#include "../views/duiextendingbackgroundview.h"

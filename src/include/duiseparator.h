@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiseparator.h"
+#include "../corelib/widgets/duiseparator.h"

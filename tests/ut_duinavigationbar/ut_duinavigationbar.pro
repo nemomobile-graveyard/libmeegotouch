@@ -2,7 +2,7 @@ include(../common_top.pri)
 
 TARGET = ut_duinavigationbar
 
-INCLUDEPATH += $$DUISRCDIR/widgets $$DUISRCDIR/style $$DUISRCDIR/scene
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets $$DUISRCDIR/corelib/style $$DUISRCDIR/scene
 
 SOURCES += \
     ut_duinavigationbar.cpp \

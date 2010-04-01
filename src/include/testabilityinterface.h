@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../core/testabilityinterface.h"
+#include "../corelib/core/testabilityinterface.h"
 

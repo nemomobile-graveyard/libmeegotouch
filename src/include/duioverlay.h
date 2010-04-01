@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duioverlay.h"
+#include "../corelib/widgets/duioverlay.h"

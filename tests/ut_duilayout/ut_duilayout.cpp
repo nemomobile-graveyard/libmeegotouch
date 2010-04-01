@@ -34,7 +34,7 @@
 #include <duiwindow.h>
 #include <duiscenemanager.h>
 
-#include "../src/layout/duilayout_p.h"
+#include "../src/corelib/layout/duilayout_p.h"
 
 #include <QtGui/QPushButton>
 #include <QtGui/QGraphicsProxyWidget>

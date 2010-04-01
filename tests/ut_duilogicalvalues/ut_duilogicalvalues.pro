@@ -5,14 +5,14 @@ LIBRARYPATH += $$DUISRCDIR
 
 SOURCES += \
 	ut_duilogicalvalues.cpp \
-    ../../src/theme/duilogicalvalues.cpp \
-    ../../src/style/duistylesheetattribute.cpp
+    ../../src/corelib/theme/duilogicalvalues.cpp \
+    ../../src/corelib/style/duistylesheetattribute.cpp
 
 HEADERS += \
 	ut_duilogicalvalues.h \
-	../../src/theme/duilogicalvalues.h \
-	../../src/theme/duilogicalvalues_p.h \
-	../../src/style/duistylesheetattribute.h
+	../../src/corelib/theme/duilogicalvalues.h \
+	../../src/corelib/theme/duilogicalvalues_p.h \
+	../../src/corelib/style/duistylesheetattribute.h
 
 support_files.files += *.ini
 

@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../layout/duigridlayoutpolicy.h"
+#include "../corelib/layout/duigridlayoutpolicy.h"

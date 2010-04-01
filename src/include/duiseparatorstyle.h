@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duiseparatorstyle.h"
+#include "../views/style/duiseparatorstyle.h"
 

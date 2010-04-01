@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../feedback/duifeedback.h"
+#include "../corelib/feedback/duifeedback.h"

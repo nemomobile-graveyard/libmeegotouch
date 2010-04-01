@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duiimagewidgetview.h"
+#include "../views/duiimagewidgetview.h"
 

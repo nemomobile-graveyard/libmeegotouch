@@ -5,38 +5,39 @@ win32|macx {
         QMAKE_LFLAGS -= -F../../lib
         LIBS -= -framework dui
     }
-    win32:LIBS -= -L../../lib -ldui0
+    win32:LIBS -= -lduicore0 -lduiviews0
 } else {
-    LIBS -= ../../lib/libdui.so
+    LIBS -= -lduicore -lduiviews
 }
 
-TARGET = ut_duiapplicationextensionmanager
 INCLUDEPATH += \
-    $$DUISRCDIR/applicationextension \
-    $$DUISRCDIR/mashup/mashup
+    $$DUISRCDIR/extensions/applicationextension \
+    $$DUISRCDIR/extensions/mashup/appletcommunication \
+    $$DUISRCDIR/extensions/mashup/mashup
 
 # unit test and unit classes
 SOURCES += \
     ut_duiapplicationextensionmanager.cpp \
-    $$DUISRCDIR/applicationextension/duiapplicationextensionmanager.cpp
+    $$DUISRCDIR/extensions/applicationextension/duiapplicationextensionmanager.cpp
 
 # service classes
 SOURCES += \
     $$STUBSDIR/stubbase.cpp \
+    dummy.cpp
 
 # unit test and unit classes
 HEADERS += \
     ut_duiapplicationextensionmanager.h \
-    $$DUISRCDIR/applicationextension/duiapplicationextensionmanager.h \
-    $$DUISRCDIR/applicationextension/duiextensionhandle.h \
-    $$DUISRCDIR/applicationextension/duiextensionhandlemodel.h \
-    $$DUISRCDIR/widgets/duiwidgetmodel.h \
-    $$DUISRCDIR/widgets/core/duiwidget.h \
-    $$DUISRCDIR/widgets/core/duiwidgetcontroller.h \
-    $$DUISRCDIR/core/duidesktopentry.h \
-    $$DUISRCDIR/theme/duitheme.h \
-    $$DUISRCDIR/mashup/mashup/duifiledatastore.h \
-    $$DUISRCDIR/mashup/mashup/duidatastore.h \
-    $$DUISRCDIR/mashup/mashup/duidataaccess.h
+    $$DUISRCDIR/extensions/applicationextension/duiapplicationextensionmanager.h \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandle.h \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandlemodel.h \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel.h \
+    $$DUISRCDIR/corelib/widgets/core/duiwidget.h \
+    $$DUISRCDIR/corelib/widgets/core/duiwidgetcontroller.h \
+    $$DUISRCDIR/corelib/core/duidesktopentry.h \
+    $$DUISRCDIR/corelib/theme/duitheme.h \
+    $$DUISRCDIR/corelib/core/duifiledatastore.h \
+    $$DUISRCDIR/corelib/core/duidatastore.h \
+    $$DUISRCDIR/corelib/core/duidataaccess.h
 
 include(../common_bot.pri)

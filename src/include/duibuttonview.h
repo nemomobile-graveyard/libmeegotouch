@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duibuttonview.h"
+#include "../views/duibuttonview.h"
 

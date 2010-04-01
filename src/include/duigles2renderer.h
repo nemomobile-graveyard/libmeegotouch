@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../painting/duigles2renderer.h"
+#include "../corelib/painting/duigles2renderer.h"

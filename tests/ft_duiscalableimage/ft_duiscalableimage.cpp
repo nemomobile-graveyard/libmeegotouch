@@ -19,8 +19,8 @@
 
 #include "ft_duiscalableimage.h"
 #include "duiapplication.h"
-#include <theme/duitheme.h>
-#include <painting/duiscalableimage.h>
+#include <corelib/theme/duitheme.h>
+#include <corelib/painting/duiscalableimage.h>
 #include <QtTest>
 #include <QPainter>
 

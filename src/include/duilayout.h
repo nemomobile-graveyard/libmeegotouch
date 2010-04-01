@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../layout/duilayout.h"
+#include "../corelib/layout/duilayout.h"

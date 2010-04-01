@@ -1,6 +1,5 @@
 include(../common_top.pri)
-TARGET = ut_duiapplicationextensionareaview
-INCLUDEPATH += $$DUISRCDIR/applicationextension $$DUISRCDIR/layout $$DUISRCDIR/style
+include(../common_duiextensions.pri)
 
 QT += core network gui svg dbus
 

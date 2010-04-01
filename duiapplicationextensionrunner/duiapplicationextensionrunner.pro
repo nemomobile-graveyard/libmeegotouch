@@ -1,17 +1,24 @@
 include(../mkspecs/common.pri)
 
 INCLUDEPATH += . \
-    ../src/mashup/mashup \
     ../src/include \
-    ../src/mashup/appletcommunication \
-    ../src/mashup/appletinterface \
-    ../src/applicationextension
+    ../src/extensions/mashup/mashup \
+    ../src/extensions/mashup/appletcommunication \
+    ../src/extensions/mashup/appletinterface \
+    ../src/extensions/applicationextension
+
 DEPENDPATH += $$INCLUDEPATH
 QMAKE_LIBDIR += ../lib
 TEMPLATE = app
 TARGET =
 DEPENDPATH += .
-QMAKE_LFLAGS += ../lib/libdui.so
+
+LIBS += \
+    -lduicore \
+    -lduiviews \
+    -lduisettings \
+    -lduiextensions \
+
 QT += core \
     network \
     gui \
@@ -22,7 +29,7 @@ QT += core \
 # Input
 SOURCES += main.cpp \
     duiapplicationextensionrunner.cpp \
-    ../src/applicationextension/duiapplicationextensionloader.cpp
+    ../src/extensions/applicationextension/duiapplicationextensionloader.cpp
 
 HEADERS += duiapplicationextensionrunner.h \
     duiapplicationextensionloader.h

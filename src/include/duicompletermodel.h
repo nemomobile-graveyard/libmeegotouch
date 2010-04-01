@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duicompletermodel.h"
+#include "../corelib/widgets/duicompletermodel.h"
 

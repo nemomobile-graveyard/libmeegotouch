@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../mashup/mashup/duigconfdatastore.h"
+#include "../extensions/mashup/mashup/duigconfdatastore.h"

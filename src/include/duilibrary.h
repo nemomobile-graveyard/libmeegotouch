@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../core/duilibrary.h"
+#include "../corelib/core/duilibrary.h"
 

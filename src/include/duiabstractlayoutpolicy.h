@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../layout/duiabstractlayoutpolicy.h"
+#include "../corelib/layout/duiabstractlayoutpolicy.h"
 

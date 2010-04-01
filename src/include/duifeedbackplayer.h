@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../feedback/duifeedbackplayer.h"
+#include "../corelib/feedback/duifeedbackplayer.h"

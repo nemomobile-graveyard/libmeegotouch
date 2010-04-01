@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duihomebuttonpanel.h"
+#include "../corelib/widgets/duihomebuttonpanel.h"

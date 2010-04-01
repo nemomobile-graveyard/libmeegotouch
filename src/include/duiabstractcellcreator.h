@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiabstractcellcreator.h"
+#include "../corelib/widgets/duiabstractcellcreator.h"
 

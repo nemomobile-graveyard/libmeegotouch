@@ -265,8 +265,9 @@ void Ut_DuiExtensionHandle::init()
     connect(this, SIGNAL(connectionFromRunnerEstablished()), handle, SLOT(connectionEstablished()));
     connect(this, SIGNAL(widgetVisibilityChanged(bool)), handle, SLOT(visibilityEvent(bool)));
     connect(this, SIGNAL(applicationVisibilityChanged(bool)), handle, SLOT(applicationVisibilityChanged(bool)));
-    connect(this, SIGNAL(operationComplete(QString, QString, QString)), handle->privateClass(), SLOT(operationComplete(QString, QString, QString)));
-    connect(this, SIGNAL(operationProgress(QString, QString, int)), handle->privateClass(), SLOT(operationProgress(QString, QString, int)));
+    connect(this, SIGNAL(operationComplete(QString, QString, QString)), handle, SLOT(operationComplete(QString, QString, QString)));
+    connect(this, SIGNAL(operationProgress(QString, QString, int)), handle, SLOT(operationProgress(QString, QString, int)));
+
     listenForConnection = true;
     elapsedQTime = 0;
     timerCalled = false;

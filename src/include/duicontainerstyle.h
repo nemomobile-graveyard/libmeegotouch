@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duicontainerstyle.h"
+#include "../views/style/duicontainerstyle.h"
 

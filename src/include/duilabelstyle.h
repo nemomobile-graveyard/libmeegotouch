@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duilabelstyle.h"
+#include "../views/style/duilabelstyle.h"
 

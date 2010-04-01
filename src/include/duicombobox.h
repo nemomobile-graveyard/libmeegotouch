@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duicombobox.h"
+#include "../corelib/widgets/duicombobox.h"

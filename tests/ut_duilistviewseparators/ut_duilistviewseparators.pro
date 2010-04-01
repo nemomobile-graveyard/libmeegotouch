@@ -9,7 +9,7 @@ HEADERS += ut_duilistviewseparators.h \
 
 SOURCES += ut_duilistviewseparators.cpp  \
         ../duilistviewcommon/myindexedmodel.cpp \
-        ../../src/widgets/views/duilistview_p.cpp \
-        ../../src/.moc/moc_duilistview_p.cpp
+        ../../src/views/duilistview_p.cpp \
+        ../../src/views/.moc/moc_duilistview_p.cpp
 
 include(../common_bot.pri)

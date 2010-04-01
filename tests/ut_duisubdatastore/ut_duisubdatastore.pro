@@ -1,6 +1,5 @@
 include(../common_top.pri)
-TARGET = ut_duisubdatastore
-INCLUDEPATH += $$DUISRCDIR/mashup/appletcommunication $$DUISRCDIR/mashup/appletinterface  $$DUISRCDIR/mashup/mashup
+include(../common_duiextensions.pri)
 
 SOURCES += \
     ut_duisubdatastore.cpp \

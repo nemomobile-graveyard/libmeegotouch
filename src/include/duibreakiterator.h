@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../i18n/duibreakiterator.h"
+#include "../corelib/i18n/duibreakiterator.h"
 

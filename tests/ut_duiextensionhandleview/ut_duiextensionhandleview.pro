@@ -1,13 +1,11 @@
 include(../common_top.pri)
+include(../common_duiextensions.pri)
 
-TARGET = ut_duiextensionhandleview
-INCLUDEPATH += $$DUISRCDIR/applicationextension \
-    $$DUISRCDIR/mashup/appletcommunication \
-    $$DUISRCDIR/mashup/mashup \
-    $$DUISRCDIR/widgets \
-    $$DUISRCDIR/widgets/core \
-    $$DUISRCDIR/core \
-    $$DUISRCDIR/style
+INCLUDEPATH += \
+    $$DUISRCDIR/corelib/widgets \
+    $$DUISRCDIR/corelib/widgets/core \
+    $$DUISRCDIR/corelib/core \
+    $$DUISRCDIR/corelib/style
 
 DUIGEN_OUTDIR = .
 duigenerator_model.name = duigenerator model
@@ -28,22 +26,23 @@ duigenerator_style.CONFIG = target_predeps no_link
 duigenerator_style.variable_out = GENERATED_SOURCES
 QMAKE_EXTRA_COMPILERS += duigenerator_model duigenerator_style
 
-MODEL_HEADERS += $$DUISRCDIR/widgets/duiwidgetmodel.h \
-    $$DUISRCDIR/applicationextension/duiextensionhandlemodel.h
+MODEL_HEADERS += $$DUISRCDIR/corelib/widgets/duiwidgetmodel.h \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandlemodel.h
 
-STYLE_HEADERS += $$DUISRCDIR/style/duiextensionhandlestyle.h
+STYLE_HEADERS += $$DUISRCDIR/extensions/style/duiextensionhandlestyle.h
 
 SOURCES += ut_duiextensionhandleview.cpp \
-           $$DUISRCDIR/applicationextension/duiextensionhandleview.cpp \
-           $$DUISRCDIR/widgets/duiwidgetmodel.cpp \
-           ../stubs/stubbase.cpp
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandleview.cpp \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel.cpp \
+    dummy.cpp \
+    ../stubs/stubbase.cpp
 
 HEADERS += ut_duiextensionhandleview.h \
-           $$DUISRCDIR/applicationextension/duiextensionhandleview.h \
-           $$DUISRCDIR/applicationextension/duiextensionhandle.h \
-           $$DUISRCDIR/applicationextension/duiextensionhandlemodel.h \
-           $$DUISRCDIR/widgets/duiwidgetmodel_p.h \
-           $$DUISRCDIR/widgets/core/duiwidgetview_p.h \
-           $$DUISRCDIR/style/duiextensionhandlestyle.h
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandleview.h \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandle.h \
+    $$DUISRCDIR/extensions/applicationextension/duiextensionhandlemodel.h \
+    $$DUISRCDIR/corelib/widgets/duiwidgetmodel_p.h \
+    $$DUISRCDIR/corelib/widgets/core/duiwidgetview_p.h \
+    $$DUISRCDIR/extensions/style/duiextensionhandlestyle.h
 
 include(../common_bot.pri)

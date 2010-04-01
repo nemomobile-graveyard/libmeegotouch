@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../mashup/mashup/duidatastore.h"
+#include "../corelib/core/duidatastore.h"

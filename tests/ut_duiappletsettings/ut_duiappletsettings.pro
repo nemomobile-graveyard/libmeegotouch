@@ -1,12 +1,11 @@
 include(../common_top.pri)
-TARGET = ut_duiappletsettings
-INCLUDEPATH += $$DUISRCDIR/mashup/mashup
+include(../common_duiextensions.pri)
 
 QT += xml
 
 SOURCES += \
     ut_duiappletsettings.cpp \
-    $$DUISRCDIR/mashup/mashup/duiappletsettings.cpp
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletsettings.cpp
 
 # service classes
 SOURCES += \
@@ -14,7 +13,7 @@ SOURCES += \
 
 HEADERS += \
     ut_duiappletsettings.h \
-    $$DUISRCDIR/mashup/mashup/duiappletsettings.h \
-    $$DUISRCDIR/mashup/mashup/duiappletid.h
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletsettings.h \
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletid.h
 
 include(../common_bot.pri)

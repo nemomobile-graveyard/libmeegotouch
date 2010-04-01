@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiscenewindowmodel.h"
+#include "../corelib/widgets/duiscenewindowmodel.h"
 

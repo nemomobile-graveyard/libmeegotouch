@@ -1,9 +1,9 @@
 include(../common_top.pri)
 TARGET = ut_duiremoteaction
-INCLUDEPATH += $$DUISRCDIR/core
+INCLUDEPATH += $$DUISRCDIR/corelib/core
 
 TEST_SOURCES = \
-    $$DUISRCDIR/core/duiremoteaction.cpp \
+    $$DUISRCDIR/corelib/core/duiremoteaction.cpp \
 
 # unit test and unit
 SOURCES += \
@@ -17,7 +17,7 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_duiremoteaction.h \
-    $$DUISRCDIR/core/duiaction.h \
-    $$DUISRCDIR/core/duiremoteaction.h
+    $$DUISRCDIR/corelib/core/duiaction.h \
+    $$DUISRCDIR/corelib/core/duiremoteaction.h
 
 include(../common_bot.pri)

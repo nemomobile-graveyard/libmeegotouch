@@ -11,6 +11,6 @@ HEADERS += \
     $$STUBSDIR/duiwidgetview_stub.h \
     ut_duicompleter.h \
 
-INCLUDEPATH += $$DUISRCDIR/widgets/
+INCLUDEPATH += $$DUISRCDIR/corelib/widgets/
 
 include(../common_bot.pri)

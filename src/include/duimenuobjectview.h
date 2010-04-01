@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duimenuobjectview.h"
+#include "../views/duimenuobjectview.h"
 

@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += $$DUISRCDIR/theme
+INCLUDEPATH += $$DUISRCDIR/corelib/theme
 
 TARGET = ut_duishareddata
 

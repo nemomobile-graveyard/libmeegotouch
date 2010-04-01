@@ -32,7 +32,7 @@
 #include "testwidget3.h"
 
 // include this to get theme profiling support
-//#include "../../src/theme/duitheme_p.h"
+//#include "../../src/corelib/theme/duitheme_p.h"
 
 
 Ft_DuiStyleSheet::Ft_DuiStyleSheet()

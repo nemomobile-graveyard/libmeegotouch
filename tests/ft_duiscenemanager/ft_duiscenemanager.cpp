@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include "ft_duiscenemanager.h"
-#include <scene/duiscenemanager.h>
+#include <corelib/scene/duiscenemanager.h>
 #include <QtTest>
 #include <DuiApplication>
 #include <DuiApplicationWindow>

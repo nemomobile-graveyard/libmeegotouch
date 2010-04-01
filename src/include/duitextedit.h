@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duitextedit.h"
+#include "../corelib/widgets/duitextedit.h"

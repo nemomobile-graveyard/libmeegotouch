@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duidialogmodel.h"
+#include "../corelib/widgets/duidialogmodel.h"
 

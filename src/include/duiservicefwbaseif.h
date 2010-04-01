@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../servicefwif/duiservicefwbaseif.h"
+#include "../corelib/servicefwif/duiservicefwbaseif.h"

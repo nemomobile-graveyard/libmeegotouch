@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../core/duicomponentdata.h"
+#include "../corelib/core/duicomponentdata.h"

@@ -4,17 +4,20 @@ TEMPLATE = app
 TARGET = duinotificationtool
 INCLUDEPATH += . \
     ../../src/include \
-    ../../src/notification
+    ../../src/corelib/notification
+
+
 DEPENDPATH += $$INCLUDEPATH
 win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework dui
     }
-    win32:LIBS += -L../../lib -ldui0
+    win32:LIBS += -lduicore0
 } else {
-    LIBS += ../../lib/libdui.so
+    LIBS += -lduicore
 }
+
 SOURCES += duinotificationtool.cpp
 target.path = $$DUI_INSTALL_BIN
 INSTALLS += target

@@ -15,10 +15,10 @@ win32|macx {
         LIBS += -framework \
             dui
     }
-    win32:LIBS += -L../../lib \
-        -ldui0
+    win32:LIBS += -lduicore0
 }
-else:LIBS += ../../lib/libdui.so
+else:LIBS += -lduicore
+
 TEMPLATE = app
 TARGET = lifecycle
 target.path = /usr/bin

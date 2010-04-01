@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duipopuplist.h"
+#include "../corelib/widgets/duipopuplist.h"

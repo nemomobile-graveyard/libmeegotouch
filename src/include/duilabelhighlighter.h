@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duilabelhighlighter.h"
+#include "../corelib/widgets/duilabelhighlighter.h"

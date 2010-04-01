@@ -1,17 +1,16 @@
 include(../common_top.pri)
-TARGET = ut_duiextensionarea
+include(../common_duiextensions.pri)
+
 INCLUDEPATH += \
-    $$DUISRCDIR/applicationextension \
-    $$DUISRCDIR/mashup/mashup \
-    $$DUISRCDIR/widgets \
-    $$DUISRCDIR/style
+    $$DUISRCDIR/corelib/widgets \
+    $$DUISRCDIR/corelib/style
 
 # unit test and unit classes
 SOURCES += \
     ut_duiextensionarea.cpp \
-    $$DUISRCDIR/applicationextension/duiextensionarea.cpp \
-    $$DUISRCDIR/widgets/core/duiwidgetcontroller.cpp \
-    $$DUISRCDIR/widgets/core/duiwidget.cpp 
+    $$DUISRCDIR/extensions/applicationextension/duiextensionarea.cpp \
+    $$DUISRCDIR/corelib/widgets/core/duiwidgetcontroller.cpp \
+    $$DUISRCDIR/corelib/widgets/core/duiwidget.cpp
 
 # service classes
 SOURCES += \
@@ -20,12 +19,12 @@ SOURCES += \
 # unit test and unit classes
 HEADERS += \
    ut_duiextensionarea.h \
-   $$DUISRCDIR/applicationextension/duiextensionarea.h \
-   $$DUISRCDIR/mashup/mashup/duiappletinstancemanager.h \
-   $$DUISRCDIR/mashup/mashup/duiappletid.h \
-   $$DUISRCDIR/widgets/core/duiwidgetcontroller_p.h \
-   $$DUISRCDIR/widgets/core/duiwidget_p.h \
-   $$DUISRCDIR/widgets/duiscenewindow_p.h \
-   $$DUISRCDIR/widgets/duiobjectmenu.h
+   $$DUISRCDIR/extensions/applicationextension/duiextensionarea.h \
+   $$DUISRCDIR/extensions/mashup/mashup/duiappletinstancemanager.h \
+   $$DUISRCDIR/extensions/mashup/mashup/duiappletid.h \
+   $$DUISRCDIR/corelib/widgets/core/duiwidgetcontroller_p.h \
+   $$DUISRCDIR/corelib/widgets/core/duiwidget_p.h \
+   $$DUISRCDIR/corelib/widgets/duiscenewindow_p.h \
+   $$DUISRCDIR/corelib/widgets/duiobjectmenu.h
 
 include(../common_bot.pri)

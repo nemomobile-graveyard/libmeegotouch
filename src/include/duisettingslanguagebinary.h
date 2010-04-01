@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../settingslanguage/duisettingslanguagebinary.h"
+#include "../settings/settingslanguage/duisettingslanguagebinary.h"

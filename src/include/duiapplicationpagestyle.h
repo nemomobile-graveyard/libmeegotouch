@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duiapplicationpagestyle.h"
+#include "../views/style/duiapplicationpagestyle.h"
 

@@ -5,14 +5,14 @@ LIBRARYPATH += $$DUISRCDIR
 
 SOURCES += \
 	ft_duistylesheetparser.cpp \
-    ../../src/theme/duilogicalvalues.cpp \
-    ../../src/style/duistylesheetattribute.cpp
+    ../../src/corelib/theme/duilogicalvalues.cpp \
+    ../../src/corelib/style/duistylesheetattribute.cpp
 
 
 HEADERS += \
 	ft_duistylesheetparser.h \
-	../../src/theme/duilogicalvalues.h \
-	../../src/style/duistylesheetattribute.h
+	../../src/corelib/theme/duilogicalvalues.h \
+	../../src/corelib/style/duistylesheetattribute.h
 
 support_files.files += \
         *.css \

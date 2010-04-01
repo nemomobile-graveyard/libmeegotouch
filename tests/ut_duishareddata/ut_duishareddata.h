@@ -23,7 +23,7 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
-#include <core/duishareddata.h>
+#include <corelib/core/duishareddata.h>
 
 Q_DECLARE_METATYPE(DuiSharedData *);
 

@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../mashup/appletinstallation/duiappletinstantiator.h"
+#include "../extensions/mashup/appletinstallation/duiappletinstantiator.h"

@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include <DuiWidget>
-#include "../../src/widgets/views/duilistview_p.h"
+#include "../../src/views/duilistview_p.h"
 #include "duilistmodel.h"
 #include "duiseparator.h"
 #include "myindexedmodel.h"

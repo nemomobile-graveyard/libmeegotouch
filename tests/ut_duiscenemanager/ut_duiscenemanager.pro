@@ -1,5 +1,9 @@
 include(../common_top.pri)
-INCLUDEPATH += $$DUISRCDIR/scene $$DUISRCDIR/widgets $$DUISRCDIR/style $$DUISRCDIR/events
+INCLUDEPATH += \
+    $$DUISRCDIR/corelib/scene \
+    $$DUISRCDIR/corelib/widgets \
+    $$DUISRCDIR/corelib/style \
+    $$DUISRCDIR/corelib/events
 
 TARGET = ut_duiscenemanager
 

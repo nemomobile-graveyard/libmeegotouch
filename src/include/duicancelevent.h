@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../events/duicancelevent.h"
+#include "../corelib/events/duicancelevent.h"

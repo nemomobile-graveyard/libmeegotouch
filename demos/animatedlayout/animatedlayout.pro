@@ -18,9 +18,9 @@ win32|macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework dui
     }
-    win32:LIBS += -L../../lib -ldui0
+    win32:LIBS += -ldui0
 } else {
-    LIBS += ../../lib/libdui.so
+    LIBS += -lduicore
 }
 
 TEMPLATE = app

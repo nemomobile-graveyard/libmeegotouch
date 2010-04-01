@@ -1,6 +1,5 @@
 include(../common_top.pri)
-TARGET = ut_duiappletobjectmenurequestmessage
-INCLUDEPATH += $$DUISRCDIR/mashup/appletcommunication $$DUISRCDIR/mashup/appletinterface  $$DUISRCDIR/mashup/mashup
+include(../common_duiextensions.pri)
 
 # unit test and unit classes
 SOURCES += \

@@ -1,11 +1,7 @@
 include(../common_top.pri)
+include(../common_duiextensions.pri)
 
-TARGET = ut_duiapplicationextensionrunner
-
-INCLUDEPATH += $$DUISRCDIR/applicationextension \
-    $$DUISRCDIR/mashup/appletcommunication \
-    $$DUISRCDIR/mashup/mashup \
-    ../../duiapplicationextensionrunner
+INCLUDEPATH += ../../duiapplicationextensionrunner
 
 QT += network xml
 

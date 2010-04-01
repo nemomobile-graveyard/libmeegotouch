@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../core/duiapplicationifproxy.h"
+#include "../corelib/core/duiapplicationifproxy.h"

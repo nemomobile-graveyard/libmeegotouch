@@ -5,3 +5,5 @@ TARGET = pt_duislider
 
 SOURCES += pt_duislider.cpp
 HEADERS += pt_duislider.h
+
+LIBS += -lduiviews

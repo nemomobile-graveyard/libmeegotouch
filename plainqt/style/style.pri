@@ -1,5 +1,4 @@
-INCLUDEPATH+=../../src/style
-#../../src/widgets
+INCLUDEPATH+=../../src/views/style
 
 PUBLIC_HEADERS += \
   qtmaemo6style.h

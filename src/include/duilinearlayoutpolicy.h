@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../layout/duilinearlayoutpolicy.h"
+#include "../corelib/layout/duilinearlayoutpolicy.h"

@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/views/duicontainerview.h"
+#include "../views/duicontainerview.h"
 

@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../notification/duinotification.h"
+#include "../corelib/notification/duinotification.h"

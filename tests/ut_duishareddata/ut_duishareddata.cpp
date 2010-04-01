@@ -20,7 +20,6 @@
 #include <stdlib.h>
 #include <time.h>
 #include <QObject>
-#include "core/duishareddata.h"
 #include "ut_duishareddata.h"
 
 void Ut_DuiSharedData::init()

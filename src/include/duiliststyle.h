@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duiliststyle.h"
+#include "../views/style/duiliststyle.h"
 

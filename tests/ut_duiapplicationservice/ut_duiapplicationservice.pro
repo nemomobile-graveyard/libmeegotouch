@@ -1,11 +1,11 @@
 include(../common_top.pri)
-INCLUDEPATH += $$DUISRCDIR/core
+INCLUDEPATH += $$DUISRCDIR/corelib/core
 TARGET = ut_duiapplicationservice
 
 # unit test and unit
 SOURCES = \
     ut_duiapplicationservice.cpp \
-    $$DUISRCDIR/core/duiapplicationservice.cpp \
+    $$DUISRCDIR/corelib/core/duiapplicationservice.cpp \
 
 # unit test and unit
 HEADERS += \

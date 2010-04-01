@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../notification/duinotificationgroup.h"
+#include "../corelib/notification/duinotificationgroup.h"
 

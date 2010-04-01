@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duipositionindicatorstyle.h"
+#include "../views/style/duipositionindicatorstyle.h"
 

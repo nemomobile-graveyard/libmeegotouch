@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../mashup/appletinterface/duiappletinterface.h"
+#include "../extensions/mashup/appletinterface/duiappletinterface.h"

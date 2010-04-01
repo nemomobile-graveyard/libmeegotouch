@@ -22,7 +22,7 @@
 #include <DuiComponentData>
 #include <DuiSceneManager>
 #include "duiondisplaychangeevent.h"
-#include "widgets/duiwindow_p.h"
+#include "corelib/widgets/duiwindow_p.h"
 
 #include "ut_duiwindow.h"
 

@@ -3,7 +3,7 @@ include(../common_top.pri)
 TARGET = ut_duisettings
 
 TEST_SOURCES = \
-#    $$DUISRCDIR/duisettings.cpp \
+#    $$DUISRCDIR/settings.cpp \
 
 # unit test and unit
 SOURCES += \
@@ -20,7 +20,7 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_duisettings.h \
-#    $$DUISRCDIR/duisettings.h \
+#    $$DUISRCDIR/settings.h \
 
 # base classes
 HEADERS += \

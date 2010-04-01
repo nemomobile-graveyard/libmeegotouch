@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duitoolbar.h"
+#include "../corelib/widgets/duitoolbar.h"
 

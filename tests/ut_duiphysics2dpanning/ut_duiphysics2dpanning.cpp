@@ -23,7 +23,7 @@
 #include <QMetaType>
 #include <QDebug>
 #include <duiphysics2dpanning.h>
-#include "../../src/widgets/duiphysics2dpanning_p.h"
+#include "../../src/corelib/widgets/duiphysics2dpanning_p.h"
 #include <duiapplication.h>
 #include <duipannablewidget.h>
 

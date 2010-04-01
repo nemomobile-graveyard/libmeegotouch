@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiwidgetrecycler.h"
+#include "../corelib/widgets/duiwidgetrecycler.h"

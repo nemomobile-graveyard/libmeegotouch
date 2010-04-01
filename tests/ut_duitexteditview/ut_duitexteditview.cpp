@@ -33,8 +33,8 @@
 #include <duitextedit.h>
 #include <duitexteditview.h>
 
-#include "../../src/widgets/duitextedit_p.h"
-#include "../../src/widgets/views/duitexteditview_p.h"
+#include "../../src/corelib/widgets/duitextedit_p.h"
+#include "../../src/views/duitexteditview_p.h"
 
 void Ut_DuiTextEditView::initTestCase()
 {

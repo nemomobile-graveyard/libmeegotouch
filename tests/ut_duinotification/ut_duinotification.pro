@@ -1,11 +1,11 @@
 include(../common_top.pri)
 TARGET = ut_duinotification
-INCLUDEPATH += $$DUISRCDIR/notification
+INCLUDEPATH += $$DUISRCDIR/corelib/notification
 
 # unit test and unit
 SOURCES += \
     ut_duinotification.cpp \
-    $$DUISRCDIR/notification/duinotification.cpp
+    $$DUISRCDIR/corelib/notification/duinotification.cpp
 
 # service classes
 SOURCES += \
@@ -14,10 +14,10 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_duinotification.h \
-    $$DUISRCDIR/notification/duinotification.h \
-    $$DUISRCDIR/notification/duinotificationmanager.h \
-    $$DUISRCDIR/notification/duinotificationmanagerproxy.h \
-    $$DUISRCDIR/core/duiremoteaction.h \
-    $$DUISRCDIR/core/duiaction.h
+    $$DUISRCDIR/corelib/notification/duinotification.h \
+    $$DUISRCDIR/corelib/notification/duinotificationmanager.h \
+    $$DUISRCDIR/corelib/notification/duinotificationmanagerproxy.h \
+    $$DUISRCDIR/corelib/core/duiremoteaction.h \
+    $$DUISRCDIR/corelib/core/duiaction.h
 
 include(../common_bot.pri)

@@ -20,10 +20,9 @@ win32|macx {
 	        QMAKE_LFLAGS += -F$$DUILIB
 	        LIBS += -framework dui
 	     }
-        win32:LIBS += -L$$DUILIB -ldui0
+        win32:LIBS += -lduicore0
 } else {
-    LIBS += $$DUILIB/libdui.so
-
+    LIBS += -lduicore
 }
 					    
 

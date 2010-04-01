@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../core/duiremoteaction.h"
+#include "../corelib/core/duiremoteaction.h"
 

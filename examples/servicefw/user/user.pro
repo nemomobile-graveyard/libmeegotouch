@@ -30,8 +30,7 @@ SOURCES    = \
     echowindow.cpp \
     main.cpp \
 
-LIBS += \
-    ../../../lib/libdui.so \
+LIBS += -lduicore
 
 QT += dbus
 LIBS += \

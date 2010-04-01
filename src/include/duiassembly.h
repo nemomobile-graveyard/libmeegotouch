@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../core/duiassembly.h"
+#include "../corelib/core/duiassembly.h"
 

@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../core/duigconfitem.h"
+#include "../corelib/core/duigconfitem.h"

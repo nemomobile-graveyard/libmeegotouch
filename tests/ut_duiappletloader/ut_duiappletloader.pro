@@ -1,12 +1,8 @@
 include(../common_top.pri)
-TARGET = ut_duiappletloader
-
-INCLUDEPATH += \
-    $$DUISRCDIR/mashup/mashup \
-    $$DUISRCDIR/mashup/appletinterface
+include(../common_duiextensions.pri)
 
 TEST_SOURCES = \
-    $$DUISRCDIR/mashup/mashup/duiappletloader.cpp
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletloader.cpp
 
 # unit test and unit
 SOURCES += \
@@ -16,6 +12,6 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_duiappletloader.h \
-    $$DUISRCDIR/mashup/mashup/duiappletloader.h
+    $$DUISRCDIR/extensions/mashup/mashup/duiappletloader.h
 
 include(../common_bot.pri)

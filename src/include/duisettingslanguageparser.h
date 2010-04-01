@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../settingslanguage/duisettingslanguageparser.h"
+#include "../settings/settingslanguage/duisettingslanguageparser.h"

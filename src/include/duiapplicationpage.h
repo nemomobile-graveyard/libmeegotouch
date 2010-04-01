@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duiapplicationpage.h"
+#include "../corelib/widgets/duiapplicationpage.h"
 

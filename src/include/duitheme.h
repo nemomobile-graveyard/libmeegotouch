@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../theme/duitheme.h"
+#include "../corelib/theme/duitheme.h"

@@ -15,10 +15,14 @@ win32|macx {
         LIBS += -framework \
             dui
     }
-    win32:LIBS += -L../../lib \
-        -ldui0
+    win32:LIBS += -lduicore0
 }
-else:LIBS += ../../lib/libdui.so
+else:LIBS += \
+    -lduicore \
+    -lduiviews \
+    -lduisettings \
+    -lduiextensions \
+
 TEMPLATE = app
 TARGET = applicationextensiondemo
 target.path = $$DUI_INSTALL_BIN

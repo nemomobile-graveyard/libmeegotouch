@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += $$DUISRCDIR/style
+INCLUDEPATH += $$DUISRCDIR/corelib/style
 TARGET = ut_duiinfobanner
 
 # unit

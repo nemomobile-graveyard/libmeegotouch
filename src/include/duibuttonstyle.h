@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duibuttonstyle.h"
+#include "../views/style/duibuttonstyle.h"
 

@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../style/duipopupliststyle.h"
+#include "../views/style/duipopupliststyle.h"
 

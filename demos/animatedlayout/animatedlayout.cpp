@@ -64,7 +64,7 @@
 ****************************************************************************/
 
 #include <QtGui>
-#include "../../src/core/duiexport.h"
+#include "../../src/corelib/core/duiexport.h"
 #include <DuiApplication>
 #include <DuiImageWidget>
 #include <DuiScene>

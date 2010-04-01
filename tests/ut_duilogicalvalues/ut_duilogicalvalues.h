@@ -21,7 +21,7 @@
 #define UT_DUILOGICALVALUES_H
 
 #include <QObject>
-#include "../../src/theme/duilogicalvalues.h"
+#include "../../src/corelib/theme/duilogicalvalues.h"
 
 class Ut_DuiLogicalValues : public QObject
 {

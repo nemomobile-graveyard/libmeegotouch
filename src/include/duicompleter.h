@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duicompleter.h"
+#include "../corelib/widgets/duicompleter.h"

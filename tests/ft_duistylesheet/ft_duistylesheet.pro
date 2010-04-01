@@ -25,8 +25,8 @@ STYLE_HEADERS += testobjectstyle.h testobject2style.h testobject3style.h
 
 SOURCES += \
 	ft_duistylesheet.cpp \
-    ../../src/theme/duilogicalvalues.cpp \
-    ../../src/style/duistylesheetattribute.cpp
+    ../../src/corelib/theme/duilogicalvalues.cpp \
+    ../../src/corelib/style/duistylesheetattribute.cpp
 
 HEADERS += \
 	ft_duistylesheet.h \
@@ -36,8 +36,8 @@ HEADERS += \
     testwidget.h \
     testwidget2.h \
     testwidget3.h \
-    ../../src/theme/duilogicalvalues.h \
-    ../../src/style/duistylesheetattribute.h
+    ../../src/corelib/theme/duilogicalvalues.h \
+    ../../src/corelib/style/duistylesheetattribute.h
 
 support_files.files += \
         *.css

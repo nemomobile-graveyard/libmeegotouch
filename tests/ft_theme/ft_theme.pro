@@ -14,6 +14,6 @@ HEADERS += \
     testthemedaemon.h \
     testview.h \
     testview2.h \
-    $$DUISRCDIR/theme/iduithemedaemon.h
+    $$DUISRCDIR/corelib/theme/iduithemedaemon.h
 
 include(../common_bot.pri)

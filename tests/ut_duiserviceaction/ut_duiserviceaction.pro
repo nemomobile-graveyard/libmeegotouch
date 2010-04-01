@@ -1,11 +1,11 @@
 include(../common_top.pri)
 TARGET = ut_duiserviceaction
 
-INCLUDEPATH += $$DUISRCDIR/service
-INCLUDEPATH += $$DUISRCDIR/core
+INCLUDEPATH += $$DUISRCDIR/corelib/service
+INCLUDEPATH += $$DUISRCDIR/corelib/core
 
 TEST_SOURCES = \
-    $$DUISRCDIR/service/duiserviceaction.cpp
+    $$DUISRCDIR/corelib/service/duiserviceaction.cpp
 
 # unit test and unit
 SOURCES += \
@@ -19,8 +19,8 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_duiserviceaction.h \
-    $$DUISRCDIR/core/duiaction.h \
-    $$DUISRCDIR/service/duiserviceaction.h \
-    $$DUISRCDIR/service/duiserviceinvoker.h
+    $$DUISRCDIR/corelib/core/duiaction.h \
+    $$DUISRCDIR/corelib/service/duiserviceaction.h \
+    $$DUISRCDIR/corelib/service/duiserviceinvoker.h
 
 include(../common_bot.pri)

@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../widgets/duimessageboxmodel.h"
+#include "../corelib/widgets/duimessageboxmodel.h"
 
