@@ -72,6 +72,7 @@ public:
         StatusBar = 8000                             // MStatusBar
     };
 
+    // TODO: remove!
     enum InputPanelPlacement {
         North,
         South,
@@ -96,7 +97,8 @@ public:
     bool onApplicationPage(QGraphicsItem *item);
     MSceneWindow *parentSceneWindow(QGraphicsItem *item);
     InputPanelPlacement inputPanelPlacement(const QRect &inputPanelRect);
-    void moveSceneWindow(MSceneWindow *window, const QPoint &translation);
+    void moveSceneWindowUp(MSceneWindow *window, int adjustment, int visibleHeight);
+    int scrollPageContents(MSceneWindow *window, int adjustment) const;
 
     bool validateSceneWindowPreAppearanceStatus(MSceneWindow *sceneWindow);
 

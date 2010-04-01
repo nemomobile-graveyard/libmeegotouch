@@ -46,6 +46,7 @@
 #include "mwindow.h"
 #include "mapplicationwindow.h"
 #include "mapplicationwindow_p.h"
+#include "mpannableviewport.h"
 
 #include "minputmethodstate.h"
 
@@ -376,36 +377,33 @@ void MSceneManagerPrivate::_q_onSceneWindowDisappeared()
 void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanelRect)
 {
     Q_Q(MSceneManager);
-    if (focusedInputWidget) {
-        const QRect mappedInputPanelRect(rootElement->mapRectFromScene(inputPanelRect).toRect());
-        QRect widgetRect;
-        QVariant result = q->scene()->inputMethodQuery(Qt::ImMicroFocus);
-        if (result.isValid())
-            widgetRect = rootElement->mapRectFromScene(result.toRect()).toRect();
-        else
-            widgetRect = focusedInputWidget->mapRectToItem(rootElement, focusedInputWidget->boundingRect()).toRect();
-        if (widgetRect.intersects(mappedInputPanelRect)) {
-            const QRect intersection(widgetRect.intersected(mappedInputPanelRect));
-            const InputPanelPlacement panelPlacement(inputPanelPlacement(mappedInputPanelRect));
-            alteredSceneWindow = parentSceneWindow(focusedInputWidget);
-            if (alteredSceneWindow) {
-                QPoint newTranslation;
-                switch (panelPlacement) {
-                case North:
-                    newTranslation.ry() += mappedInputPanelRect.bottomLeft().y() -
-                                           intersection.topLeft().y() + KeyboardSpacing;
-                    break;
-                case South:
-                    newTranslation.ry() += intersection.bottomLeft().y() -
-                                           mappedInputPanelRect.topLeft().y() + KeyboardSpacing;
-                    newTranslation.ry() *= -1;
-                    break;
-                default:;
-                }
-                sceneWindowTranslation = QPoint();
-                moveSceneWindow(alteredSceneWindow, newTranslation);
-            }
-        }
+
+    // This method is not responsible for restoring visibility when the input panel is closed -
+    // _q_inputPanelClosed() does that. Therefore, it is OK to also ignore empty rectangles here.
+    if (!focusedInputWidget || inputPanelRect.isEmpty()) {
+        return;
+    }
+
+    const QRect mappedInputPanelRect(rootElement->mapRectFromScene(inputPanelRect).toRect());
+    QRect widgetRect;
+    QVariant result = q->scene()->inputMethodQuery(Qt::ImMicroFocus);
+    if (result.isValid())
+        widgetRect = rootElement->mapRectFromScene(result.toRect()).toRect();
+    else
+        widgetRect = focusedInputWidget->mapRectToItem(rootElement,
+                                                       focusedInputWidget->boundingRect()).toRect();
+
+    const QRect intersection(widgetRect.intersected(mappedInputPanelRect));
+    if (!intersection.isEmpty()) {
+        int adjustment(intersection.bottomLeft().y() - mappedInputPanelRect.topLeft().y() +
+                       KeyboardSpacing);
+
+        // Find the first scene window parent of the focused input widget, since only those should
+        // be scrolled or moved in this context. The altered scene window is moved back to its
+        // original location, although - if it has pannable contents - it is not scrolled back.
+        MSceneWindow *newParent = parentSceneWindow(focusedInputWidget);
+        adjustment -= scrollPageContents(newParent, adjustment);
+        moveSceneWindowUp(newParent, adjustment, mappedInputPanelRect.height());
     }
 }
 
@@ -663,11 +661,49 @@ MSceneManagerPrivate::InputPanelPlacement MSceneManagerPrivate::inputPanelPlacem
     return placement;
 }
 
-void MSceneManagerPrivate::moveSceneWindow(MSceneWindow *window, const QPoint &translation)
+int MSceneManagerPrivate::scrollPageContents(MSceneWindow *window, int adjustment) const
 {
-    if (window) {
-        window->moveBy(translation.x(), translation.y());
-        sceneWindowTranslation += translation;
+    // TODO: find out at which amount this logic breaks - see NB #162913
+
+    Q_Q(const MSceneManager);
+    MApplicationPage *page = qobject_cast<MApplicationPage *>(window);
+
+    if (!page) {
+        // Nothing was scrolled.
+        return 0;
+    }
+
+    // newAdjustment stores by how much the page's contents were scrolled.
+    // It's > 0 when scrolling down, and < 0 when scrolling up.
+    int newAdjustment(0);
+    MPannableViewport *viewport(page->pannableViewport());
+
+    // Need to find out whether there is enough scrollable contents for the requested amount:
+    const int height = viewport->range().height() - viewport->position().y();
+
+    if (height <= q->visibleSceneSize().height()) {
+        // Nothing to do - page cannot be scrolled any further.
+    } else if (adjustment >= 0) {
+        newAdjustment = qMin(adjustment, height);
+    } else if (-adjustment >= viewport->position().y()) {
+        newAdjustment = -(viewport->position().y());
+    } else { // qAbs(amount) \in [0, viewport->position()]
+        newAdjustment = adjustment;
+    }
+
+    viewport->setPosition(QPoint(0, (newAdjustment + viewport->position().y())));
+    return newAdjustment;
+}
+
+void MSceneManagerPrivate::moveSceneWindowUp(MSceneWindow *window, int adjustment,
+                                               int inputPanelHeight)
+{    
+    if (window && adjustment > 0) {
+        const int newAdjustment = qMin(inputPanelHeight + sceneWindowTranslation.y(), adjustment);
+        window->moveBy(0, -newAdjustment);
+        sceneWindowTranslation.ry() -= newAdjustment;
+
+        alteredSceneWindow = window;
     }
 }
 
@@ -1153,11 +1189,6 @@ void MSceneManagerPrivate::_q_inputPanelOpened()
 {
     Q_Q(MSceneManager);
 
-    Q_ASSERT(focusedInputWidget);
-    if (!focusedInputWidget) {
-        return;
-    }
-
     const bool widgetOnPage = onApplicationPage(focusedInputWidget);
     if (navBar && widgetOnPage) {
         navBarHidden = true;
@@ -1168,10 +1199,18 @@ void MSceneManagerPrivate::_q_inputPanelOpened()
         q->disappearSceneWindow(escapeButtonPanel);
     }
 
-    MInputMethodState *inputMethodState = MInputMethodState::instance();
-    _q_relocateWindowByInputPanel(inputMethodState->inputMethodArea());
-    QObject::connect(inputMethodState, SIGNAL(inputMethodAreaChanged(QRect)),
-                     q, SLOT(_q_relocateWindowByInputPanel(QRect)));
+    // The scene manager should only listen to region updates from one instance, to prevent
+    // conflicting window relocation requests. Since MIMS is a singleton, enforcing
+    // Qt::UniqueConnection is sufficient.
+    QObject::connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
+                     q, SLOT(_q_relocateWindowByInputPanel(QRect)),
+                     Qt::UniqueConnection);
+
+    // Have to call the slot explicitly at least once: The focused widget can change without the
+    // MIMS sending new signals (e.g., the input field's content type stays the same).
+    // TODO: Rethink the design of MIMS to allow pending updates (so that we'll *know* wether we
+    // get a signal later or not).
+    _q_relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
 }
 
 void MSceneManagerPrivate::_q_inputPanelClosed()
@@ -1193,9 +1232,6 @@ void MSceneManagerPrivate::_q_inputPanelClosed()
         escapeButtonHidden = false;
     }
 
-    QObject::disconnect(MInputMethodState::instance(),
-                        SIGNAL(inputMethodAreaChanged(QRect)),
-                        q, SLOT(_q_relocateWindowByInputPanel(QRect)));
     _q_restoreSceneWindow();
 }
 
