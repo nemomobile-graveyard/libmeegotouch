@@ -176,7 +176,6 @@ public:
 
     MSceneWindow *alteredSceneWindow;
     QPoint sceneWindowTranslation;
-    static const int KeyboardSpacing;
 
     bool pendingSIPClose;
 

@@ -65,8 +65,6 @@
 #include <mwidgetslideoutanimation.h>
 #include <mwidgetfadeoutanimation.h>
 
-const int MSceneManagerPrivate::KeyboardSpacing = 20;
-
 namespace
 {
     //! This is a guess for the SIP close timeout since there is no general way of getting it.
