@@ -1,6 +1,6 @@
 /*
  * automatically generated with the command line :
- * /usr/bin/dui-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen3
+ * /usr/bin/dui-servicefwgen -p /home/shun/libdui/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen3
  */
 
 #include "ftduiservicefwgen3.h"
@@ -8,28 +8,29 @@
 
 void FtDuiServiceFwGen3::sayBye(  )
 {
-    static_cast<FtDuiServiceFwGen3Proxy*>(interfaceProxy)->sayBye(  );
+    static_cast<FtDuiServiceFwGen3Proxy*>(interfaceProxy())->sayBye(  );
 }
 
 bool FtDuiServiceFwGen3::sayHelloMessage( const QString &message )
 {
-    return qobject_cast<FtDuiServiceFwGen3Proxy*>(interfaceProxy)->sayHelloMessage( message ).value();
+    return qobject_cast<FtDuiServiceFwGen3Proxy*>(interfaceProxy())->sayHelloMessage( message ).value();
 }
 
 FtDuiServiceFwGen3::FtDuiServiceFwGen3( const QString& preferredService, QObject* parent )
     : DuiServiceFwBaseIf( FtDuiServiceFwGen3Proxy::staticInterfaceName(), parent )
 {
     // Resolve the provider service name
-    service = resolveServiceName( interface, preferredService );
+    QString service = resolveServiceName( interfaceName(), preferredService );
 
     bool serviceNameInvalid = service.contains( " " ); // "not provided" - when the service wouldn't run
     if ( serviceNameInvalid ) {
         service.clear();
     }
+    setServiceName( service );
 
     if (!service.isEmpty()) {
         // Construct the D-Bus proxy
-        interfaceProxy = new FtDuiServiceFwGen3Proxy( service, "/", QDBusConnection::sessionBus(), this );
+        setInterfaceProxy( new FtDuiServiceFwGen3Proxy( service, "/", QDBusConnection::sessionBus(), this ));
         // allConnectSignals go here (empty block if none)
 
     }
@@ -39,13 +40,8 @@ void FtDuiServiceFwGen3::setService(const QString & service)
 {
     if (service.isEmpty()) return;
 
-    this->service = service;
-
-    if ( interfaceProxy ) {
-        delete interfaceProxy;
-        interfaceProxy = 0;
-    }
-    interfaceProxy = new FtDuiServiceFwGen3Proxy( service, "/", QDBusConnection::sessionBus(), this );
+    setServiceName( service );
+    setInterfaceProxy( new FtDuiServiceFwGen3Proxy( service, "/", QDBusConnection::sessionBus(), this ));
     {
 
     }

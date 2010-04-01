@@ -27,6 +27,7 @@
 #include "duiservicefwproxy.h"
 
 class QDBusAbstractInterface;
+class DuiServiceFwBaseIfPrivate;
 
 //! \internal
 
@@ -72,7 +73,7 @@ public:
 
     /*!
      * \brief Returns the address of the service framework proxy
-     * \return Address of service framework proxy
+     * \return Address of the service framework proxy
      */
     virtual DuiServiceFwProxy *serviceFwProxy();
 
@@ -81,6 +82,12 @@ public:
      * \param service Name of the desired service
      */
     virtual void setService(const QString &service) = 0;
+
+    /*!
+     * \brief Returns the name of the interface
+     * \return Name of the interface
+     */
+    QString interfaceName() const;
 
 Q_SIGNALS:
     /*!
@@ -145,19 +152,50 @@ protected:
      */
     QString resolveServiceName(const QString &ifName, const QString &preferredService);
 
+    /*!
+     * \brief Return the D-Bus interface proxy
+     * \return D-Bus interface proxy
+     */
+    QDBusAbstractInterface *interfaceProxy() const;
+
+    /*!
+     * \brief Set the internally used D-Bus interface proxy
+     * \param newInterfaceProxy new interface proxy
+     *
+     * If there is an existing D-Bus interface proxy, it will be deleted before
+     * assigning this new one. Ownership is transferred to this class; it will
+     * delete it in the destructor.
+     */
+    void setInterfaceProxy(QDBusAbstractInterface *newInterfaceProxy);
+
+    /*!
+     * \brief Set the address of the service framework proxy
+     * \param newServiceFwProxy Address of the service framework proxy
+     *
+     * If there is an existing service framework proxy, it will be deleted
+     * before assigning this new one. Ownership is transferred to this class;
+     * it will delete it in the destructor.
+     */
+    void setServiceFwProxy(DuiServiceFwProxy *newServiceFwProxy);
+
+    /*!
+     * \brief Set the internally used service name
+     * \param service the new service name
+     */
+    void setServiceName(const QString &service);
+
+    /*!
+     * \brief Set the internally used interface name
+     * \param ifName new name of the interface
+     */
+    void setInterfaceName(const QString &ifName);
+
 protected:
-    // Pointer to the D-Bus interfaceProxy
-    // assigned in derived class, deleted in this class
-    QDBusAbstractInterface *interfaceProxy;
+    DuiServiceFwBaseIfPrivate * const d_ptr;
 
-    // Interface to Service Framework, owned
-    DuiServiceFwProxy *serviceFwProxyPtr;
-
-    // Name of the active service provider
-    QString service;
-
-    // Name of the interface
-    const QString interface;
+private:
+    Q_DECLARE_PRIVATE(DuiServiceFwBaseIf)
+    Q_DISABLE_COPY(DuiServiceFwBaseIf)
 
 #ifdef UNIT_TEST
     friend class Ut_DuiServiceFwBaseIf;

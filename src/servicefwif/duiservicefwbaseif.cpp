@@ -18,13 +18,13 @@
 ****************************************************************************/
 
 #include "duiservicefwbaseif.h"
+#include "duiservicefwbaseif_p.h"
 
 #include <QDBusAbstractInterface>
 #include <QDBusConnection>
 #include <DuiDebug>
 
-DuiServiceFwBaseIf::DuiServiceFwBaseIf(const QString &iface, QObject *parent) :
-    QObject(parent),
+DuiServiceFwBaseIfPrivate::DuiServiceFwBaseIfPrivate(const QString &iface) :
     interfaceProxy(0),
     serviceFwProxyPtr(new DuiServiceFwProxy(
                           "com.nokia.DuiServiceFw",
@@ -32,108 +32,164 @@ DuiServiceFwBaseIf::DuiServiceFwBaseIf(const QString &iface, QObject *parent) :
                           QDBusConnection::sessionBus()
                       )
                      ),
-    service(),
     interface(iface)
 {
-    connect(serviceFwProxyPtr, SIGNAL(serviceAvailable(QString, QString)),
+}
+
+DuiServiceFwBaseIfPrivate::~DuiServiceFwBaseIfPrivate()
+{
+    if (interfaceProxy)
+        delete interfaceProxy;
+
+    if (serviceFwProxyPtr)
+        delete serviceFwProxyPtr;
+}
+
+
+DuiServiceFwBaseIf::DuiServiceFwBaseIf(const QString &iface, QObject *parent) :
+    QObject(parent),
+    d_ptr(new DuiServiceFwBaseIfPrivate(iface))
+{
+    Q_D(const DuiServiceFwBaseIf);
+    connect(d->serviceFwProxyPtr, SIGNAL(serviceAvailable(QString, QString)),
             this, SLOT(handleServiceAvailable(QString, QString)));
 
-    connect(serviceFwProxyPtr, SIGNAL(serviceUnavailable(QString)),
+    connect(d->serviceFwProxyPtr, SIGNAL(serviceUnavailable(QString)),
             this, SLOT(handleServiceUnavailable(QString)));
 }
 
 DuiServiceFwBaseIf::~DuiServiceFwBaseIf()
 {
-    if (interfaceProxy) {
-        delete interfaceProxy;
-        interfaceProxy = 0;
-    }
-
-    if (serviceFwProxyPtr) {
-        delete serviceFwProxyPtr;
-        serviceFwProxyPtr = 0;
-    }
+    delete d_ptr;
 }
 
 bool DuiServiceFwBaseIf::isValid() const
 {
-    return (interfaceProxy != 0);
+    Q_D(const DuiServiceFwBaseIf);
+    return (d->interfaceProxy != 0);
+}
+
+QDBusAbstractInterface *DuiServiceFwBaseIf::interfaceProxy() const
+{
+    Q_D(const DuiServiceFwBaseIf);
+    return d->interfaceProxy;
+}
+
+void DuiServiceFwBaseIf::setInterfaceProxy(QDBusAbstractInterface *newInterfaceProxy)
+{
+    Q_D(DuiServiceFwBaseIf);
+    if (d->interfaceProxy) {
+        delete d->interfaceProxy;
+    }
+    d->interfaceProxy=newInterfaceProxy;
 }
 
 QStringList DuiServiceFwBaseIf::serviceNames(const QString &interface) const
 {
-    return serviceFwProxyPtr->serviceNames(interface);
+    Q_D(const DuiServiceFwBaseIf);
+    return d->serviceFwProxyPtr->serviceNames(interface);
 }
 
 QString DuiServiceFwBaseIf::serviceName() const
 {
-    return service;
+    Q_D(const DuiServiceFwBaseIf);
+    return d->service;
+}
+
+void DuiServiceFwBaseIf::setServiceName(const QString &service)
+{
+    Q_D(DuiServiceFwBaseIf);
+    d->service = service;
+}
+
+QString DuiServiceFwBaseIf::interfaceName() const
+{
+    Q_D(const DuiServiceFwBaseIf);
+    return d->interface;
+}
+
+void DuiServiceFwBaseIf::setInterfaceName(const QString &ifName)
+{
+    Q_D(DuiServiceFwBaseIf);
+    d->interface = ifName;
 }
 
 DuiServiceFwProxy *DuiServiceFwBaseIf::serviceFwProxy()
 {
-    return serviceFwProxyPtr;
+    Q_D(const DuiServiceFwBaseIf);
+    return d->serviceFwProxyPtr;
+}
+
+void DuiServiceFwBaseIf::setServiceFwProxy(DuiServiceFwProxy *newServiceFwProxy)
+{
+    Q_D(DuiServiceFwBaseIf);
+    if (d->serviceFwProxyPtr)
+        delete d->serviceFwProxyPtr;
+    d->serviceFwProxyPtr=newServiceFwProxy;
 }
 
 void DuiServiceFwBaseIf::handleServiceUnavailable(const QString &service)
 {
-    bool noCurrentService      = this->service.isEmpty();
-    bool currentServiceHasGone = (service == this->service);
+    Q_D(DuiServiceFwBaseIf);
+    bool noCurrentService      = d->service.isEmpty();
+    bool currentServiceHasGone = (service == d->service);
 
     if (noCurrentService || currentServiceHasGone) {
         // get new service for this interface
-        this->service = serviceFwProxyPtr->serviceName(this->interface);
+        d->service = d->serviceFwProxyPtr->serviceName(d->interface);
 
-        bool noMoreServicesForThisInterface = this->service.isEmpty();
+        bool noMoreServicesForThisInterface = d->service.isEmpty();
         if (noMoreServicesForThisInterface) {
             if (!noCurrentService)
                 emit serviceUnavailable(service);
         } else {
-            setService(this->service);
-            emit serviceChanged(this->service);
+            setService(d->service);
+            emit serviceChanged(d->service);
         }
     }
 }
 
 void DuiServiceFwBaseIf::handleServiceAvailable(const QString &service, const QString &interface)
 {
-    bool newServiceIsForThisInterface = (interface == this->interface);
+    Q_D(DuiServiceFwBaseIf);
+    bool newServiceIsForThisInterface = (interface == d->interface);
     if (newServiceIsForThisInterface) {
-        QString previousService = this->service;
+        QString previousService = d->service;
 
         // let service mappper choose which service to use
-        this->service = serviceFwProxyPtr->serviceName(this->interface);
+        d->service = d->serviceFwProxyPtr->serviceName(d->interface);
 
         bool interfaceWasDead = previousService.isEmpty();
         if (interfaceWasDead) {
             emit serviceAvailable(service);
         }
 
-        bool serviceHasChanged = (previousService != this->service);
+        bool serviceHasChanged = (previousService != d->service);
         if (serviceHasChanged) {
-            setService(this->service);
-            emit serviceChanged(this->service);
+            setService(d->service);
+            emit serviceChanged(d->service);
         }
     }
 }
 
 QString DuiServiceFwBaseIf::resolveServiceName(const QString &ifName, const QString &preferredService)
 {
+    Q_D(DuiServiceFwBaseIf);
     duiDebug("DuiServiceFwBaseIf") << "DuiServiceFwBaseIf::resolveServiceName( ifName=" << ifName << ", preferredService=" << preferredService << " )";
     bool noPreferredSpecified = preferredService.isEmpty();
     if (noPreferredSpecified) {
         // ask the service name from service mapper
-        if (serviceFwProxyPtr->connection().isConnected()) {
+        if (d->serviceFwProxyPtr->connection().isConnected()) {
             duiDebug("DuiServiceFwBaseIf") << "no preferred service and am connected to dbus so asking servicemapper";
-            service = serviceFwProxyPtr->serviceName(ifName);
+            d->service = d->serviceFwProxyPtr->serviceName(ifName);
         } else {
             duiDebug("DuiServiceFwBaseIf") << "no preferred service and am not connected to dbus so making I/F invalid";
-            service.clear();
+            d->service.clear();
         }
     } else {
         duiDebug("DuiServiceFwBaseIf") << "preferredService specified, so returning it";
-        service = preferredService;
+        d->service = preferredService;
     }
 
-    return service;
+    return d->service;
 }
