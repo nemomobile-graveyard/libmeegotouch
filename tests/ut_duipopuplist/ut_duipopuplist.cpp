@@ -132,6 +132,7 @@ void Ut_DuiPopupList::testSetItemIconID()
 {
     DuiPopupListViewPrivate *view = new DuiPopupListViewPrivate;
     QStandardItemModel *itemModel = new QStandardItemModel;
+    view->list = new DuiList();
     view->list->setItemModel(itemModel);
     view->list->setSelectionModel(new QItemSelectionModel(itemModel));
 

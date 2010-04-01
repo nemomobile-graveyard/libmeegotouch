@@ -47,6 +47,7 @@ public:
     QGraphicsLinearLayout    *layout;
     DuiContentItem *contentItem;
     DuiPopupList   *popuplist;
+    QPixmap *pixmap;
 };
 
 #endif

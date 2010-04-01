@@ -40,11 +40,9 @@ private slots:
 
     void setContent();
     void testCurrentIndex();
-
-private:
-    // disabled because of race conditions with DuiTheme daemon
     void testSetItemIconID();
 
+private:
     DuiPopupList *m_popuplist;
     QStringListModel m_model;
     QStringList m_stringList;

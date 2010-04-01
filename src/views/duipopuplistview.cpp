@@ -54,7 +54,7 @@ void DuiPopupListViewPrivate::updateCell(const QModelIndex& index, DuiWidget * c
     DuiPopupListItem* item = static_cast<DuiPopupListItem*>(cell);
 
     QString title;
-    QPixmap pixmap;
+    QPixmap* pixmap;
     QVariant value;
 
     value = list->itemModel()->data(index, Qt::DisplayRole);
@@ -62,11 +62,15 @@ void DuiPopupListViewPrivate::updateCell(const QModelIndex& index, DuiWidget * c
         title = value.toString();
 
     value = list->itemModel()->data(index, Qt::DecorationRole);
-    if (value != QVariant())
-        pixmap = *DuiTheme::pixmap(value.toString());
+    if (value != QVariant()) {
+        // TODO: Use DuiTheme::pixmap() when DuiContentItem starts to support
+        //       pixmaps that are loaded asynchronously
+        pixmap = DuiTheme::pixmapCopy(value.toString());
+    }
 
     item->setTitle(title);
-    item->setPixmap(pixmap);
+    item->setPixmap(pixmap ? *pixmap : QPixmap());
+    delete pixmap;
 
     if (list->selectionModel()->isSelected(index))
         item->setSelected(true);

@@ -36,7 +36,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 DuiComboBoxViewPrivate::DuiComboBoxViewPrivate()
-    : q_ptr(0), controller(0), contentItem(0), popuplist(0)
+    : q_ptr(0), controller(0), contentItem(0), popuplist(0), pixmap(0)
 {
 }
 
@@ -44,6 +44,7 @@ DuiComboBoxViewPrivate::~DuiComboBoxViewPrivate()
 {
     delete contentItem;
     delete popuplist;
+    delete pixmap;
 }
 
 void DuiComboBoxViewPrivate::init()
@@ -84,10 +85,16 @@ void DuiComboBoxViewPrivate::initLayout()
         layout->addItem(contentItem);
         updateSubtitle(controller->currentIndex());
         contentItem->setTitle(controller->title());
-        if (newStyle == DuiContentItem::IconAndTwoTextLabels)
-            contentItem->setPixmap(*DuiTheme::pixmap(controller->iconID()));
 
         QObject::connect(contentItem, SIGNAL(clicked()), controller, SLOT(click()));
+    }
+
+    if (newStyle == DuiContentItem::IconAndTwoTextLabels) {
+        // TODO: Use DuiTheme::pixmap() when DuiContentItem starts to support
+        //       pixmaps that are loaded asynchronously
+        if (!pixmap)
+            pixmap = DuiTheme::pixmapCopy(controller->iconID());
+        contentItem->setPixmap(*pixmap);
     }
 }
 
@@ -166,7 +173,11 @@ void DuiComboBoxView::updateData(const QList<const char *>& modifications)
     DuiWidgetView::updateData(modifications);
 
     foreach(const char* member, modifications) {
-        if (member == DuiComboBoxModel::IconID || member == DuiComboBoxModel::IconVisible) {
+        if (member == DuiComboBoxModel::IconID) {
+            delete d->pixmap;
+            d->pixmap = NULL;
+            d->initLayout();
+        } else if (member == DuiComboBoxModel::IconVisible) {
             d->initLayout();
         } else if (member == DuiComboBoxModel::Title) {
             d->contentItem->setTitle(model()->title());
