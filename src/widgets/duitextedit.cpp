@@ -765,7 +765,6 @@ void DuiTextEdit::setSelection(int start, int length, bool useBoundaries)
     if (begin == currentCursor->anchor() && end == currentCursor->position()) {
         return;
     }
-    updateMicroFocus();
 
     // make an actual selection
     currentCursor->setPosition(begin);
@@ -787,6 +786,8 @@ void DuiTextEdit::setSelection(int start, int length, bool useBoundaries)
     }
 
     model()->updateCursor();
+
+    updateMicroFocus();
 
     emit selectionChanged();
 
