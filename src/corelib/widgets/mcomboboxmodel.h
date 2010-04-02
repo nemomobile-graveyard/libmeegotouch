@@ -57,6 +57,13 @@ class M_EXPORT MComboBoxModel : public MWidgetModel
     M_MODEL_PROPERTY(QString, title, Title, true, QString())
 
     /*!
+        \property MComboBoxModel::progressIndicatorVisible
+        \brief Boolean value that defines whether a progress indicator is visible or not.
+        If the progress indicator is visible, a subtitle is hidden.
+    */
+    M_MODEL_PROPERTY(bool, progressIndicatorVisible, ProgressIndicatorVisible, true, false)
+
+    /*!
         \property MComboBoxModel::itemModel
         \brief QAbstractItemModel which used by MComboBox
     */

@@ -94,6 +94,12 @@ class M_EXPORT MComboBox : public MWidgetController
     Q_PROPERTY(QString title READ title WRITE setTitle)
 
     /*!
+        \property MComboBox::progressIndicatorVisible
+        \brief See MComboBoxModel::progressIndicatorVisible
+    */
+    Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible )
+
+    /*!
         \property MComboBox::itemModel  QAbstractItemModel which used by MComboBox
     */
     Q_PROPERTY(QAbstractItemModel *itemModel READ itemModel WRITE setItemModel)
@@ -168,6 +174,11 @@ public:
         \brief Returns the title of comboBox
     */
     QString title() const;
+
+    /*!
+        \brief Returns true if progress indicator is visible
+    */
+    bool isProgressIndicatorVisible() const;
 
     /**
         \brief Adds an item to the combobox with the given \a text.
@@ -300,6 +311,24 @@ public Q_SLOTS:
         \brief Set comboBox title
     */
     void setTitle(const QString &title);
+
+    /*!
+      \brief shows\hides progress indicator
+    */
+    void setProgressIndicatorVisible(bool visible);
+
+    /*!
+      \brief shows progress indicator
+    */
+    inline void showProgressIndicator() {
+        setProgressIndicatorVisible(true);
+    }
+    /*!
+      \brief hides progress indicator
+    */
+    inline void hideProgressIndicator() {
+        setProgressIndicatorVisible(false);
+    }
 
     /**
         \brief Set current index

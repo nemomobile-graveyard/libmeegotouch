@@ -30,6 +30,7 @@
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
 #include <QStringList>
+#include <QTimer>
 
 ComboBoxPage::ComboBoxPage()
     : model1(0),
@@ -78,8 +79,25 @@ void ComboBoxPage::createContent()
 
     comboBox2->setItemModel(proxyModel);
 
+    comboBox3 = new MComboBox;
+    comboBox3->setIconID("Icon-music");
+    comboBox3->setTitle("Time-consuming setting");
+    comboBox3->addItem("Setting 1");
+    comboBox3->addItem("Setting 2");
+    comboBox3->addItem("Setting 3");
+    comboBox3->addItem("Setting 4");
+    comboBox3->addItem("Setting 5");
+
+    QTimer* timer = new QTimer(this);
+    timer->setSingleShot(true);
+    timer->setInterval(3000);
+    QObject::connect(comboBox3, SIGNAL(currentIndexChanged(int)), comboBox3, SLOT(showProgressIndicator()));
+    QObject::connect(comboBox3, SIGNAL(currentIndexChanged(int)), timer, SLOT(start()));
+    QObject::connect(timer, SIGNAL(timeout()), comboBox3, SLOT(hideProgressIndicator()));
+
     containerPolicy->addItem(comboBox1);
     containerPolicy->addItem(comboBox2);
+    containerPolicy->addItem(comboBox3);
 
     retranslateUi();
 }
@@ -94,6 +112,8 @@ void ComboBoxPage::retranslateUi()
     comboBox1->setTitle(qtTrId("xx_popup_generic_title"));
     //% "Sort - DescendingOrder"
     comboBox2->setTitle(qtTrId("xx_popup_sort_descending_order"));
+    //% "Time-consuming setting"
+    comboBox3->setTitle(qtTrId("xx_popup_time_consuming"));
 
     //% "The MComboBox widget is a combined button and popup list. "
     //% "It is very similar to QComboBox, but does not allow editing the text."

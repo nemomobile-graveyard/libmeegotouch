@@ -36,7 +36,7 @@
 #include <QGraphicsSceneMouseEvent>
 
 MComboBoxViewPrivate::MComboBoxViewPrivate()
-    : q_ptr(0), controller(0), contentItem(0), popuplist(0), pixmap(0)
+    : q_ptr(0), controller(0), contentItem(0), popuplist(0), pixmap(0), progressIndicator(0)
 {
 }
 
@@ -45,6 +45,7 @@ MComboBoxViewPrivate::~MComboBoxViewPrivate()
     delete contentItem;
     delete popuplist;
     delete pixmap;
+    delete progressIndicator;
 }
 
 void MComboBoxViewPrivate::init()
@@ -56,7 +57,7 @@ void MComboBoxViewPrivate::init()
     layout->setSpacing(0);
     controller->setLayout(layout);
 
-    contentItem = new MContentItem(MContentItem::TwoTextLabels);
+    contentItem = new MContentItem(MContentItem::TwoIconsTwoWidgets);
     layout->addItem(contentItem);
     updateSubtitle(controller->currentIndex());
 
@@ -69,10 +70,12 @@ void MComboBoxViewPrivate::initLayout()
 {
     Q_Q(MComboBoxView);
 
-    MContentItem::ContentItemStyle newStyle;;
+    MContentItem::ContentItemStyle newStyle;
 
     if (controller->isIconVisible() && !controller->iconID().isEmpty())
-        newStyle = MContentItem::IconAndTwoTextLabels;
+        newStyle = MContentItem::TwoIconsTwoWidgets;
+    else if (controller->isProgressIndicatorVisible())
+        newStyle = MContentItem::TwoIconsTwoWidgets;
     else
         newStyle = MContentItem::TwoTextLabels;
 
@@ -89,12 +92,29 @@ void MComboBoxViewPrivate::initLayout()
         QObject::connect(contentItem, SIGNAL(clicked()), controller, SLOT(click()));
     }
 
-    if (newStyle == MContentItem::IconAndTwoTextLabels) {
+    if (controller->isIconVisible() && !controller->iconID().isEmpty()) {
         // TODO: Use MTheme::pixmap() when MContentItem starts to support
         //       pixmaps that are loaded asynchronously
         if (!pixmap)
             pixmap = MTheme::pixmapCopy(controller->iconID());
         contentItem->setPixmap(*pixmap);
+    }
+
+    if (controller->isProgressIndicatorVisible()) {
+        if (!progressIndicator) {
+            progressIndicator = new MProgressIndicator;
+            progressIndicator->setViewType(MProgressIndicator::spinnerType);
+            progressIndicator->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
+            progressIndicator->setUnknownDuration(true);
+        }
+        else {
+            progressIndicator->setVisible(true);
+        }
+        contentItem->setAdditionalItem(progressIndicator);
+    } else {
+        if (progressIndicator)
+            progressIndicator->setVisible(false);
+        contentItem->setAdditionalItem(NULL);
     }
 }
 
@@ -177,7 +197,9 @@ void MComboBoxView::updateData(const QList<const char *>& modifications)
             delete d->pixmap;
             d->pixmap = NULL;
             d->initLayout();
-        } else if (member == MComboBoxModel::IconVisible) {
+        } else if (member == MComboBoxModel::IconVisible ||
+                   member == MComboBoxModel::ProgressIndicatorVisible)
+        {
             d->initLayout();
         } else if (member == MComboBoxModel::Title) {
             d->contentItem->setTitle(model()->title());

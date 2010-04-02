@@ -24,6 +24,7 @@ class QGraphicsLinearLayout;
 class MComboBox;
 class MContentItem;
 class MPopupList;
+class MProgressIndicator;
 
 class MComboBoxViewPrivate
 {
@@ -48,6 +49,7 @@ public:
     MContentItem *contentItem;
     MPopupList   *popuplist;
     QPixmap *pixmap;
+    MProgressIndicator *progressIndicator;
 };
 
 #endif

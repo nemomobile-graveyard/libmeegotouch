@@ -183,6 +183,11 @@ QString MComboBox::title() const
     return model()->title();
 }
 
+bool MComboBox::isProgressIndicatorVisible() const
+{
+    return model()->progressIndicatorVisible();
+}
+
 void MComboBox::addItem(const QString &text)
 {
     insertItem(count(), text);
@@ -349,6 +354,11 @@ void MComboBox::setIconVisible(bool visible)
 void MComboBox::setTitle(const QString &title)
 {
     model()->setTitle(title);
+}
+
+void MComboBox::setProgressIndicatorVisible(bool enable)
+{
+    model()->setProgressIndicatorVisible(enable);
 }
 
 void MComboBox::setCurrentIndex(int index)

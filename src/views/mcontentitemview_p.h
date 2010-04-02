@@ -52,6 +52,7 @@ public:
 
     void initLayout(MContentItem::ContentItemStyle style);
     void clearLayout();
+    void initTwoIconsTwoWidgetsLayout();
 
     void applyStyle();
 

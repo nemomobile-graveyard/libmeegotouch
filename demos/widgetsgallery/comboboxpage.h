@@ -46,6 +46,7 @@ protected:
 private:
     MComboBox  *comboBox1;
     MComboBox  *comboBox2;
+    MComboBox  *comboBox3;
 
     QStringListModel *model1;
     QSortFilterProxyModel *proxyModel;

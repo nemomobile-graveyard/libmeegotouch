@@ -31,7 +31,6 @@ M_REGISTER_WIDGET(MContentItem)
 
 MContentItemPrivate::MContentItemPrivate():
     MWidgetControllerPrivate(),
-    additionalItem(0),
     smallItem(0)
 {
 }
@@ -159,23 +158,20 @@ QImage MContentItem::optionalImage() const
 
 void MContentItem::setAdditionalItem(MWidget* widget)
 {
-    Q_D(MContentItem);
-    d->additionalItem = widget;
+    model()->setAdditionalItem(widget);
 }
 
 MWidget* MContentItem::additionalItem() const
 {
-    Q_D(const MContentItem);
-    return d->additionalItem;
+    return model()->additionalItem();
 }
 
 void MContentItem::enableProgressBar()
 {
-    Q_D(MContentItem);
     MProgressIndicator* progressIndicator = new MProgressIndicator;
     progressIndicator->setViewType(MProgressIndicator::barType);
     progressIndicator->setSizePolicy(QSizePolicy::MinimumExpanding,QSizePolicy::Expanding);
-    d->additionalItem = progressIndicator;
+    model()->setAdditionalItem(progressIndicator);
 }
 
 void MContentItem::setSmallItem(MWidget* widget)

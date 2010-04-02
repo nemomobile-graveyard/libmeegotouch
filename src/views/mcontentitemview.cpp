@@ -16,7 +16,6 @@
 ** of this file.
 **
 ****************************************************************************/
-
 #include <MScalableImage>
 #include <MImageWidget>
 #include <MLabel>
@@ -217,36 +216,42 @@ void MContentItemViewPrivate::initLayout(MContentItem::ContentItemStyle style)
         break;
 
     case MContentItem::TwoIconsTwoWidgets:
-
-        layout->addItem( image(), 0,0, 2,1, Qt::AlignCenter );
-        image()->setVisible(true);
-        image()->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
-
-        layout->addItem( title(), 0,1, Qt::AlignLeft );
-
-        // first free widget or subtitle
-        int columnSpan = 1;
-        if( !controller->smallItem() )
-            columnSpan = 2;
-        if( controller->additionalItem() ) {
-            layout->addItem( controller->additionalItem(), 1,1, 1,columnSpan, Qt::AlignLeft );
-            subtitle()->setVisible( false );
-        } else
-            layout->addItem( subtitle(), 1,1, 1,columnSpan, Qt::AlignLeft );
-
-        layout->addItem( optionalImage(), 0,2, Qt::AlignRight );
-        optionalImage()->setVisible(true);
-
-        if( controller->smallItem() )
-            layout->addItem( controller->smallItem(), 1,2, Qt::AlignRight );
-
+        initTwoIconsTwoWidgetsLayout();
         break;
     };
 }
 
+void MContentItemViewPrivate::initTwoIconsTwoWidgetsLayout()
+{
+    layout->addItem( image(), 0,0, 2,1, Qt::AlignCenter );
+    image()->setVisible(true);
+    image()->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
+
+    layout->addItem( title(), 0,1, Qt::AlignLeft );
+
+    // first free widget or subtitle
+    int columnSpan = 1;
+    if( !controller->smallItem() )
+        columnSpan = 2;
+
+    if( controller->additionalItem() ) {
+        layout->addItem( controller->additionalItem(), 1,1, 1,columnSpan, Qt::AlignLeft );
+        subtitle()->setVisible(false);
+    } else {
+        layout->addItem( subtitle(), 1,1, 1,columnSpan, Qt::AlignLeft );
+        subtitle()->setVisible(true);
+    }
+
+    layout->addItem( optionalImage(), 0,2, Qt::AlignRight );
+    optionalImage()->setVisible(true);
+
+    if( controller->smallItem() )
+        layout->addItem( controller->smallItem(), 1,2, Qt::AlignRight );
+}
+
 void MContentItemViewPrivate::clearLayout()
 {
-    for (int i = 0; i < layout->count(); i++)
+    for (int i = layout->count(); i>0; i--)
         layout->removeAt(0);
 }
 
@@ -346,6 +351,11 @@ void MContentItemView::updateData(const QList<const char *> &modifications)
             d->setOptionalImage(model()->optionalImage());
         } else if(member == MContentItemModel::ItemImage) {
             d->setImage(model()->itemImage());
+        } else if(member == MContentItemModel::AdditionalItem) {
+            if (d->configuredStyle == MContentItem::TwoIconsTwoWidgets) {
+                d->clearLayout();
+                d->initTwoIconsTwoWidgetsLayout();
+            }
         }
     }
 }

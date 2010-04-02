@@ -34,7 +34,6 @@ public:
     QImage image;
     QPixmap optionalPixmap;
     QImage optionalImage;
-    MWidget* additionalItem;
     MWidget* smallItem;
 };
 

@@ -94,6 +94,13 @@ public:
      \brief Contains optional icon on the right-hand side
      */
     M_MODEL_PROPERTY(QImage, optionalImage, OptionalImage, false, QImage()) 
+
+    /*!
+        \property MContentItemModel::additionalItem
+        \brief MWidget as e.g. progress bar, visible below the title.
+         In case there is already a subtitle it will be replaced.
+    */
+    M_MODEL_PTR_PROPERTY(MWidget*, additionalItem, AdditionalItem, true, NULL)
 };
 
 #endif

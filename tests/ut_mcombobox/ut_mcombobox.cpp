@@ -210,7 +210,7 @@ void Ut_MComboBox::testIconVisibility()
 
     m_combobox->setIconID("Icon-music");
     view->updateData(QList<const char *>() << MComboBoxModel::IconID);
-    QCOMPARE(viewPrivate->contentItem->itemStyle(), MContentItem::IconAndTwoTextLabels);
+    QCOMPARE(viewPrivate->contentItem->itemStyle(), MContentItem::TwoIconsTwoWidgets);
     QVERIFY(!viewPrivate->contentItem->pixmap().isNull());
 
     m_combobox->setIconVisible(false);
@@ -221,7 +221,7 @@ void Ut_MComboBox::testIconVisibility()
 
     m_combobox->setIconVisible(true);
     view->updateData(QList<const char *>() << MComboBoxModel::IconVisible);
-    QCOMPARE(viewPrivate->contentItem->itemStyle(), MContentItem::IconAndTwoTextLabels);
+    QCOMPARE(viewPrivate->contentItem->itemStyle(), MContentItem::TwoIconsTwoWidgets);
     QVERIFY(!viewPrivate->contentItem->pixmap().isNull());
 }
 
