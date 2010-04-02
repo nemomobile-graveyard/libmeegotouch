@@ -267,11 +267,25 @@ void DuiButtonView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     style()->pressFeedback().play();
 }
 
-void DuiButtonView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+void DuiButtonView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(DuiButtonView);
 
-    Q_UNUSED(event);
+    QPointF touch = event->scenePos();
+    QRectF rect = d->controller->sceneBoundingRect();
+    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
+                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+
+    bool pressed = rect.contains(touch);
+
+    if ( pressed != model()->down()) {
+        model()->setDown(pressed);
+    }
+}
+
+void DuiButtonView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_D(DuiButtonView);
 
     if (!model()->down()) {
         return;

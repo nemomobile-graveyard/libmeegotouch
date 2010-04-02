@@ -22,6 +22,8 @@
 #include "duiwidgetview.h"
 #include "duilabelhighlighter.h"
 
+#include <QGraphicsSceneContextMenuEvent>
+
 //#include "duilabelview.h"
 
 #include "duiwidgetcreator.h"
@@ -70,6 +72,7 @@ void DuiLabel::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 //    const DuiLabel *t = (const DuiLabel *) this;
 //    DuiLabelView *labelView = (DuiLabelView *)(t->view());
 //    labelView->longPressEvent(event);
+    event->ignore();
 }
 
 void DuiLabel::setText(const QString &text)

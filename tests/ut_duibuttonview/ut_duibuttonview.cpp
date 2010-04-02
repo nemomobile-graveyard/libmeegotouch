@@ -240,6 +240,16 @@ void Ut_DuiButtonView::testMouseEvents()
     m_subject->cancelEvent(&event);
     QVERIFY(m_button->isDown() == false);
     m_subject->cancelEvent(&event);
+
+    //move
+    m_subject->mousePressEvent(&pressEvent);
+   
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setScenePos(QPointF(300,300));
+    
+    m_subject->mouseMoveEvent(&moveEvent);
+    QVERIFY(m_button->isDown() == false);
+    m_subject->mouseReleaseEvent(&releaseEvent);
 }
 
 void Ut_DuiButtonView::testSwitchView()
