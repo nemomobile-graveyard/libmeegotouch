@@ -87,15 +87,14 @@ DUIGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/duicompletermodel.h \
     $$WIDGETS_SRC_DIR/duicontentitemmodel.h \
 
+PUBLIC_HEADERS += \
+    $$DUIGEN_MODEL_HEADERS \
 
 PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/duiobjectmenu.h \
     $$WIDGETS_SRC_DIR/duipannableviewportlayout.h \
     $$WIDGETS_SRC_DIR/duicontentitem_p.h \
     $$WIDGETS_SRC_DIR/duibuttongroup_p.h \
-
-HEADERS += \
-    $$DUIGEN_MODEL_HEADERS \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/duiwidgetmodel.cpp \

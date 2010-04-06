@@ -4,19 +4,22 @@
 ############################################################################### 
 THEME_SRC_DIR=./theme
 INCLUDEPATH+=./theme
-HEADERS += $$THEME_SRC_DIR/duitheme.h \
+PUBLIC_HEADERS += \
+    $$THEME_SRC_DIR/duitheme.h \
+    $$THEME_SRC_DIR/duidefaultfonts.h \
+    $$THEME_SRC_DIR/duipalette.h \
+
+PRIVATE_HEADERS += \
     $$THEME_SRC_DIR/duiimagedirectory.h \
-    $$THEME_SRC_DIR/duicommonpixmaps.h \
     $$THEME_SRC_DIR/duithemedaemonclient.h \
     $$THEME_SRC_DIR/duiremotethemedaemon.h \
     $$THEME_SRC_DIR/duilocalthemedaemon.h \
-    $$THEME_SRC_DIR/duidefaultfonts.h \
     $$THEME_SRC_DIR/duilogicalvalues.h \
-    $$THEME_SRC_DIR/duipalette.h \
     $$THEME_SRC_DIR/duithemedaemon.h \
     $$THEME_SRC_DIR/iduithemedaemon.h \
     $$THEME_SRC_DIR/duithemedaemonprotocol.h \
     $$THEME_SRC_DIR/duithemeresourcemanager.h \
+    $$THEME_SRC_DIR/duicommonpixmaps.h \
 
 SOURCES += $$THEME_SRC_DIR/duitheme.cpp \
     $$THEME_SRC_DIR/duiimagedirectory.cpp \

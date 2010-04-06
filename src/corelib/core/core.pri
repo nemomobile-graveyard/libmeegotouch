@@ -5,39 +5,44 @@
 ###############################################################################
 CORE_SRC_DIR=./core
 INCLUDEPATH+=./core
-HEADERS += \
+PUBLIC_HEADERS += \
     $$CORE_SRC_DIR/duiapplication.h \
     $$CORE_SRC_DIR/duiaction.h \
     $$CORE_SRC_DIR/duiassembly.h \
-    $$CORE_SRC_DIR/duiassembly_p.h \
     $$CORE_SRC_DIR/duicomponentdata.h \
     $$CORE_SRC_DIR/duilibrary.h \
     $$CORE_SRC_DIR/duiwidgetaction.h \
     $$CORE_SRC_DIR/duidesktopentry.h \
-    $$CORE_SRC_DIR/duidesktopentry_p.h \
     $$CORE_SRC_DIR/duinamespace.h \
     $$CORE_SRC_DIR/duiexport.h \
     $$CORE_SRC_DIR/duiclassfactory.h \
-    $$CORE_SRC_DIR/duicpumonitor.h \
     $$CORE_SRC_DIR/duishareddata.h \
     $$CORE_SRC_DIR/duigconfitem.h \
     $$CORE_SRC_DIR/duitimestamp.h \
     $$CORE_SRC_DIR/duiinputmethodstate.h \
-    $$CORE_SRC_DIR/duiinputmethodstate_p.h \
     $$CORE_SRC_DIR/duidebug.h \
     $$CORE_SRC_DIR/duidataaccess.h \
     $$CORE_SRC_DIR/duidatastore.h \
     $$CORE_SRC_DIR/duifiledatastore.h \
+
+PRIVATE_HEADERS += \
+    $$CORE_SRC_DIR/duiassembly_p.h \
+    $$CORE_SRC_DIR/duidesktopentry_p.h \
+    $$CORE_SRC_DIR/duiinputmethodstate_p.h \
+    $$CORE_SRC_DIR/duicpumonitor.h \
     $$CORE_SRC_DIR/duifiledatastore_p.h \
 
 contains(DEFINES, HAVE_DBUS) {
-  HEADERS += \
-    $$CORE_SRC_DIR/duiapplicationservice.h \
-    $$CORE_SRC_DIR/duiapplicationservice_p.h \
-    $$CORE_SRC_DIR/duiapplicationifadaptor.h \
-    $$CORE_SRC_DIR/duiapplicationifproxy.h \
-    $$CORE_SRC_DIR/duiremoteaction.h \
-    $$CORE_SRC_DIR/duidbusservicewaiter_p.h \
+    PUBLIC_HEADERS += \
+        $$CORE_SRC_DIR/duiapplicationservice.h \
+        $$CORE_SRC_DIR/duiapplicationifadaptor.h \
+        $$CORE_SRC_DIR/duiapplicationifproxy.h \
+        $$CORE_SRC_DIR/duiremoteaction.h \
+
+    PRIVATE_HEADERS += \
+        $$CORE_SRC_DIR/duiapplicationservice_p.h \
+        $$CORE_SRC_DIR/duidbusservicewaiter_p.h \
+
 }
 
 SOURCES += \
