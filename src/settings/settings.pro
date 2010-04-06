@@ -1,6 +1,7 @@
 include( ../common_top.pri )
 
 TARGET = duisettings
+QT += xml
 
 INCLUDEPATH += \
     ../include \
