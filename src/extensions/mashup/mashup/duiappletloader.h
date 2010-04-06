@@ -36,7 +36,7 @@ class DUI_EXPORT DuiAppletLoader
 public:
     /*!
      * Loads an applet according to an applet metadata object.
-     * The ownership of the returned applet widget is transfered to the caller.
+     * The ownership of the returned applet widget is transferred to the caller.
      * \param metadata the metadata that is used to load the applet.
      * \param dataStore a data store object where applet instances can store their instance specific data.
      * \param settings a data store object that bundles applet settings to the applet.

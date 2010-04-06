@@ -55,7 +55,7 @@ public:
      * happens and \c false is returned.
      * \param key the key to be changed.
      * \param value the new value.
-     * \return \c true if setting was succesful, \c false otherwise
+     * \return \c true if setting was successful, \c false otherwise
      */
     virtual bool setValue(const QString &key, const QVariant &value) = 0;
 
