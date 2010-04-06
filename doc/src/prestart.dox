@@ -4,7 +4,8 @@ Prestarting and lazy shutdown reduces the start-up time of an
 application to zero: the application is able to show its GUI
 immediately when requested. DUI supports prestarting and lazy shutdown
 of application services, that is, applications that are started by
-calling the \c launch() method in their DBus interface.
+calling \c launch() or some other application-specific method in their
+DBus interface.
 
 Prestarted applications are started to a special \b prestarted \b
 state by a daemon called \b Applifed. In that state they are running
@@ -113,25 +114,26 @@ The application can react to launching by connecting to the \c
 DuiApplication::prestartReleased() signal, or by overriding
 DuiApplication::releasePrestart() handler. The default handler shows
 the active application window of a single-window application, if there
-is such a thing. For multiwindow applications the default handler does
-nothing.
+is such a thing.
+
+For multiwindow applications the default handler does nothing. They
+must explicitely release the application from the prestarted by
+calling \c DuiApplication::setPrestarted(false) and show the window
+after that.
 
 
 \section lazyshutdown Returning to the prestarted state
 
-Application returns from the running state to the prestarted state if
-its prestarted mode is set to \c Dui::LazyShutdown and user taps the
-close (or back) button which closes the last window of the
-application, and the event is not ignored in the \c closeEvent
-handler.
+An application returns from the running state to the prestarted state
+if its prestarted mode is set to \c Dui::LazyShutdown or \c
+Dui::LazyShutdownMultiWindow and its last window is closed.
 
 The application can react to restoring the prestarted state by
 connecting to the \c DuiApplication::prestartRestored() signal, or by
-overriding the \c DuiApplication::restorePrestart() event handler. The
-default event handler hides the active application window.
+overriding the \c DuiApplication::restorePrestart() event handler.
 
 
-\section automaticprestart Lazy shutdown and automatic prestarting
+\section automaticprestart Prestarting during boot and enabling lazy shutdown
 
 In order to enable lazy shutdown of the application or make the
 application prestartable during device boot, \c -prestart must be
@@ -181,21 +183,53 @@ Multiwindow applications can be prestarted by using
 LazyShutdownMultiWindow and TerminateOnCloseMultiWindow modes. The
 difference to the single-window applications is that no window is
 shown by default when the launch() method is called from the DBus
-interface. The window to be shown must be shown in the slot or handler
-executed when application is released from the prestarted state.
+interface. The window should be shown by the code that handles the
+DBus call, and the code should release the application from the
+prestarted state before that. See the following example.
 
-A multiwindow application enters the prestarted state when its windows
-are closed.
+\code
+void MultiWindowApplication::activateWindow(int index)
+{
+    // This is the real handler for DBus method activateWindow(int)
 
-\section windowclose Controlling window closing
+    index--;
+    if (index >= 0 && index < NUM_WINDOWS)  {
+
+        // Force release from prestart if in prestarted state.
+        // This is important.
+        if (isPrestarted()) {
+            setPrestarted(false);
+        }
+
+        // Show the desired window
+        m_window[index]->show();
+        m_window[index]->activateWindow();
+        m_window[index]->raise();
+
+        // Show the page and activate it
+        m_mainPage[index]->appear();
+        m_mainPage[index]->activateWidgets();
+    }
+}
+\endcode
+
+A multiwindow application enters the prestarted state when all its
+windows are closed. Cleaning up the closed windows can be done, for
+instance, on the closeEvent handler of each window, or on restoring
+the prestarted state when all windows are closed.
+
+
+\section windowclose Controlling window closing on lazy shutdown
 
 The default behavior on window close varies depending on the prestart
-mode. On LazyShutdown and LazyShutdownMultiWindow windows are
-hidden. On TerminateOnClose and TerminateOnCloseMultWindow windows are
-really closed, just like when application has not been prestarted.
+mode. On LazyShutdown and LazyShutdownMultiWindow windows are hidden
+by default. On TerminateOnClose and TerminateOnCloseMultWindow windows
+are really closed, just like when application has not been prestarted.
 
-Closing behavior can be altered by overriding the closeEvent handler
-of the window. This is demonstrated by the following example.
+The default closing behavior can changed by overriding the closeEvent
+handler of the window and using \c
+DuiWindow::setCloseOnLazyShutdown. This is demonstrated in the
+following example.
 
 \code
 #include <DuiApplication>
