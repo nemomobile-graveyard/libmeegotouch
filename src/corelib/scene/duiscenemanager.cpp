@@ -433,6 +433,11 @@ DuiSceneLayerEffect *DuiSceneManagerPrivate::createLayerEffectForWindow(DuiScene
     effect->setParentItem(rootElement);
     effect->setZValue(zForWindowType(window->windowType()));
 
+    // window could have been added to another scene manually beforehand
+    // remove it in that case, to avoid Qt's assert
+    if (window->scene() && window->scene() != scene)
+        window->scene()->removeItem(window);
+
     // Add window as child of the effect
     window->setParentItem(effect);
 
@@ -776,6 +781,11 @@ void DuiSceneManagerPrivate::prepareWindowShow(DuiSceneWindow *window)
     if (effect) {
         effect->enableEffect();
     } else {
+        // window could have been added to another scene manually beforehand
+        // remove it in that case, to avoid Qt's assert
+        if (window->scene() && window->scene() != scene)
+            window->scene()->removeItem(window);
+
         //add window to scene if not already there
         if (scene->items().indexOf(window) == -1) {
             window->setParentItem(rootElement);
