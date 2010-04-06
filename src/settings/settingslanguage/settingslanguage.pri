@@ -1,7 +1,7 @@
 DUIGEN_STYLE_HEADERS += \
     settingslanguage/duisettingslanguagesettingsfactorystyle.h
 
-HEADERS += \
+PUBLIC_HEADERS += \
     $$DUIGEN_STYLE_HEADERS \
     settingslanguage/duisettingslanguageparser.h \
     settingslanguage/duisettingslanguagebinary.h \

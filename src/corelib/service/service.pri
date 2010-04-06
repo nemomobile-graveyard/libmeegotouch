@@ -1,9 +1,12 @@
 SERVICE_SRC_DIR = ./service
 INCLUDEPATH += ./service
-HEADERS += \
+
+PUBLIC_HEADERS += \
     $$SERVICE_SRC_DIR/duiserviceaction.h \
     $$SERVICE_SRC_DIR/duiserviceinvoker.h \
-    $$SERVICE_SRC_DIR/duiserviceaction_p.h
+
+PRIVATE_HEADERS += \
+    $$SERVICE_SRC_DIR/duiserviceaction_p.h \
 
 SOURCES += \
     $$SERVICE_SRC_DIR/duiserviceaction.cpp \

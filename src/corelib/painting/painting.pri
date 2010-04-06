@@ -4,7 +4,8 @@
 ############################################################################### 
 PAINTING_SRC_DIR=./painting
 INCLUDEPATH+=./painting
-HEADERS += \
+
+PUBLIC_HEADERS += \
     $$PAINTING_SRC_DIR/duigles2renderer.h \
     $$PAINTING_SRC_DIR/duiscalableimage.h
 

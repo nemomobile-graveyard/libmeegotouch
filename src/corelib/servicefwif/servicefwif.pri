@@ -5,10 +5,12 @@
 ############################################################################### 
 SERVICEFWIF_SRC_DIR=./servicefwif
 INCLUDEPATH+=./servicefwif/include
-HEADERS += \
+PUBLIC_HEADERS += \
     $$SERVICEFWIF_SRC_DIR/duiservicefwbaseif.h \
-    $$SERVICEFWIF_SRC_DIR/duiservicefwbaseif_p.h \
     $$SERVICEFWIF_SRC_DIR/include/duiservicefwproxy.h \
+
+PRIVATE_HEADERS += \
+    $$SERVICEFWIF_SRC_DIR/duiservicefwbaseif_p.h \
 
 SOURCES += \
     $$SERVICEFWIF_SRC_DIR/duiservicefwbaseif.cpp \

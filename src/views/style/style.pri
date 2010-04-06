@@ -44,5 +44,5 @@ DUIGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/duicontainerheaderstyle.h \
     $$STYLE_SRC_DIR/duicontentitemstyle.h \
 
-HEADERS += \
+PRIVATE_HEADERS += \
     $$DUIGEN_STYLE_HEADERS \

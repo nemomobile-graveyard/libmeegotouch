@@ -1,16 +1,12 @@
 EXTENSION_DIR=./applicationextension
 
-HEADERS += \
+PUBLIC_HEADERS += \
     $$EXTENSION_DIR/duiextensionarea.h \
-    $$EXTENSION_DIR/duiextensionarea_p.h \
     $$EXTENSION_DIR/duiextensionareamodel.h \
     $$EXTENSION_DIR/duiextensionareaview.h \
-    $$EXTENSION_DIR/duiextensionareaview_p.h \
     $$EXTENSION_DIR/duiapplicationextensionareamodel.h \
     $$EXTENSION_DIR/duiapplicationextensionareaview.h \
-    $$EXTENSION_DIR/duiapplicationextensionareaview_p.h \
     $$EXTENSION_DIR/duiapplicationextensionarea.h \
-    $$EXTENSION_DIR/duiapplicationextensionarea_p.h \
     $$EXTENSION_DIR/duiapplicationextensionmanager.h \
     $$EXTENSION_DIR/duiapplicationextensioninterface.h \
     $$EXTENSION_DIR/duiapplicationextensionloader.h \
@@ -18,11 +14,19 @@ HEADERS += \
     $$EXTENSION_DIR/duiextensionrunner.h \
     $$EXTENSION_DIR/duiextensionhandlemodel.h \
     $$EXTENSION_DIR/duiextensionhandle.h \
-    $$EXTENSION_DIR/duiextensionhandle_p.h \
     $$EXTENSION_DIR/duiextensionhandleview.h \
-    $$EXTENSION_DIR/duiextensionhandleview_p.h \
     $$EXTENSION_DIR/duiapplicationextensionhandleview.h \
+
+
+PRIVATE_HEADERS += \
+    $$EXTENSION_DIR/duiextensionarea_p.h \
+    $$EXTENSION_DIR/duiextensionareaview_p.h \
+    $$EXTENSION_DIR/duiapplicationextensionareaview_p.h \
+    $$EXTENSION_DIR/duiapplicationextensionarea_p.h \
+    $$EXTENSION_DIR/duiextensionhandle_p.h \
+    $$EXTENSION_DIR/duiextensionhandleview_p.h \
     $$EXTENSION_DIR/duiapplicationextensionhandleview_p.h
+
 
 SOURCES += $$EXTENSION_DIR/duiextensionarea.cpp \
     $$EXTENSION_DIR/duiapplicationextensionarea.cpp \
@@ -37,8 +41,10 @@ SOURCES += $$EXTENSION_DIR/duiextensionarea.cpp \
     $$EXTENSION_DIR/duiextensionhandleview.cpp \
     $$EXTENSION_DIR/duiapplicationextensionhandleview.cpp
 
+
 DUIGEN_MODEL_HEADERS += $$EXTENSION_DIR/duiextensionareamodel.h \
     $$EXTENSION_DIR/duiapplicationextensionareamodel.h \
     $$EXTENSION_DIR/duiextensionhandlemodel.h
 
-HEADERS += $$DUIGEN_MODEL_HEADERS
+
+PUBLIC_HEADERS += $$DUIGEN_MODEL_HEADERS

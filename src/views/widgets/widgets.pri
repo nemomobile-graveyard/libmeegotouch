@@ -8,10 +8,8 @@ DUIGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/duiapplicationmenubuttonmodel.h \
 
 PRIVATE_HEADERS += \
-    $$WIDGETS_SRC_DIR/duicontainerheader_p.h \
-
-HEADERS += \
     $$DUIGEN_MODEL_HEADERS \
+    $$WIDGETS_SRC_DIR/duicontainerheader_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/duiapplicationmenubutton.cpp \

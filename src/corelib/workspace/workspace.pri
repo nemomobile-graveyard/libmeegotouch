@@ -5,7 +5,9 @@
 ############################################################################### 
 WORKSPACE_SRC_DIR=./workspace
 INCLUDEPATH+=./workspace
-HEADERS += $$WORKSPACE_SRC_DIR/duideviceprofile.h
+
+PUBLIC_HEADERS += $$WORKSPACE_SRC_DIR/duideviceprofile.h
+
 SOURCES += $$WORKSPACE_SRC_DIR/duideviceprofile.cpp
 
 devices.CONFIG += no_check_exist

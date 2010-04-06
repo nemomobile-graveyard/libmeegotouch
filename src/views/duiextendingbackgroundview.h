@@ -22,7 +22,7 @@
 
 #include <DuiWidgetView>
 #include <DuiWidgetModel>
-#include <DuiExtendingBackgroundStyle>
+#include "duiextendingbackgroundstyle.h"
 
 class DuiExtendingBackgroundViewPrivate;
 

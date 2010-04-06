@@ -5,15 +5,13 @@
 
 ANIMATIONS_CORE_SRC_DIR=./animation/core
 
-#public
-HEADERS += \
+PUBLIC_HEADERS += \
     $$ANIMATIONS_CORE_SRC_DIR/duianimation.h \
     $$ANIMATIONS_CORE_SRC_DIR/duigroupanimation.h \
     $$ANIMATIONS_CORE_SRC_DIR/duianimationcreator.h \
     $$ANIMATIONS_CORE_SRC_DIR/duiparallelanimationgroup.h \
 
-#private
-HEADERS += \
+PRIVATE_HEADERS += \
     $$ANIMATIONS_CORE_SRC_DIR/duianimation_p.h \
     $$ANIMATIONS_CORE_SRC_DIR/duigroupanimation_p.h \
     $$ANIMATIONS_CORE_SRC_DIR/duiparallelanimationgroup_p.h \

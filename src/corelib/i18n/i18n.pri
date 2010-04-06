@@ -5,7 +5,7 @@ I18N_SRC_DIR=./i18n
 INCLUDEPATH+=./i18n
 
 
-HEADERS += \
+PUBLIC_HEADERS += \
     $$I18N_SRC_DIR/duibreakiterator.h \
     $$I18N_SRC_DIR/duilocale.h
 
@@ -14,9 +14,11 @@ SOURCES += \
     $$I18N_SRC_DIR/duilocale.cpp
     
 contains(DEFINES, HAVE_ICU) {
-    HEADERS += \
+    PUBLIC_HEADERS += \
         $$I18N_SRC_DIR/duicalendar.h \
         $$I18N_SRC_DIR/duicollator.h \
+
+    PRIVATE_HEADERS += \
         $$I18N_SRC_DIR/duiicubreakiterator.h \
         $$I18N_SRC_DIR/duiicuconversions.h
 
@@ -26,7 +28,7 @@ contains(DEFINES, HAVE_ICU) {
         $$I18N_SRC_DIR/duiicubreakiterator.cpp \
         $$I18N_SRC_DIR/duiicuconversions.cpp
 } else {
-    HEADERS += \
+    PRIVATE_HEADERS += \
         $$I18N_SRC_DIR/duinullbreakiterator.h \
 
     SOURCES += \

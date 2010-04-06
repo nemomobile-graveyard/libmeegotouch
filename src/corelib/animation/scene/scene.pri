@@ -5,8 +5,7 @@
 
 ANIMATIONS_SCENE_SRC_DIR=./animation/scene
 
-#public
-HEADERS += \
+PUBLIC_HEADERS += \
     $$ANIMATIONS_SCENE_SRC_DIR/duiorientationanimation.h \
     $$ANIMATIONS_SCENE_SRC_DIR/duibasicorientationanimation.h \
     $$ANIMATIONS_SCENE_SRC_DIR/duifliporientationanimation.h \
@@ -16,8 +15,7 @@ HEADERS += \
     $$ANIMATIONS_SCENE_SRC_DIR/duiscenefadeanimation.h \
     $$ANIMATIONS_SCENE_SRC_DIR/duipageswitchanimation.h \
 
-#private
-HEADERS += \
+PRIVATE_HEADERS += \
     $$ANIMATIONS_SCENE_SRC_DIR/duiorientationanimation_p.h \
     $$ANIMATIONS_SCENE_SRC_DIR/duibasicorientationanimation_p.h \
     $$ANIMATIONS_SCENE_SRC_DIR/duifliporientationanimation_p.h \

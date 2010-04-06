@@ -9,8 +9,7 @@ include(core/core.pri)
 include(scene/scene.pri)
 include(widget/widget.pri)
 
-#public
-HEADERS += \
+PUBLIC_HEADERS += \
     $$ANIMATION_SRC_DIR/duiwidgetanimation.h
 
 SOURCES += \

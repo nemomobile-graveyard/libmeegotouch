@@ -7,8 +7,7 @@ include(core/core.pri)
 
 ANIMATIONS_WIDGET_SRC_DIR=./animation/widget
 
-#public
-HEADERS += \
+PUBLIC_HEADERS += \
     $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeinanimation.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeoutanimation.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetslideinanimation.h \
@@ -16,8 +15,7 @@ HEADERS += \
     #$$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetzoominanimation.h \
     #$$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetzoomoutanimation.h \
 
-#private
-HEADERS += \
+PRIVATE_HEADERS += \
     $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeinanimation_p.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeoutanimation_p.h \
     $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetslideinanimation_p.h \

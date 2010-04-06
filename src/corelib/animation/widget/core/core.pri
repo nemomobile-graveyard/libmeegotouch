@@ -5,12 +5,10 @@
 
 ANIMATIONS_WIDGET_CORE_SRC_DIR=./animation/widget/core
 
-#public
-HEADERS += \
+PUBLIC_HEADERS += \
     $$ANIMATIONS_WIDGET_CORE_SRC_DIR/duiabstractwidgetanimation.h \
 
-#private
-HEADERS += \
+PRIVATE_HEADERS += \
     $$ANIMATIONS_WIDGET_CORE_SRC_DIR/duiabstractwidgetanimation_p.h \
 
 SOURCES += \

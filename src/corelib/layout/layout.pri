@@ -6,7 +6,7 @@
 LAYOUT_SRC_DIR=./layout
 INCLUDEPATH+=./layout
 
-HEADERS += \
+PUBLIC_HEADERS += \
     $$LAYOUT_SRC_DIR/duilayoutanimation.h \
     $$LAYOUT_SRC_DIR/duiabstractlayoutpolicy.h \
     $$LAYOUT_SRC_DIR/duibasiclayoutanimation.h \
@@ -15,10 +15,11 @@ HEADERS += \
     $$LAYOUT_SRC_DIR/duigridlayoutpolicy.h \
     $$LAYOUT_SRC_DIR/duiitemstate.h \
     $$LAYOUT_SRC_DIR/duilayout.h \
-    $$LAYOUT_SRC_DIR/duilayout_p.h \
-    $$LAYOUT_SRC_DIR/duilayouthelper_p.h \
     $$LAYOUT_SRC_DIR/duilinearlayoutpolicy.h \
 
+PRIVATE_HEADERS += \
+    $$LAYOUT_SRC_DIR/duilayout_p.h \
+    $$LAYOUT_SRC_DIR/duilayouthelper_p.h \
 
 SOURCES += \
     $$LAYOUT_SRC_DIR/duilayoutanimation.cpp \

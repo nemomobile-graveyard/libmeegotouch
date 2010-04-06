@@ -37,7 +37,7 @@ DUIGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/duibasicorientationanimationstyle.h \
 
 
-HEADERS += \
+PUBLIC_HEADERS += \
     $$DUIGEN_STYLE_HEADERS \
 
 SOURCES += \
