@@ -1,6 +1,7 @@
 include( ../common_top.pri )
 
 TARGET = duiextensions
+QT += xml
 
 INCLUDEPATH += \
     ../include \
