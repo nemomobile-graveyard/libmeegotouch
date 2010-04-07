@@ -1,6 +1,6 @@
 include(../../mkspecs/common.pri)
 
-INCLUDEPATH += . ../ ../../src/include ../../src ../../src/core ../../src/theme
+INCLUDEPATH += . ../ ../../src/include ../../src ../../src/corelib ../../src/corelib/core ../../src/corelib/theme
 DEPENDPATH += $$INCLUDEPATH
 QMAKE_LIBDIR += ../lib
 TEMPLATE = app
@@ -24,26 +24,27 @@ PKGCONFIG += gconf-2.0
 SOURCES += main.cpp \
            clientmanager.cpp \
            client.cpp \
-           ../../src/theme/duithemedaemon.cpp \
-           ../../src/theme/duicommonpixmaps.cpp \
-           ../../src/theme/duiimagedirectory.cpp \
-           ../../src/theme/duithemedaemonclient.cpp \
-           ../../src/theme/duithemedaemonprotocol.cpp \
-           ../../src/theme/duithemeresourcemanager.cpp \
-           ../../src/core/duigconfitem.cpp \
-           ../../src/core/duicpumonitor.cpp \
+           ../../src/corelib/theme/duithemedaemon.cpp \
+           ../../src/corelib/theme/duicommonpixmaps.cpp \
+           ../../src/corelib/theme/duiimagedirectory.cpp \
+           ../../src/corelib/theme/duithemedaemonclient.cpp \
+           ../../src/corelib/theme/duithemedaemonprotocol.cpp \
+           ../../src/corelib/theme/duithemeresourcemanager.cpp \
+           ../../src/corelib/core/duigconfitem.cpp \
+           ../../src/corelib/core/duicpumonitor.cpp \
 
 
 HEADERS += clientmanager.h \
            client.h \
            ../keypresswaiter.h \
-           ../../src/theme/iduithemedaemon.h \
-           ../../src/theme/duithemedaemon.h \
-           ../../src/theme/duicommonpixmaps.h \
-           ../../src/theme/duiimagedirectory.h \
-           ../../src/theme/duithemedaemonclient.h \
-           ../../src/theme/duithemedaemonprotocol.h \
-           ../../src/theme/duithemeresourcemanager.h \
-           ../../src/core/duigconfitem.h \
-           ../../src/core/duicpumonitor.h \
+           ../../src/corelib/theme/iduithemedaemon.h \
+           ../../src/corelib/theme/duithemedaemon.h \
+           ../../src/corelib/theme/duicommonpixmaps.h \
+           ../../src/corelib/theme/duiimagedirectory.h \
+           ../../src/corelib/theme/duithemedaemonclient.h \
+           ../../src/corelib/theme/duithemedaemonprotocol.h \
+           ../../src/corelib/theme/duithemeresourcemanager.h \
+           ../../src/corelib/core/duigconfitem.h \
+           ../../src/corelib/core/duicpumonitor.h \
 
+SUBDIRS += testdaemodrgtrgn
