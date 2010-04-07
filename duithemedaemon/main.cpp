@@ -49,5 +49,9 @@ int main(int argc, char **argv)
     keyWaiter.start();
 #endif
 
+    if (app.arguments().indexOf("-quitimmediately") >= 0) {
+        QTimer::singleShot(0, &app, SLOT(quit()));
+    }
+
     return app.exec();
 }
