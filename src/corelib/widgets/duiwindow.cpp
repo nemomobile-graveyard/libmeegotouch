@@ -598,11 +598,13 @@ void DuiWindow::onDisplayChangeEvent(DuiOnDisplayChangeEvent *event)
 void DuiWindow::paintEvent(QPaintEvent *event)
 {
     // Disable view updates if the theme is not fully loaded yet
-    // TODO: Alco check for "!isOnDisplay()" to block repaints if the
+    // TODO: Also check for "!isOnDisplay()" to block repaints if the
     // window is not visible anyway. Enable this once this works in
     // scratchbox.
     if (!updatesEnabled() || DuiTheme::hasPendingRequests()) {
-        return;
+        // disabled for the moment as it makes debugging problems
+        // with duithemedaemon easier
+        // return;
     }
 
 #ifdef DUI_USE_OPENGL
