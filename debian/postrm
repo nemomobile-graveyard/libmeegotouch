@@ -1,5 +1,6 @@
 #!/bin/sh
 
 # remove cached data
-rm -r /var/cache/dui
-
+if [ -d /var/cache/dui ]; then
+  rm -rf /var/cache/dui
+fi
