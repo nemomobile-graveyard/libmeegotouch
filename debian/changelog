@@ -1,10 +1,10 @@
-libdui (0.20.0~1) unstable; urgency=low
+libdui (0.20.0~2) unstable; urgency=low
 
   * New version [UNRELEASED]
   * Fixes: NB#158420 - Bottom toolbar shown with hidden actions in portrait mode
   * Fixes: NB#156114 - <CodeStyle> typo in doxygen documentation
 
- -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 19 Mar 2010 11:20:34 +0200
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 07 Apr 2010 13:35:00 +0200
 
 libdui (0.19.9-1) unstable; urgency=low
 

@@ -5,7 +5,7 @@ includedir=${prefix}/include/dui
 
 Name: Dui
 Description: DirectUI Framework
-Version: 0.18.0
+Version: 0.20.0
 Requires: QtGui
 Cflags: -I${includedir}
 Libs: -L${libdir} -lduicore -lduiviews -lduisettings -lduiextensions
