@@ -67,7 +67,7 @@ class M_EXPORT MWidgetStyle : public MStyle
 
     M_STYLE_ATTRIBUTE(MFeedback, pressFeedback, PressFeedback)
     M_STYLE_ATTRIBUTE(MFeedback, releaseFeedback, ReleaseFeedback)
-
+    M_STYLE_ATTRIBUTE(MFeedback, cancelFeedback, CancelFeedback)
 };
 
 class M_EXPORT MWidgetStyleContainer : public MStyleContainer
