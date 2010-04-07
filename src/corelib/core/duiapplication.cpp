@@ -350,6 +350,7 @@ bool DuiApplication::x11EventFilter(XEvent *event)
             DuiApplicationPrivate::setWindowVisibility(xevent->window, false);
             break;
         case VisibilityUnobscured:
+        case VisibilityPartiallyObscured:
             DuiApplicationPrivate::setWindowVisibility(xevent->window, true);
             break;
         default:
