@@ -89,7 +89,7 @@ public:
 
     bool onApplicationPage(QGraphicsItem *item);
     MSceneWindow *parentSceneWindow(QGraphicsItem *item);
-    void moveSceneWindowUp(MSceneWindow *window, int adjustment, int visibleHeight);
+    void moveSceneWindow(MSceneWindow *window, int adjustment, int visibleHeight);
     int scrollPageContents(MSceneWindow *window, int adjustment) const;
 
     bool validateSceneWindowPreAppearanceStatus(MSceneWindow *sceneWindow);
@@ -136,6 +136,7 @@ public:
     void _q_onSceneWindowDisappeared();
     void _q_restoreSceneWindow();
     void _q_relocateWindowByInputPanel(const QRect &inputPanelRect);
+    void _q_ensureCursorVisibility();
 
     //! Prepares current window for SIP.
     void _q_inputPanelOpened();
@@ -172,6 +173,7 @@ public:
     bool escapeButtonHidden;
 
     QGraphicsItem *focusedInputWidget;
+
     MSceneWindow *alteredSceneWindow;
     QPoint sceneWindowTranslation;
     static const int KeyboardSpacing;

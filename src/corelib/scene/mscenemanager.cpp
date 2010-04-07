@@ -47,6 +47,7 @@
 #include "mapplicationwindow.h"
 #include "mapplicationwindow_p.h"
 #include "mpannableviewport.h"
+#include "mtextedit.h"
 
 #include "minputmethodstate.h"
 
@@ -384,27 +385,25 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
         return;
     }
 
-    const QRect mappedInputPanelRect(rootElement->mapRectFromScene(inputPanelRect).toRect());
-    QRect widgetRect;
-    QVariant result = q->scene()->inputMethodQuery(Qt::ImMicroFocus);
-    if (result.isValid())
-        widgetRect = rootElement->mapRectFromScene(result.toRect()).toRect();
-    else
-        widgetRect = focusedInputWidget->mapRectToItem(rootElement,
-                                                       focusedInputWidget->boundingRect()).toRect();
+    const QSize screenSize(q->visibleSceneSize());
+    const QRect mappedRect(rootElement->mapRectFromScene(inputPanelRect).toRect());
 
-    const QRect intersection(widgetRect.intersected(mappedInputPanelRect));
-    if (!intersection.isEmpty()) {
-        int adjustment(intersection.bottomLeft().y() - mappedInputPanelRect.topLeft().y() +
-                       KeyboardSpacing);
+    // Need to also handle the case where part of the input panel is outside of the visible scene
+    // size, hence the intersection. It is also assumed that the input panel always pops up from
+    // the bottom of the visible scene area
+    const int obstructedHeight(mappedRect.intersect(QRect(QPoint(0, 0), screenSize)).height());
+    const QRect visibleRect(0, 0, screenSize.width(), screenSize.height() - obstructedHeight);
 
-        // Find the first scene window parent of the focused input widget, since only those should
-        // be scrolled or moved in this context. The altered scene window is moved back to its
-        // original location, although - if it has pannable contents - it is not scrolled back.
-        MSceneWindow *newParent = parentSceneWindow(focusedInputWidget);
-        adjustment -= scrollPageContents(newParent, adjustment);
-        moveSceneWindowUp(newParent, adjustment, mappedInputPanelRect.height());
-    }
+    // Always try to center the input focus into the remaining visible rectangle.
+    int adjustment = (q->scene()->inputMethodQuery(Qt::ImMicroFocus).toRect().center() -
+                      visibleRect.center()).y();
+
+    // Find the first scene window parent of the focused input widget, since only those should
+    // be scrolled or moved in this context. The altered scene window is moved back to its
+    // original location, although - if it has pannable contents - it is not scrolled back.
+    MSceneWindow *newParent = parentSceneWindow(focusedInputWidget);
+    adjustment -= scrollPageContents(newParent, adjustment);
+    moveSceneWindow(newParent, adjustment, obstructedHeight);
 }
 
 void MSceneManagerPrivate::_q_restoreSceneWindow()
@@ -415,6 +414,11 @@ void MSceneManagerPrivate::_q_restoreSceneWindow()
         sceneWindowTranslation = QPoint();
         alteredSceneWindow = 0;
     }
+}
+
+void MSceneManagerPrivate::_q_ensureCursorVisibility()
+{
+    _q_relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
 }
 
 M::Orientation MSceneManagerPrivate::orientation(M::OrientationAngle angle) const
@@ -676,16 +680,26 @@ int MSceneManagerPrivate::scrollPageContents(MSceneWindow *window, int adjustmen
     return newAdjustment;
 }
 
-void MSceneManagerPrivate::moveSceneWindowUp(MSceneWindow *window, int adjustment,
+void MSceneManagerPrivate::moveSceneWindow(MSceneWindow *window, int adjustment,
                                                int inputPanelHeight)
-{    
-    if (window && adjustment > 0) {
-        const int newAdjustment = qMin(inputPanelHeight + sceneWindowTranslation.y(), adjustment);
-        window->moveBy(0, -newAdjustment);
-        sceneWindowTranslation.ry() -= newAdjustment;
-
-        alteredSceneWindow = window;
+{
+    if (!window) {
+        return;
     }
+
+    int newAdjustment(0);
+
+    if (adjustment > 0) {
+        newAdjustment = qMin(inputPanelHeight + sceneWindowTranslation.y(), adjustment);
+    } else {
+        const QPoint topLeftCorner = QPoint(0, 0);
+        newAdjustment = qMax(static_cast<int>(window->mapToScene(topLeftCorner).y()), adjustment);
+    }
+
+    window->moveBy(0, -newAdjustment);
+    sceneWindowTranslation.ry() -= newAdjustment;
+
+    alteredSceneWindow = window;
 }
 
 bool MSceneManagerPrivate::validateSceneWindowPreAppearanceStatus(MSceneWindow *sceneWindow)
@@ -1183,9 +1197,18 @@ void MSceneManagerPrivate::_q_inputPanelOpened()
     // The scene manager should only listen to region updates from one instance, to prevent
     // conflicting window relocation requests. Since MIMS is a singleton, enforcing
     // Qt::UniqueConnection is sufficient.
-    QObject::connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
-                     q, SLOT(_q_relocateWindowByInputPanel(QRect)),
-                     Qt::UniqueConnection);
+    q->disconnect(SIGNAL(inputMethodAreaChanged(QRect)), q);
+    q->connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
+               q, SLOT(_q_relocateWindowByInputPanel(QRect)),
+               Qt::UniqueConnection);
+
+    MTextEdit *const newEdit = dynamic_cast<MTextEdit *>(focusedInputWidget);
+
+    if (newEdit) {
+        q->disconnect(newEdit, SIGNAL(cursorPositionChanged()), q, 0); //, SLOT(_q_ensureCursorVisibility()));
+        q->connect(newEdit, SIGNAL(cursorPositionChanged()),
+                   q, SLOT(_q_ensureCursorVisibility()));
+    }
 
     // Have to call the slot explicitly at least once: The focused widget can change without the
     // MIMS sending new signals (e.g., the input field's content type stays the same).
@@ -1342,10 +1365,9 @@ void MSceneManager::requestSoftwareInputPanel(QGraphicsWidget *inputWidget)
     Q_D(MSceneManager);
 
     if (inputWidget) {
-
         d->focusedInputWidget = inputWidget;
-
         QInputContext *inputContext = qApp->inputContext();
+
         if (!inputContext) {
             return;
         }
@@ -1354,8 +1376,8 @@ void MSceneManager::requestSoftwareInputPanel(QGraphicsWidget *inputWidget)
         // common that we got here with mousePressEvent in the backtrace. Moving the
         // scene window now can cause mouse press to not hit its target (which causes focus lost).
         // Because of this we shall visit event loop first.
-        // Also, it is just a mere assumption that SIP will be opened in the first place.
-        // Connecting a signal from MInputContext to MSceneManager is intentionally left out.
+        // EDIT: This should not happen anymore with commit "cf02401 Changes: In MTextEdit,
+        // move the SIP request to the mouse-release event".
         d->pendingSIPClose = false;
         QTimer::singleShot(0, this, SLOT(_q_inputPanelOpened()));
 
