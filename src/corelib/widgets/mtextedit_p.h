@@ -77,6 +77,7 @@ public:
     bool copy();
 
 private:
+    bool pendingSoftwareInputPanelRequest;
     const QValidator *validator;
     bool ownValidator; // setting content type creates a validator that the widget owns
 

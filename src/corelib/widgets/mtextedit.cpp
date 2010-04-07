@@ -77,7 +77,8 @@ namespace
  * \param type widget type (single line or multiline)
  */
 MTextEditPrivate::MTextEditPrivate()
-    : validator(0),
+    : pendingSoftwareInputPanelRequest(true),
+      validator(0),
       ownValidator(false),
       completer(0),
       editActive(false)
@@ -1014,8 +1015,15 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
 
     d->editActive = false;
 
-    if (sceneManager())
-        sceneManager()->requestSoftwareInputPanel(this);
+    if (sceneManager()) {
+        if (event->reason() == Qt::MouseFocusReason) {
+            // Wait for the mouse release event instead so that the window relocation that might
+            // happen does not change the mouse position *before* the button is released.
+            d->pendingSoftwareInputPanelRequest = true;
+        } else {
+            sceneManager()->requestSoftwareInputPanel(this);
+        }
+    }
 
     if (model()->autoSelectionEnabled() == true) {
         selectAll();
@@ -1054,10 +1062,11 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
     }
 
     emit lostFocus(event->reason());
-    if (sceneManager())
+    if (sceneManager()) {
         sceneManager()->closeSoftwareInputPanel();
+        d->pendingSoftwareInputPanelRequest = false;
+    }
 }
-
 
 bool MTextEdit::insert(const QString &text)
 {
@@ -1181,6 +1190,12 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
         return;
 
     int cursorPositionBefore = cursorPosition();
+
+    // Widget was focused-in on corresponding mouse press event:
+    if (sceneManager() && d->pendingSoftwareInputPanelRequest) {
+        sceneManager()->requestSoftwareInputPanel(this);
+        d->pendingSoftwareInputPanelRequest = false;
+    }
 
     deselect();
 
