@@ -933,7 +933,18 @@ void generateStyleDataCpp(const StyleClass *c, const QList<QString>& modes, cons
         for (; iterator != modes.end(); ++iterator) {
             cpp << "void " << c->name() << "Container::setMode" << *iterator << "()\n";
             cpp << "{\n";
-            cpp << "    setCurrentMode(\"" << iterator->toLower() << "\");\n";
+            QString mode;
+            QString::const_iterator i = iterator->begin(),
+                                    e = iterator->end();
+            mode += i->toLower();
+            ++i;
+            for(; i != e; ++i) {
+                if(i->isUpper())
+                    mode += "-" + i->toLower();
+                else
+                    mode += *i;
+            }
+            cpp << "    setCurrentMode(\"" << mode << "\");\n";
             cpp << "}\n\n";
         }
     }

@@ -38,6 +38,7 @@ class TestObject3Style : public TestObject2Style
 class TestObject3StyleContainer : public TestObject2StyleContainer
 {
     DUI_STYLE_CONTAINER(TestObject3Style)
+    DUI_STYLE_MODE(SomeMode)
 };
 
 #endif

@@ -51,6 +51,11 @@ TestObject3Style
     // Last attribute doesn't need ';' and the bracket can be in the same row
     attribute-string2: "string3" }
 
+TestObject3Style:some-mode
+{
+    attribute-integer: 163;
+}
+
 TestObjectStyle#Specialized
 {
     attribute-integer: 100;

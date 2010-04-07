@@ -34,6 +34,20 @@
 // include this to get theme profiling support
 //#include "../../src/corelib/theme/duitheme_p.h"
 
+const DuiStyle *DuiTheme::style(const char *styleClassName,
+                                const QString &objectName,
+                                const QString &mode,
+                                const QString &type,
+                                Dui::Orientation orientation,
+                                const DuiWidgetController *parent)
+{
+    DuiStyleSheet sheet;
+    sheet.load(qApp->applicationDirPath() + "/ft_duistylesheet_testobject.css");
+    QList<const DuiStyleSheet *> sheets;
+    sheets.append(&sheet);
+    return DuiStyleSheet::style(sheets, styleClassName, objectName, mode, type, orientation, parent);
+}
+
 
 Ft_DuiStyleSheet::Ft_DuiStyleSheet()
 {
@@ -270,6 +284,15 @@ void Ft_DuiStyleSheet::test_modes()
     QCOMPARE(style2->attributeOrientation(), Qt::Vertical);
     QCOMPARE(style2->attributeString(), QString("specialiazed portrait active 2"));
     DuiStyleSheet::releaseStyle(style2);
+
+    TestObject3StyleContainer styleContainer;
+    styleContainer.initialize("","",NULL);
+    QCOMPARE(styleContainer->attributeInteger(), 3);
+    QCOMPARE(styleContainer->attributeInteger2(), 50);
+    QCOMPARE(styleContainer->attributeString2(), QString("string3"));
+    QCOMPARE(styleContainer->attributeBool(), true);
+    styleContainer.setModeSomeMode();
+    QCOMPARE(styleContainer->attributeInteger(), 163);
 }
 
 void Ft_DuiStyleSheet::test_types()
