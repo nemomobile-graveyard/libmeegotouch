@@ -6,4 +6,5 @@ DUIGEN_STYLE_HEADERS += \
     style/duiextensionhandlestyle.h \
     style/duimashupcanvasstyle.h \
 
-HEADERS += $$DUIGEN_STYLE_HEADERS
+PUBLIC_HEADERS += \
+    $$DUIGEN_STYLE_HEADERS
