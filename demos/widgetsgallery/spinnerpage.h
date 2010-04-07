@@ -26,6 +26,7 @@
 class DuiLabel;
 class DuiContainer;
 class DuiButton;
+class DuiFlowLayoutPolicy;
 
 class SpinnerPage : public TemplatePage
 {
@@ -63,6 +64,7 @@ private:
     DuiLabel       *description;
     View            view;
     QTimer          timer;
+    DuiFlowLayoutPolicy *imageContainerPolicy;
 };
 
 #endif // SPINNERPAGE_H

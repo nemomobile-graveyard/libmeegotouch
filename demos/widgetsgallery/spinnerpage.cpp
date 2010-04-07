@@ -27,13 +27,13 @@
 #include <DuiAction>
 #include <DuiLinearLayoutPolicy>
 #include <DuiGridLayoutPolicy>
+#include <DuiFlowLayoutPolicy>
 #include <DuiProgressIndicator>
 #include <DuiDialog>
 #include <DuiContainer>
 #include <QGraphicsLinearLayout>
 #include <QStringListModel>
 #include <DuiImageWidget>
-#include <QGraphicsGridLayout>
 #include <QDir>
 #include <QDebug>
 
@@ -142,18 +142,8 @@ void SpinnerPage::inContainerHeader()
     container->setTitle(qtTrId("xx_spinner_page_container_title"));
     containerPolicy->addItem(container);
 
-    QGraphicsGridLayout *grid = new QGraphicsGridLayout(container->centralWidget());
-    container->centralWidget()->setLayout(grid);
-
-    for (int i = 0; i < 6; ++i) {
-        grid->setColumnMaximumWidth(i, ImageSize);
-        grid->setColumnMinimumWidth(i, ImageSize);
-    }
-
-    grid->setRowMinimumHeight(0, ImageSize);
-    grid->setRowMinimumHeight(1, ImageSize);
-    grid->setRowMaximumHeight(0, ImageSize);
-    grid->setRowMaximumHeight(1, ImageSize);
+    DuiLayout *layout = new DuiLayout(container->centralWidget());
+    imageContainerPolicy = new DuiFlowLayoutPolicy(layout);
 
     description = new DuiLabel(centralWidget());
     //% "Spinner can be used in container header to indicate that the items inside the container "
@@ -169,14 +159,9 @@ void SpinnerPage::inContainerHeader()
 
 void SpinnerPage::timeout()
 {
-    QGraphicsGridLayout *grid = dynamic_cast<QGraphicsGridLayout *>(container->centralWidget()->layout());
+    Q_ASSERT(imageContainerPolicy != NULL);
 
-    Q_ASSERT(grid != NULL);
-
-    if (grid) {
-        int row = grid->count() / 6;
-        int column = grid->count() % 6;
-
+    if (imageContainerPolicy) {
         QString contactsDir = Utils::contactsDir();
         QDir imagesDir(contactsDir);
         imagesDir.setNameFilters(QStringList() << "*.png");
@@ -184,12 +169,12 @@ void SpinnerPage::timeout()
         QStringList imageContacts = imagesDir.entryList(QDir::Files);
 
         DuiImageWidget *image = new DuiImageWidget(container->centralWidget());
-        image->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[grid->count() % imageContacts.size()]));
+        image->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[imageContainerPolicy->count() % imageContacts.size()]));
         image->setMinimumSize(ImageSize, ImageSize);
         image->setMaximumSize(ImageSize, ImageSize);
-        grid->addItem(image, row, column);
+        imageContainerPolicy->addItem(image);
 
-        if (grid->count() < 12) {
+        if (imageContainerPolicy->count() < 12) {
             timer.setSingleShot(true);
             timer.start(2000);
         }
@@ -287,6 +272,7 @@ void SpinnerPage::reset()
     } break;
     }
 
+    imageContainerPolicy = NULL;
     view = Unknown;
 }
 
