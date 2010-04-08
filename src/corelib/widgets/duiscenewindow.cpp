@@ -33,8 +33,6 @@
 #include "duiwidgetcreator.h"
 DUI_REGISTER_WIDGET_NO_CREATE(DuiSceneWindow)
 
-Q_DECLARE_METATYPE(Qt::Alignment)
-
 DuiSceneWindowPrivate::DuiSceneWindowPrivate()
 {
     managedManually = false;
@@ -130,7 +128,7 @@ Qt::Alignment DuiSceneWindow::alignment() const
     if (view()) {
         QVariant v = view()->property("alignment");
         if (v.isValid()) {
-            result = qvariant_cast<Qt::Alignment>(v);
+            result = Qt::Alignment(v.toInt());
         }
         else {
         }
