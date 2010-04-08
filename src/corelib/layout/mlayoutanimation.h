@@ -22,7 +22,6 @@
 
 #include "manimation.h"
 #include "mexport.h"
-#include "mitemstate.h"
 #include "mlayout.h"
 class MLayoutAnimationPrivate;
 

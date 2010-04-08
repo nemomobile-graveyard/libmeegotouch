@@ -13,7 +13,6 @@ PUBLIC_HEADERS += \
     $$LAYOUT_SRC_DIR/mflowlayoutpolicy.h \
     $$LAYOUT_SRC_DIR/mfreestylelayoutpolicy.h \
     $$LAYOUT_SRC_DIR/mgridlayoutpolicy.h \
-    $$LAYOUT_SRC_DIR/mitemstate.h \
     $$LAYOUT_SRC_DIR/mlayout.h \
     $$LAYOUT_SRC_DIR/mlinearlayoutpolicy.h \
 
@@ -33,7 +32,7 @@ SOURCES += \
     $$LAYOUT_SRC_DIR/mfreestylelayoutpolicy_p.cpp \
     $$LAYOUT_SRC_DIR/mgridlayoutpolicy.cpp \
     $$LAYOUT_SRC_DIR/mgridlayoutpolicy_p.cpp \
-    $$LAYOUT_SRC_DIR/mitemstate.cpp \
+    $$LAYOUT_SRC_DIR/mitemstate_p.cpp \
     $$LAYOUT_SRC_DIR/mlayout.cpp \
     $$LAYOUT_SRC_DIR/mlayout_p.cpp \
     $$LAYOUT_SRC_DIR/mlinearlayoutpolicy.cpp \

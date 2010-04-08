@@ -22,11 +22,9 @@
 
 #include "mbasiclayoutanimation.h"
 #include "mlayoutanimation_p.h"
+#include "mitemstate_p.h"
 
-#include <QtCore/QSet>
 #include <QtCore/QTime>
-#include <QtCore/QTimer>
-#include <QEasingCurve>
 
 /** Private animator class. */
 class MBasicLayoutAnimationPrivate : public MLayoutAnimationPrivate
