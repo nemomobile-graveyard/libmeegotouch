@@ -351,7 +351,8 @@ if [ $? -eq 0 ]; then
 
     pkg-config --exists contentaction-0.1
     if [ $? -eq 0 ]; then
-	HAVE_CONTENTACTION=yes
+	#HAVE_CONTENTACTION=yes DISABLED FOR NOW
+	HAVE_CONTENTACTION=no
     fi
 
 fi
