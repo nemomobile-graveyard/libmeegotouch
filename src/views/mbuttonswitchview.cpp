@@ -31,14 +31,14 @@
 //! \internal
 class HandleAnimation : public QVariantAnimation
 {
-    public: 
+    public:
         HandleAnimation(MButtonSwitchViewPrivate* viewPrivate, QObject * parent = 0)
             : QVariantAnimation(parent), m_viewPrivate(viewPrivate)
             {
             }
-    
+
     protected:
-    
+
         virtual void updateCurrentValue(const QVariant& value)
         {
             m_viewPrivate->m_thumbPos.setX(value.toPoint().x());
@@ -51,10 +51,14 @@ class HandleAnimation : public QVariantAnimation
 //! \internal_end
 
 
+// Distance in pixels from the widget bounding box inside which a release is still accepted
+#define RELEASE_MISS_DELTA 30
+
 MButtonSwitchViewPrivate::MButtonSwitchViewPrivate() :
     mouseOffset(0),
     m_thumbDown(false),
     m_thumbDragged(false),
+    m_feedbackOnPlayed(false),
     m_thumbPos(),
     m_thumbPosValid(false),
     m_handleAnimation(new HandleAnimation(this)),
@@ -112,10 +116,10 @@ const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
 {
     //create new masked slider image if it has been invalidated
     if( m_maskedSliderPm.isNull() ) {
-        
+
         //create the new masked slider image only if the source images are valid
         Q_Q(const MButtonSwitchView);
-        if( !(q->style()->sliderImage()->pixmap()->isNull() || 
+        if( !(q->style()->sliderImage()->pixmap()->isNull() ||
               q->style()->sliderMask()->pixmap()->isNull() ||
               q->style()->sliderImage()->pixmap()->size() == QSize(1, 1) ||
               q->style()->sliderMask()->pixmap()->size() == QSize(1, 1)) ) {
@@ -130,11 +134,11 @@ const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
             q->style()->sliderMask()->draw(QRect(QPoint(0,0), q->size().toSize()), QPoint(offset,0), q->style()->sliderImage()->pixmap(), &p);
         }
     }
-    
+
     return m_maskedSliderPm;
 }
 
-void MButtonSwitchViewPrivate::updateHandle() 
+void MButtonSwitchViewPrivate::updateHandle()
 {
     //invalidate masked slider image and request redraw
     Q_Q(MButtonSwitchView);
@@ -166,7 +170,7 @@ void MButtonSwitchView::drawContents(QPainter *painter, const QStyleOptionGraphi
     Q_UNUSED(option);
     Q_D(const MButtonSwitchView);
 
-    painter->drawPixmap(QRect(QPoint(0, 0), size().toSize()), d->maskedSliderImage()); 
+    painter->drawPixmap(QRect(QPoint(0, 0), size().toSize()), d->maskedSliderImage());
     style()->thumbImage()->draw(d->thumbPos(), d->thumbSize(), painter);
 }
 
@@ -198,7 +202,7 @@ void MButtonSwitchView::setupModel()
 
     //invalidate masked slider image
     Q_D(MButtonSwitchView);
-    
+
     //d->m_thumbPos = d->thumbEndPos(model()->checked());
     d->m_maskedSliderPm = QPixmap();
     update();
@@ -216,15 +220,24 @@ void MButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     //stop ongoing animation if any
     d->m_handleAnimation->stop();
 
-    //init the the thumb position to valid value when we first time interract 
-    //with the button, this needs to be done here because we need the size of the 
-    //thumb image in our calculations and due to asynchronous pixmap loading it 
+    //play switch feedback effect
+    if (model()->checked() == false) {
+        style()->pressOnFeedback().play();
+        d->m_feedbackOnPlayed = false;
+    } else {
+        style()->pressOffFeedback().play();
+        d->m_feedbackOnPlayed = true;
+    }
+
+    //init the the thumb position to valid value when we first time interract
+    //with the button, this needs to be done here because we need the size of the
+    //thumb image in our calculations and due to asynchronous pixmap loading it
     //may not be ready before this
     if( !d->m_thumbPosValid ) {
         d->m_thumbPosValid = true;
         d->m_thumbPos = d->thumbEndPos(model()->checked());
     }
-    
+
     //calculate offset from edge of the thumb to the drag point
     d->mouseOffset = event->pos().x() - d->controller->pos().x() - d->m_thumbPos.x();
 
@@ -242,6 +255,7 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     if (!model()->down()) {
         return;
     }
+    model()->setDown(false);
 
     //check if the thumb has been dragged
     if (d->m_thumbDown && d->m_thumbDragged) {
@@ -264,15 +278,27 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     else {
         d->m_thumbDown = false;
         d->m_thumbDragged = false;
-        MButtonView::mouseReleaseEvent(event);
+
+        QPointF touch = event->scenePos();
+        QRectF rect = d->controller->sceneBoundingRect();
+        rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
+                    RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+        if (rect.contains(touch))
+            model()->click();
+
+        if (model()->checked() == true) {
+            style()->releaseOnFeedback().play();
+        } else {
+            style()->releaseOffFeedback().play();
+        }
     }
-    
+
     //start animating the thumb from current position to proper end position
     int delta = d->m_thumbPos.x() - d->thumbEndPos(model()->checked()).x();
     d->m_handleAnimation->setStartValue(d->m_thumbPos);
     d->m_handleAnimation->setEndValue(d->thumbEndPos(model()->checked()));
     d->m_handleAnimation->setDuration(abs(delta) / (d->m_animationSpeed/1000.0));
-    d->m_handleAnimation->start();              
+    d->m_handleAnimation->start();
 }
 
 void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -284,7 +310,7 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         //calculate new x for the thumb
         QPointF pos = event->pos() - d->controller->pos();
         int x = qRound(pos.x()) - d->mouseOffset;
-        
+
         //keep the thumb totally inside the view
         if (x < 0)
             x = 0;
@@ -295,6 +321,20 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
         //invalidate masked slider image
         d->m_maskedSliderPm = QPixmap();
+
+        //play switch feedback effect if center position is crossed
+        if( d->m_thumbPos.x() + (d->thumbSize().width() / 2)  > (size().width() / 2) ) {
+            if (d->m_feedbackOnPlayed == false) {
+                style()->pressOnFeedback().play();
+                d->m_feedbackOnPlayed = true;
+            }
+        } else {
+            if (d->m_feedbackOnPlayed == true) {
+                style()->pressOffFeedback().play();
+                d->m_feedbackOnPlayed = false;
+            }
+        }
+
         update();
     }
 }
@@ -302,12 +342,15 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void MButtonSwitchView::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
-    Q_D(MButtonSwitchView);    
+    Q_D(MButtonSwitchView);
+
+    style()->cancelFeedback().play();
+
     model()->setDown(false);
     d->m_thumbDown = false;
     d->m_thumbDragged = false;
-    
-    d->m_maskedSliderPm = QPixmap();    
+
+    d->m_maskedSliderPm = QPixmap();
     update();
 }
 

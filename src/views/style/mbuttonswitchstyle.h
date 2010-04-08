@@ -65,6 +65,30 @@ class M_EXPORT MButtonSwitchStyle : public MButtonStyle
         \brief Image for the thumb of the switch.
     */
     M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  thumbImage, ThumbImage)
+
+    /*!
+        \property MButtonSwitchStyle::pressOnFeedback
+        \brief Feedback given when pressing a switch about to switch on
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, pressOnFeedback, PressOnFeedback)
+
+    /*!
+        \property MButtonSwitchStyle::pressOffFeedback
+        \brief Feedback given when pressing a switch about to switch off
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, pressOffFeedback, PressOffFeedback)
+
+    /*!
+        \property MButtonSwitchStyle::releaseOnFeedback
+        \brief Feedback given when releasing a switch about to switch on
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, releaseOnFeedback, ReleaseOnFeedback)
+
+    /*!
+        \property MButtonSwitchStyle::releaseOffFeedback
+        \brief Feedback given when releasing a switch about to switch off
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, releaseOffFeedback, ReleaseOffFeedback)
 };
 
 /*!
