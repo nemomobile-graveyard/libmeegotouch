@@ -72,7 +72,7 @@ void DuiAppletInventoryViewPrivate::init(DuiAppletInventory *controller)
     // Set close button properties
     closeButton->setViewType("icon");
     closeButton->setObjectName("DuiAppletInventoryCloseButton");
-    closeButton->setIconID("Icon-close");
+    closeButton->setIconID("icon-m-framework-close");
     QObject::connect(closeButton, SIGNAL(clicked()), controller, SIGNAL(hideAppletInventory()));
 
     closeButtonOverlay->setObjectName("DuiAppletInventoryCloseButtonOverlay");
