@@ -134,6 +134,8 @@
   - pannedRange() was renamed to range()
   - pannedPos() was renamed to position()
   - updateSizePosData() was split into three new methods: setPosition(), setViewportSize() and setRange().
+- Removed DuiApplication::releaseMemoryRequested() (was deprecated in 0.19) - will be replaced by Harmattan System Memory Notification API
+- Removed DuiDesktopEntry::xMaemoPrestarted() (was deprecated in 0.19) - not relevant anymore. No replacement needed
 
 - Libdui modularization:
   - moved src/applicationextension and src/mashup into new library libduiextensions.

@@ -3,6 +3,7 @@ libdui (0.20.0~2) unstable; urgency=low
   * New version [UNRELEASED]
   * Fixes: NB#158420 - Bottom toolbar shown with hidden actions in portrait mode
   * Fixes: NB#156114 - <CodeStyle> typo in doxygen documentation
+  * Fixes: NB#162474 - displayEntered is not called when VKB is closed
 
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 07 Apr 2010 13:35:00 +0200
 
