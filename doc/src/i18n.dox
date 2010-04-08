@@ -120,28 +120,28 @@ sorting, number formatting, and currency formatting if the more
 specific settings are empty.
 
 “LcTime” selects how time and date are formatted. If it is left empty
-the value of “Language” is used. Examples: =ar@calendar\c islamic  means
+the value of “Language” is used. Examples: \c ar@calendar=islamic  means
 to format date and time the Arabic way using Islamic calendar,
-=ar@calendar\c gregorian  would use Arabic formatting but with Gregorian
+\c ar@calendar=gregorian  would use Arabic formatting but with Gregorian
 calendar, \c fi_FI  would use Finnish formatting rules for time and
 date.
 
 “LcCollate” selects how textual data is sorted. If it is left empty
-the value of “Language” is used. Examples: =de_DE@collation\c phonebook 
+the value of “Language” is used. Examples: \c de_DE@collation=phonebook
 sorts the way German phone books are sorted,
-=de_DE@collation\c standard  (or \c de_DE ) sorts the “normal” way German
-dictionaries are sorted. =zh_CN@collation\c pinyin  sorts Chinese
-according to the pinyin phonetics, =zh_CN@collation\c stroke  sorts
+\c de_DE@collation=standard  (or \c de_DE ) sorts the “normal” way German
+dictionaries are sorted. \c zh_CN@collation=pinyin  sorts Chinese
+according to the pinyin phonetics, \c zh_CN@collation=stroke  sorts
 Chinese according to the stroke count of the characters.
 
 “LcNumeric” selects how numbers are formatted. If it is left empty the
 value of “Language” is used. Examples: \c hi  formats numbers according
 to the rules for the Hindi language, using localized digits, i.e. <a
 href="http://en.wikipedia.org/wiki/Indian_numerals">Devanagari
-numerals</a> (&#2406;,&#2407;,&#2408;,&#2409;,&#2410;,&#2411;,&#2412;,&#2413;,&#2414;,&#2415;), \c ar  formats numbers
+numerals</a> (०,१,२,३,४,५,६,७,८,९), \c ar  formats numbers
 using <a
 href="http://en.wikipedia.org/wiki/Eastern_Arabic_numerals">Eastern
-Arabic numerals</a> (&#1632;,&#1633;,&#1634;,&#1635;,&#1636;,&#1637;,&#1638;,&#1639;,&#1640;,&#1641;), \c de_CH  formats the Swiss
+Arabic numerals</a> (٠,١,٢,٣,٤,٥,٦,٧,٨,٩), \c de_CH  formats the Swiss
 German way with apostrophes as thousands separators (12'345'670.89),
 and \c en_US  formats the American English way (12,345,670.89).
 
@@ -257,7 +257,7 @@ Again this isn't a very nice example because it ignores that the
 translation must be different for singular and plural.
 
 \subsubsection  numbers  Numbers
-To format a number use \c formatNumber()  method. It works with \c qlonglong , \c short , \c int , \c double , and \c float  data types.
+To format a number use \c formatNumber()  method. It works with \c qlonglong, \c short, \c int, \c double, and \c float  data types.
 
 \code
 ...
@@ -350,12 +350,6 @@ while (iterator.hasNext()) {
 }
 \endcode
 
-\subsubsection  otainstallation  Over-the-air locale data installation
-
-FIXME: Should it be discussed?
-\subsubsection  localedatastorage  Locale data storage
-FIXME: Should it be discussed?
-
 \section  translationsystem  Translation system
 \subsection  logicalidandengineeringenglish  Logical ID and engineering English
 
@@ -372,7 +366,7 @@ ids, which is commonly practiced in the open source community, the
 logical ID approach uses message ids which are guaranteed to be
 globally unique.
 
-With \c qtTrId() , the logical ID is a argument of the function and the
+With \c qtTrId(), the logical ID is an argument of the function and the
 engineering English is supplied as a comment above. See the example in
 the Qt documentation of
 <a href="http://qt.nokia.com/doc/4.6-snapshot/qtglobal.html#qtTrId">qtTrId()</a>,
@@ -384,9 +378,58 @@ reproduced here for convenience:
    QString text = qtTrId("qtn_foo_bar", n);
 \endcode
 
+\subsection  generatingengineeringenglish Generating the engineering English .qm files
+
+If no translation files at all are available, \c qtTrId() would return
+the logical ID which looks pretty ugly and is not nice for testing the
+user interface.
+
+But from code which uses \c qtTrId() with the special engineering
+English comments, \c .qm files with engineering English translations
+can be generated automatically. This can be done as follows:
+
+Create a subdirectory \c translations/ somewhere in your source tree.
+In that folder, create a \c translations.pro file with the contents:
+
+\code
+    LANGUAGES =            # empty if only engineering English is needed!
+    CATALOGNAME = foobar   # what ever catalog name you want to use
+    SOURCEDIR = $$PWD/..   # more then one directory is possible
+    TRANSLATIONDIR = $$PWD
+    include($$[QT_INSTALL_DATA]/mkspecs/features/dui_defines.prf)
+    include($$[QT_INSTALL_DATA]/mkspecs/features/dui_translations.prf)
+\endcode
+
+Introducing the extra \c translations/translations.pro file makes it
+necessary to add the \c translations/ directory to the
+list of sub-directories in a .pro file higher up in the directory
+hierarchy. I.e. you usually need something like 
+
+\code
+   SUBDIRS = \
+       src \
+       translations \
+       ...
+\endcode
+
+After doing that, a \c foobar.ts and a \c foobar.qm file which
+contain the engineering English translations will be automatically
+generated when calling “make” for your project. And “make install”
+will install \c foobar.qm to the usual place as described
+in section \ref translationdatastorage.
+
+Minor detail: with the above setup, when creating \c foobar.qm from \c
+foobar.ts, lrelease uses the option \c -markuntranslated to prepend
+the string “!! ” at the beginning of each engineering English
+string. I.e.  if the engineering English string in the source code is
+“Hello”, it will be written as “!! Hello” into the \c foobar.qm file
+and will be displayed as “!! Hello” at runtime. This is to make it
+obvious that engineering English for testing purposes is displayed and
+not the “real” English which is done by the translators.
+
 \subsection  translationsystemsetup  Translation system setup
 
-To setup the translation system using \c qtTrId() , you
+To setup the translation system using \c qtTrId(), you
 can use the following code snippets in your main function:
 
 By default, the system uses the name of the application executable
@@ -408,8 +451,8 @@ int main(int argc, char** argv){
 \endcode
 
 In the above example, if the application executable is for example
-\c /usr/bin/foo , i.e. the base file name of the executable is \c foo , the
-translation catalog =&lt;top-directory&gt;/foo_&lt;locale-code&gt;.qm= will be
+\c /usr/bin/foo, i.e. the base file name of the executable is \c foo, the
+translation catalog \c &lt;top-directory&gt;/foo_&lt;locale-code&gt;.qm  will be
 used.
 
 If you need to specify a file for the translation catalog wich differs
@@ -431,7 +474,7 @@ int main(int argc, char** argv){
 \endcode
 
 In the above example, the translation catalog
-=&lt;top-directory&gt;/bar_&lt;locale-code&gt;.qm= will be used no matter
+\c &lt;top-directory&gt;/bar_&lt;locale-code&gt;.qm will be used no matter
 what the file name of the application executable is.
 
 But note that the \c appIdentifier  is used not only for localization
@@ -439,7 +482,7 @@ files but also for themes. I.e. changing the appIdentifier
 will also affect themes. Usually this should be no problem because
 in most cases these should be kept the same, if possible.
 
-When it is not possible to use the appIdentifier to specify the
+When it is not possible to use the \c appIdentifier to specify the
 translation catalog which should be loaded, one can use the
 \c installTrCatalog()  function to load a translation catalog with a
 completely different name as in this example:
@@ -451,18 +494,23 @@ int main(int argc, char** argv){
    DuiApplication app (argc, argv);
 
    // create a DuiLocale. Without parameters in the constructor,
-   // it uses defaults from the environment or gconf
+   // it gets a copy of the system default locale, which may already
+   // have some translation catalogs, for example it usually already
+   // has the “common” translation catalog.
    DuiLocale locale;
 
-   // load a different translation catalog for this locale:
+   // add a different translation catalog for this locale.
+   // This catalog is added to the list of already loaded catalogs.
+   // Catalogs loaded last are used with highest priority.
    locale.installTrCatalog("othercatalog");
 
    // the order is important, set the locale as the default *after*
    // installing the translation catalog:
    DuiLocale::setDefault(locale);
 ...
-   // Now this call to qtTrId() will use messages from the translation catalog
-   // file othercatalog_<locale-code>.qm:
+   // Now the following call to qtTrId() will use messages
+   // from the translation catalog file othercatalog_<locale-code>.qm
+   // with highest priority:
 
    //% "hello"
    qtTrId("xxx_hello");
@@ -481,7 +529,9 @@ int main(int argc, char** argv){
 ...
    DuiApplication app (argc, argv);
    // create a DuiLocale. Without parameters in the constructor,
-   // it uses defaults from the environment or gconf
+   // it gets a copy of the system default locale, which may already
+   // have some translation catalogs, for example it usually already
+   // has the “common” translation catalog.
    DuiLocale locale;
 
    // install the catalog for use with tr(). It is probably
@@ -510,8 +560,8 @@ int main(int argc, char** argv){
 
 \c id  is the logical name for a UI message which needs to be
 translated.
-If =n >= 0=, all occurrences of =%n= in the resulting string are replaced
-with a decimal representation of \c n . In addition, depending on \c n ’s
+If \c n \c >= \c 0, all occurrences of \c n in the resulting string are replaced
+with a decimal representation of \c n. In addition, depending on \c n’s
 value, the translation text may vary.
 
 \c qtTrId()  is useful only if the project is using logical names as the
@@ -521,7 +571,7 @@ instead.
 \subsection  pluralmessages  Plural messages
 
 In a plural message, pass the number into argument \c n  in \c qtTrId()  or
-(It is similar to how this is done with \c tr() )
+(It is similar to how this is done with \c tr())
 
 \code
    int n = messages.count();
@@ -545,7 +595,7 @@ for Swiss German, etc. <catalog-name> is usually the name of the
 application. If a translation for a more specific locale name like
 \c en_US  cannot be found, a less specific locale name like \c en  is
 tried. For example, if the application name is \c foo  and the locale
-name is \c en_US , the first one of the following files which exists
+name is \c en_US, the first one of the following files which exists
 is used:
 
 \code
@@ -771,7 +821,7 @@ works like this:
     QString language = currentLocale.name();
 \endcode
 
-=DuiLocale currentLocale;= gets a copy of the system default locale
+\c DuiLocale currentLocale; gets a copy of the system default locale
 which is connected to the gconf settings and follows the gconf
 settings.
 
@@ -783,7 +833,7 @@ Alternatively it is possible to read the gconf settings directly:
 \endcode
 
 This has the same effect as getting the current system locale and
-using =currentLocale.name()=.
+using \c currentLocale.name().
 
 Setting the current language permanently from a \c DuiApplication  works like
 this:
@@ -896,7 +946,7 @@ foohandlelocalechange.cpp:
     }
 \endcode
 
-----++++ <!-- retranslateui --> The retranslateUi() method of DuiWidget
+\subsection retranslateui The retranslateUi() method of DuiWidget
 
 A \c DuiWidget  which receives the \c QEvent::LanguageChange  calls its
 virtual method
