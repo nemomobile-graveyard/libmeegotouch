@@ -54,6 +54,7 @@ private slots:
     void testSettingComponentsDisplayModes();
     void testSettingMultipleComponentsDisplayModes();
     void testSettingAllComponentsDisplayMode();
+    void testUpdatingWindowTitleWithChangingPageTitle();
 
 private:
     MApplicationPage *m_subject;

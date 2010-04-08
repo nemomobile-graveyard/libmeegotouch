@@ -53,6 +53,23 @@
 # include <X11/Xlib.h>
 #endif
 
+namespace {
+    // TODO: this may be moved to some header if needed elsewhere
+    // Returns the longest length variant of a translated string.
+    // If a translated string has many length variants, they are
+    // separated with U+009C (STRING TERMINATOR) character, and
+    // according to DTD for .ts file format, they should be ordered
+    // by decreasing length.
+    // This helper function returns the longest length variant
+    // by returning the string up to the first U+009C character.
+    // If there's only one length variant, the function returns
+    // the whole unprocessed string.
+    QString longestLengthVariant(const QString &text)
+    {
+        return text.left(text.indexOf(QChar(0x9c)));
+    }
+}
+
 MApplicationWindowPrivate::MApplicationWindowPrivate()
     : MWindowPrivate()
     , page(NULL)
@@ -238,9 +255,10 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
             setupPageEscape();
 
         } else if (member == MApplicationPageModel::Title) {
-            if (page->isVisible())
+            if (page->isVisible()) {
                 navigationBar->setViewMenuDescription(page->model()->title());
-
+                q->setWindowTitle(longestLengthVariant(page->model()->title()));
+            }
         }
     }
 }
@@ -804,6 +822,7 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
     setupPageEscape();
 
     navigationBar->setViewMenuDescription(page->title());
+    q->setWindowTitle(longestLengthVariant(page->title()));
 
     setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
     setComponentDisplayMode(escapeButtonPanel, page->model()->escapeButtonDisplayMode());

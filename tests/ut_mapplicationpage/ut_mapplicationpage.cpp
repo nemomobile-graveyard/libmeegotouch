@@ -223,4 +223,24 @@ void Ut_MApplicationPage::testSettingAllComponentsDisplayMode()
     QCOMPARE(m_subject->componentDisplayMode(MApplicationPage::EscapeButton), MApplicationPageModel::Show);
 }
 
+void Ut_MApplicationPage::testUpdatingWindowTitleWithChangingPageTitle()
+{
+    QString title("Test title");
+    QString title2("Another test title");
+    QString title3("Multiple length variants title\0x9cMult. length var. title");
+    QString title3_longest("Multiple length variants title");
+    QString title4;
+
+    m_subject->appear();
+
+    m_subject->setTitle(title);
+    QCOMPARE(appWin->windowTitle(), title);
+    m_subject->setTitle(title2);
+    QCOMPARE(appWin->windowTitle(), title2);
+    m_subject->setTitle(title3);
+    QCOMPARE(appWin->windowTitle(), title3_longest);
+    m_subject->setTitle(title4);
+    QCOMPARE(appWin->windowTitle(), title4);
+}
+
 QTEST_APPLESS_MAIN(Ut_MApplicationPage)
