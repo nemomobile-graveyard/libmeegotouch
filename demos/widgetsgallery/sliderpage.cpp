@@ -82,6 +82,7 @@ void SliderPage::createContent()
     verticalAgeLayoutPolicy->setStretchFactor(ageLabel, 0);
 
     ageSlider = new MSlider;
+    ageSlider->setObjectName("ageSlider");
     horizontalAgeLayoutPolicy->addItem(ageSlider);
     horizontalAgeLayoutPolicy->setStretchFactor(ageSlider, 1);
     verticalAgeLayoutPolicy->addItem(ageSlider);
@@ -105,6 +106,7 @@ void SliderPage::createContent()
     playerLayoutPolicy->setStretchFactor(playerButton, 0);
 
     playerSeekBar = new MSeekBar;
+    playerSeekBar->setObjectName("playerSeekBar");
     playerLayoutPolicy->addItem(playerSeekBar);
     playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
 
@@ -125,6 +127,7 @@ void SliderPage::createContent()
     brightnessLayoutPolicy->setContentsMargins(0, 0, 0, 0);
 
     brightnessSlider = new MSlider;
+    brightnessSlider->setObjectName("brightnessSlider");
     brightnessLayoutPolicy->addItem(brightnessSlider);
 
     brightnessContainer = new MContainer;

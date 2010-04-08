@@ -23,6 +23,7 @@
 #include "msliderview.h"
 
 #include <MWidget>
+#include <QTime>
 #include "mslidermodel.h"
 
 class MSlider;
@@ -190,10 +191,10 @@ private:
 class MSliderViewPrivate
 {
     Q_DECLARE_PUBLIC(MSliderView)
-    
+
 protected:
     MSliderView *q_ptr;
-    
+
 public:
     MSliderViewPrivate();
     virtual ~MSliderViewPrivate();
@@ -210,6 +211,9 @@ public:
 
     QPropertyAnimation *valueAnimation;
 
+    QTime feedbackTimer;
+    int valueWhenFeedback;
+
     int pressTimerId;
 
     int valueWhenPressed;
@@ -223,9 +227,10 @@ public:
 
     void updateOrientation();
     bool isCollision(QGraphicsSceneMouseEvent *event) const;
-    void updateValue(QGraphicsSceneMouseEvent *event);
+    int updateValue(QGraphicsSceneMouseEvent *event);
     void updateSliderGroove();
     void updateSeekBar();
+    void playSliderMoveFeedback(int newValue);
 
 #ifdef UNIT_TEST
     friend class Ut_MSliderView;

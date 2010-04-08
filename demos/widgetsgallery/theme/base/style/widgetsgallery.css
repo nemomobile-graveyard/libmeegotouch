@@ -64,6 +64,19 @@ DuiButtonStyle#theme-selection-button {
     release-feedback: ;
 }
 
+#ageSlider {
+    minimum-feedback-interval: 40;
+}
+
+#brightnessSlider {
+    minimum-feedback-interval: 55;
+}
+
+#playerSeekBar {
+    steps-per-feedback: 10;
+    minimum-feedback-interval: 45;
+}
+
 #wgToggleButton {
 }
 
@@ -172,7 +185,7 @@ MSliderStyle#video-player-slider {
     background-base-image: "video-duislider-background" 7px 7px 7px 7px;
     background-elapsed-image: "video-duislider-background-elapsed" 7px 7px 7px 7px;
     background-received-image: "video-duislider-background-received" 7px 7px 7px 7px;
-        
+
     handle-pressed-pixmap: "video-duislider-handle-pressed" 6.4mm 6.4mm;
     handle-pixmap: "video-duislider-handle" 6.4mm 6.4mm;
 

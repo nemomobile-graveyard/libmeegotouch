@@ -252,7 +252,7 @@ void MSliderIndicator::setImage(const QString &id)
 
     if (id.isEmpty()) {
 	QSizeF emptySize(0, 0);
-	
+
 	if (emptySize != image->minimumSize()) {
             image->setMinimumSize(0, 0);
 	    sizeHintChanged = true;
@@ -333,10 +333,10 @@ MSliderGroove::MSliderGroove(QGraphicsItem *parent) :
 {
     sliderHandle = new MSliderHandle(this);
     sliderHandle->setObjectName("MSliderHandle");
-    
+
     sliderHandleIndicator = new MSliderIndicator(false, this);
     sliderHandleIndicator->setObjectName("MSliderHandleIndicator");
-    
+
     sliderHandleIndicator->setVisible(false);
 }
 
@@ -803,7 +803,7 @@ void MSliderGroove::updateHandlePos(const QPointF &position)
         QPointF newPos((rect().width() - sliderHandle->rect().width()) / 2, y - (sliderHandle->rect().height() / 2));
 
         //changes slider handle positions only if
-        //it is really necessary         
+        //it is really necessary
         if (newPos == sliderHandle->pos())
             return;
 
@@ -1139,11 +1139,12 @@ bool MSliderViewPrivate::isCollision(QGraphicsSceneMouseEvent *event) const
 
 //sets slider value to that one corresponding
 //to mouse cursor position
-void MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
+int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
 {
     Q_Q(MSliderView);
 
     bool needAnimation = false;
+    int newValue;
 
     QRectF clickableHandleRect = sliderGroove->clickableHandleArea();
     clickableHandleRect.translate(sliderGroove->pos());
@@ -1165,6 +1166,8 @@ void MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
     eventPos.setX(eventPos.x() + q->marginLeft());
     eventPos.setY(eventPos.y() + q->marginTop());
 
+    newValue = sliderGroove->screenPointToValue(eventPos);
+
     if (needAnimation) {
         if (valueAnimation == 0) {
             valueAnimation = new QPropertyAnimation(controller, "value", controller);
@@ -1172,10 +1175,12 @@ void MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
             valueAnimation->setEasingCurve(QEasingCurve::OutSine);
         }
 
-        valueAnimation->setEndValue(sliderGroove->screenPointToValue(eventPos));
+        valueAnimation->setEndValue(newValue);
         valueAnimation->start();
     } else
-        controller->setValue(sliderGroove->screenPointToValue(eventPos));
+        controller->setValue(newValue);
+
+    return newValue;
 }
 
 //refreshes slider groove (min, max and value, slider state)
@@ -1195,6 +1200,18 @@ void MSliderViewPrivate::updateSeekBar()
         sliderGroove->setSeekBarValues(false);
     else
         sliderGroove->setSeekBarValues(true, seekBarModel->loadedContentMin(), seekBarModel->loadedContentMax());
+}
+
+void MSliderViewPrivate::playSliderMoveFeedback(int newValue)
+{
+    Q_Q(MSliderView);
+
+    if (qAbs(newValue - valueWhenFeedback) >= q->style()->stepsPerFeedback() &&
+        feedbackTimer.elapsed() > q->style()->minimumFeedbackInterval()) {
+        q->style()->moveFeedback().play();
+        feedbackTimer.restart();
+        valueWhenFeedback = newValue;
+    }
 }
 
 MSliderView::MSliderView(MSlider *controller):
@@ -1333,9 +1350,10 @@ void MSliderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     Q_D(MSliderView);
     if (d->isCollision(event)) {
         d->valueWhenPressed = model()->value();
-
         d->controller->setState(MSliderModel::Pressed);
-
+        d->valueWhenFeedback = d->valueWhenPressed;
+        d->feedbackTimer.start();
+        style()->moveFeedback().play();
         d->updateValue(event);
         d->pressTimerId = startTimer(100);
     }
@@ -1346,6 +1364,8 @@ void MSliderView::cancelEvent(MCancelEvent *event)
     Q_UNUSED(event);
     Q_D(MSliderView);
     d->controller->setState(MSliderModel::Released);
+
+    style()->cancelFeedback().play();
 
     if (d->pressTimerId) {
         killTimer(d->pressTimerId);
@@ -1377,13 +1397,13 @@ void MSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     Q_D(MSliderView);
     if (d->isCollision(event)) {
         d->controller->setState(MSliderModel::Pressed);
-        d->updateValue(event);
+        d->playSliderMoveFeedback(d->updateValue(event));
 
         if (model()->handleLabelVisible())
             d->sliderGroove->raiseHandleIndicator();
     } else {
         d->controller->setState(MSliderModel::Released);
-        d->updateValue(event);
+        d->playSliderMoveFeedback(d->updateValue(event));
         d->sliderGroove->lowerHandleIndicator();
     }
 }
@@ -1411,14 +1431,14 @@ void MSliderView::hideEvent(QHideEvent* event)
 void MSliderView::lowerSliderHandleIndicator()
 {
     Q_D(MSliderView);
- 
+
     d->controller->setState(MSliderModel::Released);
- 
+
     if (d->pressTimerId) {
         killTimer(d->pressTimerId);
         d->pressTimerId = 0;
     }
- 
+
     d->sliderGroove->lowerHandleIndicator();
 }
 

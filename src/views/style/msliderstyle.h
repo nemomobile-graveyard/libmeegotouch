@@ -111,6 +111,21 @@ class M_EXPORT MSliderStyle : public MWidgetStyle
         \brief Maximum length of slider groove (measured along it)
       */
     M_STYLE_ATTRIBUTE(qreal, grooveMaximumLength, GrooveMaximumLength)
+    /*!
+        \property MSlider::moveFeedback
+        \brief Feedback given when slider is moved
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, moveFeedback, MoveFeedback)
+    /*!
+        \property MSlider::minimumFeedbackInterval
+        \brief Minimum time between haptic feedbacks when moving slider (in milliseconds)
+      */
+    M_STYLE_ATTRIBUTE(int, minimumFeedbackInterval, MinimumFeedbackInterval)
+    /*!
+        \property MSlider::stepsPerFeedback
+        \brief Steps needed before giving haptic feedback when moving slider
+      */
+    M_STYLE_ATTRIBUTE(int, stepsPerFeedback, StepsPerFeedback)
 };
 
 class M_EXPORT MSliderStyleContainer : public MWidgetStyleContainer
