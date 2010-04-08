@@ -74,6 +74,8 @@ public:
 
     void _q_confirmCompletion(const QString &);
 
+    bool copy();
+
 private:
     const QValidator *validator;
     bool ownValidator; // setting content type creates a validator that the widget owns

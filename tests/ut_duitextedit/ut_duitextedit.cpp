@@ -51,6 +51,8 @@
 Q_DECLARE_METATYPE(Dui::TextContentType);
 Q_DECLARE_METATYPE(Qt::InputMethodHints);
 Q_DECLARE_METATYPE(QValidator::State);
+Q_DECLARE_METATYPE(DuiTextEditModel::EchoMode);
+Q_DECLARE_METATYPE(DuiTextEditModel::EditMode);
 
 const QString Ut_DuiTextEdit::testString = QString("jallajalla");
 
@@ -1299,6 +1301,114 @@ void Ut_DuiTextEdit::testPasteOnPreedit()
     clipboard->setText(text);
     m_subject->paste();
     QCOMPARE(m_subject->text(), text + text);
+}
+
+void Ut_DuiTextEdit::testCut_data()
+{
+    QTest::addColumn<QString>("clipboardText");
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<QString>("expectedClipboard");
+    QTest::addColumn<QString>("expectedText");
+    QTest::addColumn<bool>("doSelection");
+    QTest::addColumn<DuiTextEditModel::EchoMode>("echoMode");
+    QTest::addColumn<bool>("readOnly");
+    QTest::addColumn<DuiTextEditModel::EditMode>("expectedMode");
+    QTest::addColumn<bool>("useValidator");
+    QTest::addColumn<QValidator::State>("validatorState");
+    QTest::addColumn<bool>("sendEvent");
+
+    QString text("some text");
+    QString part1(2048, '1');
+    QString part2(" " + QString(1000, '2') + " " + QString(1000, '3'));
+    QString text2(part1 + part2);
+
+    for (int sendEvent = 0; sendEvent <= 1; ++sendEvent) {
+        for (int useValidator = 0; useValidator <= 1; ++useValidator) {
+            QTest::newRow("no selection") << text << text2 << text  << text2  << false
+                << DuiTextEditModel::Normal << false
+                << DuiTextEditModel::EditModeBasic << bool(useValidator)
+                << QValidator::Acceptable << bool(sendEvent);
+
+            QTest::newRow("selection")    << text << text2 << part1 << part2 << true
+                << DuiTextEditModel::Normal << false
+                << DuiTextEditModel::EditModeBasic << bool(useValidator)
+                << QValidator::Acceptable << bool(sendEvent);
+
+            QTest::newRow("read only")    << text << text2 << text  << text2 << true
+                << DuiTextEditModel::Normal << true
+                << DuiTextEditModel::EditModeSelect << bool(useValidator)
+                << QValidator::Acceptable << bool(sendEvent);
+
+            for (DuiTextEditModel::EchoMode mode = DuiTextEditModel::NoEcho;
+                    mode <= DuiTextEditModel::PasswordEchoOnEdit;
+                    mode = DuiTextEditModel::EchoMode(mode + 1)) {
+                QTest::newRow("test echo mode") << text << text2 << text << text2 << true
+                    << mode << false << DuiTextEditModel::EditModeSelect
+                    << bool(useValidator) << QValidator::Acceptable << bool(sendEvent);
+            }
+        }
+
+        for (int validatorState = QValidator::Intermediate;
+                validatorState <= QValidator::Acceptable;
+                ++validatorState) {
+            QTest::newRow("test validator") << text << text2 << part1 << part2 << true
+                << DuiTextEditModel::Normal << false
+                << DuiTextEditModel::EditModeBasic << true
+                << QValidator::State(validatorState) << bool(sendEvent);
+        }
+
+        QTest::newRow("invalid") << text << text2 << part1 << text2 << true
+            << DuiTextEditModel::Normal << false
+            << DuiTextEditModel::EditModeSelect << true << QValidator::Invalid
+            << bool(sendEvent);
+    }
+}
+
+void Ut_DuiTextEdit::testCut()
+{
+    QClipboard *clipboard = QApplication::clipboard();
+    QVERIFY(clipboard != 0);
+    QKeyEvent keyCut(QEvent::KeyPress, Qt::Key_X, Qt::ControlModifier, QChar());
+
+    QFETCH(QString, clipboardText);
+    QFETCH(QString, text);
+    QFETCH(QString, expectedClipboard);
+    QFETCH(QString, expectedText);
+    QFETCH(bool, doSelection);
+    QFETCH(DuiTextEditModel::EchoMode, echoMode);
+    QFETCH(bool, readOnly);
+    QFETCH(DuiTextEditModel::EditMode, expectedMode);
+    QFETCH(bool, useValidator);
+    QFETCH(QValidator::State, validatorState);
+    QFETCH(bool, sendEvent);
+
+    qDebug() << "echoMode=" << echoMode << "useValidator=" << useValidator
+             << "validatorState=" << validatorState << "sendEvent=" << sendEvent;
+
+    clipboard->setText(clipboardText);
+    m_subject->setText(text);
+
+    if (doSelection) {
+        m_subject->setSelection(1, 1, true);
+    }
+    m_subject->setEchoMode(echoMode);
+    m_subject->setReadOnly(readOnly);
+
+    SimpleValidator validator;
+    validator.state = validatorState;
+    if (useValidator) {
+        m_subject->setValidator(&validator);
+    }
+
+    if (sendEvent) {
+        m_subject->keyPressEvent(&keyCut);
+    } else {
+       m_subject->cut();
+    }
+
+    QCOMPARE(clipboard->text(), expectedClipboard);
+    QCOMPARE(m_subject->text(), expectedText);
+    QVERIFY(m_subject->mode() == expectedMode);
 }
 
 void Ut_DuiTextEdit::testInputMethodQuery()

@@ -75,6 +75,8 @@ private slots:
     void testCursorPositionChanged();
     void testCopyPaste();
     void testPasteOnPreedit();
+    void testCut_data();
+    void testCut();
     void testInputMethodQuery();
     void testConstrainedPaste();
 

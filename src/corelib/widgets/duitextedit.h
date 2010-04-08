@@ -399,6 +399,14 @@ public Q_SLOTS:
      */
     virtual void paste();
 
+    /*!
+     * \brief Copies the selected text to the clipboard and deletes it, if there is any, and if echoMode() is Normal.
+     *
+     * If the current validator disallows deleting the selected text, cut() will copy without deleting.
+     * If text could not be changed (isReadOnly() return true) then cut() do nothing.
+     */
+    void cut();
+
 Q_SIGNALS:
     /**
      *  \brief A signal which is emitted whenever the widget gets the focus.

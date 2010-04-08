@@ -674,7 +674,20 @@ void DuiTextEditPrivate::_q_confirmCompletion(const QString &completion)
     q->updateMicroFocus();
 }
 
+bool DuiTextEditPrivate::copy()
+{
+    Q_Q(DuiTextEdit);
+    QClipboard *clipboard = QApplication::clipboard();
 
+    if (!q->hasSelectedText()
+            || q->echoMode() != DuiTextEditModel::Normal // only allow copy from normal echo mode entry
+            || !clipboard) {
+        return false;
+    }
+
+    clipboard->setText(cursor()->selectedText());
+    return true;
+}
 
 ///////////////////////////////////////////////
 // Actual class implementation
@@ -884,6 +897,14 @@ void DuiTextEdit::keyPressEvent(QKeyEvent *event)
 
     if (event->matches(QKeySequence::Paste)) {
         paste();
+        event->accept();
+        return;
+    } else if (event->matches(QKeySequence::Cut)) {
+        cut();
+        event->accept();
+        return;
+    } else if (event->matches(QKeySequence::SelectAll)) {
+        selectAll();
         event->accept();
         return;
     }
@@ -1253,15 +1274,9 @@ void DuiTextEdit::clear()
 
 void DuiTextEdit::copy()
 {
-    QClipboard *clipboard = QApplication::clipboard();
+    Q_D(DuiTextEdit);
 
-    if (!hasSelectedText()
-            || echoMode() != DuiTextEditModel::Normal // only allow copy from normal echo mode entry
-            || !clipboard) {
-        return;
-    }
-
-    clipboard->setText(textCursor().selectedText());
+    d->copy();
 }
 
 
@@ -1314,6 +1329,34 @@ void DuiTextEdit::paste()
     }
 }
 
+void DuiTextEdit::cut()
+{
+    Q_D(DuiTextEdit);
+    QValidator::State result = QValidator::Acceptable;
+
+    if (isReadOnly() || !d->copy()) {
+        return;
+    }
+
+    QTextCursor *cursor = model()->cursor();
+
+    if (d->validator) {
+        QString textCopy = model()->document()->toPlainText();
+        int start = cursor->selectionStart();
+        int length = cursor->selectionEnd() - start;
+
+        textCopy.remove(start, length);
+        result = d->validator->validate(textCopy, start);
+    }
+    if (result != QValidator::Invalid) {
+        cursor->removeSelectedText();
+        d->setMode(DuiTextEditModel::EditModeBasic);
+        d->sendCopyAvailable(false);
+        emit selectionChanged();
+        emit textChanged();
+        updateMicroFocus();
+    }
+}
 
 DuiTextEditModel::EditMode DuiTextEdit::mode() const
 {
