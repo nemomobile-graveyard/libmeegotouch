@@ -54,7 +54,7 @@ void DuiPopupListViewPrivate::updateCell(const QModelIndex& index, DuiWidget * c
     DuiPopupListItem* item = static_cast<DuiPopupListItem*>(cell);
 
     QString title;
-    QPixmap* pixmap;
+    QPixmap* pixmap = NULL;
     QVariant value;
 
     value = list->itemModel()->data(index, Qt::DisplayRole);
