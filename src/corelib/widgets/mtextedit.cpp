@@ -105,22 +105,55 @@ QTextCursor *MTextEditPrivate::cursor() const
 
 
 /*!
-  * \brief Moves cursor, parameters as in QTextCursor::movePosition()
+  * \brief Moves cursor, parameters as in QTextCursor::movePosition().
+  * \return True if operation compeled successfully.
   */
-void MTextEditPrivate::moveCursor(QTextCursor::MoveOperation moveOp,
-                                    QTextCursor::MoveMode moveMode, int n)
+bool MTextEditPrivate::moveCursor(QTextCursor::MoveOperation moveOp,
+                                  QTextCursor::MoveMode moveMode, int n)
 {
     Q_Q(MTextEdit);
+    bool result;
 
     // Cursor movement will enter basic mode
     commitPreedit();
-    q->deselect();
+    if (moveMode == QTextCursor::MoveAnchor) {
+        q->deselect();
+    }
 
-    if (cursor()->movePosition(moveOp, moveMode, n)) {
+    result = cursor()->movePosition(moveOp, moveMode, n);
+    if (result) {
         q->model()->updateCursor();
         q->updateMicroFocus();
         emit q->cursorPositionChanged();
     }
+
+    return result;
+}
+
+
+/*!
+ * \brief Move cursor to begin/end if movement up/down failed.
+ * \return True if operation compeled successfully.
+ */
+bool MTextEditPrivate::smartMoveCursor(QTextCursor::MoveOperation moveOp,
+                                       QTextCursor::MoveMode moveMode, int n)
+{
+    bool result = moveCursor(moveOp, moveMode, n);
+
+    if (!result) {
+        switch (moveOp) {
+        case QTextCursor::Up:
+            result = moveCursor(QTextCursor::StartOfLine, moveMode, 1);
+            break;
+        case QTextCursor::Down:
+            result = moveCursor(QTextCursor::EndOfLine, moveMode, 1);
+            break;
+        default:
+            break;
+        }
+    }
+
+    return result;
 }
 
 
@@ -856,6 +889,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
 
     QTextCursor::MoveOperation moveDirection = QTextCursor::NoMove;
     int key = event->key();
+    bool wasSelecting = hasSelectedText();
 
     // first check if this is cursor movement
     switch (key) {
@@ -879,13 +913,22 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
 
     // if input was just movement, we're done
     if (moveDirection != QTextCursor::NoMove) {
-        if (mode() != MTextEditModel::EditModeBasic) {
-            d->cursor()->clearSelection();
-            model()->setEdit(MTextEditModel::EditModeBasic);
-            emit selectionChanged();
+        if (event->modifiers() == Qt::NoModifier) {
+            d->smartMoveCursor(moveDirection, QTextCursor::MoveAnchor, 1);
+        } else if (event->modifiers() == Qt::ShiftModifier
+                   &&  (textInteractionFlags() & Qt::TextSelectableByKeyboard)) {
+            const bool moved = d->smartMoveCursor(moveDirection, QTextCursor::KeepAnchor, 1);
+            if (!wasSelecting && d->cursor()->hasSelection()) { // first character was selected
+                d->setMode(MTextEditModel::EditModeSelect);
+                d->sendCopyAvailable(true);
+            } else if (wasSelecting && !d->cursor()->hasSelection()) { // selection have just vanished
+                d->setMode(MTextEditModel::EditModeBasic);
+                d->sendCopyAvailable(false);
+            }
+            if (moved) {
+                emit selectionChanged();
+            }
         }
-
-        d->moveCursor(moveDirection, QTextCursor::MoveAnchor, 1);
         event->accept();
         return;
     }
@@ -922,8 +965,6 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
     }
 
     d->editActive = true;
-
-    bool wasSelecting = hasSelectedText();
 
     QTextDocumentFragment selectedFragment;
     int selectionStart = -1;
@@ -1724,6 +1765,7 @@ void MTextEdit::deselect()
         model()->updateCursor();
         d->sendCopyAvailable(false);
         updateMicroFocus();
+        emit selectionChanged();
     }
 }
 

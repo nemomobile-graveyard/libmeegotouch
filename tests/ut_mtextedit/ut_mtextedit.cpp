@@ -318,8 +318,6 @@ void Ut_MTextEdit::testSingleLineKeyPressEvent()
     QCOMPARE(mode, MTextEditModel::SingleLine);
 
     confirmKeyEventIgnored(&singleLine, Qt::Key_Return, 1);
-    confirmKeyEventIgnored(&singleLine, Qt::Key_Up, 0);
-    confirmKeyEventIgnored(&singleLine, Qt::Key_Down, 0);
 }
 
 #include <MEscapeButtonPanel>
@@ -1733,6 +1731,165 @@ void Ut_MTextEdit::testCommitLineBreakAfterPreedit()
     commitEvent.setCommitString(commitString);
     m_subject->inputMethodEvent(&commitEvent);
     QCOMPARE(returnPressedSpy.count(), expectedSignals);
+}
+
+void Ut_MTextEdit::testArrowKeys()
+{
+    QSignalSpy copyAvailableSpy(m_subject, SIGNAL(copyAvailable(bool)));
+    QVERIFY(copyAvailableSpy.isValid());
+
+    QSignalSpy selectionChangedSpy(m_subject, SIGNAL(selectionChanged()));
+    QVERIFY(selectionChangedSpy.isValid());
+
+    QString line(QString(1000, '1'));
+    QKeyEvent right(QEvent::KeyPress, Qt::Key_Right, Qt::NoModifier, QChar());
+    QKeyEvent left (QEvent::KeyPress, Qt::Key_Left , Qt::NoModifier, QChar());
+    QKeyEvent up   (QEvent::KeyPress, Qt::Key_Up   , Qt::NoModifier, QChar());
+    QKeyEvent down (QEvent::KeyPress, Qt::Key_Down , Qt::NoModifier, QChar());
+
+    m_subject->keyPressEvent(&right);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+
+    m_subject->keyPressEvent(&left);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+
+    m_subject->keyPressEvent(&up);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+
+    m_subject->keyPressEvent(&down);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+
+    m_subject->setText(line);
+    m_subject->setCursorPosition(0);
+
+    m_subject->keyPressEvent(&right);
+    QCOMPARE(m_subject->cursorPosition(), 1);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+
+    m_subject->keyPressEvent(&left);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+}
+
+void Ut_MTextEdit::testSelectByArrowKeys()
+{
+    QSignalSpy copyAvailableSpy(m_subject, SIGNAL(copyAvailable(bool)));
+    QVERIFY(copyAvailableSpy.isValid());
+
+    QSignalSpy selectionChangedSpy(m_subject, SIGNAL(selectionChanged()));
+    QVERIFY(selectionChangedSpy.isValid());
+
+    QString line(QString("123 ") + QString(1000, '4'));
+    QKeyEvent right(QEvent::KeyPress, Qt::Key_Right, Qt::ShiftModifier, QChar());
+    QKeyEvent left (QEvent::KeyPress, Qt::Key_Left , Qt::ShiftModifier, QChar());
+    QKeyEvent up   (QEvent::KeyPress, Qt::Key_Up   , Qt::ShiftModifier, QChar());
+    QKeyEvent down (QEvent::KeyPress, Qt::Key_Down , Qt::ShiftModifier, QChar());
+
+    m_subject->keyPressEvent(&right);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+
+    m_subject->keyPressEvent(&left);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+
+    m_subject->keyPressEvent(&up);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+
+    m_subject->keyPressEvent(&down);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
+
+    m_subject->setText(line);
+    m_subject->setCursorPosition(1);
+
+    m_subject->keyPressEvent(&right);
+    QCOMPARE(m_subject->cursorPosition(), 2);
+    QCOMPARE(m_subject->selectedText(), QString("2"));
+    QCOMPARE(copyAvailableSpy.count(), 1);
+    QCOMPARE(copyAvailableSpy.first().count(), 1);
+    QVERIFY(copyAvailableSpy.first().first() == true);
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    copyAvailableSpy.clear();
+    selectionChangedSpy.clear();
+
+    m_subject->keyPressEvent(&left);
+    QCOMPARE(m_subject->cursorPosition(), 1);
+    QCOMPARE(m_subject->selectedText(), QString());
+    QCOMPARE(copyAvailableSpy.count(), 1);
+    QCOMPARE(copyAvailableSpy.first().count(), 1);
+    QVERIFY(copyAvailableSpy.first().first() == false);
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    copyAvailableSpy.clear();
+    selectionChangedSpy.clear();
+
+    m_subject->keyPressEvent(&left);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QCOMPARE(m_subject->selectedText(), QString("1"));
+    QCOMPARE(copyAvailableSpy.count(), 1);
+    QCOMPARE(copyAvailableSpy.first().count(), 1);
+    QVERIFY(copyAvailableSpy.first().first() == true);
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    copyAvailableSpy.clear();
+    selectionChangedSpy.clear();
+
+    m_subject->setCursorPosition(0);
+    copyAvailableSpy.clear();
+    selectionChangedSpy.clear();
+
+    m_subject->keyPressEvent(&down);
+    QVERIFY(m_subject->cursorPosition() > 0);
+    QVERIFY(!m_subject->selectedText().isEmpty());
+    QCOMPARE(copyAvailableSpy.count(), 1);
+    QCOMPARE(copyAvailableSpy.first().count(), 1);
+    QVERIFY(copyAvailableSpy.first().first() == true);
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    copyAvailableSpy.clear();
+    selectionChangedSpy.clear();
+
+    m_subject->keyPressEvent(&up);
+    QVERIFY(m_subject->cursorPosition() == 0);
+    QVERIFY(m_subject->selectedText().isEmpty());
+    QCOMPARE(copyAvailableSpy.count(), 1);
+    QCOMPARE(copyAvailableSpy.first().count(), 1);
+    QVERIFY(copyAvailableSpy.first().first() == false);
+    QCOMPARE(selectionChangedSpy.count(), 1);
+    copyAvailableSpy.clear();
+    selectionChangedSpy.clear();
+
+    //disable flag Qt::TextSelectableByKeyboard
+    m_subject->setTextInteractionFlags(Qt::TextSelectableByMouse | Qt::TextEditable);
+
+    m_subject->keyPressEvent(&right);
+    QCOMPARE(m_subject->cursorPosition(), 0);
+    QVERIFY(!m_subject->hasSelectedText());
+    QCOMPARE(copyAvailableSpy.count(), 0);
+    QCOMPARE(selectionChangedSpy.count(), 0);
 }
 
 QTEST_APPLESS_MAIN(Ut_MTextEdit);

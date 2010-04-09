@@ -100,6 +100,9 @@ private slots:
 
     void testCommitLineBreakAfterPreedit_data();
     void testCommitLineBreakAfterPreedit();
+
+    void testArrowKeys();
+    void testSelectByArrowKeys();
 };
 
 #endif
