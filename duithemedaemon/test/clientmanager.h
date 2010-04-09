@@ -28,6 +28,8 @@
 class ClientThread;
 class Client;
 
+static const QString THEME_ROOT_DIRECTORY = QString("themes");
+
 class ClientManager : public QObject
 {
     Q_OBJECT

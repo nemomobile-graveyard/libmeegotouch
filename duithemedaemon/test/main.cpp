@@ -20,6 +20,7 @@
 #include <QDebug>
 #include <QApplication>
 #include <QDir>
+#include <DuiGConfItem>
 #include <theme/duithemedaemon.h>
 #include "keypresswaiter.h"
 #include "clientmanager.h"
@@ -27,6 +28,15 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+
+#ifdef HAVE_GCONF
+    const QString themeName = "theme_one";
+    QDir themeDirectory(THEME_ROOT_DIRECTORY + '/' + themeName);
+    if (themeDirectory.exists()) {
+        DuiGConfItem theme("/Dui/theme/name");
+        theme.set(themeName);
+    }
+#endif
 
     QProcess td;
     td.start("./testdaemon/testdaemon", QStringList());

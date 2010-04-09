@@ -25,8 +25,7 @@
 #include <QSize>
 #include <QDir>
 #include <QLocalSocket>
-#include <QMutex>
-#include <QWaitCondition>
+#include <QSemaphore>
 
 #include "duithemedaemonclient.h"
 
@@ -104,8 +103,7 @@ private:
     int operationCount;
     quint64 packetsSent;
     QString currentTheme;
-    QMutex lock;
-    QWaitCondition wait;
+    QSemaphore waitVerify;
 };
 
 #endif

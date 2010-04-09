@@ -47,7 +47,6 @@ void removeDirectoryRecursive(const QString &path)
     }
 }
 
-static const QString THEME_ROOT_DIRECTORY = QString("themes");
 void ClientManager::cleanup()
 {
     QDir themeDirectory(THEME_ROOT_DIRECTORY);

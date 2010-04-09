@@ -30,8 +30,6 @@
 
 using namespace Dui::DuiThemeDaemonProtocol;
 
-static const QString THEME_ROOT_DIRECTORY = QString("themes");
-
 ClientThread::ClientThread(ClientManager* manager) : manager(manager)
 {
 }
@@ -134,10 +132,8 @@ Dui::DuiThemeDaemonProtocol::Packet Client::processOnePacket()
         const PixmapHandle *handle = static_cast<const PixmapHandle *>(packet.data());
 
         if(handle->pixmapHandle) {
-            lock.lock();
             emit pixmapReady(currentTheme, this, handle->pixmapHandle, handle->identifier.imageId, handle->identifier.size);
-            wait.wait(&lock);
-            lock.unlock();
+            waitVerify.acquire();
         } else {
             qDebug() << "ERROR: daemon returned null handle for" << handle->identifier.imageId;
         }
@@ -160,7 +156,6 @@ Dui::DuiThemeDaemonProtocol::Packet Client::processOnePacket()
 
 void Client::pixmapVerified(const QString& imageId, const QSize& size)
 {
-
     PixmapIdentifier identifier(imageId, size);
 
     if (requestedPixmaps.contains(identifier)) {
@@ -172,7 +167,8 @@ void Client::pixmapVerified(const QString& imageId, const QSize& size)
     } else {
         qDebug() << "ERROR:" << imageId << "- pixmap reply to unknown request";
     }
-    wait.wakeAll();
+
+    waitVerify.release();
 }
 
 
@@ -300,6 +296,7 @@ void Client::releasePixmap(Dui::DuiThemeDaemonProtocol::PixmapIdentifier &pixmap
     packet.setData(new PixmapIdentifier(pixmapIdentifier));
     stream << packet;
     readyPixmaps.remove(pixmapIdentifier);
+    requestedPixmaps.remove(pixmapIdentifier);
 }
 
 void Client::checkConsistency()
