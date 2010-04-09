@@ -64,6 +64,7 @@ public:
 
 protected:
     //! \reimp
+    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void setupModel();
     //! \reimp_end

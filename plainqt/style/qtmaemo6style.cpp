@@ -1379,55 +1379,10 @@ void QtMaemo6Style::drawControl(ControlElement element,
 
             d->drawWidgetBackground(p, opt, slider->rect, style);
 
-            const QPixmap *railDotPixmap = style->offPixmap();
-            const QPixmap *railDotPlayedPixmap = style->onPixmap();
-            QSize maxRailDotSize =
-                (railDotPixmap->size()).expandedTo(railDotPlayedPixmap->size());
-
-            int sliderLength = slider->orientation == Qt::Horizontal ? slider->rect.width() : slider->rect.height();
-            int railDotSize = slider->orientation == Qt::Horizontal ? maxRailDotSize.width() : maxRailDotSize.height();
-
-            int dotCount = sliderLength / (railDotSize + style->pixmapDistance());
-            int offset = (sliderLength - (dotCount * (railDotSize + style->pixmapDistance()) - style->pixmapDistance())) / 2;
-
-            //calculating the slider size, and position within the groove
-            //QRect scSliderRect = subControlRect(CC_ScrollBar, slider, SC_ScrollBarSlider, widget);
+            //retrieving the slider size, and position within the groove
             QRect scSliderRect = subControlRect(CC_ScrollBar, slider, SC_ScrollBarSlider, widget);
 
-            int sliderStart, sliderEnd;
-            if (slider->orientation == Qt::Horizontal) {
-                sliderStart = scSliderRect.x();
-                sliderEnd = scSliderRect.x() + scSliderRect.width();
-            } else {
-                sliderStart = scSliderRect.y();
-                sliderEnd = scSliderRect.y() + scSliderRect.height();
-            }
-            int grooveLength = sliderEnd - sliderStart;
-
-            int grooveDotCount = qRound((qreal)grooveLength * (qreal)dotCount / (qreal)sliderLength);
-            int sliderDotsSubPage = qRound((qreal)sliderStart * (qreal)dotCount / (qreal)sliderLength);
-            //int sliderDotsAddPage = dotCount - (grooveDotCount + sliderDotsSubPage);
-
-            //make copies of the pixmaps to avoid doing the transparency within the loop
-            QPixmap railDotPixmapAlpha(*railDotPixmap);
-            QPixmap railDotPlayedPixmapAlpha(*railDotPlayedPixmap);
-            if (widget->dynamicPropertyNames().contains(WIDGET_OPACITY)) {
-                double opacity = widget->property(WIDGET_OPACITY).toDouble();
-
-                railDotPixmapAlpha = setPixmapOpacity(railDotPixmapAlpha, opacity);
-                railDotPlayedPixmapAlpha = setPixmapOpacity(railDotPlayedPixmapAlpha, opacity);
-            }
-
-            for (int i = 0; i < dotCount; ++i) {
-                QPixmap *pm = i < sliderDotsSubPage || i >= sliderDotsSubPage + grooveDotCount
-                              ? &railDotPixmapAlpha : &railDotPlayedPixmapAlpha;
-
-                if (slider->orientation == Qt::Horizontal)
-                    p->drawPixmap(QPoint(offset, 0), *pm);
-                else
-                    p->drawPixmap(QPoint(0, offset), *pm);
-                offset += railDotSize + style->pixmapDistance();
-            }
+            d->drawScalableImage(p, opt, scSliderRect, style->indicatorImage(), style, "groove", false);
         }
     }
     break;
@@ -2247,7 +2202,7 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
                 static_cast<const MPositionIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(slider->state,
                         "MPositionIndicatorStyle"));
 
-            QSize pixmapSize = style->onPixmap()->size().expandedTo(style->offPixmap()->size());
+            QSize pixmapSize = style->indicatorImage()->pixmap()->size();
 
             int minSize;
             if (slider->orientation == Qt::Horizontal)

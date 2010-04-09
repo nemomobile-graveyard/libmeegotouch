@@ -30,11 +30,9 @@ class M_EXPORT MPositionIndicatorStyle : public MWidgetStyle
     Q_OBJECT
     M_STYLE(MPositionIndicatorStyle)
 
-    M_STYLE_PTR_ATTRIBUTE(QPixmap *,       onPixmap,         OnPixmap)
-    M_STYLE_PTR_ATTRIBUTE(QPixmap *,       offPixmap,        OffPixmap)
-    M_STYLE_ATTRIBUTE(int,                pixmapDistance,   PixmapDistance)
-    M_STYLE_ATTRIBUTE(int,                minIndicatorDots, MinIndicatorDots)
-    M_STYLE_ATTRIBUTE(int,                hideTimeout,      HideTimeout)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, indicatorImage, IndicatorImage)
+    M_STYLE_ATTRIBUTE(int, minIndicatorSize, MinIndicatorSize)
+    M_STYLE_ATTRIBUTE(int, hideTimeout, HideTimeout)
 };
 
 class M_EXPORT MPositionIndicatorStyleContainer : public MWidgetStyleContainer

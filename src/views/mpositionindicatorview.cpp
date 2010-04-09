@@ -28,6 +28,7 @@
 #include "mtheme.h"
 #include "mviewcreator.h"
 #include "mpositionindicator.h"
+#include "mscalableimage.h"
 
 MPositionIndicatorViewPrivate::MPositionIndicatorViewPrivate()
     : controller(0),
@@ -59,70 +60,84 @@ MPositionIndicatorView::~MPositionIndicatorView()
     d->controller = 0;
 }
 
+void MPositionIndicatorView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    Q_UNUSED(painter);
+    Q_UNUSED(option);
+}
+
 void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
-    /*
-        Q_D(const MPositionIndicatorView);
-    */
     Q_UNUSED(option);
-    /*
-        if(d->visible) {
-    */
-    int dotDist = style()->pixmapDistance();
-    QSize dotSize = style()->onPixmap()->size();
-    QSizeF vpSize = model()->viewportSize();
-    QRectF pRange = model()->range();
-    QPointF pPos = model()->position();
-    const QPixmap *pixOff = style()->offPixmap();
-    const QPixmap *pixOn = style()->onPixmap();
 
-    int dotsX = size().width() / dotDist;
-    int onDotsX = (2 * dotsX * vpSize.width() + pRange.width()) / pRange.width() / 2;
-    onDotsX = qMax(onDotsX,
-                   style()->minIndicatorDots());
-    int onPosX = (2 * dotsX * pPos.x() + pRange.width()) / pRange.width() / 2;
-    QPoint barPosH = QPoint(size().width() - dotsX * dotDist + (dotDist - dotSize.width()) / 2,
-                            size().height() - dotDist + (dotDist - dotSize.height()) / 2);
+    QSizeF  vpSize = model()->viewportSize();
+    QRectF  pRange = model()->range();
+    QPointF pPos   = model()->position();
 
-    int dotsY = size().height() / dotDist;
-    int onDotsY = (2 * dotsY * vpSize.height() + pRange.height()) / pRange.height() / 2;
-    onDotsY = qMax(onDotsY,
-                   style()->minIndicatorDots());
-    int onPosY = (2 * dotsY * pPos.y() + pRange.height()) / pRange.height() / 2;
-    QPoint barPosV = QPoint(size().width() - dotDist + (dotDist - dotSize.width()) / 2,
-                            size().height() - dotsY * dotDist + (dotDist - dotSize.height()) / 2);
+    const MScalableImage *indicator = style()->indicatorImage();
+    const MScalableImage *rail = style()->backgroundImage();
 
-    int effPosX = qMax(0, onPosX);
-    int effPosY = qMax(0, onPosY);
-
-    if (pRange.width() > vpSize.width()) {
-        QPointF currPos(barPosH);
-        QPointF posAdd(dotDist, 0);
-        bool pixState;
-
-        for (int i = 0; i < dotsX; ++i) {
-            pixState = (i < effPosX || i >= onPosX + onDotsX) ? false : true;
-            painter->drawPixmap(currPos, pixState ? *pixOn : *pixOff);
-
-            currPos += posAdd;
-        }
-    }
 
     if (pRange.height() > vpSize.height()) {
-        QPointF currPos(barPosV);
-        QPointF posAdd(0, dotDist);
-        bool pixState;
 
-        for (int i = 0; i < dotsY; ++i) {
-            pixState = (i < effPosY || i >= onPosY + onDotsY) ? false : true;
-            painter->drawPixmap(currPos, pixState ? *pixOn : *pixOff);
+        int indicatorPixmapSizeX = indicator->pixmap()->width();
+        int railPixmapSizeX = rail->pixmap()->width();
 
-            currPos += posAdd;
+        int indicatorHeight = qMax(style()->minIndicatorSize(), int((vpSize.height()/pRange.height())*size().height()));
+        int indicatorPosition = (pPos.y()/pRange.height())*size().height();
+
+        if (indicatorPosition + indicatorHeight > size().height()) {
+            indicatorHeight = size().height() - indicatorPosition;
         }
+
+        if (indicatorPosition < 0) {
+            indicatorHeight += indicatorPosition;
+            indicatorPosition = 0;
+        }
+
+        rail->draw( size().width() - railPixmapSizeX,
+                    0,
+                    railPixmapSizeX,
+                    size().height(),
+                    painter);
+
+
+
+        indicator->draw(size().width() - indicatorPixmapSizeX,
+                        indicatorPosition,
+                        indicatorPixmapSizeX,
+                        indicatorHeight,
+                        painter);
     }
-    /*
+
+    if (pRange.width() > vpSize.width()) {
+
+        int indicatorPixmapSizeY = indicator->pixmap()->height();
+        int railPixmapSizeY = rail->pixmap()->height();
+        int indicatorWidth = qMax(style()->minIndicatorSize(), int((vpSize.width()/pRange.width())*size().width()));
+        int indicatorPosition = (pPos.x()/pRange.width())*size().width();
+
+        if (indicatorPosition + indicatorWidth > size().width()) {
+            indicatorWidth = size().width() - indicatorPosition;
         }
-    */
+
+        if (indicatorPosition < 0) {
+            indicatorWidth += indicatorPosition;
+            indicatorPosition = 0;
+        }
+
+        rail->draw( 0,
+                    size().height() - railPixmapSizeY,
+                    size().width(),
+                    railPixmapSizeY,
+                    painter);
+
+        indicator->draw(indicatorPosition,
+                        size().height() - indicatorPixmapSizeY,
+                        indicatorWidth,
+                        indicatorPixmapSizeY,
+                        painter);
+    }
 }
 
 void MPositionIndicatorView::updateData(const QList<const char *>& modifications)
