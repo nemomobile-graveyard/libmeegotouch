@@ -170,30 +170,28 @@ void MApplicationMenuViewPrivate::change(QAction *action)
 
 bool MApplicationMenuViewPrivate::eventFilter(QObject *obj, QEvent *e)
 {
-    QActionEvent *actionEvent = dynamic_cast<QActionEvent *>(e);
-
-    if (actionEvent) {
-        switch (e->type()) {
+    switch (e->type()) {
         case QEvent::ActionRemoved: {
+            QActionEvent *actionEvent = static_cast<QActionEvent *>(e);
             remove(actionEvent->action());
             makeLandscapePolicyColumnsEqual();
             break;
         }
         case QEvent::ActionAdded: {
+            QActionEvent *actionEvent = static_cast<QActionEvent *>(e);
             add(actionEvent->action(), actionEvent->before());
             makeLandscapePolicyColumnsEqual();
             break;
         }
         case QEvent::ActionChanged: {
+            QActionEvent *actionEvent = static_cast<QActionEvent *>(e);
             change(actionEvent->action());
             break;
         }
         default: {
             break;
         }
-        }
     }
-
     return QObject::eventFilter(obj, e);
 }
 
