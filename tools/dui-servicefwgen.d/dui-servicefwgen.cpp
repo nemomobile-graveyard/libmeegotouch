@@ -824,9 +824,9 @@ void processAdaptorCppFile()
                     // match end of function - need to add the connect *before* the return, if there is one
                     outS <<
 "\n"\
-"    DuiApplication::instance()->activeWindow()->setWindowTitle( windowTitle );\n"\
 "    DuiApplicationWindow *appWindow = DuiApplication::activeApplicationWindow();\n"\
 "    if (appWindow != 0) {\n"\
+"        appWindow->setWindowTitle( windowTitle );\n"\
 "        appWindow->currentPage()->setEscapeMode( DuiApplicationPageModel::EscapeManualBack );\n"\
 "        // connect to the back button - assumes the above 'showImage' opens a\n"\
 "        // new window and so the window referred to below is already the top one\n"\
