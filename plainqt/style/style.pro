@@ -22,7 +22,7 @@ win32|macx {
     }
     win32:LIBS += -lduicore0
 } else {
-    LIBS += -lduicore
+    LIBS += -lduicore -lduiviews
 }
 
 TEMPLATE = lib
