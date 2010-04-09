@@ -405,7 +405,7 @@ public Q_SLOTS:
      * If the current validator disallows deleting the selected text, cut() will copy without deleting.
      * If text could not be changed (isReadOnly() return true) then cut() do nothing.
      */
-    void cut();
+    virtual void cut();
 
 Q_SIGNALS:
     /**
