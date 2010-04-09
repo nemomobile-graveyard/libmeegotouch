@@ -123,6 +123,15 @@ void MSceneManagerPrivate::init(MScene *scene)
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_applyQueuedSceneWindowTransitions()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
 
+    // The scene manager should only listen to region updates from one instance, to prevent
+    // conflicting window relocation requests. Since MIMS is a singleton, enforcing
+    // Qt::UniqueConnection is sufficient.
+    // This also implies that the software input panel could come up without an explicit request
+    // from the application side.
+    q->connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
+               q, SLOT(_q_relocateWindowByInputPanel(QRect)),
+               Qt::UniqueConnection);
+
     pageSwitchAnimation = new MPageSwitchAnimation;
 
     setOrientationAngleWithoutAnimation(newAngle);
@@ -1192,18 +1201,10 @@ void MSceneManagerPrivate::_q_inputPanelOpened()
         q->disappearSceneWindow(escapeButtonPanel);
     }
 
-    // The scene manager should only listen to region updates from one instance, to prevent
-    // conflicting window relocation requests. Since MIMS is a singleton, enforcing
-    // Qt::UniqueConnection is sufficient.
-    q->disconnect(SIGNAL(inputMethodAreaChanged(QRect)), q);
-    q->connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
-               q, SLOT(_q_relocateWindowByInputPanel(QRect)),
-               Qt::UniqueConnection);
-
     MTextEdit *const newEdit = dynamic_cast<MTextEdit *>(focusedInputWidget);
 
     if (newEdit) {
-        q->disconnect(newEdit, SIGNAL(cursorPositionChanged()), q, 0); //, SLOT(_q_ensureCursorVisibility()));
+        q->disconnect(newEdit, SIGNAL(cursorPositionChanged()), q, 0);
         q->connect(newEdit, SIGNAL(cursorPositionChanged()),
                    q, SLOT(_q_ensureCursorVisibility()));
     }
