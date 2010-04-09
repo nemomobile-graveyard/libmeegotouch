@@ -4,6 +4,7 @@ libdui (0.20.0~3) unstable; urgency=low
   * Fixes: NB#158420 - Bottom toolbar shown with hidden actions in portrait mode
   * Fixes: NB#156114 - <CodeStyle> typo in doxygen documentation
   * Fixes: NB#162474 - displayEntered is not called when VKB is closed
+  * Fixes: NB#162716 - Missing close applet space icon
 
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 08 Apr 2010 16:04:00 +0200
 
