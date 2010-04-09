@@ -392,17 +392,20 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
         return;
     }
 
-    const QSize screenSize(q->visibleSceneSize());
+    // The visible scene size is already mapped to the rootElement's coordinate system.
+    const QRect screenSizeRect(QPoint(0, 0), q->visibleSceneSize());
     const QRect mappedRect(rootElement->mapRectFromScene(inputPanelRect).toRect());
 
     // Need to also handle the case where part of the input panel is outside of the visible scene
     // size, hence the intersection. It is also assumed that the input panel always pops up from
-    // the bottom of the visible scene area
-    const int obstructedHeight(mappedRect.intersect(QRect(QPoint(0, 0), screenSize)).height());
-    const QRect visibleRect(0, 0, screenSize.width(), screenSize.height() - obstructedHeight);
+    // the bottom of the visible scene area.
+    const int obstructedHeight(mappedRect.intersect(screenSizeRect).height());
+    QRect visibleRect(screenSizeRect);
+    visibleRect.setHeight(visibleRect.height() - obstructedHeight);
 
     // Always try to center the input focus into the remaining visible rectangle.
-    int adjustment = (q->scene()->inputMethodQuery(Qt::ImMicroFocus).toRect().center() -
+    const QRectF microFocusRect = q->scene()->inputMethodQuery(Qt::ImMicroFocus).toRectF();
+    int adjustment = (rootElement->mapRectFromScene(microFocusRect).toRect().center() -
                       visibleRect.center()).y();
 
     // Find the first scene window parent of the focused input widget, since only those should
@@ -684,11 +687,13 @@ int MSceneManagerPrivate::scrollPageContents(MSceneWindow *window, int adjustmen
     }
 
     viewport->setPosition(QPoint(0, (newAdjustment + viewport->position().y())));
+    // Disables kinetic scrolling until next pointer event - see NB #162913.
+    viewport->physics()->stop();
     return newAdjustment;
 }
 
 void MSceneManagerPrivate::moveSceneWindow(MSceneWindow *window, int adjustment,
-                                               int inputPanelHeight)
+                                             int inputPanelHeight)
 {
     if (!window) {
         return;
@@ -700,7 +705,8 @@ void MSceneManagerPrivate::moveSceneWindow(MSceneWindow *window, int adjustment,
         newAdjustment = qMin(inputPanelHeight + sceneWindowTranslation.y(), adjustment);
     } else {
         const QPoint topLeftCorner = QPoint(0, 0);
-        newAdjustment = qMax(static_cast<int>(window->mapToScene(topLeftCorner).y()), adjustment);
+        newAdjustment = qMax(static_cast<int>(window->mapToItem(rootElement, (topLeftCorner)).y()),
+                             adjustment);
     }
 
     window->moveBy(0, -newAdjustment);
