@@ -182,7 +182,7 @@ void MWidgetStub::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGestur
   QList<ParameterBase*> params;
   params.append( new Parameter<QGestureEvent * >(event));
   params.append( new Parameter<QTapAndHoldGesture * >(gesture));
-  stubMethodEntered("tapAndHoldGesture",params);
+  stubMethodEntered("tapAndHoldGestureEvent",params);
 }
 
 void MWidgetStub::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
@@ -190,7 +190,7 @@ void MWidgetStub::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
   QList<ParameterBase*> params;
   params.append( new Parameter<QGestureEvent * >(event));
   params.append( new Parameter<QPanGesture * >(gesture));
-  stubMethodEntered("panGesture",params);
+  stubMethodEntered("panGestureEvent",params);
 }
 
 void MWidgetStub::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
@@ -198,7 +198,7 @@ void MWidgetStub::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture
   QList<ParameterBase*> params;
   params.append( new Parameter<QGestureEvent * >(event));
   params.append( new Parameter<QPinchGesture * >(gesture));
-  stubMethodEntered("pinchGesture",params);
+  stubMethodEntered("pinchGestureEvent",params);
 }
 
 void MWidgetStub::tapGestureEvent(QGestureEvent *event, QTapGesture *gesture)
@@ -206,7 +206,7 @@ void MWidgetStub::tapGestureEvent(QGestureEvent *event, QTapGesture *gesture)
   QList<ParameterBase*> params;
   params.append( new Parameter<QGestureEvent * >(event));
   params.append( new Parameter<QTapGesture * >(gesture));
-  stubMethodEntered("tapGesture",params);
+  stubMethodEntered("tapGestureEvent",params);
 }
 
 void MWidgetStub::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture)
@@ -214,7 +214,7 @@ void MWidgetStub::swipeGestureEvent(QGestureEvent *event, QSwipeGesture *gesture
   QList<ParameterBase*> params;
   params.append( new Parameter<QGestureEvent * >(event));
   params.append( new Parameter<QSwipeGesture * >(gesture));
-  stubMethodEntered("swipeGesture",params);
+  stubMethodEntered("swipeGestureEvent",params);
 }
 
 // 3. CREATE A STUB INSTANCE

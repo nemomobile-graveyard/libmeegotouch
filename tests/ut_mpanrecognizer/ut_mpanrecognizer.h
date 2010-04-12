@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libmeegotouch.
+** This file is part of libdui.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,45 +17,28 @@
 **
 ****************************************************************************/
 
-#ifndef UT_MPANNABLEWIDGET_HH
-#define UT_MPANNABLEWIDGET_HH
+#ifndef UT_MPANRECOGNIZER_H
+#define UT_MPANRECOGNIZER_H
 
-
-#include <QtTest/QtTest>
 #include <QObject>
-#include "mapplication.h"
-class MPannableWidget;
-class DummyGraphicsItem;
 
-class Ut_MPannableWidget : public QObject
+class MPanRecognizer;
+class MPanGesture;
+
+class Ut_MPanRecognizer : public QObject
 {
     Q_OBJECT
 
-public:
-
 private:
-
+    MPanRecognizer*  recognizer;
+    MPanGesture*     PanGesture;
 private slots:
-    void initTestCase();
-    void cleanupTestCase();
-
     void init();
     void cleanup();
 
-    void mousePressAndReleaseAreDeliveredToGrabber();
-    void mouseMoveIsDelieveredToGrabberIfNoPanningIsRecognized();
-
-    void usingCustomPhysics();
-    void settingNewPhysicsShouldEmitPhysicsChangeSignal();
-    void settingPhysicsToNULLShouldNotBreakTheWidget();
-
-    void panGestureMovesPhysicsPointer();
-    void panGestureAgainstPanningDirectionIsIgnored();
-    void panGestureCancelsMouseEvents();
-
-private:
-    MPannableWidget *widget;
+    void testCreateGesture();
+    void testRecognize();
+    void testTapIsNotRecognizedAsPan();
 };
 
-
-#endif
+#endif // UT_MPANRECOGNIZER_H

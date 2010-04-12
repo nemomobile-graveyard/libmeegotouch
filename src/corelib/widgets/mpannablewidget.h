@@ -26,6 +26,7 @@
 
 class QTimerEvent;
 class QGraphicsSceneMouseEvent;
+class QPanGesture;
 class MPannableWidgetPrivate;
 class MOnDisplayChangeEvent;
 
@@ -54,8 +55,6 @@ class M_EXPORT MPannableWidget : public MWidgetController
     Q_PROPERTY(QRectF range READ range WRITE setRange)
     //! \brief Panning position
     Q_PROPERTY(QPointF position READ position WRITE setPosition NOTIFY positionChanged USER true)
-    //! \brief Panning threshold
-    Q_PROPERTY(qreal panThreshold READ panThreshold WRITE setPanThreshold)
 
 public:
     /*!
@@ -142,17 +141,6 @@ public:
      */
     Qt::Orientations panDirection();
 
-    /*!
-     * \brief Sets the panning threshold. This method should be used
-     * only by the view. For setting this value, use css.
-     */
-    void setPanThreshold(qreal value);
-
-    /*!
-     * \brief Returns the current panning threshold.
-     */
-    qreal panThreshold();
-
 public Q_SLOTS:
     /*!
      * \brief Virtual slot for receiving position changes from
@@ -213,15 +201,19 @@ private:
     void glassMouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
     /*!
-     * \brief Method for handling situation when some underlying
-     * widget grabs mouse.
-     */
-    void glassUngrabMouseEvent(QEvent *event);
-
-    /*!
      * \brief Method for delivering tap&hold gesture.
      */
     void glassLongTapEvent();
+
+    /*!
+     * \brief Method for delivering pan gesture.
+     */
+    void glassPanEvent(QGestureEvent* event, QPanGesture* panGesture);
+
+    /*!
+     * \brief Method for delivering timer events.
+     */
+    void glassTimerEvent(QTimerEvent* event);
 
     /*!
      * \brief Method for checking if the event is on the resent list
