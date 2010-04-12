@@ -1,6 +1,6 @@
 include( ../common_top.pri )
 
-TARGET = duiextensions
+TARGET = meegotouchextensions
 QT += xml
 
 INCLUDEPATH += \
@@ -20,8 +20,8 @@ contains(DEFINES, HAVE_DBUS) {
     include(style/style.pri)
 }
 
-LIBS += -lduiviews -lduisettings
+LIBS += -lmeegotouchviews -lmeegotouchsettings
 
-SOURCES += duiextensionslibrary.cpp
+SOURCES += mextensionslibrary.cpp
 
 include(../common_bot.pri)

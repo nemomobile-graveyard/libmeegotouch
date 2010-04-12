@@ -3,7 +3,7 @@
 
 #include "timedemobenchmark.h"
 
-#include <DuiNamespace>
+#include <MNamespace>
 
 /**
   * Static page benchmark simply shows a given page and then waits five seconds.
@@ -13,7 +13,7 @@ class StaticPageBenchmark : public TimedemoBenchmark
 {
     Q_OBJECT
 public:
-    StaticPageBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo, Dui::OrientationAngle targetOrientationAngle);
+    StaticPageBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo, M::OrientationAngle targetOrientationAngle);
 
     QString name();
     void start();
@@ -24,8 +24,8 @@ private slots:
     void terminateBenchmark();
 
 private:
-     Dui::OrientationAngle targetOrientationAngle;
-     Dui::OrientationAngle formerOrientationAngle;
+     M::OrientationAngle targetOrientationAngle;
+     M::OrientationAngle formerOrientationAngle;
 };
 
 #endif // STATICPAGEBENCHMARK_H

@@ -5,7 +5,7 @@
 #include "panningbenchmark.h"
 
 TimedemoPage::TimedemoPage(QGraphicsItem *parent)
-    : DuiApplicationPage(parent)
+    : MApplicationPage(parent)
 {
 }
 
@@ -13,13 +13,13 @@ void TimedemoPage::createBenchmarks(Timedemo *timedemo)
 {
     // add a default set of benchmarks
     // inheriting pages may remove or add benchmarks
-    QSharedPointer<TimedemoBenchmark> benchmark(new StaticPageBenchmark(this, timedemo, Dui::Angle0));
+    QSharedPointer<TimedemoBenchmark> benchmark(new StaticPageBenchmark(this, timedemo, M::Angle0));
     m_benchmarks.append(benchmark);
 
     benchmark = QSharedPointer<TimedemoBenchmark>(new PanningBenchmark(this, timedemo));
     m_benchmarks.append(benchmark);
 
-    benchmark = QSharedPointer<TimedemoBenchmark>(new StaticPageBenchmark(this, timedemo, Dui::Angle90));
+    benchmark = QSharedPointer<TimedemoBenchmark>(new StaticPageBenchmark(this, timedemo, M::Angle90));
     m_benchmarks.append(benchmark);
 }
 

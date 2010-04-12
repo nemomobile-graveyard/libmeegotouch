@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -29,7 +29,7 @@
 #include <QDebug>
 #include <QPainter>
 
-#include <duideviceprofile.h>
+#include <mdeviceprofile.h>
 
 #include "qtmaemo6dialogtitle.h"
 #include "qtmaemo6style_p.h"
@@ -124,7 +124,7 @@ void QtMaemo6Window::paintEvent(QPaintEvent* e) {
 void QtMaemo6Window::showFastMaximized()
 {
     // Size policy instead?
-    resize(DuiDeviceProfile::instance()->resolution());
+    resize(MDeviceProfile::instance()->resolution());
     show();
 }
 

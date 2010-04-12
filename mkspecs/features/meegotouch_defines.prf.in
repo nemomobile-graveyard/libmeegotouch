@@ -1,0 +1,101 @@
+##################################################################
+# MDefinesFeature
+#
+# Global DirectUI definitions
+######################################################################
+
+M_MAJOR_VERSION = 0
+M_MINOR_VERSION = 20
+M_PATCH_VERSION = 0
+M_VERSION=$${M_MAJOR_VERSION}.$${M_MINOR_VERSION}.$${M_PATCH_VERSION}
+
+# first set default value for meegotouch prefix
+# the @@...@@ variable is filled from the libmeegotouch/configure script.
+unix {
+    M_PREFIX = @@M_UNIX_INSTALL_PREFIX@@
+    M_SYSCONFDIR = @@M_UNIX_INSTALL_SYSCONFDIR@@
+    M_LIBDIR = @@M_UNIX_INSTALL_LIBDIR@@
+}
+
+mac {
+    M_PREFIX = @@M_UNIX_INSTALL_PREFIX@@
+    M_SYSCONFDIR = @@M_UNIX_INSTALL_SYSCONFDIR@@
+    M_LIBDIR = @@M_UNIX_INSTALL_LIBDIR@@
+}
+
+win32 {
+    M_PREFIX = /
+}
+
+# Directories
+unix|win32 {
+    M_INSTALL_BIN = $$M_PREFIX/bin
+    M_INSTALL_LIBS = $$M_LIBDIR
+    M_INSTALL_DATA = $$M_PREFIX/share
+    M_INSTALL_HEADERS = $$M_PREFIX/include/meegotouch
+    M_INSTALL_SYSCONF = $$M_SYSCONFDIR
+    M_INSTALL_XSESSION = $$M_INSTALL_SYSCONF/X11
+    M_INSTALL_LOCALSTATE = /var
+
+    M_THEME_DIR = $$M_INSTALL_DATA/themes
+    M_THEME_PRELOAD_DIR = $$M_INSTALL_LOCALSTATE/lib/meegotouch/theme/preload.d
+    M_THEME_POST_PRELOAD_DIR = $$M_INSTALL_LOCALSTATE/lib/meegotouch/theme/preload.post
+
+    M_APPLET_DIR = $$M_LIBDIR/meegotouch/applets
+    M_APPLET_INSTALLATION_SOURCES_DIR = $$M_LIBDIR/meegotouch/appletinstallationsources
+    M_APPLET_DATA_DIR = $$M_INSTALL_DATA/meegotouch/applets
+    M_APPLET_SETTINGS_DIR = $$M_INSTALL_DATA/meegotouch/applets/settings
+
+    M_APPLICATION_EXTENSION_DIR = $$M_LIBDIR/meegotouch/applicationextensions
+    M_APPLICATION_EXTENSION_DATA_DIR = $$M_INSTALL_DATA/meegotouch/applicationextensions
+
+    M_NOTIFICATIONS_EVENT_TYPES_DIR=$$M_INSTALL_DATA/meegotouch/notifications/eventtypes
+    M_XDG_DIR = $$M_INSTALL_SYSCONF/xdg
+    M_TRANSLATION_DIR = $$M_INSTALL_DATA/l10n/meegotouch
+    M_DBUS_INTERFACES_DIR = /usr/share/dbus-1/interfaces
+    M_DBUS_SERVICES_DIR = $$system(pkg-config --variable session_bus_services_dir dbus-1)
+
+    M_SHADER_SOURCE_DIR = $$M_INSTALL_DATA/meegotouch/shaders
+    M_SHADER_BINARY_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch/shaders
+}
+
+mac {
+    M_INSTALL_BIN = $$M_PREFIX/bin
+    M_INSTALL_LIBS = $$M_LIBDIR
+    M_INSTALL_DATA = $$M_PREFIX/share
+    M_INSTALL_HEADERS = $$M_PREFIX/include/meegotouch
+    M_INSTALL_SYSCONF = $$M_SYSCONFDIR
+    M_INSTALL_LOCALSTATE = /var
+
+    M_THEME_DIR = $$M_INSTALL_DATA/themes
+
+    M_APPLET_DIR = $$M_LIBDIR/meegotouch/applets
+    M_APPLET_INSTALLATION_SOURCES_DIR = $$M_LIBDIR/meegotouch/appletinstallationsources
+    M_APPLET_DATA_DIR = $$M_INSTALL_DATA/meegotouch/applets
+    M_APPLET_SETTINGS_DIR = $$M_INSTALL_DATA/meegotouch/applets/settings
+
+    M_NOTIFICATIONS_EVENT_TYPES_DIR=$$M_INSTALL_DATA/meegotouch/notifications/eventtypes
+    M_XDG_DIR = $$M_INSTALL_SYSCONF/xdg
+    M_TRANSLATION_DIR = $$M_INSTALL_DATA/l10n/meegotouch
+    M_DBUS_INTERFACES_DIR = $$M_INSTALL_DATA/dbus-1/interfaces
+    M_DBUS_SERVICES_DIR = $$M_INSTALL_DATA/dbus-1/services
+
+    M_SHADER_SOURCE_DIR = $$M_INSTALL_DATA/meegotouch/shaders
+    M_SHADER_BINARY_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch/shaders
+}
+
+win32 {
+    # only override defines, that are different from the unix ones above here...
+
+    M_INSTALL_LIBS = $$M_PREFIX/bin
+    M_INSTALL_SYSCONF = $$M_PREFIX/etc
+    M_INSTALL_XSESSION = $$M_INSTALL_SYSCONF/X11
+    M_INSTALL_LOCALSTATE = $$M_PREFIX/var
+
+    M_THEME_PRELOAD_DIR = $$M_INSTALL_LOCALSTATE/lib/meegotouch/theme/preload.d
+    M_THEME_POST_PRELOAD_DIR = $$M_INSTALL_LOCALSTATE/lib/meegotouch/theme/preload.post
+
+    M_XDG_DIR = $$M_INSTALL_SYSCONF/xdg
+    M_DBUS_INTERFACES_DIR = /usr/share/dbus-1/interfaces
+    M_DBUS_SERVICES_DIR = $$M_INSTALL_DATA/dbus-1/services
+}

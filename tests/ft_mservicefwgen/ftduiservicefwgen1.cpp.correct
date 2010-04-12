@@ -1,0 +1,64 @@
+/*
+ * automatically generated with the command line :
+ * /usr/bin/dui-servicefwgen -p /home/shun/libmeegotouch/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen1
+ */
+
+#include "ftduiservicefwgen1.h"
+#include "ftduiservicefwgen1proxy.h"
+
+bool FtDuiServiceFwGen1::showGridWithCapturedContent( int limit )
+{
+    return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showGridWithCapturedContent( limit ).value();
+}
+
+bool FtDuiServiceFwGen1::showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage )
+{
+    return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showImage( uri, playlistName, defaultBackPage ).value();
+}
+
+void FtDuiServiceFwGen1::showImage( const QString &uri, const QStringList &uriList )
+{
+    static_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showImage( uri, uriList );
+}
+
+bool FtDuiServiceFwGen1::showPage( const QString &targetPage, const QString &previousPage )
+{
+    return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showPage( targetPage, previousPage ).value();
+}
+
+bool FtDuiServiceFwGen1::showSettings(  )
+{
+    return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showSettings(  ).value();
+}
+
+FtDuiServiceFwGen1::FtDuiServiceFwGen1( const QString& preferredService, QObject* parent )
+    : DuiServiceFwBaseIf( FtDuiServiceFwGen1Proxy::staticInterfaceName(), parent )
+{
+    // Resolve the provider service name
+    QString service = resolveServiceName( interfaceName(), preferredService );
+
+    bool serviceNameInvalid = service.contains( " " ); // "not provided" - when the service wouldn't run
+    if ( serviceNameInvalid ) {
+        service.clear();
+    }
+    setServiceName( service );
+
+    if (!service.isEmpty()) {
+        // Construct the D-Bus proxy
+        setInterfaceProxy( new FtDuiServiceFwGen1Proxy( service, "/", QDBusConnection::sessionBus(), this ));
+        // allConnectSignals go here (empty block if none)
+
+    }
+}
+
+void FtDuiServiceFwGen1::setService(const QString & service)
+{
+    if (service.isEmpty()) return;
+
+    setServiceName( service );
+    setInterfaceProxy( new FtDuiServiceFwGen1Proxy( service, "/", QDBusConnection::sessionBus(), this ));
+    {
+
+    }
+}
+

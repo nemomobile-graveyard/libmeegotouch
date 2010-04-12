@@ -7,14 +7,14 @@ WIDGETS_CORE_SRC_DIR=./widgets/core
 INCLUDEPATH+=$$WIDGETS_CORE_SRC_DIR
 
 PUBLIC_HEADERS += \
-    $$WIDGETS_CORE_SRC_DIR/duiwidget.h \
-    $$WIDGETS_CORE_SRC_DIR/duiwidgetview.h \
-    $$WIDGETS_CORE_SRC_DIR/duiwidgetcontroller.h \
-    $$WIDGETS_CORE_SRC_DIR/duiwidgetcreator.h \
+    $$WIDGETS_CORE_SRC_DIR/mwidget.h \
+    $$WIDGETS_CORE_SRC_DIR/mwidgetview.h \
+    $$WIDGETS_CORE_SRC_DIR/mwidgetcontroller.h \
+    $$WIDGETS_CORE_SRC_DIR/mwidgetcreator.h \
 
 
 SOURCES += \
-    $$WIDGETS_CORE_SRC_DIR/duiwidget.cpp \
-    $$WIDGETS_CORE_SRC_DIR/duiwidgetview.cpp \
-    $$WIDGETS_CORE_SRC_DIR/duiwidgetcontroller.cpp \
-    $$WIDGETS_CORE_SRC_DIR/duiwidgetcreator.cpp \
+    $$WIDGETS_CORE_SRC_DIR/mwidget.cpp \
+    $$WIDGETS_CORE_SRC_DIR/mwidgetview.cpp \
+    $$WIDGETS_CORE_SRC_DIR/mwidgetcontroller.cpp \
+    $$WIDGETS_CORE_SRC_DIR/mwidgetcreator.cpp \

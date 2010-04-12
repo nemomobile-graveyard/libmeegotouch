@@ -5,31 +5,31 @@
 EVENTS_SRC_DIR= ./events
 INCLUDEPATH+=./events
 PUBLIC_HEADERS += \
-        $$EVENTS_SRC_DIR/duicancelevent.h \
-        $$EVENTS_SRC_DIR/duidismissevent.h \
-        $$EVENTS_SRC_DIR/duipreeditinjectionevent.h \
-        $$EVENTS_SRC_DIR/duiondisplaychangeevent.h \
-        $$EVENTS_SRC_DIR/duiorientationchangeevent.h \
-        $$EVENTS_SRC_DIR/duitapandholdrecognizer.h \
-        $$EVENTS_SRC_DIR/duikeyboardstatetracker.h \
+        $$EVENTS_SRC_DIR/mcancelevent.h \
+        $$EVENTS_SRC_DIR/mdismissevent.h \
+        $$EVENTS_SRC_DIR/mpreeditinjectionevent.h \
+        $$EVENTS_SRC_DIR/mondisplaychangeevent.h \
+        $$EVENTS_SRC_DIR/morientationchangeevent.h \
+        $$EVENTS_SRC_DIR/mtapandholdrecognizer.h \
+        $$EVENTS_SRC_DIR/mkeyboardstatetracker.h \
 
 PRIVATE_HEADERS += \
-        $$EVENTS_SRC_DIR/duiorientationchangeevent_p.h \
-        $$EVENTS_SRC_DIR/duiorientationtracker.h \
-        $$EVENTS_SRC_DIR/duiorientationtracker_p.h \
-        $$EVENTS_SRC_DIR/duiscenewindowevent_p.h \
-        $$EVENTS_SRC_DIR/duitapandholdrecognizer_p.h \
-        $$EVENTS_SRC_DIR/duitapandholdgesture_p.h \
-        $$EVENTS_SRC_DIR/duikeyboardstatetracker_p.h \
+        $$EVENTS_SRC_DIR/morientationchangeevent_p.h \
+        $$EVENTS_SRC_DIR/morientationtracker.h \
+        $$EVENTS_SRC_DIR/morientationtracker_p.h \
+        $$EVENTS_SRC_DIR/mscenewindowevent_p.h \
+        $$EVENTS_SRC_DIR/mtapandholdrecognizer_p.h \
+        $$EVENTS_SRC_DIR/mtapandholdgesture_p.h \
+        $$EVENTS_SRC_DIR/mkeyboardstatetracker_p.h \
 
 SOURCES += \
-        $$EVENTS_SRC_DIR/duiorientationtracker.cpp \
-        $$EVENTS_SRC_DIR/duicancelevent.cpp \
-        $$EVENTS_SRC_DIR/duidismissevent.cpp \
-        $$EVENTS_SRC_DIR/duipreeditinjectionevent.cpp \
-        $$EVENTS_SRC_DIR/duiondisplaychangeevent.cpp \
-        $$EVENTS_SRC_DIR/duiorientationchangeevent.cpp \
-        $$EVENTS_SRC_DIR/duiscenewindowevent_p.cpp \
-        $$EVENTS_SRC_DIR/duitapandholdgesture.cpp \
-        $$EVENTS_SRC_DIR/duitapandholdrecognizer.cpp \
-        $$EVENTS_SRC_DIR/duikeyboardstatetracker.cpp \
+        $$EVENTS_SRC_DIR/morientationtracker.cpp \
+        $$EVENTS_SRC_DIR/mcancelevent.cpp \
+        $$EVENTS_SRC_DIR/mdismissevent.cpp \
+        $$EVENTS_SRC_DIR/mpreeditinjectionevent.cpp \
+        $$EVENTS_SRC_DIR/mondisplaychangeevent.cpp \
+        $$EVENTS_SRC_DIR/morientationchangeevent.cpp \
+        $$EVENTS_SRC_DIR/mscenewindowevent_p.cpp \
+        $$EVENTS_SRC_DIR/mtapandholdgesture.cpp \
+        $$EVENTS_SRC_DIR/mtapandholdrecognizer.cpp \
+        $$EVENTS_SRC_DIR/mkeyboardstatetracker.cpp \

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,11 +20,11 @@
 #ifndef WIDGETSGALLERY_TIMINGSCENE_H
 #define WIDGETSGALLERY_TIMINGSCENE_H
 
-#include <DuiScene>
+#include <MScene>
 
-/* A custom DuiScene for timing the framerate.
+/* A custom MScene for timing the framerate.
  */
-class TimingScene : public DuiScene
+class TimingScene : public MScene
 {
     Q_OBJECT
 

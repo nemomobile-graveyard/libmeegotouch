@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,14 +20,14 @@
 #ifndef CALCULATORWIDGET_H
 #define CALCULATORWIDGET_H
 
-#include <DuiWidgetController>
+#include <MWidgetController>
 #include <QList>
 
-class DuiButton;
-class DuiLabel;
-class DuiGridLayoutPolicy;
+class MButton;
+class MLabel;
+class MGridLayoutPolicy;
 
-class CalculatorWidget : public DuiWidget
+class CalculatorWidget : public MWidget
 {
 public:
     CalculatorWidget();
@@ -37,8 +37,8 @@ public:
     QString text() const;
 
 private:
-    DuiLabel *mLabel;
-    DuiLabel *mCalculationLine;
+    MLabel *mLabel;
+    MLabel *mCalculationLine;
 
     qreal mValue;
 };

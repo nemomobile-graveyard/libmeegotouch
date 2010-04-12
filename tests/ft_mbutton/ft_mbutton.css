@@ -1,0 +1,52 @@
+MButtonStyle {
+    minimum-size: size(20, 20);  
+    maximum-size: size(400, 400);                                   
+    preferred-size: size(100, 100);                                   
+    normal-background-image: scalable(SB-normal, 40, 40, 0, 0);
+    pressed-background-image: scalable(SB-press, 40, 40, 0, 0);
+}
+
+.MButtonStyle#ft_test_button {
+    minimum-size: size(20, 20);  
+    maximum-size: size(400, 400);                                   
+    preferred-size: size(100, 100);                                   
+}
+
+.MButtonStyle#button2 {
+    normal-background-image: scalable(SB-press, 40, 40, 0, 0);
+    pressed-background-image: scalable(SB-press, 40, 40, 0, 0);
+}
+
+MButtonStyle#buttonNotBoxed {
+    horizontal-box-edge-percent: 0;                                                      
+}
+
+MButtonStyle#buttonBoxed {
+    horizontal-box-edge-percent: 10;                                                      
+}
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,9 +22,9 @@
 
 #include "templatepage.h"
 
-class DuiButton;
-class DuiComboBox;
-class DuiLabel;
+class MButton;
+class MComboBox;
+class MLabel;
 
 class NavigationBarPage : public TemplatePage
 {
@@ -59,15 +59,15 @@ protected:
     virtual void retranslateUi();
 
 private:
-    void retranslateDisplayModeComboBox(DuiComboBox *combo);
+    void retranslateDisplayModeComboBox(MComboBox *combo);
     void addExampleActions();
 
-    DuiComboBox *comboNavigationBarDisplayMode;
-    DuiComboBox *comboEscapeButtonDisplayMode;
-    DuiComboBox *comboHomeButtonDisplayMode;
-    DuiComboBox *comboEscapeMode;
-    DuiLabel *lblDisplayMode;
-    DuiLabel *lblEscapeModeDesc;
+    MComboBox *comboNavigationBarDisplayMode;
+    MComboBox *comboEscapeButtonDisplayMode;
+    MComboBox *comboHomeButtonDisplayMode;
+    MComboBox *comboEscapeMode;
+    MLabel *lblDisplayMode;
+    MLabel *lblEscapeModeDesc;
 };
 
 #endif // NAVIGATIONBARPAGE_H

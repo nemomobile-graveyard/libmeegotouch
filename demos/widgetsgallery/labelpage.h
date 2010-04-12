@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,9 +22,9 @@
 
 #include "templatepage.h"
 
-class DuiLabel;
-class DuiTextEdit;
-class DuiLabelHighlighter;
+class MLabel;
+class MTextEdit;
+class MLabelHighlighter;
 
 class LabelPage : public TemplatePage
 {
@@ -49,15 +49,15 @@ protected slots:
 
     void applySearch();
 private:
-    DuiLabel *simpleLabel;
-    DuiLabel *richLabel;
+    MLabel *simpleLabel;
+    MLabel *richLabel;
 
-    DuiLabelHighlighter *phoneHighlighter;
-    DuiLabelHighlighter *urlHighlighter;
-    DuiLabelHighlighter *emailHighlighter;
-    DuiLabelHighlighter *commonHighlighter;
+    MLabelHighlighter *phoneHighlighter;
+    MLabelHighlighter *urlHighlighter;
+    MLabelHighlighter *emailHighlighter;
+    MLabelHighlighter *commonHighlighter;
 
-    DuiTextEdit *textEdit;
+    MTextEdit *textEdit;
 };
 
 #endif // LABELPAGE_H

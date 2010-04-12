@@ -1,9 +1,9 @@
 #include "panningbenchmark.h"
 #include "timedemo.h"
 
-#include <DuiApplicationPage>
-#include <DuiPannableViewport>
-#include <DuiPhysics2DPanning>
+#include <MApplicationPage>
+#include <MPannableViewport>
+#include <MPhysics2DPanning>
 
 #include <QTimer>
 #include <qdebug.h>
@@ -13,21 +13,21 @@ namespace {
     const qreal ySpeed = .5; // pixel/ms
 }
 
-PanningBenchmark::PanningBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo)
+PanningBenchmark::PanningBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo)
     : TimedemoBenchmark(applicationPage, timedemo)
     , timingStarted(false)
 {
     pannableViewport = 0;
     QList<QGraphicsItem *> childItems = applicationPage->childItems();
     foreach(QGraphicsItem * childItem, childItems) {
-        if (DuiPannableViewport * viewport = dynamic_cast<DuiPannableViewport*>(childItem)) {
+        if (MPannableViewport * viewport = dynamic_cast<MPannableViewport*>(childItem)) {
             pannableViewport = viewport;
             break;
         }
     }
 
     if (!pannableViewport) {
-        qFatal("Did not find matching viewport of DuiApplicationWindow");
+        qFatal("Did not find matching viewport of MApplicationWindow");
     }
 }
 

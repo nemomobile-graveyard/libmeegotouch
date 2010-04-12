@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -26,28 +26,28 @@
 
 
 
-#include <DuiTheme>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
+#include <MTheme>
+#include <MApplicationPage>
+#include <MApplicationWindow>
 
 #include "testwidget.h"
 #include "testwidgetview.h"
 
 int main(int argc, char **argv)
 {
-    // Create main dui application.
-    DuiApplication application(argc, argv);
+    // Create main m application.
+    MApplication application(argc, argv);
 
     // Create application window and make it visible.
-    DuiApplicationWindow window;
+    MApplicationWindow window;
     window.show();
 
     // Create application page and make it visible.
-    DuiApplicationPage page;
+    MApplicationPage page;
     page.appear();
 
     // Load widget style from CSS file.
-    DuiTheme::loadCSS("testwidgetstyle.css");
+    MTheme::loadCSS("testwidgetstyle.css");
 
     // Create widget controller and view.
     TestWidget widget;
@@ -57,7 +57,7 @@ int main(int argc, char **argv)
     // Set geometry (active area) of widget.
     widget.setGeometry(QRectF(100, 100, 200, 200));
 
-    // Attach widget to parent widget so it will be drawn and run dui application.
+    // Attach widget to parent widget so it will be drawn and run m application.
     widget.setParentItem(page.centralWidget());
     return application.exec();
 }

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,27 +20,27 @@
 #ifndef LISTPAGE_H
 #define LISTPAGE_H
 
-#include <DuiContainer>
+#include <MContainer>
 #include <QHash>
 
 #include "timedemopage.h"
 
 class TemplatePage;
 class QGraphicsLayoutItem;
-class DuiGridLayoutPolicy;
-class DuiLinearLayoutPolicy;
-class DuiLabel;
-class DuiButton;
+class MGridLayoutPolicy;
+class MLinearLayoutPolicy;
+class MLabel;
+class MButton;
 class QSettings;
 
-class MyContainer : public DuiContainer
+class MyContainer : public MContainer
 {
 public:
     MyContainer(QGraphicsItem *parent = 0);
     virtual ~MyContainer();
 
-    DuiGridLayoutPolicy  *landscapePolicy;
-    DuiLinearLayoutPolicy  *portraitPolicy;
+    MGridLayoutPolicy  *landscapePolicy;
+    MLinearLayoutPolicy  *portraitPolicy;
 
     void addItem(QGraphicsLayoutItem *button);
 
@@ -63,7 +63,7 @@ public:
     TemplatePage *findPageByTimedemoTitle(const QString& title) const;
     void showPageByTimedemoTitle(const QString& name);
 
-    static DuiGridLayoutPolicy *createAndSetupGridPolicy(DuiWidget *panel);
+    static MGridLayoutPolicy *createAndSetupGridPolicy(MWidget *panel);
 
     void setInitialPageToShow(const QString& initialPageToShow);
 
@@ -82,16 +82,16 @@ protected:
 
 private:
     void populateLayout();
-    void showPage(DuiApplicationPage *page);
+    void showPage(MApplicationPage *page);
 
 private:
-    QList<DuiLabel *> groupLabels;
-    QList<DuiContainer *> containers;
+    QList<MLabel *> groupLabels;
+    QList<MContainer *> containers;
 
-    DuiApplicationPage *shownPage;
-    DuiLinearLayoutPolicy *policy;
+    MApplicationPage *shownPage;
+    MLinearLayoutPolicy *policy;
 
-    QHash<DuiButton *, TemplatePage *> buttons;
+    QHash<MButton *, TemplatePage *> buttons;
 
     QString initialPageToShow;
 };

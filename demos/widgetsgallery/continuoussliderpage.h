@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,10 +22,10 @@
 
 #include "templatepage.h"
 
-class DuiGridLayoutPolicy;
-class DuiLabel;
-class DuiSlider;
-class DuiSeekBar;
+class MGridLayoutPolicy;
+class MLabel;
+class MSlider;
+class MSeekBar;
 
 class ContinuousSliderPage : public TemplatePage
 {
@@ -42,20 +42,20 @@ public slots:
     void rotatel();
     void rotater();
 
-    void pageRotated(const Dui::Orientation &orientation);
+    void pageRotated(const M::Orientation &orientation);
 
 protected:
     virtual void retranslateUi();
-    DuiGridLayoutPolicy *l_policy;
-    DuiGridLayoutPolicy *p_policy;
+    MGridLayoutPolicy *l_policy;
+    MGridLayoutPolicy *p_policy;
 
 private:
-    DuiLabel *label1;
-    DuiLabel *label2;
-    DuiLabel *label3;
-    DuiSlider *slider3;
-    DuiLabel *label4;
-    DuiSeekBar *seekbar4;
+    MLabel *label1;
+    MLabel *label2;
+    MLabel *label3;
+    MSlider *slider3;
+    MLabel *label4;
+    MSeekBar *seekbar4;
 };
 
 #endif

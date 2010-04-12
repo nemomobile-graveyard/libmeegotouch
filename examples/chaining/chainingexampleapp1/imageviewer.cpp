@@ -5,7 +5,7 @@
 
 #include "imageviewer.h"
 
-ImageViewer::ImageViewer( const DuiButton &button ) :
+ImageViewer::ImageViewer( const MButton &button ) :
     chainingExampleInterface( new ChainingExampleInterface )
 {
     QObject::connect( &button, SIGNAL( released() ), this, SLOT( showImage() ) );

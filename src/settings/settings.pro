@@ -1,6 +1,6 @@
 include( ../common_top.pri )
 
-TARGET = duisettings
+TARGET = meegotouchsettings
 QT += xml
 
 INCLUDEPATH += \
@@ -10,6 +10,6 @@ INCLUDEPATH += \
 
 include(settingslanguage/settingslanguage.pri)
 
-SOURCES += duisettingslibrary.cpp
+SOURCES += msettingslibrary.cpp
 
 include(../common_bot.pri)

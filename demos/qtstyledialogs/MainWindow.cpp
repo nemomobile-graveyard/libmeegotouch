@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -101,7 +101,7 @@ void MainWindow::showMessageBox()
 {
     QMessageBox::warning(this,
                          "Don't Panic! This is a test!",
-                         "Error 422001: I'm sorry, Dui. I'm afraid I can't do that!");
+                         "Error 422001: I'm sorry, M. I'm afraid I can't do that!");
 }
 
 void MainWindow::showPageSetupDialog()

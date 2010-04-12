@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -24,28 +24,28 @@
 #include <QtTracker/ontologies/nie.h>
 #include <QtTracker/ontologies/nfo.h>
 
-#include <DuiApplicationPage>
-#include <DuiWidgetFactoryPluginInterface>
+#include <MApplicationPage>
+#include <MWidgetFactoryPluginInterface>
 
 // Forward class declarations
-class DuiGrid;
+class MGrid;
 
 
 
 // Class declaration for custom grid widget factory plugin
-class GridWidgetFactoryPlugin: public DuiWidgetFactoryPluginInterface
+class GridWidgetFactoryPlugin: public MWidgetFactoryPluginInterface
 {
     Q_OBJECT
 
 public:
-    DuiWidget *onBuild(QMap<QString, QVariant>* data);
+    MWidget *onBuild(QMap<QString, QVariant>* data);
     QStringList dataFields();
 };
 
 
 
 // Class declaration for tracker grid page
-class TrackerGridPage : public DuiApplicationPage
+class TrackerGridPage : public MApplicationPage
 {
     Q_OBJECT
 
@@ -63,7 +63,7 @@ private:
 
 private:
     SopranoLive::LiveNodes imageNodes;
-    DuiGrid *grid;
+    MGrid *grid;
 };
 
 #endif // TRACKERGRIDPAGE_H

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -33,7 +33,7 @@ class QVBoxLayout;
 class QMenuBar;
 
 /*!
- * this class emulates the dui windowdecoration
+ * this class emulates the m windowdecoration
  * it adds a titlebar and places an statusbar on the bottom of the screen,
  * if available
  */

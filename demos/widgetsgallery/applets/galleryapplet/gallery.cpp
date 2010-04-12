@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,10 +19,10 @@
 
 #include "gallery.h"
 #include "galleryview.h"
-#include <DuiImage>
-#include <DuiGrid>
-#include <DuiWidgetFactory>
-#include <DuiWidgetFactoryPlugins>
+#include <MImage>
+#include <MGrid>
+#include <MWidgetFactory>
+#include <MWidgetFactoryPlugins>
 
 int GalleryModel::rowCount(const QModelIndex &parent) const
 {
@@ -35,19 +35,19 @@ QVariant GalleryModel::data(const QModelIndex &index, int role) const
     Q_ASSERT(index.row() >= 0);
 
     if (role == Qt::DisplayRole) {
-        DuiImage *b = NULL;
+        MImage *b = NULL;
         switch (index.row()) {
         case 0:
-            b = new DuiImage("Thumbs/44715f33b0e22876fa9b00447908fe7f.png");
+            b = new MImage("Thumbs/44715f33b0e22876fa9b00447908fe7f.png");
             break;
         case 1:
-            b = new DuiImage("Thumbs/1114d7211aa25eee553235a09d3fa836.png");
+            b = new MImage("Thumbs/1114d7211aa25eee553235a09d3fa836.png");
             break;
         case 2:
-            b = new DuiImage("Thumbs/c58b6248c9f1d4d391467a898c4d7032.png");
+            b = new MImage("Thumbs/c58b6248c9f1d4d391467a898c4d7032.png");
             break;
         default:
-            b = new DuiImage("Thumbs/65b89686ef3bb549a6b2bb7a1ea605e1.png");
+            b = new MImage("Thumbs/65b89686ef3bb549a6b2bb7a1ea605e1.png");
             break;
         }
 
@@ -55,7 +55,7 @@ QVariant GalleryModel::data(const QModelIndex &index, int role) const
         b->setPreferredSize(100, 100);
         b->setMaximumSize(100, 100);
 
-        DuiWidgetPtr w;
+        MWidgetPtr w;
         QVariant v;
         w = b;
         v.setValue(w);
@@ -66,17 +66,17 @@ QVariant GalleryModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-Gallery::Gallery(const DuiAppletMetaData &metadata, DuiDataStore &instanceData, DuiDataAccess &settings)
+Gallery::Gallery(const MAppletMetaData &metadata, MDataStore &instanceData, MDataAccess &settings)
     : m_grid(NULL)
 {
     Q_UNUSED(metadata);
     Q_UNUSED(instanceData);
     Q_UNUSED(settings);
 
-    m_grid = new DuiGrid(this);
+    m_grid = new MGrid(this);
     m_grid->resize(300, 300);
     m_grid->setSpacing(10);
-    m_grid->setLayoutMode(DuiGridModel::SinglePass);
+    m_grid->setLayoutMode(MGridModel::SinglePass);
 
     GalleryModel *model = new GalleryModel();
     m_grid->setItemModel(model);

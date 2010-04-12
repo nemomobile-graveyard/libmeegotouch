@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,14 +19,14 @@
 
 #include "progressbarpage.h"
 #include <QTimer>
-#include <DuiButton>
-#include <DuiLabel>
-#include <DuiTheme>
-#include <DuiLocale>
-#include <DuiLinearLayoutPolicy>
-#include <DuiGridLayoutPolicy>
-#include <DuiProgressIndicator>
-#include <DuiSceneManager>
+#include <MButton>
+#include <MLabel>
+#include <MTheme>
+#include <MLocale>
+#include <MLinearLayoutPolicy>
+#include <MGridLayoutPolicy>
+#include <MProgressIndicator>
+#include <MSceneManager>
 
 ProgressBarPage::ProgressBarPage() :
     TemplatePage(),
@@ -52,18 +52,18 @@ void ProgressBarPage::createContent()
 {
     TemplatePage::createContent();
 
-    label1 = new DuiLabel();
+    label1 = new MLabel();
     containerPolicy->addItem(label1);
 
-    bar1 = new DuiProgressIndicator(centralWidget(), DuiProgressIndicator::barType);
+    bar1 = new MProgressIndicator(centralWidget(), MProgressIndicator::barType);
     bar1->setRange(0, 99);
     bar1->setValue(0);
     containerPolicy->addItem(bar1);
 
-    label2 = new DuiLabel();
+    label2 = new MLabel();
     containerPolicy->addItem(label2);
 
-    bar2 = new DuiProgressIndicator(centralWidget(), DuiProgressIndicator::barType);
+    bar2 = new MProgressIndicator(centralWidget(), MProgressIndicator::barType);
     bar2->setRange(0, 9);
     bar2->setUnknownDuration(true);
     containerPolicy->addItem(bar2);

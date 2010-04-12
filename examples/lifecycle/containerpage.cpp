@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,17 +18,17 @@
 ****************************************************************************/
 
 #include "containerpage.h"
-#include <DuiApplicationPage>
-#include <DuiMashupCanvas>
-#include <DuiContainer>
-#include <DuiButton>
-#include <DuiLocale>
+#include <MApplicationPage>
+#include <MMashupCanvas>
+#include <MContainer>
+#include <MButton>
+#include <MLocale>
 #include <QGraphicsLinearLayout>
-#include <DuiDebug>
+#include <MDebug>
 
 ContainerPage::ContainerPage()
 {
-    setTitle("DuiMashupCanvas");
+    setTitle("MMashupCanvas");
 }
 
 ContainerPage::~ContainerPage()
@@ -37,14 +37,14 @@ ContainerPage::~ContainerPage()
 
 void ContainerPage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
 
     QGraphicsWidget *panel = centralWidget();
 
     QGraphicsLinearLayout *vbox = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(vbox);
 
-    DuiMashupCanvas *canvas = new DuiMashupCanvas("ContainerPage");
+    MMashupCanvas *canvas = new MMashupCanvas("ContainerPage");
     canvas->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
     vbox->addItem(canvas);
@@ -52,10 +52,10 @@ void ContainerPage::createContent()
 
 void ContainerPage::exitDisplayEvent()
 {
-    duiDebug("") << "lifecycle: ContainerPage hidden";
+    mDebug("") << "lifecycle: ContainerPage hidden";
 }
 
 void ContainerPage::enterDisplayEvent()
 {
-    duiDebug("") << "lifecycle: ContainerPage visible";
+    mDebug("") << "lifecycle: ContainerPage visible";
 }

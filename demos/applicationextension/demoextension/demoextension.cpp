@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include <DuiSlider>
+#include <MSlider>
 #include "demoextension.h"
 
 Q_EXPORT_PLUGIN2(demoextension, DemoApplicationExtension)
@@ -44,14 +44,14 @@ void DemoApplicationExtension::setDemoApplicationControlledValue(int value)
 
 bool DemoApplicationExtension::initialize(const QString &)
 {
-    slider = new DuiSlider;
+    slider = new MSlider;
     slider->setObjectName("demo_slider");
     connect(slider, SIGNAL(valueChanged(int)), this, SLOT(informSliderValueToApplication(int)));
 
     return true;
 }
 
-DuiWidget *DemoApplicationExtension::widget()
+MWidget *DemoApplicationExtension::widget()
 {
     return slider;
 }

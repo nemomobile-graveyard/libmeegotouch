@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -28,7 +28,7 @@
 class QGridLayout;
 
 /*!
- * this is an abstract base class for emulating dui windows, such as the
+ * this is an abstract base class for emulating m windows, such as the
  * application window, dialogs or menus.
  * It may put some decoration around the window and puts the original Widget
  * into a scrollarea, if it is not a scrollarea by itself.

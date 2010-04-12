@@ -6,72 +6,72 @@
 CORE_SRC_DIR=./core
 INCLUDEPATH+=./core
 PUBLIC_HEADERS += \
-    $$CORE_SRC_DIR/duiapplication.h \
-    $$CORE_SRC_DIR/duiaction.h \
-    $$CORE_SRC_DIR/duiassembly.h \
-    $$CORE_SRC_DIR/duicomponentdata.h \
-    $$CORE_SRC_DIR/duilibrary.h \
-    $$CORE_SRC_DIR/duiwidgetaction.h \
-    $$CORE_SRC_DIR/duidesktopentry.h \
-    $$CORE_SRC_DIR/duinamespace.h \
-    $$CORE_SRC_DIR/duiexport.h \
-    $$CORE_SRC_DIR/duiclassfactory.h \
-    $$CORE_SRC_DIR/duishareddata.h \
-    $$CORE_SRC_DIR/duigconfitem.h \
-    $$CORE_SRC_DIR/duitimestamp.h \
-    $$CORE_SRC_DIR/duiinputmethodstate.h \
-    $$CORE_SRC_DIR/duidebug.h \
-    $$CORE_SRC_DIR/duidataaccess.h \
-    $$CORE_SRC_DIR/duidatastore.h \
-    $$CORE_SRC_DIR/duifiledatastore.h \
+    $$CORE_SRC_DIR/mapplication.h \
+    $$CORE_SRC_DIR/maction.h \
+    $$CORE_SRC_DIR/massembly.h \
+    $$CORE_SRC_DIR/mcomponentdata.h \
+    $$CORE_SRC_DIR/mlibrary.h \
+    $$CORE_SRC_DIR/mwidgetaction.h \
+    $$CORE_SRC_DIR/mdesktopentry.h \
+    $$CORE_SRC_DIR/mnamespace.h \
+    $$CORE_SRC_DIR/mexport.h \
+    $$CORE_SRC_DIR/mclassfactory.h \
+    $$CORE_SRC_DIR/mshareddata.h \
+    $$CORE_SRC_DIR/mgconfitem.h \
+    $$CORE_SRC_DIR/mtimestamp.h \
+    $$CORE_SRC_DIR/minputmethodstate.h \
+    $$CORE_SRC_DIR/mdebug.h \
+    $$CORE_SRC_DIR/mdataaccess.h \
+    $$CORE_SRC_DIR/mdatastore.h \
+    $$CORE_SRC_DIR/mfiledatastore.h \
 
 PRIVATE_HEADERS += \
-    $$CORE_SRC_DIR/duiassembly_p.h \
-    $$CORE_SRC_DIR/duidesktopentry_p.h \
-    $$CORE_SRC_DIR/duiinputmethodstate_p.h \
-    $$CORE_SRC_DIR/duicpumonitor.h \
-    $$CORE_SRC_DIR/duifiledatastore_p.h \
+    $$CORE_SRC_DIR/massembly_p.h \
+    $$CORE_SRC_DIR/mdesktopentry_p.h \
+    $$CORE_SRC_DIR/minputmethodstate_p.h \
+    $$CORE_SRC_DIR/mcpumonitor.h \
+    $$CORE_SRC_DIR/mfiledatastore_p.h \
 
 contains(DEFINES, HAVE_DBUS) {
     PUBLIC_HEADERS += \
-        $$CORE_SRC_DIR/duiapplicationservice.h \
-        $$CORE_SRC_DIR/duiapplicationifadaptor.h \
-        $$CORE_SRC_DIR/duiapplicationifproxy.h \
-        $$CORE_SRC_DIR/duiremoteaction.h \
+        $$CORE_SRC_DIR/mapplicationservice.h \
+        $$CORE_SRC_DIR/mapplicationifadaptor.h \
+        $$CORE_SRC_DIR/mapplicationifproxy.h \
+        $$CORE_SRC_DIR/mremoteaction.h \
 
     PRIVATE_HEADERS += \
-        $$CORE_SRC_DIR/duiapplicationservice_p.h \
-        $$CORE_SRC_DIR/duidbusservicewaiter_p.h \
+        $$CORE_SRC_DIR/mapplicationservice_p.h \
+        $$CORE_SRC_DIR/mdbusservicewaiter_p.h \
 
 }
 
 SOURCES += \
-    $$CORE_SRC_DIR/duiapplication.cpp \
-    $$CORE_SRC_DIR/duiaction.cpp \
-    $$CORE_SRC_DIR/duiassembly.cpp \
-    $$CORE_SRC_DIR/duicomponentdata.cpp \
-    $$CORE_SRC_DIR/duilibrary.cpp \
-    $$CORE_SRC_DIR/duiwidgetaction.cpp \
-    $$CORE_SRC_DIR/duidesktopentry.cpp \
-    $$CORE_SRC_DIR/duiclassfactory.cpp \
-    $$CORE_SRC_DIR/duicpumonitor.cpp \
-    $$CORE_SRC_DIR/duishareddata.cpp \
-    $$CORE_SRC_DIR/duitimestamp.cpp \
-    $$CORE_SRC_DIR/duiinputmethodstate.cpp \
-    $$CORE_SRC_DIR/duifiledatastore.cpp \
+    $$CORE_SRC_DIR/mapplication.cpp \
+    $$CORE_SRC_DIR/maction.cpp \
+    $$CORE_SRC_DIR/massembly.cpp \
+    $$CORE_SRC_DIR/mcomponentdata.cpp \
+    $$CORE_SRC_DIR/mlibrary.cpp \
+    $$CORE_SRC_DIR/mwidgetaction.cpp \
+    $$CORE_SRC_DIR/mdesktopentry.cpp \
+    $$CORE_SRC_DIR/mclassfactory.cpp \
+    $$CORE_SRC_DIR/mcpumonitor.cpp \
+    $$CORE_SRC_DIR/mshareddata.cpp \
+    $$CORE_SRC_DIR/mtimestamp.cpp \
+    $$CORE_SRC_DIR/minputmethodstate.cpp \
+    $$CORE_SRC_DIR/mfiledatastore.cpp \
 
 contains(DEFINES, HAVE_DBUS) {
   SOURCES += \
-    $$CORE_SRC_DIR/duiapplicationservice.cpp \
-    $$CORE_SRC_DIR/duiapplicationservice_p.cpp \
-    $$CORE_SRC_DIR/duiapplicationifadaptor.cpp \
-    $$CORE_SRC_DIR/duiapplicationifproxy.cpp \
-    $$CORE_SRC_DIR/duiremoteaction.cpp \
-    $$CORE_SRC_DIR/duidbusservicewaiter.cpp \
+    $$CORE_SRC_DIR/mapplicationservice.cpp \
+    $$CORE_SRC_DIR/mapplicationservice_p.cpp \
+    $$CORE_SRC_DIR/mapplicationifadaptor.cpp \
+    $$CORE_SRC_DIR/mapplicationifproxy.cpp \
+    $$CORE_SRC_DIR/mremoteaction.cpp \
+    $$CORE_SRC_DIR/mdbusservicewaiter.cpp \
 }
 
 contains(DEFINES, HAVE_GCONF) {
-    SOURCES += $$CORE_SRC_DIR/duigconfitem.cpp
+    SOURCES += $$CORE_SRC_DIR/mgconfitem.cpp
 } else {
-    SOURCES += $$CORE_SRC_DIR/duigconfitem_stub.cpp
+    SOURCES += $$CORE_SRC_DIR/mgconfitem_stub.cpp
 }

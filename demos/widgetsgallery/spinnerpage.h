@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -23,10 +23,10 @@
 #include "templatepage.h"
 #include <QTimer>
 
-class DuiLabel;
-class DuiContainer;
-class DuiButton;
-class DuiFlowLayoutPolicy;
+class MLabel;
+class MContainer;
+class MButton;
+class MFlowLayoutPolicy;
 
 class SpinnerPage : public TemplatePage
 {
@@ -59,12 +59,12 @@ protected:
 private:
     void reset();
 
-    DuiContainer   *container;
-    DuiLabel       *header;
-    DuiLabel       *description;
+    MContainer   *container;
+    MLabel       *header;
+    MLabel       *description;
     View            view;
     QTimer          timer;
-    DuiFlowLayoutPolicy *imageContainerPolicy;
+    MFlowLayoutPolicy *imageContainerPolicy;
 };
 
 #endif // SPINNERPAGE_H

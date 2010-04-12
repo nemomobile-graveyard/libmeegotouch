@@ -11,14 +11,14 @@ contains( DEFINES, HAVE_N900 ) {
 
 # Features
 # Parts to build. Options: libs tests benchmarks demos doc debian
-#DUI_BUILD_PARTS = libs tests benchmarks demos doc debian
+#M_BUILD_PARTS = libs tests benchmarks demos doc debian
 
 
 contains(TEMPLATE, app) {
-    DEFINES += DUI_APPLICATION_NAME=\\\"${QMAKE_TARGET}\\\"
+    DEFINES += M_APPLICATION_NAME=\\\"${QMAKE_TARGET}\\\"
 } else {
     contains(TEMPLATE, lib) {
-        DEFINES += DUI_LIBRARY_NAME=\\\"lib${QMAKE_TARGET}\\\"
+        DEFINES += M_LIBRARY_NAME=\\\"lib${QMAKE_TARGET}\\\"
     } else {
         # error(Unknown template)
     }
@@ -30,51 +30,51 @@ mac {
 
 # Load configure script results
 !win32: {
-    include($${DUI_BUILD_TREE}/mkspecs/duiconfig.pri)
+    include($${M_BUILD_TREE}/mkspecs/meegotouchconfig.pri)
 }
 
 # Load global definitions
-include($${DUI_BUILD_TREE}/mkspecs/features/dui_defines.prf)
+include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
 
 # Defines for directories, for use in source code.
 {
     # THEMEDIR determines the location of the theme
-    DEFINES += THEMEDIR=\\\"\"$$DUI_THEME_DIR\"\\\"
+    DEFINES += THEMEDIR=\\\"\"$$M_THEME_DIR\"\\\"
 
     # APPLET_LIBS determines the location where all applet binaries are
-    DEFINES += APPLET_LIBS=\\\"\"$$DUI_APPLET_DIR\"\\\"
+    DEFINES += APPLET_LIBS=\\\"\"$$M_APPLET_DIR\"\\\"
 
     # APPLET_INSTALLATION_SOURCES determines the location where applet installation source binaries are
-    DEFINES += APPLET_INSTALLATION_SOURCES=\\\"\"$$DUI_APPLET_INSTALLATION_SOURCES_DIR\"\\\"
+    DEFINES += APPLET_INSTALLATION_SOURCES=\\\"\"$$M_APPLET_INSTALLATION_SOURCES_DIR\"\\\"
 
     # APPLET_DATA determines where the .desktop files are located
-    DEFINES += APPLET_DATA=\\\"\"$$DUI_APPLET_DATA_DIR\"\\\"
+    DEFINES += APPLET_DATA=\\\"\"$$M_APPLET_DATA_DIR\"\\\"
 
     # APPLET_SETTINGS_DIR determines where the applet global and instance settings files are located
-    DEFINES += APPLET_SETTINGS_DIR=\\\"\"$$DUI_APPLET_SETTINGS_DIR\"\\\"
+    DEFINES += APPLET_SETTINGS_DIR=\\\"\"$$M_APPLET_SETTINGS_DIR\"\\\"
 
     # APPLICATION_EXTENSION_LIBS determines the location of application extension binaries
-    DEFINES += APPLICATION_EXTENSION_LIBS=\\\"\"$$DUI_APPLICATION_EXTENSION_DIR\"\\\"
+    DEFINES += APPLICATION_EXTENSION_LIBS=\\\"\"$$M_APPLICATION_EXTENSION_DIR\"\\\"
 
     # APPLICATION_EXTENSION_DATA_DIR determines the location of application extension .desktop files
-    DEFINES += APPLICATION_EXTENSION_DATA_DIR=\\\"\"$$DUI_APPLICATION_EXTENSION_DATA_DIR\"\\\"
+    DEFINES += APPLICATION_EXTENSION_DATA_DIR=\\\"\"$$M_APPLICATION_EXTENSION_DATA_DIR\"\\\"
 
     # TRANSLATION_DIR determines the default translation path
-    DEFINES += TRANSLATION_DIR=\\\"\"$$DUI_TRANSLATION_DIR\"\\\"
+    DEFINES += TRANSLATION_DIR=\\\"\"$$M_TRANSLATION_DIR\"\\\"
 
-    # DUI_THEME_PRELOAD_DIR and DUI_THEME_POST_PRELOAD_DIR defines from where
+    # M_THEME_PRELOAD_DIR and M_THEME_POST_PRELOAD_DIR defines from where
     # to get lists of images to be preloaded
-    DEFINES += DUI_THEME_PRELOAD_DIR=\\\"\"$$DUI_THEME_PRELOAD_DIR\"\\\"
-    DEFINES += DUI_THEME_POST_PRELOAD_DIR=\\\"\"$$DUI_THEME_POST_PRELOAD_DIR\"\\\"
-    DEFINES += DUI_DBUS_SERVICES_DIR=\\\"\"$$DUI_DBUS_SERVICES_DIR\"\\\"
-    DEFINES += DUI_XDG_DIR=\\\"\"$$DUI_XDG_DIR\"\\\"
+    DEFINES += M_THEME_PRELOAD_DIR=\\\"\"$$M_THEME_PRELOAD_DIR\"\\\"
+    DEFINES += M_THEME_POST_PRELOAD_DIR=\\\"\"$$M_THEME_POST_PRELOAD_DIR\"\\\"
+    DEFINES += M_DBUS_SERVICES_DIR=\\\"\"$$M_DBUS_SERVICES_DIR\"\\\"
+    DEFINES += M_XDG_DIR=\\\"\"$$M_XDG_DIR\"\\\"
 
-    # DUI_BINARY_SHADERS_DIR defines the location of precompiled shader programs
-    DEFINES += DUI_SHADER_SOURCE_DIR=\\\"\"$$DUI_SHADER_SOURCE_DIR\"\\\"
-    DEFINES += DUI_SHADER_BINARY_DIR=\\\"\"$$DUI_SHADER_BINARY_DIR\"\\\"
+    # M_BINARY_SHADERS_DIR defines the location of precompiled shader programs
+    DEFINES += M_SHADER_SOURCE_DIR=\\\"\"$$M_SHADER_SOURCE_DIR\"\\\"
+    DEFINES += M_SHADER_BINARY_DIR=\\\"\"$$M_SHADER_BINARY_DIR\"\\\"
 }
 
-# Compiler configuration for all subprojects in libdui
+# Compiler configuration for all subprojects in libm
 
 !win32-msvc*:QMAKE_CXXFLAGS += -g
 
@@ -86,6 +86,6 @@ contains(USE_CCACHE, "true") {
     QMAKE_CXX = ccache g++
 }
 
-QMAKE_LIBDIR += $${DUI_BUILD_TREE}/lib
+QMAKE_LIBDIR += $${M_BUILD_TREE}/lib
 
 include(shared.pri)

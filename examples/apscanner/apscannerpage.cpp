@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,9 +17,9 @@
 **
 ****************************************************************************/
 
-#include <DuiLayout>
-#include <DuiLinearLayoutPolicy>
-#include <DuiList>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+#include <MList>
 #include "apscannerpage.h"
 #include "apitemcreator.h"
 #include "apitemmodel.h"
@@ -37,16 +37,16 @@ APScannerPage::~APScannerPage()
 void APScannerPage::createContent()
 {
     QGraphicsWidget *panel = centralWidget();
-    DuiLayout *layout = new DuiLayout(panel);
+    MLayout *layout = new MLayout(panel);
     layout->setAnimation(NULL);
     panel->setLayout(layout);
-    DuiLinearLayoutPolicy *policy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
 
-    // DuiList with fast view
-    list = new DuiList(panel);
+    // MList with fast view
+    list = new MList(panel);
     list->setViewType("fast");
     list->setObjectName("wgList");
-    list->setSelectionMode(DuiList::MultiSelection);
+    list->setSelectionMode(MList::MultiSelection);
     list->setShowGroups(false);
 
     // Content item creator and item model for the list

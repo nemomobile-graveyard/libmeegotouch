@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-class DuiApplicationPage;
+class MApplicationPage;
 class Timedemo;
 class QString;
 
@@ -16,12 +16,12 @@ class TimedemoBenchmark : public QObject
     Q_OBJECT
 public:
     /**
-      * \param applicationPage The DuiApplicationPage we are executing the benchmark with.
+      * \param applicationPage The MApplicationPage we are executing the benchmark with.
       * \param timedemo An instance of the Timedemo class. TimedemoBenchmark must call
       *        Timedemo::startTiming() and TimedemoBenchmark::stopTiming() when the actual
       *        benchmarking phase starts or is stopped.
       */
-    TimedemoBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo);
+    TimedemoBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo);
 
     /**
       * Override this method to return the name of the benchmark.
@@ -40,7 +40,7 @@ signals:
     void finished();
 
 protected:
-    DuiApplicationPage *applicationPage;
+    MApplicationPage *applicationPage;
     Timedemo *timedemo;
 };
 

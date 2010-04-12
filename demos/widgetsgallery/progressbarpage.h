@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -24,10 +24,10 @@
 #include <QTimer>
 
 
-class DuiGridLayoutPolicy;
-class DuiProgressIndicator;
-class DuiButton;
-class DuiLabel;
+class MGridLayoutPolicy;
+class MProgressIndicator;
+class MButton;
+class MLabel;
 
 class ProgressBarPage : public TemplatePage
 {
@@ -42,10 +42,10 @@ public slots:
 protected:
     virtual void retranslateUi();
 private:
-    DuiProgressIndicator *bar1;
-    DuiProgressIndicator *bar2;
-    DuiLabel *label1;
-    DuiLabel *label2;
+    MProgressIndicator *bar1;
+    MProgressIndicator *bar2;
+    MLabel *label1;
+    MLabel *label2;
     QTimer timer;
 };
 

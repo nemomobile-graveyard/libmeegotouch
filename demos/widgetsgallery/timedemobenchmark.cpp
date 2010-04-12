@@ -1,6 +1,6 @@
 #include "timedemobenchmark.h"
 
-TimedemoBenchmark::TimedemoBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo)
+TimedemoBenchmark::TimedemoBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo)
     : applicationPage(applicationPage)
     , timedemo(timedemo)
 {

@@ -1,21 +1,21 @@
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
-#include <DuiButton>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MButton>
 
 #include "imageviewer.h"
 
 int main(int argc, char** argv)
 {
-    DuiApplication app(argc, argv);
-    DuiApplicationWindow w;
+    MApplication app(argc, argv);
+    MApplicationWindow w;
     w.setObjectName( "Main Window" );
     w.show();
 
-    DuiApplicationPage p;
+    MApplicationPage p;
     p.appear();
 
-    DuiButton b(p.centralWidget());
+    MButton b(p.centralWidget());
     b.setText("IMAGE");
 
     ImageViewer myImageViewer( b );

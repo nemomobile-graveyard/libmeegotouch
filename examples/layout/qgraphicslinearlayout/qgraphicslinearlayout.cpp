@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,25 +22,25 @@
  */
 
 #include <QGraphicsLinearLayout>
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
-#include <DuiLabel>
-#include <DuiTheme>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MLabel>
+#include <MTheme>
 
 int main(int argc, char **argv)
 {
-    DuiApplication app(argc, argv);
-    DuiTheme::loadCSS("qgraphicslinearlayout.css");
-    DuiApplicationWindow window;
-    DuiApplicationPage page;
+    MApplication app(argc, argv);
+    MTheme::loadCSS("qgraphicslinearlayout.css");
+    MApplicationWindow window;
+    MApplicationPage page;
     /* Create a linear layout */
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     layout->setSpacing(10);
 
     /* Add 3 items to the layout, arranging them vertically stacked on top of each other */
     for (int i = 0; i < 3; ++i) {
-        DuiLabel *label = new DuiLabel(QString("Item %1").arg(i + 1));
+        MLabel *label = new MLabel(QString("Item %1").arg(i + 1));
         layout->addItem(label);
         label->setObjectName("item");
         label->setAlignment(Qt::AlignCenter);

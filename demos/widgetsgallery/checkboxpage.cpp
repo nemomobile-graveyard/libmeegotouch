@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,16 +18,16 @@
 ****************************************************************************/
 
 #include "checkboxpage.h"
-#include <DuiLabel>
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiApplicationPage>
-#include <DuiGridLayoutPolicy>
-#include <DuiLinearLayoutPolicy>
-#include <DuiButton>
-#include <DuiButtonGroup>
-#include <DuiDebug>
-#include <DuiApplication>
+#include <MLabel>
+#include <MLayout>
+#include <MLocale>
+#include <MApplicationPage>
+#include <MGridLayoutPolicy>
+#include <MLinearLayoutPolicy>
+#include <MButton>
+#include <MButtonGroup>
+#include <MDebug>
+#include <MApplication>
 #include <QGraphicsLinearLayout>
 
 CheckboxPage::CheckboxPage() :
@@ -52,10 +52,10 @@ void CheckboxPage::createContent()
     TemplatePage::createContent();
 
     // Icon buttons
-    checkbox = new DuiButton();
-    checkbox->setViewType(DuiButton::checkboxType);
+    checkbox = new MButton();
+    checkbox->setViewType(MButton::checkboxType);
     checkbox->setCheckable(true);
-    checkboxLabel = new DuiLabel();
+    checkboxLabel = new MLabel();
     checkboxLabel->setWordWrap(true);
     checkboxLabel->setTextElide(true);
     

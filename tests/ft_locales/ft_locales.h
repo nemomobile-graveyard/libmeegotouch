@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -24,9 +24,9 @@
 #include <QObject>
 #include <Qt>
 
-#include <DuiLocale>
-#include <DuiApplication>
-#include <DuiGConfItem>
+#include <MLocale>
+#include <MApplication>
+#include <MGConfItem>
 
 #ifdef HAVE_ICU
 #include <unicode/unistr.h>
@@ -42,8 +42,8 @@
 #include <unicode/putil.h> // u_setDataDirectory
 #endif
 
-Q_DECLARE_METATYPE(DuiLocale::CalendarType);
-Q_DECLARE_METATYPE(DuiLocale);
+Q_DECLARE_METATYPE(MLocale::CalendarType);
+Q_DECLARE_METATYPE(MLocale);
 
 
 class Ft_Locales : public QObject
@@ -51,7 +51,7 @@ class Ft_Locales : public QObject
     Q_OBJECT
 
 private:
-    DuiApplication *qap;
+    MApplication *qap;
 
 private slots:
     void initTestCase();
@@ -61,33 +61,33 @@ private slots:
 
     // these from ut_misc
     void testSettingsChanged(); // Must be the first test
-    void testDuiLocaleConstructor();
+    void testMLocaleConstructor();
 
-    void testDuiLocaleConstructorWithParams_data();
-    void testDuiLocaleConstructorWithParams();
+    void testMLocaleConstructorWithParams_data();
+    void testMLocaleConstructorWithParams();
 
-    void testDuiLocaleConstructorAndCategoryWithParams_data();
-    void testDuiLocaleConstructorAndCategoryWithParams();
+    void testMLocaleConstructorAndCategoryWithParams_data();
+    void testMLocaleConstructorAndCategoryWithParams();
 
     void testCreateSystemLocale_data();
     void testCreateSystemLocale();
-    void testDuiLocaleLanguage_data();
-    void testDuiLocaleLanguage();
-    void testDuiLocaleCountry_data();
-    void testDuiLocaleCountry();
-    void testDuiLocaleScript_data();
-    void testDuiLocaleScript();
+    void testMLocaleLanguage_data();
+    void testMLocaleLanguage();
+    void testMLocaleCountry_data();
+    void testMLocaleCountry();
+    void testMLocaleScript_data();
+    void testMLocaleScript();
 
-    void testDuiLocaleVariant_data();
-    void testDuiLocaleVariant();
+    void testMLocaleVariant_data();
+    void testMLocaleVariant();
 
-    void testDuiLocaleTextDirection_data();
-    void testDuiLocaleTextDirection();
+    void testMLocaleTextDirection_data();
+    void testMLocaleTextDirection();
 
-    void testDuiLocaleLanguageEndonum_data();
-    void testDuiLocaleLanguageEndonum();
-    void testDuiLocaleCountryEndonum_data();
-    void testDuiLocaleCountryEndonum();
+    void testMLocaleLanguageEndonum_data();
+    void testMLocaleLanguageEndonum();
+    void testMLocaleCountryEndonum_data();
+    void testMLocaleCountryEndonum();
 
     void checkAvailableLocales();
 };

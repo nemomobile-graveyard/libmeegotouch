@@ -1,0 +1,37 @@
+#!/usr/bin/perl -w
+
+$INTERVAL = ($#ARGV == 0) ? $ARGV[0] : 10;
+
+my @EVENTTYPES = ( "press", "release", "cancel", "error" );
+my @groupIDs;
+
+while(1) {
+    my $r = int(rand(2));
+    my $group;
+
+    if($#groupIDs < 0 || $r == 0) {
+        $group=""
+    } else {
+        $group="-i ".$groupIDs[int(rand($#groupIDs + 1))];
+    }
+
+    $r = int(rand(3));
+    $e = int(rand($#EVENTTYPES + 1));
+
+    if($r == 0) {
+        system("mnotificationtool -a add $group $EVENTTYPES[$e] '' 'Application Event' Icon-camera");
+        $n = $? >> 8;
+        print "notification $n created $group\n"
+    } elsif($r == 1) {
+        system("mnotificationtool -a add $group $EVENTTYPES[$e] '' 'System Event' Icon-camera");
+        $n = $? >> 8;
+        print "notification $n created $group\n"
+    } elsif($r == 2) {
+        system("mnotificationtool -a add -g $EVENTTYPES[$e] '' 'Group' Icon-camera");
+        $groupID=$? >> 8;
+        push @groupIDs, $groupID;
+        print "group $groupID created\n";
+   }
+
+   sleep($INTERVAL);
+}

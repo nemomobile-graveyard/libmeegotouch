@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -54,34 +54,34 @@
 #include <QTime>
 #include <QHeaderView>
 
-#include <DuiComponentData>
-#include <DuiTheme>
-#include <DuiScalableImage>
-#include <DuiLabel>
-#include <DuiApplicationWindow>
-#include <duibuttonstyle.h>
-#include <duiapplicationpagestyle.h>
-#include <duipositionindicatorstyle.h>
-#include <duiprogressindicatorstyle.h>
-#include <duipannablewidgetstyle.h>
-#include <duiwidgetstyle.h>
-#include <duidialogstyle.h>
-#include <duibuttoniconstyle.h>
-#include <duicheckboxstyle.h>
-#include <duicontainerstyle.h>
-#include <duicomboboxstyle.h>
-#include <duilabelstyle.h>
-#include <duiimagewidgetstyle.h>
-#include <duinavigationbarstyle.h>
-#include <duiseparatorstyle.h>
-#include <duisliderstyle.h>
-#include <duitexteditstyle.h>
-#include <duicontentitemstyle.h>
-#include <duiapplicationmenustyle.h>
-#include <duifeedbackplayer.h>
-#include <duiwidgetfadeinanimationstyle.h>
-#include <duiwidgetfadeoutanimationstyle.h>
-#include <duideviceprofile.h>
+#include <MComponentData>
+#include <MTheme>
+#include <MScalableImage>
+#include <MLabel>
+#include <MApplicationWindow>
+#include <mbuttonstyle.h>
+#include <mapplicationpagestyle.h>
+#include <mpositionindicatorstyle.h>
+#include <mprogressindicatorstyle.h>
+#include <mpannablewidgetstyle.h>
+#include <mwidgetstyle.h>
+#include <mdialogstyle.h>
+#include <mbuttoniconstyle.h>
+#include <mcheckboxstyle.h>
+#include <mcontainerstyle.h>
+#include <mcomboboxstyle.h>
+#include <mlabelstyle.h>
+#include <mimagewidgetstyle.h>
+#include <mnavigationbarstyle.h>
+#include <mseparatorstyle.h>
+#include <msliderstyle.h>
+#include <mtexteditstyle.h>
+#include <mcontentitemstyle.h>
+#include <mapplicationmenustyle.h>
+#include <mfeedbackplayer.h>
+#include <mwidgetfadeinanimationstyle.h>
+#include <mwidgetfadeoutanimationstyle.h>
+#include <mdeviceprofile.h>
 
 #include "qtmaemo6titlebar.h"
 #include "qtmaemo6dialogtitle.h"
@@ -91,13 +91,13 @@
 #include "qtmaemo6kineticscrolling.h"
 //krazy:excludeall=qclasses
 
-//#include "duicontainerheader_p.h"
+//#include "mcontainerheader_p.h"
 
 #define WIDGET_OPACITY "widgetOpacity"
 #define SCROLLAREATHUMBVIEW "scrollAreaThumbView"
 
 //#define MOVE_ACTIONS_FROM_TOOLBAR_TO_TITLEBAR
-//#define DUI_LOG_POLISH
+//#define M_LOG_POLISH
 
 QPixmap setPixmapOpacity(const QPixmap &pixmap, double opacity)
 {
@@ -124,8 +124,8 @@ QPixmap setPixmapOpacity(const QPixmap &pixmap, double opacity)
 QtMaemo6StylePrivate::QtMaemo6StylePrivate()
     : m_actionsInTitleBarCount(5),
       m_componentData(0),
-      m_isDuiInitialized(false),
-      m_isDuiApplication(false),
+      m_isMInitialized(false),
+      m_isMApplication(false),
       m_scrollBarEventFilter(0),
       m_windowEventFilter(0),
       m_menuBar(0),
@@ -135,16 +135,16 @@ QtMaemo6StylePrivate::QtMaemo6StylePrivate()
 
 QtMaemo6StylePrivate::~QtMaemo6StylePrivate()
 {
-    if (!m_isDuiApplication) {
+    if (!m_isMApplication) {
         delete m_componentData;
     }
 }
 
-void QtMaemo6StylePrivate::initDui()
+void QtMaemo6StylePrivate::initM()
 {
     Q_Q(QtMaemo6Style);
 
-    m_isDuiInitialized = true;
+    m_isMInitialized = true;
 
     QStringList args = qApp->arguments();
 
@@ -164,33 +164,33 @@ void QtMaemo6StylePrivate::initDui()
     m_scrollBarEventFilter->setScrollBarsAlwaysVisible(false);
     m_kinetic = new QtMaemo6KineticScrolling(q);
 
-    if (DuiComponentData::instance() != 0) {
-        m_isDuiApplication = true;
+    if (MComponentData::instance() != 0) {
+        m_isMApplication = true;
     } else {
-        m_componentData = new DuiComponentData(argc, argv);
+        m_componentData = new MComponentData(argc, argv);
     }
 
-    const DuiLabelStyle *style =
-        static_cast<const DuiLabelStyle *>(duiStyle(QStyle::State_Active,
-                                           "DuiLabelStyle"));
+    const MLabelStyle *style =
+        static_cast<const MLabelStyle *>(mStyle(QStyle::State_Active,
+                                           "MLabelStyle"));
     qApp->setFont(style->font());
     qApp->setGlobalStrut(QSize(0, 0));
-    qApp->setInputContext(QInputContextFactory::create("DuiInputContext", qApp));
+    qApp->setInputContext(QInputContextFactory::create("MInputContext", qApp));
 }
 
-const DuiStyle *QtMaemo6StylePrivate::duiStyle(QStyle::State state,
+const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
         const QString &styleClass,
         const QString &styleObject,
         const QString &type,
-        const DuiWidgetController *parent
+        const MWidgetController *parent
                                               )
 {
     // Set mode
     QString mode = modeFromState(state);
 
-    return DuiTheme::style(styleClass.toLocal8Bit().constData(),
+    return MTheme::style(styleClass.toLocal8Bit().constData(),
                            styleObject.toLocal8Bit().constData(),
-                           mode, type, Dui::Landscape, parent);
+                           mode, type, M::Landscape, parent);
 }
 
 QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
@@ -220,14 +220,14 @@ void QtMaemo6StylePrivate::drawWindowBackground(QWidget *widget)
         painter.begin(&backgroundPixmap);
 
         if (qobject_cast<QDialog *>(widget)) {
-            const DuiPannableWidgetStyle *style =
-                static_cast<const DuiPannableWidgetStyle *>(
-                    QtMaemo6StylePrivate::duiStyle(widgetOption.state, "DuiPannableWidgetStyle", "DuiDialogContentsViewport"));
+            const MPannableWidgetStyle *style =
+                static_cast<const MPannableWidgetStyle *>(
+                    QtMaemo6StylePrivate::mStyle(widgetOption.state, "MPannableWidgetStyle", "MDialogContentsViewport"));
             QtMaemo6StylePrivate::drawWidgetBackground(&painter, &widgetOption, backgroundPixmap.rect(), style);
         } else {
-            const DuiApplicationPageStyle *style =
-                static_cast<const DuiApplicationPageStyle *>(
-                    QtMaemo6StylePrivate::duiStyle(widgetOption.state, "DuiApplicationPageStyle", ""));
+            const MApplicationPageStyle *style =
+                static_cast<const MApplicationPageStyle *>(
+                    QtMaemo6StylePrivate::mStyle(widgetOption.state, "MApplicationPageStyle", ""));
             QtMaemo6StylePrivate::drawWidgetBackground(&painter, &widgetOption, backgroundPixmap.rect(), style);
         }
 
@@ -242,7 +242,7 @@ void QtMaemo6StylePrivate::drawWindowBackground(QWidget *widget)
 void QtMaemo6StylePrivate::drawWidgetBackground(QPainter *p,
         const QStyleOption *option,
         const QRect &rect,
-        const DuiWidgetStyle *style)
+        const MWidgetStyle *style)
 {
     if (style && style->backgroundImage()) {
         drawScalableImage(p, option, rect, style->backgroundImage(), style, "bg");
@@ -252,8 +252,8 @@ void QtMaemo6StylePrivate::drawWidgetBackground(QPainter *p,
 void QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
         const QStyleOption *option,
         const QRect &rect,
-        const DuiScalableImage *scalableImage,
-        const DuiWidgetStyle *style,
+        const MScalableImage *scalableImage,
+        const MWidgetStyle *style,
         const QString &purpose,
         bool enableCache)
 {
@@ -265,7 +265,7 @@ void QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
         // This is a cheap hack to enfore synchronous loading
         // FIXME: Implement dynamic updating for asynchronous loading
         // to get rid of this.
-        while (DuiTheme::hasPendingRequests()) {
+        while (MTheme::hasPendingRequests()) {
             usleep(10000);
             QCoreApplication::processEvents();
         }
@@ -313,7 +313,7 @@ void QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
 void QtMaemo6StylePrivate::drawSliderBaseBackground(QPainter *p,
         const QStyleOption *option,
         const QRect &rect,
-        const DuiSliderStyle *style,
+        const MSliderStyle *style,
         int maxSliderLength)
 {
     Q_UNUSED(maxSliderLength);
@@ -339,7 +339,7 @@ void QtMaemo6StylePrivate::drawSliderBaseBackground(QPainter *p,
             //                                        span,
             //                                        slider->upsideDown);
 
-            const DuiScalableImage *baseImage = (isHorizontal)
+            const MScalableImage *baseImage = (isHorizontal)
                                                 ? style->backgroundBaseImage()
                                                 : style->backgroundVerticalBaseImage();
 
@@ -386,7 +386,7 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *painter,
         const QIcon &icon,
         const QRect &rect,
         const QStyleOption *option,
-        const DuiButtonStyle *style) const
+        const MButtonStyle *style) const
 {
     drawBasicButton(painter, text, icon, rect, option, style, style->font(), style->iconSize());
 }
@@ -399,8 +399,8 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
         const QString &styleClass,
         const QString &styleObject /*= QString()*/) const
 {
-    const DuiButtonStyle *style =
-        static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(option->state,
+    const MButtonStyle *style =
+        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
                                             styleClass.toLocal8Bit().constData(),
                                             styleObject));
     drawBasicButton(p, text, icon, rect, option, style, style->font(), style->iconSize());
@@ -415,8 +415,8 @@ void QtMaemo6StylePrivate::drawToggleButton(QPainter *p,
         const QString &styleClass,
         const QString &styleObject /*= QString()*/) const
 {
-    const DuiButtonStyle *style =
-        static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(option->state,
+    const MButtonStyle *style =
+        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
                                             styleClass.toLocal8Bit().constData(),
                                             styleObject,
                                             "toggle"));
@@ -431,12 +431,12 @@ void QtMaemo6StylePrivate::drawCheckBox(QPainter *p,
                                         const QString &styleClass,
                                         const QString &styleObject /*= QString()*/) const
 {
-    const DuiCheckboxStyle *style =
-        static_cast<const DuiCheckboxStyle *>(QtMaemo6StylePrivate::duiStyle(option->state,
+    const MCheckboxStyle *style =
+        static_cast<const MCheckboxStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
                 styleClass.toLocal8Bit().constData(),
                 styleObject,
                 "checkbox"));
-    // TODO: Fix regression due to introduction of DuiCheckBoxStyle
+    // TODO: Fix regression due to introduction of MCheckBoxStyle
     drawBasicButton(p, text, icon, rect, option, style, style->font(), style->iconSize());
 }
 
@@ -445,7 +445,7 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
         const QIcon &icon,
         const QRect &rect,
         const QStyleOption *option,
-        const DuiButtonStyle *style,
+        const MButtonStyle *style,
         const QFont &font,
         const QSize &iconSize) const
 {
@@ -500,7 +500,7 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
     }
 }
 
-void QtMaemo6StylePrivate::drawButtonText(const DuiButtonStyle *style,
+void QtMaemo6StylePrivate::drawButtonText(const MButtonStyle *style,
         QPainter *painter,
         const QRectF &textRect,
         const QString &text,
@@ -529,7 +529,7 @@ void QtMaemo6StylePrivate::drawButtonText(const DuiButtonStyle *style,
     painter->drawText(rect, alignment, text);
 }
 
-void QtMaemo6StylePrivate::drawButtonText(const DuiButtonStyle *style,
+void QtMaemo6StylePrivate::drawButtonText(const MButtonStyle *style,
         QPainter *painter,
         const QRectF &textRect,
         const QString &text,
@@ -538,7 +538,7 @@ void QtMaemo6StylePrivate::drawButtonText(const DuiButtonStyle *style,
     drawButtonText(style, painter, textRect, text, align, style->font());
 }
 
-void QtMaemo6StylePrivate::drawButtonIcon(const DuiButtonStyle *style,
+void QtMaemo6StylePrivate::drawButtonIcon(const MButtonStyle *style,
         QPainter *painter,
         const QRect &contentsRect,
         const QIcon &icon,
@@ -563,7 +563,7 @@ void QtMaemo6StylePrivate::drawButtonIcon(const DuiButtonStyle *style,
     q->drawItemPixmap(painter, ctRect, usedAlign, icon.pixmap(usedIconSize));
 }
 
-QRect QtMaemo6StylePrivate::getTextAndIconRect(const DuiButtonStyle *style,
+QRect QtMaemo6StylePrivate::getTextAndIconRect(const MButtonStyle *style,
         const QString &text,
         const QIcon &icon /*= QIcon()*/,
         const QFont &font /*= QFont()*/,
@@ -616,7 +616,7 @@ QRect QtMaemo6StylePrivate::textBoundingRect(const QString &text, const QFont &f
     return QRect(QPoint(0, 0), QSize(rect.x() + rect.width(), rect.height()));
 }
 
-void QtMaemo6StylePrivate::paddingFromStyle(const DuiWidgetStyle *style,
+void QtMaemo6StylePrivate::paddingFromStyle(const MWidgetStyle *style,
         int *left,
         int *top,
         int *right,
@@ -675,7 +675,7 @@ QRect QtMaemo6StylePrivate::scrollBarSliderRect(const QStyleOptionComplex *optio
     return QRect();
 }
 
-QPixmap QtMaemo6StylePrivate::borderCroppedPixmap(const DuiScalableImage* image,
+QPixmap QtMaemo6StylePrivate::borderCroppedPixmap(const MScalableImage* image,
                                                   QSize size,
                                                   int borders,
                                                   int borderLines) const
@@ -818,7 +818,7 @@ void QtMaemo6Style::setKineticMaxKineticScrollSpeed(int speed) {
 
 void QtMaemo6Style::polish(QApplication *app)
 {
-    if(app->dynamicPropertyNames().contains(Dui::NoDuiStyle))
+    if(app->dynamicPropertyNames().contains(M::NoMStyle))
         return;
     QtMaemo6TestStyle::polish(app);
 }
@@ -828,10 +828,10 @@ void QtMaemo6Style::polish(QWidget *widget)
     if(qobject_cast<QDesktopWidget*>(widget))
         return;
 
-    if(widget->dynamicPropertyNames().contains(Dui::NoDuiStyle))
+    if(widget->dynamicPropertyNames().contains(M::NoMStyle))
         return;
 
-    if(qobject_cast<DuiWindow*>(widget)) {
+    if(qobject_cast<MWindow*>(widget)) {
         return;
     }
 
@@ -840,7 +840,7 @@ void QtMaemo6Style::polish(QWidget *widget)
     if( (widget->objectName().contains("qt_scrollarea_hcontainer")
         || widget->objectName().contains("qt_scrollarea_vcontainer")
         || widget->objectName().contains("qt_scrollarea_viewport"))
-        && qobject_cast<DuiWindow*>(widget->parentWidget()))
+        && qobject_cast<MWindow*>(widget->parentWidget()))
         return;
     */
 
@@ -850,8 +850,8 @@ void QtMaemo6Style::polish(QWidget *widget)
             return;
     }
 
-#ifdef DUI_LOG_POLISH
-    QString filename = QString("/home/duistyle_%1.log").arg( QCoreApplication::applicationFilePath().section('/', -1 ) );
+#ifdef M_LOG_POLISH
+    QString filename = QString("/home/mstyle_%1.log").arg( QCoreApplication::applicationFilePath().section('/', -1 ) );
 
     QFile file( filename );
     if (file.open(QIODevice::Append | QIODevice::Text)) {
@@ -867,10 +867,10 @@ void QtMaemo6Style::polish(QWidget *widget)
 
     Q_D(QtMaemo6Style);
 
-    // Lazy initialization of the DuiFramework.
-    // This is needed to guarantee that actual DuiApplications will work as well.
-    if (!d->m_isDuiInitialized) {
-        d->initDui();
+    // Lazy initialization of the MFramework.
+    // This is needed to guarantee that actual MApplications will work as well.
+    if (!d->m_isMInitialized) {
+        d->initM();
     }
 
     //Ensure that the widget draws its background transparent
@@ -893,24 +893,24 @@ void QtMaemo6Style::polish(QWidget *widget)
         }
         QSize navigationBarSize = QSize( navigationBarHeight, navigationBarHeight );
         if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Close") {
-            const QPixmap *closePixmap = DuiTheme::pixmapCopy("Icon-close", navigationBarSize);
+            const QPixmap *closePixmap = MTheme::pixmapCopy("Icon-close", navigationBarSize);
             lbl->setPixmap(*closePixmap);
         }
         if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Home") {
-            const QPixmap *closePixmap = DuiTheme::pixmapCopy("Icon-home", navigationBarSize);
+            const QPixmap *closePixmap = MTheme::pixmapCopy("Icon-home", navigationBarSize);
             lbl->setPixmap(*closePixmap);
         }
     }
 
     if (QtMaemo6TitleBar *titleBar = qobject_cast<QtMaemo6TitleBar *>(widget)) {
             // apply properties of the navigation bar style
-            const DuiNavigationBarStyle *style =
-                static_cast<const DuiNavigationBarStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Active,
-                        "DuiNavigationBarStyle"));
+            const MNavigationBarStyle *style =
+                static_cast<const MNavigationBarStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                        "MNavigationBarStyle"));
             Q_UNUSED( style );
-            const DuiLabelStyle *menuStyle =
-                static_cast<const DuiLabelStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_None,
-                        "DuiLabelStyle", "NavigationBarMenuButtonLabel"));
+            const MLabelStyle *menuStyle =
+                static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_None,
+                        "MLabelStyle", "NavigationBarMenuButtonLabel"));
             Q_UNUSED( menuStyle );
             //TODO: use style and menuStyle once the properties inside work actually.
             // This would also remove the magic numbers.
@@ -944,9 +944,9 @@ void QtMaemo6Style::polish(QWidget *widget)
 #endif
 
     if (qobject_cast<QScrollBar *>(widget)) {
-        //skip the scrollbars if they are inside an DuiWindow
+        //skip the scrollbars if they are inside an MWindow
         if(widget->parentWidget() &&
-           qobject_cast<DuiWindow*>(widget->parentWidget()->parentWidget()))
+           qobject_cast<MWindow*>(widget->parentWidget()->parentWidget()))
             return;
         //FIXME: public API usage
         widget->setAttribute(Qt::WA_OpaquePaintEvent, false);
@@ -1027,25 +1027,25 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
     switch (element) {
     case PE_Widget: {
         if (qobject_cast<const QtMaemo6TitleBar *>(widget)) {
-            const DuiNavigationBarStyle *style =
-                static_cast<const DuiNavigationBarStyle *>(QtMaemo6StylePrivate::duiStyle(option->state,
-                        "DuiNavigationBarStyle"));
+            const MNavigationBarStyle *style =
+                static_cast<const MNavigationBarStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
+                        "MNavigationBarStyle"));
             // draw widget background
             d->drawWidgetBackground(painter, option, widget->rect(), style);
 
         }
         if (qobject_cast<const QtMaemo6DialogTitle *>(widget)) {
-            const DuiWidgetStyle *style =
-                static_cast<const DuiWidgetStyle *>(
-                    QtMaemo6StylePrivate::duiStyle(option->state, "DuiWidgetStyle", "DuiDialogTitleBar"));
+            const MWidgetStyle *style =
+                static_cast<const MWidgetStyle *>(
+                    QtMaemo6StylePrivate::mStyle(option->state, "MWidgetStyle", "MDialogTitleBar"));
             // draw widget background
             d->drawWidgetBackground(painter, option, widget->rect(), style);
 
         }
         if (qobject_cast<const QtMaemo6Menu *>(widget)) {
-            const DuiApplicationMenuStyle *style =
-                static_cast<const DuiApplicationMenuStyle *>(
-                    QtMaemo6StylePrivate::duiStyle(option->state, "DuiApplicationMenuStyle"));
+            const MApplicationMenuStyle *style =
+                static_cast<const MApplicationMenuStyle *>(
+                    QtMaemo6StylePrivate::mStyle(option->state, "MApplicationMenuStyle"));
             // draw widget background
             d->drawScalableImage(painter, option, widget->rect(), style->canvasImage(), style, "canvas-image");
         }
@@ -1057,18 +1057,18 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
             break;
 
         if (const QStyleOptionFrame *panel = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
-            const DuiTextEditStyle *style =
-                static_cast<const DuiTextEditStyle *>(QtMaemo6StylePrivate::duiStyle(panel->state,
-                        "DuiTextEditStyle"));
+            const MTextEditStyle *style =
+                static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(panel->state,
+                        "MTextEditStyle"));
             QtMaemo6StylePrivate::drawWidgetBackground(painter, option, panel->rect, style);
         }
     }
     break;
     case PE_PanelItemViewItem: { //draw the background of ItemViewItems
         if (const QStyleOptionViewItemV4 *item = qstyleoption_cast<const QStyleOptionViewItemV4 *>(option)) {
-            const DuiContentItemStyle *style =
-                static_cast<const DuiContentItemStyle *>(QtMaemo6StylePrivate::duiStyle(item->state,
-                        "DuiContentItemStyle"));
+            const MContentItemStyle *style =
+                static_cast<const MContentItemStyle *>(QtMaemo6StylePrivate::mStyle(item->state,
+                        "MContentItemStyle"));
             const QAbstractItemModel *model = item->index.model();
 
             //it's a simple Listview
@@ -1181,10 +1181,10 @@ void QtMaemo6Style::drawControl(ControlElement element,
             QStyleOptionComboBox subopt = *cmb;
             subopt.palette = QPalette(Qt::black);
 
-            //const DuiComboBoxStyle * style =
-            //    static_cast<const DuiComboBoxStyle *>( QtMaemo6StylePrivate::duiStyle( cmb->state,
-            //                                           "DuiComboBoxStyle", "DuiComboBoxTitle" ) );
-// Not implemented yet on the DUI side
+            //const MComboBoxStyle * style =
+            //    static_cast<const MComboBoxStyle *>( QtMaemo6StylePrivate::mStyle( cmb->state,
+            //                                           "MComboBoxStyle", "MComboBoxTitle" ) );
+// Not implemented yet on the M side
             /*
                             p->setFont( style->font() );
                             p->setPen( QPen( style->color() ) );
@@ -1202,9 +1202,9 @@ void QtMaemo6Style::drawControl(ControlElement element,
 
             const QAbstractButton *buttonWidget = qobject_cast<const QAbstractButton * >(widget);
             if (buttonWidget->isCheckable())
-                d->drawToggleButton(p, subopt.text, subopt.icon, subopt.rect, opt, "DuiButtonIconStyle");
+                d->drawToggleButton(p, subopt.text, subopt.icon, subopt.rect, opt, "MButtonIconStyle");
             else
-                d->drawBasicButton(p, subopt.text, subopt.icon, subopt.rect, opt, "DuiButtonIconStyle");
+                d->drawBasicButton(p, subopt.text, subopt.icon, subopt.rect, opt, "MButtonIconStyle");
         }
     }
     break;
@@ -1232,7 +1232,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
                                          : SE_RadioButtonIndicator,
                                          btn, widget);
 
-            d->drawCheckBox(p, QString(), subopt.icon, subopt.rect, opt, "DuiButtonStyle");
+            d->drawCheckBox(p, QString(), subopt.icon, subopt.rect, opt, "MButtonStyle");
 
             subopt.rect = subElementRect(isCheckBox ? SE_CheckBoxContents
                                          : SE_RadioButtonContents,
@@ -1252,9 +1252,9 @@ void QtMaemo6Style::drawControl(ControlElement element,
             btn.rect = tab->rect;
             btn.state = tab->state;
 
-            const DuiButtonStyle *style =
-                static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(opt->state,
-                                                    "DuiButtonIconStyle"));
+            const MButtonStyle *style =
+                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(opt->state,
+                                                    "MButtonIconStyle"));
             // Don't show the edge of the button that is closest to the
             // TabBarBase.
             // FIXME: Solve for other tab bar orientations
@@ -1310,7 +1310,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
             d->drawBasicButton(p,
                                QString() /*tab->text*/,
                                QIcon() /*tab->icon*/,
-                               btn.rect, &btn, "DuiButtonIconStyle");
+                               btn.rect, &btn, "MButtonIconStyle");
         }
         break;
     }
@@ -1322,9 +1322,9 @@ void QtMaemo6Style::drawControl(ControlElement element,
     }
     case CE_ProgressBarGroove: {
         if (const QStyleOptionProgressBar *bar = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
-            const DuiProgressIndicatorStyle *style =
-                static_cast<const DuiProgressIndicatorStyle *>(QtMaemo6StylePrivate::duiStyle(bar->state,
-                        "DuiProgressIndicatorStyle", QString(), "bar"));
+            const MProgressIndicatorStyle *style =
+                static_cast<const MProgressIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(bar->state,
+                        "MProgressIndicatorStyle", QString(), "bar"));
             if (style && style->inactiveImage())
                 d->drawScalableImage(p, opt, bar->rect, style->inactiveImage(), style, "groove");
         }
@@ -1333,9 +1333,9 @@ void QtMaemo6Style::drawControl(ControlElement element,
     case CE_ProgressBarContents: {
 
         if (const QStyleOptionProgressBar *bar = qstyleoption_cast<const QStyleOptionProgressBar *>(opt)) {
-            const DuiProgressIndicatorStyle *style =
-                static_cast<const DuiProgressIndicatorStyle *>(QtMaemo6StylePrivate::duiStyle(bar->state,
-                        "DuiProgressIndicatorStyle", QString(), "bar"));
+            const MProgressIndicatorStyle *style =
+                static_cast<const MProgressIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(bar->state,
+                        "MProgressIndicatorStyle", QString(), "bar"));
             if (style && style->activeImage()) {
 
                 bool reverse = qApp->isRightToLeft();
@@ -1373,9 +1373,9 @@ void QtMaemo6Style::drawControl(ControlElement element,
         break;
     case CE_ScrollBarSlider: {
         if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(opt)) {
-            const DuiPositionIndicatorStyle *style =
-                static_cast<const DuiPositionIndicatorStyle *>(QtMaemo6StylePrivate::duiStyle(slider->state,
-                        "DuiPositionIndicatorStyle"));
+            const MPositionIndicatorStyle *style =
+                static_cast<const MPositionIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(slider->state,
+                        "MPositionIndicatorStyle"));
 
             d->drawWidgetBackground(p, opt, slider->rect, style);
 
@@ -1434,19 +1434,19 @@ void QtMaemo6Style::drawControl(ControlElement element,
     case CE_ItemViewItem: {
         if (const QStyleOptionViewItemV4 *item = qstyleoption_cast<const QStyleOptionViewItemV4 *>(opt)) {
             proxy()->drawPrimitive(PE_PanelItemViewItem, opt, p, widget);
-            const DuiContentItemStyle *style =
-                static_cast<const DuiContentItemStyle *>(QtMaemo6StylePrivate::duiStyle(item->state,
-                        "DuiContentItemStyle"));
-            const DuiLabelStyle *labelTitle =
-                static_cast<const DuiLabelStyle *>(QtMaemo6StylePrivate::duiStyle(item->state,
-                                                   "DuiLabelStyle", style->titleObjectName()));
+            const MContentItemStyle *style =
+                static_cast<const MContentItemStyle *>(QtMaemo6StylePrivate::mStyle(item->state,
+                        "MContentItemStyle"));
+            const MLabelStyle *labelTitle =
+                static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(item->state,
+                                                   "MLabelStyle", style->titleObjectName()));
             //subtitles for list view items are currently not supported by qt.
-            //const DuiLabelStyle* labelSubTitle =
-            //        static_cast<const DuiLabelStyle*>( QtMaemo6StylePrivate::duiStyle( item->state,
-            //                                                                           "DuiLabelStyle", style->subtitleObjectName() ) );
-            const DuiImageWidgetStyle *labelIcon =
-                static_cast<const DuiImageWidgetStyle *>(QtMaemo6StylePrivate::duiStyle(item->state,
-                        "DuiImageWidgetStyle", style->imageObjectName()));
+            //const MLabelStyle* labelSubTitle =
+            //        static_cast<const MLabelStyle*>( QtMaemo6StylePrivate::mStyle( item->state,
+            //                                                                           "MLabelStyle", style->subtitleObjectName() ) );
+            const MImageWidgetStyle *labelIcon =
+                static_cast<const MImageWidgetStyle *>(QtMaemo6StylePrivate::mStyle(item->state,
+                        "MImageWidgetStyle", style->imageObjectName()));
 
             QString itemText = qvariant_cast<QString>(item->index.data(Qt::DisplayRole));
             QIcon itemIcon = qvariant_cast<QIcon>(item->index.data(Qt::DecorationRole));
@@ -1472,9 +1472,9 @@ void QtMaemo6Style::drawControl(ControlElement element,
     break;
     case CE_HeaderSection: {
         if (const QStyleOptionHeader *header = qstyleoption_cast<const QStyleOptionHeader *>(opt)) {
-            const DuiButtonStyle * style =
-                static_cast<const DuiButtonStyle *>( QtMaemo6StylePrivate::duiStyle( header->state,
-                                                       "DuiButtonStyle") );
+            const MButtonStyle * style =
+                static_cast<const MButtonStyle *>( QtMaemo6StylePrivate::mStyle( header->state,
+                                                       "MButtonStyle") );
 
             int left, top, right, bottom;
             style->backgroundImage()->borders(&left, &top, &right, &bottom);
@@ -1542,9 +1542,9 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
     case CC_ComboBox: {
         if (const QStyleOptionComboBox *cmb = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
 
-            const DuiComboBoxStyle *style =
-                static_cast<const DuiComboBoxStyle *>(QtMaemo6StylePrivate::duiStyle(cmb->state,
-                        "DuiComboBoxStyle"));
+            const MComboBoxStyle *style =
+                static_cast<const MComboBoxStyle *>(QtMaemo6StylePrivate::mStyle(cmb->state,
+                        "MComboBoxStyle"));
             d->drawWidgetBackground(p, opt, cmb->rect, style);
         }
     }
@@ -1560,15 +1560,15 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             //a ToolButton on a ToolBar
             if (qobject_cast<QToolBar *>(parentOfControl)) {
                 QtMaemo6TestStyle::drawComplexControl(control, opt, p, widget);
-                //a ToolButton on the DuiTitleBar
+                //a ToolButton on the MTitleBar
             } else if (qobject_cast<QtMaemo6TitleBar *>(parentOfControl))  {
                 QtMaemo6TestStyle::drawComplexControl(control, opt, p, widget);
                 //a ToolButton anywhere else on the Screen should be drawn like a PushButton
             } else {
-                const DuiButtonStyle *style =
-                    static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(subopt.state, "DuiButtonIconStyle", ""));
-                const DuiButtonStyle *styleFont =
-                    static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(subopt.state, "DuiButtonIconStyle",
+                const MButtonStyle *style =
+                    static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle", ""));
+                const MButtonStyle *styleFont =
+                    static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle",
                                                         "NavigationBarToolBarButton"));
 
                 qDebug("Button \"%s\" font-size: %d, icon-size: %d", subopt.text.toLocal8Bit().constData(),
@@ -1583,9 +1583,9 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
     case CC_Slider: {
         p->save();
         if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(opt)) {
-            const DuiSliderStyle *style =
-                static_cast<const DuiSliderStyle *>(QtMaemo6StylePrivate::duiStyle(slider->state,
-                                                    "DuiSliderStyle"));
+            const MSliderStyle *style =
+                static_cast<const MSliderStyle *>(QtMaemo6StylePrivate::mStyle(slider->state,
+                                                    "MSliderStyle"));
 
             // draw widget background
             d->drawWidgetBackground(p, opt, widget->rect(), style);
@@ -1727,22 +1727,22 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
     break;
     case CC_GroupBox: {
         if (const QStyleOptionGroupBox *groupBox = qstyleoption_cast<const QStyleOptionGroupBox *>(opt)) {
-            const DuiContainerStyle *groupBoxStyle =
-                static_cast<const DuiContainerStyle *>(QtMaemo6StylePrivate::duiStyle(groupBox->state,
-                        "DuiContainerStyle"));
+            const MContainerStyle *groupBoxStyle =
+                static_cast<const MContainerStyle *>(QtMaemo6StylePrivate::mStyle(groupBox->state,
+                        "MContainerStyle"));
             //causes problems because requires to include a private header file
-            //DuiContainerHeader containerHeaderLabel;
-            //const DuiLabelStyle * headerLabelStyle =
-            //    static_cast<const DuiLabelStyle *>( QtMaemo6StylePrivate::duiStyle( groupBox->state,
-            //                                                    "DuiLabelStyle", "", "", &containerHeaderLabel ) );
+            //MContainerHeader containerHeaderLabel;
+            //const MLabelStyle * headerLabelStyle =
+            //    static_cast<const MLabelStyle *>( QtMaemo6StylePrivate::mStyle( groupBox->state,
+            //                                                    "MLabelStyle", "", "", &containerHeaderLabel ) );
 
-            const DuiLabelStyle *headerStyle =
-                static_cast<const DuiLabelStyle *>(QtMaemo6StylePrivate::duiStyle(groupBox->state,
-                                                   "DuiContainerHeaderStyle"));
+            const MLabelStyle *headerStyle =
+                static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(groupBox->state,
+                                                   "MContainerHeaderStyle"));
 
-            const DuiSeparatorStyle *separatorStyle =
-                static_cast<const DuiSeparatorStyle *>(QtMaemo6StylePrivate::duiStyle(groupBox->state,
-                        "DuiSeparatorStyle"));
+            const MSeparatorStyle *separatorStyle =
+                static_cast<const MSeparatorStyle *>(QtMaemo6StylePrivate::mStyle(groupBox->state,
+                        "MSeparatorStyle"));
 
             QRect headerTextRect = proxy()->subControlRect(CC_GroupBox, opt, SC_GroupBoxLabel, widget);
             QRect checkBoxRect = proxy()->subControlRect(CC_GroupBox, opt, SC_GroupBoxCheckBox, widget);
@@ -1753,7 +1753,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                                       + headerStyle->marginRight();
             int headMarginBottom =    headerStyle->paddingBottom()
                                       + headerStyle->marginBottom()
-                                      + 4; // Make it look good fix (while the header text padding in duicontainer is broken)
+                                      + 4; // Make it look good fix (while the header text padding in mcontainer is broken)
 
             QRect unitedRect = headerTextRect.united(checkBoxRect);
             int headerBottom = unitedRect.bottom() + headMarginBottom;
@@ -1799,7 +1799,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             // Draw checkbox
             if (groupBox->subControls & SC_GroupBoxCheckBox) {
                 d->drawCheckBox(p, QString(), QIcon(), checkBoxRect,
-                                groupBox, "DuiButtonIconStyle");
+                                groupBox, "MButtonIconStyle");
             }
 
         }
@@ -1819,7 +1819,7 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
 {
     Q_D(const QtMaemo6Style);
 
-    if (!d->m_isDuiInitialized) {
+    if (!d->m_isMInitialized) {
         return QRect();
     }
 
@@ -1909,9 +1909,9 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
                     int frameTop = 0;
                     int frameBottom = 0;
 
-                    const DuiTextEditStyle *style =
-                        static_cast<const DuiTextEditStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Sunken,
-                                "DuiTextEditStyle"));
+                    const MTextEditStyle *style =
+                        static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Sunken,
+                                "MTextEditStyle"));
 
                     if (style) {
                         // Check the recommended border size ...
@@ -1953,21 +1953,21 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
             case SC_GroupBoxContents: {
                 QRect contentsRect;
 
-                const DuiLabelStyle *headerStyle =
-                    static_cast<const DuiLabelStyle *>(QtMaemo6StylePrivate::duiStyle(groupBox->state,
-                                                       "DuiLabelStyle",
-                                                       "DuiContainerTitle"));
+                const MLabelStyle *headerStyle =
+                    static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(groupBox->state,
+                                                       "MLabelStyle",
+                                                       "MContainerTitle"));
 
                 QFont headerFont = headerStyle->font();
                 QFontMetrics fontMetrics(headerFont);
                 int height = fontMetrics.height();
 
-                const DuiContainerStyle *groupBoxStyle =
-                    static_cast<const DuiContainerStyle *>(QtMaemo6StylePrivate::duiStyle(groupBox->state,
-                            "DuiContainerStyle"));
-                const DuiSeparatorStyle *separatorStyle =
-                    static_cast<const DuiSeparatorStyle *>(QtMaemo6StylePrivate::duiStyle(groupBox->state,
-                            "DuiSeparatorStyle"));
+                const MContainerStyle *groupBoxStyle =
+                    static_cast<const MContainerStyle *>(QtMaemo6StylePrivate::mStyle(groupBox->state,
+                            "MContainerStyle"));
+                const MSeparatorStyle *separatorStyle =
+                    static_cast<const MSeparatorStyle *>(QtMaemo6StylePrivate::mStyle(groupBox->state,
+                            "MSeparatorStyle"));
 
                 int sepMarginTop    =  separatorStyle->marginTop() + separatorStyle->paddingTop();
                 int sepMarginBottom =  separatorStyle->marginBottom() + separatorStyle->paddingBottom();
@@ -2011,18 +2011,18 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
             case SC_GroupBoxLabel: {
                 QRect labelRect;
 
-                const DuiLabelStyle *headerStyle =
-                    static_cast<const DuiLabelStyle *>(QtMaemo6StylePrivate::duiStyle(groupBox->state,
-                                                       "DuiLabelStyle",
-                                                       "DuiContainerTitle"));
+                const MLabelStyle *headerStyle =
+                    static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(groupBox->state,
+                                                       "MLabelStyle",
+                                                       "MContainerTitle"));
                 QFont headerFont = headerStyle->font();
                 QFontMetrics fontMetrics(headerFont);
                 int height = fontMetrics.height();
                 int textWidth = fontMetrics.size(Qt::TextShowMnemonic, groupBox->text).width() + 1;
 
-                const DuiContainerStyle *groupBoxStyle =
-                    static_cast<const DuiContainerStyle *>(QtMaemo6StylePrivate::duiStyle(groupBox->state,
-                            "DuiContainerStyle"));
+                const MContainerStyle *groupBoxStyle =
+                    static_cast<const MContainerStyle *>(QtMaemo6StylePrivate::mStyle(groupBox->state,
+                            "MContainerStyle"));
 
                 int leftMargin =    groupBoxStyle->paddingLeft()
                                     + groupBoxStyle->marginLeft()
@@ -2145,16 +2145,16 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                 //a ToolButton on a ToolBar
                 if (dynamic_cast<QToolBar *>(parentOfControl)) {
                     //intentionally no code here at the moment
-                    //a ToolButton on the DuiTitleBar
+                    //a ToolButton on the MTitleBar
                 } else if (dynamic_cast<QtMaemo6TitleBar *>(parentOfControl))  {
                     //intentionally no code here at the moment
                     //a ToolButton anywhere else on the Screen should be drawn like a PushButton
                 } else {
                     QStyleOptionToolButton subopt = *btn;
-                    const DuiButtonStyle *style =
-                        static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(subopt.state, "DuiButtonIconStyle", ""));
-                    const DuiButtonStyle *styleFont =
-                        static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(subopt.state, "DuiButtonIconStyle",
+                    const MButtonStyle *style =
+                        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle", ""));
+                    const MButtonStyle *styleFont =
+                        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle",
                                                             "NavigationBarToolBarButton"));
 
                     int borderTop, borderRight, borderBottom, borderLeft;
@@ -2171,8 +2171,8 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
     case CT_PushButton: {
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
             QStyleOptionButton subopt = *btn;
-            const DuiButtonStyle *style =
-                static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(subopt.state, "DuiButtonIconStyle", ""));
+            const MButtonStyle *style =
+                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle", ""));
 
             int borderTop, borderRight, borderBottom, borderLeft;
             d->paddingFromStyle(style, &borderLeft, &borderTop, &borderRight, &borderBottom);
@@ -2186,19 +2186,19 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
     break;
     case CT_ItemViewItem:
         if (const QStyleOptionViewItemV4 *item = qstyleoption_cast<const QStyleOptionViewItemV4 *>(option)) {
-            const DuiContentItemStyle *style =
-                static_cast<const DuiContentItemStyle *>(QtMaemo6StylePrivate::duiStyle(option->state,
-                        "DuiContentItemStyle"));
-            const DuiLabelStyle *labelTitle =
-                static_cast<const DuiLabelStyle *>(QtMaemo6StylePrivate::duiStyle(option->state,
-                                                   "DuiLabelStyle", style->titleObjectName()));
+            const MContentItemStyle *style =
+                static_cast<const MContentItemStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
+                        "MContentItemStyle"));
+            const MLabelStyle *labelTitle =
+                static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
+                                                   "MLabelStyle", style->titleObjectName()));
             // subtitles for ListViewItems are currently not provided by qt.
-            //const DuiLabelStyle* labelSubTitle =
-            //        static_cast<const DuiLabelStyle*>( QtMaemo6StylePrivate::duiStyle( option->state,
-            //                                               "DuiLabelStyle", style->subtitleObjectName() ) );
-            const DuiImageWidgetStyle *labelIcon =
-                static_cast<const DuiImageWidgetStyle *>(QtMaemo6StylePrivate::duiStyle(option->state,
-                        "DuiImageWidgetStyle", style->imageObjectName()));
+            //const MLabelStyle* labelSubTitle =
+            //        static_cast<const MLabelStyle*>( QtMaemo6StylePrivate::mStyle( option->state,
+            //                                               "MLabelStyle", style->subtitleObjectName() ) );
+            const MImageWidgetStyle *labelIcon =
+                static_cast<const MImageWidgetStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
+                        "MImageWidgetStyle", style->imageObjectName()));
 
             QString itemText = qvariant_cast<QString>(item->index.data(Qt::DisplayRole)); //.toString();
             QIcon itemIcon = qvariant_cast<QIcon>(item->index.data(Qt::DecorationRole));
@@ -2243,9 +2243,9 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
     case PM_ScrollBarExtent:
     case PM_ScrollBarSliderMin: {
         if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
-            const DuiPositionIndicatorStyle *style =
-                static_cast<const DuiPositionIndicatorStyle *>(QtMaemo6StylePrivate::duiStyle(slider->state,
-                        "DuiPositionIndicatorStyle"));
+            const MPositionIndicatorStyle *style =
+                static_cast<const MPositionIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(slider->state,
+                        "MPositionIndicatorStyle"));
 
             QSize pixmapSize = style->onPixmap()->size().expandedTo(style->offPixmap()->size());
 
@@ -2264,9 +2264,9 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
         int sliderThickness = 0;
 
         if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
-            const DuiSliderStyle *style =
-                static_cast<const DuiSliderStyle *>(QtMaemo6StylePrivate::duiStyle(slider->state,
-                                                    "DuiSliderStyle"));
+            const MSliderStyle *style =
+                static_cast<const MSliderStyle *>(QtMaemo6StylePrivate::mStyle(slider->state,
+                                                    "MSliderStyle"));
             if (style) {
                 bool isHorizontal = slider->orientation == Qt::Horizontal;
                 const QPixmap *handleSourcePixmap = (isHorizontal)
@@ -2289,9 +2289,9 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
         int sliderLength = 0;
 
         if (const QStyleOptionSlider *slider = qstyleoption_cast<const QStyleOptionSlider *>(option)) {
-            const DuiSliderStyle *style =
-                static_cast<const DuiSliderStyle *>(QtMaemo6StylePrivate::duiStyle(slider->state,
-                                                    "DuiSliderStyle"));
+            const MSliderStyle *style =
+                static_cast<const MSliderStyle *>(QtMaemo6StylePrivate::mStyle(slider->state,
+                                                    "MSliderStyle"));
             if (style) {
                 bool isHorizontal = slider->orientation == Qt::Horizontal;
                 const QPixmap *handleSourcePixmap = (isHorizontal)
@@ -2320,9 +2320,9 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
         int fontSize = 10;
 
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
-            const DuiButtonStyle *style =
-                static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(btn->state,
-                                                    "DuiButtonIconStyle",
+            const MButtonStyle *style =
+                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(btn->state,
+                                                    "MButtonIconStyle",
                                                     QString(),
                                                     "checkbox"));
 
@@ -2348,9 +2348,9 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
         int fontSize = 10;
 
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
-            const DuiButtonStyle *style =
-                static_cast<const DuiButtonStyle *>(QtMaemo6StylePrivate::duiStyle(btn->state,
-                                                    "DuiButtonIconStyle",
+            const MButtonStyle *style =
+                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(btn->state,
+                                                    "MButtonIconStyle",
                                                     QString(),
                                                     "checkbox"));
 

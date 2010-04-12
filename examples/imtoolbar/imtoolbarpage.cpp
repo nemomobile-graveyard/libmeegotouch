@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,24 +18,24 @@
 ****************************************************************************/
 
 #include "imtoolbarpage.h"
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiLabel>
-#include <DuiTextEdit>
-#include <DuiButton>
+#include <MLayout>
+#include <MLocale>
+#include <MLabel>
+#include <MTextEdit>
+#include <MButton>
 #include <QDebug>
-#include <DuiGridLayoutPolicy>
+#include <MGridLayoutPolicy>
 
 namespace
 {
     //! the maximum and minimum width for labels
     const int MaximumLabelWidth = 175;
     const int MinimumTextEntryWidth = 275;
-    QList<DuiTextEdit *> Entries;
+    QList<MTextEdit *> Entries;
 }
 
 ImToolbarPage::ImToolbarPage()
-    : DuiApplicationPage()
+    : MApplicationPage()
 {
     setTitle("Custom Inputmethod Toolbar Text Entries");
 }
@@ -47,25 +47,25 @@ ImToolbarPage::~ImToolbarPage()
 
 void ImToolbarPage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
     QGraphicsWidget *panel = centralWidget();
-    DuiGridLayoutPolicy *layoutPolicy = ImToolbarPage::createAndSetupGridPolicy(panel);
+    MGridLayoutPolicy *layoutPolicy = ImToolbarPage::createAndSetupGridPolicy(panel);
 
-    DuiTextEdit *multi1 =  new DuiTextEdit(DuiTextEditModel::MultiLine, "", centralWidget());
-    // can specify only the file name, then use the default path /usr/share/dui/imtoolbars/
+    MTextEdit *multi1 =  new MTextEdit(MTextEditModel::MultiLine, "", centralWidget());
+    // can specify only the file name, then use the default path /usr/share/m/imtoolbars/
     multi1->attachToolbar("toolbar1.xml");
 
     Entries << multi1;
     Entries.at(0)->setPrompt("Example toolbar 1");
 
-    DuiTextEdit *single1 = new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    MTextEdit *single1 = new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
     // can also specify the absolute name.
-    single1->attachToolbar("/usr/share/dui/imtoolbars/toolbar2.xml");
+    single1->attachToolbar("/usr/share/m/imtoolbars/toolbar2.xml");
 
     Entries << single1;
     Entries.at(1)->setPrompt("Example toolbar 2");
 
-    DuiTextEdit *multi2 =  new DuiTextEdit(DuiTextEditModel::MultiLine, "", centralWidget());
+    MTextEdit *multi2 =  new MTextEdit(MTextEditModel::MultiLine, "", centralWidget());
 
     Entries << multi2;
     Entries.at(2)->setPrompt("Normal textentry without custom toolbar");
@@ -73,9 +73,9 @@ void ImToolbarPage::createContent()
     for (int i = 0; i < Entries.count(); i++)
         layoutPolicy->addItem(Entries.at(i), i, 1);
 
-    DuiLabel *label;
+    MLabel *label;
     for (int i = 0; i < Entries.count(); i++) {
-        label = new DuiLabel(centralWidget());
+        label = new MLabel(centralWidget());
         label->setText("Free text");
         label->setWordWrap(true);
         label->setMinimumWidth(MaximumLabelWidth);
@@ -84,16 +84,16 @@ void ImToolbarPage::createContent()
     }
 
     layoutPolicy->setColumnMinimumWidth(1, MinimumTextEntryWidth);
-    DuiLabel *labelHeader1 = new DuiLabel(centralWidget());
+    MLabel *labelHeader1 = new MLabel(centralWidget());
     labelHeader1->setMinimumHeight(250);
     layoutPolicy->addItem(labelHeader1, Entries.count(), 0);
 }
 
-DuiGridLayoutPolicy *ImToolbarPage::createAndSetupGridPolicy(QGraphicsWidget *panel)
+MGridLayoutPolicy *ImToolbarPage::createAndSetupGridPolicy(QGraphicsWidget *panel)
 {
-    DuiLayout *layout = new DuiLayout(panel);
+    MLayout *layout = new MLayout(panel);
     panel->setLayout(layout);
-    DuiGridLayoutPolicy *policy = new DuiGridLayoutPolicy(layout);
+    MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
     policy->setContentsMargins(20, 0, 20, 0);
     return policy;
 }

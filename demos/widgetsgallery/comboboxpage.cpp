@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,13 +19,13 @@
 
 #include "comboboxpage.h"
 
-#include <DuiLayout>
-#include <DuiLinearLayoutPolicy>
-#include <DuiLocale>
-#include <DuiLabel>
-#include <DuiComboBox>
-#include <DuiPopupList>
-#include <DuiButton>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+#include <MLocale>
+#include <MLabel>
+#include <MComboBox>
+#include <MPopupList>
+#include <MButton>
 
 #include <QStringListModel>
 #include <QSortFilterProxyModel>
@@ -49,12 +49,12 @@ QString ComboBoxPage::timedemoTitle()
 
 void ComboBoxPage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
 
     createLayout();
-    containerLayout = new DuiLayout(container);
+    containerLayout = new MLayout(container);
 
-    containerPolicy = new DuiLinearLayoutPolicy(containerLayout, Qt::Vertical);
+    containerPolicy = new MLinearLayoutPolicy(containerLayout, Qt::Vertical);
     containerLayout->setPolicy(containerPolicy);
 
     QStringList list;
@@ -62,11 +62,11 @@ void ComboBoxPage::createContent()
         list << QString::number(10000 + i);
     }
 
-    comboBox1 = new DuiComboBox;
+    comboBox1 = new MComboBox;
     comboBox1->setIconID("Icon-pictures");
     comboBox1->addItems(list);
 
-    comboBox2 = new DuiComboBox;
+    comboBox2 = new MComboBox;
     comboBox2->setIconID("Icon-pictures");
 
     model1 = new QStringListModel(this);
@@ -95,7 +95,7 @@ void ComboBoxPage::retranslateUi()
     //% "Sort - DescendingOrder"
     comboBox2->setTitle(qtTrId("xx_popup_sort_descending_order"));
 
-    //% "The DuiComboBox widget is a combined button and popup list. "
+    //% "The MComboBox widget is a combined button and popup list. "
     //% "It is very similar to QComboBox, but does not allow editing the text."
     infoLabel->setText("<a></a>" + qtTrId("xx_combobox_page_info"));
 }

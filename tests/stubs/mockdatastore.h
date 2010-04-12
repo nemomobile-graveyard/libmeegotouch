@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,9 +20,9 @@
 #ifndef MOCKDATASTORE_H
 #define MOCKDATASTORE_H
 
-#include <duidatastore.h>
+#include <mdatastore.h>
 
-class MockDataStore : public DuiDataStore
+class MockDataStore : public MDataStore
 {
 public:
     virtual bool createValue(const QString &key, const QVariant &value);

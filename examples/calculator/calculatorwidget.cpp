@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,11 +19,11 @@
 
 #include "calculatorwidget.h"
 
-#include <DuiLabel>
-#include <DuiButton>
-#include <DuiLayout>
-#include <DuiGridLayoutPolicy>
-#include <DuiSceneManager>
+#include <MLabel>
+#include <MButton>
+#include <MLayout>
+#include <MGridLayoutPolicy>
+#include <MSceneManager>
 
 #include "calculatorbutton.h"
 
@@ -35,18 +35,18 @@ CalculatorWidget::CalculatorWidget()
     //The calculation line will still be reversed however.
     setLayoutDirection(Qt::LeftToRight);
 
-    /* Create a DuiLayout attached to this widget */
-    DuiLayout *layout = new DuiLayout(this);
+    /* Create a MLayout attached to this widget */
+    MLayout *layout = new MLayout(this);
 
-    DuiGridLayoutPolicy *landscapePolicy = new DuiGridLayoutPolicy(layout);
-    DuiGridLayoutPolicy *portraitPolicy = new DuiGridLayoutPolicy(layout);
+    MGridLayoutPolicy *landscapePolicy = new MGridLayoutPolicy(layout);
+    MGridLayoutPolicy *portraitPolicy = new MGridLayoutPolicy(layout);
     layout->setPortraitPolicy(portraitPolicy);
     layout->setLandscapePolicy(landscapePolicy);
 
     landscapePolicy->setObjectName("calculatorLandscape");
     portraitPolicy->setObjectName("calculatorPortrait");
 
-    mCalculationLine = new DuiLabel;
+    mCalculationLine = new MLabel;
     mCalculationLine->setObjectName("calculationLine");
     mCalculationLine->setAlignment(Qt::AlignRight);
 

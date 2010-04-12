@@ -9,7 +9,7 @@ macx {
     QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 }
 
-install_headers.path = $$DUI_INSTALL_HEADERS
+install_headers.path = $$M_INSTALL_HEADERS
 install_headers.files = $$PUBLIC_HEADERS
 
 INSTALLS += \

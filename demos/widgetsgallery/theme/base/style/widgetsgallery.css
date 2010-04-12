@@ -1,5 +1,5 @@
-@import "../../libduicore/style/fonts.css";
-@import "../../libduicore/style/colors.css";
+@import "../../libmeegotouchcore/style/fonts.css";
+@import "../../libmeegotouchcore/style/colors.css";
 
 DuiButtonStyle#theme-selection-button {
     minimum-size: 10mm 10mm;

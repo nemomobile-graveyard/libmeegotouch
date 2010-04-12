@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -64,31 +64,31 @@
 ****************************************************************************/
 
 #include <QtGui>
-#include "../../src/corelib/core/duiexport.h"
-#include <DuiApplication>
-#include <DuiImageWidget>
-#include <DuiScene>
-#include <DuiLayout>
-#include <DuiLinearLayoutPolicy>
-#include <DuiGridLayoutPolicy>
-#include <DuiFlowLayoutPolicy>
+#include "../../src/corelib/core/mexport.h"
+#include <MApplication>
+#include <MImageWidget>
+#include <MScene>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+#include <MGridLayoutPolicy>
+#include <MFlowLayoutPolicy>
 #include <QGraphicsWidget>
-//#include <DuiFreestyleLayoutPolicy>
-#include <DuiLabel>
-#include <DuiButton>
-#include <DuiButtonGroup>
+//#include <MFreestyleLayoutPolicy>
+#include <MLabel>
+#include <MButton>
+#include <MButtonGroup>
 #include <QRectF>
-#include <DuiLocale>
-#include <DuiGConfItem>
+#include <MLocale>
+#include <MGConfItem>
 
 #define USE_INNER_FORM
 
 class AddItemButton;
 
-DuiScene *s_scene;
-QList<DuiAbstractLayoutPolicy *> s_policies;
-DuiFlowLayoutPolicy *s_flowLayoutPolicy;
-DuiLinearLayoutPolicy *s_innerPolicy;
+MScene *s_scene;
+QList<MAbstractLayoutPolicy *> s_policies;
+MFlowLayoutPolicy *s_flowLayoutPolicy;
+MLinearLayoutPolicy *s_innerPolicy;
 AddItemButton *s_addItemButton;
 
 /*!
@@ -105,12 +105,12 @@ class AnimatedlayoutRetranslator : public QObject
 public slots:
     void animatedlayoutRetranslate() {
         qDebug() << __PRETTY_FUNCTION__;
-        DuiGConfItem languageItem("/Dui/i18n/Language");
+        MGConfItem languageItem("/M/i18n/Language");
         QString language = languageItem.value().toString();
-        DuiLocale locale(language);
+        MLocale locale(language);
         QString catalog = "animatedlayout";
         locale.installTrCatalog(catalog);
-        DuiLocale::setDefault(locale);
+        MLocale::setDefault(locale);
 
         // tell the scene and its items about the language change
         QList<QGraphicsItem *> items = s_scene->items();
@@ -237,12 +237,12 @@ private:
     QPixmap _pix;
 };
 
-class AnimatedlayoutLabel : public DuiLabel
+class AnimatedlayoutLabel : public MLabel
 {
     Q_OBJECT
 public:
-    AnimatedlayoutLabel(const QString &messageId, DuiWidget *parent = 0)
-        : DuiLabel(parent), _messageId(messageId) {
+    AnimatedlayoutLabel(const QString &messageId, MWidget *parent = 0)
+        : MLabel(parent), _messageId(messageId) {
         this->setText(qtTrId(_messageId.toUtf8().constData()));
     }
 protected:
@@ -253,12 +253,12 @@ private:
     QString _messageId;
 };
 
-class ChangePolicyObjectNameButton : public DuiButton
+class ChangePolicyObjectNameButton : public MButton
 {
     Q_OBJECT
 public:
-    ChangePolicyObjectNameButton(const QString &messageId, const QString &objectName, DuiWidget *parent = 0)
-        : DuiButton(parent), _objectName(objectName), _messageId(messageId) {
+    ChangePolicyObjectNameButton(const QString &messageId, const QString &objectName, MWidget *parent = 0)
+        : MButton(parent), _objectName(objectName), _messageId(messageId) {
         retranslateUi();
     }
 protected:
@@ -267,10 +267,10 @@ protected:
     }
 
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
-        foreach(DuiAbstractLayoutPolicy * policy, s_policies) {
+        foreach(MAbstractLayoutPolicy * policy, s_policies) {
             policy->setObjectName(_objectName);
         }
-        DuiButton::mousePressEvent(event);
+        MButton::mousePressEvent(event);
     }
 private:
     QString _objectName;
@@ -278,15 +278,15 @@ private:
 };
 
 
-class Image : public DuiImageWidget
+class Image : public MImageWidget
 {
 public:
-    explicit Image(const QString &imageName, DuiWidget *parent = 0)
-        : DuiImageWidget(imageName, parent) {
+    explicit Image(const QString &imageName, MWidget *parent = 0)
+        : MImageWidget(imageName, parent) {
         setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
     }
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event) {
-        DuiLayout *layout = dynamic_cast<DuiLayout *>(parentLayoutItem());
+        MLayout *layout = dynamic_cast<MLayout *>(parentLayoutItem());
         if (layout) {
             if (event && event->button() == Qt::RightButton) {
                 layout->removeItem(this);
@@ -300,24 +300,24 @@ public:
         painter->setPen(Qt::NoPen);
         painter->setBrush(Qt::white);
         painter->drawRect(QRectF(0, 0, size().width(), size().height()));
-        DuiImageWidget::paint(painter, option, widget);
+        MImageWidget::paint(painter, option, widget);
     }
 };
 
-class AddItemButton : public DuiButton
+class AddItemButton : public MButton
 {
 public:
-    AddItemButton(DuiWidget *parent = 0)
-        : DuiButton("+", parent)
+    AddItemButton(MWidget *parent = 0)
+        : MButton("+", parent)
     {}
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
-        Image *item = new Image("dui-logo-red");
+        Image *item = new Image("m-logo-red");
         item->setObjectName("new");
         item->setVisible(false);
 
         s_flowLayoutPolicy->insertItem(10, item);
-        DuiButton::mousePressEvent(event);
+        MButton::mousePressEvent(event);
     }
 };
 
@@ -325,14 +325,14 @@ protected:
 class ChangePolicyButton : public Button
 {
 public:
-    ChangePolicyButton(const QPixmap &pixmap, DuiAbstractLayoutPolicy *policy, QGraphicsItem *parent = 0)
+    ChangePolicyButton(const QPixmap &pixmap, MAbstractLayoutPolicy *policy, QGraphicsItem *parent = 0)
         : Button(pixmap, parent), _policy(policy)
     {}
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) {
         _policy->activate();
         Button::mousePressEvent(event);
-        DuiLinearLayoutPolicy *linearPolicy = dynamic_cast<DuiLinearLayoutPolicy *>(_policy);
+        MLinearLayoutPolicy *linearPolicy = dynamic_cast<MLinearLayoutPolicy *>(_policy);
         if (linearPolicy &&
                 linearPolicy->orientation() == Qt::Vertical)
             s_innerPolicy->setOrientation(Qt::Horizontal);
@@ -341,7 +341,7 @@ protected:
         s_addItemButton->setVisible(_policy == s_flowLayoutPolicy);
     }
 private:
-    DuiAbstractLayoutPolicy *_policy;
+    MAbstractLayoutPolicy *_policy;
 };
 
 class View : public QGraphicsView
@@ -359,14 +359,14 @@ protected:
 
 int main(int argc, char **argv)
 {
-    DuiApplication app(argc, argv);
+    MApplication app(argc, argv);
 
     AnimatedlayoutRetranslator animatedlayoutRetranslator;
     QObject::connect(&app, SIGNAL(localeSettingsChanged()), &animatedlayoutRetranslator, SLOT(animatedlayoutRetranslate()));
 
     QPixmap *bgPix = new QPixmap("images/background.png");
 
-    s_scene = new DuiScene;
+    s_scene = new MScene;
     int offset = 0;  //sets where the background image starts tiling from
     s_scene->setSceneRect(offset, offset, 864, 480);
 
@@ -377,7 +377,7 @@ int main(int argc, char **argv)
     background->setZValue(-1);
     background->setPos(-5, -5);
 
-    DuiLayout *layout = new DuiLayout;
+    MLayout *layout = new MLayout;
     QGraphicsWidget *form = new ContainerWidget;
     form->setLayout(layout);
     s_scene->addItem(form);
@@ -389,19 +389,19 @@ int main(int argc, char **argv)
     form->setMinimumWidth(864);
     form->setMinimumHeight(480);
 
-    DuiGridLayoutPolicy *gridPolicy = new DuiGridLayoutPolicy(layout);
-    DuiLinearLayoutPolicy *linearHorizontalPolicy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
-    DuiLinearLayoutPolicy *linearVerticalPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    s_flowLayoutPolicy = new DuiFlowLayoutPolicy(layout);
-    DuiAbstractLayoutPolicy *emptyPolicy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
+    MGridLayoutPolicy *gridPolicy = new MGridLayoutPolicy(layout);
+    MLinearLayoutPolicy *linearHorizontalPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    MLinearLayoutPolicy *linearVerticalPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    s_flowLayoutPolicy = new MFlowLayoutPolicy(layout);
+    MAbstractLayoutPolicy *emptyPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     s_policies << linearHorizontalPolicy;
     s_policies << linearVerticalPolicy;
     s_policies << gridPolicy;
     s_policies << s_flowLayoutPolicy;
     s_policies << emptyPolicy;
-//    DuiFreestyleLayoutPolicy *freestylePolicy = new DuiFreestyleLayoutPolicy(layout);
+//    MFreestyleLayoutPolicy *freestylePolicy = new MFreestyleLayoutPolicy(layout);
 
-    DuiLayout *innerLayout = new DuiLayout;
+    MLayout *innerLayout = new MLayout;
 #ifdef USE_INNER_FORM
     QGraphicsWidget *innerForm = new QGraphicsWidget;
     innerForm->setLayout(innerLayout);
@@ -409,11 +409,11 @@ int main(int argc, char **argv)
     innerForm->setMaximumWidth(50);
     innerForm->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 #endif
-    s_innerPolicy = new DuiLinearLayoutPolicy(innerLayout, Qt::Vertical);
+    s_innerPolicy = new MLinearLayoutPolicy(innerLayout, Qt::Vertical);
     innerLayout->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
 
     for (int i = 0; i < 4; ++i) {
-        Image *item = new Image("dui-logo-blue");
+        Image *item = new Image("m-logo-blue");
         item->setObjectName("blue");
         item->setVisible(false);
         //add to active policy first
@@ -423,7 +423,7 @@ int main(int argc, char **argv)
     int i = 0;
     for (int y = 0; y < 10; ++y) {
         for (int x = 0; x < 4; ++x, ++i) {
-            Image *item = new Image("dui-logo");
+            Image *item = new Image("m-logo");
             item->setZValue(i);
             item->setVisible(false);
             //add to active policy first
@@ -485,12 +485,12 @@ int main(int argc, char **argv)
 
     QGraphicsWidget *controlWidget = new QGraphicsWidget;
     controlWidget->setZValue(70);
-    DuiLayout *changeObjectNameLayout = new DuiLayout(controlWidget);
+    MLayout *changeObjectNameLayout = new MLayout(controlWidget);
     changeObjectNameLayout->setAnimation(NULL);
-    DuiGridLayoutPolicy *changeObjectNameLayoutPolicy = new DuiGridLayoutPolicy(changeObjectNameLayout);
+    MGridLayoutPolicy *changeObjectNameLayoutPolicy = new MGridLayoutPolicy(changeObjectNameLayout);
     s_scene->addItem(controlWidget);
     controlWidget->setGeometry(100, 320, 300, 20);
-    DuiButtonGroup *changePolicyObjectNameButtonGroup = new DuiButtonGroup();
+    MButtonGroup *changePolicyObjectNameButtonGroup = new MButtonGroup();
     changePolicyObjectNameButtonGroup->setExclusive(true);
     QList<ChangePolicyObjectNameButton *> name_buttons;
     //% "spacing+margins"
@@ -507,7 +507,7 @@ int main(int argc, char **argv)
     name_buttons[0]->setCheckable(true);
     name_buttons[0]->setChecked(true);
     foreach(ChangePolicyObjectNameButton * button, name_buttons) {
-        button->setViewType(DuiButton::toggleType);
+        button->setViewType(MButton::toggleType);
         button->setCheckable(true);
         changePolicyObjectNameButtonGroup->addButton(button);
         changeObjectNameLayoutPolicy->addItem(button, (buttonIndex / 2), (buttonIndex % 2));
@@ -515,7 +515,7 @@ int main(int argc, char **argv)
         buttonIndex++;
     }
     name_buttons[0]->click();
-    foreach(DuiAbstractLayoutPolicy * policy, s_policies) {
+    foreach(MAbstractLayoutPolicy * policy, s_policies) {
         policy->setObjectName("spacing+margins");
     }
 

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -28,7 +28,7 @@ class QGraphicsView;
 class QGLWidget;
 
 /**
-  * Benchmark runtime of a simple Qt application. It mimics a minimal DUI application and therefor
+  * Benchmark runtime of a simple Qt application. It mimics a minimal M application and therefor
   * creates QGraphicsView/QGraphicsscene and initializes them.
   * All elements are benchmarked individually and the whole application is benchmarked at once.
  */

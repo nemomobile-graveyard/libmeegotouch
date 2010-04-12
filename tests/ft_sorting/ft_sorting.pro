@@ -3,7 +3,7 @@ include(../common_top.pri)
 TARGET = ft_sorting
 
 TEST_SOURCES = \
-#    $$DUISRCDIR/duilocale.cpp
+#    $$MSRCDIR/mlocale.cpp
 
 # Input
 HEADERS += \

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,33 +21,33 @@
  * An example of a minimalistic DirectUI application
  */
 
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiApplicationPage>
-#include <DuiButton>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MButton>
 
 int main(int argc, char **argv)
 {
     /* The base class of all DirectUI applications */
-    DuiApplication app(argc, argv);
+    MApplication app(argc, argv);
 
     /* The application window is a top-level window that contains
        the Home and Back/Close framework controls, Navigation bar,
        View menu and Toolbar components */
-    DuiApplicationWindow w;
+    MApplicationWindow w;
     w.show();
 
     /* Pages represent one "view" of an application, into which you
        can add your application's contents. An application can have
        any number of pages with transitions between them */
-    DuiApplicationPage p;
+    MApplicationPage p;
     p.appear();
 
     /* Let's add a simple push button to our page */
-    DuiButton b(p.centralWidget()); /* The (optional) constructor parameter
+    MButton b(p.centralWidget()); /* The (optional) constructor parameter
                                        causes our button to be a child of the
                                        central widget of the page. This
-                                       pattern can be used with all DuiWidgets
+                                       pattern can be used with all MWidgets
                                     */
     b.setText("Hello World!");
 

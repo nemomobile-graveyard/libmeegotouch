@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,15 +19,15 @@
 
 #include "navigationbarpage.h"
 
-#include <DuiAction>
-#include <DuiLocale>
-#include <DuiLabel>
-#include <DuiButton>
-#include <DuiSeparator>
-#include <DuiComboBox>
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiEscapeButtonPanel>
+#include <MAction>
+#include <MLocale>
+#include <MLabel>
+#include <MButton>
+#include <MSeparator>
+#include <MComboBox>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MEscapeButtonPanel>
 
 #include <QGraphicsLinearLayout>
 #include <QStringList>
@@ -50,12 +50,12 @@ QString NavigationBarPage::timedemoTitle()
 void NavigationBarPage::createContent()
 {
     QGraphicsLinearLayout *lytMain = new QGraphicsLinearLayout(Qt::Vertical);
-    lblDisplayMode = new DuiLabel(this);
+    lblDisplayMode = new MLabel(this);
 
     QGraphicsLinearLayout *lytButtons = new QGraphicsLinearLayout(Qt::Vertical);
 
     // combo box nav bar display mode
-    comboNavigationBarDisplayMode = new DuiComboBox(this);
+    comboNavigationBarDisplayMode = new MComboBox(this);
     //%  "Navigation Bar"
     comboNavigationBarDisplayMode->setTitle(qtTrId("xx_navigationbar_navbarcombo"));
     comboNavigationBarDisplayMode->setIconVisible(false);
@@ -63,7 +63,7 @@ void NavigationBarPage::createContent()
             SLOT(changeNavigationBarDisplayMode(int)));
 
     // combo box escape button display mode
-    comboEscapeButtonDisplayMode = new DuiComboBox(this);
+    comboEscapeButtonDisplayMode = new MComboBox(this);
     //% "Escape Button"
     comboEscapeButtonDisplayMode->setTitle(qtTrId("xx_navigationbar_escapebtncombo"));
     comboEscapeButtonDisplayMode->setIconVisible(false);
@@ -71,7 +71,7 @@ void NavigationBarPage::createContent()
             SLOT(changeEscapeButtonDisplayMode(int)));
 
     // combo box home button display mode
-    comboHomeButtonDisplayMode = new DuiComboBox(this);
+    comboHomeButtonDisplayMode = new MComboBox(this);
     //% "Home Button"
     comboHomeButtonDisplayMode->setTitle(qtTrId("xx_navigationbar_homebtncombo"));
     comboHomeButtonDisplayMode->setIconVisible(false);
@@ -82,10 +82,10 @@ void NavigationBarPage::createContent()
     lytButtons->addItem(comboHomeButtonDisplayMode);
     lytButtons->addItem(comboEscapeButtonDisplayMode);
 
-    DuiSeparator *separator = new DuiSeparator(this);
+    MSeparator *separator = new MSeparator(this);
 
-    lblEscapeModeDesc = new DuiLabel(this);
-    comboEscapeMode = new DuiComboBox(this);
+    lblEscapeModeDesc = new MLabel(this);
+    comboEscapeMode = new MComboBox(this);
 
     connect(comboEscapeMode, SIGNAL(currentIndexChanged(int)), SLOT(changeEscapeMode(int)));
 
@@ -104,18 +104,18 @@ void NavigationBarPage::createContent()
 
 void NavigationBarPage::addExampleActions()
 {
-    DuiAction *action;
+    MAction *action;
 
-    action = new DuiAction("Icon-video", "Video", this);
-    action->setLocation(DuiAction::ToolBarLocation);
+    action = new MAction("Icon-video", "Video", this);
+    action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 
-    action = new DuiAction("Icon-new-SMS", "SMS", this);
-    action->setLocation(DuiAction::ToolBarLocation);
+    action = new MAction("Icon-new-SMS", "SMS", this);
+    action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 
-    action = new DuiAction("Icon-contacts", "Contacts", this);
-    action->setLocation(DuiAction::ToolBarLocation);
+    action = new MAction("Icon-contacts", "Contacts", this);
+    action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 }
 
@@ -153,7 +153,7 @@ void NavigationBarPage::retranslateUi()
     retranslateDisplayModeComboBox(comboEscapeButtonDisplayMode);
 }
 
-void NavigationBarPage::retranslateDisplayModeComboBox(DuiComboBox *combo)
+void NavigationBarPage::retranslateDisplayModeComboBox(MComboBox *combo)
 {
     int oldIndex = combo->currentIndex();
 
@@ -175,13 +175,13 @@ void NavigationBarPage::changeEscapeMode(int index)
 {
     switch (index) {
         case Auto:
-            setEscapeMode(DuiApplicationPageModel::EscapeAuto);
+            setEscapeMode(MApplicationPageModel::EscapeAuto);
             break;
         case ManualBack:
-            setEscapeMode(DuiApplicationPageModel::EscapeManualBack);
+            setEscapeMode(MApplicationPageModel::EscapeManualBack);
             break;
         case CloseWindow:
-            setEscapeMode(DuiApplicationPageModel::EscapeCloseWindow);
+            setEscapeMode(MApplicationPageModel::EscapeCloseWindow);
             break;
         default:
             qFatal("Invalid index");
@@ -192,13 +192,13 @@ void NavigationBarPage::changeNavigationBarDisplayMode(int index)
 {
     switch (index) {
     case ComboShow:
-        setComponentsDisplayMode(NavigationBar, DuiApplicationPageModel::Show);
+        setComponentsDisplayMode(NavigationBar, MApplicationPageModel::Show);
         break;
     case ComboAutoHide:
-        setComponentsDisplayMode(NavigationBar, DuiApplicationPageModel::AutoHide);
+        setComponentsDisplayMode(NavigationBar, MApplicationPageModel::AutoHide);
         break;
     default:
-        setComponentsDisplayMode(NavigationBar, DuiApplicationPageModel::Hide);
+        setComponentsDisplayMode(NavigationBar, MApplicationPageModel::Hide);
     }
 }
 
@@ -206,13 +206,13 @@ void NavigationBarPage::changeEscapeButtonDisplayMode(int index)
 {
     switch (index) {
     case ComboShow:
-        setComponentsDisplayMode(EscapeButton, DuiApplicationPageModel::Show);
+        setComponentsDisplayMode(EscapeButton, MApplicationPageModel::Show);
         break;
     case ComboAutoHide:
-        setComponentsDisplayMode(EscapeButton, DuiApplicationPageModel::AutoHide);
+        setComponentsDisplayMode(EscapeButton, MApplicationPageModel::AutoHide);
         break;
     default:
-        setComponentsDisplayMode(EscapeButton, DuiApplicationPageModel::Hide);
+        setComponentsDisplayMode(EscapeButton, MApplicationPageModel::Hide);
     }
 }
 
@@ -220,26 +220,26 @@ void NavigationBarPage::changeHomeButtonDisplayMode(int index)
 {
     switch (index) {
     case ComboShow:
-        setComponentsDisplayMode(HomeButton, DuiApplicationPageModel::Show);
+        setComponentsDisplayMode(HomeButton, MApplicationPageModel::Show);
         break;
     case ComboAutoHide:
-        setComponentsDisplayMode(HomeButton, DuiApplicationPageModel::AutoHide);
+        setComponentsDisplayMode(HomeButton, MApplicationPageModel::AutoHide);
         break;
     default:
-        setComponentsDisplayMode(HomeButton, DuiApplicationPageModel::Hide);
+        setComponentsDisplayMode(HomeButton, MApplicationPageModel::Hide);
     }
 }
 
 void NavigationBarPage::setButtonsState()
 {
     switch (escapeMode()) {
-        case DuiApplicationPageModel::EscapeAuto:
+        case MApplicationPageModel::EscapeAuto:
             comboEscapeMode->setCurrentIndex(Auto);
             break;
-        case DuiApplicationPageModel::EscapeManualBack:
+        case MApplicationPageModel::EscapeManualBack:
             comboEscapeMode->setCurrentIndex(ManualBack);
             break;
-        case DuiApplicationPageModel::EscapeCloseWindow:
+        case MApplicationPageModel::EscapeCloseWindow:
             comboEscapeMode->setCurrentIndex(CloseWindow);
             break;
         default:

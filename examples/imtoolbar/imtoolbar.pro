@@ -1,9 +1,9 @@
-DUIROOT = ../..
-include($$DUIROOT/mkspecs/common.pri)
+MROOT = ../..
+include($$MROOT/mkspecs/common.pri)
 
 TEMPLATE = app
 TARGET = imtoolbar
-CONFIG += dui # Requires libdui to be installed
+CONFIG += m # Requires libm to be installed
 
 DEPENDPATH += .
 INCLUDEPATH += .
@@ -14,6 +14,6 @@ SOURCES += imtoolbarpage.cpp main.cpp
 
 install.files =  ./toolbar1.xml \
                 ./toolbar2.xml
-install.path = /usr/share/dui/imtoolbars/
+install.path = /usr/share/m/imtoolbars/
 INSTALLS += install
 

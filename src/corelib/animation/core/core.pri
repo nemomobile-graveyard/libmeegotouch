@@ -6,18 +6,18 @@
 ANIMATIONS_CORE_SRC_DIR=./animation/core
 
 PUBLIC_HEADERS += \
-    $$ANIMATIONS_CORE_SRC_DIR/duianimation.h \
-    $$ANIMATIONS_CORE_SRC_DIR/duigroupanimation.h \
-    $$ANIMATIONS_CORE_SRC_DIR/duianimationcreator.h \
-    $$ANIMATIONS_CORE_SRC_DIR/duiparallelanimationgroup.h \
+    $$ANIMATIONS_CORE_SRC_DIR/manimation.h \
+    $$ANIMATIONS_CORE_SRC_DIR/mgroupanimation.h \
+    $$ANIMATIONS_CORE_SRC_DIR/manimationcreator.h \
+    $$ANIMATIONS_CORE_SRC_DIR/mparallelanimationgroup.h \
 
 PRIVATE_HEADERS += \
-    $$ANIMATIONS_CORE_SRC_DIR/duianimation_p.h \
-    $$ANIMATIONS_CORE_SRC_DIR/duigroupanimation_p.h \
-    $$ANIMATIONS_CORE_SRC_DIR/duiparallelanimationgroup_p.h \
+    $$ANIMATIONS_CORE_SRC_DIR/manimation_p.h \
+    $$ANIMATIONS_CORE_SRC_DIR/mgroupanimation_p.h \
+    $$ANIMATIONS_CORE_SRC_DIR/mparallelanimationgroup_p.h \
 
 SOURCES += \
-    $$ANIMATIONS_CORE_SRC_DIR/duianimation.cpp \
-    $$ANIMATIONS_CORE_SRC_DIR/duigroupanimation.cpp \
-    $$ANIMATIONS_CORE_SRC_DIR/duianimationcreator.cpp \
-    $$ANIMATIONS_CORE_SRC_DIR/duiparallelanimationgroup.cpp \
+    $$ANIMATIONS_CORE_SRC_DIR/manimation.cpp \
+    $$ANIMATIONS_CORE_SRC_DIR/mgroupanimation.cpp \
+    $$ANIMATIONS_CORE_SRC_DIR/manimationcreator.cpp \
+    $$ANIMATIONS_CORE_SRC_DIR/mparallelanimationgroup.cpp \

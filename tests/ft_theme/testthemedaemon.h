@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,18 +21,18 @@
 #define TESTTHEMEDAEMON_H
 
 #include <QMultiMap>
-#include "../../src/corelib/theme/iduithemedaemon.h"
+#include "../../src/corelib/theme/imthemedaemon.h"
 
 class QPixmap;
 
-class TestThemeDaemon : public IDuiThemeDaemon
+class TestThemeDaemon : public IMThemeDaemon
 {
     Q_OBJECT
 public:
 
     TestThemeDaemon();
 
-    virtual void addDirectoryToPixmapSearchList(const QString &directoryName, Dui::RecursionMode recursive);
+    virtual void addDirectoryToPixmapSearchList(const QString &directoryName, M::RecursionMode recursive);
     virtual void clearPixmapSearchList();
     virtual void pixmapHandleSync(const QString &imageId, const QSize &size);
     virtual void pixmapHandle(const QString &imageId, const QSize &size);

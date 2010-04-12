@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,10 +19,10 @@
 
 #include "lifecycleapplication.h"
 #include <QTimer>
-#include <DuiInfoBanner>
+#include <MInfoBanner>
 
-LifeCycleApplication::LifeCycleApplication(int &argc, char **argv, const QString &appIdentifier, DuiApplicationService *service)
-    : DuiApplication(argc, argv, appIdentifier, service), m_bHandleSignal(true)
+LifeCycleApplication::LifeCycleApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service)
+    : MApplication(argc, argv, appIdentifier, service), m_bHandleSignal(true)
 {
     connect(this, SIGNAL(memoryLow()), SLOT(releaseMemoryHandler()));
 }
@@ -39,10 +39,10 @@ void LifeCycleApplication::releaseMemory()
 
 void LifeCycleApplication::showReleaseMemory(QString message)
 {
-    DuiInfoBanner *infoBanner = new DuiInfoBanner(DuiInfoBanner::Information);
+    MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
     infoBanner->setBodyText(message);
     infoBanner->setIconID("Icon-close");
-    infoBanner->appear(DuiSceneWindow::DestroyWhenDone);
+    infoBanner->appear(MSceneWindow::DestroyWhenDone);
     QTimer::singleShot(5000, infoBanner, SLOT(disappear()));
 }
 

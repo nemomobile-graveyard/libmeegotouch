@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,16 +19,16 @@
 
 #include "languagepage.h"
 
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiPopupList>
-#include <DuiLabel>
-#include <DuiGridLayoutPolicy>
-#include <DuiButton>
-#include <DuiComboBox>
-#include <DuiTheme>
+#include <MLayout>
+#include <MLocale>
+#include <MPopupList>
+#include <MLabel>
+#include <MGridLayoutPolicy>
+#include <MButton>
+#include <MComboBox>
+#include <MTheme>
 #ifdef HAVE_GCONF
-#include <DuiGConfItem>
+#include <MGConfItem>
 #endif
 #include <QGraphicsLinearLayout>
 #include <QStandardItemModel>
@@ -71,30 +71,30 @@ QString LanguagePage::timedemoTitle()
 
 void LanguagePage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
     QGraphicsWidget *panel = centralWidget();
-    DuiLayout *layout = new DuiLayout(panel);
-    DuiGridLayoutPolicy *policy = new DuiGridLayoutPolicy(layout);
-    comboBoxLanguage = new DuiComboBox;
+    MLayout *layout = new MLayout(panel);
+    MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
+    comboBoxLanguage = new MComboBox;
     comboBoxLanguage->setIconID("Icon-browser");
     policy->addItem(comboBoxLanguage, 1, 1);
-    comboBoxLcTime = new DuiComboBox;
+    comboBoxLcTime = new MComboBox;
     comboBoxLcTime->setIconID("Icon-browser");
-    comboBoxLcCollate = new DuiComboBox;
+    comboBoxLcCollate = new MComboBox;
     comboBoxLcCollate->setIconID("Icon-browser");
-    comboBoxLcNumeric = new DuiComboBox;
+    comboBoxLcNumeric = new MComboBox;
     comboBoxLcNumeric->setIconID("Icon-browser");
-    comboBoxLcMonetary = new DuiComboBox;
+    comboBoxLcMonetary = new MComboBox;
     comboBoxLcMonetary->setIconID("Icon-browser");
-    labelHaveGconf = new DuiLabel;
-    labelHaveIcu = new DuiLabel;
-    labelExampleNumber = new DuiLabel;
-    labelExampleDateTime = new DuiLabel;
-    labelExampleCurrency = new DuiLabel;
-    labelExampleTranslation1 = new DuiLabel;
-    labelExampleTranslation2 = new DuiLabel;
-    labelExampleTranslation3 = new DuiLabel;
-    labelFontTest = new DuiLabel;
+    labelHaveGconf = new MLabel;
+    labelHaveIcu = new MLabel;
+    labelExampleNumber = new MLabel;
+    labelExampleDateTime = new MLabel;
+    labelExampleCurrency = new MLabel;
+    labelExampleTranslation1 = new MLabel;
+    labelExampleTranslation2 = new MLabel;
+    labelExampleTranslation3 = new MLabel;
+    labelFontTest = new MLabel;
     labelFontTest->setWordWrap(true);
 
     policy->addItem(comboBoxLcTime, 2, 1);
@@ -212,7 +212,7 @@ void LanguagePage::retranslateUi()
 
     int rowsLocaleCount = rowsLocale.count();
 
-    DuiLocale currentLocale;
+    MLocale currentLocale;
 
     QStandardItemModel *newModelLanguage
         = new QStandardItemModel(rowsLocale.count(), 2, this);
@@ -243,7 +243,7 @@ void LanguagePage::retranslateUi()
     if (modelLcTime && modelLcTime->QObject::parent() == this)
         delete modelLcTime;
     modelLcTime = newModelLcTime;
-    QString currentLcTime = currentLocale.categoryName(DuiLocale::DuiLcTime);
+    QString currentLcTime = currentLocale.categoryName(MLocale::MLcTime);
     for (int i = 0; i < rowsLocaleCount; ++i) {
         if (currentLcTime == modelLcTime->item(i, 1)->text())
             comboBoxLcTime->setCurrentIndex(i);
@@ -260,7 +260,7 @@ void LanguagePage::retranslateUi()
     if (modelLcCollate && modelLcCollate->QObject::parent() == this)
         delete modelLcCollate;
     modelLcCollate = newModelLcCollate;
-    QString currentLcCollate = currentLocale.categoryName(DuiLocale::DuiLcCollate);
+    QString currentLcCollate = currentLocale.categoryName(MLocale::MLcCollate);
     for (int i = 0; i < rowsLocaleCount; ++i) {
         if (currentLcCollate == modelLcCollate->item(i, 1)->text())
             comboBoxLcCollate->setCurrentIndex(i);
@@ -277,7 +277,7 @@ void LanguagePage::retranslateUi()
     if (modelLcNumeric && modelLcNumeric->QObject::parent() == this)
         delete modelLcNumeric;
     modelLcNumeric = newModelLcNumeric;
-    QString currentLcNumeric = currentLocale.categoryName(DuiLocale::DuiLcNumeric);
+    QString currentLcNumeric = currentLocale.categoryName(MLocale::MLcNumeric);
     for (int i = 0; i < rowsLocaleCount; ++i) {
         if (currentLcNumeric == modelLcNumeric->item(i, 1)->text())
             comboBoxLcNumeric->setCurrentIndex(i);
@@ -294,7 +294,7 @@ void LanguagePage::retranslateUi()
     if (modelLcMonetary && modelLcMonetary->QObject::parent() == this)
         delete modelLcMonetary;
     modelLcMonetary = newModelLcMonetary;
-    QString currentLcMonetary = currentLocale.categoryName(DuiLocale::DuiLcMonetary);
+    QString currentLcMonetary = currentLocale.categoryName(MLocale::MLcMonetary);
     for (int i = 0; i < rowsLocaleCount; ++i) {
         if (currentLcMonetary == modelLcMonetary->item(i, 1)->text())
             comboBoxLcMonetary->setCurrentIndex(i);
@@ -338,8 +338,8 @@ void LanguagePage::retranslateUi()
     labelExampleDateTime->setText(
         qtTrId("xx_langage_date_time_format")
         .arg(currentLocale.formatDateTime(
-                 datetime, DuiLocale::DateFull, DuiLocale::TimeFull,
-                 DuiLocale::GregorianCalendar)));
+                 datetime, MLocale::DateFull, MLocale::TimeFull,
+                 MLocale::GregorianCalendar)));
     //% "Currency format example: %1 %2\x9c!! Currency: %1 %2"
     labelExampleCurrency->setText(
         qtTrId("xx_language_currency_format")
@@ -388,15 +388,15 @@ void LanguagePage::changeLanguage(int index)
         return;
     QString newLanguage = modelLanguage->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    DuiGConfItem languageItem("/Dui/i18n/Language");
+    MGConfItem languageItem("/M/i18n/Language");
     if (newLanguage != languageItem.value().toString()) {
         languageItem.set(newLanguage);
     }
 #else
-    DuiLocale oldLocale;
+    MLocale oldLocale;
     if (newLanguage != oldLocale.name()) {
-        DuiLocale newLocale(newLanguage);
-        DuiLocale::setDefault(newLocale);
+        MLocale newLocale(newLanguage);
+        MLocale::setDefault(newLocale);
     }
 #endif
 }
@@ -407,15 +407,15 @@ void LanguagePage::changeLcTime(int index)
         return;
     QString newLcTime = modelLcTime->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    DuiGConfItem lcTimeItem("/Dui/i18n/LcTime");
+    MGConfItem lcTimeItem("/M/i18n/LcTime");
     if (newLcTime != lcTimeItem.value().toString()) {
         lcTimeItem.set(newLcTime);
     }
 #else
-    DuiLocale currentLocale;
-    if (newLcTime != currentLocale.categoryName(DuiLocale::DuiLcTime)) {
-        currentLocale.setCategoryLocale(DuiLocale::DuiLcTime, newLcTime);
-        DuiLocale::setDefault(currentLocale);
+    MLocale currentLocale;
+    if (newLcTime != currentLocale.categoryName(MLocale::MLcTime)) {
+        currentLocale.setCategoryLocale(MLocale::MLcTime, newLcTime);
+        MLocale::setDefault(currentLocale);
     }
 #endif
 }
@@ -426,15 +426,15 @@ void LanguagePage::changeLcCollate(int index)
         return;
     QString newLcCollate = modelLcCollate->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    DuiGConfItem lcCollateItem("/Dui/i18n/LcCollate");
+    MGConfItem lcCollateItem("/M/i18n/LcCollate");
     if (newLcCollate != lcCollateItem.value().toString()) {
         lcCollateItem.set(newLcCollate);
     }
 #else
-    DuiLocale currentLocale;
-    if (newLcCollate != currentLocale.categoryName(DuiLocale::DuiLcCollate)) {
-        currentLocale.setCategoryLocale(DuiLocale::DuiLcCollate, newLcCollate);
-        DuiLocale::setDefault(currentLocale);
+    MLocale currentLocale;
+    if (newLcCollate != currentLocale.categoryName(MLocale::MLcCollate)) {
+        currentLocale.setCategoryLocale(MLocale::MLcCollate, newLcCollate);
+        MLocale::setDefault(currentLocale);
     }
 #endif
 }
@@ -445,15 +445,15 @@ void LanguagePage::changeLcNumeric(int index)
         return;
     QString newLcNumeric = modelLcNumeric->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    DuiGConfItem lcNumericItem("/Dui/i18n/LcNumeric");
+    MGConfItem lcNumericItem("/M/i18n/LcNumeric");
     if (newLcNumeric != lcNumericItem.value().toString()) {
         lcNumericItem.set(newLcNumeric);
     }
 #else
-    DuiLocale currentLocale;
-    if (newLcNumeric != currentLocale.categoryName(DuiLocale::DuiLcNumeric)) {
-        currentLocale.setCategoryLocale(DuiLocale::DuiLcNumeric, newLcNumeric);
-        DuiLocale::setDefault(currentLocale);
+    MLocale currentLocale;
+    if (newLcNumeric != currentLocale.categoryName(MLocale::MLcNumeric)) {
+        currentLocale.setCategoryLocale(MLocale::MLcNumeric, newLcNumeric);
+        MLocale::setDefault(currentLocale);
     }
 #endif
 }
@@ -464,15 +464,15 @@ void LanguagePage::changeLcMonetary(int index)
         return;
     QString newLcMonetary = modelLcMonetary->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    DuiGConfItem lcMonetaryItem("/Dui/i18n/LcMonetary");
+    MGConfItem lcMonetaryItem("/M/i18n/LcMonetary");
     if (newLcMonetary != lcMonetaryItem.value().toString()) {
         lcMonetaryItem.set(newLcMonetary);
     }
 #else
-    DuiLocale currentLocale;
-    if (newLcMonetary != currentLocale.categoryName(DuiLocale::DuiLcMonetary)) {
-        currentLocale.setCategoryLocale(DuiLocale::DuiLcMonetary, newLcMonetary);
-        DuiLocale::setDefault(currentLocale);
+    MLocale currentLocale;
+    if (newLcMonetary != currentLocale.categoryName(MLocale::MLcMonetary)) {
+        currentLocale.setCategoryLocale(MLocale::MLcMonetary, newLcMonetary);
+        MLocale::setDefault(currentLocale);
     }
 #endif
 }

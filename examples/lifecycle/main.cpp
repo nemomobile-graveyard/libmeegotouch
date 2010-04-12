@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,13 +20,13 @@
 #include <QProcess>
 #include <QStringList>
 
-#include <DuiApplication>
-#include <DuiApplicationService>
-#include <DuiApplicationIfAdaptor>
-#include <DuiApplicationWindow>
-#include <DuiApplicationPage>
-#include <DuiAction>
-#include <DuiLocale>
+#include <MApplication>
+#include <MApplicationService>
+#include <MApplicationIfAdaptor>
+#include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MAction>
+#include <MLocale>
 #include <signal.h>
 
 #include "mainpage.h"
@@ -34,14 +34,14 @@
 
 void emitMemorySignal(int sig);
 
-DuiApplication *App;
+MApplication *App;
 int requestCounter = 0;
 
-class MyApplicationService: public DuiApplicationService
+class MyApplicationService: public MApplicationService
 {
 public:
     MyApplicationService(QObject *parent = 0) :
-        DuiApplicationService("com.nokia.lifecycle", parent)
+        MApplicationService("com.nokia.lifecycle", parent)
     {}
 
     void handleServiceRegistrationFailure() {
@@ -55,9 +55,9 @@ public:
 int main(int argc, char **argv)
 {
     LifeCycleApplication app(argc, argv, "lifecycle", new MyApplicationService());
-    LifeCycleApplication::setPrestartMode(Dui::LazyShutdown);
+    LifeCycleApplication::setPrestartMode(M::LazyShutdown);
 
-    DuiApplicationWindow window;
+    MApplicationWindow window;
     window.show();
 
     MainPage mainPage;
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     App = &app;
 
     // Run activateWidgets() here to setup things if app is NOT prestarted, otherwise
-    // connect it to prestartReleased() -signal from DuiApplication so that it's run
+    // connect it to prestartReleased() -signal from MApplication so that it's run
     // at the time when the window is really being shown to the user.
 
     if (!app.isPrestarted()) {

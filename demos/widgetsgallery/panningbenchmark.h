@@ -3,7 +3,7 @@
 
 #include "timedemobenchmark.h"
 
-#include <DuiPannableViewport>
+#include <MPannableViewport>
 #include <QTime>
 
 /**
@@ -14,7 +14,7 @@ class PanningBenchmark : public TimedemoBenchmark
 {
     Q_OBJECT
 public:
-    PanningBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo);
+    PanningBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo);
 
     QString name();
     void start();
@@ -25,7 +25,7 @@ private slots:
     void terminateBenchmark();
 
 private:
-    DuiPannableViewport *pannableViewport;
+    MPannableViewport *pannableViewport;
 
     bool timingStarted;
 

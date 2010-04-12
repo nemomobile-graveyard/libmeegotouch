@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,23 +18,23 @@
 ****************************************************************************/
 
 #include "ft_theme.h"
-#include "duitheme.h"
+#include "mtheme.h"
 #include <QtTest>
-#include <DuiLibrary>
-#include <DuiWidgetController>
-#include <DuiWidgetView>
-#include <DuiTheme>
+#include <MLibrary>
+#include <MWidgetController>
+#include <MWidgetView>
+#include <MTheme>
 #include <QTextStream>
 
-#include "duicomponentdata.h"
-#include "../../src/corelib/theme/duitheme_p.h"
+#include "mcomponentdata.h"
+#include "../../src/corelib/theme/mtheme_p.h"
 #include "testthemedaemon.h"
 #include "ft_theme_data.h"
 
 #ifdef HAVE_GCONF
 static QString languageGConfValue = "en";
 
-QVariant DuiGConfItem::value() const
+QVariant MGConfItem::value() const
 {
     return languageGConfValue;
 }
@@ -73,22 +73,22 @@ void Ft_Theme::init()
     QStringList paths;
     paths << QString("Ft_Theme") + QDir::separator()
       + "theme1" + QDir::separator()
-      + "dui" + QDir::separator()
-      + "libduicore" + QDir::separator()
+      + "meegotouch" + QDir::separator()
+      + "libmeegotouchcore" + QDir::separator()
       + "style";
     paths << QString("Ft_Theme") + QDir::separator()
       + "theme2" + QDir::separator()
-      + "dui" + QDir::separator()
-      + "libduicore" + QDir::separator()
+      + "meegotouch" + QDir::separator()
+      + "libmeegotouchcore" + QDir::separator()
       + "style";
     paths << QString("Ft_Theme") + QDir::separator()
       + "theme2" + QDir::separator()
-      + "dui" + QDir::separator()
+      + "meegotouch" + QDir::separator()
       + "Ft_Theme" + QDir::separator()
       + "style";
     paths << QString("Ft_Theme") + QDir::separator()
       + "theme1" + QDir::separator()
-      + "dui" + QDir::separator()
+      + "meegotouch" + QDir::separator()
       + "locale" + QDir::separator()
       + "fi";
 
@@ -99,41 +99,41 @@ void Ft_Theme::init()
     }
 
     // create constant declarations
-    makeFile(QString("theme1") + QDir::separator() + QString("dui") + QDir::separator() + QString("constants.ini"), THEME_1_CONSTANTS_INI);
-    makeFile(QString("theme2") + QDir::separator() + QString("dui") + QDir::separator() + QString("constants.ini"), THEME_2_CONSTANTS_INI);
+    makeFile(QString("theme1") + QDir::separator() + QString("meegotouch") + QDir::separator() + QString("constants.ini"), THEME_1_CONSTANTS_INI);
+    makeFile(QString("theme2") + QDir::separator() + QString("meegotouch") + QDir::separator() + QString("constants.ini"), THEME_2_CONSTANTS_INI);
 
-    makeFile(QString("theme1") + QDir::separator() + QString("dui") + QDir::separator() +  QString("locale") + QDir::separator() + QString("fi") + QDir::separator() + QString("constants.ini"), FINNISH_CONSTANTS_INI);
+    makeFile(QString("theme1") + QDir::separator() + QString("meegotouch") + QDir::separator() +  QString("locale") + QDir::separator() + QString("fi") + QDir::separator() + QString("constants.ini"), FINNISH_CONSTANTS_INI);
 
     // create view configuration files
     makeFile( QString("theme1") + QDir::separator()
-	      + QString("dui") + QDir::separator()
-	      + QString("libduicore") + QDir::separator()
-	      + QString("libduicore.conf"), LIBDUI_THEME_1_VIEW_CONFIGURATION);
+	      + QString("meegotouch") + QDir::separator()
+	      + QString("libmeegotouchcore") + QDir::separator()
+	      + QString("libmeegotouchcore.conf"), LIBM_THEME_1_VIEW_CONFIGURATION);
 
     makeFile( QString("theme2") + QDir::separator()
-	      + QString("dui") + QDir::separator()
-	      + QString("libduicore") + QDir::separator()
-	      + QString("libduicore.conf"), LIBDUI_THEME_2_VIEW_CONFIGURATION);
+	      + QString("meegotouch") + QDir::separator()
+	      + QString("libmeegotouchcore") + QDir::separator()
+	      + QString("libmeegotouchcore.conf"), LIBM_THEME_2_VIEW_CONFIGURATION);
     makeFile( QString("theme2") + QDir::separator()
-	      + QString("dui") + QDir::separator()
+	      + QString("meegotouch") + QDir::separator()
 	      + QString("Ft_Theme") + QDir::separator()
 	      + QString("Ft_Theme.conf"), TESTAPP_VIEW_CONFIGURATION);
 
     // create stylesheets
     makeFile( QString("theme1") + QDir::separator()
-	      + QString("dui") + QDir::separator()
-	      + QString("libduicore") + QDir::separator()
+	      + QString("meegotouch") + QDir::separator()
+	      + QString("libmeegotouchcore") + QDir::separator()
 	      + QString("style") + QDir::separator()
-	      + QString("libduicore.css"), THEME_1_LIBDUI_CSS);
+	      + QString("libmeegotouchcore.css"), THEME_1_LIBM_CSS);
 
     makeFile( QString("theme2") + QDir::separator()
-	      + QString("dui") + QDir::separator()
-	      + QString("libduicore") + QDir::separator()
+	      + QString("meegotouch") + QDir::separator()
+	      + QString("libmeegotouchcore") + QDir::separator()
 	      + QString("style") + QDir::separator()
-	      + QString("libduicore.css"), THEME_2_LIBDUI_CSS);
+	      + QString("libmeegotouchcore.css"), THEME_2_LIBM_CSS);
 
     makeFile(QString("theme2") + QDir::separator()
-	     + QString("dui") + QDir::separator()
+	     + QString("meegotouch") + QDir::separator()
 	     + QString("Ft_Theme") + QDir::separator()
 	     + QString("style") + QDir::separator()
 	     + QString("Ft_Theme.css"), THEME_2_APP_CSS);
@@ -151,29 +151,29 @@ void Ft_Theme::initTestCase()
     int argc = 1;
     const char *argv = "./Ft_Theme";
 
-    componentData = new DuiComponentData(argc, (char **) &argv, NULL);
+    componentData = new MComponentData(argc, (char **) &argv, NULL);
 
     // store the "original" themedaemon
-    daemon = DuiTheme::instance()->d_ptr->themeDaemon;
+    daemon = MTheme::instance()->d_ptr->themeDaemon;
 
     // replace themedaemon with our own implementation
     testDaemon = new TestThemeDaemon;
-    DuiTheme::instance()->d_ptr->themeDaemon = testDaemon;
+    MTheme::instance()->d_ptr->themeDaemon = testDaemon;
     // a bit hackish, but connect the signals
     connect(testDaemon, SIGNAL(themeChanged(QStringList, QStringList)),
-            DuiTheme::instance(), SLOT(themeChangedSlot(QStringList, QStringList)));
+            MTheme::instance(), SLOT(themeChangedSlot(QStringList, QStringList)));
 
     connect(testDaemon, SIGNAL(pixmapChanged(QString, QSize, Qt::HANDLE)),
-            DuiTheme::instance(), SLOT(pixmapChangedSlot(QString, QSize, Qt::HANDLE)));
+            MTheme::instance(), SLOT(pixmapChangedSlot(QString, QSize, Qt::HANDLE)));
 
     connect(testDaemon, SIGNAL(pixmapCreated(QString, QSize, Qt::HANDLE)),
-            DuiTheme::instance(), SLOT(pixmapCreatedSlot(QString, QSize, Qt::HANDLE)));
+            MTheme::instance(), SLOT(pixmapCreatedSlot(QString, QSize, Qt::HANDLE)));
 }
 
 void Ft_Theme::cleanupTestCase()
 {
     // restore the original daemon we replaced
-    DuiTheme::instance()->d_ptr->themeDaemon = daemon;
+    MTheme::instance()->d_ptr->themeDaemon = daemon;
     delete testDaemon;
 
     delete componentData;
@@ -185,9 +185,9 @@ void Ft_Theme::testViews_data()
     QTest::addColumn<QString>("viewType");
     QTest::addColumn<QString>("viewClass");
 
-    QTest::newRow("dui library, theme 1") << "theme 1" << "" << "DuiWidgetView";
+    QTest::newRow("m library, theme 1") << "theme 1" << "" << "MWidgetView";
     QTest::newRow("application, theme 2") << "theme 2" << "" << "TestView";
-    QTest::newRow("dui library, theme 2") << "theme 2" << "test" << "TestView2";
+    QTest::newRow("m library, theme 2") << "theme 2" << "test" << "TestView2";
 }
 
 void Ft_Theme::testViews()
@@ -199,11 +199,11 @@ void Ft_Theme::testViews()
     testDaemon->changeTheme(theme);
     testDaemon->emitThemeChange();
 
-    DuiWidgetController widget;
+    MWidgetController widget;
     widget.setViewType(viewType);
 
     // Create view for a simple widget
-    DuiWidgetView *view = DuiTheme::view(&widget);
+    MWidgetView *view = MTheme::view(&widget);
 
     // Make sure that we got view at the first place
     if (!viewClass.isEmpty()) {
@@ -219,8 +219,8 @@ void Ft_Theme::testStyles_data()
     QTest::addColumn<QString>("styleClass");
     QTest::addColumn<QColor>("backgroundColor");
 
-    QTest::newRow("test library, theme 1") << "theme 1" << "DuiWidgetStyle" << QColor("#ffffff");
-    QTest::newRow("test library, theme 2 (custom css)") << "theme 2" << "DuiWidgetStyle" << QColor("#f0f0f0");
+    QTest::newRow("test library, theme 1") << "theme 1" << "MWidgetStyle" << QColor("#ffffff");
+    QTest::newRow("test library, theme 2 (custom css)") << "theme 2" << "MWidgetStyle" << QColor("#f0f0f0");
 }
 
 void Ft_Theme::testStyles()
@@ -232,12 +232,12 @@ void Ft_Theme::testStyles()
     testDaemon->changeTheme(theme);
     testDaemon->emitThemeChange();
 
-    const DuiWidgetStyle *style = dynamic_cast<const DuiWidgetStyle *>(DuiTheme::style(styleClass.toStdString().c_str(), QString()));
+    const MWidgetStyle *style = dynamic_cast<const MWidgetStyle *>(MTheme::style(styleClass.toStdString().c_str(), QString()));
     QVERIFY(style);
 
     QCOMPARE(style->backgroundColor(), backgroundColor);
 
-    DuiTheme::releaseStyle(style);
+    MTheme::releaseStyle(style);
 }
 
 void Ft_Theme::testPixmaps_data()
@@ -273,7 +273,7 @@ void Ft_Theme::testPixmaps()
         QStringList parameters = string.split(",");
 
         // request pixmap
-        const QPixmap *pixmap = DuiTheme::pixmap(parameters[0], QSize(parameters[1].toInt(), parameters[2].toInt()));
+        const QPixmap *pixmap = MTheme::pixmap(parameters[0], QSize(parameters[1].toInt(), parameters[2].toInt()));
         QVERIFY(pixmap != NULL);
         unique.insert(string);
         allocated.append(pixmap);
@@ -284,7 +284,7 @@ void Ft_Theme::testPixmaps()
 
     foreach(const QPixmap * pixmap, allocated) {
         // release pixmap
-        DuiTheme::releasePixmap(pixmap);
+        MTheme::releasePixmap(pixmap);
     }
 
     // verify that all pixmaps were released
@@ -309,7 +309,7 @@ void Ft_Theme::testScalables()
     // this keeps track what we have requested
     QSet<QString> unique;
     QSet<QString> uniquePixmaps;
-    QList<const DuiScalableImage *> allocated;
+    QList<const MScalableImage *> allocated;
 
     // reset test theme daemon
     testDaemon->reset();
@@ -324,7 +324,7 @@ void Ft_Theme::testScalables()
         QStringList parameters = string.split(",");
 
         // request scalable image
-        const DuiScalableImage *scalable = DuiTheme::scalableImage(parameters[0], parameters[1].toInt(),
+        const MScalableImage *scalable = MTheme::scalableImage(parameters[0], parameters[1].toInt(),
                                            parameters[2].toInt(), parameters[3].toInt(), parameters[4].toInt());
 
         QVERIFY(scalable != NULL);
@@ -343,9 +343,9 @@ void Ft_Theme::testScalables()
     // verify that the pixmaps were requested only once if there are duplicates
     QCOMPARE(testDaemon->pixmapCount(), uniquePixmaps.count());
 
-    foreach(const DuiScalableImage * scalable, allocated) {
+    foreach(const MScalableImage * scalable, allocated) {
         // release scalable image
-        DuiTheme::releaseScalableImage(scalable);
+        MTheme::releaseScalableImage(scalable);
     }
 
     // verify that all pixmaps were released
@@ -396,7 +396,7 @@ void Ft_Theme::testPalette()
     testDaemon->emitThemeChange();
 
     // create palette object
-    const DuiPalette &palette = DuiTheme::palette();
+    const MPalette &palette = MTheme::palette();
 
     // check all values against palette
     QFETCH(QColor, foregroundColor);
@@ -480,7 +480,7 @@ void Ft_Theme::testFonts()
 
     testDaemon->emitThemeChange();
 
-    const DuiDefaultFonts &fonts = DuiTheme::fonts();
+    const MDefaultFonts &fonts = MTheme::fonts();
 
     QFETCH(QFont, extraLargeFont);
     QFETCH(QFont, largeFont);

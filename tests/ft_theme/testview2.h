@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,15 +20,15 @@
 #ifndef TESTVIEW2_H
 #define TESTVIEW2_H
 
-#include <DuiWidgetView>
+#include <MWidgetView>
 
-class TestView2 : public DuiWidgetView
+class TestView2 : public MWidgetView
 {
     Q_OBJECT
-    DUI_VIEW(DuiWidgetModel, DuiWidgetStyle);
+    M_VIEW(MWidgetModel, MWidgetStyle);
 
 public:
-    TestView2(DuiWidgetController *controller) : DuiWidgetView(controller) {}
+    TestView2(MWidgetController *controller) : MWidgetView(controller) {}
 };
 
 #endif

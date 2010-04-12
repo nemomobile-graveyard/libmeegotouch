@@ -3,38 +3,38 @@
 MOC_DIR = .moc
 GEN_DIR = .gen
 OBJECTS_DIR = .obj
-DESTDIR = $$DUI_BUILD_TREE/lib
+DESTDIR = $$M_BUILD_TREE/lib
 TEMPLATE = lib
 
 include(../mkspecs/common.pri)
 include(predeps.pri)
-include(duigen.pri)
+include(mgen.pri)
 
-VERSION = $${DUI_VERSION}
-DEFINES += DUI_VERSION=\\\"$${DUI_VERSION}\\\"
+VERSION = $${M_VERSION}
+DEFINES += M_VERSION=\\\"$${M_VERSION}\\\"
 
-INCLUDEPATH += $${DUI_SOURCE_TREE}/src/include
+INCLUDEPATH += $${M_SOURCE_TREE}/src/include
 INCLUDEPATH += $${OUT_PWD}/.moc
 INCLUDEPATH += $${OUT_PWD}/.gen
 
 QMAKE_STRIP = echo
 
-PRE_TARGETDEPS += $$DUIGEN_EXECUTABLE
+PRE_TARGETDEPS += $$MGEN_EXECUTABLE
 
 CONFIG += qt warn_on depend_includepath qmake_cache target_qt dll create_prl
 !win32:CONFIG += link_pkgconfig
 macx:CONFIG += lib_bundle
 
 win32 {
-    QMAKE_MOC = perl $${IN_PWD}\..\duimoc\duimoc
+    QMAKE_MOC = perl $${IN_PWD}\..\mmoc\mmoc
     INCLUDEPATH += .
 } else {
-    QMAKE_MOC = $${DUI_SOURCE_TREE}/duimoc/duimoc
+    QMAKE_MOC = $${M_SOURCE_TREE}/mmoc/mmoc
 }
 
 QMAKE_CFLAGS += -Werror
 
-QMAKE_CXXFLAGS += -DDUI_EXPORTS
+QMAKE_CXXFLAGS += -DM_EXPORTS
 !win32-msvc*:QMAKE_CXXFLAGS += -Wno-long-long -pedantic
 !win32:QMAKE_CXXFLAGS += -Werror -Wno-variadic-macros -fvisibility=hidden
 
@@ -56,29 +56,29 @@ DEFINES += QT_STRICT_ITERATORS
 
 ## Features
 
-contains(DUI_BUILD_FEATURES, coverage) {
+contains(M_BUILD_FEATURES, coverage) {
   QMAKE_CXXFLAGS += --coverage
   QMAKE_LFLAGS += --coverage
 }
 
-contains(DUI_BUILD_FEATURES, timestamps) {
-  DEFINES += DUI_TIMESTAMP
+contains(M_BUILD_FEATURES, timestamps) {
+  DEFINES += M_TIMESTAMP
 }
 
-contains(DUI_BUILD_FEATURES, testable) {
+contains(M_BUILD_FEATURES, testable) {
   DEFINES += TESTABLE
   HEADERS += ../corelib/core/testabilityinterface.h
 }
 
-contains(DUI_BUILD_FEATURES, pch) {
+contains(M_BUILD_FEATURES, pch) {
   DEFINES += USING_PCH
   PRECOMPILED_HEADER = pch/stable_pch.h
   HEADERS += pch/stable_pch.h
   CONFIG += precompile_header
 }
 
-contains(DUI_PROFILE_PARTS, theme) {
-  DEFINES += DUI_THEMESYSTEM_PROFILING_SUPPORT
+contains(M_PROFILE_PARTS, theme) {
+  DEFINES += M_THEMESYSTEM_PROFILING_SUPPORT
 }
 
 
@@ -143,5 +143,5 @@ QMAKE_CLEAN += \
     ./.obj/*.gcno \
     ./.obj/*.gcda \
 
-target.path = $$DUI_INSTALL_LIBS
+target.path = $$M_INSTALL_LIBS
 

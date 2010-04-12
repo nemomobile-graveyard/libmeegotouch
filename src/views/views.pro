@@ -1,6 +1,6 @@
 include(../common_top.pri)
 
-TARGET = duiviews
+TARGET = meegotouchviews
 
 INCLUDEPATH += \
     .moc \
@@ -16,11 +16,11 @@ include(views.pri)
 include(widgets/widgets.pri)
 include(style/style.pri)
 
-LIBS += -lduicore
+LIBS += -lmeegotouchcore
 
 LIBS += \
-    -lduicore \
+    -lmeegotouchcore \
 
-SOURCES += duiviewslibrary.cpp
+SOURCES += mviewslibrary.cpp
 
 include(../common_bot.pri)

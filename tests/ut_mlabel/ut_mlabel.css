@@ -1,0 +1,30 @@
+MLabelStyle {
+    font: "sans" 11;
+    color: #FF0000;
+
+    margin-left: 0;
+    margin-right: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+
+    padding-left: 0;
+    padding-right: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+MLabelStyle#greyLabel {
+    font: "sans" 16;
+    color: #00FF00;
+}
+
+MLabelStyle#size10 {
+    font: "sans" 10px;
+}
+MLabelStyle#size16 {
+    font: "sans" 16px;
+}
+MLabelStyle#size100 {
+    font: "sans" 100px;
+}
+

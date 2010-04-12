@@ -21,8 +21,8 @@ if ( ! -d "$specpath" )
     mkpath( "$specpath" )
 }
 
-open( INF, "<$inpath/mkspecs/features/dui_defines.prf.in" );
-open( OUTF, ">$specpath/dui_defines.prf" );
+open( INF, "<$inpath/mkspecs/features/meegotouch_defines.prf.in" );
+open( OUTF, ">$specpath/meegotouch_defines.prf" );
 
 while ( <INF> )
 {

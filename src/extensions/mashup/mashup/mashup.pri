@@ -1,61 +1,61 @@
 include(../mashup.pri)
 MASHUP_MASHUP_SRC_DIR = $$MASHUP_SRC_DIR/mashup
 
-PUBLIC_HEADERS += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletsharedmutex.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandle.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandleview.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinstancemanager.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinstancedata.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinventory.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinventoryview.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinventorymodel.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiaggregatedataaccess.h \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvas.h \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasmodel.h \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasview.h \
-    $$MASHUP_MASHUP_SRC_DIR/duisubdatastore.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandlemodel.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletloader.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletid.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletsettings.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletsettingsdialog.h \
-    $$MASHUP_MASHUP_SRC_DIR/duigconfdatastore.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinstancemanagerdbusadaptor.h
+PUBLIC_HEADERS += $$MASHUP_MASHUP_SRC_DIR/mappletbutton.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletsharedmutex.h \
+    $$MASHUP_MASHUP_SRC_DIR/mapplethandle.h \
+    $$MASHUP_MASHUP_SRC_DIR/mapplethandleview.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinstancemanager.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinstancedata.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinventory.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinventoryview.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinventorymodel.h \
+    $$MASHUP_MASHUP_SRC_DIR/maggregatedataaccess.h \
+    $$MASHUP_MASHUP_SRC_DIR/mmashupcanvas.h \
+    $$MASHUP_MASHUP_SRC_DIR/mmashupcanvasmodel.h \
+    $$MASHUP_MASHUP_SRC_DIR/mmashupcanvasview.h \
+    $$MASHUP_MASHUP_SRC_DIR/msubdatastore.h \
+    $$MASHUP_MASHUP_SRC_DIR/mapplethandlemodel.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletloader.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletid.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletsettings.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletsettingsdialog.h \
+    $$MASHUP_MASHUP_SRC_DIR/mgconfdatastore.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinstancemanagerdbusadaptor.h
 
 
-PRIVATE_HEADERS += $$MASHUP_MASHUP_SRC_DIR/duiappletsharedmutex_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandle_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandleview_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinventoryview_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiaggregatedataaccess_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvas_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasview_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletsettings_p.h \
-    $$MASHUP_MASHUP_SRC_DIR/duigconfdatastore_p.h \
+PRIVATE_HEADERS += $$MASHUP_MASHUP_SRC_DIR/mappletsharedmutex_p.h \
+    $$MASHUP_MASHUP_SRC_DIR/mapplethandle_p.h \
+    $$MASHUP_MASHUP_SRC_DIR/mapplethandleview_p.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinventoryview_p.h \
+    $$MASHUP_MASHUP_SRC_DIR/maggregatedataaccess_p.h \
+    $$MASHUP_MASHUP_SRC_DIR/mmashupcanvas_p.h \
+    $$MASHUP_MASHUP_SRC_DIR/mmashupcanvasview_p.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletsettings_p.h \
+    $$MASHUP_MASHUP_SRC_DIR/mgconfdatastore_p.h \
 
 
-SOURCES += $$MASHUP_MASHUP_SRC_DIR/duiappletbutton.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletsharedmutex.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandle.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiapplethandleview.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinstancemanager.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinstancedata.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinventory.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinventoryview.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiaggregatedataaccess.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvas.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasview.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duisubdatastore.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletloader.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletid.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletsettings.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletsettingsdialog.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duigconfdatastore.cpp \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinstancemanagerdbusadaptor.cpp
+SOURCES += $$MASHUP_MASHUP_SRC_DIR/mappletbutton.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletsharedmutex.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mapplethandle.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mapplethandleview.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinstancemanager.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinstancedata.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinventory.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinventoryview.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/maggregatedataaccess.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mmashupcanvas.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mmashupcanvasview.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/msubdatastore.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletloader.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletid.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletsettings.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletsettingsdialog.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mgconfdatastore.cpp \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinstancemanagerdbusadaptor.cpp
 
-DUIGEN_MODEL_HEADERS += $$MASHUP_MASHUP_SRC_DIR/duiapplethandlemodel.h \
-    $$MASHUP_MASHUP_SRC_DIR/duimashupcanvasmodel.h \
-    $$MASHUP_MASHUP_SRC_DIR/duiappletinventorymodel.h
+MGEN_MODEL_HEADERS += $$MASHUP_MASHUP_SRC_DIR/mapplethandlemodel.h \
+    $$MASHUP_MASHUP_SRC_DIR/mmashupcanvasmodel.h \
+    $$MASHUP_MASHUP_SRC_DIR/mappletinventorymodel.h
 
-PUBLIC_HEADERS += $$DUIGEN_MODEL_HEADERS
+PUBLIC_HEADERS += $$MGEN_MODEL_HEADERS

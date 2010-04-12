@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,36 +20,36 @@
 #ifndef FAKEINSTALLATIONSOURCE_H
 #define FAKEINSTALLATIONSOURCE_H
 
-#include <duiappletinstallationsourceinterface.h>
+#include <mappletinstallationsourceinterface.h>
 #include <QString>
-#include <DuiWidget>
+#include <MWidget>
 
 class InstallationSourceWidget;
 
-class FakeInstallationSource : public QObject, public DuiAppletInstallationSourceInterface
+class FakeInstallationSource : public QObject, public MAppletInstallationSourceInterface
 {
     Q_OBJECT
-    Q_INTERFACES(DuiAppletInstallationSourceInterface DuiApplicationExtensionInterface)
+    Q_INTERFACES(MAppletInstallationSourceInterface MApplicationExtensionInterface)
 
 public:
 
     FakeInstallationSource();
     virtual ~FakeInstallationSource();
-    //! Methods derived from DuiApplicationExtensionInterface
+    //! Methods derived from MApplicationExtensionInterface
     virtual bool initialize(const QString&);
-    virtual DuiWidget *widget();
+    virtual MWidget *widget();
 
-    //! Methods derived from DuiAppletInstallationSourceInterface
-    void setDuiAppletInventoryInterface(DuiAppletInventoryInterface &installationSource) ;
+    //! Methods derived from MAppletInstallationSourceInterface
+    void setMAppletInventoryInterface(MAppletInventoryInterface &installationSource) ;
 
     //! For accessing applet inventory interface
-    DuiAppletInventoryInterface *appletInventoryInterface() const;
+    MAppletInventoryInterface *appletInventoryInterface() const;
 private:
     InstallationSourceWidget *source;
-    DuiAppletInventoryInterface *appletInventory;
+    MAppletInventoryInterface *appletInventory;
 };
 
-class InstallationSourceWidget : public DuiWidget
+class InstallationSourceWidget : public MWidget
 {
     Q_OBJECT
     Q_PROPERTY(QString installationSourceTitle READ installationSourceTitle)

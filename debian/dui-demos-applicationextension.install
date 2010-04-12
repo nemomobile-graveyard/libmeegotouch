@@ -1,3 +1,3 @@
 usr/bin/applicationextension*
-usr/lib/dui/applicationextensions/*
-usr/share/dui/applicationextensions/*
+usr/lib/meegotouch/applicationextensions/*
+usr/share/meegotouch/applicationextensions/*

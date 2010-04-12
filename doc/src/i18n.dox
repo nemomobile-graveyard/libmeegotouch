@@ -561,7 +561,7 @@ See also the documentation of
 <a href="http://doc.trolltech.com/4.5/qtranslator.html#load">QTranslator::load()</a>.
 
 The \c top-directory  used by default is `/usr/share/l10n/dui` (This is
-defined as \c DUI_TRANSLATION_DIR  in `duiconfig.pri` in the top-level
+defined as \c DUI_TRANSLATION_DIR  in `meegotouchconfig.pri` in the top-level
 directory of the libdui source code).
 
 `/usr/share/l10n/dui` is also the default directory used by

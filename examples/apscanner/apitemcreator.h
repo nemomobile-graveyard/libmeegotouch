@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,15 +20,15 @@
 #ifndef APITEMCREATOR_H
 #define APITEMCREATOR_H
 
-#include <DuiList>
-#include <DuiContentItem>
+#include <MList>
+#include <MContentItem>
 
 class APItemModel;
 
-class APItemCreator : public DuiAbstractCellCreator<DuiContentItem>
+class APItemCreator : public MAbstractCellCreator<MContentItem>
 {
 public:
-    void updateCell(const QModelIndex &index, DuiWidget *cell) const;
+    void updateCell(const QModelIndex &index, MWidget *cell) const;
 
 public:
     APItemModel *model;

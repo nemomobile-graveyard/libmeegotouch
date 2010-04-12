@@ -1,24 +1,24 @@
-DUIROOT = ../../../../..
-include($$DUIROOT/mkspecs/common.pri)
+MROOT = ../../../../..
+include($$MROOT/mkspecs/common.pri)
 
-system(dui-servicefwgen -p com.nokia.TextProcessorInterface)
+system(m-servicefwgen -p com.nokia.TextProcessorInterface)
 
-DUILIB = $$DUIROOT/lib
-DUISIF = $$DUIROOT/examples/servicefw
-DUISFW = $$DUIROOT/duiservicemapper
-DUISIFLIB = $$DUISIF/lib
-DUISIFINCLUDE = $$DUISIF/include
-DUISFWINCLUDE = $$DUIROOT/src/servicefwif
+MLIB = $$MROOT/lib
+MSIF = $$MROOT/examples/servicefw
+MSFW = $$MROOT/mservicemapper
+MSIFLIB = $$MSIF/lib
+MSIFINCLUDE = $$MSIF/include
+MSFWINCLUDE = $$MROOT/src/servicefwif
 
 INCLUDEPATH += \
-    $$DUISFWINCLUDE \
-    $$DUISFWINCLUDE/include \
-    $$DUISIFINCLUDE \
-    $$DUIROOT/src/include \
+    $$MSFWINCLUDE \
+    $$MSFWINCLUDE/include \
+    $$MSIFINCLUDE \
+    $$MROOT/src/include \
 
 DEPENTPATH += $$INCLUDEPATH
 TARGET = textprocessor
-DESTDIR = $$DUISIFLIB
+DESTDIR = $$MSIFLIB
 TEMPLATE = lib
 SOURCES += \
     textprocessorinterfaceproxy.cpp \
@@ -39,7 +39,7 @@ headers.files = $$HEADERS
 
 xml.target = .dummy
 xml.commands = touch $$xml.target
-xml.path = $$DUI_DBUS_INTERFACES_DIR
+xml.path = $$M_DBUS_INTERFACES_DIR
 xml.files = com.nokia.TextProcessorInterface.xml
 
 INSTALLS += \

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -23,7 +23,7 @@ void Ft_Locales::initTestCase()
 {
     static int dummyArgc = 1;
     static char *dummyArgv[1] = { (char *) "ft_locales" };
-    qap = new DuiApplication(dummyArgc, dummyArgv, "test");
+    qap = new MApplication(dummyArgc, dummyArgv, "test");
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 }
 
@@ -40,11 +40,11 @@ void Ft_Locales::cleanup()
 {
 }
 
-void Ft_Locales::testDuiLocaleConstructor()
+void Ft_Locales::testMLocaleConstructor()
 {
-    DuiLocale *z = 0;
-    z = new DuiLocale();
-    QVERIFY2(z->isValid(), "new DuiLocale()");
+    MLocale *z = 0;
+    z = new MLocale();
+    QVERIFY2(z->isValid(), "new MLocale()");
 }
 
 void Ft_Locales::testCreateSystemLocale_data()
@@ -72,7 +72,7 @@ void Ft_Locales::testCreateSystemLocale_data()
 
 bool confIsDown()
 {
-    DuiGConfItem languageItem("/Dui/i18n/Language");
+    MGConfItem languageItem("/M/i18n/Language");
     QString originalValue = languageItem.value().toString();
     int skipConf = 0;
 
@@ -95,11 +95,11 @@ void Ft_Locales::testSettingsChanged()
         QSKIP("SettingsChanged is skipped", SkipSingle);
         return;
     }
-    DuiGConfItem languageItem("/Dui/i18n/Language");
+    MGConfItem languageItem("/M/i18n/Language");
     QString originalValue = languageItem.value().toString();
 
-    // Test within DuiLocale
-    DuiLocale z;
+    // Test within MLocale
+    MLocale z;
     QSignalSpy spy(&z, SIGNAL(settingsChanged()));
     QCOMPARE(spy.count(), 0);
 
@@ -135,7 +135,7 @@ void Ft_Locales::testSettingsChanged()
     QTest::qWait(100);
     QCOMPARE(spy.count(), 2);
 
-    // Test the signal localeSettingsChanged in DuiApplication
+    // Test the signal localeSettingsChanged in MApplication
     QSignalSpy spyapp(qap, SIGNAL(localeSettingsChanged()));
     QCOMPARE(spyapp.count(), 0);
 
@@ -160,7 +160,7 @@ void Ft_Locales::testSettingsChanged()
 
 void Ft_Locales::testCreateSystemLocale()
 {
-    DuiGConfItem languageItem("/Dui/i18n/Language");
+    MGConfItem languageItem("/M/i18n/Language");
     QString originalValue = languageItem.value().toString();
 
     QFETCH(QString, conf);
@@ -170,7 +170,7 @@ void Ft_Locales::testCreateSystemLocale()
     setenv("LANG", env.toAscii().data(), 1);
 
     languageItem.set(conf);
-    DuiLocale *z = DuiLocale::createSystemDuiLocale();
+    MLocale *z = MLocale::createSystemMLocale();
 
     if (!originalValue.isEmpty()) {
         languageItem.set(originalValue);
@@ -185,7 +185,7 @@ void Ft_Locales::testCreateSystemLocale()
     delete z;
 }
 
-void Ft_Locales::testDuiLocaleLanguage_data()
+void Ft_Locales::testMLocaleLanguage_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("language");
@@ -195,17 +195,17 @@ void Ft_Locales::testDuiLocaleLanguage_data()
     QTest::newRow("en") << QString("en") << QString("en");
 }
 
-void Ft_Locales::testDuiLocaleLanguage()
+void Ft_Locales::testMLocaleLanguage()
 {
     QFETCH(QString, locale_name);
     QFETCH(QString, language);
 
-    DuiLocale *z = new DuiLocale(locale_name);
+    MLocale *z = new MLocale(locale_name);
     QCOMPARE(z->language(), language);
     delete z;
 }
 
-void Ft_Locales::testDuiLocaleCountry_data()
+void Ft_Locales::testMLocaleCountry_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("country");
@@ -219,18 +219,18 @@ void Ft_Locales::testDuiLocaleCountry_data()
     QTest::newRow("en") << QString("en") << QString("");
 }
 
-void Ft_Locales::testDuiLocaleCountry()
+void Ft_Locales::testMLocaleCountry()
 {
     QFETCH(QString, locale_name);
     QFETCH(QString, country);
 
-    DuiLocale *z = new DuiLocale(locale_name);
+    MLocale *z = new MLocale(locale_name);
 
     QCOMPARE(z->country(), country);
     delete z;
 }
 
-void Ft_Locales::testDuiLocaleScript_data()
+void Ft_Locales::testMLocaleScript_data()
 {
     QTest::addColumn<QString>("locale");
     QTest::addColumn<QString>("script");
@@ -242,17 +242,17 @@ void Ft_Locales::testDuiLocaleScript_data()
     QTest::newRow("en") << QString("en_Arab") << QString("Arab");
 }
 
-void Ft_Locales::testDuiLocaleScript()
+void Ft_Locales::testMLocaleScript()
 {
     QFETCH(QString, locale);
     QFETCH(QString, script);
 
-    DuiLocale *z = new DuiLocale(locale);
+    MLocale *z = new MLocale(locale);
     QCOMPARE(z->script(), script);
     delete z;
 }
 
-void Ft_Locales::testDuiLocaleVariant_data()
+void Ft_Locales::testMLocaleVariant_data()
 {
     QTest::addColumn<QString>("locale");
     QTest::addColumn<QString>("variant");
@@ -263,17 +263,17 @@ void Ft_Locales::testDuiLocaleVariant_data()
     QTest::newRow("en") << QString("en") << QString("");
 }
 
-void Ft_Locales::testDuiLocaleVariant()
+void Ft_Locales::testMLocaleVariant()
 {
     QFETCH(QString, locale);
     QFETCH(QString, variant);
 
-    DuiLocale *z = new DuiLocale(locale);
+    MLocale *z = new MLocale(locale);
     QCOMPARE(z->variant(), variant);
     delete z;
 }
 
-void Ft_Locales::testDuiLocaleTextDirection_data()
+void Ft_Locales::testMLocaleTextDirection_data()
 {
     QTest::addColumn<QString>("locale");
     QTest::addColumn<int>("direction");
@@ -290,17 +290,17 @@ void Ft_Locales::testDuiLocaleTextDirection_data()
     QTest::newRow("snd") << QString("snd_Deva_AF_XXX") << (int) Qt::LeftToRight;
 }
 
-void Ft_Locales::testDuiLocaleTextDirection()
+void Ft_Locales::testMLocaleTextDirection()
 {
     QFETCH(QString, locale);
     QFETCH(int, direction);
 
-    DuiLocale *z = new DuiLocale(locale);
+    MLocale *z = new MLocale(locale);
     QCOMPARE((int)z->textDirection(), direction);
     delete z;
 }
 
-void Ft_Locales::testDuiLocaleConstructorWithParams_data()
+void Ft_Locales::testMLocaleConstructorWithParams_data()
 {
     QTest::addColumn<QString>("language");
     QTest::addColumn<QString>("country");
@@ -311,25 +311,25 @@ void Ft_Locales::testDuiLocaleConstructorWithParams_data()
     QTest::newRow("xx_YY") << QString("xx") << QString("YY") << QString("xx_YY");
 }
 
-void Ft_Locales::testDuiLocaleConstructorWithParams()
+void Ft_Locales::testMLocaleConstructorWithParams()
 {
     QFETCH(QString, language);
     QFETCH(QString, country);
     QFETCH(QString, name);
 
-    DuiLocale *z = new DuiLocale(language + '_' +  country);
+    MLocale *z = new MLocale(language + '_' +  country);
     QVERIFY2(z->isValid(),
-             "new DuiLocale(language + '_' + country)");
+             "new MLocale(language + '_' + country)");
     QVERIFY2(z->name() == name, "z->name() differs from name");
     delete z;
 
-    z = new DuiLocale(name);
-    QVERIFY2(z->isValid(), "new DuiLocale(name)");
+    z = new MLocale(name);
+    QVERIFY2(z->isValid(), "new MLocale(name)");
     QVERIFY2(z->name() == name, "z->name() differs from name");
     delete z;
 }
 
-void Ft_Locales::testDuiLocaleConstructorAndCategoryWithParams_data()
+void Ft_Locales::testMLocaleConstructorAndCategoryWithParams_data()
 {
     QTest::addColumn<QString>("default_language");
     QTest::addColumn<QString>("default_country");
@@ -350,7 +350,7 @@ void Ft_Locales::testDuiLocaleConstructorAndCategoryWithParams_data()
             << QString("aa")  << QString("BB") << QString("aa_BB");
 }
 
-void Ft_Locales::testDuiLocaleConstructorAndCategoryWithParams()
+void Ft_Locales::testMLocaleConstructorAndCategoryWithParams()
 {
     QFETCH(QString, default_language);
     QFETCH(QString, default_country);
@@ -360,37 +360,37 @@ void Ft_Locales::testDuiLocaleConstructorAndCategoryWithParams()
     QFETCH(QString, category_country);
     QFETCH(QString, category_name);
 
-    DuiLocale *z = 0;
+    MLocale *z = 0;
 
-    z = new DuiLocale(default_language + '_' + default_country);
+    z = new MLocale(default_language + '_' + default_country);
 
     QVERIFY2(z->isValid(),
-             "new DuiLocale(default_language + '_' + default_country)");
+             "new MLocale(default_language + '_' + default_country)");
     QVERIFY2(z->name() == default_name, "z->name() differs from default_name");
 
-    QVERIFY2(z->categoryName(DuiLocale::DuiLcTime) == default_name,
+    QVERIFY2(z->categoryName(MLocale::MLcTime) == default_name,
              "TIME: category name does not point to default category");
-    z->setCategoryLocale(DuiLocale::DuiLcTime, category_language + '_' + category_country);
-    QVERIFY2(z->categoryName(DuiLocale::DuiLcTime) == category_name,
+    z->setCategoryLocale(MLocale::MLcTime, category_language + '_' + category_country);
+    QVERIFY2(z->categoryName(MLocale::MLcTime) == category_name,
              "TIME: category name does not point to category_name");
 
-    QVERIFY2(z->categoryName(DuiLocale::DuiLcCollate) == default_name,
+    QVERIFY2(z->categoryName(MLocale::MLcCollate) == default_name,
              "COLLATE: category name does not point to default category");
 
-    z->setCategoryLocale(DuiLocale::DuiLcCollate, category_language + '_' + category_country);
-    QVERIFY2(z->categoryName(DuiLocale::DuiLcCollate) == category_name,
+    z->setCategoryLocale(MLocale::MLcCollate, category_language + '_' + category_country);
+    QVERIFY2(z->categoryName(MLocale::MLcCollate) == category_name,
              "COLLATE: category name does not point to category_name");
 
-    QVERIFY2(z->categoryName(DuiLocale::DuiLcNumeric) == default_name,
+    QVERIFY2(z->categoryName(MLocale::MLcNumeric) == default_name,
              "NUMERIC: category name does not point to default category");
 
-    z->setCategoryLocale(DuiLocale::DuiLcNumeric, category_language + '_' +  category_country);
-    QVERIFY2(z->categoryName(DuiLocale::DuiLcNumeric) == category_name,
+    z->setCategoryLocale(MLocale::MLcNumeric, category_language + '_' +  category_country);
+    QVERIFY2(z->categoryName(MLocale::MLcNumeric) == category_name,
              "NUMERIC: category name does not point to category_name");
     delete z;
 }
 
-void Ft_Locales::testDuiLocaleLanguageEndonum_data()
+void Ft_Locales::testMLocaleLanguageEndonum_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("endonym_result");
@@ -409,15 +409,15 @@ void Ft_Locales::testDuiLocaleLanguageEndonum_data()
             << QString("中文");
 }
 
-void Ft_Locales::testDuiLocaleLanguageEndonum()
+void Ft_Locales::testMLocaleLanguageEndonum()
 {
     QFETCH(QString, locale_name);
     QFETCH(QString, endonym_result);
-    DuiLocale locale(locale_name);
+    MLocale locale(locale_name);
     QCOMPARE(locale.languageEndonym(), endonym_result);
 }
 
-void Ft_Locales::testDuiLocaleCountryEndonum_data()
+void Ft_Locales::testMLocaleCountryEndonum_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("endonym_result");
@@ -436,11 +436,11 @@ void Ft_Locales::testDuiLocaleCountryEndonum_data()
             << QString("中国");
 }
 
-void Ft_Locales::testDuiLocaleCountryEndonum()
+void Ft_Locales::testMLocaleCountryEndonum()
 {
     QFETCH(QString, locale_name);
     QFETCH(QString, endonym_result);
-    DuiLocale locale(locale_name);
+    MLocale locale(locale_name);
     QCOMPARE(locale.countryEndonym(), endonym_result);
 }
 

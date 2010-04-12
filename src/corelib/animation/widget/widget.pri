@@ -8,26 +8,26 @@ include(core/core.pri)
 ANIMATIONS_WIDGET_SRC_DIR=./animation/widget
 
 PUBLIC_HEADERS += \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeinanimation.h \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeoutanimation.h \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetslideinanimation.h \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetslideoutanimation.h \
-    #$$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetzoominanimation.h \
-    #$$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetzoomoutanimation.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetfadeinanimation.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetfadeoutanimation.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetslideinanimation.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetslideoutanimation.h \
+    #$$ANIMATIONS_WIDGET_SRC_DIR/mwidgetzoominanimation.h \
+    #$$ANIMATIONS_WIDGET_SRC_DIR/mwidgetzoomoutanimation.h \
 
 PRIVATE_HEADERS += \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeinanimation_p.h \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeoutanimation_p.h \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetslideinanimation_p.h \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetslideoutanimation_p.h \
-    #$$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetzoominanimation_p.h \
-    #$$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetzoomoutanimation_p.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetfadeinanimation_p.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetfadeoutanimation_p.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetslideinanimation_p.h \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetslideoutanimation_p.h \
+    #$$ANIMATIONS_WIDGET_SRC_DIR/mwidgetzoominanimation_p.h \
+    #$$ANIMATIONS_WIDGET_SRC_DIR/mwidgetzoomoutanimation_p.h \
 
 SOURCES += \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeinanimation.cpp \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetfadeoutanimation.cpp \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetslideinanimation.cpp \
-    $$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetslideoutanimation.cpp \
-    #$$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetzoominanimation.cpp \
-    #$$ANIMATIONS_WIDGET_SRC_DIR/duiwidgetzoomoutanimation.cpp \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetfadeinanimation.cpp \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetfadeoutanimation.cpp \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetslideinanimation.cpp \
+    $$ANIMATIONS_WIDGET_SRC_DIR/mwidgetslideoutanimation.cpp \
+    #$$ANIMATIONS_WIDGET_SRC_DIR/mwidgetzoominanimation.cpp \
+    #$$ANIMATIONS_WIDGET_SRC_DIR/mwidgetzoomoutanimation.cpp \
 

@@ -1,7 +1,7 @@
-DUIROOT=../../../../..
-include($$DUIROOT/mkspecs/common.pri)
+MROOT=../../../../..
+include($$MROOT/mkspecs/common.pri)
 
-DESTDIR=$$DUIROOT/bin/
+DESTDIR=$$MROOT/bin/
 TARGET=org.maemo.textprocessor
 TEMPLATE=app
 SOURCES += \
@@ -15,7 +15,7 @@ HEADERS += \
 
 QT += dbus gui
 
-target.path = $$DUI_INSTALL_BIN
+target.path = $$M_INSTALL_BIN
 
 INSTALLS += \
     target \

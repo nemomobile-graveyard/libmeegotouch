@@ -1,50 +1,50 @@
 EXTENSION_DIR=./applicationextension
 
 PUBLIC_HEADERS += \
-    $$EXTENSION_DIR/duiextensionarea.h \
-    $$EXTENSION_DIR/duiextensionareamodel.h \
-    $$EXTENSION_DIR/duiextensionareaview.h \
-    $$EXTENSION_DIR/duiapplicationextensionareamodel.h \
-    $$EXTENSION_DIR/duiapplicationextensionareaview.h \
-    $$EXTENSION_DIR/duiapplicationextensionarea.h \
-    $$EXTENSION_DIR/duiapplicationextensionmanager.h \
-    $$EXTENSION_DIR/duiapplicationextensioninterface.h \
-    $$EXTENSION_DIR/duiapplicationextensionloader.h \
-    $$EXTENSION_DIR/duiapplicationextensionmetadata.h \
-    $$EXTENSION_DIR/duiextensionrunner.h \
-    $$EXTENSION_DIR/duiextensionhandlemodel.h \
-    $$EXTENSION_DIR/duiextensionhandle.h \
-    $$EXTENSION_DIR/duiextensionhandleview.h \
-    $$EXTENSION_DIR/duiapplicationextensionhandleview.h \
+    $$EXTENSION_DIR/mextensionarea.h \
+    $$EXTENSION_DIR/mextensionareamodel.h \
+    $$EXTENSION_DIR/mextensionareaview.h \
+    $$EXTENSION_DIR/mapplicationextensionareamodel.h \
+    $$EXTENSION_DIR/mapplicationextensionareaview.h \
+    $$EXTENSION_DIR/mapplicationextensionarea.h \
+    $$EXTENSION_DIR/mapplicationextensionmanager.h \
+    $$EXTENSION_DIR/mapplicationextensioninterface.h \
+    $$EXTENSION_DIR/mapplicationextensionloader.h \
+    $$EXTENSION_DIR/mapplicationextensionmetadata.h \
+    $$EXTENSION_DIR/mextensionrunner.h \
+    $$EXTENSION_DIR/mextensionhandlemodel.h \
+    $$EXTENSION_DIR/mextensionhandle.h \
+    $$EXTENSION_DIR/mextensionhandleview.h \
+    $$EXTENSION_DIR/mapplicationextensionhandleview.h \
 
 
 PRIVATE_HEADERS += \
-    $$EXTENSION_DIR/duiextensionarea_p.h \
-    $$EXTENSION_DIR/duiextensionareaview_p.h \
-    $$EXTENSION_DIR/duiapplicationextensionareaview_p.h \
-    $$EXTENSION_DIR/duiapplicationextensionarea_p.h \
-    $$EXTENSION_DIR/duiextensionhandle_p.h \
-    $$EXTENSION_DIR/duiextensionhandleview_p.h \
-    $$EXTENSION_DIR/duiapplicationextensionhandleview_p.h
+    $$EXTENSION_DIR/mextensionarea_p.h \
+    $$EXTENSION_DIR/mextensionareaview_p.h \
+    $$EXTENSION_DIR/mapplicationextensionareaview_p.h \
+    $$EXTENSION_DIR/mapplicationextensionarea_p.h \
+    $$EXTENSION_DIR/mextensionhandle_p.h \
+    $$EXTENSION_DIR/mextensionhandleview_p.h \
+    $$EXTENSION_DIR/mapplicationextensionhandleview_p.h
 
 
-SOURCES += $$EXTENSION_DIR/duiextensionarea.cpp \
-    $$EXTENSION_DIR/duiapplicationextensionarea.cpp \
-    $$EXTENSION_DIR/duiapplicationextensionareaview.cpp \
-    $$EXTENSION_DIR/duiextensionareaview.cpp \
-    $$EXTENSION_DIR/duiextensionareamodel.cpp \
-    $$EXTENSION_DIR/duiapplicationextensionmanager.cpp \
-    $$EXTENSION_DIR/duiapplicationextensionloader.cpp \
-    $$EXTENSION_DIR/duiapplicationextensionmetadata.cpp \
-    $$EXTENSION_DIR/duiextensionrunner.cpp \
-    $$EXTENSION_DIR/duiextensionhandle.cpp \
-    $$EXTENSION_DIR/duiextensionhandleview.cpp \
-    $$EXTENSION_DIR/duiapplicationextensionhandleview.cpp
+SOURCES += $$EXTENSION_DIR/mextensionarea.cpp \
+    $$EXTENSION_DIR/mapplicationextensionarea.cpp \
+    $$EXTENSION_DIR/mapplicationextensionareaview.cpp \
+    $$EXTENSION_DIR/mextensionareaview.cpp \
+    $$EXTENSION_DIR/mextensionareamodel.cpp \
+    $$EXTENSION_DIR/mapplicationextensionmanager.cpp \
+    $$EXTENSION_DIR/mapplicationextensionloader.cpp \
+    $$EXTENSION_DIR/mapplicationextensionmetadata.cpp \
+    $$EXTENSION_DIR/mextensionrunner.cpp \
+    $$EXTENSION_DIR/mextensionhandle.cpp \
+    $$EXTENSION_DIR/mextensionhandleview.cpp \
+    $$EXTENSION_DIR/mapplicationextensionhandleview.cpp
 
 
-DUIGEN_MODEL_HEADERS += $$EXTENSION_DIR/duiextensionareamodel.h \
-    $$EXTENSION_DIR/duiapplicationextensionareamodel.h \
-    $$EXTENSION_DIR/duiextensionhandlemodel.h
+MGEN_MODEL_HEADERS += $$EXTENSION_DIR/mextensionareamodel.h \
+    $$EXTENSION_DIR/mapplicationextensionareamodel.h \
+    $$EXTENSION_DIR/mextensionhandlemodel.h
 
 
-PUBLIC_HEADERS += $$DUIGEN_MODEL_HEADERS
+PUBLIC_HEADERS += $$MGEN_MODEL_HEADERS

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,7 +22,7 @@
 
 Q_EXPORT_PLUGIN2(galleryapplet, GalleryApplet)
 
-DuiWidget *GalleryApplet::constructWidget(const DuiAppletMetaData &metaData, DuiDataStore &instanceData, DuiDataAccess &settings)
+MWidget *GalleryApplet::constructWidget(const MAppletMetaData &metaData, MDataStore &instanceData, MDataAccess &settings)
 {
     return new Gallery(metaData, instanceData, settings);
 }

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,31 +22,31 @@
  */
 
 #include <QGraphicsLinearLayout>
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
-#include <DuiButton>
-#include <DuiLabel>
-#include <DuiTheme>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MButton>
+#include <MLabel>
+#include <MTheme>
 
 int main(int argc, char **argv)
 {
-    DuiApplication app(argc, argv);
-    DuiTheme::loadCSS("qgraphicslayout.css");
-    DuiApplicationWindow window;
-    DuiApplicationPage page;
+    MApplication app(argc, argv);
+    MTheme::loadCSS("qgraphicslayout.css");
+    MApplicationWindow window;
+    MApplicationPage page;
 
     QGraphicsLinearLayout *outerLayout = new QGraphicsLinearLayout(Qt::Vertical, page.centralWidget());
     QGraphicsLinearLayout *firstRow = new QGraphicsLinearLayout(Qt::Horizontal);
     QGraphicsLinearLayout *secondRow = new QGraphicsLinearLayout(Qt::Horizontal);
     outerLayout->addItem(firstRow);
     outerLayout->addItem(secondRow);
-    firstRow->addItem(new DuiLabel("Label on first row"));
-    firstRow->addItem(new DuiButton("Button"));
+    firstRow->addItem(new MLabel("Label on first row"));
+    firstRow->addItem(new MButton("Button"));
     firstRow->addStretch();
-    secondRow->addItem(new DuiLabel("Label on second row"));
-    secondRow->addItem(new DuiButton("Button 1"));
-    secondRow->addItem(new DuiButton("Button 2"));
+    secondRow->addItem(new MLabel("Label on second row"));
+    secondRow->addItem(new MButton("Button 1"));
+    secondRow->addItem(new MButton("Button 2"));
     secondRow->addStretch();
 
     page.appear();

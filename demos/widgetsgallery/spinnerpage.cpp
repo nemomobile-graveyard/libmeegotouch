@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,20 +20,20 @@
 #include "spinnerpage.h"
 #include "utils.h"
 #include <QTimer>
-#include <DuiButton>
-#include <DuiLabel>
-#include <DuiTheme>
-#include <DuiLocale>
-#include <DuiAction>
-#include <DuiLinearLayoutPolicy>
-#include <DuiGridLayoutPolicy>
-#include <DuiFlowLayoutPolicy>
-#include <DuiProgressIndicator>
-#include <DuiDialog>
-#include <DuiContainer>
+#include <MButton>
+#include <MLabel>
+#include <MTheme>
+#include <MLocale>
+#include <MAction>
+#include <MLinearLayoutPolicy>
+#include <MGridLayoutPolicy>
+#include <MFlowLayoutPolicy>
+#include <MProgressIndicator>
+#include <MDialog>
+#include <MContainer>
 #include <QGraphicsLinearLayout>
 #include <QStringListModel>
-#include <DuiImageWidget>
+#include <MImageWidget>
 #include <QDir>
 #include <QDebug>
 
@@ -63,26 +63,26 @@ void SpinnerPage::createContent()
     TemplatePage::createContent();
 
     //% "In container main area"
-    DuiAction *action = new DuiAction(qtTrId("xx_spinner_page_container_main_area"), this);
-    action->setLocation(DuiAction::ApplicationMenuLocation);
+    MAction *action = new MAction(qtTrId("xx_spinner_page_container_main_area"), this);
+    action->setLocation(MAction::ApplicationMenuLocation);
     connect(action, SIGNAL(triggered()), this, SLOT(inContainerMainArea()));
     addAction(action);
 
     //% "In container header"
-    action = new DuiAction(qtTrId("xx_spinner_page_container_header"), this);
-    action->setLocation(DuiAction::ApplicationMenuLocation);
+    action = new MAction(qtTrId("xx_spinner_page_container_header"), this);
+    action->setLocation(MAction::ApplicationMenuLocation);
     connect(action, SIGNAL(triggered()), this, SLOT(inContainerHeader()));
     addAction(action);
 
     //% "In view menu"
-    action = new DuiAction(qtTrId("xx_spinner_page_menu"), this);
-    action->setLocation(DuiAction::ApplicationMenuLocation);
+    action = new MAction(qtTrId("xx_spinner_page_menu"), this);
+    action->setLocation(MAction::ApplicationMenuLocation);
     connect(action, SIGNAL(triggered()), this, SLOT(inViewmenu()));
     addAction(action);
 
     //% "In dialog"
-    action = new DuiAction(qtTrId("xx_spinner_page_dialog"), this);
-    action->setLocation(DuiAction::ApplicationMenuLocation);
+    action = new MAction(qtTrId("xx_spinner_page_dialog"), this);
+    action->setLocation(MAction::ApplicationMenuLocation);
     connect(action, SIGNAL(triggered()), this, SLOT(inDialog()));
     addAction(action);
 
@@ -111,20 +111,20 @@ void SpinnerPage::inContainerMainArea()
     reset();
     view = ContainerMainArea;
 
-    header = new DuiLabel(centralWidget());
+    header = new MLabel(centralWidget());
     //% "From: John Doe\nDate: Today\nSubject: This is funny stuff!"
     header->setText("<a></a>" + qtTrId("xx_spinner_page_email_header"));
     containerPolicy->addItem(header);
 
-    container = new DuiContainer(centralWidget());
+    container = new MContainer(centralWidget());
     container->setHeaderVisible(false);
     containerPolicy->addItem(container);
 
-    DuiProgressIndicator *spinner = new DuiProgressIndicator(container, DuiProgressIndicator::spinnerType);
+    MProgressIndicator *spinner = new MProgressIndicator(container, MProgressIndicator::spinnerType);
     spinner->setUnknownDuration(true);
     container->setCentralWidget(spinner);
 
-    description = new DuiLabel(centralWidget());
+    description = new MLabel(centralWidget());
     //% "Spinner can be used in container while e.g. content is being fetched."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_container_area_description"));
     description->setWordWrap(true);
@@ -136,16 +136,16 @@ void SpinnerPage::inContainerHeader()
     reset();
     view = ContainerHeader;
 
-    container = new DuiContainer(centralWidget());
+    container = new MContainer(centralWidget());
     container->setProgressIndicatorVisible(true);
     //% "Online albums"
     container->setTitle(qtTrId("xx_spinner_page_container_title"));
     containerPolicy->addItem(container);
 
-    DuiLayout *layout = new DuiLayout(container->centralWidget());
-    imageContainerPolicy = new DuiFlowLayoutPolicy(layout);
+    MLayout *layout = new MLayout(container->centralWidget());
+    imageContainerPolicy = new MFlowLayoutPolicy(layout);
 
-    description = new DuiLabel(centralWidget());
+    description = new MLabel(centralWidget());
     //% "Spinner can be used in container header to indicate that the items inside the container "
     //% "are being updated, but visible items can be interacted with."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_container_header_description"));
@@ -168,7 +168,7 @@ void SpinnerPage::timeout()
 
         QStringList imageContacts = imagesDir.entryList(QDir::Files);
 
-        DuiImageWidget *image = new DuiImageWidget(container->centralWidget());
+        MImageWidget *image = new MImageWidget(container->centralWidget());
         image->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[imageContainerPolicy->count() % imageContacts.size()]));
         image->setMinimumSize(ImageSize, ImageSize);
         image->setMaximumSize(ImageSize, ImageSize);
@@ -186,7 +186,7 @@ void SpinnerPage::inViewmenu()
     reset();
     view = Menu;
 
-    description = new DuiLabel(centralWidget());
+    description = new MLabel(centralWidget());
     //% "Spinner in the application menu area indicates that the whole view is pending for update."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_application_menu_description"));
     description->setWordWrap(true);
@@ -200,7 +200,7 @@ void SpinnerPage::inDialog()
     reset();
     view = Dialog;
 
-    description = new DuiLabel(centralWidget());
+    description = new MLabel(centralWidget());
     //% "Spinner can be placed in dialog header to indicate changing content."
     description->setText("<a></a>" + qtTrId("xx_spinner_page_dialog_header_description"));
     description->setWordWrap(true);
@@ -211,20 +211,20 @@ void SpinnerPage::inDialog()
 
 void SpinnerPage::launchDialog()
 {
-    DuiWidget *container = new DuiWidget();
+    MWidget *container = new MWidget();
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     container->setLayout(layout);
 
-    DuiButton *wifi = new DuiButton("Free Wifi", container);
+    MButton *wifi = new MButton("Free Wifi", container);
     layout->addItem(wifi);
-    DuiButton *wlan = new DuiButton("Public WLAN", container);
+    MButton *wlan = new MButton("Public WLAN", container);
     layout->addItem(wlan);
-    DuiButton *starbucks = new DuiButton("Starbucks", container);
+    MButton *starbucks = new MButton("Starbucks", container);
     layout->addItem(starbucks);
 
     //% "Select Internet connection"
-    DuiDialog dialog(qtTrId("xx_spinner_page_dialog_header"),
-                     Dui::NoStandardButton);
+    MDialog dialog(qtTrId("xx_spinner_page_dialog_header"),
+                     M::NoStandardButton);
     dialog.setCentralWidget(container);
     dialog.setProgressIndicatorVisible(true);
     dialog.exec();

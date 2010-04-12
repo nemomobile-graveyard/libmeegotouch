@@ -6,14 +6,14 @@ FEEDBACK_SRC_DIR=./feedback
 INCLUDEPATH+= ./feedback
 
 PUBLIC_HEADERS += \
-    $$FEEDBACK_SRC_DIR/duifeedback.h \
-    $$FEEDBACK_SRC_DIR/duifeedbackplayer.h \
+    $$FEEDBACK_SRC_DIR/mfeedback.h \
+    $$FEEDBACK_SRC_DIR/mfeedbackplayer.h \
 
 PRIVATE_HEADERS += \
-    $$FEEDBACK_SRC_DIR/duifeedbackplayer_p.h \
-    $$FEEDBACK_SRC_DIR/duifeedback_p.h
+    $$FEEDBACK_SRC_DIR/mfeedbackplayer_p.h \
+    $$FEEDBACK_SRC_DIR/mfeedback_p.h
 
-SOURCES += $$FEEDBACK_SRC_DIR/duifeedback.cpp \
-    $$FEEDBACK_SRC_DIR/duifeedback_p.cpp \
-    $$FEEDBACK_SRC_DIR/duifeedbackplayer.cpp \
-    $$FEEDBACK_SRC_DIR/duifeedbackplayer_p.cpp
+SOURCES += $$FEEDBACK_SRC_DIR/mfeedback.cpp \
+    $$FEEDBACK_SRC_DIR/mfeedback_p.cpp \
+    $$FEEDBACK_SRC_DIR/mfeedbackplayer.cpp \
+    $$FEEDBACK_SRC_DIR/mfeedbackplayer_p.cpp

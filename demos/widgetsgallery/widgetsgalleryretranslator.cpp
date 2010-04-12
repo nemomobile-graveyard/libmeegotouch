@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,14 +21,14 @@
 
 #include <QDebug>
 
-#include "duigconfitem.h"
-#include "duilocale.h"
+#include "mgconfitem.h"
+#include "mlocale.h"
 
 void WidgetsgalleryRetranslator::widgetsgalleryRetranslate()
 {
     qDebug() << __PRETTY_FUNCTION__;
-    // When the gconf key /Dui/i18n/Language specifying the system
-    // language changes, the system default locale of a DuiApplication
+    // When the gconf key /M/i18n/Language specifying the system
+    // language changes, the system default locale of a MApplication
     // is changed automatically. All translation catalogs are reloaded
     // according to the new locale settings. Therefore, in most cases,
     // calling a slot like this one here is not needed, but it is

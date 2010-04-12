@@ -14,7 +14,7 @@ HEADERS += \
 
 QT += dbus gui
 
-target.path = $$DUI_INSTALL_BIN
+target.path = $$M_INSTALL_BIN
 
 INSTALLS += \
     target \

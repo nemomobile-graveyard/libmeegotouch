@@ -1,6 +1,6 @@
 include(../common_top.pri)
 
-TARGET = duicore
+TARGET = meegotouchcore
 
 include(animation/animation.pri)
 include(core/core.pri)
@@ -29,9 +29,9 @@ contains(DEFINES, HAVE_ICU) {
 
 # install .prf files
 install_prf.path = $$[QT_INSTALL_DATA]/mkspecs/features
-install_prf.files = $${DUI_SOURCE_TREE}/mkspecs/features/dui.prf \
-                    $${DUI_SOURCE_TREE}/mkspecs/features/dui_translations.prf \
-                    $${DUI_BUILD_TREE}/mkspecs/features/dui_defines.prf
+install_prf.files = $${M_SOURCE_TREE}/mkspecs/features/meegotouch.prf \
+                    $${M_SOURCE_TREE}/mkspecs/features/meegotouch_translations.prf \
+                    $${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf
 
 # causes problems when installing on windows with INSTALL_ROOT
 !win32 {
@@ -39,9 +39,9 @@ install_prf.files = $${DUI_SOURCE_TREE}/mkspecs/features/dui.prf \
 }
 
 
-#install libdui .pc file
-install_pkgconfig.path = $$DUI_INSTALL_LIBS/pkgconfig
-install_pkgconfig.files = ../Dui.pc
+#install libmeegotouch .pc file
+install_pkgconfig.path = $$M_INSTALL_LIBS/pkgconfig
+install_pkgconfig.files = ../meegotouch.pc
 INSTALLS += install_pkgconfig
 
 
@@ -53,7 +53,7 @@ win32 {
     # match only the camel case forwarding headers here
     FORWARDING_HEADERS = $$system( find ../include/Dui* )
 }
-forwarding_headers.path = $$DUI_INSTALL_HEADERS
+forwarding_headers.path = $$M_INSTALL_HEADERS
 forwarding_headers.files = $$FORWARDING_HEADERS
 INSTALLS += forwarding_headers
 

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -27,13 +27,13 @@
 #include <QPainter>
 
 #include <qtmaemo6style.h>
-#include "duiapplication.h"
+#include "mapplication.h"
 
 #include "ut_qtmaemo6style.h"
 
 /*
   NOTE: this test is only included into test package if the Qt Maemo 6 style is
-        included to libdui.
+        included to libmeegotouch.
 */
 
 void Ut_QtMaemo6Style::init()
@@ -107,7 +107,7 @@ void Ut_QtMaemo6Style::testFonts() {
     QApplication app(argc, argv);
     Q_UNUSED(app);
     //font settings on a button should be ignored
-    // the font of dui style is used
+    // the font of m style is used
     QPushButton button;
     button.setText("Test");
     button.setFont(QFont("Arial"));

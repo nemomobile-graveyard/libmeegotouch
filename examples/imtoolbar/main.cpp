@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,23 +17,23 @@
 **
 ****************************************************************************/
 
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiTheme>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MTheme>
 #include "imtoolbarpage.h"
 
 namespace
 {
-    const QString InputMethodToolbars("/Dui/InputMethods/Toolbars");
+    const QString InputMethodToolbars("/M/InputMethods/Toolbars");
 };
 
 int main(int argc, char **argv)
 {
-    // Create main dui application.
-    DuiApplication application(argc, argv, "imtoolbar");
+    // Create main m application.
+    MApplication application(argc, argv, "imtoolbar");
 
     // Create application window and make it visible.
-    DuiApplicationWindow window;
+    MApplicationWindow window;
     window.show();
 
     // Create application page and make it visible.

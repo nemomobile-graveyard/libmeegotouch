@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -29,7 +29,7 @@
 class DemoApplicationExtension : public QObject, public DemoApplicationExtensionInterface
 {
     Q_OBJECT
-    Q_INTERFACES(DemoApplicationExtensionInterface DuiApplicationExtensionInterface)
+    Q_INTERFACES(DemoApplicationExtensionInterface MApplicationExtensionInterface)
 
 public:
     DemoApplicationExtension();
@@ -38,7 +38,7 @@ public:
     void setDemoApplicationInterface(DemoApplicationInterface &application);
     virtual void setDemoApplicationControlledValue(int value);
 
-    //! methods derived from DuiApplicationExtensionInterface
+    //! methods derived from MApplicationExtensionInterface
     virtual bool initialize(const QString &interface);
 
 private:

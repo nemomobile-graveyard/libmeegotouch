@@ -6,31 +6,31 @@ INCLUDEPATH+=./i18n
 
 
 PUBLIC_HEADERS += \
-    $$I18N_SRC_DIR/duibreakiterator.h \
-    $$I18N_SRC_DIR/duilocale.h
+    $$I18N_SRC_DIR/mbreakiterator.h \
+    $$I18N_SRC_DIR/mlocale.h
 
 SOURCES += \
-    $$I18N_SRC_DIR/duibreakiterator.cpp \
-    $$I18N_SRC_DIR/duilocale.cpp
+    $$I18N_SRC_DIR/mbreakiterator.cpp \
+    $$I18N_SRC_DIR/mlocale.cpp
     
 contains(DEFINES, HAVE_ICU) {
     PUBLIC_HEADERS += \
-        $$I18N_SRC_DIR/duicalendar.h \
-        $$I18N_SRC_DIR/duicollator.h \
+        $$I18N_SRC_DIR/mcalendar.h \
+        $$I18N_SRC_DIR/mcollator.h \
 
     PRIVATE_HEADERS += \
-        $$I18N_SRC_DIR/duiicubreakiterator.h \
-        $$I18N_SRC_DIR/duiicuconversions.h
+        $$I18N_SRC_DIR/micubreakiterator.h \
+        $$I18N_SRC_DIR/micuconversions.h
 
     SOURCES += \
-        $$I18N_SRC_DIR/duicalendar.cpp \
-        $$I18N_SRC_DIR/duicollator.cpp \
-        $$I18N_SRC_DIR/duiicubreakiterator.cpp \
-        $$I18N_SRC_DIR/duiicuconversions.cpp
+        $$I18N_SRC_DIR/mcalendar.cpp \
+        $$I18N_SRC_DIR/mcollator.cpp \
+        $$I18N_SRC_DIR/micubreakiterator.cpp \
+        $$I18N_SRC_DIR/micuconversions.cpp
 } else {
     PRIVATE_HEADERS += \
-        $$I18N_SRC_DIR/duinullbreakiterator.h \
+        $$I18N_SRC_DIR/mnullbreakiterator.h \
 
     SOURCES += \
-        $$I18N_SRC_DIR/duinullbreakiterator.cpp
+        $$I18N_SRC_DIR/mnullbreakiterator.cpp
 }

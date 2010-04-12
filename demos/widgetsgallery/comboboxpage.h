@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -23,9 +23,9 @@
 #include "templatepage.h"
 #include <QAbstractListModel>
 
-class DuiComboBox;
-class DuiPopupList;
-class DuiButton;
+class MComboBox;
+class MPopupList;
+class MButton;
 class QStringListModel;
 class QSortFilterProxyModel;
 
@@ -44,8 +44,8 @@ protected:
     void retranslateUi();
 
 private:
-    DuiComboBox  *comboBox1;
-    DuiComboBox  *comboBox2;
+    MComboBox  *comboBox1;
+    MComboBox  *comboBox2;
 
     QStringListModel *model1;
     QSortFilterProxyModel *proxyModel;

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -27,7 +27,7 @@
 class QtMaemo6ClickLabel;
 
 /*!
- * this class emulates a dui titlebar
+ * this class emulates a m titlebar
  */
 class QtMaemo6TitleBar : public QWidget
 {

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,13 +18,13 @@
 ****************************************************************************/
 
 #include <QTimer>
-#include <DuiLocale>
-#include <DuiLayout>
-#include <DuiButton>
-#include <DuiLabel>
-#include <DuiGridLayoutPolicy>
-#include <DuiFlowLayoutPolicy>
-#include <DuiProgressIndicator>
+#include <MLocale>
+#include <MLayout>
+#include <MButton>
+#include <MLabel>
+#include <MGridLayoutPolicy>
+#include <MFlowLayoutPolicy>
+#include <MProgressIndicator>
 #include <QDebug>
 
 #include "mainpage.h"
@@ -53,22 +53,22 @@ MainPage::~MainPage()
 
 void MainPage::createContent()
 {
-    DuiLayout *layout = new DuiLayout(centralWidget());
-    DuiGridLayoutPolicy *policy = new DuiGridLayoutPolicy(layout);
+    MLayout *layout = new MLayout(centralWidget());
+    MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
     policy->setSpacing(20.0);
 
-    bar0 = new DuiProgressIndicator(this, "spinner");
+    bar0 = new MProgressIndicator(this, "spinner");
     bar0->setRange(0, 12);
     bar0->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
     bar0->setUnknownDuration(false);
     bar0->setObjectName("bar0");
     policy->addItem(bar0, 0, 0, 1, 3);
 
-    DuiLabel *label1 = new DuiLabel("Application Lifecycle Demo");
+    MLabel *label1 = new MLabel("Application Lifecycle Demo");
     label1->setAlignment(Qt::AlignCenter);
     policy->addItem(label1, 1, 1);
 
-    bar1 = new DuiProgressIndicator(this, "spinner");
+    bar1 = new MProgressIndicator(this, "spinner");
     bar1->setRange(0, 120);
     bar1->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
     bar1->setUnknownDuration(false);
@@ -80,11 +80,11 @@ void MainPage::createContent()
     connect(bar0, SIGNAL(displayExited()),  this, SLOT(pauseWidgets()));
     connect(bar1, SIGNAL(displayExited()),  this, SLOT(pauseWidgets()));
 
-    DuiButton *button = new DuiButton("Visibility Information");
+    MButton *button = new MButton("Visibility Information");
     connect(button, SIGNAL(clicked()), this, SLOT(buttonPress()));
     policy->addItem(button, 5, 1);
 
-    DuiButton *button2 = new DuiButton("Applet Stuff");
+    MButton *button2 = new MButton("Applet Stuff");
     connect(button2, SIGNAL(clicked()), this, SLOT(button2Press()));
     policy->addItem(button2, 6, 1);
 
@@ -93,13 +93,13 @@ void MainPage::createContent()
 
 void MainPage::indicatorVisible()
 {
-    qDebug() << qobject_cast<DuiProgressIndicator *>(sender())->objectName() << " visible";
+    qDebug() << qobject_cast<MProgressIndicator *>(sender())->objectName() << " visible";
 
 }
 
 void MainPage::indicatorHidden()
 {
-    qDebug() << qobject_cast<DuiProgressIndicator *>(sender())->objectName() << " hidden";
+    qDebug() << qobject_cast<MProgressIndicator *>(sender())->objectName() << " hidden";
 }
 
 void MainPage::buttonPress()

@@ -3,21 +3,21 @@
 
 #include <QObject>
 
-class DuiButton;
+class MButton;
 
 class ImageViewer: public QObject
 {
     Q_OBJECT
 
 public:
-    ImageViewer( DuiButton *button );
+    ImageViewer( MButton *button );
     ~ImageViewer();
 
 public slots:
     bool showImage(const QString &uri, const QStringList &uriList);
 
 private:
-    DuiButton *button;
+    MButton *button;
 };
 
 #endif // IMAGEVIEWER_H

@@ -5,32 +5,32 @@
 THEME_SRC_DIR=./theme
 INCLUDEPATH+=./theme
 PUBLIC_HEADERS += \
-    $$THEME_SRC_DIR/duitheme.h \
-    $$THEME_SRC_DIR/duidefaultfonts.h \
-    $$THEME_SRC_DIR/duipalette.h \
+    $$THEME_SRC_DIR/mtheme.h \
+    $$THEME_SRC_DIR/mdefaultfonts.h \
+    $$THEME_SRC_DIR/mpalette.h \
 
 PRIVATE_HEADERS += \
-    $$THEME_SRC_DIR/duiimagedirectory.h \
-    $$THEME_SRC_DIR/duithemedaemonclient.h \
-    $$THEME_SRC_DIR/duiremotethemedaemon.h \
-    $$THEME_SRC_DIR/duilocalthemedaemon.h \
-    $$THEME_SRC_DIR/duilogicalvalues.h \
-    $$THEME_SRC_DIR/duithemedaemon.h \
-    $$THEME_SRC_DIR/iduithemedaemon.h \
-    $$THEME_SRC_DIR/duithemedaemonprotocol.h \
-    $$THEME_SRC_DIR/duithemeresourcemanager.h \
-    $$THEME_SRC_DIR/duicommonpixmaps.h \
+    $$THEME_SRC_DIR/mimagedirectory.h \
+    $$THEME_SRC_DIR/mthemedaemonclient.h \
+    $$THEME_SRC_DIR/mremotethemedaemon.h \
+    $$THEME_SRC_DIR/mlocalthemedaemon.h \
+    $$THEME_SRC_DIR/mlogicalvalues.h \
+    $$THEME_SRC_DIR/mthemedaemon.h \
+    $$THEME_SRC_DIR/imthemedaemon.h \
+    $$THEME_SRC_DIR/mthemedaemonprotocol.h \
+    $$THEME_SRC_DIR/mthemeresourcemanager.h \
+    $$THEME_SRC_DIR/mcommonpixmaps.h \
 
-SOURCES += $$THEME_SRC_DIR/duitheme.cpp \
-    $$THEME_SRC_DIR/duiimagedirectory.cpp \
-    $$THEME_SRC_DIR/duicommonpixmaps.cpp \
-    $$THEME_SRC_DIR/duithemedaemonclient.cpp \
-    $$THEME_SRC_DIR/duiremotethemedaemon.cpp \
-    $$THEME_SRC_DIR/duilocalthemedaemon.cpp \
-    $$THEME_SRC_DIR/duidefaultfonts.cpp \
-    $$THEME_SRC_DIR/duilogicalvalues.cpp \
-    $$THEME_SRC_DIR/duipalette.cpp \
-    $$THEME_SRC_DIR/duithemedaemon.cpp \
-    $$THEME_SRC_DIR/duithemedaemonprotocol.cpp \
-    $$THEME_SRC_DIR/duithemeresourcemanager.cpp \
+SOURCES += $$THEME_SRC_DIR/mtheme.cpp \
+    $$THEME_SRC_DIR/mimagedirectory.cpp \
+    $$THEME_SRC_DIR/mcommonpixmaps.cpp \
+    $$THEME_SRC_DIR/mthemedaemonclient.cpp \
+    $$THEME_SRC_DIR/mremotethemedaemon.cpp \
+    $$THEME_SRC_DIR/mlocalthemedaemon.cpp \
+    $$THEME_SRC_DIR/mdefaultfonts.cpp \
+    $$THEME_SRC_DIR/mlogicalvalues.cpp \
+    $$THEME_SRC_DIR/mpalette.cpp \
+    $$THEME_SRC_DIR/mthemedaemon.cpp \
+    $$THEME_SRC_DIR/mthemedaemonprotocol.cpp \
+    $$THEME_SRC_DIR/mthemeresourcemanager.cpp \
 

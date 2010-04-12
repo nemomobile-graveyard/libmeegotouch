@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -24,10 +24,10 @@
 #include "templatepage.h"
 
 
-#include <DuiApplication>
-#include <DuiWindow>
-#include <DuiSceneManager>
-#include <DuiApplicationPage>
+#include <MApplication>
+#include <MWindow>
+#include <MSceneManager>
+#include <MApplicationPage>
 
 #include <QApplication>
 #include <QTextStream>
@@ -164,9 +164,9 @@ void Timedemo::showNextPage()
         if (currentPage == m_pFrontPage) {
             // FIXME: the front page needs a special invitation.
             // otherwise it does not show up again
-            if (DuiApplication::activeWindow()) {
+            if (MApplication::activeWindow()) {
                 // FIXME: why appearSceneWindowNow() and not appear()?
-                DuiApplication::activeWindow()->sceneManager()->appearSceneWindowNow(demoPages[m_currentPageIndex]);
+                MApplication::activeWindow()->sceneManager()->appearSceneWindowNow(demoPages[m_currentPageIndex]);
             }
         }
         beginBenchmark();

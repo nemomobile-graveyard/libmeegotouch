@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,14 +17,14 @@
 **
 ****************************************************************************/
 
-#include <DuiApplication>
-#include <DuiApplicationWindow>
+#include <MApplication>
+#include <MApplicationWindow>
 #include "apscannerpage.h"
 
 int main(int argc, char **argv)
 {
-    DuiApplication app(argc, argv);
-    DuiApplicationWindow window;
+    MApplication app(argc, argv);
+    MApplicationWindow window;
     window.show();
 
     APScannerPage page;

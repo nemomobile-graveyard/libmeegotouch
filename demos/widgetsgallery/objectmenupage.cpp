@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,15 +20,15 @@
 #include "objectmenupage.h"
 
 #include <QDir>
-#include <DuiLocale>
-#include <DuiLabel>
-#include <DuiContainer>
-#include <DuiLinearLayoutPolicy>
-#include <DuiImageWidget>
-#include <DuiAction>
+#include <MLocale>
+#include <MLabel>
+#include <MContainer>
+#include <MLinearLayoutPolicy>
+#include <MImageWidget>
+#include <MAction>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
-#include <DuiContentItem>
+#include <MContentItem>
 
 #include "utils.h"
 
@@ -55,13 +55,13 @@ void ObjectMenuPage::createContent()
     TemplatePage::createContent();
 
 
-    containerFriends = new DuiContainer(centralWidget());
+    containerFriends = new MContainer(centralWidget());
     QGraphicsLinearLayout *friendsLayout = new QGraphicsLinearLayout(containerFriends->centralWidget());
     friendsLayout->setOrientation(Qt::Vertical);
     containerFriends->centralWidget()->setLayout(friendsLayout);
     containerPolicy->addItem(containerFriends);
 
-    containerAlbums = new DuiContainer(centralWidget());
+    containerAlbums = new MContainer(centralWidget());
     QGraphicsLinearLayout *albumLayout = new QGraphicsLinearLayout(Qt::Horizontal, containerAlbums->centralWidget());
     containerAlbums->centralWidget()->setLayout(albumLayout);
     containerPolicy->addItem(containerAlbums);
@@ -79,8 +79,8 @@ void ObjectMenuPage::createContent()
 
     // Fill the friends
     for (int i = 0; i < 3; ++i) {
-        DuiContentItem *item = new DuiContentItem(DuiContentItem::IconAndTwoTextLabels, containerFriends->centralWidget());
-        item->setItemMode(DuiContentItem::Single);
+        MContentItem *item = new MContentItem(MContentItem::IconAndTwoTextLabels, containerFriends->centralWidget());
+        item->setItemMode(MContentItem::Single);
 
         // set content uri to dummy contact.
         item->setProperty("contentURI", QString("a.contact"));
@@ -91,20 +91,20 @@ void ObjectMenuPage::createContent()
         item->setTitle(names[i]);
         item->setSubtitle(numbers[i]);
 
-        DuiAction *action = new DuiAction("Call", item);
-        action->setLocation(DuiAction::ObjectMenuLocation);
+        MAction *action = new MAction("Call", item);
+        action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
-        action = new DuiAction("Send message", item);
-        action->setLocation(DuiAction::ObjectMenuLocation);
+        action = new MAction("Send message", item);
+        action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
-        action = new DuiAction("Open contact card", item);
-        action->setLocation(DuiAction::ObjectMenuLocation);
+        action = new MAction("Open contact card", item);
+        action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
-        action = new DuiAction("Remove", item);
-        action->setLocation(DuiAction::ObjectMenuLocation);
+        action = new MAction("Remove", item);
+        action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
         friendsLayout->addItem(item);
@@ -113,7 +113,7 @@ void ObjectMenuPage::createContent()
 
     // Fill the albums
     for (int i = 0; i < 4; ++i) {
-        DuiImageWidget *image = new DuiImageWidget(containerAlbums->centralWidget());
+        MImageWidget *image = new MImageWidget(containerAlbums->centralWidget());
 
         // set content uri to dummy album
         image->setProperty("contentURI", QString("a.album"));
@@ -127,20 +127,20 @@ void ObjectMenuPage::createContent()
         }
         image->setPreferredSize(92, 92);
 
-        DuiAction *action = new DuiAction("Play", image);
-        action->setLocation(DuiAction::ObjectMenuLocation);
+        MAction *action = new MAction("Play", image);
+        action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
-        action = new DuiAction("Add to playlist", image);
-        action->setLocation(DuiAction::ObjectMenuLocation);
+        action = new MAction("Add to playlist", image);
+        action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
-        action = new DuiAction("Change album art", image);
-        action->setLocation(DuiAction::ObjectMenuLocation);
+        action = new MAction("Change album art", image);
+        action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
-        action = new DuiAction("Remove", image);
-        action->setLocation(DuiAction::ObjectMenuLocation);
+        action = new MAction("Remove", image);
+        action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
         albumLayout->addItem(image);

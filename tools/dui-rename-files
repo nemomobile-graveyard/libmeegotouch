@@ -1,0 +1,57 @@
+#!/bin/bash
+#
+# dui-rename-files - rename DUI source files and directories
+#     DuiFoo     -> MFoo
+#     duifoo.h   -> mfoo.h
+#     duifoo.cpp -> mfoo.cpp
+#     duifoo.pro -> mfoo.pro
+#     duifoo.pri -> mfoo.pri
+# etc.
+#
+# Author: Stefan.Hundhammer@basyskom.de
+
+
+# Rename a number of files or directories
+multi_rename()
+{
+    FILES=$@
+    
+    for file in $FILES ; do
+        basename=$(basename $file)
+        dirname=$(dirname $file)
+        new_name=$(echo $basename | sed -e 's/dui/m/' -e 's/Dui/M/' -e 's/DUI/M/')
+	#echo -e "\tmv $dirname/$basename $dirname/$new_name"
+	git mv $dirname/$basename $dirname/$new_name
+    done
+}
+
+
+#
+# Files
+#
+
+multi_rename $(find . -type f -name "*dui*.h")
+multi_rename $(find . -type f -name "*dui*.cpp")
+multi_rename $(find . -type f -name "dui*.c")
+multi_rename $(find . -type f -name "*_dui*.h")
+multi_rename $(find . -type f -name "*_dui*.cpp")
+multi_rename $(find . -type f -name "*Dui*")
+multi_rename $(find . -type f -name "dui*.pri")
+multi_rename $(find . -type f -name "dui*.pro")
+multi_rename $(find . -type f -name "*_dui*.pri")
+multi_rename $(find . -type f -name "*_dui*.pro")
+
+multi_rename $(find src/corelib/theme -type f -name "iduitheme*.h")
+multi_rename $(find src/translations -type f -name "*dui*.ts")
+multi_rename $(find mkspecs -type f -name "dui*")
+multi_rename $(find *moc -type f -name "dui*")
+
+#
+# Directories
+#
+
+multi_rename $(find . -maxdepth 5 -mindepth 5 -type d -name "*dui*")
+multi_rename $(find . -maxdepth 4 -mindepth 4 -type d -name "*dui*")
+multi_rename $(find . -maxdepth 3 -mindepth 3 -type d -name "*dui*")
+multi_rename $(find . -maxdepth 2 -mindepth 2 -type d -name "*dui*")
+multi_rename $(find . -maxdepth 1 -mindepth 1 -type d -name "*dui*")

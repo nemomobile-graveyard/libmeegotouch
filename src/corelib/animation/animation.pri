@@ -10,7 +10,7 @@ include(scene/scene.pri)
 include(widget/widget.pri)
 
 PUBLIC_HEADERS += \
-    $$ANIMATION_SRC_DIR/duiwidgetanimation.h
+    $$ANIMATION_SRC_DIR/mwidgetanimation.h
 
 SOURCES += \
-    $$ANIMATION_SRC_DIR/duiwidgetanimation.cpp
+    $$ANIMATION_SRC_DIR/mwidgetanimation.cpp

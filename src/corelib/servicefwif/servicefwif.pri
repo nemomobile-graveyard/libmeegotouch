@@ -6,13 +6,13 @@
 SERVICEFWIF_SRC_DIR=./servicefwif
 INCLUDEPATH+=./servicefwif/include
 PUBLIC_HEADERS += \
-    $$SERVICEFWIF_SRC_DIR/duiservicefwbaseif.h \
-    $$SERVICEFWIF_SRC_DIR/include/duiservicefwproxy.h \
+    $$SERVICEFWIF_SRC_DIR/mservicefwbaseif.h \
+    $$SERVICEFWIF_SRC_DIR/include/mservicefwproxy.h \
 
 PRIVATE_HEADERS += \
-    $$SERVICEFWIF_SRC_DIR/duiservicefwbaseif_p.h \
+    $$SERVICEFWIF_SRC_DIR/mservicefwbaseif_p.h \
 
 SOURCES += \
-    $$SERVICEFWIF_SRC_DIR/duiservicefwbaseif.cpp \
-    $$SERVICEFWIF_SRC_DIR/duiservicefwproxy.cpp \
+    $$SERVICEFWIF_SRC_DIR/mservicefwbaseif.cpp \
+    $$SERVICEFWIF_SRC_DIR/mservicefwproxy.cpp \
 

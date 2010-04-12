@@ -6,7 +6,7 @@ SUBDIRS     =  \
     widgetsgallery \
     widgetsgallery/translations \
 
-!contains(DUI_BUILD_FEATURES, minimal) {
+!contains(M_BUILD_FEATURES, minimal) {
     SUBDIRS += \
     animatedlayout \
     animatedlayout/translations \

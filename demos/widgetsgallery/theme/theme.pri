@@ -1,11 +1,11 @@
 
 # install
 basetheme.files = ./theme/base/*
-basetheme.path = $$DUI_THEME_DIR/base/dui/widgetsgallery/
+basetheme.path = $$M_THEME_DIR/base/meegotouch/widgetsgallery/
 basetheme.CONFIG += no_check_exist
 
 develtheme.files = ./theme/devel/*
-develtheme.path = $$DUI_THEME_DIR/devel/dui/widgetsgallery/
+develtheme.path = $$M_THEME_DIR/devel/meegotouch/widgetsgallery/
 develtheme.CONFIG += no_check_exist
 
 INSTALLS += \

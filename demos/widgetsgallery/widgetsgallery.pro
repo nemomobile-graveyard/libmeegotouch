@@ -1,31 +1,31 @@
-DUIROOT = ../..
-include($$DUIROOT/mkspecs/common.pri)
-DUILIB = $$DUIROOT/lib
-DUISRC = $$DUIROOT/src
-DUISRCINCLUDE = $$DUISRC/include
-DUISFWINCLUDE = $$DUIROOT/servicefw/include
+MROOT = ../..
+include($$MROOT/mkspecs/common.pri)
+MLIB = $$MROOT/lib
+MSRC = $$MROOT/src
+MSRCINCLUDE = $$MSRC/include
+MSFWINCLUDE = $$MROOT/servicefw/include
 INCLUDEPATH += . \
-    $$DUISRCINCLUDE \
-    $$DUISRC/corelib
+    $$MSRCINCLUDE \
+    $$MSRC/corelib
 
-QMAKE_LIBDIR += $$DUILIB
+QMAKE_LIBDIR += $$MLIB
 win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework \
-            dui
+            m
     }
-    win32:LIBS += -lduicore0
+    win32:LIBS += -lmeegotouchcore0
 }
 else:LIBS += \
-    -lduicore \
-    -lduiviews \
-    -lduisettings \
-    -lduiextensions \
+    -lmeegotouchcore \
+    -lmeegotouchviews \
+    -lmeegotouchsettings \
+    -lmeegotouchextensions \
 
 TEMPLATE = app
 TARGET = widgetsgallery
-target.path = $$DUI_INSTALL_BIN
+target.path = $$M_INSTALL_BIN
 OBJECTS_DIR = ./.obj
 MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH
@@ -48,8 +48,8 @@ SOURCES += main.cpp \
     applicationmenupage.cpp \
     toolbarpage.cpp \
     textentrypage.cpp \
-    duilistpage.cpp \
-    duigridpage.cpp \
+    mlistpage.cpp \
+    mgridpage.cpp \
     gridmodel.cpp \
     sliderpage.cpp \
     comboboxpage.cpp \
@@ -82,8 +82,8 @@ HEADERS += templatepage.h \
     applicationmenupage.h \
     toolbarpage.h \
     textentrypage.h \
-    duilistpage.h \
-    duigridpage.h \
+    mlistpage.h \
+    mgridpage.h \
     gridmodel.h \
     sliderpage.h \
     comboboxpage.h \
@@ -119,18 +119,18 @@ contains( DEFINES, HAVE_N900 ) {
     PKGCONFIG += libosso-abook-1.0
     CONFIG += release link_pkgconfig
 
-    desktop_icon.path = $$DUI_INSTALL_DATA/icons/hicolor/64x64/hildon
+    desktop_icon.path = $$M_INSTALL_DATA/icons/hicolor/64x64/hildon
     desktop_icon.files = widgetsgallery.png
 
     INSTALLS += desktop_icon
 
-    desktop_entry.path = $$DUI_INSTALL_DATA/applications/hildon
+    desktop_entry.path = $$M_INSTALL_DATA/applications/hildon
     desktop_entry.files = widgetsgallery-n900.desktop
 } else {
     SOURCES += phonebookmodel.cpp
     HEADERS += phonebookmodel.h
 
-    desktop_entry.path = $$DUI_INSTALL_DATA/applications
+    desktop_entry.path = $$M_INSTALL_DATA/applications
     desktop_entry.files = widgetsgallery.desktop
 }
 
@@ -142,15 +142,15 @@ services.commands = cat \
     | \
     sed \
     -e \
-    "s:@DUI_INSTALL_BIN@:$${DUI_INSTALL_BIN}:g" \
+    "s:@M_INSTALL_BIN@:$${M_INSTALL_BIN}:g" \
     > \
     $${myname}.service
 services.files = $$OUT_PWD/$${myname}.service
-services.path = $$DUI_DBUS_SERVICES_DIR
+services.path = $$M_DBUS_SERVICES_DIR
 testsxml.files = tests.xml
-testsxml.path = /usr/share/dui-demos-widgetsgallery-tests/
-DEFINES += CONTACTS_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/contacts/\\\"\"
-DEFINES += IMAGES_DIR=\"\\\"$$DUI_THEME_DIR/devel/dui/widgetsgallery/images/\\\"\"
+testsxml.path = /usr/share/meegotouch-demos-widgetsgallery-tests/
+DEFINES += CONTACTS_DIR=\"\\\"$$M_THEME_DIR/devel/m/widgetsgallery/images/contacts/\\\"\"
+DEFINES += IMAGES_DIR=\"\\\"$$M_THEME_DIR/devel/m/widgetsgallery/images/\\\"\"
 
 data_files.files = data/*
 data_files.path = /usr/share/widgetsgallery/

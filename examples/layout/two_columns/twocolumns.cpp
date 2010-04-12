@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,40 +21,40 @@
  * A simple example of having a two-column layout
  */
 
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
-#include <DuiButton>
-#include <DuiLabel>
-#include <DuiLayout>
-#include <DuiLinearLayoutPolicy>
-#include <DuiTextEdit>
-#include <DuiTheme>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MButton>
+#include <MLabel>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+#include <MTextEdit>
+#include <MTheme>
 #include <QDebug>
 
 int main(int argc, char **argv)
 {
-    DuiApplication app(argc, argv);
-    DuiApplicationWindow window;
-    DuiApplicationPage page;
-    DuiTheme::loadCSS("twocolumns.css");
-    /* Create a DuiLayout that we set the policy for */
-    DuiLayout *layout = new DuiLayout(page.centralWidget());
-    DuiLinearLayoutPolicy *policy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
+    MApplication app(argc, argv);
+    MApplicationWindow window;
+    MApplicationPage page;
+    MTheme::loadCSS("twocolumns.css");
+    /* Create a MLayout that we set the policy for */
+    MLayout *layout = new MLayout(page.centralWidget());
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
 
     /* Setup first layout with a label and text edit */
-    DuiLayout *nameLayout = new DuiLayout;
-    DuiLinearLayoutPolicy *namePolicy = new DuiLinearLayoutPolicy(nameLayout, Qt::Horizontal);
-    DuiLabel *textEditLabel = new DuiLabel("Name:");
-    DuiTextEdit *textEdit = new DuiTextEdit(DuiTextEditModel::MultiLine);
+    MLayout *nameLayout = new MLayout;
+    MLinearLayoutPolicy *namePolicy = new MLinearLayoutPolicy(nameLayout, Qt::Horizontal);
+    MLabel *textEditLabel = new MLabel("Name:");
+    MTextEdit *textEdit = new MTextEdit(MTextEditModel::MultiLine);
     namePolicy->addItem(textEditLabel);  //Add the label and textedit
     namePolicy->addItem(textEdit);
     textEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     /* Setup second layout with a large label */
-    DuiLayout *labelLayout = new DuiLayout;
-    DuiLinearLayoutPolicy *labelPolicy = new DuiLinearLayoutPolicy(labelLayout, Qt::Horizontal);
-    DuiLabel *label = new DuiLabel("Enter the name of the person who likes to listen to music while sorting their socks!");
+    MLayout *labelLayout = new MLayout;
+    MLinearLayoutPolicy *labelPolicy = new MLinearLayoutPolicy(labelLayout, Qt::Horizontal);
+    MLabel *label = new MLabel("Enter the name of the person who likes to listen to music while sorting their socks!");
     label->setObjectName("nameLabel");
     labelPolicy->addItem(label);
     label->setWordWrap(true);

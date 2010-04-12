@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = chainingexampleapp1
-CONFIG += dui # Requires libdui to be installed
+CONFIG += m # Requires libm to be installed
 
 OBJECTS_DIR = ./.obj
 MOC_DIR     = ./.moc

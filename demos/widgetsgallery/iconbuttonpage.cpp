@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,16 +18,16 @@
 ****************************************************************************/
 
 #include "iconbuttonpage.h"
-#include <DuiLabel>
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiApplicationPage>
-#include <DuiGridLayoutPolicy>
-#include <DuiLinearLayoutPolicy>
-#include <DuiButton>
-#include <DuiButtonGroup>
-#include <DuiDebug>
-#include <DuiApplication>
+#include <MLabel>
+#include <MLayout>
+#include <MLocale>
+#include <MApplicationPage>
+#include <MGridLayoutPolicy>
+#include <MLinearLayoutPolicy>
+#include <MButton>
+#include <MButtonGroup>
+#include <MDebug>
+#include <MApplication>
 #include <QGraphicsLinearLayout>
 
 IconButtonPage::IconButtonPage() :
@@ -60,14 +60,14 @@ void IconButtonPage::createContent()
     //containerPolicy->addStretch();
 
     // Icon buttons
-    iconButton1 = new DuiButton();
-    iconButton1->setViewType(DuiButton::iconType);
+    iconButton1 = new MButton();
+    iconButton1->setViewType(MButton::iconType);
     iconButton1->setIconID("icon-l-common-video-playback");
 
     containerPolicy->addItem(iconButton1, Qt::AlignCenter);
 
-    iconButton2 = new DuiButton();
-    iconButton2->setViewType(DuiButton::iconType);
+    iconButton2 = new MButton();
+    iconButton2->setViewType(MButton::iconType);
     iconButton2->setIconID("icon-l-games");
     iconButton2->setMaximumWidth(175);
     

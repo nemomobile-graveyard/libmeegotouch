@@ -4,10 +4,10 @@ SUBDIRS       = \
                 calculator \
                 containertest \
                 helloworld \
-                layout/duiflowlayoutpolicy \
-                layout/duifreestylelayoutpolicy \
-                layout/duilinearlayoutpolicy \
-                layout/duigridlayoutpolicy \
+                layout/mflowlayoutpolicy \
+                layout/mfreestylelayoutpolicy \
+                layout/mlinearlayoutpolicy \
+                layout/mgridlayoutpolicy \
                 layout/multiplepolicies \
                 layout/layout_inside_layout \
                 layout/hidden_widgets \

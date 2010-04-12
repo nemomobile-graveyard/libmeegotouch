@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,13 +21,13 @@
 #define GALLERY_H
 
 #include <QAbstractListModel>
-#include <duiwidgetcontroller.h>
+#include <mwidgetcontroller.h>
 
 class QByteArray;
-class DuiAppletMetaData;
-class DuiDataStore;
-class DuiGrid;
-class DuiDataAccess;
+class MAppletMetaData;
+class MDataStore;
+class MGrid;
+class MDataAccess;
 
 class GalleryModel : public QAbstractListModel
 {
@@ -40,7 +40,7 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
 };
 
-class Gallery : public DuiWidgetController
+class Gallery : public MWidgetController
 {
     Q_OBJECT
     Q_PROPERTY(QString appletIcon READ icon WRITE setIcon)
@@ -49,7 +49,7 @@ class Gallery : public DuiWidgetController
 
 public:
 
-    Gallery(const DuiAppletMetaData &metaData, DuiDataStore &instanceData, DuiDataAccess &settings);
+    Gallery(const MAppletMetaData &metaData, MDataStore &instanceData, MDataAccess &settings);
     virtual ~Gallery();
 
     const QString &icon() const;
@@ -72,7 +72,7 @@ signals:
 
 private:
 
-    DuiGrid *m_grid;
+    MGrid *m_grid;
     QString m_icon;
     QString m_title;
     QString m_text;

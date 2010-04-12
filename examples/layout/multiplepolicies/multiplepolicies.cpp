@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,33 +18,33 @@
 ****************************************************************************/
 
 /*
- * A simple example of a layout with both a DuiLinearLayoutPolicy and a DuiFlowLayoutPolicy.
+ * A simple example of a layout with both a MLinearLayoutPolicy and a MFlowLayoutPolicy.
  */
 
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
-#include <DuiLabel>
-#include <DuiLinearLayoutPolicy>
-#include <DuiFlowLayoutPolicy>
-#include <DuiLayout>
-#include <DuiTheme>
-#include <DuiSceneManager>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MLabel>
+#include <MLinearLayoutPolicy>
+#include <MFlowLayoutPolicy>
+#include <MLayout>
+#include <MTheme>
+#include <MSceneManager>
 #include <QObject>
 
 int main(int argc, char **argv)
 {
-    DuiApplication app(argc, argv);
-    DuiTheme::loadCSS("multiplepolicies.css");
-    DuiApplicationWindow window;
-    DuiApplicationPage page;
+    MApplication app(argc, argv);
+    MTheme::loadCSS("multiplepolicies.css");
+    MApplicationWindow window;
+    MApplicationPage page;
 
-    /* Create a DuiLayout that we set the policies for */
-    DuiLayout *layout = new DuiLayout(page.centralWidget());
-    DuiLinearLayoutPolicy *linearPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
-    DuiFlowLayoutPolicy *flowPolicy = new DuiFlowLayoutPolicy(layout);
+    /* Create a MLayout that we set the policies for */
+    MLayout *layout = new MLayout(page.centralWidget());
+    MLinearLayoutPolicy *linearPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    MFlowLayoutPolicy *flowPolicy = new MFlowLayoutPolicy(layout);
     for (int i = 0; i < 10; ++i) {
-        DuiLabel *label = new DuiLabel(QString("Item %1").arg(i + 1));
+        MLabel *label = new MLabel(QString("Item %1").arg(i + 1));
         label->setAlignment(Qt::AlignCenter);
         label->setObjectName("item"); //Set CSS name for styling
 

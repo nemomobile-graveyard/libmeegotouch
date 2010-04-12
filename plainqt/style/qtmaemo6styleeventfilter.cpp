@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -37,12 +37,12 @@
 #include <QComboBox>
 #include <QMenu>
 
-#include <DuiComponentData>
-#include <duifeedbackplayer.h>
-#include <duideviceprofile.h>
-#include <DuiTheme>
-#include <duibuttonstyle.h>
-#include <DuiScalableImage>
+#include <MComponentData>
+#include <mfeedbackplayer.h>
+#include <mdeviceprofile.h>
+#include <MTheme>
+#include <mbuttonstyle.h>
+#include <MScalableImage>
 
 #include "qtmaemo6clicklabel.h"
 
@@ -66,14 +66,14 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
 
                     dialogProxy->setTitle(widget->windowTitle());
 
-                    const QPixmap *closePixmap = DuiTheme::pixmap("Icon-close", QSize(28, 28));
+                    const QPixmap *closePixmap = MTheme::pixmap("Icon-close", QSize(28, 28));
                     dialogProxy->setPixmap(*closePixmap);
 
                     dialogProxy->showFastMaximized();
                     QtMaemo6StylePrivate::drawWindowBackground(widget);
                     return true;
                 } else if(QMenu* menu = qobject_cast<QMenu*>(widget)) {
-                    //also show menus styled like dui menus, even if they are not called from a menubar
+                    //also show menus styled like m menus, even if they are not called from a menubar
                     QtMaemo6SubMenu *subMenu = new QtMaemo6SubMenu(menu, NULL);
                     QtMaemo6WindowDecoration *decoration = new QtMaemo6WindowDecoration(subMenu, NULL);
                     decoration->showFastMaximized();
@@ -139,10 +139,10 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     case QEvent::MouseButtonDblClick:
     case QEvent::MouseButtonPress: {
         // now send press feedback
-        DuiFeedbackPlayer *feedbackPlayer = DuiComponentData::feedbackPlayer();
+        MFeedbackPlayer *feedbackPlayer = MComponentData::feedbackPlayer();
 
         if (feedbackPlayer) {
-            feedbackPlayer->play(DuiFeedbackPlayer::Press);
+            feedbackPlayer->play(MFeedbackPlayer::Press);
         }
         if(QComboBox* comboBox = qobject_cast<QComboBox*>(widget)) {
             //done in mousePress, because in this way the original popup is completely suppressed
@@ -159,10 +159,10 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
         //qCritical( "eventFilter got mouseRelease" );
 
         // now send release feedback
-        DuiFeedbackPlayer *feedbackPlayer = DuiComponentData::feedbackPlayer();
+        MFeedbackPlayer *feedbackPlayer = MComponentData::feedbackPlayer();
 
         if (feedbackPlayer) {
-            feedbackPlayer->play(DuiFeedbackPlayer::Release);
+            feedbackPlayer->play(MFeedbackPlayer::Release);
         }
     }
     break;

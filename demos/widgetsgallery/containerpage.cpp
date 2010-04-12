@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,11 +18,11 @@
 ****************************************************************************/
 
 #include "containerpage.h"
-#include <DuiApplicationPage>
-#include <DuiMashupCanvas>
-#include <DuiContainer>
-#include <DuiButton>
-#include <DuiLocale>
+#include <MApplicationPage>
+#include <MMashupCanvas>
+#include <MContainer>
+#include <MButton>
+#include <MLocale>
 #include <QGraphicsLinearLayout>
 
 ContainerPage::ContainerPage()
@@ -41,7 +41,7 @@ QString ContainerPage::timedemoTitle()
 
 void ContainerPage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
 
     QGraphicsWidget *panel = centralWidget();
 
@@ -49,7 +49,7 @@ void ContainerPage::createContent()
     panel->setLayout(vbox);
 
 #ifdef HAVE_DBUS
-    DuiMashupCanvas *canvas = new DuiMashupCanvas("ContainerPage");
+    MMashupCanvas *canvas = new MMashupCanvas("ContainerPage");
 
     // canvas->setContainerMode(false);
 

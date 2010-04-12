@@ -1,8 +1,8 @@
 #include "staticpagebenchmark.h"
 #include "timedemo.h"
 
-#include <DuiApplication>
-#include <DuiApplicationPage>
+#include <MApplication>
+#include <MApplicationPage>
 
 #include <QTimer>
 
@@ -11,7 +11,7 @@ namespace
     const int pageDuration = 3000;
 }
 
-StaticPageBenchmark::StaticPageBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo, Dui::OrientationAngle targetOrientationAngle)
+StaticPageBenchmark::StaticPageBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo, M::OrientationAngle targetOrientationAngle)
     : TimedemoBenchmark(applicationPage, timedemo)
     , targetOrientationAngle(targetOrientationAngle)
 {
@@ -38,10 +38,10 @@ void StaticPageBenchmark::stabilizeFps() {
 
 void StaticPageBenchmark::waitPageDuration()
 {
-    formerOrientationAngle = DuiApplication::activeWindow()->orientationAngle();
-    DuiApplication::activeWindow()->setOrientationAngleLocked(false);
-    DuiApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
-    DuiApplication::activeWindow()->setOrientationAngleLocked(true);
+    formerOrientationAngle = MApplication::activeWindow()->orientationAngle();
+    MApplication::activeWindow()->setOrientationAngleLocked(false);
+    MApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
+    MApplication::activeWindow()->setOrientationAngleLocked(true);
 
     timedemo->startTiming();
     QTimer::singleShot(pageDuration, this, SLOT(terminateBenchmark()));
@@ -51,8 +51,8 @@ void StaticPageBenchmark::terminateBenchmark()
 {
     timedemo->stopTiming();
 
-    DuiApplication::activeWindow()->setOrientationAngleLocked(false);
-    DuiApplication::activeWindow()->setOrientationAngle(formerOrientationAngle);
-    DuiApplication::activeWindow()->setOrientationAngleLocked(true);
+    MApplication::activeWindow()->setOrientationAngleLocked(false);
+    MApplication::activeWindow()->setOrientationAngle(formerOrientationAngle);
+    MApplication::activeWindow()->setOrientationAngleLocked(true);
     emit finished();
 }

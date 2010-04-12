@@ -1,23 +1,23 @@
-DUIROOT = ../..
-include($$DUIROOT/mkspecs/common.pri)
+MROOT = ../..
+include($$MROOT/mkspecs/common.pri)
 
-DUILIB = $$DUIROOT/lib
-DUISRC = $$DUIROOT/src
-DUISRCINCLUDE = $$DUISRC/include
-DUISFWINCLUDE = $$DUIROOT/servicefw/include
+MLIB = $$MROOT/lib
+MSRC = $$MROOT/src
+MSRCINCLUDE = $$MSRC/include
+MSFWINCLUDE = $$MROOT/servicefw/include
 INCLUDEPATH += . \
-    $$DUISRCINCLUDE \
-    $$DUISRC
-QMAKE_LIBDIR += $$DUILIB
+    $$MSRCINCLUDE \
+    $$MSRC
+QMAKE_LIBDIR += $$MLIB
 win32|macx { 
     macx { 
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework \
-            dui
+            m
     }
-    win32:LIBS += -lduicore0
+    win32:LIBS += -lmeegotouchcore0
 }
-else:LIBS += -lduicore
+else:LIBS += -lmeegotouchcore
 
 TEMPLATE = app
 TARGET = lifecycle
@@ -43,14 +43,14 @@ HEADERS += mainpage.h \
 # to update the .pm files automatically when running "make"
 # include(../../updateqm.pri)
 # LifeCycle Demo UI style definition
-view_configuration.path = $$DUI_THEME_DIR/../lifecycle/themes
+view_configuration.path = $$M_THEME_DIR/../lifecycle/themes
 view_configuration.files = style/lifecycle.conf
-style_images.path = $$DUI_THEME_DIR/../lifecycle/themes/images
+style_images.path = $$M_THEME_DIR/../lifecycle/themes/images
 style_images.files = images/*.png \
     images/*.jpg
-style_svg.path = $$DUI_THEME_DIR/../lifecycle/themes/svg
+style_svg.path = $$M_THEME_DIR/../lifecycle/themes/svg
 style_svg.files = images/*.svg
-contacts.path = $$DUI_THEME_DIR/../lifecycle/themes/images/contacts
+contacts.path = $$M_THEME_DIR/../lifecycle/themes/images/contacts
 contacts.files = images/contacts/*
 desktop_entry.path = /usr/share/applications
 desktop_entry.files = lifecycle.desktop

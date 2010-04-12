@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,18 +20,18 @@
 #include "continuoussliderpage.h"
 #include <QTimer>
 #include <QDebug>
-#include <DuiButton>
-#include <DuiLocale>
-#include <DuiLabel>
-#include <DuiTheme>
-#include <DuiImage>
-#include <DuiLinearLayoutPolicy>
-#include <DuiGridLayoutPolicy>
-#include <DuiSlider>
-#include <DuiSliderView>
-#include <DuiSeekBar>
-#include <DuiApplication>
-#include <DuiApplicationWindow>
+#include <MButton>
+#include <MLocale>
+#include <MLabel>
+#include <MTheme>
+#include <MImage>
+#include <MLinearLayoutPolicy>
+#include <MGridLayoutPolicy>
+#include <MSlider>
+#include <MSliderView>
+#include <MSeekBar>
+#include <MApplication>
+#include <MApplicationWindow>
 
 ContinuousSliderPage::ContinuousSliderPage()
     : TemplatePage(),
@@ -51,23 +51,23 @@ ContinuousSliderPage::~ContinuousSliderPage()
 
 void ContinuousSliderPage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
 
-    DuiLayout *layout = new DuiLayout();
+    MLayout *layout = new MLayout();
     centralWidget()->setLayout(layout);
 
-    l_policy = new DuiGridLayoutPolicy(layout);
+    l_policy = new MGridLayoutPolicy(layout);
     l_policy->setContentsMargins(32, 32, 32, 32);
     l_policy->setRowSpacing(3, 80);
 
-    p_policy = new DuiGridLayoutPolicy(layout);
+    p_policy = new MGridLayoutPolicy(layout);
     p_policy->setContentsMargins(32, 32, 32, 32);
     p_policy->setRowSpacing(5, 80);
 
-    label1 = new DuiLabel(this);
+    label1 = new MLabel(this);
     label1->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    DuiSlider *slider1 = new DuiSlider(this);
+    MSlider *slider1 = new MSlider(this);
     slider1->setObjectName("wgSlider1");
     slider1->setThumbLabelIconID("Icon-music");
     slider1->setMinLabelIconID("Icon-home");
@@ -78,18 +78,18 @@ void ContinuousSliderPage::createContent()
     slider1->setOrientation(Qt::Horizontal);
     slider1->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    label2  = new DuiLabel(this);
+    label2  = new MLabel(this);
     label2->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    DuiSlider *slider2 = new DuiSlider(this);
+    MSlider *slider2 = new MSlider(this);
     slider2->setObjectName("wgSlider2");
     slider2->setOrientation(Qt::Horizontal);
     slider2->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    label3  = new DuiLabel(this);
+    label3  = new MLabel(this);
     label3->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    slider3 = new DuiSlider(this);
+    slider3 = new MSlider(this);
     slider3->setObjectName("wgSlider3");
     slider3->setOrientation(Qt::Horizontal);
     slider3->setMinLabelVisible(true);
@@ -98,10 +98,10 @@ void ContinuousSliderPage::createContent()
     slider3->setMaxLabel("max");
     slider3->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    label4  = new DuiLabel(this);
+    label4  = new MLabel(this);
     label4->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    seekbar4 = new DuiSeekBar(this);
+    seekbar4 = new MSeekBar(this);
     seekbar4->setObjectName("wgSeekBar4");
     seekbar4->setOrientation(Qt::Horizontal);
     //% "Min"
@@ -114,7 +114,7 @@ void ContinuousSliderPage::createContent()
     seekbar4->setMaxLabelVisible(true);
     seekbar4->setThumbLabelVisible(true);
     seekbar4->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
-    seekbar4->setContentType(DuiSeekBarModel::ContentOnline);
+    seekbar4->setContentType(MSeekBarModel::ContentOnline);
     seekbar4->setLoadedContentMinimum(20);
     seekbar4->setLoadedContentMaximum(50);
 
@@ -136,10 +136,10 @@ void ContinuousSliderPage::createContent()
     p_policy->addItem(label4,  6, 0, 1, 2);
     p_policy->addItem(seekbar4, 7, 0, 1, 2);
 
-    connect(DuiApplication::activeApplicationWindow(),
-            SIGNAL(orientationChanged(Dui::Orientation)),
+    connect(MApplication::activeApplicationWindow(),
+            SIGNAL(orientationChanged(M::Orientation)),
             this,
-            SLOT(pageRotated(Dui::Orientation)));
+            SLOT(pageRotated(M::Orientation)));
 
     retranslateUi();
 }
@@ -173,15 +173,15 @@ void ContinuousSliderPage::retranslateUi()
     update();
 }
 
-void ContinuousSliderPage::pageRotated(const Dui::Orientation &orientation)
+void ContinuousSliderPage::pageRotated(const M::Orientation &orientation)
 {
-    QSize s = DuiApplication::activeApplicationWindow()->visibleSceneSize();
+    QSize s = MApplication::activeApplicationWindow()->visibleSceneSize();
 
     centralWidget()->setMinimumSize(s);
     centralWidget()->setMaximumSize(s);
     centralWidget()->setPreferredSize(s);
 
-    if (orientation == Dui::Portrait) {
+    if (orientation == M::Portrait) {
         p_policy->activate();
     } else {
         l_policy->activate();
@@ -200,16 +200,16 @@ void ContinuousSliderPage::rotater()
 
 void ContinuousSliderPage::rotate(int d)
 {
-    static const Dui::OrientationAngle angles[] = {
-        Dui::Angle0,
-        Dui::Angle90,
-        Dui::Angle180,
-        Dui::Angle270
+    static const M::OrientationAngle angles[] = {
+        M::Angle0,
+        M::Angle90,
+        M::Angle180,
+        M::Angle270
     };
 
     static int a = 0;
 
     a = (a + d) & 3;
 
-    DuiApplication::activeApplicationWindow()->setOrientationAngle(angles[a]);
+    MApplication::activeApplicationWindow()->setOrientationAngle(angles[a]);
 }

@@ -1,48 +1,48 @@
-DUIGEN_STYLE_HEADERS += \
-    settingslanguage/duisettingslanguagesettingsfactorystyle.h
+MGEN_STYLE_HEADERS += \
+    settingslanguage/msettingslanguagesettingsfactorystyle.h
 
 PUBLIC_HEADERS += \
-    $$DUIGEN_STYLE_HEADERS \
-    settingslanguage/duisettingslanguageparser.h \
-    settingslanguage/duisettingslanguagebinary.h \
-    settingslanguage/duisettingslanguagewidget.h \
-    settingslanguage/duisettingslanguagewidgetfactory.h \
-    settingslanguage/duisettingslanguagesettingsfactory.h \
-    settingslanguage/duisettingslanguageselectionfactory.h \
-    settingslanguage/duisettingslanguagetextfactory.h \
-    settingslanguage/duisettingslanguageintegerfactory.h \
-    settingslanguage/duisettingslanguageselectioncontroller.h \
-    settingslanguage/duisettingslanguagetextcontroller.h \
-    settingslanguage/duisettingslanguageintegercontroller.h \
-    settingslanguage/duisettingslanguagenode.h \
-    settingslanguage/duisettingslanguageoption.h \
-    settingslanguage/duisettingslanguageselection.h \
-    settingslanguage/duisettingslanguagesettings.h \
-    settingslanguage/duisettingslanguagetext.h \
-    settingslanguage/duisettingslanguagebooleancontroller.h \
-    settingslanguage/duisettingslanguagebooleanfactory.h \
-    settingslanguage/duisettingslanguageboolean.h \
-    settingslanguage/duisettingslanguageinteger.h \
-    settingslanguage/duisettingslanguagegroup.h
+    $$MGEN_STYLE_HEADERS \
+    settingslanguage/msettingslanguageparser.h \
+    settingslanguage/msettingslanguagebinary.h \
+    settingslanguage/msettingslanguagewidget.h \
+    settingslanguage/msettingslanguagewidgetfactory.h \
+    settingslanguage/msettingslanguagesettingsfactory.h \
+    settingslanguage/msettingslanguageselectionfactory.h \
+    settingslanguage/msettingslanguagetextfactory.h \
+    settingslanguage/msettingslanguageintegerfactory.h \
+    settingslanguage/msettingslanguageselectioncontroller.h \
+    settingslanguage/msettingslanguagetextcontroller.h \
+    settingslanguage/msettingslanguageintegercontroller.h \
+    settingslanguage/msettingslanguagenode.h \
+    settingslanguage/msettingslanguageoption.h \
+    settingslanguage/msettingslanguageselection.h \
+    settingslanguage/msettingslanguagesettings.h \
+    settingslanguage/msettingslanguagetext.h \
+    settingslanguage/msettingslanguagebooleancontroller.h \
+    settingslanguage/msettingslanguagebooleanfactory.h \
+    settingslanguage/msettingslanguageboolean.h \
+    settingslanguage/msettingslanguageinteger.h \
+    settingslanguage/msettingslanguagegroup.h
 
 SOURCES += \
-    settingslanguage/duisettingslanguageparser.cpp \
-    settingslanguage/duisettingslanguagebinary.cpp \
-    settingslanguage/duisettingslanguagewidget.cpp \
-    settingslanguage/duisettingslanguagewidgetfactory.cpp \
-    settingslanguage/duisettingslanguagesettingsfactory.cpp \
-    settingslanguage/duisettingslanguageselectionfactory.cpp \
-    settingslanguage/duisettingslanguagetextfactory.cpp \
-    settingslanguage/duisettingslanguageintegerfactory.cpp \
-    settingslanguage/duisettingslanguageselectioncontroller.cpp \
-    settingslanguage/duisettingslanguagetextcontroller.cpp \
-    settingslanguage/duisettingslanguageintegercontroller.cpp \
-    settingslanguage/duisettingslanguagenode.cpp \
-    settingslanguage/duisettingslanguageoption.cpp \
-    settingslanguage/duisettingslanguageselection.cpp \
-    settingslanguage/duisettingslanguagesettings.cpp \
-    settingslanguage/duisettingslanguagetext.cpp \
-    settingslanguage/duisettingslanguagebooleancontroller.cpp \
-    settingslanguage/duisettingslanguagebooleanfactory.cpp \
-    settingslanguage/duisettingslanguageboolean.cpp \
-    settingslanguage/duisettingslanguageinteger.cpp
+    settingslanguage/msettingslanguageparser.cpp \
+    settingslanguage/msettingslanguagebinary.cpp \
+    settingslanguage/msettingslanguagewidget.cpp \
+    settingslanguage/msettingslanguagewidgetfactory.cpp \
+    settingslanguage/msettingslanguagesettingsfactory.cpp \
+    settingslanguage/msettingslanguageselectionfactory.cpp \
+    settingslanguage/msettingslanguagetextfactory.cpp \
+    settingslanguage/msettingslanguageintegerfactory.cpp \
+    settingslanguage/msettingslanguageselectioncontroller.cpp \
+    settingslanguage/msettingslanguagetextcontroller.cpp \
+    settingslanguage/msettingslanguageintegercontroller.cpp \
+    settingslanguage/msettingslanguagenode.cpp \
+    settingslanguage/msettingslanguageoption.cpp \
+    settingslanguage/msettingslanguageselection.cpp \
+    settingslanguage/msettingslanguagesettings.cpp \
+    settingslanguage/msettingslanguagetext.cpp \
+    settingslanguage/msettingslanguagebooleancontroller.cpp \
+    settingslanguage/msettingslanguagebooleanfactory.cpp \
+    settingslanguage/msettingslanguageboolean.cpp \
+    settingslanguage/msettingslanguageinteger.cpp

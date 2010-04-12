@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,12 +18,12 @@
 ****************************************************************************/
 
 #include "ut_translations.h"
-#include <DuiGConfItem>
-#include <DuiApplication>
+#include <MGConfItem>
+#include <MApplication>
 
 bool confIsDown()
 {
-    DuiGConfItem languageItem("/Dui/i18n/Language");
+    MGConfItem languageItem("/M/i18n/Language");
     QString originalValue = languageItem.value().toString();
     int skipConf = 0;
 
@@ -44,11 +44,11 @@ void Ut_Translations::initTestCase()
 {
     static int argc = 0;
     static char *argv[1] = { (char *) "ut_translations" };
-    qap = new DuiApplication(argc, argv, "test");
+    qap = new MApplication(argc, argv, "test");
     // could also use: QCoreApplication::applicationDirPath()
     // but it seems to have some problems under scratchbox
-    DuiLocale::addTranslationPath(qApp->applicationDirPath() + "/translations-tr");
-    DuiLocale::addTranslationPath(qApp->applicationDirPath() + "/translations-qttrid");
+    MLocale::addTranslationPath(qApp->applicationDirPath() + "/translations-tr");
+    MLocale::addTranslationPath(qApp->applicationDirPath() + "/translations-qttrid");
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 }
 
@@ -90,9 +90,9 @@ void Ut_Translations::testinstallTrCatalogThenUseQtTr()
     QFETCH(QString, translation);
 
     QString context("Ut_Translations");
-    DuiLocale locale(localeName);
+    MLocale locale(localeName);
     locale.removeTrCatalog(catalog);
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated now:
     QCOMPARE(locale.translate(qPrintable(context), qPrintable(string_id)),
              string_id);
@@ -108,13 +108,13 @@ void Ut_Translations::testinstallTrCatalogThenUseQtTr()
              translation);
     // Make the locale the default to enable the message catalog also for
     // tr():
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Note that the context for tr() is automatically
     // "Ut_Translations"
     QCOMPARE(tr(qPrintable(string_id)), translation);
 
     locale.removeTrCatalog(catalog);
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated again now:
     QCOMPARE(locale.translate(qPrintable(context), qPrintable(string_id)),
              string_id);
@@ -205,11 +205,11 @@ void Ut_Translations::testQtTrId()
     QFETCH(QString, engEnglish);
     QFETCH(QString, translation);
 
-    DuiLocale locale(localeName);
+    MLocale locale(localeName);
     // removes the catalogs for both the engineering English and the
     // real translation:
     locale.removeTrCatalog("ut_translations-qttrid");
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated now:
     QCOMPARE(qtTrId(qPrintable(messageId)), messageId);
 
@@ -217,7 +217,7 @@ void Ut_Translations::testQtTrId()
     locale.installTrCatalog("ut_translations-qttrid.qm");
     QCOMPARE(locale.translate("", qPrintable(messageId)), engEnglish);
 
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // now qtTrId should return the engineering English:
     QCOMPARE(qtTrId(qPrintable(messageId)), engEnglish);
 
@@ -225,7 +225,7 @@ void Ut_Translations::testQtTrId()
     locale.installTrCatalog("ut_translations-qttrid");
     QCOMPARE(locale.translate("", qPrintable(messageId)), translation);
 
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // now qtTrId should return the real translation, unless
     // the message is not translated at all:
     QCOMPARE(qtTrId(qPrintable(messageId)), translation);
@@ -233,7 +233,7 @@ void Ut_Translations::testQtTrId()
     // removes the catalogs for both the engineering English and the
     // real translation:
     locale.removeTrCatalog("ut_translations-qttrid");
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated again now:
     QCOMPARE(locale.translate("", qPrintable(messageId)), messageId);
     QCOMPARE(qtTrId(qPrintable(messageId)), messageId);
@@ -288,11 +288,11 @@ void Ut_Translations::testQtTrIdLocalizedNumbers()
     QFETCH(QString, engEnglish);
     QFETCH(QString, translation);
 
-    DuiLocale locale(localeName);
+    MLocale locale(localeName);
     // removes the catalogs for both the engineering English and the
     // real translation:
     locale.removeTrCatalog("ut_translations-qttrid");
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated now:
     QCOMPARE(qtTrId(qPrintable(messageId)).arg(number), messageId.arg(number));
 
@@ -301,7 +301,7 @@ void Ut_Translations::testQtTrIdLocalizedNumbers()
     QCOMPARE(locale.translate("", qPrintable(messageId)).arg(number),
              engEnglish.arg(number));
 
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // now qtTrId should return the engineering English:
     QCOMPARE(qtTrId(qPrintable(messageId)).arg(number), engEnglish.arg(number));
 
@@ -309,7 +309,7 @@ void Ut_Translations::testQtTrIdLocalizedNumbers()
     locale.installTrCatalog("ut_translations-qttrid");
     QCOMPARE(locale.translate("", qPrintable(messageId)).arg(number), translation);
 
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // now qtTrId should return the real translation, unless
     // the message is not translated at all:
     QCOMPARE(qtTrId(qPrintable(messageId)).arg(number), translation);
@@ -317,7 +317,7 @@ void Ut_Translations::testQtTrIdLocalizedNumbers()
     // removes the catalogs for both the engineering English and the
     // real translation:
     locale.removeTrCatalog("ut_translations-qttrid");
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated again now:
     QCOMPARE(qtTrId(qPrintable(messageId)).arg(number), messageId.arg(number));
 }
@@ -552,19 +552,19 @@ void Ut_Translations::testQtTrIdLocalizedNumbersPlural()
     QString messageIdNumberReplaced = messageId;
     messageIdNumberReplaced.replace("%Ln", QString::number(number));
 
-    DuiLocale enLocaleWithoutTranslations("en_GB");
+    MLocale enLocaleWithoutTranslations("en_GB");
     // removes the catalogs for both the engineering English and the
     // real translation:
     enLocaleWithoutTranslations.removeTrCatalog("ut_translations-qttrid");
-    DuiLocale::setDefault(enLocaleWithoutTranslations);
+    MLocale::setDefault(enLocaleWithoutTranslations);
     // Everything should be untranslated now:
     QCOMPARE(qtTrId(qPrintable(messageId), number), messageIdNumberReplaced);
 
-    DuiLocale locale(localeName);
+    MLocale locale(localeName);
     // installs the catalog for the “Engineering English”:
     locale.installTrCatalog("ut_translations-qttrid.qm");
     QCOMPARE(locale.translate("", qPrintable(messageId), "", number), engEnglish);
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
 
     // now qtTrId should return the engineering English:
     QCOMPARE(qtTrId(qPrintable(messageId), number), engEnglishLocalizedNumber);
@@ -573,14 +573,14 @@ void Ut_Translations::testQtTrIdLocalizedNumbersPlural()
     locale.installTrCatalog("ut_translations-qttrid");
     QCOMPARE(locale.translate("", qPrintable(messageId), "", number), translation);
 
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // now qtTrId should return the real translation, unless
     // the message is not translated at all:
     QCOMPARE(qtTrId(qPrintable(messageId), number), translation);
 
     // removes the catalogs for both the engineering English and the
     // real translation again:
-    DuiLocale::setDefault(enLocaleWithoutTranslations);
+    MLocale::setDefault(enLocaleWithoutTranslations);
     // Everything should be untranslated again now:
     QCOMPARE(qtTrId(qPrintable(messageId), number), messageIdNumberReplaced);
 }
@@ -613,11 +613,11 @@ void Ut_Translations::testQtTrIdMultipleVariable()
     QFETCH(QString, engEnglish);
     QFETCH(QString, translation);
 
-    DuiLocale locale(localeName);
+    MLocale locale(localeName);
     // removes the catalogs for both the engineering English and the
     // real translation:
     locale.removeTrCatalog("ut_translations-qttrid");
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated now:
     QCOMPARE(qtTrId(qPrintable(messageId)).arg(variable1).arg(variable2),
              messageId.arg(variable1).arg(variable2));
@@ -628,7 +628,7 @@ void Ut_Translations::testQtTrIdMultipleVariable()
              .arg(variable1).arg(variable2),
              engEnglish.arg(variable1).arg(variable2));
 
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // now qtTrId should return the engineering English:
     QCOMPARE(qtTrId(qPrintable(messageId)).arg(variable1).arg(variable2),
              engEnglish.arg(variable1).arg(variable2));
@@ -639,7 +639,7 @@ void Ut_Translations::testQtTrIdMultipleVariable()
                  "", qPrintable(messageId)).arg(variable1).arg(variable2),
              translation);
 
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // now qtTrId should return the real translation, unless
     // the message is not translated at all:
     QCOMPARE(qtTrId(qPrintable(messageId)).arg(variable1).arg(variable2),
@@ -648,7 +648,7 @@ void Ut_Translations::testQtTrIdMultipleVariable()
     // removes the catalogs for both the engineering English and the
     // real translation:
     locale.removeTrCatalog("ut_translations-qttrid");
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated again now:
     QCOMPARE(qtTrId(qPrintable(messageId)).arg(variable1).arg(variable2),
              messageId.arg(variable1).arg(variable2));
@@ -704,11 +704,11 @@ void Ut_Translations::testQtTrIdMultipleVariableWithPlural()
     QString messageIdNumberReplaced = messageId;
     messageIdNumberReplaced.replace("%Ln", QString::number(number));
 
-    DuiLocale locale(localeName);
+    MLocale locale(localeName);
     // removes the catalogs for both the engineering English and the
     // real translation:
     locale.removeTrCatalog("ut_translations-qttrid");
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated now:
     QCOMPARE(qtTrId(qPrintable(messageId), number).arg(variable),
              messageIdNumberReplaced.arg(variable));
@@ -718,7 +718,7 @@ void Ut_Translations::testQtTrIdMultipleVariableWithPlural()
     QCOMPARE(locale.translate("", qPrintable(messageId), "", number).arg(variable),
              engEnglish);
 
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // now qtTrId should return the engineering English:
     QCOMPARE(qtTrId(qPrintable(messageId), number).arg(variable), engEnglish);
 
@@ -727,7 +727,7 @@ void Ut_Translations::testQtTrIdMultipleVariableWithPlural()
     QCOMPARE(locale.translate("", qPrintable(messageId), "", number).arg(variable),
              translation);
 
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // now qtTrId should return the real translation, unless
     // the message is not translated at all:
     QCOMPARE(qtTrId(qPrintable(messageId), number).arg(variable),
@@ -736,7 +736,7 @@ void Ut_Translations::testQtTrIdMultipleVariableWithPlural()
     // removes the catalogs for both the engineering English and the
     // real translation again:
     locale.removeTrCatalog("ut_translations-qttrid");
-    DuiLocale::setDefault(locale);
+    MLocale::setDefault(locale);
     // Everything should be untranslated now:
     QCOMPARE(qtTrId(qPrintable(messageId), number).arg(variable),
              messageIdNumberReplaced.arg(variable));
@@ -755,31 +755,31 @@ void Ut_Translations::testGettingTheDefaultLocaleFromTheEnvironment()
 {
     QFETCH(QString, localeName);
 
-    DuiLocale::s_systemDefault = NULL;
+    MLocale::s_systemDefault = NULL;
     qputenv("LANG", qPrintable(localeName));
     QCOMPARE(QString(qgetenv("LANG")), QString(localeName));
 
     QString languageItemOriginalValue("");
-    DuiLocale *locale;
+    MLocale *locale;
     if (confIsDown()) {
         // gconf is not available. Therefore,
-        // DuiLocale::createSystemDuiLocale() will get the language
+        // MLocale::createSystemMLocale() will get the language
         // from the LANG variable.
-        locale = new DuiLocale();
+        locale = new MLocale();
     } else {
         // gconf is available. Therefore,
-        // DuiLocale::createSystemDuiLocale() would get the language
+        // MLocale::createSystemMLocale() would get the language
         // from gconf. But if the language string it gets from gconf
         // is empty, it falls back to getting the language from the
         // LANG variable, as in the case when gconf is not available
         // at all. Therefore, we set the language in gconf to the
         // empty string temporarily to test whether getting the locale
         // from the LANG variable works:
-        DuiGConfItem languageItem("/Dui/i18n/Language");
+        MGConfItem languageItem("/M/i18n/Language");
         QString languageItemOriginalValue = languageItem.value().toString();
         languageItem.set("");
         QCOMPARE(languageItem.value().toString(), QString(""));
-        locale = new DuiLocale();
+        locale = new MLocale();
         languageItem.set(languageItemOriginalValue);
     }
 
@@ -788,41 +788,41 @@ void Ut_Translations::testGettingTheDefaultLocaleFromTheEnvironment()
 
 void Ut_Translations::testCreatingAndDestroyingLocales()
 {
-    DuiLocale locale1;
-    DuiLocale locale2("fi_FI");
+    MLocale locale1;
+    MLocale locale2("fi_FI");
     QCOMPARE(locale2.name(), QString("fi_FI"));
-    DuiLocale::setDefault(locale2);
+    MLocale::setDefault(locale2);
     locale1.formatNumber(13);
-    DuiLocale locale3;
-    DuiLocale locale4("en_GB");
+    MLocale locale3;
+    MLocale locale4("en_GB");
     QCOMPARE(locale4.name(), QString("en_GB"));
     {
-        DuiLocale locale1;
+        MLocale locale1;
     }
     {
-        DuiLocale locale1;
+        MLocale locale1;
         {
-            DuiLocale locale2("fi");
+            MLocale locale2("fi");
         }
         {
-            DuiLocale locale3;
+            MLocale locale3;
         }
-        DuiLocale::setDefault(locale1);
+        MLocale::setDefault(locale1);
     }
 }
 
-void Ut_Translations::benchmarkDuiLocaleConstructorAndDelete()
+void Ut_Translations::benchmarkMLocaleConstructorAndDelete()
 {
     QBENCHMARK {
-        DuiLocale *locale = new DuiLocale("de_DE");
+        MLocale *locale = new MLocale("de_DE");
         delete locale;
     }
 }
 
-void Ut_Translations::benchmarkDuiLocaleConstructorAndDeleteStack()
+void Ut_Translations::benchmarkMLocaleConstructorAndDeleteStack()
 {
     QBENCHMARK {
-        DuiLocale locale("de_DE");
+        MLocale locale("de_DE");
     }
 }
 
@@ -841,10 +841,10 @@ void Ut_Translations::benchmarkQLocaleConstructorAndDeleteStack()
     }
 }
 
-void Ut_Translations::benchmarkDuiLocaleAssignmentOperator()
+void Ut_Translations::benchmarkMLocaleAssignmentOperator()
 {
-    DuiLocale *locale1 = new DuiLocale("de_DE");
-    DuiLocale *locale2 = new DuiLocale();
+    MLocale *locale1 = new MLocale("de_DE");
+    MLocale *locale2 = new MLocale();
     QBENCHMARK {
         *locale2 = *locale1;
     }
@@ -852,10 +852,10 @@ void Ut_Translations::benchmarkDuiLocaleAssignmentOperator()
     delete locale2;
 }
 
-void Ut_Translations::benchmarkDuiLocaleAssignmentOperatorStack()
+void Ut_Translations::benchmarkMLocaleAssignmentOperatorStack()
 {
-    DuiLocale locale1("de_DE");
-    DuiLocale locale2;
+    MLocale locale1("de_DE");
+    MLocale locale2;
     QBENCHMARK {
         locale2 = locale1;
     }
@@ -881,21 +881,21 @@ void Ut_Translations::benchmarkQLocaleAssignmentOperatorStack()
     }
 }
 
-void Ut_Translations::benchmarkDuiLocaleCopyConstructorAndDelete()
+void Ut_Translations::benchmarkMLocaleCopyConstructorAndDelete()
 {
-    DuiLocale *locale1 = new DuiLocale("de_DE");
+    MLocale *locale1 = new MLocale("de_DE");
     QBENCHMARK {
-        DuiLocale *locale2 = new DuiLocale(*locale1);
+        MLocale *locale2 = new MLocale(*locale1);
         delete locale2;
     }
     delete locale1;
 }
 
-void Ut_Translations::benchmarkDuiLocaleCopyConstructorAndDeleteStack()
+void Ut_Translations::benchmarkMLocaleCopyConstructorAndDeleteStack()
 {
-    DuiLocale locale1("de_DE");
+    MLocale locale1("de_DE");
     QBENCHMARK {
-        DuiLocale locale2(locale1);
+        MLocale locale2(locale1);
     }
 }
 

@@ -6,31 +6,31 @@
 ANIMATIONS_SCENE_SRC_DIR=./animation/scene
 
 PUBLIC_HEADERS += \
-    $$ANIMATIONS_SCENE_SRC_DIR/duiorientationanimation.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duibasicorientationanimation.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duifliporientationanimation.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duiscenewindowanimation.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duinavigationbaranimation.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duinotificationanimation.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duiscenefadeanimation.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duipageswitchanimation.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/morientationanimation.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mfliporientationanimation.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mscenewindowanimation.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mnavigationbaranimation.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mnotificationanimation.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mscenefadeanimation.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation.h \
 
 PRIVATE_HEADERS += \
-    $$ANIMATIONS_SCENE_SRC_DIR/duiorientationanimation_p.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duibasicorientationanimation_p.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duifliporientationanimation_p.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duiscenewindowanimation_p.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duinavigationbaranimation_p.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duinotificationanimation_p.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duiscenefadeanimation_p.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/duipageswitchanimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/morientationanimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mfliporientationanimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mscenewindowanimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mnavigationbaranimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mnotificationanimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mscenefadeanimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation_p.h \
 
 SOURCES += \
-    $$ANIMATIONS_SCENE_SRC_DIR/duiorientationanimation.cpp \
-    $$ANIMATIONS_SCENE_SRC_DIR/duibasicorientationanimation.cpp \
-    $$ANIMATIONS_SCENE_SRC_DIR/duifliporientationanimation.cpp \
-    $$ANIMATIONS_SCENE_SRC_DIR/duiscenewindowanimation.cpp \
-    $$ANIMATIONS_SCENE_SRC_DIR/duinavigationbaranimation.cpp \
-    $$ANIMATIONS_SCENE_SRC_DIR/duinotificationanimation.cpp \
-    $$ANIMATIONS_SCENE_SRC_DIR/duiscenefadeanimation.cpp \
-    $$ANIMATIONS_SCENE_SRC_DIR/duipageswitchanimation.cpp \
+    $$ANIMATIONS_SCENE_SRC_DIR/morientationanimation.cpp \
+    $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation.cpp \
+    $$ANIMATIONS_SCENE_SRC_DIR/mfliporientationanimation.cpp \
+    $$ANIMATIONS_SCENE_SRC_DIR/mscenewindowanimation.cpp \
+    $$ANIMATIONS_SCENE_SRC_DIR/mnavigationbaranimation.cpp \
+    $$ANIMATIONS_SCENE_SRC_DIR/mnotificationanimation.cpp \
+    $$ANIMATIONS_SCENE_SRC_DIR/mscenefadeanimation.cpp \
+    $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation.cpp \

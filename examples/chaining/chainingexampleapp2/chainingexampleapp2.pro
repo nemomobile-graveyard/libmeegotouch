@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = chainingexampleapp2
-CONFIG += dui # Requires libdui to be installed
+CONFIG += m # Requires libm to be installed
 
 OBJECTS_DIR = ./.obj
 MOC_DIR     = ./.moc
@@ -12,7 +12,7 @@ DEPENDPATH += $$INCLUDEPATH
 LIBS += \
 
 system(cp ../chainingexampleinterface/com.nokia.ChainingExampleInterface.xml .)
-system(dui-servicefwgen -a com.nokia.ChainingExampleInterface)
+system(m-servicefwgen -a com.nokia.ChainingExampleInterface)
 
 QMAKE_CLEAN += \
     com.nokia.ChainingExampleInterface.xml \

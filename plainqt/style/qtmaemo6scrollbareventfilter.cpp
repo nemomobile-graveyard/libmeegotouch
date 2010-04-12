@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -30,12 +30,12 @@
 #include <QPaintEvent>
 #include <QDebug>
 
-#include <duiapplicationpagestyle.h>
-#include <duipositionindicatorstyle.h>
-#include <duiwidgetstyle.h>
-#include <duiwidgetfadeinanimationstyle.h>
-#include <duiwidgetfadeoutanimationstyle.h>
-#include <DuiScalableImage>
+#include <mapplicationpagestyle.h>
+#include <mpositionindicatorstyle.h>
+#include <mwidgetstyle.h>
+#include <mwidgetfadeinanimationstyle.h>
+#include <mwidgetfadeoutanimationstyle.h>
+#include <MScalableImage>
 
 AbstractScrollAreaThumbView::AbstractScrollAreaThumbView(QWidget *parent /*= NULL*/)
     : QLabel(parent)
@@ -225,9 +225,9 @@ void QtMaemo6ScrollBarEventFilter::generateScrollAreaThumb(QAbstractScrollArea *
                     pixmap.fill(Qt::white);
                     QPainter p(&pixmap);
 
-                    const DuiApplicationPageStyle *style =
-                        static_cast<const DuiApplicationPageStyle *>(
-                            QtMaemo6StylePrivate::duiStyle(QStyle::State_Active, "DuiApplicationPageStyle", ""));
+                    const MApplicationPageStyle *style =
+                        static_cast<const MApplicationPageStyle *>(
+                            QtMaemo6StylePrivate::mStyle(QStyle::State_Active, "MApplicationPageStyle", ""));
 
                     p.drawPixmap(pixmap.rect(), *style->backgroundImage()->pixmap());
 
@@ -328,17 +328,17 @@ void QtMaemo6ScrollBarEventFilter::fadeInOutAnimation(QWidget *w, const char *pr
             }
         }
     } else {
-        const DuiPositionIndicatorStyle *style =
-            static_cast<const DuiPositionIndicatorStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Active,
-                    "DuiPositionIndicatorStyle"));
+        const MPositionIndicatorStyle *style =
+            static_cast<const MPositionIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                    "MPositionIndicatorStyle"));
 
-        const DuiWidgetFadeInAnimationStyle *fadeInStyle =
-            static_cast<const DuiWidgetFadeInAnimationStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Active,
-                    "DuiWidgetFadeInAnimationStyle"));
+        const MWidgetFadeInAnimationStyle *fadeInStyle =
+            static_cast<const MWidgetFadeInAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                    "MWidgetFadeInAnimationStyle"));
 
-        const DuiWidgetFadeOutAnimationStyle *fadeOutStyle =
-            static_cast<const DuiWidgetFadeOutAnimationStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Active,
-                    "DuiWidgetFadeOutAnimationStyle"));
+        const MWidgetFadeOutAnimationStyle *fadeOutStyle =
+            static_cast<const MWidgetFadeOutAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                    "MWidgetFadeOutAnimationStyle"));
 
         QSequentialAnimationGroup *animationGroup = new QSequentialAnimationGroup();
         QPropertyAnimation *fadeIn = new QPropertyAnimation(animationGroup);

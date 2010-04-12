@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -27,8 +27,8 @@
 
 #include "testwidget.h"
 
-TestWidget::TestWidget(DuiWidget *parent) :
-    DuiWidgetController(new TestWidgetModel, parent)
+TestWidget::TestWidget(MWidget *parent) :
+    MWidgetController(new TestWidgetModel, parent)
 {
 
 }

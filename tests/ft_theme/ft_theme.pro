@@ -1,7 +1,7 @@
 include(../common_top.pri)
 TARGET = ft_theme
 QT += dbus svg network
-LIBRARYPATH += $$DUISRCDIR
+LIBRARYPATH += $$MSRCDIR
 
 SOURCES += \
     ft_theme.cpp \
@@ -14,6 +14,6 @@ HEADERS += \
     testthemedaemon.h \
     testview.h \
     testview2.h \
-    $$DUISRCDIR/corelib/theme/iduithemedaemon.h
+    $$MSRCDIR/corelib/theme/imthemedaemon.h
 
 include(../common_bot.pri)

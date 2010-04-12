@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Configures the libdui build
+# Configures the libmeegotouch build
 #
 # Copyright (C) 2010 Nokia Corporation.
 #
@@ -30,16 +30,16 @@ UNAME_SYSTEM=`(uname -s) 2>/dev/null`  || UNAME_SYSTEM=unknown
 UNAME_VERSION=`(uname -v) 2>/dev/null` || UNAME_VERSION=unknown
 
 #-----------------------------------------------------------------------------
-# Dui version detection
+# M version detection
 #-----------------------------------------------------------------------------
 cd "$relpath"
-DUI_MAJOR_VERSION=`grep -m1 DUI_MAJOR_VERSION mkspecs/features/dui_defines.prf.in |cut -f2 -d'='|sed 's/ //g'`
-DUI_MINOR_VERSION=`grep -m1 DUI_MINOR_VERSION mkspecs/features/dui_defines.prf.in |cut -f2 -d'='|sed 's/ //g'`
-DUI_PATCH_VERSION=`grep -m1 DUI_PATCH_VERSION mkspecs/features/dui_defines.prf.in |cut -f2 -d'='|sed 's/ //g'`
-DUI_VERSION=$DUI_MAJOR_VERSION.$DUI_MINOR_VERSION.$DUI_PATCH_VERSION
+M_MAJOR_VERSION=`grep -m1 M_MAJOR_VERSION mkspecs/features/meegotouch_defines.prf.in |cut -f2 -d'='|sed 's/ //g'`
+M_MINOR_VERSION=`grep -m1 M_MINOR_VERSION mkspecs/features/meegotouch_defines.prf.in |cut -f2 -d'='|sed 's/ //g'`
+M_PATCH_VERSION=`grep -m1 M_PATCH_VERSION mkspecs/features/meegotouch_defines.prf.in |cut -f2 -d'='|sed 's/ //g'`
+M_VERSION=$M_MAJOR_VERSION.$M_MINOR_VERSION.$M_PATCH_VERSION
 
-if [ -z "$DUI_MAJOR_VERSION" ]; then
-   echo "Cannot process version from src/dui_defines.prf: $DUI_VERSION"
+if [ -z "$M_MAJOR_VERSION" ]; then
+   echo "Cannot process version from src/meegotouch_defines.prf: $M_VERSION"
    echo "Cannot proceed."
    exit 1
 fi
@@ -62,7 +62,7 @@ CFG_BUILD_TESTS=no
 CFG_BUILD_BENCHMARKS=no
 CFG_BUILD_PLAINQT=no
 
-DUI_DEFAULT_BUILD_PARTS="libs demos"
+M_DEFAULT_BUILD_PARTS="libs demos"
 CFG_BUILD_PARTS=""
 CFG_NOBUILD_PARTS=""
 
@@ -77,9 +77,9 @@ HAVE_N900=no
 OPT_SHADOW=maybe
 
 # initalize variables used for installation
-DUI_INSTALL_PREFIX=/usr/local
-DUI_INSTALL_SYSCONFDIR=/etc
-DUI_INSTALL_LIBDIR= # Will be $DUI_INSTALL_PREFIX/lib unless overriden
+M_INSTALL_PREFIX=/usr/local
+M_INSTALL_SYSCONFDIR=/etc
+M_INSTALL_LIBDIR= # Will be $M_INSTALL_PREFIX/lib unless overriden
 
 #-------------------------------------------------------------------------------
 # parse command line arguments
@@ -168,13 +168,13 @@ while [ "$#" -gt 0 ]; do
     UNKNOWN_OPT=no
     case "$VAR" in
     prefix)
-        DUI_INSTALL_PREFIX="$VAL"
+        M_INSTALL_PREFIX="$VAL"
         ;;
     sysconfdir)
-        DUI_INSTALL_SYSCONFDIR="$VAL"
+        M_INSTALL_SYSCONFDIR="$VAL"
         ;;
     libdir)
-        DUI_INSTALL_LIBDIR="$VAL"
+        M_INSTALL_LIBDIR="$VAL"
         ;;
     nomake)
 	CFG_NOBUILD_PARTS="$CFG_NOBUILD_PARTS $VAL"
@@ -274,12 +274,12 @@ fi
 #-------------------------------------------------------------------------------
 
 # Make default LIBDIR relative to prefix unless overriden
-if [ -z "$DUI_INSTALL_LIBDIR" ]; then
-    DUI_INSTALL_LIBDIR=$DUI_INSTALL_PREFIX/lib
+if [ -z "$M_INSTALL_LIBDIR" ]; then
+    M_INSTALL_LIBDIR=$M_INSTALL_PREFIX/lib
 fi
 
 #setup the build parts
-CFG_BUILD_PARTS="$CFG_BUILD_PARTS $DUI_DEFAULT_BUILD_PARTS"
+CFG_BUILD_PARTS="$CFG_BUILD_PARTS $M_DEFAULT_BUILD_PARTS"
 
 for nobuild in $CFG_NOBUILD_PARTS; do
     CFG_BUILD_PARTS=`echo "$CFG_BUILD_PARTS" | sed "s, $nobuild,,g"`
@@ -373,11 +373,11 @@ Usage:  $relconf [-prefix <dir>] [-release] [-debug] [-make <part>]
 Installation options:
 
     -prefix <dir> ...... This will install everything relative to <dir>
-                         (default $DUI_INSTALL_PREFIX)
+                         (default $M_INSTALL_PREFIX)
     -sysconfdir <dir> .. This will put configuration files in <dir>
-                         (default $DUI_INSTALL_SYSCONFDIR)
+                         (default $M_INSTALL_SYSCONFDIR)
     -libdir <dir> ...... This will put libraries in <dir>
-                         (default $DUI_INSTALL_LIBDIR)
+                         (default $M_INSTALL_LIBDIR)
 
 Configure options:
 
@@ -385,10 +385,10 @@ Configure options:
  that needs to be evaluated. If the evaluation succeeds, the feature is
  included. Here is a short explanation of each option:
 
-    -release ........... Compile and link libdui in release mode
- *  -debug ............. Compile and link libdui with debugging turned on
+    -release ........... Compile and link libmeegotouch in release mode
+ *  -debug ............. Compile and link libmeegotouch with debugging turned on
 
-    -testable .......... Enable the testability plugin interface in libdui
+    -testable .......... Enable the testability plugin interface in libmeegotouch
     -timestamps ........ Enable time debug measurements in the code
     -coverage .......... Enable code coverage calculation
     -pch ............... Enable pre-compiled header
@@ -406,7 +406,7 @@ Additional options:
     -benchmarks ........ Build the benchmarks.
     -plainqt ........... Build the Plain Qt style plugin.
 
-    -n900 .............. Build libdui for the N900 device.
+    -n900 .............. Build libmeegotouch for the N900 device.
 
 EOF
 
@@ -415,11 +415,11 @@ exit 0
 fi
 
 #-------------------------------------------------------------------------------
-# save configuration into duiconfig.pri
+# save configuration into meegotouchconfig.pri
 #-------------------------------------------------------------------------------
 
 if [ "$OPT_SHADOW" = "yes" ]; then
-    if [ -f "$relpath/mkspecs/duiconfig.pri" ]; then
+    if [ -f "$relpath/mkspecs/meegotouchconfig.pri" ]; then
         echo >&2 "You cannot make a shadow build from a source tree containing a previous build."
         echo >&2 "Cannot proceed."
         echo >&2 ""
@@ -435,131 +435,131 @@ if [ "$OPT_SHADOW" = "yes" ]; then
 fi
 
 
-DUICONFIG="$outpath/mkspecs/duiconfig.pri"
-[ -f "$DUICONFIG.tmp" ] && rm -f "$DUICONFIG.tmp"
+MEEGOTOUCHCONFIG="$outpath/mkspecs/meegotouchconfig.pri"
+[ -f "$MEEGOTOUCHCONFIG.tmp" ] && rm -f "$MEEGOTOUCHCONFIG.tmp"
 
 if [ "$CFG_DEBUG" = "yes" ]; then
-    DUICONFIG_CONFIG="$DUICONFIG_CONFIG debug"
+    MEEGOTOUCHCONFIG_CONFIG="$MEEGOTOUCHCONFIG_CONFIG debug"
 fi
 
 if [ "$CFG_RELEASE" = "yes" ]; then
-    DUICONFIG_CONFIG="$DUICONFIG_CONFIG release"
+    MEEGOTOUCHCONFIG_CONFIG="$MEEGOTOUCHCONFIG_CONFIG release"
 fi
 
 
 if [ "$CFG_TESTABLE" = "yes" ]; then
-    DUICONFIG_FEATURES="$DUICONFIG_FEATURES testable"
+    MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES testable"
 fi
 
 if [ "$CFG_TIMESTAMPS" = "yes" ]; then
-    DUICONFIG_FEATURES="$DUICONFIG_FEATURES timestamps"
+    MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES timestamps"
 fi
 
 if [ "$CFG_COVERAGE" = "yes" ]; then
-    DUICONFIG_FEATURES="$DUICONFIG_FEATURES coverage"
+    MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES coverage"
 fi
 
 if [ "$CFG_PCH" = "yes" ]; then
-    DUICONFIG_FEATURES="$DUICONFIG_FEATURES pch"
+    MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES pch"
 fi
 
 if [ "$CFG_MINIMAL" = "yes" ]; then
-    DUICONFIG_FEATURES="$DUICONFIG_FEATURES minimal"
+    MEEGOTOUCHCONFIG_FEATURES="$MEEGOTOUCHCONFIG_FEATURES minimal"
 fi
 
 
 if [ "$HAVE_ICU" = "yes" ]; then
-    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_ICU"
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_ICU"
 fi
 
 if [ "$HAVE_CONTENTACTION" = "yes" ]; then
-    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_CONTENTACTION"
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_CONTENTACTION"
 fi
 
 if [ "$HAVE_CONTEXTSUBSCRIBER" = "yes" ]; then
-    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_CONTEXTSUBSCRIBER"
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_CONTEXTSUBSCRIBER"
 fi
 
 if [ "$HAVE_GCONF" = "yes" ]; then
-    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_GCONF"
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_GCONF"
 fi
 
 if [ "$HAVE_GSTREAMER" = "yes" ]; then
-    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_GSTREAMER"
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_GSTREAMER"
 fi
 
 if [ "$HAVE_DBUS" = "yes" ]; then
-    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_DBUS"
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_DBUS"
 fi
 
 if [ "$HAVE_N900" = "yes" ]; then
-    DUICONFIG_DEPS="$DUICONFIG_DEPS HAVE_N900"
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_N900"
 fi
 
 
-cat >>"$DUICONFIG.tmp" <<EOF
+cat >>"$MEEGOTOUCHCONFIG.tmp" <<EOF
 # Autogenerated by configure script
 
 #build configuration
-CONFIG += $DUICONFIG_CONFIG
+CONFIG += $MEEGOTOUCHCONFIG_CONFIG
 
-DUI_BUILD_PARTS += $CFG_BUILD_PARTS
+M_BUILD_PARTS += $CFG_BUILD_PARTS
 
-DUI_BUILD_FEATURES += $DUICONFIG_FEATURES
+M_BUILD_FEATURES += $MEEGOTOUCHCONFIG_FEATURES
 
 #versioning
-DUI_VERSION = $DUI_VERSION
+M_VERSION = $M_VERSION
 
 #paths
-DUI_INSTALL_PREFIX = $DUI_INSTALL_PREFIX
-DUI_INSTALL_SYSCONFDIR = $DUI_INSTALL_SYSCONFDIR
-DUI_INSTALL_LIBDIR = $DUI_INSTALL_LIBDIR
+M_INSTALL_PREFIX = $M_INSTALL_PREFIX
+M_INSTALL_SYSCONFDIR = $M_INSTALL_SYSCONFDIR
+M_INSTALL_LIBDIR = $M_INSTALL_LIBDIR
 
 #dependencies
-DEFINES += $DUICONFIG_DEPS
+DEFINES += $MEEGOTOUCHCONFIG_DEPS
 
 EOF
 
-# replace duiconfig.pri if it differs from the newly created temp file
-if cmp -s "$DUICONFIG.tmp" "$DUICONFIG"; then
-    rm -f "$DUICONFIG.tmp"
+# replace meegotouchconfig.pri if it differs from the newly created temp file
+if cmp -s "$MEEGOTOUCHCONFIG.tmp" "$MEEGOTOUCHCONFIG"; then
+    rm -f "$MEEGOTOUCHCONFIG.tmp"
 else
-    mv -f "$DUICONFIG.tmp" "$DUICONFIG"
+    mv -f "$MEEGOTOUCHCONFIG.tmp" "$MEEGOTOUCHCONFIG"
 fi
 
-# now try to create a .qmake.cache file to be able to find the dui build root
-DUI_QMAKE_CACHE="$outpath/.qmake.cache"
-[ -f "$DUI_QMAKE_CACHE.tmp" ] && rm -f "$DUI_QMAKE_CACHE.tmp"
+# now try to create a .qmake.cache file to be able to find the build root
+M_QMAKE_CACHE="$outpath/.qmake.cache"
+[ -f "$M_QMAKE_CACHE.tmp" ] && rm -f "$M_QMAKE_CACHE.tmp"
 
-cat >>"$DUI_QMAKE_CACHE.tmp" <<EOF
+cat >>"$M_QMAKE_CACHE.tmp" <<EOF
 # Autogenerated by configure script
-DUI_BUILD_TREE = \$\$quote($outpath)
-DUI_SOURCE_TREE = \$\$quote($relpath)
+M_BUILD_TREE = \$\$quote($outpath)
+M_SOURCE_TREE = \$\$quote($relpath)
 
 EOF
 
 # replace .qmake.cache if it differs from the newly created temp file
-if cmp -s "$DUI_QMAKE_CACHE.tmp" "$DUI_QMAKE_CACHE"; then
-    rm -f "$DUI_QMAKE_CACHE.tmp"
+if cmp -s "$M_QMAKE_CACHE.tmp" "$M_QMAKE_CACHE"; then
+    rm -f "$M_QMAKE_CACHE.tmp"
 else
-    mv -f "$DUI_QMAKE_CACHE.tmp" "$DUI_QMAKE_CACHE"
+    mv -f "$M_QMAKE_CACHE.tmp" "$M_QMAKE_CACHE"
 fi
 
 
-DUI_DEFINES_PRF="$outpath/mkspecs/features/dui_defines.prf"
+MEEGOTOUCH_DEFINES_PRF="$outpath/mkspecs/features/meegotouch_defines.prf"
 
-# and now we generate a dui_defines.prf that will contain the right
+# and now we generate a meegotouch_defines.prf that will contain the right
 # install prefix
-cat "$relpath/mkspecs/features/dui_defines.prf.in" \
-| sed -e "s,@@DUI_UNIX_INSTALL_PREFIX@@,$DUI_INSTALL_PREFIX,g" \
-| sed -e "s,@@DUI_UNIX_INSTALL_SYSCONFDIR@@,$DUI_INSTALL_SYSCONFDIR,g" \
-| sed -e "s,@@DUI_UNIX_INSTALL_LIBDIR@@,$DUI_INSTALL_LIBDIR,g" > "$DUI_DEFINES_PRF.tmp"
+cat "$relpath/mkspecs/features/meegotouch_defines.prf.in" \
+| sed -e "s,@@M_UNIX_INSTALL_PREFIX@@,$M_INSTALL_PREFIX,g" \
+| sed -e "s,@@M_UNIX_INSTALL_SYSCONFDIR@@,$M_INSTALL_SYSCONFDIR,g" \
+| sed -e "s,@@M_UNIX_INSTALL_LIBDIR@@,$M_INSTALL_LIBDIR,g" > "$MEEGOTOUCH_DEFINES_PRF.tmp"
 
-# replace dui_defines.prf if it differs from the newly created temp file
-if cmp -s "$DUI_DEFINES_PRF.tmp" "$DUI_DEFINES_PRF"; then
-    rm -f "$DUI_DEFINES_PRF.tmp"
+# replace meegotouch_defines.prf if it differs from the newly created temp file
+if cmp -s "$MEEGOTOUCH_DEFINES_PRF.tmp" "$MEEGOTOUCH_DEFINES_PRF"; then
+    rm -f "$MEEGOTOUCH_DEFINES_PRF.tmp"
 else
-    mv -f "$DUI_DEFINES_PRF.tmp" "$DUI_DEFINES_PRF"
+    mv -f "$MEEGOTOUCH_DEFINES_PRF.tmp" "$MEEGOTOUCH_DEFINES_PRF"
 fi
 
 #-------------------------------------------------------------------------------
@@ -656,17 +656,17 @@ echo "DBus (incl. QtDBus) ...... $HAVE_DBUS"
 if [ "$CFG_DEV" = "yes" ]; then
     echo ""
     echo ""
-    echo "Enabling DirectUI developer's build"
+    echo "Enabling MeeGo Touch UI developer's build"
     echo ""
 else
     echo ""
     echo ""
 fi
 
-echo "DirectUI framework build configuration:"
-echo "Version ............. $DUI_VERSION"
+echo "MeeGo Touch UI framework build configuration:"
+echo "Version ............. $M_VERSION"
 echo "Build ............... $CFG_BUILD_PARTS"
-echo "Extra features ...... $DUICONFIG_FEATURES"
+echo "Extra features ...... $MEEGOTOUCHCONFIG_FEATURES"
 echo "Release ............. $CFG_RELEASE"
 echo "Debug ............... $CFG_DEBUG"
 
@@ -681,13 +681,13 @@ if [ "$HAVE_N900" = "yes" ]; then
 fi
 
 echo ""
-echo libdui is now configured for building. Just run \'make\'.
-if [ "$relpath" = "$DUI_INSTALL_PREFIX" ]; then
-    echo Once everything is built, libdui is installed.
+echo libmeegotouch is now configured for building. Just run \'make\'.
+if [ "$relpath" = "$M_INSTALL_PREFIX" ]; then
+    echo Once everything is built, libmeegotouch is installed.
     echo You should not run \'make install\'.
 else
     echo Once everything is built, you can run \'make install\'.
-    echo libdui will be installed into $DUI_INSTALL_PREFIX
+    echo libmeegotouch will be installed into $M_INSTALL_PREFIX
 fi
 
 echo ""

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -32,12 +32,12 @@
 #include <QDebug>
 
 #include "testwidget.h"
-#include "duitheme.h"
-#include "duiviewcreator.h"
+#include "mtheme.h"
+#include "mviewcreator.h"
 
 
 TestWidgetView::TestWidgetView(TestWidget *controller) :
-    DuiWidgetView(controller)
+    MWidgetView(controller)
 {
 }
 
@@ -47,7 +47,7 @@ TestWidgetView::~TestWidgetView()
 
 void TestWidgetView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    DuiWidgetView::resizeEvent(event);
+    MWidgetView::resizeEvent(event);
 }
 
 
@@ -113,4 +113,4 @@ void TestWidgetView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     update();
 }
 
-DUI_REGISTER_VIEW(TestWidgetView, TestWidget)
+M_REGISTER_VIEW(TestWidgetView, TestWidget)

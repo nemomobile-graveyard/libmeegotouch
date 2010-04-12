@@ -7,34 +7,34 @@ LAYOUT_SRC_DIR=./layout
 INCLUDEPATH+=./layout
 
 PUBLIC_HEADERS += \
-    $$LAYOUT_SRC_DIR/duilayoutanimation.h \
-    $$LAYOUT_SRC_DIR/duiabstractlayoutpolicy.h \
-    $$LAYOUT_SRC_DIR/duibasiclayoutanimation.h \
-    $$LAYOUT_SRC_DIR/duiflowlayoutpolicy.h \
-    $$LAYOUT_SRC_DIR/duifreestylelayoutpolicy.h \
-    $$LAYOUT_SRC_DIR/duigridlayoutpolicy.h \
-    $$LAYOUT_SRC_DIR/duiitemstate.h \
-    $$LAYOUT_SRC_DIR/duilayout.h \
-    $$LAYOUT_SRC_DIR/duilinearlayoutpolicy.h \
+    $$LAYOUT_SRC_DIR/mlayoutanimation.h \
+    $$LAYOUT_SRC_DIR/mabstractlayoutpolicy.h \
+    $$LAYOUT_SRC_DIR/mbasiclayoutanimation.h \
+    $$LAYOUT_SRC_DIR/mflowlayoutpolicy.h \
+    $$LAYOUT_SRC_DIR/mfreestylelayoutpolicy.h \
+    $$LAYOUT_SRC_DIR/mgridlayoutpolicy.h \
+    $$LAYOUT_SRC_DIR/mitemstate.h \
+    $$LAYOUT_SRC_DIR/mlayout.h \
+    $$LAYOUT_SRC_DIR/mlinearlayoutpolicy.h \
 
 PRIVATE_HEADERS += \
-    $$LAYOUT_SRC_DIR/duilayout_p.h \
-    $$LAYOUT_SRC_DIR/duilayouthelper_p.h \
+    $$LAYOUT_SRC_DIR/mlayout_p.h \
+    $$LAYOUT_SRC_DIR/mlayouthelper_p.h \
 
 SOURCES += \
-    $$LAYOUT_SRC_DIR/duilayoutanimation.cpp \
-    $$LAYOUT_SRC_DIR/duiabstractlayoutpolicy.cpp \
-    $$LAYOUT_SRC_DIR/duiabstractlayoutpolicy_p.cpp \
-    $$LAYOUT_SRC_DIR/duibasiclayoutanimation.cpp \
-    $$LAYOUT_SRC_DIR/duibasiclayoutanimation_p.cpp \
-    $$LAYOUT_SRC_DIR/duiflowlayoutpolicy.cpp \
-    $$LAYOUT_SRC_DIR/duiflowlayoutpolicy_p.cpp \
-    $$LAYOUT_SRC_DIR/duifreestylelayoutpolicy.cpp \
-    $$LAYOUT_SRC_DIR/duifreestylelayoutpolicy_p.cpp \
-    $$LAYOUT_SRC_DIR/duigridlayoutpolicy.cpp \
-    $$LAYOUT_SRC_DIR/duigridlayoutpolicy_p.cpp \
-    $$LAYOUT_SRC_DIR/duiitemstate.cpp \
-    $$LAYOUT_SRC_DIR/duilayout.cpp \
-    $$LAYOUT_SRC_DIR/duilayout_p.cpp \
-    $$LAYOUT_SRC_DIR/duilinearlayoutpolicy.cpp \
-    $$LAYOUT_SRC_DIR/duilinearlayoutpolicy_p.cpp
+    $$LAYOUT_SRC_DIR/mlayoutanimation.cpp \
+    $$LAYOUT_SRC_DIR/mabstractlayoutpolicy.cpp \
+    $$LAYOUT_SRC_DIR/mabstractlayoutpolicy_p.cpp \
+    $$LAYOUT_SRC_DIR/mbasiclayoutanimation.cpp \
+    $$LAYOUT_SRC_DIR/mbasiclayoutanimation_p.cpp \
+    $$LAYOUT_SRC_DIR/mflowlayoutpolicy.cpp \
+    $$LAYOUT_SRC_DIR/mflowlayoutpolicy_p.cpp \
+    $$LAYOUT_SRC_DIR/mfreestylelayoutpolicy.cpp \
+    $$LAYOUT_SRC_DIR/mfreestylelayoutpolicy_p.cpp \
+    $$LAYOUT_SRC_DIR/mgridlayoutpolicy.cpp \
+    $$LAYOUT_SRC_DIR/mgridlayoutpolicy_p.cpp \
+    $$LAYOUT_SRC_DIR/mitemstate.cpp \
+    $$LAYOUT_SRC_DIR/mlayout.cpp \
+    $$LAYOUT_SRC_DIR/mlayout_p.cpp \
+    $$LAYOUT_SRC_DIR/mlinearlayoutpolicy.cpp \
+    $$LAYOUT_SRC_DIR/mlinearlayoutpolicy_p.cpp

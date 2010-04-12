@@ -1,10 +1,10 @@
-DUIGEN_STYLE_HEADERS += \
-    style/duiapplethandlestyle.h \
-    style/duiappletinventorystyle.h \
-    style/duiapplicationextensionareastyle.h \
-    style/duiextensionareastyle.h \
-    style/duiextensionhandlestyle.h \
-    style/duimashupcanvasstyle.h \
+MGEN_STYLE_HEADERS += \
+    style/mapplethandlestyle.h \
+    style/mappletinventorystyle.h \
+    style/mapplicationextensionareastyle.h \
+    style/mextensionareastyle.h \
+    style/mextensionhandlestyle.h \
+    style/mmashupcanvasstyle.h \
 
 PUBLIC_HEADERS += \
-    $$DUIGEN_STYLE_HEADERS
+    $$MGEN_STYLE_HEADERS

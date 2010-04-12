@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,14 +22,14 @@
 
 #include "timedemopage.h"
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 
-class DuiLayout;
-class DuiLinearLayoutPolicy;
-class DuiWidget;
-class DuiButton;
-class DuiSeparator;
-class DuiLabel;
+class MLayout;
+class MLinearLayoutPolicy;
+class MWidget;
+class MButton;
+class MSeparator;
+class MLabel;
 class QGraphicsLinearLayout;
 
 class TemplatePage  : public TimedemoPage
@@ -62,18 +62,18 @@ protected:
 
     int gid;
 
-    DuiLayout              *layout;
+    MLayout              *layout;
 
-    DuiLinearLayoutPolicy  *landscapePolicy;
-    DuiLinearLayoutPolicy  *portraitPolicy;
+    MLinearLayoutPolicy  *landscapePolicy;
+    MLinearLayoutPolicy  *portraitPolicy;
 
-    DuiWidget              *container;
+    MWidget              *container;
 
-    DuiSeparator           *separator;
-    DuiLabel               *infoLabel;
+    MSeparator           *separator;
+    MLabel               *infoLabel;
 
-    DuiLayout              *containerLayout;
-    DuiLinearLayoutPolicy  *containerPolicy;
+    MLayout              *containerLayout;
+    MLinearLayoutPolicy  *containerPolicy;
 };
 
 #endif

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,16 +19,16 @@
 
 #include "SeparatorTestPage.h"
 
-#include <DuiApplicationPage>
-#include <DuiButton>
-#include <DuiContainer>
-#include <DuiGridLayoutPolicy>
-#include <DuiLocale>
-#include <DuiLabel>
-#include <DuiLayout>
-#include <DuiMashupCanvas>
-#include <DuiSeparator>
-#include <DuiWidgetView>
+#include <MApplicationPage>
+#include <MButton>
+#include <MContainer>
+#include <MGridLayoutPolicy>
+#include <MLocale>
+#include <MLabel>
+#include <MLayout>
+#include <MMashupCanvas>
+#include <MSeparator>
+#include <MWidgetView>
 
 SeparatorTestPage::SeparatorTestPage()
 {
@@ -43,12 +43,12 @@ SeparatorTestPage::~SeparatorTestPage()
 
 void SeparatorTestPage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
     QGraphicsWidget *panel = centralWidget();
 
-    DuiLayout *layout = new DuiLayout(panel);
+    MLayout *layout = new MLayout(panel);
     panel->setLayout(layout);
-    DuiGridLayoutPolicy *grid = new DuiGridLayoutPolicy(layout);
+    MGridLayoutPolicy *grid = new MGridLayoutPolicy(layout);
 
     //  1  |  3
     //  –  5  –
@@ -62,13 +62,13 @@ void SeparatorTestPage::createContent()
     grid->addItem(createSeparator(Qt::Horizontal), 1, 2);
     grid->addItem(createButton("7"), 2, 0);
     grid->addItem(createSeparator(Qt::Vertical), 2, 1);
-    grid->addItem(new DuiContainer("9", panel), 2, 2);
+    grid->addItem(new MContainer("9", panel), 2, 2);
 }
 
-DuiButton *SeparatorTestPage::createButton(const QString &text)
+MButton *SeparatorTestPage::createButton(const QString &text)
 {
-    DuiButton *button = NULL;
-    button = new DuiButton(text);
+    MButton *button = NULL;
+    button = new MButton(text);
     QSizeF size(130.0, 130.0);
     button->setMinimumSize(size);
     button->setMaximumSize(size);
@@ -76,9 +76,9 @@ DuiButton *SeparatorTestPage::createButton(const QString &text)
     return button;
 }
 
-DuiSeparator *SeparatorTestPage::createSeparator(Qt::Orientation orientation)
+MSeparator *SeparatorTestPage::createSeparator(Qt::Orientation orientation)
 {
-    DuiSeparator *separator = NULL;
-    separator = new DuiSeparator(centralWidget(), orientation);
+    MSeparator *separator = NULL;
+    separator = new MSeparator(centralWidget(), orientation);
     return separator;
 }

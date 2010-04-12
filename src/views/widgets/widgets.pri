@@ -2,15 +2,15 @@ WIDGETS_SRC_DIR=./widgets
 INCLUDEPATH+=./widgets
 
 PUBLIC_HEADERS += \
-    $$WIDGETS_SRC_DIR/duiapplicationmenubutton.h \
+    $$WIDGETS_SRC_DIR/mapplicationmenubutton.h \
 
-DUIGEN_MODEL_HEADERS += \
-    $$WIDGETS_SRC_DIR/duiapplicationmenubuttonmodel.h \
+MGEN_MODEL_HEADERS += \
+    $$WIDGETS_SRC_DIR/mapplicationmenubuttonmodel.h \
 
 PRIVATE_HEADERS += \
-    $$DUIGEN_MODEL_HEADERS \
-    $$WIDGETS_SRC_DIR/duicontainerheader_p.h \
+    $$MGEN_MODEL_HEADERS \
+    $$WIDGETS_SRC_DIR/mcontainerheader_p.h \
 
 SOURCES += \
-    $$WIDGETS_SRC_DIR/duiapplicationmenubutton.cpp \
-    $$WIDGETS_SRC_DIR/duicontainerheader.cpp \
+    $$WIDGETS_SRC_DIR/mapplicationmenubutton.cpp \
+    $$WIDGETS_SRC_DIR/mcontainerheader.cpp \

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -29,23 +29,23 @@
 #define TESTWIDGETSTYLE_H
 
 #include <QColor>
-#include <duiwidgetstyle.h>
+#include <mwidgetstyle.h>
 
-class TestWidgetStyle : public DuiWidgetStyle
+class TestWidgetStyle : public MWidgetStyle
 {
     Q_OBJECT
-    DUI_STYLE(TestWidgetStyle)
-    DUI_STYLE_ATTRIBUTE(QColor, color, Color)
+    M_STYLE(TestWidgetStyle)
+    M_STYLE_ATTRIBUTE(QColor, color, Color)
 };
 
-class TestWidgetStyleContainer : public DuiWidgetStyleContainer
+class TestWidgetStyleContainer : public MWidgetStyleContainer
 {
-    DUI_STYLE_CONTAINER(TestWidgetStyle)
-    DUI_STYLE_MODE(Green)
-    DUI_STYLE_MODE(Blue)
-    DUI_STYLE_MODE(Yellow)
-    DUI_STYLE_MODE(Cyan)
-    DUI_STYLE_MODE(Purple)
+    M_STYLE_CONTAINER(TestWidgetStyle)
+    M_STYLE_MODE(Green)
+    M_STYLE_MODE(Blue)
+    M_STYLE_MODE(Yellow)
+    M_STYLE_MODE(Cyan)
+    M_STYLE_MODE(Purple)
 };
 
 

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,20 +21,20 @@
  * This demonstrates a simple calculator widget that can work in both portrait and landscape mode.
  */
 
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
-#include <DuiTheme>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MTheme>
 #include "calculatorwidget.h"
 
 int main(int argc, char **argv)
 {
-    DuiApplication app(argc, argv);
-    DuiTheme::loadCSS("calculator.css");
+    MApplication app(argc, argv);
+    MTheme::loadCSS("calculator.css");
     //Load the example svg file in the same directory
-    DuiTheme::addPixmapDirectory(".", Dui::NonRecursive);
-    DuiApplicationWindow window;
-    DuiApplicationPage page;
+    MTheme::addPixmapDirectory(".", M::NonRecursive);
+    MApplicationWindow window;
+    MApplicationPage page;
 
     CalculatorWidget *calculatorWidget = new CalculatorWidget;
 

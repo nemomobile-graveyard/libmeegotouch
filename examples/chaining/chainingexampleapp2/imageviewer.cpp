@@ -3,12 +3,12 @@
 
 #include <QDebug>
 
-#include <DuiButton>
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiApplicationIfProxy>
+#include <MButton>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MApplicationIfProxy>
 
-ImageViewer::ImageViewer( DuiButton *button )
+ImageViewer::ImageViewer( MButton *button )
 {
     this->button = button;
 }
@@ -22,8 +22,8 @@ bool ImageViewer::showImage(const QString &uri, const QStringList &uriList)
     qDebug() << __PRETTY_FUNCTION__;
     Q_UNUSED( uriList );
 
-    DuiApplication *duiApp = DuiApplication::instance();
-    duiApp->activeWindow()->raise();
+    MApplication *mApp = MApplication::instance();
+    mApp->activeWindow()->raise();
 
     button->setText( uri );
 

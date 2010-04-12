@@ -1,9 +1,9 @@
-usr/lib/libdui*.so*
-usr/lib/qt4/plugins/styles/libdui*.so*
-usr/bin/duithemedaemon
-usr/bin/duiservicemapper
+usr/lib/libmeegotouch*.so*
+usr/lib/qt4/plugins/styles/libmeegotouch*.so*
+usr/bin/mthemedaemon
+usr/bin/mservicemapper
 usr/share/dbus-1/services/com.nokia.servicefw.service
-usr/share/dui/shaders/*
-usr/lib/dui/applets/duiappletrunner
-etc/dui/devices.conf
+usr/share/meegotouch/shaders/*
+usr/lib/meegotouch/applets/mappletrunner
+etc/meegotouch/devices.conf
 

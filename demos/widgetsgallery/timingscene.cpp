@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,12 +19,12 @@
 
 #include "timingscene.h"
 
-#include <DuiApplication>
+#include <MApplication>
 #include <QTimer>
 
 TimingScene::TimingScene(QObject *parent)
     :
-    DuiScene(parent),
+    MScene(parent),
     m_updateContinuously(false),
     m_frameCount(0)
 {}
@@ -43,11 +43,11 @@ void TimingScene::setUpdateContinuously(bool value)
 
 void TimingScene::drawForeground(QPainter *painter, const QRectF &rect)
 {
-    DuiScene::drawForeground(painter, rect);
+    MScene::drawForeground(painter, rect);
 
     ++m_frameCount;
 
-    if (m_updateContinuously && !DuiApplication::showFps()) {
+    if (m_updateContinuously && !MApplication::showFps()) {
         // Update again on return to the main loop, in order to refresh
         // the scene as frequently as possible for benchmark purposes.
         QTimer::singleShot(0, this, SLOT(update()));

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -25,7 +25,7 @@ void Ft_LocaleData::initTestCase()
     static char *argv[1] = { (char *) "" };
     app = new QCoreApplication(argc, argv);
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
-    DuiLocale::setDataPath(qApp->applicationDirPath());
+    MLocale::setDataPath(qApp->applicationDirPath());
 }
 
 void Ft_LocaleData::cleanup()
@@ -40,7 +40,7 @@ void Ft_LocaleData::cleanup()
  *
  *    <prefix>/icudt<version><flag>/<basename>.res
  *
- * <prefix> is set above in initTestCase() by DuiLocale::setDataPath("."),
+ * <prefix> is set above in initTestCase() by MLocale::setDataPath("."),
  * i.e. this test application looks for the file starting from the current
  * directory.
  *
@@ -90,7 +90,7 @@ void Ft_LocaleData::testNumberData()
     QFETCH(double, value);
     QFETCH(QString, result);
 
-    DuiLocale locale(locale_name);
+    MLocale locale(locale_name);
     QVERIFY(locale.isValid());
     QCOMPARE(locale.formatNumber(value), result);
 }

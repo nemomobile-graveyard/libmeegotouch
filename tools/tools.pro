@@ -2,14 +2,14 @@ include(../mkspecs/common.pri)
 
 TEMPLATE = subdirs
 SUBDIRS = \
-    duiapplettester \
-    duiapplicationextensiontester \
-    duinotificationtool \
-    dui-servicefwgen.d \
+    mapplettester \
+    mapplicationextensiontester \
+    mnotificationtool \
+    m-servicefwgen.d \
 
-macx:SUBDIRS -= duinotificationtool
-macx:SUBDIRS -= duiapplettester
-macx:SUBDIRS -= duiapplicationextensiontester
+macx:SUBDIRS -= mnotificationtool
+macx:SUBDIRS -= mapplettester
+macx:SUBDIRS -= mapplicationextensiontester
 
 QMAKE_EXTRA_TARGETS += check
 check.depends =
@@ -21,8 +21,8 @@ check-xml.commands = $$system(true)
 
 tools.target = .dummy
 tools.commands = touch $$tools.target
-tools.path = $$DUI_INSTALL_BIN
-tools.files = duinotificationstresstest
+tools.path = $$M_INSTALL_BIN
+tools.files = mnotificationstresstest
 
 INSTALLS += \
     tools

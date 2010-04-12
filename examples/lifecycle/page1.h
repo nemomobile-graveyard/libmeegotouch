@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,13 +20,13 @@
 #ifndef PROGRESSINDICATORPAGE_H
 #define PROGRESSINDICATORPAGE_H
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 
-class DuiGridLayoutPolicy;
-class DuiProgressIndicator;
-class DuiButton;
+class MGridLayoutPolicy;
+class MProgressIndicator;
+class MButton;
 
-class ProgressIndicatorPage : public DuiApplicationPage
+class ProgressIndicatorPage : public MApplicationPage
 {
     Q_OBJECT;
 
@@ -44,18 +44,18 @@ public slots:
     void buttonLeftSlot();
     void buttonRightSlot();
 
-    void pageRotated(const Dui::Orientation &orientation);
+    void pageRotated(const M::Orientation &orientation);
 
 protected:
-    DuiGridLayoutPolicy *l_policy;
-    DuiGridLayoutPolicy *p_policy;
+    MGridLayoutPolicy *l_policy;
+    MGridLayoutPolicy *p_policy;
 
-    DuiProgressIndicator *bar1;
-    DuiProgressIndicator *bar2;
-    DuiProgressIndicator *circ1;
-    DuiProgressIndicator *circ2;
+    MProgressIndicator *bar1;
+    MProgressIndicator *bar2;
+    MProgressIndicator *circ1;
+    MProgressIndicator *circ2;
 
-    DuiButton *buttonLeft;
+    MButton *buttonLeft;
 };
 
 #endif // PROGRESSINDICATORPAGE_H

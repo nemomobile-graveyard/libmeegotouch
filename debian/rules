@@ -109,17 +109,17 @@ install: build
 
 	# Add here commands to install the package into debian/tmp
 
-	#libdui-doc package
+	#libmeegotouch-doc package
 ifneq (0,$(MAKEDOCS))
 	cd $(BUILD_DIR) && make $(PARALLEL_MAKEFLAGS) doc
 endif
 
-	#libdui0 package 
+	#libmeegotouch0 package
 	cd $(BUILD_DIR) && INSTALL_ROOT=$(CURDIR)/debian/tmp make $(PARALLEL_MAKEFLAGS) install
 
-	install -m 644 -D -p $(BUILD_DIR)/demos/widgetsgallery/translations/widgetsgallery.ts $(CURDIR)/debian/tmp/usr/share/doc/dui-demos-widgetsgallery-l10n-engineering-english/widgetsgallery.ts
+	install -m 644 -D -p $(BUILD_DIR)/demos/widgetsgallery/translations/widgetsgallery.ts $(CURDIR)/debian/tmp/usr/share/doc/meegotouch-demos-widgetsgallery-l10n-engineering-english/widgetsgallery.ts
 
-	install -m 644 -D -p $(BUILD_DIR)/src/translations/libdui.ts $(CURDIR)/debian/tmp/usr/share/doc/libdui-l10n-engineering-english/libdui.ts
+	install -m 644 -D -p $(BUILD_DIR)/src/translations/libmeegotouch.ts $(CURDIR)/debian/tmp/usr/share/doc/libmeegotouch-l10n-engineering-english/libmeegotouch.ts
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -145,10 +145,10 @@ binary-arch: build install
 #	dh_installinfo
 #	dh_installman
 	dh_link
-	dh_strip -p libdui0 --dbg-package=libdui0
-	dh_strip -p dui-demos-widgetsgallery --dbg-package=dui-demos-widgetsgallery
-	dh_strip -p dui-demos-plainqt --dbg-package=dui-demos-plainqt
-	dh_strip -p libdui-tests
+	dh_strip -p libmeegotouch0 --dbg-package=libmeegotouch0
+	dh_strip -p meegotouch-demos-widgetsgallery --dbg-package=meegotouch-demos-widgetsgallery
+	dh_strip -p meegotouch-demos-plainqt --dbg-package=meegotouch-demos-plainqt
+	dh_strip -p libmeegotouch-tests
 	dh_compress
 	dh_fixperms
 #	dh_perl

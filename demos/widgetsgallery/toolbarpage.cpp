@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,20 +18,20 @@
 ****************************************************************************/
 
 #include "toolbarpage.h"
-#include <DuiAction>
-#include <DuiButton>
-#include <DuiTextEdit>
-#include <DuiLocale>
-#include <DuiLabel>
-#include <DuiWidgetAction>
-#include <DuiLayout>
-#include <DuiSeparator>
-#include <DuiToolBar>
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiLinearLayoutPolicy>
+#include <MAction>
+#include <MButton>
+#include <MTextEdit>
+#include <MLocale>
+#include <MLabel>
+#include <MWidgetAction>
+#include <MLayout>
+#include <MSeparator>
+#include <MToolBar>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MLinearLayoutPolicy>
 
-#include <DuiContentItem>
+#include <MContentItem>
 #include <QDebug>
 
 TestModel::TestModel(QObject *parent)
@@ -83,14 +83,14 @@ void TestModel::setMode(TestModel::CallMode mode) {
    this->mode = mode;
 }
 
-class DuiContentItemCreator : public DuiAbstractCellCreator<DuiContentItem>
+class MContentItemCreator : public MAbstractCellCreator<MContentItem>
 {
 public:
-    DuiContentItemCreator() {
+    MContentItemCreator() {
     }
 
-    void updateCell(const QModelIndex &index, DuiWidget *cell) const {
-        DuiContentItem *contentItem = qobject_cast<DuiContentItem *>(cell);
+    void updateCell(const QModelIndex &index, MWidget *cell) const {
+        MContentItem *contentItem = qobject_cast<MContentItem *>(cell);
 
         QVariant data = index.data(Qt::DisplayRole);
         QStringList rowData = data.value<QStringList>();
@@ -100,7 +100,7 @@ public:
         updateContentItemMode(index, contentItem);
     }
 
-    void updateContentItemMode(const QModelIndex &index, DuiContentItem *contentItem) const {
+    void updateContentItemMode(const QModelIndex &index, MContentItem *contentItem) const {
         int row = index.row();
 
         bool thereIsNextRow;
@@ -109,21 +109,21 @@ public:
             thereIsNextRow = index.sibling(row + 1, 0).isValid();
 
             if (row == 0) {
-                contentItem->setItemMode(DuiContentItem::SingleColumnTop);
+                contentItem->setItemMode(MContentItem::SingleColumnTop);
             } else if (thereIsNextRow) {
-                contentItem->setItemMode(DuiContentItem::SingleColumnCenter);
+                contentItem->setItemMode(MContentItem::SingleColumnCenter);
             } else {
-                contentItem->setItemMode(DuiContentItem::SingleColumnBottom);
+                contentItem->setItemMode(MContentItem::SingleColumnBottom);
             }
         } else {
             bool left = ((row % 2) == 0);
             thereIsNextRow = left ? index.sibling(row + 2, 0).isValid() : index.sibling(row + 1, 0).isValid();
             if (row == 0 || row == 1) {
-                left ? contentItem->setItemMode(DuiContentItem::TopLeft) : contentItem->setItemMode(DuiContentItem::TopRight);
+                left ? contentItem->setItemMode(MContentItem::TopLeft) : contentItem->setItemMode(MContentItem::TopRight);
             } else if (thereIsNextRow) {
-                left ? contentItem->setItemMode(DuiContentItem::Left) : contentItem->setItemMode(DuiContentItem::Right);
+                left ? contentItem->setItemMode(MContentItem::Left) : contentItem->setItemMode(MContentItem::Right);
             } else {
-                left ? contentItem->setItemMode(DuiContentItem::BottomLeft) : contentItem->setItemMode(DuiContentItem::BottomRight);
+                left ? contentItem->setItemMode(MContentItem::BottomLeft) : contentItem->setItemMode(MContentItem::BottomRight);
             }
         }
     }
@@ -156,8 +156,8 @@ void ToolBarPage::createContent()
 {
     TemplatePage::createContent();
 
-    callList = new DuiList;
-    cellCreator = new DuiContentItemCreator;
+    callList = new MList;
+    cellCreator = new MContentItemCreator;
     callList->setCellCreator(cellCreator);
     callModel = new TestModel;
     callList->setItemModel(callModel);
@@ -165,26 +165,26 @@ void ToolBarPage::createContent()
     showCallDataAsList();
 
     //% "Example 1"
-    exampleAction1 = new DuiAction(qtTrId("xx_toolbar_page_example1"), this);
-    exampleAction1->setLocation(DuiAction::ApplicationMenuLocation);
+    exampleAction1 = new MAction(qtTrId("xx_toolbar_page_example1"), this);
+    exampleAction1->setLocation(MAction::ApplicationMenuLocation);
     connect(exampleAction1, SIGNAL(triggered()), this, SLOT(fourButtons()));
     addAction(exampleAction1);
 
     //% "Example 2"
-    exampleAction2 = new DuiAction(qtTrId("xx_toolbar_page_example2"), this);
-    exampleAction2->setLocation(DuiAction::ApplicationMenuLocation);
+    exampleAction2 = new MAction(qtTrId("xx_toolbar_page_example2"), this);
+    exampleAction2->setLocation(MAction::ApplicationMenuLocation);
     connect(exampleAction2, SIGNAL(triggered()), this, SLOT(textEntryWithTwoButtons()));
     addAction(exampleAction2);
 
     //% "Default View"
-    defaultViewAction = new DuiAction(qtTrId("xx_toolbar_page_defaultview"), this);
-    defaultViewAction->setLocation(DuiAction::ApplicationMenuLocation);
+    defaultViewAction = new MAction(qtTrId("xx_toolbar_page_defaultview"), this);
+    defaultViewAction->setLocation(MAction::ApplicationMenuLocation);
     connect(defaultViewAction, SIGNAL(triggered()), this, SLOT(selectToolbarDefaultView()));
     addAction(defaultViewAction);
 
     //% "Tab View"
-    tabViewAction = new DuiAction(qtTrId("xx_toolbar_page_tabview"), this);
-    tabViewAction->setLocation(DuiAction::ApplicationMenuLocation);
+    tabViewAction = new MAction(qtTrId("xx_toolbar_page_tabview"), this);
+    tabViewAction->setLocation(MAction::ApplicationMenuLocation);
     connect(tabViewAction, SIGNAL(triggered()), this, SLOT(selectToolbarTabView()));
     addAction(tabViewAction);
 
@@ -219,13 +219,13 @@ void ToolBarPage::fourButtons()
 {
     clearToolbarActions();
 
-    DuiAction* action = new DuiAction("icon-m-list", "", this);
-    action->setLocation(DuiAction::ToolBarLocation);
+    MAction* action = new MAction("icon-m-list", "", this);
+    action->setLocation(MAction::ToolBarLocation);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(showCallDataAsList()));
 
-    action = new DuiAction("icon-m-grid", "", this);
-    action->setLocation(DuiAction::ToolBarLocation);
+    action = new MAction("icon-m-grid", "", this);
+    action->setLocation(MAction::ToolBarLocation);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(showCallDataAsGrid()));
 
@@ -235,20 +235,20 @@ void ToolBarPage::textEntryWithTwoButtons()
 {
     clearToolbarActions();
     addTextEntry();
-    DuiAction *action = new DuiAction("Icon-video", "Video", this);
-    action->setLocation(DuiAction::ToolBarLocation);
+    MAction *action = new MAction("Icon-video", "Video", this);
+    action->setLocation(MAction::ToolBarLocation);
     addAction(action);
-    DuiAction *actionSMS = new DuiAction("Icon-new-SMS", "SMS", this);
-    actionSMS->setLocation(DuiAction::ToolBarLocation);
+    MAction *actionSMS = new MAction("Icon-new-SMS", "SMS", this);
+    actionSMS->setLocation(MAction::ToolBarLocation);
     insertAction(action, actionSMS);
 }
 
 void ToolBarPage::addTextEntry()
 {
-    DuiTextEdit *entry = new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    MTextEdit *entry = new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
     entry->setViewType("toolbar");
-    DuiWidgetAction *action = new DuiWidgetAction(this);
-    action->setLocation(DuiAction::ToolBarLocation);
+    MWidgetAction *action = new MWidgetAction(this);
+    action->setLocation(MAction::ToolBarLocation);
     action->setWidget(entry);
     addAction(action);
 }
@@ -256,7 +256,7 @@ void ToolBarPage::addTextEntry()
 void ToolBarPage::selectToolbarDefaultView()
 {
     if (!isDefaultView) {
-        ((DuiApplicationWindow*)DuiApplication::activeWindow())->setToolbarViewType(DuiToolBar::defaultType);
+        ((MApplicationWindow*)MApplication::activeWindow())->setToolbarViewType(MToolBar::defaultType);
         exampleAction1->setVisible(true);
         exampleAction2->setVisible(true);
         fourButtons();
@@ -267,7 +267,7 @@ void ToolBarPage::selectToolbarDefaultView()
 void ToolBarPage::selectToolbarTabView()
 {
     if (isDefaultView) {
-        ((DuiApplicationWindow*)DuiApplication::activeWindow())->setToolbarViewType(DuiToolBar::tabType);
+        ((MApplicationWindow*)MApplication::activeWindow())->setToolbarViewType(MToolBar::tabType);
         exampleAction1->setVisible(false);
         exampleAction2->setVisible(false);
         addButtonsToTabView();
@@ -280,23 +280,23 @@ void ToolBarPage::addButtonsToTabView()
 {
     clearToolbarActions();
 
-    DuiAction *action = new DuiAction("icon-m-telephony-call-initiated", NULL, this);
-    action->setLocation(DuiAction::ToolBarLocation);
+    MAction *action = new MAction("icon-m-telephony-call-initiated", NULL, this);
+    action->setLocation(MAction::ToolBarLocation);
     action->setCheckable(true);
     action->setChecked(true);
     connect(action, SIGNAL(triggered()), this, SLOT(populateCallInitiated()));
     addAction(action);
 
-    action = new DuiAction("icon-m-telephony-call-received", NULL, this);
-    action->setLocation(DuiAction::ToolBarLocation);
+    action = new MAction("icon-m-telephony-call-received", NULL, this);
+    action->setLocation(MAction::ToolBarLocation);
     action->setCheckable(true);
     connect(action, SIGNAL(triggered()), this, SLOT(populateCallReceived()));
     addAction(action);
 
-    action = new DuiAction("icon-m-telephony-call-missed", NULL, this);
+    action = new MAction("icon-m-telephony-call-missed", NULL, this);
     action->setCheckable(true);
     connect(action, SIGNAL(triggered()), this, SLOT(populateCallMissed()));
-    action->setLocation(DuiAction::ToolBarLocation);
+    action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 
     populateCallInitiated();
@@ -337,12 +337,12 @@ void ToolBarPage::clearToolbarActions()
     QList<QAction *> acts = actions();
     int actsSize = acts.size();
     for (int i = 0; i < actsSize; ++i) {
-        DuiAction *action = qobject_cast<DuiAction *>(acts[i]);
-        if (action && action->location().testFlag(DuiAction::ToolBarLocation)) {
+        MAction *action = qobject_cast<MAction *>(acts[i]);
+        if (action && action->location().testFlag(MAction::ToolBarLocation)) {
             removeAction(action);
         }
     }
-    DuiApplicationWindow* window = ((DuiApplicationWindow*)DuiApplication::activeWindow());
+    MApplicationWindow* window = ((MApplicationWindow*)MApplication::activeWindow());
     acts = window->actions();
     actsSize = acts.size();
     for (int i = 0; i < actsSize; ++i) {

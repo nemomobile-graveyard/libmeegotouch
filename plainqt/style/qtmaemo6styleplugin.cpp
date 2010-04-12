@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -25,8 +25,8 @@ QStringList QtMaemo6StylePlugin::keys() const
 {
     return QStringList()
            << "maemo6"
-           << "DuiBasicQtStyle"
-           << "DuiIntegratedQtStyle"   //deprecated
+           << "MBasicQtStyle"
+           << "MIntegratedQtStyle"   //deprecated
            << "bqs"
            << "iqs";                   //deprecated
 }
@@ -35,10 +35,10 @@ QStyle *QtMaemo6StylePlugin::create(const QString &key)
 {
     QString lkey = key.toLower();
 
-    if ((lkey == "duibasicqtstyle") || (lkey == "bqs"))
+    if ((lkey == "mbasicqtstyle") || (lkey == "bqs"))
         return new QtMaemo6TestStyle;
 
-    if ((lkey == "maemo6") || (lkey == "duiintegratedqtstyle") || (lkey == "iqs"))
+    if ((lkey == "maemo6") || (lkey == "mintegratedqtstyle") || (lkey == "iqs"))
         return new QtMaemo6Style;
 
     return 0;

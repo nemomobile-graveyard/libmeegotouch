@@ -3,7 +3,7 @@
 
 #include <QObject>
 
-#include <DuiButton>
+#include <MButton>
 #include "chainingexampleinterface.h"
 
 class ImageViewer: public QObject
@@ -11,7 +11,7 @@ class ImageViewer: public QObject
     Q_OBJECT
 
 public:
-    ImageViewer( const DuiButton &button );
+    ImageViewer( const MButton &button );
     ~ImageViewer();
 
 public slots:

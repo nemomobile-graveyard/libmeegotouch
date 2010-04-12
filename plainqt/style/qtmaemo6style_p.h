@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -27,8 +27,8 @@
 #include "qtmaemo6styleeventfilter.h"
 #include "qtmaemo6scrollbareventfilter.h"
 
-class DuiComponentData;
-class DuiWidgetController;
+class MComponentData;
+class MWidgetController;
 class QToolButton;
 class QAction;
 class QStatusBar;
@@ -44,26 +44,26 @@ public:
     virtual ~QtMaemo6StylePrivate();
 
     /*!
-     * Initialization of the DUI framework.
+     * Initialization of the M framework.
      * init() gets called by the style constructor.
-     * At that point we don't know yet whether the application object is a DUI
-     * application or not. As we only need to fully initialize the DUI framework
-     * for non-DUI application we need to defer the initialization of the DUI
+     * At that point we don't know yet whether the application object is a M
+     * application or not. As we only need to fully initialize the M framework
+     * for non-M application we need to defer the initialization of the M
      * framework to a later point of the application life cycle.
      */
-    void initDui();
+    void initM();
 
     /*!
-     * returns a DuiStyle corresponding the given parameters
+     * returns a MStyle corresponding the given parameters
      */
-    static const DuiStyle *duiStyle(QStyle::State state,
+    static const MStyle *mStyle(QStyle::State state,
                                     const QString &styleClass,
                                     const QString &styleObject = QString(),
                                     const QString &type = QString(),
-                                    const DuiWidgetController *parent = NULL);
+                                    const MWidgetController *parent = NULL);
 
     /*!
-     * returns a string generated from the QStyle::state, dui can use
+     * returns a string generated from the QStyle::state, m can use
      */
     static QString modeFromState(QStyle::State state) ;
 
@@ -74,7 +74,7 @@ public:
     static void drawWidgetBackground(QPainter *p,
                                      const QStyleOption *option,
                                      const QRect &rect,
-                                     const DuiWidgetStyle *style);
+                                     const MWidgetStyle *style);
 
     /*!
      * draws a scalable image
@@ -82,8 +82,8 @@ public:
     static void drawScalableImage(QPainter *p,
                                   const QStyleOption *option,
                                   const QRect &rect,
-                                  const DuiScalableImage *scalableImage,
-                                  const DuiWidgetStyle *style,
+                                  const MScalableImage *scalableImage,
+                                  const MWidgetStyle *style,
                                   const QString &purpose = "bg",
                                   bool enableCache = true);
 
@@ -93,19 +93,19 @@ public:
     static void drawSliderBaseBackground(QPainter *p,
                                          const QStyleOption *option,
                                          const QRect &rect,
-                                         const DuiSliderStyle *style,
+                                         const MSliderStyle *style,
                                          int maxSliderLength);
 
     /*!
      * Draws the text on the button.
-     * \param style the dui style which is used to draw the button
+     * \param style the m style which is used to draw the button
      * \param painter
      * \param textRect the rect within the button in which the text (and icon) is drawn
      * \param text the text
      * \param align the alignment the text uses within the textRect!!
      * \param font font used instead of font from the style
      */
-    void drawButtonText(const DuiButtonStyle *style,
+    void drawButtonText(const MButtonStyle *style,
                         QPainter *painter,
                         const QRectF &textRect,
                         const QString &text,
@@ -114,13 +114,13 @@ public:
     /*!
      * Draws the text on the button.
      *  overload: uses the font from style to draw the text
-     * \param style the dui style which is used to draw the button
+     * \param style the m style which is used to draw the button
      * \param painter
      * \param textRect the rect within the button in which the text (and icon) is drawn
      * \param text the text
      * \param align the alignment the text uses within the textRect!!
      */
-    void drawButtonText(const DuiButtonStyle *style,
+    void drawButtonText(const MButtonStyle *style,
                         QPainter *painter,
                         const QRectF &textRect,
                         const QString &text,
@@ -128,13 +128,13 @@ public:
 
     /*!
      * Draws the icon on the button.
-     * \param style the dui style which is used to draw the button
+     * \param style the m style which is used to draw the button
      * \param painter
      * \param contentsRect the rect within the button in which the text (and icon) is drawn
      * \param icon the icon
      * \param iconSize optional overrides the icon size from style
      */
-    void drawButtonIcon(const DuiButtonStyle *style,
+    void drawButtonIcon(const MButtonStyle *style,
                         QPainter *painter,
                         const QRect &contentsRect,
                         const QIcon &icon,
@@ -147,14 +147,14 @@ public:
      * \param icon the icon on the button
      * \param rect the rect in which the button is drawn
      * \param option the QStyleOption used to draw the button
-     * \param style the dui style used to draw the button
+     * \param style the m style used to draw the button
      */
     void drawBasicButton(QPainter *painter,
                          const QString &text,
                          const QIcon &icon,
                          const QRect &rect,
                          const QStyleOption *option,
-                         const DuiButtonStyle *style) const;
+                         const MButtonStyle *style) const;
 
     /*!
      * Draws the button (overloaded)
@@ -181,7 +181,7 @@ public:
      * \param icon the icon on the button
      * \param rect the rect in which the button is drawn
      * \param option the QStyleOption used to draw the button
-     * \param style the dui style used to draw the button
+     * \param style the m style used to draw the button
      * \param font use this font instead of the font from the style
      * \param font use this icon size instead of icon size from the style
      */
@@ -190,7 +190,7 @@ public:
                          const QIcon &icon,
                          const QRect &rect,
                          const QStyleOption *option,
-                         const DuiButtonStyle *style,
+                         const MButtonStyle *style,
                          const QFont &font,
                          const QSize &iconSize) const;
 
@@ -234,13 +234,13 @@ public:
      * calculates a rect the text and icon earn
      * returns a rect within the button's rect used by the text and icon
      * the rect already includes the margins
-     * \param style the dui style used to draw the button
+     * \param style the m style used to draw the button
      * \param text the text on the button
      * \param icon optional the icon on the button
      * \param font optional used instead of the font from the style
      * \param iconSize optional used instead of iconSize from the style if valid
      */
-    QRect getTextAndIconRect(const DuiButtonStyle *style,
+    QRect getTextAndIconRect(const MButtonStyle *style,
                              const QString &text,
                              const QIcon &icon = QIcon(),
                              const QFont &font = QFont(),
@@ -255,15 +255,15 @@ public:
 
     /*!
      * returns the effective padding used for the style
-     * uses the borders of the DuiScalableImage, but if the padding specified in the style is
-     * greater than the border of the DuiScalableImage, the borders from style are used
+     * uses the borders of the MScalableImage, but if the padding specified in the style is
+     * greater than the border of the MScalableImage, the borders from style are used
      * \param style the used style
      * \param left border in the left side
      * \param top border in the top side
      * \param right border in the right side
      * \param bottom border in the bottom side
      */
-    void paddingFromStyle(const DuiWidgetStyle *style,
+    void paddingFromStyle(const MWidgetStyle *style,
                           int *left,
                           int *top,
                           int *right,
@@ -292,8 +292,8 @@ public:
         rightBorder = 4,
         bottomBorder = 8
     };
-    QPixmap borderCroppedPixmap(const DuiScalableImage* image, QSize size, int borders, int borderLines) const;
-    QPixmap borderCroppedPixmap(const DuiScalableImage* image, QSize size, int borders) const {
+    QPixmap borderCroppedPixmap(const MScalableImage* image, QSize size, int borders, int borderLines) const;
+    QPixmap borderCroppedPixmap(const MScalableImage* image, QSize size, int borders) const {
         return borderCroppedPixmap(image, size, borders, borders);
     }
 
@@ -323,9 +323,9 @@ public:
 
     const int m_actionsInTitleBarCount;
 
-    DuiComponentData *m_componentData;
-    bool m_isDuiInitialized;
-    bool m_isDuiApplication;
+    MComponentData *m_componentData;
+    bool m_isMInitialized;
+    bool m_isMApplication;
     QtMaemo6ScrollBarEventFilter *m_scrollBarEventFilter;
     QtMaemo6StyleEventFilter *m_windowEventFilter;
 

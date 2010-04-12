@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,9 +20,9 @@
 #include "apitemcreator.h"
 #include "apitemmodel.h"
 
-void APItemCreator::updateCell(const QModelIndex &index, DuiWidget *cell) const
+void APItemCreator::updateCell(const QModelIndex &index, MWidget *cell) const
 {
-    DuiContentItem *contentItem = qobject_cast<DuiContentItem *>(cell);
+    MContentItem *contentItem = qobject_cast<MContentItem *>(cell);
     QVariant data = index.data(Qt::DisplayRole);
     QStringList rowData = data.value<QStringList>();
     contentItem->setTitle(rowData[0]);
@@ -32,9 +32,9 @@ void APItemCreator::updateCell(const QModelIndex &index, DuiWidget *cell) const
     contentItem->boundingRect();
 
     if (index.row() == 0)
-        contentItem->setItemMode(DuiContentItem::SingleColumnTop);
+        contentItem->setItemMode(MContentItem::SingleColumnTop);
     else if (index.sibling(index.row() + 1, 0).isValid())
-        contentItem->setItemMode(DuiContentItem::SingleColumnCenter);
+        contentItem->setItemMode(MContentItem::SingleColumnCenter);
     else
-        contentItem->setItemMode(DuiContentItem::SingleColumnBottom);
+        contentItem->setItemMode(MContentItem::SingleColumnBottom);
 }

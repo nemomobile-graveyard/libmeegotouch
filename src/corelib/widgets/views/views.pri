@@ -7,36 +7,36 @@ WIDGETS_VIEWS_SRC_DIR=./widgets/views
 INCLUDEPATH+=./widgets/views
 
 PUBLIC_HEADERS += \
-    $$WIDGETS_VIEWS_SRC_DIR/duiscenewindowview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duilabelview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duipositionindicatorview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duiapplicationmenubuttonview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duibuttonview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duiimagewidgetview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duibuttoniconview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duibuttonswitchview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duicheckboxview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duicontainerview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duidockwidgetview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duicontentitemview.h \
-    $$WIDGETS_VIEWS_SRC_DIR/duinavigationbarview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mscenewindowview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mlabelview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mpositionindicatorview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mapplicationmenubuttonview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mbuttonview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mimagewidgetview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mbuttoniconview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mbuttonswitchview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mcheckboxview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mcontainerview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mdockwidgetview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mcontentitemview.h \
+    $$WIDGETS_VIEWS_SRC_DIR/mnavigationbarview.h \
 
 PRIVATE_HEADERS += \
 
 SOURCES += \
-    $$WIDGETS_VIEWS_SRC_DIR/duiscenewindowview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duilabelview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duilabelview_rich.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duilabelview_simple.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duipositionindicatorview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duiapplicationmenubuttonview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duibuttonview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duiimagewidgetview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duibuttoniconview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duibuttonswitchview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duicheckboxview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duicontainerview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duidockwidgetview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duicontentitemview.cpp \
-    $$WIDGETS_VIEWS_SRC_DIR/duinavigationbarview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mscenewindowview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mlabelview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mlabelview_rich.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mlabelview_simple.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mpositionindicatorview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mapplicationmenubuttonview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mbuttonview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mimagewidgetview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mbuttoniconview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mbuttonswitchview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mcheckboxview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mcontainerview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mdockwidgetview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mcontentitemview.cpp \
+    $$WIDGETS_VIEWS_SRC_DIR/mnavigationbarview.cpp \
 

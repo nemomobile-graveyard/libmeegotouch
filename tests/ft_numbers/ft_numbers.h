@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -23,10 +23,10 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include <DuiLocale>
+#include <MLocale>
 
 
-Q_DECLARE_METATYPE(DuiLocale);
+Q_DECLARE_METATYPE(MLocale);
 Q_DECLARE_METATYPE(qlonglong);
 
 #define MAX_PARAMS 10

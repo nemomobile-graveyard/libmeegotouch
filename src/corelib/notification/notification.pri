@@ -7,20 +7,20 @@ INCLUDEPATH += $$NOTIFICATION_SRC_DIR
 
 # These headers should get installed
 PUBLIC_HEADERS += \
-    $$NOTIFICATION_SRC_DIR/duinotification.h \
-    $$NOTIFICATION_SRC_DIR/duinotificationgroup.h
+    $$NOTIFICATION_SRC_DIR/mnotification.h \
+    $$NOTIFICATION_SRC_DIR/mnotificationgroup.h
 
 
 PRIVATE_HEADERS += \
-    $$NOTIFICATION_SRC_DIR/duinotification_p.h \
-    $$NOTIFICATION_SRC_DIR/duinotificationgroup_p.h
+    $$NOTIFICATION_SRC_DIR/mnotification_p.h \
+    $$NOTIFICATION_SRC_DIR/mnotificationgroup_p.h
 
 # These headers should not get installed
-PRIVATE_HEADERS += $$NOTIFICATION_SRC_DIR/duinotificationmanager.h \
-    $$NOTIFICATION_SRC_DIR/duinotificationmanagerproxy.h \
+PRIVATE_HEADERS += $$NOTIFICATION_SRC_DIR/mnotificationmanager.h \
+    $$NOTIFICATION_SRC_DIR/mnotificationmanagerproxy.h \
 
 SOURCES += \
-    $$NOTIFICATION_SRC_DIR/duinotification.cpp \
-    $$NOTIFICATION_SRC_DIR/duinotificationgroup.cpp \
-    $$NOTIFICATION_SRC_DIR/duinotificationmanager.cpp \
-    $$NOTIFICATION_SRC_DIR/duinotificationmanagerproxy.cpp
+    $$NOTIFICATION_SRC_DIR/mnotification.cpp \
+    $$NOTIFICATION_SRC_DIR/mnotificationgroup.cpp \
+    $$NOTIFICATION_SRC_DIR/mnotificationmanager.cpp \
+    $$NOTIFICATION_SRC_DIR/mnotificationmanagerproxy.cpp
