@@ -30,6 +30,57 @@
 #include <QWaitCondition>
 #include <QAbstractTableModel>
 
+class Loader;
+
+struct MediaType
+{
+    enum Type {
+        Video = 0,
+        Image
+    } type;
+
+    enum Rating {
+        NoStar,
+        OneStar,
+        TwoStars,
+        ThreeStars,
+        FourStars,
+        FiveStars
+    } rating;
+
+    QString path;
+    QPixmap pixmap;
+    Rating rate;
+};
+
+Q_DECLARE_METATYPE(MediaType);
+
+class GridModel: public QAbstractTableModel
+{
+    Q_OBJECT
+
+public:
+    explicit GridModel(const QSize &size, const QString &dir = QDir::currentPath());
+    ~GridModel();
+
+    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
+    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+
+public slots:
+    void rateImage(MediaType::Rating rating, const QString& id);
+
+private slots:
+    void insertImage(QImage pixmap, int index);
+
+private:
+    void createItems();
+    QMap<int, QVariant> m_items;
+
+    Loader* m_loader;
+    QString m_dir;
+};
+
 typedef QPair<QString, int> BacklogItem;
 
 class Loader : public QThread
@@ -37,10 +88,11 @@ class Loader : public QThread
     Q_OBJECT
 public:
     explicit Loader (const QSize &s) : size(s), stopWork(false) { }
-    void pushImage(const QString &path, int idx);
+    void pushImage(const QString &path, int index);
     void stop();
+    void scaleImage(QImage& image) const;
 signals:
-    void imageReady(const QImage image, int idx);
+    void imageReady(QImage pixmap, int index);
 protected:
     void run();
 private:
@@ -49,27 +101,6 @@ private:
     QList<BacklogItem> backlog;
     QSize size;
     bool stopWork;
-};
-
-class GridModel: public QAbstractTableModel
-{
-    Q_OBJECT
-
-public:
-    explicit GridModel(const QSize &size = QSize(250, 250), const QString &dir = QDir::currentPath());
-    ~GridModel();
-
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-
-private slots:
-    void updateImage(const QImage image, int idx);
-
-private:
-    Loader *m_loader;
-    QList<QPixmap> m_items;
-    QList<QString> *m_itemPaths;
 };
 
 #endif

@@ -186,7 +186,33 @@ MApplicationPageStyle#video-detail-page {
     background-color: #001100;
 }
 
-ItemDetailPage MVideoWidgetStyle:fullscreen {
-    background-color: #001100;
+#itemDetailPage {
+    background-image: ;
+    background-color: black;
     color-key: #001100;
+}
+
+#gridPage {
+    background-image: ;
+    background-color: black;
+}
+
+#gridItem {
+    margin-left: 0px;
+    padding-left: 0px;
+    margin-right: 0px;
+    padding-right: 0px;
+
+    border-left: 0px;
+    border-right: 0px;
+    border-top: 0px;
+    border-bottom: 0px;
+}
+
+#badge {
+    minimum-size: 30px 30px;
+    preferred-size: 30px 30px;
+    maximum-size: 30px 30px;
+
+    border-width: 0px;
 }

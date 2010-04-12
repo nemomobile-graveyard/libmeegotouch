@@ -24,21 +24,14 @@
 #include "gridmodel.h"
 
 GridModel::GridModel(const QSize &size, const QString &dir)
+        : m_loader(new Loader(size)), m_dir(dir)
 {
-    QDir imagesDir(dir);
-    imagesDir.setNameFilters(QStringList() << "*.jpeg" << "*.jpg" << "*.png");
-
-    m_itemPaths = new QList<QString>;
-    QStringList entries = imagesDir.entryList(QDir::Files);
-    foreach(const QString & entry, entries) {
-        m_items.append(QPixmap(size));
-        m_itemPaths->append(dir + entry);
-    }
-
-    m_loader = new Loader(size);
-    QObject::connect(m_loader, SIGNAL(imageReady(const QImage, int)), this, SLOT(updateImage(const QImage, int)));
+    qRegisterMetaType<MediaType>("MediaType");
 
     m_loader->start(QThread::LowestPriority);
+    QObject::connect(m_loader, SIGNAL(imageReady(QImage, int)), this, SLOT(insertImage(QImage, int)));
+
+    createItems();
 }
 
 GridModel::~GridModel()
@@ -47,7 +40,6 @@ GridModel::~GridModel()
     m_loader->wait();
 
     delete m_loader;
-    delete m_itemPaths;
 }
 
 int GridModel::rowCount(const QModelIndex &parent) const
@@ -69,29 +61,119 @@ QVariant GridModel::data(const QModelIndex &index, int role) const
     Q_ASSERT(index.isValid());
     Q_ASSERT(index.row() < m_items.size());
 
-    int idx = index.row();
-    if (role == Qt::DecorationRole) {
-        const QString path = m_itemPaths->at(idx);
 
-        if (!path.isEmpty()) {
-            m_itemPaths->replace(idx, QString());
-            m_loader->pushImage(path, idx);
-        }
-        return QVariant(m_items.at(idx));
+    MediaType m;
+
+    if( m_items[ index.row() ].canConvert<MediaType>() )
+        m = m_items[ index.row() ].value<MediaType>();
+
+    if (role == Qt::DecorationRole) {
+        return m_items[ index.row() ];
     }
 
     return QVariant();
 }
 
-void GridModel::updateImage(const QImage image, int idx)
+void GridModel::createItems()
 {
-    QImage ours = image;
+    int index = 0;
 
-    QPixmap pixmap = QPixmap::fromImage(ours);
+    QDir mediaDir(m_dir);
+    mediaDir.setFilter(QDir::Files | QDir::NoSymLinks);
+    mediaDir.setSorting(QDir::NoSort);
+    mediaDir.setNameFilters(QStringList() << "*.jpeg" << "*.jpg" << "*.mp4" << "*.mov");
+    const QStringList videoTypes(QStringList() << "mp4" << "mov");
+    const QFileInfoList fileList = mediaDir.entryInfoList();
 
-    m_items.replace(idx, pixmap);
+    foreach(const QFileInfo & file, fileList) {
+        const QString path = file.absoluteFilePath();
+        MediaType m;
 
-    emit dataChanged(createIndex(idx, 0), createIndex(idx, 0));
+        if( videoTypes.contains( file.suffix() )) {
+            if( file.fileName().startsWith("thumb-") ) {
+                m.path = path;
+                m.type = MediaType::Video;
+            } else {
+                continue;
+            }
+        } else {
+            m.type = MediaType::Image;
+            m.path = path;
+            m.pixmap = QPixmap();
+            m_loader->pushImage(path,index);
+        }
+
+        m_items[index] = QVariant::fromValue(m);
+        index++;
+    }
+}
+
+void GridModel::insertImage(QImage image, int index)
+{
+    if( m_items[index].canConvert<MediaType>() ) {
+        MediaType m = m_items[index].value<MediaType>();
+        m.pixmap = QPixmap::fromImage(image);
+        m.rating = MediaType::OneStar;
+        m_items[index] = QVariant::fromValue(m);
+
+        emit dataChanged(createIndex(index, 0), createIndex(index, 0));
+    }
+}
+
+static void badgeHelper(int amount, QPixmap& pixmap)
+{
+    for(int i = 0;i<amount;i++) {
+        QPainter painter(&pixmap);
+        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
+        painter.drawImage( QRectF(i*20,0,30,30),QImage( QDir(IMAGES_DIR).canonicalPath() + QDir::separator() + "star.png") );
+        painter.end();
+    }
+}
+
+void GridModel::rateImage(MediaType::Rating rating, const QString& id)
+{
+    int index = 0;
+    foreach(QVariant v, m_items) {
+        if( v.canConvert<MediaType>() ) {
+            MediaType m = m_items[index].value<MediaType>();
+
+            if(m.type == MediaType::Image) {
+                if(m.path == id) {
+                    m.rate = rating;
+
+                    int amount = 0;
+                    switch(rating) {
+                    case MediaType::NoStar:
+                        break;
+                    case MediaType::OneStar:
+                        amount = 1; break;
+                    case MediaType::TwoStars:
+                        amount = 2; break;
+                    case MediaType::ThreeStars:
+                        amount = 3; break;
+                    case MediaType::FourStars:
+                        amount = 4; break;
+                    case MediaType::FiveStars:
+                        amount = 5; break;
+                    default: amount = 0;
+                    }
+
+                    // get a fresh image without badge
+                    QImage image(id);
+                    m_loader->scaleImage( image );
+                    QPixmap p = QPixmap::fromImage( image );
+                    badgeHelper( amount, p );
+                    m.pixmap = p;
+
+                    m_items[index] = QVariant::fromValue(m);
+
+                    emit dataChanged(createIndex(index, 0), createIndex(index, 0));
+                    return;
+                }
+            }
+            index++;
+        }
+    }
 }
 
 void Loader::run()
@@ -108,26 +190,36 @@ void Loader::run()
             continue;
         }
 
-        BacklogItem backlogItem = backlog.takeLast();
+        BacklogItem backlogItem = backlog.takeFirst();
         mutex.unlock();
+        const QFileInfo file( backlogItem.first );
+        QDir dir(file.absolutePath());
+        dir.cd(".." + QString(QDir::separator()) + "thumbnails");
+        int index = backlogItem.second;
 
-        QString path = backlogItem.first;
-        int idx = backlogItem.second;
+        QImage image(dir.path() + QDir::separator() + file.fileName());
 
-        QImage image(path);
-        image = image.scaled(size, Qt::KeepAspectRatioByExpanding);
-        if (image.size() != size) {
-            QPoint start((image.width() - size.width()) / 2, (image.height() - size.height()) / 2);
-            image = image.copy(QRect(start, size));
+        if(!image.isNull()) {
+            scaleImage(image);
+            emit imageReady(image, index);
+        } else {
+            pushImage(backlogItem.first, index);
         }
-
-        emit imageReady(image, idx);
     }
 }
 
-void Loader::pushImage(const QString &path, int idx)
+void Loader::scaleImage(QImage& image) const
 {
-    BacklogItem backlogItem(path, idx);
+    image = image.scaled(size, Qt::KeepAspectRatioByExpanding);
+    if (image.size() != size) {
+        QPoint start((image.width() - size.width()) / 2, (image.height() - size.height()) / 2);
+        image = image.copy(QRect(start, size));
+    }
+}
+
+void Loader::pushImage(const QString &path, int index)
+{
+    BacklogItem backlogItem(path, index);
     mutex.lock();
 
     backlog.append(backlogItem);

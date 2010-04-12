@@ -17,12 +17,17 @@
 **
 ****************************************************************************/
 
-#ifndef MGRIDPAGE_H
-#define MGRIDPAGE_H
+#ifndef DUIGRIDPAGE_H
+#define DUIGRIDPAGE_H
 
 #include <MList>
+#include <MVideoWidget>
 
 #include "templatepage.h"
+#include "gridmodel.h"
+
+class MSlider;
+class MLabel;
 
 class MGridPage: public TemplatePage
 {
@@ -35,13 +40,45 @@ public:
     virtual void createContent();
     virtual QString timedemoTitle();
 
+    QSizeF itemSize() const
+    {
+        return m_itemSize;
+    }
+
 public slots:
+    void videoReady();
+    void itemClicked();
+
+    void showGridConfigurationDialog();
+
+    void modifyColumnsSliderHandle(int newValue);
+    void modifyRowsSliderHandle(int newValue);
+
+    void orientationChanged(M::Orientation orientation);
+
+signals:
+    void rate(MediaType::Rating rating, const QString& id);
 
 protected:
     void retranslateUi();
+    virtual void orientationChangeEvent(MOrientationChangeEvent *event);
+
+private slots:
+    void backButtonClicked();
+    void configureGrid();
 
 private:
     MList *list;
+    bool pageShown;
+    QSizeF m_itemSize;
+
+    int m_columnsPortrait;
+    int m_columnsLandscape;
+
+    MSlider* m_columnsLandscapeSlider;
+    MSlider* m_columnsPortraitSlider;
+    MLabel* m_columnsLandscapeLabel;
+    MLabel* m_columnsPortraitLabel;
 };
 
 #endif

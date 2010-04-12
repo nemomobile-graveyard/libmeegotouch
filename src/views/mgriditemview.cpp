@@ -27,6 +27,8 @@
 #include "mlabel.h"
 #include "mviewcreator.h"
 
+#include <MButton>
+
 #include <QGraphicsGridLayout>
 #include <QDebug>
 

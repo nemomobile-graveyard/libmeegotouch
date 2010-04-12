@@ -69,6 +69,9 @@ SOURCES += main.cpp \
     timedemopage.cpp \
     timedemobenchmark.cpp \
     staticpagebenchmark.cpp \
+    gridimagewidget.cpp \
+    itemdetailpage.cpp \
+    gridvideowidget.cpp \
     swaphook.cpp
 
 HEADERS += templatepage.h \
@@ -103,12 +106,10 @@ HEADERS += templatepage.h \
     timedemopage.h \
     timedemobenchmark.h \
     staticpagebenchmark.h \
+    gridimagewidget.h \
+    itemdetailpage.h \
+    gridvideowidget.h \
     swaphook.h
-
-contains(DEFINES, HAVE_GSTREAMER) {
-  SOURCES += videocontainerpage.cpp
-  HEADERS += videocontainerpage.h
-}
 
 # theme
 include(theme/theme.pri)
@@ -152,6 +153,7 @@ testsxml.files = tests.xml
 testsxml.path = $$M_INSTALL_DATA/meegotouch-demos-widgetsgallery-tests/
 DEFINES += CONTACTS_DIR=\"\\\"$$M_THEME_DIR/devel/meegotouch/widgetsgallery/images/contacts/\\\"\"
 DEFINES += IMAGES_DIR=\"\\\"$$M_THEME_DIR/devel/meegotouch/widgetsgallery/images/\\\"\"
+DEFINES += MEDIA_DIR=\"\\\"/home/user/widgetsgallery/data/\\\"\"
 
 data_files.files = data/*
 data_files.path = $$M_INSTALL_DATA/widgetsgallery/
