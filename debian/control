@@ -70,7 +70,7 @@ Description: Demo application for DirectUI
 Package: meegotouch-demos-widgetsgallery-tests
 Section: devel
 Architecture: any
-Depends: ${shlibs:Depends}, meegotouchtestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
+Depends: ${shlibs:Depends}, duitestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
 Description: Demo application for DirectUI
 
 Package: meegotouch-demos-widgetsgallery-dbg
