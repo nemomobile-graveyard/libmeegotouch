@@ -52,7 +52,7 @@ QString MApplicationExtensionMetaData::extensionBinary() const
 
 QString MApplicationExtensionMetaData::interface() const
 {
-    return "com.nokia.m.core.ApplicationExtensionInterface/1.0";
+    return "com.meego.core.MApplicationExtensionInterface/1.0";
 }
 
 // QPluginLoader stubs
@@ -112,7 +112,7 @@ void Ut_MApplicationExtensionLoader::testExtensionLoading()
     QVERIFY(extension != NULL);
     QCOMPARE(extension, dynamic_cast<MApplicationExtensionInterface *>(QPluginLoader_instance_return));
     QCOMPARE(gQPluginLoaderFileName, QString("TestExtensionBinary"));
-    QCOMPARE(initializedInterface, QString("com.nokia.m.core.ApplicationExtensionInterface/1.0"));
+    QCOMPARE(initializedInterface, QString("com.meego.core.MApplicationExtensionInterface/1.0"));
 }
 
 void Ut_MApplicationExtensionLoader::testExtensionLoadingFailNullExtensionObject()

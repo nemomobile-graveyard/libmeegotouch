@@ -72,7 +72,7 @@ bool QDir::exists() const
     return true;
 }
 
-const QString interfaceName("com.nokia.m.core.ApplicationExtensionInterface/1.0");
+const QString interfaceName("com.meego.core.MApplicationExtensionInterface/1.0");
 
 void SignalListener::extensionInstantiated(MApplicationExtensionInterface *extension)
 {
@@ -142,6 +142,7 @@ void Ut_MApplicationExtensionManager::initTestCase()
     manager = NULL;
 
     gDefaultMApplicationExtensionMetaDataStub.stubReset();
+    gDefaultMDesktopEntryStub.stubSetReturnValue("type", QString("X-MeeGoApplicationExtension"));
 }
 
 void Ut_MApplicationExtensionManager::cleanupTestCase()

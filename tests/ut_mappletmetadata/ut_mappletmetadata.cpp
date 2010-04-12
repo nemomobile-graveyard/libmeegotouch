@@ -22,7 +22,7 @@
 #include "ut_mappletmetadata.h"
 #include "mappletmetadata.h"
 
-QString gType = "MApplet";
+QString gType = "X-MeeGoApplet";
 QString gRunner = "";
 QString gApplet = "";
 QString gName = "";
@@ -40,9 +40,9 @@ QString MDesktopEntry::value(const QString &key) const
         return QString(gIcon);
     } else if (key == "Desktop Entry/Exec") {
         return QString(gRunner);
-    } else if (key == "M/X-MApplet-Applet") {
+    } else if (key == "X-MeeGoApplet/Applet") {
         return QString(gApplet);
-    } else if (key == "M/X-MApplet-Identifier") {
+    } else if (key == "X-MeeGoApplet/Identifier") {
         return QString(gExtraIdentifier);
     }
     return QString();
@@ -58,9 +58,9 @@ bool MDesktopEntry::contains(const QString &key) const
         return gIcon != "";
     } else if (key == "Desktop Entry/Exec") {
         return gRunner != "";
-    } else if (key == "M/X-MApplet-Applet") {
+    } else if (key == "X-MeeGoApplet/Applet") {
         return gApplet != "";
-    } else if (key == "M/X-MApplet-Identifier") {
+    } else if (key == "X-MeeGoApplet/Identifier") {
         return gExtraIdentifier != "";
     }
     return false;
@@ -167,9 +167,9 @@ void Ut_MAppletMetaData::testIconMissing()
 void Ut_MAppletMetaData::testExtraIdentifier()
 {
     gExtraIdentifier = "";
-    QVERIFY(!m_subject->contains("M/X-MApplet-Identifier"));
+    QVERIFY(!m_subject->contains("X-MeeGoApplet/Identifier"));
     gExtraIdentifier = "foo";
-    QVERIFY(m_subject->contains("M/X-MApplet-Identifier"));
+    QVERIFY(m_subject->contains("X-MeeGoApplet/Identifier"));
 }
 
 void Ut_MAppletMetaData::testResourceIdentifier()

@@ -41,7 +41,7 @@ class BadApplicationExtensionInterface
 {
 };
 
-Q_DECLARE_INTERFACE(BadApplicationExtensionInterface, "com.nokia.m.core.BadApplicationExtensionInterface/1.0")
+Q_DECLARE_INTERFACE(BadApplicationExtensionInterface, "com.meego.core.BadApplicationExtensionInterface/1.0")
 
 /*!
  * A bad application extension that does not derive from the correct interface
