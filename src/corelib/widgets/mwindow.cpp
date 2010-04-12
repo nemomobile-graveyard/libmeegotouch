@@ -135,6 +135,7 @@ void MWindowPrivate::init()
     q->viewport()->grabGesture(Qt::PinchGesture);
 
     q->setAttribute(Qt::WA_AcceptTouchEvents);
+    q->viewport()->grabGesture(Qt::PanGesture);
 }
 
 #ifdef Q_WS_X11
