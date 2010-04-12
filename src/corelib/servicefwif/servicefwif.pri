@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiServiceFwIf module
+# ServiceFwIf module
 # This module contains classes needed for applications to comminucate with
 # the servicemapper
 ############################################################################### 

@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiWorkspace module
+# Workspace module
 # This module contains all classes that rather deal with the workspace   
 # management.
 ############################################################################### 

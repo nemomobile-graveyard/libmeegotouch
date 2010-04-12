@@ -1,5 +1,5 @@
 # ##############################################################################
-# DuiNotification module
+# Notification module
 # This module contains a convenience API for handling notifications in a system
 # ##############################################################################
 NOTIFICATION_SRC_DIR = ./notification

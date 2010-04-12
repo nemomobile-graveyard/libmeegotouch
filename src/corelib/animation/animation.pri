@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiAnimation module
+# Animation module
 # This module contains all classes that handle animations.
 ###############################################################################
 ANIMATION_SRC_DIR=./animation

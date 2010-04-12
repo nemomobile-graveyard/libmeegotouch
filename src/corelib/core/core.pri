@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiCore module
+# Core module
 # This module contains all classes that represent the most basic foundation
 # of an application and have little to no relationship to the view classes.
 ###############################################################################

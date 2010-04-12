@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiWidget/Views module
+# Views module
 # This module contains all classes implemeting widget views.
 ###############################################################################
 
@@ -108,4 +108,3 @@ SOURCES += \
     mcontentitemview.cpp \
     mnavigationbarview.cpp \
     mscenelayereffectdimview.cpp \
-

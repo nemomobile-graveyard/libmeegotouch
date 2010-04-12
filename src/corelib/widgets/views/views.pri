@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiWidget/Views module
+# Widget/Views module
 # This module contains all classes implemeting widget views.
 ###############################################################################
 

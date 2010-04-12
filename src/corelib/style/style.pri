@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiTheme module
+# Style module
 # This module contains all classes that handle style and CSS support.
 ###############################################################################
 STYLE_SRC_DIR=./style

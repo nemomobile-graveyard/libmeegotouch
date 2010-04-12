@@ -1,6 +1,6 @@
 ###############################################################################
-# DuiTheme module
-# This module contains all classes that handle style and CSS support.
+# Scene module
+# This module contains all classes that handle scene management
 ############################################################################### 
 SCENE_SRC_DIR=./scene
 INCLUDEPATH+=./scene

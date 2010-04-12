@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiAnimation/Widget/Core module
+# Animation/Widget/Core module
 # This module contains widget core animation code.
 ###############################################################################
 

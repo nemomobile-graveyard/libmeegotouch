@@ -18,9 +18,6 @@ include(style/style.pri)
 
 LIBS += -lmeegotouchcore
 
-LIBS += \
-    -lmeegotouchcore \
-
 SOURCES += mviewslibrary.cpp
 
 include(../common_bot.pri)

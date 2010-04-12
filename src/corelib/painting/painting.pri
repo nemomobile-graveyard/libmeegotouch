@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiPainting module
+# Painting module
 # This module contains all classes that exclusively deal with painting.  
 ############################################################################### 
 PAINTING_SRC_DIR=./painting

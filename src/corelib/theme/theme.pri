@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiTheme module
+# Theme module
 # This module contains all classes that handle theme support.
 ############################################################################### 
 THEME_SRC_DIR=./theme

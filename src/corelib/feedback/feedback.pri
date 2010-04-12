@@ -1,5 +1,5 @@
 ###############################################################################
-# DuiFeedback module
+# Feedback module
 # This module contains all classes which deal with feedback to user input  
 ############################################################################### 
 FEEDBACK_SRC_DIR=./feedback
