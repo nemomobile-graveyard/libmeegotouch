@@ -114,7 +114,6 @@ ifneq (0,$(MAKEDOCS))
 	cd $(BUILD_DIR) && make $(PARALLEL_MAKEFLAGS) doc
 endif
 
-	#libmeegotouch0 package
 	cd $(BUILD_DIR) && INSTALL_ROOT=$(CURDIR)/debian/tmp make $(PARALLEL_MAKEFLAGS) install
 
 	install -m 644 -D -p $(BUILD_DIR)/demos/widgetsgallery/translations/widgetsgallery.ts $(CURDIR)/debian/tmp/usr/share/doc/meegotouch-demos-widgetsgallery-l10n-engineering-english/widgetsgallery.ts
@@ -131,28 +130,19 @@ binary-arch: build install
 	dh_testroot
 	dh_installchangelogs 
 	dh_installdocs
-	dh_install --sourcedir=debian/tmp -v 
-#	dh_installexamples
-#	dh_install
-#	dh_installmenu
-#	dh_installdebconf	
-#	dh_installlogrotate
-#	dh_installemacsen
-#	dh_installpam
-#	dh_installmime
-#	dh_installinit
-#	dh_installcron
-#	dh_installinfo
-#	dh_installman
+	dh_install --sourcedir=debian/tmp -v
+	# print warnings for not installed files
+	dh_install --sourcedir=debian/tmp/ --list-missing
 	dh_link
-	dh_strip -p libmeegotouch0 --dbg-package=libmeegotouch0
-	dh_strip -p meegotouch-demos-widgetsgallery --dbg-package=meegotouch-demos-widgetsgallery
-	dh_strip -p meegotouch-demos-plainqt --dbg-package=meegotouch-demos-plainqt
+	dh_strip -p libmeegotouchcore0 --dbg-package=libmeegotouchcore0
+	dh_strip -p libmeegotouchviews0 --dbg-package=libmeegotouchviews0
+	dh_strip -p libmeegotouchsettings0 --dbg-package=libmeegotouchsettings0
+	dh_strip -p libmeegotouchextensions0 --dbg-package=libmeegotouchextensions0
+	dh_strip -p meegotouch-demos-widgetsgallery --dbg-package=meegotouch-demos-widgetsgallery-dbg
+	dh_strip -p meegotouch-demos-plainqt --dbg-package=meegotouch-demos-plainqt-dbg
 	dh_strip -p libmeegotouch-tests
 	dh_compress
 	dh_fixperms
-#	dh_perl
-#	dh_python
 	dh_makeshlibs
 	dh_installdeb
 	dh_shlibdeps

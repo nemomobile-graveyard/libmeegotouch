@@ -1,231 +1,282 @@
-Source: libdui
+Source: libmeegotouch
 Section: libs
 Priority: extra
 Maintainer: Tomas Junnonen <tomas.junnonen@nokia.com>
 Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.6.0), libicu-dev, libx11-dev, doxygen (>=1.5.9), libgconf2-dev, libcontextsubscriber-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgles2-sgx-img-dev [arm armel], opengles-sgx-img-common-dev [arm armel], libgl-dev [i386], libgl1 [i386], libqt4-opengl-dev, pkg-config (>= 0.22), libxdamage-dev, xsltproc
 Standards-Version: 3.7.2
 
-Package: libdui0
+Package: libmeegotouchcore0
 Architecture: any
-Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libdui-l10n-engineering-english (= ${Source-Version}), dbus-x11, duitheme (>= 0.20.0~)
-Provides: libdui
-Conflicts: libdui
-Suggests: libdui-l10n-ar, libdui-l10n-de, libdui-l10n-en, libdui-l10n-fi, libdui-l10n-ur, libdui-l10n-zh-cn
-Description: DirectUI library
- libdui framework libraries
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouch-bin (= ${Source-Version}), libmeegotouch-l10n-engineering-english (= ${Source-Version}), dbus-x11, meegotouchtheme (>= 0.20.0~)
+Suggests: libmeegotouch-l10n-ar, libmeegotouch-l10n-de, libmeegotouch-l10n-en, libmeegotouch-l10n-fi, libmeegotouch-l10n-ur, libmeegotouch-l10n-zh-cn
+Description: DirectUI core library
+ libmeegotouch core framework libraries
 
-Package: libdui-dev
+Package: libmeegotouchextensions0
+Architecture: any
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Description: DirectUI extensions library
+ libmeegotouch extensions framework libraries
+
+Package: libmeegotouchsettings0
+Architecture: any
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Description: DirectUI settings library
+ libmeegotouch settings framework libraries
+
+Package: libmeegotouchviews0
+Architecture: any
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Description: DirectUI views library
+ libmeegotouch views framework libraries
+
+Package: libmeegotouch-bin
+Replaces: libmeegotouch0
+Architecture: any
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Description: DirectUI binary files
+ binary files of the libmeegotouch framework
+
+Package: libmeegotouch-dev
 Section: devel
 Architecture: any
-Depends: libdui0 (= ${Source-Version}), dui-dev-tools (=${Source-Version}), libqt4-dev (>= 4.6.0), libx11-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgconf2-dev, libcontextsubscriber-dev, libxdamage-dev
-Description: libdui development files
+Depends: libmeegotouchcore0 (= ${Source-Version}), meegotouch-dev-tools (=${Source-Version}), libqt4-dev (>= 4.6.0), libx11-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgconf2-dev, libcontextsubscriber-dev, libxdamage-dev
+Description: libmeegotouch development files
  Development files for DirectUI
 
-Package: dui-dev-tools
+Package: meegotouch-dev-tools
 Section: devel
 Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: perl (>= 5.10.0)
-Description: libdui specific development and testing tools
- Collection of tools for testing and developing on top of libdui. Includes 
+Description: libmeegotouch specific development and testing tools
+ Collection of tools for testing and developing on top of libmeegotouch. Includes 
  stuff like applettester and code/mock generation.
 
-Package: dui-demos
+Package: meegotouch-demos
 Section: devel
 Architecture: any
-Depends: dui-demos-widgetsgallery, dui-demos-plainqt
+Depends: meegotouch-demos-widgetsgallery, meegotouch-demos-plainqt
 Description: Demo applications for DirectUI
  Collection of demo applications for DirectUI
 
-Package: dui-demos-widgetsgallery
+Package: meegotouch-demos-widgetsgallery
 Section: devel
 Architecture: any
-Depends: libdui0 (= ${Source-Version}), dui-demos-widgetsgallery-l10n-engineering-english (= ${Source-Version})
-Suggests: dui-demos-widgetsgallery-l10n-ar, dui-demos-widgetsgallery-l10n-de, dui-demos-widgetsgallery-l10n-en, dui-demos-widgetsgallery-l10n-fi, dui-demos-widgetsgallery-l10n-ur, dui-demos-widgetsgallery-l10n-zh-cn
+Depends: ${shlibs:Depends}, meegotouch-demos-widgetsgallery-l10n-engineering-english (= ${Source-Version})
+Suggests: meegotouch-demos-widgetsgallery-l10n-ar, meegotouch-demos-widgetsgallery-l10n-de, meegotouch-demos-widgetsgallery-l10n-en, meegotouch-demos-widgetsgallery-l10n-fi, meegotouch-demos-widgetsgallery-l10n-ur, meegotouch-demos-widgetsgallery-l10n-zh-cn
 Description: Demo application for DirectUI
 
-Package: dui-demos-widgetsgallery-tests
+Package: meegotouch-demos-widgetsgallery-tests
 Section: devel
 Architecture: any
-Depends: libdui0 (= ${Source-Version}), duitestrunner, dui-demos-widgetsgallery (= ${Source-Version})
+Depends: ${shlibs:Depends}, meegotouchtestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
 Description: Demo application for DirectUI
 
-Package: dui-demos-widgetsgallery-dbg
+Package: meegotouch-demos-widgetsgallery-dbg
 Section: devel
 Architecture: any
-Depends: dui-demos-widgetsgallery (= ${Source-Version})
+Depends: meegotouch-demos-widgetsgallery (= ${Source-Version})
 Description: Demo application for DirectUI.
  .
  This package contains the debug symbols.
 
-Package: dui-demos-widgetsgallery-l10n-engineering-english
+Package: meegotouch-demos-widgetsgallery-l10n-engineering-english
 Section: devel
 Architecture: any
-Enhances: dui-demos-widgetsgallery
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Enhances: meegotouch-demos-widgetsgallery
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
 Description: Engineering English translations for widgetsgallery
 
-Package: dui-demos-widgetsgallery-l10n-ar
+Package: meegotouch-demos-widgetsgallery-l10n-ar
 Section: devel
 Architecture: any
-Enhances: dui-demos-widgetsgallery
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Enhances: meegotouch-demos-widgetsgallery
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
 Description: Arabic translations for widgetsgallery
 
-Package: dui-demos-widgetsgallery-l10n-de
+Package: meegotouch-demos-widgetsgallery-l10n-de
 Section: devel
 Architecture: any
-Enhances: dui-demos-widgetsgallery
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Enhances: meegotouch-demos-widgetsgallery
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
 Description: German translations for widgetsgallery
 
-Package: dui-demos-widgetsgallery-l10n-en
+Package: meegotouch-demos-widgetsgallery-l10n-en
 Section: devel
 Architecture: any
-Enhances: dui-demos-widgetsgallery
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Enhances: meegotouch-demos-widgetsgallery
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
 Description: English translations for widgetsgallery
 
-Package: dui-demos-widgetsgallery-l10n-fi
+Package: meegotouch-demos-widgetsgallery-l10n-fi
 Section: devel
 Architecture: any
-Enhances: dui-demos-widgetsgallery
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Enhances: meegotouch-demos-widgetsgallery
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
 Description: Finnish translations for widgetsgallery
 
-Package: dui-demos-widgetsgallery-l10n-hu
+Package: meegotouch-demos-widgetsgallery-l10n-hu
 Section: devel
 Architecture: any
-Enhances: dui-demos-widgetsgallery
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Enhances: meegotouch-demos-widgetsgallery
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
 Description: Hungarian translations for widgetsgallery
 
-Package: dui-demos-widgetsgallery-l10n-ur
+Package: meegotouch-demos-widgetsgallery-l10n-ur
 Section: devel
 Architecture: any
-Enhances: dui-demos-widgetsgallery
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Enhances: meegotouch-demos-widgetsgallery
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
 Description: Urdu translations for widgetsgallery
 
-Package: dui-demos-widgetsgallery-l10n-zh-cn
+Package: meegotouch-demos-widgetsgallery-l10n-zh-cn
 Section: devel
 Architecture: any
-Enhances: dui-demos-widgetsgallery
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
+Enhances: meegotouch-demos-widgetsgallery
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
 Description: Simplified Chinese translations for widgetsgallery
 
-Package: dui-demos-plainqt
+Package: meegotouch-demos-plainqt
 Section: devel
 Architecture: any
-Depends: libdui0 (= ${Source-Version})
-Replaces: dui-demos-plainqt (<< 0.16.0-1)
+Depends: ${shlibs:Depends}
+Replaces: meegotouch-demos-plainqt (<< 0.16.0-1)
 Description: Demo applications showing the capabilities of the plain qt style.
 
-Package: dui-demos-plainqt-dbg
+Package: meegotouch-demos-plainqt-dbg
 Section: devel
 Architecture: any
-Depends: dui-demos-plainqt (= ${Source-Version})
-Replaces: dui-demos-plainqt-dbg (<< 0.16.0-1)
+Depends: meegotouch-demos-plainqt (= ${Source-Version})
+Replaces: meegotouch-demos-plainqt-dbg (<< 0.16.0-1)
 Description: debug symbols of the plain qt examples
 
-Package: dui-demos-appletinstallationsource
+Package: meegotouch-demos-appletinstallationsource
 Section: devel
 Architecture: any
-Depends: libdui0 (= ${Source-Version})
+Depends: ${shlibs:Depends}
 Description: Demo applet installation source for the applet library.
 
-Package: dui-demos-appletinstallationsource-dbg
+Package: meegotouch-demos-appletinstallationsource-dbg
 Section: devel
 Architecture: any
-Depends: dui-demos-appletinstallationsource (= ${Source-Version})
+Depends: meegotouch-demos-appletinstallationsource (= ${Source-Version})
 Description: Debug symbols of the demo applet installation source.
 
-Package: dui-demos-applicationextension
+Package: meegotouch-demos-applicationextension
 Section: devel
 Architecture: any
-Depends: libdui0 (= ${Source-Version})
+Depends: ${shlibs:Depends}
 Description: Demo application for application extensions
 
-Package: dui-demos-applicationextension-dbg
+Package: meegotouch-demos-applicationextension-dbg
 Section: devel
 Architecture: any
-Depends: dui-demos-applicationextension (= ${Source-Version})
+Depends: meegotouch-demos-applicationextension (= ${Source-Version})
 Description: Debug symbols of the demo application for application extensions
 
-Package: libdui-tests
+Package: libmeegotouch-tests
 Section: extra
 Architecture: any
-Depends: libdui0 (= ${Source-Version}), libqtgui4, testrunner, locales, ${shlibs:Depends}
-Description: libdui unit tests
- Unit testing binaries and shellscripts for testing libdui library
+Depends: ${shlibs:Depends}, testrunner, locales
+Description: libmeegotouch unit tests
+ Unit testing binaries and shellscripts for testing libmeegotouch library
 
-Package: libdui-benchmarks
+Package: libmeegotouch-benchmarks
 Section: extra
 Architecture: any
-Depends: libdui0 (= ${Source-Version}), ${shlibs:Depends}, dui-demos-widgetsgallery
-Description: libdui benchmarks
- Benchmarking binaries for testing libdui library
+Depends: ${shlibs:Depends}, meegotouch-demos-widgetsgallery
+Description: libmeegotouch benchmarks
+ Benchmarking binaries for testing libmeegotouch library
 
-Package: libdui0-dbg
+Package: libmeegotouchcore0-dbg
 Architecture: any
 Section: devel
-Depends: libdui0 (= ${Source-Version})
-Description: libdui debug package
- libdui debug symbols.
+Depends: libmeegotouchcore0 (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
 
-Package: libdui-doc
+Package: libmeegotouchviews0-dbg
+Architecture: any
+Section: devel
+Depends: libmeegotouchviews0 (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
+
+Package: libmeegotouchextensions0-dbg
+Architecture: any
+Section: devel
+Depends: libmeegotouchextensions0 (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
+
+Package: libmeegotouchsettings0-dbg
+Architecture: any
+Section: devel
+Depends: libmeegotouchsettings0 (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
+
+Package: libmeegotouch-bin-dbg
+Architecture: any
+Section: devel
+Depends: libmeegotouch-bin (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
+
+Package: libmeegotouch-doc
 Section: doc
 Architecture: all
-Description: API documentation for libdui
+Description: API documentation for libmeegotouch
 
-Package: libdui-l10n-engineering-english
+Package: libmeegotouch-l10n-engineering-english
 Section: devel
 Architecture: any
-Enhances: libdui0
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
-Description: Engineering English translations for libdui
+Enhances: libmeegotouchcore0
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
+Description: Engineering English translations for libmeegotouch
 
-Package: libdui-l10n-ar
+Package: libmeegotouch-l10n-ar
 Section: devel
 Architecture: any
-Enhances: libdui0
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
-Description: Arabic translations for libdui
+Enhances: libmeegotouchcore0
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
+Description: Arabic translations for libmeegotouch
 
-Package: libdui-l10n-de
+Package: libmeegotouch-l10n-de
 Section: devel
 Architecture: any
-Enhances: libdui0
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
-Description: German translations for libdui
+Enhances: libmeegotouchcore0
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
+Description: German translations for libmeegotouch
 
-Package: libdui-l10n-en
+Package: libmeegotouch-l10n-en
 Section: devel
 Architecture: any
-Enhances: libdui0
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
-Description: English translations for libdui
+Enhances: libmeegotouchcore0
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
+Description: English translations for libmeegotouch
 
-Package: libdui-l10n-fi
+Package: libmeegotouch-l10n-fi
 Section: devel
 Architecture: any
-Enhances: libdui0
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
-Description: Finnish translations for libdui
+Enhances: libmeegotouchcore0
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
+Description: Finnish translations for libmeegotouch
 
-Package: libdui-l10n-ur
+Package: libmeegotouch-l10n-ur
 Section: devel
 Architecture: any
-Enhances: libdui0
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
-Description: Urdu translations for libdui
+Enhances: libmeegotouchcore0
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
+Description: Urdu translations for libmeegotouch
 
-Package: libdui-l10n-zh-cn
+Package: libmeegotouch-l10n-zh-cn
 Section: devel
 Architecture: any
-Enhances: libdui0
-Replaces: dui-demos-widgetsgallery (<< 0.17.0-0)
-Description: Simplified Chinese translations for libdui
+Enhances: libmeegotouchcore0
+Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
+Description: Simplified Chinese translations for libmeegotouch
 
 
 

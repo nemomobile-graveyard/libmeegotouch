@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# create cache directory
+mkdir -p -m a+w /var/cache/meegotouch
+mkdir -p -m a+w /var/cache/meegotouch/css
+
