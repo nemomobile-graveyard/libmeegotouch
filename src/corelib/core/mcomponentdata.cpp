@@ -40,6 +40,7 @@
 #include "mwindow.h"
 #include "mapplicationwindow.h"
 #include "mtapandholdrecognizer.h"
+#include "mpinchrecognizer.h"
 #include <MDebug>
 
 #ifdef TESTABLE
@@ -580,6 +581,9 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 
     QGestureRecognizer::unregisterRecognizer(Qt::TapAndHoldGesture);
     QGestureRecognizer::registerRecognizer(new MTapAndHoldRecognizer());
+
+    QGestureRecognizer::unregisterRecognizer(Qt::PinchGesture);
+    QGestureRecognizer::registerRecognizer(new MPinchRecognizer());
 
     q->setShowCursor(showCursor);
 }

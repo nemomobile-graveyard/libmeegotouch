@@ -132,6 +132,9 @@ void MWindowPrivate::init()
         q->showFullScreen();
 
     q->viewport()->grabGesture(Qt::TapAndHoldGesture);
+    q->viewport()->grabGesture(Qt::PinchGesture);
+
+    q->setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
 #ifdef Q_WS_X11

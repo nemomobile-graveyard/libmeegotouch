@@ -12,6 +12,7 @@ PUBLIC_HEADERS += \
         $$EVENTS_SRC_DIR/morientationchangeevent.h \
         $$EVENTS_SRC_DIR/mtapandholdrecognizer.h \
         $$EVENTS_SRC_DIR/mkeyboardstatetracker.h \
+        $$EVENTS_SRC_DIR/mpinchrecognizer.h \
 
 PRIVATE_HEADERS += \
         $$EVENTS_SRC_DIR/morientationchangeevent_p.h \
@@ -33,3 +34,4 @@ SOURCES += \
         $$EVENTS_SRC_DIR/mtapandholdgesture.cpp \
         $$EVENTS_SRC_DIR/mtapandholdrecognizer.cpp \
         $$EVENTS_SRC_DIR/mkeyboardstatetracker.cpp \
+        $$EVENTS_SRC_DIR/mpinchrecognizer.cpp \

@@ -31,6 +31,8 @@
 #include <MLinearLayoutPolicy>
 #include <MDebug>
 #include <QGraphicsGridLayout>
+#include <QPinchGesture>
+#include <QGestureEvent>
 
 #include "utils.h"
 
@@ -48,6 +50,9 @@ ImagePage::ImagePage() :
     sliderValues[ImageZoom] = 10;
     sliderValues[ImageTransparency] = 0;
     sliderValues[ImageCrop] = 0;
+
+    setAcceptTouchEvents(true);
+    grabGesture(Qt::PinchGesture);
 }
 
 ImagePage::~ImagePage()
@@ -142,7 +147,8 @@ void ImagePage::retranslateUi()
     //% "Image allows the placement of images onto the UI. "
     //% "Images are generally non-interactive elements. "
     //% "Various single and multiple touch interactions can be added to an "
-    //% "Image component if desired."
+    //% "Image component if desired. As an example, pinch gesture can be "
+    //% "used in this page to zoom the image."
     infoLabel->setText("<a></a>" + qtTrId("xx_image_page_info"));
 
 }
@@ -202,4 +208,16 @@ void ImagePage::setImageCrop(float width, float height)
 
     // FIXME: why is this needed ?
     image->update();
+}
+
+void ImagePage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
+{
+    if (gesture->state() == Qt::GestureStarted) {
+	propertiesComboBox->setCurrentIndex(0);
+    }
+
+    slider->setValue(gesture->totalScaleFactor()/2);
+
+    event->accept(gesture);
+
 }
