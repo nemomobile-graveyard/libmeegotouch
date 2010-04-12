@@ -230,6 +230,12 @@ public Q_SLOTS:
      */
     void dismissSceneWindowNow(MSceneWindow *sceneWindow);
 
+    /*!
+     * Ensures that the cursor is visible by scrolling the relevant pannable viewport
+     * and/or moving the relevant scene window, if necessary.
+     */
+    void ensureCursorVisible();
+
 Q_SIGNALS:
     /*! \brief Signal emitted before scene geometry is changed for a rotation
      *
@@ -313,7 +319,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_applyQueuedSceneWindowTransitions())
     Q_PRIVATE_SLOT(d_func(), void _q_triggerAsyncPendingOrientationChange())
     Q_PRIVATE_SLOT(d_func(), void _q_applyPendingOrientationChange())
-    Q_PRIVATE_SLOT(d_func(), void _q_ensureCursorVisibility())
 };
 
 #endif

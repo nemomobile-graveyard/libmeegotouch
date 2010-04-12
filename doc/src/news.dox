@@ -1,4 +1,13 @@
 /*! \page news What's New in DirectUI
+
+\section v0202
+
+\subsection New
+
+- MSceneManager now allows a widget to request cursor visibility directly via
+ the ensureCursorVisible() slot.
+
+
 \section v0200
 
 \subsection New

@@ -136,7 +136,6 @@ public:
     void _q_onSceneWindowDisappeared();
     void _q_restoreSceneWindow();
     void _q_relocateWindowByInputPanel(const QRect &inputPanelRect);
-    void _q_ensureCursorVisibility();
 
     //! Prepares current window for SIP.
     void _q_inputPanelOpened();

@@ -1016,6 +1016,10 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
     d->editActive = false;
 
     if (sceneManager()) {
+        connect(this, SIGNAL(cursorPositionChanged()),
+                sceneManager(), SLOT(ensureCursorVisible()),
+                Qt::UniqueConnection);
+
         if (event->reason() == Qt::MouseFocusReason) {
             // Wait for the mouse release event instead so that the window relocation that might
             // happen does not change the mouse position *before* the button is released.
@@ -1063,6 +1067,9 @@ void MTextEdit::focusOutEvent(QFocusEvent *event)
 
     emit lostFocus(event->reason());
     if (sceneManager()) {
+        disconnect(this, SIGNAL(cursorPositionChanged()),
+                   sceneManager(), SLOT(ensureCursorVisible()));
+
         sceneManager()->closeSoftwareInputPanel();
         d->pendingSoftwareInputPanelRequest = false;
     }

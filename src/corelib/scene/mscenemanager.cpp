@@ -426,9 +426,11 @@ void MSceneManagerPrivate::_q_restoreSceneWindow()
     }
 }
 
-void MSceneManagerPrivate::_q_ensureCursorVisibility()
+void MSceneManager::ensureCursorVisible()
 {
-    _q_relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
+    Q_D(MSceneManager);
+
+    d->_q_relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
 }
 
 M::Orientation MSceneManagerPrivate::orientation(M::OrientationAngle angle) const
@@ -1205,14 +1207,6 @@ void MSceneManagerPrivate::_q_inputPanelOpened()
     if (escapeButtonPanel && (widgetOnPage || (navBar && navBar->isAncestorOf(focusedInputWidget)))) {
         escapeButtonHidden = true;
         q->disappearSceneWindow(escapeButtonPanel);
-    }
-
-    MTextEdit *const newEdit = dynamic_cast<MTextEdit *>(focusedInputWidget);
-
-    if (newEdit) {
-        q->disconnect(newEdit, SIGNAL(cursorPositionChanged()), q, 0);
-        q->connect(newEdit, SIGNAL(cursorPositionChanged()),
-                   q, SLOT(_q_ensureCursorVisibility()));
     }
 
     // Have to call the slot explicitly at least once: The focused widget can change without the
