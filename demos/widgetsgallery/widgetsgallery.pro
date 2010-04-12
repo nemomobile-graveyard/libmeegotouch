@@ -148,12 +148,12 @@ services.commands = cat \
 services.files = $$OUT_PWD/$${myname}.service
 services.path = $$M_DBUS_SERVICES_DIR
 testsxml.files = tests.xml
-testsxml.path = /usr/share/meegotouch-demos-widgetsgallery-tests/
+testsxml.path = $$M_INSTALL_DATA/meegotouch-demos-widgetsgallery-tests/
 DEFINES += CONTACTS_DIR=\"\\\"$$M_THEME_DIR/devel/meegotouch/widgetsgallery/images/contacts/\\\"\"
 DEFINES += IMAGES_DIR=\"\\\"$$M_THEME_DIR/devel/meegotouch/widgetsgallery/images/\\\"\"
 
 data_files.files = data/*
-data_files.path = /usr/share/widgetsgallery/
+data_files.path = $$M_INSTALL_DATA/widgetsgallery/
 data_files.CONFIG += no_check_exist
 
 # Install instructions
