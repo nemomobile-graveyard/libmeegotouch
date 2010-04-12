@@ -16,7 +16,7 @@ HEADERS += \
 QT += dbus
 
 
-myname = com.nokia.servicefw
+myname = com.nokia.mservicefw
 
 services.CONFIG += no_check_exist
 services.target = $${myname}.service

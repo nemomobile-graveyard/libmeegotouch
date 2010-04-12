@@ -30,14 +30,14 @@ public:
 };
 
 /*
- * Proxy class for interface com.nokia.ServiceFwIf
+ * Proxy class for interface com.nokia.MServiceFwIf
  */
 class MServiceFwProxy : public QObject
 {
     Q_OBJECT
 public:
     static inline const char *staticInterfaceName() {
-        return "com.nokia.ServiceFwIf";
+        return "com.nokia.MServiceFwIf";
     }
 
 public:

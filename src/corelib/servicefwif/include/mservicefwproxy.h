@@ -21,7 +21,7 @@
 #include <QtDBus/QtDBus>
 
 /*
- * Proxy class for interface com.nokia.ServiceFwIf
+ * Proxy class for interface com.nokia.MServiceFwIf
  */
 class MServiceFwProxy: public QDBusAbstractInterface
 {
