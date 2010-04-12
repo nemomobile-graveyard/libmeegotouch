@@ -24,15 +24,15 @@ From a developers point of view an applet consists of a shared library, a metada
 
 \subsection appletclasses What classes to implement
 
-From the user interface point of view an applet is a \c DuiWidget. So construct a \c DuiWidget class in whatever way fits your purposes: use one of the existing derived classes in libdui, do your own widget or whatever. This is the UI part of your applet.
+From the user interface point of view an applet is a \c MWidget. So construct a \c MWidget class in whatever way fits your purposes: use one of the existing derived classes in libdui, do your own widget or whatever. This is the UI part of your applet.
 
-Whatever approach you chose for constructing your applet \c DuiWidget, you need to offer a connection point for the host process to get a handle to it. For this you need to implement an interface called \c DuiAppletInterface. There is only a single method in this interface you need to implement:
+Whatever approach you chose for constructing your applet \c MWidget, you need to offer a connection point for the host process to get a handle to it. For this you need to implement an interface called \c MAppletInterface. There is only a single method in this interface you need to implement:
 
-\c DuiAppletInterface::constructWidget(const DuiAppletMetaData&, DuiDataStore&, DuiDataAccess&)
+\c MAppletInterface::constructWidget(const MAppletMetaData&, MDataStore&, MDataAccess&)
 
-In this method you need to return a pointer to the \c DuiWidget of your applet.
+In this method you need to return a pointer to the \c MWidget of your applet.
 
-\b Note: The ownership of the \c DuiWidget is transformed to the caller of this method, so \b you \b mustn't \b destroy the widget yourself.
+\b Note: The ownership of the \c MWidget is transformed to the caller of this method, so \b you \b mustn't \b destroy the widget yourself.
 
 You also need to use a couple of Qt macros to get things working. A complete example follows:
 
@@ -41,13 +41,13 @@ You also need to use a couple of Qt macros to get things working. A complete exa
 
 #ifndef MYAPPLET_H
 #define MYAPPLET_H
-#include <DuiAppletInterface>
+#include <MAppletInterface>
 #include <QObject>
-class MyApplet : public QObject, public DuiAppletInterface {
+class MyApplet : public QObject, public MAppletInterface {
     Q_OBJECT
-    Q_INTERFACES(DuiAppletInterface)
+    Q_INTERFACES(MAppletInterface)
 public:
-    virtual DuiWidget *constructWidget(const DuiAppletMetaData &metadata, DuiDataStore& instanceData, DuiDataAccess& settings);
+    virtual MWidget *constructWidget(const MAppletMetaData &metadata, MDataStore& instanceData, MDataAccess& settings);
 };
 #endif // MYAPPLET_H
 \endcode
@@ -56,21 +56,21 @@ public:
 // myapplet.cpp
 
 #include <QtGui>
-#include <DuiWidget>
+#include <MWidget>
 #include "myapplet.h"
 Q_EXPORT_PLUGIN2(myapplet, MyApplet)
-DuiWidget* MyApplet::constructWidget(const DuiAppletMetaData &metadata, DuiDataStore& instanceData, DuiDataAccess& settings) {
-    return new DuiWidget();
+MWidget* MyApplet::constructWidget(const MAppletMetaData &metadata, MDataStore& instanceData, MDataAccess& settings) {
+    return new MWidget();
 }
 \endcode
 
 \subsection appletmetadata Create applet metadata
 
-Applet metadata is defined in \c .desktop files following <a href="http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec">freedesktop.org desktop entry specification</a>. Applet metadata extends \c .desktop entry specification by defining a new type \b DuiApplet. Applet metadata specification follows desktop entry specification so that required keys (\em Type, \em Name and \em Exec) have to be defined in the applet metadata.
+Applet metadata is defined in \c .desktop files following <a href="http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec">freedesktop.org desktop entry specification</a>. Applet metadata extends \c .desktop entry specification by defining a new type \b X-MeeGoApplet. Applet metadata specification follows desktop entry specification so that required keys (\em Type, \em Name and \em Exec) have to be defined in the applet metadata.
 
 \b Exec key in applet metadata defines the runner binary which is launched in separate process to run the applet binary. This key needs to be defined but can be left empty. If \b Exec key is left empty the applet is ran inside the host process.
 
-Applet metadata extends the desktop specification with the following new keys. These keys need to be defined under group DUI.
+Applet metadata extends the desktop specification with the following new keys. These keys need to be defined under group X-MeeGoApplet.
 
 <table>
 <tr>
@@ -80,13 +80,13 @@ Applet metadata extends the desktop specification with the following new keys. T
  <th>Required</th>
 </tr>
 <tr>
-  <td>X-DUIApplet-Applet</td>
+  <td>Applet</td>
   <td>Defines the applet binary that will be loaded using the runner defined by the Exec key. This binary needs to be located in \c /usr/lib/dui/applets/ - directory.</td>
   <td>string</td>
   <td>YES</td>
 </tr>
 <tr>
-  <td>X-DUIApplet-Identifier</td>
+  <td>Identifier</td>
   <td>Defines an identifier for the applet. The identifier is used for example defining the applet specific style resource locations.</td>
   <td>string (can contain characters [a-zA-Z0-9_-])</td>
   <td>NO</td>
@@ -97,13 +97,13 @@ Following is an example of applet metadata specification:
 
 \code
 [Desktop Entry]
-Type=DUIApplet
+Type=X-MeeGoApplet
 Name=ExampleApplet
 Icon=Icon-music
 Exec=duiappletrunner
 
-[DUI]
-X-DUIApplet-Applet=libexampleapplet.so
+[X-MeeGoApplet]
+Applet=libexampleapplet.so
 \endcode
 
 \subsection appletinstallation Install
@@ -132,9 +132,9 @@ XB-Maemo-Desktop-File: /usr/share/dui/applets/your-applet-desktop-file.desktop
 
 \subsection appletinstancedata Applet instance data
 
-The applet system provides the applet instances with an object that can be used to store applet instance specific data to a permanent storage. Instance specific data is something that is not needed anymore when the applet instance is removed. Instance specific data includes any data that the applet needs to restore an instance. The instance data object is an object that implements the \c DuiDataStore interface.
+The applet system provides the applet instances with an object that can be used to store applet instance specific data to a permanent storage. Instance specific data is something that is not needed anymore when the applet instance is removed. Instance specific data includes any data that the applet needs to restore an instance. The instance data object is an object that implements the \c MDataStore interface.
 
-Applets don't create their own objects of the instance data classes but instead they are provided with one that they should use. The instance data object is provided to the applets via the \c DuiAppletInterface::constructWidget(const DuiAppletMetaData&, DuiDataStore&, DuiDataAccess&) call as the second argument.
+Applets don't create their own objects of the instance data classes but instead they are provided with one that they should use. The instance data object is provided to the applets via the \c MAppletInterface::constructWidget(const MAppletMetaData&, MDataStore&, MDataAccess&) call as the second argument.
 
 Whenever the state of an applet instance changes in a way that affects on how the applet instance would be restored, the applet should update the data.
 
@@ -142,7 +142,7 @@ Whenever the state of an applet instance changes in a way that affects on how th
 
 Applets can have settings which can be accessed by the user from the settings dialog. There are two different kinds of settings: \b global and \b instance settings. Global settings affect all running instances of a given applet. Instance settings on the other hand only affect the applet instance that they are associated with.
 
-The settings can be accessed by the applet code through the interface offered via the \c DuiAppletInterface::constructWidget(const DuiAppletMetaData&, DuiDataStore&, DuiDataAccess&) call as the third argument.
+The settings can be accessed by the applet code through the interface offered via the \c MAppletInterface::constructWidget(const MAppletMetaData&, MDataStore&, MDataAccess&) call as the third argument.
 
 The instance and global settings are both accessed through this same interface. The user of the settings object can't really tell the difference between instance and global settings - they are intermixed.
 
@@ -158,10 +158,10 @@ The installation location for both of these files is the <tt>/usr/share/dui/appl
 
 \subsection appletcontainer Container communication API
 
-Applet may be reparented to a DuiContainer by DuiMashupCanvas. DuiContainer can expose optional applet information on its titlebar, including icon, title and additional informative text.To make an applet reside in a container, set the container-mode property in style sheet of the mashup canvas. An example taken from base style sheet of mashup canvas looks like 
+Applet may be reparented to a MContainer by MMashupCanvas. MContainer can expose optional applet information on its titlebar, including icon, title and additional informative text.To make an applet reside in a container, set the container-mode property in style sheet of the mashup canvas. An example taken from base style sheet of mashup canvas looks like 
 
 \code
-DuiMashupCanvasStyle {
+MMashupCanvasStyle {
     container-mode:true;
 }
 \endcode
@@ -178,13 +178,13 @@ Q_PROPERTY(QString appletTitle READ title WRITE setTitle)
 Q_PROPERTY(QString appletText READ text WRITE setText)
 
 signals:
-    // change icon in DuiContainer
+    // change icon in MContainer
     void appletIconChanged(QString newIcon);
 
-    // change title in DuiContainer
+    // change title in MContainer
     void appletTitleChanged(QString newTitle);
 
-    // change additional text in DuiContainer
+    // change additional text in MContainer
     void appletTextChanged(QString newText);
 \endcode
 
@@ -195,13 +195,13 @@ The property and signal names must be as stated above. The property access funct
 Every applet has an applet identifier that is used in a few places in the applet system. The applet identifier is a string that uniquely identifies the applet. Note however that the applet identifier is not an applet instance specific identifier.
 
 The applet identifier is determined like this:
-- If an identifier (<tt>X-DUIApplet-Identifier</tt>) is specified in the  \ref appletmetadata "applet metadata" (and it is valid), that is used
+- If an identifier (<tt>Identifier</tt>) is specified in the \ref appletmetadata "applet metadata" (and it is valid), that is used
   - If the identifier in the metadata is not specified or it can't be used (e.g. it is ill-formed) an identifier is extracted from the applet shared library name:
     - Assuming your applet is packaged to a shared library called <tt>lib<strong>exampleapplet</strong>.so</tt>, the identifier will be <strong>exampleapplet</strong>.
 
 \subsection appletstyling Applet styling
 
-Applets can define their own styles just like any other applications in the DUI world. Styling is done with style sheets and images in the \ref styling "usual way". The only important thing with applets is the location of the style resources.
+Applets can define their own styles just like any other applications in the MeeGo Touch world. Styling is done with style sheets and images in the \ref styling "usual way". The only important thing with applets is the location of the style resources.
 
 The \ref appletidentifier "applet identifier" is used in the construction of the resource location. The applet identifier is used as the application name in the directory name. See \ref theme_structure for more information about the directory locations.
 
@@ -263,17 +263,17 @@ To be able to define different configurations for different purposes the applica
 should not contain this file. Instead, there should be a settings template package for the
 application which can be instantiated for different configurations. For an example how to
 achieve this refer to the duihomescreen-settings-template package. It contains example
-ConfML, XSLT and GCFML files for the DUI Home Screen package in the conf directory, the
+ConfML, XSLT and GCFML files for the MeeGo Touch Home Screen package in the conf directory, the
 necessary debian packaging files in the debian directory and tests in the tests directory.
 An instantiated version of the template, duihomescreen-settings-default, which also contains
 the sources, can be fetched with apt-get source duihomescreen-settings-default.
 
 \see
 
-- DuiMashupCanvas
-- DuiAppletInterface
-- DuiAppletMetaData
-- DuiDataStore
-- DuiDataAccess
+- MMashupCanvas
+- MAppletInterface
+- MAppletMetaData
+- MDataStore
+- MDataAccess
 */
 

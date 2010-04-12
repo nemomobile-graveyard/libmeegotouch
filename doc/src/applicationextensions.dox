@@ -12,21 +12,21 @@ For developing application extensions you need:
 From a developers point of view an application extension consists of a shared library, a desktop entry file and possibly some resources (such as images).
 All of these are put into a debian package to enable installation of application extensions to devices.
 
-An application extension is implemented as a Qt plugin. The interface class used as the base class of all application extensions is \c DuiApplicationExtensionInterface.
+An application extension is implemented as a Qt plugin. It is a good practice to name the shared library so that the related application is mentioned in the name in addition to the extension name (for example libmyapplication-myextension.so). The interface class used as the base class of all application extensions is \c MApplicationExtensionInterface.
 The interface provides a method for initializing the plugin, which must be implemented by the application extension:
-\code bool DuiApplicationExtensionInterface::initialize(const QString &interface) \endcode
+\code bool MApplicationExtensionInterface::initialize(const QString &interface) \endcode
 The extension gets the name of the interface as a parameter. The extension can but does not need to use this information for any purpose.
 The boolean return value should indicate whether the initialization was successful or not.
 
 The interface also has an method for returning the widget used for the UI of the application extension:
-\code DuiWidget *widget() \endcode
-In this method you need to return a pointer to the \c DuiWidget of your application extension. In case an UI is not required, this method can be left out.
-\b Note: The ownership of the \c DuiWidget is left to the application extension, so you should destroy the widget yourself in the destructor of the extension.
+\code MWidget *widget() \endcode
+In this method you need to return a pointer to the \c MWidget of your application extension. In case an UI is not required, this method can be left out.
+\b Note: The ownership of the \c MWidget is left to the application extension, so you should destroy the widget yourself in the destructor of the extension.
 
-To use application extensions of particular interface in an application, an instance of \c DuiApplicationExtensionArea is created:
+To use application extensions of particular interface in an application, an instance of \c MApplicationExtensionArea is created:
 
 \code
-new DuiApplicationExtensionArea(interface, enableInProcessExtensions, parent);
+new MApplicationExtensionArea(interface, enableInProcessExtensions, parent);
 \endcode
 
 where interface is the name of the interface the extensions in the area implement, enableInProcessExtensions is a boolean which tells whether
@@ -37,7 +37,7 @@ the area can load in-process extensions and parent is the parent QGraphicsItem.
 Developing application extensions and the application that uses them is done differently depending whether the extensions can be run in-process or out-of-process.
 
 In-process
-- direct communication between application and extension supported by subclassing DuiApplicationExtensionInterface
+- direct communication between application and extension supported by subclassing MApplicationExtensionInterface
 - the extension can open dialogs and views
 - the extension can extend the applications UI
 - the extension can crash the host application
@@ -56,15 +56,15 @@ Out-of-process
 
 #include <duiapplicationextensioninterface.h>
 
-class DemoExtensionInterface : public DuiApplicationExtensionInterface
+class DemoExtensionInterface : public MApplicationExtensionInterface
 {
-    Q_INTERFACES(DuiApplicationExtensionInterface)
+    Q_INTERFACES(MApplicationExtensionInterface)
 
 public:
     virtual void demoExtensionSpecificOperation() = 0;
 };
 
-Q_DECLARE_INTERFACE(DemoExtensionInterface, "com.nokia.dui.core.DemoExtensionInterface/1.0")
+Q_DECLARE_INTERFACE(DemoExtensionInterface, "com.meego.core.DemoExtensionInterface/1.0")
 
 #endif
 \endcode
@@ -75,14 +75,14 @@ Q_DECLARE_INTERFACE(DemoExtensionInterface, "com.nokia.dui.core.DemoExtensionInt
 #define DEMOEXTENSION_H_
 
 #include <QObject>
-#include <DuiApplicationExtensionInterface>
+#include <MApplicationExtensionInterface>
 
-class DuiButton;
+class MButton;
 
 class DemoApplicationExtension : public QObject, public DemoExtensionInterface
 {
     Q_OBJECT
-    Q_INTERFACES(DemoExtensionInterface DuiApplicationExtensionInterface)
+    Q_INTERFACES(DemoExtensionInterface MApplicationExtensionInterface)
 
 public:
     DemoApplicationExtension();
@@ -90,26 +90,26 @@ public:
 
     virtual void demoExtensionSpecificOperation();
 
-    //! methods derived from DuiApplicationExtensionInterface
+    //! methods derived from MApplicationExtensionInterface
     virtual bool initialize(const QString &interface);
-    virtual DuiWidget *widget();
+    virtual MWidget *widget();
 
 private:
-    DuiButton *button;
+    MButton *button;
 };
 
 #endif
 \endcode
 
-\b Note that the Q_INTERFACES list must include both the demo specific interface DemoExtensionInterface and the base interface DuiApplicationExtensionInterface.
+\b Note that the Q_INTERFACES list must include both the demo specific interface DemoExtensionInterface and the base interface MApplicationExtensionInterface.
 
 \code
  // demoextension.cpp
-#include <DuiButton>
+#include <MButton>
 #include "demoextension.h"
-#include <DuiLibrary>
+#include <MLibrary>
 
-DUI_LIBRARY
+M_LIBRARY
 Q_EXPORT_PLUGIN2(demoextension, DemoApplicationExtension)
 
 DemoApplicationExtension::DemoApplicationExtension() : button(0)
@@ -128,19 +128,19 @@ void DemoApplicationExtension::demoExtensionSpecificOperation()
 
 bool DemoApplicationExtension::initialize(const QString &)
 {
-    button = new DuiButton("Hello World");
+    button = new MButton("Hello World");
 
     return true;
 }
 
-DuiWidget *DemoApplicationExtension::widget()
+MWidget *DemoApplicationExtension::widget()
 {
     return button;
 }
 
 \endcode
 
-In the application that wants to use the extensions implementing the com.nokia.dui.core.DemoExtensionInterface/1.0 defined above,
+In the application that wants to use the extensions implementing the com.meego.core.DemoExtensionInterface/1.0 defined above,
 the application should create an application extension area like this:
 
 \code
@@ -150,18 +150,18 @@ the application should create an application extension area like this:
 ...
 void DemoApp::createExtensionArea()
 {
-    DuiApplicationExtensionArea *extensionArea =
-        new DuiApplicationExtensionArea("com.nokia.dui.core.DemoApplicationExtensionInterface/1.0");
+    MApplicationExtensionArea *extensionArea =
+        new MApplicationExtensionArea("com.meego.core.DemoApplicationExtensionInterface/1.0");
     layout->addItem(extensionArea);
 
     // Listen to signals about new and removed extensions
-    connect(area, SIGNAL(extensionInstantiated(DuiApplicationExtensionInterface*)),
-            this, SLOT(addExtension(DuiApplicationExtensionInterface*)));
-    connect(area, SIGNAL(extensionRemoved(DuiApplicationExtensionInterface*)),
-            this, SLOT(removeExtension(DuiApplicationExtensionInterface*)));
+    connect(area, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)),
+            this, SLOT(addExtension(MApplicationExtensionInterface*)));
+    connect(area, SIGNAL(extensionRemoved(MApplicationExtensionInterface*)),
+            this, SLOT(removeExtension(MApplicationExtensionInterface*)));
 }
 
-void DemoApp::addExtension(DuiApplicationExtensionInterface *extension)
+void DemoApp::addExtension(MApplicationExtensionInterface *extension)
 {
     DemoExtensionInterface *demoExtension = static_cast<DemoExtensionInterface *>(extension);
 
@@ -175,10 +175,10 @@ void DemoApp::addExtension(DuiApplicationExtensionInterface *extension)
 \subsection appextensiondesktopfile Application extension desktop file
 
 Application extension must have a \c .desktop file written according to <a href="http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec">freedesktop.org desktop entry specification</a>.
-The keys \c Type and \c Name are required as specified in the desktop entry specification.
-The \c Exec key is optionally used to specify a runner binary (usually duiapplicationextensionrunner) which is launched in separate process to run the application extension binary. If the key is not used, the application extension is run inside the host process.
+The keys \c Type and \c Name are required as specified in the desktop entry specification. The type must be \c X-MeeGoApplicationExtension.
+The \c Exec key is optionally used to specify a runner binary (usually mapplicationextensionrunner) which is launched in separate process to run the application extension binary. If the key is not used, the application extension is run inside the host process.
 
-Application extensions extend the specification by defining a new type \b DuiApplicationExtension and the following new keys that are put inside the X-DUI group:
+Application extensions extend the specification by defining a new type \b MApplicationExtension and the following new keys that are put inside the X-MeeGoApplicationExtension group:
 
 <table>
 <tr>
@@ -188,19 +188,19 @@ Application extensions extend the specification by defining a new type \b DuiApp
  <th>Required</th>
 </tr>
 <tr>
-  <td>DUIApplicationExtension-Interface</td>
+  <td>Interface</td>
   <td>Defines the name of the interface implemented by this extension.</td>
   <td>string</td>
   <td>YES</td>
 </tr>
 <tr>
-  <td>DUIApplicationExtension-Extension</td>
+  <td>Extension</td>
   <td>Defines the application extension binary. This binary needs to be located in \c /usr/lib/dui/applicationextensions/ - directory.</td>
   <td>string</td>
   <td>YES</td>
 </tr>
 <tr>
-  <td>DUIApplicationExtension-Identifier</td>
+  <td>Identifier</td>
   <td>Defines an identifier for the application extension.
   The identifier is used for example defining the application extension specific style resource locations when it's run as out-of-process.</td>
   <td>string (can contain characters [a-zA-Z0-9_-])</td>
@@ -212,23 +212,23 @@ Following is an example of application extension desktop file:
 
 \code
 [Desktop Entry]
-Type=DuiApplicationExtension
+Type=X-MeeGoApplicationExtension
 Name=ExampleExtension
-Exec=duiapplicationextensionrunner
+Exec=mapplicationextensionrunner
 
-[X-DUI]
-DUIApplicationExtension-Interface=com.nokia.dui.core.DemoExtensionInterface/1.0
-DUIApplicationExtension-Extension=libdemoextension.so
+[X-MeeGoApplicationExtension]
+Interface=com.meego.core.DemoExtensionInterface/1.0
+Extension=libdemoapplication-demoextension.so
 \endcode
 
 \subsection appextensioncontainer Container communication API
 
-Application extension widgets are by default reparented to a DuiContainer.
-DuiContainer can expose optional application extension information on its titlebar, including icon, title and additional informative text.
+Application extension widgets are by default reparented to a MContainer.
+MContainer can expose optional application extension information on its titlebar, including icon, title and additional informative text.
 To make an application extension not reside in a container, set the container-mode property of the application extension area to false:
 
 \code
-DuiApplicationExtensionAreaStyle {
+MApplicationExtensionAreaStyle {
     container-mode: false;
 }
 \endcode
@@ -241,13 +241,13 @@ Q_PROPERTY(QString applicationExtensionTitle READ title WRITE setTitle)
 Q_PROPERTY(QString applicationExtensionText  READ text  WRITE setText)
 
 signals:
-    // change icon in DuiContainer
+    // change icon in MContainer
     void applicationExtensionIconChanged(QString newIcon);
 
-    // change title in DuiContainer
+    // change title in MContainer
     void applicationExtensionTitleChanged(QString newTitle);
 
-    // change additional text in DuiContainer
+    // change additional text in MContainer
     void applicationExtensionTextChanged(QString newText);
 \endcode
 

@@ -60,6 +60,6 @@ public:
     virtual MWidget *constructWidget(const MAppletMetaData &metadata, MDataStore &instanceData, MDataAccess &settings) = 0;
 };
 
-Q_DECLARE_INTERFACE(MAppletInterface, "com.nokia.m.core.AppletInterface/1.0")
+Q_DECLARE_INTERFACE(MAppletInterface, "com.meego.core.MAppletInterface/1.0")
 
 #endif // MAPPLETINTERFACE_H

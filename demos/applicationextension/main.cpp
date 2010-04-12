@@ -46,7 +46,7 @@ void DemoPage::createContent()
     connect(button, SIGNAL(clicked()), this, SLOT(resetExtensions()));
 
     MApplicationExtensionArea *area =
-            new MApplicationExtensionArea("com.nokia.m.core.DemoApplicationExtensionInterface/1.0");
+            new MApplicationExtensionArea("com.meego.core.DemoApplicationExtensionInterface/1.0");
     vbox->addItem(area);
 
     connect(area, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)),

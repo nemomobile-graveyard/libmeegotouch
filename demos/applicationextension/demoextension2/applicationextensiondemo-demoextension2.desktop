@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=X-MeeGoApplicationExtension
+Name=DemoExtension2
+
+[X-MeeGoApplicationExtension]
+Interface=com.meego.core.DemoApplicationExtensionInterface/1.0
+Extension=libapplicationextensiondemo-demoextension2.so

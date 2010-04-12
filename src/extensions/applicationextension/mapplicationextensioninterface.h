@@ -67,6 +67,6 @@ public:
     virtual MWidget *widget() { return NULL; }
 };
 
-Q_DECLARE_INTERFACE(MApplicationExtensionInterface, "com.nokia.m.core.ApplicationExtensionInterface/1.0")
+Q_DECLARE_INTERFACE(MApplicationExtensionInterface, "com.meego.core.MApplicationExtensionInterface/1.0")
 
 #endif // MAPPLICATIONEXTENSIONINTERFACE_H

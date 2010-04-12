@@ -28,11 +28,10 @@ win32|macx {
 }
 else:LIBS += -lmeegotouchcore
 
-TARGET = $$qtLibraryTarget(demoextension)
+TARGET = $$qtLibraryTarget(applicationextensiondemo-demoextension)
 DESTDIR = ../../../lib
 target.path += $$M_APPLICATION_EXTENSION_DIR
 INSTALLS += target desktop_entry
 
 desktop_entry.path = $$M_APPLICATION_EXTENSION_DATA_DIR
 desktop_entry.files = *.desktop
-

@@ -21,9 +21,9 @@
 #include <QDir>
 #include <MDebug>
 
-const QString ExtensionBinaryKey("X-M/MApplicationExtension-Extension");
-const QString IdentifierKey("X-M/MApplicationExtension-Identifier");
-const QString InterfaceKey("X-M/MApplicationExtension-Interface");
+const QString ExtensionBinaryKey("X-MeeGoApplicationExtension/Extension");
+const QString IdentifierKey("X-MeeGoApplicationExtension/Identifier");
+const QString InterfaceKey("X-MeeGoApplicationExtension/Interface");
 
 MApplicationExtensionMetaData::MApplicationExtensionMetaData(const QString &fileName) : MDesktopEntry(fileName)
 {

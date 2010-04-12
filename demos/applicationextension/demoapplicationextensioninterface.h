@@ -54,6 +54,6 @@ public:
     virtual void setDemoApplicationControlledValue(int value) = 0;
 };
 
-Q_DECLARE_INTERFACE(DemoApplicationExtensionInterface, "com.nokia.m.core.DemoApplicationExtensionInterface/1.0")
+Q_DECLARE_INTERFACE(DemoApplicationExtensionInterface, "com.meego.core.DemoApplicationExtensionInterface/1.0")
 
 #endif /* DEMOAPPLICATIONEXTENSIONINTERFACE_H_ */

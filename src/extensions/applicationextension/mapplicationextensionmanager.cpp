@@ -74,7 +74,7 @@ void MApplicationExtensionManager::updateAvailableExtensions(const QString &path
         foreach(const QString &fileName, applicationExtensionsDir.entryList(filter, QDir::Files)) {
             const QString desktopFile = QFileInfo(applicationExtensionsDir, fileName).absoluteFilePath();
             QSharedPointer<MApplicationExtensionMetaData> metadata(new MApplicationExtensionMetaData(desktopFile));
-            if (metadata->isValid() && metadata->interface() == interface) {
+            if (metadata->isValid() && metadata->type() == "X-MeeGoApplicationExtension" && metadata->interface() == interface) {
                 currentExtensionsList.append(fileName);
 
                 if (!extensionMetaDatas.contains(fileName)) {

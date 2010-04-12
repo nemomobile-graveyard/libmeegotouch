@@ -21,9 +21,8 @@
 #include <QDir>
 #include <MDebug>
 
-
-const QString AppletBinaryKey("M/X-MApplet-Applet");
-const QString IdentifierKey("M/X-MApplet-Identifier");
+const QString AppletBinaryKey("X-MeeGoApplet/Applet");
+const QString IdentifierKey("X-MeeGoApplet/Identifier");
 const QString IconKey("Desktop Entry/Icon");
 
 // Required desktop entry keys in an applet metadata file
