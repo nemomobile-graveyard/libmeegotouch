@@ -265,11 +265,11 @@ void DialogsAndNotificationsPage::openMessageBox()
 void DialogsAndNotificationsPage::showEventBanner()
 {
     MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Event);
-    infoBanner->setImageID("ebf7db7b6ab73c6cba8fc87da2d1fdcf");
+    infoBanner->setImageID("icon-l-email");
     infoBanner->setBodyText(
         //% "<b>Ida Taipale</b><br/>Have you seen my dog?"
         qtTrId("xx_dialogs_and_notifications_event_banner"));
-    infoBanner->setIconID("Icon-new-SMS");
+        infoBanner->setIconID("Icon-new-SMS");
     connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
     infoBanner->appear(MSceneWindow::DestroyWhenDone);
     QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
@@ -278,7 +278,7 @@ void DialogsAndNotificationsPage::showEventBanner()
 void DialogsAndNotificationsPage::showInformationBanner()
 {
     MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
-    infoBanner->setImageID("Icon-close");
+    infoBanner->setImageID("icon-l-help");
     infoBanner->setBodyText(
         //% "<b>Battery is running low</b>"
         qtTrId("xx_dialogs_and_notifications_information_banner"));
@@ -290,7 +290,7 @@ void DialogsAndNotificationsPage::showInformationBanner()
 void DialogsAndNotificationsPage::showSystemInformationBanner()
 {
     MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
-    infoBanner->setImageID("icon-l-chat");
+    infoBanner->setImageID("icon-l-office-tools");
     infoBanner->setBodyText(
         //% "<b>Incoming call</b>"
         qtTrId("xx_dialogs_and_notifications_system_information_banner"));
