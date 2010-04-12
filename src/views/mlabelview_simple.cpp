@@ -165,7 +165,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
         QRectF bR(fm.boundingRect(r, viewPrivate->textOptions.alignment() | Qt::TextSingleLine,
                                   viewPrivate->model()->text()));
 
-        return QSizeF(fm.width(""), bR.height());
+        return QSizeF(fm.width("x"), bR.height());
     }
     case Qt::PreferredSize: {
         qreal w = constraint.width();
