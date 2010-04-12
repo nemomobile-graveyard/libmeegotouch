@@ -940,7 +940,7 @@ void generateStyleDataCpp(const StyleClass *c, const QList<QString>& modes, cons
             ++i;
             for(; i != e; ++i) {
                 if(i->isUpper())
-                    mode += "-" + i->toLower();
+                    mode += QString('-') + i->toLower();
                 else
                     mode += *i;
             }

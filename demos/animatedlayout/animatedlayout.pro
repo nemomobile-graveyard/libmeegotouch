@@ -16,7 +16,8 @@ QMAKE_LIBDIR += \
 win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework m
+        LIBS += -framework meegotouchcore \
+            -framework meegotouchviews
     }
     win32:LIBS += -lmeegotouch0
 } else {

@@ -5,3 +5,4 @@ SUBDIRS += \
     views \
     settings \
     extensions
+macx:SUBDIRS -= settings extensions

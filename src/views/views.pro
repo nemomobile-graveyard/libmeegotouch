@@ -16,7 +16,14 @@ include(views.pri)
 include(widgets/widgets.pri)
 include(style/style.pri)
 
-LIBS += -lmeegotouchcore
+win32|macx {
+    macx {
+        QMAKE_LFLAGS += -F../../lib
+        LIBS += -framework meegotouchcore
+    }
+    win32:LIBS += -lmeegotouchcore0
+}
+else:LIBS += -lmeegotouchcore
 
 SOURCES += mviewslibrary.cpp
 
