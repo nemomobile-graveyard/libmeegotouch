@@ -2,23 +2,44 @@
 
 use English;
 
-if ($ENV{"QTDIR"})
-{
-    $::QT_MOC_PATH = "$ENV{\"QTDIR\"}/bin/moc";
-}
-else
-{
-    $::QT_MOC_PATH = "moc";
-    # here we need to do things differently for windows
-    if ( "MSWin32" != "$OSNAME" )
-    {
-	$::QT_MOC_PATH = `which moc`;
-    }
+$::QT_MOC_PATH = find_moc ();
+
+if (! -x $::QT_MOC_PATH) {
+	print "Unable to find moc, or is not executable\n";
+	exit (1);
 }
 
 chomp( $::QT_MOC_PATH );
 
 exit main( @ARGV );
+
+sub find_moc
+{
+	my $mocpath;
+
+	if ($ENV{"QTDIR"} && -x "$ENV{\"QTDIR\"}/bin/moc")
+	{
+		return "$ENV{\"QTDIR\"}/bin/moc";
+	}
+
+    # here we need to do things differently for windows
+    if ( "MSWin32" ne "$OSNAME" )
+    {
+		$mocpath = `which moc 2>/dev/null`;
+		if ($? == 0) {
+			chomp $mocpath;
+			return $mocpath;
+		}
+
+		$mocpath = `which moc-qt4 2>/dev/null`;
+		if ($? == 0) {
+			chomp $mocpath;
+			return $mocpath;
+		}
+    } else {
+		return "moc";
+	}
+}
 
 sub main
 {
