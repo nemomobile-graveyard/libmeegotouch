@@ -4,7 +4,7 @@ HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS
 
 macx {
     FRAMEWORK_HEADERS.version = Versions
-    FRAMEWORK_HEADERS.files = $$system(find include/Dui*) $$HEADERS
+    FRAMEWORK_HEADERS.files = $$system(find include/M*) $$HEADERS
     FRAMEWORK_HEADERS.path = Headers
     QMAKE_BUNDLE_DATA += FRAMEWORK_HEADERS
 }

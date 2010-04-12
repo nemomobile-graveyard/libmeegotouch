@@ -48,10 +48,10 @@ INSTALLS += install_pkgconfig
 # install forwarding headers
 win32 {
     # for windows we can live with the broken pattern matching
-    FORWARDING_HEADERS = include/Dui*
+    FORWARDING_HEADERS = include/M*
 } else {
     # match only the camel case forwarding headers here
-    FORWARDING_HEADERS = $$system( find ../include/Dui* )
+    FORWARDING_HEADERS = $$system( find ../include/M* )
 }
 forwarding_headers.path = $$M_INSTALL_HEADERS
 forwarding_headers.files = $$FORWARDING_HEADERS
