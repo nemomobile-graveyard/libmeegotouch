@@ -371,6 +371,7 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
                     break;
                 default:;
                 }
+                sceneWindowTranslation = QPoint();
                 moveSceneWindow(alteredSceneWindow, newTranslation);
             }
         }
