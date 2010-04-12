@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef MNOTIFICATIONMANAGERPROXY_H_1269933185
-#define MNOTIFICATIONMANAGERPROXY_H_1269933185
+#ifndef MNOTIFICATIONMANAGERPROXY_H_1271085438
+#define MNOTIFICATIONMANAGERPROXY_H_1271085438
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -22,14 +22,14 @@
 #include "metatypedeclarations.h"
 
 /*
- * Proxy class for interface com.nokia.m.NotificationManager
+ * Proxy class for interface com.meego.core.MNotificationManager
  */
 class MNotificationManagerProxy: public QDBusAbstractInterface
 {
     Q_OBJECT
 public:
     static inline const char *staticInterfaceName()
-    { return "com.nokia.m.NotificationManager"; }
+    { return "com.meego.core.MNotificationManager"; }
 
 public:
     MNotificationManagerProxy(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent = 0);
@@ -124,9 +124,9 @@ Q_SIGNALS: // SIGNALS
 };
 
 namespace com {
-  namespace nokia {
-    namespace m {
-      typedef ::MNotificationManagerProxy NotificationManager;
+  namespace meego {
+    namespace core {
+      typedef ::MNotificationManagerProxy MNotificationManager;
     }
   }
 }

@@ -26,7 +26,7 @@
 
 /*!
  * An interface to the notification manager.
- * Uses the com.nokia.m.NotificationManager D-Bus interface with which
+ * Uses the com.meego.core.MNotificationManager D-Bus interface with which
  * application developers can create and manage notifications.
  */
 class MNotificationManager

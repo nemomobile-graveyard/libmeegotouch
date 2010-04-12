@@ -25,7 +25,7 @@
 static const QString DATA_PATH = QDir::homePath() + QString("/.config/libmeegotouch/notifications/");
 
 MNotificationManager::MNotificationManager() :
-    proxy("com.nokia.m.NotificationManager", "/notificationmanager", QDBusConnection::sessionBus()),
+    proxy("com.meego.core.MNotificationManager", "/notificationmanager", QDBusConnection::sessionBus()),
     userId(0)
 {
     if (!MApplication::instance()) {
