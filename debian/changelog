@@ -1,4 +1,4 @@
-libmeegotouch (0.20.0~4) unstable; urgency=low
+libmeegotouch (0.20.0~5) unstable; urgency=low
 
   * New version [UNRELEASED]
   * Fixes: NB#158420 - Bottom toolbar shown with hidden actions in portrait mode
