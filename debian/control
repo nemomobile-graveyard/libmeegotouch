@@ -9,77 +9,76 @@ Package: libmeegotouchcore0
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouch-bin (= ${Source-Version}), libmeegotouch-l10n-engineering-english (= ${Source-Version}), dbus-x11, meegotouchtheme (>= 0.20.0~)
 Suggests: libmeegotouch-l10n-ar, libmeegotouch-l10n-de, libmeegotouch-l10n-en, libmeegotouch-l10n-fi, libmeegotouch-l10n-ur, libmeegotouch-l10n-zh-cn
-Description: DirectUI core library
- libmeegotouch core framework libraries
+Description: MeeGo Touch core library
+ MeeGo Touch core framework library
 
 Package: libmeegotouchextensions0
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
-Description: DirectUI extensions library
- libmeegotouch extensions framework libraries
+Description: MeeGo Touch extensions library
+ MeeGo Touch extensions framework library
 
 Package: libmeegotouchsettings0
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
-Description: DirectUI settings library
- libmeegotouch settings framework libraries
+Description: MeeGo Touch settings library
+ MeeGo Touch settings framework library
 
 Package: libmeegotouchviews0
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
-Description: DirectUI views library
- libmeegotouch views framework libraries
+Description: MeeGo Touch views library
+ MeeGo Touch views framework library
 
 Package: libmeegotouch-bin
 Replaces: libmeegotouch0
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
-Description: DirectUI binary files
- binary files of the libmeegotouch framework
+Description: MeeGo Touch binary files
+ Binary files of MeeGo Touch framework
 
 Package: libmeegotouch-dev
 Section: devel
 Architecture: any
 Depends: libmeegotouchcore0 (= ${Source-Version}), meegotouch-dev-tools (=${Source-Version}), libqt4-dev (>= 4.6.0), libx11-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgconf2-dev, libcontextsubscriber-dev, libxdamage-dev
-Description: libmeegotouch development files
- Development files for DirectUI
+Description: MeeGo Touch development files
+ Development files for MeeGo Touch
 
 Package: meegotouch-dev-tools
 Section: devel
 Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: perl (>= 5.10.0)
-Description: libmeegotouch specific development and testing tools
- Collection of tools for testing and developing on top of libmeegotouch. Includes 
+Description: MeeGo Touch specific development and testing tools
+ Collection of tools for testing and developing on top of MeeGo Touch. Includes 
  stuff like applettester and code/mock generation.
 
 Package: meegotouch-demos
 Section: devel
 Architecture: any
 Depends: meegotouch-demos-widgetsgallery, meegotouch-demos-plainqt
-Description: Demo applications for DirectUI
- Collection of demo applications for DirectUI
+Description: Demo applications for MeeGo Touch
+ Collection of demo applications for MeeGo Touch
 
 Package: meegotouch-demos-widgetsgallery
 Section: devel
 Architecture: any
 Depends: ${shlibs:Depends}, meegotouch-demos-widgetsgallery-l10n-engineering-english (= ${Source-Version})
 Suggests: meegotouch-demos-widgetsgallery-l10n-ar, meegotouch-demos-widgetsgallery-l10n-de, meegotouch-demos-widgetsgallery-l10n-en, meegotouch-demos-widgetsgallery-l10n-fi, meegotouch-demos-widgetsgallery-l10n-ur, meegotouch-demos-widgetsgallery-l10n-zh-cn
-Description: Demo application for DirectUI
+Description: Demo application for MeeGo Touch
 
 Package: meegotouch-demos-widgetsgallery-tests
 Section: devel
 Architecture: any
 Depends: ${shlibs:Depends}, duitestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
-Description: Demo application for DirectUI
+Description: Demo application for MeeGo Touch
 
 Package: meegotouch-demos-widgetsgallery-dbg
 Section: devel
 Architecture: any
 Depends: meegotouch-demos-widgetsgallery (= ${Source-Version})
-Description: Demo application for DirectUI.
- .
- This package contains the debug symbols.
+Description: Demo application for MeeGo Touch
+ This package contains debug symbols.
 
 Package: meegotouch-demos-widgetsgallery-l10n-engineering-english
 Section: devel
@@ -277,6 +276,3 @@ Architecture: any
 Enhances: libmeegotouchcore0
 Replaces: meegotouch-demos-widgetsgallery (<< 0.17.0-0)
 Description: Simplified Chinese translations for libmeegotouch
-
-
-
