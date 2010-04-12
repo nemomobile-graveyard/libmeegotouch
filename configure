@@ -65,6 +65,8 @@ CFG_BUILD_PLAINQT=no
 M_DEFAULT_BUILD_PARTS="libs demos"
 CFG_BUILD_PARTS=""
 CFG_NOBUILD_PARTS=""
+CFG_ICU=auto
+CFG_GCONF=auto
 
 HAVE_ICU=no
 HAVE_CONTEXTSUBSCRIBER=no
@@ -117,7 +119,7 @@ while [ "$#" -gt 0 ]; do
         VAL=no
         ;;
     #Qt style yes options
-        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev|-minimal)
+        -h|-help|-v|-verbose|-debug|-release|-testable|-coverage|-timestamps|-dev|-minimal|-icu|-gconf)
         VAR=`echo $1 | sed "s,^-\(.*\),\1,"`
         VAL=yes
         ;;
@@ -230,6 +232,20 @@ while [ "$#" -gt 0 ]; do
     n900)
         HAVE_N900="yes"
         ;;
+    icu)
+        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+            CFG_ICU="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
+        ;;
+    gconf)
+        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+            CFG_GCONF="$VAL"
+        else
+            UNKNOWN_OPT=yes
+        fi
+        ;;
     h|help)
         if [ "$VAL" = "yes" ]; then
             OPT_HELP="$VAL"
@@ -317,11 +333,18 @@ if [ "$OPT_SHADOW" = "maybe" ]; then
 fi
 
 # Test for ICU
-which icu-config > /dev/null
-if [ $? -eq 0 ]; then
-    icu-config --exists
+if [ "$CFG_ICU" != "no" ]; then
+    which icu-config > /dev/null
     if [ $? -eq 0 ]; then
-        HAVE_ICU=yes
+        icu-config --exists
+        if [ $? -eq 0 ]; then
+            HAVE_ICU=yes
+        fi
+    fi
+    if [ "$CFG_ICU" = "yes" -a "$HAVE_ICU" = "no" ]; then
+        echo "You specified  -icu  but icu was not found."
+        echo "Please install the libicu-dev package."
+        exit 1
     fi
 fi
 
@@ -334,9 +357,17 @@ if [ $? -eq 0 ]; then
         HAVE_CONTEXTSUBSCRIBER=yes
     fi
 
-    pkg-config --exists gconf-2.0
-    if [ $? -eq 0 ]; then
-	HAVE_GCONF=yes
+    if [ "$CFG_GCONF" != "no" ]; then
+        pkg-config --exists gconf-2.0
+        if [ $? -eq 0 ]; then
+            HAVE_GCONF=yes
+        else
+            if [ "$CFG_GCONF" = "yes" ]; then
+                echo "You specified  -gconf  but gconf was not found."
+                echo "Please install the libgconf2-dev package."
+                exit 1
+            fi
+        fi
     fi
 
     pkg-config --exists gstreamer-0.10
@@ -408,6 +439,11 @@ Additional options:
 
     -n900 .............. Build libmeegotouch for the N900 device.
 
+    -no-icu ............ Do not compile with ICU support.
+ +  -icu ............... Compile with ICU support.
+
+    -no-gconf .......... Do not compile with gconf support.
+ +  -gconf ............. Compile with gconf support.
 EOF
 
 exit 0
