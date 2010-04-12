@@ -308,9 +308,9 @@ void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint)
                 break;
 
             case MList::EnsureVisibleHint:
-                if (cellPosition < d_ptr->viewportTopLeft.y()) {
+                if (cellPosition <= pannableViewport->position().y()) {
                     targetPosition.setY(controller->pos().y() + cellPosition);
-                } else if (cellPosition + d_ptr->itemHeight > d_ptr->viewportTopLeft.y() + pannableViewportHeight) {
+                } else if (cellPosition + d_ptr->itemHeight > pannableViewport->position().y() + pannableViewportHeight) {
                     targetPosition.setY(cellPosition + d_ptr->itemHeight + listPosition.y() - pannableViewportHeight);
                 }
 
