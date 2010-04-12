@@ -1,7 +1,7 @@
 ##################################################################
 # MDefinesFeature
 #
-# Global DirectUI definitions
+# Global MeeGo Touch definitions
 ######################################################################
 
 M_MAJOR_VERSION = 0
