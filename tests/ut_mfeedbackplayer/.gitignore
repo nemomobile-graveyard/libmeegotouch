@@ -1,5 +1,5 @@
-ut_duifeedbackplayer
-duifeedbackplayer.cpp
-duifeedbackplayer.h
-duifeedbackplayer_p.cpp
-duifeedbackplayer_p.h
+ut_mfeedbackplayer
+mfeedbackplayer.cpp
+mfeedbackplayer.h
+mfeedbackplayer_p.cpp
+mfeedbackplayer_p.h

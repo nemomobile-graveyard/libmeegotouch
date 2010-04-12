@@ -1,5 +1,5 @@
-ut_duifeedback
-duifeedback.cpp
-duifeedback.h
-duifeedback_p.cpp
-duifeedback_p.h
+ut_mfeedback
+mfeedback.cpp
+mfeedback.h
+mfeedback_p.cpp
+mfeedback_p.h
