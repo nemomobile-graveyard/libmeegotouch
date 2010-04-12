@@ -5,3 +5,5 @@ usr/bin/mapplettester
 usr/bin/mapplicationextensiontester
 usr/bin/mnotificationtool
 usr/bin/mnotificationstresstest
+usr/bin/dui-rename-files
+usr/bin/dui-rename-symbols

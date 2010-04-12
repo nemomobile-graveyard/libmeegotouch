@@ -22,7 +22,7 @@ check-xml.commands = $$system(true)
 tools.target = .dummy
 tools.commands = touch $$tools.target
 tools.path = $$M_INSTALL_BIN
-tools.files = mnotificationstresstest
+tools.files = mnotificationstresstest dui-rename-files dui-rename-symbols
 
 INSTALLS += \
     tools
