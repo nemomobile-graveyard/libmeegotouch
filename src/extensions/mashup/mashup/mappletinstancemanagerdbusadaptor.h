@@ -23,14 +23,14 @@ class QStringList;
 class QVariant;
 
 /*
- * Adaptor class for interface org.maemo.m.MAppletInstanceManager
+ * Adaptor class for interface com.meego.core.MAppletInstanceManager
  */
 class MAppletInstanceManagerDBusAdaptor: public QDBusAbstractAdaptor
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.maemo.m.MAppletInstanceManager")
+    Q_CLASSINFO("D-Bus Interface", "com.meego.core.MAppletInstanceManager")
     Q_CLASSINFO("D-Bus Introspection", ""
-                "  <interface name=\"org.maemo.m.MAppletInstanceManager\">\n"
+                "  <interface name=\"com.meego.core.MAppletInstanceManager\">\n"
                 "    <method name=\"instantiateAppletFromPackage\">\n"
                 "      <annotation value=\"QMap&lt;QString, QVariant>\" name=\"com.trolltech.QtDBus.QtTypeName.In1\"/>\n"
                 "      <arg direction=\"in\" type=\"s\" name=\"packageName\"/>\n"

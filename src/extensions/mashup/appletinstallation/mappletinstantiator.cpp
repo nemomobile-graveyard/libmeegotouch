@@ -28,7 +28,7 @@
 const QString MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_SERVICE = "com.nokia.package_manager";
 const QString MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_PATH = "/com/nokia/package_manager";
 const QString MAppletInstantiatorPrivate::PACKAGE_MANAGER_DBUS_INTERFACE = "com.nokia.package_manager";
-const QString MAppletInstantiatorPrivate::APPLET_INSTANCE_MANAGER_DBUS_INTERFACE = "org.maemo.m.MAppletInstanceManager";
+const QString MAppletInstantiatorPrivate::APPLET_INSTANCE_MANAGER_DBUS_INTERFACE = "com.meego.core.MAppletInstanceManager";
 
 MAppletInstantiatorPrivate::MAppletInstantiatorPrivate()
 {

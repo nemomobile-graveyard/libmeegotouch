@@ -35,7 +35,7 @@ MAppletInstanceManagerDBusAdaptor::~MAppletInstanceManagerDBusAdaptor()
 
 void MAppletInstanceManagerDBusAdaptor::instantiateAppletFromPackage(const QString &packageName, const QMap<QString, QVariant> &metaData)
 {
-    // handle method call org.maemo.m.MAppletInstanceManager.instantiateAppletFromPackage
+    // handle method call com.meego.core.MAppletInstanceManager.instantiateAppletFromPackage
     parent()->instantiateAppletFromPackage(packageName, metaData);
 }
 

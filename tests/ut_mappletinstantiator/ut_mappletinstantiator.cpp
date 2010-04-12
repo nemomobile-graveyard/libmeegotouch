@@ -243,7 +243,7 @@ void Ut_MAppletInstantiator::testReceivePackageData()
     // The canvas should be told
     QCOMPARE(callServiceNames.first(), QString("service"));
     QCOMPARE(callObjectPaths.first(), QString("/path/to/canvas"));
-    QCOMPARE(callInterfaces.first(), QString("org.maemo.m.MAppletInstanceManager"));
+    QCOMPARE(callInterfaces.first(), QString("com.meego.core.MAppletInstanceManager"));
     QVERIFY(callMethods.count() > 1);
     QCOMPARE(callMethods.first(), QString("instantiateAppletFromPackage"));
     QCOMPARE(callArguments.first().count(), 2);
@@ -306,7 +306,7 @@ void Ut_MAppletInstantiator::testReceivePackageDataWithError()
     // The canvas should be told with no meta data
     QCOMPARE(callServiceNames.first(), QString("service"));
     QCOMPARE(callObjectPaths.first(), QString("/path/to/canvas"));
-    QCOMPARE(callInterfaces.first(), QString("org.maemo.m.MAppletInstanceManager"));
+    QCOMPARE(callInterfaces.first(), QString("com.meego.core.MAppletInstanceManager"));
     QVERIFY(callMethods.count() > 1);
     QCOMPARE(callMethods.first(), QString("instantiateAppletFromPackage"));
     QCOMPARE(callArguments.first().count(), 2);
