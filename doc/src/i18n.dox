@@ -4,14 +4,13 @@
 \section  intro  Introduction
 
 This document provides guidelines on developing locale-aware
-applications for the DirectUI Framework. Developers, translators, and
+applications for the MeeGo Touch UI Framework. Developers, translators, and
 user interface designers are the main target audience of this
 document.
 
-Generally, as the DirectUI Framework uses Qt as it’s base, some of the Qt
-internationalisation practices also applicable. However, the DirectUI
-Framework provides additional functionalities, hence it is recommended
-that developers always use DirectUI Framework classes to achieve full
+Generally, as the MeeGo Touch UI Framework uses Qt as it’s base, some of the Qt
+internationalisation practices also applicable. However, the MeeGo Touch UI Framework provides additional functionalities, hence it is recommended
+that developers always use MeeGo Touch UI Framework classes to achieve full
 internationalisation support in their applications.
 
 This document discusses several general internationalisation
@@ -60,18 +59,18 @@ systems and text rendering:
 - Hebrew
 
 Although the implementation contains support for several calendar
-systems, officially the DirectUI Framework currently supports only
+systems, officially the MeeGo Touch UI Framework currently supports only
 Gregorian and Islamic calendar.
 
 \section  localesystem  Locale system
 \subsection  localesystemsettings  Settings
 
-The DirectUI locale system uses the following main settings:
+The MeeGo Touch UI locale system uses the following main settings:
 
 <table border="1">
   <caption>
   <big><b>
-    DuiLocale main settings
+    MLocale main settings
   </b></big>
   </caption>
   <tr>
@@ -80,26 +79,26 @@ The DirectUI locale system uses the following main settings:
      <th>example value</th>
   </tr>
   <tr>
-  <td>/Dui/i18n/Language</td>
+  <td>/M/i18n/Language</td>
   <td>main language setting</td>
   <td>en_US</td>
   <tr>
-  <td>/Dui/i18n/LcTime</td>
+  <td>/M/i18n/LcTime</td>
   <td>for date, time, and calendar</td>
   <td>ar@calendar=islamic</td>
   </tr>
   <tr>
-  <td>/Dui/i18n/LcCollate</td>
+  <td>/M/i18n/LcCollate</td>
   <td>for sorting</td>
   <td>de_DE@collation=phonebook</td>
   </tr>
   <tr>
-  <td>/Dui/i18n/LcNumeric</td>
+  <td>/M/i18n/LcNumeric</td>
   <td>formatting of numbers</td>
   <td>hi</td>
   </tr>
   <tr>
-  <td>/Dui/i18n/LcMonetary</td>
+  <td>/M/i18n/LcMonetary</td>
   <td>for formatting of amounts of money</td>
   <td>fi_FI@currency=EUR</td>
   </tr>
@@ -109,7 +108,7 @@ Each of these settings can be set to a ICU locale specifier as
 described in the <a href="http://userguide.icu-project.org/locale">ICU
 User Guide</a>.
 
-The value of \c /Dui/i18n/Language  (“Language”) tells the locale system
+The value of \c /M/i18n/Language  (“Language”) tells the locale system
 about the UI language of the device. This affects all UI texts,
 writing direction and widget layouts (It does not affect the user
 content, i.e.  it does not affect things like the browser content
@@ -150,23 +149,23 @@ empty the value of “Language” is used.
 
 \subsection  localesysteminitialisation  Initialisation
 
-A DirectUI application is normally using the system default DuiLocale object;
+A MeeGo Touch UI application is normally using the system default MLocale object;
 
 \code
-DuiLocale myLocale; // get the current locale
+MLocale myLocale; // get the current locale
 \endcode
 
 If the application needs to use different locale settings than the
-system locale, then a DuiLocale is created by making an instance of a
-DuiLocale object:
+system locale, then a MLocale is created by making an instance of a
+MLocale object:
 
 \code
-DuiLocale locale ("fi_FI");
+MLocale locale ("fi_FI");
 \endcode
 where "fi" and "FI" mean to use Finnish language in Finland.
 
 \subsection Collator Collator
-To do collation, get the comparator with \c DuiLocale::collator()  method or create it DuiCollator() for default locale collator. This object acts as a functor and can be passed to Qt's \c qSort()  or any other sorting methods. 
+To do collation, get the comparator with \c MLocale::collator()  method or create it MCollator() for default locale collator. This object acts as a functor and can be passed to Qt's \c qSort()  or any other sorting methods. 
 The comparator basically does the comparison of two items as "lessThan" function and returns true if the first parameter should come before the second one. 
 
 If other collation system than the locale's default is needed, then use \c setCollation()  method before getting the comparator. After all are set then the sorting can be started by using Qt's \c qSort()  function.
@@ -175,8 +174,8 @@ To use the default collation:
 \code
 QStringList sl; // This contains the strings needed to be sorted
 ...
-DuiLocale myLocale; // get the current locale
-DuiCollator c = myLocale.collator(); // getting the comparator
+MLocale myLocale; // get the current locale
+MCollator c = myLocale.collator(); // getting the comparator
 ...
 qSort(sl.begin, sl.end, c); // start to sort!
 ...
@@ -186,29 +185,29 @@ To use the different collation:
 \code
 QStringList sl; // This contains the strings needed to be sorted
 ...
-DuiLocale myLocale; // get the current locale
-myLocale.setCollation (DuiLocale::PhonebookCollation); // sort using German's phonebook sorting order
-DuiCollator c = myLocale.collator(); // getting the comparator
+MLocale myLocale; // get the current locale
+myLocale.setCollation (MLocale::PhonebookCollation); // sort using German's phonebook sorting order
+MCollator c = myLocale.collator(); // getting the comparator
 ...
 qSort(sl.begin, sl.end, c); // start to sort!
 ...
 \endcode
 
 \subsection Formatter Formatter
-DirectUI comes with several formatters for several data types. (Almost) Always use the formatter before displaying locale-dependant data to the screen to achieve uniformity and consistency of the data presentation.
+MeeGo Touch UI comes with several formatters for several data types. (Almost) Always use the formatter before displaying locale-dependant data to the screen to achieve uniformity and consistency of the data presentation.
 
 \subsubsection Parameters Parameters
 
 The positional parameters used in QString is also applicable in the
-DirectUI Framework. The difference to Qt is that we don't use any
+MeeGo Touch UI Framework. The difference to Qt is that we don't use any
 parameter modifier, and just use number to tell the position of the
 parameter in the string. We don't distinguish the parameter whether it
 is string, numbers or anything, we just use it as a string.
 
 It is strongly recommended that developers use \c arg()  methods to
-arrange the parameters as DirectUI provides type based formatters,
+arrange the parameters as MeeGo Touch UI provides type based formatters,
 and don't use any format string. QString formatters shall not be used,
-as QString uses QLocale which is not used in DirectUI.
+as QString uses QLocale which is not used in MeeGo Touch UI.
 
 The appearance of data is mainly driven using formatters API, not with
 the format string. However there are several APIs which accept custom
@@ -216,7 +215,7 @@ format strings.
 
 \code
    ...
-   DuiLocale myLocale; // get the current locale
+   MLocale myLocale; // get the current locale
    ...
    int number = 1234;
    // format the number, the result is in QString
@@ -261,7 +260,7 @@ To format a number use \c formatNumber()  method. It works with \c qlonglong, \c
 
 \code
 ...
-DuiLocale myLocale; // get the current locale
+MLocale myLocale; // get the current locale
 ...
 int number = 1234;
 QString formattedNumber = myLocale.formatNumber(number); // format the number, the result is in QString
@@ -272,7 +271,7 @@ QString formattedNumber = myLocale.formatNumber(number); // format the number, t
 Use \c formatDateTime()  to format the date and time.
 \code
 ...
-DuiLocale myLocale; // get the current locale
+MLocale myLocale; // get the current locale
 ...
 QDateTime now = QDateTime::currentDateTime();
 QString formattedDateTime = myLocale.formatDateTime(now);
@@ -283,10 +282,10 @@ As mentioned previously, date format can also be affected by the device language
 
 \code
 ...
-DuiLocale myLocale; // get the current locale
+MLocale myLocale; // get the current locale
 ...
 QDateTime now = QDateTime::currentDateTime();
-QString formattedDateTime = myLocale.formatDateTime(now, DuiLocale::IslamicCalendar); // format using IslamicCalendar
+QString formattedDateTime = myLocale.formatDateTime(now, MLocale::IslamicCalendar); // format using IslamicCalendar
 ...
 \endcode
 
@@ -296,7 +295,7 @@ Custom formatting is supported with ISO-14652 format (also used in libc's \c str
 \c formatPercent()  is used to format a percentage value.
 \code
 ...
-DuiLocale myLocale; // get the current locale
+MLocale myLocale; // get the current locale
 ...
 double percent = 0.29; // = 29%
 int decimals = 2;
@@ -310,7 +309,7 @@ To format any amount of money with a currency, use \c formatCurrency()  method.
 
 \code
 ...
-DuiLocale myLocale; // get the current locale
+MLocale myLocale; // get the current locale
 ...
 double money = 150.40;
 QString currency = "EUR";
@@ -319,31 +318,31 @@ QString formattedCurrency = myLocale.formatCurrency(money, currency);
 \endcode
 
 \subsubsection Name Name
-Use DuiName class to populate the name information, and use \c DuiLocale::formatName()  method to format the name.
+Use MName class to populate the name information, and use \c MLocale::formatName()  method to format the name.
 
 \subsubsection Address Address
-Use DuiAddress class to populate the address information, and use \c format()  method to format the name using the format specified as parameter.
+Use MAddress class to populate the address information, and use \c format()  method to format the name using the format specified as parameter.
 
 \subsection Calendar Calendar
-DuiLocale provides Gregorian as well as non-Gregorian calendar support. Use \c formatDateTime()  to format the date according to the custom of the selected calendar.
+MLocale provides Gregorian as well as non-Gregorian calendar support. Use \c formatDateTime()  to format the date according to the custom of the selected calendar.
 To set another calendar than the default Gregorian calendar, use \c setCalendar()  method.
 
 \code
-DuiLocale myLocale; // get the current locale
+MLocale myLocale; // get the current locale
 ...
-myLocale.setCalendar(DuiLocale::IslamicCalendar); // set the calendar to use Islamic calendar
+myLocale.setCalendar(MLocale::IslamicCalendar); // set the calendar to use Islamic calendar
 ...
 \endcode
 
-Further date manipulations can be done using DuiCalendar object.
+Further date manipulations can be done using MCalendar object.
 
 \subsection  iteratingwords  Iterating words
-On general case iterating words in a string is not possible by searching whitespace: e.g. thai language just concatenates words and in chinese language a character is a word. For this need a DuiBreakIterator class can be used. It is constructed with a locale and a string and provides an interface for iterating word boundaries. Following example iterates word boundaries from beginning to the end:
+On general case iterating words in a string is not possible by searching whitespace: e.g. thai language just concatenates words and in chinese language a character is a word. For this need a MBreakIterator class can be used. It is constructed with a locale and a string and provides an interface for iterating word boundaries. Following example iterates word boundaries from beginning to the end:
 
 \code
-DuiLocale myLocale; // current locale
+MLocale myLocale; // current locale
 QString text("this is text to be iterated");
-DuiBreakIterator iterator(myLocale, text, DuiBreakIterator::WordIterator);
+MBreakIterator iterator(myLocale, text, MBreakIterator::WordIterator);
 while (iterator.hasNext()) {
   int next = iterator.next();
   ...
@@ -353,7 +352,7 @@ while (iterator.hasNext()) {
 \section  translationsystem  Translation system
 \subsection  logicalidandengineeringenglish  Logical ID and engineering English
 
-The DirectUI Framework can use both Qt standard \c tr()  method or the
+The MeeGo Touch UI Framework can use both Qt standard \c tr()  method or the
 idbased
 <a href="http://qt.nokia.com/doc/4.6-snapshot/qtglobal.html#qtTrId">qtTrId()</a>
 method. For the Nokia internal localisation process, only \c qtTrId() 
@@ -396,8 +395,8 @@ In that folder, create a \c translations.pro file with the contents:
     CATALOGNAME = foobar   # what ever catalog name you want to use
     SOURCEDIR = $$PWD/..   # more then one directory is possible
     TRANSLATIONDIR = $$PWD
-    include($$[QT_INSTALL_DATA]/mkspecs/features/dui_defines.prf)
-    include($$[QT_INSTALL_DATA]/mkspecs/features/dui_translations.prf)
+    include($$[QT_INSTALL_DATA]/mkspecs/features/meegotouch_defines.prf)
+    include($$[QT_INSTALL_DATA]/mkspecs/features/meegotouch_translations.prf)
 \endcode
 
 Introducing the extra \c translations/translations.pro file makes it
@@ -441,7 +440,7 @@ start using \c qtTrId()  immediately:
 ...
 int main(int argc, char** argv){
 ...
-   DuiApplication app (argc, argv);
+   MApplication app (argc, argv);
 ...
    //% "hello"
    qtTrId("xxx_hello");
@@ -457,14 +456,14 @@ used.
 
 If you need to specify a file for the translation catalog wich differs
 from the name of the executable you can use the optional third
-parameter \c appIdentifier  of the DuiApplication constructor as in this
+parameter \c appIdentifier  of the MApplication constructor as in this
 example:
 
 \code
 ...
 int main(int argc, char** argv){
 ...
-   DuiApplication application(argc, argv, "bar");
+   MApplication application(argc, argv, "bar");
 ...
    //% "hello"
    qtTrId("xxx_hello");
@@ -491,13 +490,13 @@ completely different name as in this example:
 ...
 int main(int argc, char** argv){
 ...
-   DuiApplication app (argc, argv);
+   MApplication app (argc, argv);
 
-   // create a DuiLocale. Without parameters in the constructor,
+   // create a MLocale. Without parameters in the constructor,
    // it gets a copy of the system default locale, which may already
    // have some translation catalogs, for example it usually already
    // has the “common” translation catalog.
-   DuiLocale locale;
+   MLocale locale;
 
    // add a different translation catalog for this locale.
    // This catalog is added to the list of already loaded catalogs.
@@ -506,7 +505,7 @@ int main(int argc, char** argv){
 
    // the order is important, set the locale as the default *after*
    // installing the translation catalog:
-   DuiLocale::setDefault(locale);
+   MLocale::setDefault(locale);
 ...
    // Now the following call to qtTrId() will use messages
    // from the translation catalog file othercatalog_<locale-code>.qm
@@ -527,12 +526,12 @@ following example:
 ...
 int main(int argc, char** argv){
 ...
-   DuiApplication app (argc, argv);
-   // create a DuiLocale. Without parameters in the constructor,
+   MApplication app (argc, argv);
+   // create a MLocale. Without parameters in the constructor,
    // it gets a copy of the system default locale, which may already
    // have some translation catalogs, for example it usually already
    // has the “common” translation catalog.
-   DuiLocale locale;
+   MLocale locale;
 
    // install the catalog for use with tr(). It is probably
    // a good idea to use the application name for "mycatalog":
@@ -541,7 +540,7 @@ int main(int argc, char** argv){
    // Make the locale the default to enable the message catalog just
    // installed above for tr(). The order is important, do this *after*
    // installing the translation catalog:
-   DuiLocale::setDefault(locale);
+   MLocale::setDefault(locale);
 ...
    // Now you can use tr() as in regular Qt programs:
    tr("hello");
@@ -610,14 +609,15 @@ is used:
 See also the documentation of
 <a href="http://doc.trolltech.com/4.5/qtranslator.html#load">QTranslator::load()</a>.
 
-The \c top-directory  used by default is `/usr/share/l10n/dui` (This is
-defined as \c DUI_TRANSLATION_DIR  in `meegotouchconfig.pri` in the top-level
-directory of the libdui source code).
+The \c top-directory  used by default is \c /usr/share/l10n/meegotouch (This is
+defined as \c M_TRANSLATION_DIR  in \c meegotouch_defines.prf which
+can be found in \c ./mkspecs/features/meegotouch_defines.prf` in the 
+libmeegotouch source code).
 
-`/usr/share/l10n/dui` is also the default directory used by
+`/usr/share/l10n/meegotouch` is also the default directory used by
 translation packages to store the .qm files. Applications can set
-additional search paths by using \c DuiLocale::setTranslationPaths() 
-and \c DuiLocale::addTranslationPath() . This supports the variability
+additional search paths by using \c MLocale::setTranslationPaths() 
+and \c MLocale::addTranslationPath() . This supports the variability
 needed for over-the-air translation installation as well as for user
 defined translations.
 
@@ -638,21 +638,21 @@ using the demo application “widgetsgallery” as an example.
      </tr>
      <tr>
         <td>
-           dui-demos-widgetsgallery-l10n-engineering-english<br>
+           meegotouch-demos-widgetsgallery-l10n-engineering-english<br>
         </td>
         <td>
-           /usr/share/l10n/dui/widgetsgallery.qm<br>
-           /usr/share/doc/dui-demos-widgetsgallery-l10n-engineering-english/widgetsgallery.ts<br>
-           /usr/share/doc/dui-demos-widgetsgallery-l10n-engineering-english/changelog.Debian.gz<br>
+           /usr/share/l10n/meegotouch/widgetsgallery.qm<br>
+           /usr/share/doc/meegotouch-demos-widgetsgallery-l10n-engineering-english/widgetsgallery.ts<br>
+           /usr/share/doc/meegotouch-demos-widgetsgallery-l10n-engineering-english/changelog.Debian.gz<br>
         </td>
      </tr>
      <tr>
         <td>
-           dui-demos-widgetsgallery-l10n-ar<br>
+           meegotouch-demos-widgetsgallery-l10n-ar<br>
         </td>
         <td>
-           /usr/share/l10n/dui/widgetsgallery_ar.qm<br>
-           /usr/share/doc/dui-demos-widgetsgallery-l10n-ar/changelog.Debian.gz<br>
+           /usr/share/l10n/meegotouch/widgetsgallery_ar.qm<br>
+           /usr/share/doc/meegotouch-demos-widgetsgallery-l10n-ar/changelog.Debian.gz<br>
         </td>
      </tr>
      <tr>
@@ -665,11 +665,11 @@ using the demo application “widgetsgallery” as an example.
      </tr>
      <tr>
         <td>
-           dui-demos-widgetsgallery-l10n-zh-cn<br>
+           meegotouch-demos-widgetsgallery-l10n-zh-cn<br>
         </td>
         <td>
-           /usr/share/l10n/dui/widgetsgallery_zh_CN.qm<br>
-           /usr/share/doc/dui-demos-widgetsgallery-l10n-zh-cn/changelog.Debian.gz<br>
+           /usr/share/l10n/meegotouch/widgetsgallery_zh_CN.qm<br>
+           /usr/share/doc/meegotouch-demos-widgetsgallery-l10n-zh-cn/changelog.Debian.gz<br>
         </td>
      </tr>
 </table>
@@ -683,7 +683,7 @@ translations, instead they are completely auto-generated from the
 source code.
 
 In the above example, the package
-“dui-demos-widgetsgallery-l10n-engineering-english” contains
+“meegotouch-demos-widgetsgallery-l10n-engineering-english” contains
 “widgetsgallery.qm” and “widgetsgallery.ts”. “widgetsgallery” is the
 name of the application executable. “widgetsgallery.ts” is
 automatically generated from the source code using
@@ -716,7 +716,7 @@ and then this fallback engineering English is useful.
 
 It gives us an easy way to extract a list of ids which are actually
 used in the source code. Using the tool “lconvert” one can easily
-extract all ids from a .qm file. If all dui-applications supply
+extract all ids from a .qm file. If all meegotouch applications supply
 “...-l10n-engineering-english” packages, one can easily install all
 these packages (for example with “apt-get”) and then extract all ids
 which are actually used. Then these ids can be used for cross-checking
@@ -725,15 +725,15 @@ with the ids used in the specifications and in the real translations.
 </li>
 </ol>
 
-“widgetsgallery” is only a test application used by the libdui
+“widgetsgallery” is only a test application used by the libmeegotouch
 developers for testing and demos. Therefore, the localisation
 department will not supply translations for “widgetsgallery”.  The
-libdui developers supply some demo translations for “widgetsgallery”
+libmeegotouch developers supply some demo translations for “widgetsgallery”
 to test their code and to make sure the system works.
 
 Only because of this, “widgetsgallery” has some “real” translation
-packages like “dui-demos-widgetsgallery-l10n-zh-cn” containing
-“/usr/share/l10n/dui/widgetsgallery_zh_CN.qm” (see the table above).
+packages like “meegotouch-demos-widgetsgallery-l10n-zh-cn” containing
+“/usr/share/l10n/meegotouch/widgetsgallery_zh_CN.qm” (see the table above).
 In that respect, “widgetsgallery” is an exception.
 
 For a “real” application, say “camera” which is intended to be shipped
@@ -757,15 +757,15 @@ needed anymore.
 
 \subsection  translationfordotdesktop  Translation for .desktop files
 
-The translation of .desktop files for DUI differs a bit from the usual
+The translation of .desktop files for MeeGo Touch UI differs a bit from the usual
 practise of Freedesktop.org. The rationale behind it is that we
 have different localisation processes which make it impossible to
 modify the source of .desktop files during build time. To accommodate
 the special needs of our localisation processes, the .desktop file
 shall contain at least two extra (key, value) pairs:
 
-- X-DUI-logical-id=&lt;logical name&gt;: The value for this key provides the logical name of the section name
-- X-DUI-translation-catalog=&lt;catalog name&gt;: The value for this key provides the catalog where the logical name exists
+- X-MeegoTouch-logical-id=&lt;logical name&gt;: The value for this key provides the logical name of the section name
+- X-MeegoTouch-translation-catalog=&lt;catalog name&gt;: The value for this key provides the catalog where the logical name exists
 
 For example:
 \code
@@ -773,16 +773,16 @@ For example:
 # engineering english
 Name=Setting
 # logical name of "Setting"
-X-DUI-logical-id=xx_setting_something
+X-MeegoTouch-logical-id=xx_setting_something
 # the catalog name
-X-DUI-translation-catalog=duisettings
+X-MeegoTouch-translation-catalog=meegotouchsettings
 \endcode
 
 For the freedesktop specification of the .desktop files see
 
 <a href="http://standards.freedesktop.org/desktop-entry-spec/latest/">http://standards.freedesktop.org/desktop-entry-spec/latest/</a>
 
-In DUI, such .desktop files are parsed using DuiDesktopEntry.
+In MeeGo Touch UI, such .desktop files are parsed using MDesktopEntry.
 
 \subsection  otatranslationinstallation  Over-the-air translation installation
 FIXME: No settings available now
@@ -795,11 +795,11 @@ system can immediately use the new downloaded data.
 \subsection  localechange  Reacting to changes in the locale settings
 
 The current language setting is stored in the gconf key
-\c /Dui/i18n/Language . From the command line, the current language can
+\c /M/i18n/Language . From the command line, the current language can
 be queried using \c gconftool-2  like this:
 
 \code
-    ~$ gconftool-2 -g /Dui/i18n/Language
+    ~$ gconftool-2 -g /M/i18n/Language
     ar
 \endcode
 
@@ -808,47 +808,47 @@ the current language from the command line can of course also be
 done with \c gconftool-2 :
 
 \code
-    ~$ gconftool-2 -t string -s /Dui/i18n/Language zh_CN
+    ~$ gconftool-2 -t string -s /M/i18n/Language zh_CN
 \endcode
 
 The above command sets the current language to simplified Chinese.
 
-The preferred way to query the current language from a \c DuiApplication 
+The preferred way to query the current language from a \c MApplication 
 works like this:
 
 \code
-    DuiLocale currentLocale;
+    MLocale currentLocale;
     QString language = currentLocale.name();
 \endcode
 
-\c DuiLocale currentLocale; gets a copy of the system default locale
+\c MLocale currentLocale; gets a copy of the system default locale
 which is connected to the gconf settings and follows the gconf
 settings.
 
 Alternatively it is possible to read the gconf settings directly:
 
 \code
-    DuiGConfItem languageItem("/Dui/i18n/Language");
+    MGConfItem languageItem("/M/i18n/Language");
     QString language = languageItem.value().toString();
 \endcode
 
 This has the same effect as getting the current system locale and
 using \c currentLocale.name().
 
-Setting the current language permanently from a \c DuiApplication  works like
+Setting the current language permanently from a \c MApplication  works like
 this:
 
 \code
-    DuiGConfItem languageItem("/Dui/i18n/Language");
+    MGConfItem languageItem("/M/i18n/Language");
     languageItem.set("zh_CN");
 \endcode
 
-One can also set a new current language temporarily from a \c DuiApplication 
+One can also set a new current language temporarily from a \c MApplication 
 by doing:
 
 \code
-    DuiLocale newLocale("zh_CN");
-    DuiLocale::setDefault(newLocale);
+    MLocale newLocale("zh_CN");
+    MLocale::setDefault(newLocale);
 \endcode
 
 This does not change the gconf settings and therefore this change will
@@ -859,7 +859,7 @@ currently the only way to change the current language on systems
 without gconf like Windows or Mac OSX.
 
 If a the system locale changes, either because a locale related gconf
-key changed or because \c DuiLocale::setDefault()  has been called
+key changed or because \c MLocale::setDefault()  has been called
 explicitly by the application, the following things happen:
 
 <ul>
@@ -869,14 +869,14 @@ settings
 </li>
 <li>
 \c QEvent::LanguageChange  will be sent to the Application, if
-necessary. \c DuiWindow  will propagate a \c QEvent::LanguageChange  to all
-\c DuiWidgets  on the scene. A \c DuiWidget  which receives this event by
+necessary. \c MWindow  will propagate a \c QEvent::LanguageChange  to all
+\c MWidgets  on the scene. A \c MWidget  which receives this event by
 calls its \c retranslateUi()  method.
 </li>
 <li>
 \c QEvent::ApplicationLayoutDirectionChange  will be sent to the
-Application, if necessary.  \c DuiWindow  will propagate a
-\c QEvent::LayoutDirectionChange  to all \c DuiWidgets  as appropriate to
+Application, if necessary.  \c MWindow  will propagate a
+\c QEvent::LayoutDirectionChange  to all \c MWidgets  as appropriate to
 enable the widgets to change their layout on the fly.
 </li>
 <li>
@@ -884,7 +884,7 @@ The signal \c settingsChanged()  will be emitted by the locale.
 </li>
 <li>
 The signal \c localeSettingsChanged()  will be emitted by the
-\c DuiApplication .
+\c MApplication .
 </li>
 </ul>
 
@@ -946,27 +946,27 @@ foohandlelocalechange.cpp:
     }
 \endcode
 
-\subsection retranslateui The retranslateUi() method of DuiWidget
+\subsection retranslateui The retranslateUi() method of MWidget
 
-A \c DuiWidget  which receives the \c QEvent::LanguageChange  calls its
+A \c MWidget  which receives the \c QEvent::LanguageChange  calls its
 virtual method
 
 \code
     virtual void retranslateUi();
 \endcode
 
-\c DuiWidgets  can reimplement this \c retranslateUi()  method to do whatever
+\c MWidgets  can reimplement this \c retranslateUi()  method to do whatever
 is necessary to retranslate itself, as in the following example:
 
 \code
 foopage.h
 
-    class FooPage : public DuiWidget
+    class FooPage : public MWidget
     {
     ...
     private:
     ...
-        DuiLabel* label;
+        MLabel* label;
     ...
     };
 
@@ -975,7 +975,7 @@ foopage.cpp
     void FooPage::createContent()
     {
 
-        label = new DuiLabel();
+        label = new MLabel();
 
         retranslateUi();
     }
@@ -994,24 +994,24 @@ re-translate the user interface of an application on the fly if the
 locale settings change. 
 
 <!-- This can be quite tricky in some cases, therefore we are thinking -->
-<!-- about adding a convenience API for the DuiWidgets to make -->
+<!-- about adding a convenience API for the MWidgets to make -->
 <!-- reimplementing \c retranslateUi()  not necessary in many cases. -->
 
 \subsection  widgetmirroring  Widget mirroring and layout direction
-Widget mirroring is the automatic behaviour of putting the widgets in the reverse direction when the language is switched to Right-to-left languages (such as Arabic or Hebrew). In this direction, the widgets are put following the natural flow of text writing direction. Widget mirroring works automatically when the widgets are arranged using QGraphicsLayout or DuiLayout, with some exceptions with the specialist DuiLayout policies.
+Widget mirroring is the automatic behaviour of putting the widgets in the reverse direction when the language is switched to Right-to-left languages (such as Arabic or Hebrew). In this direction, the widgets are put following the natural flow of text writing direction. Widget mirroring works automatically when the widgets are arranged using QGraphicsLayout or MLayout, with some exceptions with the specialist MLayout policies.
 
-The layout direction will be automatically set to the correct value by DuiApplication when the language is changed. The current layout direction can be obtained from \c DuiApplication::layoutDirection() . Note that during the application lifetime, the direction may change if the user changes it from the global setting.
+The layout direction will be automatically set to the correct value by MApplication when the language is changed. The current layout direction can be obtained from \c MApplication::layoutDirection() . Note that during the application lifetime, the direction may change if the user changes it from the global setting.
 
-If you are developing a widget in which it does not make sense for the layout to be reversed (for example, a number keypad), then use \c QGraphicsWidget::setLayoutDirection()  to override the layout direction.  If you need to paint your widget differently in right-to-left mode, simply call `qApp->layoutDirection()` and draw as appropriate.  If you are implementing a custom DuiAbstractLayoutPolicy, however, you should use the \c DuiLayout::layoutDirection() function instead so that the user can override it.
+If you are developing a widget in which it does not make sense for the layout to be reversed (for example, a number keypad), then use \c QGraphicsWidget::setLayoutDirection()  to override the layout direction.  If you need to paint your widget differently in right-to-left mode, simply call `qApp->layoutDirection()` and draw as appropriate.  If you are implementing a custom MAbstractLayoutPolicy, however, you should use the \c MLayout::layoutDirection() function instead so that the user can override it.
 
 In advanced situations you can handle the \c QEvent::ApplicationLayoutDirectionChange()  event directly in your widget's event handler.
 
-\section  currentstatusrtlsupportinduiwidgets  Current status of RTL support in DuiWidgets
+\section  currentstatusrtlsupportinmeegotouchwidgets  Current status of RTL support in MWidgets
 
 <table border="1">
   <caption>
   <big><b>
-    Current status of RTL support in DuiWidgets
+    Current status of RTL support in MWidgets
   </b></big>
   </caption>
     <tr>
@@ -1020,12 +1020,12 @@ In advanced situations you can handle the \c QEvent::ApplicationLayoutDirectionC
       <td><b>Comments</b></td>
     </tr>
     <tr>
-      <td>DuiAnimatedIcon</td>
+      <td>MAnimatedIcon</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiApplicationMenu</td>
+      <td>MApplicationMenu</td>
       <td>broken?</td>
       <td>
 In widgetsgallery, click "Application Menu", then click "Application
@@ -1035,60 +1035,60 @@ layout direction, you see that the these names which were originally
 "almost" centred are aligned right in RTL mode. They should be aligned
 in a mirrored way, i.e. if they are a bit left of the centre in LTR
 mode, they should be a bit right of the centre in RTL mode.
-Is this a problem with DuiApplicationMenu or with DuiAction?
+Is this a problem with MApplicationMenu or with MAction?
       </td>
     </tr>
     <tr>
-      <td>DuiApplicationPage</td>
+      <td>MApplicationPage</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiApplicationWindow</td>
+      <td>MApplicationWindow</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiButton</td>
+      <td>MButton</td>
       <td>OK</td>
       <td>
 But the switches in the switchpage of widgetsgallery (which are
-DuiButtons) do not reverse the alignment of their ON/OFF texts.
-Problem in DuiButton or somewhere else?
+MButtons) do not reverse the alignment of their ON/OFF texts.
+Problem in MButton or somewhere else?
       </td>
     </tr>
     <tr>
-      <td>DuiButtonGroup</td>
+      <td>MButtonGroup</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiComboBox</td>
+      <td>MComboBox</td>
       <td>OK</td>
       <td></td>
     </tr>
     <tr>
-      <td>DuiContainer</td>
+      <td>MContainer</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiDialog</td>
+      <td>MDialog</td>
       <td>OK</td>
       <td></td>
     </tr>
     <tr>
-      <td>DuiDockWidget</td>
+      <td>MDockWidget</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiEscapeButtonPanel</td>
+      <td>MEscapeButtonPanel</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiGrid</td>
+      <td>MGrid</td>
       <td>broken</td>
       <td>
 
@@ -1101,17 +1101,17 @@ are shifted against each other. This doesn't look right.
       </td>
     </tr>
     <tr>
-      <td>DuiHomeButtonPanel</td>
+      <td>MHomeButtonPanel</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiImage</td>
+      <td>MImage</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiInfoBanner</td>
+      <td>MInfoBanner</td>
       <td>broken</td>
       <td>
 Always slides in from the left side, see "Dialogs and Notifications"
@@ -1119,7 +1119,7 @@ page in widgetsgallery.
       </td>
     </tr>
     <tr>
-      <td>DuiLabel</td>
+      <td>MLabel</td>
       <td>OK</td>
       <td>
 It did not change alignment on the fly until recently but this is
@@ -1128,47 +1128,47 @@ href="https://projects.maemo.org/bugzilla/show_bug.cgi?id=144377">NB#144377</a>
       </td>
     </tr>
     <tr>
-      <td>DuiMessageBox</td>
+      <td>MMessageBox</td>
       <td>OK</td>
       <td></td>
     </tr>
     <tr>
-      <td>DuiModalSceneWindow</td>
+      <td>MModalSceneWindow</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiNavigationBar</td>
+      <td>MNavigationBar</td>
       <td>broken</td>
       <td>Icon in the navigation bar is always on the left side</td>
     </tr>
     <tr>
-      <td>DuiObjectMenu</td>
+      <td>MObjectMenu</td>
       <td>probably OK</td>
       <td>Where is this used?</td>
     </tr>
     <tr>
-      <td>DuiPannableViewport</td>
+      <td>MPannableViewport</td>
       <td>broken</td>
       <td>Position indicator is always on the right side</td>
     </tr>
     <tr>
-      <td>DuiPannableWidget</td>
+      <td>MPannableWidget</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiPopupList</td>
+      <td>MPopupList</td>
       <td>OK</td>
       <td></td>
     </tr>
     <tr>
-      <td>DuiProgressIndicator</td>
+      <td>MProgressIndicator</td>
       <td>OK</td>
       <td></td>
     </tr>
     <tr>
-      <td>DuiPositionIndicator</td>
+      <td>MPositionIndicator</td>
       <td>broken</td>
       <td>
 Is always on the right side. Can be seen on the start page
@@ -1176,7 +1176,7 @@ of Widgetsgallery.
       </td>
     </tr>
     <tr>
-      <td>DuiSeekBar</td>
+      <td>MSeekBar</td>
       <td>broken</td>
       <td>
 slides correctly from the right in RTL mode but the black
@@ -1184,35 +1184,35 @@ area showing the "already" downloaded stuff is only visible in LTR mode.
       </td>
     </tr>
     <tr>
-      <td>DuiSeparator</td>
+      <td>MSeparator</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiSlider</td>
+      <td>MSlider</td>
       <td>OK</td>
       <td></td>
     </tr>
     <tr>
-      <td>DuiSlideShow</td>
+      <td>MSlideShow</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
     <tr>
-      <td>DuiTextEdit</td>
+      <td>MTextEdit</td>
       <td>OK</td>
       <td>
 <a href="https://projects.maemo.org/bugzilla/show_bug.cgi?id=104397">NB#104397</a>
-is very obvious here, but this is not the fault of DuiTextEdit.
+is very obvious here, but this is not the fault of MTextEdit.
       </td>
     </tr>
     <tr>
-      <td>DuiToolBar</td>
+      <td>MToolBar</td>
       <td>OK</td>
       <td></td>
     </tr>
     <tr>
-      <td>DuiWindow</td>
+      <td>MWindow</td>
       <td>OK</td>
       <td>Nothing to do for RTL</td>
     </tr>
@@ -1220,7 +1220,7 @@ is very obvious here, but this is not the fault of DuiTextEdit.
 
 \section  charsetconversion  Charset Conversions
 
-The DirectUI Framework uses the Qt character set conversion
+The MeeGo Touch UI Framework uses the Qt character set conversion
 mechanisms directly. Therefore, developers can follow the Qt
 documentation to find out how to use the character set conversion
 functionalities.
@@ -1241,7 +1241,7 @@ more than one form of plurals.
 \subsubsection Sorting Sorting
 
 Sorting order is dependent on the language setting. Always use
-DirectUI collator to sort the strings.
+MeeGo Touch UI collator to sort the strings.
 
 \subsubsection  wordboundaries  Word boundaries
 
@@ -1266,16 +1266,16 @@ When translating, translators shall also keep the place markers and
 put them in the correct places.
 
 \subsection Developers Developers
-\subsubsection  alwaysusedui  Always use DirectUI Framework API
+\subsubsection  alwaysusemeegotouch  Always use MeeGo Touch UI Framework API
 
 This is the general checklist which need to be confirmed during the
-development. Use only DirectUI Framework locale system API to gain
+development. Use only MeeGo Touch UI Framework locale system API to gain
 full internationalisation support. Use of POSIX and libc API is not
 recommended and may cause discrepancies in the representation of the
 data.
 
 To do sorting, never use Qt's QString localeAwareCompare(), use
-DirectUI collation system instead.
+MeeGo Touch UI collation system instead.
 
 \subsubsection  avoidhardcoding  Avoid hardcoding
 
@@ -1356,11 +1356,11 @@ languages. The UI presentation generally follows the natural flow of
 the writing direction. Therefore, the widget layout and composition is
 mirrored when the device language is set to the languages which use
 the right-to-left writing direction. The mirroring is done
-automatically by the DirectUI Framework. If the automatic mirroring is
+automatically by the MeeGo Touch UI Framework. If the automatic mirroring is
 not sufficient then consult the developers to support different layout
 for right-to-left direction.
 
-DirectUI Framework currently only supports left-to-right and
+MeeGo Touch UI Framework currently only supports left-to-right and
 right-to-left writing directions.
 
 \subsubsection Gender Gender
