@@ -479,37 +479,24 @@ QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *window)
 {
     Q_Q(MSceneManager);
 
-    QRectF availableSceneRect;
-    QSizeF sceneSize = q->visibleSceneSize(orientation(angle));
+    QRectF availableSceneRect(QPointF(0,0), q->visibleSceneSize(orientation(angle)));
 
-    if (statusBar && window->windowType() != MSceneWindow::StatusBar) {
-        QSizeF windowSize = window->effectiveSizeHint(Qt::PreferredSize);
+    if (statusBar) {
+        const MSceneWindow::WindowType type = window->windowType();
+        if( type != MSceneWindow::StatusBar && type != MSceneWindow::LayerEffect) {
+            QSizeF windowSize = window->effectiveSizeHint(Qt::PreferredSize);
 
-        qreal statusBarBottomEdge = statusBar->y() +
-            statusBar->effectiveSizeHint(Qt::PreferredSize).height();
+            qreal statusBarBottomEdge = statusBar->y() +
+                statusBar->effectiveSizeHint(Qt::PreferredSize).height();
 
-        if ((statusBarBottomEdge + windowSize.height()) < sceneSize.height()) {
-            // Window should still fit within the remaining scene space when shifted
-            // downwards due to the status bar presence
-            availableSceneRect.setX(0.0);
-            availableSceneRect.setY(statusBarBottomEdge);
-            availableSceneRect.setWidth(sceneSize.width());
-            availableSceneRect.setHeight(sceneSize.height() - statusBarBottomEdge);
+            if ((statusBarBottomEdge + windowSize.height()) < availableSceneRect.height()) {
+                // Window should still fit within the remaining scene space when shifted
+                // downwards due to the status bar presence
+                availableSceneRect.setY(statusBarBottomEdge);
 
-            Q_ASSERT(availableSceneRect.height() > 0.0);
-        } else {
-            // Use the whole scene
-            availableSceneRect.setX(0.0);
-            availableSceneRect.setY(0.0);
-            availableSceneRect.setWidth(sceneSize.width());
-            availableSceneRect.setHeight(sceneSize.height());
+                Q_ASSERT(availableSceneRect.height() > 0.0);
+            }
         }
-    } else {
-        // Use the whole scene
-        availableSceneRect.setX(0.0);
-        availableSceneRect.setY(0.0);
-        availableSceneRect.setWidth(sceneSize.width());
-        availableSceneRect.setHeight(sceneSize.height());
     }
 
     return availableSceneRect;
