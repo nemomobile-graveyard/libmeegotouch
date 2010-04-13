@@ -20,6 +20,8 @@
 #include "mbuttongrouplayoutpolicy_p.h"
 #include <QGraphicsLayoutItem>
 #include <MButton>
+#include <MLayout>
+#include <MApplication>
 
 MButtonGroupLayoutPolicy::MButtonGroupLayoutPolicy(MLayout *layout, Qt::Orientation orientation)
     : MLinearLayoutPolicy(layout, orientation)
@@ -53,11 +55,19 @@ void MButtonGroupLayoutPolicy::updateButtonsViewTypes()
         setButtonViewType(0, "single");
     } else {
         int i = 0;
-        setButtonViewType(i, "first");
+        if(layout()->layoutDirection() == Qt::RightToLeft && MApplication::activeWindow()->orientation() == M::Landscape){
+            setButtonViewType(i, "last");
+        }else{
+            setButtonViewType(i, "first");
+        }
         while (++i < buttonBoxSize - 1) {
             setButtonViewType(i, "middle");
         }
-        setButtonViewType(i, "last");
+        if(layout()->layoutDirection() == Qt::RightToLeft && MApplication::activeWindow()->orientation() == M::Landscape){
+            setButtonViewType(i, "first");
+        }else{
+            setButtonViewType(i, "last");
+        }
     }
 }
 
