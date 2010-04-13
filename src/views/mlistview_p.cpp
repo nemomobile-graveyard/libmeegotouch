@@ -20,6 +20,7 @@
 #include <MWidgetRecycler>
 #include <MSeparator>
 #include <MList>
+#include <MPannableViewport>
 
 #include <QItemSelectionModel>
 
@@ -46,6 +47,7 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     viewportTopLeft = QPointF();
     viewportVisibleHeight = 0;
     hseparatorHeight = 0;
+    pannableViewport = NULL;
     movingDetectorTimer.setSingleShot(true);
     connect(&movingDetectorTimer, SIGNAL(timeout()), this, SLOT(movingDetectionTimerTimeout()));
 }
@@ -164,9 +166,9 @@ MWidget *MListViewPrivate::createCell(int row)
     return cell;
 }
 
-void MListViewPrivate::exposedRectChanged(const QRectF &exposedRect)
+void MListViewPrivate::viewportRectChanged(const QRectF &viewportRect)
 {
-    if (exposedRect.topLeft() != oldExposedRectPosition) {
+    if (viewportRect.topLeft() != oldViewportRectPosition) {
         movingDetectorTimer.start(MOVINGDETECTORTIMEOUT);
 
         if (!moving) {
@@ -174,7 +176,53 @@ void MListViewPrivate::exposedRectChanged(const QRectF &exposedRect)
             controllerModel->setListIsMoving(true);
         }
 
-        oldExposedRectPosition = exposedRect.topLeft();
+        oldViewportRectPosition = viewportRect.topLeft();
+    }
+}
+
+void MListViewPrivate::viewportPositionChanged(const QPointF &position)
+{
+    if(pannableViewport)
+        updateViewportRect(position, pannableViewport->size());
+}
+
+void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
+{
+    if(pannableViewport)
+        updateViewportRect(pannableViewport->position(), size);
+}
+
+void MListViewPrivate::connectPannableViewport()
+{
+    disconnect(this, SLOT(controllerParentChanged()));
+    disconnect(this, SLOT(viewportPositionChanged(QPointF)));
+    disconnect(this, SLOT(viewportSizeChanged(QSizeF)));
+
+    connect(controller, SIGNAL(parentChanged()), SLOT(controllerParentChanged()));
+    
+    pannableViewport = MListViewPrivateNamespace::findParentWidgetOfType<MPannableViewport>(controller);
+    if(pannableViewport) {
+        connect(pannableViewport, SIGNAL(positionChanged(QPointF)), SLOT(viewportPositionChanged(QPointF)));
+        connect(pannableViewport, SIGNAL(viewportSizeChanged(QSizeF)), SLOT(viewportSizeChanged(QSizeF)));
+    }
+}
+
+void MListViewPrivate::controllerParentChanged()
+{
+    connectPannableViewport();
+}
+
+void MListViewPrivate::updateViewportRect(const QPointF &position, const QSizeF &size)
+{
+    if ((viewportTopLeft != position) || (viewportVisibleHeight < size.height()) || (forceRepaint)) {
+        forceRepaint = false;
+
+        viewportTopLeft = position;
+        if (viewportVisibleHeight < size.height())
+            viewportVisibleHeight = size.height();
+
+        viewportRectChanged(QRectF(position, size));
+        q_ptr->relayoutItemsInViewportRect();
     }
 }
 

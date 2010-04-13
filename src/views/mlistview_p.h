@@ -35,6 +35,7 @@ class MWidget;
 class MListView;
 class MList;
 class MListModel;
+class MPannableViewport;
 class MWidgetRecycler;
 class QAbstractItemModel;
 class QItemSelectionModel;
@@ -89,7 +90,9 @@ public:
 
     MWidget *findCellAtRow(int row);
 
-    void exposedRectChanged(const QRectF &exposedRect);
+    void viewportRectChanged(const QRectF &viewportRect);
+    void connectPannableViewport();
+    void updateViewportRect(const QPointF &position, const QSizeF &size);
 
     void updateFirstVisibleRow(const QModelIndex &index);
     void updateLastVisibleRow(const QModelIndex &index);
@@ -132,6 +135,9 @@ public:
 
 public slots:
     void movingDetectionTimerTimeout();
+    void viewportPositionChanged(const QPointF &pos);
+    void viewportSizeChanged(const QSizeF &size);
+    void controllerParentChanged();
 
 public:
     MListView *q_ptr;
@@ -154,9 +160,10 @@ public:
     bool forceRepaint;
 
     // Section for panning detection
-    QPointF oldExposedRectPosition;
+    QPointF oldViewportRectPosition;
     bool moving;
     QTimer movingDetectorTimer;
+    MPannableViewport *pannableViewport;
 };
 
 class MPlainListViewPrivate : public MListViewPrivate

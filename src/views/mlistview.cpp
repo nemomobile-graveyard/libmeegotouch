@@ -18,7 +18,6 @@
 ****************************************************************************/
 
 #include <QList>
-#include <MDebug>
 #include <QVector>
 #include <QTimer>
 #include <QStyleOptionGraphicsItem>
@@ -68,6 +67,7 @@ void MListView::init()
     d_ptr->updateSeparators();
 
     connectSelectionModel();
+    d_ptr->connectPannableViewport();
 
     d_ptr->resetModel(model());
 }
@@ -120,6 +120,7 @@ void MListView::applyStyle()
         d_ptr->updateSeparators();
         d_ptr->updateSeparatorSize();
         d_ptr->setHeadersCreator(new MDefaultHeadersCreator(style()->groupHeaderObjectName()));
+	relayoutItemsInViewportRect();
     }
 }
 
@@ -137,13 +138,13 @@ void MListView::setGeometry(const QRectF &rect)
         d_ptr->viewWidth = rect.width();
         d_ptr->updateItemSize();
         d_ptr->updateSeparatorSize();
-        relayoutItemsInExposedRect();
+        relayoutItemsInViewportRect();
     }
 
     MWidgetView::setGeometry(rect);
 }
 
-void MListView::relayoutItemsInExposedRect()
+void MListView::relayoutItemsInViewportRect()
 {
     if (d_ptr->model && model()->cellCreator()) {
         int rowCount = d_ptr->model->rowCount();
@@ -170,18 +171,7 @@ void MListView::relayoutItemsInExposedRect()
 void MListView::drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(painter);
-
-    QRectF exposedRect(option->exposedRect);
-    if ((d_ptr->viewportTopLeft != exposedRect.topLeft()) || (d_ptr->viewportVisibleHeight < exposedRect.height()) || (d_ptr->forceRepaint)) {
-        d_ptr->forceRepaint = false;
-
-        d_ptr->viewportTopLeft = exposedRect.topLeft();
-        if (d_ptr->viewportVisibleHeight < exposedRect.height())
-            d_ptr->viewportVisibleHeight = exposedRect.height();
-
-        d_ptr->exposedRectChanged(exposedRect);
-        const_cast<MListView *>(this)->relayoutItemsInExposedRect();
-    }
+    Q_UNUSED(option);
 }
 
 void MListView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -286,14 +276,11 @@ void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint)
     if (index.isValid()) {
         int cellPosition = d_ptr->locatePosOfItem(index);
 
-        MPannableViewport *pannableViewport =
-            MListViewPrivateNamespace::findParentWidgetOfType<MPannableViewport>(controller);
+        if (d_ptr->pannableViewport) {
+            QPointF targetPosition = d_ptr->pannableViewport->position();
+            QPointF listPosition(d_ptr->controller->mapToItem(d_ptr->pannableViewport->widget(), 0, 0));
 
-        if (pannableViewport) {
-            QPointF targetPosition = pannableViewport->position();
-            QPointF listPosition(controller->mapToItem(pannableViewport->widget(), 0, 0));
-
-            qreal pannableViewportHeight = pannableViewport->boundingRect().height();
+            qreal pannableViewportHeight = d_ptr->pannableViewport->boundingRect().height();
             switch (hint) {
             case MList::PositionAtTopHint:
                 targetPosition.setY(controller->pos().y() + cellPosition);
@@ -308,9 +295,9 @@ void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint)
                 break;
 
             case MList::EnsureVisibleHint:
-                if (cellPosition <= pannableViewport->position().y()) {
+                if (cellPosition <= d_ptr->pannableViewport->position().y()) {
                     targetPosition.setY(controller->pos().y() + cellPosition);
-                } else if (cellPosition + d_ptr->itemHeight > pannableViewport->position().y() + pannableViewportHeight) {
+                } else if (cellPosition + d_ptr->itemHeight > d_ptr->pannableViewport->position().y() + pannableViewportHeight) {
                     targetPosition.setY(cellPosition + d_ptr->itemHeight + listPosition.y() - pannableViewportHeight);
                 }
 
@@ -318,9 +305,9 @@ void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint)
             }
 
             targetPosition.setY(qMax(targetPosition.y(), (qreal)0));
-            targetPosition.setY(qMin(targetPosition.y(), pannableViewport->widget()->boundingRect().height() - pannableViewportHeight));
+            targetPosition.setY(qMin(targetPosition.y(), d_ptr->pannableViewport->widget()->boundingRect().height() - pannableViewportHeight));
 
-            pannableViewport->setPosition(targetPosition);
+            d_ptr->pannableViewport->setPosition(targetPosition);
         }
     }
 }

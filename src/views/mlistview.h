@@ -26,6 +26,7 @@
 #include <mlistmodel.h>
 
 class MController;
+class MPannableViewport;
 class MList;
 class MListModel;
 class MListViewPrivate;
@@ -46,7 +47,7 @@ public:
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
 
 public slots:
-    void relayoutItemsInExposedRect();
+    void relayoutItemsInViewportRect();
 
 protected:
     virtual void drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
