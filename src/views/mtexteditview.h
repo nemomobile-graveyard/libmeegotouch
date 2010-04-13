@@ -103,6 +103,7 @@ protected Q_SLOTS:
     //! \brief Handler for long press event.
     virtual void handleLongPress();
 
+    //! \brief Hide informational banner about failed text paste
     void hideInfoBanner();
 
 private:
