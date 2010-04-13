@@ -1,16 +1,16 @@
-#ifndef FTDUISERVICEFWGEN1_H
-#define FTDUISERVICEFWGEN1_H
+#ifndef FTMSERVICEFWGEN1_H
+#define FTMSERVICEFWGEN1_H
 
 /*
  * automatically generated with the command line :
- * /usr/bin/dui-servicefwgen -p /home/holger/hx86/master/libmeegotouch/libmeegotouch/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen1
+ * /usr/bin/m-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_mservicefwgen/com.nokia.FtMServiceFwGen1
  */
 
 #include <QObject>
 
-#include <duiservicefwbaseif.h>
+#include <mservicefwbaseif.h>
 
-class FtDuiServiceFwGen1 : public DuiServiceFwBaseIf
+class FtMServiceFwGen1 : public MServiceFwBaseIf
 {
 Q_OBJECT
 
@@ -30,7 +30,7 @@ public:
      * @param parent Parent object
      */
 
-    FtDuiServiceFwGen1( const QString& preferredService = "", QObject* parent = 0 );
+    FtMServiceFwGen1( const QString& preferredService = "", QObject* parent = 0 );
 
     /*!
      * @brief Set the service name

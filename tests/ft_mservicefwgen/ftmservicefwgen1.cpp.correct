@@ -1,38 +1,38 @@
 /*
  * automatically generated with the command line :
- * /usr/bin/dui-servicefwgen -p /home/shun/libmeegotouch/tests/ft_duiservicefwgen/com.nokia.FtDuiServiceFwGen1
+ * /usr/bin/m-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_mservicefwgen/com.nokia.FtMServiceFwGen1
  */
 
-#include "ftduiservicefwgen1.h"
-#include "ftduiservicefwgen1proxy.h"
+#include "ftmservicefwgen1.h"
+#include "ftmservicefwgen1proxy.h"
 
-bool FtDuiServiceFwGen1::showGridWithCapturedContent( int limit )
+bool FtMServiceFwGen1::showGridWithCapturedContent( int limit )
 {
-    return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showGridWithCapturedContent( limit ).value();
+    return qobject_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showGridWithCapturedContent( limit ).value();
 }
 
-bool FtDuiServiceFwGen1::showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage )
+bool FtMServiceFwGen1::showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage )
 {
-    return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showImage( uri, playlistName, defaultBackPage ).value();
+    return qobject_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showImage( uri, playlistName, defaultBackPage ).value();
 }
 
-void FtDuiServiceFwGen1::showImage( const QString &uri, const QStringList &uriList )
+void FtMServiceFwGen1::showImage( const QString &uri, const QStringList &uriList )
 {
-    static_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showImage( uri, uriList );
+    static_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showImage( uri, uriList );
 }
 
-bool FtDuiServiceFwGen1::showPage( const QString &targetPage, const QString &previousPage )
+bool FtMServiceFwGen1::showPage( const QString &targetPage, const QString &previousPage )
 {
-    return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showPage( targetPage, previousPage ).value();
+    return qobject_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showPage( targetPage, previousPage ).value();
 }
 
-bool FtDuiServiceFwGen1::showSettings(  )
+bool FtMServiceFwGen1::showSettings(  )
 {
-    return qobject_cast<FtDuiServiceFwGen1Proxy*>(interfaceProxy())->showSettings(  ).value();
+    return qobject_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showSettings(  ).value();
 }
 
-FtDuiServiceFwGen1::FtDuiServiceFwGen1( const QString& preferredService, QObject* parent )
-    : DuiServiceFwBaseIf( FtDuiServiceFwGen1Proxy::staticInterfaceName(), parent )
+FtMServiceFwGen1::FtMServiceFwGen1( const QString& preferredService, QObject* parent )
+    : MServiceFwBaseIf( FtMServiceFwGen1Proxy::staticInterfaceName(), parent )
 {
     // Resolve the provider service name
     QString service = resolveServiceName( interfaceName(), preferredService );
@@ -45,18 +45,18 @@ FtDuiServiceFwGen1::FtDuiServiceFwGen1( const QString& preferredService, QObject
 
     if (!service.isEmpty()) {
         // Construct the D-Bus proxy
-        setInterfaceProxy( new FtDuiServiceFwGen1Proxy( service, "/", QDBusConnection::sessionBus(), this ));
+        setInterfaceProxy( new FtMServiceFwGen1Proxy( service, "/", QDBusConnection::sessionBus(), this ));
         // allConnectSignals go here (empty block if none)
 
     }
 }
 
-void FtDuiServiceFwGen1::setService(const QString & service)
+void FtMServiceFwGen1::setService(const QString & service)
 {
     if (service.isEmpty()) return;
 
     setServiceName( service );
-    setInterfaceProxy( new FtDuiServiceFwGen1Proxy( service, "/", QDBusConnection::sessionBus(), this ));
+    setInterfaceProxy( new FtMServiceFwGen1Proxy( service, "/", QDBusConnection::sessionBus(), this ));
     {
 
     }

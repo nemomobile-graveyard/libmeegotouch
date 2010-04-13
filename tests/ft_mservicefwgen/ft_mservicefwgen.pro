@@ -31,9 +31,9 @@ QMAKE_CLEAN += \
     ftmservicefwgen3proxy.h \
 
 support_files.files += \
-    com.nokia.FtDuiServiceFwGen1.xml \
-    com.nokia.FtDuiServiceFwGen2.xml \
-    com.nokia.FtDuiServiceFwGen3.xml \
+    com.nokia.FtMServiceFwGen1.xml \
+    com.nokia.FtMServiceFwGen2.xml \
+    com.nokia.FtMServiceFwGen3.xml \
     ftmservicefwgen1adaptor.cpp.correct \
     ftmservicefwgen1adaptor.h.correct \
     ftmservicefwgen1.cpp.correct \
