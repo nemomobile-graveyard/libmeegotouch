@@ -1,13 +1,61 @@
-libmeegotouch (0.20.0~5) unstable; urgency=low
+libmeegotouch (0.20.0~6) unstable; urgency=low
 
   * New version [UNRELEASED]
-  * Fixes: NB#158420 - Bottom toolbar shown with hidden actions in portrait mode
-  * Fixes: NB#156114 - <CodeStyle> typo in doxygen documentation
-  * Fixes: NB#162474 - displayEntered is not called when VKB is closed
+  * Fixes: NB#163347 - scrollTo is not working for DuiPopupList
+  * Fixes: NB#161404 - Service framework call causes caller to crash if caller doesn't have applicationwindow
+  * Fixes: NB#162495 - QtMaemo6Style treats a QWidget's hide() same as close()
   * Fixes: NB#162716 - Missing close applet space icon
+  * Fixes: NB#161779 - DuiComboBox/DuiPopupList icons are not drawn properly on hardware
+  * Fixes: NB#162474 - displayEntered is not called when VKB is closed
+  * Fixes: NB#153618 - duistyle doesn't dashify mode names
+  * Fixes: NB#162807 - App menu is visible even after the action is completed
+  * Fixes: NB#160444 - Regression: Fennec crashes after opening Add-ons tab
+  * Fixes: NB#160580 - DuiButton ignores pointer location
+  * Fixes: NB#156114 - <CodeStyle> typo in doxygen documentation
+  * Fixes: NB#160934 - Different layout observed when launched in portrait mode
+  * Fixes: NB#161434 - slider labels are hidden by background objects
+  * Fixes: NB#161272 - Orientation change crashes after using DuiComboBox from DuiApplicationMenu.
+  * Fixes: NB#161781 - libdui crashes without any warning after installing new version due to presence of old preload.list
+  * Fixes: NB#161692 - The application menu doesn't properly handle removed actions
+  * Fixes: NB#162448 - The close icon for dialog is missing
+  * Fixes: NB#161700 - Changing the text of a DuiAction does not work
+  * Fixes: NB#159984 - DuiApplication should remove used up command line parameters
+  * Fixes: NB#162292 - dui-servicefwgen, setEscapeButtonMode has been removed
+  * Fixes: NB#158420 - Bottom toolbar shown with hidden actions in portrait mode
+  * Fixes: NB#160803 - DuiLocale should provide a method for reading datetime from a string
+  * Fixes: NB#159706 - Blocking of repainting while there are pending events not working
+  * Fixes: NB#161454 - Internationalisation Guidelines is not up-to-date
+  * Fixes: NB#160501 - (focusandvisibility) Window focus changes mess up on-display visibility
+  * Fixes: NB#161213 - (Invisible_tabs) No tab is selected when the currently selected tab is set to invisible.
+  * Fixes: NB#161141 - DuiList shows overlapping items
+  * Fixes: NB#158297 - Dui application crashes attempt to read CSS entry "background-color: none;"
 
- -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 12 Apr 2010 15:37:00 +0200
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Tue, 13 Apr 2010 11:00:00 +0200
 
+libdui (0.19.11-1) unstable; urgency=low
+
+  * Changes: Enable reading the keyboardOpen contextProperty
+  * Fixes: NB#159393 - DuiButton does not draw if reparented before creation of the first DuiWindow
+  * Changes: DBus registration path for dui notification manager to /notificationmanager
+  * Fixes: NB#161127 - App menu should hide when back button is tapped
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 24 Mar 2010 13:23:57 +0200
+
+libdui (0.19.10-1) unstable; urgency=low
+
+  * Fixes: NB#160550 DuiLabel::setText() does not work when using "" as a parameter.
+  * Fixes: NB#159960 -  icons: icon-l-brightness-* are missing from theme
+  * Fixes: Object menu page "jumping" problem.
+  * Fixes: NB#159761 - DuiList does not update correctly on insertRows() and setData()
+  * Fixes: NB#159761 -  DuiList does not update correctly on insertRows() and setData()
+  * Fixes: NB#159042 DuiLabel: Unable to handle strings in presence of certain characters
+  * Fixes: NB#159345 - Applet Space doesn't reappear after rotating the device
+  * Fixes: NB#159180 - Startup crash in DuiGConfItem
+  * Fixes: NB#160887 -  DuiSceneManager::execDialog() should return actual resul
+  * Fixes: not working object menu on the device
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 22 Mar 2010 10:48:19 +0200
+  
 libdui (0.19.9-1) unstable; urgency=low
 
   * Unit test fixes
