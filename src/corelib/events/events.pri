@@ -10,13 +10,13 @@ PUBLIC_HEADERS += \
         $$EVENTS_SRC_DIR/mpreeditinjectionevent.h \
         $$EVENTS_SRC_DIR/mondisplaychangeevent.h \
         $$EVENTS_SRC_DIR/morientationchangeevent.h \
+        $$EVENTS_SRC_DIR/morientationtracker.h \
         $$EVENTS_SRC_DIR/mtapandholdrecognizer.h \
         $$EVENTS_SRC_DIR/mkeyboardstatetracker.h \
         $$EVENTS_SRC_DIR/mpinchrecognizer.h \
 
 PRIVATE_HEADERS += \
         $$EVENTS_SRC_DIR/morientationchangeevent_p.h \
-        $$EVENTS_SRC_DIR/morientationtracker.h \
         $$EVENTS_SRC_DIR/morientationtracker_p.h \
         $$EVENTS_SRC_DIR/mscenewindowevent_p.h \
         $$EVENTS_SRC_DIR/mtapandholdrecognizer_p.h \
