@@ -164,6 +164,7 @@ public:
     bool moving;
     QTimer movingDetectorTimer;
     MPannableViewport *pannableViewport;
+    QPointF listPosition;
 };
 
 class MPlainListViewPrivate : public MListViewPrivate

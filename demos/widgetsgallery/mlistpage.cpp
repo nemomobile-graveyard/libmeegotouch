@@ -115,13 +115,14 @@ public:
         int flatRow = index.row();
         int row = flatRow / amountOfColumns;
         int column = flatRow % amountOfColumns;
+        int totalItems = index.model()->rowCount();
 
         int columns = amountOfColumns;
         int rows = index.model()->rowCount() / amountOfColumns;
         if(index.model()->rowCount() % amountOfColumns)
             rows += 1;
 
-        bool last = (row == (rows - 1) && flatRow == (index.model()->rowCount() - 1));
+        bool last = (row == (rows - 1) && flatRow == (totalItems - 1));
 
         if (columns == 1) {
             if (rows > 1){
@@ -148,6 +149,8 @@ public:
                         contentItem->setItemMode(MContentItem::Left);
                     else if (column > 0 && column < columns - 1 && !last)
                         contentItem->setItemMode(MContentItem::Center);
+                    else if (flatRow + columns > totalItems)
+                        contentItem->setItemMode(MContentItem::BottomRight);
                     else
                         contentItem->setItemMode(MContentItem::Right);
                 }

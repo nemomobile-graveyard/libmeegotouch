@@ -183,13 +183,13 @@ void MListViewPrivate::viewportRectChanged(const QRectF &viewportRect)
 void MListViewPrivate::viewportPositionChanged(const QPointF &position)
 {
     if(pannableViewport)
-        updateViewportRect(position, pannableViewport->size());
+        updateViewportRect(position - listPosition, QSizeF(viewWidth, viewportVisibleHeight));
 }
 
 void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
 {
     if(pannableViewport)
-        updateViewportRect(pannableViewport->position(), size);
+        updateViewportRect(viewportTopLeft, size);
 }
 
 void MListViewPrivate::connectPannableViewport()
@@ -202,6 +202,10 @@ void MListViewPrivate::connectPannableViewport()
     
     pannableViewport = MListViewPrivateNamespace::findParentWidgetOfType<MPannableViewport>(controller);
     if(pannableViewport) {
+        pannableViewport->resize(0,0);
+
+        listPosition = controller->mapToItem(pannableViewport->widget(), 0, 0);
+
         connect(pannableViewport, SIGNAL(positionChanged(QPointF)), SLOT(viewportPositionChanged(QPointF)));
         connect(pannableViewport, SIGNAL(viewportSizeChanged(QSizeF)), SLOT(viewportSizeChanged(QSizeF)));
     }
