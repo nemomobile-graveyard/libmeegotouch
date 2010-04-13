@@ -89,6 +89,7 @@
 #include "qtmaemo6dialogproxy.h"
 #include "qtmaemo6menu.h"
 #include "qtmaemo6kineticscrolling.h"
+#include "qtmaemo6sliderpopup.h"
 //krazy:excludeall=qclasses
 
 //#include "mcontainerheader_p.h"
@@ -327,21 +328,37 @@ void QtMaemo6StylePrivate::drawSliderBaseBackground(QPainter *p,
 
             bool isHorizontal = slider->orientation == Qt::Horizontal;
 
-            //unsued
-            //int span = ( isHorizontal )
-            //            ? slider->rect.width() - maxSliderLength
-            //            : slider->rect.height() - maxSliderLength;
 
+            //unsued
+            int span = ( isHorizontal )
+                        ? slider->rect.width() - maxSliderLength
+                        : slider->rect.height() - maxSliderLength;
             //unused
-            //int handlePos = sliderPositionFromValue(slider->minimum,
-            //                                        slider->maximum,
-            //                                        slider->sliderPosition,
-            //                                        span,
-            //                                        slider->upsideDown);
+            int sliderPosition = QStyle::sliderPositionFromValue(slider->minimum,
+                                                                 slider->maximum,
+                                                                 slider->sliderValue,
+                                                                 span,
+                                                                 slider->upsideDown);
+            //adjust the slider position to the absolute position within the widget
+            // instead of position on the groove
+            if(isHorizontal)
+                sliderPosition = ((rect.width() - span) / 2.0) + sliderPosition;
+            else
+                sliderPosition = ((rect.height() - span) / 2.0) + sliderPosition;
 
             const MScalableImage *baseImage = (isHorizontal)
                                                 ? style->backgroundBaseImage()
                                                 : style->backgroundVerticalBaseImage();
+
+            const DuiScalableImage *elapsedImage = (isHorizontal)
+                                                ? style->backgroundElapsedImage()
+                                                : style->backgroundVerticalElapsedImage();
+
+            if(qApp->isRightToLeft()) {
+                const DuiScalableImage* tempImage = baseImage;
+                baseImage = elapsedImage;
+                elapsedImage = tempImage;
+            }
 
             if (baseImage) {
                 // Per Widget background image cache implementation
@@ -357,16 +374,23 @@ void QtMaemo6StylePrivate::drawSliderBaseBackground(QPainter *p,
 
                 quintptr pWidget = reinterpret_cast<quintptr>(device);
 
-                QString cacheKey = QString("%1_%2_%3x%4_base").arg(pWidget)
+                QString cacheKey = QString("%1_%2_%3x%4_%5").arg(pWidget)
                                    .arg(mode)
                                    .arg(rect.width())
-                                   .arg(rect.height());
+                                   .arg(rect.height())
+                                   .arg(slider->sliderValue);
 
                 if (!QPixmapCache::find(cacheKey, backgroundPixmap)) {
                     backgroundPixmap.fill(Qt::transparent);
                     QPainter pixmapPainter;
                     pixmapPainter.begin(&backgroundPixmap);
-                    baseImage->draw(0, 0, rect.width(), rect.height(), &pixmapPainter);
+                    if(isHorizontal) {
+                        elapsedImage->draw(0, 0, sliderPosition, rect.height(), &pixmapPainter);
+                        baseImage->draw(sliderPosition, 0, rect.width() - sliderPosition, rect.height(), &pixmapPainter);
+                    } else {
+                        elapsedImage->draw(0, 0, rect.width(), sliderPosition, &pixmapPainter);
+                        baseImage->draw(0, sliderPosition, rect.width(), rect.height() - sliderPosition, &pixmapPainter);
+                    }
                     pixmapPainter.end();
                     QPixmapCache::insert(cacheKey, backgroundPixmap);
                 }
@@ -1015,6 +1039,10 @@ void QtMaemo6Style::polish(QWidget *widget)
         hView->viewport()->setBackgroundRole(QPalette::Window);
     }
 
+    if(QSlider* slider = qobject_cast<QSlider*>(widget)) {
+        QtMaemo6SliderPopUp* sliderPopup = new QtMaemo6SliderPopUp();
+        sliderPopup->enableOn(slider);
+    }
     widget->installEventFilter(d->m_windowEventFilter);
 }
 
