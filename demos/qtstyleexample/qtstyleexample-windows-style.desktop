@@ -4,5 +4,4 @@ Name=QtStyle Example (Windows style)
 Icon=icon-l-video
 Exec=qtstyleexample -style windows
 X-Maemo-Service=com.nokia.qtstyleexample
-Categories=Demos;
-OnlyShowIn=X-DUI;
+OnlyShowIn=X-MeeGo;

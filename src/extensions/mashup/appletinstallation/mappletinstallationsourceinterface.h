@@ -69,6 +69,6 @@ public:
   virtual void setMAppletInventoryInterface(MAppletInventoryInterface &installationSource) = 0;
 };
 
-Q_DECLARE_INTERFACE(MAppletInstallationSourceInterface, "com.nokia.m.core.AppletInstallationSourceInterface/1.0")
+Q_DECLARE_INTERFACE(MAppletInstallationSourceInterface, "com.meego.core.MAppletInstallationSourceInterface/1.0")
 
 #endif // MAPPLETINSTALLATIONSOURCEINTERFACE_H

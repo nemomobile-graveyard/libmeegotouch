@@ -1,7 +1,7 @@
 [Desktop Entry]
-Type=DUIApplicationExtension
+Type=X-MeeGoApplicationExtension
 Name=FakeInstallationSource
 
-[X-DUI]
-DUIApplicationExtension-Interface=com.nokia.dui.core.AppletInstallationSourceInterface/1.0
-DUIApplicationExtension-Extension=libappletinventory-fakeinstallationsource.so
+[X-MeeGoApplicationExtension]
+Interface=com.meego.core.MAppletInstallationSourceInterface/1.0
+Extension=libappletinventory-fakeinstallationsource.so
