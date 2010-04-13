@@ -23,15 +23,27 @@
 #include <QList>
 
 #include "templatepage.h"
+#include <MTextEdit>
 
 class MWidget;
 class MLabel;
 class MButton;
-class MTextEdit;
 class MCompleter;
 
 class MGridLayoutPolicy;
 class CustomDirectIMWidget;
+
+class CustomTextEdit: public MTextEdit
+{
+    Q_OBJECT
+public:
+    CustomTextEdit(const QString &text = QString(), QGraphicsItem *parent = 0);
+public slots:
+    void changeLabel();
+    void changeButton();
+protected:
+    bool event(QEvent *event);
+};
 
 /** /brief Page that shows the features of the virtual keyboard and the MtextEdit
 */
@@ -70,6 +82,8 @@ private:
     MLabel *labelNoEcho;
     MLabel *labelEchoOnEdit;
     MLabel *labelDirectIM;
+    MLabel *labelCustomToolbar1;
+    MLabel *labelCustomToolbar2;
 
     MLabel *labelHeader1;
     MButton *button1;

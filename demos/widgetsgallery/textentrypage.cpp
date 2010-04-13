@@ -21,7 +21,7 @@
 #include <MLayout>
 #include <MLocale>
 #include <MLabel>
-#include <MTextEdit>
+#include <MInputMethodState>
 #include <MButton>
 #include <MCompleter>
 #include <MSceneManager>
@@ -29,6 +29,8 @@
 #include <QStringListModel>
 #include <QDebug>
 #include <layout/mgridlayoutpolicy.h>
+#include <QKeyEvent>
+#include <QTextDocument>
 
 namespace
 {
@@ -200,6 +202,57 @@ void CustomDirectIMWidget::keyReleaseEvent(QKeyEvent *event)
     label += qtTrId("xx_textentry_text");
     label += event->text();
     this->setText(label);
+}
+
+CustomTextEdit::CustomTextEdit(const QString &text, QGraphicsItem *parent)
+    : MTextEdit(MTextEditModel::MultiLine, text, parent)
+{
+    QObject::connect(this, SIGNAL(textChanged()), this, SLOT(changeLabel()));
+    QObject::connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(changeButton()));
+    QObject::connect(this, SIGNAL(gainedFocus(Qt::FocusReason)), this, SLOT(changeLabel()));
+    QObject::connect(this, SIGNAL(gainedFocus(Qt::FocusReason)), this, SLOT(changeButton()));
+    setInputMethodCorrectionEnabled(false);
+}
+
+void CustomTextEdit::changeLabel()
+{
+    QString textCount = QString("%1").arg(text().length());
+    MInputMethodState::instance()->setToolbarItemAttribute(model()->toolbarId(),
+                                                           "labelcount",
+                                                           "text", QVariant(textCount));
+}
+
+void CustomTextEdit::changeButton()
+{
+    MInputMethodState::instance()->setToolbarItemAttribute(model()->toolbarId(),
+                                                           "buttonbold",
+                                                           "pressed",
+                                                           QVariant(document()->defaultFont().bold()));
+    MInputMethodState::instance()->setToolbarItemAttribute(model()->toolbarId(),
+                                                           "buttonunderline",
+                                                           "pressed",
+                                                           QVariant(document()->defaultFont().underline()));
+}
+
+bool CustomTextEdit::event(QEvent *event)
+{
+    if (QEvent::KeyPress == event->type()) {
+        QKeyEvent *k = static_cast<QKeyEvent *>(event);
+        if (Qt::Key_B == k->key() && (k->modifiers() & Qt::MetaModifier)) {
+            QFont font= document()->defaultFont();
+            font.setBold(!font.bold());
+            document()->setDefaultFont(font);
+            update();
+            return true;
+        } else if (Qt::Key_U == k->key() && (k->modifiers() & Qt::MetaModifier)) {
+            QFont font= document()->defaultFont();
+            font.setUnderline(!font.underline());
+            document()->setDefaultFont(font);
+            update();
+            return true;
+        }
+    }
+    return MTextEdit::event(event);
 }
 
 TextEntryPage::TextEntryPage()
@@ -439,13 +492,39 @@ void TextEntryPage::createContent()
 
     //direct input custom widget.
     directIMWidget = new CustomDirectIMWidget(centralWidget());
-    labelDirectIM = new MLabel(centralWidget());;
+    labelDirectIM = new MLabel(centralWidget());
     labelDirectIM->setWordWrap(true);
     labelDirectIM->setMinimumWidth(MaxminLabelWidth);
     labelDirectIM->setMaximumWidth(MaxminLabelWidth);
     labelDirectIM->setAlignment(Qt::AlignTop);
     layoutPolicy->addItem(labelDirectIM, row, 0);
     layoutPolicy->addItem(directIMWidget, row, 1);
+    row++;
+
+    CustomTextEdit *customTextEdit1 = new CustomTextEdit("", centralWidget());
+    customTextEdit1->attachToolbar("/usr/share/widgetsgallery/imtoolbar/exampletoolbar1.xml");
+    //% "Example custom toolbar 1"
+    customTextEdit1->setPrompt(qtTrId("xx_tooltip_customtoolbar1"));
+    labelCustomToolbar1 = new MLabel(centralWidget());
+    labelCustomToolbar1->setWordWrap(true);
+    labelCustomToolbar1->setMinimumWidth(MaxminLabelWidth);
+    labelCustomToolbar1->setMaximumWidth(MaxminLabelWidth);
+    labelCustomToolbar1->setAlignment(Qt::AlignTop);
+    layoutPolicy->addItem(labelCustomToolbar1, row, 0);
+    layoutPolicy->addItem(customTextEdit1, row, 1);
+    row++;
+
+    CustomTextEdit *customTextEdit2 = new CustomTextEdit("", centralWidget());
+    customTextEdit2->attachToolbar("/usr/share/widgetsgallery/imtoolbar/exampletoolbar2.xml");
+    //% "Example custom toolbar 2"
+    customTextEdit2->setPrompt(qtTrId("xx_tooltip_customtoolbar2"));
+    labelCustomToolbar2 = new MLabel(centralWidget());
+    labelCustomToolbar2->setWordWrap(true);
+    labelCustomToolbar2->setMinimumWidth(MaxminLabelWidth);
+    labelCustomToolbar2->setMaximumWidth(MaxminLabelWidth);
+    labelCustomToolbar2->setAlignment(Qt::AlignTop);
+    layoutPolicy->addItem(labelCustomToolbar2, row, 0);
+    layoutPolicy->addItem(customTextEdit2, row, 1);
     row++;
 
     // Auto capitalisation button (Toggle)
@@ -471,7 +550,8 @@ void TextEntryPage::createContent()
 
     //add an empty lable here, then the lower textenties won't be covered by vkb
     labelHeader1 = new MLabel(centralWidget());
-    labelHeader1->setMinimumHeight(250);
+    labelHeader1->setMinimumHeight(350);
+    labelHeader1->setMaximumHeight(350);
     layoutPolicy->addItem(labelHeader1, row, 0);
     row++;
 
@@ -529,6 +609,11 @@ void TextEntryPage::retranslateUi()
 
     //% "Direct Input Mode:"
     labelDirectIM->setText(qtTrId("xx_textentry_direct_input_mode"));
+
+    //% "Custom ToolBar 1:"
+    labelCustomToolbar1->setText(qtTrId("xx_textentry_custom_toolbar1"));
+    //% "Custom ToolBar 2:"
+    labelCustomToolbar2->setText(qtTrId("xx_textentry_custom_toolbar2"));
 
     //% "Auto capitalisation"
     button1->setText(qtTrId("xx_auto_capitalisation"));

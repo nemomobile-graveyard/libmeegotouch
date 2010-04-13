@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE MEEGO_IM_TOOLBAR_WIDGET SYSTEM 'VirtualKeyboardToolbarDTD.dtd'>
+<toolbar>
+    <button name="buttonbold" group="buttonbold" priority="0" showon="always" alignment="left" text="&lt;B&gt;B&lt;&#x002F;B&gt;" text_id="" icon="" toggle="true" pressed="false">
+        <actions>
+            <sendkeysequence keysequence="Meta+b"> </sendkeysequence>
+        </actions>
+    </button>
+    <button name="buttonsmile" group="buttonsmile" priority="1" showon="always" alignment="left" icon="/usr/share/widgetsgallery/imtoolbar/icons/icon-m-messaging-smiley-happy.svg" size="80%" text="" text_id="" toggle="false" pressed="false">
+        <actions>
+            <sendstring string=":)"> </sendstring>
+        </actions>
+    </button>
+    <button name="buttontongue" group="buttontongue" priority="2" showon="always" alignment="left" icon="/usr/share/widgetsgallery/imtoolbar/icons/icon-m-messaging-smiley-tongue.svg" size="80%" text="" text_id="">
+        <actions>
+            <sendstring string=":P"> </sendstring>
+        </actions>
+    </button>
+    <label name="labelcount" group="labelcount" priority="0" showon="always" alignment="right" text="0" text_id="">
+    </label>
+</toolbar>
