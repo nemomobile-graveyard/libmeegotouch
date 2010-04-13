@@ -95,13 +95,27 @@ void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *
     }
     //the image needs some scaling
     else {
+        bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
+        painter->setRenderHint(QPainter::SmoothPixmapTransform);
         qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
+        painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
     }
 }
 
 void MScalableImagePrivate::drawScalable1(int x, int y, int w, int h, QPainter *painter) const
 {
-    painter->drawPixmap(QRect(x, y, w, h), *m_image, m_image->rect());
+    //the image is used in it's native size
+    //no need to scale just draw it
+    if( m_image->size() == QSize(w, h) ) {
+        painter->drawPixmap(QRect(x, y, w, h), *m_image, m_image->rect());
+    }
+    //the image needs some scaling, draw the image using smooth scaling
+    else {
+        bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
+        painter->setRenderHint(QPainter::SmoothPixmapTransform);
+        painter->drawPixmap(QRect(x, y, w, h), *m_image, m_image->rect());
+        painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
+    }
 }
 
 MScalableImage::MScalableImage()
