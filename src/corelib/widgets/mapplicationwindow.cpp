@@ -108,6 +108,7 @@ void MApplicationWindowPrivate::init()
 #ifdef HAVE_N900
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(_q_exitAppView()));
 #else
+    q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(closeMenu()));
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(showMinimized()));
 #endif
 
