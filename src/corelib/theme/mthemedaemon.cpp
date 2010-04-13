@@ -210,7 +210,14 @@ const QSettings *themeFile(const QString &theme)
     }
 
     // step 3: we need to have X-MeegoTouch-Metatheme group in index.theme
-    if (!themeIndexFile->childGroups().contains(QString("X-MeegoTouch-Metatheme"))) {
+
+    // here we accept also the old X-DUI-Metatheme, because the old and new files
+    // are in the same directory. remove "X-DUI-Metatheme" when libdui 0.19 and
+    // duitheme with it is phased out.
+
+    if ( (!themeIndexFile->childGroups().contains(QString("X-DUI-Metatheme")))
+         && (!themeIndexFile->childGroups().contains(QString("X-MeegoTouch-Metatheme"))) )
+    {
         delete themeIndexFile;
         return NULL;
     }
@@ -252,7 +259,23 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
         newThemeInheritanceChain.append(tmpTheme);
         QString parentTheme = themeIndexFile->value("X-MeegoTouch-Metatheme/X-Inherits", "").toString();
 
+        // remove when duitheme is phased out
+        if ( parentTheme.isEmpty() )
+        {
+            parentTheme = themeIndexFile->value("X-DUI-Metatheme/X-Inherits", "").toString();
+        }
+        // end remove
+
         QStringList libraryNames = themeIndexFile->value("X-MeegoTouch-Metatheme/X-Libraries", "").toString().split(",", QString::SkipEmptyParts);
+
+        // remove when duitheme is phased out
+        if ( libraryNames.isEmpty() )
+        {
+            libraryNames = themeIndexFile->value("X-DUI-Metatheme/X-Libraries", "")
+                .toString().split(",", QString::SkipEmptyParts);
+        }
+        // end remove
+
         foreach(const QString& libname, libraryNames) {
             themeLibraryNames.insert(libname.trimmed());
         }
