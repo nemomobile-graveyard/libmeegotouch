@@ -78,14 +78,14 @@
         </exec>
     </target>
     
-    <target name="package-duitheme" depends="copy-widgetsgallery">
+    <target name="package-meegotheme" depends="copy-widgetsgallery">
         <exec executable="/Developer/usr/bin/packagemaker" failonerror="true">
-            <arg line="--doc ${libdui.dir}/tools/duitheme.pmdoc"/>
-            <arg line="--out ${dist.dir}/duitheme.pkg"/>
+            <arg line="--doc ${libdui.dir}/tools/mtheme.pmdoc"/>
+            <arg line="--out ${dist.dir}/mtheme.pkg"/>
         </exec>
     </target>
 
-    <target name="create-dmg" depends="package-duitheme">
+    <target name="create-dmg" depends="package-meegotheme">
         <exec  executable="/usr/bin/hdiutil" failonerror="true" dir="${build.root}">
             <arg line="create ./widgetsgallery.dmg"/>
             <arg line="-srcfolder widgetsgallery"/>
