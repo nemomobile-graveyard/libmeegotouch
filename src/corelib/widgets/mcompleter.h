@@ -33,13 +33,13 @@
  *
  * The MCompleter interacts with MWidgets that have input method support, e.g. MTextEdit.
  * Such widgets need to reimplement inputMethodQuery() for Qt::ImCursorPosition and Qt::ImSurroundingText.
- * \sa flags() \sa QGraphicsItem::ItemAcceptsInputMethod
+ * \sa \link flags() \endlink, \link QGraphicsItem::ItemAcceptsInputMethod \endlink
+ *
  * Once a completion candidate has been confirmed(), the widget is supposed to insert the received
  * candidate so that the completer can filter candidates according to the completion prefix.
  *
  * When the user starts typing a word, MCompleter suggests completion candidates, based on the contents
- * of its candidateSourceModel()
- * \sa QAbstractItemModel.
+ * of its candidateSourceModel().
  * For simple use cases, a QStringList can be sufficient.
  * Candidates are confirmed (and inserted into the text edit) by pressing return or touching the
  * completion item.
@@ -63,7 +63,7 @@
  * The application can update the model according to the prefix in the slot, and MCompleter will then show
  * completion candidates according to the updated model:
  * \code
- *   void ExampleClass::customizedComplete(const QString& prefix)
+ *   void ExampleClass::customizedComplete(const QString &prefix, const QModelIndex &index)
  *   {
  *      //do customized match according prefix,
  *      completer->setCandidateSourceModel(model);
@@ -107,6 +107,7 @@ class MTextEdit;
 class MCompleterPrivate;
 class MApplicationWindow;
 class QAbstractItemModel;
+class QModelIndex;
 
 class M_EXPORT MCompleter : public MSceneWindow
 {
@@ -222,20 +223,34 @@ public:
      *   completer->setCharactersToTrim(QString("<>"));
      * \endcode
      */
-    void setCharactersToTrim(const QString &);
+    void setCharactersToTrim(const QString &str);
 
 Q_SIGNALS:
     /*!
-     *  This signal is emitted before starting matching the completion candidates.
-     *  Application can customize its own completion rule, by connecting its customized match rule slot to this signal, and calling setCompletions, setMatchedCompletions inside the slot's implementation.
+     * This signal is emitted before starting matching the completion candidates.
+     * Application can customize its own completion rule, by connecting its
+     * customized match rule slot to this signal, and calling setCompletions,
+     * setMatchedCompletions inside the slot's implementation.
      */
-    void startCompleting(const QString &);
+    void startCompleting(const QString &prefix);
+
+    /*!
+     * This is an overloaded version of startCompleting().
+     */
+    // TODO: merge with prefix-only version and use a default parameter for the index on next ABI break.
+    void startCompleting(const QString &prefix, const QModelIndex &index);
 
     /*!
      * This signal is emitted when an item in the completion candidates is confirmed by the user.
      * The widget() using the completer is supposed to insert the confirmed completion by itself.
      */
-    void confirmed(const QString &completion);
+    void confirmed(const QString &candidate);
+
+    /*!
+     * This is an overloaded version of confirmed().
+     */
+    // TODO: merge with candidate-only version and use a default parameter for the index on next ABI break.
+    void confirmed(const QString &candidate, const QModelIndex &index);
 
     /*!
      * This signal is emitted just after showing the completer.

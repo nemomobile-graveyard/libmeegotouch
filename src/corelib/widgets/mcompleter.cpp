@@ -67,7 +67,23 @@ void MCompleterPrivate::init()
     q->model()->setMatchedModel(matchedModel);
     completerTimer->setInterval(CompleterTimeInterval);
     completerTimer->setSingleShot(true);
-    QObject::connect(completerTimer, SIGNAL(timeout()), q, SLOT(_q_complete()));
+
+    bool connected = true;
+    connected = q->connect(completerTimer, SIGNAL(timeout()),
+                           q, SLOT(_q_complete()),
+                           Qt::UniqueConnection) && connected;
+
+    connected = q->connect(q, SIGNAL(confirmed(QString,QModelIndex)),
+                           q, SIGNAL(confirmed(QString)),
+                           Qt::UniqueConnection) && connected;
+
+    connected = q->connect(q, SIGNAL(startCompleting(QString,QModelIndex)),
+                           q, SIGNAL(startCompleting(QString)),
+                           Qt::UniqueConnection) && connected;
+
+    if (!connected) {
+        qWarning("MCompleterPrivate::init() - Failed to connect signals!");
+    }
 }
 
 void MCompleterPrivate::reset()
@@ -190,9 +206,14 @@ void MCompleterPrivate::_q_complete()
         return;
     }
 
-    emit q->startCompleting(q->model()->completionPrefix());
+    emit q->startCompleting(q->model()->completionPrefix(),
+                            completionModel->index(q->model()->matchedIndex(), q->valueColumnIndex()));
 
-    if (q->receivers(SIGNAL(startCompleting(QString))) <= 0) {
+    // TODO #1: remove check for one of those signals once they have been merged.
+    // TODO #2: Change the "<= 1" back to "<= 0", because this is only needed for
+    //          the current signal forwarding!
+    if ((q->receivers(SIGNAL(startCompleting(QString))) <= 0) &&
+        (q->receivers(SIGNAL(startCompleting(QString, QModelIndex))) <= 1)) {
         //if no customized match slot, then use default match rule
         //limit the max hits to DefaultMaximumHits + 1 (+1 allow it to be larger than DefaultMaximumHits)
         match(DefaultMaximumHits + 1);
@@ -405,18 +426,17 @@ void MCompleter::confirm()
         return;
 
     if (model()->matchedIndex() >= 0 && model()->matchedIndex() < d->matchedModel->rowCount()) {
-        //insert confirmed string
+        //inform widget about confirmed string
         int row = 0;
-        int column = model()->valueColumnIndex();
+        const int column = model()->valueColumnIndex();
         QString value;
         if (d->matchedIndexList.count() > model()->matchedIndex())
             row = d->matchedIndexList.at(model()->matchedIndex());
         QVariant var = d->completionModel->data(d->completionModel->index(row, column));
         if (var.isValid())
             value = var.toString();
-        //trim before inserting
-        value = d->trim(value);
-        emit confirmed(value);
+
+        emit confirmed(d->trim(value), d->completionModel->index(row, column));
 
         d->reset();
         hideCompleter();
@@ -442,17 +462,30 @@ bool MCompleter::isActive() const
 void MCompleter::queryAll()
 {
     Q_D(MCompleter);
-    if (!widget() || !widget()->scene())
+
+    if (!widget() || !widget()->scene()) {
         return;
-    if (model()->popupActive() || (widget() != widget()->scene()->focusItem()))
+    }
+
+    if (model()->popupActive() || (widget() != widget()->scene()->focusItem())) {
         return;
-    if (receivers(SIGNAL(startCompleting(QString))) > 0)
+    }
+
+    // TODO #1: remove check for one of those signals once they have been merged.
+    // TODO #2: Change the "> 1" back to "> 0", because this is only needed for
+    //          the current signal forwarding!
+    if ((receivers(SIGNAL(startCompleting(QString))) > 0) ||
+        (receivers(SIGNAL(startCompleting(QString, QModelIndex))) > 1)) {
         return;
+    }
 
     d->reset();
     d->fetchPrefix();
-    if (model()->completionPrefix().isEmpty())
+
+    if (model()->completionPrefix().isEmpty()) {
         return;
+    }
+
     //if no customized match slot, then use default match rule. -1 to query all.
     d->match(-1);
 }

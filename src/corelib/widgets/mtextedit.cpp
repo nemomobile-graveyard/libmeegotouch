@@ -1081,7 +1081,7 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
         //The completer can be shared by several widgets, so call its setWidget,
         //and connect related slots again when getting focus.
         completer()->setWidget(this);
-        connect(completer(), SIGNAL(confirmed(QString)),
+        connect(completer(), SIGNAL(confirmed(QString, QModelIndex)),
                 this, SLOT(_q_confirmCompletion(QString)));
         connect(this, SIGNAL(textChanged()),
                 completer(), SLOT(complete()));
@@ -1943,7 +1943,7 @@ void MTextEdit::setCompleter(MCompleter *completer)
 
         if (hasFocus()) {
             updateMicroFocus();
-            connect(d->completer, SIGNAL(confirmed(QString)),
+            connect(d->completer, SIGNAL(confirmed(QString, QModelIndex)),
                     this, SLOT(_q_confirmCompletion(QString)));
         }
     }
