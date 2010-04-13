@@ -46,6 +46,7 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
        }
     } else:isEqual(PROJECT, plainqt) {
        SUBDIRS += plainqt
+       macx:SUBDIRS -= plainqt
     } else:isEqual(PROJECT, tests) {
        SUBDIRS += tests
        macx:SUBDIRS -= tests
