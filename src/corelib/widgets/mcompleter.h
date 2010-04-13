@@ -31,20 +31,18 @@
  * \class MCompleter
  * \brief MCompleter provides completion in MWidget.
  *
- * The MCompleter are used together with an valid \link MWidget \endlink (e.g. \link MTextEdit \endlink,
- * which supports input methods, with the \sa flags() \sa QGraphicsItem::ItemAcceptsInputMethod;
- * responds to inputMethodQuery() for Qt::ImCursorPosition and Qt::ImSurroundingText; and insert the
- * confirmed completion when receiving the signal confirmed(). ), to show completions which are filtered
- * from the source data model according the completion prefix.
+ * The MCompleter interacts with MWidgets that have input method support, e.g. MTextEdit.
+ * Such widgets need to reimplement inputMethodQuery() for Qt::ImCursorPosition and Qt::ImSurroundingText.
+ * \sa flags() \sa QGraphicsItem::ItemAcceptsInputMethod
+ * Once a completion candidate has been confirmed(), the widget is supposed to insert the received
+ * candidate so that the completer can filter candidates according to the completion prefix.
  *
- * When the user starts typing a word, MCompleter suggests possible ways of completing the word,
- * based on a word list. The word list is provided as a QAbstractItemModel. (For simple applications,
- * where the word list is static, you can pass a QStringList to MCompleter's constructor.)
- * When the completions are shown, if user press return key or click mouse on a completion item,
- * that item will be confirmed, and inserted to the text entry.
- *
- * For example, if you want to show completions in a text entry with given model, the easiest way is using
- * QStringListModel like:
+ * When the user starts typing a word, MCompleter suggests completion candidates, based on the contents
+ * of its candidateSourceModel()
+ * \sa QAbstractItemModel.
+ * For simple use cases, a QStringList can be sufficient.
+ * Candidates are confirmed (and inserted into the text edit) by pressing return or touching the
+ * completion item.
  * \code
  *   QStringList list;
  *   list << "apple" << "appreciate" << "orange" << "offset";
@@ -54,16 +52,16 @@
  *   edit->setCompleter(completer);
  * \endcode
  *
- * The MCompleter supports customized match. If application connect a slot to the signal startCompleting(),
- * Example:
+ * The MCompleter supports customized matching, through the startCompleting() signal:
  * \code
  *   MCompleter* completer = new MCompleter();
  *   MTextEdit * edit = new MTextEdit(MTextEditModel::MultiLine, "", 0);
  *   edit->setCompleter(completer);
- *   connect(completer, SIGNAL(startCompleting(const QString&)), this, SLOT(customizedComplete(const QString&)));
+ *   connect(completer, SIGNAL(startCompleting(QString, QModelIndex)), this, SLOT(customizedComplete(QString, QModelIndex)));
  * \endcode
- * The application can update the model according the prefix in the slot, and then MCompleter will show
- * completion according the updated model(all the items in this updated model are thought to be matched).
+ *
+ * The application can update the model according to the prefix in the slot, and MCompleter will then show
+ * completion candidates according to the updated model:
  * \code
  *   void ExampleClass::customizedComplete(const QString& prefix)
  *   {
@@ -72,11 +70,10 @@
  *   }
  * \endcode
  *
- * MCompleter supports more than one dimension model, it regards the last column of the model as the value column.
- * All columns are used to match and display, but only the item belongs to value column will be inserted to text
- * entry when confirming an item. The default value column is the last column, and it could be changed by calling
- * setValueColumnIndex().
- * Application can declare its multiple dimension model by inherit QAbstractItemModel or QAbstractTableModel.
+ * MCompleter supports more than one-dimensional models, in which case the last column is queried for values.
+ * All columns are used to match and display a candidate, but only the item in that column will be inserted to the text
+ * upon confirmation. The value column can be set via setValueColumnIndex().
+ * \sa QAbstractItemModel, QAbstractTableModel
  * Example:
  * \code
  *   class TestModel : public  QAbstractTableModel
@@ -98,10 +95,9 @@
  *   edit->setCompleter(completer);
  * \endcode
  *
- * To trim some special characters before confirming an item to the text entry, call setCharactersToTrim() to set
- * the characters to be trimed, then these characters will be trimed from the start and the end of confirmed value.
- * Example, when the user confirms an item with value "<tom.w@example.com>", if the application wants to
- * remove '<' and '>', only insert "tome.w@example.com" to the text entry.
+ * To trim special characters before confirming an item to the text entry, call setCharactersToTrim().
+ * For example, when the user confirms an item such as "<tom.w@example.com>", but the angle brackets
+ * need to be removed before insertion:
  * \code
  *   completer->setCharactersToTrim(QString("<>"));
  * \endcode
@@ -121,27 +117,25 @@ class M_EXPORT MCompleter : public MSceneWindow
 public:
 
     /*!
-     * \brief Default constructor. Create a MCompleter Object, without any completion candidates
+     * \brief Creates an instance without any completion candidates.
      */
     MCompleter();
 
     /*!
-     * \brief Constructor. Create a MCompleter Object, with the specified list \a completionCandidates as
-     *  the source of possible completion candidates.
-     * \param completionCandidates const QStringList & given completion candidate source.
+     * \brief Creates an instance with the specified list of possible completion candidates.
+     * \param[in] completionCandidates list of completion candidates.
      */
     explicit MCompleter(const QStringList &completionCandidates);
 
     /*!
-     * \brief Constructor. Create a MCompleter Object, with the specified model \a completionCandidates as
-     *  the source of possible completion candidate,
-     * \a completionCandidates is a QAbstractItemModel. If completionCandidates has only one column,
-     * then this column is the completion candidate list; if completionCandidates has more than one columns,
-     * all the columns are used as possible completion candidate source, but when confirming,
-     * only the item belongs to the value column will be inserted to text entry.
-     * Default value column is the last column, and it could be changed by calling setValueColumnIndex().
-     * \param completionCandidates QAbstractItemModel * given completion candidate source.
-     *      MCompleter won't delete the model when destroying.
+     * \brief Creates an instance with the specified model of possible completion candidates.
+     * If \a completionCandidates has only one column,
+     * then this column is the completion candidate list.
+     * If completionCandidates has more than one column,
+     * all columns are used as possible completion candidates, but only the items of the default
+     * value column will be inserted into the text edit upon candidate confirmation.
+     * The default value column is the last column. It can be changed through setValueColumnIndex().
+     * \param[in] completionCandidates model of completion candidates, MCompleter does not take ownership.
      */
     explicit MCompleter(QAbstractItemModel *completionCandidates);
 
@@ -151,32 +145,29 @@ public:
     virtual ~MCompleter();
 
     /*!
-     *\brief Returns the widget for which the completer object is providing completions.
+     *\brief Returns the completer's widget which receives the completions.
      */
     MWidget *widget();
 
     /*!
-     *\brief Sets the widget for which completion are provided for to widget.
-     * This function is automatically called when a MCompleter is set on a MWidget,
-     * e.g. on MTextEdit using MTextEdit::setCompleter().
-     * The widget needs to be set explicitly when providing completions for custom widgets.
-     * The widget must support input methods, with the \sa flags() \sa QGraphicsItem::ItemAcceptsInputMethod;
-     * respond to inputMethodQuery() for Qt::ImCursorPosition and Qt::ImSurroundingText; and insert the
-     * confirmed completion when receiving the signal confirmed().
-     * \sa confirmed().
+     *\brief Sets the completer's widget which receives the completions.
+     * This method is implicitely called when the MCompleter is bound to a MWidget,
+     * e.g., \a MTextEdit::setCompleter().
+     * For custom widgets, this method needs to be called explicitly.
      */
     void setWidget(MWidget *);
 
     /*!
-     *\brief Call this function to set which column in the completion source model is the value column.
+     *\brief Changes the completer's default value column
      * \sa valueColumnIndex().
      */
     void setValueColumnIndex(int);
 
     /*!
-     *\brief Returns the column index in the completion source model which is the value column.
-     * The value column contains the text which will be inserted to the text widget when confirming.
-     * Default value column is the last column.
+     *\brief Returns the value column index of the completer's model.
+     * The value column contains the text which will be inserted to the text edit upon candidate
+     * confirmation.
+     * Default value column is the last column of the model.
      */
     int valueColumnIndex() const;
 
@@ -242,8 +233,7 @@ Q_SIGNALS:
 
     /*!
      * This signal is emitted when an item in the completion candidates is confirmed by the user.
-     *  (by clicking or pressing return).
-     * \sa widget(). The widget which is using the completer should insert the confirmed \a completion by itself.
+     * The widget() using the completer is supposed to insert the confirmed completion by itself.
      */
     void confirmed(const QString &completion);
 
