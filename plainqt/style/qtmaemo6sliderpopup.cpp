@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -27,9 +27,9 @@
 #include <QStyleOption>
 #include <QPaintEvent>
 
-#include <DuiScalableImage>
+#include <MScalableImage>
 
-#include <duilabelstyle.h>
+#include <mlabelstyle.h>
 
 void QtMaemo6SliderPopUp::enableOn(QSlider* slider) {
 
@@ -58,10 +58,10 @@ void QtMaemo6SliderPopUp::paintEvent(QPaintEvent *e) {
     QStyleOption opt;
     opt.initFrom(this);
 
-    const DuiLabelStyle *style =
-        static_cast<const DuiLabelStyle *>(QtMaemo6StylePrivate::duiStyle(opt.state,
-                                            "DuiSliderStyle",
-                                            "DuiSliderHandleLabel"));
+    const MLabelStyle *style =
+        static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(opt.state,
+                                            "MSliderStyle",
+                                            "MSliderHandleLabel"));
     QPainter p(this);
     QtMaemo6StylePrivate::drawWidgetBackground(&p, &opt, QRect(QPoint(0,0), styledSizeHint()), style);
     QLabel::paintEvent(e);
@@ -111,10 +111,10 @@ QSize QtMaemo6SliderPopUp::styledSizeHint() {
     QStyleOption opt;
     opt.initFrom(this);
 
-    const DuiLabelStyle *style =
-        static_cast<const DuiLabelStyle *>(QtMaemo6StylePrivate::duiStyle(opt.state,
-                                            "DuiSliderStyle",
-                                            "DuiSliderHandleLabel"));
+    const MLabelStyle *style =
+        static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(opt.state,
+                                            "MSliderStyle",
+                                            "MSliderHandleLabel"));
     int left, top, right, bottom;
     style->backgroundImage()->borders(&left, &right, &top, &bottom);
     return sizeHint() + QSize(left + right, top + bottom);

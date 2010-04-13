@@ -350,12 +350,12 @@ void QtMaemo6StylePrivate::drawSliderBaseBackground(QPainter *p,
                                                 ? style->backgroundBaseImage()
                                                 : style->backgroundVerticalBaseImage();
 
-            const DuiScalableImage *elapsedImage = (isHorizontal)
+            const MScalableImage *elapsedImage = (isHorizontal)
                                                 ? style->backgroundElapsedImage()
                                                 : style->backgroundVerticalElapsedImage();
 
             if(qApp->isRightToLeft()) {
-                const DuiScalableImage* tempImage = baseImage;
+                const MScalableImage* tempImage = baseImage;
                 baseImage = elapsedImage;
                 elapsedImage = tempImage;
             }

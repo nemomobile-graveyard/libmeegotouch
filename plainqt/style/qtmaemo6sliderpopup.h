@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef QTMAEMO6SLIDEREVENTFILTER_H
-#define QTMAEMO6SLIDEREVENTFILTER_H
+#ifndef QTMAEMO6SLIDERPOPUP_H
+#define QTMAEMO6SLIDERPOPUP_H
 
 #include <QLabel>
 
@@ -59,4 +59,4 @@ protected:
     QSlider* m_slider;
 };
 
-#endif //QTMAEMO6SLIDEREVENTFILTER_H
+#endif //QTMAEMO6SLIDERPOPUP_H
