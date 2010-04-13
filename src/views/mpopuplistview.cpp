@@ -74,6 +74,14 @@ void MPopupListViewPrivate::updateCell(const QModelIndex& index, MWidget * cell)
 
     if (list->selectionModel()->isSelected(index))
         item->setSelected(true);
+
+    if (index.row() == 0) {
+        item->setItemMode(MContentItem::SingleColumnTop);
+    } else if (index.row() == index.model()->rowCount() - 1) {
+        item->setItemMode(MContentItem::SingleColumnBottom);
+    } else {
+        item->setItemMode(MContentItem::SingleColumnCenter);
+    }
 }
 
 MPopupListView::MPopupListView(MPopupList *controller)

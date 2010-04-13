@@ -136,6 +136,8 @@ void MComboBoxViewPrivate::_q_itemModelCurrentIndexChanged(int currentIndex)
 
 void MComboBoxViewPrivate::_q_showPopup()
 {
+    Q_Q(MComboBoxView);
+
     if (controller->count() == 0) return;
 
     if (!popuplist) {
@@ -145,6 +147,8 @@ void MComboBoxViewPrivate::_q_showPopup()
         popuplist->setTitle(controller->title());
         QObject::connect(popuplist, SIGNAL(clicked(QModelIndex)), controller, SLOT(_q_itemClicked(QModelIndex)));
     }
+
+    popuplist->scrollTo(q->model()->selectionModel()->currentIndex());
 
     if (controller->sceneManager()) {
         controller->sceneManager()->appearSceneWindow(popuplist);
