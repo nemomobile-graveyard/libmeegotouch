@@ -10,11 +10,13 @@ INCLUDEPATH += \
     ../corelib/widgets/views \
     ../corelib/widgets \
     ../corelib/core \
+    ../corelib/video \
     ../corelib/.gen \
 
 include(views.pri)
 include(widgets/widgets.pri)
 include(style/style.pri)
+include(video/video.pri)
 
 win32|macx {
     macx {

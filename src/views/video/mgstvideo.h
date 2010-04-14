@@ -72,7 +72,7 @@ public:
 
     void setRenderTarget(MGstVideo::RenderTarget targetSink);
     MGstVideo::RenderTarget renderTarget();
-    
+
     void expose();
     void setWinId(unsigned long id);
     unsigned long winId();
@@ -95,12 +95,12 @@ private:
 
     GstElement* makeSink(bool yuv);
     GstElement* makeVolume();
-        
+
     bool constructPipeline();
     void destroyPipeline();
-        
-    void checkSeekable();    
-    
+
+    void checkSeekable();
+
     GstElement* gst_elem_pipeline;
     GstElement* gst_elem_source;
     GstElement* gst_elem_decoder;
@@ -124,11 +124,11 @@ private:
     MVideo::DataFormat m_format;
 
     QMutex m_mutex;
-    
+
     MGstVideo::RenderTarget m_renderTarget;
     MVideo::State m_storedState;
     quint64 m_storedPosition;
-    
+
     unsigned long m_winId;
     QColor m_colorKey;
 };

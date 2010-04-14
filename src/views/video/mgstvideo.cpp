@@ -43,7 +43,7 @@ MGstVideo::~MGstVideo()
     // It is normally not needed to call this function in a normal application
     // as the resources will automatically be freed when the program terminates.
     // gst_deinit();
-    
+
     destroyPipeline();
 }
 
@@ -55,7 +55,7 @@ bool MGstVideo::open(const QString& filename)
     //create absolute name for file including path
     QFileInfo info(filename);
     m_filename = info.absoluteFilePath();
-    
+
     //check whether the file exists
     if (!info.exists() || !info.isReadable()) {
         mWarning("MGstVideo::openVideoFromFile()") << m_filename << "does not exist.";
@@ -95,8 +95,8 @@ void MGstVideo::setVideoState(MVideo::State state)
 
             //when moving to stopped state rewind the video to beginning
             if( new_state == MVideo::Stopped )
-                seek(0);     
-        } 
+                seek(0);
+        }
         else {
             mWarning("MGstVideo::setVideoState()") << "Video not ready yet, cannot set state to" << state;
             new_state = MVideo::NotReady;
@@ -105,14 +105,14 @@ void MGstVideo::setVideoState(MVideo::State state)
     else if ( state != MVideo::NotReady ) {
         mWarning("MGstVideo::setVideoState()") << "Pipeline not created yet, cannot set state to" << state;
         new_state = MVideo::NotReady;
-    } else 
+    } else
         new_state = MVideo::NotReady;
-        
+
     //TODO: state changes should be emit in bus message method.
     if( m_state != new_state ) {
         m_state = new_state;
         emit stateChanged();
-    }        
+    }
 }
 
 MVideo::State MGstVideo::videoState() const
@@ -164,7 +164,6 @@ void MGstVideo::setMuted(bool muted)
         g_object_set(gst_elem_volume, "mute", muted, NULL);
     } else
         m_muted = muted;
-     
 }
 
 bool MGstVideo::isMuted() const
@@ -229,7 +228,7 @@ void MGstVideo::setRenderTarget(MGstVideo::RenderTarget targetSink)
 {
     if( targetSink != m_renderTarget ) {
         m_renderTarget = targetSink;
-        
+
         //a video already been opened, we need to change the target on fly
         if( isReady() ) {
             //if the video is in paused or playing state store the position and state information,
@@ -241,7 +240,7 @@ void MGstVideo::setRenderTarget(MGstVideo::RenderTarget targetSink)
                 m_storedState = MVideo::NotReady;
                 m_storedPosition = 0;            
             }
-            
+
             constructPipeline();
         }
     }
@@ -328,16 +327,16 @@ gboolean MGstVideo::bus_cb(GstBus *bus, GstMessage *message, void *data)
     }
     else if ( GST_MESSAGE_TYPE(message)== GST_MESSAGE_STATE_CHANGED ) {
         if( GST_IS_PIPELINE(message->src) ) {
-           
+
             GstState oldState, newState, pendingState;
             gst_message_parse_state_changed(message, &oldState, &newState, &pendingState);
-            
+
             //GstPipeline* pipeline = GST_PIPELINE(message->src);
             //mDebug("MGstVideo::bus_cb()") << "src =" << pipeline << "gst_elem_pipeline=" << gstVideo->gst_elem_pipeline;
             //mDebug("MGstVideo::bus_cb()") << "oldState =" << oldState << "newState =" << newState << "pendingState =" << pendingState;
 
             if( oldState == GST_STATE_READY && newState == GST_STATE_PAUSED ) {
-                video_ready_cb(data);            
+                video_ready_cb(data);
             }
         }
     }
@@ -354,7 +353,7 @@ void MGstVideo::video_ready_cb(void* user_data)
 
         //check if the video is seekable
         gstVideo->checkSeekable();
-                
+
         if( gstVideo->m_storedState != MVideo::NotReady ) {
             //mDebug("MGstVideo::video_ready_cb()")  << gstVideo->m_storedState << gstVideo->m_storedPosition;
 
@@ -367,7 +366,7 @@ void MGstVideo::video_ready_cb(void* user_data)
         else {
             //automatically stop after buffering the first frame
             gstVideo->setVideoState(MVideo::Stopped);
-		}
+        }
 
         emit gstVideo->videoReady();
     }
@@ -429,7 +428,7 @@ void MGstVideo::newpad_cb(GstElement  *decodebin,
         pad2 = gst_element_get_compatible_pad(sink, pad, NULL);
         if( pad2 ) {
             caps2 = gst_pad_get_caps(pad2);
-            //mDebug("MGstVideo::newpad_cb()") << gst_caps_to_string(caps2);        
+            //mDebug("MGstVideo::newpad_cb()") << gst_caps_to_string(caps2);
         }
         //if( pad2 ) 
         //    mDebug("MGstVideo::newpad_cb()") << "COMPATIBLE pad!";
@@ -499,13 +498,13 @@ void MGstVideo::render_frame_cb(void* pointer, void* user_data)
 {
     if( user_data ) {
         MGstVideo* gstVideo = (MGstVideo*) user_data;
-        
+
         //try to lock the mutex, if the we cannot lock it
         //a new frame is currently being rendered so no need 
         //to create new one
         if( !gstVideo->lockFrameData() ) {
             mWarning("MGstVideo::render_frame_cb()") << "MUTEX LOCK CONFLICT!";
-            gst_buffer_unref(GST_BUFFER(pointer));    
+            gst_buffer_unref(GST_BUFFER(pointer));
             return;
         }
 
@@ -547,7 +546,7 @@ GstElement* MGstVideo::makeSink(bool yuv)
 
             //2. set the overlay to wanted window
             gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink),
-                                         m_winId);    
+                                         m_winId);
 
             //3. check that the colorkey and autopaint really works, if not fallback to msink rendering
             GValueArray* colorkey = gst_property_probe_get_values_name(GST_PROPERTY_PROBE(gst_elem_xvimagesink), "colorkey");
@@ -600,7 +599,7 @@ bool MGstVideo::constructPipeline()
     destroyPipeline();
 
     bool ok = true;
-    
+
     //create file source element
     gst_elem_source = gst_element_factory_make("filesrc", "file-source");
     if( gst_elem_source && GST_IS_ELEMENT(gst_elem_source) ) {
@@ -610,12 +609,12 @@ bool MGstVideo::constructPipeline()
         mWarning("MGstVideo::constructPipeline()") << "filesrc gstreamer plugin not found.";
         ok = false;
     }
-        
+
     //create decoder element
     gst_elem_decoder = gst_element_factory_make("decodebin2", "decoder");
     if( gst_elem_decoder && GST_IS_ELEMENT(gst_elem_decoder) ) {
         g_signal_connect(gst_elem_decoder, "new-decoded-pad", G_CALLBACK(newpad_cb), this);
-        g_signal_connect(gst_elem_decoder, "unknown-type", G_CALLBACK(unknownpad_cb), this);    
+        g_signal_connect(gst_elem_decoder, "unknown-type", G_CALLBACK(unknownpad_cb), this);
     }
     else {
         mWarning("MGstVideo::constructPipeline()") << "decodebin2 gstreamer plugin not found.";
@@ -651,7 +650,7 @@ bool MGstVideo::constructPipeline()
         destroyPipeline();
         return false;
     }
-    
+
     return true;
 }
 
@@ -676,9 +675,9 @@ void MGstVideo::destroyPipeline()
     gst_elem_videosink = NULL;
     gst_elem_audiosink = NULL;
     gst_elem_xvimagesink = NULL;
-    
+
     setVideoState(MVideo::NotReady);
-    
+
     m_mutex.unlock();
 }
 

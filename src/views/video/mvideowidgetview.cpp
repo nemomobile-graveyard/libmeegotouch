@@ -48,7 +48,7 @@ MVideoWidgetViewPrivate::MVideoWidgetViewPrivate()
         glGenTextures(3, &m_textures[0]);
         yuv1 = r->getShaderProgram(M_SHADER_SOURCE_DIR "/yuv1.frag" );
         yuv3 = r->getShaderProgram(M_SHADER_SOURCE_DIR "/yuv3.frag");
-    }    
+    }
     else
         mWarning("MVideoWidgetViewPrivate::MVideoWidgetViewPrivate()") << "MGLES2Renderer not ready yet, cannot init shaders.";
 #endif
@@ -59,7 +59,7 @@ MVideoWidgetViewPrivate::~MVideoWidgetViewPrivate()
     delete image;
     delete bits;
     delete scaleOffsets;
-    
+
     delete m_gstVideo;
 
 #ifdef M_USE_OPENGL
@@ -144,7 +144,7 @@ void MVideoWidgetViewPrivate::updateVideoGeometry()
 
     QSize videoSize = m_gstVideo->resolution();
     QSize widgetSize = q->size().toSize();
-    
+
     if( model()->scaleMode() == MVideoWidgetModel::ScaleToFit ) {
         if( model()->aspectRatioMode() == MVideoWidgetModel::AspectRatioOriginal ) {
             //scale but preserve the original aspect ratio
@@ -173,7 +173,7 @@ void MVideoWidgetViewPrivate::blitGLFrame()
 {
     if( !m_gstVideo->frameData() )
         return;
-        
+
     //try to lock the frame data if the we cannot lock it
     //a new frame is currently being received and there will update
     //call when the new frame has been completely received so we
@@ -226,7 +226,7 @@ void MVideoWidgetViewPrivate::blitMultiYuvTexture(const uchar* data, int  width,
 #else
     Q_UNUSED(data)
     Q_UNUSED(width)
-    Q_UNUSED(height)    
+    Q_UNUSED(height)
 #endif
 }
 
@@ -294,7 +294,7 @@ void MVideoWidgetViewPrivate::blitSwFrame()
 {
     if( !m_gstVideo->frameData() )
         return;
-        
+
     //try to lock the frame data if the we cannot lock it
     //a new frame is currently being received and there will update
     //call when the new frame has been completely received so we
@@ -313,7 +313,6 @@ void MVideoWidgetViewPrivate::blitSwFrame()
  * Prepare software blit, set correct image size, create
  * buffers & scaling offset table.
  */
- 
 void MVideoWidgetViewPrivate::prepareBlit(int w, int h)
 {
     if (image && (image->width() != w || image->height() != h)) {
@@ -342,7 +341,7 @@ void MVideoWidgetViewPrivate::prepareBlit(int w, int h)
 void MVideoWidgetViewPrivate::blit(const uchar* data, int w, int h)
 {
     QSize videoSize = m_gstVideo->resolution();
-    
+
     //FIXME: non scaling method crashes currently.
     /*if( videoSize.width() == w && videoSize.height() == h ) {
         //blit without scaling
@@ -393,9 +392,9 @@ void MVideoWidgetViewPrivate::blit(const uchar* data, int w, int h)
             ++y;
         }
     }
-    
+
     //force change of QImage::cacheKey(), to make sure the gl texture caching works.
-    image->setPixel(0,0, image->pixel(0,0));    
+    image->setPixel(0,0, image->pixel(0,0));
 }
 
 /*
@@ -519,7 +518,7 @@ QSizeF MVideoWidgetView::sizeHint(Qt::SizeHint which, const QSizeF & constraint)
 {
     Q_D(const MVideoWidgetView);
     Q_UNUSED(constraint);
- 
+
     if( d->m_gstVideo->isReady() ) {
         if (which == Qt::PreferredSize) {
             MWindow* w = MApplication::activeWindow();
@@ -546,7 +545,7 @@ void MVideoWidgetView::applyStyle()
     else {
         style().setModeDefault();
     }
-    
+
     d->m_gstVideo->setColorKey(style()->colorKey());
     MWidgetView::applyStyle();
 
@@ -607,7 +606,7 @@ void MVideoWidgetView::updateData(const QList<const char*>& modifications)
             else {
                 d->m_gstVideo->setRenderTarget(MGstVideo::MSink);
             }
-            
+
             applyStyle();
             updateGeometry();
             update();

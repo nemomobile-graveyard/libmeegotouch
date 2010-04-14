@@ -32,12 +32,12 @@ class QGraphicsSceneResizeEvent;
 
     \section MVideoWidgetViewOverview Overview
         Standard view for displaying video frames without any other graphical
-        components.        
+        components.
 
     \section MVideoWidgetViewInteractions Interactions
-          
+
     \section MVideoWidgetViewOpenIssues Open issues
-        
+
     \sa MVideoWidget MVideoWidgetStyle
 */
 class M_EXPORT MVideoWidgetView : public MWidgetView
@@ -77,7 +77,7 @@ protected:
     //! \cond
     MVideoWidgetView(MVideoWidgetViewPrivate& dd, MVideoWidget* controller);
     //! \endcond
-    
+
 protected Q_SLOTS:
     //! \reimp
     virtual void updateData(const QList<const char*>& modifications);

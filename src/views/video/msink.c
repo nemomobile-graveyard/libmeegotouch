@@ -51,7 +51,7 @@ m_gst_video_sink_render (GstBaseSink *bsink, GstBuffer *buffer)
 
   // take ownership
   gst_buffer_ref (buffer);
-  
+
   if (--n==0) {
     sink->frame_cb (buffer, sink->user_data);
     n = sink->frameskip;
@@ -88,7 +88,6 @@ m_gst_video_sink_set_caps (GstBaseSink *bsink,
   gst_structure_get_int (structure, "width",  &sink->w);
   gst_structure_get_int (structure, "height", &sink->h);
 
-  
   //sink->ready_cb(sink->user_data);
   return TRUE;
 }

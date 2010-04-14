@@ -1,2 +1,2 @@
-#include "../corelib/video/mvideowidgetview.h"
+#include "../views/video/mvideowidgetview.h"
 

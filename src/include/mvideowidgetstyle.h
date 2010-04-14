@@ -17,4 +17,4 @@
 **
 ****************************************************************************/
 
-#include "../corelib/video/mvideowidgetstyle.h"
+#include "../views/style/mvideowidgetstyle.h"
