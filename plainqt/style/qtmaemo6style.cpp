@@ -328,12 +328,9 @@ void QtMaemo6StylePrivate::drawSliderBaseBackground(QPainter *p,
 
             bool isHorizontal = slider->orientation == Qt::Horizontal;
 
-
-            //unsued
             int span = ( isHorizontal )
                         ? slider->rect.width() - maxSliderLength
                         : slider->rect.height() - maxSliderLength;
-            //unused
             int sliderPosition = QStyle::sliderPositionFromValue(slider->minimum,
                                                                  slider->maximum,
                                                                  slider->sliderValue,
@@ -342,9 +339,9 @@ void QtMaemo6StylePrivate::drawSliderBaseBackground(QPainter *p,
             //adjust the slider position to the absolute position within the widget
             // instead of position on the groove
             if(isHorizontal)
-                sliderPosition = ((rect.width() - span) / 2.0) + sliderPosition;
+                sliderPosition = ((rect.width() - span) / 2) + sliderPosition;
             else
-                sliderPosition = ((rect.height() - span) / 2.0) + sliderPosition;
+                sliderPosition = ((rect.height() - span) / 2) + sliderPosition;
 
             const MScalableImage *baseImage = (isHorizontal)
                                                 ? style->backgroundBaseImage()

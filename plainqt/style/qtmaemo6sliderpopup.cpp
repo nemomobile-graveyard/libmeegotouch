@@ -94,14 +94,14 @@ void QtMaemo6SliderPopUp::updatePosition() {
         // size to the offset and move the label
         if(m_slider->orientation() == Qt::Horizontal) {
             if(qApp->isLeftToRight()) {
-                offset.setX(offset.x() + ((m_slider->width() - span) / 2.0) - styledSizeHint().width() / 2.0);
+                offset.setX(offset.x() + ((m_slider->width() - span) / 2) - styledSizeHint().width() / 2);
                 move(offset.x() + sliderPos, offset.y() - height());
             } else {
-                offset.setX(offset.x() - ((m_slider->width() - span) / 2.0) - styledSizeHint().width() / 2.0);
+                offset.setX(offset.x() - ((m_slider->width() - span) / 2) - styledSizeHint().width() / 2);
                 move(offset.x() - sliderPos, offset.y() - height());
             }
         } else {
-            offset.setY(offset.y() + ((m_slider->height() - span) / 2.0)  - styledSizeHint().height() / 2.0);
+            offset.setY(offset.y() + ((m_slider->height() - span) / 2)  - styledSizeHint().height() / 2);
             move(offset.x() + m_slider->width(), offset.y() + span - sliderPos);
         }
     }
