@@ -406,6 +406,7 @@ void MDialogViewPrivate::addButton(MButtonModel *buttonModel)
     Q_Q(MDialogView);
     M::StandardButton currButtonType;
     MButton *newButton = new MButton(0, buttonModel);
+    newButton->setObjectName(buttonModel->objectName());
     MButton *currButton = 0;
     bool buttonAdded = false;
     int i = 0;
