@@ -33,10 +33,12 @@
 #include <mapplicationpagestyle.h>
 #include <mpositionindicatorstyle.h>
 #include <mwidgetstyle.h>
-#include <mwidgetfadeinanimationstyle.h>
-#include <mwidgetfadeoutanimationstyle.h>
 #include <MScalableImage>
 
+#include <mwidgetfadeinanimationstyle.h>
+#include <mwidgetfadeoutanimationstyle.h>
+
+#ifdef SHOW_SCROLLING_THUMBNAIL
 AbstractScrollAreaThumbView::AbstractScrollAreaThumbView(QWidget *parent /*= NULL*/)
     : QLabel(parent)
 {
@@ -71,15 +73,17 @@ void AbstractScrollAreaThumbView::paintEvent(QPaintEvent *event)
         painter.drawPixmap(event->rect(), pix);
     }
 }
-
+#endif //SHOW_SCROLLING_THUMBNAIL
 
 QtMaemo6ScrollBarEventFilter::QtMaemo6ScrollBarEventFilter(QObject *parent) :
     QObject(parent),
-    m_scrollBarsAlwaysVisible(false),
+#ifdef SHOW_SCROLLING_THUMBNAIL
     m_scrollAreaThumbnailMaxSize(200),
     m_scrollAreaThumbnailOffset(20),
     m_scrollAreaThumbnailBorder(3),
-    m_showScrollAreaThumbnailFactor(0.2)
+    m_showScrollAreaThumbnailFactor(0.2),
+#endif //SHOW_SCROLLING_THUMBNAIL
+    m_scrollBarsAlwaysVisible(false)
 {}
 
 QtMaemo6ScrollBarEventFilter::~QtMaemo6ScrollBarEventFilter()
@@ -97,7 +101,7 @@ void QtMaemo6ScrollBarEventFilter::enableOn(QObject *o)
             scrollAreaThumbView->setObjectName(SCROLLAREATHUMBVIEW);
             scrollAreaThumbView->setOpacity(0);
         }
-#endif
+#endif //SHOW_SCROLLING_THUMBNAIL
         //FIXME: find a more proper solution without manipulating the widget's properties
         // turn the scrollbars off for ScrollArea, they are handled manually by the style
         abstractScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -177,7 +181,7 @@ bool QtMaemo6ScrollBarEventFilter::eventFilter(QObject *obj, QEvent *event)
             if (QLabel *scrollAreaThumbView = scrollArea->findChild<QLabel *>(SCROLLAREATHUMBVIEW)) {
                 setScrollAreaThumbGeometry(scrollAreaThumbView);
             }
-#endif
+#endif //SHOW_SCROLLING_THUMBNAIL
         }
     }
     break;
@@ -202,11 +206,11 @@ void QtMaemo6ScrollBarEventFilter::setScrollBarVisibility(QScrollBar *scrollBar)
 void QtMaemo6ScrollBarEventFilter::generateScrollAreaThumb(QAbstractScrollArea *scrollArea,
         bool forceUpdate /*= false*/)
 {
+#ifndef SHOW_SCROLLING_THUMBNAIL
     //surpress unused warning while this is inactive
     Q_UNUSED(scrollArea);
     Q_UNUSED(forceUpdate);
-
-#ifdef SHOW_SCROLLING_THUMBNAIL
+#else
     if (AbstractScrollAreaThumbView *scrollAreaThumbView =
                 scrollArea->findChild<AbstractScrollAreaThumbView *>(SCROLLAREATHUMBVIEW)) {
         if (scrollAreaThumbView) {
@@ -252,7 +256,7 @@ void QtMaemo6ScrollBarEventFilter::generateScrollAreaThumb(QAbstractScrollArea *
             }
         }
     }
-#endif
+#endif //SHOW_SCROLLING_THUMBNAIL
 }
 
 void QtMaemo6ScrollBarEventFilter::cleanUpTimerMap()
@@ -271,6 +275,9 @@ void QtMaemo6ScrollBarEventFilter::cleanUpTimerMap()
 
 void QtMaemo6ScrollBarEventFilter::setScrollAreaThumbGeometry(QLabel *label)
 {
+#ifndef SHOW_SCROLLING_THUMBNAIL
+    Q_UNUSED(label);
+#else
     if (label->pixmap()) {
         if (qApp->isRightToLeft()) {
             label->setGeometry(m_scrollAreaThumbnailOffset, m_scrollAreaThumbnailOffset,
@@ -280,15 +287,21 @@ void QtMaemo6ScrollBarEventFilter::setScrollAreaThumbGeometry(QLabel *label)
                                m_scrollAreaThumbnailOffset, label->pixmap()->width(), label->pixmap()->height());
         }
     }
+#endif //SHOW_SCROLLING_THUMBNAIL
 }
 
 void QtMaemo6ScrollBarEventFilter::scrollBarValueChanged()
 {
+
     if (QScrollBar *scrollBar = qobject_cast<QScrollBar *>(sender())) {
         if (QAbstractScrollArea *scrollArea = qobject_cast<QAbstractScrollArea *>(scrollBar->parent())) {
             int scrollBarRange = scrollBar->maximum() - scrollBar->minimum();
 
+#ifndef SHOW_SCROLLING_THUMBNAIL
+            Q_UNUSED(scrollArea);
+#else
             double factor = 0;
+
             if (scrollBar->orientation() == Qt::Horizontal)
                 factor = scrollBarRange / (double)scrollArea->viewport()->childrenRect().size().width();
             else
@@ -302,7 +315,7 @@ void QtMaemo6ScrollBarEventFilter::scrollBarValueChanged()
 
                 fadeInOutAnimation(scrollArea->findChild<QLabel *>(SCROLLAREATHUMBVIEW), "opacity");
             }
-
+#endif //SHOW_SCROLLING_THUMBNAIL
             //only show the scrollBar if it has a valid range
             if (scrollBarRange)
                 fadeInOutAnimation(scrollBar, WIDGET_OPACITY);

@@ -24,7 +24,7 @@
 #include <QEasingCurve>
 
 //! \internal
-class MWidgetFadeInAnimationStyle : public MAbstractWidgetAnimationStyle
+class M_EXPORT MWidgetFadeInAnimationStyle : public MAbstractWidgetAnimationStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MWidgetFadeInAnimationStyle)

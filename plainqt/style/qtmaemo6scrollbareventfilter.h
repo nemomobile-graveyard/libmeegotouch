@@ -32,7 +32,7 @@ class QSequentialAnimationGroup;
 #define SCROLLAREATHUMBVIEW "scrollAreaThumbView"
 #define WIDGET_OPACITY "widgetOpacity"
 
-
+#ifdef SHOW_SCROLLING_THUMBNAIL
 /*!
  * this class shows a thumbnail of any other widget placed within an
  * scrollarea. It marks the currently visible part in the scrollarea's
@@ -82,7 +82,7 @@ protected:
     QRect m_visibleRect;
     double m_opacity;
 };
-
+#endif //SHOW_SCROLLING_THUMBNAIL
 
 /*!
  * this class handles visibility of scrollbars.
@@ -139,14 +139,14 @@ protected Q_SLOTS:
     void cleanUpTimerMap();
 
     /*!
-     * places the scrolling preview thumb
-     */
-    void setScrollAreaThumbGeometry(QLabel *label);
-
-    /*!
      * this slot is called, if a scrollbars value changed
      */
     void scrollBarValueChanged();
+
+    /*!
+     * places the scrolling preview thumb
+     */
+    void setScrollAreaThumbGeometry(QLabel *label);
 
     /*!
      * Generates a thumbnail pixmap of the whole scrollarea contents
@@ -156,8 +156,14 @@ protected Q_SLOTS:
      * \param forceUpdate forces to redraw the cached pixmap
     */
     void generateScrollAreaThumb(QAbstractScrollArea *scrollArea, bool forceUpdate = false);
-
 protected:
+#ifdef SHOW_SCROLLING_THUMBNAIL
+    const int m_scrollAreaThumbnailMaxSize;
+    const int m_scrollAreaThumbnailOffset;
+    const int m_scrollAreaThumbnailBorder;
+    const double m_showScrollAreaThumbnailFactor;
+#endif //SHOW_SCROLLING_THUMBNAIL
+
     enum AnimationState {
         FadeIn = 0,
         Show = 1,
@@ -166,10 +172,6 @@ protected:
 
     QMap<const QWidget *, QSequentialAnimationGroup *> m_pendingAnimations;
     bool m_scrollBarsAlwaysVisible;
-    const int m_scrollAreaThumbnailMaxSize;
-    const int m_scrollAreaThumbnailOffset;
-    const int m_scrollAreaThumbnailBorder;
-    const double m_showScrollAreaThumbnailFactor;
 };
 
 
