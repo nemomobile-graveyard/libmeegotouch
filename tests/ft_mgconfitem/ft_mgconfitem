@@ -49,7 +49,7 @@ if [ "$CHARMAP" != "UTF-8" ]; then
     echo "UTF-8 locale is missing, skipping all tests"
     echo "Installing the libmeegotouch-tests package should have created the en_US.UTF-8 locale"
     echo "but for some reason it appears to be missing."
-    emptylog "ft_duigconfitem.log" "ft_duigconfitem" "UTF-8 locale is missing, skipping all tests. Installing the libmeegotouch-tests package should have created the en_US.UTF-8 locale but for some reason it appears to be missing."
+    emptylog "ft_mgconfitem.log" "ft_mgconfitem" "UTF-8 locale is missing, skipping all tests. Installing the libmeegotouch-tests package should have created the en_US.UTF-8 locale but for some reason it appears to be missing."
     exit 0
 fi
 
@@ -58,7 +58,7 @@ fi
 gconftool-2 -s -t bool /Test/Bool true
 VALUE=$(gconftool-2 -g /Test/Bool)
 if [ "$VALUE" != "true" ]; then
-    emptylog "ft_duigconfitem.log" "ft_duigconfitem" "GConf is not running, skipping all tests"
+    emptylog "ft_mgconfitem.log" "ft_mgconfitem" "GConf is not running, skipping all tests"
     exit 0
 fi
 gconftool-2 -s -t int /Test/Int 123
@@ -72,7 +72,7 @@ gconftool-2 -u /Test/UnsetBefore
 gconftool-2 -s -t int /Test/UnsetAfter 100
 gconftool-2 -s -t int /Test/Dir/Entry 200
 
-$(dirname $0)/ft_duigconfitem_exec $*
+$(dirname $0)/ft_mgconfitem_exec $*
 
 # Check what set_external() has left behind.
 
