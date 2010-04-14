@@ -24,6 +24,7 @@
 #include <QPointer>
 
 #include "mnamespace.h"
+#include "mscenemanager.h"
 #include "mscenewindow.h"
 #include <mscenewindowevent_p.h>
 #include "mpageswitchanimation.h"
@@ -152,6 +153,10 @@ public:
 
     void _q_applyQueuedSceneWindowTransitions();
 
+    void _q_triggerAsyncPendingOrientationChange();
+
+    void _q_applyPendingOrientationChange();
+
 public:
 
     MScene *scene;
@@ -197,6 +202,15 @@ public:
         bool animated;
     };
     QList<SceneWindowTransition> queuedTransitions;
+
+    // If an animation gets started by MSceneManager::setOrientationAngle() while
+    // another orientation change transition is running, the orientation change
+    // request gets remembered as a pending one:
+    struct Rotation {
+        M::OrientationAngle angle;
+        MSceneManager::TransitionMode mode;
+    };
+    Rotation* pendingRotation;
 
     QPointer<QObject> debugInterface;
 

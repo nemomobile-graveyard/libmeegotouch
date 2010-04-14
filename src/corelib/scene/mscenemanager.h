@@ -311,6 +311,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_inputPanelClosed())
     Q_PRIVATE_SLOT(d_func(), void _q_unFreezeUI())
     Q_PRIVATE_SLOT(d_func(), void _q_applyQueuedSceneWindowTransitions())
+    Q_PRIVATE_SLOT(d_func(), void _q_triggerAsyncPendingOrientationChange())
+    Q_PRIVATE_SLOT(d_func(), void _q_applyPendingOrientationChange())
 };
 
 #endif

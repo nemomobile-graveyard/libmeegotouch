@@ -92,6 +92,8 @@ void MSceneManagerPrivate::init(MScene *scene)
 
     statusBar = 0;
 
+    pendingRotation = 0;
+
     // set the angle to that of the topmost window, if one exists
     MWindow *activeWindow = MApplication::activeWindow();
 
@@ -119,6 +121,7 @@ void MSceneManagerPrivate::init(MScene *scene)
     q->connect(orientationAnimation, SIGNAL(orientationChanged()), SLOT(_q_changeGlobalOrientation()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_emitOrientationChangeFinished()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_applyQueuedSceneWindowTransitions()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
 
     pageSwitchAnimation = new MPageSwitchAnimation;
 
@@ -130,6 +133,7 @@ MSceneManagerPrivate::~MSceneManagerPrivate()
     delete windows;
     delete orientationAnimation;
     delete pageSwitchAnimation;
+    delete pendingRotation;
 }
 
 int MSceneManagerPrivate::zForWindowType(MSceneWindow::WindowType windowType)
@@ -268,6 +272,33 @@ void MSceneManagerPrivate::_q_applyQueuedSceneWindowTransitions()
                 // Should never occur.
                 qFatal("MSceneManager: Invalid SceneWindowTransition::TransitionType value.");
         }
+    }
+}
+
+void MSceneManagerPrivate::_q_triggerAsyncPendingOrientationChange()
+{
+    Q_Q(MSceneManager);
+
+    if (pendingRotation != 0) {
+        // This slot is called in the context of the finished() signal.
+        // Applying the orientation change must be done asynchronously, so that
+        // other slots connected to finished() are called before.
+        QTimer::singleShot(0, q, SLOT(_q_applyPendingOrientationChange()));
+    }
+}
+
+void MSceneManagerPrivate::_q_applyPendingOrientationChange()
+{
+    Q_Q(MSceneManager);
+
+    if (pendingRotation != 0) {
+        const M::OrientationAngle pendingAngle = pendingRotation->angle;
+        const MSceneManager::TransitionMode pendingMode = pendingRotation->mode;
+
+        delete pendingRotation;
+        pendingRotation = 0;
+
+        q->setOrientationAngle(pendingAngle, pendingMode);
     }
 }
 
@@ -1356,13 +1387,30 @@ void MSceneManager::setOrientationAngle(M::OrientationAngle angle,
 {
     Q_D(MSceneManager);
 
-    if (d->orientationAnimation->state() == QAbstractAnimation::Running)
-        d->orientationAnimation->stop();
-
-    if (mode == AnimatedTransition)
-        d->rotateToAngle(angle);
-    else
-        d->setOrientationAngleWithoutAnimation(angle);
+    if (d->orientationAnimation->state() == QAbstractAnimation::Running) {
+        // Don't stop the current animation, instead remember the new
+        // animation as pending and start it after the current animation
+        // has been finished (see _q_applyPendingOrientationChange()).
+        if (d->newAngle != angle) {
+            if (d->pendingRotation == 0) {
+                d->pendingRotation = new MSceneManagerPrivate::Rotation;
+            }
+            d->pendingRotation->angle = angle;
+            d->pendingRotation->mode = mode;
+        } else {
+            // We are already transitioning to this angle.
+            // Thus no need for a pending rotation.
+            if (d->pendingRotation) {
+                delete d->pendingRotation;
+                d->pendingRotation = 0;
+            }
+        }
+    } else {
+        if (mode == AnimatedTransition)
+            d->rotateToAngle(angle);
+        else
+            d->setOrientationAngleWithoutAnimation(angle);
+    }
 }
 
 M::Orientation MSceneManager::orientation() const
