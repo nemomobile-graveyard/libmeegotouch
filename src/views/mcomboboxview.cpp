@@ -42,10 +42,10 @@ MComboBoxViewPrivate::MComboBoxViewPrivate()
 
 MComboBoxViewPrivate::~MComboBoxViewPrivate()
 {
+    delete progressIndicator;
     delete contentItem;
     delete popuplist;
     delete pixmap;
-    delete progressIndicator;
 }
 
 void MComboBoxViewPrivate::init()
