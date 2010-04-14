@@ -17,7 +17,7 @@
 
 #include <mwidgetview.h>
 #include <mvideowidgetmodel.h>
-//#include <mvideowidgetstyle.h>
+#include <mvideowidgetstyle.h>
 
 class MVideoWidgetViewPrivate;
 class MVideoWidget;
@@ -43,7 +43,7 @@ class QGraphicsSceneResizeEvent;
 class M_EXPORT MVideoWidgetView : public MWidgetView
 {
     Q_OBJECT
-    M_VIEW(MVideoWidgetModel, MWidgetStyle)
+    M_VIEW(MVideoWidgetModel, MVideoWidgetStyle)
 
 public:
 

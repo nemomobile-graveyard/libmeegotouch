@@ -2,6 +2,7 @@
 # mvideowidget, Separated to video folder.
 ###############################################################################
 VIDEO_SRC_DIR = ./video
+INCLUDEPATH +=./video
 
 # REMOVE THIS WHEN ITS AVAILABLE
 #QT -= opengl
@@ -13,7 +14,8 @@ contains( DEFINES, HAVE_GSTREAMER) {
         $$VIDEO_SRC_DIR/mvideowidgetshaders.h \
         $$VIDEO_SRC_DIR/mvideowidgetview.h \
         $$VIDEO_SRC_DIR/mvideo.h \
-        $$VIDEO_SRC_DIR/mvideowidgetmodel.h
+        $$VIDEO_SRC_DIR/mvideowidgetmodel.h \
+        $$VIDEO_SRC_DIR/mvideowidgetstyle.h
 
     PRIVATE_HEADERS += \
         $$VIDEO_SRC_DIR/mgstvideo.h \
@@ -24,6 +26,9 @@ contains( DEFINES, HAVE_GSTREAMER) {
         $$VIDEO_SRC_DIR/mvideowidgetview.cpp \
         $$VIDEO_SRC_DIR/mgstvideo.cpp \
         $$VIDEO_SRC_DIR/msink.c
+
+    MGEN_STYLE_HEADERS += \
+        $$VIDEO_SRC_DIR/mvideowidgetstyle.h
 
     MGEN_MODEL_HEADERS += \
         $$VIDEO_SRC_DIR/mvideowidgetmodel.h

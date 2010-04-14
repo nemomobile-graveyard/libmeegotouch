@@ -506,10 +506,10 @@ void MVideoWidgetView::drawContents(QPainter* painter, const QStyleOptionGraphic
         }
         else if( d->image ) {
             // SW rendering
-            painter->drawImage(d->m_scaledVideoRect, *d->image);
+            painter->drawImage(d->m_scaledVideoRect.toRect(), *d->image);
         }
     } else {
-        painter->fillRect(boundingRect(), d->m_gstVideo->colorKey());
+        painter->fillRect(boundingRect(), style()->colorKey());
         //QCoreApplication::flush();
         //d->m_gstVideo->expose();
     }
@@ -538,8 +538,16 @@ void MVideoWidgetView::resizeEvent(QGraphicsSceneResizeEvent* event)
 
 void MVideoWidgetView::applyStyle()
 {
-    //Q_D(MVideoWidgetView);
+    Q_D(MVideoWidgetView);
 
+    if( model()->fullscreen() ) {
+        style().setModeFullscreen();
+    }
+    else {
+        style().setModeDefault();
+    }
+    
+    d->m_gstVideo->setColorKey(style()->colorKey());
     MWidgetView::applyStyle();
 
     //d->refreshStyleMode();
@@ -574,7 +582,6 @@ void MVideoWidgetView::updateData(const QList<const char*>& modifications)
             model()->setLength(0);
             if( !d->m_gstVideo->open(model()->filename()) ) {
             }
-                
         }
         else if( member == MVideoWidgetModel::State ) {
             d->m_gstVideo->setVideoState(model()->state());
@@ -595,12 +602,13 @@ void MVideoWidgetView::updateData(const QList<const char*>& modifications)
         else if( member == MVideoWidgetModel::Fullscreen ) {
             if( model()->fullscreen() ) {
                 d->m_gstVideo->setWinId(MApplication::activeApplicationWindow()->viewport()->winId());
-                d->m_gstVideo->setColorKey(QColor(255,255,0));
                 d->m_gstVideo->setRenderTarget(MGstVideo::XvSink);
             }
-            else
+            else {
                 d->m_gstVideo->setRenderTarget(MGstVideo::MSink);
+            }
             
+            applyStyle();
             updateGeometry();
             update();
         }
@@ -614,15 +622,17 @@ void MVideoWidgetView::setupModel()
     Q_D(MVideoWidgetView);
     if( model()->fullscreen() ) {
         d->m_gstVideo->setWinId(MApplication::activeApplicationWindow()->viewport()->winId());
-        d->m_gstVideo->setColorKey(QColor(255,255,0));
         d->m_gstVideo->setRenderTarget(MGstVideo::XvSink);
     }
-    else
+    else {
         d->m_gstVideo->setRenderTarget(MGstVideo::MSink);
+    }
 
     d->m_gstVideo->setLooping(model()->looping());
     d->m_gstVideo->open(model()->filename());
 
+    applyStyle();
+    updateGeometry();
     update();
 }
 
