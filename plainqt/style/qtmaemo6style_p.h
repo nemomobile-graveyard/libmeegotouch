@@ -34,6 +34,7 @@ class QAction;
 class QStatusBar;
 class QMenuBar;
 class QtMaemo6KineticScrolling;
+class QStyleOptionButton;
 
 class QtMaemo6StylePrivate : public QtMaemo6TestStylePrivate
 {
@@ -219,16 +220,12 @@ public:
      * \param rect the rect in which the checkBox is drawn
      * \param icon the icon on the button
      * \param option the QStyleOption used to draw the checkBox
-     * \param styleClass style class that should be used
-     * \param styleObject style object that should be used
      */
     void drawCheckBox(QPainter *painter,
                       const QString &text,
                       const QIcon &icon,
                       const QRect &rect,
-                      const QStyleOption *option,
-                      const QString &styleClass,
-                      const QString &styleObject = QString()) const;
+                      const QStyleOption *option) const;
 
     /*!
      * calculates a rect the text and icon earn

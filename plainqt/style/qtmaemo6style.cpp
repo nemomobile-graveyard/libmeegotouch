@@ -427,17 +427,18 @@ void QtMaemo6StylePrivate::drawCheckBox(QPainter *p,
                                         const QString &text,
                                         const QIcon &icon,
                                         const QRect &rect,
-                                        const QStyleOption *option,
-                                        const QString &styleClass,
-                                        const QString &styleObject /*= QString()*/) const
+                                        const QStyleOption *option) const
 {
     const MCheckboxStyle *style =
         static_cast<const MCheckboxStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
-                styleClass.toLocal8Bit().constData(),
-                styleObject,
-                "checkbox"));
-    // TODO: Fix regression due to introduction of MCheckBoxStyle
+                "MCheckboxStyle"));
     drawBasicButton(p, text, icon, rect, option, style, style->font(), style->iconSize());
+    if(option->state & QStyle::State_On
+       && option->state & QStyle::State_Enabled
+       && style->checkmarkImage()) {
+        QSizeF pos = (rect.size() / 2) - (style->checkmarkImage()->size() / 2);
+        p->drawPixmap(pos.width() + rect.x(), pos.height() + rect.y(), *style->checkmarkImage());
+    }
 }
 
 void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
@@ -1232,7 +1233,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
                                          : SE_RadioButtonIndicator,
                                          btn, widget);
 
-            d->drawCheckBox(p, QString(), subopt.icon, subopt.rect, opt, "MButtonStyle");
+            d->drawCheckBox(p, QString(), subopt.icon, subopt.rect, opt);
 
             subopt.rect = subElementRect(isCheckBox ? SE_CheckBoxContents
                                          : SE_RadioButtonContents,
@@ -1753,8 +1754,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
 
             // Draw checkbox
             if (groupBox->subControls & SC_GroupBoxCheckBox) {
-                d->drawCheckBox(p, QString(), QIcon(), checkBoxRect,
-                                groupBox, "MButtonIconStyle");
+                d->drawCheckBox(p, QString(), QIcon(), checkBoxRect, groupBox);
             }
 
         }
