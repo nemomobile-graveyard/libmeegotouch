@@ -1,3 +1,3 @@
 [D-BUS Service]
 Name=com.nokia.qtstyleexample
-Exec=@DUI_INSTALL_BIN@/qtstyleexample -style iqs
+Exec=@M_INSTALL_BIN@/qtstyleexample -style iqs
