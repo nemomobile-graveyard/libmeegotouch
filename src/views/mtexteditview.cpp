@@ -707,7 +707,7 @@ void MTextEditView::drawContents(QPainter *painter, const QStyleOptionGraphicsIt
                     boundingRect().top() + style()->paddingTop(),
                     boundingRect().width() - style()->paddingLeft() - style()->paddingRight(),
                     boundingRect().height() - style()->paddingTop() - style()->paddingBottom());
-    painter->setClipRect(clipping);
+    painter->setClipRect(clipping, Qt::IntersectClip);
 
     // If text does not fit inside widget, it may have to be scrolled
     painter->translate(-d->hscroll + style()->paddingLeft(), -d->vscroll + style()->paddingTop());
