@@ -19,6 +19,7 @@
 
 #include "mpositionindicatorview.h"
 #include "mpositionindicatorview_p.h"
+#include "qapplication.h"
 
 #include <QString>
 #include <QTimer>
@@ -84,18 +85,21 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         int railPixmapSizeX = rail->pixmap()->width();
 
         int indicatorHeight = qMax(style()->minIndicatorSize(), int((vpSize.height()/pRange.height())*size().height()));
-        int indicatorPosition = (pPos.y()/pRange.height())*size().height();
+        int indicatorPositionY = (pPos.y()/pRange.height())*size().height();
 
-        if (indicatorPosition + indicatorHeight > size().height()) {
-            indicatorHeight = size().height() - indicatorPosition;
+        if (indicatorPositionY + indicatorHeight > size().height()) {
+            indicatorHeight = size().height() - indicatorPositionY;
         }
 
-        if (indicatorPosition < 0) {
-            indicatorHeight += indicatorPosition;
-            indicatorPosition = 0;
+        if (indicatorPositionY < 0) {
+            indicatorHeight += indicatorPositionY;
+            indicatorPositionY = 0;
         }
 
-        rail->draw( size().width() - railPixmapSizeX,
+        int railPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : size().width() - railPixmapSizeX);
+        int indicatorPositionX = (qApp->layoutDirection() == Qt::RightToLeft ? 0 : size().width() - indicatorPixmapSizeX);
+
+        rail->draw( railPositionX,
                     0,
                     railPixmapSizeX,
                     size().height(),
@@ -103,8 +107,8 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
 
 
 
-        indicator->draw(size().width() - indicatorPixmapSizeX,
-                        indicatorPosition,
+        indicator->draw(indicatorPositionX,
+                        indicatorPositionY,
                         indicatorPixmapSizeX,
                         indicatorHeight,
                         painter);
@@ -115,15 +119,15 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
         int indicatorPixmapSizeY = indicator->pixmap()->height();
         int railPixmapSizeY = rail->pixmap()->height();
         int indicatorWidth = qMax(style()->minIndicatorSize(), int((vpSize.width()/pRange.width())*size().width()));
-        int indicatorPosition = (pPos.x()/pRange.width())*size().width();
+        int indicatorPositionX = (pPos.x()/pRange.width())*size().width();
 
-        if (indicatorPosition + indicatorWidth > size().width()) {
-            indicatorWidth = size().width() - indicatorPosition;
+        if (indicatorPositionX + indicatorWidth > size().width()) {
+            indicatorWidth = size().width() - indicatorPositionX;
         }
 
-        if (indicatorPosition < 0) {
-            indicatorWidth += indicatorPosition;
-            indicatorPosition = 0;
+        if (indicatorPositionX < 0) {
+            indicatorWidth += indicatorPositionX;
+            indicatorPositionX = 0;
         }
 
         rail->draw( 0,
@@ -132,7 +136,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
                     railPixmapSizeY,
                     painter);
 
-        indicator->draw(indicatorPosition,
+        indicator->draw(indicatorPositionX,
                         size().height() - indicatorPixmapSizeY,
                         indicatorWidth,
                         indicatorPixmapSizeY,
