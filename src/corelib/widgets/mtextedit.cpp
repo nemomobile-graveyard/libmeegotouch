@@ -48,6 +48,7 @@
 #include "mapplicationwindow.h"
 #include "mcompleter.h"
 #include "mscenemanager.h"
+#include "minputmethodstate.h"
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MTextEdit)
@@ -762,6 +763,8 @@ MTextEdit::MTextEdit(MTextEditModel::LineMode type, const QString &text,
 
 MTextEdit::~MTextEdit()
 {
+    detachToolbar();
+
     // kludge so view doesn't receive memberModified() signals for the deleted pointers
     model()->beginTransaction();
 
@@ -1671,7 +1674,7 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
         return QVariant(inputMethodCorrectionEnabled());
 
     case M::InputMethodToolbarQuery:
-        return QVariant(attachedToolbar());
+        return QVariant(attachedToolbarId());
 
     default:
         return MWidgetController::inputMethodQuery(query);
@@ -1954,12 +1957,40 @@ MCompleter *MTextEdit::completer()
 
 void MTextEdit::attachToolbar(const QString &name)
 {
+    if (attachedToolbar() == name)
+        return;
+    detachToolbar();
+    int id = MInputMethodState::instance()->registerToolbar(name);
     model()->setToolbar(name);
+    model()->setToolbarId(id);
+}
+
+void MTextEdit::attachToolbar(int id)
+{
+    if (attachedToolbarId() == id)
+        return;
+    detachToolbar();
+    model()->setToolbarId(id);
 }
 
 QString MTextEdit::attachedToolbar() const
 {
     return model()->toolbar();
+}
+
+int MTextEdit::attachedToolbarId() const
+{
+    return model()->toolbarId();
+}
+
+void MTextEdit::detachToolbar()
+{
+    // only unregister toolbars it has registered.
+    if (!attachedToolbar().isEmpty()) {
+        MInputMethodState::instance()->unregisterToolbar(model()->toolbarId());
+    }
+    model()->setToolbar(QString());
+    model()->setToolbarId(-1);
 }
 
 #include "moc_mtextedit.cpp"
