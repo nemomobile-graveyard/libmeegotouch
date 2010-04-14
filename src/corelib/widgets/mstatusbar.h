@@ -23,15 +23,15 @@
 #include <mscenewindow.h>
 #include <mscenewindowmodel.h>
 
-//! \internal
+class MStatusBarPrivate;
 
+//! \internal
 class MStatusBar : public MSceneWindow
 {
     Q_OBJECT
     M_CONTROLLER(MSceneWindow)
 
 public:
-
     /*!
      * \brief Default constructor.
      */
@@ -42,7 +42,12 @@ public:
      */
     virtual ~MStatusBar();
 
+    //! \reimp
+    bool sceneEvent(QEvent *event);
+    //! \reimp_end
+
 private:
+    Q_DECLARE_PRIVATE(MStatusBar)
     Q_DISABLE_COPY(MStatusBar)
 };
 

@@ -40,6 +40,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mseekbar.h \
     $$WIDGETS_SRC_DIR/mslider.h \
     $$WIDGETS_SRC_DIR/mstatusbar.h \
+    $$WIDGETS_SRC_DIR/mstatusbar_p.h \
     $$WIDGETS_SRC_DIR/mtextedit.h \
     $$WIDGETS_SRC_DIR/mcompleter.h \
     $$WIDGETS_SRC_DIR/mcompleter_p.h \

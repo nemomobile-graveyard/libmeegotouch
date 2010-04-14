@@ -150,6 +150,7 @@ SUBDIRS     =  \
     ut_mtapandholdrecognizer \
     ut_mvideowidget \
     ut_mservicefwgen \
+    ut_mstatusbar
 
 # enable only when we have icu available
 
