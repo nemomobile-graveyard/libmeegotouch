@@ -32,117 +32,16 @@
 #include <QSignalSpy>
 #include <QEvent>
 
-const MWidgetView *MWidgetController::view() const
-{
-    return 0;
-}
-
-// MDeviceProfile stubs
-class MDeviceProfile
-{
-public:
-    static MDeviceProfile *instance();
-    QSize resolution() const;
-};
-
-MDeviceProfile *MDeviceProfile::instance()
-{
-    static MDeviceProfile p;
-    return &p;
-}
-
-QSize MDeviceProfile::resolution() const
-{
-    return QSize(1000, 500);
-}
-
-// MComponentData stubs
-MWindow *gActiveWindow = 0;
-bool MComponentData::softwareRendering()
-{
-    return true;
-}
-
-bool MComponentData::fullScreen()
-{
-    return false;
-}
-
-void MComponentData::setActiveWindow(MWindow *window)
-{
-    gActiveWindow = window;
-}
-
-MWindow *MComponentData::activeWindow()
-{
-    return gActiveWindow;
-}
-
-MApplicationWindow *MComponentData::activeApplicationWindow()
-{
-    return qobject_cast<MApplicationWindow *>(gActiveWindow);
-}
-
-void MComponentData::registerWindow(MWindow *window)
-{
-    if (gActiveWindow == 0)
-        setActiveWindow(window);
-}
-
-void MComponentData::unregisterWindow(MWindow *window)
-{
-    if (gActiveWindow == window)
-        setActiveWindow(0);
-}
-
-bool MComponentData::emulateTwoFingerGestures()
-{
-    return false;
-}
-
-// WARNING: This restricts the unit test to the support one window only
-QList<MWindow *> MComponentData::windows()
-{
-    QList<MWindow *> list;
-    if (gActiveWindow)
-        list << gActiveWindow;
-    return list;
-}
-
-// Just a dummy stub to avoid need for real MComponentData instance
-// because of this method
-void MComponentData::setPrestarted(bool)
-{}
-
-//MApplication stubs
-
-static M::PrestartMode fakeMode = M::LazyShutdown;
-
-bool Ut_MApplicationWindow::m_prestartRestored = false;
-
-bool MApplication::isPrestarted()
-{
-    if ((fakeMode == M::LazyShutdown) || (fakeMode == M::TerminateOnClose))
-        return true;
-
-    return false;
-}
-
-void MApplication::setPrestartMode(M::PrestartMode mode)
-{
-    fakeMode = mode;
-    return;
-}
-
-M::PrestartMode MApplication::prestartMode()
-{
-    return fakeMode;
-}
-
 // Test class implementation
 
 void Ut_MApplicationWindow::initTestCase()
 {
+    if(MComponentData::instance() == 0) {
+        int argc = 1;
+        char *argv[ 1 ];
+        argv[ 0 ] = (char*)"./ut_mscenewindow";
+        m_componentData = new MComponentData(argc, argv);
+    }
     qRegisterMetaType<MApplicationPage *>("MApplicationPage*");
 }
 
@@ -212,7 +111,7 @@ void Ut_MApplicationWindow::testPrestartTerminateOnClose()
 {
     MApplication::setPrestartMode(M::TerminateOnClose);
     m_subject->show();
-    QCOMPARE(m_subject->isVisible(), false);
+    QCOMPARE(m_subject->isVisible(), true);
     m_subject->close();
     QCOMPARE(m_subject->isVisible(), false);
 }
@@ -221,7 +120,7 @@ void Ut_MApplicationWindow::testPrestartLazyShutdown()
 {
     MApplication::setPrestartMode(M::LazyShutdown);
     m_subject->show();
-    QCOMPARE(m_subject->isVisible(), false);
+    QCOMPARE(m_subject->isVisible(), true);
     m_subject->close();
     QCOMPARE(m_subject->isVisible(), false);
     QCOMPARE(m_subject->isHidden(), true);
@@ -240,11 +139,7 @@ void Ut_MApplicationWindow::testWindowActivate()
     QVERIFY(MApplication::activeApplicationWindow() == appWin);
 
     delete appWin;
-    QVERIFY(MApplication::activeApplicationWindow() == 0);
-
-    qApp->sendEvent(m_subject, &activate);
     QVERIFY(MApplication::activeApplicationWindow() == m_subject);
-
 }
 
 void Ut_MApplicationWindow::testPageChanged()
