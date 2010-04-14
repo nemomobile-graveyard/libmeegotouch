@@ -133,7 +133,7 @@ public:
     virtual void drawSeparators(QPainter *painter, const QStyleOptionGraphicsItem *option);
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
-public slots:
+public Q_SLOTS:
     void movingDetectionTimerTimeout();
     void viewportPositionChanged(const QPointF &pos);
     void viewportSizeChanged(const QSizeF &size);

@@ -136,6 +136,8 @@ void MListView::setGeometry(const QRectF &rect)
 {
     if (d_ptr) {
         d_ptr->viewWidth = rect.width();
+        if (!d_ptr->pannableViewport)
+            d_ptr->viewportVisibleHeight = d_ptr->totalHeight();
         d_ptr->updateItemSize();
         d_ptr->updateSeparatorSize();
         relayoutItemsInViewportRect();
@@ -153,8 +155,7 @@ void MListView::relayoutItemsInViewportRect()
         {
             QModelIndex firstVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y());
             d_ptr->updateFirstVisibleRow(firstVisibleRow);
-            QModelIndex lastVisibleRow = d_ptr->locateVisibleIndexAt(
-                d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight - 1); // - 1 to select from inside viewport
+            QModelIndex lastVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight);
             d_ptr->updateLastVisibleRow(lastVisibleRow);
 
             QPoint firstVisibleItemPos(0, d_ptr->locatePosOfItem(firstVisibleRow));
