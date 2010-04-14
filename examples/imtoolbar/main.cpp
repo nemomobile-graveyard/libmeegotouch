@@ -24,7 +24,7 @@
 
 namespace
 {
-    const QString InputMethodToolbars("/M/InputMethods/Toolbars");
+    const QString InputMethodToolbars("/meegotouch/inputmethods/toolbars");
 };
 
 int main(int argc, char **argv)

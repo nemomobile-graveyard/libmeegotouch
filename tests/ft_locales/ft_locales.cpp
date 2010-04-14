@@ -72,7 +72,7 @@ void Ft_Locales::testCreateSystemLocale_data()
 
 bool confIsDown()
 {
-    MGConfItem languageItem("/M/i18n/Language");
+    MGConfItem languageItem("/meegotouch/i18n/language");
     QString originalValue = languageItem.value().toString();
     int skipConf = 0;
 
@@ -95,7 +95,7 @@ void Ft_Locales::testSettingsChanged()
         QSKIP("SettingsChanged is skipped", SkipSingle);
         return;
     }
-    MGConfItem languageItem("/M/i18n/Language");
+    MGConfItem languageItem("/meegotouch/i18n/language");
     QString originalValue = languageItem.value().toString();
 
     // Test within MLocale
@@ -160,7 +160,7 @@ void Ft_Locales::testSettingsChanged()
 
 void Ft_Locales::testCreateSystemLocale()
 {
-    MGConfItem languageItem("/M/i18n/Language");
+    MGConfItem languageItem("/meegotouch/i18n/language");
     QString originalValue = languageItem.value().toString();
 
     QFETCH(QString, conf);

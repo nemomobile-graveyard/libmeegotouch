@@ -27,7 +27,7 @@
 void WidgetsgalleryRetranslator::widgetsgalleryRetranslate()
 {
     qDebug() << __PRETTY_FUNCTION__;
-    // When the gconf key /M/i18n/Language specifying the system
+    // When the gconf key /meegotouch/i18n/language specifying the system
     // language changes, the system default locale of a MApplication
     // is changed automatically. All translation catalogs are reloaded
     // according to the new locale settings. Therefore, in most cases,

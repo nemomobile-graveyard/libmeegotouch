@@ -258,11 +258,11 @@ void ClientManager::changeThemeAndLocale()
 #ifdef PRINT_INFO_MESSAGES
     qDebug() << "INFO: Changing theme to:" << list[themeIndex];
 #endif
-    MGConfItem themeName("/M/theme/name");
+    MGConfItem themeName("/meegotouch/theme/name");
     //themeName.set(list[themeIndex]);
 
 //    int localeIndex = rand() % locales.size();
-//    MGConfItem localeName("/M/i18n/Language");
+//    MGConfItem localeName("/meegotouch/i18n/language");
 //    localeName.set(locales[localeIndex]);
 
     // change theme and locale again after a short period of time
@@ -296,7 +296,7 @@ bool ClientManager::verifyPixmap(const QString& theme, Client* client, quint32 h
     if(imageId.startsWith("icon"))
     {
 #ifdef HAVE_GCONF
-//        MGConfItem localeName("/M/i18n/Language");
+//        MGConfItem localeName("/meegotouch/i18n/language");
 //        QString locale = localeName.value().toString();
         QDir iconDirectory;
 //        if(locale.isEmpty())

@@ -497,7 +497,7 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
     palette(logicalValues),
     fonts(logicalValues)
 #ifdef HAVE_GCONF
-    , locale("/M/i18n/Language")
+    , locale("/meegotouch/i18n/language")
 #endif
 {
     switch (themeService) {

@@ -420,7 +420,7 @@ void ListPage::showThemeSelectionDialog()
         int index = group->checkedId();
         if (index >= 0) {
 #ifdef HAVE_GCONF
-            MGConfItem themeName("/M/theme/name");
+            MGConfItem themeName("/meegotouch/theme/name");
             themeName.set(themes[index].theme);
 #else
             M_changeTheme(themes[index].theme);

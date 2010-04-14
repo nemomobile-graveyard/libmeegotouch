@@ -59,11 +59,11 @@ namespace
 
     const QString ScriptLatin("Latn");
 
-    const QString SettingsLanguage("/M/i18n/Language");
-    const QString SettingsLcTime("/M/i18n/LcTime");
-    const QString SettingsLcCollate("/M/i18n/LcCollate");
-    const QString SettingsLcNumeric("/M/i18n/LcNumeric");
-    const QString SettingsLcMonetary("/M/i18n/LcMonetary");
+    const QString SettingsLanguage("/meegotouch/i18n/language");
+    const QString SettingsLcTime("/meegotouch/i18n/lc_time");
+    const QString SettingsLcCollate("/meegotouch/i18n/lc_collate");
+    const QString SettingsLcNumeric("/meegotouch/i18n/lc_numeric");
+    const QString SettingsLcMonetary("/meegotouch/i18n/lc_monetary");
 }
 
 /// Helper

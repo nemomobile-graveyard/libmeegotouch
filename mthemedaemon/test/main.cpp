@@ -33,7 +33,7 @@ int main(int argc, char **argv)
     const QString themeName = "theme_one";
     QDir themeDirectory(THEME_ROOT_DIRECTORY + '/' + themeName);
     if (themeDirectory.exists()) {
-        MGConfItem theme("/M/theme/name");
+        MGConfItem theme("/meegotouch/theme/name");
         theme.set(themeName);
     }
 #endif

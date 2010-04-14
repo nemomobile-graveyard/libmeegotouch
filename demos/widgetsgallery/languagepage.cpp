@@ -388,7 +388,7 @@ void LanguagePage::changeLanguage(int index)
         return;
     QString newLanguage = modelLanguage->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    MGConfItem languageItem("/M/i18n/Language");
+    MGConfItem languageItem("/meegotouch/i18n/language");
     if (newLanguage != languageItem.value().toString()) {
         languageItem.set(newLanguage);
     }
@@ -407,7 +407,7 @@ void LanguagePage::changeLcTime(int index)
         return;
     QString newLcTime = modelLcTime->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    MGConfItem lcTimeItem("/M/i18n/LcTime");
+    MGConfItem lcTimeItem("/meegotouch/i18n/lc_time");
     if (newLcTime != lcTimeItem.value().toString()) {
         lcTimeItem.set(newLcTime);
     }
@@ -426,7 +426,7 @@ void LanguagePage::changeLcCollate(int index)
         return;
     QString newLcCollate = modelLcCollate->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    MGConfItem lcCollateItem("/M/i18n/LcCollate");
+    MGConfItem lcCollateItem("/meegotouch/i18n/lc_collate");
     if (newLcCollate != lcCollateItem.value().toString()) {
         lcCollateItem.set(newLcCollate);
     }
@@ -445,7 +445,7 @@ void LanguagePage::changeLcNumeric(int index)
         return;
     QString newLcNumeric = modelLcNumeric->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    MGConfItem lcNumericItem("/M/i18n/LcNumeric");
+    MGConfItem lcNumericItem("/meegotouch/i18n/lc_numeric");
     if (newLcNumeric != lcNumericItem.value().toString()) {
         lcNumericItem.set(newLcNumeric);
     }
@@ -464,7 +464,7 @@ void LanguagePage::changeLcMonetary(int index)
         return;
     QString newLcMonetary = modelLcMonetary->item(index, 1)->text();
 #ifdef HAVE_GCONF
-    MGConfItem lcMonetaryItem("/M/i18n/LcMonetary");
+    MGConfItem lcMonetaryItem("/meegotouch/i18n/lc_monetary");
     if (newLcMonetary != lcMonetaryItem.value().toString()) {
         lcMonetaryItem.set(newLcMonetary);
     }

@@ -29,8 +29,8 @@
 using namespace M::MThemeDaemonProtocol;
 
 MThemeDaemonServer::MThemeDaemonServer() :
-    currentTheme("/M/theme/name"),
-    currentLocale("/M/i18n/Language")
+    currentTheme("/meegotouch/theme/name"),
+    currentLocale("/meegotouch/i18n/language")
 {
     const QString defaultTheme("devel");
 

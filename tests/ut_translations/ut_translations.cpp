@@ -23,7 +23,7 @@
 
 bool confIsDown()
 {
-    MGConfItem languageItem("/M/i18n/Language");
+    MGConfItem languageItem("/meegotouch/i18n/language");
     QString originalValue = languageItem.value().toString();
     int skipConf = 0;
 
@@ -775,7 +775,7 @@ void Ut_Translations::testGettingTheDefaultLocaleFromTheEnvironment()
         // at all. Therefore, we set the language in gconf to the
         // empty string temporarily to test whether getting the locale
         // from the LANG variable works:
-        MGConfItem languageItem("/M/i18n/Language");
+        MGConfItem languageItem("/meegotouch/i18n/language");
         QString languageItemOriginalValue = languageItem.value().toString();
         languageItem.set("");
         QCOMPARE(languageItem.value().toString(), QString(""));

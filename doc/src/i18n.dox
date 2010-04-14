@@ -79,26 +79,26 @@ The MeeGo Touch UI locale system uses the following main settings:
      <th>example value</th>
   </tr>
   <tr>
-  <td>/M/i18n/Language</td>
+  <td>/meegotouch/i18n/language</td>
   <td>main language setting</td>
   <td>en_US</td>
   <tr>
-  <td>/M/i18n/LcTime</td>
+  <td>/meegotouch/i18n/lc_time</td>
   <td>for date, time, and calendar</td>
   <td>ar@calendar=islamic</td>
   </tr>
   <tr>
-  <td>/M/i18n/LcCollate</td>
+  <td>/meegotouch/i18n/lc_collate</td>
   <td>for sorting</td>
   <td>de_DE@collation=phonebook</td>
   </tr>
   <tr>
-  <td>/M/i18n/LcNumeric</td>
+  <td>/meegotouch/i18n/lc_numeric</td>
   <td>formatting of numbers</td>
   <td>hi</td>
   </tr>
   <tr>
-  <td>/M/i18n/LcMonetary</td>
+  <td>/meegotouch/i18n/lc_monetary</td>
   <td>for formatting of amounts of money</td>
   <td>fi_FI@currency=EUR</td>
   </tr>
@@ -108,7 +108,7 @@ Each of these settings can be set to a ICU locale specifier as
 described in the <a href="http://userguide.icu-project.org/locale">ICU
 User Guide</a>.
 
-The value of \c /M/i18n/Language  (“Language”) tells the locale system
+The value of \c /meegotouch/i18n/language  (“Language”) tells the locale system
 about the UI language of the device. This affects all UI texts,
 writing direction and widget layouts (It does not affect the user
 content, i.e.  it does not affect things like the browser content
@@ -795,11 +795,11 @@ system can immediately use the new downloaded data.
 \subsection  localechange  Reacting to changes in the locale settings
 
 The current language setting is stored in the gconf key
-\c /M/i18n/Language . From the command line, the current language can
+\c /meegotouch/i18n/language . From the command line, the current language can
 be queried using \c gconftool-2  like this:
 
 \code
-    ~$ gconftool-2 -g /M/i18n/Language
+    ~$ gconftool-2 -g /meegotouch/i18n/language
     ar
 \endcode
 
@@ -808,7 +808,7 @@ the current language from the command line can of course also be
 done with \c gconftool-2 :
 
 \code
-    ~$ gconftool-2 -t string -s /M/i18n/Language zh_CN
+    ~$ gconftool-2 -t string -s /meegotouch/i18n/language zh_CN
 \endcode
 
 The above command sets the current language to simplified Chinese.
@@ -828,7 +828,7 @@ settings.
 Alternatively it is possible to read the gconf settings directly:
 
 \code
-    MGConfItem languageItem("/M/i18n/Language");
+    MGConfItem languageItem("/meegotouch/i18n/language");
     QString language = languageItem.value().toString();
 \endcode
 
@@ -839,7 +839,7 @@ Setting the current language permanently from a \c MApplication  works like
 this:
 
 \code
-    MGConfItem languageItem("/M/i18n/Language");
+    MGConfItem languageItem("/meegotouch/i18n/language");
     languageItem.set("zh_CN");
 \endcode
 

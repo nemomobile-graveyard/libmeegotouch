@@ -105,7 +105,7 @@ class AnimatedlayoutRetranslator : public QObject
 public slots:
     void animatedlayoutRetranslate() {
         qDebug() << __PRETTY_FUNCTION__;
-        MGConfItem languageItem("/M/i18n/Language");
+        MGConfItem languageItem("/meegotouch/i18n/language");
         QString language = languageItem.value().toString();
         MLocale locale(language);
         QString catalog = "animatedlayout";
