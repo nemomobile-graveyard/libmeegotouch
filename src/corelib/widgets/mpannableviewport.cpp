@@ -119,7 +119,7 @@ void MPannableViewportPrivate::_q_resolvePannedWidgetIsOnDisplay()
     Q_Q(MPannableViewport);
     MOnDisplayChangeEvent *event = 0;
 
-    if (q->isOnDisplay() && q->sceneManager() != 0) {
+    if (q->isOnDisplay() && q->sceneManager() != 0 && q->widget() != 0) {
         QRectF visibleSceneRect(QPoint(0, 0), q->sceneManager()->visibleSceneSize());
         event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::MustBeResolved, visibleSceneRect);
 
