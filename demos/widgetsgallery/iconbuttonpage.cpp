@@ -53,7 +53,7 @@ void IconButtonPage::createContent()
 
     QGraphicsWidget *w = new QGraphicsWidget();
     w->setMinimumSize(container->minimumWidth(), 5);
-    w->setMaximumSize(container->minimumWidth(), 5);
+    w->setMaximumSize(container->maximumWidth(), 5);
 
     containerPolicy->setSpacing(40);
     containerPolicy->addItem(w);
