@@ -23,6 +23,7 @@
 #include <QtTest/QtTest>
 #include <QObject>
 #include <MSceneWindow>
+#include <MComponentData>
 
 class MWindow;
 
@@ -56,6 +57,7 @@ private:
 
     MSceneWindow *m_subject;
     MWindow *window;
+    MComponentData *m_componentData;
 };
 
 Q_DECLARE_METATYPE(MSceneWindow::WindowType);

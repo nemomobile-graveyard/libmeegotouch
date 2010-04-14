@@ -24,6 +24,7 @@
 #include <QList>
 #include <QtTest>
 #include <MNamespace>
+#include <MComponentData>
 
 class QGraphicsItem;
 
@@ -67,6 +68,7 @@ private slots:
 private:
     MEscapeButtonPanel *fetchEscapeButtonPanel(const QList<QGraphicsItem *> &itemsList) const;
     MApplicationWindow *m_subject;
+    MComponentData *m_componentData;
 
 };
 
