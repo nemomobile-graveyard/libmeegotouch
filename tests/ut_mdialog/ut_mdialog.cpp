@@ -29,9 +29,11 @@
 
 #include "ut_mdialog.h"
 
+MWindow *appWin;
 void Ut_MDialog::initTestCase()
 {
     app = buildApp(1, "./ut_mdialog");
+    appWin = new MWindow;
 }
 
 void Ut_MDialog::cleanupTestCase()
@@ -239,6 +241,19 @@ void Ut_MDialog::dismissDialog()
     QCOMPARE(spyChanged1.count(), 0);
     QCOMPARE(spyChanged2.count(), 1);
     QCOMPARE(spyChanged3.count(), 1);
+}
+
+void Ut_MDialog::testRotation()
+{
+    dialog->appear();
+    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    QSizeF preferredSizeLandscape = dialog->preferredSize();
+    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    QSizeF preferredSizePortrait = dialog->preferredSize();
+    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    QCOMPARE(dialog->preferredSize(), preferredSizeLandscape);
+    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    QCOMPARE(dialog->preferredSize(), preferredSizePortrait);
 }
 
 QTEST_APPLESS_MAIN(Ut_MDialog);

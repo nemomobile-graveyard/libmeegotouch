@@ -37,6 +37,7 @@ MApplicationWindow *appWin;
 void Ut_MApplicationMenu::init()
 {
     m_subject = new MApplicationMenu();
+    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
 }
 
 void Ut_MApplicationMenu::cleanup()
@@ -261,5 +262,46 @@ void Ut_MApplicationMenu::testPaint()
     m_subject->addAction(new MAction("text action", m_subject));
     m_subject->paint(&painter, NULL, NULL);
 }
+
+void Ut_MApplicationMenu::testRotation()
+{
+    MAction *action = new MAction("Italic", NULL);
+    action->setLocation(MAction::ApplicationMenuLocation);
+    m_subject->addAction(action);
+
+    action = new MAction("Normal", NULL);
+    action->setLocation(MAction::ApplicationMenuLocation);
+    m_subject->addAction(action);
+
+    action = new MAction("icon-m-grid", "", NULL);
+    action->setLocation(MAction::ApplicationMenuLocation);
+    action->setStyleAction(true);
+    m_subject->addAction(action);
+
+    /* Rotate the scene by 90 degrees and back again. We should find that the
+     * preferred size hasn't changed overall.  We call processEvents to check that there
+     * are no outstanding layouting etc */
+    m_subject->appear();
+    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    QSizeF preferredSizeLandscape = m_subject->preferredSize();
+    app->processEvents();
+    QCOMPARE(m_subject->preferredSize(), preferredSizeLandscape);
+
+    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    QSizeF preferredSizePortrait = m_subject->preferredSize();
+    app->processEvents();
+    QCOMPARE(m_subject->preferredSize(), preferredSizePortrait);
+
+    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    QCOMPARE(m_subject->preferredSize(), preferredSizeLandscape);
+    app->processEvents();
+    QCOMPARE(m_subject->preferredSize(), preferredSizeLandscape);
+
+    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    QCOMPARE(m_subject->preferredSize(), preferredSizePortrait);
+    app->processEvents();
+    QCOMPARE(m_subject->preferredSize(), preferredSizePortrait);
+}
+
 
 QTEST_APPLESS_MAIN(Ut_MApplicationMenu)

@@ -220,8 +220,8 @@ void MSceneManagerPrivate::_q_changeGlobalOrientation()
     if (oldOrientation != orientation(angle)) {
         emit q->orientationAboutToChange(q->orientation());
 
-        setSceneWindowGeometries();
         notifyWidgetsAboutOrientationChange();
+        setSceneWindowGeometries();
 
         // emit signal after sending the orientation event to widgets (in case someone
         // would like to connect to the signal and get correct size hints for widgets)
@@ -492,14 +492,16 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
         return;
 
     QPointF p = calculateSceneWindowPosition(window);
-    window->setPos(p);
+    window->setGeometry( QRectF(p, window->preferredSize()) );
 }
 
 void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
 {
     MOrientationChangeEvent event(orientation(angle));
 
-    foreach(QGraphicsItem * item, scene->items()) {
+    QList<QGraphicsItem *> sceneItems = scene->items();
+    for(int i = sceneItems.count() - 1; i >= 0; i--) {
+        QGraphicsItem *item = sceneItems.at(i);
         // event handlers might remove items from the scene
         // so we must check if item it's still there
         if (scene->items().contains(item))

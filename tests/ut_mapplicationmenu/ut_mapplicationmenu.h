@@ -46,7 +46,7 @@ private Q_SLOTS:
     void testClear();
     void testPaint();
     void testEventsPassingThrough();
-
+    void testRotation();
     void actionSlot(bool checked);
 
 private:

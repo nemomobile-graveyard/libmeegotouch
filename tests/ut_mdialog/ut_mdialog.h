@@ -54,6 +54,7 @@ private slots:
     void removeButton();
     void rejectDialog();
     void dismissDialog();
+    void testRotation();
 };
 
 #endif
