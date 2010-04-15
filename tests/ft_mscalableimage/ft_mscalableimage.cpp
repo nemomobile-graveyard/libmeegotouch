@@ -153,16 +153,16 @@ void Ft_MScalableImage::test_construction()
     int center_height = paint_size.height() - 2 * BLOCK_SIZE;
 
     // corners
-    QCOMPARE(isImageBlockColor(image, QRect(0, 0, BLOCK_SIZE, BLOCK_SIZE), COLOR_TOPLEFT), true);
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE + center_width, 0, BLOCK_SIZE, BLOCK_SIZE), COLOR_TOPRIGHT), true);
-    QCOMPARE(isImageBlockColor(image, QRect(0, BLOCK_SIZE + center_height, BLOCK_SIZE, BLOCK_SIZE), COLOR_BOTTOMLEFT), true);
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE + center_width, BLOCK_SIZE + center_height, BLOCK_SIZE, BLOCK_SIZE), COLOR_BOTTOMRIGHT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(2, 2, BLOCK_SIZE-2, BLOCK_SIZE-2), COLOR_TOPLEFT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE + center_width + 2, 2, BLOCK_SIZE-2, BLOCK_SIZE-2), COLOR_TOPRIGHT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(2, BLOCK_SIZE + center_height + 2, BLOCK_SIZE-2, BLOCK_SIZE-2), COLOR_BOTTOMLEFT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE + center_width + 2, BLOCK_SIZE + center_height + 2, BLOCK_SIZE - 2, BLOCK_SIZE - 2), COLOR_BOTTOMRIGHT), true);
 
     // edges
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE, 0, center_width, BLOCK_SIZE), COLOR_TOP), true);
-    QCOMPARE(isImageBlockColor(image, QRect(0, BLOCK_SIZE, BLOCK_SIZE, center_height), COLOR_LEFT), true);
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE, BLOCK_SIZE + center_height, center_width, BLOCK_SIZE), COLOR_BOTTOM), true);
-    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE + center_width, BLOCK_SIZE, BLOCK_SIZE, center_height), COLOR_RIGHT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE+2, 2, center_width-2, BLOCK_SIZE-2), COLOR_TOP), true);
+    QCOMPARE(isImageBlockColor(image, QRect(2, BLOCK_SIZE+2, BLOCK_SIZE-2, center_height-2), COLOR_LEFT), true);
+    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE+2, BLOCK_SIZE + center_height + 2, center_width-2, BLOCK_SIZE-2), COLOR_BOTTOM), true);
+    QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE + center_width + 2, BLOCK_SIZE + 2, BLOCK_SIZE-2, center_height-2), COLOR_RIGHT), true);
 
     // center
     QCOMPARE(isImageBlockColor(image, QRect(BLOCK_SIZE, BLOCK_SIZE, center_width, center_height), COLOR_CENTER), true);
