@@ -204,7 +204,7 @@ void MListViewPrivate::connectPannableViewport()
         connect(pannableViewport, SIGNAL(viewportSizeChanged(QSizeF)), SLOT(viewportSizeChanged(QSizeF)));
 
         viewportTopLeft = pannableViewport->position() - QPointF(0, itemHeight);
-        viewportVisibleHeight = 0;
+        viewportVisibleHeight = pannableViewport->size().height();
     }
 }
 
