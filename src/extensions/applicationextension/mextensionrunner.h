@@ -84,7 +84,7 @@ Q_SIGNALS:
     /*!
      * \brief A signal that is emitted when item is shown/hidden
      */
-    void visibilityChanged(bool visibility);
+    void visibilityChanged();
 
 protected slots:
     /*!
