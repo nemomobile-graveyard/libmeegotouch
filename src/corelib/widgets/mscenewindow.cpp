@@ -34,15 +34,15 @@
 M_REGISTER_WIDGET_NO_CREATE(MSceneWindow)
 
 MSceneWindowPrivate::MSceneWindowPrivate()
+    : windowType(MSceneWindow::PlainSceneWindow),
+      policy(MSceneWindow::KeepWhenDone),
+      managedManually(false),
+      shown(false),
+      dismissed(false),
+      effect(0),
+      appearanceAnimation(0),
+      disappearanceAnimation(0)
 {
-    managedManually = false;
-    shown = false;
-    dismissed = false;
-    policy = MSceneWindow::KeepWhenDone;
-    effect = NULL;
-    windowType = MSceneWindow::PlainSceneWindow;
-    appearanceAnimation = 0;
-    disappearanceAnimation = 0;
 }
 
 MSceneWindow::MSceneWindow(QGraphicsItem *parent) :
