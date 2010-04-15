@@ -85,12 +85,12 @@ The MeeGo Touch UI locale system uses the following main settings:
   <tr>
   <td>/meegotouch/i18n/lc_time</td>
   <td>for date, time, and calendar</td>
-  <td>ar@calendar=islamic</td>
+  <td>ar\@calendar=islamic</td>
   </tr>
   <tr>
   <td>/meegotouch/i18n/lc_collate</td>
   <td>for sorting</td>
-  <td>de_DE@collation=phonebook</td>
+  <td>de_DE\@collation=phonebook</td>
   </tr>
   <tr>
   <td>/meegotouch/i18n/lc_numeric</td>
@@ -100,7 +100,7 @@ The MeeGo Touch UI locale system uses the following main settings:
   <tr>
   <td>/meegotouch/i18n/lc_monetary</td>
   <td>for formatting of amounts of money</td>
-  <td>fi_FI@currency=EUR</td>
+  <td>fi_FI\@currency=EUR</td>
   </tr>
 </table>
 
@@ -119,18 +119,18 @@ sorting, number formatting, and currency formatting if the more
 specific settings are empty.
 
 “LcTime” selects how time and date are formatted. If it is left empty
-the value of “Language” is used. Examples: \c ar@calendar=islamic  means
+the value of “Language” is used. Examples: \c ar\@calendar=islamic  means
 to format date and time the Arabic way using Islamic calendar,
-\c ar@calendar=gregorian  would use Arabic formatting but with Gregorian
+\c ar\@calendar=gregorian  would use Arabic formatting but with Gregorian
 calendar, \c fi_FI  would use Finnish formatting rules for time and
 date.
 
 “LcCollate” selects how textual data is sorted. If it is left empty
-the value of “Language” is used. Examples: \c de_DE@collation=phonebook
+the value of “Language” is used. Examples: \c de_DE\@collation=phonebook
 sorts the way German phone books are sorted,
-\c de_DE@collation=standard  (or \c de_DE ) sorts the “normal” way German
-dictionaries are sorted. \c zh_CN@collation=pinyin  sorts Chinese
-according to the pinyin phonetics, \c zh_CN@collation=stroke  sorts
+\c de_DE\@collation=standard  (or \c de_DE ) sorts the “normal” way German
+dictionaries are sorted. \c zh_CN\@collation=pinyin  sorts Chinese
+according to the pinyin phonetics, \c zh_CN\@collation=stroke  sorts
 Chinese according to the stroke count of the characters.
 
 “LcNumeric” selects how numbers are formatted. If it is left empty the
