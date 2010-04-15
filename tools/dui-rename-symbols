@@ -25,6 +25,7 @@ perl -p -i \
   $SRC_FILES $CAMEL_HEADER_FILES $BUILD_FILES
 
 perl -p -i \
+  -e 's/CONFIG\s*\+=\s*dui/CONFIG \+= meegotouch/g;' \
   -e 's/dui/m/g;' \
   -e 's/DUI/M/g;' \
   $PRO_FILES
