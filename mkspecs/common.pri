@@ -74,6 +74,10 @@ include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
     DEFINES += M_SHADER_BINARY_DIR=\\\"\"$$M_SHADER_BINARY_DIR\"\\\"
 }
 
+unix {
+   DEFINES += CACHEDIR=\\\"\"/var/cache/meegotouch/\"\\\"
+}
+
 # Compiler configuration for all subprojects in libm
 
 !win32-msvc*:QMAKE_CXXFLAGS += -g
