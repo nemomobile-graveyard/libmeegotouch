@@ -805,8 +805,8 @@ The primary (single short tap) action of the element should not be duplicated in
     </message>
     <message id="xx_image_page_info">
         <location filename="../imagepage.cpp" line="146"/>
-        <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired.</source>
-        <translation>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired.</translation>
+        <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired. As an example, pinch gesture can be used in this page to zoom the image.</source>
+        <translation>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired. As an example, pinch gesture can be used in this page to zoom the image.</translation>
     </message>
     <message id="xx_sample template">
         <location filename="../templatepage.cpp" line="124"/>

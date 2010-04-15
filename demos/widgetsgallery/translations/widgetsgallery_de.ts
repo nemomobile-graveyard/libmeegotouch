@@ -806,7 +806,7 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
     </message>
     <message id="xx_image_page_info">
         <location filename="../imagepage.cpp" line="146"/>
-        <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired.</source>
+        <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired. As an example, pinch gesture can be used in this page to zoom the image.</source>
         <translation>“Image” erlaubt das Positionieren von Bildern auf die Benutzeroberfläche. Bilder sind gewöhnlich nicht-interaktive Elemente. Jedoch können auch verschiedene einfache und mehrfache Berührungsaktionen zu einer Bildkomponente hinzugefügt werden, falls gewünscht.</translation>
     </message>
     <message id="xx_sample template">

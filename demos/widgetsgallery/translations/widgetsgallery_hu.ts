@@ -1119,7 +1119,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     </message>
     <message id="xx_image_page_info">
         <location filename="../imagepage.cpp" line="146"/>
-        <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired.</source>
+        <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired. As an example, pinch gesture can be used in this page to zoom the image.</source>
         <translation>A felhasználó a kép segítségével külömböző képeket jeleníthet meg. A képek általában passzív elemek, bár szükség esetén reagálhatnak egyszerű érintésszerű felhasználói bemenetetre.</translation>
     </message>
     <message id="xx_label_checkboxes">
