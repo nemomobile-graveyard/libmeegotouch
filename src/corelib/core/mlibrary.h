@@ -30,7 +30,7 @@
 #define M_LIBRARY \
     static const MLibrary g_Library(M_LIBRARY_NAME);
 #elif !defined M_APPLICATION_NAME
-#error "You must have CONFIG += m in your .pro file in order to register a library!" \
+#error "You must have CONFIG += meegotouch in your .pro file in order to register a library!" \
 "If the library you're developing doesn't provide any stylesheets then you shouldn't include MLibrary header!"
 #endif
 

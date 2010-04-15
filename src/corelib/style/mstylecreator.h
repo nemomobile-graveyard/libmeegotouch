@@ -31,7 +31,7 @@
 #define M_REGISTER_STYLE(STYLE) \
     static const MStyleCreator<STYLE> gStyleCreator(#STYLE, M_APPLICATION_NAME, M::Application);
 #else
-#error "You must have CONFIG += m in your .pro file in order to register styles, if you do not have any style classes, please do not include MStyleCreator header!"
+#error "You must have CONFIG += meegotouch in your .pro file in order to register styles, if you do not have any style classes, please do not include MStyleCreator header!"
 
 #endif
 
