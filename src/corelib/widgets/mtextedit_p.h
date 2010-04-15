@@ -42,6 +42,8 @@ public:
     MTextEditPrivate();
     virtual ~MTextEditPrivate();
 
+    void init();
+
     QTextCursor *cursor() const;
     bool moveCursor(QTextCursor::MoveOperation moveOp,
                     QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor, int n = 1);

@@ -81,12 +81,31 @@ public:
 
     /*!
      * \brief Default constructor. Creates a textedit field with a specified text and line mode.
-     * \param type widget type (single line or multiline)
+     * \param type widget type (single line or multiline).
      * \param text optional text.
      * \param parent optional parent.
      */
     explicit MTextEdit(MTextEditModel::LineMode type = MTextEditModel::SingleLine,
                          const QString &text = QString(), QGraphicsItem *parent = 0);
+    /*!
+     * \brief Creates a textedit field with a specified line mode, model and parent.
+     * \param type widget type (single line or multiline).
+     * \param model the model to be used.
+     * \param parent the parent of the text edit.
+     */
+    MTextEdit(MTextEditModel *model, QGraphicsItem *parent);
+
+    //! \internal
+    /*!
+     * \brief Creates a textedit field with a specified line mode, private instance, model and parent.
+     * \param type widget type (single line or multiline).
+     * \param dd private instance to be used.
+     * \param model the model to be used.
+     * \param parent the parent of the text edit.
+     */
+    MTextEdit(MTextEditPrivate *dd, MTextEditModel *model,
+              QGraphicsItem *parent);
+    //! \internal_end
 
     /*!
       \brief Destructor

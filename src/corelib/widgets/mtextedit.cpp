@@ -97,6 +97,35 @@ MTextEditPrivate::~MTextEditPrivate()
     }
 }
 
+void MTextEditPrivate::init()
+{
+    Q_Q(MTextEdit);
+    Q_ASSERT_X((q->model() != 0), "MTextEditPrivate::init()", "No model found!");
+
+    if (!q->document()) {
+        q->model()->setDocument(new QTextDocument(q->model()));
+    }
+
+    if (!q->hasCursor()) {
+        q->model()->setCursor(new QTextCursor(q->document()));
+    }
+
+    QTextOption option = q->document()->defaultTextOption();
+    option.setTextDirection(q->layoutDirection());
+
+    if (q->model()->line() == MTextEditModel::SingleLine) {
+        option.setWrapMode(QTextOption::NoWrap);
+        q->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+    } else {
+        //Set to expand vertically only in multiline mode
+        q->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+    }
+
+    q->document()->setDefaultTextOption(option);
+    q->model()->cursor()->movePosition(QTextCursor::End);
+    q->setFocusPolicy(Qt::ClickFocus);
+    q->setFlag(QGraphicsItem::ItemAcceptsInputMethod, true);
+}
 
 QTextCursor *MTextEditPrivate::cursor() const
 {
@@ -585,7 +614,6 @@ bool MTextEditPrivate::setCursorPosition(int index)
     return val;
 }
 
-
 /*!
  * \brief Returns true if given position is on pre-edit string.
  * Note: preedit starting position is not considered to be on top
@@ -736,30 +764,28 @@ MTextEdit::MTextEdit(MTextEditModel::LineMode type, const QString &text,
                          QGraphicsItem *parent)
     : MWidgetController(new MTextEditPrivate, new MTextEditModel, parent)
 {
-    setFlag(QGraphicsItem::ItemAcceptsInputMethod, true);
+    Q_D(MTextEdit);
 
     model()->setDocument(new QTextDocument(text, this->model()));
-    QTextCursor *cursor = new QTextCursor(document());
-    model()->setCursor(cursor);
     model()->setLine(type);
-
-    QTextOption option = document()->defaultTextOption();
-    option.setTextDirection(layoutDirection());
-
-    if (type == MTextEditModel::SingleLine) {
-        option.setWrapMode(QTextOption::NoWrap);
-        setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    } else {
-        setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);  //Set to expand vertically only in multiline mode
-    }
-
-    document()->setDefaultTextOption(option);
-
-    cursor->movePosition(QTextCursor::End);
-
-    setFocusPolicy(Qt::ClickFocus);
+    d->init();
 }
 
+MTextEdit::MTextEdit(MTextEditModel *model, QGraphicsItem *parent)
+    : MWidgetController(new MTextEditPrivate, model, parent)
+{
+    Q_D(MTextEdit);
+
+    d->init();
+}
+
+MTextEdit::MTextEdit(MTextEditPrivate *dd, MTextEditModel *model, QGraphicsItem *parent)
+    : MWidgetController(dd, model, parent)
+{
+    Q_D(MTextEdit);
+
+    d->init();
+}
 
 MTextEdit::~MTextEdit()
 {
