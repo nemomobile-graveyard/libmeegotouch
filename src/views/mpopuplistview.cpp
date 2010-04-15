@@ -45,6 +45,8 @@ void MPopupListViewPrivate::init()
     list->setSelectionMode(MList::SingleSelection);
     q->contentsLayout()->insertItem(0, list);
 
+    contentsViewport->setObjectName("MPopupListContentsViewport");
+
     QObject::connect(list, SIGNAL(itemClicked(QModelIndex)), controller, SLOT(click(QModelIndex)));
     QObject::connect(controller, SIGNAL(scrollToIndex(QModelIndex)),  q, SLOT(scrollTo(QModelIndex)));
 }
