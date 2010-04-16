@@ -133,7 +133,7 @@ void ut_mvideowidget::testBogusOpen()
 void ut_mvideowidget::testOpen()
 {
     QSignalSpy videoReadySpy(m_subject, SIGNAL(videoReady()));
-    m_subject->open(QString("test.mov"));
+    m_subject->open(QString(qApp->applicationDirPath() + "/test.mov"));
     waitVideoReady();
 
     QCOMPARE(videoReadySpy.count(), 1);
@@ -144,7 +144,7 @@ void ut_mvideowidget::testOpen()
 
 void ut_mvideowidget::testPlayback()
 {
-    m_subject->open(QString("test.mov"));
+    m_subject->open(QString(qApp->applicationDirPath() + "/test.mov"));
     //m_subject->setMuted(true);
     waitVideoReady();
 
@@ -198,7 +198,7 @@ void ut_mvideowidget::testPlayback()
 
 void ut_mvideowidget::testVolumeControl()
 {
-    m_subject->open(QString("test.mov"));
+    m_subject->open(QString(qApp->applicationDirPath() + "/test.mov"));
     waitVideoReady();
 
     //mute
@@ -216,7 +216,7 @@ void ut_mvideowidget::testVolumeControl()
 
 void ut_mvideowidget::testPositionControl()
 {
-    m_subject->open(QString("test.mov"));
+    m_subject->open(QString(qApp->applicationDirPath() + "/test.mov"));
     waitVideoReady();
 
     //seeking when playing
