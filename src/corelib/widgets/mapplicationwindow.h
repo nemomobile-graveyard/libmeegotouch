@@ -62,6 +62,16 @@ class MOnDisplayChangeEvent;
    In contrast to MWindow, MApplicationWindow already contains a QGraphicsScene and MSceneManager,
    so that orientation changes and in-scene windows such as MDialog and MApplicationPage windows are
    automatically managed.
+
+   \section MApplicationWindowFullScreenMode Full screen mode
+
+   When an application window is in full screen mode (see QWidget::showFullScreen())
+   it loses its status bar. To have the status bar again you have to go back to normal mode
+   (see QWidget::Normal()).
+
+   Please note that the full screen mode of an application window is orthogonal to the
+   presence of the navigation bar and navigation controls (home button and escape button).
+   The presence of those is set via MApplicationPage::setComponentsDisplayMode().
   */
 class M_EXPORT MApplicationWindow : public MWindow
 {
