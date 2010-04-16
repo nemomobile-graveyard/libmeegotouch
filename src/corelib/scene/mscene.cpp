@@ -247,7 +247,7 @@ bool MScenePrivate::eventEmulatePinch(QEvent* event)
         touchList.append(emuPoint2);
 
         QTouchEvent touchEvent(touchEventType, QTouchEvent::TouchPad, Qt::NoModifier, touchPointState, touchList);
-        QApplication::sendEvent(q->views()[0]->viewport(), &touchEvent);
+        QApplication::sendEvent(q, &touchEvent);
         q->update();
         return true;
     }
@@ -323,7 +323,7 @@ bool MScenePrivate::eventEmulatePan(QEvent* event)
         touchList.append(emuPoint2);
 
         QTouchEvent touchEvent(touchEventType, QTouchEvent::TouchPad, Qt::NoModifier, touchPointState, touchList);
-        QApplication::sendEvent(q->views()[0]->viewport(), &touchEvent);
+        QApplication::sendEvent(q, &touchEvent);
         event->accept();
         q->update();
         return true;
