@@ -35,7 +35,7 @@
 #include <QStringListModel>
 #include <MImageWidget>
 #include <QDir>
-#include <QDebug>
+#include <MDebug>
 
 static const int ImageSize = 64;
 
@@ -167,6 +167,10 @@ void SpinnerPage::timeout()
         imagesDir.setNameFilters(QStringList() << "*.png");
 
         QStringList imageContacts = imagesDir.entryList(QDir::Files);
+        if(imageContacts.isEmpty()) {
+            mWarning("SpinnerPage") << "SpinnerPage - Sample image directory does not contain any .png files:" << contactsDir;
+            return;
+        }
 
         MImageWidget *image = new MImageWidget(container->centralWidget());
         image->setPixmap(QPixmap(contactsDir + QDir::separator() + imageContacts[imageContainerPolicy->count() % imageContacts.size()]));
