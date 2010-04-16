@@ -226,6 +226,7 @@ void MSliderIndicator::setImage(const QString &id)
     if (!id.isEmpty()) {
         pixmap = MTheme::pixmapCopy(id);
         image->setPixmap(*pixmap);
+        delete pixmap;
     } else {
         pixmap = new QPixmap();
         image->setPixmap(*pixmap);
