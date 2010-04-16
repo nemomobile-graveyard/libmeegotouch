@@ -33,6 +33,7 @@ Description: MeeGo Touch views library
 Package: libmeegotouch-bin
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Replaces: libdui0
 Description: MeeGo Touch binary files
  Binary files of MeeGo Touch framework
 
