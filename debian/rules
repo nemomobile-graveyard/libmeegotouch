@@ -114,7 +114,7 @@ ifneq (0,$(MAKEDOCS))
 	cd $(BUILD_DIR) && make $(PARALLEL_MAKEFLAGS) doc
 endif
 
-	cd $(BUILD_DIR) && INSTALL_ROOT=$(CURDIR)/debian/tmp make $(PARALLEL_MAKEFLAGS) install
+	cd $(BUILD_DIR) && INSTALL_ROOT=$(CURDIR)/debian/tmp GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1 make $(PARALLEL_MAKEFLAGS) install
 
 	install -m 644 -D -p $(BUILD_DIR)/demos/widgetsgallery/translations/widgetsgallery.ts $(CURDIR)/debian/tmp/usr/share/doc/meegotouch-demos-widgetsgallery-l10n-engineering-english/widgetsgallery.ts
 

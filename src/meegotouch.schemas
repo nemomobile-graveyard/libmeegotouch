@@ -1,0 +1,71 @@
+<gconfschemafile>
+  <schemalist>
+    <schema>
+      <key>/schemas/meegotouch/theme/name</key>
+      <applyto>/meegotouch/theme/name</applyto>
+      <owner>libmeegotouch</owner>
+      <type>string</type>
+      <default>devel</default>
+      <locale name="C">
+        <short></short>
+        <long></long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/meegotouch/i18n/language</key>
+      <applyto>/meegotouch/i18n/language</applyto>
+      <owner>libmeegotouch</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short></short>
+        <long></long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/meegotouch/i18n/lc_time</key>
+      <applyto>/meegotouch/i18n/lc_time</applyto>
+      <owner>libmeegotouch</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short></short>
+        <long></long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/meegotouch/i18n/lc_collate</key>
+      <applyto>/meegotouch/i18n/lc_collate</applyto>
+      <owner>libmeegotouch</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short></short>
+        <long></long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/meegotouch/i18n/lc_numeric</key>
+      <applyto>/meegotouch/i18n/lc_numeric</applyto>
+      <owner>libmeegotouch</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short></short>
+        <long></long>
+      </locale>
+    </schema>
+    <schema>
+      <key>/schemas/meegotouch/i18n/lc_monetary</key>
+      <applyto>/meegotouch/i18n/lc_monetary</applyto>
+      <owner>libmeegotouch</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short></short>
+        <long></long>
+      </locale>
+    </schema>
+  </schemalist>
+</gconfschemafile>
+
