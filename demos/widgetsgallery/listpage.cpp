@@ -345,7 +345,11 @@ QSettings *themeFile(const QString &theme)
     }
 
     // step 3: we need to have X-M-Metatheme group in index.theme
-    if (!themeIndexFile->childGroups().contains(QString("X-M-Metatheme"))) {
+
+    // remove the X-DUI-Metatheme statement again when duitheme is phased out.
+    if ((!themeIndexFile->childGroups().contains(QString("X-M-Metatheme")))
+        &&(!themeIndexFile->childGroups().contains(QString("X-DUI-Metatheme"))))
+    {
         delete themeIndexFile;
         return NULL;
     }
@@ -380,6 +384,14 @@ QList<ThemeInfo> findAvailableThemes()
         info.theme = dir.baseName();
         info.themeName = themeIndexFile->value("Desktop Entry/Name", "").toString();
         info.themeIcon = themeIndexFile->value("X-M-Metatheme/X-Icon", "").toString();
+
+        // remove this again, when duitheme is phased out
+        if ( info.themeIcon.isEmpty() )
+        {
+            info.themeIcon = themeIndexFile->value("X-DUI-Metatheme/X-Icon", "").
+                toString();
+        }
+        // end remove
 
         // ok it's a valid theme. Add it to list of themes
         themes.append(info);
