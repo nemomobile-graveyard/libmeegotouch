@@ -1,6 +1,14 @@
-libmeegotouch (0.20.0~6) unstable; urgency=low
+libmeegotouch (0.20.0-1) unstable; urgency=low
 
-  * New version [UNRELEASED]
+  * New version
+  * Fixes: NB#163725 - The text in DuiTextEdit is rendered on top of DuiDialog title pane when panning
+  * Fixes: NB#161484 - wrong application title in the application switcher
+  * Fixes: NB#163411 - widgetsgallery : scrollbar doesn't change position on switch to left-to-right like arabic
+  * Fixes: NB#162723 - Missing icons in notifications
+  * Fixes: NB#161300 - DuiLabel text set by setText is not displayed
+  * Fixes: NB#163457 - Navigation bar has wrong size after using virtual keyboard
+  * Fixes: NB#164194 - MListView calls resize() when the parent changes
+  * Fixes: NB#162907 - DuiList emits panningStopped/panningStarted -signals wildly when list is panned down  
   * Fixes: NB#163347 - scrollTo is not working for DuiPopupList
   * Fixes: NB#161404 - Service framework call causes caller to crash if caller doesn't have applicationwindow
   * Fixes: NB#162495 - QtMaemo6Style treats a QWidget's hide() same as close()
@@ -30,7 +38,7 @@ libmeegotouch (0.20.0~6) unstable; urgency=low
   * Fixes: NB#161141 - DuiList shows overlapping items
   * Fixes: NB#158297 - Dui application crashes attempt to read CSS entry "background-color: none;"
 
- -- Tomas Junnonen <tomas.junnonen@nokia.com>  Tue, 13 Apr 2010 11:00:00 +0200
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 16 Apr 2010 11:10:00 +0200
 
 libdui (0.19.11-1) unstable; urgency=low
 
