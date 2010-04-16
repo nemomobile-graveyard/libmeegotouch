@@ -171,7 +171,12 @@ void MDialogViewPrivate::createButtonBox()
 void MDialogViewPrivate::createTitleBar()
 {
     QGraphicsLinearLayout *layout = createLayout(Qt::Horizontal);
-    titleBar = new MStylableWidget;
+
+
+    // OBS: Need any simple class whose styling works.
+    //      For some reason neither MWidgetController nor MStylableWidget get its
+    //      style loaded.
+    titleBar = new MLabel;
     titleBar->setObjectName("MDialogTitleBar");
     titleBar->setLayout(layout);
     titleBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
