@@ -48,7 +48,7 @@ void MPopupListViewPrivate::init()
     contentsViewport->setObjectName("MPopupListContentsViewport");
 
     QObject::connect(list, SIGNAL(itemClicked(QModelIndex)), controller, SLOT(click(QModelIndex)));
-    QObject::connect(controller, SIGNAL(scrollToIndex(QModelIndex)),  q, SLOT(scrollTo(QModelIndex)));
+    QObject::connect(list, SIGNAL(displayEntered()), q, SLOT(_q_scrollOnFirstAppearance()));
 }
 
 void MPopupListViewPrivate::updateCell(const QModelIndex& index, MWidget * cell) const
@@ -86,6 +86,13 @@ void MPopupListViewPrivate::updateCell(const QModelIndex& index, MWidget * cell)
     }
 }
 
+void MPopupListViewPrivate::_q_scrollOnFirstAppearance()
+{
+    Q_Q(MPopupListView);
+    list->scrollTo(q->model()->scrollToIndex());
+    QObject::disconnect(list, SIGNAL(displayEntered()), q, SLOT(_q_scrollOnFirstAppearance()));
+}
+
 MPopupListView::MPopupListView(MPopupList *controller)
     : MDialogView(* new MPopupListViewPrivate, controller)
 {
@@ -118,6 +125,8 @@ void MPopupListView::updateData(const QList<const char *>& modifications)
             d->list->setItemModel(model()->itemModel());
         else if (member == MPopupListModel::SelectionModel)
             d->list->setSelectionModel(model()->selectionModel());
+        else if (member == MPopupListModel::ScrollToIndex)
+            d->list->scrollTo(model()->scrollToIndex());
     }
 }
 
@@ -132,8 +141,7 @@ void MPopupListView::setupModel()
 
 void MPopupListView::scrollTo(const QModelIndex &index) const
 {
-    Q_D(const MPopupListView);
-    d->list->scrollTo(index, MList::EnsureVisibleHint);
+    const_cast<MPopupListModel*>(model())->setScrollToIndex(index);
 }
 
 M_REGISTER_VIEW_NEW(MPopupListView, MPopupList)

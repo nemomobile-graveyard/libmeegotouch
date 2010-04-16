@@ -149,3 +149,4 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mcontentitem.cpp \
     $$WIDGETS_SRC_DIR/mcontentitemmodel.cpp \
     $$WIDGETS_SRC_DIR/mlistmodel.cpp \
+    $$WIDGETS_SRC_DIR/mpopuplistmodel.cpp \

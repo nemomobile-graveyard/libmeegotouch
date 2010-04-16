@@ -87,6 +87,7 @@ void MPopupList::scrollTo(const QModelIndex &index)
 {
     if (index.model() != itemModel()) return;
     emit scrollToIndex(index);
+    model()->setScrollToIndex(index);
 }
 
 void MPopupList::click(const QModelIndex &index)

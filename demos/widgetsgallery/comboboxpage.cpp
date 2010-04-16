@@ -66,6 +66,7 @@ void ComboBoxPage::createContent()
     comboBox1 = new MComboBox;
     comboBox1->setIconID("Icon-pictures");
     comboBox1->addItems(list);
+    comboBox1->setCurrentIndex(50);
 
     comboBox2 = new MComboBox;
     comboBox2->setIconID("Icon-pictures");

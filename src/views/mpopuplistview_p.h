@@ -51,6 +51,7 @@ public:
     virtual void init();
 
     virtual void updateCell(const QModelIndex& index, MWidget * cell) const;
+    virtual void _q_scrollOnFirstAppearance();
 
     MPopupList*   controller;
 

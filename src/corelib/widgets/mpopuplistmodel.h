@@ -49,6 +49,12 @@ class M_EXPORT MPopupListModel : public MDialogModel
         \brief selectionModel keeps track of itemModel's selected items
     */
     M_MODEL_PROPERTY(QPointer<QItemSelectionModel>, selectionModel, SelectionModel, true, 0)
+
+    /*!
+        \property MPopupListModel::scrollToIndex
+        \brief this property is used to tell the view to scroll to the given item index
+    */
+    M_MODEL_PROPERTY(QModelIndex, scrollToIndex, ScrollToIndex, false, QModelIndex())
 };
 
 #endif

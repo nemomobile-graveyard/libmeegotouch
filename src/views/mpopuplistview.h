@@ -81,6 +81,8 @@ protected:
 private:
     Q_DISABLE_COPY(MPopupListView)
     Q_DECLARE_PRIVATE(MPopupListView)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_scrollOnFirstAppearance())
 };
 
 #endif
