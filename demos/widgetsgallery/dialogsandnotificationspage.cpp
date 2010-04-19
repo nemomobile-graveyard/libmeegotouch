@@ -32,7 +32,7 @@
 #include <QDebug>
 #include <MContainer>
 #include <MLinearLayoutPolicy>
-
+#include <MWidget>
 #include <QGraphicsLinearLayout>
 
 DialogsAndNotificationsPage::DialogsAndNotificationsPage()
@@ -265,7 +265,7 @@ void DialogsAndNotificationsPage::openMessageBox()
 void DialogsAndNotificationsPage::showEventBanner()
 {
     MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Event);
-    infoBanner->setImageID("icon-l-email");
+    infoBanner->setImageID("icon-m-content-email");
     infoBanner->setBodyText(
         //% "<b>Ida Taipale</b><br/>Have you seen my dog?"
         qtTrId("xx_dialogs_and_notifications_event_banner"));
@@ -278,7 +278,7 @@ void DialogsAndNotificationsPage::showEventBanner()
 void DialogsAndNotificationsPage::showInformationBanner()
 {
     MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
-    infoBanner->setImageID("icon-l-help");
+    infoBanner->setImageID("icon-m-startup-help");
     infoBanner->setBodyText(
         //% "<b>Battery is running low</b>"
         qtTrId("xx_dialogs_and_notifications_information_banner"));
@@ -290,7 +290,7 @@ void DialogsAndNotificationsPage::showInformationBanner()
 void DialogsAndNotificationsPage::showSystemInformationBanner()
 {
     MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
-    infoBanner->setImageID("icon-l-office-tools");
+    infoBanner->setImageID("icon-m-telephony-call-answer");
     infoBanner->setBodyText(
         //% "<b>Incoming call</b>"
         qtTrId("xx_dialogs_and_notifications_system_information_banner"));
@@ -302,6 +302,8 @@ void DialogsAndNotificationsPage::showSystemInformationBanner()
     QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
 
+
+
 void DialogsAndNotificationsPage::populateLayout(MLinearLayoutPolicy *layoutPolicy)
 {
     // Dialogs
@@ -310,6 +312,8 @@ void DialogsAndNotificationsPage::populateLayout(MLinearLayoutPolicy *layoutPoli
     QGraphicsLinearLayout *dialogsLayout = new QGraphicsLinearLayout(Qt::Vertical, dialogsContainer->centralWidget());
 
     layoutPolicy->addItem(dialogsContainer);
+
+
 
     button1 = new MButton(centralWidget());
     connect(button1, SIGNAL(clicked()), this, SLOT(openQuestionDialog()));
@@ -357,6 +361,9 @@ void DialogsAndNotificationsPage::populateLayout(MLinearLayoutPolicy *layoutPoli
     button7 = new MButton(centralWidget());
     button7->connect(button7, SIGNAL(clicked()), this, SLOT(showSystemInformationBanner()));
     notificationsLayout->addItem(button7);
+
+
+    //notificationsLayout->addItem(button8);
 }
 
 void DialogsAndNotificationsPage::retranslateUi()
@@ -393,6 +400,7 @@ void DialogsAndNotificationsPage::retranslateUi()
     button6->setText(qtTrId("xx_dialogs_and_notifications_label_information_banner"));
     //% "System Information Banner"
     button7->setText(qtTrId("xx_dialogs_and_notifications_label_system_information_banner"));
+
 }
 
 void DialogsAndNotificationsPage::setDialogProgressIndicatorVisible(bool visible)

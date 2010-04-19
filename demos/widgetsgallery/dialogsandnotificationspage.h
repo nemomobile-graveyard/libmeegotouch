@@ -77,6 +77,7 @@ private:
     MButton *button5;
     MButton *button6;
     MButton *button7;
+
     MButton *buttonStackedDialogs;
     MButton *buttonSystemModalDialog;
     MButton *buttonDialogWithProgressIndicator;
