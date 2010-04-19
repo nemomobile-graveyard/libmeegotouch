@@ -480,7 +480,8 @@ QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *window)
 {
     Q_Q(MSceneManager);
 
-    QRectF availableSceneRect(QPointF(0,0), q->visibleSceneSize(orientation(angle)));
+    QSizeF sceneSize = q->visibleSceneSize(orientation(angle));
+    QRectF availableSceneRect(QPointF(0,0), sceneSize);
 
     if (statusBar) {
         const MSceneWindow::WindowType type = window->windowType();
@@ -490,7 +491,7 @@ QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *window)
             qreal statusBarBottomEdge = statusBar->y() +
                 statusBar->effectiveSizeHint(Qt::PreferredSize).height();
 
-            if ((statusBarBottomEdge + windowSize.height()) < availableSceneRect.height()) {
+            if ((statusBarBottomEdge + windowSize.height()) < sceneSize.height()) {
                 // Window should still fit within the remaining scene space when shifted
                 // downwards due to the status bar presence
                 availableSceneRect.setY(statusBarBottomEdge);
