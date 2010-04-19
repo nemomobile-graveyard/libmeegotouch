@@ -1,3 +1,9 @@
+libmeegotouch (0.20.0-2) unstable; urgency=low
+
+  * Packaging changes, removed symlink from mthemedaemon to duithemedaemon
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 19 Apr 2010 14:48:00 +0200
+  
 libmeegotouch (0.20.0-1) unstable; urgency=low
 
   * New version
