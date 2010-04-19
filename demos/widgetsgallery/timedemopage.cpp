@@ -21,6 +21,9 @@ void TimedemoPage::createBenchmarks(Timedemo *timedemo)
 
     benchmark = QSharedPointer<TimedemoBenchmark>(new StaticPageBenchmark(this, timedemo, M::Angle90));
     m_benchmarks.append(benchmark);
+
+    benchmark = QSharedPointer<TimedemoBenchmark>(new PanningBenchmark(this, timedemo, M::Angle90));
+    m_benchmarks.append(benchmark);
 }
 
 QVector<QSharedPointer<TimedemoBenchmark> > TimedemoPage::benchmarks()
