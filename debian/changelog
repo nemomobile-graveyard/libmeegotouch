@@ -1,3 +1,9 @@
+libmeegotouch (0.20.1~1) unstable; urgency=low
+
+  * New version [UNRELEASED]
+  
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 19 Apr 2010 17:57:00 +0200
+
 libmeegotouch (0.20.0-1) unstable; urgency=low
 
   * New version
