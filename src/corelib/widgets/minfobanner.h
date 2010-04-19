@@ -42,10 +42,12 @@ class MInfoBannerPrivate;
     \section MInfoBannerExamples Examples
         Here's how to launch an event banner from code:
         \code
-            MInfoBanner* infoBanner = new MInfoBanner(MInfoBanner::Event,
-                                                    "Image-ida",
-                                                    "<b>Ida Taipale</b><br/>Have you seen my dog?",
-                                                    "Icon-new-SMS");
+            MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Event);
+            infoBanner->setImageID("icon-l-email");
+            infoBanner->setBodyText(
+                //% "<b>Ida Taipale</b><br/>Have you seen my dog?"
+                qtTrId("xx_dialogs_and_notifications_event_banner"));
+                infoBanner->setIconID("Icon-new-SMS");
             connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
             infoBanner->appear(MSceneWindow::DestroyWhenDone);
             QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
@@ -53,10 +55,11 @@ class MInfoBannerPrivate;
 
         Here's how to launch an information banner from code:
         \code
-            MInfoBanner* infoBanner = new MInfoBanner(MInfoBanner::Information,
-                                                    "Icon-close",
-                                                    "<b>Battery is running low</b>",
-                                                    "");
+            MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
+            infoBanner->setImageID("icon-l-help");
+            infoBanner->setBodyText(
+                //% "<b>Battery is running low</b>"
+                qtTrId("xx_dialogs_and_notifications_information_banner"));
             connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
             infoBanner->appear(MSceneWindow::DestroyWhenDone);
             QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
@@ -64,11 +67,13 @@ class MInfoBannerPrivate;
 
         Here's how to launch an interactive information banner from code:
         \code
-            MInfoBanner* infoBanner = new MInfoBanner(MInfoBanner::Information,
-                                                    "icon-l-chat",
-                                                    "<b>Incoming call</b>",
-                                                    "");
-            infoBanner->setButtonText("Accept");
+            MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
+            infoBanner->setImageID("icon-l-office-tools");
+            infoBanner->setBodyText(
+                //% "<b>Incoming call</b>"
+                qtTrId("xx_dialogs_and_notifications_system_information_banner"));
+            //% "Accept"
+            infoBanner->setButtonText(qtTrId("xx_dialogs_and_notifications_system_information_banner_accept"));
             connect(infoBanner, SIGNAL(buttonClicked()), this, SLOT(openMessageBox()));
             infoBanner->appear(MSceneWindow::DestroyWhenDone);
 
