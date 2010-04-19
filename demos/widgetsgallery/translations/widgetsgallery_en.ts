@@ -423,11 +423,6 @@ tooltip</source>
         <source>Player:</source>
         <translation>Player:</translation>
     </message>
-    <message id="xx_slider_player_button_label">
-        <location filename="../sliderpage.cpp" line="199"/>
-        <source>Play</source>
-        <translation>Play</translation>
-    </message>
     <message id="xx_slider_page_info_label">
         <location filename="../sliderpage.cpp" line="176"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.

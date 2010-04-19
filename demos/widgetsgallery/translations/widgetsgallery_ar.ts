@@ -995,11 +995,6 @@ Seekbar is a special type of Slider used for displaying playback status for mult
         <source>Player:</source>
         <translation>لاعب :</translation>
     </message>
-    <message id="xx_slider_player_button_label">
-        <location filename="../sliderpage.cpp" line="199"/>
-        <source>Play</source>
-        <translation>تشغيل</translation>
-    </message>
     <message id="xx_slider_brightness_label">
         <location filename="../sliderpage.cpp" line="218"/>
         <source>Brightness:</source>

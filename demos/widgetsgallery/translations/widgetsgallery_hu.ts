@@ -575,11 +575,6 @@ tooltip</source>
         <source>Player:</source>
         <translation>Lejátszó:</translation>
     </message>
-    <message id="xx_slider_player_button_label">
-        <location filename="../sliderpage.cpp" line="199"/>
-        <source>Play</source>
-        <translation>Lejátszás</translation>
-    </message>
     <message id="xx_slider_page_info_label">
         <location filename="../sliderpage.cpp" line="176"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.

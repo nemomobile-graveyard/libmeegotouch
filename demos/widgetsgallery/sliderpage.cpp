@@ -89,6 +89,8 @@ void SliderPage::createContent()
 
     if (qApp->isLeftToRight()) {
         playerButton = new MButton;
+        playerButton->setViewType(MButton::iconType);
+        playerButton->setIconID("icon-m-common-play");
         playerLayoutPolicy->addItem(playerButton, Qt::AlignCenter);
         playerLayoutPolicy->setStretchFactor(playerButton, 0);
 
@@ -191,9 +193,6 @@ void SliderPage::retranslateUi()
 
     //% "Player:"
     playerContainer->setTitle(qtTrId("xx_slider_player_label"));
-
-    //% "Play"
-    playerButton->setText(qtTrId("xx_slider_player_button_label"));
 
     playerSeekBar->setMinLabelVisible(true);
     playerSeekBar->setMaxLabelVisible(true);
