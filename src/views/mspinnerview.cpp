@@ -113,7 +113,8 @@ void MSpinnerView::updateData(const QList<const char *>& modifications)
                     d->timer = new QTimer(this);
                     connect(d->timer, SIGNAL(timeout()), this, SLOT(animationTimeout()));
                 }
-                d->timer->start(SpinnerRefreshRate);
+                if (d->controller->isVisible())
+                    d->timer->start(SpinnerRefreshRate);
             } else {
                 delete d->timer;
                 d->timer = NULL;
@@ -135,7 +136,8 @@ void MSpinnerView::setupModel()
             d->timer = new QTimer(this);
             connect(d->timer, SIGNAL(timeout()), this, SLOT(animationTimeout()));
         }
-        d->timer->start(SpinnerRefreshRate);
+        if (d->controller->isVisible())
+            d->timer->start(SpinnerRefreshRate);
     } else {
         delete d->timer;
         d->timer = NULL;

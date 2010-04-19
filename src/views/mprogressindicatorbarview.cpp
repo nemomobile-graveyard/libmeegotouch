@@ -114,7 +114,8 @@ void MProgressIndicatorBarView::updateData(const QList<const char *>& modificati
                     d->timer = new QTimer(this);
                     connect(d->timer, SIGNAL(timeout()), this, SLOT(animationTimeout()));
                 }
-                d->timer->start(ProgressBarUpdateInterval);
+                if (d->controller->isVisible())
+                    d->timer->start(ProgressBarUpdateInterval);
             } else {
                 delete d->timer;
                 d->timer = NULL;
@@ -136,7 +137,8 @@ void MProgressIndicatorBarView::setupModel()
             d->timer = new QTimer(this);
             connect(d->timer, SIGNAL(timeout()), this, SLOT(animationTimeout()));
         }
-        d->timer->start(ProgressBarUpdateInterval);
+        if (d->controller->isVisible())
+            d->timer->start(ProgressBarUpdateInterval);
     } else {
         delete d->timer;
         d->timer = NULL;
