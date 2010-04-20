@@ -9,37 +9,37 @@
         <translation>画廊</translation>
     </message>
     <message id="xx_apporientation_auto">
-        <location filename="../listpage.cpp" line="447"/>
+        <location filename="../listpage.cpp" line="456"/>
         <source>Automatic</source>
         <translation>自动</translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../listpage.cpp" line="455"/>
+        <location filename="../listpage.cpp" line="464"/>
         <source>Portrait</source>
         <translation>竖屏</translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../listpage.cpp" line="463"/>
+        <location filename="../listpage.cpp" line="472"/>
         <source>Landscape</source>
         <translation>横屏</translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../listpage.cpp" line="471"/>
+        <location filename="../listpage.cpp" line="480"/>
         <source>0 degrees</source>
         <translation> 0 度</translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../listpage.cpp" line="479"/>
+        <location filename="../listpage.cpp" line="488"/>
         <source>90 degrees clockwise</source>
         <translation>顺时针旋转90度</translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../listpage.cpp" line="487"/>
+        <location filename="../listpage.cpp" line="496"/>
         <source>180 degrees clockwise</source>
         <translation>顺时针旋转180度</translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../listpage.cpp" line="495"/>
+        <location filename="../listpage.cpp" line="504"/>
         <source>270 degrees clockwise</source>
         <translation>顺时针旋转270度</translation>
     </message>
@@ -75,58 +75,58 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <translation>询问对话框标题</translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_content">
-        <location filename="../dialogsandnotificationspage.cpp" line="90"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="92"/>
         <source>Lorem ipsum dolor sit amet?</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_label">
-        <location filename="../dialogsandnotificationspage.cpp" line="100"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="101"/>
         <source>Name</source>
         <translation>姓名</translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="112"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="113"/>
         <source>Please enter your name</source>
         <translation>请输入你的姓名</translation>
     </message>
     <message id="xx_dialogs_and_notifications_long_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="127"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="128"/>
         <source>Select printer</source>
         <translation>请选择打印机</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_button">
-        <location filename="../dialogsandnotificationspage.cpp" line="177"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="179"/>
         <source>Click to spawn a nested dialog</source>
         <translation>请点按打开下级对话</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="179"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="181"/>
         <source>Stacked dialogs</source>
         <translation>对话记录框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox">
-        <location filename="../dialogsandnotificationspage.cpp" line="191"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="194"/>
         <source>Click to open a nested message box</source>
         <translation>请点按打开下级消息框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="193"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="196"/>
         <source>This is a nested dialog</source>
         <translation>这是多层对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_messagebox_text">
-        <location filename="../dialogsandnotificationspage.cpp" line="205"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="209"/>
         <source>I&apos;m a nested message box</source>
         <translation>我是多层对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="215"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="219"/>
         <source>System Modal Dialog</source>
         <translation>模式对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog_label">
-        <location filename="../dialogsandnotificationspage.cpp" line="219"/>
-        <source>I&apos;m a System Modal dialog.
+        <location filename="../dialogsandnotificationspage.cpp" line="225"/>
+        <source>I&apos;m a window modal dialog.
 There&apos;s no way around me!
 Muwhahaha... [evil laugh]</source>
         <translation>我是模式对话框。
@@ -134,37 +134,37 @@ Muwhahaha... [evil laugh]</source>
 哈哈哈...</translation>
     </message>
     <message id="xx_dialogs_and_notifications_progress_indicator">
-        <location filename="../dialogsandnotificationspage.cpp" line="237"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="242"/>
         <source>Progress Indicator</source>
         <translation>进程指示</translation>
     </message>
     <message id="xx_dialogs_and_notifications_message_box_text">
-        <location filename="../dialogsandnotificationspage.cpp" line="256"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="261"/>
         <source>Hello World!</source>
         <translation>你好世界！</translation>
     </message>
     <message id="xx_dialogs_and_notifications_event_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="266"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="271"/>
         <source>&lt;b&gt;Ida Taipale&lt;/b&gt;&lt;br/&gt;Have you seen my dog?</source>
         <translation>&lt;b&gt;lda Taipale&lt;/b&gt;&lt;br/&gt;你看见我的狗了吗?</translation>
     </message>
     <message id="xx_dialogs_and_notifications_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="279"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="284"/>
         <source>&lt;b&gt;Battery is running low&lt;/b&gt;</source>
         <translation>&lt;b&gt;电池容量低&lt;/b&gt;</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="291"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="296"/>
         <source>&lt;b&gt;Incoming call&lt;/b&gt;</source>
         <translation>&lt;b&gt;来电&lt;/b&gt;</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_information_banner_accept">
-        <location filename="../dialogsandnotificationspage.cpp" line="293"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="298"/>
         <source>Accept</source>
         <translation>接听</translation>
     </message>
     <message id="xx_dialogs_and_notifications_title">
-        <location filename="../dialogsandnotificationspage.cpp" line="360"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="365"/>
         <source>Dialogs and Notifications</source>
         <translation variants="yes">
             <lengthvariant>对话框和通知</lengthvariant>
@@ -175,37 +175,37 @@ Muwhahaha... [evil laugh]</source>
         </translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_dialogs">
-        <location filename="../dialogsandnotificationspage.cpp" line="364"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="369"/>
         <source>Dialog examples</source>
         <translation>对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_query_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="366"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="371"/>
         <source>Question Dialog</source>
         <translation>询问对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="368"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="373"/>
         <source>Entry Dialog</source>
         <translation>登录对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_long_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="370"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="375"/>
         <source>A Long Dialog</source>
         <translation>长对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialogs">
-        <location filename="../dialogsandnotificationspage.cpp" line="373"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="378"/>
         <source>Stacked Dialogs</source>
         <translation>对话记录框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog">
-        <location filename="../dialogsandnotificationspage.cpp" line="376"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="381"/>
         <source>System Modal Dialog</source>
         <translation>模式对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_dialog_with_progress_indicator">
-        <location filename="../dialogsandnotificationspage.cpp" line="379"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="384"/>
         <source>Dialog With Progress Indicator</source>
         <translation>进程条对话框 </translation>
     </message>
@@ -214,37 +214,37 @@ Muwhahaha... [evil laugh]</source>
         <translation type="obsolete">消息对话框例子</translation>
     </message>
     <message id="xx_dialogs_and_notifications_messagebox">
-        <location filename="../dialogsandnotificationspage.cpp" line="384"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="389"/>
         <source>Simple Message Box</source>
         <translation>简单消息对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_notifications">
-        <location filename="../dialogsandnotificationspage.cpp" line="382"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="387"/>
         <source>Notifications and messages</source>
         <translation>通知</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_event_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="386"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="391"/>
         <source>Event Banner</source>
         <translation>事件通知</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="388"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="393"/>
         <source>Information Banner</source>
         <translation>消息通知</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_system_information_banner">
-        <location filename="../dialogsandnotificationspage.cpp" line="390"/>
+        <location filename="../dialogsandnotificationspage.cpp" line="395"/>
         <source>System Information Banner</source>
         <translation>系统消息通知</translation>
     </message>
     <message id="xx_Image">
-        <location filename="../imagepage.cpp" line="118"/>
+        <location filename="../imagepage.cpp" line="123"/>
         <source>Image</source>
         <translation>图像</translation>
     </message>
     <message id="xx_Image properties">
-        <location filename="../imagepage.cpp" line="122"/>
+        <location filename="../imagepage.cpp" line="127"/>
         <source>Image properties</source>
         <translation>图像属性</translation>
     </message>
@@ -253,7 +253,7 @@ Muwhahaha... [evil laugh]</source>
         <translation type="obsolete">动画</translation>
     </message>
     <message id="xx_image_page_info">
-        <location filename="../imagepage.cpp" line="146"/>
+        <location filename="../imagepage.cpp" line="152"/>
         <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired. As an example, pinch gesture can be used in this page to zoom the image.</source>
         <translation>用于在界面上放置图像，通常图像不是可交互控件，根据需求可加入单点和多点触控。</translation>
     </message>
@@ -266,166 +266,164 @@ Muwhahaha... [evil laugh]</source>
         <translation type="obsolete">停止</translation>
     </message>
     <message id="xx_image_operations">
-        <location filename="../imagepage.cpp" line="140"/>
+        <location filename="../imagepage.cpp" line="145"/>
         <source>Image operations</source>
         <translation>图像操作</translation>
     </message>
     <message id="xx_Zoom">
-        <location filename="../imagepage.cpp" line="128"/>
+        <location filename="../imagepage.cpp" line="133"/>
         <source>Zoom</source>
         <translation>缩放</translation>
     </message>
     <message id="xx_Transparency">
-        <location filename="../imagepage.cpp" line="130"/>
+        <location filename="../imagepage.cpp" line="135"/>
         <source>Transparency</source>
         <translation>透明度</translation>
     </message>
     <message id="xx_Crop">
-        <location filename="../imagepage.cpp" line="132"/>
+        <location filename="../imagepage.cpp" line="137"/>
         <source>Crop</source>
         <translation>裁剪</translation>
     </message>
     <message id="xx_listpage_title">
-        <location filename="../duilistpage.cpp" line="374"/>
+        <location filename="../mlistpage.cpp" line="423"/>
         <source>List</source>
         <translation>列表</translation>
     </message>
     <message id="xx_textentry_title">
-        <location filename="../textentrypage.cpp" line="486"/>
+        <location filename="../textentrypage.cpp" line="490"/>
         <source>Text Entries</source>
         <translation>输入文字</translation>
     </message>
     <message id="xx_tooltip_entry8">
-        <location filename="../textentrypage.cpp" line="496"/>
+        <location filename="../textentrypage.cpp" line="500"/>
         <source>Provides email address suggestions</source>
         <translation>提供邮件地址提示</translation>
     </message>
     <message id="xx_textentry_free_text">
-        <location filename="../textentrypage.cpp" line="502"/>
+        <location filename="../textentrypage.cpp" line="506"/>
         <source>Free text:</source>
         <translation>任意文字:</translation>
     </message>
     <message id="xx_textentry_free_text_masked">
-        <location filename="../textentrypage.cpp" line="504"/>
+        <location filename="../textentrypage.cpp" line="508"/>
         <source>Free text(masked):</source>
         <translation>密码:</translation>
     </message>
     <message id="xx_textentry_number_text">
-        <location filename="../textentrypage.cpp" line="506"/>
+        <location filename="../textentrypage.cpp" line="510"/>
         <source>Number text:</source>
         <translation>数字:</translation>
     </message>
     <message id="xx_textentry_phone_number">
-        <location filename="../textentrypage.cpp" line="508"/>
+        <location filename="../textentrypage.cpp" line="512"/>
         <source>Phone number:</source>
         <translation>电话:</translation>
     </message>
     <message id="xx_textentry_email_text">
-        <location filename="../textentrypage.cpp" line="510"/>
+        <location filename="../textentrypage.cpp" line="514"/>
         <source>Email text:</source>
         <translation>电子邮件:</translation>
     </message>
     <message id="xx_textentry_noecho">
-        <location filename="../textentrypage.cpp" line="521"/>
+        <location filename="../textentrypage.cpp" line="525"/>
         <source>No Echo mode:</source>
         <translation>无回响模式</translation>
     </message>
     <message id="xx_textentry_echoonedit">
-        <location filename="../textentrypage.cpp" line="524"/>
+        <location filename="../textentrypage.cpp" line="528"/>
         <source>Echo on edit:</source>
         <translation>编辑回响</translation>
     </message>
     <message id="xx_textentry_direct_input_mode">
-        <location filename="../textentrypage.cpp" line="527"/>
+        <location filename="../textentrypage.cpp" line="531"/>
         <source>Direct Input Mode:</source>
         <translation>直接输入模式:</translation>
     </message>
     <message id="xx_textentry_click_here">
-        <location filename="../textentrypage.cpp" line="138"/>
-        <location filename="../textentrypage.cpp" line="160"/>
+        <location filename="../textentrypage.cpp" line="144"/>
+        <location filename="../textentrypage.cpp" line="166"/>
         <source>Click here</source>
         <translation>点击这儿</translation>
     </message>
     <message id="xx_textentry_press_any_key">
-        <location filename="../textentrypage.cpp" line="151"/>
+        <location filename="../textentrypage.cpp" line="157"/>
         <source>Press any key</source>
         <translation>按任意键</translation>
     </message>
     <message id="xx_textentry_keypress">
-        <location filename="../textentrypage.cpp" line="179"/>
+        <location filename="../textentrypage.cpp" line="183"/>
         <source>&lt;i&gt;Key press&lt;/i&gt; key:</source>
         <translation>&lt;i&gt;Key press&lt;/i&gt; key:</translation>
     </message>
     <message id="xx_textentry_text">
-        <location filename="../textentrypage.cpp" line="182"/>
-        <location filename="../textentrypage.cpp" line="196"/>
+        <location filename="../textentrypage.cpp" line="186"/>
+        <location filename="../textentrypage.cpp" line="200"/>
         <source>text:</source>
         <translation>text:</translation>
     </message>
     <message id="xx_textentry_keyrelease">
-        <location filename="../textentrypage.cpp" line="193"/>
+        <location filename="../textentrypage.cpp" line="197"/>
         <source>&lt;i&gt;Key release&lt;/i&gt; key:</source>
         <translation>&lt;i&gt;Key release&lt;/i&gt; key:</translation>
     </message>
     <message id="xx_textentry_url_text">
-        <location filename="../textentrypage.cpp" line="512"/>
+        <location filename="../textentrypage.cpp" line="516"/>
         <source>Url text:</source>
         <translation>网址:</translation>
     </message>
     <message id="xx_textentry_multiline">
-        <location filename="../textentrypage.cpp" line="514"/>
+        <location filename="../textentrypage.cpp" line="518"/>
         <source>Multiline:</source>
         <translation>多行输入:</translation>
     </message>
     <message id="xx_tooltip_entry0">
-        <location filename="../textentrypage.cpp" line="490"/>
+        <location filename="../textentrypage.cpp" line="494"/>
         <source>Enter text here</source>
         <translation>在这里输入文字</translation>
     </message>
     <message id="xx_tooltip_entry1">
-        <location filename="../textentrypage.cpp" line="493"/>
+        <location filename="../textentrypage.cpp" line="497"/>
         <source>This tooltip is quite long and will be clipped on the display</source>
         <translation>这个提示太长显示是会被截短</translation>
     </message>
     <message id="xx_textentry_completion_text">
-        <location filename="../textentrypage.cpp" line="518"/>
+        <location filename="../textentrypage.cpp" line="522"/>
         <source>Email suggestion text:</source>
         <translation>邮件提示文字：</translation>
     </message>
     <message id="xx_auto_true_entry0">
-        <location filename="../textentrypage.cpp" line="560"/>
+        <location filename="../textentrypage.cpp" line="564"/>
         <source>Auto Capitalisation is active</source>
         <translation>自动大写转换已激活</translation>
     </message>
     <message id="xx_auto_false_entry0">
-        <location filename="../textentrypage.cpp" line="563"/>
+        <location filename="../textentrypage.cpp" line="567"/>
         <source>No Auto Capitalisation</source>
         <translation>自动大写转换关闭</translation>
     </message>
     <message id="xx_tooltip_entry6">
-        <location filename="../textentrypage.cpp" line="499"/>
-        <source>This is
-multiline
-tooltip</source>
-        <translation>这是\n 多行\n提示</translation>
+        <location filename="../textentrypage.cpp" line="503"/>
+        <source>This is a multiline text entry</source>
+        <translation>这是多行提示</translation>
     </message>
     <message id="xx_textentry_singleselectall">
-        <location filename="../textentrypage.cpp" line="516"/>
+        <location filename="../textentrypage.cpp" line="520"/>
         <source>Singleline (selectall):</source>
         <translation>单行 (全选)</translation>
     </message>
     <message id="xx_auto_capitalisation">
-        <location filename="../textentrypage.cpp" line="530"/>
+        <location filename="../textentrypage.cpp" line="534"/>
         <source>Auto capitalisation</source>
         <translation>自动大写转换</translation>
     </message>
     <message id="xx_error_correction">
-        <location filename="../textentrypage.cpp" line="532"/>
+        <location filename="../textentrypage.cpp" line="536"/>
         <source>Error correction</source>
         <translation>错误校正</translation>
     </message>
     <message id="xx_slider_page_title">
-        <location filename="../sliderpage.cpp" line="168"/>
+        <location filename="../sliderpage.cpp" line="169"/>
         <source>Sliders</source>
         <translation variants="yes">
             <lengthvariant>滑动条</lengthvariant>
@@ -433,27 +431,28 @@ tooltip</source>
         </translation>
     </message>
     <message id="xx_slider_personal_data_label">
-        <location filename="../sliderpage.cpp" line="179"/>
+        <location filename="../sliderpage.cpp" line="180"/>
         <source>Personal data</source>
         <translation>个人信息</translation>
     </message>
     <message id="xx_slider_age_label">
-        <location filename="../sliderpage.cpp" line="183"/>
-        <source>Please select your age:</source>
+        <location filename="../sliderpage.cpp" line="184"/>
+        <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
+        <oldsource>Please select your age:</oldsource>
         <translation>您的年龄：</translation>
     </message>
     <message id="xx_slider_brightness_label">
-        <location filename="../sliderpage.cpp" line="218"/>
+        <location filename="../sliderpage.cpp" line="217"/>
         <source>Brightness:</source>
         <translation>亮度:</translation>
     </message>
     <message id="xx_slider_player_label">
-        <location filename="../sliderpage.cpp" line="196"/>
+        <location filename="../sliderpage.cpp" line="197"/>
         <source>Player:</source>
         <translation>播放器:</translation>
     </message>
     <message id="xx_slider_page_info_label">
-        <location filename="../sliderpage.cpp" line="176"/>
+        <location filename="../sliderpage.cpp" line="177"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
@@ -523,24 +522,29 @@ Seekbar is a special type of Slider used for displaying playback status for mult
         <translation type="obsolete">日本</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="100"/>
-        <source>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
+        <location filename="../comboboxpage.cpp" line="120"/>
+        <source>The MComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <translation>选择对话框是按钮和弹出列表的组合。它非常类似于QComboBox, 但不允许编辑文本。</translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="94"/>
+        <location filename="../comboboxpage.cpp" line="112"/>
         <source>Title</source>
         <translation>标题</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="90"/>
+        <location filename="../comboboxpage.cpp" line="108"/>
         <source>ComboBox</source>
         <translation>组合对话框</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="96"/>
+        <location filename="../comboboxpage.cpp" line="114"/>
         <source>Sort - DescendingOrder</source>
         <translation>排序 — 降序</translation>
+    </message>
+    <message id="xx_popup_time_consuming">
+        <location filename="../comboboxpage.cpp" line="116"/>
+        <source>Time-consuming setting</source>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_container_page_title">
         <location filename="../containerpage.cpp" line="65"/>
@@ -648,25 +652,41 @@ The primary (single short tap) action of the element should not be duplicated in
         <source>Components&apos; display mode:</source>
         <translation>器件显示模式:</translation>
     </message>
-    <message id="xx_navigationbar_escapebutton_mode_label">
+    <message id="xx_navigationbar_escape_mode_label">
         <location filename="../navigationbarpage.cpp" line="131"/>
         <source>Escape Button mode:</source>
         <translation>Escape按钮模式:</translation>
     </message>
+    <message id="xx_navigationbar_auto">
+        <location filename="../navigationbarpage.cpp" line="136"/>
+        <source>Auto</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_navigationbar_manual_back">
+        <location filename="../navigationbarpage.cpp" line="140"/>
+        <source>Manual Back</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_navigationbar_close_window">
+        <location filename="../navigationbarpage.cpp" line="144"/>
+        <source>Close Window</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_navigationbar_escapebutton_mode_label">
+        <source>Escape Button mode:</source>
+        <translation type="obsolete">Escape按钮模式:</translation>
+    </message>
     <message id="xx_navigationbar_back_button">
-        <location filename="../navigationbarpage.cpp" line="137"/>
         <source>Back button</source>
-        <translation>返回按钮</translation>
+        <translation type="obsolete">返回按钮</translation>
     </message>
     <message id="xx_navigationbar_close_button">
-        <location filename="../navigationbarpage.cpp" line="141"/>
         <source>Close button</source>
-        <translation>关闭按钮</translation>
+        <translation type="obsolete">关闭按钮</translation>
     </message>
     <message id="xx_navigationbar_hidden">
-        <location filename="../navigationbarpage.cpp" line="144"/>
         <source>Hidden</source>
-        <translation>隐藏</translation>
+        <translation type="obsolete">隐藏</translation>
     </message>
     <message id="xx_displaymode_show">
         <location filename="../navigationbarpage.cpp" line="162"/>
@@ -898,22 +918,22 @@ The primary (single short tap) action of the element should not be duplicated in
         <translation>输入反馈</translation>
     </message>
     <message id="xx_template_page_title">
-        <location filename="../templatepage.cpp" line="118"/>
+        <location filename="../templatepage.cpp" line="119"/>
         <source>Template</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_sample template">
-        <location filename="../templatepage.cpp" line="124"/>
+        <location filename="../templatepage.cpp" line="125"/>
         <source>Sample template</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_checkbox_page_title">
-        <location filename="../checkboxpage.cpp" line="75"/>
+        <location filename="../checkboxpage.cpp" line="76"/>
         <source>Checkbox</source>
         <translation>核选框</translation>
     </message>
     <message id="xx_checkbox_page_info_label">
-        <location filename="../checkboxpage.cpp" line="84"/>
+        <location filename="../checkboxpage.cpp" line="85"/>
         <source>The Checkbox is a variant of Button that allows users to set the state of variable or setting which has two values, On and Off.
 
 Checkbox essentially does the same thing as the Switch button, so please consider using a Switch instead.</source>
@@ -921,18 +941,18 @@ Checkbox essentially does the same thing as the Switch button, so please conside
 复选框实质上和开关按钮具有相同的功能，所以可考虑用开关按钮。</translation>
     </message>
     <message id="xx_checkbox_page_checkbox_label">
-        <location filename="../checkboxpage.cpp" line="87"/>
+        <location filename="../checkboxpage.cpp" line="88"/>
         <source>I have read and understood the
 instructions.</source>
         <translation>我已经读过并理解了指示。</translation>
     </message>
     <message id="xx_icon_button_page_title">
-        <location filename="../iconbuttonpage.cpp" line="81"/>
+        <location filename="../iconbuttonpage.cpp" line="82"/>
         <source>Icon Button</source>
         <translation>图标按钮</translation>
     </message>
     <message id="xx_icon_button_page_info_label">
-        <location filename="../iconbuttonpage.cpp" line="89"/>
+        <location filename="../iconbuttonpage.cpp" line="90"/>
         <source>Icon Buttons have an icon and can have a text label. Icon button differs from push button by its visual presentation: it does not have button-style edges like a Push Button does.
 
  Icon Buttons are used in e.g. Toolbars.</source>
@@ -940,34 +960,34 @@ instructions.</source>
 图标按钮可以在工具条使用。</translation>
     </message>
     <message id="xx_icon_button_page_icon_button2">
-        <location filename="../iconbuttonpage.cpp" line="91"/>
+        <location filename="../iconbuttonpage.cpp" line="92"/>
         <source>Lorem ipsum</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_push_button_page_title">
-        <location filename="../pushbuttonpage.cpp" line="74"/>
+        <location filename="../pushbuttonpage.cpp" line="71"/>
         <source>Push Button</source>
         <translation>按钮</translation>
     </message>
     <message id="xx_push_button_page_info_label">
-        <location filename="../pushbuttonpage.cpp" line="83"/>
+        <location filename="../pushbuttonpage.cpp" line="80"/>
         <source>Push Buttons can have an icon and a label. Push Button can be used in any container but usually it is used with Dialogs, Notifications and Main windows to invoke actions.
 
 A Push Button generally looks like a traditional button, with button-style edges.</source>
         <translation>按钮有一个图标和一个属性。任何容器都可以按下按钮操作，不过通常用在对话，通知，和主菜单，以发动下个功能。</translation>
     </message>
     <message id="xx_push_button_page_button1">
-        <location filename="../pushbuttonpage.cpp" line="85"/>
+        <location filename="../pushbuttonpage.cpp" line="82"/>
         <source>Lorem</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_push_button_page_button2">
-        <location filename="../pushbuttonpage.cpp" line="87"/>
+        <location filename="../pushbuttonpage.cpp" line="84"/>
         <source>Ipsum</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_push_button_page_button3">
-        <location filename="../pushbuttonpage.cpp" line="89"/>
+        <location filename="../pushbuttonpage.cpp" line="86"/>
         <source>Dolor
 sit amet</source>
         <translation type="unfinished"></translation>
@@ -1031,32 +1051,32 @@ Subject: This is funny stuff!</source>
         <translation>在线相册</translation>
     </message>
     <message id="xx_spinner_page_container_header_description">
-        <location filename="../spinnerpage.cpp" line="161"/>
+        <location filename="../spinnerpage.cpp" line="151"/>
         <source>Spinner can be used in container header to indicate that the items inside the container are being updated, but visible items can be interacted with.</source>
         <translation>旋转进度指示在容器的标题上显示，表示该容器内容正在被更新，已经显示的内容可以启动。</translation>
     </message>
     <message id="xx_spinner_page_application_menu_description">
-        <location filename="../spinnerpage.cpp" line="201"/>
+        <location filename="../spinnerpage.cpp" line="195"/>
         <source>Spinner in the application menu area indicates that the whole view is pending for update.</source>
         <translation>旋转进度指示在应用菜单中使用，表示整个界面在等待更新。</translation>
     </message>
     <message id="xx_spinner_page_dialog_header_description">
-        <location filename="../spinnerpage.cpp" line="215"/>
+        <location filename="../spinnerpage.cpp" line="209"/>
         <source>Spinner can be placed in dialog header to indicate changing content.</source>
         <translation>旋转进度指示在对话标题使用，表示内容正在更新。</translation>
     </message>
     <message id="xx_spinner_page_dialog_header">
-        <location filename="../spinnerpage.cpp" line="236"/>
+        <location filename="../spinnerpage.cpp" line="230"/>
         <source>Select Internet connection</source>
         <translation>选择互联网连接</translation>
     </message>
     <message id="xx_switch_page_title">
-        <location filename="../switchpage.cpp" line="129"/>
+        <location filename="../switchpage.cpp" line="128"/>
         <source>Switch</source>
         <translation>开关</translation>
     </message>
     <message id="xx_switch_page_info_label">
-        <location filename="../switchpage.cpp" line="139"/>
+        <location filename="../switchpage.cpp" line="138"/>
         <source>A Switch button differs from both a push button and an icon button visually. It looks like a switch, communicating that pressing this button will not go to another view or will not perform any other actions except to toggle the state of the button.
 
 Switches are used to indicate e.g. settings values</source>
@@ -1064,27 +1084,27 @@ Switches are used to indicate e.g. settings values</source>
 开关可被用于指示设置的值。</translation>
     </message>
     <message id="xx_switch_page_switch1">
-        <location filename="../switchpage.cpp" line="142"/>
+        <location filename="../switchpage.cpp" line="141"/>
         <source>Headlights</source>
         <translation>高亮</translation>
     </message>
     <message id="xx_switch_page_switch2">
-        <location filename="../switchpage.cpp" line="144"/>
+        <location filename="../switchpage.cpp" line="143"/>
         <source>Autopilot</source>
         <translation>自动指示</translation>
     </message>
     <message id="xx_switch_page_switch3">
-        <location filename="../switchpage.cpp" line="146"/>
+        <location filename="../switchpage.cpp" line="145"/>
         <source>Warp Drive</source>
         <translation>偏度</translation>
     </message>
     <message id="xx_switch_page_switch4">
-        <location filename="../switchpage.cpp" line="148"/>
+        <location filename="../switchpage.cpp" line="147"/>
         <source>Reactor Shields</source>
         <translation>响应屏蔽</translation>
     </message>
     <message id="xx_switch_page_switch5">
-        <location filename="../switchpage.cpp" line="150"/>
+        <location filename="../switchpage.cpp" line="149"/>
         <source>Infinite Improbability Drive</source>
         <translation>无限非可能性驱动</translation>
     </message>
@@ -1135,66 +1155,66 @@ Switches are used to indicate e.g. settings values</source>
         <translation>定位条</translation>
     </message>
     <message id="xx_input_feedback_page_title">
-        <location filename="../feedbackpage.cpp" line="91"/>
+        <location filename="../feedbackpage.cpp" line="90"/>
         <source>Input Feedback</source>
         <translation>输入反馈</translation>
     </message>
     <message id="xx_input_feedback_page_info_label">
-        <location filename="../feedbackpage.cpp" line="101"/>
-        <source>This page contains buttons with custom input feedbacks. Any DuiWidget can have input feedback for press and release events. Input feedback can be a sound effect and/or a haptic effect (piezo, vibra) depending on the product.
+        <location filename="../feedbackpage.cpp" line="100"/>
+        <source>This page contains buttons with custom input feedbacks. Any MWidget can have input feedback for press and release events. Input feedback can be a sound effect and/or a haptic effect (piezo, vibra) depending on the product.
 
 Input feedbacks can be easily configured for different purposes using the theming system.</source>
-        <translation>本页内含按钮，以显示优化的输入反馈。任何DuiWidget可以用来接收输入按下和松开的事件反馈。输入反馈可以加上声音效果和/或触觉效果，比如压力，震动，如果产品支持的话。
+        <translation>本页内含按钮，以显示优化的输入反馈。任何MWidget可以用来接收输入按下和松开的事件反馈。输入反馈可以加上声音效果和/或触觉效果，比如压力，震动，如果产品支持的话。
 输入反馈可以很容易得通过theming system 进行各种优化组合配置。
 </translation>
     </message>
     <message id="xx_input_feedback_page_button1">
-        <location filename="../feedbackpage.cpp" line="103"/>
+        <location filename="../feedbackpage.cpp" line="102"/>
         <source>Default</source>
         <translation>缺省</translation>
     </message>
     <message id="xx_input_feedback_page_button2">
-        <location filename="../feedbackpage.cpp" line="105"/>
+        <location filename="../feedbackpage.cpp" line="104"/>
         <source>Different</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_input_feedback_page_button3">
-        <location filename="../feedbackpage.cpp" line="107"/>
+        <location filename="../feedbackpage.cpp" line="106"/>
         <source>Sluggish</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_input_feedback_page_button4">
-        <location filename="../feedbackpage.cpp" line="109"/>
+        <location filename="../feedbackpage.cpp" line="108"/>
         <source>Babytoy</source>
         <translation>婴儿玩具</translation>
     </message>
     <message id="xx_input_feedback_page_button5">
-        <location filename="../feedbackpage.cpp" line="111"/>
+        <location filename="../feedbackpage.cpp" line="110"/>
         <source>Space</source>
         <translation>空间</translation>
     </message>
     <message id="xx_input_feedback_page_button6">
-        <location filename="../feedbackpage.cpp" line="113"/>
+        <location filename="../feedbackpage.cpp" line="112"/>
         <source>Silent</source>
         <translation>静音</translation>
     </message>
     <message id="xx_gridpage_title">
-        <location filename="../duigridpage.cpp" line="97"/>
+        <location filename="../mgridpage.cpp" line="96"/>
         <source>Grid page</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_title">
-        <location filename="../videocontainerpage.cpp" line="365"/>
+        <location filename="../videocontainerpage.cpp" line="372"/>
         <source>Video container</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_page_info_label">
-        <location filename="../videocontainerpage.cpp" line="370"/>
+        <location filename="../videocontainerpage.cpp" line="377"/>
         <source>Tap video thumbnail to play/pause it. Tap and hold thumbnail to open video in it&apos;s native size.</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_video_container_header_title">
-        <location filename="../videocontainerpage.cpp" line="373"/>
+        <location filename="../videocontainerpage.cpp" line="380"/>
         <source>Gallery</source>
         <translation type="unfinished"></translation>
     </message>
