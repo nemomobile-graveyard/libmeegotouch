@@ -143,7 +143,7 @@ DuiButtonStyle#theme-selection-button {
   rail-dot-played-image: "Slider-dot-selected";
 }
 
-DuiSliderStyle#video-player-slider {
+MSliderStyle#video-player-slider {
     padding-left:   0;
     padding-top:    0;
     padding-right:  0;
@@ -155,7 +155,7 @@ DuiSliderStyle#video-player-slider {
     margin-bottom:  0;
 }
 
-DuiButtonStyle#video-player-button {
+MButtonStyle#video-player-button {
 
     padding-left:   0;
     padding-top:    0;
@@ -177,6 +177,16 @@ DuiButtonStyle#video-player-button {
     maximum-size: 7.5mm 5mm;
 
 
-    icon-size: 3.5mm 3.5mm;
+    icon-size: 3.0mm 3.0mm;
     icon-align: center;
+}
+
+MApplicationPageStyle#video-detail-page {
+    background-image: ;
+    background-color: #001100;
+}
+
+ItemDetailPage MVideoWidgetStyle:fullscreen {
+    background-color: #001100;
+    color-key: #001100;
 }

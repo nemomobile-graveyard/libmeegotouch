@@ -192,6 +192,7 @@ void ItemDetailPage::createContent()
     layout->setPortraitPolicy(policy);
     
     if( !videoId.isEmpty() ) {
+        setObjectName("video-detail-page");
         video = new MVideoWidget(panel);
         connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
         video->setFullscreen(true);
