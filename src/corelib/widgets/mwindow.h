@@ -34,12 +34,12 @@ class MOnDisplayChangeEvent;
 
 /*!
   \class MWindow
-  \brief MWindow is the base class for all DirectUI windows
+  \brief MWindow is the base class for all MeeGo Touch UI windows
 
-  A DirectUI window is completely empty by default. For developing an application
-  conforming to the DirectUI style, use MApplicationWindow instead.
+  An MWindow is completely empty by default. For developing an application
+  conforming to the MeeGo Touch UI style, use MApplicationWindow instead.
 
-  A DirectUI window is a QGraphicsView widget that visualizes the contents
+  MWindow is a QGraphicsView widget that visualizes the contents
   of the application scene. The key differences compared to the standard
   QGraphicsView is:
 
@@ -49,14 +49,14 @@ class MOnDisplayChangeEvent;
     for the window to use one of Qt's OpenGL backends.
   - Fullscreen updates are enabled by default for the window, as OpenGL partial
     updates are not supported in Qt.
-  - New concept of window orientation. DirectUI applications change orientation through
+  - New concept of window orientation. MeeGo Touch applications change orientation through
     a scene graph transformation. The window widget coordinates stay the same
     after an orientation change while the root element of the scene graph can have
     an arbitary transformation angle. See \ref rotation.
-  - New concept of scene management. DirectUI supports in-scene variants of traditional
+  - New concept of scene management. MeeGo Touch UI supports in-scene variants of traditional
     UI components such as dialogs, popups and menus. MSceneManager acts like an
     in-application window manager to orchestrate the various components.
-  - New concept of display visibility. DirectUI applications typically operate in
+  - New concept of display visibility. MeeGo Touch UI applications typically operate in
     a fully composited environment, meaning that a shown window still doesn't
     guarantee that it is visible. Display visibility tells whether the user is
     able to see the window.
@@ -213,7 +213,7 @@ public:
      If you require your window to be displayed only in a certain orientation angle,
      set the desired angle using setOrientationAngle() and set this property to true.
 
-     Note: Locking the orientation is discouraged by the DirectUI application style guidelines.
+     Note: Locking the orientation is discouraged by the MeeGo Touch UI application style guidelines.
 
      Example of locking the window orientation angle:
 
@@ -250,7 +250,8 @@ public:
      If you require your window to be displayed only in a certain orientation,
      set the desired angle using setOrientationAngle() and set this property to true.
 
-     Note: Locking the orientation is discouraged by the DirectUI application style guidelines.
+     Note: Locking the orientation is discouraged by the MeeGo TouchUI application style
+     guidelines.
 
      \note Setting this property to true locks orientation changes,
            but allows automatic adjustments of the angle for the given orientation.
