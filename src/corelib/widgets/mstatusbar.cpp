@@ -18,7 +18,10 @@
 ****************************************************************************/
 
 #include <QGraphicsSceneMouseEvent>
+
+#ifdef HAVE_DBUS
 #include <QDBusInterface>
+#endif
 
 #include "mstatusbar.h"
 #include "mstatusbar_p.h"
@@ -85,6 +88,8 @@ MStatusBarPrivate::~MStatusBarPrivate()
 
 void MStatusBarPrivate::showStatusIndicatorMenu()
 {
+#ifdef HAVE_DBUS
     QDBusInterface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
     interface.call(QDBus::NoBlock, "open");
+#endif
 }
