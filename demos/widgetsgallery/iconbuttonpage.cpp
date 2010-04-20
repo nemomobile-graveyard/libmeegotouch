@@ -68,7 +68,7 @@ void IconButtonPage::createContent()
 
     iconButton2 = new MButton();
     iconButton2->setViewType(MButton::iconType);
-    iconButton2->setIconID("icon-l-games");
+    iconButton2->setIconID("icon-m-toolbar-locked");
     iconButton2->setMaximumWidth(175);
     
     containerPolicy->addItem(iconButton2, Qt::AlignCenter);

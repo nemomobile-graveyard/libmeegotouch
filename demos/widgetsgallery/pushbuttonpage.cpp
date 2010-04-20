@@ -56,7 +56,7 @@ void PushButtonPage::createContent()
     containerPolicy->addItem(pushButton1);
 
     pushButton2 = new MButton();
-    pushButton2->setIconID("icon-l-search");
+    pushButton2->setIconID("icon-m-messaging-smiley-surprised");
     containerPolicy->addItem(pushButton2);
 
     pushButton3 = new MButton();
