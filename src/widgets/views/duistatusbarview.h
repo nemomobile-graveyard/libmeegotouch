@@ -23,7 +23,9 @@
 #include <views/duiscenewindowview.h>
 #include <duiscenewindowmodel.h>
 
+
 class DuiStatusBar;
+class QPixmap;
 
 //! \internal
 
@@ -36,8 +38,26 @@ public:
     DuiStatusBarView(DuiStatusBar *controller);
     virtual ~DuiStatusBarView();
 
+protected:
+    virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+
 private:
     Q_DISABLE_COPY(DuiStatusBarView)
+
+    DuiWidgetController *controller;
+
+#ifdef Q_WS_X11
+    bool fetchSharedPixmapHandle(Qt::HANDLE *handle);
+    void setupXDamageForSharedPixmap();
+
+    QPixmap sharedPixmap;
+    Qt::HANDLE pixmapDamage;
+
+private Q_SLOTS:
+    void handlePixmapDamageEvent(Qt::HANDLE &damage, short &x, short &y,
+                                 unsigned short &width, unsigned short &height);
+#endif
+
 };
 
 //! \internal_end

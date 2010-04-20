@@ -23,15 +23,15 @@
 #include <duiscenewindow.h>
 #include <duiscenewindowmodel.h>
 
-//! \internal
+class DuiStatusBarPrivate;
 
+//! \internal
 class DuiStatusBar : public DuiSceneWindow
 {
     Q_OBJECT
     DUI_CONTROLLER(DuiSceneWindow)
 
 public:
-
     /*!
      * \brief Default constructor.
      */
@@ -42,7 +42,12 @@ public:
      */
     virtual ~DuiStatusBar();
 
+    //! \reimp
+    bool sceneEvent(QEvent *event);
+    //! \reimp_end
+
 private:
+    Q_DECLARE_PRIVATE(DuiStatusBar)
     Q_DISABLE_COPY(DuiStatusBar)
 };
 

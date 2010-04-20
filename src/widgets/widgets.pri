@@ -107,6 +107,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/duicontainerheader_p.h \
     $$WIDGETS_SRC_DIR/duicontentitem_p.h \
     $$WIDGETS_SRC_DIR/duibuttongroup_p.h \
+    $$WIDGETS_SRC_DIR/duistatusbar_p.h \
 
 HEADERS += \
     $$WIDGET_MODEL_HEADERS \
