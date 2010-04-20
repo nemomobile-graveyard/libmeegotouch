@@ -58,6 +58,7 @@ protected:
 protected slots:
     //! \reimp
     virtual void updateData(const QList<const char *>& modifications);
+    virtual void applyStyle();
     //! \reimp_end
 
 private:

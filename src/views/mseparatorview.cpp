@@ -57,7 +57,20 @@ void MSeparatorView::updateData(const QList<const char *>& modifications)
     foreach(member, modifications) {
         if (member == MSeparatorModel::Orientation) {
             updateGeometry();
+            applyStyle();
         }
+    }
+    update();
+}
+
+void MSeparatorView::applyStyle()
+{
+    MWidgetView::applyStyle();
+
+    if ( model()->orientation() == Qt::Horizontal ) {
+        style().setModeHorizontal();
+    } else {
+        style().setModeVertical();
     }
     update();
 }

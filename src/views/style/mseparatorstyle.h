@@ -58,6 +58,8 @@ class M_EXPORT MSeparatorStyle : public MWidgetStyle
 class M_EXPORT MSeparatorStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MSeparatorStyle)
+    M_STYLE_MODE(Horizontal)
+    M_STYLE_MODE(Vertical)
 };
 
 #endif
