@@ -202,7 +202,7 @@ protected slots:
     /*!
      * \brief A slot for notifying that the visibility of the extension has changed due to hide()/show()
      */
-    void visibilityChanged();
+    void visibilityEvent(bool visible);
 
     /*!
      * \brief A slot for notifying that the orientation has changed
