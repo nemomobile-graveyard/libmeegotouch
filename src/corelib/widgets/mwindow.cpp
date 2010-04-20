@@ -507,7 +507,7 @@ void MWindow::setOrientationAngle(M::OrientationAngle angle)
 {
     Q_D(MWindow);
 
-    if (d->angle != angle) {
+    if (orientationAngle() != angle) {
         d->oldOrientation = orientation();
         d->angle = angle;
 

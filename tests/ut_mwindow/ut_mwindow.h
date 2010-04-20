@@ -46,6 +46,7 @@ private slots:
     void testOrientation();
     void testSetOrientationAngle_data();
     void testSetOrientationAngle();
+    void testSetOrientationAngleCalledFromSceneManager();
     void testVisibleSceneSize_data();
     void testVisibleSceneSize();
     void testOrientationChangedSignalPropagationFromSceneManager();

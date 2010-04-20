@@ -247,6 +247,17 @@ void Ut_MWindow::testSetOrientationAngle()
     QCOMPARE(win->orientationAngle(), newAngle);
 }
 
+void Ut_MWindow::testSetOrientationAngleCalledFromSceneManager()
+{
+    win->setSceneManager(new MSceneManager);
+    QCOMPARE(win->orientationAngle(), win->sceneManager()->orientationAngle());
+
+    win->sceneManager()->setOrientationAngle(M::Angle90);
+    win->setOrientationAngle(M::Angle0);
+    QCOMPARE(win->orientationAngle(), M::Angle0);
+    QCOMPARE(win->sceneManager()->orientationAngle(), M::Angle0);
+}
+
 void Ut_MWindow::testVisibleSceneSize_data()
 {
     QTest::addColumn<M::OrientationAngle>("newAngle");
