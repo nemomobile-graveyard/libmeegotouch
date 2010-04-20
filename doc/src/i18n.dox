@@ -1,4 +1,3 @@
-%TOC%
 /*! \page  i18n  Internationalisation Guidelines
 
 \section  intro  Introduction
@@ -8,10 +7,12 @@ applications for the MeeGo Touch UI Framework. Developers, translators, and
 user interface designers are the main target audience of this
 document.
 
-Generally, as the MeeGo Touch UI Framework uses Qt as it’s base, some of the Qt
-internationalisation practices also applicable. However, the MeeGo Touch UI Framework provides additional functionalities, hence it is recommended
-that developers always use MeeGo Touch UI Framework classes to achieve full
-internationalisation support in their applications.
+Generally, as the MeeGo Touch UI Framework uses Qt as it’s base, some
+of the Qt internationalisation practices also apply. However, the
+MeeGo Touch UI Framework provides additional functionalities, hence it
+is recommended that developers always use MeeGo Touch UI Framework
+classes to achieve full internationalisation support in their
+applications.
 
 This document discusses several general internationalisation
 guidelines for user interface designers. They are general enough and
@@ -25,38 +26,39 @@ may also be applicable in another projects and vice versa.
 Below is the list of officially supported languages both for writing
 systems and text rendering:
 
-- British English
 - American English
-- French
-- Canadian French
-- German
-- Italian
-- Spanish
-- Latin American Spanish
-- Portuguese
+- Arabic
+- <a href="http://en.wikipedia.org/wiki/Basque_language">Basque</a>-
 - Brazilian Portuguese
-- Danish
-- Swedish
-- Finnish
-- Norwegian
-- Russian
-- Dutch
+- British English
+- Canadian French
+- Catalan
 - Chinese Simplified
 - Chinese Traditional
 - Chinese Hongkong
-- Arabic
-- Urdu
-- <a href="http://en.wikipedia.org/wiki/Persian_language">Persian</a>
-- Thai
-- Indonesian
-- Hindi
-- Ukranian
-- Turkish
+- Danish
+- Dutch
+- Finnish
+- French
 - Galician
-- Catalan
-- <a href="http://en.wikipedia.org/wiki/Basque_language">Basque</a>
+- German
 - Greek
 - Hebrew
+- Hindi
+- <a href="http://en.wikipedia.org/wiki/Indonesian_language">Indonesian</a>
+- Italian
+- Latin American Spanish
+- <a href="http://en.wikipedia.org/wiki/Malay_language">Malay</a>
+- Norwegian
+- <a href="http://en.wikipedia.org/wiki/Persian_language">Persian</a>
+- Portuguese
+- Russian
+- Spanish
+- Swedish
+- Thai
+- Turkish
+- Ukranian
+- Urdu
 
 Although the implementation contains support for several calendar
 systems, officially the MeeGo Touch UI Framework currently supports only
