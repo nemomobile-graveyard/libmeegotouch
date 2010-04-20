@@ -48,6 +48,7 @@ public:
     inline void setPixmap(const QPixmap& pixmap);
     inline void setOptionalPixmap(const QPixmap& pixmap);
     inline void setImage(const QImage& image);
+    inline void setImageID(const QString &id);
     inline void setOptionalImage(const QImage& image);
 
     void initLayout(MContentItem::ContentItemStyle style);

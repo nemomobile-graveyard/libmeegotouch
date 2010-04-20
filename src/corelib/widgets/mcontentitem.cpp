@@ -22,11 +22,11 @@
 #include "mcontentitem.h"
 #include "mcontentitem_p.h"
 #include "mcontentitemmodel.h"
-#include <QDebug>
 
 #include "mwidgetcreator.h"
 #include <mprogressindicator.h>
 #include <mlabel.h>
+
 M_REGISTER_WIDGET(MContentItem)
 
 MContentItemPrivate::MContentItemPrivate():
@@ -101,6 +101,13 @@ void MContentItem::setImage(const QImage &image)
     Q_D(MContentItem);
     d->image = image;
     model()->setItemImage(d->image);
+}
+
+void MContentItem::setImage(const QString &id)
+{
+    Q_D(MContentItem);
+    d->imageID = id;
+    model()->setItemImageID(d->imageID);
 }
 
 void MContentItem::setTitle(const QString &text)

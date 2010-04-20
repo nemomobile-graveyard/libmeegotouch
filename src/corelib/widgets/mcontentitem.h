@@ -227,6 +227,12 @@ public Q_SLOTS:
     void setImage(const QImage &pixmap);
 
     /**
+        \brief Sets thumbnail image.
+        \param id, image id in theme system.
+     */
+    void setImage(const QString &id);
+
+    /**
         \brief Set title text. This is first line.
         \param text text.
      */

@@ -33,6 +33,7 @@ public:
 
     QPixmap pixmap;
     QImage image;
+    QString imageID;
     QPixmap optionalPixmap;
     QImage optionalImage;
     MLabel* smallText;

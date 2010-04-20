@@ -77,6 +77,8 @@ public:
 
     M_MODEL_PROPERTY(QImage, itemQImage, ItemQImage, false, QImage())
 
+    M_MODEL_PROPERTY(QString, itemImageID, ItemImageID, true, QString())
+
     /*!
       \property MContentItemModel::selected
       \brief Contains selection status of item.

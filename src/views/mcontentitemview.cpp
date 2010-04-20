@@ -286,6 +286,11 @@ void MContentItemViewPrivate::setImage(const QImage &i)
     image()->setImage(i);
 }
 
+void MContentItemViewPrivate::setImageID(const QString &id)
+{
+    image()->setImage(id);
+}
+
 void MContentItemViewPrivate::setOptionalImage(const QImage& i)
 {
     optionalImage()->setImage(i);
@@ -366,6 +371,8 @@ void MContentItemView::updateData(const QList<const char *> &modifications)
             d->setSubtitle(model()->subtitle());
         } else if (member == MContentItemModel::ItemPixmap) {
             d->setPixmap(model()->itemPixmap());
+        } else if (member == MContentItemModel::ItemImageID) {
+            d->setImageID(model()->itemImageID());
         } else if (member == MContentItemModel::Selected) {
             setSelected(model()->selected());
         } else if(member == MContentItemModel::OptionalPixmap){
@@ -402,6 +409,8 @@ void MContentItemView::setupModel()
         d->setOptionalImage(d->controller->optionalImage());
     if(!d->controller->image().isNull())
         d->setImage(d->controller->image());
+    if(!model()->itemImageID().isNull())
+        d->setImageID(model()->itemImageID());
 
     d->initLayout(static_cast<MContentItem::ContentItemStyle>(model()->itemStyle()));
 }
