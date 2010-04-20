@@ -202,8 +202,8 @@ sub runModelMoc
         chomp;
         my $line = $_;
 
-        $line =~ s/$pattern[0]/    Q_PROPERTY($1 $2 READ $2 WRITE set$3)/;
-        $line =~ s/$pattern[1]/    Q_PROPERTY($1 $2 READ $2 WRITE set$3)/;
+	$line =~ s/\s*M_MODEL_PROPERTY\s*\((\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*([^\(\)]+)(?:\(\))?\s*\)\s*/    Q_PROPERTY($1 $2 READ $2 WRITE set$3)/;
+	$line =~ s/\s*M_MODEL_PTR_PROPERTY\s*\((\w+\s*(?:\*)*)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*([^\(\)]+)(?:\(\))?\s*\)\s*/    Q_PROPERTY($1 $2 READ $2 WRITE set$3)/;
 
         print MOC "$line\n";
     }
