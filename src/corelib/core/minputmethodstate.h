@@ -33,8 +33,8 @@ class MInputMethodStatePrivate;
  *
  * This class allows MInputContext (technically other input contexts too) to
  * communicate input method area on display to the application and application
- * to communicate its active window's orientation to the input context.  The
- * application can be a M application or a plain Qt application (which needs
+ * to communicate its active window's orientation and custom toolbar to the input context.
+ * The application can be a M application or a plain Qt application (which needs
  * to link against libmeegotouch to get access to this class).  The input method area
  * can be used by the application to avoid obstructing the input method.
  */
@@ -62,6 +62,24 @@ public Q_SLOTS:
     //! \brief Set input method area to \a newRegion
     void setInputMethodArea(const QRect &newRegion);
 
+    /*!
+     * \brief Register an input method toolbar which is defined in \a fileName.
+     *  \param \a fileName is the absolute file name of a custom toolbar, or the relative file under
+     *      /usr/share/meegotouch/imtoolbars/.
+     *  \return the registered unique identifier of this toolbar.
+     */
+     int registerToolbar(const QString &fileName);
+
+    /*!
+     * \brief Unregister an input method toolbar which unique id \a id.
+     *  \param \a id is the unique identifier of the registered toolbar.
+     */
+     void unregisterToolbar(int id);
+
+    //! \brief Set the \a attribute of the \a item in the input method toolbar which has the unique \a id to \a value.
+    void setToolbarItemAttribute(int id, const QString &item,
+                                 const QString &attribute, const QVariant &value);
+
 Q_SIGNALS:
     //! Emitted when input method area is changed
     //! \param region new input method area
@@ -70,6 +88,15 @@ Q_SIGNALS:
     //! Emitted when the orientation of application's active window is changed
     //! \param orientation new orientation angle
     void activeWindowOrientationAngleChanged(M::OrientationAngle orientation);
+
+    //! Emitted when an input method toolbar which is defined in \a fileName with an unique identifier \a id is registered.
+    void toolbarRegistered(int id, const QString &fileName);
+
+    //! Emitted when an input method toolbar with an unique \a id is unregistered.
+    void toolbarUnregistered(int id);
+
+    //! Emitted when input method toolbar item attribute is changed.
+    void toolbarItemAttributeChanged(int id, const QString &item, const QString &attribute, const QVariant &value);
 
 private:
     //! Disable default construction
