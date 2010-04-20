@@ -19,6 +19,17 @@
 
 #include "mcontentitemmodel.h"
 
+void MContentItemModel::setItemQImage(QImage const& itemQImage)
+{
+    _itemQImage() = itemQImage;
+    memberModified(ItemQImage);
+}
+
+const QImage &MContentItemModel::itemQImage() const
+{
+    return _itemQImage();
+}
+
 void MContentItemModel::setItemPixmap(const QPixmap &itemImage)
 {
     _itemPixmap() = itemImage;
