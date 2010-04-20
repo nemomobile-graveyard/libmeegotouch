@@ -150,7 +150,7 @@ SUBDIRS     =  \
     ut_mtapandholdrecognizer \
     ut_mvideowidget \
     ut_mservicefwgen \
-    ut_mstatusbar
+#    ut_mstatusbar \ // Unstable. "Randomly" crashes on clean up, when detroying its MApplication instance.
 
 # enable only when we have icu available
 
