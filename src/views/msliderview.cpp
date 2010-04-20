@@ -1224,6 +1224,8 @@ void MSliderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     if (d->isCollision(event)) {
         d->valueWhenPressed = model()->value();
 
+        d->controller->setState(MSliderModel::Pressed);
+
         d->updateValue(event);
         d->pressTimerId = startTimer(100);
     }
@@ -1285,8 +1287,6 @@ void MSliderView::timerEvent(QTimerEvent *event)
     if (event->timerId() == d->pressTimerId) {
         killTimer(d->pressTimerId);
         d->pressTimerId = 0;
-
-        d->controller->setState(MSliderModel::Pressed);
 
         if (model()->handleLabelVisible())
             d->sliderGroove->raiseHandleIndicator();
