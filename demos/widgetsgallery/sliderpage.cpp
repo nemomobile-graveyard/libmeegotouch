@@ -62,19 +62,31 @@ void SliderPage::createContent()
     TemplatePage::createContent();
 
     MLayout *ageLayout = new MLayout;
-    MLinearLayoutPolicy *ageLayoutPolicy = new MLinearLayoutPolicy(ageLayout, Qt::Horizontal);
-    ageLayoutPolicy->setSpacing(0);
-    ageLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+
+    MLinearLayoutPolicy *horizontalAgeLayoutPolicy = new MLinearLayoutPolicy(ageLayout, Qt::Horizontal);
+    horizontalAgeLayoutPolicy->setSpacing(0);
+    horizontalAgeLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+
+    MLinearLayoutPolicy *verticalAgeLayoutPolicy = new MLinearLayoutPolicy(ageLayout, Qt::Vertical);
+    verticalAgeLayoutPolicy->setSpacing(0);
+    verticalAgeLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+
+    ageLayout->setLandscapePolicy(horizontalAgeLayoutPolicy);
+    ageLayout->setPortraitPolicy(verticalAgeLayoutPolicy);
 
     ageLabel = new MLabel;
     ageLabel->setTextElide(true);
 
-    ageLayoutPolicy->addItem(ageLabel);
-    ageLayoutPolicy->setStretchFactor(ageLabel, 0);
+    horizontalAgeLayoutPolicy->addItem(ageLabel);
+    horizontalAgeLayoutPolicy->setStretchFactor(ageLabel, 0);
+    verticalAgeLayoutPolicy->addItem(ageLabel);
+    verticalAgeLayoutPolicy->setStretchFactor(ageLabel, 0);
 
     ageSlider = new MSlider;
-    ageLayoutPolicy->addItem(ageSlider);
-    ageLayoutPolicy->setStretchFactor(ageSlider, 1);
+    horizontalAgeLayoutPolicy->addItem(ageSlider);
+    horizontalAgeLayoutPolicy->setStretchFactor(ageSlider, 1);
+    verticalAgeLayoutPolicy->addItem(ageSlider);
+    verticalAgeLayoutPolicy->setStretchFactor(ageSlider, 1);
 
     ageContainer = new MContainer;
     ageContainer->centralWidget()->setLayout(ageLayout);
@@ -87,25 +99,15 @@ void SliderPage::createContent()
     playerLayoutPolicy->setSpacing(0);
     playerLayoutPolicy->setContentsMargins(0, 0, 0, 0);
 
-    if (qApp->isLeftToRight()) {
-        playerButton = new MButton;
-        playerButton->setViewType(MButton::iconType);
-        playerButton->setIconID("icon-m-common-play");
-        playerLayoutPolicy->addItem(playerButton, Qt::AlignCenter);
-        playerLayoutPolicy->setStretchFactor(playerButton, 0);
+    playerButton = new MButton;
+    playerButton->setViewType(MButton::iconType);
+    playerButton->setIconID("icon-m-common-play");
+    playerLayoutPolicy->addItem(playerButton, Qt::AlignCenter);
+    playerLayoutPolicy->setStretchFactor(playerButton, 0);
 
-        playerSeekBar = new MSeekBar;
-        playerLayoutPolicy->addItem(playerSeekBar);
-        playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
-    } else {
-        playerSeekBar = new MSeekBar;
-        playerLayoutPolicy->addItem(playerSeekBar);
-        playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
-
-        playerButton = new MButton;
-        playerLayoutPolicy->addItem(playerButton, Qt::AlignCenter);
-        playerLayoutPolicy->setStretchFactor(playerButton, 0);
-    }
+    playerSeekBar = new MSeekBar;
+    playerLayoutPolicy->addItem(playerSeekBar);
+    playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
 
     playerContainer = new MContainer;
     playerContainer->centralWidget()->setLayout(playerLayout);
