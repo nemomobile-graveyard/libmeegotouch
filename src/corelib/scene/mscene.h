@@ -31,7 +31,7 @@ class MWindowPrivate;
 
 /*!
  \class MScene
- \brief MScene is the scene graph of DirectUI applications
+ \brief MScene is the scene graph of MeeGo Touch UI applications
 
  The scene of an application is a virtual infinite surface on which primitive items or
  full featured widgets can be placed. For general information of how the scene functions,
