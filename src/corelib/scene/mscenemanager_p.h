@@ -61,7 +61,7 @@ public:
         EscapeButtonPanel = 2000,                    // MEscapeButtonPanel
         Dialog = 3000,                               // MDialog
         MessageBox = Dialog,                         // MMessageBox
-        ObjectMenu = Dialog,
+        ObjectMenu = 7500,
         ModalSceneWindow = Dialog,                   // MModalSceneWindow
         PopupList = 4000,                            // MPopupList
         NotificationInformation = 5000,              // MNotification - Information

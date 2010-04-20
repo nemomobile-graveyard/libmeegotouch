@@ -28,7 +28,7 @@
 
 class MButton;
 class MAction;
-class MWidget;
+class QGraphicsWidget;
 class MLayout;
 class MPannableViewport;
 class MLinearLayoutPolicy;
@@ -54,7 +54,7 @@ public:
 #endif
 
     MPannableViewport *viewport;
-    MWidget *container;
+    QGraphicsWidget *container;
 
     MLayout *layout;
     MLinearLayoutPolicy *portraitPolicy;

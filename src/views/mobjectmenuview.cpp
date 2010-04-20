@@ -56,7 +56,7 @@ void MObjectMenuViewPrivate::init()
     viewport = new MPannableViewport();
 
     // create container widget for pannable viewport
-    container = new MWidget;
+    container = new QGraphicsWidget;
     viewport->setWidget(container);
 
     // create layout for controller, make it pannable
@@ -68,9 +68,7 @@ void MObjectMenuViewPrivate::init()
     // create layout policies for portrait & landscape orientation
     layout = new MLayout(container);
     portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    portraitPolicy->setContentsMargins(0, 0, 0, 0);
     landscapePolicy = new MGridLayoutPolicy(layout);
-    landscapePolicy->setContentsMargins(0, 0, 0, 0);
 
     layout->setLandscapePolicy(landscapePolicy);
     layout->setPortraitPolicy(portraitPolicy);
@@ -137,22 +135,6 @@ void MObjectMenuView::actionAdded(MAction *action)
         d->landscapePolicy->addItem(button, (d->buttons.count()) / 2, (d->buttons.count()) % 2);
 
         d->buttons.insert(action, button);
-
-        QSize sceneSize;
-        if (d->controller->sceneManager())
-            sceneSize = d->controller->sceneManager()->visibleSceneSize();
-        else if (MApplication::activeWindow())
-            sceneSize = MApplication::activeWindow()->visibleSceneSize();
-        else if (!MApplication::windows().isEmpty())
-            sceneSize = MApplication::windows().at(0)->visibleSceneSize();
-
-        d->portraitPolicy->setContentsMargins(0.0, 0.0, 0.0, 0.0);
-        qreal offset = (sceneSize.height() - d->portraitPolicy->sizeHint(Qt::PreferredSize).height()) / 2.0;
-        d->portraitPolicy->setContentsMargins(0.0, offset, 0.0, offset);
-
-        d->landscapePolicy->setContentsMargins(0.0, 0.0, 0.0, 0.0);
-        offset = (sceneSize.height() - d->landscapePolicy->sizeHint(Qt::PreferredSize).height()) / 2.0;
-        d->landscapePolicy->setContentsMargins(0.0, offset, 0.0, offset);
     }
 }
 
@@ -288,32 +270,35 @@ void MObjectMenuView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     d->controller->dismiss();
 }
 
-void MObjectMenuView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+QSizeF MObjectMenuView::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
 {
     Q_D(const MObjectMenuView);
+    QSize sceneSize;
+    QSizeF hint;
+    if(d->controller->sceneManager()) {
+        hint = sceneSize = d->controller->sceneManager()->visibleSceneSize();
 
-    if (d->controller->sceneManager() == 0)
-        return;
+        if(d->controller->sceneManager()->orientation() == M::Landscape)
+            hint.rheight() = d->landscapePolicy->sizeHint(which, constraint).height();
+        else
+            hint.rheight() = d->portraitPolicy->sizeHint(which, constraint).height();
+    } else {
+        if (MApplication::activeWindow())
+            sceneSize = MApplication::activeWindow()->visibleSceneSize();
+        else if (!MApplication::windows().isEmpty())
+            sceneSize = MApplication::windows().at(0)->visibleSceneSize();
+        hint = sceneSize;
 
-    Q_UNUSED(option);
-    painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
-
-    QTransform oldTransform(painter->worldTransform());
-    QTransform transform;
-    transform.translate(pos().x(), pos().y());
-    painter->setWorldTransform(transform);
-
-    QSizeF size = boundingRect().size();
-    if (d->controller->sceneManager()->orientation() != M::Landscape)
-        size = QSizeF(size.height(), size.width());
-
-    if (style()->backgroundImage()) {
-        // TODO Use tiled bitmap drawing when it becomes available.
-        style()->backgroundImage()->draw(0, 0, size.width(), size.height(), painter);
-        painter->setWorldTransform(oldTransform);
-    } else if (style()->backgroundColor().isValid()) {
-        painter->fillRect(QRectF(QPointF(0, 0), size), QBrush(style()->backgroundColor()));
+        hint.rheight() = d->layout->effectiveSizeHint(which, constraint).height();
     }
+
+    if(hint.height() > sceneSize.height()) {
+        hint.rheight() = sceneSize.height();
+    //    d->viewport->setEnabled(true);
+    } else {
+    //    d->viewport->setEnabled(false);
+    }
+    return hint;
 }
 
 void MObjectMenuViewPrivate::contentActionTriggered()

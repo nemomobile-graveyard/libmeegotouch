@@ -454,6 +454,9 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
     case MSceneWindow::ApplicationMenu:
         effect = new MSceneLayerEffect("messagebox");
         break;
+    case MSceneWindow::ObjectMenu:
+        effect = new MSceneLayerEffect("objectmenu");
+        break;
     default:
         return NULL;
     }
