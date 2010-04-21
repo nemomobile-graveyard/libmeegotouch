@@ -59,7 +59,11 @@ namespace
     QStringList g_debug_prefixes;
     bool g_has_debug_whitelist(false);
     bool g_has_debug_blacklist(false);
+#ifdef __arm__
     QtMsgType g_debug_level(QtCriticalMsg);
+#else
+    QtMsgType g_debug_level(QtWarningMsg);
+#endif
     bool g_loadMInputContext(true);
     FILE *debugingOutput;
 }
