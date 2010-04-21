@@ -93,6 +93,7 @@ public:
     void viewportRectChanged(const QRectF &viewportRect);
     void connectPannableViewport();
     void updateViewportRect(const QPointF &position, const QSizeF &size);
+    void updatePannableViewportPosition();
 
     void updateFirstVisibleRow(const QModelIndex &index);
     void updateLastVisibleRow(const QModelIndex &index);
@@ -125,7 +126,7 @@ public:
 
     virtual MWidget *createItem(int row) = 0;
     virtual int totalHeight() = 0;
-    virtual int separatorsCount() const = 0;
+    virtual int hseparatorsCount() const = 0;
     virtual QModelIndex locateVisibleIndexAt(int pos) = 0;
     virtual bool isGroupHeader(const QModelIndex &index);
     virtual void layoutChanged();
@@ -154,6 +155,7 @@ public:
     int viewportVisibleHeight;
 
     int itemHeight;
+    int rowCount;
     int viewWidth;
     int hdrHeight;
 
@@ -181,7 +183,7 @@ public:
 
     virtual int locatePosOfItem(int row);
     virtual int locatePosOfItem(const QModelIndex &index);
-    virtual int separatorsCount() const;
+    virtual int hseparatorsCount() const;
     virtual int itemsCount() const;
     virtual int indexToFlatRow(const QModelIndex &index) const;
     virtual QModelIndex flatRowToIndex(int row) const;
@@ -209,6 +211,7 @@ public:
     virtual void clearVisibleItemsArray();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual int locatePosOfItem(int row);
+    virtual int hseparatorsCount() const;
     virtual int totalHeight();
     virtual MWidget *createItem(int row);
     virtual int locateVisibleRowAt(int y, int x = 0);
@@ -255,7 +258,7 @@ public:
 
     virtual int locatePosOfItem(int row);
     virtual int locatePosOfItem(const QModelIndex &index);
-    virtual int separatorsCount() const;
+    virtual int hseparatorsCount() const;
     virtual int itemsCount() const;
     virtual QModelIndex flatRowToIndex(int row) const;
 
@@ -298,6 +301,7 @@ public:
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual int locatePosOfItem(int headerIndex, int itemIndex);
     virtual int locatePosOfItem(const QModelIndex &index);
+    virtual int hseparatorsCount() const;
     virtual int groupSize(int headerIndex) const;
     virtual int totalHeight();
     virtual int locateVisibleRowAt(int y, int x = 0);

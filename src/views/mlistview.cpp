@@ -138,6 +138,7 @@ void MListView::setGeometry(const QRectF &rect)
         d_ptr->viewWidth = rect.width();
         if (!d_ptr->pannableViewport)
             d_ptr->viewportVisibleHeight = d_ptr->totalHeight();
+        d_ptr->updatePannableViewportPosition();
         d_ptr->updateItemSize();
         d_ptr->updateSeparatorSize();
         relayoutItemsInViewportRect();
@@ -149,7 +150,7 @@ void MListView::setGeometry(const QRectF &rect)
 void MListView::relayoutItemsInViewportRect()
 {
     if (d_ptr->model && model()->cellCreator()) {
-        int rowCount = d_ptr->model->rowCount();
+        int rowCount = d_ptr->rowCount;
 
         if(rowCount)
         {

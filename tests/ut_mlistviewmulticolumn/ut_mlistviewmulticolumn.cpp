@@ -104,8 +104,7 @@ void Ut_MListViewMultiColumn::init()
     model->setColumns(2);
     listViewPrivate->controllerModel = model;
 
-    listViewPrivate->updateHeadersRows();
-    listViewPrivate->updateHeadersPositions();
+    listViewPrivate->layoutChanged();
 }
 
 void Ut_MListViewMultiColumn::cleanup()
@@ -189,9 +188,9 @@ void Ut_MListViewMultiColumn::testItemCount()
     QCOMPARE(listViewPrivate->itemsCount(2), 1);
 }
 
-void Ut_MListViewMultiColumn::testSeparatorsCount()
+void Ut_MListViewMultiColumn::testHorizontalSeparatorsCount()
 {
-    QCOMPARE(listViewPrivate->separatorsCount(), 5);
+    QCOMPARE(listViewPrivate->hseparatorsCount(), 2);
 }
 
 void Ut_MListViewMultiColumn::testLocateVisibleIndexAt0()

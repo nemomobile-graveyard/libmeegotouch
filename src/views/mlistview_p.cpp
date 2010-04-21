@@ -37,6 +37,7 @@ static const int MOVINGDETECTORTIMEOUT = 500;
 MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
 {
     itemHeight = 0;
+    rowCount = 0;
     viewWidth = 0;
     model = NULL;
     moving = false;
@@ -80,8 +81,10 @@ void MListViewPrivate::createSeparators()
 
 void MListViewPrivate::updateSeparators()
 {
-    if(hseparator)
+    if(hseparator) {
         hseparator->setObjectName(q_ptr->style()->horizontalSeparatorObjectName());
+        updateSeparatorSize();
+    }
 }
 
 void MListViewPrivate::setHeadersCreator(MCellCreator *creator)
@@ -182,7 +185,7 @@ void MListViewPrivate::viewportRectChanged(const QRectF &viewportRect)
 
 void MListViewPrivate::viewportPositionChanged(const QPointF &position)
 {
-    updateViewportRect(position - QPointF(0, itemHeight), QSizeF(viewWidth, pannableViewport->size().height()));
+    updateViewportRect(position - listPosition, QSizeF(viewWidth, pannableViewport->size().height()));
 }
 
 void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
@@ -200,10 +203,12 @@ void MListViewPrivate::connectPannableViewport()
     
     pannableViewport = MListViewPrivateNamespace::findParentWidgetOfType<MPannableViewport>(controller);
     if(pannableViewport) {
+        updatePannableViewportPosition();
+
         connect(pannableViewport, SIGNAL(positionChanged(QPointF)), SLOT(viewportPositionChanged(QPointF)));
         connect(pannableViewport, SIGNAL(viewportSizeChanged(QSizeF)), SLOT(viewportSizeChanged(QSizeF)));
 
-        viewportTopLeft = pannableViewport->position() - QPointF(0, itemHeight);
+        viewportTopLeft = pannableViewport->position() - listPosition;
         viewportVisibleHeight = pannableViewport->size().height();
     }
 }
@@ -226,6 +231,17 @@ void MListViewPrivate::updateViewportRect(const QPointF &position, const QSizeF 
         viewportRectChanged(QRectF(position, size));
         q_ptr->relayoutItemsInViewportRect();
     }
+}
+
+void MListViewPrivate::updatePannableViewportPosition()
+{
+    if(!pannableViewport)
+        connectPannableViewport();
+
+    if(pannableViewport && controller)
+        listPosition = controller->mapToItem(pannableViewport->widget(), 0, 0);
+    else
+        listPosition = QPointF(0,0);
 }
 
 void MListViewPrivate::updateItemHeight()
@@ -279,6 +295,7 @@ void MListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRo
 void MListViewPrivate::resetModel(MListModel *mListModel)
 {
     forceRepaint = true;
+    rowCount = 0;
 
     disconnect(q_ptr, SLOT(dataChanged(QModelIndex, QModelIndex)));
     disconnect(q_ptr, SLOT(rowsInserted(QModelIndex, int, int)));
@@ -289,6 +306,8 @@ void MListViewPrivate::resetModel(MListModel *mListModel)
 
     controllerModel = mListModel;
     model = mListModel->itemModel();
+    if(model)
+        rowCount = model->rowCount();
     clearVisibleItemsArray();
     updateItemHeight();
     updateFirstVisibleRow(QModelIndex());
@@ -355,7 +374,10 @@ bool MListViewPrivate::isGroupHeader(const QModelIndex &index)
 
 void MListViewPrivate::layoutChanged()
 {
-
+    if(model)
+        rowCount = model->rowCount();
+    else
+        rowCount = 0;
 }
 
 void MListViewPrivate::drawSeparators(QPainter *painter, const QStyleOptionGraphicsItem *option)
@@ -401,7 +423,7 @@ MPlainListViewPrivate::~MPlainListViewPrivate()
 
 }
 
-int MPlainListViewPrivate::separatorsCount() const
+int MPlainListViewPrivate::hseparatorsCount() const
 {
     return itemsCount() - 1;
 }
@@ -409,7 +431,7 @@ int MPlainListViewPrivate::separatorsCount() const
 int MPlainListViewPrivate::totalHeight()
 {
     int itemsCount = this->itemsCount();
-    int separatorsCount = this->separatorsCount();
+    int separatorsCount = this->hseparatorsCount();
     int totalHeight = itemsCount * itemHeight + separatorsCount * hseparatorHeight;
     return totalHeight;
 }
@@ -419,7 +441,7 @@ int MPlainListViewPrivate::itemsCount() const
     if (model == 0)
         return NULL;
 
-    return model->rowCount();
+    return rowCount;
 }
 
 MWidget *MPlainListViewPrivate::createItem(int row)
@@ -446,7 +468,7 @@ int MPlainListViewPrivate::locateVisibleRowAt(int y, int x)
     // row = pos / (hseparatorHeight + itemHeight)
     int row = y / (hseparatorHeight + itemHeight);
 
-    int modelRowCount = model->rowCount();
+    int modelRowCount = rowCount;
     if (row >= modelRowCount)
         row = modelRowCount - 1;
 
@@ -510,8 +532,10 @@ void MPlainMultiColumnListViewPrivate::createSeparators()
 void MPlainMultiColumnListViewPrivate::updateSeparators()
 {
     MListViewPrivate::updateSeparators();
-    if(vseparator)
+    if(vseparator) {
         vseparator->setObjectName(q_ptr->style()->verticalSeparatorObjectName());
+        updateSeparatorSize();
+    }
 }
 
 void MPlainMultiColumnListViewPrivate::setVerticalSeparator(MWidget *separator)
@@ -557,11 +581,17 @@ int MPlainMultiColumnListViewPrivate::locatePosOfItem(int row)
     return itemHeights + hseparatorHeights;
 }
 
+
+int MPlainMultiColumnListViewPrivate::hseparatorsCount() const
+{
+    return itemsToRows(itemsCount()) - 1;
+}
+
 int MPlainMultiColumnListViewPrivate::totalHeight()
 {
     int rowsCount = itemsToRows(itemsCount());
-    int separatorsCount = this->separatorsCount();
-    int totalHeight = rowsCount * itemHeight + separatorsCount * hseparatorHeight;
+    int hseparatorsCount = this->hseparatorsCount();
+    int totalHeight = rowsCount * itemHeight + hseparatorsCount * hseparatorHeight;
     return totalHeight;
 }
 
@@ -601,7 +631,6 @@ void MPlainMultiColumnListViewPrivate::updateSeparatorSize()
 {
     MListViewPrivate::updateSeparatorSize();
 
-    //Update vertical separator
     if(vseparator) {
         vseparatorWidth = vseparator->preferredWidth();
         vseparator->setGeometry(QRectF(QPointF(0, 0), QSizeF(vseparatorWidth, itemHeight)));
@@ -743,19 +772,19 @@ QModelIndex MGroupHeaderListViewPrivate::locateVisibleIndexAt(int pos)
     return flatRowToIndex(row);
 }
 
-int MGroupHeaderListViewPrivate::separatorsCount() const
+int MGroupHeaderListViewPrivate::hseparatorsCount() const
 {
     int itemsCount = this->headersCount();
-    int seperators = 0;
+    int hseparators = 0;
     for (int i = 0; i < itemsCount; i++) {
         int itemsCountInGroup = this->itemsCount(i);
         if (itemsCountInGroup == 0)
             continue;
 
-        seperators += itemsCountInGroup - 1;
+        hseparators += itemsCountInGroup - 1;
     }
 
-    return seperators;
+    return hseparators;
 }
 
 void MGroupHeaderListViewPrivate::resetModel(MListModel *mListModel)
@@ -924,7 +953,7 @@ int MGroupHeaderListViewPrivate::headerHeight()
 
 int MGroupHeaderListViewPrivate::headersCount() const
 {
-    return model->rowCount();
+    return rowCount;
 }
 
 int MGroupHeaderListViewPrivate::itemsCount(int headerIndex) const
@@ -936,9 +965,9 @@ int MGroupHeaderListViewPrivate::itemsCount(int headerIndex) const
 int MGroupHeaderListViewPrivate::itemsCount() const
 {
     if (!controllerModel->showGroups())
-        return model->rowCount();
+        return rowCount;
 
-    int groupsCount = model->rowCount();
+    int groupsCount = rowCount;
     int totalItemsCount = 0;
     for (int i = 0; i < groupsCount; i++) {
         totalItemsCount += itemsCount(i);
@@ -957,8 +986,8 @@ int MGroupHeaderListViewPrivate::totalHeight()
 {
     int headersCount = this->headersCount();
     int itemsCount = this->itemsCount();
-    int separatorsCount = this->separatorsCount();
-    int totalHeight = headersCount * headerHeight() + itemsCount * itemHeight + separatorsCount * hseparatorHeight;
+    int hseparatorsCount = this->hseparatorsCount();
+    int totalHeight = headersCount * headerHeight() + itemsCount * itemHeight + hseparatorsCount * hseparatorHeight;
     return totalHeight;
 }
 
@@ -982,6 +1011,8 @@ void MGroupHeaderListViewPrivate::createVisibleItems(int firstVisibleRow, int la
 
 void MGroupHeaderListViewPrivate::layoutChanged()
 {
+    MListViewPrivate::layoutChanged();
+
     updateHeadersPositions();
     updateHeadersRows();
 }
@@ -1031,8 +1062,11 @@ void MMultiColumnListViewPrivate::createSeparators()
 void MMultiColumnListViewPrivate::updateSeparators()
 {
     MListViewPrivate::updateSeparators();
-    if(vseparator)
+
+    if(vseparator) {
         vseparator->setObjectName(q_ptr->style()->verticalSeparatorObjectName());
+        updateSeparatorSize();
+    }
 }
 
 int MMultiColumnListViewPrivate::itemsToRows(int items) const
@@ -1167,7 +1201,7 @@ void MMultiColumnListViewPrivate::createVisibleItems(const QModelIndex &firstVis
                 visibleItems.append(cell);
                 widgetFlatRows[cell] = currentRow + column + 1;
                 cell->setPos(QPointF(column*(viewWidth / controllerModel->columns()), locatePosOfItem(currentRow + column)));
-                if (currentRow + column + 1 == itemsCount() + model->rowCount() || flatRowToColumn(currentRow + column + 1) == 0)
+                if (currentRow + column + 1 == itemsCount() + rowCount || flatRowToColumn(currentRow + column + 1) == 0)
                     break;
             }
         }
@@ -1202,6 +1236,16 @@ int MMultiColumnListViewPrivate::locatePosOfItem(int row)
 int MMultiColumnListViewPrivate::locatePosOfItem(const QModelIndex &index)
 {
     return MGroupHeaderListViewPrivate::locatePosOfItem(index);
+}
+
+int MMultiColumnListViewPrivate::hseparatorsCount() const
+{
+    int hseparatorsCount = 0;
+    for (int i = 0; i < headersCount(); ++i) {
+        hseparatorsCount += rowsInGroup(i) - 1;
+    }
+
+    return hseparatorsCount;
 }
 
 int MMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)

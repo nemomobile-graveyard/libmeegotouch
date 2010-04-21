@@ -82,7 +82,7 @@ private slots:
     void testSizeHint();
     void testItemCountIndexedModel();
     void testItemCount();
-    void testSeparatorsCount();
+    void testHorizontalSeparatorsCount();
 
     void testLocateVisibleIndexAt0();
     void testLocateVisibleIndexAt40();

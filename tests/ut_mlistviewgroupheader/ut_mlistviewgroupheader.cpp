@@ -100,8 +100,7 @@ void Ut_MListViewGroupHeader::init()
     model->setShowGroups(true);
     listViewPrivate->controllerModel = model;
 
-    listViewPrivate->updateHeadersRows();
-    listViewPrivate->updateHeadersPositions();
+    listViewPrivate->layoutChanged();
 }
 
 void Ut_MListViewGroupHeader::cleanup()
@@ -180,7 +179,7 @@ void Ut_MListViewGroupHeader::testItemCount()
 
 void Ut_MListViewGroupHeader::testSeparatorsCount()
 {
-    QCOMPARE(listViewPrivate->separatorsCount(), 5);
+    QCOMPARE(listViewPrivate->hseparatorsCount(), 5);
 }
 
 void Ut_MListViewGroupHeader::testFirstFlatRowToIndex()
@@ -419,8 +418,7 @@ void Ut_MListViewGroupHeader2::init()
     model->setShowGroups(true);
     listViewPrivate->controllerModel = model;
 
-    listViewPrivate->updateHeadersRows();
-    listViewPrivate->updateHeadersPositions();
+    listViewPrivate->layoutChanged();
 }
 
 void Ut_MListViewGroupHeader2::cleanup()
@@ -493,8 +491,7 @@ void Ut_MListViewGroupHeaderEmptyModel::init()
     model->setShowGroups(true);
     listViewPrivate->controllerModel = model;
 
-    listViewPrivate->updateHeadersRows();
-    listViewPrivate->updateHeadersPositions();
+    listViewPrivate->layoutChanged();
 }
 
 void Ut_MListViewGroupHeaderEmptyModel::cleanup()

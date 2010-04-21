@@ -75,6 +75,15 @@ private slots:
     void testPlainMulticolumnVerticalSeparatorHeight();
     void testGroupedMulticolumnVerticalSeparatorHeight();
 
+    void testPlainHorizontalSeparatorsCount();
+    void testGroupedHorizontalSeparatorsCount();
+    void testPlainMulticolumnHorizontalSeparatorsCount2Columns();
+    void testPlainMulticolumnHorizontalSeparatorsCount3Columns();
+    void testPlainMulticolumnHorizontalSeparatorsCount4Columns();
+    void testGroupedMulticolumnHorizontalSeparatorsCount2Columns();
+    void testGroupedMulticolumnHorizontalSeparatorsCount3Columns();
+    void testGroupedMulticolumnHorizontalSeparatorsCount4Columns();
+
 private:
     QObject *phoneBook;
     MyIndexedModel *phoneBookModel;

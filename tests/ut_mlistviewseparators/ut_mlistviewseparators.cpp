@@ -67,6 +67,21 @@ void Ut_MListViewSeparators::makePhoneBook()
 
     item = new QObject(itemC);
     item->setObjectName("Cindy");
+
+    QObject *itemD = new QObject(phoneBook);
+    itemD->setObjectName("D");
+
+    item = new QObject(itemD);
+    item->setObjectName("Daby");
+
+    item = new QObject(itemD);
+    item->setObjectName("Dob");
+
+    item = new QObject(itemD);
+    item->setObjectName("Doby");
+
+    item = new QObject(itemD);
+    item->setObjectName("Dritney");
 }
 
 void Ut_MListViewSeparators::makePhoneBookModel()
@@ -253,6 +268,52 @@ void Ut_MListViewSeparators::testPlainMulticolumnVerticalSeparatorHeight()
 void Ut_MListViewSeparators::testGroupedMulticolumnVerticalSeparatorHeight()
 {
     QCOMPARE(multiColumnListViewPrivate->vseparator->size().height(), 100.0);
+}
+
+void Ut_MListViewSeparators::testPlainHorizontalSeparatorsCount()
+{
+    QCOMPARE(listViewPrivate->hseparatorsCount(), 3);
+}
+
+void Ut_MListViewSeparators::testGroupedHorizontalSeparatorsCount()
+{
+    QCOMPARE(groupedListViewPrivate->hseparatorsCount(), 8);
+}
+
+void Ut_MListViewSeparators::testPlainMulticolumnHorizontalSeparatorsCount2Columns()
+{
+    plainMultiColumnListViewPrivate->controllerModel->setColumns(2);
+    QCOMPARE(plainMultiColumnListViewPrivate->hseparatorsCount(), 1);
+}
+
+void Ut_MListViewSeparators::testPlainMulticolumnHorizontalSeparatorsCount3Columns()
+{
+    plainMultiColumnListViewPrivate->controllerModel->setColumns(3);
+    QCOMPARE(plainMultiColumnListViewPrivate->hseparatorsCount(), 1);
+}
+
+void Ut_MListViewSeparators::testPlainMulticolumnHorizontalSeparatorsCount4Columns()
+{
+    plainMultiColumnListViewPrivate->controllerModel->setColumns(4);
+    QCOMPARE(plainMultiColumnListViewPrivate->hseparatorsCount(), 0);
+}
+
+void Ut_MListViewSeparators::testGroupedMulticolumnHorizontalSeparatorsCount2Columns()
+{
+    multiColumnListViewPrivate->controllerModel->setColumns(2);
+    QCOMPARE(multiColumnListViewPrivate->hseparatorsCount(), 3);
+}
+
+void Ut_MListViewSeparators::testGroupedMulticolumnHorizontalSeparatorsCount3Columns()
+{
+    multiColumnListViewPrivate->controllerModel->setColumns(3);
+    QCOMPARE(multiColumnListViewPrivate->hseparatorsCount(), 2);
+}
+
+void Ut_MListViewSeparators::testGroupedMulticolumnHorizontalSeparatorsCount4Columns()
+{
+    multiColumnListViewPrivate->controllerModel->setColumns(4);
+    QCOMPARE(multiColumnListViewPrivate->hseparatorsCount(), 0);
 }
 
 
