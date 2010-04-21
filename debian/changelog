@@ -1,8 +1,15 @@
-libmeegotouch (0.20.1~1) unstable; urgency=low
+libmeegotouch (0.20.1-1) unstable; urgency=low
 
-  * New version [UNRELEASED]
-  
- -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 19 Apr 2010 17:57:00 +0200
+  * New version
+  * Fixes: NB#161875 - <MemLeak> duitheme.cpp
+  * Fixes: NB#164280 - Screen rotation setting dialog position before rotation happens
+  * Fixes: NB#163746 - ComboBox (pop-up list) interaction should be equal to the List interaction. Selected item should be visible when pop-up list is opened
+  * Fixes: NB#161412 - DuiPannableViewport crashes
+  * Fixes: NB#163796 - No unique object names of Dialog, Messagebox, DuiPopupList
+  * Fixes: NB#163400 - Buttons in query dialog are wrongly positioned in RTL mode (Arabic)
+  * Fixes: NB#163427 - Navigation controls are wrongly positioned after 180 degrees landscape rotation
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 21 Apr 2010 11:43:00 +0300
 
 libmeegotouch (0.20.0-1) unstable; urgency=low
 
