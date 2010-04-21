@@ -59,7 +59,7 @@ void ComboBoxPage::createContent()
     containerLayout->setPolicy(containerPolicy);
 
     QStringList list;
-    for (int i = 0; i < 10000; ++i) {
+    for (int i = 0; i < 100; ++i) {
         list << QString::number(10000 + i);
     }
 
