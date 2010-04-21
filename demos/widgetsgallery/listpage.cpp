@@ -344,10 +344,10 @@ QSettings *themeFile(const QString &theme)
         return NULL;
     }
 
-    // step 3: we need to have X-M-Metatheme group in index.theme
+    // step 3: we need to have X-MeegoTouch-Metatheme group in index.theme
 
     // remove the X-DUI-Metatheme statement again when duitheme is phased out.
-    if ((!themeIndexFile->childGroups().contains(QString("X-M-Metatheme")))
+    if ((!themeIndexFile->childGroups().contains(QString("X-MeegoTouch-Metatheme")))
         &&(!themeIndexFile->childGroups().contains(QString("X-DUI-Metatheme"))))
     {
         delete themeIndexFile;
@@ -376,14 +376,14 @@ QList<ThemeInfo> findAvailableThemes()
             continue;
 
         // check if this theme is visible
-        if (!themeIndexFile->value("X-M-Metatheme/X-Visible", true).toBool()) {
+        if (!themeIndexFile->value("X-MeegoTouch-Metatheme/X-Visible", true).toBool()) {
             delete themeIndexFile;
             continue;
         }
 
         info.theme = dir.baseName();
         info.themeName = themeIndexFile->value("Desktop Entry/Name", "").toString();
-        info.themeIcon = themeIndexFile->value("X-M-Metatheme/X-Icon", "").toString();
+        info.themeIcon = themeIndexFile->value("X-MeegoTouch-Metatheme/X-Icon", "").toString();
 
         // remove this again, when duitheme is phased out
         if ( info.themeIcon.isEmpty() )
