@@ -151,7 +151,6 @@ SUBDIRS     =  \
     ut_mvideowidget \
     ut_mservicefwgen \
 #    ut_mstatusbar \ // Unstable. "Randomly" crashes on clean up, when detroying its MApplication instance.
-    ut_mpanrecognizer \
 
 # enable only when we have icu available
 

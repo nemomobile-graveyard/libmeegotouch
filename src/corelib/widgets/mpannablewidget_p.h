@@ -28,9 +28,11 @@
 
 class QPoint;
 class QEvent;
+class QTransform;
 class QGraphicsItem;
 class QGraphicsSceneMouseEvent;
 class MPhysics2DPanning;
+class MStyle;
 class MPannableWidgetGlass;
 
 class MPannableWidgetPrivate : public MWidgetControllerPrivate
@@ -39,6 +41,10 @@ class MPannableWidgetPrivate : public MWidgetControllerPrivate
 public:
     explicit MPannableWidgetPrivate();
     virtual ~MPannableWidgetPrivate();
+
+    enum states {Wait, Evaluate, Pan};
+    int state;
+    int itemCount;
 
     QGraphicsSceneMouseEvent  pressEvent;
 
@@ -53,8 +59,6 @@ public:
     };
 
     QList<struct resentItem> resentList;
-
-    int pressDeliveryTimerId;
 public:
 
     /*!
@@ -65,36 +69,14 @@ public:
                                          QGraphicsSceneMouseEvent *event);
 
     /*!
-     * \brief Method used for resetting state of the physics engine.
+     * \brief Method used for resetting state of the pannable widget.
      */
-    void resetPhysics();
-
-    /*!
-     * \brief Method used for resetting glass and mouse grabber.
-     */
-    void resetMouseGrabber();
+    void resetState();
 
     /*!
      * \brief Method used for delivering event to interested widget.
      */
     void deliverMouseEvent(QGraphicsSceneMouseEvent *event);
-
-    /*!
-     * \brief Method used for delivering initial mouse press. It will set
-     * the mouseGrabber if it is necessary at this point.
-     */
-    void deliverPressEvent();
-
-    /*!
-     * \brief Method used to start a timer which will trigger the delivery
-     * of initial mouse press event.
-     */
-    void initialPressStartTimer();
-
-    /*!
-     * \brief Method used for cancelling the mouse press delivery timer.
-     */
-    void initialPressStopTimer();
 };
 
 #endif

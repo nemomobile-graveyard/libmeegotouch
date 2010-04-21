@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
+#include <QtGui>
 
 #include "ut_mapplethandle.h"
 #include <mextensionhandle.h>

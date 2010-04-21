@@ -18,320 +18,478 @@
 ****************************************************************************/
 
 #include "ut_mpannablewidget.h"
-#include "mpannablewidget.h"
-#include "mpannablewidget_p.h"
-#include "mcancelevent.h"
+#include "mapplication.h"
+#include <mtheme.h>
+#include <mpannablewidget.h>
+#include "../../src/corelib/widgets/mpannablewidget_p.h"
+#include "../../src/corelib/widgets/mphysics2dpanning_p.h"
+#include <mapplication.h>
 
-#include <QGestureEvent>
-#include <QPanGesture>
+#include <QMetaType>
+#include <QGraphicsSceneMouseEvent>
+#include <QGraphicsView>
 
-#include <QDebug>
+/** Events that the test widget emits */
+typedef enum {
+//    START_TIMER,
+//    STOP_TIMER,
+    PHYS_STOP,
+    PHYS_MOUSE_PRESS,
+    PHYS_MOUSE_MOVE,
+    PHYS_MOUSE_RELEASE,
+    MOUSE_BUTTON_PRESS,
+    MOUSE_BUTTON_RELEASE,
+    MOUSE_MOVE,
+    UNGRAB_MOUSE
+} StateTransitionEvent;
 
-class DummyGraphicsItem : public MWidget
+/** Class indicating state of the pannable widget after a state transition. */
+class StateTransitionResult
 {
 public:
-    DummyGraphicsItem() {
-        mousePressReceived = false;
-        mouseMoveReceived = false;
-        mouseReleaseReceived = false;
-        cancelReceived = false;
-    }
+    StateTransitionResult(int targetState = 0) :
+        _targetState(targetState), _outputEvents(QList<StateTransitionEvent>()) {}
+    StateTransitionResult(int targetState, QList<StateTransitionEvent> expectedEvents) :
+        _targetState(targetState), _outputEvents(expectedEvents) {}
 
-    bool mousePressReceived;
-    bool mouseMoveReceived;
-    bool mouseReleaseReceived;
-    bool cancelReceived;
+    /** Compares this result with another result using QTestLib compare. */
+    void compare(const StateTransitionResult &result) const;
+
+    /** State where the pannable widget should be. */
+    int _targetState;
+    /** List of output events from test widget. */
+    QList<StateTransitionEvent> _outputEvents;
 };
-DummyGraphicsItem *dummyItem = 0;
 
-struct PhysicsState {
-
-    PhysicsState() {
-        pointerPressed = false;
-        pointerMoved = false;
-        pointerReleased = false;
+void StateTransitionResult::compare(const StateTransitionResult &result) const
+{
+    // Iterate through the output events and see that they match
+    QCOMPARE(_outputEvents.size(), result._outputEvents.size());
+    QListIterator<StateTransitionEvent> outputEvent(_outputEvents);
+    QListIterator<StateTransitionEvent> resultEvent(result._outputEvents);
+    while (outputEvent.hasNext()) {
+        QCOMPARE(outputEvent.next(), resultEvent.next());
     }
+}
 
-    bool pointerPressed;
-    bool pointerMoved;
-    bool pointerReleased;
-};
-PhysicsState *physicsState = 0;
+// Required to insert StateTransitionResult instances to the test data.
+Q_DECLARE_METATYPE(StateTransitionResult);
 
-//Stubs
+static Ut_MPannableWidget *gTester = 0;
 
-//Physics stubs:
+/* Using the QT timer methods rather than the stubbed ones.
+ *
+// Mock methods of the services required by pannable widget.
+void QTimer::start()
+{
+    qDebug("QTimer::start() - called.");
+    gTester->_currentResult->_outputEvents.push_back(START_TIMER);
+}
+
+
+void QTimer::stop()
+{
+    qDebug("QTimer::stop() - called.");
+    gTester->_currentResult->_outputEvents.push_back(STOP_TIMER);
+}
+*/
+
 void MPhysics2DPanning::start()
 {
+    qDebug("Physics2DPanning::start() - called.");
 }
 
-void MPhysics2DPanning::stop()
+void QTimeLine::start()
 {
+    qDebug("QTimeLine::start() - called.");
 }
 
-void MPhysics2DPanning::pointerPress(const QPointF& /*pos*/)
+QWidget::QWidget(QWidget* /*parent*/, Qt::WindowFlags /*f*/)
 {
-    physicsState->pointerPressed = true;
+    qDebug("QWidget::QWidget() - called.");
 }
 
-void MPhysics2DPanning::pointerMove(const QPointF& /*pos*/)
+QFrame::QFrame(QWidget* /*parent*/, Qt::WindowFlags /*f*/)
 {
-    physicsState->pointerMoved = true;
+    qDebug("QFrame::QFrame() - called.");
 }
 
-void MPhysics2DPanning::pointerRelease()
+QAbstractScrollArea::QAbstractScrollArea(QWidget* /*parent*/)
 {
-    physicsState->pointerReleased = true;
+    qDebug("QAbstractScrollArea::QAbstractScrollArea() - called.");
 }
 
-//QGraphicsObject stubs:
-void QGraphicsObject::grabGesture(Qt::GestureType, Qt::GestureFlags)
+QGraphicsView::QGraphicsView(QWidget* /*parent*/)
 {
-}
-
-//QGraphicsItem stubs:
-void QGraphicsItem::grabMouse()
-{
-}
-
-void QGraphicsItem::ungrabMouse()
-{
+    qDebug("QGraphicsView::QGraphicsView() - called.");
 }
 
 QGraphicsScene *QGraphicsItem::scene() const
 {
-    return (QGraphicsScene*)1;
+    qDebug("QGraphicsItem::scene() - called.");
+    return 0;
 }
 
-//QGraphiscScene stubs:
- QGraphicsItem* QGraphicsScene::mouseGrabberItem() const
+QGraphicsItem *QGraphicsScene::mouseGrabberItem() const
 {
-    return dummyItem;
+    qDebug("QGraphicsScene::mouseGrabberItem() - called");
+    return 0;
 }
 
- QList<QGraphicsItem*> QGraphicsScene::items() const
+QList<QGraphicsItem *> QGraphicsScene::items() const
 {
-    QList<QGraphicsItem*> itemList;
-    if (dummyItem) {
-        itemList.append(dummyItem);
+    qDebug("QGraphicsScene::items() - called");
+    QList<QGraphicsItem *> list;
+    return list;
+}
+
+QPointF QGraphicsItem::mapFromItem(const QGraphicsItem */*item*/, const QPointF &/*point*/) const
+{
+    qDebug("QGraphicsScene::mapFromItem() - called");
+    return QPointF();
+}
+
+QList<QGraphicsView *> QGraphicsScene::views() const
+{
+    qDebug("QGraphicsScene::views() - called.");
+    return QList<QGraphicsView *>();
+}
+
+QPoint QGraphicsView::mapFromScene(const QPointF& /*point*/) const
+{
+    qDebug("QGraphicsView::mapFromScene() - called.");
+    return QPoint();
+}
+
+QWidget *QAbstractScrollArea::viewport() const
+{
+    qDebug("QAbstractScrollArea::viewport() - called.");
+    return 0;
+}
+
+bool QGraphicsScene::sendEvent(QGraphicsItem *item, QEvent *event)
+{
+    Q_UNUSED(item);
+    Q_UNUSED(event);
+    qDebug("QGraphicsScene::sendEvent() - called.");
+    return true;
+}
+
+void QCoreApplication::postEvent(QObject* /*receiver*/, QEvent *event)
+{
+    qDebug("QCoreApplication::postEvent() - called");
+    if (event->type() == QEvent::MouseButtonPress) {
+        gTester->_currentResult->_outputEvents.push_back(MOUSE_BUTTON_PRESS);
     }
-    return itemList;
+    if (event->type() == QEvent::MouseButtonRelease) {
+        gTester->_currentResult->_outputEvents.push_back(MOUSE_BUTTON_RELEASE);
+    }
+    if (event->type() == QEvent::MouseMove) {
+        gTester->_currentResult->_outputEvents.push_back(MOUSE_MOVE);
+    }
 }
 
- QList<QGraphicsView *> QGraphicsScene::views() const
- {
-     QList<QGraphicsView *> viewList;
-     viewList.append(0);
-     return viewList;
- }
- 
- bool QGraphicsScene::sendEvent(QGraphicsItem *item, QEvent *event)
- {
-     if (item == dummyItem) {
+void MPhysics2DPanning::stop()
+{
+    gTester->_currentResult->_outputEvents.push_back(PHYS_STOP);
+}
 
-         if (event->type() == MCancelEvent::eventNumber()) {
-             dummyItem->cancelReceived = true;
-         }
+void MPhysics2DPanning::pointerPress(const QPointF& /*pos*/)
+{
+    gTester->_currentResult->_outputEvents.push_back(PHYS_MOUSE_PRESS);
+}
 
-         switch (event->type()) {
-         case QEvent::GraphicsSceneMousePress:
-             dummyItem->mousePressReceived = true;
-             break;
+void MPhysics2DPanning::pointerMove(const QPointF& /*pos*/)
+{
+    gTester->_currentResult->_outputEvents.push_back(PHYS_MOUSE_MOVE);
+}
 
-         case QEvent::GraphicsSceneMouseRelease:
-             dummyItem->mouseReleaseReceived = true;
-             break;
+void MPhysics2DPanning::pointerRelease()
+{
+    gTester->_currentResult->_outputEvents.push_back(PHYS_MOUSE_RELEASE);
+}
 
-         case QEvent::GraphicsSceneMouseMove:
-             dummyItem->mouseMoveReceived = true;
-             break;
+void MPhysics2DPanningPrivate::_q_integrator(int /*frame*/)
+{
+}
 
-         default:
-             break;
-         }
-     }
-     return true;
- }
+MApplication *app;
 
- QPointF QGraphicsItem::mapFromItem(const QGraphicsItem */*item*/, const QPointF &/*point*/) const
- {
-     return QPointF();
- }
-
- QPoint QGraphicsView::mapFromScene(const QPointF& /*point*/) const
- {
-     return QPoint();
- }
-
- QWidget *QAbstractScrollArea::viewport() const
- {
-     return 0;
- }
-
- void QCoreApplication::postEvent(QObject* /*receiver*/, QEvent */*event*/)
- {
-     qDebug("QCoreApplication::postEvent() - called");
- }
-
- Qt::GestureState currentPanState = Qt::NoGesture;
- Qt::GestureState QGesture::state() const
- {
-     return currentPanState;
- }
-
- // End of stubs.
+void QGraphicsItem::ungrabMouse()
+{
+    gTester->_currentResult->_outputEvents.push_back(UNGRAB_MOUSE);
+}
 
 void Ut_MPannableWidget::initTestCase()
 {
+    static int argc = 1;
+    static char *app_name[1] = { (char *) "./ut_pannablewidget" };
+    app = new MApplication(argc, app_name);
+    Q_UNUSED(app);
+
+    gTester = this;
+
 }
 
 void Ut_MPannableWidget::cleanupTestCase()
 {
+    gTester = 0;
+    delete app;
 }
+
 
 void Ut_MPannableWidget::init()
 {
-    dummyItem = new DummyGraphicsItem;
-    physicsState = new PhysicsState();
-    widget = new MPannableWidget();
+    _widget = new MPannableWidget();
+    _currentResult = new StateTransitionResult();
 }
 
 void Ut_MPannableWidget::cleanup()
 {
-    delete widget;
-    delete physicsState;
-    delete dummyItem;
+    delete _currentResult;
+    delete _widget;
+    _widget = 0;
+    _currentResult = 0;
 }
 
-void Ut_MPannableWidget::mousePressAndReleaseAreDeliveredToGrabber()
+void Ut_MPannableWidget::testWaitState_data()
 {
-    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
-    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
-    QTimerEvent timerEvent(1);
+    QList<StateTransitionEvent> expectedEvents;
 
-    widget->glassMousePressEvent(&pressEvent);
+    // Create a list of results that the widget should reach to
+    // when receiving events.
+    QList<StateTransitionResult> results;
 
-    QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
+    // Result after no events
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Wait)));
 
-    widget->d_func()->pressDeliveryTimerId = 1;    
-    widget->glassTimerEvent(&timerEvent);
+    // Result after mouse press event
+    expectedEvents.push_back(UNGRAB_MOUSE);
+    expectedEvents.push_back(PHYS_MOUSE_PRESS);
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Evaluate), expectedEvents));
+    expectedEvents.clear();
 
-    QCOMPARE(widget->d_func()->mouseGrabber, dummyItem);
-    QVERIFY2(widget->d_func()->resentList.at(0).type == QEvent::GraphicsSceneMousePress, "Mouse press was not sent");
+    // Result after mouse release event
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Wait), expectedEvents));
 
-    widget->glassMouseReleaseEvent(&releaseEvent);
+    // Result after mouse move event
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Wait), expectedEvents));
 
-    QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
-    QCOMPARE(dummyItem->mouseReleaseReceived, true);
+    // Result after move over passive threshold event
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Wait), expectedEvents));
+
+    // Result after move over active threshold event
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Wait), expectedEvents));
+
+    createTestData(results);
 }
 
-void Ut_MPannableWidget::mouseMoveIsDelieveredToGrabberIfNoPanningIsRecognized()
+void Ut_MPannableWidget::testWaitState()
 {
-    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
-    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
-    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
-    QTimerEvent timerEvent(1);
+    // Set the pannable widget into wait state
+    static_cast<MPannableWidgetPrivate *>(_widget->d_ptr)->state = MPannableWidgetPrivate::Wait;
 
-    widget->glassMousePressEvent(&pressEvent);
-
-    QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
-
-    widget->d_func()->pressDeliveryTimerId = 1;
-    widget->glassTimerEvent(&timerEvent);
-
-    QCOMPARE(widget->d_func()->mouseGrabber, dummyItem);
-    QVERIFY2(widget->d_func()->resentList.at(0).type == QEvent::GraphicsSceneMousePress, "Mouse press was not sent");
-
-    widget->glassMouseMoveEvent(&moveEvent);
-    QCOMPARE(widget->d_func()->mouseGrabber, dummyItem);
-    QCOMPARE(dummyItem->mouseMoveReceived, true);
-    QCOMPARE(dummyItem->mouseReleaseReceived, false);
-
-    widget->glassMouseReleaseEvent(&releaseEvent);
-
-    QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
-    QCOMPARE(dummyItem->mouseReleaseReceived, true);
+    testStateTransitions();
 }
 
-void Ut_MPannableWidget::panGestureMovesPhysicsPointer()
+void Ut_MPannableWidget::testEvaluateState_data()
 {
-    QPanGesture panGesture;
+    QList<StateTransitionEvent> expectedEvents;
 
-    QList<QGesture*> gestureList;
-    gestureList.append(&panGesture);
-    QGestureEvent event(gestureList);
+    // Create a list of results that the widget should reach to
+    // when receiving events.
+    QList<StateTransitionResult> results;
 
-    currentPanState = Qt::GestureStarted;
-    widget->glassPanEvent(&event, &panGesture);
-    QCOMPARE(physicsState->pointerPressed, true);
-    QCOMPARE(physicsState->pointerMoved, false);
-    QCOMPARE(physicsState->pointerReleased, false);
+    // Result after no events
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Evaluate)));
 
-    physicsState->pointerPressed = false;
+    // Result after mouse press event
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Evaluate)));
 
-    currentPanState = Qt::GestureUpdated;
-    widget->glassPanEvent(&event, &panGesture);
-    QCOMPARE(physicsState->pointerPressed, false);
-    QCOMPARE(physicsState->pointerMoved, true);
-    QCOMPARE(physicsState->pointerReleased, false);
+    // Result after mouse release event
+    expectedEvents.push_back(UNGRAB_MOUSE);
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Wait), expectedEvents));
+    expectedEvents.clear();
 
-    physicsState->pointerMoved = false;
+    // Result after mouse move event
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Evaluate)));
 
-    currentPanState = Qt::GestureFinished;
-    widget->glassPanEvent(&event, &panGesture);
-    QCOMPARE(physicsState->pointerPressed, false);
-    QCOMPARE(physicsState->pointerMoved, false);
-    QCOMPARE(physicsState->pointerReleased, true);
+    // Result after move over passive threshold event
+    expectedEvents.push_back(PHYS_MOUSE_RELEASE);
+    expectedEvents.push_back(UNGRAB_MOUSE);
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Wait), expectedEvents));
+    expectedEvents.clear();
 
+    // Result after move over active threshold event
+    expectedEvents.push_back(PHYS_MOUSE_MOVE);
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Pan), expectedEvents));
+    expectedEvents.clear();
+
+    createTestData(results);
 }
 
-void Ut_MPannableWidget::panGestureAgainstPanningDirectionIsIgnored()
+void Ut_MPannableWidget::testEvaluateState()
 {
-    QPanGesture panGesture;
+    // Set the pannable widget into evaluate state
+    static_cast<MPannableWidgetPrivate *>(_widget->d_ptr)->state = MPannableWidgetPrivate::Evaluate;
 
-    QList<QGesture*> gestureList;
-    gestureList.append(&panGesture);
-    QGestureEvent event(gestureList);
-
-    currentPanState = Qt::GestureStarted;
-    panGesture.setOffset(QPointF(100,0));
-
-    widget->glassPanEvent(&event, &panGesture);
-    QCOMPARE(physicsState->pointerPressed, false);
-    QCOMPARE(physicsState->pointerMoved, false);
-    QCOMPARE(physicsState->pointerReleased, false);
-    QCOMPARE(event.isAccepted(&panGesture), false);
+    testStateTransitions();
 }
 
-void Ut_MPannableWidget::panGestureCancelsMouseEvents()
+void Ut_MPannableWidget::testPanState_data()
 {
-    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
-    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
-    QTimerEvent timerEvent(1);
+    QList<StateTransitionEvent> expectedEvents;
 
-    widget->glassMousePressEvent(&pressEvent);
+    // Create a list of results that the widget should reach to
+    // when receiving events.
+    QList<StateTransitionResult> results;
 
-    QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
+    // Result after no events
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Pan)));
 
-    widget->d_func()->pressDeliveryTimerId = 1;
-    widget->glassTimerEvent(&timerEvent);
+    // Result after mouse press event
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Pan)));
 
-    QCOMPARE(widget->d_func()->mouseGrabber, dummyItem);
-    QVERIFY2(widget->d_func()->resentList.at(0).type == QEvent::GraphicsSceneMousePress, "Mouse press was not sent");
+    // Result after mouse release event
+    expectedEvents.push_back(PHYS_MOUSE_RELEASE);
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Wait), expectedEvents));
+    expectedEvents.clear();
 
-    QPanGesture panGesture;
+    // Result after mouse move event
+    expectedEvents.push_back(PHYS_MOUSE_MOVE);
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Pan), expectedEvents));
+    expectedEvents.clear();
 
-    QList<QGesture*> gestureList;
-    gestureList.append(&panGesture);
-    QGestureEvent event(gestureList);
+    // Result after move over passive threshold event
+    expectedEvents.push_back(PHYS_MOUSE_MOVE);
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Pan), expectedEvents));
+    expectedEvents.clear();
 
-    currentPanState = Qt::GestureStarted;
-    widget->glassPanEvent(&event, &panGesture);
-    QCOMPARE(physicsState->pointerPressed, true);
-    QCOMPARE(physicsState->pointerMoved, false);
-    QCOMPARE(physicsState->pointerReleased, false);
+    // Result after move over active threshold event
+    expectedEvents.push_back(PHYS_MOUSE_MOVE);
+    results.push_back(StateTransitionResult(int(MPannableWidgetPrivate::Pan), expectedEvents));
+    expectedEvents.clear();
 
-    QCOMPARE(dummyItem->cancelReceived, true);
+    createTestData(results);
+}
+
+void Ut_MPannableWidget::testPanState()
+{
+    // Set the pannable widget into pan state
+    static_cast<MPannableWidgetPrivate *>(_widget->d_ptr)->state = MPannableWidgetPrivate::Pan;
+
+    testStateTransitions();
+}
+
+void Ut_MPannableWidget::createTestData(QList<StateTransitionResult> results)
+{
+    qRegisterMetaType< QList<QEvent *> >();
+    qRegisterMetaType< StateTransitionResult >();
+
+    Q_ASSERT(results.size() == 6);
+
+    QTest::addColumn< QList<QEvent *> >("events");
+    QTest::addColumn<StateTransitionResult>("result");
+
+    // Sequence of events to be passed to the test widget.
+    QList<QEvent *> sequence;
+
+    // Iterator to results that the widget should reach when
+    // input events are send to the test widget.
+    QListIterator<StateTransitionResult> resIt(results);
+
+    // No events sent to the widget
+    QTest::newRow("initial") << sequence << resIt.next();
+
+    QGraphicsSceneMouseEvent *mouseEvent;
+
+    // Send a mouse press event
+    mouseEvent = new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMousePress);
+    mouseEvent->setButton(Qt::LeftButton);
+    sequence.push_back(mouseEvent);
+    QTest::newRow("left mouse button pressed") << sequence << resIt.next();
+    sequence.clear();
+
+    // Send a mouse release event
+    mouseEvent = new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMouseRelease);
+    mouseEvent->setButton(Qt::LeftButton);
+    sequence.push_back(mouseEvent);
+    QTest::newRow("left mouse button released") << sequence << resIt.next();
+    sequence.clear();
+
+    // Send a mouse move event
+    mouseEvent = new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMouseMove);
+    mouseEvent->setButton(Qt::LeftButton);
+    mouseEvent->setScreenPos(QPoint(0, 1));
+    sequence.push_back(mouseEvent);
+    QTest::newRow("mouse move") << sequence << resIt.next();
+    sequence.clear();
+
+    // Send a mouse move over passive threshold
+    mouseEvent = new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMouseMove);
+    mouseEvent->setButton(Qt::LeftButton);
+    mouseEvent->setPos(QPoint(31, 0));
+    sequence.push_back(mouseEvent);
+    QTest::newRow("mouse move over passive") << sequence << resIt.next();
+    sequence.clear();
+
+    // Send a mouse move over active threshold
+    mouseEvent = new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMouseMove);
+    mouseEvent->setButton(Qt::LeftButton);
+    mouseEvent->setPos(QPoint(0, 31));
+    sequence.push_back(mouseEvent);
+    QTest::newRow("mouse move over active") << sequence << resIt.next();
+    sequence.clear();
+}
+
+
+void Ut_MPannableWidget::testStateTransitions()
+{
+    QFETCH(QList<QEvent *>, events);
+    QFETCH(StateTransitionResult, result);
+
+    // Iterate through the events in the event list
+    QListIterator<QEvent *> i(events);
+    while (i.hasNext()) {
+        QEvent *event = i.next();
+        switch (event->type()) {
+        case QEvent::GraphicsSceneMousePress:
+            _widget->glassMousePressEvent(static_cast<QGraphicsSceneMouseEvent *>(event));
+            break;
+        case QEvent::GraphicsSceneMouseMove:
+            _widget->glassMouseMoveEvent(static_cast<QGraphicsSceneMouseEvent *>(event));
+            break;
+        case QEvent::GraphicsSceneMouseRelease:
+            _widget->glassMouseReleaseEvent(static_cast<QGraphicsSceneMouseEvent *>(event));
+            break;
+        default:
+            break;
+        }
+    }
+
+    QCOMPARE(static_cast<MPannableWidgetPrivate *>(_widget->d_ptr)->state, result._targetState);
+
+    _currentResult->compare(result);
+}
+
+void Ut_MPannableWidget::testRightMouseButton()
+{
+    QGraphicsSceneMouseEvent *mouseEvent;
+    mouseEvent = new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMousePress);
+    mouseEvent->setButton(Qt::RightButton);
+    mouseEvent->setScenePos(QPoint(100, 100));
+    _widget->glassMousePressEvent(mouseEvent);
+    delete mouseEvent;
+    // State should not change with right mousebutton
+    QVERIFY(static_cast<MPannableWidgetPrivate *>(_widget->d_ptr)->state == MPannableWidgetPrivate::Wait);
+
+    mouseEvent = new QGraphicsSceneMouseEvent(QEvent::GraphicsSceneMouseRelease);
+    mouseEvent->setButton(Qt::RightButton);
+    mouseEvent->setScenePos(QPoint(100, 100));
+    _widget->glassMouseReleaseEvent(mouseEvent);
+    delete mouseEvent;
+    // State should stay the same after button release
+    QVERIFY(static_cast<MPannableWidgetPrivate *>(_widget->d_ptr)->state == MPannableWidgetPrivate::Wait);
 }
 
 class CustomPhysics : public MPhysics2DPanning
@@ -344,32 +502,32 @@ public:
 
 void Ut_MPannableWidget::usingCustomPhysics()
 {
-    CustomPhysics *customPhysics = new CustomPhysics(widget);
-    widget->setPhysics(customPhysics);
+    CustomPhysics *customPhysics = new CustomPhysics(_widget);
+    _widget->setPhysics(customPhysics);
 
-    QVERIFY(static_cast<MPannableWidgetPrivate *>(widget->d_ptr)->physics == customPhysics);
+    QVERIFY(static_cast<MPannableWidgetPrivate *>(_widget->d_ptr)->physics == customPhysics);
 
-    widget->setPhysics(new MPhysics2DPanning(widget));
+    _widget->setPhysics(new MPhysics2DPanning(_widget));
 }
 
 void Ut_MPannableWidget::settingNewPhysicsShouldEmitPhysicsChangeSignal()
 {
-    CustomPhysics *customPhysics = new CustomPhysics(widget);
+    CustomPhysics *customPhysics = new CustomPhysics(_widget);
 
-    QSignalSpy spyPhysicsChange(widget, SIGNAL(physicsChanged()));
+    QSignalSpy spyPhysicsChange(_widget, SIGNAL(physicsChanged()));
 
-    widget->setPhysics(customPhysics);
+    _widget->setPhysics(customPhysics);
 
     QCOMPARE(spyPhysicsChange.count(),1);
 
-    widget->setPhysics(new MPhysics2DPanning(widget));
+    _widget->setPhysics(new MPhysics2DPanning(_widget));
 }
 
 
 void Ut_MPannableWidget::settingPhysicsToNULLShouldNotBreakTheWidget()
 {
-    widget->setPhysics(NULL);
-    QVERIFY(static_cast<MPannableWidgetPrivate *>(widget->d_ptr)->physics != NULL);
+    _widget->setPhysics(NULL);
+    QVERIFY(static_cast<MPannableWidgetPrivate *>(_widget->d_ptr)->physics != NULL);
 
 }
 

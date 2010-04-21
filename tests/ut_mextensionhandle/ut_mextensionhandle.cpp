@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
+#include <QtGui>
 #include <QLocalServer>
 #include <QPoint>
 #include <QGraphicsSceneMouseEvent>
