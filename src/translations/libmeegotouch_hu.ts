@@ -28,18 +28,17 @@
         <location filename="../mashup/mashup/duiapplethandleview.cpp" line="100"/>
         <source>The applet</source>
         <translation>Az Applet</translation>
-        <extra-uispec-document>??? FIXME</extra-uispec-document>
     </message>
     <message id="duiapplethandle_installationfaileddialog_messagemiddle">
         <location filename="../mashup/mashup/duiapplethandleview.cpp" line="106"/>
         <source>failed to install properly with the following error message: &lt;br /&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>a telepítés sikertelen volt a következ</translation>
         <extra-uispec-document>??? FIXME</extra-uispec-document>
     </message>
     <message id="duiapplethandle_installationfaileddialog_messageend">
         <location filename="../mashup/mashup/duiapplethandleview.cpp" line="110"/>
         <source>Please remove the applet.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kérlek töröld az appletet</translation>
     </message>
     <message id="duiapplethandle_applet_settings">
         <location filename="../mashup/mashup/duiapplethandleview.cpp" line="223"/>
@@ -185,7 +184,11 @@
 Command for confirmation
 ----------
 Command for confirmation</extracomment>
-        <translation type="unfinished"></translation>
+        <translation>Megerősítő parancs
+----------
+Megerősítő parancs
+----------
+Megerősítő parancs</translation>
         <extra-uispec-document>DirectUI_Common_Strings_UI_Specification_0.7.doc</extra-uispec-document>
     </message>
     <message id="xx_ComboBoxSubtitle">
@@ -215,13 +218,13 @@ Command for confirmation</extracomment>
     <message id="duiapplicationextensionhandle_brokendialog_messagestart">
         <location filename="../applicationextension/duiapplicationextensionhandleview.cpp" line="47"/>
         <source>The extension</source>
-        <translation type="unfinished"></translation>
+        <translation>A kiterjesztés</translation>
         <extra-uispec-document>??? FIXME</extra-uispec-document>
     </message>
     <message id="duiapplicationextensionhandle_brokendialog_messageend">
         <location filename="../applicationextension/duiapplicationextensionhandleview.cpp" line="51"/>
         <source>is not functioning properly.&lt;br /&gt;Please restart the extension.</source>
-        <translation type="unfinished"></translation>
+        <translation>nem működik megfelelően.&lt;br /&gt;Indítsd újra a kiterjesztést.</translation>
         <extra-uispec-document>??? FIXME</extra-uispec-document>
     </message>
     <message id="duiapplicationextensionhandle_brokendialog_restart">
@@ -233,19 +236,19 @@ Command for confirmation</extracomment>
     <message id="duiapplicationextensionhandle_installationfaileddialog_messagestart">
         <location filename="../applicationextension/duiapplicationextensionhandleview.cpp" line="76"/>
         <source>The extension</source>
-        <translation type="unfinished"></translation>
+        <translation>A kiterjesztés</translation>
         <extra-uispec-document>??? FIXME</extra-uispec-document>
     </message>
     <message id="duiapplicationextensionhandle_installationfaileddialog_messagemiddle">
         <location filename="../applicationextension/duiapplicationextensionhandleview.cpp" line="79"/>
         <source>failed to install properly with the following error message: &lt;br /&gt;</source>
-        <translation type="unfinished"></translation>
+        <translation>a telepítés sikertelen volt a következő hibával: &lt;br /&gt;</translation>
         <extra-uispec-document>??? FIXME</extra-uispec-document>
     </message>
     <message id="duiapplicationextensionhandle_installationfaileddialog_messageend">
         <location filename="../applicationextension/duiapplicationextensionhandleview.cpp" line="83"/>
         <source>Please remove the extension.</source>
-        <translation type="unfinished"></translation>
+        <translation>Kérlek töröld a kiterjesztést</translation>
     </message>
     <message id="duiapplicationextensionhandle_brokendialog_remove">
         <location filename="../applicationextension/duiapplicationextensionhandleview.cpp" line="88"/>
@@ -256,7 +259,7 @@ Command for confirmation</extracomment>
     <message id="duiappletinstancedata_nopackagemetadata">
         <location filename="../mashup/mashup/duiappletinstancemanager.cpp" line="275"/>
         <source>Could not get package meta data</source>
-        <translation type="unfinished"></translation>
+        <translation>A csomag meta adatai nem hozzáférhetőek</translation>
         <extra-uispec-document>??? FIXME</extra-uispec-document>
     </message>
 </context>
@@ -275,7 +278,7 @@ Command for confirmation</extracomment>
     <message>
         <location filename="../../plainqt/style/qtmaemo6styleeventfilter.cpp" line="152"/>
         <source>Choose a value</source>
-        <translation type="unfinished"></translation>
+        <translation>Válassz egy értéket</translation>
     </message>
 </context>
 </TS>

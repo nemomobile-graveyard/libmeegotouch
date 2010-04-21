@@ -11,37 +11,37 @@
     <message id="xx_apporientation_auto">
         <location filename="../listpage.cpp" line="456"/>
         <source>Automatic</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatikus</translation>
     </message>
     <message id="xx_apporientation_portrait">
         <location filename="../listpage.cpp" line="464"/>
         <source>Portrait</source>
-        <translation type="unfinished"></translation>
+        <translation>Álló</translation>
     </message>
     <message id="xx_apporientation_landscape">
         <location filename="../listpage.cpp" line="472"/>
         <source>Landscape</source>
-        <translation type="unfinished"></translation>
+        <translation>Fekvő</translation>
     </message>
     <message id="xx_apporientation_angle0">
         <location filename="../listpage.cpp" line="480"/>
         <source>0 degrees</source>
-        <translation type="unfinished"></translation>
+        <translation>0 fok</translation>
     </message>
     <message id="xx_apporientation_angle90">
         <location filename="../listpage.cpp" line="488"/>
         <source>90 degrees clockwise</source>
-        <translation type="unfinished"></translation>
+        <translation>90 fok óramutató irányban</translation>
     </message>
     <message id="xx_apporientation_angle180">
         <location filename="../listpage.cpp" line="496"/>
         <source>180 degrees clockwise</source>
-        <translation type="unfinished"></translation>
+        <translation>180 fok óramutató irányban</translation>
     </message>
     <message id="xx_apporientation_angle270">
         <location filename="../listpage.cpp" line="504"/>
         <source>270 degrees clockwise</source>
-        <translation type="unfinished"></translation>
+        <translation>270 fok óramutató irányban</translation>
     </message>
     <message id="xx_button_page_title">
         <source>Buttons</source>
@@ -81,7 +81,7 @@
     </message>
     <message id="xx_button_changeIcon">
         <source>dummy</source>
-        <translation type="obsolete">V´altoztatás ikon</translation>
+        <translation type="obsolete">Változtatás ikon</translation>
     </message>
     <message id="xx_label_button_groups">
         <source>Button Groups:</source>
@@ -227,27 +227,27 @@ A Címkék balra, jobbra vagy középre lehetnek rendezve és az általuk megjel
     <message id="xx_dialogs_and_notifications_stacked_dialog_button">
         <location filename="../dialogsandnotificationspage.cpp" line="179"/>
         <source>Click to spawn a nested dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Klikkelj az egymásba helyezett dialógusok létrehozásáshoz</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_title">
         <location filename="../dialogsandnotificationspage.cpp" line="181"/>
         <source>Stacked dialogs</source>
-        <translation type="unfinished"></translation>
+        <translation>Egymásra helyezett dialógusok</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox">
         <location filename="../dialogsandnotificationspage.cpp" line="194"/>
         <source>Click to open a nested message box</source>
-        <translation type="unfinished"></translation>
+        <translation>Klikkelj az egymásba helyezett üzenetek megjelenítéséhez</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title">
         <location filename="../dialogsandnotificationspage.cpp" line="196"/>
         <source>This is a nested dialog</source>
-        <translation type="unfinished"></translation>
+        <translation>Egymásba helyezett dialógusok</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_messagebox_text">
         <location filename="../dialogsandnotificationspage.cpp" line="209"/>
         <source>I&apos;m a nested message box</source>
-        <translation type="unfinished"></translation>
+        <translation>Egymásba helyezett üzenetek</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog_title">
         <location filename="../dialogsandnotificationspage.cpp" line="219"/>
@@ -262,7 +262,7 @@ Muwhahaha... [evil laugh]</source>
         <oldsource>I&apos;m a System Modal dialog.
 There&apos;s no way around me!
 Muwhahaha... [evil laugh]</oldsource>
-        <translation type="unfinished">Ez egy modális dialógus.
+        <translation>Ez egy modális dialógus.
 Nem tudsz megkerülni!
 Muwhahaha... [röhögés]</translation>
     </message>
@@ -305,7 +305,7 @@ Muwhahaha... [röhögés]</translation>
     <message id="xx_dialogs_and_notifications_label_dialogs">
         <location filename="../dialogsandnotificationspage.cpp" line="369"/>
         <source>Dialog examples</source>
-        <translation type="unfinished">Dialógusok</translation>
+        <translation>Dialógusok</translation>
     </message>
     <message id="xx_dialogs_and_notifications_query_dialog">
         <location filename="../dialogsandnotificationspage.cpp" line="371"/>
@@ -325,7 +325,7 @@ Muwhahaha... [röhögés]</translation>
     <message id="xx_dialogs_and_notifications_stacked_dialogs">
         <location filename="../dialogsandnotificationspage.cpp" line="378"/>
         <source>Stacked Dialogs</source>
-        <translation type="unfinished"></translation>
+        <translation>Egymásra helyezett dialógusok</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog">
         <location filename="../dialogsandnotificationspage.cpp" line="381"/>
@@ -344,7 +344,7 @@ Muwhahaha... [röhögés]</translation>
     <message id="xx_dialogs_and_notifications_label_notifications">
         <location filename="../dialogsandnotificationspage.cpp" line="387"/>
         <source>Notifications and messages</source>
-        <translation type="unfinished">Értesítések</translation>
+        <translation>Értesítések és üzenetek</translation>
     </message>
     <message id="xx_dialogs_and_notifications_label_event_banner">
         <location filename="../dialogsandnotificationspage.cpp" line="391"/>
@@ -475,28 +475,28 @@ Muwhahaha... [röhögés]</translation>
         <location filename="../textentrypage.cpp" line="144"/>
         <location filename="../textentrypage.cpp" line="166"/>
         <source>Click here</source>
-        <translation type="unfinished"></translation>
+        <translation>Klikk ide</translation>
     </message>
     <message id="xx_textentry_press_any_key">
         <location filename="../textentrypage.cpp" line="157"/>
         <source>Press any key</source>
-        <translation type="unfinished"></translation>
+        <translation>Nyomj le egy billentyűt</translation>
     </message>
     <message id="xx_textentry_keypress">
         <location filename="../textentrypage.cpp" line="183"/>
-        <source>&lt;i&gt;Key press&lt;/i&gt; key:</source>
-        <translation type="unfinished"></translation>
+        <source>&lt;i&gt;Billentyű leütés&lt;/i&gt; billentyű:</source>
+        <translation></translation>
     </message>
     <message id="xx_textentry_text">
         <location filename="../textentrypage.cpp" line="186"/>
         <location filename="../textentrypage.cpp" line="200"/>
         <source>text:</source>
-        <translation type="unfinished"></translation>
+        <translation>szöveg:</translation>
     </message>
     <message id="xx_textentry_keyrelease">
         <location filename="../textentrypage.cpp" line="197"/>
         <source>&lt;i&gt;Key release&lt;/i&gt; key:</source>
-        <translation type="unfinished"></translation>
+        <translation>&lt;i&gt;Billentyű felengedés&lt;/i&gt; billentyű:</translation>
     </message>
     <message id="xx_tooltip_entry1">
         <location filename="../textentrypage.cpp" line="497"/>
@@ -506,17 +506,17 @@ Muwhahaha... [röhögés]</translation>
     <message id="xx_textentry_noecho">
         <location filename="../textentrypage.cpp" line="525"/>
         <source>No Echo mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Nincs visszajelzés szerkesztéskor:</translation>
     </message>
     <message id="xx_textentry_echoonedit">
         <location filename="../textentrypage.cpp" line="528"/>
         <source>Echo on edit:</source>
-        <translation type="unfinished"></translation>
+        <translation>Visszajelzés szerkesztéskor:</translation>
     </message>
     <message id="xx_textentry_direct_input_mode">
         <location filename="../textentrypage.cpp" line="531"/>
         <source>Direct Input Mode:</source>
-        <translation type="unfinished"></translation>
+        <translation>Közvetlen bemenet:</translation>
     </message>
     <message id="xx_auto_true_entry0">
         <location filename="../textentrypage.cpp" line="564"/>
@@ -534,7 +534,9 @@ Muwhahaha... [röhögés]</translation>
         <oldsource>This is
 multiline
 tooltip</oldsource>
-        <translation type="unfinished">Ez egy\ntöbbsoros\neszközleíró</translation>
+        <translation>Ez egy
+többsoros
+eszközleíró</translation>
     </message>
     <message id="xx_textentry_singleselectall">
         <location filename="../textentrypage.cpp" line="520"/>
@@ -568,7 +570,7 @@ tooltip</oldsource>
         <location filename="../sliderpage.cpp" line="184"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
         <oldsource>Please select your age:</oldsource>
-        <translation type="unfinished">Korod:</translation>
+        <translation>Korod:</translation>
     </message>
     <message id="xx_slider_brightness_label">
         <location filename="../sliderpage.cpp" line="217"/>
@@ -585,7 +587,7 @@ tooltip</oldsource>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
-        <translation type="unfinished">A csúszka segítségével a felhasználó kiválaszthat egy bizonyos értéket egy folyamatos értéktartományból.
+        <translation>A csúszka segítségével a felhasználó kiválaszthat egy bizonyos értéket egy folyamatos értéktartományból.
 
 A kereső egy olyan csúszka amelyet multimédiás tartalom lejátszásának figyelésére használnak.</translation>
     </message>
@@ -720,7 +722,7 @@ A kereső egy olyan csúszka amelyet multimédiás tartalom lejátszásának fig
     <message id="xx_popup_time_consuming">
         <location filename="../comboboxpage.cpp" line="116"/>
         <source>Time-consuming setting</source>
-        <translation type="unfinished"></translation>
+        <translation>Időigényes beállítás</translation>
     </message>
     <message id="xx_popup_custom">
         <source>Custom</source>
@@ -796,12 +798,12 @@ A kereső egy olyan csúszka amelyet multimédiás tartalom lejátszásának fig
     <message id="xx_toolbar_page_defaultview">
         <location filename="../toolbarpage.cpp" line="180"/>
         <source>Default View</source>
-        <translation type="unfinished"></translation>
+        <translation>Alapértelmezett nézet</translation>
     </message>
     <message id="xx_toolbar_page_tabview">
         <location filename="../toolbarpage.cpp" line="186"/>
         <source>Tab View</source>
-        <translation type="unfinished"></translation>
+        <translation>Füles nézet</translation>
     </message>
     <message id="xx_toolbar_page_title">
         <location filename="../toolbarpage.cpp" line="208"/>
@@ -811,7 +813,7 @@ A kereső egy olyan csúszka amelyet multimédiás tartalom lejátszásának fig
     <message id="xx_toolbar_page_info">
         <location filename="../toolbarpage.cpp" line="215"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
-        <translation type="unfinished">&lt;b&gt;Eszköztár&lt;/b&gt; egy tároló amelyik a nézethez szempontjaból fontos parancsokat tartalmaz amelyek kötődnek közvetlenül a nézetben megjelenített grafikus elemekhez. &lt;ul&gt;&lt;li&gt;4 Ikon Gombot tartalmazhat (kattints a Menüre, majd az első példáratlmazhat egy szöveges bemeneti mezőt is 2 Ikon Gombbal (kattints a Menüre, majd az második példára)&lt;/li&gt; &lt;l&lt;/li&gt;&lt;/ul&gt;</translation>
+        <translation>&lt;b&gt;Eszköztár&lt;/b&gt; egy tároló amelyik a nézethez szempontjaból fontos parancsokat tartalmaz amelyek kötődnek közvetlenül a nézetben megjelenített grafikus elemekhez. &lt;ul&gt;&lt;li&gt;4 Ikon Gombot tartalmazhat (kattints a Menüre, majd az első példáratlmazhat egy szöveges bemeneti mezőt is 2 Ikon Gombbal (kattints a Menüre, majd az második példára)&lt;/li&gt; &lt;l&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
     <message id="xx_objectmenu_page_title">
         <location filename="../objectmenupage.cpp" line="155"/>
@@ -876,22 +878,22 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     <message id="xx_navigationbar_escape_mode_label">
         <location filename="../navigationbarpage.cpp" line="131"/>
         <source>Escape Button mode:</source>
-        <translation type="unfinished">Escape Gomb állapota:</translation>
+        <translation>Escape Gomb állapota:</translation>
     </message>
     <message id="xx_navigationbar_auto">
         <location filename="../navigationbarpage.cpp" line="136"/>
         <source>Auto</source>
-        <translation type="unfinished"></translation>
+        <translation>Automatikus</translation>
     </message>
     <message id="xx_navigationbar_manual_back">
         <location filename="../navigationbarpage.cpp" line="140"/>
         <source>Manual Back</source>
-        <translation type="unfinished"></translation>
+        <translation>Kézi visszaléptetés</translation>
     </message>
     <message id="xx_navigationbar_close_window">
         <location filename="../navigationbarpage.cpp" line="144"/>
         <source>Close Window</source>
-        <translation type="unfinished"></translation>
+        <translation>Ablak bezárása</translation>
     </message>
     <message id="xx_navigationbar_escapebutton_mode_label">
         <source>Escape Button mode:</source>
@@ -1170,7 +1172,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
         <location filename="../comboboxpage.cpp" line="120"/>
         <source>The MComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <oldsource>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</oldsource>
-        <translation type="unfinished">A DuiComboBox elem egy gombból és egy felugró listából Nagyon hasonlít a QComboBox-ra, de nem lehet benne szöveget változtatni.</translation>
+        <translation>A DuiComboBox elem egy gombból és egy felugró listából Nagyon hasonlít a QComboBox-ra, de nem lehet benne szöveget változtatni.</translation>
     </message>
     <message id="xx_combobox_title">
         <location filename="../comboboxpage.cpp" line="108"/>
@@ -1213,7 +1215,7 @@ utasításokat.</translation>
         <source>Icon Buttons have an icon and can have a text label. Icon button differs from push button by its visual presentation: it does not have button-style edges like a Push Button does.
 
  Icon Buttons are used in e.g. Toolbars.</source>
-        <translation type="unfinished">Az Ikon Gombok tartalmazhatnak egy szöveges címet és egy ikont. Kinézetre külömböznek a nyomógomboktól: az Ikon Gomboknak külömbözik a széle.
+        <translation>Az Ikon Gombok tartalmazhatnak egy szöveges címet és egy ikont. Kinézetre külömböznek a nyomógomboktól: az Ikon Gomboknak külömbözik a széle.
 
 Ikon Gombokat használnak például az Eszköztárakban.</translation>
     </message>
@@ -1301,32 +1303,34 @@ Nézd meg a menüben a külömböző felhasználási lehetőségeket.</translati
         <source>From: John Doe
 Date: Today
 Subject: This is funny stuff!</source>
-        <translation type="unfinished"></translation>
+        <translation>Kis Jánostól
+Dátum: Ma
+Téma: Egy cseles dolog!</translation>
     </message>
     <message id="xx_spinner_page_container_area_description">
         <location filename="../spinnerpage.cpp" line="129"/>
         <source>Spinner can be used in container while e.g. content is being fetched.</source>
-        <translation type="unfinished"></translation>
+        <translation>A tárolóba helyezett tekerő a tároló tartalmának feltöltését jelzi</translation>
     </message>
     <message id="xx_spinner_page_container_title">
         <location filename="../spinnerpage.cpp" line="142"/>
         <source>Online albums</source>
-        <translation type="unfinished"></translation>
+        <translation>Online albumok</translation>
     </message>
     <message id="xx_spinner_page_container_header_description">
         <location filename="../spinnerpage.cpp" line="151"/>
         <source>Spinner can be used in container header to indicate that the items inside the container are being updated, but visible items can be interacted with.</source>
-        <translation type="unfinished"></translation>
+        <translation>A tároló fejlécébe helyezett tekerő a tároló tartalmának frissitését jelzi, miközben a grafikus elemek nincsenek letitlva</translation>
     </message>
     <message id="xx_spinner_page_application_menu_description">
         <location filename="../spinnerpage.cpp" line="195"/>
         <source>Spinner in the application menu area indicates that the whole view is pending for update.</source>
-        <translation type="unfinished"></translation>
+        <translation>Az alkalmazás menübe helyezett tekerő a teljes nézet frissitésére való várakozást jelzi</translation>
     </message>
     <message id="xx_spinner_page_dialog_header_description">
         <location filename="../spinnerpage.cpp" line="209"/>
         <source>Spinner can be placed in dialog header to indicate changing content.</source>
-        <translation type="unfinished"></translation>
+        <translation>Tekerőt a dialógus fejlécébe is lehet helyezni a tartalom változásának jelzésére</translation>
     </message>
     <message id="xx_spinner_page_dialog_header">
         <location filename="../spinnerpage.cpp" line="230"/>
@@ -1395,7 +1399,7 @@ Input feedbacks can be easily configured for different purposes using the themin
         <oldsource>This page contains buttons with custom input feedbacks. Any DuiWidget can have input feedback for press and release events. Input feedback can be a sound effect and/or a haptic effect (piezo, vibra) depending on the product.
 
 Input feedbacks can be easily configured for different purposes using the theming system.</oldsource>
-        <translation type="unfinished">Ez az oldal sajátos visszajelzésű nyomógombokat tartalmaz. Minden DuiWidget lenyomásához és felengedéséhez hozzá lehet rendelni egy-egy visszajelzést. A visszajelzés, terméktől függően, lehet egy hang vagy/és egy rezgés (piezo, vibrálás).
+        <translation>Ez az oldal sajátos visszajelzésű nyomógombokat tartalmaz. Minden DuiWidget lenyomásához és felengedéséhez hozzá lehet rendelni egy-egy visszajelzést. A visszajelzés, terméktől függően, lehet egy hang vagy/és egy rezgés (piezo, vibrálás).
 
 A visszajelzéseket a témarendszer segítségével lehet beállítani.</translation>
     </message>
@@ -1407,17 +1411,17 @@ A visszajelzéseket a témarendszer segítségével lehet beállítani.</transla
     <message id="xx_input_feedback_page_button2">
         <location filename="../feedbackpage.cpp" line="104"/>
         <source>Different</source>
-        <translation type="unfinished">Játék</translation>
+        <translation>Külömböző</translation>
     </message>
     <message id="xx_input_feedback_page_button3">
         <location filename="../feedbackpage.cpp" line="106"/>
         <source>Sluggish</source>
-        <translation type="unfinished">Szünet</translation>
+        <translation>Lomha</translation>
     </message>
     <message id="xx_input_feedback_page_button4">
         <location filename="../feedbackpage.cpp" line="108"/>
         <source>Babytoy</source>
-        <translation type="unfinished">Csendes</translation>
+        <translation>Játék</translation>
     </message>
     <message id="xx_input_feedback_page_button5">
         <location filename="../feedbackpage.cpp" line="110"/>
@@ -1448,52 +1452,6 @@ A visszajelzéseket a témarendszer segítségével lehet beállítani.</transla
         <location filename="../videocontainerpage.cpp" line="380"/>
         <source>Gallery</source>
         <translation>Galéria</translation>
-    </message>
-    <message id="xx_continuous_slider_min">
-        <location filename="../continuoussliderpage.cpp" line="108"/>
-        <location filename="../continuoussliderpage.cpp" line="160"/>
-        <location filename="../continuoussliderpage.cpp" line="168"/>
-        <source>Min</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_max">
-        <location filename="../continuoussliderpage.cpp" line="110"/>
-        <location filename="../continuoussliderpage.cpp" line="162"/>
-        <location filename="../continuoussliderpage.cpp" line="170"/>
-        <source>Max</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_thumb">
-        <location filename="../continuoussliderpage.cpp" line="112"/>
-        <location filename="../continuoussliderpage.cpp" line="164"/>
-        <location filename="../continuoussliderpage.cpp" line="172"/>
-        <source>Thumb</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_title">
-        <location filename="../continuoussliderpage.cpp" line="150"/>
-        <source>Continuous Slider</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_with_icons">
-        <location filename="../continuoussliderpage.cpp" line="154"/>
-        <source>with icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_plain_slider">
-        <location filename="../continuoussliderpage.cpp" line="156"/>
-        <source>plain slider</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_with_labels">
-        <location filename="../continuoussliderpage.cpp" line="158"/>
-        <source>with labels</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_seekbar">
-        <location filename="../continuoussliderpage.cpp" line="166"/>
-        <source>seekbar</source>
-        <translation type="unfinished"></translation>
     </message>
 </context>
 </TS>

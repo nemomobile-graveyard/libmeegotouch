@@ -8,7 +8,7 @@ Standards-Version: 3.7.2
 Package: libmeegotouchcore0
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouch-bin (= ${Source-Version}), libmeegotouch-l10n-engineering-english (= ${Source-Version}), dbus-x11, meegotouchtheme (>= 0.20.0~)
-Suggests: libmeegotouch-l10n-ar, libmeegotouch-l10n-de, libmeegotouch-l10n-en, libmeegotouch-l10n-fi, libmeegotouch-l10n-ur, libmeegotouch-l10n-zh-cn
+Suggests: libmeegotouch-l10n-ar, libmeegotouch-l10n-de, libmeegotouch-l10n-en, libmeegotouch-l10n-fi, libmeegotouch-l10n-hu, libmeegotouch-l10n-ur, libmeegotouch-l10n-zh-cn
 Description: MeeGo Touch core library
  MeeGo Touch core framework library
 
@@ -254,6 +254,12 @@ Section: devel
 Architecture: any
 Enhances: libmeegotouchcore0
 Description: Finnish translations for libmeegotouch
+
+Package: libmeegotouch-l10n-hu
+Section: devel
+Architecture: any
+Enhances: libmeegotouchcore0
+Description: Hungarian translations for libmeegotouch
 
 Package: libmeegotouch-l10n-ur
 Section: devel
