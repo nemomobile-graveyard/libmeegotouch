@@ -45,6 +45,83 @@ public:
     int count;
 };
 
+// MWidgetController stubs
+const MWidgetView *MWidgetController::view() const
+{
+    return 0;
+}
+
+// MDeviceProfile stubs
+class MDeviceProfile
+{
+public:
+    static MDeviceProfile *instance();
+    QSize resolution() const;
+};
+
+MDeviceProfile *MDeviceProfile::instance()
+{
+    static MDeviceProfile p;
+    return &p;
+}
+
+QSize MDeviceProfile::resolution() const
+{
+    return QSize(1000, 500);
+}
+
+// MComponentData stubs
+MWindow *gActiveWindow = 0;
+bool MComponentData::softwareRendering()
+{
+    return true;
+}
+
+bool MComponentData::fullScreen()
+{
+    return false;
+}
+
+void MComponentData::setActiveWindow(MWindow *window)
+{
+    gActiveWindow = window;
+}
+
+QList<MWindow *> MComponentData::windows()
+{
+    QList<MWindow *> windowList;
+    if (gActiveWindow)
+       windowList.append(gActiveWindow);
+    return windowList;
+}
+
+MWindow *MComponentData::activeWindow()
+{
+    return gActiveWindow;
+}
+
+MApplicationWindow *MComponentData::activeApplicationWindow()
+{
+    return qobject_cast<MApplicationWindow *>(gActiveWindow);
+}
+
+void MComponentData::registerWindow(MWindow *window)
+{
+    if (gActiveWindow == 0)
+        setActiveWindow(window);
+}
+
+void MComponentData::unregisterWindow(MWindow *window)
+{
+    if (gActiveWindow == window)
+        setActiveWindow(0);
+}
+
+bool MComponentData::emulateTwoFingerGestures()
+{
+    return false;
+}
+
 // Test class implementation
 
 void Ut_MSceneWindow::init()
@@ -60,12 +137,6 @@ void Ut_MSceneWindow::cleanup()
 
 void Ut_MSceneWindow::initTestCase()
 {
-    if(MComponentData::instance() == 0) {
-        int argc = 1;
-        char *argv[ 1 ];
-        argv[ 0 ] = (char*)"./ut_mwindow";
-        m_componentData = new MComponentData(argc, argv);
-    }
     window = new MWindow(new MSceneManager);
 }
 

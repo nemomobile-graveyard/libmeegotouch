@@ -19,8 +19,8 @@
 
 #include <MApplication>
 #include <MWindow>
+#include <MComponentData>
 #include <MSceneManager>
-#include <MDeviceProfile>
 #include "mondisplaychangeevent.h"
 #include "corelib/widgets/mwindow_p.h"
 
@@ -31,6 +31,122 @@ MWindow *win;
 // Variables for onDisplay -tests
 bool Ut_MWindow::m_onDisplayHandlerCalled = false;
 bool Ut_MWindow::m_onDisplaySignalSent    = false;
+
+// MDeviceProfile stubs
+class MDeviceProfile
+{
+public:
+    static MDeviceProfile *instance();
+    QSize resolution() const;
+};
+
+MDeviceProfile *MDeviceProfile::instance()
+{
+    static MDeviceProfile p;
+    return &p;
+}
+
+QSize MDeviceProfile::resolution() const
+{
+    return QSize(1000, 500);
+}
+
+// MComponentData stubs
+bool MComponentData::softwareRendering()
+{
+    return true;
+}
+
+bool MComponentData::fullScreen()
+{
+    return false;
+}
+
+void MComponentData::registerWindow(MWindow *window)
+{
+    Q_UNUSED(window);
+}
+
+void MComponentData::unregisterWindow(MWindow *window)
+{
+    Q_UNUSED(window);
+}
+
+void MComponentData::setActiveWindow(MWindow *window)
+{
+    Q_UNUSED(window);
+}
+
+void MComponentData::setPrestarted(bool flag)
+{
+    Q_UNUSED(flag);
+}
+
+QList<MWindow *> MComponentData::windows()
+{
+    QList<MWindow *> windowlist;
+    return windowlist;
+}
+
+// MApplication stubs
+MWindow *MApplication::activeWindow()
+{
+    return 0;
+}
+
+static M::PrestartMode fakeMode = M::LazyShutdown;
+
+bool MApplication::isPrestarted()
+{
+    if ((fakeMode == M::LazyShutdown) || (fakeMode == M::TerminateOnClose))
+        return true;
+
+    return false;
+}
+
+void MApplication::setPrestartMode(M::PrestartMode mode)
+{
+    fakeMode = mode;
+    return;
+}
+
+M::PrestartMode MApplication::prestartMode()
+{
+    return fakeMode;
+}
+
+bool MComponentData::emulateTwoFingerGestures()
+{
+    return false;
+}
+
+// MSceneManager stubs
+M::OrientationAngle gOrientationAngle = M::Angle0;
+
+M::OrientationAngle MSceneManager::orientationAngle() const
+{
+    return gOrientationAngle;
+}
+
+M::Orientation MSceneManager::orientation() const
+{
+    return (gOrientationAngle == M::Angle90 || gOrientationAngle == M::Angle270) ? M::Portrait : M::Landscape;
+}
+
+void MSceneManager::setOrientationAngle(M::OrientationAngle angle, MSceneManager::TransitionMode mode)
+{
+    Q_UNUSED(mode);
+
+    M::Orientation newOrientation = (angle == M::Angle90 || angle == M::Angle270)
+                                      ? M::Portrait
+                                      : M::Landscape;
+
+    if (orientationAngle() != angle)
+        emit orientationAngleChanged(angle);
+    if (orientation() != newOrientation)
+        emit orientationChanged(newOrientation);
+    gOrientationAngle = angle;
+}
 
 // MWindows' visibility handler re-imps
 void MWindow::enterDisplayEvent()
@@ -46,12 +162,6 @@ void MWindow::exitDisplayEvent()
 // Test class implementation
 void Ut_MWindow::init()
 {
-    if(MComponentData::instance() == 0) {
-        int argc = 1;
-        char *argv[ 1 ];
-        argv[ 0 ] = (char*)"./ut_mwindow";
-        m_componentData = new MComponentData(argc, argv);
-    }
     win = new MWindow;
 }
 

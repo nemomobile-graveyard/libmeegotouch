@@ -26,7 +26,6 @@
 #include <MSceneManager>
 #include <MSceneWindow>
 #include <MNamespace>
-#include <MComponentData>
 
 class MWindow;
 
@@ -74,8 +73,6 @@ private slots:
     void testTransitionModeWhenOffDisplay();
     void testTransitionModeWhenOnDisplay();
     void testTransitionModeWhenNoWindow();
-private:
-    MComponentData* m_componentData;
 };
 
 Q_DECLARE_METATYPE(M::Orientation)

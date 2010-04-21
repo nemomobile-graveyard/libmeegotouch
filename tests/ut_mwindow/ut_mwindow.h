@@ -23,7 +23,6 @@
 #include <QtTest>
 #include <QObject>
 #include <MNamespace>
-#include <MComponentData>
 
 class MWindow;
 class MApplication;
@@ -67,8 +66,6 @@ public slots:
 public:
     static bool m_onDisplayHandlerCalled;
     static bool m_onDisplaySignalSent;
-private:
-    MComponentData* m_componentData;
 };
 
 Q_DECLARE_METATYPE(M::Orientation);
