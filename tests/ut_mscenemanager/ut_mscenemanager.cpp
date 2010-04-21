@@ -205,7 +205,8 @@ void Ut_MSceneManager::testOrientationChangedSignal()
 
 void Ut_MSceneManager::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
 {
-    QSignalSpy changedSpy(sm, SIGNAL(orientationChanged(M::Orientation)));
+    QSignalSpy orientationChangedSpy(sm, SIGNAL(orientationChanged(M::Orientation)));
+    QSignalSpy angleChangedSpy(sm, SIGNAL(orientationAngleChanged(M::OrientationAngle)));
     QSignalSpy finishedSpy(sm, SIGNAL(orientationChangeFinished(M::Orientation)));
 
     int newAngle = sm->orientationAngle() + M::Angle180;
@@ -214,8 +215,9 @@ void Ut_MSceneManager::testNoOrientationChangedSignalWhenRotatingBy180Degrees()
     sm->setOrientationAngle((M::OrientationAngle) newAngle,
                             MSceneManager::ImmediateTransition);
 
-    QCOMPARE(changedSpy.count(), 0);
-    QCOMPARE(finishedSpy.count(), 0);
+    QCOMPARE(orientationChangedSpy.count(), 0);
+    QCOMPARE(angleChangedSpy.count(), 1);
+    QCOMPARE(finishedSpy.count(), 1);
 }
 
 // Test uses non-exported symbol "MDockWidget".

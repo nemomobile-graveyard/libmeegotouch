@@ -379,10 +379,12 @@ Q_SIGNALS:
 
     /*!
      This signal is emitted when the rotation animation (if any) has finished.
-     It's emitted in tandem with MSceneManager::orientationChangeComplete().
+     It's emitted in tandem with MSceneManager::orientationChangeFinished().
 
      If window doesn't have the scene manager, this signal is emitted together with
      orientationChanged().
+
+     \note This signal is emitted with every orientation angle change.
 
      \sa orientationChanged()
      */

@@ -118,7 +118,7 @@ void MSceneManagerPrivate::init(MScene *scene)
     //TODO: get this from theme
     orientationAnimation = new MBasicOrientationAnimation(q->visibleSceneSize(M::Landscape));
     orientationAnimation->setRootElement(rootElement);
-    q->connect(orientationAnimation, SIGNAL(orientationChanged()), SLOT(_q_changeGlobalOrientation()));
+    q->connect(orientationAnimation, SIGNAL(orientationChanged()), SLOT(_q_changeGlobalOrientationAngle()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_emitOrientationChangeFinished()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_applyQueuedSceneWindowTransitions()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
@@ -218,7 +218,7 @@ void MSceneManagerPrivate::_q_setSenderGeometry()
         setSceneWindowGeometry(window);
 }
 
-void MSceneManagerPrivate::_q_changeGlobalOrientation()
+void MSceneManagerPrivate::_q_changeGlobalOrientationAngle()
 {
     Q_Q(MSceneManager);
 
@@ -602,9 +602,8 @@ void MSceneManagerPrivate::setOrientationAngleWithoutAnimation(M::OrientationAng
 {
     Q_Q(MSceneManager);
 
-    M::Orientation oldOrientation = orientation(angle);
     this->newAngle = newAngle;
-    _q_changeGlobalOrientation();
+    _q_changeGlobalOrientationAngle();
 
     QSize landscapeScreenSize = q->visibleSceneSize(M::Landscape);
 
@@ -620,9 +619,7 @@ void MSceneManagerPrivate::setOrientationAngleWithoutAnimation(M::OrientationAng
                                              landscapeScreenSize.width() / 2);
     }
 
-    M::Orientation newOrientation = orientation(angle);
-    if (oldOrientation != newOrientation)
-        emit q->orientationChangeFinished(newOrientation);
+    emit q->orientationChangeFinished(orientation(angle));
 }
 
 bool MSceneManagerPrivate::onApplicationPage(QGraphicsItem *item)

@@ -278,6 +278,8 @@ Q_SIGNALS:
     /*!
      * This signal is emitted when the rotation animation has finished.
      *
+     * \note It's emitted with every orientation angle change.
+     *
      * \param orientation New orientation of the viewport
      */
     void orientationChangeFinished(M::Orientation orientation);
@@ -309,7 +311,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowAppeared())
     Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowDisappeared())
     Q_PRIVATE_SLOT(d_func(), void _q_setSenderGeometry())
-    Q_PRIVATE_SLOT(d_func(), void _q_changeGlobalOrientation())
+    Q_PRIVATE_SLOT(d_func(), void _q_changeGlobalOrientationAngle())
     Q_PRIVATE_SLOT(d_func(), void _q_emitOrientationChangeFinished())
     Q_PRIVATE_SLOT(d_func(), void _q_restoreSceneWindow())
     Q_PRIVATE_SLOT(d_func(), void _q_relocateWindowByInputPanel(const QRect &inputPanelRect))

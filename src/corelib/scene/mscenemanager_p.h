@@ -129,7 +129,7 @@ public:
     void createDisappearanceAnimationForSceneWindow(MSceneWindow *sceneWindow);
 
     void _q_setSenderGeometry();
-    void _q_changeGlobalOrientation();
+    void _q_changeGlobalOrientationAngle();
     void _q_emitOrientationChangeFinished();
     void _q_pageShowAnimationFinished();
     void _q_onSceneWindowAppeared();
