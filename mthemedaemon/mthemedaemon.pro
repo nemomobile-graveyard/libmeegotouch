@@ -22,6 +22,8 @@ DEFINES += QT_STRICT_ITERATORS
 
 !win32:CONFIG += link_pkgconfig
 PKGCONFIG += gconf-2.0
+PKGCONFIG += gobject-2.0
+PKGCONFIG += x11
 
 # Input
 SOURCES += main.cpp \
