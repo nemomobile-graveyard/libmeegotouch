@@ -15,7 +15,8 @@ win32|macx {
         LIBS += -framework meegotouchcore \
             -framework meegotouchviews
     }
-    win32:LIBS += -lmeegotouchcore0
+    win32:LIBS += -lmeegotouchcore0 \
+                  -lmeegotouchviews0
 }
 else:LIBS += \
     -lmeegotouchcore \

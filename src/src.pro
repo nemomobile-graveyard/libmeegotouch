@@ -5,7 +5,7 @@ SUBDIRS += \
     views \
     settings \
     extensions
-macx:SUBDIRS -= settings extensions
+win32|macx:SUBDIRS -= settings extensions
 
 unix {
   include(../mkspecs/common.pri)
