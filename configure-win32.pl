@@ -11,8 +11,8 @@ print "inpath : $inpath\n";
 print "outpath: $outpath\n";
 
 open( CACHE, ">$outpath/.qmake.cache" );
-print CACHE "DUI_BUILD_TREE = \$\$quote($outpath)\n";
-print CACHE "DUI_SOURCE_TREE = \$\$quote($inpath)\n";
+print CACHE "M_BUILD_TREE = \$\$quote($outpath)\n";
+print CACHE "M_SOURCE_TREE = \$\$quote($inpath)\n";
 close( CACHE );
 
 $specpath = "$outpath/mkspecs/features";
