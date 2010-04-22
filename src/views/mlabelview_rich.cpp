@@ -167,7 +167,13 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
     switch (which) {
     case Qt::MinimumSize: {
         QFontMetrics fm(viewPrivate->controller->font());
-        return QSizeF(fm.width(""), textDocument.size().height());
+        //Resize text document to maximum width to find the height of one line
+        //This follows the QLabel implementation
+        qreal oldWidth = textDocument.textWidth();
+        textDocument.setTextWidth(QWIDGETSIZE_MAX);
+        qreal height = textDocument.size().height();
+        textDocument.setTextWidth(oldWidth);
+        return QSizeF(fm.width('x'), height);
     }
 
     case Qt::PreferredSize: {
