@@ -42,7 +42,8 @@ ImagePage::ImagePage() :
     propertiesComboBox(NULL),
     visual(NULL),
     image(NULL),
-    slider(NULL)
+    slider(NULL),
+    originalScaleFactor(10)
 {
     gid = TemplatePage::LayoutsAndVisuals;
 
@@ -62,6 +63,15 @@ ImagePage::~ImagePage()
 QString ImagePage::timedemoTitle()
 {
     return "Image";
+}
+
+bool ImagePage::event(QEvent *e)
+{
+    if (e->type() == QEvent::TouchBegin) {
+        e->setAccepted(true);
+        return true;
+    }
+    return TemplatePage::event(e);
 }
 
 void ImagePage::createContent()
@@ -214,9 +224,10 @@ void ImagePage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
 {
     if (gesture->state() == Qt::GestureStarted) {
 	propertiesComboBox->setCurrentIndex(0);
+        originalScaleFactor = slider->value();
     }
 
-    slider->setValue(gesture->totalScaleFactor()/2);
+    slider->setValue(originalScaleFactor * gesture->scaleFactor());
 
     event->accept(gesture);
 

@@ -40,7 +40,6 @@
 #include "mwindow.h"
 #include "mapplicationwindow.h"
 #include "mtapandholdrecognizer.h"
-#include "mpinchrecognizer.h"
 #include "mpanrecognizer.h"
 #include <MDebug>
 
@@ -586,9 +585,6 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 
     QGestureRecognizer::unregisterRecognizer(Qt::TapAndHoldGesture);
     QGestureRecognizer::registerRecognizer(new MTapAndHoldRecognizer());
-
-    QGestureRecognizer::unregisterRecognizer(Qt::PinchGesture);
-    QGestureRecognizer::registerRecognizer(new MPinchRecognizer());
 
     QGestureRecognizer::unregisterRecognizer(Qt::PanGesture);
     QGestureRecognizer::registerRecognizer(new MPanRecognizer());
