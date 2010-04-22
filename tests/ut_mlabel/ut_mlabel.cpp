@@ -214,7 +214,6 @@ void Ut_MLabel::testTextWordWrap_data()
 void Ut_MLabel::testTextWordWrap()
 {
     QFETCH(QString, text);
-    QFETCH(bool, equal);
 
     label->setText(text);
     QVERIFY(text == label->text());
@@ -231,7 +230,7 @@ void Ut_MLabel::testTextWordWrap()
     //unwrapped.save("unwrapped", "PNG");
 
     //
-    QVERIFY(((wrapped == unwrapped) == equal));
+    QVERIFY(wrapped != unwrapped);
 }
 
 void Ut_MLabel::testTextElide_data()
@@ -504,6 +503,7 @@ void Ut_MLabel::linefeedBeforeFirstTag()
     htmlData.append("character in between <br /> B import A.");
 
     MLabel label;
+    label.setWordWrap(true);
     label.setText(htmlData);
     QSizeF prefSizeHint = label.sizeHint(Qt::PreferredSize);
 
