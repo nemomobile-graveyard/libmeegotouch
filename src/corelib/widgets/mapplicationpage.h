@@ -52,7 +52,7 @@ class MPannableViewport;
     \li setPannable()
     \li setPanningDirection()
 
-    A minimal application which would show a toolbar would look like this:
+    A minimal application which would show a page would look like this:
 
     \code
       #include <MApplication>
@@ -63,11 +63,14 @@ class MPannableViewport;
       int main(int argc, char *argv[]){
           MApplication application(argc, argv);
           MApplicationWindow window;
-          window.show();
           MApplicationPage page;
+
           new MButton("Hello", page.centralWidget());
           page.appear();
-          return a.exec();
+
+          window.show();
+
+          return application.exec();
        }
     \endcode
 
