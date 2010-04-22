@@ -6,7 +6,9 @@ $::QT_MOC_PATH = find_moc ();
 
 if (! -x $::QT_MOC_PATH) {
 	print "Unable to find moc, or is not executable\n";
-	exit (1);
+	if ( "MSWin32" ne "$OSNAME" ) {
+		exit (1);
+	}
 }
 
 chomp( $::QT_MOC_PATH );
