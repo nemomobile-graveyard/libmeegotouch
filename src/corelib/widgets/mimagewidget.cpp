@@ -91,10 +91,12 @@ void MImageWidgetPrivate::setImageName(const QString &imageName, const QSize &s)
 
     cleanUp();
 
-    if (s.isValid())
-        pixmap = MTheme::pixmap(imageName, s);
-    else
-        pixmap = MTheme::pixmap(imageName);
+    if (!imageName.isEmpty()) {
+        if (s.isValid())
+            pixmap = MTheme::pixmap(imageName, s);
+        else
+            pixmap = MTheme::pixmap(imageName);
+    }
 
     deletePixmap = false;
 }

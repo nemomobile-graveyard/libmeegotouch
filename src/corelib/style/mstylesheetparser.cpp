@@ -1028,7 +1028,7 @@ bool MStyleSheetParserPrivate::dump(const MStyleSheetParser::StylesheetFileInfo 
         //Maybe it failed because the directory doesn't exist
         QDir().mkpath( QFileInfo(binaryFilename).absolutePath() );
         if (!file.open(QFile::WriteOnly)) {
-            mWarning("MStyleSheetParserPrivate") << "Failed to dump stylesheet file:" << info.filename << "to" << binaryFilename;
+            mDebug("MStyleSheetParserPrivate") << "Failed to dump stylesheet file:" << info.filename << "to" << binaryFilename;
             return false;
         }
     }

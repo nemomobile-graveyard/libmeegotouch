@@ -205,7 +205,7 @@ MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString 
                 directories.append(i->absoluteFilePath());
             } else if (i->suffix() == "png" || i->suffix() == "jpg") {
                 if (imageIds.contains(i->baseName())) {
-                    mWarning("MThemeDaemon") << "Path" << i->absolutePath() << "contains multiple images with id" << i->baseName();
+                    mDebug("MThemeDaemon") << "Path" << i->absolutePath() << "contains multiple images with id" << i->baseName();
                 } else {
                     imageIds.insert(i->baseName(), new PixmapImageResource(i->absoluteFilePath()));
                 }
@@ -230,7 +230,7 @@ MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString 
                 directories.append(i->absoluteFilePath());
             } else if (i->suffix() == "svg") {
                 if (imageIds.contains(i->baseName())) {
-                    mWarning("MThemeDaemon") << "Path" << path + QDir::separator() + "meegotouch" << "contains multiple images with id" << i->baseName();
+                    mDebug("MThemeDaemon") << "Path" << path + QDir::separator() + "meegotouch" << "contains multiple images with id" << i->baseName();
                 } else {
                     imageIds.insert(i->baseName(), new IconImageResource(i->absoluteFilePath()));
                 }
@@ -261,7 +261,7 @@ MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString 
                         while(!file.atEnd()) {
                             QString id = file.readLine().trimmed();
                             if (imageIds.contains(id)) {
-                                mWarning("MThemeDaemon") << "Path" << path << "contains multiple images with id" << id;
+                                mDebug("MThemeDaemon") << "Path" << path << "contains multiple images with id" << id;
                             } else {
                                 imageIds.insert(id, new SvgImageResource(id, i->absoluteFilePath()));
                             }
@@ -402,7 +402,7 @@ MImageDirectory::MImageDirectory(const QString &path, M::RecursionMode recursion
                 directories.append(QDir(i->absoluteFilePath()));
             } else if (i->suffix() == "png" || i->suffix() == "jpg") {
                 if (imageIds.contains(i->baseName())) {
-                    mWarning("MThemeDaemon") << "Path" << path << "contains multiple images with id" << i->baseName();
+                    mDebug("MThemeDaemon") << "Path" << path << "contains multiple images with id" << i->baseName();
                 } else {
                     imageIds.insert(i->baseName(), new PixmapImageResource(i->absoluteFilePath()));
                 }

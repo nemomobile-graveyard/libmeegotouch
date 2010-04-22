@@ -59,7 +59,7 @@ bool MAssemblyPrivate::loadViewConfiguration(const QStringList &themeInheritance
 
 void MAssemblyPrivate::loadStylesheet(const QString &filename, const MLogicalValues &logicalValues)
 {
-    qWarning( "MAssemblyPrivate::loadStylesheet from: %s", qPrintable( filename ) );
+    mDebug("MAssemblyPrivate") << "load stylesheet from" << qPrintable(filename);
     // load stylesheet to new sheet
     MStyleSheet *newStylesheet = new MStyleSheet(&logicalValues);
     bool result = newStylesheet->load(filename);
@@ -97,7 +97,7 @@ void MAssemblyPrivate::loadStylesheets(const QStringList &themeInheritance, cons
         } else {
             if (j == themeInheritance.count() - 1) {
                 // warnings only if the stylesheet is missing from the base theme
-                mWarning("MAssembly") << "Stylesheet missing!" << filename;
+                mWarning("MAssembly") << "Stylesheet missing" << filename;
             }
         }
     }

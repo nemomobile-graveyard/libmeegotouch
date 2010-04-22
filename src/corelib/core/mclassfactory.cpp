@@ -88,7 +88,7 @@ QString MClassFactory::widgetAssemblyName(const QString &widgetClassName) const
 {
     const MWidgetCreatorBase *widgetCreator = d_ptr->widgetCreators.value(widgetClassName, NULL);
     if (!widgetCreator) {
-        mWarning("MClassFactory") << "could not find assembly name for" << widgetClassName;
+        mDebug("MClassFactory") << "could not find assembly name for" << widgetClassName;
         return QString();
     }
     return widgetCreator->assemblyName();
@@ -98,7 +98,7 @@ M::AssemblyType MClassFactory::widgetAssemblyType(const QString &widgetClassName
 {
     const MWidgetCreatorBase *widgetCreator = d_ptr->widgetCreators.value(widgetClassName, NULL);
     if (!widgetCreator) {
-        mWarning("MClassFactory") << "could not find assembly type for" << widgetClassName;
+        mDebug("MClassFactory") << "could not find assembly type for" << widgetClassName;
         return (M::AssemblyType) - 1;
     }
     return widgetCreator->assemblyType();
