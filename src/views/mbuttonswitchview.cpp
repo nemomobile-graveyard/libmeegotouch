@@ -73,10 +73,10 @@ QPoint MButtonSwitchViewPrivate::thumbPos() const
     }
 }
 
-const QImage& MButtonSwitchViewPrivate::maskedSliderImage() const
+const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
 {
     //create new masked slider image if it has been invalidated
-    if( m_maskedSliderImage.isNull() ) {
+    if( m_maskedSliderPm.isNull() ) {
         
         //create the new masked slider image only if the source images are valid
         Q_Q(const MButtonSwitchView);
@@ -86,17 +86,17 @@ const QImage& MButtonSwitchViewPrivate::maskedSliderImage() const
               q->style()->sliderMask()->pixmap()->size() == QSize(1, 1)) ) {
 
             //create image and make it totally transparent
-            m_maskedSliderImage = QImage(q->size().toSize(), QImage::Format_ARGB32_Premultiplied);
-            m_maskedSliderImage.fill(0);
+            m_maskedSliderPm = QPixmap(q->size().toSize());
+            m_maskedSliderPm.fill(Qt::transparent);
 
             //create the masked slider image using MScalableImage::draw() overload
-            QPainter p(&m_maskedSliderImage);
+            QPainter p(&m_maskedSliderPm);
             int offset = (q->style()->sliderImage()->pixmap()->width() / 2) - thumbPos().x() - (thumbSize().width() / 2);
             q->style()->sliderMask()->draw(QRect(QPoint(0,0), q->size().toSize()), QPoint(offset,0), q->style()->sliderImage()->pixmap(), &p);
         }
     }
     
-    return m_maskedSliderImage;
+    return m_maskedSliderPm;
 }
 
 
@@ -115,7 +115,7 @@ void MButtonSwitchView::resizeEvent(QGraphicsSceneResizeEvent *event)
 
     //invalidate masked slider image
     Q_D(MButtonSwitchView);
-    d->m_maskedSliderImage = QImage();
+    d->m_maskedSliderPm = QPixmap();
 }
 
 void MButtonSwitchView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -123,7 +123,7 @@ void MButtonSwitchView::drawContents(QPainter *painter, const QStyleOptionGraphi
     Q_UNUSED(option);
     Q_D(const MButtonSwitchView);
 
-    painter->drawImage(QRect(QPoint(0, 0), size().toSize()), d->maskedSliderImage()); 
+    painter->drawPixmap(QRect(QPoint(0, 0), size().toSize()), d->maskedSliderImage()); 
     style()->thumbImage()->draw(d->thumbPos(), d->thumbSize(), painter);
 }
 
@@ -133,7 +133,7 @@ void MButtonSwitchView::applyStyle()
 
     //invalidate masked slider image
     Q_D(MButtonSwitchView);
-    d->m_maskedSliderImage = QImage();
+    d->m_maskedSliderPm = QPixmap();
 }
 
 void MButtonSwitchView::updateData(const QList<const char *>& modifications)
@@ -144,7 +144,7 @@ void MButtonSwitchView::updateData(const QList<const char *>& modifications)
         if (member == MButtonModel::Checked) {
             //invalidate masked slider image
             Q_D(MButtonSwitchView);
-            d->m_maskedSliderImage = QImage();
+            d->m_maskedSliderPm = QPixmap();
         }
     }
 }
@@ -155,7 +155,7 @@ void MButtonSwitchView::setupModel()
 
     //invalidate masked slider image
     Q_D(MButtonSwitchView);
-    d->m_maskedSliderImage = QImage();
+    d->m_maskedSliderPm = QPixmap();
 }
 
 void MButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -224,7 +224,7 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         //}
 
         //invalidate masked slider image
-        d->m_maskedSliderImage = QImage();
+        d->m_maskedSliderPm = QPixmap();
     }
     //user just clicked the switch, act like normal checkable button
     else {
@@ -251,7 +251,7 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         d->m_thumbDragged = true;
 
         //invalidate masked slider image
-        d->m_maskedSliderImage = QImage();
+        d->m_maskedSliderPm = QPixmap();
 
         update();
     }
