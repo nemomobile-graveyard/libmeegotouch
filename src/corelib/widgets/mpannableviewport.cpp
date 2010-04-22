@@ -117,16 +117,15 @@ void MPannableViewportPrivate::sendOnDisplayChangeEventToMWidgets(QGraphicsItem 
 void MPannableViewportPrivate::_q_resolvePannedWidgetIsOnDisplay()
 {
     Q_Q(MPannableViewport);
-    MOnDisplayChangeEvent *event = 0;
 
     if (q->isOnDisplay() && q->sceneManager() != 0 && q->widget() != 0) {
         QRectF visibleSceneRect(QPoint(0, 0), q->sceneManager()->visibleSceneSize());
-        event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::MustBeResolved, visibleSceneRect);
+        MOnDisplayChangeEvent event(MOnDisplayChangeEvent::MustBeResolved, visibleSceneRect);
 
         // If I just do a send(q->widget(), event) and widget() happens not to be a MWidget
         // (e.g., plain QGraphicsWidget layouting MWidgets inside) the event propagation
         // just won't happen.
-        sendOnDisplayChangeEventToMWidgets(q->widget(), event);
+        sendOnDisplayChangeEventToMWidgets(q->widget(), &event);
     }
 }
 
