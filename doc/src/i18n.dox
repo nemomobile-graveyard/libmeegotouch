@@ -766,8 +766,8 @@ modify the source of .desktop files during build time. To accommodate
 the special needs of our localisation processes, the .desktop file
 shall contain at least two extra (key, value) pairs:
 
-- X-MeegoTouch-logical-id=&lt;logical name&gt;: The value for this key provides the logical name of the section name
-- X-MeegoTouch-translation-catalog=&lt;catalog name&gt;: The value for this key provides the catalog where the logical name exists
+- X-MeeGo-Logical-Id=&lt;logical name&gt;: The value for this key provides the logical name of the section name
+- X-MeeGo-Translation-Catalog=&lt;catalog name&gt;: The value for this key provides the catalog where the logical name exists
 
 For example:
 \code
@@ -775,9 +775,9 @@ For example:
 # engineering english
 Name=Setting
 # logical name of "Setting"
-X-MeegoTouch-logical-id=xx_setting_something
+X-MeeGo-Logical-Id=xx_setting_something
 # the catalog name
-X-MeegoTouch-translation-catalog=meegotouchsettings
+X-MeeGo-Translation-Catalog=meegotouchsettings
 \endcode
 
 For the freedesktop specification of the .desktop files see

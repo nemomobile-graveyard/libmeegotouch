@@ -44,8 +44,8 @@ const QString CategoriesKey("Desktop Entry/Categories");
 const QString StartupNotifyKey("Desktop Entry/StartupNotify");
 const QString StartupWMClassKey("Desktop Entry/StartupWMClass");
 const QString URLKey("Desktop Entry/URL");
-const QString LogicalIdKey("Desktop Entry/X-M-logical-id");
-const QString TranslationCatalogKey("Desktop Entry/X-M-translation-catalog");
+const QString LogicalIdKey("Desktop Entry/X-MeeGo-Logical-Id");
+const QString TranslationCatalogKey("Desktop Entry/X-MeeGo-Translation-Catalog");
 const QString XMaemoServiceKey("Desktop Entry/X-Maemo-Service");
 
 MDesktopEntryPrivate::MDesktopEntryPrivate(const QString &fileName) :

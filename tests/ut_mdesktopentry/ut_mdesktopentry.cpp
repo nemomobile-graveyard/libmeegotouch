@@ -127,7 +127,7 @@ public:
         d_ptr->readDesktopFile(buffer, d_ptr->desktopEntriesMap);
 
         // FIXME modify the production code so that this part isn't needed in the unit test
-        QString TranslationCatalogKey = "Desktop Entry/X-M-translation-catalog";
+        QString TranslationCatalogKey = "Desktop Entry/X-MeeGo-Translation-Catalog";
         if (contains(TranslationCatalogKey)) {
             MLocale locale;
             // Load the catalog from disk if it's not yet loaded
@@ -291,13 +291,13 @@ void Ut_MDesktopEntry::testStartupNotify()
 void Ut_MDesktopEntry::testLocalizedNameLogicalId()
 {
     ValueList additional;
-    additional << Value("X-M-logical-id", "foobar");
+    additional << Value("X-MeeGo-Logical-Id", "foobar");
     m_subject = new MockMDesktopEntry(additional);
     QCOMPARE(m_subject->name(), QString("!! Unlocalized name"));
     delete m_subject;
 
     gTranslationCatalog = "test";
-    additional << Value("X-M-translation-catalog", "test");
+    additional << Value("X-MeeGo-Translation-Catalog", "test");
     m_subject = new MockMDesktopEntry(additional);
     QCOMPARE(m_subject->name(), QString("translated_foobar"));
 }

@@ -92,8 +92,8 @@ public:
     /*!
      * Returns the localized value of Name key or an empty string if it is
      * not defined in the input desktop entry file. The localization
-     * requires either a X-M-logical-id attribute with optional
-     * X-M-translation-catalog attribute or freedesktop.org standard
+     * requires either a X-MeeGo-Logical-Id attribute with optional
+     * X-MeeGo-Translation-Catalog attribute or freedesktop.org standard
      * style localized name attribute. Returns the name as unlocalized
      * if the logical id cannot be found from the catalog. \see nameUnlocalized
      */
