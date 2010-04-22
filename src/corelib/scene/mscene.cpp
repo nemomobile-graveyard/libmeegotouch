@@ -366,7 +366,10 @@ void MScenePrivate::logFpsCounter(const QTime *timeStamp, float fps)
     if (!fpsLog.output.isOpen()) {
         QFileInfo fi(qApp->arguments().at(0));
         QString appName = fi.baseName();
-        QString pid = QString().setNum(getpid());
+        QString pid("0");
+#ifdef Q_OS_UNIX
+        pid = QString().setNum(getpid());
+#endif //Q_OS_UNIX
 
         QString fileName = QString("%1-%2.fps").arg(appName, pid);
         fpsLog.output.setFileName(fileName);
