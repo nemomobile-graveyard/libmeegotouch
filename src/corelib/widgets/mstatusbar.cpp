@@ -49,19 +49,14 @@ bool MStatusBar::sceneEvent(QEvent *event)
 
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress: {
-        QGraphicsSceneMouseEvent *mouseEvent = dynamic_cast<QGraphicsSceneMouseEvent *> (event);
-        if (mouseEvent != NULL) {
-            d->firstPos = mouseEvent->pos();
-        }
+        QGraphicsSceneMouseEvent *mouseEvent = static_cast<QGraphicsSceneMouseEvent *> (event);
+        d->firstPos = mouseEvent->pos();
         return true;
     }
     case QEvent::GraphicsSceneMouseMove: {
-        QGraphicsSceneMouseEvent *mouseEvent = dynamic_cast<QGraphicsSceneMouseEvent *> (event);
-        if (mouseEvent != NULL) {
-            d->lastPos = mouseEvent->pos();
-            return true;
-        }
-        break;
+        QGraphicsSceneMouseEvent *mouseEvent = static_cast<QGraphicsSceneMouseEvent *> (event);
+        d->lastPos = mouseEvent->pos();
+        return true;
     }
     case QEvent::GraphicsSceneMouseRelease: {
         if (d->firstPos.y() + MStatusBarPrivate::SWIPE_THRESHOLD < d->lastPos.y()) {

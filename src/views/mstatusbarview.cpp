@@ -63,7 +63,7 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
         view->updateSharedPixmap();
     }
 
-    if (sharedPixmap.isNull())
+    if (sharedPixmap.isNull() || (controller->sceneManager() == 0))
         return;
 
     QRectF sourceRect;
