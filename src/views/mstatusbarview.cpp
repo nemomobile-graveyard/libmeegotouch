@@ -36,33 +36,20 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
     controller(controller)
 {
 #ifdef Q_WS_X11
-    Qt::HANDLE handle;
-
     pixmapDamage = 0;
-
-    if (fetchSharedPixmapHandle(&handle)) {
-        sharedPixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
-    }
-
-    if (sharedPixmap.isNull()) {
-        mWarning("MStatusBarView") << "Failed to load the shared pixmap.";
-    } else {
-        setupXDamageForSharedPixmap();
-    }
 
     MApplication *mApplication = static_cast<MApplication *>(QCoreApplication::instance());
     connect(mApplication, SIGNAL(damageEvent(Qt::HANDLE&, short&, short&, unsigned short&, unsigned short&)),
             SLOT(handlePixmapDamageEvent(Qt::HANDLE&, short&, short&, unsigned short&, unsigned short&)));
+
+    updateSharedPixmap();
 #endif
 }
 
 MStatusBarView::~MStatusBarView()
 {
 #ifdef Q_WS_X11
-    if (pixmapDamage) {
-        XDamageDestroy(QX11Info::display(), pixmapDamage);
-        pixmapDamage = 0;
-    }
+    destroyXDamageForSharedPixmap();
 #endif
 }
 
@@ -71,11 +58,15 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
     Q_UNUSED(option);
 
 #ifdef Q_WS_X11
-    QRectF sourceRect;
+    if (sharedPixmap.isNull()) {
+        MStatusBarView *view = const_cast<MStatusBarView *>(this);
+        view->updateSharedPixmap();
+    }
 
     if (sharedPixmap.isNull())
         return;
 
+    QRectF sourceRect;
     if (controller->sceneManager()->orientation() == M::Landscape) {
         sourceRect.setX(0);
         sourceRect.setY(0);
@@ -95,10 +86,23 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
 }
 
 #ifdef Q_WS_X11
+void MStatusBarView::updateSharedPixmap()
+{
+    destroyXDamageForSharedPixmap();
+
+    Qt::HANDLE handle;
+    if (fetchSharedPixmapHandle(&handle)) {
+        sharedPixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
+    }
+
+    if (!sharedPixmap.isNull()) {
+        setupXDamageForSharedPixmap();
+    }
+}
+
 bool MStatusBarView::fetchSharedPixmapHandle(Qt::HANDLE *handle)
 {
     QFile handleTempFile(QDir::temp().filePath("mstatusbar_pixmap_handle"));
-    quint32 intHandle;
 
     if (!handleTempFile.exists())
         return false;
@@ -106,6 +110,7 @@ bool MStatusBarView::fetchSharedPixmapHandle(Qt::HANDLE *handle)
     if (!handleTempFile.open(QIODevice::ReadOnly))
         return false;
 
+    quint32 intHandle;
     QDataStream dataStream(&handleTempFile);
     dataStream >> intHandle;
 
@@ -119,6 +124,14 @@ void MStatusBarView::setupXDamageForSharedPixmap()
     Q_ASSERT(!sharedPixmap.isNull());
 
     pixmapDamage = XDamageCreate(QX11Info::display(), sharedPixmap.handle(), XDamageReportNonEmpty);
+}
+
+void MStatusBarView::destroyXDamageForSharedPixmap()
+{
+    if (pixmapDamage) {
+        XDamageDestroy(QX11Info::display(), pixmapDamage);
+        pixmapDamage = 0;
+    }
 }
 
 void MStatusBarView::handlePixmapDamageEvent(Qt::HANDLE &damage, short &x, short &y,

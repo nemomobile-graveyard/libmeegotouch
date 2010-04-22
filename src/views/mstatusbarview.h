@@ -47,8 +47,10 @@ private:
     MWidgetController *controller;
 
 #ifdef Q_WS_X11
+    void updateSharedPixmap();
     bool fetchSharedPixmapHandle(Qt::HANDLE *handle);
     void setupXDamageForSharedPixmap();
+    void destroyXDamageForSharedPixmap();
 
     QPixmap sharedPixmap;
     Qt::HANDLE pixmapDamage;
