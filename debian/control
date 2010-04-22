@@ -39,7 +39,7 @@ Description: MeeGo Touch binary files
 Package: libmeegotouch-dev
 Section: devel
 Architecture: any
-Depends: libmeegotouchcore0 (= ${Source-Version}), meegotouch-dev-tools (=${Source-Version}), libqt4-dev (>= 4.6.0), libx11-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgconf2-dev, libcontextsubscriber-dev, libxdamage-dev
+Depends: libmeegotouchcore0 (= ${Source-Version}), libmeegotouchextensions0 (= ${Source-Version}), libmeegotouchsettings0 (= ${Source-Version}), libmeegotouchviews0 (= ${Source-Version}), meegotouch-dev-tools (=${Source-Version}), libqt4-dev (>= 4.6.0), libx11-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgconf2-dev, libcontextsubscriber-dev, libxdamage-dev
 Description: MeeGo Touch development files
  Development files for MeeGo Touch
 

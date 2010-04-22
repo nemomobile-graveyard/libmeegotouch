@@ -20,7 +20,7 @@ contains(DEFINES, HAVE_DBUS) {
     include(style/style.pri)
 }
 
-LIBS += -lmeegotouchviews -lmeegotouchsettings
+LIBS += -lmeegotouchviews -lmeegotouchsettings -lmeegotouchcore
 
 SOURCES += mextensionslibrary.cpp
 
