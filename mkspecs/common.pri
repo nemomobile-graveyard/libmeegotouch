@@ -36,6 +36,9 @@ mac {
 # Load global definitions
 include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
 
+# enable QString optimizations
+DEFINES += QT_USE_FAST_CONCATENATION QT_USE_FAST_OPERATOR_PLUS
+
 # Defines for directories, for use in source code.
 {
     # THEMEDIR determines the location of the theme
