@@ -33,12 +33,18 @@ public:
     QSize thumbSize() const;
     QPoint thumbPos() const;
 
+    const QImage& maskedSliderImage() const;
 
     int mouseOffset;
 
     bool m_thumbDown;
     bool m_thumbDragged;
     QPoint m_thumbPos;
+    
+    //mutable so that image can be recreated in the drawContents() const 
+    //method if needed, other solution would need a timer because of the 
+    //asynchronous pixmap loading
+    mutable QImage m_maskedSliderImage;
 };
 
 #endif

@@ -128,7 +128,7 @@ private:
 
     Q_DISABLE_COPY(MButtonSwitchView)
     Q_DECLARE_PRIVATE(MButtonSwitchView)
-
+    
 #ifdef UNIT_TEST
     friend class Ut_MButtonSwitchView;
 #endif
