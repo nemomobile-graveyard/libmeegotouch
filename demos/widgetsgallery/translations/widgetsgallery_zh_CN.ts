@@ -1108,52 +1108,6 @@ Switches are used to indicate e.g. settings values</source>
         <source>Infinite Improbability Drive</source>
         <translation>无限非可能性驱动</translation>
     </message>
-    <message id="xx_continuous_slider_min">
-        <location filename="../continuoussliderpage.cpp" line="108"/>
-        <location filename="../continuoussliderpage.cpp" line="160"/>
-        <location filename="../continuoussliderpage.cpp" line="168"/>
-        <source>Min</source>
-        <translation>最小</translation>
-    </message>
-    <message id="xx_continuous_slider_max">
-        <location filename="../continuoussliderpage.cpp" line="110"/>
-        <location filename="../continuoussliderpage.cpp" line="162"/>
-        <location filename="../continuoussliderpage.cpp" line="170"/>
-        <source>Max</source>
-        <translation>最大</translation>
-    </message>
-    <message id="xx_continuous_slider_thumb">
-        <location filename="../continuoussliderpage.cpp" line="112"/>
-        <location filename="../continuoussliderpage.cpp" line="164"/>
-        <location filename="../continuoussliderpage.cpp" line="172"/>
-        <source>Thumb</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_title">
-        <location filename="../continuoussliderpage.cpp" line="150"/>
-        <source>Continuous Slider</source>
-        <translation>连续滚动</translation>
-    </message>
-    <message id="xx_continuous_slider_with_icons">
-        <location filename="../continuoussliderpage.cpp" line="154"/>
-        <source>with icons</source>
-        <translation>附加图标</translation>
-    </message>
-    <message id="xx_continuous_slider_plain_slider">
-        <location filename="../continuoussliderpage.cpp" line="156"/>
-        <source>plain slider</source>
-        <translation>简单滚动条</translation>
-    </message>
-    <message id="xx_continuous_slider_with_labels">
-        <location filename="../continuoussliderpage.cpp" line="158"/>
-        <source>with labels</source>
-        <translation>加标签</translation>
-    </message>
-    <message id="xx_continuous_slider_seekbar">
-        <location filename="../continuoussliderpage.cpp" line="166"/>
-        <source>seekbar</source>
-        <translation>定位条</translation>
-    </message>
     <message id="xx_input_feedback_page_title">
         <location filename="../feedbackpage.cpp" line="90"/>
         <source>Input Feedback</source>

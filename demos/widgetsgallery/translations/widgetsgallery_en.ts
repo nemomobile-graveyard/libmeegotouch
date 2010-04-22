@@ -1074,52 +1074,6 @@ Input feedbacks can be easily configured for different purposes using the themin
         <source>Silent</source>
         <translation>Silent</translation>
     </message>
-    <message id="xx_continuous_slider_min">
-        <location filename="../continuoussliderpage.cpp" line="108"/>
-        <location filename="../continuoussliderpage.cpp" line="160"/>
-        <location filename="../continuoussliderpage.cpp" line="168"/>
-        <source>Min</source>
-        <translation>Min</translation>
-    </message>
-    <message id="xx_continuous_slider_max">
-        <location filename="../continuoussliderpage.cpp" line="110"/>
-        <location filename="../continuoussliderpage.cpp" line="162"/>
-        <location filename="../continuoussliderpage.cpp" line="170"/>
-        <source>Max</source>
-        <translation>Max</translation>
-    </message>
-    <message id="xx_continuous_slider_thumb">
-        <location filename="../continuoussliderpage.cpp" line="112"/>
-        <location filename="../continuoussliderpage.cpp" line="164"/>
-        <location filename="../continuoussliderpage.cpp" line="172"/>
-        <source>Thumb</source>
-        <translation>Thumb</translation>
-    </message>
-    <message id="xx_continuous_slider_title">
-        <location filename="../continuoussliderpage.cpp" line="150"/>
-        <source>Continuous Slider</source>
-        <translation>Continuous Slider</translation>
-    </message>
-    <message id="xx_continuous_slider_with_icons">
-        <location filename="../continuoussliderpage.cpp" line="154"/>
-        <source>with icons</source>
-        <translation>with icons</translation>
-    </message>
-    <message id="xx_continuous_slider_plain_slider">
-        <location filename="../continuoussliderpage.cpp" line="156"/>
-        <source>plain slider</source>
-        <translation>plain slider</translation>
-    </message>
-    <message id="xx_continuous_slider_with_labels">
-        <location filename="../continuoussliderpage.cpp" line="158"/>
-        <source>with labels</source>
-        <translation>with labels</translation>
-    </message>
-    <message id="xx_continuous_slider_seekbar">
-        <location filename="../continuoussliderpage.cpp" line="166"/>
-        <source>seekbar</source>
-        <translation>seekbar</translation>
-    </message>
     <message id="xx_gridpage_title">
         <location filename="../mgridpage.cpp" line="96"/>
         <source>Grid page</source>

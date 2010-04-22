@@ -1016,52 +1016,6 @@ Switches are used to indicate e.g. settings values</source>
         <source>Infinite Improbability Drive</source>
         <translation>Unendliche-Unwahrscheinlichkeit-Antrieb</translation>
     </message>
-    <message id="xx_continuous_slider_min">
-        <location filename="../continuoussliderpage.cpp" line="108"/>
-        <location filename="../continuoussliderpage.cpp" line="160"/>
-        <location filename="../continuoussliderpage.cpp" line="168"/>
-        <source>Min</source>
-        <translation>Min</translation>
-    </message>
-    <message id="xx_continuous_slider_max">
-        <location filename="../continuoussliderpage.cpp" line="110"/>
-        <location filename="../continuoussliderpage.cpp" line="162"/>
-        <location filename="../continuoussliderpage.cpp" line="170"/>
-        <source>Max</source>
-        <translation>Max</translation>
-    </message>
-    <message id="xx_continuous_slider_thumb">
-        <location filename="../continuoussliderpage.cpp" line="112"/>
-        <location filename="../continuoussliderpage.cpp" line="164"/>
-        <location filename="../continuoussliderpage.cpp" line="172"/>
-        <source>Thumb</source>
-        <translation>Daumen</translation>
-    </message>
-    <message id="xx_continuous_slider_title">
-        <location filename="../continuoussliderpage.cpp" line="150"/>
-        <source>Continuous Slider</source>
-        <translation>Kontinuierlicher Schieberegler</translation>
-    </message>
-    <message id="xx_continuous_slider_with_icons">
-        <location filename="../continuoussliderpage.cpp" line="154"/>
-        <source>with icons</source>
-        <translation>Mit Piktogrammen</translation>
-    </message>
-    <message id="xx_continuous_slider_plain_slider">
-        <location filename="../continuoussliderpage.cpp" line="156"/>
-        <source>plain slider</source>
-        <translation>Einfacher Schieberegler</translation>
-    </message>
-    <message id="xx_continuous_slider_with_labels">
-        <location filename="../continuoussliderpage.cpp" line="158"/>
-        <source>with labels</source>
-        <translation>Mit Labels</translation>
-    </message>
-    <message id="xx_continuous_slider_seekbar">
-        <location filename="../continuoussliderpage.cpp" line="166"/>
-        <source>seekbar</source>
-        <translation>Suchbalken</translation>
-    </message>
     <message id="xx_input_feedback_page_title">
         <location filename="../feedbackpage.cpp" line="90"/>
         <source>Input Feedback</source>

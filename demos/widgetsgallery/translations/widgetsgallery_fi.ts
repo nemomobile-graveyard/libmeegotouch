@@ -436,7 +436,7 @@ tooltip</oldsource>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
-        <translation type="unfinished">Slider is used for contnuous set of values, among which user can choose one value.
+        <translation type="unfinished">Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used for displaying playback status for multimedia content.</translation>
     </message>
@@ -1020,52 +1020,6 @@ Input feedbacks can be easily configured for different purposes using the themin
     <message id="xx_input_feedback_page_button6">
         <location filename="../feedbackpage.cpp" line="112"/>
         <source>Silent</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_min">
-        <location filename="../continuoussliderpage.cpp" line="108"/>
-        <location filename="../continuoussliderpage.cpp" line="160"/>
-        <location filename="../continuoussliderpage.cpp" line="168"/>
-        <source>Min</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_max">
-        <location filename="../continuoussliderpage.cpp" line="110"/>
-        <location filename="../continuoussliderpage.cpp" line="162"/>
-        <location filename="../continuoussliderpage.cpp" line="170"/>
-        <source>Max</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_thumb">
-        <location filename="../continuoussliderpage.cpp" line="112"/>
-        <location filename="../continuoussliderpage.cpp" line="164"/>
-        <location filename="../continuoussliderpage.cpp" line="172"/>
-        <source>Thumb</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_title">
-        <location filename="../continuoussliderpage.cpp" line="150"/>
-        <source>Continuous Slider</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_with_icons">
-        <location filename="../continuoussliderpage.cpp" line="154"/>
-        <source>with icons</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_plain_slider">
-        <location filename="../continuoussliderpage.cpp" line="156"/>
-        <source>plain slider</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_with_labels">
-        <location filename="../continuoussliderpage.cpp" line="158"/>
-        <source>with labels</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_continuous_slider_seekbar">
-        <location filename="../continuoussliderpage.cpp" line="166"/>
-        <source>seekbar</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_gridpage_title">
