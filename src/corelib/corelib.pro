@@ -15,7 +15,9 @@ include(theme/theme.pri)
 include(i18n/i18n.pri)
 include(widgets/widgets.pri)
 include(workspace/workspace.pri)
-!macx:include(video/video.pri)
+contains(DEFINES, HAVE_GSTREAMER) {
+include(video/video.pri)
+}
 contains(DEFINES, HAVE_DBUS) {
     include(servicefwif/servicefwif.pri)
     include(notification/notification.pri)
