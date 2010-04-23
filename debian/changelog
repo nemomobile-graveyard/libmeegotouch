@@ -1,8 +1,31 @@
-libmeegotouch (0.20.2~1) unstable; urgency=low
+libmeegotouch (0.20.2-1) unstable; urgency=low
 
-  * UNRELEASED
+  * Implemented: SWP#-DUI-2668, SWP#-DUI-2660, SWP#-DUI-2652, SWP#-DUI-2651
+  * Implemented: SWP#-DUI-2650, SWP#-DUI-2647, SWP#-DUI-2648, SWP#-DUI-2583
+  * Implemented: SWP#-DUI-2578, SWP#-DUI-2580, SWP#-DUI-2582, SWP#-DUI-2661
+  * Implemented: SWP#-DUI-2576, SWP#-DUI-2575, SWP#-DUI-632, SWP#-DUI-2574
+  * Implemented: SWP#-DUI-2613, SWP#-DUI-2555, SWP#-DUI-1047, SWP#-DUI-2571
+  * Implemented: SWP#-DUI-2570, SWP#-DUI-2593, SWP#-DUI-2617, SWP#-DUI-2643
+  * Implemented: SWP#-DUI-2641, SWP#-DUI-2592, SWP#-DUI-2625, SWP#-DUI-2624
+  * Implemented: SWP#-DUI-2623, SWP#-DUI-2621, SWP#-DUI-2667, SWP#-DUI-2618
+  * Implemented: SWP#-DUI-1473, SWP#-DUI-2572, SWP#-DUI-2594, SWP#-DUI-2749
+  * Implemented: SWP#-DUI-2750, SWP#-DUI-2698, SWP#-DUI-2697, SWP#-DUI-2682
+  * Implemented: SWP#-DUI-2683, SWP#-DUI-2684, SWP#-DUI-2681, SWP#-DUI-2718
+  * Implemented: SWP#-DUI-2734, SWP#-DUI-2721, SWP#-DUI-2719, SWP#-DUI-2717
+  * Implemented: SWP#-DUI-2699, SWP#-DUI-2686, SWP#-DUI-2596, SWP#-DUI-2581
+  * Implemented: SWP#-DUI-2712, SWP#-DUI-2711, SWP#-DUI-2705, SWP#-DUI-2694
+  * Implemented: SWP#-DUI-2690, SWP#-DUI-2669
+  * Fixes: NB#165100 - remove the custom pinch recognizer and use the Qt one.
+  * Fixes: NB#165196 - <MemLeak> mpannableviewport.cpp
+  * Fixes: NB#164131, NB#164917, NB#164605, NB#164598
+  * Fixes: NB#162723 - Missing icons in notifications (Problems again due the renaming)
+  * Fixes: NB#159883 - Misleading documentation in DuiInfoBanner
+  * Fixes: NB#164030 - DuiSeparator vertical and horizontal use the same background image
+  * Fixes: NB#161451 - MSceneManager should try to scroll the contents of a page before moving the window
+  * Fixes: NB#163778 - DuiObjectMenu does not use DuiSceneLayerEffect for "dimmed background"
+  * Fixes: NB#164846 - MWindow::setOrientationAngle() does not work in certain situation.
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 21 Apr 2010 11:58:41 +0300
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Fri, 23 Apr 2010 11:20:21 +0300
 
 libmeegotouch (0.20.1-1) unstable; urgency=low
 
