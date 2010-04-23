@@ -234,7 +234,7 @@ void MPannableWidgetPrivate::resetMouseGrabber()
     Q_Q(MPannableWidget);
 
     mouseGrabber = 0;
-    if (glass == q->scene()->mouseGrabberItem()) {
+    if (q->scene() && glass == q->scene()->mouseGrabberItem()) {
         glass->ungrabMouse();
     }
 }
