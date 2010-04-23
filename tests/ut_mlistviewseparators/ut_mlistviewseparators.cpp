@@ -116,21 +116,25 @@ void Ut_MListViewSeparators::init()
     listViewPrivate->model = phoneBookModel;
     listViewPrivate->itemHeight = 100;
     listViewPrivate->viewWidth = 300;
+    listViewPrivate->rowCount = phoneBookModel->rowCount();
 
     plainMultiColumnListViewPrivate = new MPlainMultiColumnListViewPrivate;
     plainMultiColumnListViewPrivate->model = phoneBookModel;
     plainMultiColumnListViewPrivate->itemHeight = 100;
     plainMultiColumnListViewPrivate->viewWidth = 300;
+    plainMultiColumnListViewPrivate->rowCount = phoneBookModel->rowCount();
 
     groupedListViewPrivate = new MGroupHeaderListViewPrivate;
     groupedListViewPrivate->model = phoneBookModel;
     groupedListViewPrivate->itemHeight = 100;
     groupedListViewPrivate->viewWidth = 300;
+    groupedListViewPrivate->rowCount = phoneBookModel->rowCount();
 
     multiColumnListViewPrivate = new MMultiColumnListViewPrivate;
     multiColumnListViewPrivate->model = phoneBookModel;
     multiColumnListViewPrivate->itemHeight = 100;
     multiColumnListViewPrivate->viewWidth = 300;
+    multiColumnListViewPrivate->rowCount = phoneBookModel->rowCount();
 
 
     MListModel *model = new MListModel;
