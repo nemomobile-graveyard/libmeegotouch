@@ -90,8 +90,7 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
       mouseTarget(0, 0),
       inAutoSelectionClick(false),
       infoBanner(0),
-      editActive(false),
-      hideInfoBannerTimer(new QTimer(this))
+      editActive(false)
 {
     // copy text options from actual document to prompt
     QTextOption option = textDocument->defaultTextOption();
@@ -105,8 +104,6 @@ MTextEditViewPrivate::MTextEditViewPrivate(MTextEdit *control, MTextEditView *q)
 
     maskTimer->setSingleShot(true);
     maskTimer->setInterval(MaskedTimeInterval);
-
-    hideInfoBannerTimer->setSingleShot(true);
 
     QObject::connect(longPressTimer, SIGNAL(timeout()), q, SLOT(handleLongPress()));
     QObject::connect(scrollTimer, SIGNAL(timeout()), this, SLOT(scrolling()));
@@ -969,22 +966,14 @@ void MTextEditView::informPasteFailed()
 {
     Q_D(MTextEditView);
 
-    d->hideInfoBannerTimer->start();
-
-    if (d->infoBanner) {
-        return;
-    }
-
     QString iconName = style()->pasteFailedIcon();
     int duration = style()->pasteFailedDuration();
 
-    if (iconName.isEmpty()) {
+    if (iconName.isEmpty())
         iconName = DefaultPasteBannerIcon;
-    }
 
-    if (duration <= 0) {
+    if (duration <= 0)
         duration = NotificationDuration;
-    }
 
     d->infoBanner = new MInfoBanner(MInfoBanner::Information);
     d->infoBanner->setImageID(iconName);
@@ -1000,12 +989,20 @@ void MTextEditView::informPasteFailed()
         qtTrId("qtn_vkb_cantpaste"));
 
     d->controller->sceneManager()->appearSceneWindow(d->infoBanner, MSceneWindow::DestroyWhenDone);
-    d->hideInfoBannerTimer->setInterval(duration);
-    connect(d->hideInfoBannerTimer, SIGNAL(timeout()), d->infoBanner, SLOT(dismiss()));
+    QTimer::singleShot(duration, this, SLOT(hideInfoBanner()));
 }
 
 void MTextEditView::handleLongPress()
 {
+}
+
+void MTextEditView::hideInfoBanner()
+{
+    Q_D(MTextEditView);
+
+    if (d->infoBanner)
+        d->infoBanner->dismiss();
+    d->infoBanner = 0;
 }
 
 void MTextEditView::setupModel()

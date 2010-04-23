@@ -128,11 +128,9 @@ protected:
 
     bool inAutoSelectionClick;
 
-    QPointer<MInfoBanner> infoBanner;
+    MInfoBanner *infoBanner;
 
     bool editActive; // true if editing started and having focus
-
-    QTimer *hideInfoBannerTimer;
 
 #ifdef UNIT_TEST
     friend class Ut_MTextEditView;

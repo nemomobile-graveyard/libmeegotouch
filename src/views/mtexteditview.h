@@ -103,6 +103,8 @@ protected Q_SLOTS:
     //! \brief Handler for long press event.
     virtual void handleLongPress();
 
+    void hideInfoBanner();
+
 private:
     Q_DISABLE_COPY(MTextEditView)
     Q_DECLARE_PRIVATE(MTextEditView)
