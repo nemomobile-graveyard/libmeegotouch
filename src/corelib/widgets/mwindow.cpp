@@ -459,6 +459,8 @@ void MWindow::setSceneManager(MSceneManager *sceneManager)
                 SIGNAL(orientationChangeFinished(M::Orientation)));
         sceneManager->setParent(this);
         setScene(sceneManager->scene());
+        setSceneRect(QRectF(QPointF(), visibleSceneSize(M::Landscape)));
+        centerOn(sceneRect().center());
     }
 }
 

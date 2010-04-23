@@ -43,6 +43,7 @@ private slots:
     void testIfSceneExistsWhenSceneManagerAutocreated();
     void testConstructorWithSceneManager();
     void testSetSceneManager();
+    void testSceneRect();
     void testOrientation_data();
     void testOrientation();
     void testSetOrientationAngle_data();

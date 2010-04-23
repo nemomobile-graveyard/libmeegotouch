@@ -99,6 +99,12 @@ void Ut_MWindow::testSetSceneManager()
     QCOMPARE((quintptr) win->sceneManager(), (quintptr) manager);
 }
 
+void Ut_MWindow::testSceneRect()
+{
+    win->setSceneManager(new MSceneManager);
+    QCOMPARE(win->sceneRect(), QRectF(QPoint(0,0), win->visibleSceneSize(M::Landscape)));
+}
+
 void Ut_MWindow::testOrientation_data()
 {
     QTest::addColumn<M::OrientationAngle>("newAngle");

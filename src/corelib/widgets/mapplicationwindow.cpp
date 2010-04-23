@@ -112,9 +112,6 @@ void MApplicationWindowPrivate::init()
 
     q->setOptimizationFlag(QGraphicsView::DontSavePainterState);
 
-    q->setSceneRect(QRectF(QPointF(), q->visibleSceneSize(M::Landscape)));
-    q->centerOn(q->sceneRect().center());
-
     q->connect(q, SIGNAL(orientationChanged(M::Orientation)),
                q, SLOT(_q_placeToolBar(M::Orientation)));
 
