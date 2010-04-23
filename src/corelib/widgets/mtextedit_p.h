@@ -43,8 +43,11 @@ public:
     virtual ~MTextEditPrivate();
 
     QTextCursor *cursor() const;
-    void moveCursor(QTextCursor::MoveOperation moveOp,
+    bool moveCursor(QTextCursor::MoveOperation moveOp,
                     QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor, int n = 1);
+
+    bool smartMoveCursor(QTextCursor::MoveOperation moveOp,
+                         QTextCursor::MoveMode moveMode = QTextCursor::MoveAnchor, int n = 1);
 
     bool doBackspace();
     bool doDelete();

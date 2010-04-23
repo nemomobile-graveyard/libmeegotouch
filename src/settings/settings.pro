@@ -12,4 +12,6 @@ include(settingslanguage/settingslanguage.pri)
 
 SOURCES += msettingslibrary.cpp
 
+LIBS += -lmeegotouchcore
+
 include(../common_bot.pri)

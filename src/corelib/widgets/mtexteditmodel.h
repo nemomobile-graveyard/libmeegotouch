@@ -86,6 +86,7 @@ private:
     M_MODEL_PROPERTY(int,  maxLength, MaxLength, true, std::numeric_limits<int>::max())
     M_MODEL_PROPERTY(QString, prompt, Prompt, true, QString())
     M_MODEL_PROPERTY(QString, toolbar, Toolbar, true, QString())
+    M_MODEL_PROPERTY(int, toolbarId, ToolbarId, true, -1)
     M_MODEL_PROPERTY(MTextEditModel::EchoMode, echo, Echo, true, MTextEditModel::Normal)
 
 public:

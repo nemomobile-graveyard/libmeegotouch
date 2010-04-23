@@ -344,13 +344,46 @@ public:
 
     /*!
      * \brief Attaches a custom toolbar named \a name.
+     *  \param name is the absolute file name of a custom toolbar, or the relative file under
+     *      /usr/share/meegotouch/imtoolbars/.
+     * Note if another toolbar is already attached, detachToolbar() will be automatically called.
+     *
+     * This method is provided for convenience. Equals with widget uses MInputMethodState::registerToolbar()
+     * to register a toolbar and obtain its identifier, then calls attachToolbar(int) to attach.
+     * The registered toolbar is valid until this widget attaches to another toolbar, or calls detachToolbar(),
+     * or widget is deleted.
+     * \sa attachToolbar(int), MInputMethodState::registerToolbar()
      */
     void attachToolbar(const QString &name);
 
     /*!
+     * \brief Attaches a custom toolbar which identifier is \a id.
+     * \param id should be a valid toolbar identifier which is registered by other widget or
+     *      MInputMethodState::registerToolbar().
+     * Note if another toolbar is already attached, detachToolbar() will be automatically called.
+     */
+    void attachToolbar(int id);
+
+    /*!
      * \brief Returns the name of current attached custom toolbar.
+     * Note the toolbar name could be empty if the toolbar is attached by attachToolbar(int).
      */
     QString attachedToolbar() const;
+
+    /*!
+     * \brief Returns the unique identifier of current attached custom toolbar.
+     * Note if the toolbar is registered by attachToolbar(const QString &), then this toolbar identifier
+     * is valid until the widget attaches to another toolbar, or calls detachToolbar(), or widget is deleted.
+     * \sa attachToolbar(const QString&), attachToolbar(int).
+     */
+    int attachedToolbarId() const;
+
+    /*!
+     * \brief Detaches the custom toolbar which is already attached before.
+     * detachToolbar() is automatically called in destructor.
+     * \sa attachToolbar(const QString &).
+     */
+    void detachToolbar();
 
 public Q_SLOTS:
     /**
