@@ -118,9 +118,11 @@ void SpinnerPage::inApplicationMainArea()
     description->setWordWrap(true);
     containerPolicy->addItem(description);
 
-    spinner = new MProgressIndicator(0, MProgressIndicator::spinnerType);
+    spinner = new MProgressIndicator(centralWidget(), MProgressIndicator::spinnerType);
     spinner->setUnknownDuration(true);
     containerPolicy->addItem(spinner, Qt::AlignCenter);
+
+    containerPolicy->addStretch();
 }
 
 void SpinnerPage::inContainerHeader()

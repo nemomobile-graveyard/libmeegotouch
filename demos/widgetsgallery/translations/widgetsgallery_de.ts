@@ -905,7 +905,7 @@ sit amet</translation>
     <message id="xx_spinner_page_application_main_area">
         <location filename="../spinnerpage.cpp" line="66"/>
         <source>In container main area</source>
-        <translation>Im Hauptbereich des Applikations</translation>
+        <translation>Im Hauptbereich der Applikation</translation>
     </message>
     <message id="xx_spinner_page_container_header">
         <location filename="../spinnerpage.cpp" line="72"/>
