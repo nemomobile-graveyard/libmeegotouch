@@ -914,10 +914,10 @@ sit amet</source>
         <translation>Dolor
 sit amet</translation>
     </message>
-    <message id="xx_spinner_page_container_main_area">
+    <message id="xx_spinner_page_application_main_area">
         <location filename="../spinnerpage.cpp" line="66"/>
         <source>In container main area</source>
-        <translation>In container main area</translation>
+        <translation>In application main area</translation>
     </message>
     <message id="xx_spinner_page_container_header">
         <location filename="../spinnerpage.cpp" line="72"/>
@@ -961,10 +961,10 @@ Subject: This is funny stuff!</source>
 Date: Today
 Subject: This is funny stuff!</translation>
     </message>
-    <message id="xx_spinner_page_container_area_description">
+    <message id="xx_spinner_page_application_area_description">
         <location filename="../spinnerpage.cpp" line="129"/>
-        <source>Spinner can be used in container while e.g. content is being fetched.</source>
-        <translation>Spinner can be used in container while e.g. content is being fetched.</translation>
+        <source>Spinner can be used while content is loading.</source>
+        <translation>Spinner can be used while content is loading.</translation>
     </message>
     <message id="xx_spinner_page_container_title">
         <location filename="../spinnerpage.cpp" line="142"/>
