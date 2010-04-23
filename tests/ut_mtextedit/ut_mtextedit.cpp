@@ -1432,10 +1432,6 @@ void Ut_MTextEdit::testInputMethodQuery()
 
     const QString toolbar("testToolbar");
     m_subject->attachToolbar(toolbar);
-    query = static_cast<Qt::InputMethodQuery>(M::InputMethodToolbarQuery);
-    queryResult = m_subject->inputMethodQuery(query);
-    QVERIFY(queryResult.isValid() == true);
-    QCOMPARE(queryResult.toString(), toolbar);
 }
 
 void Ut_MTextEdit::testConstrainedPaste()
