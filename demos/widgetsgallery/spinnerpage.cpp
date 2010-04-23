@@ -43,6 +43,7 @@ SpinnerPage::SpinnerPage() :
     TemplatePage(),
     container(NULL),
     spinner(NULL),
+    spinnerLayout(NULL),
     header(NULL),
     description(NULL),
     view(Unknown)
@@ -122,7 +123,13 @@ void SpinnerPage::inApplicationMainArea()
     spinner->setUnknownDuration(true);
     containerPolicy->addItem(spinner, Qt::AlignCenter);
 
-    containerPolicy->addStretch();
+    spinnerLayout = new MLayout(0);
+
+    MLinearLayoutPolicy* spinnerLayoutPolicy = new MLinearLayoutPolicy(spinnerLayout, Qt::Vertical);
+    spinnerLayout->setPolicy(spinnerLayoutPolicy);
+    spinnerLayoutPolicy->addStretch();
+
+    containerPolicy->addItem(spinnerLayout);
 }
 
 void SpinnerPage::inContainerHeader()
@@ -237,10 +244,13 @@ void SpinnerPage::reset()
     case ApplicationMainArea: {
         containerPolicy->removeItem(header);
         containerPolicy->removeItem(spinner);
+        containerPolicy->removeItem(spinnerLayout);
         delete description;
         delete spinner;
+        delete spinnerLayout;
         description = NULL;
         spinner = NULL;
+        spinnerLayout = NULL;
     } break;
 
     case ContainerHeader: {
