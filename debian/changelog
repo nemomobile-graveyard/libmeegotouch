@@ -1,3 +1,9 @@
+libmeegotouch (0.20.3~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Fri, 23 Apr 2010 15:55:55 +0300
+
 libmeegotouch (0.20.2-1) unstable; urgency=low
 
   * Implemented: SWP#-DUI-2668, SWP#-DUI-2660, SWP#-DUI-2652, SWP#-DUI-2651
