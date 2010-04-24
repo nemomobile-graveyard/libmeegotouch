@@ -323,17 +323,17 @@ void Ut_MListViewSeparators::testGroupedMulticolumnHorizontalSeparatorsCount4Col
 
 void Ut_MListViewSeparators::cleanup()
 {
-    delete listViewPrivate;
     delete listViewPrivate->controllerModel;
+    delete listViewPrivate;
 
-    delete plainMultiColumnListViewPrivate;
     delete plainMultiColumnListViewPrivate->controllerModel;
+    delete plainMultiColumnListViewPrivate;
 
-    delete groupedListViewPrivate;
     delete groupedListViewPrivate->controllerModel;
+    delete groupedListViewPrivate;
 
-    delete multiColumnListViewPrivate;
     delete multiColumnListViewPrivate->controllerModel;
+    delete multiColumnListViewPrivate;
 }
 
 QTEST_APPLESS_MAIN(Ut_MListViewSeparators);

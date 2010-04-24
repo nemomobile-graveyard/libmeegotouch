@@ -109,8 +109,8 @@ void Ut_MListViewMultiColumn::init()
 
 void Ut_MListViewMultiColumn::cleanup()
 {
-    delete listViewPrivate;
     delete listViewPrivate->controllerModel;
+    delete listViewPrivate;
 }
 
 void Ut_MListViewMultiColumn::testPhoneBook()

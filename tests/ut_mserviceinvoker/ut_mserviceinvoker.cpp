@@ -67,8 +67,8 @@ void Ut_MServiceInvoker::testInvoke()
     MockServiceAction *action = new MockServiceAction();
     action->executeServiceCalled = false;
     action->trigger();
-    delete action;
     QVERIFY(action->executeServiceCalled);
+    delete action;
 }
 
 QTEST_MAIN(Ut_MServiceInvoker)
