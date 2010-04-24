@@ -25,7 +25,8 @@
 
 #include <QPainter>
 #include <MDebug>
-
+#include <MComponentData>
+#include <MDebug>
 
 MScalableImagePrivate::MScalableImagePrivate()
     : m_imageType(MScalable9), m_image(NULL),
@@ -87,18 +88,58 @@ void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *
         margins.setTop(qMax(0, margins.top() - (cornerHeight - h + 1) / 2));
         margins.setBottom(qMax(0, margins.bottom() - (cornerHeight - h + 1) / 2));
     }
+
+    if (w == 0 || h == 0) {
+        // this should really not happen
+        mWarning("MScalableImage") << "Received request to draw pixmap of invalid 0 size";
+        return;
+    }
     
     //the image is used in it's native size
     //no need to scale just draw it
-    if (m_image->size() == QSize(w, h)) {
+    QSize requiredSize(w, h);
+    if (m_image->size() == requiredSize) {
         painter->drawPixmap(x, y, *m_image);
+        return;
     }
-    //the image needs some scaling
     else {
-        bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
-        painter->setRenderHint(QPainter::SmoothPixmapTransform);
-        qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
-        painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
+        //the image doesn't fit directly into the required size.
+        //check whether or not we're allowed to cache
+        bool docache = MComponentData::softwareRendering();
+
+        if (docache) {
+            //software rendering is not fast when scaling pixmaps, so we use the
+            //global pixmap cache to avoid rescaling more than needed.
+            //
+            //TODO: this cache gets thrashed a bit with widgetsgallery, may want to look into possibly
+            //increasing the size of QPixmapCache.
+            QString key = QString("msi-%1-%2,%3").arg((*m_image).cacheKey()).arg(w).arg(h);
+            QPixmap scaled;
+            if (QPixmapCache::find(key, &scaled)) {
+                //cached! draw and we're done
+                painter->drawPixmap(x, y, scaled);
+                return;
+            }
+
+            // draw into cache
+            scaled = QPixmap(requiredSize);
+            scaled.fill(Qt::transparent);
+            QPainter p;
+            p.begin(&scaled);
+            p.setRenderHint(QPainter::SmoothPixmapTransform);
+            qDrawBorderPixmap(&p, QRect(0, 0, w, h), margins, *m_image);
+            p.end();
+
+            // draw to screen
+            painter->drawPixmap(x, y, scaled);
+            QPixmapCache::insert(key, scaled);
+        } else {
+            // caching isn't permitted for this case; scale and render direct to screen.
+            bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
+            painter->setRenderHint(QPainter::SmoothPixmapTransform);
+            qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
+            painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
+        }
     }
 }
 

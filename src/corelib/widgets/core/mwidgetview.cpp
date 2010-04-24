@@ -560,16 +560,19 @@ void MWidgetView::paint(QPainter *painter, const QStyleOptionGraphicsItem *optio
 void MWidgetView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
+    QSizeF currentSize = size();
+
+    if (currentSize.width() == 0 || currentSize.height() == 0)
+        return;
 
     qreal oldOpacity = painter->opacity();
     painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
 
     if (style()->backgroundTiles().isValid()) {
-        style()->backgroundTiles()[model()->layoutPosition()]->draw(0,0, size().width(), size().height(), painter);
+        style()->backgroundTiles()[model()->layoutPosition()]->draw(0,0, currentSize.width(), currentSize.height(), painter);
     }
     else if (style()->backgroundImage()) {
-        // TODO Use tiled bitmap drawing when it becomes available.
-        style()->backgroundImage()->draw(0, 0, size().width(), size().height(), painter);
+        style()->backgroundImage()->draw(0, 0, currentSize.width(), currentSize.height(), painter);
     } else if (style()->backgroundColor().isValid()) {
         painter->fillRect(boundingRect(), QBrush(style()->backgroundColor()));
     }
