@@ -826,7 +826,7 @@ MWindow *MComponentData::activeWindow()
     if (gMComponentDataPrivate->windows.isEmpty())
         return 0;
 
-    return gMComponentDataPrivate->windows.first();
+    return gMComponentDataPrivate->windows.at(0);
 }
 
 MApplicationWindow *MComponentData::activeApplicationWindow()
