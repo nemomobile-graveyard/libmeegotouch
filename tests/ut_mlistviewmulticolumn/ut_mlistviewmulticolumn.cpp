@@ -110,6 +110,7 @@ void Ut_MListViewMultiColumn::init()
 void Ut_MListViewMultiColumn::cleanup()
 {
     delete listViewPrivate->controllerModel;
+    listViewPrivate->controllerModel = NULL;
     delete listViewPrivate;
 }
 
@@ -277,9 +278,19 @@ void Ut_MListViewMultiColumn::testLocateVisibleRowAt40x151()
     QCOMPARE(listViewPrivate->locateVisibleRowAt(40, 151), 2);
 }
 
+void Ut_MListViewMultiColumn::testLocateVisibleRowAt99()
+{
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(99), 1);
+}
+
 void Ut_MListViewMultiColumn::testLocateVisibleRowAt142()
 {
     QCOMPARE(listViewPrivate->locateVisibleRowAt(142), 3);
+}
+
+void Ut_MListViewMultiColumn::testLocateVisibleRowAt199()
+{
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(199), 3);
 }
 
 void Ut_MListViewMultiColumn::testLocateVisibleRowAt242()

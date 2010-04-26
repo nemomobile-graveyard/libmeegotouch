@@ -106,6 +106,7 @@ void Ut_MListViewGroupHeader::init()
 void Ut_MListViewGroupHeader::cleanup()
 {
     delete listViewPrivate->controllerModel;
+    listViewPrivate->controllerModel = NULL;
     delete listViewPrivate;
 }
 
@@ -424,6 +425,7 @@ void Ut_MListViewGroupHeader2::init()
 void Ut_MListViewGroupHeader2::cleanup()
 {
     delete listViewPrivate->controllerModel;
+    listViewPrivate->controllerModel = NULL;
     delete listViewPrivate;
 }
 
@@ -497,6 +499,7 @@ void Ut_MListViewGroupHeaderEmptyModel::init()
 void Ut_MListViewGroupHeaderEmptyModel::cleanup()
 {
     delete listViewPrivate->controllerModel;
+    listViewPrivate->controllerModel = NULL;
     delete listViewPrivate;
 }
 

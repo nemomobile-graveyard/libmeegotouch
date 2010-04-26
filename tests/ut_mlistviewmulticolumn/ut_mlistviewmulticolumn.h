@@ -96,7 +96,9 @@ private slots:
     void testLocateVisibleRowAt0();
     void testLocateVisibleRowAt40();
     void testLocateVisibleRowAt40x151();
+    void testLocateVisibleRowAt99();
     void testLocateVisibleRowAt142();
+    void testLocateVisibleRowAt199();
     void testLocateVisibleRowAt242();
     void testLocateVisibleRowAt282();
     void testLocateVisibleRowAt384();

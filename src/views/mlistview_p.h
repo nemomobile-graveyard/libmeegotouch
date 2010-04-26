@@ -106,6 +106,7 @@ public:
 
     virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
+    virtual void clearFirstAndLastVisibleRows();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void cellClicked(MWidget *source);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);

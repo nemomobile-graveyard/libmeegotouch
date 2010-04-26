@@ -320,19 +320,22 @@ void Ut_MListViewSeparators::testGroupedMulticolumnHorizontalSeparatorsCount4Col
     QCOMPARE(multiColumnListViewPrivate->hseparatorsCount(), 0);
 }
 
-
 void Ut_MListViewSeparators::cleanup()
 {
     delete listViewPrivate->controllerModel;
+    listViewPrivate->controllerModel = NULL;
     delete listViewPrivate;
 
     delete plainMultiColumnListViewPrivate->controllerModel;
+    plainMultiColumnListViewPrivate->controllerModel = NULL;
     delete plainMultiColumnListViewPrivate;
 
     delete groupedListViewPrivate->controllerModel;
+    groupedListViewPrivate->controllerModel = NULL;
     delete groupedListViewPrivate;
 
     delete multiColumnListViewPrivate->controllerModel;
+    multiColumnListViewPrivate->controllerModel = NULL;
     delete multiColumnListViewPrivate;
 }
 

@@ -56,6 +56,9 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
 MListViewPrivate::~MListViewPrivate()
 {
     clearVisibleItemsArray();
+    if(controllerModel)
+        clearFirstAndLastVisibleRows();
+
     movingDetectorTimer.stop();
     delete headersCreator;
     delete hseparator;
@@ -107,7 +110,10 @@ void MListViewPrivate::clearVisibleItemsArray()
     }
 
     visibleItems.clear();
+}
 
+void MListViewPrivate::clearFirstAndLastVisibleRows()
+{
     updateFirstVisibleRow(QModelIndex());
     updateLastVisibleRow(QModelIndex());
 }
@@ -310,8 +316,7 @@ void MListViewPrivate::resetModel(MListModel *mListModel)
         rowCount = model->rowCount();
     clearVisibleItemsArray();
     updateItemHeight();
-    updateFirstVisibleRow(QModelIndex());
-    updateLastVisibleRow(QModelIndex());
+    clearFirstAndLastVisibleRows();
 
     if (model) {
         connect(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)), q_ptr, SLOT(dataChanged(QModelIndex, QModelIndex)));
@@ -605,7 +610,7 @@ MWidget *MPlainMultiColumnListViewPrivate::createItem(int row)
 int MPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     int columns = controllerModel->columns();
-    int row = y * columns / (hseparatorHeight + itemHeight);
+    int row = y / (hseparatorHeight + itemHeight) * columns;
 
     if (row >= itemsCount())
         row = itemsCount() - 1;
@@ -1262,7 +1267,7 @@ int MMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
     int columns = controllerModel->columns();
 
     // row/columns * itemHeight + row/columns * hseparatorHeight = pos  ->  r/c*i + r/c*s = p  ->  r = p*c/(s+i)
-    int row = relativePos * columns / (hseparatorHeight + itemHeight);
+    int row = relativePos / (hseparatorHeight + itemHeight)  * columns;
     int column = 0;
     if (viewWidth)
         column = x / (viewWidth / columns);

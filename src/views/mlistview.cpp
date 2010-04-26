@@ -166,6 +166,7 @@ void MListView::relayoutItemsInViewportRect()
             d_ptr->createVisibleItems(firstVisibleRow, lastVisibleRow);
         } else {
             d_ptr->clearVisibleItemsArray();
+            d_ptr->clearFirstAndLastVisibleRows();
         }
     }
 }
@@ -241,6 +242,7 @@ void MListView::layoutChanged()
 
     updateGeometry();
     d_ptr->clearVisibleItemsArray();
+    d_ptr->clearFirstAndLastVisibleRows();
 }
 
 void MListView::modelReset()
