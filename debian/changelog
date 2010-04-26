@@ -1,3 +1,10 @@
+libdui (0.19.12-1) unstable; urgency=low
+
+  * New version
+  * Backported MStatusBar from libmeegotouch
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 26 Apr 2010 10:00:04 +0300
+
 libdui (0.19.11-1) unstable; urgency=low
 
   * Changes: Enable reading the keyboardOpen contextProperty
