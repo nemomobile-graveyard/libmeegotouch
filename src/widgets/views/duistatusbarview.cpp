@@ -36,33 +36,20 @@ DuiStatusBarView::DuiStatusBarView(DuiStatusBar *controller) :
     controller(controller)
 {
 #ifdef Q_WS_X11
-    Qt::HANDLE handle;
-
     pixmapDamage = 0;
-
-    if (fetchSharedPixmapHandle(&handle)) {
-        sharedPixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
-    }
-
-    if (sharedPixmap.isNull()) {
-        duiWarning("DuiStatusBarView") << "Failed to load the shared pixmap.";
-    } else {
-        setupXDamageForSharedPixmap();
-    }
 
     DuiApplication *duiApplication = static_cast<DuiApplication *>(QCoreApplication::instance());
     connect(duiApplication, SIGNAL(damageEvent(Qt::HANDLE&, short&, short&, unsigned short&, unsigned short&)),
             SLOT(handlePixmapDamageEvent(Qt::HANDLE&, short&, short&, unsigned short&, unsigned short&)));
+
+    updateSharedPixmap();
 #endif
 }
 
 DuiStatusBarView::~DuiStatusBarView()
 {
 #ifdef Q_WS_X11
-    if (pixmapDamage) {
-        XDamageDestroy(QX11Info::display(), pixmapDamage);
-        pixmapDamage = 0;
-    }
+    destroyXDamageForSharedPixmap();
 #endif
 }
 
@@ -71,11 +58,15 @@ void DuiStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphic
     Q_UNUSED(option);
 
 #ifdef Q_WS_X11
-    QRectF sourceRect;
+    if (sharedPixmap.isNull()) {
+        DuiStatusBarView *view = const_cast<DuiStatusBarView *>(this);
+        view->updateSharedPixmap();
+    }
 
     if (sharedPixmap.isNull() || (controller->sceneManager() == 0))
         return;
 
+    QRectF sourceRect;
     if (controller->sceneManager()->orientation() == Dui::Landscape) {
         sourceRect.setX(0);
         sourceRect.setY(0);
@@ -95,10 +86,23 @@ void DuiStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphic
 }
 
 #ifdef Q_WS_X11
+void DuiStatusBarView::updateSharedPixmap()
+{
+    destroyXDamageForSharedPixmap();
+
+    Qt::HANDLE handle;
+    if (fetchSharedPixmapHandle(&handle)) {
+        sharedPixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
+    }
+
+    if (!sharedPixmap.isNull()) {
+        setupXDamageForSharedPixmap();
+    }
+}
+
 bool DuiStatusBarView::fetchSharedPixmapHandle(Qt::HANDLE *handle)
 {
     QFile handleTempFile(QDir::temp().filePath("duistatusbar_pixmap_handle"));
-    quint32 intHandle;
 
     if (!handleTempFile.exists())
         return false;
@@ -106,6 +110,7 @@ bool DuiStatusBarView::fetchSharedPixmapHandle(Qt::HANDLE *handle)
     if (!handleTempFile.open(QIODevice::ReadOnly))
         return false;
 
+    quint32 intHandle;
     QDataStream dataStream(&handleTempFile);
     dataStream >> intHandle;
 
@@ -119,6 +124,14 @@ void DuiStatusBarView::setupXDamageForSharedPixmap()
     Q_ASSERT(!sharedPixmap.isNull());
 
     pixmapDamage = XDamageCreate(QX11Info::display(), sharedPixmap.handle(), XDamageReportNonEmpty);
+}
+
+void DuiStatusBarView::destroyXDamageForSharedPixmap()
+{
+    if (pixmapDamage) {
+        XDamageDestroy(QX11Info::display(), pixmapDamage);
+        pixmapDamage = 0;
+    }
 }
 
 void DuiStatusBarView::handlePixmapDamageEvent(Qt::HANDLE &damage, short &x, short &y,
