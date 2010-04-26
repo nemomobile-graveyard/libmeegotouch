@@ -102,7 +102,7 @@ void DuiStatusBarView::updateSharedPixmap()
 
 bool DuiStatusBarView::fetchSharedPixmapHandle(Qt::HANDLE *handle)
 {
-    QFile handleTempFile(QDir::temp().filePath("duistatusbar_pixmap_handle"));
+    QFile handleTempFile(QDir::temp().filePath("mstatusbar_pixmap_handle"));
 
     if (!handleTempFile.exists())
         return false;
