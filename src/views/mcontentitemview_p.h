@@ -55,12 +55,12 @@ public:
     void initTwoIconsTwoWidgetsLayout();
 
     void applyStyle();
+    void refreshStyleMode();
 
     typedef const MScalableImage*(MContentItemStyle::*backgroundFunc)() const;
 
     static void initBackgroundFunctions();
     static QVector<backgroundFunc> backgroundFunctions;
-
 private:
     MContentItem *controller;
     MLabel *titleLabel;

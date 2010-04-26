@@ -32,6 +32,9 @@
 static const int NOCONTENTITEMSTYLE = -1;
 QVector<MContentItemViewPrivate::backgroundFunc> MContentItemViewPrivate::backgroundFunctions;
 
+// Distance in pixels from the widget bounding box inside which a release is still accepted
+#define RELEASE_MISS_DELTA 30
+
 MContentItemViewPrivate::MContentItemViewPrivate()
     : controller(NULL), titleLabel(NULL), subtitleLabel(NULL), imageWidget(NULL), configuredStyle(NOCONTENTITEMSTYLE), down(false), optionalImageWidget(0)
 {
@@ -299,6 +302,23 @@ void MContentItemViewPrivate::applyStyle()
         imageWidget->setObjectName(q->style()->imageObjectName());
 }
 
+void MContentItemViewPrivate::refreshStyleMode()
+{
+    Q_Q(MContentItemView);
+
+    if (down) {
+        q->style().setModePressed();
+    } else {
+        if(controller->isSelected())
+            q->style().setModeSelected();
+        else
+            q->style().setModeDefault();
+    }
+
+    q->applyStyle();
+    q->update();
+}
+
 MContentItemView::MContentItemView(MContentItem *controller)
     : MWidgetView(* new MContentItemViewPrivate, controller)
 {
@@ -384,61 +404,62 @@ void MContentItemView::setupModel()
 
 void MContentItemView::cancelEvent(MCancelEvent *event)
 {
+    Q_UNUSED(event);
     Q_D(MContentItemView);
+
+    if (!d->down)
+        return;
+
     d->down = false;
-
-    if (d->controller->isSelected()) {
-        style().setModeSelected();
-    } else {
-        style().setModeDefault();
-    }
-
-    applyStyle();
-    update();
-
-    event->accept();
+    d->refreshStyleMode();
 }
 
 void MContentItemView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
+    Q_UNUSED(event);
     Q_D(MContentItemView);
 
-    /*
-    if(d->controller->isSelectable())
-    {
-    */
+    if (d->down)
+        return;
     d->down = true;
-    style().setModePressed();
-    applyStyle();
-    update();
+    d->refreshStyleMode();
+}
 
-    event->accept();
-    /*
-    } else {
-        event->ignore();
+void MContentItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event);
+    Q_D(MContentItemView);
+
+    QPointF touch = event->scenePos();
+    QRectF rect = d->controller->sceneBoundingRect();
+    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
+                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    bool pressed = rect.contains(touch);
+
+    if (pressed != d->down) {
+        d->down = pressed;
+        d->refreshStyleMode();
     }
-    event->ignore();
-    */
 }
 
 void MContentItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    Q_UNUSED(event);
     Q_D(MContentItemView);
 
-    if (d->down) {
-        d->down = false;
-        event->accept();
-        if(d->controller->isSelected())
-            style().setModeSelected();
-        else
-            style().setModeDefault();
-        applyStyle();
-        update();
+    if (!d->down)
+        return;
+    d->down = false;
+    d->refreshStyleMode();
 
+    QPointF touch = event->scenePos();
+    QRectF rect = d->controller->sceneBoundingRect();
+    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
+                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    bool pressed = rect.contains(touch);
+
+    if (pressed)
         d->controller->click();
-    } else {
-        event->ignore();
-    }
 }
 
 void MContentItemView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
