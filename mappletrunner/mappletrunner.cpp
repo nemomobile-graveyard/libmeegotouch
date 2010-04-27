@@ -155,7 +155,7 @@ void MAppletRunner::setAppletProperties()
         connect(widget, SIGNAL(setAppletText(QString)), this, SLOT(appletTextChanged(QString)));
     }
 
-    connect(this, SIGNAL(visibilityChanged(bool)), widget, SIGNAL(visibilityChanged(bool)));
+    connect(this, SIGNAL(visibilityChanged()), widget, SIGNAL(visibleChanged()));
     connect(view, SIGNAL(orientationChanged(M::Orientation)), widget, SIGNAL(orientationChanged(M::Orientation)));
 }
 

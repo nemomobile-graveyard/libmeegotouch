@@ -88,9 +88,6 @@ public:
     //! Application level visibility
     bool applicationVisible;
 
-    //! Widget level visibility
-    bool widgetVisible;
-
     //! A list of remote actions
     QList<MAction *> remoteActions;
 

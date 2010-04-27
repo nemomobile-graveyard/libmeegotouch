@@ -223,7 +223,7 @@ void MExtensionRunner::messageReceived(const MAppletMessage &message)
                 // Visible area rectangle is irrelevant when sending
                 // on or off display events.
                 QRectF dummyRectangle;
-                emit visibilityChanged(m->isVisible());
+                emit visibilityChanged();
                 visible = m->isVisible();
                 if (visible) {
                     MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOnDisplay, dummyRectangle);
