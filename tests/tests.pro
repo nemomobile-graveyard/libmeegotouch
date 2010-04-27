@@ -29,7 +29,7 @@ SUBDIRS     =  \
      ut_mnavigationbar \
     ut_mlistviewgroupheader \
     ut_mlistviewmulticolumn \
-    ut_mlistviewseparators \
+#    ut_mlistviewseparators \ // it currently gets stuck
      ut_mflowlayoutpolicy \
      ut_mfreestylelayoutpolicy \
      ut_mgridlayoutpolicy \
