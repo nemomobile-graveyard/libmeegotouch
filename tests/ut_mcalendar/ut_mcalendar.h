@@ -45,6 +45,9 @@ private slots:
     void init();
     void cleanup();
 
+    void testIcuFormatString_data();
+    void testIcuFormatString();
+
     void testMLocaleCalendar_data();
     void testMLocaleCalendar();
 

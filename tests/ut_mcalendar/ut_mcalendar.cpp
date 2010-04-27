@@ -56,6 +56,260 @@ void Ut_MCalendar::cleanup()
 {
 }
 
+void Ut_MCalendar::testIcuFormatString_data()
+{
+    QTest::addColumn<QString>("language");
+    QTest::addColumn<QString>("lcMessages");
+    QTest::addColumn<QString>("lcTime");
+    QTest::addColumn<MLocale::CalendarType>("calendarType");
+    QTest::addColumn<QString>("dateShortResult");
+    QTest::addColumn<QString>("dateMediumResult");
+    QTest::addColumn<QString>("dateLongResult");
+    QTest::addColumn<QString>("dateFullResult");
+    QTest::addColumn<QString>("timeShortResult");
+    QTest::addColumn<QString>("timeMediumResult");
+    QTest::addColumn<QString>("timeLongResult");
+    QTest::addColumn<QString>("timeFullResult");
+
+    QTest::newRow("de_DE, Gregorian calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI" // lc_messages does not matter
+        << "de_DE" // only lc_time matters
+        << MLocale::GregorianCalendar
+        << "dd.MM.yy"
+        << "dd.MM.yyyy"
+        << "d. MMMM y"
+        << "EEEE, d. MMMM y"
+        << "HH:mm"
+        << "HH:mm:ss"
+        << "HH:mm:ss z"
+        << "HH:mm:ss zzzz";
+
+    QTest::newRow("fi_FI, Gregorian calendar")
+        << "de_DE" // language does not matter unless lc_time is empty
+        << "de_DE" // lc_messages does not matter
+        << "fi_FI" // only lc_time matters
+        << MLocale::GregorianCalendar
+        << "d.M.yyyy"
+        << "d.M.yyyy"
+        << "d. MMMM y"
+        << "EEEE d. MMMM y"
+        << "H.mm"
+        << "H.mm.ss"
+        << "H.mm.ss z"
+        << "H.mm.ss zzzz";
+
+    QTest::newRow("fi_FI, Gregorian calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "de_DE" // lc_messages does not matter
+        << "" // only lc_time matters
+        << MLocale::GregorianCalendar
+        << "d.M.yyyy"
+        << "d.M.yyyy"
+        << "d. MMMM y"
+        << "EEEE d. MMMM y"
+        << "H.mm"
+        << "H.mm.ss"
+        << "H.mm.ss z"
+        << "H.mm.ss zzzz";
+
+    QTest::newRow("fi_FI, Islamic calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "de_DE" // lc_messages does not matter
+        << "" // only lc_time matters
+        << MLocale::IslamicCalendar
+        << "d.M.yyyy"
+        << "d.M.yyyy"
+        << "d. MMMM y"
+        << "EEEE d. MMMM y"
+        << "H.mm"
+        << "H.mm.ss"
+        << "H.mm.ss z"
+        << "H.mm.ss zzzz";
+
+    QTest::newRow("Arabic, Gregorian calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "de_DE" // lc_messages does not matter
+        << "ar_EG" // only lc_time matters
+        << MLocale::GregorianCalendar
+        << "d‏/M‏/yyyy"   // contains U+200F RIGHT-TO-LEFT MARK
+        << "dd‏/MM‏/yyyy" // contains U+200F RIGHT-TO-LEFT MARK
+        << "d MMMM، y"
+        << "EEEE، d MMMM، y"
+        << "h:mm a"
+        << "h:mm:ss a"
+        << "z h:mm:ss a"
+        << "zzzz h:mm:ss a";
+
+    QTest::newRow("Arabic, Islamic calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "de_DE" // lc_messages does not matter
+        << "ar_EG" // only lc_time matters
+        << MLocale::IslamicCalendar
+        << "d‏/M‏/yyyy"   // contains U+200F RIGHT-TO-LEFT MARK
+        << "dd‏/MM‏/yyyy" // contains U+200F RIGHT-TO-LEFT MARK
+        << "d MMMM، y"
+        << "EEEE، d MMMM، y"
+        << "h:mm a"
+        << "h:mm:ss a"
+        << "z h:mm:ss a"
+        << "zzzz h:mm:ss a";
+
+    QTest::newRow("ja_JP, Gregorian calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI" // lc_messages does not matter
+        << "ja_JP" // only lc_time matters
+        << MLocale::GregorianCalendar
+        << "yy/MM/dd"
+        << "yyyy/MM/dd"
+        << "y年M月d日"
+        << "y年M月d日EEEE"
+        << "H:mm"
+        << "H:mm:ss"
+        << "HH:mm:ss z"
+        << "H時mm分ss秒 zzzz";
+
+    QTest::newRow("ja_JP, Japanese calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI" // lc_messages does not matter
+        << "ja_JP" // only lc_time matters
+        << MLocale::JapaneseCalendar
+        << "Gyy/MM/dd"
+        << "Gyy/MM/dd"
+        << "Gy年M月d日"
+        << "Gy年M月d日EEEE"
+        << "H:mm"
+        << "H:mm:ss"
+        << "HH:mm:ss z"
+        << "H時mm分ss秒 zzzz";
+
+    QTest::newRow("zh_CN, Gregorian calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI" // lc_messages does not matter
+        << "zh_CN" // only lc_time matters
+        << MLocale::GregorianCalendar
+        << "yy-M-d"
+        << "yyyy-M-d"
+        << "y年M月d日"
+        << "y年M月d日EEEE"
+        << "ah:mm"
+        << "ahh:mm:ss"
+        << "zah时mm分ss秒"
+        << "zzzzah时mm分ss秒";
+
+    QTest::newRow("zh_CN, Chinese calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI" // lc_messages does not matter
+        << "zh_CN" // only lc_time matters
+        << MLocale::ChineseCalendar
+        << "y'x'G-Ml-d"
+        << "y'x'G-Ml-d"
+        << "y'x'G-Ml-d"
+        << "EEEE y'x'G-Ml-d"
+        << "HH:mm"
+        << "HH:mm:ss"
+        << "HH:mm:ss z"
+        << "HH:mm:ss zzzz";
+
+    QTest::newRow("th_TH, Gregorian calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI" // lc_messages does not matter
+        << "th_TH" // only lc_time matters
+        << MLocale::GregorianCalendar
+        << "d/M/yyyy"
+        << "d MMM y"
+        << "d MMMM y"
+        << "EEEEที่ d MMMM G y"
+        << "H:mm"
+        << "H:mm:ss"
+        << "H นาฬิกา m นาที ss วินาที z"
+        << "H นาฬิกา m นาที ss วินาที zzzz";
+
+    QTest::newRow("th_TH, Buddhist calendar")
+        << "fi_FI" // language does not matter unless lc_time is empty
+        << "fi_FI" // lc_messages does not matter
+        << "th_TH" // only lc_time matters
+        << MLocale::BuddhistCalendar
+        << "d/M/yyyy"
+        << "d MMM y"
+        << "d MMMM y"
+        << "EEEEที่ d MMMM G y"
+        << "H:mm"
+        << "H:mm:ss"
+        << "H นาฬิกา m นาที ss วินาที z"
+        << "H นาฬิกา m นาที ss วินาที zzzz";
+}
+
+void Ut_MCalendar::testIcuFormatString()
+{
+    QFETCH(QString, language);
+    QFETCH(QString, lcMessages);
+    QFETCH(QString, lcTime);
+    QFETCH(MLocale::CalendarType, calendarType);
+    QFETCH(QString, dateShortResult);
+    QFETCH(QString, dateMediumResult);
+    QFETCH(QString, dateLongResult);
+    QFETCH(QString, dateFullResult);
+    QFETCH(QString, timeShortResult);
+    QFETCH(QString, timeMediumResult);
+    QFETCH(QString, timeLongResult);
+    QFETCH(QString, timeFullResult);
+
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+
+    QList<QString> dateResults;
+    dateResults << QString("")
+                <<  dateShortResult
+                <<  dateMediumResult
+                <<  dateLongResult
+                <<  dateFullResult;
+    QList<QString> timeResults;
+    timeResults << QString("")
+                <<  timeShortResult
+                <<  timeMediumResult
+                <<  timeLongResult
+                <<  timeFullResult;
+
+    for (unsigned dateType = MLocale::DateNone; dateType <= MLocale::DateFull;
+            ++dateType) {
+        for (unsigned timeType = MLocale::TimeNone; timeType <= MLocale::TimeFull;
+                ++timeType) {
+            QString expectedResult;
+            if (dateType == MLocale::DateNone && timeType == MLocale::TimeNone)
+                expectedResult = QString("yyyyMMdd hh:mm a");
+            else if (dateType == MLocale::DateNone)
+                expectedResult = timeResults[timeType];
+            else if (timeType == MLocale::TimeNone)
+                expectedResult = dateResults[dateType];
+            else if(locale.categoryName(MLocale::MLcTime) == "ja_JP"
+                    && calendarType == MLocale::GregorianCalendar
+                    && (dateType == MLocale::DateLong
+                        || dateType == MLocale::DateFull))
+                expectedResult = dateResults[dateType] + timeResults[timeType];
+            else if(locale.categoryName(MLocale::MLcTime) == "zh_CN"
+                    && calendarType == MLocale::GregorianCalendar
+                    && (dateType == MLocale::DateLong
+                        || dateType == MLocale::DateFull))
+                expectedResult = dateResults[dateType] + timeResults[timeType];
+            else if(locale.categoryName(MLocale::MLcTime) == "th_TH")
+                expectedResult = dateResults[dateType] + ", " + timeResults[timeType];
+            else
+                expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];
+            QString result = locale.icuFormatString(
+                static_cast<MLocale::DateType>(dateType),
+                static_cast<MLocale::TimeType>(timeType),
+                calendarType);
+            QTextStream debugStream(stderr);
+            debugStream.setCodec("UTF-8");
+            debugStream << "dateType: " << dateType << " timeType: " << timeType
+                        << " expectedResult: " << expectedResult << " result: " << result << "\n";
+            QCOMPARE(result, expectedResult);
+        }
+    }
+}
+
 void Ut_MCalendar::testMLocaleCalendar_data()
 {
     QTest::addColumn<MLocale::CalendarType>("cal");
