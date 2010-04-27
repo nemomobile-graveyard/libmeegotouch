@@ -62,6 +62,7 @@ public:
     QTimer autoHideComponentsTimer;
     QList<MSceneWindow *> componentsOnAutoHide;
     bool isMenuOpen;
+    bool callOngoing;
 
     void manageActions();
     void distributeAction(QAction *action, QAction *before);
@@ -124,6 +125,9 @@ public:
     void _q_handlePageModelModifications(const QList<const char *>&);
     void _q_menuAppeared();
     void _q_menuDisappeared();
+#ifdef HAVE_DBUS
+    void _q_updateCallOngoingState(QString mode);
+#endif
 #ifdef HAVE_N900
     void _q_exitAppView();
 #endif
