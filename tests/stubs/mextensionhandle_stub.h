@@ -54,6 +54,7 @@ class MExtensionHandleStub : public StubBase {
   virtual void communicationTimerTimeout();
   virtual void sendAliveMessageRequest();
   virtual void visibilityEvent(bool visible);
+  virtual void visibilityChanged();
   virtual void orientationEvent(const M::Orientation &);
   virtual void processStdErrorReady();
   virtual void processStdOutputReady();
@@ -62,7 +63,7 @@ class MExtensionHandleStub : public StubBase {
   virtual void remoteActionTriggered();
   virtual void setBrokenState();
   virtual void displayContextMenu(QList<QString> actions);
-}; 
+};
 
 // 2. IMPLEMENT STUB
 void MExtensionHandleStub::MExtensionHandleConstructor(QGraphicsItem *parent) {
@@ -79,7 +80,6 @@ void MExtensionHandleStub::init(const QString &runnerBinary, const QString &meta
   params.append( new Parameter<const QStringList & >(extraArguments));
   stubMethodEntered("init",params);
 }
-
 void MExtensionHandleStub::initPlaceHolder(const QString &packageName, const QString &installationError) {
   QList<ParameterBase*> params;
   params.append( new Parameter<const QString & >(packageName));
@@ -199,6 +199,10 @@ void MExtensionHandleStub::visibilityEvent(bool visible) {
   QList<ParameterBase*> params;
   params.append( new Parameter<bool >(visible));
   stubMethodEntered("visibilityEvent",params);
+}
+
+void MExtensionHandleStub::visibilityChanged() {
+  stubMethodEntered("visibilityChanged");
 }
 
 void MExtensionHandleStub::orientationEvent(const M::Orientation &orientation) {
@@ -352,6 +356,10 @@ void MExtensionHandle::sendAliveMessageRequest() {
 
 void MExtensionHandle::visibilityEvent(bool visible) {
   gMExtensionHandleStub->visibilityEvent(visible);
+}
+
+void MExtensionHandle::visibilityChanged() {
+  gMExtensionHandleStub->visibilityChanged();
 }
 
 void MExtensionHandle::orientationEvent(M::Orientation orientation) {

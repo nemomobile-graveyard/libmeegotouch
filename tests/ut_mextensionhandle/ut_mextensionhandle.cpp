@@ -262,8 +262,7 @@ void Ut_MExtensionHandle::init()
     handle = new MTestExtensionHandle();
     handle->setViewType("default");
     connect(this, SIGNAL(connectionFromRunnerEstablished()), handle, SLOT(connectionEstablished()));
-    connect(this, SIGNAL(widgetVisibilityChanged(bool)), handle, SLOT(visibilityEvent(bool)));
-    connect(this, SIGNAL(applicationVisibilityChanged(bool)), handle, SLOT(applicationVisibilityChanged(bool)));
+    connect(this, SIGNAL(visibilityChanged()), handle, SLOT(visibilityChanged()));
     connect(this, SIGNAL(operationComplete(QString, QString, QString)), handle, SLOT(operationComplete(QString, QString, QString)));
     connect(this, SIGNAL(operationProgress(QString, QString, int)), handle, SLOT(operationProgress(QString, QString, int)));
 
@@ -521,12 +520,13 @@ void Ut_MExtensionHandle::testThatAppletBreaksIfConnectionIsNotEstablished()
 
 void Ut_MExtensionHandle::testVisibility()
 {
-    // Visibility should be true only if both the widget and the application are visible
-    emit widgetVisibilityChanged(false);
+    handle->setVisible(false);
+    emit visibilityChanged();
     QVERIFY(!visibility);
     handle->exitDisplayEvent();
     QVERIFY(!visibility);
-    emit widgetVisibilityChanged(true);
+    handle->setVisible(true);
+    emit visibilityChanged();
     QVERIFY(!visibility);
     handle->enterDisplayEvent();
     QVERIFY(visibility);
