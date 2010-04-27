@@ -3,27 +3,27 @@ include(../mashup.pri)
 MASHUP_APPLETCOMMUNICATION_SRC_DIR = $$MASHUP_SRC_DIR/appletcommunication
 INCLUDEPATH += $$MASHUP_SRC_DIR/appletcommunication
 
-HEADERS += $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletalivemessagerequest.h \
+PUBLIC_HEADERS += $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletalivemessagerequest.h \
     $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletalivemessageresponse.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletcommunicator.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletserver.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletcancelmessage.h \
     $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletclient.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletcommunicator.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappleticonchangedmessage.h \
     $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletmessagefactory.h \
     $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletmessage.h \
     $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletmousemessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletorientationmessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletobjectmenurequestmessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletobjectmenumessage.h \
     $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletobjectmenuactionselectedmessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletsetgeometrymessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletpixmaptakenintousemessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletvisibilitymessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappleticonchangedmessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mapplettitlechangedmessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mapplettextchangedmessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletupdategeometrymessage.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletobjectmenumessage.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletobjectmenurequestmessage.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletorientationmessage.h \
     $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletpixmapmodifiedmessage.h \
-    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletcancelmessage.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletpixmaptakenintousemessage.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletserver.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletsetgeometrymessage.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mapplettextchangedmessage.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mapplettitlechangedmessage.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletupdategeometrymessage.h \
+    $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletvisibilitymessage.h
 
 SOURCES += $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletalivemessagerequest.cpp \
     $$MASHUP_APPLETCOMMUNICATION_SRC_DIR/mappletalivemessageresponse.cpp \

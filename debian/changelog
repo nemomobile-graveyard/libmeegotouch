@@ -1,6 +1,7 @@
 libmeegotouch (0.20.3~1) unstable; urgency=low
 
   * [UNRELEASED]
+  * Fixes: NB#165876 - Missing header files in libmeegotouch-dev
 
  -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Fri, 23 Apr 2010 15:55:55 +0300
 
