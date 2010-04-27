@@ -36,9 +36,7 @@
 #include "mapplication.h"
 #include "mapplicationwindow.h"
 
-MObjectMenuViewPrivate::MObjectMenuViewPrivate()
-    : viewport(0),
-      container(0),
+MObjectMenuViewPrivate::MObjectMenuViewPrivate() :
       layout(0),
       portraitPolicy(0),
       landscapePolicy(0),
@@ -52,21 +50,8 @@ MObjectMenuViewPrivate::~MObjectMenuViewPrivate()
 
 void MObjectMenuViewPrivate::init()
 {
-    // create pannable viewport
-    viewport = new MPannableViewport();
-
-    // create container widget for pannable viewport
-    container = new QGraphicsWidget;
-    viewport->setWidget(container);
-
-    // create layout for controller, make it pannable
-    QGraphicsLinearLayout *controllerLayout = new QGraphicsLinearLayout();
-    controllerLayout->setContentsMargins(0, 0, 0, 0);
-    controllerLayout->addItem(viewport);
-    controller->setLayout(controllerLayout);
-
     // create layout policies for portrait & landscape orientation
-    layout = new MLayout(container);
+    layout = new MLayout(controller);
     portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
     landscapePolicy = new MGridLayoutPolicy(layout);
 
@@ -125,7 +110,7 @@ void MObjectMenuView::actionAdded(MAction *action)
     if (action->isVisible()) {
 
         // create button for this action
-        MButton *button = new MButton(action->iconID(), action->text(), d->container);
+        MButton *button = new MButton(action->iconID(), action->text(), d->controller);
 
         QObject::connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
         d->controller->connect(button, SIGNAL(clicked(bool)), SLOT(dismiss()));
@@ -268,37 +253,6 @@ void MObjectMenuView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     Q_UNUSED(event);
     Q_D(MObjectMenuView);
     d->controller->dismiss();
-}
-
-QSizeF MObjectMenuView::sizeHint(Qt::SizeHint which, const QSizeF& constraint) const
-{
-    Q_D(const MObjectMenuView);
-    QSize sceneSize;
-    QSizeF hint;
-    if(d->controller->sceneManager()) {
-        hint = sceneSize = d->controller->sceneManager()->visibleSceneSize();
-
-        if(d->controller->sceneManager()->orientation() == M::Landscape)
-            hint.rheight() = d->landscapePolicy->sizeHint(which, constraint).height();
-        else
-            hint.rheight() = d->portraitPolicy->sizeHint(which, constraint).height();
-    } else {
-        if (MApplication::activeWindow())
-            sceneSize = MApplication::activeWindow()->visibleSceneSize();
-        else if (!MApplication::windows().isEmpty())
-            sceneSize = MApplication::windows().at(0)->visibleSceneSize();
-        hint = sceneSize;
-
-        hint.rheight() = d->layout->effectiveSizeHint(which, constraint).height();
-    }
-
-    if(hint.height() > sceneSize.height()) {
-        hint.rheight() = sceneSize.height();
-    //    d->viewport->setEnabled(true);
-    } else {
-    //    d->viewport->setEnabled(false);
-    }
-    return hint;
 }
 
 void MObjectMenuViewPrivate::contentActionTriggered()

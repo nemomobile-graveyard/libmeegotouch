@@ -64,7 +64,6 @@ protected:
     virtual void updateData(const QList<const char *> &modifications);
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF& constraint) const;
     //! \reimp_end
 
 protected slots:

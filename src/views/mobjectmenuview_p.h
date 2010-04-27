@@ -53,9 +53,6 @@ public:
     QHash<MAction*, ContentAction::Action> contentActions;
 #endif
 
-    MPannableViewport *viewport;
-    QGraphicsWidget *container;
-
     MLayout *layout;
     MLinearLayoutPolicy *portraitPolicy;
     MGridLayoutPolicy *landscapePolicy;
