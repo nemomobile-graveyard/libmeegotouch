@@ -83,8 +83,14 @@ public:
 Q_SIGNALS:
     /*!
      * \brief A signal that is emitted when item is shown/hidden
+     * TODO: Remove this redundant signal during next API/ABI break
      */
     void visibilityChanged(bool visibility);
+
+    /*!
+     * \brief A signal that is emitted when item is shown/hidden
+     */
+    void visibilityChanged();
 
 protected slots:
     /*!
