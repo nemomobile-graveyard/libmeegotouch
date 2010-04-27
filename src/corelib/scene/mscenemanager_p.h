@@ -61,7 +61,6 @@ public:
         EscapeButtonPanel = 2000,                    // MEscapeButtonPanel
         Dialog = 3000,                               // MDialog
         MessageBox = Dialog,                         // MMessageBox
-        ObjectMenu = 7500,
         ModalSceneWindow = Dialog,                   // MModalSceneWindow
         PopupList = 4000,                            // MPopupList
         NotificationInformation = 5000,              // MNotification - Information
@@ -69,6 +68,7 @@ public:
         Overlay = 6000,                              // MOverlay
         Completer = Overlay,                         // MCompleter
         HomeButtonPanel = 7000,                      // MHomeButtonPanel
+        ObjectMenu = 7500,
         StatusBar = 8000                             // MStatusBar
     };
 
