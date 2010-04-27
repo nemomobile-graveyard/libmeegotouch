@@ -46,8 +46,9 @@ key_t MAppletSharedMutexPrivate::createSharedMemoryKey(const QString &fileName)
     // Create a file for ftok
     if (!QFile::exists(fileName)) {
         QFile file(fileName);
-        file.open(QIODevice::WriteOnly);
-        file.close();
+        if (file.open(QIODevice::WriteOnly)) {
+            file.close();
+        }
     }
 
     return ftok(QFile::encodeName(fileName).constData(), 'D');
