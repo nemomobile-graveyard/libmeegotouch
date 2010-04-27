@@ -289,8 +289,8 @@ QString MLocalePrivate::createLocaleString(const QString &language,
 icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(icu::Locale locale)
 {
     // This is a bit dirty but the only way to currently get the symbols
-    // is like this. only internal API supports directly creating DateFormatSymbols
-    // with arbitrary calendar
+    // is like this. Only the internal API supports directly creating DateFormatSymbols
+    // with an arbitrary calendar
     UErrorCode status = U_ZERO_ERROR;
     SimpleDateFormat dummyFormatter("", locale, status);
 
@@ -1590,6 +1590,47 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
     }
 
     return formatDateTimeICU(mCalendar, icuFormat);
+}
+#endif
+
+#ifdef HAVE_ICU
+QString MLocale::icuFormatString( DateType dateType,
+                          TimeType timeType,
+                          CalendarType calendarType) const
+{
+
+    // Create calLocale which has the time pattern we want to use
+    icu::Locale calLocale = MIcuConversions::createLocale(
+        categoryName(MLocale::MLcTime),
+        calendarType);
+
+    icu::DateFormat::EStyle dateStyle = MIcuConversions::toEStyle(dateType);
+    icu::DateFormat::EStyle timeStyle = MIcuConversions::toEStyle(timeType);
+    icu::DateFormat *df
+    = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
+
+    // Both the locale and the calendarType seem to
+    // be ignored here anyway. I.e. the following two statements can be replaced with
+    //  DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(icu::Locale(""));
+    // without a change in behaviour:
+    icu::Locale symbolLocale
+        = MIcuConversions::createLocale(categoryName(MLocale::MLcMessages),
+                                      calendarType);
+    DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
+
+    // This is not nice but seems to be the only way to set the
+    // symbols with the public API
+    static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
+
+    icu::UnicodeString icuFormatString;
+    static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+
+    QString icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
+
+    if( df )
+        delete df;
+
+    return icuFormatQString;
 }
 #endif
 

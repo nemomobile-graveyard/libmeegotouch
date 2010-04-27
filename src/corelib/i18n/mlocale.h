@@ -611,6 +611,16 @@ public:
                            const QString &formatString) const;
 
     /*!
+     * \brief returns ICU date and time format string of the current locale
+     * \param dateType style of date formatting
+     * \param timeType style of time formatting
+     * \param calendarType calendar to use for formatting
+     */
+    QString icuFormatString( DateType dateType = DateLong,
+                              TimeType timeType = TimeLong,
+                              CalendarType calendarType = DefaultCalendar) const;
+
+    /*!
      * \brief Creates a datetime object from a string with explicit format lengths.
      * \param dateTime string to parse
      * \param dateType style of date formatting
