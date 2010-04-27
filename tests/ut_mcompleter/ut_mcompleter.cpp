@@ -257,6 +257,10 @@ void Ut_MCompleter::checkWidget()
 
 void Ut_MCompleter::checkPrefix()
 {
+    // TODO: check for correct QString and QModelIndex in signals, too.
+    QSignalSpy spy0(m_subject, SIGNAL(startCompleting(QString)));
+    QSignalSpy spy1(m_subject, SIGNAL(startCompleting(QString, QModelIndex)));
+
     QString prefix2 = "ap";
     m_editWidget->setText(prefix2);
     m_subject->complete();
@@ -265,10 +269,17 @@ void Ut_MCompleter::checkPrefix()
     }
     //the completion prefix should be the one set in text entry
     QCOMPARE(m_subject->completionPrefix(), prefix2);
+
+    QCOMPARE(spy0.count(), 1);
+    QCOMPARE(spy1.count(), 1);
 }
 
 void Ut_MCompleter::checkCandidates()
 {
+    // TODO: check for correct QString and QModelIndex in signals, too.
+    QSignalSpy spy0(m_subject, SIGNAL(confirmed(QString)));
+    QSignalSpy spy1(m_subject, SIGNAL(confirmed(QString, QModelIndex)));
+
     QStringList testlist;
     testlist << "apple" << "appreciate" << "orange" << "offset"
              << "test" << "judgement" << "plane" << "never" << "northern";
@@ -313,6 +324,9 @@ void Ut_MCompleter::checkCandidates()
         qApp->processEvents();
     }
     QCOMPARE(m_subject->matchedCandidateModel()->rowCount(), 3);
+
+    QCOMPARE(spy0.count(), 1);
+    QCOMPARE(spy1.count(), 1);
 }
 
 void Ut_MCompleter::checkMultipleEntries()
