@@ -98,6 +98,32 @@ void Ut_MDialogView::titleBarVisibility()
     QVERIFY(widget == dialogTitleBar);
 }
 
+void Ut_MDialogView::spinnerVisibility()
+{
+    QGraphicsWidget *dialogSpinner = 0;
+
+    dialogSpinner = fetchWidget(*controller, "MDialogProgressIndicator");
+
+    // spinner shouldn't be created by default
+    QVERIFY(dialogSpinner == 0);
+
+    model->setProgressIndicatorVisible(true);
+
+    dialogSpinner = fetchWidget(*controller, "MDialogProgressIndicator");
+
+    // after changing visibility to true spinner should be
+    // created and visible
+    QVERIFY(dialogSpinner != 0);
+    QCOMPARE(dialogSpinner->isVisible(), true);
+
+    // after changing visibility to false spinner should
+    // be hidden
+    model->setProgressIndicatorVisible(false);
+
+    QCOMPARE(dialogSpinner->isVisible(), false);
+
+}
+
 QGraphicsWidget *Ut_MDialogView::fetchWidget(QGraphicsWidget &widget,
         const QString &objectName) const
 {

@@ -40,6 +40,7 @@ private slots:
     void cleanupTestCase();
     void closeButtonVisibility();
     void titleBarVisibility();
+    void spinnerVisibility();
 
 private:
     QGraphicsWidget *fetchWidget(QGraphicsWidget &widget,

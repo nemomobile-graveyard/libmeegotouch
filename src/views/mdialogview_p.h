@@ -98,6 +98,7 @@ public:
     void setCentralWidget(QGraphicsWidget *newCentralWidget);
     void addButton(MButtonModel *buttonModel);
     void updateButtonBox();
+    void setSpinnerVisibility(bool visibility);
 
     MDialog *controller;
 

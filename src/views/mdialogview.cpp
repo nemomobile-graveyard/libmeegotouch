@@ -181,12 +181,6 @@ void MDialogViewPrivate::createTitleBar()
     titleBar->setLayout(layout);
     titleBar->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Fixed);
 
-    spinner = new MProgressIndicator(titleBar, MProgressIndicator::spinnerType);
-    spinner->setUnknownDuration(true);
-    spinner->setObjectName("MDialogProgressIndicator");
-    layout->addItem(spinner);
-    spinner->setVisible(false); // hidden by default
-
     titleLabel = new MLabel(titleBar);
     titleLabel->setAlignment(Qt::AlignCenter);
     titleLabel->setTextElide(true);
@@ -495,6 +489,23 @@ void MDialogViewPrivate::setCentralWidget(QGraphicsWidget *newCentralWidget)
     }
 }
 
+void MDialogViewPrivate::setSpinnerVisibility(bool visibility)
+{
+    if (spinner) {
+        spinner->setVisible(visibility);
+    } else {
+        if (visibility) {
+            spinner = new MProgressIndicator(titleBar, MProgressIndicator::spinnerType);
+            spinner->setUnknownDuration(true);
+            spinner->setObjectName("MDialogProgressIndicator");
+            QGraphicsLinearLayout *layout = static_cast<QGraphicsLinearLayout *>(titleBar->layout());
+            layout->insertItem(0, spinner);
+            spinner->setVisible(true);
+        }
+    }
+
+}
+
 void MDialogView::setupModel()
 {
     Q_D(MDialogView);
@@ -508,7 +519,7 @@ void MDialogView::setupModel()
 
     d->titleLabel->setText(model()->title());
     d->closeButton->setVisible(model()->closeButtonVisible());
-    d->spinner->setVisible(model()->progressIndicatorVisible());
+    d->setSpinnerVisibility(model()->progressIndicatorVisible());
 
     d->updateWidgetVisibility(d->buttonBox,
                               model()->buttonBoxVisible(),
@@ -542,7 +553,7 @@ void MDialogView::updateData(const QList<const char *> &modifications)
         if (member == MDialogModel::CloseButtonVisible) {
             d->closeButton->setVisible(model()->closeButtonVisible());
         } else if (member == MDialogModel::ProgressIndicatorVisible) {
-            d->spinner->setVisible(model()->progressIndicatorVisible());
+            d->setSpinnerVisibility(model()->progressIndicatorVisible());
         } else if (member == MDialogModel::Title) {
             d->titleLabel->setText(model()->title());
         } else if (member == MDialogModel::ButtonBoxVisible) {
