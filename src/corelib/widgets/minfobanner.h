@@ -47,7 +47,7 @@ class MInfoBannerPrivate;
             infoBanner->setBodyText(
                 //% "<b>Ida Taipale</b><br/>Have you seen my dog?"
                 qtTrId("xx_dialogs_and_notifications_event_banner"));
-                infoBanner->setIconID("Icon-new-SMS");
+            infoBanner->setIconID("Icon-new-SMS");
             connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
             infoBanner->appear(MSceneWindow::DestroyWhenDone);
             QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
