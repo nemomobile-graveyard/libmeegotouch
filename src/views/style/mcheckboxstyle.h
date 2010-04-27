@@ -47,6 +47,29 @@ class M_EXPORT MCheckboxStyle : public MButtonStyle
     */
     M_STYLE_PTR_ATTRIBUTE(QPixmap *,  checkmarkImage, CheckmarkImage)
 
+    /*!
+        \property MCheckboxStyle::pressOnFeedback
+        \brief Feedback given when pressing a checkbox about to be checked
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, pressOnFeedback, PressOnFeedback)
+
+    /*!
+        \property MCheckboxStyle::pressOffFeedback
+        \brief Feedback given when pressing a checkbox about to be unchecked
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, pressOffFeedback, PressOffFeedback)
+
+    /*!
+        \property MCheckboxStyle::releaseOnFeedback
+        \brief Feedback given when releasing a checkbox about to be checked
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, releaseOnFeedback, ReleaseOnFeedback)
+
+    /*!
+        \property MCheckboxStyle::releaseOffFeedback
+        \brief Feedback given when releasing a checkbox about to be unchecked
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, releaseOffFeedback, ReleaseOffFeedback)
 };
 
 /*!
