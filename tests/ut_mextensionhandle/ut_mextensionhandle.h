@@ -111,8 +111,7 @@ private slots:
 signals:
     void messageReceived(const MAppletMessage &message);
     void connectionFromRunnerEstablished();
-    void widgetVisibilityChanged(bool visible);
-    void applicationVisibilityChanged(bool visible);
+    void visibilityChanged();
     void operationComplete(const QString &operation, const QString &pkg, const QString &error);
     void operationProgress(const QString &operation, const QString &pkg, int);
 };
