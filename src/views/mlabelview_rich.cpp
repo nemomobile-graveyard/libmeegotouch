@@ -347,7 +347,7 @@ void MLabelViewRich::cancelEvent(MCancelEvent *event)
         mouseDownCursorPos = -1;
         QPixmapCache::remove(viewPrivate->cacheKey);
         viewPrivate->controller->update();
-        viewPrivate->style()->releaseFeedback().play();
+        viewPrivate->style()->cancelFeedback().play();
     }
 }
 
