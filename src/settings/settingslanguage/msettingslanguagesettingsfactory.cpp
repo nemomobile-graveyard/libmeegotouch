@@ -33,7 +33,8 @@
 #include "msettingslanguageboolean.h"
 #include "msettingslanguagegroup.h"
 
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
 #include <MButton>
 #include <MImageWidget>
 #include <MContainer>
@@ -47,22 +48,23 @@ MWidgetController *MSettingsLanguageSettingsFactory::createWidget(const MSetting
         (MTheme::style("MSettingsLanguageSettingsFactoryStyle", "", "", "", M::Landscape, NULL));
 
     // Create content layout to layout content items in
-    QGraphicsLinearLayout *contentLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    contentLayout->setContentsMargins(0, 0, 0, 0);
+    MLayout *contentLayout = new MLayout();
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(contentLayout, Qt::Vertical);
+    policy->setContentsMargins(0, 0, 0, 0);
 
     MWidgetController *widget = new MWidgetController;
     widget->setView(new MWidgetView(widget));
     widget->setObjectName("MSettingsLanguage");
     widget->setLayout(contentLayout);
 
-    createChildren(*contentLayout, settingsItem, rootWidget, dataStore);
+    createChildren(*policy, settingsItem, rootWidget, dataStore);
 
     MTheme::releaseStyle(style);
 
     return widget;
 }
 
-void MSettingsLanguageSettingsFactory::createChildren(QGraphicsLinearLayout &layout, const MSettingsLanguageNode &node,
+void MSettingsLanguageSettingsFactory::createChildren(MLinearLayoutPolicy &layoutPolicy, const MSettingsLanguageNode &node,
         MSettingsLanguageWidget &rootWidget, MDataStore *dataStore)
 {
     // Go through all children of the item
@@ -85,16 +87,17 @@ void MSettingsLanguageSettingsFactory::createChildren(QGraphicsLinearLayout &lay
         } else if ((dynamic_cast<const MSettingsLanguageGroup *>(child))) {
             MContainer *container = new MContainer;
             container->setObjectName("SettingsLanguageGroupContainer");
-            QGraphicsLinearLayout *groupContentLayout = new QGraphicsLinearLayout(Qt::Vertical);
-            groupContentLayout->setContentsMargins(0, 0, 0, 0);
+            MLayout *groupContentLayout = new MLayout();
+            MLinearLayoutPolicy *contentGroupPolicy = new MLinearLayoutPolicy(groupContentLayout, Qt::Vertical);
+            contentGroupPolicy->setContentsMargins(0, 0, 0, 0);
             container->setLayout(groupContentLayout);
 
-            createChildren(*groupContentLayout, *child, rootWidget, dataStore);
+            createChildren(*contentGroupPolicy, *child, rootWidget, dataStore);
             childWidget = container;
         }
 
         if (childWidget != NULL) {
-            layout.addItem(childWidget);
+            layoutPolicy.addItem(childWidget);
         }
     }
 }

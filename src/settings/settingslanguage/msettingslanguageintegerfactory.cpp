@@ -25,7 +25,8 @@
 #include <MLabel>
 #include <MSlider>
 #include <MDataStore>
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
 
 MWidgetController *MSettingsLanguageIntegerFactory::createWidget(const MSettingsLanguageInteger &settingsInteger, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore)
 {
@@ -40,15 +41,16 @@ MWidgetController *MSettingsLanguageIntegerFactory::createWidget(const MSettings
     intController->setProperty("key", settingsInteger.key());
 
     // Create a horizontal layout
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
+    MLayout *layout = new MLayout();
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    policy->setContentsMargins(0, 0, 0, 0);
+    policy->setSpacing(0);
     parentWidget->setLayout(layout);
 
     // Create a label widget and put it into the layout
     MLabel *label = new MLabel(settingsInteger.title());
     label->setObjectName("SettingsLanguageLabel");
-    layout->addItem(label);
+    policy->addItem(label, Qt::AlignCenter);
 
     MSlider *slider = new MSlider;
     slider->setObjectName("SettingsLanguageSlider");
@@ -62,7 +64,7 @@ MWidgetController *MSettingsLanguageIntegerFactory::createWidget(const MSettings
     }
 
     slider->connect(slider, SIGNAL(valueChanged(int)), intController, SLOT(changeValue(int)));
-    layout->addItem(slider);
+    policy->addItem(slider, Qt::AlignCenter);
 
     // Get the previously entered value if it exists
     if (dataStore != NULL) {

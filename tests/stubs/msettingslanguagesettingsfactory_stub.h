@@ -30,7 +30,7 @@ class MSettingsLanguageSettingsFactoryStub : public StubBase
 {
 public:
     virtual MWidgetController *createWidget(const MSettingsLanguageSettings &settingsItem, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore);
-    virtual void createChildren(QGraphicsLinearLayout &layout, const MSettingsLanguageNode &node, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore);
+    virtual void createChildren(MLinearLayoutPolicy &layout, const MSettingsLanguageNode &node, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore);
 };
 
 // 2. IMPLEMENT STUB
@@ -44,10 +44,10 @@ MWidgetController *MSettingsLanguageSettingsFactoryStub::createWidget(const MSet
     return stubReturnValue<MWidgetController *>("createWidget");
 }
 
-void MSettingsLanguageSettingsFactoryStub::createChildren(QGraphicsLinearLayout &layout, const MSettingsLanguageNode &node, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore)
+void MSettingsLanguageSettingsFactoryStub::createChildren(MLinearLayoutPolicy &layout, const MSettingsLanguageNode &node, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore)
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<QGraphicsLinearLayout & >(layout));
+    params.append(new Parameter<MLinearLayoutPolicy & >(layout));
     params.append(new Parameter<const MSettingsLanguageNode & >(node));
     params.append(new Parameter<MSettingsLanguageWidget & >(rootWidget));
     params.append(new Parameter<MDataStore * >(dataStore));
@@ -67,7 +67,7 @@ MWidgetController *MSettingsLanguageSettingsFactory::createWidget(const MSetting
     return gMSettingsLanguageSettingsFactoryStub->createWidget(settingsItem, rootWidget, dataStore);
 }
 
-void MSettingsLanguageSettingsFactory::createChildren(QGraphicsLinearLayout &layout, const MSettingsLanguageNode &node, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore)
+void MSettingsLanguageSettingsFactory::createChildren(MLinearLayoutPolicy &layout, const MSettingsLanguageNode &node, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore)
 {
     gMSettingsLanguageSettingsFactoryStub->createChildren(layout, node, rootWidget, dataStore);
 }

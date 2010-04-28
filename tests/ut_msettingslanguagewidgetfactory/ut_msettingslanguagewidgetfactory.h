@@ -24,6 +24,7 @@
 
 class MSettingsLanguageSettings;
 class MDataStore;
+class MApplication;
 
 class Ut_MSettingsLanguageWidgetFactory : public QObject
 {
@@ -41,6 +42,9 @@ private slots:
 
     // Test creation of children
     void testChildrenCreation();
+
+private:
+    MApplication *app;
 };
 
 #endif // UT_MSETTINGSLANGUAGEFACTORY_H

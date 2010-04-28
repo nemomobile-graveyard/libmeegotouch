@@ -26,7 +26,8 @@
 #include "msettingslanguagewidget.h"
 #include "mlocale.h"
 #include "mcontainer.h"
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
 #include "mdebug.h"
 
 class QGraphicsLayoutItem;
@@ -52,11 +53,12 @@ static QGraphicsLayoutItem *createAppletSettingsWidgets(QGraphicsItem *parent,
     container->setTitle(title);
     MWidgetController *centralWidget = new MWidgetController(container);
     container->setCentralWidget(centralWidget);
-    QGraphicsLinearLayout *containerLayout = new QGraphicsLinearLayout(Qt::Vertical);
-    centralWidget->setLayout(containerLayout);
+    MLayout *layout = new MLayout();
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    centralWidget->setLayout(layout);
 
     // Create and add settings widgets to container
-    containerLayout->addItem(MSettingsLanguageWidgetFactory::createWidget(settingsBinary, settingsDataStore));
+    policy->addItem(MSettingsLanguageWidgetFactory::createWidget(settingsBinary, settingsDataStore));
 
     return container;
 }
@@ -72,23 +74,24 @@ void MAppletSettingsDialog::exec(const MAppletSettings& settings)
     MWidgetController *widget = new MWidgetController;
     widget->setView(new MWidgetView(widget));
     widget->setObjectName("MAppletHandleSettingsWidget");
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
+    MLayout *layout = new MLayout();
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    policy->setContentsMargins(0, 0, 0, 0);
+    policy->setSpacing(0);
     widget->setLayout(layout);
 
     const MSettingsLanguageBinary* instanceSettingsBinary = settings.instanceSettingsBinary();
     if (instanceSettingsBinary != NULL) {
         //~ uispec-document ??? FIXME
         //% "Applet Instance Settings"
-        layout->addItem(createAppletSettingsWidgets(widget, qtTrId("mappletsettingsdialog_applet_instance_settings_title"), *instanceSettingsBinary, settings.instanceDataStore()));
+        policy->addItem(createAppletSettingsWidgets(widget, qtTrId("mappletsettingsdialog_applet_instance_settings_title"), *instanceSettingsBinary, settings.instanceDataStore()));
     }
 
     const MSettingsLanguageBinary* globalSettingsBinary = settings.globalSettingsBinary();
     if (globalSettingsBinary != NULL) {
         //~ uispec-document ??? FIXME
         //% "Applet Global Settings"
-        layout->addItem(createAppletSettingsWidgets(widget, qtTrId("mappletsettingsdialog_applet_global_settings_title"), *globalSettingsBinary, settings.globalDataStore()));
+        policy->addItem(createAppletSettingsWidgets(widget, qtTrId("mappletsettingsdialog_applet_global_settings_title"), *globalSettingsBinary, settings.globalDataStore()));
     }
 
     // Create a dialog to show the applet instance and global settings

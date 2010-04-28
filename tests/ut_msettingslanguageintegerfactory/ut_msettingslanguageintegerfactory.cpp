@@ -17,7 +17,8 @@
 **
 ****************************************************************************/
 
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
 #include <QVariant>
 #include <mapplication.h>
 #include <msettingslanguageinteger_stub.h>
@@ -71,20 +72,22 @@ void Ut_MSettingsLanguageIntegerFactory::testCreateWidget()
     MWidget *widget = MSettingsLanguageIntegerFactory::createWidget(settingsInteger, dds, &dataStore);
     QVERIFY(widget != NULL);
 
-    // Expecting the widget to have a QGraphicsLinearLayout
-    QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(widget->layout());
+    // Expecting the widget to have a layout and linear policy
+    MLayout *layout = dynamic_cast<MLayout *>(widget->layout());
     QVERIFY(layout != NULL);
+    MLinearLayoutPolicy *policy = dynamic_cast<MLinearLayoutPolicy *>(layout->policy());
+    QVERIFY(policy != NULL);
 
     // Expecting the layout to contain a MLabel and a MSlider
-    QCOMPARE(layout->count(), 2);
+    QCOMPARE(policy->count(), 2);
 
     // The label's text should be the SettingsInteger's title
-    MLabel *label = dynamic_cast<MLabel *>(layout->itemAt(0));
+    MLabel *label = dynamic_cast<MLabel *>(policy->itemAt(0));
     QVERIFY(label != NULL);
     QCOMPARE(label->text(), settingsInteger.title());
 
     // The slider's value should be the specified key's value
-    MSlider *slider = dynamic_cast<MSlider *>(layout->itemAt(1));
+    MSlider *slider = dynamic_cast<MSlider *>(policy->itemAt(1));
     QVERIFY(slider != NULL);
     QCOMPARE(slider->value(), dataStore.value("TestKey").toInt());
     QCOMPARE(slider->minimum(), 0);
@@ -107,20 +110,22 @@ void Ut_MSettingsLanguageIntegerFactory::testCreateWidgetWithKeyValueSet()
     MWidget *widget = MSettingsLanguageIntegerFactory::createWidget(settingsInteger, dds, &dataStore);
     QVERIFY(widget != NULL);
 
-    // Expecting the widget to have a QGraphicsLinearLayout
-    QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(widget->layout());
+    // Expecting the widget to have a layout and linear policy
+    MLayout *layout = dynamic_cast<MLayout *>(widget->layout());
     QVERIFY(layout != NULL);
+    MLinearLayoutPolicy *policy = dynamic_cast<MLinearLayoutPolicy *>(layout->policy());
+    QVERIFY(policy != NULL);
 
     // Expecting the layout to contain a MLabel and a MSlider
-    QCOMPARE(layout->count(), 2);
+    QCOMPARE(policy->count(), 2);
 
     // The label's text should be the SettingsInteger's title
-    MLabel *label = dynamic_cast<MLabel *>(layout->itemAt(0));
+    MLabel *label = dynamic_cast<MLabel *>(policy->itemAt(0));
     QVERIFY(label != NULL);
     QCOMPARE(label->text(), settingsInteger.title());
 
     // The slider's value should be the specified key's value
-    MSlider *slider = dynamic_cast<MSlider *>(layout->itemAt(1));
+    MSlider *slider = dynamic_cast<MSlider *>(policy->itemAt(1));
     QVERIFY(slider != NULL);
     QCOMPARE(slider->value(), dataStore.value("AnotherTestKey").toInt());
     int minVal;

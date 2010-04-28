@@ -18,7 +18,9 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MApplication>
+#include <MLinearLayoutPolicy>
 #include "ut_msettingslanguagewidgetfactory.h"
 #include "msettingslanguagebinary_stub.h"
 #include "msettingslanguagewidgetfactory.h"
@@ -27,21 +29,19 @@
 #include "msettingslanguagesettings_stub.h"
 #include "mockdatastore.h"
 
-void QGraphicsItem::setParentItem(QGraphicsItem *)
-{
-}
-
-void QGraphicsLinearLayout::insertItem(int, QGraphicsLayoutItem *)
-{
-}
-
 // Tests
 void Ut_MSettingsLanguageWidgetFactory::initTestCase()
 {
+    // MApplication must exist
+    static int argc = 1;
+    static char *app_name[1] = { (char *)"./ut_msettingslanguageintegerfactory" };
+    app = new MApplication(argc, app_name);
 }
 
 void Ut_MSettingsLanguageWidgetFactory::cleanupTestCase()
 {
+    // Destroy the MApplication
+    delete app;
 }
 
 void Ut_MSettingsLanguageWidgetFactory::init()

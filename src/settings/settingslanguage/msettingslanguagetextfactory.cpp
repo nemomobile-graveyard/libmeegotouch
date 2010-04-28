@@ -26,7 +26,8 @@
 #include <MLabel>
 #include <MTextEdit>
 #include <MDataStore>
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
 
 MWidgetController *MSettingsLanguageTextFactory::createWidget(const MSettingsLanguageText &settingsText, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore)
 {
@@ -39,15 +40,16 @@ MWidgetController *MSettingsLanguageTextFactory::createWidget(const MSettingsLan
     MSettingsLanguageTextController *textController = new MSettingsLanguageTextController(parentWidget);
 
     // Create a horizontal layout
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
+    MLayout *layout = new MLayout();
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    policy->setContentsMargins(0, 0, 0, 0);
+    policy->setSpacing(0);
     parentWidget->setLayout(layout);
 
     // Create a label widget and put it into the layout
     MLabel *label = new MLabel(settingsText.title());
     label->setObjectName("SettingsLanguageLabel");
-    layout->addItem(label);
+    policy->addItem(label, Qt::AlignCenter);
 
     // Create a text edit widget and put it into the layout
     MTextEdit *textEdit = new MTextEdit;
@@ -55,7 +57,7 @@ MWidgetController *MSettingsLanguageTextFactory::createWidget(const MSettingsLan
     textEdit->connect(textEdit, SIGNAL(lostFocus(Qt::FocusReason)), textController, SLOT(textEditLostFocus(Qt::FocusReason)));
     textEdit->setProperty("dataStore", qVariantFromValue(static_cast<void *>(dataStore)));
     textEdit->setProperty("key", settingsText.key());
-    layout->addItem(textEdit);
+    policy->addItem(textEdit, Qt::AlignCenter);
 
     // Get the previously entered value if it exists
     if (dataStore != NULL) {

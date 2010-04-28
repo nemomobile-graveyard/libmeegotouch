@@ -24,7 +24,8 @@
 
 #include "msettingslanguagesettingsfactory.h"
 
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
 
 MSettingsLanguageWidget *MSettingsLanguageWidgetFactory::createWidget(const MSettingsLanguageBinary &settingsBinary, MDataStore *dataStore)
 {
@@ -32,10 +33,10 @@ MSettingsLanguageWidget *MSettingsLanguageWidgetFactory::createWidget(const MSet
     widget->setObjectName("MSettingsLanguage");
 
     // Create a central layout
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
-    // Set layout parameters
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
+    MLayout *layout = new MLayout();
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    policy->setContentsMargins(0, 0, 0, 0);
+    policy->setSpacing(0);
     widget->setLayout(layout);
 
     foreach(MSettingsLanguageNode * settingsNode, settingsBinary.children()) {
@@ -43,7 +44,7 @@ MSettingsLanguageWidget *MSettingsLanguageWidgetFactory::createWidget(const MSet
         if (settingsItem != NULL) {
             MWidget *itemWidget = MSettingsLanguageSettingsFactory::createWidget(*settingsItem, *widget, dataStore);
             itemWidget->setParentItem(widget);
-            layout->addItem(itemWidget);
+            policy->addItem(itemWidget);
         }
     }
 

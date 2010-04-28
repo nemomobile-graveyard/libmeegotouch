@@ -17,7 +17,8 @@
 **
 ****************************************************************************/
 
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
 #include <QVariant>
 #include <mapplication.h>
 #include <mapplicationwindow.h>
@@ -67,20 +68,22 @@ void Ut_MSettingsLanguageTextFactory::testCreateWidget()
     MWidget *widget = MSettingsLanguageTextFactory::createWidget(settingsText, dds, &dataStore);
     QVERIFY(widget != NULL);
 
-    // Expecting the widget to have a QGraphicsLinearLayout
-    QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(widget->layout());
+    // Expecting the widget to have a layout and linear policy
+    MLayout *layout = dynamic_cast<MLayout *>(widget->layout());
     QVERIFY(layout != NULL);
+    MLinearLayoutPolicy *policy = dynamic_cast<MLinearLayoutPolicy *>(layout->policy());
+    QVERIFY(policy != NULL);
 
     // Expecting the layout to contain a MLabel and a MTextEdit
-    QCOMPARE(layout->count(), 2);
+    QCOMPARE(policy->count(), 2);
 
     // The label's title should be the SettingsText's title
-    MLabel *label = dynamic_cast<MLabel *>(layout->itemAt(0));
+    MLabel *label = dynamic_cast<MLabel *>(policy->itemAt(0));
     QVERIFY(label != NULL);
     QCOMPARE(label->text(), settingsText.title());
 
     // The label's title should be the specified key's value
-    MTextEdit *textEdit = dynamic_cast<MTextEdit *>(layout->itemAt(1));
+    MTextEdit *textEdit = dynamic_cast<MTextEdit *>(policy->itemAt(1));
     QVERIFY(textEdit != NULL);
     QCOMPARE(textEdit->text(), dataStore.value("TestKey").toString());
 }

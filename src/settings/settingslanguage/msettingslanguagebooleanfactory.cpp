@@ -22,7 +22,8 @@
 #include "msettingslanguageboolean.h"
 
 #include <MWidgetView>
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
 #include <MButton>
 #include <MDataStore>
 
@@ -37,9 +38,10 @@ MWidgetController *MSettingsLanguageBooleanFactory::createWidget(const MSettings
     MSettingsLanguageBooleanController *boolController = new MSettingsLanguageBooleanController(parentWidget);
 
     // Create a horizontal layout
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
+    MLayout *layout = new MLayout();
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    policy->setContentsMargins(0, 0, 0, 0);
+    policy->setSpacing(0);
     parentWidget->setLayout(layout);
 
     // Create a button
@@ -59,7 +61,7 @@ MWidgetController *MSettingsLanguageBooleanFactory::createWidget(const MSettings
     button->setObjectName("SettingsLanguageBooleanValueButton");
     button->setProperty("dataStore", qVariantFromValue(static_cast<void *>(dataStore)));
     button->setProperty("key", settingsBool.key());
-    layout->addItem(button);
+    policy->addItem(button, Qt::AlignCenter);
 
     return parentWidget;
 }

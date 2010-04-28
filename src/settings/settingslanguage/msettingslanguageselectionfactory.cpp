@@ -23,7 +23,8 @@
 #include "msettingslanguageoption.h"
 
 #include <MWidgetView>
-#include <QGraphicsLinearLayout>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
 #include <MButtonGroup>
 #include <MButton>
 #include <MDataStore>
@@ -40,9 +41,10 @@ MWidgetController *MSettingsLanguageSelectionFactory::createWidget(const MSettin
     MSettingsLanguageSelectionController *selectionController = new MSettingsLanguageSelectionController(parentWidget);
 
     // Create a horizontal layout
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
+    MLayout *layout = new MLayout();
+    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    policy->setContentsMargins(0, 0, 0, 0);
+    policy->setSpacing(0);
     parentWidget->setLayout(layout);
 
     // Create a button group
@@ -61,7 +63,7 @@ MWidgetController *MSettingsLanguageSelectionFactory::createWidget(const MSettin
         button->setProperty("dataStore", qVariantFromValue(static_cast<void *>(dataStore)));
         button->setProperty("key", settingsSelection.key());
         button->setProperty("value", value->value());
-        layout->addItem(button);
+        policy->addItem(button, Qt::AlignCenter);
 
         // Add the button to a button group
         buttonGroup->addButton(button);

@@ -28,6 +28,7 @@ class MDataStore;
 class MSettingsLanguageNode;
 class MSettingsLanguageSettings;
 class MSettingsLanguageWidget;
+class MLinearLayoutPolicy;
 
 //! \internal
 /*!
@@ -57,12 +58,12 @@ private:
     /*!
     *  Creates child widgets to a layout from a MSettingsLanguageNode representation.
     *
-    * \param layout the layout where widgets are added.
+    * \param layoutPolicy the layout policy where widgets are added.
     * \param node the nodes binary representation.
     * \param rootWidget the root of the widget hierarchy where the new widget will be attached.
     * \param dataStore the data store for the settings.
     */
-    static void createChildren(QGraphicsLinearLayout &layout, const MSettingsLanguageNode &node, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore);
+    static void createChildren(MLinearLayoutPolicy &layoutPolicy, const MSettingsLanguageNode &node, MSettingsLanguageWidget &rootWidget, MDataStore *dataStore);
 };
 //! \internal_end
 
