@@ -198,15 +198,16 @@ public:
 
     /*!
      * \brief Called when MApplication returns to prestarted state (if supported by the mode).
-     *  Re-imp this if desired. Does nothing by default.
+     *  Hides all windows by default.
+     *  Re-imp this if desired.
      */
     virtual void restorePrestart();
 
     /*!
      * \brief Called when MApplication is released from the prestarted state.
      *  Effectively this method just shows MApplication::activeWindow().
-     *  Re-imp this if desired. Does nothing by default if multi-windowed prestart is
-     *  selected.
+     *  Does nothing by default if multi-windowed prestart is selected.
+     *  Re-imp this if desired.
      */
     virtual void releasePrestart();
 
@@ -216,7 +217,7 @@ public:
      *  specific window using some other D-Bus service than MApplicationService.
      *  This triggers corresponding signals and handlers if the state changes.
      * \param enable If set to true, prestart is restored if lazy shutdown selected.
-     *        If set to false, prestart is released.
+     *        If set to false, prestart is released (equals to MApplicationService::lauch()).
      */
     static void setPrestarted(bool enable);
 

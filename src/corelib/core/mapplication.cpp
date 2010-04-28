@@ -181,6 +181,14 @@ void MApplicationPrivate::restorePrestart()
     }
 }
 
+void MApplicationPrivate::hideWindows()
+{
+    Q_FOREACH(MWindow * win, MApplication::windows()) {
+        win->hide();
+        win->lower();
+    }
+}
+
 void MApplication::setPrestarted(bool enable)
 {
     if (enable) {
@@ -424,6 +432,10 @@ M::PrestartMode MApplication::prestartMode()
 
 void MApplication::releasePrestart()
 {
+    // Show the window only if we are not in a multi-windowed mode.
+    // In that case the user must re-implement this, because we don't know which
+    // window needs to be shown.
+
     if (!MApplicationPrivate::prestartModeIsMultiWindowed()) {
         if (MApplication::activeWindow()) {
             MApplication::activeWindow()->show();
@@ -434,7 +446,11 @@ void MApplication::releasePrestart()
 }
 
 void MApplication::restorePrestart()
-{}
+{
+    if (MApplicationPrivate::prestartModeIsLazyShutdown()) {
+        MApplicationPrivate::hideWindows();
+    }
+}
 
 bool MApplication::isPrestarted()
 {

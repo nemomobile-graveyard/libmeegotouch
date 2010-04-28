@@ -61,6 +61,7 @@ private:
 
     static void releasePrestart();
     static void restorePrestart();
+    static void hideWindows();
     static void stdExit(int status);
     static bool prestartModeIsLazyShutdown();
     static bool prestartModeIsMultiWindowed();
