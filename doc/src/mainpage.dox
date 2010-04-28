@@ -42,10 +42,11 @@
   <tr>
     <td>
       <ul>
-       <li>The DirectUI Widget Model</li>
-       <li>DirectUI theme system</li>
+       <li>The MeeGo Widget Model</li>
+       <li>MeeGo theme system</li>
        <li><a href="servicefw.html">Maemo Service Framework</a></li>
         <li><a href="i18n.html">Internationalization</a></li>
+        <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
       </ul>
     </td>
     <td>
