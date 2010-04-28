@@ -100,14 +100,44 @@ class M_EXPORT MComboBox : public MWidgetController
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible )
 
     /*!
-        \property MComboBox::itemModel  QAbstractItemModel which used by MComboBox
+        \property MComboBox::itemModel
+        \brief QAbstractItemModel which used by MComboBox.
     */
     Q_PROPERTY(QAbstractItemModel *itemModel READ itemModel WRITE setItemModel)
 
     /*!
-        \property MComboBox::selectionModel  keeps track of itemModel selected items.
+        \property MComboBox::selectionModel
+        \brief Keeps track of itemModel selected items.
     */
     Q_PROPERTY(QItemSelectionModel *selectionModel READ selectionModel WRITE setSelectionModel)
+
+    /*!
+        \property MComboBox::currentIndex
+        \brief The index of the current item in the combobox.
+
+        The current index can change when inserting or removing items.
+
+        By default, for an empty combo box or a combo box in which no current
+        item is set, this property has a value of -1.
+    */
+    Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex USER true)
+
+    /*!
+        \property MComboBox::currentText
+        \brief The text of the current item.
+
+        By default, for an empty combo box or a combo box in which no current
+        item is set, this property contains an empty string.
+    */
+    Q_PROPERTY(QString currentText READ currentText STORED false)
+
+    /*!
+        \property MComboBox::count
+        \brief The number of items in the combobox.
+
+        By default, for an empty combo box, this property has a value of 0.
+    */
+    Q_PROPERTY(int count READ count STORED false)
 
 public:
 
