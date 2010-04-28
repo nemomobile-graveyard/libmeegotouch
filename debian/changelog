@@ -1,10 +1,15 @@
-libmeegotouch (0.20.3~1) unstable; urgency=low
+libmeegotouch (0.20.3-1) unstable; urgency=low
 
-  * [UNRELEASED]
   * Fixes: NB#165876 - Missing header files in libmeegotouch-dev
-  * Fixes: NB#164924 -  Applet settings are not layed out correctly in RTL locales
+  * Fixes: NB#164924 - Applet settings are not layed out correctly in RTL locales
+  * Fixes: NB#165741 - duicontrolpanel crashes sometimes after tapping connect in WLAN security key dialog
+  * Fixes: NB#165447 - View is not updating fine when using list,
+  * Fixes: NB#161917 - Repeatedly tapping on context sensitive menu causes widget gallery to crash
+  * Fixes: NB#164850 - orientationFinished signals are sent even without change in orientation
+  * Fixes: NB#165337 - MInfoBanner is misplaced when appear() is called if the window is an MWindow and no other MSceneWindow has been appear()ed
+  * Fixes: NB#164387 - SeekBar tapping doesn't work well when seekbar is constantly updated
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Fri, 23 Apr 2010 15:55:55 +0300
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 28 Apr 2010 16:51:51 +0300
 
 libmeegotouch (0.20.2-1) unstable; urgency=low
 
