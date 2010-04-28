@@ -40,7 +40,6 @@
 #include "navigationbarpage.h"
 #include "languagepage.h"
 #include "feedbackpage.h"
-#include "timingscene.h"
 
 #ifdef HAVE_GSTREAMER
 #include "videocontainerpage.h"

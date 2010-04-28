@@ -31,9 +31,9 @@
 #include <MGConfItem>
 #include <MSceneManager>
 
-#include "timingscene.h"
 #include "listpage.h"
 #include "timedemo.h"
+#include "swaphook.h"
 #include "widgetsgalleryretranslator.h"
 #include "../../benchmarks/performancebenchmark/emptymainloophelper.h"
 
@@ -66,8 +66,7 @@ int main(int argc, char **argv)
     WidgetsgalleryRetranslator widgetsgalleryRetranslator;
     QObject::connect(&application, SIGNAL(localeSettingsChanged()), &widgetsgalleryRetranslator, SLOT(widgetsgalleryRetranslate()));
 
-    TimingScene scene;
-    MApplicationWindow window(&scene);
+    MApplicationWindow window;
     window.show();
 
     ListPage listPage;
@@ -79,11 +78,15 @@ int main(int argc, char **argv)
             demoPages = qApp->arguments()[idx + 1].split(',');
         }
 
-        timedemo = new Timedemo(&scene, &listPage, demoPages);
+        timedemo = new Timedemo(&listPage, demoPages);
 
         idx = qApp->arguments().indexOf("-outputcsv");
         if (idx >= 0 && idx + 1 < qApp->arguments().count()) {
             timedemo->setOutputCsv(qApp->arguments()[idx + 1]);
+        }
+        idx = qApp->arguments().indexOf("-framelog");
+        if (idx >= 0 && idx + 1 < qApp->arguments().count()) {
+            timedemo->setFramelog(qApp->arguments()[idx + 1]);
         }
     }
 

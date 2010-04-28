@@ -18,11 +18,9 @@
 ****************************************************************************/
 
 #include "timedemo.h"
-#include "timingscene.h"
 #include "listpage.h"
 #include "timedemobenchmark.h"
 #include "templatepage.h"
-
 
 #include <MApplication>
 #include <MWindow>
@@ -31,6 +29,7 @@
 
 #include <QApplication>
 #include <QTextStream>
+#include <QXmlStreamWriter>
 #include <QFile>
 #include <QTimer>
 
@@ -39,9 +38,8 @@ namespace
     const int pageDuration = 5000;
 }
 
-Timedemo::Timedemo(TimingScene *timingScene, ListPage *listPage, const QStringList& demoPageTitles)
-    : timingScene(timingScene)
-    , m_pFrontPage(listPage)
+Timedemo::Timedemo(ListPage *listPage, const QStringList& demoPageTitles)
+    : m_pFrontPage(listPage)
     , m_currentPageIndex(0)
     , m_currentBenchmarkIndex(0)
     , demoPageTitles(demoPageTitles)
@@ -56,6 +54,11 @@ void Timedemo::setOutputCsv(const QString &filename)
     m_csvFilename = filename;
 }
 
+void Timedemo::setFramelog(const QString &filename)
+{
+    framelogFilename = filename;
+}
+
 void Timedemo::startTiming()
 {
     if (timingStopped || timingStarted) {
@@ -63,9 +66,7 @@ void Timedemo::startTiming()
     }
 
     timingStarted = true;
-    m_beginFrameCount = timingScene->frameCount();
-    m_beginTime = QTime::currentTime();
-    timingScene->setUpdateContinuously(true);
+    SwapHook::instance()->startLurking();
 }
 
 void Timedemo::stopTiming()
@@ -74,16 +75,10 @@ void Timedemo::stopTiming()
         qFatal("Timing already processed or not running yet.");
     }
 
-    timingScene->setUpdateContinuously(false);
-    QTime endTime = QTime::currentTime();
-    uint endFrameCount = timingScene->frameCount();
-
-    BenchmarkResult currentResult;
-    currentResult.runtime = m_beginTime.msecsTo(endTime);
-    currentResult.fps = qreal(endFrameCount - m_beginFrameCount)
-                / qMax<uint>(currentResult.runtime, 1) * 1000;
+    SwapHook::instance()->stopLurking();
 
     QSharedPointer<TimedemoBenchmark> benchmark = demoPages[m_currentPageIndex]->benchmarks()[m_currentBenchmarkIndex];
+    BenchmarkResult currentResult(SwapHook::instance()->timestamps(), benchmark->type());
     benchmarkResults[m_currentPageIndex].insert(benchmark->name(), currentResult);
 
     timingStopped = true;
@@ -180,19 +175,17 @@ void Timedemo::showNextPage()
 
 void Timedemo::displayBenchmarkResults()
 {
-
     QTextStream log(stdout, QIODevice::WriteOnly | QIODevice::Text);
 
-    QFile csvFile;
-    QTextStream csv;
-
+    QFile statsCsvFile;
     if (m_csvFilename.isEmpty()) {
-        csvFile.setFileName("/dev/null");
+        statsCsvFile.setFileName("/dev/null");
     } else {
-        csvFile.setFileName(m_csvFilename);
+        statsCsvFile.setFileName(m_csvFilename);
     }
-        csvFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
-        csv.setDevice(&csvFile);
+
+    statsCsvFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
+    QTextStream statsCsv(&statsCsvFile);
 
     int pageTitleWidth = 0;
     const int fpsWidth = 5;
@@ -212,47 +205,100 @@ void Timedemo::displayBenchmarkResults()
     log.setRealNumberNotation(QTextStream::FixedNotation);
     log.setRealNumberPrecision(2);
     log << left << qSetFieldWidth(pageTitleWidth) << "Page name";
-    csv << "Page name";
+    statsCsv << "Page name";
 
     foreach(const QString& name, allBenchmarks) {
         int width = qMax(benchmarkWidth + 2, name.length() + 2);
         log << qSetFieldWidth(width) << name;
-        csv << ", \"" << name << " [fps]\", \"" << name << " [ms]\"";
+        statsCsv << ", \"" << name << " [fps]\", \"" << name << " [ms]\"";
 
         actualWidth[name] = width;
     }
     log << qSetFieldWidth(0) << '\n';
-    csv << '\n';
+    statsCsv << '\n';
 
     for (int i = 0; i < benchmarkResults.count(); ++i) {
         TimedemoPage *page = demoPages[i];
         QString title = page->timedemoTitle();
 
         log << qSetFieldWidth(pageTitleWidth) << title;
-        csv << "\"" << title << "\"";
+        statsCsv << "\"" << title << "\"";
 
         BenchmarkResultHash results = benchmarkResults[i];
         foreach(const QString& name, allBenchmarks) {
-            csv << ", ";
+            statsCsv << ", ";
             BenchmarkResultHash::const_iterator resultIter = results.find(name);
-            if (resultIter != results.constEnd() && resultIter->fps != 0 && resultIter->runtime != 0) {
+            if (resultIter != results.constEnd() && resultIter->fps() != 0 && resultIter->runtime() != 0) {
                 log << right
-                    << qSetFieldWidth(fpsWidth) << resultIter->fps
+                    << qSetFieldWidth(fpsWidth) << resultIter->fps()
                     << qSetFieldWidth(fpsUnitWidth) << "fps |"
-                    << qSetFieldWidth(runtimeWidth) << resultIter->runtime
+                    << qSetFieldWidth(runtimeWidth) << resultIter->runtime()
                     << qSetFieldWidth(runtimeUnitWidth) << "ms"
                     << qSetFieldWidth(actualWidth[name] - benchmarkWidth) << ""
                     << left;
             } else {
                 log << qSetFieldWidth(actualWidth[name]) << center << "n/a" << left;
             }
-            csv << resultIter->fps << ", " << resultIter->runtime;
+            statsCsv << resultIter->fps() << ", " << resultIter->runtime();
         }
         log << qSetFieldWidth(0) << '\n';
-        csv << '\n';
+        statsCsv << '\n';
     }
 
     log.flush();
-    csv.flush();
+    statsCsv.flush();
+    saveFramelog();
+}
 
+void Timedemo::saveFramelog() {
+    QFile framelogFile;
+    if (framelogFilename.isEmpty()) {
+        return;
+    } else {
+        framelogFile.setFileName(framelogFilename);
+    }
+
+    framelogFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
+    QXmlStreamWriter framelog(&framelogFile);
+    framelog.setAutoFormatting(true);
+    framelog.writeStartDocument();
+    framelog.writeDTD("<!DOCTYPE timedemo>");
+    framelog.writeStartElement("timedemo");
+
+    for (int i = 0; i < benchmarkResults.count(); ++i) {
+        framelog.writeStartElement("page");
+        TimedemoPage *page = demoPages[i];
+        QString title = page->timedemoTitle();
+
+        framelog.writeAttribute("id", title);
+
+        BenchmarkResultHash results = benchmarkResults[i];
+        foreach(const QString& name, allBenchmarks) {
+            BenchmarkResultHash::const_iterator resultIter = results.find(name);
+            if (resultIter == results.end()) {
+                continue;
+            }
+            framelog.writeStartElement("benchmark");
+            framelog.writeAttribute("id", name);
+            framelog.writeTextElement("type", resultIter->type);
+            framelog.writeTextElement("runtime", QString::number(resultIter->runtime()));
+            QString timestamps;
+            foreach(const timestamp ts, resultIter->timestamps) {
+                timestamps.append(QString::number(ts) + ',');
+            }
+            timestamps.truncate(timestamps.size() - 1);
+            framelog.writeTextElement("frames", timestamps);
+
+            // "page"
+            framelog.writeEndElement();
+        }
+
+        // "benchmark"
+        framelog.writeEndElement();
+    }
+
+    framelog.writeEndElement();
+    framelog.writeEndDocument();
+
+    framelogFile.flush();
 }
