@@ -41,8 +41,9 @@ struct BenchmarkResult {
 };
 
 /**
-  * Timedemo shows all the pages stored by the ListPage and shows them one after another.
-  * FPS are measured and printed in the end.
+  * Every TimedemoBenchmark must call this method once the benchmarking phase starts.
+  * Make sure to set the orientation angle of the application to the one you need. No
+  * guarantee is made about the current angle when startTiming() is called.
   */
 class Timedemo : public QObject
 {

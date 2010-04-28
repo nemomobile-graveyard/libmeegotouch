@@ -26,9 +26,6 @@ private slots:
     void panDown();
     void terminateBenchmark();
 
-    void setAngle();
-    void resetAngle();
-
 private:
     MPannableViewport *pannableViewport;
 
@@ -40,8 +37,6 @@ private:
 
 private:
      M::OrientationAngle targetOrientationAngle;
-     M::OrientationAngle formerOrientationAngle;
-
 };
 
 #endif // PANNINGBENCHMARK_H

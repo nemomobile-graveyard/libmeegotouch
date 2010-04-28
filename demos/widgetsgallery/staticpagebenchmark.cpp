@@ -24,6 +24,8 @@ QString StaticPageBenchmark::name()
 
 void StaticPageBenchmark::start()
 {
+    MApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
+    MApplication::activeWindow()->setOrientationAngleLocked(true);
     if (!applicationPage->isActiveWindow()) {
         connect(applicationPage, SIGNAL(appeared()), this, SLOT(stabilizeFps()));
         applicationPage->appear();
@@ -38,11 +40,6 @@ void StaticPageBenchmark::stabilizeFps() {
 
 void StaticPageBenchmark::waitPageDuration()
 {
-    formerOrientationAngle = MApplication::activeWindow()->orientationAngle();
-    MApplication::activeWindow()->setOrientationAngleLocked(false);
-    MApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
-    MApplication::activeWindow()->setOrientationAngleLocked(true);
-
     timedemo->startTiming();
     QTimer::singleShot(pageDuration, this, SLOT(terminateBenchmark()));
 }
@@ -50,9 +47,5 @@ void StaticPageBenchmark::waitPageDuration()
 void StaticPageBenchmark::terminateBenchmark()
 {
     timedemo->stopTiming();
-
-    MApplication::activeWindow()->setOrientationAngleLocked(false);
-    MApplication::activeWindow()->setOrientationAngle(formerOrientationAngle);
-    MApplication::activeWindow()->setOrientationAngleLocked(true);
     emit finished();
 }

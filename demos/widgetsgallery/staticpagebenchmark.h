@@ -25,7 +25,6 @@ private slots:
 
 private:
      M::OrientationAngle targetOrientationAngle;
-     M::OrientationAngle formerOrientationAngle;
 };
 
 #endif // STATICPAGEBENCHMARK_H

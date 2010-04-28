@@ -42,6 +42,8 @@ QString PanningBenchmark::name() {
 
 void PanningBenchmark::start()
 {
+    MApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
+    MApplication::activeWindow()->setOrientationAngleLocked(true);
     if (!applicationPage->isActiveWindow()) {
         connect(applicationPage, SIGNAL(appeared()), this, SLOT(waitBeforePanning()));
         applicationPage->appear();
@@ -54,7 +56,6 @@ void PanningBenchmark::start()
 // the widgets are not completely set up yet
 void PanningBenchmark::waitBeforePanning()
 {
-    setAngle();
     QTimer::singleShot(2500, this, SLOT(panDown()));
 }
 
@@ -83,25 +84,5 @@ void PanningBenchmark::terminateBenchmark()
 {
     timedemo->stopTiming();
     pannableViewport->physics()->setPosition(formerPosition);
-    resetAngle();
-
-    qDebug() << "end" << pannableViewport->widget()->pos() << pannableViewport->physics()->range();
-
     emit finished();
 }
-
-void PanningBenchmark::setAngle()
-{
-    formerOrientationAngle = MApplication::activeWindow()->orientationAngle();
-    MApplication::activeWindow()->setOrientationAngleLocked(false);
-    MApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
-    MApplication::activeWindow()->setOrientationAngleLocked(true);
-}
-
-void PanningBenchmark::resetAngle()
-{
-    MApplication::activeWindow()->setOrientationAngleLocked(false);
-    MApplication::activeWindow()->setOrientationAngle(formerOrientationAngle);
-    MApplication::activeWindow()->setOrientationAngleLocked(true);
-}
-
