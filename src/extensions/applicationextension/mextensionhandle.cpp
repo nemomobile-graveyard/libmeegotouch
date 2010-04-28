@@ -71,6 +71,7 @@ MExtensionHandlePrivate::MExtensionHandlePrivate() :
     aliveResponseTimeout(3000),
     runnerConnectionTimeout(20000),
     applicationVisible(true),
+    widgetVisible(true),
     remoteActions(),
     q_ptr(NULL)
 {
@@ -87,8 +88,7 @@ MExtensionHandlePrivate::~MExtensionHandlePrivate()
 
 void MExtensionHandlePrivate::visibilityChanged()
 {
-    Q_Q(MExtensionHandle);
-    communicator.sendMessage(MAppletVisibilityMessage(q->isVisible() && applicationVisible));
+    communicator.sendMessage(MAppletVisibilityMessage(applicationVisible && widgetVisible));
 }
 
 void MExtensionHandlePrivate::operationComplete(const QString &operation, const QString &pkg, const QString &error)
@@ -127,7 +127,7 @@ MExtensionHandle::MExtensionHandle(QGraphicsItem *parent) :
             SIGNAL(orientationChanged(M::Orientation)),
             this, SLOT(orientationEvent(M::Orientation)));
 
-    connect(this, SIGNAL(visibleChanged()), this, SLOT(visibilityChanged()));
+    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityEvent(bool)));
 
     // Configure the timers
     connect(&d->aliveTimer, SIGNAL(timeout()), this, SLOT(sendAliveMessageRequest()));
@@ -148,7 +148,7 @@ MExtensionHandle::MExtensionHandle(MExtensionHandlePrivate *dd, MExtensionHandle
             SIGNAL(orientationChanged(M::Orientation)),
             this, SLOT(orientationEvent(M::Orientation)));
 
-    connect(this, SIGNAL(visibleChanged()), this, SLOT(visibilityChanged()));
+    connect(this, SIGNAL(visibilityChanged(bool)), this, SLOT(visibilityEvent(bool)));
 
     // Configure the timers
     connect(&d->aliveTimer, SIGNAL(timeout()), this, SLOT(sendAliveMessageRequest()));
@@ -280,9 +280,6 @@ void MExtensionHandle::connectionEstablished()
     // Send alive request every 5 seconds. Send the first alive request immediately.
     d->aliveTimer.start(5000);
     sendAliveMessageRequest();
-
-    // Send the visibility changed message to the runner
-    d->visibilityChanged();
 
     if (d->oldGeometry.isValid()) {
         // Restore the old geometry
@@ -440,16 +437,12 @@ void MExtensionHandle::sendAliveMessageRequest()
     d->communicationTimer.start(d->aliveResponseTimeout);
 }
 
-void MExtensionHandle::visibilityChanged()
-{
-    Q_D(MExtensionHandle);
-    d->visibilityChanged();
-}
-
-//TODO: Remove this redundant signal in next API/ABI break window.
 void MExtensionHandle::visibilityEvent(bool visible)
 {
-    Q_UNUSED(visible);
+    Q_D(MExtensionHandle);
+
+    d->widgetVisible = visible;
+    d->visibilityChanged();
 }
 
 void MExtensionHandle::enterDisplayEvent()
