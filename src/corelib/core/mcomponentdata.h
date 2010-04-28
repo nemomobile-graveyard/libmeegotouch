@@ -186,6 +186,8 @@ private:
     static void unregisterWindow(MWindow *);
     static void setActiveWindow(MWindow *);
 
+    void reinit(int &argc, char **argv, const QString &appIdentifier = QString(), MApplicationService *service = 0);
+
     Q_DECLARE_PRIVATE(MComponentData)
     Q_DISABLE_COPY(MComponentData)
 
@@ -194,6 +196,7 @@ private:
     friend class MSceneWindow;
     friend class MTheme;
     friend class MDeviceProfile;
+    friend class MComponentCachePrivate; /* reinit()s the data */
 };
 
 #endif

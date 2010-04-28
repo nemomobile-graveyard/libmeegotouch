@@ -78,6 +78,8 @@ protected:
     MComponentData *q_ptr;
 private:
     void init(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service);
+    void registerDefaultService(const QString &appName);
+    void registerNewService(MApplicationService *newService);
     void debugInit(bool levelSet);
 };
 

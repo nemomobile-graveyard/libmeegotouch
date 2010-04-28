@@ -9,6 +9,7 @@ PUBLIC_HEADERS += \
     $$CORE_SRC_DIR/mapplication.h \
     $$CORE_SRC_DIR/maction.h \
     $$CORE_SRC_DIR/massembly.h \
+    $$CORE_SRC_DIR/mcomponentcache.h \
     $$CORE_SRC_DIR/mcomponentdata.h \
     $$CORE_SRC_DIR/mlibrary.h \
     $$CORE_SRC_DIR/mwidgetaction.h \
@@ -49,6 +50,7 @@ SOURCES += \
     $$CORE_SRC_DIR/mapplication.cpp \
     $$CORE_SRC_DIR/maction.cpp \
     $$CORE_SRC_DIR/massembly.cpp \
+    $$CORE_SRC_DIR/mcomponentcache.cpp \
     $$CORE_SRC_DIR/mcomponentdata.cpp \
     $$CORE_SRC_DIR/mlibrary.cpp \
     $$CORE_SRC_DIR/mwidgetaction.cpp \

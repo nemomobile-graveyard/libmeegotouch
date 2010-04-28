@@ -19,6 +19,7 @@ SUBDIRS     =  \
      ut_mapplicationpage \
      ut_mapplicationwindow \
      ut_mapplicationservice \
+     ut_mcomponentcache \
      ut_minputmethodstate \
      ut_mbutton \
      ut_mbuttonview \
