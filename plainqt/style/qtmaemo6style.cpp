@@ -287,7 +287,7 @@ void QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
             quintptr pWidget = reinterpret_cast<quintptr>(device);
             quintptr pImage = reinterpret_cast<quintptr>(scalableImage);
 
-            QString cacheKey = QString("%1_2%_%3_%4_%5x%6").arg(pWidget)
+            QString cacheKey = QString("%1_%2_%3_%4_%5x%6").arg(pWidget)
                                .arg(pImage)
                                .arg(mode)
                                .arg(purpose)
