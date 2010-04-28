@@ -145,24 +145,24 @@ bool MAppletCommunicator::sendMessage(const MAppletMessage &message)
     case MAppletMessage::MousePressMessage:
     case MAppletMessage::MouseReleaseMessage:
     case MAppletMessage::MouseMoveMessage:
-        mouseMessage = dynamic_cast<const MAppletMouseMessage *>(&message);
+        mouseMessage = static_cast<const MAppletMouseMessage *>(&message);
         mouseEventButton = mouseMessage->button();
         mouseEventButtons = mouseMessage->buttons();
         if (message.type() == MAppletMessage::MousePressMessage)
-            mousePressPosition = (dynamic_cast<const MAppletMouseMessage &>(message)).position();
+            mousePressPosition = mouseMessage->position();
         else if (message.type() == MAppletMessage::MouseReleaseMessage)
-            mouseReleasePosition = (dynamic_cast<const MAppletMouseMessage &>(message)).position();
+            mouseReleasePosition = mouseMessage->position();
         else if (message.type() == MAppletMessage::MouseMoveMessage)
-            mouseMovePosition = (dynamic_cast<const MAppletMouseMessage &>(message)).position();
+            mouseMovePosition = mouseMessage->position();
         break;
     case MAppletMessage::ObjectMenuRequestMessage:
-        contextMenuEventPos = (dynamic_cast<const MAppletObjectMenuRequestMessage &>(message)).pos();
+        contextMenuEventPos = (static_cast<const MAppletObjectMenuRequestMessage &>(message)).pos();
         break;
     case MAppletMessage::VisibilityMessage:
-        visibility = (dynamic_cast<const MAppletVisibilityMessage &>(message)).isVisible();
+        visibility = (static_cast<const MAppletVisibilityMessage &>(message)).isVisible();
         break;
     case MAppletMessage::ObjectMenuActionSelectedMessage:
-        remoteActionIndex = (dynamic_cast<const MAppletObjectMenuActionSelectedMessage &>(message)).index();
+        remoteActionIndex = (static_cast<const MAppletObjectMenuActionSelectedMessage &>(message)).index();
         break;
     default:
         break;

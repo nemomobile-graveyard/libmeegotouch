@@ -101,19 +101,21 @@ bool Ut_MApplicationExtensionAreaView::widgetInLayout(MWidget *widget)
     QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(extensionArea->layout());
 
     bool found = false;
-    for (int i = 0; i < layout->count(); ++i) {
-        QGraphicsWidget *w = NULL;
+    if (layout) {
+        for (int i = 0; i < layout->count(); ++i) {
+            QGraphicsWidget *w = NULL;
 
-        MContainer *container = dynamic_cast<MContainer *>(layout->itemAt(i));
-        if (container != NULL) {
-            // Widget has a container, take the centralWidget data
-            w = container->centralWidget();
-        } else {
-            // No container
-            w = dynamic_cast<MWidget *>(layout->itemAt(i));
+            MContainer *container = dynamic_cast<MContainer *>(layout->itemAt(i));
+            if (container != NULL) {
+                // Widget has a container, take the centralWidget data
+                w = container->centralWidget();
+            } else {
+                // No container
+                w = dynamic_cast<MWidget *>(layout->itemAt(i));
+            }
+
+            found |= w == widget;
         }
-
-        found |= w == widget;
     }
 
     return found;

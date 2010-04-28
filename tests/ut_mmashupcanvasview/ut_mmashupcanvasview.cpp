@@ -203,24 +203,29 @@ void Ut_MMashupCanvasView::testRemovalWithFlowLayoutPolicy()
 
 bool Ut_MMashupCanvasView::widgetInLayout(MWidget *widget)
 {
-    QGraphicsLinearLayout *mainLayout = dynamic_cast<QGraphicsLinearLayout *>(mashupCanvas->layout());
-    MLayout *layout = dynamic_cast<MLayout *>(mainLayout->itemAt(0));
-    MAbstractLayoutPolicy *policy = layout->policy();
-
     bool found = false;
-    for (int i = 0; i < policy->count(); ++i) {
-        QGraphicsWidget *w = NULL;
 
-        MContainer *container = dynamic_cast<MContainer *>(policy->itemAt(i));
-        if (container != NULL) {
-            // Widget has a container, take the centralWidget data
-            w = container->centralWidget();
-        } else {
-            // No container
-            w = dynamic_cast<MWidget *>(policy->itemAt(i));
+    QGraphicsLinearLayout *mainLayout = dynamic_cast<QGraphicsLinearLayout *>(mashupCanvas->layout());
+    if (mainLayout) {
+        MLayout *layout = dynamic_cast<MLayout *>(mainLayout->itemAt(0));
+        if (layout) {
+            MAbstractLayoutPolicy *policy = layout->policy();
+
+            for (int i = 0; i < policy->count(); ++i) {
+                QGraphicsWidget *w = NULL;
+
+                MContainer *container = dynamic_cast<MContainer *>(policy->itemAt(i));
+                if (container != NULL) {
+                    // Widget has a container, take the centralWidget data
+                    w = container->centralWidget();
+                } else {
+                    // No container
+                    w = dynamic_cast<MWidget *>(policy->itemAt(i));
+                }
+
+                found |= w == widget;
+            }
         }
-
-        found |= w == widget;
     }
 
     return found;
@@ -296,16 +301,19 @@ void Ut_MMashupCanvasView::testSettingContainerModeOffWidgetsHaveCorrectLayoutOr
 
     // Get the widgets from the layout of mashup canvas
     QGraphicsLinearLayout *mainLayout = dynamic_cast<QGraphicsLinearLayout *>(mashupCanvas->layout());
+    QVERIFY(mainLayout != NULL);
     MLayout *layout = dynamic_cast<MLayout *>(mainLayout->itemAt(0));
+    QVERIFY(layout != NULL);
     MAbstractLayoutPolicy *policy = layout->policy();
-
-    MContainer *container1 = dynamic_cast<MContainer *>(policy->itemAt(0));
-    MContainer *container2 = dynamic_cast<MContainer *>(policy->itemAt(1));
 
     QCOMPARE(widgetList->count(), 2);
     QCOMPARE(layout->count(), 2);
     QCOMPARE(policy->count(), 2);
 
+    MContainer *container1 = dynamic_cast<MContainer *>(policy->itemAt(0));
+    MContainer *container2 = dynamic_cast<MContainer *>(policy->itemAt(1));
+    QVERIFY(container1 != NULL);
+    QVERIFY(container2 != NULL);
     // and check if the order is the same.
     QCOMPARE(widgetList->at(0), container1->centralWidget());
     QCOMPARE(widgetList->at(1), container2->centralWidget());

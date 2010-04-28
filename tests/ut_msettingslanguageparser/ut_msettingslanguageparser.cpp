@@ -155,6 +155,7 @@ void Ut_MSettingsLanguageParser::testParseSelectionInSettings()
                        "  <selection key=\"key\"></selection>\n"
                        "</settings>");
     MSettingsLanguageSettings *si = dynamic_cast<MSettingsLanguageSettings *>(m_testSettingsBinary->children().at(0));
+    QVERIFY(si != NULL);
     QCOMPARE(si->numChildren(), uint(1));
     QVERIFY((dynamic_cast<const MSettingsLanguageSelection *>(si->children().at(0))));
     QCOMPARE(gMSettingsLanguageSelectionStub->stubLastCallTo("constructor").parameter<QString>(0), QString("key"));
@@ -218,6 +219,7 @@ void Ut_MSettingsLanguageParser::testParseTextInSettings()
                        "  <text key=\"aKey\" title=\"aTitle\"/>\n"
                        "</settings>");
     MSettingsLanguageSettings *si = dynamic_cast<MSettingsLanguageSettings *>(m_testSettingsBinary->children().at(0));
+    QVERIFY(si != NULL);
     QCOMPARE(si->numChildren(), uint(1));
     QCOMPARE(gMSettingsLanguageTextStub->stubLastCallTo("constructor").parameter<QString>(0), QString("aKey"));
     QCOMPARE(gMSettingsLanguageTextStub->stubLastCallTo("constructor").parameter<QString>(1), QString("aTitle"));
@@ -245,6 +247,7 @@ void Ut_MSettingsLanguageParser::testParseBooleanInSettings()
                        "  <boolean key=\"key\" title=\"titleBoolean\"/>\n"
                        "</settings>");
     MSettingsLanguageSettings *si = dynamic_cast<MSettingsLanguageSettings *>(m_testSettingsBinary->children().at(0));
+    QVERIFY(si != NULL);
     QCOMPARE(si->numChildren(), uint(1));
     QCOMPARE(gMSettingsLanguageBooleanStub->stubLastCallTo("constructor").parameter<QString>(0), QString("key"));
     QCOMPARE(gMSettingsLanguageBooleanStub->stubLastCallTo("constructor").parameter<QString>(1), QString("titleBoolean"));
@@ -280,6 +283,7 @@ void Ut_MSettingsLanguageParser::testParseIntegerInSettings()
                        "  <integer key=\"aKey\" title=\"aTitle\" min=\"-90\" max=\"90\"/>\n"
                        "</settings>");
     MSettingsLanguageSettings *si = dynamic_cast<MSettingsLanguageSettings *>(m_testSettingsBinary->children().at(0));
+    QVERIFY(si != NULL);
     QCOMPARE(si->numChildren(), uint(1));
     QCOMPARE(gMSettingsLanguageIntegerStub->stubLastCallTo("constructor").parameter<QString>(0), QString("aKey"));
     QCOMPARE(gMSettingsLanguageIntegerStub->stubLastCallTo("constructor").parameter<QString>(1), QString("aTitle"));
@@ -311,7 +315,7 @@ void Ut_MSettingsLanguageParser::testParseIntegerWithoutMinOrMax()
                        "  <integer key=\"aKey\" title=\"aTitle\" />\n"
                        "</settings>");
     MSettingsLanguageSettings *si = dynamic_cast<MSettingsLanguageSettings *>(m_testSettingsBinary->children().at(0));
-
+    QVERIFY(si != NULL);
     int val;
     // no min value
     QVERIFY(! dynamic_cast<MSettingsLanguageInteger *>(si->children().at(0))->minValue(val));
@@ -343,7 +347,7 @@ void Ut_MSettingsLanguageParser::EtestParseIntegerWithInsaneMinMax()
                        "  <integer key=\"aKey\" title=\"aTitle\" min=\"80\" max=\"-70\"/>\n"
                        "</settings>");
     MSettingsLanguageSettings *si = dynamic_cast<MSettingsLanguageSettings *>(m_testSettingsBinary->children().at(0));
-
+    QVERIFY(si != NULL);
     int val;
     // no min value
     QVERIFY(! dynamic_cast<MSettingsLanguageInteger *>(si->children().at(0))->minValue(val));
@@ -359,6 +363,7 @@ void Ut_MSettingsLanguageParser::testParseGroupInSettings()
                        "  </group>\n"
                        "</settings>");
     MSettingsLanguageSettings *si = dynamic_cast<MSettingsLanguageSettings *>(m_testSettingsBinary->children().at(0));
+    QVERIFY(si != NULL);
     QCOMPARE(si->numChildren(), uint(1));
     QVERIFY((dynamic_cast<const MSettingsLanguageGroup *>(si->children().at(0))));
     QVERIFY((dynamic_cast<const MSettingsLanguageBoolean *>(si->children().at(0)->children().at(0))));
@@ -376,6 +381,7 @@ void Ut_MSettingsLanguageParser::testParseMultipleGroupsInSettings()
                        "  </group>\n"
                        "</settings>");
     MSettingsLanguageSettings *si = dynamic_cast<MSettingsLanguageSettings *>(m_testSettingsBinary->children().at(0));
+    QVERIFY(si != NULL);
     QCOMPARE(si->numChildren(), uint(3));
     QVERIFY((dynamic_cast<const MSettingsLanguageBoolean *>(si->children().at(0))));
 

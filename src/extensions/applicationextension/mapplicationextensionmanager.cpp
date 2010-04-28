@@ -199,9 +199,9 @@ void MApplicationExtensionManager::removeOutOfProcessExtension(const MApplicatio
         MExtensionHandle *handle =  outOfProcessHandles.take(desktopFileName);
         if (handle) {
             emit widgetRemoved(handle);
+            handle->kill();
+            delete handle;
         }
-        handle->kill();
-        delete handle;
     }
 }
 
