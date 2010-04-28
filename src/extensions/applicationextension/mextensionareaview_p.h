@@ -85,7 +85,7 @@ public:
      * \param container The container whos visibility to modify
      * \param enabled Whether containers are enabled or not.
      */
-    void setContainerEnabled(MContainer *container, bool enabled);
+    void setContainerEnabled(MContainer &container, bool enabled);
 
     /*!
      * Used to check properties of widget and connect signals between it and the MContainer

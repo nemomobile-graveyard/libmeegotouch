@@ -35,13 +35,13 @@ MExtensionAreaViewPrivate::~MExtensionAreaViewPrivate()
 {
 }
 
-void MExtensionAreaViewPrivate::setContainerEnabled(MContainer *container, bool enabled)
+void MExtensionAreaViewPrivate::setContainerEnabled(MContainer &container, bool enabled)
 {
-    container->setHeaderVisible(enabled);
+    container.setHeaderVisible(enabled);
     if (enabled) {
-        container->setObjectName("");
+        container.setObjectName("");
     } else {
-        container->setObjectName("MExtensionAreaInvisibleContainer");
+        container.setObjectName("MExtensionAreaInvisibleContainer");
     }
 }
 
@@ -59,7 +59,9 @@ void MExtensionAreaViewPrivate::setupContainers(bool enabled)
     const int count = layout->count();
     for (int i = 0; i < count; ++i) {
         MContainer *container = dynamic_cast<MContainer *>(layout->itemAt(i));
-        setContainerEnabled(container, enabled);
+        if (container) {
+            setContainerEnabled(*container, enabled);
+        }
     }
 }
 
@@ -126,7 +128,9 @@ void MExtensionAreaViewPrivate::updateLayout()
 
                 // Create a container for the widget if container mode is enabled for the canvas
                 MContainer *container = createWidgetContainer(widget);
-                setContainerEnabled(container, q->style()->containerMode());
+                if (container) {
+                    setContainerEnabled(*container, q->style()->containerMode());
+                }
 
                 int layoutIndex = 0;
 
