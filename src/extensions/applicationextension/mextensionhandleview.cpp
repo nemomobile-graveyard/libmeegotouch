@@ -187,9 +187,7 @@ MExtensionHandleView::MExtensionHandleView(MExtensionHandleViewPrivate &dd, MExt
     d_ptr(&dd)
 {
     Q_D(MExtensionHandleView);
-    if (d)
-        d->q_ptr = this;
-
+    d->q_ptr = this;
     d->connectSignals();
 }
 
