@@ -171,9 +171,9 @@ public:
     bool navBarHidden;
     bool escapeButtonHidden;
 
-    QGraphicsItem *focusedInputWidget;
+    QPointer<QGraphicsWidget> focusedInputWidget;
 
-    MSceneWindow *alteredSceneWindow;
+    QPointer<MSceneWindow> alteredSceneWindow;
     QPoint sceneWindowTranslation;
 
     bool pendingSIPClose;
