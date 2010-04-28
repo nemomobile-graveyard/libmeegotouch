@@ -43,7 +43,8 @@ SpinnerPage::SpinnerPage() :
     TemplatePage(),
     container(NULL),
     spinner(NULL),
-    spinnerLayout(NULL),
+    spinnerLayout1(NULL),
+    spinnerLayout2(NULL),
     header(NULL),
     description(NULL),
     view(Unknown)
@@ -119,17 +120,25 @@ void SpinnerPage::inApplicationMainArea()
     description->setWordWrap(true);
     containerPolicy->addItem(description);
 
+    spinnerLayout1 = new MLayout(0);
+
+    MLinearLayoutPolicy* spinnerLayoutPolicy1 = new MLinearLayoutPolicy(spinnerLayout1, Qt::Vertical);
+    spinnerLayout1->setPolicy(spinnerLayoutPolicy1);
+    spinnerLayoutPolicy1->addStretch();
+
+    containerPolicy->addItem(spinnerLayout1);
+
     spinner = new MProgressIndicator(centralWidget(), MProgressIndicator::spinnerType);
     spinner->setUnknownDuration(true);
     containerPolicy->addItem(spinner, Qt::AlignCenter);
 
-    spinnerLayout = new MLayout(0);
+    spinnerLayout2 = new MLayout(0);
 
-    MLinearLayoutPolicy* spinnerLayoutPolicy = new MLinearLayoutPolicy(spinnerLayout, Qt::Vertical);
-    spinnerLayout->setPolicy(spinnerLayoutPolicy);
-    spinnerLayoutPolicy->addStretch();
+    MLinearLayoutPolicy* spinnerLayoutPolicy2 = new MLinearLayoutPolicy(spinnerLayout2, Qt::Vertical);
+    spinnerLayout2->setPolicy(spinnerLayoutPolicy2);
+    spinnerLayoutPolicy2->addStretch();
 
-    containerPolicy->addItem(spinnerLayout);
+    containerPolicy->addItem(spinnerLayout2);
 }
 
 void SpinnerPage::inContainerHeader()
@@ -243,14 +252,17 @@ void SpinnerPage::reset()
 
     case ApplicationMainArea: {
         containerPolicy->removeItem(header);
+        containerPolicy->removeItem(spinnerLayout1);
         containerPolicy->removeItem(spinner);
-        containerPolicy->removeItem(spinnerLayout);
+        containerPolicy->removeItem(spinnerLayout2);
         delete description;
+        delete spinnerLayout1;
         delete spinner;
-        delete spinnerLayout;
+        delete spinnerLayout2;
         description = NULL;
+        spinnerLayout1 = NULL;
         spinner = NULL;
-        spinnerLayout = NULL;
+        spinnerLayout2 = NULL;
     } break;
 
     case ContainerHeader: {

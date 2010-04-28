@@ -62,7 +62,8 @@ private:
 
     MContainer   *container;
     MProgressIndicator* spinner;
-    MLayout* spinnerLayout;
+    MLayout* spinnerLayout1;
+    MLayout* spinnerLayout2;
     MLabel       *header;
     MLabel       *description;
     View            view;
