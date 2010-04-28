@@ -32,7 +32,7 @@ Description: MeeGo Touch views library
 
 Package: libmeegotouchqtstyle
 Architecture: any
-Depends: libmeegotouchcore0, libmeegotouchviews0 
+Depends: ${misc:Depends}, ${shlibs:Depends} 
 Description: MeeGo Touch Qt style for plain Qt applications
  MeeGo Touch Qt style plugin
 
