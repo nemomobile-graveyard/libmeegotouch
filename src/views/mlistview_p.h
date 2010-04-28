@@ -35,7 +35,9 @@ class MWidget;
 class MListView;
 class MList;
 class MListModel;
+class MListIndex;
 class MPannableViewport;
+class MSideBar;
 class MWidgetRecycler;
 class QAbstractItemModel;
 class QItemSelectionModel;
@@ -246,6 +248,7 @@ public:
     int itemsCount(int index) const;
     void updateHeadersPositions();
     void updateHeadersRows();
+    void updateHeadersIndexes();
 
 public:
     virtual int indexToFlatRow(const QModelIndex &index) const;
@@ -272,9 +275,12 @@ public:
     virtual void layoutChanged();
 
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
+
 public:
     QVector<int> headersPositions;
     QVector<int> headersRows;
+
+    MListIndex *listIndexWidget;
 };
 
 class MMultiColumnListViewPrivate : public MGroupHeaderListViewPrivate

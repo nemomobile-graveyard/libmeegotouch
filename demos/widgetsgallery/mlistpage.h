@@ -111,6 +111,7 @@ private:
     QModelIndex longTappedIndex;
 
     int currentSortingIndex;
+    int currentListModeIndex;
 };
 
 

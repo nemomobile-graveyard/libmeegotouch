@@ -126,6 +126,14 @@ void MListView::applyStyle()
     }
 }
 
+void MListView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    MWidgetView::notifyItemChange(change, value);
+
+    if(change == QGraphicsItem::ItemSceneHasChanged)
+        emit controller->parentChanged();
+}
+
 QSizeF MListView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     if (!d_ptr)

@@ -69,6 +69,8 @@ protected:
     virtual void setupModel();
     virtual void applyStyle();
 
+    virtual void notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
+
 private:
     void init();
     void connectSelectionModel();

@@ -115,11 +115,11 @@ public:
         int flatRow = index.row();
         int row = flatRow / amountOfColumns;
         int column = flatRow % amountOfColumns;
-        int totalItems = index.model()->rowCount();
+        int totalItems = index.model()->rowCount(index.parent());
 
         int columns = amountOfColumns;
-        int rows = index.model()->rowCount() / amountOfColumns;
-        if(index.model()->rowCount() % amountOfColumns)
+        int rows = totalItems / amountOfColumns;
+        if (totalItems % amountOfColumns)
             rows += 1;
 
         bool last = (row == (rows - 1) && flatRow == (totalItems - 1));
@@ -267,9 +267,7 @@ void MListPage::createActions()
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSortingOrder(int)));
 
     QStringList listModeList;
-    listModeList << "Plain";
-    // Not implemented yet
-    // listModeList << "Grouped";
+    listModeList << "Plain" << "Grouped";
     combo = createComboBoxAction("List mode", listModeList);
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListMode(int)));
 
@@ -325,8 +323,14 @@ void MListPage::changeSortingOrder(int index)
 
 #ifndef HAVE_N900
 void MListPage::changeAmountOfItemInList(int index)
-{
+{  
     Q_ASSERT(index >= 0 && index < 4);
+
+    if(currentListModeIndex == Grouped) {
+        proxyModel->setShowGroups(false);
+        list->setShowGroups(false);
+    }
+
 
     if (model->rowCount() > 0)
         model->removeRows(0, model->rowCount());
@@ -334,6 +338,7 @@ void MListPage::changeAmountOfItemInList(int index)
     int amountOfItems[4] = {50, 100, 200, 1000};
     model->insertRows(0, amountOfItems[index]);
     changeSortingOrder(currentSortingIndex);
+    changeListMode(currentListModeIndex);
 }
 #endif
 
@@ -345,6 +350,7 @@ void MListPage::changeListMode(int index)
 #ifndef HAVE_N900
         proxyModel->setShowGroups(false);
 #endif
+
         break;
 
     case Grouped:
@@ -354,6 +360,9 @@ void MListPage::changeListMode(int index)
 #endif
         break;
     }
+
+    currentListModeIndex = index;
+
     changeSortingOrder(currentSortingIndex);
     loadPicturesInVisibleItems();
 }
@@ -386,7 +395,7 @@ void MListPage::changeSeparatorsMode(int index)
     Q_ASSERT(index >= 0 && index <= 1);
     bool enableSeparators = (index == 1);
 
-    if(enableSeparators)
+    if (enableSeparators)
         list->setObjectName("wgListWithSeparators");
     else
         list->setObjectName("wgList");
