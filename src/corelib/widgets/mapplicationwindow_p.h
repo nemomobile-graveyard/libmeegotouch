@@ -103,7 +103,7 @@ public:
 
 #ifdef Q_WS_X11
     void addMStatusBarOverlayProperty();
-    void setWindowTypeProperty();
+    void appendMApplicationWindowTypeProperty();
 #endif
 
     void setupPageEscape();

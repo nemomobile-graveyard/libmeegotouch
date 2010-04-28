@@ -122,7 +122,7 @@ void MApplicationWindowPrivate::init()
 
 #ifdef Q_WS_X11
     addMStatusBarOverlayProperty();
-    setWindowTypeProperty();
+    appendMApplicationWindowTypeProperty();
 #endif
 
 #ifdef HAVE_N900
@@ -188,14 +188,14 @@ void MApplicationWindowPrivate::addMStatusBarOverlayProperty()
             (unsigned char *) &propertyData, 1 /* number of elements */);
 }
 
-void MApplicationWindowPrivate::setWindowTypeProperty()
+void MApplicationWindowPrivate::appendMApplicationWindowTypeProperty()
 {
     Q_Q(MApplicationWindow);
 
     Atom atomWindowType = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_NET_WM_WINDOW_TYPE_MAPPLICATION", False);
     XChangeProperty(QX11Info::display(), q->winId(),
                     XInternAtom(QX11Info::display(), "_NET_WM_WINDOW_TYPE", False),
-                    XA_ATOM, 32, PropModeReplace, (unsigned char*) &atomWindowType, 1);
+                    XA_ATOM, 32, PropModeAppend, (unsigned char*) &atomWindowType, 1);
 }
 #endif
 
