@@ -27,6 +27,7 @@
 #include "mapplication.h"
 #include "mapplication_p.h"
 #include "mapplicationwindow.h"
+#include "mcomponentcache.h"
 #include "morientationtracker.h"
 #include "mdeviceprofile.h"
 #include "mwindow.h"
@@ -334,17 +335,17 @@ void MWindow::setTranslucentBackground(bool enable)
 #ifdef QT_OPENGL_LIB
         setViewportUpdateMode(MWindow::FullViewportUpdate);
 
-        QGLFormat fmt;
-        // disable multisampling, is enabled by default in Qt
-        fmt.setSampleBuffers(false);
-        fmt.setSamples(0);
-
         // The sequence of calls here is important. When translucency is not
         // enabled, ensure setViewport() is called before MGLES2Renderer
         // initializes its vertices, otherwise call setViewport() after
         // MGLES2Renderer initializes itself. Failure to do this will cause
         // a crash.
         if (enable)  {
+            QGLFormat fmt;
+            // disable multisampling, is enabled by default in Qt
+            fmt.setSampleBuffers(false);
+            fmt.setSamples(0);
+
             //d->glWidget->setAttribute(Qt::WA_TranslucentBackground);
 
             fmt.setAlpha(true); // Workaround for NB#153625
@@ -354,7 +355,7 @@ void MWindow::setTranslucentBackground(bool enable)
             d->glWidget->setAutoFillBackground(true);
             d->glWidget->setPalette(palette);
         } else {
-            d->glWidget = new QGLWidget(fmt);
+            d->glWidget = MComponentCache::glWidget();
             setViewport(d->glWidget);
         }
 #ifdef M_USE_OPENGL

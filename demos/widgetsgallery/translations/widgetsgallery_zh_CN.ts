@@ -992,10 +992,10 @@ A Push Button generally looks like a traditional button, with button-style edges
 sit amet</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="xx_spinner_page_container_main_area">
+    <message id="xx_spinner_page_application_main_area">
         <location filename="../spinnerpage.cpp" line="66"/>
         <source>In container main area</source>
-        <translation>在包容器主区域</translation>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_spinner_page_container_header">
         <location filename="../spinnerpage.cpp" line="72"/>
@@ -1040,10 +1040,10 @@ Subject: This is funny stuff!</source>
 日期：今天
 主题：这是个有趣的资料!</translation>
     </message>
-    <message id="xx_spinner_page_container_area_description">
+    <message id="xx_spinner_page_application_area_description">
         <location filename="../spinnerpage.cpp" line="129"/>
-        <source>Spinner can be used in container while e.g. content is being fetched.</source>
-        <translation>旋转进度指示可以在内容启动的等待期间内。</translation>
+        <source>Spinner can be used while content is loading.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_spinner_page_container_title">
         <location filename="../spinnerpage.cpp" line="142"/>

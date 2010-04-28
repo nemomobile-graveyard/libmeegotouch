@@ -36,6 +36,7 @@
 #include "mapplicationifproxy.h"
 #include "mapplicationifadaptor.h"
 #include "mapplicationservice.h"
+#include "mcomponentcache.h"
 #include "mcomponentdata_p.h"
 #include "mwindow.h"
 #include "mapplicationwindow.h"
@@ -569,16 +570,16 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
         qApp->exit(-1);
     }
 
-
-    if (newService == 0) {
-        QString serviceName = "com.nokia." + appName;
-        mDebug("MComponentData") << "creating MComponentDataService with name:" << serviceName;
-        service = new MApplicationService(serviceName);
-    } else {
-        service = newService;
+    /* If cache is being populated, real name of the application to be
+       executed is not known yet. Service registration will be skipped
+       now and done in reinit(). */
+    if (!MComponentCache::populating()) {
+        if (newService == 0) {
+            registerDefaultService(appName);
+        } else {
+            registerNewService(newService);
+        }
     }
-
-    service->registerService();
 #else
     Q_UNUSED(newService);
 #endif
@@ -590,6 +591,77 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     QGestureRecognizer::registerRecognizer(new MPanRecognizer());
 
     q->setShowCursor(showCursor);
+}
+
+void MComponentDataPrivate::registerNewService(MApplicationService *newService)
+{
+#ifdef HAVE_DBUS
+    service = newService;
+    service->registerService();
+#else
+    Q_UNUSED(newService);
+#endif
+}
+
+void MComponentDataPrivate::registerDefaultService(const QString &appIdentifier)
+{
+    QString serviceName = "com.nokia." + appIdentifier;
+    registerNewService(new MApplicationService(serviceName));
+}
+
+void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
+{
+    Q_D(MComponentData);
+    if (d->service) {
+        qFatal("MComponentData::reinit() - Called but service already registered.");
+    }
+
+    if (!appIdentifier.isEmpty()) {
+        d->appName = appIdentifier;
+    } else {
+        QFileInfo fileInfo(argv[0]);
+        d->appName = fileInfo.fileName();
+    }
+
+    if (newService) {
+        d->registerNewService(newService);
+    } else {
+        d->registerDefaultService(d->appName);
+    }
+
+    // Configure application according to switches
+    for (int i = 1; i < argc; ++i) 
+    {
+        QString s(argv[i]);
+        if (s == "-prestart") {
+            d->prestarted = true;
+        } else if (s == "-show-fps") {
+            setShowFps(true);
+        } else if (s == "-show-br") {
+            setShowBoundingRect(true);
+        } else if (s == "-show-size") {
+            setShowSize(true);
+        } else if (s == "-show-position") {
+            setShowPosition(true);
+        } else if (s == "-show-cursor") {
+            d->showCursor = true;
+        } else if (s == "-show-object-names") {
+            setShowObjectNames(true);
+        } else if (s == "-dev") {
+            setShowSize(true);
+            setShowPosition(true);
+        } else if (s == "-software") {
+            d->softwareRendering = true;
+        } else if (s == "-log-fps") {
+            setLogFps(true);
+        } else if (s == "-target") {
+            if (i < (argc - 1)) {
+                d->deviceName = argv[++i];
+            }
+        } else if (s == "-emulate-two-finger-gestures") {
+            setEmulateTwoFingerGestures(true);
+        }
+    }
 }
 
 MComponentData::~MComponentData()

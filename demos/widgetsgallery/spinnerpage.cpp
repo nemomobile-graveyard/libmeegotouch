@@ -42,6 +42,9 @@ static const int ImageSize = 64;
 SpinnerPage::SpinnerPage() :
     TemplatePage(),
     container(NULL),
+    spinner(NULL),
+    spinnerLayout1(NULL),
+    spinnerLayout2(NULL),
     header(NULL),
     description(NULL),
     view(Unknown)
@@ -62,10 +65,10 @@ void SpinnerPage::createContent()
 {
     TemplatePage::createContent();
 
-    //% "In container main area"
-    MAction *action = new MAction(qtTrId("xx_spinner_page_container_main_area"), this);
+    //% "In application main area"
+    MAction *action = new MAction(qtTrId("xx_spinner_page_application_main_area"), this);
     action->setLocation(MAction::ApplicationMenuLocation);
-    connect(action, SIGNAL(triggered()), this, SLOT(inContainerMainArea()));
+    connect(action, SIGNAL(triggered()), this, SLOT(inApplicationMainArea()));
     addAction(action);
 
     //% "In container header"
@@ -86,7 +89,7 @@ void SpinnerPage::createContent()
     connect(action, SIGNAL(triggered()), this, SLOT(inDialog()));
     addAction(action);
 
-    inContainerMainArea();
+    inApplicationMainArea();
 
     retranslateUi();
 }
@@ -106,29 +109,36 @@ void SpinnerPage::retranslateUi()
     infoLabel->setText("<a></a>" + qtTrId("xx_spinner_page_info_label"));
 }
 
-void SpinnerPage::inContainerMainArea()
+void SpinnerPage::inApplicationMainArea()
 {
     reset();
-    view = ContainerMainArea;
-
-    header = new MLabel(centralWidget());
-    //% "From: John Doe\nDate: Today\nSubject: This is funny stuff!"
-    header->setText("<a></a>" + qtTrId("xx_spinner_page_email_header"));
-    containerPolicy->addItem(header);
-
-    container = new MContainer(centralWidget());
-    container->setHeaderVisible(false);
-    containerPolicy->addItem(container);
-
-    MProgressIndicator *spinner = new MProgressIndicator(container, MProgressIndicator::spinnerType);
-    spinner->setUnknownDuration(true);
-    container->setCentralWidget(spinner);
+    view = ApplicationMainArea;
 
     description = new MLabel(centralWidget());
-    //% "Spinner can be used in container while e.g. content is being fetched."
-    description->setText("<a></a>" + qtTrId("xx_spinner_page_container_area_description"));
+    //% "Spinner can be used while content is loading."
+    description->setText("<a></a>" + qtTrId("xx_spinner_page_application_area_description"));
     description->setWordWrap(true);
     containerPolicy->addItem(description);
+
+    spinnerLayout1 = new MLayout(0);
+
+    MLinearLayoutPolicy* spinnerLayoutPolicy1 = new MLinearLayoutPolicy(spinnerLayout1, Qt::Vertical);
+    spinnerLayout1->setPolicy(spinnerLayoutPolicy1);
+    spinnerLayoutPolicy1->addStretch();
+
+    containerPolicy->addItem(spinnerLayout1);
+
+    spinner = new MProgressIndicator(centralWidget(), MProgressIndicator::spinnerType);
+    spinner->setUnknownDuration(true);
+    containerPolicy->addItem(spinner, Qt::AlignCenter);
+
+    spinnerLayout2 = new MLayout(0);
+
+    MLinearLayoutPolicy* spinnerLayoutPolicy2 = new MLinearLayoutPolicy(spinnerLayout2, Qt::Vertical);
+    spinnerLayout2->setPolicy(spinnerLayoutPolicy2);
+    spinnerLayoutPolicy2->addStretch();
+
+    containerPolicy->addItem(spinnerLayout2);
 }
 
 void SpinnerPage::inContainerHeader()
@@ -240,16 +250,19 @@ void SpinnerPage::reset()
     case Unknown:
         break;
 
-    case ContainerMainArea: {
+    case ApplicationMainArea: {
         containerPolicy->removeItem(header);
-        containerPolicy->removeItem(container);
-        containerPolicy->removeItem(description);
-        delete container;
+        containerPolicy->removeItem(spinnerLayout1);
+        containerPolicy->removeItem(spinner);
+        containerPolicy->removeItem(spinnerLayout2);
         delete description;
-        delete header;
-        container = NULL;
+        delete spinnerLayout1;
+        delete spinner;
+        delete spinnerLayout2;
         description = NULL;
-        header = NULL;
+        spinnerLayout1 = NULL;
+        spinner = NULL;
+        spinnerLayout2 = NULL;
     } break;
 
     case ContainerHeader: {

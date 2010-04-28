@@ -25,6 +25,7 @@
 
 class MLabel;
 class MContainer;
+class MProgressIndicator;
 class MButton;
 class MFlowLayoutPolicy;
 
@@ -34,7 +35,7 @@ class SpinnerPage : public TemplatePage
 
     enum View {
         Unknown,
-        ContainerMainArea,
+        ApplicationMainArea,
         ContainerHeader,
         Menu,
         Dialog
@@ -46,7 +47,7 @@ public:
     virtual QString timedemoTitle();
     virtual void createContent();
 public slots:
-    void inContainerMainArea();
+    void inApplicationMainArea();
     void inContainerHeader();
     void inViewmenu();
     void inDialog();
@@ -60,6 +61,9 @@ private:
     void reset();
 
     MContainer   *container;
+    MProgressIndicator* spinner;
+    MLayout* spinnerLayout1;
+    MLayout* spinnerLayout2;
     MLabel       *header;
     MLabel       *description;
     View            view;
