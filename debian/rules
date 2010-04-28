@@ -59,6 +59,11 @@ ifeq (,$(findstring notestability,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -testable
 endif
 
+#add plainqt 
+ifneq (,$(findstring plainqt,$(DEB_BUILD_OPTIONS)))
+     OPTIONS += -plainqt
+endif
+
 # Perform a minimal build by setting DEB_BUILD_OPTION=minimal,...
 ifeq (,$(findstring minimal,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -make "tests benchmarks"
