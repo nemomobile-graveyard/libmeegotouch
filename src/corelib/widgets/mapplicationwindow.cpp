@@ -179,7 +179,7 @@ void MApplicationWindowPrivate::addMStatusBarOverlayProperty()
 {
     Q_Q(MWindow);
 
-    Atom atomMStatusBarOverlay = XInternAtom(QX11Info::display(), "_M_STATUSBAR_OVERLAY", False);
+    Atom atomMStatusBarOverlay = XInternAtom(QX11Info::display(), "_DUI_STATUSBAR_OVERLAY", False);
     long propertyData = 1;
 
     XChangeProperty(QX11Info::display(), q->winId(),
