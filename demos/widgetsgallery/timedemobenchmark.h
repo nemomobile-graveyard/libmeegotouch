@@ -33,6 +33,19 @@ public:
       */
     virtual void start() = 0;
 
+    /**
+      * Return the type of the benchmark.
+      * \return The type of the benchmark-
+      */
+    QString type();
+
+    /**
+      * Set the type of the benchmark. Evaluation of the timedemo can use this
+      * information to handle different types in a different way.
+      * \param type The type of the benchmark
+      */
+    void setType(const QString& type);
+
 signals:
     /**
       * Emit this signal once the benchmark is finished.
@@ -42,6 +55,7 @@ signals:
 protected:
     MApplicationPage *applicationPage;
     Timedemo *timedemo;
+    QString _type;
 };
 
 #endif // TIMEDEMOBENCHMARK_H
