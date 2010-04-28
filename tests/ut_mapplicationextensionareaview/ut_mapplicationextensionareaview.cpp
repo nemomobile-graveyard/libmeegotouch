@@ -66,6 +66,10 @@ void Ut_MApplicationExtensionAreaView::init()
 void Ut_MApplicationExtensionAreaView::cleanup()
 {
     delete m_subject;
+
+    // Destroy any created widgets
+    qDeleteAll(createdWidgets);
+    createdWidgets.clear();
 }
 
 void Ut_MApplicationExtensionAreaView::addWidgetToApplicationExtensionArea(QGraphicsWidget *widget, MDataStore *dataStore)
@@ -82,18 +86,16 @@ void Ut_MApplicationExtensionAreaView::removeWidgetFromApplicationExtensionArea(
     extensionArea->model()->dataStoresModified();
 }
 
-QList<MWidget *> *Ut_MApplicationExtensionAreaView::createWidgets(int numberOfWidgets, bool containerMode)
+void Ut_MApplicationExtensionAreaView::createWidgets(int numberOfWidgets, bool containerMode)
 {
     m_subject->modifiableStyle()->setContainerMode(containerMode);
     m_subject->applyStyle();
-    QList<MWidget *> *widgetList = new QList<MWidget *>;
     for (int i = 0; i < numberOfWidgets; ++i) {
         MWidget *widget = new MWidget;
         MockDataStore *store = new MockDataStore;
         addWidgetToApplicationExtensionArea(widget, store);
-        widgetList->append(widget);
+        createdWidgets.append(widget);
     }
-    return widgetList;
 }
 
 bool Ut_MApplicationExtensionAreaView::widgetInLayout(MWidget *widget)
@@ -138,20 +140,20 @@ void Ut_MApplicationExtensionAreaView::testAddition()
     addWidgetToApplicationExtensionArea(widget1, &store1);
 
     // Check that it was added into the layout.
-    QVERIFY(widgetInLayout(widget1));
+    QCOMPARE(widgetInLayout(widget1), true);
 
     // Ensure that the layout data is written to data store.
-    QVERIFY(store1.contains("layoutIndex"));
+    QCOMPARE(store1.contains("layoutIndex"), true);
 
     // Add another widget. Addition will change layout data of both widgets.
     addWidgetToApplicationExtensionArea(widget2, &store2);
 
     // Check that it was added into the layout.
-    QVERIFY(widgetInLayout(widget2));
+    QCOMPARE(widgetInLayout(widget2), true);
 
     // Ensure that new layout data is stored into data store.
-    QVERIFY(store1.contains("layoutIndex"));
-    QVERIFY(store2.contains("layoutIndex"));
+    QCOMPARE(store1.contains("layoutIndex"), true);
+    QCOMPARE(store2.contains("layoutIndex"), true);
 
     delete widget1;
     delete widget2;
@@ -160,18 +162,15 @@ void Ut_MApplicationExtensionAreaView::testAddition()
 
 void Ut_MApplicationExtensionAreaView::testRemoval()
 {
-    QList<MWidget *> *widgetList = createWidgets(3);
+    createWidgets(3);
 
     // Remove widget2
-    removeWidgetFromApplicationExtensionArea(widgetList->at(1));
+    removeWidgetFromApplicationExtensionArea(createdWidgets.at(1));
 
     // Ensure that widget1 and widget3 are still in the layout but widget2 is not.
-    QVERIFY(widgetInLayout(widgetList->at(0)));
-    QVERIFY(!widgetInLayout(widgetList->at(1)));
-    QVERIFY(widgetInLayout(widgetList->at(2)));
-
-    while (!widgetList->isEmpty())
-        delete widgetList->takeFirst();
+    QCOMPARE(widgetInLayout(createdWidgets.at(0)), true);
+    QCOMPARE(widgetInLayout(createdWidgets.at(1)), false);
+    QCOMPARE(widgetInLayout(createdWidgets.at(2)), true);
 }
 
 QTEST_APPLESS_MAIN(Ut_MApplicationExtensionAreaView)

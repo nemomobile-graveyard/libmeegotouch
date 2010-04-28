@@ -72,6 +72,10 @@ void Ut_MMashupCanvasView::init()
 void Ut_MMashupCanvasView::cleanup()
 {
     delete m_subject;
+
+    // Destroy any created widgets
+    qDeleteAll(createdWidgets);
+    createdWidgets.clear();
 }
 
 void Ut_MMashupCanvasView::addWidgetToMashupCanvas(QGraphicsWidget *widget, MDataStore *dataStore)
@@ -127,18 +131,16 @@ void Ut_MMashupCanvasView::verifyWidgetContainerVisibility(QList<MWidget *> *wid
     QCOMPARE(appletLayout->count(), widgetList->size());
 }
 
-QList<MWidget *> *Ut_MMashupCanvasView::createWidgets(int numberOfWidgets, bool containerMode)
+void Ut_MMashupCanvasView::createWidgets(int numberOfWidgets, bool containerMode)
 {
     m_subject->modifiableStyle()->setContainerMode(containerMode);
     m_subject->applyStyle();
-    QList<MWidget *> *widgetList = new QList<MWidget *>;
     for (int i = 0; i < numberOfWidgets; ++i) {
         MWidget *widget = new MWidget;
         MockDataStore *store = new MockDataStore;
         addWidgetToMashupCanvas(widget, store);
-        widgetList->append(widget);
+        createdWidgets.append(widget);
     }
-    return widgetList;
 }
 
 void Ut_MMashupCanvasView::testLayoutPolicy()
@@ -181,25 +183,18 @@ void Ut_MMashupCanvasView::testAdditionWithFlowLayoutPolicy()
     delete widget2;
 }
 
-
 void Ut_MMashupCanvasView::testRemovalWithFlowLayoutPolicy()
 {
-
-    QList<MWidget *> *widgetList = createWidgets(3);
+    createWidgets(3);
 
     // Remove widget2
-    removeWidgetFromMashupCanvas(widgetList->at(1));
+    removeWidgetFromMashupCanvas(createdWidgets.at(1));
 
     // Ensure that widget1 and widget3 are still in the layout but widget2 is not.
-    QVERIFY(widgetInLayout(widgetList->at(0)));
-    QVERIFY(!widgetInLayout(widgetList->at(1)));
-    QVERIFY(widgetInLayout(widgetList->at(2)));
-
-    while (!widgetList->isEmpty())
-        delete widgetList->takeFirst();
-
+    QVERIFY(widgetInLayout(createdWidgets.at(0)));
+    QVERIFY(!widgetInLayout(createdWidgets.at(1)));
+    QVERIFY(widgetInLayout(createdWidgets.at(2)));
 }
-
 
 bool Ut_MMashupCanvasView::widgetInLayout(MWidget *widget)
 {
@@ -233,68 +228,56 @@ bool Ut_MMashupCanvasView::widgetInLayout(MWidget *widget)
 
 void Ut_MMashupCanvasView::testSettingContainerModeOff()
 {
-    QList<MWidget *> *widgetList = createWidgets(2, true);
+    createWidgets(2, true);
 
     // Check that the containers are visible
-    verifyWidgetContainerVisibility(widgetList, true);
+    verifyWidgetContainerVisibility(&createdWidgets, true);
 
     m_subject->modifiableStyle()->setContainerMode(false);
     m_subject->applyStyle();
 
     // Check that the containers are not visible
-    verifyWidgetContainerVisibility(widgetList, false);
-
-    while (!widgetList->isEmpty())
-        delete widgetList->takeFirst();
+    verifyWidgetContainerVisibility(&createdWidgets, false);
 }
 
 void Ut_MMashupCanvasView::testSettingContainerModeOn()
 {
-    QList<MWidget *> *widgetList = createWidgets(2, false);
-    verifyWidgetContainerVisibility(widgetList, false);
+    createWidgets(2, false);
+    verifyWidgetContainerVisibility(&createdWidgets, false);
 
     m_subject->modifiableStyle()->setContainerMode(true);
     m_subject->applyStyle();
 
-    verifyWidgetContainerVisibility(widgetList, true);
-
-    while (!widgetList->isEmpty())
-        delete widgetList->takeFirst();
+    verifyWidgetContainerVisibility(&createdWidgets, true);
 }
 
 void Ut_MMashupCanvasView::testSettingContainerModeOnWhenContainerModeIsOn()
 {
-    QList<MWidget *> *widgetList = createWidgets(2, true);
+    createWidgets(2, true);
 
-    verifyWidgetContainerVisibility(widgetList, true);
+    verifyWidgetContainerVisibility(&createdWidgets, true);
 
     m_subject->modifiableStyle()->setContainerMode(true);
     m_subject->applyStyle();
 
-    verifyWidgetContainerVisibility(widgetList, true);
-
-    while (!widgetList->isEmpty())
-        delete widgetList->takeFirst();
+    verifyWidgetContainerVisibility(&createdWidgets, true);
 }
 
 void Ut_MMashupCanvasView::testSettingContainerModeOffWhenContainerModeIsOff()
 {
-    QList<MWidget *> *widgetList = createWidgets(2, false);
-    verifyWidgetContainerVisibility(widgetList, false);
+    createWidgets(2, false);
+    verifyWidgetContainerVisibility(&createdWidgets, false);
 
     m_subject->modifiableStyle()->setContainerMode(false);
     m_subject->applyStyle();
 
-    verifyWidgetContainerVisibility(widgetList, false);
-
-    while (!widgetList->isEmpty())
-        delete widgetList->takeFirst();
+    verifyWidgetContainerVisibility(&createdWidgets, false);
 }
 
 
 void Ut_MMashupCanvasView::testSettingContainerModeOffWidgetsHaveCorrectLayoutOrder()
 {
-    QList<MWidget *> *widgetList = createWidgets(2, true);
+    createWidgets(2, true);
 
     m_subject->modifiableStyle()->setContainerMode(false);
     m_subject->applyStyle();
@@ -306,7 +289,7 @@ void Ut_MMashupCanvasView::testSettingContainerModeOffWidgetsHaveCorrectLayoutOr
     QVERIFY(layout != NULL);
     MAbstractLayoutPolicy *policy = layout->policy();
 
-    QCOMPARE(widgetList->count(), 2);
+    QCOMPARE(createdWidgets.count(), 2);
     QCOMPARE(layout->count(), 2);
     QCOMPARE(policy->count(), 2);
 
@@ -315,11 +298,8 @@ void Ut_MMashupCanvasView::testSettingContainerModeOffWidgetsHaveCorrectLayoutOr
     QVERIFY(container1 != NULL);
     QVERIFY(container2 != NULL);
     // and check if the order is the same.
-    QCOMPARE(widgetList->at(0), container1->centralWidget());
-    QCOMPARE(widgetList->at(1), container2->centralWidget());
-
-    while (!widgetList->isEmpty())
-        delete widgetList->takeFirst();
+    QCOMPARE(createdWidgets.at(0), container1->centralWidget());
+    QCOMPARE(createdWidgets.at(1), container2->centralWidget());
 }
 
 QTEST_APPLESS_MAIN(Ut_MMashupCanvasView)

@@ -51,6 +51,8 @@ void Ut_MSettingsLanguageBinary::cleanup()
 
 void Ut_MSettingsLanguageBinary::testKeys()
 {
+    QCOMPARE(m_subject->numChildren(), uint(0));
+
     // Create some test nodes with keys
     gMSettingsLanguageSelectionStub->stubSetReturnValue("key", QString("enumKey"));
     gMSettingsLanguageTextStub->stubSetReturnValue("key", QString("textKey"));
@@ -61,7 +63,6 @@ void Ut_MSettingsLanguageBinary::testKeys()
     MSettingsLanguageText *aText = new MSettingsLanguageText("textKey", "bar");
     MSettingsLanguageBoolean *aBool = new MSettingsLanguageBoolean("boolKey", "boolBar");
     MSettingsLanguageInteger *aInteger = new MSettingsLanguageInteger("intKey", "foo");
-    QCOMPARE(m_subject->numChildren(), uint(0));
     m_subject->addChild(child);
     child->addChild(aEnum);
     child->addChild(aText);

@@ -85,7 +85,9 @@ private:
     void verifyWidgetContainerVisibility(QList<MWidget *> *widgetList, bool visible);
 
     // Widget creation helpers
-    QList<MWidget *> *createWidgets(int numberOfWidgets, bool containerMode = true);
+    void createWidgets(int numberOfWidgets, bool containerMode = true);
+    // A container that createWidgets() fills
+    QList<MWidget*> createdWidgets;
     // MApplication instance required by MWidget.
     MApplication *app;
     // MApplicationWindow instance required to get the scene and scene manager.

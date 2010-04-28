@@ -76,7 +76,9 @@ private:
     void removeWidgetFromApplicationExtensionArea(QGraphicsWidget *widget);
 
     // Widget creation helpers
-    QList<MWidget *> *createWidgets(int numberOfWidgets, bool containerMode = true);
+    void createWidgets(int numberOfWidgets, bool containerMode = true);
+    // A container that createWidgets method fills
+    QList<MWidget *> createdWidgets;
     // MApplication instance required by MWidget.
     MApplication *app;
     // MApplicationWindow instance required to get the scene and scene manager.
