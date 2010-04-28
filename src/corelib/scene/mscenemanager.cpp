@@ -1199,6 +1199,9 @@ void MSceneManagerPrivate::_q_inputPanelOpened()
 {
     Q_Q(MSceneManager);
 
+    if (!focusedInputWidget)
+        return;
+
     const bool widgetOnPage = onApplicationPage(focusedInputWidget);
     if (navBar && widgetOnPage) {
         navBarHidden = true;
