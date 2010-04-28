@@ -36,9 +36,9 @@ class MFeedbackPlayer;
  * \brief MComponentData manages the GUI application's control flow and main settings.
  *
  * MComponentData provides all the settings that are necessary for a QApplication in
- * order to initialize the M framework. As such it is used by MApplication.
+ * order to initialize the MeeGo Touch UI framework. As such it is used by MApplication,
  * which adds the event loop. MComponentData can be used by plain Qt applications
- * in order to provide access to resources of the M framework.
+ * in order to provide access to resources of the MeeGo Touch UI framework.
  *
  * MComponentData instance automatically extracts application name from the arguments
  * given in the constructor. It also loads css - stylesheet, svg file and adds application
