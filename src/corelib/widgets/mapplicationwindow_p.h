@@ -101,10 +101,6 @@ public:
 
     void windowStateChangeEvent(QWindowStateChangeEvent *event);
 
-    /*!
-     Opens menu and disables a toolbar and an escape button.
-     */
-    void openMenu();
 #ifdef Q_WS_X11
     void addMStatusBarOverlayProperty();
     void appendMApplicationWindowTypeProperty();
