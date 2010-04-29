@@ -203,6 +203,8 @@ void MExtensionHandle::run()
     MAppletSharedMutex *mutex = new MAppletSharedMutex;
     if (!mutex->init(d->serverName)) {
         model()->setCurrentState(MExtensionHandleModel::BROKEN);
+        delete mutex;
+        mutex = NULL;
         return;
     }
 
