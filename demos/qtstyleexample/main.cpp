@@ -25,6 +25,7 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+//    app.setProperty( "NoMStyle", true );
     MainWindow mw;
     mw.show();
 

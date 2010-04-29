@@ -323,6 +323,7 @@ public:
     MComponentData *m_componentData;
     bool m_isMInitialized;
     bool m_isMApplication;
+
     QtMaemo6ScrollBarEventFilter *m_scrollBarEventFilter;
     QtMaemo6StyleEventFilter *m_windowEventFilter;
 

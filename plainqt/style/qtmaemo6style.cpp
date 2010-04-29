@@ -836,21 +836,32 @@ void QtMaemo6Style::setKineticMaxKineticScrollSpeed(int speed) {
     d->m_kinetic->setMaxKineticScrollSpeed(speed);
 }
 
+bool QtMaemo6Style::isStyled( const QWidget * widget ) const {
+    return ! ( ( widget &&
+                widget->dynamicPropertyNames().contains(M::NoMStyle) ) ||
+                qApp->dynamicPropertyNames().contains(M::NoMStyle) );
+}
 
 void QtMaemo6Style::polish(QApplication *app)
 {
-    if(app->dynamicPropertyNames().contains(M::NoMStyle))
-        return;
-    QtMaemo6TestStyle::polish(app);
+    if(!isStyled()) {
+        QPlastiqueStyle::polish(app);
+    }
+    else {
+        QtMaemo6TestStyle::polish(app);
+    }
 }
 
 void QtMaemo6Style::polish(QWidget *widget)
 {
+    Q_D(QtMaemo6Style);
+
     if(qobject_cast<QDesktopWidget*>(widget))
         return;
 
-    if(widget->dynamicPropertyNames().contains(M::NoMStyle))
+    if( !isStyled( widget ) ) {
         return;
+    }
 
     if(qobject_cast<MWindow*>(widget)) {
         return;
@@ -885,8 +896,6 @@ void QtMaemo6Style::polish(QWidget *widget)
         qCritical() << "unable to open" << filename;
     }
 #endif
-
-    Q_D(QtMaemo6Style);
 
     // Lazy initialization of the MFramework.
     // This is needed to guarantee that actual MApplications will work as well.
@@ -1047,6 +1056,11 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
                                   QPainter *painter,
                                   const QWidget *widget) const
 {
+    if( !isStyled( widget ) ) {
+        QPlastiqueStyle::drawPrimitive(element, option, painter, widget);
+        return;
+    }
+
     Q_D(const QtMaemo6Style);
 
     switch (element) {
@@ -1197,6 +1211,11 @@ void QtMaemo6Style::drawControl(ControlElement element,
                                 QPainter *p,
                                 const QWidget *widget) const
 {
+    if( !isStyled( widget ) ) {
+        QPlastiqueStyle::drawControl(element, opt, p, widget);
+        return;
+    }
+
     Q_D(const QtMaemo6Style);
 
     switch (element) {
@@ -1517,6 +1536,11 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                                        QPainter *p,
                                        const QWidget *widget /*= 0*/) const
 {
+    if( !isStyled( widget ) ) {
+        QPlastiqueStyle::drawComplexControl(control, opt, p, widget);
+        return;
+    }
+
     Q_D(const QtMaemo6Style);
     switch (control) {
     case CC_ComboBox: {
@@ -1796,6 +1820,10 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
                                     SubControl subControl,
                                     const QWidget *widget /*= 0*/) const
 {
+    if( !isStyled( widget ) ) {
+        return QPlastiqueStyle::subControlRect(control, option, subControl, widget);
+    }
+
     Q_D(const QtMaemo6Style);
 
     if (!d->m_isMInitialized) {
@@ -2086,6 +2114,10 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                                       const QSize &contentsSize,
                                       const QWidget *widget) const
 {
+    if( !isStyled( widget ) ) {
+        return QPlastiqueStyle::sizeFromContents(type, option, contentsSize, widget);
+    }
+
     Q_D(const QtMaemo6Style);
 
     QSize retSize = QtMaemo6TestStyle::sizeFromContents(type, option, contentsSize, widget);
@@ -2218,6 +2250,9 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
                                const QStyleOption *option,
                                const QWidget *widget) const
 {
+    if ( !isStyled( widget ) ) {
+        return QPlastiqueStyle::pixelMetric(metric, option, widget);
+    }
     switch (metric) {
     case PM_ScrollBarExtent:
     case PM_ScrollBarSliderMin: {
@@ -2357,6 +2392,10 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
 QIcon QtMaemo6Style::standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option,
         const QWidget *widget) const
 {
+    if ( !isStyled( widget ) ) {
+        return QPlastiqueStyle::standardIconImplementation(standardIcon, option, widget);
+    }
+
     QIcon   icon;
     QPixmap pixmap;
 
@@ -2403,6 +2442,10 @@ QIcon QtMaemo6Style::standardIconImplementation(StandardPixmap standardIcon, con
 int QtMaemo6Style::styleHint(StyleHint hint, const QStyleOption *option,
                              const QWidget *widget, QStyleHintReturn *returnData) const
 {
+    if( !isStyled( widget ) ) {
+        return QPlastiqueStyle::styleHint(hint, option, widget, returnData);
+    }
+
     if (hint == QStyle::SH_ToolBar_Movable) {
         return false;
     } else if (hint == QStyle::SH_RequestSoftwareInputPanel) {

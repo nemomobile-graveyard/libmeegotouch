@@ -188,6 +188,9 @@ public:
      * \see kineticMaxKineticScrollSpeed()
      */
     void setKineticMaxKineticScrollSpeed(int speed);
+
+    bool isStyled( const QWidget * widget = 0 ) const;
+
 protected Q_SLOTS:
     /*! \reimp */
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option,

@@ -30,7 +30,7 @@ namespace M
     };
 
     /*!
-     * setting a dynamic porperty to any QWidget or QApplication will cause the the object
+     * setting a dynamic porperty to any QWidget or QApplication will cause the object
      * not to be styled like M does.
      */
 #ifdef __GNUC__

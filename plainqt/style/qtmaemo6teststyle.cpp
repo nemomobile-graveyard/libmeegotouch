@@ -69,6 +69,7 @@ QtMaemo6TestStyle::QtMaemo6TestStyle(QtMaemo6TestStylePrivate &dd)
     Q_D(QtMaemo6TestStyle);
     if (d)
         d->q_ptr = this;
+    d->m_styleInitialized = false;
 }
 
 QtMaemo6TestStyle::QtMaemo6TestStyle()
@@ -78,12 +79,24 @@ QtMaemo6TestStyle::QtMaemo6TestStyle()
 {
     Q_D(QtMaemo6TestStyle);
     d->q_ptr = this;
+    d->m_styleInitialized = false;
 }
 
 
 QtMaemo6TestStyle::~QtMaemo6TestStyle()
 {
     delete d_ptr;
+}
+
+void QtMaemo6TestStylePrivate::initStyle()
+{
+    //FIXME: remove magic numbers!
+    qApp->setGlobalStrut(QSize(48, 48));
+    QFont font("Nokia Sans");
+    font.setPointSize(25);
+    qApp->setFont(font);
+
+    m_styleInitialized = true;
 }
 
 void QtMaemo6TestStyle::init()
@@ -93,11 +106,7 @@ void QtMaemo6TestStyle::init()
 
 void QtMaemo6TestStyle::polish(QApplication *app)
 {
-    //FIXME: remove magic numbers!
-    app->setGlobalStrut(QSize(48, 48));
-    QFont font("Nokia Sans");
-    font.setPointSize(25);
-    app->setFont(font);
+    Q_UNUSED(app);
 }
 
 void QtMaemo6TestStyle::polish(QPalette &palette)
@@ -127,6 +136,11 @@ void QtMaemo6TestStyle::polish(QWidget *widget)
 {
     if(qobject_cast<QDesktopWidget*>(widget))
         return;
+
+    Q_D(QtMaemo6TestStyle);
+    if (!d->m_styleInitialized) {
+        d->initStyle();
+    }
 
     widget->installEventFilter(m_windowEventFilter);
 }
