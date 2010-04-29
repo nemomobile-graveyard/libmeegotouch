@@ -31,7 +31,13 @@
 #include <mapplication.h>
 
 // MWidget stubs (used by MExtensionHandle)
-MWidgetPrivate::MWidgetPrivate() : selected(false)
+MWidgetPrivate::MWidgetPrivate() :
+        explicitlyHidden(false),
+        layoutHidden(false),
+        q_ptr(NULL),
+        onDisplay(false),
+        onDisplaySet(false),
+        selected(false)
 {
 }
 

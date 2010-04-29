@@ -44,7 +44,9 @@ bool Ut_MAppletInventory::pluginPathIsReadable = true;
 bool Ut_MAppletInventory::tooManyMonitoredPaths = false;
 
 // Test applet source
-TestAppletSource::TestAppletSource() : appletInventory(NULL)
+TestAppletSource::TestAppletSource() :
+        appletInventory(NULL),
+        sourceWidget(NULL)
 {
 }
 

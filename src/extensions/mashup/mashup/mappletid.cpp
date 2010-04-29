@@ -34,7 +34,8 @@ MAppletId::MAppletId(const QString &applicationName, const QString &mashupCanvas
 {
 }
 
-MAppletId::MAppletId(const QString &appletId)
+MAppletId::MAppletId(const QString &appletId) :
+        appletInstanceId(0)
 {
     QStringList list = appletId.split('/');
     if (list.length() > 0) {

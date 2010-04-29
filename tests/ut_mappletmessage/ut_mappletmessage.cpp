@@ -30,7 +30,10 @@ bool testAppletMessageUnserialized = false;
 class TestAppletMessage : public MAppletMessage
 {
 public:
-    TestAppletMessage() : MAppletMessage((MAppletMessageType)1) { }
+    TestAppletMessage() : MAppletMessage((MAppletMessageType)1),
+            foo(0)
+    {
+    }
 
     int foo;
 

@@ -23,7 +23,8 @@
 Q_EXPORT_PLUGIN2(demoextension, DemoApplicationExtension)
 
 DemoApplicationExtension::DemoApplicationExtension() :
-    app(NULL)
+    app(NULL),
+    slider(NULL)
 {
 }
 

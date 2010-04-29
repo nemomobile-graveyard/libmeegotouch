@@ -25,7 +25,9 @@
 #include <QGraphicsLinearLayout>
 #include <QDebug>
 
-MApplicationExtensionRunner::MApplicationExtensionRunner() : MExtensionRunner()
+MApplicationExtensionRunner::MApplicationExtensionRunner() :
+        MExtensionRunner(),
+        extension(NULL)
 {
 }
 

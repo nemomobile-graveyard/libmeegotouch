@@ -71,7 +71,13 @@ QSize Ut_MExtensionHandle::visibleSceneSize = QSize(1000, 1000);
 bool Ut_MExtensionHandle::contextMenuOpened;
 
 // MWidget stubs (used by MExtensionHandle)
-MWidgetPrivate::MWidgetPrivate() : selected(false)
+MWidgetPrivate::MWidgetPrivate() :
+        explicitlyHidden(false),
+        layoutHidden(false),
+        q_ptr(NULL),
+        onDisplay(false),
+        onDisplaySet(false),
+        selected(false)
 {
 }
 MWidgetPrivate::~MWidgetPrivate()

@@ -56,9 +56,10 @@ void MClassFactory::unregisterViewCreator(MViewCreatorBase *)
 
 // MWidgetViewPrivate stubs
 MWidgetViewPrivate::MWidgetViewPrivate() :
-    controller(NULL),
-    model(NULL),
-    styleContainer(NULL)
+        q_ptr(NULL),
+        controller(NULL),
+        model(NULL),
+        styleContainer(NULL)
 {
 }
 
