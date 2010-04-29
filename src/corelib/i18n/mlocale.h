@@ -447,28 +447,28 @@ public:
      *
      * Examples:
      *
-     * \verbatim
+     * \code
      * // format a number to a string according to the conventions of the
      * // current system default locale:
      * MLocale locale;  // gets the current system default locale
      * QString numberString = locale.formatNumber(12345670.89);
-     * \endverbatim
+     * \endcode
      *
-     * \verbatim
+     * \code
      * // format a number to a string using US English conventions no
      * // matter what the current system default locale is:
      * MLocale locale("en_US");
      * QString numberString = locale.formatNumber(12345670.89);
      * // now numberString contains “12,345,670.89”
-     * \endverbatim
+     * \endcode
      *
-     * \verbatim
+     * \code
      * // format a number to a string using Arabic conventions no
      * // matter what the current system default locale is:
      * MLocale locale("ar");
      * QString numberString = locale.formatNumber(12345670.89);
      * // now numberString contains: “١٢٬٣٤٥٬٦٧٠٫٨٩”
-     * \endverbatim
+     * \endcode
      *
      * \sa formatNumber(qlonglong i) const
      * \sa formatNumber(short i) const
@@ -679,7 +679,7 @@ public:
      * Add another translation catalog to the catalogs used
      * by the system default locale, and translate a message:
      *
-     * \verbatim
+     * \code
      * // get current system default locale
      * MLocale locale;
      * // install a translation catalog
@@ -694,7 +694,7 @@ public:
      *
      * //% "Hello"
      * QString translatedString = qtTrId("hello_msg");
-     * \endverbatim
+     * \endcode
      *
      * \sa setDefault(const MLocale &locale)
      */
