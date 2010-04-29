@@ -351,6 +351,16 @@ void MApplicationWindowPrivate::updatePageAutoMarginsForComponents(M::Orientatio
             dockWidget->size().height(), dockWidget->isVisible());
 }
 
+void MApplicationWindowPrivate::openMenu()
+{
+    Q_Q(MApplicationWindow);
+    if (menu->actions().count() > 0) {
+        menu->appear(q);
+        escapeButtonPanel->setEnabled(false);
+        toolBar->setEnabled(false);
+    }
+}
+
 void MApplicationWindowPrivate::_q_menuAppeared()
 {
     Q_Q(MApplicationWindow);
@@ -369,6 +379,9 @@ void MApplicationWindowPrivate::_q_menuDisappeared()
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(openMenu()));
     isMenuOpen = false;
+
+    escapeButtonPanel->setEnabled(true);
+    toolBar->setEnabled(true);
 }
 
 #ifdef HAVE_N900
@@ -824,17 +837,13 @@ void MApplicationWindow::closeEvent(QCloseEvent *event)
 void MApplicationWindow::openMenu()
 {
     Q_D(MApplicationWindow);
-
-    if (d->menu->actions().count() > 0) {
-        d->menu->appear(this);
-    }
+    d->openMenu();
 }
 
 void MApplicationWindow::closeMenu()
 {
     Q_D(MApplicationWindow);
-    d->menu->disappear();
-
+    if (d->isMenuOpen) d->menu->disappear();
 }
 
 void MApplicationWindow::setWindowIconID(const QString &windowIconID)
@@ -996,6 +1005,13 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
 
         // restart timer
         d->autoHideComponentsTimer.start();
+    }
+
+    if (d->isMenuOpen) {
+        if (d->navigationBar->boundingRect().contains(d->navigationBar->mapFromScene(event->pos().x(), event->pos().y()))
+            || d->toolBar->boundingRect().contains(d->toolBar->mapFromScene(event->pos().x(), event->pos().y()))) {
+            closeMenu();
+        }
     }
 
     MWindow::mouseReleaseEvent(event);
