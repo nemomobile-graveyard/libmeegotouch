@@ -852,7 +852,7 @@ int MGroupHeaderListViewPrivate::locateVisibleRowAt(int y, int x)
     if (relativePos < headerHeight)
         return headerRow;
 
-    int row = relativePos / (hseparatorHeight + itemHeight) + headerRow + 1;
+    int row = (relativePos - headerHeight) / (itemHeight + hseparatorHeight) + headerRow + 1;
     return row;
 }
 

@@ -274,6 +274,31 @@ void Ut_MListViewGroupHeader::testLocateVisibleRowAt41()
     QCOMPARE(listViewPrivate->locateVisibleRowAt(41), 1);
 }
 
+void Ut_MListViewGroupHeader::testLocateVisibleRowAt139()
+{
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(139), 1);
+}
+
+void Ut_MListViewGroupHeader::testLocateVisibleRowAt141()
+{
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(141), 1);
+}
+
+void Ut_MListViewGroupHeader::testLocateVisibleRowAt143()
+{
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(143), 2);
+}
+
+void Ut_MListViewGroupHeader::testLocateVisibleRowAt341()
+{
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(341), 3);
+}
+
+void Ut_MListViewGroupHeader::testLocateVisibleRowAt345()
+{
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(345), 4);
+}
+
 void Ut_MListViewGroupHeader::testLocateVisibleRowAt384()
 {
     QCOMPARE(listViewPrivate->locateVisibleRowAt(385), 5);
@@ -282,13 +307,13 @@ void Ut_MListViewGroupHeader::testLocateVisibleRowAt384()
 void Ut_MListViewGroupHeader::testLocateVisibleRowAt900()
 {
     // last item
-    QCOMPARE(listViewPrivate->locateVisibleRowAt(900), 11);
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(900), 10);
 }
 
 void Ut_MListViewGroupHeader::testLocateVisibleRowAt931()
 {
     // last item
-    QCOMPARE(listViewPrivate->locateVisibleRowAt(931), 11);
+    QCOMPARE(listViewPrivate->locateVisibleRowAt(931), 10);
 }
 
 void Ut_MListViewGroupHeader::testLocatePosOfItemAt0Row()
