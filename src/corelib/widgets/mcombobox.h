@@ -101,7 +101,7 @@ class M_EXPORT MComboBox : public MWidgetController
 
     /*!
         \property MComboBox::itemModel
-        \brief QAbstractItemModel which used by MComboBox.
+        \brief The QAbstractItemModel which is used by the MComboBox for the list of items.
     */
     Q_PROPERTY(QAbstractItemModel *itemModel READ itemModel WRITE setItemModel)
 
@@ -118,7 +118,7 @@ class M_EXPORT MComboBox : public MWidgetController
         The current index can change when inserting or removing items.
 
         By default, for an empty combo box or a combo box in which no current
-        item is set, this property has a value of -1.
+        item is set, this property has the value of -1.
     */
     Q_PROPERTY(int currentIndex READ currentIndex WRITE setCurrentIndex USER true)
 
@@ -127,7 +127,7 @@ class M_EXPORT MComboBox : public MWidgetController
         \brief The text of the current item.
 
         By default, for an empty combo box or a combo box in which no current
-        item is set, this property contains an empty string.
+        item is set, this property contains the empty string.
     */
     Q_PROPERTY(QString currentText READ currentText STORED false)
 
@@ -135,7 +135,7 @@ class M_EXPORT MComboBox : public MWidgetController
         \property MComboBox::count
         \brief The number of items in the combobox.
 
-        By default, for an empty combo box, this property has a value of 0.
+        By default, for an empty combo box, this property has the value of 0.
     */
     Q_PROPERTY(int count READ count STORED false)
 
