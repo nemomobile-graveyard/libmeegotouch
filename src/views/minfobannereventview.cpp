@@ -61,6 +61,8 @@ void MInfoBannerEventViewPrivate::init()
     layout->addItem(label);
     layout->addItem(icon);
     layout->setAlignment(label, Qt::AlignCenter);
+
+    QObject::connect(banner, SIGNAL(clicked()), controller, SLOT(dismiss()));
 }
 
 MInfoBannerEventView::MInfoBannerEventView(MInfoBanner *controller) :

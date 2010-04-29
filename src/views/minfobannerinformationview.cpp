@@ -60,6 +60,8 @@ void MInfoBannerInformationViewPrivate::init()
     button->setObjectName("SystemInfoBannerButton");
 
     controller->setLayout(layout);
+
+    QObject::connect(banner, SIGNAL(clicked()), controller, SLOT(dismiss()));
 }
 
 void MInfoBannerInformationViewPrivate::setButtonText(const QString &text)
@@ -160,6 +162,8 @@ void MInfoBannerInformationView::setupModel()
     Q_D(MInfoBannerInformationView);
 
     QObject::connect(d->button, SIGNAL(clicked()), d->banner, SIGNAL(buttonClicked()));
+    QObject::connect(d->button, SIGNAL(clicked()), d->banner, SLOT(dismiss()));
+
     d->label->setText(model()->bodyText());
     d->setButtonText(model()->buttonText());
 

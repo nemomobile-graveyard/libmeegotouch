@@ -255,11 +255,9 @@ void DialogsAndNotificationsPage::openDialogWithProgressIndicator()
 
 void DialogsAndNotificationsPage::openMessageBox()
 {
-    if (dialog != NULL)
-        delete dialog;
     //% "Hello World!"
-    dialog = new MMessageBox(qtTrId("xx_dialogs_and_notifications_message_box_text"), M::OkButton);
-    dialog->exec();
+    MDialog *dialog = new MMessageBox(qtTrId("xx_dialogs_and_notifications_message_box_text"), M::OkButton);
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::showEventBanner()
@@ -269,7 +267,7 @@ void DialogsAndNotificationsPage::showEventBanner()
     infoBanner->setBodyText(
         //% "<b>Ida Taipale</b><br/>Have you seen my dog?"
         qtTrId("xx_dialogs_and_notifications_event_banner"));
-        infoBanner->setIconID("Icon-new-SMS");
+    infoBanner->setIconID("Icon-new-SMS");
     connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
     infoBanner->appear(MSceneWindow::DestroyWhenDone);
     QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
@@ -282,7 +280,6 @@ void DialogsAndNotificationsPage::showInformationBanner()
     infoBanner->setBodyText(
         //% "<b>Battery is running low</b>"
         qtTrId("xx_dialogs_and_notifications_information_banner"));
-    connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
     infoBanner->appear(MSceneWindow::DestroyWhenDone);
     QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
@@ -298,7 +295,6 @@ void DialogsAndNotificationsPage::showSystemInformationBanner()
     infoBanner->setButtonText(qtTrId("xx_dialogs_and_notifications_system_information_banner_accept"));
     connect(infoBanner, SIGNAL(buttonClicked()), this, SLOT(openMessageBox()));
     infoBanner->appear(MSceneWindow::DestroyWhenDone);
-
     QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
 
