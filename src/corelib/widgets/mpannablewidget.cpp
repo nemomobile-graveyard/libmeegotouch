@@ -19,7 +19,6 @@
 
 #include <QApplication>
 #include <QGraphicsSceneMouseEvent>
-#include <QTapAndHoldGesture>
 #include <QPanGesture>
 
 #include "mpannablewidget.h"
@@ -113,20 +112,12 @@ public:
     virtual void timerEvent(QTimerEvent* event);
 
 protected:
-    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* state);
     virtual void panGestureEvent(QGestureEvent *event, QPanGesture* state);
 
     MPannableWidget *pannableWidget;
 };
 
 //! \endcond
-
-void MPannableWidgetGlass::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture)
-{
-    if (gesture->state() == Qt::GestureFinished)
-        pannableWidget->glassLongTapEvent();
-    event->accept(gesture);
-}
 
 void MPannableWidgetGlass::panGestureEvent(QGestureEvent *event, QPanGesture* gesture)
 {
@@ -278,7 +269,6 @@ void MPannableWidget::init()
     d->glass->setZValue(ZValueGlass);
 
     d->glass->setObjectName("glass");
-    d->glass->grabGesture(Qt::TapAndHoldGesture);
     d->glass->grabGesture(Qt::PanGesture);
 
     setPosition(QPointF());
@@ -408,6 +398,12 @@ void MPannableWidget::glassMousePressEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
+    if (isEnabled() == false) {
+        // Glass: Ignoring, I'm disabled
+        event->ignore();
+        return;
+    }
+
     copyGraphicsSceneMouseEvent(d->pressEvent, *event);
     if (!d->physics->inMotion()) {
         // sending it now, we will send "cancel" if it will be needed.
@@ -437,28 +433,6 @@ void MPannableWidget::glassMouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MPannableWidget);
     d->deliverMouseEvent(event);
-}
-
-void MPannableWidget::glassLongTapEvent()
-{
-    Q_D(MPannableWidget);
-
-    QGraphicsSceneContextMenuEvent contextEvent(QEvent::GraphicsSceneContextMenu);
-    contextEvent.setPos(d->pressEvent.pos());
-    contextEvent.setScenePos(d->pressEvent.scenePos());
-    contextEvent.setScreenPos(d->pressEvent.screenPos());
-
-    QApplication::sendEvent(scene(), &contextEvent);
-
-    if (contextEvent.isAccepted()) {
-
-        sendCancel(&d->pressEvent);
-        d->resetPhysics();
-
-        //We will still receive mouse release, but
-        //we aren't interested in it.
-        d->resetMouseGrabber();
-    }
 }
 
 void MPannableWidget::glassPanEvent(QGestureEvent *event, QPanGesture* panGesture)
@@ -573,6 +547,18 @@ void MPannableWidget::resendEvent(QGraphicsSceneMouseEvent *event)
     }
 
     QApplication::sendEvent(scene()->views().at(0)->viewport(), &mouse_event);
+}
+
+void MPannableWidget::cancelEvent(MCancelEvent *event)
+{
+    Q_UNUSED(event);
+    Q_D(MPannableWidget);
+
+    d->resetPhysics();
+
+    //We will still receive mouse release, but
+    //we aren't interested in it.
+    d->resetMouseGrabber();
 }
 
 // onDisplayChangeEvent in MWidget handles MPannableWidgets in a

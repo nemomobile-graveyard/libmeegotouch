@@ -245,6 +245,7 @@ protected:
 
     //! \reimp
     virtual bool event(QEvent *e);
+    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
     //! \reimp_end
 
 private:

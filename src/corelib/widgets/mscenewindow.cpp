@@ -19,6 +19,9 @@
 
 #include <MDebug>
 #include <MDismissEvent>
+#include <QGestureEvent>
+#include <QTapAndHoldGesture>
+#include <QGraphicsSceneContextMenuEvent>
 #include "mscenewindow.h"
 #include "mscenewindowmodel.h"
 #include "mscenewindow_p.h"
@@ -29,6 +32,7 @@
 #include "mwidgetview.h"
 #include "mwindow.h"
 #include "mdialog.h"
+#include "mcancelevent.h"
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(MSceneWindow)
@@ -51,6 +55,7 @@ MSceneWindow::MSceneWindow(QGraphicsItem *parent) :
     Q_D(MSceneWindow);
 
     d->windowType = PlainSceneWindow;
+    grabGesture(Qt::TapAndHoldGesture);
 }
 
 
@@ -61,6 +66,7 @@ MSceneWindow::MSceneWindow(MSceneWindowPrivate *dd, MSceneWindowModel *model, MS
     setViewType(viewType);
 
     d->windowType = windowType;
+    grabGesture(Qt::TapAndHoldGesture);
 }
 
 MSceneWindow::~MSceneWindow()
@@ -190,6 +196,39 @@ void MSceneWindow::closeEvent(QCloseEvent *event)
 {
     event->ignore();
     dismiss();
+}
+
+void MSceneWindow::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
+{
+    if (gesture->state() == Qt::GestureFinished) {
+
+        QGraphicsSceneContextMenuEvent contextEvent(QEvent::GraphicsSceneContextMenu);
+        contextEvent.setPos(gesture->hotSpot());
+        contextEvent.setScenePos(gesture->hotSpot());
+        contextEvent.setScreenPos(gesture->hotSpot().toPoint());
+
+        QApplication::sendEvent(scene(), &contextEvent);
+
+        if (contextEvent.isAccepted()) {
+            if ((scene() == NULL) || (scene()->views().size() == 0)) {
+                // If this widget has been removed from the scene and/or there
+                // is no view, return
+                return;
+            }
+
+            MCancelEvent cancelEvent;
+            QList<QGraphicsItem*> affectedItems = scene()->items(gesture->hotSpot());
+            QGraphicsItem *item = 0;
+
+            foreach(item, affectedItems) {
+                if (scene()->items().contains(item))
+                    scene()->sendEvent(item, &cancelEvent);
+            }
+
+        }
+    }
+
+    event->accept(gesture);
 }
 
 bool MSceneWindow::event(QEvent *event)

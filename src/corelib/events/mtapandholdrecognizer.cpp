@@ -78,7 +78,7 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress:
         tapAndHoldState->setPosition(ev->pos());
-        tapAndHoldState->setHotSpot(ev->screenPos());
+        tapAndHoldState->setHotSpot(ev->scenePos());
 
         if (tapAndHoldState->timerId)
             tapAndHoldState->killTimer(tapAndHoldState->timerId);

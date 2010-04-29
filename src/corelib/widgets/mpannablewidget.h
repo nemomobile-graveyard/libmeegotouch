@@ -190,6 +190,7 @@ protected:
                       QGraphicsItem *parent);
 
     //! \reimp
+    virtual void cancelEvent(MCancelEvent *event);
     virtual void onDisplayChangeEvent(MOnDisplayChangeEvent *event);
     //! \reimp_end
 
@@ -211,11 +212,6 @@ private:
      * \brief Method for handling the move events from the glass.
      */
     void glassMouseMoveEvent(QGraphicsSceneMouseEvent *event);
-
-    /*!
-     * \brief Method for delivering tap&hold gesture.
-     */
-    void glassLongTapEvent();
 
     /*!
      * \brief Method for delivering pan gesture.
