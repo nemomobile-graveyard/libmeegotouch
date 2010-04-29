@@ -26,6 +26,7 @@
 #include <QColor>
 #include <QSize>
 #include <mfeedback.h>
+#include <mbackgroundtiles.h>
 
 class QPixmap;
 class MScalableImage;
@@ -55,6 +56,7 @@ class M_EXPORT MWidgetStyle : public MStyle
 
     M_STYLE_ATTRIBUTE(int, backgroundBoxedPercent, BackgroundBoxedPercent)
 
+    M_STYLE_ATTRIBUTE(MBackgroundTiles, backgroundTiles, BackgroundTiles)
     M_STYLE_PTR_ATTRIBUTE(MScalableImage *,  backgroundImage,    BackgroundImage)
     M_STYLE_ATTRIBUTE(QColor,                 backgroundColor,    BackgroundColor)
     M_STYLE_ATTRIBUTE(qreal,                  backgroundOpacity,  BackgroundOpacity)
@@ -65,6 +67,7 @@ class M_EXPORT MWidgetStyle : public MStyle
 
     M_STYLE_ATTRIBUTE(MFeedback, pressFeedback, PressFeedback)
     M_STYLE_ATTRIBUTE(MFeedback, releaseFeedback, ReleaseFeedback)
+
 };
 
 class M_EXPORT MWidgetStyleContainer : public MStyleContainer

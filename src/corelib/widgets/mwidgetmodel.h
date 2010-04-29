@@ -114,6 +114,7 @@ class M_EXPORT MWidgetModel : public QObject
     M_MODEL_PROPERTY(QPointF, position, Position, true, QPointF(0.0, 0.0))
     M_MODEL_PROPERTY(QSizeF, size, Size, true, QSizeF(0.0, 0.0))
     M_MODEL_PROPERTY(qreal, opacity, Opacity, true, 1.0)
+    M_MODEL_PROPERTY(M::Position, layoutPosition, LayoutPosition, true, M::DefaultPosition)
 
 public:
 

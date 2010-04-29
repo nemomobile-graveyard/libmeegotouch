@@ -111,6 +111,9 @@ public:
     */
     const MWidgetModel *model() const;
 
+    M::Position layoutPosition() const;
+    void setLayoutPosition(M::Position layoutPosition);
+
     /*!
      Returns the type of the widget's view.
 

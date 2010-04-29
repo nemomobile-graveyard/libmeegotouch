@@ -564,7 +564,10 @@ void MWidgetView::drawBackground(QPainter *painter, const QStyleOptionGraphicsIt
     qreal oldOpacity = painter->opacity();
     painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
 
-    if (style()->backgroundImage()) {
+    if (style()->backgroundTiles().isValid()) {
+        style()->backgroundTiles()[model()->layoutPosition()]->draw(0,0, size().width(), size().height(), painter);
+    }
+    else if (style()->backgroundImage()) {
         // TODO Use tiled bitmap drawing when it becomes available.
         style()->backgroundImage()->draw(0, 0, size().width(), size().height(), painter);
     } else if (style()->backgroundColor().isValid()) {
@@ -585,5 +588,5 @@ void MWidgetView::drawForeground(QPainter *painter, const QStyleOptionGraphicsIt
     Q_UNUSED(option);
 }
 
-M_REGISTER_VIEW_NEW(MWidgetView, MApplicationPage)
+M_REGISTER_VIEW(MWidgetView, MApplicationPage)
 #include "moc_mwidgetview.cpp"

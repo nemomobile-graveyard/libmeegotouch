@@ -62,6 +62,52 @@ namespace M
     };
 
     /*!
+     * This enum contains all possible positions for a tile in a layout
+     * \code
+           .---.          .-----------------------.
+         /       \      /        |         |        \
+        | Default |    |   H-L   x   H-C   x   H-R   |
+         \       /      \        |         |        /
+           '---'          '-----------------------'
+
+           .---.          .-----------------------.
+         /       \      /        |         |        \
+        |   V-T   |    |   TL    x   TC    x    TR   |
+        |         |    |         |         |         |
+        |----x----|    |----x---------x---------x----|
+        |         |    |         |         |         |
+        |   V-C   |    |   CL    x  Center x    CR   |
+        |         |    |         |         |         |
+        |----x----|    |----x---------x---------x----|
+        |         |    |         |         |         |
+        |   V-B   |    |   BL    x   BC    x    BR   |
+         \       /      \        |         |        /
+           '---'          '-----------------------'
+     * \endcode
+     */
+    enum Position {
+        DefaultPosition,
+
+        TopLeftPosition,
+        TopCenterPosition,
+        TopRightPosition,
+        CenterLeftPosition,
+        CenterPosition,
+        CenterRightPosition,
+        BottomLeftPosition,
+        BottomCenterPosition,
+        BottomRightPosition,
+
+        HorizontalLeftPosition,
+        HorizontalCenterPosition,
+        HorizontalRightPosition,
+
+        VerticalTopPosition,
+        VerticalCenterPosition,
+        VerticalBottomPosition
+    };
+
+    /*!
      * Defines whether directories should be traversed recursively.
      */
     enum RecursionMode {

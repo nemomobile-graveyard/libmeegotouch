@@ -197,6 +197,16 @@ void MWidgetController::setModel(MWidgetModel *model)
     }
 }
 
+M::Position MWidgetController::layoutPosition() const
+{
+    return model()->layoutPosition();
+}
+
+void MWidgetController::setLayoutPosition(M::Position layoutPosition)
+{
+    model()->setLayoutPosition(layoutPosition);
+}
+
 // setter for view
 // manually sets the view to some specific view
 // after calling this the view won't change with theme

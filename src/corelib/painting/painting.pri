@@ -7,10 +7,16 @@ INCLUDEPATH+=./painting
 
 PUBLIC_HEADERS += \
     $$PAINTING_SRC_DIR/mgles2renderer.h \
+    $$PAINTING_SRC_DIR/mbackgroundtiles.h \
     $$PAINTING_SRC_DIR/mscalableimage.h
+
+PRIVATE_HEADERS += \
+    $$PAINTING_SRC_DIR/mbackgroundtiles_p.h \
+    $$PAINTING_SRC_DIR/mscalableimage_p.h
 
 SOURCES += \
     $$PAINTING_SRC_DIR/mgles2renderer.cpp \
+    $$PAINTING_SRC_DIR/mbackgroundtiles.cpp \
     $$PAINTING_SRC_DIR/mscalableimage.cpp
 
 install_shader_source.path = $$M_SHADER_SOURCE_DIR

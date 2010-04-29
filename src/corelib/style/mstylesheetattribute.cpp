@@ -36,6 +36,7 @@
 #include "mapplicationwindow.h"
 #include "mstylesheetparser.h"
 #include "mshareddata.h"
+#include "mbackgroundtiles.h"
 
 // internal enum that defines the attribute type
 typedef enum {
@@ -45,6 +46,7 @@ typedef enum {
     REAL_TYPE,
     CONST_PIXMAP_TYPE,
     CONST_SCALABLE_TYPE,
+    SCALABLE_IMAGE_TILES_TYPE,
     SIZE_TYPE,
     SIZEF_TYPE,
     POINT_TYPE,
@@ -110,6 +112,7 @@ static const QString types[NUM_TYPES] = {
     QString("qreal"),
     QString("const QPixmap*"),
     QString("const MScalableImage*"),
+    QString("MBackgroundTiles"),
     QString("QSize"),
     QString("QSizeF"),
     QString("QPoint"),
@@ -140,6 +143,7 @@ static const QString values[NUM_VALUES] = {
 
 Q_DECLARE_METATYPE(const QPixmap *)
 Q_DECLARE_METATYPE(const MScalableImage *)
+Q_DECLARE_METATYPE(MBackgroundTiles)
 Q_DECLARE_METATYPE(QTextCharFormat::UnderlineStyle)
 Q_DECLARE_METATYPE(Qt::PenStyle)
 Q_DECLARE_METATYPE(Qt::Axis)
@@ -543,7 +547,7 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
             //init null pixmap which is ok if someone does not want to use it
             return property.write(style, qVariantFromValue((const QPixmap *) NULL));
         }
-    } else if (attributeType == types[CONST_SCALABLE_TYPE]) {
+    } else if (attributeType == types[CONST_SCALABLE_TYPE] || attributeType == types[SCALABLE_IMAGE_TILES_TYPE]) {
         //"background: image_id left right top bottom;"
         //"background: image_id;"
         //"background: "image id" left right top bottom;"
@@ -572,22 +576,37 @@ bool MStyleSheetAttribute::writeAttribute(const QString &filename,
         //no parameters
         if (value.isEmpty() || value == "none") {
             //init null image which is ok if someone does not want to use it
-            return property.write(style, qVariantFromValue((const MScalableImage *) NULL));
+            if(attributeType == types[CONST_SCALABLE_TYPE])
+                return property.write(style, qVariantFromValue((const MScalableImage *) NULL));
+            else
+                return property.write(style, QVariant::fromValue(MBackgroundTiles()));
         }
         //only image_id
         else if (list.size() == 1) {
-            const MScalableImage *image = MTheme::scalableImage(list[0], 0, 0, 0, 0);
-            return property.write(style, qVariantFromValue(image));
+            if(attributeType == types[CONST_SCALABLE_TYPE]) {
+                const MScalableImage *image = MTheme::scalableImage(list[0], 0, 0, 0, 0);
+                return property.write(style, qVariantFromValue(image));
+            } else {
+                return property.write(style, QVariant::fromValue(MBackgroundTiles(list[0], 0,0,0,0)));
+            }
         }
         //image_id + border width paramaters
         else if (list.size() == 5) {
             //image_id and the border parameters
-            const MScalableImage *image = MTheme::scalableImage(list[0],
-                                            attributeToInt(list[1], &conversionOK),
-                                            attributeToInt(list[2], &conversionOK),
-                                            attributeToInt(list[3], &conversionOK),
-                                            attributeToInt(list[4], &conversionOK));
-            return property.write(style, qVariantFromValue(image));
+            if(attributeType == types[CONST_SCALABLE_TYPE]) {
+                const MScalableImage *image = MTheme::scalableImage(list[0],
+                                                attributeToInt(list[1], &conversionOK),
+                                                attributeToInt(list[2], &conversionOK),
+                                                attributeToInt(list[3], &conversionOK),
+                                                attributeToInt(list[4], &conversionOK));
+                return property.write(style, qVariantFromValue(image));
+            } else {
+                return property.write(style, QVariant::fromValue(MBackgroundTiles(list[0],
+                                                                attributeToInt(list[1], &conversionOK),
+                                                                attributeToInt(list[2], &conversionOK),
+                                                                attributeToInt(list[3], &conversionOK),
+                                                                attributeToInt(list[4], &conversionOK))));
+            }
         }
     } else if (attributeType == types[SIZE_TYPE] || attributeType == types[SIZEF_TYPE]) {
         //size: 25px 25px;
