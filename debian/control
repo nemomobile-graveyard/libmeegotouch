@@ -30,7 +30,7 @@ Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
 Description: MeeGo Touch views library
  MeeGo Touch views framework library
 
-Package: libmeegotouchqtstyle
+Package: meegotouch-qt-style
 Architecture: any
 Depends: ${misc:Depends}, ${shlibs:Depends} 
 Description: MeeGo Touch Qt style for plain Qt applications
