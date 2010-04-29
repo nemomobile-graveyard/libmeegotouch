@@ -174,7 +174,7 @@ If other collation system than the locale's default is needed, then use \c setCo
 
 To use the default collation:
 \code
-QStringList sl; // This contains the strings needed to be sorted
+QStringList sl; // This contains the strings which need to be sorted
 ...
 MLocale myLocale; // get the current locale
 MCollator c = myLocale.collator(); // getting the comparator
@@ -185,7 +185,7 @@ qSort(sl.begin, sl.end, c); // start to sort!
 
 To use the different collation:
 \code
-QStringList sl; // This contains the strings needed to be sorted
+QStringList sl; // This contains the strings which need to be sorted
 ...
 MLocale myLocale; // get the current locale
 myLocale.setCollation (MLocale::PhonebookCollation); // sort using German's phonebook sorting order
@@ -327,12 +327,12 @@ Use MAddress class to populate the address information, and use \c format()  met
 
 \subsection Calendar Calendar
 MLocale provides Gregorian as well as non-Gregorian calendar support. Use \c formatDateTime()  to format the date according to the custom of the selected calendar.
-To set another calendar than the default Gregorian calendar, use \c setCalendar()  method.
+To set another calendar than the default Gregorian calendar, use \c setCalendarType()  method.
 
 \code
 MLocale myLocale; // get the current locale
 ...
-myLocale.setCalendar(MLocale::IslamicCalendar); // set the calendar to use Islamic calendar
+myLocale.setCalendarType(MLocale::IslamicCalendar); // set the calendar to use Islamic calendar
 ...
 \endcode
 
@@ -354,7 +354,7 @@ while (iterator.hasNext()) {
 \section  translationsystem  Translation system
 \subsection  logicalidandengineeringenglish  Logical ID and engineering English
 
-The MeeGo Touch UI Framework can use both Qt standard \c tr()  method or the
+The MeeGo Touch UI Framework can use both the Qt standard \c tr()  method or the
 idbased
 <a href="http://qt.nokia.com/doc/4.6-snapshot/qtglobal.html#qtTrId">qtTrId()</a>
 method. For the Nokia internal localisation process, only \c qtTrId() 
@@ -363,7 +363,7 @@ engineering English IDs for the UI messages might also find \c qtTrId()
 useful.
 
 Contrary to the approach of using engineering English as the message
-ids, which is commonly practiced in the open source community, the
+ids, which is commonly used in the open source community, the
 logical ID approach uses message ids which are guaranteed to be
 globally unique.
 
@@ -550,6 +550,139 @@ int main(int argc, char** argv){
 }
 ...
 \endcode
+
+\subsection translationsystemsetupinlibraries Translation system setup in libraries
+
+Let’s say there is an MApplication “foo” which uses a library “libbar”.
+And the library “libbar” also uses the MeeGo Touch Framwork and has
+some translations of its own which are in files like \c libbar_<locale_name>.qm.
+
+Now the question is how to load the “libbar” translation catalog.
+
+On way to do it would be to let the application “foo” load it, i.e.
+“foo” would do something like 
+
+\code
+...
+int main(int argc, char** argv){
+...
+   MApplication app (argc, argv);
+...
+   // translations from the “foo” translation catalog
+   // can already be used without any setup when the binary
+   // name is identical to the catalog name:
+
+   //% "hello"
+   qtTrId("qtn_foo_hello");
+...
+   // get a copy of the system default locale
+   // which already has the translation catalogs for “common” and “foo”
+   // installed:create a MLocale. Without parameters in the constructor,
+   MLocale locale;
+
+   // add a the “libbar” translation catalog:
+   locale.installTrCatalog("libbar");
+
+   // set the locale with the “libbar” catalog added as the 
+   // new system default:
+   MLocale::setDefault(locale);
+...
+   // and a call of a function in the library “libbar”
+   // may use messages from the “libbar” translation catalog:
+...
+   libbar_some_function(); 
+...
+}
+...
+\endcode
+
+The disadvantage of this way of doing it is that the application “foo”
+needs to know how the translation catalog of “libbar” is called and
+maybe even require an packages like “libbar-l10n-*”. That creates
+unnecessary dependencies between “foo” and “libbar”. To avoid this,
+the recommended way of loading the “libbar” translations is letting
+the “libbar” library take care of this. I.e. “libbar” somewhere has
+an initialization function like
+
+\code
+...
+void libbar_init() {
+...
+   MLocale locale; // get copy of system locale
+   locale.installTrCatalog("libbar"); // add a the “libbar” translation catalog
+   MLocale::setDefault(locale); // set new system default with “libbar” catalog added
+...
+   // other initialization stuff if necessary
+... 
+}
+...
+\endcode
+
+The application “foo” then does not have to load the translations for “libbar”
+and only does:
+
+\code
+...
+int main(int argc, char** argv){
+...
+   MApplication app (argc, argv);
+...
+   // translations from the “foo” translation catalog
+   // can already be used without any setup when the binary
+   // name is identical to the catalog name:
+
+   //% "hello"
+   qtTrId("qtn_foo_hello");
+...
+   // initialize “libbar” which also installs the “libbar”
+   // catalog into the default system locale:
+   libbar_init();
+
+   // now a call of a function in the library “libbar”
+   // may use messages from the “libbar” translation catalog:
+...
+   libbar_some_function(); 
+...
+}
+...
+\endcode
+
+Instead of having a public initialization function in “libbar” one could also
+make “libbar” call some internal initialization code when any public
+function of “libbar” is used for the first time, i.e. one could design
+“libbar” to make the following code already work:
+
+\code
+...
+int main(int argc, char** argv){
+...
+   MApplication app (argc, argv);
+...
+   // translations from the “foo” translation catalog
+   // can already be used without any setup when the binary
+   // name is identical to the catalog name:
+
+   //% "hello"
+   qtTrId("qtn_foo_hello");
+...
+   // Calling any public function in the library “libbar”
+   // triggers installation of the “libbar” translation catalog
+   // into the default system locale and “libbar” can then
+   // use messages from its translation catalog:
+...
+   libbar_some_function(); 
+...
+}
+...
+\endcode
+
+Whether a special initialization function is used or not, the important
+thing is that “libbar” does the installing of its translation catalog
+into the system default locale. The application “foo” then does
+not need to know how the catalog is called and does not need to require
+translation packages of “libbar”. “libbar” should require its translation
+package of course. But this way of doing it reduces the dependencies
+between “foo” and “libbar”.
 
 \subsection  translatingmessages  Translating messages
 
