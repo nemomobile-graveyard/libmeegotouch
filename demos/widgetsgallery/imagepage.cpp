@@ -225,6 +225,9 @@ void ImagePage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
     if (gesture->state() == Qt::GestureStarted) {
 	propertiesComboBox->setCurrentIndex(0);
         originalScaleFactor = slider->value();
+
+        //If the current scale factor is 0, the we would not be scaling anything.
+        if (originalScaleFactor == 0) originalScaleFactor = 1;
     }
 
     slider->setValue(originalScaleFactor * gesture->scaleFactor());
