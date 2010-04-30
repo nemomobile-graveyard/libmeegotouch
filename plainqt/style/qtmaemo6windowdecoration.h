@@ -56,6 +56,9 @@ public:
      * it takes the ownership of the menuBar
      */
     void setMenuBar(QMenuBar *menuBar);
+
+    void showNavigationBar( bool visible );
+
 protected Q_SLOTS:
     void showMenuBar();
 protected:

@@ -97,6 +97,11 @@ void QtMaemo6WindowDecoration::showMenuBar()
     }
 }
 
+void QtMaemo6WindowDecoration::showNavigationBar( bool visible )
+{
+    m_titleBar->setVisible(visible);
+}
+
 bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::WindowTitleChange) {

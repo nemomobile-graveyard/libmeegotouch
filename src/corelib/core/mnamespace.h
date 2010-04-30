@@ -40,6 +40,16 @@ namespace M
 #endif
 
     /*!
+     * setting a dynamic porperty to any QWidget or QApplication will cause the the object
+     * not to be styled like M does.
+     */
+#ifdef __GNUC__
+    static const char* NoMNavigationBar __attribute__((__unused__)) = "NoMNavigationBar";
+#else
+    static const char* NoMNavigationBar = "NoMNavigationBar";
+#endif
+
+    /*!
      * This enum contains values of the orientation angle of windows in the application.
      *
      * \sa Orientation
