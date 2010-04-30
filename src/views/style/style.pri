@@ -47,6 +47,7 @@ MGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mcontentitemstyle.h \
     $$STYLE_SRC_DIR/mvideowidgetstyle.h \
     $$STYLE_SRC_DIR/mlistindexstyle.h \
+    $$STYLE_SRC_DIR/mwarpanimationstyle.h \
 
 PUBLIC_HEADERS += \
     $$MGEN_STYLE_HEADERS \

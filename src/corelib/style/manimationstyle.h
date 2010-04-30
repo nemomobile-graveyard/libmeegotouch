@@ -28,7 +28,7 @@ class M_EXPORT MAnimationStyle : public MStyle
     M_STYLE_INTERNAL(MAnimationStyle)
 };
 
-class MAnimationStyleContainer : public MStyleContainer
+class M_EXPORT MAnimationStyleContainer : public MStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MAnimationStyle)
 };

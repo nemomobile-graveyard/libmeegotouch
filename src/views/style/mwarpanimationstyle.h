@@ -17,39 +17,31 @@
 **
 ****************************************************************************/
 
-#ifndef MESCAPEBUTTONPANELVIEW_P_H
-#define MESCAPEBUTTONPANELVIEW_P_H
+#ifndef MWARPANIMATIONSTYLE_H
+#define MWARPANIMATIONSTYLE_H
 
-#include "mescapebuttonpanelmodel.h"
+#include <manimationstyle.h>
+#include <QEasingCurve>
 
-class MEscapeButtonPanel;
-class MButton;
-class QTimeLine;
-
-class MEscapeButtonPanelViewPrivate
+//! \internal
+class MWarpAnimationStyle : public MAnimationStyle
 {
-    Q_DECLARE_PUBLIC(MEscapeButtonPanelView)
+    Q_OBJECT
+    M_STYLE(MWarpAnimationStyle)
 
-protected:
-    MEscapeButtonPanelView *q_ptr;
+    M_STYLE_ATTRIBUTE(int, warpDuration, WarpDuration)
+    M_STYLE_ATTRIBUTE(int, warpDistance, WarpDistance)
 
-public:
-    MEscapeButtonPanelViewPrivate();
-    virtual ~MEscapeButtonPanelViewPrivate();
+    M_STYLE_ATTRIBUTE(int, warpInDelay, WarpInDelay)
 
-    virtual void init();
-
-    void setupEscapeButtonTransition();
-
-    MButton *backButton;
-    MButton *closeButton;
-    MEscapeButtonPanelModel::EscapeMode escapeMode;
-
-    MEscapeButtonPanel *controller;
-
-private:
-    void animatedEscapeButtonTransition();
-    void immediateEscapeButtonTransition();
+    M_STYLE_ATTRIBUTE(QEasingCurve, warpInCurve, WarpInCurve)
+    M_STYLE_ATTRIBUTE(QEasingCurve, warpOutCurve, WarpOutCurve)
 };
+
+class MWarpAnimationStyleContainer : public MAnimationStyleContainer
+{
+    M_STYLE_CONTAINER(MWarpAnimationStyle)
+};
+//! \internal_end
 
 #endif
