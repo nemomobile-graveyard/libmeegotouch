@@ -244,7 +244,6 @@ void MApplicationWindowPrivate::_q_updateCallOngoingState(QString mode)
 
 void MApplicationWindowPrivate::_q_actionUpdated(QActionEvent *event)
 {
-    Q_Q(MApplicationWindow);
     QAction *action = event->action();
 
     if (event->type() == QEvent::ActionAdded) {
@@ -260,8 +259,6 @@ void MApplicationWindowPrivate::_q_actionUpdated(QActionEvent *event)
         // Dock widget follows navigation bar display mode.
         setComponentDisplayMode(dockWidget,
                                 page->model()->navigationBarDisplayMode());
-
-        updatePageAutoMarginsForComponents(q->orientation());
     }
 }
 
@@ -287,13 +284,21 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
             setComponentDisplayMode(dockWidget,
                                     page->model()->navigationBarDisplayMode());
 
-            updatePageAutoMarginsForComponents(q->orientation());
+            // Interpretation of whether the navigation bar is covering the page
+            // changes from "auto-hide" to "show". On "auto-hide" the navigation
+            // bar doesn't count as covering the page since it does so only momentarily.
+            updatePageExposedContentRect();
 
         } else if (member == MApplicationPageModel::ProgressIndicatorVisible) {
             navigationBar->setProgressIndicatorVisible(page->model()->progressIndicatorVisible());
 
         } else if (member == MApplicationPageModel::AutoMarginsForComponentsEnabled) {
-            updatePageAutoMarginsForComponents(q->orientation());
+
+            // FIXME: Fix this on the next ABI break.
+            // updateAutoMarginsForComponents() calls due to changes in
+            // MApplicationPageModel::autoMarginsForComponentsEnabled() should
+            // be handled in MApplicationPage::updateData().
+            page->d_func()->updateAutoMarginsForComponents();
 
         } else if (member == MApplicationPageModel::EscapeMode) {
             setupPageEscape();
@@ -331,24 +336,36 @@ void MApplicationWindowPrivate::_q_placeToolBar(M::Orientation orientation)
     }
 }
 
-void MApplicationWindowPrivate::updatePageAutoMarginsForComponents(M::Orientation orientation)
+void MApplicationWindowPrivate::updatePageExposedContentRect()
 {
+    Q_Q(MApplicationWindow);
     if (!page) {
         return;
     }
 
-    qreal statusBarHeight;
+    qreal topCoverage = 0.0f;
+    qreal bottomCoverage = 0.0f;
+
+    QRectF pageExposedContentRect;
 
     if (showingStatusBar) {
-        statusBarHeight = statusBar->effectiveSizeHint(Qt::PreferredSize).height();
-    } else {
-        statusBarHeight = 0;
+        topCoverage += statusBar->effectiveSizeHint(Qt::PreferredSize).height();
     }
 
-    page->d_func()->updateAutoMarginsForComponents(orientation,
-            statusBarHeight,
-            navigationBar->size().height(),
-            dockWidget->size().height(), dockWidget->isVisible());
+    if (page->componentDisplayMode(MApplicationPage::NavigationBar) == MApplicationPageModel::Show) {
+        topCoverage += navigationBar->size().height();
+    }
+
+    if (dockWidget->isVisible()) {
+        bottomCoverage += dockWidget->size().height();
+    }
+
+    pageExposedContentRect.setY(topCoverage);
+    pageExposedContentRect.setWidth(q->visibleSceneSize().width());
+    pageExposedContentRect.setHeight(q->visibleSceneSize().height()
+                              - pageExposedContentRect.y() - bottomCoverage);
+
+    page->d_func()->setExposedContentRect(pageExposedContentRect);
 }
 
 void MApplicationWindowPrivate::openMenu()
@@ -560,27 +577,50 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
 
 void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
 {
-    Q_Q(MApplicationWindow);
     MSceneWindow *sceneWindow = event->sceneWindow();
 
-    if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
-        applicationPageAppearEvent(event);
-    } else if (sceneWindow->windowType() == MSceneWindow::StatusBar) {
-        showingStatusBar = true;
-        updatePageAutoMarginsForComponents(q->orientation());
+    switch (sceneWindow->windowType()) {
+        case MSceneWindow::ApplicationPage:
+            applicationPageAppearEvent(event);
+            break;
+
+        case MSceneWindow::StatusBar:
+            showingStatusBar = true;
+            updatePageExposedContentRect();
+            break;
+
+        case MSceneWindow::NavigationBar:
+        case MSceneWindow::DockWidget:
+            updatePageExposedContentRect();
+            break;
+
+        default:
+            break;
     }
+
 }
 
 void MApplicationWindowPrivate::sceneWindowDisappearEvent(MSceneWindowEvent *event)
 {
-    Q_Q(MApplicationWindow);
     MSceneWindow *sceneWindow = event->sceneWindow();
 
-    if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
-        applicationPageDisappearEvent(event);
-    } else if (sceneWindow->windowType() == MSceneWindow::StatusBar) {
-        showingStatusBar = false;
-        updatePageAutoMarginsForComponents(q->orientation());
+    switch (sceneWindow->windowType()) {
+        case MSceneWindow::ApplicationPage:
+            applicationPageDisappearEvent(event);
+            break;
+
+        case MSceneWindow::StatusBar:
+            showingStatusBar = false;
+            updatePageExposedContentRect();
+            break;
+
+        case MSceneWindow::NavigationBar:
+        case MSceneWindow::DockWidget:
+            updatePageExposedContentRect();
+            break;
+
+        default:
+            break;
     }
 }
 
@@ -592,7 +632,6 @@ void MApplicationWindowPrivate::sceneWindowDismissEvent(MSceneWindowEvent *event
 
 void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *event)
 {
-    Q_Q(MApplicationWindow);
     MApplicationPage *pageFromEvent = static_cast<MApplicationPage *>(event->sceneWindow());
 
     // It cannot be the current page
@@ -604,7 +643,7 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
     }
 
     connectPage(pageFromEvent);
-    updatePageAutoMarginsForComponents(q->orientation());
+    updatePageExposedContentRect();
     pageFromEvent->d_func()->prepareForAppearance();
 }
 

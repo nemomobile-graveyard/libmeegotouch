@@ -301,30 +301,41 @@ void MApplicationPagePrivate::prepareForAppearance()
     updatePannableViewportPosition();
 }
 
-void MApplicationPagePrivate::updateAutoMarginsForComponents(M::Orientation orientation,
-        qreal statusBarHeight,
-        qreal navigationBarHeight,
-        qreal dockWidgetHeight,
-        bool dockWidgetVisible)
+void MApplicationPagePrivate::setExposedContentRect(const QRectF &exposedContentRect)
 {
     Q_Q(MApplicationPage);
 
-    qreal topHeight = statusBarHeight;
-    qreal bottomHeight = 0.0;
+    if (exposedContentRect != this->exposedContentRect) {
+        this->exposedContentRect = exposedContentRect;
+        emit q->exposedContentRectChanged();
+
+        updateAutoMarginsForComponents();
+    }
+}
+
+QRectF MApplicationPage::exposedContentRect() const
+{
+    Q_D(const MApplicationPage);
+
+    return d->exposedContentRect;
+}
+
+void MApplicationPagePrivate::updateAutoMarginsForComponents()
+{
+    Q_Q(MApplicationPage);
+
+    qreal topMargin = 0.0;
+    qreal bottomMargin = 0.0;
 
     if (q->autoMarginsForComponentsEnabled()) {
+        topMargin = exposedContentRect.y();
 
-        if (q->componentDisplayMode(MApplicationPage::NavigationBar) == MApplicationPageModel::Show) {
-            topHeight += navigationBarHeight;
-        }
-
-        if (orientation == M::Portrait && dockWidgetVisible) {
-            bottomHeight += dockWidgetHeight;
-        }
+        qreal exposedContentRectBottomEdge = exposedContentRect.y() + exposedContentRect.height();
+        bottomMargin = q->boundingRect().height() - exposedContentRectBottomEdge;
     }
 
-    setSpacerHeight(topSpacer, topHeight);
-    setSpacerHeight(bottomSpacer, bottomHeight);
+    setSpacerHeight(topSpacer, topMargin);
+    setSpacerHeight(bottomSpacer, bottomMargin);
 }
 
 MApplicationPageModel::ComponentDisplayMode MApplicationPage::componentDisplayMode(

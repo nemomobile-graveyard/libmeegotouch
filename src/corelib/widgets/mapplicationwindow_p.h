@@ -94,7 +94,7 @@ public:
     void sceneWindowDisappearEvent(MSceneWindowEvent *ev);
     void sceneWindowDismissEvent(MSceneWindowEvent *ev);
 
-    void updatePageAutoMarginsForComponents(M::Orientation orientation);
+    void updatePageExposedContentRect();
 
     void applicationPageAppearEvent(MSceneWindowEvent *ev);
     void applicationPageDisappearEvent(MSceneWindowEvent *ev);

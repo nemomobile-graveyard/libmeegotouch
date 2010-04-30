@@ -23,6 +23,7 @@
 #include <mapplicationpage.h>
 #include <mscenewindow_p.h>
 #include <QList>
+#include <QRect>
 #include <mnamespace.h>
 
 class MScene;
@@ -52,11 +53,8 @@ public:
     void propagateOnDisplayChangeEvent(bool visible);
 
     // Note: Called by MApplicationWindow
-    void updateAutoMarginsForComponents(M::Orientation orientation,
-                                        qreal statusBarHeight,
-                                        qreal navigationBarHeight,
-                                        qreal dockWidgetHeight,
-                                        bool dockWidgetVisible);
+    void setExposedContentRect(const QRectF &rect);
+    void updateAutoMarginsForComponents();
 
     // FIXME: After API freeze move that code to enterDisplayEvent().
     // Didn't enterDisplayEvent() make createContent() obsolete/redundant altogether?
@@ -76,6 +74,7 @@ public:
     QGraphicsLinearLayout *mainLayout;
     MPannableViewport *pannableViewPort;
     QGraphicsWidget *centralWidget;
+    QRectF exposedContentRect;
 
     bool contentCreated;
     bool backEnabled;

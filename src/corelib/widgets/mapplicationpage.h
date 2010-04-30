@@ -90,6 +90,7 @@ class M_EXPORT MApplicationPage : public MSceneWindow
     Q_PROPERTY(Qt::Orientations panningDirection READ panningDirection WRITE setPanningDirection)
     Q_PROPERTY(bool rememberPosition READ rememberPosition WRITE setRememberPosition)
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible)
+    Q_PROPERTY(QRectF exposedContentRect READ exposedContentRect NOTIFY exposedContentRectChanged)
 
 public:
 
@@ -225,6 +226,25 @@ public:
      */
     MPannableViewport *pannableViewport();
 
+    /*!
+       \brief Area of the page whose content is not covered by any bar
+
+       Area of the page whose content is not covered by any bar (status bar,
+       navigation bar, tool bar) and thus is accessible to the user.
+
+       Floating widgets can be implemented by making them children of the application
+       page instead of the central widget (thus they are not panned). They should be
+       positioned within this rectangle.
+
+       Note that this area can be covered by transient scene windows such as
+       dialogs and notifications as well as by overlays.
+
+       The rectangle is in local item coordinates.
+
+       \sa exposedContentRectChanged()
+     */
+    QRectF exposedContentRect() const;
+
 Q_SIGNALS:
     //! Signal emitted when back button called
     void backButtonClicked();
@@ -246,6 +266,20 @@ Q_SIGNALS:
     /*! Signal emitted when action is added(removed) from the page.
      */
     void actionUpdated(QActionEvent *e);
+
+    /*!
+        \brief Emitted when the exposed content rectangle changes.
+
+        That happens when some bar (navigation bar, status bar, tool bar) appears or
+        disappears, which makes the exposed content area of the page bigger or smaller.
+
+        Appearance or disappearance of transient scene windows such as dialogs and
+        notifications does not change the exposed content rectangle of the page.
+        Overlays are also not considered.
+
+        \sa exposedContentRect()
+     */
+    void exposedContentRectChanged();
 
 public Q_SLOTS:
     /*!
@@ -326,7 +360,6 @@ protected:
     //! \reimp_end
 
 private:
-
 #ifdef UNIT_TEST
     friend class Ut_MApplicationPage;
 #endif
