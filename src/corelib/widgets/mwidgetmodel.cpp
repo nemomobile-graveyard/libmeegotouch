@@ -82,7 +82,7 @@ void MWidgetModel::decreaseReferenceCount()
 {
     --d_ptr->referenceCount;
     if (d_ptr->referenceCount == 0)
-        delete this;
+        deleteLater();
 }
 
 QDataStream &operator<<(QDataStream &stream, const MWidgetModel &model)
