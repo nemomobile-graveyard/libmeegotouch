@@ -58,9 +58,6 @@ DialogsAndNotificationsPage::DialogsAndNotificationsPage()
 
 DialogsAndNotificationsPage::~DialogsAndNotificationsPage()
 {
-    delete dialog;
-    delete nestedDialog;
-    delete nestedMessageBox;
 }
 
 QString DialogsAndNotificationsPage::timedemoTitle()
@@ -81,8 +78,9 @@ void DialogsAndNotificationsPage::createContent()
 
 void DialogsAndNotificationsPage::openQuestionDialog()
 {
-    if (dialog != NULL)
-        delete dialog;
+    if (dialog)
+        return;
+
     dialog = new MDialog(
         //%  "Question Dialog Title"
         qtTrId("xx_dialogs_and_notifications_question_dialog_title"),
@@ -90,11 +88,15 @@ void DialogsAndNotificationsPage::openQuestionDialog()
     dialog->setCentralWidget(
         //% "Lorem ipsum dolor sit amet?"
         new MLabel(qtTrId("xx_dialogs_and_notifications_question_dialog_content")));
-    dialog->exec();
+
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openEntryDialog()
 {
+    if (dialog)
+        return;
+
     MWidget *centralWidget = new MWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     //% "Name"
@@ -107,23 +109,22 @@ void DialogsAndNotificationsPage::openEntryDialog()
     layout->addItem(label);
     layout->addItem(textEdit);
 
-    if (dialog != NULL)
-        delete dialog;
     //% "Please enter your name"
     dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_entry_dialog_title"),
                            M::OkButton | M::ResetButton);
     dialog->setCentralWidget(centralWidget);
 
-    dialog->exec();
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openLongDialog()
 {
+    if (dialog)
+        return;
+
     MWidget *centralWidget = new MWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
 
-    if (dialog != NULL)
-        delete dialog;
     //% "Select printer"
     dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), M::CancelButton);
     dialog->setCentralWidget(centralWidget);
@@ -167,13 +168,13 @@ void DialogsAndNotificationsPage::openLongDialog()
 
 #undef ADD_PRINTER_BUTTON
 
-    dialog->exec();
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openStackedDialogs()
 {
-    if (dialog != NULL)
-        delete dialog;
+    if (dialog)
+        return;
 
     //% "Click to spawn a nested dialog"
     MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_button"));
@@ -182,13 +183,14 @@ void DialogsAndNotificationsPage::openStackedDialogs()
     dialog->setCentralWidget(button);
 
     connect(button, SIGNAL(clicked()), SLOT(openNestedDialog()));
-    dialog->exec();
+
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openNestedDialog()
 {
-    if (nestedDialog != NULL)
-        delete nestedDialog;
+    if (nestedDialog)
+        return;
 
     //% "Click to open a nested message box"
     MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox"));
@@ -197,40 +199,45 @@ void DialogsAndNotificationsPage::openNestedDialog()
     nestedDialog->setCentralWidget(button);
     connect(button, SIGNAL(clicked()), SLOT(openNestedMessageBox()));
 
-    nestedDialog->exec();
+    nestedDialog->appear(MSceneWindow::DestroyWhenDone);
+
 }
 
 void DialogsAndNotificationsPage::openNestedMessageBox()
 {
-    if (nestedMessageBox != NULL)
-        delete nestedMessageBox;
+    if (nestedMessageBox)
+        return;
 
     //% "I'm a nested message box"
     nestedMessageBox = new MMessageBox(qtTrId("xx_dialogs_and_notifications_stacked_dialog_messagebox_text"));
-    nestedMessageBox->exec();
+    nestedMessageBox->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openSystemModalDialog()
 {
-    if (dialog != NULL)
-        delete dialog;
+    if (dialog)
+        return;
+
     dialog = new MDialog(
         //% "System Modal Dialog"
         qtTrId("xx_dialogs_and_notifications_system_modal_dialog_title"),
         M::OkButton);
+
     dialog->setCentralWidget(
         //% "I'm a window modal dialog.\n"
         //% "There's no way around me!\n"
         //% "Muwhahaha... [evil laugh]"
         new MLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label")));
+
     dialog->setSystemModal(true);
-    dialog->exec();
+
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openDialogWithProgressIndicator()
 {
-    if (dialog != NULL)
-        delete dialog;
+    if (dialog)
+        return;
 
     MButton *button = new MButton();
     button->setViewType(MButton::switchType);
@@ -250,13 +257,16 @@ void DialogsAndNotificationsPage::openDialogWithProgressIndicator()
     dialog = new MDialog("Lorem ipsum", M::NoStandardButton);
     dialog->centralWidget()->setLayout(layout);
     dialog->setProgressIndicatorVisible(true);
-    dialog->exec();
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openMessageBox()
 {
+    if (dialog)
+        return;
+
     //% "Hello World!"
-    MDialog *dialog = new MMessageBox(qtTrId("xx_dialogs_and_notifications_message_box_text"), M::OkButton);
+    dialog = new MMessageBox(qtTrId("xx_dialogs_and_notifications_message_box_text"), M::OkButton);
     dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 

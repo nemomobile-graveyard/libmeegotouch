@@ -22,6 +22,8 @@
 
 #include "templatepage.h"
 
+#include <QPointer>
+
 class MGridLayoutPolicy;
 class MDialog;
 class MButton;
@@ -59,9 +61,9 @@ private slots:
 private:
     void populateLayout(MLinearLayoutPolicy *layoutPolicy);
 
-    MDialog *dialog;
-    MDialog *nestedDialog;
-    MDialog *nestedMessageBox;
+    QPointer<MDialog> dialog;
+    QPointer<MDialog> nestedDialog;
+    QPointer<MDialog> nestedMessageBox;
 
     MLabel *label1;
     MLabel *label2;
