@@ -27,6 +27,7 @@
 
 #include "minputmethodstate.h"
 #include "mtheme.h"
+#include "mthemedaemon.h"
 #include "mcomponentdata.h"
 #include "mscenemanager.h"
 #include "mdeviceprofile.h"
@@ -516,8 +517,12 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     systemLocale.installTrCatalog("libmeegotouch");
     // installs the common translation catalog:
     systemLocale.installTrCatalog("common");
-    // installs the translationi catalog of the application:
-    systemLocale.installTrCatalog(catalog);
+    // installs the translation catalog of the application if we
+    // already know the application/catalog name (not just populate
+    // cache)
+    if (!MComponentCache::populating()) {
+        systemLocale.installTrCatalog(catalog);
+    }
     MLocale::setDefault(systemLocale);
 
     // MLocale::setDefault(locale) also sets the
@@ -627,6 +632,28 @@ void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier
         QFileInfo fileInfo(argv[0]);
         d->appName = fileInfo.fileName();
     }
+    
+    MLocale systemLocale;
+    systemLocale.installTrCatalog(d->appName);
+    MLocale::setDefault(systemLocale);
+
+    QString baseCSS(MThemeDaemon::systemThemeDirectory() + 
+                    QDir::separator() + QString("base") +
+                    QDir::separator() + QString("meegotouch") +
+                    QDir::separator() + d->appName + 
+                    QDir::separator() + QString("style") + 
+                    QDir::separator() + d->appName + QString(".css"));
+
+    MTheme::loadCSS(baseCSS);
+
+    QString themeCSS(MThemeDaemon::systemThemeDirectory() + 
+                     QDir::separator() + MTheme::currentTheme() +
+                     QDir::separator() + QString("meegotouch") +
+                     QDir::separator() + d->appName + 
+                     QDir::separator() + QString("style") + 
+                     QDir::separator() + d->appName + QString(".css"));
+
+    MTheme::loadCSS(themeCSS);
 
     if (newService) {
         d->registerNewService(newService);

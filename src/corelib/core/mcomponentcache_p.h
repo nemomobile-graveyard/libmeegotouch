@@ -37,7 +37,6 @@ public:
     QGLWidget* glWidget();
 
     bool canUseCachedApp(int &argc, char **argv, const QString &appIdentifier);
-    bool hasCustomTheme(int &argc, char **argv, const QString &appIdentifier);
     bool hasExtraParams(int &argc, char **argv, const QString &appIdentifier);
 
     static QGLWidget* createNewGlWidget();
