@@ -605,8 +605,12 @@ void MComponentDataPrivate::registerNewService(MApplicationService *newService)
 
 void MComponentDataPrivate::registerDefaultService(const QString &appIdentifier)
 {
+#ifdef HAVE_DBUS
     QString serviceName = "com.nokia." + appIdentifier;
     registerNewService(new MApplicationService(serviceName));
+#else
+    Q_UNUSED(appIdentifier);
+#endif
 }
 
 void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
