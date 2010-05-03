@@ -18,6 +18,7 @@ PUBLIC_HEADERS += \
     mmenuobjectview.h \
     mmessageboxview.h \
     moverlayview.h \
+    mobjectmenubasicview.h \
     mobjectmenuview.h \
     mpannablewidgetview.h \
     mpopuplistview.h \
@@ -76,6 +77,7 @@ SOURCES += \
     mmenuobjectview.cpp \
     mmessageboxview.cpp \
     moverlayview.cpp \
+    mobjectmenubasicview.cpp \
     mobjectmenuview.cpp \
     mpannablewidgetview.cpp \
     mpopuplistview.cpp \

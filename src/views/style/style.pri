@@ -27,6 +27,7 @@ MGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mscenelayereffectdimstyle.h \
     $$STYLE_SRC_DIR/mnavigationbarstyle.h \
     $$STYLE_SRC_DIR/moverlaystyle.h \
+    $$STYLE_SRC_DIR/mobjectmenubasicstyle.h \
     $$STYLE_SRC_DIR/mobjectmenustyle.h \
     $$STYLE_SRC_DIR/mpannablewidgetstyle.h \
     $$STYLE_SRC_DIR/mpopupliststyle.h \

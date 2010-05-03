@@ -17,69 +17,49 @@
 **
 ****************************************************************************/
 
-#include <QGraphicsSceneMouseEvent>
-
-#include "mobjectmenuview_p.h"
+#include "mobjectmenubasicview.h"
 #include "mbutton.h"
 #include "mviewcreator.h"
 #include "mobjectmenu.h"
 
+#include "mlayout.h"
+#include "mlinearlayoutpolicy.h"
+#include "mgridlayoutpolicy.h"
 #include <QGraphicsLinearLayout>
 
 #include "mwidgetaction.h"
 #include "mscenemanager.h"
+#include "mscalableimage.h"
 #include "mapplication.h"
 #include "mapplicationwindow.h"
 
-MObjectMenuViewPrivate::MObjectMenuViewPrivate() :
-      layout(0),
-      controller(0)
-{
-}
 
-MObjectMenuViewPrivate::~MObjectMenuViewPrivate()
-{
-}
-
-void MObjectMenuViewPrivate::init()
-{
-    layout = new QGraphicsLinearLayout(Qt::Vertical);
-    layout->setSpacing(0);
-    controller->setLayout(layout);
-}
-
-
-MObjectMenuView::MObjectMenuView(MObjectMenu *controller) :
+MObjectMenuBasicView::MObjectMenuBasicView(MObjectMenu *controller) :
     MSceneWindowView(controller),
-    d_ptr(new MObjectMenuViewPrivate)
+    layout(0),
+    portraitPolicy(0),
+    landscapePolicy(0),
+    controller(controller)
 {
-    Q_D(MObjectMenuView);
-    d->q_ptr = this;
-    d->controller = controller;
-    d->init();
+    // create layout policies for portrait & landscape orientation
+    layout = new MLayout(controller);
+    portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    landscapePolicy = new MGridLayoutPolicy(layout);
+
+    layout->setLandscapePolicy(landscapePolicy);
+    layout->setPortraitPolicy(portraitPolicy);
 }
 
-MObjectMenuView::MObjectMenuView(MObjectMenuViewPrivate &dd, MObjectMenu *controller) :
-    MSceneWindowView(controller),
-    d_ptr(&dd)
-{
-    Q_D(MObjectMenuView);
-    d->q_ptr = this;
-    d->controller = controller;
-    d->init();
-}
-
-MObjectMenuView::~MObjectMenuView()
+MObjectMenuBasicView::~MObjectMenuBasicView()
 {
 #ifdef HAVE_CONTENTACTION
-    Q_D(MObjectMenuView);
-    QHash<MAction*, ContentAction::Action>::iterator i = d->contentActions.begin(),
-                                                       e = d->contentActions.end();
+    QHash<MAction*, ContentAction::Action>::iterator i = contentActions.begin(),
+                                                       e = contentActions.end();
     for(; i!=e; ++i) {
         actionRemoved(i.key());
         delete i.key();
     }
-    d->contentActions.clear();
+    contentActions.clear();
 #endif
 
     MActionList actions = model()->actions();
@@ -87,58 +67,39 @@ MObjectMenuView::~MObjectMenuView()
     for (int i = 0; i < count; ++i) {
         actionRemoved(actions.at(i));
     }
-
-    delete d_ptr;
 }
 
-void MObjectMenuView::actionAdded(MAction *action)
+void MObjectMenuBasicView::actionAdded(MAction *action)
 {
-    Q_D(MObjectMenuView);
-
     // show only if it is visible
     if (action->isVisible()) {
 
         // create button for this action
-        MButton *button = new MButton(action->iconID(), action->text(), d->controller);
+        MButton *button = new MButton(action->iconID(), action->text(), controller);
 
         QObject::connect(button, SIGNAL(clicked(bool)), action, SIGNAL(triggered()));
-        d->controller->connect(button, SIGNAL(clicked(bool)), SLOT(dismiss()));
+        controller->connect(button, SIGNAL(clicked(bool)), SLOT(dismiss()));
 
         button->setEnabled(action->isEnabled());
-        d->layout->addItem(button);
-        if(d->layout->count() == 1) {
-            // make the only button to use "single button" background
-            button->setLayoutPosition(M::DefaultPosition);
-        } else {
-            MButton* prev = (MButton*)d->layout->itemAt(d->layout->count() -2);
-            // we have more than one in layout
-            if(d->layout->count() == 2) {
-                prev->setLayoutPosition(M::VerticalTopPosition);
-            } else {
-                prev->setLayoutPosition(M::VerticalCenterPosition);
-            }
-            button->setLayoutPosition(M::VerticalBottomPosition);
-        }
+        portraitPolicy->addItem(button);
+        landscapePolicy->addItem(button, (buttons.count()) / 2, (buttons.count()) % 2);
 
-        d->buttons.insert(action, button);
+        buttons.insert(action, button);
     }
 }
 
-void MObjectMenuView::actionRemoved(MAction *action)
+void MObjectMenuBasicView::actionRemoved(MAction *action)
 {
-    Q_D(MObjectMenuView);
-
-    MButton *button = d->buttons.value(action, NULL);
+    MButton *button = buttons.value(action, NULL);
     if (button) {
-        d->buttons.remove(action);
+        buttons.remove(action);
         delete button;
     }
 }
 
-void MObjectMenuView::actionModified(MAction *action)
+void MObjectMenuBasicView::actionModified(MAction *action)
 {
-    Q_D(MObjectMenuView);
-    MButton *button = d->buttons.value(action, NULL);
+    MButton *button = buttons.value(action, NULL);
     if (button) {
         if (!action->isVisible()) {
             actionRemoved(action);
@@ -154,14 +115,12 @@ void MObjectMenuView::actionModified(MAction *action)
     }
 }
 
-void MObjectMenuView::updateData(const QList<const char *> &modifications)
+void MObjectMenuBasicView::updateData(const QList<const char *> &modifications)
 {
-    Q_D(MObjectMenuView);
-
     foreach(const char * member, modifications) {
         // TODO: this could be done without first removing all actions.
         if (member == MObjectMenuModel::Actions) {
-            foreach(MAction * action, d->buttons.keys()) {
+            foreach(MAction * action, buttons.keys()) {
                 actionRemoved(action);
             }
 
@@ -173,20 +132,20 @@ void MObjectMenuView::updateData(const QList<const char *> &modifications)
         } else if (member == MObjectMenuModel::ContentURI) {
 #ifdef HAVE_CONTENTACTION
             // remove & release the old content uri dependant actions
-            QHash<MAction*, ContentAction::Action>::iterator i = d->contentActions.begin(),
-                                                               e = d->contentActions.end();
+            QHash<MAction*, ContentAction::Action>::iterator i = contentActions.begin(),
+                                                               e = contentActions.end();
             for(; i!=e; ++i) {
                 actionRemoved(i.key());
                 delete i.key();
             }
-            d->contentActions.clear();
+            contentActions.clear();
 
             QList<ContentAction::Action> contentActionList = ContentAction::Action::actions(model()->contentURI());
             foreach(ContentAction::Action contentAction, contentActionList) {
                 // TODO: fetch the correct text from contentAction and maybe also an icon
                 MAction* action = new MAction(contentAction.name(), this);
                 connect(action, SIGNAL(triggered()), SLOT(contentActionTriggered()));
-                d->contentActions.insert(action, contentAction);
+                contentActions.insert(action, contentAction);
 
                 actionAdded(action);
             }
@@ -195,25 +154,23 @@ void MObjectMenuView::updateData(const QList<const char *> &modifications)
     }
 }
 
-void MObjectMenuView::setupModel()
+void MObjectMenuBasicView::setupModel()
 {
     MSceneWindowView::setupModel();
 
-    Q_D(MObjectMenuView);
-
 #ifdef HAVE_CONTENTACTION
     // remove & release the old content uri dependant actions
-    QHash<MAction*, ContentAction::Action>::iterator i = d->contentActions.begin(),
-                                                       e = d->contentActions.end();
+    QHash<MAction*, ContentAction::Action>::iterator i = contentActions.begin(),
+                                                       e = contentActions.end();
     for(; i!=e; ++i) {
         actionRemoved(i.key());
         delete i.key();
     }
-    d->contentActions.clear();
+    contentActions.clear();
 #endif
 
     // remove & release the old manually added actions
-    foreach(MAction * action, d->buttons.keys()) {
+    foreach(MAction * action, buttons.keys()) {
         actionRemoved(action);
     }
 
@@ -236,27 +193,14 @@ void MObjectMenuView::setupModel()
         // TODO: fetch the correct text from contentAction and maybe also an icon
         MAction* action = new MAction(contentAction.name(), this);
         connect(action, SIGNAL(triggered()), SLOT(contentActionTriggered()));
-        d->contentActions.insert(action, contentAction);
+        contentActions.insert(action, contentAction);
 
         actionAdded(action);
     }
 #endif
 }
 
-void MObjectMenuView::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    //Do not pass the events through the menu window
-    event->accept();
-}
-
-void MObjectMenuView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event);
-    Q_D(MObjectMenuView);
-    d->controller->dismiss();
-}
-
-void MObjectMenuViewPrivate::contentActionTriggered()
+void MObjectMenuBasicView::contentActionTriggered()
 {
 #ifdef HAVE_CONTENTACTION
     Q_Q(MObjectMenuView);
@@ -273,5 +217,4 @@ void MObjectMenuViewPrivate::contentActionTriggered()
 #endif
 }
 
-M_REGISTER_VIEW_NEW(MObjectMenuView, MObjectMenu)
-#include "moc_mobjectmenuview.cpp"
+M_REGISTER_VIEW(MObjectMenuBasicView, MObjectMenu)

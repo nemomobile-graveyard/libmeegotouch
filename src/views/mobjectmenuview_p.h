@@ -28,11 +28,7 @@
 
 class MButton;
 class MAction;
-class QGraphicsWidget;
-class MLayout;
-class MPannableViewport;
-class MLinearLayoutPolicy;
-class MGridLayoutPolicy;
+class QGraphicsLinearLayout;
 
 class MObjectMenuViewPrivate
 {
@@ -53,9 +49,7 @@ public:
     QHash<MAction*, ContentAction::Action> contentActions;
 #endif
 
-    MLayout *layout;
-    MLinearLayoutPolicy *portraitPolicy;
-    MGridLayoutPolicy *landscapePolicy;
+    QGraphicsLinearLayout *layout;
 
     MObjectMenu *controller;
 
