@@ -39,7 +39,6 @@
 #include <mapplethandle_stub.h>
 #include <mappletid_stub.h>
 #include "mclassfactory.h"
-#include "mwidgetview_p.h"
 
 class MApplicationWindow;
 
@@ -53,22 +52,6 @@ void MClassFactory::registerViewCreator(MViewCreatorBase *, const char *)
 void MClassFactory::unregisterViewCreator(MViewCreatorBase *)
 {
 }
-
-// MWidgetViewPrivate stubs
-MWidgetViewPrivate::MWidgetViewPrivate() :
-        q_ptr(NULL),
-        controller(NULL),
-        model(NULL),
-        styleContainer(NULL)
-{
-}
-
-MWidgetViewPrivate::~MWidgetViewPrivate()
-{
-}
-
-
-MAppletHandleModel handleModel;
 
 // MSceneManager stubs
 bool dialogShown = false;
@@ -152,6 +135,11 @@ void MTestAppletHandleView::click()
     mouseReleaseEvent(&event);
 }
 
+MAppletHandleModel* MTestAppletHandleView::modifiableModel()
+{
+    return model();
+}
+
 // Unit test cases
 void Ut_MAppletHandleView::initTestCase()
 {
@@ -159,7 +147,6 @@ void Ut_MAppletHandleView::initTestCase()
     static char *app_name[1] = { (char *) "./ut_mapplethandleview" };
     app = new MApplication(argc, app_name);
 }
-
 
 void Ut_MAppletHandleView::cleanupTestCase()
 {
@@ -170,7 +157,7 @@ void Ut_MAppletHandleView::init()
 {
     handle = new MAppletHandle();
     handleView = new MTestAppletHandleView(handle);
-    handleView->setModel(&handleModel);
+    handleView->setModel(new MAppletHandleModel);
     connect(this, SIGNAL(openAppletSettings()), handleView, SLOT(openAppletSettings()));
 
     dialogShown = false;
@@ -197,7 +184,7 @@ void Ut_MAppletHandleView::testSettingsDialog()
 
     // Check that settings dialog is executed when applet settings is set
     MAppletId appletId("applicationName", "mashupCanvasName", 1);
-    handleModel.setAppletSettings(new MAppletSettings("metaDataFilename", appletId));
+    handleView->modifiableModel()->setAppletSettings(new MAppletSettings("metaDataFilename", appletId));
     emit openAppletSettings();
     QVERIFY(gMAppletSettingsDialogExecCalled);
 }
@@ -209,7 +196,7 @@ void Ut_MAppletHandleView::testBrokenAppletDialog()
     QVERIFY(!dialogShown);
 
     // Test that clicking a broken applet view will show a dialog
-    handleModel.setCurrentState(MAppletHandleModel::BROKEN);
+    handleView->modifiableModel()->setCurrentState(MAppletHandleModel::BROKEN);
     handleView->click();
     QVERIFY(dialogShown);
 
@@ -218,14 +205,14 @@ void Ut_MAppletHandleView::testBrokenAppletDialog()
     QCOMPARE(gMAppletHandleStub->stubCallCount("removeApplet"), 0);
 
     // Return to running state
-    handleModel.setCurrentState(MAppletHandleModel::RUNNING);
+    handleView->modifiableModel()->setCurrentState(MAppletHandleModel::RUNNING);
 
     // Test that rejecting the dialog will remove the applet handle
     gMAppletHandleStub->stubReset();
     gMExtensionHandleStub->stubReset();
     dialogShown = false;
     dialogButtons.clear();
-    handleModel.setCurrentState(MAppletHandleModel::BROKEN);
+    handleView->modifiableModel()->setCurrentState(MAppletHandleModel::BROKEN);
     dialogClickedButtonIndex = 1;
     handleView->click();
     QVERIFY(dialogShown);
@@ -237,7 +224,7 @@ void Ut_MAppletHandleView::testBrokenAppletDialog()
     gMExtensionHandleStub->stubReset();
     dialogShown = false;
     dialogButtons.clear();
-    handleModel.setCurrentState(MAppletHandleModel::BROKEN);
+    handleView->modifiableModel()->setCurrentState(MAppletHandleModel::BROKEN);
     dialogClickedButtonIndex = -1;
     handleView->click();
     QVERIFY(dialogShown);
@@ -252,16 +239,16 @@ void Ut_MAppletHandleView::testInstallationFailedDialog()
     handleView->setGeometry(geometry);
     QMetaObject::invokeMethod(handleView, "pixmapTakenIntoUse", Qt::DirectConnection, Q_ARG(Qt::HANDLE, 0));
 
-    handleModel.setInstallationError("");
+    handleView->modifiableModel()->setInstallationError("");
 
     // test that clicking the applet view in non broken state doesn't show a dialog
-    handleModel.setCurrentState(MAppletHandleModel::RUNNING);
+    handleView->modifiableModel()->setCurrentState(MAppletHandleModel::RUNNING);
     handleView->click();
     QVERIFY(!dialogShown);
 
     // test that clicking a broken applet view will show a dialog with one remove button
-    handleModel.setInstallationError("CRITICAL ERROR");
-    handleModel.setCurrentState(MAppletHandleModel::BROKEN);
+    handleView->modifiableModel()->setInstallationError("CRITICAL ERROR");
+    handleView->modifiableModel()->setCurrentState(MAppletHandleModel::BROKEN);
     handleView->click();
     QVERIFY(dialogShown);
     QCOMPARE(dialogButtons.count(), 1);

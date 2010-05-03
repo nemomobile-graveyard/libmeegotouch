@@ -53,7 +53,6 @@
 #include <mscenemanager.h>
 
 MApplication *app;
-MApplicationWindow *appWin;
 
 bool visibility;
 QPointF mousePressPosition;
@@ -64,25 +63,8 @@ Qt::MouseButtons mouseEventButtons;
 Qt::MouseButton mouseEventButton;
 uint remoteActionIndex = 0;
 bool Ut_MExtensionHandle::listenForConnection = true;
-QSizeF Ut_MExtensionHandle::minSize = QSizeF();
-QSizeF Ut_MExtensionHandle::prefSize = QSizeF();
-QSizeF Ut_MExtensionHandle::maxSize = QSizeF();
-QSize Ut_MExtensionHandle::visibleSceneSize = QSize(1000, 1000);
 bool Ut_MExtensionHandle::contextMenuOpened;
 
-// MWidget stubs (used by MExtensionHandle)
-MWidgetPrivate::MWidgetPrivate() :
-        explicitlyHidden(false),
-        layoutHidden(false),
-        q_ptr(NULL),
-        onDisplay(false),
-        onDisplaySet(false),
-        selected(false)
-{
-}
-MWidgetPrivate::~MWidgetPrivate()
-{
-}
 
 void MWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *)
 {
@@ -177,20 +159,6 @@ bool MAppletCommunicator::sendMessage(const MAppletMessage &message)
     return true;
 }
 
-// QLocalServer stubs
-bool QLocalServer::listen(const QString &name)
-{
-    Q_UNUSED(name);
-    return true;
-}
-
-bool QLocalServer::waitForNewConnection(int msec, bool *timedOut)
-{
-    Q_UNUSED(msec);
-    Q_UNUSED(timedOut);
-    return true;
-}
-
 // QTimer stubs
 bool timerCalled = false;
 
@@ -232,26 +200,17 @@ Q_PID QProcess::pid() const
     }
 }
 
-// MSettingsLanguageParser stubs
-MSettingsLanguageBinary *MSettingsLanguageParser::createSettingsBinary()
-{
-    return new MSettingsLanguageBinary;
-}
-
 // Unit test cases
 void Ut_MExtensionHandle::initTestCase()
 {
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mextensionhandle" };
     app = new MApplication(argc, app_name);
-    appWin = new MApplicationWindow;
 }
 
 void Ut_MExtensionHandle::cleanupTestCase()
 {
-    delete appWin;
-    // this is commented out for now, to prevent crash at exit:
-    // delete app;
+    delete app;
 }
 
 void Ut_MExtensionHandle::init()
@@ -266,7 +225,6 @@ void Ut_MExtensionHandle::init()
     visibility = true;
 
     handle = new MTestExtensionHandle();
-    handle->setViewType("default");
     connect(this, SIGNAL(connectionFromRunnerEstablished()), handle, SLOT(connectionEstablished()));
     connect(this, SIGNAL(operationComplete(QString, QString, QString)), handle, SLOT(operationComplete(QString, QString, QString)));
     connect(this, SIGNAL(operationProgress(QString, QString, int)), handle, SLOT(operationProgress(QString, QString, int)));
@@ -277,21 +235,12 @@ void Ut_MExtensionHandle::init()
 
     gStartQProcess = true;
 
-    minSize = QSizeF();
-    prefSize = QSizeF();
-    maxSize = QSizeF();
-    visibleSceneSize = QSize(1000, 1000);
     gMAppletSharedMutexStub->stubReset();
     gMAppletSharedMutexStub->stubSetReturnValue("init", true);
     gMAppletSharedMutexStub->stubSetReturnValue("lock", true);
     gMAppletSharedMutexStub->stubSetReturnValue("unlock", true);
     gMAppletSharedMutexStub->stubSetReturnValue("tryLock", true);
     contextMenuOpened = false;
-    Ut_MExtensionHandle::minSize = QSizeF();
-    Ut_MExtensionHandle::prefSize = QSizeF();
-    Ut_MExtensionHandle::maxSize = QSizeF();
-    Ut_MExtensionHandle::visibleSceneSize = QSize(1000, 1000);
-    appWin->scene()->addItem(handle);
 }
 
 void Ut_MExtensionHandle::cleanup()

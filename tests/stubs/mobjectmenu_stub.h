@@ -21,7 +21,6 @@
 #define MOBJECTMENU_STUB
 
 #include "mobjectmenu.h"
-#include "mscenewindowprivate_stub.h"
 #include <stubbase.h>
 
 
@@ -70,7 +69,7 @@ MObjectMenuStub *gMObjectMenuStub = &gDefaultMObjectMenuStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-MObjectMenu::MObjectMenu(MWidget *target) : MSceneWindow(new MSceneWindowPrivate, new MObjectMenuModel, MSceneWindow::ObjectMenu)
+MObjectMenu::MObjectMenu(MWidget *target)
 {
     gMObjectMenuStub->MObjectMenuConstructor(target);
 }

@@ -31,19 +31,7 @@ class MTestAppletHandleView : public MAppletHandleView
 public:
     MTestAppletHandleView(MAppletHandle *handle);
     void click();
-};
-
-class MTestAppletHandleViewPrivate : public MAppletHandleViewPrivate
-{
-    Q_DECLARE_PUBLIC(MTestAppletHandleView)
-
-public:
-    MTestAppletHandleViewPrivate(MAppletHandle *handle);
-    virtual ~MTestAppletHandleViewPrivate();
-
-    //! \reimp
-    virtual void drawPixmap(QPainter *painter, const QRectF &sourceGeometry, const QRectF &targetGeometry, bool brokenState) const;
-    //! \reimp_end
+    MAppletHandleModel* modifiableModel();
 };
 
 // Test case must inherit QObject

@@ -42,12 +42,6 @@ public:
     void sendContextMenuEvent(QGraphicsSceneContextMenuEvent *event);
     MTestExtensionHandlePrivate *privateClass();
 
-    MExtensionHandleStyle *modifiableStyle() {
-        MExtensionHandleStyleContainer &sc = dynamic_cast<MExtensionHandleStyleContainer &>(style());
-        const MExtensionHandleStyle *const_s = sc.operator ->();
-        MExtensionHandleStyle *s = const_cast<MExtensionHandleStyle *>(const_s);
-        return s;
-    }
 };
 
 // Test case must inherit QObject
@@ -62,16 +56,6 @@ private:
 public:
     //! Indicates whether communication server listens to incoming connections or not.
     static bool listenForConnection;
-
-    //! Minimum size hint response
-    static QSizeF minSize;
-    //! Preferred size hint response
-    static QSizeF prefSize;
-    //! Maximum size hint response
-    static QSizeF maxSize;
-    //! The visible scene size returned by MSceneManager
-    static QSize visibleSceneSize;
-
     //! Whether the shared memory is attached or not
     static bool sharedMemoryAttached;
     //! Whether the MWidget::contextMenuEvent() has been called

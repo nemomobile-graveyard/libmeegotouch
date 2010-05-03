@@ -39,7 +39,6 @@ STYLE_HEADERS += $$MSRCDIR/extensions/style/mextensionhandlestyle.h
 
 SOURCES += ut_mextensionhandle.cpp \
     $$MSRCDIR/extensions/applicationextension/mextensionhandle.cpp \
-    $$MSRCDIR/corelib/widgets/core/mwidgetcontroller.cpp \
     $$MSRCDIR/corelib/widgets/mwidgetmodel.cpp
 
 # service classes
