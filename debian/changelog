@@ -1,8 +1,9 @@
-libmeegotouch (0.20.4~1) unstable; urgency=low
+libmeegotouch (0.20.4-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#165612 - tapping the information banner, information banner is closing after 2 seconds, it is not closing immediately
+  * Fixes: NB#161234 - DuiLabel does not restrict its size according its layout
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 28 Apr 2010 16:58:20 +0300
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 03 May 2010 14:28:29 +0300
 
 libmeegotouch (0.20.3-1) unstable; urgency=low
 
