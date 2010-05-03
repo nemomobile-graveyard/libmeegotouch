@@ -1,3 +1,9 @@
+libmeegotouch (0.20.4-2) unstable; urgency=low
+
+  * Removed mention to bug-fix that got released in 0.20.2-2 version from 0.20.3-1 changelog
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 03 May 2010 15:26:48 +0300
+
 libmeegotouch (0.20.4-1) unstable; urgency=low
 
   * Fixes: NB#165612 - tapping the information banner, information banner is closing after 2 seconds, it is not closing immediately
