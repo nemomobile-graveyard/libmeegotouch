@@ -73,6 +73,7 @@ private:
     void init();
     void connectSelectionModel();
     void scrollTo(const QModelIndex &index, MList::ScrollHint hint);
+    void longTap(const QPointF &pos);
 
 private:
     MListViewPrivate *d_ptr;

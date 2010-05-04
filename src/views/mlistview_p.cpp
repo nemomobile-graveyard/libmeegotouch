@@ -125,6 +125,11 @@ void MListViewPrivate::cellClicked(MWidget *source)
     controller->selectItem(cellIndex);
 }
 
+void MListViewPrivate::cellLongTapped(const QModelIndex &index)
+{
+    controller->longTapItem(index);
+}
+
 void MListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
 {
     foreach(MWidget * widget, visibleItems) {

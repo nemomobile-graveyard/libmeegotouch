@@ -322,6 +322,11 @@ public Q_SLOTS:
     void selectItem(const QModelIndex &index);
 
     /*!
+        \brief Convenience function - Emits a long tap event for an item.
+     */
+    void longTapItem(const QModelIndex &index);
+
+    /*!
         \brief Scrolls list to a specific index. Call to function will ensure
         that item with specified index becomes visible.
       */
@@ -350,6 +355,11 @@ Q_SIGNALS:
     void itemClicked(const QModelIndex &index);
 
     /*!
+        \brief Emitted when an item is long tapped.
+    */
+    void itemLongTapped(const QModelIndex &index);
+
+    /*!
         \brief Emitted when list is moving, e.g. pannable by user
       */
     void panningStarted();
@@ -366,6 +376,11 @@ protected:
        Notification of model data modifications.
     */
     virtual void updateData(const QList<const char *>& modifications);
+
+    /*!
+       Notification of context menu event.
+    */
+    virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
 
 private:
     Q_DECLARE_PRIVATE(MList)

@@ -109,6 +109,7 @@ public:
     virtual void clearFirstAndLastVisibleRows();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void cellClicked(MWidget *source);
+    virtual void cellLongTapped(const QModelIndex &index);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual void updateItemSize();
     virtual void updateSeparatorSize();
