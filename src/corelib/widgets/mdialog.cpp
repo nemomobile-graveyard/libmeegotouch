@@ -185,6 +185,7 @@ bool MDialogPrivate::prepareStandAloneAppearance(MSceneWindow::DeletionPolicy po
         standAloneWindow = new MWindow(new MSceneManager);
         standAloneWindow->setTranslucentBackground(true);
 #ifdef Q_WS_X11
+        standAloneWindow->setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
         XSetTransientForHint(QX11Info::display(), standAloneWindow->winId(), MApplication::activeWindow()->winId());
 #endif
         q->connect(q, SIGNAL(disappeared()), SLOT(_q_onStandAloneDialogDisappeared()));
