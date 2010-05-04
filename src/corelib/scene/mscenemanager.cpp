@@ -384,6 +384,12 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
 {
     Q_Q(MSceneManager);
 
+    const QRectF microFocusRect = q->scene()->inputMethodQuery(Qt::ImMicroFocus).toRectF();
+    // If the microfocus is invalid then the focused widget does not want to be relocated.
+    if (!microFocusRect.isValid()) {
+        return;
+    }
+
     // This method is not responsible for restoring visibility when the input panel is closed -
     // _q_inputPanelClosed() does that. Therefore, it is OK to also ignore empty rectangles here.
     if (!focusedInputWidget || inputPanelRect.isEmpty()) {
@@ -402,7 +408,6 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
     visibleRect.setHeight(visibleRect.height() - obstructedHeight);
 
     // Always try to center the input focus into the remaining visible rectangle.
-    const QRectF microFocusRect = q->scene()->inputMethodQuery(Qt::ImMicroFocus).toRectF();
     int adjustment = (rootElement->mapRectFromScene(microFocusRect).toRect().center() -
                       visibleRect.center()).y();
 
