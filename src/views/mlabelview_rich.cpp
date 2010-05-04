@@ -446,7 +446,7 @@ void MLabelViewRich::updateHighlighting()
 {
     //TODO: Should the highlight format come from the highlighter object?
 
-    MLabelHighlighterList list = viewPrivate->model()->highlighters();
+    QList<MLabelHighlighter *> list = viewPrivate->model()->highlighters();
     const int listSize = list.size();
     for (int i = 0; i < listSize; ++i) {
         const MLabelHighlighter *highlighter = list[i];

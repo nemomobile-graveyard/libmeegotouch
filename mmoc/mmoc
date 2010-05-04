@@ -5,10 +5,10 @@ use English;
 $::QT_MOC_PATH = find_moc ();
 
 if (! -x $::QT_MOC_PATH) {
-	print "Unable to find moc, or is not executable\n";
-	if ( "MSWin32" ne "$OSNAME" ) {
-		exit (1);
-	}
+        print "Unable to find moc, or is not executable\n";
+        if ( "MSWin32" ne "$OSNAME" ) {
+                exit (1);
+        }
 }
 
 chomp( $::QT_MOC_PATH );
@@ -17,30 +17,28 @@ exit main( @ARGV );
 
 sub find_moc
 {
-	my $mocpath;
+        my $mocpath;
 
-	if ($ENV{"QTDIR"} && -x "$ENV{\"QTDIR\"}/bin/moc")
-	{
-		return "$ENV{\"QTDIR\"}/bin/moc";
-	}
+        if ($ENV{"QTDIR"} && -x "$ENV{\"QTDIR\"}/bin/moc") {
+            return "$ENV{\"QTDIR\"}/bin/moc";
+        }
 
     # here we need to do things differently for windows
-    if ( "MSWin32" ne "$OSNAME" )
-    {
-		$mocpath = `which moc 2>/dev/null`;
-		if ($? == 0) {
-			chomp $mocpath;
-			return $mocpath;
-		}
+    if ( "MSWin32" ne "$OSNAME" ) {
+        $mocpath = `which moc 2>/dev/null`;
+        if ($? == 0) {
+            chomp $mocpath;
+            return $mocpath;
+        }
 
-		$mocpath = `which moc-qt4 2>/dev/null`;
-		if ($? == 0) {
-			chomp $mocpath;
-			return $mocpath;
-		}
+        $mocpath = `which moc-qt4 2>/dev/null`;
+        if ($? == 0) {
+            chomp $mocpath;
+            return $mocpath;
+        }
     } else {
-		return "moc";
-	}
+        return "moc";
+    }
 }
 
 sub main
@@ -79,24 +77,6 @@ sub main
     return 0;
 }
 
-# common regular expressions
-$::spaces = "\s*";
-$::comma = ",";
-$::colon = ":";
-$::parenO = "\(";
-$::parenC = "\)";
-$::emptyParen = "\(\)";
-$::angleO = "<";
-$::angleC = ">";
-$::braceO = "\{";
-$::nameSpace = "(?:\w+::)";
-$::typeName = "\w+";
-$::pointer = "\*";
-$::templateName = "\w+";
-$::plainParam = "(\w+)";
-$::boolParam = "(true|false)";
-$::anyParam = "(.+)";
-
 sub runStyleMoc
 {
     my ($header, @arguments) = @_;
@@ -128,74 +108,6 @@ sub runModelMoc
 
     my $commandLine = join( " ", @arguments );
 
-    my @pattern = (
-        $::spaces.
-        "M_MODEL_PROPERTY".
-        $::spaces.$::parenO.$::spaces.
-            "(".
-                "(?:".
-                    $::nameSpace."{,1}".
-                    $::typeName.
-                    $::spaces.
-                    $::pointer."{,1}".
-                ")".
-                "|".
-                "(?:".
-                    $::templateName.
-                    $::angleO.
-                        $::spaces.
-                        $::typeName.
-                        $::spaces.
-                        $::pointer."{,1}".
-                        $::spaces.
-                    $::angleC.
-                ")".
-            ")".
-                $::spaces.$::comma.$::spaces.
-            $::plainParam.
-                $::spaces.$::comma.$::spaces.
-            $::plainParam.
-                $::spaces.$::comma.$::spaces.
-            $::plainParam.
-                $::spaces.$::comma.$::spaces.
-            $::anyParam.
-        $::spaces.$::parenC.$::spaces,
-
-        $::spaces.
-        "M_MODEL_PTR_PROPERTY".
-        $::spaces.$::parenO.$::spaces.
-            "(".
-                "(?:".
-                    $::nameSpace."{,1}".
-                    $::typeName.
-                    $::spaces.
-                    $::pointer."{,1}".
-                    $::spaces.
-                ")".
-                "|".
-                "(?:".
-                    $::templateName.
-                    $::angleO.
-                        $::spaces.
-                        $::typeName.
-                        $::spaces.
-                        $::pointer."{,1}".
-                        $::spaces.
-                    $::angleC.
-                ")".
-            ")".
-                $::spaces.$::comma.$::spaces.
-            $::plainParam.
-                $::spaces.$::comma.$::spaces.
-            $::plainParam.
-                $::spaces.$::comma.$::spaces.
-            $::boolParam.
-                $::spaces.$::comma.$::spaces.
-            $::anyParam.
-        $::spaces.$::parenC.$::spaces,
-
-    );
-
     open( INF, "<$header" ) || die( "Could not open header file for reading : $!" );
 
     open( MOC, "|$commandLine" ) || die( "Could not run command $commandLine : $!" );
@@ -204,9 +116,31 @@ sub runModelMoc
         chomp;
         my $line = $_;
 
-	$line =~ s/\s*M_MODEL_PROPERTY\s*\((\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*([^\(\)]+)(?:\(\))?\s*\)\s*/    Q_PROPERTY($1 $2 READ $2 WRITE set$3)/;
-	$line =~ s/\s*M_MODEL_PTR_PROPERTY\s*\((\w+\s*(?:\*)*)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*(\w+)\s*,\s*([^\(\)]+)(?:\(\))?\s*\)\s*/    Q_PROPERTY($1 $2 READ $2 WRITE set$3)/;
+        #matching for nested pairs of paranthesis', brackets or arrows
+        my $naryoperators = qr/(?:(?>[*+-\/|&^]+))/;
+        my $unaryoperators = qr/(?:(?>[!]+))/;
+        my $pointers = qr/(?:(?>[*]+))/;
+        my $parantheses = qr/\((?:(?>[^()]+)|(??{$parantheses}))*\)/;
+        my $brackets = qr/\[(?:(?>[^[]]+)|(??{$brackets}))*\]/;
+        my $arrows = qr/\<(?:(?>[^<>]+)|(??{$arrows}))*\>/;
 
+        #arrows for template matching, brackets for array matching
+        #paranthesis' for constructor matching
+        my $typePattern = qr/\S+\s*$arrows\s*$pointers\s*$brackets |
+                             \S+\s*$arrows\s*$paranthesis |
+                             \S+\s*$arrows\s*$brackets |
+                             \S+\s*$parantheses\s*$brackets |
+                             \S+\s*$arrows\s*$pointers |
+                             \S+\s*$pointers\s*$brackets |
+                             \S+\s*$pointers |
+                             \S+\s*$arrows |
+                             \S+\s*$brackets |
+                             \S+\s*$parantheses |
+                             \S+\s*/x;
+
+        $line =~ s/\s*M_MODEL_PROPERTY\s*\(\s*($typePattern)\s*,\s*(\S+)\s*,\s*(\S+)\s*,\s*(\S+)\s*,\s*(.+)\)\s*/    Q_PROPERTY($1 $2 READ $2 WRITE set$3)/;
+        $line =~ s/\s*M_MODEL_PTR_PROPERTY\s*\(\s*($typePattern)\s*,\s*(\S+)\s*,\s*(\S+)\s*,\s*(\S+)\s*,\s*(.+)\)\s*/    Q_PROPERTY($1 $2 READ $2 WRITE set$3)/;
+ 
         print MOC "$line\n";
     }
 

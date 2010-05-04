@@ -20,6 +20,7 @@
 #ifndef MNAMESPACE_H
 #define MNAMESPACE_H
 
+#include <QMetaType>
 #include <QMessageBox>
 
 namespace M
@@ -253,5 +254,17 @@ namespace M
 }
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(M::StandardButtons)
+
+Q_DECLARE_METATYPE(M::AssemblyType)
+Q_DECLARE_METATYPE(M::OrientationAngle)
+Q_DECLARE_METATYPE(M::Orientation)
+Q_DECLARE_METATYPE(M::Position)
+Q_DECLARE_METATYPE(M::RecursionMode)
+Q_DECLARE_METATYPE(M::InputMethodQueryExtensions)
+Q_DECLARE_METATYPE(M::PreeditFace)
+Q_DECLARE_METATYPE(M::TextContentType)
+Q_DECLARE_METATYPE(M::InputMethodMode)
+Q_DECLARE_METATYPE(M::PrestartMode)
+Q_DECLARE_METATYPE(M::StandardButton)
 
 #endif

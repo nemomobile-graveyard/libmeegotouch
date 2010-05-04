@@ -167,6 +167,6 @@ void MLabel::removeHighlighter(MLabelHighlighter *highlighter)
 
 void MLabel::removeAllHighlighters()
 {
-    model()->setHighlighters(MLabelHighlighterList());
+    model()->setHighlighters(QList<MLabelHighlighter *>());
 }
 
