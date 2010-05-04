@@ -444,16 +444,17 @@ void MPannableWidget::glassPanEvent(QGestureEvent *event, QPanGesture* panGestur
         return;
     }
 
+    if ((panGesture->offset().x() != 0 && panDirection().testFlag(Qt::Vertical)) ||
+        (panGesture->offset().y() != 0 && panDirection().testFlag(Qt::Horizontal)))
+    {
+        // Panning against the pannable direction, we aren't interested in it.
+        event->ignore(panGesture);
+        return;
+    }
+
     switch (panGesture->state())
     {
     case Qt::GestureStarted:
-        if ((panGesture->offset().x() != 0 && panDirection().testFlag(Qt::Vertical)) ||
-            (panGesture->offset().y() != 0 && panDirection().testFlag(Qt::Horizontal)))
-        {
-            // Panning against the pannable direction, we aren't interested in it.
-            event->ignore(panGesture);
-            return;
-        }
 
         if (d->pressDeliveryTimerId) {
             // The initial MousePress event hasn't been delivered yet.

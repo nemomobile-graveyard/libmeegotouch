@@ -34,6 +34,8 @@ public:
     MPhysics2DPanningPrivate(MPhysics2DPanning *publicClass);
     virtual ~MPhysics2DPanningPrivate();
 
+    bool    enabled;
+
     QRectF  range;
     qreal   posX;
     qreal   posY;

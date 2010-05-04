@@ -28,6 +28,7 @@ static const int PanningTimelineInterval      =      20; /* in ms */
 static const int PositionNoiseDampingDelta    =       2; /* in px */
 
 MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObject) :
+    enabled(true),
     range(QRectF(0.0, 0.0, 0.0, 0.0)),
     posX(0.0),
     posY(0.0),
@@ -141,6 +142,19 @@ MPhysics2DPanning::MPhysics2DPanning(QObject *parent)
 MPhysics2DPanning::~MPhysics2DPanning()
 {
     delete d_ptr;
+}
+
+bool MPhysics2DPanning::enabled() const
+{
+    return d_ptr->enabled;
+}
+
+void MPhysics2DPanning::setEnabled(bool enabled)
+{
+    Q_D(MPhysics2DPanning);
+
+    d->enabled = enabled;
+    if (d->enabled == false) stop();
 }
 
 Qt::Orientations MPhysics2DPanning::panDirection() const
@@ -319,14 +333,43 @@ void MPhysics2DPanning::pointerMove(const QPointF &pos)
     Q_D(MPhysics2DPanning);
 
     // Tenses the pointer spring with the amount of movement of the pointer
-
     QPointF delta = pos - d->sceneLastPos;
 
     d->sceneLastPos = pos;
 
-    d->pointerSpringX += delta.x();
-    d->pointerSpringY += delta.y();
-    start();
+    if (d->enabled) {
+        d->pointerSpringX += delta.x();
+        d->pointerSpringY += delta.y();
+        start();
+    } else {
+
+        bool emitSignal = false;
+
+        if (d->panDirection.testFlag(Qt::Horizontal)) {
+
+            qreal prevPosX = d->posX;
+            d->posX -= delta.x();
+
+            if (d->posX < d->range.left()) d->posX = d->range.left();
+            if (d->posX > d->range.right()) d->posX = d->range.right();
+
+            if (prevPosX != d->posX) emitSignal = true;
+        }
+
+        if (d->panDirection.testFlag(Qt::Vertical)) {
+
+            qreal prevPosY = d->posY;
+            d->posY -= delta.y();
+
+            if (d->posY < d->range.top()) d->posY = d->range.top();
+            if (d->posY > d->range.bottom()) d->posY = d->range.bottom();
+
+            if (prevPosY != d->posY) emitSignal = true;
+        }
+
+        if (emitSignal) emit positionChanged(QPointF(d->posX, d->posY));
+    }
+
 }
 
 
@@ -335,8 +378,12 @@ void MPhysics2DPanning::pointerRelease()
     Q_D(MPhysics2DPanning);
 
     // Disables the pointer spring
-
     d->pointerPressed = false;
+
+    if (d->enabled == false) {
+        //The physics engine is not working, emitting panning stopped now.
+        emit panningStopped();
+    }
 }
 
 

@@ -82,6 +82,8 @@ private slots:
 
     void integrating_data();
     void integrating();
+    void kinetic_disabled_integrating_data();
+    void kinetic_disabled_integrating();
 
     // Integration algorithm convergence and border behaviour
     void positionShouldReturnToStartRangeAfterMovingViewportBeyondStartRange();

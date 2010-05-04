@@ -459,6 +459,93 @@ void Ut_MPhysics2DPanning::integrating()
     QCOMPARE(QPointF(x, y), endPosition);
 }
 
+void Ut_MPhysics2DPanning::kinetic_disabled_integrating_data()
+{
+    QList<integratingAction> actionList;
+
+    QTest::addColumn< QList<integratingAction> >("actionList");
+    QTest::addColumn< QPointF >("endPosition");
+
+    actionList.clear();
+    actionList.push_back(integratingAction(press,   QPointF(0.0, 0.0)));
+    actionList.push_back(integratingAction(tick,    7));
+    actionList.push_back(integratingAction(move,    QPointF(50.0, 10.0)));
+    actionList.push_back(integratingAction(tick,    7));
+    actionList.push_back(integratingAction(move,    QPointF(80.0, 10.0)));
+    actionList.push_back(integratingAction(tick,    7));
+    actionList.push_back(integratingAction(release));
+    actionList.push_back(integratingAction(tick,    7));
+
+    QTest::newRow("actionList 1") << actionList << QPointF(0.0, 0.0);
+
+    actionList.clear();
+    actionList.push_back(integratingAction(setRange, QSizeF(100, 100)));
+    actionList.push_back(integratingAction(press,   QPointF(0.0, 0.0)));
+    actionList.push_back(integratingAction(tick,    7));
+    actionList.push_back(integratingAction(move,    QPointF(-83.0, -20.0)));
+    actionList.push_back(integratingAction(tick,    7));
+    actionList.push_back(integratingAction(release));
+    actionList.push_back(integratingAction(tick,    7));
+
+    // End position is rounded to nearest 0.001
+    QTest::newRow("actionList 2") << actionList << QPointF(83, 20);
+}
+
+
+void Ut_MPhysics2DPanning::kinetic_disabled_integrating()
+{
+    int i, j;
+    qreal x, y;
+    int frame = 0;
+
+    physics->setEnabled(false);
+
+    QFETCH(QList<integratingAction>, actionList);
+
+
+    for (i = 0; i < actionList.size(); i++) {
+        switch (actionList[i].type) {
+        case tick:
+            for (j = 0; j < actionList[i].value_int; j++) {
+                physics->d_ptr->_q_integrator(frame++);
+            }
+            break;
+        case press:
+            physics->pointerPress(actionList[i].value_QPointF);
+            break;
+        case move:
+            physics->pointerMove(actionList[i].value_QPointF);
+            break;
+        case release:
+            physics->pointerRelease();
+            break;
+        case setRange:
+            physics->setRange(QRectF(QPointF(), actionList[i].value_QSizeF));
+            break;
+        default:
+            break;
+        }
+    }
+
+    QFETCH(QPointF, endPosition);
+
+    x = physics->position().x();
+    y = physics->position().y();
+
+    // Rounds to nearest 0.001
+
+    x *= 1000.0;
+    x  = qRound(x);
+    x /= 1000.0;
+    y *= 1000.0;
+    y  = qRound(y);
+    y /= 1000.0;
+
+    QCOMPARE(QPointF(x, y), endPosition);
+
+    physics->setEnabled(true);
+}
+
 void Ut_MPhysics2DPanning::positionShouldReturnToStartRangeAfterMovingViewportBeyondStartRange()
 {
     physics->setRange(QRectF(10, 10, 100, 100));

@@ -46,11 +46,19 @@ class MPhysics2DPanningPrivate;
  * spring. Additional forces come into play if the position goes
  * outside the range (border springs are applied). There are various
  * friction constants slowing down the movement
+ *
+ * The kinetic action of the springs can be disabled with setEnabled()
+ * methods. In case the physics is disabled, the viewport will not
+ * keep panning after the pointer is released.
+ *
+ * By default, the kinetic action of the springs is enabled.
  */
 class M_EXPORT MPhysics2DPanning : public QObject
 {
     Q_OBJECT
 
+    //! \brief Current enabled/disabled state.
+    Q_PROPERTY(bool enabled READ enabled WRITE setEnabled)
     //! \brief Current panning orientations
     Q_PROPERTY(Qt::Orientations panDirection READ panDirection WRITE setPanDirection)
     //! \brief Current panning range
@@ -79,6 +87,23 @@ public:
      * \brief Destructs an integrator.
      */
     virtual ~MPhysics2DPanning();
+
+    /*!
+     * \brief Returns the enabled state of the physics engine.
+     */
+    bool enabled() const;
+
+    /*!
+     * \brief Sets the enabled/disabled state of the physics engine.
+     * If the physics is disabled, the integration algorithm is not
+     * started when the user moves the pointer on the screen.
+     *
+     * When disabled, the viewport will still be scrollable but it
+     * will not keep panning after the pointer is released.
+     *
+     * By default, the physics engine is enabled.
+     */
+    void setEnabled(bool enabled);
 
     /*!
      * \brief Returns the allowed direction of panning movement.
