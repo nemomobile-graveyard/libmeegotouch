@@ -657,13 +657,16 @@ MSceneWindow *MSceneManagerPrivate::parentSceneWindow(QGraphicsItem *item)
 
 int MSceneManagerPrivate::scrollPageContents(MSceneWindow *window, int adjustment) const
 {
-    // TODO: find out at which amount this logic breaks - see NB #162913
-
     Q_Q(const MSceneManager);
     MApplicationPage *page = qobject_cast<MApplicationPage *>(window);
 
     if (!page) {
         // Nothing was scrolled.
+        return 0;
+    }
+
+    if (!page->isPannable()) {
+        // Scrolling was disabled explicitly.
         return 0;
     }
 
