@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include "navigationbarpage.h"
+#include "displaymodespage.h"
 
 #include <MAction>
 #include <MLocale>
@@ -33,21 +33,21 @@
 #include <QStringList>
 #include <QTimer>
 
-NavigationBarPage::NavigationBarPage()
+DisplayModesPage::DisplayModesPage()
 {
     gid = TemplatePage::ViewsAndDialogs;
 }
 
-NavigationBarPage::~NavigationBarPage()
+DisplayModesPage::~DisplayModesPage()
 {
 }
 
-QString NavigationBarPage::timedemoTitle()
+QString DisplayModesPage::timedemoTitle()
 {
-    return "NavigationBar";
+    return "DisplayModes";
 }
 
-void NavigationBarPage::createContent()
+void DisplayModesPage::createContent()
 {
     QGraphicsLinearLayout *lytMain = new QGraphicsLinearLayout(Qt::Vertical);
     lblDisplayMode = new MLabel(this);
@@ -57,7 +57,7 @@ void NavigationBarPage::createContent()
     // combo box nav bar display mode
     comboNavigationBarDisplayMode = new MComboBox(this);
     //%  "Navigation Bar"
-    comboNavigationBarDisplayMode->setTitle(qtTrId("xx_navigationbar_navbarcombo"));
+    comboNavigationBarDisplayMode->setTitle(qtTrId("xx_displaymodes_navbarcombo"));
     comboNavigationBarDisplayMode->setIconVisible(false);
     connect(comboNavigationBarDisplayMode, SIGNAL(currentIndexChanged(int)),
             SLOT(changeNavigationBarDisplayMode(int)));
@@ -65,7 +65,7 @@ void NavigationBarPage::createContent()
     // combo box escape button display mode
     comboEscapeButtonDisplayMode = new MComboBox(this);
     //% "Escape Button"
-    comboEscapeButtonDisplayMode->setTitle(qtTrId("xx_navigationbar_escapebtncombo"));
+    comboEscapeButtonDisplayMode->setTitle(qtTrId("xx_displaymodes_escapebtncombo"));
     comboEscapeButtonDisplayMode->setIconVisible(false);
     connect(comboEscapeButtonDisplayMode, SIGNAL(currentIndexChanged(int)),
             SLOT(changeEscapeButtonDisplayMode(int)));
@@ -73,7 +73,7 @@ void NavigationBarPage::createContent()
     // combo box home button display mode
     comboHomeButtonDisplayMode = new MComboBox(this);
     //% "Home Button"
-    comboHomeButtonDisplayMode->setTitle(qtTrId("xx_navigationbar_homebtncombo"));
+    comboHomeButtonDisplayMode->setTitle(qtTrId("xx_displaymodes_homebtncombo"));
     comboHomeButtonDisplayMode->setIconVisible(false);
     connect(comboHomeButtonDisplayMode, SIGNAL(currentIndexChanged(int)),
             SLOT(changeHomeButtonDisplayMode(int)));
@@ -82,27 +82,46 @@ void NavigationBarPage::createContent()
     lytButtons->addItem(comboHomeButtonDisplayMode);
     lytButtons->addItem(comboEscapeButtonDisplayMode);
 
-    MSeparator *separator = new MSeparator(this);
-
-    lblEscapeModeDesc = new MLabel(this);
-    comboEscapeMode = new MComboBox(this);
-
-    connect(comboEscapeMode, SIGNAL(currentIndexChanged(int)), SLOT(changeEscapeMode(int)));
+    createWindowStateWidgets();
 
     lytMain->addItem(lblDisplayMode);
     lytMain->addItem(lytButtons);
-    lytMain->addItem(separator);
-    lytMain->addItem(lblEscapeModeDesc);
-    lytMain->addItem(comboEscapeMode);
+    lytMain->addItem(new MSeparator);
+    lytMain->addItem(lblWindowState);
+    lytMain->addItem(fullScreenCheckboxLayout);
 
     centralWidget()->setLayout(lytMain);
-    QTimer::singleShot(0, this, SLOT(setButtonsState()));
 
     addExampleActions();
     retranslateUi();
 }
 
-void NavigationBarPage::addExampleActions()
+void DisplayModesPage::createWindowStateWidgets()
+{
+    lblWindowState = new MLabel;
+
+    checkboxFullScreen = new MButton;
+    checkboxFullScreen->setViewType(MButton::checkboxType);
+    checkboxFullScreen->setCheckable(true);
+    connect(checkboxFullScreen, SIGNAL(toggled(bool)), SLOT(changeFullScreenMode(bool)));
+
+    // Init "full screen" checkbox state
+    if (MApplication::activeWindow()) {
+        checkboxFullScreen->setChecked(MApplication::activeWindow()->isFullScreen());
+    }
+
+    lblFullScreen = new MLabel;
+    lblFullScreen->setWordWrap(true);
+    lblFullScreen->setTextElide(true);
+
+    fullScreenCheckboxLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    fullScreenCheckboxLayout->addItem(checkboxFullScreen);
+    fullScreenCheckboxLayout->addItem(lblFullScreen);
+    fullScreenCheckboxLayout->setAlignment(checkboxFullScreen, Qt::AlignCenter);
+    fullScreenCheckboxLayout->setAlignment(lblFullScreen, Qt::AlignCenter);
+}
+
+void DisplayModesPage::addExampleActions()
 {
     MAction *action;
 
@@ -119,41 +138,27 @@ void NavigationBarPage::addExampleActions()
     addAction(action);
 }
 
-void NavigationBarPage::retranslateUi()
+void DisplayModesPage::retranslateUi()
 {
-    //% "Navigation Bar"
-    setTitle(qtTrId("xx_navigationbar_page_title"));
+    //% "Display Modes and Full Screen"
+    setTitle(qtTrId("xx_displaymodes_page_title"));
     if (!isContentCreated())
         return;
     //% "Components' display mode:"
-    lblDisplayMode->setText(qtTrId("xx_navigationbar_display_mode"));
-    //% "Escape Button mode:"
-    lblEscapeModeDesc->setText(qtTrId("xx_navigationbar_escape_mode_label"));
-    int oldIndex = comboEscapeMode->currentIndex();
-    comboEscapeMode->clear();
-    comboEscapeMode->insertItem(Auto,
-                                //% "Auto"
-                                qtTrId("xx_navigationbar_auto"));
-    comboEscapeMode->insertItem(ManualBack,
-                                "Icon-back",
-                                //% "Manual Back"
-                                qtTrId("xx_navigationbar_manual_back"));
-    comboEscapeMode->insertItem(CloseWindow,
-                                "Icon-close",
-                                //% "Close Window"
-                                qtTrId("xx_navigationbar_close_window"));
+    lblDisplayMode->setText(qtTrId("xx_displaymodes_display_mode"));
 
-    if (oldIndex == -1)
-        comboEscapeMode->setCurrentIndex(0);
-    else
-        comboEscapeMode->setCurrentIndex(oldIndex);
+    //% "Window state:"
+    lblWindowState->setText(qtTrId("xx_displaymodes_window_state"));
+
+    //% "Full Screen"
+    lblFullScreen->setText(qtTrId("xx_displaymodes_full_screen"));
 
     retranslateDisplayModeComboBox(comboNavigationBarDisplayMode);
     retranslateDisplayModeComboBox(comboHomeButtonDisplayMode);
     retranslateDisplayModeComboBox(comboEscapeButtonDisplayMode);
 }
 
-void NavigationBarPage::retranslateDisplayModeComboBox(MComboBox *combo)
+void DisplayModesPage::retranslateDisplayModeComboBox(MComboBox *combo)
 {
     int oldIndex = combo->currentIndex();
 
@@ -171,24 +176,7 @@ void NavigationBarPage::retranslateDisplayModeComboBox(MComboBox *combo)
         combo->setCurrentIndex(oldIndex);
 }
 
-void NavigationBarPage::changeEscapeMode(int index)
-{
-    switch (index) {
-        case Auto:
-            setEscapeMode(MApplicationPageModel::EscapeAuto);
-            break;
-        case ManualBack:
-            setEscapeMode(MApplicationPageModel::EscapeManualBack);
-            break;
-        case CloseWindow:
-            setEscapeMode(MApplicationPageModel::EscapeCloseWindow);
-            break;
-        default:
-            qFatal("Invalid index");
-    }
-}
-
-void NavigationBarPage::changeNavigationBarDisplayMode(int index)
+void DisplayModesPage::changeNavigationBarDisplayMode(int index)
 {
     switch (index) {
     case ComboShow:
@@ -202,7 +190,7 @@ void NavigationBarPage::changeNavigationBarDisplayMode(int index)
     }
 }
 
-void NavigationBarPage::changeEscapeButtonDisplayMode(int index)
+void DisplayModesPage::changeEscapeButtonDisplayMode(int index)
 {
     switch (index) {
     case ComboShow:
@@ -216,7 +204,7 @@ void NavigationBarPage::changeEscapeButtonDisplayMode(int index)
     }
 }
 
-void NavigationBarPage::changeHomeButtonDisplayMode(int index)
+void DisplayModesPage::changeHomeButtonDisplayMode(int index)
 {
     switch (index) {
     case ComboShow:
@@ -230,20 +218,16 @@ void NavigationBarPage::changeHomeButtonDisplayMode(int index)
     }
 }
 
-void NavigationBarPage::setButtonsState()
+void DisplayModesPage::changeFullScreenMode(bool fullScreen)
 {
-    switch (escapeMode()) {
-        case MApplicationPageModel::EscapeAuto:
-            comboEscapeMode->setCurrentIndex(Auto);
-            break;
-        case MApplicationPageModel::EscapeManualBack:
-            comboEscapeMode->setCurrentIndex(ManualBack);
-            break;
-        case MApplicationPageModel::EscapeCloseWindow:
-            comboEscapeMode->setCurrentIndex(CloseWindow);
-            break;
-        default:
-            qFatal("Invalid page escape mode.");
+    MWindow *window = MApplication::activeWindow();
+
+    if (!window)
+        return;
+
+    if (fullScreen) {
+        window->showFullScreen();
+    } else {
+        window->showNormal();
     }
 }
-

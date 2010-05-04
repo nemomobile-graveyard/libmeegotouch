@@ -627,66 +627,30 @@ The primary (single short tap) action of the element should not be duplicated in
         <source>Favorite Albums</source>
         <translation>喜爱的相册</translation>
     </message>
-    <message id="xx_navigationbar_navbarcombo">
+    <message id="xx_displaymodes_navbarcombo">
         <location filename="../navigationbarpage.cpp" line="60"/>
         <source>Navigation Bar</source>
         <translation>导航条</translation>
     </message>
-    <message id="xx_navigationbar_escapebtncombo">
+    <message id="xx_displaymodes_escapebtncombo">
         <location filename="../navigationbarpage.cpp" line="68"/>
         <source>Escape Button</source>
         <translation>退出按钮</translation>
     </message>
-    <message id="xx_navigationbar_homebtncombo">
+    <message id="xx_displaymodes_homebtncombo">
         <location filename="../navigationbarpage.cpp" line="76"/>
         <source>Home Button</source>
         <translation>返回主界面按钮</translation>
     </message>
-    <message id="xx_navigationbar_page_title">
+    <message id="xx_displaymodes_page_title">
         <location filename="../navigationbarpage.cpp" line="125"/>
-        <source>Navigation Bar</source>
+        <source>Display Modes and Full Screen</source>
         <translation>导航条</translation>
     </message>
-    <message id="xx_navigationbar_display_mode">
+    <message id="xx_displaymodes_display_mode">
         <location filename="../navigationbarpage.cpp" line="129"/>
         <source>Components&apos; display mode:</source>
         <translation>器件显示模式:</translation>
-    </message>
-    <message id="xx_navigationbar_escape_mode_label">
-        <location filename="../navigationbarpage.cpp" line="131"/>
-        <source>Escape Button mode:</source>
-        <translation>Escape按钮模式:</translation>
-    </message>
-    <message id="xx_navigationbar_auto">
-        <location filename="../navigationbarpage.cpp" line="136"/>
-        <source>Auto</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_navigationbar_manual_back">
-        <location filename="../navigationbarpage.cpp" line="140"/>
-        <source>Manual Back</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_navigationbar_close_window">
-        <location filename="../navigationbarpage.cpp" line="144"/>
-        <source>Close Window</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_navigationbar_escapebutton_mode_label">
-        <source>Escape Button mode:</source>
-        <translation type="obsolete">Escape按钮模式:</translation>
-    </message>
-    <message id="xx_navigationbar_back_button">
-        <source>Back button</source>
-        <translation type="obsolete">返回按钮</translation>
-    </message>
-    <message id="xx_navigationbar_close_button">
-        <source>Close button</source>
-        <translation type="obsolete">关闭按钮</translation>
-    </message>
-    <message id="xx_navigationbar_hidden">
-        <source>Hidden</source>
-        <translation type="obsolete">隐藏</translation>
     </message>
     <message id="xx_displaymode_show">
         <location filename="../navigationbarpage.cpp" line="162"/>

@@ -59,7 +59,7 @@ SOURCES += main.cpp \
     checkboxpage.cpp \
     containerpage.cpp \
     objectmenupage.cpp \
-    navigationbarpage.cpp \
+    displaymodespage.cpp \
     languagepage.cpp \
     widgetsgalleryretranslator.cpp \
     utils.cpp \
@@ -93,7 +93,7 @@ HEADERS += templatepage.h \
     checkboxpage.h \
     containerpage.h \
     objectmenupage.h \
-    navigationbarpage.h \
+    displaymodespage.h \
     languagepage.h \
     widgetsgalleryretranslator.h \
     utils.h \

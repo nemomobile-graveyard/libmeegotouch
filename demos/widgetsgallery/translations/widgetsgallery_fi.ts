@@ -664,7 +664,7 @@ Seekbar is a special type of Slider used for displaying playback status for mult
     </message>
     <message id="xx_navigationbar_page_title">
         <location filename="../navigationbarpage.cpp" line="125"/>
-        <source>Navigation Bar</source>
+        <source>Display Modes and Full Screen</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_navigationbar_display_mode">

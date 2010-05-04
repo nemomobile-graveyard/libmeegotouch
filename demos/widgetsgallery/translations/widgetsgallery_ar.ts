@@ -499,50 +499,35 @@ The primary (single short tap) action of the element should not be duplicated in
         <source>Favorite Albums</source>
         <translation>المفضلة البومات</translation>
     </message>
-    <message id="xx_navigationbar_navbarcombo">
+    <message id="xx_displaymodes_navbarcombo">
         <location filename="../navigationbarpage.cpp" line="60"/>
         <source>Navigation Bar</source>
         <translation>الملاحة بار</translation>
     </message>
-    <message id="xx_navigationbar_escapebtncombo">
+    <message id="xx_displaymodes_escapebtncombo">
         <location filename="../navigationbarpage.cpp" line="68"/>
         <source>Escape Button</source>
         <translation>الهروب زر</translation>
     </message>
-    <message id="xx_navigationbar_homebtncombo">
+    <message id="xx_displaymodes_homebtncombo">
         <location filename="../navigationbarpage.cpp" line="76"/>
         <source>Home Button</source>
         <translation>زر الصفحة الرئيسية</translation>
     </message>
-    <message id="xx_navigationbar_page_title">
+    <message id="xx_displaymodes_page_title">
         <location filename="../navigationbarpage.cpp" line="125"/>
-        <source>Navigation Bar</source>
+        <source>Display Modes and Full Screen</source>
         <translation>الملاحة بار</translation>
     </message>
-    <message id="xx_navigationbar_display_mode">
+    <message id="xx_displaymodes_display_mode">
         <location filename="../navigationbarpage.cpp" line="129"/>
         <source>Components&apos; display mode:</source>
         <translation>الصفحة تطبيق لوضع العرض :</translation>
     </message>
-    <message id="xx_navigationbar_escape_mode_label">
+    <message id="xx_displaymodes_escape_mode_label">
         <location filename="../navigationbarpage.cpp" line="131"/>
         <source>Escape Button mode:</source>
         <translation>وضع زر الهروب :</translation>
-    </message>
-    <message id="xx_navigationbar_auto">
-        <location filename="../navigationbarpage.cpp" line="136"/>
-        <source>Auto</source>
-        <translation>أوتوماتيكي</translation>
-    </message>
-    <message id="xx_navigationbar_manual_back">
-        <location filename="../navigationbarpage.cpp" line="140"/>
-        <source>Manual Back</source>
-        <translation>الخط الخلفي</translation>
-    </message>
-    <message id="xx_navigationbar_close_window">
-        <location filename="../navigationbarpage.cpp" line="144"/>
-        <source>Close Window</source>
-        <translation>إغلاق النافذة</translation>
     </message>
     <message id="xx_displaymode_show">
         <location filename="../navigationbarpage.cpp" line="162"/>

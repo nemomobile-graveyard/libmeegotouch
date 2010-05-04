@@ -462,49 +462,29 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <source>270 degrees clockwise</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="xx_navigationbar_navbarcombo">
+    <message id="xx_displaymodes_navbarcombo">
         <location filename="../navigationbarpage.cpp" line="60"/>
         <source>Navigation Bar</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="xx_navigationbar_escapebtncombo">
+    <message id="xx_displaymodes_escapebtncombo">
         <location filename="../navigationbarpage.cpp" line="68"/>
         <source>Escape Button</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="xx_navigationbar_homebtncombo">
+    <message id="xx_displaymodes_homebtncombo">
         <location filename="../navigationbarpage.cpp" line="76"/>
         <source>Home Button</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="xx_navigationbar_page_title">
+    <message id="xx_displaymodes_page_title">
         <location filename="../navigationbarpage.cpp" line="125"/>
-        <source>Navigation Bar</source>
+        <source>Display Modes and Full Screen</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="xx_navigationbar_display_mode">
+    <message id="xx_displaymodes_display_mode">
         <location filename="../navigationbarpage.cpp" line="129"/>
         <source>Components&apos; display mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_navigationbar_escape_mode_label">
-        <location filename="../navigationbarpage.cpp" line="131"/>
-        <source>Escape Button mode:</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_navigationbar_auto">
-        <location filename="../navigationbarpage.cpp" line="136"/>
-        <source>Auto</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_navigationbar_manual_back">
-        <location filename="../navigationbarpage.cpp" line="140"/>
-        <source>Manual Back</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_navigationbar_close_window">
-        <location filename="../navigationbarpage.cpp" line="144"/>
-        <source>Close Window</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_displaymode_show">

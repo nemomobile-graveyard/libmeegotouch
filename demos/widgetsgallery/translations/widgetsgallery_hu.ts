@@ -841,7 +841,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
     </message>
     <message id="xx_navigationbar_page_title">
         <location filename="../navigationbarpage.cpp" line="125"/>
-        <source>Navigation Bar</source>
+        <source>Display Modes and Full Screen</source>
         <translation>Tájoló Csík</translation>
     </message>
     <message id="xx_navigationbar_display_mode">

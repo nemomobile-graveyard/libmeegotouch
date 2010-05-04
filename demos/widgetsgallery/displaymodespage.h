@@ -17,16 +17,17 @@
 **
 ****************************************************************************/
 
-#ifndef NAVIGATIONBARPAGE_H
-#define NAVIGATIONBARPAGE_H
+#ifndef DISPLAYMODESPAGE_H
+#define DISPLAYMODESPAGE_H
 
 #include "templatepage.h"
 
 class MButton;
 class MComboBox;
 class MLabel;
+class QGraphicsLinearLayout;
 
-class NavigationBarPage : public TemplatePage
+class DisplayModesPage : public TemplatePage
 {
     Q_OBJECT
 public:
@@ -42,18 +43,17 @@ public:
         ComboHide
     };
 
-    NavigationBarPage();
-    virtual ~NavigationBarPage();
+    DisplayModesPage();
+    virtual ~DisplayModesPage();
     virtual QString timedemoTitle();
 
     virtual void createContent();
 
 public slots:
-    void setButtonsState();
-    void changeEscapeMode(int index);
     void changeNavigationBarDisplayMode(int index);
     void changeEscapeButtonDisplayMode(int index);
     void changeHomeButtonDisplayMode(int index);
+    void changeFullScreenMode(bool fullScreen);
 
 protected:
     virtual void retranslateUi();
@@ -61,13 +61,16 @@ protected:
 private:
     void retranslateDisplayModeComboBox(MComboBox *combo);
     void addExampleActions();
+    void createWindowStateWidgets();
 
     MComboBox *comboNavigationBarDisplayMode;
     MComboBox *comboEscapeButtonDisplayMode;
     MComboBox *comboHomeButtonDisplayMode;
-    MComboBox *comboEscapeMode;
     MLabel *lblDisplayMode;
-    MLabel *lblEscapeModeDesc;
+    MLabel *lblWindowState;
+    MButton *checkboxFullScreen;
+    MLabel *lblFullScreen;
+    QGraphicsLinearLayout *fullScreenCheckboxLayout;
 };
 
 #endif // NAVIGATIONBARPAGE_H

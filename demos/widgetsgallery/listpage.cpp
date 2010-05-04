@@ -37,7 +37,7 @@
 #include "spinnerpage.h"
 #include "checkboxpage.h"
 #include "objectmenupage.h"
-#include "navigationbarpage.h"
+#include "displaymodespage.h"
 #include "languagepage.h"
 #include "feedbackpage.h"
 
@@ -130,7 +130,7 @@ void ListPage::createContent()
     addPage(new ApplicationMenuPage);
     addPage(new ObjectMenuPage);
     addPage(new DialogsAndNotificationsPage);
-    addPage(new NavigationBarPage);
+    addPage(new DisplayModesPage);
     addPage(new ToolBarPage);
     addPage(new ContainerPage);
     addPage(new LabelPage);
