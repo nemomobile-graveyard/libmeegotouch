@@ -50,6 +50,7 @@ private slots:
     void testInputMethodQuery();
     void testMaskedCharacters();
     void testUpdateScrollWhenTextChanged();
+    void testSizeHint();
 
 private:
     MTextEdit *m_controller;
