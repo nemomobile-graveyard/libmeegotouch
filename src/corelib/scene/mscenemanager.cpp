@@ -844,6 +844,20 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
 
     attachWindow(window);
 
+    // Check whether we are trying to show a window while it is in the middle of
+    // a hide animation. If that's the case, we stop it.
+    if (window->d_func()->disappearanceAnimation) {
+        MAbstractWidgetAnimation *disappearanceAnimation = window->d_func()->disappearanceAnimation;
+
+        if (disappearanceAnimation->state() == QAbstractAnimation::Running) {
+            disappearanceAnimation->stop();
+            QObject::disconnect(window, SIGNAL(disappeared()),
+                    q, SLOT(_q_onSceneWindowDisappeared()));
+
+            disappearanceAnimation->restoreTargetWidgetState();
+        }
+    }
+
     setSceneWindowGeometry(window);
     MSceneLayerEffect *effect = createLayerEffectForWindow(window);
     if (effect) {
@@ -859,18 +873,6 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
             window->setParentItem(rootElement);
             window->setZValue(zForWindowType(window->windowType()));
         }
-    }
-
-    // Check whether we are trying to show a window while it is in the middle of
-    // a hide animation. If that's the case, we stop it.
-    if (window->d_func()->disappearanceAnimation) {
-        MAbstractWidgetAnimation *disappearanceAnimation = window->d_func()->disappearanceAnimation;
-
-        disappearanceAnimation->stop();
-        QObject::disconnect(window, SIGNAL(disappeared()),
-                            q, SLOT(_q_onSceneWindowDisappeared()));
-
-        disappearanceAnimation->restoreTargetWidgetState();
     }
 
     if (window->windowType() == MSceneWindow::NavigationBar)
@@ -1043,11 +1045,13 @@ void MSceneManagerPrivate::prepareWindowHide(MSceneWindow *window)
     if (window->d_func()->appearanceAnimation) {
         MAbstractWidgetAnimation *appearanceAnimation = window->d_func()->appearanceAnimation;
 
-        appearanceAnimation->stop();
-        QObject::disconnect(window, SIGNAL(appeared()),
-                            q, SLOT(_q_onSceneWindowAppeared()));
+        if (appearanceAnimation->state() == QAbstractAnimation::Running) {
+            appearanceAnimation->stop();
+            QObject::disconnect(window, SIGNAL(appeared()),
+                    q, SLOT(_q_onSceneWindowAppeared()));
 
-        appearanceAnimation->restoreTargetWidgetState();
+            appearanceAnimation->restoreTargetWidgetState();
+        }
     }
 
     q->connect(window, SIGNAL(disappeared()), SLOT(_q_onSceneWindowDisappeared()));
