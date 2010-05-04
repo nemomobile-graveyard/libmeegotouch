@@ -397,6 +397,25 @@ void MListPage::itemClick(const QModelIndex &index)
     mDebug("MListPage::itemClick") << "Row was clicked: " << index.row();
 }
 
+void MListPage::itemLongTapped(const QModelIndex &index)
+{
+    mDebug("MListPage::itemLongTapped") << "Row was long tapped: " << index.row();
+    longTappedIndex = index;
+}
+
+void MListPage::removeListItem()
+{
+    if(longTappedIndex.isValid()) {
+        mDebug("MListPage::removeListItem") << "Row about to be removed: " << longTappedIndex.row();
+        model->removeRow(longTappedIndex.row(), longTappedIndex.parent());
+    }
+}
+
+void MListPage::editListItem()
+{
+    mDebug("MListPage::editListItem") << "Not implemented yet.";
+}
+
 void MListPage::createContent()
 {
     MApplicationPage::createContent();
@@ -410,11 +429,22 @@ void MListPage::createContent()
     list = new MList(panel);
     list->setObjectName("wgList");
 
+    MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), list);
+    action->setLocation(MAction::ObjectMenuLocation);
+    list->addAction(action);
+    connect(action, SIGNAL(triggered()), this, SLOT(removeListItem()));
+
+    action = new MAction(qtTrId("xx_listpage_list_edit"), list);
+    action->setLocation(MAction::ObjectMenuLocation);
+    list->addAction(action);
+    connect(action, SIGNAL(triggered()), this, SLOT(editListItem()));
+
     setPlainListModel();
 
     layout->addItem(list);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClick(QModelIndex)));
+    connect(list, SIGNAL(itemLongTapped(QModelIndex)), this, SLOT(itemLongTapped(QModelIndex)));
 }
 
 void MListPage::retranslateUi()
