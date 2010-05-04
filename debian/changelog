@@ -1,8 +1,10 @@
-libmeegotouch (0.20.5~1) unstable; urgency=low
+libmeegotouch (0.20.5-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#164608 - System modal dialogs do not set the _NET_WM_WINDOW_TYPE_DIALOG window hint
+  * Fixes: NB#164214 - DuiDialog causes wake up events
+  * Fixes: NB#161260, NB#165998 - move tap&hold handler to MSceneWindow.
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 03 May 2010 14:34:04 +0300
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 04 May 2010 16:18:15 +0300
 
 libmeegotouch (0.20.4-1) unstable; urgency=low
 
