@@ -130,6 +130,10 @@ void MSceneManagerPrivate::init(MScene *scene)
                q, SLOT(_q_relocateWindowByInputPanel(QRect)),
                Qt::UniqueConnection);
 
+    q->connect(q, SIGNAL(orientationChangeFinished(M::Orientation)),
+               q, SLOT(ensureCursorVisible()),
+               Qt::UniqueConnection);
+
     pageSwitchAnimation = new MPageSwitchAnimation;
 
     setOrientationAngleWithoutAnimation(newAngle);
