@@ -58,11 +58,16 @@ public:
     MEscapeButtonPanel *escapeButtonPanel;
     MApplicationMenu *menu;
     QPointer<MSceneWindow> statusBar;
-    bool showingStatusBar;
     QTimer autoHideComponentsTimer;
     QList<MSceneWindow *> componentsOnAutoHide;
     bool isMenuOpen;
     bool callOngoing;
+
+    // TODO: Use some API like "bool MSceneWindow::isAppearing()" or something,
+    //       once it becomes available, instead of manually tracking the scene windows
+    //       appear/disappear statuses.
+    bool showingStatusBar;
+    bool showingDockWidget;
 
     void manageActions();
     void distributeAction(QAction *action, QAction *before);

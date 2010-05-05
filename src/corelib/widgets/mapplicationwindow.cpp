@@ -84,9 +84,10 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , escapeButtonPanel(new MEscapeButtonPanel)
     , menu(new MApplicationMenu)
     , statusBar(new MStatusBar)
-    , showingStatusBar(false)
     , isMenuOpen(false)
     , callOngoing(false)
+    , showingStatusBar(false)
+    , showingDockWidget(false)
 {
 }
 
@@ -356,7 +357,7 @@ void MApplicationWindowPrivate::updatePageExposedContentRect()
         topCoverage += navigationBar->size().height();
     }
 
-    if (dockWidget->isVisible()) {
+    if (showingDockWidget) {
         bottomCoverage += dockWidget->size().height();
     }
 
@@ -590,7 +591,11 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
             break;
 
         case MSceneWindow::NavigationBar:
+            updatePageExposedContentRect();
+            break;
+
         case MSceneWindow::DockWidget:
+            showingDockWidget = true;
             updatePageExposedContentRect();
             break;
 
@@ -615,7 +620,11 @@ void MApplicationWindowPrivate::sceneWindowDisappearEvent(MSceneWindowEvent *eve
             break;
 
         case MSceneWindow::NavigationBar:
+            updatePageExposedContentRect();
+            break;
+
         case MSceneWindow::DockWidget:
+            showingDockWidget = false;
             updatePageExposedContentRect();
             break;
 
