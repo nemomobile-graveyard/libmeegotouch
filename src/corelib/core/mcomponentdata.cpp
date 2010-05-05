@@ -415,7 +415,7 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
             }
         } else if (s == "-v" || s.startsWith("-version") || s.startsWith("--version")) {
             mDebug("MComponentData") << "Version info: " <<  "\n"
-                                         << "M_VERSION :" << M_VERSION << "\n" 
+                                         << "M_VERSION :" << M_VERSION << "\n"
                                          << "Compile time:" <<  __DATE__  << __TIME__ << "\n"
                                          << "QT verison  :" << QT_VERSION_STR << "\n";
             exit(EXIT_SUCCESS);
@@ -551,7 +551,8 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 
     //appName cannot begin with number
     if (appName[0].isDigit()) {
-        qFatal("MComponentData - application identifier must not begin with a digit.");
+        qCritical("MComponentData - application identifier must not begin with a digit.");
+        exit(EXIT_FAILURE);
     }
 
 #ifdef HAVE_DBUS
@@ -561,13 +562,13 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     QDBusConnection connection = QDBusConnection::sessionBus();
 
     if (connection.isConnected() == false) {
-        qFatal("ERROR: No DBUS session bus found. Exiting now. Please make sure that a dbus session bus\n"
+        qCritical("ERROR: No DBUS session bus found. Exiting now. Please make sure that a dbus session bus\n"
                "is running. In Scratchbox you should execute m-sb-session start. On the target device\n"
                "it should already be running. You should also make sure that the DBUS_SESSION_BUS_ADDRESS\n"
                "environment variable is set correctly. For that you can execute the following command:\n"
                "source /tmp/session_bus_address.user\n");
 
-        qApp->exit(-1);
+        exit(EXIT_FAILURE);
     }
 
     /* If cache is being populated, real name of the application to be
@@ -634,7 +635,7 @@ void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier
     }
 
     // Configure application according to switches
-    for (int i = 1; i < argc; ++i) 
+    for (int i = 1; i < argc; ++i)
     {
         QString s(argv[i]);
         if (s == "-prestart") {
