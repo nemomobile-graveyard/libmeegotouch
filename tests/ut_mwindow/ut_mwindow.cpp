@@ -313,4 +313,26 @@ void Ut_MWindow::testCloseOnLazyShutdown()
     QVERIFY(win->closeOnLazyShutdown() == false);
 }
 
+void Ut_MWindow::testGlobalAlpha()
+{
+    qreal alpha = win->globalAlpha();
+    QCOMPARE(alpha, 1.0);
+
+    win->setGlobalAlpha(0.5);
+    alpha = win->globalAlpha();
+    QVERIFY( qAbs(alpha - 0.5) < 0.001 );
+
+    win->setGlobalAlpha(0.0);
+    alpha = win->globalAlpha();
+    QCOMPARE(alpha, 0.0);
+
+    win->setGlobalAlpha(1.0);
+    alpha = win->globalAlpha();
+    QCOMPARE(alpha, 1.0);
+
+    win->setGlobalAlpha(-2.0);
+    alpha = win->globalAlpha();
+    QCOMPARE(alpha, 1.0);
+}
+
 QTEST_MAIN(Ut_MWindow);

@@ -61,6 +61,7 @@ private slots:
     void testDisplayExitedOnClose();
     void testDisplayExitedOnCloseLazyShutdownApp();
     void testCloseOnLazyShutdown();
+    void testGlobalAlpha();
 
 public slots:
     void onDisplayTestSlot();

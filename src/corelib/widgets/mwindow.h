@@ -90,6 +90,12 @@ class M_EXPORT MWindow : public QGraphicsView
      */
     Q_PROPERTY(bool orientationLocked READ isOrientationLocked WRITE setOrientationLocked)
 
+    /*!
+     \property globalAlpha
+     The global alpha of the hardware graphics overlay for use by this window.
+    */
+    Q_PROPERTY(qreal globalAlpha READ globalAlpha WRITE setGlobalAlpha)
+
 public:
     /*!
      \brief Creates a MWindow without a scene manager.
@@ -141,6 +147,34 @@ public:
         workaround, translucency also works in software mode.
      */
     void setTranslucentBackground(bool enabled);
+
+    /*!
+    * \brief Sets the global alpha of the hardware graphics overlay for use
+    * by this window.
+    *
+    * Global alpha is used when you want to blend the contents of this window,
+    * which is rendering to the graphics overlay with the video overlay.
+    * This can be used to draw translucent controls on top of video,
+    * for example.
+    *
+    * By default, each MWindow does not enable the global alpha. When this
+    * window is destroyed or hidden, the system will revert the global alpha
+    * back to its previous state.
+    *
+    *  Platform notes:
+    *   - This is a Harmattan-specific implementation and will require
+    *     interaction with the Harmattan compositing window manager
+    *     (MCompositor)
+    *
+    * \param level The valid range of global alpha can be 1.0 (completely opaque) to 0.0 (completely transparent).
+    */
+   void setGlobalAlpha(qreal level);
+
+   /*!
+     \brief Returns the global alpha of the hardware graphics overlay for use
+     by this window.
+     */
+   qreal globalAlpha();
 
     /*!
      \brief Returns the window's MScene.

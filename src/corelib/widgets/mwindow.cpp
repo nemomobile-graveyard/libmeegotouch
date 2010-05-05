@@ -46,6 +46,7 @@
 
 #ifdef Q_WS_X11
 # include <QX11Info>
+# include <X11/Xatom.h>
 # include <X11/Xlib.h>
 // Avoid conflict with QEvent::KeyPress usage in MWindow::Event
 # undef KeyPress
@@ -370,6 +371,51 @@ void MWindow::setTranslucentBackground(bool enable)
     }
     if (enable)
         setAttribute(Qt::WA_TranslucentBackground);
+}
+
+void MWindow::setGlobalAlpha(qreal level)
+{
+#ifdef Q_WS_X11
+    Atom globalAlpha = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_GLOBAL_ALPHA", False);
+
+    if (level < 0.0 || level >= 1.0) {
+        XDeleteProperty(QX11Info::display(), winId(), globalAlpha);
+    } else {
+        // We use same conventions as _NET_WM_WINDOW_OPACITY so we could re-use
+        // same code in the compositor
+        unsigned int opacity = (unsigned int) (0xffffffff * level);
+
+        XChangeProperty(QX11Info::display(), winId(), globalAlpha, XA_CARDINAL, 32 ,
+                        PropModeReplace, (unsigned char *) &opacity, 1);
+    }
+#else
+    Q_UNUSED(level);
+#endif
+}
+
+qreal MWindow::globalAlpha()
+{
+    qreal level = 1.0;
+#ifdef Q_WS_X11
+    Atom actualType = 0;
+    int actualFormat = 0;
+    unsigned long nitems = 0;
+    unsigned long bytes = 0;
+    unsigned long *data = 0;
+
+    Atom globalAlpha = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_GLOBAL_ALPHA", False);
+
+    int status = XGetWindowProperty(QX11Info::display(), winId(), globalAlpha,
+                                    0, 1, False, AnyPropertyType,
+                                    &actualType, &actualFormat, &nitems,
+                                    &bytes, (unsigned char **)&data);
+
+    if (status == Success && actualType == XA_CARDINAL && actualFormat == 32 && nitems == 1)
+        level = (qreal)data[0] / 0xffffffff;
+    if (status == Success)
+        XFree(data);
+#endif
+    return level;
 }
 
 MScene *MWindow::scene()
