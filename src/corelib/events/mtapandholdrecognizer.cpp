@@ -77,7 +77,7 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
 
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress:
-        tapAndHoldState->setPosition(ev->pos());
+        tapAndHoldState->setPosition(ev->scenePos());
         tapAndHoldState->setHotSpot(ev->scenePos());
 
         if (tapAndHoldState->timerId)
@@ -98,7 +98,7 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
         break;
     case QEvent::GraphicsSceneMouseMove:
         if (tapAndHoldState->state() != Qt::NoGesture) {
-            QPoint delta = ev->pos().toPoint() - tapAndHoldState->position().toPoint();
+            QPoint delta = ev->scenePos().toPoint() - tapAndHoldState->position().toPoint();
             if (delta.manhattanLength() <= d->movementThreshold)
                 result = QGestureRecognizer::TriggerGesture;
         }
