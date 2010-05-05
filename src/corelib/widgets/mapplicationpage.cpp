@@ -43,8 +43,6 @@ MApplicationPagePrivate::MApplicationPagePrivate() :
     rememberPosition(false),
     topSpacer(NULL),
     bottomSpacer(NULL),
-    mainWidget(NULL),
-    mainLayout(NULL),
     pannableViewPort(NULL),
     centralWidget(NULL),
     contentCreated(false),
@@ -62,27 +60,20 @@ void MApplicationPagePrivate::init()
     QGraphicsLinearLayout *layout = createLayout();
     q->setLayout(layout);
 
+    topSpacer = createSpacer(q);
+    setSpacerHeight(topSpacer, 0);
+    layout->addItem(topSpacer);
+
     pannableViewPort = new MPannableViewport(q);
     pannableViewPort->setClipping(false);
     layout->addItem(pannableViewPort);
 
-    mainWidget = new MWidget;
-
-    pannableViewPort->setWidget(mainWidget);
-
-    mainLayout = createLayout();
-    mainWidget->setLayout(mainLayout);
-
-    topSpacer = createSpacer(mainWidget);
-    setSpacerHeight(topSpacer, 0);
-    mainLayout->addItem(topSpacer);
-
-    centralWidget = new MWidget(mainWidget);
-    mainLayout->addItem(centralWidget);
-
-    bottomSpacer = createSpacer(mainWidget);
+    bottomSpacer = createSpacer(q);
     setSpacerHeight(bottomSpacer, 0);
-    mainLayout->addItem(bottomSpacer);
+    layout->addItem(bottomSpacer);
+
+    centralWidget = new MWidget(pannableViewPort);
+    pannableViewPort->setWidget(centralWidget);
 }
 
 QGraphicsLinearLayout *MApplicationPagePrivate::createLayout()
@@ -109,7 +100,7 @@ void MApplicationPagePrivate::setSpacerHeight(MWidget *spacer, qreal height)
 void MApplicationPagePrivate::deleteCurrentCentralWidget()
 {
     if (centralWidget) {
-        mainLayout->removeItem(centralWidget);
+        pannableViewPort->setWidget(0);
         delete centralWidget;
         centralWidget = 0;
     }
@@ -118,12 +109,8 @@ void MApplicationPagePrivate::deleteCurrentCentralWidget()
 void MApplicationPagePrivate::placeCentralWidget(QGraphicsWidget *widget)
 {
     if (widget) {
-        // insert the new central widget between top and bottom spacers
-        if (mainLayout->count() > 0)
-            mainLayout->insertItem(1,widget);
-        else
-            mainLayout->addItem(widget);
         centralWidget = widget;
+        pannableViewPort->setWidget(centralWidget);
     }
 }
 
