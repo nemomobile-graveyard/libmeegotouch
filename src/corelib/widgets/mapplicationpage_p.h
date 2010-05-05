@@ -70,6 +70,8 @@ public:
     bool rememberPosition;
     MWidget *topSpacer;
     MWidget *bottomSpacer;
+    MWidget *mainWidget;
+    QGraphicsLinearLayout *mainLayout;
     MPannableViewport *pannableViewPort;
     QGraphicsWidget *centralWidget;
     QRectF exposedContentRect;
