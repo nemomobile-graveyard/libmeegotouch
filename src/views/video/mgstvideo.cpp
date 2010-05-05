@@ -14,8 +14,8 @@ MGstVideo::MGstVideo()
         gst_elem_source(NULL),
         gst_elem_decoder(NULL),
         gst_elem_volume(NULL),
-        gst_elem_videosink(NULL),
         gst_elem_audiosink(NULL),
+        gst_elem_videosink(NULL),
         gst_elem_xvimagesink(NULL),
         gst_messagebus(NULL),
         gst_buffer(NULL),
@@ -62,7 +62,6 @@ bool MGstVideo::open(const QString& filename)
         return false;
     }
 
-    //construct new video pipeline
     return constructPipeline();
 }
 
@@ -195,11 +194,10 @@ qreal MGstVideo::volume() const
 
 QSize MGstVideo::resolution() const
 {
-    if( gst_elem_videosink )
+    if( m_renderTarget == MSink && gst_elem_videosink )
         return QSize(M_GST_VIDEO_SINK(gst_elem_videosink)->w, M_GST_VIDEO_SINK(gst_elem_videosink)->h);
-    else if( gst_elem_xvimagesink ) {
+    else if( gst_elem_xvimagesink )
         return QSize(GST_VIDEO_SINK_WIDTH(gst_elem_xvimagesink), GST_VIDEO_SINK_HEIGHT(gst_elem_xvimagesink));
-    }
     else
         return QSize(0,0);
 }
@@ -225,25 +223,60 @@ void MGstVideo::unlockFrameData()
 }
 
 void MGstVideo::setRenderTarget(MGstVideo::RenderTarget targetSink)
-{
-    if( targetSink != m_renderTarget ) {
-        m_renderTarget = targetSink;
+{   
+    //check if the change of the sink on fly is needed
+    if( targetSink != m_renderTarget && isReady() ) {
+        GstElement* videobin = gst_bin_get_by_name(GST_BIN_CAST(gst_elem_pipeline), "video bin");
+        if( videobin ) {
+            //stop playback of video bin to be able to make changes
+            gst_element_set_locked_state(videobin, true);
+            gst_element_set_state(videobin, GST_STATE_READY);
+            
+            //remove the currently active sink from video bin
+            GstElement* active = activeSink();
+            gst_object_ref(GST_OBJECT(active));
+            gst_bin_remove(GST_BIN_CAST(videobin), active);
 
-        //a video already been opened, we need to change the target on fly
-        if( isReady() ) {
-            //if the video is in paused or playing state store the position and state information,
-            //when the render target is succesfully changed apply the stored position and state
-            if( m_state == MVideo::Paused || m_state == MVideo::Playing ) {
-                m_storedState = m_state;
-                m_storedPosition = position();
-            } else {
-                m_storedState = MVideo::NotReady;
-                m_storedPosition = 0;            
+            //get colorspace element
+            GstElement* colorspace = gst_bin_get_by_name(GST_BIN_CAST(videobin), "ffmpegcolorspace");
+            if( colorspace ) {
+
+                //change the sink to the wanted target, if there is no support 
+                //for xv rendering force texture rendering
+                if( !gst_elem_xvimagesink )
+                    m_renderTarget = MSink;
+                else
+                    m_renderTarget = targetSink;
+
+
+                active = activeSink();
+
+                if( active == gst_elem_xvimagesink ) {
+                    g_object_set(gst_elem_xvimagesink,
+                                             "autopaint-colorkey", FALSE,
+                                             "colorkey", m_colorKey.rgba() & 0x00FFFFFF,
+                                             //"force-aspect-ratio", TRUE,
+                                             //"draw-borders", TRUE,
+                                             (void*) 0);
+                    gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink), m_winId);   
+                    expose();             
+                }
+
+                //link the new active sink with the colorspace element
+                gst_bin_add(GST_BIN_CAST(videobin), active);
+                gst_element_link_pads(colorspace, "src", active, "sink");
+
+                //sync the videobin again with it's parent
+                gst_element_set_locked_state(videobin, false);            
+                gst_element_set_clock(videobin, gst_element_get_clock(gst_elem_pipeline));
+                gst_element_sync_state_with_parent(videobin);
+                gst_element_seek_simple(videobin, GST_FORMAT_TIME,
+                                (GstSeekFlags)(GST_SEEK_FLAG_FLUSH),// | GST_SEEK_FLAG_KEY_UNIT),
+                                position() * GST_MSECOND);
             }
-
-            constructPipeline();
         }
-    }
+    } else
+        m_renderTarget = targetSink;
 }
 
 MGstVideo::RenderTarget MGstVideo::renderTarget()
@@ -253,8 +286,7 @@ MGstVideo::RenderTarget MGstVideo::renderTarget()
 
 void MGstVideo::expose()
 {
-    if( gst_elem_xvimagesink ) {
-        gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink), m_winId);
+    if( gst_elem_xvimagesink && m_renderTarget == XvSink ) {
         gst_x_overlay_expose(GST_X_OVERLAY(gst_elem_xvimagesink));
     }
 }
@@ -297,7 +329,7 @@ gboolean MGstVideo::bus_cb(GstBus *bus, GstMessage *message, void *data)
 {
     Q_UNUSED(bus);
 
-    //mDebug("MGstVideo::bus_cb()") << gst_message_type_get_name(GST_MESSAGE_TYPE(message));
+    //mWarning("MGstVideo::bus_cb()") << gst_message_type_get_name(GST_MESSAGE_TYPE(message));
 
     MGstVideo* gstVideo = (MGstVideo*) data;
 
@@ -391,17 +423,15 @@ void MGstVideo::unknownpad_cb(GstElement*/*bin*/,
    can be decoded to raw data automatically
  */
 void MGstVideo::newpad_cb(GstElement  *decodebin,
-                            GstPad      *pad,
-                            gboolean    last,
-                            MGstVideo *w)
+                          GstPad      *pad,
+                          gboolean    last,
+                          MGstVideo *w)
 {
     GstPad       *sinkpad;
     GstCaps      *caps;
     GstElement   *sink;
     GstStructure *type;
     GstElement   *bin;
-    GstPad       *pad2;
-    GstCaps      *caps2;
 
     Q_UNUSED(decodebin);
     Q_UNUSED(last);
@@ -411,9 +441,6 @@ void MGstVideo::newpad_cb(GstElement  *decodebin,
 
     QString typeString = gst_structure_get_name(type);
 
-    //mDebug("MGstVideo::newpad_cb()") << typeString;
-    //mDebug("MGstVideo::newpad_cb()") << gst_caps_to_string(caps);
-
     //FIXME
     //Find compatible pads more accurately, add more error checking.
     if (g_strrstr(gst_structure_get_name(type), "video")) {
@@ -421,25 +448,14 @@ void MGstVideo::newpad_cb(GstElement  *decodebin,
         if (g_strrstr(gst_structure_get_name(type), "yuv"))
             yuv = true;
 
-        sink = w->makeSink(yuv);
-        //mDebug("MGstVideo::newpad_cb()") << "YUV=" << yuv;
+        sink = w->makeSinks(yuv);
         w->m_format = yuv ? YUV : RGB;
-
-        pad2 = gst_element_get_compatible_pad(sink, pad, NULL);
-        if( pad2 ) {
-            caps2 = gst_pad_get_caps(pad2);
-            //mDebug("MGstVideo::newpad_cb()") << gst_caps_to_string(caps2);
-        }
-        //if( pad2 ) 
-        //    mDebug("MGstVideo::newpad_cb()") << "COMPATIBLE pad!";
-        //else
-        //    mDebug("MGstVideo::newpad_cb()") << "INCOMPATIBLE pad!";
 
         //FIXME:
         //Add ffmpegcolorspace plugin only when necessary
         if ( /*!yuv*//*!pad2*/true) {
             bin = gst_bin_new("video bin");
-            GstElement *colorspace = gst_element_factory_make("ffmpegcolorspace", NULL);
+            GstElement *colorspace = gst_element_factory_make("ffmpegcolorspace", "ffmpegcolorspace");
 
             gst_bin_add(GST_BIN(bin), colorspace);
             gst_bin_add(GST_BIN(bin), sink);
@@ -480,9 +496,8 @@ void MGstVideo::newpad_cb(GstElement  *decodebin,
         gst_caps_unref(caps);
         gst_bin_add(GST_BIN_CAST(w->gst_elem_pipeline), sink);
         gst_element_set_state(sink, GST_STATE_PAUSED);
-
+            
         sinkpad = gst_element_get_compatible_pad(sink, pad, NULL);//gst_element_get_pad(sink, "sink");
-
         if (sinkpad) {
             gst_pad_link(pad, sinkpad);
             gst_object_unref(sinkpad);
@@ -497,11 +512,10 @@ void MGstVideo::newpad_cb(GstElement  *decodebin,
 void MGstVideo::render_frame_cb(void* pointer, void* user_data)
 {
     if( user_data ) {
-        MGstVideo* gstVideo = (MGstVideo*) user_data;
-
         //try to lock the mutex, if the we cannot lock it
         //a new frame is currently being rendered so no need 
         //to create new one
+        MGstVideo* gstVideo = (MGstVideo*) user_data;
         if( !gstVideo->lockFrameData() ) {
             mWarning("MGstVideo::render_frame_cb()") << "MUTEX LOCK CONFLICT!";
             gst_buffer_unref(GST_BUFFER(pointer));
@@ -521,69 +535,47 @@ void MGstVideo::render_frame_cb(void* pointer, void* user_data)
     }
 }
 
-GstElement* MGstVideo::makeSink(bool yuv)
+GstElement* MGstVideo::makeSinks(bool yuv)
 {
     if( gst_elem_videosink || gst_elem_xvimagesink ) {
         mWarning("MGstVideo::makeSink()") << "Sink already initialized. Call destroyPipeline() before initializing new sink.";
         return NULL;
     }
 
-    //HW overlay rendering using xvimagesink
-    if( m_renderTarget == MGstVideo::XvSink ) {
-        //try to create xvimagesink, if it fails fallback to msink rendering
-        gst_elem_xvimagesink = gst_element_factory_make("xvimagesink", "xvsink");
-        if( gst_elem_xvimagesink && GST_IS_ELEMENT(gst_elem_xvimagesink) ) {
-            //the order of the follwing steps is important
-            //otherwise the overlaying does not work
-
-            //1. set the needed xvimagesink properties
-            g_object_set(gst_elem_xvimagesink,
-                         "autopaint-colorkey", FALSE,
-                         "colorkey", m_colorKey.rgba() & 0x00FFFFFF,
-                         //"force-aspect-ratio", TRUE,
-                         //"draw-borders", TRUE,
-                         (void*) 0);
-
-            //2. set the overlay to wanted window
-            gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink),
-                                         m_winId);
-
-            //3. check that the colorkey and autopaint really works, if not fallback to msink rendering
-            GValueArray* colorkey = gst_property_probe_get_values_name(GST_PROPERTY_PROBE(gst_elem_xvimagesink), "colorkey");
-            GValueArray* autopaint = gst_property_probe_get_values_name(GST_PROPERTY_PROBE(gst_elem_xvimagesink), "autopaint-colorkey");
-            if( colorkey && autopaint ) {
-                g_value_array_free(colorkey);
-                g_value_array_free(autopaint);
-                return gst_elem_xvimagesink;
-            } else {
-                if( colorkey )
-                    g_value_array_free(colorkey);
-                if( autopaint )
-                    g_value_array_free(autopaint);
-
-                if( gst_elem_xvimagesink ) {
-                    gst_object_unref(GST_OBJECT(gst_elem_xvimagesink));
-                    gst_elem_xvimagesink = NULL;
-                }
-
-                mWarning("MGstVideo::makeSink()")   << "\"colorkey\" (" << colorkey 
-                                                        << ") or \"autopaint-colorkey\" (" << autopaint 
-                                                        <<") properties not found, falling back to texture rendering with msink.";
-            }
-        }else {
-            mWarning("MGstVideo::makeSink()") << "xvimagesink doest not exist, falling back to texture rendering with msink.";
-        }
+    //try to create xvimagesink, if it fails fallback to msink rendering
+    gst_elem_xvimagesink = gst_element_factory_make("xvimagesink", "xvsink");
+    if( gst_elem_xvimagesink && GST_IS_ELEMENT(gst_elem_xvimagesink) &&  m_renderTarget == XvSink ) {
+        g_object_set(gst_elem_xvimagesink,
+                     "autopaint-colorkey", FALSE,
+                      "colorkey", m_colorKey.rgba() & 0x00FFFFFF,
+                      //"force-aspect-ratio", TRUE,
+                      //"draw-borders", TRUE,
+                      (void*) 0);
+        gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink), m_winId);                
+    }else {
+        mWarning("MGstVideo::makeSink()") << "xvimagesink doest not exist, falling back to texture rendering with msink.";
     }
 
     //setup textured video rendering using msink
-    m_renderTarget = MGstVideo::MSink;
     gst_elem_videosink = yuv ? m_gst_video_sink_yuv_new() : m_gst_video_sink_new();
     MGstVideoSink *msink = M_GST_VIDEO_SINK(gst_elem_videosink);
     msink->user_data = this;
     msink->frame_cb = render_frame_cb;
     msink->ready_cb  = video_ready_cb;
 
-    return gst_elem_videosink;
+    return activeSink();
+}
+
+GstElement* MGstVideo::activeSink()
+{
+    if( m_renderTarget == XvSink &&  gst_elem_xvimagesink ) {
+        m_renderTarget = XvSink;
+        return gst_elem_xvimagesink;
+    }
+    else {
+        m_renderTarget = MSink;
+        return gst_elem_videosink;
+    }
 }
 
 GstElement* MGstVideo::makeVolume()
@@ -665,6 +657,13 @@ void MGstVideo::destroyPipeline()
     if( gst_elem_pipeline ) {
         gst_element_set_state(gst_elem_pipeline, GST_STATE_NULL);
         gst_object_unref(GST_OBJECT(gst_elem_pipeline));
+
+        if( activeSink() == gst_elem_xvimagesink ) {
+            if( gst_elem_videosink )
+                gst_object_unref(GST_OBJECT(gst_elem_videosink));
+        }
+        else  if( gst_elem_xvimagesink )
+            gst_object_unref(GST_OBJECT(gst_elem_xvimagesink));
     }
 
     //TODO should some of these be destroyed as well?

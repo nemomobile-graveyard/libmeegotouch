@@ -93,7 +93,9 @@ private:
                             MGstVideo* w);
     static void render_frame_cb(void* pointer, void* user_data);
 
-    GstElement* makeSink(bool yuv);
+    GstElement* makeSinks(bool yuv);
+    GstElement* activeSink();
+    
     GstElement* makeVolume();
 
     bool constructPipeline();
@@ -106,9 +108,9 @@ private:
     GstElement* gst_elem_decoder;
     GstElement* gst_elem_volume;
 
-    GstElement* gst_elem_videosink;
     GstElement* gst_elem_audiosink;
 
+    GstElement* gst_elem_videosink;
     GstElement* gst_elem_xvimagesink;
 
     GstBus* gst_messagebus;
