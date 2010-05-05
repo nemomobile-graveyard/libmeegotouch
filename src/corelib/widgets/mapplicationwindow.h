@@ -177,6 +177,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_exitAppView())
 #endif
     Q_PRIVATE_SLOT(d_func(), void _q_updatePageEscapeAuto())
+    Q_PRIVATE_SLOT(d_func(), void _q_updatePageExposedContentRect())
 };
 
 #endif

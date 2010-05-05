@@ -172,6 +172,9 @@ void MApplicationWindowPrivate::init()
                       "com.nokia.csd.CSNet", "ActivityChanged", q,
                       SLOT(_q_updateCallOngoingState(QString)));
 #endif
+
+    q->connect(q, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
+            SLOT(_q_updatePageExposedContentRect()));
 }
 
 #ifdef Q_WS_X11
@@ -287,7 +290,7 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
             // Interpretation of whether the navigation bar is covering the page
             // changes from "auto-hide" to "show". On "auto-hide" the navigation
             // bar doesn't count as covering the page since it does so only momentarily.
-            updatePageExposedContentRect();
+            _q_updatePageExposedContentRect();
 
         } else if (member == MApplicationPageModel::ProgressIndicatorVisible) {
             navigationBar->setProgressIndicatorVisible(page->model()->progressIndicatorVisible());
@@ -336,7 +339,7 @@ void MApplicationWindowPrivate::_q_placeToolBar(M::Orientation orientation)
     }
 }
 
-void MApplicationWindowPrivate::updatePageExposedContentRect()
+void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
 {
     Q_Q(MApplicationWindow);
     if (!page) {
@@ -586,16 +589,16 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
 
         case MSceneWindow::StatusBar:
             showingStatusBar = true;
-            updatePageExposedContentRect();
+            _q_updatePageExposedContentRect();
             break;
 
         case MSceneWindow::NavigationBar:
-            updatePageExposedContentRect();
+            _q_updatePageExposedContentRect();
             break;
 
         case MSceneWindow::DockWidget:
             showingDockWidget = true;
-            updatePageExposedContentRect();
+            _q_updatePageExposedContentRect();
             break;
 
         default:
@@ -615,16 +618,16 @@ void MApplicationWindowPrivate::sceneWindowDisappearEvent(MSceneWindowEvent *eve
 
         case MSceneWindow::StatusBar:
             showingStatusBar = false;
-            updatePageExposedContentRect();
+            _q_updatePageExposedContentRect();
             break;
 
         case MSceneWindow::NavigationBar:
-            updatePageExposedContentRect();
+            _q_updatePageExposedContentRect();
             break;
 
         case MSceneWindow::DockWidget:
             showingDockWidget = false;
-            updatePageExposedContentRect();
+            _q_updatePageExposedContentRect();
             break;
 
         default:
@@ -651,7 +654,7 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
     }
 
     connectPage(pageFromEvent);
-    updatePageExposedContentRect();
+    _q_updatePageExposedContentRect();
     pageFromEvent->d_func()->prepareForAppearance();
 }
 

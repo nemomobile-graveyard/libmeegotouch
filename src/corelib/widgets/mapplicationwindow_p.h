@@ -99,8 +99,6 @@ public:
     void sceneWindowDisappearEvent(MSceneWindowEvent *ev);
     void sceneWindowDismissEvent(MSceneWindowEvent *ev);
 
-    void updatePageExposedContentRect();
-
     void applicationPageAppearEvent(MSceneWindowEvent *ev);
     void applicationPageDisappearEvent(MSceneWindowEvent *ev);
 
@@ -140,6 +138,7 @@ public:
 #ifdef HAVE_N900
     void _q_exitAppView();
 #endif
+    void _q_updatePageExposedContentRect();
 };
 
 #endif
