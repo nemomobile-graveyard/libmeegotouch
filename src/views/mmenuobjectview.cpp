@@ -113,7 +113,7 @@ QSizeF MObjectMenuLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &const
 
 
 MMenuObjectViewPrivate::MMenuObjectViewPrivate(MApplicationMenu *menu)
-    : q_ptr(0), controller(menu),
+    : q_ptr(0), controller(menu), viewport(0), container(0), layout(0),
       linearPolicy(0), customPolicy(0)
 {
 }
