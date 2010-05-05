@@ -54,10 +54,16 @@ extern "C" EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffers(EGLDisplay dpy, EGLSurfa
 
 timestamp Clock::time()
 {
+    // TODO: port this to QElapsedTimer once we have Qt 4.7
+#ifdef Q_OS_LINUX
     struct timespec now;
     if(clock_gettime(CLOCK_MONOTONIC, &now))
         qFatal("clock_gettime errored");
     return ((timestamp)(now.tv_sec))*1000 + now.tv_nsec / 1000000;
+#else
+    qFatal("swap monitoring on this operating system is not supported right now");
+    return 0;
+#endif
 }
 
 SwapHookPrivate::SwapHookPrivate() :
