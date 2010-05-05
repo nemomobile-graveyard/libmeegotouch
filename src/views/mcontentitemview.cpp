@@ -486,6 +486,7 @@ void MContentItemView::cancelEvent(MCancelEvent *event)
     if (!d->down)
         return;
 
+    style()->cancelFeedback().play();
     d->down = false;
     d->refreshStyleMode();
 }
@@ -497,6 +498,8 @@ void MContentItemView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     if (d->down)
         return;
+
+    style()->pressFeedback().play();
     d->down = true;
     d->refreshStyleMode();
 }
@@ -513,6 +516,11 @@ void MContentItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     bool pressed = rect.contains(touch);
 
     if (pressed != d->down) {
+        if (pressed) {
+            style()->pressFeedback().play();
+        } else {
+            style()->cancelFeedback().play();
+        }
         d->down = pressed;
         d->refreshStyleMode();
     }
@@ -534,8 +542,10 @@ void MContentItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
                 M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
     bool pressed = rect.contains(touch);
 
-    if (pressed)
+    if (pressed) {
+        style()->releaseFeedback().play();
         d->controller->click();
+    }
 }
 
 void MContentItemView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
