@@ -425,7 +425,7 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
 
 void MSceneManagerPrivate::_q_restoreSceneWindow()
 {
-    if (alteredSceneWindow && !focusedInputWidget) {
+    if (alteredSceneWindow) {
         sceneWindowTranslation *= -1;
         alteredSceneWindow->moveBy(sceneWindowTranslation.x(), sceneWindowTranslation.y());
         sceneWindowTranslation = QPoint();
