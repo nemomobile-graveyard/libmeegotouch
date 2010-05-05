@@ -143,7 +143,6 @@ void MApplicationWindowPrivate::init()
 
     if (!MApplication::fullScreen()) {
         sceneManager->appearSceneWindowNow(statusBar);
-        showingStatusBar = true;
     }
 
     sceneManager->appearSceneWindowNow(navigationBar);
