@@ -1,27 +1,31 @@
-DUIROOT = ../..
-include($$DUIROOT/mkspecs/common.pri)
+MROOT = ../..
+include($$MROOT/mkspecs/common.pri)
 
-DUILIB = $$DUIROOT/lib
-DUISRC = $$DUIROOT/src
-DUISRCINCLUDE = $$DUISRC/include
-DUISFWINCLUDE = $$DUIROOT/servicefw/include
+MLIB = $$MROOT/lib
+MSRC = $$MROOT/src
+MSRCINCLUDE = $$MSRC/include
+MSFWINCLUDE = $$MROOT/servicefw/include
 INCLUDEPATH += . \
-    $$DUISRCINCLUDE \
-    $$DUISRC
-QMAKE_LIBDIR += $$DUILIB
+    $$MSRCINCLUDE \
+    $$MSRC
+QMAKE_LIBDIR += $$MLIB
 win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework \
-            dui
+            m
     }
-    win32:LIBS += -L../../lib \
-        -ldui0
+    win32:LIBS += -lmeegotouchcore0
 }
-else:LIBS += ../../lib/libdui.so
+else:LIBS += \
+    -lmeegotouchcore \
+    -lmeegotouchviews \
+    -lmeegotouchsettings \
+    -lmeegotouchextensions \
+
 TEMPLATE = app
 TARGET = applicationextensiondemo
-target.path = $$DUI_INSTALL_BIN
+target.path = $$M_INSTALL_BIN
 OBJECTS_DIR = ./.obj
 MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH

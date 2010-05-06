@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -27,7 +27,7 @@
 #include <QEvent>
 #include <QApplication>
 #include <QCloseEvent>
-#include <DuiNavigationBar>
+#include <MNavigationBar>
 #include <QGraphicsLinearLayout>
 #include <QStatusBar>
 #include <QMenuBar>
@@ -46,7 +46,7 @@ QtMaemo6WindowDecoration::QtMaemo6WindowDecoration(QWidget *mw, QWidget *parent 
     m_windowLayout->addWidget(centralWidget(), 1, 1);
 
     connect(m_titleBar, SIGNAL(closeButtonClicked()), this, SLOT(close()));
-    connect(m_titleBar, SIGNAL(minimizeButtonClicked()), this, SLOT(hide()));
+    connect(m_titleBar, SIGNAL(minimizeButtonClicked()), this, SLOT(showMinimized()));
     connect(m_titleBar, SIGNAL(menuLabelClicked()), this, SLOT(showMenuBar()));
 }
 
@@ -101,8 +101,6 @@ bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::WindowTitleChange) {
         m_titleBar->setTitle(widget()->windowTitle());
-    } else if (event->type() == QEvent::Close) {
-        hide();
     }
 
     return QtMaemo6Window::eventFilter(watched, event);

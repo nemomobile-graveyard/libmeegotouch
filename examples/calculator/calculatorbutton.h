@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,10 +20,10 @@
 #ifndef CALCULATORBUTTON_H
 #define CALCULATORBUTTON_H
 
-#include <DuiButton>
+#include <MButton>
 class CalculatorWidget;
 
-class CalculatorButton : public DuiButton
+class CalculatorButton : public MButton
 {
     Q_OBJECT
 public:

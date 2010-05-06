@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -27,17 +27,17 @@
 #ifndef TESTWIDGETVIEW_H_
 #define TESTWIDGETVIEW_H_
 
-#include <duiwidgetview.h>
+#include <mwidgetview.h>
 #include <testwidgetmodel.h>
 #include <testwidgetstyle.h>
 
 class TestWidget;
 class QGraphicsSceneResizeEvent;
 
-class TestWidgetView : public DuiWidgetView
+class TestWidgetView : public MWidgetView
 {
     Q_OBJECT
-    DUI_VIEW(TestWidgetModel, TestWidgetStyle)
+    M_VIEW(TestWidgetModel, TestWidgetStyle)
 
 public:
     TestWidgetView(TestWidget *controller);

@@ -1,0 +1,33 @@
+// This is a test file for Direct UI CSS parser.
+
+@import "ft_mstylesheet_constants2.css";
+
+//define constants
+@const cInt: 10;
+@const cReal: 1.0;
+@const cName: "name";
+@const cColor: #0dead0;
+@const cBool: true;
+@const cPoint: 17px 11px;
+@const cFont: arial 10px;
+@const cInvalid1 Invalid;
+@const : Invalid
+
+//define selector and use the constants
+TestObject
+{
+    object-name: "test object";
+    
+    attr-int: $cInt;
+    attr-string1: $cName;
+    attr-string2: "this is a string with constant $cName";
+    attr-bool: $cBool;
+    attr-pos1: $cWidth $cHeight;
+    attr-pos2: $cPoint;
+    attr-font1: $cFontFamily $cFontSize;
+    attr-font2: $cFont;
+    attr-color: $cColor;
+    attr-invalid: $cInvalid1;
+    attr-void: $cVoid;
+}
+

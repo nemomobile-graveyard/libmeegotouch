@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -28,7 +28,7 @@ TestThemeDaemon::TestThemeDaemon()
     current = "";
 }
 
-void TestThemeDaemon::addDirectoryToPixmapSearchList(const QString &directoryName, Dui::RecursionMode recursive)
+void TestThemeDaemon::addDirectoryToPixmapSearchList(const QString &directoryName, M::RecursionMode recursive)
 {
     Q_UNUSED(directoryName);
     Q_UNUSED(recursive);

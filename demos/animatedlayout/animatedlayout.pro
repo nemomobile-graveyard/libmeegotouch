@@ -1,31 +1,32 @@
-DUIROOT = ../..
+MROOT = ../..
 
-include($$DUIROOT/mkspecs/common.pri)
+include($$MROOT/mkspecs/common.pri)
 
-DUILIB = $$DUIROOT/lib
-DUISRC = $$DUIROOT/src
-DUISRCINCLUDE = $$DUISRC/include
+MLIB = $$MROOT/lib
+MSRC = $$MROOT/src
+MSRCINCLUDE = $$MSRC/include
 INCLUDEPATH += \
     . \
-    $$DUISRCINCLUDE \
-    $$DUISRC
+    $$MSRCINCLUDE \
+    $$MSRC
 
 QMAKE_LIBDIR += \
-    $$DUILIB
+    $$MLIB
 
 win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework dui
+        LIBS += -framework meegotouchcore \
+            -framework meegotouchviews
     }
-    win32:LIBS += -L../../lib -ldui0
+    win32:LIBS += -lmeegotouch0
 } else {
-    LIBS += ../../lib/libdui.so
+    LIBS += -lmeegotouchcore
 }
 
 TEMPLATE = app
 TARGET = animatedlayout
-target.path = $$DUI_INSTALL_BIN
+target.path = $$M_INSTALL_BIN
 OBJECTS_DIR = ./.obj
 MOC_DIR = ./.moc
 DEPENDPATH += $$INCLUDEPATH
@@ -36,11 +37,11 @@ RESOURCES +=
 CONFIG += qt
 
 # AnimatedLayout UI style definition
-style_sheet.path = $$DUI_THEME_DIR/../animatedlayout/themes/style
+style_sheet.path = $$M_THEME_DIR/../animatedlayout/themes/style
 style_sheet.files = style/animatedlayout.css
-view_configuration.path = $$DUI_THEME_DIR/../animatedlayout/themes
+view_configuration.path = $$M_THEME_DIR/../animatedlayout/themes
 view_configuration.files = style/animatedlayout.conf
-style_images.path = $$DUI_THEME_DIR/../animatedlayout/themes/images
+style_images.path = $$M_THEME_DIR/../animatedlayout/themes/images
 style_images.files = images/*
 
 # Install instructions

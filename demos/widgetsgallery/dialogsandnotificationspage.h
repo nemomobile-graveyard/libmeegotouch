@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,11 +22,13 @@
 
 #include "templatepage.h"
 
-class DuiGridLayoutPolicy;
-class DuiDialog;
-class DuiButton;
-class DuiLabel;
-class DuiContainer;
+#include <QPointer>
+
+class MGridLayoutPolicy;
+class MDialog;
+class MButton;
+class MLabel;
+class MContainer;
 
 class DialogsAndNotificationsPage : public TemplatePage
 {
@@ -57,29 +59,30 @@ private slots:
     void setDialogProgressIndicatorVisible(bool);
 
 private:
-    void populateLayout(DuiLinearLayoutPolicy *layoutPolicy);
+    void populateLayout(MLinearLayoutPolicy *layoutPolicy);
 
-    DuiDialog *dialog;
-    DuiDialog *nestedDialog;
-    DuiDialog *nestedMessageBox;
+    QPointer<MDialog> dialog;
+    QPointer<MDialog> nestedDialog;
+    QPointer<MDialog> nestedMessageBox;
 
-    DuiLabel *label1;
-    DuiLabel *label2;
-    DuiLabel *label3;
+    MLabel *label1;
+    MLabel *label2;
+    MLabel *label3;
 
-    DuiContainer *dialogsContainer;
-    DuiContainer *notificationsContainer;
+    MContainer *dialogsContainer;
+    MContainer *notificationsContainer;
 
-    DuiButton *button1;
-    DuiButton *button2;
-    DuiButton *button3;
-    DuiButton *button4;
-    DuiButton *button5;
-    DuiButton *button6;
-    DuiButton *button7;
-    DuiButton *buttonStackedDialogs;
-    DuiButton *buttonSystemModalDialog;
-    DuiButton *buttonDialogWithProgressIndicator;
+    MButton *button1;
+    MButton *button2;
+    MButton *button3;
+    MButton *button4;
+    MButton *button5;
+    MButton *button6;
+    MButton *button7;
+
+    MButton *buttonStackedDialogs;
+    MButton *buttonSystemModalDialog;
+    MButton *buttonDialogWithProgressIndicator;
 };
 
 #endif // DIALOGSANDNOTIFICATIONSPAGE_H

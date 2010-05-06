@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = testwidget
-CONFIG += dui # Requires libdui to be installed
+CONFIG += m # Requires libm to be installed
 
 # Input
 SOURCES += testwidgetmodel.cpp \

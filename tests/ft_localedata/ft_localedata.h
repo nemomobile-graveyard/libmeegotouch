@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,10 +22,10 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-#include <DuiLocale>
+#include <MLocale>
 
-Q_DECLARE_METATYPE(DuiLocale::CalendarType);
-Q_DECLARE_METATYPE(DuiLocale);
+Q_DECLARE_METATYPE(MLocale::CalendarType);
+Q_DECLARE_METATYPE(MLocale);
 
 
 #define MAX_PARAMS 10
@@ -43,9 +43,9 @@ private slots:
 
     void testNumberData_data();
     void testNumberData();
-    // void testDuiFoo();
-    // void testDuiBar_data();
-    // void testDuiBar();
+    // void testMFoo();
+    // void testMBar_data();
+    // void testMBar();
 };
 
 

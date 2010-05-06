@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,11 +22,11 @@
 
 #include "templatepage.h"
 
-class DuiLabel;
-class DuiButton;
-class DuiSlider;
-class DuiSeekBar;
-class DuiContainer;
+class MLabel;
+class MButton;
+class MSlider;
+class MSeekBar;
+class MContainer;
 
 class SliderPage : public TemplatePage
 {
@@ -43,13 +43,13 @@ protected:
     virtual void retranslateUi();
 
 private:
-    DuiLabel *ageLabel;
-    DuiSlider *ageSlider;
-    DuiContainer *ageContainer;
+    MLabel *ageLabel;
+    MSlider *ageSlider;
+    MContainer *ageContainer;
 
-    DuiSeekBar *playerSeekBar;
-    DuiButton *playerButton;
-    DuiContainer *playerContainer;
+    MSeekBar *playerSeekBar;
+    MButton *playerButton;
+    MContainer *playerContainer;
 
     int playTime;
     bool playerSeekBarIsPressed;
@@ -57,8 +57,8 @@ private:
     int loadedContentMinimum;
     int loadedContentMaximum;
 
-    DuiSlider *brightnessSlider;
-    DuiContainer *brightnessContainer;
+    MSlider *brightnessSlider;
+    MContainer *brightnessContainer;
 
 private slots:
     void modifyAgeSliderHandle(int newValue);
@@ -72,8 +72,6 @@ private slots:
     void playerOutOfLoadedContentRange();
 
     void modifyBrightnessSliderHandle(int newValue);
-    void showBrightnessSliderHandle();
-    void hideBrightnessSliderHandle();
 };
 
 #endif // SLIDERPAGE_H

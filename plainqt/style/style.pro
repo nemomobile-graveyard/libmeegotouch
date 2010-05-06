@@ -1,42 +1,39 @@
 QMAKE_CXXFLAGS += -Werror
 
-DUIROOT = ../..
+MROOT = ../..
 
-include($$DUIROOT/mkspecs/common.pri)
+include($$MROOT/mkspecs/common.pri)
 
 include(style.pri)
 
-DUILIB = $$DUIROOT/lib
-DUISRC = $$DUIROOT/src
-DUISRCINCLUDE = $$DUISRC/include
-DUISFWINCLUDE = $$DUIROOT/servicefw/include
+MLIB = $$MROOT/lib
+MSRC = $$MROOT/src
+MSRCINCLUDE = $$MSRC/include
+MSFWINCLUDE = $$MROOT/servicefw/include
 
 INCLUDEPATH += . \
-    $$DUISRCINCLUDE \
-    $$DUISRC \
-
-QMAKE_LIBDIR += \
-    $$DUILIB \
+    $$MSRCINCLUDE \
+    $$MROOT/src/corelib/style \
 
 win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework dui
+        LIBS += -framework m
     }
-    win32:LIBS += -L../../lib -ldui0
+    win32:LIBS += -lmeegotouchcore0
 } else {
-    LIBS += ../../lib/libdui.so
+    LIBS += -lmeegotouchcore -lmeegotouchviews
 }
 
 TEMPLATE = lib
   CONFIG += plugin
 
-TARGET = duiqtstyleplugin
+TARGET = meegotouchqtstyleplugin
 target.path = $$[QT_INSTALL_PLUGINS]/styles
 
 HEADERS += $$PUBLIC_HEADERS $$PRIVATE_HEADERS
 
-install_headers.path = $$DUI_INSTALL_HEADERS
+install_headers.path = $$M_INSTALL_HEADERS
 install_headers.files = \
   $$PUBLIC_HEADERS
 

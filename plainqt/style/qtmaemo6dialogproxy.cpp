@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -26,6 +26,7 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QDialog>
+#include <QDebug>
 
 #include "qtmaemo6dialogtitle.h"
 #include "qtmaemo6style_p.h"
@@ -54,6 +55,8 @@ QtMaemo6DialogProxy::QtMaemo6DialogProxy(QWidget *mw, QWidget *parent)
 
     //only works if mw is a QDialog, otherwise the connect simply fails
     connect(m_dialogTitle, SIGNAL(closeRequest()), mw, SLOT(reject()));
+
+    mw->installEventFilter(this);
 }
 
 QtMaemo6DialogProxy::~QtMaemo6DialogProxy()
@@ -68,4 +71,13 @@ void QtMaemo6DialogProxy::setTitle(const QString &text)
 void QtMaemo6DialogProxy::setPixmap(const QPixmap &icon)
 {
     m_dialogTitle->setPixmap(icon);
+}
+
+bool QtMaemo6DialogProxy::eventFilter(QObject *obj, QEvent *event) {
+    //in dialog case, also close the decoration on hide event, because the
+    //dialogs are only hidden, not closed by default
+    if(obj == widget() && event->type() == QEvent::Hide) {
+        close();
+    }
+    return QtMaemo6Window::eventFilter(obj, event);
 }

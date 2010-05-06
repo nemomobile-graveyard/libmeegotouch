@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,12 +20,12 @@
 #ifndef SEPARATORTESTPAGE_H
 #define SEPARATORTESTPAGE_H
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 
-class DuiButton;
-class DuiSeparator;
+class MButton;
+class MSeparator;
 
-class SeparatorTestPage : public DuiApplicationPage
+class SeparatorTestPage : public MApplicationPage
 {
 public:
     SeparatorTestPage();
@@ -33,8 +33,8 @@ public:
     virtual void createContent();
 
 private:
-    DuiButton *createButton(const QString &text);
-    DuiSeparator *createSeparator(Qt::Orientation orientation);
+    MButton *createButton(const QString &text);
+    MSeparator *createSeparator(Qt::Orientation orientation);
 };
 
 #endif // SEPARATORTESTPAGE_H

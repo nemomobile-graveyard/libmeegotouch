@@ -1,0 +1,80 @@
+/*! \page tutorial MeeGo Touch Tutorial
+
+This document explains, step-by-step, how to create a simple MeeGo Touch application.
+Knowledge of the basics of Qt framework, such as QObject and its signals and slots mechanism, is recommended.
+On the other hand, even though MeeGo Touch framework is built on top of Qt's Graphics Framework (QGraphicsView, QGraphicsScene, QGraphicsItem, etc) no prior knowledge of it is needed.
+
+\section mapplication Application class
+
+Let's start by creating a new directory for our tutorial application and creating its <code>main.cpp</code> file. 
+
+The first object to be added is MApplication. It handles the main event loop and initializes some internal structures needed by the framework. <code>main.cpp</code> should therefore look like the following:
+
+\include tutorial_main_step_01.cpp
+
+In the next step we will already build and run it to see what happens.
+
+\section qmake Creating project file and building for the first time
+
+As MeeGo Touch UI framework is built on top of Qt we also use Qt's building system, <code>qmake</code>.
+
+First we tell qmake to generate a project file for us. Issue the follwing command from within the tutorial application directory.
+
+\code
+$ qmake -project
+\endcode
+
+That will generate a project file (ends with <code>.pro</code>) in the current directory. Its contents should look like the following:
+
+\include tutorial.pro
+
+That project file is good to build plain Qt applications but won't work as it is for MeeGo Touch ones. To bring in the MeeGo Touch libraries, headers and compilation options into the build all that is needed is the addition of the following line to the project file: 
+
+\code
+CONFIG += meegotouch
+\endcode
+
+Now that we have our project file properly set, let's generate the actual build scripts (Makefile) from it.
+
+\code
+$ qmake
+\endcode
+
+And then finally build it.
+
+\code
+$ make
+\endcode
+
+For more information on qmake, check qmake's documentation.
+
+\section mapplicationwindow Application window
+
+If you run your application now, nothing will appear on the screen. Thus the next step is to add code to create our main application window so that we can get something displayed.
+
+In MeeGo Touch, the main window is provided by the <code>MApplicationWindow</code> class. So let's add one and show it. The code of our minimal application should now look like this:
+
+\include tutorial_main_step_02.cpp
+
+If you build and run it now, a new window should appear containing on its top edge some bars and navigation controls. Otherwise the window is pretty much empty. That empty space is to be occupied by the application's actual content. In MeeGo Touch, application content is organized into pages, which is the topic of our next section.
+
+\section mapplicationpage Application page
+
+An application page takes the entire screen and is covered by the bars and controls you've seen in the last section. It provides an unlimited area where a central widget is spread out. The page content goes inside this central widget. If the central widget happens to be bigger than the screen, all its content can still be accessed by panning the page.
+
+The application page class is called <code>MApplicationPage</code>. Let's create one and assign a label (<code>MLabel</code> class) with the text "Hello World!" as its central widget so that we get to see some content. As with all scene windows (more on that soon), to get it displayed on our window we have to make it appear by calling its <code>appear()</code> method. Also it would be a good idea to give our page a title. You can do so by calling its <code>setTitle()</code> method.
+
+With the addition of the application page our <code>main.cpp</code> should now look like the following:
+\include tutorial_main_step_03.cpp
+
+Now you should be able to see the title of your page being displayed in the navigation bar and the "Hello World!" text below it. You can also try to pan the page to see what happens. Since the text fits within the screen boundaries the page bounces back to its original position after each panning gesture.
+
+This is the minimal code to get a "Hello World!" MeeGo Touch application working. Before adding more features to it it's important to have some understanding of the MeeGo Touch scene and its scene windows.
+
+\section scenewindows The scene and its scene windows
+
+To be written...
+
+\image html "scene windows.png" "The basic scene windows of a MeeGo Touch application"
+
+*/

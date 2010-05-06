@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += $$DUISRCDIR/core
+INCLUDEPATH += $$MSRCDIR/corelib/core
 TARGET = ft_prestart
 
 # unit test and unit

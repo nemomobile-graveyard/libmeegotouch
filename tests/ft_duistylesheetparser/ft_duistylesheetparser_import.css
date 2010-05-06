@@ -1,8 +1,0 @@
-// This is a test file for DirectUI CSS parser.
-
-// import other .css files
-@import "ft_duistylesheetparser_import1.css";
-@import url("ft_duistylesheetparser_import2.css");
-@import url("ft_duistylesheetparser_import21.css");
-
-

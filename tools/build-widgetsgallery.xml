@@ -48,19 +48,24 @@
         </exec>
     </target>
 
-    <target name="macdeployqt" depends="deploy-dui-framework">
+    <target name="macdeployqt" depends="deploy-meego-touch-framework">
         <exec executable="${macdeployqt}" dir="${widgetsgallery.dir}">
             <arg line="widgetsgallery.app"/>
+            <arg line="-verbose=2"/>
         </exec>
-        <!-- Deleting dui.framework, so that it doesn't clash with other projects -->
+        <!-- Deleting meegotouchcore.framework and meegotouchviews.framework so that it doesn't clash with other projects -->
         <delete includeemptydirs="true">
-            <fileset dir="${local.frameworks.dir}/dui.framework" includes="**/*"/>
+            <fileset dir="${local.frameworks.dir}/meegotouchcore.framework" includes="**/*"/>
+            <fileset dir="${local.frameworks.dir}/meegotouchviews.framework" includes="**/*"/>
         </delete>
     </target>
 
-    <target name="deploy-dui-framework" depends="compile">
-        <copy todir="${local.frameworks.dir}/dui.framework">
-            <fileset dir="${libdui.dir}/lib/dui.framework"/>                            
+    <target name="deploy-meego-touch-framework" depends="compile">
+        <copy todir="${local.frameworks.dir}/meegotouchcore.framework">
+            <fileset dir="${libdui.dir}/lib/meegotouchcore.framework"/>
+        </copy>
+        <copy todir="${local.frameworks.dir}/meegotouchviews.framework">
+            <fileset dir="${libdui.dir}/lib/meegotouchviews.framework"/>
         </copy>
     </target>
 
@@ -68,19 +73,19 @@
         <copy todir="${dist.dir}/widgetsgallery.app">
             <fileset dir="${widgetsgallery.dir}/widgetsgallery.app"/>
         </copy>
-        <exec executable="chmod" failonerror="true">
+        <exec executable="chmod" failonerror="false">
             <arg line="a+x ${dist.dir}/widgetsgallery.app/Contents/MacOS/widgetsgallery"/>
         </exec>
     </target>
     
-    <target name="package-duitheme" depends="copy-widgetsgallery">
+    <target name="package-meegotheme" depends="copy-widgetsgallery">
         <exec executable="/Developer/usr/bin/packagemaker" failonerror="true">
-            <arg line="--doc ${libdui.dir}/tools/duitheme.pmdoc"/>
-            <arg line="--out ${dist.dir}/duitheme.pkg"/>
+            <arg line="--doc ${libdui.dir}/tools/mtheme.pmdoc"/>
+            <arg line="--out ${dist.dir}/mtheme.pkg"/>
         </exec>
     </target>
 
-    <target name="create-dmg" depends="package-duitheme">
+    <target name="create-dmg" depends="package-meegotheme">
         <exec  executable="/usr/bin/hdiutil" failonerror="true" dir="${build.root}">
             <arg line="create ./widgetsgallery.dmg"/>
             <arg line="-srcfolder widgetsgallery"/>

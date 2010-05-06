@@ -2,8 +2,8 @@
 
 export DISPLAY=:0
 
-TESTSDIR=/usr/lib/libdui-tests
-OUTDIR=/tmp/libdui-tests
+TESTSDIR=/usr/lib/libmeegotouch-tests
+OUTDIR=/tmp/libmeegotouch-tests
 
 mkdir -p ${OUTDIR}
 

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -63,7 +63,7 @@ bool QtMaemo6TestStyleEventFilter::eventFilter(QObject *obj, QEvent *event)
 }
 
 QtMaemo6TestStyle::QtMaemo6TestStyle(QtMaemo6TestStylePrivate &dd)
-    : d_ptr(& dd), // this is a special case, since we start our shared d-pointer hierarchy within dui right here
+    : d_ptr(& dd), // this is a special case, since we start our shared d-pointer hierarchy within m right here
       m_windowDecoration(NULL)
 {
     Q_D(QtMaemo6TestStyle);

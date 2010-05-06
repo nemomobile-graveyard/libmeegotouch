@@ -4,5 +4,4 @@ Name=Chaining Example App2
 Icon=icon-l-video
 X-Maemo-Service=com.nokia.ChainingExampleApp2
 Exec=chainginexampleapp2
-Categories=Demos;
-OnlyShowIn=X-DUI;
+OnlyShowIn=X-MeeGo;

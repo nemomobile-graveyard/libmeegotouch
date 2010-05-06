@@ -1,0 +1,13 @@
+ft_mservicefwgen
+fakegalleryinterfaceproxy.h
+fakegalleryinterfaceproxy.cpp
+fakegalleryinterface.h
+fakegalleryinterface.cpp
+fakegalleryinterfaceadaptor.h
+fakegalleryinterfaceadaptor.cpp
+fakegalleryinterfacedocproxy.h
+fakegalleryinterfacedocproxy.cpp
+fakegalleryinterfacedoc.h
+fakegalleryinterfacedoc.cpp
+fakegalleryinterfacedocadaptor.h
+fakegalleryinterfacedocadaptor.cpp

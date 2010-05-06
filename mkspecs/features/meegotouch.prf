@@ -1,0 +1,58 @@
+######################################################################
+# MFeature
+######################################################################
+
+include(meegotouch_defines.prf)
+macx {
+    INCLUDEPATH += /Library/Frameworks/m.framework/Headers
+    LIBS += \
+            -framework meegotouchcore \
+            -framework meegotouchviews
+} else {
+
+    contains(TEMPLATE, app) {
+        DEFINES += M_APPLICATION_NAME=\\\"${QMAKE_TARGET}\\\"
+    } else {
+        contains(TEMPLATE, lib) {
+            DEFINES += M_LIBRARY_NAME=\\\"lib${QMAKE_TARGET}\\\"
+        } else {
+            # error(Unknown template)
+        }
+    }
+
+    !contains(DEFINES, BUILD_M) {
+        M_INC_DIR = $$M_PREFIX/include/meegotouch
+        M_LIB_DIR = $$M_LIBDIR
+
+        GSTREAMER_INC = /usr/include/gstreamer-0.10 /usr/include/glib-2.0 /usr/lib/glib-2.0/include /usr/include/libxml2
+
+        INCLUDEPATH += $${M_INC_DIR} $${GSTREAMER_INC}
+        DEPENDPATH += $${M_INC_DIR}
+
+        unix: QMAKE_LFLAGS += $${QMAKE_RPATH}$${M_LIB_DIR}
+        LIBS += -L$${M_LIB_DIR} -lmeegotouchcore -lmeegotouchviews -lmeegotouchsettings -lmeegotouchextensions
+        QMAKE_MOC = mmoc
+
+        isEmpty(MGEN_OUTDIR) {
+            MGEN_OUTDIR = .
+        }
+
+        mgenerator_model.name = mgenerator model
+        mgenerator_model.input = MODEL_HEADERS
+        mgenerator_model.output = $$MGEN_OUTDIR/gen_${QMAKE_FILE_BASE}data.cpp
+        mgenerator_model.commands += mgen --model ${QMAKE_FILE_NAME} $$MGEN_OUTDIR
+        mgenerator_model.clean += $$MGEN_OUTDIR/gen_*
+        mgenerator_model.CONFIG = target_predeps no_link
+        mgenerator_model.variable_out = GENERATED_SOURCES
+        QMAKE_EXTRA_COMPILERS += mgenerator_model
+
+        mgenerator_style.name = mgenerator style
+        mgenerator_style.input = STYLE_HEADERS
+        mgenerator_style.output = $$MGEN_OUTDIR/gen_${QMAKE_FILE_BASE}data.cpp
+        mgenerator_style.commands += mgen --style ${QMAKE_FILE_NAME} $$MGEN_OUTDIR
+        mgenerator_style.clean += $$MGEN_OUTDIR/gen_*
+        mgenerator_style.CONFIG = target_predeps no_link
+        mgenerator_style.variable_out = GENERATED_SOURCES
+        QMAKE_EXTRA_COMPILERS += mgenerator_style
+    }
+}

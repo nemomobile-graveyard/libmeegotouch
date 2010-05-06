@@ -15,7 +15,7 @@
     <html>
       <head>
         <title><xsl:value-of select="$title"/></title>
-        <link href="dui.css" rel="stylesheet" type="text/css"/>
+        <link href="meegotouch.css" rel="stylesheet" type="text/css"/>
       </head>
       <body>
         <table>

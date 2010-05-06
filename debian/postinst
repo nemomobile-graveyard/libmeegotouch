@@ -1,6 +1,0 @@
-#!/bin/sh
-
-# create cache directory
-mkdir -p -m a+w /var/cache/dui
-mkdir -p -m a+w /var/cache/dui/css
-

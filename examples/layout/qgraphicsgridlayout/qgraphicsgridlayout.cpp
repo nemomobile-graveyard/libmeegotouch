@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,25 +22,25 @@
  */
 
 #include <QGraphicsGridLayout>
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
-#include <DuiLabel>
-#include <DuiTheme>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MLabel>
+#include <MTheme>
 
 int main(int argc, char **argv)
 {
-    DuiApplication app(argc, argv);
-    DuiTheme::loadCSS("qgraphicsgridlayout.css");
-    DuiApplicationWindow window;
-    DuiApplicationPage page;
+    MApplication app(argc, argv);
+    MTheme::loadCSS("qgraphicsgridlayout.css");
+    MApplicationWindow window;
+    MApplicationPage page;
     /* Create a grid layout */
     QGraphicsGridLayout *layout = new QGraphicsGridLayout;
     layout->setSpacing(10);
 
     /* Add 7 items to the layout, arranging them into a grid with 3 columns */
     for (int i = 0; i < 7; ++i) {
-        DuiLabel *label = new DuiLabel(QString("Item %1").arg(i + 1));
+        MLabel *label = new MLabel(QString("Item %1").arg(i + 1));
         layout->addItem(label, i / 3, i % 3);
         label->setObjectName("item");
         label->setAlignment(Qt::AlignCenter);
@@ -48,7 +48,7 @@ int main(int argc, char **argv)
 
     /* Attach the layout to the page */
     page.centralWidget()->setLayout(layout);
+    page.appear();
     window.show();
-    page.appearNow();
     return app.exec();
 }

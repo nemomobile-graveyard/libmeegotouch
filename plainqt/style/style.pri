@@ -1,5 +1,4 @@
-INCLUDEPATH+=../../src/style
-#../../src/widgets
+INCLUDEPATH+=../../src/views/style
 
 PUBLIC_HEADERS += \
   qtmaemo6style.h
@@ -10,6 +9,7 @@ PRIVATE_HEADERS += \
   qtmaemo6style_p.h \
   qtmaemo6styleeventfilter.h \
   qtmaemo6scrollbareventfilter.h \
+  qtmaemo6sliderpopup.h \
   qtmaemo6styleplugin.h \
   qtmaemo6titlebar.h \
   qtmaemo6windowdecoration.h \
@@ -28,6 +28,7 @@ SOURCES = \
   qtmaemo6style.cpp \
   qtmaemo6styleeventfilter.cpp \
   qtmaemo6scrollbareventfilter.cpp \
+  qtmaemo6sliderpopup.cpp \
   qtmaemo6styleplugin.cpp \
   qtmaemo6titlebar.cpp \
   qtmaemo6windowdecoration.cpp \

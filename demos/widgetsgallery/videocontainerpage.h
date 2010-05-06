@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,19 +20,19 @@
 #ifndef VIDEOCONTAINERPAGE_H
 #define VIDEOCONTAINERPAGE_H
 
-#include <DuiContainer>
-#include <DuiImageWidget>
-#include <DuiVideoWidget>
+#include <MContainer>
+#include <MImageWidget>
+#include <MVideoWidget>
 
 #include "templatepage.h"
 
-class DuiGridLayoutPolicy;
-class DuiLinearLayoutPolicy;
-class DuiDialog;
-class DuiSlider;
+class MGridLayoutPolicy;
+class MLinearLayoutPolicy;
+class MDialog;
+class MSlider;
 
 //image widget which emits clicked signal
-class MyImageWidget : public DuiImageWidget
+class MyImageWidget : public MImageWidget
 {   
     Q_OBJECT
     
@@ -54,7 +54,7 @@ Q_SIGNALS:
 };
 
 //video widget which emits clicked signal
-class MyVideoWidget : public DuiVideoWidget
+class MyVideoWidget : public MVideoWidget
 {   
     Q_OBJECT
     
@@ -78,14 +78,14 @@ Q_SIGNALS:
 };
 
 //container for image and video thumbnails
-class MyImageVideoContainer : public DuiContainer
+class MyImageVideoContainer : public MContainer
 {
 public:
     MyImageVideoContainer(QGraphicsItem *parent = 0);
     virtual ~MyImageVideoContainer();
 
-    DuiGridLayoutPolicy  *landscapePolicy;
-    DuiGridLayoutPolicy  *portraitPolicy;
+    MGridLayoutPolicy  *landscapePolicy;
+    MGridLayoutPolicy  *portraitPolicy;
 
     void addItem(QGraphicsLayoutItem *button);
     void pauseAll();
@@ -124,13 +124,13 @@ protected:
     virtual void retranslateUi();
 
 private:
-    DuiLayout* layout;
-    DuiLinearLayoutPolicy* policy;
+    MLayout* layout;
+    MLinearLayoutPolicy* policy;
 
-    DuiVideoWidget* video;
-    DuiSlider* slider;
-    DuiButton* button;
-    DuiImageWidget* image;
+    MVideoWidget* video;
+    MSlider* slider;
+    MButton* button;
+    MImageWidget* image;
     
     QString imageId;
     QString videoId;

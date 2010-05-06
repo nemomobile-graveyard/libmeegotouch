@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -26,31 +26,47 @@
 #include <QHash>
 #include <QStringList>
 
+#include "swaphook.h"
+
 class QString;
 class ListPage;
-class TimingScene;
+class SwapHook;
 class TimedemoPage;
 class TimedemoBenchmark;
 
-struct BenchmarkResult {
-    uint  runtime;
-    qreal fps;
+class BenchmarkResult {
+public:
+    BenchmarkResult() {}
+    BenchmarkResult(const QLinkedList<timestamp>& timestamps, const QString& type)
+        : timestamps(timestamps),
+        type(type)
+    {}
 
-    BenchmarkResult() : runtime(0), fps(0.) {}
-    BenchmarkResult(uint runtime, qreal fps) : runtime(runtime), fps(fps) {}
+    QLinkedList<timestamp> timestamps;
+    QString type;
+
+    int fps() const {
+        return (timestamps.count() - 1) / qMax<float>(runtime(), 1.f) * 1000;
+    }
+
+    int runtime() const {
+        return timestamps.isEmpty() ? 0 : timestamps.last() - timestamps.first();
+    }
 };
 
 /**
-  * Timedemo shows all the pages stored by the ListPage and shows them one after another.
-  * FPS are measured and printed in the end.
+  * Every TimedemoBenchmark must call this method once the benchmarking phase starts.
+  * Make sure to set the orientation angle of the application to the one you need. No
+  * guarantee is made about the current angle when startTiming() is called.
   */
 class Timedemo : public QObject
 {
     Q_OBJECT
 public:
-    Timedemo(TimingScene *timingScene, ListPage *listPage, const QStringList& demoPageTitles);
+    Timedemo(ListPage *listPage, const QStringList& demoPageTitles);
 
     void setOutputCsv(const QString &filename);
+    void setFramelog(const QString &filename);
 
     /**
       * Every TimedemoBenchmark must call this method once the benchmarking phase starts.
@@ -64,8 +80,7 @@ public:
 
 private:
     void displayBenchmarkResults();
-
-    TimingScene *timingScene;
+    void saveFramelog();
 
     ListPage *m_pFrontPage;
 
@@ -82,6 +97,7 @@ private:
     QTime m_beginTime;
 
     QString m_csvFilename;
+    QString framelogFilename;
 
     bool timingStarted;
     bool timingStopped;

@@ -1,5 +1,5 @@
-@import "../../libdui/style/fonts.css";
-@import "../../libdui/style/colors.css";
+@import "../../libmeegotouchcore/style/fonts.css";
+@import "../../libmeegotouchcore/style/colors.css";
 
 DuiButtonStyle#theme-selection-button {
     minimum-size: 10mm 10mm;
@@ -82,6 +82,17 @@ DuiButtonStyle#theme-selection-button {
     group-header-object-name: "wgListGroupHeaders";
 }
 
+#wgListWithSeparators {
+    margin-left: 0;
+    margin-top: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+
+    group-header-object-name: "wgListGroupHeaders";
+    horizontal-separator-object-name: "";
+    vertical-separator-object-name: "";
+}
+
 #labelListItemFile {
     color: #FFFFFF;
     font: "Nokia Sans Wide" 21px;
@@ -132,7 +143,7 @@ DuiButtonStyle#theme-selection-button {
   rail-dot-played-image: "Slider-dot-selected";
 }
 
-DuiSliderStyle#video-player-slider {
+MSliderStyle#video-player-slider {
     padding-left:   0;
     padding-top:    0;
     padding-right:  0;
@@ -144,7 +155,7 @@ DuiSliderStyle#video-player-slider {
     margin-bottom:  0;
 }
 
-DuiButtonStyle#video-player-button {
+MButtonStyle#video-player-button {
 
     padding-left:   0;
     padding-top:    0;
@@ -166,6 +177,16 @@ DuiButtonStyle#video-player-button {
     maximum-size: 7.5mm 5mm;
 
 
-    icon-size: 3.5mm 3.5mm;
+    icon-size: 3.0mm 3.0mm;
     icon-align: center;
+}
+
+MApplicationPageStyle#video-detail-page {
+    background-image: ;
+    background-color: #001100;
+}
+
+ItemDetailPage MVideoWidgetStyle:fullscreen {
+    background-color: #001100;
+    color-key: #001100;
 }

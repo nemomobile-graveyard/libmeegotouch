@@ -1,0 +1,64 @@
+/*
+ * automatically generated with the command line :
+ * /usr/bin/m-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_mservicefwgen/com.nokia.FtMServiceFwGen2
+ */
+
+#include "ftmservicefwgen2.h"
+#include "ftmservicefwgen2proxy.h"
+
+bool FtMServiceFwGen2::showGridWithCapturedContent( int limit )
+{
+    return qobject_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showGridWithCapturedContent( limit ).value();
+}
+
+void FtMServiceFwGen2::showImage( const QString &uri, const QStringList &uriList )
+{
+    static_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showImage( uri, uriList );
+}
+
+bool FtMServiceFwGen2::showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage )
+{
+    return qobject_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showImage( uri, playlistName, defaultBackPage ).value();
+}
+
+bool FtMServiceFwGen2::showPage( const QString &targetPage, const QString &previousPage )
+{
+    return qobject_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showPage( targetPage, previousPage ).value();
+}
+
+bool FtMServiceFwGen2::showSettings(  )
+{
+    return qobject_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showSettings(  ).value();
+}
+
+FtMServiceFwGen2::FtMServiceFwGen2( const QString& preferredService, QObject* parent )
+    : MServiceFwBaseIf( FtMServiceFwGen2Proxy::staticInterfaceName(), parent )
+{
+    // Resolve the provider service name
+    QString service = resolveServiceName( interfaceName(), preferredService );
+
+    bool serviceNameInvalid = service.contains( " " ); // "not provided" - when the service wouldn't run
+    if ( serviceNameInvalid ) {
+        service.clear();
+    }
+    setServiceName( service );
+
+    if (!service.isEmpty()) {
+        // Construct the D-Bus proxy
+        setInterfaceProxy( new FtMServiceFwGen2Proxy( service, "/", QDBusConnection::sessionBus(), this ));
+        // allConnectSignals go here (empty block if none)
+
+    }
+}
+
+void FtMServiceFwGen2::setService(const QString & service)
+{
+    if (service.isEmpty()) return;
+
+    setServiceName( service );
+    setInterfaceProxy( new FtMServiceFwGen2Proxy( service, "/", QDBusConnection::sessionBus(), this ));
+    {
+
+    }
+}
+

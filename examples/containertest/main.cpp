@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,26 +19,26 @@
 
 #include <QGraphicsLinearLayout>
 
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
-#include <DuiContainer>
-#include <DuiSeparator>
-#include <DuiLabel>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MContainer>
+#include <MSeparator>
+#include <MLabel>
 
-#include <DuiLayout>
-#include <DuiLinearLayoutPolicy>
-#include <DuiFreestyleLayoutPolicy>
-#include <DuiFlowLayoutPolicy>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+#include <MFreestyleLayoutPolicy>
+#include <MFlowLayoutPolicy>
 
 
 // create container with some content
-DuiContainer *createApplet()
+MContainer *createApplet()
 {
     static int count = 1;
 
-    DuiContainer *c = new DuiContainer();
-    DuiWidget *w = new DuiWidget();
+    MContainer *c = new MContainer();
+    MWidget *w = new MWidget();
 
     w->setObjectName("object");
     w->setMinimumSize(128, 128);
@@ -60,20 +60,20 @@ void pack_QT_layout(QGraphicsLinearLayout *layout, int items)
 // helper
 void separator(QGraphicsLinearLayout *layout, const QString &str = QString())
 {
-    layout->addItem(new DuiLabel(str));
-    layout->addItem(new DuiSeparator());
+    layout->addItem(new MLabel(str));
+    layout->addItem(new MSeparator());
 }
 
 
 int main(int argc, char **argv)
 {
 
-    // dui skeleton
-    DuiApplication app(argc, argv);
-    DuiApplicationWindow w;
+    // m skeleton
+    MApplication app(argc, argv);
+    MApplicationWindow w;
     w.show();
-    DuiApplicationPage p;
-    p.appearNow();
+    MApplicationPage p;
+    p.appear();
 
     // main layout
     QGraphicsLinearLayout *main = new QGraphicsLinearLayout(Qt::Vertical, NULL);
@@ -86,31 +86,31 @@ int main(int argc, char **argv)
     pack_QT_layout(hbox, 3);
     main->addItem(hbox);
 
-    // DUI flow
-    separator(main, "DUI flow");
-    DuiLayout *dlayout3 = new DuiLayout();
-    DuiFlowLayoutPolicy *flowpolicy = new DuiFlowLayoutPolicy(dlayout3);
+    // M flow
+    separator(main, "M flow");
+    MLayout *dlayout3 = new MLayout();
+    MFlowLayoutPolicy *flowpolicy = new MFlowLayoutPolicy(dlayout3);
     for (int i = 0; i < 6; ++i) flowpolicy->addItem(createApplet());
     main->addItem(dlayout3);
 
-    // DUI hbox
-    separator(main, "DUI horizontal");
-    DuiLayout *dlayout1 = new DuiLayout();
-    DuiLinearLayoutPolicy *lpolicy = new DuiLinearLayoutPolicy(dlayout1, Qt::Horizontal);
+    // M hbox
+    separator(main, "M horizontal");
+    MLayout *dlayout1 = new MLayout();
+    MLinearLayoutPolicy *lpolicy = new MLinearLayoutPolicy(dlayout1, Qt::Horizontal);
     for (int i = 0; i < 3; ++i) lpolicy->addItem(createApplet());
     main->addItem(dlayout1);
 
-    // DUI freestyle
-    separator(main, "DUI freestyle");
-    DuiLayout *dlayout2 = new DuiLayout();
-    DuiFreestyleLayoutPolicy *fpolicy = new DuiFreestyleLayoutPolicy(dlayout2);
+    // M freestyle
+    separator(main, "M freestyle");
+    MLayout *dlayout2 = new MLayout();
+    MFreestyleLayoutPolicy *fpolicy = new MFreestyleLayoutPolicy(dlayout2);
     for (int i = 0; i < 3; ++i) fpolicy->addItem(createApplet());
     main->addItem(dlayout2);
 
-    // DUI vbox
-    separator(main, "DUI vertical");
-    DuiLayout *dlayout4 = new DuiLayout();
-    DuiLinearLayoutPolicy *vpolicy = new DuiLinearLayoutPolicy(dlayout4, Qt::Vertical);
+    // M vbox
+    separator(main, "M vertical");
+    MLayout *dlayout4 = new MLayout();
+    MLinearLayoutPolicy *vpolicy = new MLinearLayoutPolicy(dlayout4, Qt::Vertical);
     for (int i = 0; i < 3; ++i) vpolicy->addItem(createApplet());
     main->addItem(dlayout4);
 

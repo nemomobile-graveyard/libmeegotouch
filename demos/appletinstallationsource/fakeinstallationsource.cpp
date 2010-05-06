@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,8 +22,8 @@
 #include <QDBusInterface>
 #include <QDBusConnection>
 #include <QDBusPendingReply>
-#include <DuiButton>
-#include <DuiAppletInstantiator>
+#include <MButton>
+#include <MAppletInstantiator>
 #include <QGraphicsGridLayout>
 #include "fakeinstallationsource.h"
 #include <stdlib.h>
@@ -41,7 +41,7 @@ FakeInstallationSource::~FakeInstallationSource()
     delete appletInventory;
 }
 
-DuiWidget *FakeInstallationSource::widget()
+MWidget *FakeInstallationSource::widget()
 {
     return source;
 }
@@ -51,12 +51,12 @@ bool FakeInstallationSource::initialize(const QString& )
     return true;
 }
 
-void FakeInstallationSource::setDuiAppletInventoryInterface(DuiAppletInventoryInterface &appletInventory)
+void FakeInstallationSource::setMAppletInventoryInterface(MAppletInventoryInterface &appletInventory)
 {
     this->appletInventory = &appletInventory;
 }
 
-DuiAppletInventoryInterface* FakeInstallationSource::appletInventoryInterface() const
+MAppletInventoryInterface* FakeInstallationSource::appletInventoryInterface() const
 {
     return appletInventory;
 }
@@ -68,33 +68,33 @@ InstallationSourceWidget::InstallationSourceWidget(FakeInstallationSource &sourc
     setLayout(layout);
 
     // Button for installing a package from a local file
-    DuiButton *button = new DuiButton(this);
+    MButton *button = new MButton(this);
     button->setText("Install local applet");
     layout->addItem(button, 0, 0);
     connect(button, SIGNAL(clicked()), this, SLOT(installApplet()));
 
     // Buttons for different test cases
-    button = new DuiButton(this);
+    button = new MButton(this);
     button->setText("Installable");
     layout->addItem(button, 0, 1);
     connect(button, SIGNAL(clicked()), this, SLOT(installableApplet()));
 
-    button = new DuiButton(this);
+    button = new MButton(this);
     button->setText("Uninstallable");
     layout->addItem(button, 1, 0);
     connect(button, SIGNAL(clicked()), this, SLOT(uninstallableApplet()));
 
-    button = new DuiButton(this);
+    button = new MButton(this);
     button->setText("Not Downloadable");
     layout->addItem(button, 1, 1);
     connect(button, SIGNAL(clicked()), this, SLOT(notDownloadableApplet()));
 
-    button = new DuiButton(this);
+    button = new MButton(this);
     button->setText("Metadata Only");
     layout->addItem(button, 2, 0);
     connect(button, SIGNAL(clicked()), this, SLOT(metadataOnly()));
 
-    button = new DuiButton(this);
+    button = new MButton(this);
     button->setText("Non-existent");
     layout->addItem(button, 2, 1);
     connect(button, SIGNAL(clicked()), this, SLOT(nonExistent()));
@@ -143,7 +143,7 @@ void InstallationSourceWidget::nonExistent()
 
 void InstallationSourceWidget::instantiateAppletsInPackage(const QString &packageName)
 {
-    DuiAppletInventoryInterface *inventory = installationSource.appletInventoryInterface();
+    MAppletInventoryInterface *inventory = installationSource.appletInventoryInterface();
     if (inventory != NULL) {
         inventory->instantiateAppletsInPackage(packageName);
     }

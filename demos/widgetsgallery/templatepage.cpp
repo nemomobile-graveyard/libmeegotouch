@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,14 +19,14 @@
 
 #include "templatepage.h"
 
-#include <DuiLayout>
-#include <DuiLinearLayoutPolicy>
-#include <DuiApplication>
-#include <DuiWindow>
-#include <DuiButton>
-#include <DuiSeparator>
-#include <DuiLabel>
-#include <DuiLocale>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+#include <MApplication>
+#include <MWindow>
+#include <MButton>
+#include <MSeparator>
+#include <MLabel>
+#include <MLocale>
 
 TemplatePage::TemplatePage() :
     gid(0),
@@ -69,40 +69,41 @@ int TemplatePage::groupID()
 
 void TemplatePage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
     createLayout();
-    containerLayout = new DuiLayout(container);
-    containerPolicy = new DuiLinearLayoutPolicy(containerLayout, Qt::Vertical);
+    containerLayout = new MLayout(container);
+    containerPolicy = new MLinearLayoutPolicy(containerLayout, Qt::Vertical);
     containerLayout->setPolicy(containerPolicy);
 }
 
 void TemplatePage::createLayout()
 {
     QGraphicsWidget *panel = centralWidget();
-    layout = new DuiLayout(panel);
+    layout = new MLayout(panel);
 
-    landscapePolicy = new DuiLinearLayoutPolicy(layout, Qt::Horizontal);
+    landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     landscapePolicy->setContentsMargins(0, 30, 0, 0);
 
-    portraitPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
     portraitPolicy->setContentsMargins(0, 30, 0, 0);
 
     layout->setLandscapePolicy(landscapePolicy);
     layout->setPortraitPolicy(portraitPolicy);
 
-    // main container
-    QSize s = DuiApplication::activeWindow()->visibleSceneSize();
+    container = new MWidget();
+    container->setMinimumWidth(0);
+    container->setPreferredWidth(0);
+    container->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
-    container = new DuiWidget();
-    container->setMaximumWidth(s.height());
-    container->setMinimumWidth(s.height());
-
-    separator = new DuiSeparator();
+    separator = new MSeparator();
     separator->setOrientation(Qt::Vertical);
 
-    infoLabel = new DuiLabel();
+    infoLabel = new MLabel();
+    infoLabel->setMinimumWidth(0);
+    infoLabel->setPreferredWidth(0);
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
+    infoLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
     landscapePolicy->addItem(container);
     landscapePolicy->addItem(separator);

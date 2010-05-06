@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,19 +17,19 @@
 **
 ****************************************************************************/
 
-#include <DuiButton>
-#include <DuiLabel>
-#include <DuiTheme>
-#include <DuiLocale>
-#include <DuiLinearLayoutPolicy>
-#include <DuiGridLayoutPolicy>
-#include <DuiProgressIndicator>
-#include <DuiApplication>
-#include <DuiDebug>
-#include <DuiLayout>
+#include <MButton>
+#include <MLabel>
+#include <MTheme>
+#include <MLocale>
+#include <MLinearLayoutPolicy>
+#include <MGridLayoutPolicy>
+#include <MProgressIndicator>
+#include <MApplication>
+#include <MDebug>
+#include <MLayout>
 #include <QString>
 #include <QTime>
-#include <duiapplicationwindow.h>
+#include <mapplicationwindow.h>
 #include "anotherpage.h"
 
 AnotherPage::AnotherPage()
@@ -52,40 +52,40 @@ AnotherPage::~AnotherPage()
 
 void AnotherPage::createContent()
 {
-    DuiLayout *layout = new DuiLayout();
+    MLayout *layout = new MLayout();
     centralWidget()->setLayout(layout);
 
-    l_policy = new DuiGridLayoutPolicy(layout);
+    l_policy = new MGridLayoutPolicy(layout);
     l_policy->setContentsMargins(32, 32, 32, 32);
     l_policy->setRowSpacing(1, 32.0f);
     l_policy->setSpacing(36);
 
-    DuiLabel *label1 = new DuiLabel("This Label's Visibility Log:", this);
+    MLabel *label1 = new MLabel("This Label's Visibility Log:", this);
     label1->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
     label1->setObjectName("Label");
 
-    windowHiddenLabel = new DuiLabel(("Window hidden: 00:00:00"), this);
-    windowVisibleLabel = new DuiLabel(("Window visible: 00:00:00"), this);
+    windowHiddenLabel = new MLabel(("Window hidden: 00:00:00"), this);
+    windowVisibleLabel = new MLabel(("Window visible: 00:00:00"), this);
 
-    panLabel = new DuiLabel((labelBgColors.at(labelBgColorIndex++) + "<BR>Pan me out<BR></BODY>"), this);
+    panLabel = new MLabel((labelBgColors.at(labelBgColorIndex++) + "<BR>Pan me out<BR></BODY>"), this);
     panLabel->setObjectName("panLabel");
 
-    logLabel = new DuiLabel("", this);
+    logLabel = new MLabel("", this);
     fillLogLabel("<FONT COLOR=\"#00FFFF\">" + QTime::currentTime().toString("hh:mm:ss") + " Visible</FONT>");
 
-    DuiButton *button = new DuiButton("Clear Logs");
+    MButton *button = new MButton("Clear Logs");
     connect(button, SIGNAL(clicked()), this, SLOT(clearLog()));
 
     connect(panLabel, SIGNAL(displayEntered()), this, SLOT(itemVisible()));
     connect(panLabel, SIGNAL(displayExited()),  this, SLOT(itemHidden()));
     connect(label1,   SIGNAL(displayEntered()), this, SLOT(itemVisible()));
     connect(label1,   SIGNAL(displayExited()),  this, SLOT(itemHidden()));
-    DuiApplicationWindow *window = DuiApplication::activeApplicationWindow();
+    MApplicationWindow *window = MApplication::activeApplicationWindow();
     connect(window,   SIGNAL(displayExited()),  this, SLOT(windowHidden()));
     connect(window,   SIGNAL(displayEntered()), this, SLOT(windowVisible()));
 
     for (int i = 0; i < LABEL_COUNT; i++) {
-        labelList[i] = new DuiLabel(("<BODY BGCOLOR=\"#0000FF\"><CENTER>" + QString(i + 'A') + "</CENTER></BODY>"), this);
+        labelList[i] = new MLabel(("<BODY BGCOLOR=\"#0000FF\"><CENTER>" + QString(i + 'A') + "</CENTER></BODY>"), this);
         labelList[i]->setObjectName("labelList" + QString(i + 'A'));
         connect(labelList[i], SIGNAL(displayEntered()), this, SLOT(itemVisible()));
         connect(labelList[i], SIGNAL(displayExited()), this, SLOT(itemHidden()));
@@ -99,7 +99,7 @@ void AnotherPage::createContent()
     l_policy->addItem(windowHiddenLabel, 0, 2);
     l_policy->addItem(windowVisibleLabel, 1, 2);
     // Return to initial state in case of LazyShutdown
-    connect(DuiApplication::instance(), SIGNAL(prestartRestored()), this, SLOT(clearLog()));
+    connect(MApplication::instance(), SIGNAL(prestartRestored()), this, SLOT(clearLog()));
 }
 
 void AnotherPage::clearLog()
@@ -126,7 +126,7 @@ void AnotherPage::fillLogLabel(QString text)
 
 void AnotherPage::itemHidden()
 {
-    duiDebug("") << sender()->objectName() << "HIDDEN";
+    mDebug("") << sender()->objectName() << "HIDDEN";
     if (sender()->objectName() == "Label") {
         fillLogLabel("<FONT COLOR=\"#FFFFFF\">" + QTime::currentTime().toString("hh:mm:ss") + " Hidden</FONT>");
     } else if (sender()->objectName() == "panLabel") {
@@ -146,7 +146,7 @@ void AnotherPage::itemHidden()
 
 void AnotherPage::itemVisible()
 {
-    duiDebug("") << sender()->objectName() << "Visible";
+    mDebug("") << sender()->objectName() << "Visible";
     if (sender()->objectName() == "Label") {
         fillLogLabel("<FONT COLOR=\"#00FFFF\">" + QTime::currentTime().toString("hh:mm:ss") + " Visible<</FONT>");
     } else if (sender()->objectName().leftRef(9) == "labelList") {
@@ -164,24 +164,24 @@ void AnotherPage::itemVisible()
 
 void AnotherPage::windowHidden()
 {
-    duiDebug("") << "lifecycle: Window hidden";
+    mDebug("") << "lifecycle: Window hidden";
     windowHiddenLabel->setText("Window hidden: " +  QTime::currentTime().toString("hh:mm:ss"));
 }
 
 void AnotherPage::windowVisible()
 {
-    duiDebug("") << "lifecycle: Window visible";
+    mDebug("") << "lifecycle: Window visible";
     windowVisibleLabel->setText("Window visible: " +  QTime::currentTime().toString("hh:mm:ss"));
 }
 
 void AnotherPage::exitDisplayEvent()
 {
-    duiDebug("") << "lifecycle: AnotherPage hidden";
+    mDebug("") << "lifecycle: AnotherPage hidden";
 }
 
 void AnotherPage::enterDisplayEvent()
 {
-    duiDebug("") << "lifecycle: AnotherPage visible";
+    mDebug("") << "lifecycle: AnotherPage visible";
 }
 
 

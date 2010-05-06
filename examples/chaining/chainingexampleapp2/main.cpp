@@ -1,7 +1,7 @@
-#include <DuiApplication>
-#include <DuiApplicationPage>
-#include <DuiApplicationWindow>
-#include <DuiButton>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MButton>
 
 #include "imageviewer.h"
 #include "chainingexampleinterfaceadaptor.h"
@@ -10,15 +10,15 @@
 
 int main(int argc, char** argv)
 {
-    DuiApplication app(argc, argv);
+    MApplication app(argc, argv);
 
-    DuiApplicationWindow w;
+    MApplicationWindow w;
     w.show();
 
-    DuiApplicationPage p;
-    p.appearNow();
+    MApplicationPage p;
+    p.appear();
 
-    DuiButton b(p.centralWidget());
+    MButton b(p.centralWidget());
     b.setText("NO");
 
     ImageViewer myImageViewer( &b );

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,16 +19,16 @@
 
 #include "videocontainerpage.h"
 
-#include <DuiLayout>
-#include <DuiGridLayoutPolicy>
-#include <DuiLinearLayoutPolicy>
-#include <DuiImageWidget>
-#include <DuiDialog>
-#include <DuiLabel>
-#include <DuiTextEdit>
-#include <DuiAction>
-#include <DuiSlider>
-#include <DuiButton>
+#include <MLayout>
+#include <MGridLayoutPolicy>
+#include <MLinearLayoutPolicy>
+#include <MImageWidget>
+#include <MDialog>
+#include <MLabel>
+#include <MTextEdit>
+#include <MAction>
+#include <MSlider>
+#include <MButton>
 
 #include <QDir>
 #include <QGraphicsLinearLayout>
@@ -36,10 +36,10 @@
 #include <QTimer>
 
 #include "utils.h"
-#include "duidebug.h"
+#include "mdebug.h"
 
 MyImageWidget::MyImageWidget(QGraphicsItem *parent)
-    : DuiImageWidget(parent)
+    : MImageWidget(parent)
 {
 }
 
@@ -55,18 +55,18 @@ QString MyImageWidget::id()
 
 void MyImageWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    DuiImageWidget::mousePressEvent(event);
+    MImageWidget::mousePressEvent(event);
     event->accept();
 }
 
 void MyImageWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    DuiImageWidget::mouseReleaseEvent(event);
+    MImageWidget::mouseReleaseEvent(event);
     emit clicked();
 }
 
 MyVideoWidget::MyVideoWidget(QGraphicsItem *parent)
-    : DuiVideoWidget(parent)
+    : MVideoWidget(parent)
 {
 }
 
@@ -82,28 +82,28 @@ QString MyVideoWidget::id()
 
 void MyVideoWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    DuiVideoWidget::mousePressEvent(event);
+    MVideoWidget::mousePressEvent(event);
     event->accept();
 }
 
 void MyVideoWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    DuiVideoWidget::mouseReleaseEvent(event);
+    MVideoWidget::mouseReleaseEvent(event);
     emit clicked();
 }
 
 void MyVideoWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    DuiVideoWidget::contextMenuEvent(event);
+    MVideoWidget::contextMenuEvent(event);
     //emit longPressed();
 }
 
 MyImageVideoContainer::MyImageVideoContainer(QGraphicsItem *parent)
-    : DuiContainer(parent)
+    : MContainer(parent)
 {
-    DuiLayout *layout = new DuiLayout(centralWidget());
+    MLayout *layout = new MLayout(centralWidget());
 
-    landscapePolicy = new DuiGridLayoutPolicy(layout);
+    landscapePolicy = new MGridLayoutPolicy(layout);
     landscapePolicy->setContentsMargins(0, 0, 0, 0);
     landscapePolicy->setSpacing(0);
     //To make sure that both columns have the same width, give them the same preferred width.
@@ -111,7 +111,7 @@ MyImageVideoContainer::MyImageVideoContainer(QGraphicsItem *parent)
     landscapePolicy->setColumnPreferredWidth(1, 800);
     landscapePolicy->setColumnPreferredWidth(2, 800);
     
-    portraitPolicy = new DuiGridLayoutPolicy(layout);
+    portraitPolicy = new MGridLayoutPolicy(layout);
     portraitPolicy->setContentsMargins(0, 0, 0, 0);
     portraitPolicy->setSpacing(0);
 
@@ -136,12 +136,12 @@ void MyImageVideoContainer::addItem(QGraphicsLayoutItem* button)
 
 void MyImageVideoContainer::pauseAll()
 {
-    DuiLayout *layout = dynamic_cast<DuiLayout*>(centralWidget()->layout());
+    MLayout *layout = dynamic_cast<MLayout*>(centralWidget()->layout());
     if( layout ) {
         for( int i = 0; i < layout->count(); ++i ) {
             MyVideoWidget* video = dynamic_cast<MyVideoWidget*>(layout->itemAt(i));
             if( video ) 
-                if( video->state() != DuiVideo::NotReady )
+                if( video->state() != MVideo::NotReady )
                     video->pause();
         }
     }
@@ -149,12 +149,12 @@ void MyImageVideoContainer::pauseAll()
 
 void MyImageVideoContainer::playAll()
 {
-    DuiLayout *layout = dynamic_cast<DuiLayout*>(centralWidget()->layout());
+    MLayout *layout = dynamic_cast<MLayout*>(centralWidget()->layout());
     if( layout ) {
         for( int i = 0; i < layout->count(); ++i ) {
             MyVideoWidget* video = dynamic_cast<MyVideoWidget*>(layout->itemAt(i));
             if( video )
-                if( video->state() != DuiVideo::NotReady )
+                if( video->state() != MVideo::NotReady )
                     video->play();
         }
     }
@@ -184,15 +184,16 @@ QString ItemDetailPage::timedemoTitle()
 void ItemDetailPage::createContent()
 {
     QGraphicsWidget *panel = centralWidget();
-    layout = new DuiLayout(panel);
+    layout = new MLayout(panel);
 
-    policy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
     policy->setSpacing(0.0);
     layout->setLandscapePolicy(policy);
     layout->setPortraitPolicy(policy);
     
     if( !videoId.isEmpty() ) {
-        video = new DuiVideoWidget(panel);
+        setObjectName("video-detail-page");
+        video = new MVideoWidget(panel);
         connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
         video->setFullscreen(true);
         video->open(videoId);
@@ -200,8 +201,8 @@ void ItemDetailPage::createContent()
 
         QGraphicsLinearLayout* controlLayout = new QGraphicsLinearLayout(Qt::Horizontal);
         controlLayout->setContentsMargins(0,0,0,0);
-        button = new DuiButton(panel);
-        //button->setViewType(DuiButton::iconType);
+        button = new MButton(panel);
+        //button->setViewType(MButton::iconType);
         button->setObjectName("video-player-button");
         button->setIconID("icon-m-common-pause");
         button->setIconVisible(true);
@@ -210,7 +211,7 @@ void ItemDetailPage::createContent()
         controlLayout->addItem(button);
         controlLayout->setAlignment(button, Qt::AlignCenter);
         
-        slider = new DuiSlider(panel);
+        slider = new MSlider(panel);
         slider->setObjectName("video-player-slider");
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(videoSliderValueChanged(int)));
         connect(slider, SIGNAL(sliderPressed()), this, SLOT(sliderPressed()));
@@ -223,7 +224,7 @@ void ItemDetailPage::createContent()
         setTitle(info.fileName());    
     }
     else if( !imageId.isEmpty() ) {
-        image = new DuiImageWidget(panel);
+        image = new MImageWidget(panel);
         image->setImage(QImage(imageId));
         policy->addItem(image);
         
@@ -247,7 +248,7 @@ void ItemDetailPage::videoReady()
     QTimer::singleShot(100, this, SLOT(updatePosition()));
     
     setAutoMarginsForComponentsEnabled(false);
-    setComponentsDisplayMode(DuiApplicationPage::NavigationBar/*DuiApplicationPage::AllComponents*/, DuiApplicationPageModel::Hide);
+    setComponentsDisplayMode(MApplicationPage::NavigationBar/*MApplicationPage::AllComponents*/, MApplicationPageModel::Hide);
     
 }
 
@@ -272,7 +273,7 @@ void ItemDetailPage::videoSliderValueChanged(int newValue)
 
 void ItemDetailPage::buttonClicked()
 {
-    if( video->state() == DuiVideo::Playing ) {
+    if( video->state() == MVideo::Playing ) {
         video->pause();
         button->setIconID("icon-m-common-play");
 
@@ -330,8 +331,8 @@ void VideoContainerPage::createContent()
             image->setImage(QImage(filename));
             image->setId(filename);
             
-            DuiAction *action = new DuiAction("Open", image);
-            action->setLocation(DuiAction::ObjectMenuLocation);
+            MAction *action = new MAction("Open", image);
+            action->setLocation(MAction::ObjectMenuLocation);
             image->addAction(action);
 
             image->setPreferredSize(92, 92);
@@ -342,8 +343,8 @@ void VideoContainerPage::createContent()
         else if( info.suffix() == "mp4" || info.suffix() == "mov" ) {
             if( info.fileName().startsWith("thumb-") ) {
                 MyVideoWidget *video = new MyVideoWidget(container->centralWidget());
-                DuiAction *action = new DuiAction("Open", video);
-                action->setLocation(DuiAction::ObjectMenuLocation);
+                MAction *action = new MAction("Open", video);
+                action->setLocation(MAction::ObjectMenuLocation);
                 video->addAction(action);
                 
                 //connect(video, SIGNAL(clicked()), this, SLOT(itemClicked()));
@@ -382,17 +383,17 @@ void VideoContainerPage::retranslateUi()
 
 void VideoContainerPage::openImageDialog(const QString& itemid)
 {
-    DuiWidget *centralWidget = new DuiWidget;
+    MWidget *centralWidget = new MWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     centralWidget->setLayout(layout);
 
-    DuiImageWidget *widget = new DuiImageWidget(centralWidget);
+    MImageWidget *widget = new MImageWidget(centralWidget);
     widget->setImage(QImage(itemid));
     layout->addItem(widget);
 
     QFileInfo info(itemid);
-    DuiDialog* dialog = new DuiDialog(info.fileName(),
-                           Dui::OkButton);
+    MDialog* dialog = new MDialog(info.fileName(),
+                           M::OkButton);
     dialog->setCentralWidget(centralWidget);
     dialog->exec();
 }
@@ -425,9 +426,9 @@ void VideoContainerPage::itemClicked()
     //video clicked
     MyVideoWidget* video = qobject_cast<MyVideoWidget*>(sender());
     if( video ) {
-        if( video->state() == DuiVideo::Paused || video->state() == DuiVideo::Stopped )
+        if( video->state() == MVideo::Paused || video->state() == MVideo::Stopped )
             video->play();
-        else if( video->state() == DuiVideo::Playing )
+        else if( video->state() == MVideo::Playing )
             video->pause();
     }
 }
@@ -450,7 +451,7 @@ void VideoContainerPage::videoReady()
 
 void VideoContainerPage::visibilityChanged(bool visible)
 {   
-    duiDebug("VideoContainerPage::visibilityChanged()") << isContentCreated();
+    mDebug("VideoContainerPage::visibilityChanged()") << isContentCreated();
     if( isContentCreated() ) {
         if( visible ) {
             container->playAll();

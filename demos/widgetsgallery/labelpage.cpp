@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,16 +19,16 @@
 
 #include "labelpage.h"
 
-#include <DuiLabel>
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiApplicationPage>
-#include <DuiLinearLayoutPolicy>
-#include <duidebug.h>
+#include <MLabel>
+#include <MLayout>
+#include <MLocale>
+#include <MApplicationPage>
+#include <MLinearLayoutPolicy>
+#include <mdebug.h>
 
-#include <duitextedit.h>
-#include <duibutton.h>
-#include <duilabelhighlighter.h>
+#include <mtextedit.h>
+#include <mbutton.h>
+#include <mlabelhighlighter.h>
 
 LabelPage::LabelPage()
     : TemplatePage(),
@@ -60,20 +60,20 @@ void LabelPage::createContent()
 {
     TemplatePage::createContent();
 
-    simpleLabel = new DuiLabel();
+    simpleLabel = new MLabel();
     simpleLabel->setAlignment(Qt::AlignVCenter);
     containerPolicy->addItem(simpleLabel);
 
-    richLabel = new DuiLabel();
+    richLabel = new MLabel();
 
     richLabel->setAlignment(Qt::AlignTop);
     richLabel->setWordWrap(true);
     containerPolicy->addItem(richLabel);
 
-    textEdit = new DuiTextEdit(DuiTextEditModel::MultiLine);
+    textEdit = new MTextEdit(MTextEditModel::MultiLine);
     containerPolicy->addItem(textEdit);
 
-    DuiButton *b = new DuiButton("Highlight");
+    MButton *b = new MButton("Highlight");
     containerPolicy->addItem(b);
 
     connect(b, SIGNAL(clicked()), this, SLOT(applySearch()));
@@ -89,9 +89,9 @@ void LabelPage::createContent()
 //                Qt::CaseInsensitive);
 
 
-    DuiCommonLabelHighlighter *phone = new DuiCommonLabelHighlighter(phoneregexp);
-    DuiCommonLabelHighlighter *email = new DuiCommonLabelHighlighter(emailregexp);
-    DuiCommonLabelHighlighter *url = new DuiCommonLabelHighlighter(urlregexp);
+    MCommonLabelHighlighter *phone = new MCommonLabelHighlighter(phoneregexp);
+    MCommonLabelHighlighter *email = new MCommonLabelHighlighter(emailregexp);
+    MCommonLabelHighlighter *url = new MCommonLabelHighlighter(urlregexp);
 
     connect(phone, SIGNAL(longPressed(QString)), this, SLOT(phoneNumberLongPressed(QString)));
     connect(phone, SIGNAL(clicked(QString)), this, SLOT(phoneNumberClicked(QString)));
@@ -138,43 +138,43 @@ void LabelPage::retranslateUi()
 
 void LabelPage::phoneNumberLongPressed(const QString &link)
 {
-    duiDebug("LabelPage::phoneNumberLongPressed()") << link;
+    mDebug("LabelPage::phoneNumberLongPressed()") << link;
 }
 
 void LabelPage::phoneNumberClicked(const QString &link)
 {
-    duiDebug("LabelPage::phoneNumberClicked()") << link;
+    mDebug("LabelPage::phoneNumberClicked()") << link;
 }
 
 void LabelPage::emailLongPressed(const QString &link)
 {
-    duiDebug("LabelPage::emailLongPressed()") << link;
+    mDebug("LabelPage::emailLongPressed()") << link;
 }
 
 void LabelPage::emailClicked(const QString &link)
 {
-    duiDebug("LabelPage::emailClicked()") << link;
+    mDebug("LabelPage::emailClicked()") << link;
 }
 
 void LabelPage::urlLongPressed(const QString &link)
 {
-    duiDebug("LabelPage::urlLongPressed()") << link;
+    mDebug("LabelPage::urlLongPressed()") << link;
 }
 
 void LabelPage::urlClicked(const QString &link)
 {
-    duiDebug("LabelPage::urlClicked()") << link;
+    mDebug("LabelPage::urlClicked()") << link;
 }
 
 
 void LabelPage::applySearch()
 {
-    duiDebug("LabelPage::applySearch()") << textEdit->text();
+    mDebug("LabelPage::applySearch()") << textEdit->text();
 
     richLabel->removeHighlighter(commonHighlighter);
     delete commonHighlighter;
 
-    commonHighlighter = new DuiCommonLabelHighlighter(QRegExp(textEdit->text()));
+    commonHighlighter = new MCommonLabelHighlighter(QRegExp(textEdit->text()));
 
     richLabel->addHighlighter(commonHighlighter);
 

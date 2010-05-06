@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,8 +20,8 @@
 #include <QTextCodec>
 #include <QDebug>
 
-#include <DuiLocale>
-#include <DuiCollator>
+#include <MLocale>
+#include <MCollator>
 
 #include "ft_breakiterator.h"
 
@@ -118,8 +118,8 @@ void Ft_BreakIterator::forward()
     QFETCH(QString, sourceString);
     QFETCH(QList<int>, correctBoundaries);
 
-    DuiLocale loc(locale_name);
-    DuiBreakIterator it(loc, sourceString, DuiBreakIterator::WordIterator);
+    MLocale loc(locale_name);
+    MBreakIterator it(loc, sourceString, MBreakIterator::WordIterator);
     QListIterator<int> correctIt(correctBoundaries);
 
     while (it.hasNext()) {
@@ -143,8 +143,8 @@ void Ft_BreakIterator::backward()
     QFETCH(QString, sourceString);
     QFETCH(QList<int>, correctBoundaries);
 
-    DuiLocale locale(locale_name);
-    DuiBreakIterator it(locale, sourceString, DuiBreakIterator::WordIterator);
+    MLocale locale(locale_name);
+    MBreakIterator it(locale, sourceString, MBreakIterator::WordIterator);
     QListIterator<int> correctIt(correctBoundaries);
 
     it.toBack();
@@ -171,8 +171,8 @@ void Ft_BreakIterator::aroundIndex()
     QFETCH(QString, sourceString);
     QFETCH(QList<int>, correctBoundaries);
 
-    DuiLocale locale(locale_name);
-    DuiBreakIterator it(locale, sourceString, DuiBreakIterator::WordIterator);
+    MLocale locale(locale_name);
+    MBreakIterator it(locale, sourceString, MBreakIterator::WordIterator);
     QListIterator<int> correctIt(correctBoundaries);
 
     // look for boundaries around an explicit index "fromIndex":
@@ -206,8 +206,8 @@ void Ft_BreakIterator::peek()
     QFETCH(QString, sourceString);
     QFETCH(QList<int>, correctBoundaries);
 
-    DuiLocale locale(locale_name);
-    DuiBreakIterator it(locale, sourceString, DuiBreakIterator::WordIterator);
+    MLocale locale(locale_name);
+    MBreakIterator it(locale, sourceString, MBreakIterator::WordIterator);
     QListIterator<int> correctIt(correctBoundaries);
 
     // check that two peeks return the same value and that it is a correct value

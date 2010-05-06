@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -116,8 +116,8 @@ void Ft_Numbers::testQLongLongs()
     QFETCH(QString, localeNameLcNumeric);
     QFETCH(qlonglong, val);
     QFETCH(QString, formatted);
-    DuiLocale loc(localeName);
-    loc.setCategoryLocale(DuiLocale::DuiLcNumeric, localeNameLcNumeric);
+    MLocale loc(localeName);
+    loc.setCategoryLocale(MLocale::MLcNumeric, localeNameLcNumeric);
     qDebug() << "localeName:" << localeName << "localeNameLcNumeric" << localeNameLcNumeric;
     printf("printf %s\n", loc.formatNumber(val).toUtf8().constData());
     QCOMPARE(loc.formatNumber(val), formatted);
@@ -214,7 +214,7 @@ void Ft_Numbers::testShorts()
 {
     QFETCH(QString, localeName);
     QFETCH(short, val);
-    DuiLocale loc(localeName);
+    MLocale loc(localeName);
     QTEST(loc.formatNumber(val), "formatted");
 }
 
@@ -310,7 +310,7 @@ void Ft_Numbers::testInts()
     QFETCH(QString, localeName);
     QFETCH(int, val);
     QFETCH(QString, formatted);
-    DuiLocale loc(localeName);
+    MLocale loc(localeName);
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
@@ -446,7 +446,7 @@ void Ft_Numbers::testDoubles()
     QFETCH(QString, localeName);
     QFETCH(double, val);
     QFETCH(QString, formatted);
-    DuiLocale loc(localeName);
+    MLocale loc(localeName);
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
@@ -582,7 +582,7 @@ void Ft_Numbers::testFloats()
     QFETCH(QString, localeName);
     QFETCH(float, val);
     QFETCH(QString, formatted);
-    DuiLocale loc(localeName);
+    MLocale loc(localeName);
     QCOMPARE(loc.formatNumber(val), formatted);
 }
 
@@ -658,7 +658,7 @@ void Ft_Numbers::testDoublesWithFormatting()
     QFETCH(QString, localeName);
     QFETCH(double, val);
     QFETCH(int, prec);
-    DuiLocale loc(localeName);
+    MLocale loc(localeName);
     QTEST(loc.formatNumber(val, prec), "formatted");
 }
 
@@ -726,7 +726,7 @@ void Ft_Numbers::testPercents()
     QFETCH(QString, localeName);
     QFETCH(int, decimals);
     QFETCH(double, val);
-    DuiLocale loc(localeName);
+    MLocale loc(localeName);
     QTEST(loc.formatPercent(val, decimals), "formatted");
 }
 
@@ -806,7 +806,7 @@ void Ft_Numbers::testCurrencies()
     QFETCH(QString, localeName);
     QFETCH(double, val);
     QFETCH(QString, currency);
-    DuiLocale loc(localeName);
+    MLocale loc(localeName);
     QTEST(loc.formatCurrency(val, currency), "formatted");
 }
 

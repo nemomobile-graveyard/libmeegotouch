@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -91,7 +91,8 @@ T &StubBase::stubReturnValue(const QString &methodName) const
     ParameterBase *base = _stubReturnValues[methodName];
     Parameter<T>* param = dynamic_cast<Parameter<T>*>(base);
     if (!param) {
-        qDebug() << "StubBase::" << __func__ << ": failed dynamic_cast, check that return value type matches the method; check also that you have used stubSetReturnValue(" << methodName << ")";
+        QString msg = QString("StubBase::") + __func__ + ": failed dynamic_cast, check that return value type matches the method; check also that you have used stubSetReturnValue(" + methodName + ")";
+        qFatal(qPrintable(msg));
     }
     return param->data;
 

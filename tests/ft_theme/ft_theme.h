@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -24,8 +24,8 @@
 #include <QtTest/QtTest>
 #include <QString>
 
-class IDuiThemeDaemon;
-class DuiComponentData;
+class IMThemeDaemon;
+class MComponentData;
 class TestThemeDaemon;
 
 class Ft_Theme : public QObject
@@ -63,8 +63,8 @@ private slots:
     void testFonts();
 
 private:
-    DuiComponentData *componentData;
-    IDuiThemeDaemon *daemon;
+    MComponentData *componentData;
+    IMThemeDaemon *daemon;
     TestThemeDaemon *testDaemon;
 };
 

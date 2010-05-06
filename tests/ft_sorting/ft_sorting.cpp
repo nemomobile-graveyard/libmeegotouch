@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,8 +18,8 @@
 ****************************************************************************/
 
 #include "ft_sorting.h"
-#include <DuiLocale>
-#include <DuiCollator>
+#include <MLocale>
+#include <MCollator>
 #include <QTextCodec>
 #include <QDebug>
 #include <QProcess>
@@ -45,7 +45,7 @@ void Ft_Sorting::cleanup()
 {
 }
 
-void Ft_Sorting::testDuiLocaleSorting_data()
+void Ft_Sorting::testMLocaleSorting_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("source1");
@@ -250,7 +250,7 @@ void Ft_Sorting::testDuiLocaleSorting_data()
             << QString("正");
 }
 
-void Ft_Sorting::testDuiLocaleSorting()
+void Ft_Sorting::testMLocaleSorting()
 {
     QFETCH(QString, locale_name);
     QFETCH(QString, source1);
@@ -265,8 +265,8 @@ void Ft_Sorting::testDuiLocaleSorting()
     QFETCH(QString, target4);
     QFETCH(QString, target5);
 
-    DuiLocale loc(locale_name);
-    DuiCollator comp = loc.collator();
+    MLocale loc(locale_name);
+    MCollator comp = loc.collator();
     QStringList sl;
     sl << source1 << source2 << source3 << source4 << source5;
     // printf("%s %s %s %s %s\n", sl[0].toUtf8().data(), sl[1].toUtf8().data(), sl[2].toUtf8().data(), sl[3].toUtf8().data(), sl[4].toUtf8().data());
@@ -285,33 +285,33 @@ void Ft_Sorting::testDefaultCompare_data()
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("str1");
     QTest::addColumn<QString>("str2");
-    QTest::addColumn<DuiLocale::Comparison>("result");
+    QTest::addColumn<MLocale::Comparison>("result");
 
     QTest::newRow("fi_FI-LessThan")
             << QString("fi_FI")
             << QString("AAA")
             << QString("BBB")
-            << DuiLocale::LessThan;
+            << MLocale::LessThan;
     QTest::newRow("fi_FI-GreaterThan")
             << QString("fi_FI")
             << QString("BBB")
             << QString("AAA")
-            << DuiLocale::GreaterThan;
+            << MLocale::GreaterThan;
     QTest::newRow("fi_FI-Equal")
             << QString("fi_FI")
             << QString("AAA")
             << QString("AAA")
-            << DuiLocale::Equal;
+            << MLocale::Equal;
     QTest::newRow("de_DE-LessThan")
             << QString("de_DE")
             << QString("oegh")
             << QString("öfgh")
-            << DuiLocale::LessThan;
+            << MLocale::LessThan;
     QTest::newRow("de_DE@collation=phonebook-GreaterThan")
             << QString("de_DE@collation=phonebook")
             << QString("oegh")
             << QString("öfgh")
-            << DuiLocale::GreaterThan;
+            << MLocale::GreaterThan;
 }
 
 void Ft_Sorting::testDefaultCompare()
@@ -319,12 +319,12 @@ void Ft_Sorting::testDefaultCompare()
     QFETCH(QString, locale_name);
     QFETCH(QString, str1);
     QFETCH(QString, str2);
-    QFETCH(DuiLocale::Comparison, result);
+    QFETCH(MLocale::Comparison, result);
 
-    DuiLocale loc(locale_name);
-    DuiCollator duicomp = loc.collator();
-    DuiLocale::setDefault(loc);
-    QCOMPARE(duicomp.compare(str1, str2), result);
+    MLocale loc(locale_name);
+    MCollator mcomp = loc.collator();
+    MLocale::setDefault(loc);
+    QCOMPARE(mcomp.compare(str1, str2), result);
 }
 
 void Ft_Sorting::testCompareWithLocale_data()
@@ -333,38 +333,38 @@ void Ft_Sorting::testCompareWithLocale_data()
     QTest::addColumn<QString>("locale_name2");
     QTest::addColumn<QString>("str1");
     QTest::addColumn<QString>("str2");
-    QTest::addColumn<DuiLocale::Comparison>("result");
+    QTest::addColumn<MLocale::Comparison>("result");
 
     QTest::newRow("fi_FI-LessThan")
             << QString("en_EN")
             << QString("fi_FI")
             << QString("AAA")
             << QString("BBB")
-            << DuiLocale::LessThan;
+            << MLocale::LessThan;
     QTest::newRow("fi_FI-GreaterThan")
             << QString("en_EN")
             << QString("fi_FI")
             << QString("BBB")
             << QString("AAA")
-            << DuiLocale::GreaterThan;
+            << MLocale::GreaterThan;
     QTest::newRow("fi_FI-Equal")
             << QString("en_EN")
             << QString("fi_FI")
             << QString("AAA")
             << QString("AAA")
-            << DuiLocale::Equal;
+            << MLocale::Equal;
     QTest::newRow("de_DE-LessThan")
             << QString("de_DE@collation=phonebook")
             << QString("de_DE")
             << QString("oegh")
             << QString("öfgh")
-            << DuiLocale::LessThan;
+            << MLocale::LessThan;
     QTest::newRow("de_DE@collation=phonebook-GreaterThan")
             << QString("de_DE")
             << QString("de_DE@collation=phonebook")
             << QString("oegh")
             << QString("öfgh")
-            << DuiLocale::GreaterThan;
+            << MLocale::GreaterThan;
 }
 
 void Ft_Sorting::testCompareWithLocale()
@@ -373,14 +373,14 @@ void Ft_Sorting::testCompareWithLocale()
     QFETCH(QString, locale_name2);
     QFETCH(QString, str1);
     QFETCH(QString, str2);
-    QFETCH(DuiLocale::Comparison, result);
+    QFETCH(MLocale::Comparison, result);
 
-    DuiLocale loc1(locale_name1);
-    DuiCollator duicomp = loc1.collator();
-    DuiLocale::setDefault(loc1);
+    MLocale loc1(locale_name1);
+    MCollator mcomp = loc1.collator();
+    MLocale::setDefault(loc1);
 
-    DuiLocale loc2(locale_name2);
-    QVERIFY2(duicomp.compare(loc2, str1, str2) == result, "Compare failed");
+    MLocale loc2(locale_name2);
+    QVERIFY2(mcomp.compare(loc2, str1, str2) == result, "Compare failed");
 }
 
 QTEST_APPLESS_MAIN(Ft_Sorting);

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,6 +19,8 @@
 
 #ifndef STUBMETHOD_H
 #define STUBMETHOD_H
+
+#include <QString>
 
 class MethodCall
 {
@@ -46,12 +48,13 @@ public:
     template <typename T>
     T parameter(int number) {
         if (number >= _params.count()) {
-            qDebug() << "MethodCall::" << __func__ << ": method " << _name << " does not have parameter #" << number
-                     << ". Check your test code.";
+            QString msg = QString("MethodCall::") + __func__ + ": method " + _name + " does not have parameter #" + QString::number(number) + ". Check your test code.";
+            qFatal(qPrintable(msg));
         }
         Parameter<T>* param = dynamic_cast<Parameter<T>* >(_params[number]);
         if (!param) {
-            qDebug() << "MethodCall::" << __func__ << ": failed dynamic_cast, check that parameter type matches parameter number";
+            QString msg = QString("MethodCall::") + __func__ + ": failed dynamic_cast, check that parameter type matches parameter number";
+            qFatal(qPrintable(msg));
         }
         return param->data;
     }
@@ -61,7 +64,8 @@ public:
         Parameter<T>* value = dynamic_cast<Parameter<T>*>(_returnValue);
 
         if (!value) {
-            qDebug() << "MethodCall::" << __func__ << ": failed dynamic_cast, check that type matches return value";
+            QString msg = QString("MethodCall::") + __func__ + ": failed dynamic_cast, check that type matches return value";
+            qFatal(qPrintable(msg));
         }
         return value->data;
     }

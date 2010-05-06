@@ -4,5 +4,4 @@ Name=QtStyle Dialogs Example
 Icon=icon-l-video
 Exec=qtstyledialogs -style iqs
 X-Maemo-Service=com.nokia.qtstyledialogs
-Categories=Demos;
-OnlyShowIn=X-DUI;
+OnlyShowIn=X-MeeGo;

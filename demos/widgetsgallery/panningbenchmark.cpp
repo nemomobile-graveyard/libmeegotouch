@@ -1,47 +1,54 @@
 #include "panningbenchmark.h"
 #include "timedemo.h"
 
-#include <DuiApplicationPage>
-#include <DuiPannableViewport>
-#include <DuiPhysics2DPanning>
+#include <MApplication>
+#include <MApplicationPage>
+#include <MPannableViewport>
+#include <MPhysics2DPanning>
 
 #include <QTimer>
 #include <qdebug.h>
+
 
 namespace {
     const int updateInterval = 20; // ms
     const qreal ySpeed = .5; // pixel/ms
 }
 
-PanningBenchmark::PanningBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo)
-    : TimedemoBenchmark(applicationPage, timedemo)
-    , timingStarted(false)
+PanningBenchmark::PanningBenchmark(
+  MApplicationPage * applicationPage, Timedemo * timedemo, M::OrientationAngle targetOrientationAngle) :
+      TimedemoBenchmark(applicationPage, timedemo),
+      timingStarted(false),
+      targetOrientationAngle(targetOrientationAngle)
+
 {
     pannableViewport = 0;
     QList<QGraphicsItem *> childItems = applicationPage->childItems();
     foreach(QGraphicsItem * childItem, childItems) {
-        if (DuiPannableViewport * viewport = dynamic_cast<DuiPannableViewport*>(childItem)) {
+        if (MPannableViewport * viewport = dynamic_cast<MPannableViewport*>(childItem)) {
             pannableViewport = viewport;
             break;
         }
     }
 
     if (!pannableViewport) {
-        qFatal("Did not find matching viewport of DuiApplicationWindow");
+        qFatal("Did not find matching viewport of MApplicationWindow");
     }
 }
 
 QString PanningBenchmark::name() {
-    return "PanningBenchmark";
+    return QString("PanningBenchmark (%1)").arg(QString::number(targetOrientationAngle));
 }
 
 void PanningBenchmark::start()
 {
+    MApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
+    MApplication::activeWindow()->setOrientationAngleLocked(true);
     if (!applicationPage->isActiveWindow()) {
-        connect(applicationPage, SIGNAL(windowShown()), this, SLOT(waitBeforePanning()));
+        connect(applicationPage, SIGNAL(appeared()), this, SLOT(waitBeforePanning()));
         applicationPage->appear();
     } else {
-        QTimer::singleShot(0, this, SLOT(panDown()));
+        waitBeforePanning();
     }
 }
 
@@ -49,7 +56,7 @@ void PanningBenchmark::start()
 // the widgets are not completely set up yet
 void PanningBenchmark::waitBeforePanning()
 {
-    QTimer::singleShot(500, this, SLOT(panDown()));
+    QTimer::singleShot(2500, this, SLOT(panDown()));
 }
 
 void PanningBenchmark::panDown()
@@ -77,8 +84,5 @@ void PanningBenchmark::terminateBenchmark()
 {
     timedemo->stopTiming();
     pannableViewport->physics()->setPosition(formerPosition);
-
-    qDebug() << "end" << pannableViewport->widget()->pos() << pannableViewport->physics()->range();
-
     emit finished();
 }

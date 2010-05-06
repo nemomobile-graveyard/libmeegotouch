@@ -1,7 +1,7 @@
 #ifndef TIMEDEMOPAGE_H
 #define TIMEDEMOPAGE_H
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 
 #include <QList>
 #include <QSharedPointer>
@@ -15,7 +15,7 @@ class Timedemo;
   * Arbitrary benchmarks can be added to this page and will then
   * be executed by the Timedemo.
   */
-class TimedemoPage : public DuiApplicationPage
+class TimedemoPage : public MApplicationPage
 {
 public:
     TimedemoPage(QGraphicsItem *parent = 0);

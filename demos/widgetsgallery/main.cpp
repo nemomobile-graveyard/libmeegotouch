@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,27 +21,27 @@
 #include <QStringList>
 #include <QObject>
 
-#include <DuiApplication>
-#include <DuiApplicationService>
-#include <DuiApplicationIfAdaptor>
-#include <DuiApplicationWindow>
-#include <DuiApplicationPage>
-#include <DuiAction>
-#include <DuiLocale>
-#include <DuiGConfItem>
-#include <DuiSceneManager>
+#include <MApplication>
+#include <MApplicationService>
+#include <MApplicationIfAdaptor>
+#include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MAction>
+#include <MLocale>
+#include <MGConfItem>
+#include <MSceneManager>
 
-#include "timingscene.h"
 #include "listpage.h"
 #include "timedemo.h"
+#include "swaphook.h"
 #include "widgetsgalleryretranslator.h"
 #include "../../benchmarks/performancebenchmark/emptymainloophelper.h"
 
-class MyApplicationService: public DuiApplicationService
+class MyApplicationService: public MApplicationService
 {
 public:
     MyApplicationService(QObject *parent = 0) :
-        DuiApplicationService("com.nokia.widgetsgallery", parent) {
+        MApplicationService("com.nokia.widgetsgallery", parent) {
     }
 
     void launch() {
@@ -60,14 +60,13 @@ int main(int argc, char **argv)
 #ifdef HAVE_N900
     QApplication::setGraphicsSystem(QLatin1String("native"));
 #endif
-    //DuiApplication application(argc, argv, "widgetsgallery", new MyApplicationService() );
-    DuiApplication application(argc, argv, "widgetsgallery");
+    //MApplication application(argc, argv, "widgetsgallery", new MyApplicationService() );
+    MApplication application(argc, argv, "widgetsgallery");
 
     WidgetsgalleryRetranslator widgetsgalleryRetranslator;
     QObject::connect(&application, SIGNAL(localeSettingsChanged()), &widgetsgalleryRetranslator, SLOT(widgetsgalleryRetranslate()));
 
-    TimingScene scene;
-    DuiApplicationWindow window(&scene);
+    MApplicationWindow window;
     window.show();
 
     ListPage listPage;
@@ -79,11 +78,15 @@ int main(int argc, char **argv)
             demoPages = qApp->arguments()[idx + 1].split(',');
         }
 
-        timedemo = new Timedemo(&scene, &listPage, demoPages);
+        timedemo = new Timedemo(&listPage, demoPages);
 
         idx = qApp->arguments().indexOf("-outputcsv");
         if (idx >= 0 && idx + 1 < qApp->arguments().count()) {
             timedemo->setOutputCsv(qApp->arguments()[idx + 1]);
+        }
+        idx = qApp->arguments().indexOf("-framelog");
+        if (idx >= 0 && idx + 1 < qApp->arguments().count()) {
+            timedemo->setFramelog(qApp->arguments()[idx + 1]);
         }
     }
 

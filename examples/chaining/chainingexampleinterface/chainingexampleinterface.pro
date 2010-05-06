@@ -1,9 +1,9 @@
 TEMPLATE = lib
 TARGET   = chainingexampleinterface
-CONFIG += dll dui
+CONFIG += dll m
 QT += dbus
 
-system(dui-servicefwgen -p com.nokia.ChainingExampleInterface)
+system(m-servicefwgen -p com.nokia.ChainingExampleInterface)
 
 OBJECTS_DIR = ./.obj
 MOC_DIR     = ./.moc

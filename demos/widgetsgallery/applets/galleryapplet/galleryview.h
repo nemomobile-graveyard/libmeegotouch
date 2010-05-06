@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,14 +20,14 @@
 #ifndef GALLERYVIEW_H
 #define GALLERYVIEW_H
 
-#include <duiwidgetview.h>
+#include <mwidgetview.h>
 #include <QRectF>
 #include <QPainterPath>
 #include <QPen>
 
 class Gallery;
 
-class GalleryView : public DuiWidgetView
+class GalleryView : public MWidgetView
 {
     Q_OBJECT
 

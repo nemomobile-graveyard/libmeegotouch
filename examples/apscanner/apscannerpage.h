@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,13 +20,13 @@
 #ifndef APSCANNERPAGE_H
 #define APSCANNERPAGE_H
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 #include "apscanner.h"
 
-class DuiList;
+class MList;
 class APItemModel;
 
-class APScannerPage: public DuiApplicationPage
+class APScannerPage: public MApplicationPage
 {
     Q_OBJECT
 
@@ -39,7 +39,7 @@ public Q_SLOTS:
     void accessPointUpdate(const APScanner::AccessPointInfo &accessPoint);
 
 private:
-    DuiList *list;
+    MList *list;
     APScanner *scanner;
     APItemModel *model;
 };

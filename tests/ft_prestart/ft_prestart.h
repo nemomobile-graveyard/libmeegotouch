@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -23,12 +23,12 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
-#include <DuiApplicationService>
+#include <MApplicationService>
 
-Q_DECLARE_METATYPE(DuiApplicationService *);
+Q_DECLARE_METATYPE(MApplicationService *);
 
-class DuiApplication;
-class DuiApplicationWindow;
+class MApplication;
+class MApplicationWindow;
 
 #define MAX_PARAMS 10
 
@@ -77,9 +77,9 @@ private slots:
 private:
     void initGlobals();
     void buildPrestartedApp();
-    DuiApplicationWindow *m_duiWin;
-    DuiApplicationService *m_subject;
-    DuiApplication *m_duiApp;
+    MApplicationWindow *m_mWin;
+    MApplicationService *m_subject;
+    MApplication *m_mApp;
 };
 
 #endif

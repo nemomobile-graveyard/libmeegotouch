@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,7 +19,7 @@
 
 #include "emptymainloophelper.h"
 
-#include <DuiTheme>
+#include <MTheme>
 
 #include <QApplication>
 #include <QTimer>
@@ -39,7 +39,7 @@ void EmptyMainLoopHelper::triggerTermination(TerminationType type)
 
 void EmptyMainLoopHelper::terminateOnEmptyMainLoop()
 {
-    if (qApp->hasPendingEvents() || DuiTheme::hasPendingRequests()) {
+    if (qApp->hasPendingEvents() || MTheme::hasPendingRequests()) {
         QTimer::singleShot(0, this, SLOT(terminateOnEmptyMainLoop()));
     } else {
         QTimer::singleShot(20, this, SLOT(terminateOnEmptyMainLoop2()));

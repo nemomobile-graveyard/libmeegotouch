@@ -1,3 +1,3 @@
 [D-BUS Service]
 Name=com.nokia.qtstylekinetic
-Exec=@DUI_INSTALL_BIN@/qtstylekinetic
+Exec=@M_INSTALL_BIN@/qtstylekinetic

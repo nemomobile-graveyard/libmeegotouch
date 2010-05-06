@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -24,16 +24,16 @@
 #include <QProcess>
 #include <QDebug>
 
-#include <DuiApplication>
-#include <DuiApplicationService>
-#include "duiapplicationservice_p.h"
-#include <DuiApplicationWindow>
-#include <DuiApplicationIfProxy>
+#include <MApplication>
+#include <MApplicationService>
+#include "mapplicationservice_p.h"
+#include <MApplicationWindow>
+#include <MApplicationIfProxy>
 
 #include "ft_prestart.h"
 
 // has to be included last
-#include "duiapplication_p.h"
+#include "mapplication_p.h"
 
 char   *Ft_Prestart::argv[MAX_PARAMS];
 int     Ft_Prestart::argc;
@@ -51,12 +51,12 @@ bool    Ft_Prestart::windowRaised = false;
 bool    Ft_Prestart::windowClosed = false;
 bool    Ft_Prestart::windowShown = false;
 
-QDBusPendingReply<> DuiApplicationIfProxy::launch()
+QDBusPendingReply<> MApplicationIfProxy::launch()
 {
     return QDBusPendingReply<>();
 }
 
-bool DuiApplicationServicePrivate::registerService(const QString &name)
+bool MApplicationServicePrivate::registerService(const QString &name)
 {
     bool retVal = false;
 
@@ -76,7 +76,7 @@ bool DuiApplicationServicePrivate::registerService(const QString &name)
         }
     }
 
-    qDebug() << "DuiApplicationServicePrivate::registerService() returning " << retVal;
+    qDebug() << "MApplicationServicePrivate::registerService() returning " << retVal;
     return retVal;
 }
 
@@ -100,7 +100,7 @@ void QWidget::setVisible(bool visible)
     Ft_Prestart::windowShown = visible;
 }
 
-void DuiApplicationPrivate::stdExit(int status)
+void MApplicationPrivate::stdExit(int status)
 {
     Ft_Prestart::applicationExited = true;
     Q_UNUSED(status);
@@ -129,14 +129,14 @@ void Ft_Prestart::init()
     argc = 2;
     argv[0] =  strdup("ft_prestart");
     argv[1] =  strdup("-software");
-    m_duiApp = 0;
+    m_mApp = 0;
     initGlobals();
 }
 
 void Ft_Prestart::cleanup()
 {
-    delete m_duiApp;
-    m_duiApp = 0;
+    delete m_mApp;
+    m_mApp = 0;
     for (int i = 0; i < argc; i++) {
         free(argv[i]);
     }
@@ -152,12 +152,12 @@ void Ft_Prestart::cleanupTestCase()
 
 void Ft_Prestart::buildPrestartedApp()
 {
-    m_subject = new DuiApplicationService("ft_prestart");
+    m_subject = new MApplicationService("ft_prestart");
     if (argc < MAX_PARAMS) {
         argv[argc] = strdup("-prestart");
         argc++;
     }
-    m_duiApp = new DuiApplication(argc, argv, m_subject);
+    m_mApp = new MApplication(argc, argv, m_subject);
     windowRaised = false;
     windowActivated = false;
     windowShown = false;
@@ -170,9 +170,9 @@ void Ft_Prestart::PrestartLaunchTerminateOnClose()
     Ft_Prestart::allowRegisterService = true;
     Ft_Prestart::allowRegisterService2 = true;
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::TerminateOnClose);
+    m_mApp->setPrestartMode(M::TerminateOnClose);
 
-    DuiApplicationWindow *window = new DuiApplicationWindow();
+    MApplicationWindow *window = new MApplicationWindow();
 
     // window.show should not have any effect in prestarted mode
     window->show();
@@ -193,9 +193,9 @@ void Ft_Prestart::closePrestartedLazyShutdownApplication()
 {
     Ft_Prestart::allowRegisterService = false;
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::LazyShutdown);
+    m_mApp->setPrestartMode(M::LazyShutdown);
 
-    DuiApplicationWindow *window = new DuiApplicationWindow();
+    MApplicationWindow *window = new MApplicationWindow();
     window->show();
 
     // Launch prestarted application
@@ -205,7 +205,7 @@ void Ft_Prestart::closePrestartedLazyShutdownApplication()
     // Close prestarted application, window should be hidden and application still in prestarted-mode
     m_subject->close();
     QCOMPARE(Ft_Prestart::windowShown, false);
-    QCOMPARE(m_duiApp->isPrestarted(), true);
+    QCOMPARE(m_mApp->isPrestarted(), true);
 
     // Re-launch application, window should be shown
     m_subject->launch();
@@ -216,9 +216,9 @@ void Ft_Prestart::exitPrestartedLazyShutdownApplication()
 {
     Ft_Prestart::allowRegisterService = false;
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::LazyShutdown);
+    m_mApp->setPrestartMode(M::LazyShutdown);
 
-    DuiApplicationWindow *window = new DuiApplicationWindow();
+    MApplicationWindow *window = new MApplicationWindow();
     window->show();
 
     // Launch prestarted application
@@ -228,7 +228,7 @@ void Ft_Prestart::exitPrestartedLazyShutdownApplication()
     // Close prestarted application, window should be hidden and application still in prestarted-mode
     m_subject->exit();
     QCOMPARE(Ft_Prestart::windowShown, false);
-    QCOMPARE(m_duiApp->isPrestarted(), true);
+    QCOMPARE(m_mApp->isPrestarted(), true);
 
     // Re-launch application, window should be shown
     m_subject->launch();
@@ -239,9 +239,9 @@ void Ft_Prestart::closePrestartedNoPrestartApplication()
 {
     Ft_Prestart::allowRegisterService = false;
     buildPrestartedApp();
-    QCOMPARE(m_duiApp->prestartMode(), Dui::NoPrestart);
+    QCOMPARE(m_mApp->prestartMode(), M::NoPrestart);
 
-    DuiApplicationWindow window;
+    MApplicationWindow window;
     window.show();
     // Launch prestarted application without prestartmode set
     m_subject->launch();
@@ -253,16 +253,16 @@ void Ft_Prestart::closePrestartedNoPrestartApplication()
     // Close prestarted application, window should be hidden and application still in prestarted-mode
     m_subject->close();
     QCOMPARE(Ft_Prestart::windowClosed, true);
-    QCOMPARE(m_duiApp->isPrestarted(), false);
+    QCOMPARE(m_mApp->isPrestarted(), false);
 }
 
 void Ft_Prestart::exitPrestartedNoPrestartApplication()
 {
     Ft_Prestart::allowRegisterService = false;
     buildPrestartedApp();
-    QCOMPARE(m_duiApp->prestartMode(), Dui::NoPrestart);
+    QCOMPARE(m_mApp->prestartMode(), M::NoPrestart);
 
-    DuiApplicationWindow window;
+    MApplicationWindow window;
     window.show();
     // Launch prestarted application without prestartmode set
     m_subject->launch();
@@ -274,16 +274,16 @@ void Ft_Prestart::exitPrestartedNoPrestartApplication()
     // Exit prestarted application, window should be hidden and application still in prestarted-mode
     m_subject->exit();
     QCOMPARE(Ft_Prestart::applicationExited, true);
-    QCOMPARE(m_duiApp->isPrestarted(), false);
+    QCOMPARE(m_mApp->isPrestarted(), false);
 }
 
 void Ft_Prestart::closePrestartedTerminateOnCloseApplication()
 {
     Ft_Prestart::allowRegisterService = false;
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::TerminateOnClose);
+    m_mApp->setPrestartMode(M::TerminateOnClose);
 
-    DuiApplicationWindow window;
+    MApplicationWindow window;
     window.show();
     // Launch prestarted application without prestartmode set
     m_subject->launch();
@@ -295,16 +295,16 @@ void Ft_Prestart::closePrestartedTerminateOnCloseApplication()
     // Close prestarted application, window should be hidden and application still in prestarted-mode
     m_subject->close();
     QCOMPARE(Ft_Prestart::windowClosed, true);
-    QCOMPARE(m_duiApp->isPrestarted(), false);
+    QCOMPARE(m_mApp->isPrestarted(), false);
 }
 
 void Ft_Prestart::exitPrestartedTerminateOnCloseApplication()
 {
     Ft_Prestart::allowRegisterService = false;
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::TerminateOnClose);
+    m_mApp->setPrestartMode(M::TerminateOnClose);
 
-    DuiApplicationWindow window;
+    MApplicationWindow window;
     window.show();
     // Launch prestarted application without prestartmode set
     m_subject->launch();
@@ -316,19 +316,19 @@ void Ft_Prestart::exitPrestartedTerminateOnCloseApplication()
     // Exit prestarted application, window should be hidden and application still in prestarted-mode
     m_subject->exit();
     QCOMPARE(Ft_Prestart::applicationExited, true);
-    QCOMPARE(m_duiApp->isPrestarted(), false);
+    QCOMPARE(m_mApp->isPrestarted(), false);
 }
 
 
 
-// IMPORTED FROM UT_DUIAPPLICATIONWINDOW
+// IMPORTED FROM UT_MAPPLICATIONWINDOW
 
 void Ft_Prestart::testPrestartedLazyShutdownShow()
 {
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::LazyShutdown);
+    m_mApp->setPrestartMode(M::LazyShutdown);
     QCOMPARE(Ft_Prestart::windowShown, false);
-    m_duiWin->show();
+    m_mWin->show();
     // Show should not be enough to show application which is in prestarted state
     QCOMPARE(Ft_Prestart::windowShown, false);
 }
@@ -336,9 +336,9 @@ void Ft_Prestart::testPrestartedLazyShutdownShow()
 void Ft_Prestart::testPrestartedTerminateOnCloseShow()
 {
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::TerminateOnClose);
+    m_mApp->setPrestartMode(M::TerminateOnClose);
     QCOMPARE(Ft_Prestart::windowShown, false);
-    m_duiWin->show();
+    m_mWin->show();
     // Show should not be enough to show application which is in prestarted state
     QCOMPARE(Ft_Prestart::windowShown, false);
 }
@@ -346,32 +346,32 @@ void Ft_Prestart::testPrestartedTerminateOnCloseShow()
 void Ft_Prestart::testPrestartedNoPrestartShow()
 {
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::NoPrestart);
+    m_mApp->setPrestartMode(M::NoPrestart);
     QCOMPARE(Ft_Prestart::windowShown, false);
-    m_duiWin->show();
+    m_mWin->show();
     QCOMPARE(Ft_Prestart::windowShown, true);
 }
 
 void Ft_Prestart::testPrestartedNoPrestartClose()
 {
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::NoPrestart);
+    m_mApp->setPrestartMode(M::NoPrestart);
     QCOMPARE(Ft_Prestart::windowShown, false);
 
-    m_duiWin->show();
+    m_mWin->show();
     QCOMPARE(Ft_Prestart::windowShown, true);
     QCOMPARE(Ft_Prestart::windowClosed, false);
 
     m_subject->close();
     QCOMPARE(Ft_Prestart::windowClosed, true);
-    QCOMPARE(m_duiApp->isPrestarted(), false);
+    QCOMPARE(m_mApp->isPrestarted(), false);
 }
 
 void Ft_Prestart::testPrestartedLazyShutdownClose()
 {
-    DuiApplicationService *m_subject = new DuiApplicationService("com.nokia.myApp");
+    MApplicationService *m_subject = new MApplicationService("com.nokia.myApp");
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::LazyShutdown);
+    m_mApp->setPrestartMode(M::LazyShutdown);
 
     // Simulate launch using D-Bus
     m_subject->launch();
@@ -384,7 +384,7 @@ void Ft_Prestart::testPrestartedLazyShutdownClose()
     // Window should not be really closed after close if LazyShutdown
     QCOMPARE(Ft_Prestart::windowClosed, false);
     QCOMPARE(Ft_Prestart::windowShown, false);
-    QCOMPARE(m_duiApp->isPrestarted(), true);
+    QCOMPARE(m_mApp->isPrestarted(), true);
 
     // Simulate launch using D-Bus
     m_subject->launch();
@@ -394,9 +394,9 @@ void Ft_Prestart::testPrestartedLazyShutdownClose()
 
 void Ft_Prestart::testPrestartedTerminateOnCloseClose()
 {
-    DuiApplicationService *m_subject = new DuiApplicationService("com.nokia.myApp");
+    MApplicationService *m_subject = new MApplicationService("com.nokia.myApp");
     buildPrestartedApp();
-    m_duiApp->setPrestartMode(Dui::TerminateOnClose);
+    m_mApp->setPrestartMode(M::TerminateOnClose);
 
     // Simulate launch using D-Bus
     m_subject->launch();
@@ -406,7 +406,7 @@ void Ft_Prestart::testPrestartedTerminateOnCloseClose()
     m_subject->close();
 
     QCOMPARE(Ft_Prestart::windowClosed, true);
-    QCOMPARE(m_duiApp->isPrestarted(), false);
+    QCOMPARE(m_mApp->isPrestarted(), false);
 }
 
 

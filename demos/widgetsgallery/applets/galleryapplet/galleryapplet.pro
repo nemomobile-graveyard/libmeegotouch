@@ -1,29 +1,28 @@
-DUIROOT = ../../../..
+MROOT = ../../../..
 
-include($$DUIROOT/mkspecs/common.pri)
+include($$MROOT/mkspecs/common.pri)
 
-DUILIB = $$DUIROOT/lib
-DUISRC = $$DUIROOT/src
-DUISRCINCLUDE = $$DUISRC/include
-DUISFWINCLUDE = $$DUIROOT/servicefw/include
+MLIB = $$MROOT/lib
+MSRC = $$MROOT/src
+MSRCINCLUDE = $$MSRC/include
+MSFWINCLUDE = $$MROOT/servicefw/include
 
 INCLUDEPATH += . \
-    $$DUISRCINCLUDE \
-    $$DUISRC \
-    $$DUISRC/mashup/appletinterface
+    $$MSRCINCLUDE \
+    $$MSRC \
+    $$MSRC/mashup/appletinterface
 
 QMAKE_LIBDIR += \
-    $$DUILIB \
+    $$MLIB \
 
 win32|macx {
 	macx {
-	        QMAKE_LFLAGS += -F$$DUILIB
-	        LIBS += -framework dui
+	        QMAKE_LFLAGS += -F$$MLIB
+	        LIBS += -framework m
 	     }
-        win32:LIBS += -L$$DUILIB -ldui0
+        win32:LIBS += -lmeegotouchcore0
 } else {
-    LIBS += $$DUILIB/libdui.so
-
+    LIBS += -lmeegotouchcore
 }
 					    
 
@@ -40,9 +39,9 @@ TEMPLATE = lib
 TARGET        = $$qtLibraryTarget(galleryapplet)
 DESTDIR       = ../../lib
 
-target.path += $$DUI_APPLET_DIR
+target.path += $$M_APPLET_DIR
 
-desktop_entry.path = $$DUI_APPLET_DATA_DIR
+desktop_entry.path = $$M_APPLET_DATA_DIR
 desktop_entry.files = galleryapplet.desktop
 
 INSTALLS += \

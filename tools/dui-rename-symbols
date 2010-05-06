@@ -1,0 +1,35 @@
+#!/bin/sh
+#
+# dui-rename-symbols - rename DUI classes etc.
+#     DuiFoo -> MFoo
+#     duiFoo -> mFoo
+# etc.
+#
+# Author: Stefan.Hundhammer@basyskom.de
+
+
+SRC_FILES=$(find . -name "*.cpp" -o -name "*.h" -o -name "*.c")
+CAMEL_HEADER_FILES=$(find src/include -name "[A-Z]*")
+
+BUILD_FILES=$(find mkspecs -type f)
+BUILD_FILES="$BUILD_FILES configure"
+
+PRO_FILES=$(find . -name "*.pri" -o -name "*.pro")
+
+perl -p -i \
+  -e 's/Dui/M/g;' \
+  -e 's/\bdui/m/g;' \
+  -e 's/_dui/_m/g;' \
+  -e 's/DUI/M/g;' \
+  -e 's/iduitheme/imtheme/g;' \
+  $SRC_FILES $CAMEL_HEADER_FILES $BUILD_FILES
+
+perl -p -i \
+  -e 's/CONFIG\s*\+=\s*dui/CONFIG \+= meegotouch/g;' \
+  -e 's/dui/m/g;' \
+  -e 's/DUI/M/g;' \
+  $PRO_FILES
+
+
+FILES=$(find . -type f -name "dui*")
+

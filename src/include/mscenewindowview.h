@@ -1,0 +1,1 @@
+#include "../views/mscenewindowview.h"

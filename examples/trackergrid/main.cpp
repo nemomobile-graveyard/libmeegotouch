@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,30 +21,29 @@
  * An example of a minimalistic DirectUI application
  */
 
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiLinearLayoutPolicy>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MLinearLayoutPolicy>
 
 #include "trackergridpage.h"
 
 int main(int argc, char **argv)
 {
     /* The base class of all DirectUI applications */
-    DuiApplication app(argc, argv);
+    MApplication app(argc, argv);
 
     /* The application window is a top-level window that contains
        the Home and Back/Close framework controls, Navigation bar,
        View menu and Toolbar components */
-    DuiApplicationWindow w;
-    w.show();
+    MApplicationWindow w;
 
     /* Pages represent one "view" of an application, into which you
        can add your application's contents. An application can have
        any number of pages with transitions between them */
     TrackerGridPage p;
-    p.appearNow(); /* appearNow causes the page to be visible without
-                      a transition animation, which is recommended
-                      for the initial application page */
+    p.appear();
+
+    w.show();
 
     return app.exec();
 }

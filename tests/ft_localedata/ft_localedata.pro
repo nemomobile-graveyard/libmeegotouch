@@ -10,7 +10,7 @@ QMAKE_CXXFLAGS += -ftest-coverage -fprofile-arcs
 
 # unit
 TEST_SOURCES =  \
-#    $$DUISRCDIR/duilocale.cpp \
+#    $$MSRCDIR/mlocale.cpp \
 
 # Input
 HEADERS += ft_localedata.h

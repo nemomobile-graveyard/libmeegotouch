@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,7 +21,7 @@
 #define DEMOAPPLICATIONEXTENSIONINTERFACE_H_
 
 #include <QObject>
-#include <duiapplicationextensioninterface.h>
+#include <mapplicationextensioninterface.h>
 
 class DemoApplicationInterface
 {
@@ -36,9 +36,9 @@ public:
 /*!
  * A demo application extension interface
  */
-class DemoApplicationExtensionInterface : public DuiApplicationExtensionInterface
+class DemoApplicationExtensionInterface : public MApplicationExtensionInterface
 {
-    Q_INTERFACES(DuiApplicationExtensionInterface)
+    Q_INTERFACES(MApplicationExtensionInterface)
 
 public:
     virtual ~DemoApplicationExtensionInterface() {}
@@ -54,6 +54,6 @@ public:
     virtual void setDemoApplicationControlledValue(int value) = 0;
 };
 
-Q_DECLARE_INTERFACE(DemoApplicationExtensionInterface, "com.nokia.dui.core.DemoApplicationExtensionInterface/1.0")
+Q_DECLARE_INTERFACE(DemoApplicationExtensionInterface, "com.meego.core.DemoApplicationExtensionInterface/1.0")
 
 #endif /* DEMOAPPLICATIONEXTENSIONINTERFACE_H_ */

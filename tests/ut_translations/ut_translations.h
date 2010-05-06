@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -24,11 +24,11 @@
 #include <QtTest/QtTest>
 #include <QObject>
 #define private public
-#include <DuiLocale>
+#include <MLocale>
 #undef private
 
-Q_DECLARE_METATYPE(DuiLocale::Category);
-Q_DECLARE_METATYPE(DuiLocale);
+Q_DECLARE_METATYPE(MLocale::Category);
+Q_DECLARE_METATYPE(MLocale);
 
 class Ut_Translations : public QObject
 {
@@ -60,16 +60,16 @@ private slots:
     void testGettingTheDefaultLocaleFromTheEnvironment_data();
     void testGettingTheDefaultLocaleFromTheEnvironment();
     void testCreatingAndDestroyingLocales();
-    void benchmarkDuiLocaleConstructorAndDelete();
-    void benchmarkDuiLocaleConstructorAndDeleteStack();
+    void benchmarkMLocaleConstructorAndDelete();
+    void benchmarkMLocaleConstructorAndDeleteStack();
     void benchmarkQLocaleConstructorAndDelete();
     void benchmarkQLocaleConstructorAndDeleteStack();
-    void benchmarkDuiLocaleAssignmentOperator();
-    void benchmarkDuiLocaleAssignmentOperatorStack();
+    void benchmarkMLocaleAssignmentOperator();
+    void benchmarkMLocaleAssignmentOperatorStack();
     void benchmarkQLocaleAssignmentOperator();
     void benchmarkQLocaleAssignmentOperatorStack();
-    void benchmarkDuiLocaleCopyConstructorAndDelete();
-    void benchmarkDuiLocaleCopyConstructorAndDeleteStack();
+    void benchmarkMLocaleCopyConstructorAndDelete();
+    void benchmarkMLocaleCopyConstructorAndDeleteStack();
     void benchmarkQLocaleCopyConstructorAndDelete();
     void benchmarkQLocaleCopyConstructorAndDeleteStack();
 };

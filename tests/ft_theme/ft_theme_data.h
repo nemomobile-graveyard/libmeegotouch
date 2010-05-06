@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-const QString THEME_1_LIBDUI_CSS = \
-                                   "DuiWidgetStyle {\n"\
+const QString THEME_1_LIBM_CSS = \
+                                   "MWidgetStyle {\n"\
                                    "    show-animation: \"none\";\n"\
                                    "    hide-animation: \"none\";\n"\
                                    "    margin-left:   0;\n"\
@@ -44,26 +44,26 @@ const QString THEME_1_LIBDUI_CSS = \
                                    "    release-feedback:;\n"\
                                    "}\n";
 
-const QString THEME_2_LIBDUI_CSS = \
-                                   "DuiWidgetStyle {\n"\
+const QString THEME_2_LIBM_CSS = \
+                                   "MWidgetStyle {\n"\
                                    "    backgroundColor: #000000;\n"\
                                    "}\n";
 
 const QString THEME_2_APP_CSS = \
-                                "DuiWidgetStyle {\n"\
+                                "MWidgetStyle {\n"\
                                 "    backgroundColor: #f0f0f0;\n"\
                                 "}\n";
 
-const QString LIBDUI_THEME_1_VIEW_CONFIGURATION = \
-        "[DuiWidgetController]\n"\
-        "default = DuiWidgetView\n";
+const QString LIBM_THEME_1_VIEW_CONFIGURATION = \
+        "[MWidgetController]\n"\
+        "default = MWidgetView\n";
 
-const QString LIBDUI_THEME_2_VIEW_CONFIGURATION = \
-        "[DuiWidgetController]\n"\
+const QString LIBM_THEME_2_VIEW_CONFIGURATION = \
+        "[MWidgetController]\n"\
         "test = TestView2\n";
 
 const QString TESTAPP_VIEW_CONFIGURATION = \
-        "[DuiWidgetController]\n"\
+        "[MWidgetController]\n"\
         "default = TestView\n";
 
 const QString THEME_1_CONSTANTS_INI = \

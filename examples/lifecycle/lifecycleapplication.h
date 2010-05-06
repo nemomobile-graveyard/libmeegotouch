@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,9 +21,9 @@
 #define LIFECYCLEAPPLICATION_H
 
 #include <QObject>
-#include <DuiApplication>
+#include <MApplication>
 
-class LifeCycleApplication : public DuiApplication
+class LifeCycleApplication : public MApplication
 {
     Q_OBJECT
 
@@ -31,7 +31,7 @@ public:
 
     bool m_bHandleSignal;
 
-    LifeCycleApplication(int &argc, char **argv, const QString &appIdentifier, DuiApplicationService *service);
+    LifeCycleApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service);
 
     virtual ~LifeCycleApplication();
     virtual void releaseMemory();

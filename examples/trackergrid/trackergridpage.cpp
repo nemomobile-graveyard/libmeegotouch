@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,16 +17,16 @@
 **
 ****************************************************************************/
 
-#include <DuiApplicationPage>
-#include <DuiLocale>
-#include <DuiWidgetFactory>
-#include <DuiImage>
-#include <DuiGrid>
+#include <MApplicationPage>
+#include <MLocale>
+#include <MWidgetFactory>
+#include <MImage>
+#include <MGrid>
 
 #include "trackergridpage.h"
 
 // Implementation for custom grid widget factory plugin
-DuiWidget *GridWidgetFactoryPlugin::onBuild(QMap<QString, QVariant>* data)
+MWidget *GridWidgetFactoryPlugin::onBuild(QMap<QString, QVariant>* data)
 {
     qDebug() << "GridWidgetFactoryPlugin::onBuild()";
 
@@ -42,9 +42,9 @@ DuiWidget *GridWidgetFactoryPlugin::onBuild(QMap<QString, QVariant>* data)
         if (fullpath.startsWith(QString("file:/")))
             fullpath = fullpath.right(fullpath.length() - 6);
 
-        // Construct DuiImage with the full path to image
-        qDebug() << "...creating DuiImage from " << fullpath;
-        DuiImage *widget = new DuiImage(fullpath);
+        // Construct MImage with the full path to image
+        qDebug() << "...creating MImage from " << fullpath;
+        MImage *widget = new MImage(fullpath);
 
         // Set widget size
         QSize size(128, 128);
@@ -52,7 +52,7 @@ DuiWidget *GridWidgetFactoryPlugin::onBuild(QMap<QString, QVariant>* data)
         widget->setMaximumSize(size);
         widget->setPreferredSize(size);
 
-        return (DuiWidget *)widget;
+        return (MWidget *)widget;
     }
     return 0;
 }
@@ -92,19 +92,19 @@ void TrackerGridPage::createContent()
 {
     qDebug() << "TrackerGridPage::createContent()";
 
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
 
     // Grid for presenting tracker items
-    grid = new DuiGrid();
+    grid = new MGrid();
     grid->resize(800, 450);
     grid->setSpacing(10);
-    grid->setLayoutMode(DuiGridModel::SinglePass);
+    grid->setLayoutMode(MGridModel::SinglePass);
     grid->setBatchSize(100);
     setCentralWidget(grid);
 
     // Attach a custom grid plugin to widget factory:
     // default plugins cannot handle tracker data format
-    DuiWidgetFactory *pFactory = DuiWidgetFactory::instance();
+    MWidgetFactory *pFactory = MWidgetFactory::instance();
     pFactory->attachPlugin(new GridWidgetFactoryPlugin());
 
     // Query 20 images from tracker

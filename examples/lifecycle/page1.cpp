@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,19 +18,19 @@
 ****************************************************************************/
 
 #include <QTimer>
-#include <DuiButton>
-#include <DuiLabel>
-#include <DuiTheme>
-#include <DuiLocale>
-#include <DuiImage>
-#include <DuiLinearLayoutPolicy>
-#include <DuiGridLayoutPolicy>
-#include <DuiProgressIndicator>
-#include <DuiSceneManager>
+#include <MButton>
+#include <MLabel>
+#include <MTheme>
+#include <MLocale>
+#include <MImage>
+#include <MLinearLayoutPolicy>
+#include <MGridLayoutPolicy>
+#include <MProgressIndicator>
+#include <MSceneManager>
 
 #include "progressindicatorpage.h"
 
-ProgressIndicatorPage::ProgressIndicatorPage() : DuiApplicationPage()
+ProgressIndicatorPage::ProgressIndicatorPage() : MApplicationPage()
 {
     //% "Progress Indicator"
     setTitle(qtTrId("xx_progressindicator_page_title"));
@@ -43,46 +43,46 @@ ProgressIndicatorPage::~ProgressIndicatorPage()
 
 void ProgressIndicatorPage::createContent()
 {
-    DuiLayout *layout = new DuiLayout();
+    MLayout *layout = new MLayout();
     centralWidget()->setLayout(layout);
 
-    l_policy = new DuiGridLayoutPolicy(layout);
+    l_policy = new MGridLayoutPolicy(layout);
     l_policy->setContentsMargins(32, 32, 32, 32);
     l_policy->setRowSpacing(1, 32.0f);
     l_policy->setSpacing(36);
 
-    p_policy = new DuiGridLayoutPolicy(layout);
+    p_policy = new MGridLayoutPolicy(layout);
     p_policy->setContentsMargins(32, 32, 32, 32);
     p_policy->setRowSpacing(1, 32.0f);
     p_policy->setRowSpacing(3, 32.0f);
 
     //% "unknown duration - bar"
-    DuiLabel  *label1 = new DuiLabel(qtTrId("xx_progressindicator_unknown_duration_bar"), this);
+    MLabel  *label1 = new MLabel(qtTrId("xx_progressindicator_unknown_duration_bar"), this);
     label1->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
     label1->setMaximumWidth(382);
     label1->setMinimumWidth(382);
 
-    bar1 = new DuiProgressIndicator(this, "bar");
+    bar1 = new MProgressIndicator(this, "bar");
     bar1->setRange(0, 99);
     bar1->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
     bar1->setRunUnknown(TRUE);
     bar1->setObjectName("bar");
 
     //% "known duration - bar"
-    DuiLabel *label2  = new DuiLabel(qtTrId("xx_progressindicator_known_duration_bar"), this);
+    MLabel *label2  = new MLabel(qtTrId("xx_progressindicator_known_duration_bar"), this);
     label2->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    bar2 = new DuiProgressIndicator(this, "bar");
+    bar2 = new MProgressIndicator(this, "bar");
     bar2->setRange(0, 99);
     bar2->setValue(0);
     bar2->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
     bar2->setObjectName("bar");
 
     //% "unknown duration - circular"
-    DuiLabel *label3  = new DuiLabel(qtTrId("xx_progressindicator_unknown_duration_circular"), this);
+    MLabel *label3  = new MLabel(qtTrId("xx_progressindicator_unknown_duration_circular"), this);
     label3->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    circ1 = new DuiProgressIndicator(this);
+    circ1 = new MProgressIndicator(this);
     circ1->setRange(0, 99);
     circ1->setMaximumHeight(64);
     circ1->setMinimumHeight(64);
@@ -91,10 +91,10 @@ void ProgressIndicatorPage::createContent()
     circ1->setObjectName("circle");
 
     //% "known duration - circular"
-    DuiLabel  *label4  = new DuiLabel(qtTrId("xx_progressindicator_known_duration_circular"), this);
+    MLabel  *label4  = new MLabel(qtTrId("xx_progressindicator_known_duration_circular"), this);
     label4->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    circ2 = new DuiProgressIndicator(this);
+    circ2 = new MProgressIndicator(this);
     circ2->setRange(0, 99);
     circ2->setValue(0);
     circ2->setMaximumHeight(64);
@@ -103,9 +103,9 @@ void ProgressIndicatorPage::createContent()
     circ2->setObjectName("circle");
 
     //% "Stop"
-    buttonLeft = new DuiButton(qtTrId("xx_progressindicator_button_stop"), this);
+    buttonLeft = new MButton(qtTrId("xx_progressindicator_button_stop"), this);
     //% "Increase"
-    DuiButton *buttonRight = new DuiButton(qtTrId("xx_progressindicator_button_increase"), this);
+    MButton *buttonRight = new MButton(qtTrId("xx_progressindicator_button_increase"), this);
 
     buttonLeft->setMinimumHeight(72);
     buttonRight->setMinimumHeight(72);
@@ -133,21 +133,21 @@ void ProgressIndicatorPage::createContent()
     connect(buttonLeft, SIGNAL(pressed()), this, SLOT(buttonLeftSlot()));
     connect(buttonRight, SIGNAL(pressed()), this, SLOT(buttonRightSlot()));
 
-    connect(DuiSceneManager::instance(),
-            SIGNAL(orientationChanged(Dui::Orientation)),
+    connect(MSceneManager::instance(),
+            SIGNAL(orientationChanged(M::Orientation)),
             this,
-            SLOT(pageRotated(Dui::Orientation)));
+            SLOT(pageRotated(M::Orientation)));
 }
 
-void ProgressIndicatorPage::pageRotated(const Dui::Orientation &orientation)
+void ProgressIndicatorPage::pageRotated(const M::Orientation &orientation)
 {
-    QSize s = DuiSceneManager::instance()->visibleSceneSize();
+    QSize s = MSceneManager::instance()->visibleSceneSize();
 
     centralWidget()->setMinimumSize(s);
     centralWidget()->setMaximumSize(s);
     centralWidget()->setPreferredSize(s);
 
-    if (orientation == Dui::Portrait) {
+    if (orientation == M::Portrait) {
         p_policy->activate();
     } else {
         l_policy->activate();
@@ -184,16 +184,16 @@ void ProgressIndicatorPage::rotater()
 
 void ProgressIndicatorPage::rotate(int d)
 {
-    static const Dui::OrientationAngle angles[] = {
-        Dui::Angle0,
-        Dui::Angle90,
-        Dui::Angle180,
-        Dui::Angle270
+    static const M::OrientationAngle angles[] = {
+        M::Angle0,
+        M::Angle90,
+        M::Angle180,
+        M::Angle270
     };
 
     static int a = 0;
 
     a = (a + d) & 3;
 
-    DuiSceneManager::instance()->setOrientationAngle(angles[a]);
+    MSceneManager::instance()->setOrientationAngle(angles[a]);
 }

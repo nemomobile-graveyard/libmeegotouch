@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,17 +19,16 @@
 
 #include "feedbackpage.h"
 
-#include <DuiLabel>
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiApplicationPage>
-#include <DuiGridLayoutPolicy>
-#include <DuiLinearLayoutPolicy>
-#include <DuiButton>
-#include <DuiButtonIconView>
-#include <DuiButtonGroup>
-#include <DuiDebug>
-#include <DuiApplication>
+#include <MLabel>
+#include <MLayout>
+#include <MLocale>
+#include <MApplicationPage>
+#include <MGridLayoutPolicy>
+#include <MLinearLayoutPolicy>
+#include <MButton>
+#include <MButtonGroup>
+#include <MDebug>
+#include <MApplication>
 
 FeedbackPage::FeedbackPage() :
     TemplatePage(),
@@ -58,27 +57,27 @@ void FeedbackPage::createContent()
 
     landscapePolicy->setContentsMargins(30, 0, 0, 0);
 
-    feedbackButton1 = new DuiButton();
+    feedbackButton1 = new MButton();
     feedbackButton1->setObjectName("feedbackButton1");
     containerPolicy->addItem(feedbackButton1);
 
-    feedbackButton2 = new DuiButton();
+    feedbackButton2 = new MButton();
     feedbackButton2->setObjectName("feedbackButton2");
     containerPolicy->addItem(feedbackButton2);
 
-    feedbackButton3 = new DuiButton();
+    feedbackButton3 = new MButton();
     feedbackButton3->setObjectName("feedbackButton3");
     containerPolicy->addItem(feedbackButton3);
 
-    feedbackButton4 = new DuiButton();
+    feedbackButton4 = new MButton();
     feedbackButton4->setObjectName("feedbackButton4");
     containerPolicy->addItem(feedbackButton4);
 
-    feedbackButton5 = new DuiButton();
+    feedbackButton5 = new MButton();
     feedbackButton5->setObjectName("feedbackButton5");
     containerPolicy->addItem(feedbackButton5);
 
-    feedbackButton6 = new DuiButton();
+    feedbackButton6 = new MButton();
     feedbackButton6->setObjectName("feedbackButton6");
     containerPolicy->addItem(feedbackButton6);
 
@@ -92,7 +91,7 @@ void FeedbackPage::retranslateUi()
     if (!isContentCreated())
         return;
     //% "This page contains buttons with custom "
-    //% "input feedbacks. Any DuiWidget can have input "
+    //% "input feedbacks. Any MWidget can have input "
     //% "feedback for press and release events. Input "
     //% "feedback can be a sound effect and/or a haptic "
     //% "effect (piezo, vibra) depending on the product.\n\n"

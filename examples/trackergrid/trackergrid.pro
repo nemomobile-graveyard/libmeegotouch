@@ -1,34 +1,34 @@
 TEMPLATE = app
 TARGET = trackergrid
-CONFIG += dui # Requires libdui to be installed
+CONFIG += m # Requires libm to be installed
 LIBS += -lqttracker # Requires libqttracker + tracker
 
 # Input
 SOURCES += main.cpp trackergridpage.cpp
 HEADERS += trackergridpage.h
 
-# DUIROOT = ../..
+# MROOT = ../..
 #
-# include($$DUIROOT/mkspecs/common.pri)
+# include($$MROOT/mkspecs/common.pri)
 #
-# DUILIB = $$DUIROOT/lib
-# DUISRC = $$DUIROOT/src
-# DUISRCINCLUDE = $$DUISRC/include
-# DUISFWINCLUDE = $$DUIROOT/servicefw/include
+# MLIB = $$MROOT/lib
+# MSRC = $$MROOT/src
+# MSRCINCLUDE = $$MSRC/include
+# MSFWINCLUDE = $$MROOT/servicefw/include
 #
 # INCLUDEPATH += . \
-#     $$DUISRCINCLUDE \
-#     $$DUISRC \
+#     $$MSRCINCLUDE \
+#     $$MSRC \
 #
 # QMAKE_LIBDIR += \
-#    $$DUILIB \
+#    $$MLIB \
 #
 # INCLUDEPATH += ../../src/include
 # QMAKE_LIBDIR += ../../lib/
 #
-# style_sheet.path = $$DUI_THEME_DIR/trackergrid
+# style_sheet.path = $$M_THEME_DIR/trackergrid
 # style_sheet.files = style/trackergrid.css
-# view_configuration.path = $$DUI_THEME_DIR/trackergrid
+# view_configuration.path = $$M_THEME_DIR/trackergrid
 #
 # INSTALLS += \
 #    style_sheet \

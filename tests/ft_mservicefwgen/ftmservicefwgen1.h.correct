@@ -1,0 +1,45 @@
+#ifndef FTMSERVICEFWGEN1_H
+#define FTMSERVICEFWGEN1_H
+
+/*
+ * automatically generated with the command line :
+ * /usr/bin/m-servicefwgen -p /home/holger/hx86/master/libdui/libdui/tests/ft_mservicefwgen/com.nokia.FtMServiceFwGen1
+ */
+
+#include <QObject>
+
+#include <mservicefwbaseif.h>
+
+class FtMServiceFwGen1 : public MServiceFwBaseIf
+{
+Q_OBJECT
+
+public:
+    bool showGridWithCapturedContent( int limit );
+    bool showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage );
+    void showImage( const QString &uri, const QStringList &uriList );
+    bool showPage( const QString &targetPage, const QString &previousPage );
+    bool showSettings(  );
+
+public:
+    /*!
+     * @brief Constructs a base interface
+     * @param preferredService, define the preferred service provider. Leave
+     * empty if no preferred provider. In most cases, this should be left
+     * empty.
+     * @param parent Parent object
+     */
+
+    FtMServiceFwGen1( const QString& preferredService = "", QObject* parent = 0 );
+
+    /*!
+     * @brief Set the service name
+     * @param service Name of the desired service
+     */
+
+    void setService(const QString & service);
+Q_SIGNALS:
+
+};
+#endif
+

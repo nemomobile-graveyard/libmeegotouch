@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,13 +22,13 @@
 
 #include <QObject>
 #include <QList>
-#include <DuiApplicationPage>
-#include <duiapplicationextensioninterface.h>
+#include <MApplicationPage>
+#include <mapplicationextensioninterface.h>
 #include <demoapplicationextensioninterface.h>
 
-class DuiLabel;
+class MLabel;
 
-class DemoPage : public DuiApplicationPage, public DemoApplicationInterface
+class DemoPage : public MApplicationPage, public DemoApplicationInterface
 {
     Q_OBJECT
 
@@ -39,8 +39,8 @@ public:
     virtual void setDemoExtensionControlledValue(const QString &value);
 
 public slots:
-    void addExtension(DuiApplicationExtensionInterface *extension);
-    void removeExtension(DuiApplicationExtensionInterface *extension);
+    void addExtension(MApplicationExtensionInterface *extension);
+    void removeExtension(MApplicationExtensionInterface *extension);
     void resetExtensions();
 
 private:
@@ -48,7 +48,7 @@ private:
 
     QList<DemoApplicationExtensionInterface*> extensions;
 
-    DuiLabel *extensionValueLabel;
+    MLabel *extensionValueLabel;
     int value;
     QString valueText;
 };

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -25,14 +25,14 @@
 #include <QLabel>
 #include "qtmaemo6teststyle.h"
 
-#include <duiexport.h>
+#include <mexport.h>
 
-class DuiComponentData;
-class DuiStyle;
-class DuiButtonStyle;
-class DuiWidgetStyle;
-class DuiScalableImage;
-class DuiSliderStyle;
+class MComponentData;
+class MStyle;
+class MButtonStyle;
+class MWidgetStyle;
+class MScalableImage;
+class MSliderStyle;
 class QScrollBar;
 class QTimer;
 class QSequentialAnimationGroup;
@@ -47,15 +47,15 @@ class QtMaemo6StylePrivate;
 QPixmap setPixmapOpacity(const QPixmap &pixmap, double opacity);
 
 /*!
- * This class emulates the DUI windowdecoration, it provides a emulation
- * of the DUI titlebar, adds scrolling functionallity and places a statusbar
+ * This class emulates the M windowdecoration, it provides a emulation
+ * of the M titlebar, adds scrolling functionallity and places a statusbar
  * on the bottom of the screen, if the application has one.
  * This class inherits indirectly from QPlastiqueStyle and reimplements
- * necessarry methods for doing the correct dui-like styling.
+ * necessarry methods for doing the correct m-like styling.
  * Currently it inherits from QtMaemo6TestStyle (inherits QPlastiqueStyle),
  * which is currently only for testing purposes and may be deprecated in future.
  */
-class DUI_EXPORT QtMaemo6Style : public QtMaemo6TestStyle
+class M_EXPORT QtMaemo6Style : public QtMaemo6TestStyle
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(QtMaemo6Style)

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -23,17 +23,29 @@
 #include <QList>
 
 #include "templatepage.h"
+#include <MTextEdit>
 
-class DuiWidget;
-class DuiLabel;
-class DuiButton;
-class DuiTextEdit;
-class DuiCompleter;
+class MWidget;
+class MLabel;
+class MButton;
+class MCompleter;
 
-class DuiGridLayoutPolicy;
+class MGridLayoutPolicy;
 class CustomDirectIMWidget;
 
-/** /brief Page that shows the features of the virtual keyboard and the DuitextEdit
+class CustomTextEdit: public MTextEdit
+{
+    Q_OBJECT
+public:
+    CustomTextEdit(const QString &text = QString(), QGraphicsItem *parent = 0);
+public slots:
+    void changeLabel();
+    void changeButton();
+protected:
+    bool event(QEvent *event);
+};
+
+/** /brief Page that shows the features of the virtual keyboard and the MtextEdit
 */
 class TextEntryPage : public TemplatePage
 {
@@ -45,43 +57,45 @@ public:
     virtual QString timedemoTitle();
 
     virtual void createContent();
-    DuiGridLayoutPolicy *createAndSetupGridPolicy(QGraphicsWidget *panel);
+    MGridLayoutPolicy *createAndSetupGridPolicy(QGraphicsWidget *panel);
 
 public slots:
-    //! switch Autocapitalisation on/off in every DuiTextEdit
+    //! switch Autocapitalisation on/off in every MTextEdit
     void changeAutoCapitalisation(bool val);
 
-    //! switch error correction on/off in every DuiTextEdit
+    //! switch error correction on/off in every MTextEdit
     void changeErrorCorrection(bool val);
 
 protected:
     virtual void retranslateUi();
 
 private:
-    DuiLabel *label0;
-    DuiLabel *label1;
-    DuiLabel *label2;
-    DuiLabel *label3;
-    DuiLabel *label4;
-    DuiLabel *label5;
-    DuiLabel *label6;
-    DuiLabel *label7;
-    DuiLabel *label8;
-    DuiLabel *labelNoEcho;
-    DuiLabel *labelEchoOnEdit;
-    DuiLabel *labelDirectIM;
+    MLabel *label0;
+    MLabel *label1;
+    MLabel *label2;
+    MLabel *label3;
+    MLabel *label4;
+    MLabel *label5;
+    MLabel *label6;
+    MLabel *label7;
+    MLabel *label8;
+    MLabel *labelNoEcho;
+    MLabel *labelEchoOnEdit;
+    MLabel *labelDirectIM;
+    MLabel *labelCustomToolbar1;
+    MLabel *labelCustomToolbar2;
 
-    DuiLabel *labelHeader1;
-    DuiButton *button1;
-    DuiButton *button2;
+    MLabel *labelHeader1;
+    MButton *button1;
+    MButton *button2;
 
-    QList<DuiLabel *> labels;
-    QList<DuiTextEdit *> Entries;
+    QList<MLabel *> labels;
+    QList<MTextEdit *> Entries;
 
     bool m_autoCapitalisation;
     bool m_errorCorrection;
 
-    DuiCompleter *m_completer;
+    MCompleter *m_completer;
     CustomDirectIMWidget *directIMWidget;
 };
 

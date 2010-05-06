@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -33,7 +33,7 @@ namespace Utils
         appDir.cd("share");
         appDir.cd("themes");
         appDir.cd("devel");
-        appDir.cd("dui");
+        appDir.cd("meegotouch");
         appDir.cd("widgetsgallery");
         appDir.cd("images");
         appDir.cd("contacts");
@@ -51,7 +51,7 @@ namespace Utils
         appDir.cd("share");
         appDir.cd("themes");
         appDir.cd("devel");
-        appDir.cd("dui");
+        appDir.cd("meegotouch");
         appDir.cd("widgetsgallery");
         appDir.cd("images");
         return appDir.path().append("/");
@@ -68,7 +68,7 @@ namespace Utils
         appDir.cd("share");
         appDir.cd("themes");
         appDir.cd("devel");
-        appDir.cd("dui");
+        appDir.cd("meegotouch");
         appDir.cd("widgetsgallery");
         appDir.cd("images");
         appDir.cd("media-art");

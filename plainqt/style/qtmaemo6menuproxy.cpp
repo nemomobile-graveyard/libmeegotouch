@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -32,9 +32,9 @@
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 
-#include <duiapplicationmenustyle.h>
-#include <duiwidgetfadeinanimationstyle.h>
-#include <duiwidgetfadeoutanimationstyle.h>
+#include <mapplicationmenustyle.h>
+#include <mwidgetfadeinanimationstyle.h>
+#include <mwidgetfadeoutanimationstyle.h>
 #include <QDebug>
 
 /* unforunately this is required to force widgets drawing it's background, even
@@ -89,9 +89,9 @@ QtMaemo6MenuProxy::QtMaemo6MenuProxy(QMenuBar *mb, QWidget *parent)
     QStyleOption option;
     option.initFrom(mb);
 
-    const DuiApplicationMenuStyle *style =
-        static_cast<const DuiApplicationMenuStyle *>(
-            QtMaemo6StylePrivate::duiStyle(option.state, "DuiApplicationMenuStyle"));
+    const MApplicationMenuStyle *style =
+        static_cast<const MApplicationMenuStyle *>(
+            QtMaemo6StylePrivate::mStyle(option.state, "MApplicationMenuStyle"));
 
     QSpacerItem *topSpacer = new QSpacerItem(1, style->paddingTop());
     QSpacerItem *rightSpacer = new QSpacerItem(style->paddingRight(), 1);
@@ -122,9 +122,9 @@ void QtMaemo6MenuProxy::mousePressEvent(QMouseEvent *event)
 void QtMaemo6MenuProxy::showEvent(QShowEvent *event) {
     Q_UNUSED(event);
 
-    const DuiWidgetFadeInAnimationStyle *fadeInStyle =
-        static_cast<const DuiWidgetFadeInAnimationStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Active,
-                "DuiWidgetFadeInAnimationStyle"));
+    const MWidgetFadeInAnimationStyle *fadeInStyle =
+        static_cast<const MWidgetFadeInAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                "MWidgetFadeInAnimationStyle"));
 
     layout()->activate();
     QRect finalGeometry = QRect(m_menu->geometry().topLeft(), m_menu->sizeHint());
@@ -160,9 +160,9 @@ void QtMaemo6MenuProxy::showEvent(QShowEvent *event) {
 }
 
 void QtMaemo6MenuProxy::hideWindow() {
-    const DuiWidgetFadeOutAnimationStyle *fadeOutStyle =
-        static_cast<const DuiWidgetFadeOutAnimationStyle *>(QtMaemo6StylePrivate::duiStyle(QStyle::State_Active,
-                "DuiWidgetFadeOutAnimationStyle"));
+    const MWidgetFadeOutAnimationStyle *fadeOutStyle =
+        static_cast<const MWidgetFadeOutAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                "MWidgetFadeOutAnimationStyle"));
 
     QRect startGeometry = m_menu->geometry();
     QRect finalGeometry = startGeometry;

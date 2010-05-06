@@ -1,9 +1,9 @@
 include(../common_top.pri)
 TARGET = ut_qtmaemo6style
-INCLUDEPATH += $$DUISRCDIR/widgets $$DUISRCDIR/style $$DUISRCDIR/../plainqt/style
+INCLUDEPATH += $$MSRCDIR/corelib/widgets $$MSRCDIR/corelib/style $$MSRCDIR/../plainqt/style
 
 TEST_SOURCES = \
-    $$DUISRCDIR/../plainqt/style/qtmaemo6style.cpp \
+    $$MSRCDIR/../plainqt/style/qtmaemo6style.cpp \
 
 # unit test and unit
 SOURCES += \

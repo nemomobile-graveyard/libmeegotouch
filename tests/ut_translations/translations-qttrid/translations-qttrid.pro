@@ -10,9 +10,9 @@ LANGUAGES = ar_EG en_GB de_DE
 CATALOGNAME = ut_translations-qttrid
 SOURCEDIR = $$PWD/..
 TRANSLATIONDIR = $$PWD
-TRANSLATION_INSTALLDIR = $$[QT_INSTALL_LIBS]/libdui-tests/translations-qttrid
-DUIROOT = ../../..
+TRANSLATION_INSTALLDIR = $$[QT_INSTALL_LIBS]/libmeegotouch-tests/translations-qttrid
+MROOT = ../../..
 # these include files are installed to $$[QT_INSTALL_DATA]/mkspecs/features
-# and included in the "libdui-dev" package:
-include($${DUI_BUILD_TREE}/mkspecs/features/dui_defines.prf)
-include($${DUIROOT}/mkspecs/features/dui_translations.prf)
+# and included in the "libmeegotouch-dev" package:
+include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
+include($${MROOT}/mkspecs/features/meegotouch_translations.prf)

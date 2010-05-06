@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -23,8 +23,8 @@
 #include "templatepage.h"
 #include <QAbstractListModel>
 
-class DuiButton;
-class DuiComboBox;
+class MButton;
+class MComboBox;
 class QStandardItemModel;
 
 class LanguagePage : public TemplatePage
@@ -49,25 +49,25 @@ protected:
     void retranslateUi();
 
 private:
-    DuiComboBox *comboBoxLanguage;
+    MComboBox *comboBoxLanguage;
     QStandardItemModel *modelLanguage;
-    DuiComboBox *comboBoxLcTime;
+    MComboBox *comboBoxLcTime;
     QStandardItemModel *modelLcTime;
-    DuiComboBox *comboBoxLcCollate;
+    MComboBox *comboBoxLcCollate;
     QStandardItemModel *modelLcCollate;
-    DuiComboBox *comboBoxLcNumeric;
+    MComboBox *comboBoxLcNumeric;
     QStandardItemModel *modelLcNumeric;
-    DuiComboBox *comboBoxLcMonetary;
+    MComboBox *comboBoxLcMonetary;
     QStandardItemModel *modelLcMonetary;
-    DuiLabel *labelHaveGconf;
-    DuiLabel *labelHaveIcu;
-    DuiLabel *labelExampleNumber;
-    DuiLabel *labelExampleDateTime;
-    DuiLabel *labelExampleCurrency;
-    DuiLabel *labelExampleTranslation1;
-    DuiLabel *labelExampleTranslation2;
-    DuiLabel *labelExampleTranslation3;
-    DuiLabel *labelFontTest;
+    MLabel *labelHaveGconf;
+    MLabel *labelHaveIcu;
+    MLabel *labelExampleNumber;
+    MLabel *labelExampleDateTime;
+    MLabel *labelExampleCurrency;
+    MLabel *labelExampleTranslation1;
+    MLabel *labelExampleTranslation2;
+    MLabel *labelExampleTranslation3;
+    MLabel *labelFontTest;
 };
 
 #endif

@@ -2,71 +2,70 @@
 
 Core application classes
 <ul>
-<li>DuiApplication
-<li>DuiApplicationPage
-<li>DuiApplicationWindow
+<li>MApplication
+<li>MApplicationPage
+<li>MApplicationWindow
 </ul>
 
 Action extensions
 <ul>
-<li>DuiAction
-<li>DuiWidgetAction
+<li>MAction
+<li>MWidgetAction
 </ul>
 
 Notifications
 <ul>
-<li>DuiNotification
-<li>DuiNotificationGroup
+<li>MNotification
 </ul>
 
 Widgets
 <ul>
-<li>DuiButton
-<li>DuiComboBox
-<li>DuiContainer
-<li>DuiDialog
+<li>MButton
+<li>MComboBox
+<li>MContainer
+<li>MDialog
   <ul>
-    <li>DuiMessageBox
+    <li>MMessageBox
   </ul>
-<li>DuiImageWidget
-<li>DuiInfoBanner
-<li>DuiLabel
-<li>DuiList
+<li>MImageWidget
+<li>MInfoBanner
+<li>MLabel
+<li>MList
   <ul>
-    <li>DuiContentItem
-    <li>DuiCellCreator
-    <li>DuiWidgetRecycler
+    <li>MContentItem
+    <li>MCellCreator
+    <li>MWidgetRecycler
   </ul>
-<li>DuiMashupCanvas
-<li>DuiPannableViewport
-<li>DuiProgressIndicator
-<li>DuiSlider
+<li>MMashupCanvas
+<li>MPannableViewport
+<li>MProgressIndicator
+<li>MSlider
   <ul>
-    <li>DuiSeekBar
+    <li>MSeekBar
   </ul>
-<li>DuiTextEdit
+<li>MTextEdit
 </ul>
 
 Layouting and grouping
 <ul>
-<li>DuiButtonGroup
-<li>DuiLayout
+<li>MButtonGroup
+<li>MLayout
 <ul>
-  <li>DuiLinearLayoutPolicy
-  <li>DuiGridLayoutPolicy
-  <li>DuiFlowLayoutPolicy
-  <li>DuiFreestyleLayoutPolicy
+  <li>MLinearLayoutPolicy
+  <li>MGridLayoutPolicy
+  <li>MFlowLayoutPolicy
+  <li>MFreestyleLayoutPolicy
 </ul>
 </ul>
 
 Creating new widgets
 <ul>
-<li>DuiWidget
-<li>DuiStylableWidget
-<li>DuiWidgetController
-<li>DuiWidgetView
-<li>DuiSceneWindow
-<li>DuiTheme
+<li>MWidget
+<li>MStylableWidget
+<li>MWidgetController
+<li>MWidgetView
+<li>MSceneWindow
+<li>MTheme
 </ul>
 
 */

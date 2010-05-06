@@ -1,27 +1,27 @@
 include(../../../mkspecs/common.pri)
 
-DUIROOT = ../../..
-DUILIB = $$DUIROOT/lib
-DUISIF = $$DUIROOT/examples/servicefw
-DUISIFINCLUDE = $$DUIROOT/examples/servicefw/include
-DUISFWINCLUDE = $$DUIROOT/src/servicefwif
+MROOT = ../../..
+MLIB = $$MROOT/lib
+MSIF = $$MROOT/examples/servicefw
+MSIFINCLUDE = $$MROOT/examples/servicefw/include
+MSFWINCLUDE = $$MROOT/src/servicefwif
 TARGET     = user
-DESTDIR = $$DUISIF/bin
+DESTDIR = $$MSIF/bin
 TEMPLATE   = app
 
 INCLUDEPATH += \
     . \
-    $$DUISIFINCLUDE \
-    $$DUISFWINCLUDE \
-    $$DUISFWINCLUDE/include \
-    $$DUISIFINCLUDE \
-    $$DUIROOT/src/include \
+    $$MSIFINCLUDE \
+    $$MSFWINCLUDE \
+    $$MSFWINCLUDE/include \
+    $$MSIFINCLUDE \
+    $$MROOT/src/include \
 
 DEPENDPATH += $$INCLUDEPATH
 
 QMAKE_LIBDIR += \
-    $$DUILIB \
-    $$DUISIF/lib \
+    $$MLIB \
+    $$MSIF/lib \
 
 HEADERS    = \
     echowindow.h \
@@ -30,14 +30,13 @@ SOURCES    = \
     echowindow.cpp \
     main.cpp \
 
-LIBS += \
-    ../../../lib/libdui.so \
+LIBS += -lmeegotouchcore
 
 QT += dbus
 LIBS += \
     -ltextprocessor \
 
-target.path = $$DUI_INSTALL_BIN
+target.path = $$M_INSTALL_BIN
 
 INSTALLS += \
     target

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,13 +20,13 @@
 #ifndef MAINPAGE_H
 #define MAINPAGE_H
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 #include <QTimer>
-#include <DuiProgressIndicator>
+#include <MProgressIndicator>
 #include "anotherpage.h"
 #include "containerpage.h"
 
-class MainPage : public DuiApplicationPage
+class MainPage : public MApplicationPage
 {
     Q_OBJECT
 
@@ -45,7 +45,6 @@ public slots:
 
 private slots:
     void updateProgressBars();
-    void handleBackItemClick();
     void indicatorVisible();
     void indicatorHidden();
 
@@ -55,11 +54,10 @@ protected:
     virtual void enterDisplayEvent();
 
 private:
-    DuiProgressIndicator *bar0;
-    DuiProgressIndicator *bar1;
+    MProgressIndicator *bar0;
+    MProgressIndicator *bar1;
     AnotherPage *anotherPage;
     ContainerPage *canvasPage;
-    DuiApplicationPage *m_shownPage;
     QTimer *m_pTimer;
     int m_pbarValue;
 };

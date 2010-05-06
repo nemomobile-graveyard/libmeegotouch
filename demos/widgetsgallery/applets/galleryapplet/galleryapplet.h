@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,18 +20,18 @@
 #ifndef GALLERYAPPLET_H
 #define GALLERYAPPLET_H
 
-#include <duiappletinterface.h>
+#include <mappletinterface.h>
 #include <QObject>
 
 // This class doesn't do anything else but creates widgets inside this library
-class GalleryApplet : public QObject, public DuiAppletInterface
+class GalleryApplet : public QObject, public MAppletInterface
 {
     Q_OBJECT
-    Q_INTERFACES(DuiAppletInterface)
+    Q_INTERFACES(MAppletInterface)
 
 public:
-    // methods derived from DuiAppletInterface
-    virtual DuiWidget *constructWidget(const DuiAppletMetaData &metaData, DuiDataStore &instanceData, DuiDataAccess &settings);
+    // methods derived from MAppletInterface
+    virtual MWidget *constructWidget(const MAppletMetaData &metaData, MDataStore &instanceData, MDataAccess &settings);
 };
 
 #endif

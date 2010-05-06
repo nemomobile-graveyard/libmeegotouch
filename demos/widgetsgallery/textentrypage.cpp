@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,17 +18,19 @@
 ****************************************************************************/
 
 #include "textentrypage.h"
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiLabel>
-#include <DuiTextEdit>
-#include <DuiButton>
-#include <DuiCompleter>
-#include <DuiSceneManager>
+#include <MLayout>
+#include <MLocale>
+#include <MLabel>
+#include <MInputMethodState>
+#include <MButton>
+#include <MCompleter>
+#include <MSceneManager>
 #include <QList>
 #include <QStringListModel>
 #include <QDebug>
-#include <layout/duigridlayoutpolicy.h>
+#include <layout/mgridlayoutpolicy.h>
+#include <QKeyEvent>
+#include <QTextDocument>
 
 namespace
 {
@@ -118,7 +120,7 @@ QVariant CompleterTestModel::data(const QModelIndex &index, int role) const
 
 
 
-class CustomDirectIMWidget : public DuiLabel
+class CustomDirectIMWidget : public MLabel
 {
 public:
     CustomDirectIMWidget(QGraphicsItem *parent = 0);
@@ -135,7 +137,7 @@ public:
 
 
 CustomDirectIMWidget::CustomDirectIMWidget(QGraphicsItem *parent)
-    : DuiLabel(parent)
+    : MLabel(parent)
 {
     setFocusPolicy(Qt::ClickFocus);
     setFlag(QGraphicsItem::ItemAcceptsInputMethod, true);
@@ -169,10 +171,10 @@ void CustomDirectIMWidget::focusOutEvent(QFocusEvent *event)
 QVariant CustomDirectIMWidget::inputMethodQuery(Qt::InputMethodQuery query) const
 {
     switch ((int) query) {
-    case Dui::ImModeQuery:
-        return QVariant(Dui::InputMethodModeDirect);
+    case M::ImModeQuery:
+        return QVariant(M::InputMethodModeDirect);
     default:
-        return DuiLabel::inputMethodQuery(query);
+        return MLabel::inputMethodQuery(query);
     }
 }
 
@@ -202,11 +204,62 @@ void CustomDirectIMWidget::keyReleaseEvent(QKeyEvent *event)
     this->setText(label);
 }
 
+CustomTextEdit::CustomTextEdit(const QString &text, QGraphicsItem *parent)
+    : MTextEdit(MTextEditModel::MultiLine, text, parent)
+{
+    QObject::connect(this, SIGNAL(textChanged()), this, SLOT(changeLabel()));
+    QObject::connect(this, SIGNAL(cursorPositionChanged()), this, SLOT(changeButton()));
+    QObject::connect(this, SIGNAL(gainedFocus(Qt::FocusReason)), this, SLOT(changeLabel()));
+    QObject::connect(this, SIGNAL(gainedFocus(Qt::FocusReason)), this, SLOT(changeButton()));
+    setInputMethodCorrectionEnabled(false);
+}
+
+void CustomTextEdit::changeLabel()
+{
+    QString textCount = QString("%1").arg(text().length());
+    MInputMethodState::instance()->setToolbarItemAttribute(model()->toolbarId(),
+                                                           "labelcount",
+                                                           "text", QVariant(textCount));
+}
+
+void CustomTextEdit::changeButton()
+{
+    MInputMethodState::instance()->setToolbarItemAttribute(model()->toolbarId(),
+                                                           "buttonbold",
+                                                           "pressed",
+                                                           QVariant(document()->defaultFont().bold()));
+    MInputMethodState::instance()->setToolbarItemAttribute(model()->toolbarId(),
+                                                           "buttonunderline",
+                                                           "pressed",
+                                                           QVariant(document()->defaultFont().underline()));
+}
+
+bool CustomTextEdit::event(QEvent *event)
+{
+    if (QEvent::KeyPress == event->type()) {
+        QKeyEvent *k = static_cast<QKeyEvent *>(event);
+        if (Qt::Key_B == k->key() && (k->modifiers() & Qt::MetaModifier)) {
+            QFont font= document()->defaultFont();
+            font.setBold(!font.bold());
+            document()->setDefaultFont(font);
+            update();
+            return true;
+        } else if (Qt::Key_U == k->key() && (k->modifiers() & Qt::MetaModifier)) {
+            QFont font= document()->defaultFont();
+            font.setUnderline(!font.underline());
+            document()->setDefaultFont(font);
+            update();
+            return true;
+        }
+    }
+    return MTextEdit::event(event);
+}
+
 TextEntryPage::TextEntryPage()
     : TemplatePage(),
       m_autoCapitalisation(true),
       m_errorCorrection(true),
-      m_completer(new DuiCompleter)
+      m_completer(new MCompleter)
 {
     gid = TemplatePage::UserInput;
 }
@@ -224,15 +277,15 @@ QString TextEntryPage::timedemoTitle()
 
 void TextEntryPage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
     QGraphicsWidget *panel = centralWidget();
-    DuiGridLayoutPolicy *layoutPolicy = TextEntryPage::createAndSetupGridPolicy(panel);
+    MGridLayoutPolicy *layoutPolicy = TextEntryPage::createAndSetupGridPolicy(panel);
     int row = 0;
 
     // free text line
-    Entries << new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
 
-    label0 = new DuiLabel(centralWidget());
+    label0 = new MLabel(centralWidget());
     label0->setWordWrap(true);
     label0->setMinimumWidth(MaxminLabelWidth);
     label0->setMaximumWidth(MaxminLabelWidth);
@@ -242,100 +295,100 @@ void TextEntryPage::createContent()
     row++;
 
     // password line
-    Entries << new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
 
-    label1 = new DuiLabel(centralWidget());
+    label1 = new MLabel(centralWidget());
     label1->setWordWrap(true);
     label1->setMinimumWidth(MaxminLabelWidth);
     label1->setMaximumWidth(MaxminLabelWidth);
 
-    Entries.at(row)->setEchoMode(DuiTextEditModel::Password);
+    Entries.at(row)->setEchoMode(MTextEditModel::Password);
     layoutPolicy->addItem(label1, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
     row++;
 
     // no echo line
-    Entries << new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
 
-    labelNoEcho = new DuiLabel(centralWidget());
+    labelNoEcho = new MLabel(centralWidget());
     labelNoEcho->setWordWrap(true);
     labelNoEcho->setMinimumWidth(MaxminLabelWidth);
     labelNoEcho->setMaximumWidth(MaxminLabelWidth);
 
-    Entries.at(row)->setEchoMode(DuiTextEditModel::NoEcho);
+    Entries.at(row)->setEchoMode(MTextEditModel::NoEcho);
     layoutPolicy->addItem(labelNoEcho, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
     row++;
 
     // passwordEchoOnEdit
-    Entries << new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
 
-    labelEchoOnEdit = new DuiLabel(centralWidget());
+    labelEchoOnEdit = new MLabel(centralWidget());
     labelEchoOnEdit->setWordWrap(true);
     labelEchoOnEdit->setMinimumWidth(MaxminLabelWidth);
     labelEchoOnEdit->setMaximumWidth(MaxminLabelWidth);
 
-    Entries.at(row)->setEchoMode(DuiTextEditModel::PasswordEchoOnEdit);
+    Entries.at(row)->setEchoMode(MTextEditModel::PasswordEchoOnEdit);
     layoutPolicy->addItem(labelEchoOnEdit, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
     row++;
 
     // number content type
-    Entries << new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
 
-    label2 = new DuiLabel(centralWidget());
+    label2 = new MLabel(centralWidget());
     label2->setWordWrap(true);
     label2->setMinimumWidth(MaxminLabelWidth);
     label2->setMaximumWidth(MaxminLabelWidth);
 
-    Entries.at(row)->setContentType(Dui::NumberContentType);
+    Entries.at(row)->setContentType(M::NumberContentType);
     layoutPolicy->addItem(label2, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
     row++;
 
     // phone number content type
-    Entries << new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
 
-    label3 = new DuiLabel(centralWidget());
+    label3 = new MLabel(centralWidget());
     label3->setWordWrap(true);
     label3->setMinimumWidth(MaxminLabelWidth);
     label3->setMaximumWidth(MaxminLabelWidth);
 
-    Entries.at(row)->setContentType(Dui::PhoneNumberContentType);
+    Entries.at(row)->setContentType(M::PhoneNumberContentType);
     layoutPolicy->addItem(label3, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
     row++;
 
     // email content type
-    Entries << new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
 
-    label4 = new DuiLabel(centralWidget());
+    label4 = new MLabel(centralWidget());
     label4->setWordWrap(true);
     label4->setMinimumWidth(MaxminLabelWidth);
     label4->setMaximumWidth(MaxminLabelWidth);
 
-    Entries.at(row)->setContentType(Dui::EmailContentType);
+    Entries.at(row)->setContentType(M::EmailContentType);
     layoutPolicy->addItem(label4, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
     row++;
 
     // url content type
-    Entries << new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
 
-    label5 = new DuiLabel(centralWidget());
+    label5 = new MLabel(centralWidget());
     label5->setWordWrap(true);
     label5->setMinimumWidth(MaxminLabelWidth);
     label5->setMaximumWidth(MaxminLabelWidth);
 
-    Entries.at(row)->setContentType(Dui::UrlContentType);
+    Entries.at(row)->setContentType(M::UrlContentType);
     layoutPolicy->addItem(label5, row, 0);
     layoutPolicy->addItem(Entries.at(row), row, 1);
     row++;
 
     // multiline
-    Entries << new DuiTextEdit(DuiTextEditModel::MultiLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::MultiLine, "", centralWidget());
 
-    label6 = new DuiLabel(centralWidget());
+    label6 = new MLabel(centralWidget());
     label6->setWordWrap(true);
     label6->setMinimumWidth(MaxminLabelWidth);
     label6->setMaximumWidth(MaxminLabelWidth);
@@ -346,10 +399,10 @@ void TextEntryPage::createContent()
     row++;
 
     // autoselection line
-    Entries << new DuiTextEdit(DuiTextEditModel::SingleLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::SingleLine, "", centralWidget());
     Entries.at(row)->setAutoSelectionEnabled(true);
 
-    label7 = new DuiLabel(centralWidget());
+    label7 = new MLabel(centralWidget());
     label7->setWordWrap(true);
     label7->setMinimumWidth(MaxminLabelWidth);
     label7->setMaximumWidth(MaxminLabelWidth);
@@ -359,7 +412,7 @@ void TextEntryPage::createContent()
     row++;
 
     // completion
-    Entries << new DuiTextEdit(DuiTextEditModel::MultiLine, "", centralWidget());
+    Entries << new MTextEdit(MTextEditModel::MultiLine, "", centralWidget());
     QStringList list;
     list << "Betty Brey <Betty.C.Brey@example.com>"
          << "Anne Rodriguez <Anne.E.Rodriguez@example.com>"
@@ -428,7 +481,7 @@ void TextEntryPage::createContent()
     m_completer->setAcceptMultipleEntries(true);
     Entries.at(row)->setCompleter(m_completer);
 
-    label8 = new DuiLabel(centralWidget());
+    label8 = new MLabel(centralWidget());
     label8->setWordWrap(true);
     label8->setMinimumWidth(MaxminLabelWidth);
     label8->setMaximumWidth(MaxminLabelWidth);
@@ -439,7 +492,7 @@ void TextEntryPage::createContent()
 
     //direct input custom widget.
     directIMWidget = new CustomDirectIMWidget(centralWidget());
-    labelDirectIM = new DuiLabel(centralWidget());;
+    labelDirectIM = new MLabel(centralWidget());
     labelDirectIM->setWordWrap(true);
     labelDirectIM->setMinimumWidth(MaxminLabelWidth);
     labelDirectIM->setMaximumWidth(MaxminLabelWidth);
@@ -448,8 +501,34 @@ void TextEntryPage::createContent()
     layoutPolicy->addItem(directIMWidget, row, 1);
     row++;
 
+    CustomTextEdit *customTextEdit1 = new CustomTextEdit("", centralWidget());
+    customTextEdit1->attachToolbar("/usr/share/widgetsgallery/imtoolbar/exampletoolbar1.xml");
+    //% "Example custom toolbar 1"
+    customTextEdit1->setPrompt(qtTrId("xx_tooltip_customtoolbar1"));
+    labelCustomToolbar1 = new MLabel(centralWidget());
+    labelCustomToolbar1->setWordWrap(true);
+    labelCustomToolbar1->setMinimumWidth(MaxminLabelWidth);
+    labelCustomToolbar1->setMaximumWidth(MaxminLabelWidth);
+    labelCustomToolbar1->setAlignment(Qt::AlignTop);
+    layoutPolicy->addItem(labelCustomToolbar1, row, 0);
+    layoutPolicy->addItem(customTextEdit1, row, 1);
+    row++;
+
+    CustomTextEdit *customTextEdit2 = new CustomTextEdit("", centralWidget());
+    customTextEdit2->attachToolbar("/usr/share/widgetsgallery/imtoolbar/exampletoolbar2.xml");
+    //% "Example custom toolbar 2"
+    customTextEdit2->setPrompt(qtTrId("xx_tooltip_customtoolbar2"));
+    labelCustomToolbar2 = new MLabel(centralWidget());
+    labelCustomToolbar2->setWordWrap(true);
+    labelCustomToolbar2->setMinimumWidth(MaxminLabelWidth);
+    labelCustomToolbar2->setMaximumWidth(MaxminLabelWidth);
+    labelCustomToolbar2->setAlignment(Qt::AlignTop);
+    layoutPolicy->addItem(labelCustomToolbar2, row, 0);
+    layoutPolicy->addItem(customTextEdit2, row, 1);
+    row++;
+
     // Auto capitalisation button (Toggle)
-    button1 = new DuiButton(panel);
+    button1 = new MButton(panel);
     button1->setObjectName("switchAutoCaps");
 
     button1->setCheckable(true);
@@ -458,7 +537,7 @@ void TextEntryPage::createContent()
     row++;
 
     // error correction button (Toggle)
-    button2 = new DuiButton(panel);
+    button2 = new MButton(panel);
     button2->setObjectName("switchErrorCorrection");
 
     button2->setCheckable(true);
@@ -470,8 +549,9 @@ void TextEntryPage::createContent()
     connect(button2, SIGNAL(toggled(bool)), this, SLOT(changeErrorCorrection(bool)));
 
     //add an empty lable here, then the lower textenties won't be covered by vkb
-    labelHeader1 = new DuiLabel(centralWidget());
-    labelHeader1->setMinimumHeight(250);
+    labelHeader1 = new MLabel(centralWidget());
+    labelHeader1->setMinimumHeight(350);
+    labelHeader1->setMaximumHeight(350);
     layoutPolicy->addItem(labelHeader1, row, 0);
     row++;
 
@@ -530,6 +610,11 @@ void TextEntryPage::retranslateUi()
     //% "Direct Input Mode:"
     labelDirectIM->setText(qtTrId("xx_textentry_direct_input_mode"));
 
+    //% "Custom ToolBar 1:"
+    labelCustomToolbar1->setText(qtTrId("xx_textentry_custom_toolbar1"));
+    //% "Custom ToolBar 2:"
+    labelCustomToolbar2->setText(qtTrId("xx_textentry_custom_toolbar2"));
+
     //% "Auto capitalisation"
     button1->setText(qtTrId("xx_auto_capitalisation"));
     //% "Error correction"
@@ -539,11 +624,11 @@ void TextEntryPage::retranslateUi()
     changeErrorCorrection(m_errorCorrection);
 }
 
-DuiGridLayoutPolicy *TextEntryPage::createAndSetupGridPolicy(QGraphicsWidget *panel)
+MGridLayoutPolicy *TextEntryPage::createAndSetupGridPolicy(QGraphicsWidget *panel)
 {
-    DuiLayout *layout = new DuiLayout(panel);
+    MLayout *layout = new MLayout(panel);
     panel->setLayout(layout);
-    DuiGridLayoutPolicy *policy = new DuiGridLayoutPolicy(layout);
+    MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
     policy->setContentsMargins(20, 0, 20, 0);
     return policy;
 }
@@ -553,7 +638,7 @@ void TextEntryPage::changeAutoCapitalisation(bool val)
 {
     m_autoCapitalisation = val;
 
-    DuiTextEdit *entry = NULL;
+    MTextEdit *entry = NULL;
 
     foreach(entry, Entries) {
         entry->setInputMethodAutoCapitalizationEnabled(val);
@@ -572,7 +657,7 @@ void TextEntryPage::changeErrorCorrection(bool val)
 {
     m_errorCorrection = val;
 
-    DuiTextEdit *entry = NULL;
+    MTextEdit *entry = NULL;
     foreach(entry, Entries) {
         if (!entry->completer())
             entry->setInputMethodCorrectionEnabled(val);

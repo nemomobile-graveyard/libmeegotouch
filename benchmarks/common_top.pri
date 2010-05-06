@@ -1,6 +1,16 @@
-DUISRCDIR = ../../src/
+MSRCDIR = ../../src/
 STUBSDIR = ../stubs
-INCLUDEPATH += . $$DUISRCDIR $$STUBSDIR $$DUISRCDIR/include $$DUISRCDIR/core $$DUISRCDIR/widgets $$DUISRCDIR/workspace $$DUISRCDIR/style ../memorybenchmark/
+INCLUDEPATH += \
+    . \
+    $$STUBSDIR \
+    $$MSRCDIR/include \
+    $$MSRCDIR/corelib/core \
+    $$MSRCDIR/corelib/widgets \
+    $$MSRCDIR/corelib/workspace \
+    $$MSRCDIR/corelib/style \
+    $$MSRCDIR/views \
+    $$MSRCDIR/views/style \
+    ../memorybenchmark/
 
 DEPENDPATH = $$INCLUDEPATH
 QMAKE_LIBDIR += ../../lib
@@ -9,22 +19,22 @@ QT += testlib dbus svg
 TEMPLATE = app
 # DEFINES += QT_NO_DEBUG_OUTPUT
 DEFINES += UNIT_TEST
-target.path = $$[QT_INSTALL_LIBS]/libdui-benchmarks
+target.path = $$[QT_INSTALL_LIBS]/libmeegotouch-benchmarks
 INSTALLS += target
 
 win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework dui
+        LIBS += -framework m
     }
-    win32:LIBS += -L../../lib -ldui0
+    win32:LIBS += -lmeegotouchcore0
 } else {
-    LIBS += ../../lib/libdui.so
+    LIBS += -lmeegotouchcore
 }
 
 QMAKE_CXXFLAGS += -Werror
 support_files.files =
-support_files.path = $$[QT_INSTALL_LIBS]/libdui-benchmarks
+support_files.path = $$[QT_INSTALL_LIBS]/libmeegotouch-benchmarks
 INSTALLS += support_files
 
 CONFIG-=app_bundle

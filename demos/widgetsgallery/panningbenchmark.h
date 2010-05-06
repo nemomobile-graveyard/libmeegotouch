@@ -3,7 +3,9 @@
 
 #include "timedemobenchmark.h"
 
-#include <DuiPannableViewport>
+#include <MPannableViewport>
+#include <MNamespace>
+
 #include <QTime>
 
 /**
@@ -14,7 +16,7 @@ class PanningBenchmark : public TimedemoBenchmark
 {
     Q_OBJECT
 public:
-    PanningBenchmark(DuiApplicationPage *applicationPage, Timedemo *timedemo);
+    PanningBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo, M::OrientationAngle targetOrientationAngle = M::Angle0);
 
     QString name();
     void start();
@@ -25,7 +27,7 @@ private slots:
     void terminateBenchmark();
 
 private:
-    DuiPannableViewport *pannableViewport;
+    MPannableViewport *pannableViewport;
 
     bool timingStarted;
 
@@ -33,6 +35,8 @@ private:
 
     QTime timer;
 
+private:
+     M::OrientationAngle targetOrientationAngle;
 };
 
 #endif // PANNINGBENCHMARK_H

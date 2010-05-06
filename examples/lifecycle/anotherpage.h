@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,18 +20,18 @@
 #ifndef ANOTHERPAGE_H
 #define ANOTHERPAGE_H
 
-#include <DuiApplicationPage>
-#include <DuiLabel>
+#include <MApplicationPage>
+#include <MLabel>
 #include <QStringList>
 #include <QString>
 
 const int LABEL_COUNT = 10;
 
-class DuiGridLayoutPolicy;
-class DuiProgressIndicator;
-class DuiButton;
+class MGridLayoutPolicy;
+class MProgressIndicator;
+class MButton;
 
-class AnotherPage : public DuiApplicationPage
+class AnotherPage : public MApplicationPage
 {
     Q_OBJECT;
 
@@ -49,8 +49,8 @@ private slots:
     void windowHidden();
 
 protected:
-    DuiGridLayoutPolicy *l_policy;
-    DuiGridLayoutPolicy *p_policy;
+    MGridLayoutPolicy *l_policy;
+    MGridLayoutPolicy *p_policy;
 
     //! Visibility re-imps
     virtual void enterDisplayEvent();
@@ -58,11 +58,11 @@ protected:
 
 private:
     void fillLogLabel(QString text);
-    DuiLabel *logLabel;
-    DuiLabel *panLabel;
-    DuiLabel *windowVisibleLabel;
-    DuiLabel *windowHiddenLabel;
-    DuiLabel *labelList[LABEL_COUNT];
+    MLabel *logLabel;
+    MLabel *panLabel;
+    MLabel *windowVisibleLabel;
+    MLabel *windowHiddenLabel;
+    MLabel *labelList[LABEL_COUNT];
     QStringList labelBgColors;
     QStringList logLabelRows;
     int labelBgColorIndex;

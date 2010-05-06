@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# remove cached data
+if [ -d /var/cache/meegotouch ]; then
+  rm -rf /var/cache/meegotouch
+fi

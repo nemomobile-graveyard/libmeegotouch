@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,18 +21,18 @@
 
 #include "listpage.h"
 #include <QTimer>
-#include <DuiDialog>
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiButton>
-#include <DuiMessageBox>
-#include <DuiInfoBanner>
-#include <DuiLabel>
-#include <DuiTextEdit>
+#include <MDialog>
+#include <MLayout>
+#include <MLocale>
+#include <MButton>
+#include <MMessageBox>
+#include <MInfoBanner>
+#include <MLabel>
+#include <MTextEdit>
 #include <QDebug>
-#include <DuiContainer>
-#include <DuiLinearLayoutPolicy>
-
+#include <MContainer>
+#include <MLinearLayoutPolicy>
+#include <MWidget>
 #include <QGraphicsLinearLayout>
 
 DialogsAndNotificationsPage::DialogsAndNotificationsPage()
@@ -58,9 +58,6 @@ DialogsAndNotificationsPage::DialogsAndNotificationsPage()
 
 DialogsAndNotificationsPage::~DialogsAndNotificationsPage()
 {
-    delete dialog;
-    delete nestedDialog;
-    delete nestedMessageBox;
 }
 
 QString DialogsAndNotificationsPage::timedemoTitle()
@@ -70,10 +67,10 @@ QString DialogsAndNotificationsPage::timedemoTitle()
 
 void DialogsAndNotificationsPage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
 
-    DuiLayout *layout = new DuiLayout(centralWidget());
-    DuiLinearLayoutPolicy *layoutPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    MLayout *layout = new MLayout(centralWidget());
+    MLinearLayoutPolicy *layoutPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
     populateLayout(layoutPolicy);
 
     retranslateUi();
@@ -81,25 +78,30 @@ void DialogsAndNotificationsPage::createContent()
 
 void DialogsAndNotificationsPage::openQuestionDialog()
 {
-    if (dialog != NULL)
-        delete dialog;
-    dialog = new DuiDialog(
+    if (dialog)
+        return;
+
+    dialog = new MDialog(
         //%  "Question Dialog Title"
         qtTrId("xx_dialogs_and_notifications_question_dialog_title"),
-        Dui::YesButton | Dui::NoButton);
+        M::YesButton | M::NoButton);
     dialog->setCentralWidget(
         //% "Lorem ipsum dolor sit amet?"
-        new DuiLabel(qtTrId("xx_dialogs_and_notifications_question_dialog_content")));
-    dialog->exec();
+        new MLabel(qtTrId("xx_dialogs_and_notifications_question_dialog_content")));
+
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openEntryDialog()
 {
-    DuiWidget *centralWidget = new DuiWidget;
+    if (dialog)
+        return;
+
+    MWidget *centralWidget = new MWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
     //% "Name"
-    DuiLabel *label = new DuiLabel(qtTrId("xx_dialogs_and_notifications_entry_dialog_label"), centralWidget);
-    DuiTextEdit *textEdit = new DuiTextEdit(DuiTextEditModel::SingleLine,
+    MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_entry_dialog_label"), centralWidget);
+    MTextEdit *textEdit = new MTextEdit(MTextEditModel::SingleLine,
                                             QString(),
                                             centralWidget);
     centralWidget->setLayout(layout);
@@ -107,32 +109,31 @@ void DialogsAndNotificationsPage::openEntryDialog()
     layout->addItem(label);
     layout->addItem(textEdit);
 
-    if (dialog != NULL)
-        delete dialog;
     //% "Please enter your name"
-    dialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_entry_dialog_title"),
-                           Dui::OkButton | Dui::ResetButton);
+    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_entry_dialog_title"),
+                           M::OkButton | M::ResetButton);
     dialog->setCentralWidget(centralWidget);
 
-    dialog->exec();
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openLongDialog()
 {
-    DuiWidget *centralWidget = new DuiWidget;
+    if (dialog)
+        return;
+
+    MWidget *centralWidget = new MWidget;
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
 
-    if (dialog != NULL)
-        delete dialog;
     //% "Select printer"
-    dialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), Dui::CancelButton);
+    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_long_dialog_title"), M::CancelButton);
     dialog->setCentralWidget(centralWidget);
-    DuiButton *button = 0;
+    MButton *button = 0;
 
     centralWidget->setLayout(layout);
 
 #define ADD_PRINTER_BUTTON(NAME) \
-    button = new DuiButton(NAME, centralWidget); \
+    button = new MButton(NAME, centralWidget); \
     connect(button, SIGNAL(clicked()), dialog, SLOT(accept())); \
     layout->addItem(button);
 
@@ -167,79 +168,85 @@ void DialogsAndNotificationsPage::openLongDialog()
 
 #undef ADD_PRINTER_BUTTON
 
-    dialog->exec();
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openStackedDialogs()
 {
-    if (dialog != NULL)
-        delete dialog;
+    if (dialog)
+        return;
 
     //% "Click to spawn a nested dialog"
-    DuiButton *button = new DuiButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_button"));
+    MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_button"));
     //% "Stacked dialogs"
-    dialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_title"), Dui::CancelButton);
+    dialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_title"), M::CancelButton);
     dialog->setCentralWidget(button);
 
     connect(button, SIGNAL(clicked()), SLOT(openNestedDialog()));
-    dialog->exec();
+
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openNestedDialog()
 {
-    if (nestedDialog != NULL)
-        delete nestedDialog;
+    if (nestedDialog)
+        return;
 
     //% "Click to open a nested message box"
-    DuiButton *button = new DuiButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox"));
+    MButton *button = new MButton(qtTrId("xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox"));
     //% "This is a nested dialog"
-    nestedDialog = new DuiDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title"), Dui::CancelButton);
+    nestedDialog = new MDialog(qtTrId("xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title"), M::CancelButton);
     nestedDialog->setCentralWidget(button);
     connect(button, SIGNAL(clicked()), SLOT(openNestedMessageBox()));
 
-    nestedDialog->exec();
+    nestedDialog->appear(MSceneWindow::DestroyWhenDone);
+
 }
 
 void DialogsAndNotificationsPage::openNestedMessageBox()
 {
-    if (nestedMessageBox != NULL)
-        delete nestedMessageBox;
+    if (nestedMessageBox)
+        return;
 
     //% "I'm a nested message box"
-    nestedMessageBox = new DuiMessageBox(qtTrId("xx_dialogs_and_notifications_stacked_dialog_messagebox_text"));
-    nestedMessageBox->exec();
+    nestedMessageBox = new MMessageBox(qtTrId("xx_dialogs_and_notifications_stacked_dialog_messagebox_text"));
+    nestedMessageBox->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openSystemModalDialog()
 {
-    if (dialog != NULL)
-        delete dialog;
-    dialog = new DuiDialog(
+    if (dialog)
+        return;
+
+    dialog = new MDialog(
         //% "System Modal Dialog"
         qtTrId("xx_dialogs_and_notifications_system_modal_dialog_title"),
-        Dui::OkButton);
+        M::OkButton);
+
     dialog->setCentralWidget(
         //% "I'm a window modal dialog.\n"
         //% "There's no way around me!\n"
         //% "Muwhahaha... [evil laugh]"
-        new DuiLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label")));
+        new MLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label")));
+
     dialog->setSystemModal(true);
-    dialog->exec();
+
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openDialogWithProgressIndicator()
 {
-    if (dialog != NULL)
-        delete dialog;
+    if (dialog)
+        return;
 
-    DuiButton *button = new DuiButton();
-    button->setViewType(DuiButton::switchType);
+    MButton *button = new MButton();
+    button->setViewType(MButton::switchType);
     button->setCheckable(true);
     button->setChecked(true);
     connect(button, SIGNAL(toggled(bool)), this, SLOT(setDialogProgressIndicatorVisible(bool)));
 
     //% "Progress Indicator"
-    DuiLabel *label = new DuiLabel(qtTrId("xx_dialogs_and_notifications_progress_indicator"));
+    MLabel *label = new MLabel(qtTrId("xx_dialogs_and_notifications_progress_indicator"));
 
     QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Horizontal);
     layout->addStretch();
@@ -247,116 +254,122 @@ void DialogsAndNotificationsPage::openDialogWithProgressIndicator()
     layout->addItem(button);
     layout->addStretch();
 
-    dialog = new DuiDialog("Lorem ipsum", Dui::NoStandardButton);
+    dialog = new MDialog("Lorem ipsum", M::NoStandardButton);
     dialog->centralWidget()->setLayout(layout);
     dialog->setProgressIndicatorVisible(true);
-    dialog->exec();
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::openMessageBox()
 {
-    if (dialog != NULL)
-        delete dialog;
+    if (dialog)
+        return;
+
     //% "Hello World!"
-    dialog = new DuiMessageBox(qtTrId("xx_dialogs_and_notifications_message_box_text"), Dui::OkButton);
-    dialog->exec();
+    dialog = new MMessageBox(qtTrId("xx_dialogs_and_notifications_message_box_text"), M::OkButton);
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void DialogsAndNotificationsPage::showEventBanner()
 {
-    DuiInfoBanner *infoBanner = new DuiInfoBanner(DuiInfoBanner::Event);
-    infoBanner->setImageID("ebf7db7b6ab73c6cba8fc87da2d1fdcf");
+    MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Event);
+    infoBanner->setImageID("icon-m-content-email");
     infoBanner->setBodyText(
         //% "<b>Ida Taipale</b><br/>Have you seen my dog?"
         qtTrId("xx_dialogs_and_notifications_event_banner"));
     infoBanner->setIconID("Icon-new-SMS");
     connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
-    infoBanner->appear(DuiSceneWindow::DestroyWhenDone);
+    infoBanner->appear(MSceneWindow::DestroyWhenDone);
     QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
 
 void DialogsAndNotificationsPage::showInformationBanner()
 {
-    DuiInfoBanner *infoBanner = new DuiInfoBanner(DuiInfoBanner::Information);
-    infoBanner->setImageID("Icon-close");
+    MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
+    infoBanner->setImageID("icon-m-startup-help");
     infoBanner->setBodyText(
         //% "<b>Battery is running low</b>"
         qtTrId("xx_dialogs_and_notifications_information_banner"));
-    connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
-    infoBanner->appear(DuiSceneWindow::DestroyWhenDone);
+    infoBanner->appear(MSceneWindow::DestroyWhenDone);
     QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
 
 void DialogsAndNotificationsPage::showSystemInformationBanner()
 {
-    DuiInfoBanner *infoBanner = new DuiInfoBanner(DuiInfoBanner::Information);
-    infoBanner->setImageID("icon-l-chat");
+    MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
+    infoBanner->setImageID("icon-m-telephony-call-answer");
     infoBanner->setBodyText(
         //% "<b>Incoming call</b>"
         qtTrId("xx_dialogs_and_notifications_system_information_banner"));
     //% "Accept"
     infoBanner->setButtonText(qtTrId("xx_dialogs_and_notifications_system_information_banner_accept"));
     connect(infoBanner, SIGNAL(buttonClicked()), this, SLOT(openMessageBox()));
-    infoBanner->appear(DuiSceneWindow::DestroyWhenDone);
-
+    infoBanner->appear(MSceneWindow::DestroyWhenDone);
     QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
 
-void DialogsAndNotificationsPage::populateLayout(DuiLinearLayoutPolicy *layoutPolicy)
+
+
+void DialogsAndNotificationsPage::populateLayout(MLinearLayoutPolicy *layoutPolicy)
 {
     // Dialogs
 
-    dialogsContainer = new DuiContainer();
+    dialogsContainer = new MContainer();
     QGraphicsLinearLayout *dialogsLayout = new QGraphicsLinearLayout(Qt::Vertical, dialogsContainer->centralWidget());
 
     layoutPolicy->addItem(dialogsContainer);
 
-    button1 = new DuiButton(centralWidget());
+
+
+    button1 = new MButton(centralWidget());
     connect(button1, SIGNAL(clicked()), this, SLOT(openQuestionDialog()));
     dialogsLayout->addItem(button1);
 
-    button2 = new DuiButton(centralWidget());
+    button2 = new MButton(centralWidget());
     connect(button2, SIGNAL(clicked()), this, SLOT(openEntryDialog()));
     dialogsLayout->addItem(button2);
 
-    button3 = new DuiButton(centralWidget());
+    button3 = new MButton(centralWidget());
     connect(button3, SIGNAL(clicked()), this, SLOT(openLongDialog()));
     dialogsLayout->addItem(button3);
 
-    buttonStackedDialogs = new DuiButton(centralWidget());
+    buttonStackedDialogs = new MButton(centralWidget());
     connect(buttonStackedDialogs, SIGNAL(clicked()), this, SLOT(openStackedDialogs()));
     dialogsLayout->addItem(buttonStackedDialogs);
 
-    buttonSystemModalDialog = new DuiButton(centralWidget());
+    buttonSystemModalDialog = new MButton(centralWidget());
     connect(buttonSystemModalDialog, SIGNAL(clicked()), this, SLOT(openSystemModalDialog()));
     dialogsLayout->addItem(buttonSystemModalDialog);
 
-    buttonDialogWithProgressIndicator = new DuiButton(centralWidget());
+    buttonDialogWithProgressIndicator = new MButton(centralWidget());
     connect(buttonDialogWithProgressIndicator, SIGNAL(clicked()), this, SLOT(openDialogWithProgressIndicator()));
     dialogsLayout->addItem(buttonDialogWithProgressIndicator);
 
-    button4 = new DuiButton(centralWidget());
+    button4 = new MButton(centralWidget());
     connect(button4, SIGNAL(clicked()), this, SLOT(openMessageBox()));
     dialogsLayout->addItem(button4);
 
     // Notifications
 
-    notificationsContainer = new DuiContainer();
+    notificationsContainer = new MContainer();
     QGraphicsLinearLayout *notificationsLayout = new QGraphicsLinearLayout(Qt::Vertical, notificationsContainer->centralWidget());
 
     layoutPolicy->addItem(notificationsContainer);
 
-    button5 = new DuiButton(centralWidget());
+    button5 = new MButton(centralWidget());
     connect(button5, SIGNAL(clicked()), this, SLOT(showEventBanner()));
     notificationsLayout->addItem(button5);
 
-    button6 = new DuiButton(centralWidget());
+    button6 = new MButton(centralWidget());
     connect(button6, SIGNAL(clicked()), this, SLOT(showInformationBanner()));
     notificationsLayout->addItem(button6);
 
-    button7 = new DuiButton(centralWidget());
+    button7 = new MButton(centralWidget());
     button7->connect(button7, SIGNAL(clicked()), this, SLOT(showSystemInformationBanner()));
     notificationsLayout->addItem(button7);
+
+
+    //notificationsLayout->addItem(button8);
 }
 
 void DialogsAndNotificationsPage::retranslateUi()
@@ -393,6 +406,7 @@ void DialogsAndNotificationsPage::retranslateUi()
     button6->setText(qtTrId("xx_dialogs_and_notifications_label_information_banner"));
     //% "System Information Banner"
     button7->setText(qtTrId("xx_dialogs_and_notifications_label_system_information_banner"));
+
 }
 
 void DialogsAndNotificationsPage::setDialogProgressIndicatorVisible(bool visible)

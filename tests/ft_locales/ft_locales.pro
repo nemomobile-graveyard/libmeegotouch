@@ -6,7 +6,7 @@ PKGCONFIG += gconf-2.0
 
 # unit
 TEST_SOURCES =  \
-#    $$DUISRCDIR/duilocale.cpp \ 
+#    $$MSRCDIR/mlocale.cpp \ 
 
 # Input
 HEADERS += ft_locales.h

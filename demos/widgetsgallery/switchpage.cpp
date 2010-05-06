@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,17 +18,16 @@
 ****************************************************************************/
 
 #include "switchpage.h"
-#include <DuiLabel>
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiApplicationPage>
-#include <DuiGridLayoutPolicy>
-#include <DuiLinearLayoutPolicy>
-#include <DuiButton>
-#include <DuiButtonIconView>
-#include <DuiButtonGroup>
-#include <DuiDebug>
-#include <DuiApplication>
+#include <MLabel>
+#include <MLayout>
+#include <MLocale>
+#include <MApplicationPage>
+#include <MGridLayoutPolicy>
+#include <MLinearLayoutPolicy>
+#include <MButton>
+#include <MButtonGroup>
+#include <MDebug>
+#include <MApplication>
 #include <QGraphicsLinearLayout>
 
 SwitchPage::SwitchPage() :
@@ -58,11 +57,11 @@ void SwitchPage::createContent()
 
     //landscapePolicy->insertStretch(1);
 
-    switch1 = new DuiButton();
-    switch1->setViewType(DuiButton::switchType);
+    switch1 = new MButton();
+    switch1->setViewType(MButton::switchType);
     switch1->setCheckable(true);
     switch1->setChecked(true);
-    label1 = new DuiLabel();
+    label1 = new MLabel();
     label1->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     QGraphicsLinearLayout *l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label1);
@@ -71,10 +70,10 @@ void SwitchPage::createContent()
     //l->setAlignment(label1, Qt::AlignRight);
     containerPolicy->addItem(l);
 
-    switch2 = new DuiButton();
-    switch2->setViewType(DuiButton::switchType);
+    switch2 = new MButton();
+    switch2->setViewType(MButton::switchType);
     switch2->setCheckable(true);
-    label2 = new DuiLabel();
+    label2 = new MLabel();
     label2->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label2);
@@ -83,10 +82,10 @@ void SwitchPage::createContent()
     //l->setAlignment(label2, Qt::AlignRight);
     containerPolicy->addItem(l);
 
-    switch3 = new DuiButton();
-    switch3->setViewType(DuiButton::switchType);
+    switch3 = new MButton();
+    switch3->setViewType(MButton::switchType);
     switch3->setCheckable(true);
-    label3 = new DuiLabel();
+    label3 = new MLabel();
     label3->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label3);
@@ -95,10 +94,10 @@ void SwitchPage::createContent()
     //l->setAlignment(label3, Qt::AlignRight);
     containerPolicy->addItem(l);
 
-    switch4 = new DuiButton();
-    switch4->setViewType(DuiButton::switchType);
+    switch4 = new MButton();
+    switch4->setViewType(MButton::switchType);
     switch4->setCheckable(true);
-    label4 = new DuiLabel();
+    label4 = new MLabel();
     label4->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label4);
@@ -107,11 +106,11 @@ void SwitchPage::createContent()
     //l->setAlignment(label4, Qt::AlignRight);
     containerPolicy->addItem(l);
 
-    switch5 = new DuiButton();
-    switch5->setViewType(DuiButton::switchType);
+    switch5 = new MButton();
+    switch5->setViewType(MButton::switchType);
     switch5->setCheckable(true);
     switch5->setChecked(true);
-    label5 = new DuiLabel();
+    label5 = new MLabel();
     label5->setAlignment(Qt::AlignLeft | Qt::AlignVCenter);
     l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(label5);

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,11 +22,11 @@
 
 #include "templatepage.h"
 
-class DuiButton;
-class DuiLabel;
-class DuiImageWidget;
-class DuiComboBox;
-class DuiSlider;
+class MButton;
+class MLabel;
+class MImageWidget;
+class MComboBox;
+class MSlider;
 
 class ImagePage : public TemplatePage
 {
@@ -55,15 +55,18 @@ public slots:
 
 protected:
     virtual void retranslateUi();
+    virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture);
+    bool event(QEvent *e);
 
 private:
-    DuiLabel *propertiesLabel;
-    DuiComboBox *propertiesComboBox;
-    DuiWidget *visual;
-    DuiImageWidget *image;
-    DuiSlider *slider;
+    MLabel *propertiesLabel;
+    MComboBox *propertiesComboBox;
+    MWidget *visual;
+    MImageWidget *image;
+    MSlider *slider;
 
     int sliderValues[ImageLastItem];
+    qreal originalScaleFactor;
 };
 
 #endif

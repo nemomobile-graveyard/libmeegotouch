@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,17 +18,16 @@
 ****************************************************************************/
 
 #include "pushbuttonpage.h"
-#include <DuiLabel>
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiApplicationPage>
-#include <DuiGridLayoutPolicy>
-#include <DuiLinearLayoutPolicy>
-#include <DuiButton>
-#include <DuiButtonIconView>
-#include <DuiButtonGroup>
-#include <DuiDebug>
-#include <DuiApplication>
+#include <MLabel>
+#include <MLayout>
+#include <MLocale>
+#include <MApplicationPage>
+#include <MGridLayoutPolicy>
+#include <MLinearLayoutPolicy>
+#include <MButton>
+#include <MButtonGroup>
+#include <MDebug>
+#include <MApplication>
 
 PushButtonPage::PushButtonPage() :
     TemplatePage(),
@@ -53,14 +52,14 @@ void PushButtonPage::createContent()
     TemplatePage::createContent();
 
     // Push Buttons
-    pushButton1 = new DuiButton();
+    pushButton1 = new MButton();
     containerPolicy->addItem(pushButton1);
 
-    pushButton2 = new DuiButton();
-    pushButton2->setIconID("icon-l-search");
+    pushButton2 = new MButton();
+    pushButton2->setIconID("icon-m-messaging-smiley-surprised");
     containerPolicy->addItem(pushButton2);
 
-    pushButton3 = new DuiButton();
+    pushButton3 = new MButton();
     containerPolicy->addItem(pushButton3);
 
     retranslateUi();

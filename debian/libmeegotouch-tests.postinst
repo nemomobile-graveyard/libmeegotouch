@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# add en_US.UTF-8 locale if not already there:
+# (this locale is needed for the test ft_meegotouchgconfitem)
+
+if ! egrep -q -E "^[[:space:]]*en_US.UTF-8[[:space:]]+UTF-8" /etc/locale.gen ; then
+   echo "en_US.UTF-8 UTF-8" >> /etc/locale.gen
+   /usr/sbin/locale-gen
+fi

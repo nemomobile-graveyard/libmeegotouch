@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -17,5 +17,5 @@
 **
 ****************************************************************************/
 
-#include "../core/testabilityinterface.h"
+#include "../corelib/core/testabilityinterface.h"
 

@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,11 +21,11 @@
 #define TOOLBARPAGE_H
 
 #include "templatepage.h"
-#include <DuiList>
+#include <MList>
 
-class DuiToolBar;
-class DuiGridLayoutPolicy;
-class DuiList;
+class MToolBar;
+class MGridLayoutPolicy;
+class MList;
 
 class TestModel : public QAbstractListModel
 {
@@ -54,7 +54,7 @@ private:
 
 };
 
-class DuiContentItemCreator;
+class MContentItemCreator;
 class ToolBarPage : public TemplatePage
 {
     Q_OBJECT
@@ -86,14 +86,14 @@ private:
     void clearToolbarActions();
     void addButtonsToTabView();
 
-    DuiList* callList;
+    MList* callList;
     TestModel* callModel;
-    DuiContentItemCreator * cellCreator;
+    MContentItemCreator * cellCreator;
 
-    DuiAction * exampleAction1;
-    DuiAction * exampleAction2;
-    DuiAction * defaultViewAction;
-    DuiAction * tabViewAction;
+    MAction * exampleAction1;
+    MAction * exampleAction2;
+    MAction * defaultViewAction;
+    MAction * tabViewAction;
 
     bool isDefaultView;
 

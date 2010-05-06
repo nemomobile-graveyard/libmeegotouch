@@ -3,7 +3,7 @@
 
 print "XB-Testing-metadata:\n";
 print " <testinfo>\n";
-print '   <target package="libdui" version="${binary:Version}" />' . "\n";
+print '   <target package="libmeegotouch" version="${binary:Version}" />' . "\n";
 open(META,"meta");
 $closetag = "";
 $counter = 0;

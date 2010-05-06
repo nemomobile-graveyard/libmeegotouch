@@ -1,0 +1,7 @@
+// This is a test file for DirectUI CSS parser.
+
+// Include other .css files
+@import "ft_mstylesheet_object.css";
+@import url("ft_mstylesheet_testobject.css");
+
+

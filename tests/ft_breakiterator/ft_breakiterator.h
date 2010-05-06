@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -25,7 +25,7 @@
 #include <QList>
 #include <QCoreApplication>
 
-#include <duibreakiterator.h>
+#include <mbreakiterator.h>
 
 
 #define MAX_PARAMS 10

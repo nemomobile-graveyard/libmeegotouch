@@ -3,9 +3,15 @@ include(check.pri)
 # for defines
 include(../mkspecs/common.pri)
 
-DUISRCDIR = ../../src
+MSRCDIR = ../../src
 STUBSDIR = ../stubs
-INCLUDEPATH += . $$DUISRCDIR $$STUBSDIR  $$DUISRCDIR/include
+INCLUDEPATH += \
+    . \
+    $$MSRCDIR \
+    $$STUBSDIR \
+    $$MSRCDIR/include \
+    $$MSRCDIR/views/style \
+
 DEPENDPATH = $$INCLUDEPATH
 QMAKE_LIBDIR += ../../lib /usr/local/lib
 CONFIG += debug
@@ -14,21 +20,21 @@ QT += testlib dbus svg network
 TEMPLATE = app
 # DEFINES += QT_NO_DEBUG_OUTPUT
 DEFINES += UNIT_TEST
-target.path = $$[QT_INSTALL_LIBS]/libdui-tests
+target.path = $$[QT_INSTALL_LIBS]/libmeegotouch-tests
 INSTALLS += target
 
 win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework dui
+        LIBS += -framework meegotouch
     }
-    win32:LIBS += -L../../lib -ldui0
+    win32:LIBS += -lmeegotouchcore0 -lmeegotouchviews0
 } else {
-    LIBS += ../../lib/libdui.so
+    LIBS += -lmeegotouchcore -lmeegotouchviews
 }
 
 QMAKE_CXXFLAGS += -Werror
 
 support_files.files =
-support_files.path = $$[QT_INSTALL_LIBS]/libdui-tests
+support_files.path = $$[QT_INSTALL_LIBS]/libmeegotouch-tests
 INSTALLS += support_files

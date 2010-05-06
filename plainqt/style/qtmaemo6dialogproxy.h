@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -56,6 +56,7 @@ protected:
     /*! \reimp */
     //bool eventFilter(QObject* watched, QEvent* ev);
     //void closeEvent(QCloseEvent* event);
+    bool eventFilter(QObject *obj, QEvent *event);
     /*! \reimp_end */
 
 private:

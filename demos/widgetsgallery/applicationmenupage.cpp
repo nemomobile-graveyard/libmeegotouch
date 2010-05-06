@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,23 +21,23 @@
 
 #include <QStringListModel>
 
-#include <DuiApplication>
-#include <DuiLabel>
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiApplicationPage>
-#include <DuiLinearLayoutPolicy>
-#include <DuiAction>
-#include <DuiApplicationMenu>
-#include <DuiWidgetAction>
+#include <MApplication>
+#include <MLabel>
+#include <MLayout>
+#include <MLocale>
+#include <MApplicationPage>
+#include <MLinearLayoutPolicy>
+#include <MAction>
+#include <MApplicationMenu>
+#include <MWidgetAction>
 
-#include <DuiNavigationBar>
-#include <DuiApplicationWindow>
-#include <DuiSeparator>
-#include <DuiDebug>
-#include <DuiButton>
-#include <DuiGridLayoutPolicy>
-#include <DuiComboBox>
+#include <MNavigationBar>
+#include <MApplicationWindow>
+#include <MSeparator>
+#include <MDebug>
+#include <MButton>
+#include <MGridLayoutPolicy>
+#include <MComboBox>
 
 ApplicationMenuPage::ApplicationMenuPage()
 {
@@ -83,66 +83,65 @@ void ApplicationMenuPage::createContent()
 
     QGraphicsWidget *panel = centralWidget();
 
-    DuiAction *action = new DuiAction("Italic", panel);
-    action->setLocation(DuiAction::ApplicationMenuLocation);
+    MAction *action = new MAction("Italic", panel);
+    action->setLocation(MAction::ApplicationMenuLocation);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(makeTextItalic()));
 
-    action = new DuiAction("Normal", panel);
-    action->setLocation(DuiAction::ApplicationMenuLocation);
+    action = new MAction("Normal", panel);
+    action->setLocation(MAction::ApplicationMenuLocation);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(makeTextNormal()));
 
-    DuiWidgetAction *widgetAction = new DuiWidgetAction(panel);
-    widgetAction->setLocation(DuiAction::ApplicationMenuLocation);
+    MWidgetAction *widgetAction = new MWidgetAction(panel);
+    widgetAction->setLocation(MAction::ApplicationMenuLocation);
 
     QStringList list;
     for (int i = 0; i < 5; ++i) {
         list << QString::number(100 + i);
     }
-    comboBox = new DuiComboBox;
+    comboBox = new MComboBox;
     comboBox->addItems(list);
 
     comboBox->setIconVisible(false);
     comboBox->setTitle("ComboBox");
     comboBox->setCurrentIndex(0);
     widgetAction->setWidget(comboBox);
-    connect(comboBox, SIGNAL(clicked()), widgetAction, SIGNAL(triggered()));
 
-    action = new DuiAction(NULL, "Window Icon", panel);
-    action->setLocation(DuiAction::ApplicationMenuLocation);
+    action = new MAction(NULL, "Window Icon", panel);
+    action->setLocation(MAction::ApplicationMenuLocation);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(toggleWindowIconVisibility()));
     insertAction(action, widgetAction);
 
-    action = new DuiAction("icon-m-list", "", panel);
-    action->setLocation(DuiAction::ApplicationMenuLocation);
+    action = new MAction("icon-m-list", "", panel);
+    action->setLocation(MAction::ApplicationMenuLocation);
     action->setStyleAction(true);
     action->setCheckable(true);
     action->setChecked(true);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(showButtonsAsList()));
 
-    action = new DuiAction("icon-m-grid", "", panel);
-    action->setLocation(DuiAction::ApplicationMenuLocation);
+    action = new MAction("icon-m-grid", "", panel);
+    action->setLocation(MAction::ApplicationMenuLocation);
     action->setStyleAction(true);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(showButtonsAsGrid()));
 
     // for more readability
     listPolicy = containerPolicy;
-    gridPolicy = new DuiGridLayoutPolicy(containerLayout);
+    gridPolicy = new MGridLayoutPolicy(containerLayout);
 
-    DuiButton *button = new DuiButton("Item 1", container);
+    MButton *button = new MButton("Item 1", container);
     containerPolicy->addItem(button);
     gridPolicy->addItem(button, 0, 0);
-    button = new DuiButton("Item 2", container);
+    button = new MButton("Item 2", container);
     containerPolicy->addItem(button);
     gridPolicy->addItem(button, 0, 1);
-    button = new DuiButton("Item 3", container);
+    button = new MButton("Item 3", container);
     containerPolicy->addItem(button);
     gridPolicy->addItem(button, 1, 0);
-    button = new DuiButton("Item 4", container);
+    button = new MButton("Item 4", container);
     containerPolicy->addItem(button);
     gridPolicy->addItem(button, 1, 1);
 
@@ -181,7 +180,7 @@ void ApplicationMenuPage::makeTextNormal()
 
 void ApplicationMenuPage::toggleWindowIconVisibility()
 {
-    DuiApplicationWindow *window = DuiApplication::activeApplicationWindow();
+    MApplicationWindow *window = MApplication::activeApplicationWindow();
     if (!window) {
         return;
     }

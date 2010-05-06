@@ -5,8 +5,8 @@ shell_scripts.CONFIG += no_check_exist
 include(../mkspecs/common.pri)
 
 # fixed path required by TATAM
-# You mean hardcoding /usr instead of using $$DUI_INSTALL_DATA? Why? murrayc
-shell_scripts.path += $$DUI_INSTALL_DATA/libdui-tests
+# You mean hardcoding /usr instead of using $$M_INSTALL_DATA? Why? murrayc
+shell_scripts.path += $$M_INSTALL_DATA/libmeegotouch-tests
 shell_scripts.depends = FORCE
 
 INSTALLS    += \

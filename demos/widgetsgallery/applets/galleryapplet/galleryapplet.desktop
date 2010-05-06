@@ -1,9 +1,9 @@
 [Desktop Entry]
-Type=DUIApplet
+Type=X-MeeGoApplet
 Name=Gallery
 Icon=
-Exec=duiappletrunner
+Exec=mappletrunner
 
-[DUI]
-X-DUIApplet-Applet=libgalleryapplet.so
-X-DUIApplet-Identifier=galleryappletres
+[X-MeeGoApplet]
+Applet=libgalleryapplet.so
+Identifier=galleryappletres

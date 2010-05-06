@@ -1,5 +1,5 @@
 TEMPLATE = app
-CONFIG += dui
+CONFIG += m
 
 # Input
 SOURCES += *.cpp

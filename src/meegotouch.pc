@@ -1,0 +1,11 @@
+prefix=/usr
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include/meegotouch
+
+Name: meegotouch
+Description: MeeGo Touch UI Framework
+Version: 0.20.1
+Requires: QtGui
+Cflags: -I${includedir}
+Libs: -L${libdir} -lmeegotouchcore -lmeegotouchviews -lmeegotouchsettings -lmeegotouchextensions

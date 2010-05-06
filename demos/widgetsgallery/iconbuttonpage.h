@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -22,14 +22,14 @@
 
 #include "listpage.h"
 #include "templatepage.h"
-#include <DuiApplicationPage>
-#include <DuiLayout>
-#include <DuiGridLayoutPolicy>
+#include <MApplicationPage>
+#include <MLayout>
+#include <MGridLayoutPolicy>
 
-class DuiButton;
-class DuiButtonGroup;
-class DuiWidget;
-class DuiLabel;
+class MButton;
+class MButtonGroup;
+class MWidget;
+class MLabel;
 
 class IconButtonPage : public TemplatePage
 {
@@ -42,8 +42,8 @@ public:
 protected:
     virtual void retranslateUi();
 private:
-    DuiButton *iconButton1;
-    DuiButton *iconButton2;
+    MButton *iconButton1;
+    MButton *iconButton2;
 };
 
 #endif

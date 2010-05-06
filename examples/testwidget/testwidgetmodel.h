@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -28,14 +28,14 @@
 #ifndef testwidgetmodel_h
 #define testwidgetmodel_h
 
-#include <DuiApplication>
-#include <DuiWidgetController>
-#include <duiwidgetmodel.h>
+#include <MApplication>
+#include <MWidgetController>
+#include <mwidgetmodel.h>
 
-class DUI_EXPORT TestWidgetModel : public DuiWidgetModel
+class M_EXPORT TestWidgetModel : public MWidgetModel
 {
     Q_OBJECT
-    DUI_MODEL(TestWidgetModel)
+    M_MODEL(TestWidgetModel)
 
 public:
     enum ButtonState {
@@ -47,7 +47,7 @@ public:
 private:
     // Index of current style. Fourth parameter is false so public handler methods are not automatically generated.
     // They are implemented in source file.
-    DUI_MODEL_PROPERTY(int, styleIndex, StyleIndex, false, 0)
+    M_MODEL_PROPERTY(int, styleIndex, StyleIndex, false, 0)
 };
 
 

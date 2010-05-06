@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,19 +18,21 @@
 ****************************************************************************/
 
 #include "imagepage.h"
-#include <DuiImageWidget>
-#include <DuiLabel>
-#include <DuiSceneManager>
-#include <DuiContainer>
-#include <DuiLocale>
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiComboBox>
-#include <DuiSlider>
-#include <DuiLayout>
-#include <DuiLinearLayoutPolicy>
-#include <DuiDebug>
+#include <MImageWidget>
+#include <MLabel>
+#include <MSceneManager>
+#include <MContainer>
+#include <MLocale>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MComboBox>
+#include <MSlider>
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+#include <MDebug>
 #include <QGraphicsGridLayout>
+#include <QPinchGesture>
+#include <QGestureEvent>
 
 #include "utils.h"
 
@@ -40,7 +42,8 @@ ImagePage::ImagePage() :
     propertiesComboBox(NULL),
     visual(NULL),
     image(NULL),
-    slider(NULL)
+    slider(NULL),
+    originalScaleFactor(10)
 {
     gid = TemplatePage::LayoutsAndVisuals;
 
@@ -48,6 +51,9 @@ ImagePage::ImagePage() :
     sliderValues[ImageZoom] = 10;
     sliderValues[ImageTransparency] = 0;
     sliderValues[ImageCrop] = 0;
+
+    setAcceptTouchEvents(true);
+    grabGesture(Qt::PinchGesture);
 }
 
 ImagePage::~ImagePage()
@@ -59,31 +65,40 @@ QString ImagePage::timedemoTitle()
     return "Image";
 }
 
+bool ImagePage::event(QEvent *e)
+{
+    if (e->type() == QEvent::TouchBegin) {
+        e->setAccepted(true);
+        return true;
+    }
+    return TemplatePage::event(e);
+}
+
 void ImagePage::createContent()
 {
-    DuiApplicationPage::createContent();
+    MApplicationPage::createContent();
 
     createLayout();
-    containerLayout = new DuiLayout(container);
+    containerLayout = new MLayout(container);
 
-    containerPolicy = new DuiLinearLayoutPolicy(containerLayout, Qt::Vertical);
+    containerPolicy = new MLinearLayoutPolicy(containerLayout, Qt::Vertical);
     containerLayout->setPolicy(containerPolicy);
 
     // Image properties label
-    propertiesLabel = new DuiLabel();
+    propertiesLabel = new MLabel();
 
     // Image properties comboBox
-    propertiesComboBox = new DuiComboBox();
+    propertiesComboBox = new MComboBox();
     propertiesComboBox->setIconID("Icon-pictures");
 
     // Image property slider
-    slider = new DuiSlider();
+    slider = new MSlider();
     slider->setOrientation(Qt::Horizontal);
     slider->setRange(0, 100);
     slider->setValue(0);
 
     // Visual is a common parent for Image and Animation
-    visual = new DuiWidget();
+    visual = new MWidget();
 
     QGraphicsGridLayout *gridLayout = new QGraphicsGridLayout();
     gridLayout->setContentsMargins(0, 0, 0, 0);
@@ -94,11 +109,11 @@ void ImagePage::createContent()
     // Image
     QString fname = imagesDir + '/' + QString("grape.jpg");
     QImage img(fname);
-    image = new DuiImageWidget(&img);
+    image = new MImageWidget(&img);
     image->setVisible(true);
     gridLayout->addItem(image, 0, 0);
 
-    QSize s = DuiApplication::activeApplicationWindow()->visibleSceneSize();
+    QSize s = MApplication::activeApplicationWindow()->visibleSceneSize();
 
     containerPolicy->addItem(propertiesLabel);
     containerPolicy->addItem(propertiesComboBox);
@@ -142,7 +157,8 @@ void ImagePage::retranslateUi()
     //% "Image allows the placement of images onto the UI. "
     //% "Images are generally non-interactive elements. "
     //% "Various single and multiple touch interactions can be added to an "
-    //% "Image component if desired."
+    //% "Image component if desired. As an example, pinch gesture can be "
+    //% "used in this page to zoom the image."
     infoLabel->setText("<a></a>" + qtTrId("xx_image_page_info"));
 
 }
@@ -161,7 +177,7 @@ void ImagePage::sliderValueChanged(int value)
     if (index >= ImageZoom && index < ImageLastItem)
         sliderValues[index] = value;
     else
-        duiWarning("ImagePage") << "combo box index out of range:" << index;
+        mWarning("ImagePage") << "combo box index out of range:" << index;
 
     // Set property value to image
     switch (index) {
@@ -202,4 +218,20 @@ void ImagePage::setImageCrop(float width, float height)
 
     // FIXME: why is this needed ?
     image->update();
+}
+
+void ImagePage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
+{
+    if (gesture->state() == Qt::GestureStarted) {
+	propertiesComboBox->setCurrentIndex(0);
+        originalScaleFactor = slider->value();
+
+        //If the current scale factor is 0, the we would not be scaling anything.
+        if (originalScaleFactor == 0) originalScaleFactor = 1;
+    }
+
+    slider->setValue(originalScaleFactor * gesture->scaleFactor());
+
+    event->accept(gesture);
+
 }

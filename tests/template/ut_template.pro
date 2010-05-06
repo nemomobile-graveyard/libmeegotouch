@@ -2,7 +2,7 @@ include(../common_top.pri)
 TARGET = ut_mkutclassname
 
 TEST_SOURCES = \
-    $$DUISRCDIR/mkutclassname.cpp \
+    $$MSRCDIR/mkutclassname.cpp \
 
 # unit test and unit
 SOURCES += \
@@ -20,7 +20,7 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_mkutclassname.h \
-    $$DUISRCDIR/mkutclassname.h \
+    $$MSRCDIR/mkutclassname.h \
 
 # base classes
 HEADERS += \

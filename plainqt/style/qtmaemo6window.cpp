@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -29,7 +29,7 @@
 #include <QDebug>
 #include <QPainter>
 
-#include <duideviceprofile.h>
+#include <mdeviceprofile.h>
 
 #include "qtmaemo6dialogtitle.h"
 #include "qtmaemo6style_p.h"
@@ -67,19 +67,24 @@ QSize QtMaemo6Window::maxViewportSize() const
 void QtMaemo6Window::closeEvent(QCloseEvent *event)
 {
     //prevent deleting the original Widget by Qt
+    QWidget* w = 0;
     if (m_scrollArea)
-        m_scrollArea->takeWidget();
+        w = m_scrollArea->takeWidget();
+    if(!w) {
+        w = m_window;
+        layout()->removeWidget(w);
+    }
 
     //this must be set back to dialog, so that the dialog can be shown again!
-    m_window->setWindowFlags(m_originalFlags);
-    m_window->hide();
+    w->setParent(0);
+    w->setAttribute(Qt::WA_DeleteOnClose, false);
+    w->setWindowFlags(m_originalFlags);
     QWidget::closeEvent(event);
 }
 
 bool QtMaemo6Window::eventFilter(QObject *obj, QEvent *event)
 {
     switch (event->type()) {
-    case QEvent::Hide: //intended fall trough
     case QEvent::Close:
         if (!m_closeFromChild) {
             m_closeFromChild = true;
@@ -119,7 +124,7 @@ void QtMaemo6Window::paintEvent(QPaintEvent* e) {
 void QtMaemo6Window::showFastMaximized()
 {
     // Size policy instead?
-    resize(DuiDeviceProfile::instance()->resolution());
+    resize(MDeviceProfile::instance()->resolution());
     show();
 }
 

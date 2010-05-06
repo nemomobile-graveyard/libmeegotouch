@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,9 +20,9 @@
 #ifndef CONTAINERPAGE_H
 #define CONTAINERPAGE_H
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 
-class ContainerPage : public DuiApplicationPage
+class ContainerPage : public MApplicationPage
 {
 public:
     ContainerPage();

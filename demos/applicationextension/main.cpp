@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -18,14 +18,14 @@
 ****************************************************************************/
 
 #include <QGraphicsLinearLayout>
-#include <DuiApplication>
-#include <DuiApplicationWindow>
-#include <DuiApplicationPage>
-#include <DuiButton>
-#include <DuiSceneManager>
-#include <DuiSlider>
-#include <DuiLabel>
-#include <duiapplicationextensionarea.h>
+#include <MApplication>
+#include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MButton>
+#include <MSceneManager>
+#include <MSlider>
+#include <MLabel>
+#include <mapplicationextensionarea.h>
 #include <demoapplicationextensioninterface.h>
 #include <main.h>
 
@@ -35,27 +35,27 @@ void DemoPage::createContent()
     QGraphicsLinearLayout *vbox = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(vbox);
 
-    extensionValueLabel = new DuiLabel;
+    extensionValueLabel = new MLabel;
     extensionValueLabel->setAlignment(Qt::AlignHCenter);
     vbox->addItem(extensionValueLabel);
     extensionValueLabel->setObjectName("ExtensionValueLabel");
 
-    DuiButton *button = new DuiButton;
+    MButton *button = new MButton;
     button->setText("Reset Extensions");
     vbox->addItem(button);
     connect(button, SIGNAL(clicked()), this, SLOT(resetExtensions()));
 
-    DuiApplicationExtensionArea *area =
-            new DuiApplicationExtensionArea("com.nokia.dui.core.DemoApplicationExtensionInterface/1.0");
+    MApplicationExtensionArea *area =
+            new MApplicationExtensionArea("com.meego.core.DemoApplicationExtensionInterface/1.0");
     vbox->addItem(area);
 
-    connect(area, SIGNAL(extensionInstantiated(DuiApplicationExtensionInterface*)),
-            this, SLOT(addExtension(DuiApplicationExtensionInterface*)));
-    connect(area, SIGNAL(extensionRemoved(DuiApplicationExtensionInterface*)),
-            this, SLOT(removeExtension(DuiApplicationExtensionInterface*)));
+    connect(area, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)),
+            this, SLOT(addExtension(MApplicationExtensionInterface*)));
+    connect(area, SIGNAL(extensionRemoved(MApplicationExtensionInterface*)),
+            this, SLOT(removeExtension(MApplicationExtensionInterface*)));
 }
 
-void DemoPage::addExtension(DuiApplicationExtensionInterface *extension)
+void DemoPage::addExtension(MApplicationExtensionInterface *extension)
 {
     DemoApplicationExtensionInterface *demoExtension = static_cast<DemoApplicationExtensionInterface *>(extension);
     demoExtension->setDemoApplicationInterface(*this);
@@ -63,7 +63,7 @@ void DemoPage::addExtension(DuiApplicationExtensionInterface *extension)
     updateLabel();
 }
 
-void DemoPage::removeExtension(DuiApplicationExtensionInterface *extension)
+void DemoPage::removeExtension(MApplicationExtensionInterface *extension)
 {
     DemoApplicationExtensionInterface *demoExtension = static_cast<DemoApplicationExtensionInterface *>(extension);
     extensions.removeOne(demoExtension);
@@ -102,8 +102,8 @@ void DemoPage::setDemoExtensionControlledValue(const QString &value)
 
 int main(int argc, char **argv)
 {
-    DuiApplication app(argc, argv);
-    DuiApplicationWindow window;
+    MApplication app(argc, argv);
+    MApplicationWindow window;
     DemoPage page;
     window.show();
     window.sceneManager()->appearSceneWindowNow(&page);

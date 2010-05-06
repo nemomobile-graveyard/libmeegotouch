@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -19,15 +19,15 @@
 
 #include "sliderpage.h"
 
-#include <DuiContainer>
-#include <DuiLabel>
-#include <DuiButton>
-#include <DuiSlider>
-#include <DuiSeekBar>
-#include <DuiLayout>
-#include <DuiLocale>
-#include <DuiApplicationPage>
-#include <DuiLinearLayoutPolicy>
+#include <MContainer>
+#include <MLabel>
+#include <MButton>
+#include <MSlider>
+#include <MSeekBar>
+#include <MLayout>
+#include <MLocale>
+#include <MApplicationPage>
+#include <MLinearLayoutPolicy>
 #include <QTimer>
 
 SliderPage::SliderPage() :
@@ -61,51 +61,55 @@ void SliderPage::createContent()
 {
     TemplatePage::createContent();
 
-    DuiLayout *ageLayout = new DuiLayout;
-    DuiLinearLayoutPolicy *ageLayoutPolicy = new DuiLinearLayoutPolicy(ageLayout, Qt::Horizontal);
-    ageLayoutPolicy->setSpacing(0);
-    ageLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+    MLayout *ageLayout = new MLayout;
 
-    ageLabel = new DuiLabel;
+    MLinearLayoutPolicy *horizontalAgeLayoutPolicy = new MLinearLayoutPolicy(ageLayout, Qt::Horizontal);
+    horizontalAgeLayoutPolicy->setSpacing(0);
+    horizontalAgeLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+
+    MLinearLayoutPolicy *verticalAgeLayoutPolicy = new MLinearLayoutPolicy(ageLayout, Qt::Vertical);
+    verticalAgeLayoutPolicy->setSpacing(0);
+    verticalAgeLayoutPolicy->setContentsMargins(0, 0, 0, 0);
+
+    ageLayout->setLandscapePolicy(horizontalAgeLayoutPolicy);
+    ageLayout->setPortraitPolicy(verticalAgeLayoutPolicy);
+
+    ageLabel = new MLabel;
     ageLabel->setTextElide(true);
 
-    ageLayoutPolicy->addItem(ageLabel);
-    ageLayoutPolicy->setStretchFactor(ageLabel, 0);
+    horizontalAgeLayoutPolicy->addItem(ageLabel);
+    horizontalAgeLayoutPolicy->setStretchFactor(ageLabel, 0);
+    verticalAgeLayoutPolicy->addItem(ageLabel);
+    verticalAgeLayoutPolicy->setStretchFactor(ageLabel, 0);
 
-    ageSlider = new DuiSlider;
-    ageLayoutPolicy->addItem(ageSlider);
-    ageLayoutPolicy->setStretchFactor(ageSlider, 1);
+    ageSlider = new MSlider;
+    horizontalAgeLayoutPolicy->addItem(ageSlider);
+    horizontalAgeLayoutPolicy->setStretchFactor(ageSlider, 1);
+    verticalAgeLayoutPolicy->addItem(ageSlider);
+    verticalAgeLayoutPolicy->setStretchFactor(ageSlider, 1);
 
-    ageContainer = new DuiContainer;
+    ageContainer = new MContainer;
     ageContainer->centralWidget()->setLayout(ageLayout);
     containerPolicy->addItem(ageContainer);
 
     QObject::connect(ageSlider, SIGNAL(valueChanged(int)), this, SLOT(modifyAgeSliderHandle(int)));
 
-    DuiLayout *playerLayout = new DuiLayout;
-    DuiLinearLayoutPolicy *playerLayoutPolicy = new DuiLinearLayoutPolicy(playerLayout, Qt::Horizontal);
+    MLayout *playerLayout = new MLayout;
+    MLinearLayoutPolicy *playerLayoutPolicy = new MLinearLayoutPolicy(playerLayout, Qt::Horizontal);
     playerLayoutPolicy->setSpacing(0);
     playerLayoutPolicy->setContentsMargins(0, 0, 0, 0);
 
-    if (qApp->isLeftToRight()) {
-        playerButton = new DuiButton;
-        playerLayoutPolicy->addItem(playerButton, Qt::AlignCenter);
-        playerLayoutPolicy->setStretchFactor(playerButton, 0);
+    playerButton = new MButton;
+    playerButton->setViewType(MButton::iconType);
+    playerButton->setIconID("icon-m-common-play");
+    playerLayoutPolicy->addItem(playerButton, Qt::AlignCenter);
+    playerLayoutPolicy->setStretchFactor(playerButton, 0);
 
-        playerSeekBar = new DuiSeekBar;
-        playerLayoutPolicy->addItem(playerSeekBar);
-        playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
-    } else {
-        playerSeekBar = new DuiSeekBar;
-        playerLayoutPolicy->addItem(playerSeekBar);
-        playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
+    playerSeekBar = new MSeekBar;
+    playerLayoutPolicy->addItem(playerSeekBar);
+    playerLayoutPolicy->setStretchFactor(playerSeekBar, 1);
 
-        playerButton = new DuiButton;
-        playerLayoutPolicy->addItem(playerButton, Qt::AlignCenter);
-        playerLayoutPolicy->setStretchFactor(playerButton, 0);
-    }
-
-    playerContainer = new DuiContainer;
+    playerContainer = new MContainer;
     playerContainer->centralWidget()->setLayout(playerLayout);
     containerPolicy->addItem(playerContainer);
 
@@ -116,42 +120,39 @@ void SliderPage::createContent()
 
     QObject::connect(playerButton, SIGNAL(clicked()), this, SLOT(playerButtonClicked()));
 
-    DuiLayout *brightnessLayout = new DuiLayout;
-    DuiLinearLayoutPolicy *brightnessLayoutPolicy = new DuiLinearLayoutPolicy(brightnessLayout, Qt::Horizontal);
+    MLayout *brightnessLayout = new MLayout;
+    MLinearLayoutPolicy *brightnessLayoutPolicy = new MLinearLayoutPolicy(brightnessLayout, Qt::Horizontal);
     brightnessLayoutPolicy->setSpacing(0);
     brightnessLayoutPolicy->setContentsMargins(0, 0, 0, 0);
 
-    brightnessSlider = new DuiSlider;
+    brightnessSlider = new MSlider;
     brightnessLayoutPolicy->addItem(brightnessSlider);
 
-    brightnessContainer = new DuiContainer;
+    brightnessContainer = new MContainer;
     brightnessContainer->centralWidget()->setLayout(brightnessLayout);
     containerPolicy->addItem(brightnessContainer);
 
     QObject::connect(brightnessSlider, SIGNAL(valueChanged(int)), this, SLOT(modifyBrightnessSliderHandle(int)));
-    QObject::connect(brightnessSlider, SIGNAL(sliderPressed()), this, SLOT(showBrightnessSliderHandle()));
-    QObject::connect(brightnessSlider, SIGNAL(sliderReleased()), this, SLOT(hideBrightnessSliderHandle()));
 
     retranslateUi();
 }
 
 void SliderPage::createLayout()
 {
-    QGraphicsWidget *panel = centralWidget();
-    layout = new DuiLayout(panel);
+    layout = new MLayout(centralWidget());
 
-    landscapePolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
     landscapePolicy->setContentsMargins(0, 30, 0, 0);
 
-    portraitPolicy = new DuiLinearLayoutPolicy(layout, Qt::Vertical);
+    portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
     portraitPolicy->setContentsMargins(0, 30, 0, 0);
 
     layout->setLandscapePolicy(landscapePolicy);
     layout->setPortraitPolicy(portraitPolicy);
 
-    container = new DuiWidget;
+    container = new MWidget;
 
-    infoLabel = new DuiLabel;
+    infoLabel = new MLabel;
     infoLabel->setWordWrap(true);
     infoLabel->setAlignment(Qt::AlignTop);
 
@@ -195,12 +196,10 @@ void SliderPage::retranslateUi()
     //% "Player:"
     playerContainer->setTitle(qtTrId("xx_slider_player_label"));
 
-    //% "Play"
-    playerButton->setText(qtTrId("xx_slider_player_button_label"));
-
     playerSeekBar->setMinLabelVisible(true);
     playerSeekBar->setMaxLabelVisible(true);
     playerSeekBar->setHandleLabelVisible(true);
+
     playerSeekBar->setMinimum(0);
     playerSeekBar->setMaximum(playTime);
 
@@ -220,6 +219,7 @@ void SliderPage::retranslateUi()
     brightnessSlider->setRange(0, 100);
     brightnessSlider->setMinLabelVisible(true);
     brightnessSlider->setMaxLabelVisible(true);
+    brightnessSlider->setHandleLabelVisible(true);
 
     brightnessSlider->setMinLabelIconID("icon-m-common-strength1");
     brightnessSlider->setMaxLabelIconID("icon-m-common-strength5");
@@ -233,6 +233,7 @@ void SliderPage::modifyAgeSliderHandle(int newValue)
 {
     ageSlider->setHandleLabel(QString::number(newValue));
 }
+
 void SliderPage::playerButtonClicked()
 {
     QTimer::singleShot(0, this, SLOT(playTimesliceElapsed()));
@@ -296,14 +297,4 @@ void SliderPage::playerOutOfLoadedContentRange()
 void SliderPage::modifyBrightnessSliderHandle(int newValue)
 {
     brightnessSlider->setHandleLabel(QString::number(newValue) + '%');
-}
-
-void SliderPage::showBrightnessSliderHandle()
-{
-    brightnessSlider->setHandleLabelVisible(true);
-}
-
-void SliderPage::hideBrightnessSliderHandle()
-{
-    brightnessSlider->setHandleLabelVisible(false);
 }

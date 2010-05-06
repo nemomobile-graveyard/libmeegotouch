@@ -1,4 +1,4 @@
-CONFIG += dui qt link_pkgconfig debug
+CONFIG += m qt link_pkgconfig debug
 TEMPLATE = app
 TARGET = apscanner
 DEPENDPATH += .
@@ -18,7 +18,7 @@ HEADERS += apscanner.h \
 
 # The following lines are only to allow building the
 # example inside the source tree without installing
-# libdui first:
+# libm first:
 INCLUDEPATH += ../../src/include
 QMAKE_LIBDIR += ../../lib/
-LIBS += -ldui
+LIBS += -lmeegotouch

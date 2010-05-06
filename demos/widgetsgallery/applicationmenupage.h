@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -21,10 +21,10 @@
 #define APPLICATIONMENUPAGE_H
 
 #include "templatepage.h"
-#include <DuiLabel>
-class DuiGridLayoutPolicy;
-class DuiLinearLayoutPolicy;
-class DuiComboBox;
+#include <MLabel>
+class MGridLayoutPolicy;
+class MLinearLayoutPolicy;
+class MComboBox;
 
 class ApplicationMenuPage : public TemplatePage
 {
@@ -48,9 +48,9 @@ protected:
 
 private:
     int m_textIndex;
-    DuiGridLayoutPolicy *gridPolicy;
-    DuiLinearLayoutPolicy  *listPolicy;
-    DuiComboBox *comboBox;
+    MGridLayoutPolicy *gridPolicy;
+    MLinearLayoutPolicy  *listPolicy;
+    MComboBox *comboBox;
     void showText(int index);
 };
 

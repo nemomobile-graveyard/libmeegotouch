@@ -1,10 +1,144 @@
-libdui (0.20.0~1) unstable; urgency=low
+libmeegotouch (0.20.6~1) unstable; urgency=low
 
-  * New version [UNRELEASED]
+  * [UNRELEASED]
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 04 May 2010 16:37:58 +0300
+
+libmeegotouch (0.20.5-1) unstable; urgency=low
+
+  * Fixes: NB#164608 - System modal dialogs do not set the _NET_WM_WINDOW_TYPE_DIALOG window hint
+  * Fixes: NB#164214 - DuiDialog causes wake up events
+  * Fixes: NB#161260, NB#165998 - move tap&hold handler to MSceneWindow.
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 04 May 2010 16:18:15 +0300
+
+libmeegotouch (0.20.4-1) unstable; urgency=low
+
+  * Fixes: NB#165612 - tapping the information banner, information banner is closing after 2 seconds, it is not closing immediately
+  * Fixes: NB#161234 - DuiLabel does not restrict its size according its layout
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 03 May 2010 14:28:29 +0300
+
+libmeegotouch (0.20.3-1) unstable; urgency=low
+
+  * Fixes: NB#164924 - Applet settings are not layed out correctly in RTL locales
+  * Fixes: NB#165741 - duicontrolpanel crashes sometimes after tapping connect in WLAN security key dialog
+  * Fixes: NB#165447 - View is not updating fine when using list,
+  * Fixes: NB#161917 - Repeatedly tapping on context sensitive menu causes widget gallery to crash
+  * Fixes: NB#164850 - orientationFinished signals are sent even without change in orientation
+  * Fixes: NB#165337 - MInfoBanner is misplaced when appear() is called if the window is an MWindow and no other MSceneWindow has been appear()ed
+  * Fixes: NB#164387 - SeekBar tapping doesn't work well when seekbar is constantly updated
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 28 Apr 2010 16:51:51 +0300
+
+libmeegotouch (0.20.2-1) unstable; urgency=low
+
+  * Implemented: SWP#-DUI-2668, SWP#-DUI-2660, SWP#-DUI-2652, SWP#-DUI-2651
+  * Implemented: SWP#-DUI-2650, SWP#-DUI-2647, SWP#-DUI-2648, SWP#-DUI-2583
+  * Implemented: SWP#-DUI-2578, SWP#-DUI-2580, SWP#-DUI-2582, SWP#-DUI-2661
+  * Implemented: SWP#-DUI-2576, SWP#-DUI-2575, SWP#-DUI-632, SWP#-DUI-2574
+  * Implemented: SWP#-DUI-2613, SWP#-DUI-2555, SWP#-DUI-1047, SWP#-DUI-2571
+  * Implemented: SWP#-DUI-2570, SWP#-DUI-2593, SWP#-DUI-2617, SWP#-DUI-2643
+  * Implemented: SWP#-DUI-2641, SWP#-DUI-2592, SWP#-DUI-2625, SWP#-DUI-2624
+  * Implemented: SWP#-DUI-2623, SWP#-DUI-2621, SWP#-DUI-2667, SWP#-DUI-2618
+  * Implemented: SWP#-DUI-1473, SWP#-DUI-2572, SWP#-DUI-2594, SWP#-DUI-2749
+  * Implemented: SWP#-DUI-2750, SWP#-DUI-2698, SWP#-DUI-2697, SWP#-DUI-2682
+  * Implemented: SWP#-DUI-2683, SWP#-DUI-2684, SWP#-DUI-2681, SWP#-DUI-2718
+  * Implemented: SWP#-DUI-2734, SWP#-DUI-2721, SWP#-DUI-2719, SWP#-DUI-2717
+  * Implemented: SWP#-DUI-2699, SWP#-DUI-2686, SWP#-DUI-2596, SWP#-DUI-2581
+  * Implemented: SWP#-DUI-2712, SWP#-DUI-2711, SWP#-DUI-2705, SWP#-DUI-2694
+  * Implemented: SWP#-DUI-2690, SWP#-DUI-2669
+  * Fixes: NB#165100 - remove the custom pinch recognizer and use the Qt one.
+  * Fixes: NB#165196 - <MemLeak> mpannableviewport.cpp
+  * Fixes: NB#164131, NB#164917, NB#164605, NB#164598
+  * Fixes: NB#162723 - Missing icons in notifications (Problems again due the renaming)
+  * Fixes: NB#159883 - Misleading documentation in DuiInfoBanner
+  * Fixes: NB#164030 - DuiSeparator vertical and horizontal use the same background image
+  * Fixes: NB#161451 - MSceneManager should try to scroll the contents of a page before moving the window
+  * Fixes: NB#163778 - DuiObjectMenu does not use DuiSceneLayerEffect for "dimmed background"
+  * Fixes: NB#164846 - MWindow::setOrientationAngle() does not work in certain situation.
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Fri, 23 Apr 2010 11:20:21 +0300
+
+libmeegotouch (0.20.1-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#161875 - <MemLeak> duitheme.cpp
+  * Fixes: NB#164280 - Screen rotation setting dialog position before rotation happens
+  * Fixes: NB#163746 - ComboBox (pop-up list) interaction should be equal to the List interaction. Selected item should be visible when pop-up list is opened
+  * Fixes: NB#161412 - DuiPannableViewport crashes
+  * Fixes: NB#163796 - No unique object names of Dialog, Messagebox, DuiPopupList
+  * Fixes: NB#163400 - Buttons in query dialog are wrongly positioned in RTL mode (Arabic)
+  * Fixes: NB#163427 - Navigation controls are wrongly positioned after 180 degrees landscape rotation
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Wed, 21 Apr 2010 11:43:00 +0300
+
+libmeegotouch (0.20.0-1) unstable; urgency=low
+
+  * New version
+  * Fixes: NB#163725 - The text in DuiTextEdit is rendered on top of DuiDialog title pane when panning
+  * Fixes: NB#161484 - wrong application title in the application switcher
+  * Fixes: NB#163411 - widgetsgallery : scrollbar doesn't change position on switch to left-to-right like arabic
+  * Fixes: NB#162723 - Missing icons in notifications
+  * Fixes: NB#161300 - DuiLabel text set by setText is not displayed
+  * Fixes: NB#163457 - Navigation bar has wrong size after using virtual keyboard
+  * Fixes: NB#164194 - MListView calls resize() when the parent changes
+  * Fixes: NB#162907 - DuiList emits panningStopped/panningStarted -signals wildly when list is panned down  
+  * Fixes: NB#163347 - scrollTo is not working for DuiPopupList
+  * Fixes: NB#161404 - Service framework call causes caller to crash if caller doesn't have applicationwindow
+  * Fixes: NB#162495 - QtMaemo6Style treats a QWidget's hide() same as close()
+  * Fixes: NB#162716 - Missing close applet space icon
+  * Fixes: NB#161779 - DuiComboBox/DuiPopupList icons are not drawn properly on hardware
+  * Fixes: NB#162474 - displayEntered is not called when VKB is closed
+  * Fixes: NB#153618 - duistyle doesn't dashify mode names
+  * Fixes: NB#162807 - App menu is visible even after the action is completed
+  * Fixes: NB#160444 - Regression: Fennec crashes after opening Add-ons tab
+  * Fixes: NB#160580 - DuiButton ignores pointer location
+  * Fixes: NB#156114 - <CodeStyle> typo in doxygen documentation
+  * Fixes: NB#160934 - Different layout observed when launched in portrait mode
+  * Fixes: NB#161434 - slider labels are hidden by background objects
+  * Fixes: NB#161272 - Orientation change crashes after using DuiComboBox from DuiApplicationMenu.
+  * Fixes: NB#161781 - libdui crashes without any warning after installing new version due to presence of old preload.list
+  * Fixes: NB#161692 - The application menu doesn't properly handle removed actions
+  * Fixes: NB#162448 - The close icon for dialog is missing
+  * Fixes: NB#161700 - Changing the text of a DuiAction does not work
+  * Fixes: NB#159984 - DuiApplication should remove used up command line parameters
+  * Fixes: NB#162292 - dui-servicefwgen, setEscapeButtonMode has been removed
   * Fixes: NB#158420 - Bottom toolbar shown with hidden actions in portrait mode
+  * Fixes: NB#160803 - DuiLocale should provide a method for reading datetime from a string
+  * Fixes: NB#159706 - Blocking of repainting while there are pending events not working
+  * Fixes: NB#161454 - Internationalisation Guidelines is not up-to-date
+  * Fixes: NB#160501 - (focusandvisibility) Window focus changes mess up on-display visibility
+  * Fixes: NB#161213 - (Invisible_tabs) No tab is selected when the currently selected tab is set to invisible.
+  * Fixes: NB#161141 - DuiList shows overlapping items
+  * Fixes: NB#158297 - Dui application crashes attempt to read CSS entry "background-color: none;"
 
- -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 19 Mar 2010 11:20:34 +0200
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 16 Apr 2010 11:10:00 +0200
 
+libdui (0.19.11-1) unstable; urgency=low
+
+  * Changes: Enable reading the keyboardOpen contextProperty
+  * Fixes: NB#159393 - DuiButton does not draw if reparented before creation of the first DuiWindow
+  * Changes: DBus registration path for dui notification manager to /notificationmanager
+  * Fixes: NB#161127 - App menu should hide when back button is tapped
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 24 Mar 2010 13:23:57 +0200
+
+libdui (0.19.10-1) unstable; urgency=low
+
+  * Fixes: NB#160550 DuiLabel::setText() does not work when using "" as a parameter.
+  * Fixes: NB#159960 -  icons: icon-l-brightness-* are missing from theme
+  * Fixes: Object menu page "jumping" problem.
+  * Fixes: NB#159761 - DuiList does not update correctly on insertRows() and setData()
+  * Fixes: NB#159761 -  DuiList does not update correctly on insertRows() and setData()
+  * Fixes: NB#159042 DuiLabel: Unable to handle strings in presence of certain characters
+  * Fixes: NB#159345 - Applet Space doesn't reappear after rotating the device
+  * Fixes: NB#159180 - Startup crash in DuiGConfItem
+  * Fixes: NB#160887 -  DuiSceneManager::execDialog() should return actual resul
+  * Fixes: not working object menu on the device
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 22 Mar 2010 10:48:19 +0200
+  
 libdui (0.19.9-1) unstable; urgency=low
 
   * Unit test fixes

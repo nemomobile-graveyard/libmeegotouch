@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = containertest
-CONFIG += dui # Requires libdui to be installed
+CONFIG += m # Requires libm to be installed
 
 # Input
 SOURCES += main.cpp
@@ -10,7 +10,7 @@ QMAKE_LIBDIR += ../../lib/
 
 # The following lines are only to allow building the
 # example inside the source tree without installing
-# libdui first:
+# libm first:
 INCLUDEPATH += ../../src/include
 QMAKE_LIBDIR += ../../lib/
-LIBS += -ldui
+LIBS += -lmeegotouch

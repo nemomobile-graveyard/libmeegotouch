@@ -1,5 +1,5 @@
 DEPENDS=
-contains( DUI_BUILD_FEATURES, coverage ) {
+contains( M_BUILD_FEATURES, coverage ) {
     include(coverage.pri)
 }
 

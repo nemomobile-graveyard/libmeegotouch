@@ -1,15 +1,23 @@
 /*! \page news What's New in DirectUI
+
+\section v0202
+
+\subsection New
+
+- MSceneManager now allows a widget to request cursor visibility directly via
+ the ensureCursorVisible() slot.
+
+
 \section v0200
 
 \subsection New
 
-- DuiWidget now has event handlers for gestures:
-    - DuiWidget::gestureEvent()
-    - DuiWidget::tapAndHoldGestureEvent()
-    - DuiWidget::panGestureEvent()
-    - DuiWidget::pinchGestureEvent()
-    - DuiWidget::tapGestureEvent()
-    - DuiWidget::swipeGestureEvent()
+- DuiWidget, DuiWidgetController and DuiWidgetView now have event handlers for gestures:
+    - tapAndHoldGestureEvent()
+    - panGestureEvent()
+    - pinchGestureEvent()
+    - tapGestureEvent()
+    - swipeGestureEvent()
 
 - The DuiApplicationPage's DuiPannableViewport is now accessible through the pannableViewport() method.
 
@@ -55,7 +63,13 @@
 - DuiWindow::setCloseOnLazyShutdown(bool) (and bool closeOnLazyShutdown() const) to
   force close instead of hide during lazy shutdown.
 
+- DuiPannableViewport now allows changing the position indicator to a custom made one.
+
+- MComboBox now have the progress indicator that can be shown for long taking selections.
+
 \subsection removed Removed or Renamed
+
+- DuiRmiClient and DuiRmiServer was removed.
 
 - Removed DuiPopupList's property batchSize and signals: itemModelChanged, selectionModelChanged.
 
@@ -125,6 +139,30 @@
 - DuiDialog::DuiDialog(title, centralWidget, standardButtons) was removed.
   Use DuiDialog::DuiDialog(title, standardButtons) and DuiDialog::setCentralWidget() instead.
 - Removed Dui::inputEnabledQuery (was deprecated in 0.16)
+- DuiPannableViewport::sizePosChanged() signal was split into three signals: positionChanged(),
+  rangeChanged() and viewportSizeChanged().
+- DuiPositionIndicator had several of its methods renamed:
+  - pannedRange() was renamed to range()
+  - pannedPos() was renamed to position()
+  - updateSizePosData() was split into three new methods: setPosition(), setViewportSize() and setRange().
+- Removed DuiApplication::releaseMemoryRequested() (was deprecated in 0.19) - will be replaced by Harmattan System Memory Notification API
+- Removed DuiDesktopEntry::xMaemoPrestarted() (was deprecated in 0.19) - not relevant anymore. No replacement needed
+
+- Libdui modularization:
+  - moved src/applicationextension and src/mashup into new library libduiextensions.
+  - moved src/settingslanguage into new library libduisettings.
+  - moved part of the views in src/widgets/views to new library libduiviews.
+  - moved the rest of src/ to new library libduicore.
+  - You possibly have to update your include pathes.
+  - You possibly have to update your linking statement in the .pro
+    file. Before: -ldui, now: -lduicore -lduiviews -lduisettings -lduiextensions.
+    Or a subset of these four libs.
+  - Also make sure that you update duitheme in sync with this update, as
+    it requires some changes in duitheme.
+
+- DuiWidgetController::showAnimation() and hideAnimation() methods were removed.
+- Removed DuiWidgetView::contentPosition().
+- dismissAnimation() was removed from DuiSceneWindowStyle.
 
 \section v0190
 

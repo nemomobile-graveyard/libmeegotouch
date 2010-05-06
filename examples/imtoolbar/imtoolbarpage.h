@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -20,12 +20,12 @@
 #ifndef IMTOOLBARPAGE_H
 #define IMTOOLBARPAGE_H
 
-#include <DuiApplicationPage>
+#include <MApplicationPage>
 
-class DuiGridLayoutPolicy;
+class MGridLayoutPolicy;
 /** /brief Page that shows the features of the custom toolbar in virtual keyboard
 */
-class ImToolbarPage : public DuiApplicationPage
+class ImToolbarPage : public MApplicationPage
 {
     Q_OBJECT
 public:
@@ -33,7 +33,7 @@ public:
     virtual ~ImToolbarPage();
 
     virtual void createContent();
-    DuiGridLayoutPolicy *createAndSetupGridPolicy(DuiWidget *panel);
+    MGridLayoutPolicy *createAndSetupGridPolicy(QGraphicsWidget *panel);
 };
 
 #endif

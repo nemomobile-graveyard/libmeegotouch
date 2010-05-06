@@ -4,7 +4,7 @@
 ** All rights reserved.
 ** Contact: Nokia Corporation (directui@nokia.com)
 **
-** This file is part of libdui.
+** This file is part of libmeegotouch.
 **
 ** If you have questions regarding the use of this file, please contact
 ** Nokia at directui@nokia.com.
@@ -31,9 +31,9 @@
 #include <QPainter>
 #include <QDebug>
 
-#include <duiapplicationmenubuttonstyle.h>
-#include <DuiScalableImage>
-#include <DuiTheme>
+#include <mapplicationmenubuttonstyle.h>
+#include <MScalableImage>
+#include <MTheme>
 
 QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
 {
@@ -57,19 +57,19 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
     QStyleOption option;
     option.initFrom(this);
 
-    const DuiApplicationMenuButtonStyle *iconStyle =
-        static_cast<const DuiApplicationMenuButtonStyle *>(QtMaemo6StylePrivate::duiStyle(option.state,
-                "DuiApplicationMenuButtonStyle", "NavigationBarMenuButton"));
+    const MApplicationMenuButtonStyle *iconStyle =
+        static_cast<const MApplicationMenuButtonStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
+                "MApplicationMenuButtonStyle", "NavigationBarMenuButton"));
     if (iconStyle) {
-        m_titleLabelMenuButton->setPixmap(*DuiTheme::pixmapCopy(iconStyle->arrowIcon(), iconStyle->arrowIconSize()));
+        m_titleLabelMenuButton->setPixmap(*MTheme::pixmapCopy(iconStyle->arrowIcon(), iconStyle->arrowIconSize()));
     }
     connect(m_titleLabelMenuButton, SIGNAL(clicked()), this, SIGNAL(menuLabelClicked()));
 
 
     QSpacerItem *spacer = new QSpacerItem(0, 0);
-    const DuiWidgetStyle *spacerStyle =
-        static_cast<const DuiWidgetStyle *>(QtMaemo6StylePrivate::duiStyle(option.state,
-                                            "DuiWidgetStyle", "NavigationBarMenuButtonArrowImage"));
+    const MWidgetStyle *spacerStyle =
+        static_cast<const MWidgetStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
+                                            "MWidgetStyle", "NavigationBarMenuButtonArrowImage"));
     if (spacerStyle) {
         spacer->changeSize(spacerStyle->marginLeft(), 0);
     }
