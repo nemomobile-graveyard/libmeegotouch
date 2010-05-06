@@ -286,7 +286,7 @@ QString MLocalePrivate::createLocaleString(const QString &language,
 }
 
 #ifdef HAVE_ICU
-icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(icu::Locale locale)
+icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(const icu::Locale &locale)
 {
     // This is a bit dirty but the only way to currently get the symbols
     // is like this. Only the internal API supports directly creating DateFormatSymbols

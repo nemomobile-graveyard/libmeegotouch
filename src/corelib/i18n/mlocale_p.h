@@ -90,7 +90,7 @@ public:
     // creates an icu::Locale for specific category
     icu::Locale getCategoryLocale(MLocale::Category category) const;
 
-    static icu::DateFormatSymbols *createDateFormatSymbols(icu::Locale locale);
+    static icu::DateFormatSymbols *createDateFormatSymbols(const icu::Locale &locale);
 
     // creates a dateformat object for datetime formatting/parsing
     // the caller is responsible for deleting the dateformat object
