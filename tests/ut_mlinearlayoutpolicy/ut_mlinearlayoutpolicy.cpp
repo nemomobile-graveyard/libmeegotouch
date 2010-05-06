@@ -47,6 +47,7 @@ Ut_MLinearLayoutPolicy::Ut_MLinearLayoutPolicy()
     , m_mockItem200(0)
     , m_mockItem300(0)
     , m_mockItem400(0)
+    , m_form(0)
 { }
 
 Ut_MLinearLayoutPolicy::~Ut_MLinearLayoutPolicy()
