@@ -199,11 +199,24 @@ bool MTextEditPrivate::doBackspace()
     }
 
     QTextCursor currentPositionCursor = q->textCursor();
+    int position = currentPositionCursor.position();
+
+    if (position == 0) {
+        return false;
+    }
+
     currentPositionCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
     QTextDocumentFragment currentFragment = currentPositionCursor.selection();
+
+    QTextCharFormat format;
+    // setPosition() is required to get the style that would be applied when a text is inserted at the cursor position
+    currentPositionCursor.setPosition(position);
+    format = currentPositionCursor.charFormat();
+
     cursor()->deletePreviousChar();
 
     if (validateCurrentBlock() == true) {
+        cursor()->setCharFormat(format);
         return true;
 
     } else {
@@ -317,7 +330,7 @@ bool MTextEditPrivate::doSignCycle()
   * \param text text to be inserted
   * \return true if some text was successfully inserted
   */
-bool MTextEditPrivate::doTextInsert(const QString &text)
+bool MTextEditPrivate::doTextInsert(const QString &text, bool usePreeditStyling)
 {
     Q_Q(MTextEdit);
 
@@ -346,6 +359,8 @@ bool MTextEditPrivate::doTextInsert(const QString &text)
     int textPosition = 0;
     int filteredTextLength = filteredText.length();
     int snippetLength = -1;
+    int listIndex = -1;
+    int count = 0;
 
     do {
         if (textPosition >= filteredTextLength) {
@@ -372,7 +387,12 @@ bool MTextEditPrivate::doTextInsert(const QString &text)
         QString textSnippet = filteredText.mid(textPosition, snippetLength);
 
         int cursorPosBefore = cursor()->position();
-        cursor()->insertText(textSnippet);
+
+        if (usePreeditStyling == true) {
+            insertTextWithPreeditStyling(textSnippet, listIndex, count);
+        } else {
+            cursor()->insertText(textSnippet);
+        }
 
         if (validateCurrentBlock() == true) {
             changed = true;
@@ -481,7 +501,10 @@ void MTextEditPrivate::setPreeditText(const QString &text,
     // If this becomes problematic, we should move this formatting to paintContext of the view.
     layout->setAdditionalFormats(preeditStyles);
 
-    textCursor->insertText(text);
+    int listIndex = -1;
+    int count = 0;
+    insertTextWithPreeditStyling(text, listIndex, count);
+    clearUnusedPreeditStyling(listIndex, count);
 
     // mark preedit as selection
     int position = textCursor->position();
@@ -497,6 +520,8 @@ void MTextEditPrivate::setPreeditText(const QString &text,
 void MTextEditPrivate::commitPreedit()
 {
     Q_Q(MTextEdit);
+
+    preeditStyling.clear();
 
     // Nothing to commit if not pre-editing
     if (isPreediting() == false) {
@@ -715,6 +740,172 @@ QEvent::Type MTextEditPrivate::translateGraphicsSceneMouseTypeToQMouse(QEvent::T
     return result;
 }
 
+/*!
+ * \brief stores the style information of text in pre-edit mode
+ * \param start position from where to start reading the style for storing
+ * \param end position where to end reading the style
+ */
+void MTextEditPrivate::storePreeditTextStyling(int start, int end)
+{
+    QTextCursor *textCursor = cursor();
+    int cursorPosition = textCursor->position();
+
+    for (int i = start + 1; i <= end; ++i) {
+        textCursor->setPosition(i, QTextCursor::KeepAnchor);
+        QTextCharFormat charFormat = textCursor->charFormat();
+
+        if (preeditStyling.isEmpty() == false) {
+            styleData &currentStyle = preeditStyling.last();
+
+            if (currentStyle.charFormat != charFormat) {
+                styleData newStyle;
+
+                newStyle.charFormat = charFormat;
+                newStyle.count = 1;
+                preeditStyling.push_back(newStyle);
+            } else {
+                currentStyle.count++;
+            }
+        } else {
+            styleData newStyle;
+
+            newStyle.charFormat = charFormat;
+            newStyle.count = 1;
+            preeditStyling.push_back(newStyle);
+        }
+    }
+
+    textCursor->setPosition(cursorPosition, QTextCursor::KeepAnchor);
+}
+
+
+/*!
+ * \brief inserts text by applying the stored preedit styling information
+ * \param currentListIndex styling list index to start reading from the stored styling
+ * \param currentCount character index within the current styling list index
+ */
+void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount)
+{
+    QTextCursor *textCursor = cursor();
+    const int textLength = text.length();
+    int listIndex = currentListIndex;
+    int count = currentCount;
+    int preeditStyleSize = preeditStyling.size();
+    int currentIndex = textLength;
+
+    QTextCharFormat format = textCursor->charFormat();
+
+    styleData newStyle;
+    newStyle.charFormat = format;
+    newStyle.count = 1;
+
+    if (preeditStyleSize == 0) {
+        preeditStyling.push_back(newStyle);
+        preeditStyleSize++;
+    }
+
+    for (int i = 0; i < textLength; ++i) {
+        if (preeditStyling.isEmpty() != true) {
+            if (count == 0) {
+                listIndex++;
+                if (listIndex == preeditStyleSize) {
+                    QTextCharFormat charFormat = preeditStyling.at(preeditStyleSize - 1).charFormat;
+                    textCursor->setCharFormat(charFormat);
+                    currentIndex = i;
+                    listIndex = preeditStyleSize - 1;
+                    break;
+                }
+
+                count = preeditStyling.at(listIndex).count;
+            }
+
+            if (count == 0) {
+                styleData &lastStyle = preeditStyling[listIndex];
+                lastStyle.count++;
+                count = 1;
+            }
+
+            QTextCharFormat charFormat = preeditStyling.at(listIndex).charFormat;
+            textCursor->setCharFormat(charFormat);
+            count--;
+        }
+
+        textCursor->insertText(text.at(i));
+    }
+
+    for (int i = currentIndex; i < textLength; ++i) {
+        if (preeditStyling.isEmpty() != true) {
+            styleData &newStyle = preeditStyling[listIndex];
+            newStyle.count++;
+        }
+        textCursor->insertText(text.at(i));
+    }
+
+    currentListIndex = listIndex;
+    currentCount = count;
+}
+
+
+/*!
+ * \brief adds a style to the stored preedit styling
+ * \param StyleType current style type
+ */
+void MTextEditPrivate::addStyleToPreeditStyling(StyleType currentStyleType, bool setValue)
+{
+    QTextCharFormat format;
+    int preeditStyleSize = preeditStyling.size();
+
+    if (preeditStyleSize > 0) {
+        format = preeditStyling[preeditStyleSize - 1].charFormat;
+    }
+
+    if (currentStyleType == Underline) {
+        format.setFontUnderline(setValue);
+    } else if (currentStyleType == Italic) {
+        format.setFontItalic(setValue);
+    } else { // bold
+        QFont::Weight wt = QFont::Normal;
+        if (setValue)
+            wt = QFont::Bold;
+
+        format.setFontWeight(wt);
+    }
+
+    if ((preeditStyleSize > 0) && (preeditStyling[preeditStyleSize - 1].count == 0)) {
+        preeditStyling[preeditStyleSize - 1].charFormat = format;
+    } else {
+        styleData currentStyle;
+        currentStyle.charFormat = format;
+        currentStyle.count = 0;
+        preeditStyling.push_back(currentStyle);
+    }
+}
+
+
+/*!
+ * \brief clears the unused styling from stored preedit styling information
+ * \param currentListIndex styling list index to start erasing from the stored styling
+ * \param currentCount character index within the current styling list index
+ */
+void MTextEditPrivate::clearUnusedPreeditStyling(int currentListIndex, int currentCount)
+{
+    int preeditTextStyleSize = preeditStyling.size();
+
+    if ((currentListIndex < 0) || (currentListIndex >= preeditTextStyleSize)) {
+        return;
+    }
+
+    styleData &style = preeditStyling[currentListIndex];
+    style.count -= currentCount;
+
+    for (int i = currentListIndex + 1; i < preeditTextStyleSize; i++) {
+        preeditStyling.removeAt(i);
+    }
+
+    if (style.count == 0) {
+        preeditStyling.removeAt(currentListIndex);
+    }
+}
 
 void MTextEditPrivate::_q_confirmCompletion(const QString &completion)
 {
@@ -997,8 +1188,15 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
 
     QTextDocumentFragment selectedFragment;
     int selectionStart = -1;
+    QTextCharFormat format;
 
     if (wasSelecting == true) {
+        QTextCursor positionCursor = textCursor();
+        int position = positionCursor.selectionStart();
+        // setPosition() is required to get the style that would be applied when a text is inserted at the position + 1
+        positionCursor.setPosition(position + 1);
+        format = positionCursor.charFormat();
+
         selectionStart = d->cursor()->selectionStart();
         selectedFragment = d->cursor()->selection();
         d->cursor()->removeSelectedText();
@@ -1015,6 +1213,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         if (wasSelecting == false) {
             modified = d->doBackspace();
         } else {
+            d->cursor()->setCharFormat(format);
             modified = true;
         }
         break;
@@ -1157,6 +1356,7 @@ bool MTextEdit::insert(const QString &text)
         emit selectionChanged();
     } else if (mode() == MTextEditModel::EditModeActive) {
         d->removePreedit();
+        d->preeditStyling.clear();
     }
 
     d->setMode(MTextEditModel::EditModeBasic);
@@ -1186,6 +1386,7 @@ bool MTextEdit::setText(const QString &text)
 
     // clear the state
     d->removePreedit();
+    d->preeditStyling.clear();
     d->cursor()->clearSelection();
     document()->clear();
     d->setMode(MTextEditModel::EditModeBasic);
@@ -1296,6 +1497,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                 int end = breakIterator.next(eventCursorPosition);
                 QString preedit = text.mid(start, end - start);
 
+                d->storePreeditTextStyling(start, end);
                 d->cursor()->setPosition(start);
                 d->cursor()->setPosition(end, QTextCursor::KeepAnchor);
                 QTextDocumentFragment preeditFragment = d->cursor()->selection();
@@ -1317,6 +1519,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                 if (injectionAccepted == false) {
                     d->cursor()->insertFragment(preeditFragment);
                     d->setCursorPosition(eventCursorPosition);
+                    d->preeditStyling.clear();
                 }
 
             } else {
@@ -1515,7 +1718,8 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     // append possible commit string
     if (commitString.isEmpty() == false) {
-        insertionSuccess = d->doTextInsert(commitString);
+        insertionSuccess = d->doTextInsert(commitString, true);
+        d->preeditStyling.clear();
 
         if (insertionSuccess == false && wasSelecting == true) {
             // validation failed, put the old selection back

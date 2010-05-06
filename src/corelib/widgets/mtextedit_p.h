@@ -54,7 +54,7 @@ public:
     bool doBackspace();
     bool doDelete();
     bool doTab();
-    bool doTextInsert(const QString &text);
+    bool doTextInsert(const QString &text, bool usePreeditStyling = false);
     bool onReturnPressed(QKeyEvent *event);
     bool doSignCycle();
 
@@ -77,9 +77,28 @@ public:
 
     static QEvent::Type translateGraphicsSceneMouseTypeToQMouse(QEvent::Type input);
 
+    enum StyleType
+    {
+        Bold,
+        Italic,
+        Underline
+    };
+
+    struct styleData
+    {
+        QTextCharFormat charFormat;
+        int count;
+    };
+    QList<styleData> preeditStyling;
+
+    void storePreeditTextStyling(int start, int end);
+    void addStyleToPreeditStyling(StyleType currentStyleType, bool setValue);
+    void insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount);
+    void clearUnusedPreeditStyling(int currentListIndex, int currentCount);
+
     void _q_confirmCompletion(const QString &);
 
-    bool copy();
+    virtual bool copy();
 
 private:
     bool pendingSoftwareInputPanelRequest;
