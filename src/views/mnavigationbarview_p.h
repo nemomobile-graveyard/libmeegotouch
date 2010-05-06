@@ -46,11 +46,9 @@ public:
     void notificationFlagChanged();
     void toolBarChanged();
 
-    QGraphicsGridLayout *layout;
-    QGraphicsLinearLayout *toolbarPlaceholderLayout;
+    QGraphicsLinearLayout *layout;
 
     MApplicationMenuButton *applicationMenuButton;
-    MWidget *toolbarPlaceholder;
     MToolBar *toolBar;
 };
 

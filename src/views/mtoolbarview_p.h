@@ -46,16 +46,14 @@ public:
     MToolBarViewPrivate(MToolBar *controller);
     virtual ~MToolBarViewPrivate();
 
-    virtual void init();
-    virtual void createPolicy(M::Orientation o);
+    void init();
 
-    virtual void add(QAction *action, QAction *before, bool refreshSpacer);
-    virtual void remove(QAction *action, bool refreshPolicies);
-    virtual void change(QAction *action);
+    void add(QAction *action, QAction *before);
+    void remove(QAction *action);
+    void change(QAction *action);
 
 protected:
-    virtual bool eventFilter(QObject *obj, QEvent *event);
-    virtual void addActions();
+    bool eventFilter(QObject *obj, QEvent *event);
     MWidget *createWidget(QAction *action);
     MButton *createButton(QAction *action);
     bool isLocationValid(QAction *action, MAction::Location loc);
@@ -75,7 +73,6 @@ protected:
     bool changeLocation(QAction *action);
     void changeData(QAction *action);
     bool changeVisibility(QAction *action);
-    void refreshSpacers();
 
 protected:
     MToolBarView *q_ptr;
@@ -86,7 +83,6 @@ protected:
     MLinearLayoutPolicy *portraitPolicy;
     QHash<QAction *, MWidget *> leasedWidgets;
     QHash<QAction *, MWidget *> buttons;
-    QList<QGraphicsWidget *> freeSpacers;
 
     static const int maxWidgets;
 
@@ -112,19 +108,6 @@ private:
     ActionPlacementData landscapeData;
     ActionPlacementData portraitData;
 
-    void removeAction(MLinearLayoutPolicy *policy,
-                      ActionPlacementData &policyData,
-                      QAction *action);
-    void removeAction(MLinearLayoutPolicy *policy,
-                      ActionPlacementData &policyData,
-                      QAction *action,
-                      MWidget *widget);
-    void clearPolicy(MLinearLayoutPolicy *policy, ActionPlacementData &policyData);
-    void retrieveSpacers(MLinearLayoutPolicy *policy, ActionPlacementData &policyData);
-    void insertSpacers(MLinearLayoutPolicy *policy, const ActionPlacementData &policyData);
-    void insertSpacer(MLinearLayoutPolicy *policy, int insertIndex);
-    QGraphicsWidget *createSpacer();
-    bool isItemSpacer(QGraphicsLayoutItem *item);
     bool refreshPolicyData(QAction *action,
                            MAction::Location location,
                            ActionPlacementData &policyData);

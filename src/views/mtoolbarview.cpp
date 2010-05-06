@@ -40,7 +40,6 @@ const int MToolBarViewPrivate::maxWidgets = 4;
 MToolBarViewPrivate::MToolBarViewPrivate(MToolBar *controller)
     : QObject(),
       q_ptr(0),
-      widgetsContainer(0),
       layout(0),
       landscapePolicy(0),
       portraitPolicy(0),
@@ -57,51 +56,42 @@ MToolBarViewPrivate::~MToolBarViewPrivate()
     clearWidgets(leasedWidgets);
     clearWidgets(buttons);
     removeEventFilter(controller);
-    QGraphicsLinearLayout *controllerlayout = (QGraphicsLinearLayout *)(controller->layout());
-    controllerlayout->removeItem(widgetsContainer);
-    delete widgetsContainer;
 }
 
 void MToolBarViewPrivate::init()
 {
-    widgetsContainer = new MWidget();
-    widgetsContainer->setObjectName("toolbarContainer");
-
-    layout = new MLayout(widgetsContainer);
+    layout = new MLayout;
     layout->setAnimation(NULL);
     layout->setContentsMargins(0, 0, 0, 0);
 
-    createPolicy(M::Landscape);
-    createPolicy(M::Portrait);
+    landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    landscapePolicy->setSpacing(0);
+    layout->setLandscapePolicy(landscapePolicy);
+    landscapeData.reset();
+
+    portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    portraitPolicy->setSpacing(0);
+    layout->setPortraitPolicy(portraitPolicy);
+    portraitData.reset();
 
     QGraphicsLinearLayout *controllerlayout = (QGraphicsLinearLayout *)(controller->layout());
-    controllerlayout->addItem(widgetsContainer);
+    controllerlayout->addStretch();
+    controllerlayout->addItem(layout);
 
-    addActions();
-}
-
-void MToolBarViewPrivate::createPolicy(M::Orientation orientation)
-{
-    MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
-    policy->setSpacing(0);
-    policy->setContentsMargins(0, 0, 0, 0);
-    if (orientation == M::Landscape) {
-        landscapePolicy = policy;
-        layout->setLandscapePolicy(landscapePolicy);
-        landscapeData.reset();
-    } else {
-        portraitPolicy = policy;
-        layout->setPortraitPolicy(portraitPolicy);
-        portraitData.reset();
+    //Add any existing actions now
+    foreach(QAction *action, controller->actions()) {
+        add(action, 0);
     }
+
 }
 
-void MToolBarViewPrivate::add(QAction *action, QAction *before, bool refreshSpacer)
+void MToolBarViewPrivate::add(QAction *action, QAction *before)
 {
     bool validLocation = (isLocationValid(action, MAction::ToolBarLandscapeLocation) ||
                           isLocationValid(action, MAction::ToolBarPortraitLocation));
     if (!action || !validLocation ||
             (hasWidget(action) && !isWidgetUsable(action))) {
+
         return;
     }
 
@@ -122,9 +112,6 @@ void MToolBarViewPrivate::add(QAction *action, QAction *before, bool refreshSpac
             if (addToPortrait) {
                 portraitPolicy->insertItem(getItemIndex(portraitPolicy, before), w);
             }
-            if (refreshSpacer) {
-                refreshSpacers();
-            }
             added = true;
         }
     }
@@ -134,15 +121,31 @@ void MToolBarViewPrivate::add(QAction *action, QAction *before, bool refreshSpac
     }
 }
 
-void MToolBarViewPrivate::remove(QAction *action, bool refreshPolicies)
+void MToolBarViewPrivate::remove(QAction *action)
 {
     MWidget *button = buttons.value(action);
     MWidget *leased = leasedWidgets.value(action);
     MWidget *widget = (button != 0) ? button : leased;
 
     if (widget) {
-        removeAction(landscapePolicy, landscapeData, action, widget);
-        removeAction(portraitPolicy, portraitData, action, widget);
+        bool isTextEditWidget = hasTextEditWidget(action);
+        if(landscapePolicy->indexOf(widget) >= 0) {
+            if(isTextEditWidget) {
+                landscapeData.hasTextEditor = false;
+                //one text-edit widget takes space of two buttons
+                landscapeData.placedActions -= 2;
+            } else
+                landscapeData.placedActions--;
+        }
+        if(portraitPolicy->indexOf(widget) >= 0) {
+            if(isTextEditWidget) {
+                portraitData.hasTextEditor = false;
+                //one text-edit widget takes space of two buttons
+                portraitData.placedActions -= 2;
+            } else
+                portraitData.placedActions--;
+        }
+
         layout->removeItem(widget);
     }
 
@@ -153,35 +156,28 @@ void MToolBarViewPrivate::remove(QAction *action, bool refreshPolicies)
         releaseWidget(action, leased);
         leasedWidgets.remove(action);
     }
-    if (refreshPolicies) {
-        clearPolicy(landscapePolicy, landscapeData);
-        clearPolicy(portraitPolicy, portraitData);
-        addActions();
-    }
 }
 
 void MToolBarViewPrivate::change(QAction *action)
 {
-    if (changeLocation(action) || changeVisibility(action)) {
-        clearPolicy(landscapePolicy, landscapeData);
-        clearPolicy(portraitPolicy, portraitData);
-        addActions();
-    }
     changeData(action);
 }
 
 bool MToolBarViewPrivate::eventFilter(QObject *obj, QEvent *e)
 {
     QActionEvent *actionEvent = dynamic_cast<QActionEvent *>(e);
+    if (!controller->childItems().isEmpty()) {
+        QList<QGraphicsItem *>children = controller->childItems();
+    }
 
     if (actionEvent) {
         switch (e->type()) {
         case QEvent::ActionRemoved: {
-            remove(actionEvent->action(), true);
+            remove(actionEvent->action());
             break;
         }
         case QEvent::ActionAdded: {
-            add(actionEvent->action(), actionEvent->before(), true);
+            add(actionEvent->action(), actionEvent->before());
             break;
         }
         case QEvent::ActionChanged: {
@@ -193,27 +189,15 @@ bool MToolBarViewPrivate::eventFilter(QObject *obj, QEvent *e)
         }
         }
     }
-
     return QObject::eventFilter(obj, e);
-}
-
-void MToolBarViewPrivate::addActions()
-{
-    QList<QAction *> acts = controller->actions();
-    int count = acts.count();
-    for (int i = 0; i < count; ++i) {
-        add(acts.at(i), 0, false);
-    }
-    refreshSpacers();
 }
 
 MWidget *MToolBarViewPrivate::createWidget(QAction *action)
 {
     // If widget is not already created then create it
     MWidget *widget = buttons.value(action);
-    if (!widget) {
+    if (!widget)
         widget = leasedWidgets.value(action);
-    }
     if (!widget) {
         MWidgetAction *widgetAction = qobject_cast<MWidgetAction *>(action);
         if (widgetAction) {
@@ -222,6 +206,8 @@ MWidget *MToolBarViewPrivate::createWidget(QAction *action)
         } else {
             widget = createButton(action);
             buttons.insert(action, widget);
+            Q_ASSERT(widget);
+            Q_ASSERT(buttons.value(action) == widget);
         }
     }
     widget->setVisible(true);
@@ -288,7 +274,7 @@ MWidget *MToolBarViewPrivate::requestWidget(MAction *action)
     MWidget *widget = 0;
     MWidgetAction *widgetAction = qobject_cast<MWidgetAction *>(action);
     if (widgetAction) {
-        widget = widgetAction->requestWidget(widgetsContainer);
+        widget = widgetAction->requestWidget(NULL);
     }
     return widget;
 }
@@ -318,34 +304,6 @@ bool MToolBarViewPrivate::hasTextEditWidget(QAction *action)
         textEditWidget = qobject_cast<MTextEdit *>(widgetAction->widget());
     }
     return (textEditWidget != 0);
-}
-
-void MToolBarViewPrivate::removeAction(MLinearLayoutPolicy *policy,
-        ActionPlacementData &policyData,
-        QAction *action)
-{
-    MWidget *button = buttons.value(action);
-    MWidget *leased = leasedWidgets.value(action);
-    MWidget *widget = (button != 0) ? button : leased;
-
-    removeAction(policy, policyData, action, widget);
-}
-
-void MToolBarViewPrivate::removeAction(MLinearLayoutPolicy *policy,
-        ActionPlacementData &policyData,
-        QAction *action,
-        MWidget *widget)
-{
-    bool hasTextEdit = hasTextEditWidget(action);
-    int index = policy->indexOf(widget);
-    if (index >= 0) {
-        policyData.placedActions--;
-        if (hasTextEdit) {
-            policyData.hasTextEditor = false;
-            policyData.placedActions--;
-        }
-        policy->removeAt(index);
-    }
 }
 
 bool MToolBarViewPrivate::isWidgetUsable(MWidgetAction *widgetAction)
@@ -384,7 +342,7 @@ bool MToolBarViewPrivate::changeLocation(QAction *action)
     bool validInLandscape = isLocationValid(action, MAction::ToolBarLandscapeLocation);
     bool validInPortrait = isLocationValid(action, MAction::ToolBarPortraitLocation);
     if (!validInLandscape && !validInPortrait) {
-        remove(action, false);
+        remove(action);
     }
 
     return true;
@@ -420,132 +378,24 @@ bool MToolBarViewPrivate::changeVisibility(QAction *action)
     return false;
 }
 
-void MToolBarViewPrivate::clearPolicy(MLinearLayoutPolicy *policy,
-                                        ActionPlacementData &policyData)
-{
-    while (policy->count()) {
-        policy->removeAt(0);
-    }
-    policyData.reset();
-}
-
-void MToolBarViewPrivate::refreshSpacers()
-{
-    retrieveSpacers(landscapePolicy, landscapeData);
-    retrieveSpacers(portraitPolicy, portraitData);
-
-    insertSpacers(landscapePolicy, landscapeData);
-    insertSpacers(portraitPolicy, portraitData);
-}
-
-void MToolBarViewPrivate::retrieveSpacers(MLinearLayoutPolicy *policy,
-        ActionPlacementData &policyData)
-{
-    policyData.mode = Managed;
-    QGraphicsLayoutItem *item = 0;
-    int count = policy->count();
-    for (int i = count - 1; i >= 0; --i) {
-        item = policy->itemAt(i);
-        if (isItemSpacer(item)) {
-            policy->removeAt(i);
-            freeSpacers.append((QGraphicsWidget *)item);
-        } else {
-            MWidget *widget = (MWidget *)item;
-            QAction *action = leasedWidgets.key(widget);
-            if (action && !hasTextEditWidget(action)) {
-                policyData.mode = Unmanaged;
-            }
-        }
-    }
-}
-
-void MToolBarViewPrivate::insertSpacers(MLinearLayoutPolicy *policy,
-        const ActionPlacementData &policyData)
-{
-    // Add spacer(s) only if there is no text-editor action placed or
-    // the widgets are not placed in unmanaged way or there are some
-    // actions in the policy
-    int count = policy->count();
-    if (policyData.mode == Unmanaged || policyData.hasTextEditor || count <= 0)
-        return;
-
-    // In landscape, spacer need to be added for right alignment
-    if (policy == landscapePolicy) {
-        if (count < maxWidgets)
-            insertSpacer(policy, 0);
-        return;
-    }
-
-    // In portrait, spacer(s) need to be added if portrait actions
-    // are less then max actions OR in case of maximum actions,
-    // no spacers in the start and in the end
-    int spacersCount = count + 1;
-    for (int i = 0; i < spacersCount; ++i) {
-        if (count < maxWidgets) {
-            insertSpacer(policy, i << 1); //indices are multiples of 2 i.e 0,2,4,6(if max=4)
-        } else if ((i >= 0) && (i < (count - 1))) {
-            insertSpacer(policy, (i << 1) + 1); //indices are 1,3,5 (if max=4)
-        }
-    }
-
-}
-
-void MToolBarViewPrivate::insertSpacer(MLinearLayoutPolicy *policy,
-        int insertIndex)
-{
-    QGraphicsWidget *item = 0;
-    if (freeSpacers.count() > 0) { //use existing spacer, if any
-        item = freeSpacers.at(0);
-        freeSpacers.removeAt(0);
-    } else {
-        item = createSpacer();
-    }
-    policy->insertItem(insertIndex, item);
-}
-
-QGraphicsWidget *MToolBarViewPrivate::createSpacer()
-{
-    QGraphicsWidget *spacer = new QGraphicsWidget(widgetsContainer);
-    spacer->setMinimumSize(0, 0);
-    spacer->setMaximumSize(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-    return spacer;
-}
-
-bool MToolBarViewPrivate::isItemSpacer(QGraphicsLayoutItem *item)
-{
-    // Since spacers are QGraphicsWidget object and if casting of widget
-    // to MWidget fails, then its a policy specific spacer.
-    QGraphicsWidget *widget = (QGraphicsWidget *)item;
-    MWidget *mWidget = qobject_cast<MWidget *>(widget);
-    return (!mWidget && (widget->parentItem() == widgetsContainer));
-}
-
 bool MToolBarViewPrivate::refreshPolicyData(QAction *action,
         MAction::Location location,
         ActionPlacementData &policyData)
 {
-    bool add = false;
-    if ((policyData.placedActions < maxWidgets) && isLocationValid(action, location)) {
-        bool hasTextEdit = hasTextEditWidget(action);
-        // The action is not added if it has a text-edit widget and the toolbar location
-        // has already a text-edit widget placed or there is no space for new text-edit widget
-        // as text-edit widget takes space of two buttons
-        if (!hasTextEdit || (!policyData.hasTextEditor && (policyData.placedActions < maxWidgets - 1))) {
-            add = true;
-            if (hasTextEdit) {
-                //one text-edit widget takes space of two buttons
-                policyData.placedActions++;
-                policyData.hasTextEditor = true;
-            }
-            // If there is a widget that is usable and is not text-entry widget, then the widgets
-            // are placed as it is i.e. in unmanaged way.
-            if (hasWidget(action) && !hasTextEdit) {
-                policyData.mode = Unmanaged;
-            }
-        }
+    if (!isLocationValid(action, location))
+        return false;
+    if(hasTextEditWidget(action)) {
+        if (policyData.hasTextEditor || policyData.placedActions > maxWidgets)
+            return false; //We can't add two text edits, and there must be two spaces available for a text edit
+        policyData.hasTextEditor = true;
+        //one text-edit widget takes space of two buttons
+        policyData.placedActions += 2;
+    } else {
+        if (policyData.placedActions >= maxWidgets)
+            return false; //no more room
+        policyData.placedActions += 1;
     }
-    policyData.placedActions += add;
-    return add;
+    return true;
 }
 
 MToolBarView::MToolBarView(MToolBar *controller) :

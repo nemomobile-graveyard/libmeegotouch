@@ -105,7 +105,7 @@ void MApplicationMenuButtonViewPrivate::refreshLayout()
             layout->setAlignment(arrowIconImage, Qt::AlignCenter);
         }
     }
-
+    q->updateGeometry();
 }
 
 void MApplicationMenuButtonViewPrivate::refreshIconImage()
