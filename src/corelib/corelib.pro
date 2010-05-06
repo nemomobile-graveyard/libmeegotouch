@@ -30,7 +30,12 @@ contains(DEFINES, HAVE_ICU) {
 
 
 # install .prf files
-install_prf.path = $$[QT_INSTALL_DATA]/mkspecs/features
+system(test -w $$[QT_INSTALL_DATA]) {
+    install_prf.path = $$[QT_INSTALL_DATA]/mkspecs/features
+} else {
+    install_prf.path = $$M_INSTALL_DATA/meegotouch/mkspecs/features
+    warning("We can not write to $$[QT_INSTALL_DATA], installing mkspecs to $$install_prf.path instead")
+}
 install_prf.files = $${M_SOURCE_TREE}/mkspecs/features/meegotouch.prf \
                     $${M_SOURCE_TREE}/mkspecs/features/meegotouch_translations.prf \
                     $${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf

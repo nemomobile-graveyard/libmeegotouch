@@ -55,6 +55,11 @@ unix|win32 {
     M_DBUS_INTERFACES_DIR = /usr/share/dbus-1/interfaces
     M_DBUS_SERVICES_DIR = $$system(pkg-config --variable session_bus_services_dir dbus-1)
 
+    !system(test -w $$M_DBUS_SERVICES_DIR) {
+        warning("We can not write to $$M_DBUS_SERVICES_DIR, installing mkspecs to $$M_INSTALL_SYSCONF/dbus-1/services instead")
+        M_DBUS_SERVICES_DIR = $$M_INSTALL_SYSCONF/dbus-1/services
+    }
+
     M_SHADER_SOURCE_DIR = $$M_INSTALL_DATA/meegotouch/shaders
     M_SHADER_BINARY_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch/shaders
 }
