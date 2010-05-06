@@ -1140,6 +1140,9 @@ void Ut_MTextEdit::testValidator()
     m_subject->inputMethodEvent(&event);
     QCOMPARE(m_subject->text(), QString("aaaaa"));
 
+    // test that custom validator still stays after adjusting content type
+    m_subject->setContentType(M::NumberContentType);
+    QCOMPARE(m_subject->validator(), &aLineValidator);
 }
 
 

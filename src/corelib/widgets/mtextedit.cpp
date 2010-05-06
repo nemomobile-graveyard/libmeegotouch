@@ -1838,37 +1838,65 @@ void MTextEdit::setTextCursor(const QTextCursor &cursor)
 void MTextEdit::setContentType(M::TextContentType type)
 {
     Q_D(MTextEdit);
-    Qt::InputMethodHints newHint;
 
     model()->setType(type);
 
+    // update validator if it's currently our, otherwise leave it intact
     // FIXME: doesn't work if model has content type already from somewhere
     if (d->ownValidator == true) {
         delete d->validator;
+        d->validator = 0;
+        d->ownValidator = false;
     }
 
-    d->validator = 0;
+    if (d->validator == 0) {
+        QRegExp rx;
 
-    QRegExp rx;
+        switch (type) {
+        case M::NumberContentType:
+            rx.setPattern(NumberCharacterSet);
+            d->validator = new QRegExpValidator(rx, 0);
+            break;
+
+        case M::PhoneNumberContentType:
+            rx.setPattern(PhoneNumberCharacterSet);
+            d->validator = new QRegExpValidator(rx, 0);
+            break;
+
+        case M::EmailContentType:
+            rx.setPattern(EmailCharacterSet);
+            d->validator = new QRegExpValidator(rx, 0);
+            break;
+
+        case M::UrlContentType:
+            //TODO: No check rule for URL yet
+            break;
+
+        default:
+            break;
+        }
+
+        // if a validator was created, we own it
+        if (d->validator != 0) {
+            d->ownValidator = true;
+        }
+    }
+
+    // update other state
+    Qt::InputMethodHints newHint;
 
     switch (type) {
     case M::NumberContentType:
-        rx.setPattern(NumberCharacterSet);
-        d->validator = new QRegExpValidator(rx, 0);
         setInputMethodCorrectionEnabled(false);
         newHint = Qt::ImhFormattedNumbersOnly;
         break;
 
     case M::PhoneNumberContentType:
-        rx.setPattern(PhoneNumberCharacterSet);
-        d->validator = new QRegExpValidator(rx, 0);
         setInputMethodCorrectionEnabled(false);
         newHint = Qt::ImhDialableCharactersOnly;
         break;
 
     case M::EmailContentType:
-        rx.setPattern(EmailCharacterSet);
-        d->validator = new QRegExpValidator(rx, 0);
         setInputMethodCorrectionEnabled(false);
         setInputMethodAutoCapitalizationEnabled(false);
         newHint = Qt::ImhEmailCharactersOnly;
@@ -1877,18 +1905,12 @@ void MTextEdit::setContentType(M::TextContentType type)
     case M::UrlContentType:
         setInputMethodCorrectionEnabled(false);
         setInputMethodAutoCapitalizationEnabled(false);
-        //TODO: No check rule for URL yet
         newHint = Qt::ImhUrlCharactersOnly;
         break;
 
     default:
         setInputMethodAutoCapitalizationEnabled(true);
         break;
-    }
-
-    // if a validator was created, we own it
-    if (d->validator != 0) {
-        d->ownValidator = true;
     }
 
     setInputMethodHints((inputMethodHints() & ~Qt::ImhExclusiveInputMask) | newHint);
