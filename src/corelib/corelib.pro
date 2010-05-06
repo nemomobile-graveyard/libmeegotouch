@@ -40,11 +40,15 @@ install_prf.files = $${M_SOURCE_TREE}/mkspecs/features/meegotouch.prf \
     INSTALLS += install_prf
 }
 
+#install Rich Text Editor xml file
+install_xmltoolbar.files = ./widgets/RichTextEditorToolbar1.xml
+install_xmltoolbar.path = /usr/share/meegotouch/imtoolbars
 
 #install libmeegotouch .pc file
 install_pkgconfig.path = $$M_INSTALL_LIBS/pkgconfig
 install_pkgconfig.files = ../meegotouch.pc
-INSTALLS += install_pkgconfig
+INSTALLS += install_pkgconfig \
+    install_xmltoolbar
 
 
 # install forwarding headers
