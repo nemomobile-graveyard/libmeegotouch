@@ -66,7 +66,9 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
     painter->setFont(viewPrivate->controller->font());
     painter->setPen(model->color().isValid() ? model->color() : style->color());
     painter->setLayoutDirection(model->textDirection());
-    painter->drawText(paintingRect, viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
+
+    Qt::TextFlag wrap = viewPrivate->controller->wordWrap() ? Qt::TextWordWrap : Qt::TextSingleLine;
+    painter->drawText(paintingRect, viewPrivate->textOptions.alignment() | wrap, textToRender);
 }
 
 #else
@@ -122,7 +124,10 @@ QImage MLabelViewSimple::generateImage()
         painter.setPen(model->color().isValid() ? model->color() : style->color());
         painter.setLayoutDirection(model->textDirection());
 
-        painter.drawText(0, 0, paintingRectSize.width(), paintingRectSize.height(), viewPrivate->textOptions.alignment() | Qt::TextSingleLine, textToRender);
+        Qt::TextFlag wrap = viewPrivate->controller->wordWrap() ? Qt::TextWordWrap : Qt::TextSingleLine;
+        painter.drawText(0, 0, paintingRectSize.width(), paintingRectSize.height(), viewPrivate->textOptions.alignment() 
+                         | wrap, textToRender);
+
     }
 
     return image;
@@ -182,6 +187,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
             h = preferredSize.height();
 
         QFontMetricsF fm(viewPrivate->controller->font());
+
         QRectF bR(fm.boundingRect(QRectF(0, 0, w, h), viewPrivate->textOptions.alignment() | Qt::TextSingleLine,
                                   viewPrivate->model()->text()));
         return bR.size().boundedTo(QSizeF(w, h));
@@ -218,6 +224,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
                 viewPrivate->textOptions.setWrapMode(QTextOption::ManualWrap);
             }
         } else if (member == MLabelModel::TextDirection) {
+            needUpdate = true;
             viewPrivate->textOptions.setTextDirection(viewPrivate->model()->textDirection());
         } else if (member == MLabelModel::Alignment) {
             viewPrivate->textOptions.setAlignment(viewPrivate->model()->alignment());

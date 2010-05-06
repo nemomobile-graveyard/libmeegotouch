@@ -120,41 +120,10 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
 
 bool MComponentCachePrivate::canUseCachedApp(int &argc, char **argv, const QString &appIdentifier)
 {
-    if ( hasCustomTheme(argc, argv, appIdentifier) || 
-         hasExtraParams(argc, argv, appIdentifier) )
+    if ( hasExtraParams(argc, argv, appIdentifier) )
         return false;
 
     return true;
-}
-
-bool MComponentCachePrivate::hasCustomTheme(int &argc, char **argv, const QString &appIdentifier)
-{
-    Q_UNUSED(argc);
-
-    QFileInfo fileInfo(argv[0]);
-    QString themeIdentifier = fileInfo.fileName();
-    if (!appIdentifier.isEmpty()) {
-        QRegExp regExp("[0-9a-zA-Z_-]*");
-        if (regExp.exactMatch(appIdentifier)) {
-            themeIdentifier = appIdentifier;
-        }
-    }
-
-    QString sysThemePath(MThemeDaemon::systemThemeDirectory());
-
-    QDir themesDir(sysThemePath);
-    QStringList themes = themesDir.entryList(QDir::AllDirs | 
-                                             QDir::NoDotAndDotDot);
-
-    QString meegotouch("meegotouch");
-    foreach(const QString & theme, themes) {
-        QString fullPath(sysThemePath + QDir::separator() + theme);
-        fullPath.append(QDir::separator() + meegotouch + QDir::separator() + themeIdentifier);
- 
-        if ( QDir(fullPath).exists() )
-            return true;
-    }
-    return false;
 }
 
 bool MComponentCachePrivate::hasExtraParams(int &argc, char **argv, const QString &appIdentifier)
@@ -220,11 +189,14 @@ bool MComponentCachePrivate::hasExtraParams(int &argc, char **argv, const QStrin
 
 MApplicationWindow* MComponentCachePrivate::mApplicationWindow()
 {
-    if (mApplicationWindowInstance == 0) {
-        mApplicationWindowInstance = new MApplicationWindow();
+    MApplicationWindow *returnValue;
+    if (mApplicationWindowInstance != 0) {
+        returnValue = mApplicationWindowInstance;
+        mApplicationWindowInstance = 0;
+    } else {
+        returnValue = new MApplicationWindow();
     }
-
-    return mApplicationWindowInstance;
+    return returnValue;
 }
 
 QGLWidget* MComponentCachePrivate::glWidget()

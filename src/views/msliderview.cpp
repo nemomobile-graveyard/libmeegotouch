@@ -299,7 +299,11 @@ MSliderGroove::MSliderGroove(QGraphicsItem *parent) :
     maximumLength(0)
 {
     sliderHandle = new MSliderHandle(this);
+    sliderHandle->setObjectName("MSliderHandle");
+    
     sliderHandleIndicator = new MSliderIndicator(false, this);
+    sliderHandleIndicator->setObjectName("MSliderHandleIndicator");
+    
     sliderHandleIndicator->setVisible(false);
 }
 
@@ -873,10 +877,16 @@ void MSliderViewPrivate::init(MSlider *controller)
     this->controller = controller;
 
     sliderGroove = new MSliderGroove(controller);
+    sliderGroove->setObjectName("MSliderGroove");
+
     sliderGroove->init(controller);
+
     //these are minmax indicators
     minIndicator = new MSliderIndicator(controller);
+    minIndicator->setObjectName("MSliderHandleMinMaxIndicator");
+
     maxIndicator = new MSliderIndicator(controller);
+    maxIndicator->setObjectName("MSliderHandleMinMaxIndicator");
 
     bool reverse = qApp->isRightToLeft();
 

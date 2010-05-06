@@ -41,10 +41,6 @@
 #include "languagepage.h"
 #include "feedbackpage.h"
 
-#ifdef HAVE_GSTREAMER
-#include "videocontainerpage.h"
-#endif
-
 #include <QGraphicsLayoutItem>
 #include <QGraphicsLinearLayout>
 #include <QGraphicsGridLayout>
@@ -148,9 +144,6 @@ void ListPage::createContent()
     addPage(new SliderPage);
     addPage(new LanguagePage);
     addPage(new FeedbackPage);
-#ifdef HAVE_GSTREAMER
-    addPage(new VideoContainerPage);
-#endif
 
     QGraphicsWidget *panel = centralWidget();
 

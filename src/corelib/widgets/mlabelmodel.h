@@ -51,7 +51,8 @@ class M_EXPORT MLabelModel : public MWidgetModel
         When set to true, the label wraps the text into multiple 
         lines. This is done depending on which wrap mode is active.
     */
-    M_MODEL_PROPERTY(bool, wordWrap, WordWrap, true, true)
+
+    M_MODEL_PROPERTY(bool, wordWrap, WordWrap, true, false)
 
     /*!
       \property MLabelModel::wrapMode

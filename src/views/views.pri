@@ -45,7 +45,7 @@ PUBLIC_HEADERS += \
     mcontentitemview.h \
     mnavigationbarview.h \
     mscenelayereffectdimview.h \
-
+    mlistindexview.h \
 
 PRIVATE_HEADERS += \
     mstylablewidgetview_p.h \
@@ -61,6 +61,7 @@ PRIVATE_HEADERS += \
     mbuttongrouplayoutpolicy_p.h \
     mtoolbartabview_p.h \
     mpannablewidgetview_p.h \
+    mlistindexview_p.h \
 
 SOURCES += \
     mapplicationpageview.cpp \
@@ -110,3 +111,4 @@ SOURCES += \
     mcontentitemview.cpp \
     mnavigationbarview.cpp \
     mscenelayereffectdimview.cpp \
+    mlistindexview.cpp \

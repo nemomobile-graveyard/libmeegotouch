@@ -1702,6 +1702,15 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     case M::InputMethodToolbarQuery:
         return QVariant(attachedToolbarId());
 
+    case Qt::ImMicroFocus:
+        // Only check whether this text edit *has* a completer, not whether the completer is
+        // visible. Otherwise, it would cause further window relocations once the completer hides
+        // (shows) again.
+        if (d->completer) {
+            return QVariant(MWidgetController::inputMethodQuery(query).toRectF().unite(d->completer->boundingRect()));
+        }
+        // No break - intended fall-through to default case:
+
     default:
         return MWidgetController::inputMethodQuery(query);
     }

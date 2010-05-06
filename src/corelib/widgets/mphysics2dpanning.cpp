@@ -238,8 +238,19 @@ void MPhysics2DPanning::start()
 void MPhysics2DPanning::stop()
 {
     Q_D(MPhysics2DPanning);
-    d->timeLine->stop();
-    emit panningStopped();
+
+    // Checking if the viewport is currently dragged beyond it's borders and the integration should
+    // continue.
+    bool inRangeX = (d->panDirection.testFlag(Qt::Horizontal) == false) ||
+                    (d->posX >= d->range.left() && d->posX <= d->range.right());
+
+    bool inRangeY = (d->panDirection.testFlag(Qt::Vertical) == false) ||
+                    (d->posY >= d->range.top()  && d->posY <= d->range.bottom());
+
+    if (inRangeX && inRangeY) {
+        d->timeLine->stop();
+        emit panningStopped();
+    }
 }
 
 

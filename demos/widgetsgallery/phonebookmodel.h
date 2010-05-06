@@ -55,6 +55,7 @@ public Q_SLOTS:
     void processJobQueue();
 
 private:
+    void addJob(const QModelIndex &index);
     void notifyModel(const QModelIndex &index);
 
 private:
@@ -84,6 +85,7 @@ public:
 
     void thumbnailWasLoaded(const QModelIndex &index);
 
+    void sort(int column, Qt::SortOrder order);
 private:
     QStringList loadFakeNames();
     QStringList loadFakeImageIds();
@@ -95,10 +97,13 @@ private:
     QStringList namesList;
     QStringList imageIdList;
     QImage defaultThumbnail;
+    int modelRowCount;
 };
 
 class PhoneBookSortedModel : public QSortFilterProxyModel
 {
+public:
+    typedef QVector<PhoneBookEntry*> PhoneBookEntryVector;
 public:
     PhoneBookSortedModel();
     virtual ~PhoneBookSortedModel();
@@ -107,6 +112,7 @@ public:
     void setShowGroups(bool showGroups);
 
 public:
+    void sort(int column, Qt::SortOrder order);
     QModelIndex parent(const QModelIndex &child) const;
     int rowCount(const QModelIndex &parent = QModelIndex()) const;
     bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
@@ -117,11 +123,14 @@ public:
     QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
 
 private:
-    void populateGroupHeaderIndex();
+    void createPlainModel();
+    void createGroupedModel();
+
+    int totalRowCount();
 
 private:
     bool showGroups;
-    QHash<QChar, int> groupHeaderIndex;
+    QMap<QChar, PhoneBookEntryVector> treeHeaderIndex;
 };
 
 #endif

@@ -35,7 +35,9 @@ class MWidget;
 class MListView;
 class MList;
 class MListModel;
+class MListIndex;
 class MPannableViewport;
+class MSideBar;
 class MWidgetRecycler;
 class QAbstractItemModel;
 class QItemSelectionModel;
@@ -109,6 +111,7 @@ public:
     virtual void clearFirstAndLastVisibleRows();
     virtual void removeInvisibleItems(const QPoint &firstVisibleItemCoord, const QPoint &lastVisibleItemCoord);
     virtual void cellClicked(MWidget *source);
+    virtual void cellLongTapped(const QModelIndex &index);
     virtual void selectionChange(const QItemSelection &selected, const QItemSelection &deselected);
     virtual void updateItemSize();
     virtual void updateSeparatorSize();
@@ -245,6 +248,7 @@ public:
     int itemsCount(int index) const;
     void updateHeadersPositions();
     void updateHeadersRows();
+    void updateHeadersIndexes();
 
 public:
     virtual int indexToFlatRow(const QModelIndex &index) const;
@@ -271,9 +275,12 @@ public:
     virtual void layoutChanged();
 
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
+
 public:
     QVector<int> headersPositions;
     QVector<int> headersRows;
+
+    MListIndex *listIndexWidget;
 };
 
 class MMultiColumnListViewPrivate : public MGroupHeaderListViewPrivate

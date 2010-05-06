@@ -52,9 +52,11 @@ void Ut_MComponentCache::cleanup()
 }
 
 
-void Ut_MComponentCache::testGLWidget()
+void Ut_MComponentCache::testGLWidgetAndDBusService()
 {
-
+    /* We must test many things in the same function because
+       populateForMApplication can be run only once. */
+    
     QVERIFY2( MComponentCache::populating() == false, "Failure");	
     QVERIFY2( MComponentCache::d_ptr->cacheBeingPopulated == false, "Failure");
     MComponentCache::d_ptr->cacheBeingPopulated = true;
@@ -68,10 +70,11 @@ void Ut_MComponentCache::testGLWidget()
 
     QVERIFY2( MComponentCache::d_ptr->glWidgetOfmApplicationWindowInstance == 0, "Failure");	
     QVERIFY2( MComponentCache::d_ptr->glWidgetOfOtherWindow == 0, "Failure");	
+#endif /* QT_OPENGL_LIB */
 
     MComponentCache::populateForMApplication();
 
-
+#ifdef QT_OPENGL_LIB
     QVERIFY2( MComponentCache::d_ptr->glWidgetOfmApplicationWindowInstance == 0, "Failure");	
     QVERIFY2( MComponentCache::d_ptr->glWidgetOfOtherWindow != 0, "Failure");	
 
@@ -96,60 +99,9 @@ void Ut_MComponentCache::testGLWidget()
     delete tmp;
 
     tmp = 0;
-
-    cleanupCache();
-
 #endif /* QT_OPENGL_LIB */
-}
 
-void Ut_MComponentCache::testDBusRegistration1()
-{
-    QVERIFY2( MComponentCache::populating() == false, "Failure");
-    QVERIFY2( MComponentCache::d_ptr->mApplicationInstance == 0, "Failure");
-    QVERIFY2( MComponentCache::d_ptr->mApplicationWindowInstance == 0, "Failure");
-    QVERIFY2( MComponentData::instance() == 0,  "Failure");
-
-    MComponentCache::populateForMApplication();
-
-    QVERIFY2( MComponentCache::populating() == false, "Failure");
-    QVERIFY2( MComponentCache::d_ptr->mApplicationInstance != 0, "Failure");
-    QVERIFY2( MComponentCache::d_ptr->mApplicationWindowInstance != 0, "Failure");
-    QVERIFY2( MComponentData::instance() != 0,  "Failure");
-
-    char ** argv  = packTwoArgs("testDBusRegistration1", "argument1");
-    int argc = 2;
-    MApplication *app = MComponentCache::mApplication(argc, argv);
-
-    QVERIFY2( app != NULL, "Failure");
-    QVERIFY2( MComponentCache::populating() == false, "Failure");
-
-    QString appService = MComponentData::instance()->serviceName();
-    QString defaultService("com.nokia.");
-    defaultService.append("testDBusRegistration1");
-    QVERIFY2( appService == defaultService, "Failure");
-
-    MApplicationWindow* win = MComponentCache::mApplicationWindow();
-
-    QVERIFY2( win != NULL, "Failure");
-    QVERIFY2( MComponentCache::populating() == false, "Failure");
-
-    cleanupCache();
- }
-
-void Ut_MComponentCache::testDBusRegistration2()
-{
-    QVERIFY2( MComponentCache::populating() == false, "Failure");
-    QVERIFY2( MComponentCache::d_ptr->mApplicationInstance == 0, "Failure");
-    QVERIFY2( MComponentCache::d_ptr->mApplicationWindowInstance == 0, "Failure");
-    QVERIFY2( MComponentData::instance() == 0,  "Failure");
-
-    MComponentCache::populateForMApplication();
-
-    QVERIFY2( MComponentCache::populating() == false, "Failure");
-    QVERIFY2( MComponentCache::d_ptr->mApplicationInstance != 0, "Failure");
-    QVERIFY2( MComponentCache::d_ptr->mApplicationWindowInstance != 0, "Failure");
-    QVERIFY2( MComponentData::instance() != 0,  "Failure");
-
+    /* Pick up the application from the cache and register a special D-Bus service */
     char ** argv  = packTwoArgs("testDBusRegistration", "argument1");
     int argc = 2;
     MApplicationService *service = new MApplicationService("com.nokia.appName");
@@ -199,4 +151,3 @@ void  Ut_MComponentCache::cleanupCache()
 }
 
 QTEST_APPLESS_MAIN(Ut_MComponentCache);
-

@@ -69,10 +69,13 @@ protected:
     virtual void setupModel();
     virtual void applyStyle();
 
+    virtual void notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
+
 private:
     void init();
     void connectSelectionModel();
     void scrollTo(const QModelIndex &index, MList::ScrollHint hint);
+    void longTap(const QPointF &pos);
 
 private:
     MListViewPrivate *d_ptr;

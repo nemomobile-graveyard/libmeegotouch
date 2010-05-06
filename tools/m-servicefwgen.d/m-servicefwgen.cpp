@@ -443,7 +443,7 @@ QString Worker::hideThisWindowCode()
     return
 "\n\
         // hide this window\n\
-        {\n\
+        if (win) {\n\
             // Tell the window to not to be shown in the switcher\n\
             Atom skipTaskbarAtom = XInternAtom(QX11Info::display(), \"_NET_WM_STATE_SKIP_TASKBAR\", False);\n\
 \n\
@@ -1059,9 +1059,15 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
         if (line.contains("QList<QVariant>"))
         {
             newProxyHeaderStream << "\
-        Qt::HANDLE windowId       = MApplication::instance()->activeWindow()->winId();\n\
-        QString windowTitle       = MApplication::instance()->activeWindow()->windowTitle();\n\
+        Qt::HANDLE windowId = 0;\n\
+        QString windowTitle;\n\
         QString goBackServiceName = MComponentData::instance()->serviceName();\n\
+\n\
+        MWindow *win = MApplication::instance()->activeWindow();\n\
+        if (win) {\n\
+            windowId = win->winId();\n\
+            windowTitle = win->windowTitle();\n\
+        }\n\
 \n\
 " + line + "\n\
         argumentList << qVariantFromValue(goBackServiceName);\n\

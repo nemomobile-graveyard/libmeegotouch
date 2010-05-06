@@ -83,6 +83,10 @@ public slots:
     void scrollToTop();
 
     void itemClick(const QModelIndex &index);
+    void itemLongTapped(const QModelIndex &index);
+
+    void removeListItem();
+    void editListItem();
 
 protected:
     void retranslateUi();
@@ -104,7 +108,10 @@ private:
     MList *list;
     MListContentItemCreator *cellCreator;
 
+    QModelIndex longTappedIndex;
+
     int currentSortingIndex;
+    int currentListModeIndex;
 };
 
 

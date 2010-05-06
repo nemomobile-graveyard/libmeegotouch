@@ -90,6 +90,8 @@ void MListView::updateData(const QList<const char *>& modifications)
             connectSelectionModel();
         } else if (member == MListModel::ScrollToIndex) {
             scrollTo(model()->scrollToIndex(), static_cast<MList::ScrollHint>(model()->scrollHint()));
+        } else if (member == MListModel::LongTap) {
+            longTap(model()->longTap());
         }
     }
 }
@@ -122,6 +124,14 @@ void MListView::applyStyle()
         d_ptr->setHeadersCreator(new MDefaultHeadersCreator(style()->groupHeaderObjectName()));
 	relayoutItemsInViewportRect();
     }
+}
+
+void MListView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value)
+{
+    MWidgetView::notifyItemChange(change, value);
+
+    if(change == QGraphicsItem::ItemSceneHasChanged)
+        emit controller->parentChanged();
 }
 
 QSizeF MListView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -314,6 +324,12 @@ void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint)
             d_ptr->pannableViewport->setPosition(targetPosition);
         }
     }
+}
+
+void MListView::longTap(const QPointF &pos)
+{
+    QModelIndex index = d_ptr->flatRowToIndex(d_ptr->locateVisibleRowAt(pos.y(), pos.x()));
+    d_ptr->cellLongTapped(index);
 }
 
 M_REGISTER_VIEW_NEW(MListView, MList)

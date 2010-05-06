@@ -231,7 +231,7 @@ void SliderPage::retranslateUi()
 
 void SliderPage::modifyAgeSliderHandle(int newValue)
 {
-    ageSlider->setHandleLabel(QString::number(newValue));
+    ageSlider->setHandleLabel( QString::number(newValue) );
 }
 
 void SliderPage::playerButtonClicked()

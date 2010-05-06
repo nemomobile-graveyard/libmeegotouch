@@ -54,7 +54,6 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mabstractcellcreator.h \
     $$WIDGETS_SRC_DIR/mcontentitem.h \
 
-
 MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.h \
     $$WIDGETS_SRC_DIR/mbuttonmodel.h \

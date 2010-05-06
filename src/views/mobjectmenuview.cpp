@@ -32,6 +32,7 @@
 #include "mapplicationwindow.h"
 
 MObjectMenuViewPrivate::MObjectMenuViewPrivate() :
+      q_ptr(0),
       layout(0),
       controller(0)
 {

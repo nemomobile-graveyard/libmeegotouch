@@ -46,6 +46,7 @@ private:
     M_MODEL_PROPERTY(bool, listIsMoving, ListIsMoving, true, false)
     M_MODEL_PROPERTY(QModelIndex, scrollToIndex, ScrollToIndex, false, QModelIndex())
     M_MODEL_PROPERTY(int, scrollHint, ScrollHint, true, 0)
+    M_MODEL_PROPERTY(QPointF, longTap, LongTap, true, QPointF())
 };
 
 #endif

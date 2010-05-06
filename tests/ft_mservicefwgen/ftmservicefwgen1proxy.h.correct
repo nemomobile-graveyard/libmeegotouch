@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef FTMSERVICEFWGEN1PROXY_H_1271167524
-#define FTMSERVICEFWGEN1PROXY_H_1271167524
+#ifndef FTMSERVICEFWGEN1PROXY_H_1273138620
+#define FTMSERVICEFWGEN1PROXY_H_1273138620
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -62,9 +62,15 @@ public Q_SLOTS: // METHODS
 
     inline QDBusPendingReply<> showImage(const QString &uri, const QStringList &uriList)
     {
-        Qt::HANDLE windowId       = MApplication::instance()->activeWindow()->winId();
-        QString windowTitle       = MApplication::instance()->activeWindow()->windowTitle();
+        Qt::HANDLE windowId = 0;
+        QString windowTitle;
         QString goBackServiceName = MComponentData::instance()->serviceName();
+
+        MWindow *win = MApplication::instance()->activeWindow();
+        if (win) {
+            windowId = win->winId();
+            windowTitle = win->windowTitle();
+        }
 
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(goBackServiceName);
@@ -73,7 +79,7 @@ public Q_SLOTS: // METHODS
         argumentList << qVariantFromValue(uri) << qVariantFromValue(uriList);
 
         // hide this window
-        {
+        if (win) {
             // Tell the window to not to be shown in the switcher
             Atom skipTaskbarAtom = XInternAtom(QX11Info::display(), "_NET_WM_STATE_SKIP_TASKBAR", False);
 

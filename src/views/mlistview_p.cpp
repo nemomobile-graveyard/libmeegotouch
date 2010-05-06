@@ -25,6 +25,7 @@
 #include <QItemSelectionModel>
 
 #include "mcontentitem.h"
+#include "mlistindex.h"
 #include "mabstractcellcreator.h"
 #include "mlistview_p.h"
 
@@ -123,6 +124,11 @@ void MListViewPrivate::cellClicked(MWidget *source)
     MWidget *widget = source;
     QModelIndex cellIndex(locateVisibleIndexAt(widget->pos().y()));
     controller->selectItem(cellIndex);
+}
+
+void MListViewPrivate::cellLongTapped(const QModelIndex &index)
+{
+    controller->longTapItem(index);
 }
 
 void MListViewPrivate::selectionChange(const QItemSelection &selected, const QItemSelection &deselected)
@@ -756,10 +762,12 @@ void MPlainMultiColumnListViewPrivate::drawVerticalSeparator(int row, int column
 ////////////
 MGroupHeaderListViewPrivate::MGroupHeaderListViewPrivate()
 {
+    listIndexWidget = NULL;
 }
 
 MGroupHeaderListViewPrivate::~MGroupHeaderListViewPrivate()
 {
+    delete listIndexWidget;
 }
 
 void MGroupHeaderListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
@@ -796,9 +804,14 @@ void MGroupHeaderListViewPrivate::resetModel(MListModel *mListModel)
 {
     MListViewPrivate::resetModel(mListModel);
 
+    if(!listIndexWidget) {
+        listIndexWidget = new MListIndex(controller);
+    }
+
     headersPositions.resize(this->headersCount());
     updateHeadersPositions();
     updateHeadersRows();
+    updateHeadersIndexes();
 }
 
 int MGroupHeaderListViewPrivate::locatePosOfItem(const QModelIndex &index)
@@ -913,6 +926,18 @@ void MGroupHeaderListViewPrivate::updateHeadersRows()
     }
 }
 
+void MGroupHeaderListViewPrivate::updateHeadersIndexes()
+{
+    if(listIndexWidget) {
+        QMap<QModelIndex, QString> shortcuts;
+        for (int i = 0; i < headersCount(); i++) {
+            QModelIndex headerRowIndex = flatRowToIndex(headersRows[i]);
+            shortcuts[headerRowIndex] = model->data(headerRowIndex).toString();
+        }
+        listIndexWidget->setShortcuts(shortcuts);
+    }
+}
+
 int MGroupHeaderListViewPrivate::indexToFlatRow(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -1020,6 +1045,7 @@ void MGroupHeaderListViewPrivate::layoutChanged()
 
     updateHeadersPositions();
     updateHeadersRows();
+    updateHeadersIndexes();
 }
 
 void MGroupHeaderListViewPrivate::drawSeparator(int row, QPainter *painter, const QStyleOptionGraphicsItem *option)
