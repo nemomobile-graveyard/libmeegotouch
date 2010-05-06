@@ -1275,6 +1275,20 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
     }
 }
 
+
+void MTextEdit::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_D(MTextEdit);
+    MWidgetController::mouseReleaseEvent(event);
+
+    // Widget was focused-in on corresponding mouse press event:
+    if (sceneManager() && d->pendingSoftwareInputPanelRequest) {
+        sceneManager()->requestSoftwareInputPanel(this);
+        d->pendingSoftwareInputPanelRequest = false;
+    }
+}
+
+
 void MTextEdit::focusInEvent(QFocusEvent *event)
 {
     Q_D(MTextEdit);
@@ -1478,12 +1492,6 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
         return;
 
     int cursorPositionBefore = cursorPosition();
-
-    // Widget was focused-in on corresponding mouse press event:
-    if (sceneManager() && d->pendingSoftwareInputPanelRequest) {
-        sceneManager()->requestSoftwareInputPanel(this);
-        d->pendingSoftwareInputPanelRequest = false;
-    }
 
     deselect();
 

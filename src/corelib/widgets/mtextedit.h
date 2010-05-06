@@ -501,6 +501,7 @@ Q_SIGNALS:
 protected:
     /*! \reimp */
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void focusInEvent(QFocusEvent *event);
     virtual void focusOutEvent(QFocusEvent *event);
     virtual void inputMethodEvent(QInputMethodEvent *);
