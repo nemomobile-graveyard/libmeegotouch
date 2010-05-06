@@ -1,6 +1,6 @@
-/*! \page prestart Prestartable application development How-To
+/*! \page prestart How to prestartable and lazy shutdownable applications
 
-Prestarting and lazy shutdown reduces the start-up time of an
+Prestarting and lazy shutdown reduces the startup time of an
 application to zero: the application is able to show its GUI
 immediately when requested. MeeGo Touch supports prestarting and lazy shutdown
 of application services, that is, applications that are started by
@@ -12,9 +12,9 @@ state during boot by a daemon called \b Applifed. In that state they are running
 in the background in their mainloop but not showing nor doing anything. If
 application gets terminated, Applifed re-prestarts is automatically.
 
-A special type of prestarting, called "Lazy shutdown" allows an application 
-to resume the \b prestarted \b state instead of terminating. This makes the next
-application start-up very fast. Automatically prestarted applications
+Lazy shutdown allows an application to enter the \b prestarted \b
+state instead of terminating, when closed by user. This makes the next
+application startup very fast. Automatically prestarted applications
 can use lazy shutdown as well.
 
 
