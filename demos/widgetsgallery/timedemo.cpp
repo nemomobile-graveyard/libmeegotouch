@@ -186,7 +186,8 @@ void Timedemo::displayBenchmarkResults()
 
     if ( ! statsCsvFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text) )
     {
-        qWarning( "failed to open stats file: %s", qPrintable( statsCsvFile.fileName() ) );
+        qCritical( "failed to open stats file: %s", qPrintable( statsCsvFile.fileName() ) );
+        exit(EXIT_FAILURE);
     }
 
     QTextStream statsCsv(&statsCsvFile);
@@ -262,7 +263,11 @@ void Timedemo::saveFramelog() {
         framelogFile.setFileName(framelogFilename);
     }
 
-    framelogFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
+    if (!framelogFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+    {
+        qWarning( "failed to open frame log file: %s", qPrintable( framelogFile.fileName() ) );
+    }
+
     QXmlStreamWriter framelog(&framelogFile);
     framelog.setAutoFormatting(true);
     framelog.writeStartDocument();
