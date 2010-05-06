@@ -39,7 +39,7 @@ void Pt_MApplication::processCreationAndCtor()
 
 void Pt_MApplication::ctor()
 {
-    MApplication *a;
+    MApplication *a = NULL;
     QBENCHMARK {
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
@@ -52,7 +52,7 @@ void Pt_MApplication::ctor()
 
 void Pt_MApplication::ctor2()
 {
-    MApplication *a;
+    MApplication *a = NULL;
     QBENCHMARK {
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
