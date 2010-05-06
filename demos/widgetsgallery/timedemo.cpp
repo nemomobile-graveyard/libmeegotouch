@@ -184,7 +184,11 @@ void Timedemo::displayBenchmarkResults()
         statsCsvFile.setFileName(m_csvFilename);
     }
 
-    statsCsvFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
+    if ( ! statsCsvFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text) )
+    {
+        qWarning( "failed to open stats file: %s", qPrintable( statsCsvFile.fileName() ) );
+    }
+
     QTextStream statsCsv(&statsCsvFile);
 
     int pageTitleWidth = 0;
