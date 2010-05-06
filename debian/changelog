@@ -1,8 +1,12 @@
-libmeegotouch (0.20.7~1) unstable; urgency=low
+libmeegotouch (0.20.7-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#161404 - Service framework call causes caller to crash if caller doesn't have applicationwindow
+  * Fixes: NB#135578 - Very long strings are not completely displayed.
+  * Fixes: NB#166710 - widgetsgallery exits in crash
+  * Fixes: NB#164551 - pannable area spring can be stopped
+  * Fixes: NB#167018 - MSlider 'Mover' element has no unique object name
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Thu, 06 May 2010 11:02:36 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Thu, 06 May 2010 19:38:42 +0300
 
 libmeegotouch (0.20.6-1) unstable; urgency=low
 
