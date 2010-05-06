@@ -117,6 +117,7 @@ MWindow *appWin;
 
 Ut_MLayout::Ut_MLayout() :
     m_button(0),
+    m_form(0),
     m_scene(0),
     m_proxy(0)
 {
