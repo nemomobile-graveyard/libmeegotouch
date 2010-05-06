@@ -137,7 +137,14 @@ private:
     int amountOfColumns;
 };
 
-ToolBarPage::ToolBarPage()
+ToolBarPage::ToolBarPage() :
+    callList(0),
+    callModel(0),
+    cellCreator(0),
+    exampleAction1(0),
+    exampleAction2(0),
+    defaultViewAction(0),
+    tabViewAction(0)
 {
     gid = TemplatePage::ViewsAndDialogs;
 }
