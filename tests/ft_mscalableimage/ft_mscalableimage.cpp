@@ -70,7 +70,8 @@ const QPixmap *createPixmap(const QString &id, const QSize &size)
     }
 }
 
-Ft_MScalableImage::Ft_MScalableImage()
+Ft_MScalableImage::Ft_MScalableImage() :
+        m_subject(0)
 {
 }
 

@@ -30,6 +30,7 @@ class Ut_MSliderView : public QObject
 {
     Q_OBJECT
 public:
+    Ut_MSliderView();
 
 private slots:
     void initTestCase();
