@@ -208,6 +208,16 @@ void Ut_MTextEdit::testSetText()
         QCOMPARE(mySpy2.count(), (i + 1));
         QCOMPARE(getText, setText);
     }
+    
+    // test with phone number content type so validator gets tested too.
+    int currentSpyCount = mySpy2.count();
+    m_subject->setContentType(M::PhoneNumberContentType);
+    m_subject->setText("+358-"); // partial phone number
+    QCOMPARE(mySpy2.count(), currentSpyCount + 1);
+
+    currentSpyCount = mySpy2.count();
+    m_subject->setText(""); // empty string should be always ok
+    QCOMPARE(mySpy2.count(), currentSpyCount + 1);    
 }
 
 

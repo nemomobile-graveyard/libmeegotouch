@@ -1383,6 +1383,7 @@ bool MTextEdit::setText(const QString &text)
 
     int cursorPosBefore = d->cursor()->position();
     bool wasSelecting = hasSelectedText();
+    bool wasEmpty = (document()->characterCount() == 0);
 
     // clear the state
     d->removePreedit();
@@ -1405,14 +1406,23 @@ bool MTextEdit::setText(const QString &text)
 
     d->cursor()->insertText(filteredText);
 
-    bool accepted = hasAcceptableInput();
+    bool accepted = true;
 
-    if (accepted == true) {
+    if (d->validator) {
+        QString textCopy = text;
+        int cursorPos = text.length();
+        QValidator::State result = d->validator->validate(textCopy, cursorPos);
+        accepted = (result != QValidator::Invalid);
+    }
+
+    if (!accepted) {
+        document()->clear();       
+    }
+
+    // only avoid signaling if empty before and after
+    if (!((document()->characterCount() == 0) && wasEmpty)) {
         updateMicroFocus();
         emit textChanged();
-
-    } else {
-        document()->clear();
     }
 
     if (d->cursor()->position() != cursorPosBefore) {
