@@ -349,6 +349,7 @@ MLocalePrivate::MLocalePrivate()
       currentLcNumericItem(SettingsLcNumeric),
       currentLcMonetaryItem(SettingsLcMonetary)
 #endif
+      , q_ptr(0)
 {
 }
 
@@ -377,6 +378,7 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       currentLcNumericItem(SettingsLcNumeric),
       currentLcMonetaryItem(SettingsLcMonetary)
 #endif
+      , q_ptr(0)
 {
 #ifdef HAVE_ICU
     if (other._numberFormat != 0) {
@@ -1618,18 +1620,18 @@ QString MLocale::icuFormatString( DateType dateType,
                                       calendarType);
     DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
 
-    // This is not nice but seems to be the only way to set the
-    // symbols with the public API
-    static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
+    QString icuFormatQString;
 
-    icu::UnicodeString icuFormatString;
-    static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
-
-    QString icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
-
-    if( df )
+    if (df)
+    {
+        icu::UnicodeString icuFormatString;
+        // This is not nice but seems to be the only way to set the
+        // symbols with the public API
+        static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
+        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
         delete df;
-
+    }
     return icuFormatQString;
 }
 #endif
