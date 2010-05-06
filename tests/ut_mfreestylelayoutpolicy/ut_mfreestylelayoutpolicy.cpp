@@ -57,6 +57,7 @@ Ut_MFreestyleLayoutPolicy::Ut_MFreestyleLayoutPolicy()
     , m_mockItem100(0)
     , m_mockItem200(0)
     , m_mockItem300(0)
+    , m_form(0)
 { }
 
 Ut_MFreestyleLayoutPolicy::~Ut_MFreestyleLayoutPolicy()
