@@ -514,8 +514,8 @@ void MVideoWidgetView::drawContents(QPainter* painter, const QStyleOptionGraphic
             painter->drawImage(d->m_scaledVideoRect.toRect(), *d->image);
         }
     } else {
-        d->m_gstVideo->expose();
         painter->fillRect(boundingRect(), style()->colorKey());
+        d->m_gstVideo->expose();
     }
 }
 
@@ -615,6 +615,15 @@ void MVideoWidgetView::updateData(const QList<const char*>& modifications)
             updateGeometry();
             update();
         }
+        else if( member == MVideoWidgetModel::ScaleMode ) {
+            d->updateVideoGeometry();
+            update();
+        }
+        else if( member == MVideoWidgetModel::AspectRatioMode ) {
+            d->m_gstVideo->forceAspectRatio(model()->aspectRatioMode() == MVideoWidgetModel::AspectRatioOriginal);
+            d->updateVideoGeometry();
+            update();
+        }                
     }
 }
 
@@ -634,6 +643,8 @@ void MVideoWidgetView::setupModel()
         d->m_gstVideo->setRenderTarget(MGstVideo::MSink);
     }
 
+    d->m_gstVideo->forceAspectRatio(model()->aspectRatioMode() == MVideoWidgetModel::AspectRatioOriginal);
+    
     d->m_gstVideo->setLooping(model()->looping());
     d->m_gstVideo->open(model()->filename());
 

@@ -30,7 +30,8 @@ MGstVideo::MGstVideo()
         m_storedState(MVideo::NotReady),
         m_storedPosition(0),
         m_winId(0),
-        m_colorKey(Qt::black)
+        m_colorKey(Qt::black),
+        m_forceAspectRatio(true)
 {
     GError* error = NULL;
     if(!gst_init_check(NULL, NULL, &error)) {
@@ -255,8 +256,8 @@ void MGstVideo::setRenderTarget(MGstVideo::RenderTarget targetSink)
                     g_object_set(gst_elem_xvimagesink,
                                              "autopaint-colorkey", FALSE,
                                              "colorkey", m_colorKey.rgba() & 0x00FFFFFF,
-                                             //"force-aspect-ratio", TRUE,
-                                             //"draw-borders", TRUE,
+                                             "force-aspect-ratio", m_forceAspectRatio,
+                                             "draw-borders", TRUE,
                                              (void*) 0);
                     gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink), m_winId);   
                     expose();             
@@ -311,7 +312,6 @@ void MGstVideo::setColorKey(const QColor& key)
         g_object_set(gst_elem_xvimagesink,
                      "autopaint-colorkey", FALSE,
                      "colorkey", m_colorKey.rgba() & 0x00FFFFFF,
-                     //"force-aspect-ratio", FALSE,
                      (void*) 0);
     }
 }
@@ -320,6 +320,17 @@ QColor MGstVideo::colorKey()
 {
     return m_colorKey;
 }
+
+void MGstVideo::forceAspectRatio(bool forceAspectRatio)
+{
+    m_forceAspectRatio = forceAspectRatio;
+    if( gst_elem_xvimagesink ) {
+        g_object_set(gst_elem_xvimagesink,
+                     "force-aspect-ratio", m_forceAspectRatio,
+                     (void*) 0);
+    }
+}
+
 
 /*
  * Gstreamer message callback for catching general
@@ -548,8 +559,8 @@ GstElement* MGstVideo::makeSinks(bool yuv)
         g_object_set(gst_elem_xvimagesink,
                      "autopaint-colorkey", FALSE,
                       "colorkey", m_colorKey.rgba() & 0x00FFFFFF,
-                      //"force-aspect-ratio", TRUE,
-                      //"draw-borders", TRUE,
+                      "force-aspect-ratio", m_forceAspectRatio,
+                      "draw-borders", TRUE,
                       (void*) 0);
         gst_x_overlay_set_xwindow_id(GST_X_OVERLAY(gst_elem_xvimagesink), m_winId);                
     }else {

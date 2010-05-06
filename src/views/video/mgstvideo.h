@@ -70,14 +70,18 @@ public:
     bool lockFrameData();
     void unlockFrameData();
 
+    //gst and xv specific methods
     void setRenderTarget(MGstVideo::RenderTarget targetSink);
     MGstVideo::RenderTarget renderTarget();
-
+    
     void expose();
     void setWinId(unsigned long id);
     unsigned long winId();
+
     void setColorKey(const QColor& key);
     QColor colorKey();
+
+    void forceAspectRatio(bool forceAspectRatio);
 
 private:
 
@@ -133,6 +137,8 @@ private:
 
     unsigned long m_winId;
     QColor m_colorKey;
+    
+    bool m_forceAspectRatio;
 };
 
 //! \internal_end
