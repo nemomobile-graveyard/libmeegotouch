@@ -29,7 +29,7 @@ void Pt_MComponentData::constructor()
     char appName[] = "./widgetsgallery";
     argv[0] = appName;
 
-    MComponentData *componentData;
+    MComponentData *componentData = 0;
     QBENCHMARK_ONCE {
         componentData = new MComponentData(argc, argv, appName);
     }
