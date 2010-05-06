@@ -1,3 +1,9 @@
+libmeegotouch (0.20.8~1) unstable; urgency=low
+
+  * unreleased
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Thu, 06 May 2010 19:46:25 +0300
+
 libmeegotouch (0.20.7-1) unstable; urgency=low
 
   * Fixes: NB#161404 - Service framework call causes caller to crash if caller doesn't have applicationwindow
