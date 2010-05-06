@@ -156,10 +156,14 @@ void MListIndexViewPrivate::createContainer()
     disconnect(this, SLOT(exposedContentRectChanged()));
     if (controller->model()->list()) {
         container = MListViewPrivateNamespace::findParentWidgetOfType<MApplicationPage>(controller->model()->list());
-        controller->setParentItem(container);
 
-        connect(container, SIGNAL(exposedContentRectChanged()), this, SLOT(exposedContentRectChanged()));
-        exposedContentRectChanged();
+        if (container) {
+            controller->setParentItem(container);
+
+            connect(container, SIGNAL(exposedContentRectChanged()), this, SLOT(exposedContentRectChanged()));
+            exposedContentRectChanged();
+        }
+
     }
 
 }
