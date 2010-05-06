@@ -1,5 +1,5 @@
 TEMPLATE = app
-CONFIG += m
+CONFIG += meegotouch
 
 # Input
 SOURCES += *.cpp

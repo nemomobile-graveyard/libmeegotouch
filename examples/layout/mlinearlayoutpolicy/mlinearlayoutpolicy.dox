@@ -1,0 +1,16 @@
+/**
+\page layout-mlinearlayoutpolicy DuiLinearLayoutPolicy example
+
+Source code for a simple example of DuiLinearLayoutPolicy.
+
+\image html mlinearlayoutpolicy.png
+
+\include examples/layout/mlinearlayoutpolicy/mlinearlayoutpolicy.cpp
+
+Styled with the following mlinearlayoutpolicy.css file:
+\include examples/layout/mlinearlayoutpolicy/mlinearlayoutpolicy.css
+
+And compiled with the following mlinearlayoutpolicy.pro file:
+\include examples/layout/mlinearlayoutpolicy/mlinearlayoutpolicy.pro
+
+*/

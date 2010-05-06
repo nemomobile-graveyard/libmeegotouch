@@ -1,4 +1,4 @@
-CONFIG += m qt link_pkgconfig debug
+CONFIG += meegotouch qt link_pkgconfig debug
 TEMPLATE = app
 TARGET = apscanner
 DEPENDPATH += .

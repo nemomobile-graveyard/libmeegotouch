@@ -3,7 +3,7 @@
 
 Source code for a simple example of QGraphicsLinearLayout.
 
-\image html duilinearlayoutpolicy.png
+\image html mlinearlayoutpolicy.png
 
 Source code of qgraphicslinearlayout.cpp:
 \include examples/layout/qgraphicslinearlayout/qgraphicslinearlayout.cpp

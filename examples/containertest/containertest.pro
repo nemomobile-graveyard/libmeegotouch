@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = containertest
-CONFIG += m # Requires libm to be installed
+CONFIG += meegotouch 
 
 # Input
 SOURCES += main.cpp

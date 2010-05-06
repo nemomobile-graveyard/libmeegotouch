@@ -3,7 +3,7 @@ include($$MROOT/mkspecs/common.pri)
 
 TEMPLATE = app
 TARGET = imtoolbar
-CONFIG += m # Requires libm to be installed
+CONFIG += meegotouch 
 
 DEPENDPATH += .
 INCLUDEPATH += .

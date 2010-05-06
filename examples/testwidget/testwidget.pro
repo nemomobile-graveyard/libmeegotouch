@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = testwidget
-CONFIG += m # Requires libm to be installed
+CONFIG += meegotouch 
 
 # Input
 SOURCES += testwidgetmodel.cpp \

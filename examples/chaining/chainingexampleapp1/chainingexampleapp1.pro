@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = chainingexampleapp1
-CONFIG += m # Requires libm to be installed
+CONFIG += meegotouch 
 
 OBJECTS_DIR = ./.obj
 MOC_DIR     = ./.moc

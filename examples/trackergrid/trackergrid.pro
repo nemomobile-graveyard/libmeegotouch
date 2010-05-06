@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = trackergrid
-CONFIG += m # Requires libm to be installed
+CONFIG += meegotouch 
 LIBS += -lqttracker # Requires libqttracker + tracker
 
 # Input

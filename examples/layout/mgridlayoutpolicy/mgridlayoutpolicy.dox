@@ -1,0 +1,16 @@
+/**
+\page layout-mgridlayoutpolicy DuiGridLayoutPolicy example
+
+Source code for a simple example of DuiGridLayoutPolicy.
+
+\image html mgridlayoutpolicy.png
+
+\include examples/layout/mgridlayoutpolicy/mgridlayoutpolicy.cpp
+
+Styled with the following mgridlayoutpolicy.css file:
+\include examples/layout/mgridlayoutpolicy/mgridlayoutpolicy.css
+
+And compiled with the following mgridlayoutpolicy.pro file:
+\include examples/layout/mgridlayoutpolicy/mgridlayoutpolicy.pro
+
+*/

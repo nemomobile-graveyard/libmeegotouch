@@ -1,6 +1,6 @@
 TEMPLATE = lib
 TARGET   = chainingexampleinterface
-CONFIG += dll m
+CONFIG += dll meegotouch
 QT += dbus
 
 system(m-servicefwgen -p com.nokia.ChainingExampleInterface)
