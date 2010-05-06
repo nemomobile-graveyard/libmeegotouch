@@ -62,12 +62,12 @@ bool MComponentCachePrivate::populating()
 void MComponentCachePrivate::populateForMApplication()
 {
     static int argc = 1;
-    static char *argv0 = (char *)"generic";
+    static char *argv[] = {(char*)"generic"};
 
     cacheBeingPopulated = true;
 
     if (mApplicationInstance == 0) {
-        mApplicationInstance = new MApplication(argc, &argv0, 0);
+        mApplicationInstance = new MApplication(argc, argv, 0);
     } else {
         cacheBeingPopulated = false;
         qFatal("MComponentCache::populateForMApplication() - Cache is already populated.");
