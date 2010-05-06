@@ -58,16 +58,23 @@ void MBasicLayoutAnimation::setItemGeometry(int index, const QRectF &geometry) {
     Q_ASSERT(index >= 0 && index < d->states.count());
     MItemState &state = d->states[index];
     Q_ASSERT(state.item());
-    state.setTargetGeometry(geometry);
-    if (state.isSet(MItemState::STATE_FLAG_TO_BE_SHOWN)) {
+    if(state.isSet(MItemState::STATE_FLAG_SHOWING) && !state.isSet(MItemState::STATE_FLAG_TO_BE_HIDDEN)) {
+        QPointF originalPositionCenter = state.item()->pos() + QPointF(state.item()->transform().dx(), state.item()->transform().dy());
+        state.item()->setGeometry(geometry); //Note that the item's geometry doesn't have to be equal to geometry, since there are various constraints
+        QPointF offset = originalPositionCenter - state.item()->pos();
+        state.item()->setTransform( QTransform::fromTranslate(offset.x(), offset.y()) );
+        state.setSourceTranslatePoint(offset);
+    } else {
+        state.item()->setTransform( QTransform() );
+        state.item()->setGeometry(geometry); //Note that the item's geometry doesn't have to be equal to geometry, since there are various constraints
         d->doItemShownAnimation(&state);
-        //we only want to call the item shown animation once, so clear the shown flags
-        state.removeFlags(MItemState::STATE_FLAG_TO_BE_SHOWN);
         state.addFlags(MItemState::STATE_FLAG_SHOWING);
+        state.removeFlags(MItemState::STATE_FLAG_TO_BE_HIDDEN);
     }
+
     if (state.isAnimationDone()) {//Set the geometry anyway, so that it can refresh
-        state.item()->setOpacity(1); //Restore the opacity to 1, since we are hiding it now anyway
-        state.item()->setGeometry(state.targetGeometry());
+        state.item()->setOpacity(1);
+        state.item()->setTransform( QTransform() );
     } else
         start();
 }
@@ -76,10 +83,9 @@ void MBasicLayoutAnimation::hideItem(int index) {
     Q_ASSERT(index >= 0 && index < d->states.count());
     MItemState &state = d->states[index];
     Q_ASSERT(state.item());
-    //Check if its being hidden or if it is hiding (i.e. not shown and not to-be-shown
+    //Check if its being hidden or if it is hiding (i.e. not shown)
     if (state.isSet(MItemState::STATE_FLAG_TO_BE_HIDDEN) ||
-            (!state.isSet(MItemState::STATE_FLAG_TO_BE_SHOWN) &&
-             !state.isSet(MItemState::STATE_FLAG_SHOWING))) {
+            (!state.isSet(MItemState::STATE_FLAG_SHOWING))) {
         return; //It's already hiding/hidden.  Nothing to do
     }
     state.hide();

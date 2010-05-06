@@ -55,25 +55,22 @@ void MBasicLayoutAnimationPrivate::animate(MItemState &item)
 {
     Q_Q(MBasicLayoutAnimation);
 
-    QRectF target(item.targetGeometry());
-    QRectF start(item.sourceGeometry());
     qreal delta_progress = recordedTimeSinceLastUpdate / q->style()->duration(); //Both times are in milliseconds
 
     //First animate the geometry if needed
-    if (item.geometryProgress() != 1) {
+    if (item.translateProgress() != 1) {
         //animate the geometry
-        qreal new_geometry_progress = qMin(item.geometryProgress() + delta_progress, (qreal)1.0); //between 0 and 1
-        item.setGeometryProgress(new_geometry_progress);
-        qreal geometry_animation_value = q->style()->geometryEasingCurve().valueForProgress(new_geometry_progress);
-        if (item.geometryProgress() == 1) {
-            item.item()->setGeometry(target);
+        qreal new_geometry_progress = item.translateProgress() + delta_progress;
+        if (new_geometry_progress >= 1.0) {
+            item.setTransformProgress(1.0);
+            item.item()->setTransform( QTransform() );
         } else {
-            QSizeF new_size = start.size() + (target.size() - start.size()) * geometry_animation_value;
-            new_size = new_size.boundedTo(item.item()->maximumSize()).expandedTo(item.item()->minimumSize());
-            QPointF new_position = start.center() - QPointF(new_size.width() / 2, new_size.height() / 2) + (target.center() - start.center()) * geometry_animation_value;
-            QRectF new_geometry(new_position, new_size);
-            if (item.item()->geometry() != new_geometry)
-                item.item()->setGeometry(new_geometry);
+            item.setTransformProgress(new_geometry_progress);
+            qreal x_translation_animation_value = q->style()->xTranslationEasingCurve().valueForProgress(new_geometry_progress);
+            qreal y_translation_animation_value = q->style()->yTranslationEasingCurve().valueForProgress(new_geometry_progress);
+            qreal x_offset = item.sourceTranslate().x() * (1 - x_translation_animation_value);
+            qreal y_offset = item.sourceTranslate().y() * (1 - y_translation_animation_value);
+            item.item()->setTransform( QTransform::fromTranslate(x_offset, y_offset) );
         }
     }
 
@@ -95,7 +92,7 @@ void MBasicLayoutAnimationPrivate::animate(MItemState &item)
     }
 
     //Have we finished with this item now?
-    if (item.opacityProgress() == 1 && item.geometryProgress() == 1) {
+    if (item.opacityProgress() == 1 && item.translateProgress() == 1) {
         if (item.isSet(MItemState::STATE_FLAG_TO_BE_HIDDEN)) {
             if (item.targetOpacity() != -1)
                 item.item()->setOpacity(1); //Restore the opacity to 1, since we are hiding it now anyway
@@ -109,23 +106,6 @@ void MBasicLayoutAnimationPrivate::doItemHiddenAnimation(MItemState *itemstate)
 {
     Q_Q(MBasicLayoutAnimation);
     Q_ASSERT(itemstate->item());
-    // for item hiding it should deflate from its current size to final-hiding-scale-factor
-    qreal finalScaleFactor = q->style()->finalHidingScaleFactor();
-    QRectF finalGeometry;
-    if (finalScaleFactor == 1.0) {
-        finalGeometry = itemstate->item()->geometry();
-    } else {
-        QSizeF size = itemstate->item()->effectiveSizeHint(Qt::MinimumSize);
-        if (finalScaleFactor > 0) {
-            size = size.expandedTo(itemstate->item()->geometry().size() * finalScaleFactor)
-                   .boundedTo(itemstate->item()->effectiveSizeHint(Qt::MaximumSize));
-        }
-        finalGeometry = QRectF(QPointF(0, 0), size);
-        finalGeometry.moveCenter(itemstate->item()->geometry().center());
-    }
-
-    if (itemstate->targetGeometry().size() != finalGeometry.size())
-        itemstate->setTargetGeometry(finalGeometry);
 
     QGraphicsItem *graphicsItem = itemstate->item()->graphicsItem();
     if (graphicsItem) {
@@ -138,43 +118,22 @@ void MBasicLayoutAnimationPrivate::doItemShownAnimation(MItemState *itemstate)
 {
     Q_Q(MBasicLayoutAnimation);
     Q_ASSERT(itemstate->item());
+    q->showItemNow(itemstate->item());
+    QGraphicsItem *graphicsItem = itemstate->item()->graphicsItem();
+    if(!graphicsItem)
+        return;
     if (itemstate->isSet(MItemState::STATE_FLAG_SHOWING)) {
         //If the item is already visible, this can be called because we were currently doing a hide animation.
         //So just make sure that we make everything visible
-        q->showItemNow(itemstate->item());
-        QGraphicsItem *graphicsItem = itemstate->item()->graphicsItem();
-        if (graphicsItem) {
-            itemstate->setTargetOpacity(1);
-            graphicsItem->setOpacity(1);
-        }
+        itemstate->setTargetOpacity(1);
+        graphicsItem->setOpacity(1);
         return;
     }
-    //If the item that started this animation is to be added/shown, set the initial geometry
-    qreal initialScaleFactor = q->style()->initialShowingScaleFactor();
-    QRectF initialGeometry;
 
-    if (initialScaleFactor == 1.0) {
-        initialGeometry = itemstate->targetGeometry();
-    } else {
-        QSizeF size = itemstate->item()->effectiveSizeHint(Qt::MinimumSize);
-        if (initialScaleFactor != 0.0) {
-            size = size.expandedTo(itemstate->targetGeometry().size() * initialScaleFactor)
-                   .boundedTo(itemstate->item()->effectiveSizeHint(Qt::MaximumSize));
-        }
-        initialGeometry = QRectF(QPointF(0, 0), size);
-        initialGeometry.moveCenter(itemstate->targetGeometry().center());
-    }
-
-    itemstate->setGeometry(initialGeometry);
-
-    q->showItemNow(itemstate->item());
-    QGraphicsItem *graphicsItem = itemstate->item()->graphicsItem();
-    if (graphicsItem) {
-        qreal initialOpacity = q->style()->initialShowingOpacity();
-        if (initialOpacity != 1.0) {
-            graphicsItem->setOpacity(initialOpacity);
-            itemstate->setTargetOpacity(1);
-        }
+    qreal initialOpacity = q->style()->initialShowingOpacity();
+    if (initialOpacity != 1.0) {
+        graphicsItem->setOpacity(initialOpacity);
+        itemstate->setTargetOpacity(1);
     }
 }
 

@@ -31,12 +31,11 @@ class M_EXPORT MBasicLayoutAnimationStyle : public MLayoutAnimationStyle
     M_STYLE_INTERNAL(MBasicLayoutAnimationStyle)
 
     M_STYLE_ATTRIBUTE(int, duration, Duration)
-    M_STYLE_ATTRIBUTE(QEasingCurve, geometryEasingCurve, GeometryEasingCurve)
+    M_STYLE_ATTRIBUTE(QEasingCurve, xTranslationEasingCurve, XTranslationEasingCurve)
+    M_STYLE_ATTRIBUTE(QEasingCurve, yTranslationEasingCurve, YTranslationEasingCurve)
     M_STYLE_ATTRIBUTE(QEasingCurve, opacityEasingCurve, OpacityEasingCurve)
     M_STYLE_ATTRIBUTE(qreal, initialShowingOpacity, InitialShowingOpacity)
-    M_STYLE_ATTRIBUTE(qreal, initialShowingScaleFactor, InitialShowingScaleFactor)
     M_STYLE_ATTRIBUTE(qreal, finalHidingOpacity, FinalHidingOpacity)
-    M_STYLE_ATTRIBUTE(qreal, finalHidingScaleFactor, FinalHidingScaleFactor)
 };
 
 // TODO: get rid of this container

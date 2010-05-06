@@ -43,9 +43,8 @@ public:
         STATE_FLAG_NONE = 0, //!< If none of the other flags are set, this indicates that the item is not being shown
         /* The item is still doing its remove-animation. */
         STATE_FLAG_TO_BE_DELETED = 1, //!< Indicates that the item will be deleted as soon as its hidden/
-        STATE_FLAG_TO_BE_SHOWN = 2,   //!< Indicates that setTargetGeometry has been called for an item that wasn't SHOWING.  The animator will move the item into its starting position and clear this flag.  This is not set during any showing animation.
-        STATE_FLAG_TO_BE_HIDDEN = 4,  //!< Indicates that hide() has been called for an item was SHOWING.  The animator will set the hiding animation.  Both this flag and the SHOWING flag will be left set during any hiding animation.  One the animation is finished, the item will be hidden and both this flag and SHOWING will be cleared.  If TO_BE_DELETED is set, the item is deleted.
-        STATE_FLAG_SHOWING = 8  //!< Whether the item is currently visible by the user
+        STATE_FLAG_TO_BE_HIDDEN = 2,  //!< Indicates that hide() has been called for an item was SHOWING.  The animator will set the hiding animation.  Both this flag and the SHOWING flag will be left set during any hiding animation.  One the animation is finished, the item will be hidden and both this flag and SHOWING will be cleared.  If TO_BE_DELETED is set, the item is deleted.
+        STATE_FLAG_SHOWING = 4  //!< Whether the item is currently visible by the user
     };
     Q_DECLARE_FLAGS(Flags, Flag)
 
@@ -70,14 +69,9 @@ public:
     QGraphicsWidget *item() const;
 
     /*!
-     * \brief Getter for the source position.
+     * \brief Getter for the starting offset to draw the item
      */
-    QRectF sourceGeometry() const;
-
-    /*!
-     * \brief Getter for the target position.
-     */
-    QRectF targetGeometry() const;
+    QPointF sourceTranslate() const;
 
     /*!
      * \brief Getter for the state flags.
@@ -85,20 +79,11 @@ public:
     Flags flags() const;
 
     /*!
-     * \brief Set a new target position.
+     * \brief Set a new starting offset to draw the item.
      *
-     * This will set the target geometry to the given rectangle, and set
-     * source geometry to be the current item geometry
+     * This will set the starting offset for where to draw the item.
      */
-    void setTargetGeometry(const QRectF &rect);
-
-    /*!
-     * \brief Set the current position, restarting the animation
-     *
-     * This will set the item's geometry to the rectangle and set the source
-     * geometry, restarting the animation.
-     */
-    void setGeometry(const QRectF &rect);
+    void setSourceTranslatePoint(const QPointF &translatePoint);
 
     /*!
      * \brief set a new target opacity.
@@ -166,7 +151,7 @@ public:
      * far into the geometry animation we are
      * If this is set to -1, the geometry will not be changed.
      */
-    qreal geometryProgress() const;
+    qreal translateProgress() const;
 
     /*!
      * \brief Current opacity progress for this item
@@ -186,7 +171,7 @@ public:
      *
      * The animator will use this value to set the geometry
      */
-    void setGeometryProgress(qreal progress);
+    void setTransformProgress(qreal progress);
 
     /*!
      * \brief Set the current opacity progress for this item
@@ -200,7 +185,7 @@ public:
 
     /** \brief Whether the animation is completed
      *
-     *  Equivalent to geometryProgress() == 1 && opacityProgress == 1
+     *  Equivalent to translateProgress() == 1 && opacityProgress == 1
      */
     bool isAnimationDone() const;
     void animationDone();
@@ -212,20 +197,11 @@ private:
     QGraphicsWidget *m_item;
 
     /*!
-     * \brief The position of the item in the layout.
+     * \brief The original offset to paint the item
      *
-     * This position is the one the item had before the currently
-     * active change was issued.
+     * The item's translatePoint value is animated from this value to the (0,0).
      */
-    QRectF m_sourceGeometry;
-
-    /*!
-     * \brief The position of the item in the layout.
-     *
-     * This is the position the item should have once all in-flight
-     * operations are finished.
-     */
-    QRectF m_targetGeometry;
+    QPointF m_sourceTranslate;
 
     qreal m_sourceOpacity;
     qreal m_targetOpacity;
@@ -239,7 +215,7 @@ private:
      * \brief Current progress of animation of the geometry
      * Between 0 and 1.  1 indicating finished.
      */
-    qreal m_geometryProgress;
+    qreal m_translateProgress;
     /*!
      * \brief Current progress of animation of the opacity
      * Between 0 and 1.  1 indicating finished.

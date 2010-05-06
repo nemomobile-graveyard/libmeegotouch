@@ -39,9 +39,8 @@ MLayout::MLayout(QGraphicsLayoutItem *parent) :
     QSizePolicy newSizePolicy(sizePolicy());
     newSizePolicy.setHeightForWidth(true);
     setSizePolicy(newSizePolicy);
-    // Disabling layout animations by default. Unfortunately they are not working
-    // nicely.
-    //new MBasicLayoutAnimation(this);
+    // Disabling layout animations by default
+    // new MBasicLayoutAnimation(this);
 }
 
 MLayout::~MLayout()
