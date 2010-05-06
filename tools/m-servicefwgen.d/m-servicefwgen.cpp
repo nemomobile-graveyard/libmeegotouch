@@ -30,7 +30,8 @@
 
 #include <QDomDocument>
 
-class Worker {
+class Worker
+{
 public:
     Worker();
 
@@ -217,7 +218,6 @@ void Worker::setNeedsMApplication( bool val )
     m_needsMApplication = val;
 }
 
-
 QString Worker::upperCamelServiceName()
 {
     return m_upperCamelServiceName;
@@ -370,8 +370,7 @@ QString getDoxygenFromXml( const QString& xml, int indentCount )
     QDomElement el = node.toElement();
     el = el.firstChildElement( "arg" );
 
-    while ( ! el.isNull() )
-    {
+    while ( ! el.isNull() ) {
         xmlTokens.insert( el.attribute( "tag" ), el.text() );
         el = el.nextSiblingElement( "arg" );
     }
@@ -392,20 +391,17 @@ QString getDoxygenFromXml( const QString& xml, int indentCount )
 
     bool hasDoc = false;
 
-    foreach( const QString dT, doxTokens )
-    {
-        if ( !xmlTokens.value( dT ).isEmpty() )
-        {
+    foreach( const QString dT, doxTokens ) {
+
+        if ( !xmlTokens.value( dT ).isEmpty() ) {
             hasDoc = true;
 
             QString longLine = "@" + dT + " " + xmlTokens.value( dT );
 
-            while ( !longLine.isEmpty() )
-            {
+            while ( !longLine.isEmpty() ) {
                 int pos = longLine.indexOf( ' ', 60 - indentCount );
 
-                if ( pos == -1 )
-                {
+                if ( pos == -1 ) {
                     pos = longLine.length();
                 }
 
@@ -418,12 +414,9 @@ QString getDoxygenFromXml( const QString& xml, int indentCount )
 
     s << indent << " */\n";
 
-    if ( hasDoc )
-    {
+    if ( hasDoc ) {
         return result;
-    }
-    else
-    {
+    } else {
         return "";
     }
 }
@@ -457,7 +450,6 @@ QString Worker::hideThisWindowCode()
 ";
 }
 
-
 QString Worker::topBitH()
 {
     QString commandLine(QCoreApplication::arguments().join(" "));
@@ -476,7 +468,6 @@ QString Worker::topBitH()
 #include <mservicefwbaseif.h>\n";
 }
 
-
 QString Worker::middleBitH()
 {
     return
@@ -486,7 +477,6 @@ Q_OBJECT\n\
 \n\
 public:\n";
 }
-
 
 QString Worker::botBitH()
 {
@@ -516,7 +506,6 @@ Q_SIGNALS:\n\
 ";
 }
 
-
 QString Worker::topBitC()
 {
     QString commandLine(QCoreApplication::arguments().join(" "));
@@ -530,7 +519,6 @@ QString Worker::topBitC()
 #include \"" + wrapperHeaderFileName() + "\"\n\
 #include \"" + proxyHeaderFileName() + "\"\n";
 }
-
 
 QString Worker::botBitC()
 {
@@ -566,7 +554,6 @@ void " + upperCamelServiceName() + "::setService(const QString & service)\n\
     }\n\
 }\n";
 }
-
 
 QString Worker::mHeaders()
 {
@@ -604,8 +591,7 @@ void Worker::preprocessXML()
     int errorLine;
     int errorColumn;
 
-    if (!doc.setContent(&inFile, true, &errorStr, &errorLine, &errorColumn))
-    {
+    if (!doc.setContent(&inFile, true, &errorStr, &errorLine, &errorColumn)) {
         qWarning( "doc.setContent failed" );
         return;
     }
@@ -617,8 +603,7 @@ void Worker::preprocessXML()
     // and mangle the doctag, chaintasktag and asynctag strings into the method names
 
     QDomNode node = doc.documentElement();
-    if ( node.nodeName() != "node" )
-    {
+    if ( node.nodeName() != "node" ) {
         qCritical( "Error: this is not a valid interface. exiting" );
         exit( -1 );
     }
@@ -627,8 +612,7 @@ void Worker::preprocessXML()
     el = el.firstChildElement( "interface" );
 
     // try to save and drop <doc> child of <interface>
-    if ( !el.firstChildElement( "doc" ).isNull() )
-    {
+    if ( !el.firstChildElement( "doc" ).isNull() ) {
         QString string;
         QTextStream stream( &string );
         el.firstChildElement( "doc" ).save( stream, 4 );
@@ -644,24 +628,20 @@ void Worker::preprocessXML()
     // walk over the methods
     el = el.firstChildElement( "method" );
 
-    while ( ! el.isNull() )
-    {
+    while ( ! el.isNull() ) {
         // now handle chainTask and asyncTask for this method
-        if ( el.attribute( "chainTask" ) == "true" )
-        {
+        if ( el.attribute( "chainTask" ) == "true" ) {
             el.setAttribute( "name", el.attribute( "name" ) + chainTag() );
             setNeedsMApplication( true );
         }
 
-        if ( el.attribute( "asyncTask" ) == "true" )
-        {
+        if ( el.attribute( "asyncTask" ) == "true" ) {
             el.setAttribute( "name", el.attribute( "name" ) + asyncTag() );
             setNeedsMApplication( true );
         }
 
         // handle doc
-        if ( ! el.firstChildElement( "doc" ).isNull() )
-        {
+        if ( ! el.firstChildElement( "doc" ).isNull() ) {
             QString string;
             QTextStream stream( &string );
             el.firstChildElement( "doc" ).save( stream, 4 );
@@ -1045,17 +1025,14 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
 //     {
 //         newProxyHeaderStream << w.mHeaders() << line << "\n";
 //     }
-    if (w.needsMApplication() && line.contains(QRegExp("#include <QtDBus/QtDBus>")))
-    {
+    if (w.needsMApplication() && line.contains(QRegExp("#include <QtDBus/QtDBus>"))) {
         newProxyHeaderStream << line << "\n\n" << w.mHeaders();
     }
-    else if (w.needsMApplication() && line.contains(w.newXmlFileName()))
-    {
+    else if (w.needsMApplication() && line.contains(w.newXmlFileName())) {
         line.replace(w.newXmlFileName(), w.xmlFileName());
         newProxyHeaderStream << line << "\n";
     }
-    else if (inChainTask)
-    {
+    else if (inChainTask) {
         if (line.contains("QList<QVariant>"))
         {
             newProxyHeaderStream << "\
@@ -1074,27 +1051,23 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
         argumentList << qVariantFromValue(windowTitle);\n\
         argumentList << qVariantFromValue((uint)windowId);\n";
         }
-        else if (line.contains("return"))
-        {
+        else if (line.contains("return")) {
             newProxyHeaderStream << w.hideThisWindowCode() << endl;
 
             line.remove(w.chainTag());
             newProxyHeaderStream << line << "\n";
             inChainTask = false;
         }
-        else
-        {
+        else {
             newProxyHeaderStream << line << "\n";
         }
     }
-    else if (line.contains(w.chainTag()))
-    {
+    else if (line.contains(w.chainTag())) {
         line.remove(w.chainTag());
         newProxyHeaderStream << line << "\n";
         inChainTask = true;
     }
-    else
-    {
+    else {
         newProxyHeaderStream << line << "\n";
     }
 }
@@ -1152,19 +1125,17 @@ void processProxyHeaderFile()
     bool inSignalSection = false;
     bool inChainTask     = false;
 
-    while ( ! proxyHeaderStream.atEnd() )
-    {
+    while ( ! proxyHeaderStream.atEnd() ) {
         QString line = proxyHeaderStream.readLine();
+
+        line.replace( w.qdbusxml2cppRegExp(), w.applicationName() );
 
         // add documentation and remove doc tags here
         // note that middle bit is added here too, so it's not just about doc
-        if (line.contains(QRegExp("^class")))
-        {
+        if (line.contains(QRegExp("^class"))) {
             wrapperHeaderStream << w.mangledClassDoc();
             wrapperHeaderStream << w.middleBitH();
-        }
-        else if ( line.contains( w.docTag() ) )
-        {
+        } else if ( line.contains( w.docTag() ) ) {
             // we have to handle doxygen doc here.
             // we have three cases:
             // - class documentation
@@ -1172,8 +1143,7 @@ void processProxyHeaderFile()
             // - a docTag, that can be ignored, because
             //   it appears somewhere in a method implementation
 
-            if ( ! line.contains( "return" ) )
-            {
+            if ( ! line.contains( "return" ) ) {
                 // method docs
                 QRegExp rx( w.docTag() + "(\\d+)" );
 
@@ -1182,8 +1152,7 @@ void processProxyHeaderFile()
 
                 int id = rx.cap( 1 ).toInt();
 
-                if ( id > 0 )
-                {
+                if ( id > 0 ) {
                     wrapperHeaderStream << w.mangledMethodDoc( id );
                 }
             }
@@ -1199,35 +1168,25 @@ void processProxyHeaderFile()
 
         line.remove( w.chainTag() );
 
-        if (inSignalSection)
-        {
+        if (inSignalSection) {
             bool atEndOfSignalSection = (line == "};");
-            if (atEndOfSignalSection)
-            {
+            if (atEndOfSignalSection) {
                 inSignalSection = false;
-            }
-            else
-            {
+            } else {
                 ifSignals.append(line);
             }
-        }
-        else
-        {
-            if (line.contains("Q_SIGNALS:"))
-            {
+        } else {
+            if (line.contains("Q_SIGNALS:")) {
                 inSignalSection = true;
-            }
-            else
-            {
+            } else {
                 QRegExp matchThis("inline\\s+QDBusPendingReply<([^>]*)>\\s*(\\w+)\\(([^)]*)\\)");
-                if (line.contains(matchThis))
-                {
+
+                if (line.contains(matchThis)) {
                     QString returnType = matchThis.cap(1);
                     QString methodName = matchThis.cap(2);
                     QString parameters = matchThis.cap(3);
 
-                    if (returnType.isEmpty())
-                    {
+                    if (returnType.isEmpty()) {
                         returnType = "void";
                     }
 
@@ -1242,13 +1201,10 @@ returnType + " " + w.upperCamelServiceName() + "::" + methodName + "( " + parame
                     wrapperCppStream <<
 "{" << endl;
 
-                    if (returnType == "void")
-                    {
+                    if (returnType == "void") {
                         wrapperCppStream <<
 "    static_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "( " + paramNames.join(", ") + " );" << endl;
-                    }
-                    else
-                    {
+                    } else {
                         wrapperCppStream <<
 "    return qobject_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "( " + paramNames.join(", ") + " ).value();" << endl;
                     }
@@ -1294,28 +1250,23 @@ void processProxyCppFile()
     }
     QTextStream outS(&outFile);
 
-    while ( ! inS.atEnd() )
-    {
+    while ( ! inS.atEnd() ) {
         QString line = inS.readLine();
 
-        if ( line.contains( w.docTag() ) )
-        {
+        if ( line.contains( w.docTag() ) ) {
             w.removeDocTag( line );
         }
 
-        if ( line.contains( w.chainTag() ) )
-        {
+        if ( line.contains( w.chainTag() ) ) {
             line.remove( w.chainTag() );
         }
 
-        if ( line.contains( w.asyncTag() ) )
-        {
+        if ( line.contains( w.asyncTag() ) ) {
             line.remove( w.asyncTag() );
         }
 
-        if ( line.contains( w.newXmlFileName() ) )
-        {
-            line.replace(w.newXmlFileName(), w.xmlFileName());
+        if ( line.contains( w.newXmlFileName() ) ) {
+            line.replace( w.newXmlFileName(), w.xmlFileName() );
         }
 
         outS << line << "\n";
@@ -1331,10 +1282,13 @@ void runQDBusXml2Cpp(const QStringList &params)
     qdbusxml2cpp.setWorkingDirectory(cwd);
 
     qdbusxml2cpp.start(command, params);
-    if (!qdbusxml2cpp.waitForStarted())
+    if (!qdbusxml2cpp.waitForStarted()) {
         qCritical() << qdbusxml2cpp.error();
-    if (!qdbusxml2cpp.waitForFinished())
+    }
+
+    if (!qdbusxml2cpp.waitForFinished()) {
         qCritical() << "m-servicefwgen: " << command << "did not finish";
+    }
 }
 
 void usage()
@@ -1363,21 +1317,24 @@ int main(int argc, char *argv[])
 
         if (arg == "-h") {
             usage();
-        } else if (arg == "-a") {
+        }
+        else if (arg == "-a") {
             w.setCreateAdaptor( true );
             if ( w.createProxy() ) {
                 qDebug() << "both -p and -a supplied";
                 qDebug() << "disabling proxy generation";
                 w.setCreateProxy( false );
             }
-        } else if (arg == "-p") {
+        }
+        else if (arg == "-p") {
             w.setCreateProxy( true );
             if ( w.createAdaptor() ) {
                 qDebug() << "both -p and -a supplied";
                 qDebug() << "disabling adaptor generation";
                 w.setCreateAdaptor( false );
             }
-        } else {
+        }
+        else {
             QStringList bits = arg.split("/");
 
             interfaceName = bits.takeLast();
@@ -1401,8 +1358,7 @@ int main(int argc, char *argv[])
     w.setInterfaceName( interfaceName );
     w.preprocessXML();
 
-    if ( w.createProxy() )
-    {
+    if ( w.createProxy() ) {
         runQDBusXml2Cpp(QStringList()
                         << "-c"
                         << w.upperCamelProxyName()
@@ -1412,9 +1368,7 @@ int main(int argc, char *argv[])
 
         processProxyHeaderFile();
 //        processProxyCppFile();
-    }
-    else
-    {
+    } else {
         runQDBusXml2Cpp(QStringList()
                         << "-c"
                         << w.upperCamelAdaptorName()
