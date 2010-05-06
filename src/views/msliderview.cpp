@@ -701,21 +701,28 @@ QSizeF MSliderGroove::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
             return QSizeF(minimumLength, sliderHandle->sizeHint(Qt::PreferredSize).height());
         if (orientation == Qt::Vertical)
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), minimumLength);
+
+        break;
     }
     case Qt::PreferredSize: {
         if (orientation == Qt::Horizontal)
             return QSizeF(preferredLength, sliderHandle->sizeHint(Qt::PreferredSize).height());
         if (orientation == Qt::Vertical)
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), preferredLength);
+
+        break;
     }
     case Qt::MaximumSize: {
         if (orientation == Qt::Horizontal)
             return QSizeF(maximumLength, sliderHandle->sizeHint(Qt::PreferredSize).height());
         if (orientation == Qt::Vertical)
             return QSizeF(sliderHandle->sizeHint(Qt::PreferredSize).width(), maximumLength);
+
+        break;
     }
     default:
         mWarning("MSliderView") << "MSliderView::sizeHint() don't know how to handle the value of 'which' ";
+        break;
     }
 
     return QSizeF(0, 0);
