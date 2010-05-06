@@ -54,6 +54,10 @@
 // end testability
 #endif
 
+#ifdef Q_WS_X11
+#include <QX11Info>
+#include <X11/extensions/Xfixes.h>
+#endif
 
 namespace
 {
@@ -878,11 +882,19 @@ void MComponentData::setShowCursor(bool show)
     }
 
     if (show) {
+#ifdef Q_WS_X11
+        XFixesShowCursor(QX11Info::display(), QX11Info::appRootWindow());
+#else
         qApp->restoreOverrideCursor();
+#endif
     } else {
+#ifdef Q_WS_X11
+        XFixesHideCursor(QX11Info::display(), QX11Info::appRootWindow());
+#else
         QPixmap cursor(QSize(1, 1));
         cursor.fill(Qt::transparent);
         qApp->setOverrideCursor(cursor);
+#endif
     }
 
     gMComponentDataPrivate->showCursor = show;
