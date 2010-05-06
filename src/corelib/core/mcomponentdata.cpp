@@ -281,9 +281,9 @@ MComponentData::MComponentData(MApplicationService *service) :
     MComponentData::self = this;
 
     int argc = 0;
-    char *argv = 0;
+    char *argv[] = {0};
 
-    d->init(argc, &argv, QString(), service);
+    d->init(argc, argv, QString(), service);
 }
 
 void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
