@@ -71,8 +71,14 @@ MDeviceProfile *MDeviceProfile::instance()
 {
     MComponentData *data = MComponentData::instance();
     if (!data)
+    {
         qFatal("There is no instance of MDeviceProfile. Please create MComponentData first.");
-    return data->d_ptr->deviceProfile;
+        return 0;
+    }
+    else
+    {
+        return data->d_ptr->deviceProfile;
+    }
 }
 
 MDeviceProfile::MDeviceProfile(QObject *parent)
