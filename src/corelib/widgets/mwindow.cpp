@@ -210,7 +210,8 @@ M::Orientation MWindowPrivate::orientation(M::OrientationAngle angle) const
 // return true if modifiers match what is required for debug keyboard shortcuts
 bool MWindowPrivate::debugShortcutModifiersPresent(Qt::KeyboardModifiers modifiers) const
 {
-    return (modifiers & (Qt::ControlModifier | Qt::AltModifier));
+    return (modifiers & (Qt::ControlModifier | Qt::AltModifier)
+            && (modifiers & Qt::ShiftModifier));
 }
 
 void MWindowPrivate::notifyWidgetsAboutOrientationChange()
