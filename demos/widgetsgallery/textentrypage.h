@@ -79,6 +79,7 @@ private:
     MLabel *label6;
     MLabel *label7;
     MLabel *label8;
+    MLabel *label9;
     MLabel *labelNoEcho;
     MLabel *labelEchoOnEdit;
     MLabel *labelDirectIM;

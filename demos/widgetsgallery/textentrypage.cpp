@@ -25,6 +25,7 @@
 #include <MButton>
 #include <MCompleter>
 #include <MSceneManager>
+#include <MRichTextEdit>
 #include <QList>
 #include <QStringListModel>
 #include <QDebug>
@@ -490,6 +491,18 @@ void TextEntryPage::createContent()
     layoutPolicy->addItem(Entries.at(row), row, 1);
     row++;
 
+    // rich text entry
+    Entries << new MRichTextEdit(MTextEditModel::SingleLine, "", centralWidget());
+
+    label9 = new MLabel(centralWidget());
+    label9->setWordWrap(true);
+    label9->setMinimumWidth(MaxminLabelWidth);
+    label9->setMaximumWidth(MaxminLabelWidth);
+    label9->setAlignment(Qt::AlignTop);
+    layoutPolicy->addItem(label9, row, 0);
+    layoutPolicy->addItem(Entries.at(row), row, 1);
+    row++;
+
     //direct input custom widget.
     directIMWidget = new CustomDirectIMWidget(centralWidget());
     labelDirectIM = new MLabel(centralWidget());
@@ -600,6 +613,8 @@ void TextEntryPage::retranslateUi()
     label7->setText(qtTrId("xx_textentry_singleselectall"));
     //% "Email suggestion text:"
     label8->setText(qtTrId("xx_textentry_completion_text"));
+    //% "Rich Text:"
+    label9->setText(qtTrId("xx_textentry_richtext_text"));
 
     //% "No Echo mode:"
     labelNoEcho->setText(qtTrId("xx_textentry_noecho"));
