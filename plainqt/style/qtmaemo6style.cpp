@@ -98,7 +98,7 @@
 #define SCROLLAREATHUMBVIEW "scrollAreaThumbView"
 
 //#define MOVE_ACTIONS_FROM_TOOLBAR_TO_TITLEBAR
-//#define M_LOG_POLISH
+#define M_LOG_POLISH
 
 QPixmap setPixmapOpacity(const QPixmap &pixmap, double opacity)
 {
@@ -147,18 +147,7 @@ void QtMaemo6StylePrivate::initM()
 
     m_isMInitialized = true;
 
-    QStringList args = qApp->arguments();
 
-    int argc = 1;
-    char *argv[ 1 ];
-    argv[ 0 ] = 0;
-
-    if (! args.isEmpty()) {
-        //FIXME: using QString would be nicer
-        argv[ 0 ] = strndup(args[ 0 ].toLocal8Bit().constData(), 42);
-
-        qDebug("appName: %s", argv[ 0 ]);
-    }
 
     m_windowEventFilter = new QtMaemo6StyleEventFilter(q);
     m_scrollBarEventFilter = new QtMaemo6ScrollBarEventFilter(q);
@@ -168,6 +157,21 @@ void QtMaemo6StylePrivate::initM()
     if (MComponentData::instance() != 0) {
         m_isMApplication = true;
     } else {
+        qDebug() << "App:" << qApp;
+        QStringList args = qApp->arguments();
+
+        qDebug() << "blabla" << args;
+
+        int argc = 1;
+        char *argv[ 1 ];
+        argv[ 0 ] = 0;
+
+        if (! args.isEmpty()) {
+            //FIXME: using QString would be nicer
+            argv[ 0 ] = strndup(args[ 0 ].toLocal8Bit().constData(), 42);
+
+            qDebug("appName: %s", argv[ 0 ]);
+        }
         m_componentData = new MComponentData(argc, argv);
     }
 
@@ -873,7 +877,7 @@ void QtMaemo6Style::polish(QWidget *widget)
     }
 
 #ifdef M_LOG_POLISH
-    QString filename = QString("/home/mstyle_%1.log").arg( QCoreApplication::applicationFilePath().section('/', -1 ) );
+    QString filename = QString("/tmp/mstyle_%1.log").arg( QCoreApplication::applicationFilePath().section('/', -1 ) );
 
     QFile file( filename );
     if (file.open(QIODevice::Append | QIODevice::Text)) {
