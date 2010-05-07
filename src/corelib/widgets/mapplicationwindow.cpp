@@ -85,7 +85,9 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , escapeButtonPanel(new MEscapeButtonPanel)
     , menu(new MApplicationMenu)
     , isMenuOpen(false)
-    , callOngoing(false)
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    , callStatusProperty("com.nokia.policy.call")
+#endif
     , showingStatusBar(false)
     , showingDockWidget(false)
 {
@@ -169,16 +171,9 @@ void MApplicationWindowPrivate::init()
 
     initAutoHideComponentsTimer();
 
-#ifdef HAVE_DBUS
-    // TODO: Take that info from Context Framework instead,
-    //       once it becomes available.
-    //       Initialization of callOngoing variable is missing at the moment.
-    QDBusConnection systemBus(QDBusConnection::systemBus());
-    systemBus.connect("", "/com/nokia/csd/csnet",
-                      "com.nokia.csd.CSNet", "ActivityChanged", q,
-                      SLOT(_q_updateCallOngoingState(QString)));
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    q->connect(&callStatusProperty, SIGNAL(valueChanged()), SLOT(_q_updateStatusBarVisibility()));
 #endif
-
     q->connect(q, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
             SLOT(_q_updatePageExposedContentRect()));
 }
@@ -224,31 +219,32 @@ void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *
         return;
 
     // Status bar should always be visible while a phone call is ongoing.
-    if (!callOngoing) {
-        if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
-            q->sceneManager()->disappearSceneWindowNow(statusBar);
-        } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
-            q->sceneManager()->appearSceneWindowNow(statusBar);
-        }
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    if (callStatusProperty.value().toString() == "active")
+        return;
+#endif
+
+    if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
+        q->sceneManager()->disappearSceneWindowNow(statusBar);
+    } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
+        q->sceneManager()->appearSceneWindowNow(statusBar);
     }
 }
 
-#ifdef HAVE_DBUS
-void MApplicationWindowPrivate::_q_updateCallOngoingState(QString mode)
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
 {
     Q_Q(MApplicationWindow);
     if (!statusBar)
         return;
     // Status bar should always be visible while a phone call is ongoing.
 
-    if (mode == "Call") {
-        callOngoing = true;
-        if (q->isFullScreen())
+    if (q->isFullScreen()) {
+        if (callStatusProperty.value().toString() == "active") {
             q->sceneManager()->appearSceneWindowNow(statusBar);
-    } else if (callOngoing) {
-        callOngoing = false;
-        if (q->isFullScreen())
+        } else {
             q->sceneManager()->disappearSceneWindowNow(statusBar);
+        }
     }
 }
 #endif

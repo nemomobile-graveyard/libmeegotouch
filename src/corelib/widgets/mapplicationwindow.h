@@ -170,8 +170,8 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_handlePageModelModifications(const QList<const char *>&))
     Q_PRIVATE_SLOT(d_func(), void _q_menuAppeared())
     Q_PRIVATE_SLOT(d_func(), void _q_menuDisappeared())
-#ifdef HAVE_DBUS
-    Q_PRIVATE_SLOT(d_func(), void _q_updateCallOngoingState(QString))
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    Q_PRIVATE_SLOT(d_func(), void _q_updateStatusBarVisibility())
 #endif
 #ifdef HAVE_N900
     Q_PRIVATE_SLOT(d_func(), void _q_exitAppView())
