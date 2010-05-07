@@ -59,9 +59,9 @@ ifeq (,$(findstring notestability,$(DEB_BUILD_OPTIONS)))
      OPTIONS += -testable
 endif
 
-#add plainqt 
-ifneq (,$(findstring plainqt,$(DEB_BUILD_OPTIONS)))
-     OPTIONS += -plainqt
+#disable plain qt by setting DEB_BUILD_OPTION=noplainqt,...
+ifneq (,$(findstring noplainqt,$(DEB_BUILD_OPTIONS)))
+     OPTIONS += -no-plainqt
 endif
 
 # Perform a minimal build by setting DEB_BUILD_OPTION=minimal,...
