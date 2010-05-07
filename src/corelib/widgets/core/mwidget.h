@@ -46,6 +46,7 @@ class M_EXPORT MWidget : public QGraphicsWidget
 
     Q_PROPERTY(QSizePolicy sizePolicy READ sizePolicy WRITE setSizePolicy)
     Q_PROPERTY(bool selected READ isSelected WRITE setSelected)
+    Q_PROPERTY(bool onDisplay READ isOnDisplay)
 
 public:
     MWidget(QGraphicsItem *parent = 0);
@@ -76,6 +77,9 @@ public:
      * Returning false means that currently this widget cannot be seen
      * on the display in any way. E.g.: If the widget happens to be out of sight of all the
      * QGraphicsViews that are rendering his scene.
+     *
+     * Its computational cost is significantly higher than that of a simple attribute
+     * getter such as isVisible().
      */
     bool isOnDisplay() const;
 
