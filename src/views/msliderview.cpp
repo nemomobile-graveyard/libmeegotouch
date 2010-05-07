@@ -546,7 +546,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
 {
     Q_UNUSED(option);
     Q_UNUSED(widget);
-Q_UNUSED(painter);
+
     bool reverse = qApp->isRightToLeft();
 
     QRectF grooveRect = rect();
