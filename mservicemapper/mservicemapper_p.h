@@ -26,21 +26,36 @@
 #include <QList>
 #include <QFileSystemWatcher>
 
+class MServiceMapper;
+
+namespace
+{
+    enum { LastList, CurrList };
+};
+
 class MServiceMapperPrivate
 {
 public:
+    MServiceMapperPrivate( const QString &serviceFiledir );
+
     struct ServiceInfo {
         QString service;
         QString interface;
     };
-    QMap<QString, ServiceInfo> serviceFileInfo;
-    QList<QStringList>         serviceFileList;
-    QFileSystemWatcher         watcher;
-    QString                    serviceFileDir;
+    QMap<QString, ServiceInfo> m_serviceFileInfo;
+    QList<QStringList>         m_serviceFileList;
+    QFileSystemWatcher         m_watcher;
+    QString                    m_serviceFileDir;
+
 public:
-    QStringList fillServiceFileList() const;
-    bool fileExistsAndReadable(const QString &fileName) const;
-    QIODevice *accessFile(const QString &fileName) const;
+    virtual QStringList fillServiceFileList() const;
+    virtual bool fileExistsAndReadable(const QString &fileName) const;
+    virtual QIODevice *accessFile(const QString &fileName) const;
+    virtual void init();
+
+    QString preferredService(const QStringList &serviceList) const;
+    ServiceInfo serviceInterfacePair(const QString &filePath) const;
+    void fillServiceFileInfo();
 };
 
 #endif

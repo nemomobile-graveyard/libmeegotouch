@@ -32,31 +32,32 @@ class Ut_MServiceMapper : public QObject
     Q_OBJECT
 
 public:
-    static const int noAllFiles = 3;
-    static int noFiles;
-    static QTextStream globalDummy;
-    static int lineNo;
-    static int fileNo;
-    static QString lines[4][2];
-    static QString services[3];
-    static QString interfaces[3];
+    static int m_noFiles;
+    static QTextStream m_globalDummy;
+    static int m_lineNo;
+    static int m_fileNo;
+    static QString m_lines[4][2];
+    static QString m_services[3];
+    static QString m_interfaces[3];
+    static QStringList m_currentServiceFileList;
 
 private slots:
     void init();
     void cleanup();
     void initTestCase();
     void cleanupTestCase();
-    void checkHandleServiceChangedRmLastFile();
     void checkServiceNamesNoIf();
     void checkServiceNamesIf();
     void checkServiceName();
     void checkServicePath();
-    void checkHandleServiceChangedAddLastFile();
     void checkServiceNameBadIf();
+    void checkHandleServiceChangedAddLastFile();
+    void checkHandleServiceChangedRmLastFile();
+    void checkHandleServiceChangedAddAndRemoveFiles();
 
 private:
     MServiceMapper *m_subject;
-    void mkFiles(int noFiles);
+    void fillServiceFileList( int noFiles );
 
 };
 #endif

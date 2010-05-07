@@ -27,7 +27,7 @@
 #include <QMap>
 #include <QFileSystemWatcher>
 
-class MServiceMapperPrivate;
+#include "mservicemapper_p.h"
 
 class MServiceMapper : public QObject
 {
@@ -96,18 +96,14 @@ private Q_SLOTS:
     void handleServiceChanged(const QString &path);
 
 private:
-    QString preferredService(const QStringList &serviceList) const;
-    QStringList serviceFileList() const;
-    QMap<QString, QString> serviceInterfacePair(const QString &filePath) const;
-    void fillServiceFileInfo();
-
-private:
-
     enum { LAST_LIST, CURR_LIST };
+    void init();
 
     MServiceMapperPrivate *d_ptr;
 
 #ifdef UNIT_TEST
+public:
+    MServiceMapper(MServiceMapperPrivate *priv);
     friend class Ut_MServiceMapper;
 #endif // UNIT_TEST
 };

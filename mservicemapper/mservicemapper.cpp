@@ -24,23 +24,16 @@
 #include "mservicemapper.h"
 #include "mservicemapper_p.h"
 
-namespace
-{
-    enum { LastList, CurrList };
-};
-
 MServiceMapper::MServiceMapper(const QString &serviceFileDir) :
-    d_ptr(new MServiceMapperPrivate())
+    d_ptr(new MServiceMapperPrivate( serviceFileDir ))
 {
-    d_ptr->serviceFileDir = serviceFileDir;
-    d_ptr->serviceFileList.append(QStringList());
-    d_ptr->serviceFileList.append(QStringList());
+    init();
+}
 
-    d_ptr->serviceFileList[LastList] = d_ptr->fillServiceFileList();
-    fillServiceFileInfo();
-
-    d_ptr->watcher.addPath(d_ptr->serviceFileDir);
-    connect(&d_ptr->watcher, SIGNAL(directoryChanged(QString)),
+void MServiceMapper::init()
+{
+    d_ptr->init();
+    connect(&d_ptr->m_watcher, SIGNAL(directoryChanged(QString)),
             this, SLOT(handleServiceChanged(QString)));
 }
 
@@ -54,7 +47,7 @@ QString MServiceMapper::serviceName(const QString &interfaceName)
 
     QString serviceName;
     if (!serviceNameList.isEmpty()) {
-        serviceName = preferredService(serviceNameList);
+        serviceName = d_ptr->preferredService(serviceNameList);
     }
 
     bool serviceNameInvalid = serviceName.contains(" ");   // "not provided" - when the service wouldn't run
@@ -67,46 +60,21 @@ QString MServiceMapper::serviceName(const QString &interfaceName)
 
 QStringList MServiceMapper::serviceNames(const QString &interfaceName)
 {
-    d_ptr->serviceFileList[LastList] = d_ptr->fillServiceFileList();
-    int serviceFileNum = d_ptr->serviceFileList[LastList].size();
+    d_ptr->m_serviceFileList[CurrList] = d_ptr->fillServiceFileList();
+    int serviceFileNum = d_ptr->m_serviceFileList[CurrList].size();
 
     QStringList serviceNameList;
 
     for (int i = 0; i < serviceFileNum; ++i) {
-        QMap <QString, QString> thisServiceInterfacePair = serviceInterfacePair(d_ptr->serviceFileList[LastList][i]);
+        MServiceMapperPrivate::ServiceInfo serviceInfo = d_ptr->serviceInterfacePair(d_ptr->m_serviceFileList[CurrList][i]);
 
-        if (interfaceName.isEmpty() || thisServiceInterfacePair.value("Interface") == interfaceName) {
-            MServiceMapperPrivate::ServiceInfo serviceInfo;
-            serviceInfo.interface = interfaceName;
-            serviceInfo.service = thisServiceInterfacePair.value("Name");
+        if (interfaceName.isEmpty() || serviceInfo.interface == interfaceName) {
             serviceNameList << serviceInfo.service;
-            d_ptr->serviceFileInfo.insert(d_ptr->serviceFileList[LastList][i], serviceInfo);
+            d_ptr->m_serviceFileInfo.insert(d_ptr->m_serviceFileList[CurrList][i], serviceInfo);
         }
     }
 
     return serviceNameList;
-}
-
-QString MServiceMapper::preferredService(const QStringList &serviceList) const
-{
-    // policy needed, e.g. define policy in repository
-    QSettings policy("services.policy", QSettings::IniFormat);
-    //policy.setValue("provider", "nokia");
-    QString provider = policy.value("provider").toString();
-    int serviceIndex = 0;
-
-    if (!provider.isEmpty()) {
-        //iterate list to find the 1st service of the provider
-        const int size = serviceList.size();
-        for (int i = 0; i < size; ++i) {
-            if (serviceList[i].contains(provider)) {
-                serviceIndex = i;
-                break;
-            }
-        }
-    }
-
-    return serviceList[serviceIndex];
 }
 
 void MServiceMapper::handleServiceChanged(const QString &path)
@@ -114,81 +82,38 @@ void MServiceMapper::handleServiceChanged(const QString &path)
     Q_UNUSED(path);   // we do not support changing of the service dir
     // on the fly for now.
 
-    d_ptr->serviceFileList[CurrList] = d_ptr->fillServiceFileList();
+    d_ptr->m_serviceFileList[LastList] = d_ptr->m_serviceFileList[CurrList];
 
-    bool isServiceAdded;
-    int currListSize = d_ptr->serviceFileList[CurrList].size();
-    int lastListSize = d_ptr->serviceFileList[LastList].size();
+    d_ptr->m_serviceFileList[CurrList] = d_ptr->fillServiceFileList();
 
-    int list0, list1;
-    if (currListSize > lastListSize) {
-        list0 = LastList;
-        list1 = CurrList;
-        isServiceAdded = true;
-    } else {
-        list0 = CurrList;
-        list1 = LastList;
-        isServiceAdded = false;
-    }
-
-    // difference between the lists
-    int i = 0;
-    const int size = d_ptr->serviceFileList[list0].size();
-    for (; i < size; ++i) {
-        if (d_ptr->serviceFileList[list0][i] != d_ptr->serviceFileList[list1][i]) {
-            break;
+    // find removed files - those in LastList that aren't in CurrList
+    int lastListSize = d_ptr->m_serviceFileList[LastList].size();
+    for ( int index=0; index<lastListSize; ++index ) {
+        QString thisFile = d_ptr->m_serviceFileList[LastList][index];
+        bool fileRemoved = !d_ptr->m_serviceFileList[CurrList].contains( thisFile );
+        if ( fileRemoved ) {
+            QString thisServiceName = d_ptr->m_serviceFileInfo.take(thisFile).service;
+            emit serviceUnavailable( thisServiceName );
         }
     }
 
-    QMap <QString, QString> thisServiceInterfacePair = serviceInterfacePair(d_ptr->serviceFileList[list1][i]);
+    // get info for new services
+    d_ptr->fillServiceFileInfo();
 
-    if (!thisServiceInterfacePair.isEmpty()) {
-        if (isServiceAdded) {
-            emit serviceAvailable(thisServiceInterfacePair.value("Name"), thisServiceInterfacePair.value("Interface"));
-        } else {
-            emit serviceUnavailable(thisServiceInterfacePair.value("Name"));
-        }
-    } else {
-        // serviceInterfacePair is empty
-    }
-
-    d_ptr->serviceFileList[LastList] = d_ptr->serviceFileList[CurrList];
-}
-
-QMap <QString, QString> MServiceMapper::serviceInterfacePair(const QString &fileName) const
-{
-    QMap <QString, QString> serviceInterfacePair;
-    QString absoluteFileName = QDir(d_ptr->serviceFileDir).absoluteFilePath(fileName);
-
-    if (d_ptr->fileExistsAndReadable(absoluteFileName)) {
-        QIODevice *file = d_ptr->accessFile(absoluteFileName);
-        if (file->open(QIODevice::ReadOnly)) {
-            QTextStream in(file);
-
-            while (!in.atEnd()) {
-                QString line = in.readLine();
-
-                QStringList fields = line.split('=');
-
-                if (fields[0] == "Name" ||
-                        fields[0] == "Interface") {
-                    serviceInterfacePair.insert(fields[0], fields[1]);
-                }
-            }
-        }
-
-        delete file;
-    } else {
-        // file removed
-        if (d_ptr->serviceFileInfo.contains(fileName)) {
-            serviceInterfacePair.insert("Name", d_ptr->serviceFileInfo.value(fileName).service);
-            serviceInterfacePair.insert("Interface", d_ptr->serviceFileInfo.value(fileName).interface);
-        } else {
-            // serviceFileInfo doesn't contain fileName
+    // find added files - those in CurrList that aren't in LastList
+    int currListSize = d_ptr->m_serviceFileList[CurrList].size();
+    for ( int index=0; index<currListSize; ++index ) {
+        QString thisFile = d_ptr->m_serviceFileList[CurrList][index];
+        bool fileAdded = !d_ptr->m_serviceFileList[LastList].contains( thisFile );
+        if ( fileAdded ) {
+            MServiceMapperPrivate::ServiceInfo thisServiceInterfacePair =
+                d_ptr->serviceInterfacePair( thisFile );
+            emit serviceAvailable(
+                thisServiceInterfacePair.service,
+                thisServiceInterfacePair.interface);
         }
     }
 
-    return serviceInterfacePair;
 }
 
 QString MServiceMapper::servicePath(const QString &interfaceName) const
@@ -199,29 +124,14 @@ QString MServiceMapper::servicePath(const QString &interfaceName) const
     return QString("/");
 }
 
-void MServiceMapper::fillServiceFileInfo()
-{
-    d_ptr->serviceFileList[LastList] = d_ptr->fillServiceFileList();
-    int serviceFileNum = d_ptr->serviceFileList[LastList].size();
-
-    for (int i = 0; i < serviceFileNum; ++i) {
-        QMap <QString, QString> thisServiceInterfacePair = serviceInterfacePair(d_ptr->serviceFileList[LastList][i]);
-
-        MServiceMapperPrivate::ServiceInfo serviceInfo;
-        serviceInfo.service =  thisServiceInterfacePair.value("Name");
-        serviceInfo.interface =  thisServiceInterfacePair.value("Interface");
-        d_ptr->serviceFileInfo.insert(d_ptr->serviceFileList[LastList][i], serviceInfo);
-    }
-}
-
 QString MServiceMapper::interfaceName(const QString &serviceName) const
 {
     if (serviceName.isEmpty())
         return QString();
 
     QString retVal;
-    d_ptr->serviceFileList[LastList] = d_ptr->fillServiceFileList();
-    int serviceFileNum = d_ptr->serviceFileList[LastList].size();
+    d_ptr->m_serviceFileList[CurrList] = d_ptr->fillServiceFileList();
+    int serviceFileNum = d_ptr->m_serviceFileList[CurrList].size();
 
     QStringList serviceNameList;
 
@@ -229,10 +139,10 @@ QString MServiceMapper::interfaceName(const QString &serviceName) const
     bool atEndOfList = false;
     int i = 0;
     while (!serviceFound && !atEndOfList) {
-        QMap <QString, QString> thisServiceInterfacePair = serviceInterfacePair(d_ptr->serviceFileList[LastList][i]);
+        MServiceMapperPrivate::ServiceInfo thisServiceInterfacePair = d_ptr->serviceInterfacePair(d_ptr->m_serviceFileList[CurrList][i]);
 
-        if (thisServiceInterfacePair.value("Name") == serviceName) {
-            retVal = thisServiceInterfacePair.value("Interface");
+        if (thisServiceInterfacePair.service == serviceName) {
+            retVal = thisServiceInterfacePair.interface;
             serviceFound = true;
         }
 
@@ -245,3 +155,11 @@ QString MServiceMapper::interfaceName(const QString &serviceName) const
 
     return retVal;
 }
+
+#ifdef UNIT_TEST
+MServiceMapper::MServiceMapper(MServiceMapperPrivate *priv) :
+    d_ptr(priv)
+{
+    init();
+}
+#endif // UNIT_TEST
