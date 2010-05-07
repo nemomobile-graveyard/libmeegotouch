@@ -98,7 +98,7 @@
 #define SCROLLAREATHUMBVIEW "scrollAreaThumbView"
 
 //#define MOVE_ACTIONS_FROM_TOOLBAR_TO_TITLEBAR
-#define M_LOG_POLISH
+//#define M_LOG_POLISH
 
 QPixmap setPixmapOpacity(const QPixmap &pixmap, double opacity)
 {
@@ -147,8 +147,6 @@ void QtMaemo6StylePrivate::initM()
 
     m_isMInitialized = true;
 
-
-
     m_windowEventFilter = new QtMaemo6StyleEventFilter(q);
     m_scrollBarEventFilter = new QtMaemo6ScrollBarEventFilter(q);
     m_scrollBarEventFilter->setScrollBarsAlwaysVisible(false);
@@ -157,10 +155,7 @@ void QtMaemo6StylePrivate::initM()
     if (MComponentData::instance() != 0) {
         m_isMApplication = true;
     } else {
-        qDebug() << "App:" << qApp;
         QStringList args = qApp->arguments();
-
-        qDebug() << "blabla" << args;
 
         int argc = 1;
         char *argv[ 1 ];
