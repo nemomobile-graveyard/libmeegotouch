@@ -207,6 +207,12 @@ M::Orientation MWindowPrivate::orientation(M::OrientationAngle angle) const
     return (angle == M::Angle0 || angle == M::Angle180) ? M::Landscape : M::Portrait;
 }
 
+// return true if modifiers match what is required for debug keyboard shortcuts
+bool MWindowPrivate::debugShortcutModifiersPresent(Qt::KeyboardModifiers modifiers) const
+{
+    return (modifiers & (Qt::ControlModifier | Qt::AltModifier));
+}
+
 void MWindowPrivate::notifyWidgetsAboutOrientationChange()
 {
     Q_Q(MWindow);
@@ -734,7 +740,7 @@ bool MWindow::event(QEvent *event)
 
         //SIMULATION OF ROTATION FOR DEVELOPMENT PURPOSES
         QKeyEvent *k = (QKeyEvent *) event;
-        if (Qt::Key_R == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
+        if (Qt::Key_R == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             foreach(MWindow * window, MApplication::windows()) {
                 int newAngle = (window->orientationAngle() + ((k->modifiers() & Qt::ShiftModifier) ? 270 : 90)) % 360;
                 if (!window->isOrientationAngleLocked()) {
@@ -742,25 +748,25 @@ bool MWindow::event(QEvent *event)
                         window->setOrientationAngle((M::OrientationAngle)newAngle);
                 }
             }
-        } else if (Qt::Key_P == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
+        } else if (Qt::Key_P == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowPosition(!MApplication::showPosition());
             updateNeeded = true;
-        } else if (Qt::Key_S == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
+        } else if (Qt::Key_S == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowSize(!MApplication::showSize());
             updateNeeded = true;
-        } else if (Qt::Key_B == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
+        } else if (Qt::Key_B == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowBoundingRect(!MApplication::showBoundingRect());
             updateNeeded = true;
-        } else if (Qt::Key_M == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
+        } else if (Qt::Key_M == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowMargins(!MApplication::showMargins());
             updateNeeded = true;
-        } else if (Qt::Key_N == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
+        } else if (Qt::Key_N == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowObjectNames(!MApplication::showObjectNames());
             updateNeeded = true;
-        } else if (Qt::Key_F == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
+        } else if (Qt::Key_F == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             MApplication::setShowFps(!MApplication::showFps());
             updateNeeded = true;
-        } else if (Qt::Key_D == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
+        } else if (Qt::Key_D == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             Qt::LayoutDirection dir = MApplication::layoutDirection();
 
             if (dir == Qt::LeftToRight)
@@ -771,7 +777,7 @@ bool MWindow::event(QEvent *event)
             MApplication::setLayoutDirection(dir);
 
             updateNeeded = true;
-        } else if (Qt::Key_L == k->key() && (k->modifiers() & (Qt::ControlModifier | Qt::AltModifier))) {
+        } else if (Qt::Key_L == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             // switch language
             QString language;
 
