@@ -1,8 +1,9 @@
-libmeegotouch (0.20.8~1) unstable; urgency=low
+libmeegotouch (0.20.8-1) unstable; urgency=low
 
-  * unreleased
+  * Fixes: NB#167131 - MTextEdit fails to emit textChanged()...
+  * Fixes: NB#166890 - Alarm Notification window doesnt comes up in non-idle mode.
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Thu, 06 May 2010 19:46:25 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Fri, 07 May 2010 15:28:09 +0300
 
 libmeegotouch (0.20.7-1) unstable; urgency=low
 
