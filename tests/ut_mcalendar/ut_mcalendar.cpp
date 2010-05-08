@@ -63,6 +63,36 @@ void Ut_MCalendar::testConversionFromAndToQDateTime_data()
     QTest::addColumn<int>("qTimeSpec");
     QTest::addColumn<QString>("timeZone");
 
+    QTest::newRow("1945-07-21 Qt::Localtime UTC")
+            << QDate(1945, 7, 31)
+            << QTime(14, 31, 0, 0)
+            << (int) Qt::LocalTime
+            << "UTC";
+
+    QTest::newRow("1963-07-21 Qt::Localtime UTC")
+            << QDate(1963, 7, 31)
+            << QTime(14, 31, 0, 0)
+            << (int) Qt::LocalTime
+            << "UTC";
+
+    QTest::newRow("2040-07-21 Qt::Localtime UTC")
+            << QDate(2040, 7, 31)
+            << QTime(14, 31, 0, 0)
+            << (int) Qt::LocalTime
+            << "UTC";
+
+    QTest::newRow("2050-07-21 Qt::Localtime UTC")
+            << QDate(2050, 7, 31)
+            << QTime(14, 31, 0, 0)
+            << (int) Qt::LocalTime
+            << "UTC";
+
+    QTest::newRow("2068-07-21 Qt::Localtime UTC")
+            << QDate(2068, 7, 31)
+            << QTime(14, 31, 0, 0)
+            << (int) Qt::LocalTime
+            << "UTC";
+
     QTest::newRow("2008-07-21 Qt::Localtime UTC")
             << QDate(2008, 7, 21)
             << QTime(12, 31, 0, 0)
@@ -100,7 +130,7 @@ void Ut_MCalendar::testConversionFromAndToQDateTime()
     MCalendar mcal;
     QDateTime datetime(qDate, qTime, (Qt::TimeSpec) qTimeSpec);
     mcal.setDateTime(datetime);
-    QCOMPARE(datetime, mcal.qDateTime((Qt::TimeSpec) qTimeSpec));
+    QCOMPARE(mcal.qDateTime((Qt::TimeSpec) qTimeSpec), datetime);
 }
 
 void Ut_MCalendar::testIcuFormatString_data()
