@@ -61,6 +61,7 @@ bool MDeviceProfilePrivate::load(const QString& filename)
     resolution.setHeight(settings.value(device + "/resolutionY", 0).toInt());
     pixelsPerInch.setWidth(settings.value(device + "/ppiX", 0).toInt());
     pixelsPerInch.setHeight(settings.value(device + "/ppiY", 0).toInt());
+    showStatusBar=settings.value(device+"/showStatusBar",false).toBool();
     return true;
 }
 
@@ -109,4 +110,10 @@ QSize MDeviceProfile::pixelsPerInch() const
 {
     Q_D(const MDeviceProfile);
     return d->pixelsPerInch;
+}
+
+bool MDeviceProfile::showStatusbar() const
+{
+    Q_D(const MDeviceProfile);
+    return d->showStatusBar;
 }

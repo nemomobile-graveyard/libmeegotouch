@@ -41,6 +41,7 @@
 #include "mapplication_p.h"
 #include "mscene.h"
 #include "mstatusbar.h"
+#include "mdeviceprofile.h"
 
 #include <QList>
 #include <QEvent>
@@ -83,12 +84,17 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , homeButtonPanel(new MHomeButtonPanel)
     , escapeButtonPanel(new MEscapeButtonPanel)
     , menu(new MApplicationMenu)
-    , statusBar(new MStatusBar)
     , isMenuOpen(false)
     , callOngoing(false)
     , showingStatusBar(false)
     , showingDockWidget(false)
 {
+    if(MDeviceProfile::instance()->showStatusbar())    {
+        statusBar = new MStatusBar;
+    }
+    else{
+        statusBar = NULL;
+    }
 }
 
 MApplicationWindowPrivate::~MApplicationWindowPrivate()
@@ -141,7 +147,7 @@ void MApplicationWindowPrivate::init()
     q->connect(menu, SIGNAL(disappeared()),
                q, SLOT(_q_menuDisappeared()));
 
-    if (!MApplication::fullScreen()) {
+    if (!MApplication::fullScreen() && statusBar ) {
         sceneManager->appearSceneWindowNow(statusBar);
     }
 
@@ -214,7 +220,8 @@ void  MApplicationWindowPrivate::initAutoHideComponentsTimer()
 void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
 {
     Q_Q(MApplicationWindow);
-    Q_ASSERT(statusBar != 0);
+    if (!statusBar)
+        return;
 
     // Status bar should always be visible while a phone call is ongoing.
     if (!callOngoing) {
@@ -230,7 +237,8 @@ void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *
 void MApplicationWindowPrivate::_q_updateCallOngoingState(QString mode)
 {
     Q_Q(MApplicationWindow);
-
+    if (!statusBar)
+        return;
     // Status bar should always be visible while a phone call is ongoing.
 
     if (mode == "Call") {
@@ -588,6 +596,8 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
             break;
 
         case MSceneWindow::StatusBar:
+            if (!statusBar)
+                return;
             showingStatusBar = true;
             _q_updatePageExposedContentRect();
             break;
@@ -617,6 +627,8 @@ void MApplicationWindowPrivate::sceneWindowDisappearEvent(MSceneWindowEvent *eve
             break;
 
         case MSceneWindow::StatusBar:
+            if(!statusBar)
+                return;
             showingStatusBar = false;
             _q_updatePageExposedContentRect();
             break;

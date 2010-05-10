@@ -36,6 +36,7 @@ public:
 
     QSize resolution;
     QSize pixelsPerInch;
+    bool showStatusBar;
 
 protected:
     MDeviceProfile *q_ptr;
