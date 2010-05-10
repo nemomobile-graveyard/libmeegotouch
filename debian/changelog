@@ -1,3 +1,9 @@
+libmeegotouch (0.20.10~1) unstable; urgency=low
+
+  * unreleased
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 10 May 2010 18:07:01 +0300
+
 libmeegotouch (0.20.9-1) unstable; urgency=low
 
   * Fixes: NB#167827 - List view shows redundant header list on right side of the screen.
