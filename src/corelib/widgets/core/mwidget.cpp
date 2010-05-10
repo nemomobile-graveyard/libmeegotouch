@@ -455,3 +455,12 @@ void MWidget::setVisible(bool visible)
         QGraphicsWidget::setVisible(visible);
 }
 
+QPointF MWidget::paintOffset() const
+{
+    return QPointF(transform().dx(), transform().dy());
+}
+
+void MWidget::setPaintOffset(const QPointF &newOffset)
+{
+    setTransform(QTransform::fromTranslate(newOffset.x(), newOffset.y()));
+}

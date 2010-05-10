@@ -47,6 +47,7 @@ class M_EXPORT MWidget : public QGraphicsWidget
     Q_PROPERTY(QSizePolicy sizePolicy READ sizePolicy WRITE setSizePolicy)
     Q_PROPERTY(bool selected READ isSelected WRITE setSelected)
     Q_PROPERTY(bool onDisplay READ isOnDisplay)
+    Q_PROPERTY(QPointF paintOffset READ paintOffset WRITE setPaintOffset)
 
 public:
     MWidget(QGraphicsItem *parent = 0);
@@ -88,6 +89,31 @@ public:
     * \sa setSelected(bool)
     */
     bool isSelected() const;
+
+    /*!
+     Returns the offset by which the widget will be transformed when painted.
+
+     This convenience function is equivalent to querying the horizontal and
+     vertical translation factors of the widgets's transform().
+
+     \sa setPaintOffset()
+     */
+    QPointF paintOffset() const;
+
+    /*!
+     Sets the offset by which the widget will be transformed when painted.
+
+     This convenience function is equivalent to calling setTransform on the widget,
+     supplying a QTransform that shifts the widget by \a offset.
+
+     The paint offset allows for a widget to appear as if in a position
+     different than that of the widget's pos() property. This allows for example
+     to animate the widget's apparent location using a QPropertyAnimation
+     without affecting layouting or the layout affecting the animation.
+
+     \sa paintOffset()
+     */
+    void setPaintOffset(const QPointF & offset);
 
     /*! \reimp
      *   We reimplement these to distinguish between the user hiding items
