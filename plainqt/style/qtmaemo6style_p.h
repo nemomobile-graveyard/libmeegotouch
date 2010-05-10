@@ -313,6 +313,17 @@ public:
         return align & 0xF;
     };
 
+    void ensureWidgetVisible(QWidget* widget, QRect visibleArea);
+
+    struct WidgetPos {
+        WidgetPos() : widget(NULL) {};
+        WidgetPos(QWidget* w, QPoint p) : widget(w), position(p) {};
+        QWidget* widget;
+        QPoint position;
+    };
+
+    QMap<QWidget*, WidgetPos> m_originalPosMap;
+
 public:
     QList<QToolButton *> m_toolButtonsInTitleBar;
     QList<QAction *> m_toolBarActions;

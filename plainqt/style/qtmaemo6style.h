@@ -199,6 +199,8 @@ protected Q_SLOTS:
     virtual int styleHint(StyleHint hint, const QStyleOption *option = 0,
                           const QWidget *widget = 0, QStyleHintReturn *returnData = 0) const;
     /*! \reimp_end */
+
+    void virtualInputAreaChanged(QRect rect);
 };
 
 #endif

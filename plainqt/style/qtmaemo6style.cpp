@@ -59,6 +59,7 @@
 #include <MScalableImage>
 #include <MLabel>
 #include <MApplicationWindow>
+#include <MInputMethodState>
 #include <mbuttonstyle.h>
 #include <mapplicationpagestyle.h>
 #include <mpositionindicatorstyle.h>
@@ -175,7 +176,10 @@ void QtMaemo6StylePrivate::initM()
                                            "MLabelStyle"));
     qApp->setFont(style->font());
     qApp->setGlobalStrut(QSize(0, 0));
-    qApp->setInputContext(QInputContextFactory::create("MInputContext", qApp));
+
+    bool inputConnect = QObject::connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)), q, SLOT(virtualInputAreaChanged(QRect)));
+    if(!inputConnect)
+        qCritical() << "Virtual keyboard notification connection failed";
 }
 
 const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
@@ -2454,6 +2458,70 @@ int QtMaemo6Style::styleHint(StyleHint hint, const QStyleOption *option,
 
     return QtMaemo6TestStyle::styleHint(hint, option, widget, returnData);
 }
+
+void QtMaemo6Style::virtualInputAreaChanged(QRect rect) {
+    QWidget* widget = qApp->focusWidget();
+    if(widget) {
+        Q_D(QtMaemo6Style);
+        if(rect.isValid()) {
+            QRect screenRect = QRect(QPoint(0,0), MDeviceProfile::instance()->resolution());
+            int spaceAbove = rect.top();
+            int spaceBelow = screenRect.height() - (rect.top() + rect.height());
+
+            if(spaceAbove > spaceBelow) {
+                int maxY = rect.top();
+                d->ensureWidgetVisible(widget, QRect(QPoint(0,0), QSize(screenRect.width(), maxY)));
+            } else {
+                int minY = rect.top() + rect.height();
+                d->ensureWidgetVisible(widget, QRect(QPoint(0,minY), QSize(screenRect.width(), screenRect.height()-minY)));
+            }
+        } else {
+            d->ensureWidgetVisible(widget, rect);
+        }
+    }
+}
+
+void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleArea)
+{
+    qCritical() << "Visbible Area:" << visibleArea;
+    if(visibleArea.isValid()) {
+        QWidget* parent = widget->parentWidget();
+        QtMaemo6Window* window = NULL;
+        //search
+        while(!(window = qobject_cast<QtMaemo6Window*>(parent)))
+            parent = parent->parentWidget();
+        if(window) {
+            QAbstractScrollArea* sa = qobject_cast<QAbstractScrollArea*>(window->centralWidget());
+            if(sa) {
+                QWidget* viewport = sa->viewport();
+
+                qCritical() << "InputContext TopLevel widget found" << parent;
+                QPoint widgetGlobalPosition = widget->parentWidget()->mapToGlobal(widget->geometry().topLeft());
+                qCritical() << "Widget local position:" << widget->pos();
+                qCritical() << "Widget global position:" << widgetGlobalPosition;
+                if( !(widgetGlobalPosition.y() > visibleArea.top() && widgetGlobalPosition.y() < visibleArea.bottom())) {
+                    qCritical() << "Viewport Geometry" << viewport->mapToGlobal(viewport->pos());
+                    QPoint originalViewportPos = viewport->parentWidget()->mapToGlobal(viewport->pos());
+                    m_originalPosMap.insert(widget, WidgetPos(viewport, viewport->pos()));
+                    //centered in visibleArea
+                    QPoint moveBy = QPoint(0, widgetGlobalPosition.y() + (visibleArea.top() - visibleArea.height() / 2));
+                    viewport->move(originalViewportPos - moveBy);
+                    qCritical() << "Viewport new geometry" << viewport->geometry();
+                }
+            } else {
+                qCritical() << "Can't focus on" << widget << "because scroll area contains no viewport";
+            }
+        } else {
+            qCritical() << "Can't focus on" << widget << "because there is no top level scroll area";
+        }
+    } else {
+        WidgetPos wp = m_originalPosMap.take(widget);
+        if(wp.widget) {
+            wp.widget->move(wp.position);
+        }
+    }
+}
+
 /*
     Private implementation specific methods:
  */
