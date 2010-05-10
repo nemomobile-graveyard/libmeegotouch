@@ -119,10 +119,11 @@ void MListView::applyStyle()
 
     if (d_ptr) {
         d_ptr->clearVisibleItemsArray();
+        d_ptr->updateItemHeight();
         d_ptr->updateSeparators();
         d_ptr->updateSeparatorSize();
         d_ptr->setHeadersCreator(new MDefaultHeadersCreator(style()->groupHeaderObjectName()));
-	relayoutItemsInViewportRect();
+        relayoutItemsInViewportRect();
     }
 }
 
