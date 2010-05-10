@@ -442,6 +442,7 @@ int MSliderGroove::screenPointToValue(const QPointF &point) const
     if (orientation == Qt::Vertical)
         coordinate = handlePoint.y();
 
+    int range = maximum - minimum;
     int offset = 0;
 
     if (minimum != maximum) {
@@ -454,9 +455,9 @@ int MSliderGroove::screenPointToValue(const QPointF &point) const
             coordinate = qBound(valueRangeRect.left(), coordinate, valueRangeRect.right());
 
             if (!reverse)
-                offset = qRound(((coordinate - valueRangeRect.left()) * (maximum - minimum)) / valueRangeRect.width());
+                offset = qRound(((coordinate - valueRangeRect.left()) * range) / valueRangeRect.width());
             else
-                offset = qRound(((valueRangeRect.right() - coordinate) * (maximum - minimum)) / valueRangeRect.width());
+                offset = qRound(((valueRangeRect.right() - coordinate) * range) / valueRangeRect.width());
         }
 
         if (orientation == Qt::Vertical) {
@@ -465,7 +466,7 @@ int MSliderGroove::screenPointToValue(const QPointF &point) const
             valueRangeRect.adjust(0, vAdjustment, 0, -vAdjustment);
             coordinate = qBound(valueRangeRect.top(), coordinate, valueRangeRect.bottom());
 
-            offset = qRound(((valueRangeRect.bottom() - coordinate) * (maximum - minimum)) / valueRangeRect.height());
+            offset = qRound(((valueRangeRect.bottom() - coordinate) * range) / valueRangeRect.height());
         }
     }
 
@@ -558,9 +559,14 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
     int top = 0;
     int bottom = 0;
 
+    int horizontalMargins = 0;
+    int verticalMargins = 0;
+
     if (orientation == Qt::Horizontal) {
-        if (backgroundBaseImage)
+        if (backgroundBaseImage) {
             backgroundBaseImage->borders(&left, &right, &top, &bottom);
+            horizontalMargins = left + right;
+        }
 
         qreal hAdjustment = (sliderHandle->rect().width() - grooveThickness) / 2;
         if (hAdjustment < 0)
@@ -571,7 +577,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         grooveRect.adjust(hAdjustment, vAdjustment, -hAdjustment, -vAdjustment);
 
         if (backgroundBaseImage) {
-            if (grooveRect.width() >= qreal(left + right))
+            if (grooveRect.width() >= qreal(horizontalMargins))
                 backgroundBaseImage->draw(grooveRect.toRect(), painter);
         }
 
@@ -597,7 +603,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
                         receivedRect.setLeft(grooveRect.left());
                 }
 
-                if (receivedRect.width() >= qreal(left + right))
+                if (receivedRect.width() >= qreal(horizontalMargins))
                     backgroundReceivedImage->draw(receivedRect.toRect(), painter);
             }
         }
@@ -614,14 +620,16 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
                     elapsedRect.setLeft(valueToScreenCoordinate(value));
             }
 
-            if (elapsedRect.width() >= qreal(left + right))
+            if (elapsedRect.width() >= qreal(horizontalMargins))
                 backgroundElapsedImage->draw(elapsedRect.toRect(), painter);
         }
     }
 
     if (orientation == Qt::Vertical) {
-        if (backgroundVerticalBaseImage)
+        if (backgroundVerticalBaseImage) {
             backgroundVerticalBaseImage->borders(&left, &right, &top, &bottom);
+            verticalMargins = top + bottom;
+        }
 
         qreal vAdjustment = (sliderHandle->rect().width() - grooveThickness) / 2;
         if (vAdjustment < 0)
@@ -632,7 +640,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
         grooveRect.adjust(hAdjustment, vAdjustment, -hAdjustment, -vAdjustment);
 
         if (backgroundVerticalBaseImage) {
-            if (grooveRect.width() >= qreal(top + bottom))
+            if (grooveRect.width() >= qreal(verticalMargins))
                 backgroundVerticalBaseImage->draw(grooveRect.toRect(), painter);
         }
 
@@ -648,7 +656,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
                 if (loadedContentMaximum == maximum)
                     receivedRect.setTop(grooveRect.top());
 
-                if (receivedRect.height() >= qreal(top + bottom))
+                if (receivedRect.height() >= qreal(verticalMargins))
                     backgroundVerticalReceivedImage->draw(receivedRect.toRect(), painter);
             }
         }
@@ -660,7 +668,7 @@ void MSliderGroove::paint(QPainter *painter, const QStyleOptionGraphicsItem *opt
                 elapsedRect.setTop(valueToScreenCoordinate(value));
             }
 
-            if (elapsedRect.height() >= qreal(top + bottom))
+            if (elapsedRect.height() >= qreal(verticalMargins))
                 backgroundVerticalElapsedImage->draw(elapsedRect.toRect(), painter);
         }
     }
@@ -829,9 +837,10 @@ qreal MSliderGroove::valueToScreenCoordinate(int value) const
     bool reverse = qApp->isRightToLeft();
     qreal beginning = 0;
 
+    int range = maximum - minimum;
+    qreal offset = 0;
     QRectF valueRangeRect = rect();
 
-    qreal offset = 0;
     if (minimum != maximum) {
         if (orientation == Qt::Horizontal) {
             qreal hAdjustment = sliderHandle->rect().width() / 2;
@@ -840,9 +849,9 @@ qreal MSliderGroove::valueToScreenCoordinate(int value) const
             beginning = valueRangeRect.left();
 
             if (!reverse)
-                offset = (value - minimum) * valueRangeRect.width() / (maximum - minimum);
+                offset = (value - minimum) * valueRangeRect.width() / range;
             else
-                offset = (maximum - value) * valueRangeRect.width() / (maximum - minimum);
+                offset = (maximum - value) * valueRangeRect.width() / range;
         }
 
         if (orientation == Qt::Vertical) {
@@ -851,7 +860,7 @@ qreal MSliderGroove::valueToScreenCoordinate(int value) const
             valueRangeRect.adjust(0, vAdjustment, 0, -vAdjustment);
             beginning = valueRangeRect.top();
 
-            offset = (maximum - value) * valueRangeRect.height() / (maximum - minimum);
+            offset = (maximum - value) * valueRangeRect.height() / range;
         }
     }
 
