@@ -114,7 +114,7 @@ public:
     * As an example lets assume that
     *
     * - MLocale::translationPaths()
-    *   is the list ("/usr/share/l10n/m", "/usr/share/l10n")
+    *   is the list ("/usr/share/l10n/meegotouch", "/usr/share/l10n")
     * - the category is  MLocale::MLcMessages
     * - the name of the locale (returned by mlocale->categoryName(category))
     *   is "en_US"
@@ -122,18 +122,14 @@ public:
     *
     * then the function will try to load translation catalogs in the following order:
     *
-    *   /usr/share/l10n/m/foo_en_US.qm
-    *   /usr/share/l10n/m/foo_en_US
-    *   /usr/share/l10n/m/foo_en.qm
-    *   /usr/share/l10n/m/foo_en
-    *   /usr/share/l10n/m/foo.qm
-    *   /usr/share/l10n/m/foo
+    *   /usr/share/l10n/meegotouch/foo_en_US.qm
+    *   /usr/share/l10n/meegotouch/foo_en_US
+    *   /usr/share/l10n/meegotouch/foo_en.qm
+    *   /usr/share/l10n/meegotouch/foo_en
     *   /usr/share/l10n/foo_en_US.qm
     *   /usr/share/l10n/foo_en_US
     *   /usr/share/l10n/foo_en.qm
     *   /usr/share/l10n/foo_en
-    *   /usr/share/l10n/foo.qm
-    *   /usr/share/l10n/foo
     *
     * and return when the first translation catalog was found.
     * If no translation can be found this function returns false.
