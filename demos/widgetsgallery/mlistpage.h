@@ -78,6 +78,7 @@ public slots:
     void changeAmountOfColumns(int index);
     void changeSelectionMode(int index);
     void changeSeparatorsMode(int index);
+    void changeListIndexVisibility(int index);
 
     void scrollToBottom();
     void scrollToTop();

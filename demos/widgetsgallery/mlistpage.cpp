@@ -285,6 +285,11 @@ void MListPage::createActions()
     separatorsModes << "Off" << "On";
     combo = createComboBoxAction("Separators", separatorsModes);
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSeparatorsMode(int)));
+
+    QStringList listIndexModes;
+    listIndexModes << "Hidden" << "Visible";
+    combo = createComboBoxAction("List index mode", listIndexModes);
+    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListIndexVisibility(int)));
 }
 
 void MListPage::scrollToBottom()
@@ -323,7 +328,7 @@ void MListPage::changeSortingOrder(int index)
 
 #ifndef HAVE_N900
 void MListPage::changeAmountOfItemInList(int index)
-{  
+{
     Q_ASSERT(index >= 0 && index < 4);
 
     if(currentListModeIndex == Grouped) {
@@ -401,6 +406,14 @@ void MListPage::changeSeparatorsMode(int index)
         list->setObjectName("wgList");
 }
 
+void MListPage::changeListIndexVisibility(int index)
+{
+    Q_ASSERT(index >= 0 && index <= 1);
+    bool indexVisible = (index == 1);
+
+    list->setIndexVisible(indexVisible);
+}
+
 void MListPage::itemClick(const QModelIndex &index)
 {
     mDebug("MListPage::itemClick") << "Row was clicked: " << index.row();
@@ -438,11 +451,13 @@ void MListPage::createContent()
     list = new MList(panel);
     list->setObjectName("wgList");
 
+    //% "Remove"
     MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), list);
     action->setLocation(MAction::ObjectMenuLocation);
     list->addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(removeListItem()));
 
+    //% "Edit"
     action = new MAction(qtTrId("xx_listpage_list_edit"), list);
     action->setLocation(MAction::ObjectMenuLocation);
     list->addAction(action);

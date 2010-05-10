@@ -314,6 +314,11 @@ public:
       */
     void setShowGroups(bool showGroups);
 
+    /*!
+      \return Returns the status of the list index availability.
+      */
+    bool indexVisible();
+
 public Q_SLOTS:
     /*!
         \brief Convenience function - Select the given item.
@@ -336,6 +341,11 @@ public Q_SLOTS:
         \brief Scrolls list to a specific index with specified hint.
       */
     void scrollTo(const QModelIndex &index, ScrollHint hint);
+
+    /*!
+      \brief Specifies whether the list index for a grouped model should be visible or not.
+      */
+    void setIndexVisible(bool visible);
 
 Q_SIGNALS:
     /*!
