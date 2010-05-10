@@ -22,7 +22,7 @@
 #ifndef MBASICORIENTATIONANIMATION_H
 #define MBASICORIENTATIONANIMATION_H
 
-#include <mparallelanimationgroup.h>
+#include <morientationanimation.h>
 #include <mbasicorientationanimationstyle.h>
 #include <QSize>
 #include <mnamespace.h>
@@ -40,7 +40,7 @@ class QAnimationGroup;
   Phase 1: Screen is rotated
   Phase 2: Navigation bar & dock widget slide in, scene window fade in
  */
-class MBasicOrientationAnimation : public MParallelAnimationGroup
+class MBasicOrientationAnimation : public MOrientationAnimation
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MBasicOrientationAnimation)
@@ -65,21 +65,11 @@ public:
     virtual void setTargetRotationAngle(M::OrientationAngle start, M::OrientationAngle end);
     //! \reimp_end
 
-    void setRootElement(QGraphicsWidget *rootElement);
-
-Q_SIGNALS:
-    /*!
-     \brief Signals that orientation has changed
-    */
-    void orientationChanged();
-
 protected:
     //! \reimp
     // from MOrientationAnimation
     virtual void rootElementChanged();
     //! \reimp_end
-
-    QGraphicsWidget *rootElement();
 
     void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 

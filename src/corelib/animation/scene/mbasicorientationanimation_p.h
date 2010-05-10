@@ -20,7 +20,7 @@
 #ifndef MBASICORIENTATIONANIMATION_P_H
 #define MBASICORIENTATIONANIMATION_P_H
 
-#include "mparallelanimationgroup_p.h"
+#include "morientationanimation_p.h"
 
 #include <QHash>
 
@@ -29,7 +29,7 @@ class QPropertyAnimation;
 class MBasicOrientationAnimation;
 class MSceneWindow;
 
-class MBasicOrientationAnimationPrivate : public MParallelAnimationGroupPrivate
+class MBasicOrientationAnimationPrivate : public MOrientationAnimationPrivate
 {
     Q_DECLARE_PUBLIC(MBasicOrientationAnimation)
 
@@ -97,7 +97,6 @@ public:
     QHash<MSceneWindow *, SceneWindowAnimationPair> genericAnimationsHash;
 
     class QAnimationGroup *sequentialPhasesAnimation;
-    QGraphicsWidget *rootElement;
 };
 
 #endif

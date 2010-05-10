@@ -265,11 +265,10 @@ MSceneWindow *MBasicOrientationAnimationPrivate::fetchLayerEffect(MSceneWindow *
 }
 
 MBasicOrientationAnimation::MBasicOrientationAnimation(const QSize &landscapeScreenSize, QObject *parent) :
-    MParallelAnimationGroup(new MBasicOrientationAnimationPrivate, parent)
+    MOrientationAnimation(new MBasicOrientationAnimationPrivate, parent)
 {
     Q_D(MBasicOrientationAnimation);
 
-    d->rootElement = NULL;
     d->sequentialPhasesAnimation = new QSequentialAnimationGroup;
     addAnimation(d->sequentialPhasesAnimation);
 
@@ -465,21 +464,6 @@ void MBasicOrientationAnimation::rootElementChanged()
     d->rotationAnimation->setTargetObject(rootElement());
     d->positionAnimation->setTargetObject(rootElement());
     d->originAnimation->setTargetObject(rootElement());
-}
-
-void MBasicOrientationAnimation::setRootElement(QGraphicsWidget *rootElement)
-{
-    Q_D(MBasicOrientationAnimation);
-    if (d->rootElement != rootElement) {
-        d->rootElement = rootElement;
-        rootElementChanged();
-    }
-}
-
-QGraphicsWidget *MBasicOrientationAnimation::rootElement()
-{
-    Q_D(MBasicOrientationAnimation);
-    return d->rootElement;
 }
 
 void MBasicOrientationAnimation::updateState(QAbstractAnimation::State newState,

@@ -11,8 +11,11 @@ PUBLIC_HEADERS += \
 
 PRIVATE_HEADERS += \
     $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation_p.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/morientationanimation.h \
+    $$ANIMATIONS_SCENE_SRC_DIR/morientationanimation_p.h \
     $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation_p.h \
 
 SOURCES += \
     $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation.cpp \
+    $$ANIMATIONS_SCENE_SRC_DIR/morientationanimation.cpp \
     $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation.cpp \
