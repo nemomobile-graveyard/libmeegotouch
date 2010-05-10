@@ -1075,12 +1075,78 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 2008
             << 2
             << 3
-            << 12
+            << 00
             << 25
             << 3
             << "fi_FI"
-            << "%H" // hour (00..23)
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "00";
+    QTest::newRow("fi_FI %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 01
+            << 25
+            << 3
+            << "fi_FI"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "01";
+    QTest::newRow("fi_FI %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 23
+            << 25
+            << 3
+            << "fi_FI"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "23";
+    QTest::newRow("fi_FI %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 24 // for the “date” command this would be invalid input but ICU wraps around
+            << 25
+            << 3
+            << "fi_FI"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "00";
+    QTest::newRow("fi_FI %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 00
+            << 25
+            << 3
+            << "fi_FI"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "12";
+    QTest::newRow("fi_FI %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 01
+            << 25
+            << 3
+            << "fi_FI"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "01";
+    QTest::newRow("fi_FI %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 11
+            << 25
+            << 3
+            << "fi_FI"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "11";
     QTest::newRow("fi_FI %I")
             << MLocale::GregorianCalendar
             << 2008
@@ -1090,8 +1156,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
-            << "%I" // hour (01..12)
-            << "00";
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "12";
     QTest::newRow("fi_FI %M")
             << MLocale::GregorianCalendar
             << 2008
@@ -1473,12 +1539,78 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 2008
             << 2
             << 3
-            << 12
+            << 00
             << 25
             << 3
             << "en_GB"
-            << "%H" // hour (00..23)
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "00";
+    QTest::newRow("en_GB %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 01
+            << 25
+            << 3
+            << "en_GB"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "01";
+    QTest::newRow("en_GB %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 23
+            << 25
+            << 3
+            << "en_GB"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "23";
+    QTest::newRow("en_GB %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 24 // for the “date” command this would be invalid input but ICU wraps around
+            << 25
+            << 3
+            << "en_GB"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "00";
+    QTest::newRow("en_GB %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 00
+            << 25
+            << 3
+            << "en_GB"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "12";
+    QTest::newRow("en_GB %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 01
+            << 25
+            << 3
+            << "en_GB"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "01";
+    QTest::newRow("en_GB %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 11
+            << 25
+            << 3
+            << "en_GB"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "11";
     QTest::newRow("en_GB %I")
             << MLocale::GregorianCalendar
             << 2008
@@ -1488,8 +1620,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
-            << "%I" // hour (01..12)
-            << "00";
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "12";
     QTest::newRow("en_GB %M")
             << MLocale::GregorianCalendar
             << 2008

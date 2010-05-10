@@ -1393,13 +1393,13 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 break;
 
             case 'H':
-                // 24 hour clock
-                icuFormat.append("kk");
+                // Hour (24-hour clock), as a decimal number (00-23).
+                icuFormat.append("HH");
                 break;
 
             case 'I':
-                // 12 hour clock
-                icuFormat.append("KK");
+                // Hour (12-hour clock), as a decimal number (01-12).
+                icuFormat.append("hh");
                 break;
 
             case 'j':
