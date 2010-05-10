@@ -17,4 +17,27 @@
 **
 ****************************************************************************/
 
-#include "../corelib/style/mwidgetfadeoutanimationstyle.h"
+#ifndef MWIDGETFADEANIMATION_P_H
+#define MWIDGETFADEANIMATION_P_H
+
+#include "mabstractwidgetanimation_p.h"
+#include "mwidgetfadeanimation.h"
+
+class QPauseAnimation;
+class QPropertyAnimation;
+
+class MWidgetFadeAnimationPrivate : public MAbstractWidgetAnimationPrivate
+{
+    Q_DECLARE_PUBLIC(MWidgetFadeAnimation)
+public:
+    void init();
+    virtual ~MWidgetFadeAnimationPrivate() {}
+private:
+    qreal originalOpacity;
+    bool played;
+    MWidgetFadeAnimation::TransitionDirection direction;
+    QPauseAnimation *delay;
+    QPropertyAnimation *opacityAnimation;
+};
+
+#endif

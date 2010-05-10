@@ -42,6 +42,7 @@
 #include "mdockwidget.h"
 #include "mescapebuttonpanel.h"
 #include "mescapebuttonpanelmodel.h"
+#include "mobjectmenu.h"
 #include "mapplication.h"
 #include "mwindow.h"
 #include "mapplicationwindow.h"
@@ -59,10 +60,9 @@
 #include "mabstractwidgetanimation.h"
 #include "mpageswitchanimation.h"
 
-#include <mwidgetslideinanimation.h>
-#include <mwidgetfadeinanimation.h>
-#include <mwidgetslideoutanimation.h>
-#include <mwidgetfadeoutanimation.h>
+#include <mwidgetslideanimation.h>
+#include <mwidgetfadeanimation.h>
+#include <mwidgetzoomanimation.h>
 
 namespace
 {
@@ -883,9 +883,7 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
 
     setSceneWindowGeometry(window);
     MSceneLayerEffect *effect = createLayerEffectForWindow(window);
-    if (effect) {
-        effect->enableEffect();
-    } else {
+    if (!effect) {
         // window could have been added to another scene manually beforehand
         // remove it in that case, to avoid Qt's assert
         if (window->scene() && window->scene() != scene)
@@ -1059,10 +1057,6 @@ void MSceneManagerPrivate::prepareWindowHide(MSceneWindow *window)
     orientationAnimation->removeSceneWindow(window);
     window->d_func()->shown = false;
 
-    if (window->d_func()->effect) {
-        window->d_func()->effect->disableEffect();
-    }
-
     // Check whether we are trying to hide a window while it is in the middle of
     // a show animation. If that's the case, we stop it.
     if (window->d_func()->appearanceAnimation) {
@@ -1181,15 +1175,46 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
         case MSceneWindow::NotificationEvent:
         case MSceneWindow::ApplicationMenu:
         case MSceneWindow::NavigationBar:
-        case MSceneWindow::PopupList:
-            animation = new MWidgetSlideInAnimation(sceneWindow);
+        case MSceneWindow::PopupList: {
+            MWidgetSlideAnimation *slideInAnimation = new MWidgetSlideAnimation(sceneWindow);
+            slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
+            animation = slideInAnimation;
             break;
-        default:
-            animation = new MWidgetFadeInAnimation(sceneWindow);
+        }
+        case MSceneWindow::MessageBox: {
+            MWidgetZoomAnimation *objectMenuAnimation =
+                    new MWidgetZoomAnimation(sceneWindow);
+
+            objectMenuAnimation->setOrigin(sceneWindow->boundingRect().center());
+            objectMenuAnimation->setTransitionDirection(MWidgetZoomAnimation::In);
+
+            animation = objectMenuAnimation;
             break;
+        }
+        case MSceneWindow::ObjectMenu: {
+            MWidgetZoomAnimation *objectMenuAnimation =
+                    new MWidgetZoomAnimation(sceneWindow);
+
+            MObjectMenu *objectMenu = static_cast<MObjectMenu*>(sceneWindow);
+            objectMenuAnimation->setOrigin(rootElement->mapFromScene(objectMenu->cursorPosition()));
+            objectMenuAnimation->setTransitionDirection(MWidgetZoomAnimation::In);
+            animation = objectMenuAnimation;
+            break;
+        }
+        default: {
+            MWidgetFadeAnimation *fadeInAnimation = new MWidgetFadeAnimation(sceneWindow);
+            fadeInAnimation->setTransitionDirection(MWidgetFadeAnimation::In);
+            animation = fadeInAnimation;
+            break;
+        }
     }
 
     animation->setTargetWidget(sceneWindow);
+
+    MSceneWindow *effect = sceneWindow->d_func()->effect;
+    if (effect)
+        animation->addAnimation(effect->d_func()->appearanceAnimation);
+
     sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(appeared()));
     sceneWindow->d_func()->appearanceAnimation = animation;
 }
@@ -1206,15 +1231,47 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
         case MSceneWindow::NotificationEvent:
         case MSceneWindow::ApplicationMenu:
         case MSceneWindow::NavigationBar:
-        case MSceneWindow::PopupList:
-            animation = new MWidgetSlideOutAnimation(sceneWindow);
+        case MSceneWindow::PopupList: {
+            MWidgetSlideAnimation *slideOutAnimation = new MWidgetSlideAnimation(sceneWindow);
+            slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
+            animation = slideOutAnimation;
             break;
-        default:
-            animation = new MWidgetFadeOutAnimation(sceneWindow);
+        }
+        case MSceneWindow::MessageBox: {
+            MWidgetZoomAnimation *zoomAnimation =
+                    new MWidgetZoomAnimation(sceneWindow);
+
+            zoomAnimation->setOrigin(sceneWindow->boundingRect().center());
+            zoomAnimation->setTransitionDirection(MWidgetZoomAnimation::Out);
+
+            animation = zoomAnimation;
             break;
+        }
+        case MSceneWindow::ObjectMenu: {
+            MWidgetZoomAnimation *zoomAnimation =
+                    new MWidgetZoomAnimation(sceneWindow);
+
+            MObjectMenu *objectMenu = static_cast<MObjectMenu*>(sceneWindow);
+            zoomAnimation->setOrigin(rootElement->mapFromScene(objectMenu->cursorPosition()));
+            zoomAnimation->setTransitionDirection(MWidgetZoomAnimation::Out);
+
+            animation = zoomAnimation;
+            break;
+        }
+        default: {
+            MWidgetFadeAnimation *fadeOutAnimation = new MWidgetFadeAnimation(sceneWindow);
+            fadeOutAnimation->setTransitionDirection(MWidgetFadeAnimation::Out);
+            animation = fadeOutAnimation;
+            break;
+        }
     }
 
     animation->setTargetWidget(sceneWindow);
+
+    MSceneWindow *effect = sceneWindow->d_func()->effect;
+    if (effect)
+        animation->addAnimation(effect->d_func()->disappearanceAnimation);
+
     sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(disappeared()));
     sceneWindow->d_func()->disappearanceAnimation = animation;
 }

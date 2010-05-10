@@ -17,20 +17,20 @@
 **
 ****************************************************************************/
 
-#ifndef MWIDGETFADEOUTANIMATION_H
-#define MWIDGETFADEOUTANIMATION_H
+#ifndef MWIDGETFADEANIMATION_H
+#define MWIDGETFADEANIMATION_H
 
 #include <mabstractwidgetanimation.h>
-#include <mwidgetfadeoutanimationstyle.h>
+#include <mwidgetfadeanimationstyle.h>
 
-class MWidgetFadeOutAnimationPrivate;
+class MWidgetFadeAnimationPrivate;
 
 //! \internal
-class MWidgetFadeOutAnimation : public MAbstractWidgetAnimation
+class MWidgetFadeAnimation : public MAbstractWidgetAnimation
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(MWidgetFadeOutAnimation)
-    M_ANIMATION_GROUP(MWidgetFadeOutAnimationStyle)
+    Q_DECLARE_PRIVATE(MWidgetFadeAnimation)
+    M_ANIMATION_GROUP(MWidgetFadeAnimationStyle)
 
     /*!
       \brief Constructs the widget animation.
@@ -38,19 +38,25 @@ class MWidgetFadeOutAnimation : public MAbstractWidgetAnimation
       This constructor is meant to be used inside the libmeegotouch to share the
       private data class pointer.
      */
-    MWidgetFadeOutAnimation(MWidgetFadeOutAnimationPrivate *dd, QObject *parent);
+    MWidgetFadeAnimation(MWidgetFadeAnimationPrivate *dd, QObject *parent);
 
 public:
-
     /*!
       \brief Constructs the widget animation.
      */
-    MWidgetFadeOutAnimation(QObject *parent = NULL);
+    MWidgetFadeAnimation(QObject *parent = NULL);
 
     /*!
       \brief Destructs the widget animation.
      */
-    virtual ~MWidgetFadeOutAnimation();
+    virtual ~MWidgetFadeAnimation();
+
+    enum TransitionDirection {
+        In,
+        Out
+    };
+
+    void setTransitionDirection(TransitionDirection direction);
 
     //! \reimp
     virtual void restoreTargetWidgetState();
@@ -62,6 +68,6 @@ protected:
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
     //! \reimp_end
 };
-//! \internal_end
+//! \internal
 
 #endif

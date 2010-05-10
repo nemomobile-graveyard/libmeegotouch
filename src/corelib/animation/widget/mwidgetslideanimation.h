@@ -17,20 +17,20 @@
 **
 ****************************************************************************/
 
-#ifndef MWIDGETSLIDEOUTANIMATION_H
-#define MWIDGETSLIDEOUTANIMATION_H
+#ifndef MWIDGETSLIDEANIMATION_H
+#define MWIDGETSLIDEANIMATION_H
 
 #include <mabstractwidgetanimation.h>
-#include <mwidgetslideoutanimationstyle.h>
+#include <mwidgetslideanimationstyle.h>
 
-class MWidgetSlideOutAnimationPrivate;
+class MWidgetSlideAnimationPrivate;
 
 //! \internal
-class MWidgetSlideOutAnimation : public MAbstractWidgetAnimation
+class MWidgetSlideAnimation : public MAbstractWidgetAnimation
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(MWidgetSlideOutAnimation)
-    M_ANIMATION_GROUP(MWidgetSlideOutAnimationStyle)
+    Q_DECLARE_PRIVATE(MWidgetSlideAnimation)
+    M_ANIMATION_GROUP(MWidgetSlideAnimationStyle)
 
     /*!
       \brief Constructs the widget animation.
@@ -38,19 +38,26 @@ class MWidgetSlideOutAnimation : public MAbstractWidgetAnimation
       This constructor is meant to be used inside the libmeegotouch to share the
       private data class pointer.
      */
-    MWidgetSlideOutAnimation(MWidgetSlideOutAnimationPrivate *dd, QObject *parent);
+    MWidgetSlideAnimation(MWidgetSlideAnimationPrivate *dd, QObject *parent);
 
 public:
 
     /*!
       \brief Constructs the widget animation.
      */
-    MWidgetSlideOutAnimation(QObject *parent = NULL);
+    MWidgetSlideAnimation(QObject *parent = NULL);
 
     /*!
       \brief Destructs the widget animation.
      */
-    virtual ~MWidgetSlideOutAnimation();
+    virtual ~MWidgetSlideAnimation();
+
+    enum TransitionDirection {
+        In,
+        Out
+    };
+
+    void setTransitionDirection(TransitionDirection direction);
 
     //! \reimp
     virtual void restoreTargetWidgetState();
@@ -61,6 +68,9 @@ protected:
     //! \reimp
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
     //! \reimp_end
+
+private:
+    Q_PRIVATE_SLOT(d_func(), void _q_onDelayFinished())
 };
 //! \internal_end
 

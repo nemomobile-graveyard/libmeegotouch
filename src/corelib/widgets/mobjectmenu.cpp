@@ -94,3 +94,13 @@ void MObjectMenu::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     event->accept();
 }
+
+QPointF MObjectMenu::cursorPosition() const
+{
+    return model()->cursorPosition();
+}
+
+void MObjectMenu::setCursorPosition(const QPointF &pos)
+{
+    model()->setCursorPosition(pos);
+}

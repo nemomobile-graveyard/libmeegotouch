@@ -17,18 +17,30 @@
 **
 ****************************************************************************/
 
-#ifndef MWIDGETZOOMINANIMATION_P_H
-#define MWIDGETZOOMINANIMATION_P_H
+#ifndef MWIDGETSLIDEANIMATION_P_H
+#define MWIDGETSLIDEANIMATION_P_H
 
-#include "core/mabstractwidgetanimation_p.h"
+#include "mabstractwidgetanimation_p.h"
+#include "mwidgetslideanimation.h"
+#include <QPointF>
 
-class MWidgetZoomInAnimationPrivate : public MAbstractWidgetAnimationPrivate
+class QPauseAnimation;
+class QPropertyAnimation;
+
+class MWidgetSlideAnimationPrivate : public MAbstractWidgetAnimationPrivate
 {
-    Q_DECLARE_PUBLIC(MWidgetZoomInAnimation)
+    Q_DECLARE_PUBLIC(MWidgetSlideAnimation)
 public:
-    virtual ~MWidgetZoomInAnimationPrivate() {}
+    void init();
+    virtual ~MWidgetSlideAnimationPrivate() {}
+
+    void _q_onDelayFinished();
 private:
-    qreal startScale;
+    QPointF originalPos;
+    bool played;
+    MWidgetSlideAnimation::TransitionDirection direction;
+    QPauseAnimation *delay;
+    QPropertyAnimation *positionAnimation;
 };
 
 #endif

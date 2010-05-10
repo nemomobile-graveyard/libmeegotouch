@@ -321,6 +321,7 @@ void MWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
     if (hasObjectMenuActions) {
         MObjectMenu *menu = new MObjectMenu(this);
+        menu->setCursorPosition(event->scenePos());
         sceneManager()->appearSceneWindow(menu, MSceneWindow::DestroyWhenDone);
     } else {
         event->ignore();

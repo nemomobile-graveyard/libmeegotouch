@@ -35,8 +35,7 @@
 #include <mwidgetstyle.h>
 #include <MScalableImage>
 
-#include <mwidgetfadeinanimationstyle.h>
-#include <mwidgetfadeoutanimationstyle.h>
+#include <mwidgetfadeanimationstyle.h>
 
 #ifdef SHOW_SCROLLING_THUMBNAIL
 AbstractScrollAreaThumbView::AbstractScrollAreaThumbView(QWidget *parent /*= NULL*/)
@@ -348,13 +347,13 @@ void QtMaemo6ScrollBarEventFilter::fadeInOutAnimation(QWidget *w, const char *pr
             static_cast<const MPositionIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
                     "MPositionIndicatorStyle"));
 
-        const MWidgetFadeInAnimationStyle *fadeInStyle =
-            static_cast<const MWidgetFadeInAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
-                    "MWidgetFadeInAnimationStyle"));
+        const MWidgetFadeAnimationStyle *fadeInStyle =
+            static_cast<const MWidgetFadeAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                    "MWidgetFadeAnimationStyle", "In"));
 
-        const MWidgetFadeOutAnimationStyle *fadeOutStyle =
-            static_cast<const MWidgetFadeOutAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
-                    "MWidgetFadeOutAnimationStyle"));
+        const MWidgetFadeAnimationStyle *fadeOutStyle =
+            static_cast<const MWidgetFadeAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                    "MWidgetFadeAnimationStyle", "Out"));
 
         QSequentialAnimationGroup *animationGroup = new QSequentialAnimationGroup();
         QPropertyAnimation *fadeIn = new QPropertyAnimation(animationGroup);

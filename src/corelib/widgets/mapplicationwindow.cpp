@@ -657,7 +657,8 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
     Q_ASSERT(pageFromEvent != page);
 
     if (page != 0) {
-        menu->disappear();
+        if (menu->isVisible())
+            menu->disappear();
         disconnectPage(page);
     }
 
@@ -672,7 +673,8 @@ void MApplicationWindowPrivate::applicationPageDisappearEvent(MSceneWindowEvent 
 
     // Page is going away. Let's disconnect it if it's the current page.
     if (pageFromEvent == page) {
-        menu->disappear();
+        if (menu->isVisible())
+            menu->disappear();
         disconnectPage(pageFromEvent);
     }
 }

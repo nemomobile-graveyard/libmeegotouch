@@ -17,23 +17,28 @@
 **
 ****************************************************************************/
 
-#ifndef MWIDGETSLIDEINANIMATION_P_H
-#define MWIDGETSLIDEINANIMATION_P_H
+#ifndef MWIDGETFADEANIMATIONSTYLE_H
+#define MWIDGETFADEANIMATIONSTYLE_H
 
-#include "mabstractwidgetanimation_p.h"
-#include <QPointF>
+#include <mabstractwidgetanimationstyle.h>
+#include <QEasingCurve>
 
-class QPropertyAnimation;
-
-class MWidgetSlideInAnimationPrivate : public MAbstractWidgetAnimationPrivate
+//! \internal
+class M_EXPORT MWidgetFadeAnimationStyle : public MAbstractWidgetAnimationStyle
 {
-    Q_DECLARE_PUBLIC(MWidgetSlideInAnimation)
-public:
-    virtual ~MWidgetSlideInAnimationPrivate() {}
-private:
-    QPointF originalPos;
-    bool played;
-    QPropertyAnimation *positionAnimation;
+    Q_OBJECT
+    M_STYLE_INTERNAL(MWidgetFadeAnimationStyle)
+
+    M_STYLE_ATTRIBUTE(int, delay, Delay)
+    M_STYLE_ATTRIBUTE(qreal, opacity, Opacity)
+    M_STYLE_ATTRIBUTE(QEasingCurve, easingCurve, EasingCurve)
 };
 
+class MWidgetFadeAnimationStyleContainer : public MAbstractWidgetAnimationStyleContainer
+{
+    M_STYLE_CONTAINER_INTERNAL(MWidgetFadeAnimationStyle)
+};
+//! \internal_end
+
 #endif
+

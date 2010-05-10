@@ -33,8 +33,7 @@
 #include <QParallelAnimationGroup>
 
 #include <mapplicationmenustyle.h>
-#include <mwidgetfadeinanimationstyle.h>
-#include <mwidgetfadeoutanimationstyle.h>
+#include <mwidgetfadeanimationstyle.h>
 #include <QDebug>
 
 /* unforunately this is required to force widgets drawing it's background, even
@@ -123,9 +122,9 @@ void QtMaemo6MenuProxy::mousePressEvent(QMouseEvent *event)
 void QtMaemo6MenuProxy::showEvent(QShowEvent *event) {
     Q_UNUSED(event);
 
-    const MWidgetFadeInAnimationStyle *fadeInStyle =
-        static_cast<const MWidgetFadeInAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
-                "MWidgetFadeInAnimationStyle"));
+    const MWidgetFadeAnimationStyle *fadeInStyle =
+        static_cast<const MWidgetFadeAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                "MWidgetFadeInAnimationStyle", "In"));
 
     layout()->activate();
     QRect finalGeometry = QRect(m_menu->geometry().topLeft(), m_menu->sizeHint());
@@ -161,9 +160,9 @@ void QtMaemo6MenuProxy::showEvent(QShowEvent *event) {
 }
 
 void QtMaemo6MenuProxy::hideWindow() {
-    const MWidgetFadeOutAnimationStyle *fadeOutStyle =
-        static_cast<const MWidgetFadeOutAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
-                "MWidgetFadeOutAnimationStyle"));
+    const MWidgetFadeAnimationStyle *fadeOutStyle =
+        static_cast<const MWidgetFadeAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                "MWidgetFadeOutAnimationStyle", "Out"));
 
     QRect startGeometry = m_menu->geometry();
     QRect finalGeometry = startGeometry;

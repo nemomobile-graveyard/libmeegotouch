@@ -28,12 +28,9 @@ MGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mcrossfadedorientationanimationstyle.h \
     $$STYLE_SRC_DIR/mgroupanimationstyle.h \
     $$STYLE_SRC_DIR/mlayoutanimationstyle.h \
-    $$STYLE_SRC_DIR/mwidgetfadeinanimationstyle.h \
-    $$STYLE_SRC_DIR/mwidgetfadeoutanimationstyle.h \
-    $$STYLE_SRC_DIR/mwidgetslideinanimationstyle.h \
-    $$STYLE_SRC_DIR/mwidgetslideoutanimationstyle.h \
-    $$STYLE_SRC_DIR/mwidgetzoominanimationstyle.h \
-    $$STYLE_SRC_DIR/mwidgetzoomoutanimationstyle.h \
+    $$STYLE_SRC_DIR/mwidgetfadeanimationstyle.h \
+    $$STYLE_SRC_DIR/mwidgetslideanimationstyle.h \
+    $$STYLE_SRC_DIR/mwidgetzoomanimationstyle.h \
     $$STYLE_SRC_DIR/mpageswitchanimationstyle.h \
     $$STYLE_SRC_DIR/mbasicorientationanimationstyle.h \
 

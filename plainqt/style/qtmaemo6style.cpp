@@ -80,8 +80,8 @@
 #include <mcontentitemstyle.h>
 #include <mapplicationmenustyle.h>
 #include <mfeedbackplayer.h>
-#include <mwidgetfadeinanimationstyle.h>
-#include <mwidgetfadeoutanimationstyle.h>
+//#include <mwidgetfadeinanimationstyle.h>
+//#include <mwidgetfadeoutanimationstyle.h>
 #include <mdeviceprofile.h>
 
 #include "qtmaemo6titlebar.h"

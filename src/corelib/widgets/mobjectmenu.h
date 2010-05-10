@@ -120,6 +120,8 @@ class M_EXPORT MObjectMenu : public MSceneWindow
     Q_DISABLE_COPY(MObjectMenu)
     M_CONTROLLER(MObjectMenu)
 
+    Q_PROPERTY(QPointF cursorPosition READ cursorPosition WRITE setCursorPosition)
+
 public:
     /*!
         \brief Constructs an object menu.
@@ -133,6 +135,9 @@ public:
         \brief Destructs an object menu.
      */
     virtual ~MObjectMenu();
+
+    QPointF cursorPosition() const;
+    void setCursorPosition(const QPointF &pos);
 
 protected:
     //! \reimp

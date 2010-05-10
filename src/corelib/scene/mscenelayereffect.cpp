@@ -22,6 +22,7 @@
 #include "mscenelayereffect.h"
 #include "mscenelayereffect_p.h"
 #include "mscenelayereffectmodel.h"
+#include "mwidgetfadeanimation.h"
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(MSceneLayerEffect)
@@ -29,6 +30,15 @@ M_REGISTER_WIDGET_NO_CREATE(MSceneLayerEffect)
 MSceneLayerEffectPrivate::MSceneLayerEffectPrivate()
 {
     layerPressedDirectly = false;
+
+    MWidgetFadeAnimation *fadeInAnimation = new MWidgetFadeAnimation;
+    fadeInAnimation->setTransitionDirection(MWidgetFadeAnimation::In);
+
+    MWidgetFadeAnimation *fadeOutAnimation = new MWidgetFadeAnimation;
+    fadeOutAnimation->setTransitionDirection(MWidgetFadeAnimation::Out);
+
+    appearanceAnimation = fadeInAnimation;
+    disappearanceAnimation = fadeOutAnimation;
 }
 
 MSceneLayerEffectPrivate::~MSceneLayerEffectPrivate()
@@ -40,6 +50,10 @@ MSceneLayerEffect::MSceneLayerEffect(const QString &effectType)
                      new MSceneLayerEffectModel(), MSceneWindow::LayerEffect,
                      effectType)
 {
+    Q_D(MSceneLayerEffect);
+
+    d->appearanceAnimation->setTargetWidget(this);
+    d->disappearanceAnimation->setTargetWidget(this);
 }
 
 MSceneLayerEffect::~MSceneLayerEffect()
@@ -96,14 +110,4 @@ void MSceneLayerEffect::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void MSceneLayerEffect::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 {
     event->accept();
-}
-
-void MSceneLayerEffect::enableEffect()
-{
-    model()->setEnabled(true);
-}
-
-void MSceneLayerEffect::disableEffect()
-{
-    model()->setEnabled(false);
 }

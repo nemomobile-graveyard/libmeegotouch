@@ -17,18 +17,28 @@
 **
 ****************************************************************************/
 
-#ifndef MWIDGETZOOMOUTANIMATION_P_H
-#define MWIDGETZOOMOUTANIMATION_P_H
+#ifndef MWIDGETSLIDEANIMATIONSTYLE_H
+#define MWIDGETSLIDEANIMATIONSTYLE_H
 
-#include "core/mabstractwidgetanimation_p.h"
+#include <mabstractwidgetanimationstyle.h>
+#include <QEasingCurve>
 
-class MWidgetZoomOutAnimationPrivate : public MAbstractWidgetAnimationPrivate
+//! \internal
+class MWidgetSlideAnimationStyle : public MAbstractWidgetAnimationStyle
 {
-    Q_DECLARE_PUBLIC(MWidgetZoomOutAnimation)
-public:
-    virtual ~MWidgetZoomOutAnimationPrivate() {}
-private:
-    qreal startScale;
+    Q_OBJECT
+    M_STYLE_INTERNAL(MWidgetSlideAnimationStyle)
+
+    M_STYLE_ATTRIBUTE(int, delay, Delay)
+    M_STYLE_ATTRIBUTE(QString, origin, Origin)
+    M_STYLE_ATTRIBUTE(QEasingCurve, easingCurve, EasingCurve)
 };
 
+class MWidgetSlideAnimationStyleContainer : public MAbstractWidgetAnimationStyleContainer
+{
+    M_STYLE_CONTAINER_INTERNAL(MWidgetSlideAnimationStyle)
+};
+//! \internal_end
+
 #endif
+

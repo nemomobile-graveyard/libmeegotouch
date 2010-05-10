@@ -17,27 +17,30 @@
 **
 ****************************************************************************/
 
-#ifndef MWIDGETSLIDEINANIMATIONSTYLE_H
-#define MWIDGETSLIDEINANIMATIONSTYLE_H
+#ifndef MWIDGETZOOMANIMATION_P_H
+#define MWIDGETZOOMANIMATION_P_H
 
-#include <mabstractwidgetanimationstyle.h>
-#include <QEasingCurve>
+#include "mabstractwidgetanimation_p.h"
+#include "mwidgetzoomanimation.h"
 
-//! \internal
-class MWidgetSlideInAnimationStyle : public MAbstractWidgetAnimationStyle
+class QPropertyAnimation;
+class QPauseAnimation;
+
+class MWidgetZoomAnimationPrivate : MAbstractWidgetAnimationPrivate
 {
-    Q_OBJECT
-    M_STYLE_INTERNAL(MWidgetSlideInAnimationStyle)
+    Q_DECLARE_PUBLIC(MWidgetZoomAnimation)
+public:
+    void init();
+    QPointF setupPositionAnimation(const QPointF &widgetPos);
 
-    M_STYLE_ATTRIBUTE(QString, from, From)
-    M_STYLE_ATTRIBUTE(QEasingCurve, easingCurve, EasingCurve)
+    QPauseAnimation *startDelay;
+    QPauseAnimation *opacityAnimationDelay;
+
+    MWidgetZoomAnimation::TransitionDirection direction;
+    QPointF origin;
+    QPropertyAnimation *opacityAnimation;
+    QPropertyAnimation *positionAnimation;
+    QPropertyAnimation *scaleAnimation;
 };
 
-class MWidgetSlideInAnimationStyleContainer : public MAbstractWidgetAnimationStyleContainer
-{
-    M_STYLE_CONTAINER_INTERNAL(MWidgetSlideInAnimationStyle)
-};
-//! \internal_end
-
-#endif
-
+#endif // MWIDGETZOOMANIMATION_P_H

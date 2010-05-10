@@ -36,10 +36,6 @@ public:
     MSceneLayerEffect(const QString &effectType);
     virtual ~MSceneLayerEffect();
 
-public Q_SLOTS:
-    void enableEffect();
-    void disableEffect();
-
 protected:
 
     //! \reimp
