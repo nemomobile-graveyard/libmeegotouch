@@ -1124,6 +1124,8 @@ MSliderView::MSliderView(MSlider *controller):
     Q_D(MSliderView);
     d->q_ptr = this;
     d->init(controller);
+
+    connect(controller, SIGNAL(displayExited()), this, SLOT(lowerSliderHandleIndicator()));
 }
 
 MSliderView::~MSliderView()
@@ -1323,14 +1325,20 @@ void MSliderView::hideEvent(QHideEvent* event)
 {
     Q_UNUSED(event);
 
-    Q_D(MSliderView);
-    d->controller->setState(MSliderModel::Released);
+    lowerSliderHandleIndicator();
+}
 
+void MSliderView::lowerSliderHandleIndicator()
+{
+    Q_D(MSliderView);
+ 
+    d->controller->setState(MSliderModel::Released);
+ 
     if (d->pressTimerId) {
         killTimer(d->pressTimerId);
         d->pressTimerId = 0;
     }
-
+ 
     d->sliderGroove->lowerHandleIndicator();
 }
 
