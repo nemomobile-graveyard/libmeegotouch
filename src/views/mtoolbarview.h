@@ -85,6 +85,8 @@ private:
     Q_DISABLE_COPY(MToolBarView)
     Q_DECLARE_PRIVATE(MToolBarView)
 
+    Q_PRIVATE_SLOT(d_func(), void finalizeRemovals())
+
 #ifdef UNIT_TEST
     friend class Ut_MToolBarView;
 #endif

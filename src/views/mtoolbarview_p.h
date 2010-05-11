@@ -52,6 +52,8 @@ public:
     void remove(QAction *action);
     void change(QAction *action);
 
+    void finalizeRemovals();
+
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
     MWidget *createWidget(QAction *action);
@@ -83,6 +85,7 @@ protected:
     MLinearLayoutPolicy *portraitPolicy;
     QHash<QAction *, MWidget *> leasedWidgets;
     QHash<QAction *, MWidget *> buttons;
+    QList<QAction *> removedActions;
 
     static const int maxWidgets;
 

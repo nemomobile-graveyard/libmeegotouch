@@ -28,6 +28,7 @@
 #include "private/mwidgetview_p.h"
 #include "mapplication.h"
 #include "mapplicationwindow.h"
+#include "animations/mwarpanimation.h"
 
 #include "mlayout.h"
 #include "mlinearlayoutpolicy.h"
@@ -116,13 +117,38 @@ void MToolBarViewPrivate::add(QAction *action, QAction *before)
         }
     }
 
+    if (added && w) {
+        MWarpAnimation *warpInAnimation = new MWarpAnimation(w, MWarpAnimation::InFromRight);
+        warpInAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    }
+
     if (!added && w) {
         w->setVisible(false);
     }
 }
 
+void MToolBarViewPrivate::finalizeRemovals()
+{
+    for (int i = 0; i < removedActions.count(); ++i) {
+        QAction *action = removedActions.takeAt(i);
+
+        MWidget *button = buttons.value(action);
+        MWidget *leased = leasedWidgets.value(action);
+
+        if (button) {
+            buttons.remove(action);
+            delete button;
+        } else if (leased) {
+            releaseWidget(action, leased);
+            leasedWidgets.remove(action);
+        }
+    }
+}
+
 void MToolBarViewPrivate::remove(QAction *action)
 {
+    Q_Q(MToolBarView);
+
     MWidget *button = buttons.value(action);
     MWidget *leased = leasedWidgets.value(action);
     MWidget *widget = (button != 0) ? button : leased;
@@ -146,16 +172,17 @@ void MToolBarViewPrivate::remove(QAction *action)
                 portraitData.placedActions--;
         }
 
-        layout->removeItem(widget);
+        if (!removedActions.contains(action)) {
+            layout->removeItem(widget);
+            MWarpAnimation *warpOutAnimation = new MWarpAnimation(widget, MWarpAnimation::OutFromRight);
+            warpOutAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+            connect(warpOutAnimation, SIGNAL(finished()), q, SLOT(finalizeRemovals()));
+
+            removedActions.append(action);
+        }
     }
 
-    if (button) {
-        buttons.remove(action);
-        delete button;
-    } else if (leased) {
-        releaseWidget(action, leased);
-        leasedWidgets.remove(action);
-    }
+
 }
 
 void MToolBarViewPrivate::change(QAction *action)
