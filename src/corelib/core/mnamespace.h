@@ -255,7 +255,8 @@ namespace M
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(M::StandardButtons)
 
-Q_DECLARE_METATYPE(M::AssemblyType)
+Q_ENUMS(M::AssemblyType)
+
 Q_DECLARE_METATYPE(M::OrientationAngle)
 Q_DECLARE_METATYPE(M::Orientation)
 Q_DECLARE_METATYPE(M::Position)
