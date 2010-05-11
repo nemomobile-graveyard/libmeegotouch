@@ -26,7 +26,7 @@
 #include <QGraphicsWidget>
 
 MActionPrivate::MActionPrivate()
-    : location(MAction::EveryLocation), styleAction(false)
+    : location(MAction::EveryLocation), styleAction(false), q_ptr(0)
 {
 }
 
