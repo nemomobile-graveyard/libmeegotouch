@@ -992,7 +992,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%r" // locale's 12-hour clock time (e.g., 11:11:04 PM)
-            << "00 ip.";
+            << "12.25 ip.";
     QTest::newRow("fi_FI %t")
             << MLocale::GregorianCalendar
             << 2008
@@ -1245,7 +1245,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%R" // 24-hour hour and minute; same as %H:%M
-            << "12:25";
+            << "12.25";
     QTest::newRow("fi_FI %S")
             << MLocale::GregorianCalendar
             << 2008
@@ -1456,7 +1456,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "en_GB"
             << "%r" // locale's 12-hour clock time (e.g., 11:11:04 PM)
-            << "00 PM";
+            << "12:25 PM";
     QTest::newRow("en_GB %t")
             << MLocale::GregorianCalendar
             << 2008
@@ -1822,7 +1822,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%R %Z"
-            << "12:25 Suomi";
+            << "12.25 Suomi";
     QTest::newRow("en_GB %R %Z")
             << MLocale::GregorianCalendar
             << 2008

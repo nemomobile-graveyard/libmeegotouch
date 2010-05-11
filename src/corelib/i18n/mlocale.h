@@ -579,8 +579,19 @@ public:
      - \%M Minute, as a decimal number (00-59).
      - \%n A &lt;newline&gt; character.
      - \%p FDCC-set's equivalent of either AM or PM.
-     - \%r 12-hour clock time (01-12), using the AM/PM notation.
-     - \%R 24-hour clock time, in the format "%H:%M".
+     - \%r locale specific 12-hour clock time using the AM/PM notation
+           Similar to “%I:%M %p” but the exact format does depend more on
+           the locale. E.g. for “en_GB” locale the result may look like
+           “12:15 PM” with a colon between the hours and he minutes whereas
+           for “fi_FI” locale a dot may be used as the separator, like
+           “12.15 ip.”. The exact result depends on how the TimeShort format
+           for the locale is implemented in ICU.
+     - \%R locale specific 24-hour clock time.
+           Similar to “%H:%M” but the exact format depends on the locale.
+           E.g. for “en_GB” locale the result may look like “14:15” and
+           for “fi_FI” locale the result may look like “14.15”.
+           The exact result depends on how the TimeShort format
+           for the locale is implemented in ICU.
      - \%S Seconds, as a decimal number (00-61).
      - \%t A &lt;tab&gt; character.
      - \%T 24-hour clock time, in the format HH:MM:SS.

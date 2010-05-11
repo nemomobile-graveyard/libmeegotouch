@@ -1427,14 +1427,29 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 icuFormat.append("aaa");
                 break;
 
-            case 'r':
+            case 'r': {
                 // 12 hour clock with am/pm
-                icuFormat.append("KK aaa"); // correct?
+                QString timeShortFormat
+                    = icuFormatString(MLocale::DateNone, MLocale::TimeShort,
+                                      MLocale::GregorianCalendar);
+                timeShortFormat.replace(QChar('k'), QChar('K'), Qt::CaseSensitive);
+                timeShortFormat.replace(QChar('H'), QChar('h'), Qt::CaseSensitive);
+                if (!timeShortFormat.contains('a', Qt::CaseSensitive))
+                    timeShortFormat.append(QLatin1String(" a"));
+                icuFormat.append(timeShortFormat);
+            }
                 break;
 
-            case 'R':
+            case 'R': {
                 // 24-hour clock time, in the format "%H:%M"
-                icuFormat.append("kk:mm");
+                QString timeShortFormat
+                    = icuFormatString(MLocale::DateNone, MLocale::TimeShort,
+                                      MLocale::GregorianCalendar);
+                timeShortFormat.replace(QRegExp(" *a"), QLatin1String(""));
+                timeShortFormat.replace(QChar('K'), QChar('k'), Qt::CaseSensitive);
+                timeShortFormat.replace(QChar('h'), QChar('H'), Qt::CaseSensitive);
+                icuFormat.append(timeShortFormat);
+            }
                 break;
 
             case 'S':
@@ -1447,7 +1462,7 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 icuFormat.append('\t');
                 break;
 
-            case 'T':
+            case 'T': // FIXME!
                 // 24 hour clock HH:MM:SS
                 icuFormat.append("kk:mm:ss");
                 break;
