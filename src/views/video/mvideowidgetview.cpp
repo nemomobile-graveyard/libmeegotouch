@@ -39,8 +39,14 @@ MVideoWidgetViewPrivate::MVideoWidgetViewPrivate()
         scaleOffsets(NULL),
         m_needFillBg(false),
         m_fullscreen(false),
-        m_gstVideo(new MGstVideo())
+        m_gstVideo(new MGstVideo()),
+	yuv1(NULL),
+	yuv3(NULL)
 {
+    m_textures[0] = 0;
+    m_textures[1] = 0;
+    m_textures[2] = 0;
+
     qRegisterMetaType< QList<const char*> >("QList<const char*>");
 #ifdef M_USE_OPENGL
     MGLES2Renderer* r = MGLES2Renderer::instance();
