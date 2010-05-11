@@ -31,14 +31,14 @@ void Ut_MCalendar::initTestCase()
     qap = new QCoreApplication(argc, argv);
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QProcess process;
-    process.start("sh -c \"dpkg -s libicu42 | grep Version | perl -pe 's/^Version:[[:space:]]*([^[[:space:]]+)$/$1/g'\"");
+    process.start("sh -c \"dpkg -s libicu-dev | grep Version | perl -pe 's/^Version:[[:space:]]*([^[[:space:]]+)$/$1/g'\"");
     if (!process.waitForFinished()) {
-        qDebug() << "cannot run process to check libicu42 package version , exiting ...";
+        qDebug() << "cannot run process to check libicu-dev package version , exiting ...";
         exit(1);
     }
     icuPackageVersion = process.readAllStandardOutput();
     icuPackageVersion.replace("\n", "");
-    qDebug() << "libicu42 package version is:" << icuPackageVersion;
+    qDebug() << "libicu-dev package version is:" << icuPackageVersion;
 }
 
 void Ut_MCalendar::cleanupTestCase()
@@ -166,7 +166,11 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "y年M月d日EEEE"
         << "H:mm"
         << "H:mm:ss"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+        << "H:mm:ss z"
+#else
         << "HH:mm:ss z"
+#endif
         << "H時mm分ss秒 zzzz";
 
     QTest::newRow("ja_JP, Japanese calendar")
@@ -180,7 +184,11 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "Gy年M月d日EEEE"
         << "H:mm"
         << "H:mm:ss"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+        << "H:mm:ss z"
+#else
         << "HH:mm:ss z"
+#endif
         << "H時mm分ss秒 zzzz";
 
     QTest::newRow("zh_CN, Gregorian calendar")
@@ -193,7 +201,11 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "y年M月d日"
         << "y年M月d日EEEE"
         << "ah:mm"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+        << "ah:mm:ss"
+#else
         << "ahh:mm:ss"
+#endif
         << "zah时mm分ss秒"
         << "zzzzah时mm分ss秒";
 
@@ -406,10 +418,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
             << QString("21. jul. 2008")
             << QString("21. juli 2008")
             << QString("måndag 21. juli 2008")
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 GMT+03:00")
+            << QString("kl. 12:31:00 austeuropeisk sommartid");
+#else
             << QString("12.31")
             << QString("12.31.00")
             << QString("12.31.00 GMT+03.00")
             << QString("kl. 12.31.00 austeuropeisk sommartid");
+#endif
     QTest::newRow("21.7.2008_nb_NO_Gregorian")
             << datetime
             << QString("nb_NO")
@@ -418,10 +437,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
             << QString("21. juli 2008")
             << QString("21. juli 2008")
             << QString("mandag 21. juli 2008")
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 GMT+03:00")
+            << QString("kl. 12:31:00 østeuropeisk sommertid");
+#else
             << QString("12.31")
             << QString("12.31.00")
             << QString("12.31.00 GMT+03.00")
             << QString("kl. 12.31.00 østeuropeisk sommertid");
+#endif
     QTest::newRow("21.7.2008_no_NO_Gregorian")
             << datetime
             << QString("no_NO")
@@ -430,10 +456,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
             << QString("21. juli 2008")
             << QString("21. juli 2008")
             << QString("mandag 21. juli 2008")
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 GMT+03:00")
+            << QString("kl. 12:31:00 østeuropeisk sommertid");
+#else
             << QString("12.31")
             << QString("12.31.00")
             << QString("12.31.00 GMT+03.00")
             << QString("kl. 12.31.00 østeuropeisk sommertid");
+#endif
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime()
@@ -519,16 +552,28 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime_data()
             << datetime
             << QString("nn_NO")
             << MLocale::GregorianCalendar
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("21.07.08 15:31")
+            << QString("21. juli 2008 15:31:00 GMT+03:00")
+            << QString("måndag 21. juli 2008 kl. 15:31:00 austeuropeisk sommartid");
+#else
             << QString("21.07.08 15.31")
             << QString("21. juli 2008 15.31.00 GMT+03.00")
             << QString("måndag 21. juli 2008 kl. 15.31.00 austeuropeisk sommartid");
+#endif
     QTest::newRow("21.7.2008_nb_NO_Gregorian")
             << datetime
             << QString("nb_NO")
             << MLocale::GregorianCalendar
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("21.07.08 15:31")
+            << QString("21. juli 2008 15:31:00 GMT+03:00")
+            << QString("mandag 21. juli 2008 kl. 15:31:00 østeuropeisk sommertid");
+#else
             << QString("21.07.08 15.31")
             << QString("21. juli 2008 15.31.00 GMT+03.00")
             << QString("mandag 21. juli 2008 kl. 15.31.00 østeuropeisk sommertid");
+#endif
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime()
@@ -609,10 +654,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
             << "21. jul. 2008"
             << "21. juli 2008"
             << "måndag 21. juli 2008"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << "14:31"
+            << "14:31:00"
+            << "14:31:00 GMT+03:00"
+            << "kl. 14:31:00 austeuropeisk sommartid";
+#else
             << "14.31"
             << "14.31.00"
             << "14.31.00 GMT+03.00"
             << "kl. 14.31.00 austeuropeisk sommartid";
+#endif
 
     QTest::newRow("21.7.2008_nb_NO_Gregorian")
             << QString("nb_NO")
@@ -624,10 +676,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
             << "21. juli 2008"
             << "21. juli 2008"
             << "mandag 21. juli 2008"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << "14:31"
+            << "14:31:00"
+            << "14:31:00 GMT+03:00"
+            << "kl. 14:31:00 østeuropeisk sommertid";
+#else
             << "14.31"
             << "14.31.00"
             << "14.31.00 GMT+03.00"
             << "kl. 14.31.00 østeuropeisk sommertid";
+#endif
 
     QTest::newRow("21.7.2008_no_NO_Gregorian")
             << QString("no_NO")
@@ -639,10 +698,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
             << "21. juli 2008"
             << "21. juli 2008"
             << "mandag 21. juli 2008"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << "14:31"
+            << "14:31:00"
+            << "14:31:00 GMT+03:00"
+            << "kl. 14:31:00 østeuropeisk sommertid";
+#else
             << "14.31"
             << "14.31.00"
             << "14.31.00 GMT+03.00"
             << "kl. 14.31.00 østeuropeisk sommertid";
+#endif
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
