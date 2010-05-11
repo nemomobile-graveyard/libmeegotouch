@@ -177,7 +177,7 @@ void QtMaemo6StylePrivate::initM()
     qApp->setFont(style->font());
     qApp->setGlobalStrut(QSize(0, 0));
 
-    bool inputConnect = QObject::connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)), q, SLOT(virtualInputAreaChanged(QRect)));
+    bool inputConnect = QObject::connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)), q, SLOT(ensureFocusedWidgetVisible(QRect)));
     if(!inputConnect)
         qCritical() << "Virtual keyboard notification connection failed";
 }
@@ -2459,7 +2459,7 @@ int QtMaemo6Style::styleHint(StyleHint hint, const QStyleOption *option,
     return QtMaemo6TestStyle::styleHint(hint, option, widget, returnData);
 }
 
-void QtMaemo6Style::virtualInputAreaChanged(QRect rect) {
+void QtMaemo6Style::ensureFocusedWidgetVisible(QRect rect) {
     QWidget* widget = qApp->focusWidget();
     if(widget) {
         Q_D(QtMaemo6Style);

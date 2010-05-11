@@ -200,7 +200,7 @@ protected Q_SLOTS:
                           const QWidget *widget = 0, QStyleHintReturn *returnData = 0) const;
     /*! \reimp_end */
 
-    void virtualInputAreaChanged(QRect rect);
+    void ensureFocusedWidgetVisible(QRect rect);
 };
 
 #endif
