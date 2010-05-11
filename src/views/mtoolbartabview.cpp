@@ -306,10 +306,9 @@ void MToolbarTabViewPrivate::updateActionChecked()
         iterator.next();
         MButton *button = qobject_cast<MButton *>(iterator.value());
         QAction* action = iterator.key();
-        bool butChecked = button->isChecked();
-        if (button && butChecked != action->isChecked()) {
+        if (button && (button->isChecked() != action->isChecked())) {
             QObject::disconnect(action, SIGNAL(toggled(bool)), q, SLOT(_q_groupActionToggled(bool)));
-            action->setChecked(butChecked);
+            action->setChecked(button->isChecked());
             QObject::connect(action, SIGNAL(toggled(bool)), q, SLOT(_q_groupActionToggled(bool)));
         }
     }
