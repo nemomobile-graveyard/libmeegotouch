@@ -28,6 +28,8 @@
 static const int defaultPanThreshold = 10;
 
 MPanRecognizerPrivate::MPanRecognizerPrivate()
+  : movementThreshold( 0 ),
+    q_ptr( 0 )
 {
 }
 
