@@ -29,10 +29,13 @@
 #include <getopt.h>
 #include <QString>
 #include <MApplication>
+#include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MMashupCanvas>
 
 void usage(const char *progName)
 {
-    qWarning("Usage: %s -i [OPTION] METADATAFILENAME", progName);
+    qWarning("Usage: %s -i [OPTION] [METADATAFILENAME]", progName);
     qWarning("  -i, --instanceId=ID                       Defines the instance id of the applet");
     qWarning("  metadatafilename                   Defines the metadata file of the applet");
 }
@@ -62,10 +65,18 @@ int main(int argc, char **argv)
         }
     }
 
-    // Load applet metadata
     if (optind >= argc || QString(argv[optind]).isEmpty()) {
-        usage(argv[0]);
+        // No arguments: use the mashup canvas mode
+        MApplication application(argc, argv);
+        MApplicationWindow applicationWindow;
+        MApplicationPage *applicationPage = new MApplicationPage;
+        applicationPage->setComponentsDisplayMode(MApplicationPage::AllComponents, MApplicationPageModel::Hide);
+        applicationPage->setCentralWidget(new MMashupCanvas("appletcanvas"));
+        applicationPage->appear(&applicationWindow);
+        applicationWindow.show();
+        return application.exec();
     } else {
+        // Arguments given: load a single applet
         QString metaDataFileName = argv[optind];
         MAppletMetaData metadata(metaDataFileName);
         MApplication m_app(argc, argv, metadata.resourceIdentifier());

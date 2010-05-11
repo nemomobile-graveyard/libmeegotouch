@@ -25,5 +25,8 @@ SOURCES += main.cpp \
     mapplettesterwindow.cpp \
     ../../src/extensions/mashup/mashup/mappletid.cpp
 target.path = $$M_INSTALL_BIN
-INSTALLS += target
+INSTALLS += target style
 CONFIG -= app_bundle
+
+style.path = $$M_THEME_DIR/base/meegotouch/mapplettester/style
+style.files = *.css
