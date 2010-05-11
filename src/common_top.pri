@@ -25,13 +25,6 @@ CONFIG += qt warn_on depend_includepath qmake_cache target_qt dll create_prl
 !win32:CONFIG += link_pkgconfig
 macx:CONFIG += lib_bundle
 
-win32 {
-    QMAKE_MOC = perl $${IN_PWD}\..\mmoc\mmoc
-    INCLUDEPATH += .
-} else {
-    QMAKE_MOC = $${M_SOURCE_TREE}/mmoc/mmoc
-}
-
 QMAKE_CFLAGS += -Werror
 
 QMAKE_CXXFLAGS += -DM_EXPORTS

@@ -48,7 +48,6 @@
 #include "../../src/corelib/widgets/mtextedit_p.h"
 
 
-Q_DECLARE_METATYPE(M::TextContentType);
 Q_DECLARE_METATYPE(Qt::InputMethodHints);
 Q_DECLARE_METATYPE(QValidator::State);
 Q_DECLARE_METATYPE(MTextEditModel::EchoMode);

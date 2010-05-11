@@ -73,7 +73,5 @@ private:
 };
 
 Q_DECLARE_METATYPE(MApplicationPage *);
-Q_DECLARE_METATYPE(M::OrientationAngle);
-Q_DECLARE_METATYPE(M::Orientation);
 
 #endif

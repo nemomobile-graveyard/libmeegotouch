@@ -78,6 +78,4 @@ private:
     MComponentData* m_componentData;
 };
 
-Q_DECLARE_METATYPE(M::Orientation)
-
 #endif

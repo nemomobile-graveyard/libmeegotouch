@@ -22,8 +22,6 @@
 #include "ut_minputmethodstate.h"
 #include "minputmethodstate.h"
 
-Q_DECLARE_METATYPE(M::OrientationAngle)
-
 void Ut_MInputMethodState::initTestCase()
 {
     qRegisterMetaType<M::OrientationAngle>("M::OrientationAngle");
