@@ -31,12 +31,12 @@ TestExtendingBackgroundView::TestExtendingBackgroundView(MWidgetController *cont
 {
 }
 
-QRectF TestExtendingBackgroundView::boundingRect()
+QRectF TestExtendingBackgroundView::boundingRect() const
 {
     return MExtendingBackgroundView::boundingRect();
 }
 
-QRectF TestExtendingBackgroundView::geometry()
+QRectF TestExtendingBackgroundView::geometry() const
 {
     return MExtendingBackgroundView::geometry();
 }
