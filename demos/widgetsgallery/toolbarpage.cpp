@@ -86,7 +86,7 @@ void TestModel::setMode(TestModel::CallMode mode) {
 class MContentItemCreator : public MAbstractCellCreator<MContentItem>
 {
 public:
-    MContentItemCreator() {
+    MContentItemCreator() : amountOfColumns( 0 ) {
     }
 
     void updateCell(const QModelIndex &index, MWidget *cell) const {
