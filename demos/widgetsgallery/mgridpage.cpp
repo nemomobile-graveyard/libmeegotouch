@@ -337,5 +337,6 @@ void MGridPage::modifyRowsSliderHandle(int newValue)
 
 void MGridPage::orientationChanged(M::Orientation orientation)
 {
+    Q_UNUSED(orientation)
     configureGrid();
 }

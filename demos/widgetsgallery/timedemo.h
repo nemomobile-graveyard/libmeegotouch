@@ -46,7 +46,11 @@ public:
     QString type;
 
     int fps() const {
-        return (timestamps.count() - 1) / qMax<float>(runtime(), 1.f) * 1000;
+        if (timestamps.count() == 0) {
+            return 0;
+        } else {
+            return (timestamps.count() - 1) / qMax<float>(runtime(), 1.f) * 1000;
+        }
     }
 
     int runtime() const {

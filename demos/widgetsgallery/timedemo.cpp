@@ -284,7 +284,7 @@ void Timedemo::saveFramelog() {
         BenchmarkResultHash results = benchmarkResults[i];
         foreach(const QString& name, allBenchmarks) {
             BenchmarkResultHash::const_iterator resultIter = results.find(name);
-            if (resultIter == results.end()) {
+            if (resultIter == results.end() || resultIter->runtime() == 0 ||  resultIter->fps() == 0) {
                 continue;
             }
             framelog.writeStartElement("benchmark");
