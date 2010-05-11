@@ -56,14 +56,14 @@ void Mt_MButtonGroup::memoryBenchmark()
 {
     QFETCH(int, buttonCount);
 
-    MButton **buttons = new MButton*[buttonCount];
+    QList<MButton*> buttons;
 
     beginMemoryBenchmark();
 
     MButtonGroup *buttonGroup = new MButtonGroup();
 
     for (int i = 0; i < buttonCount; ++i) {
-        buttons[i] = new MButton();
+        buttons.append( new MButton );
         buttons[i]->setCheckable(true);
         buttonGroup->addButton(buttons[i]);
     }
@@ -77,8 +77,6 @@ void Mt_MButtonGroup::memoryBenchmark()
     delete buttonGroup;
 
     endMemoryBenchmark();
-
-    delete buttons;
 }
 
 QTEST_APPLESS_MAIN(Mt_MButtonGroup)
