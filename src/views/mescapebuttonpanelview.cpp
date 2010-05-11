@@ -29,6 +29,8 @@
 
 MEscapeButtonPanelViewPrivate::MEscapeButtonPanelViewPrivate() :
     q_ptr(0),
+    backButton(0),
+    closeButton(0),
     opacityTimeLine(0),
     escapeMode(MEscapeButtonPanelModel::CloseMode),
     controller(0)
