@@ -20,7 +20,7 @@
 #ifndef MTOOLBARTABVIEW_H
 #define MTOOLBARTABVIEW_H
 
-#include "mwidgetview.h"
+#include "mtoolbarview.h"
 #include <mwidgetmodel.h>
 #include <mtoolbartabstyle.h>
 #include <mnamespace.h>
@@ -52,10 +52,11 @@ class MToolbarTabViewPrivate;
     \sa MToolBar MToolbarTabStyle
 */
 
-class M_EXPORT MToolbarTabView : public MWidgetView
+class M_EXPORT MToolbarTabView : public MToolBarView
 {
     Q_OBJECT
     M_VIEW(MWidgetModel, MToolbarTabStyle)
+    Q_DECLARE_PRIVATE(MToolbarTabView)
 
 public:
 
@@ -77,14 +78,10 @@ protected:
         \param controller The controller associated with the view.
     */
     MToolbarTabView(MToolbarTabViewPrivate &dd, MToolBar *controller);
-    MToolbarTabViewPrivate *const d_ptr;
 
 private:
     Q_DISABLE_COPY(MToolbarTabView)
-    Q_DECLARE_PRIVATE(MToolbarTabView)
 
-    Q_PRIVATE_SLOT(d_func(), void _q_groupButtonClicked(bool))
-    Q_PRIVATE_SLOT(d_func(), void _q_groupActionToggled(bool))
 #ifdef UNIT_TEST
     friend class Ut_MToolbarTabView;
 #endif

@@ -57,7 +57,7 @@ void MNavigationBarViewPrivate::init()
     applicationMenuButton->setObjectName("NavigationBarMenuButton");
 
     layout->addItem(applicationMenuButton);
-    layout->setAlignment(applicationMenuButton, Qt::AlignVCenter);
+    layout->setAlignment(applicationMenuButton, Qt::AlignCenter);
 
     // Connects button signals
     QObject::connect(applicationMenuButton, SIGNAL(clicked()), controller, SIGNAL(viewmenuTriggered()));
@@ -68,7 +68,7 @@ void MNavigationBarViewPrivate::setMenuButtonwidth()
 {
     Q_Q(MNavigationBarView);
 
-    /* FIXME: Its there because the UI specs contains the following forumla:
+    /* FIXME: Its there because the UI specs contains the following formula:
       width of view menu button = width of portrait view - width of home button - width of close button.
       This needs to be removed when there exists support for reading CSS constants in the code
      */

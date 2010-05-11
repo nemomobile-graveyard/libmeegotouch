@@ -48,32 +48,24 @@ public:
 
     void init();
 
-    void add(QAction *action, QAction *before);
+    void add(QAction *action);
     void remove(QAction *action);
     void change(QAction *action);
 
 protected:
     bool eventFilter(QObject *obj, QEvent *event);
     MWidget *createWidget(QAction *action);
-    MButton *createButton(QAction *action);
-    bool isLocationValid(QAction *action, MAction::Location loc);
-    bool isVisible(QAction *action);
-    void clearWidgets(QHash<QAction *, MWidget *>& widgets);
-    void deleteWidget(QAction *action, MWidget *widget);
-    bool releaseWidget(QAction *action, MWidget *widget);
-    MWidget *requestWidget(MAction *action);
-    bool isWidgetInUseByView(MWidgetAction *widgetAction);
-    bool hasWidget(QAction *action);
-    bool hasTextEditWidget(QAction *action);
-    bool isWidgetUsable(QAction *action);
-    bool isWidgetUsable(MWidgetAction *widgetAction);
-    bool hasAction(QAction *action);
-    int getItemIndex(MLinearLayoutPolicy *policy, QAction *before);
-    MWidget *getWidget(QAction *action);
-    bool changeLocation(QAction *action);
-    void changeData(QAction *action);
-    bool changeVisibility(QAction *action);
 
+    int policyIndexForAddingAction(QAction *action, MLinearLayoutPolicy *policy) const;
+    bool isLocationValid(QAction *action, MAction::Location loc) const;
+    bool releaseWidget(QAction *action, MWidget *widget) const;
+    bool hasTextEditWidget(QAction *action) const;
+    bool hasUnusableWidget(QAction *action) const;
+    void updateWidgetFromAction(MWidget *widget, QAction *action) const;
+    MWidget *getWidget(QAction *action) const;
+
+    void _q_groupButtonClicked(bool);
+    void _q_groupActionToggled(bool);
 protected:
     MToolBarView *q_ptr;
     MToolBar *controller;
@@ -82,35 +74,30 @@ protected:
     MLinearLayoutPolicy *landscapePolicy;
     MLinearLayoutPolicy *portraitPolicy;
     QHash<QAction *, MWidget *> leasedWidgets;
-    QHash<QAction *, MWidget *> buttons;
+    QHash<QAction *, MButton *> buttons;
+    /* If this is non-null, created buttons will be placed in this group */
+    MButtonGroup * buttonGroup;
 
     static const int maxWidgets;
 
-private:
     enum PlacementMode {
         Managed = 0,
         Unmanaged
     };
 
-    class ActionPlacementData
+    struct ActionPlacementData
     {
-    public:
-        void reset() {
-            mode = Managed;
+        ActionPlacementData() {
             hasTextEditor = false;
             placedActions = 0;
         }
-        PlacementMode mode;
         bool hasTextEditor;
         int placedActions;
     };
 
     ActionPlacementData landscapeData;
     ActionPlacementData portraitData;
-
-    bool refreshPolicyData(QAction *action,
-                           MAction::Location location,
-                           ActionPlacementData &policyData);
+    bool reserveSpaceForAction(QAction *action, ActionPlacementData &policyData);
 };
 
 #endif

@@ -72,6 +72,7 @@ public:
      */
     virtual ~MToolBarView();
 
+    MWidget *getWidget(QAction *action) const;
 protected:
     /*!
         \brief protected constructor
@@ -84,6 +85,9 @@ protected:
 private:
     Q_DISABLE_COPY(MToolBarView)
     Q_DECLARE_PRIVATE(MToolBarView)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_groupButtonClicked(bool))
+    Q_PRIVATE_SLOT(d_func(), void _q_groupActionToggled(bool))
 
 #ifdef UNIT_TEST
     friend class Ut_MToolBarView;
