@@ -64,6 +64,7 @@ bool QtMaemo6TestStyleEventFilter::eventFilter(QObject *obj, QEvent *event)
 
 QtMaemo6TestStyle::QtMaemo6TestStyle(QtMaemo6TestStylePrivate &dd)
     : d_ptr(& dd), // this is a special case, since we start our shared d-pointer hierarchy within m right here
+      m_windowEventFilter(NULL),
       m_windowDecoration(NULL)
 {
     Q_D(QtMaemo6TestStyle);
@@ -75,7 +76,8 @@ QtMaemo6TestStyle::QtMaemo6TestStyle(QtMaemo6TestStylePrivate &dd)
 QtMaemo6TestStyle::QtMaemo6TestStyle()
     : QPlastiqueStyle(),
       d_ptr(new QtMaemo6TestStylePrivate()),
-      m_windowEventFilter(0)
+      m_windowEventFilter(NULL),
+      m_windowDecoration(NULL)
 {
     Q_D(QtMaemo6TestStyle);
     d->q_ptr = this;
