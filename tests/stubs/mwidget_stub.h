@@ -35,6 +35,8 @@ class MWidgetStub : public StubBase {
   virtual MSceneManager * sceneManager() const;
   virtual bool isOnDisplay() const;
   virtual bool isSelected() const;
+  virtual QPointF paintOffset() const;
+  virtual void setPaintOffset(const QPointF & offset);
   virtual void setVisible(bool visible);
   virtual void setObjectName(const QString &name);
   virtual void setSelected(bool selected);
@@ -91,6 +93,17 @@ bool MWidgetStub::isOnDisplay() const {
 bool MWidgetStub::isSelected() const {
   stubMethodEntered("isSelected");
   return stubReturnValue<bool>("isSelected");
+}
+
+QPointF MWidgetStub::paintOffset() const {
+  stubMethodEntered("paintOffset");
+  return stubReturnValue<QPointF>("paintOffset");
+}
+
+void MWidgetStub::setPaintOffset(const QPointF & offset) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const QPointF & >(offset));
+  stubMethodEntered("setPaintOffset",params);
 }
 
 void MWidgetStub::setVisible(bool visible) {
@@ -251,6 +264,14 @@ bool MWidget::isOnDisplay() const {
 
 bool MWidget::isSelected() const {
   return gMWidgetStub->isSelected();
+}
+
+QPointF MWidget::paintOffset() const {
+    return gMWidgetStub->paintOffset();
+}
+
+void MWidget::setPaintOffset(const QPointF & offset) {
+    gMWidgetStub->setPaintOffset(offset);
 }
 
 void MWidget::setVisible(bool visible) {
