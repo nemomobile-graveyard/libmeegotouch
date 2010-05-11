@@ -38,6 +38,9 @@ const QString TILE_POSTFIX[16] = {
 MBackgroundTilesPrivate::MBackgroundTilesPrivate() :
     refCount(1)
 {
+    for(int i=0; i<16; ++i) {
+        tiles[i] = 0;
+    }
 }
 
 MBackgroundTilesPrivate::~MBackgroundTilesPrivate()
