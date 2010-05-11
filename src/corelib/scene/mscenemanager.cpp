@@ -55,8 +55,6 @@
 #include "morientationtracker.h"
 
 #include "mbasicorientationanimation.h"
-#include "mnotificationanimation.h"
-#include "mscenefadeanimation.h"
 #include "mabstractwidgetanimation.h"
 #include "mpageswitchanimation.h"
 

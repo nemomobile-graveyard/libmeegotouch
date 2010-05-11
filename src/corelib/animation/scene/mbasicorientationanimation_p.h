@@ -27,7 +27,6 @@
 class QParallelAnimationGroup;
 class QPropertyAnimation;
 class MBasicOrientationAnimation;
-class MSceneWindowAnimation;
 class MSceneWindow;
 
 class MBasicOrientationAnimationPrivate : public MParallelAnimationGroupPrivate
