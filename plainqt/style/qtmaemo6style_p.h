@@ -318,11 +318,12 @@ public:
     struct WidgetPos {
         WidgetPos() : widget(NULL) {};
         WidgetPos(QWidget* w, QPoint p) : widget(w), position(p) {};
+        WidgetPos(const WidgetPos& other) { widget = other.widget; position = other.position; }
         QWidget* widget;
         QPoint position;
     };
 
-    QMap<QWidget*, WidgetPos> m_originalPosMap;
+    WidgetPos m_originalWidgetPos;
 
 public:
     QList<QToolButton *> m_toolButtonsInTitleBar;

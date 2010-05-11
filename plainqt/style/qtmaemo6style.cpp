@@ -2483,7 +2483,6 @@ void QtMaemo6Style::virtualInputAreaChanged(QRect rect) {
 
 void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleArea)
 {
-    qCritical() << "Visbible Area:" << visibleArea;
     if(visibleArea.isValid()) {
         QWidget* parent = widget->parentWidget();
         QtMaemo6Window* window = NULL;
@@ -2495,18 +2494,28 @@ void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleAre
             if(sa) {
                 QWidget* viewport = sa->viewport();
 
-                qCritical() << "InputContext TopLevel widget found" << parent;
-                QPoint widgetGlobalPosition = widget->parentWidget()->mapToGlobal(widget->geometry().topLeft());
-                qCritical() << "Widget local position:" << widget->pos();
-                qCritical() << "Widget global position:" << widgetGlobalPosition;
-                if( !(widgetGlobalPosition.y() > visibleArea.top() && widgetGlobalPosition.y() < visibleArea.bottom())) {
-                    qCritical() << "Viewport Geometry" << viewport->mapToGlobal(viewport->pos());
-                    QPoint originalViewportPos = viewport->parentWidget()->mapToGlobal(viewport->pos());
-                    m_originalPosMap.insert(widget, WidgetPos(viewport, viewport->pos()));
+                //that is the real visible area of the viewport, the navigation bar is excluded here
+                QRect realVisibleRect = visibleArea.intersected(
+                    QRect(viewport->mapToGlobal(QPoint(0,0)), viewport->size() ));
+
+                QRect globalWidgetRect = QRect(
+                        widget->mapToGlobal(QPoint(0,0)),
+                        widget->size()
+                          );
+
+                QPoint widgetGlobalPosition = widget->mapToGlobal(QPoint(0,0));
+
+                //the widget is not fully covered by the visible Area
+                if(globalWidgetRect.intersected(realVisibleRect) != globalWidgetRect) {
+                    QPoint originalViewportPos = viewport->mapToGlobal(QPoint(0,0));
+                    m_originalWidgetPos.widget = viewport;
+                    m_originalWidgetPos.position = viewport->pos();
+
+                    int newXPos = realVisibleRect.top() + ((realVisibleRect.height() - widget->height()) / 2);
+                    QPoint moveBy = QPoint(0, widgetGlobalPosition.y() - newXPos);
+
                     //centered in visibleArea
-                    QPoint moveBy = QPoint(0, widgetGlobalPosition.y() + (visibleArea.top() - visibleArea.height() / 2));
-                    viewport->move(originalViewportPos - moveBy);
-                    qCritical() << "Viewport new geometry" << viewport->geometry();
+                    viewport->move(-moveBy);
                 }
             } else {
                 qCritical() << "Can't focus on" << widget << "because scroll area contains no viewport";
@@ -2515,9 +2524,9 @@ void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleAre
             qCritical() << "Can't focus on" << widget << "because there is no top level scroll area";
         }
     } else {
-        WidgetPos wp = m_originalPosMap.take(widget);
-        if(wp.widget) {
-            wp.widget->move(wp.position);
+        if(m_originalWidgetPos.widget) {
+            m_originalWidgetPos.widget->move(m_originalWidgetPos.position);
+            m_originalWidgetPos.widget = 0;
         }
     }
 }
