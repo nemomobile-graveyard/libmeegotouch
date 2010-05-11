@@ -444,12 +444,15 @@ void MPannableWidget::glassPanEvent(QGestureEvent *event, QPanGesture* panGestur
         return;
     }
 
-    if ((panGesture->offset().x() != 0 && panDirection().testFlag(Qt::Vertical)) ||
-        (panGesture->offset().y() != 0 && panDirection().testFlag(Qt::Horizontal)))
-    {
-        // Panning against the pannable direction, we aren't interested in it.
-        event->ignore(panGesture);
-        return;
+    if (panDirection().testFlag(Qt::Vertical) == false || panDirection().testFlag(Qt::Horizontal) == false) {
+        //Ignoring gestures that aren't aligned to allowed pan direction.
+        if ((panGesture->offset().x() != 0 && panDirection().testFlag(Qt::Vertical)) ||
+            (panGesture->offset().y() != 0 && panDirection().testFlag(Qt::Horizontal)))
+        {
+            // Panning against the pannable direction, we aren't interested in it.
+            event->ignore(panGesture);
+            return;
+        }
     }
 
     switch (panGesture->state())
