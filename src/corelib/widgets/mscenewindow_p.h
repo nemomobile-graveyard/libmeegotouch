@@ -43,6 +43,7 @@ public:
     bool managedManually;
     bool shown;
     bool dismissed;
+    bool waitingForContextMenuEvent;
 
     MSceneLayerEffect *effect;
 
