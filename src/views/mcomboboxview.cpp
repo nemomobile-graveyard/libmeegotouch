@@ -36,7 +36,13 @@
 #include <QGraphicsSceneMouseEvent>
 
 MComboBoxViewPrivate::MComboBoxViewPrivate()
-    : q_ptr(0), controller(0), contentItem(0), popuplist(0), pixmap(0), progressIndicator(0)
+  : q_ptr(0),
+    controller(0),
+    layout(0),
+    contentItem(0),
+    popuplist(0),
+    pixmap(0),
+    progressIndicator(0)
 {
 }
 
