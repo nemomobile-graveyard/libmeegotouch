@@ -31,6 +31,9 @@ static const int MTapAndHoldTimeout = 500; /* miliseconds */
 static const int MTapAndHoldMovementThreshold = 20; /* pixels */
 
 MTapAndHoldRecognizerPrivate::MTapAndHoldRecognizerPrivate()
+  : timeoutValue( 0 ),
+    movementThreshold( 0 ),
+    q_ptr( 0 )
 {
 }
 
