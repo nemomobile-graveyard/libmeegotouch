@@ -144,9 +144,11 @@ ToolBarPage::ToolBarPage() :
     exampleAction1(0),
     exampleAction2(0),
     defaultViewAction(0),
-    tabViewAction(0)
+    tabViewAction(0),
+    isDefaultView(true)
 {
     gid = TemplatePage::ViewsAndDialogs;
+
 }
 
 ToolBarPage::~ToolBarPage()
