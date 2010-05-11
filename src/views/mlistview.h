@@ -24,12 +24,12 @@
 #include <mlist.h>
 #include <mliststyle.h>
 #include <mlistmodel.h>
+#include <mlistview_p.h>
 
 class MController;
 class MPannableViewport;
 class MList;
 class MListModel;
-class MListViewPrivate;
 class MPlainMultiColumnListViewPrivate;
 class MGroupHeaderListViewPrivate;
 class MMultiColumnListViewPrivate;
@@ -78,11 +78,14 @@ private:
     void scrollTo(const QModelIndex &index, MList::ScrollHint hint);
     void longTap(const QPointF &pos);
 
+    Q_PRIVATE_SLOT(d_func(), void _q_moveViewportToNextPosition(int))
+
 private:
+    Q_DECLARE_PRIVATE(MListView)
+
     MListViewPrivate *d_ptr;
     MList *controller;
 
-    friend class MListViewPrivate;
     friend class MPlainMultiColumnListViewPrivate;
     friend class MGroupHeaderListViewPrivate;
     friend class MMultiColumnListViewPrivate;

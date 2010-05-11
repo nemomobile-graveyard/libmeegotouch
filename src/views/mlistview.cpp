@@ -19,7 +19,7 @@
 
 #include <QList>
 #include <QVector>
-#include <QTimer>
+#include <QTimeLine>
 #include <QStyleOptionGraphicsItem>
 #include <MList>
 #include <MWidgetView>
@@ -308,40 +308,13 @@ void MListView::itemClick()
 void MListView::scrollTo(const QModelIndex &index, MList::ScrollHint hint)
 {
     if (index.isValid()) {
-        int cellPosition = d_ptr->locatePosOfItem(index);
-
         if (d_ptr->pannableViewport) {
-            QPointF targetPosition = d_ptr->pannableViewport->position();
-            QPointF listPosition(d_ptr->controller->mapToItem(d_ptr->pannableViewport->widget(), 0, 0));
+            d_ptr->targetPosition = d_ptr->locateScrollToPosition(index, hint);
 
-            qreal pannableViewportHeight = d_ptr->pannableViewport->boundingRect().height();
-            switch (hint) {
-            case MList::PositionAtTopHint:
-                targetPosition.setY(controller->pos().y() + cellPosition);
-                break;
-
-            case MList::PositionAtBottomHint:
-                targetPosition.setY(cellPosition + d_ptr->itemHeight + listPosition.y() - pannableViewportHeight);
-                break;
-
-            case MList::PositionAtCenterHint:
-                targetPosition.setY(listPosition.y() + cellPosition + d_ptr->itemHeight / 2 - pannableViewportHeight / 2);
-                break;
-
-            case MList::EnsureVisibleHint:
-                if (cellPosition <= d_ptr->pannableViewport->position().y()) {
-                    targetPosition.setY(controller->pos().y() + cellPosition);
-                } else if (cellPosition + d_ptr->itemHeight > d_ptr->pannableViewport->position().y() + pannableViewportHeight) {
-                    targetPosition.setY(cellPosition + d_ptr->itemHeight + listPosition.y() - pannableViewportHeight);
-                }
-
-                break;
+            if (d_ptr->targetPosition != d_ptr->pannableViewport->position()) {
+                if (d_ptr->scrollToTimeLine->state() != QTimeLine::Running)
+                    d_ptr->scrollToTimeLine->start();
             }
-
-            targetPosition.setY(qMax(targetPosition.y(), (qreal)0));
-            targetPosition.setY(qMin(targetPosition.y(), d_ptr->pannableViewport->widget()->boundingRect().height() - pannableViewportHeight));
-
-            d_ptr->pannableViewport->setPosition(targetPosition);
         }
     }
 }

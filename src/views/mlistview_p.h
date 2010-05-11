@@ -28,13 +28,12 @@
 #include <QTimer>
 #include <QSet>
 #include <MLabel>
+#include <MList>
 #include "mabstractcellcreator.h"
 #include "private/mwidgetview_p.h"
 
 class MWidget;
 class MListView;
-class MList;
-class MListModel;
 class MListIndex;
 class MPannableViewport;
 class MSideBar;
@@ -42,6 +41,7 @@ class MWidgetRecycler;
 class QAbstractItemModel;
 class QItemSelectionModel;
 class QItemSelection;
+class QTimeLine;
 
 namespace MListViewPrivateNamespace
 {
@@ -102,6 +102,9 @@ public:
 
     void drawHorizontalSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
+    QPointF locateScrollToPosition(const QModelIndex &index, MList::ScrollHint hint);
+    QPointF calculateViewportNextPosition();
+
 public:
     virtual void createSeparators();
     virtual void updateSeparators();
@@ -150,6 +153,8 @@ public Q_SLOTS:
     void controllerParentChanged();
     void updateListGeometry();
 
+    void _q_moveViewportToNextPosition(int frame);
+
 public:
     MListView *q_ptr;
     MList *controller;
@@ -180,6 +185,11 @@ public:
     QTimer movingDetectorTimer;
     MPannableViewport *pannableViewport;
     QPointF listPosition;
+
+    // Scroll animation
+    QTimeLine *scrollToTimeLine;
+    QPointF targetPosition;
+    qreal frictionK;
 };
 
 class MPlainListViewPrivate : public MListViewPrivate

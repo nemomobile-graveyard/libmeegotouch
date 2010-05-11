@@ -24,6 +24,7 @@
 #include <MAbstractItemModel>
 
 #include <QItemSelectionModel>
+#include <QTimeLine>
 
 #include "mcontentitem.h"
 #include "mlistindex.h"
@@ -53,6 +54,12 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     hseparatorHeight = 0;
     pannableViewport = NULL;
     clearVisibleOnRelayout = false;
+    frictionK = 0.67;
+
+    scrollToTimeLine = new QTimeLine();
+    scrollToTimeLine->setLoopCount(0);
+    scrollToTimeLine->setDuration(1000);
+    scrollToTimeLine->setFrameRange(0, 30);
 
     movingDetectorTimer.setSingleShot(true);
     connect(&movingDetectorTimer, SIGNAL(timeout()), this, SLOT(movingDetectionTimerTimeout()));
@@ -322,6 +329,7 @@ void MListViewPrivate::disconnectSignalsFromModelToListView()
     if(model)
     {
         model->disconnect(q_ptr);
+        model->disconnect(scrollToTimeLine, SIGNAL(frameChanged(int)), q_ptr, SLOT(_q_moveViewportToNextPosition(int)));
     }
 }
 
@@ -339,6 +347,8 @@ void MListViewPrivate::connectSignalsFromModelToListView()
         connect(model, SIGNAL(layoutChanged()), q_ptr, SLOT(layoutChanged()));
         connect(model, SIGNAL(modelReset()), q_ptr, SLOT(modelReset()));
         connect(model, SIGNAL(rowsMoved(QModelIndex, int, int, QModelIndex, int)), q_ptr, SLOT(rowsMoved(QModelIndex, int, int, QModelIndex, int)));
+
+        connect(scrollToTimeLine, SIGNAL(frameChanged(int)), q_ptr, SLOT(_q_moveViewportToNextPosition(int)));
     }
 }
 
@@ -445,6 +455,64 @@ void MListViewPrivate::drawHorizontalSeparator(int row, QPainter *painter, const
     painter->translate(pos.x(), pos.y());
     hseparator->paint(painter, option);
     painter->translate(-pos.x(), -pos.y());
+}
+
+QPointF MListViewPrivate::locateScrollToPosition(const QModelIndex &index, MList::ScrollHint hint)
+{
+    if (!pannableViewport)
+        return QPointF(0,0);
+
+    int cellPosition = locatePosOfItem(index);
+    QPointF targetPosition = pannableViewport->position();
+
+    qreal pannableViewportHeight = pannableViewport->boundingRect().height();
+    switch (hint) {
+    case MList::PositionAtTopHint:
+        targetPosition.setY(controller->pos().y() + cellPosition);
+        break;
+
+    case MList::PositionAtBottomHint:
+        targetPosition.setY(cellPosition + itemHeight + listPosition.y() - pannableViewportHeight);
+        break;
+
+    case MList::PositionAtCenterHint:
+        targetPosition.setY(listPosition.y() + cellPosition + itemHeight / 2 - pannableViewportHeight / 2);
+        break;
+
+    case MList::EnsureVisibleHint:
+        if (cellPosition <= pannableViewport->position().y()) {
+           targetPosition.setY(controller->pos().y() + cellPosition);
+        } else if (cellPosition + itemHeight > pannableViewport->position().y() + pannableViewportHeight) {
+           targetPosition.setY(cellPosition + itemHeight + listPosition.y() - pannableViewportHeight);
+        }
+        break;
+    }
+
+    targetPosition.setY(qMax(targetPosition.y(), (qreal)0));
+    targetPosition.setY(qMin(targetPosition.y(), pannableViewport->widget()->boundingRect().height() - pannableViewportHeight));
+
+    return targetPosition;
+}
+
+void MListViewPrivate::_q_moveViewportToNextPosition(int frame)
+{
+    Q_UNUSED(frame);
+
+    if (pannableViewport) {
+        if (targetPosition != pannableViewport->position()) {
+            pannableViewport->setPosition(calculateViewportNextPosition());
+        } else {
+            pannableViewport->setPosition(targetPosition);
+            scrollToTimeLine->stop();
+        }
+    } else {
+        scrollToTimeLine->stop();
+    }
+}
+
+QPointF MListViewPrivate::calculateViewportNextPosition()
+{
+    return pannableViewport->position() + (targetPosition - pannableViewport->position()) * frictionK;
 }
 
 void MListViewPrivate::updateListIndexVisibility()
