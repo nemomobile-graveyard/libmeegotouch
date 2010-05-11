@@ -55,6 +55,7 @@
 #include "morientationtracker.h"
 
 #include "mbasicorientationanimation.h"
+#include "mcrossfadedorientationanimation.h"
 #include "mabstractwidgetanimation.h"
 #include "mpageswitchanimation.h"
 
@@ -113,13 +114,7 @@ void MSceneManagerPrivate::init(MScene *scene)
     rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.0, q->visibleSceneSize().height() / 2.0));
     scene->addItem(rootElement);
 
-    //TODO: get this from theme
-    orientationAnimation = new MBasicOrientationAnimation(q->visibleSceneSize(M::Landscape));
-    orientationAnimation->setRootElement(rootElement);
-    q->connect(orientationAnimation, SIGNAL(orientationChanged()), SLOT(_q_changeGlobalOrientationAngle()));
-    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_emitOrientationChangeFinished()));
-    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_applyQueuedSceneWindowTransitions()));
-    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
+    createOrientationAnimation();
 
     // The scene manager should only listen to region updates from one instance, to prevent
     // conflicting window relocation requests. Since MIMS is a singleton, enforcing
@@ -137,6 +132,24 @@ void MSceneManagerPrivate::init(MScene *scene)
     pageSwitchAnimation = new MPageSwitchAnimation;
 
     setOrientationAngleWithoutAnimation(newAngle);
+}
+
+void MSceneManagerPrivate::createOrientationAnimation()
+{
+    Q_Q(MSceneManager);
+
+    QRectF visibleSceneRect = QRectF(QPointF(0.0, 0.0), q->visibleSceneSize(M::Landscape));
+
+    //TODO: get this from theme
+    orientationAnimation = new MCrossFadedOrientationAnimation(visibleSceneRect);
+    //orientationAnimation = new MBasicOrientationAnimation(q->visibleSceneSize(M::Landscape));
+
+    orientationAnimation->setRootElement(rootElement);
+
+    q->connect(orientationAnimation, SIGNAL(orientationChanged()), SLOT(_q_changeGlobalOrientationAngle()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_emitOrientationChangeFinished()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_applyQueuedSceneWindowTransitions()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
 }
 
 MSceneManagerPrivate::~MSceneManagerPrivate()
