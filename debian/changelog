@@ -1,9 +1,11 @@
-libmeegotouch (0.20.10~1) unstable; urgency=low
+libmeegotouch (0.20.10-1) unstable; urgency=low
 
-  * unreleased
-  * Fixes: NB#167472 -  MLocale formats time "00:15" as "24:15". 24 is returned instead of 00 for "%H" format string.
+  * Fixes: NB#167472 - MLocale formats time "00:15" as "24:15". 24 is returned instead of 00 for "%H" format string.
+  * Fixes: NB#168123 - Panning in MPannableWidget is canceled due QTapAndHoldGesture
+  * Fixes: NB#160130 - Slider label is shown on another page if page changed during animation
+  * Fixes: NB#168135 - Scrolling or Panning is not working for any office-tools documents.
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 10 May 2010 18:07:01 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 12 May 2010 10:18:31 +0300
 
 libmeegotouch (0.20.9-1) unstable; urgency=low
 
