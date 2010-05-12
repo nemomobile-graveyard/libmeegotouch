@@ -52,8 +52,16 @@
 #include "phonebookmodel.h"
 #endif
 
-MListPage::MListPage() :
-    model(NULL), list(NULL), currentSortingIndex(0)
+MListPage::MListPage()
+  : model(NULL), 
+#ifndef HAVE_N900
+    proxyModel(NULL),
+#endif
+    imageLoader(NULL),
+    list(NULL), 
+    currentSortingIndex(0), 
+    currentListModeIndex(0)
+
 {
     gid = TemplatePage::ListsGridsAndMenus;
 }
