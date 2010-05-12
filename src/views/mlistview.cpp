@@ -208,7 +208,8 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
     int bottomRightRow = d_ptr->indexToFlatRow(bottomRight);
 
     int top = qMax(topLeftRow, firstVisibleRow);
-    int bottom = qMin(bottomRightRow, lastVisibleRow);
+    int lastCellInLastVisibleRow = lastVisibleRow + model()->columns() - lastVisibleRow % model()->columns() - 1;
+    int bottom = qMin(bottomRightRow, lastCellInLastVisibleRow);
 
     for (int i = top; i <= bottom; i++) {
         QModelIndex cellIndex = d_ptr->flatRowToIndex(i);

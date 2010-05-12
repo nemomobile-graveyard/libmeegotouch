@@ -629,7 +629,11 @@ int MPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
     if (viewWidth)
         column = x / (viewWidth / columns);
 
-    return row + column;
+    int flatRow = row + column;
+    if (flatRow >= itemsCount())
+        flatRow = itemsCount() - 1;
+
+    return flatRow;
 }
 
 void MPlainMultiColumnListViewPrivate::updateItemSize()
