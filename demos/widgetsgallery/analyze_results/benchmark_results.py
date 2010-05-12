@@ -1,8 +1,12 @@
 # -*- coding: utf-8 -*-
 
 import xml.dom.minidom
-import pylab
 import numpy
+
+try:
+  import pylab
+except ImportError:
+  pass
 
 class benchmark_result :
     def __init__(self, page, benchmark, timestamps) :

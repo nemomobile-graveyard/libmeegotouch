@@ -2,8 +2,14 @@
 
 import benchmark_results
 from optparse import OptionParser
+import sys
 
-import pylab
+try:
+  import pylab
+  pylab_available = True
+except ImportError:
+  pylab_available = False
+
 
 def main() :
     options = parse_commandline_arguments()
@@ -15,6 +21,9 @@ def main() :
         textual_output()
 
     if options.graphical :
+        if not pylab_available :
+            print "Pylab is not installed. Plotting is disabled."
+            sys.exit(-1)
         generate_plots()
 
 
@@ -73,7 +82,7 @@ def textual_output() :
                 # mean fps
                 print '| {0:>{1}.1f}fps'.format(result.fps_mean(), fps_width),
                 # min fps
-                print '{0:>{1}.1f}fps'.format(result.fps_mean(), fps_width),
+                print '{0:>{1}.1f}fps'.format(result.fps_min(), fps_width),
                 # runtime
                 print '{0:>{1}}ms'.format(result.runtime(), runtime_width),
                 # std dev
