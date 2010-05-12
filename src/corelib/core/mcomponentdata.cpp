@@ -204,7 +204,7 @@ MComponentDataPrivate::~MComponentDataPrivate()
     }
 #endif
 
-    // MTheme is a singleton which is freed by atexit()
+    delete theme;
     theme = 0;
 
     delete feedbackPlayer;

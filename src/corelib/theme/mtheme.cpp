@@ -91,14 +91,6 @@ static QString scalableImageCacheId(const QString &name, int left, int top, int 
 
 } // anonymous namespace
 
-void releaseTheme(void)
-{
-    if (gTheme) {
-        delete gTheme;
-    }
-    gTheme = 0;
-}
-
 MTheme::MTheme(const QString &applicationName, const QString &, ThemeService themeService) :
     d_ptr(new MThemePrivate(applicationName, themeService))
 {
@@ -123,7 +115,6 @@ MTheme::MTheme(const QString &applicationName, const QString &, ThemeService the
 #endif
 
     gTheme = this;
-    atexit(releaseTheme);
 }
 
 MTheme::~MTheme()
