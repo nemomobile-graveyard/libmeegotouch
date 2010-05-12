@@ -55,8 +55,12 @@ public:
         if (!param) {
             QString msg = QString("MethodCall::") + __func__ + ": failed dynamic_cast, check that parameter type matches parameter number";
             qFatal("%s", qPrintable(msg));
-        }
-        return param->data;
+
+	    // never reached
+	    return T();
+        } else {
+	    return param->data;
+	}
     }
 
     template <typename T>
