@@ -31,6 +31,8 @@
 const int NUMBER_OF_LOOPS = 100;
 
 Ft_MStyleSheetParser::Ft_MStyleSheetParser()
+  : m_logicalValues(NULL),
+    m_subject(NULL)
 {
 }
 
