@@ -358,13 +358,16 @@ public:
     integratingAction(actionType type,
                       QPointF value) :
         type(type),
+	value_int(0),
         value_QPointF(value) {}
     integratingAction(actionType type,
                       QSizeF value) :
         type(type),
+	value_int(0),
         value_QSizeF(value) {}
     integratingAction(actionType type) :
-        type(type) {}
+        type(type),
+	value_int(0) {}
 
     enum actionType type;
     int             value_int;
