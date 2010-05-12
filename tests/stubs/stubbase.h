@@ -92,7 +92,7 @@ T &StubBase::stubReturnValue(const QString &methodName) const
     Parameter<T>* param = dynamic_cast<Parameter<T>*>(base);
     if (!param) {
         QString msg = QString("StubBase::") + __func__ + ": failed dynamic_cast, check that return value type matches the method; check also that you have used stubSetReturnValue(" + methodName + ")";
-        qFatal(qPrintable(msg));
+        qFatal("%s", qPrintable(msg));
     }
     return param->data;
 

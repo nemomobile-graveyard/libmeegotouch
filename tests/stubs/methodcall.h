@@ -49,12 +49,12 @@ public:
     T parameter(int number) {
         if (number >= _params.count()) {
             QString msg = QString("MethodCall::") + __func__ + ": method " + _name + " does not have parameter #" + QString::number(number) + ". Check your test code.";
-            qFatal(qPrintable(msg));
+            qFatal("%s", qPrintable(msg));
         }
         Parameter<T>* param = dynamic_cast<Parameter<T>* >(_params[number]);
         if (!param) {
             QString msg = QString("MethodCall::") + __func__ + ": failed dynamic_cast, check that parameter type matches parameter number";
-            qFatal(qPrintable(msg));
+            qFatal("%s", qPrintable(msg));
         }
         return param->data;
     }
