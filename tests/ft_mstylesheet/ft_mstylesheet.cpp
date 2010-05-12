@@ -50,6 +50,7 @@ const MStyle *MTheme::style(const char *styleClassName,
 
 
 Ft_MStyleSheet::Ft_MStyleSheet()
+  : m_subject(NULL)
 {
 }
 
