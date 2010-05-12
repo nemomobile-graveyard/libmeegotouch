@@ -23,6 +23,7 @@
 #include "ut_mlogicalvalues.h"
 
 Ut_MLogicalValues::Ut_MLogicalValues()
+  : m_subject(NULL)
 {
 }
 
