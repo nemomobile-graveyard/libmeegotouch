@@ -41,9 +41,26 @@ my $OPT_HTTP_PASSWD;
 my $OPT_SKIP_DOWNLOAD;
 my $OPT_OUTPUTDIR;
 
+# engineering English packages which should be ignored because they are obsolete:
+my @eePackagesObsolete = (
+    "libdui-l10n-engineering-english", # now "libmeegotouch-l10n-engineering-english"
+    "duistartup-l10n-engineering-english" # now "mstartup-l10n-engineering-english"
+    );
+
+# engineering English packages which should be ignored because they are only demos:
+my @eePackagesIgnore = (
+    "meegotouch-demos-widgetsgallery-l10n-engineering-english"
+    );
+
 my @eePackages = (
+                  "account-plugin-facebook-l10n-engineering-english",
+                  "account-plugin-google-l10n-engineering-english",
+                  "account-plugin-ovi-l10n-engineering-english",
+                  "account-plugin-youtube-l10n-engineering-english",
                   "accounts-ui-l10n-engineering-english",
                   "backup-framework-l10n-engineering-english",
+                  "call-history-l10n-engineering-english",
+                  "call-ui-l10n-engineering-english",
                   "camera-ui-l10n-engineering-english",
                   "cellular-adaptation-ui-l10n-engineering-english",
                   "commhistory-daemon-l10n-engineering-english",
@@ -52,8 +69,10 @@ my @eePackages = (
                   "conn-dui-internet-l10n-engineering-english",
                   "conn-dui-wlan-l10n-engineering-english",
                   "contacts-l10n-engineering-english",
-                  "dui-demos-widgetsgallery-l10n-engineering-english",
+                  "crash-reporter-l10n-engineering-english",
+                  "dialer-l10n-engineering-english",
                   "duicontrolpanel-callandsimapplet-l10n-engineering-english",
+                  "duicontrolpanel-certificatesapplet-l10n-engineering-english",
                   "duicontrolpanel-datetimeapplet-l10n-engineering-english",
                   "duicontrolpanel-displaylanguageapplet-l10n-engineering-english",
                   "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
@@ -63,14 +82,26 @@ my @eePackages = (
                   "duihelp-l10n-engineering-english",
                   "duihomescreen-l10n-engineering-english",
                   "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
-                  "duistartup-l10n-engineering-english",
                   "duistatusind-connectivity-l10n-engineering-english",
+                  "feedreader-l10n-engineering-english",
                   "gallery-l10n-engineering-english",
                   "keychain-ui-l10n-engineering-english",
                   "libdatacounterdialog-l10n-engineering-english",
-                  "libdui-l10n-engineering-english",
+                  "libdialerui-l10n-engineering-english",
+                  "libfeedsettings-l10n-engineering-english",
+                  "liblocationpicker-l10n-engineering-english",
+                  "libmcontentwidgets-l10n-engineering-english",
+                  "libmeegotouch-l10n-engineering-english",
                   "libpresence0-l10n-engineering-english",
                   "libshare-ui-l10n-engineering-english",
+                  "libwebupload-l10n-engineering-english",
+                  "me-l10n-engineering-english",
+                  # ignore "meegotouch-demos-widgetsgallery-l10n-engineering-english",
+                  "messaging-ui-l10n-engineering-english",
+                  "mms-ui-l10n-engineering-english",
+                  "mstartup-l10n-engineering-english",
+                  "office-tools-l10n-engineering-english",
+                  "package-manager-ui-l10n-engineering-english",
                   "signon-ui-l10n-engineering-english",
                   "systemui-applets-l10n-engineering-english",
                   "systemui-l10n-engineering-english",
@@ -79,41 +110,65 @@ my @eePackages = (
                   );
 
 my @eeFiles = (
-               "/usr/share/l10n/dui/accounts-ui.qm",
-               "/usr/share/l10n/dui/backup-framework.qm",
+               "/usr/share/l10n/meegotouch/accounts-ui.qm",
+               # demo only "/usr/share/l10n/meegotouch/animatedlayout.qm", 
+               "/usr/share/l10n/meegotouch/backup.qm",
+               "/usr/share/l10n/meegotouch/call-history.qm",
+               "/usr/share/l10n/meegotouch/call-ui.qm",
+               # camera-ui is still in the old directory, will move soon
                "/usr/share/l10n/dui/camera-ui.qm",
-               "/usr/share/l10n/dui/celluid.qm",
-               "/usr/share/l10n/dui/conn-dui-bluetooth.qm",
-               "/usr/share/l10n/dui/conn-dui-cellular.qm",
-               "/usr/share/l10n/dui/conn-dui-internet.qm",
-               "/usr/share/l10n/dui/conn-dui-wlan.qm",
-               "/usr/share/l10n/dui/contacts.qm",
-               "/usr/share/l10n/dui/duicontrolpanel-callandsim.qm",
-               "/usr/share/l10n/dui/duicontrolpanel-datetime.qm",
-               "/usr/share/l10n/dui/duicontrolpanel-displaylanguage.qm",
-               "/usr/share/l10n/dui/duicontrolpanel-keyboardlanguage.qm",
-               "/usr/share/l10n/dui/duicontrolpanel-network.qm",
-               "/usr/share/l10n/dui/duicontrolpanel-regionformat.qm",
-               "/usr/share/l10n/dui/duicontrolpanel.qm",
-               "/usr/share/l10n/dui/duihelp.qm",
-               "/usr/share/l10n/dui/duihome.qm",
-               "/usr/share/l10n/dui/duistartup.qm",
+               "/usr/share/l10n/meegotouch/celluid.qm",
+               "/usr/share/l10n/meegotouch/commhistoryd.qm",
+               "/usr/share/l10n/meegotouch/conn-dui-bluetooth.qm",
+               "/usr/share/l10n/meegotouch/conn-dui-cellular.qm",
+               "/usr/share/l10n/meegotouch/conn-dui-internet.qm",
+               "/usr/share/l10n/meegotouch/conn-dui-wlan.qm",
+               "/usr/share/l10n/meegotouch/contacts.qm",
+               "/usr/share/l10n/meegotouch/duicontrolpanel-callandsim.qm",
+               "/usr/share/l10n/meegotouch/duicontrolpanel-certificatesapplet.qm",
+               "/usr/share/l10n/meegotouch/duicontrolpanel-datetime.qm",
+               "/usr/share/l10n/meegotouch/duicontrolpanel-displaylanguage.qm",
+               "/usr/share/l10n/meegotouch/duicontrolpanel-keyboardlanguage.qm",
+               "/usr/share/l10n/meegotouch/duicontrolpanel-network.qm",
+               "/usr/share/l10n/meegotouch/duicontrolpanel-regionformat.qm",
+               "/usr/share/l10n/meegotouch/duicontrolpanel.qm",
+               "/usr/share/l10n/meegotouch/duihelp.qm",
+               "/usr/share/l10n/meegotouch/duihome.qm",
+               # duistatusindicatormenu-connectivityplugin.qm is still in the old directory
                "/usr/share/l10n/dui/duistatusindicatormenu-connectivityplugin.qm",
-               "/usr/share/l10n/dui/gallery.qm",
-               "/usr/share/l10n/dui/keychain-ui.qm",
-               "/usr/share/l10n/dui/libdatacounterdialog.qm",
-               "/usr/share/l10n/dui/libdui.qm",
-               "/usr/share/l10n/dui/libpresence0.qm",
-               "/usr/share/l10n/dui/messaging.qm",
-               "/usr/share/l10n/dui/plugin-webupload-engine.qm",
-               "/usr/share/l10n/dui/share-ui.qm",
-               "/usr/share/l10n/dui/signon-ui.qm",
-               "/usr/share/l10n/dui/systemui-applets.qm",
-               "/usr/share/l10n/dui/systemui.qm",
-               "/usr/share/l10n/dui/telephony.qm",
-               "/usr/share/l10n/dui/transfer-ui.qm",
-               "/usr/share/l10n/dui/weatherappletres.qm",
-               "/usr/share/l10n/dui/webupload-engine.qm",
+               "/usr/share/l10n/meegotouch/facebookplugin.qm",
+               "/usr/share/l10n/meegotouch/feeds.qm",
+               "/usr/share/l10n/meegotouch/feedsettings.qm",
+               "/usr/share/l10n/meegotouch/gallery.qm",
+               "/usr/share/l10n/meegotouch/googleplugin.qm",
+               "/usr/share/l10n/meegotouch/keychain-ui.qm",
+               "/usr/share/l10n/meegotouch/libdatacounterdialog.qm",
+               "/usr/share/l10n/meegotouch/libdialerui.qm",
+               "/usr/share/l10n/meegotouch/liblocationpicker.qm",
+               "/usr/share/l10n/meegotouch/libmcontentwidgets.qm",
+               "/usr/share/l10n/meegotouch/libmeegotouch.qm",
+               "/usr/share/l10n/meegotouch/libpresence0.qm",
+               "/usr/share/l10n/meegotouch/libwebupload.qm",
+               "/usr/share/l10n/meegotouch/libwebuploadpui.qm",
+               "/usr/share/l10n/meegotouch/me.qm",
+               "/usr/share/l10n/meegotouch/messaging-ui.qm",
+               "/usr/share/l10n/meegotouch/mms-contacts-actions.qm",
+               "/usr/share/l10n/meegotouch/mms-messaging-plugin.qm",
+               "/usr/share/l10n/meegotouch/mms-settings.qm",
+               "/usr/share/l10n/meegotouch/mms-share-plugin.qm",
+               "/usr/share/l10n/meegotouch/mstartup.qm",
+               "/usr/share/l10n/meegotouch/officetools.qm",
+               "/usr/share/l10n/meegotouch/oviplugin.qm",
+               "/usr/share/l10n/meegotouch/package-manager-ui.qm",
+               "/usr/share/l10n/meegotouch/share-ui.qm",
+               "/usr/share/l10n/meegotouch/signon-ui.qm",
+               "/usr/share/l10n/meegotouch/systemui-applets.qm",
+               "/usr/share/l10n/meegotouch/systemui.qm",
+               "/usr/share/l10n/meegotouch/transfer-ui.qm",
+               "/usr/share/l10n/meegotouch/weatherappletres.qm",
+               "/usr/share/l10n/meegotouch/webupload-engine.qm",
+               # demo only "/usr/share/l10n/meegotouch/widgetsgallery.qm",
+               "/usr/share/l10n/meegotouch/youtubeplugin.qm"
                );
 
 #----------------------------------------------------------------------
@@ -447,7 +502,7 @@ if (!defined $OPT_HELP) {
   $OPT_HELP = 0;
 }
 if (!defined $OPT_EEDIR) {
-  $OPT_EEDIR="/usr/share/l10n/dui";
+  $OPT_EEDIR="/usr/share/l10n/meegotouch";
 }
 if (!defined $OPT_HANDOFF_URL) {
   $OPT_HANDOFF_URL="https://projects.maemo.org/svn/l10n/projects/harmattan/vendor/handoff/";
