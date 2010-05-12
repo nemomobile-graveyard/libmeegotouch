@@ -1,3 +1,9 @@
+libmeegotouch (0.20.11~1) unstable; urgency=low
+
+  * unreleased
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 12 May 2010 10:55:42 +0300
+
 libmeegotouch (0.20.10-1) unstable; urgency=low
 
   * Fixes: NB#167472 - MLocale formats time "00:15" as "24:15". 24 is returned instead of 00 for "%H" format string.
