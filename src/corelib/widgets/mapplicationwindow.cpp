@@ -1040,6 +1040,8 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
     Q_D(MApplicationWindow);
     MSceneWindow *component;
 
+    MWindow::mouseReleaseEvent(event);
+
     if (d->componentsOnAutoHide.count() > 0) {
         const int count = d->componentsOnAutoHide.count();
         for (int i = 0; i < count; ++i) {
@@ -1063,8 +1065,6 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
             closeMenu();
         }
     }
-
-    MWindow::mouseReleaseEvent(event);
 }
 
 #include "moc_mapplicationwindow.cpp"
