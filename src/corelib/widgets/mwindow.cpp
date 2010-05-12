@@ -740,13 +740,16 @@ bool MWindow::event(QEvent *event)
         bool updateNeeded = false;
 
         //SIMULATION OF ROTATION FOR DEVELOPMENT PURPOSES
-        QKeyEvent *k = (QKeyEvent *) event;
+        QKeyEvent *k = static_cast<QKeyEvent *>(event);
         if (Qt::Key_R == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
-            foreach(MWindow * window, MApplication::windows()) {
-                int newAngle = (window->orientationAngle() + ((k->modifiers() & Qt::ShiftModifier) ? 270 : 90)) % 360;
+            foreach (MWindow *window, MApplication::windows()) {
+                int newAngle = (window->orientationAngle()
+                                + ((k->modifiers() & Qt::AltModifier) ? 270 : 90)) % 360;
                 if (!window->isOrientationAngleLocked()) {
-                    if (!window->isOrientationLocked() || window->orientation() == (M::Orientation)newAngle)
-                        window->setOrientationAngle((M::OrientationAngle)newAngle);
+                    if ((!window->isOrientationLocked())
+                        || window->orientation() == static_cast<M::Orientation>(newAngle)) {
+                        window->setOrientationAngle(static_cast<M::OrientationAngle>(newAngle));
+                    }
                 }
             }
         } else if (Qt::Key_P == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
