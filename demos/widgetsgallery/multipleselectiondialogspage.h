@@ -17,43 +17,39 @@
 **
 ****************************************************************************/
 
-#ifndef SWITCHPAGE_H
-#define SWITCHPAGE_H
+#ifndef MULTIPLESELECTIONDIALOGSPAGE_H
+#define MULTIPLESELECTIONDIALOGSPAGE_H
 
-#include "mainpage.h"
 #include "templatepage.h"
-#include <MApplicationPage>
-#include <MLayout>
-#include <MGridLayoutPolicy>
 
-class MButton;
-class MButtonGroup;
-class MWidget;
-class MLabel;
+#include <QModelIndex>
+#include <QPointer>
 
-class SwitchPage : public TemplatePage
+class MDialog;
+class MList;
+
+class MultipleSelectionDialogsPage : public TemplatePage
 {
     Q_OBJECT
+
 public:
-    SwitchPage();
-    virtual ~SwitchPage();
-    virtual QString timedemoTitle();
-    virtual void createContent();
-protected:
-    virtual void retranslateUi();
+    MultipleSelectionDialogsPage();
+
+    QString timedemoTitle();
+
+    void createContent();
+    void populateLayout();
+
+    void openQuestionDialog();
+
+private Q_SLOTS:
+    void itemClicked(const QModelIndex &index);
+
 private:
-    MButton *switch1;
-    MButton *switch2;
-    MButton *switch3;
-    MButton *switch4;
-    MButton *switch5;
+    MLinearLayoutPolicy *policy;
+    MList *list;
 
-    MLabel *label1;
-    MLabel *label2;
-    MLabel *label3;
-    MLabel *label4;
-    MLabel *label5;
-
+    QPointer<MDialog> dialog;
 };
 
-#endif
+#endif // MULTIPLESELECTIONDIALOGSPAGE_H

@@ -31,7 +31,7 @@
 #include <MGConfItem>
 #include <MSceneManager>
 
-#include "listpage.h"
+#include "mainpage.h"
 #include "timedemo.h"
 #include "swaphook.h"
 #include "widgetsgalleryretranslator.h"
@@ -69,7 +69,7 @@ int main(int argc, char **argv)
     MApplicationWindow window;
     window.show();
 
-    ListPage listPage;
+    MainPage mainPage;
     Timedemo *timedemo = 0;
     if (qApp->arguments().indexOf("-timedemo") >= 0) {
         QStringList demoPages;
@@ -78,7 +78,7 @@ int main(int argc, char **argv)
             demoPages = qApp->arguments()[idx + 1].split(',');
         }
 
-        timedemo = new Timedemo(&listPage, demoPages);
+        timedemo = new Timedemo(&mainPage, demoPages);
 
         idx = qApp->arguments().indexOf("-outputcsv");
         if (idx >= 0 && idx + 1 < qApp->arguments().count()) {
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
     int index = qApp->arguments().indexOf("-initialpage");
     if (index >= 0) {
       if (index + 1 < qApp->arguments().count()) {
-          listPage.setInitialPageToShow(qApp->arguments()[index + 1]);
+          mainPage.setInitialPageToShow(qApp->arguments()[index + 1]);
       }
     }
 
@@ -103,7 +103,7 @@ int main(int argc, char **argv)
         mainLoopHelper.triggerTermination(EmptyMainLoopHelper::QuitOnEmpty);
     }
 
-    window.sceneManager()->appearSceneWindowNow(&listPage);
+    window.sceneManager()->appearSceneWindowNow(&mainPage);
 
     int exitCode = application.exec();
     delete timedemo;

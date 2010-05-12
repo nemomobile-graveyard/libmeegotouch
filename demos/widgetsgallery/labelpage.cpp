@@ -31,16 +31,14 @@
 #include <mlabelhighlighter.h>
 
 LabelPage::LabelPage()
-    : TemplatePage(),
+    : TemplatePage(TemplatePage::SimpleWidgets),
       simpleLabel(0),
-      richLabel(0)
+      richLabel(0),
+      phoneHighlighter(0),
+      urlHighlighter(0),
+      emailHighlighter(0),
+      commonHighlighter(0)
 {
-    gid = TemplatePage::LayoutsAndVisuals;
-
-    phoneHighlighter = NULL;
-    emailHighlighter = NULL;
-    urlHighlighter = NULL;
-    commonHighlighter = NULL;
 }
 
 LabelPage::~LabelPage()
@@ -69,15 +67,6 @@ void LabelPage::createContent()
     richLabel->setAlignment(Qt::AlignTop);
     richLabel->setWordWrap(true);
     containerPolicy->addItem(richLabel);
-
-    textEdit = new MTextEdit(MTextEditModel::MultiLine);
-    containerPolicy->addItem(textEdit);
-
-    MButton *b = new MButton("Highlight");
-    containerPolicy->addItem(b);
-
-    connect(b, SIGNAL(clicked()), this, SLOT(applySearch()));
-
 
     QRegExp phoneregexp("[\\+]{0,1}(\\d{8,13}|[\\(][\\+]{0,1}\\d{2,}[\\)]*\\d{5,13}|\\d{2,6}[\\-]{1}\\d{2,13}[\\-]*\\d{3,13})",
                         Qt::CaseInsensitive);
@@ -164,18 +153,4 @@ void LabelPage::urlLongPressed(const QString &link)
 void LabelPage::urlClicked(const QString &link)
 {
     mDebug("LabelPage::urlClicked()") << link;
-}
-
-
-void LabelPage::applySearch()
-{
-    mDebug("LabelPage::applySearch()") << textEdit->text();
-
-    richLabel->removeHighlighter(commonHighlighter);
-    delete commonHighlighter;
-
-    commonHighlighter = new MCommonLabelHighlighter(QRegExp(textEdit->text()));
-
-    richLabel->addHighlighter(commonHighlighter);
-
 }

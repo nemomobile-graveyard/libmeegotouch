@@ -31,7 +31,7 @@
 #include <QGraphicsLinearLayout>
 
 SwitchPage::SwitchPage() :
-    TemplatePage(),
+        TemplatePage(TemplatePage::Buttons),
     switch1(0), switch2(0),
     switch3(0), switch4(0),
     switch5(0),
@@ -39,7 +39,6 @@ SwitchPage::SwitchPage() :
     label3(0), label4(0),
     label5(0)
 {
-    gid = TemplatePage::Buttons;
 }
 
 SwitchPage::~SwitchPage()

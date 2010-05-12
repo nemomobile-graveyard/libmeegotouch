@@ -40,7 +40,7 @@
 static const int ImageSize = 64;
 
 SpinnerPage::SpinnerPage() :
-    TemplatePage(),
+    TemplatePage(TemplatePage::SimpleWidgets),
     container(NULL),
     spinner(NULL),
     spinnerLayout1(NULL),
@@ -49,7 +49,6 @@ SpinnerPage::SpinnerPage() :
     description(NULL),
     view(Unknown)
 {
-    gid = TemplatePage::IndicatorsAndNotifications;
 }
 
 SpinnerPage::~SpinnerPage()

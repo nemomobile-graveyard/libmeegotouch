@@ -20,7 +20,7 @@
 #ifndef CHECKBOXPAGE_H
 #define CHECKBOXPAGE_H
 
-#include "listpage.h"
+#include "mainpage.h"
 #include "templatepage.h"
 #include <MApplicationPage>
 #include <MLayout>

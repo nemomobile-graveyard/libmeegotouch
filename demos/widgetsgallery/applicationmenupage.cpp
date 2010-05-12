@@ -40,9 +40,11 @@
 #include <MComboBox>
 
 ApplicationMenuPage::ApplicationMenuPage()
+    : TemplatePage(TemplatePage::ApplicationView)
+    , m_textIndex(2)
+    , policy(0)
+    , comboBox(0)
 {
-    gid = TemplatePage::ViewsAndDialogs;
-    m_textIndex = 2;
 }
 
 ApplicationMenuPage::~ApplicationMenuPage()
@@ -79,9 +81,16 @@ void ApplicationMenuPage::retranslateUi()
 
 void ApplicationMenuPage::createContent()
 {
-    TemplatePage::createContent();
+    MApplicationPage::createContent();
 
     QGraphicsWidget *panel = centralWidget();
+
+    infoLabel = new MLabel(panel);
+    infoLabel->setMinimumWidth(0);
+    infoLabel->setPreferredWidth(0);
+    infoLabel->setWordWrap(true);
+    infoLabel->setAlignment(Qt::AlignTop);
+    infoLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
     MAction *action = new MAction("Italic", panel);
     action->setLocation(MAction::ApplicationMenuLocation);
@@ -114,36 +123,14 @@ void ApplicationMenuPage::createContent()
     connect(action, SIGNAL(triggered()), this, SLOT(toggleWindowIconVisibility()));
     insertAction(action, widgetAction);
 
-    action = new MAction("icon-m-list", "", panel);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    action->setStyleAction(true);
-    action->setCheckable(true);
-    action->setChecked(true);
-    addAction(action);
-    connect(action, SIGNAL(triggered()), this, SLOT(showButtonsAsList()));
+    MLayout *layout = new MLayout(panel);
+    layout->setContentsMargins(0, 0, 0, 0);
+    panel->setLayout(layout);
+    policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    policy->setContentsMargins(0, 0, 0, 0);
+    policy->setSpacing(0);
 
-    action = new MAction("icon-m-grid", "", panel);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    action->setStyleAction(true);
-    addAction(action);
-    connect(action, SIGNAL(triggered()), this, SLOT(showButtonsAsGrid()));
-
-    // for more readability
-    listPolicy = containerPolicy;
-    gridPolicy = new MGridLayoutPolicy(containerLayout);
-
-    MButton *button = new MButton("Item 1", container);
-    containerPolicy->addItem(button);
-    gridPolicy->addItem(button, 0, 0);
-    button = new MButton("Item 2", container);
-    containerPolicy->addItem(button);
-    gridPolicy->addItem(button, 0, 1);
-    button = new MButton("Item 3", container);
-    containerPolicy->addItem(button);
-    gridPolicy->addItem(button, 1, 0);
-    button = new MButton("Item 4", container);
-    containerPolicy->addItem(button);
-    gridPolicy->addItem(button, 1, 1);
+    policy->addItem(infoLabel);
 
     retranslateUi();
 }
@@ -190,14 +177,4 @@ void ApplicationMenuPage::toggleWindowIconVisibility()
     } else {
         window->setWindowIconID("");
     }
-}
-
-void ApplicationMenuPage::showButtonsAsList()
-{
-    containerLayout->setPolicy(listPolicy);
-}
-
-void ApplicationMenuPage::showButtonsAsGrid()
-{
-    containerLayout->setPolicy(gridPolicy);
 }

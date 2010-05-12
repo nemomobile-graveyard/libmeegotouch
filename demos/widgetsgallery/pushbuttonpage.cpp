@@ -30,12 +30,11 @@
 #include <MApplication>
 
 PushButtonPage::PushButtonPage() :
-    TemplatePage(),
+        TemplatePage(TemplatePage::Buttons),
     pushButton1(0),
     pushButton2(0),
     pushButton3(0)
 {
-    gid = TemplatePage::Buttons;
 }
 
 PushButtonPage::~PushButtonPage()

@@ -33,10 +33,10 @@
 #include <QTimer>
 
 ComboBoxPage::ComboBoxPage()
-    : model1(0),
+    : TemplatePage(TemplatePage::ListsGridsAndPopups),
+    model1(0),
       proxyModel(0)
 {
-    gid = TemplatePage::ListsGridsAndMenus;
 }
 
 ComboBoxPage::~ComboBoxPage()

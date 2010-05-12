@@ -17,43 +17,37 @@
 **
 ****************************************************************************/
 
-#ifndef SWITCHPAGE_H
-#define SWITCHPAGE_H
+#ifndef BANNERSPAGE_H
+#define BANNERSPAGE_H
 
-#include "mainpage.h"
 #include "templatepage.h"
-#include <MApplicationPage>
-#include <MLayout>
-#include <MGridLayoutPolicy>
 
-class MButton;
-class MButtonGroup;
-class MWidget;
-class MLabel;
+#include <QModelIndex>
 
-class SwitchPage : public TemplatePage
+class MList;
+
+class BannersPage : public TemplatePage
 {
     Q_OBJECT
+
 public:
-    SwitchPage();
-    virtual ~SwitchPage();
-    virtual QString timedemoTitle();
-    virtual void createContent();
-protected:
-    virtual void retranslateUi();
+    BannersPage();
+
+    QString timedemoTitle();
+
+    void createContent();
+    void populateLayout();
+
+    void showEventBanner();
+    void showInformationBanner();
+    void showSystemInformationBanner();
+
+private Q_SLOTS:
+    void itemClicked(const QModelIndex &index);
+
 private:
-    MButton *switch1;
-    MButton *switch2;
-    MButton *switch3;
-    MButton *switch4;
-    MButton *switch5;
-
-    MLabel *label1;
-    MLabel *label2;
-    MLabel *label3;
-    MLabel *label4;
-    MLabel *label5;
-
+    MLinearLayoutPolicy *policy;
+    MList *list;
 };
 
-#endif
+#endif // BANNERSPAGE_H

@@ -37,7 +37,7 @@
 #include "utils.h"
 
 ImagePage::ImagePage() :
-    TemplatePage(),
+    TemplatePage(TemplatePage::SimpleWidgets),
     propertiesLabel(NULL),
     propertiesComboBox(NULL),
     visual(NULL),
@@ -45,8 +45,6 @@ ImagePage::ImagePage() :
     slider(NULL),
     originalScaleFactor(10)
 {
-    gid = TemplatePage::LayoutsAndVisuals;
-
     // Initial values for image property sliders
     sliderValues[ImageZoom] = 10;
     sliderValues[ImageTransparency] = 0;
@@ -223,7 +221,7 @@ void ImagePage::setImageCrop(float width, float height)
 void ImagePage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
 {
     if (gesture->state() == Qt::GestureStarted) {
-	propertiesComboBox->setCurrentIndex(0);
+        propertiesComboBox->setCurrentIndex(0);
         originalScaleFactor = slider->value();
 
         //If the current scale factor is 0, the we would not be scaling anything.

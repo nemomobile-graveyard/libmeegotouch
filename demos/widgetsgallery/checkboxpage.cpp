@@ -31,11 +31,10 @@
 #include <QGraphicsLinearLayout>
 
 CheckboxPage::CheckboxPage() :
-    TemplatePage(),
+    TemplatePage(TemplatePage::Buttons),
     checkbox(0),
     checkboxLabel(0)
 {
-    gid = TemplatePage::Buttons;
 }
 
 CheckboxPage::~CheckboxPage()
@@ -57,8 +56,13 @@ void CheckboxPage::createContent()
     checkbox->setCheckable(true);
     checkboxLabel = new MLabel();
     checkboxLabel->setWordWrap(true);
-    checkboxLabel->setTextElide(true);
+    checkboxLabel->setTextElide(false);
     
+    checkboxLabel->setMinimumWidth(0);
+    checkboxLabel->setPreferredWidth(0);
+    checkboxLabel->setAlignment( Qt::AlignCenter );
+    checkboxLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
+
     // Layout for checkbox and it's infolabel
     QGraphicsLinearLayout *l = new QGraphicsLinearLayout(Qt::Horizontal);
     l->addItem(checkbox);

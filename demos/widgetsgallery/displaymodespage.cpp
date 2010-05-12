@@ -33,9 +33,8 @@
 #include <QStringList>
 #include <QTimer>
 
-DisplayModesPage::DisplayModesPage()
+DisplayModesPage::DisplayModesPage() : TemplatePage(TemplatePage::ApplicationView)
 {
-    gid = TemplatePage::ViewsAndDialogs;
 }
 
 DisplayModesPage::~DisplayModesPage()

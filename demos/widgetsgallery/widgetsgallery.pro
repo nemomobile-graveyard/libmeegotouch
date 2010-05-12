@@ -13,7 +13,7 @@ win32|macx {
     macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework meegotouchcore \
-            -framework meegotouchviews
+                -framework meegotouchviews
     }
     win32:LIBS += -lmeegotouchcore0 \
                   -lmeegotouchviews0
@@ -38,13 +38,12 @@ contains(DEFINES, HAVE_DBUS) {
 }
 SOURCES += main.cpp \
     templatepage.cpp \
-    listpage.cpp \
+    mainpage.cpp \
     labelpage.cpp \
     pushbuttonpage.cpp \
     feedbackpage.cpp \
     iconbuttonpage.cpp \
     switchpage.cpp \
-    dialogsandnotificationspage.cpp \
     imagepage.cpp \
     applicationmenupage.cpp \
     toolbarpage.cpp \
@@ -72,16 +71,21 @@ SOURCES += main.cpp \
     gridimagewidget.cpp \
     itemdetailpage.cpp \
     gridvideowidget.cpp \
-    swaphook.cpp
+    swaphook.cpp \
+    maincategorypage.cpp \
+    contentitemspage.cpp \
+    bannerspage.cpp \
+    querydialogspage.cpp \
+    multipleselectiondialogspage.cpp \
+    singleselectiondialogspage.cpp
 
 HEADERS += templatepage.h \
-    listpage.h \
+    mainpage.h \
     labelpage.h \
     pushbuttonpage.h \
     feedbackpage.h \
     iconbuttonpage.h \
     switchpage.h \
-    dialogsandnotificationspage.h \
     imagepage.h \
     applicationmenupage.h \
     toolbarpage.h \
@@ -109,7 +113,13 @@ HEADERS += templatepage.h \
     gridimagewidget.h \
     itemdetailpage.h \
     gridvideowidget.h \
-    swaphook.h
+    swaphook.h \
+    maincategorypage.h \
+    contentitemspage.h \
+    bannerspage.h \
+    querydialogspage.h \
+    multipleselectiondialogspage.h \
+    singleselectiondialogspage.h
 
 # theme
 include(theme/theme.pri)

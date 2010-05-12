@@ -37,7 +37,8 @@
 #include <QDateTime>
 
 LanguagePage::LanguagePage()
-    : comboBoxLanguage(0),
+    : TemplatePage(TemplatePage::ApplicationView),
+    comboBoxLanguage(0),
       modelLanguage(0),
       comboBoxLcTime(0),
       modelLcTime(0),
@@ -57,7 +58,6 @@ LanguagePage::LanguagePage()
       labelExampleTranslation3(0),
       labelFontTest(0)
 {
-    gid = TemplatePage::UserInput;
 }
 
 LanguagePage::~LanguagePage()

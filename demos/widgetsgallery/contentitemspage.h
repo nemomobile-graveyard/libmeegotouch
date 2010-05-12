@@ -17,43 +17,29 @@
 **
 ****************************************************************************/
 
-#ifndef SWITCHPAGE_H
-#define SWITCHPAGE_H
+#ifndef CONTENTITEMSPAGE_H
+#define CONTENTITEMSPAGE_H
 
-#include "mainpage.h"
 #include "templatepage.h"
-#include <MApplicationPage>
-#include <MLayout>
-#include <MGridLayoutPolicy>
+#include <MContentItem>
 
-class MButton;
-class MButtonGroup;
-class MWidget;
-class MLabel;
+class MList;
 
-class SwitchPage : public TemplatePage
+class ContentItemsPage : public TemplatePage
 {
-    Q_OBJECT
 public:
-    SwitchPage();
-    virtual ~SwitchPage();
-    virtual QString timedemoTitle();
-    virtual void createContent();
-protected:
-    virtual void retranslateUi();
+    ContentItemsPage();
+
+    QString timedemoTitle();
+
+    void createContent();
+    void populateLayout();
+
+    MList *createList(const QString &title, MContentItem::ContentItemStyle style);
+
 private:
-    MButton *switch1;
-    MButton *switch2;
-    MButton *switch3;
-    MButton *switch4;
-    MButton *switch5;
-
-    MLabel *label1;
-    MLabel *label2;
-    MLabel *label3;
-    MLabel *label4;
-    MLabel *label5;
-
+    QList<MList*> contentItemLists;
+    MLinearLayoutPolicy *policy;
 };
 
-#endif
+#endif // CONTENTITEMSPAGE_H

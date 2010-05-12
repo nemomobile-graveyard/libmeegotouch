@@ -33,12 +33,11 @@
 #include "utils.h"
 
 ObjectMenuPage::ObjectMenuPage() :
-    TemplatePage(),
+    TemplatePage(TemplatePage::ListsGridsAndPopups),
     containerFriends(0),
     containerAlbums(0)
 
 {
-    gid = TemplatePage::ListsGridsAndMenus;
 }
 
 ObjectMenuPage::~ObjectMenuPage()

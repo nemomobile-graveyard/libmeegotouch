@@ -257,12 +257,11 @@ bool CustomTextEdit::event(QEvent *event)
 }
 
 TextEntryPage::TextEntryPage()
-    : TemplatePage(),
+    : TemplatePage(TemplatePage::UserInput),
       m_autoCapitalisation(true),
       m_errorCorrection(true),
       m_completer(new MCompleter)
 {
-    gid = TemplatePage::UserInput;
 }
 
 

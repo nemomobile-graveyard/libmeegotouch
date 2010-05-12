@@ -138,6 +138,7 @@ private:
 };
 
 ToolBarPage::ToolBarPage() :
+    TemplatePage(TemplatePage::ApplicationView),
     callList(0),
     callModel(0),
     cellCreator(0),
@@ -147,8 +148,6 @@ ToolBarPage::ToolBarPage() :
     tabViewAction(0),
     isDefaultView(true)
 {
-    gid = TemplatePage::ViewsAndDialogs;
-
 }
 
 ToolBarPage::~ToolBarPage()

@@ -47,7 +47,6 @@ protected slots:
     void urlClicked(const QString &link);
     void urlLongPressed(const QString &link);
 
-    void applySearch();
 private:
     MLabel *simpleLabel;
     MLabel *richLabel;
@@ -56,8 +55,6 @@ private:
     MLabelHighlighter *urlHighlighter;
     MLabelHighlighter *emailHighlighter;
     MLabelHighlighter *commonHighlighter;
-
-    MTextEdit *textEdit;
 };
 
 #endif // LABELPAGE_H

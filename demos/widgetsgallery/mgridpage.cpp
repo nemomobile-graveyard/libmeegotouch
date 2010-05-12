@@ -142,12 +142,12 @@ QSizeF ContentItemCreator::cellSize() const
 }
 
 MGridPage::MGridPage()
-        : pageShown(false),
+    : TemplatePage(TemplatePage::ListsGridsAndPopups),
+        pageShown(false),
           m_itemSize(10,10),
           m_columnsPortrait(2),
           m_columnsLandscape(4)
 {
-    gid = TemplatePage::ListsGridsAndMenus;
     setObjectName("gridPage");
 }
 
@@ -345,5 +345,6 @@ void MGridPage::modifyRowsSliderHandle(int newValue)
 void MGridPage::orientationChanged(M::Orientation orientation)
 {
     Q_UNUSED(orientation)
+
     configureGrid();
 }
