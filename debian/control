@@ -12,11 +12,25 @@ Suggests: libmeegotouch-l10n-ar, libmeegotouch-l10n-de, libmeegotouch-l10n-en, l
 Description: MeeGo Touch core library
  MeeGo Touch core framework library
 
+Package: libmeegotouchcore0-dbg
+Architecture: any
+Section: devel
+Depends: libmeegotouchcore0 (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
+
 Package: libmeegotouchextensions0
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
 Description: MeeGo Touch extensions library
  MeeGo Touch extensions framework library
+
+Package: libmeegotouchextensions0-dbg
+Architecture: any
+Section: devel
+Depends: libmeegotouchextensions0 (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
 
 Package: libmeegotouchsettings0
 Architecture: any
@@ -24,23 +38,38 @@ Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
 Description: MeeGo Touch settings library
  MeeGo Touch settings framework library
 
+Package: libmeegotouchsettings0-dbg
+Architecture: any
+Section: devel
+Depends: libmeegotouchsettings0 (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
+
 Package: libmeegotouchviews0
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
 Description: MeeGo Touch views library
  MeeGo Touch views framework library
 
-Package: meegotouch-qt-style
+Package: libmeegotouchviews0-dbg
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends} 
-Description: MeeGo Touch Qt style for plain Qt applications
- MeeGo Touch Qt style plugin
+Section: devel
+Depends: libmeegotouchviews0 (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
 
 Package: libmeegotouch-bin
 Architecture: any
 Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
 Description: MeeGo Touch binary files
  Binary files of MeeGo Touch framework
+
+Package: libmeegotouch-bin-dbg
+Architecture: any
+Section: devel
+Depends: libmeegotouch-bin (= ${Source-Version})
+Description: libmeegotouch debug package
+ libmeegotouch debug symbols.
 
 Package: libmeegotouch-dev
 Section: devel
@@ -55,8 +84,15 @@ Architecture: any
 Depends: ${shlibs:Depends}
 Suggests: perl (>= 5.10.0)
 Description: MeeGo Touch specific development and testing tools
- Collection of tools for testing and developing on top of MeeGo Touch. Includes 
+ Collection of tools for testing and developing on top of MeeGo Touch. Includes
  stuff like applettester and code/mock generation.
+
+Package: meegotouch-dev-tools-dbg
+Architecture: any
+Section: devel
+Depends: meegotouch-dev-tools (= ${Source-Version})
+Description: meegotouch-dev-tools debug package
+ meegotouch-dev-tools debug symbols.
 
 Package: meegotouch-demos
 Section: devel
@@ -74,12 +110,6 @@ Conflicts: dui-demos-widgetsgallery
 Replaces: dui-demos-widgetsgallery
 Description: Demo application for MeeGo Touch
 
-Package: meegotouch-demos-widgetsgallery-tests
-Section: devel
-Architecture: any
-Depends: ${shlibs:Depends}, duitestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
-Description: Demo application for MeeGo Touch
-
 Package: meegotouch-demos-widgetsgallery-dbg
 Section: devel
 Architecture: any
@@ -89,53 +119,11 @@ Replaces: dui-demos-widgetsgallery-dbg
 Description: Demo application for MeeGo Touch
  This package contains debug symbols.
 
-Package: meegotouch-demos-widgetsgallery-l10n-engineering-english
+Package: meegotouch-demos-widgetsgallery-tests
 Section: devel
 Architecture: any
-Enhances: meegotouch-demos-widgetsgallery
-Description: Engineering English translations for widgetsgallery
-
-Package: meegotouch-demos-widgetsgallery-l10n-ar
-Section: devel
-Architecture: any
-Enhances: meegotouch-demos-widgetsgallery
-Description: Arabic translations for widgetsgallery
-
-Package: meegotouch-demos-widgetsgallery-l10n-de
-Section: devel
-Architecture: any
-Enhances: meegotouch-demos-widgetsgallery
-Description: German translations for widgetsgallery
-
-Package: meegotouch-demos-widgetsgallery-l10n-en
-Section: devel
-Architecture: any
-Enhances: meegotouch-demos-widgetsgallery
-Description: English translations for widgetsgallery
-
-Package: meegotouch-demos-widgetsgallery-l10n-fi
-Section: devel
-Architecture: any
-Enhances: meegotouch-demos-widgetsgallery
-Description: Finnish translations for widgetsgallery
-
-Package: meegotouch-demos-widgetsgallery-l10n-hu
-Section: devel
-Architecture: any
-Enhances: meegotouch-demos-widgetsgallery
-Description: Hungarian translations for widgetsgallery
-
-Package: meegotouch-demos-widgetsgallery-l10n-ur
-Section: devel
-Architecture: any
-Enhances: meegotouch-demos-widgetsgallery
-Description: Urdu translations for widgetsgallery
-
-Package: meegotouch-demos-widgetsgallery-l10n-zh-cn
-Section: devel
-Architecture: any
-Enhances: meegotouch-demos-widgetsgallery
-Description: Simplified Chinese translations for widgetsgallery
+Depends: ${shlibs:Depends}, duitestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
+Description: Demo application for MeeGo Touch
 
 Package: meegotouch-demos-plainqt
 Section: devel
@@ -184,6 +172,13 @@ Depends: ${shlibs:Depends}, testrunner, locales
 Description: libmeegotouch unit tests
  Unit testing binaries and shellscripts for testing libmeegotouch library
 
+Package: libmeegotouch-tests-dbg
+Architecture: any
+Section: devel
+Depends: libmeegotouch-tests (= ${Source-Version})
+Description: libmeegotouch-tests debug package
+ libmeegotouch-tests debug symbols.
+
 Package: libmeegotouch-benchmarks
 Section: extra
 Architecture: any
@@ -191,40 +186,25 @@ Depends: ${shlibs:Depends}, meegotouch-demos-widgetsgallery
 Description: libmeegotouch benchmarks
  Benchmarking binaries for testing libmeegotouch library
 
-Package: libmeegotouchcore0-dbg
+Package: libmeegotouch-benchmarks-dbg
 Architecture: any
 Section: devel
-Depends: libmeegotouchcore0 (= ${Source-Version})
-Description: libmeegotouch debug package
- libmeegotouch debug symbols.
+Depends: libmeegotouch-benchmarks (= ${Source-Version})
+Description: libmeegotouch-benchmarks debug package
+ libmeegotouch-benchmarks debug symbols.
 
-Package: libmeegotouchviews0-dbg
+Package: meegotouch-qt-style
 Architecture: any
-Section: devel
-Depends: libmeegotouchviews0 (= ${Source-Version})
-Description: libmeegotouch debug package
- libmeegotouch debug symbols.
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: MeeGo Touch Qt style for plain Qt applications
+ MeeGo Touch Qt style plugin
 
-Package: libmeegotouchextensions0-dbg
+Package: meegotouch-qt-style-dbg
 Architecture: any
 Section: devel
-Depends: libmeegotouchextensions0 (= ${Source-Version})
-Description: libmeegotouch debug package
- libmeegotouch debug symbols.
-
-Package: libmeegotouchsettings0-dbg
-Architecture: any
-Section: devel
-Depends: libmeegotouchsettings0 (= ${Source-Version})
-Description: libmeegotouch debug package
- libmeegotouch debug symbols.
-
-Package: libmeegotouch-bin-dbg
-Architecture: any
-Section: devel
-Depends: libmeegotouch-bin (= ${Source-Version})
-Description: libmeegotouch debug package
- libmeegotouch debug symbols.
+Depends: meegotouch-qt-style (= ${Source-Version})
+Description: meegotouch-qt-style debug package
+ meegotouch-qt-style debug symbols.
 
 Package: libmeegotouch-doc
 Section: doc
@@ -278,3 +258,51 @@ Section: devel
 Architecture: any
 Enhances: libmeegotouchcore0
 Description: Simplified Chinese translations for libmeegotouch
+
+Package: meegotouch-demos-widgetsgallery-l10n-engineering-english
+Section: devel
+Architecture: any
+Enhances: meegotouch-demos-widgetsgallery
+Description: Engineering English translations for widgetsgallery
+
+Package: meegotouch-demos-widgetsgallery-l10n-ar
+Section: devel
+Architecture: any
+Enhances: meegotouch-demos-widgetsgallery
+Description: Arabic translations for widgetsgallery
+
+Package: meegotouch-demos-widgetsgallery-l10n-de
+Section: devel
+Architecture: any
+Enhances: meegotouch-demos-widgetsgallery
+Description: German translations for widgetsgallery
+
+Package: meegotouch-demos-widgetsgallery-l10n-en
+Section: devel
+Architecture: any
+Enhances: meegotouch-demos-widgetsgallery
+Description: English translations for widgetsgallery
+
+Package: meegotouch-demos-widgetsgallery-l10n-fi
+Section: devel
+Architecture: any
+Enhances: meegotouch-demos-widgetsgallery
+Description: Finnish translations for widgetsgallery
+
+Package: meegotouch-demos-widgetsgallery-l10n-hu
+Section: devel
+Architecture: any
+Enhances: meegotouch-demos-widgetsgallery
+Description: Hungarian translations for widgetsgallery
+
+Package: meegotouch-demos-widgetsgallery-l10n-ur
+Section: devel
+Architecture: any
+Enhances: meegotouch-demos-widgetsgallery
+Description: Urdu translations for widgetsgallery
+
+Package: meegotouch-demos-widgetsgallery-l10n-zh-cn
+Section: devel
+Architecture: any
+Enhances: meegotouch-demos-widgetsgallery
+Description: Simplified Chinese translations for widgetsgallery

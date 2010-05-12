@@ -89,7 +89,7 @@ configure-stamp:
 	touch configure-stamp
 
 build: build-stamp
-build-stamp: configure-stamp 
+build-stamp: configure-stamp
 	dh_testdir
 
 	cd $(BUILD_DIR) && make $(PARALLEL_MAKEFLAGS)
@@ -104,7 +104,7 @@ clean:
 
 	rm -rf $(BUILD_DIR)
 
-	dh_clean 
+	dh_clean
 
 install: build
 	dh_testdir
@@ -133,19 +133,25 @@ binary-indep: build install
 binary-arch: build install
 	dh_testdir
 	dh_testroot
-	dh_installchangelogs 
+	dh_installchangelogs
 	dh_installdocs
 	dh_install --sourcedir=debian/tmp -v
 	# print warnings for not installed files
 	dh_install --sourcedir=debian/tmp/ --list-missing
 	dh_link
 	dh_strip -p libmeegotouchcore0 --dbg-package=libmeegotouchcore0
-	dh_strip -p libmeegotouchviews0 --dbg-package=libmeegotouchviews0
-	dh_strip -p libmeegotouchsettings0 --dbg-package=libmeegotouchsettings0
 	dh_strip -p libmeegotouchextensions0 --dbg-package=libmeegotouchextensions0
-	dh_strip -p meegotouch-demos-widgetsgallery --dbg-package=meegotouch-demos-widgetsgallery-dbg
-	dh_strip -p meegotouch-demos-plainqt --dbg-package=meegotouch-demos-plainqt-dbg
-	dh_strip -p libmeegotouch-tests
+	dh_strip -p libmeegotouchsettings0 --dbg-package=libmeegotouchsettings0
+	dh_strip -p libmeegotouchviews0 --dbg-package=libmeegotouchviews0
+	dh_strip -p libmeegotouch-bin --dbg-package=libmeegotouch-bin
+	dh_strip -p meegotouch-dev-tools --dbg-package=meegotouch-dev-tools
+	dh_strip -p meegotouch-demos-widgetsgallery --dbg-package=meegotouch-demos-widgetsgallery
+	dh_strip -p meegotouch-demos-plainqt --dbg-package=meegotouch-demos-plainqt
+	dh_strip -p meegotouch-demos-appletinstallationsource --dbg-package=meegotouch-demos-appletinstallationsource
+	dh_strip -p meegotouch-demos-applicationextension --dbg-package=meegotouch-demos-applicationextension
+	dh_strip -p libmeegotouch-tests --dbg-package=libmeegotouch-tests
+	dh_strip -p libmeegotouch-benchmarks --dbg-package=libmeegotouch-benchmarks
+	dh_strip -p meegotouch-qt-style --dbg-package=meegotouch-qt-style
 	dh_compress
 	dh_fixperms
 	dh_makeshlibs
