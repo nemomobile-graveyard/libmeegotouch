@@ -61,7 +61,6 @@ MListPage::MListPage()
     list(NULL), 
     currentSortingIndex(0), 
     currentListModeIndex(0)
-
 {
     gid = TemplatePage::ListsGridsAndMenus;
 }

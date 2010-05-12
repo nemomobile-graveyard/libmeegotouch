@@ -516,23 +516,23 @@ void Ft_MStyleSheetParser::test_constants_binary()
 void Ft_MStyleSheetParser::test_binary_equality()
 {
     // parse test css file, dumping it to file
-    MStyleSheetParser *parser = new MStyleSheetParser();
-    parser->setBinaryFileGenerationEnabled(true);
-    QCOMPARE(parser->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
+    MStyleSheetParser parser;
+    parser.setBinaryFileGenerationEnabled(true);
+    QCOMPARE(parser.load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
 
 //    // load binary file, see that it exists
 //    QVERIFY(QFile::exists(QDir::tempPath() + QDir::separator() + "ft_mstylesheetparser_test.css.bin"));
 
-    MStyleSheetParser *binary = new MStyleSheetParser();
-    QCOMPARE(binary->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
+    MStyleSheetParser binary;
+    QCOMPARE(binary.load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
 
     // check that there is equal count of file infos
-    QCOMPARE(parser->fileInfoList().count(), binary->fileInfoList().count());
+    QCOMPARE(parser.fileInfoList().count(), binary.fileInfoList().count());
 
-    QList<MStyleSheetParser::StylesheetFileInfo *>::iterator parserFi = parser->fileInfoList().begin();
-    QList<MStyleSheetParser::StylesheetFileInfo *>::iterator binaryFi = binary->fileInfoList().begin();
+    QList<MStyleSheetParser::StylesheetFileInfo *>::iterator parserFi = parser.fileInfoList().begin();
+    QList<MStyleSheetParser::StylesheetFileInfo *>::iterator binaryFi = binary.fileInfoList().begin();
 
-    for (int i = 0; i < parser->fileInfoList().count(); i++) {
+    for (int i = 0; i < parser.fileInfoList().count(); i++) {
         // check that there is equal count of constants
         QCOMPARE((*parserFi)->constants.count(), (*binaryFi)->constants.count());
 
@@ -577,8 +577,6 @@ void Ft_MStyleSheetParser::test_binary_equality()
         parserFi++;
         binaryFi++;
     }
-    delete parser;
-    delete binary;
 }
 
 void Ft_MStyleSheetParser::test_parser_speed()
@@ -594,19 +592,18 @@ void Ft_MStyleSheetParser::test_parser_speed()
     test_start = clock();
 
     for (int i = 0; i < NUMBER_OF_LOOPS; i++) {
-        MStyleSheetParser *p = new MStyleSheetParser();
-        p->setBinaryFileGenerationEnabled(false);
+        MStyleSheetParser p;
+        p.setBinaryFileGenerationEnabled(false);
 
         // Start clocking
         time_start = clock();
         // Open test file
-        QCOMPARE(p->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
+        QCOMPARE(p.load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
         // End clocking
         time_end = clock();
 
         // Store result & cleanup
         TIMERS[i] = time_end - time_start;
-        delete p;
     }
 
     TOTAL_TIME = time_end - test_start;
@@ -630,29 +627,27 @@ void Ft_MStyleSheetParser::test_binary_speed()
     clock_t time_end;
 
     // create binary file, if it doesn't exist
-    MStyleSheetParser *tmp = new MStyleSheetParser();
-    tmp->setBinaryFileGenerationEnabled(true);
-    QCOMPARE(tmp->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
-    delete tmp;
+    MStyleSheetParser tmp;
+    tmp.setBinaryFileGenerationEnabled(true);
+    QCOMPARE(tmp.load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
 
     qDebug() << "Testing speed of binary css files, reading ft_mstylesheetparser_test.css" << NUMBER_OF_LOOPS << "times";
 
     test_start = clock();
 
     for (int i = 0; i < NUMBER_OF_LOOPS; i++) {
-        MStyleSheetParser *p = new MStyleSheetParser();
-        p->setBinaryFileGenerationEnabled(true);
+        MStyleSheetParser p;
+        p.setBinaryFileGenerationEnabled(true);
 
         // Start clocking
         time_start = clock();
         // Open test file
-        QCOMPARE(p->load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
+        QCOMPARE(p.load(qApp->applicationDirPath() + "/ft_mstylesheetparser_test.css"), true);
         // End clocking
         time_end = clock();
 
         // Store result & cleanup
         TIMERS[i] = time_end - time_start;
-        delete p;
     }
 
     TOTAL_TIME = time_end - test_start;
