@@ -34,10 +34,14 @@
 #include "mlist.h"
 
 MListIndexViewPrivate::MListIndexViewPrivate()
+  : controller(NULL),
+    controllerModel(NULL),
+    container(NULL),
+    eventScene(NULL),
+    shortcutHeight(0),
+    shortcutsCount(0),
+    q_ptr(NULL)
 {
-    shortcutHeight = 0;
-    eventScene = NULL;
-    container = NULL;
 }
 
 MListIndexViewPrivate::~MListIndexViewPrivate()
