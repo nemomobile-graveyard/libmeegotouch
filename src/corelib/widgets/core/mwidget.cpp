@@ -122,18 +122,20 @@ void MWidgetPrivate::sendOnDisplayChangeEvent(MWidget *widget, const QRectF *vis
 
     QRectF widgetSceneRect = widget->sceneBoundingRect();
 
-    if (visibleSceneRect && visibleSceneRect->intersects(widgetSceneRect)) {
-        if (visibleSceneRect->contains(widgetSceneRect)) {
-            event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOnDisplay, *visibleSceneRect);
+    if (visibleSceneRect) {
+        if (visibleSceneRect->intersects(widgetSceneRect)) {
+            if (visibleSceneRect->contains(widgetSceneRect)) {
+                event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOnDisplay, *visibleSceneRect);
+            } else {
+                event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::PartiallyOnDisplay, *visibleSceneRect);
+            }
         } else {
-            event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::PartiallyOnDisplay, *visibleSceneRect);
+            event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOffDisplay, *visibleSceneRect);
         }
-    } else {
-        event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOffDisplay, *visibleSceneRect);
-    }
 
-    q->scene()->sendEvent(widget, event);
-    delete event;
+        q->scene()->sendEvent(widget, event);
+        delete event;
+    }
 }
 
 void MWidgetPrivate::resolveIsOnDisplay(QGraphicsItem *item, const QRectF *visibleSceneRect)
