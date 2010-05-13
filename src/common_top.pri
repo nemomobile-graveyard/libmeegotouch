@@ -29,7 +29,7 @@ win32 {
     QMAKE_MOC = ..\mmoc\mmoc
     INCLUDEPATH += .
 } else {
-    QMAKE_MOC = $${M_SOURCE_TREE}/mmoc/mmoc
+    QMAKE_MOC = $${M_BUILD_TREE}/mmoc/mmoc
 }
 
 QMAKE_CFLAGS += -Werror
