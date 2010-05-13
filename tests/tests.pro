@@ -154,6 +154,7 @@ SUBDIRS     =  \
     ut_mservicefwgen \
 #    ut_mstatusbar \ // Unstable. "Randomly" crashes on clean up, when detroying its MApplication instance.
     ut_mpanrecognizer \
+    ut_mstatusbarview \
 
 # enable only when we have icu available
 

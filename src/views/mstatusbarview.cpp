@@ -33,7 +33,8 @@
 
 MStatusBarView::MStatusBarView(MStatusBar *controller) :
     MSceneWindowView(controller),
-    controller(controller)
+    controller(controller),
+    updatesEnabled(false)
 {
 #ifdef Q_WS_X11
     pixmapDamage = 0;
@@ -41,7 +42,11 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
     MApplication *mApplication = static_cast<MApplication *>(QCoreApplication::instance());
     connect(mApplication, SIGNAL(damageEvent(Qt::HANDLE&, short&, short&, unsigned short&, unsigned short&)),
             SLOT(handlePixmapDamageEvent(Qt::HANDLE&, short&, short&, unsigned short&, unsigned short&)));
-
+    connect(controller, SIGNAL(displayExited()),
+            this, SLOT(disablePixmapUpdates()));
+    connect(controller, SIGNAL(displayEntered()),
+            this, SLOT(enablePixmapUpdates()));
+	
     updateSharedPixmap();
 #endif
 }
@@ -78,7 +83,7 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
         sourceRect.setWidth(size().width());
         sourceRect.setHeight(size().height());
     }
-
+    
     painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
 #else
     Q_UNUSED(painter);
@@ -89,6 +94,9 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
 void MStatusBarView::updateSharedPixmap()
 {
     destroyXDamageForSharedPixmap();
+
+    if (!updatesEnabled)
+       return;
 
     Qt::HANDLE handle;
     if (fetchSharedPixmapHandle(&handle)) {
@@ -141,6 +149,19 @@ void MStatusBarView::handlePixmapDamageEvent(Qt::HANDLE &damage, short &x, short
         controller->update(x, y, width, height);
     }
 }
+
+void MStatusBarView::enablePixmapUpdates()
+{
+    updatesEnabled = true;
+    updateSharedPixmap();
+}
+
+void MStatusBarView::disablePixmapUpdates()
+{
+    updatesEnabled = false;
+    destroyXDamageForSharedPixmap();
+}
+
 #endif
 
 M_REGISTER_VIEW_NEW(MStatusBarView, MStatusBar)

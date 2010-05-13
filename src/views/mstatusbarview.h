@@ -45,6 +45,7 @@ private:
     Q_DISABLE_COPY(MStatusBarView)
 
     MWidgetController *controller;
+    bool updatesEnabled;
 
 #ifdef Q_WS_X11
     void updateSharedPixmap();
@@ -58,6 +59,14 @@ private:
 private Q_SLOTS:
     void handlePixmapDamageEvent(Qt::HANDLE &damage, short &x, short &y,
                                  unsigned short &width, unsigned short &height);
+
+    void enablePixmapUpdates();
+    void disablePixmapUpdates();
+
+#endif
+
+#ifdef UNIT_TEST
+    friend class Ut_MStatusBarView;
 #endif
 
 };
