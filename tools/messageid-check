@@ -1,4 +1,4 @@
-#! /usr/bin/perl -w                        # -*- mode: perl coding: utf-8 -*-
+#! /usr/bin/perl -w
 ########################################################################
 
 use strict;
@@ -20,7 +20,7 @@ binmode STDERR, ":utf8";
 #----------------------------------------------------------------------
 # global variables
 
-my $version = "0.20100315";
+my $version = "0.20100514";
 
 my $original_wd;
 chomp ($original_wd = `pwd`);
@@ -29,6 +29,9 @@ my @handoffFiles = ();
 my %handoffXmlTrees = ();
 
 my $totalNumberOfIdsNotFoundInSpec = 0;
+my $totalNumberOfIdsLackingEngineeringEnglish = 0;
+
+my $class;
 
 my $OPT_VERBOSITY;
 my $OPT_VERSION;
@@ -42,17 +45,17 @@ my $OPT_SKIP_DOWNLOAD;
 my $OPT_OUTPUTDIR;
 
 # engineering English packages which should be ignored because they are obsolete:
-my @eePackagesObsolete = (
+my @engineeringEnglishPackagesObsolete = (
     "libdui-l10n-engineering-english", # now "libmeegotouch-l10n-engineering-english"
     "duistartup-l10n-engineering-english" # now "mstartup-l10n-engineering-english"
     );
 
 # engineering English packages which should be ignored because they are only demos:
-my @eePackagesIgnore = (
+my @engineeringEnglishPackagesIgnore = (
     "meegotouch-demos-widgetsgallery-l10n-engineering-english"
     );
 
-my @eePackages = (
+my @engineeringEnglishPackages = (
                   "account-plugin-facebook-l10n-engineering-english",
                   "account-plugin-google-l10n-engineering-english",
                   "account-plugin-ovi-l10n-engineering-english",
@@ -109,7 +112,7 @@ my @eePackages = (
                   "webupload-engine-l10n-engineering-english"
                   );
 
-my @eeFiles = (
+my @engineeringEnglishFiles = (
                "/usr/share/l10n/meegotouch/accounts-ui.qm",
                # demo only "/usr/share/l10n/meegotouch/animatedlayout.qm", 
                "/usr/share/l10n/meegotouch/backup.qm",
@@ -218,100 +221,103 @@ sub writeHtml {
   my $title = "Results of messageid-check (version $version) run on " . $date;
 
   my $htmlOutHeader = "";
-
-  $htmlOutHeader .= sprintf "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">\n";
-  $htmlOutHeader .= sprintf "<html>\n";
-  $htmlOutHeader .= sprintf "<head>\n";
-  $htmlOutHeader .= sprintf "<title>%s</title>\n", $title;
-  $htmlOutHeader .= sprintf "<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">\n";
-  $htmlOutHeader .= sprintf "<style type=\"text/css\">\n";
-  $htmlOutHeader .= sprintf "body {\n";
-  $htmlOutHeader .= sprintf "  color:#000000;\n";
-  $htmlOutHeader .= sprintf "  background-color:#FFFFFF;\n";
-  $htmlOutHeader .= sprintf "  font-family: sans-serif;\n";
-  $htmlOutHeader .= sprintf "  font-size: 1em;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".okcolor {\n";
-  $htmlOutHeader .= sprintf "  color:#00FF00;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".errorcolor {\n";
-  $htmlOutHeader .= sprintf "  color:#FF0000;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".okbgcolor {\n";
-  $htmlOutHeader .= sprintf "  background-color:#ceeebc;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".errorbgcolor {\n";
-  $htmlOutHeader .= sprintf "  background-color:#ffcdcd;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".eefile {\n";
-  $htmlOutHeader .= sprintf "  border: solid 1px #88c3ff;\n";
-  $htmlOutHeader .= sprintf "  margin-bottom: 10px;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".title {\n";
-  $htmlOutHeader .= sprintf "  background-color: #5a9fe5;\n";
-  $htmlOutHeader .= sprintf "  font-weight: bold;\n";
-  $htmlOutHeader .= sprintf "  padding: 5px;\n";
-  $htmlOutHeader .= sprintf "  padding-left: 15px;\n";
-  $htmlOutHeader .= sprintf "  font-size: 20px;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".package {\n";
-  $htmlOutHeader .= sprintf "  background-color: #71b1f2;\n";
-  $htmlOutHeader .= sprintf "  font-weight: bold;\n";
-  $htmlOutHeader .= sprintf "  padding: 5px;\n";
-  $htmlOutHeader .= sprintf "  padding-left: 15px;\n";
-  $htmlOutHeader .= sprintf "  font-size: 20px;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf "table.summary {\n";
-  $htmlOutHeader .= sprintf "  text-align: right;\n";
-  $htmlOutHeader .= sprintf "  font-style: normal;\n";
-  $htmlOutHeader .= sprintf "  font-size: small;\n";
-  $htmlOutHeader .= sprintf "  border: 1;\n";
-  $htmlOutHeader .= sprintf "  margin-top: 0em;\n";
-  $htmlOutHeader .= sprintf "  margin-bottom: 0em;\n";
-  $htmlOutHeader .= sprintf "  margin-left: 0em;\n";
-  $htmlOutHeader .= sprintf "  margin-right: 0em;\n";
-  $htmlOutHeader .= sprintf "  padding-top: 1em;\n";
-  $htmlOutHeader .= sprintf "  padding-bottom: 1em;\n";
-  $htmlOutHeader .= sprintf "  padding-left: 0em;\n";
-  $htmlOutHeader .= sprintf "  padding-right: 0em;\n";
-  $htmlOutHeader .= sprintf "  clear: left;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf "table.summary td {\n";
-  $htmlOutHeader .= sprintf "  color: #000000;\n";
-  $htmlOutHeader .= sprintf "  padding-top: 0em;\n";
-  $htmlOutHeader .= sprintf "  padding-bottom: 0em;\n";
-  $htmlOutHeader .= sprintf "  padding-left: 0.5em;\n";
-  $htmlOutHeader .= sprintf "  padding-right: 0.5em;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".maintainer {\n";
-  $htmlOutHeader .= sprintf "  text-align: right;\n";
-  $htmlOutHeader .= sprintf "  font-size: 20px;\n";
-  $htmlOutHeader .= sprintf "  background-color: #88c3ff;\n";
-  $htmlOutHeader .= sprintf "  padding-right: 20px;\n";
-  $htmlOutHeader .= sprintf "  padding-bottom: 1px;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".errorlist {\n";
-  $htmlOutHeader .= sprintf "  text-align: left;\n";
-  $htmlOutHeader .= sprintf "  background-color: #ffcdcd;\n";
-  $htmlOutHeader .= sprintf "  padding-left: 20px;\n";
-  $htmlOutHeader .= sprintf "  padding-top: 20px;\n";
-  $htmlOutHeader .= sprintf "  padding-bottom: 1px;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf ".oklist {\n";
-  $htmlOutHeader .= sprintf "  text-align: left;\n";
-  $htmlOutHeader .= sprintf "  background-color: #ceeebc;\n";
-  $htmlOutHeader .= sprintf "  padding-left: 20px;\n";
-  $htmlOutHeader .= sprintf "  padding-top: 20px;\n";
-  $htmlOutHeader .= sprintf "  padding-bottom: 1px;\n";
-  $htmlOutHeader .= sprintf "}\n";
-  $htmlOutHeader .= sprintf "</style>\n";
-  $htmlOutHeader .= sprintf "</head>\n";
-  $htmlOutHeader .= sprintf "<body>\n";
-  $htmlOutHeader .= sprintf "<h1>%s</h1>\n", $title;
+  $htmlOutHeader .= <<"EOF";
+<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
+<html>
+<head>
+<title>$title</title>
+<meta http-equiv=\"content-type\" content=\"text/html; charset=UTF-8\">
+<style type=\"text/css\">
+body {
+  color:#000000;
+  background-color:#FFFFFF;
+  font-family: sans-serif;
+  font-size: 1em;
+}
+.okcolor {
+  color:#00FF00;
+}
+.errorcolor {
+  color:#FF0000;
+}
+.okbgcolor {
+  background-color:#ceeebc;
+}
+.errorbgcolor {
+  background-color:#ffcdcd;
+}
+.eefile {
+  border: solid 1px #88c3ff;
+  margin-bottom: 10px;
+}
+.title {
+  background-color: #5a9fe5;
+  font-weight: bold;
+  padding: 5px;
+  padding-left: 15px;
+  font-size: 20px;
+}
+.package {
+  background-color: #71b1f2;
+  font-weight: bold;
+  padding: 5px;
+  padding-left: 15px;
+  font-size: 20px;
+}
+table.summary {
+  text-align: right;
+  font-style: normal;
+  font-size: small;
+  border: 1;
+  margin-top: 0em;
+  margin-bottom: 0em;
+  margin-left: 0em;
+  margin-right: 0em;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  padding-left: 0em;
+  padding-right: 0em;
+  clear: left;
+}
+table.summary td {
+  color: #000000;
+  padding-top: 0em;
+  padding-bottom: 0em;
+  padding-left: 0.5em;
+  padding-right: 0.5em;
+}
+.maintainer {
+  text-align: right;
+  font-size: 20px;
+  background-color: #88c3ff;
+  padding-right: 20px;
+  padding-bottom: 1px;
+}
+.errorlist {
+  text-align: left;
+  background-color: #ffcdcd;
+  padding-left: 20px;
+  padding-top: 20px;
+  padding-bottom: 1px;
+}
+.oklist {
+  text-align: left;
+  background-color: #ceeebc;
+  padding-left: 20px;
+  padding-top: 20px;
+  padding-bottom: 1px;
+}
+</style>
+</head>
+<body>
+<h1>$title</h1>
+EOF
 
   my $htmlOutFooter = "";
-  $htmlOutFooter .= sprintf "</body>\n";
-  $htmlOutFooter .= sprintf "</html>\n";
+  $htmlOutFooter .= <<"EOF";
+</body>
+</html>
+EOF
 
   my $htmlOutTotal = $htmlOutHeader . $htmlOutBody . $htmlOutFooter;
 
@@ -328,13 +334,13 @@ sub download {
     exit (1);
   }
 
-  for my $eePackage (@eePackages) {
-    if (mySystem("fakeroot apt-get -y --force-yes install $eePackage")) {
-      printf (STDERR "“fakeroot apt-get -y --force-yes install $eePackage” didn’t work.\n");
+  for my $engineeringEnglishPackage (@engineeringEnglishPackages) {
+    if (mySystem("fakeroot apt-get -y --force-yes install $engineeringEnglishPackage")) {
+      printf (STDERR "“fakeroot apt-get -y --force-yes install $engineeringEnglishPackage” didn’t work.\n");
       exit (1);
     }
     else {
-      printf (STDOUT "“fakeroot apt-get -y --force-yes install $eePackage” OK.\n");
+      printf (STDOUT "“fakeroot apt-get -y --force-yes install $engineeringEnglishPackage” OK.\n");
     }
   }
 
@@ -391,7 +397,7 @@ sub readHandoffXmlTrees {
 }
 
 sub checkMessageIdFromSourceAgainstHandoff {
-  my ($eeFile, $eeMessageId, $htmlOutRef) = @_;
+  my ($engineeringEnglishFile, $eeMessageId, $htmlOutRef) = @_;
   my $eeMessageIdIsInSpecCount = 0;
 
   for my $handoffFile (@handoffFiles) {
@@ -451,10 +457,10 @@ sub checkMessageIdFromSourceAgainstHandoff {
             printf STDOUT "++++++OK: id “%s” spec “%s” (%s)\n",
               $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
           }
-          ${$htmlOutRef} .= sprintf "<li>";
+          ${$htmlOutRef} .= "<li>";
           ${$htmlOutRef} .= sprintf "%s found in spec “%s” (%s)",
             $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
-          ${$htmlOutRef} .= sprintf "</li>\n";
+          ${$htmlOutRef} .= "</li>\n";
         }
       }
     }
@@ -463,9 +469,9 @@ sub checkMessageIdFromSourceAgainstHandoff {
     if ($OPT_VERBOSITY >= 1) {
       printf STDOUT "***ERROR: id “%s” not found in spec\n", $eeMessageId;
     }
-    ${$htmlOutRef} .= sprintf "<li>";
+    ${$htmlOutRef} .= "<li>";
     ${$htmlOutRef} .= sprintf "%s", $eeMessageId;
-    ${$htmlOutRef} .= sprintf "</li>\n";
+    ${$htmlOutRef} .= "</li>\n";
   }
 
   return $eeMessageIdIsInSpecCount;
@@ -561,10 +567,11 @@ my $htmlOutToc = "";
 my $htmlOutResultsDetail = "";
 my $csvOut = "Invalid Message ID, Engineering English .qm file, Package, Package version, Package maintainer\n";
 
-for my $eeFile (@eeFiles) {
+for my $engineeringEnglishFile (@engineeringEnglishFiles) {
   my $errorCount = 0;
   my $okCount = 0;
-  my $debianPackage = qx(dpkg -S $eeFile);
+  my $missingEngineeringEnglishCount = 0;
+  my $debianPackage = qx(dpkg -S $engineeringEnglishFile);
   $debianPackage =~ s/:.*$//;
   chomp($debianPackage);
   my $debianPackageMaintainerFull = "Unknown &lt;unknown\@unknown.com%gt;";
@@ -591,23 +598,35 @@ for my $eeFile (@eeFiles) {
   my $dpkgStatusDetails = qx(dpkg -s $debianPackage);
   if ($OPT_VERBOSITY >= 1) {
     printf STDOUT "------------------------------------------------------------\n";
-    printf STDOUT "checking “%s” from package “%s”\n", $eeFile, $debianPackage;
+    printf STDOUT "checking “%s” from package “%s”\n", $engineeringEnglishFile, $debianPackage;
   }
 
   my $htmlOutOkList = "";
   my $htmlOutErrorList = "";
+  my $htmlOutMissingEeList = "";
 
   my $xmlParser = new XML::Parser(Style => 'Tree');
-  open (EEFILE, "lconvert -o - -i $eeFile |") || die "Can’t open file lconvert $eeFile | : $!";
+  open (EEFILE, "lconvert -o - -i $engineeringEnglishFile |") || die "Can’t open file lconvert $engineeringEnglishFile | : $!";
   my $tree = $xmlParser->parse(*EEFILE, ProtocolEncoding => 'UTF-8');
   close(EEFILE);
   my @contextTree = @{$tree->[1][4]};
+  # print Dumper(@contextTree);
   for (my $i = 0; $i < $#contextTree; ++$i) {
     if ($contextTree[$i] eq "message") {
       my $source = $contextTree[$i+1][4][2];
+      my $translation = $contextTree[$i+1][8][2];
+      if ($translation eq "!! " || $translation eq "") {
+          ++$missingEngineeringEnglishCount;
+          ++$totalNumberOfIdsLackingEngineeringEnglish;
+          my $htmlOutMissingEeMessage = "";
+          $htmlOutMissingEeMessage .= "<li>";
+          $htmlOutMissingEeMessage .= sprintf "%s", $source;
+          $htmlOutMissingEeMessage .= "</li>\n";
+          $htmlOutMissingEeList .= $htmlOutMissingEeMessage;
+      }
       my $htmlOutMessage = "";
       my $eeMessageIdIsInSpecCount =
-        checkMessageIdFromSourceAgainstHandoff($eeFile, $source, \$htmlOutMessage);
+        checkMessageIdFromSourceAgainstHandoff($engineeringEnglishFile, $source, \$htmlOutMessage);
       if ($eeMessageIdIsInSpecCount >= 1) {
         ++$okCount;
         $htmlOutOkList .= $htmlOutMessage;
@@ -616,157 +635,220 @@ for my $eeFile (@eeFiles) {
         ++$errorCount;
         ++$totalNumberOfIdsNotFoundInSpec;
         $htmlOutErrorList .= $htmlOutMessage;
-        $csvOut .= "$source,$eeFile,$debianPackage,$debianPackageVersion,$debianPackageMaintainerMail\n";
+        $csvOut .= "$source,$engineeringEnglishFile,$debianPackage,$debianPackageVersion,$debianPackageMaintainerMail\n";
       }
     }
   }
-  $htmlOutResultsDetail .= sprintf "<div class=\"eefile\">\n";
-  $htmlOutResultsDetail .= sprintf "<div class=\"title\">";
-  $htmlOutResultsDetail .= sprintf "<a href=\"#%s-ref\" name=\"%s\">", $eeFile, $eeFile;
-  $htmlOutResultsDetail .= sprintf "%s", $eeFile;
-  $htmlOutResultsDetail .= sprintf "</a>";
-  $htmlOutResultsDetail .= sprintf " IDs in spec: ";
-  $htmlOutResultsDetail .= sprintf "<span class=\"okcolor\">";
-  $htmlOutResultsDetail .= sprintf "%d", $okCount;
-  $htmlOutResultsDetail .= sprintf "</span>";
-  $htmlOutResultsDetail .= sprintf " Invalid IDs: ";
-  $htmlOutResultsDetail .= sprintf "<span class=\"errorcolor\">";
-  $htmlOutResultsDetail .= sprintf "%d", $errorCount;
-  $htmlOutResultsDetail .= sprintf "</span>";
-  $htmlOutResultsDetail .= sprintf "</div>\n";
-  $htmlOutResultsDetail .= sprintf "<div class=\"package\">";
-  $htmlOutResultsDetail .= sprintf "%s %s", $debianPackage, $debianPackageVersion;
-  $htmlOutResultsDetail .= sprintf "</div>\n";
-  $htmlOutResultsDetail .= sprintf "<div class=\"maintainer\">";
-  $htmlOutResultsDetail .= sprintf "<a href=\"mailto:%s\">%s</a>",
-    $debianPackageMaintainerMail, $debianPackageMaintainerFull;
-  $htmlOutResultsDetail .= sprintf "</div>\n";
+  $htmlOutResultsDetail .= <<"EOF";
+    <div class="eefile">
+    <div class="title">
+    <a href="#$engineeringEnglishFile-ref" name="$engineeringEnglishFile">
+    $engineeringEnglishFile
+    </a>
+    IDs in spec:
+    <span class="okcolor">
+    $okCount
+    </span>
+EOF
+
+  $class = $errorCount?  "errorcolor" : "okcolor";
+  $htmlOutResultsDetail .= <<"EOF";
+    Invalid IDs:
+    <span class="$class">
+    $errorCount
+    </span>
+EOF
+
+  $class = $missingEngineeringEnglishCount?  "errorcolor" : "okcolor";
+  $htmlOutResultsDetail .= <<"EOF";
+    IDs lacking EE:
+    <span class="$class">
+    $missingEngineeringEnglishCount
+    </span>
+    </div>
+EOF
+
+  $htmlOutResultsDetail .= <<"EOF";
+    <div class="package">
+    $debianPackage $debianPackageVersion
+    </div>
+    <div class="maintainer">
+    <a href="mailto:$debianPackageMaintainerMail">$debianPackageMaintainerFull</a>
+    </div>
+EOF
+
   if ($errorCount > 0) {
-    $htmlOutResultsDetail .= sprintf "<div class=\"errorlist\">\n";
-    $htmlOutResultsDetail .= sprintf "List of invalid IDs not found in the UI specs:\n";
-    $htmlOutResultsDetail .= sprintf "<ul>\n";
-    $htmlOutResultsDetail .= $htmlOutErrorList;
-    $htmlOutResultsDetail .= sprintf "</ul>\n";
-    $htmlOutResultsDetail .= sprintf "</div>\n";
+    $htmlOutResultsDetail .= <<"EOF";
+    <div class="errorlist">
+    List of invalid IDs not found in the UI specs:
+    <ul>
+    $htmlOutErrorList
+    </ul>
+    </div>
+EOF
   }
+
+  if ($missingEngineeringEnglishCount > 0) {
+    $htmlOutResultsDetail .= <<"EOF";
+    <div class="errorlist">
+    List of IDs where the engineering English is missing or empty:
+    <ul>
+    $htmlOutMissingEeList
+    </ul>
+    </div>
+EOF
+  }
+
   if ($okCount > 0) {
-    $htmlOutResultsDetail .= sprintf "<div class=\"oklist\">\n";
-    $htmlOutResultsDetail .= sprintf "List of IDs found in the UI specs:\n";
-    $htmlOutResultsDetail .= sprintf "<ul>\n";
-    $htmlOutResultsDetail .= $htmlOutOkList;
-    $htmlOutResultsDetail .= sprintf "</ul>\n";
-    $htmlOutResultsDetail .= sprintf "</div>\n";
+    $htmlOutResultsDetail .= <<"EOF";
+    <div class="oklist">
+    List of IDs found in the UI specs:
+    <ul>
+    $htmlOutOkList
+    </ul>
+    </div>
+    </div>
+EOF
   }
-  $htmlOutResultsDetail .= sprintf "</div>\n";
 
   # Table of Contents:
-  $htmlOutToc .= sprintf "<tr>\n";
-  if ($errorCount != 0) {
-    $htmlOutToc .= sprintf "<td class=\"errorbgcolor\">\n";
-  }
-  else {
-    $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
-  }
-  $htmlOutToc .= sprintf "%s", $debianPackage;
-  $htmlOutToc .= sprintf "</td>\n";
-  if ($errorCount != 0) {
-    $htmlOutToc .= sprintf "<td class=\"errorbgcolor\">\n";
-  }
-  else {
-    $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
-  }
-  $htmlOutToc .= sprintf "%s", $debianPackageVersion;
-  $htmlOutToc .= sprintf "</td>\n";
-  if ($errorCount != 0) {
-    $htmlOutToc .= sprintf "<td class=\"errorbgcolor\">\n";
-  }
-  else {
-    $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
-  }
-  $htmlOutToc .= sprintf "<a href=\"#%s\" name=\"%s-ref\">%s</a>: ",
-    $eeFile, $eeFile, myBasename($eeFile);
-  $htmlOutToc .= sprintf "</td>\n";
-  $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
-  $htmlOutToc .= sprintf "%d", $okCount;
-  $htmlOutToc .= sprintf "</td>\n";
-  if ($errorCount != 0) {
-    $htmlOutToc .= sprintf "<td class=\"errorbgcolor\">\n";
-  }
-  else {
-    $htmlOutToc .= sprintf "<td class=\"okbgcolor\">\n";
-  }
-  $htmlOutToc .= sprintf "%d", $errorCount;
-  $htmlOutToc .= sprintf "</td>\n";
-  $htmlOutToc .= sprintf "</tr>\n";
+  $class = ($errorCount == 0 && $missingEngineeringEnglishCount == 0) ? "okbgcolor" : "errorbgcolor";
+  my $engineeringEnglishFileBasename = myBasename($engineeringEnglishFile);
+  $htmlOutToc .= <<"EOF";
+    <tr>
+    <td class="$class">
+    $debianPackage
+    </td>
+    <td class="$class">
+    $debianPackageVersion
+    </td>
+    <td class="$class">
+    <a href="#$engineeringEnglishFile" name="$engineeringEnglishFile-ref">
+    $engineeringEnglishFileBasename
+    </a>:
+    </td>
+EOF
+
+  $htmlOutToc .= <<"EOF";
+    <td class="okbgcolor">
+    $okCount
+    </td>
+EOF
+
+  $class = $errorCount? "errorbgcolor" : "okbgcolor";
+  $htmlOutToc .= <<"EOF";
+    <td class="$class">
+    $errorCount
+    </td>
+EOF
+
+  $class = $missingEngineeringEnglishCount? "errorbgcolor" : "okbgcolor";
+  $htmlOutToc .= <<"EOF";
+    <td class="$class">
+    $missingEngineeringEnglishCount
+    </td>
+    </tr>
+EOF
+
 }
 
-$htmlOutToc .= sprintf "</table>\n";
-$htmlOutToc .= sprintf "</center>\n";
+$htmlOutToc .= <<"EOF";
+    </table>
+    </center>
+EOF
 
 my $htmlOutTocHeader = "";
-$htmlOutTocHeader .= sprintf "<hr>\n";
-$htmlOutTocHeader .= sprintf "<h2>Summary of results:</h2>\n";
-if ($totalNumberOfIdsNotFoundInSpec != 0) {
-  $htmlOutTocHeader .= sprintf "<span class=\"errorcolor\">";
-}
-else {
-  $htmlOutTocHeader .= sprintf "<span class=\"okcolor\">";
-}
-$htmlOutTocHeader .= sprintf "<p><b>Total number of Ids not found in the specification: %d</b></p>",
-        $totalNumberOfIdsNotFoundInSpec;
-$htmlOutTocHeader .= sprintf "</span>";
+$htmlOutTocHeader .= <<"EOF";
+    <hr>
+    <h2>Summary of results:</h2>
+EOF
 
-$htmlOutTocHeader .= sprintf "<p>";
-$htmlOutTocHeader .= sprintf "<a href=\"messageid-check-result.csv\">";
-$htmlOutTocHeader .= sprintf "CVS file with a list of all invalid message IDs.";
-$htmlOutTocHeader .= sprintf "</a>";
-$htmlOutTocHeader .= sprintf "</p>";
+$class = $totalNumberOfIdsNotFoundInSpec? "errorcolor" : "okcolor";
+$htmlOutTocHeader .= <<"EOF";
+<span class="$class">
+    <p>
+    <b>
+    Total number of Ids not found in the specification:
+    $totalNumberOfIdsNotFoundInSpec
+    </b>
+    </p>
+</span>
+EOF
 
-$htmlOutTocHeader .= sprintf "<center>";
-$htmlOutTocHeader .= sprintf "<table class=\"summary\">\n";
-$htmlOutTocHeader .= sprintf "<caption style=\"caption-side:top\">Overview of the number of IDs found or not found in the specifications. Click on the file name of the .qm file for details.</caption>\n";
-$htmlOutTocHeader .= sprintf "<tr>";
-$htmlOutTocHeader .= sprintf "<th>";
-$htmlOutTocHeader .= sprintf "Debian package name";
-$htmlOutTocHeader .= sprintf "</th>";
-$htmlOutTocHeader .= sprintf "<th>";
-$htmlOutTocHeader .= sprintf "version";
-$htmlOutTocHeader .= sprintf "</th>";
-$htmlOutTocHeader .= sprintf "<th>";
-$htmlOutTocHeader .= sprintf "Engineering English .qm file";
-$htmlOutTocHeader .= sprintf "</th>";
-$htmlOutTocHeader .= sprintf "<th>";
-$htmlOutTocHeader .= sprintf "IDs in spec";
-$htmlOutTocHeader .= sprintf "</th>";
-$htmlOutTocHeader .= sprintf "<th>";
-$htmlOutTocHeader .= sprintf "Invalid IDs";
-$htmlOutTocHeader .= sprintf "</th>";
-$htmlOutTocHeader .= sprintf "</tr>";
+$class = $totalNumberOfIdsLackingEngineeringEnglish? "errorcolor" : "okcolor";
+$htmlOutTocHeader .= <<"EOF";
+<span class="$class">
+    <p>
+    <b>
+    Total number of Ids where the engineering English is missing or empty:
+    $totalNumberOfIdsLackingEngineeringEnglish
+    </b>
+    </p>  
+</span>
+EOF
+
+$htmlOutTocHeader .= <<"EOF";
+    <p>
+    <a href="messageid-check-result.csv">
+    CVS file with a list of all invalid message IDs.
+    </a>
+    </p>
+    <center>
+    <table class="summary">
+    <caption style="caption-side:top">
+    Overview of the number of IDs found or not found in the specifications.
+    Click on the file name of the .qm file for details.
+    </caption>
+    <tr>
+    <th>
+    Debian package name
+    </th>
+    <th>
+    version
+    </th>
+    <th>
+    Engineering English .qm file
+    </th>
+    <th>
+    IDs in spec
+    </th>
+    <th>
+    Invalid IDs
+    </th>
+    <th>
+    Missing EE
+    </th>
+    </tr>
+EOF
 
 my $htmlOutResultsDetailHeader = "";
-$htmlOutResultsDetailHeader .= "<hr>\n";
-$htmlOutResultsDetailHeader .= sprintf "<h2>Results in detail:</h2>\n";
+$htmlOutResultsDetailHeader .= <<"EOF";
+    <hr>
+    <h2>Results in detail:</h2>
+EOF
 
 my $htmlOutIntroduction ="";
-$htmlOutIntroduction .= sprintf "<hr>\n";
-$htmlOutIntroduction .= sprintf "<h2>Introduction</h2>\n";
+$htmlOutIntroduction .= <<"EOF";
+    <hr>
+    <h2>Introduction</h2>
+    This page lists IDs which are used in
+    the code but which are missing in the specifications. For all IDs used
+    in the code, but not defined in the UI specifications, please do the
+    following:
+    <ol>
+    <li>Check your code if those IDs are really in use</li>
+    <li>Check if there is a typo in the ID</li>
+    </ol>
+    If there is no typo and the ID is
+    really used, open a bug against the relevant UI Spec
+    requesting a new ID:
+    <ul>
+    <li>component: Specifications</li>
+    <li>Keywords: l10n, PO</li>
+    <li>CC: <a href=\"mailto:oksan.savasoglu-niemi\@nokia.com\">Oksan Savasoglu-Niemi</a></li>
+    </ul>
+EOF
 
-$htmlOutIntroduction .= sprintf "This page lists IDs which are used in
-the code but which are missing in the specifications. For all IDs used
-in the code, but not defined in the UI specifications, please do the
-following:\n";
-
-$htmlOutIntroduction .= sprintf "<ol>\n";
-$htmlOutIntroduction .= sprintf "<li>Check your code if those IDs are really in use</li>\n";
-$htmlOutIntroduction .= sprintf "<li>Check if there is a typo in the ID</li>\n";
-$htmlOutIntroduction .= sprintf "</ol>\n";
-
-$htmlOutIntroduction .= sprintf "If there is no typo and the ID is
-really used, open a bug against the relevant UI Spec requesting a new
-ID: <ul><li>component: Specifications</li> <li>Keywords: l10n, PO</li>
-<li>CC: <a href=\"mailto:oksan.savasoglu-niemi\@nokia.com\">Oksan
-Savasoglu-Niemi</a></li></ul>";
-  
 my $htmlOutBody =
   $htmlOutIntroduction
   . $htmlOutTocHeader
