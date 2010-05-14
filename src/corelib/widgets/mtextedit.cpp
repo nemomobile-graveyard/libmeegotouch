@@ -243,15 +243,13 @@ bool MTextEditPrivate::doDelete()
     QTextDocumentFragment currentFragment = currentPositionCursor.selection();
     cursor()->deleteChar();
 
-    if (validateCurrentBlock() == true) {
-        emit q->cursorPositionChanged();
-        return true;
-
-    } else {
+    if (!validateCurrentBlock()) {
         // document doesn't validate after delete -> put the character back
         cursor()->insertFragment(currentFragment);
         return false;
     }
+
+    return true;
 }
 
 
@@ -1660,6 +1658,7 @@ void MTextEdit::paste()
 
     if (changed) {
         emit textChanged();
+        emit cursorPositionChanged();
         updateMicroFocus();
     } else {
         mDebug("MTextEdit") << __PRETTY_FUNCTION__ << "paste failed";
@@ -1692,6 +1691,7 @@ void MTextEdit::cut()
         d->sendCopyAvailable(false);
         emit selectionChanged();
         emit textChanged();
+        emit cursorPositionChanged();
         updateMicroFocus();
     }
 }
