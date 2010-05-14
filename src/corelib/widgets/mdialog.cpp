@@ -410,6 +410,12 @@ void MDialog::accept()
 
 void MDialog::reject()
 {
+    Q_D(MDialog);
+
+    QObject *sender= QObject::sender();
+    if (sender != 0 && sender->objectName() == "MDialogCloseButton") {
+        d->clickedButton = 0;
+    }
     done(Rejected);
 }
 
