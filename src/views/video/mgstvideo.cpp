@@ -267,12 +267,14 @@ void MGstVideo::setRenderTarget(MGstVideo::RenderTarget targetSink)
                 gst_bin_add(GST_BIN_CAST(videobin), active);
                 gst_element_link_pads(colorspace, "src", active, "sink");
 
-                //sync the videobin again with it's parent
+                //sync the state of videobin again with it's parent, sync the clock and 
+                //position manually as well because for some reason they do not 
+                //get automatically synced during runtime target switch
                 gst_element_set_locked_state(videobin, false);            
                 gst_element_set_clock(videobin, gst_element_get_clock(gst_elem_pipeline));
                 gst_element_sync_state_with_parent(videobin);
                 gst_element_seek_simple(videobin, GST_FORMAT_TIME,
-                                (GstSeekFlags)(GST_SEEK_FLAG_FLUSH),// | GST_SEEK_FLAG_KEY_UNIT),
+                                (GstSeekFlags)(GST_SEEK_FLAG_FLUSH),
                                 position() * GST_MSECOND);
             }
         }
@@ -340,8 +342,6 @@ gboolean MGstVideo::bus_cb(GstBus *bus, GstMessage *message, void *data)
 {
     Q_UNUSED(bus);
 
-    //mWarning("MGstVideo::bus_cb()") << gst_message_type_get_name(GST_MESSAGE_TYPE(message));
-
     MGstVideo* gstVideo = (MGstVideo*) data;
 
     // video stream has reached end
@@ -373,11 +373,6 @@ gboolean MGstVideo::bus_cb(GstBus *bus, GstMessage *message, void *data)
 
             GstState oldState, newState, pendingState;
             gst_message_parse_state_changed(message, &oldState, &newState, &pendingState);
-
-            //GstPipeline* pipeline = GST_PIPELINE(message->src);
-            //mDebug("MGstVideo::bus_cb()") << "src =" << pipeline << "gst_elem_pipeline=" << gstVideo->gst_elem_pipeline;
-            //mDebug("MGstVideo::bus_cb()") << "oldState =" << oldState << "newState =" << newState << "pendingState =" << pendingState;
-
             if( oldState == GST_STATE_READY && newState == GST_STATE_PAUSED ) {
                 video_ready_cb(data);
             }
@@ -398,8 +393,6 @@ void MGstVideo::video_ready_cb(void* user_data)
         gstVideo->checkSeekable();
 
         if( gstVideo->m_storedState != MVideo::NotReady ) {
-            //mDebug("MGstVideo::video_ready_cb()")  << gstVideo->m_storedState << gstVideo->m_storedPosition;
-
             //restore the stored state information
             gstVideo->seek(gstVideo->m_storedPosition);
             gstVideo->setVideoState(gstVideo->m_storedState);
