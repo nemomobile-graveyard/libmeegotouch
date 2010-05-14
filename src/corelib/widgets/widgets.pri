@@ -102,6 +102,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mapplicationpage.cpp \
     $$WIDGETS_SRC_DIR/mapplicationwindow.cpp \
     $$WIDGETS_SRC_DIR/mbutton.cpp \
+    $$WIDGETS_SRC_DIR/mbuttonmodel.cpp \
     $$WIDGETS_SRC_DIR/mbuttongroup.cpp \
     $$WIDGETS_SRC_DIR/mcombobox.cpp \
     $$WIDGETS_SRC_DIR/mcontainer.cpp \

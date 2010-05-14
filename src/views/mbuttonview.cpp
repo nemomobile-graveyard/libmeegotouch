@@ -23,9 +23,10 @@
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 #include <QFontMetricsF>
+#include <QPixmap>
+#include <QIcon>
 
 #include "mbutton.h"
-#include "mbutton_p.h" // For the member indexes of the model
 #include "mfeedback.h"
 #include "mtheme.h"
 #include "mscalableimage.h"
@@ -39,14 +40,31 @@
 #define RELEASE_MISS_DELTA 30
 
 MButtonViewPrivate::MButtonViewPrivate()
-    : icon(0), toggledIcon(0), label(NULL)
+    : icon(0), toggledIcon(0), label(NULL), iconFromQIcon(false), toggledIconFromQIcon(false)
 {
+}
+
+void MButtonViewPrivate::freeIcons()
+{
+    if (iconFromQIcon && icon) {
+        delete icon;
+    } else {
+        MTheme::releasePixmap(icon);
+    }
+
+    if (toggledIconFromQIcon && toggledIcon) {
+        delete toggledIcon;
+    } else {
+        MTheme::releasePixmap(toggledIcon);
+    }
+
+    icon = 0;
+    toggledIcon = 0;
 }
 
 MButtonViewPrivate::~MButtonViewPrivate()
 {
-    MTheme::releasePixmap(icon);
-    MTheme::releasePixmap(toggledIcon);
+    freeIcons();
 }
 
 // As the condition of text color and background change for button
@@ -79,10 +97,16 @@ void MButtonViewPrivate::refreshStyleMode()
     //update the icons only if the iconSize in the style has changed
     QSize size = q->style()->iconSize();
     if (icon && icon->size() != size) {
-        loadIcon(icon, q->model()->iconID(), size);
+        if (iconFromQIcon)
+            loadIcon(q->model()->icon(), size);
+        else
+            loadIcon(q->model()->iconID(), size);
     }
     if (toggledIcon && toggledIcon->size() != size) {
-        loadIcon(toggledIcon, q->model()->toggledIconID(), size);
+        if (toggledIconFromQIcon)
+            loadIcon(q->model()->icon(), size);
+        else
+            loadIcon(q->model()->toggledIconID(), size, QIcon::Selected);
     }
 
     calcIconTextRects();
@@ -163,14 +187,49 @@ void MButtonViewPrivate::calcIconTextRects()
     label->setGeometry(textRect.translated(q->marginLeft(), q->marginTop()));
 }
 
-void MButtonViewPrivate::loadIcon(const QPixmap*& icon, const QString &newIconId, const QSize &newIconSize)
+void MButtonViewPrivate::loadIcon(const QIcon &newQIcon, const QSize &newIconSize)
 {
-    MTheme::releasePixmap(icon);
-    icon = 0;
-    if (!newIconId.isEmpty())
-        icon = MTheme::pixmap(newIconId, newIconSize);
+    freeIcons();
+
+    icon = new QPixmap(newQIcon.pixmap(newIconSize));
+    iconFromQIcon = true;
+
+    toggledIcon = new QPixmap(newQIcon.pixmap(newIconSize, QIcon::Selected));
+    if (toggledIcon && !toggledIcon->isNull()) {
+        toggledIconFromQIcon = true;
+    }
 }
 
+void MButtonViewPrivate::loadIcon(const QString &newIconId, const QSize &newIconSize, QIcon::Mode mode)
+{
+    const QPixmap **tmp;
+    bool *fromQIcon;
+
+    if (mode == QIcon::Selected)
+    {
+        fromQIcon = &toggledIconFromQIcon;
+        tmp = &toggledIcon;
+    }
+    else
+    {
+        fromQIcon = &iconFromQIcon;
+        tmp = &icon;
+    }
+
+    if (*tmp)
+    {
+        if (*fromQIcon)
+            delete *tmp;
+        else
+            MTheme::releasePixmap(*tmp);
+    }
+
+    *fromQIcon = false;
+    *tmp = 0;
+
+    if (!newIconId.isEmpty())
+        *tmp = MTheme::pixmap(newIconId, newIconSize);
+}
 
 MButtonView::MButtonView(MButton *controller) :
     MWidgetView(* new MButtonViewPrivate, controller)
@@ -326,10 +385,13 @@ void MButtonView::updateData(const QList<const char *>& modifications)
             d->label->setVisible(model()->textVisible());
             d->calcIconTextRects();
         } else if (member == MButtonModel::IconID) {
-            d->loadIcon(d->icon, model()->iconID(), style()->iconSize());
+            d->loadIcon(model()->iconID(), style()->iconSize());
             d->calcIconTextRects();
         } else if (member == MButtonModel::ToggledIconID) {
-            d->loadIcon(d->toggledIcon, model()->toggledIconID(), style()->iconSize());
+            d->loadIcon(model()->toggledIconID(), style()->iconSize(), QIcon::Selected);
+            d->calcIconTextRects();
+        } else if (member == MButtonModel::Icon) {
+            d->loadIcon(model()->icon(), style()->iconSize());
             d->calcIconTextRects();
         } else if (member == MButtonModel::IconVisible) {
             d->calcIconTextRects();
@@ -346,10 +408,15 @@ void MButtonView::setupModel()
     Q_D(MButtonView);
 
     MWidgetView::setupModel();
+    QList<const char *> members;
+    if (model()->icon().isNull())
+        members << MButtonModel::IconID;
+    else
+        members << MButtonModel::Icon;
+    if (!model()->toggledIconID().isEmpty())
+        members << MButtonModel::ToggledIconID;
 
-    d->loadIcon(d->icon, model()->iconID(), style()->iconSize());
-    d->loadIcon(d->toggledIcon, model()->toggledIconID(), style()->iconSize());
-    d->calcIconTextRects();
+    updateData(members);
 
     d->label->setText(model()->text());
     d->label->setVisible(model()->textVisible());

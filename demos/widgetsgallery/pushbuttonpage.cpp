@@ -60,6 +60,7 @@ void PushButtonPage::createContent()
     containerPolicy->addItem(pushButton2);
 
     pushButton3 = new MButton();
+    pushButton3->setIcon(QIcon::fromTheme("phone"));
     containerPolicy->addItem(pushButton3);
 
     retranslateUi();

@@ -163,6 +163,12 @@ class M_EXPORT MButton : public MWidgetController
     Q_PROPERTY(QString toggledIconID READ toggledIconID WRITE setToggledIconID)
 
     /*!
+        \property MButton::icon
+        \brief See MButtonModel::icon
+    */
+    Q_PROPERTY(QIcon icon READ icon WRITE setIcon)
+
+    /*!
         \property MButton::textVisible
         \brief See MButtonModel::textVisible
     */
@@ -254,6 +260,20 @@ public:
       \brief Returns the logical ID of the toggled icon of the button.
     */
     QString toggledIconID() const;
+
+    /*!
+     \brief Sets the \a icon of the button.
+
+     \sa icon(), setIconVisible(), setIconID()
+     */
+    void setIcon(const QIcon &icon);
+
+    /*!
+      \brief Returns the icon of the button.
+
+      \sa setIcon()
+     */
+    QIcon icon() const;
 
     /*!
       \brief Returns the text of the button.
