@@ -22,6 +22,7 @@
 #include <QGestureEvent>
 #include <QTapAndHoldGesture>
 #include <QGraphicsSceneContextMenuEvent>
+#include <QTimer>
 #include "mscenewindow.h"
 #include "mscenewindowmodel.h"
 #include "mscenewindow_p.h"
@@ -37,21 +38,21 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(MSceneWindow)
 
-MSceneWindowPrivate::MSceneWindowPrivate()
-    : windowType(MSceneWindow::PlainSceneWindow),
-      policy(MSceneWindow::KeepWhenDone),
-      managedManually(false),
-      shown(false),
-      dismissed(false),
-      waitingForContextMenuEvent(false),
-      effect(0),
-      appearanceAnimation(0),
-      disappearanceAnimation(0)
+        MSceneWindowPrivate::MSceneWindowPrivate()
+            : windowType(MSceneWindow::PlainSceneWindow),
+            policy(MSceneWindow::KeepWhenDone),
+            managedManually(false),
+            shown(false),
+            dismissed(false),
+            waitingForContextMenuEvent(false),
+            effect(0),
+            appearanceAnimation(0),
+            disappearanceAnimation(0)
 {
 }
 
 MSceneWindow::MSceneWindow(QGraphicsItem *parent) :
-    MWidgetController(new MSceneWindowPrivate, new MSceneWindowModel, parent)
+        MWidgetController(new MSceneWindowPrivate, new MSceneWindowModel, parent)
 {
     Q_D(MSceneWindow);
 
@@ -61,7 +62,7 @@ MSceneWindow::MSceneWindow(QGraphicsItem *parent) :
 
 
 MSceneWindow::MSceneWindow(MSceneWindowPrivate *dd, MSceneWindowModel *model, MSceneWindow::WindowType windowType, const QString &viewType, QGraphicsItem *parent) :
-    MWidgetController(dd, model, parent)
+        MWidgetController(dd, model, parent)
 {
     Q_D(MSceneWindow);
     setViewType(viewType);
@@ -102,6 +103,12 @@ void MSceneWindow::setManagedManually(bool managedManually)
 
 void MSceneWindow::appear(MWindow *window, MSceneWindow::DeletionPolicy policy)
 {
+    if (view()) {
+        if (model()->disappearTimeout() != 0) {
+            QTimer::singleShot(model()->disappearTimeout(), this, SLOT(disappear()));
+        }
+    }
+
     if (!window) {
         window = MApplication::activeWindow();
         if (!window) {

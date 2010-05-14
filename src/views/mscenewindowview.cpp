@@ -59,6 +59,10 @@ MSceneWindowView::~MSceneWindowView()
 
 void MSceneWindowView::applyStyle()
 {
+    /*!
+     *  Setuping disapearTimeout, by default= 0
+     */
+    model()->setDisappearTimeout(style()->disappearTimeout());
     MWidgetView::applyStyle();
 
     emit geometryAttributesChanged();
