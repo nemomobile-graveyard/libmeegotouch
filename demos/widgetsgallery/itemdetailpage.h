@@ -41,21 +41,15 @@ class MyVideoWidget : public MVideoWidget
     
     public:
         MyVideoWidget(QGraphicsItem *parent = 0);
-        void setId(const QString& id);
-        QString id();
 Q_SIGNALS:
         void clicked();
-        void longPressed();
         
     protected:
     
          virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
          virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-         virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
          
     private:
-    
-        QString m_id;
 };
 
 //container widget for the video playback controls

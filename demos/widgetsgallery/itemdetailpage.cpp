@@ -46,16 +46,6 @@ MyVideoWidget::MyVideoWidget(QGraphicsItem *parent)
 {
 }
 
-void MyVideoWidget::setId(const QString& id)
-{
-    m_id = id;
-}
-
-QString MyVideoWidget::id()
-{
-    return m_id;
-}
-
 void MyVideoWidget::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     MVideoWidget::mousePressEvent(event);
@@ -66,11 +56,6 @@ void MyVideoWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     MVideoWidget::mouseReleaseEvent(event);
     emit clicked();
-}
-
-void MyVideoWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
-{
-    MVideoWidget::contextMenuEvent(event);
 }
 
 MyVideoOverlayToolbar::MyVideoOverlayToolbar(QGraphicsItem *parent)
