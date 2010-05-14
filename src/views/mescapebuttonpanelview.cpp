@@ -91,6 +91,7 @@ void MEscapeButtonPanelViewPrivate::immediateEscapeButtonTransition()
     case MEscapeButtonPanelModel::BackMode:
         closeButton->hide();
         backButton->show();
+        break;
     default:
         mWarning("MEscapeButtonPanelView") << "Unknown mode for escape button transition";
         break;
