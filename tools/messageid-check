@@ -56,172 +56,172 @@ my @engineeringEnglishPackagesIgnore = (
     );
 
 my @engineeringEnglishPackages = (
-                  "account-plugin-facebook-l10n-engineering-english",
-                  "account-plugin-google-l10n-engineering-english",
-                  "account-plugin-ovi-l10n-engineering-english",
-                  "account-plugin-youtube-l10n-engineering-english",
-                  "accounts-ui-l10n-engineering-english",
-                  "backup-framework-l10n-engineering-english",
-                  "call-history-l10n-engineering-english",
-                  "call-ui-l10n-engineering-english",
-                  "camera-ui-l10n-engineering-english",
-                  "cellular-adaptation-ui-l10n-engineering-english",
-                  "commhistory-daemon-l10n-engineering-english",
-                  "conn-dui-bluetooth-l10n-engineering-english",
-                  "conn-dui-cellular-l10n-engineering-english",
-                  "conn-dui-internet-l10n-engineering-english",
-                  "conn-dui-wlan-l10n-engineering-english",
-                  "contacts-l10n-engineering-english",
-                  "crash-reporter-l10n-engineering-english",
-                  "dialer-l10n-engineering-english",
-                  "duicontrolpanel-callandsimapplet-l10n-engineering-english",
-                  "duicontrolpanel-certificatesapplet-l10n-engineering-english",
-                  "duicontrolpanel-datetimeapplet-l10n-engineering-english",
-                  "duicontrolpanel-displaylanguageapplet-l10n-engineering-english",
-                  "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
-                  "duicontrolpanel-l10n-engineering-english",
-                  "duicontrolpanel-networkapplet-l10n-engineering-english",
-                  "duicontrolpanel-regionformatapplet-l10n-engineering-english",
-                  "duihelp-l10n-engineering-english",
-                  "duihomescreen-l10n-engineering-english",
-                  "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
-                  "duistatusind-connectivity-l10n-engineering-english",
-                  "feedreader-l10n-engineering-english",
-                  "gallery-l10n-engineering-english",
-                  "keychain-ui-l10n-engineering-english",
-                  "libdatacounterdialog-l10n-engineering-english",
-                  "libdialerui-l10n-engineering-english",
-                  "libfeedsettings-l10n-engineering-english",
-                  "liblocationpicker-l10n-engineering-english",
-                  "libmcontentwidgets-l10n-engineering-english",
-                  "libmeegotouch-l10n-engineering-english",
-                  "libpresence0-l10n-engineering-english",
-                  "libshare-ui-l10n-engineering-english",
-                  "libwebupload-l10n-engineering-english",
-                  "me-l10n-engineering-english",
-                  # ignore "meegotouch-demos-widgetsgallery-l10n-engineering-english",
-                  "messaging-ui-l10n-engineering-english",
-                  "mms-ui-l10n-engineering-english",
-                  "mstartup-l10n-engineering-english",
-                  "office-tools-l10n-engineering-english",
-                  "package-manager-ui-l10n-engineering-english",
-                  "signon-ui-l10n-engineering-english",
-                  "systemui-applets-l10n-engineering-english",
-                  "systemui-l10n-engineering-english",
-                  "transfer-ui-l10n-engineering-english",
-                  "webupload-engine-l10n-engineering-english"
-                  );
+    "account-plugin-facebook-l10n-engineering-english",
+    "account-plugin-google-l10n-engineering-english",
+    "account-plugin-ovi-l10n-engineering-english",
+    "account-plugin-youtube-l10n-engineering-english",
+    "accounts-ui-l10n-engineering-english",
+    "backup-framework-l10n-engineering-english",
+    "call-history-l10n-engineering-english",
+    "call-ui-l10n-engineering-english",
+    "camera-ui-l10n-engineering-english",
+    "cellular-adaptation-ui-l10n-engineering-english",
+    "commhistory-daemon-l10n-engineering-english",
+    "conn-dui-bluetooth-l10n-engineering-english",
+    "conn-dui-cellular-l10n-engineering-english",
+    "conn-dui-internet-l10n-engineering-english",
+    "conn-dui-wlan-l10n-engineering-english",
+    "contacts-l10n-engineering-english",
+    "crash-reporter-l10n-engineering-english",
+    "dialer-l10n-engineering-english",
+    "duicontrolpanel-callandsimapplet-l10n-engineering-english",
+    "duicontrolpanel-certificatesapplet-l10n-engineering-english",
+    "duicontrolpanel-datetimeapplet-l10n-engineering-english",
+    "duicontrolpanel-displaylanguageapplet-l10n-engineering-english",
+    "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
+    "duicontrolpanel-l10n-engineering-english",
+    "duicontrolpanel-networkapplet-l10n-engineering-english",
+    "duicontrolpanel-regionformatapplet-l10n-engineering-english",
+    "duihelp-l10n-engineering-english",
+    "duihomescreen-l10n-engineering-english",
+    "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
+    "duistatusind-connectivity-l10n-engineering-english",
+    "feedreader-l10n-engineering-english",
+    "gallery-l10n-engineering-english",
+    "keychain-ui-l10n-engineering-english",
+    "libdatacounterdialog-l10n-engineering-english",
+    "libdialerui-l10n-engineering-english",
+    "libfeedsettings-l10n-engineering-english",
+    "liblocationpicker-l10n-engineering-english",
+    "libmcontentwidgets-l10n-engineering-english",
+    "libmeegotouch-l10n-engineering-english",
+    "libpresence0-l10n-engineering-english",
+    "libshare-ui-l10n-engineering-english",
+    "libwebupload-l10n-engineering-english",
+    "me-l10n-engineering-english",
+    # ignore "meegotouch-demos-widgetsgallery-l10n-engineering-english",
+    "messaging-ui-l10n-engineering-english",
+    "mms-ui-l10n-engineering-english",
+    "mstartup-l10n-engineering-english",
+    "office-tools-l10n-engineering-english",
+    "package-manager-ui-l10n-engineering-english",
+    "signon-ui-l10n-engineering-english",
+    "systemui-applets-l10n-engineering-english",
+    "systemui-l10n-engineering-english",
+    "transfer-ui-l10n-engineering-english",
+    "webupload-engine-l10n-engineering-english"
+    );
 
 my @engineeringEnglishFiles = (
-               "/usr/share/l10n/meegotouch/accounts-ui.qm",
-               # demo only "/usr/share/l10n/meegotouch/animatedlayout.qm", 
-               "/usr/share/l10n/meegotouch/backup.qm",
-               "/usr/share/l10n/meegotouch/call-history.qm",
-               "/usr/share/l10n/meegotouch/call-ui.qm",
-               # camera-ui is still in the old directory, will move soon
-               "/usr/share/l10n/dui/camera-ui.qm",
-               "/usr/share/l10n/meegotouch/celluid.qm",
-               "/usr/share/l10n/meegotouch/commhistoryd.qm",
-               "/usr/share/l10n/meegotouch/conn-dui-bluetooth.qm",
-               "/usr/share/l10n/meegotouch/conn-dui-cellular.qm",
-               "/usr/share/l10n/meegotouch/conn-dui-internet.qm",
-               "/usr/share/l10n/meegotouch/conn-dui-wlan.qm",
-               "/usr/share/l10n/meegotouch/contacts.qm",
-               "/usr/share/l10n/meegotouch/duicontrolpanel-callandsim.qm",
-               "/usr/share/l10n/meegotouch/duicontrolpanel-certificatesapplet.qm",
-               "/usr/share/l10n/meegotouch/duicontrolpanel-datetime.qm",
-               "/usr/share/l10n/meegotouch/duicontrolpanel-displaylanguage.qm",
-               "/usr/share/l10n/meegotouch/duicontrolpanel-keyboardlanguage.qm",
-               "/usr/share/l10n/meegotouch/duicontrolpanel-network.qm",
-               "/usr/share/l10n/meegotouch/duicontrolpanel-regionformat.qm",
-               "/usr/share/l10n/meegotouch/duicontrolpanel.qm",
-               "/usr/share/l10n/meegotouch/duihelp.qm",
-               "/usr/share/l10n/meegotouch/duihome.qm",
-               # duistatusindicatormenu-connectivityplugin.qm is still in the old directory
-               "/usr/share/l10n/dui/duistatusindicatormenu-connectivityplugin.qm",
-               "/usr/share/l10n/meegotouch/facebookplugin.qm",
-               "/usr/share/l10n/meegotouch/feeds.qm",
-               "/usr/share/l10n/meegotouch/feedsettings.qm",
-               "/usr/share/l10n/meegotouch/gallery.qm",
-               "/usr/share/l10n/meegotouch/googleplugin.qm",
-               "/usr/share/l10n/meegotouch/keychain-ui.qm",
-               "/usr/share/l10n/meegotouch/libdatacounterdialog.qm",
-               "/usr/share/l10n/meegotouch/libdialerui.qm",
-               "/usr/share/l10n/meegotouch/liblocationpicker.qm",
-               "/usr/share/l10n/meegotouch/libmcontentwidgets.qm",
-               "/usr/share/l10n/meegotouch/libmeegotouch.qm",
-               "/usr/share/l10n/meegotouch/libpresence0.qm",
-               "/usr/share/l10n/meegotouch/libwebupload.qm",
-               "/usr/share/l10n/meegotouch/libwebuploadpui.qm",
-               "/usr/share/l10n/meegotouch/me.qm",
-               "/usr/share/l10n/meegotouch/messaging-ui.qm",
-               "/usr/share/l10n/meegotouch/mms-contacts-actions.qm",
-               "/usr/share/l10n/meegotouch/mms-messaging-plugin.qm",
-               "/usr/share/l10n/meegotouch/mms-settings.qm",
-               "/usr/share/l10n/meegotouch/mms-share-plugin.qm",
-               "/usr/share/l10n/meegotouch/mstartup.qm",
-               "/usr/share/l10n/meegotouch/officetools.qm",
-               "/usr/share/l10n/meegotouch/oviplugin.qm",
-               "/usr/share/l10n/meegotouch/package-manager-ui.qm",
-               "/usr/share/l10n/meegotouch/share-ui.qm",
-               "/usr/share/l10n/meegotouch/signon-ui.qm",
-               "/usr/share/l10n/meegotouch/systemui-applets.qm",
-               "/usr/share/l10n/meegotouch/systemui.qm",
-               "/usr/share/l10n/meegotouch/transfer-ui.qm",
-               "/usr/share/l10n/meegotouch/weatherappletres.qm",
-               "/usr/share/l10n/meegotouch/webupload-engine.qm",
-               # demo only "/usr/share/l10n/meegotouch/widgetsgallery.qm",
-               "/usr/share/l10n/meegotouch/youtubeplugin.qm"
-               );
+    "/usr/share/l10n/meegotouch/accounts-ui.qm",
+    # demo only "/usr/share/l10n/meegotouch/animatedlayout.qm",
+    "/usr/share/l10n/meegotouch/backup.qm",
+    "/usr/share/l10n/meegotouch/call-history.qm",
+    "/usr/share/l10n/meegotouch/call-ui.qm",
+    # camera-ui is still in the old directory, will move soon
+    "/usr/share/l10n/dui/camera-ui.qm",
+    "/usr/share/l10n/meegotouch/celluid.qm",
+    "/usr/share/l10n/meegotouch/commhistoryd.qm",
+    "/usr/share/l10n/meegotouch/conn-dui-bluetooth.qm",
+    "/usr/share/l10n/meegotouch/conn-dui-cellular.qm",
+    "/usr/share/l10n/meegotouch/conn-dui-internet.qm",
+    "/usr/share/l10n/meegotouch/conn-dui-wlan.qm",
+    "/usr/share/l10n/meegotouch/contacts.qm",
+    "/usr/share/l10n/meegotouch/duicontrolpanel-callandsim.qm",
+    "/usr/share/l10n/meegotouch/duicontrolpanel-certificatesapplet.qm",
+    "/usr/share/l10n/meegotouch/duicontrolpanel-datetime.qm",
+    "/usr/share/l10n/meegotouch/duicontrolpanel-displaylanguage.qm",
+    "/usr/share/l10n/meegotouch/duicontrolpanel-keyboardlanguage.qm",
+    "/usr/share/l10n/meegotouch/duicontrolpanel-network.qm",
+    "/usr/share/l10n/meegotouch/duicontrolpanel-regionformat.qm",
+    "/usr/share/l10n/meegotouch/duicontrolpanel.qm",
+    "/usr/share/l10n/meegotouch/duihelp.qm",
+    "/usr/share/l10n/meegotouch/duihome.qm",
+    # duistatusindicatormenu-connectivityplugin.qm is still in the old directory
+    "/usr/share/l10n/dui/duistatusindicatormenu-connectivityplugin.qm",
+    "/usr/share/l10n/meegotouch/facebookplugin.qm",
+    "/usr/share/l10n/meegotouch/feeds.qm",
+    "/usr/share/l10n/meegotouch/feedsettings.qm",
+    "/usr/share/l10n/meegotouch/gallery.qm",
+    "/usr/share/l10n/meegotouch/googleplugin.qm",
+    "/usr/share/l10n/meegotouch/keychain-ui.qm",
+    "/usr/share/l10n/meegotouch/libdatacounterdialog.qm",
+    "/usr/share/l10n/meegotouch/libdialerui.qm",
+    "/usr/share/l10n/meegotouch/liblocationpicker.qm",
+    "/usr/share/l10n/meegotouch/libmcontentwidgets.qm",
+    "/usr/share/l10n/meegotouch/libmeegotouch.qm",
+    "/usr/share/l10n/meegotouch/libpresence0.qm",
+    "/usr/share/l10n/meegotouch/libwebupload.qm",
+    "/usr/share/l10n/meegotouch/libwebuploadpui.qm",
+    "/usr/share/l10n/meegotouch/me.qm",
+    "/usr/share/l10n/meegotouch/messaging-ui.qm",
+    "/usr/share/l10n/meegotouch/mms-contacts-actions.qm",
+    "/usr/share/l10n/meegotouch/mms-messaging-plugin.qm",
+    "/usr/share/l10n/meegotouch/mms-settings.qm",
+    "/usr/share/l10n/meegotouch/mms-share-plugin.qm",
+    "/usr/share/l10n/meegotouch/mstartup.qm",
+    "/usr/share/l10n/meegotouch/officetools.qm",
+    "/usr/share/l10n/meegotouch/oviplugin.qm",
+    "/usr/share/l10n/meegotouch/package-manager-ui.qm",
+    "/usr/share/l10n/meegotouch/share-ui.qm",
+    "/usr/share/l10n/meegotouch/signon-ui.qm",
+    "/usr/share/l10n/meegotouch/systemui-applets.qm",
+    "/usr/share/l10n/meegotouch/systemui.qm",
+    "/usr/share/l10n/meegotouch/transfer-ui.qm",
+    "/usr/share/l10n/meegotouch/weatherappletres.qm",
+    "/usr/share/l10n/meegotouch/webupload-engine.qm",
+    # demo only "/usr/share/l10n/meegotouch/widgetsgallery.qm",
+    "/usr/share/l10n/meegotouch/youtubeplugin.qm"
+    );
 
 #----------------------------------------------------------------------
 # subroutines:
 
 sub usage {
-  printf STDERR "Usage: photo-gallery [option] ...\n";
-  printf STDERR "-v, --verbose           print some progress messages to standard output.\n";
-  printf STDERR "    --version           display version and exit.\n";
-  printf STDERR "-h, --help              display this help and exit.\n";
-  printf STDERR "    --eedir             directory where the ee .qm files are.\n";
-  printf STDERR "    --handoffurl        URL of the “handoff” .ts files.\n";
-  printf STDERR "    --handoffdir        directory to save the “handoff” .ts files.\n";
-  printf STDERR "    --http-user         user name to access the “handoff” .ts files.\n";
-  printf STDERR "    --http-passwd       password to access the “handoff” .ts files.\n";
-  printf STDERR "                        or use .netrc to store user name and password.\n";
-  printf STDERR "    --skip-dowload      skip download.\n";
-  printf STDERR "    --output-dir        directory to write the output files to.\n";
-  printf STDERR "                        default is ./messageid-check-results/\n";
-  exit 1;
+    printf STDERR "Usage: photo-gallery [option] ...\n";
+    printf STDERR "-v, --verbose           print some progress messages to standard output.\n";
+    printf STDERR "    --version           display version and exit.\n";
+    printf STDERR "-h, --help              display this help and exit.\n";
+    printf STDERR "    --eedir             directory where the ee .qm files are.\n";
+    printf STDERR "    --handoffurl        URL of the “handoff” .ts files.\n";
+    printf STDERR "    --handoffdir        directory to save the “handoff” .ts files.\n";
+    printf STDERR "    --http-user         user name to access the “handoff” .ts files.\n";
+    printf STDERR "    --http-passwd       password to access the “handoff” .ts files.\n";
+    printf STDERR "                        or use .netrc to store user name and password.\n";
+    printf STDERR "    --skip-dowload      skip download.\n";
+    printf STDERR "    --output-dir        directory to write the output files to.\n";
+    printf STDERR "                        default is ./messageid-check-results/\n";
+    exit 1;
 }
 
 sub mySystem {
-  my ($command) = @_;
-  if ($OPT_VERBOSITY >= 1) {
-    print "executing: $command\n";
-  }
-  return system ($command);
+    my ($command) = @_;
+    if ($OPT_VERBOSITY >= 1) {
+        print "executing: $command\n";
+    }
+    return system ($command);
 }
 
 sub myExit {
-  my ($value) =@_;
-  chdir $original_wd || die "Can’t cd to $original_wd: $!\n";
-  exit ($value);
+    my ($value) =@_;
+    chdir $original_wd || die "Can’t cd to $original_wd: $!\n";
+    exit ($value);
 }
 
 sub myBasename {
-  my ($path) =@_;
-  $path =~ /\/([^\/]+)$/; # basename (strip directory)
-  return $1;
+    my ($path) =@_;
+    $path =~ /\/([^\/]+)$/; # basename (strip directory)
+    return $1;
 }
 
 sub writeHtml {
-  my ($htmlOutBody) =@_;
-  my $date = decode_utf8(`date`);
-  chomp($date);
-  my $title = "Results of messageid-check (version $version) run on " . $date;
+    my ($htmlOutBody) =@_;
+    my $date = decode_utf8(`date`);
+    chomp($date);
+    my $title = "Results of messageid-check (version $version) run on " . $date;
 
-  my $htmlOutHeader = "";
-  $htmlOutHeader .= <<"EOF";
+    my $htmlOutHeader = "";
+    $htmlOutHeader .= <<"EOF";
 <!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">
 <html>
 <head>
@@ -313,168 +313,167 @@ table.summary td {
 <h1>$title</h1>
 EOF
 
-  my $htmlOutFooter = "";
-  $htmlOutFooter .= <<"EOF";
+    my $htmlOutFooter = "";
+    $htmlOutFooter .= <<"EOF";
 </body>
 </html>
 EOF
 
-  my $htmlOutTotal = $htmlOutHeader . $htmlOutBody . $htmlOutFooter;
+    my $htmlOutTotal = $htmlOutHeader . $htmlOutBody . $htmlOutFooter;
 
-  open (HTML, ">$OPT_OUTPUTDIR/messageid-check-result.html") || die "can't open file $OPT_OUTPUTDIR/messageid-check-result.html: $!";
-  binmode HTML, ":utf8";
-  printf HTML "%s", $htmlOutTotal;
-  close (HTML);
+    open (HTML, ">$OPT_OUTPUTDIR/messageid-check-result.html") || die "can't open file $OPT_OUTPUTDIR/messageid-check-result.html: $!";
+    binmode HTML, ":utf8";
+    printf HTML "%s", $htmlOutTotal;
+    close (HTML);
 
 }
 
 sub download {
-  if (mySystem("fakeroot apt-get update")) {
-    printf (STDERR "“fakeroot apt-get update” didn’t work.\n");
-    exit (1);
-  }
-
-  for my $engineeringEnglishPackage (@engineeringEnglishPackages) {
-    if (mySystem("fakeroot apt-get -y --force-yes install $engineeringEnglishPackage")) {
-      printf (STDERR "“fakeroot apt-get -y --force-yes install $engineeringEnglishPackage” didn’t work.\n");
-      exit (1);
+    if (mySystem("fakeroot apt-get update")) {
+        printf (STDERR "“fakeroot apt-get update” didn’t work.\n");
+        exit (1);
     }
-    else {
-      printf (STDOUT "“fakeroot apt-get -y --force-yes install $engineeringEnglishPackage” OK.\n");
+
+    for my $engineeringEnglishPackage (@engineeringEnglishPackages) {
+        if (mySystem("fakeroot apt-get -y --force-yes install $engineeringEnglishPackage")) {
+            printf (STDERR "“fakeroot apt-get -y --force-yes install $engineeringEnglishPackage” didn’t work.\n");
+            exit (1);
+        }
+        else {
+            printf (STDOUT "“fakeroot apt-get -y --force-yes install $engineeringEnglishPackage” OK.\n");
+        }
     }
-  }
 
-  if (-d "$OPT_HANDOFF_DIR") {
-    rmtree ("$OPT_HANDOFF_DIR", {verbose => 1});
-  }
-  mkdir ("$OPT_HANDOFF_DIR") || die "Can’t mkdir $OPT_HANDOFF_DIR: $!\n";
-  chdir ("$OPT_HANDOFF_DIR") || die "Can’t cd to $OPT_HANDOFF_DIR: $!\n";
-
-  my $wgetCommand = "wget -nd -r -l1 ";
-  if ($OPT_HTTP_USER ne "") {
-    $wgetCommand .= "--http-user=$OPT_HTTP_USER ";
-  }
-  if ($OPT_HTTP_PASSWD ne "") {
-    $wgetCommand .= "--http-passwd=$OPT_HTTP_PASSWD ";
-  }
-  $wgetCommand .= "$OPT_HANDOFF_URL";
-
-  if (mySystem($wgetCommand)) {
-    printf (STDERR "“wget $OPT_HANDOFF_URL” didn’t work.\n");
-    myExit (1);
-  }
-
-  chdir $original_wd || die "Can’t cd to $original_wd: $!\n";
-
-  @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
-  if ($#handoffFiles < 0) {
-    printf (STDERR "download of handoff .ts files failed.\n");
-    myExit(1);
-  }
-
-  # Convert handoff files mac2unix:
-  for my $file (@handoffFiles) {
-    printf(STDOUT "mac2unix %s\n", $file);
-    my $fileContents = "";
-    open (TS, "<:encoding(UTF-8)", "$file") || die "Can’t open file $file: $!";
-    while(<TS>) {
-      $ARG =~ s/\x{FEFF}//; # remove BOM
-      $ARG =~ s/\r/\n/gi;   # replace returns with newlines
-      $fileContents .= $ARG;
+    if (-d "$OPT_HANDOFF_DIR") {
+        rmtree ("$OPT_HANDOFF_DIR", {verbose => 1});
     }
-    close (TS);
-    open (TS, ">:encoding(UTF-8)", "$file") || die "Can’t open file $file: $!";
-    printf(TS "%s", $fileContents);
-    close (TS);
-  }
+    mkdir ("$OPT_HANDOFF_DIR") || die "Can’t mkdir $OPT_HANDOFF_DIR: $!\n";
+    chdir ("$OPT_HANDOFF_DIR") || die "Can’t cd to $OPT_HANDOFF_DIR: $!\n";
+
+    my $wgetCommand = "wget -nd -r -l1 ";
+    if ($OPT_HTTP_USER ne "") {
+        $wgetCommand .= "--http-user=$OPT_HTTP_USER ";
+    }
+    if ($OPT_HTTP_PASSWD ne "") {
+        $wgetCommand .= "--http-passwd=$OPT_HTTP_PASSWD ";
+    }
+    $wgetCommand .= "$OPT_HANDOFF_URL";
+
+    if (mySystem($wgetCommand)) {
+        printf (STDERR "“wget $OPT_HANDOFF_URL” didn’t work.\n");
+        myExit (1);
+    }
+
+    chdir $original_wd || die "Can’t cd to $original_wd: $!\n";
+
+    @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
+    if ($#handoffFiles < 0) {
+        printf (STDERR "download of handoff .ts files failed.\n");
+        myExit(1);
+    }
+
+    # Convert handoff files mac2unix:
+    for my $file (@handoffFiles) {
+        printf(STDOUT "mac2unix %s\n", $file);
+        my $fileContents = "";
+        open (TS, "<:encoding(UTF-8)", "$file") || die "Can’t open file $file: $!";
+        while(<TS>) {
+            $ARG =~ s/\x{FEFF}//; # remove BOM
+            $ARG =~ s/\r/\n/gi;   # replace returns with newlines
+            $fileContents .= $ARG;
+        }
+        close (TS);
+        open (TS, ">:encoding(UTF-8)", "$file") || die "Can’t open file $file: $!";
+        printf(TS "%s", $fileContents);
+        close (TS);
+    }
 }
 
 sub readHandoffXmlTrees {
-  for my $handoffFile (glob ("$OPT_HANDOFF_DIR/*.ts")) {
-    my $xmlParser = new XML::Parser(Style => 'Tree', ProtocolEncoding => 'UTF-8');
-    $handoffXmlTrees{$handoffFile} = $xmlParser->parsefile($handoffFile);
-  }
+    for my $handoffFile (glob ("$OPT_HANDOFF_DIR/*.ts")) {
+        my $xmlParser = new XML::Parser(Style => 'Tree', ProtocolEncoding => 'UTF-8');
+        $handoffXmlTrees{$handoffFile} = $xmlParser->parsefile($handoffFile);
+    }
 }
 
 sub checkMessageIdFromSourceAgainstHandoff {
-  my ($engineeringEnglishFile, $eeMessageId, $htmlOutRef) = @_;
-  my $eeMessageIdIsInSpecCount = 0;
+    my ($engineeringEnglishFile, $eeMessageId, $htmlOutRef) = @_;
+    my $eeMessageIdIsInSpecCount = 0;
 
-  for my $handoffFile (@handoffFiles) {
-    my $tree = $handoffXmlTrees{$handoffFile};
-    my @tsTree = @{$tree->[1]};
-    # print Dumper(@tsTree);
-    my $extra_application_info = "";
-    my $extra_ui_spec_document = "";
-    my $extra_ts_date = "";
-    my $extra_ts_macroversion = "";
-    my @contextTree = ();
-    for (my $i = 0; $i < $#tsTree; ++$i) {
-    SWITCH: {
-        if ($tsTree[$i] eq "extra-application-info") {
-          $extra_application_info = $tsTree[$i+1][2];
-          last SWITCH;
-        }
-        if ($tsTree[$i] eq "extra-uispec-document") {
-          $extra_ui_spec_document = $tsTree[$i+1][2];
-          last SWITCH;
-        }
-        if ($tsTree[$i] eq "extra-ts-date") {
-          $extra_ts_date = $tsTree[$i+1][2];
-          last SWITCH;
-        }
-        if ($tsTree[$i] eq "extra-ts-macroversion") {
-          $extra_ts_macroversion = $tsTree[$i+1][2];
-          last SWITCH;
-        }
-        if ($tsTree[$i] eq "context") {
-          @contextTree = @{$tsTree[$i+1]};
-          last SWITCH;
-        }
-      }
-    }
-    for (my $i = 0; $i < $#contextTree; ++$i) {
-      if ($contextTree[$i] eq "message") {
-        my @messageTree = @{$contextTree[$i+1]};
-        my $messageId = $messageTree[0]{"id"};
-        my $source = "";
-        my $extracomment = "";
-        for (my $j = 0; $j < $#messageTree; ++$j) {
-        SWITCH: {
-            if ($messageTree[$j] eq "source") {
-              $source = $messageTree[$j+1][2];
-              last SWITCH;
+    for my $handoffFile (@handoffFiles) {
+        my $tree = $handoffXmlTrees{$handoffFile};
+        my @tsTree = @{$tree->[1]};
+        # print Dumper(@tsTree);
+        my $extra_application_info = "";
+        my $extra_ui_spec_document = "";
+        my $extra_ts_date = "";
+        my $extra_ts_macroversion = "";
+        my @contextTree = ();
+        for (my $i = 0; $i < $#tsTree; ++$i) {
+          SWITCH: {
+              if ($tsTree[$i] eq "extra-application-info") {
+                  $extra_application_info = $tsTree[$i+1][2];
+                  last SWITCH;
+              }
+              if ($tsTree[$i] eq "extra-uispec-document") {
+                  $extra_ui_spec_document = $tsTree[$i+1][2];
+                  last SWITCH;
+              }
+              if ($tsTree[$i] eq "extra-ts-date") {
+                  $extra_ts_date = $tsTree[$i+1][2];
+                  last SWITCH;
+              }
+              if ($tsTree[$i] eq "extra-ts-macroversion") {
+                  $extra_ts_macroversion = $tsTree[$i+1][2];
+                  last SWITCH;
+              }
+              if ($tsTree[$i] eq "context") {
+                  @contextTree = @{$tsTree[$i+1]};
+                  last SWITCH;
+              }
             }
-            if ($messageTree[$j] eq "extracomment") {
-              $extracomment = $messageTree[$j+1][2];
-              last SWITCH;
+        }
+        for (my $i = 0; $i < $#contextTree; ++$i) {
+            if ($contextTree[$i] eq "message") {
+                my @messageTree = @{$contextTree[$i+1]};
+                my $messageId = $messageTree[0]{"id"};
+                my $source = "";
+                my $extracomment = "";
+                for (my $j = 0; $j < $#messageTree; ++$j) {
+                  SWITCH: {
+                      if ($messageTree[$j] eq "source") {
+                          $source = $messageTree[$j+1][2];
+                          last SWITCH;
+                      }
+                      if ($messageTree[$j] eq "extracomment") {
+                          $extracomment = $messageTree[$j+1][2];
+                          last SWITCH;
+                      }
+                    }
+                }
+                if ($messageId eq $eeMessageId) {
+                    $eeMessageIdIsInSpecCount += 1;
+                    if ($OPT_VERBOSITY >= 1) {
+                        printf STDOUT "++++++OK: id “%s” spec “%s” (%s)\n",
+                        $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
+                    }
+                    ${$htmlOutRef} .= "<li>";
+                    ${$htmlOutRef} .= sprintf "%s found in spec “%s” (%s)",
+                    $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
+                    ${$htmlOutRef} .= "</li>\n";
+                }
             }
-          }
         }
-        if ($messageId eq $eeMessageId) {
-          $eeMessageIdIsInSpecCount += 1;
-          if ($OPT_VERBOSITY >= 1) {
-            printf STDOUT "++++++OK: id “%s” spec “%s” (%s)\n",
-              $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
-          }
-          ${$htmlOutRef} .= "<li>";
-          ${$htmlOutRef} .= sprintf "%s found in spec “%s” (%s)",
-            $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
-          ${$htmlOutRef} .= "</li>\n";
+    }
+    if ($eeMessageIdIsInSpecCount == 0) {
+        if ($OPT_VERBOSITY >= 1) {
+            printf STDOUT "***ERROR: id “%s” not found in spec\n", $eeMessageId;
         }
-      }
+        ${$htmlOutRef} .= "<li>";
+        ${$htmlOutRef} .= sprintf "%s", $eeMessageId;
+        ${$htmlOutRef} .= "</li>\n";
     }
-  }
-  if ($eeMessageIdIsInSpecCount == 0) {
-    if ($OPT_VERBOSITY >= 1) {
-      printf STDOUT "***ERROR: id “%s” not found in spec\n", $eeMessageId;
-    }
-    ${$htmlOutRef} .= "<li>";
-    ${$htmlOutRef} .= sprintf "%s", $eeMessageId;
-    ${$htmlOutRef} .= "</li>\n";
-  }
-
-  return $eeMessageIdIsInSpecCount;
+    return $eeMessageIdIsInSpecCount;
 }
 
 #----------------------------------------------------------------------
@@ -493,72 +492,72 @@ unless (GetOptions(\%opt,
                    'http-passwd=s',      \$OPT_HTTP_PASSWD,
                    'skip-download',      \$OPT_SKIP_DOWNLOAD,
                    'output-dir=s',       \$OPT_OUTPUTDIR,
-		  )) {
-  &usage ();
-  exit 1;
+        )) {
+    &usage ();
+    exit 1;
 }
 
 if (!defined $OPT_VERBOSITY) {
-  $OPT_VERBOSITY = 1;
+    $OPT_VERBOSITY = 1;
 }
 if (!defined $OPT_VERSION) {
-  $OPT_VERSION = 0;
+    $OPT_VERSION = 0;
 }
 if (!defined $OPT_HELP) {
-  $OPT_HELP = 0;
+    $OPT_HELP = 0;
 }
 if (!defined $OPT_EEDIR) {
-  $OPT_EEDIR="/usr/share/l10n/meegotouch";
+    $OPT_EEDIR="/usr/share/l10n/meegotouch";
 }
 if (!defined $OPT_HANDOFF_URL) {
-  $OPT_HANDOFF_URL="https://projects.maemo.org/svn/l10n/projects/harmattan/vendor/handoff/";
+    $OPT_HANDOFF_URL="https://projects.maemo.org/svn/l10n/projects/harmattan/vendor/handoff/";
 }
 if (!defined $OPT_HANDOFF_DIR) {
-  $OPT_HANDOFF_DIR="/tmp/handoff";
+    $OPT_HANDOFF_DIR="/tmp/handoff";
 }
 if (!defined $OPT_HTTP_USER) {
-  $OPT_HTTP_USER="";
+    $OPT_HTTP_USER="";
 }
 if (!defined $OPT_HTTP_PASSWD) {
-  $OPT_HTTP_PASSWD="";
+    $OPT_HTTP_PASSWD="";
 }
 if (!defined $OPT_SKIP_DOWNLOAD) {
-  $OPT_SKIP_DOWNLOAD = 0;
+    $OPT_SKIP_DOWNLOAD = 0;
 }
 if (!defined $OPT_OUTPUTDIR) {
-  $OPT_OUTPUTDIR = "$original_wd/messageid-check-results/";
+    $OPT_OUTPUTDIR = "$original_wd/messageid-check-results/";
 }
 
 if ($OPT_VERSION) {
-  print "messageid-check $version\n";
-  exit 0;
+    print "messageid-check $version\n";
+    exit 0;
 }
 
 if ($OPT_HELP) {
-  &usage ();
-  exit 0;
+    &usage ();
+    exit 0;
 }
 
 if ($OPT_VERBOSITY >=1) {
-  select (STDOUT);
-  $OUTPUT_AUTOFLUSH = 1;
-  select (STDERR);
-  $OUTPUT_AUTOFLUSH = 1;
+    select (STDOUT);
+    $OUTPUT_AUTOFLUSH = 1;
+    select (STDERR);
+    $OUTPUT_AUTOFLUSH = 1;
 }
 
 if (! -d $OPT_OUTPUTDIR) {
-  mySystem("mkdir -p $OPT_OUTPUTDIR");
-  if (! -d $OPT_OUTPUTDIR) {
-    printf STDERR "Cannot create output directory %s", $OPT_OUTPUTDIR;
-    myExit(1);
-  }
+    mySystem("mkdir -p $OPT_OUTPUTDIR");
+    if (! -d $OPT_OUTPUTDIR) {
+        printf STDERR "Cannot create output directory %s", $OPT_OUTPUTDIR;
+        myExit(1);
+    }
 }
 
 if (!$OPT_SKIP_DOWNLOAD) {
-  download();
+    download();
 }
 else {
-  @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
+    @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
 }
 
 readHandoffXmlTrees();
@@ -568,186 +567,186 @@ my $htmlOutResultsDetail = "";
 my $csvOut = "Invalid Message ID, Engineering English .qm file, Package, Package version, Package maintainer\n";
 
 for my $engineeringEnglishFile (@engineeringEnglishFiles) {
-  my $errorCount = 0;
-  my $okCount = 0;
-  my $missingEngineeringEnglishCount = 0;
-  my $debianPackage = qx(dpkg -S $engineeringEnglishFile);
-  $debianPackage =~ s/:.*$//;
-  chomp($debianPackage);
-  my $debianPackageMaintainerFull = "Unknown &lt;unknown\@unknown.com%gt;";
-  my $debianPackageMaintainerMail = "unknown\@unknown.com";
-  my $debianPackageVersion = "";
-  my $debianPackageDescription = "";
-  open (STATUS, "dpkg -s $debianPackage |") || die "Can’t open dpkg -s $debianPackage | : $!";
-  binmode STATUS, ":bytes";
-  while (<STATUS>) {
-    if ($ARG =~ /Maintainer:\s+(.+)$/) {
-      $debianPackageMaintainerFull = $1;
-      $debianPackageMaintainerFull =~ /<(.+)>/;
-      $debianPackageMaintainerMail = $1;
-      $debianPackageMaintainerFull =~ s/</&lt;/;
-      $debianPackageMaintainerFull =~ s/>/&gt;/;
+    my $errorCount = 0;
+    my $okCount = 0;
+    my $missingEngineeringEnglishCount = 0;
+    my $debianPackage = qx(dpkg -S $engineeringEnglishFile);
+    $debianPackage =~ s/:.*$//;
+    chomp($debianPackage);
+    my $debianPackageMaintainerFull = "Unknown &lt;unknown\@unknown.com%gt;";
+    my $debianPackageMaintainerMail = "unknown\@unknown.com";
+    my $debianPackageVersion = "";
+    my $debianPackageDescription = "";
+    open (STATUS, "dpkg -s $debianPackage |") || die "Can’t open dpkg -s $debianPackage | : $!";
+    binmode STATUS, ":bytes";
+    while (<STATUS>) {
+        if ($ARG =~ /Maintainer:\s+(.+)$/) {
+            $debianPackageMaintainerFull = $1;
+            $debianPackageMaintainerFull =~ /<(.+)>/;
+            $debianPackageMaintainerMail = $1;
+            $debianPackageMaintainerFull =~ s/</&lt;/;
+            $debianPackageMaintainerFull =~ s/>/&gt;/;
+        }
+        if ($ARG =~ /Version:\s+(.+)$/) {
+            $debianPackageVersion = $1;
+        }
+        if ($ARG =~ /Description:\s+(.+)$/) {
+            $debianPackageDescription = $1;
+        }
     }
-    if ($ARG =~ /Version:\s+(.+)$/) {
-      $debianPackageVersion = $1;
+    my $dpkgStatusDetails = qx(dpkg -s $debianPackage);
+    if ($OPT_VERBOSITY >= 1) {
+        printf STDOUT "------------------------------------------------------------\n";
+        printf STDOUT "checking “%s” from package “%s”\n", $engineeringEnglishFile, $debianPackage;
     }
-    if ($ARG =~ /Description:\s+(.+)$/) {
-      $debianPackageDescription = $1;
+
+    my $htmlOutOkList = "";
+    my $htmlOutErrorList = "";
+    my $htmlOutMissingEeList = "";
+
+    my $xmlParser = new XML::Parser(Style => 'Tree');
+    open (EEFILE, "lconvert -o - -i $engineeringEnglishFile |") || die "Can’t open file lconvert $engineeringEnglishFile | : $!";
+    my $tree = $xmlParser->parse(*EEFILE, ProtocolEncoding => 'UTF-8');
+    close(EEFILE);
+    my @contextTree = @{$tree->[1][4]};
+    # print Dumper(@contextTree);
+    for (my $i = 0; $i < $#contextTree; ++$i) {
+        if ($contextTree[$i] eq "message") {
+            my $source = $contextTree[$i+1][4][2];
+            my $translation = $contextTree[$i+1][8][2];
+            if ($translation eq "!! " || $translation eq "") {
+                ++$missingEngineeringEnglishCount;
+                ++$totalNumberOfIdsLackingEngineeringEnglish;
+                my $htmlOutMissingEeMessage = "";
+                $htmlOutMissingEeMessage .= "<li>";
+                $htmlOutMissingEeMessage .= sprintf "%s", $source;
+                $htmlOutMissingEeMessage .= "</li>\n";
+                $htmlOutMissingEeList .= $htmlOutMissingEeMessage;
+            }
+            my $htmlOutMessage = "";
+            my $eeMessageIdIsInSpecCount =
+                checkMessageIdFromSourceAgainstHandoff($engineeringEnglishFile, $source, \$htmlOutMessage);
+            if ($eeMessageIdIsInSpecCount >= 1) {
+                ++$okCount;
+                $htmlOutOkList .= $htmlOutMessage;
+            }
+            else {
+                ++$errorCount;
+                ++$totalNumberOfIdsNotFoundInSpec;
+                $htmlOutErrorList .= $htmlOutMessage;
+                $csvOut .= "$source,$engineeringEnglishFile,$debianPackage,$debianPackageVersion,$debianPackageMaintainerMail\n";
+            }
+        }
     }
-  }
-  my $dpkgStatusDetails = qx(dpkg -s $debianPackage);
-  if ($OPT_VERBOSITY >= 1) {
-    printf STDOUT "------------------------------------------------------------\n";
-    printf STDOUT "checking “%s” from package “%s”\n", $engineeringEnglishFile, $debianPackage;
-  }
-
-  my $htmlOutOkList = "";
-  my $htmlOutErrorList = "";
-  my $htmlOutMissingEeList = "";
-
-  my $xmlParser = new XML::Parser(Style => 'Tree');
-  open (EEFILE, "lconvert -o - -i $engineeringEnglishFile |") || die "Can’t open file lconvert $engineeringEnglishFile | : $!";
-  my $tree = $xmlParser->parse(*EEFILE, ProtocolEncoding => 'UTF-8');
-  close(EEFILE);
-  my @contextTree = @{$tree->[1][4]};
-  # print Dumper(@contextTree);
-  for (my $i = 0; $i < $#contextTree; ++$i) {
-    if ($contextTree[$i] eq "message") {
-      my $source = $contextTree[$i+1][4][2];
-      my $translation = $contextTree[$i+1][8][2];
-      if ($translation eq "!! " || $translation eq "") {
-          ++$missingEngineeringEnglishCount;
-          ++$totalNumberOfIdsLackingEngineeringEnglish;
-          my $htmlOutMissingEeMessage = "";
-          $htmlOutMissingEeMessage .= "<li>";
-          $htmlOutMissingEeMessage .= sprintf "%s", $source;
-          $htmlOutMissingEeMessage .= "</li>\n";
-          $htmlOutMissingEeList .= $htmlOutMissingEeMessage;
-      }
-      my $htmlOutMessage = "";
-      my $eeMessageIdIsInSpecCount =
-        checkMessageIdFromSourceAgainstHandoff($engineeringEnglishFile, $source, \$htmlOutMessage);
-      if ($eeMessageIdIsInSpecCount >= 1) {
-        ++$okCount;
-        $htmlOutOkList .= $htmlOutMessage;
-      }
-      else {
-        ++$errorCount;
-        ++$totalNumberOfIdsNotFoundInSpec;
-        $htmlOutErrorList .= $htmlOutMessage;
-        $csvOut .= "$source,$engineeringEnglishFile,$debianPackage,$debianPackageVersion,$debianPackageMaintainerMail\n";
-      }
-    }
-  }
-  $htmlOutResultsDetail .= <<"EOF";
-    <div class="eefile">
-    <div class="title">
-    <a href="#$engineeringEnglishFile-ref" name="$engineeringEnglishFile">
-    $engineeringEnglishFile
-    </a>
-    IDs in spec:
-    <span class="okcolor">
-    $okCount
-    </span>
-EOF
-
-  $class = $errorCount?  "errorcolor" : "okcolor";
-  $htmlOutResultsDetail .= <<"EOF";
-    Invalid IDs:
-    <span class="$class">
-    $errorCount
-    </span>
-EOF
-
-  $class = $missingEngineeringEnglishCount?  "errorcolor" : "okcolor";
-  $htmlOutResultsDetail .= <<"EOF";
-    IDs lacking EE:
-    <span class="$class">
-    $missingEngineeringEnglishCount
-    </span>
-    </div>
-EOF
-
-  $htmlOutResultsDetail .= <<"EOF";
-    <div class="package">
-    $debianPackage $debianPackageVersion
-    </div>
-    <div class="maintainer">
-    <a href="mailto:$debianPackageMaintainerMail">$debianPackageMaintainerFull</a>
-    </div>
-EOF
-
-  if ($errorCount > 0) {
     $htmlOutResultsDetail .= <<"EOF";
-    <div class="errorlist">
-    List of invalid IDs not found in the UI specs:
-    <ul>
-    $htmlOutErrorList
-    </ul>
-    </div>
+        <div class="eefile">
+        <div class="title">
+        <a href="#$engineeringEnglishFile-ref" name="$engineeringEnglishFile">
+        $engineeringEnglishFile
+        </a>
+        IDs in spec:
+        <span class="okcolor">
+        $okCount
+        </span>
 EOF
-  }
 
-  if ($missingEngineeringEnglishCount > 0) {
+    $class = $errorCount?  "errorcolor" : "okcolor";
     $htmlOutResultsDetail .= <<"EOF";
-    <div class="errorlist">
-    List of IDs where the engineering English is missing or empty:
-    <ul>
-    $htmlOutMissingEeList
-    </ul>
-    </div>
+        Invalid IDs:
+        <span class="$class">
+            $errorCount
+        </span>
 EOF
-  }
 
-  if ($okCount > 0) {
+    $class = $missingEngineeringEnglishCount?  "errorcolor" : "okcolor";
     $htmlOutResultsDetail .= <<"EOF";
-    <div class="oklist">
-    List of IDs found in the UI specs:
-    <ul>
-    $htmlOutOkList
-    </ul>
-    </div>
-    </div>
-EOF
-  }
-
-  # Table of Contents:
-  $class = ($errorCount == 0 && $missingEngineeringEnglishCount == 0) ? "okbgcolor" : "errorbgcolor";
-  my $engineeringEnglishFileBasename = myBasename($engineeringEnglishFile);
-  $htmlOutToc .= <<"EOF";
-    <tr>
-    <td class="$class">
-    $debianPackage
-    </td>
-    <td class="$class">
-    $debianPackageVersion
-    </td>
-    <td class="$class">
-    <a href="#$engineeringEnglishFile" name="$engineeringEnglishFile-ref">
-    $engineeringEnglishFileBasename
-    </a>:
-    </td>
+        IDs lacking EE:
+        <span class="$class">
+        $missingEngineeringEnglishCount
+        </span>
+        </div>
 EOF
 
-  $htmlOutToc .= <<"EOF";
-    <td class="okbgcolor">
-    $okCount
-    </td>
+    $htmlOutResultsDetail .= <<"EOF";
+        <div class="package">
+        $debianPackage $debianPackageVersion
+        </div>
+        <div class="maintainer">
+        <a href="mailto:$debianPackageMaintainerMail">$debianPackageMaintainerFull</a>
+        </div>
 EOF
 
-  $class = $errorCount? "errorbgcolor" : "okbgcolor";
-  $htmlOutToc .= <<"EOF";
-    <td class="$class">
-    $errorCount
-    </td>
+    if ($errorCount > 0) {
+        $htmlOutResultsDetail .= <<"EOF";
+            <div class="errorlist">
+            List of invalid IDs not found in the UI specs:
+            <ul>
+            $htmlOutErrorList
+            </ul>
+            </div>
+EOF
+    }
+
+    if ($missingEngineeringEnglishCount > 0) {
+        $htmlOutResultsDetail .= <<"EOF";
+            <div class="errorlist">
+            List of IDs where the engineering English is missing or empty:
+            <ul>
+            $htmlOutMissingEeList
+            </ul>
+            </div>
+EOF
+    }
+
+    if ($okCount > 0) {
+        $htmlOutResultsDetail .= <<"EOF";
+            <div class="oklist">
+            List of IDs found in the UI specs:
+            <ul>
+            $htmlOutOkList
+            </ul>
+            </div>
+            </div>
+EOF
+    }
+
+    # Table of Contents:
+    $class = ($errorCount == 0 && $missingEngineeringEnglishCount == 0) ? "okbgcolor" : "errorbgcolor";
+    my $engineeringEnglishFileBasename = myBasename($engineeringEnglishFile);
+    $htmlOutToc .= <<"EOF";
+        <tr>
+        <td class="$class">
+        $debianPackage
+        </td>
+        <td class="$class">
+        $debianPackageVersion
+        </td>
+        <td class="$class">
+        <a href="#$engineeringEnglishFile" name="$engineeringEnglishFile-ref">
+        $engineeringEnglishFileBasename
+        </a>:
+        </td>
 EOF
 
-  $class = $missingEngineeringEnglishCount? "errorbgcolor" : "okbgcolor";
-  $htmlOutToc .= <<"EOF";
-    <td class="$class">
-    $missingEngineeringEnglishCount
-    </td>
-    </tr>
+    $htmlOutToc .= <<"EOF";
+        <td class="okbgcolor">
+        $okCount
+        </td>
+EOF
+
+    $class = $errorCount? "errorbgcolor" : "okbgcolor";
+    $htmlOutToc .= <<"EOF";
+        <td class="$class">
+        $errorCount
+        </td>
+EOF
+
+    $class = $missingEngineeringEnglishCount? "errorbgcolor" : "okbgcolor";
+    $htmlOutToc .= <<"EOF";
+        <td class="$class">
+        $missingEngineeringEnglishCount
+        </td>
+        </tr>
 EOF
 
 }
@@ -850,11 +849,11 @@ $htmlOutIntroduction .= <<"EOF";
 EOF
 
 my $htmlOutBody =
-  $htmlOutIntroduction
-  . $htmlOutTocHeader
-  . $htmlOutToc
-  . $htmlOutResultsDetailHeader
-  . $htmlOutResultsDetail;
+    $htmlOutIntroduction
+    . $htmlOutTocHeader
+    . $htmlOutToc
+    . $htmlOutResultsDetailHeader
+    . $htmlOutResultsDetail;
 
 writeHtml($htmlOutBody);
 
