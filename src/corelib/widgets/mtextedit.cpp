@@ -1184,6 +1184,10 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         copy();
         event->accept();
         return;
+    } else if (event->matches(QKeySequence::SelectAll)) {
+        selectAll();
+        event->accept();
+        return;
     }
 
     if ((textInteractionFlags() & Qt::TextEditable) == 0) {
@@ -1196,10 +1200,6 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         return;
     } else if (event->matches(QKeySequence::Cut)) {
         cut();
-        event->accept();
-        return;
-    } else if (event->matches(QKeySequence::SelectAll)) {
-        selectAll();
         event->accept();
         return;
     }
@@ -1220,7 +1220,8 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
     if (wasSelecting == true) {
         QTextCursor positionCursor = textCursor();
         int position = positionCursor.selectionStart();
-        // setPosition() is required to get the style that would be applied when a text is inserted at the position + 1
+        // setPosition() is required to get the style that would be applied when a text is
+        // inserted at the position + 1
         positionCursor.setPosition(position + 1);
         format = positionCursor.charFormat();
 
