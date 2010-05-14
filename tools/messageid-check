@@ -578,7 +578,7 @@ for my $engineeringEnglishFile (@engineeringEnglishFiles) {
     my $debianPackageVersion = "";
     my $debianPackageDescription = "";
     open (STATUS, "dpkg -s $debianPackage |") || die "Can’t open dpkg -s $debianPackage | : $!";
-    binmode STATUS, ":bytes";
+    binmode STATUS, ":utf8";
     while (<STATUS>) {
         if ($ARG =~ /Maintainer:\s+(.+)$/) {
             $debianPackageMaintainerFull = $1;
