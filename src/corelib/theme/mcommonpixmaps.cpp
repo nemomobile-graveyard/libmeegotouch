@@ -169,9 +169,10 @@ void MCommonPixmaps::loadOne()
         }
 
         ImageResource *resource = daemon->findImageResource(id.imageId);
-        if(!resource)
+        if (resource)
+            resource->fetchPixmap(id.size);
+        else
             qFatal("MCommonPixmaps - Theme daemon could not find resource %s while loading most used pixmaps! Please re-install current theme or clear the preload.list file", qPrintable(id.imageId));
-        resource->fetchPixmap(id.size);
 
     } else {
         // the cpu usage was too high, so start start the timer with longer delay

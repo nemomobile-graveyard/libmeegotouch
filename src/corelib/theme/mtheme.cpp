@@ -369,15 +369,16 @@ const MStyle *MTheme::style(const char *styleClassName,
 
         // find proper library
         MLibrary *library = d->libraries->value(assemblyName, NULL);
-        if (!library) {
+        if (library) {
+            // use stylesheet from this library if there is one
+            if (library->stylesheet()) {
+                if (!sheets.contains(library->stylesheet())) {
+                    sheets.insert(0, library->stylesheet());
+                }
+            }
+        } else {
             mWarning("MTheme") << "Cannot find library. You must register your library to theming using M_LIBRARY macro." << '(' << assemblyName << ')';
             Q_ASSERT_X(library, "MTheme", "Failed to find library");
-        }
-        // use stylesheet from this library if there is one
-        if (library->stylesheet()) {
-            if (!sheets.contains(library->stylesheet())) {
-                sheets.insert(0, library->stylesheet());
-            }
         }
         mobj = mobj->superClass();
     } while (mobj->className() != QObject::staticMetaObject.className());
