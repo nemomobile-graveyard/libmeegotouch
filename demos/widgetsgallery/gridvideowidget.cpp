@@ -21,6 +21,8 @@
 
 #include "gridvideowidget.h"
 
+#ifdef HAVE_GSTREAMER
+
 GridVideoWidget::GridVideoWidget(QGraphicsItem *parent)
     : MVideoWidget(parent)
 {
@@ -53,3 +55,5 @@ void GridVideoWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
     MVideoWidget::contextMenuEvent(event);
     emit longPressed();
 }
+
+#endif

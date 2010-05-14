@@ -62,14 +62,15 @@ public:
 
         if( m.type == MediaType::Video )
         {
+#ifdef HAVE_GSTREAMER
             cell = MListCellCreatorHelper<GridVideoWidget>::createCell(recycler, "", "");
 
             GridVideoWidget *video = qobject_cast<GridVideoWidget*>(cell);
             video->open( m.path );
             video->setMuted(true);
             QObject::connect(video, SIGNAL(videoReady()), m_gridPage, SLOT(videoReady()));
-
             updateCell(index, cell);
+#endif
         } else {
             cell = MListCellCreatorHelper<GridImageWidget>::createCell(recycler, "", "");
             updateCell(index, cell);
@@ -96,6 +97,7 @@ void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) con
     if( data.canConvert<MediaType>() )
         m = data.value<MediaType>();
 
+#ifdef HAVE_GSTREAMER
     if( m.type == MediaType::Video ) {
         GridVideoWidget *video = qobject_cast<GridVideoWidget*>(cell);
 
@@ -113,6 +115,7 @@ void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) con
 
         return;
     }
+#endif
 
     if( m.type == MediaType::Image ) {
         GridImageWidget *imageWidget = qobject_cast<GridImageWidget*>(cell);
@@ -210,9 +213,11 @@ QString MGridPage::timedemoTitle()
 
 void MGridPage::videoReady()
 {
+#ifdef HAVE_GSTREAMER
     GridVideoWidget* video = qobject_cast<GridVideoWidget*>(sender());
     if( video )
         video->play();
+#endif
 }
 
 void MGridPage::itemClicked()
@@ -234,6 +239,7 @@ void MGridPage::itemClicked()
             return;
         }
 
+#ifdef HAVE_GSTREAMER
         //video clicked
         GridVideoWidget* video = qobject_cast<GridVideoWidget*>(sender());
         if( video ) {
@@ -248,6 +254,7 @@ void MGridPage::itemClicked()
 
             page->appear(DestroyWhenDismissed);
         }
+#endif
     }
 }
 

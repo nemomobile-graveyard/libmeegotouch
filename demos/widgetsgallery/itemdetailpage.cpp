@@ -30,7 +30,9 @@
 
 #include <MImageWidget>
 #include <MLabel>
+#ifdef HAVE_GSTREAMER
 #include <MVideoWidget>
+#endif
 #include <MButton>
 #include <MSlider>
 #include <MLinearLayoutPolicy>
@@ -40,6 +42,8 @@
 
 const int ANIMATION_TIME = 1000;
 const int INACTIVITY_TIMEOUT = 5000;
+
+#ifdef HAVE_GSTREAMER
 
 MyVideoWidget::MyVideoWidget(QGraphicsItem *parent)
     : MVideoWidget(parent)
@@ -90,8 +94,12 @@ void MyVideoOverlayToolbar::addItem(QGraphicsLayoutItem* button)
     portraitPolicy->addItem(button, row, column);
 }
 
-ItemDetailPage::ItemDetailPage()
-    : video(0),
+#endif
+
+ItemDetailPage::ItemDetailPage() :
+#ifdef HAVE_GSTREAMER
+      video(0),
+#endif
       slider(0),
       image(0),
       hideAnimation(0),
@@ -102,7 +110,9 @@ ItemDetailPage::ItemDetailPage()
 
 ItemDetailPage::~ItemDetailPage()
 {
+#ifdef HAVE_GSTREAMER
     delete video;
+#endif
     delete slider;
     delete image;
     
@@ -128,6 +138,7 @@ void ItemDetailPage::createContent()
     QGraphicsWidget *panel = centralWidget();
     layout = new MLayout(panel);
 
+#ifdef HAVE_GSTREAMER
     if( !videoId.isEmpty() ) {
         QFileInfo info(videoId);        
         setTitle(info.fileName());
@@ -236,6 +247,9 @@ void ItemDetailPage::createContent()
         
         relayout();
     } else if( !imageId.isEmpty() ) {
+#else
+    if( !imageId.isEmpty() ) {
+#endif
         policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
         policy->setSpacing(0.0);
         layout->setLandscapePolicy(policy);
@@ -303,6 +317,7 @@ void ItemDetailPage::resizeEvent(QGraphicsSceneResizeEvent *event)
 
 void ItemDetailPage::relayout()
 {
+#ifdef HAVE_GSTREAMER
     if( video ) {
         const QSizeF& s = size();
         QPoint cPos = QPoint(((s.width() / 2) - (cContainer->size().width()/2)),
@@ -318,6 +333,7 @@ void ItemDetailPage::relayout()
         
         video->setGeometry(QRectF(0,0,s.width(), s.height()));
     }
+#endif
 }
 
 void ItemDetailPage::showOverlay()
@@ -344,6 +360,7 @@ void ItemDetailPage::hideOverlay()
 
 void ItemDetailPage::videoReady()
 {
+#ifdef HAVE_GSTREAMER
     video->play();
     video->setMuted(false);
     video->setVolume(0.8);
@@ -365,6 +382,7 @@ void ItemDetailPage::videoReady()
 
     setAutoMarginsForComponentsEnabled(false);
     setComponentsDisplayMode(MApplicationPage::NavigationBar/*MApplicationPage::AllComponents*/, MApplicationPageModel::Hide);
+#endif
 }
 
 void ItemDetailPage::sliderPressed()
@@ -379,18 +397,23 @@ void ItemDetailPage::sliderReleased()
 
 void ItemDetailPage::videoSliderValueChanged(int newValue)
 {
+#ifdef HAVE_GSTREAMER
     if( video ) {
         video->seek(newValue);
     }
+#else
+    Q_UNUSED(newValue)
+#endif
 }
 
 void ItemDetailPage::buttonClicked()
 {
+#ifdef HAVE_GSTREAMER
     if( cContainer->opacity() == 1 )
         inactivityTimer.start();
     else
         showOverlay();
-    
+
     MyVideoWidget* v = qobject_cast<MyVideoWidget*>(sender());
     if( !v ) {
         MButton* b = qobject_cast<MButton*>(sender());
@@ -405,15 +428,18 @@ void ItemDetailPage::buttonClicked()
         } else 
             video->setFullscreen(!video->isFullscreen());
     }        
+#endif
 }
 
 
 void ItemDetailPage::updatePosition()
 {
+#ifdef HAVE_GSTREAMER
     if( video ) {
         slider->setValue(video->position());
         QTimer::singleShot(100, this, SLOT(updatePosition()));
     }
+#endif
 }
 
 void ItemDetailPage::rateNoneButtonClicked()

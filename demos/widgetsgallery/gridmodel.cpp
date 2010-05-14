@@ -90,12 +90,16 @@ void GridModel::createItems()
         MediaType m;
 
         if( videoTypes.contains( file.suffix() )) {
+#ifdef HAVE_GSTREAMER
             if( file.fileName().startsWith("thumb-") ) {
                 m.path = path;
                 m.type = MediaType::Video;
             } else {
                 continue;
             }
+#else
+            continue;
+#endif
         } else {
             m.type = MediaType::Image;
             m.path = path;

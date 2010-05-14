@@ -22,7 +22,9 @@
 
 #include <MContainer>
 #include <MImageWidget>
+#ifdef HAVE_GSTREAMER
 #include <MVideoWidget>
+#endif
 #include <MWidgetController>
 #include <MWidgetModel>
 #include <QTimer>
@@ -33,6 +35,8 @@ class MButton;
 class MLinearLayoutPolicy;
 class MGridLayoutPolicy;
 class QParallelAnimationGroup;
+
+#ifdef HAVE_GSTREAMER
 
 //video widget which emits clicked signal
 class MyVideoWidget : public MVideoWidget
@@ -67,6 +71,8 @@ public:
         MGridLayoutPolicy  *landscapePolicy;
         MGridLayoutPolicy  *portraitPolicy;
 };
+
+#endif
 
 //page for showing video or image in it's native size
 class ItemDetailPage  : public TimedemoPage
@@ -119,17 +125,19 @@ private:
     MLayout* layout;
     MLinearLayoutPolicy* policy;
 
-    MyVideoWidget* video;
     MSlider* slider;
     MButton* button;
     MImageWidget* image;
 
+#ifdef HAVE_GSTREAMER
+    MyVideoWidget* video;
     MyVideoOverlayToolbar* cContainer;
     MyVideoOverlayToolbar* lContainer;
     MyVideoOverlayToolbar* rContainer;
     MyVideoOverlayToolbar* tContainer;
     MyVideoOverlayToolbar* bContainer;
-    
+#endif
+
     QParallelAnimationGroup* hideAnimation;
     QParallelAnimationGroup* showAnimation;
 
