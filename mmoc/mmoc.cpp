@@ -2,11 +2,6 @@
 #include <QFileInfo>
 #include <QDir>
 #include <QProcess>
-#include <stdlib.h>
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-#include <string.h>
 #include <QtDebug>
 
 
@@ -19,6 +14,7 @@ void runModelMoc(const QString& header, const QStringList& arguments)
     QTextStream in(&inf);
 
     QProcess p;
+    p.setProcessChannelMode( QProcess::ForwardedChannels );
     p.start(QString(QT_MOC_PATH), arguments, QIODevice::WriteOnly);
     if(!p.waitForStarted()) {
         qFatal("mmoc: failed to run command '%s'", QT_MOC_PATH);
@@ -135,6 +131,7 @@ void runStyleMoc(const QString& header, const QStringList& arguments)
     QTextStream in(&inf);
 
     QProcess p;
+    p.setProcessChannelMode( QProcess::ForwardedChannels );
     p.start(QString(QT_MOC_PATH), arguments);
     if(!p.waitForStarted()) {
         qFatal("mmoc: failed to run command '%s'", QT_MOC_PATH);
@@ -163,6 +160,21 @@ void runStyleMoc(const QString& header, const QStringList& arguments)
     }
 }
 
+void runQtMoc(const QStringList& arguments)
+{
+    QProcess p;
+    p.setProcessChannelMode( QProcess::ForwardedChannels );
+    p.start(QString(QT_MOC_PATH), arguments);
+
+    if(!p.waitForStarted()) {
+        qFatal("mmoc: failed to run command '%s'", QT_MOC_PATH);
+    }
+
+    if(!p.waitForFinished()) {
+        qFatal("mmoc: failed to run command '%s'", QT_MOC_PATH);
+    }
+}
+
 enum HeaderType {
     Model,
     Style
@@ -173,12 +185,6 @@ int main(int argc, const char *argv[])
     HeaderType type=Model;
     QStringList commandLineParameters;
     QString filename;
-    char* mocArgv[argc+1];
-    int result;
-    pid_t pid;
-
-    mocArgv[0] = strdup(QT_MOC_PATH);
-    mocArgv[argc] = NULL;
 
     for(int i=1; i<argc; ++i) {
         if(QString(argv[i]).endsWith("style.h")) {
@@ -189,18 +195,11 @@ int main(int argc, const char *argv[])
             filename = argv[i];
         } else {
             commandLineParameters << QString(argv[i]);
-            mocArgv[i] = (char*) argv[i];
         }
     }
 
     if(filename.isEmpty()) {
-        if((pid = fork()) == 0) {
-            exit(execv(QT_MOC_PATH, mocArgv));
-        }
-        waitpid(pid, &result, 0);
-        if(result != 0) {
-            qFatal("mmoc: failed to run command '%s'", QT_MOC_PATH);
-        }
+        runQtMoc(commandLineParameters);
     } else {
         commandLineParameters << "-f" + filename;
         if(type == Model) {
@@ -210,7 +209,6 @@ int main(int argc, const char *argv[])
         }
     }
 
-    free(mocArgv[0]);
     return 0; //success
 }
 
