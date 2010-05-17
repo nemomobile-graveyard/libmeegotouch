@@ -31,16 +31,16 @@ void Ut_MServiceFwGen::cleanup()
 {
 }
 
-MApplication *Ut_MServiceFwGen::buildApp()
+QCoreApplication *Ut_MServiceFwGen::buildApp()
 {
-    MApplication *retVal = 0;
+    QCoreApplication *retVal = 0;
 
     QChar sep(' ');
     char *argv[MAX_PARAMS];
     int count=1;
     argv[0]=(char *)"ut_mservicefwgen";
 
-    retVal = new MApplication(count, argv);
+    retVal = new QCoreApplication(count, argv);
 
     return retVal;
 }

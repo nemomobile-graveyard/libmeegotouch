@@ -909,8 +909,10 @@ void processAdaptorCppFile()
 "            XSync(QX11Info::display(), False);\n"\
 "        }\n"\
 "\n"\
-"        qWarning() << \"quitting - bye bye\";\n"\
-"        QTimer::singleShot( 0, QApplication::instance(), SLOT( quit() ) );\n"\
+"        MApplicationWindow *appWindow = MApplication::activeApplicationWindow();\n"\
+"        if ( appWindow != 0 ) {\n"\
+"            appWindow->close();\n"\
+"        }\n"\
 "    } else {\n"\
 "        qWarning() << \"backService is not registered: not going back\";\n"\
 "    }\n"\

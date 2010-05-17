@@ -21,7 +21,7 @@
 #define UT_MSERVICEFWGEN_H
 
 #include <QtTest/QtTest>
-#include <MApplication>
+#include <QCoreApplication>
 #include <QObject>
 
 #define MAX_PARAMS 10
@@ -32,8 +32,8 @@ class Ut_MServiceFwGen: public QObject
 public:
 
 private:
-    MApplication *app;
-    MApplication *buildApp();
+    QCoreApplication *app;
+    QCoreApplication *buildApp();
 
 private slots:
     void init();
