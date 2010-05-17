@@ -64,12 +64,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
             if (widget->isWindow()) {
                 if (QDialog *dialog = qobject_cast<QDialog *>(widget)) {
                     QtMaemo6DialogProxy *dialogProxy = new QtMaemo6DialogProxy(dialog, m_style->m_windowDecoration);
-
                     dialogProxy->setTitle(widget->windowTitle());
-
-                    const QPixmap *closePixmap = MTheme::pixmap("Icon-close", QSize(28, 28));
-                    dialogProxy->setPixmap(*closePixmap);
-
                     dialogProxy->showFastMaximized();
                     QtMaemo6StylePrivate::drawWindowBackground(widget);
                     return true;

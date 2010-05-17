@@ -919,23 +919,6 @@ void QtMaemo6Style::polish(QWidget *widget)
         }
     }
 
-    if (QtMaemo6ClickLabel *lbl = qobject_cast<QtMaemo6ClickLabel *>(widget)) {
-        int navigationBarHeight = 0;
-        QWidget * parent = qobject_cast<QWidget *>( widget->parent() );
-        if ( parent ) {
-            navigationBarHeight = parent->height() - 2 * parent->layout()->margin();
-        }
-        QSize navigationBarSize = QSize( navigationBarHeight, navigationBarHeight );
-        if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Close") {
-            const QPixmap *closePixmap = MTheme::pixmapCopy("Icon-close", navigationBarSize);
-            lbl->setPixmap(*closePixmap);
-        }
-        if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Home") {
-            const QPixmap *closePixmap = MTheme::pixmapCopy("Icon-home", navigationBarSize);
-            lbl->setPixmap(*closePixmap);
-        }
-    }
-
     if (QtMaemo6TitleBar *titleBar = qobject_cast<QtMaemo6TitleBar *>(widget)) {
             // apply properties of the navigation bar style
             const MNavigationBarStyle *style =
