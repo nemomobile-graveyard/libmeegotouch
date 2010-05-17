@@ -158,6 +158,7 @@ public:
     void _q_exitAppView();
 #endif
     void _q_updatePageExposedContentRect();
+    void _q_enablePaintUpdates();
 };
 
 #endif

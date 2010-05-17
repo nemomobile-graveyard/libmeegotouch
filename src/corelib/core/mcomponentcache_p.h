@@ -44,7 +44,6 @@ public:
 
     QGLWidget* createNewGlWidget(const QGLFormat* format = NULL);
 
-private:
     static const int ARGV_LIMIT;
     MApplication *mApplicationInstance;
     MApplicationWindow *mApplicationWindowInstance;

@@ -58,10 +58,7 @@ MComponentCachePrivate::~MComponentCachePrivate()
     if (initialArgv != 0)
         delete[] initialArgv; 
 
-    while (!shareWidgetsCache.isEmpty()) {
-        FormatWidgetPair pair = shareWidgetsCache.takeFirst();
-        delete pair.second;
-    }
+    MComponentCache::cleanupCache();
 }
 
 bool MComponentCachePrivate::populating()
@@ -267,6 +264,13 @@ void MComponentCache::populateForMApplication()
 bool MComponentCache::populating()
 {
     return d_ptr->populating();
+}
+
+void MComponentCache::cleanupCache() {
+    while (!d_ptr->shareWidgetsCache.isEmpty()) {
+        MComponentCachePrivate::FormatWidgetPair pair = d_ptr->shareWidgetsCache.takeFirst();
+        delete pair.second;
+    }
 }
 
 MApplication* MComponentCache::mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service)

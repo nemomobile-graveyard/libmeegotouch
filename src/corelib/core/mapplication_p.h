@@ -74,6 +74,7 @@ private:
 #endif
     friend class MApplicationServicePrivate;
     friend class MWindow;
+    friend class MWindowPrivate;
 };
 
 

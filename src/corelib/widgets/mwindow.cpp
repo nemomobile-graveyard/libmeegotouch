@@ -70,6 +70,10 @@ MWindowPrivate::MWindowPrivate() :
     closeOnLazyShutdown(false),
     onDisplay(false),
     onDisplaySet(false),
+#ifdef HAVE_GCONF
+    minimizedSoftwareSwitchItem("/meegotouch/debug/minimized_software_switch"),
+#endif
+    minimizedSoftwareSwitch(false),
     q_ptr(NULL)
 {
 #ifndef Q_WS_X11
@@ -91,6 +95,11 @@ MWindowPrivate::~MWindowPrivate()
 void MWindowPrivate::init()
 {
     Q_Q(MWindow);
+
+#ifdef HAVE_GCONF
+    minimizedSoftwareSwitch = minimizedSoftwareSwitchItem.value().toBool();
+    QObject::connect(&minimizedSoftwareSwitchItem, SIGNAL(valueChanged()), q_ptr, SLOT(_q_updateMinimizedSoftwareSwitch()));
+#endif
 
 #ifdef Q_WS_X11
     // We do window decorations ourselves. Set env variable accordingly for
@@ -153,7 +162,7 @@ void MWindowPrivate::initSoftwareViewport()
 {
     Q_Q(MWindow);
 
-    mWarning("MWindow") << "Switching to software rendering";
+    mDebug("MWindow") << "Switching to software rendering";
 
 #ifdef M_USE_OPENGL
     MGLES2Renderer::activate(NULL);
@@ -172,7 +181,7 @@ void MWindowPrivate::initGLViewport()
 #ifdef QT_OPENGL_LIB
     Q_Q(MWindow);
 
-    mWarning("MWindow") << "Window restored, switching to GL rendering";
+    mDebug("MWindow") << "Window restored, switching to GL rendering";
 
     bool translucent = q->testAttribute(Qt::WA_TranslucentBackground);
 
@@ -428,21 +437,90 @@ void MWindowPrivate::propagateMOnDisplayChangeEventToScene(MOnDisplayChangeEvent
 
 }
 
-#ifdef Q_WS_X11
-void MWindowPrivate::setX11PrestartProperty(bool set)
+void MWindowPrivate::_q_enablePaintUpdates()
 {
     Q_Q(MWindow);
-    Display *dpy  = QX11Info::display();
-    if (dpy) {
-        Atom prestartAtom = XInternAtom(dpy, "_MEEGOTOUCH_PRESTARTED", False);
-        unsigned char data=1;
-        if (set) {
-            XChangeProperty(dpy, q->winId(), prestartAtom, 
-                            XA_CARDINAL, 8, PropModeAppend, &data, 1);
-        } else {
-            XDeleteProperty(dpy, q->winId(), prestartAtom);
+
+    q->setUpdatesEnabled(true);
+}
+
+void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
+{
+#ifdef QT_OPENGL_LIB
+    Q_Q(MWindow);
+
+    if (!minimizedSoftwareSwitch || MApplication::softwareRendering())
+        return;
+
+    if (q->windowState() == Qt::WindowMinimized) {
+        q->setUpdatesEnabled(false);
+        initSoftwareViewport();
+        // no timer here. otherwise updates are not properly enabled again
+        q->setUpdatesEnabled(true);
+        MComponentCache::cleanupCache();
+    } else if (event->oldState() == Qt::WindowMinimized && q->windowState() != Qt::WindowMinimized) {
+        q->setUpdatesEnabled(false);
+        initGLViewport();
+        QTimer::singleShot(700, q, SLOT(_q_enablePaintUpdates()));
+    }
+#else
+    Q_UNUSED(event);
+#endif
+}
+
+void MWindowPrivate::closeEvent(QCloseEvent *event)
+{
+    Q_Q(MWindow);
+
+    // Call close event manually here, because we want to check if the
+    // event got ignored before executing lazy shutdown routines.
+    q->closeEvent(static_cast<QCloseEvent *>(event));
+
+    if (!event->isAccepted()) {
+        return;
+    }
+
+    isLogicallyClosed = true;
+
+    if (MApplication::prestartMode() == M::LazyShutdownMultiWindow ||
+        MApplication::prestartMode() == M::LazyShutdown) {
+
+#ifdef Q_WS_X11
+        MApplicationPrivate::removeWindowFromSwitcher(q->winId(), true);
+#endif
+
+        // Check if all windows are closed. If so,
+        // return to the prestarted state.
+        bool allWindowsLogicallyClosed = true;
+        Q_FOREACH(MWindow * win, MApplication::windows()) {
+            if (!win->d_ptr->isLogicallyClosed) {
+                allWindowsLogicallyClosed = false;
+            }
+        }
+
+        if (allWindowsLogicallyClosed) {
+            MApplication::setPrestarted(true);
+        }
+
+        if (!q->closeOnLazyShutdown()) {
+            q->hide();
+            q->lower();
+            event->ignore();
+            return;
         }
     }
+
+#ifdef M_USE_OPENGL
+    if (!MApplication::softwareRendering()) {
+        MGLES2Renderer::destroy(glWidget);
+    }
+#endif
+
+}
+
+#ifdef HAVE_GCONF
+void MWindowPrivate::_q_updateMinimizedSoftwareSwitch() {
+    minimizedSoftwareSwitch = minimizedSoftwareSwitchItem.value().toBool();
 }
 #endif
 
@@ -520,8 +598,12 @@ void MWindow::setTranslucentBackground(bool enable)
 
     if (MApplication::softwareRendering() || MApplication::isPrestarted())
         d->initSoftwareViewport();
-    else
+    else {
         d->initGLViewport();
+    }
+
+    if (MApplication::softwareRendering())
+        viewport()->setAutoFillBackground(!enable);
 }
 
 #ifdef Q_WS_X11
@@ -570,6 +652,22 @@ qreal MWindowPrivate::getX11Property(const char *propertyName) const
     if (status == Success)
         XFree(data.asUChar);
     return level;
+}
+
+void MWindowPrivate::setX11PrestartProperty(bool set)
+{
+    Q_Q(MWindow);
+    Display *dpy  = QX11Info::display();
+    if (dpy) {
+        Atom prestartAtom = XInternAtom(dpy, "_MEEGOTOUCH_PRESTARTED", False);
+        unsigned char data=1;
+        if (set) {
+            XChangeProperty(dpy, q->winId(), prestartAtom,
+                            XA_CARDINAL, 8, PropModeAppend, &data, 1);
+        } else {
+            XDeleteProperty(dpy, q->winId(), prestartAtom);
+        }
+    }
 }
 #endif
 
@@ -866,59 +964,13 @@ bool MWindow::event(QEvent *event)
 
     if (event->type() == QEvent::Show || event->type() == QEvent::WindowActivate) {
         MComponentData::setActiveWindow(this);
-    }
-
-    if (event->type() == QEvent::Close) {
-
-        // Call close event manually here, because we want to check if the
-        // event got ignored before executing lazy shutdown routines.
-        closeEvent(static_cast<QCloseEvent *>(event));
-
-        if (!event->isAccepted()) {
-            return true;
-        }
-
-        d->isLogicallyClosed = true;
-
-        if (MApplication::prestartMode() == M::LazyShutdownMultiWindow ||
-            MApplication::prestartMode() == M::LazyShutdown) {
-
-#ifdef Q_WS_X11
-            MApplicationPrivate::removeWindowFromSwitcher(winId(), true);
-#endif
-
-            // Check if all windows are closed. If so,
-            // return to the prestarted state.
-            bool allWindowsLogicallyClosed = true;
-            Q_FOREACH(MWindow * win, MApplication::windows()) {
-                if (!win->d_ptr->isLogicallyClosed) {
-                    allWindowsLogicallyClosed = false;
-                }
-            }
-
-            if (allWindowsLogicallyClosed) {
-                MApplication::setPrestarted(true);
-            }
-
-            if (!closeOnLazyShutdown()) {
-                hide();
-                lower();
-                event->ignore();
-                return true;
-            }
-        }
-
-#ifdef M_USE_OPENGL
-        if (!MApplication::softwareRendering()) {
-            MGLES2Renderer::destroy(d->glWidget);
-        }
-#endif
-
+    } else if (event->type() == QEvent::WindowStateChange) {
+        d->windowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
+    } else if (event->type() == QEvent::Close) {
+        d->closeEvent(static_cast<QCloseEvent *>(event));
         // closeEvent() already called.
         return true;
-    }
-
-    if (QEvent::KeyPress == event->type()) {
+    } else if (QEvent::KeyPress == event->type()) {
         bool updateNeeded = false;
 
         //SIMULATION OF ROTATION FOR DEVELOPMENT PURPOSES
@@ -1072,7 +1124,7 @@ void MWindow::setVisible(bool visible)
                     this, SLOT(_q_onPixmapRequestsFinished()));
             return;            
         } else {
-            if (!MApplication::softwareRendering() && d->glWidget == 0) {
+            if (windowState() != Qt::WindowMinimized && !MApplication::softwareRendering() && d->glWidget == 0) {
                 d->initGLViewport();
             }
             d->isLogicallyClosed = false;

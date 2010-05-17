@@ -25,6 +25,11 @@
 
 #include <mscenemanager.h>
 
+#ifdef HAVE_GCONF
+#include <mgconfitem.h>
+#endif
+
+
 class MScene;
 class MOnDisplayChangeEvent;
 class MStatusBar;
@@ -42,6 +47,10 @@ public:
     void handleWindowStateChangeEvent(QWindowStateChangeEvent *event);
     M::Orientation orientation(M::OrientationAngle angle) const;
     bool debugShortcutModifiersPresent(Qt::KeyboardModifiers modifiers) const;
+    void windowStateChangeEvent(QWindowStateChangeEvent *event);
+    void closeEvent(QCloseEvent *event);
+    void setVisible(bool visible);
+    void _q_enablePaintUpdates();
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();
@@ -76,11 +85,16 @@ public:
     void initGLViewport();
     void initSoftwareViewport();
     void configureViewport();
-
     void playScreenshotEffect();
 
     bool onDisplay;
     bool onDisplaySet;
+
+#ifdef HAVE_GCONF
+    void _q_updateMinimizedSoftwareSwitch();
+    MGConfItem minimizedSoftwareSwitchItem;
+#endif
+    bool minimizedSoftwareSwitch;
 
 protected:
     MWindow *q_ptr;

@@ -69,8 +69,6 @@ public:
     bool m_fullscreen;
 
     MGstVideo* m_gstVideo;
-    QGLShaderProgram* yuv1;
-    QGLShaderProgram* yuv3;
 };
 
 #endif

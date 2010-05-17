@@ -39,9 +39,7 @@ MVideoWidgetViewPrivate::MVideoWidgetViewPrivate()
         scaleOffsets(NULL),
         m_needFillBg(false),
         m_fullscreen(false),
-        m_gstVideo(new MGstVideo()),
-	yuv1(NULL),
-	yuv3(NULL)
+        m_gstVideo(new MGstVideo())
 {
     m_textures[0] = 0;
     m_textures[1] = 0;
@@ -49,14 +47,7 @@ MVideoWidgetViewPrivate::MVideoWidgetViewPrivate()
 
     qRegisterMetaType< QList<const char*> >("QList<const char*>");
 #ifdef M_USE_OPENGL
-    MGLES2Renderer* r = MGLES2Renderer::instance();
-    if( r ) {
-        glGenTextures(3, &m_textures[0]);
-        yuv1 = r->getShaderProgram(M_SHADER_SOURCE_DIR "/yuv1.frag" );
-        yuv3 = r->getShaderProgram(M_SHADER_SOURCE_DIR "/yuv3.frag");
-    }
-    else
-        mWarning("MVideoWidgetViewPrivate::MVideoWidgetViewPrivate()") << "MGLES2Renderer not ready yet, cannot init shaders.";
+    glGenTextures(3, &m_textures[0]);
 #endif
 }
 
@@ -493,10 +484,10 @@ void MVideoWidgetView::drawContents(QPainter* painter, const QStyleOptionGraphic
             bool yuv = d->m_gstVideo->frameDataFormat() == MGstVideo::YUV;
             if( yuv ) {
                 if( d->m_useSingleYuvTexture ) {
-                    r->begin(painter, d->yuv1);
+                    r->begin(painter, r->getShaderProgram(M_SHADER_SOURCE_DIR "/yuv1.frag" ));
                     r->bindTexture(d->m_textures[0], QSize(-1,-1), 0, "textureYUV");
                 } else {
-                    r->begin(painter, d->yuv3);
+                    r->begin(painter, r->getShaderProgram(M_SHADER_SOURCE_DIR "/yuv3.frag"));
                     r->bindTexture(d->m_textures[0], QSize(-1,-1), 0, "textureY");
                     r->bindTexture(d->m_textures[1], QSize(-1,-1), 1, "textureU");
                     r->bindTexture(d->m_textures[2], QSize(-1,-1), 2, "textureV");
@@ -515,6 +506,8 @@ void MVideoWidgetView::drawContents(QPainter* painter, const QStyleOptionGraphic
         }
     } else {
         painter->fillRect(boundingRect(), style()->colorKey());
+        if( d->m_gstVideo->winId() != MApplication::activeApplicationWindow()->viewport()->winId() && MApplication::activeApplicationWindow()->viewport()->winId() != 0 )
+            d->m_gstVideo->setWinId(MApplication::activeApplicationWindow()->viewport()->winId());
         d->m_gstVideo->expose();
     }
 }

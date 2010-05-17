@@ -83,6 +83,8 @@ public:
     //! Returns true if cache is currently being populated, otherwise false.
     static bool populating();
 
+    static void cleanupCache();
+
 protected:
 
     static MComponentCachePrivate* const d_ptr;

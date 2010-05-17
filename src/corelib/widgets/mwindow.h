@@ -527,6 +527,10 @@ private:
     Q_DISABLE_COPY(MWindow)
     Q_DECLARE_PRIVATE(MWindow)
     Q_PRIVATE_SLOT(d_func(), void _q_onPixmapRequestsFinished())
+    Q_PRIVATE_SLOT(d_func(), void _q_enablePaintUpdates())
+#ifdef HAVE_GCONF
+    Q_PRIVATE_SLOT(d_func(), void _q_updateMinimizedSoftwareSwitch())
+#endif
 
     friend class MApplicationPrivate;
 #ifdef UNIT_TEST
