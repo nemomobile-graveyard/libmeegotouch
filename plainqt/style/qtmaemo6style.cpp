@@ -1080,7 +1080,7 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
         if (qobject_cast<const QtMaemo6DialogTitle *>(widget)) {
             const MWidgetStyle *style =
                 static_cast<const MWidgetStyle *>(
-                    QtMaemo6StylePrivate::mStyle(option->state, "MWidgetStyle", "MDialogTitleBar"));
+                    QtMaemo6StylePrivate::mStyle(option->state, "MDialogStyle", "MDialogTitleBar"));
             // draw widget background
             d->drawWidgetBackground(painter, option, widget->rect(), style);
 

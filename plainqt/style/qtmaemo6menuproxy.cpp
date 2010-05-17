@@ -62,6 +62,7 @@ QtMaemo6MenuProxy::QtMaemo6MenuProxy(QMenuBar *mb, QWidget *parent)
     : QtMaemo6Window(NULL, parent),
       m_menuBar(mb)
 {
+    setObjectName("Qt_Maemo6_MenuProxy");
     //must be set, to activate the compositing
     setAttribute(Qt::WA_TranslucentBackground);
     QPalette palette;

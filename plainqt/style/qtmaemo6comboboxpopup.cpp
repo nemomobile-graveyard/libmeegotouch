@@ -37,6 +37,7 @@ QtMaemo6ComboBoxPopup::QtMaemo6ComboBoxPopup(QComboBox *comboBox, QWidget *paren
     m_listView(NULL),
     m_lineEdit(NULL)
 {
+    setObjectName("Qt_Maemo6_ComboBox");
     m_listView = new QListView();
     if(comboBox)
         m_listView->setModel(comboBox->model());

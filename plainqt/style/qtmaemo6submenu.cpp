@@ -25,6 +25,7 @@
 
 QtMaemo6SubMenu::QtMaemo6SubMenu(QMenu *m, QWidget *parent) : QListWidget(parent)
 {
+    setObjectName("Qt_Maemo6_SubMenu");
     if(m)
         fillListWidget(m);
 
