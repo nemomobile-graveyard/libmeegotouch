@@ -86,7 +86,7 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , menu(new MApplicationMenu)
     , isMenuOpen(false)
 #ifdef HAVE_CONTEXTSUBSCRIBER
-    , callStatusProperty("com.nokia.policy.call")
+    , callStatusProperty("Phone.Call")
 #endif
     , showingStatusBar(false)
     , showingDockWidget(false)
