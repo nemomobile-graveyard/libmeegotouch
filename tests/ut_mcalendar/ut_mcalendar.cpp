@@ -1333,7 +1333,11 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%Z" // Time-zone name, or no characters if no time zone is determinable
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM == 4 && U_ICU_VERSION_PATCHLEVEL_NUM >= 1)
+            << "(Suomi)";
+#else
             << "Suomi";
+#endif
 
     // ************************************************************
     QTest::newRow("en_GB %a")
@@ -1810,7 +1814,11 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "de_DE"
             << "%Z" // Time-zone name, or no characters if no time zone is determinable
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM == 4 && U_ICU_VERSION_PATCHLEVEL_NUM >= 1)
+            << "(Finnland)";
+#else
             << "Finnland";
+#endif
     // ************************************************************
     QTest::newRow("fi_FI %R %Z")
             << MLocale::GregorianCalendar
@@ -1822,7 +1830,11 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%R %Z"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM == 4 && U_ICU_VERSION_PATCHLEVEL_NUM >= 1)
+            << "12.25 (Suomi)";
+#else
             << "12.25 Suomi";
+#endif
     QTest::newRow("en_GB %R %Z")
             << MLocale::GregorianCalendar
             << 2008
@@ -1834,6 +1846,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << "en_GB"
             << "%R %Z"
             << "12:25 Finland Time";
+
     QTest::newRow("de_DE %R %Z")
             << MLocale::GregorianCalendar
             << 2008
@@ -1844,7 +1857,11 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "de_DE"
             << "%R %Z"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM == 4 && U_ICU_VERSION_PATCHLEVEL_NUM >= 1)
+            << "12:25 (Finnland)";
+#else
             << "12:25 Finnland";
+#endif
 }
 
 void Ut_MCalendar::testPosixFormatPattern()
