@@ -21,4 +21,3 @@ HEADERS += apscanner.h \
 # libm first:
 INCLUDEPATH += ../../src/include
 QMAKE_LIBDIR += ../../lib/
-LIBS += -lmeegotouch
