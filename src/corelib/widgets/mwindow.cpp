@@ -364,6 +364,12 @@ void MWindow::setTranslucentBackground(bool enable)
             d->glWidget->setPalette(palette);
         } else {
             d->glWidget = MComponentCache::glWidget();
+
+            if (d->glWidget->isValid() == false) {
+                qCritical("Could not create a valid QGLWidget, quitting.");
+                exit(EXIT_FAILURE);
+            }
+
             setViewport(d->glWidget);
         }
 #ifdef M_USE_OPENGL
