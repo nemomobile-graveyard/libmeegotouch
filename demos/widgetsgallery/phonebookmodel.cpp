@@ -113,7 +113,7 @@ int PhoneBookModel::groupCount() const
 
 int PhoneBookModel::rowCountInGroup(int group) const
 {
-    if (group >= 0)
+    if (group < groupsSize.count() && group >= 0)
         return groupsSize[group];
     else if (group == -1)
         return phoneBookEntries.count();
@@ -222,6 +222,11 @@ void PhoneBookModel::thumbnailWasLoaded(const QModelIndex &index)
     emit dataChanged(index, index);
 }
 
+void PhoneBookModel::updateData(const QModelIndex &first, const QModelIndex &last)
+{
+    emit dataChanged(first, last);
+}
+
 PhoneBookImageLoader::PhoneBookImageLoader()
 {
 
@@ -325,7 +330,14 @@ void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
         MSortFilterProxyModel *sortModel = dynamic_cast<MSortFilterProxyModel *>(model);
         Q_ASSERT(sortModel);
         PhoneBookModel *phoneBookModel = dynamic_cast<PhoneBookModel *>(sortModel->sourceModel());
-        Q_ASSERT(phoneBookModel);
+        if (phoneBookModel == NULL) {
+            // Looks like live filtering is enabled
+            // one more cast step needed to get the
+            // the correct source index.
+            MSortFilterProxyModel *filterModel = dynamic_cast<MSortFilterProxyModel *>(sortModel->sourceModel());
+            if (filterModel)
+                phoneBookModel = dynamic_cast<PhoneBookModel *>(filterModel->sourceModel());
+        }
         phoneBookModel->thumbnailWasLoaded(sortModel->mapToSource(index));
     }
 #endif

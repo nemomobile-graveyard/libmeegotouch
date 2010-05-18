@@ -17,22 +17,37 @@
 **
 ****************************************************************************/
 
-#include "msortfilterproxymodel.h"
+#ifndef MLISTFILTER_P_H
+#define MLISTFILTER_P_H
 
-MSortFilterProxyModel::MSortFilterProxyModel(QObject *parent)
-    : QSortFilterProxyModel(parent)
-{
-}
+#include <QObject>
+#include <QPointF>
+#include "mlistfilter.h"
 
-MSortFilterProxyModel::~MSortFilterProxyModel()
-{
-}
+class MPannableViewport;
 
-bool MSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
+class MListFilterPrivate : public QObject
 {
-    if (!source_parent.isValid() && 
-        sourceModel()->rowCount(sourceModel()->index(source_row, 0, source_parent)) > 0)
-        return true;
-   
-    return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
-}
+    Q_OBJECT
+    Q_DECLARE_PUBLIC(MListFilter)
+    
+public:
+    MListFilterPrivate();
+    virtual ~MListFilterPrivate();
+    void init();
+
+public Q_SLOTS:
+    void panningStarted();
+    void viewportPositionChanged(const QPointF& pos);
+
+private:
+    MPannableViewport* pannableViewport();
+
+private:
+    QPointF viewportPos;
+    QPointF panningStartPos;
+    MPannableViewport *cachedPannableViewport;
+    MListFilter *q_ptr;
+};
+
+#endif

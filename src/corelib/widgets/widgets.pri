@@ -26,6 +26,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mlabel.h \
     $$WIDGETS_SRC_DIR/mlabelhighlighter.h \
     $$WIDGETS_SRC_DIR/mlist.h \
+    $$WIDGETS_SRC_DIR/mlistfilter.h \
     $$WIDGETS_SRC_DIR/mgriditem.h \
     $$WIDGETS_SRC_DIR/mmessagebox.h \
     $$WIDGETS_SRC_DIR/mnavigationbar.h \
@@ -102,6 +103,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mbuttongroup_p.h \
     $$WIDGETS_SRC_DIR/mlistitem_p.h \
     $$WIDGETS_SRC_DIR/mabstractitemmodel_p.h \
+    $$WIDGETS_SRC_DIR/mlistfilter_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
@@ -124,6 +126,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mlabelmodel.cpp \
     $$WIDGETS_SRC_DIR/mlabelhighlighter.cpp \
     $$WIDGETS_SRC_DIR/mlist.cpp \
+    $$WIDGETS_SRC_DIR/mlistfilter.cpp \
     $$WIDGETS_SRC_DIR/mgriditem.cpp \
     $$WIDGETS_SRC_DIR/minfobannermodel.cpp \
     $$WIDGETS_SRC_DIR/mapplicationmenu.cpp \

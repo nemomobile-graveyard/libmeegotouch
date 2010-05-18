@@ -45,6 +45,10 @@
 
 #include "phonebookcell.h"
 
+#include <MListFilter>
+#include <MTextEdit>
+#include <MPannableViewport>
+
 #include "utils.h"
 
 #ifdef HAVE_N900
@@ -80,7 +84,7 @@ QString MListPage::timedemoTitle()
 class MListContentItemCreator : public MAbstractCellCreator<PhoneBookCell>
 {
 public:
-    MListContentItemCreator() : amountOfColumns(1) {
+    MListContentItemCreator() : amountOfColumns(1), highlightText("") {
     }
     
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
@@ -121,11 +125,19 @@ public:
         cellContent->setImage(contact->getAvatar().toImage());
 #else
         PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(data.value<void *>());
-        listCell->setTitle(entry->fullName);
+
+        if(highlightText == "")
+            listCell->setTitle(entry->fullName);
+        else {
+            QString highlightedTitle = entry->fullName;
+            highlightedTitle.replace(highlightText, "<b>" + highlightText + "</b>");
+            listCell->setTitle(highlightedTitle);
+        }
+
         listCell->setSubtitle(entry->phoneNumber);
         listCell->setImage(entry->thumbnail);
-#endif        
-        
+#endif
+
         updateContentItemMode(index, listCell);
     }
        
@@ -196,8 +208,13 @@ public:
         amountOfColumns = columns;
     }
 
+    void highlightByText(QString text) {
+        highlightText = text;
+    }
+
 private:
     int amountOfColumns;
+    QString highlightText;
 };
 
 void MListPage::loadPicturesInVisibleItems()
@@ -312,6 +329,12 @@ void MListPage::createActions()
     listIndexModes << "Hidden" << "Visible";
     combo = createComboBoxAction("List index mode", listIndexModes);
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListIndexVisibility(int)));
+
+    QStringList liveFilteringModes;
+    liveFilteringModes << "Off" << "On";
+    combo = createComboBoxAction("Live Filtering", liveFilteringModes);
+    combo->setCurrentIndex(1); // live filtering is enabled by default
+    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLiveFilteringMode(int)));
 }
 
 void MListPage::scrollToBottom()
@@ -426,6 +449,25 @@ void MListPage::changeListIndexVisibility(int index)
     list->setIndexVisible(indexVisible);
 }
 
+void MListPage::changeLiveFilteringMode(int index)
+{
+    Q_ASSERT(index >= 0 && index <= 1);
+    bool enableLF = (index == 1);
+
+    if(enableLF) {
+        list->filtering()->setEnabled(true);
+        list->filtering()->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
+        list->filtering()->editor()->setVisible(false);
+        connect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB())); 
+        connect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged())); 
+    } else {
+        disconnect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB())); 
+        disconnect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged())); 
+        list->filtering()->setEnabled(false);
+        showTextEdit(false);
+    }
+}
+
 void MListPage::itemClick(const QModelIndex &index)
 {
     mDebug("MListPage::itemClick") << "Row was clicked: " << index.row();
@@ -450,6 +492,42 @@ void MListPage::removeListItem()
 void MListPage::editListItem()
 {
     mDebug("MListPage::editListItem") << "Not implemented yet.";
+}
+
+void MListPage::liveFilteringTextChanged()
+{
+    // With HWKB live filtering text edit is shown when user enters text
+    if(list->filtering()->enabled() && list->filtering()->editor()->text() != "" && !list->filtering()->editor()->isOnDisplay())
+        showTextEdit(true);
+
+    // Highlighting matching live filtering text can be done by
+    // passing the text to cell creator and updating visible items
+    cellCreator->highlightByText(list->filtering()->editor()->text());
+    static_cast<PhoneBookModel*>(model)->updateData(list->firstVisibleItem(), list->lastVisibleItem());
+}
+
+void MListPage::filteringVKB()
+{
+    // With VKB live filtering text edit is shown when user pans the list up starting from top position
+    if(!list->filtering()->editor()->isOnDisplay()) {
+        showTextEdit(true);
+        list->filtering()->editor()->setFocus();
+    }
+}
+
+void MListPage::showTextEdit(bool show) {
+    QGraphicsWidget* panel = centralWidget();
+    QGraphicsLinearLayout* layout = (QGraphicsLinearLayout*) panel->layout();
+    MTextEdit* textEdit = list->filtering()->editor();
+    if(show && !textEdit->isOnDisplay()) {
+        layout->insertItem(0, textEdit);
+        textEdit->setVisible(true);
+        pannableViewport()->setPosition(QPointF(0,0));
+    } else if(textEdit->isOnDisplay()) {
+        textEdit->setVisible(false);
+        layout->removeAt(0);
+        textEdit->setText("");
+    }
 }
 
 void MListPage::createContent()
@@ -483,6 +561,10 @@ void MListPage::createContent()
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClick(QModelIndex)));
     connect(list, SIGNAL(itemLongTapped(QModelIndex)), this, SLOT(itemLongTapped(QModelIndex)));
+
+    changeLiveFilteringMode(1); // live filtering is enabled by default
+    
+    retranslateUi();
 }
 
 void MListPage::retranslateUi()

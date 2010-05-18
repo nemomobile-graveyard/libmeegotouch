@@ -87,6 +87,7 @@ public:
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
     void thumbnailWasLoaded(const QModelIndex &index);
+    void updateData(const QModelIndex &first, const QModelIndex &last);
     
 private:
     QStringList loadFakeNames();

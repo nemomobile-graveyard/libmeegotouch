@@ -80,6 +80,7 @@ public slots:
     void changeSelectionMode(int index);
     void changeSeparatorsMode(int index);
     void changeListIndexVisibility(int index);
+    void changeLiveFilteringMode(int index);
 
     void scrollToBottom();
     void scrollToTop();
@@ -90,11 +91,15 @@ public slots:
     void removeListItem();
     void editListItem();
 
+    void liveFilteringTextChanged();
+    void filteringVKB();
+
 protected:
     void retranslateUi();
 
 private:
     MComboBox *createComboBoxAction(const QString &title, const QStringList &itemsList);
+    void showTextEdit(bool show);
 
 private:
 

@@ -17,22 +17,5 @@
 **
 ****************************************************************************/
 
-#include "msortfilterproxymodel.h"
+#include "../corelib/widgets/mlistfilter.h"
 
-MSortFilterProxyModel::MSortFilterProxyModel(QObject *parent)
-    : QSortFilterProxyModel(parent)
-{
-}
-
-MSortFilterProxyModel::~MSortFilterProxyModel()
-{
-}
-
-bool MSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
-{
-    if (!source_parent.isValid() && 
-        sourceModel()->rowCount(sourceModel()->index(source_row, 0, source_parent)) > 0)
-        return true;
-   
-    return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
-}
