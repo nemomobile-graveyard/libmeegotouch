@@ -663,6 +663,33 @@ bool MTextEditPrivate::isPreediting() const
     return (q->mode() == MTextEditModel::EditModeActive);
 }
 
+void MTextEditPrivate::requestSip()
+{
+    Q_Q(MTextEdit);
+    Q_ASSERT_X(q->sceneManager(),
+               "MTextEditPrivate::requestSip()",
+               "Invalid SIP request - no scene manager found!");
+
+    q->sceneManager()->requestSoftwareInputPanel(q);
+    pendingSoftwareInputPanelRequest = false;
+}
+
+void MTextEditPrivate::requestAutoSip(Qt::FocusReason fr)
+{
+    Q_Q(MTextEdit);
+
+    if (!q->isAutoSipEnabled()) {
+        return;
+    }
+
+    if (fr == Qt::MouseFocusReason) {
+        // Wait for the mouse release event instead so that the window relocation that might
+        // happen does not change the mouse position *before* the button is released.
+        pendingSoftwareInputPanelRequest = true;
+    } else {
+        requestSip();
+    }
+}
 
 /*!
  * \brief Sends mouse events to input context mouse handling method
@@ -1282,9 +1309,8 @@ void MTextEdit::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     MWidgetController::mouseReleaseEvent(event);
 
     // Widget was focused-in on corresponding mouse press event:
-    if (sceneManager() && d->pendingSoftwareInputPanelRequest) {
-        sceneManager()->requestSoftwareInputPanel(this);
-        d->pendingSoftwareInputPanelRequest = false;
+    if (d->pendingSoftwareInputPanelRequest) {
+        d->requestSip();
     }
 }
 
@@ -1303,13 +1329,7 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
                 sceneManager(), SLOT(ensureCursorVisible()),
                 Qt::UniqueConnection);
 
-        if (event->reason() == Qt::MouseFocusReason) {
-            // Wait for the mouse release event instead so that the window relocation that might
-            // happen does not change the mouse position *before* the button is released.
-            d->pendingSoftwareInputPanelRequest = true;
-        } else {
-            sceneManager()->requestSoftwareInputPanel(this);
-        }
+        d->requestAutoSip(event->reason());
     }
 
     if (model()->autoSelectionEnabled() == true) {
@@ -1430,7 +1450,7 @@ bool MTextEdit::setText(const QString &text)
     }
 
     if (!accepted) {
-        document()->clear();       
+        document()->clear();
     }
 
     // only avoid signaling if empty before and after
@@ -2232,6 +2252,16 @@ MCompleter *MTextEdit::completer()
 {
     Q_D(MTextEdit);
     return d->completer;
+}
+
+void MTextEdit::setAutoSipEnabled(bool enabled)
+{
+    model()->setAutoSipEnabled(enabled);
+}
+
+bool MTextEdit::isAutoSipEnabled() const
+{
+    return model()->isAutoSipEnabled();
 }
 
 void MTextEdit::attachToolbar(const QString &name)

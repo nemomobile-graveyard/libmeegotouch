@@ -69,6 +69,9 @@ public:
     bool isPositionOnPreedit(int cursorPosition) const;
     bool isPreediting() const;
 
+    void requestSip();
+    void requestAutoSip(Qt::FocusReason fr);
+
     void setMode(MTextEditModel::EditMode mode);
 
     void notifyInputContextMouseHandler(int position, QGraphicsSceneMouseEvent *event);
@@ -100,8 +103,9 @@ public:
 
     virtual bool copy();
 
-private:
     bool pendingSoftwareInputPanelRequest;
+
+private:
     const QValidator *validator;
     bool ownValidator; // setting content type creates a validator that the widget owns
 

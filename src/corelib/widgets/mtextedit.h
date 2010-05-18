@@ -75,6 +75,7 @@ class M_EXPORT MTextEdit : public MWidgetController
     Q_PROPERTY(bool inputMethodPredictionEnabled READ inputMethodPredictionEnabled WRITE setInputMethodPredictionEnabled)
     Q_PROPERTY(int maxLength READ maxLength WRITE setMaxLength)
     Q_PROPERTY(MTextEditModel::EchoMode echoMode READ echoMode WRITE setEchoMode)
+    Q_PROPERTY(bool autoSipEnabled READ isAutoSipEnabled WRITE setAutoSipEnabled)
 
 public:
     typedef M::TextContentType TextContentType; // workaround for moc bug
@@ -360,6 +361,17 @@ public:
      * \brief Returns the completer pointer, which is used by this text edit.
      */
     MCompleter *completer();
+
+    /*!
+     * \brief Allows control over SIP handling
+     *
+     * When a text edit is focused and this property is disabled, no software
+     * input panel will be requested.
+     */
+    void setAutoSipEnabled(bool enabled);
+
+    //! \sa setAutoSipEnabled
+    bool isAutoSipEnabled() const;
 
     /*!
      * \brief Attaches a custom toolbar named \a name.

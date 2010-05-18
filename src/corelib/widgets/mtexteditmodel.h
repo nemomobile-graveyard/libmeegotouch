@@ -88,6 +88,7 @@ private:
     M_MODEL_PROPERTY(QString, toolbar, Toolbar, true, QString())
     M_MODEL_PROPERTY(int, toolbarId, ToolbarId, true, -1)
     M_MODEL_PROPERTY(MTextEditModel::EchoMode, echo, Echo, true, MTextEditModel::Normal)
+    M_MODEL_PROPERTY(bool, isAutoSipEnabled, AutoSipEnabled, true, true)
 
 public:
     void updateCursor()   {
