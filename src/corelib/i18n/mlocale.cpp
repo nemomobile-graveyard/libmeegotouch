@@ -1846,7 +1846,13 @@ QString MLocale::languageEndonym() const
     Q_D(const MLocale);
     UErrorCode status = U_ZERO_ERROR;
 
+    // TODO: implement a workaround for
+    // http://site.icu-project.org/design/resbund/issues
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    UResourceBundle *res = ures_open("ICUDATA-lang", qPrintable(d->_defaultLocale), &status);
+#else
     UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
+#endif
     if (U_FAILURE(status)) {
         mDebug("MLocale") << "Error ures_open" << u_errorName(status);
     }
@@ -1878,7 +1884,13 @@ QString MLocale::countryEndonym() const
     Q_D(const MLocale);
     UErrorCode status = U_ZERO_ERROR;
 
+    // TODO: implement a workaround for
+    // http://site.icu-project.org/design/resbund/issues
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    UResourceBundle *res = ures_open("ICUDATA-region", qPrintable(d->_defaultLocale), &status);
+#else
     UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
+#endif
     if (U_FAILURE(status)) {
         mDebug("MLocale") << "Error ures_open" << u_errorName(status);
     }
