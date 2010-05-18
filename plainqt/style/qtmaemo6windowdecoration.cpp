@@ -153,6 +153,10 @@ void QtMaemo6WindowDecoration::showNavigationBar( bool visible )
     m_titleBar->setVisible(visible);
 }
 
+void QtMaemo6WindowDecoration::showDeviceStatusBar( bool visible ) {
+    m_deviceStatusBar->setVisible(visible);
+}
+
 bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::WindowTitleChange) {

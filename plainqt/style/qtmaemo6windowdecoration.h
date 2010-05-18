@@ -60,6 +60,8 @@ public:
 
     void showNavigationBar( bool visible );
 
+    void showDeviceStatusBar( bool visible );
+
 protected Q_SLOTS:
     void showMenuBar();
 protected:

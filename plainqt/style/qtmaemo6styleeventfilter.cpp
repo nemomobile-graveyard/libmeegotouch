@@ -87,6 +87,8 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                         m_style->m_windowDecoration->showFastMaximized();
                         bool navigationBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMNavigationBar);
                         m_style->m_windowDecoration->showNavigationBar( navigationBarVisible );
+                        bool statusBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMStatusBar);
+                        m_style->m_windowDecoration->showDeviceStatusBar( statusBarVisible );
                         QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
                         return true;
                     }

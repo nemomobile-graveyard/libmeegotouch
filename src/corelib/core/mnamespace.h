@@ -41,13 +41,23 @@ namespace M
 #endif
 
     /*!
-     * setting a dynamic porperty to any QWidget or QApplication will cause the the object
-     * not to be styled like M does.
+     * setting a dynamic property to QApplication named NoMNavigationBar will hide the
+     * navigationbar from qt maemo 6 style
      */
 #ifdef __GNUC__
     static const char* NoMNavigationBar __attribute__((__unused__)) = "NoMNavigationBar";
 #else
     static const char* NoMNavigationBar = "NoMNavigationBar";
+#endif
+
+    /*!
+     * setting a dynamic property to QApplication named NoMStatusBar will hide the
+     * statusbar from qt maemo 6 style
+     */
+#ifdef __GNUC__
+    static const char* NoMStatusBar __attribute__((__unused__)) = "NoMStatusBar";
+#else
+    static const char* NoMStatusBar = "NoMStatusBar";
 #endif
 
     /*!
