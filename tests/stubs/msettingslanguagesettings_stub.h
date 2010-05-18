@@ -52,6 +52,7 @@ MSettingsLanguageSettingsStub *gMSettingsLanguageSettingsStub = &gDefaultMSettin
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 MSettingsLanguageSettings::MSettingsLanguageSettings()
+  : _group(false)
 {
     gMSettingsLanguageSettingsStub->MSettingsLanguageSettingsConstructor();
 }

@@ -78,6 +78,7 @@ MAppletId::MAppletId()
 }
 
 MAppletId::MAppletId(const QString &applicationName, const QString &mashupCanvasName, const AppletInstanceID &instanceId)
+  : appletInstanceId( 0 )
 {
     gMAppletIdStub->MAppletIdConstructor(applicationName, mashupCanvasName, instanceId);
 }

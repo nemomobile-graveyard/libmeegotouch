@@ -105,7 +105,19 @@ MExtensionRunnerStub* gMExtensionRunnerStub = &gDefaultMExtensionRunnerStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-MExtensionRunner::MExtensionRunner() {
+MExtensionRunner::MExtensionRunner()
+  : communicator( NULL ),
+    parentWidget( NULL ),
+    widget( NULL ),
+    scene( NULL ),
+    view( NULL ),
+#ifdef QT_OPENGL_LIB
+    context( NULL ),
+#endif
+    aliveTimer( NULL ),
+    pixmapMutex( NULL ),
+    visible( false )
+{
   gMExtensionRunnerStub->MExtensionRunnerConstructor();
 }
 

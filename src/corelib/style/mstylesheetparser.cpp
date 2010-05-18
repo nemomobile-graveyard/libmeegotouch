@@ -1202,9 +1202,8 @@ int MStyleSheetParser::getLineNum(QFile &stream, const qint64 &streamPos)
 int MStyleSheetParser::getLineNum(const QString &filename, const qint64 &streamPos)
 {
     QFile file(filename);
-    file.open(QFile::ReadOnly);
-    if ( file.isOpen() ) {
-    return getLineNum(file, streamPos);
+    if ( file.open(QFile::ReadOnly) ) {
+        return getLineNum(file, streamPos);
     } else {
         return 0;
     }

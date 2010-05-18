@@ -345,6 +345,9 @@ MAppletInstanceManagerStub *gMAppletInstanceManagerStub = &gDefaultMAppletInstan
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 MAppletInstanceManager::MAppletInstanceManager(const QString &identifier, MDataStore *dataStore)
+  : dataStore( NULL ),
+    fileDataStore( NULL ),
+    lastAppletInstanceID( 0 )
 {
     gMAppletInstanceManagerStub->MAppletInstanceManagerConstructor(identifier, dataStore);
 }
