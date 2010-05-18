@@ -571,13 +571,26 @@ void Ft_Locales::checkAvailableLocales()
     requiredLocaleNames << "fr_SN";       // "French (Senegal)"
     requiredLocaleNames << "gl";          // "Galician"
     requiredLocaleNames << "gl_ES";       // "Galician (Spain)"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    requiredLocaleNames << "he";          // "Hebrew"
+    requiredLocaleNames << "he_IL";       // "Hebrew (Israel)"
+#endif
     requiredLocaleNames << "hi";          // "Hindi"
     requiredLocaleNames << "hi_IN";       // "Hindi (India)"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    requiredLocaleNames << "id";          // "Indonesian"
+    requiredLocaleNames << "id_ID";       // "Indonesian (Indonesia)"
+#endif
     requiredLocaleNames << "it";          // "Italian"
     requiredLocaleNames << "it_CH";       // "Italian (Switzerland)"
     requiredLocaleNames << "it_IT";       // "Italian (Italy)"
     requiredLocaleNames << "ja";          // "Japanese"
     requiredLocaleNames << "ja_JP";       // "Japanese (Japan)"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    requiredLocaleNames << "ms";          //"Malay"
+    requiredLocaleNames << "ms_BN";       // "Malay (Brunei)"
+    requiredLocaleNames << "ms_MY";       // "Malay (Malaysia)"
+#endif
     requiredLocaleNames << "nb";          // "Norwegian Bokml"
     requiredLocaleNames << "nb_NO";       // "Norwegian Bokml (Norway)"
     requiredLocaleNames << "nl";          // "Dutch"
@@ -630,13 +643,16 @@ void Ft_Locales::checkAvailableLocales()
         else
             availableDisplayNames << QString("What kind of locale is this?");
     }
+    // for (int i = 0; i < numberOfAvailableLocales; ++i) {
+    //     qDebug() << "available:" << availableLocaleNames[i] << availableDisplayNames[i];
+    // }
     foreach(QString requiredLocaleName, requiredLocaleNames) {
         // if (availableLocaleNames.contains(requiredLocaleName))
-        //     qDebug() << "available: "
+        //     qDebug() << "required and available: "
         //              << requiredLocaleName
         //              << availableDisplayNames[availableLocaleNames.indexOf(requiredLocaleName)];
         // else {
-        //     qDebug() << "missing: " << requiredLocaleName;
+        //     qDebug() << "required but missing: " << requiredLocaleName;
         // }
         QVERIFY2(availableLocaleNames.contains(requiredLocaleName),
                  QString("The following required locale is missing: "
