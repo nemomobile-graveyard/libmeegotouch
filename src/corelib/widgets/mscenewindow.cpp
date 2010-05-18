@@ -38,16 +38,16 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET_NO_CREATE(MSceneWindow)
 
-        MSceneWindowPrivate::MSceneWindowPrivate()
-            : windowType(MSceneWindow::PlainSceneWindow),
-            policy(MSceneWindow::KeepWhenDone),
-            managedManually(false),
-            shown(false),
-            dismissed(false),
-            waitingForContextMenuEvent(false),
-            effect(0),
-            appearanceAnimation(0),
-            disappearanceAnimation(0)
+MSceneWindowPrivate::MSceneWindowPrivate()
+        : windowType(MSceneWindow::PlainSceneWindow),
+        policy(MSceneWindow::KeepWhenDone),
+        managedManually(false),
+        shown(false),
+        dismissed(false),
+        waitingForContextMenuEvent(false),
+        effect(0),
+        appearanceAnimation(0),
+        disappearanceAnimation(0)
 {
 }
 

@@ -1040,7 +1040,7 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
         if (animatedTransition) {
             if (!window->d_func()->appearanceAnimation)
                 createAppearanceAnimationForSceneWindow(window);
-            window->d_func()->appearanceAnimation->start();
+            window->d_func()->appearanceAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         } else {
             emit window->appeared();
         }
@@ -1106,7 +1106,7 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
     if (animatedTransition) {
         if (!window->d_func()->disappearanceAnimation)
             createDisappearanceAnimationForSceneWindow(window);
-        window->d_func()->disappearanceAnimation->start();
+        window->d_func()->disappearanceAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     } else {
         emit window->disappeared();
     }
