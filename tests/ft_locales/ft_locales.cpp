@@ -390,7 +390,7 @@ void Ft_Locales::testMLocaleConstructorAndCategoryWithParams()
     delete z;
 }
 
-void Ft_Locales::testMLocaleLanguageEndonum_data()
+void Ft_Locales::testMLocaleLanguageEndonym_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("endonym_result");
@@ -398,6 +398,17 @@ void Ft_Locales::testMLocaleLanguageEndonum_data()
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << QString("suomi");
+    QTest::newRow("de")
+            << QString("de")
+            << QString("Deutsch");
+    // de_CH won’t work! That’s a bug in my opinion,
+    // see http://site.icu-project.org/design/resbund/issues
+    //QTest::newRow("de_CH")
+    //        << QString("de_CH")
+    //        << QString("Deutsch");
+    QTest::newRow("de_AT")
+            << QString("de_AT")
+            << QString("Deutsch");
     QTest::newRow("de_DE")
             << QString("de_DE")
             << QString("Deutsch");
@@ -409,7 +420,7 @@ void Ft_Locales::testMLocaleLanguageEndonum_data()
             << QString("中文");
 }
 
-void Ft_Locales::testMLocaleLanguageEndonum()
+void Ft_Locales::testMLocaleLanguageEndonym()
 {
     QFETCH(QString, locale_name);
     QFETCH(QString, endonym_result);
@@ -417,7 +428,7 @@ void Ft_Locales::testMLocaleLanguageEndonum()
     QCOMPARE(locale.languageEndonym(), endonym_result);
 }
 
-void Ft_Locales::testMLocaleCountryEndonum_data()
+void Ft_Locales::testMLocaleCountryEndonym_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("endonym_result");
@@ -425,6 +436,14 @@ void Ft_Locales::testMLocaleCountryEndonum_data()
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << QString("Suomi");
+    // de_CH won’t work! That’s a bug in my opinion,
+    // see http://site.icu-project.org/design/resbund/issues
+    //QTest::newRow("de_CH")
+    //        << QString("de_CH")
+    //        << QString("Deutschland");
+    QTest::newRow("de_AT")
+            << QString("de_AT")
+            << QString("Österreich");
     QTest::newRow("de_DE")
             << QString("de_DE")
             << QString("Deutschland");
@@ -436,7 +455,7 @@ void Ft_Locales::testMLocaleCountryEndonum_data()
             << QString("中国");
 }
 
-void Ft_Locales::testMLocaleCountryEndonum()
+void Ft_Locales::testMLocaleCountryEndonym()
 {
     QFETCH(QString, locale_name);
     QFETCH(QString, endonym_result);
