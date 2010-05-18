@@ -78,7 +78,7 @@ namespace
  * \param type widget type (single line or multiline)
  */
 MTextEditPrivate::MTextEditPrivate()
-    : pendingSoftwareInputPanelRequest(true),
+    : pendingSoftwareInputPanelRequest(false),
       validator(0),
       ownValidator(false),
       completer(0),
