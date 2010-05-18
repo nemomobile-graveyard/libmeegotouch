@@ -104,7 +104,10 @@ void QtMaemo6ScrollBarEventFilter::enableOn(QObject *o)
 #endif //SHOW_SCROLLING_THUMBNAIL
         //FIXME: find a more proper solution without manipulating the widget's properties
         // turn the scrollbars off for ScrollArea, they are handled manually by the style
+        abstractScrollArea->horizontalScrollBar()->setVisible(false);
         abstractScrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+        abstractScrollArea->verticalScrollBar()->setVisible(false);
         abstractScrollArea->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     }
     if (QScrollBar *scrollBar = qobject_cast<QScrollBar *>(o)) {
