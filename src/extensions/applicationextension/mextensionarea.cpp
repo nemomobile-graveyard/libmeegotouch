@@ -92,9 +92,10 @@ MExtensionArea::MExtensionArea(MExtensionAreaPrivate *dd, MWidgetModel *model, Q
 {
     // Initialize the private implementation
     Q_D(MExtensionArea);
-    if (d)
+    if (d) {
         d->q_ptr = this;
-    d->init();
+        d->init();
+    }
 }
 
 MExtensionArea::MExtensionArea(QGraphicsItem *parent) :

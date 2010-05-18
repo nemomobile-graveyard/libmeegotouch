@@ -68,8 +68,7 @@ QtMaemo6TestStyle::QtMaemo6TestStyle(QtMaemo6TestStylePrivate &dd)
       m_windowDecoration(NULL)
 {
     Q_D(QtMaemo6TestStyle);
-    if (d)
-        d->q_ptr = this;
+    d->q_ptr = this;
     d->m_styleInitialized = false;
 }
 
