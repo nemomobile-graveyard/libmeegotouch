@@ -207,6 +207,8 @@ bool Ft_MServiceFwGen::filesAreTheSame(const QString &filename, const QString &c
         QString headerGuard(QFileInfo(filename).fileName().toUpper().replace(".", "_"));
         bool lineIsExceptional =
             newLine.contains(headerGuard) ||
+            newLine.contains("m-servicefwgen") ||
+            newLine.contains("automatically generated with the command line") ||
             newLine.contains("qdbusxml2cpp") ||
             newLine.contains("ft_mservicefwgen") ||
             newLine.contains(scriptName);
