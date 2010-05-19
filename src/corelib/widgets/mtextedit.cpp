@@ -1500,7 +1500,25 @@ bool MTextEdit::setCursorPosition(int index)
 
 void MTextEdit::handleMousePress(int cursorPosition, QGraphicsSceneMouseEvent *event)
 {
+    handleMousePress(cursorPosition, event, NULL);
+}
+
+
+void MTextEdit::handleMousePress(int cursorPosition, QGraphicsSceneMouseEvent *event,
+                                 TextFieldLocationType *location)
+{
     Q_D(MTextEdit);
+
+    if (textInteractionFlags() != Qt::NoTextInteraction && location) {
+        QString text = document()->toPlainText();
+        MBreakIterator breakIterator(text);
+
+        if (breakIterator.isBoundary(cursorPosition) == true) {
+            *location = MTextEdit::WordBoundary;
+        } else {
+            *location = MTextEdit::Word;
+        }
+    }
 
     d->notifyInputContextMouseHandler(cursorPosition, event);
 }
@@ -1508,8 +1526,14 @@ void MTextEdit::handleMousePress(int cursorPosition, QGraphicsSceneMouseEvent *e
 
 void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseEvent *event)
 {
-    Q_D(MTextEdit);
+    handleMouseRelease(eventCursorPosition, event, NULL);
+}
 
+
+void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseEvent *event,
+                                   TextFieldLocationType *location)
+{
+    Q_D(MTextEdit);
     if (textInteractionFlags() == Qt::NoTextInteraction)
         return;
 
@@ -1528,9 +1552,15 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
 
         // clicks on word boundaries move the cursor
         if (breakIterator.isBoundary(eventCursorPosition) == true) {
+            if (location) {
+                *location = MTextEdit::WordBoundary;
+            }
             d->setCursorPosition(eventCursorPosition);
 
         } else {
+            if (location) {
+                *location = MTextEdit::Word;
+            }
             if (inputMethodCorrectionEnabled()) {
                 // clicks on words remove them from the normal contents and makes them preedit.
                 int start = breakIterator.previousInclusive(eventCursorPosition);
@@ -1568,6 +1598,9 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
         }
 
     } else {
+        if (location) {
+            *location = MTextEdit::Word;
+        }
         d->notifyInputContextMouseHandler(eventCursorPosition, event);
     }
 
@@ -1575,7 +1608,6 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
         updateMicroFocus();
     }
 }
-
 
 void MTextEdit::handleMouseMove(int cursorPosition, QGraphicsSceneMouseEvent *event)
 {

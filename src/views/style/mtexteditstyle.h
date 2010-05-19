@@ -41,6 +41,36 @@ class M_EXPORT MTextEditStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString,      pasteFailedIcon,          PasteFailedIcon)
     M_STYLE_ATTRIBUTE(int,          pasteFailedDuration,      PasteFailedDuration)
     M_STYLE_ATTRIBUTE(int,          maskingDelay,             MaskingDelay)
+
+    /*!
+        \property MTextEditStyle::pressBoundaryFeedback
+        \brief Feedback given when pressing between words
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, pressBoundaryFeedback, PressBoundaryFeedback)
+
+    /*!
+        \property MTextEditStyle::releaseBoundaryFeedback
+        \brief Feedback given when releasing between words
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, releaseBoundaryFeedback, ReleaseBoundaryFeedback)
+
+    /*!
+        \property MTextEditStyle::pressWordFeedback
+        \brief Feedback given when pressing on top of a word
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, pressWordFeedback, PressWordFeedback)
+
+    /*!
+        \property MTextEditStyle::releaseWordFeedback
+        \brief Feedback given when releasing on top of a word
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, releaseWordFeedback, ReleaseWordFeedback)
+
+    /*!
+        \property MTextEditStyle::changeSelectionFeedback
+        \brief Feedback given when finger movement changes text selection
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, changeSelectionFeedback, ChangeSelectionFeedback)
 };
 
 class M_EXPORT MTextEditStyleContainer : public MWidgetStyleContainer

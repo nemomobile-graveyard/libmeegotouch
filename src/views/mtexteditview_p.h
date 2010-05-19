@@ -75,6 +75,7 @@ protected slots:
     void checkSize();
     void handleDocumentUpdate(int position, int charsRemoved, int charsAdded);
     void handleDocumentSizeChange(const QSizeF &newSize);
+    void playTextFieldSelectionFeedback();
 
 private:
     void scrollingTestAndStart(QGraphicsSceneMouseEvent *event);

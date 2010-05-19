@@ -80,6 +80,15 @@ class M_EXPORT MTextEdit : public MWidgetController
 public:
     typedef M::TextContentType TextContentType; // workaround for moc bug
 
+    //! What is under the press or release location
+    enum TextFieldLocationType {
+        //! Pressed on top of a word
+        Word,
+
+        //! Pressed between words or empty space
+        WordBoundary
+    };
+
     /*!
      * \brief Default constructor. Creates a textedit field with a specified text and line mode.
      * \param type widget type (single line or multiline).
@@ -188,6 +197,13 @@ public:
      * The implementation will notify possible input context.
      * \param cursorPosition position of the click within characters
      * \param event event the view received
+     * \param location assigned by the method either as Word or  as WordBoundary depending on where in text mouse is pressed
+     * \note Location parameter is assigned by the method only if Qt::TextInteractionFlags is something other than Qt::NoTextInteraction
+     */
+    void handleMousePress(int cursorPosition, QGraphicsSceneMouseEvent *event, TextFieldLocationType *location);
+
+    /*!
+     * \overload handleMousePress()
      */
     void handleMousePress(int cursorPosition, QGraphicsSceneMouseEvent *event);
 
@@ -199,6 +215,13 @@ public:
      * clicked word as preedit if possible.
      * \param cursorPosition position of the click within characters
      * \param event event the view received
+     * \param location assigned by the method either as Word or  as WordBoundary depending on where in text mouse is released
+     * \note Location parameter is assigned by the method only if Qt::TextInteractionFlags is something other than Qt::NoTextInteraction
+     */
+    void handleMouseRelease(int cursorPosition, QGraphicsSceneMouseEvent *event, TextFieldLocationType *location);
+
+    /*!
+     * \overload handleMouseRelease()
      */
     void handleMouseRelease(int cursorPosition, QGraphicsSceneMouseEvent *event);
 
