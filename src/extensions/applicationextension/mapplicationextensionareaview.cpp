@@ -111,4 +111,13 @@ MApplicationExtensionAreaView::~MApplicationExtensionAreaView()
 {
 }
 
+void MApplicationExtensionAreaView::applyStyle()
+{
+    Q_D(MApplicationExtensionAreaView);
+    MExtensionAreaView::applyStyle();
+
+    QGraphicsLinearLayout *linearLayout = static_cast<QGraphicsLinearLayout *>(d->layout);
+    linearLayout->setOrientation(style()->layoutOrientation());
+}
+
 M_REGISTER_VIEW_NEW(MApplicationExtensionAreaView, MApplicationExtensionArea)

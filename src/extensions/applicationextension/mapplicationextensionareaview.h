@@ -58,6 +58,10 @@ protected:
      */
     MApplicationExtensionAreaView(MApplicationExtensionAreaViewPrivate &dd, MApplicationExtensionArea *controller);
 
+    //! \reimp
+    virtual void applyStyle();
+    //! \reimp_end
+
 private:
     Q_DISABLE_COPY(MApplicationExtensionAreaView)
     Q_DECLARE_PRIVATE(MApplicationExtensionAreaView)

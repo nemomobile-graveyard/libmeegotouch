@@ -69,6 +69,8 @@ private slots:
     void testAddition();
     // Test widget removal
     void testRemoval();
+    // Test theme changes
+    void testApplyStyle();
 
 private:
     bool widgetInLayout(MWidget *widget);
