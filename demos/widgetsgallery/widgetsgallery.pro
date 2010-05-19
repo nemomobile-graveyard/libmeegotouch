@@ -9,8 +9,8 @@ INCLUDEPATH += . \
     $$MSRC/corelib
 
 QMAKE_LIBDIR += $$MLIB
-win32|macx {
-    macx {
+win32|macx { 
+    macx { 
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework meegotouchcore \
                 -framework meegotouchviews
@@ -77,7 +77,8 @@ SOURCES += main.cpp \
     bannerspage.cpp \
     querydialogspage.cpp \
     multipleselectiondialogspage.cpp \
-    singleselectiondialogspage.cpp
+    singleselectiondialogspage.cpp \
+    phonebookcell.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -119,7 +120,8 @@ HEADERS += templatepage.h \
     bannerspage.h \
     querydialogspage.h \
     multipleselectiondialogspage.h \
-    singleselectiondialogspage.h
+    singleselectiondialogspage.h \
+    phonebookcell.h \
 
 # theme
 include(theme/theme.pri)

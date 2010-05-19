@@ -54,6 +54,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetrecycler.h \
     $$WIDGETS_SRC_DIR/mabstractcellcreator.h \
     $$WIDGETS_SRC_DIR/mcontentitem.h \
+    $$WIDGETS_SRC_DIR/mlistitem.h \
 
 MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.h \
@@ -87,6 +88,7 @@ MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mcontainermodel.h \
     $$WIDGETS_SRC_DIR/mcompletermodel.h \
     $$WIDGETS_SRC_DIR/mcontentitemmodel.h \
+    $$WIDGETS_SRC_DIR/mlistitemmodel.h \
 
 PUBLIC_HEADERS += \
     $$MGEN_MODEL_HEADERS \
@@ -96,6 +98,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mpannableviewportlayout.h \
     $$WIDGETS_SRC_DIR/mcontentitem_p.h \
     $$WIDGETS_SRC_DIR/mbuttongroup_p.h \
+    $$WIDGETS_SRC_DIR/mlistitem_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
@@ -152,3 +155,4 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mcontentitemmodel.cpp \
     $$WIDGETS_SRC_DIR/mlistmodel.cpp \
     $$WIDGETS_SRC_DIR/mpopuplistmodel.cpp \
+    $$WIDGETS_SRC_DIR/mlistitem.cpp \

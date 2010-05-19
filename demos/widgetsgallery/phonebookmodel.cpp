@@ -31,7 +31,7 @@ PhoneBookModel::PhoneBookModel()
 {
     namesList = loadFakeNames();
     imageIdList = loadFakeImageIds();
-    defaultThumbnail = QImage(Utils::imagesDir() + "DefaultAvatar.png");
+//    defaultThumbnail = QImage(Utils::imagesDir() + "DefaultAvatar.png");
     modelRowCount = 0;
 }
 

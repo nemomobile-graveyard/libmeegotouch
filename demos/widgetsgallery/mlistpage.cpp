@@ -40,9 +40,9 @@
 #include <MComboBox>
 #include <MDebug>
 
-#include <MContentItem>
 #include <MWidgetAction>
 
+#include "phonebookcell.h"
 
 #include "utils.h"
 
@@ -76,49 +76,59 @@ QString MListPage::timedemoTitle()
     return "List";
 }
 
-class MListContentItemCreator : public MAbstractCellCreator<MContentItem>
+class MListContentItemCreator : public MAbstractCellCreator<PhoneBookCell>
 {
 public:
     MListContentItemCreator() : amountOfColumns(1) {
-
     }
-
+    
+    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
+    {
+        // FIXME: It's a workaround against a bug, that if the layout is created and 
+        // set in constructor then the pixmaps are properly loaded.
+        PhoneBookCell *cell = dynamic_cast<PhoneBookCell *>(recycler.take(PhoneBookCell::staticMetaObject.className()));
+        if (cell == NULL) {
+            cell = new PhoneBookCell;
+            cell->initLayout();
+        }
+        updateCell(index, cell);
+        return cell;
+    }
+    
     void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MContentItem *contentItem = qobject_cast<MContentItem *>(cell);
-        if (contentItem == NULL) // TODO This is shouldn't happen, list must know what it doing, but with multiple columns it happens sometimes
+        PhoneBookCell *listCell = qobject_cast<PhoneBookCell*>(cell);
+        if (listCell == NULL) // TODO This is shouldn't happen, list must know what it doing, but with multiple columns it happens sometimes
             return;
-
+        
         QVariant data = index.data(Qt::DisplayRole);
-
+        
 #ifdef HAVE_N900
         Contact *contact = data.value<Contact*>();
-        contentItem->setTitle(contact->getName());
+        listCell->setTitle(contact->getName());
         QStringList numbers = contact->getPhoneNumbers();
         if (numbers.size() > 0) {
-            contentItem->setSubtitle(numbers[0]);
+            listCell->setSubtitle(numbers[0]);
         } else {
             QStringList addresses = contact->getEmailAddresses();
             if (addresses.size() > 0) {
-                contentItem->setSubtitle(addresses[0]);
+                listCell->setSubtitle(addresses[0]);
             } else {
-                contentItem->setSubtitle(QString());
+                listCell->setSubtitle(QString());
             }
         }
 
-        contentItem->setPixmap(contact->getAvatar());
+        cellContent->setImage(contact->getAvatar().toImage());
 #else
         PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(data.value<void *>());
-        contentItem->setTitle(entry->fullName);
-        contentItem->setSubtitle(entry->phoneNumber);
-        contentItem->setImage(entry->thumbnail);
-#endif
-
-        contentItem->boundingRect();
-
-        updateContentItemMode(index, contentItem);
+        listCell->setTitle(entry->fullName);
+        listCell->setSubtitle(entry->phoneNumber);
+        listCell->setImage(entry->thumbnail);
+#endif        
+        
+        updateContentItemMode(index, listCell);
     }
-
-    void updateContentItemMode(const QModelIndex &index, MContentItem *contentItem) const {
+       
+    void updateContentItemMode(const QModelIndex &index, MListItem *contentItem) const {
         int flatRow = index.row();
         int row = flatRow / amountOfColumns;
         int column = flatRow % amountOfColumns;
@@ -134,48 +144,48 @@ public:
         if (columns == 1) {
             if (rows > 1){
                 if (row == 0)
-                    contentItem->setItemMode(MContentItem::SingleColumnTop);
+                    contentItem->setLayoutPosition(M::VerticalTopPosition);
                 else if (row < rows - 1)
-                    contentItem->setItemMode(MContentItem::SingleColumnCenter);
+                    contentItem->setLayoutPosition(M::VerticalCenterPosition);
                 else
-                    contentItem->setItemMode(MContentItem::SingleColumnBottom);
+                    contentItem->setLayoutPosition(M::VerticalBottomPosition);
             } else {
-                contentItem->setItemMode(MContentItem::Single);
+                contentItem->setLayoutPosition(M::DefaultPosition);
             }
         } else if (columns > 1) {
             if (rows > 1) {
                 if (row == 0) {
                     if (column == 0)
-                        contentItem->setItemMode(MContentItem::TopLeft);
+                        contentItem->setLayoutPosition(M::TopLeftPosition);
                     else if (column > 0 && column < columns - 1 && !last)
-                        contentItem->setItemMode(MContentItem::Top);
+                        contentItem->setLayoutPosition(M::TopCenterPosition);
                     else
-                        contentItem->setItemMode(MContentItem::TopRight);
+                        contentItem->setLayoutPosition(M::TopRightPosition);
                 } else if (row < rows - 1) {
                     if (column == 0)
-                        contentItem->setItemMode(MContentItem::Left);
+                        contentItem->setLayoutPosition(M::CenterLeftPosition);
                     else if (column > 0 && column < columns - 1 && !last)
-                        contentItem->setItemMode(MContentItem::Center);
+                        contentItem->setLayoutPosition(M::CenterPosition);
                     else if (flatRow + columns > totalItems)
-                        contentItem->setItemMode(MContentItem::BottomRight);
+                        contentItem->setLayoutPosition(M::BottomRightPosition);
                     else
-                        contentItem->setItemMode(MContentItem::Right);
+                        contentItem->setLayoutPosition(M::CenterRightPosition);
                 }
                 else {
                     if (column == 0)
-                        contentItem->setItemMode(MContentItem::BottomLeft);
+                        contentItem->setLayoutPosition(M::BottomLeftPosition);
                     else if (column > 0 && column < columns - 1 && !last)
-                        contentItem->setItemMode(MContentItem::Bottom);
+                        contentItem->setLayoutPosition(M::BottomCenterPosition);
                     else
-                        contentItem->setItemMode(MContentItem::BottomRight);
+                        contentItem->setLayoutPosition(M::BottomRightPosition);
                 }
             } else {
                 if (column == 0)
-                    contentItem->setItemMode(MContentItem::SingleRowLeft);
+                    contentItem->setLayoutPosition(M::HorizontalLeftPosition);
                 else if (column > 0 && column < columns - 1 && !last)
-                    contentItem->setItemMode(MContentItem::SingleRowCenter);
+                    contentItem->setLayoutPosition(M::HorizontalCenterPosition);
                 else
-                    contentItem->setItemMode(MContentItem::SingleRowRight);
+                    contentItem->setLayoutPosition(M::HorizontalRightPosition);
             }
         }
     }
