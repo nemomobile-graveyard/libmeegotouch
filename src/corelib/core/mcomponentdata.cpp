@@ -27,6 +27,7 @@
 
 #include "minputmethodstate.h"
 #include "mtheme.h"
+#include "mtheme_p.h"
 #include "mthemedaemon.h"
 #include "mcomponentdata.h"
 #include "mscenemanager.h"
@@ -641,23 +642,9 @@ void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier
     systemLocale.installTrCatalog(d->appName);
     MLocale::setDefault(systemLocale);
 
-    QString baseCSS(MThemeDaemon::systemThemeDirectory() + 
-                    QDir::separator() + QString("base") +
-                    QDir::separator() + QString("meegotouch") +
-                    QDir::separator() + d->appName + 
-                    QDir::separator() + QString("style") + 
-                    QDir::separator() + d->appName + QString(".css"));
-
-    MTheme::loadCSS(baseCSS);
-
-    QString themeCSS(MThemeDaemon::systemThemeDirectory() + 
-                     QDir::separator() + MTheme::currentTheme() +
-                     QDir::separator() + QString("meegotouch") +
-                     QDir::separator() + d->appName + 
-                     QDir::separator() + QString("style") + 
-                     QDir::separator() + d->appName + QString(".css"));
-
-    MTheme::loadCSS(themeCSS);
+    if (MTheme::instance()) {
+        MTheme::instance()->d_func()->reinit(d->appName, d->imglistFilename, MTheme::AnyTheme);
+    }
 
     if (newService) {
         d->registerNewService(newService);
