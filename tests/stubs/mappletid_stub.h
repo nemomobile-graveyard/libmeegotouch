@@ -73,6 +73,7 @@ MAppletIdStub *gMAppletIdStub = &gDefaultMAppletIdStub;
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 MAppletId::MAppletId()
+  : appletInstanceId( 0 )
 {
     gMAppletIdStub->MAppletIdConstructor();
 }
