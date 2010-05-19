@@ -9,13 +9,18 @@ INCLUDEPATH += \
 # unit test and unit classes
 SOURCES += \
     ut_mapplicationextensionarea.cpp \
+    $$MSRCDIR/extensions/applicationextension/mapplicationextensionarea.cpp \
+    $$MSRCDIR/extensions/applicationextension/mextensionarea.cpp
 
 # service classes
 SOURCES += \
-    $$STUBSDIR/stubbase.cpp \
+    $$STUBSDIR/stubbase.cpp
 
 # unit test and unit classes
 HEADERS += \
-   ut_mapplicationextensionarea.h \
+    ut_mapplicationextensionarea.h \
+    $$MSRCDIR/extensions/applicationextension/mapplicationextensionarea.h \
+    $$MSRCDIR/extensions/applicationextension/mextensionarea.h \
+    $$MSRCDIR/extensions/applicationextension/mapplicationextensionmanager.h 
 
 include(../common_bot.pri)

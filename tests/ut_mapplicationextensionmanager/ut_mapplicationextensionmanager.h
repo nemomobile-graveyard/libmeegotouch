@@ -97,7 +97,7 @@ private:
     /*!
      * Sets up the test subject.
      */
-    void setupTestSubject();
+    void setupTestSubject(const QString &inProcessFilter = QString(), const QString &outOfProcessFilter = QString());
 
     int goodExtensionCount;
 
@@ -160,8 +160,9 @@ private slots:
     void testRemoveInProcessExtension();
     void testRemoveNonExistentInProcessExtension();
 
-    // Test disabling of loading inprocess extensions
-    void testDisablingLoadingOfInProcessExtensions();
+    // Test filtering of in and out of process extensions
+    void testInProcessExtensionFiltering();
+    void testOutOfProcessExtensionFiltering();
 
     // Test that manager returns list of instantiated in process extensions when requested.
     void testRequestForAllInProcessExtensionsReturnsAListOfExtensions();

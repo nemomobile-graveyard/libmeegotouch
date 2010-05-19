@@ -50,9 +50,8 @@ public:
      * is used for anything else.
      *
      * \param interface the extension interface name for the application extension area.
-     * \param enableInProcessExtensions \c true if in process extensions should be loaded. \c false otherwise
      */
-    void init(const QString &interface, const bool enableInProcessExtensions);
+    void init(const QString &interface);
 
    /*!
     * Returns a list of in process extensions loaded by this manager

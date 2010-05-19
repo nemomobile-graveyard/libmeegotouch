@@ -149,12 +149,16 @@ void Ut_MApplicationExtensionManager::cleanupTestCase()
 {
 }
 
-void Ut_MApplicationExtensionManager::setupTestSubject()
+void Ut_MApplicationExtensionManager::setupTestSubject(const QString &inProcessFilter, const QString &outOfProcessFilter)
 {
     delete manager;
-    manager = NULL;
-
     manager = new MApplicationExtensionManager(interfaceName);
+    if (!inProcessFilter.isEmpty()) {
+        manager->setInProcessFilter(QRegExp(inProcessFilter));
+    }
+    if (!outOfProcessFilter.isEmpty()) {
+        manager->setOutOfProcessFilter(QRegExp(outOfProcessFilter));
+    }
     manager->init();
     connect(this, SIGNAL(directoryChanged(QString)), manager, SLOT(updateAvailableExtensions(QString)));
 
@@ -306,20 +310,38 @@ void Ut_MApplicationExtensionManager::testRemoveNonExistentInProcessExtension()
     QCOMPARE(signalListener.removedExtensions.count(), 0);
 }
 
-void Ut_MApplicationExtensionManager::testDisablingLoadingOfInProcessExtensions()
+void Ut_MApplicationExtensionManager::testInProcessExtensionFiltering()
 {
-    delete manager;
-    manager = new MApplicationExtensionManager(interfaceName, false);
-    connect(manager, SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)), &signalListener, SLOT(extensionInstantiated(MApplicationExtensionInterface *)));
-    QString desktopFile("test.desktop");
-    gDefaultMApplicationExtensionMetaDataStub.stubSetReturnValue("runnerBinary", QString(""));
-
+    const MApplicationExtensionMetaData metaData("test.desktop");
     MWidget extensionWidget;
     setupGoodExtension(true, &extensionWidget);
 
-    // Instantiating extension would not load any extension, since extension loading of in process is diabled
-    manager->instantiateExtension(desktopFile);
+    // Test that not allowing test.desktop in-process but allowing it out-of-process does nothing
+    gDefaultMApplicationExtensionMetaDataStub.stubSetReturnValue("runnerBinary", QString(""));
+    setupTestSubject("$^", "^test.desktop$");
+    manager->instantiateExtension(metaData);
     QCOMPARE(signalListener.instantiatedExtensions.count(), 0);
+
+    // Test that allowing test.desktop in-process but not allowing it out-of-process instantiates the extension
+    setupTestSubject("^test.desktop$", "$^");
+    manager->instantiateExtension(metaData);
+    QCOMPARE(signalListener.instantiatedExtensions.count(), 1);
+}
+
+void Ut_MApplicationExtensionManager::testOutOfProcessExtensionFiltering()
+{
+    const MApplicationExtensionMetaData metaData("test.desktop");
+
+    // Test that not allowing test.desktop out-of-process but allowing it in-process does nothing
+    gDefaultMApplicationExtensionMetaDataStub.stubSetReturnValue("runnerBinary", QString("test"));
+    setupTestSubject("^test.desktop$", "$^");
+    manager->instantiateExtension(metaData);
+    QCOMPARE(signalListener.createdWidgets.count(), 0);
+
+    // Test that allowing test.desktop out-of-process but not allowing it in-process instantiates the extension
+    setupTestSubject("$^", "^test.desktop$");
+    manager->instantiateExtension(metaData);
+    QCOMPARE(signalListener.createdWidgets.count(), 1);
 }
 
 void Ut_MApplicationExtensionManager::testRequestForAllInProcessExtensionsReturnsAListOfExtensions()

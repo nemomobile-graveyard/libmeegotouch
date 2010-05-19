@@ -450,8 +450,8 @@ void Ut_MAppletInstanceManager::testOutOfProcessAppletRestoration()
     QVERIFY(instance2 != NULL);
     QList<MethodCall *> initCalls = gMAppletHandleStub->stubCallsTo("init");
     QCOMPARE(initCalls.length(), 2);
-    QCOMPARE(initCalls[0]->parameter<const MAppletId &>(3).toString(), QString("ut_mappletinstancemanager/testmanager/1"));
-    QCOMPARE(initCalls[1]->parameter<const MAppletId &>(3).toString(), QString("ut_mappletinstancemanager/testmanager/4"));
+    QCOMPARE(initCalls[0]->parameter<MAppletId>(3).toString(), QString("ut_mappletinstancemanager/testmanager/1"));
+    QCOMPARE(initCalls[1]->parameter<MAppletId>(3).toString(), QString("ut_mappletinstancemanager/testmanager/4"));
 
     // Make sure the titles are set
     QList<MethodCall *> setAppletTitleCalls = gMAppletHandleStub->stubCallsTo("setAppletTitle");
@@ -660,7 +660,7 @@ void Ut_MAppletInstanceManager::testInstallingAppletFromPackage()
 
     // Make sure the applet placeholder is instantiated
     QCOMPARE(gMAppletHandleStub->stubCallCount("initPlaceHolder"), 1);
-    QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<const MAppletId &>(0).instanceId(), (uint)2);
+    QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<MAppletId>(0).instanceId(), (uint)2);
 
     // Make sure the titles are set
     QList<MethodCall *> setAppletTitleCalls = gMAppletHandleStub->stubCallsTo("setAppletTitle");
@@ -688,7 +688,7 @@ void Ut_MAppletInstanceManager::testInstallationOperationComplete()
     existingFiles.append("/tmp/test.desktop");
     emit operationComplete("Install", "testpackage.deb", QString());
     QCOMPARE(gMAppletHandleStub->stubCallCount("init"), 1);
-    QCOMPARE(gMAppletHandleStub->stubLastCallTo("init").parameter<const MAppletId &>(3).instanceId(), (uint)2);
+    QCOMPARE(gMAppletHandleStub->stubLastCallTo("init").parameter<MAppletId>(3).instanceId(), (uint)2);
 }
 
 void Ut_MAppletInstanceManager::testInstallationOperationCompleteForUnknownPackage()
@@ -752,7 +752,7 @@ void Ut_MAppletInstanceManager::testReceiveOperationFailed()
     emit receiveOperation(&watcher);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(gMAppletHandleStub->stubCallCount("initPlaceHolder"), 1);
-    QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<const MAppletId &>(0).instanceId(), (uint)5);
+    QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<MAppletId>(0).instanceId(), (uint)5);
     QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<QString>(2), qtTrId("mappletinstancedata_nopackagemetadata"));
 }
 
@@ -773,7 +773,7 @@ void Ut_MAppletInstanceManager::testReceiveUnknownOperation()
     QCOMPARE(instantiateAppletPlaceHolderMetaData.count(), 0);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(gMAppletHandleStub->stubCallCount("initPlaceHolder"), 1);
-    QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<const MAppletId &>(0).instanceId(), (uint)5);
+    QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<MAppletId>(0).instanceId(), (uint)5);
     QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<QString>(2), qtTrId("mappletinstancedata_nopackagemetadata"));
 }
 
@@ -793,7 +793,7 @@ void Ut_MAppletInstanceManager::testReceiveInstallOperation()
     emit receiveOperation(&watcher);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(gMAppletHandleStub->stubCallCount("initPlaceHolder"), 1);
-    QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<const MAppletId &>(0).instanceId(), (uint)5);
+    QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<MAppletId>(0).instanceId(), (uint)5);
     QCOMPARE(gMAppletHandleStub->stubLastCallTo("initPlaceHolder").parameter<QString>(2), QString());
 }
 
