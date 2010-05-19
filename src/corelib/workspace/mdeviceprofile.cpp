@@ -21,6 +21,7 @@
 #include <QSize>
 #include <QSettings>
 #include <QFile>
+#include <QDir>
 
 #include "mdebug.h"
 #include "mdeviceprofile.h"
@@ -34,6 +35,14 @@ MDeviceProfilePrivate::MDeviceProfilePrivate()
     : q_ptr(0)
 {
     QString filename = "/etc/meegotouch/devices.conf";
+
+#ifdef Q_OS_WIN
+    QDir appDir(QCoreApplication::applicationDirPath());
+    appDir.cdUp();
+    appDir.cd("etc");
+    appDir.cd("meegotouch");
+    filename = appDir.path().append("/devices.conf" );
+#endif
 
     if(!load(filename)) {
         qFatal("Failed to load device profile.");

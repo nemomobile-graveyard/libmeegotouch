@@ -19,18 +19,13 @@ INCLUDEPATH += $${OUT_PWD}/.gen
 
 QMAKE_STRIP = echo
 
-PRE_TARGETDEPS += $$MGEN_EXECUTABLE
+PRE_TARGETDEPS += $$MGEN_EXECUTABLE $$MMOC_EXECUTABLE
 
 CONFIG += qt warn_on depend_includepath qmake_cache target_qt dll create_prl
 !win32:CONFIG += link_pkgconfig
 macx:CONFIG += lib_bundle
 
-win32 {
-    QMAKE_MOC = ..\mmoc\mmoc
-    INCLUDEPATH += .
-} else {
-    QMAKE_MOC = $${M_BUILD_TREE}/mmoc/mmoc
-}
+QMAKE_MOC = $$MMOC_EXECUTABLE
 
 QMAKE_CFLAGS += -Werror
 

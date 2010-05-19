@@ -635,13 +635,22 @@ void MThemePrivate::refreshLocalThemeConfiguration(const QStringList &themeInher
 
 void MThemePrivate::reloadThemeLibraries(const QStringList& libraryNames)
 {
+    QString libsuffix;
+
+#ifdef Q_OS_WIN
+    // under windows the libraries are suffixed with a "0",
+    // e.g. meegotouchviews0.dll, so the 0 here is needed,
+    // so that the library can be loaded under windows.
+    libsuffix = "0";
+#endif
+
     // store list of libraries that needs to be unloaded
     QSet<QLibrary*> toUnload = openedThemeLibraries;
 
     // load all new libraries (if the library is already loaded, it will ref the loaded one)
     openedThemeLibraries.clear();
     foreach(const QString& libname, libraryNames) {
-        QLibrary* library = new QLibrary(libname);
+        QLibrary* library = new QLibrary(libname + libsuffix);
         if(library->load()) {
             openedThemeLibraries.insert(library);
         } else {

@@ -31,7 +31,11 @@ HEADERS += \
 INSTALLS += \
      target\
 
-DEFINES += QT_MOC_PATH=\'$$quote(\"$$QMAKE_MOC\")\'
+win32: {
+    DEFINES += QT_MOC_PATH=\\\"\"moc.exe\"\\\"
+} else {
+    DEFINES += QT_MOC_PATH=\'$$quote(\"$$QMAKE_MOC\")\'
+}
 
 QMAKE_EXTRA_TARGETS += check
 check.depends = $${TARGET}
