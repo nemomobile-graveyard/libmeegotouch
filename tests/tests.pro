@@ -155,6 +155,7 @@ SUBDIRS     =  \
 #    ut_mstatusbar \ // Unstable. "Randomly" crashes on clean up, when detroying its MApplication instance.
     ut_mpanrecognizer \
     ut_mstatusbarview \
+    ut_mabstractitemmodel \
 
 # enable only when we have icu available
 

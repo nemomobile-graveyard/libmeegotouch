@@ -36,6 +36,7 @@
 #include <MButton>
 #include <MTheme>
 #include <MAction>
+#include <MSortFilterProxyModel>
 
 #include <MComboBox>
 #include <MDebug>
@@ -216,9 +217,13 @@ void MListPage::setPlainListModel()
     imageLoader = new ContactImageLoader();
 #else
     model = new PhoneBookModel();
-
-    proxyModel = new PhoneBookSortedModel();
+    
+    proxyModel = new MSortFilterProxyModel();
+    proxyModel->setSortRole(PhoneBookModel::PhoneBookSortRole);
+    proxyModel->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
     proxyModel->setSourceModel(model);
+    
+    
     list->setItemModel(proxyModel);
 
     imageLoader = new PhoneBookImageLoader;
@@ -325,18 +330,10 @@ void MListPage::changeSortingOrder(int index)
     case None:
         break;
     case Ascending:
-#ifdef HAVE_N900
-        model->sort(0, Qt::AscendingOrder);
-#else
         proxyModel->sort(0, Qt::AscendingOrder);
-#endif
         break;
     case Descending:
-#ifdef HAVE_N900
-        model->sort(0, Qt::DescendingOrder);
-#else
-        proxyModel->sort(0, Qt::DescendingOrder);
-#endif
+        proxyModel->sort(0, Qt::DescendingOrder);        
         break;
     }
     currentSortingIndex = index;
@@ -349,7 +346,6 @@ void MListPage::changeAmountOfItemInList(int index)
     Q_ASSERT(index >= 0 && index < 4);
 
     if(currentListModeIndex == Grouped) {
-        proxyModel->setShowGroups(false);
         list->setShowGroups(false);
     }
 
@@ -370,15 +366,14 @@ void MListPage::changeListMode(int index)
     case Plain:
         list->setShowGroups(false);
 #ifndef HAVE_N900
-        proxyModel->setShowGroups(false);
+        model->setGrouped(false);
 #endif
-
         break;
 
     case Grouped:
         list->setShowGroups(true);
 #ifndef HAVE_N900
-        proxyModel->setShowGroups(true);
+        model->setGrouped(true);        
 #endif
         break;
     }
@@ -446,7 +441,9 @@ void MListPage::removeListItem()
 {
     if(longTappedIndex.isValid()) {
         mDebug("MListPage::removeListItem") << "Row about to be removed: " << longTappedIndex.row();
-        model->removeRow(longTappedIndex.row(), longTappedIndex.parent());
+#ifndef HAVE_N900
+        proxyModel->removeRow(longTappedIndex.row(), longTappedIndex.parent());
+#endif
     }
 }
 

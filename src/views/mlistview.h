@@ -56,8 +56,9 @@ protected:
 protected slots:
     virtual void updateData(const QList<const char *>& modifications);
     void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-    void rowsInserted(const QModelIndex &parent, int start, int end);
-    void rowsRemoved(const QModelIndex &parent, int start, int end);
+    void rowsInserted(const QModelIndex &parent, int start, int end, bool animated = false);    
+    void rowsRemoved(const QModelIndex &parent, int start, int end, bool animated = false);
+    
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void itemClick();
     void layoutChanged();

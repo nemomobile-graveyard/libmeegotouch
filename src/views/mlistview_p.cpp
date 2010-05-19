@@ -21,6 +21,7 @@
 #include <MSeparator>
 #include <MList>
 #include <MPannableViewport>
+#include <MAbstractItemModel>
 
 #include <QItemSelectionModel>
 
@@ -311,7 +312,7 @@ void MListViewPrivate::resetModel(MListModel *mListModel)
 
     disconnect(q_ptr, SLOT(dataChanged(QModelIndex, QModelIndex)));
     disconnect(q_ptr, SLOT(rowsInserted(QModelIndex, int, int)));
-    disconnect(q_ptr, SLOT(rowsRemoved(QModelIndex, int, int)));
+    disconnect(q_ptr, SLOT(rowsRemoved(QModelIndex, int, int, bool)));
     disconnect(q_ptr, SLOT(layoutChanged()));
     disconnect(q_ptr, SLOT(modelReset()));
     disconnect(q_ptr, SLOT(rowsMoved(QModelIndex, int, int, QModelIndex, int)));
@@ -326,8 +327,13 @@ void MListViewPrivate::resetModel(MListModel *mListModel)
 
     if (model) {
         connect(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)), q_ptr, SLOT(dataChanged(QModelIndex, QModelIndex)));
-        connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), q_ptr, SLOT(rowsInserted(QModelIndex, int, int)));
-        connect(model, SIGNAL(rowsRemoved(QModelIndex, int, int)), q_ptr, SLOT(rowsRemoved(QModelIndex, int, int)));
+        if (model->inherits("MAbstractItemModel")) {
+            connect(model, SIGNAL(rowsInserted(QModelIndex, int, int, bool)), q_ptr, SLOT(rowsInserted(QModelIndex, int, int, bool)));
+            connect(model, SIGNAL(rowsRemoved(QModelIndex, int, int, bool)), q_ptr, SLOT(rowsRemoved(QModelIndex, int, int, bool)));
+        } else {
+            connect(model, SIGNAL(rowsInserted(QModelIndex, int, int)), q_ptr, SLOT(rowsInserted(QModelIndex, int, int)));
+            connect(model, SIGNAL(rowsRemoved(QModelIndex, int, int)), q_ptr, SLOT(rowsRemoved(QModelIndex, int, int)));
+        }
         connect(model, SIGNAL(layoutChanged()), q_ptr, SLOT(layoutChanged()));
         connect(model, SIGNAL(modelReset()), q_ptr, SLOT(modelReset()));
         connect(model, SIGNAL(rowsMoved(QModelIndex, int, int, QModelIndex, int)), q_ptr, SLOT(rowsMoved(QModelIndex, int, int, QModelIndex, int)));

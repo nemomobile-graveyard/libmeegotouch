@@ -55,6 +55,8 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mabstractcellcreator.h \
     $$WIDGETS_SRC_DIR/mcontentitem.h \
     $$WIDGETS_SRC_DIR/mlistitem.h \
+    $$WIDGETS_SRC_DIR/mabstractitemmodel.h \
+    $$WIDGETS_SRC_DIR/msortfilterproxymodel.h \
 
 MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.h \
@@ -99,6 +101,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mcontentitem_p.h \
     $$WIDGETS_SRC_DIR/mbuttongroup_p.h \
     $$WIDGETS_SRC_DIR/mlistitem_p.h \
+    $$WIDGETS_SRC_DIR/mabstractitemmodel_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
@@ -156,3 +159,5 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mlistmodel.cpp \
     $$WIDGETS_SRC_DIR/mpopuplistmodel.cpp \
     $$WIDGETS_SRC_DIR/mlistitem.cpp \
+    $$WIDGETS_SRC_DIR/mabstractitemmodel.cpp \
+    $$WIDGETS_SRC_DIR/msortfilterproxymodel.cpp \

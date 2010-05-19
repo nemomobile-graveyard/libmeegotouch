@@ -34,13 +34,14 @@ class ContactModel;
 class ContactImageLoader;
 #else
 class PhoneBookModel;
-class PhoneBookSortedModel;
+class MSortFilterProxyModel;
 class PhoneBookImageLoader;
 #endif
 
 class MList;
 class MComboBox;
 class MListContentItemCreator;
+class MAbstractItemModel;
 
 class MListPage: public TemplatePage
 {
@@ -101,8 +102,8 @@ private:
     ContactModel* model;
     ContactImageLoader* imageLoader;
 #else
-    PhoneBookModel *model;
-    PhoneBookSortedModel *proxyModel;
+    MAbstractItemModel *model;
+    MSortFilterProxyModel *proxyModel;
     PhoneBookImageLoader *imageLoader;
 #endif
 
