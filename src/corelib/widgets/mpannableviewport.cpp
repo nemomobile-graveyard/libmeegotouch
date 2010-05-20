@@ -361,6 +361,21 @@ void MPannableViewport::updateGeometry()
     MPannableWidget::updateGeometry();
 }
 
+void MPannableViewport::updateData(const QList<const char *> &modifications)
+{
+    Q_D(MPannableViewport);
+    const char *member;
+
+    foreach(member, modifications) {
+        if (member == MPannableWidgetModel::Enabled) {
+            if (isEnabled())
+                d->viewportLayout->setPanningDirections(panDirection());
+            else
+                d->viewportLayout->setPanningDirections(0);
+        }
+    }
+}
+
 void MPannableViewport::setPositionIndicator(MPositionIndicator *positionIndicator)
 {
     Q_D(MPannableViewport);
