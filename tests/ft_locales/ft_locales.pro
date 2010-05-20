@@ -12,4 +12,7 @@ TEST_SOURCES =  \
 HEADERS += ft_locales.h
 SOURCES += ft_locales.cpp
 
+support_files.files += \
+    *.txt
+
 include(../common_bot.pri)
