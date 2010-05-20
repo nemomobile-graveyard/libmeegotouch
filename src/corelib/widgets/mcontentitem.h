@@ -43,6 +43,10 @@ class MContentItemPrivate;
         \li ContentItemStyle::SingleTextLabel
         \li ContentItemStyle::IconAndSingleTextLabel
         \li ContentItemStyle::TwoTextLabels
+        \li ContentItemStyle::SingleIcon
+        \li ContentItemStyle::IconAndSingleTextLabelVertical
+        \li ContentItemStyle::IconAndTwoTextLabelsVertical
+        \li ContentItemStyle::TwoIconsTwoWidgets
 
         MContentItem can be in one of the modes provided by ContentItemMode enumeration.
         For each mode there is a dedicated graphics which is up to the view to show. The purpose of mode is to indicate
@@ -57,7 +61,7 @@ class M_EXPORT MContentItem : public MWidgetController
 
 public:
     /*!
-      ContentItemStyle indicates how text and thumbnail should be shown. There are 4 predefined layouts.
+      ContentItemStyle indicates how text and thumbnail should be shown. There are 8 predefined layouts.
       Exact look and feel depends on the view.
 
       \sa MContentItemView
