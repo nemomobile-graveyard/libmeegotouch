@@ -125,6 +125,10 @@ application is:
 exec /usr/bin/invoker --type=m $0.launch "$@"
 \endcode
 
+Note that even if the binary is renamed to application_name.launch,
+application identifier does not change (optional parameter of
+MComponentCache::mApplication).
+
 \c .desktop and D-Bus \c .service files can be modified so that instead of
 normal execution there is
 
