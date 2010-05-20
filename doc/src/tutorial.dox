@@ -28,7 +28,7 @@ That will generate a project file (ends with <code>.pro</code>) in the current d
 
 \include tutorial.pro
 
-That project file is good to build plain Qt applications but won't work as it is for MeeGo Touch ones. To bring in the MeeGo Touch libraries, headers and compilation options into the build all that is needed is the addition of the following line to the project file: 
+That project file is suitable for building plain Qt applications but won't work as it is for MeeGo Touch ones. To bring in the MeeGo Touch libraries, headers and compilation options into the build all that is needed is the addition of the following line to the project file: 
 
 \code
 CONFIG += meegotouch
@@ -73,8 +73,20 @@ This is the minimal code to get a "Hello World!" MeeGo Touch application working
 
 \section scenewindows The scene and its scene windows
 
-To be written...
+All graphical items of a MeeGo Touch application are positioned in a Cartesian plane which we call "scene". The scene is represented by the <code>MScene</code> class. The X-axis grows rightwards and the Y-axis downwards.
+
+What is seen through an MApplicationWindow is just a rectangular area of that scene. This rectangle has its top left corner on (0, 0). Its width and height are equivalent to the device's horizontal and vertical pixel resolution, respectively.
+
+\image html "scene and view.png" "MScene and MApplicationWindow"
+
+Scene windows are the graphical items that comprise the high-level layout of a MeeGo Touch application. Virtually all graphical items in a standard MeeGo Touch application are held in a scene window of some type. They are represented by the <code>MSceneWindow</code> class. Scene windows in a scene are analogous to top level windows in a traditional desktop windowing system.
 
 \image html "scene windows.png" "The basic scene windows of a MeeGo Touch application"
+
+The stacking order (Z-value) and geometry (position and size) of scene windows is controlled by a scene manager (<code>MSceneManager</code>). When the device orientation changes, the scene manager orchestrates the rotation and repositioning of all its scene windows. In order to properly rotate the UI, the scene manager have all its scene windows inside a graphical item called <i>root element</i> (meaning that it is the parent of all scene windows in the scene graph), which gets rotated instead of the scene windows themselves. This means that scene windows are positioned in the root element's coordinate system, not in scene coordinates. MeeGo Touch defines four possible rotation angles for its UI: 0, 90, 180 and 270 degrees (clockwise).
+
+\image html "root element and scene window.png" "A scene window at different orientation angles"
+
+<code>MApplicationWindow</code> creates its own <code>MScene</code> and <code>MSceneManager</code>. It also automatically populates the scene with all the scene windows that comprise a standard MeeGo Touch GUI, such as a status bar, navigation bar, home button panel, etc.
 
 */
