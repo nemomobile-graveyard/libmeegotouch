@@ -39,14 +39,14 @@ class MContentItemPrivate;
         queried via isSelected() function.
 
         MContentItem provides the following styles:
-        \li ContentItemStyle::IconAndTwoTextLabels
-        \li ContentItemStyle::SingleTextLabel
-        \li ContentItemStyle::IconAndSingleTextLabel
-        \li ContentItemStyle::TwoTextLabels
-        \li ContentItemStyle::SingleIcon
-        \li ContentItemStyle::IconAndSingleTextLabelVertical
-        \li ContentItemStyle::IconAndTwoTextLabelsVertical
-        \li ContentItemStyle::TwoIconsTwoWidgets
+        \li MContentItem::IconAndTwoTextLabels
+        \li MContentItem::SingleTextLabel
+        \li MContentItem::IconAndSingleTextLabel
+        \li MContentItem::TwoTextLabels
+        \li MContentItem::SingleIcon
+        \li MContentItem::IconAndSingleTextLabelVertical
+        \li MContentItem::IconAndTwoTextLabelsVertical
+        \li MContentItem::TwoIconsTwoWidgets
 
         MContentItem can be in one of the modes provided by ContentItemMode enumeration.
         For each mode there is a dedicated graphics which is up to the view to show. The purpose of mode is to indicate
