@@ -954,6 +954,9 @@ void MTextEditPrivate::_q_confirmCompletion(const QString &completion)
     cursor()->setPosition(index + block.position() + prefix.length(), QTextCursor::KeepAnchor);
     cursor()->removeSelectedText();
     doTextInsert(completion);
+    QObject::disconnect(q, SIGNAL(textChanged()), completer, SLOT(complete()));
+    emit q->textChanged();
+    QObject::connect(q, SIGNAL(textChanged()), completer, SLOT(complete()));
     q->updateMicroFocus();
 }
 
