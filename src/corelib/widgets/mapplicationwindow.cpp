@@ -225,9 +225,9 @@ void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *
 #endif
 
     if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->disappearSceneWindowNow(statusBar);
+        q->sceneManager()->disappearSceneWindow(statusBar);
     } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->appearSceneWindowNow(statusBar);
+        q->sceneManager()->appearSceneWindow(statusBar);
     }
 }
 
@@ -241,9 +241,9 @@ void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
 
     if (q->isFullScreen()) {
         if (callStatusProperty.value().toString() == "active") {
-            q->sceneManager()->appearSceneWindowNow(statusBar);
+            q->sceneManager()->appearSceneWindow(statusBar);
         } else {
-            q->sceneManager()->disappearSceneWindowNow(statusBar);
+            q->sceneManager()->disappearSceneWindow(statusBar);
         }
     }
 }
