@@ -43,7 +43,7 @@ class MDismissEvent;
 
     A MDialog is comprised by three components:
 
-    \li A title bar containig a title text, a progress indicator and a close button.
+    \li A title bar containing a title text, a progress indicator and a close button.
         The close button, the progress indicator or the entire title bar can be hidden.
         The progress indicator is hidden by default.
     \li A customizable central widget, that is meant to contain either the message or query

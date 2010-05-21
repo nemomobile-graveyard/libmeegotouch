@@ -43,7 +43,7 @@ class MAbstractWidgetAnimation;
   stores the widget's state in the model and delegates painting and event handling to the view.
 
   Although the controller provides methods to set the view and model components, widgets derived from MWidgetController
-  always provide an already initalised model while a view is constructed at the time it is needed unless otherwise explicitly
+  always provide an already initialised model while a view is constructed at the time it is needed unless otherwise explicitly
   set.
 
 */
