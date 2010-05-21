@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #include <MScalableImage>
 #include <MImageWidget>
 #include <MLabel>
@@ -371,7 +372,8 @@ void MContentItemView::updateData(const QList<const char *> &modifications)
             d->setOptionalImage(model()->optionalImage());
         } else if(member == MContentItemModel::ItemImage) {
             d->setImage(model()->itemImage());
-        } else if(member == MContentItemModel::AdditionalItem) {
+        } else if(member == MContentItemModel::AdditionalItem ||
+                  member == MContentItemModel::SmallItem) {
             if (d->configuredStyle == MContentItem::TwoIconsTwoWidgets) {
                 d->clearLayout();
                 d->initTwoIconsTwoWidgetsLayout();

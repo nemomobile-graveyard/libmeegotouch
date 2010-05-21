@@ -101,6 +101,12 @@ public:
          In case there is already a subtitle it will be replaced.
     */
     M_MODEL_PTR_PROPERTY(MWidget*, additionalItem, AdditionalItem, true, NULL)
+
+    /*!
+        \property MContentItemModel::smallItem
+        \brief MWidget as e.g. progress bar, visible on the lower right corner
+    */
+    M_MODEL_PTR_PROPERTY(MWidget*, smallItem, SmallItem, true, NULL)
 };
 
 #endif
