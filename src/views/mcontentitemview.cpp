@@ -136,6 +136,8 @@ void MContentItemViewPrivate::initLayout(MContentItem::ContentItemStyle style)
 
     configuredStyle = style;
 
+    if (optionalImageWidget)
+        optionalImageWidget->setVisible(false);
     switch (style) {
     case MContentItem::IconAndTwoTextLabels:
         image()->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
