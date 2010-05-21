@@ -824,7 +824,7 @@ void Ft_Locales::checkAvailableLocales()
             + '\n';
     }
     QString ft_localesTestOutputFileName =
-        qApp->applicationDirPath() + QDir::separator() + "ft_locales-test-output.txt";
+        "/tmp/ft_locales-test-output.txt";
     QFile ft_localesTestOutputFile(ft_localesTestOutputFileName);
     if (!ft_localesTestOutputFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
         QFAIL(qPrintable("could not open file " + ft_localesTestOutputFileName));
