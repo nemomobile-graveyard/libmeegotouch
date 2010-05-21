@@ -41,27 +41,17 @@ MAbstractLayoutPolicyPrivate::MAbstractLayoutPolicyPrivate(MLayout *l) :
 MAbstractLayoutPolicyPrivate::~MAbstractLayoutPolicyPrivate()
 { }
 
-void MAbstractLayoutPolicyPrivate::aboutToBeRemovedFromLayout(const QGraphicsLayoutItem *item)
+void MAbstractLayoutPolicyPrivate::aboutToBeRemovedFromLayout(int layoutIndex)
 {
-    //The item is about to be removed from the layout, so we need to remove it from this policy too
-    //This gets called even if the item is not in this policy, so that we can update the items mapping
-    Q_Q(MAbstractLayoutPolicy);
-
-    // First remove the item from this policy, if it is in this policy
-    int policyIndex = q->indexOf(item);
-    if (policyIndex > -1) {
-        removingFromLayout = true;
-        q->removeItem(item);
-        removingFromLayout = false;
-    }
-
-    //Now update all of the indexes
-    int layoutIndex = layout->indexOf(item); //This should always succeed
+    //The item is about to be removed from the layout.  It has already been removed from the policy
+    //so this gets called so that we can update the items mappings.
     Q_ASSERT(layoutIndex >= 0);
+    //Now update all of the indexes
 
     const int count = items.count();
     for (int i = 0; i < count; ++i) {
         int currentLayoutIndex = items.at(i);
+        Q_ASSERT(currentLayoutIndex != layoutIndex);
         if (currentLayoutIndex > layoutIndex)
             items[i] = currentLayoutIndex - 1;
     }

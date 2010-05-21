@@ -350,6 +350,6 @@ void MAbstractLayoutPolicy::activated()
 void MAbstractLayoutPolicy::aboutToBeRemovedFromLayout(const QGraphicsLayoutItem *item)
 {
     Q_D(MAbstractLayoutPolicy);
-    d->aboutToBeRemovedFromLayout(item);
+    d->aboutToBeRemovedFromLayout(layout()->indexOf(item));
 }
 
