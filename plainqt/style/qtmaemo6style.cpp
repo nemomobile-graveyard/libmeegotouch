@@ -2470,7 +2470,7 @@ void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleAre
         QWidget* parent = widget->parentWidget();
         QtMaemo6Window* window = NULL;
         //search
-        while(!(window = qobject_cast<QtMaemo6Window*>(parent)))
+        while(!(window = qobject_cast<QtMaemo6Window*>(parent)) && parent)
             parent = parent->parentWidget();
         if(window) {
             QAbstractScrollArea* sa = qobject_cast<QAbstractScrollArea*>(window->centralWidget());
