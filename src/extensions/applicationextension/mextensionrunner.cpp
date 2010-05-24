@@ -42,7 +42,6 @@
 #include <mfiledatastore.h>
 #include <mcancelevent.h>
 #include <mondisplaychangeevent.h>
-#include <MWidget>
 #include <MScene>
 #include <MSceneManager>
 #include <MAction>

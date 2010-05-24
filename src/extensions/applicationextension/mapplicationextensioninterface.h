@@ -23,7 +23,7 @@
 #include <QtPlugin>
 #include "mexport.h"
 
-class MWidget;
+class QGraphicsWidget;
 
 /**
  * MApplicationExtensionInterface is the base class for application extension
@@ -64,7 +64,7 @@ public:
      *
      * \return a pointer to the extension's widget or NULL if the extension does not have a widget.
      */
-    virtual MWidget *widget() { return NULL; }
+    virtual QGraphicsWidget *widget() { return NULL; }
 };
 
 Q_DECLARE_INTERFACE(MApplicationExtensionInterface, "com.meego.core.MApplicationExtensionInterface/1.0")

@@ -151,7 +151,7 @@ void MExtensionAreaViewPrivate::updateLayout()
     }
 }
 
-void MExtensionAreaViewPrivate::addToLayout(MWidget *, int)
+void MExtensionAreaViewPrivate::addToLayout(QGraphicsWidget *, int)
 {
 }
 

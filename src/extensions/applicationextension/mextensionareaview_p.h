@@ -46,7 +46,7 @@ public:
     /*!
      * pointer to controller
      */
-    MWidgetController     *controller;
+    MWidgetController *controller;
 
     /*!
      * Updates the geometry of each widget present in the layout into the data
@@ -97,7 +97,7 @@ public:
      * \param widget the widget
      * \param index the index to insert or -1 to add to the end
      */
-    virtual void addToLayout(MWidget *widget, int index = -1);
+    virtual void addToLayout(QGraphicsWidget *widget, int index = -1);
 
     //! Layout used to layout the widget instances on this extension area.
     QGraphicsLayout *layout;

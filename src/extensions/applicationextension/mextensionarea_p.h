@@ -48,13 +48,13 @@ public:
      * Adds a widget to the canvas.
      * \see MExtensionArea::addWidget()
      */
-    virtual void addWidget(MWidget *widget, MDataStore &store);
+    virtual void addWidget(QGraphicsWidget *widget, MDataStore &store);
 
     /*!
      * Removes a widget from the canvas.
      * \see MExtensionArea::removeWidget()
      */
-    virtual void removeWidget(MWidget *widget);
+    virtual void removeWidget(QGraphicsWidget *widget);
 
     virtual void gestureEvent(QGestureEvent *event);
     virtual void tapAndHoldGesture(QGestureEvent *event, QTapAndHoldGesture *state);

@@ -27,7 +27,7 @@ class MAppletMetaData;
 class MDataStore;
 class QString;
 class QSize;
-class MWidget;
+class QGraphicsWidget;
 class MAppletTesterWindow;
 class MApplication;
 class MSettingsLanguageBinary;
@@ -107,7 +107,7 @@ private:
     MDataStore *m_appletInstanceDataStore;
 
     //! The applet widget
-    MWidget *m_widget;
+    QGraphicsWidget *m_widget;
 
     //! The application's window
     MAppletTesterWindow *m_window;

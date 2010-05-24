@@ -21,8 +21,8 @@
 #include <mapplicationextensionmetadata.h>
 #include <mapplicationextensionloader.h>
 #include <mapplicationextensioninterface.h>
-#include <MWidget>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsWidget>
 #include <QDebug>
 
 MApplicationExtensionRunner::MApplicationExtensionRunner() :

@@ -139,17 +139,13 @@ void MAppletInstanceManager::removeActionTriggered(bool)
     MAction *action = qobject_cast<MAction *>(sender());
     if (action != NULL) {
         // Go through the associated graphics widgets
-        foreach(QGraphicsWidget * w, action->associatedGraphicsWidgets()) {
-            // They're expected to be MWidgets
-            MWidget *widget = qobject_cast<MWidget *>(w);
-            if (widget != NULL) {
-                // If an applet is found for the widget, remove it
-                MAppletId id = appletIDForWidget(widget);
+        foreach(QGraphicsWidget *widget, action->associatedGraphicsWidgets()) {
+            // If an applet is found for the widget, remove it
+            MAppletId id = appletIDForWidget(widget);
 
-                if (id != MAppletId()) {
-                    removeApplet(id);
-                    break;
-                }
+            if (id != MAppletId()) {
+                removeApplet(id);
+                break;
             }
         }
     }
@@ -437,7 +433,7 @@ void MAppletInstanceManager::freeAppletInstanceID(MAppletId id)
     }
 }
 
-MAppletId MAppletInstanceManager::appletIDForWidget(MWidget *widget) const
+MAppletId MAppletInstanceManager::appletIDForWidget(QGraphicsWidget *widget) const
 {
     foreach(MAppletInstanceData * data, applets.values()) {
         if (data->widget == widget) {
@@ -552,7 +548,7 @@ MAppletId MAppletInstanceManager::createAppletId(MAppletId::AppletInstanceID ins
 void MAppletInstanceManager::setAppletTitle(const QString &title)
 {
     // Find the widget whose title has changed
-    MWidget *widget = dynamic_cast<MWidget *>(sender());
+    QGraphicsWidget *widget = dynamic_cast<QGraphicsWidget *>(sender());
     if (widget != NULL) {
         foreach(MAppletInstanceData * data, applets.values()) {
             if (data->widget == widget) {

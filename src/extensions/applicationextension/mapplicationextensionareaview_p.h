@@ -27,7 +27,7 @@ class MLinearLayoutPolicy;
 class QGraphicsLinearLayout;
 class MButton;
 class MApplicationExtensionArea;
-class MWidget;
+class QGraphicsWidget;
 
 /*!
  * MApplicationExtensionAreaViewPrivate is the private class for MApplicationExtensionAreaView.
@@ -62,12 +62,12 @@ public:
      * \param widget the widget
      * \param index the index to insert or -1 to add to the end
      */
-    virtual void addToLayout(MWidget *widget, int index = -1);
+    virtual void addToLayout(QGraphicsWidget *widget, int index = -1);
 
     /*!
      * Used to check properties of widget and connect signals between it and the MContainer
      */
-    virtual void connectContainerToWidget(MContainer *container, MWidget *widget) const;
+    virtual void connectContainerToWidget(MContainer *container, QGraphicsWidget *widget) const;
 };
 
 #endif /* MAPPLICATIONEXTENSIONAREAVIEW_P_H_ */

@@ -62,10 +62,10 @@ class GoodExtension : public QObject, public MApplicationExtensionInterface
 
 public:
     virtual bool initialize(const QString &interface);
-    virtual MWidget *widget();
+    virtual QGraphicsWidget *widget();
 
     bool success;
-    MWidget *widget_;
+    QGraphicsWidget *widget_;
 };
 
 class MApplicationExtensionMetaData;

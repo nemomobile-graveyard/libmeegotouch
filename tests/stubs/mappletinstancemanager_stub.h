@@ -55,7 +55,7 @@ public:
     virtual QString dataPath() const;
     virtual QString createAppletInstanceDataFileName(MAppletId id) const;
     virtual void freeAppletInstanceID(MAppletId id);
-    virtual MAppletId appletIDForWidget(MWidget *widget) const;
+    virtual MAppletId appletIDForWidget(QGraphicsWidget *widget) const;
     virtual MAppletId appletIDForPackageName(const QString &packageName) const;
     virtual MAppletId::AppletInstanceID appletInstanceIDFromKey(const QString &key);
     virtual void removeAppletInstanceData(MAppletId appletId);
@@ -259,10 +259,10 @@ void MAppletInstanceManagerStub::freeAppletInstanceID(MAppletId id)
     stubMethodEntered("freeAppletInstanceID", params);
 }
 
-MAppletId MAppletInstanceManagerStub::appletIDForWidget(MWidget *widget) const
+MAppletId MAppletInstanceManagerStub::appletIDForWidget(QGraphicsWidget *widget) const
 {
     QList<ParameterBase *> params;
-    params.append(new Parameter<MWidget * >(widget));
+    params.append(new Parameter<QGraphicsWidget * >(widget));
     stubMethodEntered("appletIDForWidget", params);
     return stubReturnValue<MAppletId>("appletIDForWidget");
 }
@@ -477,7 +477,7 @@ void MAppletInstanceManager::freeAppletInstanceID(MAppletId id)
     gMAppletInstanceManagerStub->freeAppletInstanceID(id);
 }
 
-MAppletId MAppletInstanceManager::appletIDForWidget(MWidget *widget) const
+MAppletId MAppletInstanceManager::appletIDForWidget(QGraphicsWidget *widget) const
 {
     return gMAppletInstanceManagerStub->appletIDForWidget(widget);
 }

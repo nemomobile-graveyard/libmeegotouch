@@ -42,7 +42,7 @@ void MApplicationExtensionAreaViewPrivate::init(MApplicationExtensionArea *contr
     controller->setLayout(layout);
 }
 
-void MApplicationExtensionAreaViewPrivate::addToLayout(MWidget *widget, int index)
+void MApplicationExtensionAreaViewPrivate::addToLayout(QGraphicsWidget *widget, int index)
 {
     QGraphicsLinearLayout *linearLayout = static_cast<QGraphicsLinearLayout *>(layout);
     if (index >= 0) {
@@ -53,7 +53,7 @@ void MApplicationExtensionAreaViewPrivate::addToLayout(MWidget *widget, int inde
 
 }
 
-void MApplicationExtensionAreaViewPrivate::connectContainerToWidget(MContainer *container, MWidget *widget) const
+void MApplicationExtensionAreaViewPrivate::connectContainerToWidget(MContainer *container, QGraphicsWidget *widget) const
 {
     const QMetaObject *mob = widget->metaObject();
 

@@ -116,7 +116,7 @@ protected:
     QGraphicsWidget *parentWidget;
 
     //! The extension widget instantiated from shared library
-    MWidget *widget;
+    QGraphicsWidget *widget;
 
     //! Scene where the widget is inserted.
     MScene *scene;

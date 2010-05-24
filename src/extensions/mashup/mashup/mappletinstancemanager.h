@@ -25,7 +25,7 @@
 #include <QHash>
 #include <QSizeF>
 
-class MWidget;
+class QGraphicsWidget;
 class MDataStore;
 class MAppletInstanceData;
 class MAppletMetaData;
@@ -102,17 +102,17 @@ public:
 signals:
     /*!
      * Signals about a new instance of an applet.
-     * \param widget Pointer to MWidget that represents the new widget.
+     * \param widget Pointer to QGraphicsWidget that represents the new widget.
      * \param store Reference to a MDataStore object given to clients listening to this signal. Through this MDataStore object
      * clients can store their own data into permanent store that will be bound with the instantiated applet instance.
      */
-    void appletInstantiated(MWidget *widget, MDataStore &store) const;
+    void appletInstantiated(QGraphicsWidget *widget, MDataStore &store) const;
 
     /*!
      * Signals about a removal of an applet instance.
-     * \param widget Pointer to MWidget representation about the removed applet instance.
+     * \param widget Pointer to QGraphicsWidget representation about the removed applet instance.
      */
-    void appletRemoved(MWidget *widget);
+    void appletRemoved(QGraphicsWidget *widget);
 
 public slots:
     /*!
@@ -287,7 +287,7 @@ private:
      *
      * \return the Applet ID of the widget or an empty ID if the widget does not belong to an applet
      */
-    MAppletId appletIDForWidget(MWidget *widget) const;
+    MAppletId appletIDForWidget(QGraphicsWidget *widget) const;
 
     /*!
      * Returns the Applet ID for a package name

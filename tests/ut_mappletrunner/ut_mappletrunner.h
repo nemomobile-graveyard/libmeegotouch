@@ -25,7 +25,7 @@
 
 class MAppletRunner;
 class MAppletMetaData;
-class MWidget;
+class QGraphicsWidget;
 
 // Test case must inherit QObject
 class Ut_MAppletRunner: public QObject
@@ -36,7 +36,7 @@ private:
     /** MAppletRunner instance under testing. */
     MAppletRunner *m_instance;
     MAppletMetaData *meta;
-    MWidget *widget;
+    QGraphicsWidget *widget;
 
 public:
     static bool timerImmediateTimeout;

@@ -89,12 +89,12 @@ void SignalListener::extensionRemoved(MApplicationExtensionInterface *extension)
     removedExtensions.append(qMakePair(extension, extensionName));
 }
 
-void SignalListener::widgetCreated(MWidget* widget, MDataStore&)
+void SignalListener::widgetCreated(QGraphicsWidget* widget, MDataStore&)
 {
     createdWidgets.append(widget);
 }
 
-void SignalListener::widgetRemoved(MWidget *widget)
+void SignalListener::widgetRemoved(QGraphicsWidget *widget)
 {
     removedWidgets.append(widget);
 }
@@ -106,7 +106,7 @@ bool GoodExtension::initialize(const QString &interface)
     return success;
 }
 
-MWidget *GoodExtension::widget()
+QGraphicsWidget *GoodExtension::widget()
 {
     return widget_;
 }
@@ -164,11 +164,11 @@ void Ut_MApplicationExtensionManager::setupTestSubject(const QString &inProcessF
 
     connect(manager, SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)), &signalListener, SLOT(extensionInstantiated(MApplicationExtensionInterface *)));
     connect(manager, SIGNAL(extensionRemoved(MApplicationExtensionInterface *)), &signalListener, SLOT(extensionRemoved(MApplicationExtensionInterface *)));
-    connect(manager, SIGNAL(widgetCreated(MWidget*, MDataStore&)), &signalListener, SLOT(widgetCreated(MWidget*, MDataStore&)));
-    connect(manager, SIGNAL(widgetRemoved(MWidget*)), &signalListener, SLOT(widgetRemoved(MWidget*)));
+    connect(manager, SIGNAL(widgetCreated(QGraphicsWidget*, MDataStore&)), &signalListener, SLOT(widgetCreated(QGraphicsWidget*, MDataStore&)));
+    connect(manager, SIGNAL(widgetRemoved(QGraphicsWidget*)), &signalListener, SLOT(widgetRemoved(QGraphicsWidget*)));
 }
 
-void Ut_MApplicationExtensionManager::setupGoodExtension(bool success, MWidget* widget, const QString &name)
+void Ut_MApplicationExtensionManager::setupGoodExtension(bool success, QGraphicsWidget* widget, const QString &name)
 {
     ++goodExtensionCount;
     GoodExtension *goodExtension = new GoodExtension;
@@ -265,14 +265,14 @@ void Ut_MApplicationExtensionManager::testInstantiateInProcessExtensionWhichSucc
     QCOMPARE(manager->instantiateInProcessExtension("test"), true);
     QCOMPARE(signalListener.instantiatedExtensions.count(), 1);
     QCOMPARE(signalListener.instantiatedExtensions.at(0), extensions.at(0));
-    QCOMPARE(signalListener.instantiatedExtensions.at(0)->widget(), (MWidget *)NULL);
+    QCOMPARE(signalListener.instantiatedExtensions.at(0)->widget(), (QGraphicsWidget *)NULL);
     QCOMPARE(signalListener.createdWidgets.count(), 0);
     QCOMPARE(initializedInterface, interfaceName);
 }
 
 void Ut_MApplicationExtensionManager::testInstantiateInProcessExtensionWhichSucceedsWithWidget()
 {
-    MWidget extensionWidget;
+    QGraphicsWidget extensionWidget;
     setupGoodExtension(true, &extensionWidget);
     QCOMPARE(manager->instantiateInProcessExtension("test"), true);
     QCOMPARE(signalListener.instantiatedExtensions.count(), 1);
@@ -291,7 +291,7 @@ void Ut_MApplicationExtensionManager::testInstantiateOutOfProcessExtension()
 
 void Ut_MApplicationExtensionManager::testRemoveInProcessExtension()
 {
-    MWidget extensionWidget;
+    QGraphicsWidget extensionWidget;
     setupGoodExtension(true, &extensionWidget);
     manager->instantiateInProcessExtension("test");
 
@@ -302,7 +302,7 @@ void Ut_MApplicationExtensionManager::testRemoveInProcessExtension()
 
 void Ut_MApplicationExtensionManager::testRemoveNonExistentInProcessExtension()
 {
-    MWidget extensionWidget;
+    QGraphicsWidget extensionWidget;
     setupGoodExtension(true, &extensionWidget);
     manager->instantiateInProcessExtension("test");
 
@@ -313,7 +313,7 @@ void Ut_MApplicationExtensionManager::testRemoveNonExistentInProcessExtension()
 void Ut_MApplicationExtensionManager::testInProcessExtensionFiltering()
 {
     const MApplicationExtensionMetaData metaData("test.desktop");
-    MWidget extensionWidget;
+    QGraphicsWidget extensionWidget;
     setupGoodExtension(true, &extensionWidget);
 
     // Test that not allowing test.desktop in-process but allowing it out-of-process does nothing
@@ -346,10 +346,10 @@ void Ut_MApplicationExtensionManager::testOutOfProcessExtensionFiltering()
 
 void Ut_MApplicationExtensionManager::testRequestForAllInProcessExtensionsReturnsAListOfExtensions()
 {
-    MWidget extensionWidget1;
+    QGraphicsWidget extensionWidget1;
     setupGoodExtension(true, &extensionWidget1);
     QCOMPARE(manager->instantiateInProcessExtension("test"), true);
-    MWidget extensionWidget2;
+    QGraphicsWidget extensionWidget2;
     setupGoodExtension(true, &extensionWidget2);
     QCOMPARE(manager->instantiateInProcessExtension("testanother"), true);
 
@@ -368,7 +368,7 @@ void Ut_MApplicationExtensionManager::testAddWidgetInProcessExtensionWithoutWidg
 
 void Ut_MApplicationExtensionManager::testAddWidgetInProcessExtensionWithWidget()
 {
-    MWidget extensionWidget;
+    QGraphicsWidget extensionWidget;
     setupGoodExtension(true, &extensionWidget);
     manager->instantiateInProcessExtension("test");
     QCOMPARE(signalListener.createdWidgets.count(), 1);
@@ -377,7 +377,7 @@ void Ut_MApplicationExtensionManager::testAddWidgetInProcessExtensionWithWidget(
 
 void Ut_MApplicationExtensionManager::testRemoveWidgetInProcessExtension()
 {
-    MWidget extensionWidget;
+    QGraphicsWidget extensionWidget;
     setupGoodExtension(true, &extensionWidget);
     manager->instantiateInProcessExtension("test");
     manager->removeInProcessExtension("test");

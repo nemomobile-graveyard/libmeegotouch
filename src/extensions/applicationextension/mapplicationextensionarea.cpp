@@ -44,8 +44,8 @@ void MApplicationExtensionAreaPrivate::init(const QString &interface)
     extensionManager = QSharedPointer<MApplicationExtensionManager>(new MApplicationExtensionManager(interface));
     QObject::connect(extensionManager.data(), SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)), q, SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)), Qt::QueuedConnection);
     QObject::connect(extensionManager.data(), SIGNAL(extensionRemoved(MApplicationExtensionInterface*)), q, SIGNAL(extensionRemoved(MApplicationExtensionInterface*)), Qt::QueuedConnection);
-    QObject::connect(extensionManager.data(), SIGNAL(widgetCreated(MWidget*, MDataStore&)), q, SLOT(addWidget(MWidget*, MDataStore&)));
-    QObject::connect(extensionManager.data(), SIGNAL(widgetRemoved(MWidget*)), q, SLOT(removeWidget(MWidget*)));
+    QObject::connect(extensionManager.data(), SIGNAL(widgetCreated(QGraphicsWidget*, MDataStore&)), q, SLOT(addWidget(QGraphicsWidget*, MDataStore&)));
+    QObject::connect(extensionManager.data(), SIGNAL(widgetRemoved(QGraphicsWidget*)), q, SLOT(removeWidget(QGraphicsWidget*)));
 }
 
 QList<MApplicationExtensionInterface*> MApplicationExtensionAreaPrivate::extensions()

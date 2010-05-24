@@ -29,10 +29,10 @@
 
 class MApplicationExtensionMetaData;
 class MDataStore;
-class MWidget;
 class MExtensionHandle;
 class MApplicationExtensionInterface;
 class MFileDataStore;
+class QGraphicsWidget;
 
 //! \internal
 class MApplicationExtensionManager : public QObject
@@ -107,7 +107,7 @@ Q_SIGNALS:
      * Signal sent when an extension widget is removed
      * \param widget the extension that was removed
      */
-    void widgetRemoved(MWidget* widget);
+    void widgetRemoved(QGraphicsWidget* widget);
 
     /*!
      * Signal for instantiating an extension widget and it's datastore
@@ -115,7 +115,7 @@ Q_SIGNALS:
      * \param store This MDataStore object can be used to store permanent extension area data related
      * to this particular application extension instance.
      */
-     void widgetCreated(MWidget *widget, MDataStore &store);
+     void widgetCreated(QGraphicsWidget *widget, MDataStore &store);
 
 private slots:
     /*!
@@ -143,7 +143,7 @@ private:
     //! Filter for extensions allowed to be loaded out-of-process
     QRegExp outOfProcessFilter;
 
-    typedef QPair<MApplicationExtensionInterface*, MWidget*> InProcessExtensionData;
+    typedef QPair<MApplicationExtensionInterface*, QGraphicsWidget*> InProcessExtensionData;
 
     //! Instantiated in-process extensions. A map from the shared library name to the extension instance.
     QHash<QString, InProcessExtensionData> inProcessExtensions;

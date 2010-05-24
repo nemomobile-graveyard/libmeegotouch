@@ -25,10 +25,10 @@
 #include <mappletloader_stub.h>
 #include <mappletid_stub.h>
 #include <mappletsettings_stub.h>
-#include <MWidget>
 #include <MWindow>
 #include <MApplication>
 #include <QGraphicsLinearLayout>
+#include <QGraphicsWidget>
 #include <QtTest/QtTest>
 
 // MWindow stubs (to prevent crashing)
@@ -53,7 +53,7 @@ void Ut_MAppletRunner::init()
     meta = new MAppletMetaData("ut_mextensionrunner/ut_mextensionrunner.desktop");
     gMAppletMetaDataStub->stubSetReturnValue("isValid", true);
 
-    widget = new MWidget;
+    widget = new QGraphicsWidget;
     gMAppletLoaderStub->stubSetReturnValue("loadApplet", widget);
 }
 
@@ -102,7 +102,7 @@ void Ut_MAppletRunner::testInitializationFailInvalidMetadata()
 
 void Ut_MAppletRunner::testInitializationFailConstructWidgetFails()
 {
-    gMAppletLoaderStub->stubSetReturnValue("loadApplet", (MWidget *)NULL);
+    gMAppletLoaderStub->stubSetReturnValue("loadApplet", (QGraphicsWidget *)NULL);
     QCOMPARE(m_instance->init("servername", *meta, "appletId", "/tmp/applet.data"), false);
 }
 

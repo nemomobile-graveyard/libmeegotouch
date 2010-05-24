@@ -161,18 +161,18 @@ int AppletInstanceCollection::count() const
     return instances.count();
 }
 
-MWidget *AppletInstanceCollection::at(int index) const
+QGraphicsWidget *AppletInstanceCollection::at(int index) const
 {
     return instances.at(index);
 }
 
-void AppletInstanceCollection::addInstance(MWidget *widget, MDataStore &store)
+void AppletInstanceCollection::addInstance(QGraphicsWidget *widget, MDataStore &store)
 {
     Q_UNUSED(store);
     instances.append(widget);
 }
 
-void AppletInstanceCollection::removeInstance(MWidget *widget)
+void AppletInstanceCollection::removeInstance(QGraphicsWidget *widget)
 {
     int index = instances.indexOf(widget);
     if (index != -1) {
@@ -415,7 +415,7 @@ void Ut_MAppletInstanceManager::cleanup()
 
 void Ut_MAppletInstanceManager::testInProcessAppletRestoration()
 {
-    QSignalSpy spy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
+    QSignalSpy spy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
 
     // Verify that the restoration process does not return an error
     QVERIFY(manager->restoreApplets());
@@ -435,7 +435,7 @@ void Ut_MAppletInstanceManager::testOutOfProcessAppletRestoration()
 
     // Create AppletInstanceCollection to verify created applet instances
     AppletInstanceCollection collection;
-    QObject::connect(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)), &collection, SLOT(addInstance(MWidget *, MDataStore &)));
+    QObject::connect(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)), &collection, SLOT(addInstance(QGraphicsWidget *, MDataStore &)));
 
     // Verify that the restoration process does not return an error
     QVERIFY(manager->restoreApplets());
@@ -494,7 +494,7 @@ void Ut_MAppletInstanceManager::testAppletInstantiation()
     manager = new MTestAppletInstanceManager("testmanager", &mockDataStore);
 
     // Create a signal spy to investigate if appletInstantiated signal is emitted for all applets.
-    QSignalSpy spy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
+    QSignalSpy spy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
 
     // Verify that the instantiation process does not return an error
     QVERIFY(manager->instantiateApplet("/tmp/testapplet1.desktop"));
@@ -514,7 +514,7 @@ void Ut_MAppletInstanceManager::testAppletInstantiationWithMissingDesktopFiles()
     manager = new MTestAppletInstanceManager("testmanager", &mockDataStore);
 
     // Create a signal spy to investigate if appletInstantiated signal is emitted for all applets.
-    QSignalSpy spy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
+    QSignalSpy spy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
 
     // Verify that the instantiation process does return an error
     QVERIFY(!manager->instantiateApplet("/tmp/testapplet1.desktop"));
@@ -526,8 +526,8 @@ void Ut_MAppletInstanceManager::testAppletInstantiationWithMissingDesktopFiles()
 
 void Ut_MAppletInstanceManager::testAppletInstanceRemoval()
 {
-    QSignalSpy instantiateSpy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
-    QSignalSpy removeSpy(manager, SIGNAL(appletRemoved(MWidget *)));
+    QSignalSpy instantiateSpy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
+    QSignalSpy removeSpy(manager, SIGNAL(appletRemoved(QGraphicsWidget *)));
 
     // Verify that the instantiation process does not return an error
     QVERIFY(manager->restoreApplets());
@@ -552,7 +552,7 @@ void Ut_MAppletInstanceManager::testAppletInstanceRemoval()
 
 void Ut_MAppletInstanceManager::testAppletUninstallation()
 {
-    QSignalSpy removeSpy(manager, SIGNAL(appletRemoved(MWidget *)));
+    QSignalSpy removeSpy(manager, SIGNAL(appletRemoved(QGraphicsWidget *)));
 
     // Verify that the instantiation process does not return an error
     QVERIFY(manager->restoreApplets());
@@ -578,7 +578,7 @@ void Ut_MAppletInstanceManager::testAppletInstanceDataStoreIsNonReadWrite()
     manager = new MTestAppletInstanceManager("testmanager", &mockDataStore);
 
     // Create a signal spy to investigate if appletInstantiated signal is emitted
-    QSignalSpy spy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
+    QSignalSpy spy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
 
     MFileDataStore_isReadable = false;
     QVERIFY(!manager->instantiateApplet("/tmp/testapplet1.desktop"));
@@ -636,7 +636,7 @@ void Ut_MAppletInstanceManager::testOOPAppletStartsToBrokenState()
     gMExtensionHandleStub->stubSetReturnValue("state", MAppletHandleModel::BROKEN);
 
     // Create a signal spy to investigate if appletInstantiated signal is emitted for all applets.
-    QSignalSpy spy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
+    QSignalSpy spy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
 
     // Verify that the instantiation process doesn't succeed
     QVERIFY(!manager->instantiateApplet("/tmp/testapplet1.desktop"));
@@ -648,7 +648,7 @@ void Ut_MAppletInstanceManager::testOOPAppletStartsToBrokenState()
 void Ut_MAppletInstanceManager::testInstallingAppletFromPackage()
 {
     // Create a signal spy to investigate if appletInstantiated signal is emitted
-    QSignalSpy spy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
+    QSignalSpy spy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
 
     // Instantiate an applet from a package
     QMap<QString, QVariant> metaData;
@@ -738,7 +738,7 @@ void Ut_MAppletInstanceManager::testRestoringAppletsBeingInstalled()
 
 void Ut_MAppletInstanceManager::testReceiveOperationFailed()
 {
-    QSignalSpy spy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
+    QSignalSpy spy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
     connect(this, SIGNAL(receiveOperation(QDBusPendingCallWatcher *)), manager, SLOT(receiveOperation(QDBusPendingCallWatcher *)));
 
     MAppletId appletId("ut_mappletinstancemanager", "testmanager", 5);
@@ -758,7 +758,7 @@ void Ut_MAppletInstanceManager::testReceiveOperationFailed()
 
 void Ut_MAppletInstanceManager::testReceiveUnknownOperation()
 {
-    QSignalSpy spy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
+    QSignalSpy spy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
     connect(this, SIGNAL(receiveOperation(QDBusPendingCallWatcher *)), manager, SLOT(receiveOperation(QDBusPendingCallWatcher *)));
 
     MAppletId appletId("ut_mappletinstancemanager", "testmanager", 5);
@@ -779,7 +779,7 @@ void Ut_MAppletInstanceManager::testReceiveUnknownOperation()
 
 void Ut_MAppletInstanceManager::testReceiveInstallOperation()
 {
-    QSignalSpy spy(manager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)));
+    QSignalSpy spy(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)));
     connect(this, SIGNAL(receiveOperation(QDBusPendingCallWatcher *)), manager, SLOT(receiveOperation(QDBusPendingCallWatcher *)));
 
     MAppletId appletId("ut_mappletinstancemanager", "testmanager", 5);

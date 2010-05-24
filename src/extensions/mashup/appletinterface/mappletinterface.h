@@ -23,7 +23,7 @@
 #include <QtPlugin>
 #include "mexport.h"
 
-class MWidget;
+class QGraphicsWidget;
 class MAppletMetaData;
 class MDataStore;
 class MDataAccess;
@@ -55,9 +55,9 @@ public:
      * \param instanceData A data store object that should be used to store permanent data of the constructed applet instance.
      * \param settings A data store object that bundles applet settings to the applet. Contains both the
      *                 instance settings and the global settings.
-     * \return New MWidget class instance that visualizes this applet.
+     * \return New widget instance that visualizes this applet.
      */
-    virtual MWidget *constructWidget(const MAppletMetaData &metadata, MDataStore &instanceData, MDataAccess &settings) = 0;
+    virtual QGraphicsWidget *constructWidget(const MAppletMetaData &metadata, MDataStore &instanceData, MDataAccess &settings) = 0;
 };
 
 Q_DECLARE_INTERFACE(MAppletInterface, "com.meego.core.MAppletInterface/1.0")

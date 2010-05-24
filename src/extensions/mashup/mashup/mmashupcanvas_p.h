@@ -52,7 +52,7 @@ public:
     void init(const QString &identifier);
 
     //! \reimp
-    virtual void addWidget(MWidget *widget, MDataStore &store);
+    virtual void addWidget(QGraphicsWidget *widget, MDataStore &store);
     //! \reimp_end
 
     //! Applet instance manager

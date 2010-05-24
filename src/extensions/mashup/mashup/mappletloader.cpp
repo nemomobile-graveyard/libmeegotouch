@@ -18,9 +18,7 @@
 ****************************************************************************/
 
 #include "mappletloader.h"
-
 #include "mappletinterface.h"
-#include "mwidget.h"
 #include "mappletmetadata.h"
 #include "mdataaccess.h"
 
@@ -30,13 +28,13 @@ MAppletLoader::MAppletLoader()
 {
 }
 
-MWidget *MAppletLoader::loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings)
+QGraphicsWidget *MAppletLoader::loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings)
 {
     QPluginLoader loader(metadata.appletBinary());
     QObject *object = loader.instance();
 
     MAppletInterface *applet = qobject_cast<MAppletInterface *>(object);
-    MWidget *widget = NULL;
+    QGraphicsWidget *widget = NULL;
     if (applet != NULL) {
         widget = applet->constructWidget(metadata, dataStore, settings);
     }

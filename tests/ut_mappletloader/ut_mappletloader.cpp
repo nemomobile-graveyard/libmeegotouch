@@ -20,7 +20,7 @@
 #include "ut_mappletloader.h"
 
 #include <mappletloader.h>
-#include <MWidget>
+#include <QGraphicsWidget>
 #include <mdatastore.h>
 #include <mappletmetadata.h>
 #include <mdataaccess.h>
@@ -50,11 +50,11 @@ public:
 
 Q_EXPORT_PLUGIN2(testapplet, TestApplet)
 
-MWidget *gLastConstructedWidget = NULL;
+QGraphicsWidget *gLastConstructedWidget = NULL;
 
-MWidget *TestApplet::constructWidget(const MAppletMetaData &, MDataStore &, MDataAccess &)
+QGraphicsWidget *TestApplet::constructWidget(const MAppletMetaData &, MDataStore &, MDataAccess &)
 {
-    gLastConstructedWidget = new MWidget;
+    gLastConstructedWidget = new QGraphicsWidget;
     return gLastConstructedWidget;
 }
 
@@ -131,7 +131,7 @@ void Ut_MAppletLoader::testAppletLoading()
 {
     QPluginLoader_instance_return = new TestApplet;
 
-    MWidget *widget = MAppletLoader::loadApplet(*metadata, *dataStore, *appletSettingsInterface);
+    QGraphicsWidget *widget = MAppletLoader::loadApplet(*metadata, *dataStore, *appletSettingsInterface);
 
     QVERIFY(widget != NULL);
     QCOMPARE(widget, gLastConstructedWidget);
@@ -141,7 +141,7 @@ void Ut_MAppletLoader::testAppletLoading()
 void Ut_MAppletLoader::testAppletLoadingFailNullAppletObject()
 {
     // Returns NULL from QPluginLoader::instance()
-    MWidget *widget = MAppletLoader::loadApplet(*metadata, *dataStore, *appletSettingsInterface);
+    QGraphicsWidget *widget = MAppletLoader::loadApplet(*metadata, *dataStore, *appletSettingsInterface);
 
     QVERIFY(widget == NULL);
 }
@@ -151,7 +151,7 @@ void Ut_MAppletLoader::testAppletLoadingFailWrongTypeAppletObject()
     // Use an object that can't be cast to MAppletInterface
     QPluginLoader_instance_return = new SomeQObject;
 
-    MWidget *widget = MAppletLoader::loadApplet(*metadata, *dataStore, *appletSettingsInterface);
+    QGraphicsWidget *widget = MAppletLoader::loadApplet(*metadata, *dataStore, *appletSettingsInterface);
 
     QVERIFY(widget == NULL);
     // Ensure that the loader still deletes the object even though it was of a wrong type

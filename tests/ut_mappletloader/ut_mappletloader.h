@@ -34,7 +34,7 @@ class TestApplet : public QObject, public MAppletInterface
 
 public:
     // methods derived from MAppletInterface
-    virtual MWidget *constructWidget(const MAppletMetaData &, MDataStore &, MDataAccess &);
+    virtual QGraphicsWidget *constructWidget(const MAppletMetaData &, MDataStore &, MDataAccess &);
 
     // A flag to tell if we should use the deprecated or the new applet construction interface
     static bool useDeprecatedInterface;

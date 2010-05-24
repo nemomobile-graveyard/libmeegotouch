@@ -155,7 +155,7 @@ bool MApplicationExtensionManager::instantiateInProcessExtension(const QString &
             if (extension != NULL) {
                 success = extension->initialize(interface);
                 if (success) {
-                    MWidget *widget = extension->widget();
+                    QGraphicsWidget *widget = extension->widget();
                     if (widget) {
                         // Inform about the added extension widget
                         emit widgetCreated(widget, *extensionDataStore.data());
