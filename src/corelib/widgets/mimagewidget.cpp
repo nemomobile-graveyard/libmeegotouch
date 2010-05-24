@@ -162,7 +162,9 @@ void MImageWidget::setImage(const QString &id, const QSize &s)
 {
     Q_D(MImageWidget);
     d->setImageName(id, s);
-
+ 
+    model()->setCrop(QRect());
+ 
     update();
 }
 
