@@ -122,7 +122,8 @@ class MDismissEvent;
                                centralWidget,
                                M::OkButton | M::ResetButton);
 
-        dialog->exec();
+        connect(dialog, SIGNAL(disappeared()), SLOT(processDialogResult()));
+        dialog->appear();
     \endcode
 
     Constructing a question dialog, it is easier to use MMessageBox instead:
@@ -130,7 +131,8 @@ class MDismissEvent;
     MDialog* dialog = new MDialog("Question",
         new MLabel("Lorem ipsum dolor sit amet?"),
         M::YesButton | M::NoButton);
-    dialog->exec();
+    connect(dialog, SIGNAL(disappeared()), SLOT(processDialogResult()));
+    dialog->appear();
     \endcode
 
     \sa MDialogView, MDialogStyle
@@ -485,6 +487,12 @@ public Q_SLOTS:
      *
      * If the dialog was dismissed with either accept() or reject() (or the equivalent done()
      * calls), a DialogCode result is returned instead.
+     *
+     * \warning Usage of this method is discouraged as running a local event loop can
+     *          lead to hard-to-predict code paths and therefore is likely to cause
+     *          bugs. See <a href="http://labs.trolltech.com/blogs/2010/02/23/unpredictable-exec/">Unpredictable exec()</a>
+     *          article for more info. Instead, summon the dialog with appear() and
+     *          process its result upon the emission of its disappeared() signal.
      *
      * \sa StandardButton, setSystemModal()
      */
