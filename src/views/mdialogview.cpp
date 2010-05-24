@@ -438,6 +438,10 @@ void MDialogViewPrivate::addButton(MButtonModel *buttonModel)
             buttonAdded = true;
         }
     } while (!buttonAdded);
+    for (i = 0; i < buttonBoxLayout->count(); i++) {
+        buttonBoxLayoutPolicy->itemAt(i)->setPreferredWidth(
+                buttonBox->preferredWidth() / buttonBoxLayout->count());
+    }
 }
 
 int MDialogViewPrivate::stdButtonOrder(M::StandardButton buttonType)
