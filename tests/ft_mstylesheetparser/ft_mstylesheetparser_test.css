@@ -22,6 +22,11 @@ TestObject
     attribute-color: #fff/*hmm...*/fff;
 }
 
+/* some valid comments */
+/***/
+/**/ /* * */
+/* abc **/
+
 
 // General purpose style definitions for Test object with parent
 ParentName TestObject

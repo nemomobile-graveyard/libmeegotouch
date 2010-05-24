@@ -264,20 +264,25 @@ QChar MStyleSheetParserPrivate::read(QFile &stream, const QString &delimeters, Q
                 continue;
             } else if (in[0] == '/' && in[1] == '*') {
                 stream.read(in, 2);
+                in[1] = 0;
                 // multi-line comment
-                int count = 0;
                 QString comment;
 
                 // Read until we get "*/"
                 while (stream.atEnd() == false) {
                     stream.read(in, 1);
-                    if (count == 0 && in[0] == '*')
-                        count++;
-                    else if (count == 1 && in[0] == '/')
+                    if (in[0] == '/' && in[1] == '*') {
                         break;
-                    else {
-                        comment += in[0];
-                        count = 0;
+                    } else {
+                        if(in[1] == '*') {
+                            comment += in[1];
+                        }
+                        if(in[0] == '*') {
+                            in[1] = '*';
+                        } else {
+                            in[1] = 0;
+                            comment += in[0];
+                        }
                     }
                 }
                 //mDebug("MStyleSheetParserPrivate") << "Skipping comment:" << comment;
