@@ -25,7 +25,7 @@
 #include <QtGlobal>
 #include <QEasingCurve>
 
-class M_EXPORT MBasicLayoutAnimationStyle : public MLayoutAnimationStyle
+class MBasicLayoutAnimationStyle : public MLayoutAnimationStyle
 {
     Q_OBJECT
     M_STYLE_INTERNAL(MBasicLayoutAnimationStyle)
@@ -39,7 +39,7 @@ class M_EXPORT MBasicLayoutAnimationStyle : public MLayoutAnimationStyle
 };
 
 // TODO: get rid of this container
-class M_EXPORT MBasicLayoutAnimationStyleContainer : public MLayoutAnimationStyleContainer
+class MBasicLayoutAnimationStyleContainer : public MLayoutAnimationStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MBasicLayoutAnimationStyle)
 };
