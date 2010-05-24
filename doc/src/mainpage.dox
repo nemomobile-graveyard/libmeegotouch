@@ -13,7 +13,7 @@
       <li><a href="installation.html">Installation</a> and First Steps with MeeGo Touch</li>
       <li>Examples and Demos</li>
       <li><strong><a href="news.html">What's New in MeeGo Touch</a></strong></li>
-       <li><strong><a href="tutorial.html">Tutorial</a></strong></li>
+       <li><strong><a href="tutorial.html">Your first MeeGo Touch application</a></strong></li>
       </ul>
     </td>
     <td>
@@ -47,6 +47,7 @@
        <li><a href="servicefw.html">MeeGo Touch Service Framework</a></li>
         <li><a href="i18n.html">Internationalization</a></li>
         <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
+        <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>
       </ul>
     </td>
     <td>
