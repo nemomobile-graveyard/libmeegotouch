@@ -30,6 +30,7 @@ const MTheme::ViewType MButton::toggleType      = "toggle";
 const MTheme::ViewType MButton::checkboxType    = "checkbox";
 const MTheme::ViewType MButton::iconType        = "icon";
 const MTheme::ViewType MButton::switchType      = "switch";
+const MTheme::ViewType MButton::groupType       = "group";
 
 MButtonPrivate::MButtonPrivate()
     : MWidgetControllerPrivate(),

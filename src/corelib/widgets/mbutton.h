@@ -220,6 +220,11 @@ public:
     static const MTheme::ViewType switchType;
 
     /*!
+        \brief Variable that defines id for a buttons inside button groups.
+    */
+    static const MTheme::ViewType groupType;
+
+    /*!
       \brief Constructs a button without text.
      */
     explicit MButton(QGraphicsItem *parent = 0, MButtonModel *model = 0);
