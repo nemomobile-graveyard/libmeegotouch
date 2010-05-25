@@ -103,8 +103,9 @@ void MContentItem::setImage(const QImage &image)
     model()->setItemImage(d->image);
 }
 
-void MContentItem::setImage(const QString &id)
+void MContentItem::setImage(const QString &id, const QSize &s)
 {
+    Q_UNUSED(s);
     Q_D(MContentItem);
     d->imageID = id;
     model()->setItemImageID(d->imageID);

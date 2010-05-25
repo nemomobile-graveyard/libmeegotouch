@@ -230,7 +230,7 @@ public Q_SLOTS:
         \brief Sets thumbnail image.
         \param id, image id in theme system.
      */
-    void setImage(const QString &id);
+    void setImage(const QString &id, const QSize &size = QSize());
 
     /**
         \brief Set title text. This is first line.
