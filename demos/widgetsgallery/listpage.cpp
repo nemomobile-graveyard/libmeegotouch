@@ -507,7 +507,7 @@ void ListPage::showOrientationSelectionDialog()
             applicationWindow()->setOrientationLocked(false);
         } else if (mode == portrait) {
             applicationWindow()->setOrientationAngleLocked(false);
-            applicationWindow()->setOrientationAngle(M::Angle90);
+            applicationWindow()->setOrientationAngle(M::Angle270);
             applicationWindow()->setOrientationLocked(true);
         } else if (mode == landscape) {
             applicationWindow()->setOrientationAngleLocked(false);
