@@ -60,6 +60,9 @@ void MLinearLayoutPolicy::insertItem(int index, QGraphicsLayoutItem *item)
     ProxyItem *proxyItem = new ProxyItem(item);
     d->engine->insertItem(index, proxyItem);
     MAbstractLayoutPolicy::insertItem(index, item);
+    
+    if( d->notifyWidgetsOfLayoutPositionEnabled )
+        d->notifyAffectedWidgetsOfLayoutPosition(index, true);
 }
 
 void MLinearLayoutPolicy::insertItem(int index, QGraphicsLayoutItem *item, Qt::Alignment alignment)
@@ -136,6 +139,7 @@ void MLinearLayoutPolicy::setOrientation(Qt::Orientation orientation)
         else
             d->engine->setSpacing(verticalSpacing());
         invalidatePolicyAndLayout();
+        d->notifyAllWidgetsOfLayoutPosition();
     }
 }
 
@@ -152,12 +156,17 @@ void MLinearLayoutPolicy::removeAt(int index)
         mWarning("MLinearLayoutPolicy") << Q_FUNC_INFO << "invalid index" << index;
         return;
     }
+
+    if( d->notifyWidgetsOfLayoutPositionEnabled )
+        d->notifyAffectedWidgetsOfLayoutPosition(index, false);
+
     QGraphicsLayoutItem *proxyItem = d->engine->itemAt(index);
     d->rowCount--;
     d->engine->removeAt(index);
     delete proxyItem;
     MAbstractLayoutPolicy::removeAt(index);
 }
+
 QSizeF MLinearLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_D(const MLinearLayoutPolicy);
@@ -167,6 +176,22 @@ QSizeF MLinearLayoutPolicy::sizeHint(Qt::SizeHint which, const QSizeF &constrain
     const_cast<MLinearLayoutPolicyPrivate *>(d)->refreshEngine();
     return d->engine->sizeHint(which, constraint);
 }
+
+void MLinearLayoutPolicy::setNotifyWidgetsOfLayoutPositionEnabled(bool enabled)
+{
+    Q_D(MLinearLayoutPolicy);
+    if( enabled != d->notifyWidgetsOfLayoutPositionEnabled ) {
+        d->notifyWidgetsOfLayoutPositionEnabled = enabled;
+        d->notifyAllWidgetsOfLayoutPosition();
+    }
+}
+
+bool MLinearLayoutPolicy::isNotifyWidgetsOfLayoutPositionEnabled() const
+{
+    Q_D(const MLinearLayoutPolicy);
+    return d->notifyWidgetsOfLayoutPositionEnabled;
+}
+
 
 void MLinearLayoutPolicy::relayout()
 {

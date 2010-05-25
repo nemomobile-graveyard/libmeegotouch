@@ -36,8 +36,12 @@ class MButton;
     \section MButtonGroupOverview Overview
 
         MButtonGroup does not provide a visual representation of this grouping,
-        instead it manages the states of each of the buttons in the group.
-
+        instead it manages the states of each of the buttons in the group. If 
+        visual representation for the buttons in a group is needed, 
+        MLinearLayoutPolicy::setNotifyWidgetsOfLayoutPositionEnabled() method 
+        can be used to enable the layout to automatically set background graphics 
+        for the buttons depending on their position.
+        
         An exclusive button group switches off all checkable (toggle) buttons
         except the one that was clicked. By default, a button group is exclusive.
         The buttons in a button group are usually checkable buttons. Non-checkable
@@ -64,8 +68,6 @@ class MButton;
         representation of enum values in a user interface.
 
     \section MButtonGroupUseGuidelines Usage guidelines
-        - The button group should have a visualization that ties the buttons in
-          the group together.
         - The button group can have a minimum of 2 buttons.
         - The button group component should try to take all the width that is
           available for the group if possible.
@@ -87,9 +89,6 @@ class MButton;
 
     \section MButtonGroupOpenIssues Open issues
         - Should button group be always exclusive?
-        - The button group should have a visualization that ties the buttons in
-          the group together. How to implement this?
-        - Should the group handle the positioning of the buttons?
 
     \section MButtonGroupExamples Examples
         Adding buttons to group:
@@ -133,7 +132,7 @@ class MButton;
         //create button group
         MButtonGroup* buttonGroup = new MButtonGroup();
 
-        //add buttons with user define ids to group
+        //add buttons with user defined ids to group
         MButton* buttons[5];
         for( int i=0; i < 5; ++i) {
             buttons[i] = new MButton("Button" + QString::number(i));
@@ -158,6 +157,26 @@ class MButton;
 
         //fetch id of a button
         int id = buttonGroup->id(button);
+        \endcode
+
+        Group the buttons visually together:
+        \code
+        //create button group and horizontal layout for the buttons
+        MButtonGroup* buttonGroup = new MButtonGroup();
+        MLayout* layout = new MLayout;
+        MLinearLayoutPolicy* policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+        
+        //make the policy to set the backgrounds of the buttons
+        policy->setNotifyWidgetsOfLayoutPositionEnabled(true);
+        
+        //add buttons to group and layout
+        MButton* buttons[5];
+        for( int i=0; i < 5; ++i) {
+            buttons[i] = new MButton("Button" + QString::number(i));
+            buttons[i]->setViewType(MButton::groupType); //optional, for creating buttons without margins
+            buttonGroup->addButton(buttons[i]);
+            policy->addItem(buttons[i]);
+        }
         \endcode
 
     \sa MButton

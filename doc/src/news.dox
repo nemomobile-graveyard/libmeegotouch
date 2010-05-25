@@ -12,6 +12,10 @@
 - MSceneManager now allows a widget to request cursor visibility directly via
  the ensureCursorVisible() slot.
 
+- MLinearLayoutPolicy::setNotifyWidgetsOfLayoutPositionEnabled() method can be used to make the 
+  policy to automatically set different background graphics for the widget items depending 
+  on their position in the layout. This functionality is useful when there is a need to tie 
+  bunch of buttons visually together.
 
 \section v0200 0.20.0
 

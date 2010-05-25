@@ -22,10 +22,12 @@
 
 #include "mlinearlayoutpolicy.h"
 #include "mabstractlayoutpolicy_p.h"
+#include "mnamespace.h"
 
 class QGraphicsLinearLayout;
 class QGraphicsWidget;
 class MLayout;
+class ProxyItem;
 
 /**
     This is the private implementation class for the grid layout policy.
@@ -45,12 +47,18 @@ public:
     void fixIndex(int *index) const;
     void refreshEngine();
 
+    void notifyWidgetOfLayoutPosition(int index, M::Position position);
+    void notifyAffectedWidgetsOfLayoutPosition(int index, bool add);
+    void notifyAllWidgetsOfLayoutPosition();
+
     QGraphicsWidget *const engineWidget;
     QGraphicsLinearLayout *const engine;
     /** We need to keep track of the number of rows/columns in the layout, since
      *  QGraphicsLinearLayout does not expose this information to us.  This is
      *  basically q->count() + the number of stretches added/inserted. */
     int rowCount;
+    
+    bool notifyWidgetsOfLayoutPositionEnabled;
 };
 
 #endif // Header Guard

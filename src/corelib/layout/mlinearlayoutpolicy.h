@@ -260,6 +260,19 @@ public:
     virtual void removeAt(int index);
     /*! \reimp_end */
 
+    /*!
+      Enable/disable automatic setting of the layout position for the items inside the layout.
+
+      \sa layoutPositioningEnabled(), MWidgetController::setLayoutPosition()
+     */
+    void setNotifyWidgetsOfLayoutPositionEnabled(bool enabled);
+
+    /*!
+      Returns true if positioning is enabled, false if positioning is disabled.
+
+      \sa enableLayoutPositioning()
+     */    
+    bool isNotifyWidgetsOfLayoutPositionEnabled() const;
 
 protected:
     /*! \reimp */

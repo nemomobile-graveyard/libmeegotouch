@@ -332,4 +332,116 @@ void Ut_MLinearLayoutPolicy::testInsertingItems()
 
 }
 
+#include <mwidgetcontroller.h>
+void Ut_MLinearLayoutPolicy::testLayoutPositioning()
+{
+    m_policy->setOrientation(Qt::Horizontal);
+    m_policy->setNotifyWidgetsOfLayoutPositionEnabled(true);
+    
+    MWidgetController* c0 = new MWidgetController();
+    MWidgetController* c1 = new MWidgetController();
+    MWidgetController* c2 = new MWidgetController();
+    MWidgetController* c3 = new MWidgetController();
+    MWidgetController* c4 = new MWidgetController();
+    MWidgetController* c5 = new MWidgetController();
+
+    m_policy->addItem(c0);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::DefaultPosition);
+    
+    m_policy->addItem(c1);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::HorizontalLeftPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::HorizontalRightPosition);
+
+    m_policy->addItem(c2);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::HorizontalLeftPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::HorizontalRightPosition);
+    
+    m_policy->addItem(c3);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::HorizontalLeftPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c3->layoutPosition(), (int)M::HorizontalRightPosition);
+
+    m_policy->insertItem(0, c4);
+    QCOMPARE((int)c4->layoutPosition(), (int)M::HorizontalLeftPosition);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c3->layoutPosition(), (int)M::HorizontalRightPosition);
+
+    m_policy->insertItem(3, c5);
+    QCOMPARE((int)c4->layoutPosition(), (int)M::HorizontalLeftPosition);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c5->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c3->layoutPosition(), (int)M::HorizontalRightPosition);
+
+    m_policy->setNotifyWidgetsOfLayoutPositionEnabled(false);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c3->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c4->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c5->layoutPosition(), (int)M::DefaultPosition);
+
+    m_policy->setNotifyWidgetsOfLayoutPositionEnabled(true);
+    QCOMPARE((int)c4->layoutPosition(), (int)M::HorizontalLeftPosition);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c5->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::HorizontalCenterPosition);
+    QCOMPARE((int)c3->layoutPosition(), (int)M::HorizontalRightPosition);
+    
+    m_policy->setOrientation(Qt::Vertical);
+    QCOMPARE((int)c4->layoutPosition(), (int)M::VerticalTopPosition);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c5->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c3->layoutPosition(), (int)M::VerticalBottomPosition);
+
+    m_policy->removeAt(3);
+    QCOMPARE((int)c5->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c4->layoutPosition(), (int)M::VerticalTopPosition);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c3->layoutPosition(), (int)M::VerticalBottomPosition);
+
+    m_policy->removeAt(4);
+    QCOMPARE((int)c3->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c4->layoutPosition(), (int)M::VerticalTopPosition);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::VerticalBottomPosition);
+
+    m_policy->removeAt(0);
+    QCOMPARE((int)c4->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::VerticalTopPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::VerticalCenterPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::VerticalBottomPosition);
+
+    m_policy->removeAt(0);
+    QCOMPARE((int)c0->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::VerticalTopPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::VerticalBottomPosition);
+
+    m_policy->removeAt(0);
+    QCOMPARE((int)c1->layoutPosition(), (int)M::DefaultPosition);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::DefaultPosition);
+
+    m_policy->removeAt(0);
+    QCOMPARE((int)c2->layoutPosition(), (int)M::DefaultPosition);
+
+    delete c0;
+    delete c1;
+    delete c2;
+    delete c3;
+    delete c4;
+    delete c5;
+}
+
+
 QTEST_APPLESS_MAIN(Ut_MLinearLayoutPolicy)
