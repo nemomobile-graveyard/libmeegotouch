@@ -39,7 +39,7 @@ ifneq (,$(filter timestamps,$(TMP_BUILD_OPTS)))
 endif
 
 # Disable building of tests by setting DEB_BUILD_OPTION=notests,...
-ifneq (,$(filter nocheck,$(TMP_BUILD_OPTS)))
+ifneq (,$(filter notests,$(TMP_BUILD_OPTS)))
     OPTIONS += -nomake tests
 endif
 
