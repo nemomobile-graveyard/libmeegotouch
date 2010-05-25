@@ -1,3 +1,21 @@
+libmeegotouch (0.20.12-1) unstable; urgency=low
+
+  * Fixes: NB#169809 - No textChanged signal is emitted when text is placed to MRichTextEdit by MCompleter
+  * Fixes: NB#161205 - optionalImage is visible even in modes where it should not be
+  * Fixes: MB#169672 - MLabel is not showing the whole text when Qt::escape() some plain text *without* any tag inside
+  * Fixes: NB#170120 - MStyleSheetParser doesn't parse comments properly
+  * Fixes: NB#166269 - fix MContentItem::smallItem
+  * Fixes: NB#162781 - DUI chaining support should provide an option to not terminate the process when closing the child window
+  * Fixes: NB#169749 - QtMaemo6Style crashes when text edit is focused and VKB is shown
+  * Fixes: NB#156115 - CodeStyle> typo in doxygen documentation
+  * Fixes: NB#169377 - System modal dialog" in Widgetsgallery is not a system-modal dialog
+  * Fixes: NB#157742 - Fix MContentItem docs
+  * Fixes: NB#158375 - DuiContentItem api-doc fixes
+  * Fixes: NB#164207 - long press in MLabel
+  * Fixes: NB#167960 - Application is opened in landscape view when device is in portrait mode
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Tue, 25 May 2010 13:38:45 +0300
+
 libmeegotouch (0.20.11-1) unstable; urgency=low
 
   * Fixes: NB#168737 - "Fast application startup" a.k.a applauncherd does not load application.conf files
