@@ -3,6 +3,7 @@
 import benchmark_results
 from optparse import OptionParser
 import sys
+import os
 
 try:
   import pylab
@@ -24,16 +25,21 @@ def main() :
         if not pylab_available :
             print "Pylab is not installed. Plotting is disabled."
             sys.exit(-1)
-        generate_plots()
+        if options.output_folder :
+            if not os.path.isdir(options.output_folder) :
+                os.makedirs(options.output_folder)
+
+        generate_plots(options.output_folder)
 
 
-def generate_plots() :
+def generate_plots(output_folder) :
     colors = ['b', 'g', 'r', 'c', 'm', 'y', 'b']
     characters = ['o', '^', '*']
     types = [col+char+'-' for char in characters for col in colors]
 
     for benchmark_name, results in benchmark_results.benchmarksByBenchmarkName.items() :
         i = 0
+        pylab.clf()
         for page_name, result in results.items() :
             result.plot_fps(2, page_name, types[i % len(types)])
             i += 1
@@ -44,7 +50,11 @@ def generate_plots() :
         pylab.grid(True)
         pylab.legend(loc=0)
         pylab.axis(xmin=0, ymin=0)
-        pylab.show()
+
+        if output_folder :
+            pylab.savefig(os.path.join(output_folder, benchmark_name))
+        else :
+            pylab.show()
 
 
 def textual_output() :
@@ -97,6 +107,7 @@ def parse_commandline_arguments() :
     parser.add_option('-f', '--file', dest='file', action='store', type='string', help='The file containing the timestamps')
     parser.add_option('-t', '--textual', dest='textual', action='store_true', help='Enable textual output')
     parser.add_option('-g', '--graphical', dest='graphical', action='store_true', help='Enable graphical output')
+    parser.add_option('-o', '--output-folder', dest='output_folder', type='string', help='Folder to save graphical output into')
     parser.add_option('-p', '--pages', dest='pages', action='store', type='string', help='Select a subset of pages to evaluate. If this option is not set all pages will be used.')
     parser.add_option('-b', '--benchmarks', dest='benchmarks', action='store', type='string', help='Select a subset of benchmarks to evaluate. If this option is not set all benchmarks will be used.')
 
