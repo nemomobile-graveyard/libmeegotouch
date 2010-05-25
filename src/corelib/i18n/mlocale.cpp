@@ -244,7 +244,7 @@ bool MTranslationCatalog::loadWith(MLocale *mlocale, MLocale::Category category)
     // Loading the new file into the QTranslator failed.
     // Clear any old contents of the QTranslator before returning false.
     // This is necessary because the QTranslator may still have old contents.
-    // For example, assume that we an Arabic translation "foo_ar.qm" has been loaded
+    // For example, assume that an Arabic translation "foo_ar.qm" has been loaded
     // into the translator before and now this loadWith() function tries to
     // load "foo_de.qm" because the language has been switched to German
     // but "foo_de.qm" does not exist. We do *not* want to keep the previous
@@ -878,11 +878,23 @@ void MLocale::setDefault(const MLocale &locale)
 //        (locale.d_ptr)->currentLanguageItem.set(newLanguage);
 //#endif
 
+    // sends QEvent::LanguageChange to qApp:
+    (s_systemDefault->d_ptr)->insertTrToQCoreApp();
     // Setting the default QLocale is needed to get localized number
     // support in translations via %Ln, %L1, %L2, ...:
     QLocale::setDefault((s_systemDefault->d_ptr)->createQLocale(MLcNumeric));
-    // sends QEvent::LanguageChange to qApp:
-    (s_systemDefault->d_ptr)->insertTrToQCoreApp();
+    // The event queue needs to be flushed here because
+    // QCoreApplication::removeTranslator() and
+    // QCoreApplication::installTranslator() which are called by
+    // removeTrFromQCoreApp() and insertTrToQCoreApp()
+    // send several QEvent::LanguageChange events which are handled
+    // by the QApplication event handler and may set the
+    // layout direction incorrectly there (see qapplication.cpp in
+    // the Qt source code). We need to make sure these events
+    // are handled *before* we finally set the correct layout direction
+    // below.
+    // (see also bug 169305)
+    QCoreApplication::sendPostedEvents();
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
     qApp->setLayoutDirection(s_systemDefault->textDirection());
 
@@ -2117,13 +2129,25 @@ void MLocale::refreshSettings()
 
     if (settingsHaveReallyChanged) {
         if (this == s_systemDefault) {
-            // Setting the default QLocale is needed to get localized number
-            // support in translations via %Ln, %L1, %L2, ...:
-            QLocale::setDefault(d->createQLocale(MLcNumeric));
             d->removeTrFromQCoreApp();
             d->loadTrCatalogs();
             // sends QEvent::LanguageChange to qApp:
             d->insertTrToQCoreApp();
+            // Setting the default QLocale is needed to get localized number
+            // support in translations via %Ln, %L1, %L2, ...:
+            QLocale::setDefault(d->createQLocale(MLcNumeric));
+            // The event queue needs to be flushed here because
+            // QCoreApplication::removeTranslator() and
+            // QCoreApplication::installTranslator() which are called by
+            // removeTrFromQCoreApp() and insertTrToQCoreApp()
+            // send several QEvent::LanguageChange events which are handled
+            // by the QApplication event handler and may set the
+            // layout direction incorrectly there (see qapplication.cpp in
+            // the Qt source code). We need to make sure these events
+            // are handled *before* we finally set the correct layout direction
+            // below.
+            // (see also bug 169305)
+            QCoreApplication::sendPostedEvents();
             // sends QEvent::ApplicationLayoutDirectionChange to qApp:
             qApp->setLayoutDirection(this->textDirection());
         }
