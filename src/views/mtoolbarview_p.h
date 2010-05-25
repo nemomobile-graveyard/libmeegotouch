@@ -49,7 +49,7 @@ public:
     void init();
 
     void add(QAction *action);
-    void remove(QAction *action);
+    void remove(QAction *action, bool hideOnly);
     void change(QAction *action);
 
 protected:

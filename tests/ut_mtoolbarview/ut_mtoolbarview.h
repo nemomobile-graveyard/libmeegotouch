@@ -40,6 +40,7 @@ private slots:
     void init();
     void cleanup();
 
+    void testAddingRemoveActions_data();
     void testAddingRemoveActions();
     void testDeleteAddAction();
     void testTabView();

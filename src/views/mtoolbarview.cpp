@@ -189,7 +189,7 @@ void MToolBarViewPrivate::add(QAction *action)
     updateWidgetFromAction(widget, action);
 }
 
-void MToolBarViewPrivate::remove(QAction *action)
+void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
 {
     MButton *button = buttons.value(action);
     MWidget *leased = leasedWidgets.value(action);
@@ -198,39 +198,52 @@ void MToolBarViewPrivate::remove(QAction *action)
     if(!widget)
         return; //Action already removed
     bool isTextEditWidget = hasTextEditWidget(action);
-    if(landscapePolicy->indexOf(widget) >= 0) {
+    int landscapeIndex = landscapePolicy->indexOf(widget);
+    int portraitIndex = portraitPolicy->indexOf(widget);
+    if(hideOnly && landscapeIndex == -1 && portraitIndex == -1)
+        return; //Action already hidden
+
+    if(landscapeIndex >= 0) {
         if(isTextEditWidget) {
             landscapeData.hasTextEditor = false;
             //one text-edit widget takes space of two buttons
             landscapeData.placedActions -= 2;
         } else
             landscapeData.placedActions--;
+        if(hideOnly)
+            landscapePolicy->removeAt(landscapeIndex);
     }
-    if(portraitPolicy->indexOf(widget) >= 0) {
+    if(portraitIndex >= 0) {
         if(isTextEditWidget) {
             portraitData.hasTextEditor = false;
             //one text-edit widget takes space of two buttons
             portraitData.placedActions -= 2;
         } else
             portraitData.placedActions--;
+        if(hideOnly)
+            portraitPolicy->removeAt(portraitIndex);
     }
 
-    layout->removeItem(widget);
+    if(!hideOnly) {
+        //Need to fully remove the action
+        layout->removeItem(widget);
 
-    if (button) {
-        buttons.remove(action);
-        if(buttonGroup)
-            buttonGroup->removeButton(button);
-        delete button;
-    } else {
-        releaseWidget(action, leased);
-        leasedWidgets.remove(action);
+        if (button) {
+            buttons.remove(action);
+            if(buttonGroup)
+                buttonGroup->removeButton(button);
+            delete button;
+        } else {
+            releaseWidget(action, leased);
+            leasedWidgets.remove(action);
+        }
     }
 
     //There might be space now any actions not already added.  Signal a change action which
     //will check if an item now has room to be shown
     foreach(QAction *action, controller->actions()) {
-        change(action);
+        if(action->isVisible())
+            change(action);
     }
 }
 
@@ -240,13 +253,13 @@ void MToolBarViewPrivate::change(QAction *action)
     if(hasUnusableWidget(action))
         return;
     if(!action->isVisible()) {
-        remove(action);
+        remove(action, true); //Remove action, but only hiding the widget, not deleting/releasing it
         return;
     }
     bool validInLandscape = isLocationValid(action, MAction::ToolBarLandscapeLocation);
     bool validInPortrait = isLocationValid(action, MAction::ToolBarPortraitLocation);
     if (!validInLandscape && !validInPortrait) {
-        remove(action);
+        remove(action, true);
         return;
     }
 
@@ -254,7 +267,7 @@ void MToolBarViewPrivate::change(QAction *action)
     QList< QAction *> actions = controller->actions();
     int indexOfAction = actions.indexOf(action);
     if(indexOfAction == -1) {
-        remove(action); // I don't think this is possible
+        remove(action, false); // I don't think this is possible
         return;
     }
         
@@ -307,7 +320,7 @@ bool MToolBarViewPrivate::eventFilter(QObject *obj, QEvent *e)
 {
     switch (e->type()) {
         case QEvent::ActionRemoved:
-            remove(static_cast<QActionEvent *>(e)->action());
+            remove(static_cast<QActionEvent *>(e)->action(), false);
             break;
         case QEvent::ActionAdded:
             add(static_cast<QActionEvent *>(e)->action());

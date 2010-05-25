@@ -169,21 +169,57 @@ MWidgetAction *Ut_MToolBarView::createTextEditAction(MWidget *parentWidget)
     return actionTextEdit;
 }
 
+void Ut_MToolBarView::testAddingRemoveActions_data()
+{
+    QTest::addColumn<bool>("deleteAction");
+    QTest::newRow("Adding and removing action") << false;
+    QTest::newRow("Adding and deleting action") << true;
+}
 void Ut_MToolBarView::testAddingRemoveActions()
 {
+    QFETCH(bool, deleteAction);
     QPointer<MAction> action1 = new MAction("action", m_toolbar);
     action1->setLocation(MAction::ToolBarLocation);
     m_toolbar->addAction(action1);
+    QPointer<MButton> button1 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action1));
 
     QPointer<MAction> action2 = new MAction("action", m_toolbar);
     action2->setLocation(MAction::ToolBarLocation);
     m_toolbar->addAction(action2);
+    QPointer<MButton> button2 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action2));
+    action2->setVisible(false);
 
-    m_toolbar->removeAction(action1);
-    m_toolbar->removeAction(action2);
-    QVERIFY(!action1.isNull());
-    QVERIFY(!action2.isNull());
+    QPointer<MAction> action3 = new MAction("action", m_toolbar);
+    action3->setLocation(MAction::ToolBarLocation);
+    action3->setVisible(false);
+    m_toolbar->addAction(action3);
+    QPointer<MButton> button3 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action3));
 
+    QVERIFY(!button1.isNull());
+    QVERIFY(!button2.isNull());
+    QVERIFY(button3.isNull());
+
+    if(deleteAction) {
+        delete action3;
+        delete action1;
+        delete action2;
+    } else {
+        m_toolbar->removeAction(action3);
+        m_toolbar->removeAction(action1);
+        m_toolbar->removeAction(action2);
+        QVERIFY(!action1.isNull());
+        QVERIFY(!action2.isNull());
+        QVERIFY(!action3.isNull());
+    }
+    QVERIFY(button1.isNull());
+    QVERIFY(button2.isNull());
+    QVERIFY(button3.isNull());
+    if(!deleteAction) {
+        //Delete now, after they've been removed, just to clean up
+        delete action1;
+        delete action2;
+        delete action3;
+    }
 }
 
 void Ut_MToolBarView::testSizeHint_data()
@@ -304,12 +340,22 @@ void Ut_MToolBarView::testButtons()
     action->setVisible(false);
     WAIT_VERIFY(button.isNull() || !button->isVisible());
 
+    //This is an implementation specific check.  It's nice
+    //if the button is not deleted so that it's available
+    //straight away if we need it again
+    WAIT_VERIFY(!button.isNull());
+    WAIT_VERIFY(!button->isVisible());
+
     /* Set the button back to how it was, but disabled */
     action->setEnabled(false);
     action->setChecked(true);
     action->setText("Hello");
     /* And now show the button again */
     action->setVisible(true);
+
+    /* Another implementation specific check. */
+    QVERIFY(button == dynamic_cast<MButton*>(m_toolbarview->getWidget(action)));
+
     button = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
     QVERIFY(button);
     QVERIFY(!button->isEnabled());
