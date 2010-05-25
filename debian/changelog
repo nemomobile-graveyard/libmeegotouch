@@ -1,3 +1,10 @@
+libmeegotouch (0.20.12.1-1) unstable; urgency=low
+
+  * Brown paper bag release; fix arm build
+  * Update signature of MContentItem::setImage() in order to avoid future abi break
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Tue, 25 May 2010 17:14:29 +0300
+
 libmeegotouch (0.20.12-1) unstable; urgency=low
 
   * Fixes: NB#169809 - No textChanged signal is emitted when text is placed to MRichTextEdit by MCompleter
