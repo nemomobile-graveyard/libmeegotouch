@@ -22,6 +22,7 @@
 #include "templatepage.h"
 #include "labelpage.h"
 #include "pushbuttonpage.h"
+#include "buttongrouppage.h"
 #include "iconbuttonpage.h"
 #include "switchpage.h"
 #include "imagepage.h"
@@ -114,6 +115,8 @@ public:
         addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_switch"), new SwitchPage());
         //% "Checkbox"
         addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_checkbox"), new CheckboxPage());
+        //% "Button Group"
+        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_buttongroup"), new ButtonGroupPage());
 
         //% "Dialogs and Banners"
         addCategory(qtTrId("xx_wg_categories_dialogs_and_banners"), new MainCategoryPage(this, createIndex(3,0)));
