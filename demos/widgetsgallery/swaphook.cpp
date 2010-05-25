@@ -1,8 +1,6 @@
 #include <cstdio>
 #include <ctime>
-#ifdef EGL
-#include <dlfcn.h>
-#endif
+
 #include <QObject>
 #include <QEvent>
 #include <QDebug>
