@@ -60,7 +60,7 @@ CFG_DEV=no
 CFG_MINIMAL=no
 CFG_BUILD_TESTS=no
 CFG_BUILD_BENCHMARKS=no
-CFG_BUILD_PLAINQT=no
+CFG_BUILD_PLAINQT=yes
 
 M_DEFAULT_BUILD_PARTS="libs demos"
 CFG_BUILD_PARTS=""
@@ -227,7 +227,9 @@ while [ "$#" -gt 0 ]; do
         CFG_BUILD_BENCHMARKS="yes"
         ;;
     plainqt)
-        CFG_BUILD_PLAINQT="yes"
+        if [ "$VAL" = "yes" ] || [ "$VAL" = "no" ]; then
+            CFG_BUILD_PLAINQT="$VAL"
+        fi
         ;;
     n900)
         HAVE_N900="yes"
@@ -447,7 +449,6 @@ Additional options:
 
     -tests ............. Build the tests.
     -benchmarks ........ Build the benchmarks.
-    -plainqt ........... Build the Plain Qt style plugin.
 
     -n900 .............. Build libmeegotouch for the N900 device.
 
@@ -456,6 +457,10 @@ Additional options:
 
     -no-gconf .......... Do not compile with gconf support.
  +  -gconf ............. Compile with gconf support.
+
+    -no-plainqt......... Do not build the Plain Qt style plugin.
+ +  -plainqt ........... Build the Plain Qt style plugin.
+
 EOF
 
 exit 0

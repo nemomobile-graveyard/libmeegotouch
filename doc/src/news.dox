@@ -4,6 +4,11 @@
 
 \subsection New
 
+- Application developers can control the behaviour of automatic software input
+  panel (SIP) requests on the MTextEdit level:
+    - isAutoSipEnabled()
+    - setAutoSipEnabled()
+
 - MSceneManager now allows a widget to request cursor visibility directly via
  the ensureCursorVisible() slot.
 

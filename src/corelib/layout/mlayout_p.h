@@ -94,11 +94,11 @@ public:
     QGraphicsItem *parentItem() const;
 
     /** Hide the given item, setting a flag in MWidget to indicate that the layout hid it */
-    void hideItemNow(QGraphicsItem *layoutItem);
+    void hideItemNow(QGraphicsItem *layoutItem) const;
     /** Show the given item if it was hidden by the layout, clearing the flag in MWidget to indicate that the layout unhid it */
-    void showItemNow(QGraphicsItem *layoutItem);
+    void showItemNow(QGraphicsItem *layoutItem) const;
     /** Only clear the flag in MWidget */
-    void removeHiddenFlag(QGraphicsLayoutItem *layoutItem);
+    void removeHiddenFlag(QGraphicsItem *layoutItem) const;
     /** This is called when the widget's orientation has changed (probably because the device has been rotated) */
     void setOrientation(M::Orientation orientation);
     /** Check the closest parent widget's scene to find out what orientation we are in */

@@ -27,7 +27,8 @@
 
 MButtonGroupPrivate::MButtonGroupPrivate()
     : checkedButton(0),
-      exclusive(true)
+      exclusive(true),
+      q_ptr(0)
 {
 }
 

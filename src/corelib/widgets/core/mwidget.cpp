@@ -122,18 +122,20 @@ void MWidgetPrivate::sendOnDisplayChangeEvent(MWidget *widget, const QRectF *vis
 
     QRectF widgetSceneRect = widget->sceneBoundingRect();
 
-    if (visibleSceneRect && visibleSceneRect->intersects(widgetSceneRect)) {
-        if (visibleSceneRect->contains(widgetSceneRect)) {
-            event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOnDisplay, *visibleSceneRect);
+    if (visibleSceneRect) {
+        if (visibleSceneRect->intersects(widgetSceneRect)) {
+            if (visibleSceneRect->contains(widgetSceneRect)) {
+                event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOnDisplay, *visibleSceneRect);
+            } else {
+                event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::PartiallyOnDisplay, *visibleSceneRect);
+            }
         } else {
-            event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::PartiallyOnDisplay, *visibleSceneRect);
+            event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOffDisplay, *visibleSceneRect);
         }
-    } else {
-        event = new MOnDisplayChangeEvent(MOnDisplayChangeEvent::FullyOffDisplay, *visibleSceneRect);
-    }
 
-    q->scene()->sendEvent(widget, event);
-    delete event;
+        q->scene()->sendEvent(widget, event);
+        delete event;
+    }
 }
 
 void MWidgetPrivate::resolveIsOnDisplay(QGraphicsItem *item, const QRectF *visibleSceneRect)
@@ -319,6 +321,7 @@ void MWidget::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
     if (hasObjectMenuActions) {
         MObjectMenu *menu = new MObjectMenu(this);
+        menu->setCursorPosition(event->scenePos());
         sceneManager()->appearSceneWindow(menu, MSceneWindow::DestroyWhenDone);
     } else {
         event->ignore();
@@ -455,3 +458,12 @@ void MWidget::setVisible(bool visible)
         QGraphicsWidget::setVisible(visible);
 }
 
+QPointF MWidget::paintOffset() const
+{
+    return QPointF(transform().dx(), transform().dy());
+}
+
+void MWidget::setPaintOffset(const QPointF &newOffset)
+{
+    setTransform(QTransform::fromTranslate(newOffset.x(), newOffset.y()));
+}

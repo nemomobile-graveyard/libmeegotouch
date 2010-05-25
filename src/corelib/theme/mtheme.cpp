@@ -70,25 +70,23 @@ MThemePrivate::RegisteredStyleContainers MThemePrivate::styleContainers;
 
 namespace
 {
+    // "default_pixmap_MyPixmap_47_47"
+    static QString defaultPixmapCacheId(const QString &name, int width, int height)
+    {
+        return QString::fromLatin1("default_pixmap_") + name
+                + QChar::fromLatin1('_') + QString::number(width)
+                + QChar::fromLatin1('_') + QString::number(height);
+    }
 
-// "default_pixmap_MyPixmap_47_47"
-static QString defaultPixmapCacheId(const QString &name, int width, int height)
-{
-    return QString::fromLatin1("default_pixmap_") + name
-        + QChar::fromLatin1('_') + QString::number(width)
-        + QChar::fromLatin1('_') + QString::number(height);
-}
-
-// "scalable_image_myscalable_5_5_5_5
-static QString scalableImageCacheId(const QString &name, int left, int top, int right, int bottom)
-{
-    return QString::fromLatin1("scalable_image_") + name
-        + QChar::fromLatin1('_') + QString::number(left)
-        + QChar::fromLatin1('_') + QString::number(top)
-        + QChar::fromLatin1('_') + QString::number(right)
-        + QChar::fromLatin1('_') + QString::number(bottom);
-}
-
+    // "scalable_image_myscalable_5_5_5_5
+    static QString scalableImageCacheId(const QString &name, int left, int top, int right, int bottom)
+    {
+        return QString::fromLatin1("scalable_image_") + name
+                + QChar::fromLatin1('_') + QString::number(left)
+                + QChar::fromLatin1('_') + QString::number(top)
+                + QChar::fromLatin1('_') + QString::number(right)
+                + QChar::fromLatin1('_') + QString::number(bottom);
+    }
 } // anonymous namespace
 
 MTheme::MTheme(const QString &applicationName, const QString &, ThemeService themeService) :
@@ -369,22 +367,23 @@ const MStyle *MTheme::style(const char *styleClassName,
 
         // find proper library
         MLibrary *library = d->libraries->value(assemblyName, NULL);
-        if (!library) {
+        if (library) {
+            // use stylesheet from this library if there is one
+            if (library->stylesheet()) {
+                if (!sheets.contains(library->stylesheet())) {
+                    sheets.insert(0, library->stylesheet());
+                }
+            }
+        } else {
             mWarning("MTheme") << "Cannot find library. You must register your library to theming using M_LIBRARY macro." << '(' << assemblyName << ')';
             Q_ASSERT_X(library, "MTheme", "Failed to find library");
-        }
-        // use stylesheet from this library if there is one
-        if (library->stylesheet()) {
-            if (!sheets.contains(library->stylesheet())) {
-                sheets.insert(0, library->stylesheet());
-            }
         }
         mobj = mobj->superClass();
     } while (mobj->className() != QObject::staticMetaObject.className());
 
     // add application css
-    if (d->application.stylesheet())
-        sheets.append(d->application.stylesheet());
+    if (d->application->stylesheet())
+        sheets.append(d->application->stylesheet());
 
     // add custom stylesheet
     if (d->customStylesheet)
@@ -490,10 +489,18 @@ bool MTheme::hasPendingRequests()
     return instance()->d_ptr->themeDaemon->hasPendingRequests();
 }
 
+void MThemePrivate::reinit(const QString &newApplicationName, const QString &, MTheme::ThemeService)
+{
+    delete application;
+    applicationName = newApplicationName;
+    application = new MAssembly(applicationName);
+    application->themeChanged(themeDaemon->themeInheritanceChain(), logicalValues);
+}
+
 MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeService themeService) :
     applicationName(applicationName),
     customStylesheet(NULL),
-    application(applicationName),
+    application(new MAssembly(applicationName)),
     palette(logicalValues),
     fonts(logicalValues)
 #ifdef HAVE_GCONF
@@ -530,6 +537,7 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
 
 MThemePrivate::~MThemePrivate()
 {
+    delete application;
     delete themeDaemon;
     delete invalidPixmap;
     delete customStylesheet;
@@ -542,7 +550,7 @@ QString MThemePrivate::determineViewClassForController(const MWidgetController *
     bool exactMatch = false;
 
     // first search from application view configuration
-    QString bestMatch = application.viewType(controller, exactMatch);
+    QString bestMatch = application->viewType(controller, exactMatch);
     if (exactMatch)
         return bestMatch;
 
@@ -619,7 +627,7 @@ void MThemePrivate::refreshLocalThemeConfiguration(const QStringList &themeInher
     }
 
     // refresh application theme data
-    application.themeChanged(themeInheritance, logicalValues);
+    application->themeChanged(themeInheritance, logicalValues);
 
     // cached data is no more valid
     MStyleSheet::cleanup(false);
@@ -627,13 +635,22 @@ void MThemePrivate::refreshLocalThemeConfiguration(const QStringList &themeInher
 
 void MThemePrivate::reloadThemeLibraries(const QStringList& libraryNames)
 {
+    QString libsuffix;
+
+#ifdef Q_OS_WIN
+    // under windows the libraries are suffixed with a "0",
+    // e.g. meegotouchviews0.dll, so the 0 here is needed,
+    // so that the library can be loaded under windows.
+    libsuffix = "0";
+#endif
+
     // store list of libraries that needs to be unloaded
     QSet<QLibrary*> toUnload = openedThemeLibraries;
 
     // load all new libraries (if the library is already loaded, it will ref the loaded one)
     openedThemeLibraries.clear();
     foreach(const QString& libname, libraryNames) {
-        QLibrary* library = new QLibrary(libname);
+        QLibrary* library = new QLibrary(libname + libsuffix);
         if(library->load()) {
             openedThemeLibraries.insert(library);
         } else {

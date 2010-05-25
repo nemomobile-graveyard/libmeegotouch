@@ -174,7 +174,8 @@ MNotificationManagerStub *gMNotificationManagerStub = &gDefaultMNotificationMana
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-MNotificationManager::MNotificationManager() : proxy(QString(), QString(), QDBusConnection::sessionBus())
+MNotificationManager::MNotificationManager() : proxy(QString(), QString(), QDBusConnection::sessionBus()),
+  userId( 0 )
 {
     gMNotificationManagerStub->MNotificationManagerConstructor();
 }

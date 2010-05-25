@@ -98,7 +98,7 @@ void MMashupCanvasViewPrivate::init()
     mainLayout->addItem(l);
 }
 
-void MMashupCanvasViewPrivate::addToLayout(MWidget *widget, int index)
+void MMashupCanvasViewPrivate::addToLayout(QGraphicsWidget *widget, int index)
 {
     if (index >= 0) {
         layoutPolicy->insertItem(index, widget);
@@ -107,7 +107,7 @@ void MMashupCanvasViewPrivate::addToLayout(MWidget *widget, int index)
     }
 }
 
-void MMashupCanvasViewPrivate::connectContainerToWidget(MContainer *container, MWidget *widget) const
+void MMashupCanvasViewPrivate::connectContainerToWidget(MContainer *container, QGraphicsWidget *widget) const
 {
     const QMetaObject *mob = widget->metaObject();
 

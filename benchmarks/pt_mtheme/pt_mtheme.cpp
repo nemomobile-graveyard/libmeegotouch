@@ -26,7 +26,7 @@
 
 void Pt_MTheme::constructor()
 {
-    MTheme *theme;
+    MTheme *theme = NULL;
     QBENCHMARK_ONCE {
         theme = new MTheme("widgetsgallery");
     }

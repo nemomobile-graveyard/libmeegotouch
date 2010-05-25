@@ -118,11 +118,20 @@ QString MButton::toggledIconID() const
     return model()->toggledIconID();
 }
 
+void MButton::setIcon(const QIcon &icon)
+{
+    model()->setIcon(icon);
+}
+
+QIcon MButton::icon() const
+{
+    return model()->icon();
+}
+
 void MButton::setText(const QString &text)
 {
     model()->setText(text);
 }
-
 
 QString MButton::text() const
 {

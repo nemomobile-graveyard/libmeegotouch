@@ -280,7 +280,6 @@ void DialogsAndNotificationsPage::showEventBanner()
     infoBanner->setIconID("Icon-new-SMS");
     connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
     infoBanner->appear(MSceneWindow::DestroyWhenDone);
-    QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
 
 void DialogsAndNotificationsPage::showInformationBanner()
@@ -291,7 +290,6 @@ void DialogsAndNotificationsPage::showInformationBanner()
         //% "<b>Battery is running low</b>"
         qtTrId("xx_dialogs_and_notifications_information_banner"));
     infoBanner->appear(MSceneWindow::DestroyWhenDone);
-    QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
 
 void DialogsAndNotificationsPage::showSystemInformationBanner()
@@ -305,7 +303,6 @@ void DialogsAndNotificationsPage::showSystemInformationBanner()
     infoBanner->setButtonText(qtTrId("xx_dialogs_and_notifications_system_information_banner_accept"));
     connect(infoBanner, SIGNAL(buttonClicked()), this, SLOT(openMessageBox()));
     infoBanner->appear(MSceneWindow::DestroyWhenDone);
-    QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
 }
 
 

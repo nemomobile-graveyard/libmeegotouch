@@ -15,6 +15,7 @@ INCLUDEPATH += \
 
 include(views.pri)
 include(widgets/widgets.pri)
+include(animations/animations.pri)
 include(style/style.pri)
 include(video/video.pri)
 

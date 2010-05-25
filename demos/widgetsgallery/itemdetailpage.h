@@ -20,12 +20,59 @@
 #include "timedemopage.h"
 #include "gridmodel.h"
 
+#include <MContainer>
+#include <MImageWidget>
+#ifdef HAVE_GSTREAMER
+#include <MVideoWidget>
+#endif
+#include <MWidgetController>
+#include <MWidgetModel>
+#include <QTimer>
+
 class MLayout;
 class MSlider;
 class MButton;
-class MImageWidget;
-class MVideoWidget;
 class MLinearLayoutPolicy;
+class MGridLayoutPolicy;
+class QParallelAnimationGroup;
+
+#ifdef HAVE_GSTREAMER
+
+//video widget which emits clicked signal
+class MyVideoWidget : public MVideoWidget
+{   
+    Q_OBJECT
+    
+    public:
+        MyVideoWidget(QGraphicsItem *parent = 0);
+Q_SIGNALS:
+        void clicked();
+        
+    protected:
+    
+         virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+         virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+         
+    private:
+};
+
+//container widget for the video playback controls
+class MyVideoOverlayToolbar : public MWidgetController
+{
+public:
+    M_CONTROLLER(MWidget)
+
+    MyVideoOverlayToolbar(QGraphicsItem *parent = 0);
+    virtual ~MyVideoOverlayToolbar();
+
+    void addItem(QGraphicsLayoutItem *button);
+
+    private:
+        MGridLayoutPolicy  *landscapePolicy;
+        MGridLayoutPolicy  *portraitPolicy;
+};
+
+#endif
 
 //page for showing video or image in it's native size
 class ItemDetailPage  : public TimedemoPage
@@ -44,6 +91,10 @@ public:
     virtual void createContent();
 
 public slots:
+
+    void showOverlay();
+    void hideOverlay();
+
     void videoReady();
 
     void sliderPressed();
@@ -66,16 +117,32 @@ signals:
 
 protected:
     virtual void retranslateUi();
-
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 private:
+
+    void  relayout();
+
     MLayout* layout;
     MLinearLayoutPolicy* policy;
 
-    MVideoWidget* video;
     MSlider* slider;
     MButton* button;
     MImageWidget* image;
 
+#ifdef HAVE_GSTREAMER
+    MyVideoWidget* video;
+    MyVideoOverlayToolbar* cContainer;
+    MyVideoOverlayToolbar* lContainer;
+    MyVideoOverlayToolbar* rContainer;
+    MyVideoOverlayToolbar* tContainer;
+    MyVideoOverlayToolbar* bContainer;
+#endif
+
+    QParallelAnimationGroup* hideAnimation;
+    QParallelAnimationGroup* showAnimation;
+
     QString imageId;
     QString videoId;
+
+    QTimer inactivityTimer;
 };

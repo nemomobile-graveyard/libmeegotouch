@@ -66,7 +66,7 @@ protected Q_SLOTS:
      * last time around. This can be used to store for instance layout data of an application extension instance
      * or any other extension area specific data.
      */
-    virtual void addWidget(MWidget *widget, MDataStore &store);
+    virtual void addWidget(QGraphicsWidget *widget, MDataStore &store);
 
     /*!
      * removeWidget performs cleanup related to a widget that is being removed.
@@ -74,7 +74,7 @@ protected Q_SLOTS:
      *
      * \param widget The widget to be removed from the system.
      */
-    virtual void removeWidget(MWidget *widget);
+    virtual void removeWidget(QGraphicsWidget *widget);
 
 private:
     Q_DECLARE_PRIVATE(MExtensionArea)

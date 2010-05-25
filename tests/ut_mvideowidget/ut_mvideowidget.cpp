@@ -24,6 +24,9 @@
 #include <mapplication.h>
 
 ut_mvideowidget::ut_mvideowidget()
+  : m_subject(NULL),
+    app(NULL),
+    ready(false)
 {
 }
 

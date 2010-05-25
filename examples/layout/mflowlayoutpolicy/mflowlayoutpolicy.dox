@@ -1,0 +1,16 @@
+/**
+\page layout-mflowlayoutpolicy DuiFlowLayoutPolicy example
+
+Source code for a simple example of DuiFlowLayoutPolicy.
+
+\image html mflowlayoutpolicy.png
+
+\include examples/layout/mflowlayoutpolicy/mflowlayoutpolicy.cpp
+
+Styled with the following mflowlayoutpolicy.css file:
+\include examples/layout/mflowlayoutpolicy/mflowlayoutpolicy.css
+
+And compiled with the following mflowlayoutpolicy.pro file:
+\include examples/layout/mflowlayoutpolicy/mflowlayoutpolicy.pro
+
+*/

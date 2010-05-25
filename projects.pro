@@ -62,7 +62,7 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
     }
 }
 
-# put mgen, src and plainqt dirs in right build order...
+# put mmoc, mgen, src and plainqt dirs in right build order...
 
 contains( SUBDIRS, plainqt ) {
     SUBDIRS -= plainqt
@@ -73,6 +73,11 @@ contains( SUBDIRS, src ) {
     SUBDIRS -= src
     SUBDIRS = src $$SUBDIRS
 }
+
+contains( SUBDIRS, mmoc ) {
+    SUBDIRS -= mmoc
+        SUBDIRS = mmoc $$SUBDIRS
+	}
 
 contains( SUBDIRS, mgen ) {
     SUBDIRS -= mgen

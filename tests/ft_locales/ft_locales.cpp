@@ -390,7 +390,7 @@ void Ft_Locales::testMLocaleConstructorAndCategoryWithParams()
     delete z;
 }
 
-void Ft_Locales::testMLocaleLanguageEndonum_data()
+void Ft_Locales::testMLocaleLanguageEndonym_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("endonym_result");
@@ -398,6 +398,17 @@ void Ft_Locales::testMLocaleLanguageEndonum_data()
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << QString("suomi");
+    QTest::newRow("de")
+            << QString("de")
+            << QString("Deutsch");
+    // de_CH won’t work! That’s a bug in my opinion,
+    // see http://site.icu-project.org/design/resbund/issues
+    //QTest::newRow("de_CH")
+    //        << QString("de_CH")
+    //        << QString("Deutsch");
+    QTest::newRow("de_AT")
+            << QString("de_AT")
+            << QString("Deutsch");
     QTest::newRow("de_DE")
             << QString("de_DE")
             << QString("Deutsch");
@@ -409,7 +420,7 @@ void Ft_Locales::testMLocaleLanguageEndonum_data()
             << QString("中文");
 }
 
-void Ft_Locales::testMLocaleLanguageEndonum()
+void Ft_Locales::testMLocaleLanguageEndonym()
 {
     QFETCH(QString, locale_name);
     QFETCH(QString, endonym_result);
@@ -417,7 +428,7 @@ void Ft_Locales::testMLocaleLanguageEndonum()
     QCOMPARE(locale.languageEndonym(), endonym_result);
 }
 
-void Ft_Locales::testMLocaleCountryEndonum_data()
+void Ft_Locales::testMLocaleCountryEndonym_data()
 {
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("endonym_result");
@@ -425,6 +436,14 @@ void Ft_Locales::testMLocaleCountryEndonum_data()
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << QString("Suomi");
+    // de_CH won’t work! That’s a bug in my opinion,
+    // see http://site.icu-project.org/design/resbund/issues
+    //QTest::newRow("de_CH")
+    //        << QString("de_CH")
+    //        << QString("Deutschland");
+    QTest::newRow("de_AT")
+            << QString("de_AT")
+            << QString("Österreich");
     QTest::newRow("de_DE")
             << QString("de_DE")
             << QString("Deutschland");
@@ -436,7 +455,7 @@ void Ft_Locales::testMLocaleCountryEndonum_data()
             << QString("中国");
 }
 
-void Ft_Locales::testMLocaleCountryEndonum()
+void Ft_Locales::testMLocaleCountryEndonym()
 {
     QFETCH(QString, locale_name);
     QFETCH(QString, endonym_result);
@@ -552,13 +571,26 @@ void Ft_Locales::checkAvailableLocales()
     requiredLocaleNames << "fr_SN";       // "French (Senegal)"
     requiredLocaleNames << "gl";          // "Galician"
     requiredLocaleNames << "gl_ES";       // "Galician (Spain)"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    requiredLocaleNames << "he";          // "Hebrew"
+    requiredLocaleNames << "he_IL";       // "Hebrew (Israel)"
+#endif
     requiredLocaleNames << "hi";          // "Hindi"
     requiredLocaleNames << "hi_IN";       // "Hindi (India)"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    requiredLocaleNames << "id";          // "Indonesian"
+    requiredLocaleNames << "id_ID";       // "Indonesian (Indonesia)"
+#endif
     requiredLocaleNames << "it";          // "Italian"
     requiredLocaleNames << "it_CH";       // "Italian (Switzerland)"
     requiredLocaleNames << "it_IT";       // "Italian (Italy)"
     requiredLocaleNames << "ja";          // "Japanese"
     requiredLocaleNames << "ja_JP";       // "Japanese (Japan)"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    requiredLocaleNames << "ms";          //"Malay"
+    requiredLocaleNames << "ms_BN";       // "Malay (Brunei)"
+    requiredLocaleNames << "ms_MY";       // "Malay (Malaysia)"
+#endif
     requiredLocaleNames << "nb";          // "Norwegian Bokml"
     requiredLocaleNames << "nb_NO";       // "Norwegian Bokml (Norway)"
     requiredLocaleNames << "nl";          // "Dutch"
@@ -611,17 +643,212 @@ void Ft_Locales::checkAvailableLocales()
         else
             availableDisplayNames << QString("What kind of locale is this?");
     }
+    // for (int i = 0; i < numberOfAvailableLocales; ++i) {
+    //     qDebug() << "available:" << availableLocaleNames[i] << availableDisplayNames[i];
+    // }
     foreach(QString requiredLocaleName, requiredLocaleNames) {
         // if (availableLocaleNames.contains(requiredLocaleName))
-        //     qDebug() << "available: "
+        //     qDebug() << "required and available: "
         //              << requiredLocaleName
         //              << availableDisplayNames[availableLocaleNames.indexOf(requiredLocaleName)];
         // else {
-        //     qDebug() << "missing: " << requiredLocaleName;
+        //     qDebug() << "required but missing: " << requiredLocaleName;
         // }
         QVERIFY2(availableLocaleNames.contains(requiredLocaleName),
                  QString("The following required locale is missing: "
                          + requiredLocaleName).toUtf8().constData());
+    }
+    // add supported aliases here to check that these work as well:
+    QList<QString> supportedLocaleNames = requiredLocaleNames;
+    supportedLocaleNames << "no";
+    supportedLocaleNames << "no_NO";
+    supportedLocaleNames << "es_419";
+    MCalendar gregorianCalendar(MLocale::GregorianCalendar);
+    MCalendar islamicCalendar(MLocale::IslamicCalendar);
+    QString ft_localesTestOutput = "";
+    foreach(QString supportedLocaleName, supportedLocaleNames) {
+        MLocale locale(supportedLocaleName);
+        ft_localesTestOutput
+            += supportedLocaleName + '\t' + "Language endonym" + '\t'
+            + locale.languageEndonym()
+            + '\n' + supportedLocaleName + '\t' + "Country endonym" + '\t'
+            + locale.countryEndonym()
+            + '\n' + supportedLocaleName + '\t' + "Floating Point Number" + '\t'
+            + locale.formatNumber(-123456789.01234)
+            + '\n' + supportedLocaleName + '\t' + "Percent value" + '\t'
+            + locale.formatPercent(-12.3456789, 4)
+            + '\n' + supportedLocaleName + '\t' + "Currency value" + '\t'
+            + locale.formatCurrency(1234.56, "EUR")
+            + '\n' + supportedLocaleName + '\t' + "Negative Currency value" + '\t'
+            + locale.formatCurrency(-1234.56, "EUR")
+            + '\n' + supportedLocaleName + '\t' + "Date and time short (Gregorian Calendar)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(12, 31, 0, 0),
+                          Qt::LocalTime),
+                MLocale::DateShort,
+                MLocale::TimeShort,
+                MLocale::GregorianCalendar)
+            + '\n' + supportedLocaleName + '\t' + "Date and time medium (Gregorian Calendar)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(12, 31, 0, 0),
+                          Qt::LocalTime),
+                MLocale::DateMedium,
+                MLocale::TimeMedium,
+                MLocale::GregorianCalendar)
+            + '\n' + supportedLocaleName + '\t' + "Date and time long (Gregorian Calendar)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(12, 31, 0, 0),
+                          Qt::LocalTime),
+                MLocale::DateLong,
+                MLocale::TimeLong,
+                MLocale::GregorianCalendar)
+            + '\n' + supportedLocaleName + '\t' + "Date and time full (Gregorian Calendar)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(12, 31, 0, 0),
+                          Qt::LocalTime),
+                MLocale::DateFull,
+                MLocale::TimeFull,
+                MLocale::GregorianCalendar)
+            + '\n' + supportedLocaleName + '\t' + "Date and time short (Islamic Calendar)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(12, 31, 0, 0),
+                          Qt::LocalTime),
+                MLocale::DateShort,
+                MLocale::TimeShort,
+                MLocale::IslamicCalendar)
+            + '\n' + supportedLocaleName + '\t' + "Date and time medium (Islamic Calendar)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(12, 31, 0, 0),
+                          Qt::LocalTime),
+                MLocale::DateMedium,
+                MLocale::TimeMedium,
+                MLocale::IslamicCalendar)
+            + '\n' + supportedLocaleName + '\t' + "Date and time long (Islamic Calendar)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(12, 31, 0, 0),
+                          Qt::LocalTime),
+                MLocale::DateLong,
+                MLocale::TimeLong,
+                MLocale::IslamicCalendar)
+            + '\n' + supportedLocaleName + '\t' + "Date and time full (Islamic Calendar)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(12, 31, 0, 0),
+                          Qt::LocalTime),
+                MLocale::DateFull,
+                MLocale::TimeFull,
+                MLocale::IslamicCalendar)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 01 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 1)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 02 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 2)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 03 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 3)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 04 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 4)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 05 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 5)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 06 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 6)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 07 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 7)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 08 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 8)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 09 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 9)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 10 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 10)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 11 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 11)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 12 (Gregorian Calendar)" + '\t'
+            + locale.monthName(gregorianCalendar, 12)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 01 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 1)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 02 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 2)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 03 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 3)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 04 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 4)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 05 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 5)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 06 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 6)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 07 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 7)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 08 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 8)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 09 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 9)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 10 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 10)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 11 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 11)
+            + '\n' + supportedLocaleName + '\t' + "Name of month 12 (Islamic Calendar)" + '\t'
+            + locale.monthName(islamicCalendar, 12)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Gregorian Calendar)" + '\t'
+            + locale.weekdayName(gregorianCalendar, 1)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Gregorian Calendar)" + '\t'
+            + locale.weekdayName(gregorianCalendar, 2)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 03 (Gregorian Calendar)" + '\t'
+            + locale.weekdayName(gregorianCalendar, 3)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 04 (Gregorian Calendar)" + '\t'
+            + locale.weekdayName(gregorianCalendar, 4)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 05 (Gregorian Calendar)" + '\t'
+            + locale.weekdayName(gregorianCalendar, 5)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 06 (Gregorian Calendar)" + '\t'
+            + locale.weekdayName(gregorianCalendar, 6)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Gregorian Calendar)" + '\t'
+            + locale.weekdayName(gregorianCalendar, 7)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Islamic Calendar)" + '\t'
+            + locale.weekdayName(islamicCalendar, 1)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Islamic Calendar)" + '\t'
+            + locale.weekdayName(islamicCalendar, 2)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 03 (Islamic Calendar)" + '\t'
+            + locale.weekdayName(islamicCalendar, 3)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 04 (Islamic Calendar)" + '\t'
+            + locale.weekdayName(islamicCalendar, 4)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 05 (Islamic Calendar)" + '\t'
+            + locale.weekdayName(islamicCalendar, 5)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 06 (Islamic Calendar)" + '\t'
+            + locale.weekdayName(islamicCalendar, 6)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Islamic Calendar)" + '\t'
+            + locale.weekdayName(islamicCalendar, 7)
+            + '\n';
+    }
+    QString ft_localesTestOutputFileName =
+        "/tmp/ft_locales-test-output.txt";
+    QFile ft_localesTestOutputFile(ft_localesTestOutputFileName);
+    if (!ft_localesTestOutputFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        QFAIL(qPrintable("could not open file " + ft_localesTestOutputFileName));
+    int bytesWritten = ft_localesTestOutputFile.write(ft_localesTestOutput.toUtf8().constData());
+    if (bytesWritten == -1)
+        QFAIL(qPrintable("could not write to file" + ft_localesTestOutputFileName));
+    QCOMPARE(uint(bytesWritten), qstrlen(ft_localesTestOutput.toUtf8().constData()));
+    ft_localesTestOutputFile.close();
+
+    QString ft_localesTestInputFileName =
+        qApp->applicationDirPath() + QDir::separator() + "ft_locales-test-input-icu-" + U_ICU_VERSION + ".txt";
+    QFile ft_localesTestInputFile(ft_localesTestInputFileName);
+    if (!ft_localesTestInputFile.open(QIODevice::ReadOnly))
+        QFAIL(qPrintable("could not open file " + ft_localesTestInputFileName));
+    QString ft_localesTestInput = QString::fromUtf8(ft_localesTestInputFile.readAll().constData());
+    ft_localesTestInputFile.close();
+    
+    // QTextStream debugStream(stderr);
+    // debugStream.setCodec("UTF-8");
+    // debugStream << ft_localesTestInput;
+
+    if (ft_localesTestOutput != ft_localesTestInput) {
+        QProcess::execute("diff -u " + ft_localesTestInputFileName + ' ' + ft_localesTestOutputFileName);
+//        QFAIL(qPrintable("files " + ft_localesTestOutputFileName + " and " + ft_localesTestInputFileName + " differ."));
     }
 }
 

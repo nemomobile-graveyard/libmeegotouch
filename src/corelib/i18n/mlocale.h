@@ -550,11 +550,11 @@ public:
     </a>
     or
     <a href="http://linux.die.net/man/1/date">
-    the man page of <verbatim>date<verbatim>
+    the man page of “date”
     </a>
     or
     <a href="http://www.gnu.org/s/libc/manual/html_node/Formatting-Calendar-Time.html">
-    the documentation of the glibc function <verbatim>strftime</verbatim>
+    the documentation of the glibc function “strftime”
     </a>.
 
     The pattern may contain the following symbols to be replaced with
@@ -579,8 +579,19 @@ public:
      - \%M Minute, as a decimal number (00-59).
      - \%n A &lt;newline&gt; character.
      - \%p FDCC-set's equivalent of either AM or PM.
-     - \%r 12-hour clock time (01-12), using the AM/PM notation.
-     - \%R 24-hour clock time, in the format "%H:%M".
+     - \%r locale specific 12-hour clock time using the AM/PM notation
+           Similar to “%I:%M %p” but the exact format does depend more on
+           the locale. E.g. for “en_GB” locale the result may look like
+           “12:15 PM” with a colon between the hours and he minutes whereas
+           for “fi_FI” locale a dot may be used as the separator, like
+           “12.15 ip.”. The exact result depends on how the TimeShort format
+           for the locale is implemented in ICU.
+     - \%R locale specific 24-hour clock time.
+           Similar to “%H:%M” but the exact format depends on the locale.
+           E.g. for “en_GB” locale the result may look like “14:15” and
+           for “fi_FI” locale the result may look like “14.15”.
+           The exact result depends on how the TimeShort format
+           for the locale is implemented in ICU.
      - \%S Seconds, as a decimal number (00-61).
      - \%t A &lt;tab&gt; character.
      - \%T 24-hour clock time, in the format HH:MM:SS.
@@ -677,17 +688,34 @@ public:
 
     /*!
      * \brief installs a translation catalog
+     * \param name of the translation catalog to install
      *
      * Adds this translation catalog to the list of translation catalogs
      * used by this MLocale.
      *
-     * The list of catalogs used by the default locale is the list of
-     * catalogs which will be used when translating strings with qtTrId() or tr().
+     * The list of catalogs used by the system default locale is the
+     * list of catalogs which will be used when translating strings
+     * with qtTrId() or tr().
      *
-     * Examples:
+     * Usually the catalog name should be specified <b>without</b> the
+     * “.qm” file extension and <b>without</b> the locale specific
+     * part of the file name. I.e. one should usually call
+     * installTrCatalog("foo") and <b>not</b>
+     * installTrCatalog("foo_en_US.qm").
      *
-     * Add another translation catalog to the catalogs used
-     * by the system default locale, and translate a message:
+     * If only the basename of the catalog (e.g. "foo") is specified,
+     * installTrCatalog() installs both the engineering
+     * English file for this catalog <b>and</b> the real translations
+     * for this catalog for the locale. The engineering English
+     * gets lowest priority by prepending it to the list of
+     * already installed catalogs and the real translations get
+     * highest priority by appending it to the list of already
+     * installed catalog names.
+     *
+     * Example:
+     *
+     * Add translation catalogs “foo” and “bar” to the catalogs used
+     * by the system default locale:
      *
      * \code
      * // get current system default locale
@@ -695,11 +723,89 @@ public:
      * // install a translation catalog
      * // (this catalog is added to the list of catalogs already used
      * // by the system default locale):
-     * locale.installTrCatalog("catalogname");
+     * locale.installTrCatalog("foo");
+     * locale.installTrCatalog("bar");
      * // make the locale with the added translation catalog the new system
      * // default:
      * MLocale::setDefault(locale);
+     * \endcode
      *
+     * In this example, after calling locale.installTrCatalog("foo") the
+     * internal list of installed catalog names of the locale looks like:
+     *
+     * \code
+     *    "foo.qm" "bar.qm" ... previous catalog list ... "foo" "bar"
+     * \endcode
+     *
+     * Priority in this list increases from left to right.
+     *
+     * Eventually, this list of catalog names is evaluated and
+     * translation files are loaded from the file system.
+     * The translation files are searched in the directories
+     * in the translation path list, see translationPaths().
+     *
+     * For entries in the list of catalog names which end with “.qm”
+     * the names are used “as is”, i.e. in the example above the files
+     * “foo.qm” and “bar.qm” are loaded for these entries. For entries
+     * in the list of catalog names which do <b>not</b> end with
+     * “.qm”, a locale specific file name part and a “.qm” extension
+     * is added and Qt-like fallbacks for the file name to load are
+     * used.  As an example, let’s assume that the name of the locale
+     * is “en_US”, then the following file names are tried to get
+     * the real translations for the catalog name “foo”:
+     *
+     * \code
+     * foo_en_US.qm
+     * foo_en_US
+     * foo_en.qm
+     * foo_en
+     * \endcode
+     *
+     * and the first one which exists is loaded.
+     *
+     * Note that the search for fallbacks for the real translation
+     * stops at “foo_en”. This is slightly different from the
+     * behaviour of <a
+     * href="http://qt.nokia.com/doc/4.6/qtranslator.html#load">QTranslator::load()</a>
+     * because proceeding to the fallback “foo.qm” would load
+     * engineering English if “foo.qm” exists which is not what we
+     * want when trying to load real translations because this might
+     * add engineering English with the wrong priority (highest
+     * priority) to the list of translation catalogs if the real
+     * translation happens to be missing.
+     *
+     * If the settings of the locale change, the list of translation
+     * catalog names is reevaluated and translations may switch to
+     * a different language (see connectSettings(), disconnectSettings(),
+     * settingsChanged(), localeSettingsChanged()).
+     *
+     * If a full file name including a “.qm” extension is specified
+     * as the argument of installTrCatalog(), this catalog name is
+     * always appended to the list of catalog names, i.e. used with
+     * highest priority. This means that after calling
+     * locale.installTrCatalog("foo_en_US.qm") the internal list
+     * of installed catalog names looks like:
+     *
+     * \code
+     *    ... previous catalog list ... "foo_en_US.qm"
+     * \endcode
+     *
+     * This is mainly intended for testing to force loading of a fully
+     * specified translation file with highest priority. Except
+     * for testing this should not be used because in the above example
+     * with “foo_en_US.qm”, the locale specific part does not change
+     * according to the locale settings but always stays like this.
+     * And loading an engineering English file by specifying
+     * the full file name, i.e. installTrCatalog("foo.qm") should
+     * also be used only for testing because this adds the engineering
+     * English with highest priority which is usually wrong.
+     *
+     * After a locale has been made the system default with setDefault(),
+     * the translation catalogs which have been installed into that locale
+     * are available for use with qtTrId(), i.e. one can use code
+     * like this to translate a string:
+     *
+     * \code
      * // translate a string:
      *
      * //% "Hello"
@@ -707,11 +813,16 @@ public:
      * \endcode
      *
      * \sa setDefault(const MLocale &locale)
+     * \sa translationPaths()
+     * \sa setTranslationPaths(const QStringList &paths)
+     * \sa addTranslationPath(const QString &path)
+     * \sa removeTranslationPath(const QString &path)
      */
     void installTrCatalog(const QString &name);
 
     /*!
      * \brief removes a translation catalog
+     * \param name of the translation catalog to remove
      *
      * Removes the catalog from the list of translation catalogs used by this
      * MLocale.
@@ -744,21 +855,37 @@ public:
     /*!
      * \brief Sets the paths that are used as base directories for using translations
      * The translation path modification methods are not thread-safe.
+     *
+     * \sa  translationPaths()
+     * \sa addTranslationPath(const QString &path)
+     * \sa removeTranslationPath(const QString &path)
      */
     static void setTranslationPaths(const QStringList &paths);
 
     /*!
      * \brief Append a path to the translation file lookup directories.
+     *
+     * \sa translationPaths()
+     * \sa setTranslationPaths(const QStringList &paths)
+     * \sa removeTranslationPath(const QString &path)
      */
     static void addTranslationPath(const QString &path);
 
     /*!
      * \brief Removes a path
+     *
+     * \sa translationPaths()
+     * \sa setTranslationPaths(const QStringList &paths)
+     * \sa addTranslationPath(const QString &path)
      */
     static void removeTranslationPath(const QString &path);
 
     /*!
      * \brief Returns the list of current translation file base paths
+     *
+     * \sa setTranslationPaths(const QStringList &paths)
+     * \sa addTranslationPath(const QString &path)
+     * \sa removeTranslationPath(const QString &path)
      */
     static QStringList translationPaths();
 

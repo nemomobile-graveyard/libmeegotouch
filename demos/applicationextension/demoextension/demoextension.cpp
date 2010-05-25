@@ -52,7 +52,7 @@ bool DemoApplicationExtension::initialize(const QString &)
     return true;
 }
 
-MWidget *DemoApplicationExtension::widget()
+QGraphicsWidget *DemoApplicationExtension::widget()
 {
     return slider;
 }

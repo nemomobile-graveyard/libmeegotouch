@@ -38,7 +38,11 @@
     }
 
 Pt_minimalqtapplication::Pt_minimalqtapplication()
-    : noBenchmark(false)
+    : noBenchmark(false),
+      window(0),
+      graphicsScene(0),
+      graphicsView(0),
+      glWidget(0)
 {
 }
 

@@ -24,9 +24,9 @@
 #include <mapplicationextensionmetadata_stub.h>
 #include <mapplicationextensionloader_stub.h>
 #include <mappletid_stub.h>
-#include <MWidget>
 #include <MWindow>
 #include <MApplication>
+#include <QGraphicsWidget>
 #include <QGraphicsLinearLayout>
 #include <QtTest/QtTest>
 
@@ -46,7 +46,7 @@ bool TestExtension::initialize(const QString &interface)
     return true;
 }
 
-MWidget *TestExtension::widget()
+QGraphicsWidget *TestExtension::widget()
 {
     return widget_;
 }
@@ -90,7 +90,7 @@ void Ut_MApplicationExtensionRunner::cleanupTestCase()
 
 void Ut_MApplicationExtensionRunner::testInitializationSuccess()
 {
-    extension->widget_ = new MWidget;
+    extension->widget_ = new QGraphicsWidget;
     QCOMPARE(m_instance->init("servername", *meta), true);
     delete extension->widget_;
 }

@@ -81,6 +81,7 @@ MAppletSharedMutexStub gDefaultMAppletSharedMutexStub;
 MAppletSharedMutexStub *gMAppletSharedMutexStub = &gDefaultMAppletSharedMutexStub;
 
 MAppletSharedMutex::MAppletSharedMutex()
+  : d_ptr( 0 )
 {
     gMAppletSharedMutexStub->mAppletSharedMutexStubConstructor();
 }

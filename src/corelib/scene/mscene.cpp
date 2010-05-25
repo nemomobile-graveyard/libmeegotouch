@@ -52,6 +52,8 @@ const int       GesturePointSize        = 4;
 
 
 MScenePrivate::MScenePrivate() :
+        q_ptr(0),
+        manager(0),
         emuPoint1(1),
         emuPoint2(2),
         panEmulationEnabled(false),

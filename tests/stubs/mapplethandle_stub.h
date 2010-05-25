@@ -57,13 +57,13 @@ void MAppletHandleStub::init(const QString &runnerBinary, const QString &appletI
   params.append( new Parameter<QString >(runnerBinary));
   params.append( new Parameter<QString >(appletInstanceFileDataPath));
   params.append( new Parameter<QString >(metaDataFileName));
-  params.append( new Parameter<const MAppletId & >(appletId));
+  params.append( new Parameter<MAppletId >(appletId));
   stubMethodEntered("init",params);
 }
 
 void MAppletHandleStub::initPlaceHolder(const MAppletId &appletId, const QString &packageName, const QString &installationError) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const MAppletId & >(appletId));
+  params.append( new Parameter<MAppletId >(appletId));
   params.append( new Parameter<QString >(packageName));
   params.append( new Parameter<QString >(installationError));
   stubMethodEntered("initPlaceHolder",params);

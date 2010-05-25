@@ -39,10 +39,14 @@ class MContentItemPrivate;
         queried via isSelected() function.
 
         MContentItem provides the following styles:
-        \li ContentItemStyle::IconAndTwoTextLabels
-        \li ContentItemStyle::SingleTextLabel
-        \li ContentItemStyle::IconAndSingleTextLabel
-        \li ContentItemStyle::TwoTextLabels
+        \li MContentItem::IconAndTwoTextLabels
+        \li MContentItem::SingleTextLabel
+        \li MContentItem::IconAndSingleTextLabel
+        \li MContentItem::TwoTextLabels
+        \li MContentItem::SingleIcon
+        \li MContentItem::IconAndSingleTextLabelVertical
+        \li MContentItem::IconAndTwoTextLabelsVertical
+        \li MContentItem::TwoIconsTwoWidgets
 
         MContentItem can be in one of the modes provided by ContentItemMode enumeration.
         For each mode there is a dedicated graphics which is up to the view to show. The purpose of mode is to indicate
@@ -57,7 +61,7 @@ class M_EXPORT MContentItem : public MWidgetController
 
 public:
     /*!
-      ContentItemStyle indicates how text and thumbnail should be shown. There are 4 predefined layouts.
+      ContentItemStyle indicates how text and thumbnail should be shown. There are 8 predefined layouts.
       Exact look and feel depends on the view.
 
       \sa MContentItemView
@@ -221,6 +225,12 @@ public Q_SLOTS:
         \param pixmap Image
      */
     void setImage(const QImage &pixmap);
+
+    /**
+        \brief Sets thumbnail image.
+        \param id, image id in theme system.
+     */
+    void setImage(const QString &id);
 
     /**
         \brief Set title text. This is first line.

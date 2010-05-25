@@ -39,15 +39,17 @@ public:
 
     virtual void init();
 
-    void finalizeEscapeButtonTransition();
-    void opacityChange(qreal step);
+    void setupEscapeButtonTransition();
 
     MButton *backButton;
     MButton *closeButton;
-    QTimeLine *opacityTimeLine;
     MEscapeButtonPanelModel::EscapeMode escapeMode;
 
     MEscapeButtonPanel *controller;
+
+private:
+    void animatedEscapeButtonTransition();
+    void immediateEscapeButtonTransition();
 };
 
 #endif

@@ -40,15 +40,15 @@ public slots:
 
     void extensionRemoved(MApplicationExtensionInterface *extension);
 
-    void widgetCreated(MWidget*, MDataStore&);
+    void widgetCreated(QGraphicsWidget*, MDataStore&);
 
-    void widgetRemoved(MWidget* widget);
+    void widgetRemoved(QGraphicsWidget* widget);
 
 public:
     QList<MApplicationExtensionInterface *> instantiatedExtensions;
     QList<QPair<MApplicationExtensionInterface *, QString> > removedExtensions;
-    QList<MWidget*> createdWidgets;
-    QList<MWidget*> removedWidgets;
+    QList<QGraphicsWidget*> createdWidgets;
+    QList<QGraphicsWidget*> removedWidgets;
 };
 
 /*!
@@ -79,10 +79,10 @@ class GoodExtension : public QObject, public MApplicationExtensionInterface
 
 public:
     virtual bool initialize(const QString &interface);
-    virtual MWidget *widget();
+    virtual QGraphicsWidget *widget();
 
     bool success;
-    MWidget *widget_;
+    QGraphicsWidget *widget_;
     QString name;
 };
 
@@ -97,7 +97,7 @@ private:
     /*!
      * Sets up the test subject.
      */
-    void setupTestSubject();
+    void setupTestSubject(const QString &inProcessFilter = QString(), const QString &outOfProcessFilter = QString());
 
     int goodExtensionCount;
 
@@ -108,7 +108,7 @@ private:
      * \param widget the widget that the extension returns.
      * \param name name for the extension. If left empty, a name is generated automatically.
      */
-    void setupGoodExtension(bool success = true, MWidget* widget = NULL, const QString &name = QString());
+    void setupGoodExtension(bool success = true, QGraphicsWidget* widget = NULL, const QString &name = QString());
 
     QList<MApplicationExtensionInterface*> extensions;
 
@@ -160,8 +160,9 @@ private slots:
     void testRemoveInProcessExtension();
     void testRemoveNonExistentInProcessExtension();
 
-    // Test disabling of loading inprocess extensions
-    void testDisablingLoadingOfInProcessExtensions();
+    // Test filtering of in and out of process extensions
+    void testInProcessExtensionFiltering();
+    void testOutOfProcessExtensionFiltering();
 
     // Test that manager returns list of instantiated in process extensions when requested.
     void testRequestForAllInProcessExtensionsReturnsAListOfExtensions();

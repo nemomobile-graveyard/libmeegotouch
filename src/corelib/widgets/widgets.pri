@@ -36,6 +36,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mpopuplist_p.h \
     $$WIDGETS_SRC_DIR/mpositionindicator.h \
     $$WIDGETS_SRC_DIR/mprogressindicator.h \
+    $$WIDGETS_SRC_DIR/mrichtextedit.h \
     $$WIDGETS_SRC_DIR/mscenewindow.h \
     $$WIDGETS_SRC_DIR/mseekbar.h \
     $$WIDGETS_SRC_DIR/mslider.h \
@@ -101,6 +102,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mapplicationpage.cpp \
     $$WIDGETS_SRC_DIR/mapplicationwindow.cpp \
     $$WIDGETS_SRC_DIR/mbutton.cpp \
+    $$WIDGETS_SRC_DIR/mbuttonmodel.cpp \
     $$WIDGETS_SRC_DIR/mbuttongroup.cpp \
     $$WIDGETS_SRC_DIR/mcombobox.cpp \
     $$WIDGETS_SRC_DIR/mcontainer.cpp \
@@ -131,6 +133,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mpopuplist.cpp \
     $$WIDGETS_SRC_DIR/mpositionindicator.cpp \
     $$WIDGETS_SRC_DIR/mprogressindicator.cpp \
+    $$WIDGETS_SRC_DIR/mrichtextedit.cpp \
     $$WIDGETS_SRC_DIR/mscenewindow.cpp \
     $$WIDGETS_SRC_DIR/mseekbar.cpp \
     $$WIDGETS_SRC_DIR/mslider.cpp \

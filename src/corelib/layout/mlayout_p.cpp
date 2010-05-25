@@ -191,8 +191,10 @@ void MLayoutPrivate::recheckOrientation() {
         }
     }
 }
-void MLayoutPrivate::showItemNow(QGraphicsItem *graphicsItem)
+void MLayoutPrivate::showItemNow(QGraphicsItem *graphicsItem) const
 {
+    if(!graphicsItem)
+        return;
     MWidget *widget = dynamic_cast<MWidget *>(graphicsItem);
     if (widget) {
         widget->d_ptr->layoutHidden = false;
@@ -201,13 +203,13 @@ void MLayoutPrivate::showItemNow(QGraphicsItem *graphicsItem)
     } else
         graphicsItem->show(); //Show always for non-mwidgets
 }
-void MLayoutPrivate::removeHiddenFlag(QGraphicsLayoutItem *layoutItem)
+void MLayoutPrivate::removeHiddenFlag(QGraphicsItem *graphicsItem) const
 {
-    MWidget *widget = dynamic_cast<MWidget *>(layoutItem->graphicsItem());
+    MWidget *widget = dynamic_cast<MWidget *>(graphicsItem);
     if (widget)
         widget->d_ptr->layoutHidden = false;
 }
-void MLayoutPrivate::hideItemNow(QGraphicsItem *graphicsItem)
+void MLayoutPrivate::hideItemNow(QGraphicsItem *graphicsItem) const
 {
     graphicsItem->hide();
     MWidget *widget = dynamic_cast<MWidget *>(graphicsItem);

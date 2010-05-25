@@ -1,3 +1,6 @@
+# for defines
+include(../mkspecs/common.pri)
+
 MSRCDIR = ../../src/
 STUBSDIR = ../stubs
 INCLUDEPATH += \

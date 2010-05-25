@@ -86,7 +86,7 @@ void TestModel::setMode(TestModel::CallMode mode) {
 class MContentItemCreator : public MAbstractCellCreator<MContentItem>
 {
 public:
-    MContentItemCreator() {
+    MContentItemCreator() : amountOfColumns( 0 ) {
     }
 
     void updateCell(const QModelIndex &index, MWidget *cell) const {
@@ -144,9 +144,11 @@ ToolBarPage::ToolBarPage() :
     exampleAction1(0),
     exampleAction2(0),
     defaultViewAction(0),
-    tabViewAction(0)
+    tabViewAction(0),
+    isDefaultView(true)
 {
     gid = TemplatePage::ViewsAndDialogs;
+
 }
 
 ToolBarPage::~ToolBarPage()

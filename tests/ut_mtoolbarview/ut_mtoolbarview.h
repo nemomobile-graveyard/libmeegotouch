@@ -40,13 +40,19 @@ private slots:
     void init();
     void cleanup();
 
+    void testAddingRemoveActions();
     void testDeleteAddAction();
     void testTabView();
     void testTabActionExclusivity();
+    void testSizeHint_data();
+    void testSizeHint();
+    void testButtons();
+    void testMWidgetAction_data();
+    void testMWidgetAction();
 
 private:
     MToolBar *m_toolbar;
-    MToolBarView *m_subject;
+    MToolBarView *m_toolbarview;
 
     MWidgetAction *createTextEditAction(MWidget *parentWidget);
 };

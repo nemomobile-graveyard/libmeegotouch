@@ -41,6 +41,7 @@
 #include "mapplication_p.h"
 #include "mscene.h"
 #include "mstatusbar.h"
+#include "mdeviceprofile.h"
 
 #include <QList>
 #include <QEvent>
@@ -83,12 +84,19 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , homeButtonPanel(new MHomeButtonPanel)
     , escapeButtonPanel(new MEscapeButtonPanel)
     , menu(new MApplicationMenu)
-    , statusBar(new MStatusBar)
     , isMenuOpen(false)
-    , callOngoing(false)
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    , callStatusProperty("Phone.Call")
+#endif
     , showingStatusBar(false)
     , showingDockWidget(false)
 {
+    if(MDeviceProfile::instance()->showStatusbar())    {
+        statusBar = new MStatusBar;
+    }
+    else{
+        statusBar = NULL;
+    }
 }
 
 MApplicationWindowPrivate::~MApplicationWindowPrivate()
@@ -141,7 +149,7 @@ void MApplicationWindowPrivate::init()
     q->connect(menu, SIGNAL(disappeared()),
                q, SLOT(_q_menuDisappeared()));
 
-    if (!MApplication::fullScreen()) {
+    if (!MApplication::fullScreen() && statusBar ) {
         sceneManager->appearSceneWindowNow(statusBar);
     }
 
@@ -163,16 +171,9 @@ void MApplicationWindowPrivate::init()
 
     initAutoHideComponentsTimer();
 
-#ifdef HAVE_DBUS
-    // TODO: Take that info from Context Framework instead,
-    //       once it becomes available.
-    //       Initialization of callOngoing variable is missing at the moment.
-    QDBusConnection systemBus(QDBusConnection::systemBus());
-    systemBus.connect("", "/com/nokia/csd/csnet",
-                      "com.nokia.csd.CSNet", "ActivityChanged", q,
-                      SLOT(_q_updateCallOngoingState(QString)));
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    q->connect(&callStatusProperty, SIGNAL(valueChanged()), SLOT(_q_updateStatusBarVisibility()));
 #endif
-
     q->connect(q, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
             SLOT(_q_updatePageExposedContentRect()));
 }
@@ -214,33 +215,36 @@ void  MApplicationWindowPrivate::initAutoHideComponentsTimer()
 void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
 {
     Q_Q(MApplicationWindow);
-    Q_ASSERT(statusBar != 0);
+    if (!statusBar)
+        return;
 
     // Status bar should always be visible while a phone call is ongoing.
-    if (!callOngoing) {
-        if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
-            q->sceneManager()->disappearSceneWindowNow(statusBar);
-        } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
-            q->sceneManager()->appearSceneWindowNow(statusBar);
-        }
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    if (callStatusProperty.value().toString() == "active")
+        return;
+#endif
+
+    if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
+        q->sceneManager()->disappearSceneWindowNow(statusBar);
+    } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
+        q->sceneManager()->appearSceneWindowNow(statusBar);
     }
 }
 
-#ifdef HAVE_DBUS
-void MApplicationWindowPrivate::_q_updateCallOngoingState(QString mode)
+#ifdef HAVE_CONTEXTSUBSCRIBER
+void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
 {
     Q_Q(MApplicationWindow);
-
+    if (!statusBar)
+        return;
     // Status bar should always be visible while a phone call is ongoing.
 
-    if (mode == "Call") {
-        callOngoing = true;
-        if (q->isFullScreen())
+    if (q->isFullScreen()) {
+        if (callStatusProperty.value().toString() == "active") {
             q->sceneManager()->appearSceneWindowNow(statusBar);
-    } else if (callOngoing) {
-        callOngoing = false;
-        if (q->isFullScreen())
+        } else {
             q->sceneManager()->disappearSceneWindowNow(statusBar);
+        }
     }
 }
 #endif
@@ -588,6 +592,8 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
             break;
 
         case MSceneWindow::StatusBar:
+            if (!statusBar)
+                return;
             showingStatusBar = true;
             _q_updatePageExposedContentRect();
             break;
@@ -617,6 +623,8 @@ void MApplicationWindowPrivate::sceneWindowDisappearEvent(MSceneWindowEvent *eve
             break;
 
         case MSceneWindow::StatusBar:
+            if(!statusBar)
+                return;
             showingStatusBar = false;
             _q_updatePageExposedContentRect();
             break;
@@ -649,7 +657,8 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
     Q_ASSERT(pageFromEvent != page);
 
     if (page != 0) {
-        menu->disappear();
+        if (menu->isVisible())
+            menu->disappear();
         disconnectPage(page);
     }
 
@@ -664,7 +673,8 @@ void MApplicationWindowPrivate::applicationPageDisappearEvent(MSceneWindowEvent 
 
     // Page is going away. Let's disconnect it if it's the current page.
     if (pageFromEvent == page) {
-        menu->disappear();
+        if (menu->isVisible())
+            menu->disappear();
         disconnectPage(pageFromEvent);
     }
 }
@@ -1040,6 +1050,8 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
     Q_D(MApplicationWindow);
     MSceneWindow *component;
 
+    MWindow::mouseReleaseEvent(event);
+
     if (d->componentsOnAutoHide.count() > 0) {
         const int count = d->componentsOnAutoHide.count();
         for (int i = 0; i < count; ++i) {
@@ -1063,8 +1075,6 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
             closeMenu();
         }
     }
-
-    MWindow::mouseReleaseEvent(event);
 }
 
 #include "moc_mapplicationwindow.cpp"

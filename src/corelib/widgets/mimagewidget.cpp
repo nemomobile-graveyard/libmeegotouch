@@ -38,7 +38,6 @@ MImageWidgetPrivate::MImageWidgetPrivate()
 
 MImageWidgetPrivate::~MImageWidgetPrivate()
 {
-
     cleanUp();
 }
 
@@ -76,11 +75,12 @@ MImageWidgetPrivate &MImageWidgetPrivate::operator=(const MImageWidgetPrivate &o
         if (other.deletePixmap)
             pixmap = new QPixmap(*(other.pixmap));
         else
-            setImageName(other.imageName);
+            setImageName(other.imageName, other.pixmap->size());
     }
-    deletePixmap = other.deletePixmap;
 
+    deletePixmap = other.deletePixmap;
     imageName = other.imageName;
+
     return *this;
 }
 
@@ -162,7 +162,9 @@ void MImageWidget::setImage(const QString &id, const QSize &s)
 {
     Q_D(MImageWidget);
     d->setImageName(id, s);
-
+ 
+    model()->setCrop(QRect());
+ 
     update();
 }
 
@@ -316,6 +318,8 @@ void MImageWidget::setImage(const QString &id)
     Q_D(MImageWidget);
     d->setImageName(id);
 
+    model()->setCrop(QRect());
+
     update();
 }
 
@@ -326,6 +330,8 @@ void MImageWidget::setImage(const QImage &image)
     d->cleanUp();
     d->pixmap = new QPixmap(QPixmap::fromImage(image));
     d->deletePixmap = true;
+
+    model()->setCrop(QRect());
 
     update();
 }
@@ -338,6 +344,7 @@ void MImageWidget::setPixmap(const QPixmap &pixmap)
     d->pixmap = new QPixmap(pixmap);
     d->deletePixmap = true;
 
+    model()->setCrop(QRect());
+
     update();
 }
-

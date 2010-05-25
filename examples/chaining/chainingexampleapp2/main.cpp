@@ -21,7 +21,7 @@ int main(int argc, char** argv)
     MButton b(p.centralWidget());
     b.setText("NO");
 
-    ImageViewer myImageViewer( &b );
+    ImageViewer myImageViewer;
 
     new ChainingExampleInterfaceAdaptor( &myImageViewer );
 

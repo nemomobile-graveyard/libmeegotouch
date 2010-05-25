@@ -5,7 +5,7 @@ Application extensions are plugins that can be embedded into an application exte
 \section appextensiondevenv Development environment
 
 For developing application extensions you need:
-- libdui-dev
+- libmeegotouch-dev
 
 \section appextensiondevelopment Developing application extensions and applications that use them
 
@@ -26,11 +26,16 @@ In this method you need to return a pointer to the \c MWidget of your applicatio
 To use application extensions of particular interface in an application, an instance of \c MApplicationExtensionArea is created:
 
 \code
-new MApplicationExtensionArea(interface, enableInProcessExtensions, parent);
+new MApplicationExtensionArea(interface, parent);
 \endcode
 
-where interface is the name of the interface the extensions in the area implement, enableInProcessExtensions is a boolean which tells whether
-the area can load in-process extensions and parent is the parent QGraphicsItem.
+where interface is the name of the interface the extensions in the area implement and parent is the parent QGraphicsItem. The area will only
+be populated after init() is called.
+
+It is possible to define which extensions are allowed to be loaded in the same process as the extension area and which extensions are ran in separate
+processes using setInProcessFilter() and setOutOfProcessFilter() before calling init(). These take QRegExp objects as their parameter, so it is for
+example possible to use QRegExp("$^") to allow no extensions, QRegExp("/test(1|A).desktop$") to allow extensions test1.desktop and testA.desktop and
+QRegExp() to allow all extensions.
 
 \subsection appextensionprocdiff Differences between in-process and out-of-process application extensions
 
@@ -152,6 +157,8 @@ void DemoApp::createExtensionArea()
 {
     MApplicationExtensionArea *extensionArea =
         new MApplicationExtensionArea("com.meego.core.DemoApplicationExtensionInterface/1.0");
+    extensionArea->setInProcessFilter(QRegExp("/demoapp-demoextension2?\\.desktop$"));
+    extensionArea->init();
     layout->addItem(extensionArea);
 
     // Listen to signals about new and removed extensions
@@ -175,6 +182,7 @@ void DemoApp::addExtension(MApplicationExtensionInterface *extension)
 \subsection appextensiondesktopfile Application extension desktop file
 
 Application extension must have a \c .desktop file written according to <a href="http://www.freedesktop.org/wiki/Specifications/desktop-entry-spec">freedesktop.org desktop entry specification</a>.
+It is a good practice to name the file in a similar manner to naming the shared library (for example myapplication-myextension.desktop).
 The keys \c Type and \c Name are required as specified in the desktop entry specification. The type must be \c X-MeeGoApplicationExtension.
 The \c Exec key is optionally used to specify a runner binary (usually mapplicationextensionrunner) which is launched in separate process to run the application extension binary. If the key is not used, the application extension is run inside the host process.
 
@@ -274,6 +282,14 @@ The application extension identifier is used as the application name in the dire
 When the application extension is run as in-process, the resource location is constructed from the library name.
 
 See \ref theme_structure for more information about the directory locations.
+
+The layout orientation of the application extension area can be modified using the layout-orientation style parameter:
+ 
+\code
+MApplicationExtensionAreaStyle {
+    layout-orientation: horizontal;
+}
+\endcode
 
 \section appextensiontools Tools to help development
 The <tt>dui-dev-tools</tt> package includes a tool called <tt>duiapplicationextensiontester</tt>. This tool can be used to test application extensions that have an UI.

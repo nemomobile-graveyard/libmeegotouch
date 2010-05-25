@@ -1,5 +1,7 @@
 /*! \page rotation Rotation
 
+\warning THIS DOCUMENT IS OUTDATED
+
 \section basics Basics
 
 Libdui provides support for rotation of the screen (i.e. changing the orientation). Rotation consists of multiple (simultaneous) actions:

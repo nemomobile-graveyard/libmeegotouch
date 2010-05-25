@@ -22,10 +22,12 @@
 
 #include "mscenewindow.h"
 #include "private/mwidgetcontroller_p.h"
+#include <mabstractwidgetanimation.h>
+
+#include <QPointer>
 
 class MWindow;
 class MSceneLayerEffect;
-class MAbstractWidgetAnimation;
 
 class MSceneWindowPrivate : public MWidgetControllerPrivate
 {
@@ -43,11 +45,12 @@ public:
     bool managedManually;
     bool shown;
     bool dismissed;
+    bool waitingForContextMenuEvent;
 
     MSceneLayerEffect *effect;
 
-    MAbstractWidgetAnimation *appearanceAnimation;
-    MAbstractWidgetAnimation *disappearanceAnimation;
+    QPointer<MAbstractWidgetAnimation> appearanceAnimation;
+    QPointer<MAbstractWidgetAnimation> disappearanceAnimation;
 };
 
 

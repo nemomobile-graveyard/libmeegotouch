@@ -19,9 +19,6 @@
 
 #include "morientationanimation.h"
 
-#if QT_VERSION >= 0x040600
-
-
 #include "morientationanimation_p.h"
 
 ///////////////////
@@ -42,13 +39,8 @@ MOrientationAnimationPrivate::~MOrientationAnimationPrivate()
 //////////////////
 
 MOrientationAnimation::MOrientationAnimation(MOrientationAnimationPrivate *d,
-        QObject *parent, MGroupAnimation::Type type) :
-    MGroupAnimation(d, type, parent)
-{
-}
-
-MOrientationAnimation::MOrientationAnimation(QObject *parent, MGroupAnimation::Type type) :
-    MGroupAnimation(new MOrientationAnimationPrivate(), type, parent)
+        QObject *parent) :
+    MParallelAnimationGroup(d, parent)
 {
 }
 
@@ -70,4 +62,3 @@ QGraphicsWidget *MOrientationAnimation::rootElement()
 void MOrientationAnimation::rootElementChanged()
 {
 }
-#endif

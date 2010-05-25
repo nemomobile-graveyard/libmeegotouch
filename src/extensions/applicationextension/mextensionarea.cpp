@@ -35,7 +35,7 @@ MExtensionAreaPrivate::~MExtensionAreaPrivate()
 {
 }
 
-void MExtensionAreaPrivate::addWidget(MWidget *widget, MDataStore &store)
+void MExtensionAreaPrivate::addWidget(QGraphicsWidget *widget, MDataStore &store)
 {
     Q_Q(MExtensionArea);
 
@@ -51,7 +51,7 @@ void MExtensionAreaPrivate::addWidget(MWidget *widget, MDataStore &store)
     }
 }
 
-void MExtensionAreaPrivate::removeWidget(MWidget *widget)
+void MExtensionAreaPrivate::removeWidget(QGraphicsWidget *widget)
 {
     Q_Q(MExtensionArea);
 
@@ -92,9 +92,10 @@ MExtensionArea::MExtensionArea(MExtensionAreaPrivate *dd, MWidgetModel *model, Q
 {
     // Initialize the private implementation
     Q_D(MExtensionArea);
-    if (d)
+    if (d) {
         d->q_ptr = this;
-    d->init();
+        d->init();
+    }
 }
 
 MExtensionArea::MExtensionArea(QGraphicsItem *parent) :
@@ -111,14 +112,14 @@ MExtensionArea::~MExtensionArea()
 {
 }
 
-void MExtensionArea::addWidget(MWidget *widget, MDataStore &store)
+void MExtensionArea::addWidget(QGraphicsWidget *widget, MDataStore &store)
 {
     Q_D(MExtensionArea);
 
     d->addWidget(widget, store);
 }
 
-void MExtensionArea::removeWidget(MWidget *widget)
+void MExtensionArea::removeWidget(QGraphicsWidget *widget)
 {
     Q_D(MExtensionArea);
 

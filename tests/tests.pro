@@ -46,6 +46,7 @@ SUBDIRS     =  \
      ut_mpositionindicator \
      ut_mpositionindicatorview \
      ut_mpopuplist \
+     ut_mrichtextedit \
      ut_mscenemanager \
      ut_mslider \
      ut_mseekbar \

@@ -39,7 +39,11 @@
     }
 
 Pt_minimalmapplication::Pt_minimalmapplication()
-    :  appearType("appear"), noBenchmark(false)
+    :  appearType("appear"),
+       noBenchmark(false),
+       locale(0),
+       window(0),
+       page(0)
 {
 }
 

@@ -28,7 +28,7 @@ public:
     MCollatorPrivate();
     virtual ~MCollatorPrivate();
 
-    void initCollator(icu::Locale locale);
+    void initCollator(const icu::Locale &locale);
 
     icu::Collator *_coll;
 

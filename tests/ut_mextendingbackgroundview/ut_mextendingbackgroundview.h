@@ -37,8 +37,8 @@ class TestExtendingBackgroundView : public MExtendingBackgroundView
 
 public:
     TestExtendingBackgroundView(MWidgetController *controller);
-    QRectF boundingRect();
-    QRectF geometry();
+    QRectF boundingRect() const;
+    QRectF geometry() const;
     MExtendingBackgroundStyle *modifiableStyle();
 };
 

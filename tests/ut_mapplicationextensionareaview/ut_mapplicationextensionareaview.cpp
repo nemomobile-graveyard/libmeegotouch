@@ -159,7 +159,6 @@ void Ut_MApplicationExtensionAreaView::testAddition()
     delete widget2;
 }
 
-
 void Ut_MApplicationExtensionAreaView::testRemoval()
 {
     createWidgets(3);
@@ -171,6 +170,20 @@ void Ut_MApplicationExtensionAreaView::testRemoval()
     QCOMPARE(widgetInLayout(createdWidgets.at(0)), true);
     QCOMPARE(widgetInLayout(createdWidgets.at(1)), false);
     QCOMPARE(widgetInLayout(createdWidgets.at(2)), true);
+}
+
+void Ut_MApplicationExtensionAreaView::testApplyStyle()
+{
+    QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(extensionArea->layout());
+    QVERIFY(layout != NULL);
+
+    m_subject->modifiableStyle()->setLayoutOrientation(Qt::Horizontal);
+    m_subject->applyStyle();
+    QCOMPARE(layout->orientation(), Qt::Horizontal);
+
+    m_subject->modifiableStyle()->setLayoutOrientation(Qt::Vertical);
+    m_subject->applyStyle();
+    QCOMPARE(layout->orientation(), Qt::Vertical);
 }
 
 QTEST_APPLESS_MAIN(Ut_MApplicationExtensionAreaView)

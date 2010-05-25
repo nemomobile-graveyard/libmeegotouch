@@ -29,6 +29,11 @@
 
 #include "ut_mimagewidget.h"
 
+Ut_MImageWidget::Ut_MImageWidget() :
+        m_subject(0)
+{
+}
+
 void Ut_MImageWidget::initTestCase()
 {
     QImage img(qApp->applicationDirPath() + "/ut_mimagewidget-test.png");

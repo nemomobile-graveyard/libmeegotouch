@@ -27,6 +27,7 @@
 
 #include "minputmethodstate.h"
 #include "mtheme.h"
+#include "mtheme_p.h"
 #include "mthemedaemon.h"
 #include "mcomponentdata.h"
 #include "mscenemanager.h"
@@ -54,6 +55,10 @@
 // end testability
 #endif
 
+#ifdef Q_WS_X11
+#include <QX11Info>
+#include <X11/extensions/Xfixes.h>
+#endif
 
 namespace
 {
@@ -281,9 +286,9 @@ MComponentData::MComponentData(MApplicationService *service) :
     MComponentData::self = this;
 
     int argc = 0;
-    char *argv = 0;
+    char *argv[] = {0};
 
-    d->init(argc, &argv, QString(), service);
+    d->init(argc, argv, QString(), service);
 }
 
 void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
@@ -637,23 +642,9 @@ void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier
     systemLocale.installTrCatalog(d->appName);
     MLocale::setDefault(systemLocale);
 
-    QString baseCSS(MThemeDaemon::systemThemeDirectory() + 
-                    QDir::separator() + QString("base") +
-                    QDir::separator() + QString("meegotouch") +
-                    QDir::separator() + d->appName + 
-                    QDir::separator() + QString("style") + 
-                    QDir::separator() + d->appName + QString(".css"));
-
-    MTheme::loadCSS(baseCSS);
-
-    QString themeCSS(MThemeDaemon::systemThemeDirectory() + 
-                     QDir::separator() + MTheme::currentTheme() +
-                     QDir::separator() + QString("meegotouch") +
-                     QDir::separator() + d->appName + 
-                     QDir::separator() + QString("style") + 
-                     QDir::separator() + d->appName + QString(".css"));
-
-    MTheme::loadCSS(themeCSS);
+    if (MTheme::instance()) {
+        MTheme::instance()->d_func()->reinit(d->appName, d->imglistFilename, MTheme::AnyTheme);
+    }
 
     if (newService) {
         d->registerNewService(newService);
@@ -878,11 +869,19 @@ void MComponentData::setShowCursor(bool show)
     }
 
     if (show) {
+#ifdef Q_WS_X11
+        XFixesShowCursor(QX11Info::display(), QX11Info::appRootWindow());
+#else
         qApp->restoreOverrideCursor();
+#endif
     } else {
+#ifdef Q_WS_X11
+        XFixesHideCursor(QX11Info::display(), QX11Info::appRootWindow());
+#else
         QPixmap cursor(QSize(1, 1));
         cursor.fill(Qt::transparent);
         qApp->setOverrideCursor(cursor);
+#endif
     }
 
     gMComponentDataPrivate->showCursor = show;

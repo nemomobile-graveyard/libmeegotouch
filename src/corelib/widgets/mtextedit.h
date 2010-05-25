@@ -75,6 +75,7 @@ class M_EXPORT MTextEdit : public MWidgetController
     Q_PROPERTY(bool inputMethodPredictionEnabled READ inputMethodPredictionEnabled WRITE setInputMethodPredictionEnabled)
     Q_PROPERTY(int maxLength READ maxLength WRITE setMaxLength)
     Q_PROPERTY(MTextEditModel::EchoMode echoMode READ echoMode WRITE setEchoMode)
+    Q_PROPERTY(bool autoSipEnabled READ isAutoSipEnabled WRITE setAutoSipEnabled)
 
 public:
     typedef M::TextContentType TextContentType; // workaround for moc bug
@@ -362,6 +363,17 @@ public:
     MCompleter *completer();
 
     /*!
+     * \brief Allows control over SIP handling
+     *
+     * When a text edit is focused and this property is disabled, no software
+     * input panel will be requested.
+     */
+    void setAutoSipEnabled(bool enabled);
+
+    //! \sa setAutoSipEnabled
+    bool isAutoSipEnabled() const;
+
+    /*!
      * \brief Attaches a custom toolbar named \a name.
      *  \param name is the absolute file name of a custom toolbar, or the relative file under
      *      /usr/share/meegotouch/imtoolbars/.
@@ -501,6 +513,7 @@ Q_SIGNALS:
 protected:
     /*! \reimp */
     virtual void keyPressEvent(QKeyEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void focusInEvent(QFocusEvent *event);
     virtual void focusOutEvent(QFocusEvent *event);
     virtual void inputMethodEvent(QInputMethodEvent *);

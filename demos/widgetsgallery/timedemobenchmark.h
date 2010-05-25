@@ -6,6 +6,7 @@
 class MApplicationPage;
 class Timedemo;
 class QString;
+class QTimer;
 
 /**
   * TimedemoBenchmark is the base class for all benchmarks used in the timedemo.
@@ -52,7 +53,16 @@ signals:
       */
     void finished();
 
+protected slots:
+    void terminateIfNotAppeared();
+
 protected:
+    /**
+       * Start this timer after calling MApplicationPage::appear() to verify the application page
+       * has really appeared/is really active.
+       * Timer will terminate the application after the timeout if page is not active.
+       */
+    QTimer *verifyAppearanceTimer;
     MApplicationPage *applicationPage;
     Timedemo *timedemo;
     QString _type;

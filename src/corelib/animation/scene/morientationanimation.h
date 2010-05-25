@@ -21,14 +21,11 @@
 #define MORIENTATIONANIMATION_H
 
 #include <QtGlobal>
-#if QT_VERSION >= 0x040600
 
-#include <mgroupanimation.h>
-#include <mgroupanimationstyle.h>
+#include <mparallelanimationgroup.h>
 #include <mnamespace.h>
 
 class QGraphicsWidget;
-class MWindow;
 class MSceneWindow;
 class MOrientationAnimationPrivate;
 
@@ -36,21 +33,18 @@ class MOrientationAnimationPrivate;
   \class MOrientationAnimation
   \brief MOrientationAnimation class provides abstract interface for orientation animations.
  */
-class MOrientationAnimation : public MGroupAnimation
+class MOrientationAnimation : public MParallelAnimationGroup
 {
     Q_OBJECT
     Q_DECLARE_PRIVATE(MOrientationAnimation)
-
-    M_ANIMATION(MGroupAnimationStyle)
+    M_ANIMATION_GROUP(MAnimationStyle)
 
 protected:
 
     /*!
       \brief Constructs the orientation animation.
      */
-    MOrientationAnimation(MOrientationAnimationPrivate *d,
-                            QObject *parent,
-                            MGroupAnimation::Type type = MGroupAnimation::Parallel);
+    MOrientationAnimation(MOrientationAnimationPrivate *d, QObject *parent);
 
 Q_SIGNALS:
     /*!
@@ -60,10 +54,6 @@ Q_SIGNALS:
 
 public:
 
-    /*!
-      \brief Constructs the orientation animation.
-     */
-    MOrientationAnimation(QObject *parent, MGroupAnimation::Type type = MGroupAnimation::Parallel);
     /*!
       \brief Destroys the orientation animation.
      */
@@ -101,5 +91,4 @@ protected:
     virtual void rootElementChanged();
 };
 
-#endif
 #endif

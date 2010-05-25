@@ -47,6 +47,7 @@ void PanningBenchmark::start()
     if (!applicationPage->isActiveWindow()) {
         connect(applicationPage, SIGNAL(appeared()), this, SLOT(waitBeforePanning()));
         applicationPage->appear();
+        verifyAppearanceTimer->start(2000);
     } else {
         waitBeforePanning();
     }
@@ -56,6 +57,7 @@ void PanningBenchmark::start()
 // the widgets are not completely set up yet
 void PanningBenchmark::waitBeforePanning()
 {
+    verifyAppearanceTimer->stop();
     QTimer::singleShot(2500, this, SLOT(panDown()));
 }
 

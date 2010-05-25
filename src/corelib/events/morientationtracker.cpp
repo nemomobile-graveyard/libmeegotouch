@@ -82,7 +82,7 @@ void MOrientationTrackerPrivate::topEdgeChanged()
     } else if (edge == "bottom") {
         angle = M::Angle180;
     } else {
-        angle = currentAngle;
+        angle = M::Angle0;
     }
 
     // if hardware keyboard is opened, don't allow orientation angle to be changed.

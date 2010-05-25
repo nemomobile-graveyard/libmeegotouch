@@ -17,8 +17,6 @@
 **
 ****************************************************************************/
 
-#include <QPropertyAnimation>
-
 #include "mscenelayereffectdimview.h"
 
 #include "mscenewindowview_p.h"
@@ -31,7 +29,6 @@ class MSceneLayerEffectDimViewPrivate : public MSceneWindowViewPrivate
 {
 public:
     MSceneLayerEffect *controller;
-    QPropertyAnimation *animation;
 };
 //! \internal_end
 
@@ -41,9 +38,6 @@ MSceneLayerEffectDimView::MSceneLayerEffectDimView(MSceneLayerEffect *controller
     Q_D(MSceneLayerEffectDimView);
     d->controller = controller;
     d->controller->setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
-
-    d->animation = new QPropertyAnimation(d->controller, "opacity", this);
-    d->animation->setStartValue(0.0f);
 }
 
 MSceneLayerEffectDimView::~MSceneLayerEffectDimView()
@@ -64,26 +58,11 @@ QRectF MSceneLayerEffectDimView::boundingRect() const
     return QRectF(QPointF(0, 0), d->controller->size());
 }
 
-void MSceneLayerEffectDimView::updateData(const QList<const char *>& modifications)
+void MSceneLayerEffectDimView::applyStyle()
 {
     Q_D(MSceneLayerEffectDimView);
 
-    MSceneWindowView::updateData(modifications);
-    const char *member;
-    foreach(member, modifications) {
-        if (member == MSceneLayerEffectModel::Enabled) {
-            if (model()->enabled()) {
-                d->animation->setDuration(style()->fadeDuration());
-                d->animation->setEasingCurve(style()->easingCurve());
-                d->animation->setEndValue(style()->opacity());
-                d->animation->start();
-            } else {
-                d->animation->setStartValue(d->controller->opacity());
-                d->animation->setEndValue(0.0f);
-                d->animation->start();
-            }
-        }
-    }
+    d->controller->setOpacity(style()->opacity());
 }
 
 M_REGISTER_VIEW_NEW(MSceneLayerEffectDimView, MSceneLayerEffect)

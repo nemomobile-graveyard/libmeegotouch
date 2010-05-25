@@ -42,6 +42,7 @@
 #include "mdockwidget.h"
 #include "mescapebuttonpanel.h"
 #include "mescapebuttonpanelmodel.h"
+#include "mobjectmenu.h"
 #include "mapplication.h"
 #include "mwindow.h"
 #include "mapplicationwindow.h"
@@ -55,15 +56,13 @@
 #include "morientationtracker.h"
 
 #include "mbasicorientationanimation.h"
-#include "mnotificationanimation.h"
-#include "mscenefadeanimation.h"
+#include "mcrossfadedorientationanimation.h"
 #include "mabstractwidgetanimation.h"
 #include "mpageswitchanimation.h"
 
-#include <mwidgetslideinanimation.h>
-#include <mwidgetfadeinanimation.h>
-#include <mwidgetslideoutanimation.h>
-#include <mwidgetfadeoutanimation.h>
+#include <mwidgetslideanimation.h>
+#include <mwidgetfadeanimation.h>
+#include <mwidgetzoomanimation.h>
 
 namespace
 {
@@ -115,13 +114,7 @@ void MSceneManagerPrivate::init(MScene *scene)
     rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.0, q->visibleSceneSize().height() / 2.0));
     scene->addItem(rootElement);
 
-    //TODO: get this from theme
-    orientationAnimation = new MBasicOrientationAnimation(q->visibleSceneSize(M::Landscape));
-    orientationAnimation->setRootElement(rootElement);
-    q->connect(orientationAnimation, SIGNAL(orientationChanged()), SLOT(_q_changeGlobalOrientationAngle()));
-    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_emitOrientationChangeFinished()));
-    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_applyQueuedSceneWindowTransitions()));
-    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
+    createOrientationAnimation();
 
     // The scene manager should only listen to region updates from one instance, to prevent
     // conflicting window relocation requests. Since MIMS is a singleton, enforcing
@@ -132,9 +125,31 @@ void MSceneManagerPrivate::init(MScene *scene)
                q, SLOT(_q_relocateWindowByInputPanel(QRect)),
                Qt::UniqueConnection);
 
+    q->connect(q, SIGNAL(orientationChangeFinished(M::Orientation)),
+               q, SLOT(ensureCursorVisible()),
+               Qt::UniqueConnection);
+
     pageSwitchAnimation = new MPageSwitchAnimation;
 
     setOrientationAngleWithoutAnimation(newAngle);
+}
+
+void MSceneManagerPrivate::createOrientationAnimation()
+{
+    Q_Q(MSceneManager);
+
+    QRectF visibleSceneRect = QRectF(QPointF(0.0, 0.0), q->visibleSceneSize(M::Landscape));
+
+    //TODO: get this from theme
+    orientationAnimation = new MCrossFadedOrientationAnimation(visibleSceneRect);
+    //orientationAnimation = new MBasicOrientationAnimation(q->visibleSceneSize(M::Landscape));
+
+    orientationAnimation->setRootElement(rootElement);
+
+    q->connect(orientationAnimation, SIGNAL(orientationChanged()), SLOT(_q_changeGlobalOrientationAngle()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_emitOrientationChangeFinished()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_applyQueuedSceneWindowTransitions()));
+    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
 }
 
 MSceneManagerPrivate::~MSceneManagerPrivate()
@@ -386,6 +401,12 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
 {
     Q_Q(MSceneManager);
 
+    const QRectF microFocusRect = q->scene()->inputMethodQuery(Qt::ImMicroFocus).toRectF();
+    // If the microfocus is invalid then the focused widget does not want to be relocated.
+    if (!microFocusRect.isValid()) {
+        return;
+    }
+
     // This method is not responsible for restoring visibility when the input panel is closed -
     // _q_inputPanelClosed() does that. Therefore, it is OK to also ignore empty rectangles here.
     if (!focusedInputWidget || inputPanelRect.isEmpty()) {
@@ -404,7 +425,6 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
     visibleRect.setHeight(visibleRect.height() - obstructedHeight);
 
     // Always try to center the input focus into the remaining visible rectangle.
-    const QRectF microFocusRect = q->scene()->inputMethodQuery(Qt::ImMicroFocus).toRectF();
     int adjustment = (rootElement->mapRectFromScene(microFocusRect).toRect().center() -
                       visibleRect.center()).y();
 
@@ -418,7 +438,7 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
 
 void MSceneManagerPrivate::_q_restoreSceneWindow()
 {
-    if (alteredSceneWindow && !focusedInputWidget) {
+    if (alteredSceneWindow) {
         sceneWindowTranslation *= -1;
         alteredSceneWindow->moveBy(sceneWindowTranslation.x(), sceneWindowTranslation.y());
         sceneWindowTranslation = QPoint();
@@ -863,9 +883,7 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
 
     setSceneWindowGeometry(window);
     MSceneLayerEffect *effect = createLayerEffectForWindow(window);
-    if (effect) {
-        effect->enableEffect();
-    } else {
+    if (!effect) {
         // window could have been added to another scene manually beforehand
         // remove it in that case, to avoid Qt's assert
         if (window->scene() && window->scene() != scene)
@@ -1022,7 +1040,7 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
         if (animatedTransition) {
             if (!window->d_func()->appearanceAnimation)
                 createAppearanceAnimationForSceneWindow(window);
-            window->d_func()->appearanceAnimation->start();
+            window->d_func()->appearanceAnimation->start(QAbstractAnimation::DeleteWhenStopped);
         } else {
             emit window->appeared();
         }
@@ -1038,10 +1056,6 @@ void MSceneManagerPrivate::prepareWindowHide(MSceneWindow *window)
                         q, SLOT(_q_setSenderGeometry()));
     orientationAnimation->removeSceneWindow(window);
     window->d_func()->shown = false;
-
-    if (window->d_func()->effect) {
-        window->d_func()->effect->disableEffect();
-    }
 
     // Check whether we are trying to hide a window while it is in the middle of
     // a show animation. If that's the case, we stop it.
@@ -1092,7 +1106,7 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
     if (animatedTransition) {
         if (!window->d_func()->disappearanceAnimation)
             createDisappearanceAnimationForSceneWindow(window);
-        window->d_func()->disappearanceAnimation->start();
+        window->d_func()->disappearanceAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     } else {
         emit window->disappeared();
     }
@@ -1161,15 +1175,46 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
         case MSceneWindow::NotificationEvent:
         case MSceneWindow::ApplicationMenu:
         case MSceneWindow::NavigationBar:
-        case MSceneWindow::PopupList:
-            animation = new MWidgetSlideInAnimation(sceneWindow);
+        case MSceneWindow::PopupList: {
+            MWidgetSlideAnimation *slideInAnimation = new MWidgetSlideAnimation(sceneWindow);
+            slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
+            animation = slideInAnimation;
             break;
-        default:
-            animation = new MWidgetFadeInAnimation(sceneWindow);
+        }
+        case MSceneWindow::MessageBox: {
+            MWidgetZoomAnimation *objectMenuAnimation =
+                    new MWidgetZoomAnimation(sceneWindow);
+
+            objectMenuAnimation->setOrigin(sceneWindow->boundingRect().center());
+            objectMenuAnimation->setTransitionDirection(MWidgetZoomAnimation::In);
+
+            animation = objectMenuAnimation;
             break;
+        }
+        case MSceneWindow::ObjectMenu: {
+            MWidgetZoomAnimation *objectMenuAnimation =
+                    new MWidgetZoomAnimation(sceneWindow);
+
+            MObjectMenu *objectMenu = static_cast<MObjectMenu*>(sceneWindow);
+            objectMenuAnimation->setOrigin(rootElement->mapFromScene(objectMenu->cursorPosition()));
+            objectMenuAnimation->setTransitionDirection(MWidgetZoomAnimation::In);
+            animation = objectMenuAnimation;
+            break;
+        }
+        default: {
+            MWidgetFadeAnimation *fadeInAnimation = new MWidgetFadeAnimation(sceneWindow);
+            fadeInAnimation->setTransitionDirection(MWidgetFadeAnimation::In);
+            animation = fadeInAnimation;
+            break;
+        }
     }
 
     animation->setTargetWidget(sceneWindow);
+
+    MSceneWindow *effect = sceneWindow->d_func()->effect;
+    if (effect)
+        animation->addAnimation(effect->d_func()->appearanceAnimation);
+
     sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(appeared()));
     sceneWindow->d_func()->appearanceAnimation = animation;
 }
@@ -1186,15 +1231,47 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
         case MSceneWindow::NotificationEvent:
         case MSceneWindow::ApplicationMenu:
         case MSceneWindow::NavigationBar:
-        case MSceneWindow::PopupList:
-            animation = new MWidgetSlideOutAnimation(sceneWindow);
+        case MSceneWindow::PopupList: {
+            MWidgetSlideAnimation *slideOutAnimation = new MWidgetSlideAnimation(sceneWindow);
+            slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
+            animation = slideOutAnimation;
             break;
-        default:
-            animation = new MWidgetFadeOutAnimation(sceneWindow);
+        }
+        case MSceneWindow::MessageBox: {
+            MWidgetZoomAnimation *zoomAnimation =
+                    new MWidgetZoomAnimation(sceneWindow);
+
+            zoomAnimation->setOrigin(sceneWindow->boundingRect().center());
+            zoomAnimation->setTransitionDirection(MWidgetZoomAnimation::Out);
+
+            animation = zoomAnimation;
             break;
+        }
+        case MSceneWindow::ObjectMenu: {
+            MWidgetZoomAnimation *zoomAnimation =
+                    new MWidgetZoomAnimation(sceneWindow);
+
+            MObjectMenu *objectMenu = static_cast<MObjectMenu*>(sceneWindow);
+            zoomAnimation->setOrigin(rootElement->mapFromScene(objectMenu->cursorPosition()));
+            zoomAnimation->setTransitionDirection(MWidgetZoomAnimation::Out);
+
+            animation = zoomAnimation;
+            break;
+        }
+        default: {
+            MWidgetFadeAnimation *fadeOutAnimation = new MWidgetFadeAnimation(sceneWindow);
+            fadeOutAnimation->setTransitionDirection(MWidgetFadeAnimation::Out);
+            animation = fadeOutAnimation;
+            break;
+        }
     }
 
     animation->setTargetWidget(sceneWindow);
+
+    MSceneWindow *effect = sceneWindow->d_func()->effect;
+    if (effect)
+        animation->addAnimation(effect->d_func()->disappearanceAnimation);
+
     sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(disappeared()));
     sceneWindow->d_func()->disappearanceAnimation = animation;
 }

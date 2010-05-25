@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include <QtTest/QtTest>
-#include <MWidget>
+#include <QGraphicsWidget>
 #include <mapplicationextensionloader.h>
 #include <mapplicationextensioninterface.h>
 #include <mapplicationextensionmetadata.h>
@@ -39,7 +39,7 @@ bool GoodExtension::initialize(const QString &interface)
     return success;
 }
 
-MWidget *GoodExtension::widget()
+QGraphicsWidget *GoodExtension::widget()
 {
     return widget_;
 }

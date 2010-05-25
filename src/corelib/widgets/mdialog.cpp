@@ -186,7 +186,7 @@ bool MDialogPrivate::prepareStandAloneAppearance(MSceneWindow::DeletionPolicy po
         standAloneWindow->setTranslucentBackground(true);
 #ifdef Q_WS_X11
         standAloneWindow->setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
-        XSetTransientForHint(QX11Info::display(), standAloneWindow->winId(), MApplication::activeWindow()->winId());
+        standAloneWindow->setWindowModality(Qt::WindowModal);
 #endif
         q->connect(q, SIGNAL(disappeared()), SLOT(_q_onStandAloneDialogDisappeared()));
     }
@@ -405,6 +405,12 @@ void MDialog::accept()
 
 void MDialog::reject()
 {
+    Q_D(MDialog);
+
+    QObject *sender= QObject::sender();
+    if (sender != 0 && sender->objectName() == "MDialogCloseButton") {
+        d->clickedButton = 0;
+    }
     done(Rejected);
 }
 

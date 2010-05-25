@@ -138,8 +138,10 @@ void FtMServiceFwGen2Adaptor::goBack()
             XSync(QX11Info::display(), False);
         }
 
-        qWarning() << "quitting - bye bye";
-        QTimer::singleShot( 0, QApplication::instance(), SLOT( quit() ) );
+        MApplicationWindow *appWindow = MApplication::activeApplicationWindow();
+        if ( appWindow != 0 ) {
+            appWindow->close();
+        }
     } else {
         qWarning() << "backService is not registered: not going back";
     }

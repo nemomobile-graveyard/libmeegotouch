@@ -32,6 +32,10 @@
 #include <QRegExpValidator>
 #include <QRegExp>
 #include <QClipboard>
+#include <QGraphicsProxyWidget>
+#include <QTextEdit>
+#include <QInputContext>
+#include <QInputContextFactory>
 
 #include <mtextedit.h>
 #include <mtexteditview.h>
@@ -44,11 +48,8 @@
 #include <mhomebuttonpanel.h>
 #include <mapplicationpage.h>
 
-//TODO:using other way instead of using relative paths
-#include "../../src/corelib/widgets/mtextedit_p.h"
+#include "mtextedit_p.h"
 
-
-Q_DECLARE_METATYPE(M::TextContentType);
 Q_DECLARE_METATYPE(Qt::InputMethodHints);
 Q_DECLARE_METATYPE(QValidator::State);
 Q_DECLARE_METATYPE(MTextEditModel::EchoMode);
@@ -87,6 +88,60 @@ public:
     QValidator::State state;
 };
 
+class SimpleInputContext: public QInputContext
+{
+public:
+    SimpleInputContext(QObject *parent = 0)
+        : QInputContext(parent),
+          m_sipVisible(false)
+    {}
+
+    bool wouldSipBecomeVisible()
+    {
+        return m_sipVisible;
+    }
+
+    QString identifierName()
+    {
+        return QString("SimpleInputContext");
+    }
+
+    QString language()
+    {
+        return QString();
+    }
+
+    void reset()
+    {}
+
+    bool isComposing() const
+    {
+        return false;
+    }
+
+    bool filterEvent(const QEvent *ev)
+    {
+        switch (ev->type())
+        {
+
+        case QEvent::RequestSoftwareInputPanel:
+            m_sipVisible = true;
+            break;
+
+        case QEvent::CloseSoftwareInputPanel:
+            m_sipVisible = false;
+            break;
+
+        default:
+            break;
+        }
+
+        return false;
+    }
+
+private:
+    bool m_sipVisible;
+};
 
 
 
@@ -103,6 +158,8 @@ void Ut_MTextEdit::initTestCase()
 
     m_app = new MApplication(dummyArgc, dummyArgv);
     m_appWindow = new MApplicationWindow;
+    m_sic = new SimpleInputContext(m_app);
+
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     // contains valid strings which should be stored by widget as they are
     validStrings << "normal" << "normal with spaces" << "specials: !@#$%^&*()_+=-[]{}"
@@ -208,6 +265,16 @@ void Ut_MTextEdit::testSetText()
         QCOMPARE(mySpy2.count(), (i + 1));
         QCOMPARE(getText, setText);
     }
+
+    // test with phone number content type so validator gets tested too.
+    int currentSpyCount = mySpy2.count();
+    m_subject->setContentType(M::PhoneNumberContentType);
+    m_subject->setText("+358-"); // partial phone number
+    QCOMPARE(mySpy2.count(), currentSpyCount + 1);
+
+    currentSpyCount = mySpy2.count();
+    m_subject->setText(""); // empty string should be always ok
+    QCOMPARE(mySpy2.count(), currentSpyCount + 1);
 }
 
 
@@ -1130,6 +1197,9 @@ void Ut_MTextEdit::testValidator()
     m_subject->inputMethodEvent(&event);
     QCOMPARE(m_subject->text(), QString("aaaaa"));
 
+    // test that custom validator still stays after adjusting content type
+    m_subject->setContentType(M::NumberContentType);
+    QCOMPARE(m_subject->validator(), &aLineValidator);
 }
 
 
@@ -1888,5 +1958,65 @@ void Ut_MTextEdit::testSelectByArrowKeys()
     QCOMPARE(selectionChangedSpy.count(), 0);
 }
 
-QTEST_APPLESS_MAIN(Ut_MTextEdit);
+void Ut_MTextEdit::testAutoSipEnabled()
+{
+    setupSipEnv();
+    dismissSip(Qt::OtherFocusReason);
+    QVERIFY(!m_sic->wouldSipBecomeVisible());
 
+    requestSip(Qt::MouseFocusReason);
+    QVERIFY(m_sic->wouldSipBecomeVisible());
+
+    dismissSip(Qt::MouseFocusReason);
+    requestSip(Qt::OtherFocusReason);
+    QVERIFY(m_sic->wouldSipBecomeVisible());
+}
+
+void Ut_MTextEdit::testAutoSipDisabled()
+{
+    setupSipEnv();
+    dismissSip(Qt::OtherFocusReason);
+    QVERIFY(!m_sic->wouldSipBecomeVisible());
+
+    m_subject->setAutoSipEnabled(false);
+    requestSip(Qt::MouseFocusReason);
+    QVERIFY(!m_sic->wouldSipBecomeVisible());
+
+    requestSip(Qt::OtherFocusReason);
+    QVERIFY(!m_sic->wouldSipBecomeVisible());
+}
+
+void Ut_MTextEdit::setupSipEnv()
+{
+    m_subject->setFlag(QGraphicsItem::ItemAcceptsInputMethod);
+
+    // Guard manually against self-assignment - see QTBUG-10780:
+    if (m_sic != qApp->inputContext()) {
+        qApp->setInputContext(m_sic);
+    }
+
+    // Need this setup to assign a valid scene manager to m_subject:
+    MApplicationPage *page = new MApplicationPage;
+    page->setCentralWidget(m_subject);
+    m_appWindow->sceneManager()->appearSceneWindowNow(page);
+}
+
+void Ut_MTextEdit::requestSip(Qt::FocusReason fr)
+{
+    QFocusEvent focusIn(QEvent::FocusIn, fr);
+    m_subject->focusInEvent(&focusIn);
+
+    // Makes test fragile, as this behaviour (SIP request on mouse release) can easily change:
+    if (fr == Qt::MouseFocusReason) {
+        QGraphicsSceneMouseEvent mouseRelease(QEvent::GraphicsSceneMouseRelease);
+        m_subject->mouseReleaseEvent(&mouseRelease);
+    }
+}
+
+void Ut_MTextEdit::dismissSip(Qt::FocusReason fr)
+{
+    QFocusEvent focusOut(QEvent::FocusOut, fr);
+    m_subject->focusOutEvent(&focusOut);
+}
+
+QTEST_APPLESS_MAIN(Ut_MTextEdit);

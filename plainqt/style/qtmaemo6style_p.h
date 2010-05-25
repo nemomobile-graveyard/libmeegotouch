@@ -313,6 +313,18 @@ public:
         return align & 0xF;
     };
 
+    void ensureWidgetVisible(QWidget* widget, QRect visibleArea);
+
+    struct WidgetPos {
+        WidgetPos() : widget(NULL) {};
+        WidgetPos(QWidget* w, QPoint p) : widget(w), position(p) {};
+        WidgetPos(const WidgetPos& other) { widget = other.widget; position = other.position; }
+        QWidget* widget;
+        QPoint position;
+    };
+
+    WidgetPos m_originalWidgetPos;
+
 public:
     QList<QToolButton *> m_toolButtonsInTitleBar;
     QList<QAction *> m_toolBarActions;
@@ -323,6 +335,7 @@ public:
     MComponentData *m_componentData;
     bool m_isMInitialized;
     bool m_isMApplication;
+
     QtMaemo6ScrollBarEventFilter *m_scrollBarEventFilter;
     QtMaemo6StyleEventFilter *m_windowEventFilter;
 

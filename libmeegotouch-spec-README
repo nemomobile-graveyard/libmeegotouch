@@ -1,0 +1,380 @@
+                         README for libmeegotouch.spec
+                         =============================
+
+Author:  Stefan.Hundhammer@basyskom.de
+Updated: 2010-04-29
+
+
+
+RPM and spec file concepts
+==========================
+
+(skip this section if you are familiar with RPM and spec files)
+
+libmeegotouch.spec is a spec file for creating RPM packages from the
+libmeegotouch sources.
+
+RPM ("Red Hat Package Manager") is a file format for (mostly binary) packages
+for Linux distributions such as Red Hat / Fedora, openSUSE, and MeeGo.
+
+The RPM file format is little more than a cpio (see "man 1 cpio") archive, very
+similar to a tar archive. In addition to the files it contains, there are also
+meta data that, among other things, specify dependencies between packages
+("package A requires package B to run").
+
+The spec file is the RPM counterpart to the debian/ subdirectory, but in one
+single file: It specifies build instructions, file lists, dependencies and
+administrative information like package name, version numbers etc.
+
+RPM has the concept of "pristine sources" and patches. In general (for a Linux
+distributor), the sources are taken from "upstream" (somewhere in the Internet)
+as a "tarball" (a .tar or .tar.gz or .tgz or .tar.bz2 file.
+
+To get those sources to compile and to run in that distribution's specific
+environment, a distributor might have to do some (hopefully minor) changes.
+Those changes are stored in "patches" (xy.patch or xy.diff) generated with the
+"diff" (see "man 1 diff") command. The patches are also listed in the .spec
+file; while building the package, RPM first unpacks the tarball(s) (there might
+be more than one) and then applies the patches one by one.
+
+The general idea is that these patches can be applied again if there is a newer
+version of the upstream sources, so the distributor only has to fetch another
+tarball and reuse the existing patches rather than having to go through the
+complete source tree and make all the changes again manually.
+
+Since this does not always work perfectly if there were major changes in the
+source tree, it helps to keep separate changes in separate patches to minimize
+rejected patches (patches that no longer can be cleanly applied with the
+"patch" (see "man 1 pach") command.
+
+Whenever a patch is not just specific to the specific system environment, but a
+general fix, it makes a lot of sense to "send the patch upstream", i.e. to mail
+it to the authors of the original sources.
+
+
+
+Creating RPM packages with this spec file
+=========================================
+
+(1) Edit the version in the spec file. In this example:
+
+    Version: 0.20.2
+
+
+
+(2) Create a tarball. It is RPM file name convention to include the version
+    number in both the tar file name and in the first level directory in that tar
+    file:
+
+      libmeegotouch-0.20.2.tar.bz2   containing
+
+        libmeegotouch-0.20.2/benchmarks
+        libmeegotouch-0.20.2/configure
+        libmeegotouch-0.20.2/configure-win32.pl
+        libmeegotouch-0.20.2/debian
+        libmeegotouch-0.20.2/demos
+        libmeegotouch-0.20.2/doc
+        libmeegotouch-0.20.2/examples
+        ...
+
+    Also, exclude the .git subdirectory as well as any built files (.o files,
+    binaries, moc files, ...) since they only blow up the tarball without any
+    benefit.
+
+    Simple approach:
+
+      ~/projects/libmeegotouch %  git clean -dfx
+      ~/projects/libmeegotouch %  cd ..
+      ~/projects %  mv libmeegotouch libmeegotouch-0.20.2
+      ~/projects %  tar cjvf /tmp/libmeegotouch-0.20.2.tar.bz2 libmeegotouch-0.20.2 --exclude .git
+      ~/projects %  mv libmeegotouch-0.20.2 libmeegotouch
+
+
+(3.1) If building with OBS:
+
+  (3.1.1) Check out the old version of this package from OBS:
+
+      ~/projects/obs %  osc co libmeegotouch
+
+  (3.1.2) Go into that directory, remove the old tarball, copy the new one
+          and the changed spec file there and check in those changes:
+
+        ~/projects/obs %  cd libmeegotouch
+        ~/projects/obs/libmeegotouch %  rm libmeegotouch-*.tar.bz2
+        ~/projects/obs/libmeegotouch %  cp /tmp/libmeegotouch-0.20.2.tar.bz2 .
+        ~/projects/obs/libmeegotouch %  cp ../../libmeegotouch/libmeegotouch.spec .
+        ~/projects/obs/libmeegotouch %  osc addremove
+        ~/projects/obs/libmeegotouch %  osc ci -m "Updated to version 0.20.2"
+
+  (3.1.3) Upon "osc ci", the package will automatically be rebuilt in OBS.
+          Go to the web interface and monitor the results or use the
+          "osc results" and "osc buildlog" commands:
+
+        ~/projects/obs/libmeegotouch %  osc results
+        standard        armv5el    disabled   (repository is published)
+        standard        armv7el    disabled   (repository is published)
+        standard        i586       succeeded   (repository is published)
+        ~/projects/obs/libmeegotouch %  osc buildlog standard i586 >/tmp/build.log
+
+
+(3.2) If building without "rpmbuild" rather than with OBS:
+
+  (3.2.1) Make sure the tarball and the spec file are in the same directory:
+
+      ~ %  mkdir /tmp/libmeegotouch
+      ~ %  mv /tmp/libmeegotouch-0.20.2.tar.bz2 /tmp/libmeegotouch
+      ~ %  cp projects/libmeegotouch/libmeegotouch.spec /tmp/libmeegotouch
+      ~ %  ls /tmp/libmeegotouch
+      libmeegotouch-0.20.2.tar.bz2
+      libmeegotouch.spec
+
+  (3.2.2) Find a directory on your hard drive where you have enough disk space
+          to use as a "build root" and create a build root subdirectory there:
+
+      % df -h /work
+      Filesystem            Size  Used Avail Use% Mounted on
+      /dev/sda7              69G   30G   37G  45% /home
+      mkdir /work/tmp/build-root/
+
+  (3.2.3) Start a local "rpmbuild" with that build root:
+
+      ~ %  cd /tmp/libmeegotouch
+      /tmp/libmeegotouch % rpmbuild -ba --buildroot /work/tmp/build-root
+
+
+
+libmeegotouch Subpackage strategy
+=================================
+
+The one source tarball (libmeegotouch-x.y.tar.bz2) creates a number of RPM
+packages:
+
+
+- libmeegotouch: This is the main package, but it only contains one single file
+  (LICENSE.LGPL) to satisfy packaging conventions (as enforced in MeeGo by the
+  "rpmlint" tool). The main idea behind this main package is to serve as a
+  collection for the real library packages:
+
+  - libmeegotouchcore0
+  - libmeegotouchextensions0
+  - libmeegotouchsettings0
+  - libmeegotouchviews0
+
+  They each contain one of the libmeegotouch libraries. The main package
+  "libmeegotouch" has "requires" dependencies set up on all of them so it is
+  sufficient to install libmeegotouch.rpm to get all the modularized libs.
+
+- libmeegotouchqtstyle": The "plain Qt style", the Qt plug-in that adds the
+  Meego Touch look and feel for "plain Qt" applications (applications that
+  don't link against libmeegotouch).
+
+- libmeegotouch-bin: Some binaries required by applications using libmeegotouch
+  such as the theme daemon and the service mapper.
+
+- libmeegotouch-devel: Files needed for developing libmeegotouch-based
+  applications: Header files, qmake specs etc.; please notice that the RPM
+  package naming convention for development subpackages is -devel, not -dev
+  like in Debian-based distributions.
+
+- meegotouch-devel-tools: Tools needed for developing libmeegotouch-based
+  applications like the libmeegotouch-specific "moc" preprocessor etc.
+
+- libmeegotouch-doc: API documentation
+
+- meegotouch-demos: Container for the demo subpackages:
+
+  - meegotouch-demos-widgetsgallery: Widget gallery demo
+  - meegotouch-demos-widgetsgallery-tests
+  - meegotouch-demos-qtstyle
+  - meegotouch-demos-animatedlayout
+  - meegotouch-demos-appletinstallationsource
+  - meegotouch-demos-applicationextension
+
+- libmeegotouch-tests: Unit tests
+
+- libmeegotouch-benchmarks: Benchmarks
+
+
+- libmeegotouch-l10n- packages: Messages / translations for user-visible
+  strings in the lib packages.
+
+  - libmeegotouch-l10n-eng-en : "Engineering English"
+  - libmeegotouch-l10n-en:      English
+  - libmeegotouch-l10n-ar       Arabic
+  - libmeegotouch-l10n-de       German
+  - libmeegotouch-l10n-fi       Finnish
+  - libmeegotouch-l10n-hu       Hungarian
+  - libmeegotouch-l10n-ur       Urdu
+  - libmeegotouch-l10n-zh-cn    Simplified Chinese
+
+- meegotouch-demos-widgetsgallery-l10n- packages: Messages / translatiosn for
+  user-visible strings in the "widgets gallery" demo. Please note that the
+  "rpmlint" checking tool enforces a 64 character limit per file name component
+  because of the Joliet file system that is commonly used on CDs / DVDs. Thus,
+  -engineering-english had to be abbreviated to -eng-en.
+
+  - meegotouch-demos-widgetsgallery-l10n-eng-en
+  - meegotouch-demos-widgetsgallery-l10n-ar
+  - meegotouch-demos-widgetsgallery-l10n-de
+  - meegotouch-demos-widgetsgallery-l10n-en
+  - meegotouch-demos-widgetsgallery-l10n-fi
+  - meegotouch-demos-widgetsgallery-l10n-hu
+  - meegotouch-demos-widgetsgallery-l10n-ur
+  - meegotouch-demos-widgetsgallery-l10n-zh-cn
+
+- meegotouch-demos-animatedlayout-l10n- packages: Messages / translations for
+  user-visible strings in the "animated layout" demo.
+
+  - meegotouch-demos-animatedlayout-l10n-eng-en
+  - meegotouch-demos-animatedlayout-l10n-de
+  - meegotouch-demos-animatedlayout-l10n-en
+  - meegotouch-demos-animatedlayout-l10n-ja
+
+
+RPM spec file cheat sheet
+=========================
+
+RPM Variables / Macros
+----------------------
+
+Variable definition:
+
+    %define variable_name value
+
+Variable reference:
+
+    %variable_name
+    %{variable_name}
+
+
+Dependencies
+-------------
+
+    Requires: other_pkg
+
+This package requires package other_pkg to run (not for building!).
+
+    BuildRequires: other_pkg
+
+This package requires package other_pkg for building (not at runtime!).
+
+    Provides: some_capability
+
+This package provides a capability named "some_capability" that other packages
+might require. Note: A package always provides itself, so it's pointless to
+write
+
+    Provides: mypackage
+
+in mypackage.spec.
+
+A package also automatically provides all shared libs it has in its file list,
+and a package built with a shared lib automatically requires that shared
+lib. For example, package libqt4-x11 automatically provides libQtGui.so.4,
+libQtSvg.so.4 etc.; likewise, it automatically requires libX11.so.6,
+libXext.so.6 etc.
+
+
+Package name and subpackages
+----------------------------
+
+The name of the main package is specified in
+
+    Name: foo
+
+it can have any number of subpackages. A subpackage is defined with
+
+    %package subpkg-name1
+or
+
+    %package -n subpkg-name2
+
+Without the -n, it will be prefixed with the main package name and a dash:
+
+    foo-subpkg-name1
+
+With the -n, there will be no prefix:
+
+    subpkg-name2
+
+
+File lists
+----------
+
+All files generated during the build process must be listed in the file
+list(s). Wildcards may be used.
+
+    %files
+
+is the file list of the main package.
+
+    %files -n subpkg-name
+
+is the file list of subpackage "subpkg-name" (same rules as with %package:
+Prefixed with the main package name if specified without -n).
+
+    %defattr(-,root,root)
+
+specifies the default file permission and ownership (user and group) for each
+item in the file list.
+
+    %dir /usr/share/somewhere
+
+assigns directory ownership to this package.
+
+    %config /etc/foo
+
+indicates that /etc/foo should be packaged as a configuration file with special
+rules what to do if it already exists when the package is installed so changes
+by the system administrator don't simply get lost during package update.
+
+    %doc /usr/share/doc/packages/foo/*
+
+marks files as documentation.
+
+
+Build section
+-------------
+
+    %prep
+    %setup mysource-47.11.tar.bz2
+
+This removes an existing build directory for that package, creates a new one
+and unpacks the tarball there.
+
+    %build
+
+This executes the commands following %build inside the build directory.
+The convention is to only build (compile and link) the project in that section,
+not install any files there.
+
+    %install
+
+This is similar to %build, but the intention is to do "make install" and
+whatever else is required to install files to the target system in this
+section. IMPORTANT: Make sure to prefix all target paths with %{buildroot},
+e.g. use
+
+    %{buildroot}/usr/lib/whatever
+
+and not just /usr/lib/whatever.
+
+
+Misc
+----
+
+    Group: System Environment/Libraries
+
+This specifies the RPM "group tag", a tree of categories where this package
+belongs to. Different distributions may have different predefined such
+categories.
+
+-devel subpackages should go to a category below "Development/".
+
+
+
+Further reading
+===============
+
+http://www.rpm.org/max-rpm-snapshot/
+http://docs.fedoraproject.org/drafts/rpm-guide-en/

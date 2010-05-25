@@ -31,19 +31,31 @@
 #include <QGraphicsLinearLayout>
 #include <QStatusBar>
 #include <QMenuBar>
+#include <QFile>
+#include <QDir>
 
 QtMaemo6WindowDecoration::QtMaemo6WindowDecoration(QWidget *mw, QWidget *parent /*= NULL*/)
     : QtMaemo6Window(mw, parent),
       m_menuBar(0),
       m_statusBar(0),
-      m_statusBarParent(0)
+      m_statusBarParent(0),
+      m_deviceStatusBarTimerId(-1)
 {
     m_titleBar = new QtMaemo6TitleBar(NULL);
     m_titleBar->setMenuButtonVisible(false);
     m_titleBar->setTitle(mw->windowTitle());
 
-    m_windowLayout->addWidget(m_titleBar, 0, 1);
-    m_windowLayout->addWidget(centralWidget(), 1, 1);
+    m_deviceStatusBar = new QLabel();
+    //FIXME: set fixed height to 30, because haven't found a place where this is defined
+    m_deviceStatusBar->setFixedHeight(30);
+    m_deviceStatusBar->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    updateStatusBarSharedPixmap();
+    //FIXME: use XDamage to update the pixmap. As long as this don't work, update every 2 sec
+    m_deviceStatusBarTimerId = startTimer(2000);
+
+    m_windowLayout->addWidget(m_deviceStatusBar, 0, 1);
+    m_windowLayout->addWidget(m_titleBar,        1, 1);
+    m_windowLayout->addWidget(centralWidget(),   2, 1);
 
     connect(m_titleBar, SIGNAL(closeButtonClicked()), this, SLOT(close()));
     connect(m_titleBar, SIGNAL(minimizeButtonClicked()), this, SLOT(showMinimized()));
@@ -59,6 +71,45 @@ QtMaemo6WindowDecoration::~QtMaemo6WindowDecoration()
     }
 }
 
+#ifdef Q_WS_X11
+void QtMaemo6WindowDecoration::updateStatusBarSharedPixmap()
+{
+    //destroyXDamageForSharedPixmap();
+
+    Qt::HANDLE handle;
+    if (fetchStatusBarSharedPixmapHandle(&handle)) {
+        QPixmap statusBarPixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
+        m_deviceStatusBar->setPixmap(statusBarPixmap);
+        statusBarPixmap.save("/tmp/statusbar.png");
+    }
+
+    /*
+    if (!sharedPixmap.isNull()) {
+        setupXDamageForSharedPixmap();
+    }
+    */
+}
+
+bool QtMaemo6WindowDecoration::fetchStatusBarSharedPixmapHandle(Qt::HANDLE *handle)
+{
+    QFile handleTempFile(QDir::temp().filePath("mstatusbar_pixmap_handle"));
+
+    if (!handleTempFile.exists())
+        return false;
+
+    if (!handleTempFile.open(QIODevice::ReadOnly))
+        return false;
+
+    quint32 intHandle;
+    QDataStream dataStream(&handleTempFile);
+    dataStream >> intHandle;
+
+    *handle = intHandle;
+
+    return true;
+}
+#endif
+
 void QtMaemo6WindowDecoration::setStatusBar(QStatusBar *statusBar)
 {
     if (!m_windowLayout)
@@ -66,7 +117,7 @@ void QtMaemo6WindowDecoration::setStatusBar(QStatusBar *statusBar)
 
     if (statusBar) {
         m_statusBarParent = statusBar->parentWidget();
-        m_windowLayout->addWidget(statusBar, 2, 1);
+        m_windowLayout->addWidget(statusBar, 3, 1);
     } else {
         if (m_statusBar) {
             m_windowLayout->removeWidget(m_statusBar);
@@ -97,6 +148,15 @@ void QtMaemo6WindowDecoration::showMenuBar()
     }
 }
 
+void QtMaemo6WindowDecoration::showNavigationBar( bool visible )
+{
+    m_titleBar->setVisible(visible);
+}
+
+void QtMaemo6WindowDecoration::showDeviceStatusBar( bool visible ) {
+    m_deviceStatusBar->setVisible(visible);
+}
+
 bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::WindowTitleChange) {
@@ -106,3 +166,7 @@ bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
     return QtMaemo6Window::eventFilter(watched, event);
 }
 
+void QtMaemo6WindowDecoration::timerEvent(QTimerEvent *e) {
+    if(e->timerId() == m_deviceStatusBarTimerId)
+        updateStatusBarSharedPixmap();
+}

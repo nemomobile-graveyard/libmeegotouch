@@ -1,0 +1,42 @@
+/*! \page faststart Fast application startup
+
+There are three features that enable improving MApplication startup
+times:
+
+\li The <a href="launcher.html">application launcher</a> is the
+primary alternative for shortening application startup times. It will
+preload large libraries and instantiate e.g. MApplication and
+MApplicationWindow objects to so called component cache before the
+main() of the application is started. The application will then use
+the already created instances from the component cache. However, there
+are some limitations to launcher usage. For instance it does not
+support some MeeGoTouch and Qt command line options.
+
+\li <a href="prestart.html">Application prestarting</a> is meant for
+applications that cannot avoid slow initializations before they can be
+used. Prestarting enables starting up those applications to a state
+where they do not show UI. From that state they can show a window in
+no time when requested. This will provide the fastest results, but the
+drawback is the high memory usage due to prestarted applications as
+well as some unexpected maintenance tasks that the system may do for
+prestarted application processes. <strong>In Harmattan UI framework
+prestarting is limited to a small set of critical applications. This
+feature cannot be used without support from the system
+configuration.</strong>
+
+\li <a href="prestart.html">Lazy shutdown</a> allows applications to
+be closed without terminating. This allows an application to show its
+window very quickly when it is needed next time. Lazy shutdown does
+not speed up the first startup at all, but it improves the performance
+of applications that take advantage of prestarting already.
+
+An application can use any combination of the above features.
+
+\section links Documentation links 
+
+    \li <a href="launcher.html">How to write launchable applications</a>
+
+    \li <a href="prestart.html">How to write a prestartable and lazy
+    shutdownable applications</a>
+
+*/

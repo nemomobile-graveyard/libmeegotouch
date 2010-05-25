@@ -21,7 +21,7 @@
 
 void MLabelModel::addHighlighter(MLabelHighlighter *highlighter)
 {
-    MLabelHighlighterList &list = _highlighters();
+    QList<MLabelHighlighter *> &list = _highlighters();
     if (list.indexOf(highlighter) == -1) {
         list.append(highlighter);
         memberModified(Highlighters);
@@ -30,7 +30,7 @@ void MLabelModel::addHighlighter(MLabelHighlighter *highlighter)
 
 void MLabelModel::removeHighlighter(MLabelHighlighter *highlighter)
 {
-    MLabelHighlighterList &list = _highlighters();
+    QList<MLabelHighlighter *> &list = _highlighters();
     if (list.removeOne(highlighter))
         memberModified(Highlighters);
 }

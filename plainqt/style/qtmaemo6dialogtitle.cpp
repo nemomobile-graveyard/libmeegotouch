@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "qtmaemo6dialogtitle.h"
+#include "qtmaemo6style_p.h"
 
 #include <QToolButton>
 #include <QHBoxLayout>
@@ -25,17 +26,31 @@
 #include <QStyleOption>
 #include <QPainter>
 #include <QDebug>
+#include <mescapebuttonpanelstyle.h>
+#include <MTheme>
 
 
 QtMaemo6DialogTitle::QtMaemo6DialogTitle(QWidget *parent) : QWidget(parent)
 {
     setObjectName(QString("Qt_Maemo6_DialogTitle"));
 
+    QStyleOption option;
+    option.initFrom(this);
+
     m_titleLabel = new QLabel(this);
 
     m_closeButton = new QtMaemo6ClickLabel(this);
     m_closeButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
     m_closeButton->setMargin(8);
+    m_closeButton->setObjectName( QString( "Qt_Maemo6_Dialog_CloseButton" ) );
+
+    //currently meegotouch uses the same close button icon for dialogs as used in navigation bar
+    const MEscapeButtonPanelStyle *escapeButtonStyle =
+        static_cast<const MEscapeButtonPanelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
+                "MEscapeButtonPanelStyle", ""));
+    if(escapeButtonStyle) {
+        m_closeButton->setPixmap(*MTheme::pixmapCopy(escapeButtonStyle->closeButtonIconId()));
+    }
     connect(m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeRequest()));
 
     m_titleBarLayout = new QHBoxLayout(this);

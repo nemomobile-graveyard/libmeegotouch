@@ -28,6 +28,8 @@ class MImageWidget;
 class Ut_MImageWidget : public QObject
 {
     Q_OBJECT
+public:
+    Ut_MImageWidget();
 
 private slots:
     void initTestCase();

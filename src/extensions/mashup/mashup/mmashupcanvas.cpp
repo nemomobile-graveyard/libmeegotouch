@@ -55,8 +55,8 @@ void MMashupCanvasPrivate::init(const QString &identifier)
     instanceManager = new MAppletInstanceManager(this->identifier);
 
     // Connect applet instance manager signals and restore applet instances
-    q->connect(instanceManager, SIGNAL(appletInstantiated(MWidget *, MDataStore &)), SLOT(addWidget(MWidget *, MDataStore &)));
-    q->connect(instanceManager, SIGNAL(appletRemoved(MWidget *)), SLOT(removeWidget(MWidget *)));
+    q->connect(instanceManager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)), SLOT(addWidget(QGraphicsWidget *, MDataStore &)));
+    q->connect(instanceManager, SIGNAL(appletRemoved(QGraphicsWidget *)), SLOT(removeWidget(QGraphicsWidget *)));
     instanceManager->restoreApplets();
 
     // Put the data stores into the model
@@ -81,7 +81,7 @@ QString MMashupCanvasPrivate::provideUniqueIdentifier(const QString &identifier)
     return result;
 }
 
-void MMashupCanvasPrivate::addWidget(MWidget *widget, MDataStore &store)
+void MMashupCanvasPrivate::addWidget(QGraphicsWidget *widget, MDataStore &store)
 {
     Q_Q(MMashupCanvas);
 

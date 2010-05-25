@@ -27,7 +27,7 @@
 class MAppletInventory;
 class MApplication;
 class MApplicationWindow;
-class MWidget;
+class QGraphicsWidget;
 class MMashupCanvas;
 class MDesktopEntry;
 
@@ -41,7 +41,7 @@ public:
     virtual ~TestAppletSource();
     // methods derived from MAppletInstallationSourceInterface
     virtual bool initialize(const QString &);
-    virtual MWidget *widget();
+    virtual QGraphicsWidget *widget();
     virtual void setMAppletInventoryInterface(MAppletInventoryInterface &installationSource);
     //! For accessing applet inventory interface
     MAppletInventoryInterface *appletInventoryInterface() const;
@@ -49,7 +49,7 @@ public:
 
 private:
     MAppletInventoryInterface *appletInventory;
-    MWidget *sourceWidget;
+    QGraphicsWidget *sourceWidget;
 };
 
 class Ut_MAppletInventory : public QObject

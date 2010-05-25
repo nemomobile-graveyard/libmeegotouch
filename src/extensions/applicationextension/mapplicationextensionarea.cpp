@@ -38,15 +38,14 @@ MApplicationExtensionAreaPrivate::~MApplicationExtensionAreaPrivate()
 {
 }
 
-void MApplicationExtensionAreaPrivate::init(const QString &interface, const bool enableInProcessExtensions)
+void MApplicationExtensionAreaPrivate::init(const QString &interface)
 {
     Q_Q(MApplicationExtensionArea);
-    extensionManager = QSharedPointer<MApplicationExtensionManager>(new MApplicationExtensionManager(interface, enableInProcessExtensions));
+    extensionManager = QSharedPointer<MApplicationExtensionManager>(new MApplicationExtensionManager(interface));
     QObject::connect(extensionManager.data(), SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)), q, SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)), Qt::QueuedConnection);
     QObject::connect(extensionManager.data(), SIGNAL(extensionRemoved(MApplicationExtensionInterface*)), q, SIGNAL(extensionRemoved(MApplicationExtensionInterface*)), Qt::QueuedConnection);
-    QObject::connect(extensionManager.data(), SIGNAL(widgetCreated(MWidget*, MDataStore&)), q, SLOT(addWidget(MWidget*, MDataStore&)));
-    QObject::connect(extensionManager.data(), SIGNAL(widgetRemoved(MWidget*)), q, SLOT(removeWidget(MWidget*)));
-    extensionManager->init();
+    QObject::connect(extensionManager.data(), SIGNAL(widgetCreated(QGraphicsWidget*, MDataStore&)), q, SLOT(addWidget(QGraphicsWidget*, MDataStore&)));
+    QObject::connect(extensionManager.data(), SIGNAL(widgetRemoved(QGraphicsWidget*)), q, SLOT(removeWidget(QGraphicsWidget*)));
 }
 
 QList<MApplicationExtensionInterface*> MApplicationExtensionAreaPrivate::extensions()
@@ -57,13 +56,33 @@ QList<MApplicationExtensionInterface*> MApplicationExtensionAreaPrivate::extensi
 //////////////////
 // PUBLIC CLASS //
 //////////////////
-MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, const bool enableInProcessExtensions, QGraphicsItem *parent) :
-    MExtensionArea(new MApplicationExtensionAreaPrivate, new MApplicationExtensionAreaModel, parent)
+MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, QGraphicsItem *parent) :
+    MExtensionArea(new MApplicationExtensionAreaPrivate(), new MApplicationExtensionAreaModel, parent)
 {
-    // Initialize the private implementation
     Q_D(MApplicationExtensionArea);
     d->q_ptr = this;
-    d->init(interface, enableInProcessExtensions);
+    d->init(interface);
+}
+
+MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, const bool enableInProcessExtensions, QGraphicsItem *parent) :
+    MExtensionArea(new MApplicationExtensionAreaPrivate(), new MApplicationExtensionAreaModel, parent)
+{
+    Q_D(MApplicationExtensionArea);
+    d->q_ptr = this;
+    d->init(interface);
+
+    if (!enableInProcessExtensions) {
+        d->extensionManager->setInProcessFilter(QRegExp("$^"));
+    }
+
+    d->extensionManager->init();
+}
+
+MApplicationExtensionArea::MApplicationExtensionArea(MApplicationExtensionAreaPrivate *dd, MApplicationExtensionAreaModel *model, QGraphicsItem *parent, const QString &interface) :
+    MExtensionArea(dd, model, parent)
+{
+    Q_D(MApplicationExtensionArea);
+    d->init(interface);
 }
 
 MApplicationExtensionArea::MApplicationExtensionArea(MApplicationExtensionAreaPrivate *dd, MApplicationExtensionAreaModel *model,
@@ -71,13 +90,33 @@ MApplicationExtensionArea::MApplicationExtensionArea(MApplicationExtensionAreaPr
     MExtensionArea(dd, model, parent)
 {
     Q_D(MApplicationExtensionArea);
+    d->init(interface);
 
-    // Initialize the private implementation
-    d->init(interface, enableInProcessExtensions);
+    if (!enableInProcessExtensions) {
+        d->extensionManager->setInProcessFilter(QRegExp("$^"));
+    }
 }
 
 MApplicationExtensionArea::~MApplicationExtensionArea()
 {
+}
+
+void MApplicationExtensionArea::setInProcessFilter(const QRegExp &inProcessFilter)
+{
+    Q_D(MApplicationExtensionArea);
+    d->extensionManager->setInProcessFilter(inProcessFilter);
+}
+
+void MApplicationExtensionArea::setOutOfProcessFilter(const QRegExp &outOfProcessFilter)
+{
+    Q_D(MApplicationExtensionArea);
+    d->extensionManager->setOutOfProcessFilter(outOfProcessFilter);
+}
+
+bool MApplicationExtensionArea::init()
+{
+    Q_D(MApplicationExtensionArea);
+    return d->extensionManager->init();
 }
 
 QList<MApplicationExtensionInterface*> MApplicationExtensionArea::extensions()

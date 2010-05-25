@@ -1,8 +1,69 @@
-libmeegotouch (0.20.7~1) unstable; urgency=low
+libmeegotouch (0.20.12-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#169809 - No textChanged signal is emitted when text is placed to MRichTextEdit by MCompleter
+  * Fixes: NB#161205 - optionalImage is visible even in modes where it should not be
+  * Fixes: MB#169672 - MLabel is not showing the whole text when Qt::escape() some plain text *without* any tag inside
+  * Fixes: NB#170120 - MStyleSheetParser doesn't parse comments properly
+  * Fixes: NB#166269 - fix MContentItem::smallItem
+  * Fixes: NB#162781 - DUI chaining support should provide an option to not terminate the process when closing the child window
+  * Fixes: NB#169749 - QtMaemo6Style crashes when text edit is focused and VKB is shown
+  * Fixes: NB#156115 - CodeStyle> typo in doxygen documentation
+  * Fixes: NB#169377 - System modal dialog" in Widgetsgallery is not a system-modal dialog
+  * Fixes: NB#157742 - Fix MContentItem docs
+  * Fixes: NB#158375 - DuiContentItem api-doc fixes
+  * Fixes: NB#164207 - long press in MLabel
+  * Fixes: NB#167960 - Application is opened in landscape view when device is in portrait mode
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Thu, 06 May 2010 11:02:36 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Tue, 25 May 2010 13:38:45 +0300
+
+libmeegotouch (0.20.11-1) unstable; urgency=low
+
+  * Fixes: NB#168737 - "Fast application startup" a.k.a applauncherd does not load application.conf files
+  * Fixes: NB#165035 - m-servicefwgen generates adaptor files that say that qdbusxml2cpp generated them.
+  * Fixes: NB#164028 - DuiTextEdit does not move up after reverse rotation (clockwise)
+  * Fixes: NB#163243 - DuiTextEdit in Multi Line mode is not working properly
+  * Fixes: NB#168463 - Close button is not behaving properly after we press any other button on dialog
+  * Fixes: NB#165862 - MInfoBanner should have default disappear timeout
+  * Fixes: NB#168069 - Object menu is still showing after tapping on an item in object menu.
+  * Fixes: NB#165845 - (Video_full_screen) MVideoWidget: While in full screen the scale mode and aspect ratio do not work.
+  * Fixes: NB#156286 - duimoc doesn't work for some header files.
+
+ -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 19 May 2010 14:15:00 +0300
+
+libmeegotouch (0.20.10-1) unstable; urgency=low
+
+  * Fixes: NB#167472 - MLocale formats time "00:15" as "24:15". 24 is returned instead of 00 for "%H" format string.
+  * Fixes: NB#168123 - Panning in MPannableWidget is canceled due QTapAndHoldGesture
+  * Fixes: NB#160130 - Slider label is shown on another page if page changed during animation
+  * Fixes: NB#168135 - Scrolling or Panning is not working for any office-tools documents.
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 12 May 2010 10:18:31 +0300
+
+libmeegotouch (0.20.9-1) unstable; urgency=low
+
+  * Fixes: NB#167827 - List view shows redundant header list on right side of the screen.
+  * Fixes: NB#167784 - cellSize method in MAbstractCellCreator is not called when rotating device.
+  * Fixes: NB#164283 - DuiCalendar (and therefore DuiLocale) does not support QDateTimes before start of epoch
+  * Implemented: SWP#-DUI-2775
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 10 May 2010 18:00:01 +0300
+
+libmeegotouch (0.20.8-1) unstable; urgency=low
+
+  * Fixes: NB#167131 - MTextEdit fails to emit textChanged()...
+  * Fixes: NB#166890 - Alarm Notification window doesnt comes up in non-idle mode.
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Fri, 07 May 2010 15:28:09 +0300
+
+libmeegotouch (0.20.7-1) unstable; urgency=low
+
+  * Fixes: NB#161404 - Service framework call causes caller to crash if caller doesn't have applicationwindow
+  * Fixes: NB#135578 - Very long strings are not completely displayed.
+  * Fixes: NB#166710 - widgetsgallery exits in crash
+  * Fixes: NB#164551 - pannable area spring can be stopped
+  * Fixes: NB#167018 - MSlider 'Mover' element has no unique object name
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Thu, 06 May 2010 19:38:42 +0300
 
 libmeegotouch (0.20.6-1) unstable; urgency=low
 

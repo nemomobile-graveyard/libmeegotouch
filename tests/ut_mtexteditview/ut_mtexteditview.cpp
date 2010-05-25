@@ -127,26 +127,26 @@ void Ut_MTextEditView::testResizeEvent()
 
 void Ut_MTextEditView::testGrowing()
 {
-    // tests that the minimum size grows after new text is appended
+    // tests that the preferred size grows after new text is appended
 
     QString stringToAppend("\n\nasdf");
-    QSizeF oldSize = m_subject->sizeHint(Qt::MinimumSize);
+    QSizeF oldSize = m_subject->sizeHint(Qt::PreferredSize);
 
     m_controller->insert(stringToAppend);
-    QSizeF newSize = m_subject->sizeHint(Qt::MinimumSize);
+    QSizeF newSize = m_subject->sizeHint(Qt::PreferredSize);
 
     QVERIFY(newSize.height() > oldSize.height());
 
     // FIXME: first test that removing one line is in between the sizes
 
-    // test that minimum size is the same as in the start after new text is removed
+    // test that preferred size is the same as in the start after new text is removed
     QKeyEvent event(QEvent::KeyPress, Qt::Key_Backspace, Qt::NoModifier);
 
     for (int i = 0; i < stringToAppend.size(); ++i) {
         m_controller->keyPressEvent(&event);
     }
 
-    newSize = m_subject->sizeHint(Qt::MinimumSize);
+    newSize = m_subject->sizeHint(Qt::PreferredSize);
     QCOMPARE(newSize.height(), oldSize.height());
 }
 
@@ -221,6 +221,40 @@ void Ut_MTextEditView::testUpdateScrollWhenTextChanged()
         m_controller->keyPressEvent(&bsEvent);
     }
     QCOMPARE(m_subject->d_ptr->hscroll, qreal(0));
+}
+
+void Ut_MTextEditView::testSizeHint()
+{
+    cleanup();
+    m_controller = new MTextEdit(MTextEditModel::SingleLine, "");
+    m_subject = new MTextEditView(m_controller);
+    m_controller->setView(m_subject);
+    m_controller->setText("This is a longish string of sample text to test size hints. Thanks!");
+
+    //The size hints should not depend on the current size
+    QSizeF preferredSize = m_controller->preferredSize();
+    m_controller->resize(100,100);
+    QCOMPARE(preferredSize, m_controller->preferredSize());
+    m_controller->resize(10,10);
+    QCOMPARE(preferredSize, m_controller->preferredSize());
+    m_controller->resize(1000,1000);
+    QCOMPARE(preferredSize, m_controller->preferredSize());
+
+    QSizeF minimumSize = m_controller->minimumSize();
+    m_controller->resize(100,100);
+    QCOMPARE(minimumSize, m_controller->minimumSize());
+    m_controller->resize(10,10);
+    QCOMPARE(minimumSize, m_controller->minimumSize());
+    m_controller->resize(1000,1000);
+    QCOMPARE(minimumSize, m_controller->minimumSize());
+
+    QSizeF maximumSize = m_controller->maximumSize();
+    m_controller->resize(100,100);
+    QCOMPARE(maximumSize, m_controller->maximumSize());
+    m_controller->resize(10,10);
+    QCOMPARE(maximumSize, m_controller->maximumSize());
+    m_controller->resize(1000,1000);
+    QCOMPARE(maximumSize, m_controller->maximumSize());
 }
 
 QTEST_APPLESS_MAIN(Ut_MTextEditView)

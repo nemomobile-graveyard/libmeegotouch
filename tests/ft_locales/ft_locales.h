@@ -25,6 +25,7 @@
 #include <Qt>
 
 #include <MLocale>
+#include <MCalendar>
 #include <MApplication>
 #include <MGConfItem>
 
@@ -84,10 +85,10 @@ private slots:
     void testMLocaleTextDirection_data();
     void testMLocaleTextDirection();
 
-    void testMLocaleLanguageEndonum_data();
-    void testMLocaleLanguageEndonum();
-    void testMLocaleCountryEndonum_data();
-    void testMLocaleCountryEndonum();
+    void testMLocaleLanguageEndonym_data();
+    void testMLocaleLanguageEndonym();
+    void testMLocaleCountryEndonym_data();
+    void testMLocaleCountryEndonym();
 
     void checkAvailableLocales();
 };

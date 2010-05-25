@@ -13,7 +13,7 @@
       <li><a href="installation.html">Installation</a> and First Steps with MeeGo Touch</li>
       <li>Examples and Demos</li>
       <li><strong><a href="news.html">What's New in MeeGo Touch</a></strong></li>
-       <li><strong><a href="tutorial.html">Tutorial</a></strong></li>
+       <li><strong><a href="tutorial.html">Your first MeeGo Touch application</a></strong></li>
       </ul>
     </td>
     <td>
@@ -47,6 +47,7 @@
        <li><a href="servicefw.html">MeeGo Touch Service Framework</a></li>
         <li><a href="i18n.html">Internationalization</a></li>
         <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
+        <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>
       </ul>
     </td>
     <td>
@@ -57,7 +58,7 @@
       <li><a href="appletdevelopment.html">Applets</a></li>
       <li><a href="applicationextensions.html">Application extensions</a></li>
       <li><a href="appletinstallationsource.html">Applet installation sources</a></li>
-      <li><a href="prestart.html">Prestarting</a></li>
+      <li><a href="faststart.html">Fast application startup</a></li>
       <li><a href="notifications.html">Notifications</a></li>
       <li><a href="settingslanguageschema.html">Settings language reference</a></li>
       </ul>

@@ -33,7 +33,7 @@ class QSlider;
 class QtMaemo6SliderPopUp : public QLabel {
     Q_OBJECT
 public:
-    QtMaemo6SliderPopUp() : m_slider(0) {};
+    QtMaemo6SliderPopUp();
 
     /*!
      * \brief append the popup to a QSlider

@@ -21,6 +21,7 @@
 #define MBUTTONMODEL_H
 
 #include <mwidgetmodel.h>
+#include <QIcon>
 
 /*!
     \class MButtonModel
@@ -36,15 +37,21 @@ class M_EXPORT MButtonModel : public MWidgetModel
 
     /*!
         \property MButtonModel::iconID
-        \brief Id of the icon that is displayed whe a non-toggled button.
+        \brief ID of the icon that is displayed for a non-toggled button.
     */
     M_MODEL_PROPERTY(QString, iconID, IconID, true, QString())
 
     /*!
         \property MButtonModel::toggledIconID
-        \brief Id of the icon that is displayed when button is in toggled/down state.
+        \brief ID of the icon that is displayed when the button is in toggled/down state.
     */
     M_MODEL_PROPERTY(QString, toggledIconID, ToggledIconID, true, QString::null)
+
+    /*!
+        \property MButtonModel::icon
+        \brief QIcon that is displayed for the button.
+    */
+    M_MODEL_PROPERTY(QIcon, icon, Icon, false, QIcon())
 
     /*!
         \property MButtonModel::text

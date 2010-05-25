@@ -21,8 +21,8 @@
 #define MABSTRACTWIDGETANIMATION_P_H
 
 #include "mparallelanimationgroup_p.h"
-
-class MWidgetController;
+#include <mwidgetcontroller.h>
+#include <QPointer>
 
 class MAbstractWidgetAnimationPrivate : public MParallelAnimationGroupPrivate
 {
@@ -30,8 +30,8 @@ class MAbstractWidgetAnimationPrivate : public MParallelAnimationGroupPrivate
 public:
     MAbstractWidgetAnimationPrivate();
     virtual ~MAbstractWidgetAnimationPrivate() {}
-private:
-    MWidgetController *targetWidget;
+protected:
+    QPointer<MWidgetController> targetWidget;
 };
 
 #endif

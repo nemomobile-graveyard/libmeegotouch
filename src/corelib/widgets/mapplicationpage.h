@@ -75,6 +75,42 @@ class MPannableViewport;
     \endcode
 
     centralWidget() returns MWidget, layout can be used to group more than one widget.
+
+    \section navigating-between-pages Navigating between pages.
+
+    Only one page can be displayed at any given time. The framework enforces this behavior.
+    Thus in order to make your application navigate to a child page all you have to do is
+    call the child's appear() method. That will automatically make the current page disappear
+    to make room for the child page that is starting to appear.
+
+    In an hypothetical music browser application, the following code snippet
+    would make it transition from the current album page to a child page displaying
+    one of its songs:
+
+    \code
+    class AlbumPage : public MApplicationPage {
+        ...
+        void displaySong(Song song) {
+            MApplicationPage *songPage = new SongPage(song);
+
+            // I don't need this page anymore after it gets dismissed
+            songPage->appear(MSceneWindow::DestroyWhenDismissed);
+        }
+        ...
+    };
+    \endcode
+
+    The code above will put AlbumPage onto the top of the page history's stack and make
+    SongPage be displayed. Since the escapeMode of the SongPage is MApplicationPageModel::EscapeAuto
+    (the default value) the escape button panel will automatically show a back button that, when clicked,
+    will bring the application back to the AlbumPage. Therefore no code is required to make your
+    application navigate back to its previous page.
+
+    To implement a different behavior for the escape button you have set the escapeMode of the page to either
+    MApplicationPageModel::EscapeManualBack or MApplicationPageModel::EscapeCloseWindow.
+
+    You can also check and manually modify the page navigation history of your application using the methods
+    MSceneManager::pageHistory() and MSceneManager::setPageHistory().
 */
 
 class M_EXPORT MApplicationPage : public MSceneWindow

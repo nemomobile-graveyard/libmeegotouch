@@ -144,6 +144,14 @@ DuiButtonStyle#theme-selection-button {
 }
 
 MSliderStyle#video-player-slider {
+
+    background-base-image: "video-duislider-background" 7px 7px 7px 7px;
+    background-elapsed-image: "video-duislider-background-elapsed" 7px 7px 7px 7px;
+    background-received-image: "video-duislider-background-received" 7px 7px 7px 7px;
+        
+    handle-pressed-pixmap: "video-duislider-handle-pressed" 6.4mm 6.4mm;
+    handle-pixmap: "video-duislider-handle" 6.4mm 6.4mm;
+
     padding-left:   0;
     padding-top:    0;
     padding-right:  0;
@@ -153,19 +161,18 @@ MSliderStyle#video-player-slider {
     margin-top:     0;
     margin-right:   0;
     margin-bottom:  0;
+
+    preferred-size: 80% -1;
+    minimum-size: 80% -1;
+    maximum-size: 80% -1;
 }
 
 MButtonStyle#video-player-button {
 
-    padding-left:   0;
-    padding-top:    0;
-    padding-right:  0;
-    padding-bottom: 0;
-
-    margin-left: 0;
-    margin-top: 0;
-    margin-right: 0;
-    margin-bottom: 0;
+    margin-left: $PADDING_XLARGE;
+    margin-top: $PADDING_XLARGE;
+    margin-right: $PADDING_XLARGE;
+    margin-bottom: $PADDING_XLARGE;
 
     text-margin-left: 0;
     text-margin-top: 0;
@@ -176,20 +183,41 @@ MButtonStyle#video-player-button {
     minimum-size: 7.5mm 5mm;
     maximum-size: 7.5mm 5mm;
 
-
     icon-size: 3.0mm 3.0mm;
     icon-align: center;
 }
 
 MApplicationPageStyle#video-detail-page {
-    background-image: ;
-    background-color: #001100;
 }
 
-#itemDetailPage {
-    background-image: ;
-    background-color: black;
-    color-key: #001100;
+ItemDetailPage MVideoWidgetStyle {
+    color-key: #001000;
+}
+
+ItemDetailPage MVideoWidgetStyle:fullscreen {
+    color-key: #001000;
+}
+
+MWidgetStyle#center-overlay-container {
+    background-image: multimedia-overlay-center-background 17px 17px 17px 17px;
+}
+
+MWidgetStyle#bottom-overlay-container {
+    background-image: multimedia-overlay-bottom-background 17px 17px 17px 17px;
+}
+
+MWidgetStyle#top-overlay-container {
+    background-image: multimedia-overlay-top-background 17px 17px 17px 17px;
+}
+
+MLabelStyle#video-title-label {
+    color: #FFFFFF;
+    preferred-size: -1 -1;
+
+    margin-left:   $PADDING_XLARGE;
+    margin-top:    $PADDING_XLARGE;
+    margin-right:  $PADDING_XLARGE;
+    margin-bottom: $PADDING_XLARGE;
 }
 
 #gridPage {

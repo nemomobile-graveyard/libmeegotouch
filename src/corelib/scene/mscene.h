@@ -45,12 +45,12 @@ class MWindowPrivate;
  - Emulation of multitouch events for single-touch enviroments, as in a development environment.
  - Calcuation of the widget on-display property, see MWidget::isOnDisplay()
  - Development mode visual overlays, providing information to help debug applications:
-    - Bounding rectangles, toggled by <Ctrl>-B
-    - Margins, toggled by <Ctrl>-M
-    - Positions, toggled by <Ctrl>-P
-    - Sizes, toggled by <Ctrl>-S
-    - Object names, toggled by <Ctrl>-N
-    - Frames per second, toggled by <Ctrl>-F
+    - Bounding rectangles, toggled by <Ctrl>-<Shift>-B
+    - Margins, toggled by <Ctrl>-<Shift>-M
+    - Positions, toggled by <Ctrl>-<Shift>-P
+    - Sizes, toggled by <Ctrl>-<Shift>-S
+    - Object names, toggled by <Ctrl>-<Shift>-N
+    - Frames per second, toggled by <Ctrl>-<Shift>-F
 
   \sa MWindow, MApplicationWindow
  */

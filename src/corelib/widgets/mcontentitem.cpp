@@ -22,21 +22,23 @@
 #include "mcontentitem.h"
 #include "mcontentitem_p.h"
 #include "mcontentitemmodel.h"
-#include <QDebug>
 
 #include "mwidgetcreator.h"
 #include <mprogressindicator.h>
 #include <mlabel.h>
+
 M_REGISTER_WIDGET(MContentItem)
 
 MContentItemPrivate::MContentItemPrivate():
     MWidgetControllerPrivate(),
-    smallItem(0)
+    smallText(0)
 {
 }
 
 MContentItemPrivate::~MContentItemPrivate()
 {
+    if (smallText)
+        delete smallText;
 }
 
 MContentItem::MContentItem(MContentItem::ContentItemStyle itemStyle, QGraphicsItem *parent)
@@ -99,6 +101,13 @@ void MContentItem::setImage(const QImage &image)
     Q_D(MContentItem);
     d->image = image;
     model()->setItemImage(d->image);
+}
+
+void MContentItem::setImage(const QString &id)
+{
+    Q_D(MContentItem);
+    d->imageID = id;
+    model()->setItemImageID(d->imageID);
 }
 
 void MContentItem::setTitle(const QString &text)
@@ -177,20 +186,29 @@ void MContentItem::enableProgressBar()
 void MContentItem::setSmallItem(MWidget* widget)
 {
     Q_D(MContentItem);
-    d->smallItem = widget;
+
+    if (d->smallText) {
+        delete d->smallText;
+        d->smallText = 0;
+    }
+    model()->setSmallItem(widget);
 }
 
 MWidget* MContentItem::smallItem() const
 {
-    Q_D(const MContentItem);
-    return d->smallItem;
+    return model()->smallItem();
 }
 
 void MContentItem::setSmallText(QString text)
 {
     Q_D(MContentItem);
-    MLabel* label = new MLabel(text);
-    label->setAlignment( Qt::AlignRight );
-    d->smallItem = label;
+
+    if (d->smallText) {
+        d->smallText->setText(text);
+    } else {
+        d->smallText = new MLabel(text);
+        d->smallText->setAlignment( Qt::AlignRight );
+        model()->setSmallItem(d->smallText);
+    }
 }
 

@@ -19,3 +19,13 @@
 
 #include "mabstractcellcreator.h"
 
+// this hack is needed, because under windows
+// the template symbols are not exported...
+#ifdef Q_OS_WIN
+#include "mcontentitem.h"
+#include "mimagewidget.h"
+#include "mwidgetcontroller.h"
+template class MAbstractCellCreator<MContentItem>;
+template class MAbstractCellCreator<MImageWidget>;
+template class MAbstractCellCreator<MWidgetController>;
+#endif

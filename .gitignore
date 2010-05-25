@@ -42,3 +42,4 @@ cscope.out
 build-i386
 build-armel
 .qmake.cache
+mmoc/mmoc

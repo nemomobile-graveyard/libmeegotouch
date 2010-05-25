@@ -45,7 +45,7 @@ MCollatorPrivate::~MCollatorPrivate()
 
 
 // allocates an icu collator based on locale
-void MCollatorPrivate::initCollator(icu::Locale locale)
+void MCollatorPrivate::initCollator(const icu::Locale &locale)
 {
     UErrorCode status = U_ZERO_ERROR;
     _coll = icu::Collator::createInstance(locale, status);

@@ -106,9 +106,13 @@ void MLinearLayoutPolicy::setStretchFactor(QGraphicsLayoutItem *item, int stretc
         mWarning("MLinearLayoutPolicy") << Q_FUNC_INFO << "cannot assign a stretch factor to a null item";
         return;
     }
-    if (stretchFactor(item) == stretch)
+
+    QGraphicsLayoutItem *proxyItem = d->engine->itemAt(indexOf(item));
+
+    if (d->engine->stretchFactor(proxyItem) == stretch)
         return;
-    d->engine->setStretchFactor(item, stretch);
+
+    d->engine->setStretchFactor(proxyItem, stretch);
     invalidatePolicyAndLayout();
 }
 int MLinearLayoutPolicy::stretchFactor(QGraphicsLayoutItem *item) const
@@ -118,7 +122,8 @@ int MLinearLayoutPolicy::stretchFactor(QGraphicsLayoutItem *item) const
         mWarning("MLinearLayoutPolicy") << Q_FUNC_INFO << "cannot return a stretch factor for a null item";
         return 0;
     }
-    return d->engine->stretchFactor(item);
+    QGraphicsLayoutItem *proxyItem = d->engine->itemAt(indexOf(item));
+    return d->engine->stretchFactor(proxyItem);
 }
 
 void MLinearLayoutPolicy::setOrientation(Qt::Orientation orientation)

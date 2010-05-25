@@ -1,6 +1,6 @@
 TEMPLATE = app
 TARGET = containertest
-CONFIG += m # Requires libm to be installed
+CONFIG += meegotouch 
 
 # Input
 SOURCES += main.cpp
@@ -13,4 +13,3 @@ QMAKE_LIBDIR += ../../lib/
 # libm first:
 INCLUDEPATH += ../../src/include
 QMAKE_LIBDIR += ../../lib/
-LIBS += -lmeegotouch

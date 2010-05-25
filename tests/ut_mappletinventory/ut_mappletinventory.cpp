@@ -56,9 +56,9 @@ TestAppletSource::~TestAppletSource()
     delete sourceWidget;
 }
 
-MWidget *TestAppletSource::widget()
+QGraphicsWidget *TestAppletSource::widget()
 {
-    return sourceWidget = new MWidget;
+    return sourceWidget = new QGraphicsWidget;
 }
 
 bool TestAppletSource::initialize(const QString &)

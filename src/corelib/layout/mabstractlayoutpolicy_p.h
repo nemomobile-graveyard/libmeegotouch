@@ -37,7 +37,7 @@ public:
     /** Destructor */
     virtual ~MAbstractLayoutPolicyPrivate();
 
-    void aboutToBeRemovedFromLayout(const QGraphicsLayoutItem *item);
+    void aboutToBeRemovedFromLayout(int index);
 
     /** The layout we are associated with. */
     MLayout *const layout;

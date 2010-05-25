@@ -16,6 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
+
 #include <MScalableImage>
 #include <MImageWidget>
 #include <MLabel>
@@ -135,6 +136,8 @@ void MContentItemViewPrivate::initLayout(MContentItem::ContentItemStyle style)
 
     configuredStyle = style;
 
+    if (optionalImageWidget)
+        optionalImageWidget->setVisible(false);
     switch (style) {
     case MContentItem::IconAndTwoTextLabels:
         image()->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
@@ -283,6 +286,11 @@ void MContentItemViewPrivate::setImage(const QImage &i)
     image()->setImage(i);
 }
 
+void MContentItemViewPrivate::setImageID(const QString &id)
+{
+    image()->setImage(id);
+}
+
 void MContentItemViewPrivate::setOptionalImage(const QImage& i)
 {
     optionalImage()->setImage(i);
@@ -363,6 +371,8 @@ void MContentItemView::updateData(const QList<const char *> &modifications)
             d->setSubtitle(model()->subtitle());
         } else if (member == MContentItemModel::ItemPixmap) {
             d->setPixmap(model()->itemPixmap());
+        } else if (member == MContentItemModel::ItemImageID) {
+            d->setImageID(model()->itemImageID());
         } else if (member == MContentItemModel::Selected) {
             setSelected(model()->selected());
         } else if(member == MContentItemModel::OptionalPixmap){
@@ -371,7 +381,8 @@ void MContentItemView::updateData(const QList<const char *> &modifications)
             d->setOptionalImage(model()->optionalImage());
         } else if(member == MContentItemModel::ItemImage) {
             d->setImage(model()->itemImage());
-        } else if(member == MContentItemModel::AdditionalItem) {
+        } else if(member == MContentItemModel::AdditionalItem ||
+                  member == MContentItemModel::SmallItem) {
             if (d->configuredStyle == MContentItem::TwoIconsTwoWidgets) {
                 d->clearLayout();
                 d->initTwoIconsTwoWidgetsLayout();
@@ -398,6 +409,8 @@ void MContentItemView::setupModel()
         d->setOptionalImage(d->controller->optionalImage());
     if(!d->controller->image().isNull())
         d->setImage(d->controller->image());
+    if(!model()->itemImageID().isNull())
+        d->setImageID(model()->itemImageID());
 
     d->initLayout(static_cast<MContentItem::ContentItemStyle>(model()->itemStyle()));
 }

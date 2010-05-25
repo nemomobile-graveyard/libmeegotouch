@@ -43,7 +43,7 @@ public:
 
     //! methods derived from MApplicationExtensionInterface
     virtual bool initialize(const QString &interface);
-    virtual MWidget *widget();
+    virtual QGraphicsWidget *widget();
 
 private slots:
     void informSliderValueToApplication(int value);

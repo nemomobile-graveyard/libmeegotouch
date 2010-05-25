@@ -20,6 +20,8 @@
 #ifndef DUIGRIDVIDEOWIDGET_H
 #define DUIGRIDVIDEOWIDGET_H
 
+#ifdef HAVE_GSTREAMER
+
 #include <MVideoWidget>
 
 class QGraphicsSceneContextMenuEvent;
@@ -49,4 +51,5 @@ class GridVideoWidget : public MVideoWidget
         QString m_id;
 };
 
+#endif
 #endif

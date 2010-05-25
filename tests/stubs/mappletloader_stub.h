@@ -28,18 +28,18 @@
 // FIXME - stubgen is not yet finished
 class MAppletLoaderStub : public StubBase {
   public:
-  virtual MWidget * loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings);
+  virtual QGraphicsWidget * loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings);
   virtual void MAppletLoaderConstructor();
 }; 
 
 // 2. IMPLEMENT STUB
-MWidget * MAppletLoaderStub::loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings) {
+QGraphicsWidget * MAppletLoaderStub::loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings) {
   QList<ParameterBase*> params;
   params.append( new Parameter<QString >(metadata.fileName()));
   params.append( new Parameter<MDataStore & >(dataStore));
   params.append( new Parameter<MDataAccess & >(settings));
   stubMethodEntered("loadApplet",params);
-  return stubReturnValue<MWidget *>("loadApplet");
+  return stubReturnValue<QGraphicsWidget *>("loadApplet");
 }
 
 void MAppletLoaderStub::MAppletLoaderConstructor() {
@@ -53,7 +53,7 @@ MAppletLoaderStub* gMAppletLoaderStub = &gDefaultMAppletLoaderStub;
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-MWidget * MAppletLoader::loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings) {
+QGraphicsWidget * MAppletLoader::loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings) {
   return gMAppletLoaderStub->loadApplet(metadata, dataStore, settings);
 }
 

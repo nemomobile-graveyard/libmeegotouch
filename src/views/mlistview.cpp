@@ -92,6 +92,8 @@ void MListView::updateData(const QList<const char *>& modifications)
             scrollTo(model()->scrollToIndex(), static_cast<MList::ScrollHint>(model()->scrollHint()));
         } else if (member == MListModel::LongTap) {
             longTap(model()->longTap());
+        } else if (member == MListModel::ListIndexVisible) {
+            d_ptr->updateListIndexVisibility();
         }
     }
 }
@@ -119,10 +121,11 @@ void MListView::applyStyle()
 
     if (d_ptr) {
         d_ptr->clearVisibleItemsArray();
+        d_ptr->updateItemHeight();
         d_ptr->updateSeparators();
         d_ptr->updateSeparatorSize();
         d_ptr->setHeadersCreator(new MDefaultHeadersCreator(style()->groupHeaderObjectName()));
-	relayoutItemsInViewportRect();
+        relayoutItemsInViewportRect();
     }
 }
 
@@ -205,7 +208,8 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
     int bottomRightRow = d_ptr->indexToFlatRow(bottomRight);
 
     int top = qMax(topLeftRow, firstVisibleRow);
-    int bottom = qMin(bottomRightRow, lastVisibleRow);
+    int lastCellInLastVisibleRow = lastVisibleRow + model()->columns() - lastVisibleRow % model()->columns() - 1;
+    int bottom = qMin(bottomRightRow, lastCellInLastVisibleRow);
 
     for (int i = top; i <= bottom; i++) {
         QModelIndex cellIndex = d_ptr->flatRowToIndex(i);

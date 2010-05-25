@@ -29,11 +29,11 @@ class MSceneWindowPrivate;
 
 /*!
  * \class MSceneWindow
- * \brief MSceneWindow objects are the base graphical items in a Direct UI scene.
+ * \brief MSceneWindow objects are the base graphical items in a MeeGo Touch scene.
  *
- * All graphical components of a standard Direct UI application are held in
+ * All graphical components of a standard MeeGo Touch application are held in
  * a MSceneWindow of some type. MSceneWindow instances form the base
- * level of a Direct UI application's scene graph.
+ * level of a MeeGo Touch application's scene graph.
  *
  * MSceneWindows in a MScene are analogous to top level windows in a
  * traditional windowing system.

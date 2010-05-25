@@ -167,7 +167,8 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
             r.setHeight(QWIDGETSIZE_MAX);
         }
 
-        QRectF bR(fm.boundingRect(r, viewPrivate->textOptions.alignment() | Qt::TextSingleLine,
+        Qt::TextFlag wrap = viewPrivate->controller->wordWrap() ? Qt::TextWordWrap : Qt::TextSingleLine;
+        QRectF bR(fm.boundingRect(r, viewPrivate->textOptions.alignment() | wrap,
                                   viewPrivate->model()->text()));
 
         return QSizeF(fm.width("x"), bR.height());
@@ -188,7 +189,8 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 
         QFontMetricsF fm(viewPrivate->controller->font());
 
-        QRectF bR(fm.boundingRect(QRectF(0, 0, w, h), viewPrivate->textOptions.alignment() | Qt::TextSingleLine,
+        Qt::TextFlag wrap = viewPrivate->controller->wordWrap() ? Qt::TextWordWrap : Qt::TextSingleLine;
+        QRectF bR(fm.boundingRect(QRectF(0, 0, w, h), viewPrivate->textOptions.alignment() | wrap,
                                   viewPrivate->model()->text()));
         return bR.size().boundedTo(QSizeF(w, h));
     }
@@ -223,6 +225,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
             } else {
                 viewPrivate->textOptions.setWrapMode(QTextOption::ManualWrap);
             }
+            needUpdate = true;
         } else if (member == MLabelModel::TextDirection) {
             needUpdate = true;
             viewPrivate->textOptions.setTextDirection(viewPrivate->model()->textDirection());

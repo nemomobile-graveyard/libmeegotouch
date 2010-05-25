@@ -188,6 +188,9 @@ public:
      * \see kineticMaxKineticScrollSpeed()
      */
     void setKineticMaxKineticScrollSpeed(int speed);
+
+    bool isStyled( const QWidget * widget = 0 ) const;
+
 protected Q_SLOTS:
     /*! \reimp */
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option,
@@ -196,6 +199,8 @@ protected Q_SLOTS:
     virtual int styleHint(StyleHint hint, const QStyleOption *option = 0,
                           const QWidget *widget = 0, QStyleHintReturn *returnData = 0) const;
     /*! \reimp_end */
+
+    void ensureFocusedWidgetVisible(QRect rect);
 };
 
 #endif

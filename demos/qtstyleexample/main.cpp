@@ -25,6 +25,9 @@
 int main(int argc, char **argv)
 {
     QApplication app(argc, argv);
+//    app.setProperty( "NoMStyle", true );
+//    app.setProperty( "NoMNavigationBar", true );
+
     MainWindow mw;
     mw.show();
 

@@ -13,13 +13,9 @@ INCLUDEPATH += \
 QMAKE_LIBDIR += \
     $$MLIB
 
-win32|macx {
-    macx {
-        QMAKE_LFLAGS += -F../../lib
-        LIBS += -framework meegotouchcore \
-            -framework meegotouchviews
-    }
-    win32:LIBS += -lmeegotouch0
+macx {
+    QMAKE_LFLAGS += -F../../lib
+    LIBS += -framework meegotouchcore
 } else {
     LIBS += -lmeegotouchcore
 }

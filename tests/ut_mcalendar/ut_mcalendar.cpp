@@ -31,14 +31,14 @@ void Ut_MCalendar::initTestCase()
     qap = new QCoreApplication(argc, argv);
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QProcess process;
-    process.start("sh -c \"dpkg -s libicu42 | grep Version | perl -pe 's/^Version:[[:space:]]*([^[[:space:]]+)$/$1/g'\"");
+    process.start("sh -c \"dpkg -s libicu-dev | grep Version | perl -pe 's/^Version:[[:space:]]*([^[[:space:]]+)$/$1/g'\"");
     if (!process.waitForFinished()) {
-        qDebug() << "cannot run process to check libicu42 package version , exiting ...";
+        qDebug() << "cannot run process to check libicu-dev package version , exiting ...";
         exit(1);
     }
     icuPackageVersion = process.readAllStandardOutput();
     icuPackageVersion.replace("\n", "");
-    qDebug() << "libicu42 package version is:" << icuPackageVersion;
+    qDebug() << "libicu-dev package version is:" << icuPackageVersion;
 }
 
 void Ut_MCalendar::cleanupTestCase()
@@ -166,7 +166,11 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "y年M月d日EEEE"
         << "H:mm"
         << "H:mm:ss"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+        << "H:mm:ss z"
+#else
         << "HH:mm:ss z"
+#endif
         << "H時mm分ss秒 zzzz";
 
     QTest::newRow("ja_JP, Japanese calendar")
@@ -180,7 +184,11 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "Gy年M月d日EEEE"
         << "H:mm"
         << "H:mm:ss"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+        << "H:mm:ss z"
+#else
         << "HH:mm:ss z"
+#endif
         << "H時mm分ss秒 zzzz";
 
     QTest::newRow("zh_CN, Gregorian calendar")
@@ -193,7 +201,11 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "y年M月d日"
         << "y年M月d日EEEE"
         << "ah:mm"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+        << "ah:mm:ss"
+#else
         << "ahh:mm:ss"
+#endif
         << "zah时mm分ss秒"
         << "zzzzah时mm分ss秒";
 
@@ -406,10 +418,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
             << QString("21. jul. 2008")
             << QString("21. juli 2008")
             << QString("måndag 21. juli 2008")
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 GMT+03:00")
+            << QString("kl. 12:31:00 austeuropeisk sommartid");
+#else
             << QString("12.31")
             << QString("12.31.00")
             << QString("12.31.00 GMT+03.00")
             << QString("kl. 12.31.00 austeuropeisk sommartid");
+#endif
     QTest::newRow("21.7.2008_nb_NO_Gregorian")
             << datetime
             << QString("nb_NO")
@@ -418,10 +437,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
             << QString("21. juli 2008")
             << QString("21. juli 2008")
             << QString("mandag 21. juli 2008")
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 GMT+03:00")
+            << QString("kl. 12:31:00 østeuropeisk sommertid");
+#else
             << QString("12.31")
             << QString("12.31.00")
             << QString("12.31.00 GMT+03.00")
             << QString("kl. 12.31.00 østeuropeisk sommertid");
+#endif
     QTest::newRow("21.7.2008_no_NO_Gregorian")
             << datetime
             << QString("no_NO")
@@ -430,10 +456,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
             << QString("21. juli 2008")
             << QString("21. juli 2008")
             << QString("mandag 21. juli 2008")
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("12:31")
+            << QString("12:31:00")
+            << QString("12:31:00 GMT+03:00")
+            << QString("kl. 12:31:00 østeuropeisk sommertid");
+#else
             << QString("12.31")
             << QString("12.31.00")
             << QString("12.31.00 GMT+03.00")
             << QString("kl. 12.31.00 østeuropeisk sommertid");
+#endif
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime()
@@ -519,16 +552,28 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime_data()
             << datetime
             << QString("nn_NO")
             << MLocale::GregorianCalendar
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("21.07.08 15:31")
+            << QString("21. juli 2008 15:31:00 GMT+03:00")
+            << QString("måndag 21. juli 2008 kl. 15:31:00 austeuropeisk sommartid");
+#else
             << QString("21.07.08 15.31")
             << QString("21. juli 2008 15.31.00 GMT+03.00")
             << QString("måndag 21. juli 2008 kl. 15.31.00 austeuropeisk sommartid");
+#endif
     QTest::newRow("21.7.2008_nb_NO_Gregorian")
             << datetime
             << QString("nb_NO")
             << MLocale::GregorianCalendar
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << QString("21.07.08 15:31")
+            << QString("21. juli 2008 15:31:00 GMT+03:00")
+            << QString("mandag 21. juli 2008 kl. 15:31:00 østeuropeisk sommertid");
+#else
             << QString("21.07.08 15.31")
             << QString("21. juli 2008 15.31.00 GMT+03.00")
             << QString("mandag 21. juli 2008 kl. 15.31.00 østeuropeisk sommertid");
+#endif
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime()
@@ -609,10 +654,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
             << "21. jul. 2008"
             << "21. juli 2008"
             << "måndag 21. juli 2008"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << "14:31"
+            << "14:31:00"
+            << "14:31:00 GMT+03:00"
+            << "kl. 14:31:00 austeuropeisk sommartid";
+#else
             << "14.31"
             << "14.31.00"
             << "14.31.00 GMT+03.00"
             << "kl. 14.31.00 austeuropeisk sommartid";
+#endif
 
     QTest::newRow("21.7.2008_nb_NO_Gregorian")
             << QString("nb_NO")
@@ -624,10 +676,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
             << "21. juli 2008"
             << "21. juli 2008"
             << "mandag 21. juli 2008"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << "14:31"
+            << "14:31:00"
+            << "14:31:00 GMT+03:00"
+            << "kl. 14:31:00 østeuropeisk sommertid";
+#else
             << "14.31"
             << "14.31.00"
             << "14.31.00 GMT+03.00"
             << "kl. 14.31.00 østeuropeisk sommertid";
+#endif
 
     QTest::newRow("21.7.2008_no_NO_Gregorian")
             << QString("no_NO")
@@ -639,10 +698,17 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
             << "21. juli 2008"
             << "21. juli 2008"
             << "mandag 21. juli 2008"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+            << "14:31"
+            << "14:31:00"
+            << "14:31:00 GMT+03:00"
+            << "kl. 14:31:00 østeuropeisk sommertid";
+#else
             << "14.31"
             << "14.31.00"
             << "14.31.00 GMT+03.00"
             << "kl. 14.31.00 østeuropeisk sommertid";
+#endif
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
@@ -926,7 +992,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%r" // locale's 12-hour clock time (e.g., 11:11:04 PM)
-            << "00 ip.";
+            << "12.25 ip.";
     QTest::newRow("fi_FI %t")
             << MLocale::GregorianCalendar
             << 2008
@@ -1075,12 +1141,78 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 2008
             << 2
             << 3
-            << 12
+            << 00
             << 25
             << 3
             << "fi_FI"
-            << "%H" // hour (00..23)
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "00";
+    QTest::newRow("fi_FI %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 01
+            << 25
+            << 3
+            << "fi_FI"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "01";
+    QTest::newRow("fi_FI %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 23
+            << 25
+            << 3
+            << "fi_FI"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "23";
+    QTest::newRow("fi_FI %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 24 // for the “date” command this would be invalid input but ICU wraps around
+            << 25
+            << 3
+            << "fi_FI"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "00";
+    QTest::newRow("fi_FI %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 00
+            << 25
+            << 3
+            << "fi_FI"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "12";
+    QTest::newRow("fi_FI %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 01
+            << 25
+            << 3
+            << "fi_FI"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "01";
+    QTest::newRow("fi_FI %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 11
+            << 25
+            << 3
+            << "fi_FI"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "11";
     QTest::newRow("fi_FI %I")
             << MLocale::GregorianCalendar
             << 2008
@@ -1090,8 +1222,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "fi_FI"
-            << "%I" // hour (01..12)
-            << "00";
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "12";
     QTest::newRow("fi_FI %M")
             << MLocale::GregorianCalendar
             << 2008
@@ -1113,7 +1245,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%R" // 24-hour hour and minute; same as %H:%M
-            << "12:25";
+            << "12.25";
     QTest::newRow("fi_FI %S")
             << MLocale::GregorianCalendar
             << 2008
@@ -1201,7 +1333,11 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%Z" // Time-zone name, or no characters if no time zone is determinable
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM == 4 && U_ICU_VERSION_PATCHLEVEL_NUM >= 1)
+            << "(Suomi)";
+#else
             << "Suomi";
+#endif
 
     // ************************************************************
     QTest::newRow("en_GB %a")
@@ -1324,7 +1460,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "en_GB"
             << "%r" // locale's 12-hour clock time (e.g., 11:11:04 PM)
-            << "00 PM";
+            << "12:25 PM";
     QTest::newRow("en_GB %t")
             << MLocale::GregorianCalendar
             << 2008
@@ -1473,12 +1609,78 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 2008
             << 2
             << 3
-            << 12
+            << 00
             << 25
             << 3
             << "en_GB"
-            << "%H" // hour (00..23)
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "00";
+    QTest::newRow("en_GB %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 01
+            << 25
+            << 3
+            << "en_GB"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "01";
+    QTest::newRow("en_GB %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 23
+            << 25
+            << 3
+            << "en_GB"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "23";
+    QTest::newRow("en_GB %H")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 24 // for the “date” command this would be invalid input but ICU wraps around
+            << 25
+            << 3
+            << "en_GB"
+            << "%H" // Hour (24-hour clock), as a decimal number (00-23)
+            << "00";
+    QTest::newRow("en_GB %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 00
+            << 25
+            << 3
+            << "en_GB"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
             << "12";
+    QTest::newRow("en_GB %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 01
+            << 25
+            << 3
+            << "en_GB"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "01";
+    QTest::newRow("en_GB %I")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 11
+            << 25
+            << 3
+            << "en_GB"
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "11";
     QTest::newRow("en_GB %I")
             << MLocale::GregorianCalendar
             << 2008
@@ -1488,8 +1690,8 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 25
             << 3
             << "en_GB"
-            << "%I" // hour (01..12)
-            << "00";
+            << "%I" // Hour (12-hour clock), as a decimal number (01-12)
+            << "12";
     QTest::newRow("en_GB %M")
             << MLocale::GregorianCalendar
             << 2008
@@ -1612,7 +1814,11 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "de_DE"
             << "%Z" // Time-zone name, or no characters if no time zone is determinable
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM == 4 && U_ICU_VERSION_PATCHLEVEL_NUM >= 1)
+            << "(Finnland)";
+#else
             << "Finnland";
+#endif
     // ************************************************************
     QTest::newRow("fi_FI %R %Z")
             << MLocale::GregorianCalendar
@@ -1624,7 +1830,11 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%R %Z"
-            << "12:25 Suomi";
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM == 4 && U_ICU_VERSION_PATCHLEVEL_NUM >= 1)
+            << "12.25 (Suomi)";
+#else
+            << "12.25 Suomi";
+#endif
     QTest::newRow("en_GB %R %Z")
             << MLocale::GregorianCalendar
             << 2008
@@ -1636,6 +1846,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << "en_GB"
             << "%R %Z"
             << "12:25 Finland Time";
+
     QTest::newRow("de_DE %R %Z")
             << MLocale::GregorianCalendar
             << 2008
@@ -1646,7 +1857,11 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "de_DE"
             << "%R %Z"
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM == 4 && U_ICU_VERSION_PATCHLEVEL_NUM >= 1)
+            << "12:25 (Finnland)";
+#else
             << "12:25 Finnland";
+#endif
 }
 
 void Ut_MCalendar::testPosixFormatPattern()

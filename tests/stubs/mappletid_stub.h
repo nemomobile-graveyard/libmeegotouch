@@ -73,11 +73,13 @@ MAppletIdStub *gMAppletIdStub = &gDefaultMAppletIdStub;
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 MAppletId::MAppletId()
+  : appletInstanceId( 0 )
 {
     gMAppletIdStub->MAppletIdConstructor();
 }
 
 MAppletId::MAppletId(const QString &applicationName, const QString &mashupCanvasName, const AppletInstanceID &instanceId)
+  : appletInstanceId( 0 )
 {
     gMAppletIdStub->MAppletIdConstructor(applicationName, mashupCanvasName, instanceId);
 }

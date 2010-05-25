@@ -20,9 +20,9 @@
 #ifndef MORIENTATIONANIMATION_P_H
 #define MORIENTATIONANIMATION_P_H
 
-#include "mgroupanimation_p.h"
+#include "mparallelanimationgroup_p.h"
 
-class MOrientationAnimationPrivate : public MGroupAnimationPrivate
+class MOrientationAnimationPrivate : public MParallelAnimationGroupPrivate
 {
     Q_DECLARE_PUBLIC(MOrientationAnimation)
 public:

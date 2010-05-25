@@ -31,6 +31,7 @@ class M_EXPORT MSceneWindowStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(Qt::Alignment,  horizontalAlign,      HorizontalAlign)
     M_STYLE_ATTRIBUTE(Qt::Alignment,  verticalAlign,        VerticalAlign)
     M_STYLE_ATTRIBUTE(QPointF,        offset,               Offset)
+    M_STYLE_ATTRIBUTE(int,            disappearTimeout,     DisappearTimeout)
 };
 
 class M_EXPORT MSceneWindowStyleContainer : public MWidgetStyleContainer

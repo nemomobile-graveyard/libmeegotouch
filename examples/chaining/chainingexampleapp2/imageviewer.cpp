@@ -6,11 +6,12 @@
 #include <MButton>
 #include <MApplication>
 #include <MApplicationWindow>
+#include <MApplicationPage>
+#include <MSceneWindow>
 #include <MApplicationIfProxy>
 
-ImageViewer::ImageViewer( MButton *button )
+ImageViewer::ImageViewer()
 {
-    this->button = button;
 }
 
 ImageViewer::~ImageViewer()
@@ -22,10 +23,16 @@ bool ImageViewer::showImage(const QString &uri, const QStringList &uriList)
     qDebug() << __PRETTY_FUNCTION__;
     Q_UNUSED( uriList );
 
-    MApplication *mApp = MApplication::instance();
-    mApp->activeWindow()->raise();
+    MApplicationWindow *mWin = new MApplicationWindow();
+    mWin->setObjectName( "MApplicationWindow#2" );
+    mWin->setAttribute( Qt::WA_DeleteOnClose, true );
 
-    button->setText( uri );
+    MApplicationPage *p = new MApplicationPage();
+    mWin->show();
+    p->appear( mWin, MSceneWindow::DestroyWhenDone );
+
+    MButton *b = new MButton( p->centralWidget() );
+    b->setText( uriList[0] );
 
     return true;
 }

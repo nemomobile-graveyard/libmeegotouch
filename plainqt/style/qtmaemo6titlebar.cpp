@@ -32,6 +32,8 @@
 #include <QDebug>
 
 #include <mapplicationmenubuttonstyle.h>
+#include <mhomebuttonpanelstyle.h>
+#include <mescapebuttonpanelstyle.h>
 #include <MScalableImage>
 #include <MTheme>
 
@@ -39,24 +41,24 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
 {
     setObjectName(QString("Qt_Maemo6_TitleBar"));
 
+    QStyleOption option;
+    option.initFrom(this);
+
     QtMaemo6ClickLabel * minimizeButton = new QtMaemo6ClickLabel(this);
     minimizeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Home" ) );
-/*
-    minimize_button->setText("MinimizeButton");
-    minimize_button->setIcon(QPixmap(":/Icon-home.png"));
-    minimize_button->setAutoRaise(true);
-    minimize_button->setIconSize(QSize(48, 48));
-    */
+    const MHomeButtonPanelStyle *homeButtonStyle =
+        static_cast<const MHomeButtonPanelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
+                "MHomeButtonPanelStyle", ""));
+    if(homeButtonStyle) {
+        minimizeButton->setPixmap(*MTheme::pixmapCopy(homeButtonStyle->homeButtonIconId()));
+    }
     connect(minimizeButton, SIGNAL(clicked()), this, SIGNAL(minimizeButtonClicked()));
 
     m_titleLabel = new QtMaemo6ClickLabel(this);
     connect(m_titleLabel, SIGNAL(clicked()), this, SIGNAL(menuLabelClicked()));
 
     m_titleLabelMenuButton = new QtMaemo6ClickLabel(this);
-
-    QStyleOption option;
-    option.initFrom(this);
-
+    m_titleLabelMenuButton->setObjectName("Qt_Maemo6_TitleBar_Menu");
     const MApplicationMenuButtonStyle *iconStyle =
         static_cast<const MApplicationMenuButtonStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
                 "MApplicationMenuButtonStyle", "NavigationBarMenuButton"));
@@ -65,25 +67,19 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
     }
     connect(m_titleLabelMenuButton, SIGNAL(clicked()), this, SIGNAL(menuLabelClicked()));
 
-
     QSpacerItem *spacer = new QSpacerItem(0, 0);
-    const MWidgetStyle *spacerStyle =
-        static_cast<const MWidgetStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
-                                            "MWidgetStyle", "NavigationBarMenuButtonArrowImage"));
-    if (spacerStyle) {
-        spacer->changeSize(spacerStyle->marginLeft(), 0);
+    if (iconStyle) {
+        spacer->changeSize(iconStyle->marginLeft(), 0);
     }
 
     QtMaemo6ClickLabel * closeButton = new QtMaemo6ClickLabel(this);
     closeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Close" ) );
- /*
-    close_button->setText("CloseButton");
-    close_button->setIcon(QPixmap(":/Icon-close.png"));
-    //FIXME: remove magic numbers!
-    close_button->setIconSize(QSize(48, 48));
-    close_button->setAutoRaise(true);
-    */
-
+    const MEscapeButtonPanelStyle *escapeButtonStyle =
+        static_cast<const MEscapeButtonPanelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
+                "MEscapeButtonPanelStyle", ""));
+    if(escapeButtonStyle) {
+        closeButton->setPixmap(*MTheme::pixmapCopy(escapeButtonStyle->closeButtonIconId()));
+    }
     connect(closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()));
 
     m_buttonsLayout = new QHBoxLayout;

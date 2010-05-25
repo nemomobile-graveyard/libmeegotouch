@@ -21,7 +21,6 @@
 #define UT_MAPPLETINSTANCEMANAGER_H
 
 #include <QObject>
-#include <MWidget>
 #include "mappletinstancemanager.h"
 
 class MApplication;
@@ -45,14 +44,14 @@ class AppletInstanceCollection : public QObject
 public:
     virtual ~AppletInstanceCollection();
     int count() const;
-    MWidget *at(int index) const;
+    QGraphicsWidget *at(int index) const;
 
 public slots:
-    void addInstance(MWidget *widget, MDataStore &store);
-    void removeInstance(MWidget *widget);
+    void addInstance(QGraphicsWidget *widget, MDataStore &store);
+    void removeInstance(QGraphicsWidget *widget);
 
 private:
-    QList<MWidget *> instances;
+    QList<QGraphicsWidget *> instances;
 };
 
 class Ut_MAppletInstanceManager : public QObject

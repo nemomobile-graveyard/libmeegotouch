@@ -52,6 +52,9 @@ public:
     //! Return the target device pixels per inch
     QSize pixelsPerInch() const;
 
+    //! Return whether the status bar should be shown on target device
+    bool showStatusbar() const;
+
 protected:
     MDeviceProfilePrivate *const d_ptr;
 

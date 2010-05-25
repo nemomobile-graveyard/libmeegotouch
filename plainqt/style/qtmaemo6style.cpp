@@ -59,6 +59,7 @@
 #include <MScalableImage>
 #include <MLabel>
 #include <MApplicationWindow>
+#include <MInputMethodState>
 #include <mbuttonstyle.h>
 #include <mapplicationpagestyle.h>
 #include <mpositionindicatorstyle.h>
@@ -79,8 +80,8 @@
 #include <mcontentitemstyle.h>
 #include <mapplicationmenustyle.h>
 #include <mfeedbackplayer.h>
-#include <mwidgetfadeinanimationstyle.h>
-#include <mwidgetfadeoutanimationstyle.h>
+//#include <mwidgetfadeinanimationstyle.h>
+//#include <mwidgetfadeoutanimationstyle.h>
 #include <mdeviceprofile.h>
 
 #include "qtmaemo6titlebar.h"
@@ -147,19 +148,6 @@ void QtMaemo6StylePrivate::initM()
 
     m_isMInitialized = true;
 
-    QStringList args = qApp->arguments();
-
-    int argc = 1;
-    char *argv[ 1 ];
-    argv[ 0 ] = 0;
-
-    if (! args.isEmpty()) {
-        //FIXME: using QString would be nicer
-        argv[ 0 ] = strndup(args[ 0 ].toLocal8Bit().constData(), 42);
-
-        qDebug("appName: %s", argv[ 0 ]);
-    }
-
     m_windowEventFilter = new QtMaemo6StyleEventFilter(q);
     m_scrollBarEventFilter = new QtMaemo6ScrollBarEventFilter(q);
     m_scrollBarEventFilter->setScrollBarsAlwaysVisible(false);
@@ -168,6 +156,18 @@ void QtMaemo6StylePrivate::initM()
     if (MComponentData::instance() != 0) {
         m_isMApplication = true;
     } else {
+        QStringList args = qApp->arguments();
+
+        int argc = 1;
+        char *argv[ 1 ];
+        argv[ 0 ] = 0;
+
+        if (! args.isEmpty()) {
+            //FIXME: using QString would be nicer
+            argv[ 0 ] = strndup(args[ 0 ].toLocal8Bit().constData(), 42);
+
+            qDebug("appName: %s", argv[ 0 ]);
+        }
         m_componentData = new MComponentData(argc, argv);
     }
 
@@ -176,7 +176,10 @@ void QtMaemo6StylePrivate::initM()
                                            "MLabelStyle"));
     qApp->setFont(style->font());
     qApp->setGlobalStrut(QSize(0, 0));
-    qApp->setInputContext(QInputContextFactory::create("MInputContext", qApp));
+
+    bool inputConnect = QObject::connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)), q, SLOT(ensureFocusedWidgetVisible(QRect)));
+    if(!inputConnect)
+        qCritical() << "Virtual keyboard notification connection failed";
 }
 
 const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
@@ -837,21 +840,32 @@ void QtMaemo6Style::setKineticMaxKineticScrollSpeed(int speed) {
     d->m_kinetic->setMaxKineticScrollSpeed(speed);
 }
 
+bool QtMaemo6Style::isStyled( const QWidget * widget ) const {
+    return ! ( ( widget &&
+                widget->dynamicPropertyNames().contains(M::NoMStyle) ) ||
+                qApp->dynamicPropertyNames().contains(M::NoMStyle) );
+}
 
 void QtMaemo6Style::polish(QApplication *app)
 {
-    if(app->dynamicPropertyNames().contains(M::NoMStyle))
-        return;
-    QtMaemo6TestStyle::polish(app);
+    if(!isStyled()) {
+        QPlastiqueStyle::polish(app);
+    }
+    else {
+        QtMaemo6TestStyle::polish(app);
+    }
 }
 
 void QtMaemo6Style::polish(QWidget *widget)
 {
+    Q_D(QtMaemo6Style);
+
     if(qobject_cast<QDesktopWidget*>(widget))
         return;
 
-    if(widget->dynamicPropertyNames().contains(M::NoMStyle))
+    if( !isStyled( widget ) ) {
         return;
+    }
 
     if(qobject_cast<MWindow*>(widget)) {
         return;
@@ -873,7 +887,7 @@ void QtMaemo6Style::polish(QWidget *widget)
     }
 
 #ifdef M_LOG_POLISH
-    QString filename = QString("/home/mstyle_%1.log").arg( QCoreApplication::applicationFilePath().section('/', -1 ) );
+    QString filename = QString("/tmp/mstyle_%1.log").arg( QCoreApplication::applicationFilePath().section('/', -1 ) );
 
     QFile file( filename );
     if (file.open(QIODevice::Append | QIODevice::Text)) {
@@ -886,8 +900,6 @@ void QtMaemo6Style::polish(QWidget *widget)
         qCritical() << "unable to open" << filename;
     }
 #endif
-
-    Q_D(QtMaemo6Style);
 
     // Lazy initialization of the MFramework.
     // This is needed to guarantee that actual MApplications will work as well.
@@ -904,23 +916,6 @@ void QtMaemo6Style::polish(QWidget *widget)
             QPalette pal = widget->palette();
             pal.setBrush(QPalette::Window, Qt::transparent);
             widget->setPalette(pal);
-        }
-    }
-
-    if (QtMaemo6ClickLabel *lbl = qobject_cast<QtMaemo6ClickLabel *>(widget)) {
-        int navigationBarHeight = 0;
-        QWidget * parent = qobject_cast<QWidget *>( widget->parent() );
-        if ( parent ) {
-            navigationBarHeight = parent->height() - 2 * parent->layout()->margin();
-        }
-        QSize navigationBarSize = QSize( navigationBarHeight, navigationBarHeight );
-        if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Close") {
-            const QPixmap *closePixmap = MTheme::pixmapCopy("Icon-close", navigationBarSize);
-            lbl->setPixmap(*closePixmap);
-        }
-        if ( lbl->objectName() == "Qt_Maemo6_TitleBar_Home") {
-            const QPixmap *closePixmap = MTheme::pixmapCopy("Icon-home", navigationBarSize);
-            lbl->setPixmap(*closePixmap);
         }
     }
 
@@ -1048,6 +1043,11 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
                                   QPainter *painter,
                                   const QWidget *widget) const
 {
+    if( !isStyled( widget ) ) {
+        QPlastiqueStyle::drawPrimitive(element, option, painter, widget);
+        return;
+    }
+
     Q_D(const QtMaemo6Style);
 
     switch (element) {
@@ -1063,7 +1063,7 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
         if (qobject_cast<const QtMaemo6DialogTitle *>(widget)) {
             const MWidgetStyle *style =
                 static_cast<const MWidgetStyle *>(
-                    QtMaemo6StylePrivate::mStyle(option->state, "MWidgetStyle", "MDialogTitleBar"));
+                    QtMaemo6StylePrivate::mStyle(option->state, "MDialogStyle", "MDialogTitleBar"));
             // draw widget background
             d->drawWidgetBackground(painter, option, widget->rect(), style);
 
@@ -1198,6 +1198,11 @@ void QtMaemo6Style::drawControl(ControlElement element,
                                 QPainter *p,
                                 const QWidget *widget) const
 {
+    if( !isStyled( widget ) ) {
+        QPlastiqueStyle::drawControl(element, opt, p, widget);
+        return;
+    }
+
     Q_D(const QtMaemo6Style);
 
     switch (element) {
@@ -1518,6 +1523,11 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                                        QPainter *p,
                                        const QWidget *widget /*= 0*/) const
 {
+    if( !isStyled( widget ) ) {
+        QPlastiqueStyle::drawComplexControl(control, opt, p, widget);
+        return;
+    }
+
     Q_D(const QtMaemo6Style);
     switch (control) {
     case CC_ComboBox: {
@@ -1797,6 +1807,10 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
                                     SubControl subControl,
                                     const QWidget *widget /*= 0*/) const
 {
+    if( !isStyled( widget ) ) {
+        return QPlastiqueStyle::subControlRect(control, option, subControl, widget);
+    }
+
     Q_D(const QtMaemo6Style);
 
     if (!d->m_isMInitialized) {
@@ -2087,6 +2101,10 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                                       const QSize &contentsSize,
                                       const QWidget *widget) const
 {
+    if( !isStyled( widget ) ) {
+        return QPlastiqueStyle::sizeFromContents(type, option, contentsSize, widget);
+    }
+
     Q_D(const QtMaemo6Style);
 
     QSize retSize = QtMaemo6TestStyle::sizeFromContents(type, option, contentsSize, widget);
@@ -2219,6 +2237,9 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
                                const QStyleOption *option,
                                const QWidget *widget) const
 {
+    if ( !isStyled( widget ) ) {
+        return QPlastiqueStyle::pixelMetric(metric, option, widget);
+    }
     switch (metric) {
     case PM_ScrollBarExtent:
     case PM_ScrollBarSliderMin: {
@@ -2358,6 +2379,10 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
 QIcon QtMaemo6Style::standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option,
         const QWidget *widget) const
 {
+    if ( !isStyled( widget ) ) {
+        return QPlastiqueStyle::standardIconImplementation(standardIcon, option, widget);
+    }
+
     QIcon   icon;
     QPixmap pixmap;
 
@@ -2404,6 +2429,10 @@ QIcon QtMaemo6Style::standardIconImplementation(StandardPixmap standardIcon, con
 int QtMaemo6Style::styleHint(StyleHint hint, const QStyleOption *option,
                              const QWidget *widget, QStyleHintReturn *returnData) const
 {
+    if( !isStyled( widget ) ) {
+        return QPlastiqueStyle::styleHint(hint, option, widget, returnData);
+    }
+
     if (hint == QStyle::SH_ToolBar_Movable) {
         return false;
     } else if (hint == QStyle::SH_RequestSoftwareInputPanel) {
@@ -2412,6 +2441,79 @@ int QtMaemo6Style::styleHint(StyleHint hint, const QStyleOption *option,
 
     return QtMaemo6TestStyle::styleHint(hint, option, widget, returnData);
 }
+
+void QtMaemo6Style::ensureFocusedWidgetVisible(QRect rect) {
+    QWidget* widget = qApp->focusWidget();
+    if(widget) {
+        Q_D(QtMaemo6Style);
+        if(rect.isValid()) {
+            QRect screenRect = QRect(QPoint(0,0), MDeviceProfile::instance()->resolution());
+            int spaceAbove = rect.top();
+            int spaceBelow = screenRect.height() - (rect.top() + rect.height());
+
+            if(spaceAbove > spaceBelow) {
+                int maxY = rect.top();
+                d->ensureWidgetVisible(widget, QRect(QPoint(0,0), QSize(screenRect.width(), maxY)));
+            } else {
+                int minY = rect.top() + rect.height();
+                d->ensureWidgetVisible(widget, QRect(QPoint(0,minY), QSize(screenRect.width(), screenRect.height()-minY)));
+            }
+        } else {
+            d->ensureWidgetVisible(widget, rect);
+        }
+    }
+}
+
+void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleArea)
+{
+    if(visibleArea.isValid()) {
+        QWidget* parent = widget->parentWidget();
+        QtMaemo6Window* window = NULL;
+        //search
+        while(!(window = qobject_cast<QtMaemo6Window*>(parent)) && parent)
+            parent = parent->parentWidget();
+        if(window) {
+            QAbstractScrollArea* sa = qobject_cast<QAbstractScrollArea*>(window->centralWidget());
+            if(sa) {
+                QWidget* viewport = sa->viewport();
+
+                //that is the real visible area of the viewport, the navigation bar is excluded here
+                QRect realVisibleRect = visibleArea.intersected(
+                    QRect(viewport->mapToGlobal(QPoint(0,0)), viewport->size() ));
+
+                QRect globalWidgetRect = QRect(
+                        widget->mapToGlobal(QPoint(0,0)),
+                        widget->size()
+                          );
+
+                QPoint widgetGlobalPosition = widget->mapToGlobal(QPoint(0,0));
+
+                //the widget is not fully covered by the visible Area
+                if(globalWidgetRect.intersected(realVisibleRect) != globalWidgetRect) {
+                    QPoint originalViewportPos = viewport->mapToGlobal(QPoint(0,0));
+                    m_originalWidgetPos.widget = viewport;
+                    m_originalWidgetPos.position = viewport->pos();
+
+                    int newXPos = realVisibleRect.top() + ((realVisibleRect.height() - widget->height()) / 2);
+                    QPoint moveBy = QPoint(0, widgetGlobalPosition.y() - newXPos);
+
+                    //centered in visibleArea
+                    viewport->move(-moveBy);
+                }
+            } else {
+                qCritical() << "Can't focus on" << widget << "because scroll area contains no viewport";
+            }
+        } else {
+            qCritical() << "Can't focus on" << widget << "because there is no top level scroll area";
+        }
+    } else {
+        if(m_originalWidgetPos.widget) {
+            m_originalWidgetPos.widget->move(m_originalWidgetPos.position);
+            m_originalWidgetPos.widget = 0;
+        }
+    }
+}
+
 /*
     Private implementation specific methods:
  */

@@ -1,4 +1,4 @@
-/*! \page tutorial MeeGo Touch Tutorial
+/*! \page tutorial Your first MeeGo Touch application
 
 This document explains, step-by-step, how to create a simple MeeGo Touch application.
 Knowledge of the basics of Qt framework, such as QObject and its signals and slots mechanism, is recommended.
@@ -28,7 +28,7 @@ That will generate a project file (ends with <code>.pro</code>) in the current d
 
 \include tutorial.pro
 
-That project file is good to build plain Qt applications but won't work as it is for MeeGo Touch ones. To bring in the MeeGo Touch libraries, headers and compilation options into the build all that is needed is the addition of the following line to the project file: 
+That project file is suitable for building plain Qt applications but won't work as it is for MeeGo Touch ones. To bring in the MeeGo Touch libraries, headers and compilation options into the build all that is needed is the addition of the following line to the project file: 
 
 \code
 CONFIG += meegotouch
@@ -69,12 +69,10 @@ With the addition of the application page our <code>main.cpp</code> should now l
 
 Now you should be able to see the title of your page being displayed in the navigation bar and the "Hello World!" text below it. You can also try to pan the page to see what happens. Since the text fits within the screen boundaries the page bounces back to its original position after each panning gesture.
 
-This is the minimal code to get a "Hello World!" MeeGo Touch application working. Before adding more features to it it's important to have some understanding of the MeeGo Touch scene and its scene windows.
+This is the minimal code to get a "Hello World!" MeeGo Touch application working.
 
-\section scenewindows The scene and its scene windows
+\section whereToGoFromHere Where to go from here
 
-To be written...
-
-\image html "scene windows.png" "The basic scene windows of a MeeGo Touch application"
+Understand the \subpage sceneandscenewindows "MeeGo Touch scene and its scene windows".
 
 */

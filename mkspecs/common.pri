@@ -76,6 +76,10 @@ include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
 
 unix {
    DEFINES += CACHEDIR=\\\"\"/var/cache/meegotouch/\"\\\"
+   # drop unneeded dependencies
+   !macx {
+      QMAKE_LFLAGS += "-Wl,--as-needed"
+   }
 }
 
 # Compiler configuration for all subprojects in libm

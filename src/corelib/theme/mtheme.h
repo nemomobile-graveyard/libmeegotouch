@@ -40,6 +40,7 @@ class MStyleContainer;
 class MLibrary;
 class MPalette;
 class MDefaultFonts;
+class MComponentData;
 
 /*!
  \class MTheme
@@ -133,11 +134,11 @@ public:
      \sa releaseStyle
      */
     static const MStyle *style(const char *styleClassName,
-                                 const QString &objectName,
-                                 const QString &mode,
-                                 const QString &type,
-                                 M::Orientation orientation,
-                                 const MWidgetController *parent = NULL);
+                               const QString &objectName,
+                               const QString &mode,
+                               const QString &type,
+                               M::Orientation orientation,
+                               const MWidgetController *parent = NULL);
 
     /*!
       This is an overloaded function.
@@ -145,7 +146,7 @@ public:
       Returns the style object with the given \a styleClassName and \a objectName
     */
     static const MStyle *style(const char *styleClassName,
-                                 const QString &objectName = "");
+                               const QString &objectName = "");
 
     /*!
       This method should be called on style objects when they are no longer needed.
@@ -319,6 +320,7 @@ private:
 #endif
 
     friend class MApplicationPrivate;
+    friend class MComponentData;
     friend class MWidgetController;
     friend class MStyle;
 

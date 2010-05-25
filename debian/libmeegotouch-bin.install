@@ -2,6 +2,7 @@ usr/bin/mthemedaemon
 usr/bin/mservicemapper
 usr/share/dbus-1/services/com.nokia.mservicefw.service
 usr/share/meegotouch/shaders/*
+usr/share/meegotouch/imtoolbars/RichTextEditorToolbar1.xml
 usr/lib/meegotouch/applets/mappletrunner
 etc/meegotouch/devices.conf
 etc/gconf/schemas/meegotouch.schemas

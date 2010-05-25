@@ -77,6 +77,8 @@ public:
 
     M_MODEL_PROPERTY(QImage, itemQImage, ItemQImage, false, QImage())
 
+    M_MODEL_PROPERTY(QString, itemImageID, ItemImageID, true, QString())
+
     /*!
       \property MContentItemModel::selected
       \brief Contains selection status of item.
@@ -101,6 +103,12 @@ public:
          In case there is already a subtitle it will be replaced.
     */
     M_MODEL_PTR_PROPERTY(MWidget*, additionalItem, AdditionalItem, true, NULL)
+
+    /*!
+        \property MContentItemModel::smallItem
+        \brief MWidget as e.g. progress bar, visible on the lower right corner
+    */
+    M_MODEL_PTR_PROPERTY(MWidget*, smallItem, SmallItem, true, NULL)
 };
 
 #endif

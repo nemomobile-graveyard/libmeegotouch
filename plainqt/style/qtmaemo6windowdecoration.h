@@ -27,6 +27,7 @@
 
 #include "qtmaemo6window.h"
 
+class QLabel;
 class QStatusBar;
 class QtMaemo6TitleBar;
 class QVBoxLayout;
@@ -56,6 +57,11 @@ public:
      * it takes the ownership of the menuBar
      */
     void setMenuBar(QMenuBar *menuBar);
+
+    void showNavigationBar( bool visible );
+
+    void showDeviceStatusBar( bool visible );
+
 protected Q_SLOTS:
     void showMenuBar();
 protected:
@@ -63,12 +69,21 @@ protected:
 
     /*! \reimp */
     bool eventFilter(QObject *obj, QEvent *event);
+    void timerEvent(QTimerEvent *);
     /*! \reimp_end */
+
+#ifdef Q_WS_X11
+    void updateStatusBarSharedPixmap();
+    bool fetchStatusBarSharedPixmapHandle(Qt::HANDLE *handle);
+#endif
 private:
+    QLabel* m_deviceStatusBar;
     QtMaemo6TitleBar *m_titleBar;
     QMenuBar *m_menuBar;
     QStatusBar *m_statusBar;
     QWidget *m_statusBarParent;
+
+    int m_deviceStatusBarTimerId;
 };
 
 #endif

@@ -23,7 +23,7 @@
 #include <QString>
 #include "mappletid.h"
 
-class MWidget;
+class QGraphicsWidget;
 class MFileDataStore;
 class MSubDataStore;
 class MDataAccess;
@@ -68,7 +68,7 @@ public:
     //! The size of the applet in portrait
     QString sizePortrait;
     //! The applet widget.
-    MWidget *widget;
+    QGraphicsWidget *widget;
     //! The path where applet instances can store their instance data.
     QString instanceDataFilePath;
     //! The data store where applet instances can store their instance data.

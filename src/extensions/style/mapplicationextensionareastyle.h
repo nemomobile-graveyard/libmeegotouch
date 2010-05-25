@@ -29,6 +29,9 @@ class M_EXPORT MApplicationExtensionAreaStyle : public MExtensionAreaStyle
 {
     Q_OBJECT
     M_STYLE(MApplicationExtensionAreaStyle)
+
+    //! The orientation of the layout
+    M_STYLE_ATTRIBUTE(Qt::Orientation, layoutOrientation, LayoutOrientation)
 };
 
 /*!

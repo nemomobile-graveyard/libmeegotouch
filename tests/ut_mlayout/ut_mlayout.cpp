@@ -117,6 +117,7 @@ MWindow *appWin;
 
 Ut_MLayout::Ut_MLayout() :
     m_button(0),
+    m_form(0),
     m_scene(0),
     m_proxy(0)
 {
@@ -2111,13 +2112,17 @@ void Ut_MLayout::testLayoutAddItemWithTwoPolicies()
     // Neither of the two policies should have any items at the beginning:
     for (int i = 0; i <= 1; ++i) {
         if (policyTypes[i] == "grid") {
+            QVERIFY(dynamic_cast<MGridLayoutPolicy *>(policies[i]));
             QCOMPARE(dynamic_cast<MGridLayoutPolicy *>(policies[i])->rowCount(), 0);
             QCOMPARE(dynamic_cast<MGridLayoutPolicy *>(policies[i])->columnCount(), 0);
         } else if (policyTypes[i] == "linearHorizontal" || policyTypes[i] == "linearVertical") {
+            QVERIFY(dynamic_cast<MLinearLayoutPolicy *>(policies[i]));
             QCOMPARE(dynamic_cast<MLinearLayoutPolicy *>(policies[i])->count(), 0);
         } else if (policyTypes[i] == "flow") {
+            QVERIFY(dynamic_cast<MFlowLayoutPolicy *>(policies[i]));
             QCOMPARE(dynamic_cast<MFlowLayoutPolicy *>(policies[i])->count(), 0);
         } else if (policyTypes[i] == "freestyle") {
+            QVERIFY(dynamic_cast<MFreestyleLayoutPolicy *>(policies[i]));
             QCOMPARE(dynamic_cast<MFreestyleLayoutPolicy *>(policies[i])->count(), 0);
         } else
             QVERIFY(false); // should never happen
@@ -2140,16 +2145,16 @@ void Ut_MLayout::testLayoutAddItemWithTwoPolicies()
     if (policyTypes[0] == "grid") {
         QCOMPARE(dynamic_cast<MGridLayoutPolicy *>(policies[0])->rowCount(), 1);
         QCOMPARE(dynamic_cast<MGridLayoutPolicy *>(policies[0])->columnCount(), 1);
-        QVERIFY(NULL != dynamic_cast<MGridLayoutPolicy *>(policies[0])->itemAt(0, 0));
+        QVERIFY(dynamic_cast<MGridLayoutPolicy *>(policies[0])->itemAt(0, 0));
     } else if (policyTypes[0] == "linearHorizontal" || policyTypes[0] == "linearVertical") {
         QCOMPARE(dynamic_cast<MLinearLayoutPolicy *>(policies[0])->count(), 1);
-        QVERIFY(NULL != dynamic_cast<MLinearLayoutPolicy *>(policies[0])->itemAt(0));
+        QVERIFY(dynamic_cast<MLinearLayoutPolicy *>(policies[0])->itemAt(0));
     } else if (policyTypes[0] == "flow") {
         QCOMPARE(dynamic_cast<MFlowLayoutPolicy *>(policies[0])->count(), 1);
-        QVERIFY(NULL != dynamic_cast<MFlowLayoutPolicy *>(policies[0])->itemAt(0));
+        QVERIFY(dynamic_cast<MFlowLayoutPolicy *>(policies[0])->itemAt(0));
     } else if (policyTypes[0] == "freestyle") {
         QCOMPARE(dynamic_cast<MFreestyleLayoutPolicy *>(policies[0])->count(), 1);
-        QVERIFY(NULL != dynamic_cast<MFreestyleLayoutPolicy *>(policies[0])->itemAt(0));
+        QVERIFY(dynamic_cast<MFreestyleLayoutPolicy *>(policies[0])->itemAt(0));
     } else
         QVERIFY(false); // should never happen
 
@@ -2272,13 +2277,13 @@ void Ut_MLayout::testLayoutRemoveItemWithTwoPolicies()
             QCOMPARE(dynamic_cast<MGridLayoutPolicy *>(policies[i])->columnCount(), 1);
         } else if (policyTypes[i] == "linearHorizontal" || policyTypes[i] == "linearVertical") {
             QCOMPARE(dynamic_cast<MLinearLayoutPolicy *>(policies[i])->count(), 1);
-            QVERIFY(NULL != dynamic_cast<MLinearLayoutPolicy *>(policies[i])->itemAt(0));
+            QVERIFY(dynamic_cast<MLinearLayoutPolicy *>(policies[i])->itemAt(0));
         } else if (policyTypes[i] == "flow") {
             QCOMPARE(dynamic_cast<MFlowLayoutPolicy *>(policies[i])->count(), 1);
-            QVERIFY(NULL != dynamic_cast<MFlowLayoutPolicy *>(policies[i])->itemAt(0));
+            QVERIFY(dynamic_cast<MFlowLayoutPolicy *>(policies[i])->itemAt(0));
         } else if (policyTypes[i] == "freestyle") {
             QCOMPARE(dynamic_cast<MFreestyleLayoutPolicy *>(policies[i])->count(), 1);
-            QVERIFY(NULL != dynamic_cast<MFreestyleLayoutPolicy *>(policies[i])->itemAt(0));
+            QVERIFY(dynamic_cast<MFreestyleLayoutPolicy *>(policies[i])->itemAt(0));
         } else
             QVERIFY(false); // should never happen
     }
@@ -2318,20 +2323,24 @@ void Ut_MLayout::testLayoutRemoveItemWithTwoPolicies()
     // check whether the item has been again been added correctly to both policies:
     for (int i = 0; i <= 1; ++i) {
         QCOMPARE(policies[i]->count(), 1);
-        QVERIFY(NULL != policies[i]->itemAt(0));
+        QVERIFY(policies[i]->itemAt(0));
         if (policyTypes[i] == "grid") {
+            QVERIFY(dynamic_cast<MGridLayoutPolicy *>(policies[i]));
             QCOMPARE(dynamic_cast<MGridLayoutPolicy *>(policies[i])->rowCount(), 1);
             QCOMPARE(dynamic_cast<MGridLayoutPolicy *>(policies[i])->columnCount(), 1);
-            QVERIFY(NULL != dynamic_cast<MGridLayoutPolicy *>(policies[i])->itemAt(0, 0));
+            QVERIFY(dynamic_cast<MGridLayoutPolicy *>(policies[i])->itemAt(0, 0));
         } else if (policyTypes[i] == "linearHorizontal" || policyTypes[i] == "linearVertical") {
+            QVERIFY(dynamic_cast<MLinearLayoutPolicy *>(policies[i]));
             QCOMPARE(dynamic_cast<MLinearLayoutPolicy *>(policies[i])->count(), 1);
-            QVERIFY(NULL != dynamic_cast<MLinearLayoutPolicy *>(policies[i])->itemAt(0));
+            QVERIFY(dynamic_cast<MLinearLayoutPolicy *>(policies[i])->itemAt(0));
         } else if (policyTypes[i] == "flow") {
+            QVERIFY(dynamic_cast<MFlowLayoutPolicy *>(policies[i]));
             QCOMPARE(dynamic_cast<MFlowLayoutPolicy *>(policies[i])->count(), 1);
-            QVERIFY(NULL != dynamic_cast<MFlowLayoutPolicy *>(policies[i])->itemAt(0));
+            QVERIFY(dynamic_cast<MFlowLayoutPolicy *>(policies[i])->itemAt(0));
         } else if (policyTypes[i] == "freestyle") {
+            QVERIFY(dynamic_cast<MFreestyleLayoutPolicy *>(policies[i]));
             QCOMPARE(dynamic_cast<MFreestyleLayoutPolicy *>(policies[i])->count(), 1);
-            QVERIFY(NULL != dynamic_cast<MFreestyleLayoutPolicy *>(policies[i])->itemAt(0));
+            QVERIFY(dynamic_cast<MFreestyleLayoutPolicy *>(policies[i])->itemAt(0));
         } else
             QVERIFY(false); // should never happen
     }
@@ -2355,10 +2364,10 @@ void Ut_MLayout::testLayoutRemoveItemWithTwoPolicies()
     if (policyTypes[1] == "grid") {
         QCOMPARE(dynamic_cast<MGridLayoutPolicy *>(policies[1])->rowCount(), 1);
         QCOMPARE(dynamic_cast<MGridLayoutPolicy *>(policies[1])->columnCount(), 1);
-        QVERIFY(NULL != dynamic_cast<MGridLayoutPolicy *>(policies[1])->itemAt(0, 0));
+        QVERIFY(dynamic_cast<MGridLayoutPolicy *>(policies[1])->itemAt(0, 0));
     } else if (policyTypes[1] == "linearHorizontal" || policyTypes[1] == "linearVertical") {
         QCOMPARE(dynamic_cast<MLinearLayoutPolicy *>(policies[1])->count(), 1);
-        QVERIFY(NULL != dynamic_cast<MLinearLayoutPolicy *>(policies[1])->itemAt(0));
+        QVERIFY(dynamic_cast<MLinearLayoutPolicy *>(policies[1])->itemAt(0));
     } else if (policyTypes[1] == "flow") {
         QCOMPARE(dynamic_cast<MFlowLayoutPolicy *>(policies[1])->count(), 1);
     } else if (policyTypes[1] == "freestyle") {
@@ -2477,13 +2486,16 @@ void Ut_MLayout::testLayoutItemPositionRestoreWhenSwitchingPolicies()
             if (policyTypes[policyIndex] == "grid") {
                 int row = i % 3;
                 int col = i / 3;
+                QVERIFY(dynamic_cast<MGridLayoutPolicy *>(policies[policyIndex]));
                 dynamic_cast<MGridLayoutPolicy *>(policies[policyIndex])->addItem(
                     widgets[widgetIndex], row, col);
                 qApp->processEvents();
             } else if (policyTypes[policyIndex] == "linearHorizontal"
                        || policyTypes[policyIndex] == "linearVertical") {
+                QVERIFY(dynamic_cast<MLinearLayoutPolicy *>(policies[policyIndex]));
                 dynamic_cast<MLinearLayoutPolicy *>(policies[policyIndex])->addItem(widgets[widgetIndex]);
             } else if (policyTypes[policyIndex] == "flow") {
+                QVERIFY(dynamic_cast<MFlowLayoutPolicy *>(policies[policyIndex]));
                 dynamic_cast<MFlowLayoutPolicy *>(policies[policyIndex])->addItem(widgets[widgetIndex]);
             } else if (policyTypes[policyIndex] == "freestyle") {
                 // I use a geometry with a fixed width and height here on purpose.
@@ -2496,6 +2508,7 @@ void Ut_MLayout::testLayoutItemPositionRestoreWhenSwitchingPolicies()
                 // already existing item, the layout policy should move
                 // the items so that they don't overlap anymore.
                 QRectF geom(20.0, 20.0, 20, 20.0);
+                QVERIFY(dynamic_cast<MFreestyleLayoutPolicy *>(policies[policyIndex]));
                 dynamic_cast<MFreestyleLayoutPolicy *>(policies[policyIndex])->addItemAtGeometry(
                     widgets[widgetIndex], geom);
             } else
@@ -2613,6 +2626,7 @@ void Ut_MLayout::testLayoutGeometryOfItemsAddedToInactivePolicies()
             if (policyTypes[policyIndex] == "grid") {
                 int row = i % 3;
                 int col = i / 3;
+                QVERIFY(dynamic_cast<MGridLayoutPolicy *>(policies[policyIndex]));
                 dynamic_cast<MGridLayoutPolicy *>(policies[policyIndex])->addItem(
                     widgets[widgetIndex], row, col);
                 qApp->processEvents();

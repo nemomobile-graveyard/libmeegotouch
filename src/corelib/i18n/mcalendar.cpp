@@ -22,6 +22,7 @@
 
 #include <QString>
 #include <QDateTime>
+#include <QDebug>
 
 #include "mlocale_p.h"
 #include "micuconversions.h"
@@ -233,6 +234,7 @@ void MCalendar::setDate(const QDate &date)
     setDateTime(datetime);
 }
 
+#define MSECS_PER_DAY 86400000
 
 //! Sets the calendar according to given QDate
 void MCalendar::setDateTime(QDateTime date)
@@ -244,7 +246,17 @@ void MCalendar::setDateTime(QDateTime date)
     // we avoid time conversions made by qt
     Qt::TimeSpec originalTimeSpec = date.timeSpec();
     date.setTimeSpec(Qt::UTC);
-    UDate icuDate = date.toTime_t() * 1000.0;
+
+    // We cannot use QDateTime::toTime_t because this
+    // works only for dates after 1970-01-01T00:00:00.000.
+#if QT_VERSION >= 0x040700
+    UDate icuDate = date.toMSecsSinceEpoch();
+#else
+    // Qt < 4.7 lacks QDateTime::toMSecsSinceEpoch(), we need to emulate it:
+    int days = QDate(1970, 1, 1).daysTo(date.date());
+    qint64 msecs = qint64(QTime().secsTo(date.time())) * 1000;
+    UDate icuDate = (qint64(days) * MSECS_PER_DAY) + msecs;
+#endif
 
     if (originalTimeSpec == Qt::LocalTime) {
         // convert from local time to UTC
@@ -278,8 +290,23 @@ QDateTime MCalendar::qDateTime(Qt::TimeSpec spec) const
         tz.getOffset(icuDate, true /*local */, rawOffset, dstOffset, status);
         icuDate = icuDate + rawOffset + dstOffset;
     }
-
-    time.setTime_t(icuDate / 1000.0); // takes time in seconds since epoch
+    // We cannot use QDateTime::setTime_t because this
+    // works only for dates after 1970-01-01T00:00:00.000.
+#if QT_VERSION >= 0x040700
+    time.setMSecsSinceEpoch(qint64(icuDate));
+#else
+    // Qt < 4.7 lacks QDateTime::setMSecsSinceEpoch(), we need to emulate it.
+    qint64 msecs = qint64(icuDate);
+    int ddays = msecs / MSECS_PER_DAY;
+    msecs %= MSECS_PER_DAY;
+    if (msecs < 0) {
+        // negative
+        --ddays;
+        msecs += MSECS_PER_DAY;
+    }
+    time.setDate(QDate(1970, 1, 1).addDays(ddays));
+    time.setTime(QTime().addMSecs(msecs));
+#endif
     // note: we set time spec after time value so Qt will not any conversions
     // of its own to UTC. We might let Qt handle it but this might be more robust
     time.setTimeSpec(spec);

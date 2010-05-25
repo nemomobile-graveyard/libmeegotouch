@@ -27,7 +27,8 @@
 #include <cstdlib>
 
 
-EmptyMainLoopHelper::EmptyMainLoopHelper()
+EmptyMainLoopHelper::EmptyMainLoopHelper() :
+    terminationType( QuitOnEmpty )
 {
 }
 

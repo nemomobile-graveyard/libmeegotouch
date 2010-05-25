@@ -17,7 +17,7 @@ HEADERS += ft_localedata.h
 SOURCES += ft_localedata.cpp
 
 GENRB_FILES = fi_FI.txt
-ICUDATADIR = icudt42l
+ICUDATADIR = $$system(icu-config --icudata)
 genrb.name = generating resource bundle files
 genrb.input = GENRB_FILES
 genrb.output = ${QMAKE_FILE_PATH}/$${ICUDATADIR}/${QMAKE_FILE_BASE}.res

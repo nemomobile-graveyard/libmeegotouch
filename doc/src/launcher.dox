@@ -1,0 +1,209 @@
+/*! \page launcher How to write launchable applications
+
+\section intro Introduction
+
+In order to be started with the launcher, an application needs to
+
+\li use the MApplication instance from MComponentCache
+
+\li be compiled and linked to a position independent binary
+(executable or library)
+
+\li started with the \c invoker command instead of executing the
+executable file.
+
+In the following we will explain how the launcher works and then
+explain how to fulfill the requirements above.
+
+
+\section howitworks How the launcher works
+
+Applauncherd is a daemon that helps launching applications faster. It
+preloads MeeGo Touch and Qt dynamically linked libraries and makes
+some initializations before loading application binaries and running
+them.
+
+Applauncherd forks the will-be-application process a.k.a booster
+before knowing which application is going to be launched next. Booster
+processes do application-type specific initializations, for instance
+the MeeGo Touch booster instantiates an MApplication object and stores
+it to MComponentCache. Then the booster process waits for a connection
+from the \c invoker.
+
+An application of the boosted application type is invoked with the \c
+invoker. The invoker sends the booster process the name of the
+application binary and the running environment. This triggers the
+booster process to load the application binary, to initialize its
+environment, and finally to call its \c main() function.
+
+
+\section source Source code modifications
+
+MApplication instance must be picked up from the MComponentCache. For
+further acceleration, MApplicationWindow can be taken from the cache
+as well. That is, in your main program you should have:
+
+\code
+MApplication* application = MComponentCache::mApplication(argc, argv);
+MApplicationWindow* window = MComponentCache::mApplicationWindow();
+\endcode
+
+Note that applications that use MComponentCache can be run without the
+launcher/invoker as well.
+
+It is strongly encouraged to hide the unnecessary symbols in the
+application binary. For that purpose, export the main function
+explicitly:
+
+\code
+#include <MExport>
+
+M_EXPORT int main(int argc, char **argv)
+{
+...
+}
+\endcode
+
+
+\section compilation Compilation and Linking
+
+Binaries intended to be run with applauncherd should be compiled with
+\c -fPIC option to produce position independent code. In order to
+produce a position independent executable, \c -pie option and \c
+-rdynamic options can be used in linking. This allows the result to be
+executed traditionally and with the launcher.
+
+To improve linking and load times of shared object libraries the size
+of dynamic export table it is encouraged to hide the unnecessary
+symbols from the resulting binary by using \c -fvisibility=hidden and
+\c -fvisibility-inlines-hidden flags in compilation as well.
+
+
+\subsection qmaketips Building with QMake
+ 
+Define the following variables in .pro file:
+
+\code
+  QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+  QMAKE_LFLAGS += -pie -rdynamic
+\endcode
+
+and QMake will use correct options for compiler and linker.
+
+
+\subsection cmaketips Building with CMake
+
+With CMake, compile and install your program like this:
+
+\code
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fvisibility=hidden -fvisibility-inlines-hidden")
+  set(CMAKE_EXE_LINKER_FLAGS " -pie -rdynamic")
+  install(PROGRAMS myapplication DESTINATION /usr/bin RENAME myapplication.launch)
+\endcode  
+
+
+\section running Running boosted application
+
+Check that applauncherd package is installed and applancherd daemon is
+running. You can now run your application as usual like
+/usr/bin/yourapplication, or use the mboosted launching by running:
+
+\code
+invoker --type=m /usr/bin/yourapplication
+\endcode
+
+\section packaging Packaging and distributing
+
+It is recommended to rename application binary to
+<application_name>.launch and replace original binary by a script that
+executes invoker with correct application type and the name of
+application binary as a parameter. Launch script example for typical
+application is:
+
+\code
+#!/bin/sh
+exec /usr/bin/invoker --type=m $0.launch "$@"
+\endcode
+
+Note that even if the binary is renamed to application_name.launch,
+application identifier does not change (optional parameter of
+MComponentCache::mApplication).
+
+\c .desktop and D-Bus \c .service files can be modified so that instead of
+normal execution there is
+
+\code
+Exec=/usr/bin/invoker --type=m /usr/bin/application_binary
+\endcode
+
+Application packages that use the launcher depend on the applauncherd
+package.
+
+
+\section limits Launcher usage limitations
+
+Current launcher implementation does not support following Qt and
+MeeGo Touch command line options (see QApplication and MApplication
+docs for more information about command options usage):
+
+\li  \c -style
+\li  \c -stylesheet
+\li  \c -session
+\li  \c -widgetcount
+\li  \c -reverse
+\li  \c -graphicssystem
+\li  \c -display
+\li  \c -geometry
+\li  \c -fn
+\li  \c -font
+\li  \c -bg
+\li  \c -background
+\li  \c -fg
+\li  \c -foreground
+\li  \c -btn
+\li  \c -button
+\li  \c -name
+\li  \c -title
+\li  \c -visual
+\li  \c -ncols
+\li  \c -cmap
+\li  \c -im
+\li  \c -inputstyle
+\li  \c -genimglist
+\li  \c -remote-theme
+\li  \c -fullscreen
+\li  \c -output-level
+\li  \c -output-file
+\li  \c -disable-m-input-context
+\li  \c -output-prefix
+\li  \c -no-output-prefix
+
+
+\section sample Sample MeeGo Touch launchable application
+
+\code
+
+#include <MApplication>
+#include <MApplicationPage>
+#include <MApplicationWindow>
+#include <MComponentCache>
+#include <MExport>
+
+M_EXPORT int main(int argc, char ** argv)
+{
+    MApplication *app = MComponentCache::mApplication(argc, argv);
+    MApplicationWindow* window = MComponentCache::mApplicationWindow();
+    MApplicationPage mainPage;
+
+    window->show();
+
+    mainPage.setTitle("Hello World! (Now supports Launcher)");
+    mainPage.appear();
+  
+    return app->exec();
+}
+
+\endcode  
+
+*/
+

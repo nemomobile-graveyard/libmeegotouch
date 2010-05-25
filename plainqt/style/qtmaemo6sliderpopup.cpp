@@ -31,6 +31,12 @@
 
 #include <mlabelstyle.h>
 
+QtMaemo6SliderPopUp::QtMaemo6SliderPopUp()
+    : m_slider(0)
+{
+    setObjectName("Qt_Maemo6_SliderPopUp");
+}
+
 void QtMaemo6SliderPopUp::enableOn(QSlider* slider) {
 
     QWidget* topLevelWidget = slider;

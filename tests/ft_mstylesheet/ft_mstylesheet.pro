@@ -4,10 +4,10 @@ QT += dbus svg network
 LIBRARYPATH += $$MSRCDIR
 
 win32 {
-    QMAKE_MOC = perl $${IN_PWD}\..\..\mmoc\mmoc
+    QMAKE_MOC = ..\..\mmoc\mmoc
 } else {
     PRE_TARGETDEPS += ../../mgen/mgen
-    QMAKE_MOC = PATH=../../mgen:$$(PATH) $${IN_PWD}/../../mmoc/mmoc
+    QMAKE_MOC = PATH=../../mgen:$$(PATH) ../../mmoc/mmoc
 }
 
 MGEN_OUTDIR = .

@@ -26,6 +26,7 @@
 class MApplication;
 class MApplicationWindow;
 class MTextEdit;
+class SimpleInputContext;
 
 Q_DECLARE_METATYPE(MTextEdit *);
 
@@ -36,10 +37,15 @@ class Ut_MTextEdit : public QObject
 private:
     void confirmKeyEventIgnored(MTextEdit *subject, int key, int expectedReturnPressed);
     void constraintTest(MTextEdit *subject, const QString &input, const QString &expectedOutput);
+    void setupSipEnv();
+    void requestSip(Qt::FocusReason fr);
+    void dismissSip(Qt::FocusReason fr);
+    bool wouldSipBecomeVisible();
 
     MTextEdit *m_subject;
     MApplication *m_app;
     MApplicationWindow *m_appWindow;
+    SimpleInputContext *m_sic;
 
     QStringList validStrings;
     static const QString testString;
@@ -103,6 +109,9 @@ private slots:
 
     void testArrowKeys();
     void testSelectByArrowKeys();
+
+    void testAutoSipEnabled();
+    void testAutoSipDisabled();
 };
 
 #endif

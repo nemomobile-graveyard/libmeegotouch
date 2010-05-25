@@ -21,36 +21,33 @@
 #define UT_MAPPLICATIONEXTENSIONAREA_
 
 #include <QObject>
-#include <MWidgetView>
-#include "mapplicationextensionareamodel.h"
-#include "mapplicationextensionareastyle.h"
 
 class MApplicationExtensionArea;
 class MApplication;
-class MApplicationWindow;
 
 class Ut_MApplicationExtensionArea : public QObject
 {
     Q_OBJECT
 
 private:
-    // TestApplicationExtensionArea is derived from MApplicationExtensionArea
+    // MApplicationExtensionArea for testing
     MApplicationExtensionArea *area;
-    // MApplication instance required by MWidget.
-    MApplication *app;
 
 private slots:
     // Executed once before every test case
     void init();
-
     // Executed once after every test case
     void cleanup();
-
     // Executed once before first test case
     void initTestCase();
-
     // Executed once after last test case
     void cleanupTestCase();
+
+    // Test cases
+    void testInitialization();
+    void testInProcessFilter();
+    void testOutOfProcessFilter();
+    void testExtensions();
 };
 
 #endif // UT_MAPPLICATIONEXTENSIONAREA_

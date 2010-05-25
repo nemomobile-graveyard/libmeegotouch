@@ -28,6 +28,7 @@
 #include <QAbstractTextDocumentLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneResizeEvent>
+#include <QTapAndHoldGesture>
 
 MLabelViewPrivate::MLabelViewPrivate()
 {
@@ -207,9 +208,23 @@ void MLabelView::cancelEvent(MCancelEvent *event)
 
 void MLabelView::longPressEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    Q_D(MLabelView);
+    //FIXME
+    //Functionality replaced by tapAndHoldGestureEvent, this function not needed any more
     event->ignore();
-    d->impl->longPressEvent(event);
+}
+
+void MLabelView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture)
+{
+    Q_UNUSED(event);
+    Q_D(MLabelView);
+
+    if (gesture->state() == Qt::GestureFinished) {
+        QGraphicsSceneContextMenuEvent ev;
+        ev.setPos(gesture->position());
+        d->impl->longPressEvent(&ev);
+    }
+
+    event->accept();
 }
 
 

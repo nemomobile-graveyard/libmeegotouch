@@ -32,11 +32,13 @@ M_REGISTER_WIDGET(MLabel)
 MLabel::MLabel(QGraphicsItem *parent, MLabelModel *model) :
     MWidgetController(new MLabelPrivate, model == NULL ? new MLabelModel : model, parent)
 {
+    grabGesture(Qt::TapAndHoldGesture);
 }
 
 MLabel::MLabel(QString const &text, QGraphicsItem *parent) :
     MWidgetController(new MLabelPrivate, new MLabelModel, parent)
 {
+    grabGesture(Qt::TapAndHoldGesture);
     setText(text);
 }
 
@@ -167,6 +169,6 @@ void MLabel::removeHighlighter(MLabelHighlighter *highlighter)
 
 void MLabel::removeAllHighlighters()
 {
-    model()->setHighlighters(MLabelHighlighterList());
+    model()->setHighlighters(QList<MLabelHighlighter *>());
 }
 

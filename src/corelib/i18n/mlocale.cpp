@@ -114,7 +114,7 @@ public:
     * As an example lets assume that
     *
     * - MLocale::translationPaths()
-    *   is the list ("/usr/share/l10n/m", "/usr/share/l10n")
+    *   is the list ("/usr/share/l10n/meegotouch", "/usr/share/l10n")
     * - the category is  MLocale::MLcMessages
     * - the name of the locale (returned by mlocale->categoryName(category))
     *   is "en_US"
@@ -122,18 +122,14 @@ public:
     *
     * then the function will try to load translation catalogs in the following order:
     *
-    *   /usr/share/l10n/m/foo_en_US.qm
-    *   /usr/share/l10n/m/foo_en_US
-    *   /usr/share/l10n/m/foo_en.qm
-    *   /usr/share/l10n/m/foo_en
-    *   /usr/share/l10n/m/foo.qm
-    *   /usr/share/l10n/m/foo
+    *   /usr/share/l10n/meegotouch/foo_en_US.qm
+    *   /usr/share/l10n/meegotouch/foo_en_US
+    *   /usr/share/l10n/meegotouch/foo_en.qm
+    *   /usr/share/l10n/meegotouch/foo_en
     *   /usr/share/l10n/foo_en_US.qm
     *   /usr/share/l10n/foo_en_US
     *   /usr/share/l10n/foo_en.qm
     *   /usr/share/l10n/foo_en
-    *   /usr/share/l10n/foo.qm
-    *   /usr/share/l10n/foo
     *
     * and return when the first translation catalog was found.
     * If no translation can be found this function returns false.
@@ -286,7 +282,7 @@ QString MLocalePrivate::createLocaleString(const QString &language,
 }
 
 #ifdef HAVE_ICU
-icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(icu::Locale locale)
+icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(const icu::Locale &locale)
 {
     // This is a bit dirty but the only way to currently get the symbols
     // is like this. Only the internal API supports directly creating DateFormatSymbols
@@ -349,6 +345,7 @@ MLocalePrivate::MLocalePrivate()
       currentLcNumericItem(SettingsLcNumeric),
       currentLcMonetaryItem(SettingsLcMonetary)
 #endif
+      , q_ptr(0)
 {
 }
 
@@ -377,6 +374,7 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       currentLcNumericItem(SettingsLcNumeric),
       currentLcMonetaryItem(SettingsLcMonetary)
 #endif
+      , q_ptr(0)
 {
 #ifdef HAVE_ICU
     if (other._numberFormat != 0) {
@@ -1395,13 +1393,13 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 break;
 
             case 'H':
-                // 24 hour clock
-                icuFormat.append("kk");
+                // Hour (24-hour clock), as a decimal number (00-23).
+                icuFormat.append("HH");
                 break;
 
             case 'I':
-                // 12 hour clock
-                icuFormat.append("KK");
+                // Hour (12-hour clock), as a decimal number (01-12).
+                icuFormat.append("hh");
                 break;
 
             case 'j':
@@ -1429,14 +1427,29 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 icuFormat.append("aaa");
                 break;
 
-            case 'r':
+            case 'r': {
                 // 12 hour clock with am/pm
-                icuFormat.append("KK aaa"); // correct?
+                QString timeShortFormat
+                    = icuFormatString(MLocale::DateNone, MLocale::TimeShort,
+                                      MLocale::GregorianCalendar);
+                timeShortFormat.replace(QChar('k'), QChar('K'), Qt::CaseSensitive);
+                timeShortFormat.replace(QChar('H'), QChar('h'), Qt::CaseSensitive);
+                if (!timeShortFormat.contains('a', Qt::CaseSensitive))
+                    timeShortFormat.append(QLatin1String(" a"));
+                icuFormat.append(timeShortFormat);
+            }
                 break;
 
-            case 'R':
+            case 'R': {
                 // 24-hour clock time, in the format "%H:%M"
-                icuFormat.append("kk:mm");
+                QString timeShortFormat
+                    = icuFormatString(MLocale::DateNone, MLocale::TimeShort,
+                                      MLocale::GregorianCalendar);
+                timeShortFormat.replace(QRegExp(" *a"), QLatin1String(""));
+                timeShortFormat.replace(QChar('K'), QChar('k'), Qt::CaseSensitive);
+                timeShortFormat.replace(QChar('h'), QChar('H'), Qt::CaseSensitive);
+                icuFormat.append(timeShortFormat);
+            }
                 break;
 
             case 'S':
@@ -1449,7 +1462,7 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 icuFormat.append('\t');
                 break;
 
-            case 'T':
+            case 'T': // FIXME!
                 // 24 hour clock HH:MM:SS
                 icuFormat.append("kk:mm:ss");
                 break;
@@ -1618,18 +1631,18 @@ QString MLocale::icuFormatString( DateType dateType,
                                       calendarType);
     DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
 
-    // This is not nice but seems to be the only way to set the
-    // symbols with the public API
-    static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
+    QString icuFormatQString;
 
-    icu::UnicodeString icuFormatString;
-    static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
-
-    QString icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
-
-    if( df )
+    if (df)
+    {
+        icu::UnicodeString icuFormatString;
+        // This is not nice but seems to be the only way to set the
+        // symbols with the public API
+        static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
+        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
         delete df;
-
+    }
     return icuFormatQString;
 }
 #endif
@@ -1833,7 +1846,13 @@ QString MLocale::languageEndonym() const
     Q_D(const MLocale);
     UErrorCode status = U_ZERO_ERROR;
 
+    // TODO: implement a workaround for
+    // http://site.icu-project.org/design/resbund/issues
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    UResourceBundle *res = ures_open("ICUDATA-lang", qPrintable(d->_defaultLocale), &status);
+#else
     UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
+#endif
     if (U_FAILURE(status)) {
         mDebug("MLocale") << "Error ures_open" << u_errorName(status);
     }
@@ -1865,7 +1884,13 @@ QString MLocale::countryEndonym() const
     Q_D(const MLocale);
     UErrorCode status = U_ZERO_ERROR;
 
+    // TODO: implement a workaround for
+    // http://site.icu-project.org/design/resbund/issues
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    UResourceBundle *res = ures_open("ICUDATA-region", qPrintable(d->_defaultLocale), &status);
+#else
     UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
+#endif
     if (U_FAILURE(status)) {
         mDebug("MLocale") << "Error ures_open" << u_errorName(status);
     }

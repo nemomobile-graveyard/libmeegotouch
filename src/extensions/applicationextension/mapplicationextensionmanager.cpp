@@ -30,9 +30,9 @@
 #include "mfiledatastore.h"
 #include "mdebug.h"
 
-MApplicationExtensionManager::MApplicationExtensionManager(const QString &interface, const bool loadInProcessExtensions) :
-        interface(interface),
-        enableInProcessExtensions(loadInProcessExtensions)
+MApplicationExtensionManager::MApplicationExtensionManager(const QString &interface) :
+        initialized(false),
+        interface(interface)
 {
 }
 
@@ -47,17 +47,36 @@ MApplicationExtensionManager::~MApplicationExtensionManager()
     }
 }
 
+void MApplicationExtensionManager::setInProcessFilter(const QRegExp &inProcessFilter)
+{
+    if (!initialized) {
+        this->inProcessFilter = inProcessFilter;
+    }
+}
+
+void MApplicationExtensionManager::setOutOfProcessFilter(const QRegExp &outOfProcessFilter)
+{
+    if (!initialized) {
+        this->outOfProcessFilter = outOfProcessFilter;
+    }
+}
+
 bool MApplicationExtensionManager::init()
 {
+    if (initialized) {
+        return false;
+    }
+
     if (!createDataStore()) {
         mWarning("MApplicationExtensionManager") << "DataStore cannot be created for application extension manager. Bailing out.";
         return false;
     }
 
+    initialized = true;
     updateAvailableExtensions(APPLICATION_EXTENSION_DATA_DIR);
+
     // Start watching the application extensions directory for changes
     connect(&watcher, SIGNAL(directoryChanged(const QString)), this, SLOT(updateAvailableExtensions(QString)));
-
     watcher.addPath(APPLICATION_EXTENSION_DATA_DIR);
 
     return true;
@@ -112,11 +131,13 @@ bool MApplicationExtensionManager::instantiateExtension(const MApplicationExtens
     bool success = false;
 
     if (isInProcess(metadata)) {
-        if (enableInProcessExtensions) {
+        if (metadata.fileName().indexOf(inProcessFilter) >= 0) {
             success = instantiateInProcessExtension(metadata.extensionBinary());
         }
     } else {
-        success = instantiateOutOfProcessExtension(metadata);
+        if (metadata.fileName().indexOf(outOfProcessFilter) >= 0) {
+            success = instantiateOutOfProcessExtension(metadata);
+        }
     }
 
     return success;
@@ -134,7 +155,7 @@ bool MApplicationExtensionManager::instantiateInProcessExtension(const QString &
             if (extension != NULL) {
                 success = extension->initialize(interface);
                 if (success) {
-                    MWidget *widget = extension->widget();
+                    QGraphicsWidget *widget = extension->widget();
                     if (widget) {
                         // Inform about the added extension widget
                         emit widgetCreated(widget, *extensionDataStore.data());
@@ -196,7 +217,7 @@ void MApplicationExtensionManager::removeOutOfProcessExtension(const MApplicatio
 {
     QString desktopFileName = metadata.fileName();
     if (outOfProcessHandles.contains(desktopFileName)) {
-        MExtensionHandle *handle =  outOfProcessHandles.take(desktopFileName);
+        MExtensionHandle *handle = outOfProcessHandles.take(desktopFileName);
         if (handle) {
             emit widgetRemoved(handle);
             handle->kill();
@@ -223,7 +244,7 @@ bool MApplicationExtensionManager::createDataStore()
     }
 
     QString dataPath = this->dataPath();
-    QString dataStoreFileName = dataPath +  ".data";
+    QString dataStoreFileName = dataPath + ".data";
     bool dataPathExists = QDir::root().exists(dataPath);
 
     // Create the user data directory if it doesn't exist yet

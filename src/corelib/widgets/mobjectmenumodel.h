@@ -48,6 +48,14 @@ class M_EXPORT MObjectMenuModel : public MSceneWindowModel
     */
     M_MODEL_PROPERTY(MActionList, actions, Actions, true, MActionList())
 
+    /*!
+        \property MObjectMenuModel::cursorPosition
+        \brief Position of the cursor that invokes the object menu
+
+        This property contains the position of the cursor that causes menu to appear.
+    */
+    M_MODEL_PROPERTY(QPointF, cursorPosition, CursorPosition, true, QPointF())
+
 public:
     /*!
         \brief Adds the \a action to the actions list.

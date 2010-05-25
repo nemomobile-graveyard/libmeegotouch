@@ -39,9 +39,8 @@ MLayout::MLayout(QGraphicsLayoutItem *parent) :
     QSizePolicy newSizePolicy(sizePolicy());
     newSizePolicy.setHeightForWidth(true);
     setSizePolicy(newSizePolicy);
-    // Disabling layout animations by default. Unfortunately they are not working
-    // nicely.
-    //new MBasicLayoutAnimation(this);
+    // Disabling layout animations by default
+    // new MBasicLayoutAnimation(this);
 }
 
 MLayout::~MLayout()
@@ -122,9 +121,19 @@ QGraphicsLayoutItem *MLayout::takeAt(int index)
     bool toBeDeleted = d->items.at(index).toBeDeleted;
     QGraphicsLayoutItem *item = d->items.at(index).item;
     Q_ASSERT(item);
+    //First remove the item from all the policies, then update the indexes using aboutToBeRemovedFromLayout
+    //We cannot do this in once pass since removeAt() is virtual and can do pretty much anything
     foreach(MAbstractLayoutPolicy * policy, d->policies) {
         Q_ASSERT(policy);
-        policy->d_ptr->aboutToBeRemovedFromLayout(item);
+        int policyIndex = policy->indexOf(item);
+        if (policyIndex >= 0 ) {
+            policy->d_ptr->removingFromLayout = true;  //Indicate to the policy to remove the item but not to hide it
+            policy->removeAt(policyIndex);
+            policy->d_ptr->removingFromLayout = false;
+        }
+    }
+    foreach(MAbstractLayoutPolicy * policy, d->policies) {
+        policy->d_ptr->aboutToBeRemovedFromLayout(index);
     }
     if (d->animation)
         d->animation->itemRemovedFromLayout(index);
@@ -136,7 +145,8 @@ QGraphicsLayoutItem *MLayout::takeAt(int index)
         delete item;
         return NULL;
     }
-    d->removeHiddenFlag(item);
+    /* We cannot actually show the item as it might be in the process of being deleted */
+    d->removeHiddenFlag(item->graphicsItem());
     return item;
 }
 

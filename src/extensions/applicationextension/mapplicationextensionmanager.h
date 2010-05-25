@@ -25,13 +25,14 @@
 #include <QHash>
 #include <QSharedPointer>
 #include <QHash>
+#include <QRegExp>
 
 class MApplicationExtensionMetaData;
 class MDataStore;
-class MWidget;
 class MExtensionHandle;
 class MApplicationExtensionInterface;
 class MFileDataStore;
+class QGraphicsWidget;
 
 //! \internal
 class MApplicationExtensionManager : public QObject
@@ -42,12 +43,37 @@ public:
     /*!
      * Constructs a MApplicationExtensionManager.
      * \param interface The interface the extensions to be instantiated by this manager should implement
-     * \param enableInProcessExtensions \c true if in process extensions should be loaded. \c false otherwise
      */
-    MApplicationExtensionManager(const QString &interface, bool enableInProcessExtensions = true);
+    MApplicationExtensionManager(const QString &interface);
 
     //! Destroys the MApplicationExtensionManager object
     virtual ~MApplicationExtensionManager();
+
+    /*!
+     * Sets a filter for allowing only certain extensions to be loaded in the
+     * same process. The filter is a regular expression which is matched against
+     * the .desktop file names of the extensions.
+     *
+     * Must be called before init().
+     * Calling this after init() has no effect.
+     *
+     * \param inProcessFilter a regular expression for defining which
+     *                        extensions are allowed in-process
+     */
+    void setInProcessFilter(const QRegExp &inProcessFilter);
+
+    /*!
+     * Sets a filter for allowing only certain extensions to be ran in separate
+     * processes. The filter is a regular expression which is matched against
+     * the .desktop file names of the extensions.
+     *
+     * Must be called before init().
+     * Calling this after init() has no effect.
+     *
+     * \param outOfProcessFilter a regular expression for defining which
+     *                           extension are allowed out-of-process
+     */
+    void setOutOfProcessFilter(const QRegExp &outOfProcessFilter);
 
     /*!
       * Initializes the application extension manager
@@ -81,7 +107,7 @@ Q_SIGNALS:
      * Signal sent when an extension widget is removed
      * \param widget the extension that was removed
      */
-    void widgetRemoved(MWidget* widget);
+    void widgetRemoved(QGraphicsWidget* widget);
 
     /*!
      * Signal for instantiating an extension widget and it's datastore
@@ -89,7 +115,7 @@ Q_SIGNALS:
      * \param store This MDataStore object can be used to store permanent extension area data related
      * to this particular application extension instance.
      */
-     void widgetCreated(MWidget *widget, MDataStore &store);
+     void widgetCreated(QGraphicsWidget *widget, MDataStore &store);
 
 private slots:
     /*!
@@ -99,6 +125,9 @@ private slots:
     void updateAvailableExtensions(const QString &path);
 
 private:
+    //! Whether the manager has been initialized or not
+    bool initialized;
+
     //! A file system watcher for the desktop entry file directory
     QFileSystemWatcher watcher;
 
@@ -108,10 +137,13 @@ private:
     //! Data store for application extension manager
     QSharedPointer <MDataStore> extensionDataStore;
 
-    //! Keeps track of whether in process extensions should be loaded or not
-    const bool enableInProcessExtensions;
+    //! Filter for extensions allowed to be loaded in-process
+    QRegExp inProcessFilter;
 
-    typedef QPair<MApplicationExtensionInterface*, MWidget*> InProcessExtensionData;
+    //! Filter for extensions allowed to be loaded out-of-process
+    QRegExp outOfProcessFilter;
+
+    typedef QPair<MApplicationExtensionInterface*, QGraphicsWidget*> InProcessExtensionData;
 
     //! Instantiated in-process extensions. A map from the shared library name to the extension instance.
     QHash<QString, InProcessExtensionData> inProcessExtensions;

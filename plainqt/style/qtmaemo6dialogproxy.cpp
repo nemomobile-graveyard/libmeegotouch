@@ -34,6 +34,7 @@
 QtMaemo6DialogProxy::QtMaemo6DialogProxy(QWidget *mw, QWidget *parent)
     : QtMaemo6Window(mw, parent)
 {
+    setObjectName("Qt_Maemo6_DialogProxy");
     setAttribute(Qt::WA_TranslucentBackground);
 
     QPalette palette;

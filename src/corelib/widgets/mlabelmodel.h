@@ -20,11 +20,13 @@
 #ifndef MLABELMODEL_H
 #define MLABELMODEL_H
 
-#include <mwidgetmodel.h>
 #include <QApplication>
+#include <QList>
+#include <QTextOption>
+#include <mwidgetmodel.h>
 
 class MLabelHighlighter;
-typedef QList<MLabelHighlighter *> MLabelHighlighterList;
+Q_DECLARE_METATYPE(QTextOption::WrapMode)
 
 /*!
     \class MLabelModel
@@ -118,7 +120,7 @@ class M_EXPORT MLabelModel : public MWidgetModel
         fragments like urls, email addresses etc. Objects also receive callbacks
         when the highlighted items are interacted by the user.
     */
-    M_MODEL_PROPERTY(MLabelHighlighterList, highlighters, Highlighters, true, MLabelHighlighterList())
+    M_MODEL_PROPERTY(QList<MLabelHighlighter *>, highlighters, Highlighters, true, QList<MLabelHighlighter *>())
 
 public:
     void emitLinkActivated(const QString &link) const {

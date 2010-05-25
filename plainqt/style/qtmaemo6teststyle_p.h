@@ -30,8 +30,15 @@ class QtMaemo6TestStylePrivate
 {
     Q_DECLARE_PUBLIC(QtMaemo6TestStyle)
 public:
-            QtMaemo6TestStylePrivate():q_ptr(0) {};
+            QtMaemo6TestStylePrivate()
+                :  m_styleInitialized(false),
+                   q_ptr(0)
+            {};
     virtual ~QtMaemo6TestStylePrivate() {};
+
+    void initStyle();
+
+    bool m_styleInitialized;
 protected:
     QtMaemo6TestStyle *q_ptr;
 };

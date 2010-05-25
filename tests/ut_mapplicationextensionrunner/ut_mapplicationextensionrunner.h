@@ -26,15 +26,15 @@
 
 class MApplicationExtensionRunner;
 class MApplicationExtensionMetaData;
-class MWidget;
+class QGraphicsWidget;
 
 class TestExtension : public QObject, public MApplicationExtensionInterface
 {
 public:
     virtual bool initialize(const QString &interface);
-    virtual MWidget *widget();
+    virtual QGraphicsWidget *widget();
 
-    MWidget *widget_;
+    QGraphicsWidget *widget_;
 };
 
 // Test case must inherit QObject

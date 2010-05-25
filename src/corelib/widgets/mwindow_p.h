@@ -40,6 +40,7 @@ public:
     void handleApplicationLayoutDirectionChangeEvent(QGraphicsItem *item);
     void handleLanguageChangeEvent(QGraphicsItem *item);
     M::Orientation orientation(M::OrientationAngle angle) const;
+    bool debugShortcutModifiersPresent(Qt::KeyboardModifiers modifiers) const;
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();

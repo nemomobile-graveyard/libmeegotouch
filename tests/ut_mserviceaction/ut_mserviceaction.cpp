@@ -26,6 +26,7 @@
 
 // MActionPrivate stubs
 MActionPrivate::MActionPrivate()
+  : location(MAction::EveryLocation), styleAction(false), q_ptr(0)
 {
 }
 

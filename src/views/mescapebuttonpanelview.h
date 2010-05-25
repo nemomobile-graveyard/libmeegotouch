@@ -57,9 +57,6 @@ protected Q_SLOTS:
 private:
     Q_DISABLE_COPY(MEscapeButtonPanelView)
     Q_DECLARE_PRIVATE(MEscapeButtonPanelView)
-
-    Q_PRIVATE_SLOT(d_func(), void finalizeEscapeButtonTransition())
-    Q_PRIVATE_SLOT(d_func(), void opacityChange(qreal))
 };
 
 #endif // MESCAPEBUTTONPANELVIEW_P

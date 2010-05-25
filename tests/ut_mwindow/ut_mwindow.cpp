@@ -148,7 +148,7 @@ void Ut_MWindow::testSetOrientationAngleCalledFromSceneManager()
     win->setSceneManager(new MSceneManager);
     QCOMPARE(win->orientationAngle(), win->sceneManager()->orientationAngle());
 
-    win->sceneManager()->setOrientationAngle(M::Angle90);
+    win->sceneManager()->setOrientationAngle(M::Angle90, MSceneManager::ImmediateTransition);
     win->setOrientationAngle(M::Angle0);
     QCOMPARE(win->orientationAngle(), M::Angle0);
     QCOMPARE(win->sceneManager()->orientationAngle(), M::Angle0);

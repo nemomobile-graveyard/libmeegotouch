@@ -193,6 +193,16 @@ void MList::setShowGroups(bool showGroups)
     model()->setShowGroups(showGroups);
 }
 
+void MList::setIndexVisible(bool visible)
+{
+    model()->setListIndexVisible(visible);
+}
+
+bool MList::indexVisible()
+{
+    return model()->listIndexVisible();
+}
+
 int MList::columns() const
 {
     return model()->columns();

@@ -68,6 +68,7 @@ MSettingsLanguageOptionStub *gMSettingsLanguageOptionStub = &gDefaultMSettingsLa
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 MSettingsLanguageOption::MSettingsLanguageOption(const QString &title, int value)
+  : value_( 0 )
 {
     gMSettingsLanguageOptionStub->MSettingsLanguageOptionConstructor(title, value);
 }

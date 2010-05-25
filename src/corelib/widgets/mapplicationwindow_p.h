@@ -27,6 +27,10 @@
 #include <QPointer>
 #include <QTimer>
 
+#ifdef HAVE_CONTEXTSUBSCRIBER
+# include "contextproperty.h"
+#endif
+
 class QGraphicsItemAnimation;
 class QTimeLine;
 class MScene;
@@ -61,7 +65,10 @@ public:
     QTimer autoHideComponentsTimer;
     QList<MSceneWindow *> componentsOnAutoHide;
     bool isMenuOpen;
-    bool callOngoing;
+
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    ContextProperty callStatusProperty;
+#endif
 
     // TODO: Use some API like "bool MSceneWindow::isAppearing()" or something,
     //       once it becomes available, instead of manually tracking the scene windows
@@ -132,8 +139,8 @@ public:
     void _q_handlePageModelModifications(const QList<const char *>&);
     void _q_menuAppeared();
     void _q_menuDisappeared();
-#ifdef HAVE_DBUS
-    void _q_updateCallOngoingState(QString mode);
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    void _q_updateStatusBarVisibility();
 #endif
 #ifdef HAVE_N900
     void _q_exitAppView();

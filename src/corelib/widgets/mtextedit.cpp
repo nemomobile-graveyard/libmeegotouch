@@ -78,7 +78,7 @@ namespace
  * \param type widget type (single line or multiline)
  */
 MTextEditPrivate::MTextEditPrivate()
-    : pendingSoftwareInputPanelRequest(true),
+    : pendingSoftwareInputPanelRequest(false),
       validator(0),
       ownValidator(false),
       completer(0),
@@ -199,11 +199,24 @@ bool MTextEditPrivate::doBackspace()
     }
 
     QTextCursor currentPositionCursor = q->textCursor();
+    int position = currentPositionCursor.position();
+
+    if (position == 0) {
+        return false;
+    }
+
     currentPositionCursor.movePosition(QTextCursor::PreviousCharacter, QTextCursor::KeepAnchor);
     QTextDocumentFragment currentFragment = currentPositionCursor.selection();
+
+    QTextCharFormat format;
+    // setPosition() is required to get the style that would be applied when a text is inserted at the cursor position
+    currentPositionCursor.setPosition(position);
+    format = currentPositionCursor.charFormat();
+
     cursor()->deletePreviousChar();
 
     if (validateCurrentBlock() == true) {
+        cursor()->setCharFormat(format);
         return true;
 
     } else {
@@ -230,15 +243,13 @@ bool MTextEditPrivate::doDelete()
     QTextDocumentFragment currentFragment = currentPositionCursor.selection();
     cursor()->deleteChar();
 
-    if (validateCurrentBlock() == true) {
-        emit q->cursorPositionChanged();
-        return true;
-
-    } else {
+    if (!validateCurrentBlock()) {
         // document doesn't validate after delete -> put the character back
         cursor()->insertFragment(currentFragment);
         return false;
     }
+
+    return true;
 }
 
 
@@ -317,7 +328,7 @@ bool MTextEditPrivate::doSignCycle()
   * \param text text to be inserted
   * \return true if some text was successfully inserted
   */
-bool MTextEditPrivate::doTextInsert(const QString &text)
+bool MTextEditPrivate::doTextInsert(const QString &text, bool usePreeditStyling)
 {
     Q_Q(MTextEdit);
 
@@ -346,6 +357,8 @@ bool MTextEditPrivate::doTextInsert(const QString &text)
     int textPosition = 0;
     int filteredTextLength = filteredText.length();
     int snippetLength = -1;
+    int listIndex = -1;
+    int count = 0;
 
     do {
         if (textPosition >= filteredTextLength) {
@@ -372,7 +385,12 @@ bool MTextEditPrivate::doTextInsert(const QString &text)
         QString textSnippet = filteredText.mid(textPosition, snippetLength);
 
         int cursorPosBefore = cursor()->position();
-        cursor()->insertText(textSnippet);
+
+        if (usePreeditStyling == true) {
+            insertTextWithPreeditStyling(textSnippet, listIndex, count);
+        } else {
+            cursor()->insertText(textSnippet);
+        }
 
         if (validateCurrentBlock() == true) {
             changed = true;
@@ -481,7 +499,10 @@ void MTextEditPrivate::setPreeditText(const QString &text,
     // If this becomes problematic, we should move this formatting to paintContext of the view.
     layout->setAdditionalFormats(preeditStyles);
 
-    textCursor->insertText(text);
+    int listIndex = -1;
+    int count = 0;
+    insertTextWithPreeditStyling(text, listIndex, count);
+    clearUnusedPreeditStyling(listIndex, count);
 
     // mark preedit as selection
     int position = textCursor->position();
@@ -497,6 +518,8 @@ void MTextEditPrivate::setPreeditText(const QString &text,
 void MTextEditPrivate::commitPreedit()
 {
     Q_Q(MTextEdit);
+
+    preeditStyling.clear();
 
     // Nothing to commit if not pre-editing
     if (isPreediting() == false) {
@@ -638,6 +661,33 @@ bool MTextEditPrivate::isPreediting() const
     return (q->mode() == MTextEditModel::EditModeActive);
 }
 
+void MTextEditPrivate::requestSip()
+{
+    Q_Q(MTextEdit);
+    Q_ASSERT_X(q->sceneManager(),
+               "MTextEditPrivate::requestSip()",
+               "Invalid SIP request - no scene manager found!");
+
+    q->sceneManager()->requestSoftwareInputPanel(q);
+    pendingSoftwareInputPanelRequest = false;
+}
+
+void MTextEditPrivate::requestAutoSip(Qt::FocusReason fr)
+{
+    Q_Q(MTextEdit);
+
+    if (!q->isAutoSipEnabled()) {
+        return;
+    }
+
+    if (fr == Qt::MouseFocusReason) {
+        // Wait for the mouse release event instead so that the window relocation that might
+        // happen does not change the mouse position *before* the button is released.
+        pendingSoftwareInputPanelRequest = true;
+    } else {
+        requestSip();
+    }
+}
 
 /*!
  * \brief Sends mouse events to input context mouse handling method
@@ -715,6 +765,172 @@ QEvent::Type MTextEditPrivate::translateGraphicsSceneMouseTypeToQMouse(QEvent::T
     return result;
 }
 
+/*!
+ * \brief stores the style information of text in pre-edit mode
+ * \param start position from where to start reading the style for storing
+ * \param end position where to end reading the style
+ */
+void MTextEditPrivate::storePreeditTextStyling(int start, int end)
+{
+    QTextCursor *textCursor = cursor();
+    int cursorPosition = textCursor->position();
+
+    for (int i = start + 1; i <= end; ++i) {
+        textCursor->setPosition(i, QTextCursor::KeepAnchor);
+        QTextCharFormat charFormat = textCursor->charFormat();
+
+        if (preeditStyling.isEmpty() == false) {
+            styleData &currentStyle = preeditStyling.last();
+
+            if (currentStyle.charFormat != charFormat) {
+                styleData newStyle;
+
+                newStyle.charFormat = charFormat;
+                newStyle.count = 1;
+                preeditStyling.push_back(newStyle);
+            } else {
+                currentStyle.count++;
+            }
+        } else {
+            styleData newStyle;
+
+            newStyle.charFormat = charFormat;
+            newStyle.count = 1;
+            preeditStyling.push_back(newStyle);
+        }
+    }
+
+    textCursor->setPosition(cursorPosition, QTextCursor::KeepAnchor);
+}
+
+
+/*!
+ * \brief inserts text by applying the stored preedit styling information
+ * \param currentListIndex styling list index to start reading from the stored styling
+ * \param currentCount character index within the current styling list index
+ */
+void MTextEditPrivate::insertTextWithPreeditStyling(const QString &text, int &currentListIndex, int &currentCount)
+{
+    QTextCursor *textCursor = cursor();
+    const int textLength = text.length();
+    int listIndex = currentListIndex;
+    int count = currentCount;
+    int preeditStyleSize = preeditStyling.size();
+    int currentIndex = textLength;
+
+    QTextCharFormat format = textCursor->charFormat();
+
+    styleData newStyle;
+    newStyle.charFormat = format;
+    newStyle.count = 1;
+
+    if (preeditStyleSize == 0) {
+        preeditStyling.push_back(newStyle);
+        preeditStyleSize++;
+    }
+
+    for (int i = 0; i < textLength; ++i) {
+        if (preeditStyling.isEmpty() != true) {
+            if (count == 0) {
+                listIndex++;
+                if (listIndex == preeditStyleSize) {
+                    QTextCharFormat charFormat = preeditStyling.at(preeditStyleSize - 1).charFormat;
+                    textCursor->setCharFormat(charFormat);
+                    currentIndex = i;
+                    listIndex = preeditStyleSize - 1;
+                    break;
+                }
+
+                count = preeditStyling.at(listIndex).count;
+            }
+
+            if (count == 0) {
+                styleData &lastStyle = preeditStyling[listIndex];
+                lastStyle.count++;
+                count = 1;
+            }
+
+            QTextCharFormat charFormat = preeditStyling.at(listIndex).charFormat;
+            textCursor->setCharFormat(charFormat);
+            count--;
+        }
+
+        textCursor->insertText(text.at(i));
+    }
+
+    for (int i = currentIndex; i < textLength; ++i) {
+        if (preeditStyling.isEmpty() != true) {
+            styleData &newStyle = preeditStyling[listIndex];
+            newStyle.count++;
+        }
+        textCursor->insertText(text.at(i));
+    }
+
+    currentListIndex = listIndex;
+    currentCount = count;
+}
+
+
+/*!
+ * \brief adds a style to the stored preedit styling
+ * \param StyleType current style type
+ */
+void MTextEditPrivate::addStyleToPreeditStyling(StyleType currentStyleType, bool setValue)
+{
+    QTextCharFormat format;
+    int preeditStyleSize = preeditStyling.size();
+
+    if (preeditStyleSize > 0) {
+        format = preeditStyling[preeditStyleSize - 1].charFormat;
+    }
+
+    if (currentStyleType == Underline) {
+        format.setFontUnderline(setValue);
+    } else if (currentStyleType == Italic) {
+        format.setFontItalic(setValue);
+    } else { // bold
+        QFont::Weight wt = QFont::Normal;
+        if (setValue)
+            wt = QFont::Bold;
+
+        format.setFontWeight(wt);
+    }
+
+    if ((preeditStyleSize > 0) && (preeditStyling[preeditStyleSize - 1].count == 0)) {
+        preeditStyling[preeditStyleSize - 1].charFormat = format;
+    } else {
+        styleData currentStyle;
+        currentStyle.charFormat = format;
+        currentStyle.count = 0;
+        preeditStyling.push_back(currentStyle);
+    }
+}
+
+
+/*!
+ * \brief clears the unused styling from stored preedit styling information
+ * \param currentListIndex styling list index to start erasing from the stored styling
+ * \param currentCount character index within the current styling list index
+ */
+void MTextEditPrivate::clearUnusedPreeditStyling(int currentListIndex, int currentCount)
+{
+    int preeditTextStyleSize = preeditStyling.size();
+
+    if ((currentListIndex < 0) || (currentListIndex >= preeditTextStyleSize)) {
+        return;
+    }
+
+    styleData &style = preeditStyling[currentListIndex];
+    style.count -= currentCount;
+
+    for (int i = currentListIndex + 1; i < preeditTextStyleSize; i++) {
+        preeditStyling.removeAt(i);
+    }
+
+    if (style.count == 0) {
+        preeditStyling.removeAt(currentListIndex);
+    }
+}
 
 void MTextEditPrivate::_q_confirmCompletion(const QString &completion)
 {
@@ -738,6 +954,9 @@ void MTextEditPrivate::_q_confirmCompletion(const QString &completion)
     cursor()->setPosition(index + block.position() + prefix.length(), QTextCursor::KeepAnchor);
     cursor()->removeSelectedText();
     doTextInsert(completion);
+    QObject::disconnect(q, SIGNAL(textChanged()), completer, SLOT(complete()));
+    emit q->textChanged();
+    QObject::connect(q, SIGNAL(textChanged()), completer, SLOT(complete()));
     q->updateMicroFocus();
 }
 
@@ -966,6 +1185,10 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         copy();
         event->accept();
         return;
+    } else if (event->matches(QKeySequence::SelectAll)) {
+        selectAll();
+        event->accept();
+        return;
     }
 
     if ((textInteractionFlags() & Qt::TextEditable) == 0) {
@@ -978,10 +1201,6 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         return;
     } else if (event->matches(QKeySequence::Cut)) {
         cut();
-        event->accept();
-        return;
-    } else if (event->matches(QKeySequence::SelectAll)) {
-        selectAll();
         event->accept();
         return;
     }
@@ -997,8 +1216,16 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
 
     QTextDocumentFragment selectedFragment;
     int selectionStart = -1;
+    QTextCharFormat format;
 
     if (wasSelecting == true) {
+        QTextCursor positionCursor = textCursor();
+        int position = positionCursor.selectionStart();
+        // setPosition() is required to get the style that would be applied when a text is
+        // inserted at the position + 1
+        positionCursor.setPosition(position + 1);
+        format = positionCursor.charFormat();
+
         selectionStart = d->cursor()->selectionStart();
         selectedFragment = d->cursor()->selection();
         d->cursor()->removeSelectedText();
@@ -1015,6 +1242,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         if (wasSelecting == false) {
             modified = d->doBackspace();
         } else {
+            d->cursor()->setCharFormat(format);
             modified = true;
         }
         break;
@@ -1076,6 +1304,19 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
     }
 }
 
+
+void MTextEdit::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_D(MTextEdit);
+    MWidgetController::mouseReleaseEvent(event);
+
+    // Widget was focused-in on corresponding mouse press event:
+    if (d->pendingSoftwareInputPanelRequest) {
+        d->requestSip();
+    }
+}
+
+
 void MTextEdit::focusInEvent(QFocusEvent *event)
 {
     Q_D(MTextEdit);
@@ -1090,13 +1331,7 @@ void MTextEdit::focusInEvent(QFocusEvent *event)
                 sceneManager(), SLOT(ensureCursorVisible()),
                 Qt::UniqueConnection);
 
-        if (event->reason() == Qt::MouseFocusReason) {
-            // Wait for the mouse release event instead so that the window relocation that might
-            // happen does not change the mouse position *before* the button is released.
-            d->pendingSoftwareInputPanelRequest = true;
-        } else {
-            sceneManager()->requestSoftwareInputPanel(this);
-        }
+        d->requestAutoSip(event->reason());
     }
 
     if (model()->autoSelectionEnabled() == true) {
@@ -1157,6 +1392,7 @@ bool MTextEdit::insert(const QString &text)
         emit selectionChanged();
     } else if (mode() == MTextEditModel::EditModeActive) {
         d->removePreedit();
+        d->preeditStyling.clear();
     }
 
     d->setMode(MTextEditModel::EditModeBasic);
@@ -1183,9 +1419,11 @@ bool MTextEdit::setText(const QString &text)
 
     int cursorPosBefore = d->cursor()->position();
     bool wasSelecting = hasSelectedText();
+    bool wasEmpty = (document()->characterCount() == 0);
 
     // clear the state
     d->removePreedit();
+    d->preeditStyling.clear();
     d->cursor()->clearSelection();
     document()->clear();
     d->setMode(MTextEditModel::EditModeBasic);
@@ -1204,14 +1442,23 @@ bool MTextEdit::setText(const QString &text)
 
     d->cursor()->insertText(filteredText);
 
-    bool accepted = hasAcceptableInput();
+    bool accepted = true;
 
-    if (accepted == true) {
+    if (d->validator) {
+        QString textCopy = text;
+        int cursorPos = text.length();
+        QValidator::State result = d->validator->validate(textCopy, cursorPos);
+        accepted = (result != QValidator::Invalid);
+    }
+
+    if (!accepted) {
+        document()->clear();
+    }
+
+    // only avoid signaling if empty before and after
+    if (!((document()->characterCount() == 0) && wasEmpty)) {
         updateMicroFocus();
         emit textChanged();
-
-    } else {
-        document()->clear();
     }
 
     if (d->cursor()->position() != cursorPosBefore) {
@@ -1268,12 +1515,6 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
 
     int cursorPositionBefore = cursorPosition();
 
-    // Widget was focused-in on corresponding mouse press event:
-    if (sceneManager() && d->pendingSoftwareInputPanelRequest) {
-        sceneManager()->requestSoftwareInputPanel(this);
-        d->pendingSoftwareInputPanelRequest = false;
-    }
-
     deselect();
 
     if (d->isPositionOnPreedit(eventCursorPosition) == false) {
@@ -1296,6 +1537,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                 int end = breakIterator.next(eventCursorPosition);
                 QString preedit = text.mid(start, end - start);
 
+                d->storePreeditTextStyling(start, end);
                 d->cursor()->setPosition(start);
                 d->cursor()->setPosition(end, QTextCursor::KeepAnchor);
                 QTextDocumentFragment preeditFragment = d->cursor()->selection();
@@ -1317,6 +1559,7 @@ void MTextEdit::handleMouseRelease(int eventCursorPosition, QGraphicsSceneMouseE
                 if (injectionAccepted == false) {
                     d->cursor()->insertFragment(preeditFragment);
                     d->setCursorPosition(eventCursorPosition);
+                    d->preeditStyling.clear();
                 }
 
             } else {
@@ -1418,6 +1661,7 @@ void MTextEdit::paste()
 
     if (changed) {
         emit textChanged();
+        emit cursorPositionChanged();
         updateMicroFocus();
     } else {
         mDebug("MTextEdit") << __PRETTY_FUNCTION__ << "paste failed";
@@ -1450,6 +1694,7 @@ void MTextEdit::cut()
         d->sendCopyAvailable(false);
         emit selectionChanged();
         emit textChanged();
+        emit cursorPositionChanged();
         updateMicroFocus();
     }
 }
@@ -1515,7 +1760,8 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 
     // append possible commit string
     if (commitString.isEmpty() == false) {
-        insertionSuccess = d->doTextInsert(commitString);
+        insertionSuccess = d->doTextInsert(commitString, true);
+        d->preeditStyling.clear();
 
         if (insertionSuccess == false && wasSelecting == true) {
             // validation failed, put the old selection back
@@ -1624,37 +1870,65 @@ void MTextEdit::setTextCursor(const QTextCursor &cursor)
 void MTextEdit::setContentType(M::TextContentType type)
 {
     Q_D(MTextEdit);
-    Qt::InputMethodHints newHint;
 
     model()->setType(type);
 
+    // update validator if it's currently our, otherwise leave it intact
     // FIXME: doesn't work if model has content type already from somewhere
     if (d->ownValidator == true) {
         delete d->validator;
+        d->validator = 0;
+        d->ownValidator = false;
     }
 
-    d->validator = 0;
+    if (d->validator == 0) {
+        QRegExp rx;
 
-    QRegExp rx;
+        switch (type) {
+        case M::NumberContentType:
+            rx.setPattern(NumberCharacterSet);
+            d->validator = new QRegExpValidator(rx, 0);
+            break;
+
+        case M::PhoneNumberContentType:
+            rx.setPattern(PhoneNumberCharacterSet);
+            d->validator = new QRegExpValidator(rx, 0);
+            break;
+
+        case M::EmailContentType:
+            rx.setPattern(EmailCharacterSet);
+            d->validator = new QRegExpValidator(rx, 0);
+            break;
+
+        case M::UrlContentType:
+            //TODO: No check rule for URL yet
+            break;
+
+        default:
+            break;
+        }
+
+        // if a validator was created, we own it
+        if (d->validator != 0) {
+            d->ownValidator = true;
+        }
+    }
+
+    // update other state
+    Qt::InputMethodHints newHint;
 
     switch (type) {
     case M::NumberContentType:
-        rx.setPattern(NumberCharacterSet);
-        d->validator = new QRegExpValidator(rx, 0);
         setInputMethodCorrectionEnabled(false);
         newHint = Qt::ImhFormattedNumbersOnly;
         break;
 
     case M::PhoneNumberContentType:
-        rx.setPattern(PhoneNumberCharacterSet);
-        d->validator = new QRegExpValidator(rx, 0);
         setInputMethodCorrectionEnabled(false);
         newHint = Qt::ImhDialableCharactersOnly;
         break;
 
     case M::EmailContentType:
-        rx.setPattern(EmailCharacterSet);
-        d->validator = new QRegExpValidator(rx, 0);
         setInputMethodCorrectionEnabled(false);
         setInputMethodAutoCapitalizationEnabled(false);
         newHint = Qt::ImhEmailCharactersOnly;
@@ -1663,18 +1937,12 @@ void MTextEdit::setContentType(M::TextContentType type)
     case M::UrlContentType:
         setInputMethodCorrectionEnabled(false);
         setInputMethodAutoCapitalizationEnabled(false);
-        //TODO: No check rule for URL yet
         newHint = Qt::ImhUrlCharactersOnly;
         break;
 
     default:
         setInputMethodAutoCapitalizationEnabled(true);
         break;
-    }
-
-    // if a validator was created, we own it
-    if (d->validator != 0) {
-        d->ownValidator = true;
     }
 
     setInputMethodHints((inputMethodHints() & ~Qt::ImhExclusiveInputMask) | newHint);
@@ -1988,6 +2256,16 @@ MCompleter *MTextEdit::completer()
 {
     Q_D(MTextEdit);
     return d->completer;
+}
+
+void MTextEdit::setAutoSipEnabled(bool enabled)
+{
+    model()->setAutoSipEnabled(enabled);
+}
+
+bool MTextEdit::isAutoSipEnabled() const
+{
+    return model()->isAutoSipEnabled();
 }
 
 void MTextEdit::attachToolbar(const QString &name)

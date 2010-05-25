@@ -366,6 +366,8 @@ void MWidgetView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
 void MWidgetView::cancelEvent(MCancelEvent *event)
 {
+    style()->cancelFeedback().play();
+
     Q_UNUSED(event);
 }
 

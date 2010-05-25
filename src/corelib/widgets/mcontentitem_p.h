@@ -23,6 +23,7 @@
 #include "private/mwidgetcontroller_p.h"
 #include <QPixmap>
 #include <QImage>
+#include <MLabel>
 
 class MContentItemPrivate : public MWidgetControllerPrivate
 {
@@ -32,9 +33,10 @@ public:
 
     QPixmap pixmap;
     QImage image;
+    QString imageID;
     QPixmap optionalPixmap;
     QImage optionalImage;
-    MWidget* smallItem;
+    MLabel* smallText;
 };
 
 #endif

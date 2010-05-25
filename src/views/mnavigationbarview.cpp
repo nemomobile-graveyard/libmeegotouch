@@ -37,9 +37,8 @@
 // --------------------------------------------------------------------------
 
 MNavigationBarViewPrivate::MNavigationBarViewPrivate()
-    : layout(new QGraphicsGridLayout()),
+    : layout(new QGraphicsLinearLayout()),
       applicationMenuButton(0),
-      toolbarPlaceholder(0),
       toolBar(0)
 {
 }
@@ -57,16 +56,8 @@ void MNavigationBarViewPrivate::init()
     applicationMenuButton = new MApplicationMenuButton(controller);
     applicationMenuButton->setObjectName("NavigationBarMenuButton");
 
-    layout->addItem(applicationMenuButton, 0, 0);
-    layout->setAlignment(applicationMenuButton, Qt::AlignVCenter);
-
-    // panel for placing toolbar
-    toolbarPlaceholder = new MWidget(controller);
-    layout->addItem(toolbarPlaceholder, 0, 1);
-
-    toolbarPlaceholderLayout = new QGraphicsLinearLayout(toolbarPlaceholder);
-    toolbarPlaceholderLayout->setContentsMargins(0, 0, 0, 0);
-    toolbarPlaceholder->setLayout(toolbarPlaceholderLayout);
+    layout->addItem(applicationMenuButton);
+    layout->setAlignment(applicationMenuButton, Qt::AlignCenter);
 
     // Connects button signals
     QObject::connect(applicationMenuButton, SIGNAL(clicked()), controller, SIGNAL(viewmenuTriggered()));
@@ -77,7 +68,7 @@ void MNavigationBarViewPrivate::setMenuButtonwidth()
 {
     Q_Q(MNavigationBarView);
 
-    /* FIXME: Its there because the UI specs contains the following forumla:
+    /* FIXME: Its there because the UI specs contains the following formula:
       width of view menu button = width of portrait view - width of home button - width of close button.
       This needs to be removed when there exists support for reading CSS constants in the code
      */
@@ -99,16 +90,16 @@ void MNavigationBarViewPrivate::toolBarChanged()
 
     MToolBar *nextToolBar = q->model()->toolBar();
 
-    // Make sure the last toolbar is deleted first...
+    // Make sure the last toolbar is removed first...
     if (toolBar) {
         if (nextToolBar == toolBar) return;
 
-        toolbarPlaceholderLayout->removeAt(0);
+        layout->removeAt(1);
         toolBar->setParentItem(NULL);
     }
 
     if (nextToolBar) {
-        toolbarPlaceholderLayout->addItem(nextToolBar);
+        layout->addItem(nextToolBar);
         nextToolBar->show();
     }
     toolBar = nextToolBar;

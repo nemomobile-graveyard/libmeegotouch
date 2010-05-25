@@ -5,7 +5,7 @@ includedir=${prefix}/include/meegotouch
 
 Name: meegotouch
 Description: MeeGo Touch UI Framework
-Version: 0.20.1
+Version: 0.20.11
 Requires: QtGui
 Cflags: -I${includedir}
 Libs: -L${libdir} -lmeegotouchcore -lmeegotouchviews -lmeegotouchsettings -lmeegotouchextensions

@@ -138,6 +138,8 @@ public:
     virtual void drawSeparators(QPainter *painter, const QStyleOptionGraphicsItem *option);
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
+    virtual void updateListIndexVisibility();
+
 public Q_SLOTS:
     void movingDetectionTimerTimeout();
     void viewportPositionChanged(const QPointF &pos);
@@ -275,6 +277,8 @@ public:
     virtual void layoutChanged();
 
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
+
+    virtual void updateListIndexVisibility();
 
 public:
     QVector<int> headersPositions;

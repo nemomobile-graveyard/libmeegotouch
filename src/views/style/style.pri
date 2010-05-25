@@ -33,6 +33,7 @@ MGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mpopupliststyle.h \
     $$STYLE_SRC_DIR/mpositionindicatorstyle.h \
     $$STYLE_SRC_DIR/mprogressindicatorstyle.h \
+    $$STYLE_SRC_DIR/mrichtexteditstyle.h \
     $$STYLE_SRC_DIR/mscenewindowstyle.h \
     $$STYLE_SRC_DIR/mseparatorstyle.h \
     $$STYLE_SRC_DIR/msliderstyle.h \
@@ -46,6 +47,7 @@ MGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mcontentitemstyle.h \
     $$STYLE_SRC_DIR/mvideowidgetstyle.h \
     $$STYLE_SRC_DIR/mlistindexstyle.h \
+    $$STYLE_SRC_DIR/mwarpanimationstyle.h \
 
 PUBLIC_HEADERS += \
     $$MGEN_STYLE_HEADERS \

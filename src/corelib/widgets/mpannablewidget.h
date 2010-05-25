@@ -39,8 +39,18 @@ class MOnDisplayChangeEvent;
  * and interprets them. If the events form a panning gesture, a
  * physics class is used to create a natural Newtonian movement in the
  * direction of panning. Panning position is provided as an
- * overridable slot UpdatePosition(). If the events don't form a
+ * overridable slot updatePosition(). If the events don't form a
  * panning gesture, they are forwarded underneath the glass.
+ *
+ * In order to change the current position of the viewport the user
+ * can call setPosition() method. When this is done, integration engine
+ * is started and in case that the position is outside specified bounds,
+ * the physics engine will start spring action to move the viewport to
+ * the allowed borders.
+ *
+ * The physics engine object can be obtained by calling physics() method.
+ *
+ * \sa MPhysics2DPanning, MPannableViewport
  */
 class M_EXPORT MPannableWidget : public MWidgetController
 {

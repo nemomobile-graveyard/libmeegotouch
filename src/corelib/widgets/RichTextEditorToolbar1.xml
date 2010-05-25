@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE MEEGO_IM_TOOLBAR_WIDGET SYSTEM 'VirtualKeyboardToolbarDTD.dtd'>
+<toolbar>
+    <button name="Underline" group="Styles" priority="0" showon="always" alignment="left" icon="" text="&lt;U&gt;U&lt;&#x002F;U&gt;" text_id="">
+        <actions>
+            <sendkeysequence keysequence="Ctrl+U"> </sendkeysequence>
+        </actions>
+    </button>
+    <button name="Italic" group="Styles" priority="0" showon="always" alignment="left" icon="" text="&lt;I&gt;I&lt;&#x002F;I&gt;" text_id="">
+        <actions>
+            <sendkeysequence keysequence="Ctrl+I"> </sendkeysequence>
+        </actions>
+    </button>
+    <button name="Bold" group="Styles" priority="0" showon="always" alignment="left" icon="" text="&lt;B&gt;B&lt;&#x002F;B&gt;" text_id="">
+        <actions>
+            <sendkeysequence keysequence="Ctrl+B"> </sendkeysequence>
+        </actions>
+    </button>
+    <button name="Paste" group="ClipboardOptions" priority="0" showon="always" alignment="right" icon="" text="Paste" text_id="">
+        <actions>
+            <sendkeysequence keysequence="Ctrl+V"> </sendkeysequence>
+        </actions>
+    </button>
+    <button name="Copy" group="ClipboardOptions" priority="0" showon="always" alignment="right" icon="" text="Copy" text_id="">
+        <actions>
+            <sendkeysequence keysequence="Ctrl+C"> </sendkeysequence>
+        </actions>
+    </button>
+    <button name="Cut" group="ClipboardOptions" priority="0" showon="always" alignment="right" icon="" text="Cut" text_id="">
+        <actions>
+            <sendkeysequence keysequence="Ctrl+X"> </sendkeysequence>
+        </actions>
+    </button>
+</toolbar>

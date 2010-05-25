@@ -47,10 +47,9 @@ void MToolBarPrivate::initLayout()
 {
     Q_Q(MToolBar);
 
-    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout();
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(q);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
-    q->setLayout(layout);
 }
 
 MToolBar::MToolBar(QGraphicsItem *parent, const QString &viewType)

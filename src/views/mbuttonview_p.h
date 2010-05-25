@@ -21,8 +21,8 @@
 #define MBUTTONVIEW_P_H
 
 #include "private/mwidgetview_p.h"
+#include <QIcon>
 
-class QPixmap;
 class MScalableImage;
 class MLabel;
 
@@ -34,10 +34,15 @@ public:
     MButtonViewPrivate();
     virtual ~MButtonViewPrivate();
 
+    void freeIcons();
+
     const QPixmap *icon;
     const QPixmap *toggledIcon;
 
     MLabel *label;
+
+    bool iconFromQIcon;
+    bool toggledIconFromQIcon;
 
     QRectF iconRect;
 
@@ -45,7 +50,8 @@ public:
     bool toggleState() const;
     void refreshStyleMode();
 
-    void loadIcon(const QPixmap*& icon, const QString &newIconId, const QSize &newIconSize);
+    void loadIcon(const QIcon &qIcon, const QSize &newIconSize);
+    void loadIcon(const QString &newIconId, const QSize &newIconSize, QIcon::Mode mode = QIcon::Normal);
 };
 
 #endif

@@ -64,26 +64,40 @@ bool QtMaemo6TestStyleEventFilter::eventFilter(QObject *obj, QEvent *event)
 
 QtMaemo6TestStyle::QtMaemo6TestStyle(QtMaemo6TestStylePrivate &dd)
     : d_ptr(& dd), // this is a special case, since we start our shared d-pointer hierarchy within m right here
+      m_windowEventFilter(NULL),
       m_windowDecoration(NULL)
 {
     Q_D(QtMaemo6TestStyle);
-    if (d)
-        d->q_ptr = this;
+    d->q_ptr = this;
+    d->m_styleInitialized = false;
 }
 
 QtMaemo6TestStyle::QtMaemo6TestStyle()
     : QPlastiqueStyle(),
       d_ptr(new QtMaemo6TestStylePrivate()),
-      m_windowEventFilter(0)
+      m_windowEventFilter(NULL),
+      m_windowDecoration(NULL)
 {
     Q_D(QtMaemo6TestStyle);
     d->q_ptr = this;
+    d->m_styleInitialized = false;
 }
 
 
 QtMaemo6TestStyle::~QtMaemo6TestStyle()
 {
     delete d_ptr;
+}
+
+void QtMaemo6TestStylePrivate::initStyle()
+{
+    //FIXME: remove magic numbers!
+    qApp->setGlobalStrut(QSize(48, 48));
+    QFont font("Nokia Sans");
+    font.setPointSize(25);
+    qApp->setFont(font);
+
+    m_styleInitialized = true;
 }
 
 void QtMaemo6TestStyle::init()
@@ -93,11 +107,7 @@ void QtMaemo6TestStyle::init()
 
 void QtMaemo6TestStyle::polish(QApplication *app)
 {
-    //FIXME: remove magic numbers!
-    app->setGlobalStrut(QSize(48, 48));
-    QFont font("Nokia Sans");
-    font.setPointSize(25);
-    app->setFont(font);
+    Q_UNUSED(app);
 }
 
 void QtMaemo6TestStyle::polish(QPalette &palette)
@@ -127,6 +137,11 @@ void QtMaemo6TestStyle::polish(QWidget *widget)
 {
     if(qobject_cast<QDesktopWidget*>(widget))
         return;
+
+    Q_D(QtMaemo6TestStyle);
+    if (!d->m_styleInitialized) {
+        d->initStyle();
+    }
 
     widget->installEventFilter(m_windowEventFilter);
 }

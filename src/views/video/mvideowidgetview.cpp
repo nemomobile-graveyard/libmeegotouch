@@ -39,8 +39,14 @@ MVideoWidgetViewPrivate::MVideoWidgetViewPrivate()
         scaleOffsets(NULL),
         m_needFillBg(false),
         m_fullscreen(false),
-        m_gstVideo(new MGstVideo())
+        m_gstVideo(new MGstVideo()),
+	yuv1(NULL),
+	yuv3(NULL)
 {
+    m_textures[0] = 0;
+    m_textures[1] = 0;
+    m_textures[2] = 0;
+
     qRegisterMetaType< QList<const char*> >("QList<const char*>");
 #ifdef M_USE_OPENGL
     MGLES2Renderer* r = MGLES2Renderer::instance();
@@ -509,8 +515,7 @@ void MVideoWidgetView::drawContents(QPainter* painter, const QStyleOptionGraphic
         }
     } else {
         painter->fillRect(boundingRect(), style()->colorKey());
-        //QCoreApplication::flush();
-        //d->m_gstVideo->expose();
+        d->m_gstVideo->expose();
     }
 }
 
@@ -541,15 +546,13 @@ void MVideoWidgetView::applyStyle()
 
     if( model()->fullscreen() ) {
         style().setModeFullscreen();
+        d->m_gstVideo->setColorKey(style()->colorKey());
     }
     else {
         style().setModeDefault();
     }
-
-    d->m_gstVideo->setColorKey(style()->colorKey());
+    
     MWidgetView::applyStyle();
-
-    //d->refreshStyleMode();
 
     update();
 }
@@ -599,6 +602,8 @@ void MVideoWidgetView::updateData(const QList<const char*>& modifications)
             d->m_gstVideo->setVolume(model()->volume());
         }
         else if( member == MVideoWidgetModel::Fullscreen ) {
+            applyStyle();
+            
             if( model()->fullscreen() ) {
                 d->m_gstVideo->setWinId(MApplication::activeApplicationWindow()->viewport()->winId());
                 d->m_gstVideo->setRenderTarget(MGstVideo::XvSink);
@@ -607,10 +612,18 @@ void MVideoWidgetView::updateData(const QList<const char*>& modifications)
                 d->m_gstVideo->setRenderTarget(MGstVideo::MSink);
             }
 
-            applyStyle();
             updateGeometry();
             update();
         }
+        else if( member == MVideoWidgetModel::ScaleMode ) {
+            d->updateVideoGeometry();
+            update();
+        }
+        else if( member == MVideoWidgetModel::AspectRatioMode ) {
+            d->m_gstVideo->forceAspectRatio(model()->aspectRatioMode() == MVideoWidgetModel::AspectRatioOriginal);
+            d->updateVideoGeometry();
+            update();
+        }                
     }
 }
 
@@ -619,6 +632,9 @@ void MVideoWidgetView::setupModel()
     MWidgetView::setupModel();
 
     Q_D(MVideoWidgetView);
+
+    applyStyle();
+
     if( model()->fullscreen() ) {
         d->m_gstVideo->setWinId(MApplication::activeApplicationWindow()->viewport()->winId());
         d->m_gstVideo->setRenderTarget(MGstVideo::XvSink);
@@ -627,10 +643,11 @@ void MVideoWidgetView::setupModel()
         d->m_gstVideo->setRenderTarget(MGstVideo::MSink);
     }
 
+    d->m_gstVideo->forceAspectRatio(model()->aspectRatioMode() == MVideoWidgetModel::AspectRatioOriginal);
+    
     d->m_gstVideo->setLooping(model()->looping());
     d->m_gstVideo->open(model()->filename());
 
-    applyStyle();
     updateGeometry();
     update();
 }

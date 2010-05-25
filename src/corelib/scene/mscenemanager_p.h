@@ -34,7 +34,7 @@ class MSceneWindow;
 class MSceneLayerEffect;
 class MSceneManager;
 class MNavigationBar;
-class MBasicOrientationAnimation;
+class MOrientationAnimation;
 class MPageSwitchAnimation;
 class MWindow;
 
@@ -125,6 +125,8 @@ public:
 
     QRectF calculateAvailableSceneRect(MSceneWindow *window);
 
+    void createOrientationAnimation();
+
     void createAppearanceAnimationForSceneWindow(MSceneWindow *sceneWindow);
     void createDisappearanceAnimationForSceneWindow(MSceneWindow *sceneWindow);
 
@@ -156,7 +158,7 @@ public:
     MScene *scene;
 
     QGraphicsWidget *rootElement;
-    MBasicOrientationAnimation *orientationAnimation;
+    MOrientationAnimation *orientationAnimation;
     MPageSwitchAnimation *pageSwitchAnimation;
 
     QList<MSceneWindow *> *windows;

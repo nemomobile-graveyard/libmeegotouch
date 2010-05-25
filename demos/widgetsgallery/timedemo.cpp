@@ -184,7 +184,12 @@ void Timedemo::displayBenchmarkResults()
         statsCsvFile.setFileName(m_csvFilename);
     }
 
-    statsCsvFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
+    if ( ! statsCsvFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text) )
+    {
+        qCritical( "failed to open stats file: %s", qPrintable( statsCsvFile.fileName() ) );
+        exit(EXIT_FAILURE);
+    }
+
     QTextStream statsCsv(&statsCsvFile);
 
     int pageTitleWidth = 0;
@@ -258,7 +263,11 @@ void Timedemo::saveFramelog() {
         framelogFile.setFileName(framelogFilename);
     }
 
-    framelogFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text);
+    if (!framelogFile.open(QIODevice::WriteOnly | QIODevice::Truncate | QIODevice::Text))
+    {
+        qWarning( "failed to open frame log file: %s", qPrintable( framelogFile.fileName() ) );
+    }
+
     QXmlStreamWriter framelog(&framelogFile);
     framelog.setAutoFormatting(true);
     framelog.writeStartDocument();
@@ -275,7 +284,7 @@ void Timedemo::saveFramelog() {
         BenchmarkResultHash results = benchmarkResults[i];
         foreach(const QString& name, allBenchmarks) {
             BenchmarkResultHash::const_iterator resultIter = results.find(name);
-            if (resultIter == results.end()) {
+            if (resultIter == results.end() || resultIter->runtime() == 0 ||  resultIter->fps() == 0) {
                 continue;
             }
             framelog.writeStartElement("benchmark");

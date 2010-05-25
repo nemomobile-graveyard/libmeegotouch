@@ -212,7 +212,7 @@ void MListViewPrivate::connectPannableViewport()
     disconnect(this, SLOT(viewportSizeChanged(QSizeF)));
 
     connect(controller, SIGNAL(parentChanged()), SLOT(controllerParentChanged()));
-    
+
     pannableViewport = MListViewPrivateNamespace::findParentWidgetOfType<MPannableViewport>(controller);
     if(pannableViewport) {
         updatePannableViewportPosition();
@@ -421,6 +421,10 @@ void MListViewPrivate::drawHorizontalSeparator(int row, QPainter *painter, const
     painter->translate(-pos.x(), -pos.y());
 }
 
+void MListViewPrivate::updateListIndexVisibility()
+{
+}
+
 ////////////
 // Plain list
 ////////////
@@ -625,7 +629,11 @@ int MPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
     if (viewWidth)
         column = x / (viewWidth / columns);
 
-    return row + column;
+    int flatRow = row + column;
+    if (flatRow >= itemsCount())
+        flatRow = itemsCount() - 1;
+
+    return flatRow;
 }
 
 void MPlainMultiColumnListViewPrivate::updateItemSize()
@@ -806,6 +814,7 @@ void MGroupHeaderListViewPrivate::resetModel(MListModel *mListModel)
 
     if(!listIndexWidget) {
         listIndexWidget = new MListIndex(controller);
+        updateListIndexVisibility();
     }
 
     headersPositions.resize(this->headersCount());
@@ -1054,6 +1063,16 @@ void MGroupHeaderListViewPrivate::drawSeparator(int row, QPainter *painter, cons
         return;
 
     drawHorizontalSeparator(row, painter, option);
+}
+
+void MGroupHeaderListViewPrivate::updateListIndexVisibility()
+{
+    if(listIndexWidget) {
+        if(controllerModel->listIndexVisible())
+            listIndexWidget->show();
+        else
+            listIndexWidget->hide();
+    }
 }
 
 ////////////

@@ -27,8 +27,6 @@ class MLabelPrivate;
 class MLabelHighlighter;
 class QString;
 
-Q_DECLARE_METATYPE(QTextOption::WrapMode)
-
 /*!
     \class MLabel
     \brief MLabel provides functionality for displaying text.

@@ -26,6 +26,7 @@
 #include <QGraphicsLinearLayout>
 
 MMessageBoxViewPrivate::MMessageBoxViewPrivate()
+  : label(0)
 {
 }
 

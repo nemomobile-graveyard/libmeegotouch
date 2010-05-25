@@ -24,6 +24,7 @@
 #include "qtmaemo6comboboxpopup.h"
 #include "qtmaemo6submenu.h"
 
+#include <QApplication>
 #include <QWidget>
 #include <QEvent>
 #include <QDebug>
@@ -63,12 +64,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
             if (widget->isWindow()) {
                 if (QDialog *dialog = qobject_cast<QDialog *>(widget)) {
                     QtMaemo6DialogProxy *dialogProxy = new QtMaemo6DialogProxy(dialog, m_style->m_windowDecoration);
-
                     dialogProxy->setTitle(widget->windowTitle());
-
-                    const QPixmap *closePixmap = MTheme::pixmap("Icon-close", QSize(28, 28));
-                    dialogProxy->setPixmap(*closePixmap);
-
                     dialogProxy->showFastMaximized();
                     QtMaemo6StylePrivate::drawWindowBackground(widget);
                     return true;
@@ -81,12 +77,18 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     // menubar is added on show event
                     decoration->setStatusBar(NULL);
                     decoration->setMenuBar(NULL);
+                    bool navigationBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMNavigationBar);
+                    decoration->showNavigationBar( navigationBarVisible );
                     QtMaemo6StylePrivate::drawWindowBackground(decoration);
                 } else if (!qobject_cast<QtMaemo6Window *>(widget) &&
                            !widget->inherits("QTipLabel")) {  //don't create a new window for every tooltip!
                     if(0 == qobject_cast<QtMaemo6WindowDecoration*>(widget->parent())) {
                         m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
                         m_style->m_windowDecoration->showFastMaximized();
+                        bool navigationBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMNavigationBar);
+                        m_style->m_windowDecoration->showNavigationBar( navigationBarVisible );
+                        bool statusBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMStatusBar);
+                        m_style->m_windowDecoration->showDeviceStatusBar( statusBarVisible );
                         QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
                         return true;
                     }

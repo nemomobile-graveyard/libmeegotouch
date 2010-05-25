@@ -53,81 +53,105 @@ void Ut_QtMaemo6Style::cleanupTestCase()
 }
 
 void Ut_QtMaemo6Style::testStyleLoadedByDefault() {
-    int argc = 1;
-    char *argv[1] = { (char *) "./ut_qtmaemo6style" };
-    QApplication app(argc, argv);
-    QStyle* style = app.style();
-    QVERIFY(style->inherits("QtMaemo6Style"));
+    //only test it, if at least there is a plugin, otherwise we asume the
+    // style is intentionally not installed
+    if(QFile::exists("/usr/lib/qt4/plugins/styles/libmeegotouchqtstyleplugin.so")) {
+        int argc = 1;
+        char *argv[1] = { (char *) "./ut_qtmaemo6style" };
+        QApplication app(argc, argv);
+        QStyle* style = app.style();
+        QVERIFY(style->inherits("QtMaemo6Style"));
+    } else {
+        qDebug() << "Assuming style plugin not installed attentionally";
+    }
 }
 
 void Ut_QtMaemo6Style::testLoadOtherStyle() {
-    int argc = 3;
-    char *argv[3] = { (char *) "./ut_qtmaemo6style", (char *) "-style", (char *) "windows"};
-    QApplication app(argc, argv);
-    QStyle* style = app.style();
-    QVERIFY(style->inherits("QWindowsStyle"));
+    //only test it, if at least there is a plugin, otherwise we asume the
+    // style is intentionally not installed
+    if(QFile::exists("/usr/lib/qt4/plugins/styles/libmeegotouchqtstyleplugin.so")) {
+        int argc = 3;
+        char *argv[3] = { (char *) "./ut_qtmaemo6style", (char *) "-style", (char *) "windows"};
+        QApplication app(argc, argv);
+        QStyle* style = app.style();
+        QVERIFY(style->inherits("QWindowsStyle"));
+    }
 }
 
 void Ut_QtMaemo6Style::testWindowDecoration() {
-    int argc = 3;
-    char *argv[3] = { (char *) "./ut_qtmaemo6style", (char *) "-style", (char *) "maemo6"};
-    m_app = new QApplication(argc, argv);
-    QVERIFY(m_app->style()->inherits("QtMaemo6Style"));
+    //only test it, if at least there is a plugin, otherwise we asume the
+    // style is intentionally not installed
+    if(QFile::exists("/usr/lib/qt4/plugins/styles/libmeegotouchqtstyleplugin.so")) {
+        int argc = 3;
+        char *argv[3] = { (char *) "./ut_qtmaemo6style", (char *) "-style", (char *) "maemo6"};
+        m_app = new QApplication(argc, argv);
+        QVERIFY(m_app->style()->inherits("QtMaemo6Style"));
 
-    m_mw = new QMainWindow();
-    m_mw->show();
-    QTimer::singleShot(1000, this, SLOT(testWindowDecorationSlot()));
-    //just ensure that the application quits, even if the test fails
-    QTimer::singleShot(5000, m_app, SLOT(quit()));
-    m_app->exec();
+        m_mw = new QMainWindow();
+        m_mw->show();
+        QTimer::singleShot(1000, this, SLOT(testWindowDecorationSlot()));
+        //just ensure that the application quits, even if the test fails
+        QTimer::singleShot(5000, m_app, SLOT(quit()));
+        m_app->exec();
 
-    delete m_mw;
-    m_mw = 0;
-    delete m_app;
-    m_app = 0;
+        delete m_mw;
+        m_mw = 0;
+        delete m_app;
+        m_app = 0;
+    }
 }
 
 void Ut_QtMaemo6Style::testWindowDecorationSlot() {
-    if(m_app && m_mw) {
-        QWidget* pw = 0;
-        pw = m_mw->parentWidget();
-        QVERIFY(pw != 0);
-        //search the toplevel widget
-        while(pw->parentWidget())
-            pw = pw->parentWidget();
-        QVERIFY(pw != 0);
-        QVERIFY(pw->inherits("QtMaemo6WindowDecoration"));
-        m_app->quit();
+    //only test it, if at least there is a plugin, otherwise we asume the
+    // style is intentionally not installed
+    if(QFile::exists("/usr/lib/qt4/plugins/styles/libmeegotouchqtstyleplugin.so")) {
+        //this is called by testWindowDecoration(), but also called by the
+        //testframework but needs testWindowDecoration() as precondition
+        if(m_app && m_mw) {
+            QWidget* pw = 0;
+            pw = m_mw->parentWidget();
+            QVERIFY(pw != 0);
+            //search the toplevel widget
+            while(pw->parentWidget())
+                pw = pw->parentWidget();
+            QVERIFY(pw != 0);
+            QVERIFY(pw->inherits("QtMaemo6WindowDecoration"));
+            m_app->quit();
+        }
     }
 }
 
 void Ut_QtMaemo6Style::testFonts() {
-    int argc = 1;
-    char *argv[1] = { (char *) "./ut_qtmaemo6style" };
-    QApplication app(argc, argv);
-    Q_UNUSED(app);
-    //font settings on a button should be ignored
-    // the font of m style is used
-    QPushButton button;
-    button.setText("Test");
-    button.setFont(QFont("Arial"));
-    QSize size1 = button.sizeHint();
+    //only test it, if at least there is a plugin, otherwise we asume the
+    // style is intentionally not installed
+    if(QFile::exists("/usr/lib/qt4/plugins/styles/libmeegotouchqtstyleplugin.so")) {
+        int argc = 1;
+        char *argv[1] = { (char *) "./ut_qtmaemo6style" };
+        QApplication app(argc, argv);
+        Q_UNUSED(app);
+        //font settings on a button should be ignored
+        // the font of m style is used
+        QPushButton button;
+        button.setText("Test");
+        button.setFont(QFont("Arial"));
+        QSize size1 = button.sizeHint();
 
-    QPixmap pix1(size1);
-    pix1.fill(Qt::white);
-    QPainter p1(&pix1);
-    button.render(&p1);
+        QPixmap pix1(size1);
+        pix1.fill(Qt::white);
+        QPainter p1(&pix1);
+        button.render(&p1);
 
-    button.setFont(QFont("Helvetica"));
-    QSize size2 = button.sizeHint();
-    //changing the font shouldn't effect the size
-    QCOMPARE(size1, size2);
+        button.setFont(QFont("Helvetica"));
+        QSize size2 = button.sizeHint();
+        //changing the font shouldn't effect the size
+        QCOMPARE(size1, size2);
 
-    QPixmap pix2(size2);
-    pix2.fill(Qt::white);
-    QPainter p2(&pix2);
-    button.render(&p2);
-    QCOMPARE(pix1.toImage(), pix2.toImage());
+        QPixmap pix2(size2);
+        pix2.fill(Qt::white);
+        QPainter p2(&pix2);
+        button.render(&p2);
+        QCOMPARE(pix1.toImage(), pix2.toImage());
+    }
 }
 
 QTEST_APPLESS_MAIN(Ut_QtMaemo6Style)

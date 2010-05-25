@@ -22,14 +22,14 @@
 
 #include "mexport.h"
 
+class QGraphicsWidget;
 class MAppletMetaData;
-class MWidget;
 class MDataStore;
 class MDataAccess;
 
 //! \internal
 /*!
- * \brief A class that loads M applets.
+ * \brief A class that loads MeeGo Touch applets.
  */
 class M_EXPORT MAppletLoader
 {
@@ -42,7 +42,7 @@ public:
      * \param settings a data store object that bundles applet settings to the applet.
      * \return the applet widget or \c NULL in an error.
      */
-    static MWidget *loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings);
+    static QGraphicsWidget *loadApplet(const MAppletMetaData &metadata, MDataStore &dataStore, MDataAccess &settings);
 
 private:
     /*!

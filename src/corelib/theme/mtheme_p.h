@@ -37,6 +37,7 @@ class MLibrary;
 #include "mlogicalvalues.h"
 #include "mpalette.h"
 #include "mdefaultfonts.h"
+#include "mtheme.h"
 
 // TODO: remove this with style profiling
 #ifndef Q_OS_WIN
@@ -105,7 +106,7 @@ public:
 
     static QHash<QString, MLibrary *>* libraries;
 
-    MAssembly application;
+    MAssembly *application;
 
     MLogicalValues logicalValues;
 
@@ -158,6 +159,11 @@ public:
 
     void refreshLocalThemeConfiguration(const QStringList &themeInheritance);
     void reloadThemeLibraries(const QStringList& libraryNames);
+
+    /*!
+     * Reinitializes the theme to correspond to the new application name
+     */
+    void reinit(const QString &applicationName, const QString &imglistFilename = QString(), MTheme::ThemeService themeService = MTheme::AnyTheme);
 
     static void registerStyleContainer(MStyleContainer *container);
     static void unregisterStyleContainer(MStyleContainer *container);

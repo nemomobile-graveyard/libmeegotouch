@@ -1,5 +1,4 @@
 #include <cstdio>
-#include <dlfcn.h>
 #include <ctime>
 
 #include <QObject>
@@ -70,6 +69,7 @@ SwapHookPrivate::SwapHookPrivate() :
         func(0),
         lib(0),
         lurk(false),
+        lurkBegin(0),
         firstTimestamp(true)
 {
 #ifdef EGL

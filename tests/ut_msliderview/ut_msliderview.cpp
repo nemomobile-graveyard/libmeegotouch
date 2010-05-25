@@ -32,6 +32,12 @@
 
 MApplication *app;
 
+Ut_MSliderView::Ut_MSliderView() :
+        m_seekbar(0),
+        m_subject(0)
+{
+}
+
 void Ut_MSliderView::initTestCase()
 {
     static int argc = 1;

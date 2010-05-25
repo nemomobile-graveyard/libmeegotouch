@@ -26,6 +26,11 @@ class M_EXPORT MSceneWindowModel : public MWidgetModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MSceneWindowModel)
+
+   /*!
+    *   \property The scene window will disappear after a timeout
+    */
+    M_MODEL_PROPERTY(int, disappearTimeout, DisappearTimeout, true, 0)
 };
 
 #endif
