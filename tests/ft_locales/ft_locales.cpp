@@ -40,6 +40,19 @@ void Ft_Locales::cleanup()
 {
 }
 
+void Ft_Locales::testBug169305()
+{
+    MLocale locale1("ar_SA");
+    locale1.installTrCatalog("foo");
+    MLocale::setDefault(locale1);
+    QCOMPARE(qApp->layoutDirection(), Qt::RightToLeft);
+    MLocale locale;
+    locale.installTrCatalog("foo");
+    MLocale::setDefault(locale);
+    QCoreApplication::processEvents();
+    QCOMPARE(qApp->layoutDirection(), Qt::RightToLeft);
+}
+
 void Ft_Locales::testMLocaleConstructor()
 {
     MLocale *z = 0;

@@ -60,8 +60,8 @@ private slots:
     void init();
     void cleanup();
 
-    // these from ut_misc
-    void testSettingsChanged(); // Must be the first test
+    void testBug169305();
+    void testSettingsChanged();
     void testMLocaleConstructor();
 
     void testMLocaleConstructorWithParams_data();
