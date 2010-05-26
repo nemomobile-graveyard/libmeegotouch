@@ -180,8 +180,6 @@ MPannableWidgetPrivate::~MPannableWidgetPrivate()
 
 void MPannableWidgetPrivate::translateEventToItemCoordinates(const QGraphicsItem *srcItem, const QGraphicsItem *destItem, QGraphicsSceneMouseEvent *event)
 {
-    //we only handle left button here. Every other buttons are filtered out in the glassMousePressEvents();
-    event->setButtonDownPos(Qt::LeftButton, destItem->mapFromItem(srcItem, event->buttonDownPos(Qt::LeftButton)));
     event->setLastPos(destItem->mapFromItem(srcItem, event->lastPos()));
     event->setPos(destItem->mapFromItem(srcItem, event->pos()));
 }
