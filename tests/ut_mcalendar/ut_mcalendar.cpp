@@ -1913,16 +1913,15 @@ void Ut_MCalendar::testWeekdaySymbols_data()
     QTest::addColumn<MLocale::CalendarType>("cal");
     QTest::addColumn<QStringList>("symbols");
 
-    // FIXME: better translations would be without -na suffix
     QStringList fi_FI_Symbols;
     fi_FI_Symbols
-            << QString("maanantaina")
-            << QString("tiistaina")
-            << QString("keskiviikkona")
-            << QString("torstaina")
-            << QString("perjantaina")
-            << QString("lauantaina")
-            << QString("sunnuntaina");
+            << QString("maanantai")
+            << QString("tiistai")
+            << QString("keskiviikko")
+            << QString("torstai")
+            << QString("perjantai")
+            << QString("lauantai")
+            << QString("sunnuntai");
 
     QTest::newRow("weekday_symbols_fi_FI_Gregorian")
             << QString("fi_FI")
@@ -2003,21 +2002,20 @@ void Ut_MCalendar::testMonthSymbols_data()
     QTest::addColumn<MLocale::CalendarType>("cal");
     QTest::addColumn<QStringList>("symbols");
 
-    // FIXME: again better translations without -ta
     QStringList fi_FI_Symbols;
     fi_FI_Symbols
-            << QString("tammikuuta")
-            << QString("helmikuuta")
-            << QString("maaliskuuta")
-            << QString("huhtikuuta")
-            << QString("toukokuuta")
-            << QString("kesäkuuta")
-            << QString("heinäkuuta")
-            << QString("elokuuta")
-            << QString("syyskuuta")
-            << QString("lokakuuta")
-            << QString("marraskuuta")
-            << QString("joulukuuta");
+            << QString("tammikuu")
+            << QString("helmikuu")
+            << QString("maaliskuu")
+            << QString("huhtikuu")
+            << QString("toukokuu")
+            << QString("kesäkuu")
+            << QString("heinäkuu")
+            << QString("elokuu")
+            << QString("syyskuu")
+            << QString("lokakuu")
+            << QString("marraskuu")
+            << QString("joulukuu");
 
     QTest::newRow("month_symbols_fi_FI_Gregorian")
             << QString("fi_FI")

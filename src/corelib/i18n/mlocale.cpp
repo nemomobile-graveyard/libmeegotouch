@@ -1695,28 +1695,7 @@ QDateTime MLocale::parseDateTime(const QString &dateTime, CalendarType calendarT
 #ifdef HAVE_ICU
 QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber) const
 {
-    Q_D(const MLocale);
-    monthNumber--; // months in array starting from index zero
-
-    // use message locale as the output language
-    icu::Locale symbolLocale
-    = MIcuConversions::createLocale(d->categoryName(MLcMessages),
-                                      mCalendar.type());
-
-    icu::DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
-
-    int len;
-    const UnicodeString *months = dfs->getMonths(len);
-
-    QString result;
-
-    if (monthNumber < len && monthNumber >= 0) {
-        result = MIcuConversions::unicodeStringToQString(months[monthNumber]);
-    }
-
-    delete dfs;
-
-    return result;
+    return monthName(mCalendar, monthNumber, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide);
 }
 #endif
 
@@ -1761,27 +1740,7 @@ QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber,
 #ifdef HAVE_ICU
 QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday) const
 {
-    Q_D(const MLocale);
-    // use message locale as the output language
-    icu::Locale symbolLocale
-    = MIcuConversions::createLocale(d->categoryName(MLcMessages),
-                                      mCalendar.type());
-
-    icu::DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
-
-    int len;
-    const UnicodeString *weekdayNames = dfs->getWeekdays(len);
-    int weekdayNum = MIcuConversions::icuWeekday(weekday);
-
-    QString result;
-
-    if (weekdayNum < len && weekdayNum > 0) {
-        result = MIcuConversions::unicodeStringToQString(weekdayNames[weekdayNum]);
-    }
-
-    delete dfs;
-
-    return result;
+    return weekdayName(mCalendar, weekday, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide);
 }
 #endif
 
