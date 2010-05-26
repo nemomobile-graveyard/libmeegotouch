@@ -126,6 +126,12 @@ public:
     Q_PROPERTY(QImage image READ image WRITE setImage)
 
     /*!
+        \property MContentItem::imageID
+        \brief image from theme which will be displayed
+    */
+    Q_PROPERTY(QString imageID READ imageID WRITE setImageID)
+
+    /*!
         \property MContentItem::title
         \brief See MContentItemModel::title
     */
@@ -144,6 +150,12 @@ public:
     Q_PROPERTY(QPixmap optionalPixmap READ optionalPixmap WRITE setOptionalPixmap)
 
     Q_PROPERTY(QImage optionalImage READ optionalImage WRITE setOptionalImage)
+
+    /*!
+        \property MContentItem::optionalImage
+        \brief image from theme which will be displayed as "optional image"
+    */
+    Q_PROPERTY(QString optionalImageID READ optionalImageID WRITE setOptionalImageID)
 
 public:
 
@@ -170,6 +182,12 @@ public:
         \return thumbnail image
      */
     QImage image() const;
+
+    /*!
+        \brief Get the thumbnail image theme-id
+        \return id
+     */
+    QString imageID() const;
 
     /*!
         \brief Get the title.
@@ -213,6 +231,12 @@ public:
      */
     QImage optionalImage() const;
 
+    /*!
+        \brief Get the optional image theme-id
+        \return id
+     */
+    QString optionalImageID() const;
+
 public Q_SLOTS:
     /**
         \brief Sets thumbnail pixmap.
@@ -229,8 +253,9 @@ public Q_SLOTS:
     /**
         \brief Sets thumbnail image.
         \param id, image id in theme system.
+        \param size, requested size of the icon
      */
-    void setImage(const QString &id, const QSize &size = QSize());
+    void setImageID(const QString &id, const QSize &size = QSize());
 
     /**
         \brief Set title text. This is first line.
@@ -283,6 +308,13 @@ public Q_SLOTS:
         \param image QImage
      */
     void setOptionalImage(const QImage& image);
+
+    /**
+        \brief Sets optional image (Icon).
+        \param id, image id in theme system.
+        \param s, requested size of the icon
+     */
+    void setOptionalImageID(const QString &id, const QSize &s = QSize());
 
     /*!
       \brief Makes content item to send clicked() signal.

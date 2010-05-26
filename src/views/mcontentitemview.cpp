@@ -286,14 +286,19 @@ void MContentItemViewPrivate::setImage(const QImage &i)
     image()->setImage(i);
 }
 
-void MContentItemViewPrivate::setImageID(const QString &id)
+void MContentItemViewPrivate::setImage(const QString &i, const QSize &s)
 {
-    image()->setImage(id);
+    image()->setImage(i, s);
 }
 
 void MContentItemViewPrivate::setOptionalImage(const QImage& i)
 {
     optionalImage()->setImage(i);
+}
+
+void MContentItemViewPrivate::setOptionalImage(const QString &i, const QSize &s)
+{
+    optionalImage()->setImage(i, s);
 }
 
 void MContentItemViewPrivate::applyStyle()
@@ -371,16 +376,20 @@ void MContentItemView::updateData(const QList<const char *> &modifications)
             d->setSubtitle(model()->subtitle());
         } else if (member == MContentItemModel::ItemPixmap) {
             d->setPixmap(model()->itemPixmap());
-        } else if (member == MContentItemModel::ItemImageID) {
-            d->setImageID(model()->itemImageID());
         } else if (member == MContentItemModel::Selected) {
             setSelected(model()->selected());
         } else if(member == MContentItemModel::OptionalPixmap){
             d->setOptionalPixmap(d->controller->optionalPixmap());
         } else if(member == MContentItemModel::OptionalImage){
             d->setOptionalImage(model()->optionalImage());
+        } else if(member == MContentItemModel::OptionalImageID ||
+                  member == MContentItemModel::OptionalImageSize) {
+            d->setOptionalImage(model()->optionalImageID(), model()->optionalImageSize());
         } else if(member == MContentItemModel::ItemImage) {
             d->setImage(model()->itemImage());
+        } else if(member == MContentItemModel::ItemImageID ||
+                  member == MContentItemModel::ItemImageSize) {
+            d->setImage(model()->itemImageID(), model()->itemImageSize());
         } else if(member == MContentItemModel::AdditionalItem ||
                   member == MContentItemModel::SmallItem) {
             if (d->configuredStyle == MContentItem::TwoIconsTwoWidgets) {
@@ -407,10 +416,12 @@ void MContentItemView::setupModel()
         d->setOptionalPixmap(d->controller->optionalPixmap());
     if(!d->controller->optionalImage().isNull())
         d->setOptionalImage(d->controller->optionalImage());
+    if(!model()->optionalImageID().isNull())
+        d->setOptionalImage(model()->optionalImageID(), model()->optionalImageSize());
     if(!d->controller->image().isNull())
         d->setImage(d->controller->image());
     if(!model()->itemImageID().isNull())
-        d->setImageID(model()->itemImageID());
+        d->setImage(model()->itemImageID(), model()->itemImageSize());
 
     d->initLayout(static_cast<MContentItem::ContentItemStyle>(model()->itemStyle()));
 }
