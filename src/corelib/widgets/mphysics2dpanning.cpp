@@ -455,11 +455,11 @@ void MPhysics2DPanning::integrateAxis(Qt::Orientation orientation,
 
     } else {
 
-        acceleration = force;
+        acceleration = force - pointerDifference;
 
         velocity                 += acceleration;
         position                 += velocity;
-        pointerDifference        += velocity;
+        pointerDifference        = 0;
     }
 }
 
