@@ -1141,21 +1141,41 @@ bool MSliderViewPrivate::isCollision(QGraphicsSceneMouseEvent *event) const
 //to mouse cursor position
 void MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
 {
-    if (valueAnimation == 0) {
-        valueAnimation = new QPropertyAnimation(controller, "value", controller);
-        valueAnimation->setDuration(20);
-        valueAnimation->setEasingCurve(QEasingCurve::OutSine);
+    Q_Q(MSliderView);
+
+    bool needAnimation = false;
+
+    QRectF clickableHandleRect = sliderGroove->clickableHandleArea();
+    clickableHandleRect.translate(sliderGroove->pos());
+
+    //animation is necessary when tap point is further form
+    //slider handle middle point then slider handle width / height
+    //(depending on slider orientation)
+    if (q->model()->orientation() == Qt::Horizontal) {
+        if (qAbs(event->pos().x() - clickableHandleRect.center().x()) > clickableHandleRect.width())
+            needAnimation = true;
+    } else {
+        if (qAbs(event->pos().y() - clickableHandleRect.center().y()) > clickableHandleRect.height())
+            needAnimation = true;
     }
 
     //there are some margins around the view
     //and those have to be considered
-    Q_Q(MSliderView);
     QPointF eventPos = event->pos();
     eventPos.setX(eventPos.x() + q->marginLeft());
     eventPos.setY(eventPos.y() + q->marginTop());
 
-    valueAnimation->setEndValue(sliderGroove->screenPointToValue(eventPos));
-    valueAnimation->start();
+    if (needAnimation) {
+        if (valueAnimation == 0) {
+            valueAnimation = new QPropertyAnimation(controller, "value", controller);
+            valueAnimation->setDuration(150);
+            valueAnimation->setEasingCurve(QEasingCurve::OutSine);
+        }
+
+        valueAnimation->setEndValue(sliderGroove->screenPointToValue(eventPos));
+        valueAnimation->start();
+    } else
+        controller->setValue(sliderGroove->screenPointToValue(eventPos));
 }
 
 //refreshes slider groove (min, max and value, slider state)
