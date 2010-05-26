@@ -42,12 +42,12 @@ QDBusPendingReply<> MApplicationIfProxy::exit()
 
 QDBusPendingReply<> MApplicationIfProxy::launch()
 {
-    return asyncCallWithArgumentList(QLatin1String("launch"), QList<QVariant>());
+    return callWithArgumentList(QDBus::BlockWithGui, QLatin1String("launch"), QList<QVariant>());
 }
 
 QDBusPendingReply<> MApplicationIfProxy::launch(const QStringList &parameters)
 {
     QList<QVariant> argumentList;
     argumentList << qVariantFromValue(parameters);
-    return asyncCallWithArgumentList(QLatin1String("launch"), argumentList);
+    return callWithArgumentList(QDBus::BlockWithGui, QLatin1String("launch"), argumentList);
 }
