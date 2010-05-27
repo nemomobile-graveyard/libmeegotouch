@@ -38,8 +38,11 @@ void MApplicationExtensionAreaViewPrivate::init(MApplicationExtensionArea *contr
 {
     this->controller = controller;
 
-    layout = new QGraphicsLinearLayout(Qt::Vertical);
+    QGraphicsLinearLayout *layout = new QGraphicsLinearLayout(Qt::Vertical);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSpacing(0);
     controller->setLayout(layout);
+    this->layout = layout;
 }
 
 void MApplicationExtensionAreaViewPrivate::addToLayout(QGraphicsWidget *widget, int index)
