@@ -215,12 +215,14 @@ int main(int argc, char *argv[])
     // Calls notificationIdList from NotificationManager. Returns size of the list from main.
     if (listMode) {
         QList<MNotification *> list = MNotification::notifications();
+        result = list.size();
         std::cout << "\n" << applicationName.toUtf8().data() << " has " << list.size() << " notifications." << std::endl;
         std::cout << "Notification id(s):" << std::endl;
         foreach(MNotification *notification, list) {
             std::cout << static_cast<MNotificationToolNotification *>(notification)->id() << std::endl;
+            delete notification;
         }
-        return list.size();
+        list.clear();
     }
 
     // Execute the desired action
