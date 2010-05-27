@@ -23,6 +23,7 @@
 
 GridImageWidget::GridImageWidget(QGraphicsItem *parent)
     : MImageWidget(parent)
+    , m_page(0)
 {
 }
 
