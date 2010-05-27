@@ -1743,12 +1743,12 @@ QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber,
     icu::DateFormatSymbols::DtWidthType icuWidth =
         MIcuConversions::mDateWidthToIcu(symbolLength);
 
-    int len;
+    int len = -1;
     const UnicodeString *months = dfs->getMonths(len, icuContext, icuWidth);
 
     QString result;
 
-    if (monthNumber < len && monthNumber >= 0) {
+    if (len > 0 && monthNumber < len && monthNumber >= 0) {
         result = MIcuConversions::unicodeStringToQString(months[monthNumber]);
     }
 
@@ -1803,13 +1803,13 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
     icu::DateFormatSymbols::DtWidthType icuWidth
     = MIcuConversions::mDateWidthToIcu(symbolLength);
 
-    int len;
+    int len = -1;
     const UnicodeString *weekdayNames = dfs->getWeekdays(len, icuContext, icuWidth);
     int weekdayNum = MIcuConversions::icuWeekday(weekday);
 
     QString result;
 
-    if (weekdayNum < len && weekdayNum > 0) {
+    if (len > 0 && weekdayNum < len && weekdayNum > 0) {
         result = MIcuConversions::unicodeStringToQString(weekdayNames[weekdayNum]);
     }
 
