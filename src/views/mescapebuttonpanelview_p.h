@@ -21,6 +21,8 @@
 #define MESCAPEBUTTONPANELVIEW_P_H
 
 #include "mescapebuttonpanelmodel.h"
+#include "animations/mwarpanimation.h"
+#include <QPointer>
 
 class MEscapeButtonPanel;
 class MButton;
@@ -46,6 +48,8 @@ public:
     MEscapeButtonPanelModel::EscapeMode escapeMode;
 
     MEscapeButtonPanel *controller;
+    QPointer<MWarpAnimation> warpInAnimation;
+    QPointer<MWarpAnimation> warpOutAnimation;
 
 private:
     void animatedEscapeButtonTransition();

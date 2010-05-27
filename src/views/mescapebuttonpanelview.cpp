@@ -22,7 +22,6 @@
 #include "mbutton.h"
 #include "mviewcreator.h"
 #include "mescapebuttonpanel.h"
-#include "animations/mwarpanimation.h"
 #include "mdebug.h"
 
 #include <QDebug>
@@ -41,6 +40,8 @@ MEscapeButtonPanelViewPrivate::MEscapeButtonPanelViewPrivate() :
 
 MEscapeButtonPanelViewPrivate::~MEscapeButtonPanelViewPrivate()
 {
+    delete warpInAnimation;
+    delete warpOutAnimation;
 }
 
 void MEscapeButtonPanelViewPrivate::init()
@@ -58,8 +59,14 @@ void MEscapeButtonPanelViewPrivate::init()
 
 void MEscapeButtonPanelViewPrivate::animatedEscapeButtonTransition()
 {
-    MWarpAnimation *warpInAnimation = 0;
-    MWarpAnimation *warpOutAnimation = 0;
+    if (warpInAnimation && warpInAnimation->state() == QAbstractAnimation::Running) {
+        warpInAnimation->setCurrentTime(warpInAnimation->duration());
+        delete warpInAnimation;
+    }
+    if (warpOutAnimation && warpOutAnimation->state() == QAbstractAnimation::Running) {
+        warpOutAnimation->setCurrentTime(warpOutAnimation->duration());
+        delete warpOutAnimation;
+    }
 
     switch (escapeMode) {
     case MEscapeButtonPanelModel::CloseMode:
