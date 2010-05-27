@@ -277,7 +277,7 @@ private:
 
     Q_DISABLE_COPY(MPhysics2DPanning)
     Q_DECLARE_PRIVATE(MPhysics2DPanning)
-    Q_PRIVATE_SLOT(d_func(),void _q_integrator(int))
+    Q_PRIVATE_SLOT(d_func(),void _q_integrator(QVariant))
 
 #ifdef UNIT_TEST
     //! Test unit is defined as a friend of production code to access private members
