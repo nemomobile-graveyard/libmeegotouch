@@ -154,10 +154,6 @@ void MDialogPrivate::_q_onStandAloneDialogDisappeared()
 
     q->disconnect(SIGNAL(disappeared()), q, SLOT(_q_onStandAloneDialogDisappeared()));
 
-    standAloneWindow->setScene(0);
-    standAloneWindow->deleteLater();
-    standAloneWindow = 0;
-
     // Remove dialog from scene otherwise scene will delete dialog
     // on scene's destructor
     if (q->scene()) {
@@ -171,8 +167,11 @@ void MDialogPrivate::_q_onStandAloneDialogDisappeared()
         homeButtonPanel = 0;
     }
 
+    delete standAloneWindow;
+    standAloneWindow = 0;
+
     if (suicideAfterDestroyingStandAloneWindow) {
-        q->deleteLater();
+        delete q;
     }
 }
 
