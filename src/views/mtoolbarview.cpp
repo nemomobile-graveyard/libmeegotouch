@@ -336,6 +336,11 @@ MWidget *MToolBarViewPrivate::createWidget(QAction *action)
             widget->show();
         } else {
             MButton *button = new MButton;
+
+            button->setObjectName("toolbaractioncommand");
+            if (widgetAction && !widgetAction->objectName().isEmpty())
+                button->setObjectName(button->objectName() + "_" + widgetAction->objectName());
+
             if(buttonGroup) {
                 button->setViewType("toolbartab");
                 button->setCheckable(action->isCheckable());
