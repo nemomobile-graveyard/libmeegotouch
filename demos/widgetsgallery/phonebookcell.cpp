@@ -77,8 +77,7 @@ MLayout *PhoneBookCell::createLayout()
 
     // add to layout
     landscapePolicy->addItem(spinner, 0, 0, 4, 1);
-    landscapePolicy->addItem(new QGraphicsWidget(), 0, 1);
-    landscapePolicy->addItem(titleLabel, 1, 1);
+    landscapePolicy->addItem(titleLabel, 1, 1, Qt::AlignTop);
     landscapePolicy->addItem(subtitleLabel, 2, 1);
     landscapePolicy->addItem(new QGraphicsWidget(), 3, 1);
     
