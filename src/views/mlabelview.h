@@ -124,7 +124,6 @@ protected:
     virtual void applyStyle();
     virtual QFont font() const;
     virtual void cancelEvent(MCancelEvent *event);
-    virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
     //! \reimp_end
 
 protected Q_SLOTS:
