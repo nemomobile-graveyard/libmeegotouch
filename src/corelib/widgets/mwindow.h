@@ -469,6 +469,16 @@ Q_SIGNALS:
      */
     void displayExited();
 
+    /*!
+     This signal is emitted when the window has entered the task switcer.
+     */
+    void switcherEntered();
+
+    /*!
+     This signal is emitted when the window has exited the task switcer.
+     */
+    void switcherExited();
+
 protected:
     //! \reimp
     bool event(QEvent *event);

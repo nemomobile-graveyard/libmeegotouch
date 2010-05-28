@@ -39,6 +39,7 @@ public:
 
     void handleApplicationLayoutDirectionChangeEvent(QGraphicsItem *item);
     void handleLanguageChangeEvent(QGraphicsItem *item);
+    void handleWindowStateChangeEvent(QWindowStateChangeEvent *event);
     M::Orientation orientation(M::OrientationAngle angle) const;
     bool debugShortcutModifiersPresent(Qt::KeyboardModifiers modifiers) const;
 

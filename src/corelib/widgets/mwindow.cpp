@@ -327,6 +327,20 @@ void MWindowPrivate::handleLanguageChangeEvent(QGraphicsItem *item)
     }
 }
 
+void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event)
+{
+    Q_Q(MWindow);
+
+    // Check if window has entered / left the switcher
+    if(q->windowState() == Qt::WindowMinimized) {
+        emit q->switcherEntered();
+    }
+    else if (event->oldState() == Qt::WindowMinimized &&
+             q->windowState() != Qt::WindowMinimized) {
+        emit q->switcherExited();
+    }
+}
+
 M::Orientation MWindowPrivate::orientation(M::OrientationAngle angle) const
 {
     return (angle == M::Angle0 || angle == M::Angle180) ? M::Landscape : M::Portrait;
@@ -1017,6 +1031,9 @@ bool MWindow::event(QEvent *event)
                 d->handleLanguageChangeEvent(item);
             }
         }
+        return true;
+    } else if (event->type() == QEvent::WindowStateChange) {
+        d->handleWindowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
         return true;
     } else if (event->type() == MOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
