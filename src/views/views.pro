@@ -6,6 +6,8 @@ INCLUDEPATH += \
     .moc \
     ../include \
     ../corelib/animation/widget/core \
+    ../corelib/animation/scene \
+    ../corelib/painting \
     ../corelib/style \
     ../corelib/widgets/views \
     ../corelib/widgets \
