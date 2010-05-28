@@ -1248,10 +1248,6 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
 
     animation->setTargetWidget(sceneWindow);
 
-    MSceneWindow *effect = sceneWindow->d_func()->effect;
-    if (effect)
-        animation->addAnimation(effect->d_func()->appearanceAnimation);
-
     switch(sceneWindow->windowType()) {
         case MSceneWindow::Dialog:
         case MSceneWindow::MessageBox:
@@ -1341,10 +1337,6 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     }
 
     animation->setTargetWidget(sceneWindow);
-
-    MSceneWindow *effect = sceneWindow->d_func()->effect;
-    if (effect)
-        animation->addAnimation(effect->d_func()->disappearanceAnimation);
 
     switch(sceneWindow->windowType()) {
         case MSceneWindow::Dialog:
