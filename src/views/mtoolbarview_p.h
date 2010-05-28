@@ -37,6 +37,7 @@ class MWidgetAction;
 class MLayout;
 class QGraphicsLayoutItem;
 class QGraphicsWidget;
+class ToolBarLayoutPolicy;
 
 class MToolBarViewPrivate : public QObject
 {
@@ -56,14 +57,13 @@ protected:
     bool eventFilter(QObject *obj, QEvent *event);
     MWidget *createWidget(QAction *action);
 
-    int policyIndexForAddingAction(QAction *action, MLinearLayoutPolicy *policy) const;
+    int policyIndexForAddingAction(QAction *action, ToolBarLayoutPolicy *policy) const;
     bool isLocationValid(QAction *action, MAction::Location loc) const;
     bool releaseWidget(QAction *action, MWidget *widget) const;
     bool hasTextEditWidget(QAction *action) const;
     bool hasUnusableWidget(QAction *action) const;
     void updateWidgetFromAction(MWidget *widget, QAction *action) const;
     MWidget *getWidget(QAction *action) const;
-
     void _q_groupButtonClicked(bool);
     void _q_groupActionToggled(bool);
 protected:
@@ -71,33 +71,13 @@ protected:
     MToolBar *controller;
     MWidget *widgetsContainer;
     MLayout *layout;
-    MLinearLayoutPolicy *landscapePolicy;
-    MLinearLayoutPolicy *portraitPolicy;
     QHash<QAction *, MWidget *> leasedWidgets;
     QHash<QAction *, MButton *> buttons;
     /* If this is non-null, created buttons will be placed in this group */
     MButtonGroup * buttonGroup;
 
-    static const int maxWidgets;
-
-    enum PlacementMode {
-        Managed = 0,
-        Unmanaged
-    };
-
-    struct ActionPlacementData
-    {
-        ActionPlacementData() {
-            hasTextEditor = false;
-            placedActions = 0;
-        }
-        bool hasTextEditor;
-        int placedActions;
-    };
-
-    ActionPlacementData landscapeData;
-    ActionPlacementData portraitData;
-    bool reserveSpaceForAction(QAction *action, ActionPlacementData &policyData);
+    ToolBarLayoutPolicy *landscapePolicy;
+    ToolBarLayoutPolicy *portraitPolicy;
 };
 
 #endif
