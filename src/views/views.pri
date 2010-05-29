@@ -47,6 +47,7 @@ PUBLIC_HEADERS += \
     mscenelayereffectdimview.h \
     mlistindexview.h \
     mlistitemview.h \
+    mbubbleitemview.h \
 
 PRIVATE_HEADERS += \
     mstylablewidgetview_p.h \
@@ -115,3 +116,4 @@ SOURCES += \
     mscenelayereffectdimview.cpp \
     mlistindexview.cpp \
     mlistitemview.cpp \
+    mbubbleitemview.cpp \

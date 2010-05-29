@@ -79,6 +79,8 @@ SOURCES += main.cpp \
     multipleselectiondialogspage.cpp \
     singleselectiondialogspage.cpp \
     phonebookcell.cpp \
+    bubblepage.cpp \
+    bubblelistmodel.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -122,6 +124,8 @@ HEADERS += templatepage.h \
     multipleselectiondialogspage.h \
     singleselectiondialogspage.h \
     phonebookcell.h \
+    bubblepage.h \
+    bubblelistmodel.h \
 
 # theme
 include(theme/theme.pri)

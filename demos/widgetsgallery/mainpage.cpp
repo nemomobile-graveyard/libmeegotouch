@@ -45,6 +45,7 @@
 #include "multipleselectiondialogspage.h"
 #include "querydialogspage.h"
 #include "bannerspage.h"
+#include "bubblepage.h"
 
 #include <QGraphicsLayoutItem>
 #include <QGraphicsLinearLayout>
@@ -138,6 +139,8 @@ public:
         addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_combobox"), new ComboBoxPage());
         //% "ContentItems"
         addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_contentitems"), new ContentItemsPage());
+        //% "Speech bubble"
+        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_bubble"), new BubblePage());
 
         //% "User Input"
         addCategory(qtTrId("xx_wg_categories_user_input"), new MainCategoryPage(this, createIndex(5,0)));

@@ -58,6 +58,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mlistitem.h \
     $$WIDGETS_SRC_DIR/mabstractitemmodel.h \
     $$WIDGETS_SRC_DIR/msortfilterproxymodel.h \
+    $$WIDGETS_SRC_DIR/mbubbleitem.h \
 
 MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.h \
@@ -92,6 +93,7 @@ MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mcompletermodel.h \
     $$WIDGETS_SRC_DIR/mcontentitemmodel.h \
     $$WIDGETS_SRC_DIR/mlistitemmodel.h \
+    $$WIDGETS_SRC_DIR/mbubbleitemmodel.h \
 
 PUBLIC_HEADERS += \
     $$MGEN_MODEL_HEADERS \
@@ -164,3 +166,5 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mlistitem.cpp \
     $$WIDGETS_SRC_DIR/mabstractitemmodel.cpp \
     $$WIDGETS_SRC_DIR/msortfilterproxymodel.cpp \
+    $$WIDGETS_SRC_DIR/mbubbleitem.cpp \
+    $$WIDGETS_SRC_DIR/mbubbleitemmodel.cpp \
