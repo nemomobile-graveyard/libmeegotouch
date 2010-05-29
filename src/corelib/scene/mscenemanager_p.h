@@ -209,6 +209,7 @@ public:
     MPageSwitchAnimation *pageSwitchAnimation;
 
     QList<MSceneWindow *> windows;
+    QList<MSceneWindow *> blockingWindows;
     QList< QPointer<MSceneWindow> > pageHistory;
 
     M::OrientationAngle angle;

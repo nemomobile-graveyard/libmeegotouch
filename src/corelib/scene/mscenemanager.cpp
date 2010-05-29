@@ -1597,22 +1597,40 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
     Q_Q(MSceneManager);
 
     switch (sceneWindow->sceneWindowState()) {
-        case MSceneWindow::Appearing:
-            // Page switching uses a separate animation.
-            // Thus in this case appearanceAnimation == 0.
-            if (sceneWindow->d_func()->appearanceAnimation != 0) {
-                delete sceneWindow->d_func()->appearanceAnimation;
-                sceneWindow->d_func()->appearanceAnimation = 0;
-            }
-            break;
+    case MSceneWindow::Appearing:
+        // Page switching uses a separate animation.
+        // Thus in this case appearanceAnimation == 0.
+        if (sceneWindow->d_func()->appearanceAnimation != 0) {
+            delete sceneWindow->d_func()->appearanceAnimation;
+            sceneWindow->d_func()->appearanceAnimation = 0;
+        }
+        break;
 
         case MSceneWindow::Disappeared:
-            prepareWindowShow(sceneWindow);
-            produceSceneWindowEvent(MSceneWindowEvent::eventTypeAppear(), sceneWindow, false);
-            break;
+        prepareWindowShow(sceneWindow);
+        produceSceneWindowEvent(MSceneWindowEvent::eventTypeAppear(), sceneWindow, false);
+        break;
 
         default:
-            break;
+        break;
+    }
+
+    MSceneWindow::WindowType type = sceneWindow->windowType();
+
+    if (type == MSceneWindow::Dialog ||
+        type == MSceneWindow::MessageBox ||
+        type == MSceneWindow::ApplicationMenu ||
+        type == MSceneWindow::ObjectMenu ||
+        type == MSceneWindow::ModalSceneWindow ||
+        type == MSceneWindow::PopupList) {
+
+        // Notify page on first blocker appearing
+        if (currentPage && blockingWindows.count() == 0) {
+            QEvent e(QEvent::WindowBlocked);
+            qApp->sendEvent(currentPage, &e);
+        }
+
+        blockingWindows.append(sceneWindow);
     }
 
     if (isOnDisplay()) {
@@ -1690,6 +1708,24 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
 
         default:
             break;
+    }
+
+    MSceneWindow::WindowType type = sceneWindow->windowType();
+
+    if (type == MSceneWindow::Dialog ||
+        type == MSceneWindow::MessageBox ||
+        type == MSceneWindow::ApplicationMenu ||
+        type == MSceneWindow::ObjectMenu ||
+        type == MSceneWindow::ModalSceneWindow ||
+        type == MSceneWindow::PopupList) {
+
+        blockingWindows.removeOne(sceneWindow);
+
+        // Notify page on last blocker having disappeared
+        if (currentPage && blockingWindows.count() == 0) {
+            QEvent e(QEvent::WindowUnblocked);
+            qApp->sendEvent(currentPage, &e);
+        }
     }
 
     if (currentPage == sceneWindow)
