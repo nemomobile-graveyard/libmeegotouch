@@ -17,31 +17,4 @@
 **
 ****************************************************************************/
 
-#ifndef CONTENTITEMSPAGE_H
-#define CONTENTITEMSPAGE_H
-
-#include "templatepage.h"
-
-class MList;
-class MCellCreator;
-
-class ContentItemsPage : public TemplatePage
-{
-public:
-    ContentItemsPage();
-
-    QString timedemoTitle();
-
-    void createContent();
-    void populateLayout();
-
-    MList *createList(const QString &title, MCellCreator *creator);
-
-    void retranslateUi();
-    
-private:
-    QList<MList*> contentItemLists;
-    MLinearLayoutPolicy *policy;
-};
-
-#endif // CONTENTITEMSPAGE_H
+#include "../corelib/widgets/mbasiclistitem.h"

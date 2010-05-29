@@ -21,16 +21,18 @@
 #include "utils.h"
 
 #include <MAbstractCellCreator>
+#include <MImageWidget>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MList>
+#include <MListItem>
 
-#include <MDebug>
+#include <MBasicListItem>
 
-class ContentItemsPageCellCreator : public MAbstractCellCreator<MContentItem>
+class BasicListItemCreator : public MAbstractCellCreator<MBasicListItem>
 {
 public:
-    ContentItemsPageCellCreator(MContentItem::ContentItemStyle style)
+    BasicListItemCreator(MBasicListItem::ItemStyle style)
         : itemStyle(style),
         defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
     {
@@ -38,12 +40,11 @@ public:
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
         Q_UNUSED(index);
-
-        MContentItem *cell = dynamic_cast<MContentItem *>(recycler.take(MContentItem::staticMetaObject.className()));
+        MBasicListItem *cell = dynamic_cast<MBasicListItem*>(recycler.take(MBasicListItem::staticMetaObject.className()));
+        
         if (cell == NULL) {
-            cell = new MContentItem(itemStyle);
-            cell->setObjectName("wgContentItemsPageItem");
-
+            cell = new MBasicListItem(itemStyle);
+            cell->initLayout();
         }
         updateCell(index, cell);
 
@@ -51,63 +52,43 @@ public:
     }
 
     void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MContentItem *item = qobject_cast<MContentItem*>(cell);
-        if(!item)
+        MBasicListItem *item = dynamic_cast<MBasicListItem*>(cell);
+        if (!item)
             return;
 
-        item->setTitle(index.data().toString());
-
         switch (itemStyle) {
-        case MContentItem::IconAndTwoTextLabels:
+        case MBasicListItem::SingleTitle: {
+            
+            item->setTitle(index.data().toString());
+            break;
+        }
+        case MBasicListItem::TitleWithSubtitle: {
+            MBasicListItem *item = dynamic_cast<MBasicListItem*>(cell);
+            item->setTitle(index.data().toString());
             //% "Subtitle"
-            item->setSubtitle(qtTrId("xx_content_items_subtitle"));
-            item->setImage(defaultImage);
+            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
             break;
-        case MContentItem::IconAndSingleTextLabel:
-            item->setImage(defaultImage);
-            break;
-        case MContentItem::TwoTextLabels:
+        }
+        case MBasicListItem::IconWithTitle: {
+            item->setTitle(index.data().toString());
+            item->icon()->setImage(defaultImage);
+            break;    
+        }
+        case MBasicListItem::IconWithTitleAndSubtitle: {
+            item->setTitle(index.data().toString());
             //% "Subtitle"
-            item->setSubtitle(qtTrId("xx_content_items_subtitle"));
-            break;
-        case MContentItem::SingleIcon:
-            item->setImage(defaultImage);
-            break;
-        case MContentItem::IconAndSingleTextLabelVertical:
-            item->setImage(defaultImage);
-            break;
-        case MContentItem::IconAndTwoTextLabelsVertical:
-            //% "Subtitle"
-            item->setSubtitle(qtTrId("xx_content_items_subtitle"));
-            item->setImage(defaultImage);
-            break;
-        case MContentItem::TwoIconsTwoWidgets:
-            item->setImage(defaultImage);
-            item->setOptionalImage(defaultImage);
-            item->enableProgressBar();
-            dynamic_cast<MProgressIndicator*>(item->additionalItem())->setValue(25 * index.row());
-            //% "Subtitle"
-            item->setSubtitle(qtTrId("xx_content_items_subtitle"));
-            break;
+            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
+            item->icon()->setImage(defaultImage);
+            break;    
+        }
         default:
             break;
         };
 
-        const_cast<ContentItemsPageCellCreator*>(this)->updateCellSize(item);
-    }
-
-    void updateCellSize(const MWidget *cell) {
-        size = cell->effectiveSizeHint(Qt::PreferredSize);
-        mDebug("") << size;
-    }
-
-    QSizeF cellSize() const {
-        return size;
     }
 
 private:
-    QSizeF size;
-    MContentItem::ContentItemStyle itemStyle;
+    MBasicListItem::ItemStyle itemStyle;
     QImage defaultImage;
 };
 
@@ -187,30 +168,43 @@ void ContentItemsPage::createContent()
     policy->setSpacing(0);
 
     populateLayout();
+    
+    retranslateUi();
 }
 
 void ContentItemsPage::populateLayout()
 {
-    contentItemLists.append(createList("Icon and Two Text Labels", MContentItem::IconAndTwoTextLabels));
-    contentItemLists.append(createList("Single Text Label", MContentItem::SingleTextLabel));
-    contentItemLists.append(createList("Icon and Single Text Label", MContentItem::IconAndSingleTextLabel));
-    contentItemLists.append(createList("Two Text Labels", MContentItem::TwoTextLabels));
-    contentItemLists.append(createList("Single Icon", MContentItem::SingleIcon));
+    contentItemLists.append(createList("Single Title", new BasicListItemCreator(MBasicListItem::SingleTitle)));
+    contentItemLists.append(createList("Title with Subtitle", new BasicListItemCreator(MBasicListItem::TitleWithSubtitle)));
+    contentItemLists.append(createList("Icon with Title",  new BasicListItemCreator(MBasicListItem::IconWithTitle)));
+    contentItemLists.append(createList("Icon with Title and Subtitle",  new BasicListItemCreator(MBasicListItem::IconWithTitleAndSubtitle)));
+    /*contentItemLists.append(createList("Single Icon", MContentItem::SingleIcon));
     contentItemLists.append(createList("Icon and Single Text Label Vertical", MContentItem::IconAndSingleTextLabelVertical));
     contentItemLists.append(createList("Icon and Two Text Labels Vertical", MContentItem::IconAndTwoTextLabelsVertical));
-    contentItemLists.append(createList("Two Icons Two Widgets", MContentItem::TwoIconsTwoWidgets));
+    contentItemLists.append(createList("Two Icons Two Widgets", MContentItem::TwoIconsTwoWidgets));*/
 }
 
-MList *ContentItemsPage::createList(const QString &title, MContentItem::ContentItemStyle style)
+MList *ContentItemsPage::createList(const QString &title, MCellCreator *creator)
 {
     QAbstractItemModel *model = new ContentItemsPageModel(title);
 
     MList *list = new MList(centralWidget());
     list->setObjectName("wgList");
-    list->setCellCreator(new ContentItemsPageCellCreator(style));
+    list->setCellCreator(creator);
     list->setItemModel(model);
     list->setShowGroups(true);
     policy->addItem(list, Qt::AlignCenter);
 
     return list;
+}
+
+void ContentItemsPage::retranslateUi()
+{
+    //% "Content Items"
+    setTitle(qtTrId("xx_contentitemspage_title"));
+    if (!isContentCreated())
+        return;
+    // this file has no other calls to qtTrId() except for the title
+    // at the moment. If more qtTrId() calls are needed they should
+    // be added here.
 }
