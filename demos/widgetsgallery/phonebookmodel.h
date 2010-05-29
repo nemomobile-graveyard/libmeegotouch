@@ -93,7 +93,7 @@ private:
     QStringList loadFakeImageIds();
     PhoneBookEntry *generateEntry();
     QString generatePhoneNumber();
-    void updateModel();
+    void regenerateModel();
 
 private:
     QVector<PhoneBookEntry *> phoneBookEntries;

@@ -78,7 +78,7 @@ public:
       \brief Set's the grouping mode for the data model.
       \param mode The grouping mode of the model to set.
     */
-    void setGrouped(bool mode = false);
+    void setGrouped(bool mode);
     
     /*!
       \return The model grouping mode.

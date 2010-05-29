@@ -33,7 +33,6 @@ PhoneBookModel::PhoneBookModel()
 {
     namesList = loadFakeNames();
     imageIdList = loadFakeImageIds();
-//    defaultThumbnail = QImage(Utils::imagesDir() + "DefaultAvatar.png");
 }
 
 PhoneBookModel::~PhoneBookModel()
@@ -163,7 +162,7 @@ bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
         phoneBookEntries.append(entry);
     }
     
-    updateModel();
+    regenerateModel();
 
     endInsertRows();
     
@@ -189,7 +188,7 @@ bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
     qDeleteAll(phoneBookEntries.begin() + flatRow, phoneBookEntries.begin() + flatRow + count - 1);
     phoneBookEntries.remove(flatRow, count);
 
-    updateModel();
+    regenerateModel();
     
     endRemoveRows();
 
@@ -197,7 +196,7 @@ bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
     return true;
 }
 
-void PhoneBookModel::updateModel()
+void PhoneBookModel::regenerateModel()
 {
     groups.clear();
     groupsSize.clear();
