@@ -297,7 +297,7 @@ void ItemDetailPage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gest
     if (gesture->state() == Qt::GestureStarted) {
         lastScaleFactor = 1.0;
     }
-    
+
     image->setZoomFactor(scaleFactor / 10.0);
     image->update();
     scaleFactor = scaleFactor * (gesture->scaleFactor() - lastScaleFactor + 1);
@@ -424,8 +424,8 @@ void ItemDetailPage::buttonClicked()
             }
         } else
             video->setFullscreen(!video->isFullscreen());
-#endif
     }
+#endif
 }
 
 
