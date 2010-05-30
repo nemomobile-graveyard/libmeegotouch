@@ -126,7 +126,7 @@ void MDetailedListItem::initLayout()
             sideBottomImage->setObjectName("CommonSubIcon");
 
             layoutGrid->addItem(iconImage, 0, 0, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabel, 1, 1, 2, 1, Qt::AlignLeft | Qt::AlignTop);
+            layoutGrid->addItem(titleLabel, 1, 1, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
             layoutGrid->addItem(sideTopImage, 1, 2, Qt::AlignRight | Qt::AlignTop);
             layoutGrid->addItem(sideBottomImage, 2, 2, Qt::AlignRight | Qt::AlignBottom);
             layoutGrid->addItem(new QGraphicsWidget, 3, 1, 1, 2);
