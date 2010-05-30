@@ -70,6 +70,8 @@ public:
     void initSoftwareViewport();
     void configureViewport();
 
+    void playScreenshotEffect();
+
     bool onDisplay;
     bool onDisplaySet;
 

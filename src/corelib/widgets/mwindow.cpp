@@ -21,28 +21,29 @@
 #include "mgles2renderer.h"
 #endif
 
-#include <QTimeLine>
-#include <QSettings>
+#include "mwindow.h"
+#include "mwindow_p.h"
 
+#include "mscene.h"
+#include "mscene_p.h"
 #include "mapplication.h"
 #include "mapplication_p.h"
 #include "mapplicationwindow.h"
 #include "mcomponentcache.h"
 #include "morientationtracker.h"
 #include "mdeviceprofile.h"
-#include "mwindow.h"
-#include "mwindow_p.h"
 #include "mdeviceprofile.h"
 #include "mwidget.h"
 #include "mcomponentdata.h"
 #include "morientationchangeevent.h"
-#include <mondisplaychangeevent.h>
-#include <MDebug>
-#include <MGConfItem>
-#include <MScene>
-#include <mscene_p.h>
-
+#include "mondisplaychangeevent.h"
+#include "mdebug.h"
+#include "mgconfitem.h"
 #include "mlocale.h"
+
+#include <QPropertyAnimation>
+#include <QSettings>
+#include <QDir>
 
 #ifdef Q_WS_X11
 # include <QX11Info>
@@ -51,6 +52,10 @@
 // Avoid conflict with QEvent::KeyPress usage in MWindow::Event
 # undef KeyPress
 #endif
+
+namespace {
+    const QString ImagesPath(QDir::homePath() + "/MyDocs/.images");
+}
 
 /// Actual class
 
@@ -210,6 +215,37 @@ void MWindowPrivate::configureViewport()
     q->setAttribute(Qt::WA_AcceptTouchEvents);
 }
 
+
+//! \internal
+class ScreenshotEffect : public QGraphicsWidget
+{
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option,
+                       QWidget *widget = 0)
+    {
+        Q_UNUSED(option);
+        Q_UNUSED(widget);
+
+        painter->fillRect(boundingRect(), Qt::white);
+    }
+};
+//! \internal_end
+
+void MWindowPrivate::playScreenshotEffect()
+{
+    Q_Q(MWindow);
+
+    ScreenshotEffect *flash = new ScreenshotEffect();
+    flash->setGeometry(0, 0, q->width(), q->height());
+
+    QPropertyAnimation *animation = new QPropertyAnimation(flash, "opacity", q);
+    animation->setDuration(400);
+    animation->setEndValue(0.0f);
+    animation->start(QAbstractAnimation::DeleteWhenStopped);
+
+    q->scene()->addItem(flash);
+
+    QObject::connect(animation, SIGNAL(finished()), flash, SLOT(deleteLater()));
+}
 
 #ifdef Q_WS_X11
 void MWindowPrivate::appendVisibilityChangeMask()
@@ -849,6 +885,22 @@ bool MWindow::event(QEvent *event)
             MLocale::setDefault(newLocale);
 
             updateNeeded = true;
+        } else if (Qt::Key_T == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
+            QPixmap screenshot;
+            screenshot = QPixmap::grabWindow(QApplication::desktop()->winId());
+
+            QString path;
+            if (QDir(ImagesPath).exists())
+                path = ImagesPath;
+            else
+                path = QDir::homePath();
+
+            if (!screenshot.save(QString("%1/%2-%3.png").arg(path)
+                .arg(QDate::currentDate().toString("yyyyMMdd"))
+                .arg(QTime::currentTime().toString("hhmmss"))))
+                mWarning("MWindow") << "Could not save screenshot to" << path;
+
+            d->playScreenshotEffect();
         }
 
         if (updateNeeded) {

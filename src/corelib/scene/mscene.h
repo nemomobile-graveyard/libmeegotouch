@@ -51,6 +51,7 @@ class MWindowPrivate;
     - Sizes, toggled by <Ctrl>-<Shift>-S
     - Object names, toggled by <Ctrl>-<Shift>-N
     - Frames per second, toggled by <Ctrl>-<Shift>-F
+    - Take screenshot, triggered by <Ctrl>-<Shift>-T
 
   \sa MWindow, MApplicationWindow
  */
