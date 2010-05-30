@@ -1298,8 +1298,8 @@ de_BE	Name of weekday 04 (Islamic Calendar)	Donnerstag
 de_BE	Name of weekday 05 (Islamic Calendar)	Freitag
 de_BE	Name of weekday 06 (Islamic Calendar)	Samstag
 de_BE	Name of weekday 07 (Islamic Calendar)	Sonntag
-de_CH	Language endonym	de
-de_CH	Country endonym	CH
+de_CH	Language endonym	Deutsch
+de_CH	Country endonym	Schweiz
 de_CH	Floating Point Number	-123'456'789.012
 de_CH	Percent value	-1'234.5679 %
 de_CH	Currency value	€ 1'234.56
@@ -4271,11 +4271,11 @@ fi	Negative Currency value	-1 234,56 €
 fi	Date and time short (Gregorian Calendar)	21.7.2008 12.31
 fi	Date and time medium (Gregorian Calendar)	21.7.2008 12.31.00
 fi	Date and time long (Gregorian Calendar)	21. heinäkuuta 2008 12.31.00 UTC+0.00
-fi	Date and time full (Gregorian Calendar)	maanantaina 21. heinäkuuta 2008 12.31.00 UTC+0.00
+fi	Date and time full (Gregorian Calendar)	maanantai 21. heinäkuuta 2008 12.31.00 UTC+0.00
 fi	Date and time short (Islamic Calendar)	18.7.1429 12.31
 fi	Date and time medium (Islamic Calendar)	18.7.1429 12.31.00
 fi	Date and time long (Islamic Calendar)	18. radžab 1429 12.31.00 UTC+0.00
-fi	Date and time full (Islamic Calendar)	maanantaina 18. radžab 1429 12.31.00 UTC+0.00
+fi	Date and time full (Islamic Calendar)	maanantai 18. radžab 1429 12.31.00 UTC+0.00
 fi	Name of month 01 (Gregorian Calendar)	tammikuu
 fi	Name of month 02 (Gregorian Calendar)	helmikuu
 fi	Name of month 03 (Gregorian Calendar)	maaliskuu
@@ -4323,11 +4323,11 @@ fi_FI	Negative Currency value	-1 234,56 €
 fi_FI	Date and time short (Gregorian Calendar)	21.7.2008 12.31
 fi_FI	Date and time medium (Gregorian Calendar)	21.7.2008 12.31.00
 fi_FI	Date and time long (Gregorian Calendar)	21. heinäkuuta 2008 12.31.00 UTC+0.00
-fi_FI	Date and time full (Gregorian Calendar)	maanantaina 21. heinäkuuta 2008 12.31.00 UTC+0.00
+fi_FI	Date and time full (Gregorian Calendar)	maanantai 21. heinäkuuta 2008 12.31.00 UTC+0.00
 fi_FI	Date and time short (Islamic Calendar)	18.7.1429 12.31
 fi_FI	Date and time medium (Islamic Calendar)	18.7.1429 12.31.00
 fi_FI	Date and time long (Islamic Calendar)	18. radžab 1429 12.31.00 UTC+0.00
-fi_FI	Date and time full (Islamic Calendar)	maanantaina 18. radžab 1429 12.31.00 UTC+0.00
+fi_FI	Date and time full (Islamic Calendar)	maanantai 18. radžab 1429 12.31.00 UTC+0.00
 fi_FI	Name of month 01 (Gregorian Calendar)	tammikuu
 fi_FI	Name of month 02 (Gregorian Calendar)	helmikuu
 fi_FI	Name of month 03 (Gregorian Calendar)	maaliskuu
@@ -5207,11 +5207,11 @@ it	Negative Currency value	-€ 1.234,56
 it	Date and time short (Gregorian Calendar)	21/07/08 12:31
 it	Date and time medium (Gregorian Calendar)	21/lug/2008 12:31:00
 it	Date and time long (Gregorian Calendar)	21 luglio 2008 12:31:00 GMT+00:00
-it	Date and time full (Gregorian Calendar)	lunedì 21 luglio 2008 12:31:00 GMT+00:00
+it	Date and time full (Gregorian Calendar)	Lunedì 21 Luglio 2008 12:31:00 GMT+00:00
 it	Date and time short (Islamic Calendar)	18/07/29 12:31
 it	Date and time medium (Islamic Calendar)	18/Raj./1429 12:31:00
 it	Date and time long (Islamic Calendar)	18 Rajab 1429 12:31:00 GMT+00:00
-it	Date and time full (Islamic Calendar)	lunedì 18 Rajab 1429 12:31:00 GMT+00:00
+it	Date and time full (Islamic Calendar)	Lunedì 18 Rajab 1429 12:31:00 GMT+00:00
 it	Name of month 01 (Gregorian Calendar)	Gennaio
 it	Name of month 02 (Gregorian Calendar)	Febbraio
 it	Name of month 03 (Gregorian Calendar)	Marzo
@@ -5311,11 +5311,11 @@ it_IT	Negative Currency value	-€ 1.234,56
 it_IT	Date and time short (Gregorian Calendar)	21/07/08 12:31
 it_IT	Date and time medium (Gregorian Calendar)	21/lug/2008 12:31:00
 it_IT	Date and time long (Gregorian Calendar)	21 luglio 2008 12:31:00 GMT+00:00
-it_IT	Date and time full (Gregorian Calendar)	lunedì 21 luglio 2008 12:31:00 GMT+00:00
+it_IT	Date and time full (Gregorian Calendar)	Lunedì 21 Luglio 2008 12:31:00 GMT+00:00
 it_IT	Date and time short (Islamic Calendar)	18/07/29 12:31
 it_IT	Date and time medium (Islamic Calendar)	18/Raj./1429 12:31:00
 it_IT	Date and time long (Islamic Calendar)	18 Rajab 1429 12:31:00 GMT+00:00
-it_IT	Date and time full (Islamic Calendar)	lunedì 18 Rajab 1429 12:31:00 GMT+00:00
+it_IT	Date and time full (Islamic Calendar)	Lunedì 18 Rajab 1429 12:31:00 GMT+00:00
 it_IT	Name of month 01 (Gregorian Calendar)	Gennaio
 it_IT	Name of month 02 (Gregorian Calendar)	Febbraio
 it_IT	Name of month 03 (Gregorian Calendar)	Marzo

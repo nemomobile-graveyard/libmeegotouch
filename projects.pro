@@ -36,6 +36,9 @@ for(PROJECT, $$list($$lower($$unique(M_BUILD_PARTS)))) {
                   src \
                   src/translations \
 
+       contains(DEFINES, HAVE_ICU) {
+           SUBDIRS += src/icu-extradata
+       }
        contains(DEFINES, HAVE_DBUS) {
            SUBDIRS += \
                   mappletrunner \

@@ -840,15 +840,63 @@ public:
                       const char *comment = 0, int n = -1);
 
     /*!
-     * \brief Sets the DataPaths for locale system to given paths.
-     * This should be called at most once before creating any MLocale instances
-     * Data itself should be in the ICU specific subdirectory at the given paths, e.g.
-     * somePath/icudt42l/
+     * \brief Sets the DataPaths for the (ICU) locale system to the given paths.
+     *
+     * \param dataPaths a list of paths
+     *
+     * This should be called at most once in a process before creating
+     * any MLocale instances. This function is not thread-safe.
+     * Use it before doing anything with MLocale instances from multiple
+     * threads.
+     *
+     * This function calls u_setDataDirectory() in libicu, see also
+     * <a href="http://icu-project.org/apiref/icu4c/putil_8h.html">
+     * http://icu-project.org/apiref/icu4c/putil_8h.html</a>.
+     *
+     * libmeegotouch initialises this data path to the value of the macro
+     *
+     * \code
+     *     M_ICUEXTRADATA_DIR
+     * \endcode
+     *
+     * which is normally set to
+     *
+     * \code
+     *     /usr/share/meegotouch/icu/
+     * \endcode
+     *
+     * usually one should not change this.
+     *
+     * The user data itself should be in the ICU specific
+     * subdirectories at the given paths, e.g. a user override file
+     * for some of the basic data of the Finnish locale should be
+     * in
+     *
+     * \code
+     *     /usr/share/meegotouch/icu/usrdt42l/fi.res
+     * \endcode
+     *
+     * and a user override file for the lang data of the Finnish
+     * locale should be in
+     *
+     * \code
+     *     /usr/share/meegotouch/icu/usrdt42l/lang/fi.res
+     * \endcode
+     *
+     * etc.
+     *
+     * \sa void setDataPath(const QString &dataPath)
      */
     static void setDataPaths(const QStringList &dataPaths);
 
     /*!
      * \brief Sets the DatPaths to given path
+     *
+     * \param dataPath the data path
+     *
+     * convenience function to set the data path to a single directory
+     *
+     * \sa setDataPaths(const QStringList &dataPaths)
      */
     static void setDataPath(const QString &dataPath);
 

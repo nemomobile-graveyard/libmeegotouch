@@ -23,12 +23,6 @@ contains(DEFINES, HAVE_DBUS) {
     include(notification/notification.pri)
 }
 
-contains(DEFINES, HAVE_ICU) {
-    include(icu-extradata/extradata.pri)
-    EXTRADATA_SOURCE=icu-extradata/extradata.txt
-}
-
-
 # install .prf files
 install_prf.path = $$[QT_INSTALL_DATA]/mkspecs/features
 install_prf.files = $${M_SOURCE_TREE}/mkspecs/features/meegotouch.prf \
