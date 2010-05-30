@@ -36,9 +36,9 @@ class MApplicationMenuViewPrivate;
 
     \section MApplicationMenuViewOverview Overview
         MApplicationMenuView is used to visualize actions placed into the MApplicationMenu.
-        MApplicationMenuView appears once the user clicks on the view menu title area. It is opened on
+        MApplicationMenuView appears once the user clicks on the application menu title area. It is opened on
         top of the current application view. Background of the view is dimmed/blurred when application
-        menu is open. The outlook of view menu can be changed using the styling attributes defined in
+        menu is open. The outlook of application menu can be changed using the styling attributes defined in
         MApplicationMenuStyle and MSceneWindowStyle.
 
         The following action widgets are supported for this particular view:
@@ -67,9 +67,9 @@ class MApplicationMenuViewPrivate;
 
     \section MApplicationMenuInteractions Interactions
         - The view can be closed by tapping anywhere outside the menu (anywhere in the dimmed area)
-        - The view can also be closed from the top of screen (from the view menu title, or the top right corner)
-        - Selecting an action command from the view menu closes the menu
-        - Selecting a view style command closes the view menu and sets the view and its contents in
+        - The view can also be closed from the top of screen (from the application menu title, or the top right corner)
+        - Selecting an action command from the application menu closes the menu
+        - Selecting a view style command closes the application menu and sets the view and its contents in
           the newly selected style.
 
     \sa MApplicationMenu MApplicationMenuModel MApplicationMenuStyle

@@ -59,7 +59,7 @@ QString ApplicationMenuPage::timedemoTitle()
 void ApplicationMenuPage::retranslateUi()
 {
     //% "Application Menu"
-    setTitle(qtTrId("xx_viewmenu_page_title"));
+    setTitle(qtTrId("xx_applicationmenu_page_title"));
     if (!isContentCreated())
         return;
 

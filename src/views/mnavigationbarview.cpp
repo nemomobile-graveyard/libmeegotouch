@@ -69,7 +69,7 @@ void MNavigationBarViewPrivate::setMenuButtonwidth()
     Q_Q(MNavigationBarView);
 
     /* FIXME: Its there because the UI specs contains the following formula:
-      width of view menu button = width of portrait view - width of home button - width of close button.
+      width of application menu button = width of portrait view - width of home button - width of close button.
       This needs to be removed when there exists support for reading CSS constants in the code
      */
     int widthofPortraitMode = MDeviceProfile::instance()->resolution().height();

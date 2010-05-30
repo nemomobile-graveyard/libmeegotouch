@@ -84,7 +84,7 @@ public:
     WidgetsGalleryDataModel() : QAbstractItemModel() {
         //% "Application View"
         addCategory(qtTrId("xx_wg_categories_application_view"), new MainCategoryPage(this, createIndex(0,0)));
-        //% "View Menu"
+        //% "Application Menu"
         addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_view_menu"), new ApplicationMenuPage());
         //% "Command Area"
         addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_command_area"), new DisplayModesPage());

@@ -56,7 +56,7 @@ public:
     virtual ~MNavigationBar();
 
     /**
-     * Returns the iconID of the icon of the view menu button.
+     * Returns the iconID of the icon of the application menu button.
      */
     QString viewMenuIconID() const;
 
@@ -90,7 +90,7 @@ public Q_SLOTS:
     void setViewMenuDescription(const QString &text);
 
     /**
-     * Sets the new icon of the view menu button.
+     * Sets the new icon of the application menu button.
      * \param the id of the icon that should be shown.
      */
     void setViewMenuIconID(const QString &id);
