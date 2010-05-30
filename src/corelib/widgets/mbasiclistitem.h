@@ -41,6 +41,7 @@ public:
     virtual ~MBasicListItem();
     
     void initLayout();
+    void clearLayout();
     
     void setItemStyle(ItemStyle itemStyle);
     ItemStyle itemStyle() const;

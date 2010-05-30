@@ -41,16 +41,9 @@ MBasicListItem::~MBasicListItem()
 
 void MBasicListItem::initLayout()
 {
-    if (layoutGrid) {
-        for (int i = 0; i < layoutGrid->count(); i++) {
-            QGraphicsLayoutItem *item = layoutGrid->itemAt(0);
-            layoutGrid->removeAt(0);
-            delete item;
-        }
-        iconImage = NULL;
-        titleLabel = NULL;
-        subtitleLabel = NULL;
-    } else {
+    clearLayout();
+    
+    if (!layoutGrid) {
         layoutGrid = new QGraphicsGridLayout(this);
         layoutGrid->setContentsMargins(0, 0, 0, 0);
         layoutGrid->setSpacing(0);
@@ -99,14 +92,28 @@ void MBasicListItem::initLayout()
             subtitleLabel->setObjectName("CommonSubTitle");
 
             layoutGrid->addItem(iconImage, 0, 0, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabel, 1, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(subtitleLabel, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(titleLabel, 1, 1, Qt::AlignLeft | Qt::AlignTop);
+            layoutGrid->addItem(subtitleLabel, 2, 1, Qt::AlignLeft | Qt::AlignBottom);
             layoutGrid->addItem(new QGraphicsWidget, 3, 1);
             
             break;
         }
     default:
         break;
+    }
+}
+
+void MBasicListItem::clearLayout()
+{
+    if (layoutGrid) {
+        for (int i = 0; i < layoutGrid->count(); i++) {
+            QGraphicsLayoutItem *item = layoutGrid->itemAt(0);
+            layoutGrid->removeAt(0);
+            delete item;
+        }
+        iconImage = NULL;
+        titleLabel = NULL;
+        subtitleLabel = NULL;
     }
 }
 
@@ -136,7 +143,10 @@ void MBasicListItem::setIcon(MImageWidget *icon)
 
     if (icon) {
         iconImage = icon;
-        layoutGrid->addItem(iconImage, 0, 0);
+        if (listItemStyle == MBasicListItem::IconWithTitle)
+            layoutGrid->addItem(iconImage, 0, 0);
+        else if (listItemStyle == MBasicListItem::IconWithTitleAndSubtitle)
+            layoutGrid->addItem(iconImage, 0, 0, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
     }
 }
 
