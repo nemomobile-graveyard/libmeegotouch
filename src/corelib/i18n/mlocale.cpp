@@ -1820,7 +1820,7 @@ QString MLocale::languageEndonym() const
     // TODO: implement a workaround for
     // http://site.icu-project.org/design/resbund/issues
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
-    UResourceBundle *res = ures_open("ICUDATA-lang", qPrintable(d->_defaultLocale), &status);
+    UResourceBundle *res = ures_open(U_ICUDATA_NAME "-lang", qPrintable(d->_defaultLocale), &status);
 #else
     UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
 #endif
@@ -1858,7 +1858,7 @@ QString MLocale::countryEndonym() const
     // TODO: implement a workaround for
     // http://site.icu-project.org/design/resbund/issues
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
-    UResourceBundle *res = ures_open("ICUDATA-region", qPrintable(d->_defaultLocale), &status);
+    UResourceBundle *res = ures_open(U_ICUDATA_NAME "-region", qPrintable(d->_defaultLocale), &status);
 #else
     UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
 #endif
