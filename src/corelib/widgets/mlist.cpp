@@ -34,12 +34,13 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MList)
 
-        MListPrivate::MListPrivate() : selectionMode(MList::NoSelection)
+MListPrivate::MListPrivate() : selectionMode(MList::NoSelection)
 {
 }
 
 MListPrivate::~MListPrivate()
 {
+    delete listFilter;
 }
 
 void MListPrivate::init()
@@ -48,8 +49,8 @@ void MListPrivate::init()
 
     q->setSelectionMode(MList::NoSelection);
     q->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)); //grow to available space in both directions
-    q->listFilter = new MListFilter(q);
-    q->listFilter->setEnabled(false);
+    listFilter = new MListFilter(q);
+    listFilter->setEnabled(false);
 }
 
 MList::MList(MListPrivate *dd, MListModel *model, QGraphicsItem *parent)
@@ -69,7 +70,6 @@ MList::MList(QGraphicsItem *parent)
 
 MList::~MList()
 {
-    delete listFilter;
 }
 
 void MList::updateData(const QList<const char *>& modifications)
@@ -92,8 +92,9 @@ void MList::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 
 void MList::setItemModel(QAbstractItemModel *itemModel)
 {
-    if(listFilter->enabled())
-        itemModel = listFilter->updateItemModel(itemModel);
+    Q_D(MList);
+    if(d->listFilter->enabled())
+        itemModel = d->listFilter->updateItemModel(itemModel);
 
     setSelectionModel(NULL);
 
@@ -239,11 +240,14 @@ MList::SelectionMode MList::selectionMode() const
 
 MListFilter *MList::filtering() const
 {
-    return listFilter;
+    Q_D(const MList);
+    return d->listFilter;
 }
 
 void MList::keyPressEvent(QKeyEvent *event)
 {
-    if(listFilter->enabled())
-        listFilter->keyPressEvent(event);
+    Q_D(MList);
+
+    if(d->listFilter->enabled())
+        d->listFilter->keyPressEvent(event);
 }

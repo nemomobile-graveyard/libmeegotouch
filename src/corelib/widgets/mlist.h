@@ -407,7 +407,6 @@ private:
     Q_DECLARE_PRIVATE(MList)
     Q_DISABLE_COPY(MList)
     friend class MListView;
-    MListFilter* listFilter;
 };
 
 #endif
