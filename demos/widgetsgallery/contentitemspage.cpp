@@ -28,6 +28,7 @@
 #include <MListItem>
 
 #include <MBasicListItem>
+#include <MDetailedListItem>
 
 class BasicListItemCreator : public MAbstractCellCreator<MBasicListItem>
 {
@@ -45,6 +46,7 @@ public:
         if (cell == NULL) {
             cell = new MBasicListItem(itemStyle);
             cell->initLayout();
+            cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
 
@@ -91,6 +93,83 @@ private:
     MBasicListItem::ItemStyle itemStyle;
     QImage defaultImage;
 };
+
+
+class DetailedListItemCreator : public MAbstractCellCreator<MDetailedListItem>
+{
+public:
+    DetailedListItemCreator(MDetailedListItem::ItemStyle style)
+        : itemStyle(style),
+        defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
+    {
+    }
+
+    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
+        Q_UNUSED(index);
+        MDetailedListItem *cell = dynamic_cast<MDetailedListItem*>(recycler.take(MDetailedListItem::staticMetaObject.className()));
+        
+        if (cell == NULL) {
+            cell = new MDetailedListItem(itemStyle);
+            cell->initLayout();
+            cell->setLayoutPosition(M::CenterPosition);
+        }
+        updateCell(index, cell);
+
+        return cell;
+    }
+
+    void updateCell(const QModelIndex &index, MWidget *cell) const {
+        MDetailedListItem *item = dynamic_cast<MDetailedListItem*>(cell);
+        if (!item)
+            return;
+
+        switch (itemStyle) {
+        case MDetailedListItem::IconTitleSubtitleAndTwoSideIcons: {
+            item->setTitle(index.data().toString());
+            //% "Subtitle"
+            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
+            item->icon()->setImage(defaultImage);
+            item->sideTopImageWidget()->setImage(defaultImage);
+            item->sideBottomImageWidget()->setImage(defaultImage);
+            break;    
+        }
+        case MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel: {
+            item->setTitle(index.data().toString());
+            //% "Subtitle"
+            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
+            item->icon()->setImage(defaultImage);
+            item->sideTopImageWidget()->setImage(defaultImage);
+            //% "Side"
+            item->setSideBottomTitle(qtTrId("xx_wg_contentitemspage_sidetitle"));
+            break;    
+        }
+        case MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons: {
+            item->setTitle(index.data().toString());
+            //% "Subtitle"
+            item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
+            item->thumbnail()->setImage(defaultImage);
+            item->sideTopImageWidget()->setImage(defaultImage);
+            item->sideBottomImageWidget()->setImage(defaultImage);
+            break;    
+        }
+        case MDetailedListItem::ThumbnailSmallTitleAndTwoSideIcons: {
+            item->setTitle(index.data().toString());
+            item->icon()->setImage(defaultImage);
+            item->sideTopImageWidget()->setImage(defaultImage);
+            item->sideBottomImageWidget()->setImage(defaultImage);
+            break;    
+        }
+        default:
+            break;
+        };
+
+    }
+
+private:
+    MDetailedListItem::ItemStyle itemStyle;
+    QImage defaultImage;
+};
+
 
 class ContentItemsPageModel : public QAbstractItemModel {
 public:
@@ -174,10 +253,22 @@ void ContentItemsPage::createContent()
 
 void ContentItemsPage::populateLayout()
 {
+    //Basic list items
     contentItemLists.append(createList("Single Title", new BasicListItemCreator(MBasicListItem::SingleTitle)));
     contentItemLists.append(createList("Title with Subtitle", new BasicListItemCreator(MBasicListItem::TitleWithSubtitle)));
     contentItemLists.append(createList("Icon with Title",  new BasicListItemCreator(MBasicListItem::IconWithTitle)));
     contentItemLists.append(createList("Icon with Title and Subtitle",  new BasicListItemCreator(MBasicListItem::IconWithTitleAndSubtitle)));
+    
+    //Detailed list items
+    contentItemLists.append(createList("Icon with Title Subtitle and Two Side Icons", 
+                                       new DetailedListItemCreator(MDetailedListItem::IconTitleSubtitleAndTwoSideIcons)));
+    contentItemLists.append(createList("Icon with Title Subtitle and Side Icon with Label", 
+                                       new DetailedListItemCreator(MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel)));
+    contentItemLists.append(createList("Thumbnail with Title Subtitle and Two Side Icons", 
+                                       new DetailedListItemCreator(MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons)));
+    contentItemLists.append(createList("Thumbnail with Small Title and Two Side Icons", 
+                                       new DetailedListItemCreator(MDetailedListItem::ThumbnailSmallTitleAndTwoSideIcons)));
+    
     /*contentItemLists.append(createList("Single Icon", MContentItem::SingleIcon));
     contentItemLists.append(createList("Icon and Single Text Label Vertical", MContentItem::IconAndSingleTextLabelVertical));
     contentItemLists.append(createList("Icon and Two Text Labels Vertical", MContentItem::IconAndTwoTextLabelsVertical));

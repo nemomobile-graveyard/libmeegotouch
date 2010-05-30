@@ -17,28 +17,34 @@
 **
 ****************************************************************************/
  
-#ifndef MBASICLISTITEM_H
-#define MBASICLISTITEM_H
+#ifndef MDETAILEDLISTITEM_H
+#define MDETAILEDLISTITEM_H
 
 #include "mlistitem.h"
 
 class MImageWidget;
 class MLabel;
+
 class QGraphicsGridLayout;
 
-class M_EXPORT MBasicListItem : public MListItem
+class M_EXPORT MDetailedListItem : public MListItem
 {
 public:
     enum ItemStyle {
-        SingleTitle = 0x0,
-        TitleWithSubtitle,
-        IconWithTitle,
-        IconWithTitleAndSubtitle
+        IconTitleSubtitleAndTwoSideIcons = 0x0,
+        IconTitleSubtitleAndSideIconWithLabel,
+        ThumbnailTitleSubtitleAndTwoSideIcons,
+        ThumbnailSmallTitleAndTwoSideIcons
+    };
+    
+    enum IconStyle {
+        Icon = 0x0,
+        Thumbnail
     };
 
 public:
-    MBasicListItem(MBasicListItem::ItemStyle style = SingleTitle, QGraphicsItem *parent = NULL);
-    virtual ~MBasicListItem();
+    MDetailedListItem(MDetailedListItem::ItemStyle style = IconTitleSubtitleAndTwoSideIcons, QGraphicsItem *parent = NULL);
+    virtual ~MDetailedListItem();
     
     void initLayout();
     void clearLayout();
@@ -46,8 +52,20 @@ public:
     void setItemStyle(ItemStyle itemStyle);
     ItemStyle itemStyle() const;
     
+    void setIconStyle(IconStyle style);
+    IconStyle iconStyle() const;
+    
     void setIcon(MImageWidget *icon);
     MImageWidget *icon() const;
+    
+    void setThumbnail(MImageWidget *thumbnail);
+    MImageWidget *thumbnail() const;
+    
+    void setSideTopImageWidget(MImageWidget *image);
+    MImageWidget *sideTopImageWidget() const;
+    
+    void setSideBottomImageWidget(MImageWidget *image);
+    MImageWidget *sideBottomImageWidget() const;
     
     void setTitle(const QString &title);
     QString title() const;
@@ -55,14 +73,22 @@ public:
     void setSubtitle(const QString &subtitle);
     QString subtitle() const;
     
+    void setSideBottomTitle(const QString &text);
+    QString sideBottomTitle() const;
+    
 private:
     QGraphicsGridLayout *layoutGrid;
 
     MImageWidget *iconImage;    
+    MImageWidget *sideTopImage;
+    MImageWidget *sideBottomImage;
+    
     MLabel *titleLabel; 
     MLabel *subtitleLabel;
+    MLabel *sideBottomLabel;
     
     ItemStyle listItemStyle;
 };
 
-#endif // MBASICLISTITEM_H
+
+#endif // MDETAILEDLISTITEM_H

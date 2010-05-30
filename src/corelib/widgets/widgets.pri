@@ -60,6 +60,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/msortfilterproxymodel.h \
     $$WIDGETS_SRC_DIR/mbubbleitem.h \
     $$WIDGETS_SRC_DIR/mbasiclistitem.cpp \
+    $$WIDGETS_SRC_DIR/mdetailedlistitem.cpp \
 
 MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.h \
@@ -170,3 +171,4 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mbubbleitem.cpp \
     $$WIDGETS_SRC_DIR/mbubbleitemmodel.cpp \
     $$WIDGETS_SRC_DIR/mbasiclistitem.cpp \
+    $$WIDGETS_SRC_DIR/mdetailedlistitem.cpp \
