@@ -243,10 +243,10 @@ void ToolBarPage::textEntryWithTwoButtons()
 {
     clearToolbarActions();
     addTextEntry();
-    MAction *action = new MAction("Icon-video", "Video", this);
+    MAction *action = new MAction("icon-m-toolbar-camera", "Camera", this);
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
-    MAction *actionSMS = new MAction("Icon-new-SMS", "SMS", this);
+    MAction *actionSMS = new MAction("icon-m-toolbar-gallery", "Gallery", this);
     actionSMS->setLocation(MAction::ToolBarLocation);
     insertAction(action, actionSMS);
 }

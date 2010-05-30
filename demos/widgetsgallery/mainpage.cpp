@@ -86,8 +86,8 @@ public:
         addCategory(qtTrId("xx_wg_categories_application_view"), new MainCategoryPage(this, createIndex(0,0)));
         //% "Application Menu"
         addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_view_menu"), new ApplicationMenuPage());
-        //% "Command Area"
-        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_command_area"), new DisplayModesPage());
+        //% "Display Modes"
+        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_display_modes"), new DisplayModesPage());
         //% "Toolbar (including Tab Bar)"
         addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_toolbar_incl_tab_bar"), new ToolBarPage());
 

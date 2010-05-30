@@ -579,7 +579,7 @@ The primary (single short tap) action of the element should not be duplicated in
     <message id="xx_displaymodes_page_title">
         <location filename="../navigationbarpage.cpp" line="125"/>
         <source>Display Modes and Full Screen</source>
-        <translation>Display Modes and Full Screen</translation>
+        <translation>Display Modes</translation>
     </message>
     <message id="xx_displaymodes_display_mode">
         <location filename="../navigationbarpage.cpp" line="129"/>
@@ -864,10 +864,8 @@ Checkbox essentially does the same thing as the Switch button, so please conside
     </message>
     <message id="xx_checkbox_page_checkbox_label">
         <location filename="../checkboxpage.cpp" line="88"/>
-        <source>I have read and understood the
-instructions.</source>
-        <translation>I have read and understood the
-instructions.</translation>
+        <source>I have read and understood the instructions.</source>
+        <translation>I have read and understood the instructions.</translation>
     </message>
     <message id="xx_icon_button_page_title">
         <location filename="../iconbuttonpage.cpp" line="82"/>

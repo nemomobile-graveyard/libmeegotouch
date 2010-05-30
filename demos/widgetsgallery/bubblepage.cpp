@@ -84,7 +84,7 @@ void BubblePage::createContent()
     }
 
     MBubbleItem* expandedItem = new MBubbleItem();
-    expandedItem->setMessage("Here are some nice pictures to enjoy while you're coding.");
+    expandedItem->setMessage("Here are some nice pictures to enjoy while you're working.");
     expandedItem->setSenderName("Tester");
     MImageWidget *avatar = new MImageWidget(expandedItem);
     avatar->setPixmap(QPixmap(QString(MEDIA_DIR) + QDir::separator() + "avatar-cat.png"));

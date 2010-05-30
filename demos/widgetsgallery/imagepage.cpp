@@ -87,7 +87,7 @@ void ImagePage::createContent()
 
     // Image properties comboBox
     propertiesComboBox = new MComboBox();
-    propertiesComboBox->setIconID("Icon-pictures");
+    propertiesComboBox->setIconID("icon-m-gallery-image-edit");
 
     // Image property slider
     slider = new MSlider();

@@ -88,7 +88,7 @@ void CheckboxPage::retranslateUi()
     //% "using a Switch instead."
     infoLabel->setText("<a></a>" + qtTrId("xx_checkbox_page_info_label"));
 
-    //% "I have read and understood the\ninstructions."
+    //% "I have read and understood the instructions."
     checkboxLabel->setText("<a></a>" + qtTrId("xx_checkbox_page_checkbox_label"));
 }
 
