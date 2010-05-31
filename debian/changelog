@@ -1,4 +1,4 @@
-libmeegotouch (0.20.13~1) UNRELEASED; urgency=low
+libmeegotouch (0.20.13-1) unstable; urgency=low
 
   * Fixes: NB#166495 - No smooth panning for large pages possible
   * Fixes: NB#170526 - MPhysics2DPanning does not go above 33 fps
@@ -15,7 +15,7 @@ libmeegotouch (0.20.13~1) UNRELEASED; urgency=low
   * Fixes: NB#170636 - Close button not showing
   * Fixes: NB#170020 - Visible window reported as non-visible, impossible to hide
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 31 May 2010 13:14:22 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 31 May 2010 16:29:26 +0300
 
 libmeegotouch (0.20.12.1-1) unstable; urgency=low
 
