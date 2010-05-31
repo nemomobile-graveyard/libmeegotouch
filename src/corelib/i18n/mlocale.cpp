@@ -1623,34 +1623,15 @@ QString MLocale::icuFormatString( DateType dateType,
                           TimeType timeType,
                           CalendarType calendarType) const
 {
-
-    // Create calLocale which has the time pattern we want to use
-    icu::Locale calLocale = MIcuConversions::createLocale(
-        categoryName(MLocale::MLcTime),
-        calendarType);
-
-    icu::DateFormat::EStyle dateStyle = MIcuConversions::toEStyle(dateType);
-    icu::DateFormat::EStyle timeStyle = MIcuConversions::toEStyle(timeType);
-    icu::DateFormat *df
-    = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
-
-    // Both the locale and the calendarType seem to
-    // be ignored here anyway. I.e. the following two statements can be replaced with
-    //  DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(icu::Locale(""));
-    // without a change in behaviour:
-    icu::Locale symbolLocale
-        = MIcuConversions::createLocale(categoryName(MLocale::MLcMessages),
-                                      calendarType);
-    DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
+    Q_D(const MLocale);
+    MCalendar mcalendar(calendarType);
+    icu::DateFormat *df = d->createDateFormat(dateType, timeType, mcalendar);
 
     QString icuFormatQString;
 
     if (df)
     {
         icu::UnicodeString icuFormatString;
-        // This is not nice but seems to be the only way to set the
-        // symbols with the public API
-        static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
         static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
         icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
         delete df;
