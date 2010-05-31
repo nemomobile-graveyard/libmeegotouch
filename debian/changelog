@@ -1,3 +1,22 @@
+libmeegotouch (0.20.13~1) UNRELEASED; urgency=low
+
+  * Fixes: NB#166495 - No smooth panning for large pages possible
+  * Fixes: NB#170526 - MPhysics2DPanning does not go above 33 fps
+  * Fixes: NB#170533 - QGraphicsSceneMouseEvent::buttonDownPos() received from MPannableWidget is wrongly set
+  * Fixes: NB#169850 - Buttons in Delete confirmation note are uneven
+  * Fixes: NB#168336 - MStatusBar updating itself when not visible
+  * Fixes: NB#155795 - Scrollbar is not visible when DuiList is used inside DuiPannableViewport
+  * Fixes: NB#143963 - some duiapplicationservice if methods should not cause application to launch
+  * Fixes: NB#163496 - Support setting content-item images via theme-ids
+  * Fixes: NB#169087 - No unique object names for MAction's in MToolbar/MNavigationBar
+  * Fixes: NB#170390 - "back" and "close" button overlaps whn Office-tools launched from CM
+  * Fixes: NB#169937 - half of the dialog is displayed in portrait view
+  * Fixes: NB#169305 - Applications UI is not mirrored in Arabic language
+  * Fixes: NB#170636 - Close button not showing
+  * Fixes: NB#170020 - Visible window reported as non-visible, impossible to hide
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 31 May 2010 13:14:22 +0300
+
 libmeegotouch (0.20.12.1-1) unstable; urgency=low
 
   * Brown paper bag release; fix arm build
@@ -18,7 +37,6 @@ libmeegotouch (0.20.12-1) unstable; urgency=low
   * Fixes: NB#169377 - System modal dialog" in Widgetsgallery is not a system-modal dialog
   * Fixes: NB#157742 - Fix MContentItem docs
   * Fixes: NB#158375 - DuiContentItem api-doc fixes
-  * Fixes: NB#164207 - long press in MLabel
   * Fixes: NB#167960 - Application is opened in landscape view when device is in portrait mode
 
  -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Tue, 25 May 2010 13:38:45 +0300
