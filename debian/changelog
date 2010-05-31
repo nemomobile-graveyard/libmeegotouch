@@ -1,3 +1,10 @@
+libmeegotouch (0.20.14~1) UNRELEASED; urgency=low
+
+  * Implemented: SWP#-DUI-2781
+  * Implemented: SWP#-DUI-2782
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 31 May 2010 16:40:51 +0300
+
 libmeegotouch (0.20.13-1) unstable; urgency=low
 
   * Fixes: NB#166495 - No smooth panning for large pages possible
