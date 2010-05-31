@@ -1,5 +1,6 @@
 libmeegotouch-dev
 libmeegotouch-tests
+libmeegotouch-tests-dbg
 *.debhelper
 *.substvars
 libmeegotouch-bin-dbg
@@ -22,6 +23,7 @@ libmeegotouch-l10n-hu
 libmeegotouch-l10n-ur
 libmeegotouch-l10n-zh-cn
 libmeegotouch-benchmarks
+libmeegotouch-benchmarks-dbg
 tmp
 files
 meegotouch-demos
@@ -42,7 +44,9 @@ meegotouch-demos-widgetsgallery-l10n-zh-cn
 meegotouch-demos-appletinstallationsource
 meegotouch-demos-appletinstallationsource-dbg
 meegotouch-dev-tools
+meegotouch-dev-tools-dbg
 meegotouch-demos-plainqt-dbg
 meegotouch-demos-plainqt
 meegotouch-im-context
 meegotouch-qt-style
+meegotouch-qt-style-dbg
