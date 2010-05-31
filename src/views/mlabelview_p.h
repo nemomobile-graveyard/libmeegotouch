@@ -48,6 +48,7 @@ public:
     virtual void cancelEvent(MCancelEvent *event);
     virtual void longPressEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void applyStyle();
+    Qt::TextFlag wrap() const;
 
     void markDirty();
 

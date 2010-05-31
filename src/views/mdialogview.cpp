@@ -149,7 +149,7 @@ void MDialogViewPrivate::createDialogBox()
     dialogBoxLayout->addItem(contentsViewport);
 
     contents = new QGraphicsWidget();
-    contents->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    contents->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
     contentsViewport->setWidget(contents);
     contentsLayout = createLayout(Qt::Vertical);
     contentsLayout->setContentsMargins(0, 0, 0, 0);

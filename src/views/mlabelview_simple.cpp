@@ -32,6 +32,7 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneResizeEvent>
 
+
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
     viewPrivate(viewPrivate), preferredSize(-1, -1), dirty(true), cachedElidedText("")
 {
@@ -67,8 +68,7 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
     painter->setPen(model->color().isValid() ? model->color() : style->color());
     painter->setLayoutDirection(model->textDirection());
 
-    Qt::TextFlag wrap = viewPrivate->controller->wordWrap() ? Qt::TextWordWrap : Qt::TextSingleLine;
-    painter->drawText(paintingRect, viewPrivate->textOptions.alignment() | wrap, textToRender);
+    painter->drawText(paintingRect, viewPrivate->textOptions.alignment() | wrap(), textToRender);
 }
 
 #else
@@ -124,9 +124,8 @@ QImage MLabelViewSimple::generateImage()
         painter.setPen(model->color().isValid() ? model->color() : style->color());
         painter.setLayoutDirection(model->textDirection());
 
-        Qt::TextFlag wrap = viewPrivate->controller->wordWrap() ? Qt::TextWordWrap : Qt::TextSingleLine;
-        painter.drawText(0, 0, paintingRectSize.width(), paintingRectSize.height(), viewPrivate->textOptions.alignment() 
-                         | wrap, textToRender);
+        painter.drawText(0, 0, paintingRectSize.width(), paintingRectSize.height(), 
+                         viewPrivate->textOptions.alignment() | wrap(), textToRender);
 
     }
 
@@ -145,7 +144,9 @@ bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
     // return true if such update is needed.
 
     QFontMetricsF fm(viewPrivate->controller->font());
-    QRectF bR = fm.boundingRect(QRectF(QPoint(0, 0), event->newSize()), viewPrivate->textOptions.alignment(), viewPrivate->model()->text());
+
+    QRectF bR = fm.boundingRect(QRectF(QPoint(0, 0), event->newSize()), 
+                                viewPrivate->textOptions.alignment() | wrap(), viewPrivate->model()->text());
     if (bR.height() > fm.height()) {
         preferredSize = QSizeF(bR.width(), bR.height());
         return true;
@@ -167,8 +168,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
             r.setHeight(QWIDGETSIZE_MAX);
         }
 
-        Qt::TextFlag wrap = viewPrivate->controller->wordWrap() ? Qt::TextWordWrap : Qt::TextSingleLine;
-        QRectF bR(fm.boundingRect(r, viewPrivate->textOptions.alignment() | wrap,
+        QRectF bR(fm.boundingRect(r, viewPrivate->textOptions.alignment() | wrap(),
                                   viewPrivate->model()->text()));
 
         return QSizeF(fm.width("x"), bR.height());
@@ -189,8 +189,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
 
         QFontMetricsF fm(viewPrivate->controller->font());
 
-        Qt::TextFlag wrap = viewPrivate->controller->wordWrap() ? Qt::TextWordWrap : Qt::TextSingleLine;
-        QRectF bR(fm.boundingRect(QRectF(0, 0, w, h), viewPrivate->textOptions.alignment() | wrap,
+        QRectF bR(fm.boundingRect(QRectF(0, 0, w, h), viewPrivate->textOptions.alignment() | wrap(),
                                   viewPrivate->model()->text()));
         return bR.size().boundedTo(QSizeF(w, h));
     }
@@ -215,14 +214,27 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
     const char *member = NULL;
     bool needUpdate = false;
 
+    const MLabelModel *model = viewPrivate->model();
+
     foreach(member, modifications) {
         if (member == MLabelModel::Text) {
             preferredSize = QSizeF(-1, -1);
             needUpdate = true;
+        } else if(member == MLabelModel::WrapMode) {
+            if (model->wordWrap()) {
+                if (model->wrapMode() == QTextOption::NoWrap) {
+                    //Note that NoWrap works incorrectly in Qt 4.6
+                    viewPrivate->textOptions.setWrapMode(QTextOption::ManualWrap);
+                } else {
+                    viewPrivate->textOptions.setWrapMode(model->wrapMode());
+                }
+            }
+            needUpdate = true;
         } else if (member == MLabelModel::WordWrap) {
-            if (viewPrivate->model()->wordWrap()) {
-                viewPrivate->textOptions.setWrapMode(QTextOption::WordWrap);
+            if (model->wordWrap()) {
+                viewPrivate->textOptions.setWrapMode(model->wrapMode());
             } else {
+                //Note that NoWrap works incorrectly in Qt 4.6
                 viewPrivate->textOptions.setWrapMode(QTextOption::ManualWrap);
             }
             needUpdate = true;
@@ -272,3 +284,19 @@ void MLabelViewSimple::markDirty()
     dirty = true;
     cachedElidedText = "";
 }
+
+Qt::TextFlag MLabelViewSimple::wrap() const
+{
+    if(!viewPrivate->controller->wordWrap()) {
+        return Qt::TextSingleLine;
+    }
+
+    QTextOption::WrapMode wrapMode = viewPrivate->model()->wrapMode();
+    if (wrapMode == QTextOption::WordWrap) {
+        return Qt::TextWordWrap;
+    } else if (wrapMode == QTextOption::WrapAnywhere || wrapMode == QTextOption::WrapAtWordBoundaryOrAnywhere) {
+        return Qt::TextWrapAnywhere;
+    }
+    return Qt::TextSingleLine;
+}
+    

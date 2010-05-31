@@ -45,13 +45,6 @@ MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
     MLabelViewSimple(viewPrivate), textDocumentDirty(true), mouseDownCursorPos(-1)
 {
     textDocument.setDocumentMargin(0);
-    
-    if (viewPrivate->model()->wordWrap()) {
-        viewPrivate->textOptions.setWrapMode(viewPrivate->model()->wrapMode());
-    } else {
-        //NOTE!!: ManualWrap used instead of NoWrap. NoWrap works incorrectly in Qt 4.6
-        viewPrivate->textOptions.setWrapMode(QTextOption::ManualWrap);
-    }
 }    
 
 
@@ -217,8 +210,12 @@ void MLabelViewRich::setupModel()
 {
     const MLabelModel *model = viewPrivate->model();
 
-    //NOTE!!: ManualWrap used instead of NoWrap. NoWrap works incorrectly in Qt 4.6
-    viewPrivate->textOptions.setWrapMode(model->wordWrap() ? QTextOption::WordWrap : QTextOption::ManualWrap);
+    if (model->wordWrap()) {
+        viewPrivate->textOptions.setWrapMode(model->wrapMode());
+    } else {
+        //NOTE!!: ManualWrap used instead of NoWrap. NoWrap works incorrectly in Qt 4.6
+        viewPrivate->textOptions.setWrapMode(QTextOption::ManualWrap);
+    }
     viewPrivate->textOptions.setTextDirection(model->textDirection());
     viewPrivate->textOptions.setAlignment(model->alignment());
 
