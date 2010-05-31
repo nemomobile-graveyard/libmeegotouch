@@ -52,7 +52,6 @@
 namespace
 {
     const char *const BackupNameFormatString = "%d%t%g%t%m%t%f";
-    const char *const ExtraDataBundleName = "extradata";
     const QString RtlLanguages("am:ar:fa:he:ps:ur:");
     const char *const Languages = "Languages";
     const char *const Countries = "Countries";
@@ -1756,39 +1755,6 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
     delete dfs;
 
     return result;
-}
-#endif
-
-#ifdef HAVE_ICU
-namespace
-{
-// fetches a resource bundle for name formats
-    UResourceBundle *nameFmtsResourceBundle()
-    {
-        UErrorCode status = U_ZERO_ERROR;
-
-        UResourceBundle *extraData = ures_openDirect(ExtraDataBundleName, "", &status);
-
-        if (U_FAILURE(status)) {
-            mDebug("mlocale.cpp") << "Error ures_open" << u_errorName(status);
-        }
-
-        UResourceBundle *posixData = ures_getByKey(extraData, "posixdata", NULL, &status);
-
-        if (U_FAILURE(status)) {
-            mDebug("mlocale.cpp") << "Error ures_open posixData" << u_errorName(status);
-        }
-
-        UResourceBundle *nameFmts = ures_getByKey(posixData, "nameFmts", NULL, &status);
-        if (U_FAILURE(status)) {
-            mDebug("mlocale.cpp") << "Error ures_open nameFmts" << u_errorName(status);
-        }
-
-        ures_close(extraData);
-        ures_close(posixData);
-
-        return nameFmts;
-    }
 }
 #endif
 
