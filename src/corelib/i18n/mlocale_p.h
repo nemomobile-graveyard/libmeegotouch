@@ -20,6 +20,7 @@
 #ifndef MLOCALE_P_H
 #define MLOCALE_P_H
 
+#include <QMap>
 #include <QList>
 #include <QString>
 #include <QStringList>
@@ -106,6 +107,13 @@ public:
     static QString parseScript(const QString &localeString);
     static QString parseVariant(const QString &localeString);
 
+    void loadCountryCodes();
+
+    QString formatPhoneNumber( const QString& phoneNumber,
+                               MLocale::PhoneNumberGrouping grouping ) const;
+
+    bool isValidCountryCode( const QString& code ) const;
+
     bool _valid;
 
     // the default locale is used for messages and other categories if not
@@ -117,6 +125,9 @@ public:
     QString _calendarLocale;
     QString _monetaryLocale;
     QString _nameLocale;
+
+    // the list of valid country codes for the formatPhoneNumber function
+    QHash<QString, int> _validCountryCodes;
 
     // the used calendar and collation may be overridden
     MLocale::CalendarType _calendarType;

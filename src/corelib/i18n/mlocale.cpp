@@ -346,6 +346,7 @@ MLocalePrivate::MLocalePrivate()
 #endif
       , q_ptr(0)
 {
+    loadCountryCodes();
 }
 
 // copy constructor
@@ -358,6 +359,7 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       _calendarLocale(other._calendarLocale),
       _monetaryLocale(other._monetaryLocale),
       _nameLocale(other._nameLocale),
+      _validCountryCodes( other._validCountryCodes ),
       _calendarType(other._calendarType),
       _collation(other._collation),
 #ifdef HAVE_ICU
@@ -406,6 +408,7 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
     _messageTranslations = other._messageTranslations;
     _timeTranslations = other._timeTranslations;
     _trTranslations = other._trTranslations;
+    _validCountryCodes = other._validCountryCodes;
 
 #ifdef HAVE_ICU
     delete _numberFormat;
@@ -419,6 +422,241 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
 #endif
 
     return *this;
+}
+
+void MLocalePrivate::loadCountryCodes()
+{
+    _validCountryCodes.clear();
+
+    _validCountryCodes[ "1" ] = 1;
+    _validCountryCodes[ "20" ] = 1;
+    _validCountryCodes[ "212" ] = 1;
+    _validCountryCodes[ "213" ] = 1;
+    _validCountryCodes[ "214" ] = 1;
+    _validCountryCodes[ "215" ] = 1;
+    _validCountryCodes[ "216" ] = 1;
+    _validCountryCodes[ "218" ] = 1;
+    _validCountryCodes[ "219" ] = 1;
+    _validCountryCodes[ "220" ] = 1;
+    _validCountryCodes[ "221" ] = 1;
+    _validCountryCodes[ "222" ] = 1;
+    _validCountryCodes[ "223" ] = 1;
+    _validCountryCodes[ "224" ] = 1;
+    _validCountryCodes[ "225" ] = 1;
+    _validCountryCodes[ "226" ] = 1;
+    _validCountryCodes[ "227" ] = 1;
+    _validCountryCodes[ "228" ] = 1;
+    _validCountryCodes[ "229" ] = 1;
+    _validCountryCodes[ "230" ] = 1;
+    _validCountryCodes[ "231" ] = 1;
+    _validCountryCodes[ "232" ] = 1;
+    _validCountryCodes[ "233" ] = 1;
+    _validCountryCodes[ "234" ] = 1;
+    _validCountryCodes[ "235" ] = 1;
+    _validCountryCodes[ "236" ] = 1;
+    _validCountryCodes[ "237" ] = 1;
+    _validCountryCodes[ "238" ] = 1;
+    _validCountryCodes[ "239" ] = 1;
+    _validCountryCodes[ "240" ] = 1;
+    _validCountryCodes[ "241" ] = 1;
+    _validCountryCodes[ "242" ] = 1;
+    _validCountryCodes[ "243" ] = 1;
+    _validCountryCodes[ "244" ] = 1;
+    _validCountryCodes[ "245" ] = 1;
+    _validCountryCodes[ "246" ] = 1;
+    _validCountryCodes[ "247" ] = 1;
+    _validCountryCodes[ "248" ] = 1;
+    _validCountryCodes[ "249" ] = 1;
+    _validCountryCodes[ "250" ] = 1;
+    _validCountryCodes[ "251" ] = 1;
+    _validCountryCodes[ "252" ] = 1;
+    _validCountryCodes[ "253" ] = 1;
+    _validCountryCodes[ "254" ] = 1;
+    _validCountryCodes[ "255" ] = 1;
+    _validCountryCodes[ "256" ] = 1;
+    _validCountryCodes[ "257" ] = 1;
+    _validCountryCodes[ "258" ] = 1;
+    _validCountryCodes[ "259" ] = 1;
+    _validCountryCodes[ "260" ] = 1;
+    _validCountryCodes[ "261" ] = 1;
+    _validCountryCodes[ "262" ] = 1;
+    _validCountryCodes[ "263" ] = 1;
+    _validCountryCodes[ "264" ] = 1;
+    _validCountryCodes[ "265" ] = 1;
+    _validCountryCodes[ "266" ] = 1;
+    _validCountryCodes[ "267" ] = 1;
+    _validCountryCodes[ "268" ] = 1;
+    _validCountryCodes[ "269" ] = 1;
+    _validCountryCodes[ "27" ] = 1;
+    _validCountryCodes[ "290" ] = 1;
+    _validCountryCodes[ "291" ] = 1;
+    _validCountryCodes[ "297" ] = 1;
+    _validCountryCodes[ "298" ] = 1;
+    _validCountryCodes[ "299" ] = 1;
+    _validCountryCodes[ "30" ] = 1;
+    _validCountryCodes[ "31" ] = 1;
+    _validCountryCodes[ "32" ] = 1;
+    _validCountryCodes[ "33" ] = 1;
+    _validCountryCodes[ "34" ] = 1;
+    _validCountryCodes[ "350" ] = 1;
+    _validCountryCodes[ "351" ] = 1;
+    _validCountryCodes[ "352" ] = 1;
+    _validCountryCodes[ "353" ] = 1;
+    _validCountryCodes[ "354" ] = 1;
+    _validCountryCodes[ "355" ] = 1;
+    _validCountryCodes[ "356" ] = 1;
+    _validCountryCodes[ "357" ] = 1;
+    _validCountryCodes[ "358" ] = 1;
+    _validCountryCodes[ "359" ] = 1;
+    _validCountryCodes[ "36" ] = 1;
+    _validCountryCodes[ "370" ] = 1;
+    _validCountryCodes[ "371" ] = 1;
+    _validCountryCodes[ "372" ] = 1;
+    _validCountryCodes[ "373" ] = 1;
+    _validCountryCodes[ "374" ] = 1;
+    _validCountryCodes[ "375" ] = 1;
+    _validCountryCodes[ "376" ] = 1;
+    _validCountryCodes[ "377" ] = 1;
+    _validCountryCodes[ "378" ] = 1;
+    _validCountryCodes[ "379" ] = 1;
+    _validCountryCodes[ "380" ] = 1;
+    _validCountryCodes[ "381" ] = 1;
+    _validCountryCodes[ "382" ] = 1;
+    _validCountryCodes[ "385" ] = 1;
+    _validCountryCodes[ "386" ] = 1;
+    _validCountryCodes[ "387" ] = 1;
+    _validCountryCodes[ "388" ] = 1;
+    _validCountryCodes[ "389" ] = 1;
+    _validCountryCodes[ "39" ] = 1;
+    _validCountryCodes[ "40" ] = 1;
+    _validCountryCodes[ "41" ] = 1;
+    _validCountryCodes[ "420" ] = 1;
+    _validCountryCodes[ "421" ] = 1;
+    _validCountryCodes[ "423" ] = 1;
+    _validCountryCodes[ "43" ] = 1;
+    _validCountryCodes[ "44" ] = 1;
+    _validCountryCodes[ "45" ] = 1;
+    _validCountryCodes[ "46" ] = 1;
+    _validCountryCodes[ "47" ] = 1;
+    _validCountryCodes[ "48" ] = 1;
+    _validCountryCodes[ "49" ] = 1;
+    _validCountryCodes[ "500" ] = 1;
+    _validCountryCodes[ "501" ] = 1;
+    _validCountryCodes[ "502" ] = 1;
+    _validCountryCodes[ "503" ] = 1;
+    _validCountryCodes[ "504" ] = 1;
+    _validCountryCodes[ "505" ] = 1;
+    _validCountryCodes[ "506" ] = 1;
+    _validCountryCodes[ "507" ] = 1;
+    _validCountryCodes[ "508" ] = 1;
+    _validCountryCodes[ "509" ] = 1;
+    _validCountryCodes[ "51" ] = 1;
+    _validCountryCodes[ "52" ] = 1;
+    _validCountryCodes[ "53" ] = 1;
+    _validCountryCodes[ "54" ] = 1;
+    _validCountryCodes[ "55" ] = 1;
+    _validCountryCodes[ "56" ] = 1;
+    _validCountryCodes[ "57" ] = 1;
+    _validCountryCodes[ "58" ] = 1;
+    _validCountryCodes[ "590" ] = 1;
+    _validCountryCodes[ "591" ] = 1;
+    _validCountryCodes[ "592" ] = 1;
+    _validCountryCodes[ "593" ] = 1;
+    _validCountryCodes[ "594" ] = 1;
+    _validCountryCodes[ "595" ] = 1;
+    _validCountryCodes[ "596" ] = 1;
+    _validCountryCodes[ "597" ] = 1;
+    _validCountryCodes[ "598" ] = 1;
+    _validCountryCodes[ "599" ] = 1;
+    _validCountryCodes[ "60" ] = 1;
+    _validCountryCodes[ "61" ] = 1;
+    _validCountryCodes[ "62" ] = 1;
+    _validCountryCodes[ "63" ] = 1;
+    _validCountryCodes[ "64" ] = 1;
+    _validCountryCodes[ "65" ] = 1;
+    _validCountryCodes[ "66" ] = 1;
+    _validCountryCodes[ "670" ] = 1;
+    _validCountryCodes[ "672" ] = 1;
+    _validCountryCodes[ "673" ] = 1;
+    _validCountryCodes[ "674" ] = 1;
+    _validCountryCodes[ "675" ] = 1;
+    _validCountryCodes[ "676" ] = 1;
+    _validCountryCodes[ "677" ] = 1;
+    _validCountryCodes[ "678" ] = 1;
+    _validCountryCodes[ "679" ] = 1;
+    _validCountryCodes[ "680" ] = 1;
+    _validCountryCodes[ "681" ] = 1;
+    _validCountryCodes[ "682" ] = 1;
+    _validCountryCodes[ "683" ] = 1;
+    _validCountryCodes[ "685" ] = 1;
+    _validCountryCodes[ "686" ] = 1;
+    _validCountryCodes[ "687" ] = 1;
+    _validCountryCodes[ "688" ] = 1;
+    _validCountryCodes[ "689" ] = 1;
+    _validCountryCodes[ "690" ] = 1;
+    _validCountryCodes[ "691" ] = 1;
+    _validCountryCodes[ "692" ] = 1;
+    _validCountryCodes[ "7" ] = 1;
+    _validCountryCodes[ "800" ] = 1;
+    _validCountryCodes[ "808" ] = 1;
+    _validCountryCodes[ "81" ] = 1;
+    _validCountryCodes[ "82" ] = 1;
+    _validCountryCodes[ "84" ] = 1;
+    _validCountryCodes[ "850" ] = 1;
+    _validCountryCodes[ "852" ] = 1;
+    _validCountryCodes[ "853" ] = 1;
+    _validCountryCodes[ "855" ] = 1;
+    _validCountryCodes[ "856" ] = 1;
+    _validCountryCodes[ "86" ] = 1;
+    _validCountryCodes[ "870" ] = 1;
+    _validCountryCodes[ "871" ] = 1;
+    _validCountryCodes[ "872" ] = 1;
+    _validCountryCodes[ "873" ] = 1;
+    _validCountryCodes[ "874" ] = 1;
+    _validCountryCodes[ "878" ] = 1;
+    _validCountryCodes[ "880" ] = 1;
+    _validCountryCodes[ "881" ] = 1;
+    _validCountryCodes[ "882" ] = 1;
+    _validCountryCodes[ "883" ] = 1;
+    _validCountryCodes[ "886" ] = 1;
+    _validCountryCodes[ "888" ] = 1;
+    _validCountryCodes[ "90" ] = 1;
+    _validCountryCodes[ "91" ] = 1;
+    _validCountryCodes[ "92" ] = 1;
+    _validCountryCodes[ "93" ] = 1;
+    _validCountryCodes[ "94" ] = 1;
+    _validCountryCodes[ "95" ] = 1;
+    _validCountryCodes[ "960" ] = 1;
+    _validCountryCodes[ "961" ] = 1;
+    _validCountryCodes[ "962" ] = 1;
+    _validCountryCodes[ "963" ] = 1;
+    _validCountryCodes[ "964" ] = 1;
+    _validCountryCodes[ "965" ] = 1;
+    _validCountryCodes[ "966" ] = 1;
+    _validCountryCodes[ "967" ] = 1;
+    _validCountryCodes[ "968" ] = 1;
+    _validCountryCodes[ "970" ] = 1;
+    _validCountryCodes[ "971" ] = 1;
+    _validCountryCodes[ "972" ] = 1;
+    _validCountryCodes[ "973" ] = 1;
+    _validCountryCodes[ "974" ] = 1;
+    _validCountryCodes[ "975" ] = 1;
+    _validCountryCodes[ "976" ] = 1;
+    _validCountryCodes[ "977" ] = 1;
+    _validCountryCodes[ "979" ] = 1;
+    _validCountryCodes[ "98" ] = 1;
+    _validCountryCodes[ "991" ] = 1;
+    _validCountryCodes[ "992" ] = 1;
+    _validCountryCodes[ "993" ] = 1;
+    _validCountryCodes[ "994" ] = 1;
+    _validCountryCodes[ "995" ] = 1;
+    _validCountryCodes[ "996" ] = 1;
+    _validCountryCodes[ "998" ] = 1;
+}
+
+bool MLocalePrivate::isValidCountryCode( const QString& code ) const
+{
+    return _validCountryCodes.contains( code );
 }
 
 #ifdef HAVE_ICU
@@ -2065,3 +2303,290 @@ void MLocale::refreshSettings()
 #endif
 }
 
+QString MLocale::formatPhoneNumber( const QString& phoneNumber,
+				    PhoneNumberGrouping grouping ) const
+{
+    Q_D(const MLocale);
+    return d->formatPhoneNumber( phoneNumber, grouping );
+}
+
+// when string starts with numbers 2 to 9
+QString groupedNormalString( const QString& phoneNumber )
+{
+  QString result;
+  QString remaining( phoneNumber );
+
+    // for remaining number length 1 (also 0) to 3 return number unchanged
+    if ( remaining.length() < 4 )
+    {
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 8 )
+    {
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( '-' );
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 11 )
+    {
+      result.append( '(' );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( '-' );
+      result.append( remaining );
+      return result;
+    }
+    else
+    {
+      result.append( remaining );
+      return result;
+    }
+}
+
+// when string starts with number 1
+QString groupedOneString( const QString& phoneNumber )
+{
+    QString result;
+    QString remaining( phoneNumber );
+
+    // for remaining number length 1 (also 0) to 3 return number unchanged
+    if ( remaining.length() < 2 )
+    {
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 3 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining );
+      result.append( "  )" );
+      return result;
+    }
+    else if ( remaining.length() < 4 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining );
+      result.append( " )" );
+      return result;
+    }
+    else if ( remaining.length() < 5 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining );
+      result.append( ')' );
+      return result;
+    }
+    else if ( remaining.length() < 8 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 12 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( '-' );
+      result.append( remaining );
+      return result;
+    }
+    else
+    {
+      result.append( remaining );
+      return result;
+    }
+}
+
+// when string starts with numbers 2 to 9
+QString groupedInternationalString( const QString& phoneNumber )
+{
+    QString result;
+    QString remaining( phoneNumber );
+
+    // for remaining number length 1 (also 0) to 3 return number unchanged
+    if ( remaining.length() < 4 )
+    {
+      result.append( '(' );
+      result.append( remaining );
+      result.append( ')' );
+      return result;
+    }
+    else if ( remaining.length() < 7 )
+    {
+      result.append( '(' );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 11 )
+    {
+      result.append( '(' );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( '-' );
+      result.append( remaining );
+      return result;
+    }
+    else
+    {
+      result.append( remaining );
+      return result;
+    }
+}
+
+QString MLocalePrivate::formatPhoneNumber( const QString& phoneNumber,
+    MLocale::PhoneNumberGrouping grouping ) const
+{
+  // first do sanity check of the input string
+  QRegExp rx( "\\+?\\d*" );
+  if ( ! rx.exactMatch( phoneNumber ) )
+  {
+    qWarning( "MLocale::formatPhoneNumber: cannot understand number: %s",
+	      qPrintable( phoneNumber ) );
+    return phoneNumber;
+  }
+
+  // 00 is not a valid country calling code in north america
+  // -> do not do grouping in this case at all
+  if ( ( grouping == MLocale::NorthAmericanGrouping ) 
+       && phoneNumber.startsWith( "00" ) )
+  {
+    return phoneNumber;
+  }
+
+  QString remaining( phoneNumber );
+  QString result;
+
+  // if we find any error, we will return the string unchanged
+  //  bool error = false;
+
+  // first extract the country code
+
+  bool foundCountryCodeIndicator = false;
+
+  // valid beginnings for a country code are "+", "00" or "011"
+  if ( remaining.startsWith( '+' ) )
+  {
+    foundCountryCodeIndicator = true;
+    result.append( '+' );
+    remaining.remove( 0, 1 );
+  }
+  else if ( remaining.startsWith( "00" ) )
+  {
+    foundCountryCodeIndicator = true;
+    result.append( "00 " );
+    remaining.remove( 0, 2 );
+  }
+  else if ( remaining.startsWith( "011" ) )
+  {
+    foundCountryCodeIndicator = true;
+    result.append( "011 " );
+    remaining.remove( 0, 3 );
+  }
+
+
+  // now check for valid country code
+  if ( foundCountryCodeIndicator )
+  {
+    int length = 1;
+    QString code;
+
+    code = remaining.left( length );
+
+    if ( isValidCountryCode( code ) )
+    {
+      result.append( code );
+      result.append( ' ' );
+      remaining.remove( 0, code.length() );
+    }
+    else
+    {
+      length = 2;
+      code = remaining.left( length );
+      if ( isValidCountryCode( code ) )
+      {
+	result.append( code );
+	result.append( ' ' );
+	remaining.remove( 0, code.length() );
+      }
+      else
+      {
+	length = 3;
+	code = remaining.left( length );
+	if ( isValidCountryCode( code ) )
+	{
+	  result.append( code );
+	  result.append( ' ' );
+	  remaining.remove( 0, code.length() );
+	}
+	else
+	{
+	  // no valid country code -> error -> return string
+	  return phoneNumber;
+	}
+      }
+    }
+  } // found country code indicator
+
+  // if it exists, the country code is split off now
+  if ( grouping != MLocale::NorthAmericanGrouping )
+  {
+    result.append( remaining );
+    return result;
+  }
+  else
+  {
+    // has country code -> do not handle one special.
+    if ( foundCountryCodeIndicator )
+    {
+      result.append( groupedInternationalString( remaining ) );
+      return result;
+    }
+    // 11 is an invalid code, so disable grouping for this case
+    else if ( remaining.startsWith( "11" ) )
+    {
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.startsWith( '1' ) )
+    {
+      result.append( groupedOneString( remaining ) );
+      return result;
+    }
+    else
+    {
+      result.append( groupedNormalString( remaining ) );
+      return result;
+    }
+  }
+
+  return phoneNumber;
+}

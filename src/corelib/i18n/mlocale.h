@@ -158,6 +158,22 @@ public:
     enum DateSymbolLength {DateSymbolAbbreviated, DateSymbolWide, DateSymbolNarrow};
 
 
+    /*!
+     * \ brief Grouping formats for phone numbers
+     * The phone number grouping specifies, how phone numbers will
+     * be displayed to the user.
+     * NoGrouping means that the phone numbers are not grouped at all.
+     * NorthAmericanGrouping means that the phone numbers are grouped
+     * according to the "North American Numbering Plan"
+     * DefaultGrouping means that grouping is done according to the
+     * current system settings.
+     */
+    enum PhoneNumberGrouping {
+      DefaultGrouping,
+      NoGrouping,
+      NorthAmericanGrouping
+    };
+
 
     static MLocale *createSystemMLocale();
     static MLocale createCLocale();
@@ -620,6 +636,13 @@ public:
     */
     QString formatDateTime(const MCalendar &mCalendar,
                            const QString &formatString) const;
+
+    /*!
+     * \brief Formats a phone number according to the given grouping
+     */
+    QString formatPhoneNumber( const QString& phoneNumber,
+			       PhoneNumberGrouping grouping =
+			       DefaultGrouping ) const;
 
     /*!
      * \brief returns ICU date and time format string of the current locale

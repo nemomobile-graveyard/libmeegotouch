@@ -158,6 +158,7 @@ SUBDIRS     =  \
     ut_mpanrecognizer \
     ut_mstatusbarview \
     ut_mabstractitemmodel \
+    ut_phonenumberformatting \
 
 # enable only when we have icu available
 
