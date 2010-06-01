@@ -97,7 +97,7 @@ private:
     static QGLWidget* glWidget();
     static QGLWidget* glWidget(const QGLFormat& format);
     friend class MApplicationWindow; 
-    friend class MWindow; 
+    friend class MWindowPrivate;
 
 #ifdef UNIT_TEST
     friend class Ut_MComponentCache;

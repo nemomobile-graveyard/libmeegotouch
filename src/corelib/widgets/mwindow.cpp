@@ -132,6 +132,74 @@ void MWindowPrivate::init()
 
     if (MApplication::fullScreen())
         q->showFullScreen();
+}
+
+void MWindowPrivate::initSoftwareViewport()
+{
+    Q_Q(MWindow);
+
+    mWarning("MWindow") << "Switching to software rendering";
+
+#ifdef M_USE_OPENGL
+    MGLES2Renderer::activate(NULL);
+    MGLES2Renderer::destroy(glWidget);
+    glWidget = NULL;
+#endif
+
+    q->setViewport(new QWidget());
+    q->setViewportUpdateMode(MWindow::MinimalViewportUpdate);
+
+    configureViewport();
+}
+
+void MWindowPrivate::initGLViewport()
+{
+#ifdef QT_OPENGL_LIB
+    Q_Q(MWindow);
+
+    mWarning("MWindow") << "Window restored, switching to GL rendering";
+
+    bool translucent = q->testAttribute(Qt::WA_TranslucentBackground);
+
+    // The sequence of calls here is important. When translucency is not
+    // enabled, ensure setViewport() is called before DuiGLES2Renderer
+    // initializes its vertices, otherwise call setViewport() after
+    // DuiGLES2Renderer initializes itself. Failure to do this will cause
+    // a crash.
+    // This QGLWidget is owned by the viewport so previous one
+    // actually gets deleted if we overwrite it with a new one
+    if (translucent) {
+        QGLFormat fmt;
+        // disable multisampling, is enabled by default in Qt
+        fmt.setSampleBuffers(false);
+        fmt.setSamples(0);
+        fmt.setAlpha(true); // Workaround for NB#153625
+
+        glWidget = MComponentCache::glWidget(fmt);
+        QPalette palette;
+        palette.setColor(QPalette::Base, Qt::transparent);
+        glWidget->setAutoFillBackground(true);
+        glWidget->setPalette(palette);
+    } else {
+        glWidget = MComponentCache::glWidget();
+        q->setViewport(glWidget);
+    }
+#ifdef M_USE_OPENGL
+    MGLES2Renderer::instance(glWidget);
+    MGLES2Renderer::activate(glWidget);
+#endif
+    if (translucent)
+        q->setViewport(glWidget);
+#endif
+
+    q->setViewportUpdateMode(MWindow::FullViewportUpdate);
+
+    configureViewport();
+}
+
+void MWindowPrivate::configureViewport()
+{
+    Q_Q(MWindow);
 
     q->viewport()->grabGesture(Qt::TapAndHoldGesture);
     q->viewport()->grabGesture(Qt::PinchGesture);
@@ -141,6 +209,7 @@ void MWindowPrivate::init()
 
     q->setAttribute(Qt::WA_AcceptTouchEvents);
 }
+
 
 #ifdef Q_WS_X11
 void MWindowPrivate::appendVisibilityChangeMask()
@@ -341,51 +410,13 @@ void MWindow::setTranslucentBackground(bool enable)
 {
     Q_D(MWindow);
 
-    if (!MApplication::softwareRendering()) {
-#ifdef QT_OPENGL_LIB
-        setViewportUpdateMode(MWindow::FullViewportUpdate);
-
-        // The sequence of calls here is important. When translucency is not
-        // enabled, ensure setViewport() is called before MGLES2Renderer
-        // initializes its vertices, otherwise call setViewport() after
-        // MGLES2Renderer initializes itself. Failure to do this will cause
-        // a crash.
-        if (enable)  {
-            QGLFormat fmt;
-            // disable multisampling, is enabled by default in Qt
-            fmt.setSampleBuffers(false);
-            fmt.setSamples(0);
-
-            //d->glWidget->setAttribute(Qt::WA_TranslucentBackground);
-
-            fmt.setAlpha(true); // Workaround for NB#153625
-            d->glWidget = MComponentCache::glWidget(fmt);
-            QPalette palette;
-            palette.setColor(QPalette::Base, Qt::transparent);
-            d->glWidget->setAutoFillBackground(true);
-            d->glWidget->setPalette(palette);
-        } else {
-            d->glWidget = MComponentCache::glWidget();
-
-            if (d->glWidget->isValid() == false) {
-                qCritical("Could not create a valid QGLWidget, quitting.");
-                exit(EXIT_FAILURE);
-            }
-
-            setViewport(d->glWidget);
-        }
-#ifdef M_USE_OPENGL
-        MGLES2Renderer::instance(d->glWidget);
-        MGLES2Renderer::activate(d->glWidget);
-#endif
-        if (enable)
-            setViewport(d->glWidget);
-#endif
-    } else {
-        viewport()->setAutoFillBackground(!enable);
-    }
     if (enable)
         setAttribute(Qt::WA_TranslucentBackground);
+
+    if (MApplication::softwareRendering() || MApplication::isPrestarted())
+        d->initSoftwareViewport();
+    else
+        d->initGLViewport();
 }
 
 void MWindow::setGlobalAlpha(qreal level)
@@ -870,6 +901,9 @@ void MWindow::setVisible(bool visible)
         if (MApplication::isPrestarted()) {
             return;
         } else {
+            if (!MApplication::softwareRendering() && d->glWidget == 0) {
+                d->initGLViewport();
+            }
             d->isLogicallyClosed = false;
         }
 
