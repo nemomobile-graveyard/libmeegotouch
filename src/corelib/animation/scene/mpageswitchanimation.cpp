@@ -24,12 +24,6 @@
 #include "mscenewindow.h"
 #include "mscenemanager.h"
 
-void MPageSwitchAnimationPrivate::_q_animationFinished()
-{
-    if (oldPage && oldPage->sceneManager())
-        oldPage->sceneManager()->disappearSceneWindowNow(oldPage);
-}
-
 MPageSwitchAnimation::MPageSwitchAnimation(QObject *parent) :
     MParallelAnimationGroup(new MPageSwitchAnimationPrivate, parent)
 {
@@ -51,8 +45,6 @@ MPageSwitchAnimation::MPageSwitchAnimation(QObject *parent) :
     d->positionOldPageAnimation->setDuration(style()->duration());
     d->positionOldPageAnimation->setStartValue(QPointF(0, 0));
     addAnimation(d->positionOldPageAnimation);
-
-    connect(this, SIGNAL(finished()), SLOT(_q_animationFinished()));
 }
 
 MPageSwitchAnimation::MPageSwitchAnimation(MPageSwitchAnimationPrivate *dd, QObject *parent) :
@@ -63,11 +55,6 @@ MPageSwitchAnimation::MPageSwitchAnimation(MPageSwitchAnimationPrivate *dd, QObj
 void MPageSwitchAnimation::setNewPage(MSceneWindow *newPage)
 {
     Q_D(MPageSwitchAnimation);
-
-    if (d->newPage)
-        disconnect(this, SIGNAL(finished()), d->newPage, SIGNAL(appeared()));
-
-    connect(this, SIGNAL(finished()), newPage, SIGNAL(appeared()));
 
     d->newPage = newPage;
 }
@@ -84,6 +71,18 @@ void MPageSwitchAnimation::setPageTransitionDirection(PageTransitionDirection di
     Q_D(MPageSwitchAnimation);
 
     d->direction = direction;
+}
+
+MSceneWindow *MPageSwitchAnimation::oldPage() const
+{
+    Q_D(const MPageSwitchAnimation);
+    return d->oldPage;
+}
+
+MSceneWindow *MPageSwitchAnimation::newPage() const
+{
+    Q_D(const MPageSwitchAnimation);
+    return d->newPage;
 }
 
 void MPageSwitchAnimation::updateState(QAbstractAnimation::State newState,

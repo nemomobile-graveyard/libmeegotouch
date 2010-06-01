@@ -170,7 +170,8 @@ public Q_SLOTS:
     void closeSoftwareInputPanel();
 
     /*!
-     * Attaches a \a sceneWindow to the scene manager and makes it appear.
+     * Makes \a sceneWindow appear on the scene().
+     *
      * According to the given \a policy, a scene window can be kept or destroyed after disappearing.
      *
      * If the scene is currently being displayed by any MWindow (according to
@@ -183,13 +184,15 @@ public Q_SLOTS:
     void appearSceneWindow(MSceneWindow *sceneWindow, MSceneWindow::DeletionPolicy policy = MSceneWindow::KeepWhenDone);
 
     /*!
-     * Attaches a \a sceneWindow to the scene manager and makes it appear without animations (instantly).
-     * According to the given \a policy, a scene window can be kept or destroyed after disappearing.
+     * Like appearSceneWindow(), with the difference that it makes \a sceneWindow appear without
+     * animations (instantly). This means that the scene window will transition directly to
+     * MSceneWindow::Appeared state, skipping MSceneWindow::Appearing.
      */
     void appearSceneWindowNow(MSceneWindow *sceneWindow, MSceneWindow::DeletionPolicy policy = MSceneWindow::KeepWhenDone);
 
     /*!
      * Makes a \a dialog appear using associated animation and returns its result code.
+     * Scene manager takes ownership of \a dialog.
      *
      * \note Normally you don't have to call this method explicitly.
      * MDialog::exec() calls this method for you.
@@ -197,7 +200,7 @@ public Q_SLOTS:
     int execDialog(MDialog *dialog);
 
     /*!
-     * Makes a \a sceneWindow disappear and detaches it from the scene manager.
+     * Makes a \a sceneWindow disappear.
      *
      * If the scene is currently being displayed by any MWindow (according to
      * MWindow::isOnDisplay()), the disappearance transition will be animated.
@@ -209,12 +212,12 @@ public Q_SLOTS:
     void disappearSceneWindow(MSceneWindow *sceneWindow);
 
     /*!
-     * Makes a \a sceneWindow disappear without animations (instantly) and detaches it from the scene manager.
+     * Makes a \a sceneWindow disappear without animations (instantly).
      */
     void disappearSceneWindowNow(MSceneWindow *sceneWindow);
 
     /*!
-     * Dismisses a \a sceneWindow and detaches it from the scene manager.
+     * Dismisses a \a sceneWindow.
      *
      * If the scene is currently being displayed by any MWindow (according to
      * MWindow::isOnDisplay()), the dismissal transition will be animated.
@@ -226,7 +229,7 @@ public Q_SLOTS:
     void dismissSceneWindow(MSceneWindow *sceneWindow);
 
     /*!
-     * Dismisses a \a sceneWindow without animations (instantly) and detaches it from the scene manager.
+     * Dismisses a \a sceneWindow without animations (instantly).
      */
     void dismissSceneWindowNow(MSceneWindow *sceneWindow);
 
@@ -308,8 +311,8 @@ protected:
 private:
     Q_DECLARE_PRIVATE(MSceneManager)
 
-    Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowAppeared())
-    Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowDisappeared())
+    Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowAppearanceAnimationFinished())
+    Q_PRIVATE_SLOT(d_func(), void _q_onSceneWindowDisappearanceAnimationFinished())
     Q_PRIVATE_SLOT(d_func(), void _q_setSenderGeometry())
     Q_PRIVATE_SLOT(d_func(), void _q_changeGlobalOrientationAngle())
     Q_PRIVATE_SLOT(d_func(), void _q_emitOrientationChangeFinished())
@@ -318,9 +321,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_inputPanelOpened())
     Q_PRIVATE_SLOT(d_func(), void _q_inputPanelClosed())
     Q_PRIVATE_SLOT(d_func(), void _q_unFreezeUI())
-    Q_PRIVATE_SLOT(d_func(), void _q_applyQueuedSceneWindowTransitions())
+    Q_PRIVATE_SLOT(d_func(), void _q_applySceneWindowTransitionsQueuedDueToOrientationAnimation())
     Q_PRIVATE_SLOT(d_func(), void _q_triggerAsyncPendingOrientationChange())
     Q_PRIVATE_SLOT(d_func(), void _q_applyPendingOrientationChange())
+    Q_PRIVATE_SLOT(d_func(), void _q_onPageSwitchAnimationFinished())
 };
 
 #endif

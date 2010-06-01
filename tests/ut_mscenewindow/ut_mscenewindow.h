@@ -42,8 +42,6 @@ private slots:
     void testAppear();
     void testAppearWithoutSceneManager();
 
-    void testAppearedDisappearedSignals();
-
     void testDismiss();
 
     void testDestroyWhenDoneCallingDisappear();
@@ -52,12 +50,26 @@ private slots:
     void testDestroyWhenDismissedCallingDismiss();
     void testDismissedStateReset();
 
+    void testSceneWindowStateChanges();
+    void testSettingSameSceneWindowState();
+
 private:
     void processPendingEvents();
+    bool verifySceneWindowStateChange(QSignalSpy &spy,
+            MSceneWindow::SceneWindowState newState,
+            MSceneWindow::SceneWindowState oldState);
 
     MSceneWindow *m_subject;
     MWindow *window;
     MComponentData *m_componentData;
+};
+
+class TestBridge : public QObject
+{
+    Q_OBJECT
+public:
+    TestBridge(QObject *parent = 0);
+    void setSceneWindowState(MSceneWindow::SceneWindowState newState);
 };
 
 Q_DECLARE_METATYPE(MSceneWindow::WindowType);

@@ -47,6 +47,8 @@ private slots:
 
     void testConstructorWithNoScene();
     void testConstructorWithSceneSpecified();
+    void testAddSceneWindow();
+    void testRemoveSceneWindow();
     void testSceneWindowAppearNow();
     void testSceneWindowAppear();
     void testSceneWindowDisappearNow();
@@ -59,6 +61,7 @@ private slots:
     void testAngleBoundaryCases();
     void testSceneSizes();
     void testPageSwitchingOnAppearNow();
+    void testPageSwitchingOnAppear();
     void testPageSwitchingOnDismissNow();
     void testPageHistoryPushing();
     void testPageHistoryPopping();
@@ -72,8 +75,25 @@ private slots:
     void testTransitionModeWhenOffDisplay();
     void testTransitionModeWhenOnDisplay();
     void testTransitionModeWhenNoWindow();
+    void testPageSwitchQueue();
+    void testSceneWindowTransitionQueue_disappearWhileAppearing();
+    void testSceneWindowTransitionQueue_disappearAndAppearWhileAppearing();
+    void testSceneWindowTransitionQueue_appearWhileDisappearing();
+    void testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing();
+    void testDismissPageThatIsReappearing();
 private:
     MComponentData* m_componentData;
+};
+
+class TestBridge : public QObject
+{
+    Q_OBJECT
+public:
+    TestBridge(QObject *parent = 0);
+    void fastForwardPageSwitchAnimation();
+    void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
+    void addSceneWindow(MSceneWindow *sceneWindow);
+    void removeSceneWindow(MSceneWindow *sceneWindow);
 };
 
 #endif

@@ -19,6 +19,7 @@
 
 #include <MDebug>
 #include <MDismissEvent>
+#include <QChildEvent>
 #include <QGestureEvent>
 #include <QTapAndHoldGesture>
 #include <QGraphicsSceneContextMenuEvent>
@@ -41,14 +42,52 @@ M_REGISTER_WIDGET_NO_CREATE(MSceneWindow)
 MSceneWindowPrivate::MSceneWindowPrivate()
         : windowType(MSceneWindow::PlainSceneWindow),
         policy(MSceneWindow::KeepWhenDone),
+        sceneWindowState(MSceneWindow::Disappeared),
         managedManually(false),
-        shown(false),
         dismissed(false),
         waitingForContextMenuEvent(false),
         effect(0),
         appearanceAnimation(0),
-        disappearanceAnimation(0)
+        disappearanceAnimation(0),
+        queuedTransition(0),
+        sceneManager(0)
 {
+}
+
+void MSceneWindowPrivate::setSceneWindowState(MSceneWindow::SceneWindowState newState)
+{
+    Q_Q(MSceneWindow);
+
+    if (newState == sceneWindowState)
+        return;
+
+    MSceneWindow::SceneWindowState oldState = sceneWindowState;
+
+    sceneWindowState = newState;
+
+    emit q->sceneWindowStateChanged(newState, oldState);
+
+    switch (newState) {
+        case MSceneWindow::Appearing:
+            emit q->appearing();
+            break;
+
+        case MSceneWindow::Appeared:
+            emit q->appeared();
+            break;
+
+        case MSceneWindow::Disappearing:
+            emit q->disappearing();
+            break;
+
+        case MSceneWindow::Disappeared:
+            emit q->disappeared();
+            break;
+
+        default:
+            break;
+    }
+
 }
 
 MSceneWindow::MSceneWindow(QGraphicsItem *parent) :
@@ -74,7 +113,7 @@ MSceneWindow::MSceneWindow(MSceneWindowPrivate *dd, MSceneWindowModel *model, MS
 MSceneWindow::~MSceneWindow()
 {
     if (sceneManager())
-        sceneManager()->d_func()->detachWindow(this);
+        sceneManager()->d_func()->removeSceneWindow(this);
 }
 
 MSceneWindow::WindowType MSceneWindow::windowType() const
@@ -99,6 +138,12 @@ void MSceneWindow::setManagedManually(bool managedManually)
 {
     Q_D(MSceneWindow);
     d->managedManually = managedManually;
+}
+
+MSceneWindow::SceneWindowState MSceneWindow::sceneWindowState() const
+{
+    Q_D(const MSceneWindow);
+    return d->sceneWindowState;
 }
 
 void MSceneWindow::appear(MWindow *window, MSceneWindow::DeletionPolicy policy)
@@ -259,7 +304,22 @@ bool MSceneWindow::event(QEvent *event)
             d->waitingForContextMenuEvent = false;
             return true;
         }
+    } else if (event->type() == QEvent::ChildAdded) {
+        QChildEvent *childEvent = static_cast<QChildEvent *>(event);
+        if (childEvent->child()->objectName() == "_m_testBridge") {
+            new MSceneWindowTestInterface(d, childEvent->child());
+        }
     }
 
     return MWidgetController::event(event);
+}
+
+MSceneWindowTestInterface::MSceneWindowTestInterface(MSceneWindowPrivate *d, QObject *parent)
+    : QObject(parent), d(d)
+{
+}
+
+void MSceneWindowTestInterface::setSceneWindowState(MSceneWindow::SceneWindowState newState)
+{
+    d->setSceneWindowState(newState);
 }

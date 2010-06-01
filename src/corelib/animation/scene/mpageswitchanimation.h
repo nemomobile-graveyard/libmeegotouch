@@ -47,15 +47,14 @@ public:
     void setOldPage(MSceneWindow *oldPage);
     void setPageTransitionDirection(PageTransitionDirection direction);
 
+    MSceneWindow *oldPage() const;
+    MSceneWindow *newPage() const;
+
 protected:
 
     MPageSwitchAnimation(MPageSwitchAnimationPrivate *dd, QObject *parent = NULL);
 
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
-
-private:
-    Q_PRIVATE_SLOT(d_func(), void _q_animationFinished())
-
 };
 
 //! \internal_end

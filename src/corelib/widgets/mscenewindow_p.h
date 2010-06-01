@@ -28,6 +28,7 @@
 
 class MWindow;
 class MSceneLayerEffect;
+class MSceneWindowTransition;
 
 class MSceneWindowPrivate : public MWidgetControllerPrivate
 {
@@ -36,14 +37,18 @@ class MSceneWindowPrivate : public MWidgetControllerPrivate
 public:
     MSceneWindowPrivate();
 
+    // Called by MSceneManagerPrivate
+    void setSceneWindowState(MSceneWindow::SceneWindowState newState);
+
     MSceneWindow::WindowType      windowType;
     MSceneWindow::DeletionPolicy  policy;
 
     Qt::Alignment alignment;
     QPointF offset;
 
+    MSceneWindow::SceneWindowState sceneWindowState;
+
     bool managedManually;
-    bool shown;
     bool dismissed;
     bool waitingForContextMenuEvent;
 
@@ -51,7 +56,27 @@ public:
 
     QPointer<MAbstractWidgetAnimation> appearanceAnimation;
     QPointer<MAbstractWidgetAnimation> disappearanceAnimation;
+
+    // While appearing a disappear() can be queued and
+    // while disappearing an appear() can be queued.
+    // Transition to be applied after either appearanceAnimation
+    // or disappearanceAnimation finishes.
+    MSceneWindowTransition *queuedTransition;
+
+    // Scene manager that owns this scene window.
+    MSceneManager *sceneManager;
 };
 
+class MSceneWindowTestInterface : public QObject
+{
+    Q_OBJECT
+public:
+    MSceneWindowTestInterface(MSceneWindowPrivate *d, QObject *parent = 0);
+public Q_SLOTS:
+    void setSceneWindowState(MSceneWindow::SceneWindowState newState);
+
+public:
+    MSceneWindowPrivate *d;
+};
 
 #endif

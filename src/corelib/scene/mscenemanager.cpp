@@ -116,6 +116,8 @@ void MSceneManagerPrivate::init(MScene *scene)
                Qt::UniqueConnection);
 
     pageSwitchAnimation = new MPageSwitchAnimation;
+    q->connect(pageSwitchAnimation, SIGNAL(finished()),
+            SLOT(_q_onPageSwitchAnimationFinished()));
 
     setOrientationAngleWithoutAnimation(newAngle);
 }
@@ -152,7 +154,8 @@ void MSceneManagerPrivate::createOrientationAnimation()
 
     q->connect(orientationAnimation, SIGNAL(orientationChanged()), SLOT(_q_changeGlobalOrientationAngle()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_emitOrientationChangeFinished()));
-    q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_applyQueuedSceneWindowTransitions()));
+    q->connect(orientationAnimation, SIGNAL(finished()),
+            SLOT(_q_applySceneWindowTransitionsQueuedDueToOrientationAnimation()));
     q->connect(orientationAnimation, SIGNAL(finished()), SLOT(_q_triggerAsyncPendingOrientationChange()));
 }
 
@@ -278,26 +281,65 @@ void MSceneManagerPrivate::_q_unFreezeUI()
     QObject::disconnect(animation, SIGNAL(finished()), q, SLOT(_q_unFreezeUI()));
 }
 
-void MSceneManagerPrivate::_q_applyQueuedSceneWindowTransitions()
+void MSceneManagerPrivate::_q_applySceneWindowTransitionsQueuedDueToOrientationAnimation()
 {
-    SceneWindowTransition transition;
+    MSceneWindowTransition transition;
 
-    while (queuedTransitions.count() > 0) {
-        transition = queuedTransitions.takeFirst();
+    while (queuedTransitionsOrientationAnimation.count() > 0) {
+        transition = queuedTransitionsOrientationAnimation.takeFirst();
 
-        switch (transition.type) {
-            case SceneWindowTransition::AppearTransition:
-                appearSceneWindow(transition.sceneWindow, transition.policy, transition.animated);
-                break;
-            case SceneWindowTransition::DisappearTransition:
-                disappearSceneWindow(transition.sceneWindow, transition.animated);
-                break;
-            case SceneWindowTransition::DismissTransition:
-                dismissSceneWindow(transition.sceneWindow, transition.animated);
-                break;
-            default:
-                // Should never occur.
-                qFatal("MSceneManager: Invalid SceneWindowTransition::TransitionType value.");
+        applySceneWindowTransition(&transition);
+    }
+}
+
+void MSceneManagerPrivate::applySceneWindowTransition(MSceneWindowTransition *transition)
+{
+    switch (transition->type) {
+        case MSceneWindowTransition::AppearTransition:
+            appearSceneWindow(transition->sceneWindow, transition->policy, transition->animated);
+            break;
+        case MSceneWindowTransition::DisappearTransition:
+            disappearSceneWindow(transition->sceneWindow, transition->animated);
+            break;
+        default:
+            // Should never occur.
+            qFatal("MSceneManager: Invalid MSceneWindowTransition::TransitionType value.");
+    }
+}
+
+void MSceneManagerPrivate::applySceneWindowTransitionsFromPageSwitchQueue()
+{
+    bool done = queuedTransitionsPageSwitchAnimation.isEmpty();
+    MSceneWindowTransition transition;
+
+    while (!done) {
+        transition = queuedTransitionsPageSwitchAnimation.takeFirst();
+
+        applySceneWindowTransition(&transition);
+
+        // Since an application page will cause another page switch animation,
+        // we will have to stop processing the queue until this new page switch
+        // animation finishes.
+        if (transition.sceneWindow->windowType() == MSceneWindow::ApplicationPage ||
+                queuedTransitionsPageSwitchAnimation.isEmpty()) {
+            done = true;
+        }
+    }
+}
+
+void MSceneManagerPrivate::removeSceneWindowFromTransitionQueue(MSceneWindow *sceneWindow,
+        QList<MSceneWindowTransition> &transitionQueue)
+{
+    MSceneWindowTransition transition;
+    int i;
+
+    i = 0;
+    while (i < transitionQueue.count()) {
+        transition = transitionQueue[i];
+        if (transition.sceneWindow == sceneWindow) {
+            transitionQueue.removeAt(i);
+        } else {
+            ++i;
         }
     }
 }
@@ -329,71 +371,65 @@ void MSceneManagerPrivate::_q_applyPendingOrientationChange()
     }
 }
 
-void MSceneManagerPrivate::_q_onSceneWindowAppeared()
+void MSceneManagerPrivate::_q_onSceneWindowAppearanceAnimationFinished()
 {
     Q_Q(MSceneManager);
-    MSceneWindow *window = dynamic_cast<MSceneWindow *>(q->sender());
-    if (window == 0)
-        return;
 
-    if (isOnDisplay()) {
-        produceMustBeResolvedDisplayEvent(window);
+    QAbstractAnimation *appearanceAnimation = qobject_cast<QAbstractAnimation *>(q->sender());
+    Q_ASSERT(appearanceAnimation);
+
+    QObject::disconnect(appearanceAnimation, SIGNAL(finished()),
+            q, SLOT(_q_onSceneWindowAppearanceAnimationFinished()));
+
+    MSceneWindow *sceneWindow = qobject_cast<MSceneWindow *>(appearanceAnimation->parent());
+    Q_ASSERT(sceneWindow);
+
+    setSceneWindowState(sceneWindow, MSceneWindow::Appeared);
+
+    if (sceneWindow->d_func()->queuedTransition) {
+        MSceneWindowTransition *transition = sceneWindow->d_func()->queuedTransition;
+        sceneWindow->d_func()->queuedTransition = 0;
+        applySceneWindowTransition(transition);
+        delete transition;
     }
-
-    QObject::disconnect(window, SIGNAL(appeared()), q, SLOT(_q_onSceneWindowAppeared()));
 }
 
-void MSceneManagerPrivate::_q_onSceneWindowDisappeared()
+void MSceneManagerPrivate::_q_onSceneWindowDisappearanceAnimationFinished()
 {
     Q_Q(MSceneManager);
-    //TODO: There could be a mapping between windows and animations so that
-    //      when a window is detached all its animations are deleted as well
-    //      so this method would never got called for "invalid"/detached window.
-    MSceneWindow *window = dynamic_cast<MSceneWindow *>(q->sender());
-    if (window == 0)
-        return;
 
-    if (window->windowType() == MSceneWindow::NavigationBar && !navBarHidden)
-        navBar = 0;
+    QAbstractAnimation *disappearanceAnimation = qobject_cast<QAbstractAnimation *>(q->sender());
+    Q_ASSERT(disappearanceAnimation);
 
-    if (window->windowType() == MSceneWindow::EscapeButtonPanel && !escapeButtonHidden)
-        escapeButtonPanel = 0;
+    QObject::disconnect(disappearanceAnimation, SIGNAL(finished()),
+            q, SLOT(_q_onSceneWindowDisappearanceAnimationFinished()));
 
-    if (window->windowType() == MSceneWindow::StatusBar) {
-        statusBar = 0;
+    MSceneWindow  *sceneWindow = qobject_cast<MSceneWindow *>(disappearanceAnimation->parent());
+    Q_ASSERT(sceneWindow);
+
+    bool sceneWindowWillBeDeleted = (sceneWindow->deletionPolicy() == MSceneWindow::DestroyWhenDone) ||
+                ((sceneWindow->deletionPolicy() == MSceneWindow::DestroyWhenDismissed)
+                 && sceneWindow->d_func()->dismissed);
+
+    setSceneWindowState(sceneWindow, MSceneWindow::Disappeared);
+
+    if (!sceneWindowWillBeDeleted && sceneWindow->d_func()->queuedTransition) {
+        MSceneWindowTransition *transition = sceneWindow->d_func()->queuedTransition;
+        sceneWindow->d_func()->queuedTransition = 0;
+        applySceneWindowTransition(transition);
+        delete transition;
     }
+}
 
-    if (isOnDisplay()) {
-        produceFullyOffDisplayEvents(window);
-    }
+void MSceneManagerPrivate::_q_onPageSwitchAnimationFinished()
+{
+    MSceneWindow *oldPage = pageSwitchAnimation->oldPage();
+    if (oldPage)
+        setSceneWindowState(oldPage, MSceneWindow::Disappeared);
 
-    window->hide();
+    setSceneWindowState(pageSwitchAnimation->newPage(), MSceneWindow::Appeared);
 
-    if (window->d_func()->disappearanceAnimation)
-        window->d_func()->disappearanceAnimation->restoreTargetWidgetState();
-
-    QObject::disconnect(window, SIGNAL(disappeared()), q, SLOT(_q_onSceneWindowDisappeared()));
-
-    //check if the window has not yet been detached
-    int i = windows.indexOf(window);
-
-    if (i != -1) {
-        windows.removeAt(i);
-        QObject::disconnect(window, SIGNAL(repositionNeeded()), q, SLOT(_q_setSenderGeometry()));
-
-        // If there is a layer effect it is deleted as well
-        if (window->d_func()->effect) {
-            window->setParentItem(0);
-            delete window->d_func()->effect;
-            window->d_func()->effect = 0;
-        }
-
-        if ((window->deletionPolicy() == MSceneWindow::DestroyWhenDone) ||
-                ((window->deletionPolicy() == MSceneWindow::DestroyWhenDismissed)
-                 && window->d_func()->dismissed)) {
-            window->deleteLater();
-        }
-    }
+    applySceneWindowTransitionsFromPageSwitchQueue();
 }
 
 void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanelRect)
@@ -457,22 +493,77 @@ M::Orientation MSceneManagerPrivate::orientation(M::OrientationAngle angle) cons
     return (angle == M::Angle0 || angle == M::Angle180) ? M::Landscape : M::Portrait;
 }
 
-void MSceneManagerPrivate::attachWindow(MSceneWindow *window)
+void MSceneManagerPrivate::addUnmanagedSceneWindow(MSceneWindow *sceneWindow)
 {
-    if (!windows.contains(window))
-        windows.append(window);
+    Q_Q(MSceneManager);
+    Q_ASSERT(!windows.contains(sceneWindow));
+
+    windows.append(sceneWindow);
+    sceneWindow->d_func()->sceneManager = q;
+
+    // window could have been added to another scene manually beforehand
+    // remove it in that case, to avoid Qt's assert
+    if (sceneWindow->scene() && sceneWindow->scene() != scene)
+        sceneWindow->scene()->removeItem(sceneWindow);
+
+    // add scene window to the scene
+    // Now its sceneManager() method will return the correct result.
+    // It will also transfer the ownership of the scene window to the scene.
+    sceneWindow->setParentItem(rootElement);
+
+    sceneWindow->setZValue(zForWindowType(sceneWindow->windowType()));
+
+    sceneWindow->hide();
 }
 
-void MSceneManagerPrivate::detachWindow(MSceneWindow *window)
+void MSceneManagerPrivate::addSceneWindow(MSceneWindow *sceneWindow)
 {
-    windows.removeOne(window);
+    Q_Q(MSceneManager);
 
-    // If there is a layer effect it is deleted as well
-    if (window->d_func()->effect) {
-        window->setParentItem(rootElement);
-        delete window->d_func()->effect;
-        window->d_func()->effect = 0;
+    if (!sceneWindow->d_func()->sceneManager) {
+        // Just add it
+        addUnmanagedSceneWindow(sceneWindow);
+    } else {
+        if (sceneWindow->d_func()->sceneManager != q) {
+            // scene window belongs to another scene manager, remove it from him.
+            sceneWindow->d_func()->sceneManager->d_func()->removeSceneWindow(sceneWindow);
+
+            addUnmanagedSceneWindow(sceneWindow);
+        } else {
+            // scene window already belongs to this scene manager.
+            // Thus nothing to do.
+            Q_ASSERT(windows.contains(sceneWindow));
+        }
     }
+}
+
+void MSceneManagerPrivate::removeSceneWindow(MSceneWindow *sceneWindow)
+{
+    Q_Q(MSceneManager);
+
+    if (sceneWindow->d_func()->sceneManager != q) {
+        // It's not being managed by this scene manager.
+        return;
+    }
+
+    Q_ASSERT(windows.contains(sceneWindow));
+
+    sceneWindow->d_func()->policy = MSceneWindow::KeepWhenDone;
+    setSceneWindowState(sceneWindow, MSceneWindow::Disappeared);
+
+    if (sceneWindow->d_func()->queuedTransition) {
+        delete sceneWindow->d_func()->queuedTransition;
+        sceneWindow->d_func()->queuedTransition = 0;
+    }
+
+    removeSceneWindowFromTransitionQueue(sceneWindow, queuedTransitionsOrientationAnimation);
+    removeSceneWindowFromTransitionQueue(sceneWindow, queuedTransitionsPageSwitchAnimation);
+
+    windows.removeOne(sceneWindow);
+    sceneWindow->d_func()->sceneManager = 0;
+
+    // Give ownership of scene window to the caller.
+    scene->removeItem(sceneWindow);
 }
 
 MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow *window)
@@ -501,11 +592,6 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
     effect->setParentItem(rootElement);
     effect->setZValue(zForWindowType(window->windowType()));
 
-    // window could have been added to another scene manually beforehand
-    // remove it in that case, to avoid Qt's assert
-    if (window->scene() && window->scene() != scene)
-        window->scene()->removeItem(window);
-
     // Add window as child of the effect
     window->setParentItem(effect);
 
@@ -518,8 +604,13 @@ void MSceneManagerPrivate::setSceneWindowGeometries()
 {
     _q_restoreSceneWindow();
     const int size = windows.size();
-    for (int i = 0; i < size; ++i)
-        setSceneWindowGeometry(windows.at(i));
+    MSceneWindow *sceneWindow;
+
+    for (int i = 0; i < size; ++i) {
+        sceneWindow = windows.at(i);
+        if (sceneWindow->sceneWindowState() != MSceneWindow::Disappeared)
+            setSceneWindowGeometry(sceneWindow);
+    }
 }
 
 void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
@@ -736,35 +827,6 @@ void MSceneManagerPrivate::moveSceneWindow(MSceneWindow *window, int adjustment,
     alteredSceneWindow = window;
 }
 
-bool MSceneManagerPrivate::validateSceneWindowPreAppearanceStatus(MSceneWindow *sceneWindow)
-{
-    Q_Q(MSceneManager);
-    bool statusOk = true;
-
-    if (sceneWindow->d_func()->shown) {
-        MSceneManager *otherSceneManager = sceneWindow->sceneManager();
-        Q_ASSERT(otherSceneManager != 0);
-
-        if (otherSceneManager != q) {
-            // Cannot be in two scenes simultaneously.
-
-            MSceneWindow::DeletionPolicy currentPolicy = sceneWindow->deletionPolicy();
-
-            otherSceneManager->disappearSceneWindowNow(sceneWindow);
-
-            if (currentPolicy == MSceneWindow::DestroyWhenDone) {
-                // Window is gone.
-                statusOk = false;
-            }
-        } else {
-            // Window is already being shown here.
-            statusOk = false;
-        }
-    }
-
-    return statusOk;
-}
-
 bool MSceneManagerPrivate::isOnDisplay()
 {
     Q_Q(MSceneManager);
@@ -794,7 +856,7 @@ void MSceneManagerPrivate::produceMustBeResolvedDisplayEvent(MSceneWindow *scene
     QRectF viewRect(QPointF(0, 0), q->visibleSceneSize());
     MOnDisplayChangeEvent displayEvent(MOnDisplayChangeEvent::MustBeResolved, viewRect);
 
-    q->scene()->sendEvent(sceneWindow, &displayEvent);
+    scene->sendEvent(sceneWindow, &displayEvent);
 }
 
 void MSceneManagerPrivate::produceFullyOffDisplayEvents(QGraphicsItem *item)
@@ -807,7 +869,7 @@ void MSceneManagerPrivate::produceFullyOffDisplayEvents(QGraphicsItem *item)
         if (mWidget) {
             QRectF visibleSceneRect(QPoint(0, 0), q->visibleSceneSize());
             MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOffDisplay, visibleSceneRect);
-            q->scene()->sendEvent(mWidget, &event);
+            scene->sendEvent(mWidget, &event);
         }
     }
 
@@ -864,36 +926,11 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
 {
     Q_Q(MSceneManager);
 
-    attachWindow(window);
-
-    // Check whether we are trying to show a window while it is in the middle of
-    // a hide animation. If that's the case, we stop it.
-    if (window->d_func()->disappearanceAnimation) {
-        MAbstractWidgetAnimation *disappearanceAnimation = window->d_func()->disappearanceAnimation;
-
-        if (disappearanceAnimation->state() == QAbstractAnimation::Running) {
-            disappearanceAnimation->stop();
-            QObject::disconnect(window, SIGNAL(disappeared()),
-                    q, SLOT(_q_onSceneWindowDisappeared()));
-
-            disappearanceAnimation->restoreTargetWidgetState();
-        }
-    }
+    window->show();
+    window->d_func()->dismissed = false;
 
     setSceneWindowGeometry(window);
-    MSceneLayerEffect *effect = createLayerEffectForWindow(window);
-    if (!effect) {
-        // window could have been added to another scene manually beforehand
-        // remove it in that case, to avoid Qt's assert
-        if (window->scene() && window->scene() != scene)
-            window->scene()->removeItem(window);
-
-        //add window to scene if not already there
-        if (scene->items().indexOf(window) == -1) {
-            window->setParentItem(rootElement);
-            window->setZValue(zForWindowType(window->windowType()));
-        }
-    }
+    createLayerEffectForWindow(window);
 
     if (window->windowType() == MSceneWindow::NavigationBar)
         navBar = qobject_cast<MNavigationBar *>(window);
@@ -908,14 +945,8 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
         statusBar = window;
     }
 
-    window->show();
-    window->d_func()->shown = true;
-
-    window->d_func()->dismissed = false;
-
     orientationAnimation->addSceneWindow(window);
 
-    q->connect(window, SIGNAL(appeared()), SLOT(_q_onSceneWindowAppeared()));
     q->connect(window, SIGNAL(repositionNeeded()), SLOT(_q_setSenderGeometry()));
 }
 
@@ -937,10 +968,6 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
     MSceneWindow *previousPage = 0;
 
     if (currentPage && currentPage != page) {
-        prepareWindowHide(currentPage);
-        produceSceneWindowEvent(MSceneWindowEvent::eventTypeDisappear(), currentPage,
-                animatedTransition);
-
         previousPage = currentPage;
         pageHistory.append(previousPage);
         emit q->pageHistoryChanged();
@@ -949,12 +976,17 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
     currentPage = page;
 
     if (animatedTransition) {
+        if (previousPage)
+            setSceneWindowState(previousPage, MSceneWindow::Disappearing);
+
+        setSceneWindowState(currentPage, MSceneWindow::Appearing);
+
         startPageSwitchAnimation(currentPage, previousPage, MPageSwitchAnimation::RightToLeft);
     } else {
-        if (previousPage) {
-            emit previousPage->disappeared();
-        }
-        emit currentPage->appeared();
+        if (previousPage)
+            setSceneWindowState(previousPage, MSceneWindow::Disappeared);
+
+        setSceneWindowState(currentPage, MSceneWindow::Appeared);
     }
 }
 
@@ -962,43 +994,139 @@ void MSceneManagerPrivate::popPage(bool animatedTransition)
 {
     Q_Q(MSceneManager);
     MSceneWindow *previousPage = 0;
+    bool pageHistoryChanged = false;
 
     // Pages in the history might have been deleted overtime.
     while (previousPage == 0 && !pageHistory.isEmpty()) {
         previousPage = pageHistory.takeLast();
-        emit q->pageHistoryChanged();
-    }
+        pageHistoryChanged = true;
 
-    if (previousPage) {
-        prepareWindowShow(previousPage);
-        produceSceneWindowEvent(MSceneWindowEvent::eventTypeAppear(), previousPage,
-                animatedTransition);
+        if (!previousPage) {
+            // Page has been deleted
+            continue;
+        }
+
+        if (previousPage->d_func()->sceneManager != q)
+            addSceneWindow(previousPage);
+
+        if (previousPage->sceneWindowState() != MSceneWindow::Disappeared) {
+            // We cannot use it.
+            previousPage = 0;
+        }
     }
+    if (pageHistoryChanged)
+        emit q->pageHistoryChanged();
 
     if (animatedTransition) {
+        if (previousPage)
+            setSceneWindowState(previousPage, MSceneWindow::Appearing);
+
+        setSceneWindowState(currentPage, MSceneWindow::Disappearing);
+
         startPageSwitchAnimation(previousPage, currentPage, MPageSwitchAnimation::LeftToRight);
     } else {
-        emit currentPage->disappeared();
+        if (previousPage)
+            setSceneWindowState(previousPage, MSceneWindow::Appeared);
 
-        if (previousPage) {
-            emit previousPage->appeared();
-        }
+        setSceneWindowState(currentPage, MSceneWindow::Disappeared);
     }
 
     currentPage = previousPage;
+}
+
+bool MSceneManagerPrivate::verifySceneWindowStateBeforeAppear(
+        MSceneWindow *sceneWindow,
+        MSceneWindow::DeletionPolicy policy,
+        bool animatedTransition)
+{
+    bool verified = false;
+
+    switch (sceneWindow->sceneWindowState()) {
+        case MSceneWindow::Disappeared:
+            if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+                if (pageSwitchAnimation->state() == QAbstractAnimation::Running) {
+                    // Apply it after the current page switch animation finishes.
+                    MSceneWindowTransition transition;
+                    transition.sceneWindow = sceneWindow;
+                    transition.type = MSceneWindowTransition::AppearTransition;
+                    transition.policy = policy;
+                    transition.animated = animatedTransition;
+                    queuedTransitionsPageSwitchAnimation.append(transition);
+                } else {
+                    verified = true;
+                }
+            } else {
+                // Correct source state. Proceed.
+                verified = true;
+            }
+            break;
+
+        case MSceneWindow::Disappearing:
+            // Queue that transition.
+            // Page transitions goes to a different queue than other scene windows.
+            if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+                Q_ASSERT(pageSwitchAnimation->state() == QAbstractAnimation::Running);
+
+                // Apply it after the current page switch animation finishes.
+                MSceneWindowTransition transition;
+                transition.sceneWindow = sceneWindow;
+                transition.type = MSceneWindowTransition::AppearTransition;
+                transition.policy = policy;
+                transition.animated = animatedTransition;
+                queuedTransitionsPageSwitchAnimation.append(transition);
+            } else {
+                if (sceneWindow->d_func()->queuedTransition == 0) {
+                    MSceneWindowTransition *queuedTransition = new MSceneWindowTransition;
+                    queuedTransition->sceneWindow = sceneWindow;
+                    queuedTransition->type = MSceneWindowTransition::AppearTransition;
+                    queuedTransition->policy = policy;
+                    queuedTransition->animated = animatedTransition;
+
+                    sceneWindow->d_func()->queuedTransition = queuedTransition;
+                } else {
+                    // There's no sense in having a disappear() queued if it is already
+                    // disappearing.
+                    Q_ASSERT(sceneWindow->d_func()->queuedTransition->type ==
+                            MSceneWindowTransition::AppearTransition);
+                    // We already have an appear() call queued there. So nothing left to do.
+                }
+            }
+            break;
+
+        case MSceneWindow::Appearing:
+            if (sceneWindow->windowType() != MSceneWindow::ApplicationPage) {
+                // This appear() request cancels the previously pending
+                // disappear() or dismiss().
+                if (sceneWindow->d_func()->queuedTransition != 0) {
+                    Q_ASSERT(sceneWindow->d_func()->queuedTransition->type !=
+                            MSceneWindowTransition::AppearTransition);
+
+                    delete sceneWindow->d_func()->queuedTransition;
+                    sceneWindow->d_func()->queuedTransition = 0;
+                }
+            }
+            break;
+
+        case MSceneWindow::Appeared:
+            // We're already were we want to be.
+            break;
+
+        default:
+            qFatal("MSceneManager - Unknown MSceneWindow::appearanceState().");
+    }
+
+    return verified;
 }
 
 void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
         MSceneWindow::DeletionPolicy policy,
         bool animatedTransition)
 {
-    if (debugInterface) {
-        if (animatedTransition)
-            debugInterface->setProperty("transitionMode", MSceneManager::AnimatedTransition);
-        else
-            debugInterface->setProperty("transitionMode", MSceneManager::ImmediateTransition);
-    }
+    Q_Q(MSceneManager);
 
+    if (!verifySceneWindowStateBeforeAppear(window, policy, animatedTransition)) {
+        return;
+    }
 
     // Popping up scene windows during an orientation change is
     // a grey area. We probably want to avoid them during that period.
@@ -1007,25 +1135,15 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
     if (orientationAnimation->state() == QAbstractAnimation::Running
             && window->windowType() == MSceneWindow::StatusBar) {
 
-        SceneWindowTransition transition;
+        MSceneWindowTransition transition;
         transition.sceneWindow = window;
-        transition.type = SceneWindowTransition::AppearTransition;
+        transition.type = MSceneWindowTransition::AppearTransition;
         transition.policy = policy;
         transition.animated = animatedTransition;
-        queuedTransitions.append(transition);
+        queuedTransitionsOrientationAnimation.append(transition);
 
         return;
     }
-
-    if (!validateSceneWindowPreAppearanceStatus(window)) {
-        return;
-    }
-
-    Q_ASSERT(window->d_func()->shown == false);
-
-    produceSceneWindowEvent(MSceneWindowEvent::eventTypeAppear(), window,
-                            animatedTransition);
-    prepareWindowShow(window);
 
     window->d_func()->policy = policy;
 
@@ -1033,11 +1151,14 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
         pushPage(window, animatedTransition);
     } else {
         if (animatedTransition) {
+            setSceneWindowState(window, MSceneWindow::Appearing);
             if (!window->d_func()->appearanceAnimation)
                 createAppearanceAnimationForSceneWindow(window);
-            window->d_func()->appearanceAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+            q->connect(window->d_func()->appearanceAnimation, SIGNAL(finished()),
+                    SLOT(_q_onSceneWindowAppearanceAnimationFinished()));
+            window->d_func()->appearanceAnimation->start();
         } else {
-            emit window->appeared();
+            setSceneWindowState(window, MSceneWindow::Appeared);
         }
     }
 
@@ -1050,28 +1171,96 @@ void MSceneManagerPrivate::prepareWindowHide(MSceneWindow *window)
     QObject::disconnect(window, SIGNAL(repositionNeeded()),
                         q, SLOT(_q_setSenderGeometry()));
     orientationAnimation->removeSceneWindow(window);
-    window->d_func()->shown = false;
+}
 
-    // Check whether we are trying to hide a window while it is in the middle of
-    // a show animation. If that's the case, we stop it.
-    if (window->d_func()->appearanceAnimation) {
-        MAbstractWidgetAnimation *appearanceAnimation = window->d_func()->appearanceAnimation;
+bool MSceneManagerPrivate::verifySceneWindowStateBeforeDisappear(
+        MSceneWindow *sceneWindow,
+        bool animatedTransition)
+{
+    bool verified = false;
 
-        if (appearanceAnimation->state() == QAbstractAnimation::Running) {
-            appearanceAnimation->stop();
-            QObject::disconnect(window, SIGNAL(appeared()),
-                    q, SLOT(_q_onSceneWindowAppeared()));
+    switch (sceneWindow->sceneWindowState()) {
+        case MSceneWindow::Disappeared:
+            // Nothing to do here.
+            break;
 
-            appearanceAnimation->restoreTargetWidgetState();
-        }
+        case MSceneWindow::Disappearing:
+            if (sceneWindow->windowType() != MSceneWindow::ApplicationPage) {
+                // This disappear() request cancels the previously pending
+                // appear()
+                if (sceneWindow->d_func()->queuedTransition != 0) {
+                    Q_ASSERT(sceneWindow->d_func()->queuedTransition->type ==
+                            MSceneWindowTransition::AppearTransition);
+
+                    delete sceneWindow->d_func()->queuedTransition;
+                    sceneWindow->d_func()->queuedTransition = 0;
+                }
+            }
+            break;
+
+        case MSceneWindow::Appearing:
+            // Queue that transition.
+            // Page transitions goes to a different queue than other scene windows.
+            if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+                Q_ASSERT(pageSwitchAnimation->state() == QAbstractAnimation::Running);
+
+                // Apply it after the current page switch animation finishes.
+                MSceneWindowTransition transition;
+                transition.sceneWindow = sceneWindow;
+                transition.type = MSceneWindowTransition::DisappearTransition;
+                transition.animated = animatedTransition;
+                queuedTransitionsPageSwitchAnimation.append(transition);
+            } else {
+                if (sceneWindow->d_func()->queuedTransition == 0) {
+                    MSceneWindowTransition *queuedTransition = new MSceneWindowTransition;
+                    queuedTransition->sceneWindow = sceneWindow;
+                    queuedTransition->type = MSceneWindowTransition::DisappearTransition;
+                    queuedTransition->animated = animatedTransition;
+
+                    sceneWindow->d_func()->queuedTransition = queuedTransition;
+                } else {
+                    // There's no sense in having a appear() queued if it is already
+                    // appearing.
+                    Q_ASSERT(sceneWindow->d_func()->queuedTransition->type !=
+                            MSceneWindowTransition::AppearTransition);
+                }
+            }
+            break;
+
+        case MSceneWindow::Appeared:
+            if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+                if (pageSwitchAnimation->state() == QAbstractAnimation::Running) {
+                    // Apply it after the current page switch animation finishes.
+                    MSceneWindowTransition transition;
+                    transition.sceneWindow = sceneWindow;
+                    transition.type = MSceneWindowTransition::DisappearTransition;
+                    transition.animated = animatedTransition;
+                    queuedTransitionsPageSwitchAnimation.append(transition);
+                } else {
+                    verified = true;
+                }
+            } else {
+                // Correct source state. Proceed.
+                verified = true;
+            }
+            break;
+
+        default:
+            qFatal("MSceneManager - Unknown MSceneWindow::appearanceState().");
     }
 
-    q->connect(window, SIGNAL(disappeared()), SLOT(_q_onSceneWindowDisappeared()));
+    return verified;
 }
 
 void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
         bool animatedTransition)
 {
+    Q_Q(MSceneManager);
+
+    if (!verifySceneWindowStateBeforeDisappear(window, animatedTransition)) {
+        return;
+    }
+
     // Disappearing scene windows during an orientation change is
     // a grey area. We probably want to avoid them during that period.
     // TODO: For now we are only queueing the status bar. We should
@@ -1079,31 +1268,31 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
     if (orientationAnimation->state() == QAbstractAnimation::Running
             && window->windowType() == MSceneWindow::StatusBar) {
 
-        SceneWindowTransition transition;
+        MSceneWindowTransition transition;
         transition.sceneWindow = window;
-        transition.type = SceneWindowTransition::DisappearTransition;
+        transition.type = MSceneWindowTransition::DisappearTransition;
         transition.animated = animatedTransition;
-        queuedTransitions.append(transition);
+        queuedTransitionsOrientationAnimation.append(transition);
 
         return;
     }
 
-    produceSceneWindowEvent(MSceneWindowEvent::eventTypeDisappear(), window,
-                            animatedTransition);
-    prepareWindowHide(window);
-
     if (window->windowType() == MSceneWindow::ApplicationPage) {
-        if (window == currentPage) {
-            currentPage = 0;
-        }
-    }
+        Q_ASSERT(window == currentPage);
+        popPage(animatedTransition);
 
-    if (animatedTransition) {
+    } else if (animatedTransition) { // Fallback to legacy disappearance anim.
+        setSceneWindowState(window, MSceneWindow::Disappearing);
+
         if (!window->d_func()->disappearanceAnimation)
             createDisappearanceAnimationForSceneWindow(window);
-        window->d_func()->disappearanceAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+
+        q->connect(window->d_func()->disappearanceAnimation, SIGNAL(finished()),
+                SLOT(_q_onSceneWindowDisappearanceAnimationFinished()));
+
+        window->d_func()->disappearanceAnimation->start();
     } else {
-        emit window->disappeared();
+        setSceneWindowState(window, MSceneWindow::Disappeared);
     }
 }
 
@@ -1114,47 +1303,6 @@ void MSceneManagerPrivate::freezeUIForAnimationDuration(QAbstractAnimation *anim
     if (animation->state() == QAbstractAnimation::Running) {
         //rootElement->setEnabled(false);
         QObject::connect(animation, SIGNAL(finished()), q, SLOT(_q_unFreezeUI()));
-    }
-}
-
-void MSceneManagerPrivate::dismissSceneWindow(MSceneWindow *window,
-        bool animatedTransition)
-{
-    // Dismissing scene windows during an orientation change is
-    // a grey area. We probably want to avoid them during that period.
-    // TODO: For now we are only queueing the status bar. We should
-    // think about out a policy to apply to all scene windows.
-    if (orientationAnimation->state() == QAbstractAnimation::Running
-            && window->windowType() == MSceneWindow::StatusBar) {
-
-        SceneWindowTransition transition;
-        transition.sceneWindow = window;
-        transition.type = SceneWindowTransition::DismissTransition;
-        transition.animated = animatedTransition;
-        queuedTransitions.append(transition);
-
-        return;
-    }
-
-    produceSceneWindowEvent(MSceneWindowEvent::eventTypeDismiss(), window,
-                            animatedTransition);
-    prepareWindowHide(window);
-
-    window->d_func()->dismissed = true;
-
-    if (window->windowType() == MSceneWindow::ApplicationPage) {
-        if (window == currentPage) {
-            popPage(animatedTransition);
-        }
-        // If the window is not currentPage then it means that it's not
-        // currently being displayed and thus there's nothing to be done.
-
-    } else if (animatedTransition) { // Fallback to legacy disappearance anim.
-        if (!window->d_func()->disappearanceAnimation)
-            createDisappearanceAnimationForSceneWindow(window);
-        window->d_func()->disappearanceAnimation->start(QAbstractAnimation::DeleteWhenStopped);
-    } else {
-        emit window->disappeared();
     }
 }
 
@@ -1194,7 +1342,8 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             QList<MSceneWindow*> sceneWindows = windows;
             sceneWindows.removeAll(sceneWindow);
             foreach (MSceneWindow *window, sceneWindows) {
-                if (window->windowType() != MSceneWindow::ApplicationPage &&
+                if (window->sceneWindowState() != MSceneWindow::Disappeared &&
+                    window->windowType() != MSceneWindow::ApplicationPage &&
                     window->windowType() != MSceneWindow::DockWidget) {
                     MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
                     moveAnimation->setWidget(window);
@@ -1228,7 +1377,6 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
     if (effect)
         animation->addAnimation(effect->d_func()->appearanceAnimation);
 
-    sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(appeared()));
     sceneWindow->d_func()->appearanceAnimation = animation;
 }
 
@@ -1268,7 +1416,8 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             QList<MSceneWindow*> sceneWindows = windows;
             sceneWindows.removeAll(sceneWindow);
             foreach (MSceneWindow *window, sceneWindows) {
-                if (window->windowType() != MSceneWindow::ApplicationPage &&
+                if (window->sceneWindowState() != MSceneWindow::Disappeared &&
+                    window->windowType() != MSceneWindow::ApplicationPage &&
                     window->windowType() != MSceneWindow::DockWidget) {
                     MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
                     moveAnimation->setWidget(window);
@@ -1303,7 +1452,6 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     if (effect)
         animation->addAnimation(effect->d_func()->disappearanceAnimation);
 
-    sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(disappeared()));
     sceneWindow->d_func()->disappearanceAnimation = animation;
 }
 
@@ -1353,6 +1501,171 @@ void MSceneManagerPrivate::_q_inputPanelClosed()
     _q_restoreSceneWindow();
 }
 
+void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
+        MSceneWindow::SceneWindowState newState)
+{
+    switch (newState) {
+        case MSceneWindow::Appearing:
+            onSceneWindowEnteringAppearingState(sceneWindow);
+            break;
+
+        case MSceneWindow::Appeared:
+            onSceneWindowEnteringAppearedState(sceneWindow);
+            break;
+
+        case MSceneWindow::Disappearing:
+            onSceneWindowEnteringDisappearingState(sceneWindow);
+            break;
+
+        case MSceneWindow::Disappeared:
+            onSceneWindowEnteringDisappearedState(sceneWindow);
+            break;
+    }
+
+    sceneWindow->d_func()->setSceneWindowState(newState);
+}
+
+void MSceneManagerPrivate::onSceneWindowEnteringAppearingState(MSceneWindow *sceneWindow)
+{
+    prepareWindowShow(sceneWindow);
+    produceSceneWindowEvent(MSceneWindowEvent::eventTypeAppear(), sceneWindow, true);
+}
+
+void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *sceneWindow)
+{
+    switch (sceneWindow->sceneWindowState()) {
+        case MSceneWindow::Appearing:
+            // Page switching uses a separate animation.
+            // Thus in this case appearanceAnimation == 0.
+            if (sceneWindow->d_func()->appearanceAnimation != 0) {
+                delete sceneWindow->d_func()->appearanceAnimation;
+                sceneWindow->d_func()->appearanceAnimation = 0;
+            }
+            break;
+
+        case MSceneWindow::Disappeared:
+            prepareWindowShow(sceneWindow);
+            produceSceneWindowEvent(MSceneWindowEvent::eventTypeAppear(), sceneWindow, false);
+            break;
+
+        default:
+            break;
+    }
+
+    if (isOnDisplay()) {
+        produceMustBeResolvedDisplayEvent(sceneWindow);
+    }
+}
+
+void MSceneManagerPrivate::onSceneWindowEnteringDisappearingState(MSceneWindow *sceneWindow)
+{
+    if (sceneWindow->d_func()->dismissed) {
+        produceSceneWindowEvent(MSceneWindowEvent::eventTypeDismiss(),
+                sceneWindow, true);
+    } else {
+        produceSceneWindowEvent(MSceneWindowEvent::eventTypeDisappear(),
+                sceneWindow, true);
+    }
+
+    prepareWindowHide(sceneWindow);
+}
+
+void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *sceneWindow)
+{
+    switch (sceneWindow->sceneWindowState()) {
+        case MSceneWindow::Appearing:
+            // Happens if removeSceneWindow() is called during an appearance animation
+            {
+                MAbstractWidgetAnimation *appearanceAnimation =
+                    sceneWindow->d_func()->appearanceAnimation;
+
+                if (appearanceAnimation) {
+                    appearanceAnimation->stop();
+                    appearanceAnimation->restoreTargetWidgetState();
+                    delete appearanceAnimation;
+                    sceneWindow->d_func()->appearanceAnimation = 0;
+                }
+            }
+            break;
+
+        case MSceneWindow::Disappearing:
+            {
+
+                if (isOnDisplay()) {
+                    produceFullyOffDisplayEvents(sceneWindow);
+                }
+
+                MAbstractWidgetAnimation *disappearanceAnimation =
+                    sceneWindow->d_func()->disappearanceAnimation;
+
+                if (disappearanceAnimation) {
+                    disappearanceAnimation->stop();
+                    disappearanceAnimation->restoreTargetWidgetState();
+                    delete disappearanceAnimation;
+                    sceneWindow->d_func()->disappearanceAnimation = 0;
+                }
+            }
+            break;
+
+        case MSceneWindow::Appeared:
+            produceSceneWindowEvent(MSceneWindowEvent::eventTypeDisappear(),
+                    sceneWindow, false);
+            prepareWindowHide(sceneWindow);
+
+            if (isOnDisplay()) {
+                produceFullyOffDisplayEvents(sceneWindow);
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    if (sceneWindow->windowType() == MSceneWindow::NavigationBar && !navBarHidden)
+        navBar = 0;
+
+    if (sceneWindow->windowType() == MSceneWindow::EscapeButtonPanel && !escapeButtonHidden)
+        escapeButtonPanel = 0;
+
+    if (sceneWindow->windowType() == MSceneWindow::StatusBar)
+        statusBar = 0;
+
+    // If there is a layer effect it is deleted
+    if (sceneWindow->d_func()->effect) {
+        sceneWindow->setParentItem(0);
+        delete sceneWindow->d_func()->effect;
+        sceneWindow->d_func()->effect = 0;
+    }
+
+    sceneWindow->hide();
+
+    if (sceneWindow->sceneWindowState() == MSceneWindow::Disappearing ||
+            sceneWindow->sceneWindowState() == MSceneWindow::Appeared) {
+        if ((sceneWindow->deletionPolicy() == MSceneWindow::DestroyWhenDone) ||
+                ((sceneWindow->deletionPolicy() == MSceneWindow::DestroyWhenDismissed)
+                 && sceneWindow->d_func()->dismissed)) {
+            sceneWindow->deleteLater();
+        }
+    }
+}
+
+void MSceneManagerPrivate::fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow)
+{
+    if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
+        if (pageSwitchAnimation->oldPage() == sceneWindow ||
+                pageSwitchAnimation->newPage() == sceneWindow)
+            pageSwitchAnimation->setCurrentTime(pageSwitchAnimation->duration());
+    } else {
+        if (sceneWindow->sceneWindowState() == MSceneWindow::Appearing) {
+            sceneWindow->d_func()->appearanceAnimation->setCurrentTime(
+                    sceneWindow->d_func()->appearanceAnimation->duration());
+        } else if (sceneWindow->sceneWindowState() == MSceneWindow::Disappearing) {
+            sceneWindow->d_func()->disappearanceAnimation->setCurrentTime(
+                    sceneWindow->d_func()->disappearanceAnimation->duration());
+        }
+    }
+}
+
 MSceneManager::MSceneManager(MScene *scene, QObject *parent) :
     QObject(parent), d_ptr(new MSceneManagerPrivate)
 {
@@ -1384,6 +1697,8 @@ void MSceneManager::appearSceneWindow(MSceneWindow *window, MSceneWindow::Deleti
 {
     Q_D(MSceneManager);
 
+    d->addSceneWindow(window);
+
     bool animatedTransition = d->isOnDisplay();
 
     d->appearSceneWindow(window, policy, animatedTransition);
@@ -1392,6 +1707,7 @@ void MSceneManager::appearSceneWindow(MSceneWindow *window, MSceneWindow::Deleti
 void MSceneManager::appearSceneWindowNow(MSceneWindow *window, MSceneWindow::DeletionPolicy policy)
 {
     Q_D(MSceneManager);
+    d->addSceneWindow(window);
     d->appearSceneWindow(window, policy, false);
 }
 
@@ -1442,12 +1758,14 @@ void MSceneManager::disappearSceneWindow(MSceneWindow *window)
 
     bool animatedTransition = d->isOnDisplay();
 
+    window->d_func()->dismissed = false;
     d->disappearSceneWindow(window, animatedTransition);
 }
 
 void MSceneManager::disappearSceneWindowNow(MSceneWindow *window)
 {
     Q_D(MSceneManager);
+    window->d_func()->dismissed = false;
     d->disappearSceneWindow(window, false);
 }
 
@@ -1457,13 +1775,15 @@ void MSceneManager::dismissSceneWindow(MSceneWindow *window)
 
     bool animatedTransition = d->isOnDisplay();
 
-    d->dismissSceneWindow(window, animatedTransition);
+    window->d_func()->dismissed = true;
+    d->disappearSceneWindow(window, animatedTransition);
 }
 
 void MSceneManager::dismissSceneWindowNow(MSceneWindow *window)
 {
     Q_D(MSceneManager);
-    d->dismissSceneWindow(window, false);
+    window->d_func()->dismissed = true;
+    d->disappearSceneWindow(window, false);
 }
 
 bool MSceneManager::eventFilter(QObject *watched, QEvent *event)
@@ -1665,11 +1985,38 @@ void MSceneManager::childEvent(QChildEvent *event)
 {
     Q_D(MSceneManager);
 
-    if (event->added() && event->child()->objectName() == "debugInterface") {
+    if (event->added() && event->child()->objectName() == "_m_testBridge") {
         d->debugInterface = event->child();
-    } else if (event->child()->objectName() == "debugInterface") {
+        new MSceneManagerTestInterface(d, d->debugInterface);
+    } else if (event->child()->objectName() == "_m_testBridge") {
         d->debugInterface = 0;
     }
+}
+
+MSceneManagerTestInterface::MSceneManagerTestInterface(
+        MSceneManagerPrivate *d, QObject *parent)
+    : QObject(parent), d(d)
+{
+}
+
+void MSceneManagerTestInterface::fastForwardPageSwitchAnimation()
+{
+    d->pageSwitchAnimation->setCurrentTime(d->pageSwitchAnimation->duration());
+}
+
+void MSceneManagerTestInterface::fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow)
+{
+    d->fastForwardSceneWindowTransitionAnimation(sceneWindow);
+}
+
+void MSceneManagerTestInterface::addSceneWindow(MSceneWindow *sceneWindow)
+{
+    d->addSceneWindow(sceneWindow);
+}
+
+void MSceneManagerTestInterface::removeSceneWindow(MSceneWindow *sceneWindow)
+{
+    d->removeSceneWindow(sceneWindow);
 }
 
 #include "moc_mscenemanager.cpp"

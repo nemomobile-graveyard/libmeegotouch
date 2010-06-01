@@ -59,6 +59,28 @@ class MSceneWindowPrivate;
  * managed by him and setting its proper position, size, z value, parent item,
  * etc (usually with animated transitions).
  *
+ * \section scenewindow_management Managed scene windows
+ *
+ * After a scene window has been added to a scene manager (through an appear() call),
+ * the following attributes are controlled by that scene manager and therefore
+ * should not be manually modified:
+ *    - scene()
+ *    - parentItem()
+ *    - zValue()
+ *    - rotation()
+ *    - scale()
+ *    - transformOriginPoint()
+ *    - isVisible()
+ *
+ * In addition to those, if isManuallyManaged() is false, the following
+ * attributes will also be under scene manager control:
+ *    - pos()
+ *    - size()
+ *    - geometry()
+ *
+ * Manually changing attributes that are under the control of a scene manager
+ * is not supported and can lead to unpredictable behavior.
+ *
  * \sa MSceneManager
  */
 class M_EXPORT MSceneWindow : public MWidgetController
@@ -73,7 +95,7 @@ public:
      * This enum defines how to handle scene window after hiding it using disappear() or dismiss().
      */
     enum DeletionPolicy {
-        KeepWhenDone,    //!< Window is kept alive after being dismissed or disappeared
+        KeepWhenDone,    //!< Window is kept alive after being dismissed or disappeared.
         DestroyWhenDone,  //!< Window is destroyed after being dismissed or disappeared
         DestroyWhenDismissed //!< Window is destroyed after being dismissed
     };
@@ -100,6 +122,33 @@ public:
         HomeButtonPanel,                 // MHomeButtonPanel
         PlainSceneWindow,                // MSceneWindow
         StatusBar                        // MStatusBar
+    };
+
+    /*!
+     * This enum describes the possible states of a scene window.
+     * \sa sceneWindowState(), sceneWindowStateChanged(), appeared(), disappeared()
+     */
+    enum SceneWindowState {
+        Appearing, /*!< An appearance animation is running on the scene window.
+                        A scene window enters this appearance state when appear()
+                        is called from Disappeared state. */
+        Appeared, /*!< The scene window is properly positioned in the scene.
+                       It enters this state from Appearing, after its
+                       appearance animation has finished. This state can also be
+                       reached directly from Disappeared if the transition was immediate.
+                       The appeared() signal gets emitted when this state is reached.*/
+        Disappearing, /*!< A disappearance animation is running on the scene window.
+                        A scene window enters this state when disappear() is called
+                        from Appeared state. */
+        Disappeared /*!< Initial state.
+                         The scene window is outside the visible scene area and
+                         therefore cannot be seen.
+                         It enters this appearance state from Disappearing, after
+                         its disappearance animation has finished. This state
+                         might also be reached directly from Appeared if the
+                         transition was immediate. The disappeared()
+                         signal gets emitted when this state is reached.
+                          */
     };
 
     /*!
@@ -198,21 +247,59 @@ public:
      * is enabled, the window can be positioned using e.g. resize(),
      * setPos() and/or setGeometry() and it's responsible itself for
      * proper adjusting its geometry when viewport orientation changes.
+     *
+     * Scene manager will still control other attributes such as the
+     * assigned scene (scene()), the assigned parent item (parentItem())
+     * and Z value (zValue()) regardless of the value of this property.
      */
     void setManagedManually(bool managedManually);
 
-Q_SIGNALS:
     /*!
-        \brief Emitted when the scene window has finished its appearance transition.
+     * \brief Returns the state of the scene window.
+     * \sa sceneWindowStateChanged()
+     */
+    SceneWindowState sceneWindowState() const;
+
+Q_SIGNALS:
+
+    /*!
+        \brief Emitted when the scene window enters the MSceneWindow::Appearing state.
+        This means that the scene window is starting its appearance animation. From that
+        point in time onwards, some or all of it might be inside the visible area of the
+        scene.
+     */
+    void appearing();
+
+    /*!
+        \brief Emitted when the scene window enters the MSceneWindow::Appeared state.
+
+        At this point the scene window has assumed its final position in the visible
+        area of the scene.
         \sa appear()
      */
     void appeared();
 
     /*!
-        \brief Emitted when the scene window has finished its disappearance transition.
+        \brief Emitted when the scene window enters the MSceneWindow::Disappearing state.
+        This means that the scene window is starting its disappearance animation.
+     */
+    void disappearing();
+
+    /*!
+        \brief Emitted when the scene window enters the MSceneWindow::Disappeared state.
+
+        The scene window is not longer present in the visible area of the scene.
         \sa disappear()
      */
     void disappeared();
+
+    /*!
+        \brief Emitted when the scene window state changes
+        \param newState The new state of the scene window.
+        \param oldState The previous state of the scene window.
+     */
+    void sceneWindowStateChanged(MSceneWindow::SceneWindowState newState,
+                                 MSceneWindow::SceneWindowState oldState);
 
     /*!
      * \brief Emitted when window's style attributes have changed
@@ -274,5 +361,7 @@ private:
        from MSceneManager::{hide,show}Window{,Now}()*/
     friend class MSceneManager;
 };
+
+Q_DECLARE_METATYPE(MSceneWindow::SceneWindowState)
 
 #endif

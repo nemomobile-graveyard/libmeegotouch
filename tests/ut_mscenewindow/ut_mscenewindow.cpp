@@ -24,7 +24,6 @@
 #include <MSceneManager>
 #include <MApplicationWindow>
 #include <MWindow>
-#include <MOverlay>
 #include <MComponentData>
 
 class MyMDismissEventFilter : public QObject
@@ -49,7 +48,7 @@ public:
 
 void Ut_MSceneWindow::init()
 {
-    m_subject = new MOverlay;
+    m_subject = new MSceneWindow;
 }
 
 void Ut_MSceneWindow::cleanup()
@@ -67,6 +66,8 @@ void Ut_MSceneWindow::initTestCase()
         m_componentData = new MComponentData(argc, argv);
     }
     window = new MWindow(new MSceneManager);
+
+    qRegisterMetaType<MSceneWindow::SceneWindowState>("MSceneWindow::SceneWindowState");
 }
 
 void Ut_MSceneWindow::cleanupTestCase()
@@ -79,7 +80,7 @@ void Ut_MSceneWindow::testAccessors()
 {
     m_subject->setManagedManually(true);
 
-    QCOMPARE(m_subject->windowType(), MSceneWindow::Overlay);
+    QCOMPARE(m_subject->windowType(), MSceneWindow::PlainSceneWindow);
     QCOMPARE(m_subject->isManagedManually(), true);
 }
 
@@ -103,22 +104,6 @@ void Ut_MSceneWindow::testAppearWithoutSceneManager()
 
     QVERIFY(m_subject->sceneManager() == window->sceneManager());
     QVERIFY(m_subject->scene() == static_cast<QGraphicsScene *>(window->scene()));
-}
-
-void Ut_MSceneWindow::testAppearedDisappearedSignals()
-{
-    QSignalSpy spyAppeared(m_subject, SIGNAL(appeared()));
-    QSignalSpy spyDisappeared(m_subject, SIGNAL(disappeared()));
-
-    window->sceneManager()->appearSceneWindowNow(m_subject);
-
-    QCOMPARE(spyAppeared.count(), 1);
-    QCOMPARE(spyDisappeared.count(), 0);
-
-    window->sceneManager()->disappearSceneWindowNow(m_subject);
-
-    QCOMPARE(spyAppeared.count(), 1);
-    QCOMPARE(spyDisappeared.count(), 1);
 }
 
 void Ut_MSceneWindow::testDismiss()
@@ -213,6 +198,98 @@ void Ut_MSceneWindow::testDismissedStateReset()
     QCOMPARE(spyDestroyed.count(), 0);
 }
 
+void Ut_MSceneWindow::testSceneWindowStateChanges()
+{
+    QSignalSpy spyDisappeared(m_subject, SIGNAL(disappeared()));
+    QSignalSpy spyAppearing(m_subject, SIGNAL(appearing()));
+    QSignalSpy spyAppeared(m_subject, SIGNAL(appeared()));
+    QSignalSpy spyDisappearing(m_subject, SIGNAL(disappearing()));
+    QSignalSpy spySceneWindowStateChanged(m_subject,
+            SIGNAL(sceneWindowStateChanged(MSceneWindow::SceneWindowState,
+                    MSceneWindow::SceneWindowState)));
+    TestBridge testBridge;
+
+    testBridge.setObjectName("_m_testBridge");
+    testBridge.setParent(m_subject);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Disappeared);
+
+    testBridge.setSceneWindowState(MSceneWindow::Appearing);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Appearing);
+    QCOMPARE(spyDisappeared.count(), 0);
+    QCOMPARE(spyAppearing.count(), 1);
+    QCOMPARE(spyAppeared.count(), 0);
+    QCOMPARE(spyDisappearing.count(), 0);
+    QVERIFY(verifySceneWindowStateChange(spySceneWindowStateChanged,
+                                         MSceneWindow::Appearing,
+                                         MSceneWindow::Disappeared));
+    spyAppearing.clear();
+
+    testBridge.setSceneWindowState(MSceneWindow::Appeared);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Appeared);
+    QCOMPARE(spyDisappeared.count(), 0);
+    QCOMPARE(spyAppearing.count(), 0);
+    QCOMPARE(spyAppeared.count(), 1);
+    QCOMPARE(spyDisappearing.count(), 0);
+    QVERIFY(verifySceneWindowStateChange(spySceneWindowStateChanged,
+                                         MSceneWindow::Appeared,
+                                         MSceneWindow::Appearing));
+    spyAppeared.clear();
+
+    testBridge.setSceneWindowState(MSceneWindow::Disappearing);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Disappearing);
+    QCOMPARE(spyDisappeared.count(), 0);
+    QCOMPARE(spyAppearing.count(), 0);
+    QCOMPARE(spyAppeared.count(), 0);
+    QCOMPARE(spyDisappearing.count(), 1);
+    QVERIFY(verifySceneWindowStateChange(spySceneWindowStateChanged,
+                                         MSceneWindow::Disappearing,
+                                         MSceneWindow::Appeared));
+    spyDisappearing.clear();
+
+    testBridge.setSceneWindowState(MSceneWindow::Disappeared);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Disappeared);
+    QCOMPARE(spyDisappeared.count(), 1);
+    QCOMPARE(spyAppearing.count(), 0);
+    QCOMPARE(spyAppeared.count(), 0);
+    QCOMPARE(spyDisappearing.count(), 0);
+    QVERIFY(verifySceneWindowStateChange(spySceneWindowStateChanged,
+                                         MSceneWindow::Disappeared,
+                                         MSceneWindow::Disappearing));
+    spyDisappeared.clear();
+}
+
+void Ut_MSceneWindow::testSettingSameSceneWindowState()
+{
+    QSignalSpy spyDisappeared(m_subject, SIGNAL(disappeared()));
+    QSignalSpy spyAppearing(m_subject, SIGNAL(appearing()));
+    QSignalSpy spyAppeared(m_subject, SIGNAL(appeared()));
+    QSignalSpy spyDisappearing(m_subject, SIGNAL(disappearing()));
+    QSignalSpy spySceneWindowStateChanged(m_subject,
+            SIGNAL(sceneWindowStateChanged(MSceneWindow::SceneWindowState,
+                    MSceneWindow::SceneWindowState)));
+    TestBridge testBridge;
+
+    testBridge.setObjectName("_m_testBridge");
+    testBridge.setParent(m_subject);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Disappeared);
+
+    testBridge.setSceneWindowState(MSceneWindow::Disappeared);
+
+    QCOMPARE(m_subject->sceneWindowState(), MSceneWindow::Disappeared);
+    QCOMPARE(spyDisappeared.count(), 0);
+    QCOMPARE(spyAppearing.count(), 0);
+    QCOMPARE(spyAppeared.count(), 0);
+    QCOMPARE(spyDisappearing.count(), 0);
+    QCOMPARE(spySceneWindowStateChanged.count(), 0);
+
+}
+
 void Ut_MSceneWindow::processPendingEvents()
 {
     // Send the posted QEvent::DeferredDelete from deleteLater().
@@ -222,6 +299,58 @@ void Ut_MSceneWindow::processPendingEvents()
     QTimer::singleShot(0, QCoreApplication::instance(), SLOT(quit()));
 
     QCoreApplication::instance()->exec();
+}
+
+bool Ut_MSceneWindow::verifySceneWindowStateChange(QSignalSpy &spy,
+        MSceneWindow::SceneWindowState expectedNewState,
+        MSceneWindow::SceneWindowState expectedOldState)
+{
+    if (spy.count() != 1) {
+        qWarning() << "sceneWindowStateChanged(). Signal emitted" << spy.count()
+            << "times. Expected 1";
+        return false;
+    }
+
+    QList<QVariant> arguments = spy.takeFirst();
+
+    if (arguments.count() != 2) {
+        qFatal("Did not connect to the proper signal");
+        return false;
+    }
+
+    MSceneWindow::SceneWindowState actualNewState =
+        arguments.at(0).value<MSceneWindow::SceneWindowState>();
+
+    MSceneWindow::SceneWindowState actualOldState =
+        arguments.at(1).value<MSceneWindow::SceneWindowState>();
+
+    if (actualNewState != expectedNewState) {
+        qWarning() << "sceneWindowStateChanged(). newState: Expected" << expectedNewState
+            << "got" << actualNewState;
+        return false;
+    }
+
+    if (actualOldState != expectedOldState) {
+        qWarning() << "sceneWindowStateChanged(). oldState: Expected" << expectedOldState
+            << "got" << actualNewState;
+        return false;
+    }
+
+    return true;
+}
+
+TestBridge::TestBridge(QObject *parent)
+    : QObject(parent)
+{
+}
+
+void TestBridge::setSceneWindowState(MSceneWindow::SceneWindowState newState)
+{
+    QObject *testInterface = children()[0];
+
+    QMetaObject::invokeMethod(testInterface, "setSceneWindowState",
+            Qt::DirectConnection,
+            Q_ARG(MSceneWindow::SceneWindowState, newState));
 }
 
 QTEST_MAIN(Ut_MSceneWindow)

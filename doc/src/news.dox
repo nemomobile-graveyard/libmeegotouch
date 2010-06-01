@@ -1,5 +1,19 @@
 /*! \page news What's New in DirectUI
 
+\section v02020 0.20.20
+
+\subsection New
+- MSceneWindow now has a state machine: MSceneWindow::SceneWindowState. To check whether
+  a scene window is being shown on the scene, MSceneWindow::sceneWindowState() should
+  be used instead of QGraphicsItem::isVisible() or MWidget::isOnDisplay() since those
+  other two methods have different semantics.
+  - New API:
+    - MSceneWindow::SceneWindowState enumeration, describes the possible states of a scene window.
+    - MSceneWindow::appearing() signal, emitted when MSceneWindow::Appearing state is reached.
+    - MSceneWindow::disappearing() signal, emitted when MSceneWindow::Disappearing state is reached.
+    - MSceneWindow::sceneWindowState(), getter for the current state.
+    - MSceneWindow::sceneWindowStateChanged(newState, oldState), emitted whenever the scene window state changes.
+
 \section v0202 0.20.2
 
 \subsection New

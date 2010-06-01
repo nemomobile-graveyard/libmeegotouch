@@ -202,15 +202,6 @@ bool MDialogPrivate::prepareStandAloneAppearance(MSceneWindow::DeletionPolicy po
 
     standAloneWindow->show();
 
-    // Check whether the dialog is already present in some scene manager
-    if (shown) {
-        if (q->sceneManager() != standAloneWindow->sceneManager()) {
-            q->sceneManager()->disappearSceneWindowNow(q);
-        } else {
-            ok = false;
-        }
-    }
-
     return ok;
 }
 

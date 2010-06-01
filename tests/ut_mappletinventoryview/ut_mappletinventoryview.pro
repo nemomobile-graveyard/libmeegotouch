@@ -61,7 +61,6 @@ HEADERS += \
     $$MSRCDIR/extensions/mashup/mashup/mappletinventorymodel.h \
     $$MSRCDIR/extensions/style/mappletinventorystyle.h \
     $$MSRCDIR/corelib/widgets/mwidgetmodel_p.h \
-    $$MSRCDIR/corelib/widgets/mscenewindow_p.h \
     $$MSRCDIR/corelib/widgets/mobjectmenu.h
 
 include(../common_bot.pri)

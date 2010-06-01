@@ -43,6 +43,21 @@ class QGraphicsWidget;
 class QTimeLine;
 class QPointF;
 
+class MSceneWindowTransition {
+    public:
+        QPointer<MSceneWindow> sceneWindow;
+
+        enum TransitionType {
+            AppearTransition,
+            DisappearTransition
+        } type;
+
+        // Makes sense only for AppearTransition types.
+        MSceneWindow::DeletionPolicy policy;
+
+        bool animated;
+};
+
 class MSceneManagerPrivate
 {
     Q_DECLARE_PUBLIC(MSceneManager)
@@ -85,15 +100,14 @@ public:
     void rotateToAngle(M::OrientationAngle newAngle);
     void setOrientationAngleWithoutAnimation(M::OrientationAngle newAngle);
 
-    void attachWindow(MSceneWindow *window);
-    void detachWindow(MSceneWindow *window);
+    void addSceneWindow(MSceneWindow *sceneWindow);
+    void removeSceneWindow(MSceneWindow *sceneWindow);
+    void addUnmanagedSceneWindow(MSceneWindow *sceneWindow);
 
     bool onApplicationPage(QGraphicsItem *item);
     MSceneWindow *parentSceneWindow(QGraphicsItem *item);
     void moveSceneWindow(MSceneWindow *window, int adjustment, int visibleHeight);
     int scrollPageContents(MSceneWindow *window, int adjustment) const;
-
-    bool validateSceneWindowPreAppearanceStatus(MSceneWindow *sceneWindow);
 
     bool isOnDisplay();
     void produceMustBeResolvedDisplayEvent(MSceneWindow *sceneWindow);
@@ -117,9 +131,6 @@ public:
     void disappearSceneWindow(MSceneWindow *window,
                          bool animatedTransition);
 
-    void dismissSceneWindow(MSceneWindow *window,
-                       bool animatedTransition);
-
     void startPageSwitchAnimation(MSceneWindow *newPage,
                                   MSceneWindow *oldPage,
                                   MPageSwitchAnimation::PageTransitionDirection direction);
@@ -131,12 +142,37 @@ public:
     void createAppearanceAnimationForSceneWindow(MSceneWindow *sceneWindow);
     void createDisappearanceAnimationForSceneWindow(MSceneWindow *sceneWindow);
 
+    bool verifySceneWindowStateBeforeAppear(
+            MSceneWindow *sceneWindow,
+            MSceneWindow::DeletionPolicy policy,
+            bool animatedTransition);
+
+    bool verifySceneWindowStateBeforeDisappear(
+            MSceneWindow *sceneWindow,
+            bool animatedTransition);
+
+    void applySceneWindowTransition(MSceneWindowTransition *transition);
+    void applySceneWindowTransitionsFromPageSwitchQueue();
+    void removeSceneWindowFromTransitionQueue(MSceneWindow *sceneWindow,
+            QList<MSceneWindowTransition> &transitionQueue);
+
+    void setSceneWindowState(MSceneWindow *sceneWindow,
+            MSceneWindow::SceneWindowState newState);
+
+    void onSceneWindowEnteringAppearingState(MSceneWindow *sceneWindow);
+    void onSceneWindowEnteringAppearedState(MSceneWindow *sceneWindow);
+    void onSceneWindowEnteringDisappearingState(MSceneWindow *sceneWindow);
+    void onSceneWindowEnteringDisappearedState(MSceneWindow *sceneWindow);
+
+    void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
+
     void _q_setSenderGeometry();
     void _q_changeGlobalOrientationAngle();
     void _q_emitOrientationChangeFinished();
     void _q_pageShowAnimationFinished();
-    void _q_onSceneWindowAppeared();
-    void _q_onSceneWindowDisappeared();
+    void _q_onSceneWindowAppearanceAnimationFinished();
+    void _q_onSceneWindowDisappearanceAnimationFinished();
+    void _q_onPageSwitchAnimationFinished();
     void _q_restoreSceneWindow();
     void _q_relocateWindowByInputPanel(const QRect &inputPanelRect);
 
@@ -148,7 +184,7 @@ public:
 
     void _q_unFreezeUI();
 
-    void _q_applyQueuedSceneWindowTransitions();
+    void _q_applySceneWindowTransitionsQueuedDueToOrientationAnimation();
 
     void _q_triggerAsyncPendingOrientationChange();
 
@@ -183,22 +219,14 @@ public:
 
     QPointer<MSceneWindow> statusBar;
 
-    class SceneWindowTransition {
-        public:
-        MSceneWindow *sceneWindow;
+    // Queued scene window transitions to be applied after an ongoing orientation
+    // animation finishes.
+    QList<MSceneWindowTransition> queuedTransitionsOrientationAnimation;
 
-        enum TransitionType {
-            AppearTransition,
-            DisappearTransition,
-            DismissTransition
-        } type;
-
-        // Makes sense only for AppearTransition types.
-        MSceneWindow::DeletionPolicy policy;
-
-        bool animated;
-    };
-    QList<SceneWindowTransition> queuedTransitions;
+    // Queue of page transitions to be applied after an ongoing page switch
+    // animation finishes. Usually only one is picked after each page switch
+    // animation since it will probably result in anoter page switch animation.
+    QList<MSceneWindowTransition> queuedTransitionsPageSwitchAnimation;
 
     // If an animation gets started by MSceneManager::setOrientationAngle() while
     // another orientation change transition is running, the orientation change
@@ -212,6 +240,21 @@ public:
     QPointer<QObject> debugInterface;
 
     MSceneManager *q_ptr;
+};
+
+class MSceneManagerTestInterface : public QObject
+{
+    Q_OBJECT
+public:
+    MSceneManagerTestInterface(MSceneManagerPrivate *d, QObject *parent = 0);
+public Q_SLOTS:
+    void fastForwardPageSwitchAnimation();
+    void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
+    void addSceneWindow(MSceneWindow *sceneWindow);
+    void removeSceneWindow(MSceneWindow *sceneWindow);
+
+public:
+    MSceneManagerPrivate *d;
 };
 
 #endif
