@@ -22,6 +22,8 @@
 #include <MLabel>
 #include <MImageWidget>
 
+#include <MWidgetStyle>
+
 #include <QGraphicsGridLayout>
 
 MBasicListItem::MBasicListItem(MBasicListItem::ItemStyle style, QGraphicsItem *parent)
@@ -45,12 +47,15 @@ void MBasicListItem::initLayout()
     
     if (!layoutGrid) {
         layoutGrid = new QGraphicsGridLayout(this);
+        layoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
         layoutGrid->setContentsMargins(0, 0, 0, 0);
         layoutGrid->setSpacing(0);
     }
     
     switch (listItemStyle) {
     case MBasicListItem::SingleTitle: {
+            setObjectName("BasicListItemSingleTitle");
+
             titleLabel = new MLabel(this);
             titleLabel->setObjectName("CommonSingleTitle");
             
@@ -58,6 +63,8 @@ void MBasicListItem::initLayout()
             break;
         }
     case MBasicListItem::TitleWithSubtitle: {
+            setObjectName("BasicListItemTitleWithSubtitle");
+
             titleLabel = new MLabel(this);
             titleLabel->setObjectName("CommonTitle");
             
@@ -69,32 +76,33 @@ void MBasicListItem::initLayout()
             break;
         }
     case MBasicListItem::IconWithTitle: {
+            setObjectName("BasicListItemIconWithTitle");
+
             iconImage = new MImageWidget(this);
-            iconImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             iconImage->setObjectName("CommonMainIcon");
             
             titleLabel = new MLabel(this);
-            titleLabel->setObjectName("CommonSingleTitle");
+            titleLabel->setObjectName("CommonTitleWithLeftMargin");
 
             layoutGrid->addItem(iconImage, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
             layoutGrid->addItem(titleLabel, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
             break;
         }
     case MBasicListItem::IconWithTitleAndSubtitle: {
+            setObjectName("BasicListItemIconWithTitleAndSubtitle");
+
             iconImage = new MImageWidget(this);
-            iconImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             iconImage->setObjectName("CommonMainIcon");
             
             titleLabel = new MLabel(this);
-            titleLabel->setObjectName("CommonTitle");
+            titleLabel->setObjectName("CommonTitleWithLeftMargin");
             
             subtitleLabel = new MLabel(this);
-            subtitleLabel->setObjectName("CommonSubTitle");
+            subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
 
-            layoutGrid->addItem(iconImage, 0, 0, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabel, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-            layoutGrid->addItem(subtitleLabel, 2, 1, Qt::AlignLeft | Qt::AlignBottom);
-            layoutGrid->addItem(new QGraphicsWidget, 3, 1);
+            layoutGrid->addItem(iconImage, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(titleLabel, 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layoutGrid->addItem(subtitleLabel, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
             
             break;
         }
@@ -146,7 +154,7 @@ void MBasicListItem::setIcon(MImageWidget *icon)
         if (listItemStyle == MBasicListItem::IconWithTitle)
             layoutGrid->addItem(iconImage, 0, 0);
         else if (listItemStyle == MBasicListItem::IconWithTitleAndSubtitle)
-            layoutGrid->addItem(iconImage, 0, 0, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(iconImage, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
     }
 }
 

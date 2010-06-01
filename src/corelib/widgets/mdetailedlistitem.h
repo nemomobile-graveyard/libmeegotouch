@@ -24,6 +24,7 @@
 
 class MImageWidget;
 class MLabel;
+class MStylableWidget;
 
 class QGraphicsGridLayout;
 
@@ -34,7 +35,7 @@ public:
         IconTitleSubtitleAndTwoSideIcons = 0x0,
         IconTitleSubtitleAndSideIconWithLabel,
         ThumbnailTitleSubtitleAndTwoSideIcons,
-        ThumbnailSmallTitleAndTwoSideIcons
+        ThumbnailTitleAndTwoSideIcons
     };
     
     enum IconStyle {
@@ -78,6 +79,8 @@ public:
     
 private:
     QGraphicsGridLayout *layoutGrid;
+    QGraphicsGridLayout *contentLayoutGrid;
+    MStylableWidget *contentPanel;
 
     MImageWidget *iconImage;    
     MImageWidget *sideTopImage;

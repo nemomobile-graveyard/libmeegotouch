@@ -152,7 +152,7 @@ public:
             item->sideBottomImageWidget()->setImage(defaultImage);
             break;    
         }
-        case MDetailedListItem::ThumbnailSmallTitleAndTwoSideIcons: {
+        case MDetailedListItem::ThumbnailTitleAndTwoSideIcons: {
             item->setTitle(index.data().toString());
             item->icon()->setImage(defaultImage);
             item->sideTopImageWidget()->setImage(defaultImage);
@@ -266,8 +266,8 @@ void ContentItemsPage::populateLayout()
                                        new DetailedListItemCreator(MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel)));
     contentItemLists.append(createList("Thumbnail with Title Subtitle and Two Side Icons", 
                                        new DetailedListItemCreator(MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons)));
-    contentItemLists.append(createList("Thumbnail with Small Title and Two Side Icons", 
-                                       new DetailedListItemCreator(MDetailedListItem::ThumbnailSmallTitleAndTwoSideIcons)));
+    contentItemLists.append(createList("Thumbnail with Title and Two Side Icons",
+                                       new DetailedListItemCreator(MDetailedListItem::ThumbnailTitleAndTwoSideIcons)));
     
     /*contentItemLists.append(createList("Single Icon", MContentItem::SingleIcon));
     contentItemLists.append(createList("Icon and Single Text Label Vertical", MContentItem::IconAndSingleTextLabelVertical));

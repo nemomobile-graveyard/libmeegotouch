@@ -22,6 +22,7 @@
 
 #include <MListItem>
 
+#include <QGraphicsLayout>
 #include <QGraphicsSceneMouseEvent>
 
 #define RELEASE_MISS_DELTA 30.0

@@ -19,8 +19,9 @@
  
 #include "mdetailedlistitem.h"
 
-#include <MLabel>
 #include <MImageWidget>
+#include <MLabel>
+#include <MStylableWidget>
 
 #include <QGraphicsGridLayout>
 
@@ -45,92 +46,137 @@ void MDetailedListItem::initLayout()
     
     if (!layoutGrid) {
         layoutGrid = new QGraphicsGridLayout(this);
+        layoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
         layoutGrid->setContentsMargins(0, 0, 0, 0);
         layoutGrid->setSpacing(0);
     }
     
     switch (listItemStyle) {
-    case MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons :
     case MDetailedListItem::IconTitleSubtitleAndTwoSideIcons: {
             iconImage = new MImageWidget(this);
-            iconImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            if (listItemStyle == MDetailedListItem::IconTitleSubtitleAndTwoSideIcons)
+            if (listItemStyle == MDetailedListItem::IconTitleSubtitleAndTwoSideIcons) {
+                setObjectName("DetailedItemIconTitleSubtitleAndTwoSideIcons");
                 setIconStyle(Icon);
-            else
+            } else {
+                setObjectName("DetailedItemThumbnailTitleSubtitleAndTwoSideIcons");
                 setIconStyle(Thumbnail);
+            }
             
             titleLabel = new MLabel(this);
-            titleLabel->setObjectName("CommonTitle");
+            titleLabel->setObjectName("CommonTitleWithLeftMargin");
             
             subtitleLabel = new MLabel(this);
-            subtitleLabel->setObjectName("CommonSubTitle");
+            subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
             
             sideTopImage = new MImageWidget(this);
-            sideTopImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            sideTopImage->setObjectName("CommonSubIcon");
+            sideTopImage->setObjectName("CommonTopSideIcon");
             
             sideBottomImage = new MImageWidget(this);
-            sideBottomImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            sideBottomImage->setObjectName("CommonSubIcon");
+            sideBottomImage->setObjectName("CommonBottomSideIcon");
 
-            layoutGrid->addItem(iconImage, 0, 0, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabel, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-            layoutGrid->addItem(subtitleLabel, 2, 1, Qt::AlignLeft | Qt::AlignBottom);
-            layoutGrid->addItem(sideTopImage, 1, 2, Qt::AlignRight | Qt::AlignTop);
-            layoutGrid->addItem(sideBottomImage, 2, 2, Qt::AlignRight | Qt::AlignBottom);
-            layoutGrid->addItem(new QGraphicsWidget, 3, 1, 1, 2);
+            layoutGrid->addItem(iconImage, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(titleLabel, 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layoutGrid->addItem(subtitleLabel, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
+            layoutGrid->addItem(sideTopImage, 0, 2, Qt::AlignRight | Qt::AlignTop);
+            layoutGrid->addItem(sideBottomImage, 1, 2, Qt::AlignRight | Qt::AlignBottom);
             
             break;
         }
     case MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel: {
+            setObjectName("DetailedItemIconTitleSubtitleAndSideIconWithLabel");
+
             iconImage = new MImageWidget(this);
-            iconImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             iconImage->setObjectName("CommonMainIcon");
             
             titleLabel = new MLabel(this);
-            titleLabel->setObjectName("CommonTitle");
+            titleLabel->setObjectName("CommonTitleWithLeftMargin");
             
             subtitleLabel = new MLabel(this);
-            subtitleLabel->setObjectName("CommonSubTitle");
+            subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
             
             sideTopImage = new MImageWidget(this);
-            sideTopImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            sideTopImage->setObjectName("CommonSubIcon");
+            sideTopImage->setObjectName("CommonTopSideIcon");
             
             sideBottomLabel = new MLabel(this);
-            sideBottomLabel->setObjectName("CommonSubText");
+            sideBottomLabel->setObjectName("CommonBottomSideSubTitle");
 
-            layoutGrid->addItem(iconImage, 0, 0, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabel, 1, 1, Qt::AlignLeft | Qt::AlignTop);
-            layoutGrid->addItem(subtitleLabel, 2, 1, Qt::AlignLeft | Qt::AlignBottom);
-            layoutGrid->addItem(sideTopImage, 1, 2, Qt::AlignRight | Qt::AlignTop);
-            layoutGrid->addItem(sideBottomLabel, 2, 2, Qt::AlignRight | Qt::AlignBottom);
-            layoutGrid->addItem(new QGraphicsWidget, 3, 1, 1, 2);
+            layoutGrid->addItem(iconImage, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(titleLabel, 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layoutGrid->addItem(subtitleLabel, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
+            layoutGrid->addItem(sideTopImage, 0, 2, Qt::AlignRight | Qt::AlignTop);
+            layoutGrid->addItem(sideBottomLabel, 1, 2, Qt::AlignRight | Qt::AlignBottom);
             
             break;
         }
-    case MDetailedListItem::ThumbnailSmallTitleAndTwoSideIcons: {
+    case MDetailedListItem::ThumbnailTitleAndTwoSideIcons: {
+            contentPanel = new MStylableWidget(this);
+            contentLayoutGrid = new QGraphicsGridLayout(contentPanel);
+            contentLayoutGrid->setContentsMargins(0, 0, 0, 0);
+            contentLayoutGrid->setSpacing(0);
+            contentLayoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+
+            contentPanel->setObjectName("DetailedItemThumbnailTitleAndTwoSideIcons");
+            contentPanel->setContentsMargins(0, 8, 0, 8);
+
             iconImage = new MImageWidget(this);
-            iconImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
             setIconStyle(Thumbnail);
             
             titleLabel = new MLabel(this);
-            titleLabel->setObjectName("CommonSubText");
+            titleLabel->setObjectName("CommonTitleWithLeftMargin");
             
             sideTopImage = new MImageWidget(this);
-            sideTopImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            sideTopImage->setObjectName("CommonSubIcon");
+            sideTopImage->setObjectName("CommonTopSideIcon");
             
             sideBottomImage = new MImageWidget(this);
-            sideBottomImage->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-            sideBottomImage->setObjectName("CommonSubIcon");
+            sideBottomImage->setObjectName("CommonBottomSideIcon");
 
-            layoutGrid->addItem(iconImage, 0, 0, 4, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabel, 1, 1, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(sideTopImage, 1, 2, Qt::AlignRight | Qt::AlignTop);
-            layoutGrid->addItem(sideBottomImage, 2, 2, Qt::AlignRight | Qt::AlignBottom);
-            layoutGrid->addItem(new QGraphicsWidget, 3, 1, 1, 2);
+            layoutGrid->addItem(iconImage, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+
+            contentLayoutGrid->addItem(titleLabel, 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            contentLayoutGrid->addItem(sideTopImage, 0, 1, Qt::AlignRight | Qt::AlignTop);
+            contentLayoutGrid->addItem(new QGraphicsWidget, 1, 1, Qt::AlignRight | Qt::AlignVCenter);
+            contentLayoutGrid->addItem(sideBottomImage, 2, 1, Qt::AlignRight | Qt::AlignBottom);
             
+            contentPanel->setLayout(contentLayoutGrid);
+            layoutGrid->addItem(contentPanel, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+
+            break;
+        }
+    case MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons: {
+            contentPanel = new MStylableWidget(this);
+            contentLayoutGrid = new QGraphicsGridLayout(contentPanel);
+            contentLayoutGrid->setContentsMargins(0, 0, 0, 0);
+            contentLayoutGrid->setSpacing(0);
+            contentLayoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+
+            contentPanel->setObjectName("DetailedItemThumbnailTitleSubtitleAndTwoSideIcons");
+            contentPanel->setContentsMargins(0, 8, 0, 8);
+
+            iconImage = new MImageWidget(this);
+            setIconStyle(Thumbnail);
+
+            titleLabel = new MLabel(this);
+            titleLabel->setObjectName("CommonTitleWithLeftMargin");
+
+            subtitleLabel = new MLabel(this);
+            subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
+
+            sideTopImage = new MImageWidget(this);
+            sideTopImage->setObjectName("CommonTopSideIcon");
+
+            sideBottomImage = new MImageWidget(this);
+            sideBottomImage->setObjectName("CommonBottomSideIcon");
+
+            layoutGrid->addItem(iconImage, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+
+            contentLayoutGrid->addItem(titleLabel, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+            contentLayoutGrid->addItem(subtitleLabel, 1, 0, Qt::AlignLeft | Qt::AlignVCenter);
+            contentLayoutGrid->addItem(sideTopImage, 0, 1, Qt::AlignRight | Qt::AlignTop);
+            contentLayoutGrid->addItem(sideBottomImage, 1, 1, Qt::AlignRight | Qt::AlignBottom);
+
+            contentPanel->setLayout(contentLayoutGrid);
+            layoutGrid->addItem(contentPanel, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+
             break;
         }
     default:
@@ -152,6 +198,18 @@ void MDetailedListItem::clearLayout()
         sideTopImage = NULL;
         sideBottomImage = NULL;
         sideBottomLabel = NULL;
+
+        if (contentLayoutGrid) {
+            for (int i = 0; i < contentLayoutGrid->count(); i++) {
+                QGraphicsLayoutItem *item = contentLayoutGrid->itemAt(0);
+                contentLayoutGrid->removeAt(0);
+                delete item;
+            }
+            delete contentLayoutGrid;
+            contentLayoutGrid = NULL;
+            delete contentPanel;
+            contentPanel = NULL;
+        }
     }
 }
 
