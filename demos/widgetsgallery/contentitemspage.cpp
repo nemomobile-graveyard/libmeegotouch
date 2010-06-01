@@ -26,9 +26,11 @@
 #include <MLinearLayoutPolicy>
 #include <MList>
 #include <MListItem>
+#include <MProgressIndicator>
 
 #include <MBasicListItem>
 #include <MDetailedListItem>
+#include <MAdvancedListItem>
 
 class BasicListItemCreator : public MAbstractCellCreator<MBasicListItem>
 {
@@ -170,6 +172,62 @@ private:
     QImage defaultImage;
 };
 
+class AdvancedListItemCreator : public MAbstractCellCreator<MAdvancedListItem>
+{
+public:
+    AdvancedListItemCreator(MAdvancedListItem::ItemStyle style)
+        : itemStyle(style),
+        defaultImage(Utils::imagesDir() + "DefaultAvatar.png")
+    {
+    }
+
+    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
+        Q_UNUSED(index);
+        MAdvancedListItem *cell = dynamic_cast<MAdvancedListItem*>(recycler.take(MAdvancedListItem::staticMetaObject.className()));
+
+        if (cell == NULL) {
+            cell = new MAdvancedListItem(itemStyle);
+            cell->initLayout();
+            cell->setLayoutPosition(M::CenterPosition);
+        }
+        updateCell(index, cell);
+
+        return cell;
+    }
+
+    void updateCell(const QModelIndex &index, MWidget *cell) const {
+        MAdvancedListItem *item = dynamic_cast<MAdvancedListItem*>(cell);
+        if (!item)
+            return;
+
+        switch (itemStyle) {
+        case MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons: {
+                item->setTitle(index.data().toString());
+                item->imageWidget()->setImage(defaultImage);
+                item->sideTopImageWidget()->setImage(defaultImage);
+                item->sideBottomImageWidget()->setImage(defaultImage);
+                item->progressIndicator()->setValue(55);
+                break;
+            }
+        case MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon: {
+                item->setTitle(index.data().toString());
+                item->imageWidget()->setImage(defaultImage);
+                item->sideTopImageWidget()->setImage(defaultImage);
+                item->progressIndicator()->setUnknownDuration(true);
+                break;
+            }
+        default:
+            break;
+        };
+
+    }
+
+private:
+    MAdvancedListItem::ItemStyle itemStyle;
+    QImage defaultImage;
+};
+
+
 
 class ContentItemsPageModel : public QAbstractItemModel {
 public:
@@ -269,6 +327,12 @@ void ContentItemsPage::populateLayout()
     contentItemLists.append(createList("Thumbnail with Title and Two Side Icons",
                                        new DetailedListItemCreator(MDetailedListItem::ThumbnailTitleAndTwoSideIcons)));
     
+    //Advanced list items
+    contentItemLists.append(createList("Icon with Title Progress Indicator and Two Side Icons",
+                                       new AdvancedListItemCreator(MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons)));
+    contentItemLists.append(createList("Icon with Title Progress Indicator and Top Side Icon",
+                                       new AdvancedListItemCreator(MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon)));
+
     /*contentItemLists.append(createList("Single Icon", MContentItem::SingleIcon));
     contentItemLists.append(createList("Icon and Single Text Label Vertical", MContentItem::IconAndSingleTextLabelVertical));
     contentItemLists.append(createList("Icon and Two Text Labels Vertical", MContentItem::IconAndTwoTextLabelsVertical));

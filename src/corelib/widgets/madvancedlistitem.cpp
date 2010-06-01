@@ -17,31 +17,27 @@
 **
 ****************************************************************************/
 
-#include 
-#include 
-
-#include 
-#include 
-#include 
-#include 
-
 #include "madvancedlistitem.h"
 
-MAdvancedListItem::MAdvancedListItem(QGraphicsItem *parent)
-    : MListItem(parent), layout(NULL), progress(NULL), titleLabel(NULL), image(NULL)
-    , rightTopImage(NULL), rightBottomImage(NULL)
+#include <MImageWidget>
+#include <MLabel>
+#include <MProgressIndicator>
+
+#include <QGraphicsGridLayout>
+
+MAdvancedListItem::MAdvancedListItem(MAdvancedListItem::ItemStyle itemStyle, QGraphicsItem *parent)
+    : MListItem(parent), layout(NULL), progress(NULL), titleLabel(NULL), image(NULL),
+    sideTopImage(NULL), sideBottomImage(NULL), listItemStyle(itemStyle)
 {
 
 }
 
 MAdvancedListItem::~MAdvancedListItem()
 {
-
 }
 
 void MAdvancedListItem::initLayout()
 {
-
     setLayout(createLayout());
 }
 
@@ -80,7 +76,7 @@ MProgressIndicator * MAdvancedListItem::progressIndicator()
 {
     if(!progress) {
         progress = new MProgressIndicator(this, MProgressIndicator::barType);
-        progress->setObjectName("CommonProgressBar");
+        progress->setObjectName("CommonProgressIndicator");
     }
 
     return progress;
@@ -90,30 +86,30 @@ MLabel * MAdvancedListItem::titleLabelWidget()
 {
     if(!titleLabel) {
         titleLabel = new MLabel(this);
-        titleLabel->setObjectName("CommonTitle");
+        titleLabel->setObjectName("CommonTitleWithLeftMargin");
     }
 
     return titleLabel;
 }
 
-MImageWidget * MAdvancedListItem::rightTopImageWidget()
+MImageWidget * MAdvancedListItem::sideTopImageWidget()
 {
-    if(!rightTopImage) {
-        rightTopImage = new MImageWidget(this);
-        rightTopImage->setObjectName("CommonSubItem");
+    if(!sideTopImage) {
+        sideTopImage = new MImageWidget(this);
+        sideTopImage->setObjectName("CommonTopSideIcon");
     }
 
-    return rightTopImage;
+    return sideTopImage;
 }
 
-MImageWidget * MAdvancedListItem::rightBottomImageWidget()
+MImageWidget * MAdvancedListItem::sideBottomImageWidget()
 {
-    if(!rightBottomImage) {
-        rightBottomImage = new MImageWidget(this);
-        rightBottomImage->setObjectName("CommonSubItem");
+    if(!sideBottomImage) {
+        sideBottomImage = new MImageWidget(this);
+        sideBottomImage->setObjectName("CommonBottomSideIcon");
     }
 
-    return rightBottomImage;
+    return sideBottomImage;
 }
 
 QGraphicsLayout *MAdvancedListItem::createLayout()
@@ -122,12 +118,31 @@ QGraphicsLayout *MAdvancedListItem::createLayout()
     layout = new QGraphicsGridLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
-    layout->addItem(imageWidget(), 0, 0, 3, 1);
-    layout->addItem(titleLabelWidget(), 0, 1);
-    layout->addItem(progressIndicator(), 1, 1);
-    layout->addItem(new QGraphicsWidget(this), 2, 1);
-    layout->addItem(rightTopImageWidget(), 0, 2);
-    layout->addItem(rightBottomImageWidget(), 0, 2);
+
+    switch (listItemStyle) {
+    case IconWithTitleProgressIndicatorAndTwoSideIcons: {
+            setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTwoSideIcons");
+
+            layout->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layout->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layout->addItem(progressIndicator(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
+            layout->addItem(sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
+            layout->addItem(sideBottomImageWidget(), 1, 2, Qt::AlignRight | Qt::AlignBottom);
+            break;
+        }
+    case IconWithTitleProgressIndicatorAndTopSideIcon: {
+            setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTopSideIcon");
+
+            layout->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layout->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layout->addItem(progressIndicator(), 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
+            layout->addItem(sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
+            break;
+        }
+    default:
+        break;
+    }
+
     return layout;
 }
 

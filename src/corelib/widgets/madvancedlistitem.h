@@ -17,9 +17,10 @@
 **
 ****************************************************************************/
 
-#include 
+#ifndef MADVACEDLISTITEM_H
+#define MADVACEDLISTITEM_H
 
-#include 
+#include <MListItem>
 
 class QGraphicsGridLayout;
 class MProgressIndicator;
@@ -37,7 +38,13 @@ class M_EXPORT MAdvancedListItem : public MListItem
     Q_PROPERTY(MProgressIndicator* progressIndicator READ progressIndicator)
 
 public:
-    MAdvancedListItem(QGraphicsItem *parent = 0);
+    enum ItemStyle {
+        IconWithTitleProgressIndicatorAndTwoSideIcons = 0x0,
+        IconWithTitleProgressIndicatorAndTopSideIcon
+    };
+
+public:
+    MAdvancedListItem(ItemStyle itemStyle = IconWithTitleProgressIndicatorAndTwoSideIcons, QGraphicsItem *parent = 0);
     virtual ~MAdvancedListItem();
 
     void initLayout();
@@ -45,13 +52,13 @@ public:
     QString title() const;
     void setTitle(const QString &title);
 
-    MImageWidget * imageWidget();
-    void setImageWidget(MImageWidget * imageWidget);
+    MImageWidget *imageWidget();
+    void setImageWidget(MImageWidget *imageWidget);
 
-    MProgressIndicator * progressIndicator();
+    MProgressIndicator *progressIndicator();
 
-    MImageWidget * rightTopImageWidget();
-    MImageWidget * rightBottomImageWidget();
+    MImageWidget *sideTopImageWidget();
+    MImageWidget *sideBottomImageWidget();
 
 protected:
     MLabel * titleLabelWidget();
@@ -60,10 +67,15 @@ private:
     QGraphicsLayout *createLayout();
 
 private:
-    QGraphicsGridLayout * layout;
-    MProgressIndicator * progress;
-    MLabel * titleLabel;
-    MImageWidget * image;
-    MImageWidget * rightTopImage;
-    MImageWidget * rightBottomImage;
+    QGraphicsGridLayout *layout;
+
+    MProgressIndicator *progress;
+    MLabel *titleLabel;
+    MImageWidget *image;
+    MImageWidget *sideTopImage;
+    MImageWidget *sideBottomImage;
+
+    ItemStyle listItemStyle;
 };
+
+#endif //MADVACEDLISTITEM_H
