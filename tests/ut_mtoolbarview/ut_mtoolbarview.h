@@ -53,6 +53,7 @@ private slots:
     void testButtons();
     void testMWidgetAction_data();
     void testMWidgetAction();
+    void testAddToLandscapeWhenInPortrait();
 
 private:
     MToolBar *m_toolbar;

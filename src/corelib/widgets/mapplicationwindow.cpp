@@ -568,8 +568,11 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
     bool toolbarHasVisibleActions = false;
     for (int i = 0; i < count; ++i) {
         if (actions[i]->isVisible()) {
-            toolbarHasVisibleActions = true;
-            break;
+            MAction *action = qobject_cast<MAction*>(actions[i]);
+            if(!action || action->location().testFlag(MAction::ToolBarPortraitLocation)) {
+                toolbarHasVisibleActions = true;
+                break;
+            }
         }
     }
 

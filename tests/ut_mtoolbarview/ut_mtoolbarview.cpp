@@ -682,4 +682,20 @@ void Ut_MToolBarView::testMWidgetAction()
     WAIT_VERIFY(widget->isVisible());
 }
 
+void Ut_MToolBarView::testAddToLandscapeWhenInPortrait()
+{
+    QVERIFY(m_toolbar->actions().isEmpty());
+
+    appWin->setOrientationAngle(M::Angle90);
+    qApp->processEvents();
+
+    MAction *action = new MAction("Hello", m_toolbar);
+    action->setLocation(MAction::ToolBarLandscapeLocation);
+    m_toolbar->addAction(action);
+
+    //Since we are in landscape mode we should not see this action
+    QPointer<MButton> button = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
+    WAIT_VERIFY(!button || !button->isVisible());
+}
+
 QTEST_APPLESS_MAIN(Ut_MToolBarView)
