@@ -359,7 +359,7 @@ void MWindow::setTranslucentBackground(bool enable)
             //d->glWidget->setAttribute(Qt::WA_TranslucentBackground);
 
             fmt.setAlpha(true); // Workaround for NB#153625
-            d->glWidget = new QGLWidget(fmt);
+            d->glWidget = MComponentCache::glWidget(fmt);
             QPalette palette;
             palette.setColor(QPalette::Base, Qt::transparent);
             d->glWidget->setAutoFillBackground(true);

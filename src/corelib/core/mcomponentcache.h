@@ -28,6 +28,7 @@ class MApplication;
 class MApplicationWindow;
 class MApplicationService;
 class QGLWidget;
+class QGLFormat;
 class MComponentCachePrivate;
 
 /*!
@@ -94,6 +95,7 @@ private:
 
     /* QGLWidget object returned by glWidget is owned by the caller */
     static QGLWidget* glWidget();
+    static QGLWidget* glWidget(const QGLFormat& format);
     friend class MApplicationWindow; 
     friend class MWindow; 
 
