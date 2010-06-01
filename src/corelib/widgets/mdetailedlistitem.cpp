@@ -116,7 +116,7 @@ void MDetailedListItem::initLayout()
             contentLayoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
             contentPanel->setObjectName("DetailedItemThumbnailTitleAndTwoSideIcons");
-            contentPanel->setContentsMargins(0, 8, 0, 8);
+            contentPanel->setContentsMargins(0, 8, 16, 8);
 
             iconImage = new MImageWidget(this);
             setIconStyle(Thumbnail);
@@ -150,7 +150,7 @@ void MDetailedListItem::initLayout()
             contentLayoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
             contentPanel->setObjectName("DetailedItemThumbnailTitleSubtitleAndTwoSideIcons");
-            contentPanel->setContentsMargins(0, 8, 0, 8);
+            contentPanel->setContentsMargins(0, 8, 16, 8);
 
             iconImage = new MImageWidget(this);
             setIconStyle(Thumbnail);
