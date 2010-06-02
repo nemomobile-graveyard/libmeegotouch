@@ -34,6 +34,7 @@ SOURCES = \
   qtmaemo6windowdecoration.cpp \
   qtmaemo6dialogproxy.cpp \
   qtmaemo6dialogtitle.cpp \
+  qtmaemo6clicklabel.cpp \
   qtmaemo6window.cpp \
   qtmaemo6menuproxy.cpp \
   qtmaemo6menu.cpp \

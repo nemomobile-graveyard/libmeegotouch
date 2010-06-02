@@ -25,6 +25,8 @@
 #include <QPointer>
 #include <QPen>
 
+#include "mnamespace.h"
+
 class QGridLayout;
 
 /*!
@@ -91,17 +93,35 @@ public:
      * \brief returns the widget set with central widget
      * in opposite to centralWidget() this always returns the added widget.
      */
-    QWidget* widget() const { return m_window; };
+    QWidget* widget() const { return m_window; }
 
+    /*!
+     * \brief returns the current orientation angle of the window
+     */
+    M::OrientationAngle orientation() const { return m_orientationAngle; }
+public Q_SLOTS:
+    /*!
+     * \brief sets a new orientation to this window
+     * this method implements a generic orientation change based on the
+     * QGridLayout of the QtMaemo6Window.
+     * If you need a custom orientation change for a window you can overwrite this
+     * method but don't forgett to emit the orientationChanged() signal.
+     * Note: This only rotates the layout. Widgets need to care themselfs for drawing
+     *       their contents rotated.
+     */
+    virtual void setOrientation(M::OrientationAngle);
+Q_SIGNALS:
+    void orientationChanged(M::OrientationAngle);
 protected:
-    QtMaemo6Window() {};
+    QtMaemo6Window() {}
+
+    void doLayoutOrientation();
 
     /*! \reimp */
     virtual void closeEvent(QCloseEvent *event);
     virtual bool eventFilter(QObject *obj, QEvent *event);
     virtual void paintEvent(QPaintEvent* e);
     /*! \reimp_end */
-
 protected:
     QGridLayout *m_windowLayout;
 private:
@@ -112,6 +132,7 @@ private:
     Qt::WindowFlags m_originalFlags;
     bool m_closeFromChild;
     bool m_hideFromChild;
+    M::OrientationAngle m_orientationAngle;
 };
 
 #endif //QTMAEMO6WINDOW

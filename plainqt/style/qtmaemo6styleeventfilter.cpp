@@ -44,6 +44,7 @@
 #include <MTheme>
 #include <mbuttonstyle.h>
 #include <MScalableImage>
+#include <MWindow>
 
 #include "qtmaemo6clicklabel.h"
 
@@ -81,9 +82,11 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     decoration->showNavigationBar( navigationBarVisible );
                     QtMaemo6StylePrivate::drawWindowBackground(decoration);
                 } else if (!qobject_cast<QtMaemo6Window *>(widget) &&
-                           !widget->inherits("QTipLabel")) {  //don't create a new window for every tooltip!
+                           !widget->inherits("QTipLabel") &&  //don't create a new window for every tooltip!
+                           !qobject_cast<MWindow*>(widget)) {
                     if(0 == qobject_cast<QtMaemo6WindowDecoration*>(widget->parent())) {
                         m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
+                        qCritical() << "Showing WindowDecoration";
                         m_style->m_windowDecoration->showFastMaximized();
                         bool navigationBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMNavigationBar);
                         m_style->m_windowDecoration->showNavigationBar( navigationBarVisible );
@@ -134,6 +137,12 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     treeWidget->setIndentation(size.width());
                 }
             }
+
+            /*
+            if(QtMaemo6Style* style = qobject_cast<QtMaemo6Style*>(widget->style())) {
+                style->delayedPolish(widget);
+            }
+            */
         }
 
     }

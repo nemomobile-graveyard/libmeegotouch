@@ -37,6 +37,13 @@
 #include <mlabelstyle.h>
 #include <MScalableImage>
 #include <MTheme>
+#include <mnavigationbarstyle.h>
+#include <mlabelstyle.h>
+
+
+//FIXME: this is not defined by any MStyle right now and also hardcoded in
+//       libmeegotouch. If this is finally defined anywhere else, remove this.
+const int QtMaemo6TitleBar::titleBarHeight = 70;
 
 QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
 {
@@ -45,15 +52,15 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
     QStyleOption option;
     option.initFrom(this);
 
-    QtMaemo6ClickLabel * minimizeButton = new QtMaemo6ClickLabel(this);
-    minimizeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Home" ) );
+    m_minimizeButton = new QtMaemo6ClickLabel(this);
+    m_minimizeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Home" ) );
     const MHomeButtonPanelStyle *homeButtonStyle =
         static_cast<const MHomeButtonPanelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
                 "MHomeButtonPanelStyle", ""));
     if(homeButtonStyle) {
-        minimizeButton->setPixmap(*MTheme::pixmapCopy(homeButtonStyle->homeButtonIconId()));
+        m_minimizeButton->setPixmap(*MTheme::pixmapCopy(homeButtonStyle->homeButtonIconId()));
     }
-    connect(minimizeButton, SIGNAL(clicked()), this, SIGNAL(minimizeButtonClicked()));
+    connect(m_minimizeButton, SIGNAL(clicked()), this, SIGNAL(minimizeButtonClicked()));
 
     m_titleLabel = new QtMaemo6ClickLabel(this);
     connect(m_titleLabel, SIGNAL(clicked()), this, SIGNAL(menuLabelClicked()));
@@ -85,30 +92,46 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
         spacer->changeSize(iconStyle->marginLeft(), 0);
     }
 
-    QtMaemo6ClickLabel * closeButton = new QtMaemo6ClickLabel(this);
-    closeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Close" ) );
+    m_closeButton = new QtMaemo6ClickLabel(this);
+    m_closeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Close" ) );
     const MEscapeButtonPanelStyle *escapeButtonStyle =
         static_cast<const MEscapeButtonPanelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
                 "MEscapeButtonPanelStyle", ""));
     if(escapeButtonStyle) {
-        closeButton->setPixmap(*MTheme::pixmapCopy(escapeButtonStyle->closeButtonIconId()));
+        m_closeButton->setPixmap(*MTheme::pixmapCopy(escapeButtonStyle->closeButtonIconId()));
     }
-    connect(closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()));
+    connect(m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()));
 
-    m_buttonsLayout = new QHBoxLayout;
-    m_buttonsLayout->setMargin(0);
-    m_buttonsLayout->setSpacing(0);
-    m_buttonsLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
-
-    m_titleBarLayout = new QHBoxLayout(this);
+    m_titleBarLayout = new QBoxLayout(QBoxLayout::LeftToRight, this);
     m_titleBarLayout->setMargin(0);
     m_titleBarLayout->setSpacing(0);
-    m_titleBarLayout->addWidget(minimizeButton);
+    m_titleBarLayout->addWidget(m_minimizeButton);
     m_titleBarLayout->addWidget(m_titleLabel);
-    m_titleBarLayout->addItem(spacer);
     m_titleBarLayout->addWidget(m_titleLabelMenuButton);
-    m_titleBarLayout->addLayout(m_buttonsLayout);
-    m_titleBarLayout->addWidget(closeButton);
+    //m_titleBarLayout->addItem(spacer);
+    m_titleBarLayout->addStretch();
+
+    //m_titleBarLayout->addLayout(m_buttonsLayout);
+    m_titleBarLayout->addWidget(m_closeButton);
+
+
+    // apply properties of the navigation bar style
+    const MNavigationBarStyle *style =
+        static_cast<const MNavigationBarStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                "MNavigationBarStyle"));
+    Q_UNUSED( style );
+    const MLabelStyle *menuStyle =
+        static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_None,
+                "MLabelStyle", "NavigationBarMenuButtonLabel"));
+    Q_UNUSED( menuStyle );
+    //TODO: use style and menuStyle once the properties inside work actually.
+    // This would also remove the magic numbers.
+    setTitleColor( Qt::white );
+    setMargin( 10 );
+    setItemSpacing( 20 );
+
+    setOrientation(M::Angle0);
+
 }
 
 QtMaemo6TitleBar::~QtMaemo6TitleBar()
@@ -180,8 +203,54 @@ void QtMaemo6TitleBar::addAction(QAction *action)
 
 void QtMaemo6TitleBar::addButton(QToolButton *button)
 {
+    Q_UNUSED(button);
+    /*
     m_buttonsLayout->addWidget(button);
     m_buttonsLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
     qDebug("Added ToolButton %s to TitleBar", button->text().toLocal8Bit().constData());
+    */
+}
+
+void QtMaemo6TitleBar::setOrientation(M::OrientationAngle angle) {
+    QBoxLayout::Direction direction;
+    switch(angle) {
+        default:
+        case M::Angle0:
+            direction = QBoxLayout::LeftToRight;
+            setFixedHeight(titleBarHeight);
+            setMaximumWidth(1000);
+            setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+            break;
+        case M::Angle90:
+            direction = QBoxLayout::TopToBottom;
+            setFixedWidth(titleBarHeight);
+            setMaximumHeight(1000);
+            setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+            break;
+        case M::Angle180:
+            direction = QBoxLayout::RightToLeft;
+            setFixedHeight(titleBarHeight);
+            setMaximumWidth(1000);
+            setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Minimum);
+            break;
+        case M::Angle270:
+            direction = QBoxLayout::BottomToTop;
+            setFixedWidth(titleBarHeight);
+            setMaximumHeight(1000);
+            setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Expanding);
+            break;
+    }
+    update();
+
+    m_titleBarLayout->setDirection(direction);
+
+    m_titleBarLayout->setDirection(direction);
+    m_minimizeButton->setOrientation(angle);
+    m_titleLabel->setOrientation(angle);
+    m_titleLabelMenuButton->setOrientation(angle);
+    m_closeButton->setOrientation(angle);
+    m_orientationAngle = angle;
+
+    layout()->activate();
 }
