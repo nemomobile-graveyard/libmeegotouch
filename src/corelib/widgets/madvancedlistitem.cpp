@@ -26,7 +26,7 @@
 #include <QGraphicsGridLayout>
 
 MAdvancedListItem::MAdvancedListItem(MAdvancedListItem::ItemStyle itemStyle, QGraphicsItem *parent)
-    : MListItem(parent), layout(NULL), progress(NULL), titleLabel(NULL), image(NULL),
+    : MListItem(parent), layoutGrid(NULL), progress(NULL), titleLabel(NULL), image(NULL),
     sideTopImage(NULL), sideBottomImage(NULL), listItemStyle(itemStyle)
 {
 
@@ -114,36 +114,36 @@ MImageWidget * MAdvancedListItem::sideBottomImageWidget()
 
 QGraphicsLayout *MAdvancedListItem::createLayout()
 {
-    delete layout;
-    layout = new QGraphicsGridLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
-    layout->setSpacing(0);
+    delete layoutGrid;
+    layoutGrid = new QGraphicsGridLayout(this);
+    layoutGrid->setContentsMargins(0, 0, 0, 0);
+    layoutGrid->setSpacing(0);
 
     switch (listItemStyle) {
     case IconWithTitleProgressIndicatorAndTwoSideIcons: {
             setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTwoSideIcons");
 
-            layout->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layout->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
-            layout->addItem(progressIndicator(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
-            layout->addItem(sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
-            layout->addItem(sideBottomImageWidget(), 1, 2, Qt::AlignRight | Qt::AlignBottom);
+            layoutGrid->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layoutGrid->addItem(progressIndicator(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
+            layoutGrid->addItem(sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
+            layoutGrid->addItem(sideBottomImageWidget(), 1, 2, Qt::AlignRight | Qt::AlignBottom);
             break;
         }
     case IconWithTitleProgressIndicatorAndTopSideIcon: {
             setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTopSideIcon");
 
-            layout->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layout->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
-            layout->addItem(progressIndicator(), 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-            layout->addItem(sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
+            layoutGrid->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layoutGrid->addItem(progressIndicator(), 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
+            layoutGrid->addItem(sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
             break;
         }
     default:
         break;
     }
 
-    return layout;
+    return layoutGrid;
 }
 
 

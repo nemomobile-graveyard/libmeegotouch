@@ -67,7 +67,7 @@ private:
     QGraphicsLayout *createLayout();
 
 private:
-    QGraphicsGridLayout *layout;
+    QGraphicsGridLayout *layoutGrid;
 
     MProgressIndicator *progress;
     MLabel *titleLabel;
