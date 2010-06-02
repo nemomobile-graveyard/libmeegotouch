@@ -92,7 +92,6 @@ void MBubbleItemViewPrivate::initLayout()
     if (q->model()->commentsString().isEmpty() && q->model()->thumbsUpString().isEmpty()) {
         innerLayout->addItem(timeStampLabel);
         timeStampLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-
     } else {
         timeStampLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
 
@@ -130,6 +129,8 @@ void MBubbleItemViewPrivate::initLayout()
     }
 
     setupCentralWidget();
+
+    controller->connect(speechBubble, SIGNAL(clicked()), controller, SIGNAL(bubbleClicked()));
 }
 
 void MBubbleItemViewPrivate::clearLayout()

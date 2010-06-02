@@ -84,6 +84,7 @@ void BubblePage::createContent()
     }
 
     MBubbleItem* expandedItem = new MBubbleItem();
+    connect(expandedItem, SIGNAL(bubbleClicked()), this, SLOT(speechBubbleClicked()));
     expandedItem->setMessage("Here are some nice pictures to enjoy while you're working.");
     expandedItem->setSenderName("Tester");
     MImageWidget *avatar = new MImageWidget(expandedItem);
@@ -109,6 +110,7 @@ void BubblePage::createContent()
     layout->addItem(expandedItem);
 
     MBubbleItem* secondExpandedItem = new MBubbleItem();
+    connect(secondExpandedItem, SIGNAL(bubbleClicked()), this, SLOT(speechBubbleClicked()));
     secondExpandedItem->setMessage("And here are some of my favorites. Works great!");
     secondExpandedItem->setMessageType(MBubbleItem::Outgoing);
     secondExpandedItem->setSenderName("");
@@ -154,5 +156,12 @@ void BubblePage::bubbleLinkActivated(QString url)
 {
     //% "Link activated"
     messageBox = new MMessageBox(qtTrId("xx_wg_bubblepage_linkactivated") + " " + url);
+    messageBox->appear(MSceneWindow::DestroyWhenDone);
+}
+
+void BubblePage::speechBubbleClicked()
+{
+    //% "Speech buuble clicked"
+    messageBox = new MMessageBox(qtTrId("xx_wg_bubblepage_bubbleclicked"));
     messageBox->appear(MSceneWindow::DestroyWhenDone);
 }

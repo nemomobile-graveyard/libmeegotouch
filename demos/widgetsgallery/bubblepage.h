@@ -39,6 +39,7 @@ public:
 
 protected Q_SLOTS:
     void bubbleLinkActivated(QString url);
+    void speechBubbleClicked();
 
 protected:
     void retranslateUi();

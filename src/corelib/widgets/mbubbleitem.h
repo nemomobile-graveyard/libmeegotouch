@@ -173,6 +173,11 @@ Q_SIGNALS:
      */
     void linkActivated(const QString &url);
 
+    /*!
+      This signal is emitted if the bubble that contains the message is clicked.
+    */
+    void bubbleClicked();
+
 public Q_SLOTS:
 
     /**
