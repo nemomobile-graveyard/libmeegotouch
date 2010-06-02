@@ -13,12 +13,15 @@ win32|macx {
 INCLUDEPATH += \
     $$MSRCDIR/extensions/applicationextension \
     $$MSRCDIR/extensions/mashup/appletcommunication \
-    $$MSRCDIR/extensions/mashup/mashup
+    $$MSRCDIR/extensions/mashup/mashup \
+    $$MSRCDIR/extensions
 
 # unit test and unit classes
 SOURCES += \
     ut_mapplicationextensionmanager.cpp \
-    $$MSRCDIR/extensions/applicationextension/mapplicationextensionmanager.cpp
+    $$MSRCDIR/extensions/applicationextension/mapplicationextensionmanager.cpp \
+    $$MSRCDIR/extensions/mextensionwatcher.cpp \
+    $$MSRCDIR/extensions/mashup/mashup/msubdatastore.cpp
 
 # service classes
 SOURCES += \
@@ -29,8 +32,10 @@ SOURCES += \
 HEADERS += \
     ut_mapplicationextensionmanager.h \
     $$MSRCDIR/extensions/applicationextension/mapplicationextensionmanager.h \
+    $$MSRCDIR/extensions/mextensionwatcher.h \
     $$MSRCDIR/extensions/applicationextension/mextensionhandle.h \
     $$MSRCDIR/extensions/applicationextension/mextensionhandlemodel.h \
+    $$MSRCDIR/extensions/mashup/mashup/msubdatastore.h \
     $$MSRCDIR/corelib/widgets/mwidgetmodel.h \
     $$MSRCDIR/corelib/widgets/core/mwidget.h \
     $$MSRCDIR/corelib/widgets/core/mwidgetcontroller.h \

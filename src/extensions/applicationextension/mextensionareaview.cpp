@@ -24,6 +24,8 @@
 #include "mdatastore.h"
 #include "mcontainer.h"
 
+static const QString LAYOUT_INDEX = "layoutIndex";
+
 MExtensionAreaViewPrivate::MExtensionAreaViewPrivate()
     : controller(0),
       layout(0),
@@ -80,8 +82,8 @@ void MExtensionAreaViewPrivate::updateData()
 
             // Change the data in the store if item is still valid and geometry has changed.
             if (centralWidget != NULL && dsMap->contains(centralWidget) &&
-                    (*dsMap)[centralWidget]->value("layoutIndex") != i) {
-                (*dsMap)[centralWidget]->createValue("layoutIndex", i);
+                (*dsMap)[centralWidget]->value(LAYOUT_INDEX) != i) {
+                (*dsMap)[centralWidget]->createValue(LAYOUT_INDEX, i);
             }
         }
     }
@@ -114,7 +116,8 @@ void MExtensionAreaViewPrivate::updateLayout()
             bool alreadyInLayout = false;
             const int count = layout->count();
             for (int i = 0; i < count; ++i) {
-                MContainer *theContainer = dynamic_cast<MContainer *>(layout->itemAt(i));
+                MContainer *theContainer =
+                    dynamic_cast<MContainer *>(layout->itemAt(i));
                 if (widget == theContainer->centralWidget()) {
                     // Widget found from the layout, don't add again
                     alreadyInLayout = true;
@@ -131,21 +134,19 @@ void MExtensionAreaViewPrivate::updateLayout()
                 if (container) {
                     setContainerEnabled(*container, q->style()->containerMode());
                 }
-
-                int layoutIndex = 0;
-
                 // Add widget to the layout policy
-                if (store->allKeys().contains("layoutIndex") &&
-                        store->value("layoutIndex").type() == QVariant::Int) {
-                    layoutIndex = store->value("layoutIndex").toInt();
-                    addToLayout(container, layoutIndex);
+                int layoutIndex = 0;
+                bool layoutIndexFound = false;
+                int tmpIndex =
+                    store->value(LAYOUT_INDEX).toInt(&layoutIndexFound);
+                if (layoutIndexFound) {
+                    layoutIndex = tmpIndex;
                 } else {
                     layoutIndex = layout->count();
-                    addToLayout(container);
                 }
-
+                addToLayout(container, layoutIndex);
                 // Write the layout data to the permanent store
-                store->createValue("layoutIndex", layoutIndex);
+                store->createValue(LAYOUT_INDEX, layoutIndex);
             }
         }
     }

@@ -167,7 +167,6 @@ bool MExtensionRunner::init(const QString &serverName)
         teardown();
         return false;
     }
-
     return true;
 }
 
@@ -383,10 +382,7 @@ void MExtensionRunner::createAppletPixmap(Qt::HANDLE handle)
     pixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
 
 #ifdef QT_OPENGL_LIB
-    // Try to use opengl to render directly to the pixmap
-    if (context != NULL)
-        delete context;
-
+    // The QGLWidget takes the ownership of the context
     context = new QGLContext(QGLFormat::defaultFormat(), &pixmap);
     context->create();
     if (context->isValid()) {

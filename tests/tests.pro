@@ -63,6 +63,7 @@ SUBDIRS     =  \
     ut_mlabel \
     ut_mlogicalvalues \
     ut_mdesktopentry \
+    ut_mextensionwatcher \
     ut_mcontainer \
     ut_minfobanner \
     ut_mwidgetcontroller \
@@ -147,6 +148,7 @@ SUBDIRS     =  \
     ut_mapplicationextensionarea \
     ut_mapplicationextensionareaview \
     ut_mapplicationextensionmanager \
+    ut_mapplicationextensionmetadata \
     ut_mextensionhandle \
     ut_mextensionhandleview \
     ut_mtapandholdrecognizer \

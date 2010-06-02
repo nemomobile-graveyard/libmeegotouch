@@ -22,6 +22,9 @@ contains(DEFINES, HAVE_DBUS) {
 
 LIBS += -lmeegotouchviews -lmeegotouchsettings -lmeegotouchcore
 
-SOURCES += mextensionslibrary.cpp
+SOURCES += mextensionwatcher.cpp \
+           mextensionslibrary.cpp
+
+HEADERS += mextensionwatcher.h
 
 include(../common_bot.pri)

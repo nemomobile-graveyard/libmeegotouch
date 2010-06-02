@@ -31,6 +31,8 @@
 #include "mappletinstancedata.h"
 #include "mappletmessage.h"
 #include "mapplethandle_stub.h"
+#include "mextensionhandle_stub.h"
+#include "mextensionwatcher_stub.h"
 #include "mbutton.h"
 #include "mappletmetadata.h"
 #include "ut_mappletinstancemanager.h"
@@ -362,6 +364,7 @@ void Ut_MAppletInstanceManager::init()
     defaultDataStore->createValue(QString("5/title"), QVariant("Title 5"));
     defaultDataStore->createValue(QString("5/sizeLandscape"), QVariant("105 205"));
     defaultDataStore->createValue(QString("5/sizePortrait"), QVariant("105 205"));
+
     existingFiles.clear();
     existingFiles.append("/tmp/testapplet1.desktop");
     existingFiles.append("/tmp/testapplet4.desktop");
@@ -410,6 +413,33 @@ void Ut_MAppletInstanceManager::cleanup()
     // Destroy default data store
     delete defaultDataStore;
     defaultDataStore = 0;
+}
+
+void Ut_MAppletInstanceManager::testOutOfProcessAppletUpdate()
+{
+    outOfProcess = true;
+
+    // Create AppletInstanceCollection to verify created applet instances
+    AppletInstanceCollection collection;
+    QObject::connect(manager, SIGNAL(appletInstantiated(QGraphicsWidget *, MDataStore &)), &collection, SLOT(addInstance(QGraphicsWidget *, MDataStore &)));
+
+    // Verify that the restoration process does not return an error
+    QVERIFY(manager->restoreApplets());
+
+    // Make sure the two applet instances were created
+    QCOMPARE(collection.count(), 2);
+
+    connect(this, SIGNAL(extensionChanged(const MDesktopEntry &)), manager, SLOT(updateApplet(const MDesktopEntry &)));
+
+    MAppletInstanceData testApplet;
+    QString testFile = "/tmp/testapplet1.desktop";
+    testApplet.desktopFile = testFile;
+    MAppletMetaData testMetaData(testFile);
+    emit extensionChanged(testMetaData);
+
+    // The manager asks the extension to do a reinit == kill+init
+    QList<MethodCall *> reinitCalls = gMExtensionHandleStub->stubCallsTo("reinit");
+    QCOMPARE(reinitCalls.length(), 1);
 }
 
 
@@ -548,6 +578,20 @@ void Ut_MAppletInstanceManager::testAppletInstanceRemoval()
     QCOMPARE(gMAppletSettingsStub->stubCallCount("removeInstanceSettingValues"), 1);
     QCOMPARE(gMAppletSettingsStub->stubLastCallTo("mAppletSettingsConstructor").parameter<QString>(0), QString("/tmp/testapplet4.desktop"));
     QCOMPARE(gMAppletSettingsStub->stubLastCallTo("mAppletSettingsConstructor").parameter<MAppletId>(1).toString(), appletId.toString());
+
+    // verify that applet metadata is removed from the extension watcher
+    // when the last instance is removed, but not before that
+    int removeFromWatcherCallCount = gMExtensionWatcherStub->stubCallCount("removeExtension");
+    MAppletId appletId2("ut_mappletinstancemanager", "testmanager", 2);
+    MAppletId appletId3("ut_mappletinstancemanager", "testmanager", 3);
+    QVERIFY(manager->instantiateApplet("/tmp/testapplet4.desktop"));
+    QVERIFY(manager->instantiateApplet("/tmp/testapplet4.desktop"));
+    QVERIFY(manager->removeApplet(appletId2));
+    QCOMPARE(gMExtensionWatcherStub->stubCallCount("removeExtension"),
+             removeFromWatcherCallCount);
+    QVERIFY(manager->removeApplet(appletId3));
+    QCOMPARE(gMExtensionWatcherStub->stubCallCount("removeExtension"),
+             removeFromWatcherCallCount + 1);
 }
 
 void Ut_MAppletInstanceManager::testAppletUninstallation()

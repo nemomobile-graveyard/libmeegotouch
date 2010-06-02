@@ -28,6 +28,7 @@
 #include "mdesktopentry.h"
 #include "mextensionhandle.h"
 #include "mfiledatastore.h"
+#include "msubdatastore.h"
 #include "mdebug.h"
 
 MApplicationExtensionManager::MApplicationExtensionManager(const QString &interface) :
@@ -76,15 +77,34 @@ bool MApplicationExtensionManager::init()
     updateAvailableExtensions(APPLICATION_EXTENSION_DATA_DIR);
 
     // Start watching the application extensions directory for changes
-    connect(&watcher, SIGNAL(directoryChanged(const QString)), this, SLOT(updateAvailableExtensions(QString)));
-    watcher.addPath(APPLICATION_EXTENSION_DATA_DIR);
-
+    connectSignals();
+    desktopDirectoryWatcher.addPath(APPLICATION_EXTENSION_DATA_DIR);
     return true;
+}
+
+void MApplicationExtensionManager::parseAndInstantiateExtension(
+    const QString& desktopFile,
+    QSet<QString>* currentExtensionsList)
+{
+    QSharedPointer<const MApplicationExtensionMetaData>
+        metadata(new MApplicationExtensionMetaData(desktopFile));
+    if (metadata->isValid() && metadata->type() == "X-MeeGoApplicationExtension" && metadata->interface() == interface) {
+        if (currentExtensionsList != NULL) {
+            currentExtensionsList->insert(desktopFile);
+        }
+        if (!extensionMetaDatas.contains(desktopFile)) {
+            // This extension is a new one. Instantiate it
+            if (instantiateExtension(metadata)) {
+                extensionMetaDatas[desktopFile] = metadata;
+            }
+        }
+    }
 }
 
 void MApplicationExtensionManager::updateAvailableExtensions(const QString &path)
 {
-    QList<QString> currentExtensionsList;
+    disconnectSignals();
+    QSet<QString> currentExtensionsList;
 
     QDir applicationExtensionsDir(path);
     if (applicationExtensionsDir.exists()) {
@@ -92,33 +112,38 @@ void MApplicationExtensionManager::updateAvailableExtensions(const QString &path
         filter << "*.desktop";
         foreach(const QString &fileName, applicationExtensionsDir.entryList(filter, QDir::Files)) {
             const QString desktopFile = QFileInfo(applicationExtensionsDir, fileName).absoluteFilePath();
-            QSharedPointer<MApplicationExtensionMetaData> metadata(new MApplicationExtensionMetaData(desktopFile));
-            if (metadata->isValid() && metadata->type() == "X-MeeGoApplicationExtension" && metadata->interface() == interface) {
-                currentExtensionsList.append(fileName);
-
-                if (!extensionMetaDatas.contains(fileName)) {
-                    // This extension is a new one. Instantiate it
-                    if (instantiateExtension(*metadata.data())) {
-                        extensionMetaDatas[fileName] = metadata;
-                    }
-                }
-            }
+            parseAndInstantiateExtension(desktopFile,
+                                         &currentExtensionsList);
         }
-
         // Find what extensions got removed
-        QList<QString> toBeRemovedExtensions;
+        QSet<QString> toBeRemovedExtensions;
         MetaDataEntryHash::const_iterator itEnd = extensionMetaDatas.constEnd();
         for (MetaDataEntryHash::const_iterator it = extensionMetaDatas.constBegin(); it != itEnd; ++it) {
             if (!currentExtensionsList.contains(it.key())) {
-                toBeRemovedExtensions.append(it.key());
+                toBeRemovedExtensions.insert(it.key());
             }
         }
         // Remove extensions that no longer exist
         foreach (const QString &fileName, toBeRemovedExtensions) {
-            removeExtension(*extensionMetaDatas[fileName].data());
-            extensionMetaDatas.remove(fileName);
+            removeExtension(*extensionMetaDatas[fileName]);
         }
     }
+    connectSignals();
+}
+
+void MApplicationExtensionManager::updateExtension(
+    const MDesktopEntry &extensionData)
+{
+    const MApplicationExtensionMetaData* metadata =
+        dynamic_cast<const MApplicationExtensionMetaData*>(&extensionData);
+    if (!metadata) {
+        return;
+    }
+    disconnectSignals();
+    QString fileName = metadata->fileName();
+    removeExtension(*metadata);
+    parseAndInstantiateExtension(fileName, NULL);
+    connectSignals();
 }
 
 bool MApplicationExtensionManager::isInProcess(const MApplicationExtensionMetaData &metaData)
@@ -126,25 +151,28 @@ bool MApplicationExtensionManager::isInProcess(const MApplicationExtensionMetaDa
     return metaData.runnerBinary().isEmpty();
 }
 
-bool MApplicationExtensionManager::instantiateExtension(const MApplicationExtensionMetaData &metadata)
+bool MApplicationExtensionManager::instantiateExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata)
 {
     bool success = false;
 
-    if (isInProcess(metadata)) {
-        if (metadata.fileName().indexOf(inProcessFilter) >= 0) {
-            success = instantiateInProcessExtension(metadata.extensionBinary());
+    if (isInProcess(*metadata)) {
+        if (metadata->fileName().indexOf(inProcessFilter) >= 0) {
+            success = instantiateInProcessExtension(metadata);
         }
     } else {
-        if (metadata.fileName().indexOf(outOfProcessFilter) >= 0) {
+        if (metadata->fileName().indexOf(outOfProcessFilter) >= 0) {
             success = instantiateOutOfProcessExtension(metadata);
         }
     }
-
+    if (success) {
+        extensionWatcher.addExtension(metadata);
+    }
     return success;
 }
 
-bool MApplicationExtensionManager::instantiateInProcessExtension(const QString &binary)
+bool MApplicationExtensionManager::instantiateInProcessExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata)
 {
+    QString binary = metadata->extensionBinary();
     QPluginLoader loader(binary);
     QObject *object = loader.instance();
 
@@ -157,14 +185,16 @@ bool MApplicationExtensionManager::instantiateInProcessExtension(const QString &
                 if (success) {
                     QGraphicsWidget *widget = extension->widget();
                     if (widget) {
-                        // Inform about the added extension widget
-                        emit widgetCreated(widget, *extensionDataStore.data());
+                        QString tmp = metadata->fileName();
+                        QSharedPointer<MDataStore> dataStore =
+                            createSubDataStore(*metadata);
+                        inProcessDataStores[metadata.data()] = dataStore;
+                        emit widgetCreated(widget, *dataStore);
                     }
+                    // Store the instantiated extension
+                    inProcessExtensions[metadata.data()] = qMakePair(extension, widget);
                     // Inform interested parties about the new extension
                     emit extensionInstantiated(extension);
-
-                    // Store the instantiated extension
-                    inProcessExtensions[binary] = qMakePair(extension, widget);
                 }
             }
         }
@@ -176,12 +206,15 @@ bool MApplicationExtensionManager::instantiateInProcessExtension(const QString &
     return success;
 }
 
-bool MApplicationExtensionManager::instantiateOutOfProcessExtension(const MApplicationExtensionMetaData &metadata)
+bool MApplicationExtensionManager::instantiateOutOfProcessExtension(
+    QSharedPointer<const MApplicationExtensionMetaData> &metadata)
 {
     MExtensionHandle *handle = new MExtensionHandle;
-    handle->init(metadata.runnerBinary(), metadata.fileName());
-    outOfProcessHandles.insert(metadata.fileName(), handle);
-    emit widgetCreated(handle, *extensionDataStore.data());
+    handle->init(metadata->runnerBinary(), metadata->fileName());
+    outOfProcessHandles.insert(metadata.data(), handle);
+    QSharedPointer<MDataStore> dataStore = createSubDataStore(*metadata);
+    outOfProcessDataStores[metadata.data()] = dataStore;
+    emit widgetCreated(handle, *dataStore);
     return true;
 }
 
@@ -194,35 +227,41 @@ QString MApplicationExtensionManager::dataPath() const
 
 void MApplicationExtensionManager::removeExtension(const MApplicationExtensionMetaData &metadata)
 {
+    QString fileName = metadata.fileName();
     if (isInProcess(metadata)) {
-        removeInProcessExtension(metadata.extensionBinary());
+        removeInProcessExtension(metadata);
     } else {
         removeOutOfProcessExtension(metadata);
     }
+    extensionMetaDatas.remove(fileName);
+    extensionWatcher.removeExtension(metadata.fileName());
 }
 
-void MApplicationExtensionManager::removeInProcessExtension(const QString &binary)
+void MApplicationExtensionManager::removeInProcessExtension(
+    const MApplicationExtensionMetaData &metadata)
 {
-    if (inProcessExtensions.contains(binary)) {
-        InProcessExtensionData extension = inProcessExtensions.take(binary);
+    if (inProcessExtensions.contains(&metadata)) {
+        InProcessExtensionData extension = inProcessExtensions.take(&metadata);
         emit extensionRemoved(extension.first);
         if (extension.second) {
             emit widgetRemoved(extension.second);
         }
+        inProcessDataStores.remove(&metadata);
         delete extension.first;
+        QPluginLoader loader(metadata.extensionBinary());
+        loader.unload();
     }
 }
 
 void MApplicationExtensionManager::removeOutOfProcessExtension(const MApplicationExtensionMetaData &metadata)
 {
     QString desktopFileName = metadata.fileName();
-    if (outOfProcessHandles.contains(desktopFileName)) {
-        MExtensionHandle *handle = outOfProcessHandles.take(desktopFileName);
-        if (handle) {
-            emit widgetRemoved(handle);
-            handle->kill();
-            delete handle;
-        }
+    MExtensionHandle *handle = outOfProcessHandles.take(&metadata);
+    if (handle) {
+        emit widgetRemoved(handle);
+        handle->kill();
+        outOfProcessDataStores.remove(&metadata);
+        delete handle;
     }
 }
 
@@ -259,3 +298,41 @@ bool MApplicationExtensionManager::createDataStore()
         return false;
     }
 }
+
+QSharedPointer<MDataStore> MApplicationExtensionManager::createSubDataStore(
+    const MApplicationExtensionMetaData &metadata)
+{
+    return QSharedPointer<MDataStore>(
+        new MSubDataStore(
+            metadata.fileName().replace('/', '\\')
+            + QString("/"), *extensionDataStore));
+}
+
+void MApplicationExtensionManager::connectSignals()
+{
+    connect(&extensionWatcher,
+            SIGNAL(extensionChanged(
+                       const MDesktopEntry &)),
+            this,
+            SLOT(updateExtension(
+                     const MDesktopEntry &)));
+    connect(&desktopDirectoryWatcher,
+            SIGNAL(directoryChanged(const QString)),
+            this,
+            SLOT(updateAvailableExtensions(QString)));
+}
+
+void MApplicationExtensionManager::disconnectSignals()
+{
+    disconnect(&extensionWatcher,
+            SIGNAL(extensionChanged(
+                       const MDesktopEntry &)),
+            this,
+            SLOT(updateExtension(
+                     const MDesktopEntry &)));
+    disconnect(&desktopDirectoryWatcher,
+            SIGNAL(directoryChanged(const QString)),
+            this,
+            SLOT(updateAvailableExtensions(QString)));
+}
+

@@ -21,6 +21,10 @@
 #include <mapplicationextensionmetadata.h>
 #include "ut_mapplicationextensionmetadata.h"
 
+const QString EXTENSION_BINARY_KEY("X-MeeGoApplicationExtension/Extension");
+const QString IDENTIFIER_KEY("X-MeeGoApplicationExtension/Identifier");
+const QString INTERFACE_KEY("X-MeeGoApplicationExtension/Interface");
+
 QString gType = "MApplicationExtension";
 QString gRunner = "";
 QString gExtension = "";
@@ -40,11 +44,11 @@ QString MDesktopEntry::value(const QString &key) const
         return QString(gIcon);
     } else if (key == "Desktop Entry/Exec") {
         return QString(gRunner);
-    } else if (key == "X-M/MApplicationExtension-Extension") {
+    } else if (key == EXTENSION_BINARY_KEY) {
         return QString(gExtension);
-    } else if (key == "X-M/MApplicationExtension-Interface") {
+    } else if (key == INTERFACE_KEY) {
         return QString(gInterface);
-    } else if (key == "X-M/MApplicationExtension-Identifier") {
+    } else if (key == IDENTIFIER_KEY) {
         return QString(gExtraIdentifier);
     }
     return QString();
@@ -60,11 +64,11 @@ bool MDesktopEntry::contains(const QString &key) const
         return gIcon != "";
     } else if (key == "Desktop Entry/Exec") {
         return gRunner != "";
-    } else if (key == "X-M/MApplicationExtension-Extension") {
+    } else if (key == EXTENSION_BINARY_KEY) {
         return gExtension != "";
-    } else if (key == "X-M/MApplicationExtension-Interface") {
+    } else if (key == INTERFACE_KEY) {
         return gInterface != "";
-    } else if (key == "X-M/MApplicationExtension-Identifier") {
+    } else if (key == IDENTIFIER_KEY) {
         return gExtraIdentifier != "";
     }
     return false;
@@ -180,9 +184,9 @@ void Ut_MApplicationExtensionMetaData::testNameMissing()
 void Ut_MApplicationExtensionMetaData::testExtraIdentifier()
 {
     gExtraIdentifier = "";
-    QVERIFY(!m_subject->contains("X-M/MApplicationExtension-Identifier"));
+    QVERIFY(!m_subject->contains(IDENTIFIER_KEY));
     gExtraIdentifier = "foo";
-    QVERIFY(m_subject->contains("X-M/MApplicationExtension-Identifier"));
+    QVERIFY(m_subject->contains(IDENTIFIER_KEY));
 }
 
 void Ut_MApplicationExtensionMetaData::testResourceIdentifier()

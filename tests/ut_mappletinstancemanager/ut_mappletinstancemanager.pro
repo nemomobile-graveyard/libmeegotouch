@@ -3,6 +3,7 @@ include(../common_mextensions.pri)
 
 INCLUDEPATH += \
     $$MSRCDIR/events \
+    $$MSRCDIR/extensions
 
 QT += core network gui svg dbus
 
@@ -26,6 +27,6 @@ HEADERS += \
     $$MSRCDIR/extensions/mashup/mashup/mappletinstancemanagerdbusadaptor.h \
     $$MSRCDIR/extensions/applicationextension/mextensionhandle.h \
     $$MSRCDIR/extensions/applicationextension/mextensionhandlemodel.h \
-    $$MSRCDIR/events/morientationtracker.h
+    $$MSRCDIR/extensions/mextensionwatcher.h
 
 include(../common_bot.pri)

@@ -32,6 +32,8 @@ class MAppletMetaData;
 class MAppletHandle;
 class MFileDataStore;
 class QDBusPendingCallWatcher;
+class MExtensionWatcher;
+class MDesktopEntry;
 
 //! \internal
 
@@ -159,6 +161,14 @@ private slots:
      * \param watcher the call watcher
      */
     void receiveOperation(QDBusPendingCallWatcher *watcher);
+
+    /*!
+     * Tells us that we need to update the applet. Currently the \c watcher informs the manager
+     * that the update desktop file has changed
+     *
+     * \param appletData The applet that has changed.
+     */
+    void updateApplet(const MDesktopEntry &appletData);
 
 private:
     /*!
@@ -379,6 +389,9 @@ private:
 
     //! A map for keeping track of running applets
     AppletContainer applets;
+
+    //! The watcher used to monitor changes in the applets
+    MExtensionWatcher *watcher;
 
     //! The last applet ID that used to be free
     MAppletId::AppletInstanceID lastAppletInstanceID;
