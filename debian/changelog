@@ -1,9 +1,15 @@
-libmeegotouch (0.20.14~1) UNRELEASED; urgency=low
+libmeegotouch (0.20.14-1) unstable; urgency=low
 
+  * Fixes: ABI break between 0.20.12 and 0.20.13 in MLabelView
   * Implemented: SWP#-DUI-2781
   * Implemented: SWP#-DUI-2782
+  * Fixes: NB#171577 - Fixed adding MActions with orientation-flags no matter what's the current orientation
+  * Fixes: NB#167398 - Tabs unselected when the application menu is opened
+  * Fixes: NB#171957 - No mouse click signal for speechbubbles
+  * Fixes: NB#171256 - Multiple windows of the same application should share the same GL context
+  * Fixes: NB#169260 - Finnish day and month names shown using wrong form
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 31 May 2010 16:40:51 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 02 Jun 2010 17:23:13 +0300
 
 libmeegotouch (0.20.13-1) unstable; urgency=low
 
