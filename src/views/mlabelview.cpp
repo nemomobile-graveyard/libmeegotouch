@@ -212,6 +212,12 @@ void MLabelView::longPressEvent(QGraphicsSceneContextMenuEvent *event)
     d->impl->longPressEvent(event);
 }
 
+void MLabelView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture)
+{
+    Q_UNUSED(event);
+    Q_UNUSED(gesture);
+}
+
 
 M_REGISTER_VIEW_NEW(MLabelView, MLabel)
 
