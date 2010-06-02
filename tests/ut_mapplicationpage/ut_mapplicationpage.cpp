@@ -147,6 +147,7 @@ void Ut_MApplicationPage::testPageTitleChanged()
 void Ut_MApplicationPage::testRememberPosition()
 {
     m_subject->setRememberPosition(true);
+    m_subject->d_func()->pannableViewPort->adjustSize();
     m_subject->d_func()->pannableViewPort->setPosition(QPointF(0, 10));
     appWin->sceneManager()->appearSceneWindowNow(m_subject);
     QCOMPARE(m_subject->d_func()->pannableViewPort->position() + QPointF(10, 10), QPointF(10, 20));
@@ -156,6 +157,7 @@ void Ut_MApplicationPage::testRememberPosition()
 void Ut_MApplicationPage::testForgetPosition()
 {
     m_subject->setRememberPosition(false);
+    m_subject->d_func()->pannableViewPort->adjustSize();
     m_subject->d_func()->pannableViewPort->setPosition(QPointF(0, 10));
     appWin->sceneManager()->appearSceneWindowNow(m_subject);
     QCOMPARE(m_subject->d_func()->pannableViewPort->position() + QPointF(10, 10), QPointF(10, 10));
