@@ -63,9 +63,10 @@ public:
     void showDeviceStatusBar( bool visible );
 
 protected Q_SLOTS:
+    virtual void setOrientation(M::OrientationAngle);
     void showMenuBar();
 protected:
-    QtMaemo6WindowDecoration() {};
+    QtMaemo6WindowDecoration() {}
 
     /*! \reimp */
     bool eventFilter(QObject *obj, QEvent *event);
@@ -73,11 +74,15 @@ protected:
     /*! \reimp_end */
 
 #ifdef Q_WS_X11
-    void updateStatusBarSharedPixmap();
+protected Q_SLOTS:
+    void updateStatusBarSharedPixmap(M::OrientationAngle angle = M::Angle0);
+protected:
     bool fetchStatusBarSharedPixmapHandle(Qt::HANDLE *handle);
 #endif
 private:
     QLabel* m_deviceStatusBar;
+    static const int layoutOffset;
+
     QtMaemo6TitleBar *m_titleBar;
     QMenuBar *m_menuBar;
     QStatusBar *m_statusBar;

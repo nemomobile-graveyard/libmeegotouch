@@ -26,6 +26,7 @@
 #include "qtmaemo6teststyle.h"
 
 #include <mexport.h>
+#include <mnamespace.h>
 
 class MComponentData;
 class MStyle;
@@ -65,6 +66,7 @@ class M_EXPORT QtMaemo6Style : public QtMaemo6TestStyle
     Q_PROPERTY(int kineticDeaccelerationInterval READ kineticDeaccelerationInterval WRITE setKineticDeaccelerationInterval);
     Q_PROPERTY(int kineticDeaccelerationStrength READ kineticDeaccelerationStrength WRITE setKineticDeaccelerationStrength);
     Q_PROPERTY(int kineticMaxKineticScrollSpeed READ kineticMaxKineticScrollSpeed WRITE setKineticMaxKineticScrollSpeed);
+    Q_PROPERTY(bool orientationChangeEnabled READ isOrientationChangeEnabled WRITE setOrientationChangeEnabled);
 public:
     QtMaemo6Style();
     virtual ~QtMaemo6Style();
@@ -117,13 +119,6 @@ public:
     int kineticScrollStartDelay() const;
 
     /*!
-     * \brief Sets the scroll delay in milliseconds.
-     *
-     * /see kineticScrollStartDelay()
-     */
-    void setKineticScrollStartDelay(int delay);
-
-    /*!
      * \brief Returns the current scroll offset in milliseconds.
      *
      * After a press event a move must been made with at least this manhattan
@@ -133,13 +128,6 @@ public:
      * \see kineticScrollStartDelay()
      */
     int kineticScrollStartOffset() const;
-
-    /*!
-     * \brief Sets the scroll offset in milliseconds.
-     *
-     * \see kineticScrollStartOffset()
-     */
-    void setKineticScrollStartOffset(int offset);
 
     /*!
      * \brief Returns the current intervall in milliseconds the deacceleration methode
@@ -153,13 +141,6 @@ public:
     int kineticDeaccelerationInterval() const;
 
     /*!
-     * \brief sets the deaccelaration interval in milliseconds
-     *
-     * /see kineticDeaccelerationInterval()
-     */
-    void setKineticDeaccelerationInterval(int interval);
-
-    /*!
      * \brief Returns the current deaccelaration strength.
      *
      * This is the value of speed in pixels the kinetic scrolling will be decreased
@@ -169,18 +150,47 @@ public:
     int kineticDeaccelerationStrength() const;
 
     /*!
-     * \brief Sets the deaccelaration strength.
-     *
-     * \see kineticDeaccelerationStrength()
-     */
-    void setKineticDeaccelerationStrength(int strength);
-
-    /*!
      * \brief Returns the max value of the kinetic scrolling speed in pixels per interval.
      *
      * Default is 64.
      */
     int kineticMaxKineticScrollSpeed() const;
+
+    bool isStyled( const QWidget * widget = 0 ) const;
+
+    /*!
+     * \brief: returns true if the orientation change support is enabled
+     */
+    bool isOrientationChangeEnabled() const;
+
+public Q_SLOTS:
+    /*!
+     * \brief Sets the scroll delay in milliseconds.
+     *
+     * /see kineticScrollStartDelay()
+     */
+    void setKineticScrollStartDelay(int delay);
+
+    /*!
+     * \brief Sets the scroll offset in milliseconds.
+     *
+     * \see kineticScrollStartOffset()
+     */
+    void setKineticScrollStartOffset(int offset);
+
+    /*!
+     * \brief sets the deaccelaration interval in milliseconds
+     *
+     * /see kineticDeaccelerationInterval()
+     */
+    void setKineticDeaccelerationInterval(int interval);
+
+    /*!
+     * \brief Sets the deaccelaration strength.
+     *
+     * \see kineticDeaccelerationStrength()
+     */
+    void setKineticDeaccelerationStrength(int strength);
 
     /*!
      * \brief Sets the maximum speed of kinetic scrolling in pixels per interval.
@@ -189,8 +199,26 @@ public:
      */
     void setKineticMaxKineticScrollSpeed(int speed);
 
-    bool isStyled( const QWidget * widget = 0 ) const;
+    /*!
+     * \brief: set to true to enable orientation change support
+     */
+    void setOrientationChangeEnabled(bool b);
 
+    /*!
+     * \brief Returns the current orientation of the device
+     */
+    M::OrientationAngle orientation();
+
+    /*!
+     * \brief returns the current orientation of the device within the given int
+     *        for external meegotouch independent use
+     * this gives you the orientation angle as int, so the value might be 0, 90,
+     * 180 or 270.
+     */
+    void orientation(int*);
+Q_SIGNALS:
+    void orientationChanged(M::OrientationAngle angle);
+    void orientationChanged(int);
 protected Q_SLOTS:
     /*! \reimp */
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option,
@@ -201,6 +229,9 @@ protected Q_SLOTS:
     /*! \reimp_end */
 
     void ensureFocusedWidgetVisible(QRect rect);
+
+    void doOrientationChange();
+
 };
 
 #endif

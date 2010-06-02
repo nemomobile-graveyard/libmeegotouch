@@ -33,6 +33,9 @@ public:
 
 protected slots:
     void fileOpen();
+    void setStatusBarText();
+private:
+    QLabel* statusBarLabel;
 };
 
 #endif

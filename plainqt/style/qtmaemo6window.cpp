@@ -40,6 +40,7 @@ QtMaemo6Window::QtMaemo6Window(QWidget *originalWidget, QWidget *parent /*= NULL
     , m_centralWidget(0)
     , m_scrollArea(0)
     , m_closeFromChild(false)
+    , m_orientationAngle(M::Angle0)
 {
     setWindowFlags(Qt::Window
                    | Qt::CustomizeWindowHint
@@ -53,10 +54,68 @@ QtMaemo6Window::QtMaemo6Window(QWidget *originalWidget, QWidget *parent /*= NULL
     m_windowLayout->setSpacing(0);
 
     setCentralWidget(m_window);
+
+    connect(style(), SIGNAL(orientationChanged(M::OrientationAngle)),
+            this, SLOT(setOrientation(M::OrientationAngle)));
 }
 
 QtMaemo6Window::~QtMaemo6Window()
 {
+}
+
+void QtMaemo6Window::doLayoutOrientation()
+{
+    //clear layout
+    QGridLayout* newLayout = new QGridLayout(this);
+    newLayout->setMargin(0);
+    newLayout->setSpacing(0);
+
+    //iterate through the layout in reverse order
+    for(int i = m_windowLayout->count()-1; i >= 0; --i) {
+        int row, col, rowspan, colspan;
+        m_windowLayout->getItemPosition(i, &row, &col, &rowspan, &colspan);
+        QLayoutItem* item = m_windowLayout->takeAt(i);
+        //insert item into new layout with reversed row and col and reversed spans
+        newLayout->addItem(item, col, row, colspan, rowspan);
+    }
+    delete layout();
+
+    setLayout(newLayout);
+    m_windowLayout = newLayout;
+    m_windowLayout->activate();
+}
+
+void QtMaemo6Window::setOrientation(M::OrientationAngle angle) {
+    //in this case orientation changes betweend landscape and portrait.
+    // We need to relayout then, otherwise flipping the layout orientation is enough
+    if((m_orientationAngle - angle) % 180 != 0)
+        doLayoutOrientation();
+
+    Qt::Corner corner;
+    switch(angle) {
+        default:
+        case M::Angle0: corner = Qt::TopLeftCorner; break;
+        case M::Angle90:
+            //if RTL Layout is set, reverse the whole thing in portrait view
+            if(qApp->isRightToLeft())
+                corner = Qt::TopLeftCorner;
+            else
+                corner = Qt::TopRightCorner;
+            break;
+        case M::Angle180: corner = Qt::BottomRightCorner; break;
+        case M::Angle270:
+            if(qApp->isRightToLeft())
+                corner = Qt::BottomRightCorner;
+            else
+                corner = Qt::BottomLeftCorner;
+            break;
+    }
+    m_windowLayout->setOriginCorner(corner);
+    m_windowLayout->update();
+    update();
+
+    m_orientationAngle = angle;
+    emit orientationChanged(m_orientationAngle);
 }
 
 QSize QtMaemo6Window::maxViewportSize() const
@@ -124,7 +183,8 @@ void QtMaemo6Window::paintEvent(QPaintEvent* e) {
 void QtMaemo6Window::showFastMaximized()
 {
     // Size policy instead?
-    resize(MDeviceProfile::instance()->resolution());
+    //set fixed size, to force size also when orientation changes!
+    setFixedSize(MDeviceProfile::instance()->resolution());
     show();
 }
 
