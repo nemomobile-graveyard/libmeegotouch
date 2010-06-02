@@ -53,11 +53,13 @@ void MPannableViewportLayout::setGeometry(const QRectF &rect)
 
     if (pannedWidget) {
         if (panningDirections.testFlag(Qt::Horizontal)) {
-            unboundedRect.setWidth(pannedWidget->effectiveSizeHint(Qt::PreferredSize).width());
+            qreal width = qMax(rect.width(), pannedWidget->effectiveSizeHint(Qt::PreferredSize).width());
+            unboundedRect.setWidth(width);
         }
 
         if (panningDirections.testFlag(Qt::Vertical)) {
-            unboundedRect.setHeight(pannedWidget->effectiveSizeHint(Qt::PreferredSize).height());
+            qreal height = qMax(rect.height(), pannedWidget->effectiveSizeHint(Qt::PreferredSize).height());
+            unboundedRect.setHeight(height);
         }
     }
 

@@ -10,7 +10,9 @@
 #include <MWindow>
 
 #include "swaphook.h"
-
+#ifdef EGL
+#include <dlfcn.h>
+#endif
 
 class SwapHookPrivate : public QObject
 {

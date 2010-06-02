@@ -40,16 +40,13 @@ public Q_SLOTS:
     void makeTextItalic();
     void makeTextNormal();
     void toggleWindowIconVisibility();
-    void showButtonsAsList();
-    void showButtonsAsGrid();
 
 protected:
     virtual void retranslateUi();
 
 private:
     int m_textIndex;
-    MGridLayoutPolicy *gridPolicy;
-    MLinearLayoutPolicy  *listPolicy;
+    MLinearLayoutPolicy  *policy;
     MComboBox *comboBox;
     void showText(int index);
 };

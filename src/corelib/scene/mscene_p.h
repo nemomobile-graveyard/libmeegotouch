@@ -65,6 +65,7 @@ public:
     void touchPointCopyMousePosToPointStartPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event);
     bool eventEmulatePinch(QEvent* event);
     bool eventEmulatePan(QEvent* event);
+    void fillMarginRectWithPattern(QPainter * painter, const QRectF& rect, int thickness);
 
 protected:
     MScene *q_ptr;

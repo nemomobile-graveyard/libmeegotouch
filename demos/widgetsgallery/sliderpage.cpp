@@ -31,7 +31,7 @@
 #include <QTimer>
 
 SliderPage::SliderPage() :
-    TemplatePage(),
+    TemplatePage(TemplatePage::UserInput),
     ageLabel(0),
     ageSlider(0),
     ageContainer(0),
@@ -45,7 +45,6 @@ SliderPage::SliderPage() :
     brightnessSlider(0),
     brightnessContainer(0)
 {
-    gid = TemplatePage::LayoutsAndVisuals;
 }
 
 SliderPage::~SliderPage()

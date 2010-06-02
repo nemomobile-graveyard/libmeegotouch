@@ -26,6 +26,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mlabel.h \
     $$WIDGETS_SRC_DIR/mlabelhighlighter.h \
     $$WIDGETS_SRC_DIR/mlist.h \
+    $$WIDGETS_SRC_DIR/mlistfilter.h \
     $$WIDGETS_SRC_DIR/mgriditem.h \
     $$WIDGETS_SRC_DIR/mmessagebox.h \
     $$WIDGETS_SRC_DIR/mnavigationbar.h \
@@ -54,6 +55,10 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetrecycler.h \
     $$WIDGETS_SRC_DIR/mabstractcellcreator.h \
     $$WIDGETS_SRC_DIR/mcontentitem.h \
+    $$WIDGETS_SRC_DIR/mlistitem.h \
+    $$WIDGETS_SRC_DIR/mabstractitemmodel.h \
+    $$WIDGETS_SRC_DIR/msortfilterproxymodel.h \
+    $$WIDGETS_SRC_DIR/mbubbleitem.h \
 
 MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.h \
@@ -87,6 +92,8 @@ MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mcontainermodel.h \
     $$WIDGETS_SRC_DIR/mcompletermodel.h \
     $$WIDGETS_SRC_DIR/mcontentitemmodel.h \
+    $$WIDGETS_SRC_DIR/mlistitemmodel.h \
+    $$WIDGETS_SRC_DIR/mbubbleitemmodel.h \
 
 PUBLIC_HEADERS += \
     $$MGEN_MODEL_HEADERS \
@@ -96,6 +103,9 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mpannableviewportlayout.h \
     $$WIDGETS_SRC_DIR/mcontentitem_p.h \
     $$WIDGETS_SRC_DIR/mbuttongroup_p.h \
+    $$WIDGETS_SRC_DIR/mlistitem_p.h \
+    $$WIDGETS_SRC_DIR/mabstractitemmodel_p.h \
+    $$WIDGETS_SRC_DIR/mlistfilter_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
@@ -118,6 +128,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mlabelmodel.cpp \
     $$WIDGETS_SRC_DIR/mlabelhighlighter.cpp \
     $$WIDGETS_SRC_DIR/mlist.cpp \
+    $$WIDGETS_SRC_DIR/mlistfilter.cpp \
     $$WIDGETS_SRC_DIR/mgriditem.cpp \
     $$WIDGETS_SRC_DIR/minfobannermodel.cpp \
     $$WIDGETS_SRC_DIR/mapplicationmenu.cpp \
@@ -152,3 +163,8 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mcontentitemmodel.cpp \
     $$WIDGETS_SRC_DIR/mlistmodel.cpp \
     $$WIDGETS_SRC_DIR/mpopuplistmodel.cpp \
+    $$WIDGETS_SRC_DIR/mlistitem.cpp \
+    $$WIDGETS_SRC_DIR/mabstractitemmodel.cpp \
+    $$WIDGETS_SRC_DIR/msortfilterproxymodel.cpp \
+    $$WIDGETS_SRC_DIR/mbubbleitem.cpp \
+    $$WIDGETS_SRC_DIR/mbubbleitemmodel.cpp \

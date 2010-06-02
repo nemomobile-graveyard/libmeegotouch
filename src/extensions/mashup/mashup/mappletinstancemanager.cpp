@@ -33,6 +33,8 @@
 #include "mscenemanager.h"
 #include "morientationtracker.h"
 #include "maction.h"
+#include "mextensionwatcher.h"
+#include <algorithm>
 
 const QString MAppletInstanceManager::PACKAGE_MANAGER_DBUS_SERVICE = "com.nokia.package_manager";
 const QString MAppletInstanceManager::PACKAGE_MANAGER_DBUS_PATH = "/com/nokia/package_manager";
@@ -50,6 +52,7 @@ MAppletInstanceManager::~MAppletInstanceManager()
 {
     qDeleteAll(applets.values());
     delete fileDataStore;
+    delete watcher;
 }
 
 void MAppletInstanceManager::init(const QString &mashupCanvasName, MDataStore *dataStore)
@@ -57,6 +60,7 @@ void MAppletInstanceManager::init(const QString &mashupCanvasName, MDataStore *d
     this->applicationName = QFileInfo(QCoreApplication::applicationFilePath()).fileName();
     this->mashupCanvasName = mashupCanvasName;
     this->dataStore = dataStore;
+    this->watcher = new MExtensionWatcher;
 
     if (dataStore == NULL) {
         // Create a file datastore if a data store was not provided
@@ -75,6 +79,8 @@ void MAppletInstanceManager::init(const QString &mashupCanvasName, MDataStore *d
 
     // Connect to the system bus to receive the Package Manager signals
     QDBusConnection::systemBus().connect(QString(), PACKAGE_MANAGER_DBUS_PATH, PACKAGE_MANAGER_DBUS_INTERFACE, "OperationComplete", this, SLOT(operationComplete(QString, QString, QString)));
+    connect(watcher, SIGNAL(extensionChanged(const MDesktopEntry &)),
+            this, SLOT(updateApplet(const MDesktopEntry &)));
 }
 
 bool MAppletInstanceManager::restoreApplets()
@@ -114,6 +120,29 @@ void MAppletInstanceManager::instantiateAppletFromPackage(const QString &package
     instantiateApplet(appletId);
 }
 
+/*!
+ * A helper functor class for finding remaining applet instances
+ * after removing one instance
+ */
+struct FindAppletByFileName
+{
+    QString fileName_;
+    /**
+     * Constructs the functor
+     * \param fileName File name to compare against
+     */
+    explicit FindAppletByFileName(const QString& fileName)
+        : fileName_(fileName){
+    }
+    /**
+     * Compares an applet instance against the wanted file name
+     * \param data Instance to compare
+     */
+    bool operator()(const MAppletInstanceData* data) {
+        return data->desktopFile == fileName_;
+    }
+};
+
 bool MAppletInstanceManager::removeApplet(MAppletId appletId)
 {
     // Make sure the applet instance exists in this particular applet instance manager
@@ -121,12 +150,20 @@ bool MAppletInstanceManager::removeApplet(MAppletId appletId)
             appletId.mashupCanvasName() == mashupCanvasName && applets.contains(appletId.instanceId())) {
         // Get the data for the applet
         MAppletInstanceData *data = applets.value(appletId.instanceId());
-
+        QString fileName = data->desktopFile;
         // Let interested parties know that the applet's widget should be removed
         emit appletRemoved(data->widget);
 
         // Remove the applet instance data
         removeAppletInstanceData(appletId);
+
+        if (std::find_if(applets.constBegin(), applets.constEnd(),
+                         FindAppletByFileName(fileName))
+            == applets.constEnd()) {
+            // this was the last instance, remove from watcher
+            watcher->removeExtension(data->desktopFile);
+        }
+
         return true;
     }
 
@@ -169,21 +206,24 @@ bool MAppletInstanceManager::instantiateApplet(MAppletId appletId)
         QFile desktopFile(data->desktopFile);
         if ((!data->desktopFile.isEmpty() && desktopFile.exists()) || data->installationStatus == MAppletInstanceData::Installing) {
             // The desktop file exists, so the applet is installed or the applet was being installed: instantiate the applet
-            MAppletMetaData metadata(data->desktopFile);
-            if (metadata.isValid()) {
+            QSharedPointer<const MAppletMetaData>
+                metadata(new MAppletMetaData(data->desktopFile));
+            if (metadata->isValid()) {
                 // Check whether a runner is defined
                 bool success;
-                if (metadata.runnerBinary().isEmpty()) {
+                if (metadata->runnerBinary().isEmpty()) {
                     // Runner not defined: create an in-process applet
-                    success = instantiateInProcessApplet(data, metadata);
+                    // IN PROCESS APPLETS ARE NOT FULLY SUPPORTED AT THE MOMENT
+                    success = instantiateInProcessApplet(data, *metadata);
                 } else {
                     // Runner is defined: create an out-of-process applet
-                    success = instantiateOutOfProcessApplet(data, metadata);
+                    success = instantiateOutOfProcessApplet(data, *metadata);
                 }
 
                 if (success) {
                     // Notify that the applet placeholder instantiation is done
                     emit appletInstantiated(data->widget, *data->mashupCanvasDataStore);
+                    watcher->addExtension(metadata);
                     return true;
                 }
             }
@@ -206,6 +246,26 @@ bool MAppletInstanceManager::instantiateApplet(MAppletId appletId)
     }
 
     return false;
+}
+
+void MAppletInstanceManager::updateApplet(const MDesktopEntry &updatedExtension)
+{
+    const MAppletMetaData* metadata =
+        dynamic_cast<const MAppletMetaData*>(&updatedExtension);
+    if (metadata->runnerBinary().isEmpty()) {
+        // Runner not defined: create an in-process applet
+        // IN PROCESS APPLETS ARE NOT FULLY SUPPORTED AT THE MOMENT
+        qWarning() << "In-process applet updates are not supported at the moment";
+    } else {
+        AppletContainerIterator appletIterator(applets);
+        while (appletIterator.hasNext()) {
+            appletIterator.next();
+            if (appletIterator.value()->desktopFile == metadata->fileName()) {
+                MAppletHandle *handle = dynamic_cast<MAppletHandle *>(appletIterator.value()->widget);
+                handle->reinit();
+            }
+        }
+    }
 }
 
 bool MAppletInstanceManager::instantiateOutOfProcessApplet(MAppletInstanceData *data, const MAppletMetaData &metadata)
@@ -245,6 +305,7 @@ bool MAppletInstanceManager::instantiateOutOfProcessApplet(MAppletInstanceData *
     return true;
 }
 
+// IN PROCESS APPLETS ARE NOT FULLY SUPPORTED AT THE MOMENT
 bool MAppletInstanceManager::instantiateInProcessApplet(MAppletInstanceData *data, const MAppletMetaData &metadata)
 {
     MFileDataStore *instanceDataStore = new MFileDataStore(data->instanceDataFilePath);

@@ -264,7 +264,7 @@ void Ut_MPannableWidget::panGestureMovesPhysicsPointer()
     currentPanState = Qt::GestureStarted;
     widget->glassPanEvent(&event, &panGesture);
     QCOMPARE(physicsState->pointerPressed, true);
-    QCOMPARE(physicsState->pointerMoved, false);
+    QCOMPARE(physicsState->pointerMoved, true);
     QCOMPARE(physicsState->pointerReleased, false);
 
     physicsState->pointerPressed = false;
@@ -328,7 +328,7 @@ void Ut_MPannableWidget::panGestureCancelsMouseEvents()
     currentPanState = Qt::GestureStarted;
     widget->glassPanEvent(&event, &panGesture);
     QCOMPARE(physicsState->pointerPressed, true);
-    QCOMPARE(physicsState->pointerMoved, false);
+    QCOMPARE(physicsState->pointerMoved, true);
     QCOMPARE(physicsState->pointerReleased, false);
 
     QCOMPARE(dummyItem->cancelReceived, true);

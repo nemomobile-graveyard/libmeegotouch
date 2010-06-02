@@ -44,7 +44,7 @@ class MProgressIndicatorPrivate;
         \li Application can decide to display label indicating the state of the operation next to indicator such as
             "124 / 345 kt received." or "75%".
         \li If the wait operation applies to the whole view, a spinner should be used to temporarily replace the view's
-            view menu icon.
+            application menu icon.
 
     \section ProgressIndicatorVariants Variants
         \li \link MProgressIndicatorBarView Progress bar \endlink

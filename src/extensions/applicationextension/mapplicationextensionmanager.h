@@ -24,8 +24,8 @@
 #include <QFileSystemWatcher>
 #include <QHash>
 #include <QSharedPointer>
-#include <QHash>
 #include <QRegExp>
+#include "mextensionwatcher.h"
 
 class MApplicationExtensionMetaData;
 class MDataStore;
@@ -124,13 +124,22 @@ private slots:
      */
     void updateAvailableExtensions(const QString &path);
 
+    /*!
+     * \brief Slot for updating an extension when the files for the extension
+     * have been updated.
+     * \param extensionData the extension to update
+     */
+    void updateExtension(const MDesktopEntry &extensionData);
+
 private:
     //! Whether the manager has been initialized or not
     bool initialized;
 
     //! A file system watcher for the desktop entry file directory
-    QFileSystemWatcher watcher;
+    QFileSystemWatcher desktopDirectoryWatcher;
 
+    //! An extension watcher for observing modifications to the extensions
+    MExtensionWatcher extensionWatcher;
     //! The name of the interface extensions to be instantiated should implement
     QString interface;
 
@@ -145,13 +154,19 @@ private:
 
     typedef QPair<MApplicationExtensionInterface*, QGraphicsWidget*> InProcessExtensionData;
 
-    //! Instantiated in-process extensions. A map from the shared library name to the extension instance.
-    QHash<QString, InProcessExtensionData> inProcessExtensions;
+    //! In-process extensions and datastores
+    QHash<const MApplicationExtensionMetaData*, InProcessExtensionData> inProcessExtensions;
 
-    //! Hash of desktop file name versus the widget (handle) created
-    QHash<QString, MExtensionHandle*> outOfProcessHandles;
+    QHash<const MApplicationExtensionMetaData*,
+      QSharedPointer<MDataStore> > inProcessDataStores;
 
-    typedef QHash<QString, QSharedPointer<MApplicationExtensionMetaData> > MetaDataEntryHash;
+    //! Ouf-of-process extensions and datastores
+    QHash<const MApplicationExtensionMetaData*, MExtensionHandle*> outOfProcessHandles;
+
+    QHash<const MApplicationExtensionMetaData*, QSharedPointer<MDataStore> >
+        outOfProcessDataStores;
+
+    typedef QHash<QString, QSharedPointer<const MApplicationExtensionMetaData> > MetaDataEntryHash;
     /*!
      * A container for application extension desktop entries with the correct application extension interface defined.
      * This container also only contains the entries that succeeded to instantiate.
@@ -179,38 +194,67 @@ private:
     bool createDataStore();
 
     /*!
+     * Creates a subdatastore for an extension
+     * \param metaData Metadata for the extension
+     */
+    QSharedPointer<MDataStore> createSubDataStore(
+        const MApplicationExtensionMetaData &metaData);
+    /*!
+     * Connects the signals for the directory watcher and the extension
+     * watcher.
+     */
+    void connectSignals();
+    /*!
+     * Disconnects the signals for the directory watcher and the extension
+     * watcher.
+     */
+    void disconnectSignals();
+
+    /*!
+     * Creates extension metadata and instantiates an extension
+     * if it isn't already instantiated.
+     * \param desktopFile Full path of the desktop file to parse.
+     * \param currentExtensionsList List of current extensions.
+     * Used by updateAvailableExtensions to keep track of which
+     * extensions exist and which need to be removed.
+     */
+    void parseAndInstantiateExtension(const QString& desktopFile,
+                                      QSet<QString>* currentExtensionsList);
+    /*!
      * Instantiate an extension for an application extension metadata
      * \param metadata the metadata object of the extension
      * \return \c true if extension instantiated succesfully, \c false otherwise
      */
-    bool instantiateExtension(const MApplicationExtensionMetaData &metadata);
+    bool instantiateExtension(
+        QSharedPointer<const MApplicationExtensionMetaData> &metadata);
 
     /*!
      * Instantiates an in process extension.
-     *
-     * \param binary the name of the in process extension binary
+     * \param metadata metadata for the extension
      * \return \c true if the instantiation succeeds, \c false otherwise
      */
-    bool instantiateInProcessExtension(const QString &binary);
+    bool instantiateInProcessExtension(
+        QSharedPointer<const MApplicationExtensionMetaData> &metadata);
 
     /*!
      * Instantiate out of process extensions
-     * \param metadata for the extension
+     * \param metadata metadata for the extension
      * \return bool True if extension instantiated, else return false
      */
-    bool instantiateOutOfProcessExtension(const MApplicationExtensionMetaData &metadata);
+    bool instantiateOutOfProcessExtension(
+        QSharedPointer<const MApplicationExtensionMetaData> &metadata);
 
     /*!
      * Removes an extension that was defined in the desktop entry given as a parameter.
-     * \param metadata the relevant metadata.
+     * \param metadata metadata for the extension
      */
     void removeExtension(const MApplicationExtensionMetaData &metadata);
 
     /*!
      * Removes an in process extension that was loaded from the specified library.
-     * \param library the path name to the library
+     * \param metadata metadata for the extension
      */
-    void removeInProcessExtension(const QString &library);
+    void removeInProcessExtension(const MApplicationExtensionMetaData &metadata);
 
     /*!
      * Removes an out of process extension that was loaded from the specified metadata

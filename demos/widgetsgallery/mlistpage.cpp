@@ -36,13 +36,18 @@
 #include <MButton>
 #include <MTheme>
 #include <MAction>
+#include <MSortFilterProxyModel>
 
 #include <MComboBox>
 #include <MDebug>
 
-#include <MContentItem>
 #include <MWidgetAction>
 
+#include "phonebookcell.h"
+
+#include <MListFilter>
+#include <MTextEdit>
+#include <MPannableViewport>
 
 #include "utils.h"
 
@@ -53,16 +58,16 @@
 #endif
 
 MListPage::MListPage()
-  : model(NULL), 
+  : TemplatePage(TemplatePage::ListsGridsAndPopups),
+    model(NULL),
 #ifndef HAVE_N900
     proxyModel(NULL),
 #endif
     imageLoader(NULL),
-    list(NULL), 
-    currentSortingIndex(0), 
+    list(NULL),
+    currentSortingIndex(0),
     currentListModeIndex(0)
 {
-    gid = TemplatePage::ListsGridsAndMenus;
 }
 
 MListPage::~MListPage()
@@ -76,49 +81,67 @@ QString MListPage::timedemoTitle()
     return "List";
 }
 
-class MListContentItemCreator : public MAbstractCellCreator<MContentItem>
+class MListContentItemCreator : public MAbstractCellCreator<PhoneBookCell>
 {
 public:
-    MListContentItemCreator() : amountOfColumns(1) {
-
+    MListContentItemCreator() : amountOfColumns(1), highlightText("") {
     }
-
+    
+    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
+    {
+        // FIXME: It's a workaround against a bug, that if the layout is created and 
+        // set in constructor then the pixmaps are properly loaded.
+        PhoneBookCell *cell = dynamic_cast<PhoneBookCell *>(recycler.take(PhoneBookCell::staticMetaObject.className()));
+        if (cell == NULL) {
+            cell = new PhoneBookCell;
+            cell->initLayout();
+        }
+        updateCell(index, cell);
+        return cell;
+    }
+    
     void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MContentItem *contentItem = qobject_cast<MContentItem *>(cell);
-        if (contentItem == NULL) // TODO This is shouldn't happen, list must know what it doing, but with multiple columns it happens sometimes
+        PhoneBookCell *listCell = qobject_cast<PhoneBookCell*>(cell);
+        if (listCell == NULL) // TODO This is shouldn't happen, list must know what it doing, but with multiple columns it happens sometimes
             return;
-
+        
         QVariant data = index.data(Qt::DisplayRole);
-
+        
 #ifdef HAVE_N900
         Contact *contact = data.value<Contact*>();
-        contentItem->setTitle(contact->getName());
+        listCell->setTitle(contact->getName());
         QStringList numbers = contact->getPhoneNumbers();
         if (numbers.size() > 0) {
-            contentItem->setSubtitle(numbers[0]);
+            listCell->setSubtitle(numbers[0]);
         } else {
             QStringList addresses = contact->getEmailAddresses();
             if (addresses.size() > 0) {
-                contentItem->setSubtitle(addresses[0]);
+                listCell->setSubtitle(addresses[0]);
             } else {
-                contentItem->setSubtitle(QString());
+                listCell->setSubtitle(QString());
             }
         }
 
-        contentItem->setPixmap(contact->getAvatar());
+        cellContent->setImage(contact->getAvatar().toImage());
 #else
         PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(data.value<void *>());
-        contentItem->setTitle(entry->fullName);
-        contentItem->setSubtitle(entry->phoneNumber);
-        contentItem->setImage(entry->thumbnail);
+
+        if(highlightText == "")
+            listCell->setTitle(entry->fullName);
+        else {
+            QString highlightedTitle = entry->fullName;
+            highlightedTitle.replace(highlightText, "<b>" + highlightText + "</b>");
+            listCell->setTitle(highlightedTitle);
+        }
+
+        listCell->setSubtitle(entry->phoneNumber);
+        listCell->setImage(entry->thumbnail);
 #endif
 
-        contentItem->boundingRect();
-
-        updateContentItemMode(index, contentItem);
+        updateContentItemMode(index, listCell);
     }
-
-    void updateContentItemMode(const QModelIndex &index, MContentItem *contentItem) const {
+       
+    void updateContentItemMode(const QModelIndex &index, MListItem *contentItem) const {
         int flatRow = index.row();
         int row = flatRow / amountOfColumns;
         int column = flatRow % amountOfColumns;
@@ -134,48 +157,48 @@ public:
         if (columns == 1) {
             if (rows > 1){
                 if (row == 0)
-                    contentItem->setItemMode(MContentItem::SingleColumnTop);
+                    contentItem->setLayoutPosition(M::VerticalTopPosition);
                 else if (row < rows - 1)
-                    contentItem->setItemMode(MContentItem::SingleColumnCenter);
+                    contentItem->setLayoutPosition(M::VerticalCenterPosition);
                 else
-                    contentItem->setItemMode(MContentItem::SingleColumnBottom);
+                    contentItem->setLayoutPosition(M::VerticalBottomPosition);
             } else {
-                contentItem->setItemMode(MContentItem::Single);
+                contentItem->setLayoutPosition(M::DefaultPosition);
             }
         } else if (columns > 1) {
             if (rows > 1) {
                 if (row == 0) {
                     if (column == 0)
-                        contentItem->setItemMode(MContentItem::TopLeft);
+                        contentItem->setLayoutPosition(M::TopLeftPosition);
                     else if (column > 0 && column < columns - 1 && !last)
-                        contentItem->setItemMode(MContentItem::Top);
+                        contentItem->setLayoutPosition(M::TopCenterPosition);
                     else
-                        contentItem->setItemMode(MContentItem::TopRight);
+                        contentItem->setLayoutPosition(M::TopRightPosition);
                 } else if (row < rows - 1) {
                     if (column == 0)
-                        contentItem->setItemMode(MContentItem::Left);
+                        contentItem->setLayoutPosition(M::CenterLeftPosition);
                     else if (column > 0 && column < columns - 1 && !last)
-                        contentItem->setItemMode(MContentItem::Center);
+                        contentItem->setLayoutPosition(M::CenterPosition);
                     else if (flatRow + columns > totalItems)
-                        contentItem->setItemMode(MContentItem::BottomRight);
+                        contentItem->setLayoutPosition(M::BottomRightPosition);
                     else
-                        contentItem->setItemMode(MContentItem::Right);
+                        contentItem->setLayoutPosition(M::CenterRightPosition);
                 }
                 else {
                     if (column == 0)
-                        contentItem->setItemMode(MContentItem::BottomLeft);
+                        contentItem->setLayoutPosition(M::BottomLeftPosition);
                     else if (column > 0 && column < columns - 1 && !last)
-                        contentItem->setItemMode(MContentItem::Bottom);
+                        contentItem->setLayoutPosition(M::BottomCenterPosition);
                     else
-                        contentItem->setItemMode(MContentItem::BottomRight);
+                        contentItem->setLayoutPosition(M::BottomRightPosition);
                 }
             } else {
                 if (column == 0)
-                    contentItem->setItemMode(MContentItem::SingleRowLeft);
+                    contentItem->setLayoutPosition(M::HorizontalLeftPosition);
                 else if (column > 0 && column < columns - 1 && !last)
-                    contentItem->setItemMode(MContentItem::SingleRowCenter);
+                    contentItem->setLayoutPosition(M::HorizontalCenterPosition);
                 else
-                    contentItem->setItemMode(MContentItem::SingleRowRight);
+                    contentItem->setLayoutPosition(M::HorizontalRightPosition);
             }
         }
     }
@@ -185,8 +208,13 @@ public:
         amountOfColumns = columns;
     }
 
+    void highlightByText(QString text) {
+        highlightText = text;
+    }
+
 private:
     int amountOfColumns;
+    QString highlightText;
 };
 
 void MListPage::loadPicturesInVisibleItems()
@@ -206,9 +234,13 @@ void MListPage::setPlainListModel()
     imageLoader = new ContactImageLoader();
 #else
     model = new PhoneBookModel();
-
-    proxyModel = new PhoneBookSortedModel();
+    
+    proxyModel = new MSortFilterProxyModel();
+    proxyModel->setSortRole(PhoneBookModel::PhoneBookSortRole);
+    proxyModel->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
     proxyModel->setSourceModel(model);
+    
+    
     list->setItemModel(proxyModel);
 
     imageLoader = new PhoneBookImageLoader;
@@ -297,6 +329,12 @@ void MListPage::createActions()
     listIndexModes << "Hidden" << "Visible";
     combo = createComboBoxAction("List index mode", listIndexModes);
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListIndexVisibility(int)));
+
+    QStringList liveFilteringModes;
+    liveFilteringModes << "Off" << "On";
+    combo = createComboBoxAction("Live Filtering", liveFilteringModes);
+    combo->setCurrentIndex(1); // live filtering is enabled by default
+    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLiveFilteringMode(int)));
 }
 
 void MListPage::scrollToBottom()
@@ -315,18 +353,10 @@ void MListPage::changeSortingOrder(int index)
     case None:
         break;
     case Ascending:
-#ifdef HAVE_N900
-        model->sort(0, Qt::AscendingOrder);
-#else
         proxyModel->sort(0, Qt::AscendingOrder);
-#endif
         break;
     case Descending:
-#ifdef HAVE_N900
-        model->sort(0, Qt::DescendingOrder);
-#else
-        proxyModel->sort(0, Qt::DescendingOrder);
-#endif
+        proxyModel->sort(0, Qt::DescendingOrder);        
         break;
     }
     currentSortingIndex = index;
@@ -339,7 +369,6 @@ void MListPage::changeAmountOfItemInList(int index)
     Q_ASSERT(index >= 0 && index < 4);
 
     if(currentListModeIndex == Grouped) {
-        proxyModel->setShowGroups(false);
         list->setShowGroups(false);
     }
 
@@ -360,15 +389,14 @@ void MListPage::changeListMode(int index)
     case Plain:
         list->setShowGroups(false);
 #ifndef HAVE_N900
-        proxyModel->setShowGroups(false);
+        model->setGrouped(false);
 #endif
-
         break;
 
     case Grouped:
         list->setShowGroups(true);
 #ifndef HAVE_N900
-        proxyModel->setShowGroups(true);
+        model->setGrouped(true);        
 #endif
         break;
     }
@@ -421,6 +449,25 @@ void MListPage::changeListIndexVisibility(int index)
     list->setIndexVisible(indexVisible);
 }
 
+void MListPage::changeLiveFilteringMode(int index)
+{
+    Q_ASSERT(index >= 0 && index <= 1);
+    bool enableLF = (index == 1);
+
+    if(enableLF) {
+        list->filtering()->setEnabled(true);
+        list->filtering()->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
+        list->filtering()->editor()->setVisible(false);
+        connect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB())); 
+        connect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged())); 
+    } else {
+        disconnect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB())); 
+        disconnect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged())); 
+        list->filtering()->setEnabled(false);
+        showTextEdit(false);
+    }
+}
+
 void MListPage::itemClick(const QModelIndex &index)
 {
     mDebug("MListPage::itemClick") << "Row was clicked: " << index.row();
@@ -436,13 +483,51 @@ void MListPage::removeListItem()
 {
     if(longTappedIndex.isValid()) {
         mDebug("MListPage::removeListItem") << "Row about to be removed: " << longTappedIndex.row();
-        model->removeRow(longTappedIndex.row(), longTappedIndex.parent());
+#ifndef HAVE_N900
+        proxyModel->removeRow(longTappedIndex.row(), longTappedIndex.parent());
+#endif
     }
 }
 
 void MListPage::editListItem()
 {
     mDebug("MListPage::editListItem") << "Not implemented yet.";
+}
+
+void MListPage::liveFilteringTextChanged()
+{
+    // With HWKB live filtering text edit is shown when user enters text
+    if(list->filtering()->enabled() && list->filtering()->editor()->text() != "" && !list->filtering()->editor()->isOnDisplay())
+        showTextEdit(true);
+
+    // Highlighting matching live filtering text can be done by
+    // passing the text to cell creator and updating visible items
+    cellCreator->highlightByText(list->filtering()->editor()->text());
+    static_cast<PhoneBookModel*>(model)->updateData(list->firstVisibleItem(), list->lastVisibleItem());
+}
+
+void MListPage::filteringVKB()
+{
+    // With VKB live filtering text edit is shown when user pans the list up starting from top position
+    if(!list->filtering()->editor()->isOnDisplay()) {
+        showTextEdit(true);
+        list->filtering()->editor()->setFocus();
+    }
+}
+
+void MListPage::showTextEdit(bool show) {
+    QGraphicsWidget* panel = centralWidget();
+    QGraphicsLinearLayout* layout = (QGraphicsLinearLayout*) panel->layout();
+    MTextEdit* textEdit = list->filtering()->editor();
+    if(show && !textEdit->isOnDisplay()) {
+        layout->insertItem(0, textEdit);
+        textEdit->setVisible(true);
+        pannableViewport()->setPosition(QPointF(0,0));
+    } else if(textEdit->isOnDisplay()) {
+        textEdit->setVisible(false);
+        layout->removeAt(0);
+        textEdit->setText("");
+    }
 }
 
 void MListPage::createContent()
@@ -476,6 +561,10 @@ void MListPage::createContent()
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClick(QModelIndex)));
     connect(list, SIGNAL(itemLongTapped(QModelIndex)), this, SLOT(itemLongTapped(QModelIndex)));
+
+    changeLiveFilteringMode(1); // live filtering is enabled by default
+    
+    retranslateUi();
 }
 
 void MListPage::retranslateUi()

@@ -133,6 +133,8 @@ QtMaemo6StylePrivate::QtMaemo6StylePrivate()
       m_menuBar(0),
       m_kinetic(0)
 {
+    m_excludeClasses.append("QShapedPixmapWidget");
+    m_excludeClasses.append("QTipLabel");
 }
 
 QtMaemo6StylePrivate::~QtMaemo6StylePrivate()
@@ -861,6 +863,10 @@ void QtMaemo6Style::polish(QWidget *widget)
     Q_D(QtMaemo6Style);
 
     if(qobject_cast<QDesktopWidget*>(widget))
+        return;
+
+    //Qt internal class, skip this
+    if(d->m_excludeClasses.contains(widget->metaObject()->className()))
         return;
 
     if( !isStyled( widget ) ) {

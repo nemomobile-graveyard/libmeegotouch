@@ -127,6 +127,8 @@ int usage(const char *program)
     std::cerr << std::setw(7) << "                             add - Adds a new notification or notification group." << std::endl;
     std::cerr << std::setw(7) << "                             update - Updates an existing notification or notification group." << std::endl;
     std::cerr << std::setw(7) << "                             remove - Removes an existing notification or notification group." << std::endl;
+    std::cerr << std::setw(7) << "                                      A specific notification or group can be specified with the -i argument." << std::endl;
+    std::cerr << std::setw(7) << "                                      If no id is given, all the notifications will be removed." << std::endl;
     std::cerr << std::setw(7) << "  -g, --group                Whether to operate on notification groups instead of notifications." << std::endl;
     std::cerr << std::setw(7) << "  -i, --id=ID                The notification/notification group ID to use." << std::endl;
     std::cerr << std::setw(7) << "  -c, --count=NUMBER         The number of notifications. This parameter has no effect when the action is 'remove'" << std::endl;
@@ -188,7 +190,7 @@ int parseArguments(int argc, char *argv[])
         if (toolAction == Undefined ||
                 (toolAction == Add && argc < optind + 1) ||
                 (toolAction == Update && argc < optind + 4) ||
-                ((toolAction == Update || toolAction == Remove) && id == 0)) {
+                (toolAction == Update && id == 0)) {
             return usage(argv[0]);
         }
     }
@@ -213,12 +215,14 @@ int main(int argc, char *argv[])
     // Calls notificationIdList from NotificationManager. Returns size of the list from main.
     if (listMode) {
         QList<MNotification *> list = MNotification::notifications();
+        result = list.size();
         std::cout << "\n" << applicationName.toUtf8().data() << " has " << list.size() << " notifications." << std::endl;
         std::cout << "Notification id(s):" << std::endl;
         foreach(MNotification *notification, list) {
             std::cout << static_cast<MNotificationToolNotification *>(notification)->id() << std::endl;
+            delete notification;
         }
-        return list.size();
+        list.clear();
     }
 
     // Execute the desired action
@@ -309,12 +313,24 @@ int main(int argc, char *argv[])
         break;
     }
     case Remove:
-        if (groupMode) {
-            MNotificationToolNotificationGroup group(id);
-            group.remove();
+        if (id > 0) {
+            if (groupMode) {
+                MNotificationToolNotificationGroup group(id);
+                group.remove();
+            } else {
+                MNotificationToolNotification notification(id);
+                notification.remove();
+            }
         } else {
-            MNotificationToolNotification notification(id);
-            notification.remove();
+            // Remove all the notifications for this user
+            QList<MNotification *> list = MNotification::notifications();
+            foreach(MNotification *notification, list) {
+                notification->remove();
+                delete notification;
+            }
+            list.clear();
+
+            // There's no way to query the groups of the user, so there's no way to remove all the groups either :(
         }
         break;
     default:

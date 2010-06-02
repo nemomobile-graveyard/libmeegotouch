@@ -20,7 +20,7 @@
 #ifndef PUSHBUTTONPAGE_H
 #define PUSHBUTTONPAGE_H
 
-#include "listpage.h"
+#include "mainpage.h"
 #include "templatepage.h"
 #include <MApplicationPage>
 #include <MLayout>

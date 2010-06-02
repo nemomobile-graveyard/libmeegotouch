@@ -37,17 +37,27 @@ QDBusPendingReply<> MApplicationIfProxy::close()
 
 QDBusPendingReply<> MApplicationIfProxy::exit()
 {
-    return asyncCall(QLatin1String("exit"));
+    // here we only do the dbus call, when the interface is valid,
+    // i.e. there is a program listening "on the other side" of the
+    // dbus connection.
+    if ( isValid() )
+    {
+        return asyncCall(QLatin1String("exit"));
+    }
+    else
+    {
+        return QDBusPendingReply<>();
+    }
 }
 
 QDBusPendingReply<> MApplicationIfProxy::launch()
 {
-    return asyncCallWithArgumentList(QLatin1String("launch"), QList<QVariant>());
+    return callWithArgumentList(QDBus::BlockWithGui, QLatin1String("launch"), QList<QVariant>());
 }
 
 QDBusPendingReply<> MApplicationIfProxy::launch(const QStringList &parameters)
 {
     QList<QVariant> argumentList;
     argumentList << qVariantFromValue(parameters);
-    return asyncCallWithArgumentList(QLatin1String("launch"), argumentList);
+    return callWithArgumentList(QDBus::BlockWithGui, QLatin1String("launch"), argumentList);
 }

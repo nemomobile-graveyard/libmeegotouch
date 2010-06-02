@@ -23,12 +23,6 @@ contains(DEFINES, HAVE_DBUS) {
     include(notification/notification.pri)
 }
 
-contains(DEFINES, HAVE_ICU) {
-    include(icu-extradata/extradata.pri)
-    EXTRADATA_SOURCE=icu-extradata/extradata.txt
-}
-
-
 # install .prf files
 system(test -w $$[QT_INSTALL_DATA]) {
     install_prf.path = $$[QT_INSTALL_DATA]/mkspecs/features

@@ -29,7 +29,7 @@
 #include "swaphook.h"
 
 class QString;
-class ListPage;
+class MainPage;
 class SwapHook;
 class TimedemoPage;
 class TimedemoBenchmark;
@@ -67,7 +67,7 @@ class Timedemo : public QObject
 {
     Q_OBJECT
 public:
-    Timedemo(ListPage *listPage, const QStringList& demoPageTitles);
+    Timedemo(MainPage *mainPage, const QStringList& demoPageTitles);
 
     void setOutputCsv(const QString &filename);
     void setFramelog(const QString &filename);
@@ -86,7 +86,7 @@ private:
     void displayBenchmarkResults();
     void saveFramelog();
 
-    ListPage *m_pFrontPage;
+    MainPage *m_pFrontPage;
 
     typedef QHash<QString, BenchmarkResult> BenchmarkResultHash;
     QVector<BenchmarkResultHash> benchmarkResults;

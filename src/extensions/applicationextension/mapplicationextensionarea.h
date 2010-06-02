@@ -94,7 +94,9 @@ public:
 
     /*!
      * Initializes the application extension area. All setters introduced by
-     * this class must be called before the area is initialized. Initialization
+     * this class must be called before the area is initialized, and the
+     * signals must be connected, because calling init() will result in
+     * the extensions being created. Initialization
      * will fail if no interface name has been provided or if the area has
      * already been initialized.
      *

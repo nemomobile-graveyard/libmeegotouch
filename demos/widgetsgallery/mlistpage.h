@@ -34,13 +34,14 @@ class ContactModel;
 class ContactImageLoader;
 #else
 class PhoneBookModel;
-class PhoneBookSortedModel;
+class MSortFilterProxyModel;
 class PhoneBookImageLoader;
 #endif
 
 class MList;
 class MComboBox;
 class MListContentItemCreator;
+class MAbstractItemModel;
 
 class MListPage: public TemplatePage
 {
@@ -79,6 +80,7 @@ public slots:
     void changeSelectionMode(int index);
     void changeSeparatorsMode(int index);
     void changeListIndexVisibility(int index);
+    void changeLiveFilteringMode(int index);
 
     void scrollToBottom();
     void scrollToTop();
@@ -89,11 +91,15 @@ public slots:
     void removeListItem();
     void editListItem();
 
+    void liveFilteringTextChanged();
+    void filteringVKB();
+
 protected:
     void retranslateUi();
 
 private:
     MComboBox *createComboBoxAction(const QString &title, const QStringList &itemsList);
+    void showTextEdit(bool show);
 
 private:
 
@@ -101,8 +107,8 @@ private:
     ContactModel* model;
     ContactImageLoader* imageLoader;
 #else
-    PhoneBookModel *model;
-    PhoneBookSortedModel *proxyModel;
+    MAbstractItemModel *model;
+    MSortFilterProxyModel *proxyModel;
     PhoneBookImageLoader *imageLoader;
 #endif
 

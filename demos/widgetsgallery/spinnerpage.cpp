@@ -40,7 +40,7 @@
 static const int ImageSize = 64;
 
 SpinnerPage::SpinnerPage() :
-    TemplatePage(),
+    TemplatePage(TemplatePage::SimpleWidgets),
     container(NULL),
     spinner(NULL),
     spinnerLayout1(NULL),
@@ -49,7 +49,6 @@ SpinnerPage::SpinnerPage() :
     description(NULL),
     view(Unknown)
 {
-    gid = TemplatePage::IndicatorsAndNotifications;
 }
 
 SpinnerPage::~SpinnerPage()
@@ -77,10 +76,10 @@ void SpinnerPage::createContent()
     connect(action, SIGNAL(triggered()), this, SLOT(inContainerHeader()));
     addAction(action);
 
-    //% "In view menu"
+    //% "In application menu"
     action = new MAction(qtTrId("xx_spinner_page_menu"), this);
     action->setLocation(MAction::ApplicationMenuLocation);
-    connect(action, SIGNAL(triggered()), this, SLOT(inViewmenu()));
+    connect(action, SIGNAL(triggered()), this, SLOT(inApplicationMenu()));
     addAction(action);
 
     //% "In dialog"
@@ -195,7 +194,7 @@ void SpinnerPage::timeout()
     }
 }
 
-void SpinnerPage::inViewmenu()
+void SpinnerPage::inApplicationMenu()
 {
     reset();
     view = Menu;

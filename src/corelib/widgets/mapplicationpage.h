@@ -42,7 +42,7 @@ class MPannableViewport;
     the assiciated show animation for the page. If you want to show a page instantly, refer to
     MSceneManager API.
 
-    A page can contain actions, which will be shown in the navigation bar or on a view menu.
+    A page can contain actions, which will be shown in the navigation bar in the application menu.
 
     \li addAction()
     \li actions()

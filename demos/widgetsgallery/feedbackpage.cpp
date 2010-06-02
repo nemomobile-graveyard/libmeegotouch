@@ -31,7 +31,7 @@
 #include <MApplication>
 
 FeedbackPage::FeedbackPage() :
-    TemplatePage(),
+        TemplatePage(TemplatePage::UserInput),
     feedbackButton1(0),
     feedbackButton2(0),
     feedbackButton3(0),
@@ -39,7 +39,6 @@ FeedbackPage::FeedbackPage() :
     feedbackButton5(0),
     feedbackButton6(0)
 {
-    gid = TemplatePage::InputFeedback;
 }
 
 FeedbackPage::~FeedbackPage()

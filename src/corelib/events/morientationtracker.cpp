@@ -77,10 +77,12 @@ void MOrientationTrackerPrivate::topEdgeChanged()
         angle = M::Angle270;
         orientation = M::Portrait;
     } else if (edge == "right") {
-        angle = M::Angle90;
+        //angle = M::Angle90; Disabled for now
+        angle = M::Angle270;
         orientation = M::Portrait;
     } else if (edge == "bottom") {
-        angle = M::Angle180;
+        //angle = M::Angle180; Disabled for now
+        angle = M::Angle0;
     } else {
         angle = M::Angle0;
     }

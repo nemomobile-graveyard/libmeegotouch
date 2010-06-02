@@ -52,6 +52,11 @@ MComponentCachePrivate::~MComponentCachePrivate()
         delete glWidgetOfOtherWindow;
     if (mApplicationWindowInstance != 0)
         delete mApplicationWindowInstance;
+
+    while (!shareWidgetsCache.isEmpty()) {
+        FormatWidgetPair pair = shareWidgetsCache.takeFirst();
+        delete pair.second;
+    }
 }
 
 bool MComponentCachePrivate::populating()
@@ -81,13 +86,33 @@ void MComponentCachePrivate::populateForMApplication()
     cacheBeingPopulated = false;
 }
 
-QGLWidget* MComponentCachePrivate::createNewGlWidget()
+QGLWidget* MComponentCachePrivate::createNewGlWidget(const QGLFormat* format)
 {
     QGLFormat fmt;
-    // disable multisampling, is enabled by default in Qt                                                                                          
-    fmt.setSampleBuffers(false);
-    fmt.setSamples(0);
-    return new QGLWidget(fmt);
+
+    if (!format) {
+        // disable multisampling, is enabled by default in Qt
+        fmt.setSampleBuffers(false);
+        fmt.setSamples(0);
+    }
+    else {
+        fmt = *format;
+    }
+
+    QGLWidget* shareWidget = NULL;
+    foreach(FormatWidgetPair pair, shareWidgetsCache) {
+        if (pair.first == fmt)  {
+            shareWidget = pair.second;
+            break;
+        }
+    }
+
+    if (!shareWidget) {
+       shareWidget = new QGLWidget(fmt);
+       shareWidgetsCache.append(qMakePair(fmt, shareWidget));
+    }
+
+    return new QGLWidget(fmt, NULL, shareWidget);
 }
 
 MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service)
@@ -199,17 +224,21 @@ MApplicationWindow* MComponentCachePrivate::mApplicationWindow()
     return returnValue;
 }
 
-QGLWidget* MComponentCachePrivate::glWidget()
+QGLWidget* MComponentCachePrivate::glWidget(const QGLFormat* format)
 {
     QGLWidget *returnValue;
-    if (cacheBeingPopulated && glWidgetOfmApplicationWindowInstance != 0) {
+    if (cacheBeingPopulated && glWidgetOfmApplicationWindowInstance != 0
+        && (!format || glWidgetOfmApplicationWindowInstance->format() == *format))
+    {
         returnValue = glWidgetOfmApplicationWindowInstance;
         glWidgetOfmApplicationWindowInstance = 0;
-    } else if (glWidgetOfOtherWindow != 0) {
+    } else if (glWidgetOfOtherWindow != 0
+               && (!format || glWidgetOfOtherWindow->format() == *format))
+    {
         returnValue = glWidgetOfOtherWindow;
         glWidgetOfOtherWindow = 0;
     } else {
-        returnValue = createNewGlWidget();
+        returnValue = createNewGlWidget(format);
     }
     return returnValue;
 }
@@ -241,4 +270,9 @@ MApplicationWindow* MComponentCache::mApplicationWindow()
 QGLWidget* MComponentCache::glWidget()
 {
     return d_ptr->glWidget();
+}
+
+QGLWidget* MComponentCache::glWidget(const QGLFormat& format)
+{
+    return d_ptr->glWidget(&format);
 }

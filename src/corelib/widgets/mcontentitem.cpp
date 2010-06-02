@@ -69,6 +69,11 @@ QImage MContentItem::image() const
     return d->image;
 }
 
+QString MContentItem::imageID() const
+{
+    return model()->itemImageID();
+}
+
 QString MContentItem::title() const
 {
     return model()->title();
@@ -103,11 +108,12 @@ void MContentItem::setImage(const QImage &image)
     model()->setItemImage(d->image);
 }
 
-void MContentItem::setImage(const QString &id)
+void MContentItem::setImageID(const QString &id, const QSize &size)
 {
-    Q_D(MContentItem);
-    d->imageID = id;
-    model()->setItemImageID(d->imageID);
+    model()->beginTransaction();
+    model()->setItemImageID(id);
+    model()->setItemImageSize(size);
+    model()->commitTransaction();
 }
 
 void MContentItem::setTitle(const QString &text)
@@ -153,6 +159,14 @@ void MContentItem::setOptionalImage(const QImage &image)
     model()->setOptionalImage(d->optionalImage);
 }
 
+void MContentItem::setOptionalImageID(const QString &id, const QSize &size)
+{
+    model()->beginTransaction();
+    model()->setOptionalImageID(id);
+    model()->setOptionalImageSize(size);
+    model()->commitTransaction();
+}
+
 QPixmap MContentItem::optionalPixmap() const
 {
     Q_D(const MContentItem);
@@ -163,6 +177,11 @@ QImage MContentItem::optionalImage() const
 {
     Q_D(const MContentItem);
     return d->optionalImage;
+}
+
+QString MContentItem::optionalImageID() const
+{
+    return model()->optionalImageID();
 }
 
 void MContentItem::setAdditionalItem(MWidget* widget)

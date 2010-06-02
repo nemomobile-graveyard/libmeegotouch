@@ -22,9 +22,15 @@
 
 #include <QRectF>
 #include <QPointF>
+#include <QVariantAnimation>
 #include "mphysics2dpanning.h"
 
 class QTimeLine;
+
+class PanningAnimation : public QVariantAnimation
+{
+    virtual void updateCurrentValue(const QVariant&) {}
+};
 
 class MPhysics2DPanningPrivate
 {
@@ -45,8 +51,7 @@ public:
     qreal   pointerSpringY;
     QPointF sceneLastPos;
 
-    QTimeLine *timeLine;
-    int currFrame;
+    PanningAnimation *panningAnimation;
 
     // Integration algorithm constants
     bool  pointerPressed;
@@ -57,7 +62,7 @@ public:
     qreal borderFrictionC;
     Qt::Orientations panDirection;
 
-    void _q_integrator(int frame);
+    void _q_integrator(const QVariant &value);
 
 protected:
     MPhysics2DPanning *q_ptr;

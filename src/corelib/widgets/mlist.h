@@ -31,6 +31,7 @@ class QItemSelectionModel;
 class QAbstractItemModel;
 class QModelIndex;
 class MCellCreator;
+class MListFilter;
 
 /*!
   \class MList
@@ -319,6 +320,11 @@ public:
       */
     bool indexVisible();
 
+    /*!
+        \return filter which implements live filtering of list contents.
+     */
+    MListFilter *filtering() const;
+
 public Q_SLOTS:
     /*!
         \brief Convenience function - Select the given item.
@@ -391,6 +397,11 @@ protected:
        Notification of context menu event.
     */
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+
+    /*!
+        Handling of key events
+     */
+    virtual void keyPressEvent(QKeyEvent *event);
 
 private:
     Q_DECLARE_PRIVATE(MList)

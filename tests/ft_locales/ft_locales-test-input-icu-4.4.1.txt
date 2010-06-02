@@ -948,18 +948,18 @@ ca	Date and time short (Islamic Calendar)	18/07/29 12:31
 ca	Date and time medium (Islamic Calendar)	18/07/1429 12:31:00
 ca	Date and time long (Islamic Calendar)	18 Rajab de 1429 12:31:00 GMT+00:00
 ca	Date and time full (Islamic Calendar)	dilluns 18 Rajab de 1429 12:31:00 GMT+00:00
-ca	Name of month 01 (Gregorian Calendar)	de gener
-ca	Name of month 02 (Gregorian Calendar)	de febrer
-ca	Name of month 03 (Gregorian Calendar)	de març
-ca	Name of month 04 (Gregorian Calendar)	d’abril
-ca	Name of month 05 (Gregorian Calendar)	de maig
-ca	Name of month 06 (Gregorian Calendar)	de juny
-ca	Name of month 07 (Gregorian Calendar)	de juliol
-ca	Name of month 08 (Gregorian Calendar)	d’agost
-ca	Name of month 09 (Gregorian Calendar)	de setembre
-ca	Name of month 10 (Gregorian Calendar)	d’octubre
-ca	Name of month 11 (Gregorian Calendar)	de novembre
-ca	Name of month 12 (Gregorian Calendar)	de desembre
+ca	Name of month 01 (Gregorian Calendar)	gener
+ca	Name of month 02 (Gregorian Calendar)	febrer
+ca	Name of month 03 (Gregorian Calendar)	març
+ca	Name of month 04 (Gregorian Calendar)	abril
+ca	Name of month 05 (Gregorian Calendar)	maig
+ca	Name of month 06 (Gregorian Calendar)	juny
+ca	Name of month 07 (Gregorian Calendar)	juliol
+ca	Name of month 08 (Gregorian Calendar)	agost
+ca	Name of month 09 (Gregorian Calendar)	setembre
+ca	Name of month 10 (Gregorian Calendar)	octubre
+ca	Name of month 11 (Gregorian Calendar)	novembre
+ca	Name of month 12 (Gregorian Calendar)	desembre
 ca	Name of month 01 (Islamic Calendar)	Muharram
 ca	Name of month 02 (Islamic Calendar)	Safar
 ca	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -1000,18 +1000,18 @@ ca_ES	Date and time short (Islamic Calendar)	18/07/29 12:31
 ca_ES	Date and time medium (Islamic Calendar)	18/07/1429 12:31:00
 ca_ES	Date and time long (Islamic Calendar)	18 Rajab de 1429 12:31:00 GMT+00:00
 ca_ES	Date and time full (Islamic Calendar)	dilluns 18 Rajab de 1429 12:31:00 GMT+00:00
-ca_ES	Name of month 01 (Gregorian Calendar)	de gener
-ca_ES	Name of month 02 (Gregorian Calendar)	de febrer
-ca_ES	Name of month 03 (Gregorian Calendar)	de març
-ca_ES	Name of month 04 (Gregorian Calendar)	d’abril
-ca_ES	Name of month 05 (Gregorian Calendar)	de maig
-ca_ES	Name of month 06 (Gregorian Calendar)	de juny
-ca_ES	Name of month 07 (Gregorian Calendar)	de juliol
-ca_ES	Name of month 08 (Gregorian Calendar)	d’agost
-ca_ES	Name of month 09 (Gregorian Calendar)	de setembre
-ca_ES	Name of month 10 (Gregorian Calendar)	d’octubre
-ca_ES	Name of month 11 (Gregorian Calendar)	de novembre
-ca_ES	Name of month 12 (Gregorian Calendar)	de desembre
+ca_ES	Name of month 01 (Gregorian Calendar)	gener
+ca_ES	Name of month 02 (Gregorian Calendar)	febrer
+ca_ES	Name of month 03 (Gregorian Calendar)	març
+ca_ES	Name of month 04 (Gregorian Calendar)	abril
+ca_ES	Name of month 05 (Gregorian Calendar)	maig
+ca_ES	Name of month 06 (Gregorian Calendar)	juny
+ca_ES	Name of month 07 (Gregorian Calendar)	juliol
+ca_ES	Name of month 08 (Gregorian Calendar)	agost
+ca_ES	Name of month 09 (Gregorian Calendar)	setembre
+ca_ES	Name of month 10 (Gregorian Calendar)	octubre
+ca_ES	Name of month 11 (Gregorian Calendar)	novembre
+ca_ES	Name of month 12 (Gregorian Calendar)	desembre
 ca_ES	Name of month 01 (Islamic Calendar)	Muharram
 ca_ES	Name of month 02 (Islamic Calendar)	Safar
 ca_ES	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -1298,8 +1298,8 @@ de_BE	Name of weekday 04 (Islamic Calendar)	Donnerstag
 de_BE	Name of weekday 05 (Islamic Calendar)	Freitag
 de_BE	Name of weekday 06 (Islamic Calendar)	Samstag
 de_BE	Name of weekday 07 (Islamic Calendar)	Sonntag
-de_CH	Language endonym	de
-de_CH	Country endonym	CH
+de_CH	Language endonym	Deutsch
+de_CH	Country endonym	Schweiz
 de_CH	Floating Point Number	-123'456'789.012
 de_CH	Percent value	-1'234.5679 %
 de_CH	Currency value	€ 1'234.56
@@ -1520,18 +1520,18 @@ el	Date and time short (Islamic Calendar)	18/7/29 12:31 μ.μ.
 el	Date and time medium (Islamic Calendar)	18 Raj. 1429 12:31:00 μ.μ.
 el	Date and time long (Islamic Calendar)	18 Rajab 1429 12:31:00 μ.μ. GMT+00:00
 el	Date and time full (Islamic Calendar)	Δευτέρα, 18 Rajab 1429 12:31:00 μ.μ. GMT+00:00
-el	Name of month 01 (Gregorian Calendar)	Ιανουαρίου
-el	Name of month 02 (Gregorian Calendar)	Φεβρουαρίου
-el	Name of month 03 (Gregorian Calendar)	Μαρτίου
-el	Name of month 04 (Gregorian Calendar)	Απριλίου
-el	Name of month 05 (Gregorian Calendar)	Μαΐου
-el	Name of month 06 (Gregorian Calendar)	Ιουνίου
-el	Name of month 07 (Gregorian Calendar)	Ιουλίου
-el	Name of month 08 (Gregorian Calendar)	Αυγούστου
-el	Name of month 09 (Gregorian Calendar)	Σεπτεμβρίου
-el	Name of month 10 (Gregorian Calendar)	Οκτωβρίου
-el	Name of month 11 (Gregorian Calendar)	Νοεμβρίου
-el	Name of month 12 (Gregorian Calendar)	Δεκεμβρίου
+el	Name of month 01 (Gregorian Calendar)	Ιανουάριος
+el	Name of month 02 (Gregorian Calendar)	Φεβρουάριος
+el	Name of month 03 (Gregorian Calendar)	Μάρτιος
+el	Name of month 04 (Gregorian Calendar)	Απρίλιος
+el	Name of month 05 (Gregorian Calendar)	Μάιος
+el	Name of month 06 (Gregorian Calendar)	Ιούνιος
+el	Name of month 07 (Gregorian Calendar)	Ιούλιος
+el	Name of month 08 (Gregorian Calendar)	Αύγουστος
+el	Name of month 09 (Gregorian Calendar)	Σεπτέμβριος
+el	Name of month 10 (Gregorian Calendar)	Οκτώβριος
+el	Name of month 11 (Gregorian Calendar)	Νοέμβριος
+el	Name of month 12 (Gregorian Calendar)	Δεκέμβριος
 el	Name of month 01 (Islamic Calendar)	Muharram
 el	Name of month 02 (Islamic Calendar)	Safar
 el	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -1572,18 +1572,18 @@ el_CY	Date and time short (Islamic Calendar)	18/7/29 12:31 μ.μ.
 el_CY	Date and time medium (Islamic Calendar)	18 Raj. 1429 12:31:00 μ.μ.
 el_CY	Date and time long (Islamic Calendar)	18 Rajab 1429 12:31:00 μ.μ. GMT+00:00
 el_CY	Date and time full (Islamic Calendar)	Δευτέρα, 18 Rajab 1429 12:31:00 μ.μ. GMT+00:00
-el_CY	Name of month 01 (Gregorian Calendar)	Ιανουαρίου
-el_CY	Name of month 02 (Gregorian Calendar)	Φεβρουαρίου
-el_CY	Name of month 03 (Gregorian Calendar)	Μαρτίου
-el_CY	Name of month 04 (Gregorian Calendar)	Απριλίου
-el_CY	Name of month 05 (Gregorian Calendar)	Μαΐου
-el_CY	Name of month 06 (Gregorian Calendar)	Ιουνίου
-el_CY	Name of month 07 (Gregorian Calendar)	Ιουλίου
-el_CY	Name of month 08 (Gregorian Calendar)	Αυγούστου
-el_CY	Name of month 09 (Gregorian Calendar)	Σεπτεμβρίου
-el_CY	Name of month 10 (Gregorian Calendar)	Οκτωβρίου
-el_CY	Name of month 11 (Gregorian Calendar)	Νοεμβρίου
-el_CY	Name of month 12 (Gregorian Calendar)	Δεκεμβρίου
+el_CY	Name of month 01 (Gregorian Calendar)	Ιανουάριος
+el_CY	Name of month 02 (Gregorian Calendar)	Φεβρουάριος
+el_CY	Name of month 03 (Gregorian Calendar)	Μάρτιος
+el_CY	Name of month 04 (Gregorian Calendar)	Απρίλιος
+el_CY	Name of month 05 (Gregorian Calendar)	Μάιος
+el_CY	Name of month 06 (Gregorian Calendar)	Ιούνιος
+el_CY	Name of month 07 (Gregorian Calendar)	Ιούλιος
+el_CY	Name of month 08 (Gregorian Calendar)	Αύγουστος
+el_CY	Name of month 09 (Gregorian Calendar)	Σεπτέμβριος
+el_CY	Name of month 10 (Gregorian Calendar)	Οκτώβριος
+el_CY	Name of month 11 (Gregorian Calendar)	Νοέμβριος
+el_CY	Name of month 12 (Gregorian Calendar)	Δεκέμβριος
 el_CY	Name of month 01 (Islamic Calendar)	Muharram
 el_CY	Name of month 02 (Islamic Calendar)	Safar
 el_CY	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -1624,18 +1624,18 @@ el_GR	Date and time short (Islamic Calendar)	18/7/29 12:31 μ.μ.
 el_GR	Date and time medium (Islamic Calendar)	18 Raj. 1429 12:31:00 μ.μ.
 el_GR	Date and time long (Islamic Calendar)	18 Rajab 1429 12:31:00 μ.μ. GMT+00:00
 el_GR	Date and time full (Islamic Calendar)	Δευτέρα, 18 Rajab 1429 12:31:00 μ.μ. GMT+00:00
-el_GR	Name of month 01 (Gregorian Calendar)	Ιανουαρίου
-el_GR	Name of month 02 (Gregorian Calendar)	Φεβρουαρίου
-el_GR	Name of month 03 (Gregorian Calendar)	Μαρτίου
-el_GR	Name of month 04 (Gregorian Calendar)	Απριλίου
-el_GR	Name of month 05 (Gregorian Calendar)	Μαΐου
-el_GR	Name of month 06 (Gregorian Calendar)	Ιουνίου
-el_GR	Name of month 07 (Gregorian Calendar)	Ιουλίου
-el_GR	Name of month 08 (Gregorian Calendar)	Αυγούστου
-el_GR	Name of month 09 (Gregorian Calendar)	Σεπτεμβρίου
-el_GR	Name of month 10 (Gregorian Calendar)	Οκτωβρίου
-el_GR	Name of month 11 (Gregorian Calendar)	Νοεμβρίου
-el_GR	Name of month 12 (Gregorian Calendar)	Δεκεμβρίου
+el_GR	Name of month 01 (Gregorian Calendar)	Ιανουάριος
+el_GR	Name of month 02 (Gregorian Calendar)	Φεβρουάριος
+el_GR	Name of month 03 (Gregorian Calendar)	Μάρτιος
+el_GR	Name of month 04 (Gregorian Calendar)	Απρίλιος
+el_GR	Name of month 05 (Gregorian Calendar)	Μάιος
+el_GR	Name of month 06 (Gregorian Calendar)	Ιούνιος
+el_GR	Name of month 07 (Gregorian Calendar)	Ιούλιος
+el_GR	Name of month 08 (Gregorian Calendar)	Αύγουστος
+el_GR	Name of month 09 (Gregorian Calendar)	Σεπτέμβριος
+el_GR	Name of month 10 (Gregorian Calendar)	Οκτώβριος
+el_GR	Name of month 11 (Gregorian Calendar)	Νοέμβριος
+el_GR	Name of month 12 (Gregorian Calendar)	Δεκέμβριος
 el_GR	Name of month 01 (Islamic Calendar)	Muharram
 el_GR	Name of month 02 (Islamic Calendar)	Safar
 el_GR	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -4120,14 +4120,14 @@ fa	Date and time short (Islamic Calendar)	۲۹/۷/۱۸ ه‍. ق.،‏ ۱۲:۳۱
 fa	Date and time medium (Islamic Calendar)	۱۴۲۹/۷/۱۸ ه‍. ق.،‏ ۱۲:۳۱:۰۰
 fa	Date and time long (Islamic Calendar)	۱۸ رجب ۱۴۲۹ ه‍. ق.، ساعت ۱۲:۳۱:۰۰ (GMT+۰۰:۰۰)
 fa	Date and time full (Islamic Calendar)	دوشنبه ۱۸ رجب ۱۴۲۹ هجری قمری، ساعت ۱۲:۳۱:۰۰ (GMT+۰۰:۰۰)
-fa	Name of month 01 (Gregorian Calendar)	ژانویهٔ
-fa	Name of month 02 (Gregorian Calendar)	فوریهٔ
+fa	Name of month 01 (Gregorian Calendar)	ژانویه
+fa	Name of month 02 (Gregorian Calendar)	فوریه
 fa	Name of month 03 (Gregorian Calendar)	مارس
 fa	Name of month 04 (Gregorian Calendar)	آوریل
-fa	Name of month 05 (Gregorian Calendar)	می
-fa	Name of month 06 (Gregorian Calendar)	جون
-fa	Name of month 07 (Gregorian Calendar)	جولای
-fa	Name of month 08 (Gregorian Calendar)	آگوست
+fa	Name of month 05 (Gregorian Calendar)	مه
+fa	Name of month 06 (Gregorian Calendar)	ژوئن
+fa	Name of month 07 (Gregorian Calendar)	ژوئیه
+fa	Name of month 08 (Gregorian Calendar)	اوت
 fa	Name of month 09 (Gregorian Calendar)	سپتامبر
 fa	Name of month 10 (Gregorian Calendar)	اکتبر
 fa	Name of month 11 (Gregorian Calendar)	نوامبر
@@ -4172,18 +4172,18 @@ fa_AF	Date and time short (Islamic Calendar)	۲۹/۷/۱۸ ه‍. ق.،‏ ۱۲:�
 fa_AF	Date and time medium (Islamic Calendar)	۱۴۲۹/۷/۱۸ ه‍. ق.،‏ ۱۲:۳۱:۰۰
 fa_AF	Date and time long (Islamic Calendar)	۱۸ رجب ۱۴۲۹ ه‍. ق.، ساعت ۱۲:۳۱:۰۰ (GMT+۰۰:۰۰)
 fa_AF	Date and time full (Islamic Calendar)	دوشنبه ۱۸ رجب ۱۴۲۹ هجری قمری، ساعت ۱۲:۳۱:۰۰ (GMT+۰۰:۰۰)
-fa_AF	Name of month 01 (Gregorian Calendar)	جنوری
-fa_AF	Name of month 02 (Gregorian Calendar)	فبروری
-fa_AF	Name of month 03 (Gregorian Calendar)	مارچ
-fa_AF	Name of month 04 (Gregorian Calendar)	اپریل
-fa_AF	Name of month 05 (Gregorian Calendar)	می
-fa_AF	Name of month 06 (Gregorian Calendar)	جون
-fa_AF	Name of month 07 (Gregorian Calendar)	جولای
-fa_AF	Name of month 08 (Gregorian Calendar)	اگست
-fa_AF	Name of month 09 (Gregorian Calendar)	سپتمبر
-fa_AF	Name of month 10 (Gregorian Calendar)	اکتوبر
-fa_AF	Name of month 11 (Gregorian Calendar)	نومبر
-fa_AF	Name of month 12 (Gregorian Calendar)	دسمبر
+fa_AF	Name of month 01 (Gregorian Calendar)	ژانویه
+fa_AF	Name of month 02 (Gregorian Calendar)	فوریه
+fa_AF	Name of month 03 (Gregorian Calendar)	مارس
+fa_AF	Name of month 04 (Gregorian Calendar)	آوریل
+fa_AF	Name of month 05 (Gregorian Calendar)	مه
+fa_AF	Name of month 06 (Gregorian Calendar)	ژوئن
+fa_AF	Name of month 07 (Gregorian Calendar)	ژوئیه
+fa_AF	Name of month 08 (Gregorian Calendar)	اوت
+fa_AF	Name of month 09 (Gregorian Calendar)	سپتامبر
+fa_AF	Name of month 10 (Gregorian Calendar)	اکتبر
+fa_AF	Name of month 11 (Gregorian Calendar)	نوامبر
+fa_AF	Name of month 12 (Gregorian Calendar)	دسامبر
 fa_AF	Name of month 01 (Islamic Calendar)	محرم
 fa_AF	Name of month 02 (Islamic Calendar)	صفر
 fa_AF	Name of month 03 (Islamic Calendar)	ربیع الاول
@@ -4224,14 +4224,14 @@ fa_IR	Date and time short (Islamic Calendar)	۲۹/۷/۱۸ ه‍. ق.،‏ ۱۲:�
 fa_IR	Date and time medium (Islamic Calendar)	۱۴۲۹/۷/۱۸ ه‍. ق.،‏ ۱۲:۳۱:۰۰
 fa_IR	Date and time long (Islamic Calendar)	۱۸ رجب ۱۴۲۹ ه‍. ق.، ساعت ۱۲:۳۱:۰۰ (GMT+۰۰:۰۰)
 fa_IR	Date and time full (Islamic Calendar)	دوشنبه ۱۸ رجب ۱۴۲۹ هجری قمری، ساعت ۱۲:۳۱:۰۰ (GMT+۰۰:۰۰)
-fa_IR	Name of month 01 (Gregorian Calendar)	ژانویهٔ
-fa_IR	Name of month 02 (Gregorian Calendar)	فوریهٔ
+fa_IR	Name of month 01 (Gregorian Calendar)	ژانویه
+fa_IR	Name of month 02 (Gregorian Calendar)	فوریه
 fa_IR	Name of month 03 (Gregorian Calendar)	مارس
 fa_IR	Name of month 04 (Gregorian Calendar)	آوریل
-fa_IR	Name of month 05 (Gregorian Calendar)	می
-fa_IR	Name of month 06 (Gregorian Calendar)	جون
-fa_IR	Name of month 07 (Gregorian Calendar)	جولای
-fa_IR	Name of month 08 (Gregorian Calendar)	آگوست
+fa_IR	Name of month 05 (Gregorian Calendar)	مه
+fa_IR	Name of month 06 (Gregorian Calendar)	ژوئن
+fa_IR	Name of month 07 (Gregorian Calendar)	ژوئیه
+fa_IR	Name of month 08 (Gregorian Calendar)	اوت
 fa_IR	Name of month 09 (Gregorian Calendar)	سپتامبر
 fa_IR	Name of month 10 (Gregorian Calendar)	اکتبر
 fa_IR	Name of month 11 (Gregorian Calendar)	نوامبر
@@ -4271,23 +4271,23 @@ fi	Negative Currency value	-1 234,56 €
 fi	Date and time short (Gregorian Calendar)	21.7.2008 12.31
 fi	Date and time medium (Gregorian Calendar)	21.7.2008 12.31.00
 fi	Date and time long (Gregorian Calendar)	21. heinäkuuta 2008 12.31.00 UTC+0.00
-fi	Date and time full (Gregorian Calendar)	maanantaina 21. heinäkuuta 2008 12.31.00 UTC+0.00
+fi	Date and time full (Gregorian Calendar)	maanantai 21. heinäkuuta 2008 12.31.00 UTC+0.00
 fi	Date and time short (Islamic Calendar)	18.7.1429 12.31
 fi	Date and time medium (Islamic Calendar)	18.7.1429 12.31.00
 fi	Date and time long (Islamic Calendar)	18. radžab 1429 12.31.00 UTC+0.00
-fi	Date and time full (Islamic Calendar)	maanantaina 18. radžab 1429 12.31.00 UTC+0.00
-fi	Name of month 01 (Gregorian Calendar)	tammikuuta
-fi	Name of month 02 (Gregorian Calendar)	helmikuuta
-fi	Name of month 03 (Gregorian Calendar)	maaliskuuta
-fi	Name of month 04 (Gregorian Calendar)	huhtikuuta
-fi	Name of month 05 (Gregorian Calendar)	toukokuuta
-fi	Name of month 06 (Gregorian Calendar)	kesäkuuta
-fi	Name of month 07 (Gregorian Calendar)	heinäkuuta
-fi	Name of month 08 (Gregorian Calendar)	elokuuta
-fi	Name of month 09 (Gregorian Calendar)	syyskuuta
-fi	Name of month 10 (Gregorian Calendar)	lokakuuta
-fi	Name of month 11 (Gregorian Calendar)	marraskuuta
-fi	Name of month 12 (Gregorian Calendar)	joulukuuta
+fi	Date and time full (Islamic Calendar)	maanantai 18. radžab 1429 12.31.00 UTC+0.00
+fi	Name of month 01 (Gregorian Calendar)	tammikuu
+fi	Name of month 02 (Gregorian Calendar)	helmikuu
+fi	Name of month 03 (Gregorian Calendar)	maaliskuu
+fi	Name of month 04 (Gregorian Calendar)	huhtikuu
+fi	Name of month 05 (Gregorian Calendar)	toukokuu
+fi	Name of month 06 (Gregorian Calendar)	kesäkuu
+fi	Name of month 07 (Gregorian Calendar)	heinäkuu
+fi	Name of month 08 (Gregorian Calendar)	elokuu
+fi	Name of month 09 (Gregorian Calendar)	syyskuu
+fi	Name of month 10 (Gregorian Calendar)	lokakuu
+fi	Name of month 11 (Gregorian Calendar)	marraskuu
+fi	Name of month 12 (Gregorian Calendar)	joulukuu
 fi	Name of month 01 (Islamic Calendar)	muharram
 fi	Name of month 02 (Islamic Calendar)	safar
 fi	Name of month 03 (Islamic Calendar)	rabi’ al-awwal
@@ -4300,20 +4300,20 @@ fi	Name of month 09 (Islamic Calendar)	ramadan
 fi	Name of month 10 (Islamic Calendar)	šawwal
 fi	Name of month 11 (Islamic Calendar)	dhu-l-qa’da
 fi	Name of month 12 (Islamic Calendar)	dhu-l-hiddža
-fi	Name of weekday 01 (Gregorian Calendar)	maanantaina
-fi	Name of weekday 02 (Gregorian Calendar)	tiistaina
-fi	Name of weekday 03 (Gregorian Calendar)	keskiviikkona
-fi	Name of weekday 04 (Gregorian Calendar)	torstaina
-fi	Name of weekday 05 (Gregorian Calendar)	perjantaina
-fi	Name of weekday 06 (Gregorian Calendar)	lauantaina
-fi	Name of weekday 07 (Gregorian Calendar)	sunnuntaina
-fi	Name of weekday 01 (Islamic Calendar)	maanantaina
-fi	Name of weekday 02 (Islamic Calendar)	tiistaina
-fi	Name of weekday 03 (Islamic Calendar)	keskiviikkona
-fi	Name of weekday 04 (Islamic Calendar)	torstaina
-fi	Name of weekday 05 (Islamic Calendar)	perjantaina
-fi	Name of weekday 06 (Islamic Calendar)	lauantaina
-fi	Name of weekday 07 (Islamic Calendar)	sunnuntaina
+fi	Name of weekday 01 (Gregorian Calendar)	maanantai
+fi	Name of weekday 02 (Gregorian Calendar)	tiistai
+fi	Name of weekday 03 (Gregorian Calendar)	keskiviikko
+fi	Name of weekday 04 (Gregorian Calendar)	torstai
+fi	Name of weekday 05 (Gregorian Calendar)	perjantai
+fi	Name of weekday 06 (Gregorian Calendar)	lauantai
+fi	Name of weekday 07 (Gregorian Calendar)	sunnuntai
+fi	Name of weekday 01 (Islamic Calendar)	maanantai
+fi	Name of weekday 02 (Islamic Calendar)	tiistai
+fi	Name of weekday 03 (Islamic Calendar)	keskiviikko
+fi	Name of weekday 04 (Islamic Calendar)	torstai
+fi	Name of weekday 05 (Islamic Calendar)	perjantai
+fi	Name of weekday 06 (Islamic Calendar)	lauantai
+fi	Name of weekday 07 (Islamic Calendar)	sunnuntai
 fi_FI	Language endonym	suomi
 fi_FI	Country endonym	Suomi
 fi_FI	Floating Point Number	-123 456 789,012
@@ -4323,23 +4323,23 @@ fi_FI	Negative Currency value	-1 234,56 €
 fi_FI	Date and time short (Gregorian Calendar)	21.7.2008 12.31
 fi_FI	Date and time medium (Gregorian Calendar)	21.7.2008 12.31.00
 fi_FI	Date and time long (Gregorian Calendar)	21. heinäkuuta 2008 12.31.00 UTC+0.00
-fi_FI	Date and time full (Gregorian Calendar)	maanantaina 21. heinäkuuta 2008 12.31.00 UTC+0.00
+fi_FI	Date and time full (Gregorian Calendar)	maanantai 21. heinäkuuta 2008 12.31.00 UTC+0.00
 fi_FI	Date and time short (Islamic Calendar)	18.7.1429 12.31
 fi_FI	Date and time medium (Islamic Calendar)	18.7.1429 12.31.00
 fi_FI	Date and time long (Islamic Calendar)	18. radžab 1429 12.31.00 UTC+0.00
-fi_FI	Date and time full (Islamic Calendar)	maanantaina 18. radžab 1429 12.31.00 UTC+0.00
-fi_FI	Name of month 01 (Gregorian Calendar)	tammikuuta
-fi_FI	Name of month 02 (Gregorian Calendar)	helmikuuta
-fi_FI	Name of month 03 (Gregorian Calendar)	maaliskuuta
-fi_FI	Name of month 04 (Gregorian Calendar)	huhtikuuta
-fi_FI	Name of month 05 (Gregorian Calendar)	toukokuuta
-fi_FI	Name of month 06 (Gregorian Calendar)	kesäkuuta
-fi_FI	Name of month 07 (Gregorian Calendar)	heinäkuuta
-fi_FI	Name of month 08 (Gregorian Calendar)	elokuuta
-fi_FI	Name of month 09 (Gregorian Calendar)	syyskuuta
-fi_FI	Name of month 10 (Gregorian Calendar)	lokakuuta
-fi_FI	Name of month 11 (Gregorian Calendar)	marraskuuta
-fi_FI	Name of month 12 (Gregorian Calendar)	joulukuuta
+fi_FI	Date and time full (Islamic Calendar)	maanantai 18. radžab 1429 12.31.00 UTC+0.00
+fi_FI	Name of month 01 (Gregorian Calendar)	tammikuu
+fi_FI	Name of month 02 (Gregorian Calendar)	helmikuu
+fi_FI	Name of month 03 (Gregorian Calendar)	maaliskuu
+fi_FI	Name of month 04 (Gregorian Calendar)	huhtikuu
+fi_FI	Name of month 05 (Gregorian Calendar)	toukokuu
+fi_FI	Name of month 06 (Gregorian Calendar)	kesäkuu
+fi_FI	Name of month 07 (Gregorian Calendar)	heinäkuu
+fi_FI	Name of month 08 (Gregorian Calendar)	elokuu
+fi_FI	Name of month 09 (Gregorian Calendar)	syyskuu
+fi_FI	Name of month 10 (Gregorian Calendar)	lokakuu
+fi_FI	Name of month 11 (Gregorian Calendar)	marraskuu
+fi_FI	Name of month 12 (Gregorian Calendar)	joulukuu
 fi_FI	Name of month 01 (Islamic Calendar)	muharram
 fi_FI	Name of month 02 (Islamic Calendar)	safar
 fi_FI	Name of month 03 (Islamic Calendar)	rabi’ al-awwal
@@ -4352,20 +4352,20 @@ fi_FI	Name of month 09 (Islamic Calendar)	ramadan
 fi_FI	Name of month 10 (Islamic Calendar)	šawwal
 fi_FI	Name of month 11 (Islamic Calendar)	dhu-l-qa’da
 fi_FI	Name of month 12 (Islamic Calendar)	dhu-l-hiddža
-fi_FI	Name of weekday 01 (Gregorian Calendar)	maanantaina
-fi_FI	Name of weekday 02 (Gregorian Calendar)	tiistaina
-fi_FI	Name of weekday 03 (Gregorian Calendar)	keskiviikkona
-fi_FI	Name of weekday 04 (Gregorian Calendar)	torstaina
-fi_FI	Name of weekday 05 (Gregorian Calendar)	perjantaina
-fi_FI	Name of weekday 06 (Gregorian Calendar)	lauantaina
-fi_FI	Name of weekday 07 (Gregorian Calendar)	sunnuntaina
-fi_FI	Name of weekday 01 (Islamic Calendar)	maanantaina
-fi_FI	Name of weekday 02 (Islamic Calendar)	tiistaina
-fi_FI	Name of weekday 03 (Islamic Calendar)	keskiviikkona
-fi_FI	Name of weekday 04 (Islamic Calendar)	torstaina
-fi_FI	Name of weekday 05 (Islamic Calendar)	perjantaina
-fi_FI	Name of weekday 06 (Islamic Calendar)	lauantaina
-fi_FI	Name of weekday 07 (Islamic Calendar)	sunnuntaina
+fi_FI	Name of weekday 01 (Gregorian Calendar)	maanantai
+fi_FI	Name of weekday 02 (Gregorian Calendar)	tiistai
+fi_FI	Name of weekday 03 (Gregorian Calendar)	keskiviikko
+fi_FI	Name of weekday 04 (Gregorian Calendar)	torstai
+fi_FI	Name of weekday 05 (Gregorian Calendar)	perjantai
+fi_FI	Name of weekday 06 (Gregorian Calendar)	lauantai
+fi_FI	Name of weekday 07 (Gregorian Calendar)	sunnuntai
+fi_FI	Name of weekday 01 (Islamic Calendar)	maanantai
+fi_FI	Name of weekday 02 (Islamic Calendar)	tiistai
+fi_FI	Name of weekday 03 (Islamic Calendar)	keskiviikko
+fi_FI	Name of weekday 04 (Islamic Calendar)	torstai
+fi_FI	Name of weekday 05 (Islamic Calendar)	perjantai
+fi_FI	Name of weekday 06 (Islamic Calendar)	lauantai
+fi_FI	Name of weekday 07 (Islamic Calendar)	sunnuntai
 fr	Language endonym	français
 fr	Country endonym	
 fr	Floating Point Number	-123 456 789,012
@@ -5207,23 +5207,23 @@ it	Negative Currency value	-€ 1.234,56
 it	Date and time short (Gregorian Calendar)	21/07/08 12:31
 it	Date and time medium (Gregorian Calendar)	21/lug/2008 12:31:00
 it	Date and time long (Gregorian Calendar)	21 luglio 2008 12:31:00 GMT+00:00
-it	Date and time full (Gregorian Calendar)	lunedì 21 luglio 2008 12:31:00 GMT+00:00
+it	Date and time full (Gregorian Calendar)	Lunedì 21 Luglio 2008 12:31:00 GMT+00:00
 it	Date and time short (Islamic Calendar)	18/07/29 12:31
 it	Date and time medium (Islamic Calendar)	18/Raj./1429 12:31:00
 it	Date and time long (Islamic Calendar)	18 Rajab 1429 12:31:00 GMT+00:00
-it	Date and time full (Islamic Calendar)	lunedì 18 Rajab 1429 12:31:00 GMT+00:00
-it	Name of month 01 (Gregorian Calendar)	gennaio
-it	Name of month 02 (Gregorian Calendar)	febbraio
-it	Name of month 03 (Gregorian Calendar)	marzo
-it	Name of month 04 (Gregorian Calendar)	aprile
-it	Name of month 05 (Gregorian Calendar)	maggio
-it	Name of month 06 (Gregorian Calendar)	giugno
-it	Name of month 07 (Gregorian Calendar)	luglio
-it	Name of month 08 (Gregorian Calendar)	agosto
-it	Name of month 09 (Gregorian Calendar)	settembre
-it	Name of month 10 (Gregorian Calendar)	ottobre
-it	Name of month 11 (Gregorian Calendar)	novembre
-it	Name of month 12 (Gregorian Calendar)	dicembre
+it	Date and time full (Islamic Calendar)	Lunedì 18 Rajab 1429 12:31:00 GMT+00:00
+it	Name of month 01 (Gregorian Calendar)	Gennaio
+it	Name of month 02 (Gregorian Calendar)	Febbraio
+it	Name of month 03 (Gregorian Calendar)	Marzo
+it	Name of month 04 (Gregorian Calendar)	Aprile
+it	Name of month 05 (Gregorian Calendar)	Maggio
+it	Name of month 06 (Gregorian Calendar)	Giugno
+it	Name of month 07 (Gregorian Calendar)	Luglio
+it	Name of month 08 (Gregorian Calendar)	Agosto
+it	Name of month 09 (Gregorian Calendar)	Settembre
+it	Name of month 10 (Gregorian Calendar)	Ottobre
+it	Name of month 11 (Gregorian Calendar)	Novembre
+it	Name of month 12 (Gregorian Calendar)	Dicembre
 it	Name of month 01 (Islamic Calendar)	Muharram
 it	Name of month 02 (Islamic Calendar)	Safar
 it	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -5236,20 +5236,20 @@ it	Name of month 09 (Islamic Calendar)	Ramadan
 it	Name of month 10 (Islamic Calendar)	Shawwal
 it	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
 it	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
-it	Name of weekday 01 (Gregorian Calendar)	lunedì
-it	Name of weekday 02 (Gregorian Calendar)	martedì
-it	Name of weekday 03 (Gregorian Calendar)	mercoledì
-it	Name of weekday 04 (Gregorian Calendar)	giovedì
-it	Name of weekday 05 (Gregorian Calendar)	venerdì
-it	Name of weekday 06 (Gregorian Calendar)	sabato
-it	Name of weekday 07 (Gregorian Calendar)	domenica
-it	Name of weekday 01 (Islamic Calendar)	lunedì
-it	Name of weekday 02 (Islamic Calendar)	martedì
-it	Name of weekday 03 (Islamic Calendar)	mercoledì
-it	Name of weekday 04 (Islamic Calendar)	giovedì
-it	Name of weekday 05 (Islamic Calendar)	venerdì
-it	Name of weekday 06 (Islamic Calendar)	sabato
-it	Name of weekday 07 (Islamic Calendar)	domenica
+it	Name of weekday 01 (Gregorian Calendar)	Lunedì
+it	Name of weekday 02 (Gregorian Calendar)	Martedì
+it	Name of weekday 03 (Gregorian Calendar)	Mercoledì
+it	Name of weekday 04 (Gregorian Calendar)	Giovedì
+it	Name of weekday 05 (Gregorian Calendar)	Venerdì
+it	Name of weekday 06 (Gregorian Calendar)	Sabato
+it	Name of weekday 07 (Gregorian Calendar)	Domenica
+it	Name of weekday 01 (Islamic Calendar)	Lunedì
+it	Name of weekday 02 (Islamic Calendar)	Martedì
+it	Name of weekday 03 (Islamic Calendar)	Mercoledì
+it	Name of weekday 04 (Islamic Calendar)	Giovedì
+it	Name of weekday 05 (Islamic Calendar)	Venerdì
+it	Name of weekday 06 (Islamic Calendar)	Sabato
+it	Name of weekday 07 (Islamic Calendar)	Domenica
 it_CH	Language endonym	italiano
 it_CH	Country endonym	Svizzera
 it_CH	Floating Point Number	-123'456'789.012
@@ -5264,18 +5264,18 @@ it_CH	Date and time short (Islamic Calendar)	18.07.29 12:31
 it_CH	Date and time medium (Islamic Calendar)	18-Raj.-1429 12:31:00
 it_CH	Date and time long (Islamic Calendar)	18 Rajab 1429 12:31:00 GMT+00:00
 it_CH	Date and time full (Islamic Calendar)	lunedì, 18 Rajab 1429 12.31:00 h GMT+00:00
-it_CH	Name of month 01 (Gregorian Calendar)	gennaio
-it_CH	Name of month 02 (Gregorian Calendar)	febbraio
-it_CH	Name of month 03 (Gregorian Calendar)	marzo
-it_CH	Name of month 04 (Gregorian Calendar)	aprile
-it_CH	Name of month 05 (Gregorian Calendar)	maggio
-it_CH	Name of month 06 (Gregorian Calendar)	giugno
-it_CH	Name of month 07 (Gregorian Calendar)	luglio
-it_CH	Name of month 08 (Gregorian Calendar)	agosto
-it_CH	Name of month 09 (Gregorian Calendar)	settembre
-it_CH	Name of month 10 (Gregorian Calendar)	ottobre
-it_CH	Name of month 11 (Gregorian Calendar)	novembre
-it_CH	Name of month 12 (Gregorian Calendar)	dicembre
+it_CH	Name of month 01 (Gregorian Calendar)	Gennaio
+it_CH	Name of month 02 (Gregorian Calendar)	Febbraio
+it_CH	Name of month 03 (Gregorian Calendar)	Marzo
+it_CH	Name of month 04 (Gregorian Calendar)	Aprile
+it_CH	Name of month 05 (Gregorian Calendar)	Maggio
+it_CH	Name of month 06 (Gregorian Calendar)	Giugno
+it_CH	Name of month 07 (Gregorian Calendar)	Luglio
+it_CH	Name of month 08 (Gregorian Calendar)	Agosto
+it_CH	Name of month 09 (Gregorian Calendar)	Settembre
+it_CH	Name of month 10 (Gregorian Calendar)	Ottobre
+it_CH	Name of month 11 (Gregorian Calendar)	Novembre
+it_CH	Name of month 12 (Gregorian Calendar)	Dicembre
 it_CH	Name of month 01 (Islamic Calendar)	Muharram
 it_CH	Name of month 02 (Islamic Calendar)	Safar
 it_CH	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -5288,20 +5288,20 @@ it_CH	Name of month 09 (Islamic Calendar)	Ramadan
 it_CH	Name of month 10 (Islamic Calendar)	Shawwal
 it_CH	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
 it_CH	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
-it_CH	Name of weekday 01 (Gregorian Calendar)	lunedì
-it_CH	Name of weekday 02 (Gregorian Calendar)	martedì
-it_CH	Name of weekday 03 (Gregorian Calendar)	mercoledì
-it_CH	Name of weekday 04 (Gregorian Calendar)	giovedì
-it_CH	Name of weekday 05 (Gregorian Calendar)	venerdì
-it_CH	Name of weekday 06 (Gregorian Calendar)	sabato
-it_CH	Name of weekday 07 (Gregorian Calendar)	domenica
-it_CH	Name of weekday 01 (Islamic Calendar)	lunedì
-it_CH	Name of weekday 02 (Islamic Calendar)	martedì
-it_CH	Name of weekday 03 (Islamic Calendar)	mercoledì
-it_CH	Name of weekday 04 (Islamic Calendar)	giovedì
-it_CH	Name of weekday 05 (Islamic Calendar)	venerdì
-it_CH	Name of weekday 06 (Islamic Calendar)	sabato
-it_CH	Name of weekday 07 (Islamic Calendar)	domenica
+it_CH	Name of weekday 01 (Gregorian Calendar)	Lunedì
+it_CH	Name of weekday 02 (Gregorian Calendar)	Martedì
+it_CH	Name of weekday 03 (Gregorian Calendar)	Mercoledì
+it_CH	Name of weekday 04 (Gregorian Calendar)	Giovedì
+it_CH	Name of weekday 05 (Gregorian Calendar)	Venerdì
+it_CH	Name of weekday 06 (Gregorian Calendar)	Sabato
+it_CH	Name of weekday 07 (Gregorian Calendar)	Domenica
+it_CH	Name of weekday 01 (Islamic Calendar)	Lunedì
+it_CH	Name of weekday 02 (Islamic Calendar)	Martedì
+it_CH	Name of weekday 03 (Islamic Calendar)	Mercoledì
+it_CH	Name of weekday 04 (Islamic Calendar)	Giovedì
+it_CH	Name of weekday 05 (Islamic Calendar)	Venerdì
+it_CH	Name of weekday 06 (Islamic Calendar)	Sabato
+it_CH	Name of weekday 07 (Islamic Calendar)	Domenica
 it_IT	Language endonym	italiano
 it_IT	Country endonym	Italia
 it_IT	Floating Point Number	-123.456.789,012
@@ -5311,23 +5311,23 @@ it_IT	Negative Currency value	-€ 1.234,56
 it_IT	Date and time short (Gregorian Calendar)	21/07/08 12:31
 it_IT	Date and time medium (Gregorian Calendar)	21/lug/2008 12:31:00
 it_IT	Date and time long (Gregorian Calendar)	21 luglio 2008 12:31:00 GMT+00:00
-it_IT	Date and time full (Gregorian Calendar)	lunedì 21 luglio 2008 12:31:00 GMT+00:00
+it_IT	Date and time full (Gregorian Calendar)	Lunedì 21 Luglio 2008 12:31:00 GMT+00:00
 it_IT	Date and time short (Islamic Calendar)	18/07/29 12:31
 it_IT	Date and time medium (Islamic Calendar)	18/Raj./1429 12:31:00
 it_IT	Date and time long (Islamic Calendar)	18 Rajab 1429 12:31:00 GMT+00:00
-it_IT	Date and time full (Islamic Calendar)	lunedì 18 Rajab 1429 12:31:00 GMT+00:00
-it_IT	Name of month 01 (Gregorian Calendar)	gennaio
-it_IT	Name of month 02 (Gregorian Calendar)	febbraio
-it_IT	Name of month 03 (Gregorian Calendar)	marzo
-it_IT	Name of month 04 (Gregorian Calendar)	aprile
-it_IT	Name of month 05 (Gregorian Calendar)	maggio
-it_IT	Name of month 06 (Gregorian Calendar)	giugno
-it_IT	Name of month 07 (Gregorian Calendar)	luglio
-it_IT	Name of month 08 (Gregorian Calendar)	agosto
-it_IT	Name of month 09 (Gregorian Calendar)	settembre
-it_IT	Name of month 10 (Gregorian Calendar)	ottobre
-it_IT	Name of month 11 (Gregorian Calendar)	novembre
-it_IT	Name of month 12 (Gregorian Calendar)	dicembre
+it_IT	Date and time full (Islamic Calendar)	Lunedì 18 Rajab 1429 12:31:00 GMT+00:00
+it_IT	Name of month 01 (Gregorian Calendar)	Gennaio
+it_IT	Name of month 02 (Gregorian Calendar)	Febbraio
+it_IT	Name of month 03 (Gregorian Calendar)	Marzo
+it_IT	Name of month 04 (Gregorian Calendar)	Aprile
+it_IT	Name of month 05 (Gregorian Calendar)	Maggio
+it_IT	Name of month 06 (Gregorian Calendar)	Giugno
+it_IT	Name of month 07 (Gregorian Calendar)	Luglio
+it_IT	Name of month 08 (Gregorian Calendar)	Agosto
+it_IT	Name of month 09 (Gregorian Calendar)	Settembre
+it_IT	Name of month 10 (Gregorian Calendar)	Ottobre
+it_IT	Name of month 11 (Gregorian Calendar)	Novembre
+it_IT	Name of month 12 (Gregorian Calendar)	Dicembre
 it_IT	Name of month 01 (Islamic Calendar)	Muharram
 it_IT	Name of month 02 (Islamic Calendar)	Safar
 it_IT	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -5340,20 +5340,20 @@ it_IT	Name of month 09 (Islamic Calendar)	Ramadan
 it_IT	Name of month 10 (Islamic Calendar)	Shawwal
 it_IT	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
 it_IT	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
-it_IT	Name of weekday 01 (Gregorian Calendar)	lunedì
-it_IT	Name of weekday 02 (Gregorian Calendar)	martedì
-it_IT	Name of weekday 03 (Gregorian Calendar)	mercoledì
-it_IT	Name of weekday 04 (Gregorian Calendar)	giovedì
-it_IT	Name of weekday 05 (Gregorian Calendar)	venerdì
-it_IT	Name of weekday 06 (Gregorian Calendar)	sabato
-it_IT	Name of weekday 07 (Gregorian Calendar)	domenica
-it_IT	Name of weekday 01 (Islamic Calendar)	lunedì
-it_IT	Name of weekday 02 (Islamic Calendar)	martedì
-it_IT	Name of weekday 03 (Islamic Calendar)	mercoledì
-it_IT	Name of weekday 04 (Islamic Calendar)	giovedì
-it_IT	Name of weekday 05 (Islamic Calendar)	venerdì
-it_IT	Name of weekday 06 (Islamic Calendar)	sabato
-it_IT	Name of weekday 07 (Islamic Calendar)	domenica
+it_IT	Name of weekday 01 (Gregorian Calendar)	Lunedì
+it_IT	Name of weekday 02 (Gregorian Calendar)	Martedì
+it_IT	Name of weekday 03 (Gregorian Calendar)	Mercoledì
+it_IT	Name of weekday 04 (Gregorian Calendar)	Giovedì
+it_IT	Name of weekday 05 (Gregorian Calendar)	Venerdì
+it_IT	Name of weekday 06 (Gregorian Calendar)	Sabato
+it_IT	Name of weekday 07 (Gregorian Calendar)	Domenica
+it_IT	Name of weekday 01 (Islamic Calendar)	Lunedì
+it_IT	Name of weekday 02 (Islamic Calendar)	Martedì
+it_IT	Name of weekday 03 (Islamic Calendar)	Mercoledì
+it_IT	Name of weekday 04 (Islamic Calendar)	Giovedì
+it_IT	Name of weekday 05 (Islamic Calendar)	Venerdì
+it_IT	Name of weekday 06 (Islamic Calendar)	Sabato
+it_IT	Name of weekday 07 (Islamic Calendar)	Domenica
 ja	Language endonym	日本語
 ja	Country endonym	
 ja	Floating Point Number	-123,456,789.012
@@ -6148,18 +6148,18 @@ ru	Date and time short (Islamic Calendar)	18.07.29 12:31
 ru	Date and time medium (Islamic Calendar)	18.07.1429 12:31:00
 ru	Date and time long (Islamic Calendar)	18 Раджаб 1429 г. 12:31:00 GMT+00:00
 ru	Date and time full (Islamic Calendar)	понедельник, 18 Раджаб 1429 г. 12:31:00 GMT+00:00
-ru	Name of month 01 (Gregorian Calendar)	января
-ru	Name of month 02 (Gregorian Calendar)	февраля
-ru	Name of month 03 (Gregorian Calendar)	марта
-ru	Name of month 04 (Gregorian Calendar)	апреля
-ru	Name of month 05 (Gregorian Calendar)	мая
-ru	Name of month 06 (Gregorian Calendar)	июня
-ru	Name of month 07 (Gregorian Calendar)	июля
-ru	Name of month 08 (Gregorian Calendar)	августа
-ru	Name of month 09 (Gregorian Calendar)	сентября
-ru	Name of month 10 (Gregorian Calendar)	октября
-ru	Name of month 11 (Gregorian Calendar)	ноября
-ru	Name of month 12 (Gregorian Calendar)	декабря
+ru	Name of month 01 (Gregorian Calendar)	Январь
+ru	Name of month 02 (Gregorian Calendar)	Февраль
+ru	Name of month 03 (Gregorian Calendar)	Март
+ru	Name of month 04 (Gregorian Calendar)	Апрель
+ru	Name of month 05 (Gregorian Calendar)	Май
+ru	Name of month 06 (Gregorian Calendar)	Июнь
+ru	Name of month 07 (Gregorian Calendar)	Июль
+ru	Name of month 08 (Gregorian Calendar)	Август
+ru	Name of month 09 (Gregorian Calendar)	Сентябрь
+ru	Name of month 10 (Gregorian Calendar)	Октябрь
+ru	Name of month 11 (Gregorian Calendar)	Ноябрь
+ru	Name of month 12 (Gregorian Calendar)	Декабрь
 ru	Name of month 01 (Islamic Calendar)	Мухаррам
 ru	Name of month 02 (Islamic Calendar)	Сафар
 ru	Name of month 03 (Islamic Calendar)	Раби-уль-авваль
@@ -6172,20 +6172,20 @@ ru	Name of month 09 (Islamic Calendar)	Рамадан
 ru	Name of month 10 (Islamic Calendar)	Шавваль
 ru	Name of month 11 (Islamic Calendar)	Зуль-Каада
 ru	Name of month 12 (Islamic Calendar)	Зуль-Хиджжа
-ru	Name of weekday 01 (Gregorian Calendar)	понедельник
-ru	Name of weekday 02 (Gregorian Calendar)	вторник
-ru	Name of weekday 03 (Gregorian Calendar)	среда
-ru	Name of weekday 04 (Gregorian Calendar)	четверг
-ru	Name of weekday 05 (Gregorian Calendar)	пятница
-ru	Name of weekday 06 (Gregorian Calendar)	суббота
-ru	Name of weekday 07 (Gregorian Calendar)	воскресенье
-ru	Name of weekday 01 (Islamic Calendar)	понедельник
-ru	Name of weekday 02 (Islamic Calendar)	вторник
-ru	Name of weekday 03 (Islamic Calendar)	среда
-ru	Name of weekday 04 (Islamic Calendar)	четверг
-ru	Name of weekday 05 (Islamic Calendar)	пятница
-ru	Name of weekday 06 (Islamic Calendar)	суббота
-ru	Name of weekday 07 (Islamic Calendar)	воскресенье
+ru	Name of weekday 01 (Gregorian Calendar)	Понедельник
+ru	Name of weekday 02 (Gregorian Calendar)	Вторник
+ru	Name of weekday 03 (Gregorian Calendar)	Среда
+ru	Name of weekday 04 (Gregorian Calendar)	Четверг
+ru	Name of weekday 05 (Gregorian Calendar)	Пятница
+ru	Name of weekday 06 (Gregorian Calendar)	Суббота
+ru	Name of weekday 07 (Gregorian Calendar)	Воскресенье
+ru	Name of weekday 01 (Islamic Calendar)	Понедельник
+ru	Name of weekday 02 (Islamic Calendar)	Вторник
+ru	Name of weekday 03 (Islamic Calendar)	Среда
+ru	Name of weekday 04 (Islamic Calendar)	Четверг
+ru	Name of weekday 05 (Islamic Calendar)	Пятница
+ru	Name of weekday 06 (Islamic Calendar)	Суббота
+ru	Name of weekday 07 (Islamic Calendar)	Воскресенье
 ru_RU	Language endonym	русский
 ru_RU	Country endonym	Россия
 ru_RU	Floating Point Number	-123 456 789,012
@@ -6200,18 +6200,18 @@ ru_RU	Date and time short (Islamic Calendar)	18.07.29 12:31
 ru_RU	Date and time medium (Islamic Calendar)	18.07.1429 12:31:00
 ru_RU	Date and time long (Islamic Calendar)	18 Раджаб 1429 г. 12:31:00 GMT+00:00
 ru_RU	Date and time full (Islamic Calendar)	понедельник, 18 Раджаб 1429 г. 12:31:00 GMT+00:00
-ru_RU	Name of month 01 (Gregorian Calendar)	января
-ru_RU	Name of month 02 (Gregorian Calendar)	февраля
-ru_RU	Name of month 03 (Gregorian Calendar)	марта
-ru_RU	Name of month 04 (Gregorian Calendar)	апреля
-ru_RU	Name of month 05 (Gregorian Calendar)	мая
-ru_RU	Name of month 06 (Gregorian Calendar)	июня
-ru_RU	Name of month 07 (Gregorian Calendar)	июля
-ru_RU	Name of month 08 (Gregorian Calendar)	августа
-ru_RU	Name of month 09 (Gregorian Calendar)	сентября
-ru_RU	Name of month 10 (Gregorian Calendar)	октября
-ru_RU	Name of month 11 (Gregorian Calendar)	ноября
-ru_RU	Name of month 12 (Gregorian Calendar)	декабря
+ru_RU	Name of month 01 (Gregorian Calendar)	Январь
+ru_RU	Name of month 02 (Gregorian Calendar)	Февраль
+ru_RU	Name of month 03 (Gregorian Calendar)	Март
+ru_RU	Name of month 04 (Gregorian Calendar)	Апрель
+ru_RU	Name of month 05 (Gregorian Calendar)	Май
+ru_RU	Name of month 06 (Gregorian Calendar)	Июнь
+ru_RU	Name of month 07 (Gregorian Calendar)	Июль
+ru_RU	Name of month 08 (Gregorian Calendar)	Август
+ru_RU	Name of month 09 (Gregorian Calendar)	Сентябрь
+ru_RU	Name of month 10 (Gregorian Calendar)	Октябрь
+ru_RU	Name of month 11 (Gregorian Calendar)	Ноябрь
+ru_RU	Name of month 12 (Gregorian Calendar)	Декабрь
 ru_RU	Name of month 01 (Islamic Calendar)	Мухаррам
 ru_RU	Name of month 02 (Islamic Calendar)	Сафар
 ru_RU	Name of month 03 (Islamic Calendar)	Раби-уль-авваль
@@ -6224,20 +6224,20 @@ ru_RU	Name of month 09 (Islamic Calendar)	Рамадан
 ru_RU	Name of month 10 (Islamic Calendar)	Шавваль
 ru_RU	Name of month 11 (Islamic Calendar)	Зуль-Каада
 ru_RU	Name of month 12 (Islamic Calendar)	Зуль-Хиджжа
-ru_RU	Name of weekday 01 (Gregorian Calendar)	понедельник
-ru_RU	Name of weekday 02 (Gregorian Calendar)	вторник
-ru_RU	Name of weekday 03 (Gregorian Calendar)	среда
-ru_RU	Name of weekday 04 (Gregorian Calendar)	четверг
-ru_RU	Name of weekday 05 (Gregorian Calendar)	пятница
-ru_RU	Name of weekday 06 (Gregorian Calendar)	суббота
-ru_RU	Name of weekday 07 (Gregorian Calendar)	воскресенье
-ru_RU	Name of weekday 01 (Islamic Calendar)	понедельник
-ru_RU	Name of weekday 02 (Islamic Calendar)	вторник
-ru_RU	Name of weekday 03 (Islamic Calendar)	среда
-ru_RU	Name of weekday 04 (Islamic Calendar)	четверг
-ru_RU	Name of weekday 05 (Islamic Calendar)	пятница
-ru_RU	Name of weekday 06 (Islamic Calendar)	суббота
-ru_RU	Name of weekday 07 (Islamic Calendar)	воскресенье
+ru_RU	Name of weekday 01 (Gregorian Calendar)	Понедельник
+ru_RU	Name of weekday 02 (Gregorian Calendar)	Вторник
+ru_RU	Name of weekday 03 (Gregorian Calendar)	Среда
+ru_RU	Name of weekday 04 (Gregorian Calendar)	Четверг
+ru_RU	Name of weekday 05 (Gregorian Calendar)	Пятница
+ru_RU	Name of weekday 06 (Gregorian Calendar)	Суббота
+ru_RU	Name of weekday 07 (Gregorian Calendar)	Воскресенье
+ru_RU	Name of weekday 01 (Islamic Calendar)	Понедельник
+ru_RU	Name of weekday 02 (Islamic Calendar)	Вторник
+ru_RU	Name of weekday 03 (Islamic Calendar)	Среда
+ru_RU	Name of weekday 04 (Islamic Calendar)	Четверг
+ru_RU	Name of weekday 05 (Islamic Calendar)	Пятница
+ru_RU	Name of weekday 06 (Islamic Calendar)	Суббота
+ru_RU	Name of weekday 07 (Islamic Calendar)	Воскресенье
 ru_UA	Language endonym	ru
 ru_UA	Country endonym	Украина
 ru_UA	Floating Point Number	-123 456 789,012
@@ -6252,18 +6252,18 @@ ru_UA	Date and time short (Islamic Calendar)	18.07.29 12:31
 ru_UA	Date and time medium (Islamic Calendar)	18 Raj. 1429 12:31:00
 ru_UA	Date and time long (Islamic Calendar)	18 Раджаб 1429 12:31:00 GMT+00:00
 ru_UA	Date and time full (Islamic Calendar)	понедельник, 18 Раджаб 1429 г. 12:31:00 GMT+00:00
-ru_UA	Name of month 01 (Gregorian Calendar)	января
-ru_UA	Name of month 02 (Gregorian Calendar)	февраля
-ru_UA	Name of month 03 (Gregorian Calendar)	марта
-ru_UA	Name of month 04 (Gregorian Calendar)	апреля
-ru_UA	Name of month 05 (Gregorian Calendar)	мая
-ru_UA	Name of month 06 (Gregorian Calendar)	июня
-ru_UA	Name of month 07 (Gregorian Calendar)	июля
-ru_UA	Name of month 08 (Gregorian Calendar)	августа
-ru_UA	Name of month 09 (Gregorian Calendar)	сентября
-ru_UA	Name of month 10 (Gregorian Calendar)	октября
-ru_UA	Name of month 11 (Gregorian Calendar)	ноября
-ru_UA	Name of month 12 (Gregorian Calendar)	декабря
+ru_UA	Name of month 01 (Gregorian Calendar)	Январь
+ru_UA	Name of month 02 (Gregorian Calendar)	Февраль
+ru_UA	Name of month 03 (Gregorian Calendar)	Март
+ru_UA	Name of month 04 (Gregorian Calendar)	Апрель
+ru_UA	Name of month 05 (Gregorian Calendar)	Май
+ru_UA	Name of month 06 (Gregorian Calendar)	Июнь
+ru_UA	Name of month 07 (Gregorian Calendar)	Июль
+ru_UA	Name of month 08 (Gregorian Calendar)	Август
+ru_UA	Name of month 09 (Gregorian Calendar)	Сентябрь
+ru_UA	Name of month 10 (Gregorian Calendar)	Октябрь
+ru_UA	Name of month 11 (Gregorian Calendar)	Ноябрь
+ru_UA	Name of month 12 (Gregorian Calendar)	Декабрь
 ru_UA	Name of month 01 (Islamic Calendar)	Мухаррам
 ru_UA	Name of month 02 (Islamic Calendar)	Сафар
 ru_UA	Name of month 03 (Islamic Calendar)	Раби-уль-авваль
@@ -6276,20 +6276,20 @@ ru_UA	Name of month 09 (Islamic Calendar)	Рамадан
 ru_UA	Name of month 10 (Islamic Calendar)	Шавваль
 ru_UA	Name of month 11 (Islamic Calendar)	Зуль-Каада
 ru_UA	Name of month 12 (Islamic Calendar)	Зуль-Хиджжа
-ru_UA	Name of weekday 01 (Gregorian Calendar)	понедельник
-ru_UA	Name of weekday 02 (Gregorian Calendar)	вторник
-ru_UA	Name of weekday 03 (Gregorian Calendar)	среда
-ru_UA	Name of weekday 04 (Gregorian Calendar)	четверг
-ru_UA	Name of weekday 05 (Gregorian Calendar)	пятница
-ru_UA	Name of weekday 06 (Gregorian Calendar)	суббота
-ru_UA	Name of weekday 07 (Gregorian Calendar)	воскресенье
-ru_UA	Name of weekday 01 (Islamic Calendar)	понедельник
-ru_UA	Name of weekday 02 (Islamic Calendar)	вторник
-ru_UA	Name of weekday 03 (Islamic Calendar)	среда
-ru_UA	Name of weekday 04 (Islamic Calendar)	четверг
-ru_UA	Name of weekday 05 (Islamic Calendar)	пятница
-ru_UA	Name of weekday 06 (Islamic Calendar)	суббота
-ru_UA	Name of weekday 07 (Islamic Calendar)	воскресенье
+ru_UA	Name of weekday 01 (Gregorian Calendar)	Понедельник
+ru_UA	Name of weekday 02 (Gregorian Calendar)	Вторник
+ru_UA	Name of weekday 03 (Gregorian Calendar)	Среда
+ru_UA	Name of weekday 04 (Gregorian Calendar)	Четверг
+ru_UA	Name of weekday 05 (Gregorian Calendar)	Пятница
+ru_UA	Name of weekday 06 (Gregorian Calendar)	Суббота
+ru_UA	Name of weekday 07 (Gregorian Calendar)	Воскресенье
+ru_UA	Name of weekday 01 (Islamic Calendar)	Понедельник
+ru_UA	Name of weekday 02 (Islamic Calendar)	Вторник
+ru_UA	Name of weekday 03 (Islamic Calendar)	Среда
+ru_UA	Name of weekday 04 (Islamic Calendar)	Четверг
+ru_UA	Name of weekday 05 (Islamic Calendar)	Пятница
+ru_UA	Name of weekday 06 (Islamic Calendar)	Суббота
+ru_UA	Name of weekday 07 (Islamic Calendar)	Воскресенье
 sv	Language endonym	svenska
 sv	Country endonym	
 sv	Floating Point Number	−123 456 789,012
@@ -6668,18 +6668,18 @@ uk	Date and time short (Islamic Calendar)	18.07.29 12:31
 uk	Date and time medium (Islamic Calendar)	18 Raj. 1429 12:31:00
 uk	Date and time long (Islamic Calendar)	18 Раджаб 1429 р. 12:31:00 GMT+00:00
 uk	Date and time full (Islamic Calendar)	Понеділок, 18 Раджаб 1429 р. 12:31:00 GMT+00:00
-uk	Name of month 01 (Gregorian Calendar)	січня
-uk	Name of month 02 (Gregorian Calendar)	лютого
-uk	Name of month 03 (Gregorian Calendar)	березня
-uk	Name of month 04 (Gregorian Calendar)	квітня
-uk	Name of month 05 (Gregorian Calendar)	травня
-uk	Name of month 06 (Gregorian Calendar)	червня
-uk	Name of month 07 (Gregorian Calendar)	липня
-uk	Name of month 08 (Gregorian Calendar)	серпня
-uk	Name of month 09 (Gregorian Calendar)	вересня
-uk	Name of month 10 (Gregorian Calendar)	жовтня
-uk	Name of month 11 (Gregorian Calendar)	листопада
-uk	Name of month 12 (Gregorian Calendar)	грудня
+uk	Name of month 01 (Gregorian Calendar)	Січень
+uk	Name of month 02 (Gregorian Calendar)	Лютий
+uk	Name of month 03 (Gregorian Calendar)	Березень
+uk	Name of month 04 (Gregorian Calendar)	Квітень
+uk	Name of month 05 (Gregorian Calendar)	Травень
+uk	Name of month 06 (Gregorian Calendar)	Червень
+uk	Name of month 07 (Gregorian Calendar)	Липень
+uk	Name of month 08 (Gregorian Calendar)	Серпень
+uk	Name of month 09 (Gregorian Calendar)	Вересень
+uk	Name of month 10 (Gregorian Calendar)	Жовтень
+uk	Name of month 11 (Gregorian Calendar)	Листопад
+uk	Name of month 12 (Gregorian Calendar)	Грудень
 uk	Name of month 01 (Islamic Calendar)	Мухаррам
 uk	Name of month 02 (Islamic Calendar)	Сафар
 uk	Name of month 03 (Islamic Calendar)	Рабі I
@@ -6720,18 +6720,18 @@ uk_UA	Date and time short (Islamic Calendar)	18.07.29 12:31
 uk_UA	Date and time medium (Islamic Calendar)	18 Raj. 1429 12:31:00
 uk_UA	Date and time long (Islamic Calendar)	18 Раджаб 1429 р. 12:31:00 GMT+00:00
 uk_UA	Date and time full (Islamic Calendar)	Понеділок, 18 Раджаб 1429 р. 12:31:00 GMT+00:00
-uk_UA	Name of month 01 (Gregorian Calendar)	січня
-uk_UA	Name of month 02 (Gregorian Calendar)	лютого
-uk_UA	Name of month 03 (Gregorian Calendar)	березня
-uk_UA	Name of month 04 (Gregorian Calendar)	квітня
-uk_UA	Name of month 05 (Gregorian Calendar)	травня
-uk_UA	Name of month 06 (Gregorian Calendar)	червня
-uk_UA	Name of month 07 (Gregorian Calendar)	липня
-uk_UA	Name of month 08 (Gregorian Calendar)	серпня
-uk_UA	Name of month 09 (Gregorian Calendar)	вересня
-uk_UA	Name of month 10 (Gregorian Calendar)	жовтня
-uk_UA	Name of month 11 (Gregorian Calendar)	листопада
-uk_UA	Name of month 12 (Gregorian Calendar)	грудня
+uk_UA	Name of month 01 (Gregorian Calendar)	Січень
+uk_UA	Name of month 02 (Gregorian Calendar)	Лютий
+uk_UA	Name of month 03 (Gregorian Calendar)	Березень
+uk_UA	Name of month 04 (Gregorian Calendar)	Квітень
+uk_UA	Name of month 05 (Gregorian Calendar)	Травень
+uk_UA	Name of month 06 (Gregorian Calendar)	Червень
+uk_UA	Name of month 07 (Gregorian Calendar)	Липень
+uk_UA	Name of month 08 (Gregorian Calendar)	Серпень
+uk_UA	Name of month 09 (Gregorian Calendar)	Вересень
+uk_UA	Name of month 10 (Gregorian Calendar)	Жовтень
+uk_UA	Name of month 11 (Gregorian Calendar)	Листопад
+uk_UA	Name of month 12 (Gregorian Calendar)	Грудень
 uk_UA	Name of month 01 (Islamic Calendar)	Мухаррам
 uk_UA	Name of month 02 (Islamic Calendar)	Сафар
 uk_UA	Name of month 03 (Islamic Calendar)	Рабі I
@@ -6928,18 +6928,18 @@ zh	Date and time short (Islamic Calendar)	29-7-18 下午12:31
 zh	Date and time medium (Islamic Calendar)	1429-7-18 下午12:31:00
 zh	Date and time long (Islamic Calendar)	1429年7月18日格林尼治标准时间+0000下午12时31分00秒
 zh	Date and time full (Islamic Calendar)	1429年7月18日星期一格林尼治标准时间+0000下午12时31分00秒
-zh	Name of month 01 (Gregorian Calendar)	1月
-zh	Name of month 02 (Gregorian Calendar)	2月
-zh	Name of month 03 (Gregorian Calendar)	3月
-zh	Name of month 04 (Gregorian Calendar)	4月
-zh	Name of month 05 (Gregorian Calendar)	5月
-zh	Name of month 06 (Gregorian Calendar)	6月
-zh	Name of month 07 (Gregorian Calendar)	7月
-zh	Name of month 08 (Gregorian Calendar)	8月
-zh	Name of month 09 (Gregorian Calendar)	9月
-zh	Name of month 10 (Gregorian Calendar)	10月
-zh	Name of month 11 (Gregorian Calendar)	11月
-zh	Name of month 12 (Gregorian Calendar)	12月
+zh	Name of month 01 (Gregorian Calendar)	一月
+zh	Name of month 02 (Gregorian Calendar)	二月
+zh	Name of month 03 (Gregorian Calendar)	三月
+zh	Name of month 04 (Gregorian Calendar)	四月
+zh	Name of month 05 (Gregorian Calendar)	五月
+zh	Name of month 06 (Gregorian Calendar)	六月
+zh	Name of month 07 (Gregorian Calendar)	七月
+zh	Name of month 08 (Gregorian Calendar)	八月
+zh	Name of month 09 (Gregorian Calendar)	九月
+zh	Name of month 10 (Gregorian Calendar)	十月
+zh	Name of month 11 (Gregorian Calendar)	十一月
+zh	Name of month 12 (Gregorian Calendar)	十二月
 zh	Name of month 01 (Islamic Calendar)	Muharram
 zh	Name of month 02 (Islamic Calendar)	Safar
 zh	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -6980,18 +6980,18 @@ zh_Hans	Date and time short (Islamic Calendar)	29-7-18 下午12:31
 zh_Hans	Date and time medium (Islamic Calendar)	1429-7-18 下午12:31:00
 zh_Hans	Date and time long (Islamic Calendar)	1429年7月18日格林尼治标准时间+0000下午12时31分00秒
 zh_Hans	Date and time full (Islamic Calendar)	1429年7月18日星期一格林尼治标准时间+0000下午12时31分00秒
-zh_Hans	Name of month 01 (Gregorian Calendar)	1月
-zh_Hans	Name of month 02 (Gregorian Calendar)	2月
-zh_Hans	Name of month 03 (Gregorian Calendar)	3月
-zh_Hans	Name of month 04 (Gregorian Calendar)	4月
-zh_Hans	Name of month 05 (Gregorian Calendar)	5月
-zh_Hans	Name of month 06 (Gregorian Calendar)	6月
-zh_Hans	Name of month 07 (Gregorian Calendar)	7月
-zh_Hans	Name of month 08 (Gregorian Calendar)	8月
-zh_Hans	Name of month 09 (Gregorian Calendar)	9月
-zh_Hans	Name of month 10 (Gregorian Calendar)	10月
-zh_Hans	Name of month 11 (Gregorian Calendar)	11月
-zh_Hans	Name of month 12 (Gregorian Calendar)	12月
+zh_Hans	Name of month 01 (Gregorian Calendar)	一月
+zh_Hans	Name of month 02 (Gregorian Calendar)	二月
+zh_Hans	Name of month 03 (Gregorian Calendar)	三月
+zh_Hans	Name of month 04 (Gregorian Calendar)	四月
+zh_Hans	Name of month 05 (Gregorian Calendar)	五月
+zh_Hans	Name of month 06 (Gregorian Calendar)	六月
+zh_Hans	Name of month 07 (Gregorian Calendar)	七月
+zh_Hans	Name of month 08 (Gregorian Calendar)	八月
+zh_Hans	Name of month 09 (Gregorian Calendar)	九月
+zh_Hans	Name of month 10 (Gregorian Calendar)	十月
+zh_Hans	Name of month 11 (Gregorian Calendar)	十一月
+zh_Hans	Name of month 12 (Gregorian Calendar)	十二月
 zh_Hans	Name of month 01 (Islamic Calendar)	Muharram
 zh_Hans	Name of month 02 (Islamic Calendar)	Safar
 zh_Hans	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -7032,18 +7032,18 @@ zh_Hans_CN	Date and time short (Islamic Calendar)	29-7-18 下午12:31
 zh_Hans_CN	Date and time medium (Islamic Calendar)	1429-7-18 下午12:31:00
 zh_Hans_CN	Date and time long (Islamic Calendar)	1429年7月18日格林尼治标准时间+0000下午12时31分00秒
 zh_Hans_CN	Date and time full (Islamic Calendar)	1429年7月18日星期一格林尼治标准时间+0000下午12时31分00秒
-zh_Hans_CN	Name of month 01 (Gregorian Calendar)	1月
-zh_Hans_CN	Name of month 02 (Gregorian Calendar)	2月
-zh_Hans_CN	Name of month 03 (Gregorian Calendar)	3月
-zh_Hans_CN	Name of month 04 (Gregorian Calendar)	4月
-zh_Hans_CN	Name of month 05 (Gregorian Calendar)	5月
-zh_Hans_CN	Name of month 06 (Gregorian Calendar)	6月
-zh_Hans_CN	Name of month 07 (Gregorian Calendar)	7月
-zh_Hans_CN	Name of month 08 (Gregorian Calendar)	8月
-zh_Hans_CN	Name of month 09 (Gregorian Calendar)	9月
-zh_Hans_CN	Name of month 10 (Gregorian Calendar)	10月
-zh_Hans_CN	Name of month 11 (Gregorian Calendar)	11月
-zh_Hans_CN	Name of month 12 (Gregorian Calendar)	12月
+zh_Hans_CN	Name of month 01 (Gregorian Calendar)	一月
+zh_Hans_CN	Name of month 02 (Gregorian Calendar)	二月
+zh_Hans_CN	Name of month 03 (Gregorian Calendar)	三月
+zh_Hans_CN	Name of month 04 (Gregorian Calendar)	四月
+zh_Hans_CN	Name of month 05 (Gregorian Calendar)	五月
+zh_Hans_CN	Name of month 06 (Gregorian Calendar)	六月
+zh_Hans_CN	Name of month 07 (Gregorian Calendar)	七月
+zh_Hans_CN	Name of month 08 (Gregorian Calendar)	八月
+zh_Hans_CN	Name of month 09 (Gregorian Calendar)	九月
+zh_Hans_CN	Name of month 10 (Gregorian Calendar)	十月
+zh_Hans_CN	Name of month 11 (Gregorian Calendar)	十一月
+zh_Hans_CN	Name of month 12 (Gregorian Calendar)	十二月
 zh_Hans_CN	Name of month 01 (Islamic Calendar)	Muharram
 zh_Hans_CN	Name of month 02 (Islamic Calendar)	Safar
 zh_Hans_CN	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -7084,18 +7084,18 @@ zh_Hans_HK	Date and time short (Islamic Calendar)	29-7-18 下午12:31
 zh_Hans_HK	Date and time medium (Islamic Calendar)	1429-7-18 下午12:31:00
 zh_Hans_HK	Date and time long (Islamic Calendar)	1429年7月18日格林尼治标准时间+0000下午12时31分00秒
 zh_Hans_HK	Date and time full (Islamic Calendar)	1429年7月18日星期一格林尼治标准时间+0000下午12时31分00秒
-zh_Hans_HK	Name of month 01 (Gregorian Calendar)	1月
-zh_Hans_HK	Name of month 02 (Gregorian Calendar)	2月
-zh_Hans_HK	Name of month 03 (Gregorian Calendar)	3月
-zh_Hans_HK	Name of month 04 (Gregorian Calendar)	4月
-zh_Hans_HK	Name of month 05 (Gregorian Calendar)	5月
-zh_Hans_HK	Name of month 06 (Gregorian Calendar)	6月
-zh_Hans_HK	Name of month 07 (Gregorian Calendar)	7月
-zh_Hans_HK	Name of month 08 (Gregorian Calendar)	8月
-zh_Hans_HK	Name of month 09 (Gregorian Calendar)	9月
-zh_Hans_HK	Name of month 10 (Gregorian Calendar)	10月
-zh_Hans_HK	Name of month 11 (Gregorian Calendar)	11月
-zh_Hans_HK	Name of month 12 (Gregorian Calendar)	12月
+zh_Hans_HK	Name of month 01 (Gregorian Calendar)	一月
+zh_Hans_HK	Name of month 02 (Gregorian Calendar)	二月
+zh_Hans_HK	Name of month 03 (Gregorian Calendar)	三月
+zh_Hans_HK	Name of month 04 (Gregorian Calendar)	四月
+zh_Hans_HK	Name of month 05 (Gregorian Calendar)	五月
+zh_Hans_HK	Name of month 06 (Gregorian Calendar)	六月
+zh_Hans_HK	Name of month 07 (Gregorian Calendar)	七月
+zh_Hans_HK	Name of month 08 (Gregorian Calendar)	八月
+zh_Hans_HK	Name of month 09 (Gregorian Calendar)	九月
+zh_Hans_HK	Name of month 10 (Gregorian Calendar)	十月
+zh_Hans_HK	Name of month 11 (Gregorian Calendar)	十一月
+zh_Hans_HK	Name of month 12 (Gregorian Calendar)	十二月
 zh_Hans_HK	Name of month 01 (Islamic Calendar)	Muharram
 zh_Hans_HK	Name of month 02 (Islamic Calendar)	Safar
 zh_Hans_HK	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -7136,18 +7136,18 @@ zh_Hans_MO	Date and time short (Islamic Calendar)	29-7-18 下午12:31
 zh_Hans_MO	Date and time medium (Islamic Calendar)	1429-7-18 下午12:31:00
 zh_Hans_MO	Date and time long (Islamic Calendar)	1429年7月18日格林尼治标准时间+0000下午12时31分00秒
 zh_Hans_MO	Date and time full (Islamic Calendar)	1429年7月18日星期一格林尼治标准时间+0000下午12时31分00秒
-zh_Hans_MO	Name of month 01 (Gregorian Calendar)	1月
-zh_Hans_MO	Name of month 02 (Gregorian Calendar)	2月
-zh_Hans_MO	Name of month 03 (Gregorian Calendar)	3月
-zh_Hans_MO	Name of month 04 (Gregorian Calendar)	4月
-zh_Hans_MO	Name of month 05 (Gregorian Calendar)	5月
-zh_Hans_MO	Name of month 06 (Gregorian Calendar)	6月
-zh_Hans_MO	Name of month 07 (Gregorian Calendar)	7月
-zh_Hans_MO	Name of month 08 (Gregorian Calendar)	8月
-zh_Hans_MO	Name of month 09 (Gregorian Calendar)	9月
-zh_Hans_MO	Name of month 10 (Gregorian Calendar)	10月
-zh_Hans_MO	Name of month 11 (Gregorian Calendar)	11月
-zh_Hans_MO	Name of month 12 (Gregorian Calendar)	12月
+zh_Hans_MO	Name of month 01 (Gregorian Calendar)	一月
+zh_Hans_MO	Name of month 02 (Gregorian Calendar)	二月
+zh_Hans_MO	Name of month 03 (Gregorian Calendar)	三月
+zh_Hans_MO	Name of month 04 (Gregorian Calendar)	四月
+zh_Hans_MO	Name of month 05 (Gregorian Calendar)	五月
+zh_Hans_MO	Name of month 06 (Gregorian Calendar)	六月
+zh_Hans_MO	Name of month 07 (Gregorian Calendar)	七月
+zh_Hans_MO	Name of month 08 (Gregorian Calendar)	八月
+zh_Hans_MO	Name of month 09 (Gregorian Calendar)	九月
+zh_Hans_MO	Name of month 10 (Gregorian Calendar)	十月
+zh_Hans_MO	Name of month 11 (Gregorian Calendar)	十一月
+zh_Hans_MO	Name of month 12 (Gregorian Calendar)	十二月
 zh_Hans_MO	Name of month 01 (Islamic Calendar)	Muharram
 zh_Hans_MO	Name of month 02 (Islamic Calendar)	Safar
 zh_Hans_MO	Name of month 03 (Islamic Calendar)	Rabiʻ I
@@ -7188,18 +7188,18 @@ zh_Hans_SG	Date and time short (Islamic Calendar)	18/07/29 下午12:31
 zh_Hans_SG	Date and time medium (Islamic Calendar)	1429-7-18 下午12:31:00
 zh_Hans_SG	Date and time long (Islamic Calendar)	1429年7月18日下午12:31:00格林尼治标准时间+0000
 zh_Hans_SG	Date and time full (Islamic Calendar)	1429年7月18日星期一格林尼治标准时间+0000下午12时31分00秒
-zh_Hans_SG	Name of month 01 (Gregorian Calendar)	1月
-zh_Hans_SG	Name of month 02 (Gregorian Calendar)	2月
-zh_Hans_SG	Name of month 03 (Gregorian Calendar)	3月
-zh_Hans_SG	Name of month 04 (Gregorian Calendar)	4月
-zh_Hans_SG	Name of month 05 (Gregorian Calendar)	5月
-zh_Hans_SG	Name of month 06 (Gregorian Calendar)	6月
-zh_Hans_SG	Name of month 07 (Gregorian Calendar)	7月
-zh_Hans_SG	Name of month 08 (Gregorian Calendar)	8月
-zh_Hans_SG	Name of month 09 (Gregorian Calendar)	9月
-zh_Hans_SG	Name of month 10 (Gregorian Calendar)	10月
-zh_Hans_SG	Name of month 11 (Gregorian Calendar)	11月
-zh_Hans_SG	Name of month 12 (Gregorian Calendar)	12月
+zh_Hans_SG	Name of month 01 (Gregorian Calendar)	一月
+zh_Hans_SG	Name of month 02 (Gregorian Calendar)	二月
+zh_Hans_SG	Name of month 03 (Gregorian Calendar)	三月
+zh_Hans_SG	Name of month 04 (Gregorian Calendar)	四月
+zh_Hans_SG	Name of month 05 (Gregorian Calendar)	五月
+zh_Hans_SG	Name of month 06 (Gregorian Calendar)	六月
+zh_Hans_SG	Name of month 07 (Gregorian Calendar)	七月
+zh_Hans_SG	Name of month 08 (Gregorian Calendar)	八月
+zh_Hans_SG	Name of month 09 (Gregorian Calendar)	九月
+zh_Hans_SG	Name of month 10 (Gregorian Calendar)	十月
+zh_Hans_SG	Name of month 11 (Gregorian Calendar)	十一月
+zh_Hans_SG	Name of month 12 (Gregorian Calendar)	十二月
 zh_Hans_SG	Name of month 01 (Islamic Calendar)	Muharram
 zh_Hans_SG	Name of month 02 (Islamic Calendar)	Safar
 zh_Hans_SG	Name of month 03 (Islamic Calendar)	Rabiʻ I

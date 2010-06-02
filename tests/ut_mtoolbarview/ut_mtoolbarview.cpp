@@ -76,17 +76,168 @@ void Ut_MToolBarView::testDeleteAddAction()
     m_toolbar->clearActions();
 
     MWidget *parentWidget = new MWidget();
-    m_toolbar->addAction(createTextEditAction(parentWidget));
+    QPointer<MWidgetAction> action = createTextEditAction(parentWidget);
+    m_toolbar->addAction(action);
     QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
     delete parentWidget;
 
     // toolbar should not crash as action has been deleted
+    QVERIFY(m_toolbar->actions().count() == 0);
+    QVERIFY(action.isNull());
+
+    // Add another action just to sure
     m_toolbar->addAction(new MAction("TEXTONLY", m_toolbar));
-    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
 
     QVERIFY(m_toolbar->actions().count() == 1);
 }
+void Ut_MToolBarView::testDeleteAction()
+{
+    m_toolbar->clearActions();
 
+    MWidget *parentWidget = new MWidget();
+    QPointer<MWidgetAction> action = createTextEditAction(parentWidget);
+    m_toolbar->addAction(action);
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+    delete action;
+
+    // toolbar should not crash as action has been deleted
+    QVERIFY(m_toolbar->actions().count() == 0);
+    QVERIFY(action.isNull());
+}
+void Ut_MToolBarView::testDeleteAndAddingTextWidget()
+{
+    //This is testing that we properly delete a text edit action
+    MWidget *parentWidget = new MWidget();
+    QPointer<MWidgetAction> action = createTextEditAction(parentWidget);
+    m_toolbar->addAction(action);
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+    delete action;
+
+    //We should now be completely empty, and thus we can add a text edit again, and 4 more actions..
+    MWidget *parentWidget2 = new MWidget();
+    QPointer<MWidgetAction> action2 = createTextEditAction(parentWidget2);
+    m_toolbar->addAction(action2);
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    QVERIFY(m_toolbar->actions().count() == 1);
+    QVERIFY(action2->widget()->isVisible()); //Should be visible
+
+    //Try adding a second text edit.  Should not show
+    MWidget *parentWidget3 = new MWidget();
+    QPointer<MWidgetAction> action3 = createTextEditAction(parentWidget3);
+    m_toolbar->addAction(action3);
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    QVERIFY(m_toolbar->actions().count() == 2);
+    QVERIFY(action2->widget()->isVisible()); //Should still be visible
+    QVERIFY(!action3->widget()->isVisible()); //New one should not be visible
+
+    //Now add four normal widgets
+    MAction *action4 = new MAction("action4", m_toolbar);
+    action4->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(action4);
+
+    MAction *action5 = new MAction("action4", m_toolbar);
+    action5->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(action5);
+
+    MAction *action6 = new MAction("action4", m_toolbar);
+    action6->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(action6);
+
+    MAction *action7 = new MAction("action4", m_toolbar);
+    action7->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(action7);
+
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    //Two of the normal actions should be visible, and two not
+    MButton* button4 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action4));
+    MButton* button5 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action5));
+    MButton* button6 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action6));
+    MButton* button7 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action7));
+    QVERIFY(button4);
+    QVERIFY(button4->isVisible());
+    QVERIFY(button5);
+    QVERIFY(button5->isVisible());
+    QVERIFY(!button6 || !button6->isVisible());
+    QVERIFY(!button7 || !button7->isVisible());
+
+    //Now delete the showing text edit.  The second should become visible
+    delete parentWidget2;
+    QVERIFY(action2.isNull());
+
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+    QVERIFY(action3->widget()->isVisible()); //New one should now be visible
+
+    button4 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action4));
+    button5 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action5));
+    button6 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action6));
+    button7 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action7));
+    QVERIFY(button4);
+    QVERIFY(button4->isVisible());
+    QVERIFY(button5);
+    QVERIFY(button5->isVisible());
+    QVERIFY(!button6 || !button6->isVisible());
+    QVERIFY(!button7 || !button7->isVisible());
+
+    //Now remove the third text edit
+    m_toolbar->removeAction(action3);
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    //All the buttons should now be visible again
+    QVERIFY(!action3->widget()->isVisible());
+
+    button4 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action4));
+    button5 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action5));
+    button6 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action6));
+    button7 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action7));
+    QVERIFY(button4);
+    QVERIFY(button4->isVisible());
+    QVERIFY(button5);
+    QVERIFY(button5->isVisible());
+    QVERIFY(button6);
+    QVERIFY(button6->isVisible());
+    QVERIFY(button7);
+    QVERIFY(button7->isVisible());
+
+    //Try inserting the toolbar again before the 4th button visible.
+    //This should fail since there isn't room for it
+    m_toolbar->insertAction(action7, action3);
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    QVERIFY(!action3->widget()->isVisible());
+    button4 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action4));
+    button5 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action5));
+    button6 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action6));
+    button7 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action7));
+    QVERIFY(button4);
+    QVERIFY(button4->isVisible());
+    QVERIFY(button5);
+    QVERIFY(button5->isVisible());
+    QVERIFY(button6);
+    QVERIFY(button6->isVisible());
+    QVERIFY(button7);
+    QVERIFY(button7->isVisible());
+
+    //Try inserting the toolbar before the 3rd button visible.
+    //This should now work, pushing off button6 and button7
+    m_toolbar->insertAction(action6, action3);
+    QCoreApplication::processEvents(QEventLoop::WaitForMoreEvents, 10);
+
+    QVERIFY(action3->widget()->isVisible());
+    button4 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action4));
+    button5 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action5));
+    button6 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action6));
+    button7 = dynamic_cast<MButton *>(m_toolbarview->getWidget(action7));
+    QVERIFY(button4);
+    QVERIFY(button4->isVisible());
+    QVERIFY(button5);
+    QVERIFY(button5->isVisible());
+    QVERIFY(!button6 || !button6->isVisible());
+    QVERIFY(!button7 || !button7->isVisible());
+
+}
 void Ut_MToolBarView::testTabView()
 {
     m_toolbar->clearActions();
@@ -169,21 +320,150 @@ MWidgetAction *Ut_MToolBarView::createTextEditAction(MWidget *parentWidget)
     return actionTextEdit;
 }
 
-void Ut_MToolBarView::testAddingRemoveActions()
+void Ut_MToolBarView::testInsertingActions()
 {
     QPointer<MAction> action1 = new MAction("action", m_toolbar);
     action1->setLocation(MAction::ToolBarLocation);
     m_toolbar->addAction(action1);
+    QPointer<MButton> button1 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action1));
+
+    QPointer<MAction> action2 = new MAction("action", m_toolbar);
+    action2->setLocation(MAction::ToolBarLocation);
+    m_toolbar->insertAction(action1, action2);
+    QPointer<MButton> button2 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action2));
+
+    qApp->processEvents();
+    QCOMPARE(m_toolbar->actions().count(), 2);
+    QVERIFY(m_toolbar->actions()[0] == action2);
+    QVERIFY(m_toolbar->actions()[1] == action1);
+    QVERIFY(button2->geometry().left() < button1->geometry().left());
+
+    action1->setVisible(false);
+    button1 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action1));
+
+    //Check we can insert before a hidden action
+    QPointer<MAction> action3 = new MAction("action", m_toolbar);
+    action3->setLocation(MAction::ToolBarLocation);
+    m_toolbar->insertAction(action1, action3);
+    QPointer<MButton> button3 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action3));
+
+    qApp->processEvents();
+    QCOMPARE(m_toolbar->actions().count(), 3);
+    QVERIFY(m_toolbar->actions()[0] == action2);
+    QVERIFY(m_toolbar->actions()[1] == action3);
+    QVERIFY(m_toolbar->actions()[2] == action1);
+    QVERIFY(button2->geometry().left() < button3->geometry().left());
+    QCOMPARE(button1 && button1->isVisible(), false);
+
+    //Check if we insert a hidden action then make it visible, it's in the right place
+    QPointer<MAction> action4 = new MAction("action", m_toolbar);
+    action4->setLocation(MAction::ToolBarLocation);
+    action4->setVisible(false);
+    m_toolbar->insertAction(action2, action4);
+    action4->setVisible(true);
+    QPointer<MButton> button4 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action4));
+
+    qApp->processEvents();
+    QCOMPARE(m_toolbar->actions().count(), 4);
+    QVERIFY(m_toolbar->actions()[0] == action4);
+    QVERIFY(m_toolbar->actions()[1] == action2);
+    QVERIFY(m_toolbar->actions()[2] == action3);
+    QVERIFY(m_toolbar->actions()[3] == action1);
+    QVERIFY(button4->geometry().left() < button2->geometry().left());
+    QVERIFY(button2->geometry().left() < button3->geometry().left());
+    QCOMPARE(button1 && button1->isVisible(), false);
+    QCOMPARE(button4->isVisible(), true);
+
+    //Add an action at the end, so we now have 4 visible buttons and 1 hidden button
+    QPointer<MAction> action5 = new MAction("action", m_toolbar);
+    action5->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(action5);
+    QPointer<MButton> button5 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action5));
+
+    qApp->processEvents();
+    QCOMPARE(m_toolbar->actions().count(), 5);
+    QVERIFY(m_toolbar->actions()[0] == action4);
+    QVERIFY(m_toolbar->actions()[1] == action2);
+    QVERIFY(m_toolbar->actions()[2] == action3);
+    QVERIFY(m_toolbar->actions()[3] == action1);
+    QVERIFY(m_toolbar->actions()[4] == action5);
+
+    QVERIFY(button4->geometry().left() < button2->geometry().left());
+    QVERIFY(button2->geometry().left() < button3->geometry().left());
+    QVERIFY(button3->geometry().left() < button5->geometry().left());
+    QCOMPARE(button1 && button1->isVisible(), false);
+
+    //Make action1 visible again.  This should push action5 off so that it's hidden
+    action1->setVisible(true);
+    button1 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action1));
+    button5 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action5));
+    QVERIFY(button1);
+    qApp->processEvents();
+
+    QCOMPARE(button1->isVisible(), true);
+    QCOMPARE(button5 && button5->isVisible(), false);
+
+    QCOMPARE(m_toolbar->actions().count(), 5);
+    QVERIFY(m_toolbar->actions()[0] == action4);
+    QVERIFY(m_toolbar->actions()[1] == action2);
+    QVERIFY(m_toolbar->actions()[2] == action3);
+    QVERIFY(m_toolbar->actions()[3] == action1);
+    QVERIFY(m_toolbar->actions()[4] == action5);
+    QVERIFY(button4->geometry().left() < button2->geometry().left());
+    QVERIFY(button2->geometry().left() < button3->geometry().left());
+    QVERIFY(button3->geometry().left() < button1->geometry().left());
+}
+void Ut_MToolBarView::testAddingRemoveActions_data()
+{
+    QTest::addColumn<bool>("deleteAction");
+    QTest::newRow("Adding and removing action") << false;
+    QTest::newRow("Adding and deleting action") << true;
+}
+void Ut_MToolBarView::testAddingRemoveActions()
+{
+    QFETCH(bool, deleteAction);
+    QPointer<MAction> action1 = new MAction("action", m_toolbar);
+    action1->setLocation(MAction::ToolBarLocation);
+    m_toolbar->addAction(action1);
+    QPointer<MButton> button1 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action1));
 
     QPointer<MAction> action2 = new MAction("action", m_toolbar);
     action2->setLocation(MAction::ToolBarLocation);
     m_toolbar->addAction(action2);
+    QPointer<MButton> button2 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action2));
+    action2->setVisible(false);
 
-    m_toolbar->removeAction(action1);
-    m_toolbar->removeAction(action2);
-    QVERIFY(!action1.isNull());
-    QVERIFY(!action2.isNull());
+    QPointer<MAction> action3 = new MAction("action", m_toolbar);
+    action3->setLocation(MAction::ToolBarLocation);
+    action3->setVisible(false);
+    m_toolbar->addAction(action3);
+    QPointer<MButton> button3 = dynamic_cast<MButton*>(m_toolbarview->getWidget(action3));
 
+    QVERIFY(!button1.isNull());
+    QVERIFY(!button2.isNull());
+    QVERIFY(button3.isNull());
+
+    if(deleteAction) {
+        delete action3;
+        delete action1;
+        delete action2;
+    } else {
+        m_toolbar->removeAction(action3);
+        m_toolbar->removeAction(action1);
+        m_toolbar->removeAction(action2);
+        QVERIFY(!action1.isNull());
+        QVERIFY(!action2.isNull());
+        QVERIFY(!action3.isNull());
+    }
+    QVERIFY(button1.isNull());
+    QVERIFY(button2.isNull());
+    QVERIFY(button3.isNull());
+    if(!deleteAction) {
+        //Delete now, after they've been removed, just to clean up
+        delete action1;
+        delete action2;
+        delete action3;
+    }
 }
 
 void Ut_MToolBarView::testSizeHint_data()
@@ -304,12 +584,22 @@ void Ut_MToolBarView::testButtons()
     action->setVisible(false);
     WAIT_VERIFY(button.isNull() || !button->isVisible());
 
+    //This is an implementation specific check.  It's nice
+    //if the button is not deleted so that it's available
+    //straight away if we need it again
+    WAIT_VERIFY(!button.isNull());
+    WAIT_VERIFY(!button->isVisible());
+
     /* Set the button back to how it was, but disabled */
     action->setEnabled(false);
     action->setChecked(true);
     action->setText("Hello");
     /* And now show the button again */
     action->setVisible(true);
+
+    /* Another implementation specific check. */
+    QVERIFY(button == dynamic_cast<MButton*>(m_toolbarview->getWidget(action)));
+
     button = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
     QVERIFY(button);
     QVERIFY(!button->isEnabled());
@@ -355,7 +645,7 @@ void Ut_MToolBarView::testMWidgetAction_data()
 
     QTest::newRow("Testing MWidgetAction with MButton") << "button";
     QTest::newRow("Testing MWidgetAction with MTextEdit") << "textedit";
-    QTest::newRow("Testing MWidgetAction with MSlider") << "image";
+//    QTest::newRow("Testing MWidgetAction with MSlider") << "image";
 }
 void Ut_MToolBarView::testMWidgetAction()
 {
@@ -390,7 +680,22 @@ void Ut_MToolBarView::testMWidgetAction()
     QVERIFY(widget);
     QVERIFY(widget->isEnabled());
     WAIT_VERIFY(widget->isVisible());
-    
+}
+
+void Ut_MToolBarView::testAddToLandscapeWhenInPortrait()
+{
+    QVERIFY(m_toolbar->actions().isEmpty());
+
+    appWin->setOrientationAngle(M::Angle90);
+    qApp->processEvents();
+
+    MAction *action = new MAction("Hello", m_toolbar);
+    action->setLocation(MAction::ToolBarLandscapeLocation);
+    m_toolbar->addAction(action);
+
+    //Since we are in landscape mode we should not see this action
+    QPointer<MButton> button = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
+    WAIT_VERIFY(!button || !button->isVisible());
 }
 
 QTEST_APPLESS_MAIN(Ut_MToolBarView)

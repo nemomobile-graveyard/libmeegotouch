@@ -35,14 +35,17 @@ class MApplicationExtensionManagerStub : public StubBase {
   virtual bool init();
   virtual QList<MApplicationExtensionInterface *> extensions();
   virtual void updateAvailableExtensions(const QString &path);
+  virtual void updateExtension(const MDesktopEntry &extensionData);
   virtual QString dataPath() const;
   virtual bool isInProcess(const MApplicationExtensionMetaData &metaData);
   virtual bool createDataStore();
-  virtual bool instantiateExtension(const MApplicationExtensionMetaData &metadata);
-  virtual bool instantiateInProcessExtension(const QString &binary);
-  virtual bool instantiateOutOfProcessExtension(const MApplicationExtensionMetaData &metadata);
+  virtual QSharedPointer<MDataStore> createSubDataStore(
+      const MApplicationExtensionMetaData &metaData);
+  virtual bool instantiateExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata);
+  virtual bool instantiateInProcessExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata);
+  virtual bool instantiateOutOfProcessExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata);
   virtual void removeExtension(const MApplicationExtensionMetaData &metadata);
-  virtual void removeInProcessExtension(const QString &library);
+  virtual void removeInProcessExtension(const MApplicationExtensionMetaData &metadata);
   virtual void removeOutOfProcessExtension(const MApplicationExtensionMetaData &metadata);
   virtual QString createApplicationExtensionDataFileName(const QString &interface) const;
 }; 
@@ -83,6 +86,13 @@ void MApplicationExtensionManagerStub::updateAvailableExtensions(const QString &
   stubMethodEntered("updateAvailableExtensions",params);
 }
 
+void MApplicationExtensionManagerStub::updateExtension(const MDesktopEntry &extensionData)
+{
+  QList<ParameterBase*> params;
+  params.append( new Parameter<const MDesktopEntry& >(extensionData));
+  stubMethodEntered("updateExtension",params);
+}
+
 QString MApplicationExtensionManagerStub::dataPath() const {
   stubMethodEntered("dataPath");
   return stubReturnValue<QString>("dataPath");
@@ -100,23 +110,33 @@ bool MApplicationExtensionManagerStub::createDataStore() {
   return stubReturnValue<bool>("createDataStore");
 }
 
-bool MApplicationExtensionManagerStub::instantiateExtension(const MApplicationExtensionMetaData &metadata) {
+QSharedPointer<MDataStore>
+MApplicationExtensionManagerStub::createSubDataStore(
+    const MApplicationExtensionMetaData &metadata) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const MApplicationExtensionMetaData & >(metadata));
+  params.append(
+      new Parameter<const MApplicationExtensionMetaData & >(metadata));
+  stubMethodEntered("createSubDataStore", params);
+  return stubReturnValue<QSharedPointer<MDataStore> >("createSubDataStore");
+}
+
+bool MApplicationExtensionManagerStub::instantiateExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata) {
+  QList<ParameterBase*> params;
+  params.append( new Parameter<QSharedPointer<const MApplicationExtensionMetaData> & >(metadata));
   stubMethodEntered("instantiateExtension",params);
   return stubReturnValue<bool>("instantiateExtension");
 }
 
-bool MApplicationExtensionManagerStub::instantiateInProcessExtension(const QString &binary) {
+bool MApplicationExtensionManagerStub::instantiateInProcessExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<QString >(binary));
+  params.append( new Parameter<QSharedPointer<const MApplicationExtensionMetaData> & >(metadata));
   stubMethodEntered("instantiateInProcessExtension",params);
   return stubReturnValue<bool>("instantiateInProcessExtension");
 }
 
-bool MApplicationExtensionManagerStub::instantiateOutOfProcessExtension(const MApplicationExtensionMetaData &metadata) {
+bool MApplicationExtensionManagerStub::instantiateOutOfProcessExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const MApplicationExtensionMetaData & >(metadata));
+  params.append( new Parameter<QSharedPointer<const MApplicationExtensionMetaData> & >(metadata));
   stubMethodEntered("instantiateOutOfProcessExtension",params);
   return stubReturnValue<bool>("instantiateOutOfProcessExtension");
 }
@@ -127,9 +147,9 @@ void MApplicationExtensionManagerStub::removeExtension(const MApplicationExtensi
   stubMethodEntered("removeExtension",params);
 }
 
-void MApplicationExtensionManagerStub::removeInProcessExtension(const QString &library) {
+void MApplicationExtensionManagerStub::removeInProcessExtension(const MApplicationExtensionMetaData &metadata) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<QString >(library));
+  params.append( new Parameter<const MApplicationExtensionMetaData & >(metadata));
   stubMethodEntered("removeInProcessExtension",params);
 }
 
@@ -182,6 +202,10 @@ void MApplicationExtensionManager::updateAvailableExtensions(const QString &path
   gMApplicationExtensionManagerStub->updateAvailableExtensions(path);
 }
 
+void MApplicationExtensionManager::updateExtension(const MDesktopEntry &extensionData) {
+  gMApplicationExtensionManagerStub->updateExtension(extensionData);
+}
+
 QString MApplicationExtensionManager::dataPath() const {
   return gMApplicationExtensionManagerStub->dataPath();
 }
@@ -194,15 +218,21 @@ bool MApplicationExtensionManager::createDataStore() {
   return gMApplicationExtensionManagerStub->createDataStore();
 }
 
-bool MApplicationExtensionManager::instantiateExtension(const MApplicationExtensionMetaData &metadata) {
+QSharedPointer<MDataStore>
+MApplicationExtensionManager::createSubDataStore(
+    const MApplicationExtensionMetaData &metadata) {
+    return gMApplicationExtensionManagerStub->createSubDataStore(metadata);
+}
+
+bool MApplicationExtensionManager::instantiateExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata) {
   return gMApplicationExtensionManagerStub->instantiateExtension(metadata);
 }
 
-bool MApplicationExtensionManager::instantiateInProcessExtension(const QString &binary) {
-  return gMApplicationExtensionManagerStub->instantiateInProcessExtension(binary);
+bool MApplicationExtensionManager::instantiateInProcessExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata) {
+  return gMApplicationExtensionManagerStub->instantiateInProcessExtension(metadata);
 }
 
-bool MApplicationExtensionManager::instantiateOutOfProcessExtension(const MApplicationExtensionMetaData &metadata) {
+bool MApplicationExtensionManager::instantiateOutOfProcessExtension(QSharedPointer<const MApplicationExtensionMetaData> &metadata) {
   return gMApplicationExtensionManagerStub->instantiateOutOfProcessExtension(metadata);
 }
 
@@ -210,8 +240,8 @@ void MApplicationExtensionManager::removeExtension(const MApplicationExtensionMe
   gMApplicationExtensionManagerStub->removeExtension(metadata);
 }
 
-void MApplicationExtensionManager::removeInProcessExtension(const QString &library) {
-  gMApplicationExtensionManagerStub->removeInProcessExtension(library);
+void MApplicationExtensionManager::removeInProcessExtension(const MApplicationExtensionMetaData &metadata) {
+  gMApplicationExtensionManagerStub->removeInProcessExtension(metadata);
 }
 
 void MApplicationExtensionManager::removeOutOfProcessExtension(const MApplicationExtensionMetaData &metadata) {

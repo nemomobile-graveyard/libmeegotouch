@@ -37,30 +37,25 @@ class TemplatePage  : public TimedemoPage
     Q_OBJECT
 
 public:
-    enum GroupID {
-        ViewsAndDialogs = 0,
-        ContainersAndApplets,
-        LayoutsAndVisuals,
+    enum Category {
+        ApplicationView = 0,
+        SimpleWidgets,
         Buttons,
-        IndicatorsAndNotifications,
-        ListsGridsAndMenus,
-        UserInput,
-        InputFeedback
+        DialogsAndBanners,
+        ListsGridsAndPopups,
+        UserInput
     };
 
-    TemplatePage();
+    TemplatePage(TemplatePage::Category category);
     virtual ~TemplatePage();
 
-    int groupID();
-    static QStringList groupNames();
+    TemplatePage::Category category();
 
     virtual void createContent();
 
 protected:
     virtual void createLayout();
     virtual void retranslateUi();
-
-    int gid;
 
     MLayout              *layout;
 
@@ -74,6 +69,9 @@ protected:
 
     MLayout              *containerLayout;
     MLinearLayoutPolicy  *containerPolicy;
+
+private:
+    TemplatePage::Category pageCategory;
 };
 
 #endif

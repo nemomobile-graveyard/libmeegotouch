@@ -59,10 +59,11 @@ SUBDIRS     =  \
     ut_mwidget \
     ut_mwidgetview \
     ut_mwindow \
-    ut_mphysics2dpanning \
+#    ut_mphysics2dpanning \ Needs refactoring
     ut_mlabel \
     ut_mlogicalvalues \
     ut_mdesktopentry \
+    ut_mextensionwatcher \
     ut_mcontainer \
     ut_minfobanner \
     ut_mwidgetcontroller \
@@ -147,6 +148,7 @@ SUBDIRS     =  \
     ut_mapplicationextensionarea \
     ut_mapplicationextensionareaview \
     ut_mapplicationextensionmanager \
+    ut_mapplicationextensionmetadata \
     ut_mextensionhandle \
     ut_mextensionhandleview \
     ut_mtapandholdrecognizer \
@@ -154,6 +156,9 @@ SUBDIRS     =  \
     ut_mservicefwgen \
 #    ut_mstatusbar \ // Unstable. "Randomly" crashes on clean up, when detroying its MApplication instance.
     ut_mpanrecognizer \
+    ut_mstatusbarview \
+    ut_mabstractitemmodel \
+    ut_phonenumberformatting \
 
 # enable only when we have icu available
 

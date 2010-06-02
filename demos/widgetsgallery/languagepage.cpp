@@ -37,7 +37,8 @@
 #include <QDateTime>
 
 LanguagePage::LanguagePage()
-    : comboBoxLanguage(0),
+    : TemplatePage(TemplatePage::ApplicationView),
+    comboBoxLanguage(0),
       modelLanguage(0),
       comboBoxLcTime(0),
       modelLcTime(0),
@@ -57,7 +58,6 @@ LanguagePage::LanguagePage()
       labelExampleTranslation3(0),
       labelFontTest(0)
 {
-    gid = TemplatePage::UserInput;
 }
 
 LanguagePage::~LanguagePage()
@@ -76,16 +76,11 @@ void LanguagePage::createContent()
     MLayout *layout = new MLayout(panel);
     MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
     comboBoxLanguage = new MComboBox;
-    comboBoxLanguage->setIconID("Icon-browser");
     policy->addItem(comboBoxLanguage, 1, 1);
     comboBoxLcTime = new MComboBox;
-    comboBoxLcTime->setIconID("Icon-browser");
     comboBoxLcCollate = new MComboBox;
-    comboBoxLcCollate->setIconID("Icon-browser");
     comboBoxLcNumeric = new MComboBox;
-    comboBoxLcNumeric->setIconID("Icon-browser");
     comboBoxLcMonetary = new MComboBox;
-    comboBoxLcMonetary->setIconID("Icon-browser");
     labelHaveGconf = new MLabel;
     labelHaveIcu = new MLabel;
     labelExampleNumber = new MLabel;

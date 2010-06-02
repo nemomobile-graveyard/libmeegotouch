@@ -49,6 +49,8 @@ private slots:
     void settingNewPositionIndicator();
     void settingNULLPositionIndicatorShouldNotBeAccepted();
 
+    void disabledViewportShouldNotAllowWigetToBeBiggerThanViewport();
+
 private:
     MPannableViewport *subject;
 };

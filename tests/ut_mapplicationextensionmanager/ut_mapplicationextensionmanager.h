@@ -27,7 +27,8 @@
 
 class MApplicationExtensionManager;
 class MDataStore;
-
+class MApplicationExtensionMetaData;
+class MDesktopEntry;
 /*!
  * Class for listening to MApplicationExtensionManager signals
  */
@@ -115,7 +116,7 @@ private:
 
 signals:
     void directoryChanged(QString path);
-
+    void extensionChanged(const MDesktopEntry &extensionData) const;
 
 private slots:
     // Executed once before every test case
@@ -159,10 +160,10 @@ private slots:
 
     void testRemoveInProcessExtension();
     void testRemoveNonExistentInProcessExtension();
-
     // Test filtering of in and out of process extensions
     void testInProcessExtensionFiltering();
     void testOutOfProcessExtensionFiltering();
+    void testUpdateInProcessExtension();
 
     // Test that manager returns list of instantiated in process extensions when requested.
     void testRequestForAllInProcessExtensionsReturnsAListOfExtensions();

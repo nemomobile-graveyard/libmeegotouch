@@ -23,9 +23,7 @@
 #include "mphysics2dpanning.h"
 #include "mphysics2dpanning_p.h"
 
-static const int PanningTimelineDuration      = 1000000; /* in ms */
-static const int PanningTimelineInterval      =      20; /* in ms */
-static const int PositionNoiseDampingDelta    =       2; /* in px */
+static const int PositionNoiseDampingDelta =  2; /* in px */
 
 MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObject) :
     enabled(true),
@@ -37,8 +35,7 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
     pointerSpringX(0.0),
     pointerSpringY(0.0),
     sceneLastPos(QPointF()),
-    timeLine(new QTimeLine()),
-    currFrame(0),
+    panningAnimation(new PanningAnimation),
     pointerPressed(false),
     pointerSpringK(0.0),
     frictionC(0.0),
@@ -53,75 +50,68 @@ MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObje
 
 MPhysics2DPanningPrivate::~MPhysics2DPanningPrivate()
 {
-    delete timeLine;
+    delete panningAnimation;
 }
 
-void MPhysics2DPanningPrivate::_q_integrator(int frame)
+void MPhysics2DPanningPrivate::_q_integrator(const QVariant &value)
 {
     Q_Q(MPhysics2DPanning);
+    Q_UNUSED(value);
 
     qreal accX, accY;
     qreal tempPosX;
     qreal tempPosY;
-    int i = 0;
 
     tempPosX = posX;
     tempPosY = posY;
 
-    while (frame > currFrame) {
-        if (panDirection.testFlag(Qt::Horizontal)) {
-            q->integrateAxis(Qt::Horizontal,
-                             posX,
-                             velX,
-                             accX,
-                             pointerSpringX,
-                             pointerPressed
-                             );
-        } else {
-            posX = 0.0;
-            velX = 0.0;
-            accX = 0.0;
-        }
+    if (panDirection.testFlag(Qt::Horizontal)) {
+        q->integrateAxis(Qt::Horizontal,
+                         posX,
+                         velX,
+                         accX,
+                         pointerSpringX,
+                         pointerPressed
+                         );
+    } else {
+        posX = 0.0f;
+        velX = 0.0f;
+        accX = 0.0f;
+    }
 
-        if (panDirection.testFlag(Qt::Vertical)) {
-            q->integrateAxis(Qt::Vertical,
-                             posY,
-                             velY,
-                             accY,
-                             pointerSpringY,
-                             pointerPressed
-                             );
+    if (panDirection.testFlag(Qt::Vertical)) {
+        q->integrateAxis(Qt::Vertical,
+                         posY,
+                         velY,
+                         accY,
+                         pointerSpringY,
+                         pointerPressed
+                         );
 
-        } else {
-            posY = 0.0;
-            velY = 0.0;
-            accY = 0.0;
-        }
+    } else {
+        posY = 0.0f;
+        velY = 0.0f;
+        accY = 0.0f;
+    }
 
-        // Checking if the viewport is currently dragged beyond it's borders and the integration should
-        // continue even though the speed is low.
-        bool inRangeX = (panDirection.testFlag(Qt::Horizontal) == false) ||
-                        (posX >= range.left() && posX <= range.right());
+    // Checking if the viewport is currently dragged beyond it's borders and the integration should
+    // continue even though the speed is low.
+    bool inRangeX = (panDirection.testFlag(Qt::Horizontal) == false) ||
+                    (posX >= range.left() && posX <= range.right());
 
-        bool inRangeY = (panDirection.testFlag(Qt::Vertical) == false) ||
-                        (posY >= range.top()  && posY <= range.bottom());
+    bool inRangeY = (panDirection.testFlag(Qt::Vertical) == false) ||
+                    (posY >= range.top()  && posY <= range.bottom());
 
         // Integration stop condition.
-        if (inRangeX && inRangeY &&
-                qAbs(accX) < 1 &&
-                qAbs(accY) < 1 &&
-                qAbs(velX) < 1 &&
-                qAbs(velY) < 1 &&
-                !pointerPressed) {
-            timeLine->stop();
+    if (inRangeX && inRangeY &&
+        qAbs(accX) < 1 &&
+        qAbs(accY) < 1 &&
+        qAbs(velX) < 1 &&
+        qAbs(velY) < 1 &&
+        !pointerPressed) {
+        panningAnimation->stop();
 
-            emit q->panningStopped();
-
-            break;
-        }
-
-        currFrame++;
-        i++;
+        emit q->panningStopped();
     }
 
     if (tempPosX != posX || tempPosY != posY) {
@@ -134,8 +124,7 @@ MPhysics2DPanning::MPhysics2DPanning(QObject *parent)
       d_ptr(new MPhysics2DPanningPrivate(this))
 {
     Q_D(MPhysics2DPanning);
-    connect(d->timeLine, SIGNAL(frameChanged(int)),
-            this, SLOT(_q_integrator(int)));
+    connect(d->panningAnimation, SIGNAL(valueChanged(QVariant)), SLOT(_q_integrator(QVariant)));
 }
 
 
@@ -221,19 +210,19 @@ void MPhysics2DPanning::start()
 {
     Q_D(MPhysics2DPanning);
     if (!inMotion()) {
-        d->velX = 0.0;
-        d->velY = 0.0;
+        d->velX = 0.0f;
+        d->velY = 0.0f;
 
-        d->timeLine->setDuration(PanningTimelineDuration);
-        d->timeLine->setUpdateInterval(PanningTimelineInterval);
-        d->timeLine->setFrameRange(0, 29999);
-        d->timeLine->setCurrentTime(0);
-        d->timeLine->setCurveShape(QTimeLine::LinearCurve);
-        d->currFrame = 0;
-        d->timeLine->start();
+        // Duration does not matter as we loop until the physics termination condition is hit
+        d->panningAnimation->setDuration(1000000);
+        d->panningAnimation->setLoopCount(-1);
+
+        d->panningAnimation->setStartValue(0.0f);
+        d->panningAnimation->setEndValue(1.0f);
+
+        d->panningAnimation->start();
     }
 }
-
 
 void MPhysics2DPanning::stop()
 {
@@ -248,7 +237,7 @@ void MPhysics2DPanning::stop()
                     (d->posY >= d->range.top()  && d->posY <= d->range.bottom());
 
     if (inRangeX && inRangeY) {
-        d->timeLine->stop();
+        d->panningAnimation->stop();
         emit panningStopped();
     }
 }
@@ -320,7 +309,7 @@ bool MPhysics2DPanning::inMotion() const
 {
     Q_D(const MPhysics2DPanning);
 
-    return (d->timeLine->state() == QTimeLine::Running);
+    return (d->panningAnimation->state() == QAbstractAnimation::Running);
 }
 
 
@@ -334,8 +323,8 @@ void MPhysics2DPanning::pointerPress(const QPointF &pos)
     d->pointerPressed = true;
     d->sceneLastPos = pos;
 
-    d->pointerSpringX = 0.0;
-    d->pointerSpringY = 0.0;
+    d->pointerSpringX = 0.0f;
+    d->pointerSpringY = 0.0f;
 }
 
 
@@ -466,11 +455,11 @@ void MPhysics2DPanning::integrateAxis(Qt::Orientation orientation,
 
     } else {
 
-        acceleration = force;
+        acceleration = force - pointerDifference;
 
         velocity                 += acceleration;
         position                 += velocity;
-        pointerDifference   += velocity;
+        pointerDifference        = 0;
     }
 }
 

@@ -31,11 +31,10 @@
 #include <QGraphicsLinearLayout>
 
 IconButtonPage::IconButtonPage() :
-    TemplatePage(),
+        TemplatePage(TemplatePage::SimpleWidgets),
     iconButton1(0),
     iconButton2(0)
 {
-    gid = TemplatePage::Buttons;
 }
 
 IconButtonPage::~IconButtonPage()
@@ -70,7 +69,7 @@ void IconButtonPage::createContent()
     iconButton2->setViewType(MButton::iconType);
     iconButton2->setIconID("icon-m-toolbar-locked");
     iconButton2->setMaximumWidth(175);
-    
+
     containerPolicy->addItem(iconButton2, Qt::AlignCenter);
     containerPolicy->addStretch();
     retranslateUi();

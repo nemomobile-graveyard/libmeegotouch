@@ -4,7 +4,7 @@ INCLUDEPATH += $$MSRCDIR/applicationextension
 TARGET = ut_mapplicationextensionmetadata
 
 TEST_SOURCES = \
-    $$MSRCDIR/applicationextension/mapplicationextensionmetadata.cpp \
+    $$MSRCDIR/extensions/applicationextension/mapplicationextensionmetadata.cpp \
 
 # unit test and unit
 SOURCES += \
@@ -18,7 +18,7 @@ SOURCES += \
 # unit test and unit
 HEADERS += \
     ut_mapplicationextensionmetadata.h \
-    $$MSRCDIR/applicationextension/mapplicationextensionmetadata.h \
+    $$MSRCDIR/extensions/applicationextension/mapplicationextensionmetadata.h \
 
 DEFINES += M_INSTALL_LIBS=\\\"\"$$M_INSTALL_LIBS\"\\\"
 

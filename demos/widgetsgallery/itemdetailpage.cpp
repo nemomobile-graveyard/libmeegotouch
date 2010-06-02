@@ -27,6 +27,7 @@
 #include <QTimer>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include <QPinchGesture>
 
 #include <MImageWidget>
 #include <MLabel>
@@ -70,7 +71,7 @@ MyVideoOverlayToolbar::MyVideoOverlayToolbar(QGraphicsItem *parent)
     landscapePolicy = new MGridLayoutPolicy(layout);
     landscapePolicy->setContentsMargins(0, 0, 0, 0);
     landscapePolicy->setSpacing(0);
-    
+
     portraitPolicy = new MGridLayoutPolicy(layout);
     portraitPolicy->setContentsMargins(0, 0, 0, 0);
     portraitPolicy->setSpacing(0);
@@ -97,15 +98,19 @@ void MyVideoOverlayToolbar::addItem(QGraphicsLayoutItem* button)
 #endif
 
 ItemDetailPage::ItemDetailPage() :
+      slider(0),
+      image(0),
 #ifdef HAVE_GSTREAMER
       video(0),
 #endif
-      slider(0),
-      image(0),
       hideAnimation(0),
-      showAnimation(0)
+      showAnimation(0),
+      scaleFactor(10.0),
+      lastScaleFactor(1.0)
 {
     setObjectName("itemDetailPage");
+    setAcceptTouchEvents(true);
+    grabGesture(Qt::PinchGesture);
 }
 
 ItemDetailPage::~ItemDetailPage()
@@ -115,7 +120,7 @@ ItemDetailPage::~ItemDetailPage()
 #endif
     delete slider;
     delete image;
-    
+
     delete hideAnimation;
     delete showAnimation;
 }
@@ -125,11 +130,20 @@ QString ItemDetailPage::timedemoTitle()
     return "ItemDetailPage";
 }
 
+bool ItemDetailPage::event(QEvent *e)
+{
+    if (e->type() == QEvent::TouchBegin) {
+        lastScaleFactor = 1.0;
+        e->setAccepted(true);
+        return true;
+    }
+    return TimedemoPage::event(e);
+}
 
 void ItemDetailPage::createContent()
 {
     mWarning("ItemDetailPage::createContent()");
-    
+
     inactivityTimer.setInterval(INACTIVITY_TIMEOUT);
     connect(&inactivityTimer, SIGNAL(timeout()),
                this, SLOT(hideOverlay()),
@@ -137,18 +151,19 @@ void ItemDetailPage::createContent()
 
     QGraphicsWidget *panel = centralWidget();
     layout = new MLayout(panel);
+    layout->setContentsMargins(0, 0, 0, 0);
 
 #ifdef HAVE_GSTREAMER
     if( !videoId.isEmpty() ) {
-        QFileInfo info(videoId);        
+        QFileInfo info(videoId);
         setTitle(info.fileName());
 
         setObjectName("video-detail-page");
         video = new MyVideoWidget(panel);
         connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
 
-//set video to fullscreen mode immediately only on device where the 
-//Xv rendering with color-key is supported for sure, to avoid flickering 
+//set video to fullscreen mode immediately only on device where the
+//Xv rendering with color-key is supported for sure, to avoid flickering
 //on desktop machines that does not support color-keying.
 #ifdef __arm__
         video->setFullscreen(true);
@@ -162,7 +177,7 @@ void ItemDetailPage::createContent()
         button->setObjectName("video-player-button");
         button->setIconID("icon-m-toolbar-mediacontrol-pause");
         connect(button, SIGNAL(clicked(bool)), this, SLOT(buttonClicked()));
-       
+
         MButton* bPrev = new MButton(panel);
         bPrev->setViewType(MButton::iconType);
         bPrev->setObjectName("video-player-button");
@@ -174,7 +189,7 @@ void ItemDetailPage::createContent()
         bNext->setObjectName("video-player-button");
         bNext->setIconID("icon-m-toolbar-mediacontrol-next");
         connect(bNext, SIGNAL(clicked(bool)), this, SLOT(buttonClicked()));
-        
+
         slider = new MSlider(panel);
         slider->setObjectName("video-player-slider");
         connect(slider, SIGNAL(valueChanged(int)), this, SLOT(videoSliderValueChanged(int)));
@@ -182,7 +197,7 @@ void ItemDetailPage::createContent()
         connect(slider, SIGNAL(sliderReleased()), this, SLOT(sliderReleased()));
         slider->setMinLabelVisible(true);
         slider->setMaxLabelVisible(true);
-        
+
         cContainer = new MyVideoOverlayToolbar(panel);
         cContainer->addItem(bPrev);
         cContainer->addItem(button);
@@ -214,7 +229,7 @@ void ItemDetailPage::createContent()
 
         hideAnimation = new QParallelAnimationGroup();
         showAnimation = new QParallelAnimationGroup();
-        
+
         QPropertyAnimation* animation = new QPropertyAnimation(cContainer, "opacity");
         animation->setDuration(ANIMATION_TIME);
         animation->setEndValue(0.0);
@@ -244,7 +259,7 @@ void ItemDetailPage::createContent()
         animation->setDuration(ANIMATION_TIME);
         animation->setEndValue(1.0);
         showAnimation->addAnimation(animation);
-        
+
         relayout();
     } else if( !imageId.isEmpty() ) {
 #else
@@ -252,54 +267,16 @@ void ItemDetailPage::createContent()
 #endif
         policy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
         policy->setSpacing(0.0);
-        layout->setLandscapePolicy(policy);
-        layout->setPortraitPolicy(policy);
-
-        MButton* button0 = new MButton;
-        button0->setText("-");
-        connect(button0, SIGNAL(clicked()),this,SLOT(rateNoneButtonClicked()));
-
-        MButton* button1 = new MButton;
-        button1->setText("*");
-        connect(button1, SIGNAL(clicked()),this,SLOT(rateOneButtonClicked()));
-
-        MButton* button2 = new MButton;
-        button2->setText("**");
-        connect(button2, SIGNAL(clicked()),this,SLOT(rateTwoButtonClicked()));
-
-        MButton* button3 = new MButton;
-        button3->setText("***");
-        connect(button3, SIGNAL(clicked()),this,SLOT(rateThreeButtonClicked()));
-
-        MButton* button4 = new MButton;
-        button4->setText("****");
-        connect(button4, SIGNAL(clicked()),this,SLOT(rateFourButtonClicked()));
-
-        MButton* button5 = new MButton;
-        button5->setText("*****");
-        connect(button5, SIGNAL(clicked()),this,SLOT(rateFiveButtonClicked()));
+        layout->setPolicy(policy);
 
         image = new MImageWidget(panel);
         image->setImage(QImage(imageId));
         policy->addItem(image);
 
-        MLayout* bl = new MLayout;
-        bl->setSizePolicy(QSizePolicy::Maximum,QSizePolicy::MinimumExpanding);
-        MLinearLayoutPolicy* blp = new MLinearLayoutPolicy(bl,Qt::Vertical);
-        blp->addItem(button0);
-        blp->addItem(button1);
-        blp->addItem(button2);
-        blp->addItem(button3);
-        blp->addItem(button4);
-        blp->addItem(button5);
-        bl->setLandscapePolicy(blp);
-
-        policy->addItem(bl);
-
         setTitle(QFileInfo(imageId).fileName());
 
         // go fullscreen
-        setComponentsDisplayMode(MApplicationPage::AllComponents,
+        setComponentsDisplayMode(MApplicationPage::NavigationBar,
                                        MApplicationPageModel::AutoHide);
     }
     retranslateUi();
@@ -315,6 +292,26 @@ void ItemDetailPage::resizeEvent(QGraphicsSceneResizeEvent *event)
     relayout();
 }
 
+void ItemDetailPage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
+{
+    if (gesture->state() == Qt::GestureStarted) {
+        lastScaleFactor = 1.0;
+    }
+
+    image->setZoomFactor(scaleFactor / 10.0);
+    image->update();
+    scaleFactor = scaleFactor * (gesture->scaleFactor() - lastScaleFactor + 1);
+
+    lastScaleFactor = gesture->scaleFactor();
+
+    if (scaleFactor < 1)
+        scaleFactor = 1;
+    else if (scaleFactor > 50)
+        scaleFactor = 50;
+
+    event->accept(gesture);
+}
+
 void ItemDetailPage::relayout()
 {
 #ifdef HAVE_GSTREAMER
@@ -326,11 +323,11 @@ void ItemDetailPage::relayout()
                              (s.height() - bContainer->size().height()));
         QPoint tPos = QPoint(((s.width() / 2) - (tContainer->size().width()/2)),
                               0);
-        
+
         cContainer->setPos(cPos);
         bContainer->setPos(bPos);
         tContainer->setPos(tPos);
-        
+
         video->setGeometry(QRectF(0,0,s.width(), s.height()));
     }
 #endif
@@ -370,10 +367,10 @@ void ItemDetailPage::videoReady()
     QTimer::singleShot(100, this, SLOT(updatePosition()));
 
     int minutes = (video->length() / 1000) / 60;
-    int seconds = (video->length() / 1000) % 60;    
+    int seconds = (video->length() / 1000) % 60;
     slider->setMinLabel("0:00");
     slider->setMaxLabel(QString("%1:%2").arg(minutes).arg(seconds, 2, 10, QChar('0')));
-    
+
     setPannable(false);
     setAutoMarginsForComponentsEnabled(false);
     setComponentsDisplayMode(MApplicationPage::NavigationBar, MApplicationPageModel::Hide);
@@ -425,9 +422,9 @@ void ItemDetailPage::buttonClicked()
                 video->play();
                 button->setIconID("icon-m-toolbar-mediacontrol-pause");
             }
-        } else 
+        } else
             video->setFullscreen(!video->isFullscreen());
-    }        
+    }
 #endif
 }
 

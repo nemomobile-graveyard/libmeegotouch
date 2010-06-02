@@ -387,6 +387,46 @@ void MScenePrivate::logFpsCounter(const QTime *timeStamp, float fps)
     fpsLog.stream << " " << QString("%1").arg(fps, 0, 'f', 1) << endl;
 }
 
+void MScenePrivate::fillMarginRectWithPattern(QPainter * painter, const QRectF& rect, int thickness)
+{
+    if(thickness == 0)
+        return;
+
+    QColor fillColor;
+
+    switch(thickness)
+    {
+    case 24:
+        fillColor = QColor(122, 24, 127);
+        break;
+    case 16:
+        fillColor = QColor(250, 25, 0);
+        break;
+    case 12:
+        fillColor = QColor(100, 190, 69);
+        break;
+    case 8:
+        fillColor = QColor(0, 51, 250);
+        break;
+    case 6:
+        fillColor = QColor(138, 93, 59);
+        break;
+    case 4:
+        fillColor = QColor(255, 171, 0);
+        break;
+    case 2:
+        fillColor = QColor(250, 250, 2);
+        break;
+
+    default:
+        fillColor = QColor(2, 254, 255);
+    }
+
+    painter->fillRect(rect, QBrush(fillColor));
+    painter->setOpacity(0.6);
+    painter->fillRect(rect, QBrush(Qt::black, Qt::BDiagPattern));
+}
+
 MScene::MScene(QObject *parent)
     : QGraphicsScene(parent),
       d_ptr(new MScenePrivate)
@@ -468,20 +508,22 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
                 if (layoutItem) {
                     qreal left, top, right, bottom;
                     layoutItem->getContentsMargins(&left, &top, &right, &bottom);
-                    if (left != 0 || top != 0 || right != 0 || bottom != 0) {
-                        QPainterPath path;
-                        path.addPolygon(bp);
-                        path.addPolygon((*item)->mapToScene(br.adjusted(left, top, -right, -bottom)));
 
-                        painter->setOpacity(MarginBackgroundOpacity);
-                        painter->fillPath(path, QBrush(MarginColor));
-                        painter->setOpacity(1.0);
-                        painter->fillPath(path, QBrush(MarginColor, Qt::BDiagPattern));
-                        QPen pen(Qt::DashLine);
-                        pen.setWidth(MarginBorderWidth);
-                        pen.setColor(MarginColor);
-                        painter->strokePath(path, pen);
-                    }
+                    QRectF outerRect = (*item)->mapRectToScene(br.x(),br.y(), br.width(), br.height());
+                    QRectF innerRect = outerRect.adjusted(left, top, -right, -bottom);
+
+                    QRectF leftRect(outerRect.x(), outerRect.y(), innerRect.x() - outerRect.x(), outerRect.height());
+                    QRectF topRect(innerRect.x(), outerRect.y(), innerRect.width(), innerRect.y() - outerRect.y());
+                    QRectF rightRect(innerRect.bottomRight().x(), outerRect.y(), outerRect.bottomRight().x() - innerRect.bottomRight().x(), outerRect.height());
+                    QRectF bottomRect(innerRect.x(), innerRect.bottomRight().y(), innerRect.width(), outerRect.bottomRight().y() - innerRect.bottomRight().y());
+
+                    painter->setOpacity(0.5);
+
+                    d->fillMarginRectWithPattern(painter, leftRect, leftRect.width());
+                    d->fillMarginRectWithPattern(painter, topRect, topRect.height());
+                    d->fillMarginRectWithPattern(painter, rightRect, rightRect.width());
+                    d->fillMarginRectWithPattern(painter, bottomRect, bottomRect.height());
+
                 }
 
                 painter->setOpacity(1.0);

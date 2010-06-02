@@ -504,6 +504,9 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     if (catalog.isEmpty())
         catalog = fileInfo.fileName();
 
+    // set the path for the icu extra data:
+    MLocale::setDataPath(M_ICUEXTRADATA_DIR);
+
     MLocale systemLocale; // gets the current system locale, creating it if necessary.
 #ifdef Q_OS_WIN
     // walk to translation dir relative to bin dir

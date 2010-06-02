@@ -32,6 +32,7 @@
 
 class MPannableViewport;
 class MWidget;
+class MListFilter;
 
 #include "mlist.h"
 
@@ -48,6 +49,7 @@ public:
 
     MList::SelectionMode selectionMode;
 
+    MListFilter* listFilter;
 public slots:
     /*!
      * \brief This slot is called when items are changed in the model. The changed items are those

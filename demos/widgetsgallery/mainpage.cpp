@@ -17,13 +17,13 @@
 **
 ****************************************************************************/
 
-#include "listpage.h"
+#include "mainpage.h"
+#include "maincategorypage.h"
 #include "templatepage.h"
 #include "labelpage.h"
 #include "pushbuttonpage.h"
 #include "iconbuttonpage.h"
 #include "switchpage.h"
-#include "dialogsandnotificationspage.h"
 #include "imagepage.h"
 #include "applicationmenupage.h"
 #include "toolbarpage.h"
@@ -40,6 +40,12 @@
 #include "displaymodespage.h"
 #include "languagepage.h"
 #include "feedbackpage.h"
+#include "contentitemspage.h"
+#include "singleselectiondialogspage.h"
+#include "multipleselectiondialogspage.h"
+#include "querydialogspage.h"
+#include "bannerspage.h"
+#include "bubblepage.h"
 
 #include <QGraphicsLayoutItem>
 #include <QGraphicsLinearLayout>
@@ -48,9 +54,12 @@
 #include <QPointer>
 #include <QDebug>
 #include <QSettings>
+#include <QStringListModel>
 #include <QDir>
 
 #include <MApplication>
+#include <MAbstractCellCreator>
+#include <MContentItem>
 #include <MLocale>
 #include <MLayout>
 #include <MButton>
@@ -67,90 +76,227 @@
 #include <MGConfItem>
 #endif
 
-MyContainer::MyContainer(QGraphicsItem *parent)
-    : MContainer(parent)
+class WidgetsGalleryDataModel : public QAbstractItemModel {
+public:
+    typedef QList<TemplatePage*> TemplatePageList;
+    typedef QList<QString> TemplatePageNameList;
+public:
+    WidgetsGalleryDataModel() : QAbstractItemModel() {
+        //% "Application View"
+        addCategory(qtTrId("xx_wg_categories_application_view"), new MainCategoryPage(this, createIndex(0,0)));
+        //% "Application Menu"
+        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_view_menu"), new ApplicationMenuPage());
+        //% "Display Modes"
+        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_display_modes"), new DisplayModesPage());
+        //% "Toolbar (including Tab Bar)"
+        addGalleryPage(index(0,0), qtTrId("xx_wg_application_view_toolbar_incl_tab_bar"), new ToolBarPage());
+
+
+        //% "Simple Widgets"
+        addCategory(qtTrId("xx_wg_categories_simple_widgets"), new MainCategoryPage(this, createIndex(1,0)));
+        //% "Labels"
+        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_labels"), new LabelPage());
+        //% "Image"
+        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_image"), new ImagePage());
+        //% "Progress Bar"
+        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_progress_bar"), new ProgressBarPage());
+        //% "Container"
+        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_container"), new ContainerPage());
+        //% "Spinner"
+        addGalleryPage(index(1,0), qtTrId("xx_wg_simple_widgets_spinner"), new SpinnerPage());
+
+        //% "Buttons"
+        addCategory(qtTrId("xx_wg_categories_buttons"), new MainCategoryPage(this, createIndex(2,0)));
+        //% "Push Button"
+        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_push_button"), new PushButtonPage());
+        //% "Icon Button"
+        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_icon_button"), new IconButtonPage());
+        //% "Switch"
+        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_switch"), new SwitchPage());
+        //% "Checkbox"
+        addGalleryPage(index(2,0), qtTrId("xx_wg_buttons_checkbox"), new CheckboxPage());
+
+        //% "Dialogs and Banners"
+        addCategory(qtTrId("xx_wg_categories_dialogs_and_banners"), new MainCategoryPage(this, createIndex(3,0)));
+        //% "Single Selection Dialog"
+        addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_single_selection_dialog"), new SingleSelectionDialogsPage());
+        //% "Multiple Selection Dialog"
+        addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_multiple_selection_dialog"), new MultipleSelectionDialogsPage());
+        //% "Query Dialog"
+        addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_query_dialog"), new QueryDialogsPage());
+        //% "Banner"
+        addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_banner"), new BannersPage());
+
+        //% "Lists, Grids and Popups"
+        addCategory(qtTrId("xx_wg_categories_lists_grids_and_popups"), new MainCategoryPage(this, createIndex(4,0)));
+        //% "List"
+        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_list"), new MListPage());
+        //% "Grid"
+        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_grid"), new MGridPage());
+        //% "Object Menu"
+        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_object_menu"), new ObjectMenuPage());
+        //% "ComboBox"
+        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_combobox"), new ComboBoxPage());
+        //% "ContentItems"
+        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_contentitems"), new ContentItemsPage());
+        //% "Speech bubble"
+        addGalleryPage(index(4,0), qtTrId("xx_wg_lists_grids_and_popups_bubble"), new BubblePage());
+
+        //% "User Input"
+        addCategory(qtTrId("xx_wg_categories_user_input"), new MainCategoryPage(this, createIndex(5,0)));
+        //% "Text Entries"
+        addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_text_entries"), new TextEntryPage());
+        //% "Slider"
+        addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_slider"), new SliderPage());
+        //% "Input Feedback"
+        addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_input_feedback"), new FeedbackPage());
+
+    }
+
+    QModelIndex parent(const QModelIndex &child) const {
+        Q_UNUSED(child);
+
+        if (child.internalId() >= 0)
+            return index(child.internalId(), 0);
+
+        return QModelIndex();
+    }
+
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const {
+        if (parent.isValid())
+            return createIndex(row, column, parent.row());
+        else
+            return createIndex(row, column, -1);
+    }
+
+    int columnCount(const QModelIndex &parent) const {
+        Q_UNUSED(parent);
+
+        return 1;
+    }
+
+    int rowCount(const QModelIndex &parent) const {
+        Q_UNUSED(parent);
+
+        if (parent.isValid())
+            return galleryPages[parent.row()].count();
+        else
+            return categoryPageNames.count();
+    }
+
+    QVariant data(const QModelIndex &index, int role) const {
+        Q_UNUSED(index);
+
+        if (index.isValid()) {
+            if (role == Qt::DisplayRole || role == MainPage::PageName) {
+                return getName(index);
+            } else if (role == MainPage::Page) {
+                return QVariant::fromValue((void *)getPage(index));
+            } else if (role == MainPage::PageTimedemoName) {
+                return getTimedemoName(index);
+            }
+        }
+
+        return QVariant();
+    }
+
+private:
+    void addCategory(const QString &name, MainCategoryPage *page) {
+        page->setTitle(name);
+
+        categoryPageNames.append(name);
+        categoryPages.append(page);
+    }
+
+    void addGalleryPage(const QModelIndex &parent, const QString &name, TemplatePage *page) {
+        galleryPageNames[parent.row()].append(name);
+        galleryPages[parent.row()].append(page);
+    }
+
+    MApplicationPage *getPage(const QModelIndex &index) const {
+        if (index.parent().isValid())
+            return galleryPages[index.parent().row()].at(index.row());
+        else
+            return categoryPages[index.row()];
+    }
+
+    const QString &getName(const QModelIndex &index) const {
+        if (index.parent().isValid())
+            return galleryPageNames[index.parent().row()].at(index.row());
+        else
+            return categoryPageNames[index.row()];
+    }
+
+     QString getTimedemoName(const QModelIndex &index) const {
+        if (index.parent().isValid())
+            return galleryPages[index.parent().row()].at(index.row())->timedemoTitle();
+
+        return QString();
+    }
+
+private:
+    QList<QString> categoryPageNames;
+    QList<MainCategoryPage*> categoryPages;
+    QMap<int, TemplatePageList> galleryPages;
+    QMap<int, TemplatePageNameList> galleryPageNames;
+};
+
+class WidgetGalleryCategoryCellCreator : public MAbstractCellCreator<MContentItem>
 {
-    MLayout *layout = new MLayout(centralWidget());
+public:
+    WidgetGalleryCategoryCellCreator() : MAbstractCellCreator<MContentItem>() {
+    }
 
-    landscapePolicy = new MGridLayoutPolicy(layout);
-    landscapePolicy->setContentsMargins(0, 0, 0, 0);
-    landscapePolicy->setSpacing(0);
-    //To make sure that both columns have the same width, give them the same preferred width.
-    landscapePolicy->setColumnPreferredWidth(0, 800);
-    landscapePolicy->setColumnPreferredWidth(1, 800);
+    MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
+        Q_UNUSED(index);
 
-    portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    portraitPolicy->setContentsMargins(0, 0, 0, 0);
-    portraitPolicy->setSpacing(0);
+        MContentItem *cell = dynamic_cast<MContentItem *>(recycler.take(MContentItem::staticMetaObject.className()));
+        if (cell == NULL) {
+            cell = new MContentItem(MContentItem::SingleTextLabel);
+            cell->setObjectName("wgMainPageCategoryItem");
+        }
+        updateCell(index, cell);
 
-    layout->setLandscapePolicy(landscapePolicy);
-    layout->setPortraitPolicy(portraitPolicy);
-}
+        return cell;
+    }
 
-MyContainer::~MyContainer()
-{
-}
+    void updateCell(const QModelIndex &index, MWidget *cell) const {
+        MContentItem *item = qobject_cast<MContentItem*>(cell);
+        if(!item)
+            return;
 
-void MyContainer::addItem(QGraphicsLayoutItem *button)
-{
-    int count = landscapePolicy->count();
+        item->setTitle(index.data().toString());
+    }
+};
 
-    int row = count / 2;
-    int column = count % 2;
-
-    landscapePolicy->addItem(button, row, column);
-    portraitPolicy->addItem(button);
-}
-
-ListPage::ListPage(const QString &title)
-    : shownPage(NULL)
+MainPage::MainPage(const QString &title)
+    : shownPage(NULL), languageSettingsPage(NULL)
 {
     setTitle(title);
 
     connect(this, SIGNAL(appeared()), this, SLOT(showInitialPage()));
 }
 
-ListPage::~ListPage()
+MainPage::~MainPage()
 {
 }
 
-QString ListPage::timedemoTitle()
+QString MainPage::timedemoTitle()
 {
     return "MainPage";
 }
 
-void ListPage::createContent()
+void MainPage::createContent()
 {
     MApplicationPage::createContent();
-
-    addPage(new ApplicationMenuPage);
-    addPage(new ObjectMenuPage);
-    addPage(new DialogsAndNotificationsPage);
-    addPage(new DisplayModesPage);
-    addPage(new ToolBarPage);
-    addPage(new ContainerPage);
-    addPage(new LabelPage);
-    addPage(new ImagePage);
-    addPage(new PushButtonPage);
-    addPage(new IconButtonPage);
-    addPage(new SwitchPage);
-    addPage(new ProgressBarPage);
-    addPage(new SpinnerPage);
-    addPage(new MListPage);
-    addPage(new MGridPage);
-    addPage(new CheckboxPage);
-    addPage(new ComboBoxPage);
-    addPage(new TextEntryPage);
-    addPage(new SliderPage);
-    addPage(new LanguagePage);
-    addPage(new FeedbackPage);
 
     QGraphicsWidget *panel = centralWidget();
 
     MLayout *layout = new MLayout(panel);
+    layout->setContentsMargins(0, 0, 0, 0);
     panel->setLayout(layout);
     policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-    policy->setContentsMargins(6, 6, 6, 6);
+    policy->setContentsMargins(0, 0, 0, 0);
     policy->setSpacing(0);
 
     populateLayout();
@@ -170,99 +316,41 @@ void ListPage::createContent()
     this->addAction(action);
     connect(action, SIGNAL(triggered()), SLOT(toggleFps()));
 
+    action = new MAction("Language Settings", this);
+    action->setLocation(MAction::ApplicationMenuLocation);
+    this->addAction(action);
+    connect(action, SIGNAL(triggered()), SLOT(showLanguageSettingsPage()));
+
     retranslateUi();
 }
 
-void ListPage::retranslateUi()
+void MainPage::retranslateUi()
 {
     //% "Widgets Gallery"
     setTitle(qtTrId("xx_application_title"));
 
-    QList<MButton *> keys = buttons.keys();
-    const int keysCount = keys.count();
-    for (int i = 0; i < keysCount; ++i) {
-        MButton *button = keys[i];
-        MApplicationPage *page = buttons.value(button);
-        if (!page) continue;
-
-        // the retranslateUi() is normally only executed when a
-        // page is visible, but because we need the new translations
-        // of the titles, we have to do this hack here.
-        // we call retranslateUi for the pages.
-        QEvent ev(QEvent::LanguageChange);
-        qApp->sendEvent(page, &ev);
-
-        button->setText(page->title());
-    }
-
     if (!isContentCreated())
         return;
-
-    QStringList groupNames = TemplatePage::groupNames();
-    const int count = groupNames.count();
-    for (int i = 0; i < count; ++i)
-        containers[i]->setTitle(groupNames[i]);
-
 }
 
-MGridLayoutPolicy *ListPage::createAndSetupGridPolicy(MWidget *panel)
-{
-    MLayout *layout = new MLayout(panel);
-    MGridLayoutPolicy *policy = new MGridLayoutPolicy(layout);
-    policy->setContentsMargins(6, 6, 6, 6);
-    policy->setSpacing(0);
-    return policy;
-}
-
-void ListPage::setInitialPageToShow(const QString& initialPageToShow)
+void MainPage::setInitialPageToShow(const QString& initialPageToShow)
 {
     this->initialPageToShow = initialPageToShow;
 }
 
 
-void ListPage::populateLayout()
+void MainPage::populateLayout()
 {
-    QStringList groupNames = TemplatePage::groupNames();
+    list = new MList(centralWidget());
+    list->setObjectName("wgList");
+    list->setCellCreator(new WidgetGalleryCategoryCellCreator());
+    list->setItemModel(new WidgetsGalleryDataModel());
+    policy->addItem(list, Qt::AlignCenter);
 
-    const int pageCount = pages.count();
-    const int groupNamesCount = groupNames.count();
-    for (int i = 0; i < groupNamesCount; ++i) {
-
-        MyContainer *container = new MyContainer;
-        containers.append(container);
-        policy->addItem(container);
-
-        int numButtons = 0;
-        for (int j = 0; j < pageCount; ++j) {
-            TemplatePage *page = qobject_cast<TemplatePage *>(pages[j]);
-            if (!page || page->groupID() != i) continue;
-
-            MButton *listItem = new MButton(page->title());
-            container->addItem(listItem);
-            numButtons++;
-
-            listItem->connect(listItem, SIGNAL(clicked()), this, SLOT(handleListItemClick()));
-            buttons.insert(listItem, page);
-        }
-        //If we only have one item, add an empty spacer widget to ensure that we have two columns
-        if (numButtons == 1) {
-            QGraphicsWidget *widget = new QGraphicsWidget;
-            widget->setMinimumSize(80, 0);
-            container->addItem(widget);
-        }
-    }
-
-    centralWidget()->setContentsMargins(0, 0, 0, 25);
+    connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(categoryItemClicked(QModelIndex)));
 }
 
-void ListPage::addPage(TemplatePage *page)
-{
-    // Take ownership of page
-    page->setParent(this);
-    pages.append(page);
-}
-
-void ListPage::handleListItemClick()
+void MainPage::handleListItemClick()
 {
     QObject *sender_object = sender();
     if (sender_object)   {
@@ -275,12 +363,7 @@ void ListPage::handleListItemClick()
     }
 }
 
-int ListPage::pageCount() const
-{
-    return pages.count();
-}
-
-void ListPage::showPage(MApplicationPage *page)
+void MainPage::showPage(MApplicationPage *page)
 {
     if (page) {
         page->appear();
@@ -288,31 +371,46 @@ void ListPage::showPage(MApplicationPage *page)
     }
 }
 
-void ListPage::showPageByIndex(int index)
+void MainPage::showLanguageSettingsPage()
 {
-    showPage(findPageByIndex(index));
-}
-
-TemplatePage *ListPage::findPageByIndex(int index) const
-{
-    if (index >= 0 && index < pages.count()) {
-        return pages[ index ];
+    if (!languageSettingsPage) {
+        languageSettingsPage = new LanguagePage();
+        languageSettingsPage->setParent(this);
     }
-
-    return 0;
+    languageSettingsPage->appear();
 }
 
-TemplatePage *ListPage::findPageByTimedemoTitle(const QString& title) const
+TemplatePage *MainPage::findPageByTimedemoTitle(const QString& title) const
 {
-    for (int i = 0; i < pages.size(); ++i) {
-        if (pages.at(i)->timedemoTitle() == title) {
-            return pages.at(i);
+    QAbstractItemModel *model = list->itemModel();
+    for (int i = 0; i < model->rowCount(); ++i) {
+        QModelIndex parent = model->index(i, 0);
+        for (int j = 0; j < model->rowCount(parent); j++) {
+            QModelIndex item = model->index(j, 0, parent);
+            QString pageTitle = item.data(MainPage::PageTimedemoName).toString();
+            if (pageTitle == title) {
+                return static_cast<TemplatePage *>(item.data(MainPage::Page).value<void *>());
+            }
         }
     }
     return 0;
 }
 
-void ListPage::showPageByTimedemoTitle(const QString& name)
+QList<TemplatePage *> MainPage::demoPages()
+{
+    QList<TemplatePage *> pages;
+    QAbstractItemModel *model = list->itemModel();
+    for (int i = 0; i < model->rowCount(); ++i) {
+        QModelIndex parent = model->index(i, 0);
+        for (int j = 0; j < model->rowCount(parent); j++) {
+            QModelIndex item = model->index(j, 0, parent);
+            pages.append(static_cast<TemplatePage *>(item.data(MainPage::Page).value<void *>()));
+        }
+    }
+    return pages;
+}
+
+void MainPage::showPageByTimedemoTitle(const QString& name)
 {
     TemplatePage *page = findPageByTimedemoTitle(name);
     if (page) {
@@ -397,7 +495,7 @@ QList<ThemeInfo> findAvailableThemes()
 extern void M_changeTheme(const QString &theme);
 #endif
 
-void ListPage::showThemeSelectionDialog()
+void MainPage::showThemeSelectionDialog()
 {
     QList<ThemeInfo> themes = findAvailableThemes();
 
@@ -435,7 +533,7 @@ void ListPage::showThemeSelectionDialog()
     delete dialog;
 }
 
-void ListPage::showOrientationSelectionDialog()
+void MainPage::showOrientationSelectionDialog()
 {
     QPointer<MDialog> dialog = new MDialog("Select orientation (angle)", M::OkButton | M::CancelButton);
 
@@ -507,7 +605,7 @@ void ListPage::showOrientationSelectionDialog()
             applicationWindow()->setOrientationLocked(false);
         } else if (mode == portrait) {
             applicationWindow()->setOrientationAngleLocked(false);
-            applicationWindow()->setOrientationAngle(M::Angle90);
+            applicationWindow()->setOrientationAngle(M::Angle270);
             applicationWindow()->setOrientationLocked(true);
         } else if (mode == landscape) {
             applicationWindow()->setOrientationAngleLocked(false);
@@ -535,14 +633,20 @@ void ListPage::showOrientationSelectionDialog()
     delete dialog;
 }
 
-void ListPage::toggleFps()
+void MainPage::toggleFps()
 {
     MApplication::instance()->setShowFps(!MApplication::showFps());
 }
 
-void ListPage::showInitialPage()
+void MainPage::showInitialPage()
 {
     if (!initialPageToShow.isEmpty()) {
         showPageByTimedemoTitle(initialPageToShow);
     }
+}
+
+void MainPage::categoryItemClicked(const QModelIndex &index)
+{
+    MainCategoryPage *page = static_cast<MainCategoryPage *>(index.data(MainPage::Page).value<void *>());
+    showPage(page);
 }

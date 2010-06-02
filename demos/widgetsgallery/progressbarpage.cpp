@@ -29,14 +29,12 @@
 #include <MSceneManager>
 
 ProgressBarPage::ProgressBarPage() :
-    TemplatePage(),
-
+    TemplatePage(TemplatePage::SimpleWidgets),
     bar1(0),
     bar2(0),
     label1(0),
     label2(0)
 {
-    gid = TemplatePage::IndicatorsAndNotifications;
 }
 
 ProgressBarPage::~ProgressBarPage()

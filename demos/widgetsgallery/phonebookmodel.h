@@ -26,6 +26,8 @@
 #include <QVector>
 #include <QImage>
 
+#include <MAbstractItemModel>
+
 // Structure which contain data for each row
 struct PhoneBookEntry {
     QString firstName; // store first and last names for searching
@@ -62,10 +64,10 @@ private:
     QList<Job> thumbnailLoadingJobs;
 };
 
-class PhoneBookModel: public QAbstractTableModel
+class PhoneBookModel: public MAbstractItemModel
 {
     Q_OBJECT
-
+    
 public:
     // Defining roles here which will be used for sorting and filtering in PhoneBookSortedModel
     enum PhoneBookRoles {
@@ -76,61 +78,35 @@ public:
     PhoneBookModel();
     virtual ~PhoneBookModel();
 
-    virtual int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual int columnCount(const QModelIndex &parent = QModelIndex()) const;
-    virtual QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
+    int groupCount() const;
+    int rowCountInGroup(int group) const;
+    QString groupTitle(int group) const;
+    QVariant itemData(int row, int group, int role) const;
 
     bool insertRows(int row, int count, const QModelIndex &parent = QModelIndex());
     bool removeRows(int row, int count, const QModelIndex &parent = QModelIndex());
 
     void thumbnailWasLoaded(const QModelIndex &index);
-
-    void sort(int column, Qt::SortOrder order);
+    void updateData(const QModelIndex &first, const QModelIndex &last);
+    
 private:
     QStringList loadFakeNames();
     QStringList loadFakeImageIds();
     PhoneBookEntry *generateEntry();
     QString generatePhoneNumber();
+    void regenerateModel();
 
 private:
     QVector<PhoneBookEntry *> phoneBookEntries;
     QStringList namesList;
     QStringList imageIdList;
     QImage defaultThumbnail;
-    int modelRowCount;
-};
 
-class PhoneBookSortedModel : public QSortFilterProxyModel
-{
-public:
-    typedef QVector<PhoneBookEntry*> PhoneBookEntryVector;
-public:
-    PhoneBookSortedModel();
-    virtual ~PhoneBookSortedModel();
-    void thumbnailWasLoaded(const QModelIndex &index);
-
-    void setShowGroups(bool showGroups);
-
-public:
-    void sort(int column, Qt::SortOrder order);
-    QModelIndex parent(const QModelIndex &child) const;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    bool hasChildren(const QModelIndex &parent = QModelIndex()) const;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const;
-
-public:
-    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const;
-    QModelIndex mapToSource(const QModelIndex &proxyIndex) const;
-
-private:
-    void createPlainModel();
-    void createGroupedModel();
-
-    int totalRowCount();
-
-private:
-    bool showGroups;
-    QMap<QChar, PhoneBookEntryVector> treeHeaderIndex;
+    QList<QChar> groups;
+    QList<int> groupsSize;
+    
+    typedef QList<int> ListOfInt;
+    QMap<int, ListOfInt> itemGroupCache;
 };
 
 #endif

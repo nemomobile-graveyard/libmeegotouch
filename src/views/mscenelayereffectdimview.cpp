@@ -62,6 +62,8 @@ void MSceneLayerEffectDimView::applyStyle()
 {
     Q_D(MSceneLayerEffectDimView);
 
+    MSceneWindowView::applyStyle();
+
     d->controller->setOpacity(style()->opacity());
 }
 

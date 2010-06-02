@@ -63,6 +63,7 @@
 #include <mwidgetslideanimation.h>
 #include <mwidgetfadeanimation.h>
 #include <mwidgetzoomanimation.h>
+#include <mwidgetmoveanimation.h>
 
 namespace
 {
@@ -358,10 +359,6 @@ void MSceneManagerPrivate::_q_onSceneWindowDisappeared()
 
     if (window->windowType() == MSceneWindow::StatusBar) {
         statusBar = 0;
-
-        // All other scene windows have to be repositioned since now there's more
-        // space available in the scene.
-        setSceneWindowGeometries();
     }
 
     if (isOnDisplay()) {
@@ -907,10 +904,6 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
         Q_ASSERT(statusBar == 0);
 
         statusBar = window;
-
-        // All other scene windows have to be repositioned since now there's less
-        // space available in the scene for them.
-        setSceneWindowGeometries();
     }
 
     window->show();
@@ -1191,6 +1184,24 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             animation = objectMenuAnimation;
             break;
         }
+        case MSceneWindow::StatusBar: {
+            MWidgetSlideAnimation *slideInAnimation = new MWidgetSlideAnimation(sceneWindow);
+            slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
+            animation = slideInAnimation;
+
+            QList<MSceneWindow*> sceneWindows = *windows;
+            sceneWindows.removeAll(sceneWindow);
+            foreach (MSceneWindow *window, sceneWindows) {
+                if (window->windowType() != MSceneWindow::ApplicationPage &&
+                    window->windowType() != MSceneWindow::DockWidget) {
+                    MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
+                    moveAnimation->setWidget(window);
+                    moveAnimation->setFinalPos(QPointF(window->x(), window->y() + sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
+                    animation->addAnimation(moveAnimation);
+                }
+            }
+            break;
+        }
         case MSceneWindow::ObjectMenu: {
             MWidgetZoomAnimation *objectMenuAnimation =
                     new MWidgetZoomAnimation(sceneWindow);
@@ -1245,6 +1256,24 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             zoomAnimation->setTransitionDirection(MWidgetZoomAnimation::Out);
 
             animation = zoomAnimation;
+            break;
+        }
+        case MSceneWindow::StatusBar: {
+            MWidgetSlideAnimation *slideOutAnimation = new MWidgetSlideAnimation(sceneWindow);
+            slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
+            animation = slideOutAnimation;
+
+            QList<MSceneWindow*> sceneWindows = *windows;
+            sceneWindows.removeAll(sceneWindow);
+            foreach (MSceneWindow *window, sceneWindows) {
+                if (window->windowType() != MSceneWindow::ApplicationPage &&
+                    window->windowType() != MSceneWindow::DockWidget) {
+                    MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
+                    moveAnimation->setWidget(window);
+                    moveAnimation->setFinalPos(QPointF(window->x(), window->y() - sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
+                    animation->addAnimation(moveAnimation);
+                }
+            }
             break;
         }
         case MSceneWindow::ObjectMenu: {

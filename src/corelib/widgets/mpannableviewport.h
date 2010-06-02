@@ -168,6 +168,7 @@ public:
     void setPanDirection(const Qt::Orientations &panDirection);
     void resizeEvent(QGraphicsSceneResizeEvent *event);
     void updateGeometry();
+    void updateData(const QList<const char *> &modifications);
     //! \reimp_end
 
 Q_SIGNALS:

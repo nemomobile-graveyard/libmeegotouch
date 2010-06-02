@@ -21,9 +21,9 @@
 #include <QDir>
 #include <MDebug>
 
-const QString ExtensionBinaryKey("X-MeeGoApplicationExtension/Extension");
-const QString IdentifierKey("X-MeeGoApplicationExtension/Identifier");
-const QString InterfaceKey("X-MeeGoApplicationExtension/Interface");
+const QString EXTENSION_BINARY_KEY("X-MeeGoApplicationExtension/Extension");
+const QString IDENTIFIER_KEY("X-MeeGoApplicationExtension/Identifier");
+const QString INTERFACE_KEY("X-MeeGoApplicationExtension/Interface");
 
 MApplicationExtensionMetaData::MApplicationExtensionMetaData(const QString &fileName) : MDesktopEntry(fileName)
 {
@@ -42,7 +42,7 @@ bool MApplicationExtensionMetaData::isValid() const
 
     // Loop through keys and check that all are found
     QStringList requiredKeys;
-    requiredKeys << ExtensionBinaryKey << InterfaceKey;
+    requiredKeys << EXTENSION_BINARY_KEY << INTERFACE_KEY;
     foreach(const QString &key, requiredKeys) {
         if (!contains(key)) {
             return false;
@@ -80,7 +80,7 @@ QString MApplicationExtensionMetaData::runnerBinary() const
 QString MApplicationExtensionMetaData::extensionBinary() const
 {
     // Fetch the absolute file path and return it.
-    QFileInfo extension(QString(APPLICATION_EXTENSION_LIBS), value(ExtensionBinaryKey));
+    QFileInfo extension(QString(APPLICATION_EXTENSION_LIBS), value(EXTENSION_BINARY_KEY));
     if (extension.exists() && extension.isFile()) {
         return extension.absoluteFilePath();
     } else {
@@ -91,7 +91,7 @@ QString MApplicationExtensionMetaData::extensionBinary() const
 
 QString MApplicationExtensionMetaData::interface() const
 {
-    return value(InterfaceKey);
+    return value(INTERFACE_KEY);
 }
 
 QString MApplicationExtensionMetaData::extractLibraryName(const QString &libFileName)
@@ -114,8 +114,8 @@ QString MApplicationExtensionMetaData::resourceIdentifier() const
     QString resourceId;
     QString binary = extensionBinary();
 
-    if (contains(IdentifierKey)) {
-        resourceId = value(IdentifierKey);
+    if (contains(IDENTIFIER_KEY)) {
+        resourceId = value(IDENTIFIER_KEY);
     } else if (!binary.isNull()) {
         resourceId = extractLibraryName(binary);
     } else {

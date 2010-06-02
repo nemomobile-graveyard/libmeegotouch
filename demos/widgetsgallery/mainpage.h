@@ -17,65 +17,59 @@
 **
 ****************************************************************************/
 
-#ifndef LISTPAGE_H
-#define LISTPAGE_H
+#ifndef MAINPAGE_H
+#define MAINPAGE_H
 
-#include <MContainer>
 #include <QHash>
+#include <QModelIndex>
 
-#include "timedemopage.h"
+#include "templatepage.h"
 
-class TemplatePage;
 class QGraphicsLayoutItem;
 class MGridLayoutPolicy;
 class MLinearLayoutPolicy;
 class MLabel;
+class MList;
 class MButton;
 class QSettings;
 
-class MyContainer : public MContainer
-{
-public:
-    MyContainer(QGraphicsItem *parent = 0);
-    virtual ~MyContainer();
+class LanguagePage;
 
-    MGridLayoutPolicy  *landscapePolicy;
-    MLinearLayoutPolicy  *portraitPolicy;
-
-    void addItem(QGraphicsLayoutItem *button);
-
-};
-
-class ListPage : public TimedemoPage
+class MainPage : public TimedemoPage
 {
     Q_OBJECT
 
 public:
-    ListPage(const QString &title = "");
-    virtual ~ListPage();
+    typedef QHash<QString, TemplatePage*> TemplatePageHashMap;
+
+    enum DataRole {
+        Page = Qt::UserRole,
+        PageName,
+        PageTimedemoName
+    };
+
+public:
+    MainPage(const QString &title = "");
+    virtual ~MainPage();
     virtual QString timedemoTitle();
 
     virtual void createContent();
 
-    void addPage(TemplatePage *page);
-    int pageCount() const;
-    TemplatePage *findPageByIndex(int index) const;
+    QList<TemplatePage*> demoPages();
     TemplatePage *findPageByTimedemoTitle(const QString& title) const;
     void showPageByTimedemoTitle(const QString& name);
 
-    static MGridLayoutPolicy *createAndSetupGridPolicy(MWidget *panel);
-
     void setInitialPageToShow(const QString& initialPageToShow);
-
-    QList<TemplatePage *> pages;
 
 public slots:
     void handleListItemClick();
     void showThemeSelectionDialog();
-    void showPageByIndex(int index);
     void showOrientationSelectionDialog();
     void toggleFps();
     void showInitialPage();
+    void showLanguageSettingsPage();
+
+    void categoryItemClicked(const QModelIndex &index);
 
 protected:
     virtual void retranslateUi();
@@ -85,11 +79,11 @@ private:
     void showPage(MApplicationPage *page);
 
 private:
-    QList<MLabel *> groupLabels;
-    QList<MContainer *> containers;
+    MList *list;
 
     MApplicationPage *shownPage;
     MLinearLayoutPolicy *policy;
+    LanguagePage *languageSettingsPage;
 
     QHash<MButton *, TemplatePage *> buttons;
 

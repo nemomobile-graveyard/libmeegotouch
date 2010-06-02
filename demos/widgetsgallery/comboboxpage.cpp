@@ -33,10 +33,10 @@
 #include <QTimer>
 
 ComboBoxPage::ComboBoxPage()
-    : model1(0),
+    : TemplatePage(TemplatePage::ListsGridsAndPopups),
+    model1(0),
       proxyModel(0)
 {
-    gid = TemplatePage::ListsGridsAndMenus;
 }
 
 ComboBoxPage::~ComboBoxPage()
@@ -59,17 +59,17 @@ void ComboBoxPage::createContent()
     containerLayout->setPolicy(containerPolicy);
 
     QStringList list;
-    for (int i = 0; i < 100; ++i) {
-        list << QString::number(10000 + i);
+    for (int i = 0; i < 130; ++i) {
+        list << QString::number(1970 + i);
     }
 
     comboBox1 = new MComboBox;
-    comboBox1->setIconID("Icon-pictures");
+    comboBox1->setIconID("icon-m-camera-scene-portrait");
     comboBox1->addItems(list);
-    comboBox1->setCurrentIndex(50);
+    comboBox1->setCurrentIndex(40);
 
     comboBox2 = new MComboBox;
-    comboBox2->setIconID("Icon-pictures");
+    comboBox2->setIconID("icon-m-camera-shutter");
 
     model1 = new QStringListModel(this);
     model1->setStringList(list);
@@ -81,13 +81,13 @@ void ComboBoxPage::createContent()
     comboBox2->setItemModel(proxyModel);
 
     comboBox3 = new MComboBox;
-    comboBox3->setIconID("Icon-music");
+    comboBox3->setIconID("icon-m-startup-clock");
     comboBox3->setTitle("Time-consuming setting");
-    comboBox3->addItem("Setting 1");
-    comboBox3->addItem("Setting 2");
-    comboBox3->addItem("Setting 3");
-    comboBox3->addItem("Setting 4");
-    comboBox3->addItem("Setting 5");
+    comboBox3->addItem("Wash your car");
+    comboBox3->addItem("Cook dinner");
+    comboBox3->addItem("Join a funk band");
+    comboBox3->addItem("Run for president");
+    comboBox3->addItem("Hop, skip, and jump");
 
     QTimer* timer = new QTimer(this);
     timer->setSingleShot(true);

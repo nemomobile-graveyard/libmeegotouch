@@ -55,7 +55,7 @@ public:
      * file in that is given as a construction parameter.
      * \param filename Location of .desktop file to be read by constructed MApplicationExtensionMetaData instance.
      */
-    MApplicationExtensionMetaData(const QString &filename);
+    explicit MApplicationExtensionMetaData(const QString &filename);
 
     /*!
      * Destructor

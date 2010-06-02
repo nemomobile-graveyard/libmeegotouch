@@ -1,6 +1,30 @@
 @import "../../libmeegotouchcore/style/fonts.css";
 @import "../../libmeegotouchcore/style/colors.css";
 
+MList#wgMainPageCategoryList {
+    margin-left:    0;
+    padding-left:   0;
+    margin-right:   0;
+    padding-right:  0;
+
+    border-left:    0;
+    border-right:   0;
+    border-top:     0;
+    border-bottom:  0;
+}
+
+MConentItem#wgMainPageCategoryListItem {
+    margin-left:    0;
+    padding-left:   0;
+    margin-right:   0;
+    padding-right:  0;
+
+    border-left:    0;
+    border-right:   0;
+    border-top:     0;
+    border-bottom:  0;
+}
+
 DuiButtonStyle#theme-selection-button {
     minimum-size: 10mm 10mm;
     preferred-size: 15mm 15mm;

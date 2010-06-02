@@ -28,11 +28,10 @@
 #include <MLabel>
 #include <MLocale>
 
-TemplatePage::TemplatePage() :
-    gid(0),
+TemplatePage::TemplatePage(TemplatePage::Category category) :
     layout(0), landscapePolicy(0), portraitPolicy(0),
     container(0), separator(0), infoLabel(0),
-    containerLayout(0), containerPolicy(0)
+    containerLayout(0), containerPolicy(0), pageCategory(category)
 {
 }
 
@@ -40,32 +39,15 @@ TemplatePage::~TemplatePage()
 {
 }
 
+TemplatePage::Category TemplatePage::category()
+{
+    return pageCategory;
+}
+/*
 QStringList TemplatePage::groupNames()
 {
-    QStringList list;
-    //% "Views and Dialogs"
-    list << qtTrId("xx_template_page_views_dialogs");
-    //% "Contains and Applets"
-    list << qtTrId("xx_template_page_contains_applets");
-    //% "Layouts and Visuals"
-    list << qtTrId("xx_template_page_layouts_visuals");
-    //% "Buttons"
-    list << qtTrId("xx_template_page_buttons");
-    //% "Indicators and Notifications"
-    list << qtTrId("xx_template_page_indicators_notifications");
-    //% "Lists, Grids and Menus"
-    list << qtTrId("xx_template_page_lists_grids_menus");
-    //% "User input"
-    list << qtTrId("xx_template_page_user_input");
-    //% "Input Feedback"
-    list << qtTrId("xx_template_page_input_feedback");
-    return list;
-}
 
-int TemplatePage::groupID()
-{
-    return gid;
-}
+}*/
 
 void TemplatePage::createContent()
 {

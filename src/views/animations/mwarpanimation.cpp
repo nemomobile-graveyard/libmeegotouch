@@ -99,6 +99,12 @@ void MWarpAnimation::updateState(QAbstractAnimation::State newState,
             offsetAnimation->setStartValue(QPointF(0, 0));
             offsetAnimation->setEndValue(QPointF(style()->warpDistance(), 0));
         }
+    } else if (newState == Stopped && target) {
+        if (warpDirection == OutFromLeft || warpDirection == OutFromRight) {
+            target->hide();
+            target->setOpacity(1);
+            target->setPaintOffset(QPointF(0, 0));
+        }
     }
 }
 

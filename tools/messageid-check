@@ -84,7 +84,7 @@ my @engineeringEnglishPackages = (
     "duicontrolpanel-regionformatapplet-l10n-engineering-english",
     "duihelp-l10n-engineering-english",
     "duihomescreen-l10n-engineering-english",
-    "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
+    # ignore, demo only "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
     "duistatusind-connectivity-l10n-engineering-english",
     "feedreader-l10n-engineering-english",
     "gallery-l10n-engineering-english",
@@ -118,8 +118,7 @@ my @engineeringEnglishFiles = (
     "/usr/share/l10n/meegotouch/backup.qm",
     "/usr/share/l10n/meegotouch/call-history.qm",
     "/usr/share/l10n/meegotouch/call-ui.qm",
-    # camera-ui is still in the old directory, will move soon
-    "/usr/share/l10n/dui/camera-ui.qm",
+    "/usr/share/l10n/meegotouch/camera-ui.qm",
     "/usr/share/l10n/meegotouch/celluid.qm",
     "/usr/share/l10n/meegotouch/commhistoryd.qm",
     "/usr/share/l10n/meegotouch/conn-dui-bluetooth.qm",
@@ -134,7 +133,6 @@ my @engineeringEnglishFiles = (
     "/usr/share/l10n/meegotouch/duicontrolpanel-keyboardlanguage.qm",
     "/usr/share/l10n/meegotouch/duicontrolpanel-network.qm",
     "/usr/share/l10n/meegotouch/duicontrolpanel-regionformat.qm",
-    "/usr/share/l10n/meegotouch/duicontrolpanel.qm",
     "/usr/share/l10n/meegotouch/duihelp.qm",
     "/usr/share/l10n/meegotouch/duihome.qm",
     # duistatusindicatormenu-connectivityplugin.qm is still in the old directory
@@ -163,12 +161,13 @@ my @engineeringEnglishFiles = (
     "/usr/share/l10n/meegotouch/officetools.qm",
     "/usr/share/l10n/meegotouch/oviplugin.qm",
     "/usr/share/l10n/meegotouch/package-manager-ui.qm",
+    "/usr/share/l10n/meegotouch/settings.qm",
     "/usr/share/l10n/meegotouch/share-ui.qm",
     "/usr/share/l10n/meegotouch/signon-ui.qm",
     "/usr/share/l10n/meegotouch/systemui-applets.qm",
     "/usr/share/l10n/meegotouch/systemui.qm",
     "/usr/share/l10n/meegotouch/transfer-ui.qm",
-    "/usr/share/l10n/meegotouch/weatherappletres.qm",
+    # "/usr/share/l10n/meegotouch/weatherappletres.qm",
     "/usr/share/l10n/meegotouch/webupload-engine.qm",
     # demo only "/usr/share/l10n/meegotouch/widgetsgallery.qm",
     "/usr/share/l10n/meegotouch/youtubeplugin.qm"
@@ -392,6 +391,9 @@ sub download {
 sub readHandoffXmlTrees {
     for my $handoffFile (glob ("$OPT_HANDOFF_DIR/*.ts")) {
         my $xmlParser = new XML::Parser(Style => 'Tree', ProtocolEncoding => 'UTF-8');
+        if ($OPT_VERBOSITY >= 1) {
+            printf STDOUT "parsing %s\n", $handoffFile;
+        }
         $handoffXmlTrees{$handoffFile} = $xmlParser->parsefile($handoffFile);
     }
 }
@@ -843,8 +845,7 @@ $htmlOutIntroduction .= <<"EOF";
     requesting a new ID:
     <ul>
     <li>component: Specifications</li>
-    <li>Keywords: l10n, PO</li>
-    <li>CC: <a href=\"mailto:oksan.savasoglu-niemi\@nokia.com\">Oksan Savasoglu-Niemi</a></li>
+    <li>CC: <a href=\"mailto:heidi.hendrell\@nokia.com\">Heidi Hendrell</a></li>
     </ul>
 EOF
 

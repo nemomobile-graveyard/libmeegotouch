@@ -335,11 +335,18 @@ void MButtonView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
     rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
                 RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
 
-    bool pressed = rect.contains(touch);
-
-    if ( pressed != model()->down()) {
-        model()->setDown(pressed);
+    if (rect.contains(touch)) {
+        if (!model()->down()) {
+            model()->setDown(true);
+            style()->pressFeedback().play();
+        }
+    } else {
+        if (model()->down()) {
+            model()->setDown(false);
+            style()->cancelFeedback().play();
+        }
     }
+
 }
 
 void MButtonView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -368,6 +375,9 @@ void MButtonView::cancelEvent(MCancelEvent *event)
     if (!model()->down()) {
         return;
     }
+
+    style()->cancelFeedback().play();
+
     model()->setDown(false);
 }
 

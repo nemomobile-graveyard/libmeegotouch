@@ -33,9 +33,8 @@
 #include <QStringList>
 #include <QTimer>
 
-DisplayModesPage::DisplayModesPage()
+DisplayModesPage::DisplayModesPage() : TemplatePage(TemplatePage::ApplicationView)
 {
-    gid = TemplatePage::ViewsAndDialogs;
 }
 
 DisplayModesPage::~DisplayModesPage()
@@ -125,22 +124,22 @@ void DisplayModesPage::addExampleActions()
 {
     MAction *action;
 
-    action = new MAction("Icon-video", "Video", this);
+    action = new MAction("icon-m-toolbar-new-chat", "Chat", this);
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 
-    action = new MAction("Icon-new-SMS", "SMS", this);
+    action = new MAction("icon-m-toolbar-send-sms", "SMS", this);
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 
-    action = new MAction("Icon-contacts", "Contacts", this);
+    action = new MAction("icon-m-toolbar-send-email", "Mail", this);
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
 }
 
 void DisplayModesPage::retranslateUi()
 {
-    //% "Display Modes and Full Screen"
+    //% "Display Modes"
     setTitle(qtTrId("xx_displaymodes_page_title"));
     if (!isContentCreated())
         return;

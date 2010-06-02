@@ -98,20 +98,9 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
 
         if (panGesture->state() == Qt::NoGesture) {
 
-            if (distX > d->movementThreshold) {
-                if (panGesture->panDirection.testFlag(Qt::Vertical)) {
-                    result = QGestureRecognizer::CancelGesture;
-                } else {
-                    panGesture->panDirection = Qt::Horizontal;
-                    result = QGestureRecognizer::TriggerGesture;
-                }
-            } else if (distY > d->movementThreshold) {
-                if (panGesture->panDirection.testFlag(Qt::Horizontal)) {
-                    result = QGestureRecognizer::CancelGesture;
-                } else {                    
-                    panGesture->panDirection = Qt::Vertical;
-                    result = QGestureRecognizer::TriggerGesture;
-                }
+            if (distX > d->movementThreshold || distY > d->movementThreshold) {
+                panGesture->panDirection = (distX > distY ? Qt::Horizontal : Qt::Vertical);
+                result = QGestureRecognizer::TriggerGesture;
             } else {
                 result = QGestureRecognizer::MayBeGesture;
             }

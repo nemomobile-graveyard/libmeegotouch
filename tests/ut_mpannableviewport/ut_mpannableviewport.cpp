@@ -275,4 +275,22 @@ void Ut_MPannableViewport::settingNULLPositionIndicatorShouldNotBeAccepted()
     QVERIFY(subject->positionIndicator() != NULL);
 }
 
+void Ut_MPannableViewport::disabledViewportShouldNotAllowWigetToBeBiggerThanViewport()
+{
+    subject->setEnabled(false);
+    QGraphicsWidget *widget = new QGraphicsWidget();
+    widget->setPreferredSize(1000,1000);
+    subject->setWidget(widget);
+
+
+    // Forcing the size of subject to some value
+    subject->setMinimumSize(QSizeF(500, 300));
+    subject->setMaximumSize(QSizeF(500, 300));
+
+    subject->adjustSize();
+
+    QCOMPARE(widget->size(), QSizeF(500,300));
+    subject->setEnabled(true);
+}
+
 QTEST_APPLESS_MAIN(Ut_MPannableViewport)

@@ -66,6 +66,10 @@ public:
 
     void propagateMOnDisplayChangeEventToScene(MOnDisplayChangeEvent *event);
 
+    void initGLViewport();
+    void initSoftwareViewport();
+    void configureViewport();
+
     bool onDisplay;
     bool onDisplaySet;
 

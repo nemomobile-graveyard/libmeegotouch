@@ -180,8 +180,6 @@ MPannableWidgetPrivate::~MPannableWidgetPrivate()
 
 void MPannableWidgetPrivate::translateEventToItemCoordinates(const QGraphicsItem *srcItem, const QGraphicsItem *destItem, QGraphicsSceneMouseEvent *event)
 {
-    //we only handle left button here. Every other buttons are filtered out in the glassMousePressEvents();
-    event->setButtonDownPos(Qt::LeftButton, destItem->mapFromItem(srcItem, event->buttonDownPos(Qt::LeftButton)));
     event->setLastPos(destItem->mapFromItem(srcItem, event->lastPos()));
     event->setPos(destItem->mapFromItem(srcItem, event->pos()));
 }
@@ -189,6 +187,13 @@ void MPannableWidgetPrivate::translateEventToItemCoordinates(const QGraphicsItem
 void MPannableWidgetPrivate::deliverPressEvent()
 {
     Q_Q(MPannableWidget);
+
+    if (physics->inMotion())
+    {
+        physics->stop();
+        return;
+    }
+
     glass->ungrabMouse();
     q->resendEvent(&pressEvent);
     mouseGrabber = q->scene()->mouseGrabberItem();
@@ -405,14 +410,7 @@ void MPannableWidget::glassMousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 
     copyGraphicsSceneMouseEvent(d->pressEvent, *event);
-    if (!d->physics->inMotion()) {
-        // sending it now, we will send "cancel" if it will be needed.
-        copyGraphicsSceneMouseEvent(d->pressEvent, *event);
-        d->initialPressStartTimer();
-
-    } else {
-        d->physics->stop();
-    }
+    d->initialPressStartTimer();
 }
 
 void MPannableWidget::glassMouseReleaseEvent(QGraphicsSceneMouseEvent *event)
@@ -467,8 +465,9 @@ void MPannableWidget::glassPanEvent(QGestureEvent *event, QPanGesture* panGestur
             d->mouseGrabber = 0;
         }
 
-        d->physics->pointerPress(d->pressEvent.pos() + panGesture->offset());
-        break;
+        d->physics->pointerPress(d->pressEvent.pos());
+        //Fallthough is intentionary, we need to handle the movement that
+        //is delivered with a started gesture.
     case Qt::GestureUpdated:
         d->physics->pointerMove(d->pressEvent.pos() + panGesture->offset());
         break;

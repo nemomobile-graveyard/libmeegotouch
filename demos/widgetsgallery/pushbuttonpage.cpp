@@ -30,12 +30,11 @@
 #include <MApplication>
 
 PushButtonPage::PushButtonPage() :
-    TemplatePage(),
+        TemplatePage(TemplatePage::Buttons),
     pushButton1(0),
     pushButton2(0),
     pushButton3(0)
 {
-    gid = TemplatePage::Buttons;
 }
 
 PushButtonPage::~PushButtonPage()
@@ -56,7 +55,7 @@ void PushButtonPage::createContent()
     containerPolicy->addItem(pushButton1);
 
     pushButton2 = new MButton();
-    pushButton2->setIconID("icon-m-messaging-smiley-surprised");
+    pushButton2->setIconID("icon-m-messaging-smiley-tongue");
     containerPolicy->addItem(pushButton2);
 
     pushButton3 = new MButton();

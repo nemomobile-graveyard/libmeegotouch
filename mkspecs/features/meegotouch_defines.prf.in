@@ -6,7 +6,7 @@
 
 M_MAJOR_VERSION = 0
 M_MINOR_VERSION = 20
-M_PATCH_VERSION = 12
+M_PATCH_VERSION = 14
 M_VERSION=$${M_MAJOR_VERSION}.$${M_MINOR_VERSION}.$${M_PATCH_VERSION}
 
 # first set default value for meegotouch prefix
@@ -52,6 +52,7 @@ unix|win32 {
     M_NOTIFICATIONS_EVENT_TYPES_DIR=$$M_INSTALL_DATA/meegotouch/notifications/eventtypes
     M_XDG_DIR = $$M_INSTALL_SYSCONF/xdg
     M_TRANSLATION_DIR = $$M_INSTALL_DATA/l10n/meegotouch
+    M_ICUEXTRADATA_DIR = $$M_INSTALL_DATA/meegotouch/icu
     M_DBUS_INTERFACES_DIR = /usr/share/dbus-1/interfaces
     M_DBUS_SERVICES_DIR = $$system(pkg-config --variable session_bus_services_dir dbus-1)
 

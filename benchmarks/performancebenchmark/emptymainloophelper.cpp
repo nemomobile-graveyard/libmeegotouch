@@ -20,11 +20,19 @@
 #include "emptymainloophelper.h"
 
 #include <MTheme>
+#include <MComponentData>
 
 #include <QApplication>
 #include <QTimer>
 
+#include <MDebug>
+#include <QString>
+
 #include <cstdlib>
+
+#ifdef Q_OS_LINUX
+#include <sys/time.h>
+#endif
 
 
 EmptyMainLoopHelper::EmptyMainLoopHelper() :
@@ -55,6 +63,16 @@ void EmptyMainLoopHelper::terminateOnEmptyMainLoop2()
         if (terminationType == ExitOnEmpty) {
             exit(0);
         } else {
+#ifdef Q_OS_LINUX
+            struct timeval t;
+            gettimeofday(&t, 0);
+
+            mDebug("EmptyMainLoopHelper") << QString("%1[%2%3]: quitting")
+                   .arg(MComponentData::instance()->appName())
+                   .arg((int)t.tv_sec)
+                   .arg((int)(t.tv_usec % 1000000), 6, 10, (const QChar)'0');
+#endif
+
             qApp->quit();
         }
     }

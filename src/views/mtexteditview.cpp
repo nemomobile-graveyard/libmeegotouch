@@ -522,6 +522,12 @@ void MTextEditViewPrivate::handleDocumentSizeChange(const QSizeF &newSize)
     checkScroll();
 }
 
+void MTextEditViewPrivate::playTextFieldSelectionFeedback()
+{
+    Q_Q(const MTextEditView);
+
+    q->style()->changeSelectionFeedback().play();
+}
 
 /*!
  * \brief Method to start text selection
@@ -770,6 +776,7 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
 
+    MTextEdit::TextFieldLocationType location;
     int cursor = d->cursorPosition(event);
     d->setMouseTarget(event->pos());
 
@@ -785,12 +792,23 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
         d->ignoreSelection = !d->controller->isSelectionEnabled();
     }
 
+    // let the controller react on click on a cursor index
+    d->controller->handleMousePress(cursor, event, &location);
+
     if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
-        style()->pressFeedback().play();
+        if (location == MTextEdit::Word) {
+            style()->pressWordFeedback().play();
+        } else {
+            style()->pressBoundaryFeedback().play();
+        }
     }
 
-    // let the controller react on click on a cursor index
-    d->controller->handleMousePress(cursor, event);
+    // Connect when pressing and disconnect when releasing
+    // to make sure that feedback is only given when user is
+    // making changes to the selection by touching.
+    QObject::connect(d->controller, SIGNAL(selectionChanged()),
+                     d, SLOT(playTextFieldSelectionFeedback()),
+                     Qt::UniqueConnection);
 }
 
 
@@ -798,6 +816,7 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MTextEditView);
 
+    MTextEdit::TextFieldLocationType location;
     event->accept();
 
     // controller shouldn't do anything for selection ending mouse release
@@ -805,12 +824,15 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         // don't send either focus gaining mouse click with autoselect
         if (d->inAutoSelectionClick == false) {
             int cursor = d->cursorPosition(event);
+            d->controller->handleMouseRelease(cursor, event, &location);
 
             if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
-                style()->releaseFeedback().play();
+                if (location == MTextEdit::Word) {
+                    style()->releaseWordFeedback().play();
+                } else {
+                    style()->releaseBoundaryFeedback().play();
+                }
             }
-
-            d->controller->handleMouseRelease(cursor, event);
         }
     }
 
@@ -818,6 +840,9 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     d->inAutoSelectionClick = false;
     d->longPressTimer->stop();
     d->scrollTimer->stop();
+
+    QObject::disconnect(d->controller, SIGNAL(selectionChanged()),
+                        d, SLOT(playTextFieldSelectionFeedback()));
 }
 
 
@@ -973,9 +998,11 @@ void MTextEditView::changeEvent(QEvent *event)
 void MTextEditView::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
+    Q_D(MTextEditView);
+
+    style()->cancelFeedback().play();
 
     // restore state before as before mouse press
-    Q_D(MTextEditView);
     d->selecting = false;
     d->inAutoSelectionClick = false;
     d->longPressTimer->stop();
@@ -985,6 +1012,9 @@ void MTextEditView::cancelEvent(MCancelEvent *event)
     if (d->controller->completer() && d->controller->completer()->isActive()) {
         d->controller->completer()->hideCompleter();
     }
+
+    QObject::disconnect(d->controller, SIGNAL(selectionChanged()),
+                        d, SLOT(playTextFieldSelectionFeedback()));
 }
 
 

@@ -75,9 +75,23 @@ public:
       */
     M_MODEL_PROPERTY(QImage, itemImage, ItemImage, false, QImage())
 
-    M_MODEL_PROPERTY(QImage, itemQImage, ItemQImage, false, QImage())
+    /*!
+      \property MContentItemModel::itemImageID
+      \brief Item thumbnail theme ID.
 
+      \sa MContentItemView
+      */
     M_MODEL_PROPERTY(QString, itemImageID, ItemImageID, true, QString())
+
+    /*!
+      \property MContentItemModel::itemImageSize
+      \brief Contains size of the thumbnail (set thumbnail from theme using itemImageID).
+
+      \sa MContentItemView
+      */
+    M_MODEL_PROPERTY(QSize, itemImageSize, ItemImageSize, true, QSize())
+
+    M_MODEL_PROPERTY(QImage, itemQImage, ItemQImage, false, QImage())
 
     /*!
       \property MContentItemModel::selected
@@ -96,6 +110,22 @@ public:
      \brief Contains optional icon on the right-hand side
      */
     M_MODEL_PROPERTY(QImage, optionalImage, OptionalImage, false, QImage()) 
+
+    /*!
+      \property MContentItemModel::optionalImageID
+      \brief Contains theme ID of optional icon on the right-hand side.
+
+      \sa MContentItemView
+      */
+    M_MODEL_PROPERTY(QString, optionalImageID, OptionalImageID, true, QString())
+
+    /*!
+      \property MContentItemModel::optionalImageSize
+      \brief Contains size of the optional icon (set optional icon from theme with optionalImageID).
+
+      \sa MContentItemView
+      */
+    M_MODEL_PROPERTY(QSize, optionalImageSize, OptionalImageSize, true, QSize())
 
     /*!
         \property MContentItemModel::additionalItem

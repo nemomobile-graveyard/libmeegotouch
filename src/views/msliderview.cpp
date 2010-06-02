@@ -190,32 +190,51 @@ MSliderIndicator::~MSliderIndicator()
 
 void MSliderIndicator::setText(const QString &text)
 {
+    bool sizeHintChanged = false;
     label->setVisible(!text.isEmpty());
 
     label->setText(text);
-    while (layout->count() > 0)
-        layout->removeAt(0);
-
-    layout->addAnchor(layout, Qt::AnchorVerticalCenter, label, Qt::AnchorVerticalCenter);
-    layout->addAnchor(layout, Qt::AnchorVerticalCenter, image, Qt::AnchorVerticalCenter);
 
     if (text.isEmpty()) {
-        label->setMinimumSize(0, 0);
-        label->setPreferredSize(0, 0);
-        label->setMaximumSize(0, 0);
+	QSizeF emptySize(0, 0);
+
+	if (emptySize != label->minimumSize()) {
+            label->setMinimumSize(0, 0);
+	    sizeHintChanged = true;
+	}
+	if (emptySize != label->preferredSize()) {
+            label->setPreferredSize(0, 0);
+	    sizeHintChanged = true;
+	}
+	if (emptySize != label->maximumSize()) {
+            label->setMaximumSize(0, 0);
+	    sizeHintChanged = true;
+	}
     } else {
-        label->setMinimumSize(label->sizeHint(Qt::PreferredSize));
-        label->setPreferredSize(label->sizeHint(Qt::PreferredSize));
-        label->setMaximumSize(label->sizeHint(Qt::PreferredSize));
+	if (label->sizeHint(Qt::PreferredSize) != label->minimumSize()) {
+            label->setMinimumSize(label->sizeHint(Qt::PreferredSize));
+	    sizeHintChanged = true;
+	}
+	if (label->sizeHint(Qt::PreferredSize) != label->preferredSize()) {
+            label->setPreferredSize(label->sizeHint(Qt::PreferredSize));
+	    sizeHintChanged = true;
+	}
+	if (label->sizeHint(Qt::PreferredSize) != label->maximumSize()) {
+            label->setMaximumSize(label->sizeHint(Qt::PreferredSize));
+	    sizeHintChanged = true;
+	}
     }
 
-    label->resize(label->sizeHint(Qt::PreferredSize));
+    if (label->sizeHint(Qt::PreferredSize) != label->size())
+        label->resize(label->sizeHint(Qt::PreferredSize));
 
-    updateGeometry();
+    if (sizeHintChanged)
+        updateGeometry();
 }
 
 void MSliderIndicator::setImage(const QString &id)
 {
+    bool sizeHintChanged = false;
     image->setVisible(!id.isEmpty());
 
     imageName = id;
@@ -231,25 +250,41 @@ void MSliderIndicator::setImage(const QString &id)
         delete pixmap;
     }
 
-    while (layout->count() > 0)
-        layout->removeAt(0);
-
-    layout->addAnchor(layout, Qt::AnchorVerticalCenter, label, Qt::AnchorVerticalCenter);
-    layout->addAnchor(layout, Qt::AnchorVerticalCenter, image, Qt::AnchorVerticalCenter);
-
     if (id.isEmpty()) {
-        image->setMinimumSize(0, 0);
-        image->setPreferredSize(0, 0);
-        image->setMaximumSize(0, 0);
+	QSizeF emptySize(0, 0);
+	
+	if (emptySize != image->minimumSize()) {
+            image->setMinimumSize(0, 0);
+	    sizeHintChanged = true;
+	}
+	if (emptySize != image->preferredSize()) {
+            image->setPreferredSize(0, 0);
+	    sizeHintChanged = true;
+	}
+	if (emptySize != image->maximumSize()) {
+            image->setMaximumSize(0, 0);
+	    sizeHintChanged = true;
+	}
     } else {
-        image->setMinimumSize(image->sizeHint(Qt::PreferredSize));
-        image->setPreferredSize(image->sizeHint(Qt::PreferredSize));
-        image->setMaximumSize(image->sizeHint(Qt::PreferredSize));
+	if (image->sizeHint(Qt::PreferredSize) != image->minimumSize()) {
+            image->setMinimumSize(image->sizeHint(Qt::PreferredSize));
+	    sizeHintChanged = true;
+	}
+	if (image->sizeHint(Qt::PreferredSize) != image->preferredSize()) {
+            image->setPreferredSize(image->sizeHint(Qt::PreferredSize));
+	    sizeHintChanged = true;
+	}
+	if (image->sizeHint(Qt::PreferredSize) != image->maximumSize()) {
+            image->setMaximumSize(image->sizeHint(Qt::PreferredSize));
+	    sizeHintChanged = true;
+	}
     }
 
-    image->resize(image->sizeHint(Qt::PreferredSize));
+    if (image->sizeHint(Qt::PreferredSize) != label->size())
+        image->resize(image->sizeHint(Qt::PreferredSize));
 
-    updateGeometry();
+    if (sizeHintChanged)
+        updateGeometry();
 }
 
 QSizeF MSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -388,6 +423,7 @@ void MSliderGroove::setSliderValues(int min, int max, int val)
         handlePos.setX(valueToScreenCoordinate(value));
     else
         handlePos.setY(valueToScreenCoordinate(value));
+
     updateHandlePos(handlePos);
 
     update();
@@ -519,10 +555,14 @@ void MSliderGroove::raiseHandleIndicator()
 {
     QGraphicsItem *newParent = topLevelItem();
     if (newParent) {
-        sliderHandleIndicator->setParentItem(newParent);
+        //reparents slider handle indicator only if it is necessary
+        if (newParent != sliderHandleIndicator->parentItem())
+            sliderHandleIndicator->setParentItem(newParent);
 
-        //by raising handle indicator will be shown
-        sliderHandleIndicator->setVisible(true);
+        //by raising handle indicator will be shown (only if it
+        //is not already visible)
+        if (!sliderHandleIndicator->isVisible())
+            sliderHandleIndicator->setVisible(true);
     }
 
     updateHandleIndicatorPos();
@@ -746,6 +786,12 @@ void MSliderGroove::updateHandlePos(const QPointF &position)
 
         x = qBound(sliderHandle->rect().width() / 2, x, rect().width() - (sliderHandle->rect().width() / 2));
 
+        QPointF newPos(x - (sliderHandle->rect().width() / 2), (rect().height() - sliderHandle->rect().height()) / 2);
+
+        //changes slider handle positions only if
+        //it is really necessary
+        if (newPos == sliderHandle->pos())
+            return;
         sliderHandle->setPos(x - (sliderHandle->rect().width() / 2), (rect().height() - sliderHandle->rect().height()) / 2);
     }
 
@@ -754,8 +800,16 @@ void MSliderGroove::updateHandlePos(const QPointF &position)
 
         y = qBound(sliderHandle->rect().height() / 2, y, rect().height() - (sliderHandle->rect().height() / 2));
 
+        QPointF newPos((rect().width() - sliderHandle->rect().width()) / 2, y - (sliderHandle->rect().height() / 2));
+
+        //changes slider handle positions only if
+        //it is really necessary         
+        if (newPos == sliderHandle->pos())
+            return;
+
         sliderHandle->setPos((rect().width() - sliderHandle->rect().width()) / 2, y - (sliderHandle->rect().height() / 2));
     }
+
     updateHandleIndicatorPos();
 }
 
@@ -815,7 +869,13 @@ void MSliderGroove::updateHandleIndicatorPos()
     if (sliderHandleIndicatorParent)
         grooveRelativePos = mapFromScene(scenePos()) - mapFromScene(sliderHandleIndicatorParent->scenePos());
 
-    sliderHandleIndicator->setPos(grooveRelativePos + handleIndicatorPos);
+    //slider handle label position (and bounding rect)
+    //will be changed only if it is really necessary
+    QPointF newPos = grooveRelativePos + handleIndicatorPos;
+    if (newPos == pos())
+        return;
+
+    sliderHandleIndicator->setPos(newPos);
 
     //recalculates bounding rect according to area occupied by handle indicator
     //because that area still has to be redrawn whenever slider is redrawn
@@ -1081,21 +1141,41 @@ bool MSliderViewPrivate::isCollision(QGraphicsSceneMouseEvent *event) const
 //to mouse cursor position
 void MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
 {
-    if (valueAnimation == 0) {
-        valueAnimation = new QPropertyAnimation(controller, "value", controller);
-        valueAnimation->setDuration(50);
-        valueAnimation->setEasingCurve(QEasingCurve::OutSine);
+    Q_Q(MSliderView);
+
+    bool needAnimation = false;
+
+    QRectF clickableHandleRect = sliderGroove->clickableHandleArea();
+    clickableHandleRect.translate(sliderGroove->pos());
+
+    //animation is necessary when tap point is further form
+    //slider handle middle point then slider handle width / height
+    //(depending on slider orientation)
+    if (q->model()->orientation() == Qt::Horizontal) {
+        if (qAbs(event->pos().x() - clickableHandleRect.center().x()) > clickableHandleRect.width())
+            needAnimation = true;
+    } else {
+        if (qAbs(event->pos().y() - clickableHandleRect.center().y()) > clickableHandleRect.height())
+            needAnimation = true;
     }
 
     //there are some margins around the view
     //and those have to be considered
-    Q_Q(MSliderView);
     QPointF eventPos = event->pos();
     eventPos.setX(eventPos.x() + q->marginLeft());
     eventPos.setY(eventPos.y() + q->marginTop());
 
-    valueAnimation->setEndValue(sliderGroove->screenPointToValue(eventPos));
-    valueAnimation->start();
+    if (needAnimation) {
+        if (valueAnimation == 0) {
+            valueAnimation = new QPropertyAnimation(controller, "value", controller);
+            valueAnimation->setDuration(150);
+            valueAnimation->setEasingCurve(QEasingCurve::OutSine);
+        }
+
+        valueAnimation->setEndValue(sliderGroove->screenPointToValue(eventPos));
+        valueAnimation->start();
+    } else
+        controller->setValue(sliderGroove->screenPointToValue(eventPos));
 }
 
 //refreshes slider groove (min, max and value, slider state)

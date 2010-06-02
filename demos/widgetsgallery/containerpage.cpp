@@ -25,9 +25,8 @@
 #include <MLocale>
 #include <QGraphicsLinearLayout>
 
-ContainerPage::ContainerPage()
+ContainerPage::ContainerPage() : TemplatePage(TemplatePage::SimpleWidgets)
 {
-    gid = TemplatePage::ContainersAndApplets;
 }
 
 ContainerPage::~ContainerPage()

@@ -62,6 +62,9 @@ include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
     # TRANSLATION_DIR determines the default translation path
     DEFINES += TRANSLATION_DIR=\\\"\"$$M_TRANSLATION_DIR\"\\\"
 
+    # extra data for libicu to be used be default
+    DEFINES += M_ICUEXTRADATA_DIR=\\\"\"$$M_ICUEXTRADATA_DIR\"\\\"
+
     # M_THEME_PRELOAD_DIR and M_THEME_POST_PRELOAD_DIR defines from where
     # to get lists of images to be preloaded
     DEFINES += M_THEME_PRELOAD_DIR=\\\"\"$$M_THEME_PRELOAD_DIR\"\\\"

@@ -40,19 +40,19 @@ class QParallelAnimationGroup;
 
 //video widget which emits clicked signal
 class MyVideoWidget : public MVideoWidget
-{   
+{
     Q_OBJECT
-    
+
     public:
         MyVideoWidget(QGraphicsItem *parent = 0);
 Q_SIGNALS:
         void clicked();
-        
+
     protected:
-    
+
          virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
          virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-         
+
     private:
 };
 
@@ -118,6 +118,10 @@ signals:
 protected:
     virtual void retranslateUi();
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+
+    virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture);
+    virtual bool event(QEvent *e);
+
 private:
 
     void  relayout();
@@ -145,4 +149,7 @@ private:
     QString videoId;
 
     QTimer inactivityTimer;
+
+    qreal scaleFactor;
+    qreal lastScaleFactor;
 };

@@ -225,9 +225,9 @@ void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *
 #endif
 
     if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->disappearSceneWindowNow(statusBar);
+        q->sceneManager()->disappearSceneWindow(statusBar);
     } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->appearSceneWindowNow(statusBar);
+        q->sceneManager()->appearSceneWindow(statusBar);
     }
 }
 
@@ -241,9 +241,9 @@ void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
 
     if (q->isFullScreen()) {
         if (callStatusProperty.value().toString() == "active") {
-            q->sceneManager()->appearSceneWindowNow(statusBar);
+            q->sceneManager()->appearSceneWindow(statusBar);
         } else {
-            q->sceneManager()->disappearSceneWindowNow(statusBar);
+            q->sceneManager()->disappearSceneWindow(statusBar);
         }
     }
 }
@@ -381,7 +381,6 @@ void MApplicationWindowPrivate::openMenu()
     if (menu->actions().count() > 0) {
         menu->appear(q);
         escapeButtonPanel->setEnabled(false);
-        toolBar->setEnabled(false);
     }
 }
 
@@ -569,8 +568,11 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
     bool toolbarHasVisibleActions = false;
     for (int i = 0; i < count; ++i) {
         if (actions[i]->isVisible()) {
-            toolbarHasVisibleActions = true;
-            break;
+            MAction *action = qobject_cast<MAction*>(actions[i]);
+            if(!action || action->location().testFlag(MAction::ToolBarPortraitLocation)) {
+                toolbarHasVisibleActions = true;
+                break;
+            }
         }
     }
 

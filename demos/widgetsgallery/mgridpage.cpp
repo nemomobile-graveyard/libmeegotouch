@@ -23,6 +23,8 @@
 #include <QGraphicsSceneContextMenuEvent>
 #include <QPointer>
 
+#include <MApplication>
+#include <MApplicationWindow>
 #include <MContentItem>
 #include <MAbstractCellCreator>
 #include <MLabel>
@@ -142,12 +144,12 @@ QSizeF ContentItemCreator::cellSize() const
 }
 
 MGridPage::MGridPage()
-        : pageShown(false),
-          m_itemSize(10,10),
-          m_columnsPortrait(2),
-          m_columnsLandscape(4)
+    : TemplatePage(TemplatePage::ListsGridsAndPopups),
+      pageShown(false),
+      m_itemSize(10,10),
+      m_columnsPortrait(2),
+      m_columnsLandscape(4)
 {
-    gid = TemplatePage::ListsGridsAndMenus;
     setObjectName("gridPage");
 }
 
@@ -160,9 +162,9 @@ void MGridPage::createContent()
     MApplicationPage::createContent();
 
     MTheme::addPixmapDirectory(QDir(CONTACTS_DIR).canonicalPath());
-    QGraphicsWidget * panel = centralWidget();
+    QGraphicsWidget *panel = centralWidget();
 
-    MLayout* layout = new MLayout(panel);
+    MLayout *layout = new MLayout(panel);
     layout->setContentsMargins(0,0,0,0);
     panel->setLayout(layout);
 
@@ -173,24 +175,30 @@ void MGridPage::createContent()
     layout->setPortraitPolicy(portraitPolicy);
 
     list = new MList(panel);
-    list->setObjectName( "wgList" );
+    list->setObjectName("wgList");
     landscapePolicy->addItem(list);
     portraitPolicy->addItem(list);
 
-    connect( this, SIGNAL(appeared()), this, SLOT(configureGrid()) );
+    if (MApplication::activeApplicationWindow()->orientation() == M::Landscape) {
+        list->setColumns(m_columnsLandscape);
+        m_itemSize.setWidth(exposedContentRect().width() / m_columnsLandscape);
+    } else {
+        list->setColumns(m_columnsPortrait);
+        m_itemSize.setWidth(exposedContentRect().width() / m_columnsPortrait);
+    }
+    m_itemSize.setHeight(m_itemSize.width());
 
-    ContentItemCreator * cellCreator = new ContentItemCreator(this);
+    connect(this, SIGNAL(appeared()), this, SLOT(configureGrid()));
+
+    ContentItemCreator *cellCreator = new ContentItemCreator(this);
     list->setCellCreator(cellCreator);
 
-    m_itemSize.setWidth( geometry().width() / m_columnsLandscape );
-    m_itemSize.setHeight( m_itemSize.width() );
-
-    GridModel * model = new GridModel(m_itemSize.toSize(), Utils::mediaArtDir());
+    GridModel *model = new GridModel(m_itemSize.toSize(), Utils::mediaArtDir());
     list->setItemModel(model);
-    connect( this, SIGNAL(rate(MediaType::Rating,QString)), model, SLOT(rateImage(MediaType::Rating,QString)) );
+    connect(this, SIGNAL(rate(MediaType::Rating,QString)), model, SLOT(rateImage(MediaType::Rating,QString)));
 
     //% "Configuration"
-    MAction* configurationAction = new MAction(qtTrId("xx_gridpage_configuration"), this);
+    MAction *configurationAction = new MAction(qtTrId("xx_gridpage_configuration"), this);
     configurationAction->setLocation(MAction::ApplicationMenuLocation);
     connect(configurationAction, SIGNAL(triggered()), this, SLOT(showGridConfigurationDialog()));
     addAction(configurationAction);
@@ -267,18 +275,24 @@ void MGridPage::orientationChangeEvent(MOrientationChangeEvent *event)
 {
     MApplicationPage::orientationChangeEvent(event);
 
-    connect( sceneManager(), SIGNAL(orientationChangeFinished(M::Orientation)), this, SLOT(orientationChanged(M::Orientation)));
+    orientationChanged(event->orientation());
 }
 
 void MGridPage::configureGrid()
 {
-    if( sceneManager()->orientation() == M::Portrait ) {
-        m_itemSize.setHeight( list->geometry().width() / m_columnsPortrait );
+    configureGrid(sceneManager()->orientation());
+}
+
+void MGridPage::configureGrid(M::Orientation orientation)
+{
+    if (orientation == M::Portrait) {
+        m_itemSize.setHeight(list->geometry().width() / m_columnsPortrait);
         list->setColumns(m_columnsPortrait);
     } else {
-        m_itemSize.setHeight( list->geometry().width() / m_columnsLandscape );
+        m_itemSize.setHeight(list->geometry().width() / m_columnsLandscape);
         list->setColumns(m_columnsLandscape);
     }
+    m_itemSize.setWidth(m_itemSize.height());
 
     updateGeometry();
     update();
@@ -344,6 +358,5 @@ void MGridPage::modifyRowsSliderHandle(int newValue)
 
 void MGridPage::orientationChanged(M::Orientation orientation)
 {
-    Q_UNUSED(orientation)
-    configureGrid();
+    configureGrid(orientation);
 }

@@ -40,6 +40,19 @@ void Ft_Locales::cleanup()
 {
 }
 
+void Ft_Locales::testBug169305()
+{
+    MLocale locale1("ar_SA");
+    locale1.installTrCatalog("foo");
+    MLocale::setDefault(locale1);
+    QCOMPARE(qApp->layoutDirection(), Qt::RightToLeft);
+    MLocale locale;
+    locale.installTrCatalog("foo");
+    MLocale::setDefault(locale);
+    QCoreApplication::processEvents();
+    QCOMPARE(qApp->layoutDirection(), Qt::RightToLeft);
+}
+
 void Ft_Locales::testMLocaleConstructor()
 {
     MLocale *z = 0;
@@ -395,17 +408,23 @@ void Ft_Locales::testMLocaleLanguageEndonym_data()
     QTest::addColumn<QString>("locale_name");
     QTest::addColumn<QString>("endonym_result");
 
+    QTest::newRow("fi")
+            << QString("fi")
+            << QString("suomi");
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << QString("suomi");
     QTest::newRow("de")
             << QString("de")
             << QString("Deutsch");
-    // de_CH won’t work! That’s a bug in my opinion,
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    // de_CH needs a special fix because of
     // see http://site.icu-project.org/design/resbund/issues
-    //QTest::newRow("de_CH")
-    //        << QString("de_CH")
-    //        << QString("Deutsch");
+    // make sure that the fix works:
+    QTest::newRow("de_CH")
+            << QString("de_CH")
+            << QString("Deutsch");
+#endif
     QTest::newRow("de_AT")
             << QString("de_AT")
             << QString("Deutsch");
@@ -436,11 +455,14 @@ void Ft_Locales::testMLocaleCountryEndonym_data()
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << QString("Suomi");
-    // de_CH won’t work! That’s a bug in my opinion,
+#if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
+    // de_CH needs a special fix because of
     // see http://site.icu-project.org/design/resbund/issues
-    //QTest::newRow("de_CH")
-    //        << QString("de_CH")
-    //        << QString("Deutschland");
+    // make sure that the fix works:
+    QTest::newRow("de_CH")
+            << QString("de_CH")
+            << QString("Schweiz");
+#endif
     QTest::newRow("de_AT")
             << QString("de_AT")
             << QString("Österreich");

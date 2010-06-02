@@ -40,8 +40,12 @@ private slots:
     void init();
     void cleanup();
 
+    void testInsertingActions();
+    void testAddingRemoveActions_data();
     void testAddingRemoveActions();
     void testDeleteAddAction();
+    void testDeleteAction();
+    void testDeleteAndAddingTextWidget();
     void testTabView();
     void testTabActionExclusivity();
     void testSizeHint_data();
@@ -49,6 +53,7 @@ private slots:
     void testButtons();
     void testMWidgetAction_data();
     void testMWidgetAction();
+    void testAddToLandscapeWhenInPortrait();
 
 private:
     MToolBar *m_toolbar;

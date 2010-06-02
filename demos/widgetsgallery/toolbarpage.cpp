@@ -138,6 +138,7 @@ private:
 };
 
 ToolBarPage::ToolBarPage() :
+    TemplatePage(TemplatePage::ApplicationView),
     callList(0),
     callModel(0),
     cellCreator(0),
@@ -147,8 +148,6 @@ ToolBarPage::ToolBarPage() :
     tabViewAction(0),
     isDefaultView(true)
 {
-    gid = TemplatePage::ViewsAndDialogs;
-
 }
 
 ToolBarPage::~ToolBarPage()
@@ -228,12 +227,12 @@ void ToolBarPage::fourButtons()
 {
     clearToolbarActions();
 
-    MAction* action = new MAction("icon-m-list", "", this);
+    MAction* action = new MAction("icon-m-toolbar-list", "", this);
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(showCallDataAsList()));
 
-    action = new MAction("icon-m-grid", "", this);
+    action = new MAction("icon-m-toolbar-grid", "", this);
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
     connect(action, SIGNAL(triggered()), this, SLOT(showCallDataAsGrid()));
@@ -244,12 +243,12 @@ void ToolBarPage::textEntryWithTwoButtons()
 {
     clearToolbarActions();
     addTextEntry();
-    MAction *action = new MAction("Icon-video", "Video", this);
+    MAction *action = new MAction("icon-m-toolbar-camera", "Camera", this);
     action->setLocation(MAction::ToolBarLocation);
     addAction(action);
-    MAction *actionSMS = new MAction("Icon-new-SMS", "SMS", this);
-    actionSMS->setLocation(MAction::ToolBarLocation);
-    insertAction(action, actionSMS);
+    MAction *actionGallery = new MAction("icon-m-toolbar-gallery", "Gallery", this);
+    actionGallery->setLocation(MAction::ToolBarLocation);
+    insertAction(action, actionGallery);
 }
 
 void ToolBarPage::addTextEntry()

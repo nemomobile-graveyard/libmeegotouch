@@ -40,6 +40,7 @@ public:
     virtual void operationComplete(const QString &operation, const QString &pkg, const QString &error);
     virtual void setAppletTitle(const QString &title);
     virtual void receiveOperation(QDBusPendingCallWatcher *watcher);
+    virtual void updateApplet(const MDesktopEntry &appletData);
     virtual void init(const QString &mashupCanvasName, MDataStore *dataStore);
     virtual bool instantiateApplet(MAppletId appletId);
     virtual bool instantiateOutOfProcessApplet(MAppletInstanceData *data, const MAppletMetaData &metadata);
@@ -144,6 +145,13 @@ void MAppletInstanceManagerStub::receiveOperation(QDBusPendingCallWatcher *watch
     QList<ParameterBase *> params;
     params.append(new Parameter<QDBusPendingCallWatcher * >(watcher));
     stubMethodEntered("receiveOperation", params);
+}
+
+void MAppletInstanceManagerStub::updateApplet(const MDesktopEntry &appletData)
+{
+    QList<ParameterBase *> params;
+    params.append(new Parameter<const MDesktopEntry& >(appletData));
+    stubMethodEntered("updateApplet", params);
 }
 
 void MAppletInstanceManagerStub::init(const QString &mashupCanvasName, MDataStore *dataStore)
@@ -400,6 +408,11 @@ void MAppletInstanceManager::setAppletTitle(const QString &title)
 void MAppletInstanceManager::receiveOperation(QDBusPendingCallWatcher *watcher)
 {
     gMAppletInstanceManagerStub->receiveOperation(watcher);
+}
+
+void MAppletInstanceManager::updateApplet(const MDesktopEntry &appletData)
+{
+    gMAppletInstanceManagerStub->updateApplet(appletData);
 }
 
 void MAppletInstanceManager::init(const QString &mashupCanvasName, MDataStore *dataStore)

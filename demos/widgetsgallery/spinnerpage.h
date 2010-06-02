@@ -49,7 +49,7 @@ public:
 public slots:
     void inApplicationMainArea();
     void inContainerHeader();
-    void inViewmenu();
+    void inApplicationMenu();
     void inDialog();
     void launchDialog();
 

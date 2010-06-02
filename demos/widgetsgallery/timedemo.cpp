@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include "timedemo.h"
-#include "listpage.h"
+#include "mainpage.h"
 #include "timedemobenchmark.h"
 #include "templatepage.h"
 
@@ -38,8 +38,8 @@ namespace
     const int pageDuration = 5000;
 }
 
-Timedemo::Timedemo(ListPage *listPage, const QStringList& demoPageTitles)
-    : m_pFrontPage(listPage)
+Timedemo::Timedemo(MainPage *mainPage, const QStringList& demoPageTitles)
+    : m_pFrontPage(mainPage)
     , m_currentPageIndex(0)
     , m_currentBenchmarkIndex(0)
     , demoPageTitles(demoPageTitles)
@@ -87,7 +87,7 @@ void Timedemo::stopTiming()
 void Timedemo::showFirstPage()
 {
     if (demoPageTitles.count() == 0) {
-        foreach(TimedemoPage *page, m_pFrontPage->pages) {
+        foreach(TimedemoPage *page, m_pFrontPage->demoPages()) {
             demoPages.append(page);
         }
     } else {

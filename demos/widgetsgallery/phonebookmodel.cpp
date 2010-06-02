@@ -26,38 +26,18 @@
 #include <QTimer>
 
 #include <MTheme>
+#include <MSortFilterProxyModel>
 
 PhoneBookModel::PhoneBookModel()
+    : MAbstractItemModel()
 {
     namesList = loadFakeNames();
     imageIdList = loadFakeImageIds();
-    defaultThumbnail = QImage(Utils::imagesDir() + "DefaultAvatar.png");
-    modelRowCount = 0;
 }
 
 PhoneBookModel::~PhoneBookModel()
 {
     qDeleteAll(phoneBookEntries);
-}
-
-QVariant PhoneBookModel::data(const QModelIndex &index, int role) const
-{
-    // This function will be called many times during fast panning, lets
-    // check boundaries and validnes only in debug mode
-    Q_ASSERT(index.isValid());
-    Q_ASSERT(index.row() < phoneBookEntries.size());
-
-    if (role == Qt::DisplayRole) {
-        // Let's store a pointer into QVariant, otherwise QT will make a copy but we are lazy
-        // and don't want to copy stuff around
-        return QVariant::fromValue(static_cast<void *>(phoneBookEntries[index.row()]));
-    } else if (role == PhoneBookModel::PhoneBookSortRole) {
-        return QVariant::fromValue(phoneBookEntries[index.row()]->lastName);
-    } else if (role == PhoneBookModel::PhoneBookFilterRole) {
-        return QVariant::fromValue(phoneBookEntries[index.row()]->fullName);
-    }
-
-    return QVariant();
 }
 
 QStringList PhoneBookModel::loadFakeNames()
@@ -126,34 +106,66 @@ PhoneBookEntry *PhoneBookModel::generateEntry()
     return entry;
 }
 
-int PhoneBookModel::rowCount(const QModelIndex &parent) const
+int PhoneBookModel::groupCount() const
 {
-    Q_UNUSED(parent);
-
-    return modelRowCount;
+    return groups.count();
 }
 
-int PhoneBookModel::columnCount(const QModelIndex &parent) const
+int PhoneBookModel::rowCountInGroup(int group) const
 {
-    Q_UNUSED(parent);
+    if (group < groupsSize.count() && group >= 0)
+        return groupsSize[group];
+    else if (group == -1)
+        return phoneBookEntries.count();
+    
+    return 0;
+}
 
-    return 1;
+QString PhoneBookModel::groupTitle(int group) const
+{
+    if (group < groups.count())
+        return groups[group];
+    
+    return QString();
+}
+
+QVariant PhoneBookModel::itemData(int row, int group, int role) const
+{
+    int flatRow = row;
+    
+    if (group >= 0 && row >= 0)
+        flatRow = itemGroupCache[group][row];
+
+    // This function will be called many times during fast panning, lets
+    // check boundaries and validnes only in debug mode
+    Q_ASSERT(flatRow >= 0);
+    Q_ASSERT(flatRow < phoneBookEntries.size());
+    
+    if (role == Qt::DisplayRole)
+        return QVariant::fromValue(static_cast<void *>(phoneBookEntries[flatRow]));
+    else if (role == PhoneBookSortRole)
+        return QVariant::fromValue(phoneBookEntries[flatRow]->lastName);
+    else if (role == PhoneBookFilterRole)
+        return QVariant::fromValue(phoneBookEntries[flatRow]->fullName);
+    
+    return QVariant();
 }
 
 bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
 {
     emit layoutAboutToBeChanged();
-    beginInsertRows(parent, row, row + count - 1);
+    
+    beginInsertRows(parent, row, row + count - 1, false);
 
     for (int i = phoneBookEntries.size(); i < count; i++) {
         PhoneBookEntry *entry = generateEntry();
         phoneBookEntries.append(entry);
     }
-
-    if(!parent.isValid())
-        modelRowCount += count;
+    
+    regenerateModel();
 
     endInsertRows();
+    
     emit layoutChanged();
     return true;
 }
@@ -161,15 +173,48 @@ bool PhoneBookModel::insertRows(int row, int count, const QModelIndex &parent)
 bool PhoneBookModel::removeRows(int row, int count, const QModelIndex &parent)
 {
     emit layoutAboutToBeChanged();
+    
     if (count <= 0)
         return true; //Successfully removed 0 rows.
+    
+    int flatRow = row;
+    int group = parent.row();
+            
+    if (isGrouped() && group >= 0)
+        flatRow = itemGroupCache[group][row];
 
-    beginRemoveRows(parent, row, row + count - 1);
-    modelRowCount -= count;
+    beginRemoveRows(parent, row, row + count - 1, true);
+    
+    qDeleteAll(phoneBookEntries.begin() + flatRow, phoneBookEntries.begin() + flatRow + count - 1);
+    phoneBookEntries.remove(flatRow, count);
+
+    regenerateModel();
+    
     endRemoveRows();
 
     emit layoutChanged();
     return true;
+}
+
+void PhoneBookModel::regenerateModel()
+{
+    groups.clear();
+    groupsSize.clear();
+    itemGroupCache.clear();
+    for (int i = 0; i < phoneBookEntries.count(); i++) {
+        PhoneBookEntry *entry = phoneBookEntries[i];
+        if (!entry)
+            continue;
+        
+        QChar group = entry->fullName[0];
+        if (!groups.contains(group)) {
+            groups.append(group);
+            groupsSize.append(1);
+        } else {
+            groupsSize[groups.indexOf(group)] ++ ;
+        }
+        itemGroupCache[groups.indexOf(group)].append(i);
+    }
 }
 
 void PhoneBookModel::thumbnailWasLoaded(const QModelIndex &index)
@@ -177,23 +222,10 @@ void PhoneBookModel::thumbnailWasLoaded(const QModelIndex &index)
     emit dataChanged(index, index);
 }
 
-void PhoneBookModel::sort(int column, Qt::SortOrder order)
+void PhoneBookModel::updateData(const QModelIndex &first, const QModelIndex &last)
 {
-    Q_UNUSED(column);
-
-    for (int i = 0; i < phoneBookEntries.size(); i++) {
-        for (int j = i + 1; j < phoneBookEntries.size(); j++) {
-            PhoneBookEntry *iEntry = phoneBookEntries.at(i);
-            PhoneBookEntry *jEntry = phoneBookEntries.at(j);
-            if((order == Qt::AscendingOrder && iEntry->fullName > jEntry->fullName) ||
-               (order == Qt::DescendingOrder && iEntry->fullName < jEntry->fullName)) {
-                phoneBookEntries.replace(i, jEntry);
-                phoneBookEntries.replace(j, iEntry);
-            }
-        }
-    }
+    emit dataChanged(first, last);
 }
-
 
 PhoneBookImageLoader::PhoneBookImageLoader()
 {
@@ -291,154 +323,22 @@ void PhoneBookImageLoader::processJobQueue()
 // but this is one way to achieve same result.
 void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
 {
+#ifndef HAVE_N900    
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(index.model());
     Q_ASSERT(model);
     if (model) {
-        PhoneBookSortedModel *proxyModel = dynamic_cast<PhoneBookSortedModel *>(model);
-        Q_ASSERT(proxyModel);
-        proxyModel->thumbnailWasLoaded(index);
-    }
-}
-
-PhoneBookSortedModel::PhoneBookSortedModel() : QSortFilterProxyModel(NULL), showGroups(false)
-{
-    // By default QSortFilterProxyModel uses Qt::DisplayRole for sorting and filter however we are
-    // returning pointer in QVariant so it won't work, to solve that we need to set custom roles
-    // and in the data() of model, we need to return corresponding QString
-    setSortRole(PhoneBookModel::PhoneBookSortRole);
-    setFilterRole(PhoneBookModel::PhoneBookFilterRole);
-}
-
-PhoneBookSortedModel::~PhoneBookSortedModel()
-{
-
-}
-
-QModelIndex PhoneBookSortedModel::mapFromSource(const QModelIndex &sourceIndex) const
-{
-    return QSortFilterProxyModel::mapFromSource(sourceIndex);
-}
-
-QModelIndex PhoneBookSortedModel::mapToSource(const QModelIndex &proxyIndex) const
-{
-    return QSortFilterProxyModel::mapToSource(proxyIndex);
-}
-
-void PhoneBookSortedModel::thumbnailWasLoaded(const QModelIndex &index)
-{
-    emit dataChanged(index, index);
-}
-
-void PhoneBookSortedModel::setShowGroups(bool showGroups)
-{
-    if (this->showGroups != showGroups) {
-        this->showGroups = showGroups;
-        if (this->showGroups) {
-            sort(0, Qt::AscendingOrder);
-            createGroupedModel();
+        MSortFilterProxyModel *sortModel = dynamic_cast<MSortFilterProxyModel *>(model);
+        Q_ASSERT(sortModel);
+        PhoneBookModel *phoneBookModel = dynamic_cast<PhoneBookModel *>(sortModel->sourceModel());
+        if (phoneBookModel == NULL) {
+            // Looks like live filtering is enabled
+            // one more cast step needed to get the
+            // the correct source index.
+            MSortFilterProxyModel *filterModel = dynamic_cast<MSortFilterProxyModel *>(sortModel->sourceModel());
+            if (filterModel)
+                phoneBookModel = dynamic_cast<PhoneBookModel *>(filterModel->sourceModel());
         }
-        else
-            createPlainModel();
+        phoneBookModel->thumbnailWasLoaded(sortModel->mapToSource(index));
     }
-}
-
-
-void PhoneBookSortedModel::createPlainModel()
-{
-    int plainRowCount = totalRowCount();
-    treeHeaderIndex.clear();
-
-    removeRows(0, rowCount());
-    insertRows(0, plainRowCount);
-}
-
-void PhoneBookSortedModel::createGroupedModel()
-{
-    treeHeaderIndex.clear();
-
-    QVector<PhoneBookEntry *> phoneBookEntries;
-    for (int i = 0; i < sourceModel()->rowCount(); i++) {
-        PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(sourceModel()->data(sourceModel()->index(i, 0), Qt::DisplayRole).value<void *>());
-        phoneBookEntries.append(entry);
-        QChar firstLetter = sourceModel()->data(sourceModel()->index(i, 0), PhoneBookModel::PhoneBookSortRole).toString()[0];
-
-        treeHeaderIndex[firstLetter].push_back(entry);
-    }
-
-    removeRows(0, rowCount());
-
-    insertRows(0, treeHeaderIndex.keys().count(), QModelIndex());
-    for (int i = 0; i < treeHeaderIndex.keys().count(); i++) {
-        QChar key = treeHeaderIndex.keys()[i];
-        int count = treeHeaderIndex[key].count();
-        insertRows(0, count, index(i, 0, QModelIndex()));
-    }
-}
-
-int PhoneBookSortedModel::totalRowCount()
-{
-    int totalRowCount = 0;
-
-    foreach(PhoneBookEntryVector entries, treeHeaderIndex.values()) {
-        totalRowCount += entries.count();
-    }
-
-    return totalRowCount;
-}
-
-void PhoneBookSortedModel::sort(int column, Qt::SortOrder order)
-{
-    Q_UNUSED(column);
-
-    if(showGroups)
-        return;
-
-    sourceModel()->sort(column, order);
-
-    emit dataChanged(index(0, 0), index(rowCount(), 0));
-}
-
-QModelIndex PhoneBookSortedModel::parent(const QModelIndex &child) const
-{
-    return QSortFilterProxyModel::parent(child);
-}
-
-int PhoneBookSortedModel::rowCount(const QModelIndex &parent) const
-{
-    if (showGroups) {
-        if (!parent.isValid()) {
-            return treeHeaderIndex.keys().count();
-        } else if (parent.row() < treeHeaderIndex.keys().count()) {
-            QChar key = treeHeaderIndex.keys().at(parent.row());
-            return treeHeaderIndex[key].count();
-        }
-    }
-    return QSortFilterProxyModel::rowCount(parent);
-}
-
-bool PhoneBookSortedModel::hasChildren(const QModelIndex &parent) const
-{
-    if (showGroups && parent.isValid() && !parent.parent().isValid())
-        return true;
-    else
-        return false;
-}
-
-QVariant PhoneBookSortedModel::data(const QModelIndex &index, int role) const
-{
-    if (showGroups && index.isValid()) {
-        if (role == Qt::DisplayRole) {
-            if (!index.parent().isValid()) {
-                return QVariant::fromValue(treeHeaderIndex.keys().at(index.row()));
-            } else {
-                QChar key = treeHeaderIndex.uniqueKeys().at(index.parent().row());
-                PhoneBookEntry *entry = treeHeaderIndex[key].at(index.row());
-                return QVariant::fromValue(static_cast<void *>(entry));
-            }
-        }
-    }
-    if (index.isValid())
-        return QSortFilterProxyModel::data(index, role);
-
-    return QVariant();
+#endif
 }

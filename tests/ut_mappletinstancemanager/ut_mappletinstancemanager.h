@@ -79,7 +79,9 @@ signals:
     void appletUninstalled(const QString &desktopFile);
     void operationComplete(const QString &operation, const QString &pkg, const QString &error);
     void receiveOperation(QDBusPendingCallWatcher *watcher);
-
+    // Used by the extesnion watcher
+    void fileChanged(const QString &path);
+    void extensionChanged(const MDesktopEntry &appletData) const;
 private slots:
     void initTestCase();
     void cleanupTestCase();
@@ -87,6 +89,7 @@ private slots:
     void init();
     void cleanup();
 
+    void testOutOfProcessAppletUpdate();
     void testInProcessAppletRestoration();
     void testOutOfProcessAppletRestoration();
     void testAppletDataStoring();

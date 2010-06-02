@@ -343,6 +343,7 @@ public:
 
     QtMaemo6KineticScrolling* m_kinetic;
 
+    QList<QString> m_excludeClasses;
 };
 
 #endif

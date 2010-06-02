@@ -52,7 +52,6 @@
 namespace
 {
     const char *const BackupNameFormatString = "%d%t%g%t%m%t%f";
-    const char *const ExtraDataBundleName = "extradata";
     const QString RtlLanguages("am:ar:fa:he:ps:ur:");
     const char *const Languages = "Languages";
     const char *const Countries = "Countries";
@@ -244,7 +243,7 @@ bool MTranslationCatalog::loadWith(MLocale *mlocale, MLocale::Category category)
     // Loading the new file into the QTranslator failed.
     // Clear any old contents of the QTranslator before returning false.
     // This is necessary because the QTranslator may still have old contents.
-    // For example, assume that we an Arabic translation "foo_ar.qm" has been loaded
+    // For example, assume that an Arabic translation "foo_ar.qm" has been loaded
     // into the translator before and now this loadWith() function tries to
     // load "foo_de.qm" because the language has been switched to German
     // but "foo_de.qm" does not exist. We do *not* want to keep the previous
@@ -347,6 +346,7 @@ MLocalePrivate::MLocalePrivate()
 #endif
       , q_ptr(0)
 {
+    loadCountryCodes();
 }
 
 // copy constructor
@@ -359,6 +359,7 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       _calendarLocale(other._calendarLocale),
       _monetaryLocale(other._monetaryLocale),
       _nameLocale(other._nameLocale),
+      _validCountryCodes( other._validCountryCodes ),
       _calendarType(other._calendarType),
       _collation(other._collation),
 #ifdef HAVE_ICU
@@ -407,6 +408,7 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
     _messageTranslations = other._messageTranslations;
     _timeTranslations = other._timeTranslations;
     _trTranslations = other._trTranslations;
+    _validCountryCodes = other._validCountryCodes;
 
 #ifdef HAVE_ICU
     delete _numberFormat;
@@ -420,6 +422,243 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
 #endif
 
     return *this;
+}
+
+void MLocalePrivate::loadCountryCodes()
+{
+    _validCountryCodes.clear();
+
+
+    _validCountryCodes
+      << "1"
+      << "20"
+      << "212"
+      << "213"
+      << "214"
+      << "215"
+      << "216"
+      << "218"
+      << "219"
+      << "220"
+      << "221"
+      << "222"
+      << "223"
+      << "224"
+      << "225"
+      << "226"
+      << "227"
+      << "228"
+      << "229"
+      << "230"
+      << "231"
+      << "232"
+      << "233"
+      << "234"
+      << "235"
+      << "236"
+      << "237"
+      << "238"
+      << "239"
+      << "240"
+      << "241"
+      << "242"
+      << "243"
+      << "244"
+      << "245"
+      << "246"
+      << "247"
+      << "248"
+      << "249"
+      << "250"
+      << "251"
+      << "252"
+      << "253"
+      << "254"
+      << "255"
+      << "256"
+      << "257"
+      << "258"
+      << "259"
+      << "260"
+      << "261"
+      << "262"
+      << "263"
+      << "264"
+      << "265"
+      << "266"
+      << "267"
+      << "268"
+      << "269"
+      << "27"
+      << "290"
+      << "291"
+      << "297"
+      << "298"
+      << "299"
+      << "30"
+      << "31"
+      << "32"
+      << "33"
+      << "34"
+      << "350"
+      << "351"
+      << "352"
+      << "353"
+      << "354"
+      << "355"
+      << "356"
+      << "357"
+      << "358"
+      << "359"
+      << "36"
+      << "370"
+      << "371"
+      << "372"
+      << "373"
+      << "374"
+      << "375"
+      << "376"
+      << "377"
+      << "378"
+      << "379"
+      << "380"
+      << "381"
+      << "382"
+      << "385"
+      << "386"
+      << "387"
+      << "388"
+      << "389"
+      << "39"
+      << "40"
+      << "41"
+      << "420"
+      << "421"
+      << "423"
+      << "43"
+      << "44"
+      << "45"
+      << "46"
+      << "47"
+      << "48"
+      << "49"
+      << "500"
+      << "501"
+      << "502"
+      << "503"
+      << "504"
+      << "505"
+      << "506"
+      << "507"
+      << "508"
+      << "509"
+      << "51"
+      << "52"
+      << "53"
+      << "54"
+      << "55"
+      << "56"
+      << "57"
+      << "58"
+      << "590"
+      << "591"
+      << "592"
+      << "593"
+      << "594"
+      << "595"
+      << "596"
+      << "597"
+      << "598"
+      << "599"
+      << "60"
+      << "61"
+      << "62"
+      << "63"
+      << "64"
+      << "65"
+      << "66"
+      << "670"
+      << "672"
+      << "673"
+      << "674"
+      << "675"
+      << "676"
+      << "677"
+      << "678"
+      << "679"
+      << "680"
+      << "681"
+      << "682"
+      << "683"
+      << "685"
+      << "686"
+      << "687"
+      << "688"
+      << "689"
+      << "690"
+      << "691"
+      << "692"
+      << "7"
+      << "800"
+      << "808"
+      << "81"
+      << "82"
+      << "84"
+      << "850"
+      << "852"
+      << "853"
+      << "855"
+      << "856"
+      << "86"
+      << "870"
+      << "871"
+      << "872"
+      << "873"
+      << "874"
+      << "878"
+      << "880"
+      << "881"
+      << "882"
+      << "883"
+      << "886"
+      << "888"
+      << "90"
+      << "91"
+      << "92"
+      << "93"
+      << "94"
+      << "95"
+      << "960"
+      << "961"
+      << "962"
+      << "963"
+      << "964"
+      << "965"
+      << "966"
+      << "967"
+      << "968"
+      << "970"
+      << "971"
+      << "972"
+      << "973"
+      << "974"
+      << "975"
+      << "976"
+      << "977"
+      << "979"
+      << "98"
+      << "991"
+      << "992"
+      << "993"
+      << "994"
+      << "995"
+      << "996"
+      << "998";
+}
+
+bool MLocalePrivate::isValidCountryCode( const QString& code ) const
+{
+    return _validCountryCodes.contains( code );
 }
 
 #ifdef HAVE_ICU
@@ -878,11 +1117,23 @@ void MLocale::setDefault(const MLocale &locale)
 //        (locale.d_ptr)->currentLanguageItem.set(newLanguage);
 //#endif
 
+    // sends QEvent::LanguageChange to qApp:
+    (s_systemDefault->d_ptr)->insertTrToQCoreApp();
     // Setting the default QLocale is needed to get localized number
     // support in translations via %Ln, %L1, %L2, ...:
     QLocale::setDefault((s_systemDefault->d_ptr)->createQLocale(MLcNumeric));
-    // sends QEvent::LanguageChange to qApp:
-    (s_systemDefault->d_ptr)->insertTrToQCoreApp();
+    // The event queue needs to be flushed here because
+    // QCoreApplication::removeTranslator() and
+    // QCoreApplication::installTranslator() which are called by
+    // removeTrFromQCoreApp() and insertTrToQCoreApp()
+    // send several QEvent::LanguageChange events which are handled
+    // by the QApplication event handler and may set the
+    // layout direction incorrectly there (see qapplication.cpp in
+    // the Qt source code). We need to make sure these events
+    // are handled *before* we finally set the correct layout direction
+    // below.
+    // (see also bug 169305)
+    QCoreApplication::sendPostedEvents();
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
     qApp->setLayoutDirection(s_systemDefault->textDirection());
 
@@ -1611,34 +1862,15 @@ QString MLocale::icuFormatString( DateType dateType,
                           TimeType timeType,
                           CalendarType calendarType) const
 {
-
-    // Create calLocale which has the time pattern we want to use
-    icu::Locale calLocale = MIcuConversions::createLocale(
-        categoryName(MLocale::MLcTime),
-        calendarType);
-
-    icu::DateFormat::EStyle dateStyle = MIcuConversions::toEStyle(dateType);
-    icu::DateFormat::EStyle timeStyle = MIcuConversions::toEStyle(timeType);
-    icu::DateFormat *df
-    = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
-
-    // Both the locale and the calendarType seem to
-    // be ignored here anyway. I.e. the following two statements can be replaced with
-    //  DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(icu::Locale(""));
-    // without a change in behaviour:
-    icu::Locale symbolLocale
-        = MIcuConversions::createLocale(categoryName(MLocale::MLcMessages),
-                                      calendarType);
-    DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
+    Q_D(const MLocale);
+    MCalendar mcalendar(calendarType);
+    icu::DateFormat *df = d->createDateFormat(dateType, timeType, mcalendar);
 
     QString icuFormatQString;
 
     if (df)
     {
         icu::UnicodeString icuFormatString;
-        // This is not nice but seems to be the only way to set the
-        // symbols with the public API
-        static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
         static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
         icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
         delete df;
@@ -1683,28 +1915,7 @@ QDateTime MLocale::parseDateTime(const QString &dateTime, CalendarType calendarT
 #ifdef HAVE_ICU
 QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber) const
 {
-    Q_D(const MLocale);
-    monthNumber--; // months in array starting from index zero
-
-    // use message locale as the output language
-    icu::Locale symbolLocale
-    = MIcuConversions::createLocale(d->categoryName(MLcMessages),
-                                      mCalendar.type());
-
-    icu::DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
-
-    int len;
-    const UnicodeString *months = dfs->getMonths(len);
-
-    QString result;
-
-    if (monthNumber < len && monthNumber >= 0) {
-        result = MIcuConversions::unicodeStringToQString(months[monthNumber]);
-    }
-
-    delete dfs;
-
-    return result;
+    return monthName(mCalendar, monthNumber, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide);
 }
 #endif
 
@@ -1731,12 +1942,12 @@ QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber,
     icu::DateFormatSymbols::DtWidthType icuWidth =
         MIcuConversions::mDateWidthToIcu(symbolLength);
 
-    int len;
+    int len = -1;
     const UnicodeString *months = dfs->getMonths(len, icuContext, icuWidth);
 
     QString result;
 
-    if (monthNumber < len && monthNumber >= 0) {
+    if (len > 0 && monthNumber < len && monthNumber >= 0) {
         result = MIcuConversions::unicodeStringToQString(months[monthNumber]);
     }
 
@@ -1749,27 +1960,7 @@ QString MLocale::monthName(const MCalendar &mCalendar, int monthNumber,
 #ifdef HAVE_ICU
 QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday) const
 {
-    Q_D(const MLocale);
-    // use message locale as the output language
-    icu::Locale symbolLocale
-    = MIcuConversions::createLocale(d->categoryName(MLcMessages),
-                                      mCalendar.type());
-
-    icu::DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
-
-    int len;
-    const UnicodeString *weekdayNames = dfs->getWeekdays(len);
-    int weekdayNum = MIcuConversions::icuWeekday(weekday);
-
-    QString result;
-
-    if (weekdayNum < len && weekdayNum > 0) {
-        result = MIcuConversions::unicodeStringToQString(weekdayNames[weekdayNum]);
-    }
-
-    delete dfs;
-
-    return result;
+    return weekdayName(mCalendar, weekday, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide);
 }
 #endif
 
@@ -1791,52 +1982,19 @@ QString MLocale::weekdayName(const MCalendar &mCalendar, int weekday,
     icu::DateFormatSymbols::DtWidthType icuWidth
     = MIcuConversions::mDateWidthToIcu(symbolLength);
 
-    int len;
+    int len = -1;
     const UnicodeString *weekdayNames = dfs->getWeekdays(len, icuContext, icuWidth);
     int weekdayNum = MIcuConversions::icuWeekday(weekday);
 
     QString result;
 
-    if (weekdayNum < len && weekdayNum > 0) {
+    if (len > 0 && weekdayNum < len && weekdayNum > 0) {
         result = MIcuConversions::unicodeStringToQString(weekdayNames[weekdayNum]);
     }
 
     delete dfs;
 
     return result;
-}
-#endif
-
-#ifdef HAVE_ICU
-namespace
-{
-// fetches a resource bundle for name formats
-    UResourceBundle *nameFmtsResourceBundle()
-    {
-        UErrorCode status = U_ZERO_ERROR;
-
-        UResourceBundle *extraData = ures_openDirect(ExtraDataBundleName, "", &status);
-
-        if (U_FAILURE(status)) {
-            mDebug("mlocale.cpp") << "Error ures_open" << u_errorName(status);
-        }
-
-        UResourceBundle *posixData = ures_getByKey(extraData, "posixdata", NULL, &status);
-
-        if (U_FAILURE(status)) {
-            mDebug("mlocale.cpp") << "Error ures_open posixData" << u_errorName(status);
-        }
-
-        UResourceBundle *nameFmts = ures_getByKey(posixData, "nameFmts", NULL, &status);
-        if (U_FAILURE(status)) {
-            mDebug("mlocale.cpp") << "Error ures_open nameFmts" << u_errorName(status);
-        }
-
-        ures_close(extraData);
-        ures_close(posixData);
-
-        return nameFmts;
-    }
 }
 #endif
 
@@ -1849,7 +2007,7 @@ QString MLocale::languageEndonym() const
     // TODO: implement a workaround for
     // http://site.icu-project.org/design/resbund/issues
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
-    UResourceBundle *res = ures_open("ICUDATA-lang", qPrintable(d->_defaultLocale), &status);
+    UResourceBundle *res = ures_open(U_ICUDATA_NAME "-lang", qPrintable(d->_defaultLocale), &status);
 #else
     UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
 #endif
@@ -1887,7 +2045,7 @@ QString MLocale::countryEndonym() const
     // TODO: implement a workaround for
     // http://site.icu-project.org/design/resbund/issues
 #if (U_ICU_VERSION_MAJOR_NUM > 4) || (U_ICU_VERSION_MAJOR_NUM == 4 && U_ICU_VERSION_MINOR_NUM >=4)
-    UResourceBundle *res = ures_open("ICUDATA-region", qPrintable(d->_defaultLocale), &status);
+    UResourceBundle *res = ures_open(U_ICUDATA_NAME "-region", qPrintable(d->_defaultLocale), &status);
 #else
     UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
 #endif
@@ -2117,13 +2275,25 @@ void MLocale::refreshSettings()
 
     if (settingsHaveReallyChanged) {
         if (this == s_systemDefault) {
-            // Setting the default QLocale is needed to get localized number
-            // support in translations via %Ln, %L1, %L2, ...:
-            QLocale::setDefault(d->createQLocale(MLcNumeric));
             d->removeTrFromQCoreApp();
             d->loadTrCatalogs();
             // sends QEvent::LanguageChange to qApp:
             d->insertTrToQCoreApp();
+            // Setting the default QLocale is needed to get localized number
+            // support in translations via %Ln, %L1, %L2, ...:
+            QLocale::setDefault(d->createQLocale(MLcNumeric));
+            // The event queue needs to be flushed here because
+            // QCoreApplication::removeTranslator() and
+            // QCoreApplication::installTranslator() which are called by
+            // removeTrFromQCoreApp() and insertTrToQCoreApp()
+            // send several QEvent::LanguageChange events which are handled
+            // by the QApplication event handler and may set the
+            // layout direction incorrectly there (see qapplication.cpp in
+            // the Qt source code). We need to make sure these events
+            // are handled *before* we finally set the correct layout direction
+            // below.
+            // (see also bug 169305)
+            QCoreApplication::sendPostedEvents();
             // sends QEvent::ApplicationLayoutDirectionChange to qApp:
             qApp->setLayoutDirection(this->textDirection());
         }
@@ -2135,3 +2305,290 @@ void MLocale::refreshSettings()
 #endif
 }
 
+QString MLocale::formatPhoneNumber( const QString& phoneNumber,
+				    PhoneNumberGrouping grouping ) const
+{
+    Q_D(const MLocale);
+    return d->formatPhoneNumber( phoneNumber, grouping );
+}
+
+// when string starts with numbers 2 to 9
+QString groupedNormalString( const QString& phoneNumber )
+{
+  QString result;
+  QString remaining( phoneNumber );
+
+    // for remaining number length 1 (also 0) to 3 return number unchanged
+    if ( remaining.length() < 4 )
+    {
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 8 )
+    {
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( '-' );
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 11 )
+    {
+      result.append( '(' );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( '-' );
+      result.append( remaining );
+      return result;
+    }
+    else
+    {
+      result.append( remaining );
+      return result;
+    }
+}
+
+// when string starts with number 1
+QString groupedOneString( const QString& phoneNumber )
+{
+    QString result;
+    QString remaining( phoneNumber );
+
+    // for remaining number length 1 (also 0) to 3 return number unchanged
+    if ( remaining.length() < 2 )
+    {
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 3 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining );
+      result.append( "  )" );
+      return result;
+    }
+    else if ( remaining.length() < 4 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining );
+      result.append( " )" );
+      return result;
+    }
+    else if ( remaining.length() < 5 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining );
+      result.append( ')' );
+      return result;
+    }
+    else if ( remaining.length() < 8 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 12 )
+    {
+      result.append( remaining.left( 1 ) );
+      remaining.remove( 0, 1 );
+      result.append( " (" );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( '-' );
+      result.append( remaining );
+      return result;
+    }
+    else
+    {
+      result.append( remaining );
+      return result;
+    }
+}
+
+// when string starts with numbers 2 to 9
+QString groupedInternationalString( const QString& phoneNumber )
+{
+    QString result;
+    QString remaining( phoneNumber );
+
+    // for remaining number length 1 (also 0) to 3 return number unchanged
+    if ( remaining.length() < 4 )
+    {
+      result.append( '(' );
+      result.append( remaining );
+      result.append( ')' );
+      return result;
+    }
+    else if ( remaining.length() < 7 )
+    {
+      result.append( '(' );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.length() < 11 )
+    {
+      result.append( '(' );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( ") " );
+      result.append( remaining.left( 3 ) );
+      remaining.remove( 0, 3 );
+      result.append( '-' );
+      result.append( remaining );
+      return result;
+    }
+    else
+    {
+      result.append( remaining );
+      return result;
+    }
+}
+
+QString MLocalePrivate::formatPhoneNumber( const QString& phoneNumber,
+    MLocale::PhoneNumberGrouping grouping ) const
+{
+  // first do sanity check of the input string
+  QRegExp rx( "\\+?\\d*" );
+  if ( ! rx.exactMatch( phoneNumber ) )
+  {
+    qWarning( "MLocale::formatPhoneNumber: cannot understand number: %s",
+	      qPrintable( phoneNumber ) );
+    return phoneNumber;
+  }
+
+  // 00 is not a valid country calling code in north america
+  // -> do not do grouping in this case at all
+  if ( ( grouping == MLocale::NorthAmericanGrouping ) 
+       && phoneNumber.startsWith( "00" ) )
+  {
+    return phoneNumber;
+  }
+
+  QString remaining( phoneNumber );
+  QString result;
+
+  // if we find any error, we will return the string unchanged
+  //  bool error = false;
+
+  // first extract the country code
+
+  bool foundCountryCodeIndicator = false;
+
+  // valid beginnings for a country code are "+", "00" or "011"
+  if ( remaining.startsWith( '+' ) )
+  {
+    foundCountryCodeIndicator = true;
+    result.append( '+' );
+    remaining.remove( 0, 1 );
+  }
+  else if ( remaining.startsWith( "00" ) )
+  {
+    foundCountryCodeIndicator = true;
+    result.append( "00 " );
+    remaining.remove( 0, 2 );
+  }
+  else if ( remaining.startsWith( "011" ) )
+  {
+    foundCountryCodeIndicator = true;
+    result.append( "011 " );
+    remaining.remove( 0, 3 );
+  }
+
+
+  // now check for valid country code
+  if ( foundCountryCodeIndicator )
+  {
+    int length = 1;
+    QString code;
+
+    code = remaining.left( length );
+
+    if ( isValidCountryCode( code ) )
+    {
+      result.append( code );
+      result.append( ' ' );
+      remaining.remove( 0, code.length() );
+    }
+    else
+    {
+      length = 2;
+      code = remaining.left( length );
+      if ( isValidCountryCode( code ) )
+      {
+	result.append( code );
+	result.append( ' ' );
+	remaining.remove( 0, code.length() );
+      }
+      else
+      {
+	length = 3;
+	code = remaining.left( length );
+	if ( isValidCountryCode( code ) )
+	{
+	  result.append( code );
+	  result.append( ' ' );
+	  remaining.remove( 0, code.length() );
+	}
+	else
+	{
+	  // no valid country code -> error -> return string
+	  return phoneNumber;
+	}
+      }
+    }
+  } // found country code indicator
+
+  // if it exists, the country code is split off now
+  if ( grouping != MLocale::NorthAmericanGrouping )
+  {
+    result.append( remaining );
+    return result;
+  }
+  else
+  {
+    // has country code -> do not handle one special.
+    if ( foundCountryCodeIndicator )
+    {
+      result.append( groupedInternationalString( remaining ) );
+      return result;
+    }
+    // 11 is an invalid code, so disable grouping for this case
+    else if ( remaining.startsWith( "11" ) )
+    {
+      result.append( remaining );
+      return result;
+    }
+    else if ( remaining.startsWith( '1' ) )
+    {
+      result.append( groupedOneString( remaining ) );
+      return result;
+    }
+    else
+    {
+      result.append( groupedNormalString( remaining ) );
+      return result;
+    }
+  }
+
+  return phoneNumber;
+}

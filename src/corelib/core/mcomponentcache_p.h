@@ -20,6 +20,9 @@
 #ifndef MCOMPONENTCACHE_P_H
 #define MCOMPONENTCACHE_P_H
 
+#include <QList>
+#include <QPair>
+
 class MComponentCache;
 class MApplication;
 class MApplicationWindow;
@@ -34,12 +37,12 @@ public:
     bool populating();
     MApplication* mApplication(int &argc, char **argv, const QString &appIdentifier, MApplicationService *service);
     MApplicationWindow* mApplicationWindow();
-    QGLWidget* glWidget();
+    QGLWidget* glWidget(const QGLFormat* format = NULL);
 
     bool canUseCachedApp(int &argc, char **argv, const QString &appIdentifier);
     bool hasExtraParams(int &argc, char **argv, const QString &appIdentifier);
 
-    static QGLWidget* createNewGlWidget();
+    QGLWidget* createNewGlWidget(const QGLFormat* format = NULL);
 
 private:
     MApplication *mApplicationInstance;
@@ -47,6 +50,9 @@ private:
     QGLWidget *glWidgetOfmApplicationWindowInstance;
     QGLWidget *glWidgetOfOtherWindow;
     bool cacheBeingPopulated;
+
+    typedef QPair<QGLFormat,QGLWidget*> FormatWidgetPair;
+    QList<FormatWidgetPair> shareWidgetsCache;
 
 #ifdef UNIT_TEST
     friend class Ut_MComponentCache;

@@ -20,7 +20,7 @@
 #ifndef SWITCHPAGE_H
 #define SWITCHPAGE_H
 
-#include "listpage.h"
+#include "mainpage.h"
 #include "templatepage.h"
 #include <MApplicationPage>
 #include <MLayout>

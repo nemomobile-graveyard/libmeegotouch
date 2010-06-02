@@ -226,11 +226,12 @@ void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &botto
  *
  * \sa QAbstractItemView::rowsInserted(), exposedRectUpdated()
  */
-void MListView::rowsInserted(const QModelIndex &parent, int start, int end)
+void MListView::rowsInserted(const QModelIndex &parent, int start, int end, bool animated)
 {
     Q_UNUSED(parent);
     Q_UNUSED(start);
     Q_UNUSED(end);
+    Q_UNUSED(animated);
 
     layoutChanged();
 }
@@ -241,11 +242,12 @@ void MListView::rowsInserted(const QModelIndex &parent, int start, int end)
  *
  * \sa rowsInserted(), exposedRectUpdated()
  */
-void MListView::rowsRemoved(const QModelIndex &parent, int start, int end)
+void MListView::rowsRemoved(const QModelIndex &parent, int start, int end, bool animated)
 {
     Q_UNUSED(parent);
     Q_UNUSED(start);
     Q_UNUSED(end);
+    Q_UNUSED(animated);
 
     layoutChanged();
 }
