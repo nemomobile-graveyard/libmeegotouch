@@ -20,7 +20,7 @@
 #ifndef MLOCALE_P_H
 #define MLOCALE_P_H
 
-#include <QMap>
+#include <QSet>
 #include <QList>
 #include <QString>
 #include <QStringList>
@@ -127,7 +127,7 @@ public:
     QString _nameLocale;
 
     // the list of valid country codes for the formatPhoneNumber function
-    QHash<QString, int> _validCountryCodes;
+    QSet<QString> _validCountryCodes;
 
     // the used calendar and collation may be overridden
     MLocale::CalendarType _calendarType;

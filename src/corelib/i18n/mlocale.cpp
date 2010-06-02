@@ -428,230 +428,232 @@ void MLocalePrivate::loadCountryCodes()
 {
     _validCountryCodes.clear();
 
-    _validCountryCodes[ "1" ] = 1;
-    _validCountryCodes[ "20" ] = 1;
-    _validCountryCodes[ "212" ] = 1;
-    _validCountryCodes[ "213" ] = 1;
-    _validCountryCodes[ "214" ] = 1;
-    _validCountryCodes[ "215" ] = 1;
-    _validCountryCodes[ "216" ] = 1;
-    _validCountryCodes[ "218" ] = 1;
-    _validCountryCodes[ "219" ] = 1;
-    _validCountryCodes[ "220" ] = 1;
-    _validCountryCodes[ "221" ] = 1;
-    _validCountryCodes[ "222" ] = 1;
-    _validCountryCodes[ "223" ] = 1;
-    _validCountryCodes[ "224" ] = 1;
-    _validCountryCodes[ "225" ] = 1;
-    _validCountryCodes[ "226" ] = 1;
-    _validCountryCodes[ "227" ] = 1;
-    _validCountryCodes[ "228" ] = 1;
-    _validCountryCodes[ "229" ] = 1;
-    _validCountryCodes[ "230" ] = 1;
-    _validCountryCodes[ "231" ] = 1;
-    _validCountryCodes[ "232" ] = 1;
-    _validCountryCodes[ "233" ] = 1;
-    _validCountryCodes[ "234" ] = 1;
-    _validCountryCodes[ "235" ] = 1;
-    _validCountryCodes[ "236" ] = 1;
-    _validCountryCodes[ "237" ] = 1;
-    _validCountryCodes[ "238" ] = 1;
-    _validCountryCodes[ "239" ] = 1;
-    _validCountryCodes[ "240" ] = 1;
-    _validCountryCodes[ "241" ] = 1;
-    _validCountryCodes[ "242" ] = 1;
-    _validCountryCodes[ "243" ] = 1;
-    _validCountryCodes[ "244" ] = 1;
-    _validCountryCodes[ "245" ] = 1;
-    _validCountryCodes[ "246" ] = 1;
-    _validCountryCodes[ "247" ] = 1;
-    _validCountryCodes[ "248" ] = 1;
-    _validCountryCodes[ "249" ] = 1;
-    _validCountryCodes[ "250" ] = 1;
-    _validCountryCodes[ "251" ] = 1;
-    _validCountryCodes[ "252" ] = 1;
-    _validCountryCodes[ "253" ] = 1;
-    _validCountryCodes[ "254" ] = 1;
-    _validCountryCodes[ "255" ] = 1;
-    _validCountryCodes[ "256" ] = 1;
-    _validCountryCodes[ "257" ] = 1;
-    _validCountryCodes[ "258" ] = 1;
-    _validCountryCodes[ "259" ] = 1;
-    _validCountryCodes[ "260" ] = 1;
-    _validCountryCodes[ "261" ] = 1;
-    _validCountryCodes[ "262" ] = 1;
-    _validCountryCodes[ "263" ] = 1;
-    _validCountryCodes[ "264" ] = 1;
-    _validCountryCodes[ "265" ] = 1;
-    _validCountryCodes[ "266" ] = 1;
-    _validCountryCodes[ "267" ] = 1;
-    _validCountryCodes[ "268" ] = 1;
-    _validCountryCodes[ "269" ] = 1;
-    _validCountryCodes[ "27" ] = 1;
-    _validCountryCodes[ "290" ] = 1;
-    _validCountryCodes[ "291" ] = 1;
-    _validCountryCodes[ "297" ] = 1;
-    _validCountryCodes[ "298" ] = 1;
-    _validCountryCodes[ "299" ] = 1;
-    _validCountryCodes[ "30" ] = 1;
-    _validCountryCodes[ "31" ] = 1;
-    _validCountryCodes[ "32" ] = 1;
-    _validCountryCodes[ "33" ] = 1;
-    _validCountryCodes[ "34" ] = 1;
-    _validCountryCodes[ "350" ] = 1;
-    _validCountryCodes[ "351" ] = 1;
-    _validCountryCodes[ "352" ] = 1;
-    _validCountryCodes[ "353" ] = 1;
-    _validCountryCodes[ "354" ] = 1;
-    _validCountryCodes[ "355" ] = 1;
-    _validCountryCodes[ "356" ] = 1;
-    _validCountryCodes[ "357" ] = 1;
-    _validCountryCodes[ "358" ] = 1;
-    _validCountryCodes[ "359" ] = 1;
-    _validCountryCodes[ "36" ] = 1;
-    _validCountryCodes[ "370" ] = 1;
-    _validCountryCodes[ "371" ] = 1;
-    _validCountryCodes[ "372" ] = 1;
-    _validCountryCodes[ "373" ] = 1;
-    _validCountryCodes[ "374" ] = 1;
-    _validCountryCodes[ "375" ] = 1;
-    _validCountryCodes[ "376" ] = 1;
-    _validCountryCodes[ "377" ] = 1;
-    _validCountryCodes[ "378" ] = 1;
-    _validCountryCodes[ "379" ] = 1;
-    _validCountryCodes[ "380" ] = 1;
-    _validCountryCodes[ "381" ] = 1;
-    _validCountryCodes[ "382" ] = 1;
-    _validCountryCodes[ "385" ] = 1;
-    _validCountryCodes[ "386" ] = 1;
-    _validCountryCodes[ "387" ] = 1;
-    _validCountryCodes[ "388" ] = 1;
-    _validCountryCodes[ "389" ] = 1;
-    _validCountryCodes[ "39" ] = 1;
-    _validCountryCodes[ "40" ] = 1;
-    _validCountryCodes[ "41" ] = 1;
-    _validCountryCodes[ "420" ] = 1;
-    _validCountryCodes[ "421" ] = 1;
-    _validCountryCodes[ "423" ] = 1;
-    _validCountryCodes[ "43" ] = 1;
-    _validCountryCodes[ "44" ] = 1;
-    _validCountryCodes[ "45" ] = 1;
-    _validCountryCodes[ "46" ] = 1;
-    _validCountryCodes[ "47" ] = 1;
-    _validCountryCodes[ "48" ] = 1;
-    _validCountryCodes[ "49" ] = 1;
-    _validCountryCodes[ "500" ] = 1;
-    _validCountryCodes[ "501" ] = 1;
-    _validCountryCodes[ "502" ] = 1;
-    _validCountryCodes[ "503" ] = 1;
-    _validCountryCodes[ "504" ] = 1;
-    _validCountryCodes[ "505" ] = 1;
-    _validCountryCodes[ "506" ] = 1;
-    _validCountryCodes[ "507" ] = 1;
-    _validCountryCodes[ "508" ] = 1;
-    _validCountryCodes[ "509" ] = 1;
-    _validCountryCodes[ "51" ] = 1;
-    _validCountryCodes[ "52" ] = 1;
-    _validCountryCodes[ "53" ] = 1;
-    _validCountryCodes[ "54" ] = 1;
-    _validCountryCodes[ "55" ] = 1;
-    _validCountryCodes[ "56" ] = 1;
-    _validCountryCodes[ "57" ] = 1;
-    _validCountryCodes[ "58" ] = 1;
-    _validCountryCodes[ "590" ] = 1;
-    _validCountryCodes[ "591" ] = 1;
-    _validCountryCodes[ "592" ] = 1;
-    _validCountryCodes[ "593" ] = 1;
-    _validCountryCodes[ "594" ] = 1;
-    _validCountryCodes[ "595" ] = 1;
-    _validCountryCodes[ "596" ] = 1;
-    _validCountryCodes[ "597" ] = 1;
-    _validCountryCodes[ "598" ] = 1;
-    _validCountryCodes[ "599" ] = 1;
-    _validCountryCodes[ "60" ] = 1;
-    _validCountryCodes[ "61" ] = 1;
-    _validCountryCodes[ "62" ] = 1;
-    _validCountryCodes[ "63" ] = 1;
-    _validCountryCodes[ "64" ] = 1;
-    _validCountryCodes[ "65" ] = 1;
-    _validCountryCodes[ "66" ] = 1;
-    _validCountryCodes[ "670" ] = 1;
-    _validCountryCodes[ "672" ] = 1;
-    _validCountryCodes[ "673" ] = 1;
-    _validCountryCodes[ "674" ] = 1;
-    _validCountryCodes[ "675" ] = 1;
-    _validCountryCodes[ "676" ] = 1;
-    _validCountryCodes[ "677" ] = 1;
-    _validCountryCodes[ "678" ] = 1;
-    _validCountryCodes[ "679" ] = 1;
-    _validCountryCodes[ "680" ] = 1;
-    _validCountryCodes[ "681" ] = 1;
-    _validCountryCodes[ "682" ] = 1;
-    _validCountryCodes[ "683" ] = 1;
-    _validCountryCodes[ "685" ] = 1;
-    _validCountryCodes[ "686" ] = 1;
-    _validCountryCodes[ "687" ] = 1;
-    _validCountryCodes[ "688" ] = 1;
-    _validCountryCodes[ "689" ] = 1;
-    _validCountryCodes[ "690" ] = 1;
-    _validCountryCodes[ "691" ] = 1;
-    _validCountryCodes[ "692" ] = 1;
-    _validCountryCodes[ "7" ] = 1;
-    _validCountryCodes[ "800" ] = 1;
-    _validCountryCodes[ "808" ] = 1;
-    _validCountryCodes[ "81" ] = 1;
-    _validCountryCodes[ "82" ] = 1;
-    _validCountryCodes[ "84" ] = 1;
-    _validCountryCodes[ "850" ] = 1;
-    _validCountryCodes[ "852" ] = 1;
-    _validCountryCodes[ "853" ] = 1;
-    _validCountryCodes[ "855" ] = 1;
-    _validCountryCodes[ "856" ] = 1;
-    _validCountryCodes[ "86" ] = 1;
-    _validCountryCodes[ "870" ] = 1;
-    _validCountryCodes[ "871" ] = 1;
-    _validCountryCodes[ "872" ] = 1;
-    _validCountryCodes[ "873" ] = 1;
-    _validCountryCodes[ "874" ] = 1;
-    _validCountryCodes[ "878" ] = 1;
-    _validCountryCodes[ "880" ] = 1;
-    _validCountryCodes[ "881" ] = 1;
-    _validCountryCodes[ "882" ] = 1;
-    _validCountryCodes[ "883" ] = 1;
-    _validCountryCodes[ "886" ] = 1;
-    _validCountryCodes[ "888" ] = 1;
-    _validCountryCodes[ "90" ] = 1;
-    _validCountryCodes[ "91" ] = 1;
-    _validCountryCodes[ "92" ] = 1;
-    _validCountryCodes[ "93" ] = 1;
-    _validCountryCodes[ "94" ] = 1;
-    _validCountryCodes[ "95" ] = 1;
-    _validCountryCodes[ "960" ] = 1;
-    _validCountryCodes[ "961" ] = 1;
-    _validCountryCodes[ "962" ] = 1;
-    _validCountryCodes[ "963" ] = 1;
-    _validCountryCodes[ "964" ] = 1;
-    _validCountryCodes[ "965" ] = 1;
-    _validCountryCodes[ "966" ] = 1;
-    _validCountryCodes[ "967" ] = 1;
-    _validCountryCodes[ "968" ] = 1;
-    _validCountryCodes[ "970" ] = 1;
-    _validCountryCodes[ "971" ] = 1;
-    _validCountryCodes[ "972" ] = 1;
-    _validCountryCodes[ "973" ] = 1;
-    _validCountryCodes[ "974" ] = 1;
-    _validCountryCodes[ "975" ] = 1;
-    _validCountryCodes[ "976" ] = 1;
-    _validCountryCodes[ "977" ] = 1;
-    _validCountryCodes[ "979" ] = 1;
-    _validCountryCodes[ "98" ] = 1;
-    _validCountryCodes[ "991" ] = 1;
-    _validCountryCodes[ "992" ] = 1;
-    _validCountryCodes[ "993" ] = 1;
-    _validCountryCodes[ "994" ] = 1;
-    _validCountryCodes[ "995" ] = 1;
-    _validCountryCodes[ "996" ] = 1;
-    _validCountryCodes[ "998" ] = 1;
+
+    _validCountryCodes
+      << "1"
+      << "20"
+      << "212"
+      << "213"
+      << "214"
+      << "215"
+      << "216"
+      << "218"
+      << "219"
+      << "220"
+      << "221"
+      << "222"
+      << "223"
+      << "224"
+      << "225"
+      << "226"
+      << "227"
+      << "228"
+      << "229"
+      << "230"
+      << "231"
+      << "232"
+      << "233"
+      << "234"
+      << "235"
+      << "236"
+      << "237"
+      << "238"
+      << "239"
+      << "240"
+      << "241"
+      << "242"
+      << "243"
+      << "244"
+      << "245"
+      << "246"
+      << "247"
+      << "248"
+      << "249"
+      << "250"
+      << "251"
+      << "252"
+      << "253"
+      << "254"
+      << "255"
+      << "256"
+      << "257"
+      << "258"
+      << "259"
+      << "260"
+      << "261"
+      << "262"
+      << "263"
+      << "264"
+      << "265"
+      << "266"
+      << "267"
+      << "268"
+      << "269"
+      << "27"
+      << "290"
+      << "291"
+      << "297"
+      << "298"
+      << "299"
+      << "30"
+      << "31"
+      << "32"
+      << "33"
+      << "34"
+      << "350"
+      << "351"
+      << "352"
+      << "353"
+      << "354"
+      << "355"
+      << "356"
+      << "357"
+      << "358"
+      << "359"
+      << "36"
+      << "370"
+      << "371"
+      << "372"
+      << "373"
+      << "374"
+      << "375"
+      << "376"
+      << "377"
+      << "378"
+      << "379"
+      << "380"
+      << "381"
+      << "382"
+      << "385"
+      << "386"
+      << "387"
+      << "388"
+      << "389"
+      << "39"
+      << "40"
+      << "41"
+      << "420"
+      << "421"
+      << "423"
+      << "43"
+      << "44"
+      << "45"
+      << "46"
+      << "47"
+      << "48"
+      << "49"
+      << "500"
+      << "501"
+      << "502"
+      << "503"
+      << "504"
+      << "505"
+      << "506"
+      << "507"
+      << "508"
+      << "509"
+      << "51"
+      << "52"
+      << "53"
+      << "54"
+      << "55"
+      << "56"
+      << "57"
+      << "58"
+      << "590"
+      << "591"
+      << "592"
+      << "593"
+      << "594"
+      << "595"
+      << "596"
+      << "597"
+      << "598"
+      << "599"
+      << "60"
+      << "61"
+      << "62"
+      << "63"
+      << "64"
+      << "65"
+      << "66"
+      << "670"
+      << "672"
+      << "673"
+      << "674"
+      << "675"
+      << "676"
+      << "677"
+      << "678"
+      << "679"
+      << "680"
+      << "681"
+      << "682"
+      << "683"
+      << "685"
+      << "686"
+      << "687"
+      << "688"
+      << "689"
+      << "690"
+      << "691"
+      << "692"
+      << "7"
+      << "800"
+      << "808"
+      << "81"
+      << "82"
+      << "84"
+      << "850"
+      << "852"
+      << "853"
+      << "855"
+      << "856"
+      << "86"
+      << "870"
+      << "871"
+      << "872"
+      << "873"
+      << "874"
+      << "878"
+      << "880"
+      << "881"
+      << "882"
+      << "883"
+      << "886"
+      << "888"
+      << "90"
+      << "91"
+      << "92"
+      << "93"
+      << "94"
+      << "95"
+      << "960"
+      << "961"
+      << "962"
+      << "963"
+      << "964"
+      << "965"
+      << "966"
+      << "967"
+      << "968"
+      << "970"
+      << "971"
+      << "972"
+      << "973"
+      << "974"
+      << "975"
+      << "976"
+      << "977"
+      << "979"
+      << "98"
+      << "991"
+      << "992"
+      << "993"
+      << "994"
+      << "995"
+      << "996"
+      << "998";
 }
 
 bool MLocalePrivate::isValidCountryCode( const QString& code ) const
