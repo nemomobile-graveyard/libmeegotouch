@@ -660,10 +660,10 @@ void TextEntryPage::changeAutoCapitalisation(bool val)
 
     if (val)
         //% "Auto Capitalisation is active"
-        Entries.at(4)->setPrompt(qtTrId("xx_auto_true_entry0"));
+        Entries.at(9)->setPrompt(qtTrId("xx_auto_true_entry0"));
     else
         //% "No Auto Capitalisation"
-        Entries.at(4)->setPrompt(qtTrId("xx_auto_false_entry0"));
+        Entries.at(9)->setPrompt(qtTrId("xx_auto_false_entry0"));
 }
 
 

@@ -66,6 +66,7 @@ protected:
 private slots:
     void backButtonClicked();
     void configureGrid();
+    void configureGrid(M::Orientation orientation);
 
 private:
     MList *list;

@@ -173,7 +173,7 @@ void ApplicationMenuPage::toggleWindowIconVisibility()
     }
     QString oldIconID = window->windowIconID();
     if (oldIconID.isEmpty()) {
-        window->setWindowIconID("Icon-browser");
+        window->setWindowIconID("icon-m-toolbar-gallery");
     } else {
         window->setWindowIconID("");
     }
