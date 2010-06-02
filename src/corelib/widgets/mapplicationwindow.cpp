@@ -381,7 +381,6 @@ void MApplicationWindowPrivate::openMenu()
     if (menu->actions().count() > 0) {
         menu->appear(q);
         escapeButtonPanel->setEnabled(false);
-        toolBar->setEnabled(false);
     }
 }
 
