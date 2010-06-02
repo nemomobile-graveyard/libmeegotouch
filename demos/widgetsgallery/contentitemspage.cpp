@@ -75,14 +75,14 @@ public:
         }
         case MBasicListItem::IconWithTitle: {
             item->setTitle(index.data().toString());
-            item->icon()->setImage(defaultImage);
+            item->imageWidget()->setImage(defaultImage);
             break;    
         }
         case MBasicListItem::IconWithTitleAndSubtitle: {
             item->setTitle(index.data().toString());
             //% "Subtitle"
             item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
-            item->icon()->setImage(defaultImage);
+            item->imageWidget()->setImage(defaultImage);
             break;    
         }
         default:

@@ -29,7 +29,7 @@
 MBasicListItem::MBasicListItem(MBasicListItem::ItemStyle style, QGraphicsItem *parent)
     : MListItem(parent),
     layoutGrid(NULL),
-    iconImage(NULL),
+    image(NULL),
     titleLabel(NULL),
     subtitleLabel(NULL),
     listItemStyle(style)
@@ -42,6 +42,11 @@ MBasicListItem::~MBasicListItem()
 }
 
 void MBasicListItem::initLayout()
+{
+    setLayout(createLayout());
+}
+
+QGraphicsLayout *MBasicListItem::createLayout()
 {
     clearLayout();
     
@@ -56,59 +61,37 @@ void MBasicListItem::initLayout()
     case MBasicListItem::SingleTitle: {
             setObjectName("BasicListItemSingleTitle");
 
-            titleLabel = new MLabel(this);
-            titleLabel->setObjectName("CommonSingleTitle");
-            
-            layoutGrid->addItem(titleLabel, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(titleLabelWidget(), 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
             break;
         }
     case MBasicListItem::TitleWithSubtitle: {
             setObjectName("BasicListItemTitleWithSubtitle");
 
-            titleLabel = new MLabel(this);
-            titleLabel->setObjectName("CommonTitle");
-            
-            subtitleLabel = new MLabel(this);
-            subtitleLabel->setObjectName("CommonSubTitle");
-            
-            layoutGrid->addItem(titleLabel, 0, 0, Qt::AlignLeft | Qt::AlignTop);
-            layoutGrid->addItem(subtitleLabel, 1, 0, Qt::AlignLeft | Qt::AlignBottom);
+            layoutGrid->addItem(titleLabelWidget(), 0, 0, Qt::AlignLeft | Qt::AlignTop);
+            layoutGrid->addItem(subtitleLabelWidget(), 1, 0, Qt::AlignLeft | Qt::AlignBottom);
             break;
         }
     case MBasicListItem::IconWithTitle: {
             setObjectName("BasicListItemIconWithTitle");
 
-            iconImage = new MImageWidget(this);
-            iconImage->setObjectName("CommonMainIcon");
-            
-            titleLabel = new MLabel(this);
-            titleLabel->setObjectName("CommonTitleWithLeftMargin");
-
-            layoutGrid->addItem(iconImage, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabel, 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(imageWidget(), 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
             break;
         }
     case MBasicListItem::IconWithTitleAndSubtitle: {
             setObjectName("BasicListItemIconWithTitleAndSubtitle");
 
-            iconImage = new MImageWidget(this);
-            iconImage->setObjectName("CommonMainIcon");
-            
-            titleLabel = new MLabel(this);
-            titleLabel->setObjectName("CommonTitleWithLeftMargin");
-            
-            subtitleLabel = new MLabel(this);
-            subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
-
-            layoutGrid->addItem(iconImage, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabel, 0, 1, Qt::AlignLeft | Qt::AlignTop);
-            layoutGrid->addItem(subtitleLabel, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
+            layoutGrid->addItem(imageWidget(), 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layoutGrid->addItem(subtitleLabelWidget(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
             
             break;
         }
     default:
         break;
     }
+
+    return layoutGrid;
 }
 
 void MBasicListItem::clearLayout()
@@ -119,7 +102,7 @@ void MBasicListItem::clearLayout()
             layoutGrid->removeAt(0);
             delete item;
         }
-        iconImage = NULL;
+        image = NULL;
         titleLabel = NULL;
         subtitleLabel = NULL;
     }
@@ -138,48 +121,80 @@ MBasicListItem::ItemStyle MBasicListItem::itemStyle() const
     return listItemStyle;
 }
 
-void MBasicListItem::setIcon(MImageWidget *icon)
+void MBasicListItem::setImageWidget(MImageWidget *imageWidget)
 {
     for (int i = 0; i < layoutGrid->count(); i++) {
-        if (layoutGrid->itemAt(i) == iconImage) {
+        if (layoutGrid->itemAt(i) == image) {
             layoutGrid->removeAt(i);
-            delete iconImage;
-            iconImage = NULL;
+            delete image;
+            image = NULL;
             break;
         }
     }
 
-    if (icon) {
-        iconImage = icon;
+    if (imageWidget) {
+        image = imageWidget;
         if (listItemStyle == MBasicListItem::IconWithTitle)
-            layoutGrid->addItem(iconImage, 0, 0);
+            layoutGrid->addItem(image, 0, 0);
         else if (listItemStyle == MBasicListItem::IconWithTitleAndSubtitle)
-            layoutGrid->addItem(iconImage, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layoutGrid->addItem(image, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
     }
 }
 
-MImageWidget *MBasicListItem::icon() const
+MImageWidget *MBasicListItem::imageWidget()
 {
-    return iconImage;
+    if (!image) {
+        image = new MImageWidget(this);
+        image->setObjectName("CommonMainIcon");
+    }
+    return image;
+}
+
+MLabel *MBasicListItem::titleLabelWidget()
+{
+    if (!titleLabel) {
+        titleLabel = new MLabel(this);
+        if (listItemStyle == SingleTitle)
+            titleLabel->setObjectName("CommonSingleTitle");
+        else if (listItemStyle == TitleWithSubtitle)
+            titleLabel->setObjectName("CommonTitle");
+        else
+            titleLabel->setObjectName("CommonTitleWithLeftMargin");
+    }
+
+    return titleLabel;
+}
+
+MLabel *MBasicListItem::subtitleLabelWidget()
+{
+    if (!subtitleLabel) {
+        subtitleLabel = new MLabel(this);
+        if (listItemStyle == TitleWithSubtitle)
+            subtitleLabel->setObjectName("CommonSubTitle");
+        else
+            subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
+    }
+
+    return subtitleLabel;
 }
 
 void MBasicListItem::setTitle(const QString &title)
 {
-    titleLabel->setText(title);
+    titleLabelWidget()->setText(title);
 }
 
-QString MBasicListItem::title() const
+QString MBasicListItem::title()
 {
-    return titleLabel->text();
+    return titleLabelWidget()->text();
 }
 
 void MBasicListItem::setSubtitle(const QString &subtitle)
 {
-    subtitleLabel->setText(subtitle);    
+    subtitleLabelWidget()->setText(subtitle);
 }
 
-QString MBasicListItem::subtitle() const
+QString MBasicListItem::subtitle()
 {
-    return subtitleLabel->text();
+    return subtitleLabelWidget()->text();
 }
 

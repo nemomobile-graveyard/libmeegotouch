@@ -28,6 +28,12 @@ class QGraphicsGridLayout;
 
 class M_EXPORT MBasicListItem : public MListItem
 {
+    Q_OBJECT
+
+    Q_PROPERTY(QString title READ title WRITE setTitle)
+    Q_PROPERTY(QString subtitle READ subtitle WRITE setSubtitle)
+    Q_PROPERTY(MImageWidget* imageWidget READ imageWidget WRITE setImageWidget)
+
 public:
     enum ItemStyle {
         SingleTitle = 0x0,
@@ -41,24 +47,31 @@ public:
     virtual ~MBasicListItem();
     
     void initLayout();
-    void clearLayout();
-    
+
     void setItemStyle(ItemStyle itemStyle);
     ItemStyle itemStyle() const;
     
-    void setIcon(MImageWidget *icon);
-    MImageWidget *icon() const;
+    void setImageWidget(MImageWidget *imageWidget);
+    MImageWidget *imageWidget();
     
     void setTitle(const QString &title);
-    QString title() const;
+    QString title();
     
     void setSubtitle(const QString &subtitle);
-    QString subtitle() const;
+    QString subtitle();
     
+protected:
+    MLabel *titleLabelWidget();
+    MLabel *subtitleLabelWidget();
+
+private:
+    QGraphicsLayout *createLayout();
+    void clearLayout();
+
 private:
     QGraphicsGridLayout *layoutGrid;
 
-    MImageWidget *iconImage;    
+    MImageWidget *image;
     MLabel *titleLabel; 
     MLabel *subtitleLabel;
     
