@@ -48,7 +48,11 @@ void PhoneBookCell::initLayout()
 
 MLayout *PhoneBookCell::createLayout()
 {
+    setObjectName("BasicListItemIconWithTitleAndSubtitle");
     layout = new MLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+
     landscapePolicy = new MGridLayoutPolicy(layout);
     landscapePolicy->setContentsMargins(0, 0, 0, 0);
     landscapePolicy->setSpacing(0);
@@ -56,36 +60,33 @@ MLayout *PhoneBookCell::createLayout()
     // title
     titleLabel = new MLabel(this);
     titleLabel->setTextElide(true);
-    titleLabel->setObjectName("CommonTitle");
+    titleLabel->setObjectName("CommonTitleWithLeftMargin");
 
     // subtitle
     subtitleLabel = new MLabel(this);
     subtitleLabel->setTextElide(true);
-    subtitleLabel->setObjectName("CommonSubTitle");    
+    subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
     
     // icon
     imageWidget = new MImageWidget(this);
-    imageWidget->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     imageWidget->setObjectName("CommonMainIcon");
     imageWidget->setVisible(false);
 
     // spinner
     spinner = new MProgressIndicator(this, MProgressIndicator::spinnerType);
-    spinner->setSizePolicy(QSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed));
     spinner->setUnknownDuration(true);
     spinner->setObjectName("CommonMainIcon");
 
     // add to layout
-    landscapePolicy->addItem(spinner, 0, 0, 4, 1);
-    landscapePolicy->addItem(titleLabel, 1, 1, Qt::AlignTop);
-    landscapePolicy->addItem(subtitleLabel, 2, 1);
-    landscapePolicy->addItem(new QGraphicsWidget(), 3, 1);
+    landscapePolicy->addItem(spinner, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    landscapePolicy->addItem(titleLabel, 0, 1, Qt::AlignLeft | Qt::AlignTop);
+    landscapePolicy->addItem(subtitleLabel, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
     
     portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     portraitPolicy->setContentsMargins(0, 0, 0, 0);
     portraitPolicy->setSpacing(0);
-    portraitPolicy->addItem(spinner);
-    portraitPolicy->addItem(titleLabel);
+    portraitPolicy->addItem(spinner, Qt::AlignLeft | Qt::AlignVCenter);
+    portraitPolicy->addItem(titleLabel, Qt::AlignLeft | Qt::AlignVCenter);
     
     layout->setPortraitPolicy(portraitPolicy);
     layout->setLandscapePolicy(landscapePolicy);
@@ -120,24 +121,28 @@ QImage PhoneBookCell::image() const
 
 void PhoneBookCell::setImage(const QImage &image)
 {
-    imageWidget->setImage(image);
-    imageWidget->setVisible(true);
+    if (image.isNull() || imageWidget->image().isEmpty()) {
+        if (layout->policy() == landscapePolicy) {
+            if (landscapePolicy->itemAt(0, 0) == spinner && !image.isNull()) {
+                landscapePolicy->removeItem(spinner);
+                landscapePolicy->addItem(imageWidget, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            } else if (landscapePolicy->itemAt(0, 0) == imageWidget && image.isNull()) {
+                landscapePolicy->removeItem(imageWidget);
+                landscapePolicy->addItem(spinner, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            }
+        } else if (layout->policy() == portraitPolicy) {
+            if (portraitPolicy->itemAt(0) == imageWidget && image.isNull()) {
+                portraitPolicy->removeAt(0);
+                portraitPolicy->insertItem(0, spinner, Qt::AlignLeft | Qt::AlignVCenter);
+            } else if (portraitPolicy->itemAt(0) == spinner && !image.isNull()) {
+                portraitPolicy->removeAt(0);
+                portraitPolicy->insertItem(0, imageWidget, Qt::AlignLeft | Qt::AlignVCenter);
+            }
+        }
+    }
 
-    if (layout->policy() == landscapePolicy) {
-        if (landscapePolicy->itemAt(0, 0) == spinner && !image.isNull()) {
-            landscapePolicy->removeItem(spinner);
-            landscapePolicy->addItem(imageWidget, 0, 0, 4, 1);
-        } else if (landscapePolicy->itemAt(0, 0) == imageWidget && image.isNull()) {
-            landscapePolicy->removeItem(imageWidget);
-            landscapePolicy->addItem(spinner, 0, 0, 4, 1);
-        }
-    } else if (layout->policy() == portraitPolicy) {
-        if (portraitPolicy->itemAt(0) == imageWidget && image.isNull()) {
-            portraitPolicy->removeAt(0);
-            portraitPolicy->insertItem(0, spinner, Qt::AlignLeft);
-        } else if (portraitPolicy->itemAt(0) == spinner && !image.isNull()) {
-            portraitPolicy->removeAt(0);
-            portraitPolicy->insertItem(0, imageWidget, Qt::AlignLeft);
-        }
+    if (!image.isNull()) {
+        imageWidget->setImage(image);
+        imageWidget->setVisible(true);
     }
 }
