@@ -165,6 +165,7 @@ void MImageWidget::setImage(const QString &id, const QSize &s)
  
     model()->setCrop(QRect());
  
+    updateGeometry();
     update();
 }
 
@@ -320,6 +321,7 @@ void MImageWidget::setImage(const QString &id)
 
     model()->setCrop(QRect());
 
+    updateGeometry();
     update();
 }
 
@@ -333,6 +335,7 @@ void MImageWidget::setImage(const QImage &image)
 
     model()->setCrop(QRect());
 
+    updateGeometry();
     update();
 }
 
@@ -346,5 +349,6 @@ void MImageWidget::setPixmap(const QPixmap &pixmap)
 
     model()->setCrop(QRect());
 
+    updateGeometry();
     update();
 }

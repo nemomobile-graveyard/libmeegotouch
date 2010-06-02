@@ -219,22 +219,22 @@ QSizeF MImageWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
     Q_D(const MImageWidgetView);
 
     QSizeF s = MWidgetView::sizeHint(which, constraint);
-
-    if (s == QSizeF(-1, -1)) {
-        if (which == Qt::MinimumSize)
-            return QSize(0, 0);
-        if (which == Qt::MaximumSize)
-            return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
-        return d->controller->imageSize();
-    }
-
-    if (which == Qt::MinimumSize || which == Qt::MaximumSize)
+    if(s.isValid())
         return s;
 
-    if (style()->preferredSize().isValid())
-        return style()->preferredSize();
+    QSizeF s2;
+    if(which == Qt::MinimumSize)
+        s2 = QSizeF(0,0);
+    else if(which == Qt::MaximumSize)
+        s2 = QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
+    else
+        s2 = d->controller->imageSize();
 
-    return d->controller->imageSize();
+    if(s.height() < 0)
+        s.setHeight(s2.height());
+    if(s.width() < 0)
+        s.setWidth(s2.width());
+    return s;
 }
 
 M_REGISTER_VIEW_NEW(MImageWidgetView, MImageWidget)
