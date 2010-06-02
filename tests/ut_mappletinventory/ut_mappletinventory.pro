@@ -7,10 +7,16 @@ INCLUDEPATH += \
     $$MSRCDIR/events
 
 win32 {
-    QMAKE_MOC = ..\..\mmoc\mmoc
+    QMAKE_MOC = $${IN_PWD}\..\..\mmoc\mmoc
+    contains(DEFINES, IS_ARMEL) {
+        QMAKE_MOC = perl.exe $${IN_PWD}\..\..\mmoc\mmoc.pl
+    }
 } else {
     PRE_TARGETDEPS += ../../mgen/mgen
-    QMAKE_MOC = PATH=../../mgen:$$(PATH) ../../mmoc/mmoc
+    QMAKE_MOC = PATH=../../mgen:$$(PATH) $${IN_PWD}/../../mmoc/mmoc
+    contains(DEFINES, IS_ARMEL) {
+        QMAKE_MOC = PATH=../../mgen:$$(PATH) perl $${IN_PWD}/../../mmoc/mmoc.pl
+    }
 }
 
 MGEN_OUTDIR = .

@@ -14,16 +14,14 @@ win32 {
     MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/mgen
 }
 
-build_mmoc.target = ../mmoc/mmoc
 win32 {
-    build_mmoc.commands = \
-        cd $$M_BUILD_TREE/mmoc && mingw32-make
-
-    # FIXME make it work for release build too
-    MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/debug/mmoc.exe
+     MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/mmoc
+     contains(DEFINES, IS_ARMEL) {
+        MMOC_EXECUTABLE = perl.exe $$M_BUILD_TREE/mmoc/mmoc.pl
+     }
 } else {
-    build_mmoc.commands = \
-        cd $$M_BUILD_TREE/mmoc && qmake && make
-
-    MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/mmoc
+     MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/mmoc
+     contains(DEFINES, IS_ARMEL) {
+        MMOC_EXECUTABLE = perl $$M_BUILD_TREE/mmoc/mmoc.pl
+     }
 }
