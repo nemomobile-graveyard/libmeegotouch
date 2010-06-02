@@ -33,8 +33,8 @@ class M_EXPORT MAdvancedListItem : public MListItem
 
     Q_PROPERTY(QString title READ title WRITE setTitle)
     Q_PROPERTY(MImageWidget* imagewidget READ imageWidget WRITE setImageWidget)
-    Q_PROPERTY(MImageWidget* rightTopImage READ imageWidget)
-    Q_PROPERTY(MImageWidget* rightTopImage READ imageWidget)
+    Q_PROPERTY(MImageWidget* sideTopImage READ sideTopImageWidget)
+    Q_PROPERTY(MImageWidget* sideBottomImage READ sideBottomImageWidget)
     Q_PROPERTY(MProgressIndicator* progressIndicator READ progressIndicator)
 
 public:
@@ -49,11 +49,11 @@ public:
 
     void initLayout();
 
-    QString title() const;
     void setTitle(const QString &title);
+    QString title() const;
 
-    MImageWidget *imageWidget();
     void setImageWidget(MImageWidget *imageWidget);
+    MImageWidget *imageWidget();
 
     MProgressIndicator *progressIndicator();
 

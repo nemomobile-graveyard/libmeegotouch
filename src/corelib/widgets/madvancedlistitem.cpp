@@ -56,8 +56,7 @@ void MAdvancedListItem::setTitle(const QString &title)
 
 MImageWidget * MAdvancedListItem::imageWidget()
 {
-    if(!image)
-    {
+    if (!image) {
         image = new MImageWidget(this);
         image->setObjectName("CommonMainIcon");
     }
@@ -67,14 +66,22 @@ MImageWidget * MAdvancedListItem::imageWidget()
 
 void MAdvancedListItem::setImageWidget(MImageWidget * imageWidget)
 {
-    delete image;
-    imageWidget->setParentItem(this);
+    if (image) {
+        for (int i = 0; i < layoutGrid->count(); i++) {
+            if (layoutGrid->itemAt(i) == image) {
+                layoutGrid->removeAt(i);
+                break;
+            }
+        }
+        delete image;
+        image = NULL;
+    }
     image = imageWidget;
 }
 
 MProgressIndicator * MAdvancedListItem::progressIndicator()
 {
-    if(!progress) {
+    if (!progress) {
         progress = new MProgressIndicator(this, MProgressIndicator::barType);
         progress->setObjectName("CommonProgressIndicator");
     }
@@ -84,7 +91,7 @@ MProgressIndicator * MAdvancedListItem::progressIndicator()
 
 MLabel * MAdvancedListItem::titleLabelWidget()
 {
-    if(!titleLabel) {
+    if (!titleLabel) {
         titleLabel = new MLabel(this);
         titleLabel->setObjectName("CommonTitleWithLeftMargin");
     }
@@ -94,7 +101,7 @@ MLabel * MAdvancedListItem::titleLabelWidget()
 
 MImageWidget * MAdvancedListItem::sideTopImageWidget()
 {
-    if(!sideTopImage) {
+    if (!sideTopImage) {
         sideTopImage = new MImageWidget(this);
         sideTopImage->setObjectName("CommonTopSideIcon");
     }
@@ -104,7 +111,7 @@ MImageWidget * MAdvancedListItem::sideTopImageWidget()
 
 MImageWidget * MAdvancedListItem::sideBottomImageWidget()
 {
-    if(!sideBottomImage) {
+    if (!sideBottomImage) {
         sideBottomImage = new MImageWidget(this);
         sideBottomImage->setObjectName("CommonBottomSideIcon");
     }
