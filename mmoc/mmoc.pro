@@ -27,27 +27,14 @@ SOURCES += \
 
 HEADERS += \
 
-mmoc_perl.files += mmoc.pl
-mmoc_perl.path = $$M_INSTALL_BIN
 
 INSTALLS += \
      target\
-     mmoc_perl
 
 win32: {
     DEFINES += QT_MOC_PATH=\\\"\"moc.exe\"\\\"
 } else {
     DEFINES += QT_MOC_PATH=\'$$quote(\"$$QMAKE_MOC\")\'
-}
-
-win32 {
-    !exists ($$M_BUILD_TREE\mmoc\mmoc.pl) {
-        system (copy $$M_SOURCE_TREE\mmoc\mmoc.pl $$M_BUILD_TREE\mmoc\mmoc.pl)
-    }
-} else {
-    !exists ($$M_BUILD_TREE/mmoc/mmoc.pl) {
-        system (cp -f $$M_SOURCE_TREE/mmoc/mmoc.pl $$M_BUILD_TREE/mmoc/mmoc.pl)
-    }
 }
 
 QMAKE_EXTRA_TARGETS += check
