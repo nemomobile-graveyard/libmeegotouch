@@ -66,6 +66,17 @@
         <long></long>
       </locale>
     </schema>
+    <schema>
+      <key>/schemas/meegotouch/debug/show_async_requests</key>
+      <applyto>/meegotouch/debug/show_async_requests</applyto>
+      <owner>libmeegotouch</owner>
+      <type>bool</type>
+      <default>false</default>
+      <locale name="C">
+        <short>Can be used to turn on debugging of asynchronous pixmap loading.</short>
+        <long>Asynchronous pixmaps are initially transparent by default. When this value is set to true the are filled with green.</long>
+      </locale>
+    </schema>
   </schemalist>
 </gconfschemafile>
 

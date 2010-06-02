@@ -75,10 +75,10 @@ struct CachedScalableImage {
 };
 //! \endcond
 
-class MThemePrivate
+class MThemePrivate : public QObject
 {
+    Q_OBJECT
     Q_DECLARE_PUBLIC(MTheme)
-
 public:
     MThemePrivate(const QString &applicationName, MTheme::ThemeService themeService);
     virtual ~MThemePrivate();
@@ -117,7 +117,9 @@ public:
 
 #ifdef HAVE_GCONF
     MGConfItem locale;
+    MGConfItem showAsyncRequestsItem;
 #endif
+    bool showAsyncRequests;
 
 public:
     /*!
@@ -170,6 +172,11 @@ public:
 
     static void registerLibrary(MLibrary *library);
     static void unregisterLibrary(MLibrary *library);
+
+#ifdef HAVE_GCONF
+public slots:
+    void updateShowAsyncRequests();
+#endif
 };
 
 #endif

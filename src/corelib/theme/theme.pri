@@ -20,6 +20,7 @@ PRIVATE_HEADERS += \
     $$THEME_SRC_DIR/mthemedaemonprotocol.h \
     $$THEME_SRC_DIR/mthemeresourcemanager.h \
     $$THEME_SRC_DIR/mcommonpixmaps.h \
+    $$THEME_SRC_DIR/mtheme_p.h
 
 SOURCES += $$THEME_SRC_DIR/mtheme.cpp \
     $$THEME_SRC_DIR/mimagedirectory.cpp \

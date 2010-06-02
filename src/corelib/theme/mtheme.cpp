@@ -204,11 +204,11 @@ const QPixmap *MTheme::pixmap(const QString &id, const QSize &size)
     } else {
         result = new QPixmap(1,1);
     }
-    //TODO: activate the debug guards once the release is close
-    // fill with an ugly color -- this pixmap should never be visible
-//#ifndef NDEBUG
-    result->fill(QColor(0, 255, 0, 255));
-//#endif
+    if (instance()->d_ptr->showAsyncRequests) {
+        result->fill(QColor(0, 255, 0, 255));
+    } else {
+        result->fill(QColor(0, 0, 0, 0));
+    }
 
     instance()->d_ptr->pixmapIdentifiers.insert(identifier, CachedPixmap(result, id, realSize));
     instance()->d_ptr->themeDaemon->pixmapHandle(id, realSize);
@@ -507,7 +507,9 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
     fonts(logicalValues)
 #ifdef HAVE_GCONF
     , locale("/meegotouch/i18n/language")
+    , showAsyncRequestsItem("/meegotouch/debug/show_async_requests")
 #endif
+    , showAsyncRequests(false)
 {
     switch (themeService) {
     case MTheme::LocalTheme:
@@ -535,6 +537,11 @@ MThemePrivate::MThemePrivate(const QString &applicationName, MTheme::ThemeServic
     // this loads the current theme
     reloadThemeLibraries(themeDaemon->themeLibraryNames());
     refreshLocalThemeConfiguration(themeDaemon->themeInheritanceChain());
+
+#ifdef HAVE_GCONF
+    showAsyncRequests = showAsyncRequestsItem.value().toBool();
+    connect(&showAsyncRequestsItem, SIGNAL(valueChanged()), this, SLOT(updateShowAsyncRequests()));
+#endif
 }
 
 MThemePrivate::~MThemePrivate()
@@ -813,5 +820,12 @@ void MThemePrivate::localeChangedSlot()
 {
     themeChangedSlot(themeDaemon->themeInheritanceChain(), themeDaemon->themeLibraryNames());
 }
+
+#ifdef HAVE_GCONF
+void MThemePrivate::updateShowAsyncRequests()
+{
+    showAsyncRequests = showAsyncRequestsItem.value().toBool();
+}
+#endif
 
 #include "moc_mtheme.cpp"
