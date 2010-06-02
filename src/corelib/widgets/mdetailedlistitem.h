@@ -22,6 +22,7 @@
 
 #include "mlistitem.h"
 
+class MDetailedListItemPrivate;
 class MImageWidget;
 class MLabel;
 class MStylableWidget;
@@ -58,7 +59,6 @@ public:
     virtual ~MDetailedListItem();
     
     void initLayout();
-    void clearLayout();
     
     void setItemStyle(ItemStyle itemStyle);
     ItemStyle itemStyle() const;
@@ -86,23 +86,12 @@ protected:
     MLabel *subtitleLabelWidget();
     MLabel *sideBottomLabelWidget();
 
-private:
-    QGraphicsLayout *createLayout();
+    virtual QGraphicsLayout *createLayout();
+    virtual void clearLayout();
 
 private:
-    QGraphicsGridLayout *layoutGrid;
-    QGraphicsGridLayout *contentLayoutGrid;
-    MStylableWidget *contentPanel;
-
-    MImageWidget *image;
-    MImageWidget *sideTopImage;
-    MImageWidget *sideBottomImage;
-    
-    MLabel *titleLabel; 
-    MLabel *subtitleLabel;
-    MLabel *sideBottomLabel;
-    
-    ItemStyle listItemStyle;
+    Q_DECLARE_PRIVATE(MDetailedListItem)
+    MDetailedListItemPrivate *d_ptr;
 };
 
 

@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "madvancedlistitem.h"
+#include "madvancedlistitem_p.h"
 
 #include <MImageWidget>
 #include <MLabel>
@@ -25,11 +26,71 @@
 
 #include <QGraphicsGridLayout>
 
-MAdvancedListItem::MAdvancedListItem(MAdvancedListItem::ItemStyle itemStyle, QGraphicsItem *parent)
-    : MListItem(parent), layoutGrid(NULL), progress(NULL), titleLabel(NULL), image(NULL),
-    sideTopImage(NULL), sideBottomImage(NULL), listItemStyle(itemStyle)
+MAdvancedListItemPrivate::MAdvancedListItemPrivate(MAdvancedListItem::ItemStyle style)
+    : layoutGrid(NULL),
+    progress(NULL),
+    titleLabel(NULL),
+    image(NULL),
+    sideTopImage(NULL),
+    sideBottomImage(NULL),
+    listItemStyle(style)
 {
 
+}
+
+MAdvancedListItemPrivate::~MAdvancedListItemPrivate()
+{
+}
+
+void MAdvancedListItemPrivate::createLayout()
+{
+    Q_Q(MAdvancedListItem);
+
+    switch (listItemStyle) {
+    case MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons: {
+            q->setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTwoSideIcons");
+
+            layout()->addItem(q->imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layout()->addItem(q->progressIndicator(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
+            layout()->addItem(q->sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
+            layout()->addItem(q->sideBottomImageWidget(), 1, 2, Qt::AlignRight | Qt::AlignBottom);
+            break;
+        }
+    case MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon: {
+            q->setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTopSideIcon");
+
+            layout()->addItem(q->imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
+            layout()->addItem(q->progressIndicator(), 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
+            layout()->addItem(q->sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
+            break;
+        }
+    default:
+        break;
+    }
+}
+
+void MAdvancedListItemPrivate::clearLayout()
+{
+    Q_Q(MAdvancedListItem);
+
+    delete layoutGrid;
+    layoutGrid = new QGraphicsGridLayout(q);
+    layoutGrid->setContentsMargins(0, 0, 0, 0);
+    layoutGrid->setSpacing(0);
+}
+
+QGraphicsGridLayout *MAdvancedListItemPrivate::layout()
+{
+    return layoutGrid;
+}
+
+MAdvancedListItem::MAdvancedListItem(MAdvancedListItem::ItemStyle style, QGraphicsItem *parent)
+    : MListItem(parent), d_ptr(new MAdvancedListItemPrivate(style))
+{
+    Q_D(MAdvancedListItem);
+    d->q_ptr = this;
 }
 
 MAdvancedListItem::~MAdvancedListItem()
@@ -41,12 +102,27 @@ void MAdvancedListItem::initLayout()
     setLayout(createLayout());
 }
 
-QString MAdvancedListItem::title() const
+void MAdvancedListItem::setItemStyle(ItemStyle itemStyle)
 {
-    if(titleLabel)
-        return titleLabel->text();
+    Q_D(MAdvancedListItem);
 
-    return QString();
+    if (itemStyle == d->listItemStyle)
+        return;
+
+    d->listItemStyle = itemStyle;
+    initLayout();
+}
+
+MAdvancedListItem::ItemStyle MAdvancedListItem::itemStyle() const
+{
+    Q_D(const MAdvancedListItem);
+
+    return d->listItemStyle;
+}
+
+QString MAdvancedListItem::title()
+{
+    return titleLabelWidget()->text();
 }
 
 void MAdvancedListItem::setTitle(const QString &title)
@@ -56,101 +132,100 @@ void MAdvancedListItem::setTitle(const QString &title)
 
 MImageWidget * MAdvancedListItem::imageWidget()
 {
-    if (!image) {
-        image = new MImageWidget(this);
-        image->setObjectName("CommonMainIcon");
+    Q_D(MAdvancedListItem);
+
+    if (!d->image) {
+        d->image = new MImageWidget(this);
+        d->image->setObjectName("CommonMainIcon");
     }
 
-    return image;
+    return d->image;
 }
 
 void MAdvancedListItem::setImageWidget(MImageWidget * imageWidget)
 {
-    if (image) {
-        for (int i = 0; i < layoutGrid->count(); i++) {
-            if (layoutGrid->itemAt(i) == image) {
-                layoutGrid->removeAt(i);
+    Q_D(MAdvancedListItem);
+
+    if (d->image) {
+        for (int i = 0; i < d->layout()->count(); i++) {
+            if (d->layout()->itemAt(i) == d->image) {
+                d->layout()->removeAt(i);
                 break;
             }
         }
-        delete image;
-        image = NULL;
+        delete d->image;
+        d->image = NULL;
     }
-    image = imageWidget;
+
+    if (imageWidget) {
+        d->image = imageWidget;
+        d->layout()->addItem(d->image, 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    }
 }
 
 MProgressIndicator * MAdvancedListItem::progressIndicator()
 {
-    if (!progress) {
-        progress = new MProgressIndicator(this, MProgressIndicator::barType);
-        progress->setObjectName("CommonProgressIndicator");
+    Q_D(MAdvancedListItem);
+
+    if (!d->progress) {
+        d->progress = new MProgressIndicator(this, MProgressIndicator::barType);
+        d->progress->setObjectName("CommonProgressIndicator");
     }
 
-    return progress;
+    return d->progress;
 }
 
 MLabel * MAdvancedListItem::titleLabelWidget()
 {
-    if (!titleLabel) {
-        titleLabel = new MLabel(this);
-        titleLabel->setObjectName("CommonTitleWithLeftMargin");
+    Q_D(MAdvancedListItem);
+
+    if (!d->titleLabel) {
+        d->titleLabel = new MLabel(this);
+        d->titleLabel->setObjectName("CommonTitleWithLeftMargin");
     }
 
-    return titleLabel;
+    return d->titleLabel;
 }
 
 MImageWidget * MAdvancedListItem::sideTopImageWidget()
 {
-    if (!sideTopImage) {
-        sideTopImage = new MImageWidget(this);
-        sideTopImage->setObjectName("CommonTopSideIcon");
+    Q_D(MAdvancedListItem);
+
+    if (!d->sideTopImage) {
+        d->sideTopImage = new MImageWidget(this);
+        d->sideTopImage->setObjectName("CommonTopSideIcon");
     }
 
-    return sideTopImage;
+    return d->sideTopImage;
 }
 
 MImageWidget * MAdvancedListItem::sideBottomImageWidget()
 {
-    if (!sideBottomImage) {
-        sideBottomImage = new MImageWidget(this);
-        sideBottomImage->setObjectName("CommonBottomSideIcon");
+    Q_D(MAdvancedListItem);
+
+    if (!d->sideBottomImage) {
+        d->sideBottomImage = new MImageWidget(this);
+        d->sideBottomImage->setObjectName("CommonBottomSideIcon");
     }
 
-    return sideBottomImage;
+    return d->sideBottomImage;
 }
 
 QGraphicsLayout *MAdvancedListItem::createLayout()
 {
-    delete layoutGrid;
-    layoutGrid = new QGraphicsGridLayout(this);
-    layoutGrid->setContentsMargins(0, 0, 0, 0);
-    layoutGrid->setSpacing(0);
+    Q_D(MAdvancedListItem);
 
-    switch (listItemStyle) {
-    case IconWithTitleProgressIndicatorAndTwoSideIcons: {
-            setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTwoSideIcons");
+    clearLayout();
+    d->createLayout();
 
-            layoutGrid->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
-            layoutGrid->addItem(progressIndicator(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
-            layoutGrid->addItem(sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
-            layoutGrid->addItem(sideBottomImageWidget(), 1, 2, Qt::AlignRight | Qt::AlignBottom);
-            break;
-        }
-    case IconWithTitleProgressIndicatorAndTopSideIcon: {
-            setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTopSideIcon");
+    return d->layout();
+}
 
-            layoutGrid->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layoutGrid->addItem(titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
-            layoutGrid->addItem(progressIndicator(), 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-            layoutGrid->addItem(sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
-            break;
-        }
-    default:
-        break;
-    }
+void MAdvancedListItem::clearLayout()
+{
+    Q_D(MAdvancedListItem);
 
-    return layoutGrid;
+    d->clearLayout();
 }
 
 

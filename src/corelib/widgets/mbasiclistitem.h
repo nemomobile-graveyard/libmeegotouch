@@ -26,6 +26,8 @@ class MImageWidget;
 class MLabel;
 class QGraphicsGridLayout;
 
+class MBasicListItemPrivate;
+
 class M_EXPORT MBasicListItem : public MListItem
 {
     Q_OBJECT
@@ -64,18 +66,12 @@ protected:
     MLabel *titleLabelWidget();
     MLabel *subtitleLabelWidget();
 
-private:
-    QGraphicsLayout *createLayout();
-    void clearLayout();
+    virtual QGraphicsLayout *createLayout();
+    virtual void clearLayout();
 
 private:
-    QGraphicsGridLayout *layoutGrid;
-
-    MImageWidget *image;
-    MLabel *titleLabel; 
-    MLabel *subtitleLabel;
-    
-    ItemStyle listItemStyle;
+    Q_DECLARE_PRIVATE(MBasicListItem)
+    MBasicListItemPrivate *d_ptr;
 };
 
 #endif // MBASICLISTITEM_H

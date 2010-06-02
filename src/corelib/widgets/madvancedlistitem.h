@@ -22,10 +22,12 @@
 
 #include <MListItem>
 
-class QGraphicsGridLayout;
-class MProgressIndicator;
-class MLabel;
+class MAdvancedListItemPrivate;
 class MImageWidget;
+class MLabel;
+class MProgressIndicator;
+
+class QGraphicsGridLayout;
 
 class M_EXPORT MAdvancedListItem : public MListItem
 {
@@ -49,8 +51,11 @@ public:
 
     void initLayout();
 
+    void setItemStyle(ItemStyle itemStyle);
+    ItemStyle itemStyle() const;
+
     void setTitle(const QString &title);
-    QString title() const;
+    QString title();
 
     void setImageWidget(MImageWidget *imageWidget);
     MImageWidget *imageWidget();
@@ -63,19 +68,13 @@ public:
 protected:
     MLabel * titleLabelWidget();
 
-private:
-    QGraphicsLayout *createLayout();
+    virtual QGraphicsLayout *createLayout();
+    virtual void clearLayout();
 
 private:
-    QGraphicsGridLayout *layoutGrid;
+    Q_DECLARE_PRIVATE(MAdvancedListItem)
+    MAdvancedListItemPrivate *d_ptr;
 
-    MProgressIndicator *progress;
-    MLabel *titleLabel;
-    MImageWidget *image;
-    MImageWidget *sideTopImage;
-    MImageWidget *sideBottomImage;
-
-    ItemStyle listItemStyle;
 };
 
 #endif //MADVACEDLISTITEM_H

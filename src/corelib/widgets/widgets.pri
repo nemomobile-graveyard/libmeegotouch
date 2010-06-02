@@ -109,6 +109,9 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mlistitem_p.h \
     $$WIDGETS_SRC_DIR/mabstractitemmodel_p.h \
     $$WIDGETS_SRC_DIR/mlistfilter_p.h \
+    $$WIDGETS_SRC_DIR/mbasiclistitem_p.h \
+    $$WIDGETS_SRC_DIR/mdetailedlistitem_p.h \
+    $$WIDGETS_SRC_DIR/madvancedlistitem_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
