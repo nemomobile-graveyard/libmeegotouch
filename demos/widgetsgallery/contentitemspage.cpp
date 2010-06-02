@@ -130,7 +130,7 @@ public:
             item->setTitle(index.data().toString());
             //% "Subtitle"
             item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
-            item->icon()->setImage(defaultImage);
+            item->imageWidget()->setImage(defaultImage);
             item->sideTopImageWidget()->setImage(defaultImage);
             item->sideBottomImageWidget()->setImage(defaultImage);
             break;    
@@ -139,7 +139,7 @@ public:
             item->setTitle(index.data().toString());
             //% "Subtitle"
             item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
-            item->icon()->setImage(defaultImage);
+            item->imageWidget()->setImage(defaultImage);
             item->sideTopImageWidget()->setImage(defaultImage);
             //% "Side"
             item->setSideBottomTitle(qtTrId("xx_wg_contentitemspage_sidetitle"));
@@ -149,14 +149,14 @@ public:
             item->setTitle(index.data().toString());
             //% "Subtitle"
             item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
-            item->thumbnail()->setImage(defaultImage);
+            item->imageWidget()->setImage(defaultImage);
             item->sideTopImageWidget()->setImage(defaultImage);
             item->sideBottomImageWidget()->setImage(defaultImage);
             break;    
         }
         case MDetailedListItem::ThumbnailTitleAndTwoSideIcons: {
             item->setTitle(index.data().toString());
-            item->icon()->setImage(defaultImage);
+            item->imageWidget()->setImage(defaultImage);
             item->sideTopImageWidget()->setImage(defaultImage);
             item->sideBottomImageWidget()->setImage(defaultImage);
             break;    

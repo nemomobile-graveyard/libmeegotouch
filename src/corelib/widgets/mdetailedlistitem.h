@@ -31,6 +31,16 @@ class QGraphicsGridLayout;
 class M_EXPORT MDetailedListItem : public MListItem
 {
 public:
+    Q_OBJECT
+
+    Q_PROPERTY(QString title READ title WRITE setTitle)
+    Q_PROPERTY(QString subtitle READ subtitle WRITE setSubtitle)
+    Q_PROPERTY(QString sideBottomTitle READ sideBottomTitle WRITE setSideBottomTitle)
+    Q_PROPERTY(MImageWidget* imageWidget READ imageWidget WRITE setImageWidget)
+    Q_PROPERTY(MImageWidget* sideTopImageWidget READ sideTopImageWidget)
+    Q_PROPERTY(MImageWidget* sideBottomImageWidget READ sideBottomImageWidget)
+
+public:
     enum ItemStyle {
         IconTitleSubtitleAndTwoSideIcons = 0x0,
         IconTitleSubtitleAndSideIconWithLabel,
@@ -56,33 +66,35 @@ public:
     void setIconStyle(IconStyle style);
     IconStyle iconStyle() const;
     
-    void setIcon(MImageWidget *icon);
-    MImageWidget *icon() const;
+    void setImageWidget(MImageWidget *icon);
+    MImageWidget *imageWidget();
     
-    void setThumbnail(MImageWidget *thumbnail);
-    MImageWidget *thumbnail() const;
-    
-    void setSideTopImageWidget(MImageWidget *image);
-    MImageWidget *sideTopImageWidget() const;
-    
-    void setSideBottomImageWidget(MImageWidget *image);
-    MImageWidget *sideBottomImageWidget() const;
+    MImageWidget *sideTopImageWidget();
+    MImageWidget *sideBottomImageWidget();
     
     void setTitle(const QString &title);
-    QString title() const;
+    QString title();
     
     void setSubtitle(const QString &subtitle);
-    QString subtitle() const;
+    QString subtitle();
     
     void setSideBottomTitle(const QString &text);
-    QString sideBottomTitle() const;
+    QString sideBottomTitle();
     
+protected:
+    MLabel *titleLabelWidget();
+    MLabel *subtitleLabelWidget();
+    MLabel *sideBottomLabelWidget();
+
+private:
+    QGraphicsLayout *createLayout();
+
 private:
     QGraphicsGridLayout *layoutGrid;
     QGraphicsGridLayout *contentLayoutGrid;
     MStylableWidget *contentPanel;
 
-    MImageWidget *iconImage;    
+    MImageWidget *image;
     MImageWidget *sideTopImage;
     MImageWidget *sideBottomImage;
     
