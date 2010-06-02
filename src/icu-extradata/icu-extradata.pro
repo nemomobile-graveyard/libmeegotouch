@@ -5,18 +5,16 @@ ICUVERSION = $$system(icu-config --version)
 ICUDATA = $$system(icu-config --icudata)      # for example “icudt44l”
 ICUUSRDATA = $$replace(ICUDATA, icudt, usrdt) # for example “usrdt44l”
 
-isEqual(ICUVERSION, 4.2.1) {
-message(old)
-    # old icu version, just do nothing
-    LOCALESTXT = # empty, do nothing
-    LANGTXT =    # empty, do nothing
-    REGIONTXT =  # empty, do nothing
-} else {
-message(new)
+greaterThan(ICUVERSION, 4.4) {
     LOCALESTXT = $${ICUVERSION}/fi.txt \
                  $${ICUVERSION}/it.txt
     LANGTXT    = $${ICUVERSION}/lang/de_CH.txt
     REGIONTXT  = $${ICUVERSION}/region/de_CH.txt
+} else {
+    # old icu version, just do nothing
+    LOCALESTXT = # empty, do nothing
+    LANGTXT =    # empty, do nothing
+    REGIONTXT =  # empty, do nothing
 }
 
 defineReplace(installPaths){
