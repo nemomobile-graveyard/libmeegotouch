@@ -19,10 +19,12 @@
 
 #include "mthemedaemonprotocol.h"
 #include <QHash>
+#include <QtEndian>
 
 using namespace M::MThemeDaemonProtocol;
 
 const QString M::MThemeDaemonProtocol::ServerAddress = "m.mthemedaemon";
+static const int SOCKET_DELAY_MS = 15000;
 
 PacketData::~PacketData()
 {}
@@ -148,12 +150,63 @@ QDataStream &operator<<(QDataStream &stream, const Packet &packet)
     return stream;
 }
 
+static bool waitForAvailableBytes(QDataStream &stream, quint32 count)
+{
+    while (stream.device()->bytesAvailable() < count) {
+        if (!stream.device()->waitForReadyRead(SOCKET_DELAY_MS)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+static QString readQString(QDataStream &stream)
+{
+    if (!waitForAvailableBytes(stream, sizeof(quint32))) {
+        return QString();
+    }
+    char b[sizeof(quint32)];
+    stream.device()->peek(b, sizeof(quint32));
+    quint32 stringSize = qFromBigEndian<quint32>(reinterpret_cast<uchar*>(b));
+    if (stringSize == 0xFFFFFFFF) {
+        return QString();
+    }
+    if (!waitForAvailableBytes(stream, stringSize + sizeof(quint32))) {
+        return QString();
+    }
+    QString string;
+    stream >> string;
+    return string;
+}
+
+static QStringList readQStringList(QDataStream &stream)
+{
+    quint32 nrOfStrings;
+    if (!waitForAvailableBytes(stream, sizeof(quint32))) {
+        return QStringList();
+    }
+    stream >> nrOfStrings;
+
+    QStringList stringList;
+    for (quint32 i = 0; i < nrOfStrings; ++i) {
+        QString entry = readQString(stream);
+        if (entry.isNull()) {
+            return QStringList();
+        }
+        stringList.append(entry);
+    }
+    return stringList;
+}
+
 QDataStream &operator>>(QDataStream &stream, Packet &packet)
 {
     Q_ASSERT(!packet.data());
 
     quint32 type = 0;
     quint64 seq  = 0;
+    if (!waitForAvailableBytes(stream, sizeof(quint32) + sizeof(quint64))) {
+        return stream;
+    }
     stream >> type >> seq;
     packet.setType(Packet::PacketType(type));
     packet.setSequenceNumber(seq);
@@ -168,41 +221,44 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
     // string as data
     case Packet::ErrorPacket:
     case Packet::RequestRegistrationPacket: {
-        QString string;
-        stream >> string;
+        QString string = readQString(stream);
         packet.setData(new String(string));
     } break;
 
     // two string lists as data
     case Packet::ThemeChangedPacket: {
         QStringList themeInheritance, themeLibraryNames;
-        stream >> themeInheritance >> themeLibraryNames;
+        themeInheritance = readQStringList(stream);
+        themeLibraryNames = readQStringList(stream);
         packet.setData(new ThemeChangeInfo(themeInheritance, themeLibraryNames));
     } break;
 
     // stringbool as data
     case Packet::RequestNewPixmapDirectoryPacket: {
-        QString string;
+        QString string = readQString(stream);
         bool b = false;
-        stream >> string >> b;
+        waitForAvailableBytes(stream, sizeof(bool));
+        stream >> b;
         packet.setData(new StringBool(string, b));
     } break;
 
     // pixmap identifier as data
     case Packet::RequestPixmapPacket:
     case Packet::ReleasePixmapPacket: {
-        QString imageId;
+        QString imageId = readQString(stream);
         QSize size;
-        stream >> imageId >> size;
+        waitForAvailableBytes(stream, 2*sizeof(qint32));
+        stream >> size;
         packet.setData(new PixmapIdentifier(imageId, size));
     } break;
 
     // pixmap handle as data
     case Packet::PixmapUpdatedPacket: {
-        QString imageId;
+        QString imageId = readQString(stream);;
         QSize size;
         quint64 pixmapHandle = 0;
-        stream >> imageId >> size >> pixmapHandle;
+        waitForAvailableBytes(stream, 2*sizeof(qint32)+sizeof(qint64));
+        stream >> size >> pixmapHandle;
         packet.setData(new PixmapHandle(PixmapIdentifier(imageId, size),
                        (Qt::HANDLE) quintptr(pixmapHandle)));
     } break;
@@ -215,31 +271,35 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
         stream >> clientCount;
         while (clientCount) {
             ClientInfo info;
-            stream >> info.name;
+            info.name = readQString(stream);
             quint32 pixmapCount = 0;
+            waitForAvailableBytes(stream, 2*sizeof(quint32));
             stream >> pixmapCount;
             while (pixmapCount) {
-                QString imageId;
+                QString imageId = readQString(stream);
                 QSize size;
-                stream >> imageId >> size;
+                waitForAvailableBytes(stream, 2*sizeof(qint32));
+                stream >> size;
                 info.pixmaps.append(PixmapIdentifier(imageId, size));
                 --pixmapCount;
             }
             quint32 requestedPixmapCount = 0;
             stream >> requestedPixmapCount;
             while (requestedPixmapCount) {
-                QString imageId;
+                QString imageId = readQString(stream);
                 QSize size;
-                stream >> imageId >> size;
+                waitForAvailableBytes(stream, 2*sizeof(qint32));
+                stream >> size;
                 info.requestedPixmaps.append(PixmapIdentifier(imageId, size));
                 --requestedPixmapCount;
             }
             quint32 releasedPixmapCount = 0;
             stream >> releasedPixmapCount;
             while (releasedPixmapCount) {
-                QString imageId;
+                QString imageId = readQString(stream);
                 QSize size;
-                stream >> imageId >> size;
+                waitForAvailableBytes(stream, 2*sizeof(qint32));
+                stream >> size;
                 info.releasedPixmaps.append(PixmapIdentifier(imageId, size));
                 --releasedPixmapCount;
             }

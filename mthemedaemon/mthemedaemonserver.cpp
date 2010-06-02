@@ -157,6 +157,7 @@ void MThemeDaemonServer::clientDataAvailable()
 
         // create a temporary data stream to read from the socket
         QDataStream stream(socket);
+        stream.setVersion(QDataStream::Qt_4_6);
 
         // loop as long as the socket has some data left
         while (socket->bytesAvailable()) {

@@ -41,6 +41,7 @@ MRemoteThemeDaemon::MRemoteThemeDaemon(const QString &applicationName, int timeo
     d->q_ptr = this;
     d->sequenceCounter = 0;
 
+    d->stream.setVersion(QDataStream::Qt_4_6);
     QObject::connect(&d->socket, SIGNAL(readyRead()), this, SLOT(connectionDataAvailable()));
 
     // this blocking behavior could be removed
