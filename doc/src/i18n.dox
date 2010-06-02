@@ -195,67 +195,12 @@ qSort(sl.begin, sl.end, c); // start to sort!
 ...
 \endcode
 
-\subsection Formatter Formatter
-MeeGo Touch UI comes with several formatters for several data types. (Almost) Always use the formatter before displaying locale-dependant data to the screen to achieve uniformity and consistency of the data presentation.
+\subsection formatters Formatters
 
-\subsubsection Parameters Parameters
-
-The positional parameters used in QString is also applicable in the
-MeeGo Touch UI Framework. The difference to Qt is that we don't use any
-parameter modifier, and just use number to tell the position of the
-parameter in the string. We don't distinguish the parameter whether it
-is string, numbers or anything, we just use it as a string.
-
-It is strongly recommended that developers use \c arg()  methods to
-arrange the parameters as MeeGo Touch UI provides type based formatters,
-and don't use any format string. QString formatters shall not be used,
-as QString uses QLocale which is not used in MeeGo Touch UI.
-
-The appearance of data is mainly driven using formatters API, not with
-the format string. However there are several APIs which accept custom
-format strings.
-
-\code
-   ...
-   MLocale myLocale; // get the current locale
-   ...
-   int number = 1234;
-   // format the number, the result is in QString
-   QString formattedNumber = myLocale.formatNumber(number);
-   ...
-   // Now use it in your string
-
-   //% "We have %1 new messages"
-   QString message = qtTrId("xx_%1_new_messages").arg(formattedNumber);
-\endcode
-
-The above message isn't a good example though because in the above
-message one would probably want to distinguish between singular and
-plural messages ("We have 0 new messages", "We have 1 new message",
-...)
-
-To do this correctly, one should use %n instead of %1 and pass the number
-as an additional argument, like this:
-
-\code
-   //% "We have %n new messages"
-   QString message = qtTrId("xx_%n_new_messages", number);
-\endcode
-
-\b <!-- translator --> Note for translators \par
-Parameters starts from %1 and the index can be shuffled around in the translations.
-
-*Example:*
-- Translation 1: "%1 missed calls from %2"
-- Translation 2: "%2 mencoba menelepon %1 kali"
-- Text parameter: "3"  "John"
-- Final text in language 1: "3 missed calls from John"
-- Final text in language 2: "John mencoba menelepon 3 kali"
-
-There is only one special  modifier which is '%%' to display the per cent sign.
-
-Again this isn't a very nice example because it ignores that the
-translation must be different for singular and plural.
+MeeGo Touch UI comes with several formatters for several data
+types. (Almost) Always use the formatters before displaying
+locale-dependant data to the screen to achieve uniformity and
+consistency of the data presentation.
 
 \subsubsection  numbers  Numbers
 To format a number use \c formatNumber()  method. It works with \c qlonglong, \c short, \c int, \c double, and \c float  data types.
@@ -356,7 +301,7 @@ while (iterator.hasNext()) {
 
 The MeeGo Touch UI Framework can use both the Qt standard \c tr()  method or the
 idbased
-<a href="http://qt.nokia.com/doc/4.6-snapshot/qtglobal.html#qtTrId">qtTrId()</a>
+<a href="http://qt.nokia.com/doc/qtglobal.html#qtTrId">qtTrId()</a>
 method. For the Nokia internal localisation process, only \c qtTrId() 
 should be used.  Other parties using logical IDs instead of
 engineering English IDs for the UI messages might also find \c qtTrId() 
@@ -374,7 +319,7 @@ the Qt documentation of
 reproduced here for convenience:
 
 \code
-   //% "%n fooish bar(s) found.\n"
+   //% "%Ln fooish bar(s) found.\n"
    //% "Do you want to continue?"
    QString text = qtTrId("qtn_foo_bar", n);
 \endcode
@@ -692,26 +637,326 @@ between “foo” and “libbar”.
    QString qtTrId ( const char * id, int n = -1 )
 \endcode
 
-\c id  is the logical name for a UI message which needs to be
-translated.
-If \c n \c >= \c 0, all occurrences of \c n in the resulting string are replaced
-with a decimal representation of \c n. In addition, depending on \c n’s
-value, the translation text may vary.
+\c id is the logical name for a UI message which needs to be
+translated.  If \c n \c >= \c 0, all occurrences of \c \%Ln or \c \%n in
+the resulting string are replaced with a decimal representation of \c
+n. In addition, depending on \c n’s value, the translation text may
+vary.
 
-\c qtTrId()  is useful only if the project is using logical names as the
-UI message. If your project is using English string then use \c tr() 
+The difference between \%Ln and \%n is that \%Ln may be replaced using
+localized numerals like Arabic-Indic numerals in Arabic locales
+whereas \%n is always replaced using Arabic (= Western) numerals.
+
+<a
+href="http://qt.nokia.com/doc/qtglobal.html#qtTrId">qtTrId()</a>
+is useful only if the project is using logical names as the UI
+message. If your project is using English string then use \c tr()
 instead.
+
+\subsection parametersintranslations Parameters in translations
+
+The positional parameters \%1 to \%99 and \%L1 to \%L99 which are used in
+QString can also be used in translations for the MeeGo Touch UI
+Framework.
+For a description of \%L1 to \%L99 see also the documentation
+of QLocale.
+
+For parameters which are integer numbers, \%L1 to \%L99 is a better
+choice than \%1 to \%99 because \%L1 to \%L99 automatically do locale
+specific number formatting which achieves the same results
+as using MLocale’s formatNumber() for the current system locale.
+
+Let’s illustrate the behaviour in detail with an example.  We assume
+that an application is running with the language locale settings set
+to Arabic to get Arabic translations (for example if the gconf key
+“/meegotouch/i18n/language” is set to “ar”) and the numeric locale
+settings are also set to Arabic to get Arabic number formatting (for
+example if the gconf key “/meegotouch/i18n/lc_numeric” is also set
+to “ar” or is empty and this the numeric locale settings are
+inherited from the language settings).
+
+Now a message id is translated using qtTrId("xx_some_message_id"). And
+let’s assume that the Arabic translation of this happens to be “\%L1 \%2”.
+
+The following example code illustrates how numbers used as parameters
+would be formatted in that case:
+
+\code
+    QString translation = qtTrId("xx_some_message_id");
+    // “translation” now contains “%L1 %2”.
+
+    translation.arg("123456.7").arg("123456.7");
+    // The line above returns “123456.7 123456.7”.
+    // 
+    // I.e. if strings are used as the arguments
+    // there is no difference in the behaviour of %L1 and %2.
+
+    translation.arg(123456).arg(123456);
+    // The line above returns “١٢٣٬٤٥٧ 123457”
+    //
+    // Here the arguments are numbers and we can see the
+    // difference: In case of %L1 the number is formatted
+    // by using QLocale which is set by MLocale to the numeric
+    // settings of MLocale. Therefore, %L1 is replaced by
+    // Arabic-Indic numerals here. However, %2 is still replaced
+    // by Western-Arabic numerals, and has no thousands separators either.
+    // In English locale the replacement for %2 would be “123457”
+    // and not “123,456”, the place holders %1 to %99
+    // never do any automatic locale specific number formatting.
+    
+    translation.arg(123456.7).arg(123456.7);
+    // The line above returns “١٢٣٬٤٥٧ 123457”
+    //
+    // Note that the formatted result shows only the integer part of the
+    // floating point numbers.
+    // Number formatting using %L1 to %L99 or %1 to %99 works
+    // only for integers.
+    
+    MLocale locale;
+    translation.arg(locale.formatNumber(123456.7)).arg(locale.formatNumber(123456.7));
+    // The line above returns “١٢٣٬٤٥٦٫٧ ١٢٣٬٤٥٦٫٧”
+    //
+    // Here the number formatting is done using MLocale.
+    // locale.formatNumber(123456.7) already returns a QString
+    // containing “١٢٣٬٤٥٦٫٧”, i.e. the arguments used for %L1
+    // and %2 in the translations are not numbers but QStrings.
+    // Therefore, no further formatting is done by %L1 and %2.
+\endcode
+
+Passing an integer number as the argument from %L1 and letting QLocale
+format that number always gives the same result as passing the the
+result of formatNumber() using the system MLocale for that integer.
+The reason is that the MeegoTouch framework always sets QLocale to the
+value of the numeric setting of the system default MLocale and both
+the number formatter in MLocale and the number formatter in QLocale
+use the CLDR data for the number format.
+
+\subsection placeholdersinmessageids Place holders in message ids
+
+Message ids do not have to indicate whether the translation for this
+id contains place holders or not. For example if the message id is
+“xx_greet_user" and the English translation is “Hello %1”,
+then the following code works fine:
+
+\code
+   // The following returns “Hello Joe” if the translation is “Hello %1”.
+   // If no translation can be found it returns “xx_greet_user”:
+   qTrId("xx_greet_user").arg("Joe");
+\endcode
+
+It is possible to include place holders in message ids,
+for example if the message id for the translation
+were “xx_greet_user_%1”, the following code would
+work just as well:
+
+\code
+   // The following returns “Hello Joe” if the translation is “Hello %1”
+   // If no translation can be found it returns “xx_greet_user_Joe”:
+   qTrId("xx_greet_user_%1").arg("Joe");
+\endcode
+
+So it doesn’t matter whether a message id for a translation which
+contains place holders contains these place holders itself or not.
+
+Although place holders in message ids are possible, the message ids
+used by MeeGo Touch never contain any place holders. The message
+ids used in MeeGo Touch only use lowercase letters
+from “a” to “z” and underscores “_”. 
+
+This is perfectly OK and does not cause any problems for
+translations which use place holders.
 
 \subsection  pluralmessages  Plural messages
 
-In a plural message, pass the number into argument \c n  in \c qtTrId()  or
-(It is similar to how this is done with \c tr())
+In a plural message, pass the number to select the correct
+plural translation as the second argument \c n  in \c qtTrId()
+(This works the same way with qtTrId() as it does with \c tr()).
 
 \code
    int n = messages.count();
-   //% "%n message(s) saved"
-   showMessage(qtTrId("xx_%n_messages_saved", n));
+   //% "%Ln message(s) saved"
+   showMessage(qtTrId("xx_messages_saved", n));
 \endcode
+
+Usually, the number of different translations used for plural, among
+which the parameter “n” selects the appropriate one, depends on the
+language, see also the <a
+href="http://qt.nokia.com/doc/i18n-plural-rules.html">“Qt
+Translation Rules for Plurals”</a> and the <a
+href="http://unicode.org/repos/cldr-tmp/trunk/diff/supplemental/language_plural_rules.html">“CLDR
+Language Plural Rules”</a>.
+
+However, for the Meego Touch UI framework, it has been decided to use
+only 2 plural forms and only English rules. I.e.  the .ts translation
+files used by the Meego Touch UI framework <b>always</b> contain
+<b>only two</b> different translations for plural and are
+<b>always</b> marked in the xml as English language translation files,
+even if the language is not English.
+
+For example if a .ts file for English translation contains something like
+
+\code
+<?xml version="1.0" encoding="UTF-8"?>
+<TS language="en" version="3.0">
+  <context>
+    <name>message_context</name>
+    ...
+    <message id="xx_amount_events" numerus="yes">
+       <source>%Ln event</source>
+       <translation>
+          <numerusform>%Ln event</numerusform>
+          <numerusform>%Ln events</numerusform>
+       </translation>
+    </message>
+    ...
+    <message id="xx_time_day" numerus="yes">
+       <source>%Ln day</source>
+       <translation>
+          <numerusform>%Ln day</numerusform>
+          <numerusform>%Ln days</numerusform>
+       </translation>
+    </message>
+    ...
+  </context>
+</TS>
+\endcode
+
+the corresponding Russian translation file might contain
+something like:
+
+\code
+<?xml version="1.0" encoding="UTF-8"?>
+<TS language="en" version="3.0">
+  <context>
+    <name>message_context</name>
+    ...
+    <message id="xx_amount_events" numerus="yes">
+       <source>%Ln event</source>
+       <translation>
+          <numerusform>%Ln событие</numerusform>
+          <numerusform>Событий: %Ln</numerusform>
+       </translation>
+    </message>
+    ...
+    <message id="xx_time_day" numerus="yes">
+       <source>%Ln day</source>
+       <translation>
+          <numerusform>%Ln день</numerusform>
+          <numerusform>%Ln дн.</numerusform>
+       </translation>
+    </message>
+    ...
+  </context>
+</TS>
+\endcode
+
+Note that this Russian translation file has “language="en"”
+in the header and thus English rules are used to select
+the plural forms, i.e. the first plural form is selected
+if “n” is equal to 1, the second plural form for all
+other cases.
+
+Usually, Russian would use one plural form for　“n” in 1, 21, 31,
+41, 51, 61…, another one for “n” in 2-4, 22-24, 32-34…, and yet
+another one for “n” in 0, 5-20, 25-30, 35-40….
+
+If only 2 forms with English rules are used as above, i.e.
+only “n” equal to 1 is special cased, the second plural
+form has to be translated in a way that it is acceptable
+for all other values of “n”.
+
+In the Russian example translation file above this is in one case
+achieved by abbreviating, i.e. using “\%Ln дн.” for all “n” not
+equal to one and thus hide the different plural forms with the
+abbreviation dot. In the other case, the number is grammatically
+“detached”, i.e. by writing “Событий: \%Ln” the part of the
+translation before the “:” is detached from the part with the number
+and thus the word “Событий” does not need to change for
+different values of “n”.
+
+\subsubsection percent_ln_percent_l1 \%Ln versus \%L1 in plural messages
+
+Messages using plural should use the place holder \%Ln
+and not \%L1, i.e. the source code should should look like
+
+\code
+   int n = messages.count();
+   //% "%Ln message(s) saved"
+   showMessage(qtTrId("xx_messages_saved", n));
+\endcode
+
+and the .ts file with the translations should look like:
+
+\code
+<?xml version="1.0" encoding="UTF-8"?>
+<TS language="en" version="3.0">
+  <context>
+    <name>message_context</name>
+    ...
+    <message id="xx_amount_events" numerus="yes">
+       <source>%Ln event</source>
+       <translation>
+          <numerusform>%Ln message saved.</numerusform>
+          <numerusform>%Ln messages saved.</numerusform>
+       </translation>
+    </message>
+    ...
+  </context>
+</TS>
+\endcode
+
+The second parameter “n” of qtTrId() does two things:
+
+<ul>
+<li>
+It selects the correct translation for this value of “n”
+(note that if no translation exists and the engineering
+English fallback is used, the same message will be displayed
+for all values of “n” because there is only one
+version of the engineering English. I.e. in
+the above example “1 message(s) saved” would be shown
+if “n” is 1 and “2 message(s) saved” if “n” is 2).
+</li>
+<li>
+It replaces the place holder \%Ln with the value of
+the number “n”, formatted in the locale specific way,
+possibly using localized numerals (\%n would also be
+replaced by the value of “n” but would not be formatted
+in a locale specific way).
+</li>
+</ul>
+
+If \%L1 were used instead of \%Ln in the translation,
+the second parameter of qtTrId() would still select
+the correct translation for the value of “n” but would
+not replace \%L1, i.e. in this case the code 
+
+\code
+   showMessage(qtTrId("xx_messages_saved", 2));
+\endcode
+
+would display “\%L1 messages saved.”. If it is known 
+that the plural translations mistakenly use \%L1 instead
+of \%Ln, one can work around the issue by using an
+extra .arg() in the code like this:
+
+\code
+   showMessage(qtTrId("xx_messages_saved", 2).arg(2));
+\endcode
+
+In this example, the “2” used as the second parameter
+of would select that correct plural form, i.e.
+“\%L1 messages saved.” and the .arg(2) would replace
+the \%L1 with 2 so the final result would
+be “2 messages saved.” as desired. But as soon as the translation
+is fixed to use the correct \%Ln this code prints
+a warning
+
+\verbatim
+   QString::arg: Argument missing: "2 messages saved." , 2 
+\endverbatim
+
+because the .arg(2) tries to replace a \%L1 which is not there.
 
 \subsection  translationdatastorage  Translation data storage
 
@@ -999,7 +1244,7 @@ explicitly by the application, the following things happen:
 
 <ul>
 <li>
-all translation catalogs are reloaded according to the new locale
+All translation catalogs are reloaded according to the new locale
 settings
 </li>
 <li>
@@ -1392,13 +1637,22 @@ other languages may be different. Use QString place marker to define
 the order of the variables.
 
 \code
-   //% "Download and install %1 from %2? (Size is %3 MB)"
-   QString s = qtTrId("xx_download_and_install_%1_from_%2_size_%3_mb")
+   //% "Download and install %1 from %2? (Size is %L3 MB)"
+   QString s = qtTrId("xx_download_and_install_from_size_mb")
                    .arg(packageName).arg(repository).arg(size);
 \endcode
 
 When translating, translators shall also keep the place markers and
 put them in the correct places.
+
+Note how %L3 was used for the size parameter which is a number.  Using
+%L3 instead of just %3 has the advantage that localized numerals may
+be used. For example if the language of the locale is Arabic and the
+numeric settings of the locale do not override it, %L3 causes
+Arabic-Indic numerals to be used. If the translator wants to disable
+this behaviour for this particular message and force usage of Arabic
+(= Western) numerals always, no matter what the locale settings are,
+the translator can use %3 instead of %L3 on purpose.
 
 \subsection Developers Developers
 \subsubsection  alwaysusemeegotouch  Always use MeeGo Touch UI Framework API
@@ -1432,8 +1686,8 @@ all languages. Never do this:
 
 Instead use a variable when constructing the string:
 \code
-   //% "You have %1 messages"
-   QString message = qtTrId("xx_you_have_%1_messages").arg(numMessages);
+   //% "You have %Ln messages"
+   QString message = qtTrId("xx_you_have_messages", numMessages);
 \endcode
 
 \subsubsection  dataformat  Data formatting

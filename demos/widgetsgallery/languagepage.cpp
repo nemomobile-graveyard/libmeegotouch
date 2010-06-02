@@ -362,7 +362,7 @@ void LanguagePage::retranslateUi()
 
     //% "%Ln boxes with a total weight of %L1 kilogram\x9c!! %Ln boxes, total weight of %L1 kg"
     labelExampleTranslation1->setText(
-        qtTrId("xx_language_trans_%Ln_boxes_weight_%L1", 0).arg(1234.56));
+        qtTrId("xx_language_trans_%Ln_boxes_weight_%L1", 0).arg(0));
     labelExampleTranslation2->setText(
         qtTrId("xx_language_trans_%Ln_boxes_weight_%L1", 1).arg(2431.78));
     labelExampleTranslation3->setText(
