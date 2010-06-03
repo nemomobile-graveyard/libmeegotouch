@@ -31,7 +31,8 @@ macx {
 
         unix: QMAKE_LFLAGS += $${QMAKE_RPATH}$${M_LIB_DIR}
         LIBS += -L$${M_LIB_DIR} -lmeegotouchcore -lmeegotouchviews -lmeegotouchsettings -lmeegotouchextensions
-        QMAKE_MOC = mmoc
+
+        QMAKE_MOC = $${M_MMOC_EXECUTABLE}
 
         isEmpty(MGEN_OUTDIR) {
             MGEN_OUTDIR = .

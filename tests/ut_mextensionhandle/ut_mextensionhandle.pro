@@ -7,10 +7,16 @@ INCLUDEPATH += \
 QT += xml
 
 win32 {
-    QMAKE_MOC = ..\..\mmoc\mmoc
+    QMAKE_MOC = $${OUT_PWD}\..\..\mmoc\mmoc
+    contains(DEFINES, IS_ARMEL) {
+        QMAKE_MOC = perl.exe $${OUT_PWD}\..\..\mmoc\mmoc.pl
+    }
 } else {
     PRE_TARGETDEPS += ../../mgen/mgen
-    QMAKE_MOC = PATH=../../mgen:$$(PATH) ../../mmoc/mmoc
+    QMAKE_MOC = PATH=../../mgen:$$(PATH) $${OUT_PWD}/../../mmoc/mmoc
+    contains(DEFINES, IS_ARMEL) {
+        QMAKE_MOC = PATH=../../mgen:$$(PATH) perl $${OUT_PWD}/../../mmoc/mmoc.pl
+    }
 }
 
 MGEN_OUTDIR = .

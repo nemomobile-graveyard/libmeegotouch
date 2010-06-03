@@ -26,6 +26,9 @@ CONFIG += qt warn_on depend_includepath qmake_cache target_qt dll create_prl
 macx:CONFIG += lib_bundle
 
 QMAKE_MOC = $$MMOC_EXECUTABLE
+contains(DEFINES, IS_ARMEL) {
+    QMAKE_MOC = $$MMOC_PERL
+}
 
 QMAKE_CFLAGS += -Werror
 
