@@ -1,8 +1,14 @@
-libmeegotouch (0.20.14.1~1) unstable; urgency=low
+libmeegotouch (0.20.15~1) UNRELEASED; urgency=low
 
+  * Changes: Screenshot-feature: Press shift+ctrl+t
   * Fixes: NB#172276 - duihome crashes after boot
+  * Fixes: NB#171747 - mmoc native binary does not work with qemu - causes build failures
+  * Fixes: NB#168359 - Theme change crashes/blocks setting application
+  * Fixes: NB#171458 - Need a signal to detect when the theme change is complete
+  * Fixes: NB#171579 - "widgetsgallery -quitimmediately" does not terminate anymore
+  * Fixes: NB#166337 - MImageWidget deals with sizeHint incorrectly
 
- -- Vesa Halttunen <vesa.halttunen@nokia.com>  Thu, 3 Jun 2010 17:42:29 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Thu, 03 Jun 2010 20:05:27 +0300
 
 libmeegotouch (0.20.14-1) unstable; urgency=low
 
