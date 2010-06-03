@@ -51,7 +51,7 @@ public:
      *
      * \param interface the extension interface name for the application extension area.
      */
-    void init(const QString &interface);
+    void init(const QString &interface, Qt::ConnectionType connectionType = Qt::AutoConnection);
 
    /*!
     * Returns a list of in process extensions loaded by this manager

@@ -38,12 +38,12 @@ MApplicationExtensionAreaPrivate::~MApplicationExtensionAreaPrivate()
 {
 }
 
-void MApplicationExtensionAreaPrivate::init(const QString &interface)
+void MApplicationExtensionAreaPrivate::init(const QString &interface, Qt::ConnectionType connectionType)
 {
     Q_Q(MApplicationExtensionArea);
     extensionManager = QSharedPointer<MApplicationExtensionManager>(new MApplicationExtensionManager(interface));
-    QObject::connect(extensionManager.data(), SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)), q, SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)));
-    QObject::connect(extensionManager.data(), SIGNAL(extensionRemoved(MApplicationExtensionInterface*)), q, SIGNAL(extensionRemoved(MApplicationExtensionInterface*)));
+    QObject::connect(extensionManager.data(), SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)), q, SIGNAL(extensionInstantiated(MApplicationExtensionInterface *)), connectionType);
+    QObject::connect(extensionManager.data(), SIGNAL(extensionRemoved(MApplicationExtensionInterface*)), q, SIGNAL(extensionRemoved(MApplicationExtensionInterface*)), connectionType);
     QObject::connect(extensionManager.data(), SIGNAL(widgetCreated(QGraphicsWidget*, MDataStore&)), q, SLOT(addWidget(QGraphicsWidget*, MDataStore&)));
     QObject::connect(extensionManager.data(), SIGNAL(widgetRemoved(QGraphicsWidget*)), q, SLOT(removeWidget(QGraphicsWidget*)));
 }
@@ -69,7 +69,7 @@ MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, c
 {
     Q_D(MApplicationExtensionArea);
     d->q_ptr = this;
-    d->init(interface);
+    d->init(interface, Qt::QueuedConnection);
 
     if (!enableInProcessExtensions) {
         d->extensionManager->setInProcessFilter(QRegExp("$^"));
@@ -90,7 +90,7 @@ MApplicationExtensionArea::MApplicationExtensionArea(MApplicationExtensionAreaPr
     MExtensionArea(dd, model, parent)
 {
     Q_D(MApplicationExtensionArea);
-    d->init(interface);
+    d->init(interface, Qt::QueuedConnection);
 
     if (!enableInProcessExtensions) {
         d->extensionManager->setInProcessFilter(QRegExp("$^"));
