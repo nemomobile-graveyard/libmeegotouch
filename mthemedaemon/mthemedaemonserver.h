@@ -57,6 +57,9 @@ private:
     void pixmapReleaseRequested(MThemeDaemonClient *client,
                                 const M::MThemeDaemonProtocol::PixmapIdentifier &id,
                                 quint64 sequenceNumber);
+
+    void themeChangeApplied(MThemeDaemonClient *client, quint64 sequenceNumber);
+
     void themeDaemonStatus(MThemeDaemonClient *client, quint64 sequenceNumber) const;
 
 private:
@@ -87,6 +90,9 @@ private:
     QQueue<QueueItem> loadPixmapsQueue;
     QQueue<QueueItem> releasePixmapsQueue;
     QTimer processQueueTimer;
+
+    QList<MThemeDaemonClient*> clientsThatHaveNotYetAppliedThemeChange;
+    QList<QPixmap*> pixmapsToDeleteWhenThemeChangeHasCompleted;
 };
 //! \internal_end
 #endif

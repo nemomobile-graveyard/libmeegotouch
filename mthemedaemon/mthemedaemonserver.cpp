@@ -40,14 +40,15 @@ MThemeDaemonServer::MThemeDaemonServer() :
 
     // 2) activate the current theme
     QHash<MThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
-    if (!daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), QList<MThemeDaemonClient *>(), pixmapsToReload)) {
+    if (!daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), QList<MThemeDaemonClient *>(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted)) {
         // could not activate current theme, change to devel
-        if (!daemon.activateTheme(defaultTheme, currentLocale.value().toString(), QList<MThemeDaemonClient *>(), pixmapsToReload)) {
+        if (!daemon.activateTheme(defaultTheme, currentLocale.value().toString(), QList<MThemeDaemonClient *>(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted)) {
             qFatal("MThemeDaemonServer - Could not find themes, aborting!");
         }
         currentTheme.set(defaultTheme);
     }
     Q_ASSERT(pixmapsToReload.isEmpty());
+    Q_ASSERT(pixmapsToDeleteWhenThemeChangeHasCompleted.isEmpty());
 
     // 3) make sure we're notified if locale or theme changes
     connect(&currentTheme, SIGNAL(valueChanged()), SLOT(themeChanged()));
@@ -136,6 +137,8 @@ void MThemeDaemonServer::clientDisconnected()
                     pi.remove();
             }
 
+            clientsThatHaveNotYetAppliedThemeChange.removeOne(client);
+
             delete client;
         }
         socket->deleteLater();
@@ -221,11 +224,13 @@ void MThemeDaemonServer::clientDataAvailable()
             client->addCustomImageDirectory(sb->string, sb->b ? M::Recursive : M::NonRecursive);
         } break;
 
+        case Packet::ThemeChangeAppliedPacket: {
+            themeChangeApplied(client, packet.sequenceNumber());
+        } break;
 
         case Packet::QueryThemeDaemonStatusPacket: {
             themeDaemonStatus(client, packet.sequenceNumber());
         } break;
-
 
         default: {
             mWarning("MThemeDaemonServer") << "unknown packet received:" << packet.type();
@@ -239,8 +244,14 @@ void MThemeDaemonServer::themeChanged()
     if (daemon.currentTheme() == currentTheme.value().toString())
         return;
 
+    if(!clientsThatHaveNotYetAppliedThemeChange.isEmpty()) {
+        mWarning("MThemeDaemonServer") << "Will not change theme while another theme change is still ongoing";
+        currentTheme.set(daemon.currentTheme());
+        return;
+    }
+
     QHash<MThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
-    if (daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToReload)) {
+    if (daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted)) {
         // theme change succeeded, let's inform all clients + add the pixmaps to load-list
         Packet themeChangedPacket(Packet::ThemeChangedPacket, 0, new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
 
@@ -248,6 +259,8 @@ void MThemeDaemonServer::themeChanged()
         QHash<MThemeDaemonClient *, QList<PixmapIdentifier> >::iterator end = pixmapsToReload.end();
         for (; i != end; ++i) {
             MThemeDaemonClient *client = i.key();
+            clientsThatHaveNotYetAppliedThemeChange.append(client);
+
             const QList<PixmapIdentifier> &ids = i.value();
 
             client->stream() << themeChangedPacket;
@@ -379,6 +392,30 @@ void MThemeDaemonServer::pixmapReleaseRequested(MThemeDaemonClient *client,
         releasePixmapsQueue.enqueue(item);
         if (!processQueueTimer.isActive())
             processQueueTimer.start();
+    }
+}
+
+void MThemeDaemonServer::themeChangeApplied(MThemeDaemonClient *client,
+                                             quint64 sequenceNumber)
+{
+    Q_UNUSED(sequenceNumber);
+
+    if(!clientsThatHaveNotYetAppliedThemeChange.removeOne(client)) {
+        mWarning("MThemeDaemonServer") << "Client" << client->name() << "has already sent theme change applied packet!";
+        return;
+    }
+
+    if(clientsThatHaveNotYetAppliedThemeChange.isEmpty()) {
+        // all clients have applied the theme change, so we can now release the old pixmaps
+        // and inform everyone that theme change has been completed
+        qDeleteAll(pixmapsToDeleteWhenThemeChangeHasCompleted);
+        pixmapsToDeleteWhenThemeChangeHasCompleted.clear();
+
+        Packet themeChangeFinishedPacket(Packet::ThemeChangeCompletedPacket, 0);
+
+        foreach(MThemeDaemonClient * c, registeredClients.values()) {
+            c->stream() << themeChangeFinishedPacket;
+        }
     }
 }
 

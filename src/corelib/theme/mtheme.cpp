@@ -108,6 +108,8 @@ MTheme::MTheme(const QString &applicationName, const QString &, ThemeService the
     connect(d->themeDaemon, SIGNAL(pixmapCreated(QString, QSize, Qt::HANDLE)),
             SLOT(pixmapCreatedSlot(QString, QSize, Qt::HANDLE)));
 
+    connect(d->themeDaemon, SIGNAL(themeChangeCompleted()), SIGNAL(themeChangeCompleted()));
+
 #ifdef HAVE_GCONF
     connect(&d->locale, SIGNAL(valueChanged()), SLOT(localeChangedSlot()));
 #endif

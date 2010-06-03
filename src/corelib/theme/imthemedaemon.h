@@ -59,6 +59,8 @@ signals:
     // emitted when theme has been changed
     void themeChanged(const QStringList &themeInheritance, const QStringList& libraryNames);
 
+    void themeChangeCompleted();
+
 };
 
 #endif

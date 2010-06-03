@@ -237,6 +237,7 @@ Packet MRemoteThemeDaemonPrivate::readOnePacket()
 
 void MRemoteThemeDaemonPrivate::processOnePacket(const Packet &packet)
 {
+    Q_Q(MRemoteThemeDaemon);
     // process it according to packet type
     switch (packet.type()) {
     case Packet::PixmapUpdatedPacket:
@@ -246,8 +247,13 @@ void MRemoteThemeDaemonPrivate::processOnePacket(const Packet &packet)
     case Packet::ThemeChangedPacket: {
         const ThemeChangeInfo* info = static_cast<const ThemeChangeInfo*>(packet.data());
         themeChanged(info->themeInheritance, info->themeLibraryNames);
-        break;
-    }
+        stream << Packet(Packet::ThemeChangeAppliedPacket, packet.sequenceNumber());
+    } break;
+
+    case Packet::ThemeChangeCompletedPacket: {
+        emit q->themeChangeCompleted();
+    } break;
+
     default:
         mDebug("MRemoteThemeDaemon") << "Couldn't process packet of type" << packet.type();
         break;

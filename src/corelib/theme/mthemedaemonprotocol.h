@@ -88,6 +88,14 @@ namespace M
                 // /usr/share/themes/base/
                 ThemeChangedPacket                  = 33,
 
+                // client will send this packet as a reply to ThemeChangedPacket
+                // when the client has applied the theme change.
+                ThemeChangeAppliedPacket            = 34,
+
+                // daemon will send this packet to all clients when the theme change
+                // has completed.
+                ThemeChangeCompletedPacket          = 35,
+
                 // With this packet any client can request the state
                 // of the daemon. The data type is undetermined, so NULL will do.
                 // Daemon will reply with ThemeDaemonStatusPacket and the data type

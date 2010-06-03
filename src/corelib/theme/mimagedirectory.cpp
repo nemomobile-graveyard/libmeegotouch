@@ -80,6 +80,28 @@ void ImageResource::releasePixmap(const QSize &size)
     }
 }
 
+QPixmap* ImageResource::releaseWithoutDelete(const QSize &size)
+{
+    Q_ASSERT_X(cachedPixmaps.contains(size), "ImageResource", "Cannot release pixmap because the cache entry cannot be found for the pixmap!");
+
+    PixmapCacheEntry &cacheEntry = cachedPixmaps[size];
+
+    // decrease the refcount.
+    --cacheEntry.refCount;
+
+    // if this was the last reference, release the pixmap
+    if (cacheEntry.refCount == 0) {
+
+        QPixmap* pixmap = cacheEntry.pixmap;
+
+        // remove the cache entry from this resource
+        cachedPixmaps.remove(size);
+
+        return pixmap;
+    }
+    return NULL;
+}
+
 Qt::HANDLE ImageResource::pixmapHandle(const QSize &size)
 {
     Q_ASSERT(cachedPixmaps.contains(size));

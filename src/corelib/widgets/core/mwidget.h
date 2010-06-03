@@ -153,6 +153,13 @@ public Q_SLOTS:
     /*!
         Removes all the actions from the widget's action list.
         Note: actions are not deleted after removal from the list.
+        To clear and delete the actions from the widget, following procedure is proposed:
+        <code>
+            QList<QAction*> actions = widget->actions();
+            widget->clearActions();
+            qDeleteAll(actions);
+        </code>
+
     */
     virtual void clearActions();
 

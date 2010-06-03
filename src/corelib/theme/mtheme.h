@@ -297,6 +297,15 @@ Q_SIGNALS:
      */
     void pixmapRequestsFinished();
 
+    /*!
+     This signal is emitted when the theme service and all applications have changed the theme.
+
+     Note that for regular applications, listening for this signal is not necessary,
+     since when this signal is emitted the applications are already running with the new
+     theme.
+     */
+    void themeChangeCompleted();
+
 protected:
 
     /*!

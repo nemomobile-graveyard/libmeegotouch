@@ -225,7 +225,7 @@ const QSettings *themeFile(const QString &theme)
 }
 
 
-bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QHash<MThemeDaemonClient *, QList<PixmapIdentifier> >& pixmapsToReload)
+bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QHash<MThemeDaemonClient *, QList<PixmapIdentifier> >& pixmapsToReload, QList<QPixmap*>& pixmapsToDelete)
 {
     if (newTheme == currentThemeName) {
         // TODO: check need for warning
@@ -328,10 +328,20 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
 
     foreach(MThemeDaemonClient * client, clientList) {
 
-        QList<PixmapIdentifier> pixmapsToBeReloaded = client->pixmaps.keys();
-
-        foreach(const PixmapIdentifier & id, pixmapsToBeReloaded) {
-            releasePixmap(client, id);
+        QList<PixmapIdentifier> pixmapsToBeReloaded;
+        QHash<PixmapIdentifier, ImageResource *>::iterator i;
+        while(!client->pixmaps.isEmpty()) {
+            i = client->pixmaps.begin();
+            ImageResource* resource = i.value();
+            PixmapIdentifier id = i.key();
+            pixmapsToBeReloaded.append(id);
+            client->pixmaps.erase(i);
+            if(resource != NULL) {
+                QPixmap* pixmap = resource->releaseWithoutDelete(id.size);
+                if(pixmap != NULL) {
+                    pixmapsToDelete.append(pixmap);
+                }
+            }
         }
 
         pixmapsToReload.insert(client, pixmapsToBeReloaded);

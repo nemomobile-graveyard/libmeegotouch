@@ -52,6 +52,7 @@ public:
     Qt::HANDLE fetchPixmap(const QSize &size);
     // decreases refCount and releases the pixmap if refCount dropped to zero
     void releasePixmap(const QSize &size);
+    QPixmap* releaseWithoutDelete(const QSize &size);
 
     // returns a handle to pixmap, without increasing the refCount
     Qt::HANDLE pixmapHandle(const QSize &size);
