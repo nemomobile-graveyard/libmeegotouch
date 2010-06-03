@@ -43,15 +43,23 @@ public:
     ~MBubbleItemBackgroundView(){}
 
 protected:
-    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-
     virtual bool event(QEvent* event);
     void applyStyle();
 
-private:
-  bool rtl;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    void cancelEvent(MCancelEvent *event);
 
+    void setupModel();
+
+protected Q_SLOTS:
+    void refreshStyleMode();
+
+private:
+  bool mirrored;
+  bool down;
   MBubbleItemBackground* controller;
+
   Q_DISABLE_COPY(MBubbleItemBackgroundView)
 };
 
@@ -68,24 +76,15 @@ public:
     MBubbleItemBackground(QGraphicsItem *parent = 0);
     virtual ~MBubbleItemBackground() {}
 
-    void setMessageType(MBubbleItem::MessageType mt)
-    {
-        _messageType = mt;
-    }
+    void setMessageType(MBubbleItem::MessageType mt);
+    MBubbleItem::MessageType messageType();
 
-    MBubbleItem::MessageType messageType()
-    {
-        return _messageType;
-    }
-
-protected:
-  virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-  virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-  virtual void cancelEvent(MCancelEvent *event);
+public Q_SLOTS:
+    void click();
 
 Q_SIGNALS:
     void clicked();
-    void canceled();
+    void messageTypeChanged();
 
 private:
     MBubbleItem::MessageType _messageType;

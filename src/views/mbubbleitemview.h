@@ -24,6 +24,7 @@
 #include <MImageWidget>
 #include "mimagewidgetview.h"
 #include "mbubbleitemmodel.h"
+#include "mbubbleitemstyle.h"
 #include "mbubbleitembackgroundstyle.h"
 
 class MBubbleItem;
@@ -43,7 +44,7 @@ class MBubbleItemViewPrivate;
 class M_EXPORT MBubbleItemView : public MWidgetView
 {
     Q_OBJECT
-    M_VIEW(MBubbleItemModel, MWidgetStyle)
+    M_VIEW(MBubbleItemModel, MBubbleItemStyle)
 
 public:
     MBubbleItemView(MBubbleItem *controller);

@@ -74,18 +74,6 @@ public:
       \brief centralWidget.
       */
     M_MODEL_PTR_PROPERTY(int, messageType, MessageType, true, NULL)
-
-    /*!
-      \property MBubbleItemModel::commentsString
-      \brief Comment string.
-      */
-    M_MODEL_PROPERTY(QString, commentsString, CommentsString, true, QString())
-
-    /*!
-      \property MBubbleItemModel::thumbsUpString
-      \brief Thumbs up string.
-      */
-    M_MODEL_PROPERTY(QString, thumbsUpString, ThumbsUpString, true, QString())
 };
 
 #endif

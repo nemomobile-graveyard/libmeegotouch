@@ -23,6 +23,8 @@
 #include "private/mwidgetcontroller_p.h"
 
 class MBubbleItem;
+class MImageWidget;
+class MLabel;
 
 class MBubbleItemPrivate : public MWidgetControllerPrivate
 {
@@ -33,6 +35,18 @@ public:
     virtual ~MBubbleItemPrivate();
     
     void init();
+
+    void createCommentsInfo();
+    void createThumbsUpInfo();
+
+    void refreshStyles();
+
+private:
+    MLabel *commentsLabel;
+    MLabel *thumbsUpLabel;
+
+    MImageWidget *commentsIcon;
+    MImageWidget *thumbsUpIcon;
 };
 
 #endif

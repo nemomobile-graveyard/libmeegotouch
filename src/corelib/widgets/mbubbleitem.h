@@ -256,7 +256,19 @@ public Q_SLOTS:
       \sa setCommentsString();
       \sa setThumbsUpString();
      */
-    void addInformationWidget(QGraphicsWidget* widget);
+    void addInformationWidget(QGraphicsWidget *widget);
+
+    /**
+      Removes the \a widget from the informational widgets stack.
+
+      Informational widgets are displayed as part of the message bubble main body.
+      There are two pre-defined information widgets for the bubble: number of comments and thumbs up received.
+
+      \sa informationWidgets()
+      \sa setCommentsString();
+      \sa setThumbsUpString();
+     */
+    void removeInformationWidget(QGraphicsWidget *widget);
 
     /**
       Sets the string for number of comments received for the bubble item to \a comments.

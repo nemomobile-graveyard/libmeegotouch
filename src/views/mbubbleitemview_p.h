@@ -45,25 +45,28 @@ public:
     void replaceAvatar();
     void setupCentralWidget();
 
+    void clearInformationWidgetsLayout();
+    void updateInformationWidgetsLayout();
+
     void applyStyle();
+    void refreshStyleMode();
     void updateMessageComposition(); 
 
     MImageWidget *avatar;
     MBubbleItemBackground* speechBubble;
 
-    MLabel* timeStampLabel;
-    MLabel* messageComposition;
-    MLabel* numberOfCommentsLabel;
-    MLabel* numberOfThumbsUpLabel;
+    MLabel *timeStampLabel;
+    MLabel *messageComposition;
 
-    MImageWidget* serviceIcon;
-    MSeparator* separator;
+    MSeparator *separator;
 
     QGraphicsWidget* currentCentralWidget;
 
 private:
     MBubbleItem *controller;
     QGraphicsGridLayout *layout;
+    QGraphicsLinearLayout *informationWidgetsLayout;
+    QGraphicsWidget *informationWidgetsSpacer;
     QGraphicsLinearLayout *innerLayout;
 };
 

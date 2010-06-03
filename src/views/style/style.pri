@@ -50,6 +50,7 @@ MGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mwarpanimationstyle.h \
     $$STYLE_SRC_DIR/mlistitemstyle.h \
     $$STYLE_SRC_DIR/mbubbleitembackgroundstyle.h \
+    $$STYLE_SRC_DIR/mbubbleitemstyle.h \
 
 PUBLIC_HEADERS += \
     $$MGEN_STYLE_HEADERS \

@@ -34,42 +34,38 @@ M_REGISTER_VIEW(MBubbleItemBackgroundView, MBubbleItemBackground)
 
 MBubbleItemBackgroundView::MBubbleItemBackgroundView(MBubbleItemBackground *_controller)
     : MWidgetView(_controller),
-    rtl( false )
+    mirrored(false),
+    down(false)
 {
     controller = _controller;
+    connect(controller, SIGNAL(messageTypeChanged()), this, SLOT(refreshStyleMode()));
 }
 
-void MBubbleItemBackgroundView::drawBackground(QPainter* painter, const QStyleOptionGraphicsItem* option) const
+void MBubbleItemBackgroundView::refreshStyleMode()
 {
-    Q_UNUSED(option);
+    if (mirrored)
+        style().setObjectName(style()->mirroredObjectName());
+    else
+        style().setObjectName("");
 
-    QSizeF currentSize = size();
-    if (currentSize.width() == 0 || currentSize.height() == 0)
-        return;
-
-    qreal oldOpacity = painter->opacity();
-    painter->setOpacity(style()->backgroundOpacity() * effectiveOpacity());
-
-    if( controller->messageType() == MBubbleItem::Incoming ) {
-        if( !rtl ) {
-            if( style()->incomingBackground() )
-                style()->incomingBackground()->draw(0, 0, currentSize.width(), currentSize.height(), painter);
-        } else {
-            if( style()->incomingMirroredBackground() )
-                style()->incomingMirroredBackground()->draw(0, 0, currentSize.width(), currentSize.height(), painter);
-        }
-
-    } else if ( controller->messageType() == MBubbleItem::Outgoing ) {
-        if( !rtl ) {
-            if( style()->outgoingBackground() )
-                style()->outgoingBackground()->draw(0, 0, currentSize.width(), currentSize.height(), painter);
-        } else {
-            if( style()->outgoingMirroredBackground() )
-                style()->outgoingMirroredBackground()->draw(0, 0, currentSize.width(), currentSize.height(), painter);
-        }
+    if (controller->messageType() == MBubbleItem::Outgoing) {
+        if (down)
+            style().setModeOutgoingPressed();
+        else
+            style().setModeOutgoing();
+    } else if (controller->messageType() == MBubbleItem::Incoming) {
+        if (down)
+            style().setModeIncomingPressed();
+        else
+            style().setModeIncoming();
     }
 
-    painter->setOpacity(oldOpacity);
+    controller->setContentsMargins(style()->paddingLeft(),
+                                   style()->paddingTop(),
+                                   style()->paddingRight(),
+                                   style()->paddingBottom());
+
+    controller->update();
 }
 
 void MBubbleItemBackgroundView::applyStyle()
@@ -77,20 +73,63 @@ void MBubbleItemBackgroundView::applyStyle()
     MWidgetView::applyStyle();
 
     if( controller->layoutDirection() == Qt::RightToLeft )
-        rtl = true;
+        mirrored = true;
     else
-        rtl = false;
+        mirrored = false;
+
+    refreshStyleMode();
+}
+
+void MBubbleItemBackgroundView::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event);
+
+    if (!down)
+        down = true;
+
+    refreshStyleMode();
+}
+
+void MBubbleItemBackgroundView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_UNUSED(event);
+
+    if (down) {
+        down = false;
+        controller->click();
+    }
+
+    refreshStyleMode();
+}
+
+void MBubbleItemBackgroundView::cancelEvent(MCancelEvent *event)
+{
+    Q_UNUSED(event);
+
+    if (down)
+        down = false;
+
+    refreshStyleMode();
 }
 
 bool MBubbleItemBackgroundView::event(QEvent* event)
 {
     if ( event->type() == QEvent::LayoutDirectionChange ) {
-        if(rtl)
-            rtl = false;
-        else
-            rtl = true;
+        if(mirrored) {
+            mirrored = false;
+        } else {
+            mirrored = true;
+        }
     }
+
+    refreshStyleMode();
+
     return MWidgetView::event(event);
+}
+
+void MBubbleItemBackgroundView::setupModel()
+{
+
 }
 
 /*
@@ -104,26 +143,18 @@ MBubbleItemBackground::MBubbleItemBackground(QGraphicsItem * parent)
     setView(new MBubbleItemBackgroundView(this));
 }
 
-void MBubbleItemBackground::mousePressEvent(QGraphicsSceneMouseEvent *event)
+void MBubbleItemBackground::click()
 {
-    Q_UNUSED(event);
-    style().setModePressed();
-    update();
-}
-
-void MBubbleItemBackground::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
-{
-    Q_UNUSED(event);
-    style().setModeDefault();
     emit clicked();
-    update();
 }
 
-void MBubbleItemBackground::cancelEvent(MCancelEvent *event)
+void MBubbleItemBackground::setMessageType(MBubbleItem::MessageType mt)
 {
-    Q_UNUSED(event);
-    style().setModeDefault();
-    emit canceled();
-    update();
+    _messageType = mt;
+    emit messageTypeChanged();
 }
 
+MBubbleItem::MessageType MBubbleItemBackground::messageType()
+{
+    return _messageType;
+}

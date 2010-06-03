@@ -22,8 +22,6 @@
 #include <MLabel>
 #include <MWidgetController>
 #include <MWidgetView>
-#include <MCancelEvent>
-#include <mviewcreator.h>
 #include <MSeparator>
 
 #include <QGraphicsGridLayout>
@@ -40,8 +38,6 @@ MBubbleItemViewPrivate::MBubbleItemViewPrivate()
         speechBubble(0),
         timeStampLabel(0),
         messageComposition(0),
-        numberOfCommentsLabel(0),
-        numberOfThumbsUpLabel(0),
         separator(0),
         currentCentralWidget(0)
 {
@@ -49,11 +45,21 @@ MBubbleItemViewPrivate::MBubbleItemViewPrivate()
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
 
+    informationWidgetsLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+    informationWidgetsLayout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+    informationWidgetsLayout->setContentsMargins(0, 0, 0, 0);
+    informationWidgetsLayout->setSpacing(0);
+
+    informationWidgetsSpacer = new QGraphicsWidget;
+    informationWidgetsSpacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
+
     innerLayout = new QGraphicsLinearLayout(Qt::Vertical);
+    innerLayout->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
+    innerLayout->setContentsMargins(0, 0, 0, 0);
+    innerLayout->setSpacing(0);
 
     timeStampLabel = new MLabel();
-    timeStampLabel->setObjectName("MBubbleItemTimeStamp");
-    timeStampLabel->setAlignment(Qt::AlignRight);
+    timeStampLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     messageComposition = new MLabel();
     messageComposition->setWordWrap(true);
@@ -67,66 +73,28 @@ MBubbleItemViewPrivate::~MBubbleItemViewPrivate()
 
 void MBubbleItemViewPrivate::initLayout()
 {
-    Q_Q(MBubbleItemView);
-
     clearLayout();
     
     replaceAvatar();
     
     if (controller->messageType() == MBubbleItem::Incoming) {
-        if(controller->avatar()) {
-            layout->addItem(controller->avatar(), 0,0);
-            layout->addItem(speechBubble,0,1);
+        if (controller->avatar()) {
+            layout->addItem(controller->avatar(), 0, 0);
+            layout->addItem(speechBubble, 0, 1);
         } else {
-            layout->addItem(speechBubble,0,0);
+            layout->addItem(speechBubble, 0, 0);
         }
     } else if(controller->messageType() == MBubbleItem::Outgoing) {
-        layout->addItem(speechBubble,0,0);
+        layout->addItem(speechBubble, 0, 0);
+        if (controller->avatar())
+            layout->addItem(controller->avatar(), 0, 1);
     }
 
-    innerLayout = new QGraphicsLinearLayout(Qt::Vertical, speechBubble);
-    messageComposition->setObjectName("MBubbleItemMessage");
+    updateMessageComposition();
+    updateInformationWidgetsLayout();
 
     innerLayout->addItem(messageComposition);
-
-    if (q->model()->commentsString().isEmpty() && q->model()->thumbsUpString().isEmpty()) {
-        innerLayout->addItem(timeStampLabel);
-        timeStampLabel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-    } else {
-        timeStampLabel->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-
-        QGraphicsLinearLayout* informationWidgetsLayout = new QGraphicsLinearLayout(Qt::Horizontal);
-        informationWidgetsLayout->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Maximum);
-
-        MLabel* alignTimeStampToTheRight = new MLabel();
-        alignTimeStampToTheRight->setAlignment(Qt::AlignLeft);
-        alignTimeStampToTheRight->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Minimum);
-        informationWidgetsLayout->addItem(alignTimeStampToTheRight);
-
-        if (!q->model()->commentsString().isEmpty()) {
-            MImageWidget* numberOfCommentsIcon = new MImageWidget("icon-s-common-presence-away");
-            numberOfCommentsIcon->setObjectName("MBubbleItemNumberOfCommentsIcon");
-
-            numberOfCommentsLabel = new MLabel(q->model()->commentsString());
-            numberOfCommentsLabel->setObjectName("MBubbleItemNumberOfCommentsLabel");
-
-            informationWidgetsLayout->addItem(numberOfCommentsIcon);
-            informationWidgetsLayout->addItem(numberOfCommentsLabel);
-        }
-        if (!q->model()->thumbsUpString().isEmpty()) {
-            MImageWidget* numberOfThumbsIcon = new MImageWidget("icon-s-common-presence-offline");
-            numberOfThumbsIcon->setObjectName("MBubbleItemNumberOfThumbsIcon");
-
-            numberOfThumbsUpLabel = new MLabel(q->model()->thumbsUpString());
-            numberOfThumbsUpLabel->setObjectName("MBubbleItemNumberofThumbsLabel");
-
-            informationWidgetsLayout->addItem(numberOfThumbsIcon);
-            informationWidgetsLayout->addItem(numberOfThumbsUpLabel);
-        }
-
-        informationWidgetsLayout->addItem(timeStampLabel);
-        innerLayout->addItem(informationWidgetsLayout);
-    }
+    innerLayout->addItem(informationWidgetsLayout);
 
     setupCentralWidget();
 
@@ -143,6 +111,8 @@ void MBubbleItemViewPrivate::clearLayout()
 
 void MBubbleItemViewPrivate::replaceAvatar()
 {
+    Q_Q(MBubbleItemView);
+
     if (avatar) {
         for (int i = 0; i < layout->count(); i ++) {
             if (layout->itemAt(i) == avatar)
@@ -152,10 +122,13 @@ void MBubbleItemViewPrivate::replaceAvatar()
         avatar = 0;
     }
     
-    if (controller->avatar() && controller->messageType() == MBubbleItem::Incoming) {
+    if (controller->avatar()) {
         if (controller->avatar()->objectName().isEmpty())
-            controller->avatar()->setObjectName("MBubbleItemAvatar");
-        layout->addItem(controller->avatar(), 0, 0);
+            controller->avatar()->setObjectName(q->style()->avatarObjectName());
+        if (controller->messageType() == MBubbleItem::Incoming)
+            layout->addItem(controller->avatar(), 0, 0);
+        else
+            layout->addItem(controller->avatar(), 0, 1);
         avatar = controller->avatar();
     }
 }
@@ -186,8 +159,57 @@ void MBubbleItemViewPrivate::setupCentralWidget()
     }
 }
 
+void MBubbleItemViewPrivate::clearInformationWidgetsLayout()
+{
+    for (int i = 0; i < informationWidgetsLayout->count(); i++)
+        informationWidgetsLayout->removeAt(0);
+}
+
+void MBubbleItemViewPrivate::updateInformationWidgetsLayout()
+{
+    Q_Q(MBubbleItemView);
+
+    clearInformationWidgetsLayout();
+
+    foreach (QGraphicsWidget *widget, q->model()->informationWidgets()) {
+        informationWidgetsLayout->addItem(widget);
+        informationWidgetsLayout->setAlignment(widget, Qt::AlignVCenter | Qt::AlignRight);
+    }
+
+    informationWidgetsLayout->addItem(informationWidgetsSpacer);
+    informationWidgetsLayout->addItem(timeStampLabel);
+}
+
 void MBubbleItemViewPrivate::applyStyle()
 {
+    refreshStyleMode();
+}
+
+void MBubbleItemViewPrivate::refreshStyleMode()
+{
+    Q_Q(MBubbleItemView);
+    if (controller->messageType() == MBubbleItem::Incoming)
+        q->style().setModeDefault();
+    else
+        q->style().setModeOutgoing();
+
+    if (speechBubble)
+        speechBubble->setObjectName(q->style()->bubbleObjectName());
+
+    if (timeStampLabel) {
+        timeStampLabel->setFont(q->style()->timestampFont());
+        timeStampLabel->setColor(q->style()->timestampTextColor());
+    }
+
+    if (messageComposition) {
+        messageComposition->setFont(q->style()->font());
+        messageComposition->setColor(q->style()->textColor());
+    }
+
+    controller->setContentsMargins(q->style()->marginLeft(),
+                                   q->style()->marginTop(),
+                                   q->style()->marginRight(),
+                                   q->style()->marginBottom());
 }
 
 void MBubbleItemViewPrivate::updateMessageComposition()
@@ -206,7 +228,6 @@ MBubbleItemView::MBubbleItemView(MBubbleItem *controller)
     Q_D(MBubbleItemView);
     d->controller = controller;
     controller->setLayout(d->layout);
-    d->layout->setParentLayoutItem(controller);
 }
 
 MBubbleItemView::MBubbleItemView(MBubbleItemViewPrivate &dd, MBubbleItem *controller)
@@ -252,12 +273,9 @@ void MBubbleItemView::updateData(const QList<const char *> &modifications)
             d->speechBubble->setMessageType(static_cast<MBubbleItem::MessageType>(model()->messageType()));
             d->updateMessageComposition();
             d->initLayout();
-        } else if(member == MBubbleItemModel::CommentsString) {
-            if (d->numberOfCommentsLabel)
-                d->numberOfCommentsLabel->setText(model()->commentsString());
-        } else if(member == MBubbleItemModel::ThumbsUpString) {
-            if (d->numberOfCommentsLabel)
-                d->numberOfCommentsLabel->setText(model()->thumbsUpString());
+            d->refreshStyleMode();
+        } else if (member == MBubbleItemModel::InformationWidgets) {
+            d->updateInformationWidgetsLayout();
         }
     }
 }
@@ -275,8 +293,11 @@ void MBubbleItemView::setupModel()
 
     d->speechBubble = new MBubbleItemBackground(d->controller);
     d->speechBubble->setMessageType(static_cast<MBubbleItem::MessageType>(model()->messageType()));
+    d->speechBubble->setObjectName(style()->bubbleObjectName());
+    d->speechBubble->setLayout(d->innerLayout);
 
     d->initLayout();
+    d->refreshStyleMode();
 }
 
 void MBubbleItemView::setSelected(bool selected)

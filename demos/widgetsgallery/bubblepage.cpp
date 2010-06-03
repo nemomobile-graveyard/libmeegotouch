@@ -47,10 +47,11 @@ MBubbleItem *BubbleItemCreator::createBubbleItem(const QModelIndex& index) const
     bi->setMessage(me->message);
     bi->setSenderName(me->sendername);
     bi->setTimeStamp(me->timestamp);
-    bi->setAvatar(me->avatar);
 
     if(me->sendername.isEmpty())
         bi->setMessageType(MBubbleItem::Outgoing);
+    else
+        bi->setAvatar(me->avatar);
 
     return bi;
 }
@@ -91,6 +92,16 @@ void BubblePage::createContent()
     expandedItem->setAvatar(avatar);
     expandedItem->setTimeStamp("5 min ago");
 
+    MImageWidget *serviceIcon = new MImageWidget(expandedItem);
+    serviceIcon->setObjectName("InformationalIcon");
+    serviceIcon->setImage("icon-s-common-pending", serviceIcon->minimumSize().toSize());
+    MLabel *pendingLabel = new MLabel(expandedItem);
+    pendingLabel->setObjectName("InformationalLabelIncoming");
+    pendingLabel->setText("pending...");
+    expandedItem->addInformationWidget(serviceIcon);
+    expandedItem->addInformationWidget(pendingLabel);
+    expandedItem->setCommentsString("+3");
+
     QPixmap* p0 = new QPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_001.jpg");
     MImageWidget* i0 = new MImageWidget(p0);
     QPixmap* p1 = new QPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_002.jpg");
@@ -111,6 +122,7 @@ void BubblePage::createContent()
     MBubbleItem* secondExpandedItem = new MBubbleItem();
     connect(secondExpandedItem, SIGNAL(bubbleClicked()), this, SLOT(speechBubbleClicked()));
     secondExpandedItem->setMessage("And here are some of my favorites. Works great!");
+    secondExpandedItem->setAvatar(QPixmap(QString(MEDIA_DIR) + QDir::separator() + "avatar-cat.png"));
     secondExpandedItem->setMessageType(MBubbleItem::Outgoing);
     secondExpandedItem->setSenderName("");
     secondExpandedItem->setTimeStamp("5 min ago");

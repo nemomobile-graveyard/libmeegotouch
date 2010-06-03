@@ -17,8 +17,8 @@
 **
 ****************************************************************************/
 
-#ifndef MBUBBLEITEMBACKGROUNDSTYLE_H
-#define MBUBBLEITEMBACKGROUNDSTYLE_H
+#ifndef MBUBBLEITEMSTYLE_H
+#define MBUBBLEITEMSTYLE_H
 
 #include <mwidgetstyle.h>
 
@@ -26,27 +26,30 @@
  * \internal
  */
 
-class M_EXPORT MBubbleItemBackgroundStyle : public MWidgetStyle
+class M_EXPORT MBubbleItemStyle : public MWidgetStyle
 {
     Q_OBJECT
-    M_STYLE(MBubbleItemBackgroundStyle)
+    M_STYLE(MBubbleItemStyle)
 
-    M_STYLE_ATTRIBUTE(QString,                mirroredObjectName,   MirroredObjectName)
+    M_STYLE_ATTRIBUTE(QFont,                  font,                     Font)
+    M_STYLE_ATTRIBUTE(QColor,                 textColor,                TextColor)
+
+    M_STYLE_ATTRIBUTE(QFont,                  timestampFont,            TimestampFont)
+    M_STYLE_ATTRIBUTE(QColor,                 timestampTextColor,       TimestampTextColor)
+
+    M_STYLE_ATTRIBUTE(QString,                avatarObjectName,   AvatarObjectName)
+    M_STYLE_ATTRIBUTE(QString,                bubbleObjectName,   BubbleObjectName)
 };
 
 /*!
  * \internal
  */
 
-class M_EXPORT MBubbleItemBackgroundStyleContainer : public MWidgetStyleContainer
+class M_EXPORT MBubbleItemStyleContainer : public MWidgetStyleContainer
 {
-    M_STYLE_CONTAINER(MBubbleItemBackgroundStyle)
+    M_STYLE_CONTAINER(MBubbleItemStyle)
 
     M_STYLE_MODE(Outgoing)
-    M_STYLE_MODE(OutgoingPressed)
-    M_STYLE_MODE(Incoming)
-    M_STYLE_MODE(IncomingPressed)
 };
 
-#endif
-
+#endif // MBUBBLEITEMSTYLE_H

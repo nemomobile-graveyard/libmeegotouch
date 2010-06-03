@@ -23,12 +23,17 @@
 #include "mbubbleitemmodel.h"
 
 #include "mimagewidget.h"
+#include "mlabel.h"
 #include "mwidgetcreator.h"
 
 M_REGISTER_WIDGET(MBubbleItem)
 
 MBubbleItemPrivate::MBubbleItemPrivate() 
-    : MWidgetControllerPrivate()
+    : MWidgetControllerPrivate(),
+    commentsLabel(NULL),
+    thumbsUpLabel(NULL),
+    commentsIcon(NULL),
+    thumbsUpIcon(NULL)
 {
 }
 
@@ -38,6 +43,55 @@ MBubbleItemPrivate::~MBubbleItemPrivate()
 
 void MBubbleItemPrivate::init()
 {
+}
+
+void MBubbleItemPrivate::createCommentsInfo()
+{
+    Q_Q(MBubbleItem);
+
+    commentsLabel = new MLabel(q);
+
+    commentsIcon = new MImageWidget(q);
+    commentsIcon->setObjectName("InformationalIcon");
+    commentsIcon->setImage("icon-s-common-comments", commentsIcon->minimumSize().toSize());
+
+    q->addInformationWidget(commentsIcon);
+    q->addInformationWidget(commentsLabel);
+
+    refreshStyles();
+}
+
+void MBubbleItemPrivate::createThumbsUpInfo()
+{
+    Q_Q(MBubbleItem);
+
+    thumbsUpLabel = new MLabel(q);
+
+    thumbsUpIcon = new MImageWidget(q);
+    thumbsUpIcon->setObjectName("InformationalIcon");
+    thumbsUpIcon->setImage("icon-s-common-like", thumbsUpIcon->minimumSize().toSize());
+
+    q->addInformationWidget(thumbsUpIcon);
+    q->addInformationWidget(thumbsUpLabel);
+
+    refreshStyles();
+}
+
+void MBubbleItemPrivate::refreshStyles()
+{
+    Q_Q(MBubbleItem);
+
+    if (q->messageType() == MBubbleItem::Incoming) {
+        if (thumbsUpLabel)
+            thumbsUpLabel->setObjectName("InformationalLabelIncoming");
+        if (commentsLabel)
+            commentsLabel->setObjectName("InformationalLabelIncoming");
+    } else {
+        if (thumbsUpLabel)
+            thumbsUpLabel->setObjectName("InformationalLabelOutgoing");
+        if (commentsLabel)
+            commentsLabel->setObjectName("InformationalLabelOutgoing");
+    }
 }
 
 MBubbleItem::MBubbleItem(QGraphicsItem *parent)
@@ -76,7 +130,7 @@ void MBubbleItem::setAvatar(const QPixmap &avatar)
     
     if (!model()->avatar())
         model()->setAvatar(new MImageWidget);
-    
+
     model()->avatar()->setPixmap(avatar);
     model()->commitTransaction();
 }
@@ -118,12 +172,13 @@ MBubbleItem::MessageType MBubbleItem::messageType() const
 
 void MBubbleItem::setMessageType(MessageType messageType)
 {
+    Q_D(MBubbleItem);
+
     model()->beginTransaction();
-    
-    if (messageType == MBubbleItem::Outgoing)
-        model()->setAvatar(NULL);
-    
     model()->setMessageType(messageType);
+
+    d->refreshStyles();
+
     model()->commitTransaction();
 }
 
@@ -142,30 +197,58 @@ QStack<QGraphicsWidget*> MBubbleItem::informationWidgets()
     return model()->informationWidgets();
 }
 
-void MBubbleItem::addInformationWidget(QGraphicsWidget* item)
+void MBubbleItem::addInformationWidget(QGraphicsWidget *widget)
 {
     QStack<QGraphicsWidget*> stack = model()->informationWidgets();
-    stack.push(item);
-    model()->setInformationWidgets( stack );
+    stack.push(widget);
+    model()->setInformationWidgets(stack);
+}
+
+void MBubbleItem::removeInformationWidget(QGraphicsWidget *widget)
+{
+    QStack<QGraphicsWidget*> stack = model()->informationWidgets();
+    int index = stack.indexOf(widget);
+    if (index >= 0)
+        stack.remove(index);
+    model()->setInformationWidgets(stack);
 }
 
 QString MBubbleItem::commentsString()
 {
-    return model()->commentsString();
+    Q_D(MBubbleItem);
+
+    if (d->commentsLabel)
+        return d->commentsLabel->text();
+    return QString();
 }
 
 void MBubbleItem::setCommentsString(const QString &comments)
 {
-    model()->setCommentsString(comments);
+    Q_D(MBubbleItem);
+
+    if (!d->commentsLabel || !d->commentsIcon)
+        d->createCommentsInfo();
+
+    d->commentsLabel->setText(comments);
 }
 
 QString MBubbleItem::thumbsUpString()
 {
-    return model()->thumbsUpString();
+    Q_D(MBubbleItem);
+
+    if (d->thumbsUpLabel)
+        return d->thumbsUpLabel->text();
+
+    return QString();
 }
 
 void MBubbleItem::setThumbsUpString(const QString &thumbsUp)
 {
-    model()->setThumbsUpString(thumbsUp);
+    Q_D(MBubbleItem);
+
+    if (!d->thumbsUpLabel || !d->thumbsUpIcon)
+        d->createThumbsUpInfo();
+
+    d->thumbsUpLabel->setText(thumbsUp);
 }
 
