@@ -21,7 +21,7 @@ Description: libmeegotouch debug package
 
 Package: libmeegotouchextensions0
 Architecture: any
-Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch extensions library
  MeeGo Touch extensions framework library
 
@@ -34,7 +34,7 @@ Description: libmeegotouch debug package
 
 Package: libmeegotouchsettings0
 Architecture: any
-Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch settings library
  MeeGo Touch settings framework library
 
@@ -47,7 +47,7 @@ Description: libmeegotouch debug package
 
 Package: libmeegotouchviews0
 Architecture: any
-Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch views library
  MeeGo Touch views framework library
 
@@ -60,7 +60,7 @@ Description: libmeegotouch debug package
 
 Package: libmeegotouch-bin
 Architecture: any
-Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch binary files
  Binary files of MeeGo Touch framework
 
@@ -81,7 +81,7 @@ Description: MeeGo Touch development files
 Package: meegotouch-dev-tools
 Section: devel
 Architecture: any
-Depends: ${shlibs:Depends}
+Depends: ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Suggests: perl (>= 5.10.0)
 Description: MeeGo Touch specific development and testing tools
  Collection of tools for testing and developing on top of MeeGo Touch. Includes
@@ -195,7 +195,7 @@ Description: libmeegotouch-benchmarks debug package
 
 Package: meegotouch-qt-style
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}
+Depends: ${misc:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
 Description: MeeGo Touch Qt style for plain Qt applications
  MeeGo Touch Qt style plugin
 
