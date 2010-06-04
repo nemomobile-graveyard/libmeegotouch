@@ -137,20 +137,22 @@ contains( DEFINES, HAVE_N900 ) {
     PKGCONFIG += libosso-abook-1.0
     CONFIG += release link_pkgconfig
 
-    desktop_icon.path = $$M_INSTALL_DATA/icons/hicolor/64x64/hildon
-    desktop_icon.files = widgetsgallery.png
+    desktop_icon.path = $$M_INSTALL_DATA/icons/hicolor/48x48/hildon
+    desktop_icon.files = icon-l-widgetsgallery.png
 
     INSTALLS += desktop_icon
 
     desktop_entry.path = $$M_INSTALL_DATA/applications/hildon
-    desktop_entry.files = widgetsgallery-n900.desktop
 } else {
     SOURCES += phonebookmodel.cpp
     HEADERS += phonebookmodel.h
 
+    desktop_icon.path = $$M_THEME_DIR/base/meegotouch/icons
+    desktop_icon.files = icon-l-widgetsgallery.svg
+
     desktop_entry.path = $$M_INSTALL_DATA/applications
-    desktop_entry.files = widgetsgallery.desktop
 }
+desktop_entry.files = widgetsgallery.desktop
 
 myname = com.nokia.widgetsgallery
 services.CONFIG += no_check_exist

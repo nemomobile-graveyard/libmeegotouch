@@ -140,7 +140,7 @@ void MApplicationWindowPrivate::init()
 #else
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(closeMenu()));
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(showMinimized()));
-#endif
+#endif //HAVE_N900
 
     q->connect(navigationBar, SIGNAL(viewmenuTriggered()),
                q, SLOT(openMenu()));
@@ -419,7 +419,7 @@ void MApplicationWindowPrivate::_q_exitAppView()
     QDBusMessage message = QDBusMessage::createSignal("/", "com.nokia.hildon_desktop", "exit_app_view");
     bus.send(message);
 }
-#endif
+#endif //HAVE_N900
 
 void MApplicationWindowPrivate::manageActions()
 {

@@ -25,10 +25,9 @@
 
 
 // 1. DECLARE STUB
-// FIXME - stubgen is not yet finished
 class MWidgetControllerStub : public StubBase {
   public:
-   const MTheme::ViewType defaultType ;
+  static const MTheme::ViewType defaultType ;
   virtual void MWidgetControllerConstructor(QGraphicsItem *parent);
   virtual void MWidgetControllerConstructor(MWidgetModel *model, QGraphicsItem *parent);
   virtual void MWidgetControllerDestructor();

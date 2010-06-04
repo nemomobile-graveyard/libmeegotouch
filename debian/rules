@@ -109,7 +109,11 @@ clean:
 install: build
 	dh_testdir
 	dh_testroot
+ifeq (,$(filter n900,$(TMP_BUILD_OPTS))) #fremantle debhelper is older..
 	dh_prep
+else
+	dh_clean -k
+endif
 	dh_installdirs
 
 	# Add here commands to install the package into debian/tmp
