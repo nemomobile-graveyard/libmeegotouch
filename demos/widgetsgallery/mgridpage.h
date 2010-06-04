@@ -54,8 +54,6 @@ public slots:
     void modifyColumnsSliderHandle(int newValue);
     void modifyRowsSliderHandle(int newValue);
 
-    void orientationChanged(M::Orientation orientation);
-
 signals:
     void rate(MediaType::Rating rating, const QString& id);
 

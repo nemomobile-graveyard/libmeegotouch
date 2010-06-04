@@ -36,6 +36,7 @@
 #include <MSlider>
 #include <MDialog>
 #include <MPannableViewport>
+#include <MGridLayoutPolicy>
 
 #include "utils.h"
 #include "mgridpage.h"
@@ -103,13 +104,6 @@ void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) con
     if( m.type == MediaType::Video ) {
         GridVideoWidget *video = qobject_cast<GridVideoWidget*>(cell);
 
-#ifdef TEMP_REMOVED
-        MImageWidget *badge = new MImageWidget(video);
-        badge->setObjectName("badge");
-        badge->setPixmap( QPixmap( QDir(IMAGES_DIR).canonicalPath() + QDir::separator() + "star.png") );
-        badge->setCacheMode(QGraphicsItem::ItemCoordinateCache);
-#endif
-
         QFileInfo info(m.path);
         video->setId(info.absolutePath() + QDir::separator() + info.fileName()/*.remove("thumb-")*/);
 
@@ -123,12 +117,6 @@ void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) con
         GridImageWidget *imageWidget = qobject_cast<GridImageWidget*>(cell);
 
         imageWidget->setObjectName("gridItem");
-
-#ifdef TEMP_REMOVED
-        MImageWidget *badge = new MImageWidget(imageWidget);
-        badge->setObjectName("badge");
-        badge->setCacheMode(QGraphicsItem::ItemCoordinateCache);
-#endif
 
         imageWidget->setPixmap( m.pixmap );
         imageWidget->setId(m.path);
@@ -187,8 +175,6 @@ void MGridPage::createContent()
         m_itemSize.setWidth(exposedContentRect().width() / m_columnsPortrait);
     }
     m_itemSize.setHeight(m_itemSize.width());
-
-    connect(this, SIGNAL(appeared()), this, SLOT(configureGrid()));
 
     ContentItemCreator *cellCreator = new ContentItemCreator(this);
     list->setCellCreator(cellCreator);
@@ -274,8 +260,7 @@ void MGridPage::backButtonClicked()
 void MGridPage::orientationChangeEvent(MOrientationChangeEvent *event)
 {
     MApplicationPage::orientationChangeEvent(event);
-
-    orientationChanged(event->orientation());
+    configureGrid(event->orientation());
 }
 
 void MGridPage::configureGrid()
@@ -303,7 +288,13 @@ void MGridPage::showGridConfigurationDialog()
     //% "Set columns"
     QPointer<MDialog> dialog = new MDialog(qtTrId("xx_gridpage_set_columns"), M::OkButton | M::CancelButton);
 
-    QGraphicsGridLayout *layout = new QGraphicsGridLayout();
+    MLayout *layout = new MLayout(dialog->centralWidget());
+    MGridLayoutPolicy *landscapePolicy = new MGridLayoutPolicy(layout);
+    layout->setLandscapePolicy(landscapePolicy);
+
+    MLinearLayoutPolicy *potraitPolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+    layout->setPortraitPolicy(potraitPolicy);
+
     dialog->centralWidget()->setLayout(layout);
 
     m_columnsLandscapeSlider = new MSlider;
@@ -327,14 +318,24 @@ void MGridPage::showGridConfigurationDialog()
     connect( m_columnsPortraitSlider,SIGNAL(valueChanged(int)), this,SLOT(modifyRowsSliderHandle(int)) );
 
     //% "Landscape"
-    layout->addItem(new MLabel(qtTrId("xx_gridpage_landscape")), 0,0);
-    layout->addItem(m_columnsLandscapeLabel,  1,0);
-    layout->addItem(m_columnsLandscapeSlider, 2,0);
+    landscapePolicy->addItem(new MLabel(qtTrId("xx_gridpage_landscape")), 0,0);
+    landscapePolicy->addItem(m_columnsLandscapeLabel,  1,0);
+    landscapePolicy->addItem(m_columnsLandscapeSlider, 2,0);
 
     //% "Portrait"
-    layout->addItem(new MLabel(qtTrId("xx_gridpage_portrait")), 0,1);
-    layout->addItem(m_columnsPortraitLabel,  1,1);
-    layout->addItem(m_columnsPortraitSlider, 2,1);
+    landscapePolicy->addItem(new MLabel(qtTrId("xx_gridpage_portrait")), 0,1);
+    landscapePolicy->addItem(m_columnsPortraitLabel,  1,1);
+    landscapePolicy->addItem(m_columnsPortraitSlider, 2,1);
+
+    //% "Landscape"
+    potraitPolicy->addItem(new MLabel(qtTrId("xx_gridpage_landscape")));
+    potraitPolicy->addItem(m_columnsLandscapeLabel);
+    potraitPolicy->addItem(m_columnsLandscapeSlider);
+
+    //% "Portrait"
+    potraitPolicy->addItem(new MLabel(qtTrId("xx_gridpage_portrait")));
+    potraitPolicy->addItem(m_columnsPortraitLabel);
+    potraitPolicy->addItem(m_columnsPortraitSlider);
 
     if (dialog->exec() == MDialog::Accepted) {
             m_columnsLandscape = m_columnsLandscapeSlider->value();
@@ -354,9 +355,4 @@ void MGridPage::modifyRowsSliderHandle(int newValue)
 {
     m_columnsPortraitSlider->setHandleLabel(QString::number(newValue));
     m_columnsPortraitLabel->setText(QString::number(newValue));
-}
-
-void MGridPage::orientationChanged(M::Orientation orientation)
-{
-    configureGrid(orientation);
 }
