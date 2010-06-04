@@ -52,28 +52,20 @@ void MBasicListItemPrivate::createLayout()
 
     switch (listItemStyle) {
     case MBasicListItem::SingleTitle: {
-            q->setObjectName("BasicListItemSingleTitle");
-
             layout()->addItem(q->titleLabelWidget(), 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
             break;
         }
     case MBasicListItem::TitleWithSubtitle: {
-            q->setObjectName("BasicListItemTitleWithSubtitle");
-
             layout()->addItem(q->titleLabelWidget(), 0, 0, Qt::AlignLeft | Qt::AlignTop);
             layout()->addItem(q->subtitleLabelWidget(), 1, 0, Qt::AlignLeft | Qt::AlignBottom);
             break;
         }
     case MBasicListItem::IconWithTitle: {
-            q->setObjectName("BasicListItemIconWithTitle");
-
             layout()->addItem(q->imageWidget(), 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
             layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
             break;
         }
     case MBasicListItem::IconWithTitleAndSubtitle: {
-            q->setObjectName("BasicListItemIconWithTitleAndSubtitle");
-
             layout()->addItem(q->imageWidget(), 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
             layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
             layout()->addItem(q->subtitleLabelWidget(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
@@ -198,10 +190,8 @@ MLabel *MBasicListItem::titleLabelWidget()
         d->titleLabel = new MLabel(this);
         if (d->listItemStyle == SingleTitle)
             d->titleLabel->setObjectName("CommonSingleTitle");
-        else if (d->listItemStyle == TitleWithSubtitle)
-            d->titleLabel->setObjectName("CommonTitle");
         else
-            d->titleLabel->setObjectName("CommonTitleWithLeftMargin");
+            d->titleLabel->setObjectName("CommonTitle");
     }
 
     return d->titleLabel;
@@ -213,10 +203,7 @@ MLabel *MBasicListItem::subtitleLabelWidget()
 
     if (!d->subtitleLabel) {
         d->subtitleLabel = new MLabel(this);
-        if (d->listItemStyle == TitleWithSubtitle)
-            d->subtitleLabel->setObjectName("CommonSubTitle");
-        else
-            d->subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
+        d->subtitleLabel->setObjectName("CommonSubTitle");
     }
 
     return d->subtitleLabel;

@@ -56,7 +56,6 @@ void MDetailedListItemPrivate::createLayout()
 
     switch (listItemStyle) {
     case MDetailedListItem::IconTitleSubtitleAndTwoSideIcons: {
-            q->setObjectName("DetailedListItemIconTitleSubtitleAndTwoSideIcons");
             q->setIconStyle(MDetailedListItem::Icon);
 
             layout()->addItem(q->imageWidget(), 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
@@ -68,7 +67,6 @@ void MDetailedListItemPrivate::createLayout()
             break;
         }
     case MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel: {
-            q->setObjectName("DetailedListItemIconTitleSubtitleAndSideIconWithLabel");
             q->setIconStyle(MDetailedListItem::Icon);
 
             layout()->addItem(q->imageWidget(), 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
@@ -85,9 +83,6 @@ void MDetailedListItemPrivate::createLayout()
             contentLayoutGrid->setContentsMargins(0, 0, 0, 0);
             contentLayoutGrid->setSpacing(0);
             contentLayoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-
-            contentPanel->setObjectName("DetailedListItemThumbnailTitleAndTwoSideIcons");
-            contentPanel->setContentsMargins(0, 8, 16, 8);
 
             q->setIconStyle(MDetailedListItem::Thumbnail);
 
@@ -109,9 +104,6 @@ void MDetailedListItemPrivate::createLayout()
             contentLayoutGrid->setContentsMargins(0, 0, 0, 0);
             contentLayoutGrid->setSpacing(0);
             contentLayoutGrid->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Maximum);
-
-            contentPanel->setObjectName("DetailedListItemThumbnailTitleSubtitleAndTwoSideIcons");
-            contentPanel->setContentsMargins(0, 8, 16, 8);
 
             q->setIconStyle(MDetailedListItem::Thumbnail);
 
@@ -264,7 +256,7 @@ MImageWidget *MDetailedListItem::sideTopImageWidget()
 
     if (!d->sideTopImage) {
         d->sideTopImage = new MImageWidget(this);
-        d->sideTopImage->setObjectName("CommonTopSideIcon");
+        d->sideTopImage->setObjectName("CommonSubIcon");
     }
     return d->sideTopImage;
 }
@@ -275,7 +267,7 @@ MImageWidget *MDetailedListItem::sideBottomImageWidget()
 
     if (!d->sideBottomImage) {
         d->sideBottomImage = new MImageWidget(this);
-        d->sideBottomImage->setObjectName("CommonBottomSideIcon");
+        d->sideBottomImage->setObjectName("CommonSubIcon");
     }
     return d->sideBottomImage;
 }
@@ -286,7 +278,7 @@ MLabel *MDetailedListItem::titleLabelWidget()
 
     if (!d->titleLabel) {
         d->titleLabel = new MLabel(this);
-        d->titleLabel->setObjectName("CommonTitleWithLeftMargin");
+        d->titleLabel->setObjectName("CommonTitle");
     }
 
     return d->titleLabel;
@@ -308,7 +300,7 @@ MLabel *MDetailedListItem::subtitleLabelWidget()
 
     if (!d->subtitleLabel) {
         d->subtitleLabel = new MLabel(this);
-        d->subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
+        d->subtitleLabel->setObjectName("CommonSubTitle");
     }
 
     return d->subtitleLabel;
@@ -330,7 +322,7 @@ MLabel *MDetailedListItem::sideBottomLabelWidget()
 
     if (!d->sideBottomLabel) {
         d->sideBottomLabel = new MLabel(this);
-        d->sideBottomLabel->setObjectName("CommonBottomSideSubTitle");
+        d->sideBottomLabel->setObjectName("CommonSubText");
     }
 
     return d->sideBottomLabel;

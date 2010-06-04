@@ -48,8 +48,6 @@ void MAdvancedListItemPrivate::createLayout()
 
     switch (listItemStyle) {
     case MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons: {
-            q->setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTwoSideIcons");
-
             layout()->addItem(q->imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
             layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
             layout()->addItem(q->progressIndicator(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
@@ -58,8 +56,6 @@ void MAdvancedListItemPrivate::createLayout()
             break;
         }
     case MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon: {
-            q->setObjectName("AdvancedListItemIconWithTitleProgressIndicatorAndTopSideIcon");
-
             layout()->addItem(q->imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
             layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
             layout()->addItem(q->progressIndicator(), 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
@@ -181,7 +177,7 @@ MLabel * MAdvancedListItem::titleLabelWidget()
 
     if (!d->titleLabel) {
         d->titleLabel = new MLabel(this);
-        d->titleLabel->setObjectName("CommonTitleWithLeftMargin");
+        d->titleLabel->setObjectName("CommonTitle");
     }
 
     return d->titleLabel;
@@ -193,7 +189,7 @@ MImageWidget * MAdvancedListItem::sideTopImageWidget()
 
     if (!d->sideTopImage) {
         d->sideTopImage = new MImageWidget(this);
-        d->sideTopImage->setObjectName("CommonTopSideIcon");
+        d->sideTopImage->setObjectName("CommonSubIcon");
     }
 
     return d->sideTopImage;
@@ -205,7 +201,7 @@ MImageWidget * MAdvancedListItem::sideBottomImageWidget()
 
     if (!d->sideBottomImage) {
         d->sideBottomImage = new MImageWidget(this);
-        d->sideBottomImage->setObjectName("CommonBottomSideIcon");
+        d->sideBottomImage->setObjectName("CommonSubIcon");
     }
 
     return d->sideBottomImage;

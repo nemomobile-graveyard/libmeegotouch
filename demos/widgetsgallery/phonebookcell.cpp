@@ -60,12 +60,12 @@ MLayout *PhoneBookCell::createLayout()
     // title
     titleLabel = new MLabel(this);
     titleLabel->setTextElide(true);
-    titleLabel->setObjectName("CommonTitleWithLeftMargin");
+    titleLabel->setObjectName("CommonTitle");
 
     // subtitle
     subtitleLabel = new MLabel(this);
     subtitleLabel->setTextElide(true);
-    subtitleLabel->setObjectName("CommonSubTitleWithLeftMargin");
+    subtitleLabel->setObjectName("CommonSubTitle");
     
     // icon
     imageWidget = new MImageWidget(this);
