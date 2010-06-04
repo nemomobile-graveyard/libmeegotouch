@@ -201,14 +201,14 @@ const QPixmap *MTheme::pixmap(const QString &id, const QSize &size)
     // we have to create temporary pixmap
     if (realSize.isValid()) {
         result = new QPixmap(realSize);
-        //TODO: activate the debug guards once the release is close
-        // fill with an ugly color -- this pixmap should never be visible
-//#ifndef NDEBUG
-        result->fill(QColor(0, 255, 0, 255));
-//#endif
     } else {
-        result = new QPixmap();
+        result = new QPixmap(1,1);
     }
+    //TODO: activate the debug guards once the release is close
+    // fill with an ugly color -- this pixmap should never be visible
+//#ifndef NDEBUG
+    result->fill(QColor(0, 255, 0, 255));
+//#endif
 
     instance()->d_ptr->pixmapIdentifiers.insert(identifier, CachedPixmap(result, id, realSize));
     instance()->d_ptr->themeDaemon->pixmapHandle(id, realSize);
