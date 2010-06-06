@@ -1,6 +1,5 @@
 usr/lib/libmeegotouch*.so
 usr/include/*
 usr/lib/pkgconfig/*
-usr/share/qt4/mkspecs/features/meegotouch.prf
-usr/share/qt4/mkspecs/features/meegotouch_defines.prf
-usr/share/qt4/mkspecs/features/meegotouch_translations.prf
+usr/share/qt4/mkspecs/features/meegotouch*
+usr/share/mkspecs/features/meegotouch*
