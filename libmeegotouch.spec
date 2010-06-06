@@ -1,7 +1,7 @@
 #
 # spec file for creating RPM packages from libmeegotouch for MeeGo
 #
-# See also file libmeegotouch-spec-README
+# See also file README.specfile
 #
 
 Name:           libmeegotouch
