@@ -102,3 +102,12 @@ QMAKE_EXTRA_TARGETS += check
 check-xml.target = check-xml
 check-xml.CONFIG = recursive
 QMAKE_EXTRA_TARGETS += check-xml
+
+# "make setup" can be used to install the minimal necessary data to run the
+# MeeGo Touch demo applications inside the build tree.
+setup.target = setup
+setup.CONFIG += no_check_exist
+setup.commands = mkdir -p $$M_INSTALL_SYSCONF/meegotouch
+setup.commands += && cp src/data/devices.conf $$M_INSTALL_SYSCONF/meegotouch
+setup.commands += && GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule src/data/meegotouch.schemas
+QMAKE_EXTRA_TARGETS += setup
