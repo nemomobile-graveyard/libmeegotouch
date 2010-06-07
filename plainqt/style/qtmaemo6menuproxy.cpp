@@ -124,7 +124,7 @@ void QtMaemo6MenuProxy::showEvent(QShowEvent *event) {
 
     const MWidgetFadeAnimationStyle *fadeInStyle =
         static_cast<const MWidgetFadeAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
-                "MWidgetFadeInAnimationStyle", "In"));
+                "MWidgetFadeAnimationStyle", "In"));
 
     layout()->activate();
     QRect finalGeometry = QRect(m_menu->geometry().topLeft(), m_menu->sizeHint());
@@ -162,7 +162,7 @@ void QtMaemo6MenuProxy::showEvent(QShowEvent *event) {
 void QtMaemo6MenuProxy::hideWindow() {
     const MWidgetFadeAnimationStyle *fadeOutStyle =
         static_cast<const MWidgetFadeAnimationStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
-                "MWidgetFadeOutAnimationStyle", "Out"));
+                "MWidgetFadeAnimationStyle", "Out"));
 
     QRect startGeometry = m_menu->geometry();
     QRect finalGeometry = startGeometry;
