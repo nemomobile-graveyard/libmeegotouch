@@ -66,6 +66,7 @@ MWindowPrivate::MWindowPrivate() :
     orientationAngleLocked(false),
     orientationLocked(false),
     isLogicallyClosed(true),
+    isInSwitcher(false),
     closeOnLazyShutdown(false),
     onDisplay(false),
     onDisplaySet(false),
@@ -333,12 +334,21 @@ void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event
 
     // Check if window has entered / left the switcher
     if(q->windowState() == Qt::WindowMinimized) {
+        isInSwitcher = true;
         emit q->switcherEntered();
     }
     else if (event->oldState() == Qt::WindowMinimized &&
              q->windowState() != Qt::WindowMinimized) {
+        isInSwitcher = false;
         emit q->switcherExited();
     }
+}
+
+bool MWindow::isInSwitcher() const
+{
+    Q_D(const MWindow);
+
+    return d->isInSwitcher;
 }
 
 M::Orientation MWindowPrivate::orientation(M::OrientationAngle angle) const

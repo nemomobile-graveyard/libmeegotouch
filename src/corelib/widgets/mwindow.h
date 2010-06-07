@@ -347,6 +347,12 @@ public:
     //! Returns the current visibility state of the window.
     bool isOnDisplay() const;
 
+    /*! Returns true if the window is currently minimized to the switcher.
+     *  It doesn't matter whether the window is visible or not in the
+     *  switcher.
+     */
+    bool isInSwitcher() const;
+
     /*!
      * Allows to force close instead of hide during lazy shutdown.
      */

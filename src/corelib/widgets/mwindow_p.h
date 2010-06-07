@@ -65,6 +65,7 @@ public:
     bool orientationLocked;
 
     bool isLogicallyClosed;
+    bool isInSwitcher;
     bool closeOnLazyShutdown;
 
     void doEnterDisplayEvent();
