@@ -367,12 +367,16 @@ void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *actio
     MButton *button = qobject_cast<MButton *>(widget);
     if (button) {
         // Update button data accordingly
-        button->setText(action->text());
         button->setCheckable(action->isCheckable());
         button->setChecked(action->isChecked());
-        MAction *mAction = qobject_cast<MAction *>(action);
-        if (mAction)
-            button->setIconID(mAction->iconID());
+
+        // Only update the text and icon if we created the button
+        if(buttons.contains(action)) {
+            button->setText(action->text());
+            MAction *mAction = qobject_cast<MAction *>(action);
+            if (mAction)
+                button->setIconID(mAction->iconID());
+        }
     }
 }
 

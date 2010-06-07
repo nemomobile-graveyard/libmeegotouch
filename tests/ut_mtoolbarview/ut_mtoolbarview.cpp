@@ -680,12 +680,15 @@ void Ut_MToolBarView::testMWidgetAction()
     action->setEnabled(true);
     action->setVisible(true);
 
+    MButton *button = NULL;
     QPointer<MWidget> widget;
     if(widgetType == "textedit")
         widget = new MTextEdit;
-    else if(widgetType == "button")
-        widget = new MButton(m_toolbar);
-    else
+    else if(widgetType == "button") {
+        button = new MButton(m_toolbar);
+        button->setText("Hello");
+        widget = button;
+    } else
         widget = new MSlider(m_toolbar);
     action->setWidget(widget);
 
@@ -705,6 +708,16 @@ void Ut_MToolBarView::testMWidgetAction()
     QVERIFY(widget);
     QVERIFY(widget->isEnabled());
     WAIT_VERIFY(widget->isVisible());
+
+    if(button) {
+        QCOMPARE(button->text(), QString("Hello"));
+        action->setText(QString("Goodbye"));
+        QCOMPARE(button->text(), QString("Hello")); //Shouldn't change button text
+        QCOMPARE(button->isChecked(), false);
+        action->setCheckable(true);
+        action->setChecked(true);
+        QCOMPARE(button->isChecked(), true);
+    }
 }
 
 void Ut_MToolBarView::testAddToLandscapeWhenInPortrait()
