@@ -736,4 +736,40 @@ void Ut_MToolBarView::testAddToLandscapeWhenInPortrait()
     WAIT_VERIFY(!button || !button->isVisible());
 }
 
+void Ut_MToolBarView::testChangingLocation()
+{
+    MAction *action = new MAction("Hello", m_toolbar);
+    action->setLocation(MAction::ToolBarLocation);
+
+    //It should get distributed to the toolbar
+    appWin->addAction(action);
+
+    MToolBar *toolbar = NULL;
+    foreach(QGraphicsWidget *widget, action->associatedGraphicsWidgets()) {
+        if( (toolbar = qobject_cast<MToolBar *>(widget)) )
+            break;
+    }
+    //Check that the action was added to the toolbar
+    QVERIFY(toolbar);
+    QVERIFY(toolbar->actions().count() == 1);
+
+    const MToolBarView *view = dynamic_cast<const MToolBarView *>(toolbar->view());
+    QVERIFY(view);
+    const MButton* button = dynamic_cast<MButton *>(view->getWidget(action));
+
+    QVERIFY(button);
+    WAIT_VERIFY(button->isVisible());
+
+    action->setLocation(MAction::NoLocation);
+
+    //Remove the action
+    WAIT_VERIFY(!button || !button->isVisible());
+
+    //Readd the action
+    action->setLocation(MAction::EveryLocation);
+    button = dynamic_cast<const MButton *>(view->getWidget(action));
+    QVERIFY(button);
+    WAIT_VERIFY(button->isVisible());
+}
+
 QTEST_APPLESS_MAIN(Ut_MToolBarView)
