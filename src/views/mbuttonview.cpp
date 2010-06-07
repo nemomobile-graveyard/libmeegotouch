@@ -125,15 +125,15 @@ void MButtonViewPrivate::calcIconTextRects()
     int vPadding = q->style()->paddingTop() + q->style()->paddingBottom();
 
     //area for the content (icon and text)
-    QRect contentRect(q->style()->paddingLeft(), q->style()->paddingTop(),
+    QRectF contentRect(q->style()->paddingLeft(), q->style()->paddingTop(),
                       q->size().width() - hPadding,
                       q->size().height() - vPadding);
 
     //text rect when there is no icon
-    QRect textRect = QRect(contentRect.left() + q->style()->textMarginLeft(),
-                           contentRect.top() + q->style()->textMarginTop(),
-                           contentRect.width() - hTextMargin,
-                           contentRect.height() - vTextMargin);
+    QRectF textRect(contentRect.left() + q->style()->textMarginLeft(),
+                    contentRect.top() + q->style()->textMarginTop(),
+                    contentRect.width() - hTextMargin,
+                    contentRect.height() - vTextMargin);
 
     //icon visible and valid?
     if (q->model()->iconVisible() && (icon || toggledIcon)) {
