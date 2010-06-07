@@ -63,6 +63,7 @@ MHomeButtonPanelView::MHomeButtonPanelView(MHomeButtonPanel *controller) :
 
 MHomeButtonPanelView::~MHomeButtonPanelView()
 {
+    delete d_ptr;
 }
 
 void MHomeButtonPanelView::applyStyle()
