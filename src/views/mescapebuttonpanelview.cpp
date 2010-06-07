@@ -46,6 +46,8 @@ MEscapeButtonPanelViewPrivate::~MEscapeButtonPanelViewPrivate()
 
 void MEscapeButtonPanelViewPrivate::init()
 {
+    Q_Q(MEscapeButtonPanelView);
+
     backButton = new MButton(controller);
     closeButton = new MButton(controller);
     backButton->setViewType("icon");
@@ -53,6 +55,11 @@ void MEscapeButtonPanelViewPrivate::init()
 
     QObject::connect(backButton, SIGNAL(clicked()), controller, SIGNAL(buttonClicked()));
     QObject::connect(closeButton, SIGNAL(clicked()), controller, SIGNAL(buttonClicked()));
+
+    QObject::connect(backButton, SIGNAL(pressed()), q, SLOT(_q_buttonInteracted()));
+    QObject::connect(backButton, SIGNAL(released()), q, SLOT(_q_buttonInteracted()));
+    QObject::connect(closeButton, SIGNAL(pressed()), q, SLOT(_q_buttonInteracted()));
+    QObject::connect(closeButton, SIGNAL(released()), q, SLOT(_q_buttonInteracted()));
 
     setupEscapeButtonTransition();
 }
@@ -114,6 +121,12 @@ void MEscapeButtonPanelViewPrivate::setupEscapeButtonTransition()
     }
 }
 
+void MEscapeButtonPanelViewPrivate::_q_buttonInteracted()
+{
+    Q_Q(MEscapeButtonPanelView);
+    q->applyStyle();
+}
+
 MEscapeButtonPanelView::MEscapeButtonPanelView(MEscapeButtonPanel *controller) :
     MSceneWindowView(controller),
     d_ptr(new MEscapeButtonPanelViewPrivate)
@@ -132,6 +145,12 @@ MEscapeButtonPanelView::~MEscapeButtonPanelView()
 void MEscapeButtonPanelView::applyStyle()
 {
     Q_D(MEscapeButtonPanelView);
+
+    MButton* button = d->escapeMode == MEscapeButtonPanelModel::BackMode ? d->backButton : d->closeButton;
+    if (button->isDown())
+        style().setModePressed();
+    else
+        style().setModeDefault();
 
     MSceneWindowView::applyStyle();
 

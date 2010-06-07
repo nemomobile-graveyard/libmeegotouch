@@ -65,6 +65,8 @@ PRIVATE_HEADERS += \
     mpannablewidgetview_p.h \
     mlistindexview_p.h \
     mlistitemview_p.h \
+    mescapebuttonpanelview_p.h \
+    mhomebuttonpanelview_p.h \
 
 SOURCES += \
     mapplicationpageview.cpp \

@@ -57,6 +57,8 @@ protected Q_SLOTS:
 private:
     Q_DISABLE_COPY(MEscapeButtonPanelView)
     Q_DECLARE_PRIVATE(MEscapeButtonPanelView)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_buttonInteracted())
 };
 
 #endif // MESCAPEBUTTONPANELVIEW_P

@@ -33,6 +33,9 @@ class MEscapeButtonPanelViewPrivate
     Q_DECLARE_PUBLIC(MEscapeButtonPanelView)
 
 protected:
+
+    void _q_buttonInteracted();
+
     MEscapeButtonPanelView *q_ptr;
 
 public:

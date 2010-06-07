@@ -51,6 +51,8 @@ protected:
 private:
     Q_DISABLE_COPY(MHomeButtonPanelView)
     Q_DECLARE_PRIVATE(MHomeButtonPanelView)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_buttonInteracted())
 };
 
 #endif

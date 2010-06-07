@@ -38,6 +38,8 @@ MHomeButtonPanelViewPrivate::~MHomeButtonPanelViewPrivate()
 
 void MHomeButtonPanelViewPrivate::init()
 {
+    Q_Q(MHomeButtonPanelView);
+
     QGraphicsLinearLayout *mainLayout = new QGraphicsLinearLayout(Qt::Horizontal);
     mainLayout->setContentsMargins(0, 0, 0, 0);
     mainLayout->setSpacing(0);
@@ -49,7 +51,18 @@ void MHomeButtonPanelViewPrivate::init()
     controller->setLayout(mainLayout);
 
     QObject::connect(button, SIGNAL(clicked()), controller, SIGNAL(buttonClicked()));
+
+    QObject::connect(button, SIGNAL(pressed()), q, SLOT(_q_buttonInteracted()));
+    QObject::connect(button, SIGNAL(released()), q, SLOT(_q_buttonInteracted()));
+
 }
+
+void MHomeButtonPanelViewPrivate::_q_buttonInteracted()
+{
+    Q_Q(MHomeButtonPanelView);
+    q->applyStyle();
+}
+
 
 MHomeButtonPanelView::MHomeButtonPanelView(MHomeButtonPanel *controller) :
     MSceneWindowView(controller),
@@ -70,10 +83,17 @@ void MHomeButtonPanelView::applyStyle()
 {
     Q_D(MHomeButtonPanelView);
 
+    if (d->button->isDown())
+        style().setModePressed();
+    else
+        style().setModeDefault();
+
     MSceneWindowView::applyStyle();
 
     d->button->setObjectName(style()->homeButtonObjectName());
     d->button->setIconID(style()->homeButtonIconId());
 }
+
+#include "moc_mhomebuttonpanelview.cpp"
 
 M_REGISTER_VIEW_NEW(MHomeButtonPanelView, MHomeButtonPanel)
