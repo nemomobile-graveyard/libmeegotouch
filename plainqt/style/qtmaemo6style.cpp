@@ -1005,7 +1005,8 @@ void QtMaemo6Style::polish(QWidget *widget)
             d->m_statusBar = statusBar;
         }
         //FIXME: Public API usage
-        statusBar->setSizeGripEnabled(false);
+        //FIXME: Figure out why this triggers a crash with Qt 4.7
+//        statusBar->setSizeGripEnabled(false);
     }
 
     if (QMenuBar *menuBar = qobject_cast<QMenuBar *>(widget)) {
