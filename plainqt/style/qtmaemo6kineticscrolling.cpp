@@ -189,7 +189,7 @@ bool QtMaemo6KineticScrolling::eventFilter(QObject *object, QEvent *event)
             if (mouseEvent->buttons() == Qt::LeftButton) {
                 consumed = true;
                 data->setState(KineticData::Pressed);
-                data->pressPos = mouseEvent->pos();
+                data->pressPos = QCursor::pos();
                 data->pressedWidget = qobject_cast<QWidget*>(object);
                 data->offset = scrollOffset(data->scrollArea, m_layoutDirection);
                 if (!m_ticker.isActive())
@@ -203,18 +203,18 @@ bool QtMaemo6KineticScrolling::eventFilter(QObject *object, QEvent *event)
             data->setState(KineticData::Waiting);
 
             QMouseEvent *event1 = new QMouseEvent(QEvent::MouseButtonPress,
-                                                  data->pressPos, Qt::LeftButton,
-                                                  Qt::LeftButton, Qt::NoModifier);
+                                                  data->pressedWidget->mapFromGlobal(data->pressPos),
+                                                  Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
             QMouseEvent *event2 = new QMouseEvent(*mouseEvent);
 
             data->ignored << event1;
             data->ignored << event2;
-            QApplication::postEvent(object, event1);
-            QApplication::postEvent(object, event2);
+            QApplication::postEvent(data->pressedWidget, event1);
+            QApplication::postEvent(data->pressedWidget, event2);
         }
         if (mouseEvent->type() == QEvent::MouseMove) {
             consumed = true;
-            QPoint offset = mouseEvent->pos() - data->pressPos;
+            QPoint offset = QCursor::pos() - data->pressPos;
             if(offset.manhattanLength() > m_scrollStartOffset) {
                 data->setState(KineticData::Panning);
                 data->dragPos = QCursor::pos();
@@ -227,7 +227,7 @@ bool QtMaemo6KineticScrolling::eventFilter(QObject *object, QEvent *event)
     case KineticData::Panning:
         if (mouseEvent->type() == QEvent::MouseMove) {
             consumed = true;
-            QPoint delta = mouseEvent->pos() - data->pressPos;
+            QPoint delta = QCursor::pos() - data->pressPos;
             //it occurs, that the last move event before release is a (0,0)
             // move. In this case keep the last speed setting.
             QPoint speed = QCursor::pos() - data->dragPos;
@@ -288,8 +288,8 @@ void QtMaemo6KineticScrolling::timerEvent(QTimerEvent *event)
         if( data->state() == KineticData::Pressed) {
             m_ticker.stop();
             QMouseEvent *newPressEvent = new QMouseEvent(QEvent::MouseButtonPress,
-                                                  data->pressPos, Qt::LeftButton,
-                                                  Qt::LeftButton, Qt::NoModifier);
+                                                  data->pressedWidget->mapFromGlobal(data->pressPos),
+                                                  Qt::LeftButton, Qt::LeftButton, Qt::NoModifier);
             data->ignored << newPressEvent;
             data->setState(KineticData::Waiting);
             QApplication::postEvent(data->pressedWidget, newPressEvent);
