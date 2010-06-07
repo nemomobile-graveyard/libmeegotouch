@@ -383,8 +383,8 @@ void QtMaemo6ScrollBarEventFilter::fadeInOutAnimation(QWidget *w, const char *pr
         connect(animationGroup->animationAt(FadeOut), SIGNAL(finished()), w, SLOT(hide()));
         connect(animationGroup->animationAt(FadeOut), SIGNAL(finished()), this, SLOT(cleanUpTimerMap()));
 
-        connect(fadeIn, SIGNAL(valueChanged(QVariant)), w, SLOT(repaint()));
-        connect(fadeOut, SIGNAL(valueChanged(QVariant)), w, SLOT(repaint()));
+        connect(fadeIn, SIGNAL(valueChanged(QVariant)), w, SLOT(update()));
+        connect(fadeOut, SIGNAL(valueChanged(QVariant)), w, SLOT(update()));
 
         w->show();
         m_pendingAnimations.insert(w, animationGroup);
