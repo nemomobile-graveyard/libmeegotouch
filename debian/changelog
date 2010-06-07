@@ -1,3 +1,9 @@
+libmeegotouch (0.20.17~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 07 Jun 2010 16:58:45 +0300
+
 libmeegotouch (0.20.16-1) unstable; urgency=low
 
   * Fixes: NB#170284 - MTheme::pixmap(const QString&) does not initialize the sizes of loaded QPixmap instances
