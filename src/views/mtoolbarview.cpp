@@ -295,7 +295,8 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
     //There might be space now any actions not already added.  Signal a change action which
     //will check if an item now has room to be shown
     foreach(QAction *action, controller->actions()) {
-        if(action->isVisible())
+        if(action->isVisible() && (isLocationValid(action, MAction::ToolBarLandscapeLocation) ||
+                                   isLocationValid(action, MAction::ToolBarPortraitLocation)))
             change(action);
     }
 }

@@ -48,6 +48,7 @@ private Q_SLOTS:
     void testActionVisiblity();
     void testAddTabAction();
     void testRemoveTabAction();
+    void testNoLocation();
 
     void actionSlot(bool);
 

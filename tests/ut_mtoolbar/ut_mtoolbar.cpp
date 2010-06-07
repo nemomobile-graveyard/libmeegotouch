@@ -314,4 +314,29 @@ void Ut_MToolBar::actionSlot(bool)
     testValue = true;
 }
 
+void Ut_MToolBar::testNoLocation()
+{
+    //Add an action to everywhere and then change it to nowhere, to test that this does not crash etc
+    m_subject->clearActions();
+    QVERIFY(m_subject->actions().count() == 0);
+
+    //Add a normal action
+    MAction *action0 = new MAction("action0", m_subject);
+    action0->setCheckable(true);
+    action0->setChecked(true);
+    appWin->addAction(action0);
+  
+    //Add a widget action
+    MTextEdit *textEntry = new MTextEdit();
+    MWidgetAction *actionTextEdit = new MWidgetAction(m_subject);
+    actionTextEdit->setWidget(textEntry);
+    appWin->addAction(actionTextEdit);
+
+    QCOMPARE(action0->location(), MAction::EveryLocation);
+    QCOMPARE(actionTextEdit->location(), MAction::EveryLocation);
+    //Now remove both actions
+    action0->setLocation(MAction::NoLocation);
+    actionTextEdit->setLocation(MAction::NoLocation);
+
+}
 QTEST_APPLESS_MAIN(Ut_MToolBar)
