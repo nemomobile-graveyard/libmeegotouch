@@ -756,124 +756,124 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
         <translation>Verstecken</translation>
     </message>
     <message id="xx_language_title">
-        <location filename="../languagepage.cpp" line="120"/>
+        <location filename="../languagepage.cpp" line="118"/>
         <source>Change Language</source>
         <translation>Sprache Ändern</translation>
     </message>
     <message id="xx_locale_none">
-        <location filename="../languagepage.cpp" line="139"/>
+        <location filename="../languagepage.cpp" line="137"/>
         <source>None</source>
         <translation>Keine</translation>
     </message>
     <message id="xx_locale_ar">
-        <location filename="../languagepage.cpp" line="144"/>
+        <location filename="../languagepage.cpp" line="142"/>
         <source>Arabic</source>
         <translation>Arabisch</translation>
     </message>
     <message id="xx_locale_de">
-        <location filename="../languagepage.cpp" line="149"/>
+        <location filename="../languagepage.cpp" line="147"/>
         <source>German</source>
         <translation>Deutsch</translation>
     </message>
     <message id="xx_locale_de_AT">
-        <location filename="../languagepage.cpp" line="154"/>
+        <location filename="../languagepage.cpp" line="152"/>
         <source>German (Austria)</source>
         <translation>Deutsch (Österreich)</translation>
     </message>
     <message id="xx_locale_de_CH">
-        <location filename="../languagepage.cpp" line="159"/>
+        <location filename="../languagepage.cpp" line="157"/>
         <source>German (Switzerland)</source>
         <translation>Deutsch (Schweiz)</translation>
     </message>
     <message id="xx_locale_en">
-        <location filename="../languagepage.cpp" line="164"/>
+        <location filename="../languagepage.cpp" line="162"/>
         <source>English</source>
         <translation>Englisch</translation>
     </message>
     <message id="xx_locale_fi">
-        <location filename="../languagepage.cpp" line="169"/>
+        <location filename="../languagepage.cpp" line="167"/>
         <source>Finnish</source>
         <translation>Finnisch</translation>
     </message>
     <message id="xx_locale_hi">
-        <location filename="../languagepage.cpp" line="174"/>
+        <location filename="../languagepage.cpp" line="172"/>
         <source>Hindi</source>
         <translation>Hindi</translation>
     </message>
     <message id="xx_locale_hu">
-        <location filename="../languagepage.cpp" line="179"/>
+        <location filename="../languagepage.cpp" line="177"/>
         <source>Hungarian</source>
         <translation>Ungarisch</translation>
     </message>
     <message id="xx_locale_ja">
-        <location filename="../languagepage.cpp" line="184"/>
+        <location filename="../languagepage.cpp" line="182"/>
         <source>Japanese</source>
         <translation>Japanisch</translation>
     </message>
     <message id="xx_locale_ur">
-        <location filename="../languagepage.cpp" line="189"/>
+        <location filename="../languagepage.cpp" line="187"/>
         <source>Urdu</source>
         <translation>Urdu</translation>
     </message>
     <message id="xx_locale_ur_PK">
-        <location filename="../languagepage.cpp" line="194"/>
+        <location filename="../languagepage.cpp" line="192"/>
         <source>Urdu (Pakistan)</source>
         <translation>Urdu (Pakistan)</translation>
     </message>
     <message id="xx_locale_ur_IN">
-        <location filename="../languagepage.cpp" line="199"/>
+        <location filename="../languagepage.cpp" line="197"/>
         <source>Urdu (India)</source>
         <translation>Urdu (Indien)</translation>
     </message>
     <message id="xx_locale_zh_CN">
-        <location filename="../languagepage.cpp" line="204"/>
+        <location filename="../languagepage.cpp" line="202"/>
         <source>Chinese (China)</source>
         <translation>Vereinfachtes Chinesisch (China)</translation>
     </message>
     <message id="xx_locale_zh_TW">
-        <location filename="../languagepage.cpp" line="209"/>
+        <location filename="../languagepage.cpp" line="207"/>
         <source>Chinese (Taiwan)</source>
         <translation>Chinesisch (Taiwan)</translation>
     </message>
     <message id="xx_language_combobox_title">
-        <location filename="../languagepage.cpp" line="304"/>
+        <location filename="../languagepage.cpp" line="302"/>
         <source>Please select language</source>
         <translation>Bitte wählen Sie die Sprache:</translation>
     </message>
     <message id="xx_language_combobox_lctime_title">
-        <location filename="../languagepage.cpp" line="306"/>
+        <location filename="../languagepage.cpp" line="304"/>
         <source>Locale for time</source>
         <translation>Locale für Zeit</translation>
     </message>
     <message id="xx_language_combobox_lccollate_title">
-        <location filename="../languagepage.cpp" line="308"/>
+        <location filename="../languagepage.cpp" line="306"/>
         <source>Locale for collation</source>
         <translation>Locale für Sortierung</translation>
     </message>
     <message id="xx_language_combobox_lcnumeric_title">
-        <location filename="../languagepage.cpp" line="310"/>
+        <location filename="../languagepage.cpp" line="308"/>
         <source>Locale for numbers</source>
         <translation>Locale für Zahlen</translation>
     </message>
     <message id="xx_language_combobox_lcmonetary_title">
-        <location filename="../languagepage.cpp" line="312"/>
+        <location filename="../languagepage.cpp" line="310"/>
         <source>Locale for money</source>
         <translation>Locale für Geld</translation>
     </message>
     <message id="qtn_comm_command_yes">
-        <location filename="../languagepage.cpp" line="316"/>
-        <location filename="../languagepage.cpp" line="323"/>
+        <location filename="../languagepage.cpp" line="314"/>
+        <location filename="../languagepage.cpp" line="321"/>
         <source>Yes</source>
         <translation>Ja</translation>
     </message>
     <message id="qtn_comm_command_no">
-        <location filename="../languagepage.cpp" line="319"/>
-        <location filename="../languagepage.cpp" line="326"/>
+        <location filename="../languagepage.cpp" line="317"/>
+        <location filename="../languagepage.cpp" line="324"/>
         <source>No</source>
         <translation>Nein</translation>
     </message>
     <message id="xx_language_number_format">
-        <location filename="../languagepage.cpp" line="335"/>
+        <location filename="../languagepage.cpp" line="333"/>
         <source>Number format example: %1!! Number example: %1!! Number: %1</source>
         <translation variants="yes">
             <lengthvariant>Beispiel für Zahlenformatierung: %1</lengthvariant>
@@ -882,7 +882,7 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
         </translation>
     </message>
     <message id="xx_langage_date_time_format">
-        <location filename="../languagepage.cpp" line="339"/>
+        <location filename="../languagepage.cpp" line="337"/>
         <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
         <translation variants="yes">
             <lengthvariant>Beispiel für Datums- und Zeitformatierung: %1</lengthvariant>
@@ -892,8 +892,17 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
             <lengthvariant>%1</lengthvariant>
         </translation>
     </message>
+    <message id="xx_language_week_number">
+        <location filename="../languagepage.cpp" line="344"/>
+        <source>Week number example: %1</source>
+        <translation variants="yes">
+            <lengthvariant>Kalenderwochennummerbeispiel: %1</lengthvariant>
+            <lengthvariant>Wochennummerbeispiel: %1</lengthvariant>
+            <lengthvariant>Wochennummer: %1</lengthvariant>
+        </translation>
+    </message>
     <message id="xx_language_currency_format">
-        <location filename="../languagepage.cpp" line="345"/>
+        <location filename="../languagepage.cpp" line="350"/>
         <source>Currency format example: %1 %2!! Currency: %1 %2</source>
         <translation variants="yes">
             <lengthvariant>Beispiel für Geldbetragformatierung: %1 %2</lengthvariant>
@@ -903,9 +912,9 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
         </translation>
     </message>
     <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
-        <location filename="../languagepage.cpp" line="351"/>
-        <location filename="../languagepage.cpp" line="353"/>
-        <location filename="../languagepage.cpp" line="355"/>
+        <location filename="../languagepage.cpp" line="356"/>
+        <location filename="../languagepage.cpp" line="358"/>
+        <location filename="../languagepage.cpp" line="360"/>
         <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
         <translation>
             <numerusform variants="yes">
@@ -919,7 +928,7 @@ Die primäre Aktion  (kurzes Einzelklopfen) auf dieses Element sollte nicht im O
         </translation>
     </message>
     <message id="xx_language_font_test">
-        <location filename="../languagepage.cpp" line="359"/>
+        <location filename="../languagepage.cpp" line="364"/>
         <source>Font test:</source>
         <translation>Zeichensatzprüfung:</translation>
     </message>
@@ -1171,39 +1180,44 @@ Eingaberückmeldungen können mit Hilfe des Theming-Systems einfach für verschi
         <translation>Stumm</translation>
     </message>
     <message id="xx_gridpage_configuration">
-        <location filename="../mgridpage.cpp" line="193"/>
+        <location filename="../mgridpage.cpp" line="201"/>
         <source>Configuration</source>
         <translation>Einstellung</translation>
     </message>
     <message id="xx_gridpage_title">
-        <location filename="../mgridpage.cpp" line="204"/>
+        <location filename="../mgridpage.cpp" line="212"/>
         <source>Grid page</source>
         <translation>Gitter Seite</translation>
     </message>
     <message id="xx_gridpage_set_columns">
-        <location filename="../mgridpage.cpp" line="290"/>
+        <location filename="../mgridpage.cpp" line="304"/>
         <source>Set columns</source>
         <translation>Spalten einstellen</translation>
     </message>
     <message id="xx_gridpage_landscape">
-        <location filename="../mgridpage.cpp" line="316"/>
+        <location filename="../mgridpage.cpp" line="330"/>
         <source>Landscape</source>
         <translation>Querformat</translation>
     </message>
     <message id="xx_gridpage_portrait">
-        <location filename="../mgridpage.cpp" line="321"/>
+        <location filename="../mgridpage.cpp" line="335"/>
         <source>Portrait</source>
         <translation>Hochformat</translation>
     </message>
     <message id="xx_bubblepage_title">
-        <location filename="../bubblepage.cpp" line="143"/>
+        <location filename="../bubblepage.cpp" line="145"/>
         <source>Speech Bubble</source>
         <translation>Sprechblase</translation>
     </message>
     <message id="xx_wg_bubblepage_linkactivated">
-        <location filename="../bubblepage.cpp" line="156"/>
+        <location filename="../bubblepage.cpp" line="158"/>
         <source>Link activated</source>
         <translation>Link aktiviert</translation>
+    </message>
+    <message id="xx_wg_bubblepage_bubbleclicked">
+        <location filename="../bubblepage.cpp" line="165"/>
+        <source>Speech buuble clicked</source>
+        <translation>Sprechblase angeklickt</translation>
     </message>
     <message id="xx_content_items_subtitle">
         <location filename="../contentitemspage.cpp" line="63"/>
