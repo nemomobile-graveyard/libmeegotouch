@@ -299,7 +299,7 @@ void QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
                                .arg(rect.width())
                                .arg(rect.height());
 
-            if (!enableCache || !QPixmapCache::find(cacheKey, backgroundPixmap)) {
+            if ((!enableCache || !QPixmapCache::find(cacheKey, backgroundPixmap)) && rect.isValid()) {
                 backgroundPixmap.fill(Qt::transparent);
                 QPainter pixmapPainter;
                 pixmapPainter.begin(&backgroundPixmap);
