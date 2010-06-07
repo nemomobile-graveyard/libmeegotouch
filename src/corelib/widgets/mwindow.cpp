@@ -483,19 +483,23 @@ qreal MWindow::globalAlpha()
     int actualFormat = 0;
     unsigned long nitems = 0;
     unsigned long bytes = 0;
-    unsigned long *data = 0;
+
+    union {
+        unsigned char* asUChar;
+        unsigned long* asULong;
+    } data = {0};
 
     Atom globalAlpha = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_GLOBAL_ALPHA", False);
 
     int status = XGetWindowProperty(QX11Info::display(), winId(), globalAlpha,
                                     0, 1, False, AnyPropertyType,
                                     &actualType, &actualFormat, &nitems,
-                                    &bytes, (unsigned char **)&data);
+                                    &bytes, &data.asUChar);
 
     if (status == Success && actualType == XA_CARDINAL && actualFormat == 32 && nitems == 1)
-        level = (qreal)data[0] / 0xffffffff;
+        level = (qreal)data.asULong[0] / 0xffffffff;
     if (status == Success)
-        XFree(data);
+        XFree(data.asUChar);
 #endif
     return level;
 }
