@@ -615,8 +615,7 @@ public:
      - \%U Week number of the year (Sunday as the first day of the week) as a
        decimal number (00-53). All days in a new year preceding the first
        Sunday are considered to be in week 0.
-     - \%v Week number of the year, as a decimal number with two digits including
-       a possible leading zero, according to "week" keyword.
+     - \%v Same as \%V, for compatibility
      - \%V Week of the year (Monday as the first day of the week), as a decimal
        number (01-53). The method for determining the week number is as
        specified by ISO 8601.

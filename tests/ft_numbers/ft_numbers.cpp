@@ -68,11 +68,21 @@ void Ft_Numbers::testQLongLongs_data()
             << QString("de_CH")
             << (qlonglong) 1542678073
             << QString("1'542'678'073");
+    QTest::newRow("fr_FR 0")
+            << QString("fr_FR")
+            << QString("fr_FR")
+            << (qlonglong) 0
+            << QString("0");
     QTest::newRow("fr_FR")
             << QString("fr_FR")
             << QString("fr_FR")
             << (qlonglong) 1542678073
             << QString("1 542 678 073");
+    QTest::newRow("ar_EG 0")
+            << QString("ar_EG")
+            << QString("ar_EG")
+            << (qlonglong) 0
+            << QString("٠");
     QTest::newRow("ar_EG")
             << QString("ar_EG")
             << QString("ar_EG")

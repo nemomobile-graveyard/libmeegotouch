@@ -1278,7 +1278,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%U" // week number of year, with Sunday as first day of week (00..53)
-            << "5";
+            << "05";
     QTest::newRow("fi_FI %V")
             << MLocale::GregorianCalendar
             << 2008
@@ -1289,7 +1289,7 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "fi_FI"
             << "%V" // ISO week number, with Monday as first day of week (01..53)"
-            << "5";
+            << "05";
     QTest::newRow("fi_FI %W")
             << MLocale::GregorianCalendar
             << 2008
@@ -1746,7 +1746,18 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "en_GB"
             << "%U" // week number of year, with Sunday as first day of week (00..53)
-            << "5";
+            << "05";
+    QTest::newRow("ar_EG %U")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "ar_EG"
+            << "%U" // week number of year, with Sunday as first day of week (00..53)
+            << "٠٥";
     QTest::newRow("en_GB %V")
             << MLocale::GregorianCalendar
             << 2008
@@ -1757,7 +1768,18 @@ void Ut_MCalendar::testPosixFormatPattern_data()
             << 3
             << "en_GB"
             << "%V" // ISO week number, with Monday as first day of week (01..53)"
-            << "5";
+            << "05";
+    QTest::newRow("ar_EG %V")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "ar_EG"
+            << "%V" // ISO week number, with Monday as first day of week (01..53)"
+            << "٠٥";
     QTest::newRow("en_GB %W")
             << MLocale::GregorianCalendar
             << 2008

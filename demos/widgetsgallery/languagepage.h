@@ -63,6 +63,7 @@ private:
     MLabel *labelHaveIcu;
     MLabel *labelExampleNumber;
     MLabel *labelExampleDateTime;
+    MLabel *labelExampleWeekNumber;
     MLabel *labelExampleCurrency;
     MLabel *labelExampleTranslation1;
     MLabel *labelExampleTranslation2;

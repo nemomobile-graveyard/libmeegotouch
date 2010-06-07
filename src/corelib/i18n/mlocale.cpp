@@ -313,9 +313,9 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
     icu::DateFormat *df
     = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
 
-    // Symbols come from the messages locale
+    // Symbols come from the time locale
     icu::Locale symbolLocale
-    = MIcuConversions::createLocale(categoryName(MLocale::MLcMessages),
+    = MIcuConversions::createLocale(categoryName(MLocale::MLcTime),
                                       mcalendar.type());
 
     DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
@@ -1485,10 +1485,9 @@ QString MLocale::formatDateTimeICU(const MCalendar &mCalendar,
                                      const QString &formatString) const
 {
     Q_D(const MLocale);
-    // Note: using MESSAGES locale here to get symbols in right language
     UErrorCode status = U_ZERO_ERROR;
     icu::SimpleDateFormat formatter(MIcuConversions::qStringToUnicodeString(formatString),
-                                    d->getCategoryLocale(MLcMessages), status);
+                                    d->getCategoryLocale(MLcTime), status);
 
     if (U_FAILURE(status)) {
         return QString();
@@ -1545,6 +1544,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
 {
     Q_D(const MLocale);
     // convert POSIX format string into ICU format
+
+    MLocale timeLocale(categoryName(MLocale::MLcTime));
 
     QString icuFormat;
 
@@ -1611,7 +1612,7 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
             case 'C': {
                 // century, no corresponding icu pattern
                 int century = mCalendar.year() / 100;
-                icuFormat.append(QString::number(century));
+                icuFormat.append(timeLocale.formatNumber(century));
                 break;
             }
 
@@ -1721,22 +1722,20 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
             case 'u':
                 // Weekday, as a decimal number (1(Monday)-7)
                 // no corresponding icu pattern for monday based weekday
-                icuFormat.append(QString::number(mCalendar.dayOfWeek()));
+                icuFormat.append(timeLocale.formatNumber(mCalendar.dayOfWeek()));
                 break;
 
             case 'U': {
                 // Week number of the year (Sunday as the first day of the week) as a
-                // decimal number (00-53). first week starts from first sunday.
-                int weeknumber = weekNumberStartingFromDay(mCalendar, MLocale::Sunday);
-                icuFormat.append(QString::number(weeknumber));
+                // decimal number (00-53). First week starts from first Sunday.
+                QString weeknumber = timeLocale.formatNumber(weekNumberStartingFromDay(mCalendar, MLocale::Sunday));
+                if (weeknumber.length() < 2)
+                    weeknumber = timeLocale.formatNumber(0) + weeknumber;
+                icuFormat.append(weeknumber);
                 break;
             }
 
-            case 'v':
-                // week number of the year in two digits
-                icuFormat.append("ww");
-                break;
-
+            case 'v': // same as %V, for compatibility
             case 'V': {
                 // Week of the year (Monday as the first day of the week), as a decimal
                 // number (01-53). according to ISO-8601
@@ -1744,8 +1743,10 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 MCalendar calendarCopy = mCalendar;
                 calendarCopy.setFirstDayOfWeek(MLocale::Monday);
                 calendarCopy.setMinimalDaysInFirstWeek(4);
-                int weeknumber = calendarCopy.weekNumber();
-                icuFormat.append(QString::number(weeknumber));
+                QString weeknumber = timeLocale.formatNumber(calendarCopy.weekNumber());
+                if (weeknumber.length() < 2)
+                    weeknumber = timeLocale.formatNumber(0) + weeknumber;
+                icuFormat.append(weeknumber);
                 break;
             }
 
@@ -1757,7 +1758,7 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                     weekday = 0;
                 }
 
-                icuFormat.append(QString::number(weekday));
+                icuFormat.append(timeLocale.formatNumber(weekday));
                 break;
             }
 
@@ -1765,7 +1766,7 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 // Week number of the year (Monday as the first day of the week), as a
                 // decimal number (00-53). Week starts from the first monday
                 int weeknumber = weekNumberStartingFromDay(mCalendar, MLocale::Monday);
-                icuFormat.append(QString::number(weeknumber));
+                icuFormat.append(timeLocale.formatNumber(weeknumber));
                 break;
             }
 

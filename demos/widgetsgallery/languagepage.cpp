@@ -52,6 +52,7 @@ LanguagePage::LanguagePage()
       labelHaveIcu(0),
       labelExampleNumber(0),
       labelExampleDateTime(0),
+      labelExampleWeekNumber(0),
       labelExampleCurrency(0),
       labelExampleTranslation1(0),
       labelExampleTranslation2(0),
@@ -85,6 +86,7 @@ void LanguagePage::createContent()
     labelHaveIcu = new MLabel;
     labelExampleNumber = new MLabel;
     labelExampleDateTime = new MLabel;
+    labelExampleWeekNumber = new MLabel;
     labelExampleCurrency = new MLabel;
     labelExampleTranslation1 = new MLabel;
     labelExampleTranslation2 = new MLabel;
@@ -100,11 +102,12 @@ void LanguagePage::createContent()
     policy->addItem(labelHaveIcu, 7, 1);
     policy->addItem(labelExampleNumber, 8, 1);
     policy->addItem(labelExampleDateTime, 9, 1);
-    policy->addItem(labelExampleCurrency, 10, 1);
-    policy->addItem(labelExampleTranslation1, 11, 1);
-    policy->addItem(labelExampleTranslation2, 12, 1);
-    policy->addItem(labelExampleTranslation3, 13, 1);
-    policy->addItem(labelFontTest, 14, 1);
+    policy->addItem(labelExampleWeekNumber, 10, 1);
+    policy->addItem(labelExampleCurrency, 11, 1);
+    policy->addItem(labelExampleTranslation1, 12, 1);
+    policy->addItem(labelExampleTranslation2, 13, 1);
+    policy->addItem(labelExampleTranslation3, 14, 1);
+    policy->addItem(labelFontTest, 15, 1);
 
     retranslateUi();
 }
@@ -335,6 +338,13 @@ void LanguagePage::retranslateUi()
         .arg(currentLocale.formatDateTime(
                  datetime, MLocale::DateFull, MLocale::TimeFull,
                  MLocale::GregorianCalendar)));
+
+    //% "Week number example: %1"
+    labelExampleWeekNumber->setText(
+        qtTrId("xx_language_week_number")
+        .arg(currentLocale.formatDateTime(
+                 datetime, "%%U %U %%v %v %%V %V")));
+
     //% "Currency format example: %1 %2\x9c!! Currency: %1 %2"
     labelExampleCurrency->setText(
         qtTrId("xx_language_currency_format")
