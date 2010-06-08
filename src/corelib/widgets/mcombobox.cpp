@@ -87,7 +87,6 @@ void MComboBoxPrivate::_q_itemClicked(const QModelIndex &index)
     emit q->activated(q->itemText(row));
 }
 
-
 MComboBox::MComboBox(QGraphicsItem *parent)
     : MWidgetController(new MComboBoxPrivate(), new MComboBoxModel(), parent)
 {
@@ -379,6 +378,11 @@ void MComboBox::setCurrentIndex(int index)
 void MComboBox::click()
 {
     emit clicked();
+}
+
+void MComboBox::dismiss()
+{
+    emit dismissed();
 }
 
 #include "moc_mcombobox.cpp"

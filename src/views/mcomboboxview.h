@@ -77,6 +77,9 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void _q_itemModelCurrentIndexChanged(int))
     Q_PRIVATE_SLOT(d_func(), void _q_showPopup())
+    Q_PRIVATE_SLOT(d_func(), void _q_dismissPopup())
+    Q_PRIVATE_SLOT(d_func(), void _q_popuplistAppeared())
+    Q_PRIVATE_SLOT(d_func(), void _q_popuplistDisappeared())
 
 #ifdef UNIT_TEST
     friend class Ut_MComboBox;

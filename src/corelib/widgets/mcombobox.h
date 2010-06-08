@@ -370,12 +370,22 @@ public Q_SLOTS:
     */
     void click();
 
+    /*!
+      \brief Dismisses popup list programatically.
+    */
+    void dismiss();
+
 Q_SIGNALS:
 
     /**
-        \brief This signal is emitted when comboBox is clicked
+        \brief This signal is emitted when comboBox is clicked.
      */
     void clicked();
+
+    /**
+        \brief This signal is emitted when popup list is dismissed.
+     */
+    void dismissed();
 
     /**
         \brief This signal is emitted whenever the currentIndex in the combobox changes

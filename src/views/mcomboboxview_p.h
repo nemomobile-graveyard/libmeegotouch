@@ -42,12 +42,16 @@ public:
     void updateSubtitle(int currentIndex);
 
     void _q_showPopup();
+    void _q_dismissPopup();
+    void _q_popuplistAppeared();
+    void _q_popuplistDisappeared();
     void _q_itemModelCurrentIndexChanged(int currentIndex);
 
     MComboBox    *controller;
     QGraphicsLinearLayout    *layout;
     MContentItem *contentItem;
     MPopupList   *popuplist;
+    bool isPopupShowing;
     QPixmap *pixmap;
     MProgressIndicator *progressIndicator;
 };

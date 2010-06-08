@@ -27,6 +27,7 @@
 #include "mscalableimage.h"
 #include "mviewcreator.h"
 #include "mpopuplist.h"
+#include "mapplication.h"
 #include "mapplicationwindow.h"
 #include "mscenemanager.h"
 #include "mlocale.h"
@@ -41,6 +42,7 @@ MComboBoxViewPrivate::MComboBoxViewPrivate()
     layout(0),
     contentItem(0),
     popuplist(0),
+    isPopupShowing(0),
     pixmap(0),
     progressIndicator(0)
 {
@@ -70,6 +72,7 @@ void MComboBoxViewPrivate::init()
     QObject::connect(contentItem, SIGNAL(clicked()), controller, SLOT(click()));
     QObject::connect(controller, SIGNAL(currentIndexChanged(int)), q, SLOT(_q_itemModelCurrentIndexChanged(int)));
     QObject::connect(controller, SIGNAL(clicked()), q, SLOT(_q_showPopup()));
+    QObject::connect(controller, SIGNAL(dismissed()), q ,SLOT(_q_dismissPopup()));
 }
 
 void MComboBoxViewPrivate::initLayout()
@@ -152,13 +155,39 @@ void MComboBoxViewPrivate::_q_showPopup()
         popuplist->setSelectionModel(controller->selectionModel());
         popuplist->setTitle(controller->title());
         QObject::connect(popuplist, SIGNAL(clicked(QModelIndex)), controller, SLOT(_q_itemClicked(QModelIndex)));
+        QObject::connect(popuplist, SIGNAL(appeared()), q, SLOT(_q_popuplistAppeared()));
+        QObject::connect(popuplist, SIGNAL(disappeared()), q, SLOT(_q_popuplistDisappeared()));
+
+        QObject::connect(popuplist, SIGNAL(rejected()), controller, SIGNAL(dismissed()));
     }
 
     popuplist->scrollTo(q->model()->selectionModel()->currentIndex());
 
-    if (controller->sceneManager()) {
+    if (controller->sceneManager())
         controller->sceneManager()->appearSceneWindow(popuplist);
-    }
+}
+
+void MComboBoxViewPrivate::_q_dismissPopup()
+{
+    if (!popuplist)
+        return;
+
+    if (!isPopupShowing)
+        return;
+
+    QObject::disconnect(popuplist, SIGNAL(rejected()), controller, SIGNAL(dismissed()));
+    popuplist->reject();
+    QObject::connect(popuplist, SIGNAL(rejected()), controller, SIGNAL(dismissed()));
+}
+
+void MComboBoxViewPrivate::_q_popuplistAppeared()
+{
+    isPopupShowing = true;
+}
+
+void MComboBoxViewPrivate::_q_popuplistDisappeared()
+{
+    isPopupShowing = false;
 }
 
 MComboBoxView::MComboBoxView(MComboBox *controller) :
