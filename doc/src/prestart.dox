@@ -1,4 +1,4 @@
-/*! \page prestart How to prestartable and lazy shutdownable applications
+/*! \page prestart How to write prestartable and lazy shutdownable applications
 
 Prestarting and lazy shutdown reduces the startup time of an
 application to zero: the application is able to show its GUI
@@ -13,11 +13,11 @@ in the background in their mainloop but not showing nor doing anything. If
 application gets terminated, Applifed re-prestarts is automatically.
 
 Lazy shutdown allows an application to enter the \b prestarted \b
-state instead of terminating, when closed by user. This makes the next
+state instead of terminating when closed by the user. This makes the next
 application startup very fast. Automatically prestarted applications
 can use lazy shutdown as well.
 
-
+ 
 \section terminology Terminology
 
 - \b Launch - user action that aims to start an application so that
@@ -101,7 +101,7 @@ If the \c launch() method in MApplication's D-Bus interface is called
 (because of user tapping the application icon, for instance) and the
 application is in the prestarted state, the application is released
 from the prestarted state and allowed to continue to the running
-state. 
+state. Make sure that the application registers exactly the same D-Bus service that is defined in the corresponding .service file. Contradictory services may lead to longer startup times.
 
 The default launch from the application grid can be simulated, for example, like this:
 

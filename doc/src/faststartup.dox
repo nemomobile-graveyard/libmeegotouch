@@ -36,7 +36,6 @@ An application can use any combination of the above features.
 
     \li <a href="launcher.html">How to write launchable applications</a>
 
-    \li <a href="prestart.html">How to write a prestartable and lazy
-    shutdownable applications</a>
+    \li <a href="prestart.html">How to write prestartable and lazy shutdownable applications</a>
 
 */
