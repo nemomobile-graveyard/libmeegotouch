@@ -30,7 +30,10 @@
 #include "mlistview_p.h"
 
 //// MListView /////
-MListView::MListView(MWidgetController *widgetController) : MWidgetView(widgetController), d_ptr(NULL)
+MListView::MListView(MWidgetController *widgetController)
+    : MWidgetView(widgetController),
+    d_ptr(NULL),
+    clearVisibleOnRelayout(false)
 {
     controller = dynamic_cast<MList *>(widgetController);
 }
@@ -162,11 +165,16 @@ void MListView::setGeometry(const QRectF &rect)
 
 void MListView::relayoutItemsInViewportRect()
 {
+    if (clearVisibleOnRelayout) {
+        d_ptr->clearVisibleItemsArray();
+        d_ptr->clearFirstAndLastVisibleRows();
+        clearVisibleOnRelayout = false;
+    }
+
     if (d_ptr->model && model()->cellCreator()) {
         int rowCount = d_ptr->rowCount;
 
-        if(rowCount)
-        {
+        if (rowCount) {
             QModelIndex firstVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y());
             d_ptr->updateFirstVisibleRow(firstVisibleRow);
             QModelIndex lastVisibleRow = d_ptr->locateVisibleIndexAt(d_ptr->viewportTopLeft.y() + d_ptr->viewportVisibleHeight);
@@ -257,8 +265,7 @@ void MListView::layoutChanged()
     d_ptr->layoutChanged();
 
     updateGeometry();
-    d_ptr->clearVisibleItemsArray();
-    d_ptr->clearFirstAndLastVisibleRows();
+    clearVisibleOnRelayout = true;
 }
 
 void MListView::modelReset()
