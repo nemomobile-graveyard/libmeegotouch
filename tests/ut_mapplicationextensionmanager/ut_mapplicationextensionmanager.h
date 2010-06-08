@@ -98,7 +98,9 @@ private:
     /*!
      * Sets up the test subject.
      */
-    void setupTestSubject(const QString &inProcessFilter = QString(), const QString &outOfProcessFilter = QString());
+    void setupTestSubject(const QString &inProcessFilter = QString(),
+                          const QString &outOfProcessFilter = QString(),
+                          const QStringList &order = QStringList());
 
     int goodExtensionCount;
 
@@ -113,6 +115,7 @@ private:
 
     QList<MApplicationExtensionInterface*> extensions;
 
+    void verifyOrderCreatedInDataStore(int order);
 
 signals:
     void directoryChanged(QString path);
@@ -164,6 +167,9 @@ private slots:
     void testInProcessExtensionFiltering();
     void testOutOfProcessExtensionFiltering();
     void testUpdateInProcessExtension();
+
+    // Test ordering of the extensions
+    void testOrdering();
 
     // Test that manager returns list of instantiated in process extensions when requested.
     void testRequestForAllInProcessExtensionsReturnsAListOfExtensions();

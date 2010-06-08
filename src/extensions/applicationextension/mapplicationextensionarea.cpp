@@ -113,6 +113,12 @@ void MApplicationExtensionArea::setOutOfProcessFilter(const QRegExp &outOfProces
     d->extensionManager->setOutOfProcessFilter(outOfProcessFilter);
 }
 
+void MApplicationExtensionArea::setOrder(const QStringList &order)
+{
+    Q_D(MApplicationExtensionArea);
+    d->extensionManager->setOrder(order);
+}
+
 bool MApplicationExtensionArea::init()
 {
     Q_D(MApplicationExtensionArea);

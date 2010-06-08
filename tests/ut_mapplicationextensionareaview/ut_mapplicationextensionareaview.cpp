@@ -98,11 +98,12 @@ void Ut_MApplicationExtensionAreaView::createWidgets(int numberOfWidgets, bool c
     }
 }
 
-bool Ut_MApplicationExtensionAreaView::widgetInLayout(MWidget *widget)
+int Ut_MApplicationExtensionAreaView::widgetPosInLayout(MWidget *widget)
 {
     QGraphicsLinearLayout *layout = dynamic_cast<QGraphicsLinearLayout *>(extensionArea->layout());
 
-    bool found = false;
+    int pos = -1;
+
     if (layout) {
         for (int i = 0; i < layout->count(); ++i) {
             QGraphicsWidget *w = NULL;
@@ -116,11 +117,19 @@ bool Ut_MApplicationExtensionAreaView::widgetInLayout(MWidget *widget)
                 w = dynamic_cast<MWidget *>(layout->itemAt(i));
             }
 
-            found |= w == widget;
+            if(w == widget) {
+                pos = i;
+                break;
+            }
         }
     }
 
-    return found;
+    return pos;
+}
+
+bool Ut_MApplicationExtensionAreaView::widgetInLayout(MWidget *widget)
+{
+    return widgetPosInLayout(widget) >= 0;
 }
 
 void Ut_MApplicationExtensionAreaView::testLayoutPolicy()
@@ -157,6 +166,56 @@ void Ut_MApplicationExtensionAreaView::testAddition()
 
     delete widget1;
     delete widget2;
+}
+
+void Ut_MApplicationExtensionAreaView::testOrdering()
+{
+    MWidget *widget1 = new MWidget;
+    MWidget *widget2 = new MWidget;
+    MWidget *widget3 = new MWidget;
+    MockDataStore store1;
+    MockDataStore store2;
+    MockDataStore store3;
+
+    // add one widget with order specified, other without, check ordering
+    store1.createValue("order", 0);
+    addWidgetToApplicationExtensionArea(widget1, &store1);
+    addWidgetToApplicationExtensionArea(widget2, &store2);
+    QCOMPARE(widgetPosInLayout(widget1), 0);
+    QCOMPARE(widgetPosInLayout(widget2), 1);
+    QCOMPARE(extensionArea->layout()->count(), 2);
+
+    // add another widget with order specified, check the ordering
+    store3.createValue("order", 2);
+    addWidgetToApplicationExtensionArea(widget3, &store3);
+    QCOMPARE(widgetPosInLayout(widget1), 0);
+    QCOMPARE(widgetPosInLayout(widget3), 1);
+    QCOMPARE(widgetPosInLayout(widget2), 2);
+    QCOMPARE(extensionArea->layout()->count(), 3);
+
+    // reverse the order of two widgets, check ordering
+    store1.createValue("order", 1);
+    store2.createValue("order", 0);
+    extensionArea->model()->dataStoresModified();
+    QCOMPARE(widgetPosInLayout(widget1), 1);
+    QCOMPARE(widgetPosInLayout(widget2), 0);
+    QCOMPARE(widgetPosInLayout(widget3), 2);
+    QCOMPARE(extensionArea->layout()->count(), 3);
+
+    // remove widget from middle, check ordering
+    removeWidgetFromApplicationExtensionArea(widget1);
+    QCOMPARE(widgetPosInLayout(widget2), 0);
+    QCOMPARE(widgetPosInLayout(widget3), 1);
+    QCOMPARE(extensionArea->layout()->count(), 2);
+
+    // add a widget with layoutIndex, without order
+    store1.createValue("layoutIndex", 0);
+    store1.remove("order");
+    addWidgetToApplicationExtensionArea(widget1, &store1);
+    QCOMPARE(widgetPosInLayout(widget2), 0);
+    QCOMPARE(widgetPosInLayout(widget3), 1);
+    QCOMPARE(widgetPosInLayout(widget1), 2);
+    QCOMPARE(extensionArea->layout()->count(), 3);
 }
 
 void Ut_MApplicationExtensionAreaView::testRemoval()

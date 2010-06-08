@@ -33,7 +33,8 @@
 
 MApplicationExtensionManager::MApplicationExtensionManager(const QString &interface) :
         initialized(false),
-        interface(interface)
+        interface(interface),
+        unorderedExtensionsIndex(-1)
 {
 }
 
@@ -61,6 +62,17 @@ void MApplicationExtensionManager::setOutOfProcessFilter(const QRegExp &outOfPro
         this->outOfProcessFilter = outOfProcessFilter;
     }
 }
+
+void MApplicationExtensionManager::setOrder(const QStringList &order)
+{
+    if(!initialized) {
+        extensionOrder = order;
+        extensionOrder.removeDuplicates();
+        unorderedExtensionsIndex = extensionOrder.indexOf("");
+        extensionOrder.replaceInStrings(QRegExp("^"), QString(APPLICATION_EXTENSION_DATA_DIR) + "/");
+    }
+}
+
 
 bool MApplicationExtensionManager::init()
 {
@@ -302,10 +314,19 @@ bool MApplicationExtensionManager::createDataStore()
 QSharedPointer<MDataStore> MApplicationExtensionManager::createSubDataStore(
     const MApplicationExtensionMetaData &metadata)
 {
-    return QSharedPointer<MDataStore>(
-        new MSubDataStore(
+    MSubDataStore *ds = new MSubDataStore(
             metadata.fileName().replace('/', '\\')
-            + QString("/"), *extensionDataStore));
+            + QString("/"), *extensionDataStore);
+
+    int order = extensionOrder.indexOf(metadata.fileName());
+    if(order == -1) {
+        order = unorderedExtensionsIndex;
+    }
+    if(order != -1) {
+        ds->createValue("order", order);
+    }
+
+    return QSharedPointer<MDataStore>(ds);
 }
 
 void MApplicationExtensionManager::connectSignals()

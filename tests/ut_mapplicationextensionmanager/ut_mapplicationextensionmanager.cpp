@@ -149,7 +149,8 @@ void Ut_MApplicationExtensionManager::cleanupTestCase()
 {
 }
 
-void Ut_MApplicationExtensionManager::setupTestSubject(const QString &inProcessFilter, const QString &outOfProcessFilter)
+void Ut_MApplicationExtensionManager::setupTestSubject(const QString &inProcessFilter, const QString &outOfProcessFilter,
+                                                       const QStringList &order)
 {
     delete manager;
     manager = new MApplicationExtensionManager(interfaceName);
@@ -158,6 +159,9 @@ void Ut_MApplicationExtensionManager::setupTestSubject(const QString &inProcessF
     }
     if (!outOfProcessFilter.isEmpty()) {
         manager->setOutOfProcessFilter(QRegExp(outOfProcessFilter));
+    }
+    if (!order.isEmpty()) {
+        manager->setOrder(order);
     }
     manager->init();
     connect(this, SIGNAL(directoryChanged(QString)), manager, SLOT(updateAvailableExtensions(QString)));
@@ -394,6 +398,49 @@ void Ut_MApplicationExtensionManager::testOutOfProcessExtensionFiltering()
     setupTestSubject("$^", "^test.desktop$");
     manager->instantiateExtension(metaData);
     QCOMPARE(signalListener.createdWidgets.count(), 1);
+}
+
+void Ut_MApplicationExtensionManager::verifyOrderCreatedInDataStore(int order)
+{
+    QVERIFY(gMFileDataStoreStub->stubCallCount("createValue") > 0);
+    MethodCall *call = gMFileDataStoreStub->stubCallsTo("createValue").takeLast();
+    QVERIFY(call->parameter<const QString>(0).endsWith("order"));
+    QVERIFY(call->parameter<const QVariant>(1).canConvert(QVariant::Int));
+    QCOMPARE(call->parameter<const QVariant>(1).toInt(), order);
+}
+
+void Ut_MApplicationExtensionManager::testOrdering()
+{
+    MWidget extensionWidget1;
+    setupGoodExtension(true, &extensionWidget1);
+    gMDesktopEntryStub->stubSetReturnValue("fileName", QString(APPLICATION_EXTENSION_DATA_DIR) + "/test");
+    QSharedPointer<const MApplicationExtensionMetaData> metaData(new MApplicationExtensionMetaData(""));
+
+    // order with one entry
+    QStringList order;
+    order << "test";
+    setupTestSubject(QString(), QString(), order);
+    setupGoodExtension(true, &extensionWidget1);
+    QCOMPARE(manager->instantiateInProcessExtension(metaData), true);
+    verifyOrderCreatedInDataStore(0);
+
+    // order with three entries
+    order.insert(0, "test2");
+    order.insert(1, "");
+    setupTestSubject(QString(), QString(), order);
+    setupGoodExtension(true, &extensionWidget1);
+    QCOMPARE(manager->instantiateInProcessExtension(metaData), true);
+    verifyOrderCreatedInDataStore(2);
+    // check that unordered entry goes to correct place
+    gMDesktopEntryStub->stubSetReturnValue("fileName", QString(APPLICATION_EXTENSION_DATA_DIR) + "/unordered");
+    setupGoodExtension(true, &extensionWidget1);
+    QCOMPARE(manager->instantiateInProcessExtension(metaData), true);
+    verifyOrderCreatedInDataStore(1);
+    // check the first entry
+    gMDesktopEntryStub->stubSetReturnValue("fileName", QString(APPLICATION_EXTENSION_DATA_DIR) + "/test2");
+    setupGoodExtension(true, &extensionWidget1);
+    QCOMPARE(manager->instantiateInProcessExtension(metaData), true);
+    verifyOrderCreatedInDataStore(0);
 }
 
 void Ut_MApplicationExtensionManager::testRequestForAllInProcessExtensionsReturnsAListOfExtensions()

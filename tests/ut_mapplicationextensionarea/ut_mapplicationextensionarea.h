@@ -48,6 +48,7 @@ private slots:
     void testInProcessFilter();
     void testOutOfProcessFilter();
     void testExtensions();
+    void testOrder();
 };
 
 #endif // UT_MAPPLICATIONEXTENSIONAREA_

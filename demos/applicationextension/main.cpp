@@ -47,7 +47,7 @@ void DemoPage::createContent()
 
     MApplicationExtensionArea *area =
             new MApplicationExtensionArea("com.meego.core.DemoApplicationExtensionInterface/1.0");
-    area->setInProcessFilter(QRegExp("/applicationextensiondemo-demoextension2?\\.desktop$"));
+    area->setInProcessFilter(QRegExp("/applicationextensiondemo-demoextension\\d?\\.desktop$"));
     connect(area, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)),
             this, SLOT(addExtension(MApplicationExtensionInterface*)));
     connect(area, SIGNAL(extensionRemoved(MApplicationExtensionInterface*)),

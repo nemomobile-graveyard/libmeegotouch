@@ -61,6 +61,17 @@ public:
      */
     void updateLayout();
 
+
+    /*!
+     * Returns an int value for a key from the datastore associated with the widget
+     */
+    int getIntFromDataStore(QGraphicsWidget *widget, QString key);
+
+    /*!
+     * Returns the index of the widget in the layout, or -1 if not found
+     */
+    int findLayoutIndex(QGraphicsWidget *widget);
+
     /*!
      * Creates a new container and inserts the given \p widget into the container.
      * Sets up the container for the \p widget.
@@ -85,7 +96,7 @@ public:
      * \param container The container whos visibility to modify
      * \param enabled Whether containers are enabled or not.
      */
-    void setContainerEnabled(MContainer &container, bool enabled);
+    void setContainerEnabled(MContainer &container, const bool enabled) const;
 
     /*!
      * Used to check properties of widget and connect signals between it and the MContainer

@@ -54,23 +54,23 @@ void MFileDataStoreStub::MFileDataStoreConstructor(const QString &filePath) {
 }
 bool MFileDataStoreStub::createValue(const QString &key, const QVariant &value) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(key));
-  params.append( new Parameter<const QVariant & >(value));
+  params.append( new Parameter<const QString>(key));
+  params.append( new Parameter<const QVariant>(value));
   stubMethodEntered("createValue",params);
   return stubReturnValue<bool>("createValue");
 }
 
 bool MFileDataStoreStub::setValue(const QString &key, const QVariant &value) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(key));
-  params.append( new Parameter<const QVariant & >(value));
+  params.append( new Parameter<const QString>(key));
+  params.append( new Parameter<const QVariant>(value));
   stubMethodEntered("setValue",params);
   return stubReturnValue<bool>("setValue");
 }
 
 QVariant MFileDataStoreStub::value(const QString &key) const {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(key));
+  params.append( new Parameter<const QString>(key));
   stubMethodEntered("value",params);
   return stubReturnValue<QVariant>("value");
 }
@@ -82,7 +82,7 @@ QStringList MFileDataStoreStub::allKeys() const {
 
 void MFileDataStoreStub::remove(const QString &key) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(key));
+  params.append( new Parameter<const QString>(key));
   stubMethodEntered("remove",params);
 }
 
@@ -92,7 +92,7 @@ void MFileDataStoreStub::clear() {
 
 bool MFileDataStoreStub::contains(const QString &key) const {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(key));
+  params.append( new Parameter<const QString>(key));
   stubMethodEntered("contains",params);
   return stubReturnValue<bool>("contains");
 }
@@ -113,13 +113,13 @@ void MFileDataStoreStub::takeSnapshot() {
 
 void MFileDataStoreStub::fileChanged(const QString &fileName) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(fileName));
+  params.append( new Parameter<const QString>(fileName));
   stubMethodEntered("fileChanged",params);
 }
 
 void MFileDataStoreStub::directoryChanged(const QString &fileName) {
   QList<ParameterBase*> params;
-  params.append( new Parameter<const QString & >(fileName));
+  params.append( new Parameter<const QString>(fileName));
   stubMethodEntered("directoryChanged",params);
 }
 

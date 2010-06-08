@@ -46,7 +46,7 @@ void MExtensionAreaPrivate::addWidget(QGraphicsWidget *widget, MDataStore &store
         // Let the view know about the data store modification
         q->model()->dataStoresModified();
     } else {
-        // Widget is already added to the mashup canvas. Bail out.
+        // Widget is already added to the extension area. Bail out.
         mWarning("MExtensionArea") << "MExtensionArea::addWidget() - Widget was already added to extension area.";
     }
 }

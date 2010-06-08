@@ -71,9 +71,12 @@ private slots:
     void testRemoval();
     // Test theme changes
     void testApplyStyle();
+    // Test that widgets appear in the order set in the extension area
+    void testOrdering();
 
 private:
     bool widgetInLayout(MWidget *widget);
+    int widgetPosInLayout(MWidget *widget);
     void addWidgetToApplicationExtensionArea(QGraphicsWidget *widget, MDataStore *dataStore);
     void removeWidgetFromApplicationExtensionArea(QGraphicsWidget *widget);
 

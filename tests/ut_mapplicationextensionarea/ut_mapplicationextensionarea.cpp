@@ -76,4 +76,13 @@ void Ut_MApplicationExtensionArea::testExtensions()
     QCOMPARE(area->extensions(), extensions);
 }
 
+void Ut_MApplicationExtensionArea::testOrder()
+{
+    QStringList order;
+    order << "test";
+    area->setOrder(order);
+    QCOMPARE(gMApplicationExtensionManagerStub->stubCallCount("setOrder"), 1);
+    QCOMPARE(gMApplicationExtensionManagerStub->stubLastCallTo("setOrder").parameter<QStringList>(0), order);
+}
+
 QTEST_APPLESS_MAIN(Ut_MApplicationExtensionArea)

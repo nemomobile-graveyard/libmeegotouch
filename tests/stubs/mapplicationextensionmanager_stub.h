@@ -32,6 +32,7 @@ class MApplicationExtensionManagerStub : public StubBase {
   virtual void MApplicationExtensionManagerDestructor();
   virtual void setInProcessFilter(const QRegExp &inProcessFilter);
   virtual void setOutOfProcessFilter(const QRegExp &outOfProcessFilter);
+  virtual void setOrder(const QStringList &order);
   virtual bool init();
   virtual QList<MApplicationExtensionInterface *> extensions();
   virtual void updateAvailableExtensions(const QString &path);
@@ -69,6 +70,14 @@ void MApplicationExtensionManagerStub::setOutOfProcessFilter(const QRegExp &outO
   params.append( new Parameter<QRegExp >(outOfProcessFilter));
   stubMethodEntered("setOutOfProcessFilter",params);
 }
+
+void MApplicationExtensionManagerStub::setOrder(const QStringList &order)
+{
+    QList<ParameterBase*> params;
+    params.append(new Parameter<QStringList >(order));
+    stubMethodEntered("setOrder",params);
+}
+
 
 bool MApplicationExtensionManagerStub::init() {
   stubMethodEntered("init");
@@ -189,6 +198,11 @@ void MApplicationExtensionManager::setInProcessFilter(const QRegExp &inProcessFi
 void MApplicationExtensionManager::setOutOfProcessFilter(const QRegExp &outOfProcessFilter) {
   gMApplicationExtensionManagerStub->setOutOfProcessFilter(outOfProcessFilter);
 }
+
+void MApplicationExtensionManager::setOrder(const QStringList &order) {
+    gMApplicationExtensionManagerStub->setOrder(order);
+}
+
 
 bool MApplicationExtensionManager::init() {
   return gMApplicationExtensionManagerStub->init();

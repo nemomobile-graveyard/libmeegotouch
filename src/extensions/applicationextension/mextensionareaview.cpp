@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <QGraphicsLayout>
+#include <limits.h>
 #include "mextensionareaview.h"
 #include "mextensionareaview_p.h"
 #include "mextensionarea.h"
@@ -37,7 +38,7 @@ MExtensionAreaViewPrivate::~MExtensionAreaViewPrivate()
 {
 }
 
-void MExtensionAreaViewPrivate::setContainerEnabled(MContainer &container, bool enabled)
+void MExtensionAreaViewPrivate::setContainerEnabled(MContainer &container, const bool enabled) const
 {
     container.setHeaderVisible(enabled);
     if (enabled) {
@@ -49,9 +50,13 @@ void MExtensionAreaViewPrivate::setContainerEnabled(MContainer &container, bool 
 
 MContainer *MExtensionAreaViewPrivate::createWidgetContainer(QGraphicsWidget *widget) const
 {
+    Q_Q(const MExtensionAreaView);
+
     MContainer *container = new MContainer(controller);
     container->setCentralWidget(widget);
     connectContainerToWidget(container, widget);
+    setContainerEnabled(*container, q->style()->containerMode());
+
     return container;
 }
 
@@ -69,24 +74,6 @@ void MExtensionAreaViewPrivate::setupContainers(bool enabled)
 
 void MExtensionAreaViewPrivate::updateData()
 {
-    Q_Q(MExtensionAreaView);
-
-    DataStoreMap *dsMap = q->model()->dataStores();
-    if (dsMap != NULL) {
-        // Iterate through the items in the layout and write their new geometries to data store.
-        const int count = layout->count();
-        for (int i = 0; i < count; ++i) {
-            QGraphicsLayoutItem *layoutItem = layout->itemAt(i);
-            MContainer *container = dynamic_cast<MContainer *>(layoutItem);
-            QGraphicsWidget *centralWidget = container->centralWidget();
-
-            // Change the data in the store if item is still valid and geometry has changed.
-            if (centralWidget != NULL && dsMap->contains(centralWidget) &&
-                (*dsMap)[centralWidget]->value(LAYOUT_INDEX) != i) {
-                (*dsMap)[centralWidget]->createValue(LAYOUT_INDEX, i);
-            }
-        }
-    }
 }
 
 void MExtensionAreaViewPrivate::updateLayout()
@@ -100,7 +87,6 @@ void MExtensionAreaViewPrivate::updateLayout()
         for (int i = layout->count() - 1; i >= 0; --i) {
             MContainer *container = dynamic_cast<MContainer *>(layout->itemAt(i));
             QGraphicsWidget *centralWidget = container->centralWidget();
-
             if (container != NULL && !dsMap->contains(centralWidget)) {
                 // Remove widget from layout
                 layout->removeAt(i);
@@ -111,45 +97,78 @@ void MExtensionAreaViewPrivate::updateLayout()
             }
         }
 
-        // Iterate through the items in the data store and add items that don't exist in the layout
-        foreach(QGraphicsWidget * widget, dsMap->keys()) {
-            bool alreadyInLayout = false;
-            const int count = layout->count();
-            for (int i = 0; i < count; ++i) {
-                MContainer *theContainer =
-                    dynamic_cast<MContainer *>(layout->itemAt(i));
-                if (widget == theContainer->centralWidget()) {
-                    // Widget found from the layout, don't add again
-                    alreadyInLayout = true;
-                    break;
-                }
+        // Use a map for sorting the containers based on desired position in layout
+        QMap<int, MContainer*> orderedLayoutItems;
+        QMap<int, MContainer*> indexedLayoutItems;
+
+        // Construct the correct order for the containers, create containers for new widgets
+        foreach(QGraphicsWidget *widget, dsMap->keys()) {
+            int currentLayoutIndex = findLayoutIndex(widget);
+            int storedLayoutIndex  = getIntFromDataStore(widget, LAYOUT_INDEX);
+            int order              = getIntFromDataStore(widget, "order");
+
+            MContainer *container = currentLayoutIndex == -1 ?
+                                    createWidgetContainer(widget) :
+                                    dynamic_cast<MContainer*>(layout->itemAt(currentLayoutIndex));
+
+            if(order != -1) {
+                orderedLayoutItems.insert(order, container);
+            } else if(storedLayoutIndex != -1) {
+                indexedLayoutItems.insert(storedLayoutIndex, container);
+            } else {
+                indexedLayoutItems.insertMulti(INT_MAX, container);
             }
+        }
 
-            if (!alreadyInLayout) {
-                // Widget not found in the layout so add it
-                MDataStore *store = dsMap->value(widget);
+        // Remove all from layout temporarily
+        for(int i = layout->count() - 1; i >= 0; --i) {
+            layout->removeAt(i);
+        }
 
-                // Create a container for the widget if container mode is enabled for the canvas
-                MContainer *container = createWidgetContainer(widget);
-                if (container) {
-                    setContainerEnabled(*container, q->style()->containerMode());
-                }
-                // Add widget to the layout policy
-                int layoutIndex = 0;
-                bool layoutIndexFound = false;
-                int tmpIndex =
-                    store->value(LAYOUT_INDEX).toInt(&layoutIndexFound);
-                if (layoutIndexFound) {
-                    layoutIndex = tmpIndex;
-                } else {
-                    layoutIndex = layout->count();
-                }
-                addToLayout(container, layoutIndex);
-                // Write the layout data to the permanent store
-                store->createValue(LAYOUT_INDEX, layoutIndex);
+        // Put the containers back into the layout in correct order
+        int i = 0;
+        foreach(MContainer *container, orderedLayoutItems.values()) {
+            if(container != NULL) {
+                addToLayout(container, i++);
+            }
+        }
+        foreach(MContainer *container, indexedLayoutItems.values()) {
+            if(container != NULL) {
+                addToLayout(container, i);
+                dsMap->value(container->centralWidget())->createValue(LAYOUT_INDEX, i);
+                i++;
             }
         }
     }
+}
+
+int MExtensionAreaViewPrivate::getIntFromDataStore(QGraphicsWidget *widget, QString key)
+{
+    Q_Q(MExtensionAreaView);
+
+    MDataStore *store = q->model()->dataStores()->value(widget);
+
+    if(store == NULL) return -1;
+
+    bool found = false;
+    int value = store->value(key).toInt(&found);
+    if(!found) {
+        value = -1;
+    }
+
+    return value;
+}
+
+int MExtensionAreaViewPrivate::findLayoutIndex(QGraphicsWidget *widget)
+{
+    const int count = layout->count();
+    for (int i = 0; i < count; ++i) {
+        MContainer *c = dynamic_cast<MContainer *>(layout->itemAt(i));
+        if (widget == c->centralWidget()) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 void MExtensionAreaViewPrivate::addToLayout(QGraphicsWidget *, int)
@@ -173,8 +192,9 @@ MExtensionAreaView::MExtensionAreaView(MExtensionAreaViewPrivate &dd, MExtension
     d_ptr(& dd)
 {
     Q_D(MExtensionAreaView);
-    if (d)
+    if (d) {
         d->q_ptr = this;
+    }
 }
 
 MExtensionAreaView::~MExtensionAreaView()

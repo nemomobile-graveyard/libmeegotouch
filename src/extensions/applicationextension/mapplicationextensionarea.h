@@ -93,6 +93,18 @@ public:
     void setOutOfProcessFilter(const QRegExp &outOfProcessFilter);
 
     /*!
+     * Defines the order in which extensions are placed if they are found. Each
+     * extension is placed in the position in which it appears for the first
+     * time in the list. An empty string can be used to mark the place for
+     * unnamed extensions. Must be called before init(). Calling this
+     * after init() has no effect.
+     *
+     * \param order a list of extension .desktop file names for defining the
+     *              order in which certain extensions appear
+     */
+    void setOrder(const QStringList &order);
+
+    /*!
      * Initializes the application extension area. All setters introduced by
      * this class must be called before the area is initialized, and the
      * signals must be connected, because calling init() will result in

@@ -25,6 +25,7 @@
 #include <QHash>
 #include <QSharedPointer>
 #include <QRegExp>
+#include <QStringList>
 #include "mextensionwatcher.h"
 
 class MApplicationExtensionMetaData;
@@ -74,6 +75,19 @@ public:
      *                           extension are allowed out-of-process
      */
     void setOutOfProcessFilter(const QRegExp &outOfProcessFilter);
+
+    /*!
+     * Defines the order in which extensions are placed if they are found. Each
+     * extension is placed in the position in which it appears for the first
+     * time in the list.
+     *
+     * Must be called before init().
+     * Calling this after init() has no effect.
+     *
+     * \param order a list of extension .desktop file names for defining the
+     *              order in which certain extensions appear
+     */
+    void setOrder(const QStringList &order);
 
     /*!
       * Initializes the application extension manager
@@ -153,6 +167,12 @@ private:
     QRegExp outOfProcessFilter;
 
     typedef QPair<MApplicationExtensionInterface*, QGraphicsWidget*> InProcessExtensionData;
+
+    //! The order in which the extensions should appear
+    QStringList extensionOrder;
+
+    //! The index where the extensions go when their order is unspecified
+    int unorderedExtensionsIndex;
 
     //! In-process extensions and datastores
     QHash<const MApplicationExtensionMetaData*, InProcessExtensionData> inProcessExtensions;
