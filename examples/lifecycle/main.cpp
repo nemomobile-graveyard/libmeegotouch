@@ -17,45 +17,16 @@
 **
 ****************************************************************************/
 
-#include <QProcess>
-#include <QStringList>
-
 #include <MApplication>
-#include <MApplicationService>
-#include <MApplicationIfAdaptor>
 #include <MApplicationWindow>
 #include <MApplicationPage>
-#include <MAction>
-#include <MLocale>
-#include <signal.h>
 
 #include "mainpage.h"
-#include "lifecycleapplication.h"
-
-void emitMemorySignal(int sig);
-
-MApplication *App;
-int requestCounter = 0;
-
-class MyApplicationService: public MApplicationService
-{
-public:
-    MyApplicationService(QObject *parent = 0) :
-        MApplicationService("com.nokia.lifecycle", parent)
-    {}
-
-    void handleServiceRegistrationFailure() {
-        qDebug() << "MyApplicationService::handleServiceRegistrationFailure()";
-
-        incrementAndRegister();
-    }
-};
-
 
 int main(int argc, char **argv)
 {
-    LifeCycleApplication app(argc, argv, "lifecycle", new MyApplicationService());
-    LifeCycleApplication::setPrestartMode(M::LazyShutdown);
+    MApplication app(argc, argv);
+    MApplication::setPrestartMode(M::LazyShutdown);
 
     MApplicationWindow window;
     window.show();
@@ -63,29 +34,15 @@ int main(int argc, char **argv)
     MainPage mainPage;
     mainPage.appear();
 
-    (void) signal(SIGINT, emitMemorySignal);
-    App = &app;
-
-    // Run activateWidgets() here to setup things if app is NOT prestarted, otherwise
-    // connect it to prestartReleased() -signal from MApplication so that it's run
-    // at the time when the window is really being shown to the user.
-
+    // Run activateWidgets() here to setup things if app is NOT prestarted now
     if (!app.isPrestarted()) {
         mainPage.activateWidgets();
-    } else {
-        app.connect(&app, SIGNAL(prestartReleased()), &mainPage, SLOT(activateWidgets()));
-        app.connect(&app, SIGNAL(prestartRestored()), &mainPage, SLOT(deactivateWidgets()));
     }
+    
+    // Connect to prestart signals
+    app.connect(&app, SIGNAL(prestartReleased()), &mainPage, SLOT(activateWidgets()));
+    app.connect(&app, SIGNAL(prestartRestored()), &mainPage, SLOT(deactivateWidgets()));
 
     return app.exec();
 }
 
-void emitMemorySignal(int)
-{
-    // memory signal cannot be emitted in the current setting.
-    requestCounter++;
-
-    if (requestCounter >= 2) {
-        (void) signal(SIGINT, SIG_DFL);
-    }
-}
