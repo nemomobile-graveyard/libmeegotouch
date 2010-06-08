@@ -43,14 +43,14 @@ public:
 
 public:
     enum ItemStyle {
-        IconTitleSubtitleAndTwoSideIcons = 0x0,
+        IconTitleSubtitleAndTwoSideIcons,
         IconTitleSubtitleAndSideIconWithLabel,
         ThumbnailTitleSubtitleAndTwoSideIcons,
         ThumbnailTitleAndTwoSideIcons
     };
     
     enum IconStyle {
-        Icon = 0x0,
+        Icon,
         Thumbnail
     };
 

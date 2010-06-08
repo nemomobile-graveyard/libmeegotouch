@@ -41,7 +41,7 @@ class M_EXPORT MAdvancedListItem : public MListItem
 
 public:
     enum ItemStyle {
-        IconWithTitleProgressIndicatorAndTwoSideIcons = 0x0,
+        IconWithTitleProgressIndicatorAndTwoSideIcons,
         IconWithTitleProgressIndicatorAndTopSideIcon
     };
 

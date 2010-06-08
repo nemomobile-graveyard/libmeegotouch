@@ -25,6 +25,7 @@
 #include <MProgressIndicator>
 
 #include <QGraphicsGridLayout>
+#include <QGraphicsLinearLayout>
 
 MAdvancedListItemPrivate::MAdvancedListItemPrivate(MAdvancedListItem::ItemStyle style)
     : layoutGrid(NULL),
@@ -48,18 +49,32 @@ void MAdvancedListItemPrivate::createLayout()
 
     switch (listItemStyle) {
     case MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons: {
-            layout()->addItem(q->imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
-            layout()->addItem(q->progressIndicator(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
-            layout()->addItem(q->sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
-            layout()->addItem(q->sideBottomImageWidget(), 1, 2, Qt::AlignRight | Qt::AlignBottom);
+            layout()->addItem(q->imageWidget(), 0, 0, 3, 1);
+
+            layout()->addItem(q->titleLabelWidget(), 0, 1);
+            layout()->addItem(q->progressIndicator(), 1, 1);
+
+            QGraphicsWidget * panel = new QGraphicsWidget(q);
+            QGraphicsLinearLayout * panelLayout = new QGraphicsLinearLayout(Qt::Vertical);
+            panelLayout->setContentsMargins(0, 0, 0, 0);
+            panelLayout->setSpacing(0);
+            panel->setLayout(panelLayout);
+
+            panelLayout->addItem(q->sideTopImageWidget());
+            panelLayout->addItem(q->sideBottomImageWidget());
+
+            layout()->addItem(panel, 0, 2, 3, 1, Qt::AlignVCenter);
+
+            layout()->addItem(new QGraphicsWidget(q), 2, 1);
+
             break;
         }
     case MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon: {
-            layout()->addItem(q->imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
-            layout()->addItem(q->progressIndicator(), 1, 1, 1, 2, Qt::AlignLeft | Qt::AlignBottom);
-            layout()->addItem(q->sideTopImageWidget(), 0, 2, Qt::AlignRight | Qt::AlignTop);
+            layout()->addItem(q->imageWidget(), 0, 0, 3, 1);
+            layout()->addItem(q->titleLabelWidget(), 0, 1);
+            layout()->addItem(q->progressIndicator(), 1, 1, 1, 2);
+            layout()->addItem(q->sideTopImageWidget(), 0, 2, Qt::AlignBottom);
+            layout()->addItem(new QGraphicsWidget(q), 2, 1);
             break;
         }
     default:
@@ -87,6 +102,7 @@ MAdvancedListItem::MAdvancedListItem(MAdvancedListItem::ItemStyle style, QGraphi
 {
     Q_D(MAdvancedListItem);
     d->q_ptr = this;
+    setObjectName("CommonPanel");
 }
 
 MAdvancedListItem::~MAdvancedListItem()
@@ -165,7 +181,7 @@ MProgressIndicator * MAdvancedListItem::progressIndicator()
 
     if (!d->progress) {
         d->progress = new MProgressIndicator(this, MProgressIndicator::barType);
-        d->progress->setObjectName("CommonProgressIndicator");
+        d->progress->setObjectName("CommonProgressBar");
     }
 
     return d->progress;
@@ -177,6 +193,7 @@ MLabel * MAdvancedListItem::titleLabelWidget()
 
     if (!d->titleLabel) {
         d->titleLabel = new MLabel(this);
+        d->titleLabel->setTextElide(true);
         d->titleLabel->setObjectName("CommonTitle");
     }
 
@@ -189,7 +206,7 @@ MImageWidget * MAdvancedListItem::sideTopImageWidget()
 
     if (!d->sideTopImage) {
         d->sideTopImage = new MImageWidget(this);
-        d->sideTopImage->setObjectName("CommonSubIcon");
+        d->sideTopImage->setObjectName("CommonSubIconTop");
     }
 
     return d->sideTopImage;
@@ -201,7 +218,7 @@ MImageWidget * MAdvancedListItem::sideBottomImageWidget()
 
     if (!d->sideBottomImage) {
         d->sideBottomImage = new MImageWidget(this);
-        d->sideBottomImage->setObjectName("CommonSubIcon");
+        d->sideBottomImage->setObjectName("CommonSubIconBottom");
     }
 
     return d->sideBottomImage;

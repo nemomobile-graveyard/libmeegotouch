@@ -38,7 +38,7 @@ class M_EXPORT MBasicListItem : public MListItem
 
 public:
     enum ItemStyle {
-        SingleTitle = 0x0,
+        SingleTitle,
         TitleWithSubtitle,
         IconWithTitle,
         IconWithTitleAndSubtitle

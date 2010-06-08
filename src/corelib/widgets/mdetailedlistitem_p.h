@@ -40,9 +40,7 @@ private:
     MDetailedListItem *q_ptr;
 
 private:
-    QGraphicsGridLayout *layoutGrid;
-    QGraphicsGridLayout *contentLayoutGrid;
-    MStylableWidget *contentPanel;
+    QGraphicsGridLayout *layoutGrid;        
 
     MImageWidget *image;
     MImageWidget *sideTopImage;

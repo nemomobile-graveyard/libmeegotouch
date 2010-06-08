@@ -26,6 +26,7 @@
 #include <MWidgetStyle>
 
 #include <QGraphicsGridLayout>
+#include <QGraphicsWidget>
 
 MBasicListItemPrivate::MBasicListItemPrivate(MBasicListItem::ItemStyle style)
     : layoutGrid(NULL),
@@ -52,24 +53,29 @@ void MBasicListItemPrivate::createLayout()
 
     switch (listItemStyle) {
     case MBasicListItem::SingleTitle: {
-            layout()->addItem(q->titleLabelWidget(), 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+            q->titleLabelWidget()->setObjectName("CommonSingleTitle");
+            layout()->addItem(q->titleLabelWidget(), 0, 0);
             break;
         }
     case MBasicListItem::TitleWithSubtitle: {
-            layout()->addItem(q->titleLabelWidget(), 0, 0, Qt::AlignLeft | Qt::AlignTop);
-            layout()->addItem(q->subtitleLabelWidget(), 1, 0, Qt::AlignLeft | Qt::AlignBottom);
+            q->titleLabelWidget()->setObjectName("CommonTitle");
+            layout()->addItem(q->titleLabelWidget(), 0, 0);
+            layout()->addItem(q->subtitleLabelWidget(), 1, 0);
+            layout()->addItem(new QGraphicsWidget(q), 2, 0);
             break;
         }
     case MBasicListItem::IconWithTitle: {
-            layout()->addItem(q->imageWidget(), 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
-            layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignVCenter);
+            q->titleLabelWidget()->setObjectName("CommonSingleTitle");
+            layout()->addItem(q->imageWidget(), 0, 0);
+            layout()->addItem(q->titleLabelWidget(), 0, 1);
             break;
         }
     case MBasicListItem::IconWithTitleAndSubtitle: {
-            layout()->addItem(q->imageWidget(), 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layout()->addItem(q->titleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
-            layout()->addItem(q->subtitleLabelWidget(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
-
+            q->titleLabelWidget()->setObjectName("CommonTitle");
+            layout()->addItem(q->imageWidget(), 0, 0, 3, 1);
+            layout()->addItem(q->titleLabelWidget(), 0, 1);
+            layout()->addItem(q->subtitleLabelWidget(), 1, 1);
+            layout()->addItem(new QGraphicsWidget(q), 2, 1);
             break;
         }
     default:
@@ -103,6 +109,7 @@ MBasicListItem::MBasicListItem(MBasicListItem::ItemStyle style, QGraphicsItem *p
     d->q_ptr = this;
 
     setItemStyle(style);
+    setObjectName("CommonPanel");
 }
 
 MBasicListItem::~MBasicListItem()
@@ -188,10 +195,8 @@ MLabel *MBasicListItem::titleLabelWidget()
 
     if (!d->titleLabel) {
         d->titleLabel = new MLabel(this);
-        if (d->listItemStyle == SingleTitle)
-            d->titleLabel->setObjectName("CommonSingleTitle");
-        else
-            d->titleLabel->setObjectName("CommonTitle");
+        d->titleLabel->setTextElide(true);
+        d->titleLabel->setObjectName("CommonTitle");
     }
 
     return d->titleLabel;
