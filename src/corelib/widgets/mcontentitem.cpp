@@ -142,7 +142,7 @@ QVariant MContentItem::itemChange(GraphicsItemChange change, const QVariant &val
         model()->setSelected(value.toBool());
     }
 
-    return QGraphicsItem::itemChange(change, value);
+    return MWidgetController::itemChange(change, value);
 }
 
 void MContentItem::setOptionalPixmap(const QPixmap &pixmap)
