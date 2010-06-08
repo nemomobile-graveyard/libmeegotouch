@@ -52,7 +52,8 @@ my @engineeringEnglishPackagesObsolete = (
 
 # engineering English packages which should be ignored because they are only demos:
 my @engineeringEnglishPackagesIgnore = (
-    "meegotouch-demos-widgetsgallery-l10n-engineering-english"
+    "meegotouch-demos-widgetsgallery-l10n-engineering-english",
+    "duihomescreen-plugins-weatherapplet-l10n-engineering-english"
     );
 
 my @engineeringEnglishPackages = (
@@ -82,9 +83,10 @@ my @engineeringEnglishPackages = (
     "duicontrolpanel-l10n-engineering-english",
     "duicontrolpanel-networkapplet-l10n-engineering-english",
     "duicontrolpanel-regionformatapplet-l10n-engineering-english",
+    "duicontrolpanel-skeletonapplet-l10n-engineering-english",
     "duihelp-l10n-engineering-english",
     "duihomescreen-l10n-engineering-english",
-    # ignore, demo only "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
+    "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
     "duistatusind-connectivity-l10n-engineering-english",
     "feedreader-l10n-engineering-english",
     "gallery-l10n-engineering-english",
@@ -98,8 +100,10 @@ my @engineeringEnglishPackages = (
     "libpresence0-l10n-engineering-english",
     "libshare-ui-l10n-engineering-english",
     "libwebupload-l10n-engineering-english",
+    "location-ui-l10n-engineering-english",
+    "locationsettings-l10n-engineering-english",
     "me-l10n-engineering-english",
-    # ignore "meegotouch-demos-widgetsgallery-l10n-engineering-english",
+    "meegotouch-demos-widgetsgallery-l10n-engineering-english",
     "messaging-ui-l10n-engineering-english",
     "mms-ui-l10n-engineering-english",
     "mstartup-l10n-engineering-english",
@@ -110,67 +114,6 @@ my @engineeringEnglishPackages = (
     "systemui-l10n-engineering-english",
     "transfer-ui-l10n-engineering-english",
     "webupload-engine-l10n-engineering-english"
-    );
-
-my @engineeringEnglishFiles = (
-    "/usr/share/l10n/meegotouch/accounts-ui.qm",
-    # demo only "/usr/share/l10n/meegotouch/animatedlayout.qm",
-    "/usr/share/l10n/meegotouch/backup.qm",
-    "/usr/share/l10n/meegotouch/call-history.qm",
-    "/usr/share/l10n/meegotouch/call-ui.qm",
-    "/usr/share/l10n/meegotouch/camera-ui.qm",
-    "/usr/share/l10n/meegotouch/celluid.qm",
-    "/usr/share/l10n/meegotouch/commhistoryd.qm",
-    "/usr/share/l10n/meegotouch/conn-dui-bluetooth.qm",
-    "/usr/share/l10n/meegotouch/conn-dui-cellular.qm",
-    "/usr/share/l10n/meegotouch/conn-dui-internet.qm",
-    "/usr/share/l10n/meegotouch/conn-dui-wlan.qm",
-    "/usr/share/l10n/meegotouch/contacts.qm",
-    "/usr/share/l10n/meegotouch/duicontrolpanel-callandsim.qm",
-    "/usr/share/l10n/meegotouch/duicontrolpanel-certificatesapplet.qm",
-    "/usr/share/l10n/meegotouch/duicontrolpanel-datetime.qm",
-    "/usr/share/l10n/meegotouch/duicontrolpanel-displaylanguage.qm",
-    "/usr/share/l10n/meegotouch/duicontrolpanel-keyboardlanguage.qm",
-    "/usr/share/l10n/meegotouch/duicontrolpanel-network.qm",
-    "/usr/share/l10n/meegotouch/duicontrolpanel-regionformat.qm",
-    "/usr/share/l10n/meegotouch/duihelp.qm",
-    "/usr/share/l10n/meegotouch/duihome.qm",
-    # duistatusindicatormenu-connectivityplugin.qm is still in the old directory
-    "/usr/share/l10n/dui/duistatusindicatormenu-connectivityplugin.qm",
-    "/usr/share/l10n/meegotouch/facebookplugin.qm",
-    "/usr/share/l10n/meegotouch/feeds.qm",
-    "/usr/share/l10n/meegotouch/feedsettings.qm",
-    "/usr/share/l10n/meegotouch/gallery.qm",
-    "/usr/share/l10n/meegotouch/googleplugin.qm",
-    "/usr/share/l10n/meegotouch/keychain-ui.qm",
-    "/usr/share/l10n/meegotouch/libdatacounterdialog.qm",
-    "/usr/share/l10n/meegotouch/libdialerui.qm",
-    "/usr/share/l10n/meegotouch/liblocationpicker.qm",
-    "/usr/share/l10n/meegotouch/libmcontentwidgets.qm",
-    "/usr/share/l10n/meegotouch/libmeegotouch.qm",
-    "/usr/share/l10n/meegotouch/libpresence0.qm",
-    "/usr/share/l10n/meegotouch/libwebupload.qm",
-    "/usr/share/l10n/meegotouch/libwebuploadpui.qm",
-    "/usr/share/l10n/meegotouch/me.qm",
-    "/usr/share/l10n/meegotouch/messaging-ui.qm",
-    "/usr/share/l10n/meegotouch/mms-contacts-actions.qm",
-    "/usr/share/l10n/meegotouch/mms-messaging-plugin.qm",
-    "/usr/share/l10n/meegotouch/mms-settings.qm",
-    "/usr/share/l10n/meegotouch/mms-share-plugin.qm",
-    "/usr/share/l10n/meegotouch/mstartup.qm",
-    "/usr/share/l10n/meegotouch/officetools.qm",
-    "/usr/share/l10n/meegotouch/oviplugin.qm",
-    "/usr/share/l10n/meegotouch/package-manager-ui.qm",
-    "/usr/share/l10n/meegotouch/settings.qm",
-    "/usr/share/l10n/meegotouch/share-ui.qm",
-    "/usr/share/l10n/meegotouch/signon-ui.qm",
-    "/usr/share/l10n/meegotouch/systemui-applets.qm",
-    "/usr/share/l10n/meegotouch/systemui.qm",
-    "/usr/share/l10n/meegotouch/transfer-ui.qm",
-    # "/usr/share/l10n/meegotouch/weatherappletres.qm",
-    "/usr/share/l10n/meegotouch/webupload-engine.qm",
-    # demo only "/usr/share/l10n/meegotouch/widgetsgallery.qm",
-    "/usr/share/l10n/meegotouch/youtubeplugin.qm"
     );
 
 #----------------------------------------------------------------------
@@ -388,6 +331,43 @@ sub download {
     }
 }
 
+sub findEngineeringEnglishFiles {
+    my %engineeringEnglishPackages = ();
+    for my $package (@engineeringEnglishPackages) {
+        if (grep(/^${package}$/, @engineeringEnglishPackagesObsolete)
+            || grep(/^${package}$/, @engineeringEnglishPackagesIgnore)) {
+            if ($OPT_VERBOSITY >=1) {
+                printf (STDOUT "ignoring %s\n", $package);
+            }
+        }
+        else {
+            $engineeringEnglishPackages{$package} = "";
+        }
+    }
+    @engineeringEnglishPackages = (sort (keys %engineeringEnglishPackages));
+    my @engineeringEnglishFiles = ();
+    for my $package (@engineeringEnglishPackages) {
+        if ($OPT_VERBOSITY >= 1) {
+            printf (STDOUT "using %s\n", $package);
+        }
+        my @qmFiles = grep (/\.qm$/, qx(dpkg -L $package));
+        if ($#qmFiles < 0) {
+            printf (STDOUT "ERROR: %s has no .qm files.\n", $package);
+            exit (1);
+        }
+        else {
+            for my $file (@qmFiles) {
+                chomp ($file);
+                if ($OPT_VERBOSITY >= 1) {
+                    printf (STDOUT "    %s\n", $file);
+                }
+                push (@engineeringEnglishFiles, $file);
+            }
+        }
+    }
+    return @engineeringEnglishFiles;
+}
+
 sub readHandoffXmlTrees {
     for my $handoffFile (glob ("$OPT_HANDOFF_DIR/*.ts")) {
         my $xmlParser = new XML::Parser(Style => 'Tree', ProtocolEncoding => 'UTF-8');
@@ -568,7 +548,7 @@ my $htmlOutToc = "";
 my $htmlOutResultsDetail = "";
 my $csvOut = "Invalid Message ID, Engineering English .qm file, Package, Package version, Package maintainer\n";
 
-for my $engineeringEnglishFile (@engineeringEnglishFiles) {
+for my $engineeringEnglishFile (findEngineeringEnglishFiles()) {
     my $errorCount = 0;
     my $okCount = 0;
     my $missingEngineeringEnglishCount = 0;
@@ -610,13 +590,20 @@ for my $engineeringEnglishFile (@engineeringEnglishFiles) {
     open (EEFILE, "lconvert -o - -i $engineeringEnglishFile |") || die "Can’t open file lconvert $engineeringEnglishFile | : $!";
     my $tree = $xmlParser->parse(*EEFILE, ProtocolEncoding => 'UTF-8');
     close(EEFILE);
+    if (! $tree->[1][4]) {
+        if ($OPT_VERBOSITY >=1) {
+            printf (STDOUT "%s has no context tree, probably empty, skipping ...\n",
+                    $engineeringEnglishFile);
+        }
+        next;
+    }
     my @contextTree = @{$tree->[1][4]};
     # print Dumper(@contextTree);
     for (my $i = 0; $i < $#contextTree; ++$i) {
         if ($contextTree[$i] eq "message") {
             my $source = $contextTree[$i+1][4][2];
             my $translation = $contextTree[$i+1][8][2];
-            if ($translation eq "!! " || $translation eq "") {
+            if (!$translation || $translation eq "!! " || $translation eq "") {
                 ++$missingEngineeringEnglishCount;
                 ++$totalNumberOfIdsLackingEngineeringEnglish;
                 my $htmlOutMissingEeMessage = "";
