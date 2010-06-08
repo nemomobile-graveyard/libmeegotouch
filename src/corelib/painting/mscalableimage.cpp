@@ -89,12 +89,13 @@ void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *
         margins.setBottom(qMax(0, margins.bottom() - (cornerHeight - h + 1) / 2));
     }
 
-    if (w == 0 || h == 0) {
+    if (w <= 0 || h <= 0) {
         // this should really not happen
-        mWarning("MScalableImage") << "Received request to draw pixmap of invalid 0 size";
+        mWarning("MScalableImage") <<
+            "Received request to draw pixmap of invalid size" << w << "x" << h;
         return;
     }
-    
+
     //the image is used in it's native size
     //no need to scale just draw it
     QSize requiredSize(w, h);
