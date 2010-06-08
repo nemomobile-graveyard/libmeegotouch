@@ -45,6 +45,7 @@ private slots:
 
     // Test cases
     void testInitialization();
+    void testDestruction();
     void testInProcessFilter();
     void testOutOfProcessFilter();
     void testExtensions();

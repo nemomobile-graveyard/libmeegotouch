@@ -57,8 +57,9 @@ void MApplicationExtensionManagerStub::MApplicationExtensionManagerConstructor(c
 
 }
 void MApplicationExtensionManagerStub::MApplicationExtensionManagerDestructor() {
-
+  stubMethodEntered("MApplicationExtensionManagerDestructor");
 }
+
 void MApplicationExtensionManagerStub::setInProcessFilter(const QRegExp &inProcessFilter) {
   QList<ParameterBase*> params;
   params.append( new Parameter<QRegExp >(inProcessFilter));

@@ -110,6 +110,8 @@ MExtensionArea::MExtensionArea(QGraphicsItem *parent) :
 
 MExtensionArea::~MExtensionArea()
 {
+    Q_D(MExtensionArea);
+    delete d;
 }
 
 void MExtensionArea::addWidget(QGraphicsWidget *widget, MDataStore &store)

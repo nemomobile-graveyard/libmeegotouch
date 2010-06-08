@@ -40,6 +40,7 @@ void Ut_MApplicationExtensionArea::cleanup()
 
 void Ut_MApplicationExtensionArea::initTestCase()
 {
+    gMApplicationExtensionManagerStub->stubReset();
 }
 
 void Ut_MApplicationExtensionArea::cleanupTestCase()
@@ -53,6 +54,14 @@ void Ut_MApplicationExtensionArea::testInitialization()
 
     gMApplicationExtensionManagerStub->stubSetReturnValue("init", false);
     QCOMPARE(area->init(), false);
+}
+
+void Ut_MApplicationExtensionArea::testDestruction()
+{
+    MApplicationExtensionArea* tmp =
+        new MApplicationExtensionArea("testcanvas");
+    delete tmp;
+    QCOMPARE(gMApplicationExtensionManagerStub->stubCallCount("MApplicationExtensionManagerDestructor"), 1);
 }
 
 void Ut_MApplicationExtensionArea::testInProcessFilter()
