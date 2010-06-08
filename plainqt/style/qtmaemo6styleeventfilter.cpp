@@ -67,7 +67,6 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     QtMaemo6DialogProxy *dialogProxy = new QtMaemo6DialogProxy(dialog, m_style->m_windowDecoration);
                     dialogProxy->setTitle(widget->windowTitle());
                     dialogProxy->showFastMaximized();
-                    QtMaemo6StylePrivate::drawWindowBackground(widget);
                     return true;
                 } else if(QMenu* menu = qobject_cast<QMenu*>(widget)) {
                     //also show menus styled like m menus, even if they are not called from a menubar
@@ -80,7 +79,6 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                     decoration->setMenuBar(NULL);
                     bool navigationBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMNavigationBar);
                     decoration->showNavigationBar( navigationBarVisible );
-                    QtMaemo6StylePrivate::drawWindowBackground(decoration);
                 } else if (!qobject_cast<QtMaemo6Window *>(widget) &&
                            !widget->inherits("QTipLabel") &&  //don't create a new window for every tooltip!
                            !qobject_cast<MWindow*>(widget)) {
@@ -92,7 +90,6 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                         m_style->m_windowDecoration->showNavigationBar( navigationBarVisible );
                         bool statusBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMStatusBar);
                         m_style->m_windowDecoration->showDeviceStatusBar( statusBarVisible );
-                        QtMaemo6StylePrivate::drawWindowBackground(m_style->m_windowDecoration);
                         return true;
                     }
                 }

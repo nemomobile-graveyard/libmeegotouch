@@ -21,6 +21,7 @@
 #include "qtmaemo6windowdecoration.h"
 #include "qtmaemo6titlebar.h"
 #include "qtmaemo6menuproxy.h"
+#include "qtmaemo6style_p.h"
 
 #include <QLabel>
 #include <QVBoxLayout>
@@ -216,6 +217,11 @@ bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
     }
 
     return QtMaemo6Window::eventFilter(watched, event);
+}
+
+void QtMaemo6WindowDecoration::resizeEvent(QResizeEvent * e) {
+    QtMaemo6StylePrivate::drawWindowBackground(this);
+    QWidget::resizeEvent(e);
 }
 
 void QtMaemo6WindowDecoration::timerEvent(QTimerEvent *e) {

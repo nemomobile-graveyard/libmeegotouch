@@ -70,6 +70,7 @@ protected:
 
     /*! \reimp */
     bool eventFilter(QObject *obj, QEvent *event);
+    void resizeEvent(QResizeEvent *);
     void timerEvent(QTimerEvent *);
     /*! \reimp_end */
 
