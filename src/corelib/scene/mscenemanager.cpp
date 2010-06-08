@@ -1562,10 +1562,29 @@ void MSceneManager::setOrientationAngle(M::OrientationAngle angle,
             }
         }
     } else {
-        if (mode == AnimatedTransition)
-            d->rotateToAngle(angle);
-        else
+        if (mode == AnimatedTransition) {
+            bool managesVisibleWindow = false;
+
+            // Only animate the rotation if it is actually visible to the user
+            QList<QGraphicsView *> viewsList = scene()->views();
+            for (int i = 0; i < viewsList.count(); ++i) {
+                MWindow *window = qobject_cast<MWindow *>(viewsList[i]);
+
+                if (window && window->isOnDisplay()) {
+                    if (window->windowState() != Qt::WindowMinimized) {
+                        managesVisibleWindow = true;
+                    }
+                    break;
+                }
+            }
+            if (managesVisibleWindow) {
+                d->rotateToAngle(angle);
+            } else {
+                d->setOrientationAngleWithoutAnimation(angle);
+            }
+        } else {
             d->setOrientationAngleWithoutAnimation(angle);
+        }
     }
 }
 
