@@ -61,7 +61,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     switch (event->type()) {
     case QEvent::Show: {
         if (NULL != widget) {
-            if (widget->isWindow()) {
+            if (widget->isWindow() && !widget->graphicsProxyWidget()) {
                 if (QDialog *dialog = qobject_cast<QDialog *>(widget)) {
                     QtMaemo6DialogProxy *dialogProxy = new QtMaemo6DialogProxy(dialog, m_style->m_windowDecoration);
                     dialogProxy->setTitle(widget->windowTitle());
