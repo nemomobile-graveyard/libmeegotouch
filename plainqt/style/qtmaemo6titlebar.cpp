@@ -48,6 +48,7 @@ const int QtMaemo6TitleBar::titleBarHeight = 70;
 QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
 {
     setObjectName(QString("Qt_Maemo6_TitleBar"));
+    setAutoFillBackground(true);
 
     QStyleOption option;
     option.initFrom(this);
@@ -132,16 +133,21 @@ QtMaemo6TitleBar::~QtMaemo6TitleBar()
 
 }
 
+void QtMaemo6TitleBar::resizeEvent(QResizeEvent *) {
+    QtMaemo6StylePrivate::drawWindowBackground(this, "MNavigationBarStyle");
+}
+
 void QtMaemo6TitleBar::paintEvent(QPaintEvent *event)
 {
     Q_UNUSED(event);
-
+/*
     QPainter painter(this);
 
     QStyleOption option;
     option.initFrom(this);
 
     style()->drawPrimitive(QStyle::PE_Widget, &option, &painter, this);
+    */
 }
 
 void QtMaemo6TitleBar::setTitle(const QString &title)

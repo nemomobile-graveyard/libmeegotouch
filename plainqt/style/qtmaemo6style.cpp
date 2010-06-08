@@ -221,7 +221,7 @@ QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
     return mode;
 }
 
-void QtMaemo6StylePrivate::drawWindowBackground(QWidget *widget)
+void QtMaemo6StylePrivate::drawWindowBackground(QWidget *widget, QString styleObject, QString styleClass)
 {
     if (NULL != widget) {
         QStyleOption widgetOption;
@@ -238,9 +238,12 @@ void QtMaemo6StylePrivate::drawWindowBackground(QWidget *widget)
                     QtMaemo6StylePrivate::mStyle(widgetOption.state, "MPannableWidgetStyle", "MDialogContentsViewport"));
             QtMaemo6StylePrivate::drawWidgetBackground(&painter, &widgetOption, backgroundPixmap.rect(), style);
         } else {
-            const MApplicationPageStyle *style =
-                static_cast<const MApplicationPageStyle *>(
-                    QtMaemo6StylePrivate::mStyle(widgetOption.state, "MApplicationPageStyle", ""));
+            QString _styleObject("MApplicationPageStyle");
+            if(!styleObject.isEmpty())
+                _styleObject = styleObject;
+            const MWidgetStyle *style =
+                static_cast<const MWidgetStyle*>(
+                    QtMaemo6StylePrivate::mStyle(widgetOption.state, _styleObject, styleClass));
             QtMaemo6StylePrivate::drawWidgetBackground(&painter, &widgetOption, backgroundPixmap.rect(), style);
         }
 
@@ -1120,6 +1123,7 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
 
     switch (element) {
     case PE_Widget: {
+
         if (const QtMaemo6TitleBar* tb = qobject_cast<const QtMaemo6TitleBar *>(widget)) {
             const MNavigationBarStyle *style =
                 static_cast<const MNavigationBarStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
@@ -1147,6 +1151,7 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
             d->drawWidgetBackground(painter, option, widget->rect(), style);
 
         }
+        */
         if (qobject_cast<const QtMaemo6Menu *>(widget)) {
             const MApplicationMenuStyle *style =
                 static_cast<const MApplicationMenuStyle *>(

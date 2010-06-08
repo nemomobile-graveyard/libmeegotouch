@@ -75,7 +75,7 @@ public:
     /*!
      * draws the background of the widget
      */
-    static void drawWindowBackground(QWidget *);
+    static void drawWindowBackground(QWidget *, QString styleObject = QString(), QString styleClass = QString());
     static void drawWidgetBackground(QPainter *p,
                                      const QStyleOption *option,
                                      const QRect &rect,

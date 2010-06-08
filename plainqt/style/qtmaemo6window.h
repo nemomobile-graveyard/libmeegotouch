@@ -120,6 +120,7 @@ protected:
     /*! \reimp */
     virtual void closeEvent(QCloseEvent *event);
     virtual bool eventFilter(QObject *obj, QEvent *event);
+    virtual void resizeEvent(QResizeEvent *);
     virtual void paintEvent(QPaintEvent* e);
     /*! \reimp_end */
 protected:

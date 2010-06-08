@@ -57,6 +57,8 @@ QtMaemo6Window::QtMaemo6Window(QWidget *originalWidget, QWidget *parent /*= NULL
 
     connect(style(), SIGNAL(orientationChanged(M::OrientationAngle)),
             this, SLOT(setOrientation(M::OrientationAngle)));
+
+    centralWidget()->setAutoFillBackground(true);
 }
 
 QtMaemo6Window::~QtMaemo6Window()
@@ -169,6 +171,11 @@ bool QtMaemo6Window::eventFilter(QObject *obj, QEvent *event)
         break;
     }
     return QWidget::eventFilter(obj, event);
+}
+
+void QtMaemo6Window::resizeEvent(QResizeEvent *e) {
+    QWidget::resizeEvent(e);
+    QtMaemo6StylePrivate::drawWindowBackground(centralWidget());
 }
 
 void QtMaemo6Window::paintEvent(QPaintEvent* e) {
