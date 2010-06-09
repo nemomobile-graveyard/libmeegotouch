@@ -40,8 +40,12 @@ public:
     void createContent();
     void populateLayout();
 
+    void openQuestionDialog();
     void openEntryDialog();
     void openLongDialog();
+
+protected:
+    void retranslateUi();
 
 private Q_SLOTS:
     void itemClicked(const QModelIndex &index);

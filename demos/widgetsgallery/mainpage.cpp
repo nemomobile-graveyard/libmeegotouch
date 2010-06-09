@@ -42,7 +42,6 @@
 #include "feedbackpage.h"
 #include "contentitemspage.h"
 #include "singleselectiondialogspage.h"
-#include "multipleselectiondialogspage.h"
 #include "querydialogspage.h"
 #include "bannerspage.h"
 #include "bubblepage.h"
@@ -120,8 +119,6 @@ public:
         addCategory(qtTrId("xx_wg_categories_dialogs_and_banners"), new MainCategoryPage(this, createIndex(3,0)));
         //% "Single Selection Dialog"
         addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_single_selection_dialog"), new SingleSelectionDialogsPage());
-        //% "Multiple Selection Dialog"
-        addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_multiple_selection_dialog"), new MultipleSelectionDialogsPage());
         //% "Query Dialog"
         addGalleryPage(index(3,0), qtTrId("xx_wg_dialogs_and_banners_query_dialog"), new QueryDialogsPage());
         //% "Banner"
@@ -271,7 +268,14 @@ public:
 };
 
 MainPage::MainPage(const QString &title)
-    : shownPage(NULL), languageSettingsPage(NULL)
+    : list(0),
+      actionThemes(0),
+      actionOrientation(0),
+      actionToggleFPS(0),
+      actionLanguage(0),
+      shownPage(0),
+      policy(0),
+      languageSettingsPage(0)
 {
     setTitle(title);
 
@@ -302,25 +306,25 @@ void MainPage::createContent()
 
     populateLayout();
 
-    MAction *action = new MAction("Themes", this);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    this->addAction(action);
-    connect(action, SIGNAL(triggered()), SLOT(showThemeSelectionDialog()));
+    actionThemes = new MAction(this);
+    actionThemes->setLocation(MAction::ApplicationMenuLocation);
+    this->addAction(actionThemes);
+    connect(actionThemes, SIGNAL(triggered()), SLOT(showThemeSelectionDialog()));
 
-    action = new MAction("Orientation", this);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    this->addAction(action);
-    connect(action, SIGNAL(triggered()), SLOT(showOrientationSelectionDialog()));
+    actionOrientation = new MAction(this);
+    actionOrientation->setLocation(MAction::ApplicationMenuLocation);
+    this->addAction(actionOrientation);
+    connect(actionOrientation, SIGNAL(triggered()), SLOT(showOrientationSelectionDialog()));
 
-    action = new MAction("Toggle FPS", this);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    this->addAction(action);
-    connect(action, SIGNAL(triggered()), SLOT(toggleFps()));
+    actionToggleFPS = new MAction(this);
+    actionToggleFPS->setLocation(MAction::ApplicationMenuLocation);
+    this->addAction(actionToggleFPS);
+    connect(actionToggleFPS, SIGNAL(triggered()), SLOT(toggleFps()));
 
-    action = new MAction("Language Settings", this);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    this->addAction(action);
-    connect(action, SIGNAL(triggered()), SLOT(showLanguageSettingsPage()));
+    actionLanguage = new MAction( this);
+    actionLanguage->setLocation(MAction::ApplicationMenuLocation);
+    this->addAction(actionLanguage);
+    connect(actionLanguage, SIGNAL(triggered()), SLOT(showLanguageSettingsPage()));
 
     retranslateUi();
 }
@@ -332,6 +336,15 @@ void MainPage::retranslateUi()
 
     if (!isContentCreated())
         return;
+
+    //% "Themes"
+    actionThemes->setText(qtTrId("xx_mainpage_themes"));
+    //% "Orientation"
+    actionOrientation->setText(qtTrId("xx_mainpage_orientation"));
+    //% "Toggle FPS"
+    actionToggleFPS->setText(qtTrId("xx_mainpage_toggle_fps"));
+    //% "Language Settings"
+    actionLanguage->setText(qtTrId("xx_mainpage_language_settings"));
 }
 
 void MainPage::setInitialPageToShow(const QString& initialPageToShow)

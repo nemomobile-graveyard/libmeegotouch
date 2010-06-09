@@ -59,7 +59,9 @@ public:
 };
 
 BannersPage::BannersPage()
-    : TemplatePage(TemplatePage::DialogsAndBanners)
+    : TemplatePage(TemplatePage::DialogsAndBanners),
+      policy(0),
+      list(0)
 {
 }
 
@@ -82,22 +84,16 @@ void BannersPage::createContent()
     policy->setSpacing(0);
 
     populateLayout();
+
+    retranslateUi();
 }
 
 void BannersPage::populateLayout()
 {
-    QStringList bannerTypes;
-    //% "Event Banner"
-    bannerTypes << qtTrId("xx_wg_banners_page_event_banner");
-    //% "Information Banner"
-    bannerTypes << qtTrId("xx_wg_banners_page_information_banner");
-    //% "System Information Banner"
-    bannerTypes << qtTrId("xx_wg_banners_page_system_information_banner");
-
     list = new MList(centralWidget());
     list->setObjectName("wgList");
     list->setCellCreator(new BannersPageCellCreator());
-    list->setItemModel(new QStringListModel(bannerTypes));
+    list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
@@ -135,4 +131,22 @@ void BannersPage::showSystemInformationBanner()
     banner->setIconID("icon-l-calendar-reminder");
     banner->setSubtitle("System banner");
     banner->appear(MSceneWindow::DestroyWhenDone);
+}
+
+void BannersPage::retranslateUi()
+{
+    //% "Banners"
+    setTitle(qtTrId("xx_bannerspage_title"));
+    if (!isContentCreated())
+        return;
+
+    QStringList bannerTypes;
+    //% "Event Banner"
+    bannerTypes << qtTrId("xx_wg_banners_page_event_banner");
+    //% "Information Banner"
+    bannerTypes << qtTrId("xx_wg_banners_page_information_banner");
+    //% "System Information Banner"
+    bannerTypes << qtTrId("xx_wg_banners_page_system_information_banner");
+
+    static_cast<QStringListModel *>(list->itemModel())->setStringList(bannerTypes);
 }

@@ -41,13 +41,18 @@ static const int ImageSize = 64;
 
 SpinnerPage::SpinnerPage() :
     TemplatePage(TemplatePage::SimpleWidgets),
-    container(NULL),
-    spinner(NULL),
-    spinnerLayout1(NULL),
-    spinnerLayout2(NULL),
-    header(NULL),
-    description(NULL),
-    view(Unknown)
+    container(0),
+    spinner(0),
+    spinnerLayout1(0),
+    spinnerLayout2(0),
+    header(0),
+    description(0),
+    view(Unknown),
+    imageContainerPolicy(0),
+    actionInMainArea(0),
+    actionInContainerHeader(0),
+    actionInAppMenu(0),
+    actionInDialog(0)
 {
 }
 
@@ -64,29 +69,25 @@ void SpinnerPage::createContent()
 {
     TemplatePage::createContent();
 
-    //% "In application main area"
-    MAction *action = new MAction(qtTrId("xx_spinner_page_application_main_area"), this);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    connect(action, SIGNAL(triggered()), this, SLOT(inApplicationMainArea()));
-    addAction(action);
+    actionInMainArea = new MAction(this);
+    actionInMainArea->setLocation(MAction::ApplicationMenuLocation);
+    connect(actionInMainArea, SIGNAL(triggered()), this, SLOT(inApplicationMainArea()));
+    addAction(actionInMainArea);
 
-    //% "In container header"
-    action = new MAction(qtTrId("xx_spinner_page_container_header"), this);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    connect(action, SIGNAL(triggered()), this, SLOT(inContainerHeader()));
-    addAction(action);
+    actionInContainerHeader = new MAction(this);
+    actionInContainerHeader->setLocation(MAction::ApplicationMenuLocation);
+    connect(actionInContainerHeader, SIGNAL(triggered()), this, SLOT(inContainerHeader()));
+    addAction(actionInContainerHeader);
 
-    //% "In application menu"
-    action = new MAction(qtTrId("xx_spinner_page_menu"), this);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    connect(action, SIGNAL(triggered()), this, SLOT(inApplicationMenu()));
-    addAction(action);
+    actionInAppMenu = new MAction(this);
+    actionInAppMenu->setLocation(MAction::ApplicationMenuLocation);
+    connect(actionInAppMenu, SIGNAL(triggered()), this, SLOT(inApplicationMenu()));
+    addAction(actionInAppMenu);
 
-    //% "In dialog"
-    action = new MAction(qtTrId("xx_spinner_page_dialog"), this);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    connect(action, SIGNAL(triggered()), this, SLOT(inDialog()));
-    addAction(action);
+    actionInDialog = new MAction(this);
+    actionInDialog->setLocation(MAction::ApplicationMenuLocation);
+    connect(actionInDialog, SIGNAL(triggered()), this, SLOT(inDialog()));
+    addAction(actionInDialog);
 
     inApplicationMainArea();
 
@@ -106,6 +107,15 @@ void SpinnerPage::retranslateUi()
     //% "but available space on screen does not permit using a Progress bar.\n\n"
     //% "See the menu for examples of different use cases."
     infoLabel->setText("<a></a>" + qtTrId("xx_spinner_page_info_label"));
+
+    //% "In application main area"
+    actionInMainArea->setText(qtTrId("xx_spinner_page_application_main_area"));
+    //% "In container header"
+    actionInContainerHeader->setText(qtTrId("xx_spinner_page_container_header"));
+    //% "In application menu"
+    actionInAppMenu->setText(qtTrId("xx_spinner_page_menu"));
+    //% "In dialog"
+    actionInDialog->setText(qtTrId("xx_spinner_page_dialog"));
 }
 
 void SpinnerPage::inApplicationMainArea()

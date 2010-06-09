@@ -172,26 +172,22 @@ void ToolBarPage::createContent()
     containerPolicy->addItem(callList);
     showCallDataAsList();
 
-    //% "Example 1"
-    exampleAction1 = new MAction(qtTrId("xx_toolbar_page_example1"), this);
+    exampleAction1 = new MAction(this);
     exampleAction1->setLocation(MAction::ApplicationMenuLocation);
     connect(exampleAction1, SIGNAL(triggered()), this, SLOT(fourButtons()));
     addAction(exampleAction1);
 
-    //% "Example 2"
-    exampleAction2 = new MAction(qtTrId("xx_toolbar_page_example2"), this);
+    exampleAction2 = new MAction(this);
     exampleAction2->setLocation(MAction::ApplicationMenuLocation);
     connect(exampleAction2, SIGNAL(triggered()), this, SLOT(textEntryWithTwoButtons()));
     addAction(exampleAction2);
 
-    //% "Default View"
-    defaultViewAction = new MAction(qtTrId("xx_toolbar_page_defaultview"), this);
+    defaultViewAction = new MAction(this);
     defaultViewAction->setLocation(MAction::ApplicationMenuLocation);
     connect(defaultViewAction, SIGNAL(triggered()), this, SLOT(selectToolbarDefaultView()));
     addAction(defaultViewAction);
 
-    //% "Tab View"
-    tabViewAction = new MAction(qtTrId("xx_toolbar_page_tabview"), this);
+    tabViewAction = new MAction(this);
     tabViewAction->setLocation(MAction::ApplicationMenuLocation);
     connect(tabViewAction, SIGNAL(triggered()), this, SLOT(selectToolbarTabView()));
     addAction(tabViewAction);
@@ -210,8 +206,6 @@ void ToolBarPage::createLayout()
 
 void ToolBarPage::retranslateUi()
 {
-    TemplatePage::retranslateUi();
-
     //% "ToolBar"
     setTitle(qtTrId("xx_toolbar_page_title"));
     if (!isContentCreated())
@@ -221,6 +215,15 @@ void ToolBarPage::retranslateUi()
     //% "it either acts as a tab bar or is a container for buttons and text input field. "
     //% "<ul><li>Click Menu to explore the example</li></ul>"
     infoLabel->setText("<a></a>" + qtTrId("xx_toolbar_page_info"));
+
+    //% "Example 1"
+    exampleAction1->setText(qtTrId("xx_toolbar_page_example1"));
+    //% "Example 2"
+    exampleAction2->setText(qtTrId("xx_toolbar_page_example2"));
+    //% "Default View"
+    defaultViewAction->setText(qtTrId("xx_toolbar_page_defaultview"));
+    //% "Tab View"
+    tabViewAction->setText(qtTrId("xx_toolbar_page_tabview"));
 }
 
 void ToolBarPage::fourButtons()

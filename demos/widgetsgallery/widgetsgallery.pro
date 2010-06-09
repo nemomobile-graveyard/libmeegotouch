@@ -76,7 +76,6 @@ SOURCES += main.cpp \
     contentitemspage.cpp \
     bannerspage.cpp \
     querydialogspage.cpp \
-    multipleselectiondialogspage.cpp \
     singleselectiondialogspage.cpp \
     phonebookcell.cpp \
     bubblepage.cpp \
@@ -121,7 +120,6 @@ HEADERS += templatepage.h \
     contentitemspage.h \
     bannerspage.h \
     querydialogspage.h \
-    multipleselectiondialogspage.h \
     singleselectiondialogspage.h \
     phonebookcell.h \
     bubblepage.h \

@@ -63,7 +63,9 @@ public:
 };
 
 SingleSelectionDialogsPage::SingleSelectionDialogsPage()
-    : TemplatePage(TemplatePage::DialogsAndBanners)
+    : TemplatePage(TemplatePage::DialogsAndBanners),
+      policy(0),
+      list(0)
 {
 }
 
@@ -86,24 +88,16 @@ void SingleSelectionDialogsPage::createContent()
     policy->setSpacing(0);
 
     populateLayout();
+
+    retranslateUi();
 }
 
 void SingleSelectionDialogsPage::populateLayout()
 {
-    QStringList singleSelectionDialogTypes;
-    //% "Stacked Dialogs"
-    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_stacked_dialogs");
-    //% "System Modal Dialog"
-    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_system_modal_dialog");
-    //% "Dialog with Progress Indicator"
-    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_dialog_with_progress_indicator");
-    //% "Message Box"
-    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_message_box");
-
     list = new MList(centralWidget());
     list->setObjectName("wgList");
     list->setCellCreator(new SingleSelectionDialogsPageCellCreator());
-    list->setItemModel(new QStringListModel(singleSelectionDialogTypes));
+    list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
@@ -226,3 +220,22 @@ void SingleSelectionDialogsPage::setDialogProgressIndicatorVisible(bool visible)
     }
 }
 
+void SingleSelectionDialogsPage::retranslateUi()
+{
+    //% "Single Selection Dialogs"
+    setTitle(qtTrId("xx_single_selection_dialog_title"));
+    if (!isContentCreated())
+        return;
+
+    QStringList singleSelectionDialogTypes;
+    //% "Stacked Dialogs"
+    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_stacked_dialogs");
+    //% "System Modal Dialog"
+    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_system_modal_dialog");
+    //% "Dialog with Progress Indicator"
+    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_dialog_with_progress_indicator");
+    //% "Message Box"
+    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_message_box");
+
+    static_cast<QStringListModel *>(list->itemModel())->setStringList(singleSelectionDialogTypes);
+}

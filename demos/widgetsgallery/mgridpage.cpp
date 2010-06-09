@@ -132,10 +132,16 @@ QSizeF ContentItemCreator::cellSize() const
 
 MGridPage::MGridPage()
     : TemplatePage(TemplatePage::ListsGridsAndPopups),
+      list(0),
+      actionConfiguration(0),
       pageShown(false),
       m_itemSize(10,10),
       m_columnsPortrait(2),
-      m_columnsLandscape(4)
+      m_columnsLandscape(4),
+      m_columnsLandscapeSlider(0),
+      m_columnsPortraitSlider(0),
+      m_columnsLandscapeLabel(0),
+      m_columnsPortraitLabel(0)
 {
     setObjectName("gridPage");
 }
@@ -183,10 +189,10 @@ void MGridPage::createContent()
     connect(this, SIGNAL(rate(MediaType::Rating,QString)), model, SLOT(rateImage(MediaType::Rating,QString)));
 
     //% "Configuration"
-    MAction *configurationAction = new MAction(qtTrId("xx_gridpage_configuration"), this);
-    configurationAction->setLocation(MAction::ApplicationMenuLocation);
-    connect(configurationAction, SIGNAL(triggered()), this, SLOT(showGridConfigurationDialog()));
-    addAction(configurationAction);
+    actionConfiguration = new MAction(this);
+    actionConfiguration->setLocation(MAction::ApplicationMenuLocation);
+    connect(actionConfiguration, SIGNAL(triggered()), this, SLOT(showGridConfigurationDialog()));
+    addAction(actionConfiguration);
 
     retranslateUi();
 }
@@ -197,6 +203,9 @@ void MGridPage::retranslateUi()
     setTitle(qtTrId("xx_gridpage_title"));
     if (!isContentCreated())
         return;
+
+    //% "Configuration"
+    actionConfiguration->setText(qtTrId("xx_gridpage_configuration"));
 }
 
 QString MGridPage::timedemoTitle()

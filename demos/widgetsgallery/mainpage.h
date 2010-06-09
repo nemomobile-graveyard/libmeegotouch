@@ -80,6 +80,10 @@ private:
 
 private:
     MList *list;
+    MAction *actionThemes;
+    MAction *actionOrientation;
+    MAction *actionToggleFPS;
+    MAction *actionLanguage;
 
     MApplicationPage *shownPage;
     MLinearLayoutPolicy *policy;

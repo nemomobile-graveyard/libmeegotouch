@@ -305,32 +305,41 @@ void ContentItemsPage::createContent()
     policy->setSpacing(0);
 
     populateLayout();
-    
+
     retranslateUi();
 }
 
 void ContentItemsPage::populateLayout()
-{
-    //Basic list items
-    contentItemLists.append(createList("Single Title", new BasicListItemCreator(MBasicListItem::SingleTitle)));
-    contentItemLists.append(createList("Title with Subtitle", new BasicListItemCreator(MBasicListItem::TitleWithSubtitle)));
-    contentItemLists.append(createList("Icon with Title",  new BasicListItemCreator(MBasicListItem::IconWithTitle)));
-    contentItemLists.append(createList("Icon with Title and Subtitle",  new BasicListItemCreator(MBasicListItem::IconWithTitleAndSubtitle)));
+{    //Basic list items
+    //% "Single Title"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_single_title"), new BasicListItemCreator(MBasicListItem::SingleTitle)));
+    //% "Title with Subtitle"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_title_with_subtitle"), new BasicListItemCreator(MBasicListItem::TitleWithSubtitle)));
+    //% "Icon with Title"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_icon_with_title"),  new BasicListItemCreator(MBasicListItem::IconWithTitle)));
+    //% "Icon with Title and Subtitle"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_icon_with_title_and_subtitle"),  new BasicListItemCreator(MBasicListItem::IconWithTitleAndSubtitle)));
     
     //Detailed list items
-    contentItemLists.append(createList("Icon with Title Subtitle and Two Side Icons", 
+    //% "Icon with Title Subtitle and Two Side Icons"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_icon_with_title_subtitle_and_two_side_icons"),
                                        new DetailedListItemCreator(MDetailedListItem::IconTitleSubtitleAndTwoSideIcons)));
-    contentItemLists.append(createList("Icon with Title Subtitle and Side Icon with Label", 
+    //% "Icon with Title Subtitle and Side Icon with Label"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_icon_with_title_subtitle_and_side_icon_with_label"),
                                        new DetailedListItemCreator(MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel)));
-    contentItemLists.append(createList("Thumbnail with Title Subtitle and Two Side Icons", 
+    //% "Thumbnail with Title Subtitle and Two Side Icons"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_thumbnail_with_title_subtitle_and_two_side_icons"),
                                        new DetailedListItemCreator(MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons)));
-    contentItemLists.append(createList("Thumbnail with Title and Two Side Icons",
+    //% "Thumbnail with Title and Two Side Icons"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_thumbnail_with_title_and_two_side_icons"),
                                        new DetailedListItemCreator(MDetailedListItem::ThumbnailTitleAndTwoSideIcons)));
     
     //Advanced list items
-    contentItemLists.append(createList("Icon with Title Progress Indicator and Two Side Icons",
+    //% "Icon with Title Progress Indicator and Two Side Icons"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_icon_with_title_progress_indicator_and_two_side_icons"),
                                        new AdvancedListItemCreator(MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons)));
-    contentItemLists.append(createList("Icon with Title Progress Indicator and Top Side Icon",
+    //% "Icon with Title Progress Indicator and Top Side Icon"
+    contentItemLists.append(createList(qtTrId("xx_wg_contentitemspage_icon_with_title_progress_indicator_and_top_side_icon"),
                                        new AdvancedListItemCreator(MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon)));
 }
 

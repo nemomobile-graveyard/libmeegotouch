@@ -64,7 +64,9 @@ public:
 };
 
 QueryDialogsPage::QueryDialogsPage()
-    : TemplatePage(TemplatePage::DialogsAndBanners)
+    : TemplatePage(TemplatePage::DialogsAndBanners),
+      policy(0),
+      list(0)
 {
 }
 
@@ -87,20 +89,16 @@ void QueryDialogsPage::createContent()
     policy->setSpacing(0);
 
     populateLayout();
+
+    retranslateUi();
 }
 
 void QueryDialogsPage::populateLayout()
 {
-    QStringList queryDialogTypes;
-    //% "Entry Dialog"
-    queryDialogTypes << qtTrId("xx_wg_query_dialogs_page_entry_dialog");
-    //% "Long Dialog"
-    queryDialogTypes << qtTrId("xx_wg_query_dialogs_page_long_dialog");
-
     list = new MList(centralWidget());
     list->setObjectName("wgList");
     list->setCellCreator(new QueryDialogsPageCellCreator());
-    list->setItemModel(new QStringListModel(queryDialogTypes));
+    list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClicked(QModelIndex)));
@@ -108,10 +106,34 @@ void QueryDialogsPage::populateLayout()
 
 void QueryDialogsPage::itemClicked(const QModelIndex &index)
 {
-    if (index.row() == 0)
+    switch (index.row()) {
+    case 0:
+        openQuestionDialog();
+        break;
+    case 1:
         openEntryDialog();
-    else if (index.row() == 1)
+        break;
+    case 2:
         openLongDialog();
+    default:
+        break;
+    }
+}
+
+void QueryDialogsPage::openQuestionDialog()
+{
+    if (dialog)
+        return;
+
+    dialog = new MDialog(
+        //%  "Question Dialog Title"
+        qtTrId("xx_dialogs_and_notifications_question_dialog_title"),
+        M::YesButton | M::NoButton);
+    dialog->setCentralWidget(
+        //% "Lorem ipsum dolor sit amet?"
+        new MLabel(qtTrId("xx_dialogs_and_notifications_question_dialog_content")));
+
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void QueryDialogsPage::openEntryDialog()
@@ -191,4 +213,22 @@ void QueryDialogsPage::openLongDialog()
 #undef ADD_PRINTER_BUTTON
 
     dialog->appear(MSceneWindow::DestroyWhenDone);
+}
+
+void QueryDialogsPage::retranslateUi()
+{
+    //% "Query Dialogs"
+    setTitle(qtTrId("xx_query_dialog_title"));
+    if (!isContentCreated())
+        return;
+
+    QStringList queryDialogTypes;
+    //% "Question Dialog"
+    queryDialogTypes << qtTrId("xx_wg_multiple_selection_dialogs_page_question_dialog");
+    //% "Entry Dialog"
+    queryDialogTypes << qtTrId("xx_wg_query_dialogs_page_entry_dialog");
+    //% "Long Dialog"
+    queryDialogTypes << qtTrId("xx_wg_query_dialogs_page_long_dialog");
+
+    static_cast<QStringListModel *>(list->itemModel())->setStringList(queryDialogTypes);
 }

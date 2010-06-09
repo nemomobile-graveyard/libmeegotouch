@@ -42,6 +42,9 @@ public:
     void showInformationBanner();
     void showSystemInformationBanner();
 
+protected:
+    void retranslateUi();
+
 private Q_SLOTS:
     void itemClicked(const QModelIndex &index);
 

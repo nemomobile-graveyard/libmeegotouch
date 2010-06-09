@@ -38,7 +38,7 @@ public:
     MList *createList(const QString &title, MCellCreator *creator);
 
     void retranslateUi();
-    
+
 private:
     QList<MList*> contentItemLists;
     MLinearLayoutPolicy *policy;

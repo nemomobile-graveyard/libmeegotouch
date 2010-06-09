@@ -45,6 +45,9 @@ public:
     void openDialogWithProgressIndicator();
     void openMessageBox();
 
+protected:
+    void retranslateUi();
+
 private Q_SLOTS:
     void itemClicked(const QModelIndex &index);
     void openNestedDialog();

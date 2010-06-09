@@ -68,6 +68,7 @@ private slots:
 
 private:
     MList *list;
+    MAction *actionConfiguration;
     bool pageShown;
     QSizeF m_itemSize;
 

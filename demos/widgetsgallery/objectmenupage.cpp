@@ -90,19 +90,23 @@ void ObjectMenuPage::createContent()
         item->setTitle(names[i]);
         item->setSubtitle(numbers[i]);
 
-        MAction *action = new MAction("Call", item);
+        //% "Call"
+        MAction *action = new MAction(qtTrId("xx_objectmenu_call"), item);
         action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
-        action = new MAction("Send message", item);
+        //% "Send message"
+        action = new MAction(qtTrId("xx_objectmenu_send_message"), item);
         action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
-        action = new MAction("Open contact card", item);
+        //% "Open contact card"
+        action = new MAction(qtTrId("xx_objectmenu_open_contact_card"), item);
         action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
-        action = new MAction("Remove", item);
+        //% "Remove"
+        action = new MAction(qtTrId("xx_objectmenu_remove"), item);
         action->setLocation(MAction::ObjectMenuLocation);
         item->addAction(action);
 
@@ -126,19 +130,23 @@ void ObjectMenuPage::createContent()
         }
         image->setPreferredSize(92, 92);
 
-        MAction *action = new MAction("Play", image);
+        //% "Play"
+        MAction *action = new MAction(qtTrId("xx_objectmenu_Play"), image);
         action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
-        action = new MAction("Add to playlist", image);
+        //% "Add to playlist"
+        action = new MAction(qtTrId("xx_objectmenu_add_to_playlist"), image);
         action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
-        action = new MAction("Change album art", image);
+        //% "Change album art"
+        action = new MAction(qtTrId("xx_objectmenu_change_album_art"), image);
         action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 
-        action = new MAction("Remove", image);
+        //% "Remove"
+        action = new MAction(qtTrId("xx_objectmenu_remove"), image);
         action->setLocation(MAction::ObjectMenuLocation);
         image->addAction(action);
 

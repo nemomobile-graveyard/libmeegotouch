@@ -48,6 +48,10 @@ private:
     int m_textIndex;
     MLinearLayoutPolicy  *policy;
     MComboBox *comboBox;
+    MAction *actionItalic;
+    MAction *actionNormal;
+    MAction *actionIcon;
+
     void showText(int index);
 };
 

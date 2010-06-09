@@ -44,6 +44,9 @@ ApplicationMenuPage::ApplicationMenuPage()
     , m_textIndex(2)
     , policy(0)
     , comboBox(0)
+    , actionItalic(0)
+    , actionNormal(0)
+    , actionIcon(0)
 {
 }
 
@@ -77,6 +80,13 @@ void ApplicationMenuPage::retranslateUi()
     infoLabel->setText("<a></a>" + qtTrId("xx_applicationmenu_page_info"));
 
     showText(m_textIndex);
+
+    //% "Italic"
+    actionItalic->setText(qtTrId("xx_appmenu_italic"));
+    //% "Normal"
+    actionNormal->setText(qtTrId("xx_appmenu_normal"));
+    //% "Window Icon"
+    actionIcon->setText(qtTrId("xx_appmenu_window_icon"));
 }
 
 void ApplicationMenuPage::createContent()
@@ -92,15 +102,15 @@ void ApplicationMenuPage::createContent()
     infoLabel->setAlignment(Qt::AlignTop);
     infoLabel->setSizePolicy(QSizePolicy::Expanding,QSizePolicy::Preferred);
 
-    MAction *action = new MAction("Italic", panel);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    addAction(action);
-    connect(action, SIGNAL(triggered()), this, SLOT(makeTextItalic()));
+    actionItalic = new MAction(panel);
+    actionItalic->setLocation(MAction::ApplicationMenuLocation);
+    addAction(actionItalic);
+    connect(actionItalic, SIGNAL(triggered()), this, SLOT(makeTextItalic()));
 
-    action = new MAction("Normal", panel);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    addAction(action);
-    connect(action, SIGNAL(triggered()), this, SLOT(makeTextNormal()));
+    actionNormal = new MAction(panel);
+    actionNormal->setLocation(MAction::ApplicationMenuLocation);
+    addAction(actionNormal);
+    connect(actionNormal, SIGNAL(triggered()), this, SLOT(makeTextNormal()));
 
     MWidgetAction *widgetAction = new MWidgetAction(panel);
     widgetAction->setLocation(MAction::ApplicationMenuLocation);
@@ -117,11 +127,11 @@ void ApplicationMenuPage::createContent()
     comboBox->setCurrentIndex(0);
     widgetAction->setWidget(comboBox);
 
-    action = new MAction(NULL, "Window Icon", panel);
-    action->setLocation(MAction::ApplicationMenuLocation);
-    addAction(action);
-    connect(action, SIGNAL(triggered()), this, SLOT(toggleWindowIconVisibility()));
-    insertAction(action, widgetAction);
+    actionIcon = new MAction(panel);
+    actionIcon->setLocation(MAction::ApplicationMenuLocation);
+    addAction(actionIcon);
+    connect(actionIcon, SIGNAL(triggered()), this, SLOT(toggleWindowIconVisibility()));
+    insertAction(actionIcon, widgetAction);
 
     MLayout *layout = new MLayout(panel);
     layout->setContentsMargins(0, 0, 0, 0);

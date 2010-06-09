@@ -60,15 +60,19 @@ protected:
 private:
     void reset();
 
-    MContainer   *container;
-    MProgressIndicator* spinner;
-    MLayout* spinnerLayout1;
-    MLayout* spinnerLayout2;
-    MLabel       *header;
-    MLabel       *description;
-    View            view;
-    QTimer          timer;
+    MContainer *container;
+    MProgressIndicator *spinner;
+    MLayout *spinnerLayout1;
+    MLayout *spinnerLayout2;
+    MLabel *header;
+    MLabel *description;
+    View view;
+    QTimer timer;
     MFlowLayoutPolicy *imageContainerPolicy;
+    MAction *actionInMainArea;
+    MAction *actionInContainerHeader;
+    MAction *actionInAppMenu;
+    MAction *actionInDialog;
 };
 
 #endif // SPINNERPAGE_H
