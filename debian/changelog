@@ -1,8 +1,12 @@
-libmeegotouch (0.20.17~1) unstable; urgency=low
+libmeegotouch (0.20.17-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#172945 - MButtonIconView increases application startup times
+  * Fixes: NB#171496 - <MemLeak> mhomebuttonpanelview.cpp
+  * Fixes: NB#168600 - Calender week showing Arabic numbers
+  * Fixes: NB#173114 - Adding QGraphicsProxyWidgets adds windows
+  * Fixes: NB#173036 - Adding rows to model updates all visible items in MListView
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 07 Jun 2010 16:58:45 +0300
+ Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 09 Jun 2010 12:45:26 +0300
 
 libmeegotouch (0.20.16-1) unstable; urgency=low
 
