@@ -6,7 +6,7 @@ libmeegotouch (0.20.17-1) unstable; urgency=low
   * Fixes: NB#173114 - Adding QGraphicsProxyWidgets adds windows
   * Fixes: NB#173036 - Adding rows to model updates all visible items in MListView
 
- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 09 Jun 2010 12:45:26 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 09 Jun 2010 12:45:26 +0300
 
 libmeegotouch (0.20.16-1) unstable; urgency=low
 
