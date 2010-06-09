@@ -29,7 +29,7 @@ void StaticPageBenchmark::start()
     if (!applicationPage->isActiveWindow()) {
         connect(applicationPage, SIGNAL(appeared()), this, SLOT(stabilizeFps()));
         applicationPage->appear();
-        verifyAppearanceTimer->start(2000);
+        verifyAppearanceTimer->start(5000);
     } else {
         QTimer::singleShot(0, this, SLOT(stabilizeFps()));
     }

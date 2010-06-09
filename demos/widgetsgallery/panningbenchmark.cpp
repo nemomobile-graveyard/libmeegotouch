@@ -47,7 +47,7 @@ void PanningBenchmark::start()
     if (!applicationPage->isActiveWindow()) {
         connect(applicationPage, SIGNAL(appeared()), this, SLOT(waitBeforePanning()));
         applicationPage->appear();
-        verifyAppearanceTimer->start(2000);
+        verifyAppearanceTimer->start(5000);
     } else {
         waitBeforePanning();
     }
