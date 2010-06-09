@@ -342,8 +342,12 @@ void LanguagePage::retranslateUi()
     //% "Week number example: %1"
     labelExampleWeekNumber->setText(
         qtTrId("xx_language_week_number")
-        .arg(currentLocale.formatDateTime(
-                 datetime, "%%U %U %%v %v %%V %V")));
+        .arg(
+#ifdef HAVE_ICU
+            currentLocale.formatDateTime(datetime, "%%U %U %%v %v %%V %V")));
+#else
+            datetime.date().weekNumber()));
+#endif
 
     //% "Currency format example: %1 %2\x9c!! Currency: %1 %2"
     labelExampleCurrency->setText(
