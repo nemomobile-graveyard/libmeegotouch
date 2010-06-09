@@ -1,0 +1,139 @@
+/****************************************************************************
+** Meta object code from reading C++ file ''
+**
+** Created: Fri Jun 11 19:07:56 2010
+**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.0)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#include "/home/holger/hx86/master/libdui/libdui/src/extensions/applicationextension/mextensionhandlemodel.h"
+#include <QtCore/qmetatype.h>
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#error "The header file '' doesn't include <QObject>."
+#elif Q_MOC_OUTPUT_REVISION != 62
+#error "This file was generated using the moc from 4.7.0. It"
+#error "cannot be used with the include files from this version of Qt."
+#error "(The moc has changed too much.)"
+#endif
+
+QT_BEGIN_MOC_NAMESPACE
+static const uint qt_meta_data_MExtensionHandleModel[] = {
+
+ // content:
+       5,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+       8,   14, // properties
+       1,   38, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+ // properties: name, type, flags
+      51,   22, 0x0009510b,
+      70,   64, (QMetaType::QReal << 24) | 0x00095103,
+      84,   76, 0x0a095103,
+     113,   93, 0x0009510b,
+     141,  125, 0x0009510b,
+     155,  151, 0x02095103,
+     176,   76, 0x0a095103,
+     188,   76, 0x0a095103,
+
+ // enums: name, flags, count, data
+     206, 0x0,    5,   42,
+
+ // enum data: key, value
+     212, uint(MExtensionHandleModel::STOPPED),
+     220, uint(MExtensionHandleModel::RUNNING),
+     228, uint(MExtensionHandleModel::STARTING),
+     237, uint(MExtensionHandleModel::BROKEN),
+     244, uint(MExtensionHandleModel::INSTALLING),
+
+       0        // eod
+};
+
+static const char qt_meta_stringdata_MExtensionHandleModel[] = {
+    "MExtensionHandleModel\0"
+    "MExtensionHandleModel::State\0currentState\0"
+    "qreal\0scale\0QString\0baseName\0"
+    "MAppletSharedMutex*\0pixmapMutex\0"
+    "QVector<QSizeF>\0sizeHints\0int\0"
+    "installationProgress\0packageName\0"
+    "installationError\0State\0STOPPED\0RUNNING\0"
+    "STARTING\0BROKEN\0INSTALLING\0"
+};
+
+const QMetaObject MExtensionHandleModel::staticMetaObject = {
+    { &MWidgetModel::staticMetaObject, qt_meta_stringdata_MExtensionHandleModel,
+      qt_meta_data_MExtensionHandleModel, 0 }
+};
+
+#ifdef Q_NO_DATA_RELOCATION
+const QMetaObject &MExtensionHandleModel::getStaticMetaObject() { return staticMetaObject; }
+#endif //Q_NO_DATA_RELOCATION
+
+const QMetaObject *MExtensionHandleModel::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
+}
+
+void *MExtensionHandleModel::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, qt_meta_stringdata_MExtensionHandleModel))
+        return static_cast<void*>(const_cast< MExtensionHandleModel*>(this));
+    return MWidgetModel::qt_metacast(_clname);
+}
+
+int MExtensionHandleModel::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = MWidgetModel::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    
+#ifndef QT_NO_PROPERTIES
+     if (_c == QMetaObject::ReadProperty) {
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: *reinterpret_cast< MExtensionHandleModel::State*>(_v) = currentState(); break;
+        case 1: *reinterpret_cast< qreal*>(_v) = scale(); break;
+        case 2: *reinterpret_cast< QString*>(_v) = baseName(); break;
+        case 3: *reinterpret_cast< MAppletSharedMutex**>(_v) = pixmapMutex(); break;
+        case 4: *reinterpret_cast< QVector<QSizeF>*>(_v) = sizeHints(); break;
+        case 5: *reinterpret_cast< int*>(_v) = installationProgress(); break;
+        case 6: *reinterpret_cast< QString*>(_v) = packageName(); break;
+        case 7: *reinterpret_cast< QString*>(_v) = installationError(); break;
+        }
+        _id -= 8;
+    } else if (_c == QMetaObject::WriteProperty) {
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: setCurrentState(*reinterpret_cast< MExtensionHandleModel::State*>(_v)); break;
+        case 1: setScale(*reinterpret_cast< qreal*>(_v)); break;
+        case 2: setBaseName(*reinterpret_cast< QString*>(_v)); break;
+        case 3: setPixmapMutex(*reinterpret_cast< MAppletSharedMutex**>(_v)); break;
+        case 4: setSizeHints(*reinterpret_cast< QVector<QSizeF>*>(_v)); break;
+        case 5: setInstallationProgress(*reinterpret_cast< int*>(_v)); break;
+        case 6: setPackageName(*reinterpret_cast< QString*>(_v)); break;
+        case 7: setInstallationError(*reinterpret_cast< QString*>(_v)); break;
+        }
+        _id -= 8;
+    } else if (_c == QMetaObject::ResetProperty) {
+        _id -= 8;
+    } else if (_c == QMetaObject::QueryPropertyDesignable) {
+        _id -= 8;
+    } else if (_c == QMetaObject::QueryPropertyScriptable) {
+        _id -= 8;
+    } else if (_c == QMetaObject::QueryPropertyStored) {
+        _id -= 8;
+    } else if (_c == QMetaObject::QueryPropertyEditable) {
+        _id -= 8;
+    } else if (_c == QMetaObject::QueryPropertyUser) {
+        _id -= 8;
+    }
+#endif // QT_NO_PROPERTIES
+    return _id;
+}
+QT_END_MOC_NAMESPACE

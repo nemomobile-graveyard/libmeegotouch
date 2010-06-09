@@ -186,7 +186,7 @@ bool Ft_MServiceFwGen::filesAreTheSame(const QString &filename, const QString &c
 
     QFile correctFile(correctFilename);
     if (!correctFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-        qDebug() << "Could not open" << filename;
+        qDebug() << "Could not open" << correctFilename;
         return false;
     }
     QTextStream correctIn(&correctFile);

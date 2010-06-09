@@ -173,7 +173,8 @@ SUBDIRS += \
     ft_numbers \
     ft_sorting \
     ut_mcalendar \
-    ut_mappletinstantiator
+    ut_mappletinstantiator \
+    ft_mmoc
 }
 
 contains(M_BUILD_PARTS, "plainqt") {

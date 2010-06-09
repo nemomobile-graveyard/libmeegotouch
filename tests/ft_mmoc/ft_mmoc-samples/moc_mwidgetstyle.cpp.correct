@@ -1,0 +1,178 @@
+/****************************************************************************
+** Meta object code from reading C++ file ''
+**
+** Created: Fri Jun 11 11:35:32 2010
+**      by: The Qt Meta Object Compiler version 62 (Qt 4.7.0)
+**
+** WARNING! All changes made in this file will be lost!
+*****************************************************************************/
+
+#include "mwidgetstyle.h"
+#include <QtCore/qmetatype.h>
+#if !defined(Q_MOC_OUTPUT_REVISION)
+#error "The header file '' doesn't include <QObject>."
+#elif Q_MOC_OUTPUT_REVISION != 62
+#error "This file was generated using the moc from 4.7.0. It"
+#error "cannot be used with the include files from this version of Qt."
+#error "(The moc has changed too much.)"
+#endif
+
+QT_BEGIN_MOC_NAMESPACE
+static const uint qt_meta_data_MWidgetStyle[] = {
+
+ // content:
+       5,       // revision
+       0,       // classname
+       0,    0, // classinfo
+       0,    0, // methods
+      23,   14, // properties
+       0,    0, // enums/sets
+       0,    0, // constructors
+       0,       // flags
+       0,       // signalCount
+
+ // properties: name, type, flags
+      17,   13, 0x02095103,
+      28,   13, 0x02095103,
+      38,   13, 0x02095103,
+      50,   13, 0x02095103,
+      63,   13, 0x02095103,
+      75,   13, 0x02095103,
+      86,   13, 0x02095103,
+      99,   13, 0x02095103,
+     113,   13, 0x02095103,
+     132,   13, 0x02095103,
+     150,   13, 0x02095103,
+     170,   13, 0x02095103,
+     191,   13, 0x02095103,
+     231,  214, 0x0009510b,
+     269,  247, 0x0009510b,
+     292,  285, 0x43095103,
+     314,  308, (QMetaType::QReal << 24) | 0x00095103,
+     338,  332, 0x15095103,
+     352,  332, 0x15095103,
+     364,  332, 0x15095103,
+     386,  376, 0x0009510b,
+     400,  376, 0x0009510b,
+     416,  376, 0x0009510b,
+
+       0        // eod
+};
+
+static const char qt_meta_stringdata_MWidgetStyle[] = {
+    "MWidgetStyle\0int\0marginLeft\0marginTop\0"
+    "marginRight\0marginBottom\0paddingLeft\0"
+    "paddingTop\0paddingRight\0paddingBottom\0"
+    "reactiveMarginLeft\0reactiveMarginTop\0"
+    "reactiveMarginRight\0reactiveMarginBottom\0"
+    "backgroundBoxedPercent\0MBackgroundTiles\0"
+    "backgroundTiles\0const MScalableImage*\0"
+    "backgroundImage\0QColor\0backgroundColor\0"
+    "qreal\0backgroundOpacity\0QSize\0"
+    "preferredSize\0minimumSize\0maximumSize\0"
+    "MFeedback\0pressFeedback\0releaseFeedback\0"
+    "cancelFeedback\0"
+};
+
+const QMetaObject MWidgetStyle::staticMetaObject = {
+    { &MStyle::staticMetaObject, qt_meta_stringdata_MWidgetStyle,
+      qt_meta_data_MWidgetStyle, 0 }
+};
+
+#ifdef Q_NO_DATA_RELOCATION
+const QMetaObject &MWidgetStyle::getStaticMetaObject() { return staticMetaObject; }
+#endif //Q_NO_DATA_RELOCATION
+
+const QMetaObject *MWidgetStyle::metaObject() const
+{
+    return QObject::d_ptr->metaObject ? QObject::d_ptr->metaObject : &staticMetaObject;
+}
+
+void *MWidgetStyle::qt_metacast(const char *_clname)
+{
+    if (!_clname) return 0;
+    if (!strcmp(_clname, qt_meta_stringdata_MWidgetStyle))
+        return static_cast<void*>(const_cast< MWidgetStyle*>(this));
+    return MStyle::qt_metacast(_clname);
+}
+
+int MWidgetStyle::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
+{
+    _id = MStyle::qt_metacall(_c, _id, _a);
+    if (_id < 0)
+        return _id;
+    
+#ifndef QT_NO_PROPERTIES
+     if (_c == QMetaObject::ReadProperty) {
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: *reinterpret_cast< int*>(_v) = marginLeft(); break;
+        case 1: *reinterpret_cast< int*>(_v) = marginTop(); break;
+        case 2: *reinterpret_cast< int*>(_v) = marginRight(); break;
+        case 3: *reinterpret_cast< int*>(_v) = marginBottom(); break;
+        case 4: *reinterpret_cast< int*>(_v) = paddingLeft(); break;
+        case 5: *reinterpret_cast< int*>(_v) = paddingTop(); break;
+        case 6: *reinterpret_cast< int*>(_v) = paddingRight(); break;
+        case 7: *reinterpret_cast< int*>(_v) = paddingBottom(); break;
+        case 8: *reinterpret_cast< int*>(_v) = reactiveMarginLeft(); break;
+        case 9: *reinterpret_cast< int*>(_v) = reactiveMarginTop(); break;
+        case 10: *reinterpret_cast< int*>(_v) = reactiveMarginRight(); break;
+        case 11: *reinterpret_cast< int*>(_v) = reactiveMarginBottom(); break;
+        case 12: *reinterpret_cast< int*>(_v) = backgroundBoxedPercent(); break;
+        case 13: *reinterpret_cast< MBackgroundTiles*>(_v) = backgroundTiles(); break;
+        case 14: *reinterpret_cast< const MScalableImage**>(_v) = backgroundImage(); break;
+        case 15: *reinterpret_cast< QColor*>(_v) = backgroundColor(); break;
+        case 16: *reinterpret_cast< qreal*>(_v) = backgroundOpacity(); break;
+        case 17: *reinterpret_cast< QSize*>(_v) = preferredSize(); break;
+        case 18: *reinterpret_cast< QSize*>(_v) = minimumSize(); break;
+        case 19: *reinterpret_cast< QSize*>(_v) = maximumSize(); break;
+        case 20: *reinterpret_cast< MFeedback*>(_v) = pressFeedback(); break;
+        case 21: *reinterpret_cast< MFeedback*>(_v) = releaseFeedback(); break;
+        case 22: *reinterpret_cast< MFeedback*>(_v) = cancelFeedback(); break;
+        }
+        _id -= 23;
+    } else if (_c == QMetaObject::WriteProperty) {
+        void *_v = _a[0];
+        switch (_id) {
+        case 0: setMarginLeft(*reinterpret_cast< int*>(_v)); break;
+        case 1: setMarginTop(*reinterpret_cast< int*>(_v)); break;
+        case 2: setMarginRight(*reinterpret_cast< int*>(_v)); break;
+        case 3: setMarginBottom(*reinterpret_cast< int*>(_v)); break;
+        case 4: setPaddingLeft(*reinterpret_cast< int*>(_v)); break;
+        case 5: setPaddingTop(*reinterpret_cast< int*>(_v)); break;
+        case 6: setPaddingRight(*reinterpret_cast< int*>(_v)); break;
+        case 7: setPaddingBottom(*reinterpret_cast< int*>(_v)); break;
+        case 8: setReactiveMarginLeft(*reinterpret_cast< int*>(_v)); break;
+        case 9: setReactiveMarginTop(*reinterpret_cast< int*>(_v)); break;
+        case 10: setReactiveMarginRight(*reinterpret_cast< int*>(_v)); break;
+        case 11: setReactiveMarginBottom(*reinterpret_cast< int*>(_v)); break;
+        case 12: setBackgroundBoxedPercent(*reinterpret_cast< int*>(_v)); break;
+        case 13: setBackgroundTiles(*reinterpret_cast< MBackgroundTiles*>(_v)); break;
+        case 14: setBackgroundImage(*reinterpret_cast< const MScalableImage**>(_v)); break;
+        case 15: setBackgroundColor(*reinterpret_cast< QColor*>(_v)); break;
+        case 16: setBackgroundOpacity(*reinterpret_cast< qreal*>(_v)); break;
+        case 17: setPreferredSize(*reinterpret_cast< QSize*>(_v)); break;
+        case 18: setMinimumSize(*reinterpret_cast< QSize*>(_v)); break;
+        case 19: setMaximumSize(*reinterpret_cast< QSize*>(_v)); break;
+        case 20: setPressFeedback(*reinterpret_cast< MFeedback*>(_v)); break;
+        case 21: setReleaseFeedback(*reinterpret_cast< MFeedback*>(_v)); break;
+        case 22: setCancelFeedback(*reinterpret_cast< MFeedback*>(_v)); break;
+        }
+        _id -= 23;
+    } else if (_c == QMetaObject::ResetProperty) {
+        _id -= 23;
+    } else if (_c == QMetaObject::QueryPropertyDesignable) {
+        _id -= 23;
+    } else if (_c == QMetaObject::QueryPropertyScriptable) {
+        _id -= 23;
+    } else if (_c == QMetaObject::QueryPropertyStored) {
+        _id -= 23;
+    } else if (_c == QMetaObject::QueryPropertyEditable) {
+        _id -= 23;
+    } else if (_c == QMetaObject::QueryPropertyUser) {
+        _id -= 23;
+    }
+#endif // QT_NO_PROPERTIES
+    return _id;
+}
+QT_END_MOC_NAMESPACE
