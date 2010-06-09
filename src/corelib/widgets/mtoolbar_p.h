@@ -26,6 +26,8 @@ class MAction;
 class MWidget;
 class MButton;
 
+#define _M_IsEnabledPreservingSelection "_m_isEnabledPreservingSelection"
+
 class MToolBarPrivate : public MWidgetControllerPrivate
 {
     Q_DECLARE_PUBLIC(MToolBar)

@@ -20,6 +20,7 @@
 #include <QGraphicsLinearLayout>
 
 #include "mtoolbar.h"
+#include "mtoolbar_p.h"
 
 #include "mtheme.h"
 #include "mbutton.h"
@@ -380,6 +381,17 @@ bool MToolBarViewPrivate::eventFilter(QObject *obj, QEvent *e)
         case QEvent::ActionChanged:
             change(static_cast<QActionEvent *>(e)->action());
             break;
+
+        case QEvent::DynamicPropertyChange:
+            {
+                QDynamicPropertyChangeEvent *propertyEvent = static_cast<QDynamicPropertyChangeEvent*>(e);
+                if (propertyEvent->propertyName() == _M_IsEnabledPreservingSelection) {
+                    bool enabledPreservingSelection = obj->property(_M_IsEnabledPreservingSelection).toBool();
+                    setEnabledPreservingSelection(enabledPreservingSelection);
+                }
+            }
+            break;
+
         default:
             break;
     }
@@ -469,6 +481,20 @@ MWidget *MToolBarView::getWidget(QAction *action) const
     if( button )
         return button;
     return d->leasedWidgets.value(action);
+}
+
+void MToolBarViewPrivate::setEnabledPreservingSelection(bool enabled)
+{
+    foreach(MButton *button, buttons) {
+        if (!button->isChecked())
+            button->setEnabled(enabled);
+    }
+
+    foreach(MWidget *leasedWidget, leasedWidgets) {
+        MButton *button = qobject_cast<MButton *>(leasedWidget);
+        if (!button || !button->isChecked())
+            leasedWidget->setEnabled(enabled);
+    }
 }
 
 void MToolBarViewPrivate::_q_groupButtonClicked(bool checked)

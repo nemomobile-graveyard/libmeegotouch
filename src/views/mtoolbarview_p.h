@@ -64,6 +64,7 @@ protected:
     bool hasUnusableWidget(QAction *action) const;
     void updateWidgetFromAction(MWidget *widget, QAction *action) const;
     MWidget *getWidget(QAction *action) const;
+    void setEnabledPreservingSelection(bool enabled);
     void _q_groupButtonClicked(bool);
     void _q_groupActionToggled(bool);
 protected:

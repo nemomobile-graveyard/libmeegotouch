@@ -30,6 +30,7 @@
 #include "mnavigationbar.h"
 #include "mapplicationmenu.h"
 #include "mtoolbar.h"
+#include "mtoolbar_p.h"
 #include "mdockwidget.h"
 #include "mcomponentdata.h"
 #include "maction.h"
@@ -381,6 +382,10 @@ void MApplicationWindowPrivate::openMenu()
     if (menu->actions().count() > 0) {
         menu->appear(q);
         escapeButtonPanel->setEnabled(false);
+
+        // Simply calling setEnabled(false) would uncheck the currently
+        // checked item in the toolbar if tab view is being used.
+        toolBar->setProperty(_M_IsEnabledPreservingSelection, QVariant(false));
     }
 }
 
@@ -404,7 +409,7 @@ void MApplicationWindowPrivate::_q_menuDisappeared()
     isMenuOpen = false;
 
     escapeButtonPanel->setEnabled(true);
-    toolBar->setEnabled(true);
+    toolBar->setProperty(_M_IsEnabledPreservingSelection, QVariant(true));
 }
 
 #ifdef HAVE_N900
