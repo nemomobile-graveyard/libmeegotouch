@@ -34,7 +34,7 @@ void QtMaemo6KineticScrolling::KineticData::setState(State state) {
 
 QtMaemo6KineticScrolling::QtMaemo6KineticScrolling(QObject *parent)
   : QObject(parent),
-    m_scrollStartDelay(50),
+    m_scrollStartDelay(85),
     m_scrollStartOffset(5),
     m_deaccelerationInterval(20),
     m_deaccelerationStrength(2),
