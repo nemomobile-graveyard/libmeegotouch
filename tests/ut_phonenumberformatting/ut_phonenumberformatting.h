@@ -23,13 +23,24 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
+class MLocale;
+
 class Ut_PhoneNumberFormatting : public QObject
 {
     Q_OBJECT
 
 private slots:
+    void initTestCase();
+    void cleanupTestCase();
+
     void testFormatting_data();
     void testFormatting();
+
+    void testDefaultFormatting_data();
+    void testDefaultFormatting();
+
+private:
+    MLocale* m_pLocale;
 };
 
 #endif

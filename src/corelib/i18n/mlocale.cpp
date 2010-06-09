@@ -63,6 +63,7 @@ namespace
     const QString SettingsLcCollate("/meegotouch/i18n/lc_collate");
     const QString SettingsLcNumeric("/meegotouch/i18n/lc_numeric");
     const QString SettingsLcMonetary("/meegotouch/i18n/lc_monetary");
+    const QString SettingsLcTelephone("/meegotouch/i18n/lc_telephone");
 }
 
 /// Helper
@@ -333,18 +334,20 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
 MLocalePrivate::MLocalePrivate()
     : _valid(true),
       _calendarType(MLocale::DefaultCalendar),
-      _collation(MLocale::DefaultCollation)
+      _collation(MLocale::DefaultCollation),
+      _phoneNumberGrouping( MLocale::DefaultPhoneNumberGrouping ),
 #ifdef HAVE_ICU
-      , _numberFormat(0)
+      _numberFormat(0),
 #endif
 #ifdef HAVE_GCONF
-      , currentLanguageItem(SettingsLanguage),
+      currentLanguageItem(SettingsLanguage),
       currentLcTimeItem(SettingsLcTime),
       currentLcCollateItem(SettingsLcCollate),
       currentLcNumericItem(SettingsLcNumeric),
-      currentLcMonetaryItem(SettingsLcMonetary)
+      currentLcMonetaryItem(SettingsLcMonetary),
+      currentLcTelephoneItem(SettingsLcTelephone),
 #endif
-      , q_ptr(0)
+      q_ptr(0)
 {
     loadCountryCodes();
 }
@@ -359,23 +362,26 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       _calendarLocale(other._calendarLocale),
       _monetaryLocale(other._monetaryLocale),
       _nameLocale(other._nameLocale),
+      _telephoneLocale(other._telephoneLocale),
       _validCountryCodes( other._validCountryCodes ),
       _calendarType(other._calendarType),
       _collation(other._collation),
+      _phoneNumberGrouping( other._phoneNumberGrouping ),
 #ifdef HAVE_ICU
       _numberFormat(0),
 #endif
       _messageTranslations(other._messageTranslations),
       _timeTranslations(other._timeTranslations),
-      _trTranslations(other._trTranslations)
+      _trTranslations(other._trTranslations),
 #ifdef HAVE_GCONF
-      , currentLanguageItem(SettingsLanguage),
+      currentLanguageItem(SettingsLanguage),
       currentLcTimeItem(SettingsLcTime),
       currentLcCollateItem(SettingsLcCollate),
       currentLcNumericItem(SettingsLcNumeric),
-      currentLcMonetaryItem(SettingsLcMonetary)
+      currentLcMonetaryItem(SettingsLcMonetary),
+      currentLcTelephoneItem(SettingsLcTelephone),
 #endif
-      , q_ptr(0)
+      q_ptr(0)
 {
 #ifdef HAVE_ICU
     if (other._numberFormat != 0) {
@@ -409,6 +415,7 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
     _timeTranslations = other._timeTranslations;
     _trTranslations = other._trTranslations;
     _validCountryCodes = other._validCountryCodes;
+    _telephoneLocale = other._telephoneLocale;
 
 #ifdef HAVE_ICU
     delete _numberFormat;
@@ -427,7 +434,6 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
 void MLocalePrivate::loadCountryCodes()
 {
     _validCountryCodes.clear();
-
 
     _validCountryCodes
       << "1"
@@ -709,6 +715,12 @@ QString MLocalePrivate::categoryName(MLocale::Category category) const
             return _nameLocale;
         }
         break;
+
+    case(MLocale::MLcTelephone):
+        if (!_telephoneLocale.isEmpty()) {
+            return _telephoneLocale;
+        }
+        break;
     }
 
     return _defaultLocale;
@@ -780,6 +792,15 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
         _monetaryLocale = localeName;
     } else if (category == MLocale::MLcName) {
         _nameLocale = localeName;
+    } else if (category == MLocale::MLcTelephone) {
+        _telephoneLocale = localeName;
+        // here we set the phone number grouping depending on the
+        // setting in the gconf key
+        if ( _telephoneLocale.startsWith( "en_US" ) ) {
+            _phoneNumberGrouping = MLocale::NorthAmericanPhoneNumberGrouping;
+        } else {
+            _phoneNumberGrouping = MLocale::NoPhoneNumberGrouping;
+        }
     } else {
         //mDebug("MLocalePrivate") << "unimplemented category change"; // DEBUG
     }
@@ -915,12 +936,14 @@ MLocale::createSystemMLocale()
     MGConfItem lcCollateItem(SettingsLcCollate);
     MGConfItem lcNumericItem(SettingsLcNumeric);
     MGConfItem lcMonetaryItem(SettingsLcMonetary);
+    MGConfItem lcTelephoneItem(SettingsLcTelephone);
 
     QString language = languageItem.value().toString();
     QString lcTime = lcTimeItem.value().toString();
     QString lcCollate = lcCollateItem.value().toString();
     QString lcNumeric = lcNumericItem.value().toString();
     QString lcMonetary = lcMonetaryItem.value().toString();
+    QString lcTelephone = lcTelephoneItem.value().toString();
 
     MLocale *systemLocale;
 
@@ -945,6 +968,8 @@ MLocale::createSystemMLocale()
         systemLocale->setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
     if (!lcMonetary.isEmpty())
         systemLocale->setCategoryLocale(MLocale::MLcMonetary, lcMonetary);
+    if (!lcTelephone.isEmpty())
+        systemLocale->setCategoryLocale(MLocale::MLcTelephone, lcTelephone);
 
     return systemLocale;
 #else
@@ -979,6 +1004,8 @@ MLocale::connectSettings()
                      this, SLOT(refreshSettings()));
     QObject::connect(&d->currentLcMonetaryItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcTelephoneItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
 #endif
 }
 
@@ -997,6 +1024,8 @@ MLocale::disconnectSettings()
     QObject::disconnect(&d->currentLcNumericItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
     QObject::disconnect(&d->currentLcMonetaryItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcTelephoneItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
 #endif
 }
@@ -2242,12 +2271,14 @@ void MLocale::refreshSettings()
 {
 #ifdef HAVE_GCONF
     Q_D(MLocale);
+
     bool settingsHaveReallyChanged = false;
     QString localeName = d->currentLanguageItem.value().toString();
     QString lcTime = d->currentLcTimeItem.value().toString();
     QString lcCollate = d->currentLcCollateItem.value().toString();
     QString lcNumeric = d->currentLcNumericItem.value().toString();
     QString lcMonetary = d->currentLcMonetaryItem.value().toString();
+    QString lcTelephone = d->currentLcTelephoneItem.value().toString();
 
     if (localeName != d->_defaultLocale) {
         settingsHaveReallyChanged = true;
@@ -2272,6 +2303,10 @@ void MLocale::refreshSettings()
     if (lcMonetary != d->_monetaryLocale) {
         settingsHaveReallyChanged = true;
         setCategoryLocale(MLcMonetary, lcMonetary);
+    }
+    if (lcTelephone != d->_telephoneLocale) {
+        settingsHaveReallyChanged = true;
+        setCategoryLocale(MLcTelephone, lcTelephone);
     }
 
     if (settingsHaveReallyChanged) {
@@ -2307,10 +2342,24 @@ void MLocale::refreshSettings()
 }
 
 QString MLocale::formatPhoneNumber( const QString& phoneNumber,
-				    PhoneNumberGrouping grouping ) const
+                                    PhoneNumberGrouping grouping ) const
 {
     Q_D(const MLocale);
-    return d->formatPhoneNumber( phoneNumber, grouping );
+
+    PhoneNumberGrouping tmpGrouping( grouping );
+
+    // when called with default grouping, use the
+    // system setting for the grouping
+    if ( tmpGrouping == DefaultPhoneNumberGrouping )
+    {
+        if ( d->currentLcTelephoneItem.value().toString().startsWith( "en_US" ) ) {
+            tmpGrouping = NorthAmericanPhoneNumberGrouping;
+        } else {
+            tmpGrouping = NoPhoneNumberGrouping;
+	}
+    }
+
+    return d->formatPhoneNumber( phoneNumber, tmpGrouping );
 }
 
 // when string starts with numbers 2 to 9
@@ -2479,7 +2528,7 @@ QString MLocalePrivate::formatPhoneNumber( const QString& phoneNumber,
 
   // 00 is not a valid country calling code in north america
   // -> do not do grouping in this case at all
-  if ( ( grouping == MLocale::NorthAmericanGrouping ) 
+  if ( ( grouping == MLocale::NorthAmericanPhoneNumberGrouping )
        && phoneNumber.startsWith( "00" ) )
   {
     return phoneNumber;
@@ -2560,7 +2609,7 @@ QString MLocalePrivate::formatPhoneNumber( const QString& phoneNumber,
   } // found country code indicator
 
   // if it exists, the country code is split off now
-  if ( grouping != MLocale::NorthAmericanGrouping )
+  if ( grouping != MLocale::NorthAmericanPhoneNumberGrouping )
   {
     result.append( remaining );
     return result;

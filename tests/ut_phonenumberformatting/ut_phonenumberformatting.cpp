@@ -19,6 +19,23 @@
 #include "ut_phonenumberformatting.h"
 
 #include "mlocale.h"
+#include "mgconfitem.h"
+
+void Ut_PhoneNumberFormatting::initTestCase()
+{
+    m_pLocale = new MLocale;
+
+    // for some reason only the default locale gets
+    // the signals when the gconf keys change,
+    // so for this test we make this locale the default
+    // locale...
+    m_pLocale->setDefault( *m_pLocale );
+}
+
+void Ut_PhoneNumberFormatting::cleanupTestCase()
+{
+    delete m_pLocale;
+}
 
 void Ut_PhoneNumberFormatting::testFormatting_data()
 {
@@ -281,17 +298,76 @@ void Ut_PhoneNumberFormatting::testFormatting()
     QFETCH( QString, formattedPhoneNumber );
     QFETCH( bool, doGrouping );
 
-    Q_UNUSED(doGrouping);
-
     MLocale locale;
 
     QString myGroupedPhoneNumber = locale.formatPhoneNumber(
         rawPhoneNumber, doGrouping ?
-	    MLocale::NorthAmericanGrouping :
-	    MLocale::NoGrouping );
+	    MLocale::NorthAmericanPhoneNumberGrouping :
+	    MLocale::NoPhoneNumberGrouping );
 
     QCOMPARE( myGroupedPhoneNumber, formattedPhoneNumber );
 }
 
+void Ut_PhoneNumberFormatting::testDefaultFormatting_data()
+{
+    QTest::addColumn<QString>("rawPhoneNumber");
+    QTest::addColumn<QString>("formattedPhoneNumber");
+    QTest::addColumn<QString>("phoneLocale");
 
-QTEST_APPLESS_MAIN(Ut_PhoneNumberFormatting);
+    // here we just test two switches between north
+    // american grouping and no grouping
+
+    QTest::newRow( "" ) << QString()
+			<< QString()
+			<< QString();
+
+    QTest::newRow( "fi" ) << QString( "+3581234567" )
+			  << QString( "+358 1234567" )
+			  << QString( "fi" );
+
+    QTest::newRow( "en_US" ) << QString( "+3581234567" )
+			     << QString( "+358 (123) 456-7" )
+			     << QString( "en_US" );
+
+    QTest::newRow( "fi2" ) << QString( "+3581234567" )
+			  << QString( "+358 1234567" )
+			  << QString( "fi" );
+
+    QTest::newRow( "en_US2" ) << QString( "+3581234567" )
+			     << QString( "+358 (123) 456-7" )
+			     << QString( "en_US" );
+}
+
+void Ut_PhoneNumberFormatting::testDefaultFormatting()
+{
+    QTest::addColumn<QString>("rawPhoneNumber");
+    QTest::addColumn<QString>("formattedPhoneNumber");
+    QTest::addColumn<QString>("phoneLocale");
+
+    QFETCH( QString, rawPhoneNumber );
+    QFETCH( QString, formattedPhoneNumber );
+    QFETCH( QString, phoneLocale );
+
+    // here we set the telephone locale first,
+    // and then we get the formatted phone number
+    // for the default locale.
+    // this way we test if a change in the
+    // locale gconf key really results in different
+    // formatted phone numbers for different phone
+    // locales.
+
+    MGConfItem lcPhoneItem( "/meegotouch/i18n/lc_telephone" );
+
+    lcPhoneItem.set( phoneLocale );
+
+    // for some reason the gconf items do need this
+    // wait call to propagate the key change.
+    QTest::qWait( 10 );
+
+    QString myGroupedPhoneNumber = m_pLocale->formatPhoneNumber(
+        rawPhoneNumber, MLocale::DefaultPhoneNumberGrouping );
+
+    QCOMPARE( myGroupedPhoneNumber, formattedPhoneNumber );
+}
+
+QTEST_MAIN(Ut_PhoneNumberFormatting);

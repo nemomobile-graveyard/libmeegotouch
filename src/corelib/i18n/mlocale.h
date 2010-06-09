@@ -126,7 +126,8 @@ public:
 
     //! Category type for the locale
     enum Category {MLcMessages, MLcTime, MLcCollate,
-                   MLcNumeric, MLcMonetary, MLcName
+                   MLcNumeric, MLcMonetary, MLcName,
+                   MLcTelephone
                   };
 
     //! Set of possible collations
@@ -169,9 +170,9 @@ public:
      * current system settings.
      */
     enum PhoneNumberGrouping {
-      DefaultGrouping,
-      NoGrouping,
-      NorthAmericanGrouping
+      DefaultPhoneNumberGrouping,
+      NoPhoneNumberGrouping,
+      NorthAmericanPhoneNumberGrouping
     };
 
 
@@ -680,7 +681,7 @@ public:
      */
     QString formatPhoneNumber( const QString& phoneNumber,
 			       PhoneNumberGrouping grouping =
-			       DefaultGrouping ) const;
+			       DefaultPhoneNumberGrouping ) const;
 
     /*!
      * \brief returns ICU date and time format string of the current locale

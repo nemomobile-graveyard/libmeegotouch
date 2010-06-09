@@ -125,6 +125,7 @@ public:
     QString _calendarLocale;
     QString _monetaryLocale;
     QString _nameLocale;
+    QString _telephoneLocale;
 
     // the list of valid country codes for the formatPhoneNumber function
     QSet<QString> _validCountryCodes;
@@ -133,6 +134,8 @@ public:
     MLocale::CalendarType _calendarType;
     MLocale::Collation _collation;
     // add currency?
+
+    MLocale::PhoneNumberGrouping _phoneNumberGrouping;
 
 #ifdef HAVE_ICU
     // number format caching for better performance.
@@ -155,6 +158,7 @@ public:
     MGConfItem currentLcCollateItem;
     MGConfItem currentLcNumericItem;
     MGConfItem currentLcMonetaryItem;
+    MGConfItem currentLcTelephoneItem;
 #endif
 
     MLocale *q_ptr;

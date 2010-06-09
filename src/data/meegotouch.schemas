@@ -77,6 +77,16 @@
         <long>Asynchronous pixmaps are initially transparent by default. When this value is set to true the are filled with green.</long>
       </locale>
     </schema>
+    <schema>
+      <key>/schemas/meegotouch/i18n/lc_telephone</key>
+      <applyto>/meegotouch/i18n/lc_telephone</applyto>
+      <owner>libmeegotouch</owner>
+      <type>string</type>
+      <default></default>
+      <locale name="C">
+        <short></short>
+        <long></long>
+      </locale>
+    </schema>
   </schemalist>
 </gconfschemafile>
-
