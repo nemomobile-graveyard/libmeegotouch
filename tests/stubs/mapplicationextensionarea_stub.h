@@ -9,18 +9,15 @@
 // FIXME - stubgen is not yet finished
 class MApplicationExtensionAreaStub : public StubBase {
   public:
-  virtual void MApplicationExtensionAreaConstructor(const QString &interface, const bool enableInProcessExtensions, QGraphicsItem *parent);
+  virtual void MApplicationExtensionAreaConstructor(const QString &interface, QGraphicsItem *parent);
   virtual QList<MApplicationExtensionInterface *> extensions();
   virtual void MApplicationExtensionAreaDestructor();
-  virtual void extensionInstantiated(MApplicationExtensionInterface *extension);
-  virtual void extensionRemoved(MApplicationExtensionInterface *extension);
   virtual void MApplicationExtensionAreaConstructor(MApplicationExtensionAreaPrivate *dd, MApplicationExtensionAreaModel *model, QGraphicsItem *parent, const QString &interface, const bool enableInProcessExtensions);
 };
 
 // 2. IMPLEMENT STUB
-void MApplicationExtensionAreaStub::MApplicationExtensionAreaConstructor(const QString &interface, const bool enableInProcessExtensions, QGraphicsItem *parent) {
+void MApplicationExtensionAreaStub::MApplicationExtensionAreaConstructor(const QString &interface, QGraphicsItem *parent) {
   Q_UNUSED(interface);
-  Q_UNUSED(enableInProcessExtensions);
   Q_UNUSED(parent);
 
 }
@@ -30,18 +27,6 @@ QList<MApplicationExtensionInterface *> MApplicationExtensionAreaStub::extension
 }
 
 void MApplicationExtensionAreaStub::MApplicationExtensionAreaDestructor() {
-}
-
-void MApplicationExtensionAreaStub::extensionInstantiated(MApplicationExtensionInterface *extension) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<MApplicationExtensionInterface * >(extension));
-  stubMethodEntered("extensionInstantiated",params);
-}
-
-void MApplicationExtensionAreaStub::extensionRemoved(MApplicationExtensionInterface *extension) {
-  QList<ParameterBase*> params;
-  params.append( new Parameter<MApplicationExtensionInterface * >(extension));
-  stubMethodEntered("extensionRemoved",params);
 }
 
 void MApplicationExtensionAreaStub::MApplicationExtensionAreaConstructor(MApplicationExtensionAreaPrivate *dd, MApplicationExtensionAreaModel *model, QGraphicsItem *parent, const QString &interface, const bool enableInProcessExtensions) {
@@ -60,8 +45,8 @@ MApplicationExtensionAreaStub* gMApplicationExtensionAreaStub = &gDefaultMApplic
 
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
-MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, const bool enableInProcessExtensions, QGraphicsItem *parent) {
-  gMApplicationExtensionAreaStub->MApplicationExtensionAreaConstructor(interface, enableInProcessExtensions, parent);
+MApplicationExtensionArea::MApplicationExtensionArea(const QString &interface, QGraphicsItem *parent) {
+  gMApplicationExtensionAreaStub->MApplicationExtensionAreaConstructor(interface, parent);
 }
 
 QList<MApplicationExtensionInterface *> MApplicationExtensionArea::extensions() {
@@ -70,14 +55,6 @@ QList<MApplicationExtensionInterface *> MApplicationExtensionArea::extensions() 
 
 MApplicationExtensionArea::~MApplicationExtensionArea() {
   gMApplicationExtensionAreaStub->MApplicationExtensionAreaDestructor();
-}
-
-void MApplicationExtensionArea::extensionInstantiated(MApplicationExtensionInterface *extension) {
-  gMApplicationExtensionAreaStub->extensionInstantiated(extension);
-}
-
-void MApplicationExtensionArea::extensionRemoved(MApplicationExtensionInterface *extension) {
-  gMApplicationExtensionAreaStub->extensionRemoved(extension);
 }
 
 MApplicationExtensionArea::MApplicationExtensionArea(MApplicationExtensionAreaPrivate *dd, MApplicationExtensionAreaModel *model, QGraphicsItem *parent, const QString &interface, const bool enableInProcessExtensions) {

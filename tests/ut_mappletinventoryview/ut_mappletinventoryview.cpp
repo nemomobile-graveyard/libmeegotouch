@@ -28,11 +28,14 @@
 #include <MSceneManager>
 #include <MContainer>
 #include <mappletinventory.h>
+#include <mappletinventorymodel.h>
 #include <mappletbutton_stub.h>
 #include <mobjectmenu_stub.h>
 #include <mclassfactory.h>
 #include "mwidgetcontroller_p.h"
 #include "ut_mappletinventoryview.h"
+#include "mapplicationextensionarea_stub.h"
+#include "mextensionarea_stub.h"
 
 // MClassFactory stubs
 void MClassFactory::registerViewCreator(MViewCreatorBase *, const char *)
@@ -64,18 +67,22 @@ void MAppletInventory::appletButtonClicked()
 {
 }
 
-void MAppletInventory::instantiateAppletsFromPackage(QString const &)
+void MAppletInventory::instantiateAppletsInPackage(QString const &)
+{
+}
+
+void MAppletInventory::setMAppletInventoryInterface(MApplicationExtensionInterface *)
 {
 }
 
 // MSceneManager stubs
-void MSceneManager::showWindow(MSceneWindow *window, MSceneWindow::DeletionPolicy)
+void MSceneManager::appearSceneWindow(MSceneWindow *window, MSceneWindow::DeletionPolicy)
 {
     window->show();
     Ut_MAppletInventoryView::appearCalled = true;
 }
 
-void MSceneManager::hideWindow(MSceneWindow *window)
+void MSceneManager::disappearSceneWindow(MSceneWindow *window)
 {
     window->hide();
     Ut_MAppletInventoryView::disappearCalled = true;
@@ -89,8 +96,8 @@ void QGraphicsItem::setZValue(qreal z)
 
 // MContainer stubs
 QList<MContainer *> gMContainers;
-QList<MWidget *> gMContainerCentralWidgets;
-void MContainer::setCentralWidget(MWidget *centralWidget, bool /*destroy*/)
+QList<QGraphicsWidget *> gMContainerCentralWidgets;
+void MContainer::setCentralWidget(QGraphicsWidget *centralWidget, bool /*destroy*/)
 {
     gMContainers.append(this);
     gMContainerCentralWidgets.append(centralWidget);
@@ -133,7 +140,7 @@ void Ut_MAppletInventoryView::init()
 
 void Ut_MAppletInventoryView::cleanup()
 {
-    controller->model()->setWidgets(WidgetList());
+    static_cast<MAppletInventoryModel*>(controller->model())->setWidgets(WidgetList());
     delete controller;
 }
 
@@ -147,7 +154,7 @@ void Ut_MAppletInventoryView::testModelModifiedWidgets()
     widgets.append(&widget1);
     widgets.append(&widget2);
     widgets.append(&widget3);
-    controller->model()->setWidgets(widgets);
+    static_cast<MAppletInventoryModel*>(controller->model())->setWidgets(widgets);
 
     // The widgets should now be in the MFlowLayoutPolicy
     MLayout *layout = dynamic_cast<MLayout *>(controller->layout());
@@ -169,7 +176,7 @@ void Ut_MAppletInventoryView::testModelModifiedWidgets()
     // Remove two widgets from the list
     widgets.removeAt(0);
     widgets.removeAt(1);
-    controller->model()->setWidgets(widgets);
+    static_cast<MAppletInventoryModel*>(controller->model())->setWidgets(widgets);
 
     // Verify that only the relevant one is still there
     QCOMPARE(policy->count(), 1);
@@ -179,51 +186,15 @@ void Ut_MAppletInventoryView::testModelModifiedWidgets()
 void Ut_MAppletInventoryView::testModelModifiedCloseButtonVisible()
 {
     // Set the close button visible
-    controller->model()->setCloseButtonVisible(true);
+    static_cast<MAppletInventoryModel*>(controller->model())->setCloseButtonVisible(true);
     QVERIFY(!disappearCalled);
     QVERIFY(appearCalled);
 
     // Set the close button invisible
     appearCalled = false;
-    controller->model()->setCloseButtonVisible(false);
+    static_cast<MAppletInventoryModel*>(controller->model())->setCloseButtonVisible(false);
     QVERIFY(disappearCalled);
     QVERIFY(!appearCalled);
-}
-
-void Ut_MAppletInventoryView::testModelModifiedInstallationSources()
-{
-    QList<MWidget *> sourceWidgets;
-
-    // See that containers are created for all source widgets
-    gMContainerCentralWidgets.clear();
-    sourceWidgets.append(new MWidget);
-    sourceWidgets.append(new MWidget);
-    controller->model()->setInstallationSources(sourceWidgets);
-    QCOMPARE(gMContainerCentralWidgets, sourceWidgets);
-
-    gMContainerCentralWidgets.clear();
-    gMContainers.clear();
-    sourceWidgets.clear();
-    TestSourceWidget *testSourceWidget = new TestSourceWidget;
-    testSourceWidget->installationSourceIcon_  = "fooicon";
-    testSourceWidget->installationSourceTitle_ = "footitle";
-    testSourceWidget->installationSourceText_  = "footext";
-
-    // Source container's properties should come from the source widget
-    sourceWidgets.append(testSourceWidget);
-    controller->model()->setInstallationSources(sourceWidgets);
-    QCOMPARE(gMContainerCentralWidgets, sourceWidgets);
-    QCOMPARE(gMContainers[0]->iconID(), testSourceWidget->installationSourceIcon_);
-    QCOMPARE(gMContainers[0]->title(), testSourceWidget->installationSourceTitle_);
-    QCOMPARE(gMContainers[0]->text(), testSourceWidget->installationSourceText_);
-
-    // Signals from source widget should change the values in the container
-    testSourceWidget->setInstallationSourceIcon("baricon");
-    testSourceWidget->setInstallationSourceTitle("bartitle");
-    testSourceWidget->setInstallationSourceText("bartext");
-    QCOMPARE(gMContainers[0]->iconID(), testSourceWidget->installationSourceIcon_);
-    QCOMPARE(gMContainers[0]->title(), testSourceWidget->installationSourceTitle_);
-    QCOMPARE(gMContainers[0]->text(), testSourceWidget->installationSourceText_);
 }
 
 QTEST_APPLESS_MAIN(Ut_MAppletInventoryView)

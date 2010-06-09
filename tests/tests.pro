@@ -82,7 +82,7 @@ SUBDIRS     =  \
     ut_mappletinstancemanager \
     ut_mappletinstancedata \
     ut_mappletinventory \
-#    ut_mappletinventoryview \ // Depends on private class
+    ut_mappletinventoryview \
     ut_mappletmetadata \
     ut_mappletmessage \
     ut_mappletmessagefactory \

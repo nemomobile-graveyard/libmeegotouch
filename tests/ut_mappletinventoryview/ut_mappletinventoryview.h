@@ -102,8 +102,6 @@ private slots:
     void testModelModifiedWidgets();
     //! Test that changing the close button visibility shows and hides the close button
     void testModelModifiedCloseButtonVisible();
-    //! Test that changing the installation sources puts them into the layout
-    void testModelModifiedInstallationSources();
 
 private:
     //! MApplication for the test case

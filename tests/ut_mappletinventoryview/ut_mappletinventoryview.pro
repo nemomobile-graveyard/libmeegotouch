@@ -1,7 +1,8 @@
 include(../common_top.pri)
 TARGET = ut_mappletinventoryview
-INCLUDEPATH += $$MSRCDIR/mashup/mashup
-INCLUDEPATH += $$MSRCDIR/mashup/appletinstallation
+INCLUDEPATH += $$MSRCDIR/extensions/mashup/mashup
+INCLUDEPATH += $$MSRCDIR/extensions/style
+INCLUDEPATH += $$MSRCDIR/extensions/mashup/appletinstallation
 INCLUDEPATH += $$MSRCDIR/corelib/style
 INCLUDEPATH += $$MSRCDIR/corelib/widgets
 INCLUDEPATH += $$MSRCDIR/corelib/widgets/core
@@ -16,16 +17,25 @@ mgenerator_model.commands += ../../mgen/mgen --model ${QMAKE_FILE_NAME} $$MGEN_O
 mgenerator_model.clean += $$MGEN_OUTDIR/gen_*
 mgenerator_model.CONFIG = target_predeps no_link
 mgenerator_model.variable_out = GENERATED_SOURCES
-QMAKE_EXTRA_COMPILERS += mgenerator_model
+mgenerator_style.name = mgenerator style
+mgenerator_style.input = STYLE_HEADERS
+mgenerator_style.depends = ../../mgen/mgen
+mgenerator_style.output = $$MGEN_OUTDIR/gen_${QMAKE_FILE_BASE}data.cpp
+mgenerator_style.commands += ../../mgen/mgen --style ${QMAKE_FILE_NAME} $$MGEN_OUTDIR
+mgenerator_style.clean += $$MGEN_OUTDIR/gen_*
+mgenerator_style.CONFIG = target_predeps no_link
+mgenerator_style.variable_out = GENERATED_SOURCES
 
-STYLE_HEADERS += $$MSRCDIR/corelib/style/mappletinventorystyle.h
+QMAKE_EXTRA_COMPILERS += mgenerator_model mgenerator_style
+
+STYLE_HEADERS += $$MSRCDIR/extensions/style/mappletinventorystyle.h
 MODEL_HEADERS += $$MSRCDIR/corelib/widgets/mwidgetmodel.h \
-    $$MSRCDIR/mashup/mashup/mappletinventorymodel.h
+    $$MSRCDIR/extensions/mashup/mashup/mappletinventorymodel.h
 
 # unit test and unit
 SOURCES += \
     ut_mappletinventoryview.cpp \
-    $$MSRCDIR/mashup/mashup/mappletinventoryview.cpp \
+    $$MSRCDIR/extensions/mashup/mashup/mappletinventoryview.cpp \
     $$TEST_SOURCES \ 
 
 # base classes
@@ -42,11 +52,14 @@ SOURCES += \
 HEADERS += \
     ut_mappletinventoryview.h \
     $$MSRCDIR/corelib/widgets/core/mwidgetcontroller_p.h \
-    $$MSRCDIR/corelib/widgets/views/mextendingbackgroundview_p.h \
-    $$MSRCDIR/mashup/mashup/mappletbutton.h \
-    $$MSRCDIR/mashup/mashup/mappletinventory.h \
-    $$MSRCDIR/mashup/mashup/mappletinventoryview.h \
-    $$MSRCDIR/mashup/mashup/mappletinventorymodel.h \
+    $$MSRCDIR/views/mextendingbackgroundview_p.h \
+    $$MSRCDIR/extensions/applicationextension/mextensionarea.h \
+    $$MSRCDIR/extensions/applicationextension/mapplicationextensionarea.h \
+    $$MSRCDIR/extensions/mashup/mashup/mappletbutton.h \
+    $$MSRCDIR/extensions/mashup/mashup/mappletinventory.h \
+    $$MSRCDIR/extensions/mashup/mashup/mappletinventoryview.h \
+    $$MSRCDIR/extensions/mashup/mashup/mappletinventorymodel.h \
+    $$MSRCDIR/extensions/style/mappletinventorystyle.h \
     $$MSRCDIR/corelib/widgets/mwidgetmodel_p.h \
     $$MSRCDIR/corelib/widgets/mscenewindow_p.h \
     $$MSRCDIR/corelib/widgets/mobjectmenu.h
