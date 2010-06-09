@@ -158,7 +158,6 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
             QtMaemo6DialogProxy* dialog = new QtMaemo6DialogProxy(comboBoxPopup, comboBox);
             dialog->showFastMaximized();
             dialog->setTitle(tr("Choose a value"));
-            QtMaemo6StylePrivate::drawWindowBackground(comboBoxPopup);
             return true;
         }
     }

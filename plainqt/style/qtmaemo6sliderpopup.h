@@ -48,6 +48,7 @@ public Q_SLOTS:
 protected:
     /*! \reimp */
     virtual void showEvent(QShowEvent *);
+    virtual void resizeEvent(QResizeEvent *);
     virtual void paintEvent(QPaintEvent *);
     /*! \reimp_end */
 

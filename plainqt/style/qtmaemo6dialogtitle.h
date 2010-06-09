@@ -60,7 +60,6 @@ Q_SIGNALS:
 protected:
     /*! \reimp */
     void resizeEvent(QResizeEvent *);
-    void paintEvent(QPaintEvent *event);
     /*! \reimp_end */
 private:
     QtMaemo6ClickLabel *m_closeButton;

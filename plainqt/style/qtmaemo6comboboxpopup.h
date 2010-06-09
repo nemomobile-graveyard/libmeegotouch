@@ -44,7 +44,10 @@ protected Q_SLOTS:
     void selectItem(const QModelIndex &);
     void closePopup();
 protected:
+        /*! \reimp */
     virtual void showEvent(QShowEvent *e);
+    virtual void resizeEvent(QResizeEvent *);
+        /*! \reimp_end */
 private:
     QComboBox* m_comboBox;
     QListView* m_listView;

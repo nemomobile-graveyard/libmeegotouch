@@ -37,7 +37,7 @@ protected Q_SLOTS:
     void executeAction();
 protected:
     /*! \reimp */
-    void paintEvent(QPaintEvent *event);
+    void resizeEvent(QResizeEvent *);
     /*! \reimp_end */
 };
 

@@ -210,15 +210,34 @@ public Q_SLOTS:
     M::OrientationAngle orientation();
 
     /*!
+
      * \brief returns the current orientation of the device within the given int
      *        for external meegotouch independent use
      * this gives you the orientation angle as int, so the value might be 0, 90,
      * 180 or 270.
      */
     void orientation(int*);
+
+     * sets the background image from the style to the palette of the widget
+     * returns true if the image is loaded and drawn
+     * returns false if the image is not loaded yet (and then of course wasn't drawn)
+     *               but the loading process was invoked then.
+     */
+    bool setPaletteBackground(QWidget *,
+                              QString styleObject = QString(),
+                              QString styleClass = QString()) const;
+    bool setPaletteBackground(QWidget *,
+                              const MScalableImage*) const;
+    bool setPaletteBackground(QPainter *p,
+                              const QStyleOption *option,
+                              const QRect &rect,
+                              const MWidgetStyle *style,
+                              const QWidget* w = 0) const;
+
 Q_SIGNALS:
     void orientationChanged(M::OrientationAngle angle);
     void orientationChanged(int);
+
 protected Q_SLOTS:
     /*! \reimp */
     QIcon standardIconImplementation(StandardPixmap standardIcon, const QStyleOption *option,
@@ -230,8 +249,12 @@ protected Q_SLOTS:
 
     void ensureFocusedWidgetVisible(QRect rect);
 
+<<<<<<< HEAD
     void doOrientationChange();
 
+=======
+    void updateDirtyWidgets();
+>>>>>>> Changes: asynchronous drawing of the scaleable images
 };
 
 #endif

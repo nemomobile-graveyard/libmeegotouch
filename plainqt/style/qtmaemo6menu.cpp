@@ -31,6 +31,8 @@
 QtMaemo6Menu::QtMaemo6Menu(QMenuBar *mb, QWidget *parent) : QWidget(parent)
 {
     setObjectName("Qt_Maemo6_Menu");
+    setAutoFillBackground(true);
+
     QGridLayout *gridLayout = new QGridLayout(this);
 
     for (int i = 0; i < mb->actions().count(); ++i) {
@@ -44,6 +46,7 @@ QtMaemo6Menu::QtMaemo6Menu(QMenuBar *mb, QWidget *parent) : QWidget(parent)
         button->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
         gridLayout->addWidget(button, i / 2, i % 2);
     }
+
 }
 
 QtMaemo6Menu::~QtMaemo6Menu()
@@ -63,7 +66,6 @@ void QtMaemo6Menu::showSubMenu()
             // menubar is added on show event
             decoration->setStatusBar(NULL);
             decoration->setMenuBar(NULL);
-            QtMaemo6StylePrivate::drawWindowBackground(decoration);
             close();
         }
     }
@@ -77,14 +79,9 @@ void QtMaemo6Menu::executeAction()
     }
 }
 
-void QtMaemo6Menu::paintEvent(QPaintEvent *event)
-{
-    Q_UNUSED(event);
-
-    QPainter painter(this);
-
-    QStyleOption option;
-    option.initFrom(this);
-
-    style()->drawPrimitive(QStyle::PE_Widget, &option, &painter, this);
+void QtMaemo6Menu::resizeEvent(QResizeEvent *e) {
+    QWidget::resizeEvent(e);
+    if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(style()))
+        s->setPaletteBackground(this, "MApplicationMenuStyle");
 }
+

@@ -38,6 +38,8 @@ QtMaemo6ComboBoxPopup::QtMaemo6ComboBoxPopup(QComboBox *comboBox, QWidget *paren
     m_lineEdit(NULL)
 {
     setObjectName("Qt_Maemo6_ComboBox");
+    setAutoFillBackground(true);
+
     m_listView = new QListView();
     if(comboBox)
         m_listView->setModel(comboBox->model());
@@ -85,6 +87,12 @@ void QtMaemo6ComboBoxPopup::showEvent(QShowEvent *e) {
         m_lineEdit->setFocus();
         m_lineEdit->selectAll();
     }
+}
+
+void QtMaemo6ComboBoxPopup::resizeEvent(QResizeEvent *e) {
+    QWidget::resizeEvent(e);
+    if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(style()))
+        s->setPaletteBackground(this);
 }
 
 void QtMaemo6ComboBoxPopup::selectItem(const QModelIndex & index)

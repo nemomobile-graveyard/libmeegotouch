@@ -62,7 +62,6 @@ void QtMaemo6SubMenu::listItemClicked(QListWidgetItem *item)
             // menubar is added on show event
             decoration->setStatusBar(NULL);
             decoration->setMenuBar(NULL);
-            QtMaemo6StylePrivate::drawWindowBackground(decoration);
         } else {
             action->activate(QAction::Trigger);
         }

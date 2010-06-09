@@ -189,6 +189,7 @@ void QtMaemo6StylePrivate::initM()
     if(!inputConnect)
         qCritical() << "Virtual keyboard notification connection failed";
 
+    QObject::connect(MTheme::instance(), SIGNAL(pixmapRequestsFinished()), q, SLOT(updateDirtyWidgets()));
 }
 
 const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
@@ -221,109 +222,154 @@ QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
     return mode;
 }
 
-void QtMaemo6StylePrivate::drawWindowBackground(QWidget *widget, QString styleObject, QString styleClass)
+bool QtMaemo6Style::setPaletteBackground(QWidget *widget,
+                                         QString styleObject,
+                                         QString styleClass) const
 {
+    bool ret = false;
     if (NULL != widget) {
         QStyleOption widgetOption;
         widgetOption.initFrom(widget);
 
         QPixmap backgroundPixmap(widget->size());
         backgroundPixmap.fill(Qt::transparent);
-        QPainter painter;
-        painter.begin(&backgroundPixmap);
+        QPainter painter(&backgroundPixmap);
 
         if (qobject_cast<QDialog *>(widget)) {
             const MPannableWidgetStyle *style =
                 static_cast<const MPannableWidgetStyle *>(
-                    QtMaemo6StylePrivate::mStyle(widgetOption.state, "MPannableWidgetStyle", "MDialogContentsViewport"));
-            QtMaemo6StylePrivate::drawWidgetBackground(&painter, &widgetOption, backgroundPixmap.rect(), style);
+                    QtMaemo6StylePrivate::mStyle(widgetOption.state,
+                                                 "MPannableWidgetStyle",
+                                                 "MDialogContentsViewport"));
+            ret = setPaletteBackground(&painter, &widgetOption,
+                                       backgroundPixmap.rect(), style, widget);
         } else {
+            //by default use the MApplicationPageStyle background
             QString _styleObject("MApplicationPageStyle");
             if(!styleObject.isEmpty())
                 _styleObject = styleObject;
+
             const MWidgetStyle *style =
                 static_cast<const MWidgetStyle*>(
                     QtMaemo6StylePrivate::mStyle(widgetOption.state, _styleObject, styleClass));
-            QtMaemo6StylePrivate::drawWidgetBackground(&painter, &widgetOption, backgroundPixmap.rect(), style);
+            ret = setPaletteBackground(&painter, &widgetOption, backgroundPixmap.rect(), style, widget);
         }
 
-        painter.end();
+        if(ret) {
+            QPalette palette;
+            palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
+            widget->setPalette(palette);
+        }
+    }
+    return ret;
+}
 
+<<<<<<< HEAD
         QPalette palette = widget->palette();
         palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
         widget->setPalette(palette);
-    }
-}
-
-void QtMaemo6StylePrivate::drawWidgetBackground(QPainter *p,
-        const QStyleOption *option,
-        const QRect &rect,
-        const MWidgetStyle *style)
+=======
+bool QtMaemo6Style::setPaletteBackground(QWidget* widget,
+                                         const MScalableImage* image) const
 {
-    if (style && style->backgroundImage()) {
-        drawScalableImage(p, option, rect, style->backgroundImage(), style, "bg");
+    bool ret = false;
+    if(widget && image) {
+        Q_D(const QtMaemo6Style);
+        QStyleOption widgetOption;
+        widgetOption.initFrom(widget);
+
+        QPixmap backgroundPixmap(widget->size());
+        backgroundPixmap.fill(Qt::transparent);
+        QPainter painter(&backgroundPixmap);
+
+        ret = d->drawScalableImage(&painter, &widgetOption, backgroundPixmap.rect(),
+                                   image, NULL, widget);
+>>>>>>> Changes: asynchronous drawing of the scaleable images
     }
+    return ret;
 }
 
-void QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
+bool QtMaemo6Style::setPaletteBackground(QPainter *p,
+                                         const QStyleOption *option,
+                                         const QRect &rect,
+                                         const MWidgetStyle *style,
+                                         const QWidget* w /*= 0*/) const
+{
+    Q_D(const QtMaemo6Style);
+    bool ret = false;
+    if (style && style->backgroundImage()) {
+        ret = d->drawScalableImage(p, option, rect, style->backgroundImage(), 0, w);
+    }
+    return ret;
+}
+
+bool QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
         const QStyleOption *option,
         const QRect &rect,
         const MScalableImage *scalableImage,
         const MWidgetStyle *style,
+        const QWidget* widget,
         const QString &purpose,
-        bool enableCache)
+        bool enableCache) const
 {
-    if (style) {
-        // draw Background
-        qreal effectiveOpacity = p->opacity();
+    qreal effectiveOpacity = p->opacity();
+    if(style)
         p->setOpacity(style->backgroundOpacity() * effectiveOpacity);
 
-        // This is a cheap hack to enfore synchronous loading
-        // FIXME: Implement dynamic updating for asynchronous loading
-        // to get rid of this.
-        while (MTheme::hasPendingRequests()) {
-            usleep(10000);
-            QCoreApplication::processEvents();
+    // This is a cheap hack to enfore synchronous loading
+    // FIXME: Implement dynamic updating for asynchronous loading
+    // to get rid of this.
+    /*
+    while (MTheme::hasPendingRequests()) {
+        qCritical() << "asynchronous scalableImage loading";
+        usleep(10000);
+        QCoreApplication::processEvents();
+    }*/
+    if (scalableImage && rect.isValid()) {
+        if (MTheme::hasPendingRequests()) {
+            if(widget) {
+                m_dirtyWidgetBackgrounds.insert(const_cast<QWidget*>(widget), scalableImage);
+                qCritical() << "### scheduling scalableImage" << widget;
+            }
+            return false;
         }
 
-        if (scalableImage) {
+        // Per Widget background image cache implementation
+        QPixmap backgroundPixmap(rect.size());
 
-            // Per Widget background image cache implementation
-            QPixmap backgroundPixmap(rect.size());
+        QPaintDevice *device = p->device();
+        QWidget *cachedWidget = dynamic_cast<QWidget *>(device);
 
-            QPaintDevice *device = p->device();
-            QWidget *cachedWidget = dynamic_cast<QWidget *>(device);
-
-            QString mode;
-            if (cachedWidget) {
-                mode = QtMaemo6StylePrivate::modeFromState(option->state);
-            }
-
-            quintptr pWidget = reinterpret_cast<quintptr>(device);
-            quintptr pImage = reinterpret_cast<quintptr>(scalableImage);
-
-            QString cacheKey = QString("%1_%2_%3_%4_%5x%6").arg(pWidget)
-                               .arg(pImage)
-                               .arg(mode)
-                               .arg(purpose)
-                               .arg(rect.width())
-                               .arg(rect.height());
-
-            if ((!enableCache || !QPixmapCache::find(cacheKey, backgroundPixmap)) && rect.isValid()) {
-                backgroundPixmap.fill(Qt::transparent);
-                QPainter pixmapPainter;
-                pixmapPainter.begin(&backgroundPixmap);
-                scalableImage->draw(0, 0, rect.width(), rect.height(), &pixmapPainter);
-                pixmapPainter.end();
-                QPixmapCache::insert(cacheKey, backgroundPixmap);
-            }
-
-            p->drawPixmap(rect, backgroundPixmap);
-        } else if (style->backgroundColor().isValid()) {
-            p->fillRect(rect, QBrush(style->backgroundColor()));
+        QString mode;
+        if (cachedWidget) {
+            mode = QtMaemo6StylePrivate::modeFromState(option->state);
         }
-        p->setOpacity(effectiveOpacity);
+
+        quintptr pWidget = reinterpret_cast<quintptr>(device);
+        quintptr pImage = reinterpret_cast<quintptr>(scalableImage);
+
+        QString cacheKey = QString("%1_%2_%3_%4_%5x%6").arg(pWidget)
+                           .arg(pImage)
+                           .arg(mode)
+                           .arg(purpose)
+                           .arg(rect.width())
+                           .arg(rect.height());
+        qCritical() << "###" << cacheKey;
+
+        if ((!enableCache || !QPixmapCache::find(cacheKey, backgroundPixmap)) && rect.isValid()) {
+            backgroundPixmap.fill(Qt::transparent);
+            QPainter pixmapPainter(&backgroundPixmap);
+            scalableImage->draw(0, 0, rect.width(), rect.height(), &pixmapPainter);
+            QPixmapCache::insert(cacheKey, backgroundPixmap);
+        }
+
+        p->drawPixmap(rect, backgroundPixmap);
+    } else if (style && style->backgroundColor().isValid()) {
+        p->fillRect(rect, QBrush(style->backgroundColor()));
     }
+    p->setOpacity(effectiveOpacity);
+
+    return true;
 }
 
 void QtMaemo6StylePrivate::drawSliderBaseBackground(QPainter *p,
@@ -486,9 +532,10 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
         const QFont &font,
         const QSize &iconSize) const
 {
+    Q_Q(const QtMaemo6Style);
     if (style) {
         // draw Background
-        QtMaemo6StylePrivate::drawWidgetBackground(p, option, rect, style);
+        q->setPaletteBackground(p, option, rect, style);
 
         QSize usedIconSize = iconSize.isValid() ? iconSize : style->iconSize();
 
@@ -1123,41 +1170,12 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
 
     switch (element) {
     case PE_Widget: {
-
-        if (const QtMaemo6TitleBar* tb = qobject_cast<const QtMaemo6TitleBar *>(widget)) {
-            const MNavigationBarStyle *style =
-                static_cast<const MNavigationBarStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
-                        "MNavigationBarStyle"));
-            // draw widget background
-            QTransform t;
-            QPoint center = widget->rect().center();
-            t.translate(center.x(), center.y());
-            t.rotate(tb->orientation());
-            t.translate(-center.x(), -center.y());
-//            painter->translate(widget->rect().center());
-//            painter->rotate(tb->orientation());
-//            painter->translate(-widget->rect().center());
-            painter->setTransform(t);
-            QRect adjustedRect(widget->rect());
-            adjustedRect = t.mapRect(adjustedRect);
-            d->drawWidgetBackground(painter, option, adjustedRect, style);
-
-        }
-        if (qobject_cast<const QtMaemo6DialogTitle *>(widget)) {
-            const MWidgetStyle *style =
-                static_cast<const MWidgetStyle *>(
-                    QtMaemo6StylePrivate::mStyle(option->state, "MDialogStyle", "MDialogTitleBar"));
-            // draw widget background
-            d->drawWidgetBackground(painter, option, widget->rect(), style);
-
-        }
-        */
         if (qobject_cast<const QtMaemo6Menu *>(widget)) {
             const MApplicationMenuStyle *style =
                 static_cast<const MApplicationMenuStyle *>(
                     QtMaemo6StylePrivate::mStyle(option->state, "MApplicationMenuStyle"));
             // draw widget background
-            d->drawScalableImage(painter, option, widget->rect(), style->canvasImage(), style, "canvas-image");
+            d->drawScalableImage(painter, option, widget->rect(), style->canvasImage(), style, widget, "canvas-image");
         }
     }
     break;
@@ -1170,7 +1188,7 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
             const MTextEditStyle *style =
                 static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(panel->state,
                         "MTextEditStyle"));
-            QtMaemo6StylePrivate::drawWidgetBackground(painter, option, panel->rect, style);
+            setPaletteBackground(painter, option, panel->rect, style, widget);
         }
     }
     break;
@@ -1442,7 +1460,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
                 static_cast<const MProgressIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(bar->state,
                         "MProgressIndicatorStyle", QString(), "bar"));
             if (style && style->inactiveImage())
-                d->drawScalableImage(p, opt, bar->rect, style->inactiveImage(), style, "groove");
+                d->drawScalableImage(p, opt, bar->rect, style->inactiveImage(), style, widget, "groove");
         }
         break;
     }
@@ -1473,7 +1491,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
                     r.setRight(r.width());
                     r.setLeft(r.width() - distance);
                 }
-                d->drawScalableImage(p, opt, r, style->activeImage(), style, "contents", false);
+                d->drawScalableImage(p, opt, r, style->activeImage(), style, widget, "contents", false);
             }
         }
         break;
@@ -1493,12 +1511,12 @@ void QtMaemo6Style::drawControl(ControlElement element,
                 static_cast<const MPositionIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(slider->state,
                         "MPositionIndicatorStyle"));
 
-            d->drawWidgetBackground(p, opt, slider->rect, style);
+            setPaletteBackground(p, opt, slider->rect, style, widget);
 
             //retrieving the slider size, and position within the groove
             QRect scSliderRect = subControlRect(CC_ScrollBar, slider, SC_ScrollBarSlider, widget);
 
-            d->drawScalableImage(p, opt, scSliderRect, style->indicatorImage(), style, "groove", false);
+            d->drawScalableImage(p, opt, scSliderRect, style->indicatorImage(), style, widget, "groove", false);
         }
     }
     break;
@@ -1621,7 +1639,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             const MComboBoxStyle *style =
                 static_cast<const MComboBoxStyle *>(QtMaemo6StylePrivate::mStyle(cmb->state,
                         "MComboBoxStyle"));
-            d->drawWidgetBackground(p, opt, cmb->rect, style);
+            setPaletteBackground(p, opt, cmb->rect, style, widget);
         }
     }
     break;
@@ -1664,7 +1682,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                                                     "MSliderStyle"));
 
             // draw widget background
-            d->drawWidgetBackground(p, opt, widget->rect(), style);
+            setPaletteBackground(p, opt, widget->rect(), style, widget);
 
             // draw groove
             bool isHorizontal = slider->orientation == Qt::Horizontal;
@@ -1852,8 +1870,8 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             QRect containerRect = widget->rect();
             containerRect.adjust(0, headerRect.height(), 0, 0);
 
-            d->drawWidgetBackground(p, groupBox, headerRect, headerStyle);
-            d->drawWidgetBackground(p, groupBox, containerRect, groupBoxStyle);
+            setPaletteBackground(p, groupBox, headerRect, headerStyle, widget);
+            setPaletteBackground(p, groupBox, containerRect, groupBoxStyle, widget);
 //                drawWidgetBackground( p, groupBox, separatorRect, separatorStyle );
 
             // Draw title
@@ -2599,6 +2617,7 @@ void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleAre
     }
 }
 
+
 void QtMaemo6Style::doOrientationChange()
 {
     Q_D(QtMaemo6Style);
@@ -2607,6 +2626,21 @@ void QtMaemo6Style::doOrientationChange()
         emit orientationChanged(orientation());
         //also emit this with int as parameter for meegotouch independent use
         emit orientationChanged(static_cast<int>(orientation()));
+    }
+}
+
+void QtMaemo6Style::updateDirtyWidgets() {
+    Q_D(QtMaemo6Style);
+    if(!d->m_dirtyWidgetBackgrounds.isEmpty()) {
+        foreach(QWidget* w, d->m_dirtyWidgetBackgrounds.keys()) {
+            qCritical() << "### updating Widget" << w;
+            const MScalableImage* image = d->m_dirtyWidgetBackgrounds.take(w);
+            if(setPaletteBackground(w, image)) {
+                w->repaint();
+            } else {
+                qCritical() << "### still not loaded";
+            }
+        }
     }
 }
 

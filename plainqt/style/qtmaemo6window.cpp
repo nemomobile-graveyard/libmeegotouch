@@ -58,7 +58,8 @@ QtMaemo6Window::QtMaemo6Window(QWidget *originalWidget, QWidget *parent /*= NULL
     connect(style(), SIGNAL(orientationChanged(M::OrientationAngle)),
             this, SLOT(setOrientation(M::OrientationAngle)));
 
-    centralWidget()->setAutoFillBackground(true);
+    if(centralWidget())
+        centralWidget()->setAutoFillBackground(true);
 }
 
 QtMaemo6Window::~QtMaemo6Window()
@@ -175,7 +176,9 @@ bool QtMaemo6Window::eventFilter(QObject *obj, QEvent *event)
 
 void QtMaemo6Window::resizeEvent(QResizeEvent *e) {
     QWidget::resizeEvent(e);
-    QtMaemo6StylePrivate::drawWindowBackground(centralWidget());
+
+    if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(centralWidget()))
+        s->setPaletteBackground(this);
 }
 
 void QtMaemo6Window::paintEvent(QPaintEvent* e) {

@@ -60,16 +60,15 @@ void QtMaemo6SliderPopUp::showEvent(QShowEvent *e) {
     QLabel::showEvent(e);
 }
 
-void QtMaemo6SliderPopUp::paintEvent(QPaintEvent *e) {
-    QStyleOption opt;
-    opt.initFrom(this);
+void QtMaemo6SliderPopUp::resizeEvent(QResizeEvent *e) {
+    QLabel::resizeEvent(e);
+    if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(style())) {
+        s->setPaletteBackground(this, "MSliderStyle", "MSliderHandleLabel");
+    }
 
-    const MLabelStyle *style =
-        static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(opt.state,
-                                            "MSliderStyle",
-                                            "MSliderHandleLabel"));
-    QPainter p(this);
-    QtMaemo6StylePrivate::drawWidgetBackground(&p, &opt, QRect(QPoint(0,0), styledSizeHint()), style);
+}
+
+void QtMaemo6SliderPopUp::paintEvent(QPaintEvent *e) {
     QLabel::paintEvent(e);
 }
 

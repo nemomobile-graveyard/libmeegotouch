@@ -73,24 +73,35 @@ public:
     static QString modeFromState(QStyle::State state) ;
 
     /*!
-     * draws the background of the widget
+     * draws a scalable image onto painter
+     * \param p the painter to draw on
+     * \param option style option used for drawing
+     * \param rect the rect into which is drawn, the scalable image will be
+     *             drawn to fit into this rect
+     * \param scalableImage the image that should be drawn
+     * \param style optional if given transparency and background color of the
+     *                       style will be used if there is no suitable image
+     * \param widget optional if painting on an widget you should provide the
+     *                        widget here. The widget will be marked as dirty due
+     *                        asynchronous loading if MScalableImage within the
+     *                        style and will be updated then by the style
+     * \param purpose optional provide a key used for caching. This is needed if
+     *                         you want to use different backgrounds for the same
+     *                         widget.
+     * \param enableCache optional if true the images will be cached locally by
+     *                             the style
+     * \return true if the image is loaded and drawn
+     *         false if the image is not loaded yet (and then of course wasn't drawn)
+     *               but the loading process was invoked then.
      */
-    static void drawWindowBackground(QWidget *, QString styleObject = QString(), QString styleClass = QString());
-    static void drawWidgetBackground(QPainter *p,
-                                     const QStyleOption *option,
-                                     const QRect &rect,
-                                     const MWidgetStyle *style);
-
-    /*!
-     * draws a scalable image
-     */
-    static void drawScalableImage(QPainter *p,
-                                  const QStyleOption *option,
-                                  const QRect &rect,
-                                  const MScalableImage *scalableImage,
-                                  const MWidgetStyle *style,
-                                  const QString &purpose = "bg",
-                                  bool enableCache = true);
+    bool drawScalableImage(QPainter *p,
+                           const QStyleOption *option,
+                           const QRect &rect,
+                           const MScalableImage *scalableImage,
+                           const MWidgetStyle *style,
+                           const QWidget* widget = 0,
+                           const QString &purpose = "bg",
+                           bool enableCache = true) const;
 
     /*!
      * draws the background of a slider
@@ -357,6 +368,8 @@ public:
     //QList<QWidget*> m_delayedPolishing;
 
     QList<QString> m_excludeClasses;
+
+    mutable QMap<QWidget*, const MScalableImage*> m_dirtyWidgetBackgrounds;
 };
 
 #endif

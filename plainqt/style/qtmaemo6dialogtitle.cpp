@@ -80,21 +80,8 @@ QtMaemo6DialogTitle::~QtMaemo6DialogTitle()
 }
 
 void QtMaemo6DialogTitle::resizeEvent(QResizeEvent *) {
-    QtMaemo6StylePrivate::drawWindowBackground(this, "MDialogStyle", "MDialogTitleBar");
-}
-
-void QtMaemo6DialogTitle::paintEvent(QPaintEvent *event)
-{
-
-    Q_UNUSED(event);
-    /*
-    QPainter painter(this);
-
-    QStyleOption option;
-    option.initFrom(this);
-
-    style()->drawPrimitive(QStyle::PE_Widget, &option, &painter, this);
-    */
+    if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(style()))
+        s->setPaletteBackground(this, "MDialogStyle", "MDialogTitleBar");
 }
 
 void QtMaemo6DialogTitle::setTitle(const QString &title)

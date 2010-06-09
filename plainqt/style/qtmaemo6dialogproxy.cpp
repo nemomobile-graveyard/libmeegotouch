@@ -42,7 +42,6 @@ QtMaemo6DialogProxy::QtMaemo6DialogProxy(QWidget *mw, QWidget *parent)
     setPalette(palette);
 
     m_dialogTitle = new QtMaemo6DialogTitle(NULL);
-    QtMaemo6StylePrivate::drawWindowBackground(m_dialogTitle);
 
     QSpacerItem *leftSideSpacer = new QSpacerItem(9, 0);
     QSpacerItem *rightSideSpacer = new QSpacerItem(9, 0);
