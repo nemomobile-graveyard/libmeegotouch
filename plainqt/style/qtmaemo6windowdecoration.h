@@ -69,9 +69,9 @@ protected:
     QtMaemo6WindowDecoration() {}
 
     /*! \reimp */
-    bool eventFilter(QObject *obj, QEvent *event);
-    void resizeEvent(QResizeEvent *);
-    void timerEvent(QTimerEvent *);
+    virtual bool eventFilter(QObject *obj, QEvent *event);
+    virtual void resizeEvent(QResizeEvent *);
+    virtual void timerEvent(QTimerEvent *);
     /*! \reimp_end */
 
 #ifdef Q_WS_X11

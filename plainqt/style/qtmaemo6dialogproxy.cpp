@@ -73,6 +73,13 @@ void QtMaemo6DialogProxy::setPixmap(const QPixmap &icon)
     m_dialogTitle->setPixmap(icon);
 }
 
+void QtMaemo6DialogProxy::resizeEvent(QResizeEvent *) {
+    if(centralWidget()) {
+        if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(centralWidget()->style()))
+            s->setPaletteBackground(centralWidget());
+    }
+}
+
 bool QtMaemo6DialogProxy::eventFilter(QObject *obj, QEvent *event) {
     //in dialog case, also close the decoration on hide event, because the
     //dialogs are only hidden, not closed by default

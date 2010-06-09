@@ -228,7 +228,7 @@ public Q_SLOTS:
                               QString styleClass = QString()) const;
     bool setPaletteBackground(QWidget *,
                               const MScalableImage*) const;
-    bool setPaletteBackground(QPainter *p,
+    bool drawBackground      (QPainter *p,
                               const QStyleOption *option,
                               const QRect &rect,
                               const MWidgetStyle *style,

@@ -235,15 +235,17 @@ bool QtMaemo6Style::setPaletteBackground(QWidget *widget,
         backgroundPixmap.fill(Qt::transparent);
         QPainter painter(&backgroundPixmap);
 
+        /*
         if (qobject_cast<QDialog *>(widget)) {
             const MPannableWidgetStyle *style =
                 static_cast<const MPannableWidgetStyle *>(
                     QtMaemo6StylePrivate::mStyle(widgetOption.state,
                                                  "MPannableWidgetStyle",
                                                  "MDialogContentsViewport"));
-            ret = setPaletteBackground(&painter, &widgetOption,
+            ret = drawBackground(&painter, &widgetOption,
                                        backgroundPixmap.rect(), style, widget);
         } else {
+        */
             //by default use the MApplicationPageStyle background
             QString _styleObject("MApplicationPageStyle");
             if(!styleObject.isEmpty())
@@ -252,23 +254,19 @@ bool QtMaemo6Style::setPaletteBackground(QWidget *widget,
             const MWidgetStyle *style =
                 static_cast<const MWidgetStyle*>(
                     QtMaemo6StylePrivate::mStyle(widgetOption.state, _styleObject, styleClass));
-            ret = setPaletteBackground(&painter, &widgetOption, backgroundPixmap.rect(), style, widget);
-        }
+            ret = drawBackground(&painter, &widgetOption, backgroundPixmap.rect(), style, widget);
+        //}
 
         if(ret) {
-            QPalette palette;
+            QPalette palette = widget->palette();
             palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
             widget->setPalette(palette);
         }
+
     }
     return ret;
 }
 
-<<<<<<< HEAD
-        QPalette palette = widget->palette();
-        palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
-        widget->setPalette(palette);
-=======
 bool QtMaemo6Style::setPaletteBackground(QWidget* widget,
                                          const MScalableImage* image) const
 {
@@ -284,16 +282,20 @@ bool QtMaemo6Style::setPaletteBackground(QWidget* widget,
 
         ret = d->drawScalableImage(&painter, &widgetOption, backgroundPixmap.rect(),
                                    image, NULL, widget);
->>>>>>> Changes: asynchronous drawing of the scaleable images
+        if(ret) {
+            QPalette palette = widget->palette();
+            palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
+            widget->setPalette(palette);
+        }
     }
     return ret;
 }
 
-bool QtMaemo6Style::setPaletteBackground(QPainter *p,
-                                         const QStyleOption *option,
-                                         const QRect &rect,
-                                         const MWidgetStyle *style,
-                                         const QWidget* w /*= 0*/) const
+bool QtMaemo6Style::drawBackground(QPainter *p,
+                                   const QStyleOption *option,
+                                   const QRect &rect,
+                                   const MWidgetStyle *style,
+                                   const QWidget* w /*= 0*/) const
 {
     Q_D(const QtMaemo6Style);
     bool ret = false;
@@ -535,7 +537,7 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
     Q_Q(const QtMaemo6Style);
     if (style) {
         // draw Background
-        q->setPaletteBackground(p, option, rect, style);
+        q->drawBackground(p, option, rect, style);
 
         QSize usedIconSize = iconSize.isValid() ? iconSize : style->iconSize();
 
@@ -1188,7 +1190,7 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
             const MTextEditStyle *style =
                 static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(panel->state,
                         "MTextEditStyle"));
-            setPaletteBackground(painter, option, panel->rect, style, widget);
+            drawBackground(painter, option, panel->rect, style, widget);
         }
     }
     break;
@@ -1511,7 +1513,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
                 static_cast<const MPositionIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(slider->state,
                         "MPositionIndicatorStyle"));
 
-            setPaletteBackground(p, opt, slider->rect, style, widget);
+            drawBackground(p, opt, slider->rect, style, widget);
 
             //retrieving the slider size, and position within the groove
             QRect scSliderRect = subControlRect(CC_ScrollBar, slider, SC_ScrollBarSlider, widget);
@@ -1639,7 +1641,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             const MComboBoxStyle *style =
                 static_cast<const MComboBoxStyle *>(QtMaemo6StylePrivate::mStyle(cmb->state,
                         "MComboBoxStyle"));
-            setPaletteBackground(p, opt, cmb->rect, style, widget);
+            drawBackground(p, opt, cmb->rect, style, widget);
         }
     }
     break;
@@ -1682,7 +1684,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                                                     "MSliderStyle"));
 
             // draw widget background
-            setPaletteBackground(p, opt, widget->rect(), style, widget);
+            drawBackground(p, opt, widget->rect(), style, widget);
 
             // draw groove
             bool isHorizontal = slider->orientation == Qt::Horizontal;
@@ -1870,8 +1872,8 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
             QRect containerRect = widget->rect();
             containerRect.adjust(0, headerRect.height(), 0, 0);
 
-            setPaletteBackground(p, groupBox, headerRect, headerStyle, widget);
-            setPaletteBackground(p, groupBox, containerRect, groupBoxStyle, widget);
+            drawBackground(p, groupBox, headerRect, headerStyle, widget);
+            drawBackground(p, groupBox, containerRect, groupBoxStyle, widget);
 //                drawWidgetBackground( p, groupBox, separatorRect, separatorStyle );
 
             // Draw title
@@ -2636,7 +2638,7 @@ void QtMaemo6Style::updateDirtyWidgets() {
             qCritical() << "### updating Widget" << w;
             const MScalableImage* image = d->m_dirtyWidgetBackgrounds.take(w);
             if(setPaletteBackground(w, image)) {
-                w->repaint();
+                w->update();
             } else {
                 qCritical() << "### still not loaded";
             }

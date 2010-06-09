@@ -43,6 +43,7 @@ protected:
     QtMaemo6MenuProxy() {};
     void hideWindow();
     /*! \reimp */
+    virtual void resizeEvent(QResizeEvent *);
     virtual void mousePressEvent(QMouseEvent *event);
     virtual void showEvent(QShowEvent *event);
     /*! \reimp_end */

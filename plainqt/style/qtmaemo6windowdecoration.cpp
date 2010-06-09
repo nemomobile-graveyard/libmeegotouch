@@ -220,9 +220,9 @@ bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
 }
 
 void QtMaemo6WindowDecoration::resizeEvent(QResizeEvent * e) {
+    QWidget::resizeEvent(e);
     if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(style()))
         s->setPaletteBackground(this);
-    QWidget::resizeEvent(e);
 }
 
 void QtMaemo6WindowDecoration::timerEvent(QTimerEvent *e) {

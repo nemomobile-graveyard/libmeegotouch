@@ -115,6 +115,21 @@ QtMaemo6MenuProxy::~QtMaemo6MenuProxy()
     delete m_menu;
 }
 
+void QtMaemo6MenuProxy::resizeEvent(QResizeEvent *) {
+    if(widget()) {
+        if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(widget()->style())) {
+            QStyleOption option;
+            option.initFrom(widget());
+
+            const MApplicationMenuStyle *style =
+                    static_cast<const MApplicationMenuStyle *>(
+                        QtMaemo6StylePrivate::mStyle(option.state, "MApplicationMenuStyle"));
+            // draw widget background
+            s->setPaletteBackground(widget(), style->canvasImage());
+        }
+    }
+}
+
 void QtMaemo6MenuProxy::mousePressEvent(QMouseEvent *event)
 {
     hideWindow(); //this also closes the window, after hide animation is done.
