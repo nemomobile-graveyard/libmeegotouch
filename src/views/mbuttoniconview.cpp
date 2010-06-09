@@ -30,9 +30,6 @@
 #include "mtheme.h"
 
 
-// TODO: to be removed when the glow pixmap generation is moved to application side as an effect.
-QImage glow(const QImage &image, int radius, const QColor &color);
-
 MButtonIconViewPrivate::MButtonIconViewPrivate()
     : timelineShrink(new QTimeLine())
     , timelineGlow(new QTimeLine())
@@ -61,8 +58,7 @@ void MButtonIconViewPrivate::drawGlowIcon(QPainter *painter, const QRectF &iconR
     glowRect.setSize(QSizeF(icon->width() + 2 * q->style()->glowRadius(), icon->height() + 2 * q->style()->glowRadius()));
 
     painter->setOpacity(controller->effectiveOpacity() * timelineGlow->currentValue());
-    // TODO: cache the glow image/pixmap, and update it only if icon->handle() has changed.
-    painter->drawImage(glowRect, glow(icon->toImage(), q->style()->glowRadius(), q->style()->glowColor()));
+    painter->drawImage(glowRect, const_cast<MButtonIconViewPrivate*>(this)->glowIcon(icon, q->style()->glowRadius(), q->style()->glowColor()));
 }
 
 MButtonIconView::MButtonIconView(MButton *controller) :
@@ -293,9 +289,16 @@ static void blur(const QImage *source, QImage *destination, int radius, const QC
     }
 }
 
-QImage glow(const QImage &image, int radius, const QColor &color)
+// TODO: to be removed when the glow pixmap generation is moved to application side as an effect.
+const QImage& MButtonIconViewPrivate::glowIcon(const QPixmap* pm, int radius, const QColor &color)
 {
-    QImage g(image.width() + 2 * radius, image.height() + 2 * radius, QImage::Format_ARGB32);
-    blur(&image, &g, radius, color);
-    return g;
+    if( glowImage.isNull() || glowCacheKey != pm->cacheKey() || glowRadius != radius || glowColor != color ) {
+        QImage image = pm->toImage();
+        glowImage = QImage(pm->width() + 2 * radius, pm->height() + 2 * radius, QImage::Format_ARGB32);
+        blur(&image, &glowImage, radius, color);
+        glowCacheKey = pm->cacheKey();
+        glowRadius = radius;
+        glowColor = color;
+    }
+    return glowImage;  
 }
