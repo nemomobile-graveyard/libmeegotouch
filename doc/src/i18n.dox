@@ -1284,8 +1284,8 @@ href="https://projects.maemo.org/bugzilla/show_bug.cgi?id=144377">NB#144377</a>
     </tr>
     <tr>
       <td>MPannableViewport</td>
-      <td>broken</td>
-      <td>Position indicator is always on the right side</td>
+      <td>OK</td>
+      <td>Position indicator correctly changes side</td>
     </tr>
     <tr>
       <td>MPannableWidget</td>
