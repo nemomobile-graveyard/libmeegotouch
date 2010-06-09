@@ -81,6 +81,8 @@ private:
 private:
     MListViewPrivate *d_ptr;
     MList *controller;
+    bool clearVisibleOnRelayout;
+
     friend class MListViewPrivate;
     friend class MPlainMultiColumnListViewPrivate;
     friend class MGroupHeaderListViewPrivate;
