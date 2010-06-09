@@ -36,6 +36,8 @@
 MApplication *app;
 MApplicationWindow *appWin;
 
+#define WAIT_VERIFY(x) { int i = 0; while(!(x) && i++ < 100) { QTest::qWait(50); } QVERIFY(x); }
+
 void Ut_MToolBarView::initTestCase()
 
 {
@@ -297,7 +299,7 @@ void Ut_MToolBarView::testTabActionExclusivity()
     QVERIFY(action1->isChecked() == false);
     QVERIFY(action2->isChecked() == false);
 
-    MButton* button2 = dynamic_cast<MButton *>(tabView->getWidget(action));
+    QPointer<MButton> button2 = dynamic_cast<MButton *>(tabView->getWidget(action2));
     QVERIFY(button2);
     QVERIFY(button0->isChecked());
     QVERIFY(!button1->isChecked());
@@ -310,6 +312,30 @@ void Ut_MToolBarView::testTabActionExclusivity()
     QVERIFY(!button0->isChecked());
     QVERIFY(!button1->isChecked());
     QVERIFY(button2->isChecked());
+
+    action2->setVisible(false);
+
+    QVERIFY(action0->isChecked() == true);
+    QVERIFY(action1->isChecked() == false);
+    QVERIFY(action2->isChecked() == false);
+
+    WAIT_VERIFY(!button2 || !button2->isVisible());
+    QVERIFY(button0->isChecked());
+    QVERIFY(!button1->isChecked());
+    QVERIFY(!button2 || !button2->isChecked());
+
+    action2->setVisible(true);
+
+    button2 = dynamic_cast<MButton *>(tabView->getWidget(action2));
+    QVERIFY(action0->isChecked() == true);
+    QVERIFY(action1->isChecked() == false);
+    QVERIFY(action2->isChecked() == false);
+
+    WAIT_VERIFY(button2);
+    WAIT_VERIFY(button2->isVisible());
+    QVERIFY(button0->isChecked());
+    QVERIFY(!button1->isChecked());
+    QVERIFY(!button2->isChecked());
 }
 
 MWidgetAction *Ut_MToolBarView::createTextEditAction(MWidget *parentWidget)
@@ -555,7 +581,6 @@ void Ut_MToolBarView::testSizeHint()
     }
 }
 
-#define WAIT_VERIFY(x) { int i = 0; while(!(x) && i++ < 100) { QTest::qWait(50); } QVERIFY(x); }
 void Ut_MToolBarView::testButtons()
 {
     QVERIFY(m_toolbar->actions().isEmpty());

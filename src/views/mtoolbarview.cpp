@@ -272,17 +272,18 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
     if(!widget)
         return;
 
+    if (button && buttonGroup)
+        buttonGroup->removeButton(button);
     if(hideOnly) {
         landscapePolicy->removeWidget(widget);
         portraitPolicy->removeWidget(widget);
+        button->setChecked(false);
     } else {
         //Need to fully remove the action
         layout->removeItem(widget);
 
         if (button) {
             buttons.remove(action);
-            if(buttonGroup)
-                buttonGroup->removeButton(button);
             delete button;
         } else {
             releaseWidget(action, leased);
@@ -327,6 +328,11 @@ void MToolBarViewPrivate::change(QAction *action)
         //We need to add the action
         add(action);
         return;
+    }
+    if(buttonGroup) {
+        MButton *button = buttons.value(action);
+        if(button)
+            buttonGroup->addButton(button);
     }
 
     //We have now an action and a widget for it
