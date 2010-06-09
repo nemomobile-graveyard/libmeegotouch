@@ -37,7 +37,27 @@ struct MGConfItemPrivate {
     static void notify_trampoline(GConfClient *, guint, GConfEntry *, gpointer);
 };
 
-#define withClient(c) for(GConfClient *c = (g_type_init(), gconf_client_get_default()); c; g_object_unref(c), c=NULL)
+/* We get the default client and never release it, on purpose, to
+   avoid disconnecting from the GConf daemon when a program happens to
+   not have any GConfItems for short periods of time.
+ */
+static GConfClient *
+get_gconf_client ()
+{
+  static bool initialized = false;
+  static GConfClient *client;
+
+  if (initialized)
+    return client;
+
+  g_type_init ();
+  client = gconf_client_get_default();
+  initialized = true;
+
+  return client;
+}
+
+#define withClient(c) for (GConfClient *c = get_gconf_client (); c; c = NULL)
 
 static QByteArray convertKey(const QString &key)
 {
