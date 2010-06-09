@@ -516,6 +516,12 @@ public:
      *
      * If dateType is MLocale::DateNone <b>and</b> timeType is MLocale::TimeNone,
      * an empty string is returned.
+     *
+     * Using this can be considerably slower than using
+     * formatDateTime(const MCalendar &mCalendar, DateType datetype = DateLong, TimeType timetype = TimeLong) const,
+     * see the example there.
+     *
+     * \sa formatDateTime(const MCalendar &mCalendar, DateType datetype = DateLong, TimeType timetype = TimeLong) const
      */
     QString formatDateTime(const QDateTime &dateTime, DateType dateType = DateLong,
                            TimeType timeType = TimeLong,
@@ -525,6 +531,15 @@ public:
      * \brief String presentation with explicit calendar type
      * \param dateTime time to format
      * \param calendarType calendar to use
+     *
+     * This uses the TimeLong and DateLong formats.
+     *
+     * Using this can be considerably slower than using
+     * formatDateTime(const MCalendar &mCalendar, DateType datetype = DateLong, TimeType timetype = TimeLong) const,
+     * see the example there.
+     *
+     * \sa formatDateTime(const QDateTime &dateTime, DateType dateType = DateLong, TimeType timeType = TimeLong, CalendarType calendarType = DefaultCalendar) const
+     * \sa formatDateTime(const MCalendar &mCalendar, DateType datetype = DateLong, TimeType timetype = TimeLong) const
      */
     QString formatDateTime(const QDateTime &dateTime, CalendarType calendarType) const;
 
@@ -536,6 +551,30 @@ public:
      *
      * If dateType is MLocale::DateNone <b>and</b> timeType is MLocale::TimeNone,
      * an empty string is returned.
+     *
+     * If many dates and times need to be formatted, this method
+     * should be preferred over
+     * formatDateTime(const QDateTime &dateTime, DateType dateType = DateLong, TimeType timeType = TimeLong, CalendarType calendarType = DefaultCalendar) const
+     * because the latter one creates an MCalendar and sets it to the QDateTime.
+     * It is wasteful to create a new MCalendar many times, it is better
+     * to create the MCalendar only once, change the date and time of this
+     * calendar as needed and use this MCalendar for formatting.
+     * Example:
+     *
+     * \code
+     * QString formattedDateTime;
+     * QDateTime current = QDateTime::currentDateTime();
+     * MLocale locale;
+     * MCalendar calendar;
+     * for(int i=0 ; i < 5000 ; i++) {
+     *     current.addSecs(36);
+     *     calendar.setDateTime(current);
+     *     formattedDateTime = locale.formatDateTime(calendar, MLocale::DateMedium, MLocale::TimeMedium);
+     * }
+     * \endcode
+     *
+     * \sa formatDateTime(const QDateTime &dateTime, DateType dateType = DateLong, TimeType timeType = TimeLong, CalendarType calendarType = DefaultCalendar) const
+     * \sa formatDateTime(const QDateTime &dateTime, CalendarType calendarType) const
      */
     QString formatDateTime(const MCalendar &mCalendar, DateType datetype = DateLong,
                            TimeType timetype = TimeLong) const;
