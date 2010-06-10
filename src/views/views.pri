@@ -56,6 +56,7 @@ PRIVATE_HEADERS += \
     mtexteditview_p.h \
     mapplicationmenuview_p.h \
     mobjectmenuview_p.h \
+    mprogressindicatorbarview_p.h \
     mcompleterview_p.h \
     msliderview_p.h \
     mspinnerview_p.h \

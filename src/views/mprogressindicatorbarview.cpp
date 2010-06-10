@@ -18,8 +18,7 @@
 ****************************************************************************/
 
 #include <QPainter>
-#include <QTimeLine>
-#include <QTimer>
+#include <QPropertyAnimation>
 #include <QGraphicsSceneResizeEvent>
 #include <QApplication>
 
@@ -32,26 +31,47 @@
 #include "mtheme.h"
 #include "mdebug.h"
 
-// 30 fps
-const int ProgressBarUpdateInterval = 1000 / 30;
-
 MProgressIndicatorBarViewPrivate::MProgressIndicatorBarViewPrivate()
     :  q_ptr(0),
        controller(0),
        elementSize(0),
        activeElementCount(0),
-       speed(0),
        position(0),
-       timer(0)
+       animation(0),
+       width(0)
 {
 }
 
 
 MProgressIndicatorBarViewPrivate::~MProgressIndicatorBarViewPrivate()
 {
-    delete timer;
 }
 
+void MProgressIndicatorBarViewPrivate::setPosition(qreal pos)
+{
+    Q_Q(MProgressIndicatorBarView);
+
+    position = pos;
+    q->update();
+}
+
+qreal MProgressIndicatorBarViewPrivate::getPosition()
+{
+    return position;
+}
+
+
+void MProgressIndicatorBarViewPrivate::animate(bool animate)
+{
+    Q_Q(MProgressIndicatorBarView);
+
+    animate = (animate && q->model()->unknownDuration());
+    if (animate) {
+        animation->start();
+    } else {
+        animation->stop();
+    }
+}
 
 MProgressIndicatorBarView::MProgressIndicatorBarView(MProgressIndicator *controller) :
     MWidgetView(controller),
@@ -61,6 +81,14 @@ MProgressIndicatorBarView::MProgressIndicatorBarView(MProgressIndicator *control
 
     d->q_ptr = this;
     d->controller = controller;
+
+    d->animation = new QPropertyAnimation(d, "position", d);
+    // "position" is a value between 0.0 and 1.0
+    d->animation->setStartValue(0.0);
+    d->animation->setEndValue(1.0);
+    // the animation drives the unknownDuration-mode, so it loops forever
+    // until the animation is stop()ed
+    d->animation->setLoopCount(-1);
     connect(controller, SIGNAL(visibleChanged()), this, SLOT(visibilityChangedSlot()));
 }
 
@@ -68,37 +96,6 @@ MProgressIndicatorBarView::MProgressIndicatorBarView(MProgressIndicator *control
 MProgressIndicatorBarView::~MProgressIndicatorBarView()
 {
     delete d_ptr;
-}
-
-void MProgressIndicatorBarView::animationTimeout()
-{
-    Q_D(MProgressIndicatorBarView);
-
-    if (model()->unknownDuration()) {
-
-        // calculate interval in secs and add it to elapsed time
-        qreal elapsed = (qreal) d->timer->interval() / 1000.0;
-
-        // calculate how many pixels to move
-        if (elapsed > 0) {
-            qreal distance = elapsed * (qreal) style()->speed();
-
-            // current position
-            qreal width = rect().width();
-
-            // increment
-            qreal current = d->position * width;
-            current += distance;
-
-            // make sure it falls to range
-            int count = (int)(current / width);
-            current -= count * width;
-            d->position = current / width;
-
-            // redraw
-            update();
-        }
-    }
 }
 
 void MProgressIndicatorBarView::updateData(const QList<const char *>& modifications)
@@ -110,15 +107,7 @@ void MProgressIndicatorBarView::updateData(const QList<const char *>& modificati
     foreach(const char * member, modifications) {
         if (member == MProgressIndicatorModel::UnknownDuration) {
             if (model()->unknownDuration()) {
-                if (!d->timer) {
-                    d->timer = new QTimer(this);
-                    connect(d->timer, SIGNAL(timeout()), this, SLOT(animationTimeout()));
-                }
-                if (d->controller->isVisible())
-                    d->timer->start(ProgressBarUpdateInterval);
-            } else {
-                delete d->timer;
-                d->timer = NULL;
+                d->animate(d->controller->isVisible());
             }
         }
     }
@@ -133,15 +122,7 @@ void MProgressIndicatorBarView::setupModel()
     Q_D(MProgressIndicatorBarView);
 
     if (model()->unknownDuration()) {
-        if (!d->timer) {
-            d->timer = new QTimer(this);
-            connect(d->timer, SIGNAL(timeout()), this, SLOT(animationTimeout()));
-        }
-        if (d->controller->isVisible())
-            d->timer->start(ProgressBarUpdateInterval);
-    } else {
-        delete d->timer;
-        d->timer = NULL;
+        d->animate(d->controller->isVisible());
     }
 
     update();
@@ -178,7 +159,6 @@ void MProgressIndicatorBarView::drawContents(QPainter *painter, const QStyleOpti
                 style()->activeImage()->draw(r, painter);
             }
         } else {
-
             qreal distance = d->position * (qreal) r.width();
 
             // need to draw in 1 or 2 parts, depending if the indicator element goes across the ends
@@ -221,16 +201,21 @@ void MProgressIndicatorBarView::drawContents(QPainter *painter, const QStyleOpti
 void MProgressIndicatorBarView::visibilityChangedSlot()
 {
     Q_D(MProgressIndicatorBarView);
-    if (d->timer) {
-        if (d->controller->isVisible()) {
-            d->timer->start(ProgressBarUpdateInterval);
-        } else {
-            d->timer->stop();
-        }
+
+    d->animate(d->controller->isVisible());
+}
+
+void MProgressIndicatorBarView::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    Q_D(MProgressIndicatorBarView);
+
+    MWidgetView::resizeEvent(event);
+
+    if (d->width != rect().width()) {
+        d->width = rect().width();
+        d->animation->setDuration(d->width * 1000 / style()->speed());
     }
 }
 
-
 // bind controller widget and view widget together by registration macro
 M_REGISTER_VIEW_NEW(MProgressIndicatorBarView, MProgressIndicator)
-
