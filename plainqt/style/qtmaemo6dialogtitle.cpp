@@ -27,6 +27,7 @@
 #include <QPainter>
 #include <QDebug>
 #include <mescapebuttonpanelstyle.h>
+#include <mlabelstyle.h>
 #include <MTheme>
 
 
@@ -37,7 +38,18 @@ QtMaemo6DialogTitle::QtMaemo6DialogTitle(QWidget *parent) : QWidget(parent)
     QStyleOption option;
     option.initFrom(this);
 
+    const MLabelStyle *titleBarStyle =
+        static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
+                "MLabelStyle", "MDialogTitleLabel"));
+
     m_titleLabel = new QLabel(this);
+    if ( titleBarStyle ) {
+      m_titleLabel->setFont(titleBarStyle->font());
+
+      QPalette pal(palette());
+      pal.setColor(foregroundRole(), titleBarStyle->color());
+      setPalette(pal);
+    }
 
     m_closeButton = new QtMaemo6ClickLabel(this);
     m_closeButton->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Preferred);
