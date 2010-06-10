@@ -2352,7 +2352,7 @@ QString MLocale::formatPhoneNumber( const QString& phoneNumber,
     // system setting for the grouping
     if ( tmpGrouping == DefaultPhoneNumberGrouping )
     {
-        if ( d->currentLcTelephoneItem.value().toString().startsWith( "en_US" ) ) {
+        if ( d->_telephoneLocale.startsWith( "en_US" ) ) {
             tmpGrouping = NorthAmericanPhoneNumberGrouping;
         } else {
             tmpGrouping = NoPhoneNumberGrouping;
