@@ -20,6 +20,11 @@
 #ifndef METATYPEDECLARATIONS_H
 #define METATYPEDECLARATIONS_H
 
+#include "mnotification.h"
+#include "mnotificationgroup.h"
+
 Q_DECLARE_METATYPE(QList<uint>)
+Q_DECLARE_METATYPE(QList<MNotification>)
+Q_DECLARE_METATYPE(QList<MNotificationGroup>)
 
 #endif // METATYPEDECLARATIONS_H

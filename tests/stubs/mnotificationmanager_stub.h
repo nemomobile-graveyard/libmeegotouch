@@ -42,6 +42,8 @@ public:
     virtual bool updateNotification(uint notificationId, const QString &eventType, const QString &summary, const QString &body, const QString &action, const QString &imageURI, uint count);
     virtual bool updateNotification(uint notificationId, const QString &eventType);
     virtual QList<uint> notificationIdList();
+    virtual QList<MNotification> notificationList();
+    virtual QList<MNotificationGroup> notificationGroupList();
 };
 
 // 2. IMPLEMENT STUB
@@ -166,6 +168,18 @@ QList<uint> MNotificationManagerStub::notificationIdList()
     return stubReturnValue<QList<uint> >("notificationIdList");
 }
 
+QList<MNotification> MNotificationManagerStub::notificationList()
+{
+    stubMethodEntered("notificationList");
+    return stubReturnValue<QList<MNotification> >("notificationList");
+}
+
+QList<MNotificationGroup> MNotificationManagerStub::notificationGroupList()
+{
+    stubMethodEntered("notificationGroupList");
+    return stubReturnValue<QList<MNotificationGroup> >("notificationGroupList");
+}
+
 
 
 // 3. CREATE A STUB INSTANCE
@@ -244,6 +258,16 @@ bool MNotificationManager::updateNotification(uint notificationId, const QString
 QList<uint> MNotificationManager::notificationIdList()
 {
     return gMNotificationManagerStub->notificationIdList();
+}
+
+QList<MNotification> MNotificationManager::notificationList()
+{
+    return gMNotificationManagerStub->notificationList();
+}
+
+QList<MNotificationGroup> MNotificationManager::notificationGroupList()
+{
+    return gMNotificationManagerStub->notificationGroupList();
 }
 
 MNotificationManagerProxy::MNotificationManagerProxy(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)

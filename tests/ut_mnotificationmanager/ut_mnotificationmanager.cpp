@@ -472,4 +472,22 @@ void Ut_MNotificationManager::testNotificationIdList()
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(1));
 }
 
+void Ut_MNotificationManager::testNotificationList()
+{
+    MNotificationManager::instance()->notificationList();
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("notificationList"));
+    QCOMPARE(asyncCallArguments.count(), 1);
+    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(1));
+}
+
+void Ut_MNotificationManager::testNotificationGroupList()
+{
+    MNotificationManager::instance()->notificationGroupList();
+    QCOMPARE(asyncCallMethods.count(), 1);
+    QCOMPARE(asyncCallMethods.at(0), QString("notificationGroupList"));
+    QCOMPARE(asyncCallArguments.count(), 1);
+    QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(1));
+}
+
 QTEST_APPLESS_MAIN(Ut_MNotificationManager)

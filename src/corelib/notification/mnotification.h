@@ -21,7 +21,7 @@
 #define MNOTIFICATION_H_
 
 #include <MExport>
-#include <QtGlobal>
+#include <QDBusArgument>
 #include <mremoteaction.h>
 
 class MNotificationPrivate;
@@ -195,6 +195,13 @@ public:
     void setGroup(const MNotificationGroup &group);
 
     /*!
+     * Gets the event type of the notification.
+     *
+     * \return the event type of the notification.
+     */
+    QString eventType() const;
+
+    /*!
      * Sets the summary text to be used in the notification.
      *
      * \param summary the summary text to be used in the notification.
@@ -294,8 +301,28 @@ public:
      */
     static QList<MNotification *> notifications();
 
-protected:
     //! \internal
+    /*!
+     * Creates a new uninitialized representation of a notification. This
+     * constructor should only be used for populating the notification list
+     * from D-Bus structures.
+     */
+    MNotification();
+
+    /*!
+     * Creates a copy of an existing representation of a notification.
+     * This constructor should only be used for populating the notification
+     * list from D-Bus structures.
+     *
+     * \param notification the notification representation to a create copy of
+     */
+    explicit MNotification(const MNotification &notification);
+
+    friend QDBusArgument &operator<<(QDBusArgument &, const MNotification &);
+    friend const QDBusArgument &operator>>(const QDBusArgument &, MNotification &);
+    MNotification &operator=(const MNotification &);
+
+protected:
     //! A pointer to the private implementation class
     MNotificationPrivate *d_ptr;
 
@@ -326,7 +353,8 @@ protected:
     //! \internal_end
 
     Q_DECLARE_PRIVATE(MNotification)
-    Q_DISABLE_COPY(MNotification)
 };
+
+Q_DECLARE_METATYPE(MNotification)
 
 #endif /* MNOTIFICATION_H_ */

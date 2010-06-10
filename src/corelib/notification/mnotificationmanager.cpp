@@ -54,6 +54,11 @@ MNotificationManager::MNotificationManager() :
         userId = proxy.notificationUserId();
         userIdStore.createValue(appId, userId);
     }
+
+    qDBusRegisterMetaType<MNotification>();
+    qDBusRegisterMetaType<MNotificationGroup>();
+    qDBusRegisterMetaType<QList<MNotification> >();
+    qDBusRegisterMetaType<QList<MNotificationGroup> >();
 }
 
 MNotificationManager::~MNotificationManager()
@@ -119,4 +124,14 @@ bool MNotificationManager::updateNotification(uint notificationId, const QString
 QList<uint> MNotificationManager::notificationIdList()
 {
     return proxy.notificationIdList(userId);
+}
+
+QList<MNotification> MNotificationManager::notificationList()
+{
+    return proxy.notificationList(userId);
+}
+
+QList<MNotificationGroup> MNotificationManager::notificationGroupList()
+{
+    return proxy.notificationGroupList(userId);
 }

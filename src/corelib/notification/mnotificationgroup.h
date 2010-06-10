@@ -58,8 +58,37 @@ public:
     virtual bool remove();
     //! \reimp_end
 
-protected:
+    /*!
+     * Returns a list of notification groups created by this application but
+     * which have not been dismissed by the user yet. Caller of this function
+     * gets the ownership of the notification groups, and is responsible for
+     * freeing them.
+     *
+     * \return list of notifications
+     */
+    static QList<MNotificationGroup *> notificationGroups();
+
     //! \internal
+    /*!
+     * Creates a new uninitialized representation of a notification group.
+     * This constructor should only be used for populating the notification group
+     * list from D-Bus structures.
+     */
+    MNotificationGroup();
+
+    /*!
+     * Creates a copy of an existing representation of a notification group.
+     * This constructor should only be used for populating the notification
+     * group list from D-Bus structures.
+     *
+     * \param group the notification representation to a create copy of
+     */
+    explicit MNotificationGroup(const MNotificationGroup &group);
+
+    friend QDBusArgument &operator<<(QDBusArgument &, const MNotificationGroup &);
+    friend const QDBusArgument &operator>>(const QDBusArgument &, MNotificationGroup &);
+
+protected:
     /*!
      * Creates a representation of an existing notification group.
      * Should be used to get a handle to an existing notification group
@@ -70,7 +99,8 @@ protected:
     explicit MNotificationGroup(uint id);
 
     Q_DECLARE_PRIVATE(MNotificationGroup)
-    Q_DISABLE_COPY(MNotificationGroup)
 };
+
+Q_DECLARE_METATYPE(MNotificationGroup)
 
 #endif /* MNOTIFICATIONGROUP_H_ */

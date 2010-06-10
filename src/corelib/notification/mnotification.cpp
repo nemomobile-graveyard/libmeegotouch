@@ -63,6 +63,11 @@ MNotification::MNotification(MNotificationPrivate &dd) :
 {
 }
 
+MNotification::MNotification() :
+    d_ptr(new MNotificationPrivate)
+{
+}
+
 MNotification::MNotification(const QString &eventType, const QString &summary, const QString &body) :
     d_ptr(new MNotificationPrivate)
 {
@@ -70,6 +75,12 @@ MNotification::MNotification(const QString &eventType, const QString &summary, c
     d->eventType = eventType;
     d->summary = summary;
     d->body = body;
+}
+
+MNotification::MNotification(const MNotification &notification) :
+    QObject(), d_ptr(new MNotificationPrivate)
+{
+    *this = notification;
 }
 
 MNotification::MNotification(uint id) :
@@ -100,6 +111,12 @@ void MNotification::setEventType(const QString &eventType)
 {
     Q_D(MNotification);
     d->eventType = eventType;
+}
+
+QString MNotification::eventType() const
+{
+    Q_D(const MNotification);
+    return d->eventType;
 }
 
 void MNotification::setSummary(const QString &summary)
@@ -202,11 +219,57 @@ bool MNotification::isPublished() const
 
 QList<MNotification *> MNotification::notifications()
 {
-    QList<uint> idList = MNotificationManager::instance()->notificationIdList();
+    QList<MNotification> list = MNotificationManager::instance()->notificationList();
     QList<MNotification *> notifications;
-    foreach(uint i, idList) {
-        MNotification *notification = new MNotification(i);
-        notifications.append(notification);
+    foreach(const MNotification &notification, list) {
+        notifications.append(new MNotification(notification));
     }
     return notifications;
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const MNotification &notification)
+{
+    const MNotificationPrivate *d = notification.d_func();
+    argument.beginStructure();
+    argument << d->id;
+    argument << d->groupId;
+    argument << d->eventType;
+    argument << d->summary;
+    argument << d->body;
+    argument << d->image;
+    argument << d->action;
+    argument << d->count;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, MNotification &notification)
+{
+    MNotificationPrivate *d = notification.d_func();
+    argument.beginStructure();
+    argument >> d->id;
+    argument >> d->groupId;
+    argument >> d->eventType;
+    argument >> d->summary;
+    argument >> d->body;
+    argument >> d->image;
+    argument >> d->action;
+    argument >> d->count;
+    argument.endStructure();
+    return argument;
+}
+
+MNotification &MNotification::operator=(const MNotification &notification)
+{
+    Q_D(MNotification);
+    const MNotificationPrivate *dn = notification.d_func();
+    d->id = dn->id;
+    d->groupId = dn->groupId;
+    d->eventType = dn->eventType;
+    d->summary = dn->summary;
+    d->body = dn->body;
+    d->image = dn->image;
+    d->action = dn->action;
+    d->count = dn->count;
+    return *this;
 }

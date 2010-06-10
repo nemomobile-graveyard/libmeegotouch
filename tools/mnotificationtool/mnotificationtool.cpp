@@ -217,9 +217,15 @@ int main(int argc, char *argv[])
         QList<MNotification *> list = MNotification::notifications();
         result = list.size();
         std::cout << "\n" << applicationName.toUtf8().data() << " has " << list.size() << " notifications." << std::endl;
-        std::cout << "Notification id(s):" << std::endl;
+        std::cout << "Notifications:" << std::endl;
         foreach(MNotification *notification, list) {
-            std::cout << static_cast<MNotificationToolNotification *>(notification)->id() << std::endl;
+            MNotificationToolNotification *toolNotification = static_cast<MNotificationToolNotification *>(notification);
+            std::cout << toolNotification->id() << "\t" <<
+                         toolNotification->eventType().toUtf8().constData() << "\t" <<
+                         toolNotification->summary().toUtf8().constData() << "\t" <<
+                         toolNotification->body().toUtf8().constData() << "\t" <<
+                         toolNotification->image().toUtf8().constData() << "\t" <<
+                         toolNotification->count() << std::endl;
             delete notification;
         }
         list.clear();

@@ -50,22 +50,17 @@ private slots:
     // Called after every testfunction
     void cleanup();
 
-    // Test notification adding
+    // Test cases
     void testAddNotification();
-    // Test notification updating
     void testUpdateNotification();
-    // Test notification removal
     void testRemoveNotification();
-    // Test notification group adding
     void testAddGroup();
-    // Test notification group updating
     void testUpdateGroup();
-    // Test notification group removal
     void testRemoveGroup();
-    // Test adding a notification into a notification group
     void testAddToGroup();
-    // Test quering of notifications
     void testNotificationIdList();
+    void testNotificationList();
+    void testNotificationGroupList();
 };
 
 #endif

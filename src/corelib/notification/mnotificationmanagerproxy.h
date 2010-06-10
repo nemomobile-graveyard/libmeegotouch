@@ -8,8 +8,8 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#ifndef MNOTIFICATIONMANAGERPROXY_H_1271085438
-#define MNOTIFICATIONMANAGERPROXY_H_1271085438
+#ifndef MNOTIFICATIONMANAGERPROXY_H_1276593769
+#define MNOTIFICATIONMANAGERPROXY_H_1276593769
 
 #include <QtCore/QObject>
 #include <QtCore/QByteArray>
@@ -65,11 +65,25 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("addNotification"), argumentList);
     }
 
+    inline QDBusPendingReply<QList < MNotificationGroup > > notificationGroupList(uint notificationUserId)
+    {
+        QList<QVariant> argumentList;
+        argumentList << qVariantFromValue(notificationUserId);
+        return asyncCallWithArgumentList(QLatin1String("notificationGroupList"), argumentList);
+    }
+
     inline QDBusPendingReply<QList < uint > > notificationIdList(uint notificationUserId)
     {
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue(notificationUserId);
         return asyncCallWithArgumentList(QLatin1String("notificationIdList"), argumentList);
+    }
+
+    inline QDBusPendingReply<QList < MNotification > > notificationList(uint notificationUserId)
+    {
+        QList<QVariant> argumentList;
+        argumentList << qVariantFromValue(notificationUserId);
+        return asyncCallWithArgumentList(QLatin1String("notificationList"), argumentList);
     }
 
     inline QDBusPendingReply<uint> notificationUserId()

@@ -28,8 +28,13 @@
 class TestNotification : public MNotification
 {
 public:
+    TestNotification(uint id);
     uint id() const;
 };
+
+TestNotification::TestNotification(uint id) : MNotification(id)
+{
+}
 
 uint TestNotification::id() const
 {
@@ -54,14 +59,25 @@ void Ut_MNotification::cleanup()
 
 void Ut_MNotification::testGettingAllNotifications()
 {
-    QList<uint> idList;
-    idList << 1 << 5 << 3 << 42 << 100;
-    gDefaultMNotificationManagerStub.stubSetReturnValue("notificationIdList", idList);
+    QList<MNotification> notifications;
+    notifications.append(TestNotification(1));
+    notifications.append(TestNotification(5));
+    notifications.append(TestNotification(3));
+    notifications.append(TestNotification(42));
+    notifications.append(TestNotification(100));
+    gDefaultMNotificationManagerStub.stubSetReturnValue("notificationList", notifications);
 
     QList<MNotification *> notificationList = MNotification::notifications();
-    QCOMPARE(notificationList.count(), idList.count());
-    foreach(MNotification * notification, notificationList) {
-        QVERIFY(idList.contains(static_cast<TestNotification *>(notification)->id()));
+    QCOMPARE(notificationList.count(), notifications.count());
+    foreach(MNotification *notification, notificationList) {
+        bool found = false;
+        foreach(const MNotification &n, notifications) {
+            if (static_cast<TestNotification *>(notification)->id() == static_cast<const TestNotification &>(n).id()) {
+                found = true;
+                break;
+            }
+        }
+        QVERIFY(found);
     }
 }
 

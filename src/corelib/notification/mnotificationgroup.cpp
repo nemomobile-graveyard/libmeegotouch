@@ -29,6 +29,11 @@ MNotificationGroupPrivate::~MNotificationGroupPrivate()
 {
 }
 
+MNotificationGroup::MNotificationGroup() :
+    MNotification(*new MNotificationGroupPrivate)
+{
+}
+
 MNotificationGroup::MNotificationGroup(const QString &eventType, const QString &summary, const QString &body) :
     MNotification(*new MNotificationGroupPrivate)
 {
@@ -36,6 +41,12 @@ MNotificationGroup::MNotificationGroup(const QString &eventType, const QString &
     d->eventType = eventType;
     d->summary = summary;
     d->body = body;
+}
+
+MNotificationGroup::MNotificationGroup(const MNotificationGroup &group) :
+    MNotification(*new MNotificationGroupPrivate)
+{
+    *this = group;
 }
 
 MNotificationGroup::~MNotificationGroup()
@@ -81,4 +92,44 @@ bool MNotificationGroup::remove()
         d->id = 0;
         return MNotificationManager::instance()->removeGroup(id);
     }
+}
+
+QList<MNotificationGroup *> MNotificationGroup::notificationGroups()
+{
+    QList<MNotificationGroup> list = MNotificationManager::instance()->notificationGroupList();
+    QList<MNotificationGroup *> notificationGroups;
+    foreach(const MNotificationGroup &group, list) {
+        notificationGroups.append(new MNotificationGroup(group));
+    }
+    return notificationGroups;
+}
+
+QDBusArgument &operator<<(QDBusArgument &argument, const MNotificationGroup &group)
+{
+    const MNotificationGroupPrivate *d = group.d_func();
+    argument.beginStructure();
+    argument << d->id;
+    argument << d->eventType;
+    argument << d->summary;
+    argument << d->body;
+    argument << d->image;
+    argument << d->action;
+    argument << d->count;
+    argument.endStructure();
+    return argument;
+}
+
+const QDBusArgument &operator>>(const QDBusArgument &argument, MNotificationGroup &group)
+{
+    MNotificationGroupPrivate *d = group.d_func();
+    argument.beginStructure();
+    argument >> d->id;
+    argument >> d->eventType;
+    argument >> d->summary;
+    argument >> d->body;
+    argument >> d->image;
+    argument >> d->action;
+    argument >> d->count;
+    argument.endStructure();
+    return argument;
 }

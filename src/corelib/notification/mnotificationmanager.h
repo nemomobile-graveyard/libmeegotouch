@@ -21,6 +21,8 @@
 #define MNOTIFICATIONMANAGER_H_
 
 #include "mnotificationmanagerproxy.h"
+#include "mnotification.h"
+#include "mnotificationgroup.h"
 
 //! \internal
 
@@ -165,9 +167,24 @@ public:
     /*!
      * Returns a list of IDs for notifications owned by this application
      *
+     * \deprecated this function has been deprecated in favor of notificationList() and will be removed in libmeegotouch 0.21.
      * \return list of notification IDs
      */
     QList<uint> notificationIdList();
+
+    /*!
+     * Returns a list of notifications owned by this application
+     *
+     * \return list of notifications
+     */
+    QList<MNotification> notificationList();
+
+    /*!
+     * Returns a list of notification groups owned by this application
+     *
+     * \return list of notification groups
+     */
+    QList<MNotificationGroup> notificationGroupList();
 };
 
 //! \internal_end

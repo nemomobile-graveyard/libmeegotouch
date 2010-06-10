@@ -22,3 +22,4 @@ SOURCES += mnotificationtool.cpp
 target.path = $$M_INSTALL_BIN
 INSTALLS += target
 CONFIG -= app_bundle
+QT += dbus
