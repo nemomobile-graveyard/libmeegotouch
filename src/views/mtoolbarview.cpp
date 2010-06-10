@@ -277,7 +277,8 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
     if(hideOnly) {
         landscapePolicy->removeWidget(widget);
         portraitPolicy->removeWidget(widget);
-        button->setChecked(false);
+        if (button)
+            button->setChecked(false);
     } else {
         //Need to fully remove the action
         layout->removeItem(widget);
