@@ -29,7 +29,7 @@ void Ut_PhoneNumberFormatting::initTestCase()
     // the signals when the gconf keys change,
     // so for this test we make this locale the default
     // locale...
-    m_pLocale->setDefault( *m_pLocale );
+    m_pLocale->connectSettings();
 }
 
 void Ut_PhoneNumberFormatting::cleanupTestCase()
