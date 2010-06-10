@@ -24,11 +24,7 @@
 void Ut_PhoneNumberFormatting::initTestCase()
 {
     m_pLocale = new MLocale;
-
-    // for some reason only the default locale gets
-    // the signals when the gconf keys change,
-    // so for this test we make this locale the default
-    // locale...
+    // make sure we are notified about gconf changes
     m_pLocale->connectSettings();
 }
 
