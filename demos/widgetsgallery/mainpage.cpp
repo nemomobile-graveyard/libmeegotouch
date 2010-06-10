@@ -290,6 +290,11 @@ void MainPage::createContent()
 {
     MApplicationPage::createContent();
 
+    QTimer::singleShot(10, this, SLOT(createContentLazily()));
+}
+
+void MainPage::createContentLazily()
+{
     QGraphicsWidget *panel = centralWidget();
 
     MLayout *layout = new MLayout(panel);
