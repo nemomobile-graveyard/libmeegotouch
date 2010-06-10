@@ -81,10 +81,12 @@ public:
      * \param scalableImage the image that should be drawn
      * \param style optional if given transparency and background color of the
      *                       style will be used if there is no suitable image
-     * \param widget optional if painting on an widget you should provide the
-     *                        widget here. The widget will be marked as dirty due
-     *                        asynchronous loading if MScalableImage within the
-     *                        style and will be updated then by the style
+     * \param widget optional if image should be used as background of a widget
+     *                        you must provide the widget here. The widget will
+     *                        be marked as dirty due asynchronous loading.
+     *                        The MScalableImage will then be set as background for
+     *                        this widget by the style as soon as the image is
+     *                        loaded and the widget gets an update.
      * \param purpose optional provide a key used for caching. This is needed if
      *                         you want to use different backgrounds for the same
      *                         widget.
@@ -369,7 +371,11 @@ public:
 
     QList<QString> m_excludeClasses;
 
-    mutable QMap<QWidget*, const MScalableImage*> m_dirtyWidgetBackgrounds;
+    //this is the cache list for widgets that need updating due to asynchronous
+    // image loading. If there is an MScalabaleImage for the widget in this list,
+    // this image is supposed to be used as background for the widget.
+    // if the image is NULL, the widget just needs an update.
+    mutable QMap<QWidget*, const MScalableImage*> m_dirtyWidgets;
 };
 
 #endif

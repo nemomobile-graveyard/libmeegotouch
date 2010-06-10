@@ -63,8 +63,7 @@ void QtMaemo6SliderPopUp::showEvent(QShowEvent *e) {
 void QtMaemo6SliderPopUp::resizeEvent(QResizeEvent *e) {
     QLabel::resizeEvent(e);
     if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(style())) {
-        if(s->setPaletteBackground(this, "MSliderStyle", "MSliderHandleLabel"))
-            qCritical() << "SliderPopUp Resize:" << this;
+        s->setPaletteBackground(this, "MSliderStyle", "MSliderHandleLabel");
     }
 
 }

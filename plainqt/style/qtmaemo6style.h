@@ -210,7 +210,6 @@ public Q_SLOTS:
     M::OrientationAngle orientation();
 
     /*!
-
      * \brief returns the current orientation of the device within the given int
      *        for external meegotouch independent use
      * this gives you the orientation angle as int, so the value might be 0, 90,
@@ -218,6 +217,7 @@ public Q_SLOTS:
      */
     void orientation(int*);
 
+    /*!
      * sets the background image from the style to the palette of the widget
      * returns true if the image is loaded and drawn
      * returns false if the image is not loaded yet (and then of course wasn't drawn)
@@ -249,12 +249,25 @@ protected Q_SLOTS:
 
     void ensureFocusedWidgetVisible(QRect rect);
 
-<<<<<<< HEAD
     void doOrientationChange();
 
-=======
+    /*!
+     * \brief update all widgets marked as dirty
+     *
+     * How asynchronous image loading and painting works within the QtMaemo6 style:
+     * When calling QtMaemo6StylePrivate::drawScalableImage() the image may not be
+     * painted imediately, because it is not loaded yet. In this case, the widget
+     * will be remembered as dirty.
+     * If you provide an explicit widget to drawScalableImage(), it is assumed you
+     * want to use the image as background of the widget, which means just repainting
+     * the widget isn't enough but the palette of the widget has to be changed.
+     * This is done by the style  automaticall if you provide the widget here.
+     * If no widget is provided, the widget just receives an update when the image is
+     * loaded, but it is not set to the palette's background role.
+     *
+     * \see QtMaemo6StylePrivate::drawScalableImage()
+     */
     void updateDirtyWidgets();
->>>>>>> Changes: asynchronous drawing of the scaleable images
 };
 
 #endif

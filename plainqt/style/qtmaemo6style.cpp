@@ -295,7 +295,7 @@ bool QtMaemo6Style::drawBackground(QPainter *p,
     Q_D(const QtMaemo6Style);
     bool ret = false;
     if (style && style->backgroundImage()) {
-        ret = d->drawScalableImage(p, option, rect, style->backgroundImage(), 0, w);
+        ret = d->drawScalableImage(p, option, rect, style->backgroundImage(), style, w);
     }
     return ret;
 }
@@ -316,17 +316,18 @@ bool QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
     if (scalableImage && rect.isValid()) {
         if (MTheme::hasPendingRequests()) {
             //cache widgets that need an update, after the images are loaded
-            if(widget) {
-                if(widget->objectName() == "Qt_Maemo6_SliderPopUp") {
-                    int i = 0;
-                    Q_UNUSED(i)
-                }
-                QWidget* cacheWidget = const_cast<QWidget*>(widget);
-                if(m_dirtyWidgetBackgrounds.contains(cacheWidget)) {
-                    qCritical() << "### dirtyWidgetBackgrounds already conatains" << widget << m_dirtyWidgetBackgrounds.value(cacheWidget) << scalableImage << purpose;
-                } else {
-                    qCritical() << "### dirtyWidgetBackgrounds added" << cacheWidget << scalableImage << purpose;
-                    m_dirtyWidgetBackgrounds.insert(cacheWidget, scalableImage);
+            QWidget* usedWidget = const_cast<QWidget*>(widget);
+
+            //if no widget is provieded, use the painter's device, if painted onto a widget
+            if(!usedWidget) {
+                usedWidget = dynamic_cast<QWidget*>(p->device());
+            }
+            if(usedWidget) {
+                if(!m_dirtyWidgets.contains(usedWidget)) {
+                    MScalableImage* imageForBackground = 0;
+                    if(widget)
+                        imageForBackground = const_cast<MScalableImage*>(scalableImage);
+                    m_dirtyWidgets.insert(usedWidget, imageForBackground);
                 }
             }
             return false;
@@ -352,10 +353,6 @@ bool QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
                            .arg(purpose)
                            .arg(rect.width())
                            .arg(rect.height());
-
-        if(widget && widget->objectName() == "Qt_Maemo6_SliderPopUp") {
-            qCritical() << "SliderPopUp CacheKey:" << cacheKey;
-        }
 
         if ((!enableCache || !QPixmapCache::find(cacheKey, backgroundPixmap)) && rect.isValid()) {
             backgroundPixmap.fill(Qt::transparent);
@@ -2632,19 +2629,14 @@ void QtMaemo6Style::doOrientationChange()
 
 void QtMaemo6Style::updateDirtyWidgets() {
     Q_D(QtMaemo6Style);
-    if(!d->m_dirtyWidgetBackgrounds.isEmpty()) {
-        qCritical() << "### updating widgets";
-        foreach(QWidget* w, d->m_dirtyWidgetBackgrounds.keys()) {
-            const MScalableImage* image = d->m_dirtyWidgetBackgrounds.take(w);
-            if(setPaletteBackground(w, image)) {
-                if(w->objectName() == "Qt_Maemo6_SliderPopUp") {
-                    qCritical() << "SliderPopUp updated:" << w;
-                }
-                w->update();
-            }
+    if(!d->m_dirtyWidgets.isEmpty()) {
+        foreach(QWidget* w, d->m_dirtyWidgets.keys()) {
+            const MScalableImage* image = d->m_dirtyWidgets.take(w);
+            //if there is an image in the cache list, set it as background for the widget
+            if(image)
+                setPaletteBackground(w, image);
+            w->update();
         }
-        if(!d->m_dirtyWidgetBackgrounds.isEmpty())
-            qCritical() << "### dirtyWidgetsUpdate is not empty after update";
     }
 }
 
