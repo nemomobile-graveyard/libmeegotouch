@@ -167,6 +167,8 @@ public:
 
     bool forceRepaint;
 
+    bool clearVisibleOnRelayout;
+
     // Section for panning detection
     QPointF oldViewportRectPosition;
     bool moving;
