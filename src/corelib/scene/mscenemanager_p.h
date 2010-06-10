@@ -63,13 +63,13 @@ public:
         MessageBox = Dialog,                         // MMessageBox
         ModalSceneWindow = Dialog,                   // MModalSceneWindow
         PopupList = 4000,                            // MPopupList
-        NotificationInformation = 5000,              // MNotification - Information
-        NotificationEvent = NotificationInformation, // MNotification - Event
         Overlay = 6000,                              // MOverlay
         Completer = Overlay,                         // MCompleter
         HomeButtonPanel = 7000,                      // MHomeButtonPanel
         ObjectMenu = 7500,
-        StatusBar = 8000                             // MStatusBar
+        NotificationInformation = 8000,              // MNotification - Information
+        NotificationEvent = NotificationInformation, // MNotification - Event
+        StatusBar = 9000                             // MStatusBar
     };
 
     int zForWindowType(MSceneWindow::WindowType windowType);
