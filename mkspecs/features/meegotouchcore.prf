@@ -1,0 +1,9 @@
+include(meegotouch_common.prf)
+
+macx {
+    LIBS += -framework meegotouchcore
+} else {
+    !contains(DEFINES, BUILD_M) {
+        LIBS += -lmeegotouchcore
+    }
+}

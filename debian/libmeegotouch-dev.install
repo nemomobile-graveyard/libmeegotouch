@@ -2,4 +2,3 @@ usr/lib/libmeegotouch*.so
 usr/include/*
 usr/lib/pkgconfig/*
 usr/share/qt4/mkspecs/features/meegotouch*
-usr/share/mkspecs/features/meegotouch*

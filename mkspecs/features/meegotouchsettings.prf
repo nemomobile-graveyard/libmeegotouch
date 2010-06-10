@@ -4,12 +4,10 @@ macx {
     LIBS += \
         -framework meegotouchcore \
         -framework meegotouchsettings \
-        -framework meegotouchextensions
 } else {
     !contains(DEFINES, BUILD_M) {
         LIBS += \
 	    -lmeegotouchcore \
 	    -lmeegotouchsettings \
-	    -lmeegotouchextensions
     }
 }
