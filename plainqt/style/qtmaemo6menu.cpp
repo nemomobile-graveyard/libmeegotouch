@@ -31,7 +31,6 @@
 QtMaemo6Menu::QtMaemo6Menu(QMenuBar *mb, QWidget *parent) : QWidget(parent)
 {
     setObjectName("Qt_Maemo6_Menu");
-    setAutoFillBackground(true);
 
     QGridLayout *gridLayout = new QGridLayout(this);
 

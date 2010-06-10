@@ -34,7 +34,6 @@
 QtMaemo6DialogTitle::QtMaemo6DialogTitle(QWidget *parent) : QWidget(parent)
 {
     setObjectName(QString("Qt_Maemo6_DialogTitle"));
-    setAutoFillBackground(true);
 
     QStyleOption option;
     option.initFrom(this);

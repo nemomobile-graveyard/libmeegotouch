@@ -38,7 +38,6 @@ QtMaemo6ComboBoxPopup::QtMaemo6ComboBoxPopup(QComboBox *comboBox, QWidget *paren
     m_lineEdit(NULL)
 {
     setObjectName("Qt_Maemo6_ComboBox");
-    setAutoFillBackground(true);
 
     m_listView = new QListView();
     if(comboBox)

@@ -63,7 +63,8 @@ void QtMaemo6SliderPopUp::showEvent(QShowEvent *e) {
 void QtMaemo6SliderPopUp::resizeEvent(QResizeEvent *e) {
     QLabel::resizeEvent(e);
     if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(style())) {
-        s->setPaletteBackground(this, "MSliderStyle", "MSliderHandleLabel");
+        if(s->setPaletteBackground(this, "MSliderStyle", "MSliderHandleLabel"))
+            qCritical() << "SliderPopUp Resize:" << this;
     }
 
 }
@@ -120,7 +121,9 @@ QSize QtMaemo6SliderPopUp::styledSizeHint() {
         static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(opt.state,
                                             "MSliderStyle",
                                             "MSliderHandleLabel"));
-    int left, top, right, bottom;
-    style->backgroundImage()->borders(&left, &right, &top, &bottom);
-    return sizeHint() + QSize(left + right, top + bottom);
+    //int left, top, right, bottom;
+    //style->backgroundImage()->borders(&left, &right, &top, &bottom);
+    //return sizeHint() + QSize(left + right, top + bottom);
+    return sizeHint() + QSize(style->paddingLeft() + style->paddingRight(),
+                              style->paddingTop() + style->paddingBottom());
 }

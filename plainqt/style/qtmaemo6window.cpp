@@ -182,7 +182,9 @@ void QtMaemo6Window::resizeEvent(QResizeEvent *e) {
 }
 
 void QtMaemo6Window::paintEvent(QPaintEvent* e) {
-    //force drawing the background on windows
+    //by default a window with no content is transparent.
+    // in derived classes you have to care for the content to draw its own
+    // background
     QPainter p(this);
     p.setPen(Qt::NoPen);
     p.setBrush(palette().window());

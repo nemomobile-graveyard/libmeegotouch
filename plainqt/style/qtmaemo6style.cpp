@@ -228,24 +228,16 @@ bool QtMaemo6Style::setPaletteBackground(QWidget *widget,
 {
     bool ret = false;
     if (NULL != widget) {
-        QStyleOption widgetOption;
-        widgetOption.initFrom(widget);
+        if(widget->size().isValid()) {
+            widget->setAutoFillBackground(true);
 
-        QPixmap backgroundPixmap(widget->size());
-        backgroundPixmap.fill(Qt::transparent);
-        QPainter painter(&backgroundPixmap);
+            QStyleOption widgetOption;
+            widgetOption.initFrom(widget);
 
-        /*
-        if (qobject_cast<QDialog *>(widget)) {
-            const MPannableWidgetStyle *style =
-                static_cast<const MPannableWidgetStyle *>(
-                    QtMaemo6StylePrivate::mStyle(widgetOption.state,
-                                                 "MPannableWidgetStyle",
-                                                 "MDialogContentsViewport"));
-            ret = drawBackground(&painter, &widgetOption,
-                                       backgroundPixmap.rect(), style, widget);
-        } else {
-        */
+            QPixmap backgroundPixmap(widget->size());
+            backgroundPixmap.fill(Qt::transparent);
+            QPainter painter(&backgroundPixmap);
+
             //by default use the MApplicationPageStyle background
             QString _styleObject("MApplicationPageStyle");
             if(!styleObject.isEmpty())
@@ -255,14 +247,13 @@ bool QtMaemo6Style::setPaletteBackground(QWidget *widget,
                 static_cast<const MWidgetStyle*>(
                     QtMaemo6StylePrivate::mStyle(widgetOption.state, _styleObject, styleClass));
             ret = drawBackground(&painter, &widgetOption, backgroundPixmap.rect(), style, widget);
-        //}
 
-        if(ret) {
-            QPalette palette = widget->palette();
-            palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
-            widget->setPalette(palette);
+            if(ret) {
+                QPalette palette = widget->palette();
+                palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
+                widget->setPalette(palette);
+            }
         }
-
     }
     return ret;
 }
@@ -273,6 +264,10 @@ bool QtMaemo6Style::setPaletteBackground(QWidget* widget,
     bool ret = false;
     if(widget && image) {
         Q_D(const QtMaemo6Style);
+        //this is needed to force the widget to draw its palette background
+        // autmatically before each paint event
+        widget->setAutoFillBackground(true);
+
         QStyleOption widgetOption;
         widgetOption.initFrom(widget);
 
@@ -318,20 +313,21 @@ bool QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
     if(style)
         p->setOpacity(style->backgroundOpacity() * effectiveOpacity);
 
-    // This is a cheap hack to enfore synchronous loading
-    // FIXME: Implement dynamic updating for asynchronous loading
-    // to get rid of this.
-    /*
-    while (MTheme::hasPendingRequests()) {
-        qCritical() << "asynchronous scalableImage loading";
-        usleep(10000);
-        QCoreApplication::processEvents();
-    }*/
     if (scalableImage && rect.isValid()) {
         if (MTheme::hasPendingRequests()) {
+            //cache widgets that need an update, after the images are loaded
             if(widget) {
-                m_dirtyWidgetBackgrounds.insert(const_cast<QWidget*>(widget), scalableImage);
-                qCritical() << "### scheduling scalableImage" << widget;
+                if(widget->objectName() == "Qt_Maemo6_SliderPopUp") {
+                    int i = 0;
+                    Q_UNUSED(i)
+                }
+                QWidget* cacheWidget = const_cast<QWidget*>(widget);
+                if(m_dirtyWidgetBackgrounds.contains(cacheWidget)) {
+                    qCritical() << "### dirtyWidgetBackgrounds already conatains" << widget << m_dirtyWidgetBackgrounds.value(cacheWidget) << scalableImage << purpose;
+                } else {
+                    qCritical() << "### dirtyWidgetBackgrounds added" << cacheWidget << scalableImage << purpose;
+                    m_dirtyWidgetBackgrounds.insert(cacheWidget, scalableImage);
+                }
             }
             return false;
         }
@@ -356,7 +352,10 @@ bool QtMaemo6StylePrivate::drawScalableImage(QPainter *p,
                            .arg(purpose)
                            .arg(rect.width())
                            .arg(rect.height());
-        qCritical() << "###" << cacheKey;
+
+        if(widget && widget->objectName() == "Qt_Maemo6_SliderPopUp") {
+            qCritical() << "SliderPopUp CacheKey:" << cacheKey;
+        }
 
         if ((!enableCache || !QPixmapCache::find(cacheKey, backgroundPixmap)) && rect.isValid()) {
             backgroundPixmap.fill(Qt::transparent);
@@ -445,10 +444,12 @@ void QtMaemo6StylePrivate::drawSliderBaseBackground(QPainter *p,
                     QPainter pixmapPainter;
                     pixmapPainter.begin(&backgroundPixmap);
                     if(isHorizontal) {
-                        elapsedImage->draw(0, 0, sliderPosition, rect.height(), &pixmapPainter);
+                        if(sliderPosition > 0)
+                            elapsedImage->draw(0, 0, sliderPosition, rect.height(), &pixmapPainter);
                         baseImage->draw(sliderPosition, 0, rect.width() - sliderPosition, rect.height(), &pixmapPainter);
                     } else {
-                        elapsedImage->draw(0, 0, rect.width(), sliderPosition, &pixmapPainter);
+                        if(sliderPosition > 0)
+                            elapsedImage->draw(0, 0, rect.width(), sliderPosition, &pixmapPainter);
                         baseImage->draw(0, sliderPosition, rect.width(), rect.height() - sliderPosition, &pixmapPainter);
                     }
                     pixmapPainter.end();
@@ -1093,8 +1094,6 @@ void QtMaemo6Style::polish(QWidget *widget)
         d->m_kinetic->enableOn(abstractScrollArea);
         d->m_kinetic->setRightToLeft(qApp->isRightToLeft());
         d->m_scrollBarEventFilter->enableOn(abstractScrollArea);
-        //FIXME: public API usage
-        //widget->setAutoFillBackground(false);
 
         //must use inherits() because it's an private Qt class
         if (!abstractScrollArea->inherits("QComboBoxListView")) {
@@ -2634,15 +2633,18 @@ void QtMaemo6Style::doOrientationChange()
 void QtMaemo6Style::updateDirtyWidgets() {
     Q_D(QtMaemo6Style);
     if(!d->m_dirtyWidgetBackgrounds.isEmpty()) {
+        qCritical() << "### updating widgets";
         foreach(QWidget* w, d->m_dirtyWidgetBackgrounds.keys()) {
-            qCritical() << "### updating Widget" << w;
             const MScalableImage* image = d->m_dirtyWidgetBackgrounds.take(w);
             if(setPaletteBackground(w, image)) {
+                if(w->objectName() == "Qt_Maemo6_SliderPopUp") {
+                    qCritical() << "SliderPopUp updated:" << w;
+                }
                 w->update();
-            } else {
-                qCritical() << "### still not loaded";
             }
         }
+        if(!d->m_dirtyWidgetBackgrounds.isEmpty())
+            qCritical() << "### dirtyWidgetsUpdate is not empty after update";
     }
 }
 

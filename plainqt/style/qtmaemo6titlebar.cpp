@@ -48,7 +48,6 @@ const int QtMaemo6TitleBar::titleBarHeight = 70;
 QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
 {
     setObjectName(QString("Qt_Maemo6_TitleBar"));
-    setAutoFillBackground(true);
 
     QStyleOption option;
     option.initFrom(this);
