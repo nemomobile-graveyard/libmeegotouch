@@ -32,6 +32,12 @@ class M_EXPORT MSceneWindowStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(Qt::Alignment,  verticalAlign,        VerticalAlign)
     M_STYLE_ATTRIBUTE(QPointF,        offset,               Offset)
     M_STYLE_ATTRIBUTE(int,            disappearTimeout,     DisappearTimeout)
+
+    /*!
+        \property MSceneWindowStyle::appearFeedback
+        \brief Feedback given when scene window reaches the Appeared state.
+      */
+    M_STYLE_ATTRIBUTE(MFeedback, appearFeedback, AppearFeedback)
 };
 
 class M_EXPORT MSceneWindowStyleContainer : public MWidgetStyleContainer

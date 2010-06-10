@@ -84,6 +84,8 @@ signals:
     void geometryAttributesChanged();
 
 private:
+    Q_PRIVATE_SLOT(d_func(), void _q_playSceneWindowAppearedFeedback())
+
     Q_DECLARE_PRIVATE(MSceneWindowView)
     Q_DISABLE_COPY(MSceneWindowView)
 };

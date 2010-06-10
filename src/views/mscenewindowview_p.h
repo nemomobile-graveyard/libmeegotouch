@@ -32,6 +32,8 @@ public:
     virtual ~MSceneWindowViewPrivate();
 
     MSceneWindow *controller;
+
+    void _q_playSceneWindowAppearedFeedback();
 };
 
 #endif
