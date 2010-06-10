@@ -140,8 +140,6 @@ contains( DEFINES, HAVE_N900 ) {
     desktop_icon.path = $$M_INSTALL_DATA/icons/hicolor/48x48/hildon
     desktop_icon.files = icon-l-widgetsgallery.png
 
-    INSTALLS += desktop_icon
-
     desktop_entry.path = $$M_INSTALL_DATA/applications/hildon
 } else {
     SOURCES += phonebookmodel.cpp
@@ -181,5 +179,6 @@ data_files.CONFIG += no_check_exist
 INSTALLS += target \
     data_files \
     desktop_entry \
-    testsxml
+    testsxml \
+    desktop_icon
 !win32:!macx:INSTALLS += services

@@ -1,6 +1,7 @@
 usr/bin/widgetsgallery
 usr/share/themes/*
-usr/share/applications/*
+usr/share/applications/*widgetsgallery.desktop
+usr/share/applications/hildon/*widgetsgallery.desktop
 usr/share/dbus-1/services/com.nokia.widgetsgallery.service
 usr/share/widgetsgallery/*
 usr/share/icons/*
