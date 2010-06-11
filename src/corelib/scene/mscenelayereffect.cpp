@@ -54,8 +54,6 @@ MSceneLayerEffect::MSceneLayerEffect(const QString &effectType)
 
     d->appearanceAnimation->setTargetWidget(this);
     d->disappearanceAnimation->setTargetWidget(this);
-
-    setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
 }
 
 MSceneLayerEffect::~MSceneLayerEffect()

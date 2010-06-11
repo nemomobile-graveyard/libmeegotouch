@@ -45,7 +45,6 @@ MSceneWindowPrivate::MSceneWindowPrivate()
         shown(false),
         dismissed(false),
         waitingForContextMenuEvent(false),
-        dimEffectBehindWindow(false),
         effect(0),
         appearanceAnimation(0),
         disappearanceAnimation(0)

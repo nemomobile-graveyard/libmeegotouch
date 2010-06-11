@@ -8,7 +8,6 @@ ANIMATIONS_SCENE_SRC_DIR=./animation/scene
 PUBLIC_HEADERS += \
     $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation.h \
     $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/mscenedimminganimation.h \
 
 PRIVATE_HEADERS += \
     $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation_p.h \
@@ -18,7 +17,6 @@ PRIVATE_HEADERS += \
     $$ANIMATIONS_SCENE_SRC_DIR/mcrossfadedorientationanimation_p.h \
     $$ANIMATIONS_SCENE_SRC_DIR/msnapshotitem.h \
     $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation_p.h \
-    $$ANIMATIONS_SCENE_SRC_DIR/mscenedimminganimation_p.h \
 
 SOURCES += \
     $$ANIMATIONS_SCENE_SRC_DIR/mbasicorientationanimation.cpp \
@@ -26,4 +24,3 @@ SOURCES += \
     $$ANIMATIONS_SCENE_SRC_DIR/mcrossfadedorientationanimation.cpp \
     $$ANIMATIONS_SCENE_SRC_DIR/msnapshotitem.cpp \
     $$ANIMATIONS_SCENE_SRC_DIR/mpageswitchanimation.cpp \
-    $$ANIMATIONS_SCENE_SRC_DIR/mscenedimminganimation.cpp \

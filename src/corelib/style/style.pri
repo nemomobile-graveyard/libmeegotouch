@@ -34,9 +34,7 @@ MGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mwidgetzoomanimationstyle.h \
     $$STYLE_SRC_DIR/mpageswitchanimationstyle.h \
     $$STYLE_SRC_DIR/mbasicorientationanimationstyle.h \
-    $$STYLE_SRC_DIR/mgraphicseffectstyle.h \
-    $$STYLE_SRC_DIR/mgraphicsdimeffectstyle.h \
-    $$STYLE_SRC_DIR/mscenedimminganimationstyle.h \
+
 
 PUBLIC_HEADERS += \
     $$MGEN_STYLE_HEADERS \

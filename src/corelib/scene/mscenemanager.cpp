@@ -64,8 +64,6 @@
 #include <mwidgetfadeanimation.h>
 #include <mwidgetzoomanimation.h>
 #include <mwidgetmoveanimation.h>
-#include <mscenedimminganimation.h>
-#include <mgraphicsdimeffect.h>
 
 namespace
 {
@@ -378,8 +376,15 @@ void MSceneManagerPrivate::_q_onSceneWindowDisappeared()
     int i = windows->indexOf(window);
 
     if (i != -1) {
-        detachWindow(window);
+        windows->removeAt(i);
         QObject::disconnect(window, SIGNAL(repositionNeeded()), q, SLOT(_q_setSenderGeometry()));
+
+        // If there is a layer effect it is deleted as well
+        if (window->d_func()->effect) {
+            window->setParentItem(0);
+            delete window->d_func()->effect;
+            window->d_func()->effect = 0;
+        }
 
         if ((window->deletionPolicy() == MSceneWindow::DestroyWhenDone) ||
                 ((window->deletionPolicy() == MSceneWindow::DestroyWhenDismissed)
@@ -460,17 +465,9 @@ void MSceneManagerPrivate::detachWindow(MSceneWindow *window)
 {
     windows->removeOne(window);
 
-    // remove graphicseffect applied to this window completely
-    window->setGraphicsEffect(0);
-
-    if (window->d_func()->dimEffectBehindWindow) {
-        // disable graphicseffect caused by this window
-        enableDimEffectBehindWindow(window, false);
-    }
-
     // If there is a layer effect it is deleted as well
     if (window->d_func()->effect) {
-        window->setParentItem(0);
+        window->setParentItem(rootElement);
         delete window->d_func()->effect;
         window->d_func()->effect = 0;
     }
@@ -513,29 +510,6 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
     window->d_func()->effect = effect;
 
     return effect;
-}
-
-void MSceneManagerPrivate::enableDimEffectBehindWindow(MSceneWindow* window, bool enabled, MSceneDimmingAnimation* animation)
-{
-    int windowZValue = zForWindowType(window->windowType());
-
-    foreach(MSceneWindow *sceneWindow, *windows) {
-        if (sceneWindow != window &&
-            zForWindowType(sceneWindow->windowType()) <= windowZValue)
-        {
-            MGraphicsEffect *graphicsEffect = qobject_cast<MGraphicsEffect*>(sceneWindow->graphicsEffect());
-            if (!graphicsEffect) {
-                graphicsEffect = new MGraphicsDimEffect;
-                sceneWindow->setGraphicsEffect(graphicsEffect);
-            }
-            graphicsEffect->setEnabled(enabled, MGraphicsEffect::CumulativeEnabling);
-
-            if (animation)
-                animation->addGraphicsEffect(graphicsEffect);
-        }
-    }
-
-    window->d_func()->dimEffectBehindWindow = enabled;
 }
 
 void MSceneManagerPrivate::setSceneWindowGeometries()
@@ -1252,25 +1226,6 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
     if (effect)
         animation->addAnimation(effect->d_func()->appearanceAnimation);
 
-    switch(sceneWindow->windowType()) {
-        case MSceneWindow::Dialog:
-        case MSceneWindow::MessageBox:
-        case MSceneWindow::ApplicationMenu:
-        case MSceneWindow::ObjectMenu:
-        case MSceneWindow::ModalSceneWindow:
-        case MSceneWindow::PopupList: {
-            MSceneDimmingAnimation* dimmingAnimation = new MSceneDimmingAnimation(sceneWindow);
-            dimmingAnimation->setStyleParent(sceneWindow);
-            dimmingAnimation->setTransitionDirection(MSceneDimmingAnimation::In);
-            enableDimEffectBehindWindow(sceneWindow, true, dimmingAnimation);
-
-            animation->addAnimation(dimmingAnimation);
-            break;
-        }
-        default:
-            break;
-    }
-
     sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(appeared()));
     sceneWindow->d_func()->appearanceAnimation = animation;
 }
@@ -1345,25 +1300,6 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     MSceneWindow *effect = sceneWindow->d_func()->effect;
     if (effect)
         animation->addAnimation(effect->d_func()->disappearanceAnimation);
-
-    switch(sceneWindow->windowType()) {
-        case MSceneWindow::Dialog:
-        case MSceneWindow::MessageBox:
-        case MSceneWindow::ApplicationMenu:
-        case MSceneWindow::ObjectMenu:
-        case MSceneWindow::ModalSceneWindow:
-        case MSceneWindow::PopupList: {
-            MSceneDimmingAnimation* dimmingAnimation = new MSceneDimmingAnimation(sceneWindow);
-            dimmingAnimation->setStyleParent(sceneWindow);
-            dimmingAnimation->setTransitionDirection(MSceneDimmingAnimation::Out);
-            enableDimEffectBehindWindow(sceneWindow, false, dimmingAnimation);
-
-            animation->addAnimation(dimmingAnimation);
-            break;
-        }
-        default:
-            break;
-    }
 
     sceneWindow->connect(animation, SIGNAL(finished()), SIGNAL(disappeared()));
     sceneWindow->d_func()->disappearanceAnimation = animation;

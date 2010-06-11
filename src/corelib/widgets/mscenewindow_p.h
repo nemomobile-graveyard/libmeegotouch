@@ -46,8 +46,6 @@ public:
     bool shown;
     bool dismissed;
     bool waitingForContextMenuEvent;
-    // tells if this window is causing dimEffect for some other windows on the scene
-    bool dimEffectBehindWindow;
 
     MSceneLayerEffect *effect;
 

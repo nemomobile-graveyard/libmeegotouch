@@ -36,7 +36,6 @@ class MSceneManager;
 class MNavigationBar;
 class MOrientationAnimation;
 class MPageSwitchAnimation;
-class MSceneDimmingAnimation;
 class MWindow;
 
 class QAbstractAnimation;
@@ -75,7 +74,6 @@ public:
 
     int zForWindowType(MSceneWindow::WindowType windowType);
     MSceneLayerEffect *createLayerEffectForWindow(MSceneWindow *window);
-    void enableDimEffectBehindWindow(MSceneWindow* window, bool enabled, MSceneDimmingAnimation* animation = NULL);
 
     M::Orientation orientation(M::OrientationAngle angle) const;
 
