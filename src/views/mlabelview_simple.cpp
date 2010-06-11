@@ -26,6 +26,7 @@
 #include <QPainter>
 #include <QTextDocument>
 #include <QTextCursor>
+#include <QTransform>
 #include <QFontMetrics>
 #include <QPixmapCache>
 #include <QAbstractTextDocumentLayout>
@@ -34,7 +35,7 @@
 
 
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
-    viewPrivate(viewPrivate), preferredSize(-1, -1), dirty(true), cachedElidedText("")
+    viewPrivate(viewPrivate), preferredSize(-1, -1), dirty(true), staticText()
 {
 }
 
@@ -42,94 +43,18 @@ MLabelViewSimple::~MLabelViewSimple()
 {
 }
 
-#ifdef __arm__
 void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
 {
     Q_UNUSED(size);
-
+   
+    initializeStaticText();
+    
     const MLabelModel *model = viewPrivate->model();
     const MLabelStyle *style = viewPrivate->style();
-    QRectF paintingRect(viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom()));
-    QString textToRender = model->text();
-    if (model->textElide() && textToRender.size() > 4) {
-        if(cachedElidedText.isEmpty()) {
-            QFontMetrics fm(viewPrivate->controller->font());
-            cachedElidedText = fm.elidedText(model->text(), Qt::ElideRight, paintingRect.width());
-        }
 
-        textToRender = cachedElidedText;
-    }
-
-    if (textToRender.isEmpty()) {
-        return;
-    }
-
-    painter->setFont(viewPrivate->controller->font());
     painter->setPen(model->color().isValid() ? model->color() : style->color());
-    painter->setLayoutDirection(model->textDirection());
-
-    painter->drawText(paintingRect, viewPrivate->textOptions.alignment() | wrap(), textToRender);
-}
-
-#else
-
-void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
-{
-    Q_UNUSED(size);
-
-    painter->drawImage(textOffset, generateImage());
-}
-
-#endif
-
-QPixmap MLabelViewSimple::generatePixmap()
-{
-    return QPixmap();
-}
-
-QImage MLabelViewSimple::generateImage()
-{
-    if(!dirty)
-        return cachedImage;
-
-    dirty = false;
-    const MLabelModel *model = viewPrivate->model();
-    const MLabelStyle *style = viewPrivate->style();
-    QRectF paintingRect(viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom()));
-    QSizeF paintingRectSize = paintingRect.size();
-    textOffset = paintingRect.topLeft().toPoint();
-    QString textToRender = model->text();
-    if (model->textElide() && textToRender.size() > 4) {
-        QFontMetrics fm(viewPrivate->controller->font());
-        textToRender = fm.elidedText(model->text(), Qt::ElideRight, paintingRect.width());
-    }
-
-    if (textToRender.isEmpty()) {
-        cachedImage = QImage();
-        return cachedImage;
-    }
-
-    if(cachedImage.size() != paintingRect.size().toSize())
-    {
-        cachedImage = QImage(paintingRect.size().toSize(), QImage::Format_ARGB32_Premultiplied);
-    }
-
-    QImage &image = cachedImage;
-
-    if (!image.isNull()) {
-        image.fill(0);
-        QPainter painter(&image);
-        painter.setRenderHint(QPainter::TextAntialiasing);
-        painter.setFont(viewPrivate->controller->font());
-        painter.setPen(model->color().isValid() ? model->color() : style->color());
-        painter.setLayoutDirection(model->textDirection());
-
-        painter.drawText(0, 0, paintingRectSize.width(), paintingRectSize.height(), 
-                         viewPrivate->textOptions.alignment() | wrap(), textToRender);
-
-    }
-
-    return image;
+    painter->setFont(viewPrivate->controller->font());
+    painter->drawStaticText(textOffset, staticText);    
 }
 
 bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
@@ -279,10 +204,57 @@ void MLabelViewSimple::applyStyle()
 {
 }
 
+void MLabelViewSimple::initializeStaticText()
+{
+    if (!dirty) {
+        return;
+    }
+
+    dirty = false;
+    
+    const MLabelModel *model = viewPrivate->model();
+    const MLabelStyle *style = viewPrivate->style();
+    
+    const QRectF paintingRect(viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom()));
+    textOffset = paintingRect.topLeft().toPoint();
+    
+    QString textToRender = model->text();
+    if (model->textElide() && textToRender.size() > 4) {
+        QFontMetrics fm(viewPrivate->controller->font());
+        textToRender = fm.elidedText(model->text(), Qt::ElideRight, paintingRect.width());
+    }
+    
+    const qreal textWidth = viewPrivate->controller->wordWrap() ? paintingRect.width() : -1.0;
+    staticText.setTextWidth(textWidth);
+    staticText.setText(textToRender);
+    staticText.prepare(QTransform(), viewPrivate->controller->font());
+    
+    const Qt::Alignment alignment = viewPrivate->textOptions.alignment();
+    
+    // Adjust x-position dependent on the horizontal alignment
+    if (alignment & Qt::AlignHCenter) {
+        const qreal inc = (paintingRect.width() - staticText.size().width()) / 2.0;
+        if (inc > 0.0) {
+            textOffset.rx() += inc;
+        }
+    } else if (alignment & Qt::AlignRight) {
+        textOffset.setX(paintingRect.right() - staticText.size().width());    
+    }
+    
+    // Adjust y-position dependent on the vertical alignment
+    if (alignment & Qt::AlignVCenter) {
+        const qreal inc = (paintingRect.height() - staticText.size().height()) / 2.0;
+        if (inc > 0.0) {
+            textOffset.ry() += inc;
+        }
+    } else if (alignment & Qt::AlignBottom) {
+        textOffset.setY(paintingRect.bottom() - staticText.size().height());
+    }    
+}
+
 void MLabelViewSimple::markDirty()
 {
     dirty = true;
-    cachedElidedText = "";
 }
 
 Qt::TextFlag MLabelViewSimple::wrap() const
