@@ -51,6 +51,8 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     viewportVisibleHeight = 0;
     hseparatorHeight = 0;
     pannableViewport = NULL;
+    clearVisibleOnRelayout = false;
+
     movingDetectorTimer.setSingleShot(true);
     connect(&movingDetectorTimer, SIGNAL(timeout()), this, SLOT(movingDetectionTimerTimeout()));
 }

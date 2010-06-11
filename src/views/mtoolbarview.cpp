@@ -277,7 +277,8 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
     if(hideOnly) {
         landscapePolicy->removeWidget(widget);
         portraitPolicy->removeWidget(widget);
-        button->setChecked(false);
+        if (button)
+            button->setChecked(false);
     } else {
         //Need to fully remove the action
         layout->removeItem(widget);
@@ -294,7 +295,8 @@ void MToolBarViewPrivate::remove(QAction *action, bool hideOnly)
     //There might be space now any actions not already added.  Signal a change action which
     //will check if an item now has room to be shown
     foreach(QAction *action, controller->actions()) {
-        if(action->isVisible())
+        if(action->isVisible() && (isLocationValid(action, MAction::ToolBarLandscapeLocation) ||
+                                   isLocationValid(action, MAction::ToolBarPortraitLocation)))
             change(action);
     }
 }
@@ -366,12 +368,16 @@ void MToolBarViewPrivate::updateWidgetFromAction(MWidget *widget, QAction *actio
     MButton *button = qobject_cast<MButton *>(widget);
     if (button) {
         // Update button data accordingly
-        button->setText(action->text());
         button->setCheckable(action->isCheckable());
         button->setChecked(action->isChecked());
-        MAction *mAction = qobject_cast<MAction *>(action);
-        if (mAction)
-            button->setIconID(mAction->iconID());
+
+        // Only update the text and icon if we created the button
+        if(buttons.contains(action)) {
+            button->setText(action->text());
+            MAction *mAction = qobject_cast<MAction *>(action);
+            if (mAction)
+                button->setIconID(mAction->iconID());
+        }
     }
 }
 

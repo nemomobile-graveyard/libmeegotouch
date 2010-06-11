@@ -20,8 +20,6 @@
 #ifndef MHOMEBUTTONPANELVIEW_P_H
 #define MHOMEBUTTONPANELVIEW_P_H
 
-#include "mhomebuttonpanelview.h"
-
 class MHomeButtonPanel;
 class MButton;
 
@@ -30,6 +28,9 @@ class MHomeButtonPanelViewPrivate
     Q_DECLARE_PUBLIC(MHomeButtonPanelView)
 
 protected:
+
+    void _q_buttonInteracted();
+
     MHomeButtonPanelView *q_ptr;
 
 public:

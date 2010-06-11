@@ -680,12 +680,15 @@ void Ut_MToolBarView::testMWidgetAction()
     action->setEnabled(true);
     action->setVisible(true);
 
+    MButton *button = NULL;
     QPointer<MWidget> widget;
     if(widgetType == "textedit")
         widget = new MTextEdit;
-    else if(widgetType == "button")
-        widget = new MButton(m_toolbar);
-    else
+    else if(widgetType == "button") {
+        button = new MButton(m_toolbar);
+        button->setText("Hello");
+        widget = button;
+    } else
         widget = new MSlider(m_toolbar);
     action->setWidget(widget);
 
@@ -705,6 +708,16 @@ void Ut_MToolBarView::testMWidgetAction()
     QVERIFY(widget);
     QVERIFY(widget->isEnabled());
     WAIT_VERIFY(widget->isVisible());
+
+    if(button) {
+        QCOMPARE(button->text(), QString("Hello"));
+        action->setText(QString("Goodbye"));
+        QCOMPARE(button->text(), QString("Hello")); //Shouldn't change button text
+        QCOMPARE(button->isChecked(), false);
+        action->setCheckable(true);
+        action->setChecked(true);
+        QCOMPARE(button->isChecked(), true);
+    }
 }
 
 void Ut_MToolBarView::testAddToLandscapeWhenInPortrait()
@@ -721,6 +734,42 @@ void Ut_MToolBarView::testAddToLandscapeWhenInPortrait()
     //Since we are in landscape mode we should not see this action
     QPointer<MButton> button = dynamic_cast<MButton*>(m_toolbarview->getWidget(action));
     WAIT_VERIFY(!button || !button->isVisible());
+}
+
+void Ut_MToolBarView::testChangingLocation()
+{
+    MAction *action = new MAction("Hello", m_toolbar);
+    action->setLocation(MAction::ToolBarLocation);
+
+    //It should get distributed to the toolbar
+    appWin->addAction(action);
+
+    MToolBar *toolbar = NULL;
+    foreach(QGraphicsWidget *widget, action->associatedGraphicsWidgets()) {
+        if( (toolbar = qobject_cast<MToolBar *>(widget)) )
+            break;
+    }
+    //Check that the action was added to the toolbar
+    QVERIFY(toolbar);
+    QVERIFY(toolbar->actions().count() == 1);
+
+    const MToolBarView *view = dynamic_cast<const MToolBarView *>(toolbar->view());
+    QVERIFY(view);
+    const MButton* button = dynamic_cast<MButton *>(view->getWidget(action));
+
+    QVERIFY(button);
+    WAIT_VERIFY(button->isVisible());
+
+    action->setLocation(MAction::NoLocation);
+
+    //Remove the action
+    WAIT_VERIFY(!button || !button->isVisible());
+
+    //Readd the action
+    action->setLocation(MAction::EveryLocation);
+    button = dynamic_cast<const MButton *>(view->getWidget(action));
+    QVERIFY(button);
+    WAIT_VERIFY(button->isVisible());
 }
 
 QTEST_APPLESS_MAIN(Ut_MToolBarView)

@@ -82,15 +82,17 @@ public:
     virtual ~MProgressIndicatorBarView();
 
 private Q_SLOTS:
-    void animationTimeout();
+
     void visibilityChangedSlot();
 
 protected:
     //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void setupModel();
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
     //! \reimp_end
     MProgressIndicatorBarViewPrivate *const d_ptr;
+
 
 protected Q_SLOTS:
     //! \reimp

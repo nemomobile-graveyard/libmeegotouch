@@ -21,7 +21,6 @@
 #define PROGRESSBARPAGE_H
 
 #include "templatepage.h"
-#include <QTimer>
 
 
 class MGridLayoutPolicy;
@@ -37,8 +36,6 @@ public:
     virtual ~ProgressBarPage();
     virtual QString timedemoTitle();
     virtual void createContent();
-public slots:
-    void timeout();
 protected:
     virtual void retranslateUi();
 private:
@@ -46,7 +43,6 @@ private:
     MProgressIndicator *bar2;
     MLabel *label1;
     MLabel *label2;
-    QTimer timer;
 };
 
 #endif // PROGRESSBARPAGE_H

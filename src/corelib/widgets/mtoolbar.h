@@ -153,6 +153,7 @@ private:
 
 #ifdef UNIT_TEST
     friend class Ut_MToolBar;
+    friend class Ut_MToolBarView;
 #endif
 };
 

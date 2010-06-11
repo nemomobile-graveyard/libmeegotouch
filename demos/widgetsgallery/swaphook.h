@@ -7,7 +7,11 @@ typedef unsigned long long timestamp;
 #ifdef __arm__
 #define EGL
 #include <EGL/egl.h>
-#endif
+#   ifdef HAVE_N900
+#       define EGLAPI
+#       define EGLAPIENTRY
+#   endif //HAVE_N900
+#endif //__arm__
 
 #include <QObject>
 #include <QLinkedList>
@@ -16,7 +20,7 @@ class SwapHookPrivate;
 
 /**
   * Swap hooks saves the timestamps when eglSwapBuffers is beein called
-  * or as fallback monotors paint events.
+  * or as fallback monitors paint events.
   *
   */
 class SwapHook : public QObject
@@ -24,7 +28,7 @@ class SwapHook : public QObject
     Q_OBJECT
 #ifdef EGL
 friend EGLAPI EGLBoolean EGLAPIENTRY eglSwapBuffers(EGLDisplay dpy, EGLSurface surface);
-#endif
+#endif //EGL
 
 private:
   SwapHook();

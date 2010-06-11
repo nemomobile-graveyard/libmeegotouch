@@ -140,7 +140,7 @@ void MApplicationWindowPrivate::init()
 #else
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(closeMenu()));
     q->connect(homeButtonPanel, SIGNAL(buttonClicked()), q, SLOT(showMinimized()));
-#endif
+#endif //HAVE_N900
 
     q->connect(navigationBar, SIGNAL(viewmenuTriggered()),
                q, SLOT(openMenu()));
@@ -419,7 +419,7 @@ void MApplicationWindowPrivate::_q_exitAppView()
     QDBusMessage message = QDBusMessage::createSignal("/", "com.nokia.hildon_desktop", "exit_app_view");
     bus.send(message);
 }
-#endif
+#endif //HAVE_N900
 
 void MApplicationWindowPrivate::manageActions()
 {
@@ -459,30 +459,10 @@ void MApplicationWindowPrivate::distributeAction(QAction *action, QAction *befor
     if (mAction)
         location = mAction->location();
 
-    switch (location) {
-    case MAction::NoLocation: {
-        break;
-    }
-    case MAction::ToolBarLocation:
-    case MAction::ToolBarLandscapeLocation:
-    case MAction::ToolBarPortraitLocation: {
+    if(location & MAction::ToolBarLocation)
         toolBar->insertAction(before, action);
-        break;
-    }
-    case MAction::ApplicationMenuLocation: {
+    if(location & MAction::ApplicationMenuLocation)
         menu->insertAction(before, action);
-        break;
-    }
-    case MAction::EveryLocation: {
-        toolBar->insertAction(before, action);
-        menu->insertAction(before, action);
-        break;
-    }
-    default: {
-        mDebug("MApplicationWindowPrivate") << "Unknown Locations value.";
-        break;
-    }
-    }
 }
 
 void MApplicationWindowPrivate::refreshArrowIconVisibility()
@@ -833,11 +813,9 @@ MApplicationPage *MApplicationWindow::currentPage() const
 bool MApplicationWindow::event(QEvent *event)
 {
     Q_D(MApplicationWindow);
-
-    QActionEvent * actionEvent = (QActionEvent *)event;
-    QEvent::Type type = event->type();
-    switch (type) {
+    switch (event->type()) {
         case QEvent::ActionRemoved: {
+            QActionEvent *actionEvent = static_cast<QActionEvent *>(event);
             QAction *action = actionEvent->action();
             if (action) {
                 action->disconnect(this);
@@ -847,6 +825,7 @@ bool MApplicationWindow::event(QEvent *event)
 
         case QEvent::ActionChanged:
         case QEvent::ActionAdded: {
+            QActionEvent *actionEvent = static_cast<QActionEvent *>(event);
             d->_q_actionUpdated(actionEvent);
             return true;
         }

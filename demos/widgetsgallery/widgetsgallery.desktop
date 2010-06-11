@@ -1,7 +1,7 @@
 [Desktop Entry]
 Type=Application
 Name=Widgets Gallery
-Icon=icon-l-video
+Icon=icon-l-widgetsgallery
 Exec=widgetsgallery
 X-Maemo-Service=com.nokia.widgetsgallery
-OnlyShowIn=X-MeeGo;
+OnlyShowIn=X-MeeGo;GNOME;

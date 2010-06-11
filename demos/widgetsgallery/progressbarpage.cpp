@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include "progressbarpage.h"
-#include <QTimer>
+#include <QPropertyAnimation>
 #include <MButton>
 #include <MLabel>
 #include <MTheme>
@@ -54,7 +54,8 @@ void ProgressBarPage::createContent()
     containerPolicy->addItem(label1);
 
     bar1 = new MProgressIndicator(centralWidget(), MProgressIndicator::barType);
-    bar1->setRange(0, 99);
+    // Since range's type is int, we want a fairly large number here, to get a smooth animation
+    bar1->setRange(0, 99999);
     bar1->setValue(0);
     containerPolicy->addItem(bar1);
 
@@ -66,8 +67,15 @@ void ProgressBarPage::createContent()
     bar2->setUnknownDuration(true);
     containerPolicy->addItem(bar2);
 
-    connect(&timer, SIGNAL(timeout()), SLOT(timeout()));
-    timer.start(100);
+    QPropertyAnimation* animation = new QPropertyAnimation(bar1, "value", this);
+    // loop forever
+    animation->setLoopCount(-1);
+    // start and end value should match bar1's range
+    animation->setStartValue(0);
+    animation->setEndValue(99999);
+    // 10 ms to fill the bar
+    animation->setDuration(10000);
+    animation->start();
 
     retranslateUi();
 }
@@ -85,14 +93,6 @@ void ProgressBarPage::retranslateUi()
     label1->setText(qtTrId("xx_progressindicator_known_duration_bar"));
     //% "Installing CoolApp"
     label2->setText(qtTrId("xx_progressindicator_unknown_duration_bar"));
-}
-
-void ProgressBarPage::timeout()
-{
-    if (bar1->value() < bar1->maximum())
-        bar1->setValue(bar1->value() + 1);
-    else
-        bar1->setValue(bar1->minimum());
 }
 
 

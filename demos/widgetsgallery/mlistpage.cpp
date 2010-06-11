@@ -55,14 +55,14 @@
 #include "contactmodel.h"
 #else
 #include "phonebookmodel.h"
-#endif
+#endif //HAVE_N900
 
 MListPage::MListPage()
   : TemplatePage(TemplatePage::ListsGridsAndPopups),
     model(NULL),
 #ifndef HAVE_N900
     proxyModel(NULL),
-#endif
+#endif //HAVE_N900
     imageLoader(NULL),
     list(NULL),
     currentSortingIndex(0),
@@ -122,7 +122,8 @@ public:
             }
         }
 
-        cellContent->setImage(contact->getAvatar().toImage());
+	listCell->setImage(contact->getAvatar().toImage());
+
 #else
         PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(data.value<void *>());
 
@@ -136,7 +137,7 @@ public:
 
         listCell->setSubtitle(entry->phoneNumber);
         listCell->setImage(entry->thumbnail);
-#endif
+#endif //HAVE_N900
 
         updateContentItemMode(index, listCell);
     }
@@ -244,7 +245,7 @@ void MListPage::setPlainListModel()
     list->setItemModel(proxyModel);
 
     imageLoader = new PhoneBookImageLoader;
-#endif
+#endif //HAVE_N900
 
     // when list is moving we shouldn't do any processing, which may happen
     connect(list, SIGNAL(panningStarted()), imageLoader, SLOT(stopLoadingPictures()));
@@ -258,7 +259,7 @@ void MListPage::setPlainListModel()
     loadPicturesInVisibleItems();
 #else
     changeAmountOfItemInList(0);
-#endif
+#endif //HAVE_N900
 }
 
 MComboBox *MListPage::createComboBoxAction(const QString &title, const QStringList &itemsList)
@@ -298,7 +299,7 @@ void MListPage::createActions()
     amountOfItemsList << "50 items" << "100 items" << "200 items" << "1000 items";
     combo = createComboBoxAction("Items in model", amountOfItemsList);
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeAmountOfItemInList(int)));
-#endif
+#endif //HAVE_N900
 
     QStringList sortingOrderList;
     sortingOrderList << "None" << "Ascending" << "Descending";
@@ -352,11 +353,18 @@ void MListPage::changeSortingOrder(int index)
     switch (index) {
     case None:
         break;
-    case Ascending:
+#ifndef HAVE_N900
         proxyModel->sort(0, Qt::AscendingOrder);
+#else
+         model->sort(0, Qt::AscendingOrder);
+#endif //HAVE_N900
         break;
     case Descending:
-        proxyModel->sort(0, Qt::DescendingOrder);        
+#ifndef HAVE_N900
+        proxyModel->sort(0, Qt::DescendingOrder);
+#else
+        model->sort(0, Qt::DescendingOrder);
+#endif //HAVE_N900;
         break;
     }
     currentSortingIndex = index;
@@ -381,7 +389,7 @@ void MListPage::changeAmountOfItemInList(int index)
     changeSortingOrder(currentSortingIndex);
     changeListMode(currentListModeIndex);
 }
-#endif
+#endif //HAVE_N900
 
 void MListPage::changeListMode(int index)
 {
@@ -390,14 +398,14 @@ void MListPage::changeListMode(int index)
         list->setShowGroups(false);
 #ifndef HAVE_N900
         model->setGrouped(false);
-#endif
+#endif //HAVE_N900
         break;
 
     case Grouped:
         list->setShowGroups(true);
 #ifndef HAVE_N900
         model->setGrouped(true);        
-#endif
+#endif //HAVE_N900
         break;
     }
 
@@ -456,7 +464,9 @@ void MListPage::changeLiveFilteringMode(int index)
 
     if(enableLF) {
         list->filtering()->setEnabled(true);
+#ifndef HAVE_N900
         list->filtering()->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
+#endif //HAVE_N900
         list->filtering()->editor()->setVisible(false);
         connect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB())); 
         connect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged())); 
@@ -485,7 +495,7 @@ void MListPage::removeListItem()
         mDebug("MListPage::removeListItem") << "Row about to be removed: " << longTappedIndex.row();
 #ifndef HAVE_N900
         proxyModel->removeRow(longTappedIndex.row(), longTappedIndex.parent());
-#endif
+#endif //HAVE_N900
     }
 }
 
@@ -503,7 +513,9 @@ void MListPage::liveFilteringTextChanged()
     // Highlighting matching live filtering text can be done by
     // passing the text to cell creator and updating visible items
     cellCreator->highlightByText(list->filtering()->editor()->text());
+#ifndef HAVE_N900
     static_cast<PhoneBookModel*>(model)->updateData(list->firstVisibleItem(), list->lastVisibleItem());
+#endif //HAVE_N900
 }
 
 void MListPage::filteringVKB()

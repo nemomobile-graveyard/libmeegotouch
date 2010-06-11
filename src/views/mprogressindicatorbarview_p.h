@@ -21,14 +21,16 @@
 #define MPROGRESSINDICATORBARVIEW_P_H
 
 #include <QObject>
+#include "mprogressindicatorbarview.h"
 
 class MStyle;
 class MProgressIndicator;
 class QPixmap;
-class QTimer;
+class QPropertyAnimation;
 
-class MProgressIndicatorBarViewPrivate
+class MProgressIndicatorBarViewPrivate : public QObject
 {
+    Q_OBJECT
     Q_DECLARE_PUBLIC(MProgressIndicatorBarView)
 
 protected:
@@ -36,15 +38,23 @@ protected:
 
 public:
     MProgressIndicatorBarViewPrivate();
-    virtual ~MProgressIndicatorBarViewPrivate();
+    ~MProgressIndicatorBarViewPrivate();
+
+    Q_PROPERTY(qreal position READ getPosition WRITE setPosition)
+
+    qreal getPosition();
+    void setPosition(qreal pos);
+
+    void animate(bool);
+    void updateAnimation();
 
     MProgressIndicator *controller;
 
     float elementSize;
     int activeElementCount;
-    int speed;
     qreal position;
-    QTimer *timer;
+    QPropertyAnimation *animation;
+    int width;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;
