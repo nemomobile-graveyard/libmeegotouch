@@ -332,6 +332,7 @@ void PhoneBookImageLoader::processJobQueue()
 void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
 {
 #ifndef HAVE_N900    
+    QModelIndex realIndex = index;
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(index.model());
     Q_ASSERT(model);
     if (model) {
@@ -343,10 +344,13 @@ void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
             // one more cast step needed to get the
             // the correct source index.
             MSortFilterProxyModel *filterModel = dynamic_cast<MSortFilterProxyModel *>(sortModel->sourceModel());
-            if (filterModel)
+            if (filterModel) {
                 phoneBookModel = dynamic_cast<PhoneBookModel *>(filterModel->sourceModel());
+                realIndex = sortModel->mapToSource(index);
+                sortModel = filterModel;
+            }
         }
-        phoneBookModel->thumbnailWasLoaded(sortModel->mapToSource(index));
+        phoneBookModel->thumbnailWasLoaded(sortModel->mapToSource(realIndex));
     }
 #endif
 }
