@@ -30,13 +30,7 @@
 
 #include <QtTest/QtTest>
 
-MWidgetModel::~MWidgetModel()
-{
-}
-
-MExtensionHandleModel::~MExtensionHandleModel()
-{
-}
+const MTheme::ViewType MWidgetController::defaultType = "default";
 
 bool fileExists = false;
 bool QFile::exists(const QString &fileName)
