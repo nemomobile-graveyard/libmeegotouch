@@ -51,6 +51,17 @@ public:
     virtual ~MStyleSheet();
 
     /*!
+      \deprecated Please use the overloaded version instead.
+     */
+    static MStyle *style(const QList<const MStyleSheet *>& sheets,
+                           const QString &styleClassName,
+                           const QString &objectName,
+                           const QString &mode,
+                           const QString &type,
+                           M::Orientation orientation,
+                           const MWidgetController *parent);
+
+    /*!
      * \brief Creates and caches a new style object or retrieves existing from cache
      * \param sheets            A list of stylesheets
      * \param styleClassName    Name of the style class to be created
@@ -61,6 +72,7 @@ public:
      * \param parent            Parent object
      */
     static MStyle *style(const QList<const MStyleSheet *>& sheets,
+                           const QList<QPair<const QMetaObject*, QList<const MStyleSheet*> > >& parentsSheets,
                            const QString &styleClassName,
                            const QString &objectName,
                            const QString &mode,

@@ -101,18 +101,26 @@ public:
                               const MWidgetController *parent,
                               const QList<SelectorInfo>& parentInfo);
 
+    static bool matchParent(MStyleSheetSelector *selector,
+                            const QMetaObject* mobj,
+                            unsigned int sceneOrder,
+                            unsigned int &parentPriority);
+
+    static bool matchParents(MStyleSheetSelector *selector,
+                             const MWidgetController *parent,
+                             unsigned int &parentPriority);
+
     static bool match(MStyleSheetSelector *selector,
                       const QMetaObject &styleMetaObject,
                       const QString &objectName,
                       const QString &mode,
                       const QString &type,
                       M::Orientation orientation,
-                      const MWidgetController *parent,
-                      unsigned int &classPriority,
-                      unsigned int &parentPriority);
+                      unsigned int &classPriority);
 
     static void getMatchingSelectorsWithParent(const QList<const MStyleSheet *>& sheets,
             const QMetaObject &styleMetaObject,
+            const QList<QPair<const QMetaObject*, QList<const MStyleSheet*> > > parentsSheets,
             const QString &objectName,
             const QString &mode,
             const QString &type,
