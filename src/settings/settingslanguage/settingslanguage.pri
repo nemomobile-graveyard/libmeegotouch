@@ -1,8 +1,8 @@
-MGEN_STYLE_HEADERS += \
+STYLE_HEADERS += \
     settingslanguage/msettingslanguagesettingsfactorystyle.h
 
 PUBLIC_HEADERS += \
-    $$MGEN_STYLE_HEADERS \
+    $$STYLE_HEADERS \
     settingslanguage/msettingslanguageparser.h \
     settingslanguage/msettingslanguagebinary.h \
     settingslanguage/msettingslanguagewidget.h \

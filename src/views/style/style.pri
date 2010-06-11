@@ -1,7 +1,7 @@
 STYLE_SRC_DIR=./style
 INCLUDEPATH+=./style
 
-MGEN_STYLE_HEADERS += \
+STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mapplicationpagestyle.h \
     $$STYLE_SRC_DIR/mbuttonstyle.h \
     $$STYLE_SRC_DIR/mbuttoniconstyle.h \
@@ -54,4 +54,4 @@ MGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mbubbleitemstyle.h \
 
 PUBLIC_HEADERS += \
-    $$MGEN_STYLE_HEADERS \
+    $$STYLE_HEADERS \

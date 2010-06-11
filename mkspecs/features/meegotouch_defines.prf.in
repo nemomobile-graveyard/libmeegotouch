@@ -27,8 +27,6 @@ win32 {
     M_PREFIX = /
 }
 
-M_MMOC_EXECUTABLE = @@M_MMOC_EXECUTABLE@@
-
 # Directories
 unix|win32 {
     M_INSTALL_BIN = $$M_PREFIX/bin
@@ -101,11 +99,4 @@ win32 {
     M_XDG_DIR = $$M_INSTALL_SYSCONF/xdg
     M_DBUS_INTERFACES_DIR = /usr/share/dbus-1/interfaces
     M_DBUS_SERVICES_DIR = $$M_INSTALL_DATA/dbus-1/services
-}
-
-#mmoc execatable
-contains (M_MMOC_EXECUTABLE, mmoc.pl) {
-    M_MMOC_EXECUTABLE = perl $$M_INSTALL_BIN/$$M_MMOC_EXECUTABLE
-} else {
-    M_MMOC_EXECUTABLE = $$M_INSTALL_BIN/$$M_MMOC_EXECUTABLE
 }

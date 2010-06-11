@@ -608,11 +608,6 @@ else
     mv -f "$M_QMAKE_CACHE.tmp" "$M_QMAKE_CACHE"
 fi
 
-M_MMOC_EXECUTABLE="mmoc"
-if [ "$IS_ARMEL" = "yes" ]; then
-    M_MMOC_EXECUTABLE="mmoc.pl"
-fi
-
 MEEGOTOUCH_DEFINES_PRF="$outpath/mkspecs/features/meegotouch_defines.prf"
 
 # and now we generate a meegotouch_defines.prf that will contain the right
@@ -621,7 +616,7 @@ cat "$relpath/mkspecs/features/meegotouch_defines.prf.in" \
 | sed -e "s,@@M_UNIX_INSTALL_PREFIX@@,$M_INSTALL_PREFIX,g" \
 | sed -e "s,@@M_UNIX_INSTALL_SYSCONFDIR@@,$M_INSTALL_SYSCONFDIR,g" \
 | sed -e "s,@@M_UNIX_INSTALL_LIBDIR@@,$M_INSTALL_LIBDIR,g" \
-| sed -e "s,@@M_MMOC_EXECUTABLE@@,$M_MMOC_EXECUTABLE,g" > "$MEEGOTOUCH_DEFINES_PRF.tmp"
+> "$MEEGOTOUCH_DEFINES_PRF.tmp"
 
 # replace meegotouch_defines.prf if it differs from the newly created temp file
 if cmp -s "$MEEGOTOUCH_DEFINES_PRF.tmp" "$MEEGOTOUCH_DEFINES_PRF"; then

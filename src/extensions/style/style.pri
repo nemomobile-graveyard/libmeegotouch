@@ -1,4 +1,4 @@
-MGEN_STYLE_HEADERS += \
+STYLE_HEADERS += \
     style/mapplethandlestyle.h \
     style/mappletinventorystyle.h \
     style/mapplicationextensionareastyle.h \
@@ -7,4 +7,4 @@ MGEN_STYLE_HEADERS += \
     style/mmashupcanvasstyle.h \
 
 PUBLIC_HEADERS += \
-    $$MGEN_STYLE_HEADERS
+    $$STYLE_HEADERS

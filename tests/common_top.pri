@@ -3,6 +3,11 @@ include(check.pri)
 # for defines
 include(../mkspecs/common.pri)
 
+# for mmoc and mgen settings
+include(../src/predeps.pri)
+include(../mkspecs/features/meegotouch_mmoc.prf)
+include(../mkspecs/features/meegotouch_mgen.prf)
+
 MSRCDIR = ../../src
 STUBSDIR = ../stubs
 INCLUDEPATH += \

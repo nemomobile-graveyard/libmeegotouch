@@ -1,36 +1,43 @@
 QMAKE_EXTRA_TARGETS += build_mgen build_mmoc
 
+build_moc.target = ../mmoc/mmoc
 build_gen.target = ../mgen/mgen
 win32 {
-    build_mgen.commands = \
-        cd $$M_BUILD_TREE/mgen && mingw32-make
-
-    # FIXME make it work for release build too
-    MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/debug/mgen.exe
-} else {
-    build_mgen.commands = \
-        cd $$M_BUILD_TREE/mgen && qmake && make
-
-    MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/mgen
-}
-
-build_moc.target = ../mmoc/mmoc
-win32 {
-    build_mmmoc.commands = \
+    build_mmoc.commands = \
         cd $$M_BUILD_TREE/mmmoc && mingw32-make
 
-    # FIXME make it work for release build too
-    MMOC_EXECUTABLE = $$M_BUILD_TREE/mgen/debug/mmoc.exe
+    build_mgen.commands = \
+        cd $$M_BUILD_TREE/mgen && mingw32-make
 } else {
     build_mmoc.commands = \
         cd $$M_BUILD_TREE/mmoc && qmake && make
 
-    MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/mmoc
+    build_mgen.commands = \
+        cd $$M_BUILD_TREE/mgen && qmake && make
 }
 
-MMOC_PERL_SCRIPT = $$M_BUILD_TREE/mmoc/mmoc.pl
 
-MMOC_PERL = perl $$MMOC_PERL_SCRIPT
+# make sure mmoc executable is found
 win32 {
-    MMOC_PERL = perl.exe $$MMOC_PERL_SCRIPT
+    M_MMOC_EXECUTABLE = perl.exe $$M_SOURCE_TREE/mmoc/mmoc.pl
+} else {
+    contains(DEFINES, IS_ARMEL) {
+        M_MMOC_EXECUTABLE = perl $$M_SOURCE_TREE/mmoc/mmoc.pl
+    } else {
+        M_MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/mmoc
+    }
 }
+
+
+# make sure mgen executable is found
+win32 {
+    debug {
+        M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/debug/mgen.exe
+    } else {
+        M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/release/mgen.exe
+    }
+} else {
+    M_MGEN_EXECUTABLE = $$M_BUILD_TREE/mgen/mgen
+}
+
+PRE_TARGETDEPS += $$M_MGEN_EXECUTABLE $$M_MMOC_EXECUTABLE

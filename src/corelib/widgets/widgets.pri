@@ -65,7 +65,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mdetailedlistitem.h \
     $$WIDGETS_SRC_DIR/madvancedlistitem.h \
 
-MGEN_MODEL_HEADERS += \
+MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.h \
     $$WIDGETS_SRC_DIR/mbuttonmodel.h \
     $$WIDGETS_SRC_DIR/mcomboboxmodel.h \
@@ -102,7 +102,7 @@ MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mbubbleitemmodel.h \
 
 PUBLIC_HEADERS += \
-    $$MGEN_MODEL_HEADERS \
+    $$MODEL_HEADERS \
 
 PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mpannableviewportlayout.h \

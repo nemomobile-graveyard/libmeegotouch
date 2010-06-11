@@ -33,7 +33,7 @@ SOURCES += \
 
 # unit test and unit classes
 
-MGEN_MODEL_HEADERS += \
+MODEL_HEADERS += \
     $$MSRCDIR/extensions/applicationextension/mextensionhandlemodel.h \
     $$MSRCDIR/corelib/widgets/mwidgetmodel.h
 
@@ -51,6 +51,6 @@ HEADERS += \
     $$MSRCDIR/corelib/core/mfiledatastore.h \
     $$MSRCDIR/corelib/core/mdatastore.h \
     $$MSRCDIR/corelib/core/mdataaccess.h \
-    $$MGEN_MODEL_HEADERS
+    $$MODEL_HEADERS
 
 include(../common_bot.pri)

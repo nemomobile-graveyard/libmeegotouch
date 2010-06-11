@@ -17,7 +17,7 @@ PRIVATE_HEADERS += \
     $$STYLE_SRC_DIR/mstylesheet_p.h \
     $$STYLE_SRC_DIR/mstylesheetselector_p.h
 
-MGEN_STYLE_HEADERS += \
+STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mstyle.h \
     $$STYLE_SRC_DIR/mwidgetstyle.h \
     $$STYLE_SRC_DIR/mabstractlayoutpolicystyle.h \
@@ -37,7 +37,7 @@ MGEN_STYLE_HEADERS += \
 
 
 PUBLIC_HEADERS += \
-    $$MGEN_STYLE_HEADERS \
+    $$STYLE_HEADERS \
 
 SOURCES += \
     $$STYLE_SRC_DIR/mstyle.cpp \

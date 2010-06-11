@@ -18,7 +18,7 @@ SOURCES += \
     ../stubs/stubbase.cpp
 
 # unit test and unit classes
-MGEN_MODEL_HEADERS += \
+MODEL_HEADERS += \
     $$MSRCDIR/extensions/mashup/mashup/mapplethandlemodel.h \
     $$MSRCDIR/extensions/applicationextension/mextensionhandlemodel.h \
 
@@ -31,6 +31,6 @@ HEADERS += \
     $$MSRCDIR/extensions/mashup/mashup/mappletinstancemanagerdbusadaptor.h \
     $$MSRCDIR/extensions/applicationextension/mextensionhandle.h \
     $$MSRCDIR/extensions/mextensionwatcher.h \
-    $$MGEN_MODEL_HEADERS
+    $$MODEL_HEADERS
 
 include(../common_bot.pri)

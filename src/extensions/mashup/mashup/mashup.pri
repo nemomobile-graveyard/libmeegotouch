@@ -54,8 +54,8 @@ SOURCES += $$MASHUP_MASHUP_SRC_DIR/mappletbutton.cpp \
     $$MASHUP_MASHUP_SRC_DIR/mgconfdatastore.cpp \
     $$MASHUP_MASHUP_SRC_DIR/mappletinstancemanagerdbusadaptor.cpp
 
-MGEN_MODEL_HEADERS += $$MASHUP_MASHUP_SRC_DIR/mapplethandlemodel.h \
+MODEL_HEADERS += $$MASHUP_MASHUP_SRC_DIR/mapplethandlemodel.h \
     $$MASHUP_MASHUP_SRC_DIR/mmashupcanvasmodel.h \
     $$MASHUP_MASHUP_SRC_DIR/mappletinventorymodel.h
 
-PUBLIC_HEADERS += $$MGEN_MODEL_HEADERS
+PUBLIC_HEADERS += $$MODEL_HEADERS

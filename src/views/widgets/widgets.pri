@@ -5,12 +5,12 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mapplicationmenubutton.h \
     $$WIDGETS_SRC_DIR/mlistindex.h \
 
-MGEN_MODEL_HEADERS += \
+MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mapplicationmenubuttonmodel.h \
     $$WIDGETS_SRC_DIR/mlistindexmodel.h \
 
 PRIVATE_HEADERS += \
-    $$MGEN_MODEL_HEADERS \
+    $$MODEL_HEADERS \
     $$WIDGETS_SRC_DIR/mcontainerheader_p.h \
     $$WIDGETS_SRC_DIR/mbubbleitembackground_p.h \
 

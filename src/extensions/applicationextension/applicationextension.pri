@@ -42,9 +42,9 @@ SOURCES += $$EXTENSION_DIR/mextensionarea.cpp \
     $$EXTENSION_DIR/mapplicationextensionhandleview.cpp
 
 
-MGEN_MODEL_HEADERS += $$EXTENSION_DIR/mextensionareamodel.h \
+MODEL_HEADERS += $$EXTENSION_DIR/mextensionareamodel.h \
     $$EXTENSION_DIR/mapplicationextensionareamodel.h \
     $$EXTENSION_DIR/mextensionhandlemodel.h
 
 
-PUBLIC_HEADERS += $$MGEN_MODEL_HEADERS
+PUBLIC_HEADERS += $$MODEL_HEADERS

@@ -1,14 +1,15 @@
 # this file contains the parts that are common to all libs
 
 MOC_DIR = .moc
-GEN_DIR = .gen
+M_MGEN_OUTDIR = .gen
 OBJECTS_DIR = .obj
 DESTDIR = $$M_BUILD_TREE/lib
 TEMPLATE = lib
 
 include(../mkspecs/common.pri)
 include(predeps.pri)
-include(mgen.pri)
+include(../mkspecs/features/meegotouch_mmoc.prf)
+include(../mkspecs/features/meegotouch_mgen.prf)
 
 VERSION = $${M_VERSION}
 DEFINES += M_VERSION=\\\"$${M_VERSION}\\\"
@@ -19,16 +20,9 @@ INCLUDEPATH += $${OUT_PWD}/.gen
 
 QMAKE_STRIP = echo
 
-PRE_TARGETDEPS += $$MGEN_EXECUTABLE $$MMOC_EXECUTABLE
-
 CONFIG += qt warn_on depend_includepath qmake_cache target_qt dll create_prl
 !win32:CONFIG += link_pkgconfig
 macx:CONFIG += lib_bundle
-
-QMAKE_MOC = $$MMOC_EXECUTABLE
-contains(DEFINES, IS_ARMEL) {
-    QMAKE_MOC = $$MMOC_PERL
-}
 
 QMAKE_CFLAGS += -Werror
 
@@ -144,4 +138,3 @@ QMAKE_CLEAN += \
     ./.obj/*.gcda \
 
 target.path = $$M_INSTALL_LIBS
-
