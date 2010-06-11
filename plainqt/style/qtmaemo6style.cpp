@@ -239,7 +239,7 @@ void QtMaemo6StylePrivate::drawWindowBackground(QWidget *widget)
 
         painter.end();
 
-        QPalette palette;
+        QPalette palette = widget->palette();
         palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
         widget->setPalette(palette);
     }
