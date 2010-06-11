@@ -62,7 +62,6 @@ public:
     void setInitialPageToShow(const QString& initialPageToShow);
 
 public slots:
-    void createContentLazily();
     void handleListItemClick();
     void showThemeSelectionDialog();
     void showOrientationSelectionDialog();
