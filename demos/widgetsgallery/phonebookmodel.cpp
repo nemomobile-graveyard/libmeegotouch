@@ -281,8 +281,16 @@ void PhoneBookImageLoader::addJob(const QModelIndex &index)
     // May happen if size of list model was changed
     if (entry == NULL)
         return;
+    
+    foreach (Job job, thumbnailLoadingJobs) {
+        if (job.entry == entry)
+            return;
+    }
 
     if (entry->thumbnailId.isEmpty())
+        return;
+
+    if (!entry->thumbnail.isNull())
         return;
 
     Job job;
