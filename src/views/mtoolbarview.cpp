@@ -427,8 +427,8 @@ MWidget *MToolBarViewPrivate::createWidget(QAction *action)
             MButton *button = new MButton;
 
             button->setObjectName("toolbaractioncommand");
-            if (widgetAction && !widgetAction->objectName().isEmpty())
-                button->setObjectName(button->objectName() + "_" + widgetAction->objectName());
+            if (action && !action->objectName().isEmpty())
+                button->setObjectName(button->objectName() + "_" + action->objectName());
 
             if(buttonGroup) {
                 button->setViewType("toolbartab");
