@@ -23,8 +23,6 @@
 #include "mphysics2dpanning.h"
 #include "mphysics2dpanning_p.h"
 
-static const int PositionNoiseDampingDelta =  2; /* in px */
-
 MPhysics2DPanningPrivate::MPhysics2DPanningPrivate(MPhysics2DPanning *publicObject) :
     enabled(true),
     range(QRectF(0.0, 0.0, 0.0, 0.0)),
@@ -448,10 +446,8 @@ void MPhysics2DPanning::integrateAxis(Qt::Orientation orientation,
         acceleration = force - pointerDifference;
         velocity += acceleration;
 
-        if (abs(pointerDifference) > PositionNoiseDampingDelta) {
-            position           -= pointerDifference;
-            pointerDifference = 0;
-        }
+        position           -= pointerDifference;
+        pointerDifference = 0;
 
     } else {
 
