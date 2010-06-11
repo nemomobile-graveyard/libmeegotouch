@@ -166,28 +166,15 @@ void MButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     }
 
     Q_D(MButtonSwitchView);
-    QRect thumb(d->thumbPos(), d->thumbSize());
 
-    if (thumb.contains(event->pos().toPoint())) {
-
-        //start drag from ON or OFF position
-        d->m_thumbPos = d->thumbPos();
-
-
-        //if (style()->pressFeedback()) {
-        //    style()->pressFeedback()->play();
-        //}
-
-        d->mouseOffset = event->pos().x() - d->controller->pos().x() - d->m_thumbPos.x();
-
-        d->m_thumbDown = true;
-    }
+    //start drag from ON or OFF position
+    d->m_thumbPos = d->thumbPos();
+    d->mouseOffset = event->pos().x() - d->controller->pos().x() - d->m_thumbPos.x();
+    d->m_thumbDown = true;
 
     //set switch to down mode
     model()->setDown(true);
 }
-
-
 
 void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
@@ -260,7 +247,11 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 void MButtonSwitchView::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
+    Q_D(MButtonSwitchView);    
     model()->setDown(false);
+    d->m_thumbDown = false;
+    d->m_thumbDragged = false;
+    d->m_maskedSliderPm = QPixmap();
     update();
 }
 
