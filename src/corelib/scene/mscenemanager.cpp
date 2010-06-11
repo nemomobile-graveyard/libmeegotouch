@@ -1313,11 +1313,11 @@ void MSceneManagerPrivate::_q_inputPanelOpened()
         return;
 
     const bool widgetOnPage = onApplicationPage(focusedInputWidget);
-    if (navBar && widgetOnPage) {
+    if (!navBarHidden && navBar && widgetOnPage) {
         navBarHidden = true;
         q->disappearSceneWindow(navBar);
     }
-    if (escapeButtonPanel && (widgetOnPage || (navBar && navBar->isAncestorOf(focusedInputWidget)))) {
+    if (!escapeButtonHidden && escapeButtonPanel && (widgetOnPage || (navBar && navBar->isAncestorOf(focusedInputWidget)))) {
         escapeButtonHidden = true;
         q->disappearSceneWindow(escapeButtonPanel);
     }
