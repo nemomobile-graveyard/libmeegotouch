@@ -3,7 +3,8 @@ include(../common_mextensions.pri)
 
 INCLUDEPATH += \
     $$MSRCDIR/events \
-    $$MSRCDIR/extensions
+    $$MSRCDIR/extensions \
+    $$MSRCDIR/corelib/.gen
 
 QT += core network gui svg dbus
 
@@ -17,16 +18,19 @@ SOURCES += \
     ../stubs/stubbase.cpp
 
 # unit test and unit classes
+MGEN_MODEL_HEADERS += \
+    $$MSRCDIR/extensions/mashup/mashup/mapplethandlemodel.h \
+    $$MSRCDIR/extensions/applicationextension/mextensionhandlemodel.h \
+
 HEADERS += \
     ut_mappletinstancemanager.h \
     $$MSRCDIR/extensions/mashup/mashup/mappletinstancemanager.h \
     $$MSRCDIR/extensions/mashup/mashup/mappletinstancedata.h \
     $$MSRCDIR/extensions/mashup/mashup/mappletid.h \
     $$MSRCDIR/extensions/mashup/mashup/mapplethandle.h \
-    $$MSRCDIR/extensions/mashup/mashup/mapplethandlemodel.h \
     $$MSRCDIR/extensions/mashup/mashup/mappletinstancemanagerdbusadaptor.h \
     $$MSRCDIR/extensions/applicationextension/mextensionhandle.h \
-    $$MSRCDIR/extensions/applicationextension/mextensionhandlemodel.h \
-    $$MSRCDIR/extensions/mextensionwatcher.h
+    $$MSRCDIR/extensions/mextensionwatcher.h \
+    $$MGEN_MODEL_HEADERS
 
 include(../common_bot.pri)

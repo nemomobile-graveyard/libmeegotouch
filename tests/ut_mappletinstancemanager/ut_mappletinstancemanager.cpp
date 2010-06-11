@@ -136,14 +136,6 @@ void MAppletInstanceManagerDBusAdaptor::instantiateAppletFromPackage(const QStri
 {
 }
 
-MAppletHandleModel::~MAppletHandleModel()
-{
-}
-
-MExtensionHandleModel::~MExtensionHandleModel()
-{
-}
-
 bool Ut_MAppletInstanceManager::captureCalls = false;
 QString Ut_MAppletInstanceManager::callServiceName;
 QString Ut_MAppletInstanceManager::callObjectPath;
