@@ -21,7 +21,7 @@
 
 #include <MAbstractCellCreator>
 #include <MButton>
-#include <MContentItem>
+#include <MBasicListItem>
 #include <MDialog>
 #include <MLabel>
 #include <MLayout>
@@ -33,19 +33,20 @@
 #include <QStringListModel>
 #include <QTimer>
 
-class MultipleSelectionDialogsPageCellCreator : public MAbstractCellCreator<MContentItem>
+class MultipleSelectionDialogsPageCellCreator : public MAbstractCellCreator<MBasicListItem>
 {
 public:
-    MultipleSelectionDialogsPageCellCreator() : MAbstractCellCreator<MContentItem>() {
+    MultipleSelectionDialogsPageCellCreator() : MAbstractCellCreator<MBasicListItem>() {
     }
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
         Q_UNUSED(index);
 
-        MContentItem *cell = dynamic_cast<MContentItem *>(recycler.take(MContentItem::staticMetaObject.className()));
+        MBasicListItem *cell = dynamic_cast<MBasicListItem *>(recycler.take(MBasicListItem::staticMetaObject.className()));
         if (cell == NULL) {
-            cell = new MContentItem(MContentItem::SingleTextLabel);
-            cell->setObjectName("wgMainPageCategoryItem");
+            cell = new MBasicListItem(MBasicListItem::SingleTitle);
+            cell->initLayout();
+            cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
 
@@ -53,7 +54,7 @@ public:
     }
 
     void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MContentItem *item = qobject_cast<MContentItem*>(cell);
+        MBasicListItem *item = qobject_cast<MBasicListItem*>(cell);
         if(!item)
             return;
 

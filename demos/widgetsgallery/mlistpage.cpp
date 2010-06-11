@@ -255,9 +255,7 @@ void MListPage::setPlainListModel()
     QTimer::singleShot(1500, this, SLOT(loadPicturesInVisibleItems()));
 
 
-#ifdef HAVE_N900
-    loadPicturesInVisibleItems();
-#else
+#ifndef HAVE_N900
     changeAmountOfItemInList(0);
 #endif //HAVE_N900
 }
@@ -368,7 +366,7 @@ void MListPage::changeSortingOrder(int index)
         break;
     }
     currentSortingIndex = index;
-    loadPicturesInVisibleItems();
+    QTimer::singleShot(1500, this, SLOT(loadPicturesInVisibleItems()));
 }
 
 #ifndef HAVE_N900
@@ -412,7 +410,7 @@ void MListPage::changeListMode(int index)
     currentListModeIndex = index;
 
     changeSortingOrder(currentSortingIndex);
-    loadPicturesInVisibleItems();
+    QTimer::singleShot(1500, this, SLOT(loadPicturesInVisibleItems()));
 }
 
 void MListPage::changeAmountOfColumns(int index)

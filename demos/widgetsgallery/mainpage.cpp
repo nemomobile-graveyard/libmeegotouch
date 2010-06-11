@@ -59,7 +59,7 @@
 
 #include <MApplication>
 #include <MAbstractCellCreator>
-#include <MContentItem>
+#include <MBasicListItem>
 #include <MLocale>
 #include <MLayout>
 #include <MButton>
@@ -241,19 +241,20 @@ private:
     QMap<int, TemplatePageNameList> galleryPageNames;
 };
 
-class WidgetGalleryCategoryCellCreator : public MAbstractCellCreator<MContentItem>
+class WidgetGalleryCategoryCellCreator : public MAbstractCellCreator<MBasicListItem>
 {
 public:
-    WidgetGalleryCategoryCellCreator() : MAbstractCellCreator<MContentItem>() {
+    WidgetGalleryCategoryCellCreator() : MAbstractCellCreator<MBasicListItem>() {
     }
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
         Q_UNUSED(index);
 
-        MContentItem *cell = dynamic_cast<MContentItem *>(recycler.take(MContentItem::staticMetaObject.className()));
+        MBasicListItem *cell = dynamic_cast<MBasicListItem *>(recycler.take(MBasicListItem::staticMetaObject.className()));
         if (cell == NULL) {
-            cell = new MContentItem(MContentItem::SingleTextLabel);
-            cell->setObjectName("wgMainPageCategoryItem");
+            cell = new MBasicListItem(MBasicListItem::SingleTitle);
+            cell->initLayout();
+            cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
 
@@ -261,7 +262,7 @@ public:
     }
 
     void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MContentItem *item = qobject_cast<MContentItem*>(cell);
+        MBasicListItem *item = qobject_cast<MBasicListItem*>(cell);
         if(!item)
             return;
 

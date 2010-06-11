@@ -25,7 +25,6 @@
 
 #include <MApplication>
 #include <MApplicationWindow>
-#include <MContentItem>
 #include <MAbstractCellCreator>
 #include <MLabel>
 #include <MLinearLayoutPolicy>

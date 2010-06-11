@@ -332,11 +332,6 @@ void ContentItemsPage::populateLayout()
                                        new AdvancedListItemCreator(MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons)));
     contentItemLists.append(createList("Icon with Title Progress Indicator and Top Side Icon",
                                        new AdvancedListItemCreator(MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon)));
-
-    /*contentItemLists.append(createList("Single Icon", MContentItem::SingleIcon));
-    contentItemLists.append(createList("Icon and Single Text Label Vertical", MContentItem::IconAndSingleTextLabelVertical));
-    contentItemLists.append(createList("Icon and Two Text Labels Vertical", MContentItem::IconAndTwoTextLabelsVertical));
-    contentItemLists.append(createList("Two Icons Two Widgets", MContentItem::TwoIconsTwoWidgets));*/
 }
 
 MList *ContentItemsPage::createList(const QString &title, MCellCreator *creator)

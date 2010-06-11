@@ -2,7 +2,7 @@
 #include "mainpage.h"
 
 #include <MAbstractCellCreator>
-#include <MContentItem>
+#include <MBasicListItem>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MList>
@@ -34,19 +34,20 @@ private:
     QModelIndex categoryIndex;
 };
 
-class WidgetGalleryCellCreator : public MAbstractCellCreator<MContentItem>
+class WidgetGalleryCellCreator : public MAbstractCellCreator<MBasicListItem>
 {
 public:
-    WidgetGalleryCellCreator() : MAbstractCellCreator<MContentItem>() {
+    WidgetGalleryCellCreator() : MAbstractCellCreator<MBasicListItem>() {
     }
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
         Q_UNUSED(index);
 
-        MContentItem *cell = dynamic_cast<MContentItem *>(recycler.take(MContentItem::staticMetaObject.className()));
+        MBasicListItem *cell = dynamic_cast<MBasicListItem *>(recycler.take(MBasicListItem::staticMetaObject.className()));
         if (cell == NULL) {
-            cell = new MContentItem(MContentItem::SingleTextLabel);
-            cell->setObjectName("wgMainCategoryPageGalleryItem");
+            cell = new MBasicListItem(MBasicListItem::SingleTitle);
+            cell->initLayout();
+            cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
 
@@ -54,7 +55,7 @@ public:
     }
 
     void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MContentItem *item = qobject_cast<MContentItem*>(cell);
+        MBasicListItem *item = qobject_cast<MBasicListItem*>(cell);
         if(!item)
             return;
 

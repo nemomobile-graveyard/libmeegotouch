@@ -22,7 +22,6 @@
 #include <QGraphicsGridLayout>
 #include <QTime>
 
-#include <MContentItem>
 #include <MImageWidget>
 #include <MAbstractCellCreator>
 #include <MLabel>
