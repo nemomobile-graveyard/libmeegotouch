@@ -30,6 +30,15 @@ M_REGISTER_WIDGET_NO_CREATE(MSceneLayerEffect)
 MSceneLayerEffectPrivate::MSceneLayerEffectPrivate()
 {
     layerPressedDirectly = false;
+
+    MWidgetFadeAnimation *fadeInAnimation = new MWidgetFadeAnimation;
+    fadeInAnimation->setTransitionDirection(MWidgetFadeAnimation::In);
+
+    MWidgetFadeAnimation *fadeOutAnimation = new MWidgetFadeAnimation;
+    fadeOutAnimation->setTransitionDirection(MWidgetFadeAnimation::Out);
+
+    appearanceAnimation = fadeInAnimation;
+    disappearanceAnimation = fadeOutAnimation;
 }
 
 MSceneLayerEffectPrivate::~MSceneLayerEffectPrivate()
@@ -41,6 +50,12 @@ MSceneLayerEffect::MSceneLayerEffect(const QString &effectType)
                      new MSceneLayerEffectModel(), MSceneWindow::LayerEffect,
                      effectType)
 {
+    Q_D(MSceneLayerEffect);
+
+    d->appearanceAnimation->setTargetWidget(this);
+    d->disappearanceAnimation->setTargetWidget(this);
+
+    setFlag(QGraphicsItem::ItemDoesntPropagateOpacityToChildren, true);
 }
 
 MSceneLayerEffect::~MSceneLayerEffect()

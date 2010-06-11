@@ -44,6 +44,7 @@ PUBLIC_HEADERS += \
     mdockwidgetview.h \
     mcontentitemview.h \
     mnavigationbarview.h \
+    mscenelayereffectdimview.h \
     mlistindexview.h \
     mlistitemview.h \
     mbubbleitemview.h \
@@ -115,6 +116,7 @@ SOURCES += \
     mdockwidgetview.cpp \
     mcontentitemview.cpp \
     mnavigationbarview.cpp \
+    mscenelayereffectdimview.cpp \
     mlistindexview.cpp \
     mlistitemview.cpp \
     mbubbleitemview.cpp \
