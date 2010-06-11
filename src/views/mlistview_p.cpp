@@ -485,6 +485,10 @@ QModelIndex MPlainListViewPrivate::flatRowToIndex(int row) const
 int MPlainListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
+
+    if (itemHeight == 0)
+        return 0;
+
     // Formula for calculating position of specific row is following:
     // row * itemHeight + row * hseparatorHeight = pos
     // to calculate row lets do basic math:
@@ -627,6 +631,9 @@ MWidget *MPlainMultiColumnListViewPrivate::createItem(int row)
 
 int MPlainMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 {
+    if (itemHeight == 0)
+        return 0;
+
     int columns = controllerModel->columns();
     int row = y / (hseparatorHeight + itemHeight) * columns;
 
@@ -870,7 +877,10 @@ int MGroupHeaderListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
 
-    if(headersPositions.size() == 0)
+    if (itemHeight == 0)
+        return 0;
+
+    if (headersPositions.size() == 0)
         return 0;
 
     int headerIndex = dFindLowerIndex(headersPositions, y);
@@ -1309,6 +1319,10 @@ int MMultiColumnListViewPrivate::hseparatorsCount() const
 int MMultiColumnListViewPrivate::locateVisibleRowAt(int y, int x)
 {
     Q_UNUSED(x);
+
+    if (itemHeight == 0)
+        return 0;
+
     int headerIndex = dFindLowerIndex(headersPositions, y);
     int headerRow = headersRows[headerIndex];
     int relativePos = y - headersPositions[headerIndex];
