@@ -43,6 +43,22 @@ class MSceneWindowPrivate;
  * manually resize and position a MSceneWindow you have to explicitly set
  * the managedManually property to true.
  *
+ * \section appear_methods Appearing and disappearing scene windows
+ *
+ * Scene windows introduce a new concept: They also appear and disappear
+ * instead of just being shown and hidden like regular graphics items.
+ *
+ * Thus the family of methods appear()/disappear()/dismiss() are different
+ * from show()/hide()/close()/isVisible().
+ *
+ * The first group revolves around the isVisible() property which has its
+ * meaning defined in the documentation for QGraphicsItem::setVisible().
+ *
+ * The second group is a higher level concept introduced by MSceneWindow/MSceneManager
+ * and is about the scene manager taking a scene window, adding it to the scene
+ * managed by him and setting its proper position, size, z value, parent item,
+ * etc (usually with animated transitions).
+ *
  * \sa MSceneManager
  */
 class M_EXPORT MSceneWindow : public MWidgetController
