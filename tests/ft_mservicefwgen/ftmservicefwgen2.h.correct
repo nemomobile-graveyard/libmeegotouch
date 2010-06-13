@@ -50,7 +50,7 @@ public:
      * @brief documentation for showSettings() method
      * @details documentation for showSettings() method2
      */
-    bool showSettings(  );
+    bool showSettings();
 
 public:
     /*!

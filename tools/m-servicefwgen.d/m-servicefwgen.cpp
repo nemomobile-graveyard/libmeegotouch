@@ -983,6 +983,7 @@ void processAdaptorHeaderFile()
                 }
 
                 // remove asyncTask attribute
+                bool chainTaskHasNoParameters = false;
                 bool isChainTask = false;
                 {
                     QRegExp matchThis("chainTask=\\\\\"(\\w+)\\\\\"\\s*");
@@ -990,6 +991,12 @@ void processAdaptorHeaderFile()
                         line.remove(matchThis);
                         isChainTask = matchThis.cap(1).contains("true");
                         line.remove(w.chainTag());
+                        if ( line.contains( "/>") ) {
+                            chainTaskHasNoParameters = true;
+                            line.replace( "/>", ">" ); // if the method has no args, it'll have a />, but we will add args, so we don't want this
+                        } else {
+                            chainTaskHasNoParameters = false;
+                        }
                     }
                 }
 
@@ -1004,6 +1011,10 @@ void processAdaptorHeaderFile()
                         << "\"      <arg direction=\\\"in\\\" type=\\\"s\\\" name=\\\"backServiceName\\\"/>\\n\"" << endl
                         << "\"      <arg direction=\\\"in\\\" type=\\\"s\\\" name=\\\"windowTitle\\\"/>\\n\"" << endl
                         << "\"      <arg direction=\\\"in\\\" type=\\\"u\\\" name=\\\"windowId\\\"/>\\n\"" << endl;
+                    if ( chainTaskHasNoParameters ) {
+                        newAdaptorHeaderStream
+                            << "\"    </method>\\n\"" << endl;
+                    }
                 }
             } else if (line.contains(w.chainTag() + "(") || line.contains(w.asyncTag() + "(")) {   // add parameters to the chain methods
                 if (line.contains(w.asyncTag())) {
@@ -1032,7 +1043,14 @@ void processAdaptorHeaderFile()
                 if (line.contains(w.chainTag())) {
                     hasChains = true;
                     line.remove(w.chainTag());
-                    line.replace("(", "(const QString &backServiceName, const QString &windowTitle, const uint windowId, ");
+
+                    QString parameterString = "(const QString &backServiceName, const QString &windowTitle, const uint windowId";
+
+                    bool methodHasParameters = !line.contains( QRegExp( "\\(\\s*\\)" ));
+                    if ( methodHasParameters ) {
+                        parameterString += ", ";
+                    }
+                    line.replace("(", parameterString);
                 }
 
                 newAdaptorHeaderStream << line << endl;
@@ -1234,21 +1252,33 @@ void processProxyHeaderFile()
 
                     QStringList paramNames = getParamNames(parameters);
 
+                    QString paramString;
+                    if ( parameters.isEmpty() ) {
+                        paramString = "";
+                    } else {
+                        paramString = " "+parameters+" ";
+                    }
+
                     wrapperHeaderStream <<
-"    " + returnType + " " + methodName + "( " + parameters + " );" << endl;
+                        "    " + returnType + " " + methodName + "(" + paramString + ");" << endl;
 
                     wrapperCppStream <<
-returnType + " " + w.upperCamelServiceName() + "::" + methodName + "( " + parameters + " )" << endl;
+                        returnType + " " + w.upperCamelServiceName() + "::" + methodName + "(" + paramString + ")" << endl;
 
                     wrapperCppStream <<
 "{" << endl;
 
+                    if ( parameters.isEmpty() ) {
+                        paramString = "";
+                    } else {
+                        paramString = " " + paramNames.join(", ")+" ";
+                    }
                     if (returnType == "void") {
                         wrapperCppStream <<
-"    static_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "( " + paramNames.join(", ") + " );" << endl;
+"    static_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "(" + paramString + ");" << endl;
                     } else {
                         wrapperCppStream <<
-"    return qobject_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "( " + paramNames.join(", ") + " ).value();" << endl;
+"    return qobject_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "(" + paramString + ").value();" << endl;
                     }
                     wrapperCppStream << "}\n" << endl;
                 }

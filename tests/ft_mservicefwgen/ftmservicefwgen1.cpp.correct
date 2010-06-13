@@ -6,6 +6,11 @@
 #include "ftmservicefwgen1.h"
 #include "ftmservicefwgen1proxy.h"
 
+void FtMServiceFwGen1::bug172441()
+{
+    static_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->bug172441();
+}
+
 bool FtMServiceFwGen1::showGridWithCapturedContent( int limit )
 {
     return qobject_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showGridWithCapturedContent( limit ).value();
@@ -26,9 +31,9 @@ bool FtMServiceFwGen1::showPage( const QString &targetPage, const QString &previ
     return qobject_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showPage( targetPage, previousPage ).value();
 }
 
-bool FtMServiceFwGen1::showSettings(  )
+bool FtMServiceFwGen1::showSettings()
 {
-    return qobject_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showSettings(  ).value();
+    return qobject_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showSettings().value();
 }
 
 FtMServiceFwGen1::FtMServiceFwGen1( const QString& preferredService, QObject* parent )

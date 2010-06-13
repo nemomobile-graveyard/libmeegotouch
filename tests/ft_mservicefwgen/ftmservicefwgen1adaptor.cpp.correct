@@ -47,6 +47,42 @@ FtMServiceFwGen1Adaptor::~FtMServiceFwGen1Adaptor()
     // destructor
 }
 
+void FtMServiceFwGen1Adaptor::bug172441(const QString &backServiceName, const QString &windowTitle, const uint windowId, )
+{
+    this->windowId = windowId;
+    this->backServiceName = backServiceName;
+
+    // handle method call com.nokia.fakegalleryserviceinterface.bug172441
+    QMetaObject::invokeMethod(parent(), "bug172441");
+
+    MApplicationWindow *appWindow = MApplication::activeApplicationWindow();
+    if (appWindow != 0) {
+        appWindow->setWindowTitle( windowTitle );
+        appWindow->currentPage()->setEscapeMode( MApplicationPageModel::EscapeManualBack );
+        // connect to the back button - assumes the above 'showImage' opens a
+        // new window and so the window referred to below is already the top one
+        connect(appWindow->currentPage(), SIGNAL(backButtonClicked()),
+                this, SLOT(goBack()));
+    }
+
+    // update the X server
+    {
+        XPropertyEvent p;
+        p.send_event = True;
+        p.display = QX11Info::display();
+        p.type   = PropertyNotify;
+        p.window = RootWindow(p.display, 0);
+        p.atom   = XInternAtom(p.display, "_NET_CLIENT_LIST", False);
+        p.state  = PropertyNewValue;
+        p.time   = CurrentTime;
+        XSendEvent(p.display, p.window, False, PropertyChangeMask,
+                (XEvent*)&p);
+
+        XSync(QX11Info::display(), False);
+    }
+
+}
+
 bool FtMServiceFwGen1Adaptor::showGridWithCapturedContent(int limit)
 {
     // handle method call com.nokia.fakegalleryserviceinterface.showGridWithCapturedContent

@@ -6,9 +6,9 @@
 #include "ftmservicefwgen3.h"
 #include "ftmservicefwgen3proxy.h"
 
-void FtMServiceFwGen3::sayBye(  )
+void FtMServiceFwGen3::sayBye()
 {
-    static_cast<FtMServiceFwGen3Proxy*>(interfaceProxy())->sayBye(  );
+    static_cast<FtMServiceFwGen3Proxy*>(interfaceProxy())->sayBye();
 }
 
 bool FtMServiceFwGen3::sayHelloMessage( const QString &message )

@@ -26,9 +26,9 @@ bool FtMServiceFwGen2::showPage( const QString &targetPage, const QString &previ
     return qobject_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showPage( targetPage, previousPage ).value();
 }
 
-bool FtMServiceFwGen2::showSettings(  )
+bool FtMServiceFwGen2::showSettings()
 {
-    return qobject_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showSettings(  ).value();
+    return qobject_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showSettings().value();
 }
 
 FtMServiceFwGen2::FtMServiceFwGen2( const QString& preferredService, QObject* parent )

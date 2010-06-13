@@ -15,11 +15,12 @@ class FtMServiceFwGen1 : public MServiceFwBaseIf
 Q_OBJECT
 
 public:
+    void bug172441();
     bool showGridWithCapturedContent( int limit );
     bool showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage );
     void showImage( const QString &uri, const QStringList &uriList );
     bool showPage( const QString &targetPage, const QString &previousPage );
-    bool showSettings(  );
+    bool showSettings();
 
 public:
     /*!

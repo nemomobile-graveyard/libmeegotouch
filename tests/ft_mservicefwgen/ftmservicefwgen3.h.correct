@@ -31,7 +31,7 @@ public:
      * @brief Say bye
      * @details Say bye bye and continue your conversation later
      */
-    void sayBye(  );
+    void sayBye();
 
     /**
      * @brief Say hello

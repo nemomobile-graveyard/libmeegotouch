@@ -26,10 +26,12 @@
       <arg name="" type="b" direction="out" />
     </method>
 
-    <method name="showSettings">      
+    <method name="showSettings">
       <arg name="" type="b" direction="out" />
     </method>
 
+    <method name="bug172441" chainTask="true">
+    </method>
 
   </interface>
 </node>
