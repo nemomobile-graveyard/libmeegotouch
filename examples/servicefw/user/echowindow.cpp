@@ -37,7 +37,7 @@ EchoWindow::EchoWindow()
 
     // check the interface is valid
     if (!textProcessorInterface->isValid()) {
-        disableTextProcessing(QString(0));
+        disableTextProcessing(QString());
         statusBar->showMessage("Err: Service unavailable");
     }
 
@@ -100,7 +100,7 @@ void EchoWindow::createGUI()
     label = new QLabel;
     label->setFrameStyle(QFrame::Box | QFrame::Plain);
     button = new QPushButton(tr("Send Message"));
-    statusBar = new QStatusBar;
+    statusBar = new QStatusBar( this );
 
     connect(lineEdit, SIGNAL(editingFinished()),
             this, SLOT(sendEcho()));
