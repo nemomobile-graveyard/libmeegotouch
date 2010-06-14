@@ -1239,7 +1239,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
             subopt.rect = subElementRect(SE_PushButtonContents, btn, widget);
 
             const QAbstractButton *buttonWidget = qobject_cast<const QAbstractButton * >(widget);
-            if (buttonWidget->isCheckable())
+            if (buttonWidget && buttonWidget->isCheckable())
                 d->drawToggleButton(p, subopt.text, subopt.icon, subopt.rect, opt, "MButtonIconStyle");
             else
                 d->drawBasicButton(p, subopt.text, subopt.icon, subopt.rect, opt, "MButtonIconStyle");
