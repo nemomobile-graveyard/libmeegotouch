@@ -80,5 +80,17 @@ bool QtMaemo6DialogProxy::eventFilter(QObject *obj, QEvent *event) {
     if(obj == widget() && event->type() == QEvent::Hide) {
         close();
     }
+
+    if(event->type() == QEvent::Resize) {
+        //don't show dialog bigger than needed
+        // it's a little tricky because everything is inside a scrollarea
+        if(QScrollArea* scrollArea = qobject_cast<QScrollArea*>(centralWidget())) {
+            int left, top, right, bottom;
+            QWidget* w = scrollArea->widget();
+            w->getContentsMargins(&left, &top, &right, & bottom);
+            int scrollAreaContentHeight = w->height() + top + bottom;
+            scrollArea->setMaximumHeight(scrollAreaContentHeight);
+        }
+    }
     return QtMaemo6Window::eventFilter(obj, event);
 }
