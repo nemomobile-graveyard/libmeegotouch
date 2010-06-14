@@ -1,3 +1,22 @@
+libmeegotouch (0.20.18-1) unstable; urgency=low
+
+  * Fixes: NB#174290 - Button in webpage causes segfault
+  * Fixes: NB#172441 - Serviceframework: m-servicefwgen generates non-compiling code
+  * Fixes: NB#171909 - No obvious way to programmatically dismiss the MPopupList window opened by MComboBox
+  * Fixes: NB#172456 - CSS using parent-child in custom library, M component as child, fails
+  * Fixes: NB#172712 - Segmentation fault and infinite recursion in MToolBarViewPrivate::remove when adding actions for sub pages
+  * Fixes: NB#171284 - problems with adding MButton
+  * Fixes: NB#170105 - show/hideEvent of MContentItem does not get called
+  * Fixes: NB#163877 - DuiHome Button is above Event window
+  * Fixes: NB#170617 - Green flicker when loading async pixmaps on PR image
+  * Fixes: NB#161213 - (Invisible_tabs) No tab is selected when the currently selected tab is set to invisible.
+  * Fixes: NB#172420 - widgetgallery -timedemo -demopages Grid aborts with SIGFPE
+  * Fixes: NB#169190 - Word wrap not happening in MLabel.
+  * Fixes: NB#167467 - adding and immediately removing service file
+  * Fixes: NB#169087 - No unique object names for MAction's in MToolbar/MNavigationBar
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 14 Jun 2010 16:02:21 +0300
+
 libmeegotouch (0.20.17-1) unstable; urgency=low
 
   * Fixes: NB#172945 - MButtonIconView increases application startup times
