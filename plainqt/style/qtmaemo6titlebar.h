@@ -70,11 +70,6 @@ public Q_SLOTS:
     void setTitle(const QString &title);
 
     /*!
-     * sets the color of the title
-     */
-    void setTitleColor(const QColor &color);
-
-    /*!
      * sets the margin
      */
     void setMargin(int spacing);
