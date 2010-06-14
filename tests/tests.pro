@@ -159,6 +159,7 @@ SUBDIRS     =  \
     ut_mstatusbarview \
     ut_mabstractitemmodel \
     ut_phonenumberformatting \
+    ut_mlocationdatabase \
 
 # enable only when we have icu available
 

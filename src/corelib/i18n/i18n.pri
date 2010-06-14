@@ -7,12 +7,18 @@ INCLUDEPATH+=./i18n
 
 PUBLIC_HEADERS += \
     $$I18N_SRC_DIR/mbreakiterator.h \
-    $$I18N_SRC_DIR/mlocale.h
+    $$I18N_SRC_DIR/mlocale.h \
+    $$I18N_SRC_DIR/mcountry.h \
+    $$I18N_SRC_DIR/mcity.h \
+    $$I18N_SRC_DIR/mlocationdatabase.h \
 
 SOURCES += \
     $$I18N_SRC_DIR/mbreakiterator.cpp \
-    $$I18N_SRC_DIR/mlocale.cpp
-    
+    $$I18N_SRC_DIR/mlocale.cpp \
+    $$I18N_SRC_DIR/mcountry.cpp \
+    $$I18N_SRC_DIR/mcity.cpp \
+    $$I18N_SRC_DIR/mlocationdatabase.cpp \
+
 contains(DEFINES, HAVE_ICU) {
     PUBLIC_HEADERS += \
         $$I18N_SRC_DIR/mcalendar.h \
