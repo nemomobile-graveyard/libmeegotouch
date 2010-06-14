@@ -37,6 +37,7 @@
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
     viewPrivate(viewPrivate), preferredSize(-1, -1), dirty(true), staticText()
 {
+    staticText.setTextFormat(Qt::PlainText);
 }
 
 MLabelViewSimple::~MLabelViewSimple()
@@ -224,12 +225,29 @@ void MLabelViewSimple::initializeStaticText()
         textToRender = fm.elidedText(model->text(), Qt::ElideRight, paintingRect.width());
     }
     
-    const qreal textWidth = viewPrivate->controller->wordWrap() ? paintingRect.width() : -1.0;
+    qreal textWidth = -1.0;
+    if (viewPrivate->controller->wordWrap()) {
+        textWidth = paintingRect.width();
+    } else {
+        // QStaticText uses QPainter::drawText(int x, int y, ...) internally, if the text width
+        // is smaller than 0. In opposite to QPainter::drawText(const QRect &rectangle, ...) '\n'
+        // characters are not replaced by spaces in this case. For MLabel '\n' characters should be
+        // replaced by spaces too, when shown in a single line.
+        textToRender.replace('\n', ' ');
+    }
     staticText.setTextWidth(textWidth);
     staticText.setText(textToRender);
     staticText.prepare(QTransform(), viewPrivate->controller->font());
     
-    const Qt::Alignment alignment = viewPrivate->textOptions.alignment();
+    Qt::Alignment alignment = viewPrivate->textOptions.alignment();
+    if (model->textDirection() == Qt::RightToLeft) {
+        // Mirror the horizontal alignment
+        if (alignment & Qt::AlignLeft) {
+            alignment = (alignment | Qt::AlignRight) & ~Qt::AlignLeft;
+        } else if (alignment & Qt::AlignRight) {
+            alignment = (alignment | Qt::AlignLeft) & ~Qt::AlignRight;
+        }
+    }
     
     // Adjust x-position dependent on the horizontal alignment
     if (alignment & Qt::AlignHCenter) {
