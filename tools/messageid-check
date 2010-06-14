@@ -47,7 +47,8 @@ my $OPT_OUTPUTDIR;
 # engineering English packages which should be ignored because they are obsolete:
 my @engineeringEnglishPackagesObsolete = (
     "libdui-l10n-engineering-english", # now "libmeegotouch-l10n-engineering-english"
-    "duistartup-l10n-engineering-english" # now "mstartup-l10n-engineering-english"
+    "duistartup-l10n-engineering-english", # now "mstartup-l10n-engineering-english"
+    "dui-demos-widgetsgallery-l10n-engineering-english" # now "meegotouch-demos-widgetsgallery-l10n-engineering-english"
     );
 
 # engineering English packages which should be ignored because they are only demos:
@@ -57,11 +58,13 @@ my @engineeringEnglishPackagesIgnore = (
     );
 
 my @engineeringEnglishPackages = (
+    "account-plugin-att-l10n-engineering-english",
     "account-plugin-facebook-l10n-engineering-english",
     "account-plugin-google-l10n-engineering-english",
     "account-plugin-ovi-l10n-engineering-english",
     "account-plugin-youtube-l10n-engineering-english",
     "accounts-ui-l10n-engineering-english",
+    "activities-l10n-engineering-english",
     "backup-framework-l10n-engineering-english",
     "call-history-l10n-engineering-english",
     "call-ui-l10n-engineering-english",
@@ -74,7 +77,9 @@ my @engineeringEnglishPackages = (
     "conn-dui-wlan-l10n-engineering-english",
     "contacts-l10n-engineering-english",
     "crash-reporter-l10n-engineering-english",
+    "devicelock-l10n-engineering-english",
     "dialer-l10n-engineering-english",
+    "dui-demos-widgetsgallery-l10n-engineering-english",
     "duicontrolpanel-callandsimapplet-l10n-engineering-english",
     "duicontrolpanel-certificatesapplet-l10n-engineering-english",
     "duicontrolpanel-datetimeapplet-l10n-engineering-english",
@@ -87,10 +92,12 @@ my @engineeringEnglishPackages = (
     "duihelp-l10n-engineering-english",
     "duihomescreen-l10n-engineering-english",
     "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
+    "duistartup-l10n-engineering-english",
     "duistatusind-connectivity-l10n-engineering-english",
     "feedreader-l10n-engineering-english",
     "gallery-l10n-engineering-english",
-    "keychain-ui-l10n-engineering-english",
+    # file conflict with accounts-ui-l10n-engineering-english
+    # "keychain-ui-l10n-engineering-english",
     "libdatacounterdialog-l10n-engineering-english",
     "libdialerui-l10n-engineering-english",
     "libfeedsettings-l10n-engineering-english",
@@ -108,8 +115,10 @@ my @engineeringEnglishPackages = (
     "mms-ui-l10n-engineering-english",
     "mstartup-l10n-engineering-english",
     "office-tools-l10n-engineering-english",
+    "package-manager-l10n-engineering-english",
     "package-manager-ui-l10n-engineering-english",
-    "signon-ui-l10n-engineering-english",
+    # file conflict with accounts-ui-l10n-engineering-english
+    # "signon-ui-l10n-engineering-english",
     "systemui-applets-l10n-engineering-english",
     "systemui-l10n-engineering-english",
     "transfer-ui-l10n-engineering-english",
@@ -530,7 +539,7 @@ if ($OPT_VERBOSITY >=1) {
 if (! -d $OPT_OUTPUTDIR) {
     mySystem("mkdir -p $OPT_OUTPUTDIR");
     if (! -d $OPT_OUTPUTDIR) {
-        printf STDERR "Cannot create output directory %s", $OPT_OUTPUTDIR;
+        printf STDERR "Cannot create output directory %s\n", $OPT_OUTPUTDIR;
         myExit(1);
     }
 }
