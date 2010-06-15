@@ -98,9 +98,9 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    //! Test that changing the widgets puts them into the layout
+    //! Test cases
+    void testInitialization();
     void testModelModifiedWidgets();
-    //! Test that changing the close button visibility shows and hides the close button
     void testModelModifiedCloseButtonVisible();
 
 private:

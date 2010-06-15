@@ -129,6 +129,8 @@ void Ut_MAppletInventoryView::cleanupTestCase()
 
 void Ut_MAppletInventoryView::init()
 {
+    gMApplicationExtensionAreaStub->stubReset();
+
     controller = new MAppletInventory;
     view = new TestAppletInventoryView(controller);
     controller->setView(view);
@@ -142,6 +144,11 @@ void Ut_MAppletInventoryView::cleanup()
 {
     static_cast<MAppletInventoryModel*>(controller->model())->setWidgets(WidgetList());
     delete controller;
+}
+
+void Ut_MAppletInventoryView::testInitialization()
+{
+    QCOMPARE(gMApplicationExtensionAreaStub->stubCallCount("init"), 1);
 }
 
 void Ut_MAppletInventoryView::testModelModifiedWidgets()
