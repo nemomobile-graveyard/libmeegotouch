@@ -47,7 +47,7 @@ public:
 
     void deleteCurrentCentralWidget();
     void placeCentralWidget(QGraphicsWidget *widget);
-    void setSpacerHeight(MWidget *spacer, qreal height);
+    void setWidgetHeight(MWidget *w, qreal height);
     void updatePannableViewportPosition();
 
     void propagateOnDisplayChangeEvent(bool visible);

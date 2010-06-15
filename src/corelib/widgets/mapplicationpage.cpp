@@ -31,6 +31,7 @@
 #include <MEscapeButtonPanel>
 #include <MAction>
 #include <MScene>
+#include <MPositionIndicator>
 #include <mdockwidget.h>
 #include <mapplicationwindow_p.h>
 
@@ -74,14 +75,14 @@ void MApplicationPagePrivate::init()
     mainWidget->setLayout(mainLayout);
 
     topSpacer = createSpacer(mainWidget);
-    setSpacerHeight(topSpacer, 0);
+    setWidgetHeight(topSpacer, 0);
     mainLayout->addItem(topSpacer);
 
     centralWidget = new MWidget(mainWidget);
     mainLayout->addItem(centralWidget);
 
     bottomSpacer = createSpacer(mainWidget);
-    setSpacerHeight(bottomSpacer, 0);
+    setWidgetHeight(bottomSpacer, 0);
     mainLayout->addItem(bottomSpacer);
 }
 
@@ -99,11 +100,11 @@ MWidget *MApplicationPagePrivate::createSpacer(QGraphicsItem *parent)
     return spacer;
 }
 
-void MApplicationPagePrivate::setSpacerHeight(MWidget *spacer, qreal height)
+void MApplicationPagePrivate::setWidgetHeight(MWidget *w, qreal height)
 {
-    spacer->setMinimumHeight(height);
-    spacer->setMaximumHeight(height);
-    spacer->setPreferredHeight(height);
+    w->setMinimumHeight(height);
+    w->setMaximumHeight(height);
+    w->setPreferredHeight(height);
 }
 
 void MApplicationPagePrivate::deleteCurrentCentralWidget()
@@ -334,8 +335,11 @@ void MApplicationPagePrivate::updateAutoMarginsForComponents()
         bottomMargin = q->boundingRect().height() - exposedContentRectBottomEdge;
     }
 
-    setSpacerHeight(topSpacer, topMargin);
-    setSpacerHeight(bottomSpacer, bottomMargin);
+    pannableViewPort->positionIndicator()->setPos(exposedContentRect.topLeft());
+    setWidgetHeight(pannableViewPort->positionIndicator(), exposedContentRect.height());
+
+    setWidgetHeight(topSpacer, topMargin);
+    setWidgetHeight(bottomSpacer, bottomMargin);
 }
 
 MApplicationPageModel::ComponentDisplayMode MApplicationPage::componentDisplayMode(

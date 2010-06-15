@@ -29,6 +29,8 @@
 #include <MButton>
 #include <MLayout>
 #include <MGridLayoutPolicy>
+#include <MPannableViewport>
+#include <MPositionIndicator>
 
 #include "mondisplaychangeevent.h"
 
@@ -243,6 +245,12 @@ void Ut_MApplicationPage::testUpdatingWindowTitleWithChangingPageTitle()
     QCOMPARE(appWin->windowTitle(), title3_longest);
     m_subject->setTitle(title4);
     QCOMPARE(appWin->windowTitle(), title4);
+}
+
+void Ut_MApplicationPage::testIfPositionIndicatorGeometryFollowsExposedRect()
+{
+    m_subject->appear();
+    QCOMPARE(m_subject->pannableViewport()->positionIndicator()->geometry(), m_subject->exposedContentRect());
 }
 
 QTEST_APPLESS_MAIN(Ut_MApplicationPage)
