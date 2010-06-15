@@ -397,6 +397,7 @@ void MApplicationWindowPrivate::_q_menuAppeared()
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(closeMenu()));
     isMenuOpen = true;
+    autoHideComponentsTimer.stop();
 }
 
 void MApplicationWindowPrivate::_q_menuDisappeared()
@@ -410,6 +411,9 @@ void MApplicationWindowPrivate::_q_menuDisappeared()
 
     escapeButtonPanel->setEnabled(true);
     toolBar->setProperty(_M_IsEnabledPreservingSelection, QVariant(true));
+
+    if (!componentsOnAutoHide.isEmpty() && !autoHideComponentsTimer.isActive())
+        autoHideComponentsTimer.start();
 }
 
 #ifdef HAVE_N900
