@@ -937,7 +937,7 @@ void QtMaemo6Style::polish(QWidget *widget)
             Q_UNUSED( menuStyle );
             //TODO: use style and menuStyle once the properties inside work actually.
             // This would also remove the magic numbers.
-            titleBar->setTitleColor( Qt::white );
+            //titleBar->setTitleColor( Qt::white );
             titleBar->setMargin( 10 );
             titleBar->setItemSpacing( 20 );
             titleBar->setFixedHeight( 70 );
