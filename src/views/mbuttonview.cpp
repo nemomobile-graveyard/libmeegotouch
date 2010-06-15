@@ -144,21 +144,22 @@ void MButtonViewPrivate::calcIconTextRects()
         int iconWidth = q->style()->iconSize().width();
         int iconHeight = q->style()->iconSize().height();
 
+        QSizeF iconSize(iconWidth, iconHeight);
+        QPointF iconPosition(0, 0);
+
         //text visible and valid?
         if (q->model()->textVisible() && !q->model()->text().isEmpty()) {
-            iconRect.setSize(QSizeF(iconWidth, iconHeight));
-
             switch (q->style()->iconAlign()) {
                 //icon on left and text on right
             case Qt::AlignLeft: {
                 if (q->style()->horizontalTextAlign() == Qt::AlignHCenter)
-                    iconRect.setX(contentRect.center().x() - iconWidth - (textSize.width() / 2));
+                    iconPosition.setX(contentRect.center().x() - iconWidth - (textSize.width() / 2));
                 else if (q->style()->horizontalTextAlign() == Qt::AlignRight)
-                    iconRect.setX(contentRect.right() - textSize.width() - iconWidth - hTextMargin);
+                    iconPosition.setX(contentRect.right() - textSize.width() - iconWidth - hTextMargin);
                 else if (q->style()->horizontalTextAlign() == Qt::AlignLeft)
-                    iconRect.setX(contentRect.left());
+                    iconPosition.setX(contentRect.left());
 
-                iconRect.setY(contentRect.center().y() - (iconHeight / 2));
+                iconPosition.setY(contentRect.center().y() - (iconHeight / 2));
                 textRect.setX(contentRect.left() + q->style()->textMarginLeft() + iconWidth);
                 textRect.setWidth(contentRect.width() - iconWidth - hTextMargin);
                 break;
@@ -167,27 +168,27 @@ void MButtonViewPrivate::calcIconTextRects()
             //icon on right and text on left
             case Qt::AlignRight: {
                 if (q->style()->horizontalTextAlign() == Qt::AlignHCenter)
-                    iconRect.setX(contentRect.center().x() + (textSize.width() / 2));
+                    iconPosition.setX(contentRect.center().x() + (textSize.width() / 2));
                 else if (q->style()->horizontalTextAlign() == Qt::AlignRight)
-                    iconRect.setX(contentRect.width() - iconWidth);
+                    iconPosition.setX(contentRect.width() - iconWidth);
                 else if (q->style()->horizontalTextAlign() == Qt::AlignLeft)
-                    iconRect.setX(textSize.width() + hTextMargin);
+                    iconPosition.setX(textSize.width() + hTextMargin);
 
-                iconRect.setY(contentRect.center().y() - (iconHeight / 2));
+                iconPosition.setY(contentRect.center().y() - (iconHeight / 2));
                 textRect.setWidth(contentRect.width() - iconWidth - hTextMargin);
                 break;
             }
 
             //icon on bottom and text on top
             case Qt::AlignBottom: {
-                iconRect.setTopLeft(QPointF(contentRect.center().x() - (iconWidth / 2), contentRect.bottom() - iconHeight));
+                iconPosition = QPointF(contentRect.center().x() - (iconWidth / 2), contentRect.bottom() - iconHeight);
                 textRect.setHeight(contentRect.height() - iconHeight - vTextMargin);
                 break;
             }
 
             //icon on top and text on bottom
             default: {
-                iconRect.setTopLeft(QPointF(contentRect.center().x() - (iconWidth / 2), contentRect.top()));
+                iconPosition = QPointF(contentRect.center().x() - (iconWidth / 2), contentRect.top());
                 textRect.setY(iconRect.bottom() + q->style()->textMarginTop());
                 textRect.setHeight(contentRect.height() - iconHeight - vTextMargin);
                 break;
@@ -197,8 +198,10 @@ void MButtonViewPrivate::calcIconTextRects()
         // no text
         else {
             //icon on center
-            iconRect = QRectF(contentRect.center().x() - (iconWidth / 2), contentRect.center().y() - (iconHeight / 2), iconWidth, iconHeight);
+            iconPosition = QPointF(contentRect.center().x() - (iconWidth / 2), contentRect.center().y() - (iconHeight / 2));
         }
+
+        iconRect = QRectF(iconPosition, iconSize);
     }
 
     //adjust label with button margins
@@ -448,6 +451,8 @@ void MButtonView::setupModel()
 
     d->label->setText(model()->text());
     d->label->setVisible(model()->textVisible());
+
+    d->calcIconTextRects();
 
     update();
 }
