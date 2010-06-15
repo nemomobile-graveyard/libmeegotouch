@@ -30,12 +30,12 @@ using namespace M::MThemeDaemonProtocol;
 
 MThemeDaemonServer::MThemeDaemonServer() :
     currentTheme("/meegotouch/theme/name"),
-    currentLocale("/meegotouch/i18n/language")
+    currentLocale("/meegotouch/i18n/language"),
+    defaultTheme("devel"),
+    delayedThemeChange(false)
 {
-    const QString defaultTheme("devel");
-
     // 1) make sure that gconf has some value for the current theme
-    if (currentTheme.value().isNull())
+    if (currentTheme.value().isNull() || currentTheme.value().toString().isEmpty() )
         currentTheme.set(defaultTheme);
 
     // 2) activate the current theme
@@ -45,7 +45,6 @@ MThemeDaemonServer::MThemeDaemonServer() :
         if (!daemon.activateTheme(defaultTheme, currentLocale.value().toString(), QList<MThemeDaemonClient *>(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted)) {
             qFatal("MThemeDaemonServer - Could not find themes, aborting!");
         }
-        currentTheme.set(defaultTheme);
     }
     Q_ASSERT(pixmapsToReload.isEmpty());
     Q_ASSERT(pixmapsToDeleteWhenThemeChangeHasCompleted.isEmpty());
@@ -64,8 +63,8 @@ MThemeDaemonServer::MThemeDaemonServer() :
     }
 
     // 5) make sure we have a cache directory for the current theme
-    if(!cacheDir.exists(currentTheme.value().toString())) {
-        if(!cacheDir.mkdir(currentTheme.value().toString())) {
+    if(!cacheDir.exists(daemon.currentTheme())) {
+        if(!cacheDir.mkdir(daemon.currentTheme())) {
             qFatal("MThemeDaemonServer - Could not create cache directory for current theme. No write permissions to %s",
                 qPrintable(cacheDir.absolutePath()));
         }
@@ -137,9 +136,16 @@ void MThemeDaemonServer::clientDisconnected()
                     pi.remove();
             }
 
-            clientsThatHaveNotYetAppliedThemeChange.removeOne(client);
-
+            // remove the client from themechange list and delete the client data
+            bool removed = clientsThatHaveNotYetAppliedThemeChange.removeOne(client);
             delete client;
+            
+            // check if the delayed theme change has been request and whether we can complete it now
+            if( removed && clientsThatHaveNotYetAppliedThemeChange.isEmpty() && delayedThemeChange ) {
+                mWarning("MThemeDaemonServer") << "Start delayed theme change.";
+                delayedThemeChange = false;
+                themeChanged();
+            }            
         }
         socket->deleteLater();
     }
@@ -244,14 +250,24 @@ void MThemeDaemonServer::themeChanged()
     if (daemon.currentTheme() == currentTheme.value().toString())
         return;
 
+    //if previous theme change is not finished yet we need wait it to complete before changing to new one
     if(!clientsThatHaveNotYetAppliedThemeChange.isEmpty()) {
         mWarning("MThemeDaemonServer") << "Will not change theme while another theme change is still ongoing";
-        currentTheme.set(daemon.currentTheme());
+        delayedThemeChange = true;
         return;
     }
 
     QHash<MThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
-    if (daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted)) {
+    
+    bool changeOk = daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted);
+    if(!changeOk) {
+        mWarning("MThemeDaemonServer") << "Could not change theme to" << currentTheme.value().toString() << ". Falling back to default theme " << defaultTheme;
+        if( daemon.currentTheme() == defaultTheme )
+            return;
+        changeOk = daemon.activateTheme(defaultTheme, currentLocale.value().toString(), registeredClients.values(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted);
+    }
+    
+    if (changeOk) {
         // theme change succeeded, let's inform all clients + add the pixmaps to load-list
         Packet themeChangedPacket(Packet::ThemeChangedPacket, 0, new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
 
@@ -277,8 +293,8 @@ void MThemeDaemonServer::themeChanged()
 
         // make sure we have a cache directory for the current theme
         QDir cacheDir(MThemeDaemon::systemThemeCacheDirectory());
-        if(!cacheDir.exists(currentTheme.value().toString())) {
-            if(!cacheDir.mkdir(currentTheme.value().toString())) {
+        if(!cacheDir.exists(daemon.currentTheme())) {
+            if(!cacheDir.mkdir(daemon.currentTheme())) {
                 qFatal("MThemeDaemonServer - Could not create cache directory for current theme. No write permissions to %s",
                     qPrintable(cacheDir.absolutePath()));
             }
@@ -288,9 +304,8 @@ void MThemeDaemonServer::themeChanged()
             processQueueTimer.start();
 
     } else {
-        // theme change failed, so change the theme back also in gconf.
-        mWarning("MThemeDaemonServer") << "Could not change theme to" << currentTheme.value().toString();
-        currentTheme.set(daemon.currentTheme());
+        // could not change to default theme, something seriously wrong now nothing we can do
+        qFatal("MThemeDaemonServer - Could not fall back to default theme.");
     }
 }
 
@@ -415,6 +430,13 @@ void MThemeDaemonServer::themeChangeApplied(MThemeDaemonClient *client,
 
         foreach(MThemeDaemonClient * c, registeredClients.values()) {
             c->stream() << themeChangeFinishedPacket;
+        }
+    
+        //if delayed theme change was requested, change it now
+        if( delayedThemeChange ) {
+            mWarning("MThemeDaemonServer") << "Start delayed theme change.";
+            delayedThemeChange = false;
+            themeChanged();
         }
     }
 }

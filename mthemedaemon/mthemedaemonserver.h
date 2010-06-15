@@ -86,6 +86,8 @@ private:
 
     MGConfItem currentTheme;
     MGConfItem currentLocale;
+    QString defaultTheme;
+    bool delayedThemeChange;
 
     QQueue<QueueItem> loadPixmapsQueue;
     QQueue<QueueItem> releasePixmapsQueue;
