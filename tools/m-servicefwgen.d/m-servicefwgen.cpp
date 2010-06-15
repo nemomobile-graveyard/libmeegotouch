@@ -813,6 +813,8 @@ void processAdaptorCppFile()
                     "#include <MApplicationWindow>\n" \
                     "#include <MApplicationIfProxy>\n"        \
                     "#include <MEscapeButtonPanel>\n"         \
+                    "#include <MDebug>\n"                    \
+                    "\n"                                     \
                     "#include <QX11Info>\n"                     \
                     "#include <X11/Xutil.h>\n"                  \
                     "#include <X11/Xlib.h>\n"                   \
@@ -839,11 +841,20 @@ void processAdaptorCppFile()
 "    MApplicationWindow *appWindow = MApplication::activeApplicationWindow();\n"\
 "    if (appWindow != 0) {\n"\
 "        appWindow->setWindowTitle( windowTitle );\n"\
-"        appWindow->currentPage()->setEscapeMode( MApplicationPageModel::EscapeManualBack );\n"\
-"        // connect to the back button - assumes the above 'showImage' opens a\n"\
-"        // new window and so the window referred to below is already the top one\n"\
-"        connect(appWindow->currentPage(), SIGNAL(backButtonClicked()),\n"\
+"\n"\
+"        MApplicationPage *currentPage = appWindow->currentPage();\n"\
+"\n"\
+"        if ( currentPage != 0 ) {\n"\
+"            currentPage->setEscapeMode( MApplicationPageModel::EscapeManualBack );\n"\
+"            // connect to the back button - assumes the above 'showImage' opens a\n"\
+"            // new window and so the window referred to below is already the top one\n"\
+"            connect(currentPage, SIGNAL(backButtonClicked()),\n"\
 "                this, SLOT(goBack()));\n"\
+"        } else {\n"\
+"            mDebug( __PRETTY_FUNCTION__ ) <<  \"No currentPage! - broken chain\";\n"\
+"        }\n"\
+"    } else {\n"\
+"        mDebug( __PRETTY_FUNCTION__ ) << \"No activeApplicationWindow! - broken chain\";\n"\
 "    }\n"\
 "\n"\
 "    // update the X server\n"\
@@ -888,18 +899,16 @@ void processAdaptorCppFile()
         outS <<
 "void " + w.upperCamelAdaptorName() + "::goBack()\n"\
 "{\n"                                                   \
-"    qDebug() << __PRETTY_FUNCTION__;\n"\
-"\n"\
 "    bool backServiceRegistered = ( windowId != -1 );\n"\
 "    if ( backServiceRegistered ) {\n"\
 "        MApplicationIfProxy mApplicationIfProxy(backServiceName, this);\n"\
 "\n"\
 "        if (mApplicationIfProxy.connection().isConnected()) {\n"\
-"            qDebug() << \"Launching \" << backServiceName;\n"\
+"            mDebug( __PRETTY_FUNCTION__ ) << \"Launching \" << backServiceName;\n"\
 "            mApplicationIfProxy.launch();\n"\
 "        } else {\n"\
-"            qWarning() << \"Could not launch\" << backServiceName;\n"\
-"            qWarning() << \"DBus not connected?\";\n"\
+"            mDebug( __PRETTY_FUNCTION__ ) << \"Could not launch\" << backServiceName;\n"\
+"            mDebug( __PRETTY_FUNCTION__ ) << \"DBus not connected?\";\n"\
 "        }\n"\
 "\n"\
 "        // unhide the chain parent's window\n"\
