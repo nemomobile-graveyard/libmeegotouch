@@ -884,10 +884,12 @@ void QtMaemo6Style::setOrientationChangeEnabled(bool b) {
 }
 
 M::OrientationAngle QtMaemo6Style::orientation() {
-    //qCritical() << "Query Orientation" << MOrientationTracker::instance();
-    Q_D(QtMaemo6Style);
     M::OrientationAngle angle;
-    QString edge = d->m_orientation.value().toString();
+    QString edge;
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    Q_D(QtMaemo6Style);
+    edge = d->m_orientation.value().toString();
+#endif //HAVE_CONTEXTSUBSCRIBER
 
     if (edge == "top") {
         angle = M::Angle0;
