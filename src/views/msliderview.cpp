@@ -28,6 +28,7 @@
 #include <QApplication>
 #include <QGraphicsAnchorLayout>
 #include <QPropertyAnimation>
+#include <QTimer>
 #include <limits>
 
 #include "mdebug.h"
@@ -426,7 +427,8 @@ void MSliderGroove::setSliderValues(int min, int max, int val)
 
     updateHandlePos(handlePos);
 
-    update();
+    if (controller)
+        controller->update();
 }
 
 void MSliderGroove::setSeekBarValues(bool show, int loadedContentMin, int loadedContentMax)
@@ -444,7 +446,8 @@ void MSliderGroove::setSeekBarValues(bool show, int loadedContentMin, int loaded
     loadedContentMinimum = qBound(minimum, loadedContentMinimum, maximum);
     loadedContentMaximum = qBound(minimum, loadedContentMaximum, maximum);
 
-    update();
+    if (controller)
+        controller->update();
 }
 
 void MSliderGroove::setSliderState(MSliderModel::SliderState state)
@@ -945,8 +948,7 @@ MSliderViewPrivate::~MSliderViewPrivate()
 {
     sliderGroove->ensureSafeClosing();
 
-    if (valueAnimation)
-        delete valueAnimation;
+    delete valueAnimation;
 }
 
 //intializes main layout and layout policies
@@ -1167,18 +1169,22 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
     eventPos.setY(eventPos.y() + q->marginTop());
 
     newValue = sliderGroove->screenPointToValue(eventPos);
+    //sometimes this method can be called twice with the same
+    //event position (for example when user clicks to slider groove
+    //once it is called at mouse press and once at mouse release)
+    if (newValue != q->model()->value()) {
+        if (needAnimation) {
+            if (valueAnimation == 0) {
+                valueAnimation = new QPropertyAnimation(controller, "value", 0);
+                valueAnimation->setDuration(150);
+                valueAnimation->setEasingCurve(QEasingCurve::OutSine);
+            }
 
-    if (needAnimation) {
-        if (valueAnimation == 0) {
-            valueAnimation = new QPropertyAnimation(controller, "value", controller);
-            valueAnimation->setDuration(150);
-            valueAnimation->setEasingCurve(QEasingCurve::OutSine);
-        }
-
-        valueAnimation->setEndValue(newValue);
-        valueAnimation->start();
-    } else
-        controller->setValue(newValue);
+            valueAnimation->setEndValue(newValue);
+            valueAnimation->start();
+        } else
+            controller->setValue(newValue);
+    }
 
     return newValue;
 }
@@ -1187,6 +1193,7 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
 void MSliderViewPrivate::updateSliderGroove()
 {
     Q_Q(MSliderView);
+
     sliderGroove->setSliderValues(q->model()->minimum(), q->model()->maximum(), q->model()->value());
     sliderGroove->setSliderState(q->model()->state());
 }
@@ -1195,6 +1202,7 @@ void MSliderViewPrivate::updateSliderGroove()
 void MSliderViewPrivate::updateSeekBar()
 {
     Q_Q(MSliderView);
+
     const MSeekBarModel *seekBarModel = qobject_cast<const MSeekBarModel *>(q->model());
     if (!seekBarModel)
         sliderGroove->setSeekBarValues(false);
