@@ -80,6 +80,7 @@ void MAppletInventoryViewPrivate::init(MAppletInventory *controller)
     MApplicationExtensionArea *area = new MApplicationExtensionArea("com.meego.core.MAppletInstallationSourceInterface/1.0");
     layoutPolicy->addItem(area);
     QObject::connect(area, SIGNAL(extensionInstantiated(MApplicationExtensionInterface*)), controller, SLOT(setMAppletInventoryInterface(MApplicationExtensionInterface*)));
+    area->init();
 }
 
 MAppletInventoryView::MAppletInventoryView(MAppletInventory *container) :

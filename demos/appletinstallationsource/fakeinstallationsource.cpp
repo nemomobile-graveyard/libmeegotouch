@@ -41,7 +41,7 @@ FakeInstallationSource::~FakeInstallationSource()
     delete appletInventory;
 }
 
-MWidget *FakeInstallationSource::widget()
+QGraphicsWidget *FakeInstallationSource::widget()
 {
     return source;
 }

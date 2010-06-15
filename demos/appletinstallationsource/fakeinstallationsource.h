@@ -37,7 +37,7 @@ public:
     virtual ~FakeInstallationSource();
     //! Methods derived from MApplicationExtensionInterface
     virtual bool initialize(const QString&);
-    virtual MWidget *widget();
+    virtual QGraphicsWidget *widget();
 
     //! Methods derived from MAppletInstallationSourceInterface
     void setMAppletInventoryInterface(MAppletInventoryInterface &installationSource) ;
