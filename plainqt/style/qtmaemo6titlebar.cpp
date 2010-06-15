@@ -87,11 +87,6 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
         m_titleLabel->setPalette(pal);
     }
 
-    QSpacerItem *spacer = new QSpacerItem(0, 0);
-    if (iconStyle) {
-        spacer->changeSize(iconStyle->marginLeft(), 0);
-    }
-
     m_closeButton = new QtMaemo6ClickLabel(this);
     m_closeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Close" ) );
     const MEscapeButtonPanelStyle *escapeButtonStyle =
@@ -108,7 +103,6 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
     m_titleBarLayout->addWidget(m_minimizeButton);
     m_titleBarLayout->addWidget(m_titleLabel);
     m_titleBarLayout->addWidget(m_titleLabelMenuButton);
-    //m_titleBarLayout->addItem(spacer);
     m_titleBarLayout->addStretch();
 
     //m_titleBarLayout->addLayout(m_buttonsLayout);
