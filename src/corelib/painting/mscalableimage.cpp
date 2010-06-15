@@ -54,12 +54,8 @@ void MScalableImagePrivate::validateSize() const
         cornerHeight = m_preferredMargins.top() + m_preferredMargins.bottom();
     }
 
-    if (w < cornerWidth) {
-        mWarning("MScalableImage") << "Width of" << pixmapId << " image" << w << "is smaller than combined corner width " << cornerWidth << ". This might cause rendering artifacts.";
-    }
-    if (h < cornerHeight) {
-        mWarning("MScalableImage") << "Height of " << pixmapId << " image" << h << "is smaller than combined corner height" << cornerHeight << ". This might cause rendering artifacts.";
-    }
+    if ( (w < cornerWidth || h < cornerHeight) && !(w == 1 && h == 1) ) //1x1 means a temporary pixmap
+        mWarning("MScalableImage") << QString("The size of the image '%1', %2x%3, is smaller than combined corner size %4x%5. This might cause rendering artifacts.").arg(pixmapId).arg(w).arg(h).arg(cornerWidth).arg(cornerHeight);
 }
 
 void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *painter) const
@@ -174,8 +170,10 @@ MScalableImage::MScalableImage(const QPixmap *pixmap, int left, int right, int t
     d->q_ptr = this;
 
     setBorders(left, right, top, bottom);
-    setPixmap(pixmap);
+
+    d->m_image = pixmap;
     d->pixmapId = pixmapId;
+    d->validateSize();
 }
 
 MScalableImage::MScalableImage(MScalableImagePrivate *dd)
