@@ -83,7 +83,6 @@
 //#include <mwidgetfadeinanimationstyle.h>
 //#include <mwidgetfadeoutanimationstyle.h>
 #include <mdeviceprofile.h>
-#include <morientationtracker.h>
 
 #include "qtmaemo6titlebar.h"
 #include "qtmaemo6dialogtitle.h"
@@ -127,12 +126,8 @@ QPixmap setPixmapOpacity(const QPixmap &pixmap, double opacity)
 QtMaemo6StylePrivate::QtMaemo6StylePrivate()
     : m_actionsInTitleBarCount(5),
       m_componentData(0),
-#ifdef HAVE_CONTEXTSUBSCRIBER
-      m_orientation("Screen.TopEdge"),
-#endif //HAVE_CONTEXTSUBSCRIBER
       m_isMInitialized(false),
       m_isMApplication(false),
-      m_isOrientationChangeEnabled(false),
       m_scrollBarEventFilter(0),
       m_windowEventFilter(0),
       m_menuBar(0),
@@ -151,7 +146,7 @@ QtMaemo6StylePrivate::~QtMaemo6StylePrivate()
 
 void QtMaemo6StylePrivate::initM()
 {
-    qCritical() << "Qt Maemo 6 Style init";    Q_Q(QtMaemo6Style);
+    Q_Q(QtMaemo6Style);
 
     m_isMInitialized = true;
 
@@ -161,7 +156,6 @@ void QtMaemo6StylePrivate::initM()
     m_kinetic = new QtMaemo6KineticScrolling(q);
 
     if (MComponentData::instance() != 0) {
-        m_componentData = MComponentData::instance();
         m_isMApplication = true;
     } else {
         QStringList args = qApp->arguments();
@@ -188,7 +182,6 @@ void QtMaemo6StylePrivate::initM()
     bool inputConnect = QObject::connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)), q, SLOT(ensureFocusedWidgetVisible(QRect)));
     if(!inputConnect)
         qCritical() << "Virtual keyboard notification connection failed";
-
 }
 
 const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
@@ -783,13 +776,6 @@ Qt::Alignment QtMaemo6StylePrivate::invertAlignment(Qt::Alignment align) const
     return retAlign;
 }
 
-bool QtMaemo6StylePrivate::hasMWindowParent(const QWidget* w) const {
-    QWidget* parent = w->parentWidget();
-    while(qobject_cast<MWindow*>(parent))
-        parent = parent->parentWidget();
-    return parent != NULL;
-}
-
 QtMaemo6Style::QtMaemo6Style()
     : QtMaemo6TestStyle(*new QtMaemo6StylePrivate)
 {
@@ -860,51 +846,6 @@ bool QtMaemo6Style::isStyled( const QWidget * widget ) const {
     return ! ( ( widget &&
                 widget->dynamicPropertyNames().contains(M::NoMStyle) ) ||
                 qApp->dynamicPropertyNames().contains(M::NoMStyle) );
-}
-
-bool QtMaemo6Style::isOrientationChangeEnabled() const {
-    Q_D(const QtMaemo6Style);
-    return d->m_isOrientationChangeEnabled;
-}
-
-void QtMaemo6Style::setOrientationChangeEnabled(bool b) {
-    Q_D(QtMaemo6Style);
-    d->m_isOrientationChangeEnabled = b;
-
-    //only subscribe if it is really needed
-#ifdef HAVE_CONTEXTSUBSCRIBER
-    if(b) {
-        qCritical() << "Subscribing for Screen.TopEdge";
-        d->m_orientation.waitForSubscription();
-        disconnect(&d->m_orientation);
-        if(!connect(&d->m_orientation, SIGNAL(valueChanged()), this, SLOT(doOrientationChange())))
-            qCritical() << "Can't connect to orientation Change signal";
-    }
-#endif //HAVE_CONTEXTSUBSCRIBER
-}
-
-M::OrientationAngle QtMaemo6Style::orientation() {
-    //qCritical() << "Query Orientation" << MOrientationTracker::instance();
-    Q_D(QtMaemo6Style);
-    M::OrientationAngle angle;
-    QString edge = d->m_orientation.value().toString();
-
-    if (edge == "top") {
-        angle = M::Angle0;
-    } else if (edge == "left") {
-        angle = M::Angle270;
-    } else if (edge == "right") {
-        angle = M::Angle90;
-    } else if (edge == "bottom") {
-        angle = M::Angle180;
-    } else {
-        angle = M::Angle0;
-    }
-    return angle;
-}
-
-void QtMaemo6Style::orientation(int* o) {
-    *o = static_cast<int>(orientation());
 }
 
 void QtMaemo6Style::polish(QApplication *app)
@@ -1002,7 +943,6 @@ void QtMaemo6Style::polish(QWidget *widget)
             titleBar->setFixedHeight( 70 );
     }
 
-
 #ifdef MOVE_ACTIONS_FROM_TOOLBAR_TO_TITLEBAR
     if (QtMaemo6TitleBar *titleBar = qobject_cast<QtMaemo6TitleBar *>(widget)) {
         foreach(QAction * action, d->m_toolBarActions) {
@@ -1028,7 +968,8 @@ void QtMaemo6Style::polish(QWidget *widget)
 
     if (qobject_cast<QScrollBar *>(widget)) {
         //skip the scrollbars if they are inside an MWindow
-        if(d->hasMWindowParent(widget))
+        if(widget->parentWidget() &&
+           qobject_cast<MWindow*>(widget->parentWidget()->parentWidget()))
             return;
         //FIXME: public API usage
         widget->setAttribute(Qt::WA_OpaquePaintEvent, false);
@@ -1118,23 +1059,12 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
 
     switch (element) {
     case PE_Widget: {
-        if (const QtMaemo6TitleBar* tb = qobject_cast<const QtMaemo6TitleBar *>(widget)) {
+        if (qobject_cast<const QtMaemo6TitleBar *>(widget)) {
             const MNavigationBarStyle *style =
                 static_cast<const MNavigationBarStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
                         "MNavigationBarStyle"));
             // draw widget background
-            QTransform t;
-            QPoint center = widget->rect().center();
-            t.translate(center.x(), center.y());
-            t.rotate(tb->orientation());
-            t.translate(-center.x(), -center.y());
-//            painter->translate(widget->rect().center());
-//            painter->rotate(tb->orientation());
-//            painter->translate(-widget->rect().center());
-            painter->setTransform(t);
-            QRect adjustedRect(widget->rect());
-            adjustedRect = t.mapRect(adjustedRect);
-            d->drawWidgetBackground(painter, option, adjustedRect, style);
+            d->drawWidgetBackground(painter, option, widget->rect(), style);
 
         }
         if (qobject_cast<const QtMaemo6DialogTitle *>(widget)) {
@@ -1281,7 +1211,6 @@ void QtMaemo6Style::drawControl(ControlElement element,
     }
 
     Q_D(const QtMaemo6Style);
-
 
     switch (element) {
     case CE_ComboBoxLabel: {
@@ -2589,17 +2518,6 @@ void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleAre
             m_originalWidgetPos.widget->move(m_originalWidgetPos.position);
             m_originalWidgetPos.widget = 0;
         }
-    }
-}
-
-void QtMaemo6Style::doOrientationChange()
-{
-    Q_D(QtMaemo6Style);
-    qCritical() << "orientation Change" << d->m_isOrientationChangeEnabled;
-    if(d->m_isOrientationChangeEnabled) {
-        emit orientationChanged(orientation());
-        //also emit this with int as parameter for meegotouch independent use
-        emit orientationChanged(static_cast<int>(orientation()));
     }
 }
 

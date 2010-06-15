@@ -21,7 +21,6 @@
 
 #include <QMenu>
 #include <QFileDialog>
-#include <QDebug>
 
 MainWindow::MainWindow() : QMainWindow(NULL)
 {
@@ -33,13 +32,8 @@ MainWindow::MainWindow() : QMainWindow(NULL)
         comboBox->addItem(QString("%1 cm").arg(i * 2));
     }
     connect(actionOpen, SIGNAL(triggered()), this, SLOT(fileOpen()));
-    if(!connect(style(), SIGNAL(orientationChanged(int)), this, SLOT(setStatusBarText())))
-        qCritical() << "Couldn't connect statusbar";
 
-    statusBarLabel = new QLabel();
-    statusBar()->addWidget(statusBarLabel);
-
-    statusBarLabel->setText("I am the status bar");
+    statusBar()->showMessage("I am the status bar");
 }
 
 MainWindow::~MainWindow()
@@ -50,12 +44,4 @@ MainWindow::~MainWindow()
 void MainWindow::fileOpen()
 {
     QString s = QFileDialog::getOpenFileName();
-}
-
-void MainWindow::setStatusBarText() {
-    int retVal;
-    if(QMetaObject::invokeMethod(qApp->style(), "orientation", Q_ARG(int*, &retVal)))
-        statusBarLabel->setText(QString("Orientation %1°").arg(retVal));
-    else
-        statusBarLabel->setText("Couldn't retrive orientation");
 }

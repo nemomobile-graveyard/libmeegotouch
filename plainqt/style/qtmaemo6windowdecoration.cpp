@@ -17,7 +17,6 @@
 **
 ****************************************************************************/
 
-#include "qtmaemo6style.h"
 #include "qtmaemo6windowdecoration.h"
 #include "qtmaemo6titlebar.h"
 #include "qtmaemo6menuproxy.h"
@@ -34,11 +33,6 @@
 #include <QMenuBar>
 #include <QFile>
 #include <QDir>
-#include <QDebug>
-#include <mdeviceprofile.h>
-
-const int QtMaemo6WindowDecoration::layoutOffset = 2;
-
 
 QtMaemo6WindowDecoration::QtMaemo6WindowDecoration(QWidget *mw, QWidget *parent /*= NULL*/)
     : QtMaemo6Window(mw, parent),
@@ -53,26 +47,19 @@ QtMaemo6WindowDecoration::QtMaemo6WindowDecoration(QWidget *mw, QWidget *parent 
 
     m_deviceStatusBar = new QLabel();
     //FIXME: set fixed height to 30, because haven't found a place where this is defined
+    m_deviceStatusBar->setFixedHeight(30);
     m_deviceStatusBar->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     updateStatusBarSharedPixmap();
     //FIXME: use XDamage to update the pixmap. As long as this don't work, update every 2 sec
-    m_deviceStatusBarTimerId = startTimer(500);
+    m_deviceStatusBarTimerId = startTimer(2000);
 
-    //build the layout, assuming orientation is Angle0
-    m_windowLayout->addWidget(m_deviceStatusBar, layoutOffset-2, layoutOffset);
-    m_windowLayout->addWidget(m_titleBar, layoutOffset-1, layoutOffset);
-    m_windowLayout->addWidget(centralWidget(), layoutOffset, layoutOffset);
-
+    m_windowLayout->addWidget(m_deviceStatusBar, 0, 1);
+    m_windowLayout->addWidget(m_titleBar,        1, 1);
+    m_windowLayout->addWidget(centralWidget(),   2, 1);
 
     connect(m_titleBar, SIGNAL(closeButtonClicked()), this, SLOT(close()));
     connect(m_titleBar, SIGNAL(minimizeButtonClicked()), this, SLOT(showMinimized()));
     connect(m_titleBar, SIGNAL(menuLabelClicked()), this, SLOT(showMenuBar()));
-    connect(this, SIGNAL(orientationChanged(M::OrientationAngle)),
-            m_titleBar, SLOT(setOrientation(M::OrientationAngle)));
-    //also update the statusbar pixmap to get correct orientation
-    connect(this, SIGNAL(orientationChanged(M::OrientationAngle)),
-            this, SLOT(updateStatusBarSharedPixmap(M::OrientationAngle)));
-
 }
 
 QtMaemo6WindowDecoration::~QtMaemo6WindowDecoration()
@@ -85,47 +72,16 @@ QtMaemo6WindowDecoration::~QtMaemo6WindowDecoration()
 }
 
 #ifdef Q_WS_X11
-void QtMaemo6WindowDecoration::updateStatusBarSharedPixmap(M::OrientationAngle angle)
+void QtMaemo6WindowDecoration::updateStatusBarSharedPixmap()
 {
     //destroyXDamageForSharedPixmap();
 
     Qt::HANDLE handle;
-    QPixmap statusBarPixmap;
     if (fetchStatusBarSharedPixmapHandle(&handle)) {
-        statusBarPixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
-        //m_deviceStatusBar->setPixmap(statusBarPixmap);
+        QPixmap statusBarPixmap = QPixmap::fromX11Pixmap(handle, QPixmap::ExplicitlyShared);
+        m_deviceStatusBar->setPixmap(statusBarPixmap);
+        statusBarPixmap.save("/tmp/statusbar.png");
     }
-
-    QPixmap modifiedPixmap;
-
-    //set label size due to orientation
-    if(angle == M::Angle0 || angle == M::Angle180) {
-        m_deviceStatusBar->setFixedHeight(30);
-        m_deviceStatusBar->setMinimumWidth(0);
-        m_deviceStatusBar->setMaximumWidth(9999);
-
-        modifiedPixmap = statusBarPixmap.copy(0, 0, statusBarPixmap.width(), 30);
-        if(angle == M::Angle180) {
-            QMatrix m;
-            m.rotate(180);
-            modifiedPixmap = modifiedPixmap.transformed(m);
-            m_deviceStatusBar->setAlignment(Qt::AlignRight | Qt::AlignBottom);
-        } else
-            m_deviceStatusBar->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    }
-    else {
-        m_deviceStatusBar->setFixedWidth(30);
-        m_deviceStatusBar->setMinimumHeight(0);
-        m_deviceStatusBar->setMaximumHeight(9999);
-        QMatrix m;
-        m.rotate(angle);
-        modifiedPixmap = statusBarPixmap.copy(0, 30, width(), 30).transformed(m);
-        if(angle == M::Angle90)
-            m_deviceStatusBar->setAlignment(Qt::AlignLeft | Qt::AlignBottom);
-        else
-            m_deviceStatusBar->setAlignment(Qt::AlignRight | Qt::AlignTop);
-    }
-    m_deviceStatusBar->setPixmap(modifiedPixmap);
 
     /*
     if (!sharedPixmap.isNull()) {
@@ -161,7 +117,7 @@ void QtMaemo6WindowDecoration::setStatusBar(QStatusBar *statusBar)
 
     if (statusBar) {
         m_statusBarParent = statusBar->parentWidget();
-        m_windowLayout->addWidget(statusBar, layoutOffset+1, layoutOffset);
+        m_windowLayout->addWidget(statusBar, 3, 1);
     } else {
         if (m_statusBar) {
             m_windowLayout->removeWidget(m_statusBar);
@@ -183,14 +139,6 @@ void QtMaemo6WindowDecoration::setMenuBar(QMenuBar *menuBar)
         m_titleBar->setMenuButtonVisible(false);
     }
 }
-
-
-void QtMaemo6WindowDecoration::setOrientation(M::OrientationAngle angle) {
-    //currently this method does nothing but calling the base method.
-    // reimplement an custom orientation change here
-    QtMaemo6Window::setOrientation(angle);
-}
-
 
 void QtMaemo6WindowDecoration::showMenuBar()
 {
@@ -220,5 +168,5 @@ bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
 
 void QtMaemo6WindowDecoration::timerEvent(QTimerEvent *e) {
     if(e->timerId() == m_deviceStatusBarTimerId)
-        updateStatusBarSharedPixmap(orientation());
+        updateStatusBarSharedPixmap();
 }

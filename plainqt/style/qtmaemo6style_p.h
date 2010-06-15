@@ -27,10 +27,6 @@
 #include "qtmaemo6styleeventfilter.h"
 #include "qtmaemo6scrollbareventfilter.h"
 
-#ifdef HAVE_CONTEXTSUBSCRIBER
-#include "contextproperty.h"
-#endif //HAVE_CONTEXTSUBSCRIBER
-
 class MComponentData;
 class MWidgetController;
 class QToolButton;
@@ -329,7 +325,6 @@ public:
 
     WidgetPos m_originalWidgetPos;
 
-    bool hasMWindowParent(const QWidget*) const;
 public:
     QList<QToolButton *> m_toolButtonsInTitleBar;
     QList<QAction *> m_toolBarActions;
@@ -338,14 +333,8 @@ public:
     const int m_actionsInTitleBarCount;
 
     MComponentData *m_componentData;
-
-#ifdef HAVE_CONTEXTSUBSCRIBER
-    ContextProperty m_orientation;
-#endif //HAVE_CONTEXTSUBSCRIBER
-
     bool m_isMInitialized;
     bool m_isMApplication;
-    bool m_isOrientationChangeEnabled;
 
     QtMaemo6ScrollBarEventFilter *m_scrollBarEventFilter;
     QtMaemo6StyleEventFilter *m_windowEventFilter;
@@ -353,8 +342,6 @@ public:
     QMenuBar *m_menuBar;
 
     QtMaemo6KineticScrolling* m_kinetic;
-
-    //QList<QWidget*> m_delayedPolishing;
 
     QList<QString> m_excludeClasses;
 };

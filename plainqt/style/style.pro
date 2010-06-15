@@ -24,10 +24,6 @@ win32|macx {
 } else {
     LIBS += -lmeegotouchcore -lmeegotouchviews
 }
-contains(DEFINES, HAVE_CONTEXTSUBSCRIBER) {
-    LIBS += -lcontextsubscriber
-    INCLUDEPATH += /usr/include/contextsubscriber
-}
 
 TEMPLATE = lib
   CONFIG += plugin

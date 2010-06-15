@@ -21,7 +21,6 @@
 #define QTMAEMO6CLICKLABEL_H
 
 #include <QLabel>
-#include <mnamespace.h>
 
 
 /*!
@@ -31,23 +30,16 @@ class QtMaemo6ClickLabel : public QLabel
 {
     Q_OBJECT
 public:
-    explicit QtMaemo6ClickLabel(QWidget *parent);
+    explicit QtMaemo6ClickLabel(QWidget *parent): QLabel(parent) {}
 
-    virtual QSize minimumSizeHint () const;
-    virtual QSize sizeHint () const;
 protected:
-    /*! \reimp */
-    void paintEvent(QPaintEvent *ev);
-    void mousePressEvent(QMouseEvent *ev);
-    /*! \reimp_end */
-private:
-    QSize getSize(const QSize origSize) const;
-public Q_SLOTS:
-    void setOrientation(M::OrientationAngle);
+    void mousePressEvent(QMouseEvent *ev) {
+        Q_UNUSED(ev);
+        emit clicked();
+    }
+
 Q_SIGNALS:
     void clicked();
-protected:
-    M::OrientationAngle m_orientationAngle;
 };
 
 #endif // QTMAEMO6CLICKLABEL_H

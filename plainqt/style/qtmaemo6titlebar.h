@@ -24,8 +24,6 @@
 #include <QToolButton>
 #include <QHBoxLayout>
 
-#include <mnamespace.h>
-
 class QtMaemo6ClickLabel;
 
 /*!
@@ -95,12 +93,6 @@ public Q_SLOTS:
      */
     void addButton(QToolButton *button);
 
-    /*!
-     * sets the orientation of the titlebar
-     */
-    void setOrientation(M::OrientationAngle);
-
-    M::OrientationAngle orientation() const { return m_orientationAngle; };
 Q_SIGNALS:
     /*!
      * this signal is emitted if the home button was pressed
@@ -123,14 +115,10 @@ protected:
     /*! \reimp_end */
 
 private:
-    static const int titleBarHeight;
     QtMaemo6ClickLabel *m_titleLabel;
     QtMaemo6ClickLabel *m_titleLabelMenuButton;
-    QtMaemo6ClickLabel *m_minimizeButton;
-    QtMaemo6ClickLabel *m_closeButton;
-    QBoxLayout *m_buttonsLayout;
-    QBoxLayout *m_titleBarLayout;
-    M::OrientationAngle m_orientationAngle;
+    QHBoxLayout *m_buttonsLayout;
+    QHBoxLayout *m_titleBarLayout;
 };
 
 #endif
