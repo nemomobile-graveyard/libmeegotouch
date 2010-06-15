@@ -34,7 +34,6 @@
 #include <mapplicationmenubuttonstyle.h>
 #include <mhomebuttonpanelstyle.h>
 #include <mescapebuttonpanelstyle.h>
-#include <mlabelstyle.h>
 #include <MScalableImage>
 #include <MTheme>
 #include <mnavigationbarstyle.h>
@@ -67,25 +66,13 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
 
     m_titleLabelMenuButton = new QtMaemo6ClickLabel(this);
     m_titleLabelMenuButton->setObjectName("Qt_Maemo6_TitleBar_Menu");
-
     const MApplicationMenuButtonStyle *iconStyle =
         static_cast<const MApplicationMenuButtonStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
                 "MApplicationMenuButtonStyle", "NavigationBarMenuButton"));
     if (iconStyle) {
-        if(!iconStyle->arrowIcon().isEmpty())
-            m_titleLabelMenuButton->setPixmap(*MTheme::pixmapCopy(iconStyle->arrowIcon(), iconStyle->arrowIconSize()));
+        m_titleLabelMenuButton->setPixmap(*MTheme::pixmapCopy(iconStyle->arrowIcon(), iconStyle->arrowIconSize()));
     }
     connect(m_titleLabelMenuButton, SIGNAL(clicked()), this, SIGNAL(menuLabelClicked()));
-
-    const MLabelStyle *menuButtonLabelStyle =
-        static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
-                "MLabelStyle", "NavigationBarMenuButtonLabel"));
-    if(menuButtonLabelStyle) {
-        qCritical() << menuButtonLabelStyle->color();
-        QPalette pal = m_titleLabel->palette();
-        pal.setBrush(m_titleLabel->foregroundRole(), menuButtonLabelStyle->color());
-        m_titleLabel->setPalette(pal);
-    }
 
     QSpacerItem *spacer = new QSpacerItem(0, 0);
     if (iconStyle) {
@@ -126,6 +113,7 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
     Q_UNUSED( menuStyle );
     //TODO: use style and menuStyle once the properties inside work actually.
     // This would also remove the magic numbers.
+    setTitleColor( Qt::white );
     setMargin( 10 );
     setItemSpacing( 20 );
 
@@ -153,6 +141,13 @@ void QtMaemo6TitleBar::paintEvent(QPaintEvent *event)
 void QtMaemo6TitleBar::setTitle(const QString &title)
 {
     m_titleLabel->setText(title);
+}
+
+void QtMaemo6TitleBar::setTitleColor(const QColor &color)
+{
+    QPalette pal;
+    pal.setColor( QPalette::Foreground, color );
+    m_titleLabel->setPalette( pal );
 }
 
 void QtMaemo6TitleBar::setMargin(int margin)
