@@ -126,7 +126,6 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
     Q_UNUSED( menuStyle );
     //TODO: use style and menuStyle once the properties inside work actually.
     // This would also remove the magic numbers.
-    setTitleColor( Qt::white );
     setMargin( 10 );
     setItemSpacing( 20 );
 
