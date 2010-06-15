@@ -1036,6 +1036,13 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
     Q_D(MApplicationWindow);
     MSceneWindow *component;
 
+    if (d->isMenuOpen) {
+        if (d->navigationBar->boundingRect().contains(d->navigationBar->mapFromScene(event->pos().x(), event->pos().y()))
+            || d->toolBar->boundingRect().contains(d->toolBar->mapFromScene(event->pos().x(), event->pos().y()))) {
+            closeMenu();
+        }
+    }
+
     MWindow::mouseReleaseEvent(event);
 
     if (d->componentsOnAutoHide.count() > 0) {
@@ -1053,13 +1060,6 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
 
         // restart timer
         d->autoHideComponentsTimer.start();
-    }
-
-    if (d->isMenuOpen) {
-        if (d->navigationBar->boundingRect().contains(d->navigationBar->mapFromScene(event->pos().x(), event->pos().y()))
-            || d->toolBar->boundingRect().contains(d->toolBar->mapFromScene(event->pos().x(), event->pos().y()))) {
-            closeMenu();
-        }
     }
 }
 
