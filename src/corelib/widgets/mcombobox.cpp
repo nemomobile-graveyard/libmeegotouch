@@ -51,9 +51,10 @@ void MComboBoxPrivate::_q_selectionModelSelectionChanged(const QItemSelection &s
     Q_UNUSED(deselected);
     Q_Q(MComboBox);
     if (!selected.isEmpty()) {
-        int currentRow = selected.indexes().first().row();
-        emit q->currentIndexChanged(currentRow);
-        emit q->currentIndexChanged(q->itemText(currentRow));
+        QModelIndex current = selected.indexes().first();
+        q->selectionModel()->setCurrentIndex(current, QItemSelectionModel::NoUpdate);
+        emit q->currentIndexChanged(current.row());
+        emit q->currentIndexChanged(q->itemText(current.row()));
     } else if (q->currentIndex() == -1) {
         emit q->currentIndexChanged(-1);
         emit q->currentIndexChanged(QString());
