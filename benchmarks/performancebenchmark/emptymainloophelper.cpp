@@ -48,6 +48,7 @@ void EmptyMainLoopHelper::triggerTermination(TerminationType type)
 
 void EmptyMainLoopHelper::terminateOnEmptyMainLoop()
 {
+    qApp->processEvents();
     if (qApp->hasPendingEvents() || MTheme::hasPendingRequests()) {
         QTimer::singleShot(0, this, SLOT(terminateOnEmptyMainLoop()));
     } else {
