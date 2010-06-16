@@ -22,7 +22,7 @@ macx {
         INCLUDEPATH += $${M_INC_DIR} $${GSTREAMER_INC}
         DEPENDPATH += $${M_INC_DIR}
 
-        unix: QMAKE_LFLAGS += $${QMAKE_RPATH}$${M_LIB_DIR}
+        unix: QMAKE_LFLAGS += $${QMAKE_LFLAGS_RPATH}$${M_LIB_DIR}
         LIBS += -L$${M_LIB_DIR}
 
         QMAKE_MOC = $${M_MMOC_EXECUTABLE}
