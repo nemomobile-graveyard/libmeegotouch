@@ -21,7 +21,7 @@
 
 #include <MAbstractCellCreator>
 #include <MBasicListItem>
-#include <MInfoBanner>
+#include <MBanner>
 #include <MLayout>
 #include <MList>
 #include <MLinearLayoutPolicy>
@@ -115,38 +115,24 @@ void BannersPage::itemClicked(const QModelIndex &index)
 
 void BannersPage::showEventBanner()
 {
-    MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Event);
-    infoBanner->setImageID("icon-m-content-email");
-    infoBanner->setBodyText(
-        //% "<b>Ida Taipale</b><br/>Have you seen my dog?"
-        qtTrId("xx_dialogs_and_notifications_event_banner"));
-    infoBanner->setIconID("icon-m-content-mms");
-    connect(infoBanner, SIGNAL(clicked()), this, SLOT(openMessageBox()));
-    infoBanner->appear(MSceneWindow::DestroyWhenDone);
-    QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
+    MBanner *banner = new MBanner();
+    banner->setIconID("icon-l-settings");
+    banner->setTitle("New updates waiting to install");
+    banner->setSubtitle("130 files");
+    banner->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void BannersPage::showInformationBanner()
 {
-    MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
-    infoBanner->setImageID("icon-m-startup-help");
-    infoBanner->setBodyText(
-        //% "<b>Battery is running low</b>"
-        qtTrId("xx_dialogs_and_notifications_information_banner"));
-    infoBanner->appear(MSceneWindow::DestroyWhenDone);
-    QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
+    MBanner *banner = new MBanner();
+    banner->setSubtitle("Info banner with so much information that the text wraps in portrait");
+    banner->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void BannersPage::showSystemInformationBanner()
 {
-    MInfoBanner *infoBanner = new MInfoBanner(MInfoBanner::Information);
-    infoBanner->setImageID("icon-m-telephony-call-answer");
-    infoBanner->setBodyText(
-        //% "<b>Incoming call</b>"
-        qtTrId("xx_dialogs_and_notifications_system_information_banner"));
-    //% "Accept"
-    infoBanner->setButtonText(qtTrId("xx_dialogs_and_notifications_system_information_banner_accept"));
-    connect(infoBanner, SIGNAL(buttonClicked()), this, SLOT(openMessageBox()));
-    infoBanner->appear(MSceneWindow::DestroyWhenDone);
-    QTimer::singleShot(3000, infoBanner, SLOT(disappear()));
+    MBanner *banner = new MBanner();
+    banner->setIconID("icon-l-calendar-reminder");
+    banner->setSubtitle("System banner");
+    banner->appear(MSceneWindow::DestroyWhenDone);
 }

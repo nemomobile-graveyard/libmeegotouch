@@ -13,6 +13,7 @@ PUBLIC_HEADERS += \
     mhomebuttonpanelview.h \
     minfobannereventview.h \
     minfobannerinformationview.h \
+    mbannerview.h \
     mgriditemview.h \
     mapplicationmenuview.h \
     mmenuobjectview.h \
@@ -79,6 +80,7 @@ SOURCES += \
     mhomebuttonpanelview.cpp \
     minfobannereventview.cpp \
     minfobannerinformationview.cpp \
+    mbannerview.cpp \
     mgriditemview.cpp \
     mapplicationmenuview.cpp \
     mmenuobjectview.cpp \

@@ -18,6 +18,7 @@ MGEN_STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mhomebuttonpanelstyle.h \
     $$STYLE_SRC_DIR/mimagewidgetstyle.h \
     $$STYLE_SRC_DIR/minfobannerstyle.h \
+    $$STYLE_SRC_DIR/mbannerstyle.h \
     $$STYLE_SRC_DIR/mlabelstyle.h \
     $$STYLE_SRC_DIR/mliststyle.h \
     $$STYLE_SRC_DIR/mapplicationmenustyle.h \

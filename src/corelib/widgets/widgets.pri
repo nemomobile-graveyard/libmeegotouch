@@ -23,6 +23,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mhomebuttonpanel.h \
     $$WIDGETS_SRC_DIR/mimagewidget.h \
     $$WIDGETS_SRC_DIR/minfobanner.h \
+    $$WIDGETS_SRC_DIR/mbanner.h \
     $$WIDGETS_SRC_DIR/mlabel.h \
     $$WIDGETS_SRC_DIR/mlabelhighlighter.h \
     $$WIDGETS_SRC_DIR/mlist.h \
@@ -74,6 +75,7 @@ MGEN_MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mescapebuttonpanelmodel.h \
     $$WIDGETS_SRC_DIR/mimagewidgetmodel.h \
     $$WIDGETS_SRC_DIR/minfobannermodel.h \
+    $$WIDGETS_SRC_DIR/mbannermodel.h \
     $$WIDGETS_SRC_DIR/mapplicationmenumodel.h \
     $$WIDGETS_SRC_DIR/mmessageboxmodel.h \
     $$WIDGETS_SRC_DIR/mnavigationbarmodel.h \
@@ -130,6 +132,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mhomebuttonpanel.cpp \
     $$WIDGETS_SRC_DIR/mimagewidget.cpp \
     $$WIDGETS_SRC_DIR/minfobanner.cpp \
+    $$WIDGETS_SRC_DIR/mbanner.cpp \
     $$WIDGETS_SRC_DIR/mlabel.cpp \
     $$WIDGETS_SRC_DIR/mlabelmodel.cpp \
     $$WIDGETS_SRC_DIR/mlabelhighlighter.cpp \
