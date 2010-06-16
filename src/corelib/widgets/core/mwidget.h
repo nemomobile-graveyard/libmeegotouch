@@ -131,21 +131,26 @@ public:
 
 public Q_SLOTS:
     /*! \reimp */
-    /** This is implement here because although the function already exists from
-     * QGraphicsWidget it was not virtual.  This means that calling MWidget's
-     * setObjectName would not call MWidgetController's setObjectName which
-     * calls updateStyle().  So without this, the widget would not be styled correctly.
+    /** Hide the non-virtual QObject::setObjectName()  with this virtual function to catch calls to
+     * change the object name.  This is required to allow us to update the style from CSS. 
+     *
+     * Warning: Since QObject::setObjectName() is non-virtual, code like:
+     * \code
+     *   MLabel *label = new MLabel("Hello"); label->setObjectName("hello");
+     * \endcode
+     * Would correctly restyle the label.  But:
+     * \code
+     *   QGraphicsWidget *label = new MLabel("Hello"); label->setObjectName("hello");
+     * \endcode
+     * Would not update the CSS style correctly.
      */
     virtual void setObjectName(const QString &name);
 
     /**
-    * This is implemented here because of limitations of item selection which is provided by QGraphicsScene.
-    * There is no way to implement custom selection policies, because QGraphicsItem and QGraphicsScene have
-    * there own selection logic which is very limited and can't be extended.
+    * Hide the non-virtual QGraphicsItem::setSelected() with this virtual function to catch calls
+    * to select the object.  This is required to allow for custom selection policies.
     *
-    * Notifies widget that it was selected or deselected depending on parameter. It's up to widget to decide
-    * how selection should be shown. By default widget is not selected.
-    * \a selected specify if widget is selected <code>true</code> or not
+    * It is up to widget to decide how selection should be shown. By default a widget is not selected.
     */
     void setSelected(bool selected);
     /*! \reimp_end */
