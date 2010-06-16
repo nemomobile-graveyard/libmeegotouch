@@ -379,7 +379,7 @@ void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
 void MApplicationWindowPrivate::openMenu()
 {
     Q_Q(MApplicationWindow);
-    if (menu->actions().count() > 0) {
+    if (navigationBar->isArrowIconVisible()) {
         menu->appear(q);
         escapeButtonPanel->setEnabled(false);
 
@@ -435,18 +435,17 @@ void MApplicationWindowPrivate::manageActions()
     menu->clearActions();
 
     // add page actions
-    QAction *before = 0;
     QList<QAction *> actions = page->actions();
     int actionsSize = actions.size();
     for (int i = 0; i < actionsSize; ++i) {
-        distributeAction(actions[i], before);
+        distributeAction(actions[i], NULL);
     }
 
     // add window actions
     actions = q->actions();
     actionsSize = actions.size();
     for (int i = 0; i < actionsSize; ++i) {
-        distributeAction(actions[i], before);
+        distributeAction(actions[i], NULL);
     }
 
     if (pageCheckedAction) {
@@ -458,27 +457,24 @@ void MApplicationWindowPrivate::manageActions()
 
 void MApplicationWindowPrivate::distributeAction(QAction *action, QAction *before)
 {
-    MAction::Locations location = MAction::EveryLocation;
-    MAction *mAction = qobject_cast<MAction *>(action);
-    if (mAction)
-        location = mAction->location();
-
-    if(location & MAction::ToolBarLocation)
-        toolBar->insertAction(before, action);
-    if(location & MAction::ApplicationMenuLocation)
-        menu->insertAction(before, action);
+    //The toolbar and menu will check for themselves whether to actually show the action or not
+    toolBar->insertAction(before, action);
+    menu->insertAction(before, action);
 }
 
 void MApplicationWindowPrivate::refreshArrowIconVisibility()
 {
-    bool visible = navigationBar->isArrowIconVisible();
-    if (menu->actions().count() == 0) {
-        if (visible)
-            navigationBar->setArrowIconVisible(false);
-    } else {
-        if (!visible)
-            navigationBar->setArrowIconVisible(true);
+    bool haveVisibleMenuAction = false;
+    foreach(QAction *action, menu->actions()) {
+        if(action->isVisible()) {
+            MAction *maction = qobject_cast<MAction*>(action);
+            if(!maction || maction->location().testFlag(MAction::ApplicationMenuLocation)) {
+                haveVisibleMenuAction = true;
+                break;
+            }
+        }
     }
+    navigationBar->setArrowIconVisible(haveVisibleMenuAction);
 }
 
 void MApplicationWindowPrivate::setComponentDisplayMode(
