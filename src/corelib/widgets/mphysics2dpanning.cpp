@@ -280,9 +280,16 @@ void MPhysics2DPanning::setPosition(const QPointF &position)
 
         emit positionChanged(position);
 
-        // Starts the physics in case the position is set to border
-        // and it needs to slide back into range
-        start();
+        if (inMotion()) {
+            // If we are in the middle of the movement, we should reduce the speed
+            // but not stop because we might be outside bounds.
+            d->velX = 0.0;
+            d->velY = 0.0;
+        } else {
+            // Starts the physics in case the position is set to border
+            // and it needs to slide back into range
+            start();
+        }
     }
 }
 
