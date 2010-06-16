@@ -1,8 +1,12 @@
-libmeegotouch (0.20.19~1) unstable; urgency=low
+libmeegotouch (0.20.19-1) unstable; urgency=low
 
+  * Fixes: NB#174469 - widgetsgallery -quitimmediately stuck
   * Fixes: NB#171466 - The MNotification::notifications() returns non-initialized notifications?
+  * Fixes: NB#174768 - Launcher and Quick Launch Bar icons are squeezed horizontally
+  * Fixes: NB#173243 - (MSlider_groove) MSlider: The groove is not painted right when we use values out of bounds.
+  * Fixes: NB#172438 - Serviceframework: Interfaceadaptor causes crash if AppWindow doesn't have page ready
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 14 Jun 2010 16:41:28 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 16 Jun 2010 15:48:58 +0300
 
 libmeegotouch (0.20.18-1) unstable; urgency=low
 
