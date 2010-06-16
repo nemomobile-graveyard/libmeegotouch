@@ -96,6 +96,12 @@ class M_EXPORT MWindow : public QGraphicsView
     */
     Q_PROPERTY(qreal globalAlpha READ globalAlpha WRITE setGlobalAlpha)
 
+    /*!
+     \property videoGlobalAlpha
+     The global alpha of the hardware video overlay for use by this window.
+    */
+    Q_PROPERTY(qreal videoGlobalAlpha READ videoGlobalAlpha WRITE setVideoGlobalAlpha)
+
 public:
     /*!
      \brief Creates a MWindow without a scene manager.
@@ -168,13 +174,38 @@ public:
     *
     * \param level The valid range of global alpha can be 1.0 (completely opaque) to 0.0 (completely transparent).
     */
-   void setGlobalAlpha(qreal level);
+    void setGlobalAlpha(qreal level);
 
    /*!
      \brief Returns the global alpha of the hardware graphics overlay for use
      by this window.
      */
-   qreal globalAlpha();
+    qreal globalAlpha();
+
+    /*!
+     * \brief Sets the alpha of the hardware video overlay for use
+     * by this window.
+     *
+     * Video alpha is the is used to control the dimming of the video overlay
+     * where hardware accelerated video is rendering.
+     *
+     * By default, each MWindow does not enable the video alpha. When this
+     * window is destroyed or hidden, the system will revert the video alpha
+     * back to its previous state.
+     *
+     *  Platform notes:
+     *   - This is a Harmattan-specific implementation and will require
+     *     interaction with the Harmattan compositing window manager
+     *     (MCompositor)
+     *
+     * \param level The valid range of video alpha can be 1.0 (completely opaque) to 0.0 (completely transparent)
+     */
+    void setVideoGlobalAlpha(qreal level);
+
+    /*!
+     * \brief Returns the alpha of the hardware video overlay for use by this window.
+     */
+    qreal videoGlobalAlpha();
 
     /*!
      \brief Returns the window's MScene.

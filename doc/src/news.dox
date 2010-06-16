@@ -1,5 +1,10 @@
 /*! \page news What's New in DirectUI
 
+\section v02024 0.20.24
+
+\subsection New
+- videoGlobalAlpha property in MWindow.
+
 \section v02020 0.20.20
 
 \subsection New

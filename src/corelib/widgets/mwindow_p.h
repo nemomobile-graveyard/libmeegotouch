@@ -44,6 +44,8 @@ public:
 
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();
+    void setX11Property(const char *propertyName, qreal value);
+    qreal getX11Property(const char *propertyName) const;
 #endif
     
     void _q_onPixmapRequestsFinished();

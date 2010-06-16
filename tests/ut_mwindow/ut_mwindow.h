@@ -62,6 +62,7 @@ private slots:
     void testDisplayExitedOnCloseLazyShutdownApp();
     void testCloseOnLazyShutdown();
     void testGlobalAlpha();
+    void testVideoGlobalAlpha();
 
 public slots:
     void onDisplayTestSlot();

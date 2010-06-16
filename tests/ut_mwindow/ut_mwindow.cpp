@@ -335,4 +335,26 @@ void Ut_MWindow::testGlobalAlpha()
     QCOMPARE(alpha, 1.0);
 }
 
+void Ut_MWindow::testVideoGlobalAlpha()
+{
+    qreal alpha = win->videoGlobalAlpha();
+    QCOMPARE(alpha, 1.0);
+
+    win->setVideoGlobalAlpha(0.5);
+    alpha = win->videoGlobalAlpha();
+    QVERIFY( qAbs(alpha - 0.5) < 0.001 );
+
+    win->setVideoGlobalAlpha(0.0);
+    alpha = win->videoGlobalAlpha();
+    QCOMPARE(alpha, 0.0);
+
+    win->setVideoGlobalAlpha(1.0);
+    alpha = win->videoGlobalAlpha();
+    QCOMPARE(alpha, 1.0);
+
+    win->setVideoGlobalAlpha(-2.0);
+    alpha = win->videoGlobalAlpha();
+    QCOMPARE(alpha, 1.0);
+}
+
 QTEST_MAIN(Ut_MWindow);

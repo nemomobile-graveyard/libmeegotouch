@@ -477,30 +477,30 @@ void MWindow::setTranslucentBackground(bool enable)
         d->initGLViewport();
 }
 
-void MWindow::setGlobalAlpha(qreal level)
-{
 #ifdef Q_WS_X11
-    Atom globalAlpha = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_GLOBAL_ALPHA", False);
+void MWindowPrivate::setX11Property(const char *propertyName, qreal value)
+{
+    Q_Q(MWindow);
 
-    if (level < 0.0 || level >= 1.0) {
-        XDeleteProperty(QX11Info::display(), winId(), globalAlpha);
+    Atom atom = XInternAtom(QX11Info::display(), propertyName, False);
+
+    if (value < 0.0 || value >= 1.0) {
+        XDeleteProperty(QX11Info::display(), q->winId(), atom);
     } else {
         // We use same conventions as _NET_WM_WINDOW_OPACITY so we could re-use
         // same code in the compositor
-        unsigned int opacity = (unsigned int) (0xffffffff * level);
+        unsigned int opacity = (unsigned int) (0xffffffff * value);
 
-        XChangeProperty(QX11Info::display(), winId(), globalAlpha, XA_CARDINAL, 32 ,
+        XChangeProperty(QX11Info::display(), q->winId(), atom, XA_CARDINAL, 32 ,
                         PropModeReplace, (unsigned char *) &opacity, 1);
     }
-#else
-    Q_UNUSED(level);
-#endif
 }
 
-qreal MWindow::globalAlpha()
+qreal MWindowPrivate::getX11Property(const char *propertyName) const
 {
+    Q_Q(const MWindow);
+
     qreal level = 1.0;
-#ifdef Q_WS_X11
     Atom actualType = 0;
     int actualFormat = 0;
     unsigned long nitems = 0;
@@ -511,9 +511,9 @@ qreal MWindow::globalAlpha()
         unsigned long* asULong;
     } data = {0};
 
-    Atom globalAlpha = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_GLOBAL_ALPHA", False);
+    Atom propertyAtom = XInternAtom(QX11Info::display(), propertyName, False);
 
-    int status = XGetWindowProperty(QX11Info::display(), winId(), globalAlpha,
+    int status = XGetWindowProperty(QX11Info::display(), q->winId(), propertyAtom,
                                     0, 1, False, AnyPropertyType,
                                     &actualType, &actualFormat, &nitems,
                                     &bytes, &data.asUChar);
@@ -522,8 +522,48 @@ qreal MWindow::globalAlpha()
         level = (qreal)data.asULong[0] / 0xffffffff;
     if (status == Success)
         XFree(data.asUChar);
-#endif
     return level;
+}
+#endif
+
+void MWindow::setGlobalAlpha(qreal level)
+{
+#ifdef Q_WS_X11
+    Q_D(MWindow);
+    d->setX11Property("_MEEGOTOUCH_GLOBAL_ALPHA", level);
+#else
+    Q_UNUSED(level);
+#endif
+}
+
+qreal MWindow::globalAlpha()
+{
+#ifdef Q_WS_X11
+    Q_D(MWindow);
+    return d->getX11Property("_MEEGOTOUCH_GLOBAL_ALPHA");
+#else
+    return 1.0;
+#endif
+}
+
+void MWindow::setVideoGlobalAlpha(qreal level)
+{
+#ifdef Q_WS_X11
+    Q_D(MWindow);
+    d->setX11Property("_MEEGOTOUCH_VIDEO_ALPHA", level);
+#else
+    Q_UNUSED(level);
+#endif
+}
+
+qreal MWindow::videoGlobalAlpha()
+{
+#ifdef Q_WS_X11
+    Q_D(MWindow);
+    return d->getX11Property("_MEEGOTOUCH_VIDEO_ALPHA");
+#else
+    return 1.0;
+#endif
 }
 
 MScene *MWindow::scene()
