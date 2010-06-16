@@ -1152,7 +1152,7 @@ void MSceneManagerPrivate::dismissSceneWindow(MSceneWindow *window,
     } else if (animatedTransition) { // Fallback to legacy disappearance anim.
         if (!window->d_func()->disappearanceAnimation)
             createDisappearanceAnimationForSceneWindow(window);
-        window->d_func()->disappearanceAnimation->start();
+        window->d_func()->disappearanceAnimation->start(QAbstractAnimation::DeleteWhenStopped);
     } else {
         emit window->disappeared();
     }
