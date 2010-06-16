@@ -94,20 +94,7 @@ void MSceneManagerPrivate::init(MScene *scene)
 
     pendingRotation = 0;
 
-    // set the angle to that of the topmost window, if one exists
-    MWindow *activeWindow = MApplication::activeWindow();
-
-    MWindow *viewingWindow = 0;
-    if (scene->views().size() > 0) {
-        viewingWindow = qobject_cast<MWindow *>(scene->views().at(0));
-        Q_ASSERT(viewingWindow);
-    }
-
-    if (activeWindow && activeWindow != viewingWindow)
-        angle = activeWindow->orientationAngle();
-    else
-        angle = MOrientationTracker::instance()->orientationAngle();
-    newAngle = angle;
+    initOrientationAngles();
 
     windows = new QList<MSceneWindow *>();
 
@@ -133,6 +120,24 @@ void MSceneManagerPrivate::init(MScene *scene)
     pageSwitchAnimation = new MPageSwitchAnimation;
 
     setOrientationAngleWithoutAnimation(newAngle);
+}
+
+void MSceneManagerPrivate::initOrientationAngles()
+{
+    // set the angle to that of the topmost window, if one exists
+    MWindow *activeWindow = MApplication::activeWindow();
+
+    MWindow *viewingWindow = 0;
+    if (scene->views().size() > 0) {
+        viewingWindow = qobject_cast<MWindow *>(scene->views().at(0));
+        Q_ASSERT(viewingWindow);
+    }
+
+    if (activeWindow && activeWindow != viewingWindow)
+        angle = activeWindow->orientationAngle();
+    else
+        angle = MOrientationTracker::instance()->orientationAngle();
+    newAngle = angle;
 }
 
 void MSceneManagerPrivate::createOrientationAnimation()

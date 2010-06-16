@@ -72,6 +72,7 @@ public:
         StatusBar = 9000                             // MStatusBar
     };
 
+    void initOrientationAngles();
     int zForWindowType(MSceneWindow::WindowType windowType);
     MSceneLayerEffect *createLayerEffectForWindow(MSceneWindow *window);
 
