@@ -952,7 +952,7 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
     currentPage = page;
 
     if (animatedTransition) {
-        startPageSwitchAnimation(currentPage, previousPage, MPageSwitchAnimation::LeftToRight);
+        startPageSwitchAnimation(currentPage, previousPage, MPageSwitchAnimation::RightToLeft);
     } else {
         if (previousPage) {
             emit previousPage->disappeared();
@@ -979,7 +979,7 @@ void MSceneManagerPrivate::popPage(bool animatedTransition)
     }
 
     if (animatedTransition) {
-        startPageSwitchAnimation(previousPage, currentPage, MPageSwitchAnimation::RightToLeft);
+        startPageSwitchAnimation(previousPage, currentPage, MPageSwitchAnimation::LeftToRight);
     } else {
         emit currentPage->disappeared();
 

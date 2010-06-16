@@ -99,14 +99,14 @@ void MPageSwitchAnimation::updateState(QAbstractAnimation::State newState,
     d->positionOldPageAnimation->setTargetObject(d->oldPage);
 
     if (d->newPage) {
-        if (d->direction == LeftToRight)
+        if (d->direction == RightToLeft)
             d->positionNewPageAnimation->setStartValue(QPointF(d->newPage->boundingRect().width(), 0));
         else
             d->positionNewPageAnimation->setStartValue(QPointF(-d->newPage->boundingRect().width(), 0));
     }
 
     if (d->oldPage) {
-        if (d->direction == LeftToRight)
+        if (d->direction == RightToLeft)
             d->positionOldPageAnimation->setEndValue(QPointF(-d->oldPage->boundingRect().width(), 0));
         else
             d->positionOldPageAnimation->setEndValue(QPointF(d->oldPage->boundingRect().width(), 0));
