@@ -96,8 +96,6 @@ void MSceneManagerPrivate::init(MScene *scene)
 
     initOrientationAngles();
 
-    windows = new QList<MSceneWindow *>();
-
     rootElement = new QGraphicsWidget();
     rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.0, q->visibleSceneSize().height() / 2.0));
     scene->addItem(rootElement);
@@ -160,7 +158,6 @@ void MSceneManagerPrivate::createOrientationAnimation()
 
 MSceneManagerPrivate::~MSceneManagerPrivate()
 {
-    delete windows;
     delete orientationAnimation;
     delete pageSwitchAnimation;
     delete pendingRotation;
@@ -378,10 +375,10 @@ void MSceneManagerPrivate::_q_onSceneWindowDisappeared()
     QObject::disconnect(window, SIGNAL(disappeared()), q, SLOT(_q_onSceneWindowDisappeared()));
 
     //check if the window has not yet been detached
-    int i = windows->indexOf(window);
+    int i = windows.indexOf(window);
 
     if (i != -1) {
-        windows->removeAt(i);
+        windows.removeAt(i);
         QObject::disconnect(window, SIGNAL(repositionNeeded()), q, SLOT(_q_setSenderGeometry()));
 
         // If there is a layer effect it is deleted as well
@@ -462,13 +459,13 @@ M::Orientation MSceneManagerPrivate::orientation(M::OrientationAngle angle) cons
 
 void MSceneManagerPrivate::attachWindow(MSceneWindow *window)
 {
-    if (!windows->contains(window))
-        windows->append(window);
+    if (!windows.contains(window))
+        windows.append(window);
 }
 
 void MSceneManagerPrivate::detachWindow(MSceneWindow *window)
 {
-    windows->removeOne(window);
+    windows.removeOne(window);
 
     // If there is a layer effect it is deleted as well
     if (window->d_func()->effect) {
@@ -520,9 +517,9 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
 void MSceneManagerPrivate::setSceneWindowGeometries()
 {
     _q_restoreSceneWindow();
-    const int size = windows->size();
+    const int size = windows.size();
     for (int i = 0; i < size; ++i)
-        setSceneWindowGeometry(windows->at(i));
+        setSceneWindowGeometry(windows.at(i));
 }
 
 void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
@@ -1194,7 +1191,7 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
             animation = slideInAnimation;
 
-            QList<MSceneWindow*> sceneWindows = *windows;
+            QList<MSceneWindow*> sceneWindows = windows;
             sceneWindows.removeAll(sceneWindow);
             foreach (MSceneWindow *window, sceneWindows) {
                 if (window->windowType() != MSceneWindow::ApplicationPage &&
@@ -1268,7 +1265,7 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
             animation = slideOutAnimation;
 
-            QList<MSceneWindow*> sceneWindows = *windows;
+            QList<MSceneWindow*> sceneWindows = windows;
             sceneWindows.removeAll(sceneWindow);
             foreach (MSceneWindow *window, sceneWindows) {
                 if (window->windowType() != MSceneWindow::ApplicationPage &&
