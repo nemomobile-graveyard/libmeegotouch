@@ -59,6 +59,7 @@ protected:
     //! \reimp
     virtual void setupModel();
     virtual void applyStyle();
+    virtual void setGeometry(const QRectF &rect);
     //! \reimp_end
 
     void setSelected(bool selected);

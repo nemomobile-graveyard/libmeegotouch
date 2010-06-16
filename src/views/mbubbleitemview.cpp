@@ -90,7 +90,6 @@ void MBubbleItemViewPrivate::initLayout()
             layout->addItem(controller->avatar(), 0, 1);
     }
 
-    updateMessageComposition();
     updateInformationWidgetsLayout();
 
     innerLayout->addItem(messageComposition);
@@ -187,6 +186,14 @@ void MBubbleItemViewPrivate::applyStyle()
     refreshStyleMode();
 }
 
+void MBubbleItemView::setGeometry(const QRectF &rect)
+{
+    MWidgetView::setGeometry(rect);
+
+    Q_D(MBubbleItemView);
+    d->updateMessageComposition();
+}
+
 void MBubbleItemViewPrivate::refreshStyleMode()
 {
     Q_Q(MBubbleItemView);
@@ -218,12 +225,23 @@ void MBubbleItemViewPrivate::updateMessageComposition()
 {
     Q_Q(MBubbleItemView);
 
+    QString senderName = q->model()->senderName();
+    QFont boldFontForSendername( messageComposition->font() );
+    boldFontForSendername.setBold(true);
+    QFontMetrics fontMetrics(boldFontForSendername);
+
+    if (fontMetrics.width(senderName) > messageComposition->size().width())
+        senderName = fontMetrics.elidedText(senderName, Qt::ElideRight,
+                                            messageComposition->size().width()
+                                            - fontMetrics.size( Qt::TextSingleLine, "...:" ).width()
+                                            );
+
     if (controller->messageType() == MBubbleItem::Incoming)
-        messageComposition->setText("<b>" + q->model()->senderName() + "</b>: " + q->model()->message());
+        messageComposition->setText( "<b>" + senderName + "</b>: " + q->model()->message());
     else if (controller->messageType() == MBubbleItem::Outgoing)
         messageComposition->setText(q->model()->message() + "<b></b>");
-}
 
+}
 MBubbleItemView::MBubbleItemView(MBubbleItem *controller)
     : MWidgetView(* new MBubbleItemViewPrivate, controller)
 {
@@ -291,7 +309,6 @@ void MBubbleItemView::setupModel()
     d->timeStampLabel->setText(model()->timeStamp());
 
     connect(d->messageComposition, SIGNAL(linkActivated(QString)), d->controller, SIGNAL(linkActivated(QString)));
-    d->updateMessageComposition();
 
     d->speechBubble = new MBubbleItemBackground(d->controller);
     d->speechBubble->setMessageType(static_cast<MBubbleItem::MessageType>(model()->messageType()));
