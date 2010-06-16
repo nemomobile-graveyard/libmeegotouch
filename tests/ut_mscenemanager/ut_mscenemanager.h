@@ -47,8 +47,6 @@ private slots:
 
     void testConstructorWithNoScene();
     void testConstructorWithSceneSpecified();
-    void testSceneWindowAttaching();
-    void testSceneWindowDetaching();
     void testSceneWindowAppearNow();
     void testSceneWindowAppear();
     void testSceneWindowDisappearNow();

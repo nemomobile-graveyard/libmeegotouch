@@ -89,25 +89,6 @@ void Ut_MSceneManager::testConstructorWithSceneSpecified()
     delete manager;
 }
 
-void Ut_MSceneManager::testSceneWindowAttaching()
-{
-    MOverlay *p = new MOverlay();
-    sm->appearSceneWindowNow(p);
-
-    QCOMPARE(sm->d_ptr->windows.size(), (int)1);
-    delete p;
-}
-
-void Ut_MSceneManager::testSceneWindowDetaching()
-{
-    MOverlay *p = new MOverlay();
-    sm->appearSceneWindowNow(p);
-
-    QCOMPARE(sm->d_ptr->windows.size(), (int)1);
-    delete p;
-    QCOMPARE(sm->d_ptr->windows.size(), (int)0);
-}
-
 void Ut_MSceneManager::testSceneWindowAppearNow()
 {
     MOverlay *p = new MOverlay();
