@@ -40,7 +40,7 @@ class MLayout;
 class QGraphicsLinearLayout;
 class MButtonGroup;
 class MWidget;
-class MContentItem;
+class MBasicListItem;
 class MComboBox;
 
 class MApplicationMenuViewPrivate : public QObject
@@ -90,8 +90,7 @@ protected:
     void clearPolicy(MAbstractLayoutPolicy *policy);
     void refreshLandscapePolicy();
     void updateItemMode();
-    void updateContentItemMode(MContentItem *contentItem, int columnsCount, int itemCount, int index);
-    void updateComboboxMode(MComboBox *comboBox, int columnsCount, int itemCount, int index);
+    void updateItemLayout(MWidgetController *item, int columnsCount, int itemCount, int index);
     void addStyleWidget(MWidget *widget, MWidget *before);
     void addActionCommandWidget(MWidget *widget, MWidget *before);
     void removeStyleWidget(MWidget *widget);

@@ -37,7 +37,7 @@
 #include "mlayout.h"
 #include "mlinearlayoutpolicy.h"
 #include "mgridlayoutpolicy.h"
-#include "mcontentitem.h"
+#include "mbasiclistitem.h"
 #include "mcombobox.h"
 
 const int maxCommandActions = 8;
@@ -248,7 +248,7 @@ MWidget *MApplicationMenuViewPrivate::createButton(QAction *action)
         button->setObjectName("menustylecommand");
         w = button;
     } else {
-        MContentItem *item = new MContentItem(MContentItem::SingleTextLabel);
+        MBasicListItem *item = new MBasicListItem(MBasicListItem::SingleTitle);
         item->setTitle(action->text());
         item->setObjectName("menuactioncommand");
         connect(item, SIGNAL(clicked()), action, SIGNAL(triggered()));
@@ -426,7 +426,7 @@ void MApplicationMenuViewPrivate::changeData(QAction *action)
             button->setIconID(mAction->iconID());
         }
     } else {
-        MContentItem *item = qobject_cast<MContentItem *>(widget);
+        MBasicListItem *item = qobject_cast<MBasicListItem *>(widget);
         if (item)
             item->setTitle(action->text());
     }
@@ -511,66 +511,39 @@ void MApplicationMenuViewPrivate::updateItemMode()
 
     for (int index = 0; index < count; index++) {
         MWidget *w = (MWidget *)policy->itemAt(index);
-        MContentItem *contentItem = qobject_cast<MContentItem *>(w);
-        updateContentItemMode(contentItem, columnsCount, count, index);
-        MComboBox *combobox = qobject_cast<MComboBox *>(w);
-        updateComboboxMode(combobox, columnsCount, count, index);
+        if (qobject_cast<MBasicListItem *>(w) || qobject_cast<MComboBox *>(w)) {
+            //Only for MBasicListItem and MComboBox types (those styleaction buttons are ruled out like before)
+            MWidgetController *widget = qobject_cast<MWidgetController *>(w);
+            updateItemLayout(widget, columnsCount, count, index);
+        }
     }
 
 }
 
-void MApplicationMenuViewPrivate::updateContentItemMode(MContentItem *contentItem,
+void MApplicationMenuViewPrivate::updateItemLayout(MWidgetController *widget,
         int columnsCount,
         int itemCount,
         int index)
 {
-    if (!contentItem)
+    if (!widget)
         return;
 
     if (columnsCount == 1) {
         if (index == itemCount - 1) {
-            contentItem->setItemMode(MContentItem::SingleColumnBottom);
+            widget->setLayoutPosition(M::VerticalBottomPosition);
         } else {
-            contentItem->setItemMode(MContentItem::SingleColumnCenter);
+            widget->setLayoutPosition(M::VerticalCenterPosition);
         }
     } else {
         int rowCount = (itemCount + 1) / 2;
         int row = index / 2;
         int col = index % 2;
         if ((itemCount == 1) || (col == 0 && index == (itemCount - 1))) { //only one item in last row
-            contentItem->setItemMode(MContentItem::SingleColumnBottom);
+            widget->setLayoutPosition(M::VerticalBottomPosition);
         } else if (row >= 0 && row < (rowCount - 1)) {
-            (col == 0) ? contentItem->setItemMode(MContentItem::Left) : contentItem->setItemMode(MContentItem::Right);
+            (col == 0) ? widget->setLayoutPosition(M::CenterLeftPosition) : widget->setLayoutPosition(M::CenterRightPosition);
         } else {
-            (col == 0) ? contentItem->setItemMode(MContentItem::BottomLeft) : contentItem->setItemMode(MContentItem::BottomRight);
-        }
-    }
-}
-
-void MApplicationMenuViewPrivate::updateComboboxMode(MComboBox *comboBox,
-        int columnsCount,
-        int itemCount,
-        int index)
-{
-    if (!comboBox)
-        return;
-
-    if (columnsCount == 1) {
-        if (index == itemCount - 1) {
-            comboBox->setViewType("singlecolumnbottom");
-        } else {
-            comboBox->setViewType("singlecolumncenter");
-        }
-    } else {
-        int rowCount = (itemCount + 1) / 2;
-        int row = index / 2;
-        int col = index % 2;
-        if ((itemCount == 1) || (col == 0 && index == (itemCount - 1))) { //only one item in last row
-            comboBox->setViewType("singlecolumnbottom");
-        } else if (row >= 0 && row < (rowCount - 1)) {
-            (col == 0) ? comboBox->setViewType("left") : comboBox->setViewType("right");
-        } else {
-            (col == 0) ? comboBox->setViewType("bottomleft") : comboBox->setViewType("bottomright");
+            (col == 0) ? widget->setLayoutPosition(M::BottomLeftPosition) : widget->setLayoutPosition(M::BottomRightPosition);
         }
     }
 }
