@@ -50,6 +50,7 @@ private:
     MLabel *subtitleLabel;
     MLabel *sideBottomLabel;
 
+    bool isLayoutInitialized;
     MDetailedListItem::ItemStyle listItemStyle;
 };
 

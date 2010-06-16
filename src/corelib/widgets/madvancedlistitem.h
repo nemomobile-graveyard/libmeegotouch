@@ -49,6 +49,10 @@ public:
     MAdvancedListItem(ItemStyle itemStyle = IconWithTitleProgressIndicatorAndTwoSideIcons, QGraphicsItem *parent = 0);
     virtual ~MAdvancedListItem();
 
+    /*!
+      \deprecated The method is no longer required to be called after constructing the item.
+                  There shouldn't be any need for this function.
+    */
     void initLayout();
 
     void setItemStyle(ItemStyle itemStyle);

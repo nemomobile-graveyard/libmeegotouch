@@ -47,6 +47,7 @@ private:
     MImageWidget *sideTopImage;
     MImageWidget *sideBottomImage;
 
+    bool isLayoutInitialized;
     MAdvancedListItem::ItemStyle listItemStyle;
 };
 
