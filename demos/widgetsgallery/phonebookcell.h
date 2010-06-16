@@ -45,19 +45,25 @@ public:
     PhoneBookCell();
     virtual ~PhoneBookCell();
 
-    void initLayout();
-
-    QString title() const;
+    QString title();
     void setTitle(const QString &title);
 
-    QString subtitle() const;
+    QString subtitle();
     void setSubtitle(const QString &title);
 
-    QImage image() const;
-    void setImage(const QImage &image);
+    QImage image();
+    void setImage(const QImage &iconImage);
 
 private:
     MLayout *createLayout();
+
+    MProgressIndicator *spinnerWidget();
+    MLabel *landscapeTitleLabelWidget();
+    MLabel *portraitTitleLabelWidget();
+    MLabel *subtitleLabelWidget();
+    MImageWidget *imageWidget();
+
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 private:
     MLayout *layout;
@@ -68,7 +74,7 @@ private:
     MLabel *landscapeTitleLabel;
     MLabel *portraitTitleLabel;
     MLabel *subtitleLabel;
-    MImageWidget *imageWidget;
+    MImageWidget *icon;
 };
 
 #endif // PHONEBOOKCONTENTITEM_H

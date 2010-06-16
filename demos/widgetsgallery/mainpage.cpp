@@ -253,7 +253,6 @@ public:
         MBasicListItem *cell = dynamic_cast<MBasicListItem *>(recycler.take(MBasicListItem::staticMetaObject.className()));
         if (cell == NULL) {
             cell = new MBasicListItem(MBasicListItem::SingleTitle);
-            cell->initLayout();
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
