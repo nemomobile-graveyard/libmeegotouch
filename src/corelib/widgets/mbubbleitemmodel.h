@@ -64,7 +64,7 @@ public:
     M_MODEL_PTR_PROPERTY(QGraphicsWidget *, centralWidget, CentralWidget, true, NULL)
 
     /*!
-      \property MBubbleItemModel::items
+      \property MBubbleItemModel::informationWidgets
       \brief Stack of items shown in the header, for example icons
       */
     M_MODEL_PROPERTY(QStack<QGraphicsWidget*>, informationWidgets, InformationWidgets, true, QStack<QGraphicsWidget*>())
@@ -74,6 +74,18 @@ public:
       \brief centralWidget.
       */
     M_MODEL_PTR_PROPERTY(int, messageType, MessageType, true, NULL)
+
+    /*!
+      \property MBubbleItemModel::commentsString
+      \brief commentsString.
+      */
+    M_MODEL_PROPERTY(QString, commentsString, CommentsString, true, QString())
+
+    /*!
+      \property MBubbleItemModel::thumbsUpString
+      \brief thumbsUpString.
+      */
+    M_MODEL_PROPERTY(QString, thumbsUpString, ThumbsUpString, true, QString())
 };
 
 #endif

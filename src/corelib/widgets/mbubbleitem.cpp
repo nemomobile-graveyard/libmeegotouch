@@ -218,7 +218,8 @@ QString MBubbleItem::commentsString()
     Q_D(MBubbleItem);
 
     if (d->commentsLabel)
-        return d->commentsLabel->text();
+        return model()->commentsString();
+
     return QString();
 }
 
@@ -230,6 +231,7 @@ void MBubbleItem::setCommentsString(const QString &comments)
         d->createCommentsInfo();
 
     d->commentsLabel->setText(comments);
+    model()->setCommentsString(comments);
 }
 
 QString MBubbleItem::thumbsUpString()
@@ -237,7 +239,7 @@ QString MBubbleItem::thumbsUpString()
     Q_D(MBubbleItem);
 
     if (d->thumbsUpLabel)
-        return d->thumbsUpLabel->text();
+        return model()->thumbsUpString();
 
     return QString();
 }
@@ -250,5 +252,6 @@ void MBubbleItem::setThumbsUpString(const QString &thumbsUp)
         d->createThumbsUpInfo();
 
     d->thumbsUpLabel->setText(thumbsUp);
+    model()->setThumbsUpString(thumbsUp);
 }
 
