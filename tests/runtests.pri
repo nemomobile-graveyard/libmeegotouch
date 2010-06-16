@@ -1,5 +1,5 @@
-# QMAKE_EXTRA_UNIX_TARGETS += runtests 
-# QMAKE_EXTRA_UNIX_TARGETS += coverage
+# QMAKE_EXTRA_TARGETS += runtests 
+# QMAKE_EXTRA_TARGETS += coverage
 
 # runtests.target = runtests
 # runtests.commands = @find . -type f -perm +100 -name \"?t_*\" -exec ./runsingletest.sh {} \\;

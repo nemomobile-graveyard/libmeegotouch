@@ -1,7 +1,7 @@
 include(../mkspecs/shared.pri)
 DOXYGEN_BIN=$$findFile(doxygen)
 
-QMAKE_EXTRA_UNIX_TARGETS += doc
+QMAKE_EXTRA_TARGETS += doc
 doc.target = doc
 isEmpty(DOXYGEN_BIN) {
     doc.commands = @echo "Unable to detect doxygen in PATH"
