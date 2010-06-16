@@ -69,6 +69,7 @@ MWindowPrivate::MWindowPrivate() :
     closeOnLazyShutdown(false),
     onDisplay(false),
     onDisplaySet(false),
+    delayVisibility(true),
     q_ptr(NULL)
 {
 #ifndef Q_WS_X11
@@ -270,6 +271,15 @@ void MWindowPrivate::appendVisibilityChangeMask()
     XChangeWindowAttributes(QX11Info::display(), q->winId(), CWEventMask, &newAttributes);
 }
 #endif
+
+void MWindowPrivate::_q_onPixmapRequestsFinished()
+{
+    Q_Q(MWindow);
+    
+    q->disconnect(MTheme::instance(), SIGNAL(pixmapRequestsFinished()),
+                  q, SLOT(_q_onPixmapRequestsFinished()));
+    q->setVisible(true);
+}
 
 void MWindowPrivate::handleApplicationLayoutDirectionChangeEvent(QGraphicsItem *item)
 {
@@ -740,16 +750,6 @@ void MWindow::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 
 void MWindow::paintEvent(QPaintEvent *event)
 {
-    // Disable view updates if the theme is not fully loaded yet
-    // TODO: Also check for "!isOnDisplay()" to block repaints if the
-    // window is not visible anyway. Enable this once this works in
-    // scratchbox.
-    if (!updatesEnabled() || MTheme::hasPendingRequests()) {
-        // disabled for the moment as it makes debugging problems
-        // with mthemedaemon easier
-        // return;
-    }
-
 #ifdef M_USE_OPENGL
     Q_D(MWindow);
 
@@ -960,6 +960,15 @@ void MWindow::setVisible(bool visible)
         // prestarted state.
         if (MApplication::isPrestarted()) {
             return;
+        } else if (d->delayVisibility) {
+            // The showing of the window gets delayed until the theme
+            // has finished to load all pixmap requests. This prevents
+            // a flickering of the application on startup and improves
+            // the performance.
+            d->delayVisibility = false;
+            connect(MTheme::instance(), SIGNAL(pixmapRequestsFinished()),
+                    this, SLOT(_q_onPixmapRequestsFinished()));
+            return;            
         } else {
             if (!MApplication::softwareRendering() && d->glWidget == 0) {
                 d->initGLViewport();

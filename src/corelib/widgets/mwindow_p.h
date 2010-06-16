@@ -45,6 +45,8 @@ public:
 #ifdef Q_WS_X11
     void appendVisibilityChangeMask();
 #endif
+    
+    void _q_onPixmapRequestsFinished();
 
     QGLWidget *glWidget;
 
@@ -74,6 +76,12 @@ public:
 
     bool onDisplay;
     bool onDisplaySet;
+    
+    // If set to true, a call to MWindow::setVisible(true) will delay the
+    // showing of the window, until all pixmap requests of the theme have
+    // been finished. This prevents a flickering of the application on startup
+    // (see MWindow::setVisible() and _q_onPixmapRequestsFinished()).    
+    bool delayVisibility;
 
 protected:
     MWindow *q_ptr;
