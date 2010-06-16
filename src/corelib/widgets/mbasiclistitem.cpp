@@ -33,9 +33,9 @@ MBasicListItemPrivate::MBasicListItemPrivate(MBasicListItem::ItemStyle style)
     image(NULL),
     titleLabel(NULL),
     subtitleLabel(NULL),
+    isLayoutInitialized(false),
     listItemStyle(style)
 {
-
 }
 
 MBasicListItemPrivate::~MBasicListItemPrivate()
@@ -118,7 +118,13 @@ MBasicListItem::~MBasicListItem()
 
 void MBasicListItem::initLayout()
 {
+    Q_D(MBasicListItem);
+
+    if (d->isLayoutInitialized)
+        return;
+
     setLayout(createLayout());
+    d->isLayoutInitialized = true;
 }
 
 QGraphicsLayout *MBasicListItem::createLayout()
@@ -232,5 +238,11 @@ void MBasicListItem::setSubtitle(const QString &subtitle)
 QString MBasicListItem::subtitle()
 {
     return subtitleLabelWidget()->text();
+}
+
+void MBasicListItem::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    MListItem::resizeEvent(event);
+    initLayout();
 }
 

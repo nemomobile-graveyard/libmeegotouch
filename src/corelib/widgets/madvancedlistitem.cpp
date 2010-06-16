@@ -34,6 +34,7 @@ MAdvancedListItemPrivate::MAdvancedListItemPrivate(MAdvancedListItem::ItemStyle 
     image(NULL),
     sideTopImage(NULL),
     sideBottomImage(NULL),
+    isLayoutInitialized(false),
     listItemStyle(style)
 {
 
@@ -111,7 +112,13 @@ MAdvancedListItem::~MAdvancedListItem()
 
 void MAdvancedListItem::initLayout()
 {
+    Q_D(MAdvancedListItem);
+
+    if (d->isLayoutInitialized)
+        return;
+
     setLayout(createLayout());
+    d->isLayoutInitialized = true;
 }
 
 void MAdvancedListItem::setItemStyle(ItemStyle itemStyle)
@@ -241,4 +248,9 @@ void MAdvancedListItem::clearLayout()
     d->clearLayout();
 }
 
+void MAdvancedListItem::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    MListItem::resizeEvent(event);
+    initLayout();
+}
 

@@ -35,6 +35,7 @@ MDetailedListItemPrivate::MDetailedListItemPrivate(MDetailedListItem::ItemStyle 
     titleLabel(NULL),
     subtitleLabel(NULL),
     sideBottomLabel(NULL),
+    isLayoutInitialized(false),
     listItemStyle(style)
 {
 
@@ -174,7 +175,13 @@ MDetailedListItem::~MDetailedListItem()
 
 void MDetailedListItem::initLayout()
 {
+    Q_D(MDetailedListItem);
+
+    if (d->isLayoutInitialized)
+        return;
+
     setLayout(createLayout());
+    d->isLayoutInitialized = true;
 }
 
 QGraphicsLayout *MDetailedListItem::createLayout()
@@ -341,5 +348,11 @@ void MDetailedListItem::setSideBottomTitle(const QString &text)
 QString MDetailedListItem::sideBottomTitle()
 {
     return sideBottomLabelWidget()->text();
+}
+
+void MDetailedListItem::resizeEvent(QGraphicsSceneResizeEvent *event)
+{
+    MListItem::resizeEvent(event);
+    initLayout();
 }
 

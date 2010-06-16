@@ -48,6 +48,7 @@ private:
     MLabel *titleLabel;
     MLabel *subtitleLabel;
 
+    bool isLayoutInitialized;
     MBasicListItem::ItemStyle listItemStyle;
 };
 

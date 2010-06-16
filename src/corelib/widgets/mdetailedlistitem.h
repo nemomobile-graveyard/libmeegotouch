@@ -58,6 +58,10 @@ public:
     MDetailedListItem(MDetailedListItem::ItemStyle style = IconTitleSubtitleAndTwoSideIcons, QGraphicsItem *parent = NULL);
     virtual ~MDetailedListItem();
     
+    /*!
+      \deprecated The method is no longer required to be called after constructing the item.
+                  There shouldn't be any need for this function.
+    */
     void initLayout();
     
     void setItemStyle(ItemStyle itemStyle);
@@ -88,6 +92,8 @@ protected:
 
     virtual QGraphicsLayout *createLayout();
     virtual void clearLayout();
+
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 
 private:
     Q_DECLARE_PRIVATE(MDetailedListItem)
