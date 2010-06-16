@@ -947,8 +947,9 @@ M::OrientationAngle QtMaemo6Style::orientation() {
         angle = M::Angle270;
     } else if (edge == "right") {
         angle = M::Angle90;
-    } else if (edge == "bottom") {
-        angle = M::Angle180;
+    //Rotation 180� should be disabled
+    //} else if (edge == "bottom") {
+    //    angle = M::Angle180;
     } else {
         angle = M::Angle0;
     }
