@@ -190,6 +190,18 @@ public Q_SLOTS:
        #warning { background-color: #FF0000; }
      \endcode
 
+     Warning: Since QObject::setObjectName() is non-virtual, code like:
+     \code
+       MLabel *label = new MLabel("Hello");
+       label->setObjectName("hello");
+     \endcode
+     Would correctly restyle the label.  But:
+     \code
+       QGraphicsWidget *label = new MLabel("Hello");
+       label->setObjectName("hello");
+     \endcode
+     Would not update the CSS style correctly.
+
      Note that multiple objects can have the same name, and consequently the same style.
     */
     virtual void setObjectName(const QString &name);
