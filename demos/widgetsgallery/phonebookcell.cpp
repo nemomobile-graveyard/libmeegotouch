@@ -35,6 +35,7 @@ PhoneBookCell::PhoneBookCell()
     subtitleLabel(NULL),
     imageWidget(NULL)
 {
+    initLayout();
 }
 
 PhoneBookCell::~PhoneBookCell()
