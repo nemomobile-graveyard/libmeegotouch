@@ -32,6 +32,7 @@ class Ut_MServiceMapper : public QObject
     Q_OBJECT
 
 public:
+    static const int initFiles = 2;
     static int m_noFiles;
     static QTextStream m_globalDummy;
     static int m_lineNo;
@@ -51,6 +52,8 @@ private slots:
     void checkServiceName();
     void checkServicePath();
     void checkServiceNameBadIf();
+    void checkInterfaceName_data();
+    void checkInterfaceName();
     void checkHandleServiceChangedAddLastFile();
     void checkHandleServiceChangedRmLastFile();
     void checkHandleServiceChangedAddAndRemoveFiles();

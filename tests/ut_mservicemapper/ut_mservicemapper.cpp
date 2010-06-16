@@ -94,7 +94,7 @@ QIODevice *MyMServiceMapperPrivate::accessFile(const QString &fileName) const
 void Ut_MServiceMapper::init()
 {
     // always start with two files
-    fillServiceFileList( 2 );
+    fillServiceFileList( initFiles );
 
     // reset to beginning of first file for each test
     // difficult to keep track otherwise
@@ -261,6 +261,25 @@ void Ut_MServiceMapper::fillServiceFileList( int noFiles )
         QString filename = QString("services/%1.service").arg(thisFileNo);
         m_currentServiceFileList << filename;
     }
+}
+
+void Ut_MServiceMapper::checkInterfaceName_data()
+{
+    QTest::addColumn<QString>( "serviceName" );
+    QTest::addColumn<QString>( "interfaceName" );
+    for ( int i=0; i<initFiles; ++i ) {
+        QTest::newRow(m_services[i].toAscii().constData()) << m_services[i] << m_interfaces[i];
+    }
+
+    QTest::newRow("None existent service") << "BogusService" << "";
+}
+
+void Ut_MServiceMapper::checkInterfaceName()
+{
+    QFETCH(QString, serviceName);
+    QFETCH(QString, interfaceName);
+    QString actual = m_subject->interfaceName( serviceName );
+    QCOMPARE( actual, interfaceName );
 }
 
 QTEST_MAIN(Ut_MServiceMapper)

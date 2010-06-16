@@ -89,12 +89,18 @@ bool MApplicationServicePrivate::activeWindowSet()
 
 void MApplicationServicePrivate::activateActiveWindow()
 {
-    mApp->activeWindow()->activateWindow();
+    MWindow *win = MApplication::instance()->activeWindow();
+    if ( win ) {
+        win->activateWindow();
+    }
 }
 
 void MApplicationServicePrivate::raiseActiveWindow()
 {
-    mApp->activeWindow()->raise();
+    MWindow *win = MApplication::instance()->activeWindow();
+    if ( win ) {
+        win->show();
+    }
 }
 
 bool MApplicationServicePrivate::thisAppRunWithDBus()

@@ -473,6 +473,7 @@ QString Worker::hideThisWindowCode()
         // hide this window\n\
         if (win) {\n\
             // Tell the window to not to be shown in the switcher\n\
+#ifdef Q_WS_X11\n\
             Atom skipTaskbarAtom = XInternAtom(QX11Info::display(), \"_NET_WM_STATE_SKIP_TASKBAR\", False);\n\
 \n\
             Atom netWmStateAtom = XInternAtom(QX11Info::display(), \"_NET_WM_STATE\", False);\n\
@@ -481,6 +482,7 @@ QString Worker::hideThisWindowCode()
             XChangeProperty(QX11Info::display(), windowId, netWmStateAtom, XA_ATOM, 32,\n\
                             PropModeReplace, (unsigned char *)atoms.data(), atoms.count());\n\
             XSync(QX11Info::display(), False);\n\
+#endif // Q_WS_X11\n\
         }\n\
 ";
 }
@@ -592,13 +594,16 @@ QString Worker::mHeaders()
     return
 "#include <MApplication>\n\
 #include <MApplicationWindow>\n\
-#include <MApplicationIfProxy>\n\
 #include <MComponentData>\n\
+\
+#ifdef Q_WS_X11\n\
 #include <QX11Info>\n\
 #include <X11/Xutil.h>\n\
 #include <X11/Xlib.h>\n\
 #include <X11/Xatom.h>\n\
-#include <X11/Xmd.h>\n";
+#include <X11/Xmd.h>\n\
+#endif // Q_WS_X11\n\
+";
 }
 
 void Worker::preprocessXML()
@@ -811,15 +816,16 @@ void processAdaptorCppFile()
                     "#include <MApplication>\n"       \
                     "#include <MApplicationPage>\n"   \
                     "#include <MApplicationWindow>\n" \
-                    "#include <MApplicationIfProxy>\n"        \
                     "#include <MEscapeButtonPanel>\n"         \
                     "#include <MDebug>\n"                    \
                     "\n"                                     \
+                    "#ifdef Q_WS_X11\n"                         \
                     "#include <QX11Info>\n"                     \
                     "#include <X11/Xutil.h>\n"                  \
                     "#include <X11/Xlib.h>\n"                   \
                     "#include <X11/Xatom.h>\n"                  \
                     "#include <X11/Xmd.h>\n"                    \
+                    "#endif // Q_WS_X11\n"                      \
                     "\n"
                     + line + "\n";
             } else if (w.needsMApplication() && line.contains("QDBusAbstractAdaptor(parent)")) {
@@ -857,6 +863,7 @@ void processAdaptorCppFile()
 "        mDebug( __PRETTY_FUNCTION__ ) << \"No activeApplicationWindow! - broken chain\";\n"\
 "    }\n"\
 "\n"\
+"#ifdef Q_WS_X11\n"\
 "    // update the X server\n"\
 "    {\n"\
 "        XPropertyEvent p;\n"\
@@ -872,6 +879,7 @@ void processAdaptorCppFile()
 "\n"\
 "        XSync(QX11Info::display(), False);\n"\
 "    }\n"\
+"#endif // Q_WS_X11\n"\
 "\n"
 + line + "\n";
                     inChainTask = false;
@@ -901,21 +909,38 @@ void processAdaptorCppFile()
 "{\n"                                                   \
 "    bool backServiceRegistered = ( windowId != -1 );\n"\
 "    if ( backServiceRegistered ) {\n"\
-"        MApplicationIfProxy mApplicationIfProxy(backServiceName, this);\n"\
+"#ifdef Q_WS_X11\n"\
+"        Display *display = QX11Info::display();\n"\
 "\n"\
-"        if (mApplicationIfProxy.connection().isConnected()) {\n"\
-"            mDebug( __PRETTY_FUNCTION__ ) << \"Launching \" << backServiceName;\n"\
-"            mApplicationIfProxy.launch();\n"\
-"        } else {\n"\
-"            mDebug( __PRETTY_FUNCTION__ ) << \"Could not launch\" << backServiceName;\n"\
-"            mDebug( __PRETTY_FUNCTION__ ) << \"DBus not connected?\";\n"\
+"        // raise and activate window\n"\
+"        {\n"\
+"            XEvent ev;\n"\
+"            memset(&ev, 0, sizeof(ev));\n"\
+"\n"\
+"            Window rootWin = QX11Info::appRootWindow(QX11Info::appScreen());\n"\
+"\n"\
+"            ev.xclient.type         = ClientMessage;\n"\
+"            ev.xclient.window       = windowId;\n"\
+"            ev.xclient.message_type = XInternAtom(\n"\
+"                    display,\n"\
+"                    \"_NET_ACTIVE_WINDOW\",\n"\
+"                    True);\n"\
+"            ev.xclient.format       = 32;\n"\
+"            ev.xclient.data.l[0]    = 1;\n"\
+"            ev.xclient.data.l[1]    = CurrentTime;\n"\
+"            ev.xclient.data.l[2]    = 0;\n"\
+"\n"\
+"            XSendEvent(display,  rootWin, False, StructureNotifyMask, &ev);\n"\
+"#endif // Q_WS_X11\n"\
 "        }\n"\
 "\n"\
 "        // unhide the chain parent's window\n"\
 "        {\n"\
 "            // Tell the window to not to be shown in the switcher\n"\
-"            XDeleteProperty(QX11Info::display(), windowId, XInternAtom(QX11Info::display(), \"_NET_WM_STATE\", False));\n"\
-"            XSync(QX11Info::display(), False);\n"\
+"#ifdef Q_WS_X11\n"\
+"            XDeleteProperty(display, windowId, XInternAtom(display, \"_NET_WM_STATE\", False));\n"\
+"            XSync(display, False);\n"\
+"#endif // Q_WS_X11\n"\
 "        }\n"\
 "\n"\
 "        MApplicationWindow *appWindow = MApplication::activeApplicationWindow();\n"\

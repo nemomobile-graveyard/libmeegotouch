@@ -1,8 +1,8 @@
 /*
  * automatically generated with the command line :
- * /home/davidmaxwaterman/z/hi386/bug172438/tools/m-servicefwgen -a /home/davidmaxwaterman/z/hi386/bug172438/tests/ft_mservicefwgen/com.nokia.FtMServiceFwGen2
+ * /home/davidmaxwaterman/z/hi386/bug160677-onTopOfMASTER/tools/m-servicefwgen -a /home/davidmaxwaterman/z/hi386/bug160677-onTopOfMASTER/tests/ft_mservicefwgen/com.nokia.FtMServiceFwGen2
  *
- * /home/davidmaxwaterman/z/hi386/bug172438/tools/m-servicefwgen is Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ * /home/davidmaxwaterman/z/hi386/bug160677-onTopOfMASTER/tools/m-servicefwgen is Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
  *
  * This is an auto-generated file.
  * Do not edit! All changes made to it will be lost.
@@ -13,15 +13,16 @@
 #include <MApplication>
 #include <MApplicationPage>
 #include <MApplicationWindow>
-#include <MApplicationIfProxy>
 #include <MEscapeButtonPanel>
 #include <MDebug>
 
+#ifdef Q_WS_X11
 #include <QX11Info>
 #include <X11/Xutil.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xmd.h>
+#endif // Q_WS_X11
 
 #include <QtCore/QMetaObject>
 #include <QtCore/QByteArray>
@@ -84,6 +85,7 @@ void FtMServiceFwGen2Adaptor::showImage(const QString &backServiceName, const QS
         mDebug( __PRETTY_FUNCTION__ ) << "No activeApplicationWindow! - broken chain";
     }
 
+#ifdef Q_WS_X11
     // update the X server
     {
         XPropertyEvent p;
@@ -99,6 +101,7 @@ void FtMServiceFwGen2Adaptor::showImage(const QString &backServiceName, const QS
 
         XSync(QX11Info::display(), False);
     }
+#endif // Q_WS_X11
 
 }
 
@@ -130,21 +133,38 @@ void FtMServiceFwGen2Adaptor::goBack()
 {
     bool backServiceRegistered = ( windowId != -1 );
     if ( backServiceRegistered ) {
-        MApplicationIfProxy mApplicationIfProxy(backServiceName, this);
+#ifdef Q_WS_X11
+        Display *display = QX11Info::display();
 
-        if (mApplicationIfProxy.connection().isConnected()) {
-            mDebug( __PRETTY_FUNCTION__ ) << "Launching " << backServiceName;
-            mApplicationIfProxy.launch();
-        } else {
-            mDebug( __PRETTY_FUNCTION__ ) << "Could not launch" << backServiceName;
-            mDebug( __PRETTY_FUNCTION__ ) << "DBus not connected?";
+        // raise and activate window
+        {
+            XEvent ev;
+            memset(&ev, 0, sizeof(ev));
+
+            Window rootWin = QX11Info::appRootWindow(QX11Info::appScreen());
+
+            ev.xclient.type         = ClientMessage;
+            ev.xclient.window       = windowId;
+            ev.xclient.message_type = XInternAtom(
+                    display,
+                    "_NET_ACTIVE_WINDOW",
+                    True);
+            ev.xclient.format       = 32;
+            ev.xclient.data.l[0]    = 1;
+            ev.xclient.data.l[1]    = CurrentTime;
+            ev.xclient.data.l[2]    = 0;
+
+            XSendEvent(display,  rootWin, False, StructureNotifyMask, &ev);
+#endif // Q_WS_X11
         }
 
         // unhide the chain parent's window
         {
             // Tell the window to not to be shown in the switcher
-            XDeleteProperty(QX11Info::display(), windowId, XInternAtom(QX11Info::display(), "_NET_WM_STATE", False));
-            XSync(QX11Info::display(), False);
+#ifdef Q_WS_X11
+            XDeleteProperty(display, windowId, XInternAtom(display, "_NET_WM_STATE", False));
+            XSync(display, False);
+#endif // Q_WS_X11
         }
 
         MApplicationWindow *appWindow = MApplication::activeApplicationWindow();

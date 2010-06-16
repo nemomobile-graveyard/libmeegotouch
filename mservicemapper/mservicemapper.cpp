@@ -146,7 +146,7 @@ QString MServiceMapper::interfaceName(const QString &serviceName) const
             serviceFound = true;
         }
 
-        if (i < serviceFileNum) {
+        if (i < serviceFileNum-1) {
             i++;
         } else {
             atEndOfList = true;

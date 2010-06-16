@@ -22,13 +22,14 @@
 
 #include <MApplication>
 #include <MApplicationWindow>
-#include <MApplicationIfProxy>
 #include <MComponentData>
+#ifdef Q_WS_X11
 #include <QX11Info>
 #include <X11/Xutil.h>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
 #include <X11/Xmd.h>
+#endif // Q_WS_X11
 
 /*
  * Proxy class for interface com.nokia.fakegalleryserviceinterface
@@ -74,6 +75,7 @@ public Q_SLOTS: // METHODS
         // hide this window
         if (win) {
             // Tell the window to not to be shown in the switcher
+#ifdef Q_WS_X11
             Atom skipTaskbarAtom = XInternAtom(QX11Info::display(), "_NET_WM_STATE_SKIP_TASKBAR", False);
 
             Atom netWmStateAtom = XInternAtom(QX11Info::display(), "_NET_WM_STATE", False);
@@ -82,6 +84,7 @@ public Q_SLOTS: // METHODS
             XChangeProperty(QX11Info::display(), windowId, netWmStateAtom, XA_ATOM, 32,
                             PropModeReplace, (unsigned char *)atoms.data(), atoms.count());
             XSync(QX11Info::display(), False);
+#endif // Q_WS_X11
         }
 
         return asyncCallWithArgumentList(QLatin1String("showImage"), argumentList);
