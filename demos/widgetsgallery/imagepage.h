@@ -56,7 +56,6 @@ public slots:
 protected:
     virtual void retranslateUi();
     virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture);
-    bool event(QEvent *e);
 
 private:
     MLabel *propertiesLabel;

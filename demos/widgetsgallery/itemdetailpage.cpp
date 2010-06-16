@@ -130,16 +130,6 @@ QString ItemDetailPage::timedemoTitle()
     return "ItemDetailPage";
 }
 
-bool ItemDetailPage::event(QEvent *e)
-{
-    if (e->type() == QEvent::TouchBegin) {
-        lastScaleFactor = 1.0;
-        e->setAccepted(true);
-        return true;
-    }
-    return TimedemoPage::event(e);
-}
-
 void ItemDetailPage::createContent()
 {
     mWarning("ItemDetailPage::createContent()");

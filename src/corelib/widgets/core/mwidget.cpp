@@ -400,6 +400,9 @@ bool MWidget::event(QEvent *event)
         onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
     } else if (type == QEvent::Gesture) {
         gestureEvent(static_cast<QGestureEvent*>(event));
+    } else if (type == QEvent::TouchBegin && acceptTouchEvents()) {
+	event->setAccepted(true);
+	return true;
     }
     return QGraphicsWidget::event(event);
 }

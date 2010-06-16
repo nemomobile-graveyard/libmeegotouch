@@ -63,15 +63,6 @@ QString ImagePage::timedemoTitle()
     return "Image";
 }
 
-bool ImagePage::event(QEvent *e)
-{
-    if (e->type() == QEvent::TouchBegin) {
-        e->setAccepted(true);
-        return true;
-    }
-    return TemplatePage::event(e);
-}
-
 void ImagePage::createContent()
 {
     MApplicationPage::createContent();

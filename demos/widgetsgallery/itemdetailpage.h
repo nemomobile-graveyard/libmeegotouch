@@ -120,7 +120,6 @@ protected:
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
 
     virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture);
-    virtual bool event(QEvent *e);
 
 private:
 
