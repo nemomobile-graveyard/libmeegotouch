@@ -40,7 +40,7 @@ void Pt_MApplication::processCreationAndCtor()
 void Pt_MApplication::ctor()
 {
     MApplication *a = NULL;
-    QBENCHMARK {
+    QBENCHMARK_ONCE {
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
         char appName[] = "./pt_mapplication";
@@ -53,7 +53,7 @@ void Pt_MApplication::ctor()
 void Pt_MApplication::ctor2()
 {
     MApplication *a = NULL;
-    QBENCHMARK {
+    QBENCHMARK_ONCE {
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
         char appName[] = "./pt_mapplication2";
