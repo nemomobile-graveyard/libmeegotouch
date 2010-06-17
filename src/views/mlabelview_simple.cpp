@@ -52,10 +52,15 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
     
     const MLabelModel *model = viewPrivate->model();
     const MLabelStyle *style = viewPrivate->style();
+    const QRectF paintingRect(viewPrivate->boundingRect().adjusted(style->paddingLeft(), style->paddingTop(), -style->paddingRight(), -style->paddingBottom()));
 
     painter->setPen(model->color().isValid() ? model->color() : style->color());
     painter->setFont(viewPrivate->controller->font());
+
+    painter->setClipping(true);
+    painter->setClipRect(paintingRect);
     painter->drawStaticText(textOffset, staticText);    
+    painter->setClipping(false);
 }
 
 bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
