@@ -119,7 +119,7 @@ MTheme::MTheme(const QString &applicationName, const QString &, ThemeService the
 
 MTheme::~MTheme()
 {
-    MStyleSheet::cleanup(true);
+    MStyleSheet::cleanup(false);
 
     QHash<QString, CachedScalableImage>::iterator i2 = d_ptr->scalableImageIdentifiers.begin();
     QHash<QString, CachedScalableImage>::iterator end2 = d_ptr->scalableImageIdentifiers.end();

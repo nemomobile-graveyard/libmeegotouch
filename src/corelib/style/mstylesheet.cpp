@@ -212,7 +212,7 @@ void MStyleSheet::releaseStyle(const MStyle *style)
     const_cast<MStyle *>(style)->removeReference();
 }
 
-void MStyleSheet::cleanup(bool outputAndDelete)
+void MStyleSheet::cleanup(bool)
 {
     // delete entry cache
     QHash<QString, MStyleSheetPrivate::CacheEntry *>::iterator end = MStyleSheetPrivate::EntryCache.end();
@@ -225,19 +225,6 @@ void MStyleSheet::cleanup(bool outputAndDelete)
         delete entry;
     }
     MStyleSheetPrivate::EntryCache.clear();
-
-    // print identifiers from all styles which were not released
-    if (outputAndDelete) {
-        QHash<QString, MStyle *>::iterator end = MStyleSheetPrivate::StyleCache.end();
-        for (QHash<QString, MStyle *>::iterator iterator = MStyleSheetPrivate::StyleCache.begin();
-                iterator != end;
-                ++iterator) {
-
-            MStyle *style = *iterator;
-            mWarning("mstylesheet.cpp") << "Style:" << iterator.key() << "not released!" << "refcount:" << style->references();
-            while (style->removeReference() > 0) ;
-        }
-    }
 
     MStyleSheetPrivate::StyleCache.clear();
 }
