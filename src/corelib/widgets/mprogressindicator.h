@@ -61,7 +61,7 @@ class MProgressIndicatorPrivate;
         This is how to create spinner with unknown duration:
         \code
             MProgressIndicator* spinner = new MProgressIndicator(parent, MProgressIndicator::spinnerType);
-            spinner->setRunUnknown(true);
+            spinner->setUnknownDuration(true);
         \endcode
 
     \section ProgressIndicatorOpenIssues Open issues
