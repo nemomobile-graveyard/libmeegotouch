@@ -69,7 +69,6 @@ MWindowPrivate::MWindowPrivate() :
     closeOnLazyShutdown(false),
     onDisplay(false),
     onDisplaySet(false),
-    delayVisibility(true),
     q_ptr(NULL)
 {
 #ifndef Q_WS_X11
@@ -960,12 +959,11 @@ void MWindow::setVisible(bool visible)
         // prestarted state.
         if (MApplication::isPrestarted()) {
             return;
-        } else if (d->delayVisibility) {
+        } else if (MTheme::hasPendingRequests()) {
             // The showing of the window gets delayed until the theme
             // has finished to load all pixmap requests. This prevents
             // a flickering of the application on startup and improves
             // the performance.
-            d->delayVisibility = false;
             connect(MTheme::instance(), SIGNAL(pixmapRequestsFinished()),
                     this, SLOT(_q_onPixmapRequestsFinished()));
             return;            
