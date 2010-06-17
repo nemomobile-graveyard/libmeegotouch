@@ -19,6 +19,7 @@
 
 #include <QObject>
 #include <QGraphicsSceneMouseEvent>
+#include <QDBusPendingReply>
 
 #include <mstatusbar.h>
 
@@ -41,15 +42,28 @@ void Ut_MStatusBarView::cleanupTestCase()
     delete m_statusbar;
     m_statusbar = 0;
 }
+
 #ifdef Q_WS_X11
-void Ut_MStatusBarView::testXDamageWhileTogglingVisibility()
-{
-    m_subject->sharedPixmap = QPixmap(50,50);
-    m_subject->enablePixmapUpdates();
-    QVERIFY(m_subject->pixmapDamage != 0);
-    m_subject->disablePixmapUpdates();
-    QVERIFY(m_subject->pixmapDamage == 0);
-}
+//void Ut_MStatusBarView::testXDamageWhileTogglingVisibility()
+//{
+//    m_subject->sharedPixmap = QPixmap(50,50);
+//    m_subject->isPixmapProviderOnline = true;
+//    m_subject->sharedPixmapHandleReceived(new QDBusPendingCallWatcher);
+//    QVERIFY(m_subject->pixmapDamage != 0);
+//    m_subject->disablePixmapUpdates();
+//    QVERIFY(m_subject->pixmapDamage == 0);
+//}
+
+//void Ut_MStatusBarView::testXDamageWhileTogglingProviderAvailability()
+//{
+//    m_subject->sharedPixmap = QPixmap(50,50);
+//    m_subject->updatesEnabled = true;
+//    m_subject->sharedPixmapHandleReceived(new QDBusPendingCallWatcher);
+//    QVERIFY(m_subject->pixmapDamage != 0);
+//    m_subject->handlePixmapProviderOffline();
+//    QVERIFY(m_subject->pixmapDamage == 0);
+//}
+
 #endif
 
 QTEST_MAIN(Ut_MStatusBarView)

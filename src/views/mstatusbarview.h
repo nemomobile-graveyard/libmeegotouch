@@ -26,6 +26,10 @@
 
 class MStatusBar;
 class QPixmap;
+#ifdef HAVE_DBUS
+class QDBusServiceWatcher;
+class QDBusPendingCallWatcher;
+#endif
 
 //! \internal
 
@@ -49,7 +53,11 @@ private:
 
 #ifdef Q_WS_X11
     void updateSharedPixmap();
-    bool fetchSharedPixmapHandle(Qt::HANDLE *handle);
+#ifdef HAVE_DBUS
+    bool isPixmapProviderOnline;
+    QDBusServiceWatcher *dbusWatcher;
+    void querySharedPixmapFromProvider();
+#endif
     void setupXDamageForSharedPixmap();
     void destroyXDamageForSharedPixmap();
 
@@ -62,6 +70,11 @@ private Q_SLOTS:
 
     void enablePixmapUpdates();
     void disablePixmapUpdates();
+#ifdef HAVE_DBUS
+    void sharedPixmapHandleReceived(QDBusPendingCallWatcher * call);
+    void handlePixmapProviderOnline();
+    void handlePixmapProviderOffline();
+#endif
 
 #endif
 

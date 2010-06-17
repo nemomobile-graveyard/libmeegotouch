@@ -38,7 +38,8 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 #ifdef Q_WS_X11
-    void testXDamageWhileTogglingVisibility();
+//    void testXDamageWhileTogglingVisibility();
+//    void testXDamageWhileTogglingProviderAvailability();
 #endif
 
 private:
