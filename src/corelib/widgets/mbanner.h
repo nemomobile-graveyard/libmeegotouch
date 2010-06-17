@@ -30,17 +30,39 @@
     \ingroup widgets
 
     \section BannerOverview Overview
-        - Use MBanner class to launch in-process notifications.
-        - Use MNotification class to launch out-of-process system level notifications.
+
+    MBanner is a component used by the system for different purposes related with
+    the notifications. Depending on the elements that you use when setting up an MBanner,
+    the component will have different appearances.
+
+    Although we haven't defined different views for the MBanner, we consider those three types:
+
+    \li An event banner is a MBanner with an icon, title and subtitle.
+    \li An information banner is a MBanner with a subtitle (only one label)
+    \li An system banner is a MBanner with an icon an subtitle
+
+    Is not necessary to setup any view, the use of the above elements creates the layout.
+
+    By default MBanner is dismissed automatically after a certain amount of time. This
+    parameter is defined in mbannerstyle.css under the name of disappear-timeout.
+
+    The whole MBanner is interactive. If you click the MBanner before the diappear-timeout
+    is reached it will be dismissed.
+
+    \section notification_vs_banner MNotification versus MBanner
+
+    Use MBanner class to launch in-process notifications.
+    Use MNotification class to launch out-of-process system level notifications.
 
     \section MBannerExamples Examples
 
         Here's how to launch an event banner from code:
         \code
-           MBanner *infoBanner = new MBanner();
-           infoBanner->setTitle("New updates waiting to install");
-           infoBanner->setSubtitle("130 files");
-           infoBanner->appear(MSceneWindow::DestroyWhenDone);
+           MBanner *eventBanner = new MBanner();
+           eventBanner->setIconID("icon-l-settings");
+           eventBanner->setTitle("New updates waiting to install");
+           eventBanner->setSubtitle("130 files");
+           eventBanner->appear(MSceneWindow::DestroyWhenDone);
         \endcode
 
         Here's how to launch an information banner from code:
@@ -50,12 +72,12 @@
            infoBanner->appear(MSceneWindow::DestroyWhenDone);
         \endcode
 
-        Here's how to launch an system banner from code:
+        Here's how to launch a system banner from code:
         \code
-          MBanner *infoBanner = new MBanner();
-          infoBanner->setIconID("icon-m-telephony-call-answer");
-          infoBanner->setSubtitle("System banner");
-          infoBanner->appear(MSceneWindow::DestroyWhenDone);
+          MBanner *systemBanner = new MBanner();
+          systemBanner->setIconID("icon-m-telephony-call-answer");
+          systemBanner->setSubtitle("System banner");
+          systemBanner->appear(MSceneWindow::DestroyWhenDone);
         \endcode
 
     \sa MNotification
@@ -149,7 +171,7 @@ private:
     Q_DISABLE_COPY(MBanner)
 
 #ifdef UNIT_TEST
-    friend class Ut_MInfoBanner;
+    friend class Ut_MBanner;
 #endif
 };
 

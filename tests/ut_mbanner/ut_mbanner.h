@@ -17,42 +17,32 @@
 **
 ****************************************************************************/
 
-#ifndef BANNERSPAGE_H
-#define BANNERSPAGE_H
+#ifndef UT_MBANNER_H
+#define UT_MBANNER_H
 
-#include "templatepage.h"
+#include <QtTest/QtTest>
+#include <QObject>
+#include "mbanner.h"
 
-#include <QModelIndex>
-#include <MBanner>
-
-class MList;
-
-class BannersPage : public TemplatePage
+class Ut_MBanner : public QObject
 {
     Q_OBJECT
 
-public:
-    BannersPage();
+private slots:
+    void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
 
-    QString timedemoTitle();
-
-    void createContent();
-    void populateLayout();
-
-    void showEventBanner();
-    void showInformationBanner();
-    void showSystemInformationBanner();
-
-protected:
-    void retranslateUi();
-
-private Q_SLOTS:
-    void itemClicked(const QModelIndex &index);
+    void testTitle();
+    void testSubTitle();
+    void testIcon();
+    void testBannerCreation();
+    void testBannerClicking();
 
 private:
-    MLinearLayoutPolicy *policy;
-    MList *list;
-    MBanner *banner;
+    MBanner *m_subject;
+    MBanner *m_tmp;
 };
 
-#endif // BANNERSPAGE_H
+#endif

@@ -51,14 +51,12 @@ void MBannerViewPrivate::initDynamicLayout()
     layout = new MLayout();
 
     landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
-
     landscapePolicy->setSpacing(0);
     landscapePolicy->setContentsMargins(0, 0, 0, 0);
 
     portraitPolicy = new MGridLayoutPolicy(layout);
     portraitPolicy->setContentsMargins(0, 0, 0, 0);
     portraitPolicy->setSpacing(0);
-
 
     Q_Q(MBannerView);
 
@@ -84,7 +82,7 @@ void MBannerViewPrivate::initDynamicLayout()
         landscapePolicy->addItem(subtitle);
         portraitPolicy->addItem(subtitle,1,1,Qt::AlignVCenter);
         
-     }else if(q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()){
+    } else if (q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
 
         subtitle = new MLabel();
         subtitle->setObjectName("CommonBannerSingleSubTitle");
@@ -106,6 +104,35 @@ void MBannerViewPrivate::initDynamicLayout()
         subtitle->setWordWrap(true);
         landscapePolicy->addItem(subtitle);
         portraitPolicy->addItem(subtitle,1,1,Qt::AlignVCenter);
+
+    }else{
+        /*These conditionals are necessary for cases not contemplated
+        in the common layouts */
+
+        if (!q->model()->iconID().isEmpty()) {
+            icon = new MImageWidget();
+            icon->setObjectName("CommonBannerMainIcon");
+            landscapePolicy->addItem(icon, Qt::AlignVCenter);
+            portraitPolicy->addItem(icon, 0, 0, 2, 1, Qt::AlignVCenter);
+        }
+
+        if (!q->model()->title().isEmpty()) {
+            title = new MLabel();
+            title->setObjectName("CommonBannerSingleTitle");
+            title->setAlignment(Qt::AlignVCenter);
+            title->setWordWrap(true);
+            landscapePolicy->addItem(title);
+            portraitPolicy->addItem(title, 0, 1, Qt::AlignLeft);
+        }
+
+        if (!q->model()->subtitle().isEmpty()) {
+            subtitle = new MLabel();
+            subtitle->setObjectName("CommonBannerSingleSubTitle");
+            subtitle->setAlignment(Qt::AlignVCenter);
+            subtitle->setWordWrap(true);
+            landscapePolicy->addItem(subtitle);
+            portraitPolicy->addItem(subtitle, 0, 0, Qt::AlignVCenter);
+        }
     }
 
     landscapePolicy->addStretch();
@@ -172,7 +199,6 @@ void MBannerView::setupModel()
         d->subtitle->setText(model()->subtitle());
     if (!model()->iconID().isEmpty())
         d->icon->setImage(model()->iconID(), style()->iconSize());
-
 }
 
 void MBannerView::applyStyle()
@@ -186,8 +212,6 @@ void MBannerView::updateData(const QList<const char *>& modifications)
 
     Q_D(MBannerView);
 
-    d->initDynamicLayout();
-
     const char *member;
 
     foreach(member, modifications) {
@@ -199,6 +223,8 @@ void MBannerView::updateData(const QList<const char *>& modifications)
             d->icon->setImage(model()->iconID(), style()->iconSize());
         }
     }
+
+    d->initDynamicLayout();
 }
 
 M_REGISTER_VIEW_NEW(MBannerView, MBanner)

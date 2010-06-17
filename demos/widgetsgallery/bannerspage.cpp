@@ -120,17 +120,17 @@ void BannersPage::showEventBanner()
 
 void BannersPage::showInformationBanner()
 {
-    MBanner *banner = new MBanner();
-    banner->setSubtitle("Info banner with so much information that the text wraps in portrait");
-    banner->appear(MSceneWindow::DestroyWhenDone);
+    MBanner *infoBanner = new MBanner();
+    infoBanner->setSubtitle("Info banner with so much information that the text wraps in portrait");
+    infoBanner->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void BannersPage::showSystemInformationBanner()
 {
-    MBanner *banner = new MBanner();
-    banner->setIconID("icon-l-calendar-reminder");
-    banner->setSubtitle("System banner");
-    banner->appear(MSceneWindow::DestroyWhenDone);
+    MBanner *systemBanner = new MBanner();
+    systemBanner->setIconID("icon-l-calendar-reminder");
+    systemBanner->setSubtitle("System banner");
+    systemBanner->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void BannersPage::retranslateUi()

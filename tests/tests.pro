@@ -66,6 +66,7 @@ SUBDIRS     =  \
     ut_mextensionwatcher \
     ut_mcontainer \
     ut_minfobanner \
+    ut_mbanner \
     ut_mwidgetcontroller \
     ut_mservicemapper \
     ut_mservicefwbaseif \
