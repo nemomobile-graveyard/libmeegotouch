@@ -21,6 +21,7 @@
 #define MSTYLE_H
 
 #include <QObject>
+#include <QHash>
 #include "mexport.h"
 
 // style macro
@@ -99,8 +100,14 @@ protected:
     int references() const;
     int addReference();
     int removeReference();
+    void setID(const QString &id);
+    QString id() { return m_id; }
 
     friend class MStyleSheet;
+    friend class LeakedStyles;
+
+private:
+    QString m_id;
 };
 
 class M_EXPORT MStyleContainer

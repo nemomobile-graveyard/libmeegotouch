@@ -181,6 +181,7 @@ MStyle *MStyleSheet::style(const QList<const MStyleSheet *>& sheets,
 
     //store this one to cache
     MStyleSheetPrivate::StyleCache.insert(identifier, style);
+    style->setID(identifier);
 
     return style;
 }
