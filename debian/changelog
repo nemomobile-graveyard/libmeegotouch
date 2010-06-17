@@ -1,3 +1,10 @@
+libmeegotouch (0.20.20~1) UNRELEASED; urgency=low
+
+  * Fixes: NB#169509 - info note is truncated in portrait mode
+  * Fixes: NB#171531 -  Info banner is not dismissed
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Thu, 17 Jun 2010 13:30:27 +0300
+
 libmeegotouch (0.20.19-1) unstable; urgency=low
 
   * Fixes: NB#174469 - widgetsgallery -quitimmediately stuck
