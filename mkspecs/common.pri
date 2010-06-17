@@ -71,6 +71,7 @@ include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
     DEFINES += M_THEME_POST_PRELOAD_DIR=\\\"\"$$M_THEME_POST_PRELOAD_DIR\"\\\"
     DEFINES += M_DBUS_SERVICES_DIR=\\\"\"$$M_DBUS_SERVICES_DIR\"\\\"
     DEFINES += M_XDG_DIR=\\\"\"$$M_XDG_DIR\"\\\"
+    DEFINES += M_INSTALL_SYSCONFDIR=\\\"\"$$M_INSTALL_SYSCONFDIR\"\\\"
 
     # M_BINARY_SHADERS_DIR defines the location of precompiled shader programs
     DEFINES += M_SHADER_SOURCE_DIR=\\\"\"$$M_SHADER_SOURCE_DIR\"\\\"

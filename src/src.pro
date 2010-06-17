@@ -7,14 +7,17 @@ SUBDIRS += \
     extensions
 win32|macx:SUBDIRS -= settings extensions
 
-# install gconf schema
-unix {
-  include(../mkspecs/common.pri)
-  schemas.CONFIG += no_check_exist
-  schemas.files = $${IN_PWD}/data/meegotouch.schemas
-  schemas.path = $${M_SYSCONFDIR}/gconf/schemas
-  schemas.commands = GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule $${IN_PWD}/data/meegotouch.schemas
-  INSTALLS += schemas
+include(../mkspecs/common.pri)
+
+contains(DEFINES, HAVE_GCONF) {
+    # install gconf schema
+    unix {
+        schemas.CONFIG += no_check_exist
+        schemas.files = $${IN_PWD}/data/meegotouch.schemas
+        schemas.path = $${M_SYSCONFDIR}/gconf/schemas
+        schemas.commands = GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule $${IN_PWD}/data/meegotouch.schemas
+        INSTALLS += schemas
+    }
 }
 
 #install device configuration file
@@ -40,7 +43,7 @@ install_prf.files = \
 
 # install Rich Text Editor xml file
 install_xmltoolbar.files = data/RichTextEditorToolbar1.xml
-install_xmltoolbar.path = /usr/share/meegotouch/imtoolbars
+install_xmltoolbar.path = $$M_INSTALL_PREFIX/share/meegotouch/imtoolbars
 INSTALLS += install_xmltoolbar
 
 # install pkgconfig file

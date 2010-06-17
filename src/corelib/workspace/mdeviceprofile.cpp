@@ -34,7 +34,7 @@
 MDeviceProfilePrivate::MDeviceProfilePrivate()
     : q_ptr(0)
 {
-    QString filename = "/etc/meegotouch/devices.conf";
+    QString filename = M_INSTALL_SYSCONFDIR "/meegotouch/devices.conf";
 
 #ifdef Q_OS_WIN
     QDir appDir(QCoreApplication::applicationDirPath());
@@ -45,7 +45,7 @@ MDeviceProfilePrivate::MDeviceProfilePrivate()
 #endif
 
     if(!load(filename)) {
-        qFatal("Failed to load device profile.");
+        qFatal("Failed to load device profile '%s'", qPrintable(filename));
     }
 }
 
