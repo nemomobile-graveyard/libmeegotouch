@@ -173,10 +173,24 @@ public:
     static void registerLibrary(MLibrary *library);
     static void unregisterLibrary(MLibrary *library);
 
+    static void addLeakedStyle(MStyle *style, const QString &id);
+    static void removeLeakedStyle(MStyle *style);
+
 #ifdef HAVE_GCONF
 public slots:
     void updateShowAsyncRequests();
 #endif
+
+private:
+    class LeakedStyles {
+    public:
+        void insert(MStyle* style, const QString &id) { styles.insert(style, id); }
+        void remove(MStyle* style) { styles.remove(style); }
+        ~LeakedStyles();
+    private:
+        QHash<MStyle*, QString> styles;
+    };
+    static LeakedStyles leakedStyles;
 };
 
 #endif

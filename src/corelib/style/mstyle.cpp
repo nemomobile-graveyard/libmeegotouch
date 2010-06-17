@@ -51,29 +51,6 @@ void releaseAllocatedResourcesFromStyle(const MStyle *style)
     }
 }
 
-struct LeakedStyles {
-public:
-    void insert(MStyle* style) { styles.insert(style, style); }
-    void remove(MStyle* style) { styles.remove(style); }
-    ~LeakedStyles();
-private:
-    QHash<MStyle*, MStyle*> styles;
-};
-static LeakedStyles leakedStyles;
-
-LeakedStyles::~LeakedStyles()
-{
-    QHash<MStyle*, MStyle*>::iterator end = styles.end();
-    for (QHash<MStyle*, MStyle*>::iterator iterator = styles.begin();
-            iterator != end;
-            ++iterator) {
-        MStyle *leak = iterator.key();
-        QString id = leak->id();
-
-        mWarning("mstyle.cpp") << "Style:" << id << "not released!" << "refcount:" << leak->references();
-    }
-}
-
 ///////////////////
 // PRIVATE CLASS //
 ///////////////////
@@ -88,12 +65,6 @@ int MStyle::addReference()
     return data->references;
 }
 
-void MStyle::setID(const QString &id)
-{
-    m_id = id;
-    leakedStyles.insert(this);
-}
-
 int MStyle::removeReference()
 {
     data->references--;
@@ -102,7 +73,7 @@ int MStyle::removeReference()
         /* TODO: deleteLater breaks theme change (when theme libraries are unloaded and deleteLater refs them)
         deleteLater(); // Use deleteLater() for QObjects instead of "delete this"
         */
-        leakedStyles.remove(this);
+        MThemePrivate::removeLeakedStyle(this);
         delete this;
         return 0;
     }

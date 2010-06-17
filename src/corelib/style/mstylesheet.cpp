@@ -32,6 +32,7 @@
 #include "mfeedback.h"
 #include "mstylesheet.h"
 #include "mstylesheet_p.h"
+#include "mtheme_p.h"
 #include "mstylesheetselector.h"
 #include "mdeviceprofile.h"
 #include "mwidgetstyle.h"
@@ -181,7 +182,7 @@ MStyle *MStyleSheet::style(const QList<const MStyleSheet *>& sheets,
 
     //store this one to cache
     MStyleSheetPrivate::StyleCache.insert(identifier, style);
-    style->setID(identifier);
+    MThemePrivate::addLeakedStyle(style, identifier);
 
     return style;
 }
