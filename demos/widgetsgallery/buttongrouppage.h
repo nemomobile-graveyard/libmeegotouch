@@ -35,8 +35,10 @@ public:
     virtual ~ButtonGroupPage();
     virtual QString timedemoTitle();
     virtual void createContent();
+
 protected:
     virtual void retranslateUi();
+
 private:
     MButton *pushButton1;
     MButton *pushButton2;
@@ -44,8 +46,12 @@ private:
     MButton *pushButton4;
     MButton *pushButton5;
     MButton *pushButton6;
-    
-    MLabel* hLabel;
+    MButton *pushButton7;
+    MButton *pushButton8;
+    MButton *pushButton9;
+
+    MLabel* hLabel1;
+    MLabel* hLabel2;
     MLabel* vLabel;
 };
 
