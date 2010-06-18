@@ -459,8 +459,17 @@ void MWindow::setTranslucentBackground(bool enable)
 {
     Q_D(MWindow);
 
-    if (enable)
+    if (enable) {
         setAttribute(Qt::WA_TranslucentBackground);
+#ifdef Q_WS_X11
+        // This is workaround for NB#170883
+        // Setting Qt::WA_TranslucentBackground property for window
+        // changes mask for yet unknown reason, only on hardware,
+        // not in scratchbox and supposingly its a candidate for
+        // filing bug against Qt when confirmed
+        d->appendVisibilityChangeMask();
+#endif
+    }
 
     if (MApplication::softwareRendering() || MApplication::isPrestarted())
         d->initSoftwareViewport();
