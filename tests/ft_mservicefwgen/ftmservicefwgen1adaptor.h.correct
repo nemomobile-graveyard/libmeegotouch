@@ -42,8 +42,6 @@ class FtMServiceFwGen1Adaptor: public QDBusAbstractAdaptor
 "      <arg direction=\"out\" type=\"b\" name=\"\"/>\n"
 "    </method>\n"
 "    <method name=\"showImage\">\n"
-"      <arg direction=\"in\" type=\"s\" name=\"backServiceName\"/>\n"
-"      <arg direction=\"in\" type=\"s\" name=\"windowTitle\"/>\n"
 "      <arg direction=\"in\" type=\"u\" name=\"windowId\"/>\n"
 "      <arg direction=\"in\" type=\"s\" name=\"uri\"/>\n"
 "      <arg direction=\"in\" type=\"as\" name=\"uriList\"/>\n"
@@ -56,8 +54,6 @@ class FtMServiceFwGen1Adaptor: public QDBusAbstractAdaptor
 "      <arg direction=\"out\" type=\"b\" name=\"\"/>\n"
 "    </method>\n"
 "    <method name=\"bug172441\">\n"
-"      <arg direction=\"in\" type=\"s\" name=\"backServiceName\"/>\n"
-"      <arg direction=\"in\" type=\"s\" name=\"windowTitle\"/>\n"
 "      <arg direction=\"in\" type=\"u\" name=\"windowId\"/>\n"
 "    </method>\n"
 "  </interface>\n"
@@ -68,16 +64,15 @@ public:
 
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
-    void bug172441(const QString &backServiceName, const QString &windowTitle, const uint windowId);
+    void bug172441(const uint windowId);
     bool showGridWithCapturedContent(int limit);
     bool showImage(const QString &uri, const QString &playlistName, const QString &defaultBackPage);
-    Q_NOREPLY void showImage(const QString &backServiceName, const QString &windowTitle, const uint windowId, const QString &uri, const QStringList &uriList);
+    Q_NOREPLY void showImage(const uint windowId, const QString &uri, const QStringList &uriList);
     bool showPage(const QString &targetPage, const QString &previousPage);
     bool showSettings();
     void goBack();
 
 private:
-    QString backServiceName;
     int windowId;
 
 Q_SIGNALS: // SIGNALS

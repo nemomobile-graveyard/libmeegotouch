@@ -79,8 +79,6 @@ public:
     QString adaptorBase();
     QRegExp qdbusxml2cppRegExp();
 
-    QString hideThisWindowCode();
-
     QString topBitH();
     QString middleBitH();
     QString botBitH();
@@ -466,27 +464,6 @@ QString Worker::mangledMethodDoc( int id )
     return getDoxygenFromXml( m_methodDocs[ id ], 4 );
 }
 
-QString Worker::hideThisWindowCode()
-{
-    return
-"\n\
-        // hide this window\n\
-        if (win) {\n\
-            // Tell the window to not to be shown in the switcher\n\
-#ifdef Q_WS_X11\n\
-            Atom skipTaskbarAtom = XInternAtom(QX11Info::display(), \"_NET_WM_STATE_SKIP_TASKBAR\", False);\n\
-\n\
-            Atom netWmStateAtom = XInternAtom(QX11Info::display(), \"_NET_WM_STATE\", False);\n\
-            QVector<Atom> atoms;\n\
-            atoms.append(skipTaskbarAtom);\n\
-            XChangeProperty(QX11Info::display(), windowId, netWmStateAtom, XA_ATOM, 32,\n\
-                            PropModeReplace, (unsigned char *)atoms.data(), atoms.count());\n\
-            XSync(QX11Info::display(), False);\n\
-#endif // Q_WS_X11\n\
-        }\n\
-";
-}
-
 QString Worker::topBitH()
 {
     return
@@ -816,29 +793,23 @@ void processAdaptorCppFile()
                     "#include <MApplication>\n"       \
                     "#include <MApplicationPage>\n"   \
                     "#include <MApplicationWindow>\n" \
-                    "#include <MEscapeButtonPanel>\n"         \
                     "#include <MDebug>\n"                    \
                     "\n"                                     \
                     "#ifdef Q_WS_X11\n"                         \
                     "#include <QX11Info>\n"                     \
-                    "#include <X11/Xutil.h>\n"                  \
                     "#include <X11/Xlib.h>\n"                   \
-                    "#include <X11/Xatom.h>\n"                  \
-                    "#include <X11/Xmd.h>\n"                    \
                     "#endif // Q_WS_X11\n"                      \
                     "\n"
                     + line + "\n";
             } else if (w.needsMApplication() && line.contains("QDBusAbstractAdaptor(parent)")) {
                 outS
                     << line + "," << endl
-                    << "    backServiceName()," << endl
                     << "    windowId(-1)" << endl;
             } else if (inChainTask) {
                 line.remove(w.chainTag());
                 if (line == "{") {
                     outS << line << endl
                          << "    this->windowId = windowId;" << endl
-                         << "    this->backServiceName = backServiceName;" << endl
                          << endl;
                 } else if (line.contains("return") || line == "}") {
                     // match end of function - need to add the connect *before* the return, if there is one
@@ -846,13 +817,12 @@ void processAdaptorCppFile()
 "\n"\
 "    MApplicationWindow *appWindow = MApplication::activeApplicationWindow();\n"\
 "    if (appWindow != 0) {\n"\
-"        appWindow->setWindowTitle( windowTitle );\n"\
 "\n"\
 "        MApplicationPage *currentPage = appWindow->currentPage();\n"\
 "\n"\
 "        if ( currentPage != 0 ) {\n"\
 "            currentPage->setEscapeMode( MApplicationPageModel::EscapeManualBack );\n"\
-"            // connect to the back button - assumes the above 'showImage' opens a\n"\
+"            // connect to the back button - assumes the above method opens a\n"\
 "            // new window and so the window referred to below is already the top one\n"\
 "            connect(currentPage, SIGNAL(backButtonClicked()),\n"\
 "                this, SLOT(goBack()));\n"\
@@ -865,20 +835,7 @@ void processAdaptorCppFile()
 "\n"\
 "#ifdef Q_WS_X11\n"\
 "    // update the X server\n"\
-"    {\n"\
-"        XPropertyEvent p;\n"\
-"        p.send_event = True;\n"\
-"        p.display = QX11Info::display();\n"\
-"        p.type   = PropertyNotify;\n"\
-"        p.window = RootWindow(p.display, 0);\n"\
-"        p.atom   = XInternAtom(p.display, \"_NET_CLIENT_LIST\", False);\n"\
-"        p.state  = PropertyNewValue;\n"\
-"        p.time   = CurrentTime;\n"\
-"        XSendEvent(p.display, p.window, False, PropertyChangeMask,\n"\
-"                (XEvent*)&p);\n"\
-"\n"\
-"        XSync(QX11Info::display(), False);\n"\
-"    }\n"\
+"    XSetTransientForHint(QX11Info::display(), appWindow->winId(), windowId);\n"\
 "#endif // Q_WS_X11\n"\
 "\n"
 + line + "\n";
@@ -888,8 +845,7 @@ void processAdaptorCppFile()
                 }
             } else if (line.contains(w.chainTag())) {
                 line.remove(w.chainTag());
-
-                QString parameterString = "(const QString &backServiceName, const QString &windowTitle, const uint windowId";
+                QString parameterString = "(const uint windowId";
 
                 bool methodHasParameters = !line.contains( QRegExp( "\\(\\s*\\)" ));
                 if ( methodHasParameters ) {
@@ -916,40 +872,8 @@ void processAdaptorCppFile()
 "{\n"                                                   \
 "    bool backServiceRegistered = ( windowId != -1 );\n"\
 "    if ( backServiceRegistered ) {\n"\
-"#ifdef Q_WS_X11\n"\
-"        Display *display = QX11Info::display();\n"\
-"\n"\
-"        // raise and activate window\n"\
-"        {\n"\
-"            XEvent ev;\n"\
-"            memset(&ev, 0, sizeof(ev));\n"\
-"\n"\
-"            Window rootWin = QX11Info::appRootWindow(QX11Info::appScreen());\n"\
-"\n"\
-"            ev.xclient.type         = ClientMessage;\n"\
-"            ev.xclient.window       = windowId;\n"\
-"            ev.xclient.message_type = XInternAtom(\n"\
-"                    display,\n"\
-"                    \"_NET_ACTIVE_WINDOW\",\n"\
-"                    True);\n"\
-"            ev.xclient.format       = 32;\n"\
-"            ev.xclient.data.l[0]    = 1;\n"\
-"            ev.xclient.data.l[1]    = CurrentTime;\n"\
-"            ev.xclient.data.l[2]    = 0;\n"\
-"\n"\
-"            XSendEvent(display,  rootWin, False, StructureNotifyMask, &ev);\n"\
-"#endif // Q_WS_X11\n"\
-"        }\n"\
-"\n"\
-"        // unhide the chain parent's window\n"\
-"        {\n"\
-"            // Tell the window to not to be shown in the switcher\n"\
-"#ifdef Q_WS_X11\n"\
-"            XDeleteProperty(display, windowId, XInternAtom(display, \"_NET_WM_STATE\", False));\n"\
-"            XSync(display, False);\n"\
-"#endif // Q_WS_X11\n"\
-"        }\n"\
-"\n"\
+"        // All we need to do is close the window as it has the WM_TRANSIENT_FOR set\n"\
+"        // the compositor should bring out the parent window\n"\
 "        MApplicationWindow *appWindow = MApplication::activeApplicationWindow();\n"\
 "        if ( appWindow != 0 ) {\n"\
 "            appWindow->close();\n"\
@@ -1008,7 +932,6 @@ void processAdaptorHeaderFile()
                         << "    void goBack();" << endl
                         << "" << endl
                         << "private:" << endl
-                        << "    QString backServiceName;" << endl
                         << "    int windowId;" << endl
                         << "" << endl;
                 }
@@ -1049,8 +972,6 @@ void processAdaptorHeaderFile()
                 // this has to be printed after the method tag, above
                 if (isChainTask) {
                     newAdaptorHeaderStream
-                        << "\"      <arg direction=\\\"in\\\" type=\\\"s\\\" name=\\\"backServiceName\\\"/>\\n\"" << endl
-                        << "\"      <arg direction=\\\"in\\\" type=\\\"s\\\" name=\\\"windowTitle\\\"/>\\n\"" << endl
                         << "\"      <arg direction=\\\"in\\\" type=\\\"u\\\" name=\\\"windowId\\\"/>\\n\"" << endl;
                     if ( chainTaskHasNoParameters ) {
                         newAdaptorHeaderStream
@@ -1085,7 +1006,7 @@ void processAdaptorHeaderFile()
                     hasChains = true;
                     line.remove(w.chainTag());
 
-                    QString parameterString = "(const QString &backServiceName, const QString &windowTitle, const uint windowId";
+                    QString parameterString = "(const uint windowId";
 
                     bool methodHasParameters = !line.contains( QRegExp( "\\(\\s*\\)" ));
                     if ( methodHasParameters ) {
@@ -1136,23 +1057,16 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
         {
             newProxyHeaderStream << "\
         Qt::HANDLE windowId = 0;\n\
-        QString windowTitle;\n\
-        QString goBackServiceName = MComponentData::instance()->serviceName();\n\
 \n\
         MWindow *win = MApplication::instance()->activeWindow();\n\
         if (win) {\n\
             windowId = win->winId();\n\
-            windowTitle = win->windowTitle();\n\
         }\n\
 \n\
 " + line + "\n\
-        argumentList << qVariantFromValue(goBackServiceName);\n\
-        argumentList << qVariantFromValue(windowTitle);\n\
         argumentList << qVariantFromValue((uint)windowId);\n";
         }
         else if (line.contains("return")) {
-            newProxyHeaderStream << w.hideThisWindowCode() << endl;
-
             line.remove(w.chainTag());
             newProxyHeaderStream << line << "\n";
             inChainTask = false;

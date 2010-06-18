@@ -13,15 +13,11 @@
 #include <MApplication>
 #include <MApplicationPage>
 #include <MApplicationWindow>
-#include <MEscapeButtonPanel>
 #include <MDebug>
 
 #ifdef Q_WS_X11
 #include <QX11Info>
-#include <X11/Xutil.h>
 #include <X11/Xlib.h>
-#include <X11/Xatom.h>
-#include <X11/Xmd.h>
 #endif // Q_WS_X11
 
 #include <QtCore/QMetaObject>
@@ -38,7 +34,6 @@
 
 FtMServiceFwGen1Adaptor::FtMServiceFwGen1Adaptor(QObject *parent)
     : QDBusAbstractAdaptor(parent),
-    backServiceName(),
     windowId(-1)
 {
     // constructor
@@ -50,23 +45,21 @@ FtMServiceFwGen1Adaptor::~FtMServiceFwGen1Adaptor()
     // destructor
 }
 
-void FtMServiceFwGen1Adaptor::bug172441(const QString &backServiceName, const QString &windowTitle, const uint windowId)
+void FtMServiceFwGen1Adaptor::bug172441(const uint windowId)
 {
     this->windowId = windowId;
-    this->backServiceName = backServiceName;
 
     // handle method call com.nokia.fakegalleryserviceinterface.bug172441
     QMetaObject::invokeMethod(parent(), "bug172441");
 
     MApplicationWindow *appWindow = MApplication::activeApplicationWindow();
     if (appWindow != 0) {
-        appWindow->setWindowTitle( windowTitle );
 
         MApplicationPage *currentPage = appWindow->currentPage();
 
         if ( currentPage != 0 ) {
             currentPage->setEscapeMode( MApplicationPageModel::EscapeManualBack );
-            // connect to the back button - assumes the above 'showImage' opens a
+            // connect to the back button - assumes the above method opens a
             // new window and so the window referred to below is already the top one
             connect(currentPage, SIGNAL(backButtonClicked()),
                 this, SLOT(goBack()));
@@ -79,20 +72,7 @@ void FtMServiceFwGen1Adaptor::bug172441(const QString &backServiceName, const QS
 
 #ifdef Q_WS_X11
     // update the X server
-    {
-        XPropertyEvent p;
-        p.send_event = True;
-        p.display = QX11Info::display();
-        p.type   = PropertyNotify;
-        p.window = RootWindow(p.display, 0);
-        p.atom   = XInternAtom(p.display, "_NET_CLIENT_LIST", False);
-        p.state  = PropertyNewValue;
-        p.time   = CurrentTime;
-        XSendEvent(p.display, p.window, False, PropertyChangeMask,
-                (XEvent*)&p);
-
-        XSync(QX11Info::display(), False);
-    }
+    XSetTransientForHint(QX11Info::display(), appWindow->winId(), windowId);
 #endif // Q_WS_X11
 
 }
@@ -113,23 +93,21 @@ bool FtMServiceFwGen1Adaptor::showImage(const QString &uri, const QString &playl
     return out0;
 }
 
-void FtMServiceFwGen1Adaptor::showImage(const QString &backServiceName, const QString &windowTitle, const uint windowId, const QString &uri, const QStringList &uriList)
+void FtMServiceFwGen1Adaptor::showImage(const uint windowId, const QString &uri, const QStringList &uriList)
 {
     this->windowId = windowId;
-    this->backServiceName = backServiceName;
 
     // handle method call com.nokia.fakegalleryserviceinterface.showImage
     QMetaObject::invokeMethod(parent(), "showImage", Q_ARG(QString, uri), Q_ARG(QStringList, uriList));
 
     MApplicationWindow *appWindow = MApplication::activeApplicationWindow();
     if (appWindow != 0) {
-        appWindow->setWindowTitle( windowTitle );
 
         MApplicationPage *currentPage = appWindow->currentPage();
 
         if ( currentPage != 0 ) {
             currentPage->setEscapeMode( MApplicationPageModel::EscapeManualBack );
-            // connect to the back button - assumes the above 'showImage' opens a
+            // connect to the back button - assumes the above method opens a
             // new window and so the window referred to below is already the top one
             connect(currentPage, SIGNAL(backButtonClicked()),
                 this, SLOT(goBack()));
@@ -142,20 +120,7 @@ void FtMServiceFwGen1Adaptor::showImage(const QString &backServiceName, const QS
 
 #ifdef Q_WS_X11
     // update the X server
-    {
-        XPropertyEvent p;
-        p.send_event = True;
-        p.display = QX11Info::display();
-        p.type   = PropertyNotify;
-        p.window = RootWindow(p.display, 0);
-        p.atom   = XInternAtom(p.display, "_NET_CLIENT_LIST", False);
-        p.state  = PropertyNewValue;
-        p.time   = CurrentTime;
-        XSendEvent(p.display, p.window, False, PropertyChangeMask,
-                (XEvent*)&p);
-
-        XSync(QX11Info::display(), False);
-    }
+    XSetTransientForHint(QX11Info::display(), appWindow->winId(), windowId);
 #endif // Q_WS_X11
 
 }
@@ -180,40 +145,8 @@ void FtMServiceFwGen1Adaptor::goBack()
 {
     bool backServiceRegistered = ( windowId != -1 );
     if ( backServiceRegistered ) {
-#ifdef Q_WS_X11
-        Display *display = QX11Info::display();
-
-        // raise and activate window
-        {
-            XEvent ev;
-            memset(&ev, 0, sizeof(ev));
-
-            Window rootWin = QX11Info::appRootWindow(QX11Info::appScreen());
-
-            ev.xclient.type         = ClientMessage;
-            ev.xclient.window       = windowId;
-            ev.xclient.message_type = XInternAtom(
-                    display,
-                    "_NET_ACTIVE_WINDOW",
-                    True);
-            ev.xclient.format       = 32;
-            ev.xclient.data.l[0]    = 1;
-            ev.xclient.data.l[1]    = CurrentTime;
-            ev.xclient.data.l[2]    = 0;
-
-            XSendEvent(display,  rootWin, False, StructureNotifyMask, &ev);
-#endif // Q_WS_X11
-        }
-
-        // unhide the chain parent's window
-        {
-            // Tell the window to not to be shown in the switcher
-#ifdef Q_WS_X11
-            XDeleteProperty(display, windowId, XInternAtom(display, "_NET_WM_STATE", False));
-            XSync(display, False);
-#endif // Q_WS_X11
-        }
-
+        // All we need to do is close the window as it has the WM_TRANSIENT_FOR set
+        // the compositor should bring out the parent window
         MApplicationWindow *appWindow = MApplication::activeApplicationWindow();
         if ( appWindow != 0 ) {
             appWindow->close();

@@ -57,36 +57,15 @@ public Q_SLOTS: // METHODS
     inline QDBusPendingReply<> showImage(const QString &uri, const QStringList &uriList)
     {
         Qt::HANDLE windowId = 0;
-        QString windowTitle;
-        QString goBackServiceName = MComponentData::instance()->serviceName();
 
         MWindow *win = MApplication::instance()->activeWindow();
         if (win) {
             windowId = win->winId();
-            windowTitle = win->windowTitle();
         }
 
         QList<QVariant> argumentList;
-        argumentList << qVariantFromValue(goBackServiceName);
-        argumentList << qVariantFromValue(windowTitle);
         argumentList << qVariantFromValue((uint)windowId);
         argumentList << qVariantFromValue(uri) << qVariantFromValue(uriList);
-
-        // hide this window
-        if (win) {
-            // Tell the window to not to be shown in the switcher
-#ifdef Q_WS_X11
-            Atom skipTaskbarAtom = XInternAtom(QX11Info::display(), "_NET_WM_STATE_SKIP_TASKBAR", False);
-
-            Atom netWmStateAtom = XInternAtom(QX11Info::display(), "_NET_WM_STATE", False);
-            QVector<Atom> atoms;
-            atoms.append(skipTaskbarAtom);
-            XChangeProperty(QX11Info::display(), windowId, netWmStateAtom, XA_ATOM, 32,
-                            PropModeReplace, (unsigned char *)atoms.data(), atoms.count());
-            XSync(QX11Info::display(), False);
-#endif // Q_WS_X11
-        }
-
         return asyncCallWithArgumentList(QLatin1String("showImage"), argumentList);
     }
 
