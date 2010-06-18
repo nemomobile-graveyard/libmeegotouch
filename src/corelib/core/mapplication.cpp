@@ -25,6 +25,7 @@
 #include "mcomponentdata.h"
 #include "mondisplaychangeevent.h"
 #include "mapplicationwindow.h"
+#include "mwindow_p.h"
 #include <MDebug>
 #include "mapplication_p.h"
 
@@ -54,12 +55,10 @@ MApplicationPrivate::~MApplicationPrivate()
 #ifdef Q_WS_X11
 void MApplicationPrivate::setWindowVisibility(Window window, bool visible)
 {
-    if (!MApplication::windows().empty()) {
-        Q_FOREACH(MWindow * win, MApplication::windows()) {
-            if (win && win->winId() == window) {
-                MOnDisplayChangeEvent ev(visible, QRectF(QPointF(0, 0), win->visibleSceneSize()));
-                MApplication::instance()->sendEvent(win, &ev);
-            }
+    Q_FOREACH(MWindow * win, MApplication::windows()) {
+        if (win && win->winId() == window) {
+            MOnDisplayChangeEvent ev(visible, QRectF(QPointF(0, 0), win->visibleSceneSize()));
+            MApplication::instance()->sendEvent(win, &ev);
         }
     }
 }
@@ -69,12 +68,18 @@ int MApplicationPrivate::handleXError(Display *, XErrorEvent *)
     return 0;
 }
 
+
+void MApplicationPrivate::setX11PrestartPropertyForWindows(bool set)
+{
+    Q_FOREACH(MWindow * win, MApplication::windows()) {
+        win->d_ptr->setX11PrestartProperty(set);
+    }
+}
+
 void MApplicationPrivate::removeWindowsFromSwitcher(bool remove)
 {
-    if (!MApplication::windows().empty()) {
-        Q_FOREACH(MWindow * win, MApplication::windows()) {
-            removeWindowFromSwitcher(win->winId(), remove);
-        }
+    Q_FOREACH(MWindow * win, MApplication::windows()) {
+        removeWindowFromSwitcher(win->winId(), remove);
     }
 }
 
@@ -156,6 +161,7 @@ void MApplicationPrivate::releasePrestart()
         if (prestartModeIsLazyShutdown()) {
             removeWindowsFromSwitcher(false);
         }
+        setX11PrestartPropertyForWindows(false);
 #endif
     }
 }
@@ -177,6 +183,7 @@ void MApplicationPrivate::restorePrestart()
         // Explicitly remove windows from the switcher because they
         // are hidden but should look like closed
         removeWindowsFromSwitcher(true);
+        setX11PrestartPropertyForWindows(true);
 #endif
     }
 }

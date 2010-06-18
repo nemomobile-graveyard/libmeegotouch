@@ -510,9 +510,9 @@ protected:
 private:
     Q_DISABLE_COPY(MWindow)
     Q_DECLARE_PRIVATE(MWindow)
-    
     Q_PRIVATE_SLOT(d_func(), void _q_onPixmapRequestsFinished())
 
+    friend class MApplicationPrivate;
 #ifdef UNIT_TEST
     // to call orientationAngleChanged()
     friend class Ut_MWindow;

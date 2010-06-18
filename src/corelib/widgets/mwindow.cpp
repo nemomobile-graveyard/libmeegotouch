@@ -135,6 +135,11 @@ void MWindowPrivate::init()
 
 #ifdef Q_WS_X11
     appendVisibilityChangeMask();
+    // If the window is created for the application in prestarted mode
+    // we have to set X11 property _MEEGOTOUCH_PRESTARTED
+    if(MApplication::isPrestarted()) {
+        setX11PrestartProperty(true);
+    }
 #endif
 
     q->setTranslucentBackground(false);
@@ -398,6 +403,24 @@ void MWindowPrivate::propagateMOnDisplayChangeEventToScene(MOnDisplayChangeEvent
     q->scene()->d_func()->onDisplayChangeEvent(&ev);
 
 }
+
+#ifdef Q_WS_X11
+void MWindowPrivate::setX11PrestartProperty(bool set)
+{
+    Q_Q(MWindow);
+    Display *dpy  = QX11Info::display();
+    if (dpy) {
+        Atom prestartAtom = XInternAtom(dpy, "_MEEGOTOUCH_PRESTARTED", False);
+        unsigned char data=1;
+        if (set) {
+            XChangeProperty(dpy, q->winId(), prestartAtom, 
+                            XA_CARDINAL, 8, PropModeAppend, &data, 1);
+        } else {
+            XDeleteProperty(dpy, q->winId(), prestartAtom);
+        }
+    }
+}
+#endif
 
 MWindow::MWindow(MWindowPrivate &dd, QWidget *parent)
     : QGraphicsView(parent),

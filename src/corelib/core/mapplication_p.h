@@ -70,6 +70,7 @@ private:
     static void setWindowVisibility(Window window, bool visible);
     static void removeWindowsFromSwitcher(bool remove);
     static void removeWindowFromSwitcher(Window window, bool remove);
+    static void setX11PrestartPropertyForWindows(bool set);
 #endif
     friend class MApplicationServicePrivate;
     friend class MWindow;

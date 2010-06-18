@@ -46,6 +46,7 @@ public:
     void appendVisibilityChangeMask();
     void setX11Property(const char *propertyName, qreal value);
     qreal getX11Property(const char *propertyName) const;
+    void setX11PrestartProperty(bool set);
 #endif
     
     void _q_onPixmapRequestsFinished();
