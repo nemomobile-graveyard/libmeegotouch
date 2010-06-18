@@ -47,6 +47,7 @@ public:
         
         if (cell == NULL) {
             cell = new MBasicListItem(itemStyle);
+            cell->initLayout();
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
@@ -111,6 +112,7 @@ public:
         
         if (cell == NULL) {
             cell = new MDetailedListItem(itemStyle);
+            cell->initLayout();
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
@@ -185,6 +187,7 @@ public:
 
         if (cell == NULL) {
             cell = new MAdvancedListItem(itemStyle);
+            cell->initLayout();
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);

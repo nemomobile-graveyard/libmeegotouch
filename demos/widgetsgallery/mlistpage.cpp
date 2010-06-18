@@ -94,6 +94,7 @@ public:
         PhoneBookCell *cell = dynamic_cast<PhoneBookCell *>(recycler.take(PhoneBookCell::staticMetaObject.className()));
         if (cell == NULL) {
             cell = new PhoneBookCell;
+            cell->initLayout();
         }
         updateCell(index, cell);
         return cell;
