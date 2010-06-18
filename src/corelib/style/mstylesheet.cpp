@@ -514,9 +514,12 @@ bool MStyleSheetPrivate::matchParents(MStyleSheetSelector *selector,
 
         const QGraphicsItem *p = parent;
         while (p) {
-            const QGraphicsWidget *widget = dynamic_cast<const QGraphicsWidget *>(p);
-            if (widget && matchParent(selector, widget->metaObject(), sceneOrder, parentPriority)) {
-                return true;
+            if (p->isWidget()) {
+                const QGraphicsWidget *widget = static_cast<const QGraphicsWidget *>(p);
+
+                if (matchParent(selector, widget->metaObject(), sceneOrder, parentPriority)) {
+                    return true;
+                }
             }
 
             if (selector->flags() & MStyleSheetSelector::Child) {
