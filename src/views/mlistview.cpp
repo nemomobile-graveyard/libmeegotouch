@@ -199,7 +199,8 @@ void MListView::drawForeground(QPainter *painter, const QStyleOptionGraphicsItem
 
 void MListView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
-    d_ptr->drawSeparators(painter, option);
+    if (d_ptr->hseparatorHeight > 0 && !d_ptr->clearVisibleOnRelayout)
+        d_ptr->drawSeparators(painter, option);
 }
 
 void MListView::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
