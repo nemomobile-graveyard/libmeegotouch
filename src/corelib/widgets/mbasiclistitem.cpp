@@ -33,9 +33,9 @@ MBasicListItemPrivate::MBasicListItemPrivate(MBasicListItem::ItemStyle style)
     image(NULL),
     titleLabel(NULL),
     subtitleLabel(NULL),
-    isLayoutInitialized(false),
     listItemStyle(style)
 {
+
 }
 
 MBasicListItemPrivate::~MBasicListItemPrivate()
@@ -110,8 +110,6 @@ MBasicListItem::MBasicListItem(MBasicListItem::ItemStyle style, QGraphicsItem *p
 
     setItemStyle(style);
     setObjectName("CommonPanel");
-
-    initLayout();
 }
 
 MBasicListItem::~MBasicListItem()
@@ -120,13 +118,7 @@ MBasicListItem::~MBasicListItem()
 
 void MBasicListItem::initLayout()
 {
-    Q_D(MBasicListItem);
-
-    if (d->isLayoutInitialized)
-        return;
-
     setLayout(createLayout());
-    d->isLayoutInitialized = true;
 }
 
 QGraphicsLayout *MBasicListItem::createLayout()

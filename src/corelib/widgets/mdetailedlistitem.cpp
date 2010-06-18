@@ -35,7 +35,6 @@ MDetailedListItemPrivate::MDetailedListItemPrivate(MDetailedListItem::ItemStyle 
     titleLabel(NULL),
     subtitleLabel(NULL),
     sideBottomLabel(NULL),
-    isLayoutInitialized(false),
     listItemStyle(style)
 {
 
@@ -167,8 +166,6 @@ MDetailedListItem::MDetailedListItem(MDetailedListItem::ItemStyle style, QGraphi
 
     setItemStyle(style);
     setObjectName("CommonPanel");
-
-    initLayout();
 }
 
 MDetailedListItem::~MDetailedListItem()
@@ -177,13 +174,7 @@ MDetailedListItem::~MDetailedListItem()
 
 void MDetailedListItem::initLayout()
 {
-    Q_D(MDetailedListItem);
-
-    if (d->isLayoutInitialized)
-        return;
-
     setLayout(createLayout());
-    d->isLayoutInitialized = true;
 }
 
 QGraphicsLayout *MDetailedListItem::createLayout()

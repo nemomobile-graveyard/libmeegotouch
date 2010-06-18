@@ -34,7 +34,6 @@ MAdvancedListItemPrivate::MAdvancedListItemPrivate(MAdvancedListItem::ItemStyle 
     image(NULL),
     sideTopImage(NULL),
     sideBottomImage(NULL),
-    isLayoutInitialized(false),
     listItemStyle(style)
 {
 
@@ -104,8 +103,6 @@ MAdvancedListItem::MAdvancedListItem(MAdvancedListItem::ItemStyle style, QGraphi
     Q_D(MAdvancedListItem);
     d->q_ptr = this;
     setObjectName("CommonPanel");
-
-    initLayout();
 }
 
 MAdvancedListItem::~MAdvancedListItem()
@@ -114,13 +111,7 @@ MAdvancedListItem::~MAdvancedListItem()
 
 void MAdvancedListItem::initLayout()
 {
-    Q_D(MAdvancedListItem);
-
-    if (d->isLayoutInitialized)
-        return;
-
     setLayout(createLayout());
-    d->isLayoutInitialized = true;
 }
 
 void MAdvancedListItem::setItemStyle(ItemStyle itemStyle)

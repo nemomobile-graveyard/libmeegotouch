@@ -48,10 +48,6 @@ public:
     MBasicListItem(MBasicListItem::ItemStyle style = SingleTitle, QGraphicsItem *parent = NULL);
     virtual ~MBasicListItem();
     
-    /*!
-      \deprecated The method is no longer required to be called after constructing the item.
-                  There shouldn't be any need for this function.
-    */
     void initLayout();
 
     void setItemStyle(ItemStyle itemStyle);
