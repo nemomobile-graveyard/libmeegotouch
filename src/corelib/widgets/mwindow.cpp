@@ -71,6 +71,10 @@ MWindowPrivate::MWindowPrivate() :
     onDisplaySet(false),
     q_ptr(NULL)
 {
+#ifndef Q_WS_X11
+    onDisplay = true; // For non X11, windows always visible
+#endif
+
     MWindow *window = MApplication::activeWindow();
 
     if (window)
