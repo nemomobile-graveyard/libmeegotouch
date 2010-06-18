@@ -128,7 +128,8 @@ QT += \
     network \
     core \
     gui \
-    opengl
+    opengl \
+    xml
 
 QMAKE_EXTRA_TARGETS += check
 check.depends = $$DESTDIR/lib$${TARGET}.so.$$VERSION
