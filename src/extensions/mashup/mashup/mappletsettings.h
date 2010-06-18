@@ -121,6 +121,10 @@ private:
     void createDataStoresIfNeeded() const;
     //! Deletes all the datastore instances
     void deleteDataStores() const;
+
+#ifdef UNIT_TEST
+    friend class Ut_MAppletSettingsDialog;
+#endif // UNIT_TEST
 };
 
 #endif // MAPPLETSETTINGS_H
