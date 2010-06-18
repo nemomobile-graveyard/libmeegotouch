@@ -22,6 +22,8 @@
 
 #include "mbuttonview_p.h"
 
+class QVariantAnimation;
+
 class MButtonSwitchViewPrivate : public MButtonViewPrivate
 {
     Q_DECLARE_PUBLIC(MButtonSwitchView)
@@ -32,19 +34,26 @@ public:
 
     QSize thumbSize() const;
     QPoint thumbPos() const;
+    QPoint thumbEndPos(bool checked) const;
 
     const QPixmap& maskedSliderImage() const;
+    
+    void updateHandle();
 
     int mouseOffset;
 
     bool m_thumbDown;
     bool m_thumbDragged;
     QPoint m_thumbPos;
+    bool m_thumbPosValid;
     
     //mutable so that image can be recreated in the drawContents() const 
     //method if needed, other solution would need a timer because of the 
     //asynchronous pixmap loading
     mutable QPixmap m_maskedSliderPm;
+
+    QVariantAnimation* m_handleAnimation;
+    int m_animationSpeed; //pixels per sec
 };
 
 #endif

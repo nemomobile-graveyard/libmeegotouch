@@ -26,17 +26,45 @@
 
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
+#include <QVariantAnimation>
+
+//! \internal
+class HandleAnimation : public QVariantAnimation
+{
+    public: 
+        HandleAnimation(MButtonSwitchViewPrivate* viewPrivate, QObject * parent = 0)
+            : QVariantAnimation(parent), m_viewPrivate(viewPrivate)
+            {
+            }
+    
+    protected:
+    
+        virtual void updateCurrentValue(const QVariant& value)
+        {
+            m_viewPrivate->m_thumbPos.setX(value.toPoint().x());
+            m_viewPrivate->updateHandle();
+        }
+
+    private:
+        MButtonSwitchViewPrivate* m_viewPrivate;
+};
+//! \internal_end
+
 
 MButtonSwitchViewPrivate::MButtonSwitchViewPrivate() :
     mouseOffset(0),
     m_thumbDown(false),
     m_thumbDragged(false),
-    m_thumbPos(0, 0)
+    m_thumbPos(),
+    m_thumbPosValid(false),
+    m_handleAnimation(new HandleAnimation(this)),
+    m_animationSpeed(500)
 {
 }
 
 MButtonSwitchViewPrivate::~MButtonSwitchViewPrivate()
 {
+    delete m_handleAnimation;
 }
 
 QSize MButtonSwitchViewPrivate::thumbSize() const
@@ -59,19 +87,26 @@ QPoint MButtonSwitchViewPrivate::thumbPos() const
     Q_Q(const MButtonSwitchView);
 
     //when thumb is not dragged it is on another end of the view
-    if (!m_thumbDragged) {
-        QSize thumb = thumbSize();
-        int h = (q->size().height() / 2) - (thumb.height() / 2);
-        if (q->model()->checked())
-            return QPoint(q->size().width() - thumb.width(), h);
-        else
-            return QPoint(0, h);
+    if (!m_thumbDown && m_handleAnimation->state() == QAbstractAnimation::Stopped) {
+        return thumbEndPos(q->model()->checked());
     }
     //return dragged thumb position
     else {
         return m_thumbPos;
     }
 }
+
+QPoint MButtonSwitchViewPrivate::thumbEndPos(bool checked) const
+{
+    Q_Q(const MButtonSwitchView);
+    QSize thumb = thumbSize();
+    int h = (q->size().height() / 2) - (thumb.height() / 2);
+    if( checked )
+        return QPoint(q->size().width() - thumb.width(), h);
+    else
+        return QPoint(0, h);
+}
+
 
 const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
 {
@@ -97,6 +132,14 @@ const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
     }
     
     return m_maskedSliderPm;
+}
+
+void MButtonSwitchViewPrivate::updateHandle() 
+{
+    //invalidate masked slider image and request redraw
+    Q_Q(MButtonSwitchView);
+    m_maskedSliderPm = QPixmap();
+    q->update();
 }
 
 
@@ -155,7 +198,10 @@ void MButtonSwitchView::setupModel()
 
     //invalidate masked slider image
     Q_D(MButtonSwitchView);
+    
+    //d->m_thumbPos = d->thumbEndPos(model()->checked());
     d->m_maskedSliderPm = QPixmap();
+    update();
 }
 
 void MButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -167,18 +213,28 @@ void MButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
     Q_D(MButtonSwitchView);
 
-    //start drag from ON or OFF position
-    d->m_thumbPos = d->thumbPos();
+    //stop ongoing animation if any
+    d->m_handleAnimation->stop();
+
+    //init the the thumb position to valid value when we first time interract 
+    //with the button, this needs to be done here because we need the size of the 
+    //thumb image in our calculations and due to asynchronous pixmap loading it 
+    //may not be ready before this
+    if( !d->m_thumbPosValid ) {
+        d->m_thumbPosValid = true;
+        d->m_thumbPos = d->thumbEndPos(model()->checked());
+    }
+    
+    //calculate offset from edge of the thumb to the drag point
     d->mouseOffset = event->pos().x() - d->controller->pos().x() - d->m_thumbPos.x();
-    d->m_thumbDown = true;
 
     //set switch to down mode
+    d->m_thumbDown = true;
     model()->setDown(true);
 }
 
 void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
-    //MButtonView::mouseReleaseEvent(event);
     Q_D(MButtonSwitchView);
 
     Q_UNUSED(event);
@@ -189,26 +245,17 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     //check if the thumb has been dragged
     if (d->m_thumbDown && d->m_thumbDragged) {
-
+        //stop dragging
         d->m_thumbDown = false;
         d->m_thumbDragged = false;
         model()->setDown(false);
-        //if (style()->releaseFeedback()) {
-        //    style()->releaseFeedback()->play();
-        //}
 
-        //QPointF touch = event->scenePos();
-        //QRectF rect = d->controller->sceneBoundingRect();
-        //rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-        //            RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
-        //if (rect.contains(touch)) {
-        //model()->click();
+        //set the state depending which side the thumb currently is
         if (d->m_thumbPos.x() + (d->thumbSize().width() / 2)  > (size().width() / 2)) {
             model()->setChecked(true);
         } else {
             model()->setChecked(false);
         }
-        //}
 
         //invalidate masked slider image
         d->m_maskedSliderPm = QPixmap();
@@ -219,6 +266,13 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         d->m_thumbDragged = false;
         MButtonView::mouseReleaseEvent(event);
     }
+    
+    //start animating the thumb from current position to proper end position
+    int delta = d->m_thumbPos.x() - d->thumbEndPos(model()->checked()).x();
+    d->m_handleAnimation->setStartValue(d->m_thumbPos);
+    d->m_handleAnimation->setEndValue(d->thumbEndPos(model()->checked()));
+    d->m_handleAnimation->setDuration(abs(delta) / (d->m_animationSpeed/1000.0));
+    d->m_handleAnimation->start();              
 }
 
 void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
@@ -227,19 +281,20 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     //drag only if the thumb was pressed down
     if (d->m_thumbDown) {
+        //calculate new x for the thumb
         QPointF pos = event->pos() - d->controller->pos();
         int x = qRound(pos.x()) - d->mouseOffset;
+        
+        //keep the thumb totally inside the view
         if (x < 0)
             x = 0;
         else if (x > (size().width() - d->thumbSize().width()))
             x = size().width() - d->thumbSize().width();
-
         d->m_thumbPos.setX(x);
         d->m_thumbDragged = true;
 
         //invalidate masked slider image
         d->m_maskedSliderPm = QPixmap();
-
         update();
     }
 }
@@ -251,7 +306,8 @@ void MButtonSwitchView::cancelEvent(MCancelEvent *event)
     model()->setDown(false);
     d->m_thumbDown = false;
     d->m_thumbDragged = false;
-    d->m_maskedSliderPm = QPixmap();
+    
+    d->m_maskedSliderPm = QPixmap();    
     update();
 }
 
