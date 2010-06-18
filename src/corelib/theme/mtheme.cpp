@@ -412,28 +412,31 @@ const MStyle *MTheme::style(const char *styleClassName,
     QList<QPair<const QMetaObject*, QList<const MStyleSheet*> > > parentsSheets;
     // go trough the parents and add them to parent stylesheet list
     while (p) {
-        const QGraphicsWidget* widget = dynamic_cast<const QGraphicsWidget*>(p);
-        mobj = widget->metaObject();
-        QList<const MStyleSheet*> thisParentSheets;
-        // go trough this parent's inheritance chain
-        do {
-            M::AssemblyType assemblyType = MClassFactory::instance()->widgetAssemblyType(mobj->className());
-            if (assemblyType == M::Application) {
-                mobj = mobj->superClass();
-                continue;
-            }
-            QString assemblyName = MClassFactory::instance()->widgetAssemblyName(mobj->className());
-            MLibrary *library = d->libraries->value(assemblyName, NULL);
-            if (library) {
-                if (library->stylesheet()) {
-                    if (!sheets.contains(library->stylesheet()) && !thisParentSheets.contains(library->stylesheet())) {
-                        thisParentSheets.insert(0, library->stylesheet());
+        if (p->isWidget()) {
+            const QGraphicsWidget* widget = static_cast<const QGraphicsWidget*>(p);
+
+            mobj = widget->metaObject();
+            QList<const MStyleSheet*> thisParentSheets;
+            // go trough this parent's inheritance chain
+            do {
+                M::AssemblyType assemblyType = MClassFactory::instance()->widgetAssemblyType(mobj->className());
+                if (assemblyType == M::Application) {
+                    mobj = mobj->superClass();
+                    continue;
+                }
+                QString assemblyName = MClassFactory::instance()->widgetAssemblyName(mobj->className());
+                MLibrary *library = d->libraries->value(assemblyName, NULL);
+                if (library) {
+                    if (library->stylesheet()) {
+                        if (!sheets.contains(library->stylesheet()) && !thisParentSheets.contains(library->stylesheet())) {
+                            thisParentSheets.insert(0, library->stylesheet());
+                        }
                     }
                 }
-            }
-            mobj = mobj->superClass();
-        } while (mobj->className() != QObject::staticMetaObject.className());
-        parentsSheets.insert(0, qMakePair(widget->metaObject(), thisParentSheets));
+                mobj = mobj->superClass();
+            } while (mobj->className() != QObject::staticMetaObject.className());
+            parentsSheets.insert(0, qMakePair(widget->metaObject(), thisParentSheets));
+        }
 
         p = p->parentItem();
     }
