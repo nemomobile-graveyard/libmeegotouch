@@ -89,7 +89,7 @@ void MListView::updateData(const QList<const char *>& modifications)
             if(model()->itemModel())
             {
                 init();
-                updateGeometry();
+                QTimer::singleShot(0, d_ptr, SLOT(updateListGeometry()));
             }
         } else if (member == MListModel::SelectionModel) {
             connectSelectionModel();

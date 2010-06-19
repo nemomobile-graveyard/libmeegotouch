@@ -148,6 +148,7 @@ public Q_SLOTS:
     void viewportPositionChanged(const QPointF &pos);
     void viewportSizeChanged(const QSizeF &size);
     void controllerParentChanged();
+    void updateListGeometry();
 
 public:
     MListView *q_ptr;

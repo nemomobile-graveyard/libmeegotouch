@@ -238,6 +238,12 @@ void MListViewPrivate::controllerParentChanged()
     connectPannableViewport();
 }
 
+void MListViewPrivate::updateListGeometry()
+{
+    if(q_ptr)
+        q_ptr->updateGeometry();
+}
+
 void MListViewPrivate::updateViewportRect(const QPointF &position, const QSizeF &size)
 {
     if ((viewportTopLeft != position) || (viewportVisibleHeight < size.height()) || (forceRepaint)) {
