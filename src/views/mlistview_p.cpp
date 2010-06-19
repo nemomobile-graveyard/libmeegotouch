@@ -307,26 +307,16 @@ void MListViewPrivate::createVisibleItems(int firstVisibleRow, int lastVisibleRo
     }
 }
 
-void MListViewPrivate::resetModel(MListModel *mListModel)
+void MListViewPrivate::disconnectSignalsFromModelToListView()
 {
-    forceRepaint = true;
-    rowCount = 0;
-
-    disconnect(q_ptr, SLOT(dataChanged(QModelIndex, QModelIndex)));
-    disconnect(q_ptr, SLOT(rowsInserted(QModelIndex, int, int)));
-    disconnect(q_ptr, SLOT(rowsRemoved(QModelIndex, int, int, bool)));
-    disconnect(q_ptr, SLOT(layoutChanged()));
-    disconnect(q_ptr, SLOT(modelReset()));
-    disconnect(q_ptr, SLOT(rowsMoved(QModelIndex, int, int, QModelIndex, int)));
-
-    controllerModel = mListModel;
-    model = mListModel->itemModel();
     if(model)
-        rowCount = model->rowCount();
-    clearVisibleItemsArray();
-    updateItemHeight();
-    clearFirstAndLastVisibleRows();
+    {
+        model->disconnect(q_ptr);
+    }
+}
 
+void MListViewPrivate::connectSignalsFromModelToListView()
+{
     if (model) {
         connect(model, SIGNAL(dataChanged(QModelIndex, QModelIndex)), q_ptr, SLOT(dataChanged(QModelIndex, QModelIndex)));
         if (model->inherits("MAbstractItemModel")) {
@@ -340,6 +330,24 @@ void MListViewPrivate::resetModel(MListModel *mListModel)
         connect(model, SIGNAL(modelReset()), q_ptr, SLOT(modelReset()));
         connect(model, SIGNAL(rowsMoved(QModelIndex, int, int, QModelIndex, int)), q_ptr, SLOT(rowsMoved(QModelIndex, int, int, QModelIndex, int)));
     }
+}
+
+void MListViewPrivate::resetModel(MListModel *mListModel)
+{
+    forceRepaint = true;
+    rowCount = 0;
+
+    disconnectSignalsFromModelToListView();
+
+    controllerModel = mListModel;
+    model = mListModel->itemModel();
+    if(model)
+        rowCount = model->rowCount();
+    clearVisibleItemsArray();
+    updateItemHeight();
+    clearFirstAndLastVisibleRows();
+
+    connectSignalsFromModelToListView();
 }
 
 void MListViewPrivate::updateItemSize()

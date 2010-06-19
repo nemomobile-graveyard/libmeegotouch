@@ -46,6 +46,9 @@ void MListView::init()
 {
     Q_ASSERT(controller);
 
+    if(d_ptr)
+        d_ptr->disconnectSignalsFromModelToListView();
+
     delete d_ptr;
 
     if (model()->columns() > 1) {

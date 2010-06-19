@@ -140,6 +140,9 @@ public:
 
     virtual void updateListIndexVisibility();
 
+    virtual void disconnectSignalsFromModelToListView();
+    virtual void connectSignalsFromModelToListView();
+
 public Q_SLOTS:
     void movingDetectionTimerTimeout();
     void viewportPositionChanged(const QPointF &pos);
