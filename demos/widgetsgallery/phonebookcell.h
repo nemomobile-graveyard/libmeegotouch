@@ -16,7 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
- 
+
 #ifndef PHONEBOOKCELLCONTENT_H
 #define PHONEBOOKCELLCONTENT_H
 
@@ -36,36 +36,37 @@ class MProgressIndicator;
 class PhoneBookCell : public MListItem
 {
     Q_OBJECT
-    
+
     Q_PROPERTY(QString title READ title WRITE setTitle)
     Q_PROPERTY(QString subtitle READ subtitle WRITE setSubtitle)
     Q_PROPERTY(QImage image READ image WRITE setImage)
-    
+
 public:
     PhoneBookCell();
     virtual ~PhoneBookCell();
-    
+
     void initLayout();
-    
+
     QString title() const;
     void setTitle(const QString &title);
 
     QString subtitle() const;
     void setSubtitle(const QString &title);
-    
+
     QImage image() const;
     void setImage(const QImage &image);
 
 private:
     MLayout *createLayout();
-      
+
 private:
     MLayout *layout;
     MGridLayoutPolicy *landscapePolicy;
     MLinearLayoutPolicy *portraitPolicy;
-    
+
     MProgressIndicator *spinner;
-    MLabel *titleLabel;
+    MLabel *landscapeTitleLabel;
+    MLabel *portraitTitleLabel;
     MLabel *subtitleLabel;
     MImageWidget *imageWidget;
 };

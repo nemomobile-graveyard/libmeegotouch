@@ -16,7 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
- 
+
 
 #include "phonebookcell.h"
 
@@ -31,14 +31,15 @@
 PhoneBookCell::PhoneBookCell()
     : MListItem(),
     layout(NULL),
-    titleLabel(NULL),
+    landscapeTitleLabel(NULL),
+    portraitTitleLabel(NULL),
     subtitleLabel(NULL),
     imageWidget(NULL)
 {
 }
 
 PhoneBookCell::~PhoneBookCell()
-{   
+{
 }
 
 void PhoneBookCell::initLayout()
@@ -56,17 +57,22 @@ MLayout *PhoneBookCell::createLayout()
     landscapePolicy = new MGridLayoutPolicy(layout);
     landscapePolicy->setContentsMargins(0, 0, 0, 0);
     landscapePolicy->setSpacing(0);
-    
+
     // title
-    titleLabel = new MLabel(this);
-    titleLabel->setTextElide(true);
-    titleLabel->setObjectName("CommonTitle");
+    landscapeTitleLabel = new MLabel(this);
+    landscapeTitleLabel->setTextElide(true);
+    landscapeTitleLabel->setObjectName("CommonTitle");
+
+    // In portrait we have only one title, also object name should be different
+    portraitTitleLabel = new MLabel(this);
+    portraitTitleLabel->setTextElide(true);
+    portraitTitleLabel->setObjectName("CommonSingleTitle");
 
     // subtitle
     subtitleLabel = new MLabel(this);
     subtitleLabel->setTextElide(true);
     subtitleLabel->setObjectName("CommonSubTitle");
-    
+
     // icon
     imageWidget = new MImageWidget(this);
     imageWidget->setObjectName("CommonMainIcon");
@@ -78,16 +84,17 @@ MLayout *PhoneBookCell::createLayout()
     spinner->setObjectName("CommonMainIcon");
 
     // add to layout
-    landscapePolicy->addItem(spinner, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
-    landscapePolicy->addItem(titleLabel, 0, 1, Qt::AlignLeft | Qt::AlignTop);
+    landscapePolicy->addItem(spinner, 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    landscapePolicy->addItem(landscapeTitleLabel, 0, 1, Qt::AlignLeft | Qt::AlignTop);
     landscapePolicy->addItem(subtitleLabel, 1, 1, Qt::AlignLeft | Qt::AlignBottom);
-    
+    landscapePolicy->addItem(new QGraphicsWidget(this), 2, 1);
+
     portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     portraitPolicy->setContentsMargins(0, 0, 0, 0);
     portraitPolicy->setSpacing(0);
     portraitPolicy->addItem(spinner, Qt::AlignLeft | Qt::AlignVCenter);
-    portraitPolicy->addItem(titleLabel, Qt::AlignLeft | Qt::AlignVCenter);
-    
+    portraitPolicy->addItem(portraitTitleLabel, Qt::AlignLeft | Qt::AlignVCenter);
+
     layout->setPortraitPolicy(portraitPolicy);
     layout->setLandscapePolicy(landscapePolicy);
 
@@ -96,12 +103,13 @@ MLayout *PhoneBookCell::createLayout()
 
 QString PhoneBookCell::title() const
 {
-    return titleLabel->text();
+    return landscapeTitleLabel->text();
 }
 
 void PhoneBookCell::setTitle(const QString &title)
 {
-    titleLabel->setText(title);
+    landscapeTitleLabel->setText(title);
+    portraitTitleLabel->setText(title);
 }
 
 QString PhoneBookCell::subtitle() const
@@ -125,10 +133,10 @@ void PhoneBookCell::setImage(const QImage &image)
         if (layout->policy() == landscapePolicy) {
             if (landscapePolicy->itemAt(0, 0) == spinner && !image.isNull()) {
                 landscapePolicy->removeItem(spinner);
-                landscapePolicy->addItem(imageWidget, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+                landscapePolicy->addItem(imageWidget, 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
             } else if (landscapePolicy->itemAt(0, 0) == imageWidget && image.isNull()) {
                 landscapePolicy->removeItem(imageWidget);
-                landscapePolicy->addItem(spinner, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+                landscapePolicy->addItem(spinner, 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
             }
         } else if (layout->policy() == portraitPolicy) {
             if (portraitPolicy->itemAt(0) == imageWidget && image.isNull()) {
