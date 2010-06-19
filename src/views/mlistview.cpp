@@ -105,11 +105,15 @@ void MListView::updateData(const QList<const char *>& modifications)
 
 void MListView::connectSelectionModel()
 {
-    disconnect(this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
+    if(d_ptr->selectionModel)
+        d_ptr->selectionModel->disconnect(this);
+
     if (model()->selectionModel()) {
         connect(model()->selectionModel(), SIGNAL(selectionChanged(QItemSelection, QItemSelection)),
                 this, SLOT(selectionChanged(QItemSelection, QItemSelection)));
     }
+
+    d_ptr->selectionModel = model()->selectionModel();
 }
 
 void MListView::setupModel()

@@ -154,6 +154,7 @@ public:
     MList *controller;
     MListModel *controllerModel;
     QAbstractItemModel *model;
+    QItemSelectionModel *selectionModel;
     MWidgetRecycler *recycler;
     MWidget *hseparator;
     int hseparatorHeight;

@@ -42,6 +42,7 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     rowCount = 0;
     viewWidth = 0;
     model = NULL;
+    selectionModel = NULL;
     moving = false;
     hseparator = NULL;
     headersCreator = NULL;
@@ -210,9 +211,12 @@ void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
 
 void MListViewPrivate::connectPannableViewport()
 {
-    disconnect(this, SLOT(controllerParentChanged()));
-    disconnect(this, SLOT(viewportPositionChanged(QPointF)));
-    disconnect(this, SLOT(viewportSizeChanged(QSizeF)));
+    disconnect(controller, SIGNAL(parentChanged()), this, SLOT(controllerParentChanged()));
+
+    if(pannableViewport)
+    {
+        pannableViewport->disconnect(this);
+    }
 
     connect(controller, SIGNAL(parentChanged()), SLOT(controllerParentChanged()));
 
