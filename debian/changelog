@@ -1,3 +1,23 @@
+libmeegotouch (0.20.21-1) unstable; urgency=low
+
+  * Fixes: NB#175502 - MList creates WAY too many items
+  * Fixes: NB#175720 - When setting a new itemModel for MList this does not disconnect from the old itemModel
+  * Fixes: NB#175429 - MList crashes after a modelReset if group headers are shown and one group header is removed
+  * Fixes: NB#175507 - Crash is observed when tapped outside 'camera mode' pop up.
+  * Fixes: NB#172712 - Moving action to menu does not work
+  * Fixes: NB#172712 - Moving action to menu does not work
+  * Fixes: NB#169208 - MInfoBanner disappear animation is executed when...
+  * Fixes: NB#174516 - Switching between month, multiday, list and tasks views returns black window
+  * Fixes: NB#167102 - Don't forcefully drop all style-references in ~MTheme
+  * Fixes: NB#170968 - Navigation bar times out even when the view menu options are displayed
+  * Fixes: NB#173599 - Switch does not work with right-to-left swipe, only with left-to-right
+  * Fixes: NB#174084 - Application menu doesn't appear when scene window transitions are immediate
+  * Fixes: NB#173416 - setting gconf value for /meegotouch/theme/name only works once
+  * Fixes: NB#174281 - MComboBox emits currentIndexChanged(int) prematurely
+  * Fixes: NB#172567 - Phone application is not usable when View Menu is opened and closed multiple times
+
+ -- Sergiy Dubovik <sergiy.dubovik@nokia.com> Sun, 20 Jun 2010 12:49:14 +300
+
 libmeegotouch (0.20.20-1) unstable; urgency=low
 
   * Fixes: NB#172712 - Moving action to menu does not work
