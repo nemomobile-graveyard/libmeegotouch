@@ -1179,6 +1179,10 @@ int MMultiColumnListViewPrivate::flatRowToColumn(int row) const
         return 0; // group headers are always in column 0
 
     int headerIndex = dFindLowerIndex(headersRows, row);
+
+    if(headersRows.count() <= headerIndex)
+        return 0;
+
     int relativeRow = row - headersRows[headerIndex] - 1;
     int columns = controllerModel->columns();
     int itemRow = relativeRow / columns;
