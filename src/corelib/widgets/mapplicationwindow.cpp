@@ -1053,7 +1053,7 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
             if (component == d->dockWidget) {
                 // Dock widget is a special guy.
                 d->updateDockWidgetVisibility();
-            } else {
+            } else if (component->sceneWindowState() != MSceneWindow::Disappearing) {
                 component->appear(this);
             }
         }
