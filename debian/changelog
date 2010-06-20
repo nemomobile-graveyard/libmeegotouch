@@ -16,7 +16,7 @@ libmeegotouch (0.20.21-1) unstable; urgency=low
   * Fixes: NB#174281 - MComboBox emits currentIndexChanged(int) prematurely
   * Fixes: NB#172567 - Phone application is not usable when View Menu is opened and closed multiple times
 
- -- Sergiy Dubovik <sergiy.dubovik@nokia.com> Sun, 20 Jun 2010 12:49:14 +0300
+ -- Sergiy Dubovik <sergiy.dubovik@nokia.com>  Sun, 20 Jun 2010 12:49:14 +0300
 
 libmeegotouch (0.20.20-1) unstable; urgency=low
 
