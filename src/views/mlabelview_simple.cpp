@@ -57,10 +57,14 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
     painter->setPen(model->color().isValid() ? model->color() : style->color());
     painter->setFont(viewPrivate->controller->font());
 
+    bool wasClipping = painter->hasClipping();
+    QRegion oldClipRegion = painter->clipRegion();
     painter->setClipping(true);
-    painter->setClipRect(paintingRect);
-    painter->drawStaticText(textOffset, staticText);    
-    painter->setClipping(false);
+    // IntersectClip is needed for the cases when widget has "clip children to parent" flag on
+    painter->setClipRect(paintingRect, wasClipping?Qt::IntersectClip:Qt::ReplaceClip);
+    painter->drawStaticText(textOffset, staticText);
+    painter->setClipRegion(oldClipRegion);
+    painter->setClipping(wasClipping);
 }
 
 bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
