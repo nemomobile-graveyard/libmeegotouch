@@ -30,6 +30,7 @@ class M_EXPORT MNavigationBarStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(int, itemSpacing,           ItemSpacing)
     M_STYLE_ATTRIBUTE(int, buttonAnimationLength, ButtonAnimationLength)
     M_STYLE_ATTRIBUTE(int, height,                Height)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, dropShadowImage, DropShadowImage)
 };
 
 class M_EXPORT MNavigationBarStyleContainer : public MSceneWindowStyleContainer

@@ -31,6 +31,7 @@
 #include "mtoolbar.h"
 #include "mviewcreator.h"
 #include "mdeviceprofile.h"
+#include "mscalableimage.h"
 
 // --------------------------------------------------------------------------
 // MNavigationBarViewPrivate
@@ -120,6 +121,15 @@ MNavigationBarView::~MNavigationBarView()
 {
 }
 
+QRectF MNavigationBarView::boundingRect() const
+{
+    QRectF br = MWidgetView::boundingRect();
+    if( style()->dropShadowImage() ) {
+        br.setHeight(style()->dropShadowImage()->pixmap()->size().height());
+    }
+    return br;
+}
+
 void MNavigationBarView::updateData(const QList<const char *>& modifications)
 {
     Q_D(MNavigationBarView);
@@ -168,6 +178,16 @@ void MNavigationBarView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     // Don't let it propagate to widgets below
     event->accept();
+}
+
+void MNavigationBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    //draw shadow under the actual navigationbar    
+    if( style()->dropShadowImage() ) {
+        style()->dropShadowImage()->draw(0, 0, boundingRect().width(),  style()->dropShadowImage()->pixmap()->size().height(), painter);
+    }
+    
+    MWidgetView::drawBackground(painter, option);
 }
 
 M_REGISTER_VIEW_NEW(MNavigationBarView, MNavigationBar)

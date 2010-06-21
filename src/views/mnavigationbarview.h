@@ -36,12 +36,16 @@ public:
     MNavigationBarView(MNavigationBar *controller);
     virtual ~MNavigationBarView();
 
+    //! \reimp
+    virtual QRectF boundingRect() const;
+    //! \reimp_end
 
 protected:
     //! \reimp
     virtual void setupModel();
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     //! \reimp_end
 
 protected Q_SLOTS:
