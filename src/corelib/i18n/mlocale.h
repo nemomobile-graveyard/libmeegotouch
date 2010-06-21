@@ -550,8 +550,27 @@ public:
      * \param datetype format for date
      * \param timetype format for time
      *
-     * If dateType is MLocale::DateNone <b>and</b> timeType is MLocale::TimeNone,
-     * an empty string is returned.
+     * If dateType is MLocale::DateNone <b>and</b> timeType is
+     * MLocale::TimeNone, an empty string is returned.
+     *
+     * The return value of this method does not necessarily start with
+     * an uppercase letter because it cannot know in which context the
+     * returned string will be used. Therefore, it is left
+     * to the application to uppercase the first letter if the
+     * context requires is. Uppercasing the first letter could
+     * be done as in the following example:
+     *
+     * \code
+     * QString formattedDateTime;
+     * QDateTime current = QDateTime::currentDateTime();
+     * MLocale locale;
+     * MCalendar calendar;
+     * calendar.setDateTime(current);
+     * formattedDateTime = locale.formatDateTime(calendar, MLocale::DateMedium, MLocale::TimeMedium);
+     * // Make the first letter uppercase:
+     * if (!formattedDateTime.isEmpty())
+     *    formattedDateTime[0] = formattedDateTime.at(0).toUpper();
+     * \endcode
      *
      * If many dates and times need to be formatted, this method
      * should be preferred over

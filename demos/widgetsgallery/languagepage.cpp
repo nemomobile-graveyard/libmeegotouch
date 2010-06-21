@@ -324,20 +324,25 @@ void LanguagePage::retranslateUi()
     labelHaveIcu->setText("ICU: " + qtTrId("qtn_comm_command_no"));
 #endif
 
-    QDate date(2008, 7, 21);
-    QTime time(14, 31, 0, 0);
-    QDateTime datetime(date, time, Qt::UTC);
-
     //% "Number format example: %1\x9c!! Number example: %1\x9c!! Number: %1"
     labelExampleNumber->setText(
         qtTrId("xx_language_number_format")
         .arg(currentLocale.formatNumber(12345670.89)));
+
+    QDate date(2008, 7, 21);
+    QTime time(14, 31, 0, 0);
+    QDateTime datetime(date, time, Qt::UTC);
+    QString formattedDateTime =
+        currentLocale.formatDateTime(
+            datetime, MLocale::DateFull, MLocale::TimeFull,
+            MLocale::GregorianCalendar);
+    if (!formattedDateTime.isEmpty())
+        formattedDateTime[0] = formattedDateTime.at(0).toUpper();
+
     //% "Date and time format example: %1\x9c!! Date and time: %1\x9c!! Date: %1\x9c!! %1"
     labelExampleDateTime->setText(
         qtTrId("xx_langage_date_time_format")
-        .arg(currentLocale.formatDateTime(
-                 datetime, MLocale::DateFull, MLocale::TimeFull,
-                 MLocale::GregorianCalendar)));
+        .arg(formattedDateTime));
 
     //% "Week number example: %1"
     labelExampleWeekNumber->setText(
