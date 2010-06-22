@@ -1089,7 +1089,8 @@ void QtMaemo6Style::polish(QWidget *widget)
     }
 
     if (QAbstractScrollArea *abstractScrollArea = qobject_cast<QAbstractScrollArea *>(widget)) {
-        d->m_kinetic->enableOn(abstractScrollArea);
+        abstractScrollArea->grabGesture(Qt::PanGesture);
+        //d->m_kinetic->enableOn(abstractScrollArea);
         d->m_kinetic->setRightToLeft(qApp->isRightToLeft());
         d->m_scrollBarEventFilter->enableOn(abstractScrollArea);
 
@@ -2568,13 +2569,15 @@ void QtMaemo6Style::ensureFocusedWidgetVisible(QRect rect) {
 
 void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleArea)
 {
-    if(visibleArea.isValid()) {
+    //if(visibleArea.isValid()) {
         QWidget* parent = widget->parentWidget();
         QtMaemo6Window* window = NULL;
         //search
         while(!(window = qobject_cast<QtMaemo6Window*>(parent)) && parent)
             parent = parent->parentWidget();
         if(window) {
+            window->ensureWidgetVisible(widget, visibleArea);
+            /*
             QAbstractScrollArea* sa = qobject_cast<QAbstractScrollArea*>(window->centralWidget());
             if(sa) {
                 QWidget* viewport = sa->viewport();
@@ -2605,15 +2608,18 @@ void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleAre
             } else {
                 qCritical() << "Can't focus on" << widget << "because scroll area contains no viewport";
             }
+            */
         } else {
             qCritical() << "Can't focus on" << widget << "because there is no top level scroll area";
         }
+    /*
     } else {
         if(m_originalWidgetPos.widget) {
             m_originalWidgetPos.widget->move(m_originalWidgetPos.position);
             m_originalWidgetPos.widget = 0;
         }
     }
+    */
 }
 
 

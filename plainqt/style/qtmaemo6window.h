@@ -99,6 +99,13 @@ public:
      * \brief returns the current orientation angle of the window
      */
     M::OrientationAngle orientation() const { return m_orientationAngle; }
+
+
+    /*!
+     * \brief this moves the given widget, so that is contained in visibleArea
+     */
+    virtual void ensureWidgetVisible(QWidget* widget, QRect visibleArea) = 0;
+
 public Q_SLOTS:
     /*!
      * \brief sets a new orientation to this window
@@ -134,6 +141,7 @@ private:
     bool m_closeFromChild;
     bool m_hideFromChild;
     M::OrientationAngle m_orientationAngle;
+
 };
 
 #endif //QTMAEMO6WINDOW

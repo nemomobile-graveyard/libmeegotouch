@@ -332,16 +332,6 @@ public:
 
     void ensureWidgetVisible(QWidget* widget, QRect visibleArea);
 
-    struct WidgetPos {
-        WidgetPos() : widget(NULL) {};
-        WidgetPos(QWidget* w, QPoint p) : widget(w), position(p) {};
-        WidgetPos(const WidgetPos& other) { widget = other.widget; position = other.position; }
-        QWidget* widget;
-        QPoint position;
-    };
-
-    WidgetPos m_originalWidgetPos;
-
     bool hasMWindowParent(const QWidget*) const;
 public:
     QList<QToolButton *> m_toolButtonsInTitleBar;

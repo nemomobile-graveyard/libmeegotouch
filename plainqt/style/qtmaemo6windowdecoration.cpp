@@ -210,6 +210,46 @@ void QtMaemo6WindowDecoration::showDeviceStatusBar( bool visible ) {
     m_deviceStatusBar->setVisible(visible);
 }
 
+void QtMaemo6WindowDecoration::ensureWidgetVisible(QWidget* widget, QRect visibleArea) {
+    if(visibleArea.isValid()) {
+        QAbstractScrollArea* sa = qobject_cast<QAbstractScrollArea*>(centralWidget());
+        if(sa) {
+            QWidget* viewport = sa->viewport();
+
+            //that is the real visible area of the viewport, the navigation bar is excluded here
+            QRect realVisibleRect = visibleArea.intersected(
+                QRect(viewport->mapToGlobal(QPoint(0,0)), viewport->size() ));
+
+            QRect globalWidgetRect = QRect(
+                    widget->mapToGlobal(QPoint(0,0)),
+                    widget->size()
+                      );
+
+            QPoint widgetGlobalPosition = widget->mapToGlobal(QPoint(0,0));
+
+            //the widget is not fully covered by the visible Area
+            if(globalWidgetRect.intersected(realVisibleRect) != globalWidgetRect) {
+                QPoint originalViewportPos = viewport->mapToGlobal(QPoint(0,0));
+                m_originalWidgetPos.widget = viewport;
+                m_originalWidgetPos.position = viewport->pos();
+
+                int newXPos = realVisibleRect.top() + ((realVisibleRect.height() - widget->height()) / 2);
+                QPoint moveBy = QPoint(0, widgetGlobalPosition.y() - newXPos);
+
+                //centered in visibleArea
+                viewport->move(-moveBy);
+            }
+        } else {
+            qCritical() << "Can't focus on" << widget << "because scroll area contains no viewport";
+        }
+    } else {
+        if(m_originalWidgetPos.widget) {
+            m_originalWidgetPos.widget->move(m_originalWidgetPos.position);
+            m_originalWidgetPos.widget = 0;
+        }
+    }
+}
+
 bool QtMaemo6WindowDecoration::eventFilter(QObject *watched, QEvent *event)
 {
     if (event->type() == QEvent::WindowTitleChange) {

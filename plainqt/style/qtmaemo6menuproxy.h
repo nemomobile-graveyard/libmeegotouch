@@ -42,6 +42,10 @@ public:
 protected:
     QtMaemo6MenuProxy() {};
     void hideWindow();
+
+    //not needed for menus
+    void ensureWidgetVisible(QWidget* widget, QRect visibleArea) { Q_UNUSED(widget); Q_UNUSED(visibleArea); }
+
     /*! \reimp */
     virtual void resizeEvent(QResizeEvent *);
     virtual void mousePressEvent(QMouseEvent *event);

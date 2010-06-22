@@ -49,6 +49,7 @@ public:
     */
     void setPixmap(const QPixmap &icon);
 
+    void ensureWidgetVisible(QWidget* widget, QRect visibleArea);
 protected:
     QtMaemo6DialogProxy() {};
     void init();

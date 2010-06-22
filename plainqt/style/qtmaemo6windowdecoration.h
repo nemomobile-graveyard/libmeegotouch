@@ -62,6 +62,7 @@ public:
 
     void showDeviceStatusBar( bool visible );
 
+    void ensureWidgetVisible(QWidget* widget, QRect visibleArea);
 protected Q_SLOTS:
     virtual void setOrientation(M::OrientationAngle);
     void showMenuBar();
@@ -90,6 +91,15 @@ private:
     QWidget *m_statusBarParent;
 
     int m_deviceStatusBarTimerId;
+
+    struct WidgetPos {
+        WidgetPos() : widget(NULL) {};
+        WidgetPos(QWidget* w, QPoint p) : widget(w), position(p) {};
+        WidgetPos(const WidgetPos& other) { widget = other.widget; position = other.position; }
+        QWidget* widget;
+        QPoint position;
+    };
+    WidgetPos m_originalWidgetPos;
 };
 
 #endif

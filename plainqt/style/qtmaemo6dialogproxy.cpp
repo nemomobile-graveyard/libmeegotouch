@@ -73,6 +73,11 @@ void QtMaemo6DialogProxy::setPixmap(const QPixmap &icon)
     m_dialogTitle->setPixmap(icon);
 }
 
+void QtMaemo6DialogProxy::ensureWidgetVisible(QWidget* widget, QRect visibleArea) {
+    Q_UNUSED(widget)
+    Q_UNUSED(visibleArea)
+}
+
 void QtMaemo6DialogProxy::resizeEvent(QResizeEvent *) {
     if(centralWidget()) {
         if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(centralWidget()->style()))
