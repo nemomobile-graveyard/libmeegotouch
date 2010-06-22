@@ -74,9 +74,9 @@ MBubbleItemViewPrivate::~MBubbleItemViewPrivate()
 void MBubbleItemViewPrivate::initLayout()
 {
     clearLayout();
-    
+
     replaceAvatar();
-    
+
     if (controller->messageType() == MBubbleItem::Incoming) {
         if (controller->avatar()) {
             layout->addItem(controller->avatar(), 0, 0);
@@ -125,8 +125,10 @@ void MBubbleItemViewPrivate::replaceAvatar()
     if (controller->avatar()) {
         if (controller->avatar()->objectName().isEmpty())
             controller->avatar()->setObjectName(q->style()->avatarObjectName());
-        if (controller->messageType() == MBubbleItem::Incoming)
+        if (controller->messageType() == MBubbleItem::Incoming) {
             layout->addItem(controller->avatar(), 0, 0);
+            layout->addItem(speechBubble, 0, 1);
+        }
         else
             layout->addItem(controller->avatar(), 0, 1);
         avatar = controller->avatar();
