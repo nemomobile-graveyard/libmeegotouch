@@ -22,7 +22,6 @@
 
 #include <QTextOption>
 #include <QTextDocument>
-#include <QStaticText>
 #include "private/mwidgetview_p.h"
 
 class MLabel;
@@ -36,6 +35,8 @@ public:
     MLabelViewSimple(MLabelViewPrivate *viewPrivate);
     virtual ~MLabelViewSimple();
 
+    virtual QPixmap generatePixmap();
+    QImage generateImage();
     virtual void drawContents(QPainter *painter, const QSizeF &size);
     virtual bool resizeEvent(QGraphicsSceneResizeEvent *event);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
@@ -48,7 +49,6 @@ public:
     virtual void longPressEvent(QGraphicsSceneContextMenuEvent *event);
     virtual void applyStyle();
     Qt::TextFlag wrap() const;
-    void initializeStaticText();
 
     void markDirty();
 
@@ -57,7 +57,9 @@ public:
     QSizeF preferredSize;
     QPoint textOffset;
     bool dirty;
-    QStaticText staticText;
+    QImage cachedImage;
+    QPixmap cachedPixmap;
+    QString cachedElidedText;
 };
 
 class MLabelViewRich : public MLabelViewSimple
@@ -67,7 +69,7 @@ public:
     MLabelViewRich(MLabelViewPrivate *viewPrivate);
     virtual ~MLabelViewRich();
 
-    QPixmap generatePixmap();
+    virtual QPixmap generatePixmap();
     virtual void drawContents(QPainter *painter, const QSizeF &size);
     virtual bool shouldElide() const;
     virtual bool resizeEvent(QGraphicsSceneResizeEvent *event);

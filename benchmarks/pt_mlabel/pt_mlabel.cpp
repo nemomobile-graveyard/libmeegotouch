@@ -31,9 +31,12 @@ void Pt_MLabel::initTestCase()
 {
     int argc = 1;
     const char *argv[argc];
-    char appName[] = "./pt_mlabel";
+    char appName[] = "./eternia";
     argv[0] = appName;
     app = new MApplication(argc, (char **)argv);
+    MTheme::instance()->changeTheme("common");
+
+    currentViewIndex = 0;
 }
 
 void Pt_MLabel::cleanupTestCase()
@@ -43,19 +46,33 @@ void Pt_MLabel::cleanupTestCase()
 
 void Pt_MLabel::init()
 {
+    // get size dimensions for test
     QFETCH(QString, text);
+    QFETCH(qint32, viewIndex);
+
+    this->currentViewIndex = viewIndex;
 
     // create widget, set size
-    subject = new MLabel(text);
-    subject->setMaximumWidth(864);
-    currentView = new MLabelView(subject);
-    subject->setView(currentView);   // transfers ownership to controller
+    m_subject = new MLabel(text);
 
-    // wait for the resource loading to finish
-    while (MTheme::instance()->hasPendingRequests()) {
-        usleep(100);
-        QCoreApplication::processEvents();
+    m_subject->setMaximumWidth(864);
+
+    switch (this->currentViewIndex) {
+    case View:
+        this->currentView = new MLabelView(m_subject);
+        break;
     }
+
+    this->currentView->updateStyle();
+    //this->currentView->styleUpdated();
+
+    // There is no MLabel::setView() so this is the one from
+    // MWidgetController, which is private, so need to be friends
+    m_subject->setView(this->currentView);   // transfers ownership to controller
+
+    // wait for the image loading
+    usleep(1000000);
+    QCoreApplication::processEvents();
 
     // create pixmap paintdevice
     pixmap = new QPixmap(846, 480);
@@ -71,6 +88,11 @@ void Pt_MLabel::cleanup()
     QString kuva;
     QTextStream(&kuva)
             << "view_"
+            << this->currentViewIndex
+            << "_"
+            << m_subject->size().width()
+            << "x"
+            << m_subject->size().height()
             << ".png";
     if (!written.contains(kuva)) {
         pixmap->save(kuva, "png", -1);
@@ -78,28 +100,35 @@ void Pt_MLabel::cleanup()
     }
 #endif
 
-    delete subject;
-    subject = 0;
+    delete m_subject;
+    m_subject = 0;
+
     delete painter;
     painter = 0;
     delete pixmap;
     pixmap = 0;
+
 }
 
 void Pt_MLabel::paintPerformance()
 {
+    // actual benchmark
     QBENCHMARK {
-        currentView->paint(painter, NULL);
+        this->currentView->paint(painter, NULL);
     }
 }
 
 void Pt_MLabel::paintPerformance_data()
 {
     QTest::addColumn<QString>("text");
+    QTest::addColumn<qint32>("viewIndex");
 
-    QTest::newRow("plaintext") << "Silence!";
-    QTest::newRow("richtext") << "<span>Silence! I <b>kill</b> you!</span>";
-    QTest::newRow("veryrich") << "<h5>Very rich text, multi line label</h5><p>The phrase \"<b>to be, or not to be</b>\" comes from <font color=\"white\">William Shakespeare's <i>Hamlet</i></font> (written about 1600), act three, scene one. It is one of the most famous quotations in <small>world literature</small> and the <u>best-known of this particular play</u>...<h6>And tables...</h6><table border=1><tr><td>Cell 1</td><td>Cell 2</td></tr></table></p>";
+    for (qint32 viewIndex = 0; viewIndex < NoViews; viewIndex++) {
+        // typical icon sizes
+        QTest::newRow("plaintext") << "Silence!" << viewIndex;
+        QTest::newRow("richtext") << "<span>Silence! I <b>kill</b> you!</span>" << viewIndex;
+        QTest::newRow("veryrich") << "<h5>Very rich text, multi line label</h5><p>The phrase \"<b>to be, or not to be</b>\" comes from <font color=\"white\">William Shakespeare's <i>Hamlet</i></font> (written about 1600), act three, scene one. It is one of the most famous quotations in <small>world literature</small> and the <u>best-known of this particular play</u>...<h6>And tables...</h6><table border=1><tr><td>Cell 1</td><td>Cell 2</td></tr></table></p>" << viewIndex;
+    }
 }
 
 QTEST_APPLESS_MAIN(Pt_MLabel)

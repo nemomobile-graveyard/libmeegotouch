@@ -5,5 +5,3 @@ TARGET = pt_mlabel
 
 SOURCES += pt_mlabel.cpp
 HEADERS += pt_mlabel.h
-
-LIBS += -lmeegotouchviews

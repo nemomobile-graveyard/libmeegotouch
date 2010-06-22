@@ -42,9 +42,14 @@ private slots:
     void paintPerformance_data();
 
 private:
-    MLabel *subject;
+    MLabel *m_subject;
+    enum ViewName {
+        View = 0,
+        NoViews
+    };
     MWidgetView *currentView;
 
+    qint32 currentViewIndex;
     QPixmap *pixmap;
     QPainter *painter;
     qint32 width;
