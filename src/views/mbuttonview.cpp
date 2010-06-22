@@ -260,6 +260,7 @@ MButtonView::MButtonView(MButton *controller) :
     d->label->setParentItem(controller);
     d->label->setTextElide(true);
     d->label->setObjectName("ButtonLabel");
+    d->label->setMinimumSize(0,0);
 }
 
 MButtonView::MButtonView(MButtonViewPrivate &dd, MButton *controller) :
@@ -270,6 +271,7 @@ MButtonView::MButtonView(MButtonViewPrivate &dd, MButton *controller) :
     d->label->setParentItem(controller);
     d->label->setTextElide(true);
     d->label->setObjectName("ButtonLabel");
+    d->label->setMinimumSize(0,0);
 }
 
 MButtonView::~MButtonView()
