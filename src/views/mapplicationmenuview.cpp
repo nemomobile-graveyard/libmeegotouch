@@ -254,6 +254,10 @@ MWidget *MApplicationMenuViewPrivate::createButton(QAction *action)
         connect(item, SIGNAL(clicked()), action, SIGNAL(triggered()));
         w = item;
     }
+
+    if (w && action && !action->objectName().isEmpty())
+        w->setObjectName(w->objectName() + '_' + action->objectName());
+
     return w;
 }
 
