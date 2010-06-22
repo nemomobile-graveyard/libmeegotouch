@@ -888,8 +888,15 @@ void processAdaptorCppFile()
                 }
             } else if (line.contains(w.chainTag())) {
                 line.remove(w.chainTag());
-                // remove CHAINTASK
-                line.replace("(", "(const QString &backServiceName, const QString &windowTitle, const uint windowId, ");
+
+                QString parameterString = "(const QString &backServiceName, const QString &windowTitle, const uint windowId";
+
+                bool methodHasParameters = !line.contains( QRegExp( "\\(\\s*\\)" ));
+                if ( methodHasParameters ) {
+                    parameterString += ", ";
+                }
+                line.replace("(", parameterString);
+
                 outS << line << endl;
                 inChainTask = true;
                 needGoBackMethod  = true;

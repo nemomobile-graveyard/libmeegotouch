@@ -1,8 +1,8 @@
 /*
  * automatically generated with the command line :
- * /home/davidmaxwaterman/z/hi386/bug160677-onTopOfMASTER/tools/m-servicefwgen -a /home/davidmaxwaterman/z/hi386/bug160677-onTopOfMASTER/tests/ft_mservicefwgen/com.nokia.FtMServiceFwGen1
+ * /home/davidmaxwaterman/z/hi386/bug172441/tools/m-servicefwgen -a /home/davidmaxwaterman/z/hi386/bug172441/tests/ft_mservicefwgen/com.nokia.FtMServiceFwGen1
  *
- * /home/davidmaxwaterman/z/hi386/bug160677-onTopOfMASTER/tools/m-servicefwgen is Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
+ * /home/davidmaxwaterman/z/hi386/bug172441/tools/m-servicefwgen is Copyright (C) 2010 Nokia Corporation and/or its subsidiary(-ies).
  *
  * This is an auto-generated file.
  * Do not edit! All changes made to it will be lost.
@@ -50,7 +50,7 @@ FtMServiceFwGen1Adaptor::~FtMServiceFwGen1Adaptor()
     // destructor
 }
 
-void FtMServiceFwGen1Adaptor::bug172441(const QString &backServiceName, const QString &windowTitle, const uint windowId, )
+void FtMServiceFwGen1Adaptor::bug172441(const QString &backServiceName, const QString &windowTitle, const uint windowId)
 {
     this->windowId = windowId;
     this->backServiceName = backServiceName;

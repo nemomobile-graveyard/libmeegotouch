@@ -6,5 +6,7 @@
       <arg name="uri" type="s" direction="in" />
       <arg name="uriList" type="as" direction="in" />
     </method>
+    <method name="bug172441" chainTask="true">
+    </method>
   </interface>
 </node>
