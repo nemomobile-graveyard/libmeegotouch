@@ -31,6 +31,7 @@ PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mgriditem.h \
     $$WIDGETS_SRC_DIR/mmessagebox.h \
     $$WIDGETS_SRC_DIR/mnavigationbar.h \
+    $$WIDGETS_SRC_DIR/mobjectmenu.h \
     $$WIDGETS_SRC_DIR/moverlay.h \
     $$WIDGETS_SRC_DIR/mpannablewidget.h \
     $$WIDGETS_SRC_DIR/mphysics2dpanning.h \
@@ -104,7 +105,6 @@ PUBLIC_HEADERS += \
     $$MGEN_MODEL_HEADERS \
 
 PRIVATE_HEADERS += \
-    $$WIDGETS_SRC_DIR/mobjectmenu.h \
     $$WIDGETS_SRC_DIR/mpannableviewportlayout.h \
     $$WIDGETS_SRC_DIR/mcontentitem_p.h \
     $$WIDGETS_SRC_DIR/mbuttongroup_p.h \
