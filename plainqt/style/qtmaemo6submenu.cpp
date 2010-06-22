@@ -42,7 +42,7 @@ QtMaemo6SubMenu::~QtMaemo6SubMenu()
 void QtMaemo6SubMenu::fillListWidget(QMenu *m)
 {
     m_actionItemList.clear();
-    foreach(QAction * action, m->actions()) {
+    foreach(QPointer<QAction> action, m->actions()) {
         if (!action->isSeparator() && action->isEnabled()) {
             QListWidgetItem *item = new QListWidgetItem(action->icon(), action->text(), this);
             m_actionItemList.insert(item, action);

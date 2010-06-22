@@ -41,7 +41,7 @@ protected Q_SLOTS:
 protected:
     void fillListWidget(QMenu *m);
 private:
-    QMap<QListWidgetItem *, QAction *> m_actionItemList;
+    QMap< QListWidgetItem *, QPointer<QAction> > m_actionItemList;
 };
 
 #endif
