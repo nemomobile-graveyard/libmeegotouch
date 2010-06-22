@@ -97,6 +97,10 @@ void MSceneManagerPrivate::init(MScene *scene)
     initOrientationAngles();
 
     rootElement = new QGraphicsWidget();
+    homeButtonRootElement = new QGraphicsWidget(rootElement);
+    homeButtonRootElement->setZValue(zForWindowType(MSceneWindow::HomeButtonPanel));
+    navigationBarRootElement = new QGraphicsWidget(rootElement);
+    navigationBarRootElement->setZValue(zForWindowType(MSceneWindow::NavigationBar));
     rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.0, q->visibleSceneSize().height() / 2.0));
     scene->addItem(rootElement);
 
@@ -509,7 +513,7 @@ void MSceneManagerPrivate::addUnmanagedSceneWindow(MSceneWindow *sceneWindow)
     // add scene window to the scene
     // Now its sceneManager() method will return the correct result.
     // It will also transfer the ownership of the scene window to the scene.
-    sceneWindow->setParentItem(rootElement);
+    setParentItemForSceneWindow(sceneWindow, sceneWindow->windowType());
 
     sceneWindow->setZValue(zForWindowType(sceneWindow->windowType()));
 
@@ -589,7 +593,8 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
     setSceneWindowGeometry(effect);
 
     // Add effect to scene via rootElement
-    effect->setParentItem(rootElement);
+    setParentItemForSceneWindow(effect, window->windowType());
+
     effect->setZValue(zForWindowType(window->windowType()));
 
     // Add window as child of the effect
@@ -598,6 +603,25 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
     window->d_func()->effect = effect;
 
     return effect;
+}
+
+void MSceneManagerPrivate::setParentItemForSceneWindow(MSceneWindow *sceneWindow,
+                                                       MSceneWindow::WindowType type)
+{
+    switch (type) {
+        case MSceneWindow::EscapeButtonPanel:
+        case MSceneWindow::NavigationBar:
+            sceneWindow->setParentItem(navigationBarRootElement);
+            break;
+        case MSceneWindow::HomeButtonPanel:
+        case MSceneWindow::NotificationInformation:
+        case MSceneWindow::NotificationEvent:
+            sceneWindow->setParentItem(homeButtonRootElement);
+            break;
+        default:
+            sceneWindow->setParentItem(rootElement);
+            break;
+    }
 }
 
 void MSceneManagerPrivate::setSceneWindowGeometries()
@@ -636,38 +660,11 @@ void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
     }
 }
 
-QRectF MSceneManagerPrivate::calculateAvailableSceneRect(MSceneWindow *window)
-{
-    Q_Q(MSceneManager);
-
-    QSizeF sceneSize = q->visibleSceneSize(orientation(angle));
-    QRectF availableSceneRect(QPointF(0,0), sceneSize);
-
-    if (statusBar) {
-        const MSceneWindow::WindowType type = window->windowType();
-        if( type != MSceneWindow::StatusBar && type != MSceneWindow::LayerEffect) {
-            QSizeF windowSize = window->effectiveSizeHint(Qt::PreferredSize);
-
-            qreal statusBarBottomEdge = statusBar->y() +
-                statusBar->effectiveSizeHint(Qt::PreferredSize).height();
-
-            if ((statusBarBottomEdge + windowSize.height()) < sceneSize.height()) {
-                // Window should still fit within the remaining scene space when shifted
-                // downwards due to the status bar presence
-                availableSceneRect.setY(statusBarBottomEdge);
-
-                Q_ASSERT(availableSceneRect.height() > 0.0);
-            }
-        }
-    }
-
-    return availableSceneRect;
-}
-
 QPointF MSceneManagerPrivate::calculateSceneWindowPosition(MSceneWindow *window)
 {
-    // The rectangle available for the positioning of the given scene window
-    QRectF availableSceneRect = calculateAvailableSceneRect(window);
+    Q_Q(MSceneManager);
+    QSizeF sceneSize = q->visibleSceneSize(orientation(angle));
+    QRectF availableSceneRect(QPointF(0,0), sceneSize);
 
     Qt::Alignment alignment = window->alignment();
     QSizeF windowSize = window->effectiveSizeHint(Qt::PreferredSize);
@@ -1159,6 +1156,11 @@ void MSceneManagerPrivate::appearSceneWindow(MSceneWindow *window,
             window->d_func()->appearanceAnimation->start();
         } else {
             setSceneWindowState(window, MSceneWindow::Appeared);
+            if (window->windowType() == MSceneWindow::StatusBar) {
+                qreal y = window->y() + window->geometry().height();
+                navigationBarRootElement->setPos(0, y);
+                homeButtonRootElement->setPos(0, y);
+            }
         }
     }
 
@@ -1293,6 +1295,10 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
         window->d_func()->disappearanceAnimation->start();
     } else {
         setSceneWindowState(window, MSceneWindow::Disappeared);
+        if (window->windowType() == MSceneWindow::StatusBar) {
+            navigationBarRootElement->setPos(0, 0);
+            homeButtonRootElement->setPos(0, 0);
+        }
     }
 }
 
@@ -1339,17 +1345,13 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
             slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
             animation = slideInAnimation;
 
-            QList<MSceneWindow*> sceneWindows = windows;
-            sceneWindows.removeAll(sceneWindow);
-            foreach (MSceneWindow *window, sceneWindows) {
-                if (window->sceneWindowState() != MSceneWindow::Disappeared &&
-                    window->windowType() != MSceneWindow::ApplicationPage &&
-                    window->windowType() != MSceneWindow::DockWidget) {
-                    MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
-                    moveAnimation->setWidget(window);
-                    moveAnimation->setFinalPos(QPointF(window->x(), window->y() + sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
-                    animation->addAnimation(moveAnimation);
-                }
+            QList<QGraphicsWidget*> list;
+            list << navigationBarRootElement << homeButtonRootElement;
+            foreach(QGraphicsWidget *widget, list) {
+                MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
+                moveAnimation->setWidget(widget);
+                moveAnimation->setFinalPos(QPointF(widget->x(), widget->y() + sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
+                animation->addAnimation(moveAnimation);
             }
             break;
         }
@@ -1413,17 +1415,13 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
             slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
             animation = slideOutAnimation;
 
-            QList<MSceneWindow*> sceneWindows = windows;
-            sceneWindows.removeAll(sceneWindow);
-            foreach (MSceneWindow *window, sceneWindows) {
-                if (window->sceneWindowState() != MSceneWindow::Disappeared &&
-                    window->windowType() != MSceneWindow::ApplicationPage &&
-                    window->windowType() != MSceneWindow::DockWidget) {
-                    MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
-                    moveAnimation->setWidget(window);
-                    moveAnimation->setFinalPos(QPointF(window->x(), window->y() - sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
-                    animation->addAnimation(moveAnimation);
-                }
+            QList<QGraphicsWidget*> list;
+            list << navigationBarRootElement << homeButtonRootElement;
+            foreach(QGraphicsWidget *widget, list) {
+                MWidgetMoveAnimation *moveAnimation = new MWidgetMoveAnimation;
+                moveAnimation->setWidget(widget);
+                moveAnimation->setFinalPos(QPointF(widget->x(), widget->y() - sceneWindow->effectiveSizeHint(Qt::PreferredSize).height()));
+                animation->addAnimation(moveAnimation);
             }
             break;
         }

@@ -61,7 +61,7 @@ MWidgetMoveAnimation::MWidgetMoveAnimation(MWidgetMoveAnimationPrivate *dd, QObj
     d->init();
 }
 
-void MWidgetMoveAnimation::setWidget(MWidgetController *widget)
+void MWidgetMoveAnimation::setWidget(QGraphicsWidget *widget)
 {
     Q_D(MWidgetMoveAnimation);
 

@@ -28,7 +28,7 @@
 #include <QPointF>
 
 class MWidgetMoveAnimationPrivate;
-class MWidgetController;
+class QGraphicsWidget;
 
 //! \internal
 
@@ -40,7 +40,7 @@ class MWidgetMoveAnimation : public MParallelAnimationGroup
 
 public:
     MWidgetMoveAnimation(QObject *parent = NULL);
-    void setWidget(MWidgetController *widget);
+    void setWidget(QGraphicsWidget *widget);
     void setFinalPos(const QPointF &pos);
 
 protected:

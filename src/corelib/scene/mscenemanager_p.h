@@ -96,6 +96,7 @@ public:
     QPointF calculateSceneWindowPosition(MSceneWindow *window);
     void setSceneWindowGeometry(MSceneWindow *window);
     void setSceneWindowGeometries();
+    void setParentItemForSceneWindow(MSceneWindow *window, MSceneWindow::WindowType type);
     void notifyWidgetsAboutOrientationChange();
     void rotateToAngle(M::OrientationAngle newAngle);
     void setOrientationAngleWithoutAnimation(M::OrientationAngle newAngle);
@@ -134,8 +135,6 @@ public:
     void startPageSwitchAnimation(MSceneWindow *newPage,
                                   MSceneWindow *oldPage,
                                   MPageSwitchAnimation::PageTransitionDirection direction);
-
-    QRectF calculateAvailableSceneRect(MSceneWindow *window);
 
     void createOrientationAnimation();
 
@@ -195,6 +194,9 @@ public:
     MScene *scene;
 
     QGraphicsWidget *rootElement;
+    QGraphicsWidget *homeButtonRootElement;
+    QGraphicsWidget *navigationBarRootElement;
+
     MOrientationAnimation *orientationAnimation;
     MPageSwitchAnimation *pageSwitchAnimation;
 

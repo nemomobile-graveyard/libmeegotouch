@@ -24,7 +24,6 @@
 #include "mparallelanimationgroup_p.h"
 #include <QPointer>
 
-class MWidgetController;
 class QPauseAnimation;
 class QPropertyAnimation;
 
@@ -34,7 +33,7 @@ class MWidgetMoveAnimationPrivate : public MParallelAnimationGroupPrivate
 public:
     virtual void init();
 
-    QPointer<MWidgetController> widget;
+    QPointer<QGraphicsWidget> widget;
 
     QPointF finalPos;
     QPauseAnimation *delay;
