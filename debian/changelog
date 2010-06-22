@@ -1,4 +1,4 @@
-libmeegotouch (0.20.22-1) unstable; urgency=low
+libmeegotouch (0.20.22~1) UNRELEASED; urgency=low
 
   * Fixes: NB#173390 - Half tool bar displayed
   * Fixes: NB#170883 - No enter/exitDisplayEvent() methods called for a widget inside system modal dialog
