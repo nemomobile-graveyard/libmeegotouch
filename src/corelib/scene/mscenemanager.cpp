@@ -611,6 +611,7 @@ void MSceneManagerPrivate::setParentItemForSceneWindow(MSceneWindow *sceneWindow
     switch (type) {
         case MSceneWindow::EscapeButtonPanel:
         case MSceneWindow::NavigationBar:
+        case MSceneWindow::ApplicationMenu:
             sceneWindow->setParentItem(navigationBarRootElement);
             break;
         case MSceneWindow::HomeButtonPanel:
