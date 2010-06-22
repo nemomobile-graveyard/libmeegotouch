@@ -15,6 +15,10 @@ greaterThan(ICUVERSION, 4.4) {
     LOCALESTXT = # empty, do nothing
     LANGTXT =    # empty, do nothing
     REGIONTXT =  # empty, do nothing
+    dummy.files = dummy-icu42-workaround-this-file-never-exists
+    dummy.CONFIG += no_check_exist
+    dummy.path = $$M_ICUEXTRADATA_DIR/$$ICUUSRDATA
+    INSTALLS += dummy
 }
 
 defineReplace(installPaths){
