@@ -1362,7 +1362,7 @@ void MSliderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
         d->controller->setState(MSliderModel::Pressed);
         d->valueWhenFeedback = d->valueWhenPressed;
         d->feedbackTimer.start();
-        style()->moveFeedback().play();
+        style()->pressFeedback().play();
         d->updateValue(event);
         d->pressTimerId = startTimer(100);
     }
@@ -1391,6 +1391,9 @@ void MSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     Q_D(MSliderView);
 
     d->controller->setState(MSliderModel::Released);
+
+    style()->releaseFeedback().play();
+
     d->updateValue(event);
 
     if (d->pressTimerId) {
