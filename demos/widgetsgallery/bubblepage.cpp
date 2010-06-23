@@ -73,12 +73,12 @@ void BubblePage::createContent()
     QGraphicsLinearLayout * layout = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(layout);
 
-    BubbleItemCreator * cellCreator = new BubbleItemCreator();
+    BubbleItemCreator cellCreator;
     BubbleListModel * model = new BubbleListModel;
 
     for (int i = 0; i < model->rowCount(); ++i)
     {
-        MBubbleItem *item =  cellCreator->createBubbleItem(model->index(i,0));
+        MBubbleItem *item =  cellCreator.createBubbleItem(model->index(i,0));
         connect(item, SIGNAL(linkActivated(QString)), this, SLOT(bubbleLinkActivated(QString)));
         layout->addItem(item);
     }
