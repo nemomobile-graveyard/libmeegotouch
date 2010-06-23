@@ -38,8 +38,7 @@ MBannerViewPrivate::MBannerViewPrivate() :
     landscapePolicy(0),
     icon(0),
     title(0),
-    subtitle(0),
-    controller(controller)
+    subtitle(0)
 {
 }
 
