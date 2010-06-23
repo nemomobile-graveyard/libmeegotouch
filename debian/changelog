@@ -1,10 +1,13 @@
-libmeegotouch (0.20.22~1) UNRELEASED; urgency=low
+libmeegotouch (0.20.22-1) unstable; urgency=low
 
+  * Fixes: NB#166466 - Position indicator partially hidden behind titlebar
+  * Fixes: NB#172441 - Serviceframework: m-servicefwgen generates non-compiling code
+  * Fixes: NB#160677 - DuiApplicationService launch method needs an *option* to cause un-minimize animation
   * Fixes: NB#173390 - Half tool bar displayed
-  * Fixes: NB#170883 - No enter/exitDisplayEvent() methods called for a widget inside system modal dialog
   * Fixes: NB#175977 - MLabelViewSimple - restore clipping state after setting it
+  * Fixes: NB#170883 - No enter/exitDisplayEvent() methods called for a widget inside system modal dialog
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Tue, 22 Jun 2010 14:56:34 +0300
+ -- Sergiy Dubovik <sergiy.dubovik@nokia.com>  Wed, 23 Jun 2010 10:17:43 +0300
 
 libmeegotouch (0.20.21-1) unstable; urgency=low
 
