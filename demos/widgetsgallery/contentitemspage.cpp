@@ -62,12 +62,10 @@ public:
 
         switch (itemStyle) {
         case MBasicListItem::SingleTitle: {
-            
             item->setTitle(index.data().toString());
             break;
         }
         case MBasicListItem::TitleWithSubtitle: {
-            MBasicListItem *item = dynamic_cast<MBasicListItem*>(cell);
             item->setTitle(index.data().toString());
             //% "Subtitle"
             item->setSubtitle(qtTrId("xx_wg_contentitemspage_subtitle"));
