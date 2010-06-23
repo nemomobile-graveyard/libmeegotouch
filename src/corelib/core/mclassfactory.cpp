@@ -30,10 +30,10 @@
 class MClassFactoryPrivate
 {
 public:
-    QMap<QString, MWidgetCreatorBase *> widgetCreators;
-    QMap<QString, MViewCreatorBase *> viewCreators;
-    QMap<QString, MStyleCreatorBase *> styleCreators;
-    QMap<QString, MAnimationCreatorBase *> animationCreators;
+    QHash<QString, MWidgetCreatorBase *> widgetCreators;
+    QHash<QString, MViewCreatorBase *> viewCreators;
+    QHash<QString, MStyleCreatorBase *> styleCreators;
+    QHash<QString, MAnimationCreatorBase *> animationCreators;
 };
 
 MClassFactory::MClassFactory() :
@@ -88,7 +88,6 @@ QString MClassFactory::widgetAssemblyName(const QString &widgetClassName) const
 {
     const MWidgetCreatorBase *widgetCreator = d_ptr->widgetCreators.value(widgetClassName, NULL);
     if (!widgetCreator) {
-        mDebug("MClassFactory") << "could not find assembly name for" << widgetClassName;
         return QString();
     }
     return widgetCreator->assemblyName();
@@ -98,8 +97,7 @@ M::AssemblyType MClassFactory::widgetAssemblyType(const QString &widgetClassName
 {
     const MWidgetCreatorBase *widgetCreator = d_ptr->widgetCreators.value(widgetClassName, NULL);
     if (!widgetCreator) {
-        mDebug("MClassFactory") << "could not find assembly type for" << widgetClassName;
-        return (M::AssemblyType) - 1;
+        return M::AssemblyNone;
     }
     return widgetCreator->assemblyType();
 }
@@ -221,7 +219,7 @@ M::AssemblyType MClassFactory::styleAssemblyType(const char *styleClassName) con
     const MStyleCreatorBase *styleCreator = d_ptr->styleCreators.value(QString(styleClassName), NULL);
     if (!styleCreator) {
         mWarning("MClassFactory") << "could not find assembly type for" << styleClassName;
-        return (M::AssemblyType) - 1;
+        return M::AssemblyNone;
     }
     return styleCreator->assemblyType();
 }

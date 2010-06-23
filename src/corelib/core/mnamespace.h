@@ -27,7 +27,8 @@ namespace M
 {
     enum AssemblyType {
         Library,
-        Application
+        Application,
+        AssemblyNone
     };
 
     /*!

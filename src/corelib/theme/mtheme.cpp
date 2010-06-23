@@ -420,7 +420,7 @@ const MStyle *MTheme::style(const char *styleClassName,
             // go trough this parent's inheritance chain
             do {
                 M::AssemblyType assemblyType = MClassFactory::instance()->widgetAssemblyType(mobj->className());
-                if (assemblyType == M::Application) {
+                if (assemblyType == M::Application || assemblyType == M::AssemblyNone) {
                     mobj = mobj->superClass();
                     continue;
                 }
