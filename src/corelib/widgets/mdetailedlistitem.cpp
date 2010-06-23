@@ -28,7 +28,8 @@
 #include <QGraphicsLinearLayout>
 
 MDetailedListItemPrivate::MDetailedListItemPrivate(MDetailedListItem::ItemStyle style)
-    : layoutGrid(NULL),
+    : q_ptr(NULL),
+    layoutGrid(NULL),
     image(NULL),
     sideTopImage(NULL),
     sideBottomImage(NULL),

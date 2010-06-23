@@ -113,6 +113,7 @@ private:
 };
 
 Ut_MAbstractItemModel::Ut_MAbstractItemModel()
+    : model( 0 )
 {
 }
 

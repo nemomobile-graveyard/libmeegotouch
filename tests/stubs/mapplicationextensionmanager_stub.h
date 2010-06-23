@@ -185,6 +185,8 @@ MApplicationExtensionManagerStub* gMApplicationExtensionManagerStub = &gDefaultM
 
 // 4. CREATE A PROXY WHICH CALLS THE STUB
 MApplicationExtensionManager::MApplicationExtensionManager(const QString &interface) {
+  initialized = false;
+  unorderedExtensionsIndex = 0;
   gMApplicationExtensionManagerStub->MApplicationExtensionManagerConstructor(interface);
 }
 

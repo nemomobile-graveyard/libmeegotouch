@@ -350,6 +350,7 @@ void MListPage::changeSortingOrder(int index)
     switch (index) {
     case None:
         break;
+    case Ascending:
 #ifndef HAVE_N900
         proxyModel->sort(0, Qt::AscendingOrder);
 #else

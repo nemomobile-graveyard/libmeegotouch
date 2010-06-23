@@ -2639,6 +2639,4 @@ QString MLocalePrivate::formatPhoneNumber( const QString& phoneNumber,
       return result;
     }
   }
-
-  return phoneNumber;
 }

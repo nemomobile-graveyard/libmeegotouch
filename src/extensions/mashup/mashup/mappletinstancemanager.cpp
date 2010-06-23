@@ -262,7 +262,10 @@ void MAppletInstanceManager::updateApplet(const MDesktopEntry &updatedExtension)
             appletIterator.next();
             if (appletIterator.value()->desktopFile == metadata->fileName()) {
                 MAppletHandle *handle = dynamic_cast<MAppletHandle *>(appletIterator.value()->widget);
-                handle->reinit();
+                if ( handle )
+                {
+                    handle->reinit();
+                }
             }
         }
     }

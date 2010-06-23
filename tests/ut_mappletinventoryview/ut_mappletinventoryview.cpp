@@ -51,7 +51,8 @@ MAppletInventory::MAppletInventory(QGraphicsItem *parent) :
     MWidgetController(new MWidgetControllerPrivate, new MAppletInventoryModel, parent),
     mashupCanvas(NULL),
     watcher(new QFileSystemWatcher()),
-    appletPath(APPLET_DATA)
+    appletPath(APPLET_DATA),
+    initialized(false)
 {
 }
 
