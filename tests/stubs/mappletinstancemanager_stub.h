@@ -355,6 +355,7 @@ MAppletInstanceManagerStub *gMAppletInstanceManagerStub = &gDefaultMAppletInstan
 MAppletInstanceManager::MAppletInstanceManager(const QString &identifier, MDataStore *dataStore)
   : dataStore( NULL ),
     fileDataStore( NULL ),
+    watcher( NULL ),
     lastAppletInstanceID( 0 )
 {
     gMAppletInstanceManagerStub->MAppletInstanceManagerConstructor(identifier, dataStore);
