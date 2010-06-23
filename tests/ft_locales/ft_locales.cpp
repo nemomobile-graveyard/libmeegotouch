@@ -687,9 +687,25 @@ void Ft_Locales::checkAvailableLocales()
     supportedLocaleNames << "es_419";
     MCalendar gregorianCalendar(MLocale::GregorianCalendar);
     MCalendar islamicCalendar(MLocale::IslamicCalendar);
+    QStringList sortingTestList;
+    sortingTestList
+        // Han:
+        << "一" << "二" << "三" << "中" << "正"
+        << "爱" << "播" << "此" << "得" << "俄" << "攀"
+        // Cyrillic:
+        << "Ѐ" << "А" << "а" << "Б" << "б" << "В" << "в" << "Г" << "г" << "Я" << "я"
+        // Greek:
+        << "Α" << "α" << "Β" << "β" << "Ω" << "ω"
+        // Arabic:
+        << "ا" << "ب" << "ة" << "ظ" << "ع" << "غ"
+        // Hebrew:
+        << "א" << "ב" << "ג" << "ש" << "ת"
+        // Latin:
+        << "a" << "ä" << "å" << "á" << "b" << "öfgh" << "oegh" << "z";
     QString ft_localesTestOutput = "";
     foreach(QString supportedLocaleName, supportedLocaleNames) {
         MLocale locale(supportedLocaleName);
+        qSort(sortingTestList.begin(), sortingTestList.end(), locale.collator());
         ft_localesTestOutput
             += supportedLocaleName + '\t' + "Language endonym" + '\t'
             + locale.languageEndonym()
@@ -843,6 +859,8 @@ void Ft_Locales::checkAvailableLocales()
             + locale.weekdayName(islamicCalendar, 6)
             + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Islamic Calendar)" + '\t'
             + locale.weekdayName(islamicCalendar, 7)
+            + '\n' + supportedLocaleName + '\t' + "Collation sample" + '\t'
+            + sortingTestList.join(" ")
             + '\n';
     }
     QString ft_localesTestOutputFileName =

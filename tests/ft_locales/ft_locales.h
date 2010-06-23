@@ -25,6 +25,7 @@
 #include <Qt>
 
 #include <MLocale>
+#include <MCollator>
 #include <MCalendar>
 #include <MApplication>
 #include <MGConfItem>
