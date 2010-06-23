@@ -33,13 +33,14 @@
 #include <MScene>
 #include <MSceneManager>
 #include <MPopupList>
-#include <MContentItem>
 #include <MLocale>
 
 #include "ut_mcombobox.h"
 #include "mcancelevent.h"
 #include "mcomboboxview.h"
 #include "mcomboboxview_p.h"
+#include "mlayout.h"
+#include "mgridlayoutpolicy.h"
 
 MApplication *app;
 MWindow *win;
@@ -204,25 +205,24 @@ void Ut_MComboBox::testIconVisibility()
 
     m_combobox->setTitle("Title");
     view->updateData(QList<const char *>() << MComboBoxModel::Title);
-    QCOMPARE(viewPrivate->contentItem->itemStyle(), MContentItem::TwoTextLabels);
-    QCOMPARE(viewPrivate->contentItem->title(), QString("Title"));
-    QVERIFY(viewPrivate->contentItem->pixmap().isNull());
+    QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_basicSubtitlePolicy);
+    QCOMPARE(viewPrivate->button->titleWidget()->text(), QString("Title"));
 
     m_combobox->setIconID("Icon-music");
     view->updateData(QList<const char *>() << MComboBoxModel::IconID);
-    QCOMPARE(viewPrivate->contentItem->itemStyle(), MContentItem::TwoIconsTwoWidgets);
-    QVERIFY(!viewPrivate->contentItem->pixmap().isNull());
+    QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_iconSubtitlePolicy);
+    QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("Icon-music"));
 
     m_combobox->setIconVisible(false);
     view->updateData(QList<const char *>() << MComboBoxModel::IconVisible);
-    QCOMPARE(viewPrivate->contentItem->itemStyle(), MContentItem::TwoTextLabels);
-    QCOMPARE(viewPrivate->contentItem->title(), QString("Title"));
-    QVERIFY(viewPrivate->contentItem->pixmap().isNull());
+    QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_basicSubtitlePolicy);
+    QCOMPARE(viewPrivate->button->titleWidget()->text(), QString("Title"));
+    QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("Icon-music"));
 
     m_combobox->setIconVisible(true);
     view->updateData(QList<const char *>() << MComboBoxModel::IconVisible);
-    QCOMPARE(viewPrivate->contentItem->itemStyle(), MContentItem::TwoIconsTwoWidgets);
-    QVERIFY(!viewPrivate->contentItem->pixmap().isNull());
+    QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_iconSubtitlePolicy);
+    QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("Icon-music"));
 }
 
 
@@ -255,36 +255,36 @@ void Ut_MComboBox::testBuiltinModel()
     // select item2
     m_combobox->setCurrentIndex(2);
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item2"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("item2"));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.takeLast()[0], QVariant(2));
     // remove item1, index should change
     m_combobox->removeItem(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item2"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("item2"));
     // remove current item
     m_combobox->removeItem(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("xx_ComboBoxSubtitle"));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.takeLast()[0], QVariant(-1));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item3"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("item3"));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.takeLast()[0], QVariant(1));
     // add one item
     m_combobox->insertItem(0, QString("itemX"));
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item3"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("item3"));
     QCOMPARE(spy.count(), 0);
 
     // change current item text
     m_combobox->setItemText(2, QString("beef"));
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("beef"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("beef"));
 }
 
 void Ut_MComboBox::testModelSwitching()
@@ -297,7 +297,7 @@ void Ut_MComboBox::testModelSwitching()
 
     m_combobox->setCurrentIndex(2);
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("item2"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("item2"));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.takeLast()[0], QVariant(2));
 
@@ -307,7 +307,7 @@ void Ut_MComboBox::testModelSwitching()
 
     // model changed selection should reset
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("xx_ComboBoxSubtitle"));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.takeLast()[0], QVariant(-1));
 
@@ -327,30 +327,30 @@ void Ut_MComboBox::testStringListModel()
 
     // select item 2
     m_combobox->setCurrentIndex(2);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("foo2"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("foo2"));
     // remove item1, index should change
     strListModel->removeRow(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("foo2"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("foo2"));
     // remove current item
     strListModel->removeRow(1);
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("xx_ComboBoxSubtitle"));
     // check that after removing items everything looks ok
     QCOMPARE(m_combobox->count(), 2);
     m_combobox->setCurrentIndex(1);
     QCOMPARE(m_combobox->currentIndex(), 1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("foo3"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("foo3"));
     // add one item
     strListModel->insertRow(0);
     strListModel->setData(strListModel->index(0, 0), QString("fooX"), Qt::DisplayRole);
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("foo3"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("foo3"));
 
     // change current item text
     strListModel->setData(strListModel->index(2, 0), QString("lamb"), Qt::DisplayRole);
     QCOMPARE(m_combobox->currentIndex(), 2);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), QString("lamb"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("lamb"));
 }
 
 void Ut_MComboBox::testStringListModelSetStringList()
@@ -370,7 +370,7 @@ void Ut_MComboBox::testStringListModelSetStringList()
     // change string list completely
     strListModel->setStringList(QStringList() << "bar0" << "bar1" << "bar2" << "bar3");
     QCOMPARE(m_combobox->currentIndex(), -1);
-    QCOMPARE(viewPrivate->contentItem->subtitle(), qtTrId("xx_ComboBoxSubtitle"));
+    QCOMPARE(viewPrivate->button->subtitleWidget()->text(), qtTrId("xx_ComboBoxSubtitle"));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.takeFirst()[0], QVariant(-1));
 }

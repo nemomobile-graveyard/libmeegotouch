@@ -24,6 +24,7 @@
 #include "mlist.h"
 #include "mgriditem.h"
 #include "mpannableviewport.h"
+#include "mimagewidget.h"
 
 #include <QGraphicsLinearLayout>
 
@@ -56,34 +57,29 @@ void MPopupListViewPrivate::updateCell(const QModelIndex& index, MWidget * cell)
     MPopupListItem* item = static_cast<MPopupListItem*>(cell);
 
     QString title;
-    QPixmap* pixmap = NULL;
+    QString iconID;
     QVariant value;
 
     value = list->itemModel()->data(index, Qt::DisplayRole);
-    if (value != QVariant())
+    if (value.isValid())
         title = value.toString();
 
     value = list->itemModel()->data(index, Qt::DecorationRole);
-    if (value != QVariant()) {
-        // TODO: Use MTheme::pixmap() when MContentItem starts to support
-        //       pixmaps that are loaded asynchronously
-        pixmap = MTheme::pixmapCopy(value.toString());
-    }
+    if (value.isValid())
+        iconID = value.toString();
 
     item->setTitle(title);
-    item->setPixmap(pixmap ? *pixmap : QPixmap());
-    delete pixmap;
+    item->imageWidget()->setImage(iconID);
 
     if (list->selectionModel()->isSelected(index))
         item->setSelected(true);
 
-    if (index.row() == 0) {
-        item->setItemMode(MContentItem::SingleColumnTop);
-    } else if (index.row() == index.model()->rowCount() - 1) {
-        item->setItemMode(MContentItem::SingleColumnBottom);
-    } else {
-        item->setItemMode(MContentItem::SingleColumnCenter);
-    }
+    if (index.row() == 0)
+        item->setLayoutPosition(M::TopCenterPosition);
+    else if (index.row() == index.model()->rowCount() - 1)
+        item->setLayoutPosition(M::BottomCenterPosition);
+    else
+        item->setLayoutPosition(M::CenterPosition);
 }
 
 void MPopupListViewPrivate::_q_scrollOnFirstAppearance()

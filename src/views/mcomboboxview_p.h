@@ -20,11 +20,62 @@
 #ifndef MCOMBOBOXVIEW_P_H
 #define MCOMBOBOXVIEW_P_H
 
-class QGraphicsLinearLayout;
+class MLayout;
+class MGridLayoutPolicy;
 class MComboBox;
-class MContentItem;
 class MPopupList;
 class MProgressIndicator;
+class MLabel;
+class MImageWidget;
+
+#include "mlistitem.h"
+
+class MComboBoxButton : public MListItem
+{
+public:
+    MComboBoxButton(QGraphicsItem *parent = 0);
+
+    void setIconID(const QString& id);
+    void setTitle(const QString &title);
+    void setSubtitle(const QString &subtitle);
+    void setProgressIndicatorVisible(bool visible);
+    void setIconVisible(bool visible);
+
+    MImageWidget * iconWidget();
+    MLabel * titleWidget();
+    MLabel * subtitleWidget();
+    MImageWidget * indicatorWidget();
+    MProgressIndicator * progressWidget();
+
+private:
+    void initLayout();
+    void updatePolicy();
+
+    MGridLayoutPolicy* iconSubtitlePolicy();
+    MGridLayoutPolicy* basicSubtitlePolicy();
+    MGridLayoutPolicy* iconProgressPolicy();
+    MGridLayoutPolicy* basicProgressPolicy();
+
+
+    MLayout *layoutGrid;
+    MGridLayoutPolicy* _iconSubtitlePolicy;
+    MGridLayoutPolicy* _basicSubtitlePolicy;
+    MGridLayoutPolicy* _iconProgressPolicy;
+    MGridLayoutPolicy* _basicProgressPolicy;
+
+    MImageWidget* _iconWidget;
+    MLabel* _titleWidget;
+    MLabel* _subtitleWidget;
+    MImageWidget* _indicatorWidget;
+    MProgressIndicator* _progressWidget;
+
+    bool progressVisible;
+    bool iconVisible;
+
+#ifdef UNIT_TEST
+    friend class Ut_MComboBox;
+#endif
+};
 
 class MComboBoxViewPrivate
 {
@@ -38,7 +89,6 @@ public:
     virtual ~MComboBoxViewPrivate();
 
     void init();
-    void initLayout();
     void updateSubtitle(int currentIndex);
 
     void _q_showPopup();
@@ -48,12 +98,9 @@ public:
     void _q_itemModelCurrentIndexChanged(int currentIndex);
 
     MComboBox    *controller;
-    QGraphicsLinearLayout    *layout;
-    MContentItem *contentItem;
+    MComboBoxButton *button;
     MPopupList   *popuplist;
     bool isPopupShowing;
-    QPixmap *pixmap;
-    MProgressIndicator *progressIndicator;
 };
 
 #endif

@@ -30,7 +30,6 @@
 #include "mpopuplistview.h"
 #include "mpopuplistview_p.h"
 #include "mpopuplistview.cpp"
-#include "mgriditem.h"
 
 #include "ut_mpopuplist.h"
 
@@ -136,20 +135,18 @@ void Ut_MPopupList::testSetItemIconID()
     view->list->setItemModel(itemModel);
     view->list->setSelectionModel(new QItemSelectionModel(itemModel));
 
-    MContentItem *item;
+    MPopupListItem *item;
     MWidgetRecycler recycler;
 
     // First add item with text to model and build it
     itemModel->appendRow(new QStandardItem("Item"));
-    item = (MContentItem *)(view->createCell(itemModel->index(0, 0),recycler));
-    // no icon was set to model, so it should be invisible
-    QVERIFY(item->pixmap().isNull());
+    item = (MPopupListItem *)(view->createCell(itemModel->index(0, 0),recycler));
+    QCOMPARE(item->imageWidget()->image(), QString());
 
     // Add icon to previously set item
     itemModel->setData(itemModel->index(0, 0), "Icon-music", Qt::DecorationRole);
     view->updateCell(itemModel->index(0,0), item);
-    // now, icon should be visible
-    QVERIFY(!item->pixmap().isNull());
+    QCOMPARE(item->imageWidget()->image(), QString("Icon-music"));
 
     delete itemModel;
     delete view;

@@ -46,6 +46,12 @@ class M_EXPORT MComboBoxStyle : public MWidgetStyle
       \brief Object name of internal MContentItem.
     */
     M_STYLE_ATTRIBUTE(QString, contentItemObjectName, ContentItemObjectName)
+
+    /*!
+      \property MComboBoxStyle::indicatorImage
+      \brief Image ID of combobox indicator arrows.
+    */
+    M_STYLE_ATTRIBUTE(QString, indicatorImage, IndicatorImage)
 };
 
 /*!

@@ -24,17 +24,17 @@
 #include <QPointer>
 #include <QModelIndex>
 #include "mabstractcellcreator.h"
-#include "mcontentitem.h"
+#include "mbasiclistitem.h"
 
 class MPopupList;
 class QAbstractItemModel;
 class QItemSelectionModel;
 class MList;
 
-class MPopupListItem : public MContentItem {
+class MPopupListItem : public MBasicListItem {
 public:
     explicit MPopupListItem(QGraphicsItem *parent = NULL)
-        : MContentItem(MContentItem::IconAndSingleTextLabel, parent)
+        : MBasicListItem(MBasicListItem::IconWithTitle, parent)
     {
         setObjectName("PopupListItem");
     }
