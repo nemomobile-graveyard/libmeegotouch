@@ -41,3 +41,10 @@ SOURCES = \
   qtmaemo6submenu.cpp \
   qtmaemo6comboboxpopup.cpp \
   qtmaemo6kineticscrolling.cpp
+
+contains( DEFINES, HAVE_NATIVE_FILEDIALOG ) {
+    PRIVATE_HEADERS += \
+        qtmeegofilepicker.h
+    SOURCES += \
+        qtmeegofilepicker.cpp
+}

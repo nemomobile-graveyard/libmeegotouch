@@ -96,11 +96,16 @@
 
 //#include "mcontainerheader_p.h"
 
+#ifdef HAVE_NATIVE_FILEDIALOG
+#include "qtmeegofilepicker.h"
+#endif
+
 #define WIDGET_OPACITY "widgetOpacity"
 #define SCROLLAREATHUMBVIEW "scrollAreaThumbView"
 
 //#define MOVE_ACTIONS_FROM_TOOLBAR_TO_TITLEBAR
 //#define M_LOG_POLISH
+
 
 QPixmap setPixmapOpacity(const QPixmap &pixmap, double opacity)
 {
