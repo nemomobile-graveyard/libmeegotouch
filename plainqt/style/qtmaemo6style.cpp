@@ -1096,7 +1096,6 @@ void QtMaemo6Style::polish(QWidget *widget)
     }
 
     if (QAbstractScrollArea *abstractScrollArea = qobject_cast<QAbstractScrollArea *>(widget)) {
-        abstractScrollArea->grabGesture(Qt::PanGesture);
         d->m_kinetic->enableOn(abstractScrollArea);
         d->m_kinetic->setRightToLeft(qApp->isRightToLeft());
         d->m_scrollBarEventFilter->enableOn(abstractScrollArea);
@@ -2576,57 +2575,16 @@ void QtMaemo6Style::ensureFocusedWidgetVisible(QRect rect) {
 
 void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleArea)
 {
-    //if(visibleArea.isValid()) {
-        QWidget* parent = widget->parentWidget();
-        QtMaemo6Window* window = NULL;
-        //search
-        while(!(window = qobject_cast<QtMaemo6Window*>(parent)) && parent)
-            parent = parent->parentWidget();
-        if(window) {
-            window->ensureWidgetVisible(widget, visibleArea);
-            /*
-            QAbstractScrollArea* sa = qobject_cast<QAbstractScrollArea*>(window->centralWidget());
-            if(sa) {
-                QWidget* viewport = sa->viewport();
-
-                //that is the real visible area of the viewport, the navigation bar is excluded here
-                QRect realVisibleRect = visibleArea.intersected(
-                    QRect(viewport->mapToGlobal(QPoint(0,0)), viewport->size() ));
-
-                QRect globalWidgetRect = QRect(
-                        widget->mapToGlobal(QPoint(0,0)),
-                        widget->size()
-                          );
-
-                QPoint widgetGlobalPosition = widget->mapToGlobal(QPoint(0,0));
-
-                //the widget is not fully covered by the visible Area
-                if(globalWidgetRect.intersected(realVisibleRect) != globalWidgetRect) {
-                    QPoint originalViewportPos = viewport->mapToGlobal(QPoint(0,0));
-                    m_originalWidgetPos.widget = viewport;
-                    m_originalWidgetPos.position = viewport->pos();
-
-                    int newXPos = realVisibleRect.top() + ((realVisibleRect.height() - widget->height()) / 2);
-                    QPoint moveBy = QPoint(0, widgetGlobalPosition.y() - newXPos);
-
-                    //centered in visibleArea
-                    viewport->move(-moveBy);
-                }
-            } else {
-                qCritical() << "Can't focus on" << widget << "because scroll area contains no viewport";
-            }
-            */
-        } else {
-            qCritical() << "Can't focus on" << widget << "because there is no top level scroll area";
-        }
-    /*
+    QWidget* parent = widget->parentWidget();
+    QtMaemo6Window* window = NULL;
+    //search the parent QtMameo6Window and pass the request there
+    while(!(window = qobject_cast<QtMaemo6Window*>(parent)) && parent)
+        parent = parent->parentWidget();
+    if(window) {
+        window->ensureWidgetVisible(widget, visibleArea);
     } else {
-        if(m_originalWidgetPos.widget) {
-            m_originalWidgetPos.widget->move(m_originalWidgetPos.position);
-            m_originalWidgetPos.widget = 0;
-        }
+        qCritical() << "Can't focus on" << widget << "because there is no top level window";
     }
-    */
 }
 
 
