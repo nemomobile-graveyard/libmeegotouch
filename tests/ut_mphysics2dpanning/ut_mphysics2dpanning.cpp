@@ -22,6 +22,7 @@
 #include <QPoint>
 #include <QMetaType>
 #include <QDebug>
+#include <QVariant>
 #include <mphysics2dpanning.h>
 #include "../../src/corelib/widgets/mphysics2dpanning_p.h"
 #include <mapplication.h>
@@ -31,74 +32,50 @@
 
 #define QFLOATCOMPARE(x,y)  QCOMPARE(x+1.0,y+1.0)
 
-QList<QString> Ut_MPhysics2DPanning::timeLineActions;
-QTimeLine::State Ut_MPhysics2DPanning::timeLineState;
+QList<QString> Ut_MPhysics2DPanning::animationActions;
+QAbstractAnimation::State Ut_MPhysics2DPanning::animationState;
 
-void QTimeLine::setDuration(int duration)
+void QVariantAnimation::setDuration(int duration)
 {
     QString str = "setDuration";
     str.append("_");
     str.append(QString::number(duration));
-    Ut_MPhysics2DPanning::timeLineActions.push_back(str);
+    Ut_MPhysics2DPanning::animationActions.push_back(str);
 }
 
-
-void QTimeLine::setUpdateInterval(int interval)
+void QVariantAnimation::setStartValue(const QVariant &value)
 {
-    QString str = "setUpdateInterval";
+    QString str = "setStartValue";
     str.append("_");
-    str.append(QString::number(interval));
-    Ut_MPhysics2DPanning::timeLineActions.push_back(str);
+    str.append(QString::number(value.toFloat()));
+    Ut_MPhysics2DPanning::animationActions.push_back(str);
 }
 
-
-void QTimeLine::setFrameRange(int startFrame, int endFrame)
+void QVariantAnimation::setEndValue(const QVariant &value)
 {
-    QString str = "setFrameRange";
+    QString str = "setEndValue";
     str.append("_");
-    str.append(QString::number(startFrame));
-    str.append("_");
-    str.append(QString::number(endFrame));
-    Ut_MPhysics2DPanning::timeLineActions.push_back(str);
+    str.append(QString::number(value.toFloat()));
+    Ut_MPhysics2DPanning::animationActions.push_back(str);
 }
 
-
-void QTimeLine::setCurrentTime(int msec)
-{
-    QString str = "setCurrentTime";
-    str.append("_");
-    str.append(QString::number(msec));
-    Ut_MPhysics2DPanning::timeLineActions.push_back(str);
-}
-
-
-void QTimeLine::setCurveShape(CurveShape shape)
-{
-    QString str = "setCurveShape";
-    str.append("_");
-    str.append(QString::number(shape));
-    Ut_MPhysics2DPanning::timeLineActions.push_back(str);
-}
-
-
-void QTimeLine::start()
+void QAbstractAnimation::start(QAbstractAnimation::DeletionPolicy)
 {
     QString str = "start";
-    Ut_MPhysics2DPanning::timeLineActions.push_back(str);
+    Ut_MPhysics2DPanning::animationActions.push_back(str);
 }
 
-
-void QTimeLine::stop()
+void QAbstractAnimation::stop()
 {
     QString str = "stop";
-    Ut_MPhysics2DPanning::timeLineActions.push_back(str);
+    Ut_MPhysics2DPanning::animationActions.push_back(str);
 }
 
-
-QTimeLine::State QTimeLine::state() const
+QAbstractAnimation::State QAbstractAnimation::state() const
 {
-    return Ut_MPhysics2DPanning::timeLineState;
+    return Ut_MPhysics2DPanning::animationState;
 }
+
 
 void Ut_MPhysics2DPanning::initTestCase()
 {
@@ -130,8 +107,8 @@ void Ut_MPhysics2DPanning::init()
     physics->d_ptr->borderFrictionC = 0.6;
     physics->d_ptr->panDirection = Qt::Vertical | Qt::Horizontal;
 
-    Ut_MPhysics2DPanning::timeLineActions.clear();
-    Ut_MPhysics2DPanning::timeLineState = QTimeLine::NotRunning;
+    Ut_MPhysics2DPanning::animationActions.clear();
+    Ut_MPhysics2DPanning::animationState = QAbstractAnimation::Stopped;
 }
 
 
@@ -157,8 +134,7 @@ void Ut_MPhysics2DPanning::initValues()
     QCOMPARE(physics->d_ptr->pointerSpringX, 0.0);
     QCOMPARE(physics->d_ptr->pointerSpringY, 0.0);
     QCOMPARE(physics->d_ptr->sceneLastPos, QPointF());
-    QCOMPARE(physics->d_ptr->timeLine != NULL, true);
-    QCOMPARE(physics->d_ptr->currFrame, 0);
+    QCOMPARE(physics->d_ptr->panningAnimation != NULL, true);
     QCOMPARE(physics->d_ptr->panDirection, Qt::Vertical | Qt::Horizontal);
 }
 
@@ -167,7 +143,7 @@ void Ut_MPhysics2DPanning::timeLineInStart1()
 {
     // Checks that timeline is initialized correctly in case it was not running
 
-    Ut_MPhysics2DPanning::timeLineState = QTimeLine::NotRunning;
+    Ut_MPhysics2DPanning::animationState = QAbstractAnimation::Stopped;
 
     physics->d_ptr->velX = -1.0;
     physics->d_ptr->velY = -1.0;
@@ -175,14 +151,11 @@ void Ut_MPhysics2DPanning::timeLineInStart1()
 
     QCOMPARE(physics->d_ptr->velX, 0.0);
     QCOMPARE(physics->d_ptr->velY, 0.0);
-    QCOMPARE(timeLineActions.size(), 6);
-    QCOMPARE(timeLineActions[0], QString("setDuration_1000000"));
-    QCOMPARE(timeLineActions[1], QString("setUpdateInterval_20"));
-    QCOMPARE(timeLineActions[2], QString("setFrameRange_0_29999"));
-    QCOMPARE(timeLineActions[3], QString("setCurrentTime_0"));
-    QCOMPARE(timeLineActions[4],
-             QString("setCurveShape_").append(QString::number(QTimeLine::LinearCurve)));
-    QCOMPARE(timeLineActions[5], QString("start"));
+    QCOMPARE(animationActions.size(), 4);
+    QCOMPARE(animationActions[0], QString("setDuration_1000000"));
+    QCOMPARE(animationActions[1], QString("setStartValue_0"));
+    QCOMPARE(animationActions[2], QString("setEndValue_1"));
+    QCOMPARE(animationActions[3], QString("start"));
 }
 
 
@@ -190,7 +163,7 @@ void Ut_MPhysics2DPanning::timeLineInStart2()
 {
     // Checks that timeline is not initialized in case it was already running
 
-    Ut_MPhysics2DPanning::timeLineState = QTimeLine::Running;
+    Ut_MPhysics2DPanning::animationState = QAbstractAnimation::Running;
 
     physics->d_ptr->velX = -1.0;
     physics->d_ptr->velY = -1.0;
@@ -198,7 +171,7 @@ void Ut_MPhysics2DPanning::timeLineInStart2()
 
     QCOMPARE(physics->d_ptr->velX, -1.0);
     QCOMPARE(physics->d_ptr->velY, -1.0);
-    QCOMPARE(timeLineActions.size(), 0);
+    QCOMPARE(animationActions.size(), 0);
 }
 
 
@@ -206,8 +179,8 @@ void Ut_MPhysics2DPanning::timeLineInStop()
 {
     physics->stop();
 
-    QCOMPARE(timeLineActions.size(), 1);
-    QCOMPARE(timeLineActions[0], QString("stop"));
+    QCOMPARE(animationActions.size(), 1);
+    QCOMPARE(animationActions[0], QString("stop"));
 }
 
 
@@ -265,15 +238,15 @@ void Ut_MPhysics2DPanning::setAndGetQPointF()
 }
 
 
-void Ut_MPhysics2DPanning::timeLineStateQuery()
+void Ut_MPhysics2DPanning::animationStateQuery()
 {
-    Ut_MPhysics2DPanning::timeLineState = QTimeLine::NotRunning;
+    Ut_MPhysics2DPanning::animationState = QAbstractAnimation::Stopped;
     QCOMPARE(physics->inMotion(), false);
 
-    Ut_MPhysics2DPanning::timeLineState = QTimeLine::Paused;
+    Ut_MPhysics2DPanning::animationState = QAbstractAnimation::Paused;
     QCOMPARE(physics->inMotion(), false);
 
-    Ut_MPhysics2DPanning::timeLineState = QTimeLine::Running;
+    Ut_MPhysics2DPanning::animationState = QAbstractAnimation::Running;
     QCOMPARE(physics->inMotion(), true);
 }
 
@@ -395,7 +368,7 @@ void Ut_MPhysics2DPanning::integrating_data()
     actionList.push_back(integratingAction(tick,    7));
 
     // End position is rounded to nearest 0.001
-    QTest::newRow("actionList 1") << actionList << QPointF(-22.348, -2.793);
+    QTest::newRow("actionList 1") << actionList << QPointF(-22.39,-2.794);
 
     actionList.clear();
     actionList.push_back(integratingAction(setRange, QSizeF(100, 100)));
@@ -409,7 +382,7 @@ void Ut_MPhysics2DPanning::integrating_data()
     actionList.push_back(integratingAction(tick,    7));
 
     // End position is rounded to nearest 0.001
-    QTest::newRow("actionList 2") << actionList << QPointF(83, 20);
+    QTest::newRow("actionList 2") << actionList << QPointF(83.578,20.241);
 }
 
 

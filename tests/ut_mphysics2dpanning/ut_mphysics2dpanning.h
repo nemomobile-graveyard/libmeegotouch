@@ -23,7 +23,8 @@
 
 #include <string>
 #include <QtTest/QtTest>
-#include <QTimeLine>
+#include <QVariantAnimation>
+#include <QAbstractAnimation>
 #include "mapplication.h"
 
 class MPhysics2DPanning;
@@ -33,8 +34,8 @@ class Ut_MPhysics2DPanning : public QObject
     Q_OBJECT;
 
 public:
-    static QList<QString>   timeLineActions;
-    static QTimeLine::State timeLineState;
+    static QList<QString>               animationActions;
+    static QAbstractAnimation::State    animationState;
 
 private:
     MApplication *app;
@@ -70,7 +71,7 @@ private slots:
 
     // Passing the state of the TimeLine
 
-    void timeLineStateQuery();
+    void animationStateQuery();
 
     // Pointer press, move and release actions
 

@@ -59,7 +59,7 @@ SUBDIRS     =  \
     ut_mwidget \
     ut_mwidgetview \
     ut_mwindow \
-#    ut_mphysics2dpanning \ Needs refactoring
+    ut_mphysics2dpanning \ 
     ut_mlabel \
     ut_mlogicalvalues \
     ut_mdesktopentry \
