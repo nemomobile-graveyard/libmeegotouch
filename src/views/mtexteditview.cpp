@@ -796,6 +796,9 @@ void MTextEditView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     d->controller->handleMousePress(cursor, event, &location);
 
     if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
+        // Honor MWidgetView's style and play press feedback
+        style()->pressFeedback().play();
+
         if (location == MTextEdit::Word) {
             style()->pressWordFeedback().play();
         } else {
@@ -818,6 +821,11 @@ void MTextEditView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     MTextEdit::TextFieldLocationType location;
     event->accept();
+
+    if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
+        // Honor MWidgetView's style and play release feedback
+        style()->releaseFeedback().play();
+    }
 
     // controller shouldn't do anything for selection ending mouse release
     if (d->selecting == false) {
