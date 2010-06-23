@@ -939,6 +939,7 @@ MSliderViewPrivate::MSliderViewPrivate() :
     horizontalPolicy(0),
     verticalPolicy(0),
     valueAnimation(0),
+    valueWhenFeedback(0),
     pressTimerId(0),
     valueWhenPressed(0)
 {
