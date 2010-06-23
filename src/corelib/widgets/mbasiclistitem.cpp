@@ -29,7 +29,8 @@
 #include <QGraphicsWidget>
 
 MBasicListItemPrivate::MBasicListItemPrivate(MBasicListItem::ItemStyle style)
-    : layoutGrid(NULL),
+    : q_ptr(NULL),
+    layoutGrid(NULL),
     image(NULL),
     titleLabel(NULL),
     subtitleLabel(NULL),
