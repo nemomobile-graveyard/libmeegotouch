@@ -172,7 +172,7 @@ void MButtonViewPrivate::calcIconTextRects()
                 else if (q->style()->horizontalTextAlign() == Qt::AlignRight)
                     iconPosition.setX(contentRect.width() - iconWidth);
                 else if (q->style()->horizontalTextAlign() == Qt::AlignLeft)
-                    iconPosition.setX(textSize.width() + hTextMargin);
+                    iconPosition.setX(contentRect.left() + textSize.width() + hTextMargin);
 
                 iconPosition.setY(contentRect.center().y() - (iconHeight / 2));
                 textRect.setWidth(contentRect.width() - iconWidth - hTextMargin);
