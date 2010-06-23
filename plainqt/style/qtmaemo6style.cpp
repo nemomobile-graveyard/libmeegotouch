@@ -227,7 +227,14 @@ bool QtMaemo6Style::setPaletteBackground(QWidget *widget,
                                          QString styleClass) const
 {
     bool ret = false;
+
     if (NULL != widget) {
+
+        //ensure the layout was activated, so the widget already has correct size
+        if(widget->parentWidget())
+            if(widget->parentWidget()->layout())
+                widget->parentWidget()->layout()->activate();
+
         if(widget->size().isValid()) {
             widget->setAutoFillBackground(true);
 
@@ -1090,7 +1097,7 @@ void QtMaemo6Style::polish(QWidget *widget)
 
     if (QAbstractScrollArea *abstractScrollArea = qobject_cast<QAbstractScrollArea *>(widget)) {
         abstractScrollArea->grabGesture(Qt::PanGesture);
-        //d->m_kinetic->enableOn(abstractScrollArea);
+        d->m_kinetic->enableOn(abstractScrollArea);
         d->m_kinetic->setRightToLeft(qApp->isRightToLeft());
         d->m_scrollBarEventFilter->enableOn(abstractScrollArea);
 

@@ -58,11 +58,25 @@ protected:
     //bool eventFilter(QObject* watched, QEvent* ev);
     //void closeEvent(QCloseEvent* event);
     virtual void resizeEvent(QResizeEvent *);
+    virtual void mousePressEvent(QMouseEvent *event);
     bool eventFilter(QObject *obj, QEvent *event);
     /*! \reimp_end */
 
 private:
     QtMaemo6DialogTitle *m_dialogTitle;
+
+    //this contains the visible part of the dialog (titlebar + content)
+    QWidget* m_dialogWidget;
+
+    struct WidgetPos {
+        WidgetPos() : widget(NULL) {};
+        WidgetPos(QWidget* w, QPoint p) : widget(w), position(p) {};
+        WidgetPos(const WidgetPos& other) { widget = other.widget; position = other.position; }
+        QWidget* widget;
+        QPoint position;
+    };
+    WidgetPos m_originalWidgetPos;
+
 };
 
 #endif
