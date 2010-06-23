@@ -33,6 +33,8 @@
 MButtonIconViewPrivate::MButtonIconViewPrivate()
     : timelineShrink(new QTimeLine())
     , timelineGlow(new QTimeLine())
+    , glowCacheKey( 0 )
+    , glowRadius( 0 )
 {
     timelineShrink->setCurveShape(QTimeLine::EaseInCurve);
     timelineGlow->setCurveShape(QTimeLine::SineCurve);
