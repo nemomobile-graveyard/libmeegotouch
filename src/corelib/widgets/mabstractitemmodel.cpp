@@ -21,7 +21,7 @@
 #include "mabstractitemmodel_p.h"
 
 MAbstractItemModelPrivate::MAbstractItemModelPrivate()
-    : groupMode(false)
+    : q_ptr( 0 ), groupMode(false)
 {
 }
 
