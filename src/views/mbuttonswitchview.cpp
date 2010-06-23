@@ -220,6 +220,9 @@ void MButtonSwitchView::mousePressEvent(QGraphicsSceneMouseEvent *event)
     //stop ongoing animation if any
     d->m_handleAnimation->stop();
 
+    //honor MWidgetView's style and play press feedback
+    style()->pressFeedback().play();
+
     //play switch feedback effect
     if (model()->checked() == false) {
         style()->pressOnFeedback().play();
@@ -256,6 +259,9 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
     model()->setDown(false);
+
+    //honor MWidgetView's style and play release feedback
+    style()->releaseFeedback().play();
 
     //check if the thumb has been dragged
     if (d->m_thumbDown && d->m_thumbDragged) {
