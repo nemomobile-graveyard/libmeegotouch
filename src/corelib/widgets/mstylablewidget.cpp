@@ -121,6 +121,21 @@ void MStylableWidget::drawForeground(QPainter *painter, const QStyleOptionGraphi
 
 void MStylableWidget::applyStyle()
 {
+    if (layoutDirection() == Qt::RightToLeft)
+        setContentsMargins(
+            style()->paddingRight() + style()->marginRight(),
+            style()->paddingTop() + style()->marginTop(),
+            style()->paddingLeft() + style()->marginLeft(),
+            style()->paddingBottom() + style()->marginBottom());
+    else
+        setContentsMargins(
+            style()->paddingLeft() + style()->marginLeft(),
+            style()->paddingTop() + style()->marginTop(),
+            style()->paddingRight() + style()->marginRight(),
+            style()->paddingBottom() + style()->marginBottom());
+
+    updateGeometry();
+    update();
 }
 
 void MStylableWidget::registerStylableWidgetType(const QMetaObject *metaObject,

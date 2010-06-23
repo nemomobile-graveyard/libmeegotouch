@@ -216,6 +216,7 @@ void MWidgetView::applyStyle()
             style()->paddingBottom() + style()->marginBottom());
 
     updateGeometry();
+    update();
 }
 
 MWidgetModel *MWidgetView::model()
