@@ -28,7 +28,8 @@
 #include <QGraphicsLinearLayout>
 
 MAdvancedListItemPrivate::MAdvancedListItemPrivate(MAdvancedListItem::ItemStyle style)
-    : layoutGrid(NULL),
+    : q_ptr(NULL),
+    layoutGrid(NULL),
     progress(NULL),
     titleLabel(NULL),
     image(NULL),
