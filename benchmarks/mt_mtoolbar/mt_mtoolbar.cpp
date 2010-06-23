@@ -47,7 +47,7 @@ void Mt_MToolBar::initTestCase()
         QCoreApplication::processEvents();
     }
     for (int i = 0; i < 1; ++i)
-        toolbar->addAction(new MAction("Icon-music", "Action " + QString::number(i), this));
+        toolbar->addAction(new MAction("icon-l-music", "Action " + QString::number(i), this));
     toolbar->paint(&painter, NULL);
     delete toolbar;
 }
@@ -63,7 +63,7 @@ void Mt_MToolBar::memoryBenchmark_data()
     QTest::addColumn<qint32>("height");
     QTest::addColumn<QString>("icon");
 
-    QTest::newRow("300x60") << 300 << 60 << "Icon-music";
+    QTest::newRow("300x60") << 300 << 60 << "icon-l-music";
 }
 
 void Mt_MToolBar::memoryBenchmark()

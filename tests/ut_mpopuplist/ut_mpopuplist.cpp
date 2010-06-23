@@ -144,7 +144,7 @@ void Ut_MPopupList::testSetItemIconID()
     QCOMPARE(item->imageWidget()->image(), QString());
 
     // Add icon to previously set item
-    itemModel->setData(itemModel->index(0, 0), "Icon-music", Qt::DecorationRole);
+    itemModel->setData(itemModel->index(0, 0), "icon-l-music", Qt::DecorationRole);
     view->updateCell(itemModel->index(0,0), item);
     QCOMPARE(item->imageWidget()->image(), QString("Icon-music"));
 

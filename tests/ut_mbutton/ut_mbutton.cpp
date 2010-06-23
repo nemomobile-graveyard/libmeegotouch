@@ -61,7 +61,7 @@ void Ut_MButton::testConstructionAndDestruction()
     QCOMPARE(m_tmp->text(), ButtonText);
     delete m_tmp;
 
-    QString  IconId("Icon-home");
+    QString  IconId("icon-m-framework-home");
     m_tmp = new MButton(IconId, ButtonText);
     QCOMPARE(m_tmp->text(), ButtonText);
     QCOMPARE(m_tmp->iconID(), IconId);

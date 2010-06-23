@@ -99,7 +99,7 @@ Following is an example of applet metadata specification:
 [Desktop Entry]
 Type=X-MeeGoApplet
 Name=ExampleApplet
-Icon=Icon-music
+Icon=icon-l-music
 Exec=duiappletrunner
 
 [X-MeeGoApplet]

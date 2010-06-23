@@ -81,7 +81,7 @@ Gallery::Gallery(const MAppletMetaData &metadata, MDataStore &instanceData, MDat
     GalleryModel *model = new GalleryModel();
     m_grid->setItemModel(model);
 
-    setIcon(QString("Icon-pictures"));
+    setIcon(QString("icon-l-gallery"));
     setTitle(QString("Gallery"));
     setView(new GalleryView(this));
 }

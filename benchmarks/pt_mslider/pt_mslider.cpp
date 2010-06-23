@@ -58,9 +58,9 @@ void Pt_MSlider::createController()
 {
     this->m_subject = new MSlider();
 
-    this->m_subject->setMinLabelIconID("Icon-contacts");
-    this->m_subject->setMaxLabelIconID("Icon-browser");
-    this->m_subject->setHandleLabelIconID("Icon-music");
+    this->m_subject->setMinLabelIconID("icon-l-contacts");
+    this->m_subject->setMaxLabelIconID("icon-l-browser");
+    this->m_subject->setHandleLabelIconID("icon-l-music");
     this->m_subject->setMaxLabel("Max");
     this->m_subject->setHandleLabel("Thumb");
     this->m_subject->setMinLabelVisible(true);

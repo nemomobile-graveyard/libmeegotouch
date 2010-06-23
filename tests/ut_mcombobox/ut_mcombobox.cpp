@@ -208,7 +208,7 @@ void Ut_MComboBox::testIconVisibility()
     QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_basicSubtitlePolicy);
     QCOMPARE(viewPrivate->button->titleWidget()->text(), QString("Title"));
 
-    m_combobox->setIconID("Icon-music");
+    m_combobox->setIconID("icon-l-music");
     view->updateData(QList<const char *>() << MComboBoxModel::IconID);
     QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_iconSubtitlePolicy);
     QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("Icon-music"));

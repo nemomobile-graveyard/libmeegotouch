@@ -75,13 +75,13 @@ void Pt_MButton::init()
     views[ this->currentViewIndex ] = new MButtonView(m_subject);
 
     m_subject->setView(views[ this->currentViewIndex ]);   // transfers ownership to controller
-    m_subject->setIconID("Icon-mute");
+    m_subject->setIconID("icon-m-telephony-ongoing-muted");
 
     views[ this->currentViewIndex ]->updateStyle();
     views[ this->currentViewIndex ]->styleUpdated();
 
     // if this is paced above 'updateStyle()', then get a core dump; if above setView(), then no icon
-    //m_subject->setIconID("Icon-mute");
+    //m_subject->setIconID("icon-m-telephony-ongoing-muted");
     qDebug() << "ICONID" << m_subject->iconID();
 
     sleep(1);

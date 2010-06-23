@@ -55,7 +55,7 @@ namespace
     const QChar DefaultMaskCharacter('*');
 
     // Default icon name for informational banner about failed paste
-    const char *const DefaultPasteBannerIcon = "Icon-close";
+    const char *const DefaultPasteBannerIcon = "icon-m-framework-close";
 
     // How long notification will stay visible
     const int NotificationDuration = 3000;

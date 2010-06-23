@@ -61,7 +61,7 @@ class MComboBoxPrivate;
         \code
         MComboBox *combobox = new MComboBox();
         combobox->setTitle("Select an item");
-        combobox->setIconID("Icon-pictures");
+        combobox->setIconID("icon-l-gallery");
 
         QStringList stringList;
         stringList << "Item 1" << "Item 2";

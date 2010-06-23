@@ -45,8 +45,8 @@ void Pt_MButton::initTestCase()
     QPainter painter(&pixmap);
     MButton warmupButton;
     warmupButton.setText("text");
-    warmupButton.setIconID("Icon-home");
-    warmupButton.setToggledIconID("Icon-close");
+    warmupButton.setIconID("icon-m-framework-home");
+    warmupButton.setToggledIconID("icon-m-framework-close");
     warmupButton.setGeometry(QRectF(0, 0, W, H));
     while (MTheme::hasPendingRequests()) {
         usleep(10000);
@@ -83,24 +83,24 @@ void Pt_MButton::paintPerformance_data()
 
     QTest::newRow("250x100 MButtonView") << W << H << "MButtonView" << "" << "" << "";
     QTest::newRow("250x100 MButtonView Text") << W << H << "MButtonView" << "" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonView Icon") << W << H << "MButtonView" << "Icon-home" << "" << "";
-    QTest::newRow("250x100 MButtonView Icon Text") << W << H << "MButtonView" << "Icon-home" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonView Icon ToggledIcon") << W << H << "MButtonView" << "Icon-home" << "Icon-close" << "";
-    QTest::newRow("250x100 MButtonView Icon ToggledIcon Text") << W << H << "MButtonView" << "Icon-home" << "Icon-close" << "ButtonText";
+    QTest::newRow("250x100 MButtonView Icon") << W << H << "MButtonView" << "icon-m-framework-home" << "" << "";
+    QTest::newRow("250x100 MButtonView Icon Text") << W << H << "MButtonView" << "icon-m-framework-home" << "" << "ButtonText";
+    QTest::newRow("250x100 MButtonView Icon ToggledIcon") << W << H << "MButtonView" << "icon-m-framework-home" << "icon-m-framework-close" << "";
+    QTest::newRow("250x100 MButtonView Icon ToggledIcon Text") << W << H << "MButtonView" << "icon-m-framework-home" << "icon-m-framework-close" << "ButtonText";
 
     QTest::newRow("250x100 MButtonDefaultView") << W << H << "MButtonDefaultView" << "" << "" << "";
     QTest::newRow("250x100 MButtonDefaultView Text") << W << H << "MButtonDefaultView" << "" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonDefaultView Icon") << W << H << "MButtonDefaultView" << "Icon-home" << "" << "";
-    QTest::newRow("250x100 MButtonDefaultView Icon Text") << W << H << "MButtonDefaultView" << "Icon-home" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonDefaultView Icon ToggledIcon") << W << H << "MButtonDefaultView" << "Icon-home" << "Icon-close" << "";
-    QTest::newRow("250x100 MButtonDefaultView Icon ToggledIcon Text") << W << H << "MButtonDefaultView" << "Icon-home" << "Icon-close" << "ButtonText";
+    QTest::newRow("250x100 MButtonDefaultView Icon") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "" << "";
+    QTest::newRow("250x100 MButtonDefaultView Icon Text") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "" << "ButtonText";
+    QTest::newRow("250x100 MButtonDefaultView Icon ToggledIcon") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "icon-m-framework-close" << "";
+    QTest::newRow("250x100 MButtonDefaultView Icon ToggledIcon Text") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "icon-m-framework-close" << "ButtonText";
 
     QTest::newRow("250x100 MButtonIconView") << W << H << "MButtonIconView" << "" << "" << "";
     QTest::newRow("250x100 MButtonIconView Text") << W << H << "MButtonIconView" << "" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonIconView Icon") << W << H << "MButtonIconView" << "Icon-home" << "" << "";
-    QTest::newRow("250x100 MButtonIconView Icon Text") << W << H << "MButtonIconView" << "Icon-home" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonIconView Icon ToggledIcon") << W << H << "MButtonIconView" << "Icon-home" << "Icon-close" << "";
-    QTest::newRow("250x100 MButtonIconView Icon ToggledIcon Text") << W << H << "MButtonIconView" << "Icon-home" << "Icon-close" << "ButtonText";
+    QTest::newRow("250x100 MButtonIconView Icon") << W << H << "MButtonIconView" << "icon-m-framework-home" << "" << "";
+    QTest::newRow("250x100 MButtonIconView Icon Text") << W << H << "MButtonIconView" << "icon-m-framework-home" << "" << "ButtonText";
+    QTest::newRow("250x100 MButtonIconView Icon ToggledIcon") << W << H << "MButtonIconView" << "icon-m-framework-home" << "icon-m-framework-close" << "";
+    QTest::newRow("250x100 MButtonIconView Icon ToggledIcon Text") << W << H << "MButtonIconView" << "icon-m-framework-home" << "icon-m-framework-close" << "ButtonText";
 }
 
 void Pt_MButton::paintPerformance()
@@ -183,24 +183,24 @@ void Pt_MButton::toggledPaintPerformance_data()
 
     QTest::newRow("250x100 MButtonView") << W << H << "MButtonView" << "" << "" << "";
     QTest::newRow("250x100 MButtonView Text") << W << H << "MButtonView" << "" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonView Icon") << W << H << "MButtonView" << "Icon-home" << "" << "";
-    QTest::newRow("250x100 MButtonView Icon Text") << W << H << "MButtonView" << "Icon-home" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonView Icon ToggledIcon") << W << H << "MButtonView" << "Icon-home" << "Icon-close" << "";
-    QTest::newRow("250x100 MButtonView Icon ToggledIcon Text") << W << H << "MButtonView" << "Icon-home" << "Icon-close" << "ButtonText";
+    QTest::newRow("250x100 MButtonView Icon") << W << H << "MButtonView" << "icon-m-framework-home" << "" << "";
+    QTest::newRow("250x100 MButtonView Icon Text") << W << H << "MButtonView" << "icon-m-framework-home" << "" << "ButtonText";
+    QTest::newRow("250x100 MButtonView Icon ToggledIcon") << W << H << "MButtonView" << "icon-m-framework-home" << "icon-m-framework-close" << "";
+    QTest::newRow("250x100 MButtonView Icon ToggledIcon Text") << W << H << "MButtonView" << "icon-m-framework-home" << "icon-m-framework-close" << "ButtonText";
 
     QTest::newRow("250x100 MButtonDefaultView") << W << H << "MButtonDefaultView" << "" << "" << "";
     QTest::newRow("250x100 MButtonDefaultView Text") << W << H << "MButtonDefaultView" << "" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonDefaultView Icon") << W << H << "MButtonDefaultView" << "Icon-home" << "" << "";
-    QTest::newRow("250x100 MButtonDefaultView Icon Text") << W << H << "MButtonDefaultView" << "Icon-home" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonDefaultView Icon ToggledIcon") << W << H << "MButtonDefaultView" << "Icon-home" << "Icon-close" << "";
-    QTest::newRow("250x100 MButtonDefaultView Icon ToggledIcon Text") << W << H << "MButtonDefaultView" << "Icon-home" << "Icon-close" << "ButtonText";
+    QTest::newRow("250x100 MButtonDefaultView Icon") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "" << "";
+    QTest::newRow("250x100 MButtonDefaultView Icon Text") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "" << "ButtonText";
+    QTest::newRow("250x100 MButtonDefaultView Icon ToggledIcon") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "icon-m-framework-close" << "";
+    QTest::newRow("250x100 MButtonDefaultView Icon ToggledIcon Text") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "icon-m-framework-close" << "ButtonText";
 
     QTest::newRow("250x100 MButtonIconView") << W << H << "MButtonIconView" << "" << "" << "";
     QTest::newRow("250x100 MButtonIconView Text") << W << H << "MButtonIconView" << "" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonIconView Icon") << W << H << "MButtonIconView" << "Icon-home" << "" << "";
-    QTest::newRow("250x100 MButtonIconView Icon Text") << W << H << "MButtonIconView" << "Icon-home" << "" << "ButtonText";
-    QTest::newRow("250x100 MButtonIconView Icon ToggledIcon") << W << H << "MButtonIconView" << "Icon-home" << "Icon-close" << "";
-    QTest::newRow("250x100 MButtonIconView Icon ToggledIcon Text") << W << H << "MButtonIconView" << "Icon-home" << "Icon-close" << "ButtonText";
+    QTest::newRow("250x100 MButtonIconView Icon") << W << H << "MButtonIconView" << "icon-m-framework-home" << "" << "";
+    QTest::newRow("250x100 MButtonIconView Icon Text") << W << H << "MButtonIconView" << "icon-m-framework-home" << "" << "ButtonText";
+    QTest::newRow("250x100 MButtonIconView Icon ToggledIcon") << W << H << "MButtonIconView" << "icon-m-framework-home" << "icon-m-framework-close" << "";
+    QTest::newRow("250x100 MButtonIconView Icon ToggledIcon Text") << W << H << "MButtonIconView" << "icon-m-framework-home" << "icon-m-framework-close" << "ButtonText";
 }
 
 void Pt_MButton::toggledPaintPerformance()

@@ -57,7 +57,7 @@ class MMashupCanvasPrivate;
  * [Desktop Entry]
  * Type=MApplet
  * Name=ExampleApplet
- * Icon=Icon-music
+ * Icon=icon-l-music
  * Exec=mappletrunner
  *
  * [M]

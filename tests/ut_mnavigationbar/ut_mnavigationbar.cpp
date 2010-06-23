@@ -73,7 +73,7 @@ void Ut_MNavigationBar::testToolbar()
 
 void Ut_MNavigationBar::testViewMenuIconID()
 {
-    QString iconID("Icon-back");
+    QString iconID("icon-m-framework-back");
 
     // this is the default value from model
     QCOMPARE(subject->viewMenuIconID(), QString(""));

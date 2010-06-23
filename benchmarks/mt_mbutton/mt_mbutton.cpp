@@ -46,8 +46,8 @@ void Mt_MButton::initTestCase()
 
     warmupButton = new MButton();
     warmupButton->setText("text");
-    warmupButton->setIconID("Icon-home");
-    warmupButton->setToggledIconID("Icon-close");
+    warmupButton->setIconID("icon-m-framework-home");
+    warmupButton->setToggledIconID("icon-m-framework-close");
 
     warmupButton->setGeometry(QRectF(0, 0, W, H));
 
@@ -96,10 +96,10 @@ void Mt_MButton::memoryMButtonView_data()
 
     QTest::newRow("Empty") << W << H << "MButtonView" << "" << "" << "";
     QTest::newRow("Text") << W << H << "MButtonView" << "" << "" << "ButtonText";
-    QTest::newRow("Icon") << W << H << "MButtonView" << "Icon-home" << "" << "";
-    QTest::newRow("Text&Icon") << W << H << "MButtonView" << "Icon-home" << "" << "ButtonText";
-    QTest::newRow("Toggle") << W << H << "MButtonView" << "Icon-home" << "Icon-close" << "";
-    QTest::newRow("Toggle&Text") << W << H << "MButtonView" << "Icon-home" << "Icon-close" << "ButtonText";
+    QTest::newRow("Icon") << W << H << "MButtonView" << "icon-m-framework-home" << "" << "";
+    QTest::newRow("Text&Icon") << W << H << "MButtonView" << "icon-m-framework-home" << "" << "ButtonText";
+    QTest::newRow("Toggle") << W << H << "MButtonView" << "icon-m-framework-home" << "icon-m-framework-close" << "";
+    QTest::newRow("Toggle&Text") << W << H << "MButtonView" << "icon-m-framework-home" << "icon-m-framework-close" << "ButtonText";
 }
 
 void Mt_MButton::memoryMButtonDefaultView()
@@ -120,10 +120,10 @@ void Mt_MButton::memoryMButtonDefaultView_data()
 
     QTest::newRow("Empty") << W << H << "MButtonDefaultView" << "" << "" << "";
     QTest::newRow("Text") << W << H << "MButtonDefaultView" << "" << "" << "ButtonText";
-    QTest::newRow("Icon") << W << H << "MButtonDefaultView" << "Icon-home" << "" << "";
-    QTest::newRow("Text&Icon") << W << H << "MButtonDefaultView" << "Icon-home" << "" << "ButtonText";
-    QTest::newRow("Toggle") << W << H << "MButtonDefaultView" << "Icon-home" << "Icon-close" << "";
-    QTest::newRow("Toggle&Text") << W << H << "MButtonDefaultView" << "Icon-home" << "Icon-close" << "ButtonText";
+    QTest::newRow("Icon") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "" << "";
+    QTest::newRow("Text&Icon") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "" << "ButtonText";
+    QTest::newRow("Toggle") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "icon-m-framework-close" << "";
+    QTest::newRow("Toggle&Text") << W << H << "MButtonDefaultView" << "icon-m-framework-home" << "icon-m-framework-close" << "ButtonText";
 }
 
 void Mt_MButton::memoryMButtonIconView()
@@ -144,25 +144,25 @@ void Mt_MButton::memoryMButtonIconView_data()
 
     QTest::newRow("Empty") << W << H << "MButtonIconView" << "" << "" << "";
     QTest::newRow("Text") << W << H << "MButtonIconView" << "" << "" << "ButtonText";
-    QTest::newRow("Icon") << W << H << "MButtonIconView" << "Icon-home" << "" << "";
-    QTest::newRow("Text&Icon") << W << H << "MButtonIconView" << "Icon-home" << "" << "ButtonText";
-    QTest::newRow("Toggle") << W << H << "MButtonIconView" << "Icon-home" << "Icon-close" << "";
-    QTest::newRow("Toggle&Text") << W << H << "MButtonIconView" << "Icon-home" << "Icon-close" << "ButtonText";
+    QTest::newRow("Icon") << W << H << "MButtonIconView" << "icon-m-framework-home" << "" << "";
+    QTest::newRow("Text&Icon") << W << H << "MButtonIconView" << "icon-m-framework-home" << "" << "ButtonText";
+    QTest::newRow("Toggle") << W << H << "MButtonIconView" << "icon-m-framework-home" << "icon-m-framework-close" << "";
+    QTest::newRow("Toggle&Text") << W << H << "MButtonIconView" << "icon-m-framework-home" << "icon-m-framework-close" << "ButtonText";
 }
 
 void Mt_MButton::memoryMButtonViewTimeline()
 {
-    memoryBenchmark(W, H, "MButtonView", "Icon-home", "Icon-close", "ButtonText");
+    memoryBenchmark(W, H, "MButtonView", "icon-m-framework-home", "icon-m-framework-close", "ButtonText");
 }
 
 void Mt_MButton::memoryMButtonViewDefaultViewTimeline()
 {
-    memoryBenchmark(W, H, "MButtonDefaultView", "Icon-home", "Icon-close", "ButtonText");
+    memoryBenchmark(W, H, "MButtonDefaultView", "icon-m-framework-home", "icon-m-framework-close", "ButtonText");
 }
 
 void Mt_MButton::memoryMButtonViewIconViewTimeline()
 {
-    memoryBenchmark(W, H, "MButtonIconView", "Icon-home", "Icon-close", "ButtonText");
+    memoryBenchmark(W, H, "MButtonIconView", "icon-m-framework-home", "icon-m-framework-close", "ButtonText");
 }
 
 void Mt_MButton::memoryBenchmark(qint32 width, qint32 height, const QString &view, const QString &icon1, const QString &icon2, const QString &text)

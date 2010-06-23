@@ -187,17 +187,17 @@ void Ut_MContainer::setTitleWithHeaderInvisible()
 void Ut_MContainer::setIconIDWithHeaderVisible()
 {
     m_subject->setHeaderVisible(true);
-    m_subject->setIconID("Icon-close");
+    m_subject->setIconID("icon-m-framework-close");
 
-    QCOMPARE(m_subject->iconID(), QString("Icon-close"));
+    QCOMPARE(m_subject->iconID(), QString("icon-m-framework-close"));
 }
 
 void Ut_MContainer::setIconIDWithHeaderInvisible()
 {
     m_subject->setHeaderVisible(false);
-    m_subject->setIconID("Icon-close");
+    m_subject->setIconID("icon-m-framework-close");
 
-    QCOMPARE(m_subject->iconID(), QString("Icon-close"));
+    QCOMPARE(m_subject->iconID(), QString("icon-m-framework-close"));
 }
 
 void Ut_MContainer::setTextWithHeaderVisible()

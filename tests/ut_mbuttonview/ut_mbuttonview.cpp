@@ -123,10 +123,10 @@ void Ut_MButtonView::testDrawIcon_data()
     QTest::addColumn<bool>("checkable");
 
 
-    QTest::newRow("testDrawIcon1") << (int)Qt::AlignLeft << "Icon-close" << "Icon-close" << QSize(16, 16) << false;
-    QTest::newRow("testDrawIcon2") << (int)Qt::AlignRight << "Icon-close" << "Icon-close" << QSize(32, 32) << true;
-    QTest::newRow("testDrawIcon3") << (int)Qt::AlignBottom << "Icon-close" << "Icon-close" << QSize(64, 64) << false;
-    QTest::newRow("testDrawIcon4") << (int)Qt::AlignTop << "Icon-close" << "Icon-close" << QSize(128, 128) << true;
+    QTest::newRow("testDrawIcon1") << (int)Qt::AlignLeft << "icon-m-framework-close" << "icon-m-framework-close" << QSize(16, 16) << false;
+    QTest::newRow("testDrawIcon2") << (int)Qt::AlignRight << "icon-m-framework-close" << "icon-m-framework-close" << QSize(32, 32) << true;
+    QTest::newRow("testDrawIcon3") << (int)Qt::AlignBottom << "icon-m-framework-close" << "icon-m-framework-close" << QSize(64, 64) << false;
+    QTest::newRow("testDrawIcon4") << (int)Qt::AlignTop << "icon-m-framework-close" << "icon-m-framework-close" << QSize(128, 128) << true;
 }
 
 void Ut_MButtonView::testDrawIcon()
@@ -174,10 +174,10 @@ void Ut_MButtonView::testDrawIconText_data()
     QTest::addColumn<QString>("toggledIcon");
     QTest::addColumn<QSize>("iconSize");
 
-    QTest::newRow("testDrawIcon1") << (int)Qt::AlignLeft << "Icon-close" << "Icon-close" << QSize(16, 16);
-    QTest::newRow("testDrawIcon2") << (int)Qt::AlignRight << "Icon-close" << "Icon-close" << QSize(32, 32);
-    QTest::newRow("testDrawIcon3") << (int)Qt::AlignBottom << "Icon-close" << "Icon-close" << QSize(64, 64);
-    QTest::newRow("testDrawIcon4") << (int)Qt::AlignTop << "Icon-close" << "Icon-close" << QSize(128, 128);
+    QTest::newRow("testDrawIcon1") << (int)Qt::AlignLeft << "icon-m-framework-close" << "icon-m-framework-close" << QSize(16, 16);
+    QTest::newRow("testDrawIcon2") << (int)Qt::AlignRight << "icon-m-framework-close" << "icon-m-framework-close" << QSize(32, 32);
+    QTest::newRow("testDrawIcon3") << (int)Qt::AlignBottom << "icon-m-framework-close" << "icon-m-framework-close" << QSize(64, 64);
+    QTest::newRow("testDrawIcon4") << (int)Qt::AlignTop << "icon-m-framework-close" << "icon-m-framework-close" << QSize(128, 128);
 }
 
 void Ut_MButtonView::testDrawIconText()

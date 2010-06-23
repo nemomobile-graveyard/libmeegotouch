@@ -45,7 +45,7 @@ class MToolBarPrivate;
         to a toolbar.
         \code
         MToolBar* toolbar = new MToolBar();
-        MAction * iconAction = new MAction("Icon-pictures","Pictures", this);
+        MAction * iconAction = new MAction("icon-l-gallery","Pictures", this);
         iconAction->setLocation(MAction::ToolBarLocation);
         toolbar->addAction(iconAction);
         MTextEdit *entry = new MTextEdit();
@@ -65,7 +65,7 @@ class MToolBarPrivate;
         Following demonstates how to add a tab action to the toolbar:
         \code
         MToolBar* toolbar = new MToolBar();
-        MAction *action = new MAction("Icon-pictures", NULL, this);
+        MAction *action = new MAction("icon-l-gallery", NULL, this);
         action->setLocation(MAction::ToolbarLocation);
         action->setCheckable(true);
         action->setChecked(true);

@@ -65,7 +65,7 @@ void Ut_MInfoBanner::testCreation_data()
 
     QTest::newRow("info") << MInfoBanner::Information
                           << MTheme::ViewType(MInfoBanner::informationType)
-                          << QString("Icon-close")
+                          << QString("icon-m-framework-close")
                           << QString("<font color=\"white\">Battery is running low</font>")
                           << QString("");
 
@@ -73,7 +73,7 @@ void Ut_MInfoBanner::testCreation_data()
                            << MTheme::ViewType(MInfoBanner::eventType)
                            << QString("ebf7db7b6ab73c6cba8fc87da2d1fdcf")
                            << QString("<font color=\"white\" size=\"3\">Ida Taipale</font><br/><font color=\"white\" size=\"2\">Have you seen my dog?</font>")
-                           << QString("Icon-new-SMS");
+                           << QString("icon-m-toolbar-send-sms");
 
     QTest::newRow("invalid") << (MInfoBanner::BannerType)10
                              << MTheme::ViewType(MInfoBanner::eventType)
