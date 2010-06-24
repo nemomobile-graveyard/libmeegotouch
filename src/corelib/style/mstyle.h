@@ -59,27 +59,37 @@
     private:
 
 // style container macro
+// TODO: remove the dummy method below once we are allowed to break
+// the ABI. it just exists to make sure the inlined operator->()
+// is also exported as symbol
 #define M_STYLE_CONTAINER(STYLE_CLASS) \
     public: \
     STYLE_CLASS##Container(); \
     virtual ~STYLE_CLASS##Container(); \
-    const STYLE_CLASS* operator->() const; \
+    const STYLE_CLASS* operator->() const { return static_cast<const STYLE_CLASS*>(currentStyle()); } \
     protected: \
     STYLE_CLASS##Container(class STYLE_CLASS##ContainerPrivate* dd); \
     virtual const char* styleType() const; \
     class STYLE_CLASS##ContainerPrivate * const d_ptr; \
+    typedef const STYLE_CLASS* (STYLE_CLASS##Container::*dummyNeverToBeUsedPtr)() const; \
+    dummyNeverToBeUsedPtr _dummyNeverToBeUsed(); \
     private: \
     Q_DECLARE_PRIVATE(STYLE_CLASS##Container)
 
 // style container macro for internal styles
+// TODO: remove the dummy method below once we are allowed to break
+// the ABI. it just exists to make sure the inlined operator->()
+// is also exported as symbo
 #define M_STYLE_CONTAINER_INTERNAL(STYLE_CLASS) \
     public: \
     STYLE_CLASS##Container(); \
     virtual ~STYLE_CLASS##Container(); \
-    const STYLE_CLASS* operator->() const; \
+    const STYLE_CLASS* operator->() const { return static_cast<const STYLE_CLASS*>(currentStyle()); } \
     protected: \
     STYLE_CLASS##Container(class STYLE_CLASS##ContainerPrivate* dd); \
     virtual const char* styleType() const; \
+    typedef const STYLE_CLASS* (STYLE_CLASS##Container::*dummyNeverToBeUsedPtr)() const; \
+    dummyNeverToBeUsedPtr _dummyNeverToBeUsed(); \
     private: \
     Q_DECLARE_PRIVATE(STYLE_CLASS##Container)
 

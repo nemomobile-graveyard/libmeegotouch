@@ -929,10 +929,10 @@ void generateStyleDataCpp(const StyleClass *c, const QList<QString>& modes, cons
             cpp << "    delete d_ptr;\n";
         cpp << "}\n\n";
 
-        // -> operator
-        cpp << "const " << c->name() << "* " << c->name() << "Container::operator->() const\n";
+        // _dummyNeverToBeUsed
+        cpp << c->name() << "Container::dummyNeverToBeUsedPtr " << c->name() << "Container::_dummyNeverToBeUsed()\n";
         cpp << "{\n";
-        cpp << "    return static_cast<const " << c->name() << "*>(currentStyle());\n";
+        cpp << "    return &" << c->name() << "Container::operator->;\n";
         cpp << "}\n\n";
 
         // styleType

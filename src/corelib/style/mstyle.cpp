@@ -234,12 +234,6 @@ QString MStyleContainer::currentMode() const
     return d_ptr->currentMode;
 }
 
-// returns pointer to the current style
-const MStyle *MStyleContainer::operator->() const
-{
-    return currentStyle();
-}
-
 // virtual method which returns the name of the style in this container instance
 const char *MStyleContainer::styleType() const
 {
