@@ -40,6 +40,7 @@ MMessageBoxView::MMessageBoxView(MMessageBox *controller) :
     Q_D(MMessageBoxView);
     d->label = new MLabel;
     d->label->setAlignment(Qt::AlignCenter);
+    d->label->setWordWrap(true);
     contentsLayout()->insertItem(0, d->label);
 }
 
