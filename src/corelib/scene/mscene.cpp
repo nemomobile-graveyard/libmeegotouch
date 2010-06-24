@@ -184,7 +184,17 @@ void MScenePrivate::touchPointCopyMousePosToPointStartPos(QTouchEvent::TouchPoin
     point.setStartScreenPos(event->screenPos());
 }
 
-bool MScenePrivate::eventEmulatePinch(QEvent* event)
+bool MScenePrivate::eventEmulateTwoFingerGestures(QEvent *event)
+{
+    if (MApplication::emulateTwoFingerGestures() &&
+        (eventEmulatePinch(event) || eventEmulatePan(event))) {
+        return true;
+    }
+
+    return false;
+}
+
+bool MScenePrivate::eventEmulatePinch(QEvent *event)
 {
     Q_Q(MScene);
 
@@ -257,7 +267,7 @@ bool MScenePrivate::eventEmulatePinch(QEvent* event)
     return false;
 }
 
-bool MScenePrivate::eventEmulatePan(QEvent* event)
+bool MScenePrivate::eventEmulatePan(QEvent *event)
 {
     Q_Q(MScene);
 
@@ -387,7 +397,7 @@ void MScenePrivate::logFpsCounter(const QTime *timeStamp, float fps)
     fpsLog.stream << " " << QString("%1").arg(fps, 0, 'f', 1) << endl;
 }
 
-void MScenePrivate::fillMarginRectWithPattern(QPainter * painter, const QRectF& rect, int thickness)
+void MScenePrivate::fillMarginRectWithPattern(QPainter *painter, const QRectF& rect, int thickness)
 {
     if(thickness == 0)
         return;
@@ -464,9 +474,8 @@ bool MScene::event(QEvent *event)
 {
     Q_D(MScene);
 
-    if (MApplication::emulateTwoFingerGestures()) {
-        if (d->eventEmulatePinch(event)) return true;
-        if (d->eventEmulatePan(event))   return true;
+    if (d->eventEmulateTwoFingerGestures(event)) {
+        return true;
     }
 
     return QGraphicsScene::event(event);
