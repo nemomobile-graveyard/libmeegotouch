@@ -32,6 +32,7 @@ class MLibrary;
 #include <QSize>
 #include <QHash>
 #include <QLibrary>
+#include <QAtomicInt>
 
 #include "massembly.h"
 #include "mlogicalvalues.h"
@@ -62,7 +63,7 @@ struct CachedPixmap {
     CachedPixmap(const QPixmap *p, const QString &imageId, const QSize &size) : pixmap(p), refcount(1), imageId(imageId), size(size) {};
 
     const QPixmap *pixmap;
-    int refcount;
+    QAtomicInt refcount;
     QString imageId;
     QSize size;
 };
@@ -71,7 +72,7 @@ struct CachedScalableImage {
     CachedScalableImage(const MScalableImage *p) : image(p), refcount(1) {};
 
     const MScalableImage *image;
-    int refcount;
+    QAtomicInt refcount;
 };
 //! \endcond
 
