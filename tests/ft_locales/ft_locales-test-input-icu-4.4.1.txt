@@ -1429,6 +1429,59 @@ de_DE	Name of weekday 05 (Islamic Calendar)	Freitag
 de_DE	Name of weekday 06 (Islamic Calendar)	Samstag
 de_DE	Name of weekday 07 (Islamic Calendar)	Sonntag
 de_DE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+de_DE@collation=phonebook	Language endonym	Deutsch
+de_DE@collation=phonebook	Country endonym	DE@collation=phonebook
+de_DE@collation=phonebook	Floating Point Number	-123.456.789,012
+de_DE@collation=phonebook	Percent value	-1.234,5679 %
+de_DE@collation=phonebook	Currency value	1.234,56 €
+de_DE@collation=phonebook	Negative Currency value	-1.234,56 €
+de_DE@collation=phonebook	Date and time short (Gregorian Calendar)	21.07.08 12:31
+de_DE@collation=phonebook	Date and time medium (Gregorian Calendar)	21.07.2008 12:31:00
+de_DE@collation=phonebook	Date and time long (Gregorian Calendar)	21. Juli 2008 12:31:00 GMT+00:00
+de_DE@collation=phonebook	Date and time full (Gregorian Calendar)	Montag, 21. Juli 2008 12:31:00 GMT+00:00
+de_DE@collation=phonebook	Date and time short (Islamic Calendar)	21.07.08 12:31
+de_DE@collation=phonebook	Date and time medium (Islamic Calendar)	21.07.2008 12:31:00
+de_DE@collation=phonebook	Date and time long (Islamic Calendar)	21. Juli 2008 12:31:00 GMT+00:00
+de_DE@collation=phonebook	Date and time full (Islamic Calendar)	Montag, 21. Juli 2008 12:31:00 GMT+00:00
+de_DE@collation=phonebook	Name of month 01 (Gregorian Calendar)	Januar
+de_DE@collation=phonebook	Name of month 02 (Gregorian Calendar)	Februar
+de_DE@collation=phonebook	Name of month 03 (Gregorian Calendar)	März
+de_DE@collation=phonebook	Name of month 04 (Gregorian Calendar)	April
+de_DE@collation=phonebook	Name of month 05 (Gregorian Calendar)	Mai
+de_DE@collation=phonebook	Name of month 06 (Gregorian Calendar)	Juni
+de_DE@collation=phonebook	Name of month 07 (Gregorian Calendar)	Juli
+de_DE@collation=phonebook	Name of month 08 (Gregorian Calendar)	August
+de_DE@collation=phonebook	Name of month 09 (Gregorian Calendar)	September
+de_DE@collation=phonebook	Name of month 10 (Gregorian Calendar)	Oktober
+de_DE@collation=phonebook	Name of month 11 (Gregorian Calendar)	November
+de_DE@collation=phonebook	Name of month 12 (Gregorian Calendar)	Dezember
+de_DE@collation=phonebook	Name of month 01 (Islamic Calendar)	Januar
+de_DE@collation=phonebook	Name of month 02 (Islamic Calendar)	Februar
+de_DE@collation=phonebook	Name of month 03 (Islamic Calendar)	März
+de_DE@collation=phonebook	Name of month 04 (Islamic Calendar)	April
+de_DE@collation=phonebook	Name of month 05 (Islamic Calendar)	Mai
+de_DE@collation=phonebook	Name of month 06 (Islamic Calendar)	Juni
+de_DE@collation=phonebook	Name of month 07 (Islamic Calendar)	Juli
+de_DE@collation=phonebook	Name of month 08 (Islamic Calendar)	August
+de_DE@collation=phonebook	Name of month 09 (Islamic Calendar)	September
+de_DE@collation=phonebook	Name of month 10 (Islamic Calendar)	Oktober
+de_DE@collation=phonebook	Name of month 11 (Islamic Calendar)	November
+de_DE@collation=phonebook	Name of month 12 (Islamic Calendar)	Dezember
+de_DE@collation=phonebook	Name of weekday 01 (Gregorian Calendar)	Montag
+de_DE@collation=phonebook	Name of weekday 02 (Gregorian Calendar)	Dienstag
+de_DE@collation=phonebook	Name of weekday 03 (Gregorian Calendar)	Mittwoch
+de_DE@collation=phonebook	Name of weekday 04 (Gregorian Calendar)	Donnerstag
+de_DE@collation=phonebook	Name of weekday 05 (Gregorian Calendar)	Freitag
+de_DE@collation=phonebook	Name of weekday 06 (Gregorian Calendar)	Samstag
+de_DE@collation=phonebook	Name of weekday 07 (Gregorian Calendar)	Sonntag
+de_DE@collation=phonebook	Name of weekday 01 (Islamic Calendar)	Montag
+de_DE@collation=phonebook	Name of weekday 02 (Islamic Calendar)	Dienstag
+de_DE@collation=phonebook	Name of weekday 03 (Islamic Calendar)	Mittwoch
+de_DE@collation=phonebook	Name of weekday 04 (Islamic Calendar)	Donnerstag
+de_DE@collation=phonebook	Name of weekday 05 (Islamic Calendar)	Freitag
+de_DE@collation=phonebook	Name of weekday 06 (Islamic Calendar)	Samstag
+de_DE@collation=phonebook	Name of weekday 07 (Islamic Calendar)	Sonntag
+de_DE@collation=phonebook	Collation sample	a á å ä b öfgh oegh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
 de_LI	Language endonym	Deutsch
 de_LI	Country endonym	Liechtenstein
 de_LI	Floating Point Number	-123'456'789.012
@@ -3019,6 +3072,59 @@ es	Name of weekday 05 (Islamic Calendar)	viernes
 es	Name of weekday 06 (Islamic Calendar)	sábado
 es	Name of weekday 07 (Islamic Calendar)	domingo
 es	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_419	Language endonym	español
+es_419	Country endonym	Latinoamérica y el Caribe
+es_419	Floating Point Number	-123.456.789,012
+es_419	Percent value	-1.234,5679%
+es_419	Currency value	€ 1.234,56
+es_419	Negative Currency value	-€ 1.234,56
+es_419	Date and time short (Gregorian Calendar)	21/07/08 12:31
+es_419	Date and time medium (Gregorian Calendar)	21/07/2008 12:31:00
+es_419	Date and time long (Gregorian Calendar)	21 de julio de 2008 12:31:00 GMT+00:00
+es_419	Date and time full (Gregorian Calendar)	lunes 21 de julio de 2008 12:31:00 GMT+00:00
+es_419	Date and time short (Islamic Calendar)	18/07/29 12:31
+es_419	Date and time medium (Islamic Calendar)	18/07/1429 12:31:00
+es_419	Date and time long (Islamic Calendar)	18 de Rajab de 1429 12:31:00 GMT+00:00
+es_419	Date and time full (Islamic Calendar)	lunes 18 de Rajab de 1429 12:31:00 GMT+00:00
+es_419	Name of month 01 (Gregorian Calendar)	enero
+es_419	Name of month 02 (Gregorian Calendar)	febrero
+es_419	Name of month 03 (Gregorian Calendar)	marzo
+es_419	Name of month 04 (Gregorian Calendar)	abril
+es_419	Name of month 05 (Gregorian Calendar)	mayo
+es_419	Name of month 06 (Gregorian Calendar)	junio
+es_419	Name of month 07 (Gregorian Calendar)	julio
+es_419	Name of month 08 (Gregorian Calendar)	agosto
+es_419	Name of month 09 (Gregorian Calendar)	septiembre
+es_419	Name of month 10 (Gregorian Calendar)	octubre
+es_419	Name of month 11 (Gregorian Calendar)	noviembre
+es_419	Name of month 12 (Gregorian Calendar)	diciembre
+es_419	Name of month 01 (Islamic Calendar)	Muharram
+es_419	Name of month 02 (Islamic Calendar)	Safar
+es_419	Name of month 03 (Islamic Calendar)	Rabiʻ I
+es_419	Name of month 04 (Islamic Calendar)	Rabiʻ II
+es_419	Name of month 05 (Islamic Calendar)	Jumada I
+es_419	Name of month 06 (Islamic Calendar)	Jumada II
+es_419	Name of month 07 (Islamic Calendar)	Rajab
+es_419	Name of month 08 (Islamic Calendar)	Shaʻban
+es_419	Name of month 09 (Islamic Calendar)	Ramadan
+es_419	Name of month 10 (Islamic Calendar)	Shawwal
+es_419	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
+es_419	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
+es_419	Name of weekday 01 (Gregorian Calendar)	lunes
+es_419	Name of weekday 02 (Gregorian Calendar)	martes
+es_419	Name of weekday 03 (Gregorian Calendar)	miércoles
+es_419	Name of weekday 04 (Gregorian Calendar)	jueves
+es_419	Name of weekday 05 (Gregorian Calendar)	viernes
+es_419	Name of weekday 06 (Gregorian Calendar)	sábado
+es_419	Name of weekday 07 (Gregorian Calendar)	domingo
+es_419	Name of weekday 01 (Islamic Calendar)	lunes
+es_419	Name of weekday 02 (Islamic Calendar)	martes
+es_419	Name of weekday 03 (Islamic Calendar)	miércoles
+es_419	Name of weekday 04 (Islamic Calendar)	jueves
+es_419	Name of weekday 05 (Islamic Calendar)	viernes
+es_419	Name of weekday 06 (Islamic Calendar)	sábado
+es_419	Name of weekday 07 (Islamic Calendar)	domingo
+es_419	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
 es_AR	Language endonym	español
 es_AR	Country endonym	Argentina
 es_AR	Floating Point Number	-123.456.789,012
@@ -6093,6 +6199,112 @@ nn_NO	Name of weekday 05 (Islamic Calendar)	fredag
 nn_NO	Name of weekday 06 (Islamic Calendar)	laurdag
 nn_NO	Name of weekday 07 (Islamic Calendar)	søndag
 nn_NO	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+no	Language endonym	norsk
+no	Country endonym	
+no	Floating Point Number	-123 456 789,012
+no	Percent value	-1 234,5679 %
+no	Currency value	EUR 1 234,56
+no	Negative Currency value	-EUR 1 234,56
+no	Date and time short (Gregorian Calendar)	21.07.08 12:31
+no	Date and time medium (Gregorian Calendar)	21. juli 2008 12:31:00
+no	Date and time long (Gregorian Calendar)	21. juli 2008 12:31:00 GMT+00:00
+no	Date and time full (Gregorian Calendar)	mandag 21. juli 2008 kl. 12:31:00 GMT+00:00
+no	Date and time short (Islamic Calendar)	18.07.29 12:31
+no	Date and time medium (Islamic Calendar)	18. Raj. 1429 12:31:00
+no	Date and time long (Islamic Calendar)	18. Rajab 1429 12:31:00 GMT+00:00
+no	Date and time full (Islamic Calendar)	mandag 18. Rajab 1429 kl. 12:31:00 GMT+00:00
+no	Name of month 01 (Gregorian Calendar)	januar
+no	Name of month 02 (Gregorian Calendar)	februar
+no	Name of month 03 (Gregorian Calendar)	mars
+no	Name of month 04 (Gregorian Calendar)	april
+no	Name of month 05 (Gregorian Calendar)	mai
+no	Name of month 06 (Gregorian Calendar)	juni
+no	Name of month 07 (Gregorian Calendar)	juli
+no	Name of month 08 (Gregorian Calendar)	august
+no	Name of month 09 (Gregorian Calendar)	september
+no	Name of month 10 (Gregorian Calendar)	oktober
+no	Name of month 11 (Gregorian Calendar)	november
+no	Name of month 12 (Gregorian Calendar)	desember
+no	Name of month 01 (Islamic Calendar)	Muharram
+no	Name of month 02 (Islamic Calendar)	Safar
+no	Name of month 03 (Islamic Calendar)	Rabiʻ I
+no	Name of month 04 (Islamic Calendar)	Rabiʻ II
+no	Name of month 05 (Islamic Calendar)	Jumada I
+no	Name of month 06 (Islamic Calendar)	Jumada II
+no	Name of month 07 (Islamic Calendar)	Rajab
+no	Name of month 08 (Islamic Calendar)	Shaʻban
+no	Name of month 09 (Islamic Calendar)	Ramadan
+no	Name of month 10 (Islamic Calendar)	Shawwal
+no	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
+no	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
+no	Name of weekday 01 (Gregorian Calendar)	mandag
+no	Name of weekday 02 (Gregorian Calendar)	tirsdag
+no	Name of weekday 03 (Gregorian Calendar)	onsdag
+no	Name of weekday 04 (Gregorian Calendar)	torsdag
+no	Name of weekday 05 (Gregorian Calendar)	fredag
+no	Name of weekday 06 (Gregorian Calendar)	lørdag
+no	Name of weekday 07 (Gregorian Calendar)	søndag
+no	Name of weekday 01 (Islamic Calendar)	mandag
+no	Name of weekday 02 (Islamic Calendar)	tirsdag
+no	Name of weekday 03 (Islamic Calendar)	onsdag
+no	Name of weekday 04 (Islamic Calendar)	torsdag
+no	Name of weekday 05 (Islamic Calendar)	fredag
+no	Name of weekday 06 (Islamic Calendar)	lørdag
+no	Name of weekday 07 (Islamic Calendar)	søndag
+no	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+no_NO	Language endonym	norsk
+no_NO	Country endonym	Norge
+no_NO	Floating Point Number	-123 456 789,012
+no_NO	Percent value	-1 234,5679 %
+no_NO	Currency value	EUR 1 234,56
+no_NO	Negative Currency value	-EUR 1 234,56
+no_NO	Date and time short (Gregorian Calendar)	21.07.08 12:31
+no_NO	Date and time medium (Gregorian Calendar)	21. juli 2008 12:31:00
+no_NO	Date and time long (Gregorian Calendar)	21. juli 2008 12:31:00 GMT+00:00
+no_NO	Date and time full (Gregorian Calendar)	mandag 21. juli 2008 kl. 12:31:00 GMT+00:00
+no_NO	Date and time short (Islamic Calendar)	18.07.29 12:31
+no_NO	Date and time medium (Islamic Calendar)	18. Raj. 1429 12:31:00
+no_NO	Date and time long (Islamic Calendar)	18. Rajab 1429 12:31:00 GMT+00:00
+no_NO	Date and time full (Islamic Calendar)	mandag 18. Rajab 1429 kl. 12:31:00 GMT+00:00
+no_NO	Name of month 01 (Gregorian Calendar)	januar
+no_NO	Name of month 02 (Gregorian Calendar)	februar
+no_NO	Name of month 03 (Gregorian Calendar)	mars
+no_NO	Name of month 04 (Gregorian Calendar)	april
+no_NO	Name of month 05 (Gregorian Calendar)	mai
+no_NO	Name of month 06 (Gregorian Calendar)	juni
+no_NO	Name of month 07 (Gregorian Calendar)	juli
+no_NO	Name of month 08 (Gregorian Calendar)	august
+no_NO	Name of month 09 (Gregorian Calendar)	september
+no_NO	Name of month 10 (Gregorian Calendar)	oktober
+no_NO	Name of month 11 (Gregorian Calendar)	november
+no_NO	Name of month 12 (Gregorian Calendar)	desember
+no_NO	Name of month 01 (Islamic Calendar)	Muharram
+no_NO	Name of month 02 (Islamic Calendar)	Safar
+no_NO	Name of month 03 (Islamic Calendar)	Rabiʻ I
+no_NO	Name of month 04 (Islamic Calendar)	Rabiʻ II
+no_NO	Name of month 05 (Islamic Calendar)	Jumada I
+no_NO	Name of month 06 (Islamic Calendar)	Jumada II
+no_NO	Name of month 07 (Islamic Calendar)	Rajab
+no_NO	Name of month 08 (Islamic Calendar)	Shaʻban
+no_NO	Name of month 09 (Islamic Calendar)	Ramadan
+no_NO	Name of month 10 (Islamic Calendar)	Shawwal
+no_NO	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
+no_NO	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
+no_NO	Name of weekday 01 (Gregorian Calendar)	mandag
+no_NO	Name of weekday 02 (Gregorian Calendar)	tirsdag
+no_NO	Name of weekday 03 (Gregorian Calendar)	onsdag
+no_NO	Name of weekday 04 (Gregorian Calendar)	torsdag
+no_NO	Name of weekday 05 (Gregorian Calendar)	fredag
+no_NO	Name of weekday 06 (Gregorian Calendar)	lørdag
+no_NO	Name of weekday 07 (Gregorian Calendar)	søndag
+no_NO	Name of weekday 01 (Islamic Calendar)	mandag
+no_NO	Name of weekday 02 (Islamic Calendar)	tirsdag
+no_NO	Name of weekday 03 (Islamic Calendar)	onsdag
+no_NO	Name of weekday 04 (Islamic Calendar)	torsdag
+no_NO	Name of weekday 05 (Islamic Calendar)	fredag
+no_NO	Name of weekday 06 (Islamic Calendar)	lørdag
+no_NO	Name of weekday 07 (Islamic Calendar)	søndag
+no_NO	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
 pt	Language endonym	português
 pt	Country endonym	
 pt	Floating Point Number	-123.456.789,012
@@ -7100,6 +7312,112 @@ zh	Name of weekday 05 (Islamic Calendar)	星期五
 zh	Name of weekday 06 (Islamic Calendar)	星期六
 zh	Name of weekday 07 (Islamic Calendar)	星期日
 zh	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
+zh_CN@collation=pinyin	Language endonym	中文
+zh_CN@collation=pinyin	Country endonym	CN@collation=pinyin
+zh_CN@collation=pinyin	Floating Point Number	-123,456,789.012
+zh_CN@collation=pinyin	Percent value	-1,234.5679%
+zh_CN@collation=pinyin	Currency value	€1,234.56
+zh_CN@collation=pinyin	Negative Currency value	-€1,234.56
+zh_CN@collation=pinyin	Date and time short (Gregorian Calendar)	08-7-21 下午12:31
+zh_CN@collation=pinyin	Date and time medium (Gregorian Calendar)	2008-7-21 下午12:31:00
+zh_CN@collation=pinyin	Date and time long (Gregorian Calendar)	2008年7月21日格林尼治标准时间+0000下午12时31分00秒
+zh_CN@collation=pinyin	Date and time full (Gregorian Calendar)	2008年7月21日星期一格林尼治标准时间+0000下午12时31分00秒
+zh_CN@collation=pinyin	Date and time short (Islamic Calendar)	08-7-21 下午12:31
+zh_CN@collation=pinyin	Date and time medium (Islamic Calendar)	2008-7-21 下午12:31:00
+zh_CN@collation=pinyin	Date and time long (Islamic Calendar)	2008年7月21日格林尼治标准时间+0000下午12时31分00秒
+zh_CN@collation=pinyin	Date and time full (Islamic Calendar)	2008年7月21日星期一格林尼治标准时间+0000下午12时31分00秒
+zh_CN@collation=pinyin	Name of month 01 (Gregorian Calendar)	一月
+zh_CN@collation=pinyin	Name of month 02 (Gregorian Calendar)	二月
+zh_CN@collation=pinyin	Name of month 03 (Gregorian Calendar)	三月
+zh_CN@collation=pinyin	Name of month 04 (Gregorian Calendar)	四月
+zh_CN@collation=pinyin	Name of month 05 (Gregorian Calendar)	五月
+zh_CN@collation=pinyin	Name of month 06 (Gregorian Calendar)	六月
+zh_CN@collation=pinyin	Name of month 07 (Gregorian Calendar)	七月
+zh_CN@collation=pinyin	Name of month 08 (Gregorian Calendar)	八月
+zh_CN@collation=pinyin	Name of month 09 (Gregorian Calendar)	九月
+zh_CN@collation=pinyin	Name of month 10 (Gregorian Calendar)	十月
+zh_CN@collation=pinyin	Name of month 11 (Gregorian Calendar)	十一月
+zh_CN@collation=pinyin	Name of month 12 (Gregorian Calendar)	十二月
+zh_CN@collation=pinyin	Name of month 01 (Islamic Calendar)	一月
+zh_CN@collation=pinyin	Name of month 02 (Islamic Calendar)	二月
+zh_CN@collation=pinyin	Name of month 03 (Islamic Calendar)	三月
+zh_CN@collation=pinyin	Name of month 04 (Islamic Calendar)	四月
+zh_CN@collation=pinyin	Name of month 05 (Islamic Calendar)	五月
+zh_CN@collation=pinyin	Name of month 06 (Islamic Calendar)	六月
+zh_CN@collation=pinyin	Name of month 07 (Islamic Calendar)	七月
+zh_CN@collation=pinyin	Name of month 08 (Islamic Calendar)	八月
+zh_CN@collation=pinyin	Name of month 09 (Islamic Calendar)	九月
+zh_CN@collation=pinyin	Name of month 10 (Islamic Calendar)	十月
+zh_CN@collation=pinyin	Name of month 11 (Islamic Calendar)	十一月
+zh_CN@collation=pinyin	Name of month 12 (Islamic Calendar)	十二月
+zh_CN@collation=pinyin	Name of weekday 01 (Gregorian Calendar)	星期一
+zh_CN@collation=pinyin	Name of weekday 02 (Gregorian Calendar)	星期二
+zh_CN@collation=pinyin	Name of weekday 03 (Gregorian Calendar)	星期三
+zh_CN@collation=pinyin	Name of weekday 04 (Gregorian Calendar)	星期四
+zh_CN@collation=pinyin	Name of weekday 05 (Gregorian Calendar)	星期五
+zh_CN@collation=pinyin	Name of weekday 06 (Gregorian Calendar)	星期六
+zh_CN@collation=pinyin	Name of weekday 07 (Gregorian Calendar)	星期日
+zh_CN@collation=pinyin	Name of weekday 01 (Islamic Calendar)	星期一
+zh_CN@collation=pinyin	Name of weekday 02 (Islamic Calendar)	星期二
+zh_CN@collation=pinyin	Name of weekday 03 (Islamic Calendar)	星期三
+zh_CN@collation=pinyin	Name of weekday 04 (Islamic Calendar)	星期四
+zh_CN@collation=pinyin	Name of weekday 05 (Islamic Calendar)	星期五
+zh_CN@collation=pinyin	Name of weekday 06 (Islamic Calendar)	星期六
+zh_CN@collation=pinyin	Name of weekday 07 (Islamic Calendar)	星期日
+zh_CN@collation=pinyin	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
+zh_CN@collation=stroke	Language endonym	中文
+zh_CN@collation=stroke	Country endonym	CN@collation=stroke
+zh_CN@collation=stroke	Floating Point Number	-123,456,789.012
+zh_CN@collation=stroke	Percent value	-1,234.5679%
+zh_CN@collation=stroke	Currency value	€1,234.56
+zh_CN@collation=stroke	Negative Currency value	-€1,234.56
+zh_CN@collation=stroke	Date and time short (Gregorian Calendar)	08-7-21 下午12:31
+zh_CN@collation=stroke	Date and time medium (Gregorian Calendar)	2008-7-21 下午12:31:00
+zh_CN@collation=stroke	Date and time long (Gregorian Calendar)	2008年7月21日格林尼治标准时间+0000下午12时31分00秒
+zh_CN@collation=stroke	Date and time full (Gregorian Calendar)	2008年7月21日星期一格林尼治标准时间+0000下午12时31分00秒
+zh_CN@collation=stroke	Date and time short (Islamic Calendar)	08-7-21 下午12:31
+zh_CN@collation=stroke	Date and time medium (Islamic Calendar)	2008-7-21 下午12:31:00
+zh_CN@collation=stroke	Date and time long (Islamic Calendar)	2008年7月21日格林尼治标准时间+0000下午12时31分00秒
+zh_CN@collation=stroke	Date and time full (Islamic Calendar)	2008年7月21日星期一格林尼治标准时间+0000下午12时31分00秒
+zh_CN@collation=stroke	Name of month 01 (Gregorian Calendar)	一月
+zh_CN@collation=stroke	Name of month 02 (Gregorian Calendar)	二月
+zh_CN@collation=stroke	Name of month 03 (Gregorian Calendar)	三月
+zh_CN@collation=stroke	Name of month 04 (Gregorian Calendar)	四月
+zh_CN@collation=stroke	Name of month 05 (Gregorian Calendar)	五月
+zh_CN@collation=stroke	Name of month 06 (Gregorian Calendar)	六月
+zh_CN@collation=stroke	Name of month 07 (Gregorian Calendar)	七月
+zh_CN@collation=stroke	Name of month 08 (Gregorian Calendar)	八月
+zh_CN@collation=stroke	Name of month 09 (Gregorian Calendar)	九月
+zh_CN@collation=stroke	Name of month 10 (Gregorian Calendar)	十月
+zh_CN@collation=stroke	Name of month 11 (Gregorian Calendar)	十一月
+zh_CN@collation=stroke	Name of month 12 (Gregorian Calendar)	十二月
+zh_CN@collation=stroke	Name of month 01 (Islamic Calendar)	一月
+zh_CN@collation=stroke	Name of month 02 (Islamic Calendar)	二月
+zh_CN@collation=stroke	Name of month 03 (Islamic Calendar)	三月
+zh_CN@collation=stroke	Name of month 04 (Islamic Calendar)	四月
+zh_CN@collation=stroke	Name of month 05 (Islamic Calendar)	五月
+zh_CN@collation=stroke	Name of month 06 (Islamic Calendar)	六月
+zh_CN@collation=stroke	Name of month 07 (Islamic Calendar)	七月
+zh_CN@collation=stroke	Name of month 08 (Islamic Calendar)	八月
+zh_CN@collation=stroke	Name of month 09 (Islamic Calendar)	九月
+zh_CN@collation=stroke	Name of month 10 (Islamic Calendar)	十月
+zh_CN@collation=stroke	Name of month 11 (Islamic Calendar)	十一月
+zh_CN@collation=stroke	Name of month 12 (Islamic Calendar)	十二月
+zh_CN@collation=stroke	Name of weekday 01 (Gregorian Calendar)	星期一
+zh_CN@collation=stroke	Name of weekday 02 (Gregorian Calendar)	星期二
+zh_CN@collation=stroke	Name of weekday 03 (Gregorian Calendar)	星期三
+zh_CN@collation=stroke	Name of weekday 04 (Gregorian Calendar)	星期四
+zh_CN@collation=stroke	Name of weekday 05 (Gregorian Calendar)	星期五
+zh_CN@collation=stroke	Name of weekday 06 (Gregorian Calendar)	星期六
+zh_CN@collation=stroke	Name of weekday 07 (Gregorian Calendar)	星期日
+zh_CN@collation=stroke	Name of weekday 01 (Islamic Calendar)	星期一
+zh_CN@collation=stroke	Name of weekday 02 (Islamic Calendar)	星期二
+zh_CN@collation=stroke	Name of weekday 03 (Islamic Calendar)	星期三
+zh_CN@collation=stroke	Name of weekday 04 (Islamic Calendar)	星期四
+zh_CN@collation=stroke	Name of weekday 05 (Islamic Calendar)	星期五
+zh_CN@collation=stroke	Name of weekday 06 (Islamic Calendar)	星期六
+zh_CN@collation=stroke	Name of weekday 07 (Islamic Calendar)	星期日
+zh_CN@collation=stroke	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 二 三 中 正 此 俄 得 播 攀 爱
 zh_Hans	Language endonym	中文
 zh_Hans	Country endonym	
 zh_Hans	Floating Point Number	-123,456,789.012
@@ -7577,162 +7895,3 @@ zh_Hant_TW	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hant_TW	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hant_TW	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hant_TW	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 二 三 中 正 此 俄 得 播 攀 爱
-no	Language endonym	norsk
-no	Country endonym	
-no	Floating Point Number	-123 456 789,012
-no	Percent value	-1 234,5679 %
-no	Currency value	EUR 1 234,56
-no	Negative Currency value	-EUR 1 234,56
-no	Date and time short (Gregorian Calendar)	21.07.08 12:31
-no	Date and time medium (Gregorian Calendar)	21. juli 2008 12:31:00
-no	Date and time long (Gregorian Calendar)	21. juli 2008 12:31:00 GMT+00:00
-no	Date and time full (Gregorian Calendar)	mandag 21. juli 2008 kl. 12:31:00 GMT+00:00
-no	Date and time short (Islamic Calendar)	18.07.29 12:31
-no	Date and time medium (Islamic Calendar)	18. Raj. 1429 12:31:00
-no	Date and time long (Islamic Calendar)	18. Rajab 1429 12:31:00 GMT+00:00
-no	Date and time full (Islamic Calendar)	mandag 18. Rajab 1429 kl. 12:31:00 GMT+00:00
-no	Name of month 01 (Gregorian Calendar)	januar
-no	Name of month 02 (Gregorian Calendar)	februar
-no	Name of month 03 (Gregorian Calendar)	mars
-no	Name of month 04 (Gregorian Calendar)	april
-no	Name of month 05 (Gregorian Calendar)	mai
-no	Name of month 06 (Gregorian Calendar)	juni
-no	Name of month 07 (Gregorian Calendar)	juli
-no	Name of month 08 (Gregorian Calendar)	august
-no	Name of month 09 (Gregorian Calendar)	september
-no	Name of month 10 (Gregorian Calendar)	oktober
-no	Name of month 11 (Gregorian Calendar)	november
-no	Name of month 12 (Gregorian Calendar)	desember
-no	Name of month 01 (Islamic Calendar)	Muharram
-no	Name of month 02 (Islamic Calendar)	Safar
-no	Name of month 03 (Islamic Calendar)	Rabiʻ I
-no	Name of month 04 (Islamic Calendar)	Rabiʻ II
-no	Name of month 05 (Islamic Calendar)	Jumada I
-no	Name of month 06 (Islamic Calendar)	Jumada II
-no	Name of month 07 (Islamic Calendar)	Rajab
-no	Name of month 08 (Islamic Calendar)	Shaʻban
-no	Name of month 09 (Islamic Calendar)	Ramadan
-no	Name of month 10 (Islamic Calendar)	Shawwal
-no	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
-no	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
-no	Name of weekday 01 (Gregorian Calendar)	mandag
-no	Name of weekday 02 (Gregorian Calendar)	tirsdag
-no	Name of weekday 03 (Gregorian Calendar)	onsdag
-no	Name of weekday 04 (Gregorian Calendar)	torsdag
-no	Name of weekday 05 (Gregorian Calendar)	fredag
-no	Name of weekday 06 (Gregorian Calendar)	lørdag
-no	Name of weekday 07 (Gregorian Calendar)	søndag
-no	Name of weekday 01 (Islamic Calendar)	mandag
-no	Name of weekday 02 (Islamic Calendar)	tirsdag
-no	Name of weekday 03 (Islamic Calendar)	onsdag
-no	Name of weekday 04 (Islamic Calendar)	torsdag
-no	Name of weekday 05 (Islamic Calendar)	fredag
-no	Name of weekday 06 (Islamic Calendar)	lørdag
-no	Name of weekday 07 (Islamic Calendar)	søndag
-no	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
-no_NO	Language endonym	norsk
-no_NO	Country endonym	Norge
-no_NO	Floating Point Number	-123 456 789,012
-no_NO	Percent value	-1 234,5679 %
-no_NO	Currency value	EUR 1 234,56
-no_NO	Negative Currency value	-EUR 1 234,56
-no_NO	Date and time short (Gregorian Calendar)	21.07.08 12:31
-no_NO	Date and time medium (Gregorian Calendar)	21. juli 2008 12:31:00
-no_NO	Date and time long (Gregorian Calendar)	21. juli 2008 12:31:00 GMT+00:00
-no_NO	Date and time full (Gregorian Calendar)	mandag 21. juli 2008 kl. 12:31:00 GMT+00:00
-no_NO	Date and time short (Islamic Calendar)	18.07.29 12:31
-no_NO	Date and time medium (Islamic Calendar)	18. Raj. 1429 12:31:00
-no_NO	Date and time long (Islamic Calendar)	18. Rajab 1429 12:31:00 GMT+00:00
-no_NO	Date and time full (Islamic Calendar)	mandag 18. Rajab 1429 kl. 12:31:00 GMT+00:00
-no_NO	Name of month 01 (Gregorian Calendar)	januar
-no_NO	Name of month 02 (Gregorian Calendar)	februar
-no_NO	Name of month 03 (Gregorian Calendar)	mars
-no_NO	Name of month 04 (Gregorian Calendar)	april
-no_NO	Name of month 05 (Gregorian Calendar)	mai
-no_NO	Name of month 06 (Gregorian Calendar)	juni
-no_NO	Name of month 07 (Gregorian Calendar)	juli
-no_NO	Name of month 08 (Gregorian Calendar)	august
-no_NO	Name of month 09 (Gregorian Calendar)	september
-no_NO	Name of month 10 (Gregorian Calendar)	oktober
-no_NO	Name of month 11 (Gregorian Calendar)	november
-no_NO	Name of month 12 (Gregorian Calendar)	desember
-no_NO	Name of month 01 (Islamic Calendar)	Muharram
-no_NO	Name of month 02 (Islamic Calendar)	Safar
-no_NO	Name of month 03 (Islamic Calendar)	Rabiʻ I
-no_NO	Name of month 04 (Islamic Calendar)	Rabiʻ II
-no_NO	Name of month 05 (Islamic Calendar)	Jumada I
-no_NO	Name of month 06 (Islamic Calendar)	Jumada II
-no_NO	Name of month 07 (Islamic Calendar)	Rajab
-no_NO	Name of month 08 (Islamic Calendar)	Shaʻban
-no_NO	Name of month 09 (Islamic Calendar)	Ramadan
-no_NO	Name of month 10 (Islamic Calendar)	Shawwal
-no_NO	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
-no_NO	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
-no_NO	Name of weekday 01 (Gregorian Calendar)	mandag
-no_NO	Name of weekday 02 (Gregorian Calendar)	tirsdag
-no_NO	Name of weekday 03 (Gregorian Calendar)	onsdag
-no_NO	Name of weekday 04 (Gregorian Calendar)	torsdag
-no_NO	Name of weekday 05 (Gregorian Calendar)	fredag
-no_NO	Name of weekday 06 (Gregorian Calendar)	lørdag
-no_NO	Name of weekday 07 (Gregorian Calendar)	søndag
-no_NO	Name of weekday 01 (Islamic Calendar)	mandag
-no_NO	Name of weekday 02 (Islamic Calendar)	tirsdag
-no_NO	Name of weekday 03 (Islamic Calendar)	onsdag
-no_NO	Name of weekday 04 (Islamic Calendar)	torsdag
-no_NO	Name of weekday 05 (Islamic Calendar)	fredag
-no_NO	Name of weekday 06 (Islamic Calendar)	lørdag
-no_NO	Name of weekday 07 (Islamic Calendar)	søndag
-no_NO	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
-es_419	Language endonym	español
-es_419	Country endonym	Latinoamérica y el Caribe
-es_419	Floating Point Number	-123.456.789,012
-es_419	Percent value	-1.234,5679%
-es_419	Currency value	€ 1.234,56
-es_419	Negative Currency value	-€ 1.234,56
-es_419	Date and time short (Gregorian Calendar)	21/07/08 12:31
-es_419	Date and time medium (Gregorian Calendar)	21/07/2008 12:31:00
-es_419	Date and time long (Gregorian Calendar)	21 de julio de 2008 12:31:00 GMT+00:00
-es_419	Date and time full (Gregorian Calendar)	lunes 21 de julio de 2008 12:31:00 GMT+00:00
-es_419	Date and time short (Islamic Calendar)	18/07/29 12:31
-es_419	Date and time medium (Islamic Calendar)	18/07/1429 12:31:00
-es_419	Date and time long (Islamic Calendar)	18 de Rajab de 1429 12:31:00 GMT+00:00
-es_419	Date and time full (Islamic Calendar)	lunes 18 de Rajab de 1429 12:31:00 GMT+00:00
-es_419	Name of month 01 (Gregorian Calendar)	enero
-es_419	Name of month 02 (Gregorian Calendar)	febrero
-es_419	Name of month 03 (Gregorian Calendar)	marzo
-es_419	Name of month 04 (Gregorian Calendar)	abril
-es_419	Name of month 05 (Gregorian Calendar)	mayo
-es_419	Name of month 06 (Gregorian Calendar)	junio
-es_419	Name of month 07 (Gregorian Calendar)	julio
-es_419	Name of month 08 (Gregorian Calendar)	agosto
-es_419	Name of month 09 (Gregorian Calendar)	septiembre
-es_419	Name of month 10 (Gregorian Calendar)	octubre
-es_419	Name of month 11 (Gregorian Calendar)	noviembre
-es_419	Name of month 12 (Gregorian Calendar)	diciembre
-es_419	Name of month 01 (Islamic Calendar)	Muharram
-es_419	Name of month 02 (Islamic Calendar)	Safar
-es_419	Name of month 03 (Islamic Calendar)	Rabiʻ I
-es_419	Name of month 04 (Islamic Calendar)	Rabiʻ II
-es_419	Name of month 05 (Islamic Calendar)	Jumada I
-es_419	Name of month 06 (Islamic Calendar)	Jumada II
-es_419	Name of month 07 (Islamic Calendar)	Rajab
-es_419	Name of month 08 (Islamic Calendar)	Shaʻban
-es_419	Name of month 09 (Islamic Calendar)	Ramadan
-es_419	Name of month 10 (Islamic Calendar)	Shawwal
-es_419	Name of month 11 (Islamic Calendar)	Dhuʻl-Qiʻdah
-es_419	Name of month 12 (Islamic Calendar)	Dhuʻl-Hijjah
-es_419	Name of weekday 01 (Gregorian Calendar)	lunes
-es_419	Name of weekday 02 (Gregorian Calendar)	martes
-es_419	Name of weekday 03 (Gregorian Calendar)	miércoles
-es_419	Name of weekday 04 (Gregorian Calendar)	jueves
-es_419	Name of weekday 05 (Gregorian Calendar)	viernes
-es_419	Name of weekday 06 (Gregorian Calendar)	sábado
-es_419	Name of weekday 07 (Gregorian Calendar)	domingo
-es_419	Name of weekday 01 (Islamic Calendar)	lunes
-es_419	Name of weekday 02 (Islamic Calendar)	martes
-es_419	Name of weekday 03 (Islamic Calendar)	miércoles
-es_419	Name of weekday 04 (Islamic Calendar)	jueves
-es_419	Name of weekday 05 (Islamic Calendar)	viernes
-es_419	Name of weekday 06 (Islamic Calendar)	sábado
-es_419	Name of weekday 07 (Islamic Calendar)	domingo
-es_419	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱

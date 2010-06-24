@@ -685,6 +685,13 @@ void Ft_Locales::checkAvailableLocales()
     supportedLocaleNames << "no";
     supportedLocaleNames << "no_NO";
     supportedLocaleNames << "es_419";
+    // add some variants with different sort rules:
+    supportedLocaleNames << "de_DE@collation=phonebook";
+    supportedLocaleNames << "zh_CN@collation=pinyin";
+    supportedLocaleNames << "zh_CN@collation=stroke";
+    // sort the list for easier comparision in the output
+    // (i.e. es_419 should be near es, not at the end of the list):
+    qSort(supportedLocaleNames.begin(), supportedLocaleNames.end());
     MCalendar gregorianCalendar(MLocale::GregorianCalendar);
     MCalendar islamicCalendar(MLocale::IslamicCalendar);
     QStringList sortingTestList;
