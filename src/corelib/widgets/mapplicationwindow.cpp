@@ -517,8 +517,7 @@ void MApplicationWindowPrivate::setComponentDisplayMode(
 
     case MApplicationPageModel::Hide:
         removeComponentFromAutoHide(component);
-        if (component->isVisible())
-            component->disappear();
+        component->disappear();
         break;
     };
 
