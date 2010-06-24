@@ -155,7 +155,7 @@ public:
         \endcode
   */
 template <class T>
-class M_EXPORT MAbstractCellCreator : public MCellCreator
+class MAbstractCellCreator : public MCellCreator
 {
 public:
     MAbstractCellCreator() : size(QSizeF(-1, -1)), cellViewType(QString()),
