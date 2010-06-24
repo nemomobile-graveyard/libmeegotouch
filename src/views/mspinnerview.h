@@ -82,6 +82,9 @@ public:
 protected:
     //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+
     void resizeEvent(QGraphicsSceneResizeEvent *event);
     virtual void setupModel();
     virtual void applyStyle();
@@ -94,6 +97,9 @@ protected slots:
     //! \reimp_end
 
 private:
+   void calculateSizes();
+   void createPieImage( int startAngle, int endAngle, QSize const & size, QPixmap const & image ) const;
+
     Q_DISABLE_COPY(MSpinnerView)
     Q_DECLARE_PRIVATE(MSpinnerView)
 

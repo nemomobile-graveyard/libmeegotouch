@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QPointF>
+#include <QRect>
 
 class MStyle;
 class MProgressIndicator;
@@ -42,17 +43,18 @@ public:
 
     void animationTimeout();
     void visibilityChanged();
-    void calculateShape(QSizeF size);
 
     MProgressIndicator *controller;
+    mutable QPixmap *pieImage;
 
-    const QPixmap *inactiveElement;
-    const QPixmap *activeElement;
     int position;
     qreal elapsed;
 
     QTimer *timer;
-    QVector<QPoint> elements;
+    
+    QRect bgRect;
+    QRect fgRect;
+
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;
