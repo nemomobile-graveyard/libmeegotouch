@@ -210,11 +210,12 @@ const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
 QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
 {
     QString mode;
+    qCritical() << state;
     if (state & QStyle::State_Enabled) {
         if (state & QStyle::State_Active)
             mode = "active";
-        if (state & QStyle::State_Sunken || state & QStyle::State_On
-                || state & QStyle::State_Selected)
+        if (state & QStyle::State_Selected ||
+            state & QStyle::State_HasFocus)
             mode = "selected";
     } else {
         mode = "disabled";
@@ -253,12 +254,14 @@ bool QtMaemo6Style::setPaletteBackground(QWidget *widget,
             const MWidgetStyle *style =
                 static_cast<const MWidgetStyle*>(
                     QtMaemo6StylePrivate::mStyle(widgetOption.state, _styleObject, styleClass));
-            ret = drawBackground(&painter, &widgetOption, backgroundPixmap.rect(), style, widget);
+            if(style) {
+                ret = drawBackground(&painter, &widgetOption, backgroundPixmap.rect(), style, widget);
 
-            if(ret) {
-                QPalette palette = widget->palette();
-                palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
-                widget->setPalette(palette);
+                if(ret) {
+                    QPalette palette = widget->palette();
+                    palette.setBrush(widget->backgroundRole(), QBrush(backgroundPixmap));
+                    widget->setPalette(palette);
+                }
             }
         }
     }
@@ -1049,17 +1052,16 @@ void QtMaemo6Style::polish(QWidget *widget)
             const MNavigationBarStyle *style =
                 static_cast<const MNavigationBarStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
                         "MNavigationBarStyle"));
-            Q_UNUSED( style );
+            /*
             const MLabelStyle *menuStyle =
                 static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_None,
                         "MLabelStyle", "NavigationBarMenuButtonLabel"));
             Q_UNUSED( menuStyle );
-            //TODO: use style and menuStyle once the properties inside work actually.
-            // This would also remove the magic numbers.
-            //titleBar->setTitleColor( Qt::white );
-            titleBar->setMargin( 10 );
-            titleBar->setItemSpacing( 20 );
-            titleBar->setFixedHeight( 70 );
+            */
+            if(style) {
+                titleBar->setItemSpacing( style->itemSpacing() );
+                titleBar->setFixedHeight( style->minimumSize().height() );
+            }
     }
 
 
@@ -1447,13 +1449,16 @@ void QtMaemo6Style::drawControl(ControlElement element,
                 }
             }
 
-            d->drawBasicButton(p,
-                               QString() /*tab->text*/,
-                               QIcon() /*tab->icon*/,
-                               btn.rect, &btn, "MButtonIconStyle");
+            d->drawBasicButton(p, QString(), QIcon(),
+                               btn.rect, &btn, style);
+            p->setPen(style->textColor());
+            p->drawText(tab->rect, tab->text, QTextOption(Qt::AlignCenter));
         }
         break;
     }
+    case CE_TabBarTabLabel:
+        //don't draw the label, it's already handled by CE_TabBarTabShape
+        break;
     case CE_ToolBar: {
         //const QToolBar* toolBar = qobject_cast<const QToolBar*>(widget);
         if (widget->actions().count() > 0)
@@ -1571,54 +1576,62 @@ void QtMaemo6Style::drawControl(ControlElement element,
                 static_cast<const MButtonStyle *>( QtMaemo6StylePrivate::mStyle( header->state,
                                                        "MButtonStyle") );
 
-            int left, top, right, bottom;
-            style->backgroundImage()->borders(&left, &top, &right, &bottom);
+            if(style) {
+                int left, top, right, bottom;
+                style->backgroundImage()->borders(&left, &top, &right, &bottom);
 
-            p->fillRect(opt->rect, Qt::transparent);
+                p->fillRect(opt->rect, Qt::transparent);
 
-            QtMaemo6StylePrivate::Borders leftBorder = QtMaemo6StylePrivate::leftBorder;
-            QtMaemo6StylePrivate::Borders rightBorder = QtMaemo6StylePrivate::rightBorder;
+                QtMaemo6StylePrivate::Borders leftBorder = QtMaemo6StylePrivate::leftBorder;
+                QtMaemo6StylePrivate::Borders rightBorder = QtMaemo6StylePrivate::rightBorder;
 
-            if(opt->direction == Qt::RightToLeft) {
-                leftBorder = QtMaemo6StylePrivate::rightBorder;
-                rightBorder = QtMaemo6StylePrivate::leftBorder;
-            }
-
-            if(header->orientation == Qt::Horizontal) {
-                if(header->position == QStyleOptionHeader::Beginning) {
-                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
-                                  QtMaemo6StylePrivate::bottomBorder | rightBorder);
-                    p->drawPixmap(opt->rect.topLeft(), pix);
-                } else if(header->position == QStyleOptionHeader::Middle) {
-                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
-                                  QtMaemo6StylePrivate::bottomBorder | rightBorder | leftBorder,
-                                  QtMaemo6StylePrivate::bottomBorder | rightBorder);
-                    p->drawPixmap(opt->rect.topLeft(), pix);
-                } else if(header->position == QStyleOptionHeader::End) {
-                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
-                                  QtMaemo6StylePrivate::bottomBorder | leftBorder,
-                                  QtMaemo6StylePrivate::bottomBorder);
-                    p->drawPixmap(opt->rect.topLeft(), pix);
+                if(opt->direction == Qt::RightToLeft) {
+                    leftBorder = QtMaemo6StylePrivate::rightBorder;
+                    rightBorder = QtMaemo6StylePrivate::leftBorder;
                 }
-            } else if(header->orientation == Qt::Vertical) {
-                if(header->position == QStyleOptionHeader::Beginning) {
-                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
-                                  QtMaemo6StylePrivate::bottomBorder | rightBorder);
-                    p->drawPixmap(opt->rect.topLeft(), pix);
-                } else if(header->position == QStyleOptionHeader::Middle) {
-                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
-                                  QtMaemo6StylePrivate::bottomBorder | QtMaemo6StylePrivate::topBorder | rightBorder,
-                                  QtMaemo6StylePrivate::bottomBorder | rightBorder);
-                    p->drawPixmap(opt->rect.topLeft(), pix);
-                } else if(header->position == QStyleOptionHeader::End) {
-                    QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
-                                  QtMaemo6StylePrivate::topBorder | rightBorder,
-                                  rightBorder);
-                    p->drawPixmap(opt->rect.topLeft(), pix);
+
+                if(header->orientation == Qt::Horizontal) {
+                    if(header->position == QStyleOptionHeader::Beginning) {
+                        QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                      QtMaemo6StylePrivate::bottomBorder | rightBorder);
+                        p->drawPixmap(opt->rect.topLeft(), pix);
+                    } else if(header->position == QStyleOptionHeader::Middle) {
+                        QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                      QtMaemo6StylePrivate::bottomBorder | rightBorder | leftBorder,
+                                      QtMaemo6StylePrivate::bottomBorder | rightBorder);
+                        p->drawPixmap(opt->rect.topLeft(), pix);
+                    } else if(header->position == QStyleOptionHeader::End) {
+                        QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                      QtMaemo6StylePrivate::bottomBorder | leftBorder,
+                                      QtMaemo6StylePrivate::bottomBorder);
+                        p->drawPixmap(opt->rect.topLeft(), pix);
+                    }
+                } else if(header->orientation == Qt::Vertical) {
+                    if(header->position == QStyleOptionHeader::Beginning) {
+                        QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                      QtMaemo6StylePrivate::bottomBorder | rightBorder);
+                        p->drawPixmap(opt->rect.topLeft(), pix);
+                    } else if(header->position == QStyleOptionHeader::Middle) {
+                        QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                      QtMaemo6StylePrivate::bottomBorder | QtMaemo6StylePrivate::topBorder | rightBorder,
+                                      QtMaemo6StylePrivate::bottomBorder | rightBorder);
+                        p->drawPixmap(opt->rect.topLeft(), pix);
+                    } else if(header->position == QStyleOptionHeader::End) {
+                        QPixmap pix = d->borderCroppedPixmap(style->backgroundImage(), opt->rect.size(),
+                                      QtMaemo6StylePrivate::topBorder | rightBorder,
+                                      rightBorder);
+                        p->drawPixmap(opt->rect.topLeft(), pix);
+                    }
                 }
+
+                p->setPen(style->textColor());
+                p->drawText(header->rect, header->text, QTextOption(Qt::AlignCenter));
             }
         }
     }
+    break;
+    case CE_HeaderLabel:
+    //don't draw header labels, it's already done by CE_HeaderSection
     break;
     default: {
         QtMaemo6TestStyle::drawControl(element, opt, p, widget);

@@ -27,6 +27,9 @@ QtMaemo6ClickLabel::QtMaemo6ClickLabel(QWidget *parent)
     : QLabel(parent)
     , m_orientationAngle(M::Angle0)
 {
+    setMargin(0);
+    setIndent(0);
+    setContentsMargins(0,0,0,0);
 }
 
 QSize QtMaemo6ClickLabel::minimumSizeHint () const {

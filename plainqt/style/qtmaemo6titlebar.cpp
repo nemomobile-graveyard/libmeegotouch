@@ -54,15 +54,19 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
 
     m_minimizeButton = new QtMaemo6ClickLabel(this);
     m_minimizeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Home" ) );
+    m_minimizeButton->setScaledContents(true);
     const MHomeButtonPanelStyle *homeButtonStyle =
         static_cast<const MHomeButtonPanelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
                 "MHomeButtonPanelStyle", ""));
     if(homeButtonStyle) {
+        m_minimizeButton->setMinimumWidth(homeButtonStyle->minimumSize().width());
+        m_minimizeButton->setFixedHeight(homeButtonStyle->minimumSize().height());
         m_minimizeButton->setPixmap(*MTheme::pixmapCopy(homeButtonStyle->homeButtonIconId()));
     }
     connect(m_minimizeButton, SIGNAL(clicked()), this, SIGNAL(minimizeButtonClicked()));
 
     m_titleLabel = new QtMaemo6ClickLabel(this);
+    m_titleLabel->setObjectName("Qt_Maemo6_TitleBar_Title");
     connect(m_titleLabel, SIGNAL(clicked()), this, SIGNAL(menuLabelClicked()));
 
     m_titleLabelMenuButton = new QtMaemo6ClickLabel(this);
@@ -72,6 +76,8 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
         static_cast<const MApplicationMenuButtonStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
                 "MApplicationMenuButtonStyle", "NavigationBarMenuButton"));
     if (iconStyle) {
+        m_titleLabel->setMinimumWidth(iconStyle->minimumSize().width());
+        m_titleLabel->setFixedHeight(iconStyle->minimumSize().height());
         if(!iconStyle->arrowIcon().isEmpty())
             m_titleLabelMenuButton->setPixmap(*MTheme::pixmapCopy(iconStyle->arrowIcon(), iconStyle->arrowIconSize()));
     }
@@ -89,17 +95,21 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
 
     m_closeButton = new QtMaemo6ClickLabel(this);
     m_closeButton->setObjectName( QString( "Qt_Maemo6_TitleBar_Close" ) );
+    m_closeButton->setScaledContents(true);
     const MEscapeButtonPanelStyle *escapeButtonStyle =
         static_cast<const MEscapeButtonPanelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
                 "MEscapeButtonPanelStyle", ""));
     if(escapeButtonStyle) {
         m_closeButton->setPixmap(*MTheme::pixmapCopy(escapeButtonStyle->closeButtonIconId()));
+        m_closeButton->setMinimumWidth(escapeButtonStyle->minimumSize().width());
+        m_closeButton->setFixedHeight(escapeButtonStyle->minimumSize().height());
     }
     connect(m_closeButton, SIGNAL(clicked()), this, SIGNAL(closeButtonClicked()));
 
     m_titleBarLayout = new QBoxLayout(QBoxLayout::LeftToRight, this);
     m_titleBarLayout->setMargin(0);
     m_titleBarLayout->setSpacing(0);
+    m_titleBarLayout->setContentsMargins(0,0,0,0);
     m_titleBarLayout->addWidget(m_minimizeButton);
     m_titleBarLayout->addWidget(m_titleLabel);
     m_titleBarLayout->addWidget(m_titleLabelMenuButton);
@@ -108,19 +118,8 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
     //m_titleBarLayout->addLayout(m_buttonsLayout);
     m_titleBarLayout->addWidget(m_closeButton);
 
-
-    // apply properties of the navigation bar style
-    const MNavigationBarStyle *style =
-        static_cast<const MNavigationBarStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
-                "MNavigationBarStyle"));
-    Q_UNUSED( style );
-    const MLabelStyle *menuStyle =
-        static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_None,
-                "MLabelStyle", "NavigationBarMenuButtonLabel"));
-    Q_UNUSED( menuStyle );
     //TODO: use style and menuStyle once the properties inside work actually.
     // This would also remove the magic numbers.
-    setMargin( 10 );
     setItemSpacing( 20 );
 
     setOrientation(M::Angle0);
@@ -134,8 +133,12 @@ QtMaemo6TitleBar::~QtMaemo6TitleBar()
 
 void QtMaemo6TitleBar::resizeEvent(QResizeEvent *e) {
     QWidget::resizeEvent(e);
-    if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(style()))
+    if(QtMaemo6Style* s = qobject_cast<QtMaemo6Style*>(style())) {
         s->setPaletteBackground(this, "MNavigationBarStyle");
+        s->setPaletteBackground(m_closeButton, "MEscapeButtonPanelStyle");
+        s->setPaletteBackground(m_minimizeButton, "MHomeButtonPanelStyle");
+        s->setPaletteBackground(m_titleLabel, "MLabelStyle", "NavigationBarMenuButton");
+    }
 }
 
 void QtMaemo6TitleBar::setTitle(const QString &title)
