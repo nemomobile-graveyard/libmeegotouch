@@ -50,6 +50,7 @@ void MListFilterPrivate::panningStarted()
     if(!cachedPannableViewport && pannableViewport()) {
         MPannableViewport* viewport = pannableViewport();
         connect(viewport, SIGNAL(positionChanged(QPointF)), this, SLOT(viewportPositionChanged(QPointF)));
+        viewportPos = viewport->position();
     }
     panningStartPos = viewportPos;
 }
@@ -61,6 +62,7 @@ void MListFilterPrivate::viewportPositionChanged(const QPointF& pos)
     viewportPos = pos;
     if(q->filteringEnabled && viewportPos.y() < 0 && panningStartPos.y() == 0) {
         emit q->listPannedUpFromTop();
+        panningStartPos = pos;
     }
 }
 
@@ -89,7 +91,7 @@ MListFilter::MListFilter(MList *parent)
     filterProxy = new MSortFilterProxyModel(parent);
     filterEditor = new MTextEdit(MTextEditModel::SingleLine, "", parent);
     filterEditor->setVisible(false);
-    
+
     connect(filterEditor, SIGNAL(textChanged()), this, SLOT(editorTextChanged()));
 }
 
@@ -161,7 +163,7 @@ void MListFilter::keyPressEvent(QKeyEvent *event)
 void MListFilter::editorTextChanged()
 {
     QRegExp::PatternSyntax syntax = QRegExp::RegExp;
-    Qt::CaseSensitivity caseSensitivity = Qt::CaseSensitive;
+    Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive;
     QRegExp regExp(filterEditor->text(), caseSensitivity, syntax);
     filterProxy->setFilterRegExp(regExp);
 }

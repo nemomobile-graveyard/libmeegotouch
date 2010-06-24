@@ -93,6 +93,7 @@ public slots:
 
     void liveFilteringTextChanged();
     void filteringVKB();
+    void hideEmptyTextEdit();
 
 protected:
     void retranslateUi();

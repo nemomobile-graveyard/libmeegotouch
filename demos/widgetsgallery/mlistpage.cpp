@@ -126,11 +126,15 @@ public:
 #else
         PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(data.value<void *>());
 
-        if(highlightText == "")
+        if(highlightText == "") {
             listCell->setTitle(entry->fullName);
-        else {
+        } else {
             QString highlightedTitle = entry->fullName;
-            highlightedTitle.replace(highlightText, "<b>" + highlightText + "</b>");
+            int matchingIndex = highlightedTitle.indexOf(highlightText, 0, Qt::CaseInsensitive);
+            if(matchingIndex != -1) {
+                highlightedTitle.insert(matchingIndex+highlightText.length(), "</b>");
+                highlightedTitle.insert(matchingIndex, "<b>");
+            }
             listCell->setTitle(highlightedTitle);
         }
 
@@ -250,6 +254,8 @@ void MListPage::setPlainListModel()
     connect(list, SIGNAL(panningStarted()), imageLoader, SLOT(stopLoadingPictures()));
     // when list is stopped, lets load pictures if needed
     connect(list, SIGNAL(panningStopped()), this, SLOT(loadPicturesInVisibleItems()));
+    // when list is moving hide empty live filtering editor
+    connect(list, SIGNAL(panningStarted()), this, SLOT(hideEmptyTextEdit()));
     // trigger initial pictures loading
     QTimer::singleShot(1500, this, SLOT(loadPicturesInVisibleItems()));
 
@@ -504,8 +510,13 @@ void MListPage::editListItem()
 
 void MListPage::liveFilteringTextChanged()
 {
-    // With HWKB live filtering text edit is shown when user enters text
-    if(list->filtering()->enabled() && list->filtering()->editor()->text() != "" && !list->filtering()->editor()->isOnDisplay())
+    if(!list->filtering()->enabled())
+        return;
+
+    // With HWKB live filtering text edit is hidden when empty and shown when user enters text
+    if(list->filtering()->editor()->text() == "" && list->filtering()->editor()->isOnDisplay())
+        QTimer::singleShot(1500, this, SLOT(hideEmptyTextEdit()));
+    else if(list->filtering()->editor()->text() != "" && !list->filtering()->editor()->isOnDisplay())
         showTextEdit(true);
 
     // Highlighting matching live filtering text can be done by
@@ -525,6 +536,12 @@ void MListPage::filteringVKB()
     }
 }
 
+void MListPage::hideEmptyTextEdit() {
+    if(list->filtering()->enabled() && list->filtering()->editor()->text() == "") {
+        showTextEdit(false);
+    }
+}
+
 void MListPage::showTextEdit(bool show) {
     QGraphicsWidget* panel = centralWidget();
     QGraphicsLinearLayout* layout = (QGraphicsLinearLayout*) panel->layout();
@@ -534,6 +551,7 @@ void MListPage::showTextEdit(bool show) {
         textEdit->setVisible(true);
         pannableViewport()->setPosition(QPointF(0,0));
     } else if(textEdit->isOnDisplay()) {
+        list->setFocus();
         textEdit->setVisible(false);
         layout->removeAt(0);
         textEdit->setText("");
