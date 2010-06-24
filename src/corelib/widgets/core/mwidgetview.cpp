@@ -245,10 +245,11 @@ const MWidgetStyleContainer &MWidgetView::style() const
 
 QRect MWidgetView::margins() const
 {
-    return QRect(style()->marginLeft(),
-                 style()->marginTop(),
-                 style()->marginRight(),
-                 style()->marginBottom());
+    const MWidgetStyle *s = static_cast<const MWidgetStyle*>(style().operator->());
+    return QRect(s->marginLeft(),
+                 s->marginTop(),
+                 s->marginRight(),
+                 s->marginBottom());
 }
 
 int MWidgetView::marginLeft() const
@@ -273,10 +274,11 @@ int MWidgetView::marginBottom() const
 
 QRect MWidgetView::reactiveMargins() const
 {
-    return QRect(style()->reactiveMarginLeft(),
-                 style()->reactiveMarginTop(),
-                 style()->reactiveMarginRight(),
-                 style()->reactiveMarginBottom());
+    const MWidgetStyle *s = static_cast<const MWidgetStyle*>(style().operator->());
+    return QRect(s->reactiveMarginLeft(),
+                 s->reactiveMarginTop(),
+                 s->reactiveMarginRight(),
+                 s->reactiveMarginBottom());
 }
 
 int MWidgetView::reactiveMarginLeft() const
