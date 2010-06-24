@@ -250,32 +250,23 @@ QPixmap *MTheme::pixmapCopy(const QString &id, const QSize &size)
     if (realSize.height() < 1)
         realSize.rheight() = 0;
 
+    // if there is no entry for the copied pixmap yet, we need to create it
     QString identifier = defaultPixmapCacheId(id, realSize.width(), realSize.height());
     const QPixmap *p = instance()->d_ptr->fetchPixmapFromCache(identifier);
-
-    // check if we found the pixmap from cache?
-    if (p) {
-        return new QPixmap(p->copy());
+    if (!p) {
+        QPixmap *result = new QPixmap();
+        instance()->d_ptr->pixmapIdentifiers.insert(identifier, CachedPixmap(result, id, realSize));
+        p = result;
     }
 
-    QPixmap *result;
-    // we have to create temporary pixmap
-    if (realSize.width() < 1 || realSize.height() < 1) {
-        result = new QPixmap(1, 1);
-    } else {
-        result = new QPixmap(realSize);
-    }
-    if (instance()->d_ptr->showAsyncRequests) {
-        result->fill(QColor(0, 255, 0, 255));
-    } else {
-        result->fill(QColor(0, 0, 0, 0));
-    }
+    //TODO: check if the local pixmap pointer is valid already,
+    //      no need to fetch anything from daemon then
 
-    instance()->d_ptr->pixmapIdentifiers.insert(identifier, CachedPixmap(result, id, realSize));
+    //force daemon to load the pixmap synchronously, then make copy of the
+    //pixmap and release it immediately
     instance()->d_ptr->themeDaemon->pixmapHandleSync(id, realSize);
-
-    QPixmap *copy = new QPixmap(result->copy());
-    releasePixmap(result);
+    QPixmap* copy = new QPixmap(p->copy());
+    releasePixmap(p);
     return copy;
 }
 
