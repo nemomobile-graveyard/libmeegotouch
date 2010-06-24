@@ -211,18 +211,18 @@ void Ut_MComboBox::testIconVisibility()
     m_combobox->setIconID("icon-l-music");
     view->updateData(QList<const char *>() << MComboBoxModel::IconID);
     QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_iconSubtitlePolicy);
-    QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("Icon-music"));
+    QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("icon-l-music"));
 
     m_combobox->setIconVisible(false);
     view->updateData(QList<const char *>() << MComboBoxModel::IconVisible);
     QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_basicSubtitlePolicy);
     QCOMPARE(viewPrivate->button->titleWidget()->text(), QString("Title"));
-    QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("Icon-music"));
+    QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("icon-l-music"));
 
     m_combobox->setIconVisible(true);
     view->updateData(QList<const char *>() << MComboBoxModel::IconVisible);
     QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_iconSubtitlePolicy);
-    QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("Icon-music"));
+    QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("icon-l-music"));
 }
 
 
