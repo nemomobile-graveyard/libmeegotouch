@@ -192,8 +192,13 @@ MPannableViewport::MPannableViewport(QGraphicsItem *parent)
 
 MPannableViewport::~MPannableViewport()
 {
+    Q_D(MPannableViewport);
+
     QGraphicsWidget *oldwidget  = widget();
-    setWidget(0);
+
+    d->pannedWidget = NULL;
+    d->viewportLayout->setWidget(NULL);
+
     if (oldwidget) {
         delete oldwidget;
         oldwidget = 0;
