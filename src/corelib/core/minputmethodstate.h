@@ -103,9 +103,12 @@ private:
     MInputMethodState();
     ~MInputMethodState();
     Q_DISABLE_COPY(MInputMethodState)
-    Q_DECLARE_PRIVATE(MInputMethodState)
 
     MInputMethodStatePrivate *const d_ptr;
+
+    Q_DECLARE_PRIVATE(MInputMethodState)
+
+    Q_PRIVATE_SLOT(d_func(), void _q_emitInputMethodAreaChanged())
 };
 
 #endif

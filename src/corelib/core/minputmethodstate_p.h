@@ -25,10 +25,18 @@
 #include "minputmethodstate.h"
 #include "mnamespace.h"
 
+class QTimer;
+
 class MInputMethodStatePrivate
 {
+    Q_DECLARE_PUBLIC(MInputMethodState)
 public:
     MInputMethodStatePrivate();
+    ~MInputMethodStatePrivate();
+
+    void init();
+
+    void _q_emitInputMethodAreaChanged();
 
     //! Current input method area
     QRect region;
@@ -36,8 +44,12 @@ public:
     //! Current orientation of application's active window
     M::OrientationAngle orientation;
 
+    QTimer *emitInputMethodAreaTimer;
+
 private:
     Q_DISABLE_COPY(MInputMethodStatePrivate)
+
+    MInputMethodState *q_ptr;
 };
 
 #endif
