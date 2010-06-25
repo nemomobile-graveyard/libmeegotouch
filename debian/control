@@ -278,7 +278,7 @@ Description: libmeegotouch-benchmarks debug package
 
 Package: meegotouch-qt-style
 Architecture: any
-Depends: ${misc:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version})
+Depends: ${misc:Depends}, ${shlibs:Depends}, libmeegotouchcore0 (= ${Source-Version}), libqttracker-dev, libcontentmanager-dev, maemo-meegotouch-interfaces
 Description: MeeGo Touch Qt style for plain Qt applications
  MeeGo Touch Qt style plugin
 
