@@ -200,8 +200,9 @@ const MStyle *MStyleContainer::currentStyle() const
 {
     M::Orientation orientation = M::Landscape;
 
-    if (MApplication::activeWindow())
-        orientation = MApplication::activeWindow()->orientation();
+    const MWindow *activeWindow = MApplication::activeWindow();
+    if (activeWindow)
+        orientation = activeWindow->orientation();
 
     if (d_ptr->cachedCurrentStyle[orientation] != 0) {
         return d_ptr->cachedCurrentStyle[orientation];
