@@ -265,7 +265,11 @@ QPixmap *MTheme::pixmapCopy(const QString &id, const QSize &size)
     } else {
         result = new QPixmap(realSize);
     }
-    result->fill(QColor(128, 128, 128, 32));
+    if (instance()->d_ptr->showAsyncRequests) {
+        result->fill(QColor(0, 255, 0, 255));
+    } else {
+        result->fill(QColor(0, 0, 0, 0));
+    }
 
     instance()->d_ptr->pixmapIdentifiers.insert(identifier, CachedPixmap(result, id, realSize));
     instance()->d_ptr->themeDaemon->pixmapHandleSync(id, realSize);
@@ -292,7 +296,11 @@ const MScalableImage *MTheme::scalableImage(const QString &id, int left, int rig
     if (!p) {
         // we have to create temporary pixmap
         QPixmap *result = new QPixmap(1, 1);
-        result->fill(QColor(128, 128, 128, 32));
+        if (instance()->d_ptr->showAsyncRequests) {
+            result->fill(QColor(0, 255, 0, 255));
+        } else {
+            result->fill(QColor(0, 0, 0, 0));
+        }
 
         instance()->d_ptr->pixmapIdentifiers.insert(pixmapidentifier, CachedPixmap(result, id, QSize(0, 0)));
         instance()->d_ptr->themeDaemon->pixmapHandle(id, QSize(0, 0));
