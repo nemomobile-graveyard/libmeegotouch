@@ -499,7 +499,7 @@ void MListViewPrivate::_q_moveViewportToNextPosition(int frame)
     Q_UNUSED(frame);
 
     if (pannableViewport) {
-        if (targetPosition != pannableViewport->position()) {
+        if (targetPosition.toPoint() != pannableViewport->position().toPoint()) {
             pannableViewport->setPosition(calculateViewportNextPosition());
         } else {
             pannableViewport->setPosition(targetPosition);
