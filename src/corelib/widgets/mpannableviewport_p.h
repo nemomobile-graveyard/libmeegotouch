@@ -39,6 +39,7 @@ public:
     QGraphicsWidget *pannedWidget;
     MPannableViewportLayout *viewportLayout;
     MPositionIndicator *positionIndicator;
+    int lastInputMethodAreaHeight;
 
     /*!
      * \brief Sets new value of the range attribute with emitting
@@ -56,6 +57,7 @@ public:
             MOnDisplayChangeEvent *event);
     void _q_resolvePannedWidgetIsOnDisplay();
     void _q_positionIndicatorEnabledChanged();
+    void _q_inputMethodAreaChanged();
 
     friend class Ut_MPannableViewport;
 };

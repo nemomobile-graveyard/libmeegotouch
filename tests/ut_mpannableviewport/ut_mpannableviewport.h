@@ -51,6 +51,8 @@ private slots:
 
     void disabledViewportShouldNotAllowWigetToBeBiggerThanViewport();
 
+    void rangeControlledByInputMethodArea();
+
 private:
     MPannableViewport *subject;
 };

@@ -27,6 +27,7 @@
 #include <QTest>
 #include <mapplication.h>
 #include <mwidgetview.h>
+#include <MInputMethodState>
 
 MApplication *app;
 
@@ -291,6 +292,56 @@ void Ut_MPannableViewport::disabledViewportShouldNotAllowWigetToBeBiggerThanView
 
     QCOMPARE(widget->size(), QSizeF(500,300));
     subject->setEnabled(true);
+}
+
+void Ut_MPannableViewport::rangeControlledByInputMethodArea()
+{
+    QGraphicsWidget *widget = new QGraphicsWidget();
+    widget->setPreferredSize(1000, 1000);
+    widget->adjustSize();
+
+    subject->setWidget(widget);
+    subject->adjustSize();
+    QCOMPARE(subject->autoRange(), true);
+    QCOMPARE(subject->range().toRect().height(), 1000);
+
+    MInputMethodState *ims = MInputMethodState::instance();
+    QVERIFY(ims);
+    QVERIFY(ims->inputMethodArea().isEmpty());
+
+    QSignalSpy areaChanges(ims, SIGNAL(inputMethodAreaChanged(QRect)));
+
+    ims->setInputMethodArea(QRect(0, 0, 1, 500));
+    QTest::qWait(100);
+    QCOMPARE(areaChanges.count(), 1);
+    QCOMPARE(subject->range().toRect().height(), 1500);
+    QCOMPARE(subject->autoRange(), true);
+
+    subject->setAutoRange(false);
+    subject->setRange(QRectF(0, 0, 0, 2000));
+    QCOMPARE(subject->range().toRect().height(), 2500);
+
+    ims->setInputMethodArea(QRect(0, 0, 1, 1500));
+    QTest::qWait(100);
+    QCOMPARE(areaChanges.count(), 2);
+    QCOMPARE(subject->range().toRect().height(), 3500);
+    QCOMPARE(subject->autoRange(), false);
+
+    subject->setAutoRange(true);
+    QGraphicsWidget *widget2 = new QGraphicsWidget();
+    widget2->setPreferredSize(1000, 4000);
+    widget2->adjustSize();
+
+    subject->setWidget(widget2);
+    subject->adjustSize();
+    delete widget;
+    QCOMPARE(subject->range().toRect().height(), 5500);
+
+    ims->setInputMethodArea(QRect());
+    QTest::qWait(100);
+    QCOMPARE(areaChanges.count(), 3);
+    QCOMPARE(subject->range().toRect().height(), 4000);
+    QCOMPARE(subject->autoRange(), true);
 }
 
 QTEST_APPLESS_MAIN(Ut_MPannableViewport)
