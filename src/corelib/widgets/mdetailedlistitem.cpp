@@ -230,22 +230,33 @@ void MDetailedListItem::setImageWidget(MImageWidget *image)
 {
     Q_D(MDetailedListItem);
 
-    for (int i = 0; i < d->layout()->count(); i++) {
-        if (d->layout()->itemAt(i) == d->image) {
-            d->layout()->removeAt(i);
-            delete d->image;
-            d->image = NULL;
-            break;
+    if (d->layout() && d->image) {
+        for (int i = 0; i < d->layout()->count(); i++) {
+            if (d->layout()->itemAt(i) == d->image) {
+                d->layout()->removeAt(i);
+                delete d->image;
+                d->image = NULL;
+                break;
+            }
         }
     }
 
     if (image) {
         d->image = image;
-        if (d->listItemStyle == MDetailedListItem::IconTitleSubtitleAndTwoSideIcons)
-            d->layout()->addItem(d->image, 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
-        else if (d->listItemStyle == MDetailedListItem::ThumbnailTitleAndTwoSideIcons ||
-                 d->listItemStyle == MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons)
-            d->layout()->addItem(d->image, 0, 0, Qt::AlignLeft | Qt::AlignVCenter);
+        if (d->listItemStyle == MDetailedListItem::IconTitleSubtitleAndTwoSideIcons ||
+            d->listItemStyle == MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel) {
+            setIconStyle(Icon);
+            if (d->layout())
+                d->layout()->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+        } else if (d->listItemStyle == MDetailedListItem::ThumbnailTitleAndTwoSideIcons) {
+            setIconStyle(Thumbnail);
+            if (d->layout())
+                d->layout()->addItem(imageWidget(), 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
+        } else if (d->listItemStyle == MDetailedListItem::ThumbnailTitleSubtitleAndTwoSideIcons) {
+            setIconStyle(Thumbnail);
+            if (d->layout())
+                d->layout()->addItem(imageWidget(), 0, 0, 3, 1);
+        }
     }
 }
 
