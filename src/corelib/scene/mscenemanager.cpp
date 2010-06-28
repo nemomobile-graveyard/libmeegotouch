@@ -428,10 +428,13 @@ void MSceneManagerPrivate::_q_onSceneWindowDisappearanceAnimationFinished()
 void MSceneManagerPrivate::_q_onPageSwitchAnimationFinished()
 {
     MSceneWindow *oldPage = pageSwitchAnimation->oldPage();
+    MSceneWindow *newPage = pageSwitchAnimation->newPage();
+
     if (oldPage)
         setSceneWindowState(oldPage, MSceneWindow::Disappeared);
 
-    setSceneWindowState(pageSwitchAnimation->newPage(), MSceneWindow::Appeared);
+    if (newPage)
+        setSceneWindowState(newPage, MSceneWindow::Appeared);
 
     applySceneWindowTransitionsFromPageSwitchQueue();
 }
@@ -1619,6 +1622,9 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
         default:
             break;
     }
+
+    if (currentPage == sceneWindow)
+        currentPage = 0;
 
     if (sceneWindow->windowType() == MSceneWindow::NavigationBar && !navBarHidden)
         navBar = 0;

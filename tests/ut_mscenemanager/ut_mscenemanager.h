@@ -81,6 +81,8 @@ private slots:
     void testSceneWindowTransitionQueue_appearWhileDisappearing();
     void testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing();
     void testDismissPageThatIsReappearing();
+    void testDeletePageThatIsAppearing();
+    void testDeletePageThatIsDisappearing();
 private:
     MComponentData* m_componentData;
 };

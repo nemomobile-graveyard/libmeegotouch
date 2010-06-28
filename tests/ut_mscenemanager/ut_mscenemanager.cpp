@@ -958,6 +958,62 @@ void Ut_MSceneManager::testDismissPageThatIsReappearing()
     QCOMPARE(thirdPage->sceneWindowState(), MSceneWindow::Disappeared);
 }
 
+void Ut_MSceneManager::testDeletePageThatIsAppearing()
+{
+    TestBridge testBridge;
+    MApplicationPage *firstPage = new MApplicationPage;
+    MApplicationPage *secondPage = new MApplicationPage;
+
+    testBridge.setObjectName("_m_testBridge");
+    testBridge.setParent(sm);
+
+    gMWindowIsOnDisplay = true;
+
+    sm->appearSceneWindowNow(firstPage);
+    sm->appearSceneWindow(secondPage);
+
+    QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Disappearing);
+    QCOMPARE(secondPage->sceneWindowState(), MSceneWindow::Appearing);
+
+    delete secondPage;
+    secondPage = 0;
+
+    QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Disappearing);
+
+    // Animation should not cause a crash
+    testBridge.fastForwardPageSwitchAnimation();
+
+    QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Disappeared);
+}
+
+void Ut_MSceneManager::testDeletePageThatIsDisappearing()
+{
+    TestBridge testBridge;
+    MApplicationPage *firstPage = new MApplicationPage;
+    MApplicationPage *secondPage = new MApplicationPage;
+
+    testBridge.setObjectName("_m_testBridge");
+    testBridge.setParent(sm);
+
+    gMWindowIsOnDisplay = true;
+
+    sm->appearSceneWindowNow(firstPage);
+    sm->appearSceneWindow(secondPage);
+
+    QCOMPARE(firstPage->sceneWindowState(), MSceneWindow::Disappearing);
+    QCOMPARE(secondPage->sceneWindowState(), MSceneWindow::Appearing);
+
+    delete firstPage;
+    firstPage = 0;
+
+    QCOMPARE(secondPage->sceneWindowState(), MSceneWindow::Appearing);
+
+    // Animation should not cause a crash
+    testBridge.fastForwardPageSwitchAnimation();
+
+    QCOMPARE(secondPage->sceneWindowState(), MSceneWindow::Appeared);
+}
+
 TestBridge::TestBridge(QObject *parent)
     : QObject(parent)
 {
