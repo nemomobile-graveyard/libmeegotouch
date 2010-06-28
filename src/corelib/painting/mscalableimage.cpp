@@ -78,9 +78,11 @@ void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *
     //bigger than the 4 corner blocks. If necessary,
     //use smaller border values than those set with setBorders API
     //call.
-    if (w < cornerWidth || h < cornerHeight) {
+    if (w < cornerWidth) {
         margins.setLeft(qMax(0, margins.left() - (cornerWidth - w + 1) / 2));
         margins.setRight(qMax(0, margins.right() - (cornerWidth - w + 1) / 2));
+    }
+    if (h < cornerHeight) {
         margins.setTop(qMax(0, margins.top() - (cornerHeight - h + 1) / 2));
         margins.setBottom(qMax(0, margins.bottom() - (cornerHeight - h + 1) / 2));
     }
