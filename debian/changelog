@@ -1,3 +1,9 @@
+libmeegotouch (0.20.24~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 28 Jun 2010 15:34:02 +0300
+
 libmeegotouch (0.20.23-1) unstable; urgency=low
 
   * Fixes: NB#175620 - Widget properties are not updated after rotation
