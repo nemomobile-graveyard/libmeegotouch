@@ -95,6 +95,11 @@ public:
      * \brief Method used for cancelling the mouse press delivery timer.
      */
     void initialPressStopTimer();
+
+    /*!
+     * \brief Method used for getting an enabled parent pannable widget.
+     */
+    MPannableWidget* parentPannableWidget();
 };
 
 #endif

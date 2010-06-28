@@ -25,6 +25,8 @@
 #include "mwidgetview_p.h"
 #include "mtheme.h"
 
+#include "mpannablewidget.h"
+
 #include <MDebug>
 #include <QSet>
 #include <QGraphicsSceneMouseEvent>
@@ -394,8 +396,15 @@ void MWidgetController::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHold
 void MWidgetController::panGestureEvent(QGestureEvent *event, QPanGesture *gesture)
 {
     Q_D(MWidgetController);
-    if (view())
-        d->view->panGestureEvent(event,gesture);
+    // We are using here a hack which will allow reimplementing the panGestureEvent
+    // method in the pannable widget without recompilation of all client applications.
+    // This needs to be deleted when API unfreeze will finally happen.
+    if( MPannableWidget* pannableWidget = qobject_cast< MPannableWidget* >( this ))
+        pannableWidget->MPannableWidget::panGestureEvent(event, gesture);
+    else {
+        if (view())
+            d->view->panGestureEvent(event,gesture);
+    }
 }
 
 void MWidgetController::pinchGestureEvent(QGestureEvent *event, QPinchGesture* gesture)

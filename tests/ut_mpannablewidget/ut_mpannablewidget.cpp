@@ -262,7 +262,7 @@ void Ut_MPannableWidget::panGestureMovesPhysicsPointer()
     QGestureEvent event(gestureList);
 
     currentPanState = Qt::GestureStarted;
-    widget->glassPanEvent(&event, &panGesture);
+    widget->panGestureEvent(&event, &panGesture);
     QCOMPARE(physicsState->pointerPressed, true);
     QCOMPARE(physicsState->pointerMoved, true);
     QCOMPARE(physicsState->pointerReleased, false);
@@ -270,7 +270,7 @@ void Ut_MPannableWidget::panGestureMovesPhysicsPointer()
     physicsState->pointerPressed = false;
 
     currentPanState = Qt::GestureUpdated;
-    widget->glassPanEvent(&event, &panGesture);
+    widget->panGestureEvent(&event, &panGesture);
     QCOMPARE(physicsState->pointerPressed, false);
     QCOMPARE(physicsState->pointerMoved, true);
     QCOMPARE(physicsState->pointerReleased, false);
@@ -278,7 +278,7 @@ void Ut_MPannableWidget::panGestureMovesPhysicsPointer()
     physicsState->pointerMoved = false;
 
     currentPanState = Qt::GestureFinished;
-    widget->glassPanEvent(&event, &panGesture);
+    widget->panGestureEvent(&event, &panGesture);
     QCOMPARE(physicsState->pointerPressed, false);
     QCOMPARE(physicsState->pointerMoved, false);
     QCOMPARE(physicsState->pointerReleased, true);
@@ -296,7 +296,7 @@ void Ut_MPannableWidget::panGestureAgainstPanningDirectionIsIgnored()
     currentPanState = Qt::GestureStarted;
     panGesture.setOffset(QPointF(100,0));
 
-    widget->glassPanEvent(&event, &panGesture);
+    widget->panGestureEvent(&event, &panGesture);
     QCOMPARE(physicsState->pointerPressed, false);
     QCOMPARE(physicsState->pointerMoved, false);
     QCOMPARE(physicsState->pointerReleased, false);
@@ -326,7 +326,7 @@ void Ut_MPannableWidget::panGestureCancelsMouseEvents()
     QGestureEvent event(gestureList);
 
     currentPanState = Qt::GestureStarted;
-    widget->glassPanEvent(&event, &panGesture);
+    widget->panGestureEvent(&event, &panGesture);
     QCOMPARE(physicsState->pointerPressed, true);
     QCOMPARE(physicsState->pointerMoved, true);
     QCOMPARE(physicsState->pointerReleased, false);

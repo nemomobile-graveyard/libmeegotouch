@@ -69,7 +69,8 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
 
     switch (event->type()) {
     case QEvent::GraphicsSceneMousePress:
-        panGesture->startPos = ev->pos();
+
+        panGesture->startPos = ev->scenePos();
         panGesture->setHotSpot(ev->screenPos());
 
         if (panGesture->state() != Qt::NoGesture) {
@@ -90,8 +91,9 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
         break;
 
     case QEvent::GraphicsSceneMouseMove:
+
         panGesture->setLastOffset(panGesture->offset());
-        panGesture->setOffset(ev->pos() - panGesture->startPos);
+        panGesture->setOffset(ev->scenePos() - panGesture->startPos);
 
         distX = abs(panGesture->offset().x());
         distY = abs(panGesture->offset().y());

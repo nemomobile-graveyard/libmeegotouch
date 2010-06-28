@@ -112,17 +112,11 @@ public:
     virtual void timerEvent(QTimerEvent* event);
 
 protected:
-    virtual void panGestureEvent(QGestureEvent *event, QPanGesture* state);
 
     MPannableWidget *pannableWidget;
 };
 
 //! \endcond
-
-void MPannableWidgetGlass::panGestureEvent(QGestureEvent *event, QPanGesture* gesture)
-{
-    pannableWidget->glassPanEvent(event, gesture);
-}
 
 MPannableWidgetGlass::MPannableWidgetGlass(QGraphicsItem *parent) :
     MWidget(parent)
@@ -197,13 +191,7 @@ void MPannableWidgetPrivate::deliverPressEvent()
     glass->ungrabMouse();
     q->resendEvent(&pressEvent);
     mouseGrabber = q->scene()->mouseGrabberItem();
-
-    MPannableWidgetGlass *otherGlass = dynamic_cast<MPannableWidgetGlass*>(mouseGrabber);
-    if (otherGlass) {
-        mouseGrabber = 0;
-    } else {
-        glass->grabMouse();
-    }
+    glass->grabMouse();
 }
 
 void MPannableWidgetPrivate::initialPressStartTimer()
@@ -244,6 +232,22 @@ void MPannableWidgetPrivate::deliverMouseEvent(QGraphicsSceneMouseEvent *event)
     }
 }
 
+MPannableWidget* MPannableWidgetPrivate::parentPannableWidget()
+{
+    Q_Q(MPannableWidget);
+
+    QGraphicsWidget* parentWidget = q->parentWidget();
+    MPannableWidget* parentPannableWidget = 0;
+    while(parentWidget && !parentPannableWidget) {
+        parentPannableWidget = qobject_cast<MPannableWidget*>(parentWidget);
+        if (parentPannableWidget && !parentPannableWidget->isEnabled())
+            parentPannableWidget = 0;
+        parentWidget = parentWidget->parentWidget();
+    }
+
+    return parentPannableWidget;
+}
+
 MPannableWidget::MPannableWidget(MPannableWidgetPrivate *dd, MPannableWidgetModel *model,
                                      QGraphicsItem *parent)
     : MWidgetController(dd, model, parent)
@@ -274,7 +278,7 @@ void MPannableWidget::init()
     d->glass->setZValue(ZValueGlass);
 
     d->glass->setObjectName("glass");
-    d->glass->grabGesture(Qt::PanGesture);
+    grabGesture(Qt::PanGesture);
 
     setPosition(QPointF());
     setRange(QRectF());
@@ -409,6 +413,18 @@ void MPannableWidget::glassMousePressEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
+    MPannableWidget *parentPannableWidget = d->parentPannableWidget();
+    if (parentPannableWidget) {
+
+        //We are stopping here, because if there is a parent pannable widget
+        //then the initial press timeout has already happened.
+        d->physics->stop();
+
+        //My parent will handle this mouse press.
+        event->ignore();
+        return;
+    }
+
     copyGraphicsSceneMouseEvent(d->pressEvent, *event);
     d->initialPressStartTimer();
 }
@@ -433,7 +449,7 @@ void MPannableWidget::glassMouseMoveEvent(QGraphicsSceneMouseEvent *event)
     d->deliverMouseEvent(event);
 }
 
-void MPannableWidget::glassPanEvent(QGestureEvent *event, QPanGesture* panGesture)
+void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGesture)
 {
     Q_D(MPannableWidget);
 
@@ -442,10 +458,13 @@ void MPannableWidget::glassPanEvent(QGestureEvent *event, QPanGesture* panGestur
         return;
     }
 
+    QTransform itemTransform(sceneTransform().inverted());
+    QPointF itemSpaceOffset = panGesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());
+
     if (panDirection().testFlag(Qt::Vertical) == false || panDirection().testFlag(Qt::Horizontal) == false) {
         //Ignoring gestures that aren't aligned to allowed pan direction.
-        if ((panGesture->offset().x() != 0 && panDirection().testFlag(Qt::Vertical)) ||
-            (panGesture->offset().y() != 0 && panDirection().testFlag(Qt::Horizontal)))
+        if ((itemSpaceOffset.x() != 0 && panDirection().testFlag(Qt::Vertical)) ||
+            (itemSpaceOffset.y() != 0 && panDirection().testFlag(Qt::Horizontal)))
         {
             // Panning against the pannable direction, we aren't interested in it.
             event->ignore(panGesture);
@@ -457,19 +476,23 @@ void MPannableWidget::glassPanEvent(QGestureEvent *event, QPanGesture* panGestur
     {
     case Qt::GestureStarted:
 
-        if (d->pressDeliveryTimerId) {
-            // The initial MousePress event hasn't been delivered yet.
-            d->initialPressStopTimer();
-        } else {
-            sendCancel(&d->pressEvent);
-            d->mouseGrabber = 0;
+        //If we have parent pannable widget, then it is the parent
+        //who handles the cancelling of mouse press. We need to inform
+        //it that this needs to be done.
+        {
+            MPannableWidget *parentPannableWidget = d->parentPannableWidget();
+            if (parentPannableWidget) {
+                parentPannableWidget->sendCancel();
+            } else {
+                sendCancel();
+            }
         }
 
-        d->physics->pointerPress(d->pressEvent.pos());
-        //Fallthough is intentionary, we need to handle the movement that
+        d->physics->pointerPress(QPointF());
+        //Fallthrough is intentional, we need to handle the movement that
         //is delivered with a started gesture.
     case Qt::GestureUpdated:
-        d->physics->pointerMove(d->pressEvent.pos() + panGesture->offset());
+        d->physics->pointerMove(itemSpaceOffset);
         break;
     case Qt::GestureFinished:
     case Qt::GestureCanceled:
@@ -601,10 +624,11 @@ void MPannableWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
     }
 }
 
-void MPannableWidget::sendCancel(QGraphicsSceneMouseEvent *event)
+void MPannableWidget::sendCancel()
 {
     Q_D(MPannableWidget);
-    Q_UNUSED(event);
+
+    MCancelEvent cancelEvent;
 
     if ((scene() == NULL) || (scene()->views().size() == 0)) {
 
@@ -613,13 +637,14 @@ void MPannableWidget::sendCancel(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    if (!d->mouseGrabber || !scene()->items().contains(d->mouseGrabber)) {
-        // We don't have the recipient of the cancel event, don't send it.
-        return;
+    if (d->pressDeliveryTimerId) {
+        // The initial MousePress event hasn't been delivered yet.
+        d->initialPressStopTimer();
+    } else if (d->mouseGrabber && scene()->items().contains(d->mouseGrabber)) {
+        scene()->sendEvent(d->mouseGrabber, &cancelEvent);
+        d->mouseGrabber = 0;
     }
 
-    MCancelEvent cancelEvent;
-    scene()->sendEvent(d->mouseGrabber, &cancelEvent);
 }
 
 void MPannableWidget::setPanDirection(const Qt::Orientations &panDirection)

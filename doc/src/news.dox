@@ -2,12 +2,14 @@
 
 \section v02030 0.20.30
 
+- Fixed NB#175847: MPannableArea does not work inside an MApplicationPage
+
 \subsection New
 - MGridItem is deprecated, please use MContentItem, MBasicListItem, MAdvancedListItem, MDetailedListItem
 
 \section v02028 0.20.28
 
-- Fixed NB#176700: Black text on black buttons, fixed in blanco theme
+- Fixed NB#176700: Labels are not visible in QtStyle Dialog Test and QtStyle Example apps until button is tapped
 
 \subsection New
 - Added a small demo application which demonstrates how to use the orientation change support in meegotouch Qt style

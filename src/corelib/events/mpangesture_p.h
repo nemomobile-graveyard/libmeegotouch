@@ -46,6 +46,9 @@ public:
 
 private:
 
+    /*!
+      The start position of the pan gesture in scene coordinates.
+     */
     QPointF             startPos;
     Qt::Orientations    panDirection;
 

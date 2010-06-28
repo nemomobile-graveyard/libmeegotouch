@@ -202,6 +202,7 @@ protected:
     //! \reimp
     virtual void cancelEvent(MCancelEvent *event);
     virtual void onDisplayChangeEvent(MOnDisplayChangeEvent *event);
+    virtual void panGestureEvent(QGestureEvent *event, QPanGesture* state);
     //! \reimp_end
 
 private:
@@ -224,11 +225,6 @@ private:
     void glassMouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
     /*!
-     * \brief Method for delivering pan gesture.
-     */
-    void glassPanEvent(QGestureEvent* event, QPanGesture* panGesture);
-
-    /*!
      * \brief Method for delivering timer events.
      */
     void glassTimerEvent(QTimerEvent* event);
@@ -247,7 +243,7 @@ private:
     /*!
      * \brief Method for sending cancel event to viewport.
      */
-    void sendCancel(QGraphicsSceneMouseEvent *baseEvent);
+    void sendCancel();
 
     /*!
      * \brief Init method.
@@ -260,6 +256,11 @@ private:
 #endif
 
     friend class MPannableWidgetGlass;
+
+    // We are using a hack which will allow reimplementing the panGestureEvent
+    // method in the pannable widget without recompilation of all client applications.
+    // This needs to be deleted when API unfreeze will finally happen.
+    friend class MWidgetController;
 };
 
 #endif
