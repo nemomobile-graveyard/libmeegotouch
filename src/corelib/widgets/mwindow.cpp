@@ -968,8 +968,9 @@ bool MWindow::event(QEvent *event)
             QList<QGraphicsItem *> items = scene()->items();
 
             // call setLayoutDirection_helper() for all top-level items
-            foreach(QGraphicsItem * item, items) {
-                if (!item->parentItem()) {
+            for (int i = 0; i < items.size(); i++) {
+                QGraphicsItem *item = items.at(i);
+                if (scene()->items().contains(item) && !item->parentItem()) {
                     d->handleApplicationLayoutDirectionChangeEvent(item);
                 }
             }
