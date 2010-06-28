@@ -35,23 +35,56 @@ class M_EXPORT MComboBoxStyle : public MWidgetStyle
     M_STYLE(MComboBoxStyle)
 
     /*!
-        \property MComboBoxStyle::itemMode
-        \brief itemMode of internal MContentItem.
-        \see MContentItem::itemMode
+      \deprecated do not use
     */
     M_STYLE_ATTRIBUTE(int, itemMode, ItemMode)
 
     /*!
-      \property MComboBoxStyle::contentItemObjectName
-      \brief Object name of internal MContentItem.
+      \deprecated do not use
     */
     M_STYLE_ATTRIBUTE(QString, contentItemObjectName, ContentItemObjectName)
 
     /*!
       \property MComboBoxStyle::indicatorImage
-      \brief Image ID of combobox indicator arrows.
+      \brief Image ID of combobox's indicator arrows.
     */
     M_STYLE_ATTRIBUTE(QString, indicatorImage, IndicatorImage)
+
+    /*!
+      \property MComboBoxStyle::titleObjectName
+      \brief Object name of title label.
+    */
+    M_STYLE_ATTRIBUTE(QString, titleObjectName, TitleObjectName)
+
+    /*!
+      \property MComboBoxStyle::subTitleObjectName
+      \brief Object name of subtitle label.
+    */
+    M_STYLE_ATTRIBUTE(QString, subTitleObjectName, SubTitleObjectName)
+
+    /*!
+      \property MComboBoxStyle::iconObjectName
+      \brief Object name of icon.
+    */
+    M_STYLE_ATTRIBUTE(QString, iconObjectName, IconObjectName)
+
+    /*!
+      \property MComboBoxStyle::progressIndicatorObjectName
+      \brief Object name of progress indicator.
+    */
+    M_STYLE_ATTRIBUTE(QString, progressIndicatorObjectName, progressIndicatorObjectName)
+
+    /*!
+      \property MComboBoxStyle::indicatorObjectName
+      \brief Object name of combobox's indicator arrows.
+    */
+    M_STYLE_ATTRIBUTE(QString, indicatorObjectName, indicatorObjectName)
+
+    /*!
+      \property MComboBoxStyle::separateTitle
+      \brief If true, combobox's title will be above button.
+    */
+    M_STYLE_ATTRIBUTE(bool, separateTitle, SeparateTitle)
 };
 
 /*!

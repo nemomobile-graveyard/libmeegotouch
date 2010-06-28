@@ -21,61 +21,11 @@
 #define MCOMBOBOXVIEW_P_H
 
 class MLayout;
-class MGridLayoutPolicy;
+class MLinearLayoutPolicy;
 class MComboBox;
+class MComboBoxButton;
 class MPopupList;
-class MProgressIndicator;
 class MLabel;
-class MImageWidget;
-
-#include "mlistitem.h"
-
-class MComboBoxButton : public MListItem
-{
-public:
-    MComboBoxButton(QGraphicsItem *parent = 0);
-
-    void setIconID(const QString& id);
-    void setTitle(const QString &title);
-    void setSubtitle(const QString &subtitle);
-    void setProgressIndicatorVisible(bool visible);
-    void setIconVisible(bool visible);
-
-    MImageWidget * iconWidget();
-    MLabel * titleWidget();
-    MLabel * subtitleWidget();
-    MImageWidget * indicatorWidget();
-    MProgressIndicator * progressWidget();
-
-private:
-    void initLayout();
-    void updatePolicy();
-
-    MGridLayoutPolicy* iconSubtitlePolicy();
-    MGridLayoutPolicy* basicSubtitlePolicy();
-    MGridLayoutPolicy* iconProgressPolicy();
-    MGridLayoutPolicy* basicProgressPolicy();
-
-
-    MLayout *layoutGrid;
-    MGridLayoutPolicy* _iconSubtitlePolicy;
-    MGridLayoutPolicy* _basicSubtitlePolicy;
-    MGridLayoutPolicy* _iconProgressPolicy;
-    MGridLayoutPolicy* _basicProgressPolicy;
-
-    MImageWidget* _iconWidget;
-    MLabel* _titleWidget;
-    MLabel* _subtitleWidget;
-    MImageWidget* _indicatorWidget;
-    MProgressIndicator* _progressWidget;
-
-    bool progressVisible;
-    bool iconVisible;
-
-#ifdef UNIT_TEST
-    friend class Ut_MComboBox;
-#endif
-};
 
 class MComboBoxViewPrivate
 {
@@ -89,7 +39,13 @@ public:
     virtual ~MComboBoxViewPrivate();
 
     void init();
+    void updateTitle(const QString& title);
     void updateSubtitle(int currentIndex);
+
+    MComboBoxButton* buttonWidget();
+    MLabel* titleWidget();
+    MLinearLayoutPolicy* separateTitlePolicy();
+    MLinearLayoutPolicy* integratedTitlePolicy();
 
     void _q_showPopup();
     void _q_dismissPopup();
@@ -100,6 +56,11 @@ public:
     MComboBox    *controller;
     MComboBoxButton *button;
     MPopupList   *popuplist;
+    MLabel *title;
+    MLayout *layout;
+    MLinearLayoutPolicy *separateTitle;
+    MLinearLayoutPolicy *integratedTitle;
+
     bool isPopupShowing;
 };
 

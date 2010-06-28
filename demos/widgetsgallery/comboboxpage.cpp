@@ -67,9 +67,10 @@ void ComboBoxPage::createContent()
     comboBox1->setIconID("icon-m-camera-scene-portrait");
     comboBox1->addItems(list);
     comboBox1->setCurrentIndex(40);
+    comboBox1->setViewType("button");
 
     comboBox2 = new MComboBox;
-    comboBox2->setIconID("icon-m-camera-shutter");
+    comboBox2->setViewType("labelButton");
 
     model1 = new QStringListModel(this);
     model1->setStringList(list);
@@ -81,7 +82,7 @@ void ComboBoxPage::createContent()
     comboBox2->setItemModel(proxyModel);
 
     comboBox3 = new MComboBox;
-    comboBox3->setIconID("icon-m-startup-clock");
+    comboBox3->setIconID("icon-m-common-clock");
     comboBox3->setTitle("Time-consuming setting");
     comboBox3->addItem("Wash your car");
     comboBox3->addItem("Cook dinner");

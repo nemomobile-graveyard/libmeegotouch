@@ -4,6 +4,7 @@ INCLUDEPATH+=./widgets
 PUBLIC_HEADERS += \
     $$WIDGETS_SRC_DIR/mapplicationmenubutton.h \
     $$WIDGETS_SRC_DIR/mlistindex.h \
+    $$WIDGETS_SRC_DIR/mcomboboxbutton.h \
 
 MODEL_HEADERS += \
     $$WIDGETS_SRC_DIR/mapplicationmenubuttonmodel.h \
@@ -19,3 +20,4 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mcontainerheader.cpp \
     $$WIDGETS_SRC_DIR/mlistindex.cpp \
     $$WIDGETS_SRC_DIR/mbubbleitembackground.cpp \
+    $$WIDGETS_SRC_DIR/mcomboboxbutton.cpp \

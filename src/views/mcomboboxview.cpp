@@ -21,193 +21,23 @@
 #include "mcomboboxview_p.h"
 #include "mcombobox.h"
 
-#include "mtheme.h"
-#include "mimagewidget.h"
-#include "mlabel.h"
-#include "mscalableimage.h"
 #include "mviewcreator.h"
 #include "mpopuplist.h"
-#include "mapplication.h"
-#include "mapplicationwindow.h"
-#include "mscenemanager.h"
-#include "mlocale.h"
-#include "mprogressindicator.h"
+#include "mcomboboxbutton.h"
+#include "mlabel.h"
 #include "mlayout.h"
-#include "mgridlayoutpolicy.h"
-
-#include <QGraphicsLinearLayout>
-#include <QGraphicsGridLayout>
-
-
-MComboBoxButton::MComboBoxButton(QGraphicsItem *parent)
-    : MListItem(parent),
-      layoutGrid(0),
-      _iconSubtitlePolicy(0),
-      _basicSubtitlePolicy(0),
-      _iconProgressPolicy(0),
-      _basicProgressPolicy(0),
-      _iconWidget(0),
-      _titleWidget(0),
-      _subtitleWidget(0),
-      _indicatorWidget(0),
-      _progressWidget(0),
-      progressVisible(false),
-      iconVisible(false)
-{
-    initLayout();
-}
-
-void MComboBoxButton::initLayout()
-{
-    layoutGrid = new MLayout(this);
-    layoutGrid->setContentsMargins(0, 0, 0, 0);
-    setLayout(layoutGrid);
-    updatePolicy();
-}
-
-void MComboBoxButton::updatePolicy()
-{
-    if (!iconVisible && !progressVisible)
-        layoutGrid->setPolicy(basicSubtitlePolicy());
-    else if (iconVisible && !progressVisible)
-        layoutGrid->setPolicy(iconSubtitlePolicy());
-    if (!iconVisible && progressVisible)
-        layoutGrid->setPolicy(basicProgressPolicy());
-    else if (iconVisible && progressVisible)
-        layoutGrid->setPolicy(iconProgressPolicy());
-}
-
-MGridLayoutPolicy* MComboBoxButton::iconSubtitlePolicy() {
-    if (!_iconSubtitlePolicy) {
-        _iconSubtitlePolicy = new MGridLayoutPolicy(layoutGrid);
-        _iconSubtitlePolicy->addItem(iconWidget(), 0, 0, 3, 1);
-        _iconSubtitlePolicy->addItem(titleWidget(), 0, 1);
-        _iconSubtitlePolicy->addItem(subtitleWidget(), 1, 1);
-        _iconSubtitlePolicy->addItem(indicatorWidget(), 0, 2, 3, 1, Qt::AlignVCenter);
-        _iconSubtitlePolicy->addItem(new QGraphicsWidget(this), 2, 1);
-    }
-    return _iconSubtitlePolicy;
-}
-
-MGridLayoutPolicy* MComboBoxButton::basicSubtitlePolicy() {
-    if (!_basicSubtitlePolicy) {
-        _basicSubtitlePolicy = new MGridLayoutPolicy(layoutGrid);
-        _basicSubtitlePolicy->addItem(titleWidget(), 0, 0);
-        _basicSubtitlePolicy->addItem(subtitleWidget(), 1, 0);
-        _basicSubtitlePolicy->addItem(indicatorWidget(), 0, 1, 3, 1, Qt::AlignVCenter);
-        _basicSubtitlePolicy->addItem(new QGraphicsWidget(this), 2, 0);
-    }
-    return _basicSubtitlePolicy;
-}
-
-MGridLayoutPolicy* MComboBoxButton::iconProgressPolicy() {
-    if (!_iconProgressPolicy) {
-        _iconProgressPolicy = new MGridLayoutPolicy(layoutGrid);
-        _iconProgressPolicy->addItem(iconWidget(), 0, 0, 3, 1);
-        _iconProgressPolicy->addItem(titleWidget(), 0, 1);
-        _iconProgressPolicy->addItem(progressWidget(), 1, 1);
-        _iconProgressPolicy->addItem(indicatorWidget(), 0, 2, 3, 1, Qt::AlignVCenter);
-        _iconProgressPolicy->addItem(new QGraphicsWidget(this), 2, 1);
-    }
-    return _iconProgressPolicy;
-}
-
-MGridLayoutPolicy* MComboBoxButton::basicProgressPolicy() {
-    if (!_basicProgressPolicy) {
-        _basicProgressPolicy = new MGridLayoutPolicy(layoutGrid);
-        _basicProgressPolicy->addItem(titleWidget(), 0, 0);
-        _basicProgressPolicy->addItem(progressWidget(), 1, 0);
-        _basicProgressPolicy->addItem(indicatorWidget(), 0, 1, 3, 1, Qt::AlignVCenter);
-        _basicProgressPolicy->addItem(new QGraphicsWidget(this), 2, 0);
-    }
-    return _basicProgressPolicy;
-}
-
-void MComboBoxButton::setProgressIndicatorVisible(bool visible)
-{
-    if (visible != progressVisible) {
-        progressVisible = visible;
-        updatePolicy();
-    }
-}
-
-void MComboBoxButton::setIconVisible(bool visible)
-{
-    if (visible != iconVisible) {
-        iconVisible = visible;
-        updatePolicy();
-    }
-}
-
-void MComboBoxButton::setIconID(const QString& id)
-{
-    iconWidget()->setImage(id);
-}
-
-void MComboBoxButton::setTitle(const QString &title)
-{
-    titleWidget()->setText(title);
-}
-
-void MComboBoxButton::setSubtitle(const QString &subtitle)
-{
-    subtitleWidget()->setText(subtitle);
-}
-
-MImageWidget * MComboBoxButton::iconWidget()
-{
-    if (!_iconWidget) {
-        _iconWidget = new MImageWidget(this);
-        _iconWidget->setObjectName("CommonMainIcon");
-    }
-    return _iconWidget;
-}
-
-MLabel * MComboBoxButton::titleWidget()
-{
-    if (!_titleWidget) {
-        _titleWidget = new MLabel(this);
-        _titleWidget->setTextElide(true);
-        _titleWidget->setObjectName("CommonTitle");
-    }
-    return _titleWidget;
-}
-
-MLabel * MComboBoxButton::subtitleWidget()
-{
-    if (!_subtitleWidget) {
-        _subtitleWidget = new MLabel(this);
-        _subtitleWidget->setTextElide(true);
-        _subtitleWidget->setObjectName("CommonSubTitle");
-    }
-    return _subtitleWidget;
-}
-
-MProgressIndicator* MComboBoxButton::progressWidget()
-{
-    if (!_progressWidget) {
-        _progressWidget = new MProgressIndicator(this, MProgressIndicator::barType);
-        _progressWidget->setUnknownDuration(true);
-        _progressWidget->setObjectName("CommonProgressIndicator");
-    }
-    return _progressWidget;
-}
-
-MImageWidget* MComboBoxButton::indicatorWidget()
-{
-    if (!_indicatorWidget) {
-        _indicatorWidget = new MImageWidget(this);
-        _indicatorWidget->setObjectName("ComboBoxIndicator");
-    }
-    return _indicatorWidget;
-}
-
+#include "mlinearlayoutpolicy.h"
+#include "mscenemanager.h"
 
 MComboBoxViewPrivate::MComboBoxViewPrivate()
   : q_ptr(0),
     controller(0),
     button(0),
     popuplist(0),
+    title(0),
+    layout(0),
+    separateTitle(0),
+    integratedTitle(0),
     isPopupShowing(0)
 {
 }
@@ -216,34 +46,78 @@ MComboBoxViewPrivate::~MComboBoxViewPrivate()
 {
     delete popuplist;
     delete button;
+    delete title;
 }
 
 void MComboBoxViewPrivate::init()
 {
     Q_Q(MComboBoxView);
 
-    QGraphicsLinearLayout* layout = new QGraphicsLinearLayout();
+    layout = new MLayout();
     layout->setContentsMargins(0, 0, 0, 0);
     controller->setLayout(layout);
 
-    button = new MComboBoxButton();
-    layout->addItem(button);
-
-    QObject::connect(button, SIGNAL(clicked()), controller, SLOT(click()));
     QObject::connect(controller, SIGNAL(currentIndexChanged(int)), q, SLOT(_q_itemModelCurrentIndexChanged(int)));
     QObject::connect(controller, SIGNAL(clicked()), q, SLOT(_q_showPopup()));
     QObject::connect(controller, SIGNAL(dismissed()), q ,SLOT(_q_dismissPopup()));
 }
 
-void MComboBoxViewPrivate::updateSubtitle(int currentIndex) {
+void MComboBoxViewPrivate::updateTitle(const QString& newTitle)
+{
+    buttonWidget()->setTitle(newTitle);
+    if (title)
+        title->setText(newTitle);
+    if (popuplist)
+        popuplist->setTitle(newTitle);
+}
+
+void MComboBoxViewPrivate::updateSubtitle(int currentIndex)
+{
     if (currentIndex != -1)  {
-        button->setSubtitle(controller->itemText(currentIndex));
+        buttonWidget()->setSubtitle(controller->itemText(currentIndex));
     } else {
         //~ uispec-document DirectUI_Common_Strings_UI_Specification_0.7.doc
         //: default value for Popup List button sublabel when nothing has been selected yet
         //% "Tap to Select"
-        button->setSubtitle(qtTrId("xx_ComboBoxSubtitle"));
+        buttonWidget()->setSubtitle(qtTrId("xx_ComboBoxSubtitle"));
     }
+}
+
+MComboBoxButton* MComboBoxViewPrivate::buttonWidget()
+{
+    if (!button) {
+        button = new MComboBoxButton();
+        QObject::connect(button, SIGNAL(clicked()), controller, SLOT(click()));
+    }
+    return button;
+}
+
+MLabel* MComboBoxViewPrivate::titleWidget()
+{
+    if (!title) {
+        title = new MLabel();
+        title->setTextElide(true);
+    }
+    return title;
+}
+
+MLinearLayoutPolicy* MComboBoxViewPrivate::separateTitlePolicy()
+{
+    if (!separateTitle) {
+        separateTitle = new MLinearLayoutPolicy(layout, Qt::Vertical);
+        separateTitle->addItem(titleWidget());
+        separateTitle->addItem(buttonWidget());
+    }
+    return separateTitle;
+}
+
+MLinearLayoutPolicy* MComboBoxViewPrivate::integratedTitlePolicy()
+{
+    if (!integratedTitle) {
+        integratedTitle = new MLinearLayoutPolicy(layout, Qt::Vertical);
+        integratedTitle->addItem(buttonWidget());
+    }
+    return integratedTitle;
 }
 
 void MComboBoxViewPrivate::_q_itemModelCurrentIndexChanged(int currentIndex)
@@ -328,8 +202,17 @@ void MComboBoxView::applyStyle()
     Q_D(MComboBoxView);
     MWidgetView::applyStyle();
 
-    d->button->setObjectName(style()->contentItemObjectName());
-    d->button->indicatorWidget()->setImage(style()->indicatorImage());
+    d->buttonWidget()->setTitleObjectName(style()->titleObjectName());
+    d->buttonWidget()->setSubTitleObjectName(style()->subTitleObjectName());
+    d->buttonWidget()->setIconObjectName(style()->iconObjectName());
+    d->buttonWidget()->setIndicatorObjectName(style()->indicatorObjectName());
+    d->buttonWidget()->setIndicatorImage(style()->indicatorImage());
+    d->buttonWidget()->setProgressIndicatorObjectName(style()->progressIndicatorObjectName());
+
+    d->layout->setPolicy(style()->separateTitle() ? d->separateTitlePolicy() : d->integratedTitlePolicy());
+    d->buttonWidget()->setTitleVisible(!style()->separateTitle());
+    if (d->title)
+        d->title->setObjectName(style()->titleObjectName());
 }
 
 void MComboBoxView::updateData(const QList<const char *>& modifications)
@@ -340,16 +223,14 @@ void MComboBoxView::updateData(const QList<const char *>& modifications)
 
     foreach(const char* member, modifications) {
         if (member == MComboBoxModel::IconID) {
-            d->button->setIconID(model()->iconID());
-            d->button->setIconVisible(model()->iconVisible() && !model()->iconID().isEmpty());
+            d->buttonWidget()->setIconID(model()->iconID());
+            d->buttonWidget()->setIconVisible(model()->iconVisible() && !model()->iconID().isEmpty());
         } else if (member == MComboBoxModel::IconVisible) {
-            d->button->setIconVisible(model()->iconVisible() && !model()->iconID().isEmpty());
+            d->buttonWidget()->setIconVisible(model()->iconVisible() && !model()->iconID().isEmpty());
         } else if (member == MComboBoxModel::ProgressIndicatorVisible) {
-            d->button->setProgressIndicatorVisible(model()->progressIndicatorVisible());
+            d->buttonWidget()->setProgressIndicatorVisible(model()->progressIndicatorVisible());
         } else if (member == MComboBoxModel::Title) {
-            d->button->setTitle(model()->title());
-            if (d->popuplist)
-                d->popuplist->setTitle(model()->title());
+            d->updateTitle(model()->title());
         } else if (member == MComboBoxModel::ItemModel) {
             if (d->popuplist)
                 d->popuplist->setItemModel(model()->itemModel());
@@ -357,7 +238,7 @@ void MComboBoxView::updateData(const QList<const char *>& modifications)
             if (d->popuplist)
                 d->popuplist->setSelectionModel(model()->selectionModel());
         } else if (member == MWidgetModel::LayoutPosition) {
-            d->button->setLayoutPosition(model()->layoutPosition());
+            d->buttonWidget()->setLayoutPosition(model()->layoutPosition());
         }
     }
 }
@@ -367,10 +248,12 @@ void MComboBoxView::setupModel()
     Q_D(MComboBoxView);
     MWidgetView::setupModel();
 
-    d->button->setTitle(model()->title());
-    d->button->setIconID(model()->iconID());
-    d->button->setIconVisible(model()->iconVisible() && !model()->iconID().isEmpty());
-    d->button->setProgressIndicatorVisible(model()->progressIndicatorVisible());
+    d->updateTitle(model()->title());
+    d->buttonWidget()->setIconID(model()->iconID());
+    d->buttonWidget()->setIconVisible(model()->iconVisible() && !model()->iconID().isEmpty());
+    d->buttonWidget()->setProgressIndicatorVisible(model()->progressIndicatorVisible());
+    d->buttonWidget()->setLayoutPosition(model()->layoutPosition());
+    d->buttonWidget()->setViewType(model()->viewType());
     d->updateSubtitle(d->controller->currentIndex());
 }
 

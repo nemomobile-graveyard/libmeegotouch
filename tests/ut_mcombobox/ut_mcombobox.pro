@@ -7,7 +7,8 @@ TARGET = ut_mcombobox
 # unit test and unit
 SOURCES += \
     ut_mcombobox.cpp \
-    ../../src/views/mcomboboxview.cpp
+    ../../src/views/mcomboboxview.cpp \
+    ../../src/views/widgets/mcomboboxbutton.cpp \
 
 # unit test and unit
 HEADERS += \
@@ -16,6 +17,7 @@ HEADERS += \
 INCLUDEPATH += \
     ../../src/corelib/widgets \
     ../../src/views \
-    ../../src/views/.moc
+    ../../src/views/widgets \
+    ../../src/views/.moc \
 
 include(../common_bot.pri)

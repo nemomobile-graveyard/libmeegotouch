@@ -39,6 +39,7 @@
 #include "mcancelevent.h"
 #include "mcomboboxview.h"
 #include "mcomboboxview_p.h"
+#include "mcomboboxbutton.h"
 #include "mlayout.h"
 #include "mgridlayoutpolicy.h"
 
@@ -202,26 +203,27 @@ void Ut_MComboBox::testIconVisibility()
 {
     MComboBoxView *view = (MComboBoxView *)m_combobox->view();
     MComboBoxViewPrivate *viewPrivate = view->d_func();
+    MLayout* comboboxButtonLayout = static_cast<MLayout*>(viewPrivate->button->layout());
 
     m_combobox->setTitle("Title");
     view->updateData(QList<const char *>() << MComboBoxModel::Title);
-    QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_basicSubtitlePolicy);
+    QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->policy[MComboBoxButton::TitleShown]);
     QCOMPARE(viewPrivate->button->titleWidget()->text(), QString("Title"));
 
     m_combobox->setIconID("icon-l-music");
     view->updateData(QList<const char *>() << MComboBoxModel::IconID);
-    QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_iconSubtitlePolicy);
+    QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->policy[MComboBoxButton::TitleShown|MComboBoxButton::IconShown]);
     QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("icon-l-music"));
 
     m_combobox->setIconVisible(false);
     view->updateData(QList<const char *>() << MComboBoxModel::IconVisible);
-    QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_basicSubtitlePolicy);
+    QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->policy[MComboBoxButton::TitleShown]);
     QCOMPARE(viewPrivate->button->titleWidget()->text(), QString("Title"));
     QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("icon-l-music"));
 
     m_combobox->setIconVisible(true);
     view->updateData(QList<const char *>() << MComboBoxModel::IconVisible);
-    QCOMPARE(viewPrivate->button->layoutGrid->policy(), viewPrivate->button->_iconSubtitlePolicy);
+    QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->policy[MComboBoxButton::TitleShown|MComboBoxButton::IconShown]);
     QCOMPARE(viewPrivate->button->iconWidget()->image(), QString("icon-l-music"));
 }
 
