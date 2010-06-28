@@ -210,7 +210,6 @@ const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
 QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
 {
     QString mode;
-    qCritical() << state;
     if (state & QStyle::State_Enabled) {
         if (state & QStyle::State_Active)
             mode = "active";
