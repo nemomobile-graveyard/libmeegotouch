@@ -248,10 +248,10 @@ void Ft_Locales::testMLocaleScript_data()
     QTest::addColumn<QString>("locale");
     QTest::addColumn<QString>("script");
 
-    QTest::newRow("fi") << QString("fi_FI") << QString("Latn");
+    QTest::newRow("fi") << QString("fi_FI") << QString("");
     QTest::newRow("snd") << QString("snd_Arab_AF") << QString("Arab");
     QTest::newRow("snd") << QString("snd_Deva") << QString("Deva");
-    QTest::newRow("en") << QString("en") << QString("Latn");
+    QTest::newRow("en") << QString("en") << QString("");
     QTest::newRow("en") << QString("en_Arab") << QString("Arab");
 }
 
@@ -483,6 +483,42 @@ void Ft_Locales::testMLocaleCountryEndonym()
     QFETCH(QString, endonym_result);
     MLocale locale(locale_name);
     QCOMPARE(locale.countryEndonym(), endonym_result);
+}
+
+void Ft_Locales::testMLocaleLocaleScripts_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QStringList>("localeScripts");
+
+    QTest::newRow("fi_FI")
+            << QString("fi_FI")
+            << (QStringList () << "Latn");
+    QTest::newRow("sr_RS")
+            << QString("sr_RS")
+            << (QStringList () << "Cyrl");
+    QTest::newRow("sr_RS")
+            << QString("sr_Cyrl_RS")
+            << (QStringList () << "Cyrl");
+    QTest::newRow("sr_Latn_RS")
+            << QString("sr_Latn_RS")
+            << (QStringList () << "Latn");
+    QTest::newRow("zh_TW")
+            << QString("zh_TW")
+            << (QStringList () << "Hani" << "Bopo");
+    QTest::newRow("zh_Hant_TW")
+            << QString("zh_Hant_TW")
+            << (QStringList () << "Hani" << "Bopo");
+    QTest::newRow("ja_JP")
+            << QString("ja_JP")
+            << (QStringList () << "Kana" << "Hira" << "Hani");
+}
+
+void Ft_Locales::testMLocaleLocaleScripts()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QStringList, localeScripts);
+    MLocale locale(localeName);
+    QCOMPARE(locale.localeScripts(), localeScripts);
 }
 
 /*
@@ -868,6 +904,8 @@ void Ft_Locales::checkAvailableLocales()
             + locale.weekdayName(islamicCalendar, 7)
             + '\n' + supportedLocaleName + '\t' + "Collation sample" + '\t'
             + sortingTestList.join(" ")
+            + '\n' + supportedLocaleName + '\t' + "Scripts used" + '\t'
+            + locale.localeScripts().join(" ")
             + '\n';
     }
     QString ft_localesTestOutputFileName =

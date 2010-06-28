@@ -56,8 +56,6 @@ namespace
     const char *const Languages = "Languages";
     const char *const Countries = "Countries";
 
-    const QString ScriptLatin("Latn");
-
     const QString SettingsLanguage("/meegotouch/i18n/language");
     const QString SettingsLcTime("/meegotouch/i18n/lc_time");
     const QString SettingsLcCollate("/meegotouch/i18n/lc_collate");
@@ -847,14 +845,12 @@ QString MLocalePrivate::parseScript(const QString &localeString)
 
     if (startOfScript > 0) {
         QString candidate = localeString.mid(startOfScript, endOfScript - startOfScript);
-        if (candidate.size() == 4) {
+        if (candidate.size() == 4)
             return candidate;
-        } else {
-            return ScriptLatin;
-        }
-    } else {
-        return ScriptLatin;
-    }
+        else
+            return "";
+    } else
+        return "";
 }
 
 QString MLocalePrivate::parseVariant(const QString &localeString)
@@ -2100,7 +2096,43 @@ QString MLocale::countryEndonym() const
     }
 
     ures_close(res);
+
     return convertedValue;
+}
+#endif
+
+#ifdef HAVE_ICU
+QStringList MLocale::localeScripts() const
+{
+    Q_D(const MLocale);
+    UErrorCode status = U_ZERO_ERROR;
+
+    UResourceBundle *res = ures_open(NULL, qPrintable(d->_defaultLocale), &status);
+
+    if (U_FAILURE(status)) {
+        mDebug("MLocale") << "Error ures_open" << u_errorName(status);
+    }
+
+    res = ures_getByKey(res, "LocaleScript", res, &status);
+    if (U_FAILURE(status)) {
+        mDebug("MLocale") << "Error ures_getByKey" << u_errorName(status);
+    }
+
+    QStringList scripts;
+    qint32 len;
+    const UChar *val;
+
+    while (NULL != (val = ures_getNextString(res, &len, NULL, &status))) {
+        if (U_SUCCESS(status))
+            scripts << QString::fromUtf16(val, len);
+    }
+    ures_close(res);
+    if (scripts.isEmpty())
+        // "Zyyy" Code for undetermined script,
+        // see http://www.unicode.org/iso15924/iso15924-codes.html
+        scripts << "Zyyy";
+
+    return scripts;
 }
 #endif
 

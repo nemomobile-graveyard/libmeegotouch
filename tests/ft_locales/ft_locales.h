@@ -90,6 +90,8 @@ private slots:
     void testMLocaleLanguageEndonym();
     void testMLocaleCountryEndonym_data();
     void testMLocaleCountryEndonym();
+    void testMLocaleLocaleScripts_data();
+    void testMLocaleLocaleScripts();
 
     void checkAvailableLocales();
 };

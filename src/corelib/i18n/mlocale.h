@@ -364,27 +364,113 @@ public:
     QString countryEndonym() const;
 
     /*!
+     * \brief Returns the list of scripts used by the locale
+     *
+     * This returns the scripts used by the locale, in form of <a
+     * href="http://www.unicode.org/iso15924/iso15924-codes.html">ISO
+     * 15924 script codes</a>. Most locales use only one script
+     * but there are a few locales which use several scripts.
+     *
+     * <table border="1">
+     * <caption>
+     *  <big><b>Examples for script codes</b></big>
+     * </caption>
+     * <tr>
+     *    <th>locale name</th><th>script codes</th>
+     * </tr>
+     * <tr>
+     *    <td>en_US</td><td>Latn</td>
+     * </tr>
+     * <tr>
+     *    <td>sr_RS</td><td>Cyrl</td>
+     * </tr>
+     * <tr>
+     *    <td>sr_Cyrl_RS</td><td>Cyrl</td>
+     * </tr>
+     * <tr>
+     *    <td>sr_Latn_RS</td><td>Latn</td>
+     * </tr>
+     * <tr>
+     *    <td>zh_Hant_TW</td><td>Hani, Bopo</td>
+     * </tr>
+     * <tr>
+     *    <td>ja_JP</td><td>Kana, Hira, Hani</td>
+     * </tr>
+     * </table>
+     *
+     */
+    QStringList localeScripts() const;
+
+    /*!
      * \brief Returns the language code of the locale in ISO-639 format
+     *
+     * \sa name()
+     * \sa script()
+     * \sa country()
+     * \sa variant()
      */
     QString language() const;
 
     /*!
      * \brief Returns the country code of the locale in ISO-3166 format
+     *
+     * \sa name()
+     * \sa language()
+     * \sa script()
+     * \sa variant()
      */
     QString country() const;
 
     /*!
      * \brief Returns the script code of the locale in ISO-15924 format
+     *
+     * Returns the part of the locale name which specifies the script
+     * in form of <a
+     * href="http://www.unicode.org/iso15924/iso15924-codes.html">ISO
+     * 15924 script codes</a>
+     *
+     * If that part of the locale name was not specified, i.e. if the
+     * default script for that language and country is used, it
+     * returns an empty string. For example, if the locale name is
+     * “ru_RU”, an empty string is returned and not “Cyrl” which
+     * is the <a
+     * href="http://www.unicode.org/iso15924/iso15924-codes.html">ISO
+     * 15924 code</a> of the Cyrillic script used by the “ru_RU”
+     * locale.
+     *
+     * If you need to find out which scripts are used by a certain locale
+     * use localeScripts() const instead.
+     *
+     * \sa name()
+     * \sa language()
+     * \sa country()
+     * \sa variant()
+     * \sa localeScripts() const
      */
     QString script() const;
 
     /*!
      * \brief Returns the variant appended to the locale
+     *
+     * \sa name()
+     * \sa language()
+     * \sa script()
+     * \sa country()
      */
     QString variant() const;
 
     /*!
      * \brief Returns the string representation of the locale
+     *
+     * The string representation of the locale is the full ICU locale
+     * ID string. See the <a
+     * href="http://userguide.icu-project.org/locale">ICU user
+     * guide</a> for examples.
+     *
+     * \sa language()
+     * \sa script()
+     * \sa country()
+     * \sa variant()
      */
     QString name() const;
 

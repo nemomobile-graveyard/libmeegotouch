@@ -51,6 +51,7 @@ ar	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar	Name of weekday 06 (Islamic Calendar)	السبت
 ar	Name of weekday 07 (Islamic Calendar)	الأحد
 ar	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar	Scripts used	Arab
 ar_AE	Language endonym	العربية
 ar_AE	Country endonym	الامارات العربية المتحدة
 ar_AE	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -104,6 +105,7 @@ ar_AE	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_AE	Name of weekday 06 (Islamic Calendar)	السبت
 ar_AE	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_AE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_AE	Scripts used	Arab
 ar_BH	Language endonym	العربية
 ar_BH	Country endonym	البحرين
 ar_BH	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -157,6 +159,7 @@ ar_BH	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_BH	Name of weekday 06 (Islamic Calendar)	السبت
 ar_BH	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_BH	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_BH	Scripts used	Arab
 ar_DZ	Language endonym	العربية
 ar_DZ	Country endonym	الجزائر
 ar_DZ	Floating Point Number	123٬456٬789٫012-
@@ -210,6 +213,7 @@ ar_DZ	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_DZ	Name of weekday 06 (Islamic Calendar)	السبت
 ar_DZ	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_DZ	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_DZ	Scripts used	Arab
 ar_EG	Language endonym	العربية
 ar_EG	Country endonym	مصر
 ar_EG	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -263,6 +267,7 @@ ar_EG	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_EG	Name of weekday 06 (Islamic Calendar)	السبت
 ar_EG	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_EG	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_EG	Scripts used	Arab
 ar_IQ	Language endonym	العربية
 ar_IQ	Country endonym	العراق
 ar_IQ	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -316,6 +321,7 @@ ar_IQ	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_IQ	Name of weekday 06 (Islamic Calendar)	السبت
 ar_IQ	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_IQ	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_IQ	Scripts used	Arab
 ar_JO	Language endonym	العربية
 ar_JO	Country endonym	الأردن
 ar_JO	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -369,6 +375,7 @@ ar_JO	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_JO	Name of weekday 06 (Islamic Calendar)	السبت
 ar_JO	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_JO	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_JO	Scripts used	Arab
 ar_KW	Language endonym	العربية
 ar_KW	Country endonym	الكويت
 ar_KW	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -422,6 +429,7 @@ ar_KW	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_KW	Name of weekday 06 (Islamic Calendar)	السبت
 ar_KW	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_KW	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_KW	Scripts used	Arab
 ar_LB	Language endonym	العربية
 ar_LB	Country endonym	لبنان
 ar_LB	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -475,6 +483,7 @@ ar_LB	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_LB	Name of weekday 06 (Islamic Calendar)	السبت
 ar_LB	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_LB	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_LB	Scripts used	Arab
 ar_LY	Language endonym	العربية
 ar_LY	Country endonym	ليبيا
 ar_LY	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -528,6 +537,7 @@ ar_LY	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_LY	Name of weekday 06 (Islamic Calendar)	السبت
 ar_LY	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_LY	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_LY	Scripts used	Arab
 ar_MA	Language endonym	العربية
 ar_MA	Country endonym	المغرب
 ar_MA	Floating Point Number	123٬456٬789٫012-
@@ -581,6 +591,7 @@ ar_MA	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_MA	Name of weekday 06 (Islamic Calendar)	السبت
 ar_MA	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_MA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_MA	Scripts used	Arab
 ar_OM	Language endonym	العربية
 ar_OM	Country endonym	عُمان
 ar_OM	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -634,6 +645,7 @@ ar_OM	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_OM	Name of weekday 06 (Islamic Calendar)	السبت
 ar_OM	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_OM	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_OM	Scripts used	Arab
 ar_QA	Language endonym	العربية
 ar_QA	Country endonym	قطر
 ar_QA	Floating Point Number	١٢٣٤٥٦٧٨٩٫٠١٢-
@@ -687,6 +699,7 @@ ar_QA	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_QA	Name of weekday 06 (Islamic Calendar)	السبت
 ar_QA	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_QA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_QA	Scripts used	Arab
 ar_SA	Language endonym	العربية
 ar_SA	Country endonym	المملكة العربية السعودية
 ar_SA	Floating Point Number	١٢٣٤٥٦٧٨٩٫٠١٢-
@@ -740,6 +753,7 @@ ar_SA	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_SA	Name of weekday 06 (Islamic Calendar)	السبت
 ar_SA	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_SA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_SA	Scripts used	Arab
 ar_SD	Language endonym	العربية
 ar_SD	Country endonym	السودان
 ar_SD	Floating Point Number	١٢٣٬٤٥٦٬٧٨٩٫٠١٢-
@@ -793,6 +807,7 @@ ar_SD	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_SD	Name of weekday 06 (Islamic Calendar)	السبت
 ar_SD	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_SD	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_SD	Scripts used	Arab
 ar_SY	Language endonym	العربية
 ar_SY	Country endonym	سوريا
 ar_SY	Floating Point Number	١٢٣٤٥٦٧٨٩٫٠١٢-
@@ -846,6 +861,7 @@ ar_SY	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_SY	Name of weekday 06 (Islamic Calendar)	السبت
 ar_SY	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_SY	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_SY	Scripts used	Arab
 ar_TN	Language endonym	العربية
 ar_TN	Country endonym	تونس
 ar_TN	Floating Point Number	123456789٫012-
@@ -899,6 +915,7 @@ ar_TN	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_TN	Name of weekday 06 (Islamic Calendar)	السبت
 ar_TN	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_TN	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_TN	Scripts used	Arab
 ar_YE	Language endonym	العربية
 ar_YE	Country endonym	اليمن
 ar_YE	Floating Point Number	١٢٣٤٥٦٧٨٩٫٠١٢-
@@ -952,6 +969,7 @@ ar_YE	Name of weekday 05 (Islamic Calendar)	الجمعة
 ar_YE	Name of weekday 06 (Islamic Calendar)	السبت
 ar_YE	Name of weekday 07 (Islamic Calendar)	الأحد
 ar_YE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ar_YE	Scripts used	Arab
 ca	Language endonym	català
 ca	Country endonym	
 ca	Floating Point Number	-123.456.789,012
@@ -1005,6 +1023,7 @@ ca	Name of weekday 05 (Islamic Calendar)	divendres
 ca	Name of weekday 06 (Islamic Calendar)	dissabte
 ca	Name of weekday 07 (Islamic Calendar)	diumenge
 ca	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ca	Scripts used	Latn
 ca_ES	Language endonym	català
 ca_ES	Country endonym	Espanya
 ca_ES	Floating Point Number	-123.456.789,012
@@ -1058,6 +1077,7 @@ ca_ES	Name of weekday 05 (Islamic Calendar)	divendres
 ca_ES	Name of weekday 06 (Islamic Calendar)	dissabte
 ca_ES	Name of weekday 07 (Islamic Calendar)	diumenge
 ca_ES	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ca_ES	Scripts used	Latn
 da	Language endonym	dansk
 da	Country endonym	
 da	Floating Point Number	-123.456.789,012
@@ -1111,6 +1131,7 @@ da	Name of weekday 05 (Islamic Calendar)	fredag
 da	Name of weekday 06 (Islamic Calendar)	lørdag
 da	Name of weekday 07 (Islamic Calendar)	søndag
 da	Collation sample	a á b oegh z ä öfgh å Α α Β β Ω ω А а Б б В в Г г Ѐ Я я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+da	Scripts used	Latn
 da_DK	Language endonym	dansk
 da_DK	Country endonym	Danmark
 da_DK	Floating Point Number	-123.456.789,012
@@ -1164,6 +1185,7 @@ da_DK	Name of weekday 05 (Islamic Calendar)	fredag
 da_DK	Name of weekday 06 (Islamic Calendar)	lørdag
 da_DK	Name of weekday 07 (Islamic Calendar)	søndag
 da_DK	Collation sample	a á b oegh z ä öfgh å Α α Β β Ω ω А а Б б В в Г г Ѐ Я я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+da_DK	Scripts used	Latn
 de	Language endonym	Deutsch
 de	Country endonym	
 de	Floating Point Number	-123.456.789,012
@@ -1217,6 +1239,7 @@ de	Name of weekday 05 (Islamic Calendar)	Freitag
 de	Name of weekday 06 (Islamic Calendar)	Samstag
 de	Name of weekday 07 (Islamic Calendar)	Sonntag
 de	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+de	Scripts used	Latn
 de_AT	Language endonym	Deutsch
 de_AT	Country endonym	Österreich
 de_AT	Floating Point Number	-123.456.789,012
@@ -1270,6 +1293,7 @@ de_AT	Name of weekday 05 (Islamic Calendar)	Freitag
 de_AT	Name of weekday 06 (Islamic Calendar)	Samstag
 de_AT	Name of weekday 07 (Islamic Calendar)	Sonntag
 de_AT	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+de_AT	Scripts used	Latn
 de_BE	Language endonym	Deutsch
 de_BE	Country endonym	Belgien
 de_BE	Floating Point Number	-123.456.789,012
@@ -1323,6 +1347,7 @@ de_BE	Name of weekday 05 (Islamic Calendar)	Freitag
 de_BE	Name of weekday 06 (Islamic Calendar)	Samstag
 de_BE	Name of weekday 07 (Islamic Calendar)	Sonntag
 de_BE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+de_BE	Scripts used	Latn
 de_CH	Language endonym	Deutsch
 de_CH	Country endonym	Schweiz
 de_CH	Floating Point Number	-123'456'789.012
@@ -1376,6 +1401,7 @@ de_CH	Name of weekday 05 (Islamic Calendar)	Freitag
 de_CH	Name of weekday 06 (Islamic Calendar)	Samstag
 de_CH	Name of weekday 07 (Islamic Calendar)	Sonntag
 de_CH	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+de_CH	Scripts used	Latn
 de_DE	Language endonym	Deutsch
 de_DE	Country endonym	Deutschland
 de_DE	Floating Point Number	-123.456.789,012
@@ -1429,6 +1455,7 @@ de_DE	Name of weekday 05 (Islamic Calendar)	Freitag
 de_DE	Name of weekday 06 (Islamic Calendar)	Samstag
 de_DE	Name of weekday 07 (Islamic Calendar)	Sonntag
 de_DE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+de_DE	Scripts used	Latn
 de_DE@collation=phonebook	Language endonym	Deutsch
 de_DE@collation=phonebook	Country endonym	DE@collation=phonebook
 de_DE@collation=phonebook	Floating Point Number	-123.456.789,012
@@ -1482,6 +1509,7 @@ de_DE@collation=phonebook	Name of weekday 05 (Islamic Calendar)	Freitag
 de_DE@collation=phonebook	Name of weekday 06 (Islamic Calendar)	Samstag
 de_DE@collation=phonebook	Name of weekday 07 (Islamic Calendar)	Sonntag
 de_DE@collation=phonebook	Collation sample	a á å ä b öfgh oegh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+de_DE@collation=phonebook	Scripts used	Latn
 de_LI	Language endonym	Deutsch
 de_LI	Country endonym	Liechtenstein
 de_LI	Floating Point Number	-123'456'789.012
@@ -1535,6 +1563,7 @@ de_LI	Name of weekday 05 (Islamic Calendar)	Freitag
 de_LI	Name of weekday 06 (Islamic Calendar)	Samstag
 de_LI	Name of weekday 07 (Islamic Calendar)	Sonntag
 de_LI	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+de_LI	Scripts used	Latn
 de_LU	Language endonym	Deutsch
 de_LU	Country endonym	Luxemburg
 de_LU	Floating Point Number	-123.456.789,012
@@ -1588,6 +1617,7 @@ de_LU	Name of weekday 05 (Islamic Calendar)	Freitag
 de_LU	Name of weekday 06 (Islamic Calendar)	Samstag
 de_LU	Name of weekday 07 (Islamic Calendar)	Sonntag
 de_LU	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+de_LU	Scripts used	Latn
 el	Language endonym	Ελληνικά
 el	Country endonym	
 el	Floating Point Number	-123.456.789,012
@@ -1641,6 +1671,7 @@ el	Name of weekday 05 (Islamic Calendar)	Παρασκευή
 el	Name of weekday 06 (Islamic Calendar)	Σάββατο
 el	Name of weekday 07 (Islamic Calendar)	Κυριακή
 el	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+el	Scripts used	Grek
 el_CY	Language endonym	Ελληνικά
 el_CY	Country endonym	Κύπρος
 el_CY	Floating Point Number	-123.456.789,012
@@ -1694,6 +1725,7 @@ el_CY	Name of weekday 05 (Islamic Calendar)	Παρασκευή
 el_CY	Name of weekday 06 (Islamic Calendar)	Σάββατο
 el_CY	Name of weekday 07 (Islamic Calendar)	Κυριακή
 el_CY	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+el_CY	Scripts used	Grek
 el_GR	Language endonym	Ελληνικά
 el_GR	Country endonym	Ελλάδα
 el_GR	Floating Point Number	-123.456.789,012
@@ -1747,6 +1779,7 @@ el_GR	Name of weekday 05 (Islamic Calendar)	Παρασκευή
 el_GR	Name of weekday 06 (Islamic Calendar)	Σάββατο
 el_GR	Name of weekday 07 (Islamic Calendar)	Κυριακή
 el_GR	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+el_GR	Scripts used	Grek
 en	Language endonym	English
 en	Country endonym	
 en	Floating Point Number	-123,456,789.012
@@ -1800,6 +1833,7 @@ en	Name of weekday 05 (Islamic Calendar)	Friday
 en	Name of weekday 06 (Islamic Calendar)	Saturday
 en	Name of weekday 07 (Islamic Calendar)	Sunday
 en	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en	Scripts used	Latn
 en_AU	Language endonym	English
 en_AU	Country endonym	Australia
 en_AU	Floating Point Number	-123,456,789.012
@@ -1853,6 +1887,7 @@ en_AU	Name of weekday 05 (Islamic Calendar)	Friday
 en_AU	Name of weekday 06 (Islamic Calendar)	Saturday
 en_AU	Name of weekday 07 (Islamic Calendar)	Sunday
 en_AU	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_AU	Scripts used	Latn
 en_BE	Language endonym	English
 en_BE	Country endonym	Belgium
 en_BE	Floating Point Number	-123.456.789,012
@@ -1906,6 +1941,7 @@ en_BE	Name of weekday 05 (Islamic Calendar)	Friday
 en_BE	Name of weekday 06 (Islamic Calendar)	Saturday
 en_BE	Name of weekday 07 (Islamic Calendar)	Sunday
 en_BE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_BE	Scripts used	Latn
 en_BW	Language endonym	English
 en_BW	Country endonym	Botswana
 en_BW	Floating Point Number	-123,456,789.012
@@ -1959,6 +1995,7 @@ en_BW	Name of weekday 05 (Islamic Calendar)	Friday
 en_BW	Name of weekday 06 (Islamic Calendar)	Saturday
 en_BW	Name of weekday 07 (Islamic Calendar)	Sunday
 en_BW	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_BW	Scripts used	Latn
 en_BZ	Language endonym	English
 en_BZ	Country endonym	Belize
 en_BZ	Floating Point Number	-123,456,789.012
@@ -2012,6 +2049,7 @@ en_BZ	Name of weekday 05 (Islamic Calendar)	Friday
 en_BZ	Name of weekday 06 (Islamic Calendar)	Saturday
 en_BZ	Name of weekday 07 (Islamic Calendar)	Sunday
 en_BZ	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_BZ	Scripts used	Latn
 en_CA	Language endonym	English
 en_CA	Country endonym	Canada
 en_CA	Floating Point Number	-123,456,789.012
@@ -2065,6 +2103,7 @@ en_CA	Name of weekday 05 (Islamic Calendar)	Friday
 en_CA	Name of weekday 06 (Islamic Calendar)	Saturday
 en_CA	Name of weekday 07 (Islamic Calendar)	Sunday
 en_CA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_CA	Scripts used	Latn
 en_GB	Language endonym	English
 en_GB	Country endonym	United Kingdom
 en_GB	Floating Point Number	-123,456,789.012
@@ -2118,6 +2157,7 @@ en_GB	Name of weekday 05 (Islamic Calendar)	Friday
 en_GB	Name of weekday 06 (Islamic Calendar)	Saturday
 en_GB	Name of weekday 07 (Islamic Calendar)	Sunday
 en_GB	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_GB	Scripts used	Latn
 en_HK	Language endonym	English
 en_HK	Country endonym	Hong Kong SAR China
 en_HK	Floating Point Number	-123,456,789.012
@@ -2171,6 +2211,7 @@ en_HK	Name of weekday 05 (Islamic Calendar)	Friday
 en_HK	Name of weekday 06 (Islamic Calendar)	Saturday
 en_HK	Name of weekday 07 (Islamic Calendar)	Sunday
 en_HK	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_HK	Scripts used	Latn
 en_IE	Language endonym	English
 en_IE	Country endonym	Ireland
 en_IE	Floating Point Number	-123,456,789.012
@@ -2224,6 +2265,7 @@ en_IE	Name of weekday 05 (Islamic Calendar)	Friday
 en_IE	Name of weekday 06 (Islamic Calendar)	Saturday
 en_IE	Name of weekday 07 (Islamic Calendar)	Sunday
 en_IE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_IE	Scripts used	Latn
 en_IN	Language endonym	English
 en_IN	Country endonym	India
 en_IN	Floating Point Number	-12,34,56,789.012
@@ -2277,6 +2319,7 @@ en_IN	Name of weekday 05 (Islamic Calendar)	Friday
 en_IN	Name of weekday 06 (Islamic Calendar)	Saturday
 en_IN	Name of weekday 07 (Islamic Calendar)	Sunday
 en_IN	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_IN	Scripts used	Latn
 en_JM	Language endonym	English
 en_JM	Country endonym	Jamaica
 en_JM	Floating Point Number	-123,456,789.012
@@ -2330,6 +2373,7 @@ en_JM	Name of weekday 05 (Islamic Calendar)	Friday
 en_JM	Name of weekday 06 (Islamic Calendar)	Saturday
 en_JM	Name of weekday 07 (Islamic Calendar)	Sunday
 en_JM	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_JM	Scripts used	Latn
 en_MH	Language endonym	English
 en_MH	Country endonym	Marshall Islands
 en_MH	Floating Point Number	-123,456,789.012
@@ -2383,6 +2427,7 @@ en_MH	Name of weekday 05 (Islamic Calendar)	Friday
 en_MH	Name of weekday 06 (Islamic Calendar)	Saturday
 en_MH	Name of weekday 07 (Islamic Calendar)	Sunday
 en_MH	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_MH	Scripts used	Latn
 en_MT	Language endonym	English
 en_MT	Country endonym	Malta
 en_MT	Floating Point Number	-123,456,789.012
@@ -2436,6 +2481,7 @@ en_MT	Name of weekday 05 (Islamic Calendar)	Friday
 en_MT	Name of weekday 06 (Islamic Calendar)	Saturday
 en_MT	Name of weekday 07 (Islamic Calendar)	Sunday
 en_MT	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_MT	Scripts used	Latn
 en_NA	Language endonym	English
 en_NA	Country endonym	Namibia
 en_NA	Floating Point Number	-123,456,789.012
@@ -2489,6 +2535,7 @@ en_NA	Name of weekday 05 (Islamic Calendar)	Friday
 en_NA	Name of weekday 06 (Islamic Calendar)	Saturday
 en_NA	Name of weekday 07 (Islamic Calendar)	Sunday
 en_NA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_NA	Scripts used	Latn
 en_NZ	Language endonym	English
 en_NZ	Country endonym	New Zealand
 en_NZ	Floating Point Number	-123,456,789.012
@@ -2542,6 +2589,7 @@ en_NZ	Name of weekday 05 (Islamic Calendar)	Friday
 en_NZ	Name of weekday 06 (Islamic Calendar)	Saturday
 en_NZ	Name of weekday 07 (Islamic Calendar)	Sunday
 en_NZ	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_NZ	Scripts used	Latn
 en_PH	Language endonym	English
 en_PH	Country endonym	Philippines
 en_PH	Floating Point Number	-123,456,789.012
@@ -2595,6 +2643,7 @@ en_PH	Name of weekday 05 (Islamic Calendar)	Friday
 en_PH	Name of weekday 06 (Islamic Calendar)	Saturday
 en_PH	Name of weekday 07 (Islamic Calendar)	Sunday
 en_PH	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_PH	Scripts used	Latn
 en_PK	Language endonym	English
 en_PK	Country endonym	Pakistan
 en_PK	Floating Point Number	-123,456,789.012
@@ -2648,6 +2697,7 @@ en_PK	Name of weekday 05 (Islamic Calendar)	Friday
 en_PK	Name of weekday 06 (Islamic Calendar)	Saturday
 en_PK	Name of weekday 07 (Islamic Calendar)	Sunday
 en_PK	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_PK	Scripts used	Latn
 en_SG	Language endonym	English
 en_SG	Country endonym	Singapore
 en_SG	Floating Point Number	-123,456,789.012
@@ -2701,6 +2751,7 @@ en_SG	Name of weekday 05 (Islamic Calendar)	Friday
 en_SG	Name of weekday 06 (Islamic Calendar)	Saturday
 en_SG	Name of weekday 07 (Islamic Calendar)	Sunday
 en_SG	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_SG	Scripts used	Latn
 en_TT	Language endonym	English
 en_TT	Country endonym	Trinidad and Tobago
 en_TT	Floating Point Number	-123,456,789.012
@@ -2754,6 +2805,7 @@ en_TT	Name of weekday 05 (Islamic Calendar)	Friday
 en_TT	Name of weekday 06 (Islamic Calendar)	Saturday
 en_TT	Name of weekday 07 (Islamic Calendar)	Sunday
 en_TT	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_TT	Scripts used	Latn
 en_US	Language endonym	English
 en_US	Country endonym	United States
 en_US	Floating Point Number	-123,456,789.012
@@ -2807,6 +2859,7 @@ en_US	Name of weekday 05 (Islamic Calendar)	Friday
 en_US	Name of weekday 06 (Islamic Calendar)	Saturday
 en_US	Name of weekday 07 (Islamic Calendar)	Sunday
 en_US	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_US	Scripts used	Latn
 en_US_POSIX	Language endonym	English
 en_US_POSIX	Country endonym	United States
 en_US_POSIX	Floating Point Number	-123456789.01234
@@ -2860,6 +2913,7 @@ en_US_POSIX	Name of weekday 05 (Islamic Calendar)	Friday
 en_US_POSIX	Name of weekday 06 (Islamic Calendar)	Saturday
 en_US_POSIX	Name of weekday 07 (Islamic Calendar)	Sunday
 en_US_POSIX	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_US_POSIX	Scripts used	Latn
 en_VI	Language endonym	English
 en_VI	Country endonym	U.S. Virgin Islands
 en_VI	Floating Point Number	-123,456,789.012
@@ -2913,6 +2967,7 @@ en_VI	Name of weekday 05 (Islamic Calendar)	Friday
 en_VI	Name of weekday 06 (Islamic Calendar)	Saturday
 en_VI	Name of weekday 07 (Islamic Calendar)	Sunday
 en_VI	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_VI	Scripts used	Latn
 en_ZA	Language endonym	English
 en_ZA	Country endonym	South Africa
 en_ZA	Floating Point Number	-123 456 789,012
@@ -2966,6 +3021,7 @@ en_ZA	Name of weekday 05 (Islamic Calendar)	Friday
 en_ZA	Name of weekday 06 (Islamic Calendar)	Saturday
 en_ZA	Name of weekday 07 (Islamic Calendar)	Sunday
 en_ZA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_ZA	Scripts used	Latn
 en_ZW	Language endonym	English
 en_ZW	Country endonym	Zimbabwe
 en_ZW	Floating Point Number	-123,456,789.012
@@ -3019,6 +3075,7 @@ en_ZW	Name of weekday 05 (Islamic Calendar)	Friday
 en_ZW	Name of weekday 06 (Islamic Calendar)	Saturday
 en_ZW	Name of weekday 07 (Islamic Calendar)	Sunday
 en_ZW	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+en_ZW	Scripts used	Latn
 es	Language endonym	español
 es	Country endonym	
 es	Floating Point Number	-123.456.789,012
@@ -3072,6 +3129,7 @@ es	Name of weekday 05 (Islamic Calendar)	viernes
 es	Name of weekday 06 (Islamic Calendar)	sábado
 es	Name of weekday 07 (Islamic Calendar)	domingo
 es	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es	Scripts used	Latn
 es_419	Language endonym	español
 es_419	Country endonym	Latinoamérica y el Caribe
 es_419	Floating Point Number	-123.456.789,012
@@ -3125,6 +3183,7 @@ es_419	Name of weekday 05 (Islamic Calendar)	viernes
 es_419	Name of weekday 06 (Islamic Calendar)	sábado
 es_419	Name of weekday 07 (Islamic Calendar)	domingo
 es_419	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_419	Scripts used	Latn
 es_AR	Language endonym	español
 es_AR	Country endonym	Argentina
 es_AR	Floating Point Number	-123.456.789,012
@@ -3178,6 +3237,7 @@ es_AR	Name of weekday 05 (Islamic Calendar)	viernes
 es_AR	Name of weekday 06 (Islamic Calendar)	sábado
 es_AR	Name of weekday 07 (Islamic Calendar)	domingo
 es_AR	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_AR	Scripts used	Latn
 es_BO	Language endonym	español
 es_BO	Country endonym	Bolivia
 es_BO	Floating Point Number	-123.456.789,012
@@ -3231,6 +3291,7 @@ es_BO	Name of weekday 05 (Islamic Calendar)	viernes
 es_BO	Name of weekday 06 (Islamic Calendar)	sábado
 es_BO	Name of weekday 07 (Islamic Calendar)	domingo
 es_BO	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_BO	Scripts used	Latn
 es_CL	Language endonym	español
 es_CL	Country endonym	CL
 es_CL	Floating Point Number	-123.456.789,012
@@ -3284,6 +3345,7 @@ es_CL	Name of weekday 05 (Islamic Calendar)	viernes
 es_CL	Name of weekday 06 (Islamic Calendar)	sábado
 es_CL	Name of weekday 07 (Islamic Calendar)	domingo
 es_CL	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_CL	Scripts used	Latn
 es_CO	Language endonym	español
 es_CO	Country endonym	Colombia
 es_CO	Floating Point Number	-123.456.789,012
@@ -3337,6 +3399,7 @@ es_CO	Name of weekday 05 (Islamic Calendar)	viernes
 es_CO	Name of weekday 06 (Islamic Calendar)	sábado
 es_CO	Name of weekday 07 (Islamic Calendar)	domingo
 es_CO	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_CO	Scripts used	Latn
 es_CR	Language endonym	español
 es_CR	Country endonym	Costa Rica
 es_CR	Floating Point Number	-123.456.789,012
@@ -3390,6 +3453,7 @@ es_CR	Name of weekday 05 (Islamic Calendar)	viernes
 es_CR	Name of weekday 06 (Islamic Calendar)	sábado
 es_CR	Name of weekday 07 (Islamic Calendar)	domingo
 es_CR	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_CR	Scripts used	Latn
 es_DO	Language endonym	español
 es_DO	Country endonym	República Dominicana
 es_DO	Floating Point Number	-123,456,789.012
@@ -3443,6 +3507,7 @@ es_DO	Name of weekday 05 (Islamic Calendar)	viernes
 es_DO	Name of weekday 06 (Islamic Calendar)	sábado
 es_DO	Name of weekday 07 (Islamic Calendar)	domingo
 es_DO	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_DO	Scripts used	Latn
 es_EC	Language endonym	español
 es_EC	Country endonym	Ecuador
 es_EC	Floating Point Number	-123.456.789,012
@@ -3496,6 +3561,7 @@ es_EC	Name of weekday 05 (Islamic Calendar)	viernes
 es_EC	Name of weekday 06 (Islamic Calendar)	sábado
 es_EC	Name of weekday 07 (Islamic Calendar)	domingo
 es_EC	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_EC	Scripts used	Latn
 es_ES	Language endonym	español
 es_ES	Country endonym	España
 es_ES	Floating Point Number	-123.456.789,012
@@ -3549,6 +3615,7 @@ es_ES	Name of weekday 05 (Islamic Calendar)	viernes
 es_ES	Name of weekday 06 (Islamic Calendar)	sábado
 es_ES	Name of weekday 07 (Islamic Calendar)	domingo
 es_ES	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_ES	Scripts used	Latn
 es_GT	Language endonym	español
 es_GT	Country endonym	Guatemala
 es_GT	Floating Point Number	-123,456,789.012
@@ -3602,6 +3669,7 @@ es_GT	Name of weekday 05 (Islamic Calendar)	viernes
 es_GT	Name of weekday 06 (Islamic Calendar)	sábado
 es_GT	Name of weekday 07 (Islamic Calendar)	domingo
 es_GT	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_GT	Scripts used	Latn
 es_HN	Language endonym	español
 es_HN	Country endonym	Honduras
 es_HN	Floating Point Number	-123,456,789.012
@@ -3655,6 +3723,7 @@ es_HN	Name of weekday 05 (Islamic Calendar)	viernes
 es_HN	Name of weekday 06 (Islamic Calendar)	sábado
 es_HN	Name of weekday 07 (Islamic Calendar)	domingo
 es_HN	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_HN	Scripts used	Latn
 es_MX	Language endonym	español
 es_MX	Country endonym	México
 es_MX	Floating Point Number	-123,456,789.012
@@ -3708,6 +3777,7 @@ es_MX	Name of weekday 05 (Islamic Calendar)	viernes
 es_MX	Name of weekday 06 (Islamic Calendar)	sábado
 es_MX	Name of weekday 07 (Islamic Calendar)	domingo
 es_MX	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_MX	Scripts used	Latn
 es_NI	Language endonym	español
 es_NI	Country endonym	Nicaragua
 es_NI	Floating Point Number	-123,456,789.012
@@ -3761,6 +3831,7 @@ es_NI	Name of weekday 05 (Islamic Calendar)	viernes
 es_NI	Name of weekday 06 (Islamic Calendar)	sábado
 es_NI	Name of weekday 07 (Islamic Calendar)	domingo
 es_NI	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_NI	Scripts used	Latn
 es_PA	Language endonym	español
 es_PA	Country endonym	Panamá
 es_PA	Floating Point Number	-123,456,789.012
@@ -3814,6 +3885,7 @@ es_PA	Name of weekday 05 (Islamic Calendar)	viernes
 es_PA	Name of weekday 06 (Islamic Calendar)	sábado
 es_PA	Name of weekday 07 (Islamic Calendar)	domingo
 es_PA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_PA	Scripts used	Latn
 es_PE	Language endonym	español
 es_PE	Country endonym	Perú
 es_PE	Floating Point Number	-123,456,789.012
@@ -3867,6 +3939,7 @@ es_PE	Name of weekday 05 (Islamic Calendar)	viernes
 es_PE	Name of weekday 06 (Islamic Calendar)	sábado
 es_PE	Name of weekday 07 (Islamic Calendar)	domingo
 es_PE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_PE	Scripts used	Latn
 es_PR	Language endonym	español
 es_PR	Country endonym	Puerto Rico
 es_PR	Floating Point Number	-123,456,789.012
@@ -3920,6 +3993,7 @@ es_PR	Name of weekday 05 (Islamic Calendar)	viernes
 es_PR	Name of weekday 06 (Islamic Calendar)	sábado
 es_PR	Name of weekday 07 (Islamic Calendar)	domingo
 es_PR	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_PR	Scripts used	Latn
 es_PY	Language endonym	español
 es_PY	Country endonym	Paraguay
 es_PY	Floating Point Number	-123.456.789,012
@@ -3973,6 +4047,7 @@ es_PY	Name of weekday 05 (Islamic Calendar)	viernes
 es_PY	Name of weekday 06 (Islamic Calendar)	sábado
 es_PY	Name of weekday 07 (Islamic Calendar)	domingo
 es_PY	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_PY	Scripts used	Latn
 es_SV	Language endonym	español
 es_SV	Country endonym	El Salvador
 es_SV	Floating Point Number	-123,456,789.012
@@ -4026,6 +4101,7 @@ es_SV	Name of weekday 05 (Islamic Calendar)	viernes
 es_SV	Name of weekday 06 (Islamic Calendar)	sábado
 es_SV	Name of weekday 07 (Islamic Calendar)	domingo
 es_SV	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_SV	Scripts used	Latn
 es_US	Language endonym	español
 es_US	Country endonym	Estados Unidos
 es_US	Floating Point Number	-123,456,789.012
@@ -4079,6 +4155,7 @@ es_US	Name of weekday 05 (Islamic Calendar)	viernes
 es_US	Name of weekday 06 (Islamic Calendar)	sábado
 es_US	Name of weekday 07 (Islamic Calendar)	domingo
 es_US	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_US	Scripts used	Latn
 es_UY	Language endonym	español
 es_UY	Country endonym	Uruguay
 es_UY	Floating Point Number	-123.456.789,012
@@ -4132,6 +4209,7 @@ es_UY	Name of weekday 05 (Islamic Calendar)	viernes
 es_UY	Name of weekday 06 (Islamic Calendar)	sábado
 es_UY	Name of weekday 07 (Islamic Calendar)	domingo
 es_UY	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_UY	Scripts used	Latn
 es_VE	Language endonym	español
 es_VE	Country endonym	Venezuela
 es_VE	Floating Point Number	-123.456.789,012
@@ -4185,6 +4263,7 @@ es_VE	Name of weekday 05 (Islamic Calendar)	viernes
 es_VE	Name of weekday 06 (Islamic Calendar)	sábado
 es_VE	Name of weekday 07 (Islamic Calendar)	domingo
 es_VE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+es_VE	Scripts used	Latn
 eu	Language endonym	euskara
 eu	Country endonym	
 eu	Floating Point Number	-123.456.789,012
@@ -4238,6 +4317,7 @@ eu	Name of weekday 05 (Islamic Calendar)	ostirala
 eu	Name of weekday 06 (Islamic Calendar)	larunbata
 eu	Name of weekday 07 (Islamic Calendar)	igandea
 eu	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+eu	Scripts used	Latn
 eu_ES	Language endonym	euskara
 eu_ES	Country endonym	Espainia
 eu_ES	Floating Point Number	-123.456.789,012
@@ -4291,6 +4371,7 @@ eu_ES	Name of weekday 05 (Islamic Calendar)	ostirala
 eu_ES	Name of weekday 06 (Islamic Calendar)	larunbata
 eu_ES	Name of weekday 07 (Islamic Calendar)	igandea
 eu_ES	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+eu_ES	Scripts used	Latn
 fa	Language endonym	فارسی
 fa	Country endonym	
 fa	Floating Point Number	‪−۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‬
@@ -4344,6 +4425,7 @@ fa	Name of weekday 05 (Islamic Calendar)	جمعه
 fa	Name of weekday 06 (Islamic Calendar)	شنبه
 fa	Name of weekday 07 (Islamic Calendar)	یکشنبه
 fa	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ظ ع غ ة 一 三 中 二 俄 得 播 攀 正 此 爱
+fa	Scripts used	Arab
 fa_AF	Language endonym	دری
 fa_AF	Country endonym	AF
 fa_AF	Floating Point Number	‪−۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‬
@@ -4397,6 +4479,7 @@ fa_AF	Name of weekday 05 (Islamic Calendar)	جمعه
 fa_AF	Name of weekday 06 (Islamic Calendar)	شنبه
 fa_AF	Name of weekday 07 (Islamic Calendar)	یکشنبه
 fa_AF	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ظ ع غ ة 一 三 中 二 俄 得 播 攀 正 此 爱
+fa_AF	Scripts used	Arab
 fa_IR	Language endonym	فارسی
 fa_IR	Country endonym	ایران
 fa_IR	Floating Point Number	‪−۱۲۳٬۴۵۶٬۷۸۹٫۰۱۲‬
@@ -4450,6 +4533,7 @@ fa_IR	Name of weekday 05 (Islamic Calendar)	جمعه
 fa_IR	Name of weekday 06 (Islamic Calendar)	شنبه
 fa_IR	Name of weekday 07 (Islamic Calendar)	یکشنبه
 fa_IR	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ظ ع غ ة 一 三 中 二 俄 得 播 攀 正 此 爱
+fa_IR	Scripts used	Arab
 fi	Language endonym	suomi
 fi	Country endonym	
 fi	Floating Point Number	-123 456 789,012
@@ -4503,6 +4587,7 @@ fi	Name of weekday 05 (Islamic Calendar)	perjantai
 fi	Name of weekday 06 (Islamic Calendar)	lauantai
 fi	Name of weekday 07 (Islamic Calendar)	sunnuntai
 fi	Collation sample	a á b oegh z å ä öfgh α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fi	Scripts used	Latn
 fi_FI	Language endonym	suomi
 fi_FI	Country endonym	Suomi
 fi_FI	Floating Point Number	-123 456 789,012
@@ -4556,6 +4641,7 @@ fi_FI	Name of weekday 05 (Islamic Calendar)	perjantai
 fi_FI	Name of weekday 06 (Islamic Calendar)	lauantai
 fi_FI	Name of weekday 07 (Islamic Calendar)	sunnuntai
 fi_FI	Collation sample	a á b oegh z å ä öfgh α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fi_FI	Scripts used	Latn
 fr	Language endonym	français
 fr	Country endonym	
 fr	Floating Point Number	-123 456 789,012
@@ -4609,6 +4695,7 @@ fr	Name of weekday 05 (Islamic Calendar)	vendredi
 fr	Name of weekday 06 (Islamic Calendar)	samedi
 fr	Name of weekday 07 (Islamic Calendar)	dimanche
 fr	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fr	Scripts used	Latn
 fr_BE	Language endonym	français
 fr_BE	Country endonym	Belgique
 fr_BE	Floating Point Number	-123.456.789,012
@@ -4662,6 +4749,7 @@ fr_BE	Name of weekday 05 (Islamic Calendar)	vendredi
 fr_BE	Name of weekday 06 (Islamic Calendar)	samedi
 fr_BE	Name of weekday 07 (Islamic Calendar)	dimanche
 fr_BE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fr_BE	Scripts used	Latn
 fr_CA	Language endonym	français
 fr_CA	Country endonym	Canada
 fr_CA	Floating Point Number	-123 456 789,012
@@ -4715,6 +4803,7 @@ fr_CA	Name of weekday 05 (Islamic Calendar)	vendredi
 fr_CA	Name of weekday 06 (Islamic Calendar)	samedi
 fr_CA	Name of weekday 07 (Islamic Calendar)	dimanche
 fr_CA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fr_CA	Scripts used	Latn
 fr_CH	Language endonym	français
 fr_CH	Country endonym	Suisse
 fr_CH	Floating Point Number	-123'456'789.012
@@ -4768,6 +4857,7 @@ fr_CH	Name of weekday 05 (Islamic Calendar)	vendredi
 fr_CH	Name of weekday 06 (Islamic Calendar)	samedi
 fr_CH	Name of weekday 07 (Islamic Calendar)	dimanche
 fr_CH	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fr_CH	Scripts used	Latn
 fr_FR	Language endonym	français
 fr_FR	Country endonym	France
 fr_FR	Floating Point Number	-123 456 789,012
@@ -4821,6 +4911,7 @@ fr_FR	Name of weekday 05 (Islamic Calendar)	vendredi
 fr_FR	Name of weekday 06 (Islamic Calendar)	samedi
 fr_FR	Name of weekday 07 (Islamic Calendar)	dimanche
 fr_FR	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fr_FR	Scripts used	Latn
 fr_LU	Language endonym	français
 fr_LU	Country endonym	Luxembourg
 fr_LU	Floating Point Number	-123.456.789,012
@@ -4874,6 +4965,7 @@ fr_LU	Name of weekday 05 (Islamic Calendar)	vendredi
 fr_LU	Name of weekday 06 (Islamic Calendar)	samedi
 fr_LU	Name of weekday 07 (Islamic Calendar)	dimanche
 fr_LU	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fr_LU	Scripts used	Latn
 fr_MC	Language endonym	français
 fr_MC	Country endonym	Monaco
 fr_MC	Floating Point Number	-123 456 789,012
@@ -4927,6 +5019,7 @@ fr_MC	Name of weekday 05 (Islamic Calendar)	vendredi
 fr_MC	Name of weekday 06 (Islamic Calendar)	samedi
 fr_MC	Name of weekday 07 (Islamic Calendar)	dimanche
 fr_MC	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fr_MC	Scripts used	Latn
 fr_SN	Language endonym	français
 fr_SN	Country endonym	Sénégal
 fr_SN	Floating Point Number	-123 456 789,012
@@ -4980,6 +5073,7 @@ fr_SN	Name of weekday 05 (Islamic Calendar)	vendredi
 fr_SN	Name of weekday 06 (Islamic Calendar)	samedi
 fr_SN	Name of weekday 07 (Islamic Calendar)	dimanche
 fr_SN	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+fr_SN	Scripts used	Latn
 gl	Language endonym	galego
 gl	Country endonym	
 gl	Floating Point Number	-123.456.789,012
@@ -5033,6 +5127,7 @@ gl	Name of weekday 05 (Islamic Calendar)	Venres
 gl	Name of weekday 06 (Islamic Calendar)	Sábado
 gl	Name of weekday 07 (Islamic Calendar)	Domingo
 gl	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+gl	Scripts used	Latn
 gl_ES	Language endonym	galego
 gl_ES	Country endonym	España
 gl_ES	Floating Point Number	-123.456.789,012
@@ -5086,6 +5181,7 @@ gl_ES	Name of weekday 05 (Islamic Calendar)	Venres
 gl_ES	Name of weekday 06 (Islamic Calendar)	Sábado
 gl_ES	Name of weekday 07 (Islamic Calendar)	Domingo
 gl_ES	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+gl_ES	Scripts used	Latn
 he	Language endonym	עברית
 he	Country endonym	
 he	Floating Point Number	-123,456,789.012
@@ -5139,6 +5235,7 @@ he	Name of weekday 05 (Islamic Calendar)	יום שישי
 he	Name of weekday 06 (Islamic Calendar)	יום שבת
 he	Name of weekday 07 (Islamic Calendar)	יום ראשון
 he	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+he	Scripts used	Hebr
 he_IL	Language endonym	עברית
 he_IL	Country endonym	ישראל
 he_IL	Floating Point Number	-123,456,789.012
@@ -5192,6 +5289,7 @@ he_IL	Name of weekday 05 (Islamic Calendar)	יום שישי
 he_IL	Name of weekday 06 (Islamic Calendar)	יום שבת
 he_IL	Name of weekday 07 (Islamic Calendar)	יום ראשון
 he_IL	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+he_IL	Scripts used	Hebr
 hi	Language endonym	हिन्दी
 hi	Country endonym	
 hi	Floating Point Number	-१२,३४,५६,७८९.०१२
@@ -5245,6 +5343,7 @@ hi	Name of weekday 05 (Islamic Calendar)	शुक्रवार
 hi	Name of weekday 06 (Islamic Calendar)	शनिवार
 hi	Name of weekday 07 (Islamic Calendar)	रविवार
 hi	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+hi	Scripts used	Deva
 hi_IN	Language endonym	हिन्दी
 hi_IN	Country endonym	भारत
 hi_IN	Floating Point Number	-१२,३४,५६,७८९.०१२
@@ -5298,6 +5397,7 @@ hi_IN	Name of weekday 05 (Islamic Calendar)	शुक्रवार
 hi_IN	Name of weekday 06 (Islamic Calendar)	शनिवार
 hi_IN	Name of weekday 07 (Islamic Calendar)	रविवार
 hi_IN	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+hi_IN	Scripts used	Deva
 id	Language endonym	Bahasa Indonesia
 id	Country endonym	
 id	Floating Point Number	-123.456.789,012
@@ -5351,6 +5451,7 @@ id	Name of weekday 05 (Islamic Calendar)	Jumat
 id	Name of weekday 06 (Islamic Calendar)	Sabtu
 id	Name of weekday 07 (Islamic Calendar)	Minggu
 id	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+id	Scripts used	Latn
 id_ID	Language endonym	Bahasa Indonesia
 id_ID	Country endonym	Indonesia
 id_ID	Floating Point Number	-123.456.789,012
@@ -5404,6 +5505,7 @@ id_ID	Name of weekday 05 (Islamic Calendar)	Jumat
 id_ID	Name of weekday 06 (Islamic Calendar)	Sabtu
 id_ID	Name of weekday 07 (Islamic Calendar)	Minggu
 id_ID	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+id_ID	Scripts used	Latn
 it	Language endonym	italiano
 it	Country endonym	
 it	Floating Point Number	-123.456.789,012
@@ -5457,6 +5559,7 @@ it	Name of weekday 05 (Islamic Calendar)	Venerdì
 it	Name of weekday 06 (Islamic Calendar)	Sabato
 it	Name of weekday 07 (Islamic Calendar)	Domenica
 it	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+it	Scripts used	Latn
 it_CH	Language endonym	italiano
 it_CH	Country endonym	Svizzera
 it_CH	Floating Point Number	-123'456'789.012
@@ -5510,6 +5613,7 @@ it_CH	Name of weekday 05 (Islamic Calendar)	Venerdì
 it_CH	Name of weekday 06 (Islamic Calendar)	Sabato
 it_CH	Name of weekday 07 (Islamic Calendar)	Domenica
 it_CH	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+it_CH	Scripts used	Latn
 it_IT	Language endonym	italiano
 it_IT	Country endonym	Italia
 it_IT	Floating Point Number	-123.456.789,012
@@ -5563,6 +5667,7 @@ it_IT	Name of weekday 05 (Islamic Calendar)	Venerdì
 it_IT	Name of weekday 06 (Islamic Calendar)	Sabato
 it_IT	Name of weekday 07 (Islamic Calendar)	Domenica
 it_IT	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+it_IT	Scripts used	Latn
 ja	Language endonym	日本語
 ja	Country endonym	
 ja	Floating Point Number	-123,456,789.012
@@ -5616,6 +5721,7 @@ ja	Name of weekday 05 (Islamic Calendar)	金曜日
 ja	Name of weekday 06 (Islamic Calendar)	土曜日
 ja	Name of weekday 07 (Islamic Calendar)	日曜日
 ja	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 俄 此 三 正 中 得 二 播 攀 爱
+ja	Scripts used	Kana Hira Hani
 ja_JP	Language endonym	日本語
 ja_JP	Country endonym	日本
 ja_JP	Floating Point Number	-123,456,789.012
@@ -5669,6 +5775,7 @@ ja_JP	Name of weekday 05 (Islamic Calendar)	金曜日
 ja_JP	Name of weekday 06 (Islamic Calendar)	土曜日
 ja_JP	Name of weekday 07 (Islamic Calendar)	日曜日
 ja_JP	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 俄 此 三 正 中 得 二 播 攀 爱
+ja_JP	Scripts used	Kana Hira Hani
 ms	Language endonym	Bahasa Melayu
 ms	Country endonym	
 ms	Floating Point Number	-123,456,789.012
@@ -5722,6 +5829,7 @@ ms	Name of weekday 05 (Islamic Calendar)	Jumaat
 ms	Name of weekday 06 (Islamic Calendar)	Sabtu
 ms	Name of weekday 07 (Islamic Calendar)	Ahad
 ms	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ms	Scripts used	Latn
 ms_BN	Language endonym	Bahasa Melayu
 ms_BN	Country endonym	Brunei
 ms_BN	Floating Point Number	-123.456.789,012
@@ -5775,6 +5883,7 @@ ms_BN	Name of weekday 05 (Islamic Calendar)	Jumaat
 ms_BN	Name of weekday 06 (Islamic Calendar)	Sabtu
 ms_BN	Name of weekday 07 (Islamic Calendar)	Ahad
 ms_BN	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ms_BN	Scripts used	Latn
 ms_MY	Language endonym	Bahasa Melayu
 ms_MY	Country endonym	Malaysia
 ms_MY	Floating Point Number	-123,456,789.012
@@ -5828,6 +5937,7 @@ ms_MY	Name of weekday 05 (Islamic Calendar)	Jumaat
 ms_MY	Name of weekday 06 (Islamic Calendar)	Sabtu
 ms_MY	Name of weekday 07 (Islamic Calendar)	Ahad
 ms_MY	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ms_MY	Scripts used	Latn
 nb	Language endonym	norsk bokmål
 nb	Country endonym	
 nb	Floating Point Number	-123 456 789,012
@@ -5881,6 +5991,7 @@ nb	Name of weekday 05 (Islamic Calendar)	fredag
 nb	Name of weekday 06 (Islamic Calendar)	lørdag
 nb	Name of weekday 07 (Islamic Calendar)	søndag
 nb	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+nb	Scripts used	Latn
 nb_NO	Language endonym	norsk bokmål
 nb_NO	Country endonym	Norge
 nb_NO	Floating Point Number	-123 456 789,012
@@ -5934,6 +6045,7 @@ nb_NO	Name of weekday 05 (Islamic Calendar)	fredag
 nb_NO	Name of weekday 06 (Islamic Calendar)	lørdag
 nb_NO	Name of weekday 07 (Islamic Calendar)	søndag
 nb_NO	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+nb_NO	Scripts used	Latn
 nl	Language endonym	Nederlands
 nl	Country endonym	
 nl	Floating Point Number	-123.456.789,012
@@ -5987,6 +6099,7 @@ nl	Name of weekday 05 (Islamic Calendar)	vrijdag
 nl	Name of weekday 06 (Islamic Calendar)	zaterdag
 nl	Name of weekday 07 (Islamic Calendar)	zondag
 nl	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+nl	Scripts used	Latn
 nl_BE	Language endonym	nl
 nl_BE	Country endonym	BE
 nl_BE	Floating Point Number	-123.456.789,012
@@ -6040,6 +6153,7 @@ nl_BE	Name of weekday 05 (Islamic Calendar)	vrijdag
 nl_BE	Name of weekday 06 (Islamic Calendar)	zaterdag
 nl_BE	Name of weekday 07 (Islamic Calendar)	zondag
 nl_BE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+nl_BE	Scripts used	Latn
 nl_NL	Language endonym	Nederlands
 nl_NL	Country endonym	Nederland
 nl_NL	Floating Point Number	-123.456.789,012
@@ -6093,6 +6207,7 @@ nl_NL	Name of weekday 05 (Islamic Calendar)	vrijdag
 nl_NL	Name of weekday 06 (Islamic Calendar)	zaterdag
 nl_NL	Name of weekday 07 (Islamic Calendar)	zondag
 nl_NL	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+nl_NL	Scripts used	Latn
 nn	Language endonym	nynorsk
 nn	Country endonym	
 nn	Floating Point Number	−123 456 789,012
@@ -6146,6 +6261,7 @@ nn	Name of weekday 05 (Islamic Calendar)	fredag
 nn	Name of weekday 06 (Islamic Calendar)	laurdag
 nn	Name of weekday 07 (Islamic Calendar)	søndag
 nn	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+nn	Scripts used	Latn
 nn_NO	Language endonym	nynorsk
 nn_NO	Country endonym	Noreg
 nn_NO	Floating Point Number	−123 456 789,012
@@ -6199,6 +6315,7 @@ nn_NO	Name of weekday 05 (Islamic Calendar)	fredag
 nn_NO	Name of weekday 06 (Islamic Calendar)	laurdag
 nn_NO	Name of weekday 07 (Islamic Calendar)	søndag
 nn_NO	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+nn_NO	Scripts used	Latn
 no	Language endonym	norsk
 no	Country endonym	
 no	Floating Point Number	-123 456 789,012
@@ -6252,6 +6369,7 @@ no	Name of weekday 05 (Islamic Calendar)	fredag
 no	Name of weekday 06 (Islamic Calendar)	lørdag
 no	Name of weekday 07 (Islamic Calendar)	søndag
 no	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+no	Scripts used	Latn
 no_NO	Language endonym	norsk
 no_NO	Country endonym	Norge
 no_NO	Floating Point Number	-123 456 789,012
@@ -6305,6 +6423,7 @@ no_NO	Name of weekday 05 (Islamic Calendar)	fredag
 no_NO	Name of weekday 06 (Islamic Calendar)	lørdag
 no_NO	Name of weekday 07 (Islamic Calendar)	søndag
 no_NO	Collation sample	a á b oegh z ä öfgh å α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+no_NO	Scripts used	Latn
 pt	Language endonym	português
 pt	Country endonym	
 pt	Floating Point Number	-123.456.789,012
@@ -6358,6 +6477,7 @@ pt	Name of weekday 05 (Islamic Calendar)	sexta-feira
 pt	Name of weekday 06 (Islamic Calendar)	sábado
 pt	Name of weekday 07 (Islamic Calendar)	domingo
 pt	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+pt	Scripts used	Latn
 pt_BR	Language endonym	português
 pt_BR	Country endonym	Brasil
 pt_BR	Floating Point Number	-123.456.789,012
@@ -6411,6 +6531,7 @@ pt_BR	Name of weekday 05 (Islamic Calendar)	sexta-feira
 pt_BR	Name of weekday 06 (Islamic Calendar)	sábado
 pt_BR	Name of weekday 07 (Islamic Calendar)	domingo
 pt_BR	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+pt_BR	Scripts used	Latn
 pt_PT	Language endonym	pt
 pt_PT	Country endonym	PT
 pt_PT	Floating Point Number	-123 456 789,012
@@ -6464,6 +6585,7 @@ pt_PT	Name of weekday 05 (Islamic Calendar)	Sexta-feira
 pt_PT	Name of weekday 06 (Islamic Calendar)	Sábado
 pt_PT	Name of weekday 07 (Islamic Calendar)	Domingo
 pt_PT	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+pt_PT	Scripts used	Latn
 ru	Language endonym	русский
 ru	Country endonym	
 ru	Floating Point Number	-123 456 789,012
@@ -6517,6 +6639,7 @@ ru	Name of weekday 05 (Islamic Calendar)	Пятница
 ru	Name of weekday 06 (Islamic Calendar)	Суббота
 ru	Name of weekday 07 (Islamic Calendar)	Воскресенье
 ru	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ru	Scripts used	Cyrl
 ru_RU	Language endonym	русский
 ru_RU	Country endonym	Россия
 ru_RU	Floating Point Number	-123 456 789,012
@@ -6570,6 +6693,7 @@ ru_RU	Name of weekday 05 (Islamic Calendar)	Пятница
 ru_RU	Name of weekday 06 (Islamic Calendar)	Суббота
 ru_RU	Name of weekday 07 (Islamic Calendar)	Воскресенье
 ru_RU	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ru_RU	Scripts used	Cyrl
 ru_UA	Language endonym	ru
 ru_UA	Country endonym	Украина
 ru_UA	Floating Point Number	-123 456 789,012
@@ -6623,6 +6747,7 @@ ru_UA	Name of weekday 05 (Islamic Calendar)	Пятница
 ru_UA	Name of weekday 06 (Islamic Calendar)	Суббота
 ru_UA	Name of weekday 07 (Islamic Calendar)	Воскресенье
 ru_UA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+ru_UA	Scripts used	Cyrl
 sv	Language endonym	svenska
 sv	Country endonym	
 sv	Floating Point Number	−123 456 789,012
@@ -6676,6 +6801,7 @@ sv	Name of weekday 05 (Islamic Calendar)	fredag
 sv	Name of weekday 06 (Islamic Calendar)	lördag
 sv	Name of weekday 07 (Islamic Calendar)	söndag
 sv	Collation sample	a á b oegh z å ä öfgh α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+sv	Scripts used	Latn
 sv_FI	Language endonym	svenska
 sv_FI	Country endonym	FI
 sv_FI	Floating Point Number	−123 456 789,012
@@ -6729,6 +6855,7 @@ sv_FI	Name of weekday 05 (Islamic Calendar)	fredag
 sv_FI	Name of weekday 06 (Islamic Calendar)	lördag
 sv_FI	Name of weekday 07 (Islamic Calendar)	söndag
 sv_FI	Collation sample	a á b oegh z å ä öfgh α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+sv_FI	Scripts used	Latn
 sv_SE	Language endonym	svenska
 sv_SE	Country endonym	Sverige
 sv_SE	Floating Point Number	−123 456 789,012
@@ -6782,6 +6909,7 @@ sv_SE	Name of weekday 05 (Islamic Calendar)	fredag
 sv_SE	Name of weekday 06 (Islamic Calendar)	lördag
 sv_SE	Name of weekday 07 (Islamic Calendar)	söndag
 sv_SE	Collation sample	a á b oegh z å ä öfgh α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+sv_SE	Scripts used	Latn
 th	Language endonym	ไทย
 th	Country endonym	
 th	Floating Point Number	-123,456,789.012
@@ -6835,6 +6963,7 @@ th	Name of weekday 05 (Islamic Calendar)	วันศุกร์
 th	Name of weekday 06 (Islamic Calendar)	วันเสาร์
 th	Name of weekday 07 (Islamic Calendar)	วันอาทิตย์
 th	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+th	Scripts used	Thai
 th_TH	Language endonym	ไทย
 th_TH	Country endonym	ไทย
 th_TH	Floating Point Number	-123,456,789.012
@@ -6888,6 +7017,7 @@ th_TH	Name of weekday 05 (Islamic Calendar)	วันศุกร์
 th_TH	Name of weekday 06 (Islamic Calendar)	วันเสาร์
 th_TH	Name of weekday 07 (Islamic Calendar)	วันอาทิตย์
 th_TH	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+th_TH	Scripts used	Thai
 tr	Language endonym	Türkçe
 tr	Country endonym	
 tr	Floating Point Number	-123.456.789,012
@@ -6941,6 +7071,7 @@ tr	Name of weekday 05 (Islamic Calendar)	Cuma
 tr	Name of weekday 06 (Islamic Calendar)	Cumartesi
 tr	Name of weekday 07 (Islamic Calendar)	Pazar
 tr	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+tr	Scripts used	Latn
 tr_TR	Language endonym	Türkçe
 tr_TR	Country endonym	Türkiye
 tr_TR	Floating Point Number	-123.456.789,012
@@ -6994,6 +7125,7 @@ tr_TR	Name of weekday 05 (Islamic Calendar)	Cuma
 tr_TR	Name of weekday 06 (Islamic Calendar)	Cumartesi
 tr_TR	Name of weekday 07 (Islamic Calendar)	Pazar
 tr_TR	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+tr_TR	Scripts used	Latn
 uk	Language endonym	українська
 uk	Country endonym	
 uk	Floating Point Number	-123 456 789,012
@@ -7047,6 +7179,7 @@ uk	Name of weekday 05 (Islamic Calendar)	Пʼятниця
 uk	Name of weekday 06 (Islamic Calendar)	Субота
 uk	Name of weekday 07 (Islamic Calendar)	Неділя
 uk	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+uk	Scripts used	Cyrl
 uk_UA	Language endonym	українська
 uk_UA	Country endonym	Україна
 uk_UA	Floating Point Number	-123 456 789,012
@@ -7100,6 +7233,7 @@ uk_UA	Name of weekday 05 (Islamic Calendar)	Пʼятниця
 uk_UA	Name of weekday 06 (Islamic Calendar)	Субота
 uk_UA	Name of weekday 07 (Islamic Calendar)	Неділя
 uk_UA	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
+uk_UA	Scripts used	Cyrl
 ur	Language endonym	اردو
 ur	Country endonym	
 ur	Floating Point Number	-123,456,789.012
@@ -7153,6 +7287,7 @@ ur	Name of weekday 05 (Islamic Calendar)	جمعہ
 ur	Name of weekday 06 (Islamic Calendar)	ہفتہ
 ur	Name of weekday 07 (Islamic Calendar)	اتوار
 ur	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ظ ع غ ة 一 三 中 二 俄 得 播 攀 正 此 爱
+ur	Scripts used	Arab
 ur_IN	Language endonym	اردو
 ur_IN	Country endonym	بھارت
 ur_IN	Floating Point Number	-12,34,56,789.012
@@ -7206,6 +7341,7 @@ ur_IN	Name of weekday 05 (Islamic Calendar)	جمعہ
 ur_IN	Name of weekday 06 (Islamic Calendar)	ہفتہ
 ur_IN	Name of weekday 07 (Islamic Calendar)	اتوار
 ur_IN	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ظ ع غ ة 一 三 中 二 俄 得 播 攀 正 此 爱
+ur_IN	Scripts used	Arab
 ur_PK	Language endonym	اردو
 ur_PK	Country endonym	پاکستان
 ur_PK	Floating Point Number	-123,456,789.012
@@ -7259,6 +7395,7 @@ ur_PK	Name of weekday 05 (Islamic Calendar)	جمعہ
 ur_PK	Name of weekday 06 (Islamic Calendar)	ہفتہ
 ur_PK	Name of weekday 07 (Islamic Calendar)	اتوار
 ur_PK	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ظ ع غ ة 一 三 中 二 俄 得 播 攀 正 此 爱
+ur_PK	Scripts used	Arab
 zh	Language endonym	中文
 zh	Country endonym	
 zh	Floating Point Number	-123,456,789.012
@@ -7312,6 +7449,7 @@ zh	Name of weekday 05 (Islamic Calendar)	星期五
 zh	Name of weekday 06 (Islamic Calendar)	星期六
 zh	Name of weekday 07 (Islamic Calendar)	星期日
 zh	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
+zh	Scripts used	Hani
 zh_CN@collation=pinyin	Language endonym	中文
 zh_CN@collation=pinyin	Country endonym	CN@collation=pinyin
 zh_CN@collation=pinyin	Floating Point Number	-123,456,789.012
@@ -7365,6 +7503,7 @@ zh_CN@collation=pinyin	Name of weekday 05 (Islamic Calendar)	星期五
 zh_CN@collation=pinyin	Name of weekday 06 (Islamic Calendar)	星期六
 zh_CN@collation=pinyin	Name of weekday 07 (Islamic Calendar)	星期日
 zh_CN@collation=pinyin	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
+zh_CN@collation=pinyin	Scripts used	Hani
 zh_CN@collation=stroke	Language endonym	中文
 zh_CN@collation=stroke	Country endonym	CN@collation=stroke
 zh_CN@collation=stroke	Floating Point Number	-123,456,789.012
@@ -7418,6 +7557,7 @@ zh_CN@collation=stroke	Name of weekday 05 (Islamic Calendar)	星期五
 zh_CN@collation=stroke	Name of weekday 06 (Islamic Calendar)	星期六
 zh_CN@collation=stroke	Name of weekday 07 (Islamic Calendar)	星期日
 zh_CN@collation=stroke	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 二 三 中 正 此 俄 得 播 攀 爱
+zh_CN@collation=stroke	Scripts used	Hani
 zh_Hans	Language endonym	中文
 zh_Hans	Country endonym	
 zh_Hans	Floating Point Number	-123,456,789.012
@@ -7471,6 +7611,7 @@ zh_Hans	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hans	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hans	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hans	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
+zh_Hans	Scripts used	Hani
 zh_Hans_CN	Language endonym	中文
 zh_Hans_CN	Country endonym	中国
 zh_Hans_CN	Floating Point Number	-123,456,789.012
@@ -7524,6 +7665,7 @@ zh_Hans_CN	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hans_CN	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hans_CN	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hans_CN	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
+zh_Hans_CN	Scripts used	Hani
 zh_Hans_HK	Language endonym	中文
 zh_Hans_HK	Country endonym	中国香港特别行政区
 zh_Hans_HK	Floating Point Number	-123,456,789.012
@@ -7577,6 +7719,7 @@ zh_Hans_HK	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hans_HK	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hans_HK	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hans_HK	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
+zh_Hans_HK	Scripts used	Hani
 zh_Hans_MO	Language endonym	中文
 zh_Hans_MO	Country endonym	中国澳门特别行政区
 zh_Hans_MO	Floating Point Number	-123,456,789.012
@@ -7630,6 +7773,7 @@ zh_Hans_MO	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hans_MO	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hans_MO	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hans_MO	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
+zh_Hans_MO	Scripts used	Hani
 zh_Hans_SG	Language endonym	中文
 zh_Hans_SG	Country endonym	新加坡
 zh_Hans_SG	Floating Point Number	-123,456,789.012
@@ -7683,6 +7827,7 @@ zh_Hans_SG	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hans_SG	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hans_SG	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hans_SG	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
+zh_Hans_SG	Scripts used	Hani
 zh_Hant	Language endonym	中文
 zh_Hant	Country endonym	
 zh_Hant	Floating Point Number	-123,456,789.012
@@ -7736,6 +7881,7 @@ zh_Hant	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hant	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hant	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hant	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 二 三 中 正 此 俄 得 播 攀 爱
+zh_Hant	Scripts used	Hani Bopo
 zh_Hant_HK	Language endonym	zh
 zh_Hant_HK	Country endonym	中華人民共和國香港特別行政區
 zh_Hant_HK	Floating Point Number	-123,456,789.012
@@ -7789,6 +7935,7 @@ zh_Hant_HK	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hant_HK	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hant_HK	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hant_HK	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 二 三 中 正 此 俄 得 播 攀 爱
+zh_Hant_HK	Scripts used	Hani Bopo
 zh_Hant_MO	Language endonym	中文
 zh_Hant_MO	Country endonym	中華人民共和國澳門特別行政區
 zh_Hant_MO	Floating Point Number	-123,456,789.012
@@ -7842,6 +7989,7 @@ zh_Hant_MO	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hant_MO	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hant_MO	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hant_MO	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 二 三 中 正 此 俄 得 播 攀 爱
+zh_Hant_MO	Scripts used	Hani Bopo
 zh_Hant_TW	Language endonym	中文
 zh_Hant_TW	Country endonym	台灣
 zh_Hant_TW	Floating Point Number	-123,456,789.012
@@ -7895,3 +8043,4 @@ zh_Hant_TW	Name of weekday 05 (Islamic Calendar)	星期五
 zh_Hant_TW	Name of weekday 06 (Islamic Calendar)	星期六
 zh_Hant_TW	Name of weekday 07 (Islamic Calendar)	星期日
 zh_Hant_TW	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 二 三 中 正 此 俄 得 播 攀 爱
+zh_Hant_TW	Scripts used	Hani Bopo
