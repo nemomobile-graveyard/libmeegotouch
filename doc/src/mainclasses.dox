@@ -16,6 +16,7 @@ Action extensions
 Notifications
 <ul>
 <li>MNotification
+<li>MNotificationGroup
 </ul>
 
 Widgets

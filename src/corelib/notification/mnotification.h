@@ -50,11 +50,8 @@ class QString;
 
         A notification is not created or updated until the publish() function is called.
 
-        A list of notifications already created can be requested, but in this case a MApplication
-        instance must have been created before any notifications were created and before the request
-        itself. It should also be noted that currently all properties of such notifications need to be
-        set before publishing changes to the notification. Otherwise the properties of the notification
-        will be lost.
+        A list of notifications already created can be requested. An MApplication must be created before
+        doing the request.
 
         \sa \ref notifications
 
@@ -189,6 +186,7 @@ public:
 
     /*!
      * Sets the notification group the notification belongs to.
+     * The notification group must be published before this function is called.
      *
      * \param group the notification group the notification belongs to.
      */
