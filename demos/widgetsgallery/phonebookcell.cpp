@@ -55,7 +55,11 @@ MLayout *PhoneBookCell::createLayout()
     landscapePolicy->setSpacing(0);
 
     // add to layout
-    landscapePolicy->addItem(spinnerWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    if (!imageWidget()->pixmap())
+        landscapePolicy->addItem(spinnerWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+    else
+        landscapePolicy->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+
     landscapePolicy->addItem(landscapeTitleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
     landscapePolicy->addItem(subtitleLabelWidget(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
     landscapePolicy->addItem(new QGraphicsWidget(this), 2, 1);
@@ -63,7 +67,12 @@ MLayout *PhoneBookCell::createLayout()
     portraitPolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
     portraitPolicy->setContentsMargins(0, 0, 0, 0);
     portraitPolicy->setSpacing(0);
-    portraitPolicy->addItem(spinnerWidget(), Qt::AlignLeft | Qt::AlignVCenter);
+
+    if (!imageWidget()->pixmap())
+        portraitPolicy->addItem(spinnerWidget(), Qt::AlignLeft | Qt::AlignVCenter);
+    else
+        portraitPolicy->addItem(imageWidget(), Qt::AlignLeft | Qt::AlignVCenter);
+
     portraitPolicy->addItem(portraitTitleLabelWidget(), Qt::AlignLeft | Qt::AlignVCenter);
 
     layout->setPortraitPolicy(portraitPolicy);

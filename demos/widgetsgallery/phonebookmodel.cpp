@@ -350,8 +350,7 @@ void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
                 sortModel = filterModel;
             }
         }
-        else if ( sortModel != NULL )
-        {
+        if (phoneBookModel != NULL && sortModel != NULL) {
             phoneBookModel->thumbnailWasLoaded(sortModel->mapToSource(realIndex));
         }
     }
