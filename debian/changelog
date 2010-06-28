@@ -1,8 +1,14 @@
-libmeegotouch (0.20.23~1) UNRELEASED; urgency=low
+libmeegotouch (0.20.23-1) unstable; urgency=low
 
-  * ...
+  * Fixes: NB#175620 - Widget properties are not updated after rotation
+  * Fixes: NB#176860 - Message UI crashes when tap on SMS send button
+  * Fixes: NB#170699 - Documentation does not mention how %L1 localization is done
+  * Fixes: NB#176157 - MBubbleItem setAvatar() resizes the bubble
+  * Fixes: NB#175800 - MButton layout when horizontal-text-align is left and icon-align is right ignores label position
+  * Fixes: NB#176455 - MClassFactory trashes debug output
+  * Fixes: NB#176134 - No unique object names for MActions in application menu
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 23 Jun 2010 14:42:41 +0300
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 28 Jun 2010 14:22:16 +0300
 
 libmeegotouch (0.20.22-1) unstable; urgency=low
 
