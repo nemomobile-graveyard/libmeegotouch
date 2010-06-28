@@ -149,6 +149,7 @@ void MButtonViewPrivate::calcIconTextRects()
 
         //text visible and valid?
         if (q->model()->textVisible() && !q->model()->text().isEmpty()) {
+            textSize.setWidth(qMin(textSize.width(), (int)contentRect.width() - iconWidth - hTextMargin));
             switch (q->style()->iconAlign()) {
                 //icon on left and text on right
             case Qt::AlignLeft: {
@@ -170,7 +171,7 @@ void MButtonViewPrivate::calcIconTextRects()
                 if (q->style()->horizontalTextAlign() == Qt::AlignHCenter)
                     iconPosition.setX(contentRect.center().x() + (textSize.width() / 2));
                 else if (q->style()->horizontalTextAlign() == Qt::AlignRight)
-                    iconPosition.setX(contentRect.width() - iconWidth);
+                    iconPosition.setX(contentRect.right() - iconWidth);
                 else if (q->style()->horizontalTextAlign() == Qt::AlignLeft)
                     iconPosition.setX(contentRect.left() + textSize.width() + hTextMargin);
 
