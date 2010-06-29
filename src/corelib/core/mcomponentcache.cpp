@@ -34,13 +34,16 @@
 #include <QGLWidget>
 
 MComponentCachePrivate * const MComponentCache::d_ptr = new MComponentCachePrivate;
+const int MComponentCachePrivate::ARGV_LIMIT = 32;
 
 MComponentCachePrivate::MComponentCachePrivate() :
     mApplicationInstance(0),
     mApplicationWindowInstance(0),
     glWidgetOfmApplicationWindowInstance(0),
     glWidgetOfOtherWindow(0),
-    cacheBeingPopulated(false)
+    cacheBeingPopulated(false),
+    initialArgc(ARGV_LIMIT),
+    initialArgv(new char* [initialArgc])
 {
 }
 
@@ -52,6 +55,8 @@ MComponentCachePrivate::~MComponentCachePrivate()
         delete glWidgetOfOtherWindow;
     if (mApplicationWindowInstance != 0)
         delete mApplicationWindowInstance;
+    if (initialArgv != 0)
+        delete[] initialArgv; 
 
     while (!shareWidgetsCache.isEmpty()) {
         FormatWidgetPair pair = shareWidgetsCache.takeFirst();
@@ -66,13 +71,20 @@ bool MComponentCachePrivate::populating()
 
 void MComponentCachePrivate::populateForMApplication()
 {
-    static int argc = 1;
-    static char *argv[] = {(char*)"generic"};
+    static const char *const genericString = "generic";
+    static const char *const emptyString = "";
 
     cacheBeingPopulated = true;
 
+    // We support at most ARGV_LIMIT arguments in QCoreApplication. These will be set when real
+    // arguments are known (in MComponentCachePrivate::mApplication). 
+    initialArgv[0] = const_cast<char *>(genericString);
+    for (int i = 1; i < initialArgc; i++) {
+        initialArgv[i] = const_cast<char *>(emptyString);
+    }
+
     if (mApplicationInstance == 0) {
-        mApplicationInstance = new MApplication(argc, argv, 0);
+        mApplicationInstance = new MApplication(initialArgc, initialArgv, 0);
     } else {
         cacheBeingPopulated = false;
         qFatal("MComponentCache::populateForMApplication() - Cache is already populated.");
@@ -121,6 +133,18 @@ MApplication* MComponentCachePrivate::mApplication(int &argc, char **argv, const
         mApplicationInstance = new MApplication(argc, argv, appIdentifier, service);
     } else {
         if (canUseCachedApp(argc, argv, appIdentifier)) {
+            if(argc > ARGV_LIMIT) {
+                qWarning("MComponentCache: QCoreApplication::arguments() will not contain all arguments.");
+            }
+
+            // Copy arguments to QCoreApplication 
+            for (int i = 0; i < qMin(argc, ARGV_LIMIT); i++) {
+                qApp->argv()[i] = argv[i];
+            }
+
+            // This changes argc in QCoreApplication
+            initialArgc = qMin(argc, ARGV_LIMIT);
+
             MComponentData::instance()->reinit(argc, argv, appIdentifier, service);
         } else {
             /* Clean up cache.

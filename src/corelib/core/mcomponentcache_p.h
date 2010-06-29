@@ -45,11 +45,14 @@ public:
     QGLWidget* createNewGlWidget(const QGLFormat* format = NULL);
 
 private:
+    static const int ARGV_LIMIT;
     MApplication *mApplicationInstance;
     MApplicationWindow *mApplicationWindowInstance;
     QGLWidget *glWidgetOfmApplicationWindowInstance;
     QGLWidget *glWidgetOfOtherWindow;
     bool cacheBeingPopulated;
+    int initialArgc;
+    char **initialArgv;
 
     typedef QPair<QGLFormat,QGLWidget*> FormatWidgetPair;
     QList<FormatWidgetPair> shareWidgetsCache;
