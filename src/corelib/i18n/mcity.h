@@ -35,16 +35,32 @@ class M_EXPORT MCity
 
     /**
      * \brief returns the unique key for the city
+     *
+     * Example:
+     * something like “qtn_clk_city_fin_hki” might be returned
+     * for Helsinki. This key can be used in qtTrId() to get the
+     * translation for “Helsinki”:
+     *
+     * \code
+     * qtTrId("qtn_clk_city_fin_hki");
+     * \endcode
      */
     QString key() const;
 
     /**
      * \brief returns the english name for the city
+     *
+     * Example:
+     * might return something like “Helsinki”.
      */
     QString englishName() const;
 
     /**
      * \brief returns the local name for the city
+     *
+     * Example:
+     * For a city with the English name “Rome” this
+     * function might return “Roma”.
      */
     QString localName() const;
 
@@ -60,6 +76,9 @@ class M_EXPORT MCity
 
     /**
      * \brief returns the timezone string for the city
+     *
+     * Example:
+     * returns something like “Europe/Helsinki”
      */
     QString timeZone() const;
 

@@ -37,16 +37,31 @@ class M_EXPORT MCountry
 
     /**
      * \brief returns the unique key for the country
+     *
+     * Example:
+     * might return something like “qtn_clk_country_finland”
+     * for Finland. This key can be used in qtTrId() to get
+     * the translation of “Finland”
+     *
+     * \code
+     * qtTrId("qtn_clk_country_finland");
+     * \endcode
      */
     QString key() const;
 
     /**
      * \brief returns the english name for the country
+     *
+     * Example:
+     * might return something like “Finland”.
      */
     QString englishName() const;
 
     /**
      * \brief returns the local name for the country
+     *
+     * Example
+     * might return something like “Suomi” in case of Finland
      */
     QString localName() const;
 
