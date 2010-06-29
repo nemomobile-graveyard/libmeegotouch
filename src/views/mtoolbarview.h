@@ -73,7 +73,16 @@ public:
     virtual ~MToolBarView();
 
     MWidget *getWidget(QAction *action) const;
+
+    //! \reimp
+    virtual QRectF boundingRect() const;
+    //! \reimp_end
+
 protected:
+    //! \reimp
+    virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    //! \reimp_end
+
     /*!
         \brief protected constructor
         \param dd Shared private class

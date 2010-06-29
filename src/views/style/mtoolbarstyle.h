@@ -34,6 +34,8 @@ class M_EXPORT MToolbarStyle : public MWidgetStyle
 {
     Q_OBJECT
     M_STYLE(MToolbarStyle)
+
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, dropShadowImage, DropShadowImage)
 };
 
 /*!

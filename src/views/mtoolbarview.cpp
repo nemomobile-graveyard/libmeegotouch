@@ -33,6 +33,8 @@
 #include "mtextedit.h"
 #include "mtoolbarview.h"
 #include "mtoolbarview_p.h"
+#include "mscalableimage.h"
+#include "mscenemanager.h"
 
 const int maxSlots = 4;
 
@@ -558,6 +560,32 @@ MToolBarView::MToolBarView(MToolBarViewPrivate &dd, MToolBar *controller) :
 MToolBarView::~MToolBarView()
 {
     delete d_ptr;
+}
+
+QRectF MToolBarView::boundingRect() const
+{
+    QRectF br = MWidgetView::boundingRect();
+    if (style()->dropShadowImage()) {
+        br.setTop(-style()->dropShadowImage()->pixmap()->size().height());
+    }
+    return br;
+}
+
+void MToolBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
+{
+    Q_D(const MToolBarView);
+
+    //draw shadow on top of the actual toolbar on portrait mode
+    if (d->controller->sceneManager()->orientation() == M::Portrait) {
+        if (style()->dropShadowImage()) {
+            style()->dropShadowImage()->draw(0,
+                    -style()->dropShadowImage()->pixmap()->size().height(),
+                    boundingRect().width(),
+                    style()->dropShadowImage()->pixmap()->size().height(),
+                    painter);
+        }
+    }
+    MWidgetView::drawBackground(painter, option);
 }
 
 // bind view and controller together
