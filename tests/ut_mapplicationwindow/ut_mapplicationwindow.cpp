@@ -24,6 +24,7 @@
 #include <mapplicationservice.h>
 #include <mapplicationwindow.h>
 #include <mapplicationpage.h>
+#include <minputmethodstate.h>
 #include <MComponentData>
 #include <MScene>
 #include <MSceneManager>
@@ -43,6 +44,7 @@ void Ut_MApplicationWindow::initTestCase()
         m_componentData = new MComponentData(argc, argv);
     }
     qRegisterMetaType<MApplicationPage *>("MApplicationPage*");
+    qRegisterMetaType< QList<StatusBarTestOperation> >("QList<StatusBarTestOperation>");
 }
 
 void Ut_MApplicationWindow::cleanupTestCase()
@@ -242,6 +244,79 @@ void Ut_MApplicationWindow::testPageEscapeAutoWhenClearingPageHistory()
     m_subject->sceneManager()->setPageHistory(pageHistory);
 
     QCOMPARE(escapeButtonPanel->escapeMode(), MEscapeButtonPanelModel::CloseMode);
+}
+
+void Ut_MApplicationWindow::testStatusBarVisibility_data()
+{
+    QTest::addColumn< QList<StatusBarTestOperation> >("operations");
+    QTest::addColumn<bool>("expectedVisibility");  // true = visible, false = invisible
+
+    typedef QList<StatusBarTestOperation> OpList;
+
+    QTest::newRow("Fullscreen OFF") << (OpList() << MakeNormal) << true;
+    QTest::newRow("Fullscreen ON") << (OpList() << MakeFullScreen) << false;
+    QTest::newRow("Open SIP") << (OpList() << MakeNormal << OpenSip) << false;
+    QTest::newRow("Close SIP") << (OpList() << MakeNormal << CloseSip) << true;
+    QTest::newRow("Close SIP while fullscreen1") << (OpList() << MakeFullScreen << CloseSip) << false;
+    QTest::newRow("Close SIP while fullscreen2") << (OpList() << MakeFullScreen << CloseSip << MakeNormal) << true;
+    QTest::newRow("Open SIP while fullscreen1") << (OpList() << MakeFullScreen << OpenSip) << false;
+    QTest::newRow("Open SIP while fullscreen2") << (OpList() << MakeFullScreen << OpenSip << MakeNormal) << false;
+}
+
+void Ut_MApplicationWindow::testStatusBarVisibility()
+{
+    QFETCH(QList<StatusBarTestOperation>, operations);
+    QFETCH(bool, expectedVisibility);
+
+    const MSceneWindow *statusBar = 0;
+
+    // Find the status bar
+    QList<QGraphicsItem *> itemList = m_subject->scene()->items();
+    foreach (const QGraphicsItem *item, itemList) {
+        const MSceneWindow *window = dynamic_cast<const MSceneWindow *>(item);
+        if (window && window->windowType() == MSceneWindow::StatusBar) {
+            statusBar = window;
+            break;
+        }
+    }
+
+    if (!statusBar) {
+        QSKIP("No status bar used so skipping test.", SkipSingle);
+    }
+
+    m_subject->sceneManager()->setOrientationAngle(M::Angle0, MSceneManager::ImmediateTransition);
+    QVERIFY(m_subject->orientationAngle() == M::Angle0);
+
+    foreach (StatusBarTestOperation op, operations) {
+        switch (op) {
+        case MakeFullScreen:
+            m_subject->showFullScreen();
+            break;
+        case MakeNormal:
+            m_subject->showNormal();
+            break;
+        case OpenSip:
+            {
+                // Hide status bar, among with others, by telling the subject
+                // we have a large software input panel present.
+                const QRect largePanel(m_subject->sceneRect().toRect());
+                QMetaObject::invokeMethod(m_subject, "_q_inputPanelAreaChanged",
+                                          Qt::DirectConnection, Q_ARG(const QRect &, largePanel));
+                break;
+            }
+        case CloseSip:
+            {
+                const QRect emptyPanel(0, 0, 0, 0);
+                QMetaObject::invokeMethod(m_subject, "_q_inputPanelAreaChanged",
+                                          Qt::DirectConnection, Q_ARG(const QRect &, emptyPanel));
+                break;
+            }
+        }
+    }
+
+    // This relies on status bar being out of display which means no animation
+    // and change in QGraphicsItem visibility is immediate.
+    QCOMPARE(statusBar->isVisible(), expectedVisibility);
 }
 
 MEscapeButtonPanel *Ut_MApplicationWindow::fetchEscapeButtonPanel(

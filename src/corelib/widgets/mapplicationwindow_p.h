@@ -65,6 +65,7 @@ public:
     QTimer autoHideComponentsTimer;
     QList<MSceneWindow *> componentsOnAutoHide;
     bool isMenuOpen;
+    bool pageAreaMaximized;
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
     ContextProperty callStatusProperty;
@@ -74,6 +75,7 @@ public:
     //       once it becomes available, instead of manually tracking the scene windows
     //       appear/disappear statuses.
     bool showingStatusBar;
+    bool showingNavigationBar;
     bool showingDockWidget;
 
     void manageActions();
@@ -127,6 +129,17 @@ public:
     void tearDownPageEscape();
     void _q_updatePageEscapeAuto();
 
+    /*!
+     * Maximizes visible area for page by hiding all other components (e.g. navigation bar).
+     * Overrides each page's own preference for displaying components.
+     */
+    void maximizePageArea();
+
+    /*!
+     * Restores page area to current page's preference.
+     */
+    void restorePageArea();
+
 private:
     void init();
     void initAutoHideComponentsTimer();
@@ -139,9 +152,8 @@ public:
     void _q_handlePageModelModifications(const QList<const char *>&);
     void _q_menuAppeared();
     void _q_menuDisappeared();
-#ifdef HAVE_CONTEXTSUBSCRIBER
     void _q_updateStatusBarVisibility();
-#endif
+    void _q_inputPanelAreaChanged(const QRect &);
 #ifdef HAVE_N900
     void _q_exitAppView();
 #endif

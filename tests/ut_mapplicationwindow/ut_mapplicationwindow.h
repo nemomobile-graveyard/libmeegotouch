@@ -65,6 +65,9 @@ private slots:
     void testPageEscapeAutoWhenAddingPageHistory();
     void testPageEscapeAutoWhenClearingPageHistory();
 
+    void testStatusBarVisibility_data();
+    void testStatusBarVisibility();
+
 private:
     MEscapeButtonPanel *fetchEscapeButtonPanel(const QList<QGraphicsItem *> &itemsList) const;
     MApplicationWindow *m_subject;
@@ -72,6 +75,16 @@ private:
 
 };
 
+
+enum StatusBarTestOperation {
+    MakeFullScreen,
+    MakeNormal,
+    OpenSip,
+    CloseSip
+};
+
+
 Q_DECLARE_METATYPE(MApplicationPage *);
+Q_DECLARE_METATYPE(QList<StatusBarTestOperation>);
 
 #endif

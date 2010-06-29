@@ -173,6 +173,9 @@ public:
 
     void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
 
+    void relocateWindowByInputPanel(const QRect &inputPanelRect);
+    void restoreSceneWindow();
+
     void _q_setSenderGeometry();
     void _q_changeGlobalOrientationAngle();
     void _q_emitOrientationChangeFinished();
@@ -180,8 +183,7 @@ public:
     void _q_onSceneWindowAppearanceAnimationFinished();
     void _q_onSceneWindowDisappearanceAnimationFinished();
     void _q_onPageSwitchAnimationFinished();
-    void _q_restoreSceneWindow();
-    void _q_relocateWindowByInputPanel(const QRect &inputPanelRect);
+    void _q_inputPanelAreaChanged(const QRect &inputPanelRect);
 
     //! Prepares current window for SIP.
     void _q_inputPanelOpened();
@@ -214,11 +216,7 @@ public:
     M::OrientationAngle angle;
     M::OrientationAngle newAngle;
 
-    MNavigationBar *navBar;
-    MSceneWindow *escapeButtonPanel;
     QPointer<MSceneWindow> currentPage;
-    bool navBarHidden;
-    bool escapeButtonHidden;
 
     QPointer<QGraphicsWidget> focusedInputWidget;
 

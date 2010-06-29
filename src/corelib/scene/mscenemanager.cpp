@@ -40,8 +40,6 @@
 #include "mscenelayereffect.h"
 #include "mnavigationbar.h"
 #include "mdockwidget.h"
-#include "mescapebuttonpanel.h"
-#include "mescapebuttonpanelmodel.h"
 #include "mobjectmenu.h"
 #include "mapplication.h"
 #include "mwindow.h"
@@ -78,11 +76,7 @@ void MSceneManagerPrivate::init(MScene *scene)
 
     this->scene = scene;
 
-    navBar = 0;
-    escapeButtonPanel = 0;
     currentPage = 0;
-    navBarHidden = false;
-    escapeButtonHidden = false;
 
     focusedInputWidget = 0;
     alteredSceneWindow = 0;
@@ -112,7 +106,7 @@ void MSceneManagerPrivate::init(MScene *scene)
     // This also implies that the software input panel could come up without an explicit request
     // from the application side.
     q->connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
-               q, SLOT(_q_relocateWindowByInputPanel(QRect)),
+               q, SLOT(_q_inputPanelAreaChanged(const QRect &)),
                Qt::UniqueConnection);
 
     q->connect(q, SIGNAL(orientationChangeFinished(M::Orientation)),
@@ -439,7 +433,16 @@ void MSceneManagerPrivate::_q_onPageSwitchAnimationFinished()
     applySceneWindowTransitionsFromPageSwitchQueue();
 }
 
-void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanelRect)
+void MSceneManagerPrivate::_q_inputPanelAreaChanged(const QRect &panelRect)
+{
+    if (panelRect.isEmpty()) {
+        restoreSceneWindow();
+    } else {
+        relocateWindowByInputPanel(panelRect);
+    }
+}
+
+void MSceneManagerPrivate::relocateWindowByInputPanel(const QRect &inputPanelRect)
 {
     Q_Q(MSceneManager);
 
@@ -450,8 +453,18 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
     }
 
     // This method is not responsible for restoring visibility when the input panel is closed -
-    // _q_inputPanelClosed() does that. Therefore, it is OK to also ignore empty rectangles here.
+    // restoreSceneWindow() does that. Therefore, it is OK to also ignore empty rectangles here.
     if (!focusedInputWidget || inputPanelRect.isEmpty()) {
+        return;
+    }
+
+    // Find the first scene window parent of the focused input widget, since only those should
+    // be scrolled or moved in this context.
+    MSceneWindow *newParent = parentSceneWindow(focusedInputWidget);
+
+    // Don't move navigation bar. Focus can also be in dock widget but because it can get
+    // obfuscated by input panel we need to move it.
+    if (newParent->windowType() == MSceneWindow::NavigationBar) {
         return;
     }
 
@@ -470,15 +483,13 @@ void MSceneManagerPrivate::_q_relocateWindowByInputPanel(const QRect &inputPanel
     int adjustment = (rootElement->mapRectFromScene(microFocusRect).toRect().center() -
                       visibleRect.center()).y();
 
-    // Find the first scene window parent of the focused input widget, since only those should
-    // be scrolled or moved in this context. The altered scene window is moved back to its
+    // The altered scene window is moved back to its
     // original location, although - if it has pannable contents - it is not scrolled back.
-    MSceneWindow *newParent = parentSceneWindow(focusedInputWidget);
     adjustment -= scrollPageContents(newParent, adjustment);
     moveSceneWindow(newParent, adjustment, obstructedHeight);
 }
 
-void MSceneManagerPrivate::_q_restoreSceneWindow()
+void MSceneManagerPrivate::restoreSceneWindow()
 {
     if (alteredSceneWindow) {
         sceneWindowTranslation *= -1;
@@ -492,7 +503,7 @@ void MSceneManager::ensureCursorVisible()
 {
     Q_D(MSceneManager);
 
-    d->_q_relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
+    d->_q_inputPanelAreaChanged(MInputMethodState::instance()->inputMethodArea());
 }
 
 M::Orientation MSceneManagerPrivate::orientation(M::OrientationAngle angle) const
@@ -630,7 +641,7 @@ void MSceneManagerPrivate::setParentItemForSceneWindow(MSceneWindow *sceneWindow
 
 void MSceneManagerPrivate::setSceneWindowGeometries()
 {
-    _q_restoreSceneWindow();
+    restoreSceneWindow();
     const int size = windows.size();
     MSceneWindow *sceneWindow;
 
@@ -932,12 +943,6 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
 
     setSceneWindowGeometry(window);
     createLayerEffectForWindow(window);
-
-    if (window->windowType() == MSceneWindow::NavigationBar)
-        navBar = qobject_cast<MNavigationBar *>(window);
-
-    if (window->windowType() == MSceneWindow::EscapeButtonPanel)
-        escapeButtonPanel = window;
 
     if (window->windowType() == MSceneWindow::StatusBar) {
         // There can be only one status bar in the scene.
@@ -1479,48 +1484,21 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
 
 void MSceneManagerPrivate::_q_inputPanelOpened()
 {
-    Q_Q(MSceneManager);
-
-    if (!focusedInputWidget)
-        return;
-
-    const bool widgetOnPage = onApplicationPage(focusedInputWidget);
-    if (!navBarHidden && navBar && widgetOnPage) {
-        navBarHidden = true;
-        q->disappearSceneWindow(navBar);
-    }
-    if (!escapeButtonHidden && escapeButtonPanel && (widgetOnPage || (navBar && navBar->isAncestorOf(focusedInputWidget)))) {
-        escapeButtonHidden = true;
-        q->disappearSceneWindow(escapeButtonPanel);
-    }
-
     // Have to call the slot explicitly at least once: The focused widget can change without the
-    // MIMS sending new signals (e.g., the input field's content type stays the same).
+    // MIMS sending new area (e.g., the input field's content type stays the same) and then
+    // relocateWindowByInputPanel is not called.
     // TODO: Rethink the design of MIMS to allow pending updates (so that we'll *know* wether we
     // get a signal later or not).
-    _q_relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
+    relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
 }
 
 void MSceneManagerPrivate::_q_inputPanelClosed()
 {
-    Q_Q(MSceneManager);
-
     if (!pendingSIPClose) {
         return;
     }
 
     focusedInputWidget = 0;
-
-    if (navBar && navBarHidden) {
-        q->appearSceneWindow(navBar);
-        navBarHidden = false;
-    }
-    if (escapeButtonPanel && escapeButtonHidden) {
-        q->appearSceneWindow(escapeButtonPanel);
-        escapeButtonHidden = false;
-    }
-
-    _q_restoreSceneWindow();
 }
 
 void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
@@ -1645,12 +1623,6 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
 
     if (currentPage == sceneWindow)
         currentPage = 0;
-
-    if (sceneWindow->windowType() == MSceneWindow::NavigationBar && !navBarHidden)
-        navBar = 0;
-
-    if (sceneWindow->windowType() == MSceneWindow::EscapeButtonPanel && !escapeButtonHidden)
-        escapeButtonPanel = 0;
 
     if (sceneWindow->windowType() == MSceneWindow::StatusBar)
         statusBar = 0;
@@ -1831,7 +1803,7 @@ void MSceneManager::requestSoftwareInputPanel(QGraphicsWidget *inputWidget)
             return;
         }
 
-        // Calling _q_relocateWindowByInputPanel can change the scene window position and it is
+        // Calling relocateWindowByInputPanel can change the scene window position and it is
         // common that we got here with mousePressEvent in the backtrace. Moving the
         // scene window now can cause mouse press to not hit its target (which causes focus lost).
         // Because of this we shall visit event loop first.
@@ -1867,6 +1839,7 @@ void MSceneManager::closeSoftwareInputPanel()
 
     // Tell input context we want to close the SIP.
     if (!inputContext) {
+        d->_q_inputPanelClosed();
         return;
     }
 

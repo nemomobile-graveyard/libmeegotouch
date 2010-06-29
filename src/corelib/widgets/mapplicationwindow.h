@@ -173,6 +173,7 @@ private:
 #ifdef HAVE_CONTEXTSUBSCRIBER
     Q_PRIVATE_SLOT(d_func(), void _q_updateStatusBarVisibility())
 #endif
+    Q_PRIVATE_SLOT(d_func(), void _q_inputPanelAreaChanged(const QRect &))
 #ifdef HAVE_N900
     Q_PRIVATE_SLOT(d_func(), void _q_exitAppView())
 #endif

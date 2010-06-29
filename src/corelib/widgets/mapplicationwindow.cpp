@@ -26,6 +26,8 @@
 #include "mapplicationwindow.h"
 #include "mapplicationpage.h"
 #include "mapplicationpage_p.h"
+#include "minputmethodstate.h"
+#include "mkeyboardstatetracker.h"
 #include "morientationtracker.h"
 #include "mnavigationbar.h"
 #include "mapplicationmenu.h"
@@ -86,10 +88,12 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , escapeButtonPanel(new MEscapeButtonPanel)
     , menu(new MApplicationMenu)
     , isMenuOpen(false)
+    , pageAreaMaximized(false)
 #ifdef HAVE_CONTEXTSUBSCRIBER
     , callStatusProperty("Phone.Call")
 #endif
     , showingStatusBar(false)
+    , showingNavigationBar(false)
     , showingDockWidget(false)
 {
     if(MDeviceProfile::instance()->showStatusbar())    {
@@ -177,6 +181,9 @@ void MApplicationWindowPrivate::init()
 #endif
     q->connect(q, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
             SLOT(_q_updatePageExposedContentRect()));
+
+    q->connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
+               q, SLOT(_q_inputPanelAreaChanged(const QRect &)));
 }
 
 #ifdef Q_WS_X11
@@ -219,36 +226,94 @@ void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *
     if (!statusBar)
         return;
 
-    // Status bar should always be visible while a phone call is ongoing.
-#ifdef HAVE_CONTEXTSUBSCRIBER
-    if (callStatusProperty.value().toString() == "active")
-        return;
-#endif
-
-    if (q->isFullScreen() && !event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->disappearSceneWindow(statusBar);
-    } else if (!q->isFullScreen() && event->oldState().testFlag(Qt::WindowFullScreen)) {
-        q->sceneManager()->appearSceneWindow(statusBar);
+    if (q->isFullScreen() != event->oldState().testFlag(Qt::WindowFullScreen)) {
+        _q_updateStatusBarVisibility();
     }
 }
 
-#ifdef HAVE_CONTEXTSUBSCRIBER
+void MApplicationWindowPrivate::maximizePageArea()
+{
+    pageAreaMaximized = true;
+
+    // When maximized, the window is in control of these components.
+    setComponentDisplayMode(homeButtonPanel, MApplicationPageModel::Hide);
+    setComponentDisplayMode(escapeButtonPanel, MApplicationPageModel::Hide);
+    setComponentDisplayMode(navigationBar, MApplicationPageModel::Hide);
+    setComponentDisplayMode(dockWidget, MApplicationPageModel::Hide);
+
+    // Now that we've set pageAreaMaximized, this update tries to hide status bar.
+    _q_updateStatusBarVisibility();
+}
+
+void MApplicationWindowPrivate::restorePageArea()
+{
+    Q_Q(MApplicationWindow);
+
+    pageAreaMaximized = false;
+
+    if (page) {
+        setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
+        setComponentDisplayMode(escapeButtonPanel, page->model()->escapeButtonDisplayMode());
+        setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
+
+        if (q->orientation() == M::Portrait) {
+            // Dock widget follows navigation bar display mode.
+            setComponentDisplayMode(dockWidget, page->model()->navigationBarDisplayMode());
+        }
+    }
+
+    // Show status bar
+    _q_updateStatusBarVisibility();
+}
+
+void MApplicationWindowPrivate::_q_inputPanelAreaChanged(const QRect &panelRect)
+{
+    Q_Q(MApplicationWindow);
+
+    // If input panel rect is of nonzero size hide navigation controls.
+    // For portrait mode, the only change is to restore previously maximized page.
+
+    // Another exception is that with hardware keyboard open the controls are always visible
+    // even though symbol view or toolbars can be visible at the same time.
+    // We make the assumption that the state of MKeyboardStateTracker is updated before
+    // this slot is called again.
+
+    // Also, if we have keyboard focus in navigation controls then no need to make page
+    // area larger.
+
+    if (pageAreaMaximized
+        && (panelRect.isEmpty() || q->orientation() == M::Portrait)) {
+        restorePageArea();
+    } else if (!pageAreaMaximized
+               && !panelRect.isEmpty()
+               && (q->orientation() == M::Landscape)
+               && !MKeyboardStateTracker::instance()->isOpen()
+               && !navigationBar->focusItem()
+               && !dockWidget->focusItem()) {
+        maximizePageArea();
+    }
+}
+
 void MApplicationWindowPrivate::_q_updateStatusBarVisibility()
 {
     Q_Q(MApplicationWindow);
     if (!statusBar)
         return;
-    // Status bar should always be visible while a phone call is ongoing.
 
-    if (q->isFullScreen()) {
-        if (callStatusProperty.value().toString() == "active") {
-            q->sceneManager()->appearSceneWindow(statusBar);
-        } else {
-            q->sceneManager()->disappearSceneWindow(statusBar);
-        }
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    // Status bar should always be appeared while a phone call is ongoing.
+    if (callStatusProperty.value().toString() == "active") {
+        statusBar->appear(q);
+        return;
+    }
+#endif
+
+    if (q->isFullScreen() || pageAreaMaximized) {
+        statusBar->disappear();
+    } else {
+        statusBar->appear(q);
     }
 }
-#endif
 
 void MApplicationWindowPrivate::_q_actionUpdated(QActionEvent *event)
 {
@@ -276,28 +341,30 @@ void MApplicationWindowPrivate::_q_handlePageModelModifications(const QList<cons
     const char *member;
 
     foreach(member, modifications) {
-        if (member == MApplicationPageModel::HomeButtonDisplayMode) {
-            setComponentDisplayMode(homeButtonPanel,
-                                    page->model()->homeButtonDisplayMode());
+        if (!pageAreaMaximized) {
+            if (member == MApplicationPageModel::HomeButtonDisplayMode) {
+                setComponentDisplayMode(homeButtonPanel,
+                                        page->model()->homeButtonDisplayMode());
 
-        } else if (member == MApplicationPageModel::EscapeButtonDisplayMode) {
-            setComponentDisplayMode(escapeButtonPanel,
-                                    page->model()->escapeButtonDisplayMode());
+            } else if (member == MApplicationPageModel::EscapeButtonDisplayMode) {
+                setComponentDisplayMode(escapeButtonPanel,
+                                        page->model()->escapeButtonDisplayMode());
 
-        } else if (member == MApplicationPageModel::NavigationBarDisplayMode) {
-            setComponentDisplayMode(navigationBar,
-                                    page->model()->navigationBarDisplayMode());
+            } else if (member == MApplicationPageModel::NavigationBarDisplayMode) {
+                setComponentDisplayMode(navigationBar,
+                                        page->model()->navigationBarDisplayMode());
 
-            // Dock widget follows navigation bar display mode.
-            setComponentDisplayMode(dockWidget,
-                                    page->model()->navigationBarDisplayMode());
+                // Dock widget follows navigation bar display mode.
+                setComponentDisplayMode(dockWidget,
+                                        page->model()->navigationBarDisplayMode());
 
-            // Interpretation of whether the navigation bar is covering the page
-            // changes from "auto-hide" to "show". On "auto-hide" the navigation
-            // bar doesn't count as covering the page since it does so only momentarily.
-            _q_updatePageExposedContentRect();
+                // Display mode can be changed between "auto-hide" and "show" which does not
+                // affect appearance state. Need to update exposed rectangle explicitly.
+                _q_updatePageExposedContentRect();
+            }
+        }
 
-        } else if (member == MApplicationPageModel::ProgressIndicatorVisible) {
+        if (member == MApplicationPageModel::ProgressIndicatorVisible) {
             navigationBar->setProgressIndicatorVisible(page->model()->progressIndicatorVisible());
 
         } else if (member == MApplicationPageModel::AutoMarginsForComponentsEnabled) {
@@ -360,7 +427,15 @@ void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
         topCoverage += statusBar->effectiveSizeHint(Qt::PreferredSize).height();
     }
 
-    if (page->componentDisplayMode(MApplicationPage::NavigationBar) == MApplicationPageModel::Show) {
+    // Interpretation of whether the navigation bar is covering the page
+    // changes from "auto-hide" to "show". On "auto-hide" the navigation
+    // bar doesn't count as covering the page since it does so only momentarily.
+
+    // If page area is maximized it means that page's own component display mode
+    // is not currently applied and we cannot rely on it.
+    const bool navBarIsCovering = pageAreaMaximized ? showingNavigationBar :
+                                  (page->componentDisplayMode(MApplicationPage::NavigationBar) == MApplicationPageModel::Show);
+    if (navBarIsCovering) {
         topCoverage += navigationBar->size().height();
     }
 
@@ -570,6 +645,10 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
 
 void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
 {
+    // Note that, when listening scene window state changed events, the actual state
+    // of the scene window is not yet changed, and is needed to store separately
+    // before call to _q_updatePageExposedContentRect().
+
     MSceneWindow *sceneWindow = event->sceneWindow();
 
     switch (sceneWindow->windowType()) {
@@ -585,6 +664,7 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
             break;
 
         case MSceneWindow::NavigationBar:
+            showingNavigationBar = true;
             _q_updatePageExposedContentRect();
             break;
 
@@ -616,6 +696,7 @@ void MApplicationWindowPrivate::sceneWindowDisappearEvent(MSceneWindowEvent *eve
             break;
 
         case MSceneWindow::NavigationBar:
+            showingNavigationBar = false;
             _q_updatePageExposedContentRect();
             break;
 

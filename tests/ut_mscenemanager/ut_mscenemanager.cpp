@@ -170,7 +170,6 @@ void Ut_MSceneManager::testSceneWindowDisappearNow()
     sm->appearSceneWindowNow(p);
     sm->disappearSceneWindowNow(p);
 
-    //QCOMPARE(sm->d_ptr->navBar, (MNavigationBar *)0);
     QCOMPARE(p->isVisible(), false);
 
     delete p;
