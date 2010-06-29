@@ -29,6 +29,11 @@
 #include <gconf/gconf-client.h>
 
 struct MGConfItemPrivate {
+    MGConfItemPrivate() :
+        notify_id(0),
+        have_gconf(false)
+    {}
+
     QString key;
     QVariant value;
     guint notify_id;
@@ -357,16 +362,21 @@ MGConfItem::MGConfItem(const QString &key, QObject *parent)
 {
     priv = new MGConfItemPrivate;
     priv->key = key;
-    priv->notify_id = 0;
     withClient(client) {
-        update_value(false);
         QByteArray k = convertKey(priv->key);
         GError *error = NULL;
-        gconf_client_add_dir(client, k.data(), GCONF_CLIENT_PRELOAD_ONELEVEL, &error);
+
+        int index = k.lastIndexOf('/');
+        if (index > 0) {
+            QByteArray dir = k.left(index);
+            gconf_client_add_dir(client, dir.data(), GCONF_CLIENT_PRELOAD_ONELEVEL, &error);
+        } else {
+            gconf_client_add_dir(client, k.data(), GCONF_CLIENT_PRELOAD_NONE, &error);
+        }
+
         if(error) {
             mWarning("MGConfItem") << error->message;
             g_error_free(error);
-            priv->have_gconf = false;
             return;
         }
         priv->notify_id = gconf_client_notify_add(client, k.data(),
@@ -378,6 +388,7 @@ MGConfItem::MGConfItem(const QString &key, QObject *parent)
             priv->have_gconf = false;
             return;
         }
+        update_value(false);
     }
     priv->have_gconf = true;
 }
