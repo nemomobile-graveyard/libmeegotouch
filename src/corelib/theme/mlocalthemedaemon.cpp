@@ -68,6 +68,11 @@ MLocalThemeDaemon::MLocalThemeDaemon(const QString &applicationName)
 #endif
 }
 
+void MLocalThemeDaemon::registerApplicationName(const QString &applicationName)
+{
+    client->reinit(applicationName, daemon.themeInheritanceChain());
+}
+
 MLocalThemeDaemon::~MLocalThemeDaemon()
 {
     daemon.removeClient(client);

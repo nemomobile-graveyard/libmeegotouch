@@ -37,6 +37,7 @@ public:
     MLocalThemeDaemon(const QString &applicationName);
     ~MLocalThemeDaemon();
 
+    virtual void registerApplicationName(const QString &applicationName);
     virtual void addDirectoryToPixmapSearchList(const QString &directoryName, M::RecursionMode recursive);
     virtual void clearPixmapSearchList();
 

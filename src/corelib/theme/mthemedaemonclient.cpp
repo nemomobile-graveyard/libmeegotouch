@@ -26,11 +26,10 @@
 #include <QDir>
 #include <QPixmap>
 
-MThemeDaemonClient::MThemeDaemonClient(QIODevice *socket, const QString &clientName, const QStringList &themes) :
-    clientName(clientName),
+MThemeDaemonClient::MThemeDaemonClient(QIODevice *socket, const QString &clientName, const QStringList &themes):
     dataStream(socket)
 {
-    reloadImagePaths(themes);
+    reinit(clientName, themes);
 }
 
 MThemeDaemonClient::~MThemeDaemonClient()
@@ -44,6 +43,12 @@ MThemeDaemonClient::~MThemeDaemonClient()
 QString MThemeDaemonClient::name() const
 {
     return clientName;
+}
+
+void MThemeDaemonClient::reinit(const QString &newClientName, const QStringList &themes)
+{
+    clientName = newClientName;
+    reloadImagePaths(themes);
 }
 
 QDataStream &MThemeDaemonClient::stream()

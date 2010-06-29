@@ -552,6 +552,7 @@ void MThemePrivate::reinit(const QString &newApplicationName, const QString &, M
 {
     delete application;
     applicationName = newApplicationName;
+    themeDaemon->registerApplicationName(newApplicationName);
     application = new MAssembly(applicationName);
     application->themeChanged(themeDaemon->themeInheritanceChain(), logicalValues);
 }

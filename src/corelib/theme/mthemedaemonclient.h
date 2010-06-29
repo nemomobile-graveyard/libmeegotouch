@@ -42,6 +42,8 @@ public:
     MThemeDaemonClient(QIODevice *socket, const QString &clientName, const QStringList &themes);
     ~MThemeDaemonClient();
 
+    void reinit(const QString &newClientName, const QStringList &themes);
+
     QString name() const;
     QDataStream &stream();
 

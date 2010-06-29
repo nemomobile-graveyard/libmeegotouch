@@ -47,20 +47,26 @@ MRemoteThemeDaemon::MRemoteThemeDaemon(const QString &applicationName, int timeo
     // this blocking behavior could be removed
     if (d->waitForServer(M::MThemeDaemonProtocol::ServerAddress, timeout)) {
         d->stream.setDevice(&d->socket);
-
-        const quint64 seq = ++d->sequenceCounter;
-        d->stream << Packet(Packet::RequestRegistrationPacket, seq, new String(applicationName));
-        Packet reply = d->waitForPacket(seq);
-        if (reply.type() == Packet::ThemeChangedPacket) {
-            const ThemeChangeInfo* info = static_cast<const ThemeChangeInfo*>(reply.data());
-            d->themeInheritanceChain = info->themeInheritance;
-            d->themeLibraryNames = info->themeLibraryNames;
-        } else {
-            // TODO: print out warning, etc.
-        }
+        registerApplicationName(applicationName);
     } else {
         mWarning("MRemoteThemeDaemon") << "Failed to connect to theme daemon (IPC)";
     }
+}
+
+void MRemoteThemeDaemon::registerApplicationName(const QString &applicationName)
+{
+    Q_D(MRemoteThemeDaemon);
+
+    const quint64 seq = ++d->sequenceCounter;
+    d->stream << Packet(Packet::RequestRegistrationPacket, seq, new String(applicationName));
+    Packet reply = d->waitForPacket(seq);
+    if (reply.type() == Packet::ThemeChangedPacket) {
+        const ThemeChangeInfo* info = static_cast<const ThemeChangeInfo*>(reply.data());
+        d->themeInheritanceChain = info->themeInheritance;
+        d->themeLibraryNames = info->themeLibraryNames;
+    } else {
+        // TODO: print out warning, etc.
+    }    
 }
 
 MRemoteThemeDaemon::~MRemoteThemeDaemon()

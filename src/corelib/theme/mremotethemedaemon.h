@@ -34,6 +34,7 @@ public:
     bool connected() const;
 
 public:
+    virtual void registerApplicationName(const QString &applicationName);
     // directory search list contains list of directories to search for pixmaps for application
     virtual void addDirectoryToPixmapSearchList(const QString &directoryName, M::RecursionMode recursive);
     virtual void clearPixmapSearchList();

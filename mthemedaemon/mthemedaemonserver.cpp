@@ -202,11 +202,10 @@ void MThemeDaemonServer::clientDataAvailable()
         switch (packet.type()) {
 
         case Packet::RequestRegistrationPacket: {
-            // client tried to register a second time
-            client->stream() << Packet(Packet::ErrorPacket, packet.sequenceNumber(),
-                                       new String("You have already registered!"));
-            mWarning("MThemeDaemonServer") << "Client with name" << client->name()
-                                               << "tried to register a second time!";
+            // client re-registered: change the name of the client
+            client->reinit(static_cast<const String *>(packet.data())->string, daemon.themeInheritanceChain());
+            client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
+                                       new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
         } break;
 
         case Packet::RequestPixmapPacket: {

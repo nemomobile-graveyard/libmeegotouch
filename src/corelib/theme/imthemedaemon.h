@@ -31,6 +31,9 @@ class IMThemeDaemon : public QObject
 
 public:
     virtual ~IMThemeDaemon() {}
+    
+    // set/reset the name of the application registered to theme daemon
+    virtual void registerApplicationName(const QString &applicationName) = 0;
 
     // directory search list contains list of directories to search for pixmaps for application
     virtual void addDirectoryToPixmapSearchList(const QString &directoryName, M::RecursionMode recursive) = 0;
