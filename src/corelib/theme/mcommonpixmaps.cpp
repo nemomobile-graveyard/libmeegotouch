@@ -19,6 +19,7 @@
 
 #include "mcommonpixmaps.h"
 #include "mthemedaemon.h"
+#include "mdebug.h"
 #include <QFile>
 #include <QDir>
 
@@ -172,7 +173,7 @@ void MCommonPixmaps::loadOne()
         if (resource)
             resource->fetchPixmap(id.size);
         else {
-            mWarning("MCommonPixmaps - Themedaemon could not find resource %s while loading most used pixmaps. Removing from list.", qPrintable(id.imageId));
+            mWarning("MCommonPixmaps") << QString("Themedaemon could not find resource %1 while loading most used pixmaps. Removing from list.").arg(id.imageId);
             requestCounts.remove(id);
             mostUsedPixmaps.remove(id);
         }
