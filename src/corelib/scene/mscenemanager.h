@@ -317,8 +317,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_changeGlobalOrientationAngle())
     Q_PRIVATE_SLOT(d_func(), void _q_emitOrientationChangeFinished())
     Q_PRIVATE_SLOT(d_func(), void _q_inputPanelAreaChanged(const QRect &inputPanelRect))
-    Q_PRIVATE_SLOT(d_func(), void _q_inputPanelOpened())
-    Q_PRIVATE_SLOT(d_func(), void _q_inputPanelClosed())
     Q_PRIVATE_SLOT(d_func(), void _q_unFreezeUI())
     Q_PRIVATE_SLOT(d_func(), void _q_applySceneWindowTransitionsQueuedDueToOrientationAnimation())
     Q_PRIVATE_SLOT(d_func(), void _q_triggerAsyncPendingOrientationChange())

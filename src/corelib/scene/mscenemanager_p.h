@@ -185,12 +185,6 @@ public:
     void _q_onPageSwitchAnimationFinished();
     void _q_inputPanelAreaChanged(const QRect &inputPanelRect);
 
-    //! Prepares current window for SIP.
-    void _q_inputPanelOpened();
-
-    //! Restores the current window state after SIP is closed.
-    void _q_inputPanelClosed();
-
     void _q_unFreezeUI();
 
     void _q_applySceneWindowTransitionsQueuedDueToOrientationAnimation();
@@ -222,8 +216,6 @@ public:
 
     QPointer<MSceneWindow> alteredSceneWindow;
     QPoint sceneWindowTranslation;
-
-    bool pendingSIPClose;
 
     QPointer<MSceneWindow> statusBar;
 

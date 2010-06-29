@@ -82,8 +82,6 @@ void MSceneManagerPrivate::init(MScene *scene)
     alteredSceneWindow = 0;
     sceneWindowTranslation = QPoint();
 
-    pendingSIPClose = false;
-
     statusBar = 0;
 
     pendingRotation = 0;
@@ -1482,25 +1480,6 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
     sceneWindow->d_func()->disappearanceAnimation = animation;
 }
 
-void MSceneManagerPrivate::_q_inputPanelOpened()
-{
-    // Have to call the slot explicitly at least once: The focused widget can change without the
-    // MIMS sending new area (e.g., the input field's content type stays the same) and then
-    // relocateWindowByInputPanel is not called.
-    // TODO: Rethink the design of MIMS to allow pending updates (so that we'll *know* wether we
-    // get a signal later or not).
-    relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
-}
-
-void MSceneManagerPrivate::_q_inputPanelClosed()
-{
-    if (!pendingSIPClose) {
-        return;
-    }
-
-    focusedInputWidget = 0;
-}
-
 void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
         MSceneWindow::SceneWindowState newState)
 {
@@ -1803,15 +1782,6 @@ void MSceneManager::requestSoftwareInputPanel(QGraphicsWidget *inputWidget)
             return;
         }
 
-        // Calling relocateWindowByInputPanel can change the scene window position and it is
-        // common that we got here with mousePressEvent in the backtrace. Moving the
-        // scene window now can cause mouse press to not hit its target (which causes focus lost).
-        // Because of this we shall visit event loop first.
-        // EDIT: This should not happen anymore with commit "cf02401 Changes: In MTextEdit,
-        // move the SIP request to the mouse-release event".
-        d->pendingSIPClose = false;
-        QTimer::singleShot(0, this, SLOT(_q_inputPanelOpened()));
-
         QWidget *focusWidget = QApplication::focusWidget();
 
         if (focusWidget) {
@@ -1828,6 +1798,10 @@ void MSceneManager::requestSoftwareInputPanel(QGraphicsWidget *inputWidget)
         //FIXME: verify if application style allows SIP usage
         QEvent request(QEvent::RequestSoftwareInputPanel);
         inputContext->filterEvent(&request);
+
+        // This is normally called automatically except in cases where input panel area does not change and we
+        // move between two similar text edits, for example.
+        d->relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
     }
 }
 
@@ -1839,7 +1813,6 @@ void MSceneManager::closeSoftwareInputPanel()
 
     // Tell input context we want to close the SIP.
     if (!inputContext) {
-        d->_q_inputPanelClosed();
         return;
     }
 
@@ -1848,14 +1821,7 @@ void MSceneManager::closeSoftwareInputPanel()
     inputContext->filterEvent(&close);
     inputContext->reset();
 
-    // There is no general way of tracking when the SIP actually closes. It might not
-    // close at all, for example, in a situation where focus is changed between widgets
-    // that both wants a SIP. MInputContext has its own logic for this because it cannot
-    // rely that it's running on a MApplication.
-    // Our guess now is that SIP will be closed after some delay.
-    d->pendingSIPClose = true;
-    QTimer::singleShot(SoftwareInputPanelHideTimer, this,
-                       SLOT(_q_inputPanelClosed()));
+    d->focusedInputWidget = 0;
 }
 
 void MSceneManager::setOrientationAngle(M::OrientationAngle angle,
