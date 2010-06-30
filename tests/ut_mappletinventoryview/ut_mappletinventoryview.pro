@@ -42,8 +42,6 @@ HEADERS += \
     $$MSRCDIR/extensions/style/mappletinventorystyle.h \
     $$MSRCDIR/corelib/widgets/mwidgetmodel_p.h \
     $$MSRCDIR/corelib/widgets/mobjectmenu.h \
-    $$MSRCDIR/corelib/widgets/mscenewindow_p.h \
-    $$MSRCDIR/corelib/widgets/mobjectmenu.h \
     $$MODEL_HEADERS \
     $$STYLE_HEADERS
 

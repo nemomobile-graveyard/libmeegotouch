@@ -36,8 +36,6 @@ HEADERS += \
     $$MSRCDIR/corelib/widgets/core/mwidget_p.h \
     $$MSRCDIR/corelib/widgets/mwidgetmodel_p.h \
     $$MSRCDIR/corelib/widgets/mobjectmenu.h \
-    $$MSRCDIR/corelib/widgets/mscenewindow_p.h \
-    $$MSRCDIR/corelib/widgets/mobjectmenu.h \
     $$MODEL_HEADERS
 
 include(../common_bot.pri)
