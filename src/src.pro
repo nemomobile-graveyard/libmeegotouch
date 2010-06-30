@@ -35,7 +35,9 @@ install_prf.files = \
     $${M_SOURCE_TREE}/mkspecs/features/meegotouchcore.prf \
     $${M_SOURCE_TREE}/mkspecs/features/meegotouchsettings.prf \
     $${M_SOURCE_TREE}/mkspecs/features/meegotouch.prf \
-    $${M_SOURCE_TREE}/mkspecs/features/meegotouch_mgen.prf
+    $${M_SOURCE_TREE}/mkspecs/features/meegotouch_mgen.prf \
+    $${M_SOURCE_TREE}/mkspecs/features/meegotouch_mmoc.prf \
+
 
 # causes problems when installing on windows with INSTALL_ROOT
 !win32 {
