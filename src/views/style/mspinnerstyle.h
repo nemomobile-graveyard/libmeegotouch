@@ -35,40 +35,35 @@ class M_EXPORT MSpinnerStyle : public MWidgetStyle
     M_STYLE(MSpinnerStyle)
 
     /*!
-        \property MSpinnerStyle::fgImage
-        \brief  Image of foreground of spinner
+        \property MSpinnerStyle::activeImage
+        \brief Image of the active bar element.
     */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, fgImage, FgImage)
+    M_STYLE_PTR_ATTRIBUTE(QPixmap *, activeImage, ActiveImage)
 
     /*!
-        \property MSpinnerStyle:bgImage
-        \brief  Image of background of spinner
+        \property MSpinnerStyle::inactiveImage
+        \brief  Image of the inactive bar element.
     */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, bgImage, BgImage)
-
-    /*!
-        \property MSpinnerStyle::maskImage
-        \brief  Image of mask for spinner background
-    */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, maskImage, MaskImage)
-
-    /*!
-        \property MSpinnerStyle::progressImage
-        \brief  Image of progress bar for spinner
-    */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, progressImage, ProgressImage)
-
-    /*!
-        \property MSpinnerStyle::progressStripSize
-        \brief Size of the strip of progress indicator.
-    */
-    M_STYLE_ATTRIBUTE(qreal, progressStripSize, ProgressStripSize)
+    M_STYLE_PTR_ATTRIBUTE(QPixmap *, inactiveImage, InactiveImage)
 
     /*!
         \property MSpinnerStyle::speed
         \brief Speed of unknown duration progress animation (distance/sec).
     */
     M_STYLE_ATTRIBUTE(int, speed, Speed)
+
+    /*!
+        \property MSpinnerStyle::activeElementCount
+        \brief The number of active elements in circular progress indicator (unknown duration).
+    */
+    M_STYLE_ATTRIBUTE(int, activeElementCount, ActiveElementCount)
+
+    /*!
+        \property MSpinnerStyle::elementSize
+        \brief Size of an element in the circle.
+    */
+    M_STYLE_ATTRIBUTE(qreal, elementSize, ElementSize)
+
 
     /*!
         \property MSpinnerStyle::elementCount

@@ -21,7 +21,6 @@
 #include <QTimeLine>
 #include <QTimer>
 #include <QGraphicsSceneResizeEvent>
-#include <QBitmap>
 #include <math.h>
 
 #include "mspinnerview.h"
@@ -44,7 +43,8 @@ const int SpinnerRefreshRate = 30;
 MSpinnerViewPrivate::MSpinnerViewPrivate()
     :  q_ptr(0),
        controller(0),
-       pieImage(0),
+       inactiveElement(0),
+       activeElement(0),
        position(0),
        elapsed(0),
        timer(0)
@@ -54,6 +54,9 @@ MSpinnerViewPrivate::MSpinnerViewPrivate()
 
 MSpinnerViewPrivate::~MSpinnerViewPrivate()
 {
+    MTheme::releasePixmap(activeElement);
+    MTheme::releasePixmap(inactiveElement);
+
     delete timer;
 }
 
@@ -65,11 +68,6 @@ MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
     Q_D(MSpinnerView);
     d->q_ptr = this;
     d->controller = controller;
-
-    d->bgRect = QRect();
-    d->fgRect = QRect();
-    d->pieImage = new QPixmap();
-
     connect(controller, SIGNAL(visibleChanged()), this, SLOT(visibilityChanged()));
 }
 
@@ -84,18 +82,19 @@ void MSpinnerViewPrivate::animationTimeout()
     Q_Q(MSpinnerView);
 
     if (q->model()->unknownDuration()) {
-        //calculate interval in secs and add it to elapsed time
-        qreal interval = static_cast<qreal>(timer->interval() / 1000.0);
+
+        // calculate interval in secs and add it to elapsed time
+        qreal interval = (qreal) timer->interval() / 1000.0;
         elapsed += interval;
 
-        //calculate how many steps we should take
-        int steps = static_cast<int>(elapsed * (qreal) q->style()->speed());
+        // calculate how many steps we should take
+        int steps = (int)(elapsed * (qreal) q->style()->speed());
         if (steps > 0) {
-            //subtract the amount we will step from the elapsed time
+            // subtract the amount we will step from the elapsed time
             elapsed -= steps * (1.0 / (qreal) q->style()->speed());
-            //and perform the stepping
-            position = (position + steps) % 360;
-            //redraw
+            // and perform the stepping
+            position = (position + steps) % elements.count();
+            // redraw
             q->update();
         }
     }
@@ -116,17 +115,15 @@ void MSpinnerView::updateData(const QList<const char *>& modifications)
                 }
                 if (d->controller->isVisible())
                     d->timer->start(SpinnerRefreshRate);
-                } else {
-                    delete d->timer;
-                    d->timer = NULL;
-                }
+            } else {
+                delete d->timer;
+                d->timer = NULL;
             }
         }
+    }
 
-    applyStyle();
     update();
 }
-
 
 void MSpinnerView::setupModel()
 {
@@ -146,75 +143,9 @@ void MSpinnerView::setupModel()
         d->timer = NULL;
     }
 
-   update();
+    update();
 }
 
-
-void MSpinnerView::calculateSizes()
-{
-    Q_D(MSpinnerView);
-    QSize s;
-    //calculating sizes for background
-    if ( rect().toRect().height() >= rect().toRect().width() ) {
-        s = QSize(rect().toRect().width(), rect().toRect().width());
-    } else {
-        s = QSize(rect().toRect().height(), rect().toRect().height());
-    }
-
-   QPoint bgDrawPoint(size().width() * 0.5 - s.width() * 0.5, size().height() * 0.5 - s.height() * 0.5 );
-
-   d->bgRect = QRect(bgDrawPoint, s);
-
-   //calculating foreground size:
-   d->fgRect = QRect(
-           QPoint((d->bgRect.topLeft().x() + style()->progressStripSize()), (d->bgRect.topLeft().y() + style()->progressStripSize())),
-           QPoint((d->bgRect.bottomRight().x() - style()->progressStripSize()), (d->bgRect.bottomRight().y() - style()->progressStripSize())));
-
-  *d->pieImage = QPixmap(d->bgRect.size());
-  }
-
-void MSpinnerView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
-{
-   Q_D(const MSpinnerView);
-   Q_UNUSED(option);
-   Q_UNUSED(painter);
-
-   style()->bgImage()->draw(d->bgRect, painter);
-}
-
-void MSpinnerView::drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
-{
-  Q_UNUSED(option);
-  Q_UNUSED(painter);
-
-  /*previously drawing foreground was here, but it is drawing it incorrectly for some reason
-  drawing foreground is moved to drawContents temporary*/
-}
-
-QRect centerScale( QRect const & r, double s )
-{
-    int w = r.width() * s;
-    int h = r.height() * s;
-    int x = r.x() + (r.width() - w)/2;
-    int y = r.y() + (r.height() - h)/2;
-    return QRect(x, y, w, h);
-}
-
-void MSpinnerView::createPieImage( int startAngle, int endAngle, QSize const & size, QPixmap const & image ) const
-{
-    Q_D(const MSpinnerView);
-    d->pieImage->rect().setSize( size );
-    d->pieImage->fill( Qt::transparent);
-
-    QPainter piePainter( d->pieImage );
-    piePainter.setBrush( QBrush(image) );
-    piePainter.setPen( QPen(Qt::transparent) );
-
-    // Qt starts at 3:00 and goes CCW, we provide values starting at 12:00 and going CW
-    piePainter.drawPie( centerScale(QRect(QPoint(),size), 1.5),
-                                         (90-endAngle)*16,
-                                         (endAngle-startAngle)*16 );
-}
 
 void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
@@ -222,60 +153,99 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
 
     Q_D(const MSpinnerView);
 
-    // Temporary: these should be made as style parameters
-    static int const minScale = 75; // scale used for minimum size when growing/shrinking
-    static int const maxScale = 100; // maybe not needed as style
-    static int const sweepAngle = 90; // sweep angle for unknown duration
-    static int const resolution = 100; // number of divisions in circle for unknown duration mode
+    const int elementsCount = d->elements.count();
+    if (style()->inactiveImage() && style()->activeImage()) {
 
-    // calculated values input into rendering
-    double startAngle = 0.0;
-    double endAngle = 0.0;
-    double scale = 1.0;
+        // size of an element
+        QSize size(style()->elementSize(), style()->elementSize());
 
-    // Calculate values depending on mode
-    if ( model()->unknownDuration() ) {
-        startAngle = d->position * 360/resolution;
-        endAngle = startAngle + sweepAngle;
-        scale = 1.0;
+        if (model()->unknownDuration()) {
+            // every n'th should be active
+            int span = (d->elements.count() / style()->activeElementCount());
+            // this tells the active index within the span
+            int activeIndexInSpan = d->position % span;
+
+            // draw all elements with proper image
+            for (int i = 0; i < elementsCount; ++i) {
+                if ((i % span) == activeIndexInSpan) {
+                    painter->drawPixmap(QRect(d->elements[i], size), *style()->activeImage());
+                } else {
+                    painter->drawPixmap(QRect(d->elements[i], size), *style()->inactiveImage());
+                }
+            }
+        } else {
+            // active element count
+            int active = (model()->value() - model()->minimum()) * d->elements.count() /
+                         qMax(model()->maximum() - model()->minimum(), 1);
+
+            // draw active elements
+            for (int i = 0; i < active; ++i) {
+                painter->drawPixmap(QRect(d->elements[i], size), *style()->activeImage());
+            }
+
+            // draw inactive elements
+            for (int i = active; i < elementsCount; ++i) {
+                painter->drawPixmap(QRect(d->elements[i], size), *style()->inactiveImage());
+            }
+        }
     }
-    else {
-        startAngle = 0.0;
-        endAngle =  360*(model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
+}
 
-        double growAngle = 1; //can be adjusted if grow/shrink animation for not uknown duration required
-        double angleIncrement = (maxScale-minScale)/growAngle; // conversion from angle to scale
+void MSpinnerViewPrivate::calculateShape(QSizeF size)
+{
+    Q_Q(MSpinnerView);
 
-        scale = endAngle < growAngle ? minScale + endAngle * angleIncrement :
-                      endAngle > 360-growAngle ? minScale + (360-endAngle) * angleIncrement : maxScale;
-        scale /= 100.0;
+    QSizeF s = size - QSizeF(q->style()->elementSize(), q->style()->elementSize());
+
+    qreal diameter = qMin(s.width(), s.height());
+
+    // clear existing elements
+    elements.clear();
+
+    if (q->style()->elementCount() > 0) {
+        // center point
+        QPoint center(size.width() * 0.5, size.height() * 0.5);
+
+        // radius for the spinner
+        qreal radius = diameter * 0.5f;
+
+        // half element size
+        qreal halfElementSize = q->style()->elementSize() * 0.5;
+
+        qreal angle = 0;
+        qreal span = (M_PI * 2.0) / q->style()->elementCount();
+
+        // calculate spherical shape and store points where the item should be drawn
+        const int elementsCount = q->style()->elementCount();
+        for (int i = 0; i < elementsCount; ++i) {
+
+            QPoint position;
+            position.setX(center.x() + (sinf(angle) * radius) - halfElementSize);
+            position.setY(center.y() - (cosf(angle) * radius) - halfElementSize);
+
+            elements.append(position);
+
+            angle += span;
+        }
     }
-
-    // Render the image
-    createPieImage( startAngle, endAngle, d->bgRect.size(), *style()->progressImage()->pixmap() );
-    d->pieImage->setMask( style()->maskImage()->pixmap()->createHeuristicMask() );
-    painter->drawPixmap( scale > .99 ? d->bgRect : centerScale(d->bgRect, scale), *d->pieImage, d->pieImage->rect() );
-
-    //drawing foreground here, because there's something wrong with drawForeground()
-    style()->fgImage()->draw( d->fgRect, painter);
 }
 
 void MSpinnerView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    MWidgetView::resizeEvent(event);
-    calculateSizes();
+    Q_D(MSpinnerView);
+    d->calculateShape(event->newSize());
 }
 
 void MSpinnerView::applyStyle()
 {
-     MWidgetView::applyStyle();
-     calculateSizes();
+    Q_D(MSpinnerView);
+    MWidgetView::applyStyle();
+    d->calculateShape(size());
 }
 
 
 void MSpinnerViewPrivate::visibilityChanged()
 {
-    Q_Q(MSpinnerView);
     if (timer) {
         if (controller->isVisible()) {
             timer->start(SpinnerRefreshRate);
@@ -283,7 +253,6 @@ void MSpinnerViewPrivate::visibilityChanged()
             timer->stop();
         }
     }
-    q->calculateSizes();
 }
 
 #include "moc_mspinnerview.cpp"
