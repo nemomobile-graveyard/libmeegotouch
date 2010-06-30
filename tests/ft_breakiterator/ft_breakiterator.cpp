@@ -53,58 +53,60 @@ void defaultData()
     QTest::addColumn<QList<int> >("correctBoundaries");
 
     // an empty locale_name should be equivalent to the locale_name "en_US_POSIX"
-    QList<int> correctBoundaries_empty_locale_name;
-    correctBoundaries_empty_locale_name
-            << 0 << 4 << 5 << 7 << 8 << 9 << 10 << 16 << 17 << 25 << 26  << 27 << 31 << 32;
     QTest::newRow("")
             << QString("")
             << "This is a simple sentence. Täst."
-            << correctBoundaries_empty_locale_name;
+            << (QList<int> ()<< 0 << 4 << 5 << 7 << 8 << 9 << 10 << 16 << 17 << 25 << 26  << 27 << 31 << 32);
 
-    QList<int> correctBoundaries_fi_FI;
-    correctBoundaries_fi_FI
-            << 0 << 8 << 9 << 17 << 18 << 23 << 24 << 29 << 30 << 39 << 40 << 43 << 44 << 47;
     QTest::newRow("fi_FI")
             << QString("fi_FI")
             << "fiksusta boksista esiin astui despootti ges ces"
-            << correctBoundaries_fi_FI;
+            << (QList<int> () << 0 << 8 << 9 << 17 << 18 << 23 << 24 << 29 << 30 << 39 << 40 << 43 << 44 << 47);
 
     // results for Japanese are apparently not completely correct
     // it breaks only between kanji and kana, i.e. はいい is counted as one word.
     // But that is better than nothing.
-    QList<int> correctBoundaries_ja_JP;
-    correctBoundaries_ja_JP
-            << 0 << 4 << 7 << 9 << 10 << 11 << 12 << 13;
     QTest::newRow("ja_JP")
             << QString("ja_JP")
             << "睡眠不足はいい仕事の敵だ。"
-            << correctBoundaries_ja_JP;
+            << (QList<int> () << 0 << 4 << 7 << 9 << 10 << 11 << 12 << 13);
 
     // For Thai, ICU does a "GraphemeClusterBreak". not really a word break:
-    QList<int> correctBoundaries_th_TH;
-    correctBoundaries_th_TH
-            << 0 << 3 << 5 << 8 << 17 << 20 << 21 << 27 << 28 << 31 << 34 << 39 << 43 << 46 << 50 << 53 << 54 << 60 << 61 << 66 << 68;
     QTest::newRow("th_TH")
             << QString("th_TH")
             << "ฉันจะใช้ไดเรกทอรีของ Google แทนการค้นหาเว็บตามปกติของ Google เมื่อใด"
-            << correctBoundaries_th_TH;
+            << (QList<int> () << 0 << 3 << 5 << 8 << 17 << 20 << 21 << 27 << 28 << 31 << 34 << 39 << 43 << 46 << 50 << 53 << 54 << 60 << 61 << 66 << 68);
 
     // For Chinese, ICU breaks after every Chinese character:
-    QList<int> correctBoundaries_zh_CN;
-    correctBoundaries_zh_CN
-            << 0 << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 14 << 15 << 16 << 17 << 18 << 19 << 20 << 21 << 22 << 23 << 24 << 25 << 26 << 27;
     QTest::newRow("zh_CN")
             << QString("zh_CN")
             << "什么时候该选用 Google 目录查询而非网络查询呢？"
-            << correctBoundaries_zh_CN;
+            << (QList<int> () << 0 << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 8 << 14 << 15 << 16 << 17 << 18 << 19 << 20 << 21 << 22 << 23 << 24 << 25 << 26 << 27);
 
-    QList<int> correctBoundaries_de_DE;
-    correctBoundaries_de_DE
-            << 0 << 4 << 5 << 11 << 12 << 15 << 16 << 19 << 20 << 26 << 27 << 38 << 39 << 47 << 48 << 51 << 52 << 61 << 62 << 70 << 71 << 74 << 75 << 81 << 82 << 91 << 92;
+    // Let’s try Chinese again without spaces around the Latin characters:
+    // For Chinese, ICU breaks after every Chinese character:
+    QTest::newRow("zh_CN")
+            << QString("zh_CN")
+            << "什么时候该选用Google目录查询而非网络查询呢？"
+            << (QList<int> () << 0 << 1 << 2 << 3 << 4 << 5 << 6 << 7 << 13 << 14 << 15 << 16 << 17 << 18 << 19 << 20 << 21 << 22 << 23 << 24 << 25);
+
     QTest::newRow("de_DE")
             << QString("de_DE")
             << "Wann sollte ich das Google Verzeichnis anstelle der regulären Websuche von Google verwenden?"
-            << correctBoundaries_de_DE;
+            << (QList<int> () << 0 << 4 << 5 << 11 << 12 << 15 << 16 << 19 << 20 << 26 << 27 << 38 << 39 << 47 << 48 << 51 << 52 << 61 << 62 << 70 << 71 << 74 << 75 << 81 << 82 << 91 << 92);
+
+    QTest::newRow("ar_SA")
+            << QString("ar_SA")
+            << "نريد NOKIA الهواتف لتصبح أفضل."
+            << (QList<int> () << 0 << 4 << 5 << 10 << 11 << 18 << 19 << 24 << 25 << 29 << 30);
+
+    // and now without spaces around “NOKIA”:
+    // The result is most likely wrong, see NB#177492, i.e. the following
+    // just “documents” the current behaviour here until we can fix it:
+    QTest::newRow("ar_SA")
+            << QString("ar_SA")
+            << "نريدNOKIAالهواتف لتصبح أفضل."
+            << (QList<int> () << 0 << 16 << 17 << 22 << 23 << 27 << 28);
 }
 
 void Ft_BreakIterator::forward_data()
