@@ -387,42 +387,47 @@ void MWidget::swipeGestureEvent(QGestureEvent *event, QSwipeGesture* gesture)
 
 bool MWidget::event(QEvent *event)
 {
-
-//    if (MTouchEvent::cast2TouchEvent(event))
-//        mDebug("MWidget") << "touchevent in MWidget:" << event;
-//    if (MGestureEvent::cast2GestureEvent(event))
-//        mDebug("MWidget) << "gesture in MWidget:" << event;
     QEvent::Type type = event->type();
-    if (type == QEvent::ActionAdded || type == QEvent::ActionChanged ||
-            type == QEvent::ActionRemoved) {
-
-        // now I add ActionEvent here for Qt 4.5 not provide this in QGraphicsWidget, maybe changed later
-        actionEvent((QActionEvent *)event);
-    } else if (type == MCancelEvent::eventNumber()) {
-        cancelEvent((MCancelEvent *)event);
-    } else if (type == MOrientationChangeEvent::eventNumber()) {
-        MOrientationChangeEvent *oce = static_cast<MOrientationChangeEvent *>(event);
-        orientationChangeEvent(oce);
-    } else if (type == QEvent::LanguageChange) {
-        // retranslate the ui strings of this MWidget:
-        retranslateUi();
-    } else if (type == MOnDisplayChangeEvent::eventNumber()) {
-        onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
-    } else if (type == QEvent::Gesture) {
-        gestureEvent(static_cast<QGestureEvent*>(event));
-    } else if (type == QEvent::LayoutRequest) {
-        //When you have a widget inside a layout in a widget inside a layout in a widget...
-        //and the innermost widget or layout's sizehint is invalidated only the parent is notified in the next
-        //event loop. And that will notify its parent in the event loop after, and so on.  It can thus take many iterations
-        //of the event loop before the layout has settled down, leading to a visual 'jumping around' effect.
-        //So we manually invalidate the sizehint for all the parents immediately.
-        QGraphicsLayoutItem *item = this;
-        do {
-            item->updateGeometry();
-        } while( (item = item->parentLayoutItem()) );
-    } else if (type == QEvent::TouchBegin && acceptTouchEvents()) {
-	event->setAccepted(true);
-	return true;
+    switch(type) {
+        case QEvent::ActionAdded:
+        case QEvent::ActionChanged:
+        case QEvent::ActionRemoved:
+            actionEvent(static_cast<QActionEvent *>(event));
+            break;
+        case QEvent::LanguageChange:
+            // retranslate the ui strings of this MWidget:
+            retranslateUi();
+            break;
+        case QEvent::Gesture:
+            gestureEvent(static_cast<QGestureEvent*>(event));
+            break;
+        case QEvent::LayoutRequest: {
+            //When you have a widget inside a layout in a widget inside a layout in a widget...
+            //and the innermost widget or layout's sizehint is invalidated only the parent is notified in the next
+            //event loop. And that will notify its parent in the event loop after, and so on.  It can thus take many iterations
+            //of the event loop before the layout has settled down, leading to a visual 'jumping around' effect.
+            //So we manually invalidate the sizehint for all the parents immediately.
+            QGraphicsLayoutItem *item = this;
+            do {
+                item->updateGeometry();
+            } while( (item = item->parentLayoutItem()) );
+            break;
+        }
+        case QEvent::TouchBegin:
+           if(acceptTouchEvents()) {
+               event->setAccepted(true);
+               return true;
+           }
+           break;
+        default: 
+           if(type >= QEvent::User) {
+               if (type == MCancelEvent::eventNumber())
+                   cancelEvent((MCancelEvent *)event);
+               else if (type == MOrientationChangeEvent::eventNumber())
+                   orientationChangeEvent( static_cast<MOrientationChangeEvent *>(event) );
+               else if (type == MOnDisplayChangeEvent::eventNumber())
+                   onDisplayChangeEvent( static_cast<MOnDisplayChangeEvent *>(event) );
+           }
     }
     return QGraphicsWidget::event(event);
 }
