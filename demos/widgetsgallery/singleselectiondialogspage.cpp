@@ -108,10 +108,12 @@ void SingleSelectionDialogsPage::itemClicked(const QModelIndex &index)
     if (index.row() == 0)
         openStackedDialogs();
     else if (index.row() == 1)
-        openSystemModalDialog();
+        openSystemDialog();
     else if (index.row() == 2)
-        openDialogWithProgressIndicator();
+        openSystemModalDialog();
     else if (index.row() == 3)
+        openDialogWithProgressIndicator();
+    else if (index.row() == 4)
         openMessageBox();
 }
 
@@ -156,6 +158,29 @@ void SingleSelectionDialogsPage::openNestedMessageBox()
     nestedMessageBox->appear(MSceneWindow::DestroyWhenDone);
 }
 
+void SingleSelectionDialogsPage::openSystemDialog()
+{
+    if (dialog)
+        return;
+
+    dialog = new MDialog(
+        //% "System Dialog"
+        qtTrId("xx_dialogs_and_notifications_system_dialog_title"),
+        M::OkButton);
+
+    dialog->setCentralWidget(
+        //% "I'm a system dialog.<br>"
+        //% "There actually is a way around me...<br>"
+        //% "You can skip me with the home button, but I'll remain<br>"
+        //% "alive until you make a selection."
+        new MLabel(qtTrId("xx_dialogs_and_notifications_system_dialog_label")));
+
+    dialog->setSystem(true);
+    dialog->setModal(false);
+
+    dialog->appear(MSceneWindow::DestroyWhenDone);
+}
+
 void SingleSelectionDialogsPage::openSystemModalDialog()
 {
     if (dialog)
@@ -172,7 +197,7 @@ void SingleSelectionDialogsPage::openSystemModalDialog()
         //% "Muwhahaha... [evil laugh]"
         new MLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label")));
 
-    dialog->setSystemModal(true);
+    dialog->setSystem(true);
 
     dialog->appear(MSceneWindow::DestroyWhenDone);
 }
@@ -230,6 +255,8 @@ void SingleSelectionDialogsPage::retranslateUi()
     QStringList singleSelectionDialogTypes;
     //% "Stacked Dialogs"
     singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_stacked_dialogs");
+    //% "System Dialog"
+    singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_system_dialog");
     //% "System Modal Dialog"
     singleSelectionDialogTypes << qtTrId("xx_wg_single_selection_dialogs_page_system_modal_dialog");
     //% "Dialog with Progress Indicator"

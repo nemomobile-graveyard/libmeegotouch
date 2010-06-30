@@ -13,6 +13,9 @@
 
 \subsection New
 - videoGlobalAlpha property in MWindow.
+- systemModal property in MDialog split to system and modal properties. System Dialog
+  (in contrast to System Modal Dialog) provides a home button and can be skipped
+  (minimized). Once skipped, it's accessible from the task switcher.
 
 \section v02020 0.20.20
 

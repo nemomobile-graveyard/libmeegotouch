@@ -81,7 +81,7 @@ void MDialogPrivate::appear(MSceneWindow::DeletionPolicy policy)
     Q_Q(MDialog);
     MWindow *window;
 
-    if (q->isSystemModal()) {
+    if (q->isSystem()) {
         if (prepareStandAloneAppearance(policy)) {
             q->appear(standAloneWindow);
         }
@@ -125,7 +125,7 @@ void MDialogPrivate::updateStandAloneHomeButtonVisibility()
 {
     Q_Q(MDialog);
 
-    if (q->isSystemModal()) {
+    if (q->isSystem() && q->isModal()) {
         // Remove the home button if it's there.
         if (homeButtonPanel) {
             if (homeButtonPanel->scene() != 0) {
@@ -185,8 +185,12 @@ bool MDialogPrivate::prepareStandAloneAppearance(MSceneWindow::DeletionPolicy po
         standAloneWindow = new MWindow(new MSceneManager);
         standAloneWindow->setTranslucentBackground(true);
 #ifdef Q_WS_X11
-        standAloneWindow->setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
-        standAloneWindow->setWindowModality(Qt::WindowModal);
+        // System Dialog (unlike System Modal Dialog) has to be treated as a separate
+        // window, in order to be able to reside in task switcher
+        if (q->isSystem() && q->isModal()) {
+            standAloneWindow->setAttribute(Qt::WA_X11NetWmWindowTypeDialog, true);
+            standAloneWindow->setWindowModality(Qt::WindowModal);
+        }
 #endif
         q->connect(q, SIGNAL(disappeared()), SLOT(_q_onStandAloneDialogDisappeared()));
     }
@@ -431,7 +435,7 @@ int MDialog::exec(MWindow *window)
     if (window) {
         targetSceneManager = window->sceneManager();
     } else {
-        if (isSystemModal()) {
+        if (isSystem()) {
             d->prepareStandAloneAppearance(KeepWhenDone);
             targetSceneManager = d->standAloneWindow->sceneManager();
         } else {
@@ -510,14 +514,43 @@ void MDialog::setTitleBarVisible(bool visible)
     model()->setTitleBarVisible(visible);
 }
 
+bool MDialog::isModal() const
+{
+    return model()->modal();
+}
+
+void MDialog::setModal(bool enabled)
+{
+    model()->setModal(enabled);
+}
+
+bool MDialog::isSystem() const
+{
+    return model()->system();
+}
+
+void MDialog::setSystem(bool enabled)
+{
+    model()->setSystem(enabled);
+}
+
 bool MDialog::isSystemModal() const
 {
-    return model()->systemModal();
+    mWarning("MDialog:") << Q_FUNC_INFO << "is deprecated. Use isSystem() and isModal() instead";
+    return model()->system() && model()->modal();
 }
 
 void MDialog::setSystemModal(bool systemModal)
 {
-    model()->setSystemModal(systemModal);
+    mWarning("MDialog:") << Q_FUNC_INFO << "is deprecated. Use setSystem() and setModal() instead";
+    model()->setSystem(systemModal);
+
+    // * if 'systemModal' is set to true both 'system' and 'modal'
+    //   properties are set to true
+    // * if 'systemModal' is set to false then 'system' is set to false
+    //   but we're not supporting 'system' and 'modal' both being false
+    //   so let's keep 'modal' true
+    model()->setModal(true);
 }
 
 void MDialog::setLayout(QGraphicsLayout *layout)

@@ -92,6 +92,8 @@ void Ut_MDialog::constructorWithParameters()
 void Ut_MDialog::initVals()
 {
     QCOMPARE(dialog->clickedButton(), (MButtonModel *)NULL);
+    QCOMPARE(dialog->isModal(), true);
+    QCOMPARE(dialog->isSystem(), false);
 }
 
 void Ut_MDialog::settersAndGetters()
@@ -112,12 +114,6 @@ void Ut_MDialog::settersAndGetters()
         bool val = i % 2 ? false : true;
         dialog->setTitleBarVisible(val);
         QCOMPARE(dialog->isTitleBarVisible(), val);
-    }
-
-    for (int i = 0; i < 4; i++) {
-        bool val = i % 2 ? false : true;
-        dialog->setSystemModal(val);
-        QCOMPARE(dialog->isSystemModal(), val);
     }
 
     {

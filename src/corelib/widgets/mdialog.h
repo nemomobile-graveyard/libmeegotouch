@@ -51,13 +51,6 @@ class MDismissEvent;
     \li A button box, that can contain buttons for providing means of selection for simple queries.
         Can be hidden when central widget is customized.
 
-    MDialog may be application modal or system modal. When displayed inside a given
-    MWindow (by supplying a window parameter to appear() or exec())
-    it will ignore the systemModal property and will be application modal. If
-    no window is supplied and systemModal is set to true it will be displayed in its own
-    separate top-level MWindow and will be system modal. The home button is not accessible
-    when MDialog is system modal. MDialog is application modal by default.
-
     MDialog provides a return value, based on the user's choice. It also knows which button from
     the button box was pressed (if any).
 
@@ -96,6 +89,27 @@ class MDismissEvent;
                 time.)</td>
         </tr>
         </table>
+
+    \section SystemAndSystemModal System Dialogs and System Modal Dialogs
+
+    MDialog is application modal by default. It means that it pops up on top of the current
+    window and blocks interaction with the application until the selection is made by user.
+
+    Then a dialog can be a System Dialog, which means that it's displayed in a separate
+    top-level MWindow, A System Dialog can be modeless or modal - the difference between
+    System Dialog and System Modal Dialog is that System Dialog can be temporarily skipped -
+    it provides a home button that can minimize the dialog to switcher and reveal the
+    underlying application. When the System Dialog is skipped it's not deleted nor closed
+    and it can be later accessed from the task switcher.
+
+    The System Modal Dialog doesn't provide the home button and therefore it can't be skipped -
+    it should be used for queries that require user's immediate action.
+
+    \note When displayed inside a given MWindow (by supplying a window parameter to appear() or exec())
+          a dialog will ignore the system property and will be application modal.
+
+    \sa setSystem(), setModal()
+
 
     \section MDialogVariants Variants
         \li MMessageBox is designed for asking the user simple yes/no-type of questions.
@@ -150,7 +164,11 @@ class M_EXPORT MDialog : public MSceneWindow
     Q_PROPERTY(bool closeButtonVisible READ isCloseButtonVisible WRITE setCloseButtonVisible)
     Q_PROPERTY(bool titleBarVisible READ isTitleBarVisible WRITE setTitleBarVisible)
     Q_PROPERTY(QString title READ title WRITE setTitle)
+    Q_PROPERTY(bool system READ isSystem WRITE setSystem)
+    Q_PROPERTY(bool modal READ isModal WRITE setModal)
+    //! \internal
     Q_PROPERTY(bool systemModal READ isSystemModal WRITE setSystemModal)
+    //! \internal_end
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible)
 
 public:
@@ -297,23 +315,47 @@ public:
     void setTitleBarVisible(bool visible);
 
     /*!
-     * \brief Returns whether the dialog should be displayed as system modal.
+     * \brief Tells whether the dialog is modal or not.
      *
-     * If false, dialog will be application modal.
-     * \sa setSystemModal()
+     * By default this value is set to true.
+     * \sa setModal()
      */
-    bool isSystemModal() const;
+    bool isModal() const;
 
     /*!
-     * \brief Defines whether the dialog should be displayed as system modal.
+     * \brief Defines whether the dialog should be modal.
      *
-     * Changing this property will affect only subsequent calls to appear()
-     * and exec(). I.e., if called between an appear() and a disappear() it won't affect
-     * the modality of the ongoing appearance.
+     * \note Changing this property will affect only subsequent calls to appear()
+     *       and exec(). I.e., if called between an appear() and a disappear() it won't
+     *       affect the current appearance.
      *
-     * \sa isSystemModal()
+     * \sa isModal(), setSystem()
      */
+    void setModal(bool enabled);
+
+    /*!
+     * \brief Returns whether the dialog should be displayed as System Dialog.
+     *
+     * If false, dialog will be application modal.
+     * \sa setSystem()
+     */
+    bool isSystem() const;
+
+    /*!
+     * \brief Defines whether the dialog should be displayed as System Dialog.
+     *
+     * \note Changing this property will affect only subsequent calls to appear()
+     *       and exec(). I.e., if called between an appear() and a disappear() it won't
+     *       affect the current appearance.
+     *
+     * \sa isSystem(), setModal()
+     */
+    void setSystem(bool enabled);
+
+    //! \internal
+    bool isSystemModal() const;
     void setSystemModal(bool systemModal);
+    //! \internal_end
 
     /*!
      * \brief Adds a given \a button to the button box.

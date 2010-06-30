@@ -41,6 +41,7 @@ public:
     void populateLayout();
 
     void openStackedDialogs();
+    void openSystemDialog();
     void openSystemModalDialog();
     void openDialogWithProgressIndicator();
     void openMessageBox();
