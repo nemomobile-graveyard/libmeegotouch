@@ -125,7 +125,7 @@ QRectF MNavigationBarView::boundingRect() const
 {
     QRectF br = MWidgetView::boundingRect();
     if( style()->dropShadowImage() ) {
-        br.setHeight(style()->dropShadowImage()->pixmap()->size().height());
+        br.setHeight(br.height() + style()->dropShadowImage()->pixmap()->size().height());
     }
     return br;
 }
@@ -184,7 +184,7 @@ void MNavigationBarView::drawBackground(QPainter *painter, const QStyleOptionGra
 {
     //draw shadow under the actual navigationbar    
     if( style()->dropShadowImage() ) {
-        style()->dropShadowImage()->draw(0, 0, boundingRect().width(),  style()->dropShadowImage()->pixmap()->size().height(), painter);
+        style()->dropShadowImage()->draw(0, size().height(), boundingRect().width(),  style()->dropShadowImage()->pixmap()->size().height(), painter);
     }
     
     MWidgetView::drawBackground(painter, option);
