@@ -187,7 +187,7 @@ void Ut_MWindow::testOrientationChangedSignalPropagationFromSceneManager()
 
     // create the scene manager
     win->sceneManager();
-    M::OrientationAngle newAngle = (M::OrientationAngle)(win->orientationAngle() + 90);
+    M::OrientationAngle newAngle = (M::OrientationAngle)(0);
 
     win->sceneManager()->setOrientationAngle(newAngle, MSceneManager::ImmediateTransition);
 

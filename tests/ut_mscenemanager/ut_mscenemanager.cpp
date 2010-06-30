@@ -228,7 +228,7 @@ void Ut_MSceneManager::testSceneLayerEffect()
 void Ut_MSceneManager::testInitialOrientation()
 {
     M::Orientation initialOrientation = sm->orientation();
-    QCOMPARE(initialOrientation, M::Landscape);
+    QCOMPARE(initialOrientation, M::Portrait);
 }
 
 void Ut_MSceneManager::testOrientationChangedSignal()

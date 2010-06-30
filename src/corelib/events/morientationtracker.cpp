@@ -71,21 +71,25 @@ void MOrientationTrackerPrivate::topEdgeChanged()
     M::Orientation orientation = M::Landscape;
     QString edge = topEdgeProperty.value().toString();
 
-    if (edge == "top") {
-        angle = M::Angle0;
-    } else if (edge == "left") {
-        angle = M::Angle270;
-        orientation = M::Portrait;
-    } else if (edge == "right") {
-        //angle = M::Angle90; Disabled for now
-        angle = M::Angle270;
-        orientation = M::Portrait;
-    } else if (edge == "bottom") {
-        //angle = M::Angle180; Disabled for now
-        angle = M::Angle0;
-    } else {
-        angle = M::Angle0;
-    }
+// Following code is diabled only temporarily
+// Will probably by used again later.
+//    if (edge == "top") {
+//        angle = M::Angle0;
+//    } else if (edge == "left") {
+//        angle = M::Angle270;
+//        orientation = M::Portrait;
+//    } else if (edge == "right") {
+//        //angle = M::Angle90; Disabled for now
+//        angle = M::Angle270;
+//        orientation = M::Portrait;
+//    } else if (edge == "bottom") {
+//        //angle = M::Angle180; Disabled for now
+//        angle = M::Angle0;
+//    } else {
+//        angle = M::Angle0;
+//    }
+    angle = M::Angle270;
+    orientation = M::Portrait;
 
     // if hardware keyboard is opened, don't allow orientation angle to be changed.
     if (angle != currentAngle
