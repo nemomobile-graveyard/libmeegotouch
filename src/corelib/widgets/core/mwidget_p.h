@@ -33,7 +33,8 @@ public:
     void doExitDisplayEvent();
 
     void sendOnDisplayChangeEvent(MWidget *widget, const QRectF *visibleSceneRect);
-    void resolveIsOnDisplay(QGraphicsItem *item, const QRectF *visibleSceneRect);
+    void resolveIsOnDisplay(QGraphicsItem *item, const QRectF *visibleSceneRect,
+                            MOnDisplayChangeEvent *event = NULL);
     QGraphicsView *fetchGraphicsView();
 
     bool explicitlyHidden;  //< true if the user called hide(), as opposed to MLayout hiding it

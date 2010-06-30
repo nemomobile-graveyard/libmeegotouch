@@ -138,14 +138,24 @@ void MWidgetPrivate::sendOnDisplayChangeEvent(MWidget *widget, const QRectF *vis
     }
 }
 
-void MWidgetPrivate::resolveIsOnDisplay(QGraphicsItem *item, const QRectF *visibleSceneRect)
+void MWidgetPrivate::resolveIsOnDisplay(QGraphicsItem *item, const QRectF *visibleSceneRect,
+                                        MOnDisplayChangeEvent *event)
 {
+    Q_Q(MWidget);
     MWidget *mWidget;
 
     if (item->isWidget()) {
         mWidget = qobject_cast<MWidget *>(static_cast<QGraphicsWidget *>(item));
         if (mWidget) {
-            sendOnDisplayChangeEvent(mWidget, visibleSceneRect);
+
+            // Check if event was defined explicitly. If so then send it, otherwise
+            // let sendOnDisplayChangeEvent() resolve visibility and send
+            // the corresponding event.
+            if (event) {
+                q->scene()->sendEvent(mWidget, event);
+            } else {
+                sendOnDisplayChangeEvent(mWidget, visibleSceneRect);
+            }
         }
     }
 
@@ -153,7 +163,7 @@ void MWidgetPrivate::resolveIsOnDisplay(QGraphicsItem *item, const QRectF *visib
     int childItemsCount = childItemsList.count();
 
     for (int i = 0; i < childItemsCount; i++) {
-        resolveIsOnDisplay(childItemsList.at(i), visibleSceneRect);
+        resolveIsOnDisplay(childItemsList.at(i), visibleSceneRect, event);
     }
 }
 
@@ -457,8 +467,28 @@ void MWidget::setVisible(bool visible)
 {
     Q_D(MWidget);
     d->explicitlyHidden = !visible;
-    if (!d->layoutHidden) //Only show if the layout is not showing this
+
+    // Only show if the layout is not hiding this
+    if (!d->layoutHidden) {
         QGraphicsWidget::setVisible(visible);
+
+        // Propagate visibility events
+        QGraphicsView *graphicsView = d->fetchGraphicsView();
+        QRectF visibleSceneRect;
+        if (graphicsView) {
+            visibleSceneRect = graphicsView->sceneRect();
+
+            // show() called: resolve visibility
+            if (visible) {
+                d->resolveIsOnDisplay(this, &visibleSceneRect);
+            // hide() called: explicitly send FullyOffDisplay
+            } else {
+                MOnDisplayChangeEvent event(MOnDisplayChangeEvent::FullyOffDisplay,
+                                            visibleSceneRect);
+                d->resolveIsOnDisplay(this, &visibleSceneRect, &event);
+            }
+        }
+    }
 }
 
 QPointF MWidget::paintOffset() const
