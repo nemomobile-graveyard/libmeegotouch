@@ -90,6 +90,9 @@ MListFilter::MListFilter(MList *parent)
 
     filterProxy = new MSortFilterProxyModel(parent);
     filterEditor = new MTextEdit(MTextEditModel::SingleLine, "", parent);
+    filterEditor->setInputMethodAutoCapitalizationEnabled(false);
+    filterEditor->setInputMethodCorrectionEnabled(false);
+    filterEditor->setInputMethodPredictionEnabled(false);
     filterEditor->setVisible(false);
 
     connect(filterEditor, SIGNAL(textChanged()), this, SLOT(editorTextChanged()));

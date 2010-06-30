@@ -78,6 +78,9 @@ void Ut_MListFilter::testEditor()
     MList *list = new MList();
 
     QVERIFY(list->filtering()->editor() != NULL);
+    QCOMPARE(list->filtering()->editor()->inputMethodAutoCapitalizationEnabled(), false);
+    QCOMPARE(list->filtering()->editor()->inputMethodCorrectionEnabled(), false);
+    QCOMPARE(list->filtering()->editor()->inputMethodPredictionEnabled(), false);
 
     delete list;
 }
