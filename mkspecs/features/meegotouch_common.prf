@@ -1,5 +1,6 @@
 include(meegotouch_defines.prf)
 include(meegotouch_mgen.prf)
+include(meegotouch_mmoc.prf)
 
 macx {
     INCLUDEPATH += /Library/Frameworks/m.framework/Headers
@@ -27,6 +28,4 @@ contains(TEMPLATE, app) {
     unix: QMAKE_LFLAGS += $${QMAKE_LFLAGS_RPATH}$${M_LIB_DIR}
 
     LIBS += -L$${M_LIB_DIR}
-
-    QMAKE_MOC = $${M_MMOC_EXECUTABLE}
 }

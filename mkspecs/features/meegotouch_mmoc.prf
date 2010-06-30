@@ -1,20 +1,32 @@
 # settings for meegotouch mmoc
 
-win32 {
-    contains(DEFINES, IS_ARMEL) {
-        M_MMOC_EXECUTABLE = perl.exe $$M_SOURCE_TREE/mmoc/mmoc.pl
-    } else {
-        debug {
-            M_MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/debug/mmoc.exe
+contains(DEFINES, BUILD_M) {
+    win32 {
+        contains(DEFINES, IS_ARMEL) {
+            M_MMOC_EXECUTABLE = perl.exe $$M_SOURCE_TREE/mmoc/mmoc.pl
         } else {
-            M_MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/release/mmoc.exe
-	}
+            debug {
+                M_MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/debug/mmoc.exe
+            } else {
+                M_MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/release/mmoc.exe
+	    }
+        }
+    } else {
+        contains(DEFINES, IS_ARMEL) {
+            M_MMOC_EXECUTABLE = perl $$M_SOURCE_TREE/mmoc/mmoc.pl
+        } else {
+            M_MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/mmoc
+        }
     }
 } else {
-    contains(DEFINES, IS_ARMEL) {
-        M_MMOC_EXECUTABLE = perl $$M_SOURCE_TREE/mmoc/mmoc.pl
+    win32 {
+        M_MMOC_EXECUTABLE = perl.exe $$M_SOURCE_TREE/mmoc/mmoc.pl
     } else {
-        M_MMOC_EXECUTABLE = $$M_BUILD_TREE/mmoc/mmoc
+        contains(DEFINES, IS_ARMEL) {
+            M_MMOC_EXECUTABLE = mmoc.pl
+        } else {
+            M_MMOC_EXECUTABLE = mmoc
+        }
     }
 }
 
