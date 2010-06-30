@@ -3,11 +3,12 @@
 \section styling_in_application_code Styling in application code
 
     \subsection architecture Architecture
-        In DirectUI, the theme acts as a base for all the styling. If the theme is changed runtime, the look and 
-        feel for the whole system can radically change. The following figure shows the basic building blocks of 
-        the DirectUI style system. It also illustrates how the styling is integrated to the widgets.
+        In MeeGo Touch Framework, the theme acts as a base for all the styling. If the theme is changed in
+        runtime, the look and feel for the whole system can radically change. The following figure shows
+        the basic building blocks of the MeeGo Touch style system. It also illustrates how the styling is
+        integrated to the widgets.
 
-        \image html widgets_style.png "Architecture of the DirectUI styling system."
+        \image html widgets_style.png "Architecture of the MeeGo Touch styling system."
 
     \subsection duitheme DuiTheme
         All the style objects are used by the theme class. Theme class provides services to create a new style 
