@@ -25,6 +25,7 @@
 #include <MWidgetView>
 #include <MTheme>
 #include <QTextStream>
+#include <MComponentCache>
 
 #include "mcomponentdata.h"
 #include "../../src/corelib/theme/mtheme_p.h"
@@ -148,10 +149,12 @@ void Ft_Theme::cleanup()
 
 void Ft_Theme::initTestCase()
 {
-    int argc = 1;
-    const char *argv = "./Ft_Theme";
+    // MComponentCache creates MApplication. That allows us to test 
+    // theme reinit with a new application name (first test case)
+    MComponentCache::populateForMApplication();
 
-    componentData = new MComponentData(argc, (char **) &argv, NULL);
+    // ComponentData is created in populateForMApplication()
+    componentData = MComponentData::instance();
 
     // store the "original" themedaemon
     daemon = MTheme::instance()->d_ptr->themeDaemon;
@@ -175,8 +178,19 @@ void Ft_Theme::cleanupTestCase()
     // restore the original daemon we replaced
     MTheme::instance()->d_ptr->themeDaemon = daemon;
     delete testDaemon;
+    delete argv[0];
+    delete[] argv;
+}
 
-    delete componentData;
+void Ft_Theme::testThemeReinit()
+{
+    QSignalSpy themeReinitedSpy(testDaemon, SIGNAL(themeReinited()));
+    argc = 1;
+    argv = new char * [ argc ];
+    argv[0] = strdup("./Ft_Theme");
+    QCOMPARE(themeReinitedSpy.count(), 0);
+    MComponentCache::mApplication(argc, argv);
+    QCOMPARE(themeReinitedSpy.count(), 1);
 }
 
 void Ft_Theme::testViews_data()
@@ -495,4 +509,4 @@ void Ft_Theme::testFonts()
     QCOMPARE(fonts.extraSmallFont(), extraSmallFont);
 }
 
-QTEST_MAIN(Ft_Theme)
+QTEST_APPLESS_MAIN(Ft_Theme)

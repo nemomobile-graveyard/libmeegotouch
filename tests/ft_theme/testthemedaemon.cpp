@@ -34,6 +34,12 @@ void TestThemeDaemon::addDirectoryToPixmapSearchList(const QString &directoryNam
     Q_UNUSED(recursive);
 }
 
+void TestThemeDaemon::registerApplicationName(const QString &applicationName)
+{
+    Q_UNUSED(applicationName);
+    emit themeReinited();
+}
+
 void TestThemeDaemon::clearPixmapSearchList()
 {
 }

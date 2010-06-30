@@ -38,6 +38,11 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    // Test theme reinit with new application name.
+    // That have to be the first test case because
+    // it sets the application name used in other tests.
+    void testThemeReinit();
+
     // test view creation
     void testViews_data();
     void testViews();
@@ -66,6 +71,8 @@ private:
     MComponentData *componentData;
     IMThemeDaemon *daemon;
     TestThemeDaemon *testDaemon;
+    char ** argv;
+    int argc;
 };
 
 #endif

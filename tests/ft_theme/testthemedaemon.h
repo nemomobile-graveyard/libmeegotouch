@@ -37,6 +37,7 @@ public:
     virtual void pixmapHandleSync(const QString &imageId, const QSize &size);
     virtual void pixmapHandle(const QString &imageId, const QSize &size);
     virtual void releasePixmap(const QString &imageId, const QSize &size);
+    virtual void registerApplicationName(const QString &applicationName);
     virtual QString currentTheme();
     virtual QStringList findAvailableThemes();
     virtual void changeTheme(const QString &theme_id);
@@ -45,9 +46,12 @@ public:
     virtual QStringList themeLibraryNames();
     virtual bool hasPendingRequests() const;
 
-
     int pixmapCount() const;
     void reset();
+
+signals:
+    void themeReinited();
+
 private:
     QMultiMap<QString, QPixmap *> pixmaps;
     QString current;
