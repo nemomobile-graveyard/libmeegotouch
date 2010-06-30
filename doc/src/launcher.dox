@@ -32,8 +32,8 @@ from the \c invoker.
 
 An application of the boosted application type is invoked with the \c
 invoker. The invoker sends the booster process the name of the
-application binary and the running environment. This triggers the
-booster process to load the application binary, to initialize its
+application binary and data on its running environment. This triggers
+the booster process to load the application binary, to initialize its
 environment, and finally to call its \c main() function.
 
 
@@ -51,9 +51,12 @@ MApplicationWindow* window = MComponentCache::mApplicationWindow();
 Note that applications that use MComponentCache can be run without the
 launcher/invoker as well.
 
-It is strongly encouraged to hide the unnecessary symbols in the
-application binary. For that purpose, export the main function
-explicitly:
+The launcher needs to find the symbol \c main in an application
+binary in order to start executing the application. However,
+unnecessary symbols in the application binary cause unnecessary
+overhead, so the recommended flags for compiling for the launcher make
+symbols hidden by default. The main function must be explicitly
+exported as follows:
 
 \code
 #include <MExport>
@@ -78,39 +81,136 @@ of dynamic export table it is encouraged to hide the unnecessary
 symbols from the resulting binary by using \c -fvisibility=hidden and
 \c -fvisibility-inlines-hidden flags in compilation as well.
 
+\subsection pkgconfig Obtaining Flags with pkg-config
+
+The package \c applauncherd-dev provides the necessary files for
+\c pkg-config to get the appropriate compiler and linker flags.
+To get the compiler flags, use
+
+\code
+pkg-config --cflags meegotouch-boostable
+\endcode
+
+and to get the linker flags use
+
+\code
+pkg-config --libs meegotouch-boostable
+\endcode
+
+See below how to use pkg-config with QMake and CMake.
 
 \subsection qmaketips Building with QMake
+
+Once you have installed the \c applauncherd-dev package,
+adding the following lines in the .pro file will provide
+the compiler and the linker the necessary flags:
+
+\code
+QMAKE_CXXFLAGS += `pkg-config --cflags meegotouch-boostable`
+QMAKE_LFLAGS += `pkg-config --libs meegotouch-boostable`
+\endcode
+
+If \c applauncherd-dev is not installed, \c pkg-config will
+complain when you run \c make.
+
+Alternatively, you can use the QMake configuration option \c
+meegotouch-boostable (also provided in \c applauncherd-dev) and add
+the following line in the .pro file:
+
+\code
+CONFIG += meegotouch-boostable
+\endcode
+
+This tells qmake to use the \c meegotouch-boostable feature, which
+ultimately uses \c pkg-config for the flags. Unfortunately qmake does
+not complain if you add the line but have not installed \c
+applauncherd-dev, so if the QMake magic does not seem to work, double
+check that the package is indeed installed.
  
-Define the following variables in .pro file:
+As a last resort, you can manually define the following variables in
+the .pro file:
 
 \code
   QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
   QMAKE_LFLAGS += -pie -rdynamic
 \endcode
 
-and QMake will use correct options for compiler and linker.
-
+It is then up to you to modify the .pro file if there are changes to the
+required compiler and linker flags.
 
 \subsection cmaketips Building with CMake
 
-With CMake, compile and install your program like this:
+You can utilize \c pkg-config in CMake by including \c FindPkgConfig in \c CMakeLists.txt:
+
+\code
+  include(FindPkgConfig) 
+\endcode
+
+To obtain the compiler and linker flags, add the following lines:
+
+\code
+  pkg_check_modules(MEEGOTOUCH_BOOSTABLE REQUIRED meegotouch-boostable)
+  add_definitions(${MEEGOTOUCH_BOOSTABLE_CFLAGS})
+  link_libraries(${MEEGOTOUCH_BOOSTABLE_LDFLAGS})
+\endcode  
+
+In order to install the application binary with a \c .launch prefix, use the following
+line:
+
+\code
+  install(PROGRAMS myapplication DESTINATION /usr/bin RENAME myapplication.launch)
+\endcode
+
+If you do not want to use \c pkg-config for some reason, you can manually add the
+compiler and linker flags like this:
 
 \code
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fvisibility=hidden -fvisibility-inlines-hidden")
   set(CMAKE_EXE_LINKER_FLAGS " -pie -rdynamic")
-  install(PROGRAMS myapplication DESTINATION /usr/bin RENAME myapplication.launch)
 \endcode  
 
+Again, this requires you to update the flags if something changes.
 
 \section running Running boosted application
 
 Check that applauncherd package is installed and applancherd daemon is
 running. You can now run your application as usual like
-/usr/bin/yourapplication, or use the mboosted launching by running:
+/usr/bin/application_binary, or use the mboosted launching by running:
 
 \code
-invoker --type=m /usr/bin/yourapplication
+invoker --type=m /usr/bin/application_binary
 \endcode
+
+
+\section debugging Debugging
+
+In order to debug launched application, the debugger must be attached
+to already running booster process. For instance, first run
+
+\code
+gdb /usr/bin/applauncherd.bin $(pgrep booster-m)
+\endcode
+
+then set a breakpoint to the application code and let the process
+continue to that point
+
+\code
+(gdb) break main.cpp:42
+No source file named main.cpp.
+Make breakpoint pending on future shared library load? (y or [n]) y
+
+Breakpoint 1 (main.cpp:42) pending.
+(gdb) c
+Continuing.
+\endcode
+
+Finally invoke the application with the booster to which the debugger
+is attached to
+
+\code
+invoker --type=m /usr/bin/application_binary
+\endcode
+
 
 \section packaging Packaging and distributing
 
@@ -140,7 +240,17 @@ Application packages that use the launcher depend on the applauncherd
 package.
 
 
-\section limits Launcher usage limitations
+\section security Platform security
+
+Harmattan platform security works fine with launcher. Note, that you
+must specify the name of the application binary in the aegis file as
+renamed the application binary to <application_name>.launch, you must
+use the same binary name in the aegis file as well.
+
+
+\section limitations Limitations and known issues
+
+\subsection issue-cmdline Issues with command line arguments
 
 Current launcher implementation does not support following Qt and
 MeeGo Touch command line options (see QApplication and MApplication
@@ -177,6 +287,17 @@ docs for more information about command options usage):
 \li  \c -disable-m-input-context
 \li  \c -output-prefix
 \li  \c -no-output-prefix
+\li QCoreApplication::arguments() - returns at most first 32
+command line arguments. It is safer to use argc and argv directly.
+
+\subsection issue-watchdog Issues with process monitoring and watchdogs
+
+Invoker processes terminate before or right after booster processes
+have called main(). This may confuse process monitoring in D-Bus
+daemon and Upstart, for instance. D-Bus case can be handled by calling
+the invoker \c --delay \c 10 parameter in the D-Bus service file, and
+Upstart can be configured not to consider process dead when invoker
+terminates.
 
 
 \section sample Sample MeeGo Touch launchable application
