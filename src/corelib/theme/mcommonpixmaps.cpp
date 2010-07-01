@@ -77,8 +77,6 @@ bool MCommonPixmaps::load(const QString &filename)
     if (version != PRELOAD_FILE_VERSION)
         return false;
 
-    QString path = cachePath();
-
     while (file.bytesAvailable()) {
         QString imageId;
         QSize size;
@@ -89,22 +87,7 @@ bool MCommonPixmaps::load(const QString &filename)
         PixmapIdentifier id(imageId, size);
         requestCounts.insert(id, requestCount);
         if (isMostUsed) {
-            bool resourceLoaded = false;
-            QFile pixmapFile(path + id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')');
-            if(pixmapFile.open(QIODevice::ReadOnly)) {
-                // find this resource
-                ImageResource* resource = daemon->findImageResource(imageId);
-                if(resource) {
-                    // try to load pre-rasterized pixmap from file
-                    resourceLoaded = resource->load(&pixmapFile, size);
-                }
-                pixmapFile.close();
-            }
-            // if there was no pre-rasterized pixmap for this resource, 
-            // it will be added to load list.
-            if(!resourceLoaded) {
-                toLoadList.insert(PixmapIdentifier(imageId, size));
-            }
+            toLoadList.insert(PixmapIdentifier(imageId, size));
             mostUsedPixmaps.insert(PixmapIdentifier(imageId, size));
         }
     }
@@ -169,11 +152,19 @@ void MCommonPixmaps::loadOne()
                 // there's still items in the list, so start the timer with small delay
                 cpuMonitor.start(250);
             }
-
             ImageResource *resource = daemon->findImageResource(id.imageId);
-            if (resource)
-                resource->fetchPixmap(id.size);
-            else {
+            if (resource) {
+                bool resourceLoaded = false;
+                QFile pixmapFile(cachePath() + id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')');
+                if(pixmapFile.open(QIODevice::ReadOnly)) {
+                    // try to load pre-rasterized pixmap from file
+                    resourceLoaded = resource->load(&pixmapFile, id.size);
+                    pixmapFile.close();
+                }
+                if (!resourceLoaded) {
+                    resource->fetchPixmap(id.size);
+                }
+            } else {
                 mWarning("MCommonPixmaps") << QString("Themedaemon could not find resource %1 while loading most used pixmaps. Removing from list.").arg(id.imageId);
                 requestCounts.remove(id);
                 mostUsedPixmaps.remove(id);
