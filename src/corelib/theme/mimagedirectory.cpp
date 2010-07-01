@@ -104,12 +104,16 @@ QPixmap* ImageResource::releaseWithoutDelete(const QSize &size)
 
 Qt::HANDLE ImageResource::pixmapHandle(const QSize &size)
 {
-    Q_ASSERT(cachedPixmaps.contains(size));
+    QHash<QSize, PixmapCacheEntry>::iterator it = cachedPixmaps.find(size);
+    if (it == cachedPixmaps.end()) {
+        return 0;
+    } else {
 #if defined(Q_WS_X11)
-    return cachedPixmaps[size].pixmap->handle();
+        return cachedPixmaps[size].pixmap->handle();
 #else
-    return &(cachedPixmaps[size].pixmap);
+        return &(cachedPixmaps[size].pixmap);
 #endif
+    }
 }
 
 bool ImageResource::save(QIODevice* device, const QSize& size) const
