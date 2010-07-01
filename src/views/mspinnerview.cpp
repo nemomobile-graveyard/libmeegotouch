@@ -32,7 +32,6 @@
 
 #include "mtheme.h"
 #include "mscalableimage.h"
-#include "mdebug.h"
 
 #ifndef M_PI
 #define M_PI 3.14159265358979323846
@@ -82,7 +81,6 @@ void MSpinnerViewPrivate::animationTimeout()
     Q_Q(MSpinnerView);
 
     if (q->model()->unknownDuration()) {
-
         // calculate interval in secs and add it to elapsed time
         qreal interval = (qreal) timer->interval() / 1000.0;
         elapsed += interval;
@@ -100,6 +98,17 @@ void MSpinnerViewPrivate::animationTimeout()
     }
 }
 
+void MSpinnerViewPrivate::_q_resumeAnimation()
+{
+    if (controller->isVisible())
+        timer->start();
+}
+
+void MSpinnerViewPrivate::_q_pauseAnimation()
+{
+    timer->stop();
+}
+
 void MSpinnerView::updateData(const QList<const char *>& modifications)
 {
     MWidgetView::updateData(modifications);
@@ -111,13 +120,18 @@ void MSpinnerView::updateData(const QList<const char *>& modifications)
             if (model()->unknownDuration()) {
                 if (!d->timer) {
                     d->timer = new QTimer(this);
+                    d->timer->setInterval(SpinnerRefreshRate);
                     connect(d->timer, SIGNAL(timeout()), this, SLOT(animationTimeout()));
+                    connect(d->controller, SIGNAL(displayEntered()), this, SLOT(_q_resumeAnimation()));
+                    connect(d->controller, SIGNAL(displayExited()), this, SLOT(_q_pauseAnimation()));
                 }
-                if (d->controller->isVisible())
-                    d->timer->start(SpinnerRefreshRate);
+                if (d->controller->isVisible() && d->controller->isOnDisplay())
+                    d->timer->start();
             } else {
                 delete d->timer;
                 d->timer = NULL;
+                disconnect(d->controller, SIGNAL(displayEntered()), this, SLOT(_q_resumeAnimation()));
+                disconnect(d->controller, SIGNAL(displayExited()), this, SLOT(_q_pauseAnimation()));
             }
         }
     }
@@ -129,21 +143,11 @@ void MSpinnerView::setupModel()
 {
     MWidgetView::setupModel();
 
-    Q_D(MSpinnerView);
+    QList<const char *> members;
+    if (model()->unknownDuration())
+        members << MProgressIndicatorModel::UnknownDuration;
 
-    if (model()->unknownDuration()) {
-        if (!d->timer) {
-            d->timer = new QTimer(this);
-            connect(d->timer, SIGNAL(timeout()), this, SLOT(animationTimeout()));
-        }
-        if (d->controller->isVisible())
-            d->timer->start(SpinnerRefreshRate);
-    } else {
-        delete d->timer;
-        d->timer = NULL;
-    }
-
-    update();
+    updateData(members);
 }
 
 

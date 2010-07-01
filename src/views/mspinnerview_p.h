@@ -22,6 +22,7 @@
 
 #include <QObject>
 #include <QPointF>
+#include <QSizeF>
 
 class MStyle;
 class MProgressIndicator;
@@ -41,6 +42,9 @@ public:
     virtual ~MSpinnerViewPrivate();
 
     void animationTimeout();
+    void _q_resumeAnimation();
+    void _q_pauseAnimation();
+
     void visibilityChanged();
     void calculateShape(QSizeF size);
 

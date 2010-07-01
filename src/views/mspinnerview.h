@@ -99,6 +99,8 @@ private:
 
     Q_PRIVATE_SLOT(d_func(), void visibilityChanged())
     Q_PRIVATE_SLOT(d_func(), void animationTimeout())
+    Q_PRIVATE_SLOT(d_func(), void _q_resumeAnimation())
+    Q_PRIVATE_SLOT(d_func(), void _q_pauseAnimation())
 };
 
 #endif // MSPINNERVIEW_H

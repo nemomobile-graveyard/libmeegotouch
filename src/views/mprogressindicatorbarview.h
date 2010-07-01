@@ -85,6 +85,9 @@ private Q_SLOTS:
 
     void visibilityChangedSlot();
 
+    void resumeAnimation();
+    void pauseAnimation();
+
 protected:
     //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;

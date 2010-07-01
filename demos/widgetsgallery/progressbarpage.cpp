@@ -78,6 +78,9 @@ void ProgressBarPage::createContent()
     animation->start();
 
     retranslateUi();
+
+    connect(this, SIGNAL(displayEntered()), animation, SLOT(start()));
+    connect(this, SIGNAL(displayExited()), animation, SLOT(stop()));
 }
 
 void ProgressBarPage::retranslateUi()

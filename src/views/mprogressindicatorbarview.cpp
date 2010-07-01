@@ -89,7 +89,11 @@ MProgressIndicatorBarView::MProgressIndicatorBarView(MProgressIndicator *control
     // the animation drives the unknownDuration-mode, so it loops forever
     // until the animation is stop()ed
     d->animation->setLoopCount(-1);
+
     connect(controller, SIGNAL(visibleChanged()), this, SLOT(visibilityChangedSlot()));
+
+    connect(controller, SIGNAL(displayEntered()), this, SLOT(resumeAnimation()));
+    connect(controller, SIGNAL(displayExited()), this, SLOT(pauseAnimation()));
 }
 
 
@@ -203,6 +207,22 @@ void MProgressIndicatorBarView::visibilityChangedSlot()
     Q_D(MProgressIndicatorBarView);
 
     d->animate(d->controller->isVisible());
+}
+
+void MProgressIndicatorBarView::resumeAnimation()
+{
+    Q_D(MProgressIndicatorBarView);
+
+    if (d->animation->state() == QPropertyAnimation::Paused)
+        d->animation->resume();
+}
+
+void MProgressIndicatorBarView::pauseAnimation()
+{
+    Q_D(MProgressIndicatorBarView);
+
+    if (d->animation->state() == QPropertyAnimation::Running)
+        d->animation->pause();
 }
 
 void MProgressIndicatorBarView::resizeEvent(QGraphicsSceneResizeEvent *event)
