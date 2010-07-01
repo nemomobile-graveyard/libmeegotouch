@@ -2,6 +2,15 @@
 
 \section v02024 0.20.24
 
+- Automatic orientation changes have been disabled. Now the GUI orientation
+  (landscape vs. portrait) will not follow the accelerometer anymore.
+  While the keyboard is closed it will remain in portrait and while the
+  keyboard is open it will remain in landscape.
+  Naturally, the API to programmatically set and/or lock the GUI to a specific
+  orientation angle still works as usual.
+  In the future there could be a per-device configuration and/or a user setting
+  to specify this behavior, but for the moment it's hardcoded.
+
 \subsection New
 - videoGlobalAlpha property in MWindow.
 
