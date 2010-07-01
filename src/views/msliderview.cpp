@@ -1394,7 +1394,8 @@ void MSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     style()->releaseFeedback().play();
 
-    d->updateValue(event);
+    if (d->isCollision(event))
+        d->updateValue(event);
 
     if (d->pressTimerId) {
         killTimer(d->pressTimerId);
@@ -1407,17 +1408,13 @@ void MSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void MSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MSliderView);
-    if (d->isCollision(event)) {
-        d->controller->setState(MSliderModel::Pressed);
+    if (d->controller->state() == MSliderModel::Pressed) {
         d->playSliderMoveFeedback(d->updateValue(event));
 
         if (model()->handleLabelVisible())
             d->sliderGroove->raiseHandleIndicator();
-    } else {
-        d->controller->setState(MSliderModel::Released);
-        d->playSliderMoveFeedback(d->updateValue(event));
+    } else
         d->sliderGroove->lowerHandleIndicator();
-    }
 }
 
 void MSliderView::timerEvent(QTimerEvent *event)
