@@ -50,6 +50,9 @@ private slots:
     void testEnteredDisplay();
     void testExitedDisplay();
 
+    void testShowHideSimple();
+    void testShowHidePropagation();
+
 protected slots:
     void dummySlot();
 };

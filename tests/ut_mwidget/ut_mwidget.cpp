@@ -23,6 +23,8 @@
 #include "mpannablewidget.h"
 #include "mwidgetcontroller.h"
 #include "mondisplaychangeevent.h"
+#include "mlayout.h"
+#include "mlinearlayoutpolicy.h"
 
 /*   ## Removing Stubs ##
 #include "mpannableviewport_stub.h"
@@ -174,6 +176,69 @@ void Ut_MWidget::testExitedDisplay()
     QVERIFY(m_dummySlotCalled == true);
 
     disconnect(widget, SIGNAL(displayExited()), this, SLOT(dummySlot()));
+}
+
+void Ut_MWidget::testShowHideSimple()
+{
+    QGraphicsScene scene;
+    QGraphicsView view(&scene);
+
+    view.resize(500, 500);
+    view.show();
+
+    scene.addItem(widget);
+
+    widget->setGeometry(10, 10, 50, 50);
+
+    m_dummySlotCalled = false;
+    connect(widget, SIGNAL(displayEntered()), this, SLOT(dummySlot()));
+    widget->show();
+    QVERIFY(m_dummySlotCalled == true);
+    disconnect(widget, SIGNAL(displayEntered()), this, SLOT(dummySlot()));
+
+    m_dummySlotCalled = false;
+    connect(widget, SIGNAL(displayExited()), this, SLOT(dummySlot()));
+    widget->hide();
+    QVERIFY(m_dummySlotCalled == true);
+    disconnect(widget, SIGNAL(displayExited()), this, SLOT(dummySlot()));
+
+    scene.removeItem(widget);
+}
+
+void Ut_MWidget::testShowHidePropagation()
+{
+    QGraphicsScene scene;
+    QGraphicsView view(&scene);
+
+    view.resize(500, 500);
+    view.show();
+
+    MWidget * topLevel = new MWidget;
+    topLevel->setGeometry(10, 10, 50, 50);
+    widget->setGeometry(10, 10, 50, 50);
+
+    MLayout layout;
+    MLinearLayoutPolicy policy(&layout, Qt::Vertical);
+
+    policy.addItem(widget);
+    layout.setPolicy(&policy);
+    topLevel->setLayout(&layout);
+
+    scene.addItem(topLevel);
+
+    m_dummySlotCalled = false;
+    connect(widget, SIGNAL(displayEntered()), this, SLOT(dummySlot()));
+    topLevel->show();
+    QVERIFY(m_dummySlotCalled == true);
+    disconnect(widget, SIGNAL(displayEntered()), this, SLOT(dummySlot()));
+
+    m_dummySlotCalled = false;
+    connect(widget, SIGNAL(displayExited()), this, SLOT(dummySlot()));
+    topLevel->hide();
+    QVERIFY(m_dummySlotCalled == true);
+    disconnect(widget, SIGNAL(displayExited()), this, SLOT(dummySlot()));
+
+    scene.removeItem(topLevel);
 }
 
 void Ut_MWidget::dummySlot()

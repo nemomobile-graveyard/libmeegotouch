@@ -171,30 +171,32 @@ public Q_SLOTS:
 Q_SIGNALS:
 
     /*!
-     * A signal that is emitted when the widget has entered the visible area of the display or
-     * the page containing the widget is not obscured anymore by another window / page.
-     * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     * A signal that is emitted when:
+     * - the widget has entered the visible area of the display
+     * - the page containing the widget is not obscured anymore by another window / page
+     * - the widget is explicitly shown with show() or setVisible(true) and is on the display area.
+     * Note!: the stacking order of widgets is not taken into account
      */
     void displayEntered();
 
     /*!
-     * A signal that is emitted when the widget has left the visible area of the display or
-     * the page containing the widget has become obscured by another window / page.
-     * Note!: this is different from Qt's visibilityChanged(), which is emitted due to show() and hide().
+     * A signal that is emitted when:
+     * - the widget has left the visible area of the display
+     * - the page containing the widget has become obscured by another window / page
+     * - the widget is explicitly hidden with hide() or setVisible(false).
+     * Note!: the stacking order of widgets is not taken into account
      */
     void displayExited();
 
 protected:
 
     /*!
-     * A handler that is called when the widget has entered the visible area of the display or
-     * the page containing the widget is not obscured anymore by another window / page.
+     * A handler that is called just before displayEntered() is emitted.
      */
     virtual void enterDisplayEvent();
 
     /*!
-     * A handler that is called when the widget has left the visible area of the display or
-     * the page containing the widget has become obscured by another window / page.
+     * A handler that is called just before displayExited() is emitted.
      */
     virtual void exitDisplayEvent();
 
@@ -202,8 +204,8 @@ protected:
      * This event handler allows a widget to notify subscribers (and its children) about
      * changes in its presence on the display. enterDisplayEvent() and exitDisplayEvent()
      * convenience handlers are called by the default implementation. MOnDisplayChangeEvent
-     * may be sent e.g. if the widget gets panned out of display or the window gets obscured
-     * by another window.
+     * may be sent e.g. if the widget gets panned out of display, the widget is explicitly
+     * hidden/shown or the window gets obscured by another window.
      */
     virtual void onDisplayChangeEvent(MOnDisplayChangeEvent *event);
 

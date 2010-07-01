@@ -474,9 +474,8 @@ void MWidget::setVisible(bool visible)
 
         // Propagate visibility events
         QGraphicsView *graphicsView = d->fetchGraphicsView();
-        QRectF visibleSceneRect;
         if (graphicsView) {
-            visibleSceneRect = graphicsView->sceneRect();
+            QRectF visibleSceneRect = graphicsView->sceneRect();
 
             // show() called: resolve visibility
             if (visible) {
