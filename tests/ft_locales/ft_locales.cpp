@@ -874,20 +874,90 @@ void Ft_Locales::checkAvailableLocales()
             + locale.monthName(islamicCalendar, 11)
             + '\n' + supportedLocaleName + '\t' + "Name of month 12 (Islamic Calendar)" + '\t'
             + locale.monthName(islamicCalendar, 12)
-            + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Gregorian Calendar)" + '\t'
-            + locale.weekdayName(gregorianCalendar, 1)
-            + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Gregorian Calendar)" + '\t'
-            + locale.weekdayName(gregorianCalendar, 2)
-            + '\n' + supportedLocaleName + '\t' + "Name of weekday 03 (Gregorian Calendar)" + '\t'
-            + locale.weekdayName(gregorianCalendar, 3)
-            + '\n' + supportedLocaleName + '\t' + "Name of weekday 04 (Gregorian Calendar)" + '\t'
-            + locale.weekdayName(gregorianCalendar, 4)
-            + '\n' + supportedLocaleName + '\t' + "Name of weekday 05 (Gregorian Calendar)" + '\t'
-            + locale.weekdayName(gregorianCalendar, 5)
-            + '\n' + supportedLocaleName + '\t' + "Name of weekday 06 (Gregorian Calendar)" + '\t'
-            + locale.weekdayName(gregorianCalendar, 6)
-            + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Gregorian Calendar)" + '\t'
-            + locale.weekdayName(gregorianCalendar, 7)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Gregorian Calendar), stand-alone, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Gregorian Calendar), stand-alone, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 03 (Gregorian Calendar), stand-alone, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 04 (Gregorian Calendar), stand-alone, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 05 (Gregorian Calendar), stand-alone, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 06 (Gregorian Calendar), stand-alone, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Gregorian Calendar), stand-alone, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolStandalone, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Gregorian Calendar), stand-alone, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Gregorian Calendar), stand-alone, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 03 (Gregorian Calendar), stand-alone, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 04 (Gregorian Calendar), stand-alone, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 05 (Gregorian Calendar), stand-alone, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 06 (Gregorian Calendar), stand-alone, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Gregorian Calendar), stand-alone, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolStandalone, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Gregorian Calendar), stand-alone, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Gregorian Calendar), stand-alone, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 03 (Gregorian Calendar), stand-alone, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 04 (Gregorian Calendar), stand-alone, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 05 (Gregorian Calendar), stand-alone, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 06 (Gregorian Calendar), stand-alone, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Gregorian Calendar), stand-alone, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolStandalone, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Gregorian Calendar), format, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Gregorian Calendar), format, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 03 (Gregorian Calendar), format, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 04 (Gregorian Calendar), format, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 05 (Gregorian Calendar), format, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 06 (Gregorian Calendar), format, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Gregorian Calendar), format, wide" + '\t'
+            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolFormat, MLocale::DateSymbolWide)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Gregorian Calendar), format, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Gregorian Calendar), format, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 03 (Gregorian Calendar), format, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 04 (Gregorian Calendar), format, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 05 (Gregorian Calendar), format, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 06 (Gregorian Calendar), format, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Gregorian Calendar), format, abbreviated" + '\t'
+            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolFormat, MLocale::DateSymbolAbbreviated)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Gregorian Calendar), format, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 1, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Gregorian Calendar), format, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 2, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 03 (Gregorian Calendar), format, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 3, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 04 (Gregorian Calendar), format, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 4, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 05 (Gregorian Calendar), format, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 5, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 06 (Gregorian Calendar), format, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 6, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
+            + '\n' + supportedLocaleName + '\t' + "Name of weekday 07 (Gregorian Calendar), format, narrow" + '\t'
+            + locale.weekdayName(gregorianCalendar, 7, MLocale::DateSymbolFormat, MLocale::DateSymbolNarrow)
             + '\n' + supportedLocaleName + '\t' + "Name of weekday 01 (Islamic Calendar)" + '\t'
             + locale.weekdayName(islamicCalendar, 1)
             + '\n' + supportedLocaleName + '\t' + "Name of weekday 02 (Islamic Calendar)" + '\t'

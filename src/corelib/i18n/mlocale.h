@@ -147,17 +147,35 @@ public:
                   Saturday, Sunday
                  };
 
-
     //! Return type for MCollator::compare(). Denotes the order of two strings.
     enum Comparison {LessThan = -1, Equal = 0, GreaterThan = 1};
 
-
-    //! Type for locale dependant date symbol presentation
+    /*!
+     * \brief Type for locale dependent date symbol presentation
+     *
+     * Chooses whether the returned name should be stand-alone
+     * or in context.
+     *
+     * Example:
+     *
+     * Using DateSymbolStandalone will select “sunnuntai” for Sunday
+     * in Finnish language whereas DateSymbolFormat will select the
+     * inflected form “sunnuntaina”.
+     */
     enum DateSymbolContext {DateSymbolFormat, DateSymbolStandalone};
 
-    //! Length type for date symbol presentation
+    /*!
+     * \brief Length type for date symbol presentation
+     *
+     * Chooses how much the returned name should be abbreviated.
+     *
+     * Example:
+     *
+     * For the first day of the week in English language, using
+     * DateSymbolAbbreviated will select “Sun”, using DateSymbolWide
+     * will select “Sunday”, and using DateSymbolNarrow will select “S”.
+     */
     enum DateSymbolLength {DateSymbolAbbreviated, DateSymbolWide, DateSymbolNarrow};
-
 
     /*!
      * \ brief Grouping formats for phone numbers
@@ -820,24 +838,40 @@ public:
     QDateTime parseDateTime(const QString &dateTime, CalendarType calendarType) const;
 
     /*!
-     * \brief Returns the locale dependant name for a month number
+     * \brief Returns the locale dependent name for a month number
+     *
+     * calls the 4 argument version of monthName() with
+     * context = MLocale::DateSymbolStandalone and
+     * symbolLength = MLocale::DateSymbolWide
+     *
+     * \sa QString monthName(const MCalendar &mCalendar, int monthNumber, DateSymbolContext context, DateSymbolLength symbolLength) const
      */
     QString monthName(const MCalendar &mCalendar, int monthNumber) const;
 
     /*!
-     * \brief Returns the locale dependant name for a month using context information
+     * \brief Returns the locale dependent name for a month choosing context and length
+     *
+     * \sa QString monthName(const MCalendar &mCalendar, int monthNumber) const
      */
     QString monthName(const MCalendar &mCalendar, int monthNumber,
                       DateSymbolContext context, DateSymbolLength symbolLength) const;
 
     /*!
-     * \brief Returns locale dependant weekday name
+     * \brief Returns locale dependent weekday name
+     *
+     * calls the 4 argument version of weekdayName() with
+     * context = MLocale::DateSymbolStandalone and
+     * symbolLength = MLocale::DateSymbolWide
+     *
+     * \sa weekdayName(const MCalendar &mCalendar, int weekday, DateSymbolContext context, DateSymbolLength symbolLength) const
      */
     QString weekdayName(const MCalendar &mCalendar, int weekday) const;
 
 
     /*!
-     * \brief Returns locale dependant weekday name using context information
+     * \brief Returns locale dependent weekday name choosing context and length
+     *
+     * \sa weekdayName(const MCalendar &mCalendar, int weekday) const
      */
     QString weekdayName(const MCalendar &mCalendar, int weekday,
                         DateSymbolContext context, DateSymbolLength symbolLength) const;
