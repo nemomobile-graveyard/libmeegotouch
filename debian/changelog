@@ -1,8 +1,19 @@
-libmeegotouch (0.20.24~1) unstable; urgency=low
+libmeegotouch (0.20.24-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#177177 - Disable automatic rotation
+  * Fixes: NB#176548 - Toolbar missing shade
+  * Fixes: NB#174927 - MTheme::pixmap() and MTheme::pixmapCopy() return empty images
+  * Fixes: NB#176909 - spinners in widgetsgallery list are not replaced with images anymore
+  * Fixes: NB#173438 - connection failed, DHCP cut in portrait view
+  * Fixes: NB#175820 - 'Contacts' application is crashing in portrait mode.
+  * Fixes: NB#176352 - Sometimes navigation bar is not fully hidden/shown when requested
+  * Fixes: NB#176755 - MLocale::script() does not change according to the language
+  * Fixes: NB#173106 - MBubbleItem: Sender text does not get elided
+  * Fixes: NB#175275 -  Slider handle MLabel rendering for short texts
+  * Fixes: NB#175646
+  * Fixes: NB#175652
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Mon, 28 Jun 2010 15:34:02 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Thu, 01 Jul 2010 13:36:01 +0300
 
 libmeegotouch (0.20.23-1) unstable; urgency=low
 
