@@ -519,6 +519,10 @@ void MListPage::liveFilteringTextChanged()
     else if(list->filtering()->editor()->text() != "" && !list->filtering()->editor()->isOnDisplay())
         showTextEdit(true);
 
+    // Load images for items which match filtering
+    imageLoader->stopLoadingPictures();
+    loadPicturesInVisibleItems();
+
     // Highlighting matching live filtering text can be done by
     // passing the text to cell creator and updating visible items
     cellCreator->highlightByText(list->filtering()->editor()->text());
