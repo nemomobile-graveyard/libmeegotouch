@@ -75,16 +75,28 @@ SwapHookPrivate::SwapHookPrivate() :
         firstTimestamp(true)
 {
 #ifdef EGL
-    lib = dlopen("libEGL.so", RTLD_NOW);
+    QString preload = qgetenv("LD_PRELOAD");
 
-    if(!lib) {
-        qWarning("%s:%d: can't dlopen libEGL.so (%s)\n", __FILE__, __LINE__, dlerror());
-    }
+    QStringList libs = preload.split(":", QString::SkipEmptyParts);
+    libs << QString("libEGL.so");
 
-    func = (eglSwapBuffers_ptr)dlsym(lib, "eglSwapBuffers");
-    if(!func) {
-        qWarning("%s:%d: can't find eglSwapBuffers from libEGL.so (%s)\n", __FILE__, __LINE__, dlerror());
+    foreach (QString candidate, libs) {
+
+        lib = dlopen(candidate.toAscii().data(), RTLD_NOW);
+
+        if(!lib) {
+            qWarning("%s:%d: can't dlopen %s (%s)\n", __FILE__, __LINE__, qPrintable(candidate), dlerror());
+            continue;
+        }
+
+        func = (eglSwapBuffers_ptr)dlsym(lib, "eglSwapBuffers");
+        if(!func) {
+            qWarning("%s:%d: can't find eglSwapBuffers from %s (%s)\n", __FILE__, __LINE__, qPrintable(candidate), dlerror());
+            continue;
+        }
+        return;
     }
+    qFatal("%s:%d: failed to redirect eglSwapBuffers()", __FILE__, __LINE__);
 #endif
 }
 
