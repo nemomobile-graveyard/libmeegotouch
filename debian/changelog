@@ -1,5 +1,6 @@
 libmeegotouch (0.20.24-1) unstable; urgency=low
 
+  * Fixes: NB#159063 - Using QFileDialog instead of the native dialog creates issues.
   * Fixes: NB#177177 - Disable automatic rotation
   * Fixes: NB#176548 - Toolbar missing shade
   * Fixes: NB#174927 - MTheme::pixmap() and MTheme::pixmapCopy() return empty images
@@ -325,7 +326,7 @@ libmeegotouch (0.20.0-1) unstable; urgency=low
   * Fixes: NB#161300 - DuiLabel text set by setText is not displayed
   * Fixes: NB#163457 - Navigation bar has wrong size after using virtual keyboard
   * Fixes: NB#164194 - MListView calls resize() when the parent changes
-  * Fixes: NB#162907 - DuiList emits panningStopped/panningStarted -signals wildly when list is panned down  
+  * Fixes: NB#162907 - DuiList emits panningStopped/panningStarted -signals wildly when list is panned down
   * Fixes: NB#163347 - scrollTo is not working for DuiPopupList
   * Fixes: NB#161404 - Service framework call causes caller to crash if caller doesn't have applicationwindow
   * Fixes: NB#162495 - QtMaemo6Style treats a QWidget's hide() same as close()
@@ -380,7 +381,7 @@ libdui (0.19.10-1) unstable; urgency=low
   * Fixes: not working object menu on the device
 
  -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 22 Mar 2010 10:48:19 +0200
-  
+
 libdui (0.19.9-1) unstable; urgency=low
 
   * Unit test fixes
@@ -434,9 +435,9 @@ libdui (0.19.5-1) unstable; urgency=low
 libdui (0.19.4-2) unstable; urgency=low
 
   * Unit test fixes
-  
+
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 08 Mar 2010 10:23:00 +0200
-  
+
 libdui (0.19.4-1) unstable; urgency=low
 
   * Fixes: NB#158361 - DuiLocale remembers old system locale and writes it back after a language change
@@ -470,7 +471,7 @@ libdui (0.19.3-1) unstable; urgency=low
   * Fixes: NB#156878 - Possible race condition with remote theme server
   * Fixes: NB#156075 Widgetsgallery: Broken button text after switching language
   * Fixes: NB#144431 An application with a DuiLabel in it segfaults during shutdown when its window is closed
-  
+
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 24 Feb 2010 13:06:00 +0200
 
 libdui (0.19.2-1) unstable; urgency=low
@@ -478,9 +479,9 @@ libdui (0.19.2-1) unstable; urgency=low
   * Fixes: NB#157409 - Item selected after itemClicked is emited
   * Fixes: NB#157425 - DuiWidgetView returns wrong sizeHint in portrait orientation
   * Fixes: NB#156084 - DuiList does not refresh properly when dynamic tree model is used(setShowGroups())
-  
+
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Mon, 22 Feb 2010 17:13:00 +0200
-  
+
 libdui (0.19.1-1) unstable; urgency=low
 
   * PlainQt style plugin disabled
@@ -506,45 +507,45 @@ libdui (0.19.0-1) unstable; urgency=low
   * Fixes: NB#156146 - Text overflows in list when run in different profile
   * Fixes: NB#151726 - No text displayed with VKB during typing a SMS
   * Fixes: NB#155734 - Items under the last group of DuiList are duplicated
-  
+
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Wed, 17 Feb 2010 17:53:00 +0200
 
 libdui (0.18.9-2) unstable; urgency=low
 
   * New version
   * Unit test fixes
-  * Implemented: SWP#DUI-2901 
- 
+  * Implemented: SWP#DUI-2901
+
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Fri, 12 Feb 2010 14:30:00 +0200
-  
+
 libdui (0.18.8-1) unstable; urgency=low
 
   * Fixes: NB#155940 - DuiDialog crashes at times if created with DuiSceneWindow::KeepWhenDone
   * Fixes: NB#156148 - There is no way to change theme on non linux OS
   * Fixes: NB#154831 - Widgetsgallery crash on first run
   * Fixes: NB#155361 - Removed warnings and added -Werror
-  * Fixes: NB#155726 - Asynchronously handled dialog returns wrong result 
-  * Fixes: NB#154422 - Inserting rows to first group in DuiList does not update the list 
+  * Fixes: NB#155726 - Asynchronously handled dialog returns wrong result
+  * Fixes: NB#154422 - Inserting rows to first group in DuiList does not update the list
   * Fixes: NB#156073 - Widgetsgallery : Broken Query dialog, yes and no Button double caption
-  * Fixes: NB#155116 - Pannable viewport doesn't come back to the very same position 
+  * Fixes: NB#155116 - Pannable viewport doesn't come back to the very same position
   * Fixes: NB#152282 - DuiNavigationBar animates incorrectly when the screen is rotated
   * Fixes: NB#154831 - Widgetsgallery -timedemo causes consistent segfault in CITA; occasionally on device
-  * Fixes: NB#154535 - Not possible to keep current window orientation angle with keepCurrentOrientation() 
-  * Fixes: NB#156155 - Widgets are invisible after layout policy switch 
+  * Fixes: NB#154535 - Not possible to keep current window orientation angle with keepCurrentOrientation()
+  * Fixes: NB#156155 - Widgets are invisible after layout policy switch
   * Fixes: NB#154584 - -remote-theme switch doesn't work
-  * Fixes: NB#154446 - <MemLeak> duistylesheet.cpp 
+  * Fixes: NB#154446 - <MemLeak> duistylesheet.cpp
   * Fixes: NB#154129 - DuiPopupList::scrollTo makes some items disappear
-  * Fixes: NB#154888 - performing click() on DuiComboBox is not working as expected 
+  * Fixes: NB#154888 - performing click() on DuiComboBox is not working as expected
   * Fixes: NB#154891 - setting the icon & icon visibility for DuiComboBox is not working properly
-  * Fixes: NB#153911 - DuiStylableWidget shouldn't require the DUI_REGISTER_WIDGET macro, or default constructor 
-  * Fixes: NB#155682 - ta_duilistmod: complete List deletion causes segfault 
-  * Fixes: NB#155734 - Items under the last group of DuiList are duplicated 
-  * Fixes: NB#151937 - Incorrect include files libdui-dev package 
-  * Fixes: NB#155837 - DuiComboBox does not change current item text when item model is changed 
-  * Fixes: NB#152740 - <Logic> trid function is not marked as deprecated 
-  * Fixes: NB#152994 - Width of the view menu items differ from each other 
-  * Fixes: NB#155856 - Launching applications in Portrait is broken again 
-  * Fixes: NB#156115 - <CodeStyle> typo in doxygen documentation 
+  * Fixes: NB#153911 - DuiStylableWidget shouldn't require the DUI_REGISTER_WIDGET macro, or default constructor
+  * Fixes: NB#155682 - ta_duilistmod: complete List deletion causes segfault
+  * Fixes: NB#155734 - Items under the last group of DuiList are duplicated
+  * Fixes: NB#151937 - Incorrect include files libdui-dev package
+  * Fixes: NB#155837 - DuiComboBox does not change current item text when item model is changed
+  * Fixes: NB#152740 - <Logic> trid function is not marked as deprecated
+  * Fixes: NB#152994 - Width of the view menu items differ from each other
+  * Fixes: NB#155856 - Launching applications in Portrait is broken again
+  * Fixes: NB#156115 - <CodeStyle> typo in doxygen documentation
   * Implemented: SWP#DUI-2143, SWP#DUI-2147, SWP#DUI-2201, SWP#DUI-2207
   * Implemented: SWP#DUI-2145, SWP#DUI-2148, SWP#DUI-2140, SWP#DUI-2228
   * Implemented: SWP#DUI-2135, SWP#DUI-2134, SWP#DUI-2139, SWP#DUI-2114
@@ -568,11 +569,11 @@ libdui (0.18.7-1) unstable; urgency=low
   * Fixes: NB#155031 - Transaction support in DuiModel not functioning
   * Fixes: NB#153437 - DuiTheme::pixmap() not working
   * Fixes: NB#154878 - DuiList component does not react to some item model signals
-  * Fixes: NB#154961 - DuiList doesnt update cells correctly when deleting a row from the underlying model 
+  * Fixes: NB#154961 - DuiList doesnt update cells correctly when deleting a row from the underlying model
   * Fixes: NB#113828 - Documentation for DUI Theme system is out of date and/or lacking
   * Fixes: NB#152740 - <Logic> trid function is not marked as deprecated
   * Fixes: NB#154240 - List has visual artefacts when run with Pineapple profile
-  * Fixes: NB#154907 - The background of tapped DuiContentItem in Single mode looks foggy 
+  * Fixes: NB#154907 - The background of tapped DuiContentItem in Single mode looks foggy
   * Fixes: NB#152990 - DuiList's setColumns() doesn't work
   * Fixes: NB#148937 - Multiple slection is not possible in the duilist in libdui15
   * Fixes: NB#137510 - DuiGrid performance is bad
@@ -647,7 +648,7 @@ libdui (0.18.1-1) unstable; urgency=low
 
   * New version
   * Unit test fixes
-  
+
  -- Tomas Junnonen <tomas.junnonen@nokia.com>  Tue, 19 Jan 2010 09:50:00 +0200
 
 libdui (0.18.0-1) unstable; urgency=low
