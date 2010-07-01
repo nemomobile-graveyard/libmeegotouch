@@ -28,8 +28,11 @@
 #include <QPointF>
 #include <MSortFilterProxyModel>
 
-MListFilterPrivate::MListFilterPrivate()
-: cachedPannableViewport(NULL), q_ptr(NULL)
+MListFilterPrivate::MListFilterPrivate() :
+    viewportPos(QPointF(0,0)),
+    panningStartPos(QPointF(0,0)),
+    cachedPannableViewport(NULL),
+    q_ptr(NULL)
 {
 }
 
@@ -50,7 +53,6 @@ void MListFilterPrivate::panningStarted()
     if(!cachedPannableViewport && pannableViewport()) {
         MPannableViewport* viewport = pannableViewport();
         connect(viewport, SIGNAL(positionChanged(QPointF)), this, SLOT(viewportPositionChanged(QPointF)));
-        viewportPos = viewport->position();
     }
     panningStartPos = viewportPos;
 }
