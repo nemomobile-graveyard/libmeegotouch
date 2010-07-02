@@ -63,8 +63,9 @@ void MListView::init()
             d_ptr = new MPlainListViewPrivate;
     }
 
-    if (model()->showGroups())
-        d_ptr->setHeadersCreator(new MDefaultHeadersCreator(style()->groupHeaderObjectName()));
+    if (model()->showGroups() && model()->headerCreator()) {
+        d_ptr->setHeadersCreator(model()->headerCreator());
+    }
 
     d_ptr->q_ptr = this;
     d_ptr->controller = dynamic_cast<MList *>(controller);
@@ -85,9 +86,9 @@ void MListView::updateData(const QList<const char *>& modifications)
     for (int i = 0; i < modifications.count(); i++) {
         member = modifications[i];
 
-        if (member == MListModel::ItemModel || member == MListModel::ShowGroups || member == MListModel::Columns || member == MListModel::CellCreator) {
-            if(model()->itemModel())
-            {
+        if (member == MListModel::ItemModel || member == MListModel::ShowGroups || member == MListModel::Columns || member == MListModel::CellCreator ||
+            member == MListModel::HeaderCreator) {
+            if (model()->itemModel()) {
                 init();
                 QTimer::singleShot(0, d_ptr, SLOT(updateListGeometry()));
             }
@@ -133,7 +134,8 @@ void MListView::applyStyle()
         d_ptr->updateItemHeight();
         d_ptr->updateSeparators();
         d_ptr->updateSeparatorSize();
-        d_ptr->setHeadersCreator(new MDefaultHeadersCreator(style()->groupHeaderObjectName()));
+        d_ptr->updateHeaders();
+
         relayoutItemsInViewportRect();
     }
 }

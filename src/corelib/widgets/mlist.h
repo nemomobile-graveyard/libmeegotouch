@@ -238,6 +238,18 @@ public:
     const MCellCreator *cellCreator() const;
 
     /*!
+      Set's header creator which will map data from model to widgets which will be displayed by MList in the header.
+
+      \sa MCellCreator
+      */
+    void setHeaderCreator(MCellCreator *cellCreator);
+
+    /*!
+      Returns header creator associated with MList
+      */
+    const MCellCreator *headerCreator() const;
+
+    /*!
         \brief Sets the amount of columns to be used for presenting list items. Set to 1 by default.
 
         When columns is > 1, the rows will be split vertically, making the cell widget

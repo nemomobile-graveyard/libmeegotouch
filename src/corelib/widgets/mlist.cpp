@@ -179,6 +179,16 @@ const MCellCreator *MList::cellCreator() const
     return model()->cellCreator();
 }
 
+void MList::setHeaderCreator(MCellCreator *headerCreator)
+{
+    model()->setHeaderCreator(headerCreator);
+}
+
+const MCellCreator *MList::headerCreator() const
+{
+    return model()->headerCreator();
+}
+
 const QModelIndex MList::firstVisibleItem() const
 {
     return model()->firstVisibleItem();

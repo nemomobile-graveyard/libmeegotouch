@@ -71,7 +71,10 @@ MListViewPrivate::~MListViewPrivate()
         clearFirstAndLastVisibleRows();
 
     movingDetectorTimer.stop();
-    delete headersCreator;
+
+    if (!controllerModel->headerCreator())
+        delete headersCreator;
+
     delete hseparator;
     delete recycler;
 }
@@ -101,9 +104,17 @@ void MListViewPrivate::updateSeparators()
     }
 }
 
+void MListViewPrivate::updateHeaders()
+{
+    MDefaultHeadersCreator *defaultCreator = dynamic_cast<MDefaultHeadersCreator*>(headersCreator);
+    if (defaultCreator)
+        defaultCreator->setHeaderObjectName(q_ptr->style()->groupHeaderObjectName());
+}
+
 void MListViewPrivate::setHeadersCreator(MCellCreator *creator)
 {
     delete headersCreator;
+    hdrHeight = 0;
     headersCreator = creator;
 }
 
@@ -926,9 +937,13 @@ void MGroupHeaderListViewPrivate::resetModel(MListModel *mListModel)
 {
     MListViewPrivate::resetModel(mListModel);
 
-    if(!listIndexWidget) {
+    if (!listIndexWidget) {
         listIndexWidget = new MListIndex(controller);
         updateListIndexVisibility();
+    }
+
+    if (!controllerModel->headerCreator()) {
+        headersCreator = new MDefaultHeadersCreator(q_ptr->style()->groupHeaderObjectName());
     }
 
     headersPositions.resize(this->headersCount());

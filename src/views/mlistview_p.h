@@ -109,6 +109,7 @@ public:
 public:
     virtual void createSeparators();
     virtual void updateSeparators();
+    virtual void updateHeaders();
 
     virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
@@ -353,7 +354,7 @@ class MDefaultHeadersCreator : public MAbstractCellCreator<MLabel>
 {
 public:
     MDefaultHeadersCreator(const QString &headerObjectName) {
-        this->headerObjectName = headerObjectName;
+        setHeaderObjectName(headerObjectName);
     }
 
     virtual ~MDefaultHeadersCreator() {
@@ -375,6 +376,10 @@ public:
         MLabel *header = dynamic_cast<MLabel *>(cell);
         QString title = index.data(Qt::DisplayRole).toString();
         header->setText(title);
+    }
+
+    virtual void setHeaderObjectName(const QString &headerObjectName) {
+        this->headerObjectName = headerObjectName;
     }
 
 private:

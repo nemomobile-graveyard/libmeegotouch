@@ -38,6 +38,7 @@ private:
 
     M_MODEL_PTR_PROPERTY(QAbstractItemModel *, itemModel, ItemModel, true, 0)
     M_MODEL_PTR_PROPERTY(MCellCreator *, cellCreator, CellCreator, true, 0)
+    M_MODEL_PTR_PROPERTY(MCellCreator *, headerCreator, HeaderCreator, true, 0)
     M_MODEL_PROPERTY(QModelIndex, firstVisibleItem, FirstVisibleItem, false, QModelIndex())
     M_MODEL_PROPERTY(QModelIndex, lastVisibleItem, LastVisibleItem, false, QModelIndex())
     M_MODEL_PROPERTY(bool, showGroups, ShowGroups, true, false)
