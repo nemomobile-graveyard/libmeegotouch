@@ -576,7 +576,7 @@ void MToolBarView::drawBackground(QPainter *painter, const QStyleOptionGraphicsI
     Q_D(const MToolBarView);
 
     //draw shadow on top of the actual toolbar on portrait mode
-    if (d->controller->sceneManager()->orientation() == M::Portrait) {
+    if (d->controller->sceneManager() && d->controller->sceneManager()->orientation() == M::Portrait) {
         if (style()->dropShadowImage()) {
             style()->dropShadowImage()->draw(0,
                     -style()->dropShadowImage()->pixmap()->size().height(),
