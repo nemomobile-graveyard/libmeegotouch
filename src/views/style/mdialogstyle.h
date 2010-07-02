@@ -130,6 +130,18 @@ class M_EXPORT MDialogStyle : public MSceneWindowStyle
         \brief Orientation of dialog button box.
     */
     M_STYLE_ATTRIBUTE(Qt::Orientation, buttonBoxOrientation, ButtonBoxOrientation)
+
+    /*!
+        \property MDialogStyle::titleBarAlignment
+        \brief Alignment of title bar text.
+    */
+    M_STYLE_ATTRIBUTE(Qt::Alignment, titleBarAlignment, TitleBarAlignment)
+
+    /*!
+        \property MDialogStyle::titleCapitalization
+        \brief If true, title text will be all uppercase.
+    */
+    M_STYLE_ATTRIBUTE(bool, titleCapitalization, titleCapitalization)
 };
 
 /*!

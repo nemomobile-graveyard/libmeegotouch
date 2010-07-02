@@ -32,6 +32,7 @@
 #include <MLayout>
 #include "mbuttongrouplayoutpolicy_p.h"
 
+#include <QFont>
 #include <QGraphicsLinearLayout>
 
 MDialogViewPrivate::MDialogViewPrivate()
@@ -246,6 +247,13 @@ void MDialogView::applyStyle()
     d->titleBar->setMinimumHeight(style()->titleBarHeight());
     d->titleBar->setPreferredHeight(style()->titleBarHeight());
     d->titleBar->setMaximumHeight(style()->titleBarHeight());
+
+    d->titleLabel->setAlignment(style()->titleBarAlignment());
+    if (style()->titleCapitalization()) {
+        QFont labelFont = d->titleLabel->font();
+        labelFont.setCapitalization(QFont::AllUppercase);
+        d->titleLabel->setFont(labelFont);
+    }
 
     // set dimensions separately to that we may have one dimensions set
     // and the other unset (-1).
