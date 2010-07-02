@@ -37,6 +37,7 @@ class MNavigationBar;
 class MOrientationAnimation;
 class MPageSwitchAnimation;
 class MWindow;
+class MSceneEventEater;
 
 class QAbstractAnimation;
 class QGraphicsWidget;
@@ -240,6 +241,8 @@ public:
     QPointer<QObject> debugInterface;
 
     MSceneManager *q_ptr;
+
+    MSceneEventEater *eventEater;
 };
 
 class MSceneManagerTestInterface : public QObject

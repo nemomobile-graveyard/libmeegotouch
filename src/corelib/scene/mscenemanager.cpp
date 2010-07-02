@@ -57,6 +57,7 @@
 #include "mcrossfadedorientationanimation.h"
 #include "mabstractwidgetanimation.h"
 #include "mpageswitchanimation.h"
+#include "msceneeventeater.h"
 
 #include <mwidgetslideanimation.h>
 #include <mwidgetfadeanimation.h>
@@ -96,6 +97,9 @@ void MSceneManagerPrivate::init(MScene *scene)
     rootElement->setTransformOriginPoint(QPointF(q->visibleSceneSize().width() / 2.0, q->visibleSceneSize().height() / 2.0));
     scene->addItem(rootElement);
 
+    eventEater = new MSceneEventEater();
+    scene->addItem(eventEater);
+    eventEater->setGeometry(QRectF(QPointF(0.0, 0.0), q->visibleSceneSize(M::Landscape)));
     createOrientationAnimation();
 
     // The scene manager should only listen to region updates from one instance, to prevent
@@ -160,6 +164,11 @@ MSceneManagerPrivate::~MSceneManagerPrivate()
     delete orientationAnimation;
     delete pageSwitchAnimation;
     delete pendingRotation;
+    if (eventEater != 0){
+        delete eventEater;
+        eventEater = 0;
+    }
+
 }
 
 int MSceneManagerPrivate::zForWindowType(MSceneWindow::WindowType windowType)
@@ -267,8 +276,7 @@ void MSceneManagerPrivate::_q_emitOrientationChangeFinished()
 void MSceneManagerPrivate::_q_unFreezeUI()
 {
     Q_Q(MSceneManager);
-
-    rootElement->setEnabled(true);
+    eventEater->hide();
 
     QAbstractAnimation *animation = dynamic_cast<QAbstractAnimation *>(q->sender());
     if (animation == 0)
@@ -1332,9 +1340,9 @@ void MSceneManagerPrivate::disappearSceneWindow(MSceneWindow *window,
 void MSceneManagerPrivate::freezeUIForAnimationDuration(QAbstractAnimation *animation)
 {
     Q_Q(MSceneManager);
+    eventEater->show();
 
     if (animation->state() == QAbstractAnimation::Running) {
-        //rootElement->setEnabled(false);
         QObject::connect(animation, SIGNAL(finished()), q, SLOT(_q_unFreezeUI()));
     }
 }
