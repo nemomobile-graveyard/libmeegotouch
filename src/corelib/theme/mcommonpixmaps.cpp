@@ -161,23 +161,24 @@ void MCommonPixmaps::loadOne()
     cpuMonitor.stop();
 
     if (0 <= cpuMonitor.usage() || cpuMonitor.usage() < 10) {
-
-        PixmapIdentifier id = *toLoadList.begin();
-        toLoadList.erase(toLoadList.begin());
+        //check if there really is something to load
         if (!toLoadList.isEmpty()) {
-            // there's still items in the list, so start the timer with small delay
-            cpuMonitor.start(250);
-        }
+            PixmapIdentifier id = *toLoadList.begin();
+            toLoadList.erase(toLoadList.begin());
+            if (!toLoadList.isEmpty()) {
+                // there's still items in the list, so start the timer with small delay
+                cpuMonitor.start(250);
+            }
 
-        ImageResource *resource = daemon->findImageResource(id.imageId);
-        if (resource)
-            resource->fetchPixmap(id.size);
-        else {
-            mWarning("MCommonPixmaps") << QString("Themedaemon could not find resource %1 while loading most used pixmaps. Removing from list.").arg(id.imageId);
-            requestCounts.remove(id);
-            mostUsedPixmaps.remove(id);
+            ImageResource *resource = daemon->findImageResource(id.imageId);
+            if (resource)
+                resource->fetchPixmap(id.size);
+            else {
+                mWarning("MCommonPixmaps") << QString("Themedaemon could not find resource %1 while loading most used pixmaps. Removing from list.").arg(id.imageId);
+                requestCounts.remove(id);
+                mostUsedPixmaps.remove(id);
+            }
         }
-
     } else {
         // the cpu usage was too high, so start start the timer with longer delay
         cpuMonitor.start(2000);
