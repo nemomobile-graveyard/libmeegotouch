@@ -38,9 +38,10 @@
 void Ut_MApplicationWindow::initTestCase()
 {
     if(MComponentData::instance() == 0) {
-        static int argc = 1;
-        static char *argv[ 1 ];
+        static int argc = 2;
+        static char *argv[ 2 ];
         argv[ 0 ] = (char*)"./ut_mscenewindow";
+        argv[ 1 ] = (char*)"-local-theme";
         m_componentData = new MComponentData(argc, argv);
     }
     qRegisterMetaType<MApplicationPage *>("MApplicationPage*");

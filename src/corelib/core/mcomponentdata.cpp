@@ -494,6 +494,8 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
             }
         } else if (s == "-remote-theme") {
             themeService = MTheme::RemoteTheme;
+        } else if (s == "-local-theme") {
+            themeService = MTheme::LocalTheme;
         } else if (s == "-output-level") {
             if (i < (argc - 1)) {
                 i++;
@@ -585,6 +587,7 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "  [-dev] Enable development visualization mode\n"
                                          << "  [-genimglist filename] Generate list of requested images to filename\n"
                                          << "  [-remote-theme] Wait until remote theme daemon is available\n"
+                                         << "  [-local-theme] Force usage of local theme processing instead of remote theme daemon\n"
                                          << "  [-output-level debug|warning|critical] Only show messages of given output level or above\n"
                                          << "  [-output-prefix <prefix>] Only show debug messages that start with the given prefix\n"
                                          << "  [-no-output-prefix <prefix>] Only show debug messages that do not start with the given prefix\n"
