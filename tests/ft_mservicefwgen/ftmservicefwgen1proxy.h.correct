@@ -31,6 +31,8 @@
 #include <X11/Xmd.h>
 #endif // Q_WS_X11
 
+namespace fakegalleryserviceinterface {
+
 /*
  * Proxy class for interface com.nokia.fakegalleryserviceinterface
  */
@@ -108,7 +110,10 @@ Q_SIGNALS: // SIGNALS
 
 namespace com {
   namespace nokia {
-    typedef ::FtMServiceFwGen1Proxy fakegalleryserviceinterface;
+    typedef ::fakegalleryserviceinterface::FtMServiceFwGen1Proxy fakegalleryserviceinterface;
   }
 }
+
+}; // namespace
+
 #endif

@@ -49,6 +49,8 @@ public:
 
     void setArguments( const int argc, const char * const argv[] );
 
+    void setNameSpace( const QString &nameSpace );
+
     QString applicationName();
     QString generatedByComment();
     QString upperCamelServiceName();
@@ -58,6 +60,7 @@ public:
     QString chainTag();
     QString asyncTag();
     QString upperCamelProxyName();
+    QString nameSpace();
 
     QString proxyHeaderFileName();
     QString proxyCppFileName();
@@ -98,6 +101,7 @@ public:
     QString mangledMethodDoc( int id );
 
     bool needsMApplication();
+    bool hasNameSpace();
 
     void preprocessXML();
     void createConnectSignalCommands( const QStringList& ifSignals );
@@ -129,6 +133,7 @@ private:
     QString m_docTag;
     QString m_proxyBase;
     QString m_adaptorBase;
+    QString m_nameSpace;
 
     QString m_allSignals;
     QString m_allConnectSignalCommands;
@@ -154,6 +159,21 @@ Worker::Worker()
     m_createProxy = false;
 
     m_needsMApplication = false;
+}
+
+bool Worker::hasNameSpace()
+{
+    return !m_nameSpace.isEmpty();
+}
+
+QString Worker::nameSpace()
+{
+    return m_nameSpace;
+}
+
+void Worker::setNameSpace( const QString &nameSpace)
+{
+    m_nameSpace = nameSpace;
 }
 
 void Worker::setArguments( const int argc, const char * const argv[] )
@@ -491,7 +511,7 @@ public:\n";
 
 QString Worker::botBitH()
 {
-    return
+    QString retVal =
 "\n\
 public:\n\
     /*!\n\
@@ -512,16 +532,23 @@ public:\n\
     void setService(const QString & service);\n\
 Q_SIGNALS:\n\
 " + m_allSignals + "\n\
-};\n\
-#endif\n\
-";
+};\n";
+
+    if (hasNameSpace()) {
+        retVal += "\n}; // namespace\n";
+    }
+
+    retVal += "#endif\n";
+
+  return retVal;
 }
 
 QString Worker::topBitC()
 {
+    QString retVal;
     QString commandLine(QCoreApplication::arguments().join(" "));
 
-    return
+    retVal =
 "/*\n\
  * automatically generated with the command line :\n\
  * " + commandLine + "\n\
@@ -529,11 +556,19 @@ QString Worker::topBitC()
 \n\
 #include \"" + wrapperHeaderFileName() + "\"\n\
 #include \"" + proxyHeaderFileName() + "\"\n";
+
+    if ( hasNameSpace() ) {
+        retVal += "\nnamespace " + nameSpace() + " {\n";
+    }
+
+    return retVal;
 }
 
 QString Worker::botBitC()
 {
-    return
+    QString retVal;
+
+    retVal =
 "" + upperCamelServiceName() + "::" + upperCamelServiceName() + "( const QString& preferredService, QObject* parent )\n\
     : MServiceFwBaseIf( " + upperCamelProxyName() + "::staticInterfaceName(), parent )\n\
 {\n\
@@ -564,6 +599,12 @@ void " + upperCamelServiceName() + "::setService(const QString & service)\n\
 " + m_allConnectSignalCommands + "\n\
     }\n\
 }\n";
+
+    if (hasNameSpace()) {
+        retVal += "\n}; // namespace";
+    }
+
+    return retVal;
 }
 
 QString Worker::mHeaders()
@@ -637,6 +678,14 @@ void Worker::preprocessXML()
         el.setAttribute( "name", el.attribute( "name" ) + docTag() );
 
         el.removeChild( el.firstChildElement( "doc" ) );
+    }
+
+    // try to save and drop <namespace> child of <interface>
+    if ( !el.firstChildElement( "annotation" ).isNull() ) {
+        const QDomElement &annotation = el.firstChildElement( "annotation" );
+        if ( annotation.attribute( "name" ) == "namespace" ) {
+            setNameSpace( annotation.attribute( "value" ).split(".").last() );
+        }
     }
 
     // walk over the methods
@@ -768,8 +817,9 @@ void processAdaptorCppFile()
         exit(-1);
     }
     QTextStream outS(&newAdaptorCppFile);
+    QString previousLine;
 
-    bool inChainTask = false;
+    bool inChainTask      = false;
     bool needGoBackMethod = false;
 
     while (!inS.atEnd()) {
@@ -781,6 +831,12 @@ void processAdaptorCppFile()
 
         line.replace( w.qdbusxml2cppRegExp(), w.applicationName() );
         line.replace( w.newXmlFileName(), w.xmlFileName() );
+
+        if (w.hasNameSpace() && previousLine == "#include <QtCore/QVariant>" ) {
+                // this is the blank line after the last #include class declarations, before the beginning of the main class definition
+                outS << endl;
+                outS << "namespace " << w.nameSpace() << " {" << endl;
+        }
 
         // add chaining code to NEWADAPTOR
         {
@@ -864,6 +920,8 @@ void processAdaptorCppFile()
                 outS << line << endl;
             }
         }
+
+        previousLine = line;
     }
 
     if (needGoBackMethod) {
@@ -882,6 +940,11 @@ void processAdaptorCppFile()
 "        qWarning() << \"backService is not registered: not going back\";\n"\
 "    }\n"\
 "}\n";
+    }
+
+    if (w.hasNameSpace()) {
+        outS << endl;
+        outS << "}; // namespace" << endl;
     }
 
     newAdaptorCppFile.close();
@@ -914,6 +977,7 @@ void processAdaptorHeaderFile()
     QTextStream newAdaptorHeaderStream(&newAdaptorHeaderFile);
 
     bool hasChains = false;
+    QString previousLine;
 
     while (!adaptorHeaderFileStream.atEnd()) {
         QString line = adaptorHeaderFileStream.readLine();
@@ -926,6 +990,17 @@ void processAdaptorHeaderFile()
 
         // add chaining code to NEWADAPTOR
         {
+            if (w.hasNameSpace()) {
+                if ( previousLine.startsWith( "class" ) && previousLine.endsWith( ";" )
+                    && line.isEmpty() ) {
+                    // this is the blank line after the forward class declarations, before the beginning of the main class definition
+                    newAdaptorHeaderStream << line << endl;
+                    newAdaptorHeaderStream << "namespace " << w.nameSpace() << " {" << endl;
+                } else if (line == "#endif") {
+                    newAdaptorHeaderStream << "}; // namespace" << endl << endl;
+                }
+            }
+
             if (line.contains("Q_SIGNALS:")) {
                 if (hasChains) {
                     newAdaptorHeaderStream
@@ -1027,6 +1102,8 @@ void processAdaptorHeaderFile()
                 newAdaptorHeaderStream << line << endl;
             }
         }
+
+        previousLine = line;
     }
 
     newAdaptorHeaderFile.close();
@@ -1129,9 +1206,15 @@ void processProxyHeaderFile()
         exit(-1);
     }
     QTextStream wrapperCppStream(&wrapperCppFile);
+    QString previousLine;
 
     wrapperCppStream    << w.topBitC() << endl;
     wrapperHeaderStream << w.topBitH() << endl;
+
+    if ( w.hasNameSpace() ) {
+        wrapperHeaderStream << "namespace " << w.nameSpace() << " {" << endl;
+        wrapperHeaderStream << endl;
+    }
 
     QStringList ifSignals;
 
@@ -1142,6 +1225,23 @@ void processProxyHeaderFile()
         QString line = proxyHeaderStream.readLine();
 
         line.replace( w.qdbusxml2cppRegExp(), w.applicationName() );
+
+        if (w.hasNameSpace()) {
+            if ( previousLine == "#include <QtDBus/QtDBus>" ) {
+                // this is the blank line after the forward class declarations, before the beginning of the main class definition
+                newProxyHeaderStream << line << endl;
+                newProxyHeaderStream << "namespace " << w.nameSpace() << " {" << endl;
+            }
+            else if (line == "#endif" && proxyHeaderStream.atEnd() ) {
+                newProxyHeaderStream << endl;
+                newProxyHeaderStream << "}; // namespace" << endl;
+                newProxyHeaderStream << endl;
+            }
+        }
+
+        if ( w.hasNameSpace() ) {
+            line.replace( "typedef ::", "typedef ::"+w.nameSpace()+"::" );
+        }
 
         // add documentation and remove doc tags here
         // note that middle bit is added here too, so it's not just about doc
@@ -1239,6 +1339,8 @@ void processProxyHeaderFile()
                 }
             }
         }
+
+        previousLine = line;
     } // ! proxyHeaderStream.atEnd()
 
 
@@ -1291,11 +1393,19 @@ void processProxyCppFile()
 
         if (line.contains("This file was generated by")) {
           outS << w.generatedByComment() << endl;
+        } else if (w.hasNameSpace() && line.startsWith( "#include") ) {
+          outS << line << endl;
+          outS << endl;
+          outS << "namespace " << w.nameSpace() << " {" << endl;
         } else if (line.contains( "Command line was:")) {
           // do nothing - the replacement for this line is output by the above
         } else {
           outS << line << "\n";
         }
+    }
+
+    if ( w.hasNameSpace() ) {
+      outS << "}; // namespace" << endl;
     }
 
     inFile.remove();

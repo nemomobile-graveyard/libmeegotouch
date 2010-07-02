@@ -21,7 +21,7 @@ ImageViewer::~ImageViewer()
 bool ImageViewer::showImage(const QString &uri, const QStringList &uriList)
 {
     qDebug() << __PRETTY_FUNCTION__;
-    Q_UNUSED( uriList );
+    Q_UNUSED( uri );
 
     MApplicationWindow *mWin = new MApplicationWindow();
     mWin->setObjectName( "MApplicationWindow#2" );

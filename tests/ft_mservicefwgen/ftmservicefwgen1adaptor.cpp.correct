@@ -28,6 +28,8 @@
 #include <QtCore/QStringList>
 #include <QtCore/QVariant>
 
+namespace fakegalleryserviceinterface {
+
 /*
  * Implementation of adaptor class FtMServiceFwGen1Adaptor
  */
@@ -155,3 +157,5 @@ void FtMServiceFwGen1Adaptor::goBack()
         qWarning() << "backService is not registered: not going back";
     }
 }
+
+}; // namespace

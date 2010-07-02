@@ -2,7 +2,8 @@
 <!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN"
         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
-  <interface name="com.nokia.fakegalleryserviceinterface">
+    <interface name="com.nokia.fakegalleryserviceinterface">
+        <annotation name="namespace" value="fakegalleryserviceinterface"/>
     <method name="showPage">
       <arg name="targetPage" type="s" direction="in" />
       <arg name="previousPage" type="s" direction="in" />

@@ -10,6 +10,8 @@
 
 #include <mservicefwbaseif.h>
 
+namespace fakegalleryserviceinterface {
+
 class FtMServiceFwGen1 : public MServiceFwBaseIf
 {
 Q_OBJECT
@@ -42,5 +44,7 @@ public:
 Q_SIGNALS:
 
 };
+
+}; // namespace
 #endif
 

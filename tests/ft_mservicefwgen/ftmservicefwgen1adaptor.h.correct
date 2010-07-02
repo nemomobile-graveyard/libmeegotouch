@@ -21,6 +21,8 @@ class QString;
 class QStringList;
 class QVariant;
 
+namespace fakegalleryserviceinterface {
+
 /*
  * Adaptor class for interface com.nokia.fakegalleryserviceinterface
  */
@@ -30,6 +32,7 @@ class FtMServiceFwGen1Adaptor: public QDBusAbstractAdaptor
     Q_CLASSINFO("D-Bus Interface", "com.nokia.fakegalleryserviceinterface")
     Q_CLASSINFO("D-Bus Introspection", ""
 "  <interface name=\"com.nokia.fakegalleryserviceinterface\">\n"
+"    <annotation value=\"fakegalleryserviceinterface\" name=\"namespace\"/>\n"
 "    <method name=\"showPage\">\n"
 "      <arg direction=\"in\" type=\"s\" name=\"targetPage\"/>\n"
 "      <arg direction=\"in\" type=\"s\" name=\"previousPage\"/>\n"
@@ -77,5 +80,7 @@ private:
 
 Q_SIGNALS: // SIGNALS
 };
+
+}; // namespace
 
 #endif

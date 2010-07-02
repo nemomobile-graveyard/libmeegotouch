@@ -11,6 +11,8 @@
 
 #include "ftmservicefwgen1proxy.h"
 
+namespace fakegalleryserviceinterface {
+
 /*
  * Implementation of interface class FtMServiceFwGen1Proxy
  */
@@ -24,3 +26,4 @@ FtMServiceFwGen1Proxy::~FtMServiceFwGen1Proxy()
 {
 }
 
+}; // namespace

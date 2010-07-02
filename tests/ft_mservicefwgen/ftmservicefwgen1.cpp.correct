@@ -6,6 +6,8 @@
 #include "ftmservicefwgen1.h"
 #include "ftmservicefwgen1proxy.h"
 
+namespace fakegalleryserviceinterface {
+
 void FtMServiceFwGen1::bug172441()
 {
     static_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->bug172441();
@@ -67,3 +69,4 @@ void FtMServiceFwGen1::setService(const QString & service)
     }
 }
 
+}; // namespace

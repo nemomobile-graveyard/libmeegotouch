@@ -2,7 +2,6 @@
         "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
 <node>
   <interface name="com.nokia.SomeInterface">
-        <annotation name="namespace" value="SomeInterface"/>
     <method name="showImage" chainTask="true" asyncTask="true">
       <arg name="uri" type="s" direction="in" />
       <arg name="uriList" type="as" direction="in" />
