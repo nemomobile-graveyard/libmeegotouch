@@ -325,4 +325,6 @@ void MListView::longTap(const QPointF &pos)
     d_ptr->cellLongTapped(index);
 }
 
+#include "moc_mlistview.cpp"
+
 M_REGISTER_VIEW_NEW(MListView, MList)

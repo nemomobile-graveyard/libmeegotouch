@@ -24,12 +24,12 @@
 #include <mlist.h>
 #include <mliststyle.h>
 #include <mlistmodel.h>
-#include <mlistview_p.h>
 
 class MController;
 class MPannableViewport;
 class MList;
 class MListModel;
+class MListViewPrivate;
 class MPlainMultiColumnListViewPrivate;
 class MGroupHeaderListViewPrivate;
 class MMultiColumnListViewPrivate;
