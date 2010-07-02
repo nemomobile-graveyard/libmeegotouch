@@ -762,10 +762,20 @@ void Ft_Locales::checkAvailableLocales()
             + locale.formatCurrency(1234.56, "EUR")
             + '\n' + supportedLocaleName + '\t' + "Negative Currency value" + '\t'
             + locale.formatCurrency(-1234.56, "EUR")
+            + '\n' + supportedLocaleName + '\t' + "%r (locale specific 12 hour “TimeShort”)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(14, 31, 0, 0),
+                          Qt::LocalTime), "%r")
+            + '\n' + supportedLocaleName + '\t' + "%R (locale specific 24 hour “TimeShort”)" + '\t'
+            + locale.formatDateTime(
+                QDateTime(QDate(2008, 7, 21),
+                          QTime(14, 31, 0, 0),
+                          Qt::LocalTime), "%R")
             + '\n' + supportedLocaleName + '\t' + "Date and time short (Gregorian Calendar)" + '\t'
             + locale.formatDateTime(
                 QDateTime(QDate(2008, 7, 21),
-                          QTime(12, 31, 0, 0),
+                          QTime(14, 31, 0, 0),
                           Qt::LocalTime),
                 MLocale::DateShort,
                 MLocale::TimeShort,
@@ -773,7 +783,7 @@ void Ft_Locales::checkAvailableLocales()
             + '\n' + supportedLocaleName + '\t' + "Date and time medium (Gregorian Calendar)" + '\t'
             + locale.formatDateTime(
                 QDateTime(QDate(2008, 7, 21),
-                          QTime(12, 31, 0, 0),
+                          QTime(14, 31, 0, 0),
                           Qt::LocalTime),
                 MLocale::DateMedium,
                 MLocale::TimeMedium,
@@ -781,7 +791,7 @@ void Ft_Locales::checkAvailableLocales()
             + '\n' + supportedLocaleName + '\t' + "Date and time long (Gregorian Calendar)" + '\t'
             + locale.formatDateTime(
                 QDateTime(QDate(2008, 7, 21),
-                          QTime(12, 31, 0, 0),
+                          QTime(14, 31, 0, 0),
                           Qt::LocalTime),
                 MLocale::DateLong,
                 MLocale::TimeLong,
@@ -789,7 +799,7 @@ void Ft_Locales::checkAvailableLocales()
             + '\n' + supportedLocaleName + '\t' + "Date and time full (Gregorian Calendar)" + '\t'
             + locale.formatDateTime(
                 QDateTime(QDate(2008, 7, 21),
-                          QTime(12, 31, 0, 0),
+                          QTime(14, 31, 0, 0),
                           Qt::LocalTime),
                 MLocale::DateFull,
                 MLocale::TimeFull,
@@ -797,7 +807,7 @@ void Ft_Locales::checkAvailableLocales()
             + '\n' + supportedLocaleName + '\t' + "Date and time short (Islamic Calendar)" + '\t'
             + locale.formatDateTime(
                 QDateTime(QDate(2008, 7, 21),
-                          QTime(12, 31, 0, 0),
+                          QTime(14, 31, 0, 0),
                           Qt::LocalTime),
                 MLocale::DateShort,
                 MLocale::TimeShort,
@@ -805,7 +815,7 @@ void Ft_Locales::checkAvailableLocales()
             + '\n' + supportedLocaleName + '\t' + "Date and time medium (Islamic Calendar)" + '\t'
             + locale.formatDateTime(
                 QDateTime(QDate(2008, 7, 21),
-                          QTime(12, 31, 0, 0),
+                          QTime(14, 31, 0, 0),
                           Qt::LocalTime),
                 MLocale::DateMedium,
                 MLocale::TimeMedium,
@@ -813,7 +823,7 @@ void Ft_Locales::checkAvailableLocales()
             + '\n' + supportedLocaleName + '\t' + "Date and time long (Islamic Calendar)" + '\t'
             + locale.formatDateTime(
                 QDateTime(QDate(2008, 7, 21),
-                          QTime(12, 31, 0, 0),
+                          QTime(14, 31, 0, 0),
                           Qt::LocalTime),
                 MLocale::DateLong,
                 MLocale::TimeLong,
@@ -821,7 +831,7 @@ void Ft_Locales::checkAvailableLocales()
             + '\n' + supportedLocaleName + '\t' + "Date and time full (Islamic Calendar)" + '\t'
             + locale.formatDateTime(
                 QDateTime(QDate(2008, 7, 21),
-                          QTime(12, 31, 0, 0),
+                          QTime(14, 31, 0, 0),
                           Qt::LocalTime),
                 MLocale::DateFull,
                 MLocale::TimeFull,
