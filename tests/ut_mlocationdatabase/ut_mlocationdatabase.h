@@ -22,18 +22,25 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
-
-class MLocale;
+#include <QElapsedTimer>
+#include <MApplication>
+#include <MLocale>
 
 class Ut_MLocationDatabase : public QObject
 {
     Q_OBJECT
 
+private:
+    MApplication *qap;
+
 private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testHelsinki();
+    void testCities_data();
+    void testCities();
+
+    void testCitiesDumpInfo();
 };
 
 #endif

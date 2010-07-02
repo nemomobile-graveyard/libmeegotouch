@@ -106,6 +106,63 @@ QString MCity::timeZone() const
     return d->timeZone;
 }
 
+#ifdef HAVE_ICU
+qint32 MCity::timeZoneRawOffset() const
+{
+    Q_D(const MCity);
+    icu::TimeZone *tz =
+        TimeZone::createTimeZone(MIcuConversions::qStringToUnicodeString(d->timeZone));
+    qint32 rawOffset = tz->getRawOffset();
+    delete tz;
+    return rawOffset;
+}
+#endif
+
+#ifdef HAVE_ICU
+qint32 MCity::timeZoneDstOffset(QDateTime dateTime) const
+{
+    Q_D(const MCity);
+    UBool local = dateTime.timeSpec() == Qt::LocalTime? true : false;
+    // we avoid time conversions done by Qt:
+    dateTime.setTimeSpec(Qt::UTC);
+    UDate icuDate = dateTime.toMSecsSinceEpoch();
+
+    icu::TimeZone *tz =
+        TimeZone::createTimeZone(MIcuConversions::qStringToUnicodeString(d->timeZone));
+    qint32 rawOffset;
+    qint32 dstOffset;
+    UErrorCode status = U_ZERO_ERROR;
+    tz->getOffset(icuDate, local, rawOffset, dstOffset, status);
+    delete tz;
+    if (status == U_ZERO_ERROR)
+        return dstOffset;
+    else
+        return INT32_MAX;
+}
+#endif
+
+#ifdef HAVE_ICU
+qint32 MCity::timeZoneTotalOffset(QDateTime dateTime) const
+{
+    Q_D(const MCity);
+    UBool local = dateTime.timeSpec() == Qt::LocalTime? true : false;
+    // we avoid time conversions done by Qt:
+    dateTime.setTimeSpec(Qt::UTC);
+    UDate icuDate = dateTime.toMSecsSinceEpoch();
+
+    icu::TimeZone *tz =
+        TimeZone::createTimeZone(MIcuConversions::qStringToUnicodeString(d->timeZone));
+    qint32 rawOffset;
+    qint32 dstOffset;
+    UErrorCode status = U_ZERO_ERROR;
+    tz->getOffset(icuDate, local, rawOffset, dstOffset, status);
+    delete tz;
+    if (status == U_ZERO_ERROR)
+        return rawOffset + dstOffset;
+    else
+        return INT32_MAX;
+}
+#endif
 
 MCountry MCity::country() const
 {

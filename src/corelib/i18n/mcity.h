@@ -20,6 +20,15 @@
 #ifndef MCITY_H
 #define MCITY_H
 
+#include <QDateTime>
+
+#ifdef HAVE_ICU
+#include <unicode/umachine.h>
+#include <unicode/datefmt.h>
+#include <unicode/dtfmtsym.h>
+#include "micuconversions.h"
+#endif
+
 #include "mexport.h"
 #include "mcountry.h"
 
@@ -81,6 +90,44 @@ class M_EXPORT MCity
      * returns something like “Europe/Helsinki”
      */
     QString timeZone() const;
+
+    /*!
+     * \brief returns the raw offset of the timezone
+     *
+     * returns the raw offset of the time zone in milliseconds.
+     * The raw offset is the offset without considering daylight savings time.
+     *
+     * \sa timeZoneTotalOffset(QDateTime dateTime = QDateTime::currentDateTime()) const
+     * \sa timeZoneDstOffset(QDateTime dateTime = QDateTime::currentDateTime()) const
+     */
+     qint32 timeZoneRawOffset() const;
+
+    /*!
+     * \brief returns the daylight savings time offset of the timezone
+     *
+     * \param dateTime the date and time to calculate the offset for
+     *
+     * returns the daylight savings time offset for the date and time given
+     * in milliseconds.
+     *
+     * \sa timeZoneRawOffset() const
+     * \sa timeZoneTotalOffset(QDateTime dateTime = QDateTime::currentDateTime()) const
+     */
+     qint32 timeZoneDstOffset(QDateTime dateTime = QDateTime::currentDateTime()) const;
+
+    /*!
+     * \brief returns the total offset of the timezone
+     *
+     * \param dateTime the date and time to calculate the offset for
+     *
+     * returns the total offset, i.e. the raw offset plus the
+     * daylight savings time offset for the date and time given
+     * in milliseconds.
+     *
+     * \sa timeZoneRawOffset() const
+     * \sa timeZoneDstOffset(QDateTime dateTime = QDateTime::currentDateTime()) const
+     */
+     qint32 timeZoneTotalOffset(QDateTime dateTime = QDateTime::currentDateTime()) const;
 
     /**
      * \brief returns the country of the city

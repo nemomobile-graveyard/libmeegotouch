@@ -9,4 +9,7 @@ TARGET = ut_mlocationdatabase
 HEADERS += ut_mlocationdatabase.h
 SOURCES += ut_mlocationdatabase.cpp
 
+support_files.files += \
+    *.txt
+
 include(../common_bot.pri)
