@@ -28,7 +28,7 @@ HEADERS += \
     textprocessorinterfaceproxy.h \
     textprocessorinterface.h \
 
-QT += dbus
+CONFIG += meegotouch
 
 target.path += $$[QT_INSTALL_LIBS]
 

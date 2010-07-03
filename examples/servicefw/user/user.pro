@@ -9,6 +9,8 @@ TARGET     = user
 DESTDIR = $$MSIF/bin
 TEMPLATE   = app
 
+CONFIG += meegotouch
+
 INCLUDEPATH += \
     . \
     $$MSIFINCLUDE \
@@ -30,10 +32,8 @@ SOURCES    = \
     echowindow.cpp \
     main.cpp \
 
-LIBS += -lmeegotouchcore
-
-QT += dbus
 LIBS += \
+    -lmeegotouchcore \
     -ltextprocessor \
 
 target.path = $$M_INSTALL_BIN

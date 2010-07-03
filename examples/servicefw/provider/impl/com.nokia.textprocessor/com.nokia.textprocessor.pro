@@ -12,7 +12,9 @@ HEADERS += \
     textprocessor.h \
     textprocessorinterfaceadaptor.h\
 
-QT += dbus gui
+CONFIG += meegotouch
+
+QT += gui
 
 target.path = $$M_INSTALL_BIN
 

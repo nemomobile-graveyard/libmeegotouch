@@ -2,6 +2,8 @@ include(meegotouch_defines.prf)
 include(meegotouch_mgen.prf)
 include(meegotouch_mmoc.prf)
 
+unix:QT += dbus
+
 macx {
     INCLUDEPATH += /Library/Frameworks/m.framework/Headers
 }
