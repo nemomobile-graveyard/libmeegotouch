@@ -78,19 +78,19 @@
         <source>Checkbox</source>
         <translation type="unfinished">Jelölőnégyzet</translation>
     </message>
+    <message id="xx_wg_buttons_buttongroup">
+        <location filename="../mainpage.cpp" line="119"/>
+        <source>Button Group</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_wg_categories_dialogs_and_banners">
-        <location filename="../mainpage.cpp" line="120"/>
+        <location filename="../mainpage.cpp" line="122"/>
         <source>Dialogs and Banners</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_wg_dialogs_and_banners_single_selection_dialog">
-        <location filename="../mainpage.cpp" line="122"/>
-        <source>Single Selection Dialog</source>
-        <translation type="unfinished"></translation>
-    </message>
-    <message id="xx_wg_dialogs_and_banners_multiple_selection_dialog">
         <location filename="../mainpage.cpp" line="124"/>
-        <source>Multiple Selection Dialog</source>
+        <source>Single Selection Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_wg_dialogs_and_banners_query_dialog">
@@ -159,42 +159,62 @@
         <translation type="unfinished">Visszajelzés</translation>
     </message>
     <message id="xx_application_title">
-        <location filename="../mainpage.cpp" line="330"/>
+        <location filename="../mainpage.cpp" line="337"/>
         <source>Widgets Gallery</source>
         <translation>Grafikus Elemek Tárlata</translation>
     </message>
+    <message id="xx_mainpage_themes">
+        <location filename="../mainpage.cpp" line="343"/>
+        <source>Themes</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_mainpage_orientation">
+        <location filename="../mainpage.cpp" line="345"/>
+        <source>Orientation</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_mainpage_toggle_fps">
+        <location filename="../mainpage.cpp" line="347"/>
+        <source>Toggle FPS</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_mainpage_language_settings">
+        <location filename="../mainpage.cpp" line="349"/>
+        <source>Language Settings</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_apporientation_auto">
-        <location filename="../mainpage.cpp" line="546"/>
+        <location filename="../mainpage.cpp" line="562"/>
         <source>Automatic</source>
         <translation>Automatikus</translation>
     </message>
     <message id="xx_apporientation_portrait">
-        <location filename="../mainpage.cpp" line="554"/>
+        <location filename="../mainpage.cpp" line="570"/>
         <source>Portrait</source>
         <translation>Álló</translation>
     </message>
     <message id="xx_apporientation_landscape">
-        <location filename="../mainpage.cpp" line="562"/>
+        <location filename="../mainpage.cpp" line="578"/>
         <source>Landscape</source>
         <translation>Fekvő</translation>
     </message>
     <message id="xx_apporientation_angle0">
-        <location filename="../mainpage.cpp" line="570"/>
+        <location filename="../mainpage.cpp" line="586"/>
         <source>0 degrees</source>
         <translation>0 fok</translation>
     </message>
     <message id="xx_apporientation_angle90">
-        <location filename="../mainpage.cpp" line="578"/>
+        <location filename="../mainpage.cpp" line="594"/>
         <source>90 degrees clockwise</source>
         <translation>90 fok óramutató irányban</translation>
     </message>
     <message id="xx_apporientation_angle180">
-        <location filename="../mainpage.cpp" line="586"/>
+        <location filename="../mainpage.cpp" line="602"/>
         <source>180 degrees clockwise</source>
         <translation>180 fok óramutató irányban</translation>
     </message>
     <message id="xx_apporientation_angle270">
-        <location filename="../mainpage.cpp" line="594"/>
+        <location filename="../mainpage.cpp" line="610"/>
         <source>270 degrees clockwise</source>
         <translation>270 fok óramutató irányban</translation>
     </message>
@@ -355,97 +375,102 @@ A Címkék balra, jobbra vagy középre lehetnek rendezve és az általuk megjel
         <translation>Rich Label &lt;b&gt;bold&lt;/b&gt;, &lt;i&gt;italic&lt;/i&gt;, http://www.nokia.com, +358401234567, fors.fagerstrom@email.com</translation>
     </message>
     <message id="xx_wg_multiple_selection_dialogs_page_question_dialog">
-        <location filename="../multipleselectiondialogspage.cpp" line="94"/>
+        <location filename="../querydialogspage.cpp" line="227"/>
         <source>Question Dialog</source>
         <translation type="unfinished">Kérdő Dialógus</translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_title">
-        <location filename="../multipleselectiondialogspage.cpp" line="118"/>
+        <location filename="../querydialogspage.cpp" line="130"/>
         <source>Question Dialog Title</source>
         <translation>Kérdező dialógus címe</translation>
     </message>
     <message id="xx_dialogs_and_notifications_question_dialog_content">
-        <location filename="../multipleselectiondialogspage.cpp" line="122"/>
+        <location filename="../querydialogspage.cpp" line="134"/>
         <source>Lorem ipsum dolor sit amet?</source>
         <translation>Lorem ipsum dolor sit amet?</translation>
     </message>
+    <message id="xx_query_dialog_title">
+        <location filename="../querydialogspage.cpp" line="221"/>
+        <source>Query Dialogs</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_wg_query_dialogs_page_entry_dialog">
-        <location filename="../querydialogspage.cpp" line="95"/>
+        <location filename="../querydialogspage.cpp" line="229"/>
         <source>Entry Dialog</source>
         <translation type="unfinished">Bemenet Dialógus</translation>
     </message>
     <message id="xx_wg_query_dialogs_page_long_dialog">
-        <location filename="../querydialogspage.cpp" line="97"/>
+        <location filename="../querydialogspage.cpp" line="231"/>
         <source>Long Dialog</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_label">
-        <location filename="../querydialogspage.cpp" line="124"/>
+        <location filename="../querydialogspage.cpp" line="147"/>
         <source>Name</source>
         <translation>Név</translation>
     </message>
     <message id="xx_dialogs_and_notifications_entry_dialog_title">
-        <location filename="../querydialogspage.cpp" line="134"/>
+        <location filename="../querydialogspage.cpp" line="157"/>
         <source>Please enter your name</source>
         <translation>Írd be a neved</translation>
     </message>
     <message id="xx_dialogs_and_notifications_long_dialog_title">
-        <location filename="../querydialogspage.cpp" line="150"/>
+        <location filename="../querydialogspage.cpp" line="173"/>
         <source>Select printer</source>
         <translation>Válassz nyomtatót</translation>
     </message>
     <message id="xx_wg_single_selection_dialogs_page_stacked_dialogs">
-        <location filename="../singleselectiondialogspage.cpp" line="94"/>
+        <location filename="../singleselectiondialogspage.cpp" line="232"/>
         <source>Stacked Dialogs</source>
         <translation type="unfinished">Egymásra helyezett dialógusok</translation>
     </message>
     <message id="xx_wg_single_selection_dialogs_page_system_modal_dialog">
-        <location filename="../singleselectiondialogspage.cpp" line="96"/>
+        <location filename="../singleselectiondialogspage.cpp" line="234"/>
         <source>System Modal Dialog</source>
         <translation type="unfinished">Ablak Modális Dialógus</translation>
     </message>
     <message id="xx_wg_single_selection_dialogs_page_dialog_with_progress_indicator">
-        <location filename="../singleselectiondialogspage.cpp" line="98"/>
+        <location filename="../singleselectiondialogspage.cpp" line="236"/>
         <source>Dialog with Progress Indicator</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_wg_single_selection_dialogs_page_message_box">
-        <location filename="../singleselectiondialogspage.cpp" line="100"/>
+        <location filename="../singleselectiondialogspage.cpp" line="238"/>
         <source>Message Box</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_button">
-        <location filename="../singleselectiondialogspage.cpp" line="129"/>
+        <location filename="../singleselectiondialogspage.cpp" line="124"/>
         <source>Click to spawn a nested dialog</source>
         <translation>Klikkelj az egymásba helyezett dialógusok létrehozásáshoz</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_title">
-        <location filename="../singleselectiondialogspage.cpp" line="131"/>
+        <location filename="../singleselectiondialogspage.cpp" line="126"/>
         <source>Stacked dialogs</source>
         <translation>Egymásra helyezett dialógusok</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox">
-        <location filename="../singleselectiondialogspage.cpp" line="145"/>
+        <location filename="../singleselectiondialogspage.cpp" line="140"/>
         <source>Click to open a nested message box</source>
         <translation>Klikkelj az egymásba helyezett üzenetek megjelenítéséhez</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title">
-        <location filename="../singleselectiondialogspage.cpp" line="147"/>
+        <location filename="../singleselectiondialogspage.cpp" line="142"/>
         <source>This is a nested dialog</source>
         <translation>Egymásba helyezett dialógusok</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_messagebox_text">
-        <location filename="../singleselectiondialogspage.cpp" line="160"/>
+        <location filename="../singleselectiondialogspage.cpp" line="155"/>
         <source>I&apos;m a nested message box</source>
         <translation>Egymásba helyezett üzenetek</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog_title">
-        <location filename="../singleselectiondialogspage.cpp" line="171"/>
+        <location filename="../singleselectiondialogspage.cpp" line="166"/>
         <source>System Modal Dialog</source>
         <translation>Ablak Modális Dialógus</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog_label">
-        <location filename="../singleselectiondialogspage.cpp" line="178"/>
+        <location filename="../singleselectiondialogspage.cpp" line="173"/>
         <source>I&apos;m a window modal dialog.
 There&apos;s no way around me!
 Muwhahaha... [evil laugh]</source>
@@ -457,44 +482,50 @@ Nem tudsz megkerülni!
 Muwhahaha... [röhögés]</translation>
     </message>
     <message id="xx_dialogs_and_notifications_message_box_text">
-        <location filename="../singleselectiondialogspage.cpp" line="217"/>
+        <location filename="../singleselectiondialogspage.cpp" line="212"/>
         <source>Hello World!</source>
         <translation>Sziasztok!</translation>
     </message>
+    <message id="xx_single_selection_dialog_title">
+        <location filename="../singleselectiondialogspage.cpp" line="226"/>
+        <source>Single Selection Dialogs</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_bannerspage_title">
+        <location filename="../bannerspage.cpp" line="139"/>
+        <source>Banners</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_wg_banners_page_event_banner">
-        <location filename="../bannerspage.cpp" line="90"/>
+        <location filename="../bannerspage.cpp" line="145"/>
         <source>Event Banner</source>
         <translation type="unfinished">Eseményszallag</translation>
     </message>
     <message id="xx_wg_banners_page_information_banner">
-        <location filename="../bannerspage.cpp" line="92"/>
+        <location filename="../bannerspage.cpp" line="147"/>
         <source>Information Banner</source>
         <translation type="unfinished">Informácószallag</translation>
     </message>
     <message id="xx_wg_banners_page_system_information_banner">
-        <location filename="../bannerspage.cpp" line="94"/>
+        <location filename="../bannerspage.cpp" line="149"/>
         <source>System Information Banner</source>
         <translation type="unfinished">Rendszer Információ Szallag</translation>
     </message>
     <message id="xx_dialogs_and_notifications_event_banner">
-        <location filename="../bannerspage.cpp" line="121"/>
         <source>&lt;b&gt;Ida Taipale&lt;/b&gt;&lt;br/&gt;Have you seen my dog?</source>
-        <translation>&lt;b&gt;Ida Taipale&lt;/b&gt;&lt;br/&gt;Már láttad a kutyát?</translation>
+        <translation type="obsolete">&lt;b&gt;Ida Taipale&lt;/b&gt;&lt;br/&gt;Már láttad a kutyát?</translation>
     </message>
     <message id="xx_dialogs_and_notifications_information_banner">
-        <location filename="../bannerspage.cpp" line="134"/>
         <source>&lt;b&gt;Battery is running low&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Akkumulátor kimerülőben&lt;/b&gt;</translation>
+        <translation type="obsolete">&lt;b&gt;Akkumulátor kimerülőben&lt;/b&gt;</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_information_banner">
-        <location filename="../bannerspage.cpp" line="145"/>
         <source>&lt;b&gt;Incoming call&lt;/b&gt;</source>
-        <translation>&lt;b&gt;Beérkező hívás&lt;/b&gt;</translation>
+        <translation type="obsolete">&lt;b&gt;Beérkező hívás&lt;/b&gt;</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_information_banner_accept">
-        <location filename="../bannerspage.cpp" line="147"/>
         <source>Accept</source>
-        <translation>Elfogad</translation>
+        <translation type="obsolete">Elfogad</translation>
     </message>
     <message id="xx_dialogs_and_notifications_title">
         <source>Dialogs and Notifications</source>
@@ -555,7 +586,7 @@ Muwhahaha... [röhögés]</translation>
         <translation type="obsolete">Rendszer Információ Szallag</translation>
     </message>
     <message id="xx_dialogs_and_notifications_progress_indicator">
-        <location filename="../singleselectiondialogspage.cpp" line="197"/>
+        <location filename="../singleselectiondialogspage.cpp" line="192"/>
         <source>Progress Indicator</source>
         <translation>Haladás Jelző</translation>
     </message>
@@ -564,12 +595,12 @@ Muwhahaha... [röhögés]</translation>
         <translation type="obsolete">Haladás Jelzős Dialógus</translation>
     </message>
     <message id="xx_Image">
-        <location filename="../imagepage.cpp" line="131"/>
+        <location filename="../imagepage.cpp" line="122"/>
         <source>Image</source>
         <translation>Kép</translation>
     </message>
     <message id="xx_Image properties">
-        <location filename="../imagepage.cpp" line="135"/>
+        <location filename="../imagepage.cpp" line="126"/>
         <source>Image properties</source>
         <translation>Kép tulajdonságai</translation>
     </message>
@@ -586,37 +617,37 @@ Muwhahaha... [röhögés]</translation>
         <translation type="obsolete">Megállít</translation>
     </message>
     <message id="xx_image_operations">
-        <location filename="../imagepage.cpp" line="153"/>
+        <location filename="../imagepage.cpp" line="144"/>
         <source>Image operations</source>
         <translation>Képi műveletek</translation>
     </message>
     <message id="xx_Zoom">
-        <location filename="../imagepage.cpp" line="141"/>
+        <location filename="../imagepage.cpp" line="132"/>
         <source>Zoom</source>
         <translation>Nagyítás</translation>
     </message>
     <message id="xx_Transparency">
-        <location filename="../imagepage.cpp" line="143"/>
+        <location filename="../imagepage.cpp" line="134"/>
         <source>Transparency</source>
         <translation>Áttetszőség</translation>
     </message>
     <message id="xx_Crop">
-        <location filename="../imagepage.cpp" line="145"/>
+        <location filename="../imagepage.cpp" line="136"/>
         <source>Crop</source>
         <translation>Levág</translation>
     </message>
     <message id="xx_listpage_list_remove">
-        <location filename="../mlistpage.cpp" line="547"/>
+        <location filename="../mlistpage.cpp" line="579"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_listpage_list_edit">
-        <location filename="../mlistpage.cpp" line="553"/>
+        <location filename="../mlistpage.cpp" line="585"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_listpage_title">
-        <location filename="../mlistpage.cpp" line="573"/>
+        <location filename="../mlistpage.cpp" line="605"/>
         <source>List</source>
         <translation>Lista</translation>
     </message>
@@ -782,7 +813,7 @@ eszközleíró</translation>
         <translation>Hiba kijavítása</translation>
     </message>
     <message id="xx_slider_page_title">
-        <location filename="../sliderpage.cpp" line="168"/>
+        <location filename="../sliderpage.cpp" line="171"/>
         <source>Sliders</source>
         <translation variants="yes">
             <lengthvariant>Csúszkák</lengthvariant>
@@ -790,28 +821,28 @@ eszközleíró</translation>
         </translation>
     </message>
     <message id="xx_slider_personal_data_label">
-        <location filename="../sliderpage.cpp" line="179"/>
+        <location filename="../sliderpage.cpp" line="182"/>
         <source>Personal data</source>
         <translation>Személyes adatok</translation>
     </message>
     <message id="xx_slider_age_label">
-        <location filename="../sliderpage.cpp" line="183"/>
+        <location filename="../sliderpage.cpp" line="186"/>
         <source>Please select your age:!! Please select your age:!! Please select your age:!! Age:</source>
         <oldsource>Please select your age:</oldsource>
         <translation>Korod:</translation>
     </message>
     <message id="xx_slider_brightness_label">
-        <location filename="../sliderpage.cpp" line="216"/>
+        <location filename="../sliderpage.cpp" line="219"/>
         <source>Brightness:</source>
         <translation>Fényesség:</translation>
     </message>
     <message id="xx_slider_player_label">
-        <location filename="../sliderpage.cpp" line="196"/>
+        <location filename="../sliderpage.cpp" line="199"/>
         <source>Player:</source>
         <translation>Lejátszó:</translation>
     </message>
     <message id="xx_slider_page_info_label">
-        <location filename="../sliderpage.cpp" line="176"/>
+        <location filename="../sliderpage.cpp" line="179"/>
         <source>Slider is used for continuous set of values, among which user can choose one value.
 
 Seekbar is a special type of Slider used for displaying playback status for multimedia content.</source>
@@ -824,14 +855,29 @@ A kereső egy olyan csúszka amelyet multimédiás tartalom lejátszásának fig
         <translation type="obsolete">Alkalmazás Menü</translation>
     </message>
     <message id="xx_applicationmenu_page_title">
-        <location filename="../applicationmenupage.cpp" line="62"/>
+        <location filename="../applicationmenupage.cpp" line="65"/>
         <source>Application Menu</source>
         <translation type="unfinished">Alkalmazás Menü</translation>
     </message>
     <message id="xx_applicationmenu_page_info">
-        <location filename="../applicationmenupage.cpp" line="77"/>
+        <location filename="../applicationmenupage.cpp" line="80"/>
         <source>Application Menu is a menu element available to any view. &lt;ul&gt;&lt;li&gt;It can be opened by tapping on the menu title area.&lt;/li&gt;&lt;li&gt;It contains commands and view settings for the view in question and an optional area for style commands.&lt;/li&gt;&lt;li&gt;Each view of the application can have different menu contents.&lt;/li&gt;&lt;/ul&gt;&lt;b&gt;Guidelines&lt;/b&gt; for mandatory menu items: &lt;ul&gt;&lt;li&gt;Settings should be on the main View of the application, unless the settings are specific to a sub-View&lt;/li&gt;&lt;li&gt;Help should be available in each View &lt;/li&gt;&lt;li&gt;Exit task should be present in all Views except for the main View of the application.&lt;/li&gt;&lt;/ul&gt;</source>
         <translation>Az Alkalmazás menü minden nézetből megjeleníthető. &lt;ul&gt;&lt;li&gt;Az oldal cím területének érintéséval tehető láthatóvá.&lt;/li&gt;&lt;li&gt;Az adott nézethez kötődő beállításokat és parancsokat valamint a nézet stílusához kötődő beállításokat tartalmazza.&lt;/li&gt;&lt;li&gt;Az alkalmazás minden nézetéhez sajátos Alkalmazás Menü kapcsolódhat.&lt;/li&gt;&lt;/ul&gt;&lt;b&gt;Irányelvek&lt;/b&gt; az Alkalmaźas Menü tartalmához:&lt;ul&gt;&lt;li&gt;A Beállítások menü elem az alkalmazás fő nézetéhez kapcsolódó Alkalmazás menüben foglalhon helyet, hacsak nem tartalmaz egy adott nézethez kotődő beállítást&lt;/li&gt;&lt;li&gt;A Súgó minden Alkalmazás Menüből legyen elérhető&lt;/li&gt;&lt;li&gt;A Kilépés minden Alkalmazás Menüből legyen elérhető kivéve a főnézet Alkalmazás menüjét.&lt;/li&gt;&lt;/ul&gt;</translation>
+    </message>
+    <message id="xx_appmenu_italic">
+        <location filename="../applicationmenupage.cpp" line="85"/>
+        <source>Italic</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_appmenu_normal">
+        <location filename="../applicationmenupage.cpp" line="87"/>
+        <source>Normal</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_appmenu_window_icon">
+        <location filename="../applicationmenupage.cpp" line="89"/>
+        <source>Window Icon</source>
+        <translation type="unfinished"></translation>
     </message>
     <message id="xx_viewmenu_1">
         <source>We can easily forgive a child who is afraid of the dark;&lt;br/&gt;the real tragedy of life is when men are afraid of the light.</source>
@@ -942,17 +988,17 @@ A kereső egy olyan csúszka amelyet multimédiás tartalom lejátszásának fig
         <translation type="obsolete">Japán</translation>
     </message>
     <message id="xx_popup_generic_title">
-        <location filename="../comboboxpage.cpp" line="113"/>
+        <location filename="../comboboxpage.cpp" line="114"/>
         <source>Title</source>
         <translation>Cím</translation>
     </message>
     <message id="xx_popup_sort_descending_order">
-        <location filename="../comboboxpage.cpp" line="115"/>
+        <location filename="../comboboxpage.cpp" line="116"/>
         <source>Sort - DescendingOrder</source>
         <translation>Csökkenő sorrendbe rendezés</translation>
     </message>
     <message id="xx_popup_time_consuming">
-        <location filename="../comboboxpage.cpp" line="117"/>
+        <location filename="../comboboxpage.cpp" line="118"/>
         <source>Time-consuming setting</source>
         <translation>Időigényes beállítás</translation>
     </message>
@@ -974,22 +1020,22 @@ A kereső egy olyan csúszka amelyet multimédiás tartalom lejátszásának fig
         </translation>
     </message>
     <message id="xx_progressbar_page_title">
-        <location filename="../progressbarpage.cpp" line="78"/>
+        <location filename="../progressbarpage.cpp" line="89"/>
         <source>Progress Bar</source>
         <translation>Haladó Csík</translation>
     </message>
     <message id="xx_progressbar_page_info_label">
-        <location filename="../progressbarpage.cpp" line="83"/>
+        <location filename="../progressbarpage.cpp" line="94"/>
         <source>A Progress Bar can indicate an ongoing process with either known or unknown durations.</source>
         <translation>Haladó csíkkal ismert vagy ismeretlen időtartamú folyamatokat lehet követni.</translation>
     </message>
     <message id="xx_progressindicator_unknown_duration_bar">
-        <location filename="../progressbarpage.cpp" line="87"/>
+        <location filename="../progressbarpage.cpp" line="98"/>
         <source>Installing CoolApp</source>
         <translation>CoolApp telepítse</translation>
     </message>
     <message id="xx_progressindicator_known_duration_bar">
-        <location filename="../progressbarpage.cpp" line="85"/>
+        <location filename="../progressbarpage.cpp" line="96"/>
         <source>Downloading nicepic.jpg</source>
         <translation>szepkep.jpg letöltése</translation>
     </message>
@@ -1018,42 +1064,78 @@ A kereső egy olyan csúszka amelyet multimédiás tartalom lejátszásának fig
         <translation type="obsolete">Rács</translation>
     </message>
     <message id="xx_toolbar_page_example1">
-        <location filename="../toolbarpage.cpp" line="176"/>
+        <location filename="../toolbarpage.cpp" line="220"/>
         <source>Example 1</source>
         <translation>1. Példa</translation>
     </message>
     <message id="xx_toolbar_page_example2">
-        <location filename="../toolbarpage.cpp" line="182"/>
+        <location filename="../toolbarpage.cpp" line="222"/>
         <source>Example 2</source>
         <translation>2. Példa</translation>
     </message>
     <message id="xx_toolbar_page_defaultview">
-        <location filename="../toolbarpage.cpp" line="188"/>
+        <location filename="../toolbarpage.cpp" line="224"/>
         <source>Default View</source>
         <translation>Alapértelmezett nézet</translation>
     </message>
     <message id="xx_toolbar_page_tabview">
-        <location filename="../toolbarpage.cpp" line="194"/>
+        <location filename="../toolbarpage.cpp" line="226"/>
         <source>Tab View</source>
         <translation>Füles nézet</translation>
     </message>
     <message id="xx_toolbar_page_title">
-        <location filename="../toolbarpage.cpp" line="216"/>
+        <location filename="../toolbarpage.cpp" line="210"/>
         <source>ToolBar</source>
         <translation>Eszköztár</translation>
     </message>
     <message id="xx_toolbar_page_info">
-        <location filename="../toolbarpage.cpp" line="223"/>
+        <location filename="../toolbarpage.cpp" line="217"/>
         <source>&lt;b&gt;Toolbar&lt;/b&gt; acts as a container for actions. Depending upon the view attached, it either acts as a tab bar or is a container for buttons and text input field. &lt;ul&gt;&lt;li&gt;Click Menu to explore the example&lt;/li&gt;&lt;/ul&gt;</source>
         <translation>&lt;b&gt;Eszköztár&lt;/b&gt; egy tároló amelyik a nézethez szempontjaból fontos parancsokat tartalmaz amelyek kötődnek közvetlenül a nézetben megjelenített grafikus elemekhez. &lt;ul&gt;&lt;li&gt;4 Ikon Gombot tartalmazhat (kattints a Menüre, majd az első példáratlmazhat egy szöveges bemeneti mezőt is 2 Ikon Gombbal (kattints a Menüre, majd az második példára)&lt;/li&gt; &lt;l&lt;/li&gt;&lt;/ul&gt;</translation>
     </message>
+    <message id="xx_objectmenu_call">
+        <location filename="../objectmenupage.cpp" line="94"/>
+        <source>Call</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_objectmenu_send_message">
+        <location filename="../objectmenupage.cpp" line="99"/>
+        <source>Send message</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_objectmenu_open_contact_card">
+        <location filename="../objectmenupage.cpp" line="104"/>
+        <source>Open contact card</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_objectmenu_remove">
+        <location filename="../objectmenupage.cpp" line="109"/>
+        <location filename="../objectmenupage.cpp" line="149"/>
+        <source>Remove</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_objectmenu_Play">
+        <location filename="../objectmenupage.cpp" line="134"/>
+        <source>Play</source>
+        <translation type="unfinished">Lejátszás</translation>
+    </message>
+    <message id="xx_objectmenu_add_to_playlist">
+        <location filename="../objectmenupage.cpp" line="139"/>
+        <source>Add to playlist</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_objectmenu_change_album_art">
+        <location filename="../objectmenupage.cpp" line="144"/>
+        <source>Change album art</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_objectmenu_page_title">
-        <location filename="../objectmenupage.cpp" line="154"/>
+        <location filename="../objectmenupage.cpp" line="162"/>
         <source>Object menu</source>
         <translation>Objektum menü</translation>
     </message>
     <message id="xx_objectmenu_page_info_label">
-        <location filename="../objectmenupage.cpp" line="166"/>
+        <location filename="../objectmenupage.cpp" line="174"/>
         <source>Object Menu is a popup menu of commands opened by long tapping an element. It is used for providing shortcuts to functions related to that particular element.
 
 The primary (single short tap) action of the element should not be duplicated in the Object Menu.</source>
@@ -1062,12 +1144,12 @@ The primary (single short tap) action of the element should not be duplicated in
 Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megismételni az Objektum Menüben.</translation>
     </message>
     <message id="xx_objectmenu_page_container_friends">
-        <location filename="../objectmenupage.cpp" line="169"/>
+        <location filename="../objectmenupage.cpp" line="177"/>
         <source>Friends</source>
         <translation>Barátok</translation>
     </message>
     <message id="xx_objectmenu_page_container_albums">
-        <location filename="../objectmenupage.cpp" line="171"/>
+        <location filename="../objectmenupage.cpp" line="179"/>
         <source>Favorite Albums</source>
         <translation>Kedvenc Albumok</translation>
     </message>
@@ -1302,7 +1384,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
         <translation>Nem</translation>
     </message>
     <message id="xx_language_number_format">
-        <location filename="../languagepage.cpp" line="333"/>
+        <location filename="../languagepage.cpp" line="329"/>
         <source>Number format example: %1!! Number example: %1!! Number: %1</source>
         <translation variants="yes">
             <lengthvariant>Számformátum példa: %1</lengthvariant>
@@ -1311,7 +1393,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
         </translation>
     </message>
     <message id="xx_langage_date_time_format">
-        <location filename="../languagepage.cpp" line="337"/>
+        <location filename="../languagepage.cpp" line="344"/>
         <source>Date and time format example: %1!! Date and time: %1!! Date: %1!! %1</source>
         <translation variants="yes">
             <lengthvariant>Dátum- és időformátum példa: %1</lengthvariant>
@@ -1321,12 +1403,12 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
         </translation>
     </message>
     <message id="xx_language_week_number">
-        <location filename="../languagepage.cpp" line="344"/>
+        <location filename="../languagepage.cpp" line="349"/>
         <source>Week number example: %1</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_language_currency_format">
-        <location filename="../languagepage.cpp" line="350"/>
+        <location filename="../languagepage.cpp" line="359"/>
         <source>Currency format example: %1 %2!! Currency: %1 %2</source>
         <translation variants="yes">
             <lengthvariant>Pénznemformátum példa: %1 %2</lengthvariant>
@@ -1334,9 +1416,9 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
         </translation>
     </message>
     <message id="xx_language_trans_%Ln_boxes_weight_%L1" numerus="yes">
-        <location filename="../languagepage.cpp" line="356"/>
-        <location filename="../languagepage.cpp" line="358"/>
-        <location filename="../languagepage.cpp" line="360"/>
+        <location filename="../languagepage.cpp" line="365"/>
+        <location filename="../languagepage.cpp" line="367"/>
+        <location filename="../languagepage.cpp" line="369"/>
         <source>%Ln boxes with a total weight of %L1 kilogram!! %Ln boxes, total weight of %L1 kg</source>
         <translation>
             <numerusform>%Ln láda %L1 kilogramm összsúllyal</numerusform>
@@ -1344,7 +1426,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
         </translation>
     </message>
     <message id="xx_language_font_test">
-        <location filename="../languagepage.cpp" line="364"/>
+        <location filename="../languagepage.cpp" line="373"/>
         <source>Font test:</source>
         <translation>Betűtípus teszt:</translation>
     </message>
@@ -1397,7 +1479,7 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
         <translation type="obsolete">2. Példa</translation>
     </message>
     <message id="xx_image_page_info">
-        <location filename="../imagepage.cpp" line="160"/>
+        <location filename="../imagepage.cpp" line="151"/>
         <source>Image allows the placement of images onto the UI. Images are generally non-interactive elements. Various single and multiple touch interactions can be added to an Image component if desired. As an example, pinch gesture can be used in this page to zoom the image.</source>
         <translation>A felhasználó a kép segítségével külömböző képeket jeleníthet meg. A képek általában passzív elemek, bár szükség esetén reagálhatnak egyszerű érintésszerű felhasználói bemenetetre.</translation>
     </message>
@@ -1425,13 +1507,13 @@ Az elsődleges (egyszeri rövid érintés) kiváltó eseményt nem lehet megism�
         <translation>Sugallt email cím:</translation>
     </message>
     <message id="xx_combobox_page_info">
-        <location filename="../comboboxpage.cpp" line="121"/>
+        <location filename="../comboboxpage.cpp" line="122"/>
         <source>The MComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</source>
         <oldsource>The DuiComboBox widget is a combined button and popup list. It is very similar to QComboBox, but does not allow editing the text.</oldsource>
         <translation>A DuiComboBox elem egy gombból és egy felugró listából Nagyon hasonlít a QComboBox-ra, de nem lehet benne szöveget változtatni.</translation>
     </message>
     <message id="xx_combobox_title">
-        <location filename="../comboboxpage.cpp" line="109"/>
+        <location filename="../comboboxpage.cpp" line="110"/>
         <source>ComboBox</source>
         <translation>Kombó</translation>
     </message>
@@ -1514,13 +1596,13 @@ sit amet</source>
 sit amet</translation>
     </message>
     <message id="xx_spinner_page_application_main_area">
-        <location filename="../spinnerpage.cpp" line="68"/>
+        <location filename="../spinnerpage.cpp" line="112"/>
         <source>In application main area</source>
         <oldsource>In container main area</oldsource>
         <translation type="unfinished">Az alkalmazás testében </translation>
     </message>
     <message id="xx_spinner_page_container_header">
-        <location filename="../spinnerpage.cpp" line="74"/>
+        <location filename="../spinnerpage.cpp" line="114"/>
         <source>In container header</source>
         <translation>A tároló fejlécében</translation>
     </message>
@@ -1529,23 +1611,23 @@ sit amet</translation>
         <translation type="obsolete">Tárolóban</translation>
     </message>
     <message id="xx_spinner_page_menu">
-        <location filename="../spinnerpage.cpp" line="80"/>
+        <location filename="../spinnerpage.cpp" line="116"/>
         <source>In application menu</source>
         <oldsource>In view menu</oldsource>
         <translation type="unfinished">Nézet menüben</translation>
     </message>
     <message id="xx_spinner_page_dialog">
-        <location filename="../spinnerpage.cpp" line="86"/>
+        <location filename="../spinnerpage.cpp" line="118"/>
         <source>In dialog</source>
         <translation>Dialógusban</translation>
     </message>
     <message id="xx_spinner_page_title">
-        <location filename="../spinnerpage.cpp" line="99"/>
+        <location filename="../spinnerpage.cpp" line="100"/>
         <source>Spinner</source>
         <translation>Tekerő</translation>
     </message>
     <message id="xx_spinner_page_info_label">
-        <location filename="../spinnerpage.cpp" line="108"/>
+        <location filename="../spinnerpage.cpp" line="109"/>
         <source>Spinner is used to indicate that a progress is ongoing and the duration is unknown.
 
 Spinners can also be used in situations when duration is known, but available space on screen does not permit using a Progress bar.
@@ -1566,32 +1648,32 @@ Dátum: Ma
 Téma: Egy cseles dolog!</translation>
     </message>
     <message id="xx_spinner_page_application_area_description">
-        <location filename="../spinnerpage.cpp" line="118"/>
+        <location filename="../spinnerpage.cpp" line="128"/>
         <source>Spinner can be used while content is loading.</source>
         <translation>A tekerő a tartalom betöltődését is jelezheti.</translation>
     </message>
     <message id="xx_spinner_page_container_title">
-        <location filename="../spinnerpage.cpp" line="151"/>
+        <location filename="../spinnerpage.cpp" line="161"/>
         <source>Online albums</source>
         <translation>Online albumok</translation>
     </message>
     <message id="xx_spinner_page_container_header_description">
-        <location filename="../spinnerpage.cpp" line="160"/>
+        <location filename="../spinnerpage.cpp" line="170"/>
         <source>Spinner can be used in container header to indicate that the items inside the container are being updated, but visible items can be interacted with.</source>
         <translation>A tároló fejlécébe helyezett tekerő a tároló tartalmának frissitését jelzi, miközben a grafikus elemek nincsenek letitlva</translation>
     </message>
     <message id="xx_spinner_page_application_menu_description">
-        <location filename="../spinnerpage.cpp" line="204"/>
+        <location filename="../spinnerpage.cpp" line="214"/>
         <source>Spinner in the application menu area indicates that the whole view is pending for update.</source>
         <translation>Az alkalmazás menübe helyezett tekerő a teljes nézet frissitésére való várakozást jelzi</translation>
     </message>
     <message id="xx_spinner_page_dialog_header_description">
-        <location filename="../spinnerpage.cpp" line="218"/>
+        <location filename="../spinnerpage.cpp" line="228"/>
         <source>Spinner can be placed in dialog header to indicate changing content.</source>
         <translation>Tekerőt a dialógus fejlécébe is lehet helyezni a tartalom változásának jelzésére</translation>
     </message>
     <message id="xx_spinner_page_dialog_header">
-        <location filename="../spinnerpage.cpp" line="239"/>
+        <location filename="../spinnerpage.cpp" line="249"/>
         <source>Select Internet connection</source>
         <translation>Válassz internet kapcsolatot</translation>
     </message>
@@ -1691,27 +1773,30 @@ A visszajelzéseket a témarendszer segítségével lehet beállítani.</transla
         <translation>Csendes</translation>
     </message>
     <message id="xx_gridpage_configuration">
-        <location filename="../mgridpage.cpp" line="201"/>
+        <location filename="../mgridpage.cpp" line="208"/>
         <source>Configuration</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_gridpage_title">
-        <location filename="../mgridpage.cpp" line="212"/>
-        <source>Grid page</source>
-        <translation>Rács</translation>
+        <location filename="../mgridpage.cpp" line="203"/>
+        <source>ConfigurationGrid page</source>
+        <oldsource>Grid page</oldsource>
+        <translation type="unfinished">Rács</translation>
     </message>
     <message id="xx_gridpage_set_columns">
-        <location filename="../mgridpage.cpp" line="304"/>
+        <location filename="../mgridpage.cpp" line="297"/>
         <source>Set columns</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_gridpage_landscape">
-        <location filename="../mgridpage.cpp" line="330"/>
+        <location filename="../mgridpage.cpp" line="329"/>
+        <location filename="../mgridpage.cpp" line="339"/>
         <source>Landscape</source>
         <translation type="unfinished">Fekvő</translation>
     </message>
     <message id="xx_gridpage_portrait">
-        <location filename="../mgridpage.cpp" line="335"/>
+        <location filename="../mgridpage.cpp" line="334"/>
+        <location filename="../mgridpage.cpp" line="344"/>
         <source>Portrait</source>
         <translation type="unfinished">Álló</translation>
     </message>
@@ -1728,26 +1813,161 @@ A visszajelzéseket a témarendszer segítségével lehet beállítani.</transla
         <translation type="obsolete">Galéria</translation>
     </message>
     <message id="xx_bubblepage_title">
-        <location filename="../bubblepage.cpp" line="145"/>
+        <location filename="../bubblepage.cpp" line="156"/>
         <source>Speech Bubble</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_wg_bubblepage_linkactivated">
-        <location filename="../bubblepage.cpp" line="158"/>
+        <location filename="../bubblepage.cpp" line="169"/>
         <source>Link activated</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_wg_bubblepage_bubbleclicked">
-        <location filename="../bubblepage.cpp" line="165"/>
+        <location filename="../bubblepage.cpp" line="176"/>
         <source>Speech buuble clicked</source>
         <translation type="unfinished"></translation>
     </message>
-    <message id="xx_content_items_subtitle">
-        <location filename="../contentitemspage.cpp" line="63"/>
-        <location filename="../contentitemspage.cpp" line="71"/>
+    <message id="xx_button_group_page_title">
+        <location filename="../buttongrouppage.cpp" line="156"/>
+        <source>Button Group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_info_label">
+        <location filename="../buttongrouppage.cpp" line="168"/>
+        <source>Buttons can be grouped together based on visual or logic requirements.
+
+The basic group is formed by placing buttons together into a layout. Depending on the theme, the buttons are typically drawn as connected with each other.
+
+Logical exclusivity can be added to a group, which ensures only one of the buttons can be selected at a time. If a group is not exclusive, multiple options from the group can be selected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_hlabel1">
+        <location filename="../buttongrouppage.cpp" line="171"/>
+        <source>Horizontal group</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_button1">
+        <location filename="../buttongrouppage.cpp" line="173"/>
+        <source>Yes</source>
+        <translation type="unfinished">Igen</translation>
+    </message>
+    <message id="xx_button_group_page_button2">
+        <location filename="../buttongrouppage.cpp" line="175"/>
+        <source>No</source>
+        <translation type="unfinished">Nem</translation>
+    </message>
+    <message id="xx_button_group_page_button3">
+        <location filename="../buttongrouppage.cpp" line="177"/>
+        <source>Maybe</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_vlabel2">
+        <location filename="../buttongrouppage.cpp" line="180"/>
+        <source>Horizontal group, exclusive</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_button4">
+        <location filename="../buttongrouppage.cpp" line="182"/>
+        <source>Cost</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_button5">
+        <location filename="../buttongrouppage.cpp" line="184"/>
+        <source>Quality</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_button6">
+        <location filename="../buttongrouppage.cpp" line="186"/>
+        <source>Schedule</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_vlabel">
+        <location filename="../buttongrouppage.cpp" line="189"/>
+        <source>Vertical group, checkable</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_button7">
+        <location filename="../buttongrouppage.cpp" line="191"/>
+        <source>Milk</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_button8">
+        <location filename="../buttongrouppage.cpp" line="193"/>
+        <source>Sugar</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_button_group_page_button9">
+        <location filename="../buttongrouppage.cpp" line="195"/>
+        <source>Biscotti</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_subtitle">
+        <location filename="../contentitemspage.cpp" line="70"/>
         <location filename="../contentitemspage.cpp" line="81"/>
-        <location filename="../contentitemspage.cpp" line="90"/>
+        <location filename="../contentitemspage.cpp" line="128"/>
+        <location filename="../contentitemspage.cpp" line="137"/>
+        <location filename="../contentitemspage.cpp" line="147"/>
         <source>Subtitle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_sidetitle">
+        <location filename="../contentitemspage.cpp" line="141"/>
+        <source>Side</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_single_title">
+        <location filename="../contentitemspage.cpp" line="310"/>
+        <source>Single Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_title_with_subtitle">
+        <location filename="../contentitemspage.cpp" line="312"/>
+        <source>Title with Subtitle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_icon_with_title">
+        <location filename="../contentitemspage.cpp" line="314"/>
+        <source>Icon with Title</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_icon_with_title_and_subtitle">
+        <location filename="../contentitemspage.cpp" line="316"/>
+        <source>Icon with Title and Subtitle</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_icon_with_title_subtitle_and_two_side_icons">
+        <location filename="../contentitemspage.cpp" line="320"/>
+        <source>Icon with Title Subtitle and Two Side Icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_icon_with_title_subtitle_and_side_icon_with_label">
+        <location filename="../contentitemspage.cpp" line="323"/>
+        <source>Icon with Title Subtitle and Side Icon with Label</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_thumbnail_with_title_subtitle_and_two_side_icons">
+        <location filename="../contentitemspage.cpp" line="326"/>
+        <source>Thumbnail with Title Subtitle and Two Side Icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_thumbnail_with_title_and_two_side_icons">
+        <location filename="../contentitemspage.cpp" line="329"/>
+        <source>Thumbnail with Title and Two Side Icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_icon_with_title_progress_indicator_and_two_side_icons">
+        <location filename="../contentitemspage.cpp" line="334"/>
+        <source>Icon with Title Progress Indicator and Two Side Icons</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_wg_contentitemspage_icon_with_title_progress_indicator_and_top_side_icon">
+        <location filename="../contentitemspage.cpp" line="337"/>
+        <source>Icon with Title Progress Indicator and Top Side Icon</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_contentitemspage_title">
+        <location filename="../contentitemspage.cpp" line="358"/>
+        <source>Content Items</source>
         <translation type="unfinished"></translation>
     </message>
 </context>
