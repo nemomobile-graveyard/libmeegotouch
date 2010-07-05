@@ -164,8 +164,8 @@ services.files = $$OUT_PWD/$${myname}.service
 services.path = $$M_DBUS_SERVICES_DIR
 testsxml.files = tests.xml
 testsxml.path = $$M_INSTALL_DATA/meegotouch-demos-widgetsgallery-tests/
-DEFINES += CONTACTS_DIR=\"\\\"$$M_THEME_DIR/devel/meegotouch/widgetsgallery/images/contacts/\\\"\"
-DEFINES += IMAGES_DIR=\"\\\"$$M_THEME_DIR/devel/meegotouch/widgetsgallery/images/\\\"\"
+DEFINES += CONTACTS_DIR=\"\\\"$$M_THEME_DIR/base/meegotouch/widgetsgallery/images/contacts/\\\"\"
+DEFINES += IMAGES_DIR=\"\\\"$$M_THEME_DIR/base/meegotouch/widgetsgallery/images/\\\"\"
 DEFINES += MEDIA_DIR=\"\\\"$$M_INSTALL_DATA/widgetsgallery/media\\\"\"
 
 data_files.files = data/*

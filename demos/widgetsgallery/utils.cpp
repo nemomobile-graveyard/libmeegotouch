@@ -32,7 +32,7 @@ namespace Utils
         appDir.cdUp();
         appDir.cd("share");
         appDir.cd("themes");
-        appDir.cd("devel");
+        appDir.cd("base");
         appDir.cd("meegotouch");
         appDir.cd("widgetsgallery");
         appDir.cd("images");
@@ -50,7 +50,7 @@ namespace Utils
         appDir.cdUp();
         appDir.cd("share");
         appDir.cd("themes");
-        appDir.cd("devel");
+        appDir.cd("base");
         appDir.cd("meegotouch");
         appDir.cd("widgetsgallery");
         appDir.cd("images");
@@ -67,7 +67,7 @@ namespace Utils
         appDir.cdUp();
         appDir.cd("share");
         appDir.cd("themes");
-        appDir.cd("devel");
+        appDir.cd("base");
         appDir.cd("meegotouch");
         appDir.cd("widgetsgallery");
         appDir.cd("images");
