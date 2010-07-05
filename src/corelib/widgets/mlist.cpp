@@ -34,7 +34,7 @@
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MList)
 
-MListPrivate::MListPrivate() : selectionMode(MList::NoSelection)
+MListPrivate::MListPrivate() : selectionMode(MList::NoSelection), listFilter(0)
 {
 }
 
@@ -49,8 +49,6 @@ void MListPrivate::init()
 
     q->setSelectionMode(MList::NoSelection);
     q->setSizePolicy(QSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding)); //grow to available space in both directions
-    listFilter = new MListFilter(q);
-    listFilter->setEnabled(false);
 }
 
 MList::MList(MListPrivate *dd, MListModel *model, QGraphicsItem *parent)
@@ -93,7 +91,7 @@ void MList::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
 void MList::setItemModel(QAbstractItemModel *itemModel)
 {
     Q_D(MList);
-    if(d->listFilter->enabled())
+    if (d->listFilter && d->listFilter->enabled())
         itemModel = d->listFilter->updateItemModel(itemModel);
 
     setSelectionModel(NULL);
@@ -240,7 +238,13 @@ MList::SelectionMode MList::selectionMode() const
 
 MListFilter *MList::filtering() const
 {
-    Q_D(const MList);
+    MListPrivate* d = static_cast<MListPrivate*>(d_ptr);
+    if (d->listFilter == 0) {
+        // Postpone the creation of the list filter until it is requested
+        // to speedup the startup performance
+        d->listFilter = new MListFilter(const_cast<MList*>(this));
+        d->listFilter->setEnabled(false);
+    }
     return d->listFilter;
 }
 
@@ -248,6 +252,6 @@ void MList::keyPressEvent(QKeyEvent *event)
 {
     Q_D(MList);
 
-    if(d->listFilter->enabled())
+    if (d->listFilter && d->listFilter->enabled())
         d->listFilter->keyPressEvent(event);
 }
