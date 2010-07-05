@@ -216,6 +216,13 @@ void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
     updateViewportRect(viewportTopLeft, QSizeF(viewWidth, size.height()));
 }
 
+void MListViewPrivate::viewportRangeChanged(const QRectF &range)
+{
+    Q_UNUSED(range);
+
+    updateScrollToTargetPosition();
+}
+
 void MListViewPrivate::connectPannableViewport()
 {
     disconnect(controller, SIGNAL(parentChanged()), this, SLOT(controllerParentChanged()));
@@ -233,6 +240,7 @@ void MListViewPrivate::connectPannableViewport()
 
         connect(pannableViewport, SIGNAL(positionChanged(QPointF)), SLOT(viewportPositionChanged(QPointF)));
         connect(pannableViewport, SIGNAL(viewportSizeChanged(QSizeF)), SLOT(viewportSizeChanged(QSizeF)));
+        connect(pannableViewport, SIGNAL(rangeChanged(QRectF)), SLOT(viewportRangeChanged(QRectF)));
 
         viewportTopLeft = pannableViewport->position() - listPosition;
         viewportVisibleHeight = pannableViewport->size().height();
@@ -513,6 +521,12 @@ void MListViewPrivate::_q_moveViewportToNextPosition(int frame)
 QPointF MListViewPrivate::calculateViewportNextPosition()
 {
     return pannableViewport->position() + (targetPosition - pannableViewport->position()) * frictionK;
+}
+
+void MListViewPrivate::updateScrollToTargetPosition()
+{
+    if (scrollToTimeLine->state() == QTimeLine::Running)
+        targetPosition = locateScrollToPosition(controllerModel->scrollToIndex(), static_cast<MList::ScrollHint>(controllerModel->scrollHint()));
 }
 
 void MListViewPrivate::updateListIndexVisibility()

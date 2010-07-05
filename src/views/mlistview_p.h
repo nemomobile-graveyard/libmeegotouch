@@ -104,6 +104,7 @@ public:
 
     QPointF locateScrollToPosition(const QModelIndex &index, MList::ScrollHint hint);
     QPointF calculateViewportNextPosition();
+    void updateScrollToTargetPosition();
 
 public:
     virtual void createSeparators();
@@ -150,6 +151,7 @@ public Q_SLOTS:
     void movingDetectionTimerTimeout();
     void viewportPositionChanged(const QPointF &pos);
     void viewportSizeChanged(const QSizeF &size);
+    void viewportRangeChanged(const QRectF &range);
     void controllerParentChanged();
     void updateListGeometry();
 
