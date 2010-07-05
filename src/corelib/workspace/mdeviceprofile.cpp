@@ -71,6 +71,29 @@ bool MDeviceProfilePrivate::load(const QString& filename)
     pixelsPerInch.setWidth(settings.value(device + "/ppiX", 0).toInt());
     pixelsPerInch.setHeight(settings.value(device + "/ppiY", 0).toInt());
     showStatusBar=settings.value(device+"/showStatusBar",false).toBool();
+
+    QStringList orientationsForDevOpen = settings.value(device + "/allowedOrientationsOnKeyboardOpen",
+                                           QStringList()).toStringList();
+    if (orientationsForDevOpen.contains("0"))
+        supportedOrientationsForKeyboardOpen << M::Angle0;
+    if (orientationsForDevOpen.contains("90"))
+        supportedOrientationsForKeyboardOpen << M::Angle90;
+    if (orientationsForDevOpen.contains("180"))
+        supportedOrientationsForKeyboardOpen << M::Angle180;
+    if (orientationsForDevOpen.contains("270"))
+        supportedOrientationsForKeyboardOpen << M::Angle270;
+
+    QStringList orientationsForDevClosed = settings.value(device + "/allowedOrientationsOnKeyboardClosed",
+                                           QStringList()).toStringList();
+    if (orientationsForDevClosed.contains("0"))
+        supportedOrientationsForKeyboardClosed << M::Angle0;
+    if (orientationsForDevClosed.contains("90"))
+        supportedOrientationsForKeyboardClosed << M::Angle90;
+    if (orientationsForDevClosed.contains("180"))
+        supportedOrientationsForKeyboardClosed << M::Angle180;
+    if (orientationsForDevClosed.contains("270"))
+        supportedOrientationsForKeyboardClosed << M::Angle270;
+
     return true;
 }
 
@@ -125,4 +148,13 @@ bool MDeviceProfile::showStatusbar() const
 {
     Q_D(const MDeviceProfile);
     return d->showStatusBar;
+}
+
+bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
+{
+    Q_D(const MDeviceProfile);
+    if (isKeyboardOpen)
+        return d->supportedOrientationsForKeyboardOpen.contains(angle);
+    else
+        return d->supportedOrientationsForKeyboardClosed.contains(angle);
 }

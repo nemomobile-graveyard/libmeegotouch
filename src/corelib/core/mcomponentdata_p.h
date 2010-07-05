@@ -63,6 +63,8 @@ public:
     bool prestarted;
     bool emulateTwoFingerGestures;
     M::PrestartMode prestartMode;
+    M::OrientationAngle forcedOrientationAngle;
+    bool isOrientationForced;
     MTheme *theme;
     MDeviceProfile *deviceProfile;
     QList<MWindow *> windows;

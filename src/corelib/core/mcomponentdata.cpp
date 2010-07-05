@@ -149,6 +149,7 @@ MComponentDataPrivate::MComponentDataPrivate()
     prestarted(false),
     emulateTwoFingerGestures(false),
     prestartMode(M::NoPrestart),
+    isOrientationForced(false),
     theme(0),
     deviceProfile(0),
     windows(),
@@ -566,6 +567,33 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                           argv[0]);
                 exit(EXIT_FAILURE);
             }
+        } else if (s == "-fixed-orientation") {
+            if (i < (argc - 1)) {
+                i++;
+                QString selectedOrientationString = argv[i];
+
+                if (selectedOrientationString == "0") {
+                    forcedOrientationAngle = M::Angle0;
+                    isOrientationForced = true;
+                } else if (selectedOrientationString == "90") {
+                    forcedOrientationAngle = M::Angle90;
+                    isOrientationForced = true;
+                } else if (selectedOrientationString == "180") {
+                    forcedOrientationAngle = M::Angle180;
+                    isOrientationForced = true;
+                } else if (selectedOrientationString == "270") {
+                    forcedOrientationAngle = M::Angle270;
+                    isOrientationForced = true;
+                } else {
+                    qCritical("%s: Error: Provide one of 0, 90, 180, 270 to -fixed-orientation",
+                              argv[0]);
+                    exit(EXIT_FAILURE);
+                }
+            } else {
+                qCritical("%s: Error: Provide one of 0, 90, 180, 270 to -fixed-orientation",
+                          argv[0]);
+                exit(EXIT_FAILURE);
+            }
         } else if (s == "-v" || s.startsWith("-version") || s.startsWith("--version")) {
             mDebug("MComponentData") << "Version info: " <<  "\n"
                                          << "M_VERSION :" << M_VERSION << "\n"
@@ -595,6 +623,8 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "  [-prestart] Prestart the application (if supported)\n"
                                          << "  [-emulate-two-finger-gestures] Emulate pinch gesture (alt + mid mouse button + mouse movement)\n"
                                          << "                                 and two finger pan gesture (ctrl + mid mouse button + mouse movement)\n"
+                                         << "  [-fixed-orientation 0|90|180|270] Start application in fixed orientation. \n "
+                                         << "                                    This overrides keyboard state, as well as a device profile"
                                          << "\n";
             exit(0);
 
@@ -1026,4 +1056,20 @@ QString MComponentData::serviceName()
     }
 
     return gMComponentDataPrivate->service->registeredName();
+}
+
+M::OrientationAngle MComponentData::forcedOrientationAngle()
+{
+    if (!gMComponentDataPrivate) {
+        qFatal("MComponentData::orientationAngleIsSupported() - MComponentData instance not yet created.");
+    }
+    return gMComponentDataPrivate->forcedOrientationAngle;
+}
+
+bool MComponentData::isOrientationForced()
+{
+    if (!gMComponentDataPrivate) {
+        qFatal("MComponentData::allowedOrientations() - MComponentData instance not yet created.");
+    }
+    return gMComponentDataPrivate->isOrientationForced;
 }

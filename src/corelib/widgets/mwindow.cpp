@@ -728,6 +728,10 @@ void MWindow::setOrientationAngle(M::OrientationAngle angle)
 {
     Q_D(MWindow);
 
+    //orientation was forced by command line option
+    if (MComponentData::isOrientationForced())
+        return;
+
     if (orientationAngle() != angle) {
         d->oldOrientation = orientation();
         d->angle = angle;

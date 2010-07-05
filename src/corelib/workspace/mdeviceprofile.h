@@ -55,6 +55,9 @@ public:
     //! Return whether the status bar should be shown on target device
     bool showStatusbar() const;
 
+	//! Returns true if orientation angle is supported for given keyboard state.
+    bool orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const;
+
 protected:
     MDeviceProfilePrivate *const d_ptr;
 

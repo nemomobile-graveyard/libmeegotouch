@@ -170,6 +170,12 @@ public:
     //! Sets whether MComponentData should automatically load m input context
     static void setLoadMInputContext(bool enable);
 
+    //! \internal
+    static M::OrientationAngle forcedOrientationAngle();
+
+    static bool isOrientationForced();
+    //! \internal_end
+
 Q_SIGNALS:
     /*!
      * \brief Signal emitted when the default system locale changes.

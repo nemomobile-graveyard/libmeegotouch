@@ -44,7 +44,6 @@ public:
 #endif
 
 public slots:
-    void topEdgeChanged();
     void isCoveredChanged();
 
 protected:

@@ -22,6 +22,8 @@
 #include "mkeyboardstatetracker.h"
 #include "mapplication.h"
 #include "mwindow.h"
+#include "mcomponentdata.h"
+#include "mdeviceprofile.h"
 #include <QCoreApplication>
 #include <QVariant>
 #include <QTimer>
@@ -39,9 +41,24 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
 #endif
     , q_ptr(controller)
 {
+    if (MComponentData::isOrientationForced()) {
+        M::Orientation orientation = M::Landscape;
+
+        currentAngle = MComponentData::forcedOrientationAngle();
+        if (currentAngle == M::Angle90 || currentAngle == M::Angle270)
+            orientation = M::Portrait;
+
+        foreach(MWindow * window, MApplication::windows()) {
+            if (window->orientation() == orientation)
+                window->setOrientationAngle(currentAngle);
+        }
+        //orientation is fixed so we do not need to register for any signals
+        return;
+    }
+
 #ifdef HAVE_CONTEXTSUBSCRIBER
     connect(&topEdgeProperty, SIGNAL(valueChanged()),
-            this, SLOT(topEdgeChanged()));
+            this, SLOT(updateOrientationAngle()));
     connect(&isCoveredProperty, SIGNAL(valueChanged()),
             this, SLOT(isCoveredChanged()));
     connect(MKeyboardStateTracker::instance(), SIGNAL(stateChanged()),
@@ -59,52 +76,8 @@ void MOrientationTrackerPrivate::initContextSubscriber()
     isCoveredProperty.waitForSubscription();
 
     //initiating the variables to current orientation
-    topEdgeChanged();
+    updateOrientationAngle();
     isCoveredChanged();
-#endif
-}
-
-void MOrientationTrackerPrivate::topEdgeChanged()
-{
-#ifdef HAVE_CONTEXTSUBSCRIBER
-    M::OrientationAngle angle;
-    M::Orientation orientation = M::Landscape;
-    QString edge = topEdgeProperty.value().toString();
-
-// Following code is diabled only temporarily
-// Will probably by used again later.
-//    if (edge == "top") {
-//        angle = M::Angle0;
-//    } else if (edge == "left") {
-//        angle = M::Angle270;
-//        orientation = M::Portrait;
-//    } else if (edge == "right") {
-//        //angle = M::Angle90; Disabled for now
-//        angle = M::Angle270;
-//        orientation = M::Portrait;
-//    } else if (edge == "bottom") {
-//        //angle = M::Angle180; Disabled for now
-//        angle = M::Angle0;
-//    } else {
-//        angle = M::Angle0;
-//    }
-    angle = M::Angle270;
-    orientation = M::Portrait;
-
-    // if hardware keyboard is opened, don't allow orientation angle to be changed.
-    if (angle != currentAngle
-        && !MKeyboardStateTracker::instance()->isOpen()) {
-        currentAngle = angle;
-        // instead of emitting a signal we have to explicitely call setOrientationAngle
-        // on windows, because this is very often excuted before the application's
-        // event loop is started and leads to crash in QMetaObject
-        foreach(MWindow * window, MApplication::windows()) {
-            if (!window->isOrientationAngleLocked()) {
-                if (!window->isOrientationLocked() || window->orientation() == orientation)
-                    window->setOrientationAngle(angle);
-            }
-        }
-    }
 #endif
 }
 
@@ -129,19 +102,60 @@ void MOrientationTrackerPrivate::isCoveredChanged()
 
 void MOrientationTrackerPrivate::updateOrientationAngle()
 {
-    if (MKeyboardStateTracker::instance()->isOpen()) {
-        // if hardware keyboard is opened, set all window's orientation angle to 0.
-        foreach (MWindow *window, MApplication::windows()) {
+#ifdef HAVE_CONTEXTSUBSCRIBER
+    M::OrientationAngle angle = M::Angle0;
+    M::Orientation orientation = M::Landscape;
+    QString edge = topEdgeProperty.value().toString();
+    bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
+
+    if (edge == "top" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen))) {
+        angle = M::Angle0;
+    } else if (edge == "left" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle270, isKeyboardOpen))) {
+        angle = M::Angle270;
+        orientation = M::Portrait;
+    } else if (edge == "right" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle90, isKeyboardOpen))) {
+        angle = M::Angle90;
+        orientation = M::Portrait;
+    } else if (edge == "bottom" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle180, isKeyboardOpen))) {
+        angle = M::Angle180;
+    } else {
+        //it seems that orientation does not match allowed for current kybrd state.
+        //check if the previous one was ok:
+        if ((currentAngle == M::Angle0 && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen))) ||
+            (currentAngle == M::Angle90 && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle90, isKeyboardOpen))) ||
+            (currentAngle == M::Angle180 && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle180, isKeyboardOpen))) ||
+            (currentAngle == M::Angle270 && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle270, isKeyboardOpen)))
+            ){
+            //it was: let's just use an old angle
+            angle = currentAngle;
+        } else {            
+            //it was not: let's use first allowed:
+            if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen))
+                angle = M::Angle0;
+            else if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle270, isKeyboardOpen))
+                angle = M::Angle270;
+            else if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle90, isKeyboardOpen))
+                angle = M::Angle90;
+            else if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle180, isKeyboardOpen))
+                angle = M::Angle180;
+            else
+                qFatal("MOrientationTrackerPrivate::updateOrientationAngle() - current keyboard state seems not to be covered in device.conf file");
+        }
+    }
+
+    if (angle != currentAngle) {
+        currentAngle = angle;
+        // instead of emitting a signal we have to explicitely call setOrientationAngle
+        // on windows, because this is very often excuted before the application's
+        // event loop is started and leads to crash in QMetaObject
+        foreach(MWindow * window, MApplication::windows()) {
             if (!window->isOrientationAngleLocked()) {
-                if (!window->isOrientationLocked() || window->orientation() == M::Landscape)
-                    window->setOrientationAngle(M::Angle0);
+                if (!window->isOrientationLocked() || window->orientation() == orientation)
+                    window->setOrientationAngle(angle);
             }
         }
-        currentAngle = M::Angle0;
-    } else {
-        // if hardware keyboard is closed, set the real orientation.
-        topEdgeChanged();
     }
+#endif
 }
 
 MOrientationTracker::MOrientationTracker() :

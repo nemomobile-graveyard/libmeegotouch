@@ -38,6 +38,8 @@ public:
     QSize pixelsPerInch;
     bool showStatusBar;
 
+    QSet<M::OrientationAngle> supportedOrientationsForKeyboardOpen;
+    QSet<M::OrientationAngle> supportedOrientationsForKeyboardClosed;
 protected:
     MDeviceProfile *q_ptr;
 };
