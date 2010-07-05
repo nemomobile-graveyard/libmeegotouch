@@ -266,8 +266,9 @@ void MContentItemViewPrivate::initTwoIconsTwoWidgetsLayout()
 
 void MContentItemViewPrivate::clearLayout()
 {
-    for (int i = layout->count(); i>0; i--)
-        layout->removeAt(0);
+    for (int i = layout->count()-1; i>=0; i--) {
+        layout->removeAt(i);
+    }
 }
 
 void MContentItemViewPrivate::setTitle(const QString &string)

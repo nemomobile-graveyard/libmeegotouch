@@ -123,6 +123,11 @@ void MContentItem::setTitle(const QString &text)
 
 void MContentItem::setSubtitle(const QString &text)
 {
+    if (additionalItem()) {
+        additionalItem()->setVisible(false);
+        setAdditionalItem(0);
+    }
+
     model()->setSubtitle(text);
 }
 
