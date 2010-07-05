@@ -17,32 +17,23 @@
 **
 ****************************************************************************/
 
-#ifndef MSTATUSBAR_P_H
-#define MSTATUSBAR_P_H
+#ifndef MSTATUSBARSTYLE_H
+#define MSTATUSBARSTYLE_H
 
-#include "mscenewindow_p.h"
-#include "mstatusbar.h"
+#include <mscenewindowstyle.h>
 
-//! \internal
-/*!
- * Private class for the MStatusBar.
- */
-class MStatusBarPrivate : public MSceneWindowPrivate
+class M_EXPORT MStatusBarStyle : public MSceneWindowStyle
 {
-    Q_DECLARE_PUBLIC(MStatusBar)
+    Q_OBJECT
+    M_STYLE(MStatusBarStyle)
 
-public:
-    /*!
-     * Constructs a private class for the MStatusBar.
-     */
-    MStatusBarPrivate();
-
-    /*!
-     * Destroys the MStatusBar private class.
-     */
-    virtual ~MStatusBarPrivate();
-
+    M_STYLE_ATTRIBUTE(int, swipeThreshold, SwipeThreshold)
 };
 
-//! \internal_end
-#endif
+class M_EXPORT MStatusBarStyleContainer : public MSceneWindowStyleContainer
+{
+    M_STYLE_CONTAINER(MStatusBarStyle)
+};
+
+
+#endif // MSTATUSBARSTYLE_H

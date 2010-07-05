@@ -1,6 +1,6 @@
 libmeegotouch (0.20.28~1) UNRELEASED; urgency=low
 
-  * 
+  * Status indicator menu opens with a drag and mouse release is not required. Also haptics feedback when opening the status indicator menu 
 
  -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 12 Jul 2010 16:49:19 +0300
 

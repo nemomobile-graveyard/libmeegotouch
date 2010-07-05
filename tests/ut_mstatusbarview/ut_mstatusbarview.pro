@@ -1,7 +1,7 @@
 include(../common_top.pri)
 TARGET = ut_mstatusbarview
 
-INCLUDEPATH += $$MSRCDIR/views $$STUBSDIR
+INCLUDEPATH += $$MSRCDIR/views $$STUBSDIR $$MSRCDIR/corelib/widgets
 
 TEST_SOURCES = \
     $$MSRCDIR/views/mstatusbarview.cpp \

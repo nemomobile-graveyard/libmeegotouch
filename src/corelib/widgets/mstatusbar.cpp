@@ -17,22 +17,11 @@
 **
 ****************************************************************************/
 
-#include <QGraphicsSceneMouseEvent>
-
-#ifdef HAVE_DBUS
-#include <QDBusInterface>
-#endif
-
 #include "mstatusbar.h"
 #include "mstatusbar_p.h"
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MStatusBar)
-
-const QString MStatusBarPrivate::STATUS_INDICATOR_MENU_DBUS_SERVICE = "com.meego.core.MStatusIndicatorMenu";
-const QString MStatusBarPrivate::STATUS_INDICATOR_MENU_DBUS_PATH = "/statusindicatormenu";
-const QString MStatusBarPrivate::STATUS_INDICATOR_MENU_DBUS_INTERFACE = "com.meego.core.MStatusIndicatorMenu";
-const int MStatusBarPrivate::SWIPE_THRESHOLD = 30;
 
 MStatusBar::MStatusBar() : MSceneWindow(new MStatusBarPrivate, new MSceneWindowModel, MSceneWindow::StatusBar)
 {
@@ -43,36 +32,6 @@ MStatusBar::~MStatusBar()
 {
 }
 
-bool MStatusBar::sceneEvent(QEvent *event)
-{
-    Q_D(MStatusBar);
-
-    switch (event->type()) {
-    case QEvent::GraphicsSceneMousePress: {
-        QGraphicsSceneMouseEvent *mouseEvent = static_cast<QGraphicsSceneMouseEvent *> (event);
-        d->firstPos = mouseEvent->pos();
-        return true;
-    }
-    case QEvent::GraphicsSceneMouseMove: {
-        QGraphicsSceneMouseEvent *mouseEvent = static_cast<QGraphicsSceneMouseEvent *> (event);
-        d->lastPos = mouseEvent->pos();
-        return true;
-    }
-    case QEvent::GraphicsSceneMouseRelease: {
-        if (d->firstPos.y() + MStatusBarPrivate::SWIPE_THRESHOLD < d->lastPos.y()) {
-            d->showStatusIndicatorMenu();
-            d->lastPos = QPointF();
-            return true;
-        }
-        break;
-    }
-    default:
-        break;
-    }
-
-    return MSceneWindow::sceneEvent(event);
-}
-
 MStatusBarPrivate::MStatusBarPrivate() : MSceneWindowPrivate()
 {
 }
@@ -81,10 +40,7 @@ MStatusBarPrivate::~MStatusBarPrivate()
 {
 }
 
-void MStatusBarPrivate::showStatusIndicatorMenu()
+bool MStatusBar::sceneEvent(QEvent *event)
 {
-#ifdef HAVE_DBUS
-    QDBusInterface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
-    interface.call(QDBus::NoBlock, "open");
-#endif
+    return MSceneWindow::sceneEvent(event);
 }

@@ -23,6 +23,8 @@
 #include <QtTest/QtTest>
 #include <QObject>
 
+class MApplication;
+
 // the real unit/MStatusBarView class declaration
 #include <mstatusbarview.h>
 
@@ -37,14 +39,24 @@ public:
 private slots:
     void initTestCase();
     void cleanupTestCase();
+    void cleanup();
 #ifdef Q_WS_X11
 //    void testXDamageWhileTogglingVisibility();
 //    void testXDamageWhileTogglingProviderAvailability();
 #endif
+    // Test when mouse is moved over a certain threshold then status indicator menu appears.
+    void testWhenMouseMovesAboveThresholdStatusIndicatorMenuAppears();
+    // Test when swipe less than a particular amount, status indicator will not be triggered.
+    void testWhenSwipeLessThanThresholdStatusIndicatorMenuDoesNotAppear();
+    // Test when mouse is moved over a certain threshold then haptics done.
+    void testWhenMousePressHapticsDone();
 
 private:
+    void mouseDownWorker();
+    void mouseMoveworker(QPointF moveTo);
     MStatusBarView *m_subject;
     MStatusBar *m_statusbar;
+    MApplication* app;
 };
 
 #endif

@@ -26,7 +26,13 @@
 #include <QFile>
 #include <QDataStream>
 #include <QDir>
-#include <QtDBus>
+#include <QGraphicsSceneMouseEvent>
+
+#ifdef HAVE_DBUS
+#include <QDBusInterface>
+#include <QDBusServiceWatcher> 
+#include <QDBusConnectionInterface>
+#endif
 
 #ifdef Q_WS_X11
 #include <X11/extensions/Xdamage.h>
@@ -39,6 +45,10 @@ namespace{
     const QString PIXMAP_PROVIDER_DBUS_SHAREDPIXMAP_CALL = "sharedPixmapHandle";
 }
 #endif
+
+const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_SERVICE = "com.meego.core.MStatusIndicatorMenu";
+const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_PATH = "/statusindicatormenu";
+const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE = "com.meego.core.MStatusIndicatorMenu";
 
 MStatusBarView::MStatusBarView(MStatusBar *controller) :
     MSceneWindowView(controller),
@@ -205,6 +215,32 @@ void MStatusBarView::handlePixmapProviderOffline()
     destroyXDamageForSharedPixmap();
 }
 #endif
+
+void MStatusBarView::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    firstPos = event->pos();
+    playHapticsFeedback();
+}
+
+void MStatusBarView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if(firstPos.y()+ style()->swipeThreshold() < event->pos().y()) {
+        showStatusIndicatorMenu();
+    }
+}
+
+void MStatusBarView::showStatusIndicatorMenu()
+{
+#ifdef HAVE_DBUS
+    QDBusInterface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
+    interface.call(QDBus::NoBlock, "open");
+#endif
+}
+
+void MStatusBarView::playHapticsFeedback()
+{
+    style()->pressFeedback().play();
+}
 
 #endif
 

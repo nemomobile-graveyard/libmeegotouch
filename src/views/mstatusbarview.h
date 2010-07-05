@@ -22,6 +22,7 @@
 
 #include <mscenewindowview.h>
 #include <mscenewindowmodel.h>
+#include <mstatusbarstyle.h>
 
 
 class MStatusBar;
@@ -36,7 +37,7 @@ class QDBusPendingCallWatcher;
 class MStatusBarView : public MSceneWindowView
 {
     Q_OBJECT
-    M_VIEW(MSceneWindowModel, MSceneWindowStyle)
+    M_VIEW(MSceneWindowModel, MStatusBarStyle)
 
 public:
     MStatusBarView(MStatusBar *controller);
@@ -44,12 +45,33 @@ public:
 
 protected:
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
 
 private:
     Q_DISABLE_COPY(MStatusBarView)
 
     MWidgetController *controller;
     bool updatesEnabled;
+    /*!
+     * Displays the status indicator menu.
+     */
+    void showStatusIndicatorMenu();
+
+    // Perform the haptic feedback
+    void playHapticsFeedback();
+
+    //! The name of the status indicator menu D-Bus service
+    static const QString STATUS_INDICATOR_MENU_DBUS_SERVICE;
+
+    //! The name of the status indicator menu D-Bus path
+    static const QString STATUS_INDICATOR_MENU_DBUS_PATH;
+
+    //! The name of the status indicator menu D-Bus interface
+    static const QString STATUS_INDICATOR_MENU_DBUS_INTERFACE;
+
+    //! position of mouse button press(firstPos) and position of last point of mouse move(lastPos)
+    QPointF firstPos, lastPos;
 
 #ifdef Q_WS_X11
     void updateSharedPixmap();

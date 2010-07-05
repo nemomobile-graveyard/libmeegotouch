@@ -21,7 +21,6 @@
 #define MSTATUSBAR_H
 
 #include <mscenewindow.h>
-#include <mscenewindowmodel.h>
 
 class MStatusBarPrivate;
 

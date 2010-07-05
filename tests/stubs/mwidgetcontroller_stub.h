@@ -27,7 +27,6 @@
 // 1. DECLARE STUB
 class MWidgetControllerStub : public StubBase {
   public:
-  static const MTheme::ViewType defaultType ;
   virtual void MWidgetControllerConstructor(QGraphicsItem *parent);
   virtual void MWidgetControllerConstructor(MWidgetModel *model, QGraphicsItem *parent);
   virtual void MWidgetControllerDestructor();
