@@ -74,6 +74,13 @@ private slots:
 
     void testMonthSymbols_data();
     void testMonthSymbols();
+
+    void benchmarkFormatDateTimePosixFormatString_U_QDateTime();
+    void benchmarkFormatDateTimePosixFormatString_U_MCalendar();
+    void benchmarkFormatDateTimePosixFormatString_V_MCalendar();
+    void benchmarkFormatDateTimePosixFormatString_r_MCalendar();
+    void benchmarkFormatDateTimePosixFormatString_R_MCalendar();
+    void benchmarkFormatDateTimePosixFormatString_t_MCalendar();
 };
 
 

@@ -2128,5 +2128,209 @@ void Ut_MCalendar::testMonthSymbols()
     }
 }
 
+void Ut_MCalendar::benchmarkFormatDateTimePosixFormatString_U_QDateTime()
+{
+    QString language("en_US");   // will be overridden
+    QString lcMessages("en_US"); // should not matter
+    QString lcTime("ar_SA");     // this overrides language
+    QString lcNumeric("en_US");  // should not matter
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    locale.setCalendarType(MLocale::GregorianCalendar);
+    MCalendar mcal(locale);
+    int year = 2008;
+    int month = 7;
+    int day = 21;
+    int hour = 14;
+    int minute = 31;
+    int second = 3;
+    mcal.setDate(year, month, day);
+    mcal.setTime(hour, minute, second);
+    QDate date(year, month, day);
+    QTime time(hour, minute, second);
+    QDateTime datetime(date, time, Qt::LocalTime);
+    QLocale qlocale(language);
+    QString format("%U");
+    QString result("٢٩");
+    QCOMPARE(locale.formatDateTime(mcal, format), result);
+    QCOMPARE(locale.formatDateTime(datetime, format), result);
+
+    QBENCHMARK {
+        locale.formatDateTime(datetime, format);
+    }
+}
+
+void Ut_MCalendar::benchmarkFormatDateTimePosixFormatString_U_MCalendar()
+{
+    QString language("en_US");   // will be overridden
+    QString lcMessages("en_US"); // should not matter
+    QString lcTime("ar_SA");     // this overrides language
+    QString lcNumeric("en_US");  // should not matter
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    locale.setCalendarType(MLocale::GregorianCalendar);
+    MCalendar mcal(locale);
+    int year = 2008;
+    int month = 7;
+    int day = 21;
+    int hour = 14;
+    int minute = 31;
+    int second = 3;
+    mcal.setDate(year, month, day);
+    mcal.setTime(hour, minute, second);
+    QDate date(year, month, day);
+    QTime time(hour, minute, second);
+    QDateTime datetime(date, time, Qt::LocalTime);
+    QLocale qlocale(language);
+    QString format("%U");
+    QString result("٢٩");
+    QCOMPARE(locale.formatDateTime(mcal, format), result);
+    QCOMPARE(locale.formatDateTime(datetime, format), result);
+
+    QBENCHMARK {
+        locale.formatDateTime(mcal, format);
+    }
+}
+
+void Ut_MCalendar::benchmarkFormatDateTimePosixFormatString_V_MCalendar()
+{
+    QString language("en_US");   // will be overridden
+    QString lcMessages("en_US"); // should not matter
+    QString lcTime("ar_SA");     // this overrides language
+    QString lcNumeric("en_US");  // should not matter
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    locale.setCalendarType(MLocale::GregorianCalendar);
+    MCalendar mcal(locale);
+    int year = 2008;
+    int month = 7;
+    int day = 21;
+    int hour = 14;
+    int minute = 31;
+    int second = 3;
+    mcal.setDate(year, month, day);
+    mcal.setTime(hour, minute, second);
+    QDate date(year, month, day);
+    QTime time(hour, minute, second);
+    QDateTime datetime(date, time, Qt::LocalTime);
+    QLocale qlocale(language);
+    QString format("%V");
+    QString result("٣٠");
+    QCOMPARE(locale.formatDateTime(mcal, format), result);
+    QCOMPARE(locale.formatDateTime(datetime, format), result);
+
+    QBENCHMARK {
+        locale.formatDateTime(mcal, format);
+    }
+}
+
+void Ut_MCalendar::benchmarkFormatDateTimePosixFormatString_r_MCalendar()
+{
+    QString language("en_US");   // will be overridden
+    QString lcMessages("en_US"); // should not matter
+    QString lcTime("ar_SA");     // this overrides language
+    QString lcNumeric("en_US");  // should not matter
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    locale.setCalendarType(MLocale::GregorianCalendar);
+    MCalendar mcal(locale);
+    int year = 2008;
+    int month = 7;
+    int day = 21;
+    int hour = 14;
+    int minute = 31;
+    int second = 3;
+    mcal.setDate(year, month, day);
+    mcal.setTime(hour, minute, second);
+    QDate date(year, month, day);
+    QTime time(hour, minute, second);
+    QDateTime datetime(date, time, Qt::LocalTime);
+    QLocale qlocale(language);
+    QString format("%r");
+    QString result("٢:٣١ م");
+    QCOMPARE(locale.formatDateTime(mcal, format), result);
+    QCOMPARE(locale.formatDateTime(datetime, format), result);
+
+    QBENCHMARK {
+        locale.formatDateTime(mcal, format);
+    }
+}
+
+void Ut_MCalendar::benchmarkFormatDateTimePosixFormatString_R_MCalendar()
+{
+    QString language("en_US");   // will be overridden
+    QString lcMessages("en_US"); // should not matter
+    QString lcTime("ar_SA");     // this overrides language
+    QString lcNumeric("en_US");  // should not matter
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    locale.setCalendarType(MLocale::GregorianCalendar);
+    MCalendar mcal(locale);
+    int year = 2008;
+    int month = 7;
+    int day = 21;
+    int hour = 14;
+    int minute = 31;
+    int second = 3;
+    mcal.setDate(year, month, day);
+    mcal.setTime(hour, minute, second);
+    QDate date(year, month, day);
+    QTime time(hour, minute, second);
+    QDateTime datetime(date, time, Qt::LocalTime);
+    QLocale qlocale(language);
+    QString format("%R");
+    QString result("١٤:٣١");
+    QCOMPARE(locale.formatDateTime(mcal, format), result);
+    QCOMPARE(locale.formatDateTime(datetime, format), result);
+
+    QBENCHMARK {
+        locale.formatDateTime(mcal, format);
+    }
+}
+
+void Ut_MCalendar::benchmarkFormatDateTimePosixFormatString_t_MCalendar()
+{
+    QString language("en_US");   // will be overridden
+    QString lcMessages("en_US"); // should not matter
+    QString lcTime("ar_SA");     // this overrides language
+    QString lcNumeric("en_US");  // should not matter
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    locale.setCalendarType(MLocale::GregorianCalendar);
+    MCalendar mcal(locale);
+    int year = 2008;
+    int month = 7;
+    int day = 21;
+    int hour = 14;
+    int minute = 31;
+    int second = 3;
+    mcal.setDate(year, month, day);
+    mcal.setTime(hour, minute, second);
+    QDate date(year, month, day);
+    QTime time(hour, minute, second);
+    QDateTime datetime(date, time, Qt::LocalTime);
+    QLocale qlocale(language);
+    QString format("%t");
+    QString result("\t");
+    QCOMPARE(locale.formatDateTime(mcal, format), result);
+    QCOMPARE(locale.formatDateTime(datetime, format), result);
+
+    QBENCHMARK {
+        locale.formatDateTime(mcal, format);
+    }
+}
+
 QTEST_APPLESS_MAIN(Ut_MCalendar);
 
