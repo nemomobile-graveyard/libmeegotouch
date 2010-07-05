@@ -1,3 +1,9 @@
+libmeegotouch (0.20.26~1) UNRELEASED; urgency=low
+
+  * 
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 05 Jul 2010 15:27:14 +0300
+
 libmeegotouch (0.20.25-1) unstable; urgency=low
 
   * Fixes: NB#178001 - using MList::scrollTo() makes the list behave strange
