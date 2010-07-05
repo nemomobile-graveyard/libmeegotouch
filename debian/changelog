@@ -1,12 +1,13 @@
 libmeegotouch (0.20.25-1) unstable; urgency=low
 
+  * Fixes: NB#178001 - using MList::scrollTo() makes the list behave strange
   * Fixes: NB#176892 - svg ids are not shown on using fast launch in application
   * Fixes: NB#175447 - meegotouch doesn't add dbus to QT features, but it needs...
   * Fixes: NB#176453 - progress bar and spinner widgets get paint events when are offscreen.
   * Fixes: NB#177613 - MCommonPixmaps crash happened
   * Fixes: NB#177339 - If MSlider is tapped on the min/max label slider handle moves but sliderPressed signal is not emitted.
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 05 Jul 2010 13:58:40 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 05 Jul 2010 14:52:05 +0300
 
 libmeegotouch (0.20.24-1) unstable; urgency=low
 
