@@ -25,10 +25,16 @@
 void Ut_MInputMethodState::initTestCase()
 {
     qRegisterMetaType<M::OrientationAngle>("M::OrientationAngle");
+
+    static int argc = 1;
+    static char *app_name[1] = { (char *) "./ut_minputmethodstate" };
+
+    m_app.reset(new MApplication(argc, app_name));
 }
 
 void Ut_MInputMethodState::cleanupTestCase()
 {
+    m_app->quit();
 }
 
 void Ut_MInputMethodState::init()
@@ -71,11 +77,13 @@ void Ut_MInputMethodState::testInputMethodArea()
     const QRect rect(0, 0, 10, 10);
     state->setInputMethodArea(rect);
     QCOMPARE(state->inputMethodArea(), rect);
+    QTest::qWait(100);
     QCOMPARE(spy.count(), 1);
     QCOMPARE(spy.first().first().value<QRect>(), rect);
 
     // Set the same orientation again, don't get notified
     state->setInputMethodArea(rect);
+    QTest::qWait(100);
     QCOMPARE(spy.count(), 1);
 }
 

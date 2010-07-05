@@ -22,6 +22,8 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
+#include <memory>
+#include "mapplication.h"
 
 class Ut_MInputMethodState : public QObject
 {
@@ -39,6 +41,9 @@ private slots:
 
     void testActiveWindowOrientationAngle();
     void testInputMethodArea();
+
+private:
+    std::auto_ptr<MApplication> m_app;
 };
 
 #endif
