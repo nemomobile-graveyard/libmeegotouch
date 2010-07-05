@@ -356,9 +356,24 @@ void Ut_PhoneNumberFormatting::testDefaultFormatting()
 
     lcPhoneItem.set( phoneLocale );
 
-    // for some reason the gconf items do need this
-    // wait call to propagate the key change.
-    QTest::qWait( 10 );
+    // wait until the change to the gconf item
+    // is propagated to the locale:MLocale::MLcTelephone
+    for (int i = 0; i < 100; ++i) {
+        QTest::qWait(50);
+        if (m_pLocale->categoryName(MLocale::MLcTelephone)
+            == phoneLocale
+            || (phoneLocale == ""
+                && m_pLocale->categoryName(MLocale::MLcTelephone)
+                == m_pLocale->name()))
+            break;
+    }
+    // Check if the change was really propagated or the timeout
+    // of the loop was reached:
+    if (phoneLocale == "")
+        QCOMPARE(m_pLocale->categoryName(MLocale::MLcTelephone),
+                 m_pLocale->name());
+    else
+        QCOMPARE(m_pLocale->categoryName(MLocale::MLcTelephone), phoneLocale);
 
     QString myGroupedPhoneNumber = m_pLocale->formatPhoneNumber(
         rawPhoneNumber, MLocale::DefaultPhoneNumberGrouping );
