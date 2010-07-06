@@ -78,8 +78,10 @@ private slots:
     void testPageSwitchQueue();
     void testSceneWindowTransitionQueue_disappearWhileAppearing();
     void testSceneWindowTransitionQueue_disappearAndAppearWhileAppearing();
+    void testSceneWindowTransitionQueue_disappearAndAppearWhileAppearing_ApplicationPage();
     void testSceneWindowTransitionQueue_appearWhileDisappearing();
     void testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing();
+    void testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing_ApplicationPage();
     void testDismissPageThatIsReappearing();
     void testDeletePageThatIsAppearing();
     void testDeletePageThatIsDisappearing();

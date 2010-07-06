@@ -56,6 +56,14 @@ class MSceneWindowTransition {
         MSceneWindow::DeletionPolicy policy;
 
         bool animated;
+
+        bool operator==(const MSceneWindowTransition &other) const
+        {
+            return (sceneWindow == other.sceneWindow &&
+                    type == other.type &&
+                    policy == other.policy &&
+                    animated == other.animated);
+        }
 };
 
 class MSceneManagerPrivate

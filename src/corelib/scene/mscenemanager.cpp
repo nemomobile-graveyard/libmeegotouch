@@ -1095,7 +1095,17 @@ bool MSceneManagerPrivate::verifySceneWindowStateBeforeAppear(
             break;
 
         case MSceneWindow::Appearing:
-            if (sceneWindow->windowType() != MSceneWindow::ApplicationPage) {
+            if (sceneWindow->windowType() == MSceneWindow::ApplicationPage
+                && pageSwitchAnimation->state() == QAbstractAnimation::Running) {
+                foreach(MSceneWindowTransition transition, queuedTransitionsPageSwitchAnimation) {
+                    if (transition.sceneWindow == sceneWindow
+                        && transition.type == MSceneWindowTransition::DisappearTransition)
+                    {
+                        queuedTransitionsPageSwitchAnimation.removeAll(transition);
+                        break;
+                    }
+                }
+            } else {
                 // This appear() request cancels the previously pending
                 // disappear() or dismiss().
                 if (sceneWindow->d_func()->queuedTransition != 0) {
@@ -1191,7 +1201,17 @@ bool MSceneManagerPrivate::verifySceneWindowStateBeforeDisappear(
             break;
 
         case MSceneWindow::Disappearing:
-            if (sceneWindow->windowType() != MSceneWindow::ApplicationPage) {
+            if (sceneWindow->windowType() == MSceneWindow::ApplicationPage
+                && pageSwitchAnimation->state() == QAbstractAnimation::Running) {
+                foreach(MSceneWindowTransition transition, queuedTransitionsPageSwitchAnimation) {
+                    if (transition.sceneWindow == sceneWindow
+                        && transition.type == MSceneWindowTransition::AppearTransition)
+                    {
+                        queuedTransitionsPageSwitchAnimation.removeAll(transition);
+                        break;
+                    }
+                }
+            } else {
                 // This disappear() request cancels the previously pending
                 // appear()
                 if (sceneWindow->d_func()->queuedTransition != 0) {

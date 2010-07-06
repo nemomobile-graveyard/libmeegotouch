@@ -853,6 +853,36 @@ void Ut_MSceneManager::testSceneWindowTransitionQueue_disappearAndAppearWhileApp
     QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appeared);
 }
 
+void Ut_MSceneManager::testSceneWindowTransitionQueue_disappearAndAppearWhileAppearing_ApplicationPage()
+{
+    MSceneWindow *sceneWindow = new MApplicationPage;
+    TestBridge testBridge;
+
+    testBridge.setObjectName("_m_testBridge");
+    testBridge.setParent(sm);
+
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    sm->appearSceneWindow(sceneWindow);
+
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appearing);
+
+    sm->disappearSceneWindow(sceneWindow);
+
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appearing);
+
+    // That cancels out the previous disappear() that was queued, resulting
+    // in an empty transition queue.
+    sm->appearSceneWindow(sceneWindow);
+
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appearing);
+
+    testBridge.fastForwardSceneWindowTransitionAnimation(sceneWindow);
+
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Appeared);
+}
+
 void Ut_MSceneManager::testSceneWindowTransitionQueue_appearWhileDisappearing()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
@@ -887,6 +917,37 @@ void Ut_MSceneManager::testSceneWindowTransitionQueue_appearWhileDisappearing()
 void Ut_MSceneManager::testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing()
 {
     MSceneWindow *sceneWindow = new MSceneWindow;
+    TestBridge testBridge;
+
+    testBridge.setObjectName("_m_testBridge");
+    testBridge.setParent(sm);
+
+    gMWindowIsOnDisplay = true;
+    mWindow->show();
+
+    sm->appearSceneWindowNow(sceneWindow);
+    sm->disappearSceneWindow(sceneWindow);
+
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappearing);
+
+    sm->appearSceneWindow(sceneWindow);
+
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappearing);
+
+    // That cancels out the previous appear() that was queued, resulting
+    // in an empty transition queue.
+    sm->disappearSceneWindow(sceneWindow);
+
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappearing);
+
+    testBridge.fastForwardSceneWindowTransitionAnimation(sceneWindow);
+
+    QCOMPARE(sceneWindow->sceneWindowState(), MSceneWindow::Disappeared);
+}
+
+void Ut_MSceneManager::testSceneWindowTransitionQueue_appearAndDisappearWhileDisappearing_ApplicationPage()
+{
+    MSceneWindow *sceneWindow = new MApplicationPage;
     TestBridge testBridge;
 
     testBridge.setObjectName("_m_testBridge");
