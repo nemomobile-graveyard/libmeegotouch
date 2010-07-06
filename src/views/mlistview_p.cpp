@@ -56,9 +56,8 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     clearVisibleOnRelayout = false;
     frictionK = 0.67;
 
-    scrollToTimeLine = new QTimeLine();
+    scrollToTimeLine = new QTimeLine(1000, this);
     scrollToTimeLine->setLoopCount(0);
-    scrollToTimeLine->setDuration(1000);
     scrollToTimeLine->setFrameRange(0, 30);
 
     movingDetectorTimer.setSingleShot(true);
