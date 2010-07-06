@@ -32,7 +32,9 @@
 MWindow *appWin;
 void Ut_MDialog::initTestCase()
 {
-    app = buildApp(1, "./ut_mdialog");
+    static int argc = 1;
+    static char *argv[] = { (char*)"./ut_mdialog" };
+    app = new MApplication(argc, argv);
     appWin = new MWindow;
 }
 
@@ -212,20 +214,6 @@ void Ut_MDialog::rejectDialog()
     QCOMPARE(spyChanged1.count(), 0);
     QCOMPARE(spyChanged2.count(), 1);
     QCOMPARE(spyChanged3.count(), 1);
-}
-
-MApplication *Ut_MDialog::buildApp(int count, const QString &params)
-{
-    QChar sep(' ');
-    char *argv[MAX_PARAMS];
-    int x = 0;
-
-    QStringList list = params.split(sep);
-    QStringListIterator it(list);
-    while (it.hasNext() && x < MAX_PARAMS)  {
-        argv[x++] = strdup(it.next().toLocal8Bit().constData());
-    }
-    return new MApplication(count, argv);
 }
 
 void Ut_MDialog::dismissDialog()

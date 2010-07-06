@@ -26,7 +26,6 @@
 
 class MApplication;
 
-#define MAX_PARAMS 10
 class Ut_MDialog: public QObject
 {
     Q_OBJECT
@@ -34,7 +33,6 @@ class Ut_MDialog: public QObject
 private:
     MDialog *dialog;
     MApplication *app;
-    MApplication *buildApp(int count, const QString &params);
 
 private slots:
 
