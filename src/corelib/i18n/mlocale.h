@@ -1105,6 +1105,15 @@ public:
      * \brief Sets the paths that are used as base directories for using translations
      * The translation path modification methods are not thread-safe.
      *
+     * The default translation path is
+     *
+     * \verbatim
+     *    /usr/share/l10n/meegotouch
+     * \endverbatim
+     *
+     * i.e. if none of the translation path modification methods is
+     * used, the list of translation paths contains only this entry.
+     *
      * \sa  translationPaths()
      * \sa addTranslationPath(const QString &path)
      * \sa removeTranslationPath(const QString &path)
@@ -1113,6 +1122,10 @@ public:
 
     /*!
      * \brief Append a path to the translation file lookup directories.
+     *
+     * If the path to be added is already in the list of translation
+     * paths, nothing happens, i.e. the path is not appended again to
+     * the end of the path list.
      *
      * \sa translationPaths()
      * \sa setTranslationPaths(const QStringList &paths)

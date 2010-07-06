@@ -47,8 +47,10 @@ void Ut_Translations::initTestCase()
     qap = new MApplication(argc, argv, "test");
     // could also use: QCoreApplication::applicationDirPath()
     // but it seems to have some problems under scratchbox
-    MLocale::addTranslationPath(qApp->applicationDirPath() + "/translations-tr");
-    MLocale::addTranslationPath(qApp->applicationDirPath() + "/translations-qttrid");
+    MLocale::setTranslationPaths(
+        (QStringList()
+         << qApp->applicationDirPath() + "/translations-tr"
+         << qApp->applicationDirPath() + "/translations-qttrid"));
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 }
 

@@ -349,6 +349,8 @@ MLocalePrivate::MLocalePrivate()
       q_ptr(0)
 {
     loadCountryCodes();
+    if (translationPaths.isEmpty())
+        translationPaths = (QStringList() << QString(TRANSLATION_DIR));
 }
 
 // copy constructor
