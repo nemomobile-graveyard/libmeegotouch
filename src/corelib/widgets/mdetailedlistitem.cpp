@@ -172,6 +172,7 @@ MDetailedListItem::MDetailedListItem(MDetailedListItem::ItemStyle style, QGraphi
 
 MDetailedListItem::~MDetailedListItem()
 {
+    delete d_ptr;
 }
 
 void MDetailedListItem::initLayout()

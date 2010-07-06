@@ -109,6 +109,7 @@ MAdvancedListItem::MAdvancedListItem(MAdvancedListItem::ItemStyle style, QGraphi
 
 MAdvancedListItem::~MAdvancedListItem()
 {
+    delete d_ptr;
 }
 
 void MAdvancedListItem::initLayout()

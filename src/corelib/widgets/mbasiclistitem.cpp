@@ -115,6 +115,7 @@ MBasicListItem::MBasicListItem(MBasicListItem::ItemStyle style, QGraphicsItem *p
 
 MBasicListItem::~MBasicListItem()
 {
+    delete d_ptr;
 }
 
 void MBasicListItem::initLayout()
