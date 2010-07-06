@@ -53,11 +53,9 @@ public:
     virtual void updateVisible();
 
     virtual void createContainer();
-    virtual void installSceneEventHandler();
-    virtual void uninstallSceneEventHandler();
 
 protected:
-    virtual bool eventFilter(QObject *object, QEvent *event);
+    void scrollToGroupHeader(int y);
 
 protected Q_SLOTS:
     virtual void listParentChanged();
@@ -68,7 +66,6 @@ public:
     const MListIndexModel *controllerModel;
 
     MApplicationPage *container;
-    QGraphicsScene *eventScene;
 
     QVector<MLabel *> shortcuts;
     int shortcutHeight;

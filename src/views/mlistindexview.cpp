@@ -37,7 +37,6 @@ MListIndexViewPrivate::MListIndexViewPrivate()
   : controller(NULL),
     controllerModel(NULL),
     container(NULL),
-    eventScene(NULL),
     shortcutHeight(0),
     shortcutsCount(0),
     q_ptr(NULL)
@@ -58,7 +57,6 @@ void MListIndexViewPrivate::initLayout()
         shortcutsCount = 0;
 
         createContainer();
-        installSceneEventHandler();
 
         if (controller->model()->shortcutLabels().count() > 0) {
             //create the first shortcut label and get the font metrics from it
@@ -157,7 +155,7 @@ void MListIndexViewPrivate::updateVisible()
 
 void MListIndexViewPrivate::createContainer()
 {
-    disconnect(this, SLOT(exposedContentRectChanged()));
+    disconnect(container, SIGNAL(exposedContentRectChanged()), this, SLOT(exposedContentRectChanged()));
     if (controller->model()->list()) {
         container = MListViewPrivateNamespace::findParentWidgetOfType<MApplicationPage>(controller->model()->list());
 
@@ -172,53 +170,12 @@ void MListIndexViewPrivate::createContainer()
 
 }
 
-void MListIndexViewPrivate::installSceneEventHandler()
+void MListIndexViewPrivate::scrollToGroupHeader(int y)
 {
-    uninstallSceneEventHandler();
-
-    if (controller->scene()) {
-        eventScene = controller->scene();
-        eventScene->installEventFilter(this);
+    QModelIndex scrollTo = locateShortcutIndex(y, 0);
+    if (scrollTo.isValid()) {
+        controllerModel->list()->scrollTo(scrollTo, MList::PositionAtTopHint);
     }
-}
-
-void MListIndexViewPrivate::uninstallSceneEventHandler()
-{
-    if (eventScene)
-        eventScene->removeEventFilter(this);
-}
-
-bool MListIndexViewPrivate::eventFilter(QObject *object, QEvent *event)
-{
-    Q_UNUSED(object);
-
-    QGraphicsSceneMouseEvent *mouseEvent = dynamic_cast<QGraphicsSceneMouseEvent*>(event);
-    if (mouseEvent && controller->isVisible()) {
-        QPointF mousePos = controller->mapFromScene(mouseEvent->scenePos());
-
-        bool mouseOver = false;
-        if (mousePos.y() >= 0 && mousePos.y() <= controller->size().height() &&
-           mousePos.x() >= 0 && mousePos.x() <= controller->size().width())
-            mouseOver = true;
-
-        switch (mouseEvent->type()) {
-        case QGraphicsSceneMouseEvent::GraphicsSceneMousePress:
-        case QGraphicsSceneMouseEvent::GraphicsSceneMouseMove:{
-                if (mouseOver) {
-                    QModelIndex scrollTo = locateShortcutIndex(mousePos.y(), 0);
-                    if (scrollTo.isValid()) {
-                        controllerModel->list()->scrollTo(scrollTo, MList::PositionAtTopHint);
-                    }
-                    return true;
-                }
-            }
-            break;
-        default:
-            break;
-        }
-    }
-
-    return false;
 }
 
 void MListIndexViewPrivate::listParentChanged()
@@ -293,6 +250,26 @@ void MListIndexView::updateData(const QList<const char *> &modifications)
     }
 
     MWidgetView::updateData(modifications);
+}
+
+void MListIndexView::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_D(MListIndexView);
+    MWidgetView::mousePressEvent(event);
+
+    d->scrollToGroupHeader(event->pos().y());
+
+    event->accept();
+}
+
+void MListIndexView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    Q_D(MListIndexView);
+    MWidgetView::mouseMoveEvent(event);
+
+    d->scrollToGroupHeader(event->pos().y());
+
+    event->accept();   
 }
 
 M_REGISTER_VIEW_NEW(MListIndexView, MListIndex)

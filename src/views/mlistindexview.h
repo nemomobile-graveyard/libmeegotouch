@@ -44,6 +44,9 @@ protected:
     //! \reimp
     virtual void setupModel();
     virtual void applyStyle();
+
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     //! \reimp_end
 
     //! \internal
