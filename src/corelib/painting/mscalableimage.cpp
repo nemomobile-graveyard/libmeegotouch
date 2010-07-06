@@ -285,7 +285,7 @@ void MScalableImage::enableOptimizedRendering(bool enable)
     d->m_useGLRenderer = enable;
 }
 
-void MScalableImage::draw(const QRect &rect, const QPoint& pixmapOffset, const QPixmap* pixmap, QPainter *painter) const
+void MScalableImage::draw(const QRect &rect, const QPoint& pixmapOffset, const QPixmap* pixmap, QPainter* painter) const
 {
     if(!pixmap || pixmap->isNull()) {
         // if the pixmap is not valid, draw without filling
@@ -294,36 +294,28 @@ void MScalableImage::draw(const QRect &rect, const QPoint& pixmapOffset, const Q
     }
     // TODO: create HW version with proper shaders (2 textures, 2 sets of texcoords + shader)
 
-    // SLOW: SW fallback, create temporary render target
-    QImage image(rect.size(), QImage::Format_ARGB32);
-    image.fill(Qt::transparent);
+    QPixmap background(rect.size());
+    background.fill(Qt::transparent);
 
-    // paint scalable image to target
-    QPainter imagePainter(&image);
-    draw(QPoint(0,0), rect.size(), &imagePainter);
+    QPainter backgroundPainter;
+    if (!backgroundPainter.begin(&background))
+        return;
 
-    // post process the resulting image (add mask)
-    QImage fillImage = pixmap->toImage();
-    int sourceWidth = fillImage.width();
-    int sourceHeight = fillImage.height();
+    backgroundPainter.drawTiledPixmap(rect, *pixmap, pixmapOffset);
+    backgroundPainter.end();
 
-    int width = image.width();
-    int height = image.height();
+    QPixmap result(rect.size());
+    result.fill(Qt::transparent);
 
-    for (int y = 0; y < height; ++y) {
-        // target scanline
-        uint* target = (uint *) image.scanLine(y);
-        // source scanline (tiled)
-        const uint* source = (const uint *) fillImage.scanLine(pixmapOffset.y() + (y % sourceHeight));
-        for (int x = 0; x < width; ++x) {
-            // tile the x coordinate
-            uint color = *(source + ((pixmapOffset.x() + x) % sourceWidth));
-            // alpha comes from target, colour from source
-            *target = ((*target) & 0xff000000) | (color & 0x00ffffff);
-            target++;
-        }
-    }
+    QPainter resultPainter;
+    if (!resultPainter.begin(&result))
+        return;
 
-    painter->drawImage(rect, image);
+    resultPainter.setCompositionMode(QPainter::CompositionMode_DestinationAtop);
+    resultPainter.drawPixmap(rect, background);
+    draw(QPoint(0, 0), rect.size(), &resultPainter);
+    resultPainter.end();
+
+    painter->drawPixmap(rect, result);
 }
 
