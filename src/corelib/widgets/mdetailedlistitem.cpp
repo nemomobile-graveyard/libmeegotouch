@@ -95,7 +95,7 @@ void MDetailedListItemPrivate::createLayout()
             layout()->addItem(q->imageWidget(), 0, 0, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
             layout()->addItem(q->titleLabelWidget(), 0, 1, 2, 1, Qt::AlignLeft | Qt::AlignVCenter);
-            layout()->addItem(new QGraphicsWidget(q), 1, 1, Qt::AlignRight | Qt::AlignVCenter);
+            layout()->addItem(new QGraphicsWidget(q), 2, 1, Qt::AlignRight | Qt::AlignVCenter);
 
             QGraphicsWidget * panel = new QGraphicsWidget(q);
             QGraphicsLinearLayout * panelLayout = new QGraphicsLinearLayout(Qt::Vertical);
