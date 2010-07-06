@@ -22,6 +22,7 @@
 #include <QTextDocumentFragment>
 #include <QApplication>
 #include <QClipboard>
+#include <MInputMethodState>
 #include "mrichtextedit.h"
 #include "mrichtextedit_p.h"
 
@@ -104,6 +105,28 @@ bool MRichTextEditPrivate::copy()
     return true;
 }
 
+
+void MRichTextEditPrivate::_q_updateStyle()
+{
+    Q_Q(MRichTextEdit);
+
+    QTextCursor cursor = q->textCursor();
+    QTextCharFormat format = cursor.charFormat();
+
+    MInputMethodState::instance()->setToolbarItemAttribute(q->attachedToolbarId(),
+                                                           "Bold",
+                                                           "pressed",
+                                                           QVariant((QFont::Bold == format.fontWeight()) ? "true" : "false"));
+    MInputMethodState::instance()->setToolbarItemAttribute(q->attachedToolbarId(),
+                                                           "Underline",
+                                                           "pressed",
+                                                           QVariant((format.fontUnderline()) ? "true" : "false"));
+    MInputMethodState::instance()->setToolbarItemAttribute(q->attachedToolbarId(),
+                                                           "Italic",
+                                                           "pressed",
+                                                           QVariant((format.fontItalic()) ? "true" : "false"));
+}
+
 ///////////////////////////////////////////////
 // Actual class implementation
 
@@ -111,6 +134,10 @@ bool MRichTextEditPrivate::copy()
 MRichTextEdit::MRichTextEdit(MTextEditModel::LineMode type, const QString &text, QGraphicsItem *parent)
     : MTextEdit(new MRichTextEditPrivate, new MTextEditModel, parent)
 {
+    connect(this,
+            SIGNAL(cursorPositionChanged()),
+            SLOT(_q_updateStyle()));
+
     model()->setText(text);
     model()->setLine(type);
     attachToolbar(ToolbarFile);
@@ -120,6 +147,10 @@ MRichTextEdit::MRichTextEdit(MTextEditModel::LineMode type, const QString &text,
 MRichTextEdit::MRichTextEdit(MTextEditModel *model, QGraphicsItem *parent)
     : MTextEdit(new MRichTextEditPrivate, model, parent)
 {
+    connect(this,
+            SIGNAL(cursorPositionChanged()),
+            SLOT(_q_updateStyle()));
+
     attachToolbar(ToolbarFile);
 }
 

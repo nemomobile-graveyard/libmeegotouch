@@ -56,6 +56,12 @@ public:
      * \return True if operation compeled successfully.
      */
     virtual bool copy();
+
+    /*!
+     * \brief Update the style button(Bold, Italics, Underline) depending on
+     * the current cursor position
+     */
+    void _q_updateStyle();
 };
 
 #endif
