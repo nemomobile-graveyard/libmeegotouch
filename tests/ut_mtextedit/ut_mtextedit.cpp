@@ -1986,6 +1986,52 @@ void Ut_MTextEdit::testAutoSipDisabled()
     QVERIFY(!m_sic->wouldSipBecomeVisible());
 }
 
+void Ut_MTextEdit::testInsertMultiLineText_data()
+{
+    QTest::addColumn<MTextEditModel::LineMode>("lineMode");
+    QTest::addColumn<QString>("text");
+    QTest::addColumn<QString>("expectedText");
+    QTest::addColumn<QString>("expectedText2");
+
+    const QString sampleText(QString("1") + QChar('\n') + "2" + QChar(0x2028) +"3" + QChar(0x2029));
+
+    QTest::newRow("single line entry") << MTextEditModel::SingleLine << sampleText << QString("1 2 3 ")    << QString("12 3 ");
+    QTest::newRow("multi line entry")  << MTextEditModel::MultiLine  << sampleText << QString("1\n2\n3\n") << QString("1\n2\n3\n");
+}
+
+void Ut_MTextEdit::testInsertMultiLineText()
+{
+    QFETCH(MTextEditModel::LineMode, lineMode);
+    QFETCH(QString, text);
+    QFETCH(QString, expectedText);
+    QFETCH(QString, expectedText2);
+
+    delete m_subject;
+    m_subject = new MTextEdit(lineMode);
+
+    QClipboard *clipboard = QApplication::clipboard();
+    QVERIFY(clipboard != 0);
+
+    clipboard->setText(text);
+    m_subject->paste();
+    QCOMPARE(m_subject->text(), expectedText);
+
+    m_subject->clear();
+    QInputMethodEvent preeditEvent(text, QList<QInputMethodEvent::Attribute>());
+    m_subject->inputMethodEvent(&preeditEvent);
+    QCOMPARE(m_subject->text(), expectedText2);
+
+    m_subject->clear();
+    QInputMethodEvent commitEvent("", QList<QInputMethodEvent::Attribute>());
+    commitEvent.setCommitString(text);
+    m_subject->inputMethodEvent(&preeditEvent);
+    QCOMPARE(m_subject->text(), expectedText2);
+
+    m_subject->clear();
+    m_subject->insert(text);
+    QCOMPARE(m_subject->text(), expectedText);
+}
+
 void Ut_MTextEdit::setupSipEnv()
 {
     m_subject->setFlag(QGraphicsItem::ItemAcceptsInputMethod);

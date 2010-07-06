@@ -70,6 +70,11 @@ namespace
 
     const QChar PlusSign('+');
     const QChar MinusSign('-');
+
+    //! Character set for line break.
+    const QString LineBreakSet = QString("\n%1%2")
+        .arg(QChar(0x2028))
+        .arg(QChar(0x2029));
 }
 
 
@@ -351,7 +356,7 @@ bool MTextEditPrivate::doTextInsert(const QString &text, bool usePreeditStyling)
 
     // on single line newline are changed into spaces
     if (q->lineMode() == MTextEditModel::SingleLine) {
-        filteredText.replace(QChar('\n'), QChar(' '));
+        filteredText = replaceLineBreaks(filteredText, QChar(' '));
     }
 
     int textPosition = 0;
@@ -973,6 +978,16 @@ bool MTextEditPrivate::copy()
 
     clipboard->setText(cursor()->selectedText());
     return true;
+}
+
+QString MTextEditPrivate::replaceLineBreaks(QString text, QChar replacement)
+{
+    // FIXME: this implementation works quite slow if text or LineBreakSet is long
+    foreach (QChar lineBreak, LineBreakSet) {
+        text.replace(lineBreak, replacement);
+    }
+
+    return text;
 }
 
 ///////////////////////////////////////////////
@@ -1762,6 +1777,9 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
         emitReturnPressed = commitString.contains('\n');
         preedit.remove('\n');
         commitString.remove('\n');
+
+        preedit = d->replaceLineBreaks(preedit, QChar(' '));
+        commitString = d->replaceLineBreaks(commitString, QChar(' '));
     }
 
     // get and remove the current selection

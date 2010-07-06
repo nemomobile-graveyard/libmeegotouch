@@ -112,6 +112,9 @@ private slots:
 
     void testAutoSipEnabled();
     void testAutoSipDisabled();
+
+    void testInsertMultiLineText_data();
+    void testInsertMultiLineText();
 };
 
 #endif

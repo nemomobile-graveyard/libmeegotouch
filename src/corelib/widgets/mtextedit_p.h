@@ -105,6 +105,8 @@ public:
 
     bool pendingSoftwareInputPanelRequest;
 
+    QString replaceLineBreaks(QString text, QChar replacement);
+
 private:
     const QValidator *validator;
     bool ownValidator; // setting content type creates a validator that the widget owns
