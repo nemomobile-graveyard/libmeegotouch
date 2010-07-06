@@ -336,6 +336,7 @@ MLocalePrivate::MLocalePrivate()
       _phoneNumberGrouping( MLocale::DefaultPhoneNumberGrouping ),
 #ifdef HAVE_ICU
       _numberFormat(0),
+      _numberFormatLcTime(0),
 #endif
 #ifdef HAVE_GCONF
       currentLanguageItem(SettingsLanguage),
@@ -367,6 +368,7 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       _phoneNumberGrouping( other._phoneNumberGrouping ),
 #ifdef HAVE_ICU
       _numberFormat(0),
+      _numberFormatLcTime(0),
 #endif
       _messageTranslations(other._messageTranslations),
       _timeTranslations(other._timeTranslations),
@@ -385,6 +387,9 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
     if (other._numberFormat != 0) {
         _numberFormat = static_cast<icu::NumberFormat *>((other._numberFormat)->clone());
     }
+    if (other._numberFormatLcTime != 0) {
+        _numberFormatLcTime = static_cast<icu::NumberFormat *>((other._numberFormatLcTime)->clone());
+    }
 #endif
 }
 
@@ -392,6 +397,7 @@ MLocalePrivate::~MLocalePrivate()
 {
 #ifdef HAVE_ICU
     delete _numberFormat;
+    delete _numberFormatLcTime;
 #endif
     // note: if tr translations are inserted into QCoreApplication
     // deleting the QTranslator removes them from the QCoreApplication
@@ -417,12 +423,19 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
 
 #ifdef HAVE_ICU
     delete _numberFormat;
+    delete _numberFormatLcTime;
 
     if (other._numberFormat) {
         _numberFormat = static_cast<icu::NumberFormat *>((other._numberFormat)->clone());
 
     } else {
         _numberFormat = 0;
+    }
+    if (other._numberFormatLcTime) {
+        _numberFormatLcTime = static_cast<icu::NumberFormat *>((other._numberFormatLcTime)->clone());
+
+    } else {
+        _numberFormatLcTime = 0;
     }
 #endif
 
@@ -769,6 +782,19 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
         _messageLocale = localeName;
     } else if (category == MLocale::MLcTime) {
         _calendarLocale = localeName;
+#ifdef HAVE_ICU
+        // recreate the number formatter
+        delete _numberFormatLcTime;
+
+        UErrorCode status = U_ZERO_ERROR;
+        icu::Locale timeLocale = getCategoryLocale(MLocale::MLcTime);
+        _numberFormatLcTime = icu::NumberFormat::createInstance(timeLocale, status);
+
+        if (!U_SUCCESS(status)) {
+            mDebug("MLocalePrivate") << "Unable to create number format for LcTime";
+            _valid = false;
+        }
+#endif
     } else if (category == MLocale::MLcNumeric) {
         _numericLocale = localeName;
 #ifdef HAVE_ICU
@@ -780,7 +806,7 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
         _numberFormat = icu::NumberFormat::createInstance(numericLocale, status);
 
         if (!U_SUCCESS(status)) {
-            mDebug("MLocalePrivate") << "Unable to create number format";
+            mDebug("MLocalePrivate") << "Unable to create number format for LcNumeric";
             _valid = false;
         }
 #endif
@@ -1059,7 +1085,15 @@ MLocale::MLocale(const QString &localeName, QObject *parent)
                        status);
 
     if (!U_SUCCESS(status)) {
-        qWarning() << "NumberFormat creating failed:" << u_errorName(status);
+        qWarning() << "NumberFormat creating for LcNumeric failed:" << u_errorName(status);
+        d->_valid = false;
+    }
+    status = U_ZERO_ERROR;
+    d->_numberFormatLcTime = icu::NumberFormat::createInstance(d->getCategoryLocale(MLcTime),
+                       status);
+
+    if (!U_SUCCESS(status)) {
+        qWarning() << "NumberFormat creating for LcTime failed:" << u_errorName(status);
         d->_valid = false;
     }
 #endif
@@ -1570,8 +1604,6 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
     Q_D(const MLocale);
     // convert POSIX format string into ICU format
 
-    MLocale timeLocale(categoryName(MLocale::MLcTime));
-
     QString icuFormat;
 
     bool isInNormalText = false; // a-zA-Z should be between <'>-quotations
@@ -1636,8 +1668,9 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
 
             case 'C': {
                 // century, no corresponding icu pattern
-                int century = mCalendar.year() / 100;
-                icuFormat.append(timeLocale.formatNumber(century));
+                UnicodeString str;
+                d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.year() / 100), str);
+                icuFormat.append(MIcuConversions::unicodeStringToQString(str));
                 break;
             }
 
@@ -1714,8 +1747,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 if (!timeShortFormat.contains('a', Qt::CaseSensitive))
                     timeShortFormat.append(QLatin1String(" a"));
                 icuFormat.append(timeShortFormat);
-            }
                 break;
+            }
 
             case 'R': {
                 // 24-hour clock time, in the format "%H:%M"
@@ -1726,8 +1759,8 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 timeShortFormat.replace(QChar('K'), QChar('k'), Qt::CaseSensitive);
                 timeShortFormat.replace(QChar('h'), QChar('H'), Qt::CaseSensitive);
                 icuFormat.append(timeShortFormat);
-            }
                 break;
+            }
 
             case 'S':
                 // seconds
@@ -1744,18 +1777,24 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 icuFormat.append("kk:mm:ss");
                 break;
 
-            case 'u':
+            case 'u': {
                 // Weekday, as a decimal number (1(Monday)-7)
                 // no corresponding icu pattern for monday based weekday
-                icuFormat.append(timeLocale.formatNumber(mCalendar.dayOfWeek()));
+                UnicodeString str;
+                d->_numberFormatLcTime->format(static_cast<int32_t>(mCalendar.dayOfWeek()), str);
+                icuFormat.append(MIcuConversions::unicodeStringToQString(str));
                 break;
+            }
 
             case 'U': {
                 // Week number of the year (Sunday as the first day of the week) as a
                 // decimal number (00-53). First week starts from first Sunday.
-                QString weeknumber = timeLocale.formatNumber(weekNumberStartingFromDay(mCalendar, MLocale::Sunday));
-                if (weeknumber.length() < 2)
-                    weeknumber = timeLocale.formatNumber(0) + weeknumber;
+                UnicodeString str;
+                d->_numberFormatLcTime->format(static_cast<int32_t>(0), str);
+                d->_numberFormatLcTime->format(static_cast<int32_t>(weekNumberStartingFromDay(mCalendar, MLocale::Sunday)), str);
+                QString weeknumber = MIcuConversions::unicodeStringToQString(str);
+                if (weeknumber.length() > 2)
+                    weeknumber = weeknumber.right(2);
                 icuFormat.append(weeknumber);
                 break;
             }
@@ -1768,9 +1807,12 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 MCalendar calendarCopy = mCalendar;
                 calendarCopy.setFirstDayOfWeek(MLocale::Monday);
                 calendarCopy.setMinimalDaysInFirstWeek(4);
-                QString weeknumber = timeLocale.formatNumber(calendarCopy.weekNumber());
-                if (weeknumber.length() < 2)
-                    weeknumber = timeLocale.formatNumber(0) + weeknumber;
+                UnicodeString str;
+                d->_numberFormatLcTime->format(static_cast<int32_t>(0), str);
+                d->_numberFormatLcTime->format(static_cast<int32_t>(calendarCopy.weekNumber()), str);
+                QString weeknumber = MIcuConversions::unicodeStringToQString(str);
+                if (weeknumber.length() > 2)
+                    weeknumber = weeknumber.right(2); // cut leading 0
                 icuFormat.append(weeknumber);
                 break;
             }
@@ -1778,12 +1820,12 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
             case 'w': {
                 // Weekday, as a decimal number (0(Sunday)-6)
                 int weekday = mCalendar.dayOfWeek();
-
                 if (weekday == Sunday) {
                     weekday = 0;
                 }
-
-                icuFormat.append(timeLocale.formatNumber(weekday));
+                UnicodeString str;
+                d->_numberFormatLcTime->format(static_cast<int32_t>(weekday), str);
+                icuFormat.append(MIcuConversions::unicodeStringToQString(str));
                 break;
             }
 
@@ -1791,7 +1833,9 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
                 // Week number of the year (Monday as the first day of the week), as a
                 // decimal number (00-53). Week starts from the first monday
                 int weeknumber = weekNumberStartingFromDay(mCalendar, MLocale::Monday);
-                icuFormat.append(timeLocale.formatNumber(weeknumber));
+                UnicodeString str;
+                d->_numberFormatLcTime->format(static_cast<int32_t>(weeknumber), str);
+                icuFormat.append(MIcuConversions::unicodeStringToQString(str));
                 break;
             }
 

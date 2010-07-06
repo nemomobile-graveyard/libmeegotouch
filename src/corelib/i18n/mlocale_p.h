@@ -140,6 +140,7 @@ public:
 #ifdef HAVE_ICU
     // number format caching for better performance.
     icu::NumberFormat *_numberFormat;
+    icu::NumberFormat *_numberFormatLcTime;
 #endif
 
     // translations for two supported translation categories
