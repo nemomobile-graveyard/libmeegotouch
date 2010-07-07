@@ -46,6 +46,8 @@ private slots:
     void clientDataAvailable();
 
     void themeChanged();
+    void themeChangeTimeout();
+    
     void localeChanged();
 
     void processOneQueueItem();

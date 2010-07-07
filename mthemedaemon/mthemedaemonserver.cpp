@@ -24,9 +24,12 @@
 
 #include <QLocalSocket>
 #include <QDir>
+#include <QTimer>
 
 
 using namespace M::MThemeDaemonProtocol;
+
+const int THEME_CHANGE_TIMEOUT = 3000;
 
 MThemeDaemonServer::MThemeDaemonServer() :
     currentTheme("/meegotouch/theme/name"),
@@ -142,10 +145,10 @@ void MThemeDaemonServer::clientDisconnected()
             
             // check if the delayed theme change has been request and whether we can complete it now
             if( removed && clientsThatHaveNotYetAppliedThemeChange.isEmpty() && delayedThemeChange ) {
-                mWarning("MThemeDaemonServer") << "Start delayed theme change.";
+                mWarning("MThemeDaemonServer") << "Start delayed theme change due to disconnection of last pending application.";
                 delayedThemeChange = false;
                 themeChanged();
-            }            
+            }
         }
         socket->deleteLater();
     }
@@ -251,8 +254,14 @@ void MThemeDaemonServer::themeChanged()
 
     //if previous theme change is not finished yet we need wait it to complete before changing to new one
     if(!clientsThatHaveNotYetAppliedThemeChange.isEmpty()) {
-        mWarning("MThemeDaemonServer") << "Will not change theme while another theme change is still ongoing";
+        mWarning("MThemeDaemonServer") << "Will not change theme while another theme change is still ongoing. Change requests still pending:" << clientsThatHaveNotYetAppliedThemeChange.size();
+        QStringList list;
+        for (int i = 0; i < clientsThatHaveNotYetAppliedThemeChange.size(); ++i) {
+            list << clientsThatHaveNotYetAppliedThemeChange.at(i)->name();
+        }        
+        mWarning("MThemeDaemonServer") << list;
         delayedThemeChange = true;
+        QTimer::singleShot(THEME_CHANGE_TIMEOUT, this, SLOT(themeChangeTimeout()));
         return;
     }
 
@@ -305,6 +314,28 @@ void MThemeDaemonServer::themeChanged()
     } else {
         // could not change to default theme, something seriously wrong now nothing we can do
         qFatal("MThemeDaemonServer - Could not fall back to default theme.");
+    }
+}
+
+void MThemeDaemonServer::themeChangeTimeout()
+{
+    //check if some applications have not yet replied to theme 
+    //change request, output some info and clear the list
+    if(!clientsThatHaveNotYetAppliedThemeChange.isEmpty()) {
+        mWarning("MThemeDaemonServer") << "Theme change timeout. Change requests still pending:" << clientsThatHaveNotYetAppliedThemeChange.size();
+        QStringList list;
+        for (int i = 0; i < clientsThatHaveNotYetAppliedThemeChange.size(); ++i) {
+            list << clientsThatHaveNotYetAppliedThemeChange.at(i)->name();
+        }        
+        mWarning("MThemeDaemonServer") << list;        
+        clientsThatHaveNotYetAppliedThemeChange.clear();
+    }
+
+    //if delayed theme change was requested, change it now
+    if( delayedThemeChange ) {
+        mWarning("MThemeDaemonServer") << "Start delayed theme change due to timeout.";
+        delayedThemeChange = false;
+        themeChanged();
     }
 }
 
@@ -433,7 +464,7 @@ void MThemeDaemonServer::themeChangeApplied(MThemeDaemonClient *client,
     
         //if delayed theme change was requested, change it now
         if( delayedThemeChange ) {
-            mWarning("MThemeDaemonServer") << "Start delayed theme change.";
+            mWarning("MThemeDaemonServer") << "Start delayed theme change after receiving all the replies.";
             delayedThemeChange = false;
             themeChanged();
         }
