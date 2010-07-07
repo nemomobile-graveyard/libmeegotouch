@@ -554,11 +554,19 @@ QSizeF MWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 
 void MWidgetView::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
+    Q_D(MWidgetView);
     Q_UNUSED(widget);
-    painter->translate(marginLeft(), marginTop());
+
+    int horizontalMargin = 0;
+    if (d->controller->layoutDirection() == Qt::LeftToRight)
+        horizontalMargin = marginLeft();
+    else
+        horizontalMargin = marginRight();
+
+    painter->translate(horizontalMargin, marginTop());
     drawBackground(painter, option);
     drawContents(painter, option);
-    painter->translate(-marginLeft(), -marginTop());
+    painter->translate(-horizontalMargin, -marginTop());
     drawForeground(painter, option);
 }
 
