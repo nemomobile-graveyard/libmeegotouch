@@ -182,12 +182,31 @@ ImageResource *MThemeDaemon::findImageResource(const QString &imageId)
 
 void MThemeDaemon::reloadImagePaths(const QString &locale)
 {
-    qDeleteAll(themeImageDirs);
-    themeImageDirs.clear();
-
+    QList<MThemeImagesDirectory*> newThemeImageDirs;
     foreach(const QString & theme, themeInheritance) {
-        themeImageDirs.append(new MThemeImagesDirectory(theme + "meegotouch", locale));
+        const QString path = theme + "meegotouch";
+        
+        // Creating a MThemeImagesDirectory is an expensive operation.
+        // Check whether there is already a MThemeImagesDirectory instance
+        // that can be reused.
+        bool foundDir = false;
+        for (int i = 0; i < themeImageDirs.size(); ++i) {
+            foundDir = (themeImageDirs[i]->path() == path) && (themeImageDirs[i]->locale() == locale);
+            if (foundDir) {
+                newThemeImageDirs.append(themeImageDirs[i]);
+                themeImageDirs[i] = 0;
+                break;
+            }
+        }
+       
+        if (!foundDir) {
+            // No existing MThemeImagesDirectory could be reused, create a new one
+            newThemeImageDirs.append(new MThemeImagesDirectory(path, locale));
+        }
     }
+    
+    qDeleteAll(themeImageDirs);
+    themeImageDirs = newThemeImageDirs;
 }
 
 

@@ -128,6 +128,10 @@ public:
     bool isLocaleSpecificImage(const QString &imageId) const;
 
     void reloadLocaleSpecificImages(const QString &locale);
+    
+    QString path() const;
+    QString locale() const;
+    
 private:
     // image id => image resource
     QHash<QString, ImageResource *> imageIds;
@@ -140,7 +144,8 @@ private:
 
     QSet<QString> notFoundIds;
 
-    QString path;
+    QString m_path;
+    QString m_locale;
 };
 
 

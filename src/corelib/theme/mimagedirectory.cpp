@@ -207,7 +207,8 @@ const QString MThemeImagesDirectory::svgDir = "svg";
 
 
 MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString &locale) :
-    path(path)
+    m_path(path),
+    m_locale(locale)
 {
     QList<QString> directories;
     // first go trough the pixmaps dir
@@ -372,7 +373,7 @@ void MThemeImagesDirectory::reloadLocaleSpecificImages(const QString &locale)
         return;
     }
 
-    QString localeDir = path + QDir::separator() + "locale" + QDir::separator() + locale + QDir::separator() + iconsDir;
+    QString localeDir = m_path + QDir::separator() + "locale" + QDir::separator() + m_locale + QDir::separator() + iconsDir;
     if (!QFile::exists(localeDir)) {
         return;
     }
@@ -400,6 +401,15 @@ void MThemeImagesDirectory::reloadLocaleSpecificImages(const QString &locale)
     }
 }
 
+QString MThemeImagesDirectory::path() const
+{
+    return m_path;
+}
+
+QString MThemeImagesDirectory::locale() const
+{
+    return m_locale;
+}
 
 MImageDirectory::MImageDirectory(const QString &path, M::RecursionMode recursionMode)
 {
