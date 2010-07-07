@@ -101,8 +101,8 @@ void ut_mvideowidget::cleanup()
 void ut_mvideowidget::initTestCase()
 {
 #define MAX_PARAMS 8
-    char *argv[MAX_PARAMS];
-    int argc = 2;
+    static char *argv[MAX_PARAMS];
+    static int argc = 2;
 
     argv[0] = strdup("./ut_mbutton");
     argv[1] = strdup("-software");

@@ -60,8 +60,8 @@ void Ut_MSceneWindow::cleanup()
 void Ut_MSceneWindow::initTestCase()
 {
     if(MComponentData::instance() == 0) {
-        int argc = 1;
-        char *argv[ 1 ];
+        static int argc = 1;
+        static char *argv[ 1 ];
         argv[ 0 ] = (char*)"./ut_mwindow";
         m_componentData = new MComponentData(argc, argv);
     }

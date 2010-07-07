@@ -69,8 +69,8 @@ void Ut_MStatusBar::cleanup()
 
 void Ut_MStatusBar::initTestCase()
 {
-    int argc = 1;
-    char *app_name = (char *)"./ut_mstatusbar";
+    static int argc = 1;
+    static char *app_name = (char *)"./ut_mstatusbar";
     app = new MApplication(argc, &app_name);
 }
 

@@ -102,8 +102,8 @@ void Ut_MComponentCache::testGLWidgetAndDBusService()
 #endif /* QT_OPENGL_LIB */
 
     /* Pick up the application from the cache and register a special D-Bus service */
-    char ** argv  = packTwoArgs("testDBusRegistration", "argument1");
-    int argc = 2;
+    static char ** argv  = packTwoArgs("testDBusRegistration", "argument1");
+    static int argc = 2;
     MApplicationService *service = new MApplicationService("com.nokia.appName");
 
     MApplication *app = MComponentCache::mApplication(argc, argv, "doesnt_matter", service);

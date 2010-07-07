@@ -115,8 +115,8 @@ bool Ut_MAppletInventoryView::disappearCalled;
 void Ut_MAppletInventoryView::initTestCase()
 {
     // Create a MAapplication
-    int argc = 1;
-    char *app_name = (char *)"./ut_mappletinventoryview";
+    static int argc = 1;
+    static char *app_name = (char *)"./ut_mappletinventoryview";
     app = new MApplication(argc, &app_name);
     appWin = new MApplicationWindow;
 }

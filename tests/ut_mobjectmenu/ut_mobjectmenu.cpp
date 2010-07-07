@@ -35,8 +35,8 @@ MApplication *app;
 
 void Ut_MObjectMenu::initTestCase()
 {
-    int argc = 1;
-    char *app_name = (char *) "./ut_mobjectmenu";
+    static int argc = 1;
+    static char *app_name = (char *) "./ut_mobjectmenu";
     app = new MApplication(argc, &app_name);
 }
 

@@ -61,8 +61,8 @@ void Ut_MExtensionArea::cleanup()
 void Ut_MExtensionArea::initTestCase()
 {
     // MApplications must be created manually due to theme system changes
-    int argc = 1;
-    char *app_name = (char *)"./ut_mextensionarea";
+    static int argc = 1;
+    static char *app_name = (char *)"./ut_mextensionarea";
     app = new MApplication(argc, &app_name);
 }
 

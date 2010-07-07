@@ -95,8 +95,8 @@ MApplication *Ut_MApplication::buildApp(int count, const QString &params, const 
     MApplication *retVal = 0;
 
     QChar sep(' ');
-    char *argv[MAX_PARAMS];
-    int x = 0;
+    static char *argv[MAX_PARAMS];
+    static int x = 0;
 
     QStringList list = params.split(sep);
     QStringListIterator it(list);
@@ -127,8 +127,8 @@ MApplication *Ut_MApplication::buildPrestartApp(int count, const QString &params
     MApplication *retVal = 0;
 
     QChar sep(' ');
-    char *argv[MAX_PARAMS];
-    int x = 0;
+    static char *argv[MAX_PARAMS];
+    static int x = 0;
 
     QStringList list = params.split(sep);
     QStringListIterator it(list);

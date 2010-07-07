@@ -36,8 +36,8 @@ Ft_MButton::Ft_MButton()
 
 void Ft_MButton::initTestCase()
 {
-    int argc = 1;
-    char *argv = (char *) "./ft_mbutton";
+    static int argc = 1;
+    static char *argv = (char *) "./ft_mbutton";
     app = new MApplication(argc, &argv);
     qDebug() << "loadCSS " <<  MTheme::loadCSS("ft_mbutton.css");
 }

@@ -39,8 +39,8 @@ void Ut_MImageWidget::initTestCase()
     QImage img(qApp->applicationDirPath() + "/ut_mimagewidget-test.png");
 
     if (! MComponentData::instance()) {
-        char *argv = 0;
-        int argc = 0;
+        static char *argv = 0;
+        static int argc = 0;
         new MComponentData(argc, &argv, QString("ut_mimagewidget"), NULL);
     }
 

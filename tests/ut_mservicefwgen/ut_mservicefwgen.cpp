@@ -36,8 +36,8 @@ QCoreApplication *Ut_MServiceFwGen::buildApp()
     QCoreApplication *retVal = 0;
 
     QChar sep(' ');
-    char *argv[MAX_PARAMS];
-    int count=1;
+    static char *argv[MAX_PARAMS];
+    static int count=1;
     argv[0]=(char *)"ut_mservicefwgen";
 
     retVal = new QCoreApplication(count, argv);

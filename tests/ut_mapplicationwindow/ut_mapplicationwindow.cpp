@@ -37,8 +37,8 @@
 void Ut_MApplicationWindow::initTestCase()
 {
     if(MComponentData::instance() == 0) {
-        int argc = 1;
-        char *argv[ 1 ];
+        static int argc = 1;
+        static char *argv[ 1 ];
         argv[ 0 ] = (char*)"./ut_mscenewindow";
         m_componentData = new MComponentData(argc, argv);
     }

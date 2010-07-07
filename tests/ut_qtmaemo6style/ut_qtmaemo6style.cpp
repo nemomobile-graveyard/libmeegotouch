@@ -56,8 +56,8 @@ void Ut_QtMaemo6Style::testStyleLoadedByDefault() {
     //only test it, if at least there is a plugin, otherwise we asume the
     // style is intentionally not installed
     if(QFile::exists("/usr/lib/qt4/plugins/styles/libmeegotouchqtstyleplugin.so")) {
-        int argc = 1;
-        char *argv[1] = { (char *) "./ut_qtmaemo6style" };
+        static int argc = 1;
+        static char *argv[1] = { (char *) "./ut_qtmaemo6style" };
         QApplication app(argc, argv);
         QStyle* style = app.style();
         QVERIFY(style->inherits("QtMaemo6Style"));
@@ -70,8 +70,8 @@ void Ut_QtMaemo6Style::testLoadOtherStyle() {
     //only test it, if at least there is a plugin, otherwise we asume the
     // style is intentionally not installed
     if(QFile::exists("/usr/lib/qt4/plugins/styles/libmeegotouchqtstyleplugin.so")) {
-        int argc = 3;
-        char *argv[3] = { (char *) "./ut_qtmaemo6style", (char *) "-style", (char *) "windows"};
+        static int argc = 3;
+        static char *argv[3] = { (char *) "./ut_qtmaemo6style", (char *) "-style", (char *) "windows"};
         QApplication app(argc, argv);
         QStyle* style = app.style();
         QVERIFY(style->inherits("QWindowsStyle"));
@@ -82,8 +82,8 @@ void Ut_QtMaemo6Style::testWindowDecoration() {
     //only test it, if at least there is a plugin, otherwise we asume the
     // style is intentionally not installed
     if(QFile::exists("/usr/lib/qt4/plugins/styles/libmeegotouchqtstyleplugin.so")) {
-        int argc = 3;
-        char *argv[3] = { (char *) "./ut_qtmaemo6style", (char *) "-style", (char *) "maemo6"};
+        static int argc = 3;
+        static char *argv[3] = { (char *) "./ut_qtmaemo6style", (char *) "-style", (char *) "maemo6"};
         m_app = new QApplication(argc, argv);
         QVERIFY(m_app->style()->inherits("QtMaemo6Style"));
 
@@ -125,8 +125,8 @@ void Ut_QtMaemo6Style::testFonts() {
     //only test it, if at least there is a plugin, otherwise we asume the
     // style is intentionally not installed
     if(QFile::exists("/usr/lib/qt4/plugins/styles/libmeegotouchqtstyleplugin.so")) {
-        int argc = 1;
-        char *argv[1] = { (char *) "./ut_qtmaemo6style" };
+        static int argc = 1;
+        static char *argv[1] = { (char *) "./ut_qtmaemo6style" };
         QApplication app(argc, argv);
         Q_UNUSED(app);
         //font settings on a button should be ignored

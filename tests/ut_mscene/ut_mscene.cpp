@@ -44,8 +44,8 @@ void Ut_MScene::cleanupTestCase()
 void Ut_MScene::init()
 {
     QChar sep(' ');
-    char *argv[MAX_PARAMS];
-    int x = 0;
+    static char *argv[MAX_PARAMS];
+    static int x = 0;
     QString params("./ut_mscene -software -show-br -show-fps -show-size -show-position");
 
     QStringList list = params.split(sep);
