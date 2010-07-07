@@ -31,14 +31,14 @@ void Ft_Sorting::initTestCase()
     qap = new QCoreApplication(argc, argv);
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
     QProcess process;
-    process.start("sh -c \"dpkg -s libicu-dev | grep Version | perl -pe 's/^Version:[[:space:]]*([^[[:space:]]+)$/$1/g'\"");
+    process.start("sh -c \"dpkg -s libicu44 | grep Version | perl -pe 's/^Version:[[:space:]]*([^[[:space:]]+)$/$1/g'\"");
     if (!process.waitForFinished()) {
-        qDebug() << "cannot run process to check libicu-dev package version , exiting ...";
+        qDebug() << "cannot run process to check libicu44 package version , exiting ...";
         exit(1);
     }
     icuPackageVersion = process.readAllStandardOutput();
     icuPackageVersion.replace("\n", "");
-    qDebug() << "libicu-dev package version is:" << icuPackageVersion;
+    qDebug() << "libicu44 package version is:" << icuPackageVersion;
 }
 
 void Ft_Sorting::cleanup()
