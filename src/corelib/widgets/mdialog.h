@@ -149,6 +149,17 @@ class MDismissEvent;
     dialog->appear();
     \endcode
 
+    Adding standard and non standard buttons:
+
+    \code
+    \\First two are standard buttons with positive and negative roles.
+    addButton(M::OkButton);
+    addButton(M::CancelButton);
+    \\The third is custom button with positive role
+    addButton("Custom Action", M::ActionRole);
+    \endcode
+    Order of buttons will be: Ok, Custom Action, Cancel.
+
     \sa MDialogView, MDialogStyle
 
  */
@@ -370,6 +381,23 @@ public:
      * \sa removeButton()
      */
     MButtonModel *addButton(const QString &text);
+
+    /*!
+     * \brief Creates a button with the given \a text and adds it to the button box
+     * placing it according to given \a role. It should be used in case it is necessary to
+     * place nonstandard buttons before standard ones.
+     *
+     * Positive roles like AcceptRole, ActionRole, YesRole will be placed always before
+     * buttons with negative role: CancelRole, RejectRole.
+     *
+     * Secondary order depends on order of addButton() calls in code.
+     *
+     * \param text - dialog caption
+     * \param role - role of the button
+     *
+     * \sa addButton(MButtonModel *button),  addButton(M::StandardButton button), M::ButtonRole, removeButton()
+      */
+    MButtonModel *addButton(const QString &text, M::ButtonRole role);
 
     /*!
      * \brief Creates a standard button specified by the \a button value.

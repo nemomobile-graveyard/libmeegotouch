@@ -356,6 +356,18 @@ MButtonModel *MDialog::addButton(const QString &text)
     return buttonModel;
 }
 
+MButtonModel *MDialog::addButton(const QString &text, M::ButtonRole role)
+{
+    MButtonModel *buttonModel = 0;
+
+    buttonModel = new MButtonModel;
+    buttonModel->setRole(role);
+    buttonModel->setText(text);
+    addButton(buttonModel);
+
+    return buttonModel;
+}
+
 MButtonModel *MDialog::addButton(M::StandardButton buttonType)
 {
     return model()->addButton(buttonType);

@@ -415,14 +415,13 @@ bool MDialogViewPrivate::isButtonInButtonBox(MButtonModel *buttonModel)
 
 void MDialogViewPrivate::addButton(MButtonModel *buttonModel)
 {
-    Q_Q(MDialogView);
-    M::StandardButton currButtonType;
+    M::ButtonRole currentButtonRole;
     MButton *newButton = new MButton(0, buttonModel);
     newButton->setObjectName(buttonModel->objectName());
     MButton *currButton = 0;
     bool buttonAdded = false;
     int i = 0;
-    M::StandardButton buttonType = q->model()->standardButton(buttonModel);
+    M::ButtonRole buttonRole = buttonModel->role();
 
     /* The order of buttons should be arranged so, that from left-to-right,
        top-down, the positive/confirming button should be the first one, and
@@ -434,9 +433,9 @@ void MDialogViewPrivate::addButton(MButtonModel *buttonModel)
         if (i < buttonBoxLayout->count()) {
             currButton = static_cast<MButton *>(buttonBoxLayout->itemAt(i));
 
-            currButtonType = q->model()->standardButton(currButton->model());
+            currentButtonRole = currButton->model()->role();
 
-            if (stdButtonOrder(buttonType) < stdButtonOrder(currButtonType)) {
+            if (buttonOrder(buttonRole) < buttonOrder(currentButtonRole)) {
                 buttonBoxLayoutPolicy->insertItem(i, newButton);
                 buttonAdded = true;
             }
@@ -454,35 +453,25 @@ void MDialogViewPrivate::addButton(MButtonModel *buttonModel)
     }
 }
 
-int MDialogViewPrivate::stdButtonOrder(M::StandardButton buttonType)
+int MDialogViewPrivate::buttonOrder(M::ButtonRole role)
 {
     int order;
 
-    switch (buttonType) {
+    switch (role) {
         // Positive actions
-    case M::OkButton:
-    case M::SaveButton:
-    case M::SaveAllButton:
-    case M::OpenButton:
-    case M::YesButton:
-    case M::YesToAllButton:
-    case M::RetryButton:
-    case M::ApplyButton:
-    case M::DoneButton:
+    case M::AcceptRole:
+    case M::ActionRole:
+    case M::HelpRole:
+    case M::YesRole:
+    case M::ApplyRole:
         order = 1;
         break;
 
         // Negative actions
-    case M::NoButton:
-    case M::NoToAllButton:
-    case M::AbortButton:
-    case M::IgnoreButton:
-    case M::CloseButton:
-    case M::CancelButton:
-    case M::DiscardButton:
-    case M::HelpButton:
-    case M::ResetButton:
-    case M::RestoreDefaultsButton:
+    case M::RejectRole:
+    case M::DestructiveRole:
+    case M::NoRole:
+    case M::ResetRole:
         order = 2;
         break;
 

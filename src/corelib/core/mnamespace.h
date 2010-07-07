@@ -213,6 +213,37 @@ namespace M
     };
 
     /*!
+      * This enum describes the roles that can be used to describe buttons in the button box.
+      * Currently they are used to determine primary order of buttons.
+      * Positive roles like AcceptRole, ActionRole, YesRole will be placed always before buttons with negative role:
+      * CancelRole, RejectRole.
+      */
+    enum ButtonRole {
+        //! The button is invalid.
+        InvalidRole = QMessageBox::InvalidRole,
+        //! Clicking the button causes the dialog to be accepted (e.g. OK).
+        AcceptRole = QMessageBox::AcceptRole,
+        //! Clicking the button causes the dialog to be rejected (e.g. Cancel).
+        RejectRole = QMessageBox::RejectRole,
+        //! Clicking the button causes a destructive change (e.g. for Discarding Changes) and closes the dialog.
+        DestructiveRole = QMessageBox::DestructiveRole,
+        //! Clicking the button causes changes to the elements within the dialog.
+        ActionRole = QMessageBox::ActionRole,
+        //! The button can be clicked to request help.
+        HelpRole = QMessageBox::HelpRole,
+        //! The button is a "Yes"-like button.
+        YesRole = QMessageBox::YesRole,
+        //! The button is a "No"-like button.
+        NoRole = QMessageBox::NoRole,
+        //! The button resets the dialog's fields to default values.
+        ResetRole = QMessageBox::ResetRole,
+        //! The button applies current changes.
+        ApplyRole = QMessageBox::ApplyRole,
+
+        NRoles = QMessageBox::NRoles
+    };
+
+    /*!
      * \brief This enum describes flags for standard buttons. Each button has a defined caption.
      *
      */

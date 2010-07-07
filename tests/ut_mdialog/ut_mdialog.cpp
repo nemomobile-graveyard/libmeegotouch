@@ -145,9 +145,21 @@ void Ut_MDialog::addStandardButtons()
     MButtonModel *b4 = dialog->addButton(M::NoButton);
 
     QCOMPARE(dialog->button(M::AbortButton), b1);
+    QCOMPARE(dialog->button(M::AbortButton)->role(), M::RejectRole);
     QCOMPARE(dialog->button(M::OkButton), b2);
+    QCOMPARE(dialog->button(M::OkButton)->role(), M::AcceptRole);
     QCOMPARE(dialog->button(M::NoButton), b4);
+    QCOMPARE(dialog->button(M::NoButton)->role(), M::NoRole);
     QVERIFY(dialog->button(M::YesToAllButton) == 0);
+}
+
+void Ut_MDialog::addNonStandardButtonsWithRole()
+{
+    MButtonModel *b1 = dialog->addButton("Custom Action Button", M::AcceptRole);
+    MButtonModel *b2 = dialog->addButton("Custom Reject Button", M::RejectRole);
+
+    QCOMPARE(b1->role(), M::AcceptRole);
+    QCOMPARE(b2->role(), M::RejectRole);
 }
 
 void Ut_MDialog::addInvalidStandardButton()

@@ -131,6 +131,13 @@ public:
      * \sa button(M::StandardButton)
      */
     M::StandardButton standardButton(const MButtonModel *button) const;
+
+    /*!
+     * \brief Maps M::StandardButton enum values to corresponding M::ButtonRole.
+     *
+     * \sa button(M::StandardButton)
+     */
+    static M::ButtonRole roleFor(M::StandardButton button);
 };
 
 #endif

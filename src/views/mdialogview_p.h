@@ -91,7 +91,7 @@ public:
     static QGraphicsWidget *createSpacer();
     static QGraphicsLinearLayout *createLayout(Qt::Orientation orientation);
     void repopulateButtonBox();
-    static int stdButtonOrder(M::StandardButton buttonType);
+    static int buttonOrder(M::ButtonRole role);
     void removeButtonsNotInDialogModel();
     void addButtonsFromDialogModel();
     bool isButtonInButtonBox(MButtonModel *buttonModel);

@@ -225,6 +225,7 @@ MButtonModel *MDialogModel::addButton(M::StandardButton buttonType)
             buttonModel = createStandardButton(buttonType);
             addButton(buttonModel);
         }
+        buttonModel->setRole(roleFor(buttonType));
     }
 
     return buttonModel;
@@ -317,4 +318,47 @@ M::StandardButton MDialogModel::standardButton(const MButtonModel *button) const
     }
 
     return result;
+}
+
+M::ButtonRole MDialogModel::roleFor(M::StandardButton button)
+{
+    switch (button) {
+    case M::OkButton:
+    case M::SaveButton:
+    case M::OpenButton:
+    case M::SaveAllButton:
+    case M::RetryButton:
+    case M::IgnoreButton:
+    case M::DoneButton:
+        return M::AcceptRole;
+
+    case M::CancelButton:
+    case M::CloseButton:
+    case M::AbortButton:
+        return M::RejectRole;
+
+    case M::DiscardButton:
+        return M::DestructiveRole;
+
+    case M::HelpButton:
+        return M::HelpRole;
+
+    case M::ApplyButton:
+        return M::ApplyRole;
+
+    case M::YesButton:
+    case M::YesToAllButton:
+        return M::YesRole;
+
+    case M::NoButton:
+    case M::NoToAllButton:
+        return M::NoRole;
+
+    case M::RestoreDefaultsButton:
+    case M::ResetButton:
+        return M::ResetRole;
+
+    default:
+        return M::InvalidRole;
+    }
 }

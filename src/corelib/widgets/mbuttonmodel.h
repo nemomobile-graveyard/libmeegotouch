@@ -30,6 +30,10 @@
     \ingroup models
     \sa MButton
 */
+
+//We need this to due to MOC generator limitations:
+using M::ButtonRole;
+
 class M_EXPORT MButtonModel : public MWidgetModel
 {
     Q_OBJECT
@@ -88,6 +92,12 @@ class M_EXPORT MButtonModel : public MWidgetModel
         \brief Boolean value that defines whether button is currently pressed down or not.
     */
     M_MODEL_PROPERTY(bool, down, Down, true, false)
+
+     /*!
+        \property MButtonModel::role
+        \brief Enum property that defines button role.
+    */
+    M_MODEL_PROPERTY(ButtonRole, role, Role, true,  M::InvalidRole)
 
 public:
 
