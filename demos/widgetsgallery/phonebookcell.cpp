@@ -41,6 +41,11 @@ PhoneBookCell::PhoneBookCell()
 
 PhoneBookCell::~PhoneBookCell()
 {
+    if (spinner)
+        delete spinner;
+
+    if (icon)
+        delete icon;
 }
 
 MLayout *PhoneBookCell::createLayout()
@@ -59,6 +64,7 @@ MLayout *PhoneBookCell::createLayout()
         landscapePolicy->addItem(spinnerWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
     else
         landscapePolicy->addItem(imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+
 
     landscapePolicy->addItem(landscapeTitleLabelWidget(), 0, 1, Qt::AlignLeft | Qt::AlignTop);
     landscapePolicy->addItem(subtitleLabelWidget(), 1, 1, Qt::AlignLeft | Qt::AlignBottom);
@@ -85,7 +91,7 @@ MProgressIndicator *PhoneBookCell::spinnerWidget()
 {
     if (!spinner) {
         // spinner
-        spinner = new MProgressIndicator(this, MProgressIndicator::spinnerType);
+        spinner = new MProgressIndicator(NULL, MProgressIndicator::spinnerType);
         spinner->setUnknownDuration(true);
         spinner->setObjectName("CommonMainIcon");
 
@@ -128,7 +134,7 @@ MImageWidget *PhoneBookCell::imageWidget()
 {
     if (!icon) {
         // icon
-        icon = new MImageWidget(this);
+        icon = new MImageWidget();
         icon->setObjectName("CommonMainIcon");
         icon->setVisible(false);
     }

@@ -45,6 +45,7 @@
 #include <MWidgetAction>
 
 #include "phonebookcell.h"
+#include "phonebookheader.h"
 
 #include <MListFilter>
 #include <MTextEdit>
@@ -83,6 +84,22 @@ QString MListPage::timedemoTitle()
 {
     return "List";
 }
+
+class MListAdvancedCustomHeaderCreator : public MAbstractCellCreator<PhoneBookHeader>
+{
+public:
+    void updateCell(const QModelIndex &index, MWidget *cell) const {
+        PhoneBookHeader *header = qobject_cast<PhoneBookHeader*>(cell);
+        QString title = index.data(Qt::DisplayRole).toString();
+
+        header->setGroupTitle(title);
+        header->setGroupCount(index.model()->rowCount(index));
+    }
+
+    QSizeF cellSize() const {
+        return QSizeF(-1, 100);
+    }
+};
 
 class MListCustomHeaderCreator : public MAbstractCellCreator<MButton>
 {
@@ -327,6 +344,7 @@ void MListPage::createActions()
     QStringList amountOfItemsList;
     amountOfItemsList << "50 items" << "100 items" << "200 items" << "1000 items";
     combo = createComboBoxAction("Items in model", amountOfItemsList);
+    combo->setCurrentIndex(3); // by default create 1000 items
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeAmountOfItemInList(int)));
 #endif //HAVE_N900
 
@@ -500,13 +518,19 @@ void MListPage::changeLiveFilteringMode(int index)
 
 void MListPage::changeGroupHeadersMode(int index)
 {
-    Q_ASSERT(index >=0 && index <= 1);
-    bool customHeaders = (index == 1);
+    Q_ASSERT(index >=0 && index <= 2);
 
-    if (customHeaders)
+    switch (index) {
+    case 1:
         list->setHeaderCreator(new MListCustomHeaderCreator);
-    else
+        break;
+    case 2:
+        list->setHeaderCreator(new MListAdvancedCustomHeaderCreator);
+        break;
+    default:
         list->setHeaderCreator(NULL);
+        break;
+    };
 }
 
 void MListPage::itemClick(const QModelIndex &index)
@@ -608,7 +632,7 @@ void MListPage::showAdvancedConfigurationDialog()
         landscapePolicy->addItem(combo);
 
         QStringList groupHeadersModes;
-        groupHeadersModes << "Default - Labels" << "Custom - Buttons";
+        groupHeadersModes << "Default - Labels" << "Custom - Buttons" << "Advanced - Custom Widget";
         combo = createComboBoxLabelButton("Group Headers", groupHeadersModes, panel);
         connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeGroupHeadersMode(int)));
 
@@ -671,6 +695,8 @@ void MListPage::createContent()
 
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClick(QModelIndex)));
     connect(list, SIGNAL(itemLongTapped(QModelIndex)), this, SLOT(itemLongTapped(QModelIndex)));
+
+    changeAmountOfItemInList(3);
 
     retranslateUi();
 }

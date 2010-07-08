@@ -81,6 +81,7 @@ SOURCES += main.cpp \
     phonebookcell.cpp \
     bubblepage.cpp \
     bubblelistmodel.cpp \
+    phonebookheader.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -126,6 +127,7 @@ HEADERS += templatepage.h \
     phonebookcell.h \
     bubblepage.h \
     bubblelistmodel.h \
+    phonebookheader.h \
 
 # theme
 include(theme/theme.pri)
