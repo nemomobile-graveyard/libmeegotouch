@@ -208,7 +208,7 @@ public:
     /*!
      Returns a copy of graphical asset with the given logical identifier.
 
-     Loads the pixmap specified by \a id of size \a size synchorously and returns a copy to the caller.
+     Loads the pixmap specified by \a id of size \a size synchronously and returns a copy to the caller.
      This method can be very slow, use the asynchronous pixmap method instead if possible.
 
      The ownership of the returned pixmap is transferred to caller, and the pixmap may be modified.
