@@ -40,6 +40,10 @@ void Ft_MMoc::initTestCase()
     // check for mmoc binary
     m_binaryMmoc = "/usr/bin/mmoc";
     m_binaryMmocFound = QFileInfo( m_binaryMmoc ).exists();
+
+    if ( !m_binaryMmocFound && !m_perlMmocFound ) {
+        QSKIP( "need development environment", SkipAll );
+    }
 }
 
 void Ft_MMoc::cleanupTestCase()
