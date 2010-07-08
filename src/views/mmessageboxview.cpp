@@ -73,6 +73,7 @@ void MMessageBoxView::setupModel()
     MDialogView::setupModel();
 
     Q_D(MMessageBoxView);
+    model()->setAlwaysPannable(false);
 
     //update text
     d->label->setText(model()->text());

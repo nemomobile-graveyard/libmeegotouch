@@ -99,6 +99,7 @@ public:
     void addButton(MButtonModel *buttonModel);
     void updateButtonBox();
     void setSpinnerVisibility(bool visibility);
+    void _q_updatePanning();
 
     MDialog *controller;
 

@@ -42,6 +42,7 @@ private:
     M_MODEL_PROPERTY(bool, titleBarVisible, TitleBarVisible, true, true)
     M_MODEL_PROPERTY(QString, title, Title, true, QString())
     M_MODEL_PROPERTY(bool, systemModal, SystemModal, true, false)
+    M_MODEL_PROPERTY(bool, alwaysPannable, AlwaysPannable, true, true)
 
     /*!
         \property MDialogModel::progressIndicatorVisible
