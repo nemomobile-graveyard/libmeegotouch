@@ -119,6 +119,8 @@ private:
     PhoneBookImageLoader *imageLoader;
 #endif
 
+    MComboBox *comboListMode;
+
     MAction *actionAdvancedConfiguration;
     QPointer<MDialog> dialogAdvancedConfiguration;
 

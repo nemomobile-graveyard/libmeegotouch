@@ -66,6 +66,7 @@ MListPage::MListPage()
     proxyModel(NULL),
 #endif //HAVE_N900
     imageLoader(NULL),
+    comboListMode(NULL),
     actionAdvancedConfiguration(NULL),
     dialogAdvancedConfiguration(NULL),
     list(NULL),
@@ -355,8 +356,8 @@ void MListPage::createActions()
 
     QStringList listModeList;
     listModeList << "Plain" << "Grouped";
-    combo = createComboBoxAction("List mode", listModeList);
-    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListMode(int)));
+    comboListMode = createComboBoxAction("List mode", listModeList);
+    connect(comboListMode, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListMode(int)));
 
     QStringList amountOfColumnList;
     amountOfColumnList << "1 column" << "2 columns" << "3 columns" << "4 columns";
@@ -493,6 +494,10 @@ void MListPage::changeListIndexVisibility(int index)
     bool indexVisible = (index == 1);
 
     list->setIndexVisible(indexVisible);
+
+    if (indexVisible)
+        comboListMode->setCurrentIndex(Grouped);
+
 }
 
 void MListPage::changeLiveFilteringMode(int index)
@@ -531,6 +536,9 @@ void MListPage::changeGroupHeadersMode(int index)
         list->setHeaderCreator(NULL);
         break;
     };
+
+    if (index > 0)
+        comboListMode->setCurrentIndex(Grouped);
 }
 
 void MListPage::itemClick(const QModelIndex &index)
