@@ -28,7 +28,7 @@ systems and text rendering:
 
 - American English
 - Arabic
-- <a href="http://en.wikipedia.org/wiki/Basque_language">Basque</a>-
+- <a href="http://en.wikipedia.org/wiki/Basque_language">Basque</a>
 - Brazilian Portuguese
 - British English
 - Canadian French
@@ -1236,7 +1236,9 @@ be lost as soon as one of the locale related gconf keys changes
 again. And it will be lost when the application restarts. Nevertheless
 this can be useful for temporary changes for testing and it is
 currently the only way to change the current language on systems
-without gconf like Windows or Mac OSX.
+without gconf like <a
+href="http://en.wikipedia.org/wiki/Microsoft_Windows">Windows</a> or
+<a href="http://en.wikipedia.org/wiki/Mac_OSX">Mac OS X</a>.
 
 If a the system locale changes, either because a locale related gconf
 key changed or because \c MLocale::setDefault()  has been called
@@ -1387,7 +1389,6 @@ If you are developing a widget in which it does not make sense for the layout to
 In advanced situations you can handle the \c QEvent::ApplicationLayoutDirectionChange()  event directly in your widget's event handler.
 
 \section  currentstatusrtlsupportinmeegotouchwidgets  Current status of RTL support in MWidgets
-
 <table border="1">
   <caption>
   <big><b>
