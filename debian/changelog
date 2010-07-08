@@ -1,8 +1,15 @@
-libmeegotouch (0.20.26~1) UNRELEASED; urgency=low
+libmeegotouch (0.20.26-1) unstable; urgency=low
 
-  * 
+  * Fixes: NB#158821 - dui-servicefwgen should allow generation of namespaced code
+  * Fixes: NB#178690 - no timezone offset query api is provided by MCity classcity list improvements
+  * Fixes: NB#165818 - MMessageBox content is always pannable
+  * Fixes: NB#175181
+  * Fixes: NB#173512 - Unable to close any dialog displayed above list view using close button
+  * Fixes: NB#173151 - Expensive layouting during startup
+  * Fixes: NB#178004 - Window goes black after dismiss() and subsequent appear()
+  * Fixes: NB#176803 - MLocale::formatDateTime allocates MLocale per call
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 05 Jul 2010 15:27:14 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Thu, 08 Jul 2010 15:18:46 +0300
 
 libmeegotouch (0.20.25-1) unstable; urgency=low
 
