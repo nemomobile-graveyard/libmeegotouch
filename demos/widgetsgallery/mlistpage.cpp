@@ -37,6 +37,7 @@
 #include <MTheme>
 #include <MAction>
 #include <MSortFilterProxyModel>
+#include <MDialog>
 
 #include <MComboBox>
 #include <MDebug>
@@ -64,6 +65,8 @@ MListPage::MListPage()
     proxyModel(NULL),
 #endif //HAVE_N900
     imageLoader(NULL),
+    actionAdvancedConfiguration(NULL),
+    dialogAdvancedConfiguration(NULL),
     list(NULL),
     currentSortingIndex(0),
     currentListModeIndex(0)
@@ -80,6 +83,17 @@ QString MListPage::timedemoTitle()
 {
     return "List";
 }
+
+class MListCustomHeaderCreator : public MAbstractCellCreator<MButton>
+{
+public:
+    void updateCell(const QModelIndex &index, MWidget *cell) const {
+        MButton *header = qobject_cast<MButton*>(cell);
+        QString title = index.data(Qt::DisplayRole).toString();
+
+        header->setText(title);
+    }
+};
 
 class MListContentItemCreator : public MAbstractCellCreator<PhoneBookCell>
 {
@@ -280,6 +294,18 @@ MComboBox *MListPage::createComboBoxAction(const QString &title, const QStringLi
     return comboBox;
 }
 
+MComboBox *MListPage::createComboBoxLabelButton(const QString &title, const QStringList &itemsList, QGraphicsWidget *parent)
+{
+    MComboBox *comboBox = new MComboBox(parent);
+    comboBox->setViewType("labelButton");
+    comboBox->setTitle(title);
+    comboBox->setIconVisible(false);
+    comboBox->addItems(itemsList);
+    comboBox->setCurrentIndex(0);
+
+    return comboBox;
+}
+
 void MListPage::createActions()
 {
     MComboBox *combo;
@@ -324,21 +350,11 @@ void MListPage::createActions()
     combo = createComboBoxAction("Selection mode", selectionModes);
     connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSelectionMode(int)));
 
-    QStringList separatorsModes;
-    separatorsModes << "Off" << "On";
-    combo = createComboBoxAction("Separators", separatorsModes);
-    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSeparatorsMode(int)));
-
-    QStringList listIndexModes;
-    listIndexModes << "Hidden" << "Visible";
-    combo = createComboBoxAction("List index mode", listIndexModes);
-    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListIndexVisibility(int)));
-
-    QStringList liveFilteringModes;
-    liveFilteringModes << "Off" << "On";
-    combo = createComboBoxAction("Live Filtering", liveFilteringModes);
-    combo->setCurrentIndex(1); // live filtering is enabled by default
-    connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLiveFilteringMode(int)));
+    actionAdvancedConfiguration = new MAction(centralWidget());
+    actionAdvancedConfiguration->setLocation(MAction::ApplicationMenuLocation);
+    actionAdvancedConfiguration->setText("Advanced Configuration");
+    addAction(actionAdvancedConfiguration);
+    connect(actionAdvancedConfiguration, SIGNAL(triggered()), SLOT(showAdvancedConfigurationDialog()));
 }
 
 void MListPage::scrollToBottom()
@@ -482,6 +498,17 @@ void MListPage::changeLiveFilteringMode(int index)
     }
 }
 
+void MListPage::changeGroupHeadersMode(int index)
+{
+    Q_ASSERT(index >=0 && index <= 1);
+    bool customHeaders = (index == 1);
+
+    if (customHeaders)
+        list->setHeaderCreator(new MListCustomHeaderCreator);
+    else
+        list->setHeaderCreator(NULL);
+}
+
 void MListPage::itemClick(const QModelIndex &index)
 {
     mDebug("MListPage::itemClick") << "Row was clicked: " << index.row();
@@ -534,27 +561,78 @@ void MListPage::liveFilteringTextChanged()
 void MListPage::filteringVKB()
 {
     // With VKB live filtering text edit is shown when user pans the list up starting from top position
-    if(!list->filtering()->editor()->isOnDisplay()) {
+    if (!list->filtering()->editor()->isOnDisplay()) {
         showTextEdit(true);
         list->filtering()->editor()->setFocus();
     }
 }
 
-void MListPage::hideEmptyTextEdit() {
-    if(list->filtering()->enabled() && list->filtering()->editor()->text() == "") {
+void MListPage::hideEmptyTextEdit()
+{
+    if (list->filtering()->enabled() && list->filtering()->editor()->text() == "") {
         showTextEdit(false);
     }
 }
 
-void MListPage::showTextEdit(bool show) {
+void MListPage::showAdvancedConfigurationDialog()
+{
+    if (!dialogAdvancedConfiguration) {
+        dialogAdvancedConfiguration = new MDialog("Advanced configuration", M::OkButton);
+
+        QGraphicsWidget *panel = dialogAdvancedConfiguration->centralWidget();
+
+        MLayout *layout = new MLayout(panel);
+        MLinearLayoutPolicy *landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Vertical);
+        // Use the same landscape policy for portrait mode.
+        MLinearLayoutPolicy *portraitPolicy = landscapePolicy;
+
+        QStringList separatorsModes;
+        separatorsModes << "Off" << "On";
+        MComboBox *combo = createComboBoxLabelButton("Separators", separatorsModes, panel);
+        connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeSeparatorsMode(int)));
+
+        landscapePolicy->addItem(combo);
+
+        QStringList listIndexModes;
+        listIndexModes << "Off" << "On";
+        combo = createComboBoxLabelButton("List Index", listIndexModes, panel);
+        connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeListIndexVisibility(int)));
+
+        landscapePolicy->addItem(combo);
+
+        QStringList liveFilteringModes;
+        liveFilteringModes << "Off" << "On";
+        combo = createComboBoxLabelButton("Live Filtering", liveFilteringModes, panel);
+        connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeLiveFilteringMode(int)));
+
+        landscapePolicy->addItem(combo);
+
+        QStringList groupHeadersModes;
+        groupHeadersModes << "Default - Labels" << "Custom - Buttons";
+        combo = createComboBoxLabelButton("Group Headers", groupHeadersModes, panel);
+        connect(combo, SIGNAL(currentIndexChanged(int)), this, SLOT(changeGroupHeadersMode(int)));
+
+        landscapePolicy->addItem(combo);
+
+        layout->setLandscapePolicy(landscapePolicy);
+        layout->setPortraitPolicy(portraitPolicy);
+
+        dialogAdvancedConfiguration->centralWidget()->setLayout(layout);
+    }
+
+    dialogAdvancedConfiguration->appear(MSceneWindow::DestroyWhenDismissed);
+}
+
+void MListPage::showTextEdit(bool show)
+{
     QGraphicsWidget* panel = centralWidget();
     QGraphicsLinearLayout* layout = (QGraphicsLinearLayout*) panel->layout();
     MTextEdit* textEdit = list->filtering()->editor();
-    if(show && !textEdit->isOnDisplay()) {
+    if (show && !textEdit->isOnDisplay()) {
         layout->insertItem(0, textEdit);
         textEdit->setVisible(true);
         pannableViewport()->setPosition(QPointF(0,0));
-    } else if(textEdit->isOnDisplay()) {
+    } else if (textEdit->isOnDisplay()) {
         list->setFocus();
         textEdit->setVisible(false);
         layout->removeAt(0);
@@ -594,8 +672,6 @@ void MListPage::createContent()
     connect(list, SIGNAL(itemClicked(QModelIndex)), this, SLOT(itemClick(QModelIndex)));
     connect(list, SIGNAL(itemLongTapped(QModelIndex)), this, SLOT(itemLongTapped(QModelIndex)));
 
-    changeLiveFilteringMode(1); // live filtering is enabled by default
-    
     retranslateUi();
 }
 

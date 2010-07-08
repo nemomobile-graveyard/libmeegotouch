@@ -28,6 +28,7 @@
 #include <QStringList>
 #include <QMap>
 #include <QTimer>
+#include <QPointer>
 
 #ifdef HAVE_N900
 class ContactModel;
@@ -38,6 +39,7 @@ class MSortFilterProxyModel;
 class PhoneBookImageLoader;
 #endif
 
+class MDialog;
 class MList;
 class MComboBox;
 class MListContentItemCreator;
@@ -81,6 +83,7 @@ public slots:
     void changeSeparatorsMode(int index);
     void changeListIndexVisibility(int index);
     void changeLiveFilteringMode(int index);
+    void changeGroupHeadersMode(int index);
 
     void scrollToBottom();
     void scrollToTop();
@@ -95,11 +98,14 @@ public slots:
     void filteringVKB();
     void hideEmptyTextEdit();
 
+    void showAdvancedConfigurationDialog();
+
 protected:
     void retranslateUi();
 
 private:
     MComboBox *createComboBoxAction(const QString &title, const QStringList &itemsList);
+    MComboBox *createComboBoxLabelButton(const QString &title, const QStringList &itemsList, QGraphicsWidget *parent);
     void showTextEdit(bool show);
 
 private:
@@ -112,6 +118,9 @@ private:
     MSortFilterProxyModel *proxyModel;
     PhoneBookImageLoader *imageLoader;
 #endif
+
+    MAction *actionAdvancedConfiguration;
+    QPointer<MDialog> dialogAdvancedConfiguration;
 
     MList *list;
     MListContentItemCreator *cellCreator;
