@@ -25,9 +25,10 @@
 #include <MInputMethodState>
 #include "mrichtextedit.h"
 #include "mrichtextedit_p.h"
+#include "mrichtexteditdialogsmanager_p.h"
 
-#include "mwidgetcreator.h" 
-M_REGISTER_WIDGET(MRichTextEdit) 
+#include "mwidgetcreator.h"
+M_REGISTER_WIDGET(MRichTextEdit)
 
 namespace
 {
@@ -133,6 +134,86 @@ void MRichTextEditPrivate::_q_updateStyle()
                                                            "Italic",
                                                            "pressed",
                                                            QVariant((format.fontItalic()) ? "true" : "false"));
+}
+
+
+void MRichTextEditPrivate::showTextStylingOptions()
+{
+    Q_Q(MRichTextEdit);
+
+    MRichTextEditDialogsManager *dialogsManager = MRichTextEditDialogsManager::instance();
+
+    q->connect(dialogsManager, SIGNAL(fontFamilySelected(QString)),
+               SLOT(_q_setFontFamily(QString)));
+
+    QString fontFamily;
+
+    textStyleValues(&fontFamily);
+
+    int startPos = -1;
+    int endPos  = -1;
+    const bool hasSelectedText = q->hasSelectedText();
+    // removing the focus from the text entry widget is removing the text selection, so
+    // retain the selection
+    if (hasSelectedText) {
+        QTextCursor textcursor = q->textCursor();
+        startPos = textcursor.selectionStart();
+        endPos  = textcursor.selectionEnd();
+    }
+
+    // Get rid of software input panel (SIP), which might obstruct our dialog otherwise.
+    q->clearFocus();
+
+    if (hasSelectedText) {
+        q->setSelection(startPos, endPos - startPos);
+    }
+
+    dialogsManager->showTextStylingDialog(fontFamily);
+    q->setFocus();
+
+    q->disconnect(dialogsManager, 0, q, 0);
+}
+
+
+void MRichTextEditPrivate::textStyleValues(QString *fontfamily)
+{
+    Q_Q(MRichTextEdit);
+
+    QTextCursor textcursor = q->textCursor();
+    *fontfamily = textcursor.charFormat().font().family();
+
+    if (!q->hasSelectedText()) {
+        return;
+    }
+
+    // If the text selection has different styles don't set the current text style value
+    int startPos = textcursor.selectionStart();
+    int endPos  = textcursor.selectionEnd();
+    bool familyDiffers = false;
+
+    // Starting from startPos + 1 to get the style that would be used when
+    // text is inserted in the positions
+    for (int i = startPos + 1; i <= endPos; i++) {
+        textcursor.setPosition(i);
+
+        if (!familyDiffers && (fontfamily != textcursor.charFormat().font().family())) {
+            familyDiffers = true;
+            fontfamily->clear();
+        }
+    }
+}
+
+
+void MRichTextEditPrivate::_q_setFontFamily(const QString &fontFamily)
+{
+    Q_Q(MRichTextEdit);
+
+    QTextCursor textcursor = q->textCursor();
+    QTextCharFormat format;
+
+    format.setFontFamily(fontFamily);
+    textcursor.mergeCharFormat(format);
+    q->setTextCursor(textcursor);
 }
 
 ///////////////////////////////////////////////
@@ -317,6 +398,8 @@ QFont MRichTextEdit::currentFont()
 
 void MRichTextEdit::keyPressEvent(QKeyEvent *event)
 {
+    Q_D(MRichTextEdit);
+
     if (QEvent::KeyPress == event->type()) {
         if (event->matches(QKeySequence::Bold)) {
             QFont curFont = currentFont();
@@ -333,6 +416,9 @@ void MRichTextEdit::keyPressEvent(QKeyEvent *event)
             bool underlineStyle = !curFont.underline();
             // set current underline style option
             setFontUnderline(underlineStyle);
+        } else if ((event->key() == Qt::Key_F) && (event->modifiers() & Qt::ControlModifier)) {
+            // show text styling options
+            d->showTextStylingOptions();
         } else {
             // Pass the remaining events to MTextEdit will handle
             MTextEdit::keyPressEvent(event);

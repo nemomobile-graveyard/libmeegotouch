@@ -104,6 +104,7 @@ private:
     Q_DECLARE_PRIVATE(MRichTextEdit)
 
     Q_PRIVATE_SLOT(d_func(), void _q_updateStyle())
+    Q_PRIVATE_SLOT(d_func(), void _q_setFontFamily(const QString &))
 
     Q_DISABLE_COPY(MRichTextEdit)
 

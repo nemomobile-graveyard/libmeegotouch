@@ -62,6 +62,18 @@ public:
      * the current cursor position
      */
     void _q_updateStyle();
+
+    /*!
+     * \brief shows the text styling options
+     */
+    void showTextStylingOptions();
+
+    /*!
+     * \brief gets the current text style values to be shown in the text styling ui
+     */
+    void  textStyleValues(QString *fontfamily);
+
+    void _q_setFontFamily(const QString &fontFamily);
 };
 
 #endif

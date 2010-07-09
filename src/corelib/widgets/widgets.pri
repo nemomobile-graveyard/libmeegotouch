@@ -119,6 +119,7 @@ PRIVATE_HEADERS += \
     $$WIDGETS_SRC_DIR/mscenewindow_p.h \
     $$WIDGETS_SRC_DIR/mstatusbar_p.h \
     $$WIDGETS_SRC_DIR/mwindow_p.h \
+    $$WIDGETS_SRC_DIR/mrichtexteditdialogsmanager_p.h \
 
 SOURCES += \
     $$WIDGETS_SRC_DIR/mwidgetmodel.cpp \
@@ -159,6 +160,7 @@ SOURCES += \
     $$WIDGETS_SRC_DIR/mpositionindicator.cpp \
     $$WIDGETS_SRC_DIR/mprogressindicator.cpp \
     $$WIDGETS_SRC_DIR/mrichtextedit.cpp \
+    $$WIDGETS_SRC_DIR/mrichtexteditdialogsmanager.cpp \
     $$WIDGETS_SRC_DIR/mscenewindow.cpp \
     $$WIDGETS_SRC_DIR/mseekbar.cpp \
     $$WIDGETS_SRC_DIR/mslider.cpp \
