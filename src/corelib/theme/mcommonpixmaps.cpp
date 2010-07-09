@@ -153,13 +153,15 @@ void MCommonPixmaps::loadOne()
                 cpuMonitor.start(250);
             }
             ImageResource *resource = daemon->findImageResource(id.imageId);
-            if (resource && !resource->pixmapHandle(id.size)) {
+            if (resource) {
                 bool resourceLoaded = false;
-                QFile pixmapFile(cachePath() + id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')');
-                if(pixmapFile.open(QIODevice::ReadOnly)) {
-                    // try to load pre-rasterized pixmap from file
-                    resourceLoaded = resource->load(&pixmapFile, id.size);
-                    pixmapFile.close();
+                if (!resource->pixmapHandle(id.size)) {
+                    QFile pixmapFile(cachePath() + id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')');
+                    if(pixmapFile.open(QIODevice::ReadOnly)) {
+                        // try to load pre-rasterized pixmap from file
+                        resourceLoaded = resource->load(&pixmapFile, id.size);
+                        pixmapFile.close();
+                    }
                 }
                 if (!resourceLoaded) {
                     resource->fetchPixmap(id.size);
