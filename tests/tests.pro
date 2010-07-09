@@ -57,6 +57,7 @@ SUBDIRS     =  \
     ut_mtextedit \
     ut_mtexteditview \
 #    ut_mtheme \
+     ut_mthemedaemonprotocol \
     ut_mtoolbar \
     ut_mtoolbarview \
     ut_mwidget \
