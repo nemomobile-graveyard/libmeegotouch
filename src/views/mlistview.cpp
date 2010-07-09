@@ -39,7 +39,10 @@ MListView::MListView(MWidgetController *widgetController)
 
 MListView::~MListView()
 {
-    delete d_ptr;
+    if (d_ptr) {
+        delete d_ptr->headersCreator;
+        delete d_ptr;
+    }
 }
 
 void MListView::init()

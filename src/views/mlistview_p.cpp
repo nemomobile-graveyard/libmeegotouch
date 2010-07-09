@@ -72,9 +72,6 @@ MListViewPrivate::~MListViewPrivate()
 
     movingDetectorTimer.stop();
 
-    if (!controllerModel->headerCreator())
-        delete headersCreator;
-
     delete hseparator;
     delete recycler;
 }
