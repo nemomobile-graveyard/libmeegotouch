@@ -47,6 +47,9 @@ ClientList::~ClientList()
 ThemeChangeInfo::~ThemeChangeInfo()
 {}
 
+MostUsedPixmaps::~MostUsedPixmaps()
+{}
+
 Packet::Packet(PacketType type, quint64 seq, PacketData *data)
 :
     m_seq  (seq),
@@ -95,17 +98,33 @@ QDataStream &operator<<(QDataStream &stream, const Packet &packet)
     } break;
 
     // pixmap identifier as data
+    case Packet::PixmapUsedPacket:
     case Packet::RequestPixmapPacket:
     case Packet::ReleasePixmapPacket: {
         const PixmapIdentifier *id = static_cast<const PixmapIdentifier *>(packet.data());
-        stream << id->imageId << id->size;
+        stream << *id;
     } break;
 
     // pixmap handle as data
     case Packet::PixmapUpdatedPacket: {
         const PixmapHandle *h = static_cast<const PixmapHandle *>(packet.data());
-        stream << h->identifier.imageId << h->identifier.size
-               << quint64((quintptr) h->pixmapHandle);
+        stream << *h;
+    } break;
+
+    case Packet::MostUsedPixmapsPacket: {
+        const MostUsedPixmaps *mostUsedPixmaps = static_cast<const MostUsedPixmaps *>(packet.data());
+
+        quint32 addedHandlesCount = mostUsedPixmaps->addedHandles.count();
+        stream << addedHandlesCount;
+        for (quint32 i = 0; i < addedHandlesCount; ++i) {
+            stream << mostUsedPixmaps->addedHandles.at(i);
+        }
+
+        quint32 removedIdentifiersCount = mostUsedPixmaps->removedIdentifiers.count();
+        stream << removedIdentifiersCount;
+        for (quint32 i = 0; i < removedIdentifiersCount; ++i) {
+            stream << mostUsedPixmaps->removedIdentifiers.at(i);
+        }
     } break;
 
     // client list as data
@@ -113,32 +132,25 @@ QDataStream &operator<<(QDataStream &stream, const Packet &packet)
         const ClientList *cl = static_cast<const ClientList *>(packet.data());
         quint32 clientCount = cl->clients.count();
         stream << clientCount;
-        while (clientCount) {
-            const ClientInfo &info = cl->clients.at(clientCount - 1);
+        for (uint i = 0; i < clientCount; ++i)
+        {
+            const ClientInfo &info = cl->clients.at(i);
             stream << info.name;
             quint32 pixmapCount = info.pixmaps.count();
             stream << pixmapCount;
-            while (pixmapCount) {
-                const PixmapIdentifier &id = info.pixmaps.at(pixmapCount - 1);
-                stream << id.imageId << id.size;
-                --pixmapCount;
+            for (quint32 j = 0; j < pixmapCount; ++j) {
+                stream << info.pixmaps.at(j);
             }
             quint32 requestedPixmapCount = info.requestedPixmaps.count();
             stream << requestedPixmapCount;
-            while (requestedPixmapCount) {
-                const PixmapIdentifier &id = info.requestedPixmaps.at(requestedPixmapCount - 1);
-                stream << id.imageId << id.size;
-                --requestedPixmapCount;
+            for (quint32 j = 0; j < requestedPixmapCount; ++j) {
+                stream << info.requestedPixmaps.at(j);
             }
             quint32 releasedPixmapCount = info.releasedPixmaps.count();
             stream << releasedPixmapCount;
-            while (releasedPixmapCount) {
-                const PixmapIdentifier &id = info.releasedPixmaps.at(releasedPixmapCount - 1);
-                stream << id.imageId << id.size;
-                --releasedPixmapCount;
+            for (quint32 j = 0; j < releasedPixmapCount; ++j) {
+                stream << info.releasedPixmaps.at(j);
             }
-
-            --clientCount;
         }
     } break;
 
@@ -160,7 +172,7 @@ static bool waitForAvailableBytes(QDataStream &stream, quint32 count)
     return true;
 }
 
-static QString readQString(QDataStream &stream)
+QString readQString(QDataStream &stream)
 {
     if (!waitForAvailableBytes(stream, sizeof(quint32))) {
         return QString();
@@ -169,7 +181,7 @@ static QString readQString(QDataStream &stream)
     stream.device()->peek(b, sizeof(quint32));
     quint32 stringSize = qFromBigEndian<quint32>(reinterpret_cast<uchar*>(b));
     if (stringSize == 0xFFFFFFFF) {
-        return QString();
+        stringSize = 0;
     }
     if (!waitForAvailableBytes(stream, stringSize + sizeof(quint32))) {
         return QString();
@@ -179,7 +191,7 @@ static QString readQString(QDataStream &stream)
     return string;
 }
 
-static QStringList readQStringList(QDataStream &stream)
+QStringList readQStringList(QDataStream &stream)
 {
     quint32 nrOfStrings;
     if (!waitForAvailableBytes(stream, sizeof(quint32))) {
@@ -189,11 +201,7 @@ static QStringList readQStringList(QDataStream &stream)
 
     QStringList stringList;
     for (quint32 i = 0; i < nrOfStrings; ++i) {
-        QString entry = readQString(stream);
-        if (entry.isNull()) {
-            return QStringList();
-        }
-        stringList.append(entry);
+        stringList.append(readQString(stream));
     }
     return stringList;
 }
@@ -243,24 +251,43 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
     } break;
 
     // pixmap identifier as data
+    case Packet::PixmapUsedPacket:
     case Packet::RequestPixmapPacket:
     case Packet::ReleasePixmapPacket: {
-        QString imageId = readQString(stream);
-        QSize size;
-        waitForAvailableBytes(stream, 2*sizeof(qint32));
-        stream >> size;
-        packet.setData(new PixmapIdentifier(imageId, size));
+        PixmapIdentifier id;
+        stream >> id;
+        packet.setData(new PixmapIdentifier(id));
     } break;
 
     // pixmap handle as data
     case Packet::PixmapUpdatedPacket: {
-        QString imageId = readQString(stream);;
-        QSize size;
-        quint64 pixmapHandle = 0;
-        waitForAvailableBytes(stream, 2*sizeof(qint32)+sizeof(qint64));
-        stream >> size >> pixmapHandle;
-        packet.setData(new PixmapHandle(PixmapIdentifier(imageId, size),
-                       (Qt::HANDLE) quintptr(pixmapHandle)));
+        PixmapHandle h;
+        stream >> h;
+        packet.setData(new PixmapHandle(h));
+    } break;
+
+    case Packet::MostUsedPixmapsPacket: {
+        waitForAvailableBytes(stream, sizeof(qint32));
+        qint32 addedHandlesCount;
+        stream >> addedHandlesCount;
+        QList<PixmapHandle> addedHandles;
+        for (int i = 0; i < addedHandlesCount; ++i) {
+            PixmapHandle h;
+            stream >> h;
+            addedHandles.append(h);
+        }
+
+        waitForAvailableBytes(stream, sizeof(qint32));
+        qint32 removedIdentifiersCount;
+        stream >> removedIdentifiersCount;
+        QList<PixmapIdentifier> removedIdentifiers;
+        for (int i = 0; i < removedIdentifiersCount; ++i) {
+            PixmapIdentifier id;
+            stream >> id;
+            removedIdentifiers.append(id);
+        }
+
+        packet.setData(new MostUsedPixmaps(addedHandles, removedIdentifiers));
     } break;
 
 
@@ -276,31 +303,25 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
             waitForAvailableBytes(stream, 2*sizeof(quint32));
             stream >> pixmapCount;
             while (pixmapCount) {
-                QString imageId = readQString(stream);
-                QSize size;
-                waitForAvailableBytes(stream, 2*sizeof(qint32));
-                stream >> size;
-                info.pixmaps.append(PixmapIdentifier(imageId, size));
+                PixmapIdentifier id;
+                stream >> id;
+                info.pixmaps.append(id);
                 --pixmapCount;
             }
             quint32 requestedPixmapCount = 0;
             stream >> requestedPixmapCount;
             while (requestedPixmapCount) {
-                QString imageId = readQString(stream);
-                QSize size;
-                waitForAvailableBytes(stream, 2*sizeof(qint32));
-                stream >> size;
-                info.requestedPixmaps.append(PixmapIdentifier(imageId, size));
+                PixmapIdentifier id;
+                stream >> id;
+                info.requestedPixmaps.append(id);
                 --requestedPixmapCount;
             }
             quint32 releasedPixmapCount = 0;
             stream >> releasedPixmapCount;
             while (releasedPixmapCount) {
-                QString imageId = readQString(stream);
-                QSize size;
-                waitForAvailableBytes(stream, 2*sizeof(qint32));
-                stream >> size;
-                info.releasedPixmaps.append(PixmapIdentifier(imageId, size));
+                PixmapIdentifier id;
+                stream >> id;
+                info.releasedPixmaps.append(id);
                 --releasedPixmapCount;
             }
 
@@ -318,6 +339,42 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
     return stream;
 }
 
+QDataStream &operator<<(QDataStream &stream, const M::MThemeDaemonProtocol::PixmapHandle &handle)
+{
+    stream << handle.identifier << quint64((quintptr) handle.pixmapHandle);
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, M::MThemeDaemonProtocol::PixmapHandle &handle)
+{
+    M::MThemeDaemonProtocol::PixmapIdentifier id;
+    stream >> id;
+
+    quint64 pixmapHandle;
+    waitForAvailableBytes(stream, sizeof(quint64));
+    stream >> pixmapHandle;
+    handle.identifier = id;
+    handle.pixmapHandle = (Qt::HANDLE) quintptr(pixmapHandle);
+    return stream;
+}
+
+QDataStream &operator<<(QDataStream &stream, const M::MThemeDaemonProtocol::PixmapIdentifier &id)
+{
+    stream << id.imageId;
+    stream << id.size;
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, M::MThemeDaemonProtocol::PixmapIdentifier &id)
+{
+    QString imageId = readQString(stream);;
+    QSize size;
+    waitForAvailableBytes(stream, 2*sizeof(qint32));
+    stream >> size;
+    id.imageId = imageId;
+    id.size = size;
+    return stream;
+}
 
 uint M::MThemeDaemonProtocol::qHash(const PixmapIdentifier &id)
 {

@@ -24,6 +24,7 @@
 #include <QSharedPointer>
 #include <QSize>
 #include <QColor>
+#include <QList>
 
 namespace M
 {
@@ -49,6 +50,11 @@ namespace M
                 // The type of the data is String and should contain
                 // the name of the client.
                 RequestRegistrationPacket           = 1,
+
+                // Client tells the daemon that it will use a specific
+                // package. It does not expect an answer as it already
+                // knows the handle.
+                PixmapUsedPacket                     = 7,
 
                 // With this packet the client can request a pixmap
                 // data type of the packet is PixmapIdentifier.
@@ -96,6 +102,13 @@ namespace M
                 // has completed.
                 ThemeChangeCompletedPacket          = 35,
 
+                // themedaemon sends the handles of the most used pixmaps to the
+                // application.
+                MostUsedPixmapsPacket               = 36,
+
+                // client acks the MostUsedPixmapsPacket from the server
+                AckMostUsedPixmapsPacket            = 37,
+
                 // With this packet any client can request the state
                 // of the daemon. The data type is undetermined, so NULL will do.
                 // Daemon will reply with ThemeDaemonStatusPacket and the data type
@@ -131,6 +144,7 @@ namespace M
 
         // identifier used for identifying an pixmap request, reply and updates.
         struct PixmapIdentifier : PacketData {
+            PixmapIdentifier() {}
             PixmapIdentifier(const QString &imageId, const QSize &size) :
                 imageId(imageId), size(size) {}
             virtual ~PixmapIdentifier();
@@ -166,10 +180,19 @@ namespace M
         };
 
         struct PixmapHandle : PacketData {
+            PixmapHandle()
+            {}
+
             PixmapHandle(const PixmapIdentifier &identifier, Qt::HANDLE pixmapHandle) :
                 identifier(identifier),
                 pixmapHandle(pixmapHandle)
             {}
+
+            PixmapHandle(const PixmapHandle &handle) :
+                identifier(handle.identifier),
+                pixmapHandle(handle.pixmapHandle)
+            {}
+
             virtual ~PixmapHandle();
 
             PixmapIdentifier identifier;
@@ -204,10 +227,32 @@ namespace M
             QStringList themeInheritance;
             QStringList themeLibraryNames;
         };
+
+        struct MostUsedPixmaps : PacketData {
+            MostUsedPixmaps() {}
+            MostUsedPixmaps(const QList<PixmapHandle>& addedHandles, const QList<PixmapIdentifier>& removedIdentifiers) :
+                addedHandles(addedHandles),
+                removedIdentifiers(removedIdentifiers)
+            {}
+
+            virtual ~MostUsedPixmaps();
+
+            QList<PixmapHandle> addedHandles;
+            QList<PixmapIdentifier> removedIdentifiers;
+        };
     }
 }
 
+QString readQString(QDataStream &stream);
+QStringList readQStringList(QDataStream &stream);
+
 QDataStream &operator<<(QDataStream &stream, const M::MThemeDaemonProtocol::Packet &packet);
 QDataStream &operator>>(QDataStream &stream, M::MThemeDaemonProtocol::Packet &packet);
+
+QDataStream &operator<<(QDataStream &stream, const M::MThemeDaemonProtocol::PixmapHandle &handle);
+QDataStream &operator>>(QDataStream &stream, M::MThemeDaemonProtocol::PixmapHandle &handle);
+
+QDataStream &operator<<(QDataStream &stream, const M::MThemeDaemonProtocol::PixmapIdentifier &id);
+QDataStream &operator>>(QDataStream &stream, M::MThemeDaemonProtocol::PixmapIdentifier &id);
 
 #endif
