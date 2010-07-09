@@ -24,6 +24,7 @@
 
 #include "templatepage.h"
 #include <MTextEdit>
+#include <QPointer>
 
 class MWidget;
 class MLabel;
@@ -70,25 +71,26 @@ protected:
     virtual void retranslateUi();
 
 private:
-    MLabel *label0;
-    MLabel *label1;
-    MLabel *label2;
-    MLabel *label3;
-    MLabel *label4;
-    MLabel *label5;
-    MLabel *label6;
-    MLabel *label7;
-    MLabel *label8;
-    MLabel *label9;
-    MLabel *labelNoEcho;
-    MLabel *labelEchoOnEdit;
-    MLabel *labelDirectIM;
-    MLabel *labelCustomToolbar1;
-    MLabel *labelCustomToolbar2;
+    QPointer<MLabel> label0;
+    QPointer<MLabel> label1;
+    QPointer<MLabel> label2;
+    QPointer<MLabel> label3;
+    QPointer<MLabel> label4;
+    QPointer<MLabel> label5;
+    QPointer<MLabel> label6;
+    QPointer<MLabel> label7;
+    QPointer<MLabel> label8;
+    QPointer<MLabel> label9;
+    QPointer<MLabel> label10;
+    QPointer<MLabel> labelNoEcho;
+    QPointer<MLabel> labelEchoOnEdit;
+    QPointer<MLabel> labelDirectIM;
+    QPointer<MLabel> labelCustomToolbar1;
+    QPointer<MLabel> labelCustomToolbar2;
 
-    MLabel *labelHeader1;
-    MButton *button1;
-    MButton *button2;
+    QPointer<MLabel> labelHeader1;
+    QPointer<MButton> button1;
+    QPointer<MButton> button2;
 
     QList<MLabel *> labels;
     QList<MTextEdit *> Entries;
@@ -96,8 +98,8 @@ private:
     bool m_autoCapitalisation;
     bool m_errorCorrection;
 
-    MCompleter *m_completer;
-    CustomDirectIMWidget *directIMWidget;
+    QPointer<MCompleter> m_completer;
+    QPointer<CustomDirectIMWidget> directIMWidget;
 };
 
 #endif

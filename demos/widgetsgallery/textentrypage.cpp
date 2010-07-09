@@ -502,6 +502,18 @@ void TextEntryPage::createContent()
     layoutPolicy->addItem(Entries.at(row), row, 1);
     row++;
 
+    // multiline rich text entry
+    Entries << new MRichTextEdit(MTextEditModel::MultiLine, "", centralWidget());
+
+    label10 = new MLabel(centralWidget());
+    label10->setWordWrap(true);
+    label10->setMinimumWidth(MaxminLabelWidth);
+    label10->setMaximumWidth(MaxminLabelWidth);
+    label10->setAlignment(Qt::AlignTop);
+    layoutPolicy->addItem(label10, row, 0);
+    layoutPolicy->addItem(Entries.at(row), row, 1);
+    row++;
+
     //direct input custom widget.
     directIMWidget = new CustomDirectIMWidget(centralWidget());
     labelDirectIM = new MLabel(centralWidget());
@@ -560,13 +572,6 @@ void TextEntryPage::createContent()
     connect(button1, SIGNAL(toggled(bool)), this, SLOT(changeAutoCapitalisation(bool)));
     connect(button2, SIGNAL(toggled(bool)), this, SLOT(changeErrorCorrection(bool)));
 
-    //add an empty lable here, then the lower textenties won't be covered by vkb
-    labelHeader1 = new MLabel(centralWidget());
-    labelHeader1->setMinimumHeight(350);
-    labelHeader1->setMaximumHeight(350);
-    layoutPolicy->addItem(labelHeader1, row, 0);
-    row++;
-
     layoutPolicy->setColumnMinimumWidth(1, MiniminTextEntryWidth);
 
     // switch on Auto Capitalistaion and error correction
@@ -596,7 +601,7 @@ void TextEntryPage::retranslateUi()
 
     //% "Free text:"
     label0->setText(qtTrId("xx_textentry_free_text"));
-    //% "Free text(masked):"
+    //% "Free text (masked):"
     label1->setText(qtTrId("xx_textentry_free_text_masked"));
     //% "Number text:"
     label2->setText(qtTrId("xx_textentry_number_text"));
@@ -604,7 +609,7 @@ void TextEntryPage::retranslateUi()
     label3->setText(qtTrId("xx_textentry_phone_number"));
     //% "Email text:"
     label4->setText(qtTrId("xx_textentry_email_text"));
-    //% "Url text:"
+    //% "URL text:"
     label5->setText(qtTrId("xx_textentry_url_text"));
     //% "Multiline:"
     label6->setText(qtTrId("xx_textentry_multiline"));
@@ -612,21 +617,23 @@ void TextEntryPage::retranslateUi()
     label7->setText(qtTrId("xx_textentry_singleselectall"));
     //% "Email suggestion text:"
     label8->setText(qtTrId("xx_textentry_completion_text"));
-    //% "Rich Text:"
+    //% "Rich text:"
     label9->setText(qtTrId("xx_textentry_richtext_text"));
+    //% "Rich text (multiline):"
+    label10->setText(qtTrId("xx_textentry_richtext_text_multiline"));
 
-    //% "No Echo mode:"
+    //% "No echo mode:"
     labelNoEcho->setText(qtTrId("xx_textentry_noecho"));
 
     //% "Echo on edit:"
     labelEchoOnEdit->setText(qtTrId("xx_textentry_echoonedit"));
 
-    //% "Direct Input Mode:"
+    //% "Direct input mode:"
     labelDirectIM->setText(qtTrId("xx_textentry_direct_input_mode"));
 
-    //% "Custom ToolBar 1:"
+    //% "Custom toolbar 1:"
     labelCustomToolbar1->setText(qtTrId("xx_textentry_custom_toolbar1"));
-    //% "Custom ToolBar 2:"
+    //% "Custom toolbar 2:"
     labelCustomToolbar2->setText(qtTrId("xx_textentry_custom_toolbar2"));
 
     //% "Auto capitalisation"
@@ -659,10 +666,10 @@ void TextEntryPage::changeAutoCapitalisation(bool val)
     }
 
     if (val)
-        //% "Auto Capitalisation is active"
+        //% "Auto capitalisation is active"
         Entries.at(9)->setPrompt(qtTrId("xx_auto_true_entry0"));
     else
-        //% "No Auto Capitalisation"
+        //% "No auto capitalisation"
         Entries.at(9)->setPrompt(qtTrId("xx_auto_false_entry0"));
 }
 
