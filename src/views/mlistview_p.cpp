@@ -506,8 +506,12 @@ QPointF MListViewPrivate::locateScrollToPosition(const QModelIndex &index, MList
         break;
     }
 
+    int pannableWidgetBoundingHeight = pannableViewport->widget()->boundingRect().height();
     targetPosition.setY(qMax(targetPosition.y(), (qreal)0));
-    targetPosition.setY(qMin(targetPosition.y(), pannableViewport->widget()->boundingRect().height() - pannableViewportHeight));
+    if (pannableWidgetBoundingHeight > pannableViewportHeight)
+        targetPosition.setY(qMin(targetPosition.y(), pannableWidgetBoundingHeight - pannableViewportHeight));
+    else
+        targetPosition = pannableViewport->position();
 
     return targetPosition;
 }
