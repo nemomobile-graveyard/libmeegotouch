@@ -193,19 +193,7 @@ bool MComponentCachePrivate::hasExtraParams(int &argc, char **argv, const QStrin
             (s.startsWith("--version"))           ||
             (s == "-h")                           ||
             (s.startsWith("-help"))               ||
-            (s.startsWith("--help"))              ||
-
-            /* theme related options */
-            (s == "-genimglist")                  ||
-            (s == "-remote-theme")                ||
-            
-            /* other options */
-            (s == "-fullscreen")                  ||
-            (s == "-output-level")                ||
-            (s == "-output-file")                 ||
-            (s == "-disable-m-input-context")     ||
-            (s == "-output-prefix")               || 
-            (s == "-no-output-prefix")            
+            (s.startsWith("--help"))
            )
             return true;
     }

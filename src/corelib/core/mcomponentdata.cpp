@@ -291,6 +291,7 @@ MComponentData::MComponentData(MApplicationService *service) :
     d->init(argc, argv, QString(), service);
 }
 
+
 void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
 {
     Q_Q(MComponentData);
@@ -304,7 +305,6 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     reverseLayout = qApp->layoutDirection() == Qt::RightToLeft;
 
     MTheme::ThemeService themeService = MTheme::AnyTheme;
-    bool outputLevelSet = false;
 
 #ifdef HAVE_N900
     //#MS - default commadline: /usr/bin/widgetsgallery -target N900 -fullscreen
@@ -312,6 +312,146 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     fullScreen = true;
     deviceName = "N900";
 #endif //HAVE_N900
+
+    parseArguments(argc, argv, themeService);
+
+    // If there was already a message handler, remove
+    // own message handler again.
+    QtMsgHandler handler(qInstallMsgHandler(mMessageHandler));
+    if (handler != 0) {
+        qInstallMsgHandler(handler);
+    }
+
+    if (themeService == MTheme::RemoteTheme && !imglistFilename.isEmpty()) {
+        qFatal("-genimglist switch can't be used with remote theme daemon");
+    }
+
+    QFileInfo fileInfo(argv[0]);
+    QString themeIdentifier = fileInfo.fileName();
+    if (!appIdentifier.isEmpty()) {
+        QRegExp regExp("[0-9a-zA-Z_-]*");
+        if (regExp.exactMatch(appIdentifier)) {
+            themeIdentifier = appIdentifier;
+        }
+    }
+    theme = new MTheme(themeIdentifier, imglistFilename, themeService);
+    deviceProfile = new MDeviceProfile();
+
+    QString catalog = appIdentifier;
+    if (catalog.isEmpty())
+        catalog = fileInfo.fileName();
+
+    // set the path for the icu extra data:
+    MLocale::setDataPath(M_ICUEXTRADATA_DIR);
+
+    MLocale systemLocale; // gets the current system locale, creating it if necessary.
+#ifdef Q_OS_WIN
+    // walk to translation dir relative to bin dir
+    QDir appDir(QCoreApplication::applicationDirPath());
+
+    appDir.cdUp();
+    appDir.cd("share");
+    appDir.cd("l10n");
+    appDir.cd("meegotouch");
+
+    systemLocale.addTranslationPath(appDir.absolutePath());
+#else
+    systemLocale.addTranslationPath(TRANSLATION_DIR);
+#endif
+    // installs the libmeegotouch translations
+    systemLocale.installTrCatalog("libmeegotouch");
+    // installs the common translation catalog:
+    systemLocale.installTrCatalog("common");
+    // installs the translation catalog of the application if we
+    // already know the application/catalog name (not just populate
+    // cache)
+    if (!MComponentCache::populating()) {
+        systemLocale.installTrCatalog(catalog);
+    }
+    MLocale::setDefault(systemLocale);
+
+    // MLocale::setDefault(locale) also sets the
+    // layoutDirection(). This overrides the effects of the -reverse
+    // command line switch. Therefore, if the -reverse command line switch
+    // was used, we have to set the RTL direction again here:
+    if (reverseLayout)
+        qApp->setLayoutDirection(Qt::RightToLeft);
+
+    // set the input context
+    if (g_loadMInputContext == true) {
+        // QApplication::setInputContext takes ownership of this input context,
+        // but it does not call setParent( qApp ); on the input context yet.
+        // a bug for this is filed to qt software.
+        QInputContext *ic = QInputContextFactory::create("MInputContext", 0);
+
+        if (ic != 0) {
+            qApp->setInputContext(ic);
+        }
+    }
+
+    feedbackPlayer = new MFeedbackPlayer();
+    if (!feedbackPlayer->d_ptr->init(themeIdentifier)) {
+        delete feedbackPlayer;
+        feedbackPlayer = 0;
+    }
+
+    // register dbus service
+    appName = themeIdentifier;
+    binaryName = argv[0];
+
+    //appName cannot begin with number
+    if (appName[0].isDigit()) {
+        qCritical("MComponentData - application identifier must not begin with a digit.");
+        exit(EXIT_FAILURE);
+    }
+
+#ifdef HAVE_DBUS
+    // here we check for a working dbus session bus and give a big
+    // fat error message when it does not exist.
+
+    QDBusConnection connection = QDBusConnection::sessionBus();
+
+    if (connection.isConnected() == false) {
+        qCritical("ERROR: No DBUS session bus found. Exiting now. Please make sure that a dbus session bus\n"
+               "is running. In Scratchbox you should execute m-sb-session start. On the target device\n"
+               "it should already be running. You should also make sure that the DBUS_SESSION_BUS_ADDRESS\n"
+               "environment variable is set correctly. For that you can execute the following command:\n"
+               "source /tmp/session_bus_address.user\n");
+
+        exit(EXIT_FAILURE);
+    }
+
+    /* If cache is being populated, real name of the application to be
+       executed is not known yet. Service registration will be skipped
+       now and done in reinit(). */
+    if (!MComponentCache::populating()) {
+        if (newService == 0) {
+            registerDefaultService(appName);
+        } else {
+            registerNewService(newService);
+        }
+    }
+#else
+    Q_UNUSED(newService);
+#endif
+
+    QGestureRecognizer::unregisterRecognizer(Qt::TapAndHoldGesture);
+    QGestureRecognizer::registerRecognizer(new MTapAndHoldRecognizer());
+
+    QGestureRecognizer::unregisterRecognizer(Qt::PanGesture);
+    QGestureRecognizer::registerRecognizer(new MPanRecognizer());
+
+    q->setShowCursor(showCursor);
+}
+
+void MComponentDataPrivate::parseArguments(int &argc, char **argv, 
+                                           MTheme::ThemeService &themeService)
+// argc and argv (in and out): command line arguments, used ones are removed
+// themeService (out): value changed if theme service is defined in arguments
+{
+    Q_Q(MComponentData);
+
+    bool outputLevelSet = false;
 
     // Assume every argument is used and mark those that are not
     QVector<bool> usedArguments(argc, true);
@@ -482,134 +622,6 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 
     //Setup mDebug()
     debugInit(outputLevelSet);
-
-    // If there was already a message handler, remove
-    // own message handler again.
-    QtMsgHandler handler(qInstallMsgHandler(mMessageHandler));
-    if (handler != 0) {
-        qInstallMsgHandler(handler);
-    }
-
-    if (themeService == MTheme::RemoteTheme && !imglistFilename.isEmpty()) {
-        qFatal("-genimglist switch can't be used with remote theme daemon");
-    }
-
-    QFileInfo fileInfo(argv[0]);
-    QString themeIdentifier = fileInfo.fileName();
-    if (!appIdentifier.isEmpty()) {
-        QRegExp regExp("[0-9a-zA-Z_-]*");
-        if (regExp.exactMatch(appIdentifier)) {
-            themeIdentifier = appIdentifier;
-        }
-    }
-    theme = new MTheme(themeIdentifier, imglistFilename, themeService);
-    deviceProfile = new MDeviceProfile();
-
-    QString catalog = appIdentifier;
-    if (catalog.isEmpty())
-        catalog = fileInfo.fileName();
-
-    // set the path for the icu extra data:
-    MLocale::setDataPath(M_ICUEXTRADATA_DIR);
-
-    MLocale systemLocale; // gets the current system locale, creating it if necessary.
-#ifdef Q_OS_WIN
-    // walk to translation dir relative to bin dir
-    QDir appDir(QCoreApplication::applicationDirPath());
-
-    appDir.cdUp();
-    appDir.cd("share");
-    appDir.cd("l10n");
-    appDir.cd("meegotouch");
-
-    systemLocale.addTranslationPath(appDir.absolutePath());
-#else
-    systemLocale.addTranslationPath(TRANSLATION_DIR);
-#endif
-    // installs the libmeegotouch translations
-    systemLocale.installTrCatalog("libmeegotouch");
-    // installs the common translation catalog:
-    systemLocale.installTrCatalog("common");
-    // installs the translation catalog of the application if we
-    // already know the application/catalog name (not just populate
-    // cache)
-    if (!MComponentCache::populating()) {
-        systemLocale.installTrCatalog(catalog);
-    }
-    MLocale::setDefault(systemLocale);
-
-    // MLocale::setDefault(locale) also sets the
-    // layoutDirection(). This overrides the effects of the -reverse
-    // command line switch. Therefore, if the -reverse command line switch
-    // was used, we have to set the RTL direction again here:
-    if (reverseLayout)
-        qApp->setLayoutDirection(Qt::RightToLeft);
-
-    // set the input context
-    if (g_loadMInputContext == true) {
-        // QApplication::setInputContext takes ownership of this input context,
-        // but it does not call setParent( qApp ); on the input context yet.
-        // a bug for this is filed to qt software.
-        QInputContext *ic = QInputContextFactory::create("MInputContext", 0);
-
-        if (ic != 0) {
-            qApp->setInputContext(ic);
-        }
-    }
-
-    feedbackPlayer = new MFeedbackPlayer();
-    if (!feedbackPlayer->d_ptr->init(themeIdentifier)) {
-        delete feedbackPlayer;
-        feedbackPlayer = 0;
-    }
-
-    // register dbus service
-    appName = themeIdentifier;
-    binaryName = argv[0];
-
-    //appName cannot begin with number
-    if (appName[0].isDigit()) {
-        qCritical("MComponentData - application identifier must not begin with a digit.");
-        exit(EXIT_FAILURE);
-    }
-
-#ifdef HAVE_DBUS
-    // here we check for a working dbus session bus and give a big
-    // fat error message when it does not exist.
-
-    QDBusConnection connection = QDBusConnection::sessionBus();
-
-    if (connection.isConnected() == false) {
-        qCritical("ERROR: No DBUS session bus found. Exiting now. Please make sure that a dbus session bus\n"
-               "is running. In Scratchbox you should execute m-sb-session start. On the target device\n"
-               "it should already be running. You should also make sure that the DBUS_SESSION_BUS_ADDRESS\n"
-               "environment variable is set correctly. For that you can execute the following command:\n"
-               "source /tmp/session_bus_address.user\n");
-
-        exit(EXIT_FAILURE);
-    }
-
-    /* If cache is being populated, real name of the application to be
-       executed is not known yet. Service registration will be skipped
-       now and done in reinit(). */
-    if (!MComponentCache::populating()) {
-        if (newService == 0) {
-            registerDefaultService(appName);
-        } else {
-            registerNewService(newService);
-        }
-    }
-#else
-    Q_UNUSED(newService);
-#endif
-
-    QGestureRecognizer::unregisterRecognizer(Qt::TapAndHoldGesture);
-    QGestureRecognizer::registerRecognizer(new MTapAndHoldRecognizer());
-
-    QGestureRecognizer::unregisterRecognizer(Qt::PanGesture);
-    QGestureRecognizer::registerRecognizer(new MPanRecognizer());
-
-    q->setShowCursor(showCursor);
 }
 
 void MComponentDataPrivate::registerNewService(MApplicationService *newService)
@@ -635,6 +647,11 @@ void MComponentDataPrivate::registerDefaultService(const QString &appIdentifier)
 void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
 {
     Q_D(MComponentData);
+    MTheme::ThemeService themeService = MTheme::AnyTheme;
+
+    d->parseArguments(argc, argv, 
+                      themeService);
+
     if (d->service) {
         qFatal("MComponentData::reinit() - Called but service already registered.");
     }
@@ -660,39 +677,6 @@ void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier
         d->registerDefaultService(d->appName);
     }
 
-    // Configure application according to switches
-    for (int i = 1; i < argc; ++i)
-    {
-        QString s(argv[i]);
-        if (s == "-prestart") {
-            d->prestarted = true;
-        } else if (s == "-show-fps") {
-            setShowFps(true);
-        } else if (s == "-show-br") {
-            setShowBoundingRect(true);
-        } else if (s == "-show-size") {
-            setShowSize(true);
-        } else if (s == "-show-position") {
-            setShowPosition(true);
-        } else if (s == "-show-cursor") {
-            d->showCursor = true;
-        } else if (s == "-show-object-names") {
-            setShowObjectNames(true);
-        } else if (s == "-dev") {
-            setShowSize(true);
-            setShowPosition(true);
-        } else if (s == "-software") {
-            d->softwareRendering = true;
-        } else if (s == "-log-fps") {
-            setLogFps(true);
-        } else if (s == "-target") {
-            if (i < (argc - 1)) {
-                d->deviceName = argv[++i];
-            }
-        } else if (s == "-emulate-two-finger-gestures") {
-            setEmulateTwoFingerGestures(true);
-        }
-    }
 }
 
 MComponentData::~MComponentData()

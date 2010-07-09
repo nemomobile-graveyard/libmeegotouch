@@ -26,7 +26,8 @@
 #include <X11/Xlib.h>
 #endif
 
-class MTheme;
+#include "mtheme.h"
+
 class MComponentData;
 class MFeedbackPlayer;
 class MApplicationService;
@@ -44,6 +45,9 @@ class MComponentDataPrivate
 public:
     MComponentDataPrivate();
     virtual ~MComponentDataPrivate();
+
+    void parseArguments(int &argc, char **argv, 
+                        MTheme::ThemeService &themeService);
 
     bool softwareRendering;
     bool fullScreen;
