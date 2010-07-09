@@ -226,7 +226,7 @@ public:
     QAbstractItemModel *itemModel() const;
 
     /*!
-      Set's cell creator which will map data from model to widgets which will be displayed by MList.
+      Set's cell creator which will map data from model to widgets which will be displayed by MList. Ownership is transferred to MList.
 
       \sa MCellCreator
       */
@@ -238,7 +238,7 @@ public:
     const MCellCreator *cellCreator() const;
 
     /*!
-      Set's header creator which will map data from model to widgets which will be displayed by MList in the header.
+      Set's header creator which will map data from model to widgets which will be displayed by MList in the header. Ownership is transferred to MList.
 
       \sa MCellCreator
       */
