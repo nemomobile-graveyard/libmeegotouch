@@ -37,6 +37,8 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
+    void testConstructors();
+
     void testCities_data();
     void testCities();
 

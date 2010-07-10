@@ -22,6 +22,14 @@
 #include "mcity.h"
 #include "mcountry.h"
 
+class TestCity : public MCity
+{
+};
+
+class TestCountry : public MCountry
+{
+};
+
 void Ut_MLocationDatabase::initTestCase()
 {
     static int dummyArgc = 1;
@@ -34,14 +42,75 @@ void Ut_MLocationDatabase::cleanupTestCase()
 {
 }
 
+void Ut_MLocationDatabase::testConstructors()
+{
+    TestCountry *testCountryFoo = new TestCountry();
+    testCountryFoo->setKey("qtn_clk_country_finland");
+    testCountryFoo->setEnglishName("Finland");
+    testCountryFoo->setLocalName("Suomi");
+    TestCity *testCityFoo = new TestCity();
+    testCityFoo->setKey("qtn_clk_city_fin_hki");
+    testCityFoo->setEnglishName("Helsinki");
+    testCityFoo->setLocalName("Helsinki");
+    testCityFoo->setLatitude(60.1667);
+    testCityFoo->setLongitude(24.9667);
+    testCityFoo->setTimeZone("Europe/Helsinki");
+    testCityFoo->setCountry(*testCountryFoo);
+
+    // copy constructor
+    MCity *cityBar = new MCity(*testCityFoo);
+    QCOMPARE(cityBar->key(), testCityFoo->key());
+    cityBar->setKey("something_which_is_not_"+testCityFoo->key());
+    QVERIFY(cityBar->key() != testCityFoo->key());
+    // assignment operator
+    *cityBar = *testCityFoo;
+    QVERIFY(cityBar->key() == testCityFoo->key());
+
+    // copy constructor
+    TestCity *testCityBar = new TestCity(*testCityFoo);
+    QCOMPARE(testCityBar->key(), testCityFoo->key());
+    testCityBar->setKey("something_which_is_not_"+testCityFoo->key());
+    QVERIFY(testCityBar->key() != testCityFoo->key());
+    // assignment operator
+    *testCityBar = *testCityFoo;
+    QVERIFY(testCityBar->key() == testCityFoo->key());
+
+    // copy constructor
+    MCountry *countryBar = new MCountry(*testCountryFoo);
+    QCOMPARE(countryBar->key(), testCountryFoo->key());
+    countryBar->setKey("something_which_is_not_"+testCountryFoo->key());
+    QVERIFY(countryBar->key() != testCountryFoo->key());
+    // assignment operator
+    *countryBar = *testCountryFoo;
+    QVERIFY(countryBar->key() == testCountryFoo->key());
+
+    // copy constructor
+    TestCountry *testCountryBar = new TestCountry(*testCountryFoo);
+    QCOMPARE(testCountryBar->key(), testCountryFoo->key());
+    testCountryBar->setKey("something_which_is_not_"+testCountryFoo->key());
+    QVERIFY(testCountryBar->key() != testCountryFoo->key());
+    // assignment operator
+    *testCountryBar = *testCountryFoo;
+    QVERIFY(testCountryBar->key() == testCountryFoo->key());
+    
+    delete testCityFoo;
+    delete testCityBar;
+    delete testCountryFoo;
+    delete testCountryBar;
+    delete countryBar;
+    delete cityBar;
+}
+
 void Ut_MLocationDatabase::testCities_data()
 {
     QTest::addColumn<QString>("key");
     QTest::addColumn<QString>("englishName");
+    QTest::addColumn<QString>("localName");
     QTest::addColumn<qreal>("latitude");
     QTest::addColumn<qreal>("longitude");
     QTest::addColumn<QString>("timeZone");
     QTest::addColumn<QString>("countryEnglishName");
+    QTest::addColumn<QString>("countryLocalName");
     QTest::addColumn<QDateTime>("dateTime");
     QTest::addColumn<qint32>("timeZoneRawOffset");
     QTest::addColumn<qint32>("timeZoneDstOffset");
@@ -50,9 +119,11 @@ void Ut_MLocationDatabase::testCities_data()
     QTest::newRow("Helsinki, Winter 2010-03-28 3:59:59 local")
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
+        << "" // local name currently always empty
         << 60.1667 << 24.9667
         << "Europe/Helsinki"
         << "Finland"
+        << "" // local name currently always empty
         << QDateTime(QDate(2010, 3, 28), QTime(3, 59, 59, 0), Qt::LocalTime)
         << 2 * 3600 * 1000  // 2 hours always
         << 0 * 3600 * 1000  // 0 hours in winter
@@ -60,9 +131,11 @@ void Ut_MLocationDatabase::testCities_data()
     QTest::newRow("Helsinki, Summer 2010-03-28 4:00:00 local")
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
+        << "" // local name currently always empty
         << 60.1667 << 24.9667
         << "Europe/Helsinki"
         << "Finland"
+        << "" // local name currently always empty
         << QDateTime(QDate(2010, 3, 28), QTime(4, 0, 0, 0), Qt::LocalTime)
         << 2 * 3600 * 1000  // 2 hours always
         << 1 * 3600 * 1000  // 1 hours in summer
@@ -70,9 +143,11 @@ void Ut_MLocationDatabase::testCities_data()
     QTest::newRow("Helsinki, Winter 2010-03-28 0:59:59 utc")
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
+        << "" // local name currently always empty
         << 60.1667 << 24.9667
         << "Europe/Helsinki"
         << "Finland"
+        << "" // local name currently always empty
         << QDateTime(QDate(2010, 3, 28), QTime(0, 59, 59, 0), Qt::UTC)
         << 2 * 3600 * 1000  // 2 hours always
         << 0 * 3600 * 1000  // 0 hours in winter
@@ -80,9 +155,11 @@ void Ut_MLocationDatabase::testCities_data()
     QTest::newRow("Helsinki, Summer 2010-03-28 1:00:00 utc")
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
+        << "" // local name currently always empty
         << 60.1667 << 24.9667
         << "Europe/Helsinki"
         << "Finland"
+        << "" // local name currently always empty
         << QDateTime(QDate(2010, 3, 28), QTime(1, 0, 0, 0), Qt::UTC)
         << 2 * 3600 * 1000  // 2 hours always
         << 1 * 3600 * 1000  // 1 hours in summer
@@ -91,9 +168,11 @@ void Ut_MLocationDatabase::testCities_data()
     QTest::newRow("Helsinki, Summer 2010-10-31 0:59:59 local")
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
+        << "" // local name currently always empty
         << 60.1667 << 24.9667
         << "Europe/Helsinki"
         << "Finland"
+        << "" // local name currently always empty
         << QDateTime(QDate(2010, 10, 31), QTime(2, 59, 59, 0), Qt::LocalTime)
         << 2 * 3600 * 1000  // 2 hours always
         << 1 * 3600 * 1000  // 1 hours in summer
@@ -101,9 +180,11 @@ void Ut_MLocationDatabase::testCities_data()
     QTest::newRow("Helsinki, Winter 2010-10-31 1:00:00 local")
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
+        << "" // local name currently always empty
         << 60.1667 << 24.9667
         << "Europe/Helsinki"
         << "Finland"
+        << "" // local name currently always empty
         << QDateTime(QDate(2010, 10, 31), QTime(3, 0, 0, 0), Qt::LocalTime)
         << 2 * 3600 * 1000  // 2 hours always
         << 0 * 3600 * 1000  // 0 hours in winter
@@ -111,9 +192,11 @@ void Ut_MLocationDatabase::testCities_data()
     QTest::newRow("Helsinki, Summer 2010-10-31 0:59:59 utc")
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
+        << "" // local name currently always empty
         << 60.1667 << 24.9667
         << "Europe/Helsinki"
         << "Finland"
+        << "" // local name currently always empty
         << QDateTime(QDate(2010, 10, 31), QTime(0, 59, 59, 0), Qt::UTC)
         << 2 * 3600 * 1000  // 2 hours always
         << 1 * 3600 * 1000  // 1 hours in summer
@@ -121,9 +204,11 @@ void Ut_MLocationDatabase::testCities_data()
     QTest::newRow("Helsinki, Winter 2010-10-31 1:00:00 utc")
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
+        << "" // local name currently always empty
         << 60.1667 << 24.9667
         << "Europe/Helsinki"
         << "Finland"
+        << "" // local name currently always empty
         << QDateTime(QDate(2010, 10, 31), QTime(1, 0, 0, 0), Qt::UTC)
         << 2 * 3600 * 1000  // 2 hours always
         << 0 * 3600 * 1000  // 0 hours in winter
@@ -134,10 +219,12 @@ void Ut_MLocationDatabase::testCities()
 {
     QFETCH(QString, key);
     QFETCH(QString, englishName);
+    QFETCH(QString, localName);
     QFETCH(qreal, latitude);
     QFETCH(qreal, longitude);
     QFETCH(QString, timeZone);
     QFETCH(QString, countryEnglishName);
+    QFETCH(QString, countryLocalName);
     QFETCH(QDateTime, dateTime);
     QFETCH(qint32, timeZoneRawOffset);
     QFETCH(qint32, timeZoneDstOffset);
@@ -165,7 +252,9 @@ void Ut_MLocationDatabase::testCities()
     QVERIFY(found);
     QCOMPARE(foundCity.key(), key);
     QCOMPARE(foundCity.englishName(), englishName);
+    QCOMPARE(foundCity.localName(), localName);
     QCOMPARE(foundCity.country().englishName(), countryEnglishName);
+    QCOMPARE(foundCity.country().localName(), countryLocalName);
     qDebug() << "found latitude" << foundCity.latitude()
              << "expected latitude" << latitude;
     QVERIFY(qAbs(foundCity.latitude() - latitude)   < 0.01);
