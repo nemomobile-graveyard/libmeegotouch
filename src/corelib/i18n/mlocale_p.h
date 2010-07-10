@@ -56,12 +56,6 @@ public:
 
     MLocalePrivate &operator=(const MLocalePrivate &other);
 
-    // returns string presentation for category.
-    static QString createLocaleString(const QString &language,
-                                      const QString &country,
-                                      const QString &script,
-                                      const QString &variant);
-
     typedef QList<QExplicitlySharedDataPointer<MTranslationCatalog> > CatalogList;
 
     // return string for a category, default if category is not set

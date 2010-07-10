@@ -256,29 +256,6 @@ bool MTranslationCatalog::loadWith(MLocale *mlocale, MLocale::Category category)
 
 QStringList MLocalePrivate::translationPaths;
 
-QString MLocalePrivate::createLocaleString(const QString &language,
-        const QString &country,
-        const QString &script,
-        const QString &variant)
-{
-    if (language.isEmpty())
-        return "";
-
-    // construct the locale string from the parameters
-    QString localeString(language);
-
-    if (!script.isEmpty())
-        localeString += '_' + script;
-
-    if (!country.isEmpty())
-        localeString += '_' + country;
-
-    if (!variant.isEmpty())
-        localeString += '_' + variant;
-
-    return localeString;
-}
-
 #ifdef HAVE_ICU
 icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(const icu::Locale &locale)
 {
