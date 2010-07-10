@@ -2,6 +2,10 @@ include(../common_top.pri)
 LIBS =
 QT -= gui
 
+RESOURCES = \
+    correctFiles.qrc \
+    xmlFiles.qrc \
+
 TARGET = ft_mservicefwgen
 
 SOURCES += \
@@ -29,28 +33,5 @@ QMAKE_CLEAN += \
     ftmservicefwgen3.h \
     ftmservicefwgen3proxy.cpp \
     ftmservicefwgen3proxy.h \
-
-support_files.files += \
-    com.nokia.FtMServiceFwGen1.xml \
-    com.nokia.FtMServiceFwGen2.xml \
-    com.nokia.FtMServiceFwGen3.xml \
-    ftmservicefwgen1adaptor.cpp.correct \
-    ftmservicefwgen1adaptor.h.correct \
-    ftmservicefwgen1.cpp.correct \
-    ftmservicefwgen1.h.correct \
-    ftmservicefwgen1proxy.cpp.correct \
-    ftmservicefwgen1proxy.h.correct \
-    ftmservicefwgen2adaptor.cpp.correct \
-    ftmservicefwgen2adaptor.h.correct \
-    ftmservicefwgen2.cpp.correct \
-    ftmservicefwgen2.h.correct \
-    ftmservicefwgen2proxy.cpp.correct \
-    ftmservicefwgen2proxy.h.correct \
-    ftmservicefwgen3adaptor.cpp.correct \
-    ftmservicefwgen3adaptor.h.correct \
-    ftmservicefwgen3.cpp.correct \
-    ftmservicefwgen3.h.correct \
-    ftmservicefwgen3proxy.cpp.correct \
-    ftmservicefwgen3proxy.h.correct \
 
 include(../common_bot.pri)

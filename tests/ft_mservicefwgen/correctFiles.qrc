@@ -1,0 +1,23 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource>
+        <file>ftmservicefwgen1adaptor.cpp.correct</file>
+        <file>ftmservicefwgen1adaptor.h.correct</file>
+        <file>ftmservicefwgen1.cpp.correct</file>
+        <file>ftmservicefwgen1.h.correct</file>
+        <file>ftmservicefwgen1proxy.cpp.correct</file>
+        <file>ftmservicefwgen1proxy.h.correct</file>
+        <file>ftmservicefwgen2adaptor.cpp.correct</file>
+        <file>ftmservicefwgen2adaptor.h.correct</file>
+        <file>ftmservicefwgen2.cpp.correct</file>
+        <file>ftmservicefwgen2.h.correct</file>
+        <file>ftmservicefwgen2proxy.cpp.correct</file>
+        <file>ftmservicefwgen2proxy.h.correct</file>
+        <file>ftmservicefwgen3adaptor.cpp.correct</file>
+        <file>ftmservicefwgen3adaptor.h.correct</file>
+        <file>ftmservicefwgen3.cpp.correct</file>
+        <file>ftmservicefwgen3.h.correct</file>
+        <file>ftmservicefwgen3proxy.cpp.correct</file>
+        <file>ftmservicefwgen3proxy.h.correct</file>
+    </qresource>
+</RCC>

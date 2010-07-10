@@ -1,0 +1,8 @@
+<!DOCTYPE RCC>
+<RCC version="1.0">
+    <qresource>
+        <file>com.nokia.FtMServiceFwGen1.xml</file>
+        <file>com.nokia.FtMServiceFwGen2.xml</file>
+        <file>com.nokia.FtMServiceFwGen3.xml</file>
+    </qresource>
+</RCC>
