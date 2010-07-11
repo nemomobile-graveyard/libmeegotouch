@@ -316,6 +316,11 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     // Assume every argument is used and mark those that are not
     QVector<bool> usedArguments(argc, true);
 
+    // Check environment variables
+    QByteArray useSoftwareRendering = qgetenv("M_USE_SOFTWARE_RENDERING");
+    if (!useSoftwareRendering.isNull())
+        softwareRendering = true;
+
     // Configure application according to switches
     for (int i = 1; i < argc; ++i) {
         QString s(argv[i]);
