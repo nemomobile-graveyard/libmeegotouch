@@ -27,6 +27,7 @@
 #include <MScalableImage>
 #include <MSceneManager>
 
+#include <QGraphicsLinearLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <qmath.h>
 
@@ -36,6 +37,7 @@
 MListIndexViewPrivate::MListIndexViewPrivate()
   : controller(NULL),
     controllerModel(NULL),
+    layout(NULL),
     container(NULL),
     shortcutHeight(0),
     shortcutsCount(0),
@@ -48,9 +50,30 @@ MListIndexViewPrivate::~MListIndexViewPrivate()
     clearVisible();
 }
 
+void MListIndexViewPrivate::applyStyleToShortcuts()
+{
+    Q_Q(MListIndexView);
+
+    if (layout) {
+        for (int i = 0; i < layout->count(); i++) {
+            MLabel *shortcut = dynamic_cast<MLabel*>(layout->itemAt(i));
+            if (shortcut)
+                shortcut->setObjectName(q->style()->shortcutObjectName());
+        }
+        updateVisible();
+    }
+}
+
 void MListIndexViewPrivate::initLayout()
 {
     clearVisible();
+
+    if (!layout) {
+        layout = new QGraphicsLinearLayout(Qt::Vertical, controller);
+        layout->setSpacing(0);
+        layout->setContentsMargins(0, 0, 0, 0);
+        controller->setLayout(layout);
+    }
     
     if (controller->model()) {
         controllerModel = controller->model();
@@ -61,10 +84,9 @@ void MListIndexViewPrivate::initLayout()
         if (controller->model()->shortcutLabels().count() > 0) {
             //create the first shortcut label and get the font metrics from it
             MLabel *firstShortcut = createLabel(0);
-            shortcuts.append(firstShortcut);
+            layout->addItem(firstShortcut);
 
-            QFontMetrics fm(firstShortcut->font());
-            shortcutHeight = fm.height();
+            shortcutHeight = firstShortcut->minimumHeight();
 
             shortcutsCount = controllerModel->shortcutLabels().count();
             updateVisible();
@@ -81,29 +103,20 @@ void MListIndexViewPrivate::initLayout()
 void MListIndexViewPrivate::updateLayout()
 {
     if(container) {
+        clearVisible();
         controller->resize(controller->preferredWidth(), containerRect.height());
-        controller->setPos((containerRect.x() + containerRect.width()) - controller->preferredWidth(), containerRect.y());
+        controller->setPos(containerRect.x() + containerRect.width() - controller->preferredWidth(), containerRect.y());
     }
-    updateShortcutPositions();
-}
-
-void MListIndexViewPrivate::updateShortcutPositions() const
-{
-    if (shortcuts.count() > 0) {
-        int shortcutsGap = controller->size().height() / shortcuts.count();
-        QFontMetrics fm(shortcuts[0]->font());
-        for (int i = 0; i < shortcuts.count(); i++) {
-            shortcuts[i]->setPos((controller->size().width() - fm.width(shortcuts[i]->text())) / 2, i*shortcutsGap);
-        }
-    }
+    updateVisible();
 }
 
 QModelIndex MListIndexViewPrivate::locateShortcutIndex(int y, int x)
 {
     Q_UNUSED(x);
 
-    foreach (MLabel *shortcut, shortcuts) {
-        if (shortcut->pos().y() <= y && shortcut->pos().y() + shortcut->contentsRect().height() >= y ) {
+    for (int i = 0; i < layout->count(); i++) {
+        MLabel *shortcut = dynamic_cast<MLabel*>(layout->itemAt(i));
+        if (shortcut && shortcut->geometry().contains(x, y)) {
             int flatIndex = controller->model()->shortcutLabels().indexOf(shortcut->text());
             return controller->model()->shortcutIndexes()[flatIndex];
         }
@@ -116,7 +129,8 @@ MLabel *MListIndexViewPrivate::createLabel(int index)
     Q_Q(MListIndexView);
     Q_ASSERT(index < controllerModel->shortcutLabels().count());
 
-    MLabel *shortcut = new MLabel(controller);
+    MLabel *shortcut = new MLabel();
+    shortcut->setAlignment(Qt::AlignCenter);
     shortcut->setObjectName(q->style()->shortcutObjectName());
     shortcut->setText(controllerModel->shortcutLabels()[index]);
 
@@ -125,10 +139,12 @@ MLabel *MListIndexViewPrivate::createLabel(int index)
 
 void MListIndexViewPrivate::clearVisible()
 {
-    foreach (MLabel *shortcut, shortcuts) {
-        delete shortcut;
+    if (layout) {
+        for (int i = layout->count(); i > 0; i--) {
+            QGraphicsLayoutItem *item = layout->itemAt(0);
+            delete item;
+        }
     }
-    shortcuts.clear();
 }
 
 void MListIndexViewPrivate::updateVisible()
@@ -138,24 +154,25 @@ void MListIndexViewPrivate::updateVisible()
 
     int fitCount = (controller->contentsRect().height()) / shortcutHeight;
 
-    if (fitCount > 0 && fitCount != shortcuts.count()) {
+    if (fitCount > 0 && fitCount != layout->count()) {
         int skipCount = qCeil((qreal)shortcutsCount / (qreal)fitCount);
-        if (skipCount > 0 && shortcuts.count() != shortcutsCount / skipCount) {
+        if (skipCount > 0 && layout->count() != shortcutsCount / skipCount) {
             clearVisible();
             for (int i = 0; i < shortcutsCount; i += skipCount) {
                 if (shortcutsCount - i <= skipCount)
-                    shortcuts.append(createLabel(shortcutsCount - 1));
+                    layout->addItem(createLabel(shortcutsCount - 1));
                 else
-                    shortcuts.append(createLabel(i));
+                    layout->addItem(createLabel(i));
             }
         }
     }
-    updateShortcutPositions();
 }
 
 void MListIndexViewPrivate::createContainer()
 {
-    disconnect(container, SIGNAL(exposedContentRectChanged()), this, SLOT(exposedContentRectChanged()));
+    if (container)
+        disconnect(container, SIGNAL(exposedContentRectChanged()), this, SLOT(exposedContentRectChanged()));
+
     if (controller->model()->list()) {
         container = MListViewPrivateNamespace::findParentWidgetOfType<MApplicationPage>(controller->model()->list());
 
@@ -202,20 +219,11 @@ MListIndexView::~MListIndexView()
     delete d_ptr;
 }
 
-void MListIndexView::setGeometry(const QRectF &rect)
-{
-    Q_D(MListIndexView);
-
-    d->updateVisible();
-    MWidgetView::setGeometry(rect);
-}
-
 void MListIndexView::setupModel()
 {
     Q_D(MListIndexView);
 
     MWidgetView::setupModel();
-
     d->initLayout();
 }
 
@@ -230,9 +238,7 @@ void MListIndexView::applyStyle()
     else
         d->controller->setPreferredWidth(0.0);
 
-    foreach (MLabel *shortcut, d->shortcuts) {
-        shortcut->setObjectName(style()->shortcutObjectName());
-    }
+    d->applyStyleToShortcuts();
 }
 
 void MListIndexView::updateData(const QList<const char *> &modifications)

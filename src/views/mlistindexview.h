@@ -36,10 +36,6 @@ public:
     MListIndexView(MListIndex *controller);
     virtual ~MListIndexView();
 
-    //! \reimp
-    virtual void setGeometry(const QRectF &rect);
-    //! \reimp_end
-
 protected:
     //! \reimp
     virtual void setupModel();

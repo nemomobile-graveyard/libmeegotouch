@@ -31,7 +31,7 @@ class MListIndexView;
 class MLabel;
 class MWidgetController;
 
-class QGraphicsScene;
+class QGraphicsLinearLayout;
 
 class MListIndexViewPrivate : public QObject
 {
@@ -41,10 +41,10 @@ public:
     MListIndexViewPrivate();
     virtual ~MListIndexViewPrivate();
 
+    virtual void applyStyleToShortcuts();
 
     virtual void initLayout();
     virtual void updateLayout();
-    virtual void updateShortcutPositions() const;
 
     virtual QModelIndex locateShortcutIndex(int y, int x = 0);
 
@@ -64,10 +64,10 @@ protected Q_SLOTS:
 public:
     MListIndex *controller;
     const MListIndexModel *controllerModel;
+    QGraphicsLinearLayout *layout;
 
     MApplicationPage *container;
 
-    QVector<MLabel *> shortcuts;
     int shortcutHeight;
     int shortcutsCount;
     QRectF containerRect;
