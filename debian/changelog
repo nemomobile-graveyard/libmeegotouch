@@ -1,8 +1,11 @@
-libmeegotouch (0.20.27~1) UNRELEASED; urgency=low
+libmeegotouch (0.20.27-1) unstable; urgency=low
 
-  * 
+  * Fixes: NB#168462 - MDialog - Buttons are not displayed in the order in which they were added.
+  * Fixes: NB#168075 - Copying text from multi-line text edit to single line text
+  * Fixes: NB#175663 - system dialog cannot be minimised
+  * Fixes: NB#177960 - cannot change themes
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Fri, 09 Jul 2010 10:53:25 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 12 Jul 2010 15:05:13 +0300
 
 libmeegotouch (0.20.26-1) unstable; urgency=low
 
