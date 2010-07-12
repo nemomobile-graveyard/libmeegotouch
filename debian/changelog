@@ -1,3 +1,9 @@
+libmeegotouch (0.20.28~1) UNRELEASED; urgency=low
+
+  * 
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 12 Jul 2010 16:49:19 +0300
+
 libmeegotouch (0.20.27-1) unstable; urgency=low
 
   * Fixes: NB#168462 - MDialog - Buttons are not displayed in the order in which they were added.
