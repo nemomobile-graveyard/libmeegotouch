@@ -19,6 +19,10 @@
 
 #include "ft_locales.h"
 
+class TestLocale : public MLocale
+{
+};
+
 void Ft_Locales::initTestCase()
 {
     static int dummyArgc = 1;
@@ -55,9 +59,47 @@ void Ft_Locales::testBug169305()
 
 void Ft_Locales::testMLocaleConstructor()
 {
-    MLocale *z = 0;
-    z = new MLocale();
-    QVERIFY2(z->isValid(), "new MLocale()");
+    TestLocale *testLocale = new TestLocale();
+    QVERIFY2(testLocale->isValid(), "testLocale is not valid");
+    testLocale->setCategoryLocale(MLocale::MLcNumeric, "de_CH");
+
+    // copy constructor
+    MLocale *mLocale = new MLocale(*testLocale);
+    QVERIFY2(mLocale->isValid(), "mLocale is not valid");
+    QCOMPARE(mLocale->name(), testLocale->name());
+    QCOMPARE(mLocale->categoryName(MLocale::MLcNumeric),
+             testLocale->categoryName(MLocale::MLcNumeric));
+    mLocale->setCategoryLocale(MLocale::MLcNumeric, "zh_CN");
+    QVERIFY2(mLocale->categoryName(MLocale::MLcNumeric)
+             != testLocale->categoryName(MLocale::MLcNumeric),
+             "mLocale->categoryName(MLocale::MLcNumeric) and testLocale->categoryName(MLocale::MLcNumeric) should be different");
+    // assignment operator
+    *mLocale = * testLocale;
+    QVERIFY2(mLocale->isValid(), "mLocale is not valid");
+    QCOMPARE(mLocale->name(), testLocale->name());
+    QCOMPARE(mLocale->categoryName(MLocale::MLcNumeric),
+             testLocale->categoryName(MLocale::MLcNumeric));
+
+    // copy constructor
+    TestLocale *testLocale2 = new TestLocale(*testLocale);
+    QVERIFY2(testLocale2->isValid(), "testLocale2 is not valid");
+    QCOMPARE(testLocale2->name(), testLocale->name());
+    QCOMPARE(testLocale2->categoryName(MLocale::MLcNumeric),
+             testLocale->categoryName(MLocale::MLcNumeric));
+    testLocale2->setCategoryLocale(MLocale::MLcNumeric, "zh_CN");
+    QVERIFY2(testLocale2->categoryName(MLocale::MLcNumeric)
+             != testLocale->categoryName(MLocale::MLcNumeric),
+             "testLocale2->categoryName(MLocale::MLcNumeric) and testLocale->categoryName(MLocale::MLcNumeric) should be different");
+    // assignment operator
+    *testLocale2 = * testLocale;
+    QVERIFY2(testLocale2->isValid(), "testLocale2 is not valid");
+    QCOMPARE(testLocale2->name(), testLocale->name());
+    QCOMPARE(testLocale2->categoryName(MLocale::MLcNumeric),
+             testLocale->categoryName(MLocale::MLcNumeric));
+
+    delete mLocale;
+    delete testLocale;
+    delete testLocale2;
 }
 
 void Ft_Locales::testCreateSystemLocale_data()
