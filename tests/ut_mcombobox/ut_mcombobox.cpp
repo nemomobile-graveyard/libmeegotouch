@@ -246,6 +246,28 @@ void Ut_MComboBox::testClickSlot()
     win->scene()->removeItem(m_combobox);
 }
 
+void Ut_MComboBox::testDismissSlot()
+{
+    win->scene()->addItem(m_combobox);
+    MComboBoxView *view = (MComboBoxView *)m_combobox->view();
+    MComboBoxViewPrivate *viewPrivate = view->d_func();
+    m_combobox->addItems(QStringList() << "Item1" << "Item2");
+
+    QSignalSpy dismissedSpy(m_combobox, SIGNAL(dismissed()));
+    m_combobox->dismiss();
+    QCOMPARE(dismissedSpy.count(), 1);
+    dismissedSpy.clear();
+
+    m_combobox->click();
+    QSignalSpy rejectedSpy(viewPrivate->popuplist, SIGNAL(rejected()));
+    m_combobox->dismiss();
+    QCOMPARE(dismissedSpy.count(), 1);
+    QCOMPARE(rejectedSpy.count(), 1);
+    QVERIFY(!viewPrivate->popuplist->isVisible());
+
+    win->scene()->removeItem(m_combobox);
+}
+
 void Ut_MComboBox::testBuiltinModel()
 {
     MComboBoxView *view = (MComboBoxView *)m_combobox->view();
@@ -287,6 +309,25 @@ void Ut_MComboBox::testBuiltinModel()
     m_combobox->setItemText(2, QString("beef"));
     QCOMPARE(m_combobox->currentIndex(), 2);
     QCOMPARE(viewPrivate->button->subtitleWidget()->text(), QString("beef"));
+}
+
+void Ut_MComboBox::testSelectionModel()
+{
+    m_combobox->addItems(QStringList() << "Item0" << "Item1" << "Item2");
+    QItemSelectionModel* oldSelectionModel = m_combobox->selectionModel();
+
+    QStringListModel* otherModel = new QStringListModel(QStringList() << "A" << "B" << "C");
+    QItemSelectionModel* badSelectionModel = new QItemSelectionModel(otherModel);
+    badSelectionModel->setCurrentIndex(otherModel->index(2,0), QItemSelectionModel::SelectCurrent);
+    m_combobox->setSelectionModel(badSelectionModel);
+    QCOMPARE(m_combobox->selectionModel(), oldSelectionModel);
+    QCOMPARE(m_combobox->currentIndex(), -1);
+
+    QItemSelectionModel* selectionModel = new QItemSelectionModel(m_combobox->itemModel());
+    selectionModel->setCurrentIndex(m_combobox->itemModel()->index(1,0), QItemSelectionModel::SelectCurrent);
+    m_combobox->setSelectionModel(selectionModel);
+    QCOMPARE(m_combobox->selectionModel(), selectionModel);
+    QCOMPARE(m_combobox->currentIndex(), 1);
 }
 
 void Ut_MComboBox::testModelSwitching()
@@ -448,6 +489,24 @@ void Ut_MComboBox::testSetCurrentIndex()
     QCOMPARE(spy.takeFirst()[0].toInt(), 1);
 
     win->scene()->removeItem(m_combobox);
+}
+
+void Ut_MComboBox::testProgressIndicator()
+{
+    MComboBoxView *view = (MComboBoxView *)m_combobox->view();
+    MComboBoxViewPrivate *viewPrivate = view->d_func();
+    MLayout* comboboxButtonLayout = static_cast<MLayout*>(viewPrivate->button->layout());
+
+    QCOMPARE(m_combobox->isProgressIndicatorVisible(), false);
+    QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->layoutPolicy(MComboBoxButton::TitleShown));
+
+    m_combobox->setProgressIndicatorVisible(true);
+    QCOMPARE(m_combobox->isProgressIndicatorVisible(), true);
+    QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->layoutPolicy(MComboBoxButton::TitleShown|MComboBoxButton::ProgressShown));
+
+    m_combobox->setProgressIndicatorVisible(false);
+    QCOMPARE(m_combobox->isProgressIndicatorVisible(), false);
+    QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->layoutPolicy(MComboBoxButton::TitleShown));
 }
 
 QTEST_APPLESS_MAIN(Ut_MComboBox)

@@ -46,12 +46,15 @@ private slots:
     void testFunctions();
     void testIconVisibility();
     void testClickSlot();
+    void testDismissSlot();
     void testBuiltinModel();
+    void testSelectionModel();
     void testModelSwitching();
     void testStringListModel();
     void testStringListModelSetStringList();
     void testActivatedSignal();
     void testSetCurrentIndex();
+    void testProgressIndicator();
 
 private:
     MComboBox *m_combobox;
