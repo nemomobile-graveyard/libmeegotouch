@@ -22,6 +22,7 @@
 #include <QTest>
 #include <MApplication>
 #include <MApplicationWindow>
+#include <MApplicationPage>
 #include <QString>
 #include <QTextCursor>
 #include <QSignalSpy>
@@ -54,6 +55,9 @@ Q_DECLARE_METATYPE(Qt::InputMethodHints);
 Q_DECLARE_METATYPE(QValidator::State);
 Q_DECLARE_METATYPE(MTextEditModel::EchoMode);
 Q_DECLARE_METATYPE(MTextEditModel::EditMode);
+Q_DECLARE_METATYPE(Ut_MTextEdit::PositionedTextEditList);
+Q_DECLARE_METATYPE(Ut_MTextEdit::KeyList);
+Q_DECLARE_METATYPE(Qt::KeyboardModifiers);
 
 const QString Ut_MTextEdit::testString = QString("jallajalla");
 
@@ -143,15 +147,80 @@ private:
     bool m_sipVisible;
 };
 
+class AlwaysOnDisplayWindow
+    : public MWindow
+{
+public:
+    explicit AlwaysOnDisplayWindow(MSceneManager *sm, QWidget *parent = 0)
+        : MWindow(sm, parent)
+        , m_page(new MApplicationPage)
+    {
+        setVisible(true);
+        m_page->appear(this);
+        m_page->setCentralWidget(new QGraphicsWidget);
+    }
 
+    QGraphicsWidget* box()
+    {
+        return m_page->centralWidget();
+    }
+
+private:
+    QPointer<MApplicationPage> m_page;
+};
+
+class AutoActivatedScene
+    : public MScene
+{
+public:
+    explicit AutoActivatedScene(QObject *parent = 0)
+        : MScene(parent)
+        , m(new MSceneManager(this))
+
+    {
+        QEvent activate(QEvent::WindowActivate);
+        event(&activate);
+
+        setFocus(Qt::OtherFocusReason);
+        QTest::qWaitForWindowShown(&m);
+    }
+
+    void adjustTextEdit(MTextEdit *edit, const QPoint &pos)
+    {
+        edit->setParentItem(m.box());
+        edit->setVisible(true);
+        edit->setPos(pos);
+        edit->setZValue(1);
+    }
+
+    AlwaysOnDisplayWindow m;
+};
+
+class AccurateRect
+    : public QRect
+{
+
+public:
+    AccurateRect(int x, int y, int w, int h)
+        : QRect(x, y, w, h)
+    {}
+
+    QPoint centerTop() const {return QPoint(width() * 0.5, 0);}
+    QPoint centerBottom() const {return QPoint(width() * 0.5, height());}
+    QPoint centerLeft() const {return QPoint(0, height() * 0.5);}
+    QPoint centerRight() const {return QPoint(width(), height() * 0.5);}
+
+};
 
 /*!
  * Called once before the first testcase is run.
  */
 void Ut_MTextEdit::initTestCase()
 {
-    static int dummyArgc = 1;
-    static char *dummyArgv[1] = { (char *) "./ut_mtextedit" };
+    static int dummyArgc = 3;
+    static char *dummyArgv[3] = { (char *) "./ut_mtextedit",
+                                  (char *) "-local-theme",
+                                  (char *) "-software"};
 
     // prevent loading of minputcontext because we don't need it
     MApplication::setLoadMInputContext(false);
@@ -2030,6 +2099,228 @@ void Ut_MTextEdit::testInsertMultiLineText()
     m_subject->clear();
     m_subject->insert(text);
     QCOMPARE(m_subject->text(), expectedText);
+}
+
+void Ut_MTextEdit::testArrowKeyNavigation_data()
+{
+    const AccurateRect area(0, 0, 400, 400);
+
+    QTest::addColumn<QString>("subjectText");
+    QTest::addColumn<int>("subjectCursorPosition");
+    QTest::addColumn<QPoint>("subjectPosition");
+    QTest::addColumn<PositionedTextEditList>("targets");
+    QTest::addColumn<int>("expectedTarget");
+    QTest::addColumn<KeyList>("sequence");
+    QTest::addColumn<Qt::KeyboardModifiers>("modifiers");
+
+    QTest::newRow("left0") << ""
+                           << 0
+                           << area.centerTop()
+                           << (PositionedTextEditList() << PositionedTextEdit(
+                                   new MTextEdit, area.topLeft()))
+                           << 0
+                           << (KeyList() << Qt::Key_Left)
+                           << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("left1") << "some test"
+                           << 4
+                           << area.centerRight()
+                           << (PositionedTextEditList() << PositionedTextEdit(
+                                   new MTextEdit, area.bottomLeft()))
+                           << 0
+                           << (KeyList() << Qt::Key_Up << Qt::Key_Left)
+                           << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("right0") << ""
+                            << 0
+                            << area.centerLeft()
+                            << (PositionedTextEditList() << PositionedTextEdit(new MTextEdit, area.centerBottom())
+                                                         << PositionedTextEdit(new MTextEdit, area.topRight()))
+                            << 1
+                            << (KeyList() << Qt::Key_Right)
+                            << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("right1") << "a"
+                            << 0
+                            << area.bottomLeft()
+                            << (PositionedTextEditList() << PositionedTextEdit(
+                                    new MTextEdit, area.centerRight()))
+                            << 0
+                            << (KeyList() << Qt::Key_Right << Qt::Key_Up << Qt::Key_Down << Qt::Key_Right)
+                            << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("up0") << ""
+                         << 0
+                         << area.centerBottom()
+                         << (PositionedTextEditList() << PositionedTextEdit(new MTextEdit, area.bottomLeft())
+                                                      << PositionedTextEdit(new MTextEdit, area.topLeft()))
+                         << 1
+                         << (KeyList() << Qt::Key_Up)
+                         << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("down0") << ""
+                           << 0
+                           << area.center()
+                           << (PositionedTextEditList() << PositionedTextEdit(
+                                   new MTextEdit, area.centerBottom()))
+                           << 0
+                           << (KeyList() << Qt::Key_Down)
+                           << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("down1") << "a"
+                           << 0
+                           << area.center()
+                           << (PositionedTextEditList() << PositionedTextEdit(
+                                   new MTextEdit, area.centerBottom()))
+                           << 0
+                           << (KeyList() << Qt::Key_Right << Qt::Key_Down)
+                           << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    // 9 text edits in a 3x3 grid - arrow key navigation starts in B, ends in E:
+    //
+    //   o > o   o
+    //   ^   v
+    //   o   B > o
+    //   ^   v   v
+    //   o < o   E
+    // TODO (maybe): trace the order of focused widgets - it might arrive at E on a different path?
+    QTest::newRow("grid0") << ""
+                           << 0
+                           << area.center()
+                           << (PositionedTextEditList() << PositionedTextEdit(new MTextEdit, area.topLeft())
+                                                        << PositionedTextEdit(new MTextEdit, area.centerTop())
+                                                        << PositionedTextEdit(new MTextEdit, area.topRight())
+                                                        << PositionedTextEdit(new MTextEdit, area.centerRight())
+                                                        << PositionedTextEdit(new MTextEdit, area.bottomRight())
+                                                        << PositionedTextEdit(new MTextEdit, area.centerBottom())
+                                                        << PositionedTextEdit(new MTextEdit, area.bottomLeft())
+                                                        << PositionedTextEdit(new MTextEdit, area.centerLeft()))
+                             << 4
+                             << (KeyList() << Qt::Key_Down << Qt::Key_Left << Qt::Key_Up << Qt::Key_Up
+                                           << Qt::Key_Right << Qt::Key_Down << Qt::Key_Right << Qt::Key_Down)
+                             << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("closest0") << ""
+                              << 0
+                              << area.centerTop()
+                              << (PositionedTextEditList() << PositionedTextEdit(new MTextEdit, area.centerBottom())
+                                                           << PositionedTextEdit(new MTextEdit, area.centerLeft())
+                                                           << PositionedTextEdit(new MTextEdit, area.center())
+                                                           << PositionedTextEdit(new MTextEdit, area.centerRight()))
+                              << 2
+                              << (KeyList() << Qt::Key_Down)
+                              << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("closest1") << ""
+                              << 0
+                              << area.centerRight()
+                              << (PositionedTextEditList() << PositionedTextEdit(new MTextEdit, area.topLeft())
+                                                           << PositionedTextEdit(new MTextEdit, area.bottomLeft())
+                                                           << PositionedTextEdit(new MTextEdit, area.centerLeft()))
+                              << 2
+                              << (KeyList() << Qt::Key_Left)
+                              << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("none0") << "some text"
+                           << 4
+                           << area.centerTop()
+                           << (PositionedTextEditList() << PositionedTextEdit(
+                                   new MTextEdit, area.topLeft()))
+                           << -1
+                           << (KeyList() << Qt::Key_Left)
+                           << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("none1") << ""
+                           << 0
+                           << area.center()
+                           << (PositionedTextEditList() << PositionedTextEdit(
+                                   new MTextEdit, area.centerRight()))
+                           << -1
+                           << (KeyList() << Qt::Key_Left)
+                           << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("none2") << "some text"
+                           << 4
+                           << area.center()
+                           << (PositionedTextEditList() << PositionedTextEdit(
+                                   new MTextEdit, area.centerBottom()))
+                           << -1
+                           << (KeyList() << Qt::Key_Right << Qt::Key_Down)
+                           << Qt::KeyboardModifiers(Qt::NoModifier);
+
+    QTest::newRow("shift") << ""
+                           << 0
+                           << area.center()
+                           << (PositionedTextEditList() << PositionedTextEdit(
+                                   new MTextEdit, area.centerLeft()))
+                           << -1
+                           << (KeyList() << Qt::Key_Left)
+                           << Qt::KeyboardModifiers(Qt::ShiftModifier);
+
+    QTest::newRow("ctrl") << ""
+                           << 0
+                           << area.center()
+                           << (PositionedTextEditList() << PositionedTextEdit(
+                                   new MTextEdit, area.centerLeft()))
+                           << -1
+                           << (KeyList() << Qt::Key_Left)
+                           << Qt::KeyboardModifiers(Qt::ControlModifier);
+
+    QTest::newRow("auto-repeat") << "stop"
+                                 << 0
+                                 << area.bottomLeft()
+                                 << (PositionedTextEditList() << PositionedTextEdit(
+                                         new MTextEdit, area.centerRight()))
+                                 << -1
+                                 << (KeyList() << Qt::Key_Right << Qt::Key_Right << Qt::Key_Right
+                                               << Qt::Key_Right << Qt::Key_Right)
+                                 << Qt::KeyboardModifiers(Qt::ControlModifier);
+}
+
+void Ut_MTextEdit::testArrowKeyNavigation()
+{
+    QFETCH(QString, subjectText);
+    QFETCH(int, subjectCursorPosition);
+    QFETCH(QPoint, subjectPosition);
+    QFETCH(PositionedTextEditList, targets);
+    QFETCH(int, expectedTarget);
+    QFETCH(KeyList, sequence);
+    QFETCH(Qt::KeyboardModifiers, modifiers);
+
+    // Not using m_subject => clash of ownership ...
+    MTextEdit *subject = new MTextEdit;
+
+    AutoActivatedScene sc;
+    sc.adjustTextEdit(subject, subjectPosition);
+
+    QVERIFY(sc.isActive());
+
+    subject->setText(subjectText);
+    subject->setCursorPosition(subjectCursorPosition);
+    sc.setFocusItem(subject);
+
+    for (PositionedTextEditList::iterator iter = targets.begin();
+         iter != targets.end();
+         ++iter) {
+        PositionedTextEdit target(*iter);
+        sc.adjustTextEdit(target.edit, target.pos);
+    }
+
+    foreach (Qt::Key key, sequence) {
+        MTextEdit *edit = dynamic_cast<MTextEdit *>(sc.focusItem());
+
+        if (edit) {
+            QKeyEvent ev(QEvent::KeyPress, key, modifiers);
+            edit->keyPressEvent(&ev);
+            QTest::qWait(0);
+        }
+    }
+
+    if (-1 == expectedTarget) {
+        QVERIFY(subject->hasFocus());
+    } else {
+        QVERIFY(targets.at(expectedTarget).edit->hasFocus());
+    }
 }
 
 void Ut_MTextEdit::setupSipEnv()

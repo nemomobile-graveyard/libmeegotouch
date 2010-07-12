@@ -34,6 +34,21 @@ class Ut_MTextEdit : public QObject
 {
     Q_OBJECT
 
+public:
+    class PositionedTextEdit {
+    public:
+        PositionedTextEdit(const QPointer<MTextEdit> &newEdit, const QPoint &newPos)
+            : edit(newEdit)
+            , pos(newPos)
+        {}
+
+        QPointer<MTextEdit> edit;
+        QPoint pos;
+    };
+
+    typedef QList<PositionedTextEdit> PositionedTextEditList;
+    typedef QList<Qt::Key> KeyList;
+
 private:
     void confirmKeyEventIgnored(MTextEdit *subject, int key, int expectedReturnPressed);
     void constraintTest(MTextEdit *subject, const QString &input, const QString &expectedOutput);
@@ -42,13 +57,14 @@ private:
     void dismissSip(Qt::FocusReason fr);
     bool wouldSipBecomeVisible();
 
-    MTextEdit *m_subject;
+        MTextEdit *m_subject;
     MApplication *m_app;
     MApplicationWindow *m_appWindow;
     SimpleInputContext *m_sic;
 
     QStringList validStrings;
     static const QString testString;
+
 
 private slots:
     void initTestCase();
@@ -115,6 +131,9 @@ private slots:
 
     void testInsertMultiLineText_data();
     void testInsertMultiLineText();
+
+    void testArrowKeyNavigation_data();
+    void testArrowKeyNavigation();
 };
 
 #endif
