@@ -282,22 +282,19 @@ docs for more information about command options usage):
 \li  \c -genimglist
 \li  \c -remote-theme
 \li  \c -fullscreen
-\li  \c -output-level
-\li  \c -output-file
 \li  \c -disable-m-input-context
-\li  \c -output-prefix
-\li  \c -no-output-prefix
-\li QCoreApplication::arguments() - returns at most first 32
-command line arguments. It is safer to use argc and argv directly.
+\li QCoreApplication::arguments() - does not work. Use argc and argv received by the main function directly.
 
-\subsection issue-watchdog Issues with process monitoring and watchdogs
+\subsection issue-watchdog Issues with scripts and process monitoring
 
-Invoker processes terminate before or right after booster processes
-have called main(). This may confuse process monitoring in D-Bus
-daemon and Upstart, for instance. D-Bus case can be handled by calling
-the invoker \c --delay \c 10 parameter in the D-Bus service file, and
-Upstart can be configured not to consider process dead when invoker
-terminates.
+By default, invoker processes terminate before or right after booster
+processes have called main(). This may confuse shell scripts and
+process monitoring in D-Bus daemon and Upstart, for instance. To help
+solving these issues invoker accepts parameters
+
+\li \c --delay \c 10 invoker waits for 10 seconds before terminating
+\li \c --wait-term invoker will not terminate until the launched
+application process terminates.
 
 
 \section sample Sample MeeGo Touch launchable application
