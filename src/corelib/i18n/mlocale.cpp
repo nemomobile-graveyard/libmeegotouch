@@ -809,72 +809,59 @@ void MLocalePrivate::setCategoryLocale(MLocale *mlocale,
     }
 }
 
+static bool parseIcuLocaleString(const QString &localeString, QString *language, QString *script, QString *country, QString *variant)
+{
+    // A ICU locale string looks like this:
+    //     aa_Bbbb_CC_DDDDDD@foo=fooval;bar=barval;
+    // see also http://userguide.icu-project.org/locale
+    // The country part is usually a 2 letter uppercase code
+    // as in the above example, but there is the exception
+    // es_419, i.e. Spanish in Latin America where the “country code”
+    // is “419”.
+    QRegExp regexp("^([a-z]{2,3})(?:_([A-Z][a-z]{3,3}))?(?:_([A-Z]{2,2}|419))?(?:_{1,2}([A-Z][A-Z_]*))?(?:@.*)?$");
+    if (regexp.indexIn(localeString) == 0
+        && regexp.capturedTexts().size() == 5) {
+        *language = regexp.capturedTexts().at(1);
+        *script   = regexp.capturedTexts().at(2); // "" if no match
+        *country  = regexp.capturedTexts().at(3); // "" if no match
+        *variant  = regexp.capturedTexts().at(4); // "" if no match
+        return true;
+    }
+    else {
+        *language = "";
+        *script = "";
+        *country = "";
+        *variant= "";
+        return false;
+    }
+}
+
 QString MLocalePrivate::parseLanguage(const QString &localeString)
 {
-    int endOfLanguage = localeString.indexOf('_');
-
-    if (endOfLanguage > 0) {
-        return localeString.left(endOfLanguage);
-    } else {
-        return localeString;
-    }
+    QString language, script, country, variant;
+    parseIcuLocaleString(localeString, &language, &script, &country, &variant);
+    return language;
 }
 
 QString MLocalePrivate::parseCountry(const QString &localeString)
 {
-    int startOfCountry = localeString.indexOf('_') + 1;
-    int endOfCountry = localeString.indexOf('_', startOfCountry);
-
-    if (startOfCountry > 0) {
-        QString candidate = localeString.mid(startOfCountry, endOfCountry - startOfCountry);
-        if (candidate.size() == 4) {
-            startOfCountry = endOfCountry + 1;
-            endOfCountry = localeString.indexOf('_', startOfCountry);
-            if (startOfCountry > 0) {
-                return localeString.mid(startOfCountry, endOfCountry - startOfCountry);
-            } else {
-                return "";
-            }
-        } else {
-            return candidate;
-        }
-    } else {
-        return "";
-    }
+    QString language, script, country, variant;
+    parseIcuLocaleString(localeString, &language, &script, &country, &variant);
+    return country;
 }
 
 QString MLocalePrivate::parseScript(const QString &localeString)
 {
-    int startOfScript = localeString.indexOf('_') + 1;
-    int endOfScript = localeString.indexOf('_', startOfScript);
-
-    if (startOfScript > 0) {
-        QString candidate = localeString.mid(startOfScript, endOfScript - startOfScript);
-        if (candidate.size() == 4)
-            return candidate;
-        else
-            return "";
-    } else
-        return "";
+    QString language, script, country, variant;
+    parseIcuLocaleString(localeString, &language, &script, &country, &variant);
+    return script;
 }
 
 QString MLocalePrivate::parseVariant(const QString &localeString)
 {
-    int startOfCountry = localeString.indexOf('_') + 1;
-    int startOfVariant = localeString.indexOf('_', startOfCountry) + 1;
-
-    if (startOfVariant > 0) {
-        QString candidate = localeString.mid(startOfVariant);
-        int startOfVariant = candidate.indexOf('_') + 1;
-
-        if (startOfVariant > 0) {
-            return candidate.mid(startOfVariant);
-        } else {
-            return candidate;
-        }
-    } else {
-        return "";
-    }
+    QString language, script, country, variant;
+    parseIcuLocaleString(localeString, &language, &script, &country, &variant);
+    return variant;
 }
 
 //////////////////////////////////
@@ -1255,7 +1242,6 @@ QString MLocale::country() const
     return MLocalePrivate::parseCountry(name());
 }
 
-//TODO This shall return an enum
 QString MLocale::script() const
 {
     return MLocalePrivate::parseScript(name());
@@ -1282,6 +1268,12 @@ QString MLocale::categoryCountry(Category category) const
 {
     QString wholeName = categoryName(category);
     return MLocalePrivate::parseCountry(wholeName);
+}
+
+QString MLocale::categoryScript(Category category) const
+{
+    QString wholeName = categoryName(category);
+    return MLocalePrivate::parseScript(wholeName);
 }
 
 QString MLocale::categoryVariant(Category category) const

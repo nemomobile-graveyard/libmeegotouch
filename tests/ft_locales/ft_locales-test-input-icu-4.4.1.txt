@@ -2456,7 +2456,7 @@ de_DE	Name of weekday 07 (Islamic Calendar)	Sonntag
 de_DE	Collation sample	a á å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 一 三 中 二 俄 得 播 攀 正 此 爱
 de_DE	Scripts used	Latn
 de_DE@collation=phonebook	Language endonym	Deutsch
-de_DE@collation=phonebook	Country endonym	DE@collation=phonebook
+de_DE@collation=phonebook	Country endonym	Deutschland
 de_DE@collation=phonebook	Floating Point Number	-123.456.789,012
 de_DE@collation=phonebook	Percent value	-1.234,5679 %
 de_DE@collation=phonebook	Currency value	1.234,56 €
@@ -12557,7 +12557,7 @@ zh	Name of weekday 07 (Islamic Calendar)	星期日
 zh	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
 zh	Scripts used	Hani
 zh_CN@collation=pinyin	Language endonym	中文
-zh_CN@collation=pinyin	Country endonym	CN@collation=pinyin
+zh_CN@collation=pinyin	Country endonym	中国
 zh_CN@collation=pinyin	Floating Point Number	-123,456,789.012
 zh_CN@collation=pinyin	Percent value	-1,234.5679%
 zh_CN@collation=pinyin	Currency value	€1,234.56
@@ -12648,7 +12648,7 @@ zh_CN@collation=pinyin	Name of weekday 07 (Islamic Calendar)	星期日
 zh_CN@collation=pinyin	Collation sample	á a å ä b oegh öfgh z α Α β Β ω Ω а А б Б в В г Г Ѐ я Я א ב ג ש ת ا ب ة ظ ع غ 爱 播 此 得 俄 二 攀 三 一 正 中
 zh_CN@collation=pinyin	Scripts used	Hani
 zh_CN@collation=stroke	Language endonym	中文
-zh_CN@collation=stroke	Country endonym	CN@collation=stroke
+zh_CN@collation=stroke	Country endonym	中国
 zh_CN@collation=stroke	Floating Point Number	-123,456,789.012
 zh_CN@collation=stroke	Percent value	-1,234.5679%
 zh_CN@collation=stroke	Currency value	€1,234.56

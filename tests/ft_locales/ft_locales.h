@@ -44,9 +44,8 @@
 #include <unicode/putil.h> // u_setDataDirectory
 #endif
 
-Q_DECLARE_METATYPE(MLocale::CalendarType);
 Q_DECLARE_METATYPE(MLocale);
-
+Q_DECLARE_METATYPE(MLocale::CalendarType);
 
 class Ft_Locales : public QObject
 {
@@ -64,6 +63,9 @@ private slots:
     void testBug169305();
     void testSettingsChanged();
     void testMLocaleConstructor();
+
+    void testLocaleNameParsingFunctions_data();
+    void testLocaleNameParsingFunctions();
 
     void testMLocaleConstructorWithParams_data();
     void testMLocaleConstructorWithParams();

@@ -422,6 +422,12 @@ public:
     /*!
      * \brief Returns the language code of the locale in ISO-639 format
      *
+     * If the language code cannot be parsed out of the locale name
+     * an empty string is returned.
+     *
+     * Example:
+     * If the locale name is “fi_FI”, this will return “fi”.
+     *
      * \sa name()
      * \sa script()
      * \sa country()
@@ -431,6 +437,12 @@ public:
 
     /*!
      * \brief Returns the country code of the locale in ISO-3166 format
+     *
+     * If the country code cannot be parsed out of the locale name
+     * an empty string is returned.
+     *
+     * Example:
+     * If the locale name is “fi_FI” this will return “FI”.
      *
      * \sa name()
      * \sa language()
@@ -468,7 +480,14 @@ public:
     QString script() const;
 
     /*!
-     * \brief Returns the variant appended to the locale
+     * \brief Returns the variant of the locale
+     *
+     * If the variant code cannot be parsed out of the locale name
+     * an empty string is returned.
+     *
+     * Example:
+     * If the locale name is “sr_Latn_RS_REVISED@currency=USD”
+     * this will return “REVISED”.
      *
      * \sa name()
      * \sa language()
@@ -498,22 +517,110 @@ public:
     Qt::LayoutDirection textDirection() const;
 
     /*!
-     * \brief Returns the language code of the category in ISO-639 format
+     * \brief Returns the language code of the locale category in ISO-639 format
+     *
+     * same as language(), only for a specific category.
+     *
+     * \sa categoryName()
+     * \sa categoryScript()
+     * \sa categoryCountry()
+     * \sa categoryVariant()
+     * \sa name()
+     * \sa language()
+     * \sa script()
+     * \sa country()
+     * \sa variant()
      */
     QString categoryLanguage(Category category) const;
 
     /*!
-     * \brief Returns the country code of the category in ISO-3166 format
+     * \brief Returns the country code of the locale category in ISO-3166 format
+     *
+     * same as country(), only for a specific category.
+     *
+     * \sa categoryName()
+     * \sa categoryLanguage()
+     * \sa categoryScript()
+     * \sa categoryVariant()
+     * \sa name()
+     * \sa language()
+     * \sa script()
+     * \sa country()
+     * \sa variant()
      */
     QString categoryCountry(Category category) const;
 
     /*!
-     * \brief Returns the variant code appended to the category
+     * \brief Returns the script code of the locale category in ISO-15924 format
+     *
+     * same as script(), only for a specific category.
+     *
+     * Returns the part of the locale category name which specifies the script
+     * in form of <a
+     * href="http://www.unicode.org/iso15924/iso15924-codes.html">ISO
+     * 15924 script codes</a>
+     *
+     * If that part of the locale category name was not specified, i.e. if the
+     * default script for that language and country is used, it
+     * returns an empty string. For example, if the locale category name is
+     * “ru_RU”, an empty string is returned and not “Cyrl” which
+     * is the <a
+     * href="http://www.unicode.org/iso15924/iso15924-codes.html">ISO
+     * 15924 code</a> of the Cyrillic script used by the “ru_RU”
+     * locale.
+     *
+     * If you need to find out which scripts are used by a certain locale
+     * use localeScripts() const instead.
+     *
+     * \sa categoryName()
+     * \sa categoryLanguage()
+     * \sa categoryCountry()
+     * \sa categoryVariant()
+     * \sa localeScripts() const
+     * \sa name()
+     * \sa language()
+     * \sa script()
+     * \sa country()
+     * \sa variant()
+     */
+    QString categoryScript(Category category) const;
+
+    /*!
+     * \brief Returns the variant of the locale category
+     *
+     * same as variant(), only for a specific category.
+     *
+     * \sa categoryName()
+     * \sa categoryLanguage()
+     * \sa categoryScript()
+     * \sa categoryCountry()
+     * \sa name()
+     * \sa language()
+     * \sa script()
+     * \sa country()
+     * \sa variant()
      */
     QString categoryVariant(Category category) const;
 
     /*!
-     * \brief Returns the string representation of the category
+     * \brief Returns the string representation of the locale category
+     *
+     * same as name(), only for a specific category.
+     *
+     * The string representation of the locale category is the full ICU locale
+     * ID string. See the <a
+     * href="http://userguide.icu-project.org/locale">ICU user
+     * guide</a> for examples.
+     *
+     * \sa categoryLanguage()
+     * \sa categoryScript()
+     * \sa categoryCountry()
+     * \sa categoryVariant()
+     * \sa name()
+     * \sa language()
+     * \sa script()
+     * \sa country()
+     * \sa variant()
      */
     QString categoryName(Category category) const;
 

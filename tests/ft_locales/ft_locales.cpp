@@ -102,6 +102,113 @@ void Ft_Locales::testMLocaleConstructor()
     delete testLocale2;
 }
 
+void Ft_Locales::testLocaleNameParsingFunctions_data()
+{
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("localeLanguage");
+    QTest::addColumn<QString>("localeScript");
+    QTest::addColumn<QString>("localeCountry");
+    QTest::addColumn<QString>("localeVariant");
+
+    QTest::newRow("en")
+        << "en"
+        << "en"
+        << ""
+        << ""
+        << "";
+    QTest::newRow("en_US")
+        << "en_US"
+        << "en"
+        << ""
+        << "US"
+        << "";
+    QTest::newRow("ru_RU")
+        << "ru_RU"
+        << "ru"
+        << ""
+        << "RU"
+        << "";
+    QTest::newRow("ru_Cyrl_RU")
+        << "ru_Cyrl_RU"
+        << "ru"
+        << "Cyrl"
+        << "RU"
+        << "";
+    QTest::newRow("en_IE_PREEURO")
+        << "en_IE_PREEURO"
+        << "en"
+        << ""
+        << "IE"
+        << "PREEURO";
+    QTest::newRow("eo")
+        << "eo"
+        << "eo"
+        << ""
+        << ""
+        << "";
+    QTest::newRow("fr_FR@collation=phonebook;calendar=islamic-civil")
+        << "fr_FR@collation=phonebook;calendar=islamic-civil"
+        << "fr"
+        << ""
+        << "FR"
+        << "";
+    QTest::newRow("fr@collation=phonebook;calendar=islamic-civil")
+        << "fr@collation=phonebook;calendar=islamic-civil"
+        << "fr"
+        << ""
+        << ""
+        << "";
+    QTest::newRow("sr_RS")
+        << "sr_RS"
+        << "sr"
+        << ""
+        << "RS"
+        << "";
+    QTest::newRow("sr_Latn_RS_REVISED")
+        << "sr_Latn_RS_REVISED"
+        << "sr"
+        << "Latn"
+        << "RS"
+        << "REVISED";
+    QTest::newRow("sr_Cyrl_RS_REVISED@currency=USD")
+        << "sr_Cyrl_RS_REVISED@currency=USD"
+        << "sr"
+        << "Cyrl"
+        << "RS"
+        << "REVISED";
+    QTest::newRow("es__TRADITIONAL")
+        << "es__TRADITIONAL"
+        << "es"
+        << ""
+        << ""
+        << "TRADITIONAL";
+}
+
+void Ft_Locales::testLocaleNameParsingFunctions()
+{
+    QFETCH(QString, localeName);
+    QFETCH(QString, localeLanguage);
+    QFETCH(QString, localeScript);
+    QFETCH(QString, localeCountry);
+    QFETCH(QString, localeVariant);
+
+    MLocale::Category category = MLocale::MLcNumeric;
+    MLocale locale(localeName);
+    QCOMPARE(locale.name(), localeName);
+    QCOMPARE(locale.language(), localeLanguage);
+    QCOMPARE(locale.script(), localeScript);
+    QCOMPARE(locale.country(), localeCountry);
+    QCOMPARE(locale.variant(), localeVariant);
+    MLocale englishLocale("en_US");
+    locale = englishLocale;
+    locale.setCategoryLocale(category, localeName);
+    QCOMPARE(locale.categoryName(category), localeName);
+    QCOMPARE(locale.categoryLanguage(category), localeLanguage);
+    QCOMPARE(locale.categoryScript(category), localeScript);
+    QCOMPARE(locale.categoryCountry(category), localeCountry);
+    QCOMPARE(locale.categoryVariant(category), localeVariant);
+}
+
 void Ft_Locales::testCreateSystemLocale_data()
 {
     QTest::addColumn<QString>("conf");
@@ -246,7 +353,7 @@ void Ft_Locales::testMLocaleLanguage_data()
     QTest::addColumn<QString>("language");
 
     QTest::newRow("fi") << QString("fi_FI") << QString("fi");
-    QTest::newRow("snd") << QString("snd_AF_Arab") << QString("snd");
+    QTest::newRow("snd") << QString("snd_Arab_AF") << QString("snd");
     QTest::newRow("en") << QString("en") << QString("en");
 }
 
@@ -268,9 +375,7 @@ void Ft_Locales::testMLocaleCountry_data()
     QTest::newRow("fi") << QString("fi_FI") << QString("FI");
     QTest::newRow("snd") << QString("snd_Arab_AF") << QString("AF");
     QTest::newRow("snd") << QString("snd_Arab") << QString("");
-    // this isn't a valid country, or is it?:
-    // should we refuse to accept something like this?
-    QTest::newRow("snd") << QString("snd_Arab_Egypt") << QString("Egypt");
+    QTest::newRow("snd") << QString("snd_Arab_EG") << QString("EG");
     QTest::newRow("en") << QString("en") << QString("");
 }
 
@@ -294,7 +399,8 @@ void Ft_Locales::testMLocaleScript_data()
     QTest::newRow("snd") << QString("snd_Arab_AF") << QString("Arab");
     QTest::newRow("snd") << QString("snd_Deva") << QString("Deva");
     QTest::newRow("en") << QString("en") << QString("");
-    QTest::newRow("en") << QString("en_Arab") << QString("Arab");
+    QTest::newRow("en_Arab") << QString("en_Arab") << QString("Arab");
+    QTest::newRow("es__TRADITIONAL") << QString("es__TRADITIONAL") << QString("");
 }
 
 void Ft_Locales::testMLocaleScript()
@@ -312,9 +418,10 @@ void Ft_Locales::testMLocaleVariant_data()
     QTest::addColumn<QString>("locale");
     QTest::addColumn<QString>("variant");
 
-    QTest::newRow("fi") << QString("fi_FI") << QString("");
-    QTest::newRow("snd") << QString("snd_AF_XXX") << QString("XXX");
-    QTest::newRow("snd") << QString("snd_Arab_AF_XXX") << QString("XXX");
+    QTest::newRow("fi_FI") << QString("fi_FI") << QString("");
+    QTest::newRow("sr_Cyrl_RS_REVISED@currency=USD") << QString("sr_Cyrl_RS_REVISED@currency=USD") << QString("REVISED");
+    QTest::newRow("snd_AF_XXX") << QString("snd_AF_XXX") << QString("XXX");
+    QTest::newRow("snd_Arab_AF_XXX") << QString("snd_Arab_AF_XXX") << QString("XXX");
     QTest::newRow("en") << QString("en") << QString("");
 }
 
