@@ -1929,6 +1929,109 @@ void Ut_MCalendar::testPosixFormatPattern()
     }
 }
 
+void Ut_MCalendar::testFormatDateTimeICU_data()
+{
+    QTest::addColumn<MLocale::CalendarType>("calendarType");
+    QTest::addColumn<int>("year");
+    QTest::addColumn<int>("month");
+    QTest::addColumn<int>("day");
+    QTest::addColumn<int>("hour");
+    QTest::addColumn<int>("minute");
+    QTest::addColumn<int>("second");
+    QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("format");
+    QTest::addColumn<QString>("result");
+
+    QTest::newRow("fi_FI “G”")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "fi_FI"
+            << "G" // era designator
+            << "jKr.";
+    QTest::newRow("de_DE “G”")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "de_DE"
+            << "G" // era designator
+            << "n. Chr.";
+    QTest::newRow("zh_CN “G”")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "zh_CN"
+            << "G" // era designator
+            << "公元";
+    QTest::newRow("ja_JP “G”")
+            << MLocale::GregorianCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "ja_JP"
+            << "G" // era designator
+            << "AD";
+    QTest::newRow("ja_JP “G”")
+            << MLocale::JapaneseCalendar
+            << 2008
+            << 2
+            << 3
+            << 12
+            << 25
+            << 3
+            << "ja_JP"
+            << "G" // era designator
+            << "平成";
+}
+
+void Ut_MCalendar::testFormatDateTimeICU()
+{
+    QFETCH(MLocale::CalendarType, calendarType);
+    QFETCH(int, year);
+    QFETCH(int, month);
+    QFETCH(int, day);
+    QFETCH(int, hour);
+    QFETCH(int, minute);
+    QFETCH(int, second);
+    QFETCH(QString, localeName);
+    QFETCH(QString, format);
+    QFETCH(QString, result);
+
+    MLocale locale(localeName);
+    locale.setCalendarType(calendarType);
+    MCalendar mcal(locale);
+    mcal.setDate(year, month, day);
+    mcal.setTime(hour, minute, second);
+    QDate date(year, month, day);
+    QTime time(hour, minute, second);
+    QDateTime datetime(date, time, Qt::LocalTime);
+    QLocale qlocale(localeName);
+
+    QTextStream debugStream(stderr);
+    debugStream.setCodec("UTF-8");
+    debugStream << "format: " << format
+                << "actual result: " << locale.formatDateTimeICU(mcal, format)
+                << " expected result: " << result << "\n";
+
+    QCOMPARE(locale.formatDateTimeICU(mcal, format), result);
+    QCOMPARE(locale.formatDateTimeICU(datetime, format), result);
+}
+
 void Ut_MCalendar::testWeekdaySymbols_data()
 {
     QTest::addColumn<QString>("localeName");

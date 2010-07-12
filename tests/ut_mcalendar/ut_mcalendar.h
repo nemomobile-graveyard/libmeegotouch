@@ -69,6 +69,9 @@ private slots:
     void testPosixFormatPattern_data();
     void testPosixFormatPattern();
 
+    void testFormatDateTimeICU_data();
+    void testFormatDateTimeICU();
+
     void testWeekdaySymbols_data();
     void testWeekdaySymbols();
 
