@@ -30,14 +30,9 @@
 #include <QTimer>
 #include <QPointer>
 
-#ifdef HAVE_N900
-class ContactModel;
-class ContactImageLoader;
-#else
 class PhoneBookModel;
 class MSortFilterProxyModel;
 class PhoneBookImageLoader;
-#endif
 
 class MDialog;
 class MList;
@@ -74,9 +69,7 @@ public slots:
     void setPlainListModel();
 
     void changeSortingOrder(int index);
-#ifndef HAVE_N900
     void changeAmountOfItemInList(int index);
-#endif
     void changeListMode(int index);
     void changeAmountOfColumns(int index);
     void changeSelectionMode(int index);
@@ -110,14 +103,9 @@ private:
 
 private:
 
-#ifdef HAVE_N900
-    ContactModel* model;
-    ContactImageLoader* imageLoader;
-#else
     MAbstractItemModel *model;
     MSortFilterProxyModel *proxyModel;
     PhoneBookImageLoader *imageLoader;
-#endif
 
     MComboBox *comboListMode;
 

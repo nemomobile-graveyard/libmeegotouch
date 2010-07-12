@@ -331,7 +331,6 @@ void PhoneBookImageLoader::processJobQueue()
 // but this is one way to achieve same result.
 void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
 {
-#ifndef HAVE_N900    
     QModelIndex realIndex = index;
     QAbstractItemModel *model = const_cast<QAbstractItemModel *>(index.model());
     Q_ASSERT(model);
@@ -354,5 +353,4 @@ void PhoneBookImageLoader::notifyModel(const QModelIndex &index)
             phoneBookModel->thumbnailWasLoaded(sortModel->mapToSource(realIndex));
         }
     }
-#endif
 }

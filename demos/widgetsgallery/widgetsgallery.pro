@@ -82,6 +82,7 @@ SOURCES += main.cpp \
     bubblepage.cpp \
     bubblelistmodel.cpp \
     phonebookheader.cpp \
+    phonebookmodel.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -128,15 +129,12 @@ HEADERS += templatepage.h \
     bubblepage.h \
     bubblelistmodel.h \
     phonebookheader.h \
+    phonebookmodel.h \
 
 # theme
 include(theme/theme.pri)
 
 contains( DEFINES, HAVE_N900 ) {
-    SOURCES += contactmodel.cpp
-    HEADERS += contactmodel.h
-
-    PKGCONFIG += libosso-abook-1.0
     CONFIG += release link_pkgconfig
 
     desktop_icon.path = $$M_INSTALL_DATA/icons/hicolor/48x48/hildon
@@ -144,9 +142,6 @@ contains( DEFINES, HAVE_N900 ) {
 
     desktop_entry.path = $$M_INSTALL_DATA/applications/hildon
 } else {
-    SOURCES += phonebookmodel.cpp
-    HEADERS += phonebookmodel.h
-
     desktop_icon.path = $$M_THEME_DIR/base/meegotouch/icons
     desktop_icon.files = icon-l-widgetsgallery.svg
 
