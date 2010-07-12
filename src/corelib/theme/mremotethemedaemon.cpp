@@ -268,9 +268,14 @@ void MRemoteThemeDaemonPrivate::processOnePacket(const Packet &packet)
 
 void MRemoteThemeDaemonPrivate::connectionDataAvailable()
 {
+    // when reading a packet block all signals to not start
+    // reading a second one
+    bool blocked = socket.blockSignals(true);
     while (socket.bytesAvailable()) {
         processOnePacket(readOnePacket());
     }
+
+    socket.blockSignals(blocked);
 }
 
 void MRemoteThemeDaemonPrivate::pixmapUpdated(const PixmapHandle &handle)
