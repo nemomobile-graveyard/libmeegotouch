@@ -168,6 +168,7 @@ public:
     QMap<QString, Qt::PenStyle> PENSTYLES;
     QMap<QString, Qt::Axis> AXES;
     QMap<QString, QFont::Weight> WEIGHTS;
+    QMap<QString, QFont::Capitalization> CAPITALIZATION;
 #if QT_VERSION >= 0x040600
     QMap<QString, QEasingCurve::Type> EASINGCURVETYPES;
 #endif
@@ -210,6 +211,12 @@ public:
         WEIGHTS["demibold"] = QFont::DemiBold;
         WEIGHTS["bold"] = QFont::Bold;
         WEIGHTS["black"] = QFont::Black;
+
+        CAPITALIZATION["mixedcase"] = QFont::MixedCase;
+        CAPITALIZATION["uppercase"] = QFont::AllUppercase;
+        CAPITALIZATION["lowercase"] = QFont::AllLowercase;
+        CAPITALIZATION["smallcaps"] = QFont::SmallCaps;
+        CAPITALIZATION["capitalize"] = QFont::Capitalize;
 
 #if QT_VERSION >= 0x040600
         EASINGCURVETYPES["linear"] = QEasingCurve::Linear;
@@ -399,8 +406,20 @@ QFont MStyleSheetAttribute::fontFromString(const QString string, bool *conversio
 {
     //font: "font family" 20px
     //font: "font family" bold 20px
+    //font: "font family" italic 20px
+    //font: "font family" uppercase 20px
+    //font: "font family" bold italic 20px
+    //font: "font family" bold uppercase 20px
+    //font: "font family" italic uppercase 20px
+    //font: "font family" bold italic uppercase 20px
     //font: font_family 20px
     //font: font_family bold 20px
+    //font: font_family italic 20px
+    //font: font_family uppercase 20px
+    //font: font_family bold italic 20px
+    //font: font_family bold uppercase 20px
+    //font: font_family italic uppercase 20px
+    //font: font_family bold italic uppercase 20px
     bool ok;
     if (!conversionOk)
         conversionOk = &ok;
@@ -434,7 +453,7 @@ QFont MStyleSheetAttribute::fontFromString(const QString string, bool *conversio
             return font;
         }
     }
-    //family + weight + font size
+    //family + weight/italic/capitalization + font size
     else if (list.size() == 3) {
         qreal pixelSize = attributeToFloat(list[2], conversionOk);
         if (*conversionOk) {
@@ -442,6 +461,51 @@ QFont MStyleSheetAttribute::fontFromString(const QString string, bool *conversio
             font.setPixelSize(pixelSize);
             if (DataTypeConverter.WEIGHTS.contains(list[1])) {
                 font.setWeight(DataTypeConverter.WEIGHTS[list[1]]);
+                return font;
+            } else if (list[1] == "italic") {
+                font.setItalic(true);
+                return font;
+            } else if (DataTypeConverter.CAPITALIZATION.contains(list[1])) {
+                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list[1]]);
+                return font;
+            } else {
+                *conversionOk = false;
+            }
+        }
+    }
+    //family + weight/italic + italic/capitalization + font size
+    else if (list.size() == 4) {
+        qreal pixelSize = attributeToFloat(list[3], conversionOk);
+        if (*conversionOk) {
+            QFont font(list[0]);
+            font.setPixelSize(pixelSize);
+            if (DataTypeConverter.WEIGHTS.contains(list[1]) && list[2] == "italic") {
+                font.setWeight(DataTypeConverter.WEIGHTS[list[1]]);
+                font.setItalic(true);
+                return font;
+            } else if (DataTypeConverter.WEIGHTS.contains(list[1]) && DataTypeConverter.CAPITALIZATION.contains(list[2])) {
+                font.setWeight(DataTypeConverter.WEIGHTS[list[1]]);
+                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list[2]]);
+                return font;
+            } else if (list[1] == "italic" && DataTypeConverter.CAPITALIZATION.contains(list[2])) {
+                font.setItalic(true);
+                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list[2]]);
+                return font;
+            } else {
+                *conversionOk = false;
+            }
+        }
+    }
+    //family + weight + italic + capitalization + font size
+    else if (list.size() == 5) {
+        qreal pixelSize = attributeToFloat(list[4], conversionOk);
+        if (*conversionOk) {
+            QFont font(list[0]);
+            font.setPixelSize(pixelSize);
+            if (DataTypeConverter.WEIGHTS.contains(list[1]) && list[2] == "italic" && DataTypeConverter.CAPITALIZATION.contains(list[3])) {
+                font.setWeight(DataTypeConverter.WEIGHTS[list[1]]);
+                font.setItalic(true);
+                font.setCapitalization(DataTypeConverter.CAPITALIZATION[list[3]]);
                 return font;
             } else {
                 *conversionOk = false;

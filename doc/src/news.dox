@@ -1,5 +1,11 @@
 /*! \page news What's New in DirectUI
 
+\section v02027 0.20.27
+
+\subsection New
+- Support for capitalization and italic styling for the font CSS attributes. New syntax goes as follows:
+  "font: family [light|normal|demibold|bold|black] [italic] [mixedcase|uppercase|lowercase|smallcaps|capitalize] size;"
+
 \section v02024 0.20.24
 
 - Automatic orientation changes have been disabled. Now the GUI orientation

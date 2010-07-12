@@ -76,7 +76,7 @@
             The attribute naming between C++ code and stylesheets follows the pattern where camelcase names are 
             converted into lowercase strings with hyphens. See example below.
 
-            <table border="1">
+            <table border="1" cellpadding="3">
             <tr>
             <th>C++ name</th>
             <th>Attribute name in stylesheet</th>
@@ -90,20 +90,21 @@
             <td>underline-text-color</td>
             </tr>
             </table> 
-
-            <table border="1">
-            <tr><th>Datatype</th> <th>Syntax</th> <td>Example</td></tr>
+            <br>
+            
+            <table border="1" cellpadding="3">
+            <tr><th>Datatype</th> <th>Syntax</th> <th>Example</th></tr>
             <tr><td>bool</td> <td>true, false</td> <td>visible: false;</td></tr>
             <tr><td>int</td> <td>numeric value</td> <td>age: 42;</td></tr>
             <tr><td>QColor</td> <td>Color name. See QColor::setNamedColor for possible parameters</td> <td>color: #ffffff;</td></tr>
             <tr><td>qreal</td> <td>decimal value</td> <td>distance: 31.5;</td></tr>
-            <tr><td>const QPixmap*</td> <td>image-id &lt;width height&gt;</td> <td>background: image_id; background: image_id 128 128;</td></tr>
-            <tr><td>const DuiScalableImage*</td> <td>image-id &lt;left right top bottom&gt;</td> <td>background: image_id; background: image_id 0 128 0 128;</td></tr>
+            <tr><td>const QPixmap*</td> <td>image-id [width height]</td> <td>background: image_id;<br>background: image_id 128 128;</td></tr>
+            <tr><td>const DuiScalableImage*</td> <td>image-id [left right top bottom]</td> <td>background: image_id;<br>background: image_id 0 128 0 128;</td></tr>
             <tr><td>QSize</td> <td>width height</td> <td>size: 25 25;</td></tr>
             <tr><td>QSizeF</td> <td>width height</td> <td>size: 25.2 25.6;</td></tr>
             <tr><td>QPoint</td> <td>x y</td> <td>position: 10 10;</td></tr>
             <tr><td>QPointF</td> <td>x y</td> <td>position: 10.6 10.6;</td></tr>
-            <tr><td>QFont</td> <td>family size</td> <td>font: arial 20;</td></tr>
+            <tr><td>QFont</td> <td>family [weight] [italic] [capitalization] size<br><br>[weight] = light | normal | demibold | bold | black<br>[capitalization] = mixedcase | uppercase | lowercase | smallcaps | capitalize</td> <td>font: arial 20;<br>font: arial italic 20;<br>font: arial bold 20;<br>font: arial uppercase 20;<br>font: arial bold uppercase 20;<br>font: arial italic uppercase 20;</td></tr>
             <tr><td>QString</td> <td>text</td> <td>name: "john";</td></tr>
             <tr><td>Qt::Alignment</td> <td>left, right, hcenter, justify, top, bottom, vcenter, center, absolute</td> <td>align: center;</td></tr>
             <tr><td>Qt::Orientation</td> <td>vertical, horizontal</td> <td>orientation: vertical;</td></tr>
@@ -111,10 +112,13 @@
             <tr><td>Qt::PenStyle</td> <td>nopen, solidline, dashline, dotline, dashdotline, dashdotdotline</td> <td>pen-type: solidline;</td></tr>
             <tr><td>Qt::Axis</td> <td>x, y, z</td> <td>rotation-axis: x;</td></tr>
             <tr><td>const DuiFeedback*</td> <td>feedback-effect-name</td> <td>press-feedback: press;</td></tr>
-            <tr><td>QEasingCurve</td> <td>type &lt;amplitude&gt; &lt;overshoot&gt; &lt;period&gt;</td> <td>easing-curve: linear;</td></tr>
+            <tr><td>QEasingCurve</td> <td>type [amplitude] [overshoot] [period]</td> <td>easing-curve: linear;</td></tr>
+            <tr><td>QFont::Weight</td> <td>light, normal, demibold, bold, black</td> <td>weight: demibold;</td></tr>
+            <tr><td>QFont::Capitalization</td> <td>mixedcase, uppercase, lowercase, smallcaps, capitalize</td> <td>capitalization: uppercase;</td></tr>
             </table>
-
-            <table border="1">
+            
+            <br>
+            <table border="1" cellpadding="3">
             <tr><th>Dimension type</th> <th>Suffix</th> <th>Example</th></tr>
             <tr><td>Relative</td> <td>%</td> <td>size: 25% 25%;</tr>
             <tr><td>Absolute (pixels)</td> <td></td> <td>size: 25 25;</tr>
