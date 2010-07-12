@@ -120,7 +120,7 @@ void Ut_MLocationDatabase::testCities_data()
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
         << "" // local name currently always empty
-        << 60.1667 << 24.9667
+        << qreal(60.1667) << qreal(24.9667)
         << "Europe/Helsinki"
         << "Finland"
         << "" // local name currently always empty
@@ -132,7 +132,7 @@ void Ut_MLocationDatabase::testCities_data()
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
         << "" // local name currently always empty
-        << 60.1667 << 24.9667
+        << qreal(60.1667) << qreal(24.9667)
         << "Europe/Helsinki"
         << "Finland"
         << "" // local name currently always empty
@@ -144,7 +144,7 @@ void Ut_MLocationDatabase::testCities_data()
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
         << "" // local name currently always empty
-        << 60.1667 << 24.9667
+        << qreal(60.1667) << qreal(24.9667)
         << "Europe/Helsinki"
         << "Finland"
         << "" // local name currently always empty
@@ -156,7 +156,7 @@ void Ut_MLocationDatabase::testCities_data()
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
         << "" // local name currently always empty
-        << 60.1667 << 24.9667
+        << qreal(60.1667) << qreal(24.9667)
         << "Europe/Helsinki"
         << "Finland"
         << "" // local name currently always empty
@@ -169,7 +169,7 @@ void Ut_MLocationDatabase::testCities_data()
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
         << "" // local name currently always empty
-        << 60.1667 << 24.9667
+        << qreal(60.1667) << qreal(24.9667)
         << "Europe/Helsinki"
         << "Finland"
         << "" // local name currently always empty
@@ -181,7 +181,7 @@ void Ut_MLocationDatabase::testCities_data()
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
         << "" // local name currently always empty
-        << 60.1667 << 24.9667
+        << qreal(60.1667) << qreal(24.9667)
         << "Europe/Helsinki"
         << "Finland"
         << "" // local name currently always empty
@@ -193,7 +193,7 @@ void Ut_MLocationDatabase::testCities_data()
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
         << "" // local name currently always empty
-        << 60.1667 << 24.9667
+        << qreal(60.1667) << qreal(24.9667)
         << "Europe/Helsinki"
         << "Finland"
         << "" // local name currently always empty
@@ -205,7 +205,7 @@ void Ut_MLocationDatabase::testCities_data()
         << "qtn_clk_city_fin_hki"
         << "Helsinki"
         << "" // local name currently always empty
-        << 60.1667 << 24.9667
+        << qreal(60.1667) << qreal(24.9667)
         << "Europe/Helsinki"
         << "Finland"
         << "" // local name currently always empty
