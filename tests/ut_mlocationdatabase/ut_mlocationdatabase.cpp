@@ -172,6 +172,45 @@ void Ut_MLocationDatabase::testMatchingCities()
     }
 }
 
+void Ut_MLocationDatabase::testCitiesInCountry_data()
+{
+    QTest::addColumn<QString>("countryKey");
+    QTest::addColumn<QStringList>("someExpectedMatches");
+
+    QTest::newRow("Mexico")
+        << "qtn_clk_country_mexico"
+        << (QStringList() << "Chihuahua" << "Tijuana");
+}
+
+void Ut_MLocationDatabase::testCitiesInCountry()
+{
+    QFETCH(QString, countryKey);
+    QFETCH(QStringList, someExpectedMatches);
+
+    MLocationDatabase db;
+    QList<MCountry> countries = db.countries();
+
+    // do only run the tests, if we were able to load
+    // some countries from the meegotouch-cities-*
+    // package.
+    if (countries.count() < 10) {
+        qWarning( "loading of country list failed, skipping test" );
+        return;
+    }
+    QList<MCity> citiesInCountry = db.citiesInCountry(countryKey);
+    qDebug() << "number of cities in country" << citiesInCountry.size();
+    QStringList citiesInCountryNames;
+    foreach (MCity city, citiesInCountry) {
+        qDebug() << "city in country:" << city.englishName();
+        citiesInCountryNames << city.englishName();
+    }
+    foreach (QString expectedMatch, someExpectedMatches) {
+        qDebug() << "expected match:" << expectedMatch;
+        QVERIFY2(citiesInCountryNames.contains(expectedMatch),
+                 "expected match not found");
+    }
+}
+
 void Ut_MLocationDatabase::testCities_data()
 {
     QTest::addColumn<QString>("key");

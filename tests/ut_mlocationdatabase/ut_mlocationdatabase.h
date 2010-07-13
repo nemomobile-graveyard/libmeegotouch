@@ -42,6 +42,9 @@ private slots:
     void testNearestCity_data();
     void testNearestCity();
 
+    void testCitiesInCountry_data();
+    void testCitiesInCountry();
+
     void testMatchingCities_data();
     void testMatchingCities();
 
