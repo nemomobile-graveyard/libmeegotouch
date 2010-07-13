@@ -22,7 +22,10 @@
 #include <QPoint>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneContextMenuEvent>
+
+#ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
+#endif //HAVE_XDAMAGE
 
 #include "ut_mextensionhandle.h"
 #include <mextensionhandle.h>

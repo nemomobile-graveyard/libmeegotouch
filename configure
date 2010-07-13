@@ -74,6 +74,7 @@ HAVE_GCONF=no
 HAVE_GSTREAMER=no
 HAVE_DBUS=no
 HAVE_CONTENTACTION=no
+HAVE_XDAMAGE=no
 HAVE_N900=no
 
 OPT_SHADOW=maybe
@@ -402,6 +403,11 @@ if [ $? -eq 0 ]; then
 	HAVE_CONTENTACTION=no
     fi
 
+    pkg-config --exists xdamage
+    if [ $? -eq 0 ]; then
+        HAVE_XDAMAGE=yes
+    fi
+
     if [ "$SBOX_UNAME_MACHINE" = "arm" ]; then
         IS_ARMEL=yes
     fi
@@ -533,6 +539,10 @@ fi
 
 if [ "$HAVE_CONTENTACTION" = "yes" ]; then
     MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_CONTENTACTION"
+fi
+
+if [ "$HAVE_XDAMAGE" = "yes" ]; then
+    MEEGOTOUCHCONFIG_DEPS="$MEEGOTOUCHCONFIG_DEPS HAVE_XDAMAGE"
 fi
 
 if [ "$HAVE_CONTEXTSUBSCRIBER" = "yes" ]; then
@@ -714,6 +724,7 @@ echo "Content Action 0.1 ....... $HAVE_CONTENTACTION"
 echo "GConf 2.0 ................ $HAVE_GCONF"
 echo "GStreamer 0.10 ........... $HAVE_GSTREAMER"
 echo "DBus (incl. QtDBus) ...... $HAVE_DBUS"
+echo "XDamage .................. $HAVE_XDAMAGE"
 
 
 if [ "$CFG_DEV" = "yes" ]; then

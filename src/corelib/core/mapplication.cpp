@@ -34,8 +34,11 @@
 #include <QX11Info>
 #include <X11/Xlib.h>
 #include <X11/Xatom.h>
+#endif //Q_WS_X11
+
+#ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
-#endif
+#endif //HAVE_XDAMAGE
 
 MApplicationPrivate::MApplicationPrivate():
         componentData(NULL),
@@ -43,9 +46,9 @@ MApplicationPrivate::MApplicationPrivate():
         xDamageErrorBase(0),
         q_ptr(NULL)
 {
-#ifdef Q_WS_X11
+#ifdef HAVE_XDAMAGE
     XDamageQueryExtension(QX11Info::display(), &xDamageEventBase, &xDamageErrorBase);
-#endif
+#endif //HAVE_XDAMAGE
 }
 
 MApplicationPrivate::~MApplicationPrivate()
@@ -371,7 +374,10 @@ bool MApplication::x11EventFilter(XEvent *event)
         default:
             break;
         }
-    } else if (event->type == d->xDamageEventBase + XDamageNotify) {
+    }
+#ifdef HAVE_XDAMAGE
+    else if (event->type == d->xDamageEventBase + XDamageNotify) {
+
         XDamageNotifyEvent *xevent = (XDamageNotifyEvent *) event;
         XserverRegion parts;
         XRectangle *rects;
@@ -397,6 +403,9 @@ bool MApplication::x11EventFilter(XEvent *event)
 
         return true;
     }
+#else //HAVE_XDAMAGE
+    Q_UNUSED(d);
+#endif //HAVE_XDAMAGE
 
     return false;
 }

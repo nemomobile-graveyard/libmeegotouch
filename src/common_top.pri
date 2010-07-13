@@ -77,7 +77,9 @@ contains(M_PROFILE_PARTS, theme) {
 ## Dependencies
 
 # list pkg-config dependencies here
-!macx:PKGCONFIG += xdamage
+contains(DEFINES, HAVE_XDAMAGE) {
+    PKGCONFIG += xdamage
+}
 
 contains(DEFINES, HAVE_ICU) {
     LIBS += -licui18n -licuuc -licudata

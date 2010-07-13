@@ -30,8 +30,9 @@
 #include <EGL/egl.h>
 #include <X11/Xlib.h>
 
-#include <X11/Xlib.h>
+#ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
+#endif //HAVE_XDAMAGE
 
 #include "mdebug.h"
 

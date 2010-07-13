@@ -34,9 +34,10 @@
 #include <QDBusConnectionInterface>
 #endif
 
-#ifdef Q_WS_X11
+#ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
-#endif
+#endif //HAVE_XDAMAGE
+
 #ifdef HAVE_DBUS
 namespace{
     const QString PIXMAP_PROVIDER_DBUS_SERVICE = "com.meego.core.MStatusBar";
@@ -91,7 +92,7 @@ MStatusBarView::~MStatusBarView()
 {
 #ifdef Q_WS_X11
     destroyXDamageForSharedPixmap();
-#endif
+#endif //Q_WS_X11
 }
 
 void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -145,16 +146,19 @@ void MStatusBarView::updateSharedPixmap()
 void MStatusBarView::setupXDamageForSharedPixmap()
 {
     Q_ASSERT(!sharedPixmap.isNull());
-
+#ifdef HAVE_XDAMAGE
     pixmapDamage = XDamageCreate(QX11Info::display(), sharedPixmap.handle(), XDamageReportNonEmpty);
+#endif //HAVE_XDAMAGE
 }
 
 void MStatusBarView::destroyXDamageForSharedPixmap()
 {
+#ifdef HAVE_XDAMAGE
     if (pixmapDamage) {
         XDamageDestroy(QX11Info::display(), pixmapDamage);
         pixmapDamage = 0;
     }
+#endif //HAVE_XDAMAGE
 }
 
 void MStatusBarView::handlePixmapDamageEvent(Qt::HANDLE &damage, short &x, short &y,
