@@ -39,6 +39,9 @@ private slots:
 
     void testConstructors();
 
+    void testNearestCity_data();
+    void testNearestCity();
+
     void testMatchingCities_data();
     void testMatchingCities();
 

@@ -101,6 +101,38 @@ void Ut_MLocationDatabase::testConstructors()
     delete cityBar;
 }
 
+void Ut_MLocationDatabase::testNearestCity_data()
+{
+    QTest::addColumn<qreal>("latitude");
+    QTest::addColumn<qreal>("longitude");
+    QTest::addColumn<QString>("resultEnglishName");
+
+    QTest::newRow("near Espoo")
+        << qreal(60.205556)
+        << qreal(24.655556)
+        << "Helsinki";
+}
+
+void Ut_MLocationDatabase::testNearestCity()
+{
+    QFETCH(qreal, latitude);
+    QFETCH(qreal, longitude);
+    QFETCH(QString, resultEnglishName);
+
+    MLocationDatabase db;
+    QList<MCity> cities = db.cities();
+
+    // do only run the tests, if we were able to load
+    // some cities from the meegotouch-cities-*
+    // package.
+    if (cities.count() < 10) {
+        qWarning( "loading of city list failed, skipping test" );
+        return;
+    }
+    QCOMPARE(db.nearestCity(latitude, longitude).englishName(),
+             resultEnglishName);
+}
+
 void Ut_MLocationDatabase::testMatchingCities_data()
 {
     QTest::addColumn<QString>("pattern");

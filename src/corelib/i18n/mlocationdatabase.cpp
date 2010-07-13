@@ -265,7 +265,7 @@ QList<MCity> MLocationDatabase::matchingCities(const QString& searchString)
     return list;
 }
 
-MCity MLocationDatabase::nearestCity( qreal latitude, qreal longitude )
+MCity MLocationDatabase::nearestCity(qreal latitude, qreal longitude)
 {
     Q_D(MLocationDatabase);
 
@@ -274,19 +274,14 @@ MCity MLocationDatabase::nearestCity( qreal latitude, qreal longitude )
     qreal bestDistance = 1000000;
 
     QList<MCity> list;
-
-    foreach( MCity city, d->cities )
-    {
+    foreach(MCity city, d->cities) {
         qreal distance =
-            abs( latitude - city.latitude() )
-            + abs( longitude - city.longitude() );
-
-        if ( distance < bestDistance )
-        {
+            (latitude - city.latitude()) * (latitude - city.latitude())
+            + (longitude - city.longitude()) * (longitude - city.longitude());
+        if ( distance < bestDistance ) {
             bestDistance = distance;
             bestCity = city;
         }
     }
-
     return bestCity;
 }
