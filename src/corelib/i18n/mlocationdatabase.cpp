@@ -250,21 +250,18 @@ QList<MCity> MLocationDatabase::citiesInCountry( const QString& countryKey )
     return list;
 }
 
-QList<MCity> MLocationDatabase::matchingCities( const QString& searchString )
+QList<MCity> MLocationDatabase::matchingCities(const QString& searchString)
 {
     Q_D(MLocationDatabase);
 
     QList<MCity> list;
-
-    foreach( MCity city, d->cities )
-    {
-        if ( city.englishName().contains( searchString )
-             || city.localName().contains( searchString ) )
+    foreach (MCity city, d->cities) {
+        if (city.englishName().contains(searchString, Qt::CaseInsensitive)
+            || city.localName().contains(searchString, Qt::CaseInsensitive))
         {
             list.append( city );
         }
     }
-
     return list;
 }
 

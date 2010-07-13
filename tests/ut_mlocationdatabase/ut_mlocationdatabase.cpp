@@ -101,6 +101,45 @@ void Ut_MLocationDatabase::testConstructors()
     delete cityBar;
 }
 
+void Ut_MLocationDatabase::testMatchingCities_data()
+{
+    QTest::addColumn<QString>("pattern");
+    QTest::addColumn<QStringList>("someExpectedMatches");
+
+    QTest::newRow("ber")
+        << "ber"
+        << (QStringList() << "Berlin" << "Bern");
+}
+
+void Ut_MLocationDatabase::testMatchingCities()
+{
+    QFETCH(QString, pattern);
+    QFETCH(QStringList, someExpectedMatches);
+
+    MLocationDatabase db;
+    QList<MCity> cities = db.cities();
+
+    // do only run the tests, if we were able to load
+    // some cities from the meegotouch-cities-*
+    // package.
+    if (cities.count() < 10) {
+        qWarning( "loading of city list failed, skipping test" );
+        return;
+    }
+    QList<MCity> matchingCities = db.matchingCities(pattern);
+    qDebug() << "number of matching cities" << matchingCities.size();
+    QStringList matchingCitiesNames;
+    foreach (MCity city, matchingCities) {
+        qDebug() << "matching city:" << city.englishName();
+        matchingCitiesNames << city.englishName();
+    }
+    foreach (QString expectedMatch, someExpectedMatches) {
+        qDebug() << "expected match:" << expectedMatch;
+        QVERIFY2(matchingCitiesNames.contains(expectedMatch),
+                 "expected match not found");
+    }
+}
+
 void Ut_MLocationDatabase::testCities_data()
 {
     QTest::addColumn<QString>("key");
