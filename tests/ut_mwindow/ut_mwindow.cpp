@@ -357,4 +357,44 @@ void Ut_MWindow::testVideoGlobalAlpha()
     QCOMPARE(alpha, 1.0);
 }
 
+void Ut_MWindow::testSetLandscapeOrientation_data()
+{
+    QTest::addColumn<M::OrientationAngle>("initialAngle");
+    QTest::addColumn<M::OrientationAngle>("landscapeAngle");
+    QTest::newRow("0->0")     << M::Angle0   << M::Angle0;
+    QTest::newRow("90->0")    << M::Angle90  << M::Angle0;
+    QTest::newRow("180->180") << M::Angle180 << M::Angle180;
+    QTest::newRow("270->0")   << M::Angle270 << M::Angle0;
+}
+
+void Ut_MWindow::testSetLandscapeOrientation()
+{
+    QFETCH(M::OrientationAngle, initialAngle);
+    QFETCH(M::OrientationAngle, landscapeAngle);
+
+    win->setOrientationAngle(initialAngle);
+    win->setLandscapeOrientation();
+    QCOMPARE(win->orientationAngle(), landscapeAngle);
+}
+
+void Ut_MWindow::testSetPortraitOrientation_data()
+{
+    QTest::addColumn<M::OrientationAngle>("initialAngle");
+    QTest::addColumn<M::OrientationAngle>("portraitAngle");
+    QTest::newRow("0->270")   << M::Angle0   << M::Angle270;
+    QTest::newRow("90->90")   << M::Angle90  << M::Angle90;
+    QTest::newRow("180->270") << M::Angle180 << M::Angle270;
+    QTest::newRow("270->270") << M::Angle270 << M::Angle270;
+}
+
+void Ut_MWindow::testSetPortraitOrientation()
+{
+    QFETCH(M::OrientationAngle, initialAngle);
+    QFETCH(M::OrientationAngle, portraitAngle);
+
+    win->setOrientationAngle(initialAngle);
+    win->setPortraitOrientation();
+    QCOMPARE(win->orientationAngle(), portraitAngle);
+}
+
 QTEST_MAIN(Ut_MWindow);

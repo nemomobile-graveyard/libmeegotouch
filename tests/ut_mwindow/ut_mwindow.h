@@ -64,6 +64,11 @@ private slots:
     void testGlobalAlpha();
     void testVideoGlobalAlpha();
 
+    void testSetLandscapeOrientation_data();
+    void testSetLandscapeOrientation();
+    void testSetPortraitOrientation_data();
+    void testSetPortraitOrientation();
+
 public slots:
     void onDisplayTestSlot();
 
