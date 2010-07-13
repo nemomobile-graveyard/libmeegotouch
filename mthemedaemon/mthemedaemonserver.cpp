@@ -35,7 +35,8 @@ MThemeDaemonServer::MThemeDaemonServer() :
     currentTheme("/meegotouch/theme/name"),
     currentLocale("/meegotouch/i18n/language"),
     defaultTheme(M_THEME_DEFAULT),
-    delayedThemeChange(false)
+    delayedThemeChange(false),
+    sequenceCounter(0)
 {
     // 1) make sure that gconf has some value for the current theme
     if (currentTheme.value().isNull() || currentTheme.value().toString().isEmpty() )
@@ -85,6 +86,7 @@ MThemeDaemonServer::MThemeDaemonServer() :
     processQueueTimer.setInterval(0);
     processQueueTimer.setSingleShot(false);
     connect(&processQueueTimer, SIGNAL(timeout()), SLOT(processOneQueueItem()));
+    connect(&daemon.mostUsedPixmaps, SIGNAL(mostUsedPixmapsChanged(M::MThemeDaemonProtocol::MostUsedPixmaps)), this, SLOT(handleUpdatedMostUsedPixmaps(M::MThemeDaemonProtocol::MostUsedPixmaps)));
 }
 
 MThemeDaemonServer::~MThemeDaemonServer()
@@ -189,6 +191,8 @@ void MThemeDaemonServer::clientDataAvailable()
                 daemon.addClient(client);
                 client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
                                            new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
+                client->stream() << Packet(Packet::MostUsedPixmapsPacket, ++sequenceCounter,
+                                           new MostUsedPixmaps(daemon.mostUsedPixmaps.mostUsedPixmapHandles(), QList<PixmapIdentifier>()));
                 break;
             }
         }
@@ -209,6 +213,12 @@ void MThemeDaemonServer::clientDataAvailable()
             client->reinit(static_cast<const String *>(packet.data())->string, daemon.themeInheritanceChain());
             client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
                                        new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
+        } break;
+
+        case Packet::PixmapUsedPacket: {
+            // client wants to use a pixmap
+            const PixmapIdentifier *id = static_cast<const PixmapIdentifier *>(packet.data());
+            pixmapUsed(client, *id, packet.sequenceNumber());
         } break;
 
         case Packet::RequestPixmapPacket: {
@@ -234,6 +244,10 @@ void MThemeDaemonServer::clientDataAvailable()
 
         case Packet::ThemeChangeAppliedPacket: {
             themeChangeApplied(client, packet.sequenceNumber());
+        } break;
+
+        case Packet::AckMostUsedPixmapsPacket: {
+            ackMostUsedPixmaps(client, packet.sequenceNumber());
         } break;
 
         case Packet::QueryThemeDaemonStatusPacket: {
@@ -398,6 +412,34 @@ void MThemeDaemonServer::processOneQueueItem()
     }
 }
 
+void MThemeDaemonServer::handleUpdatedMostUsedPixmaps(const M::MThemeDaemonProtocol::MostUsedPixmaps& mostUsed)
+{
+    quint64 sequenceNumber = ++sequenceCounter;
+
+    foreach(MThemeDaemonClient * c, registeredClients) {
+        c->stream() << Packet(Packet::MostUsedPixmapsPacket, sequenceNumber, new MostUsedPixmaps(mostUsed));
+        if (!mostUsed.removedIdentifiers.empty()) {
+            clientsThatHaveNotYetUpdatedMostUsed[sequenceNumber].append(c);
+        }
+    }
+    if (!mostUsed.removedIdentifiers.empty()) {
+        pixmapsToDeleteWhenUpdatedMostUsed[sequenceNumber] = mostUsed.removedIdentifiers;
+    }
+}
+
+void MThemeDaemonServer::pixmapUsed(MThemeDaemonClient *client,
+                                         const PixmapIdentifier &id, quint64 sequenceNumber)
+{
+    Q_UNUSED(sequenceNumber)
+    // if the client has requested a release for this pixmap, we'll remove the
+    // release request, otherwise we increase the reference count
+    const QueueItem item (client, id, sequenceNumber);
+    if (!releasePixmapsQueue.removeOne(item)) {
+        Qt::HANDLE handle;
+        daemon.pixmap(item.client, item.pixmapId, handle);
+    }
+}
+
 void MThemeDaemonServer::pixmapRequested(MThemeDaemonClient *client,
                                            const PixmapIdentifier &id, quint64 sequenceNumber)
 {
@@ -467,6 +509,21 @@ void MThemeDaemonServer::themeChangeApplied(MThemeDaemonClient *client,
             mWarning("MThemeDaemonServer") << "Start delayed theme change after receiving all the replies.";
             delayedThemeChange = false;
             themeChanged();
+        }
+    }
+}
+
+void MThemeDaemonServer::ackMostUsedPixmaps(MThemeDaemonClient *client,
+                                            quint64 sequenceNumber)
+{
+    if(!clientsThatHaveNotYetUpdatedMostUsed[sequenceNumber].removeOne(client)) {
+        mWarning("MThemeDaemonServer") << "Client" << client->name() << "has already acked most used pixmaps packet!";
+        return;
+    }
+
+    if (clientsThatHaveNotYetUpdatedMostUsed.empty()) {
+        foreach(const PixmapIdentifier& id, pixmapsToDeleteWhenUpdatedMostUsed[sequenceNumber]) {
+            pixmapReleaseRequested(client, id, sequenceNumber);
         }
     }
 }

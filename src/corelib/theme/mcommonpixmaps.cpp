@@ -148,10 +148,7 @@ void MCommonPixmaps::loadOne()
         if (!toLoadList.isEmpty()) {
             PixmapIdentifier id = *toLoadList.begin();
             toLoadList.erase(toLoadList.begin());
-            if (!toLoadList.isEmpty()) {
-                // there's still items in the list, so start the timer with small delay
-                cpuMonitor.start(250);
-            }
+
             ImageResource *resource = daemon->findImageResource(id.imageId);
             if (resource) {
                 bool resourceLoaded = false;
@@ -170,6 +167,16 @@ void MCommonPixmaps::loadOne()
                 mWarning("MCommonPixmaps") << QString("Themedaemon could not find resource %1 while loading most used pixmaps. Removing from list.").arg(id.imageId);
                 requestCounts.remove(id);
                 mostUsedPixmaps.remove(id);
+            }
+
+            if (!toLoadList.isEmpty()) {
+                // there's still items in the list, so start the timer with small delay
+                cpuMonitor.start(250);
+            } else {
+                // all common pixmaps loaded - notify clients
+                MostUsedPixmaps mostUsed;
+                mostUsed.addedHandles = mostUsedPixmapHandles();
+                emit mostUsedPixmapsChanged(mostUsed);
             }
         }
     } else {
@@ -194,8 +201,14 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
         // check if there's still room for this pixmap
         if (mostUsedPixmaps.count() < MCommonPixmaps::CacheSize) {
             // yep, just add this pixmap and return
-            resource->fetchPixmap(id.size);
+            Qt::HANDLE handle = resource->fetchPixmap(id.size);
             mostUsedPixmaps.insert(id);
+
+            MostUsedPixmaps packet;
+            packet.addedHandles.append(PixmapHandle(id, handle));
+            if (toLoadList.isEmpty()) {
+                emit mostUsedPixmapsChanged(packet);
+            }
             return;
         }
 
@@ -229,13 +242,16 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
         minRequestsForCache = (secondlyLeastUsedRequests > requestCount.value()) ? requestCount.value() : secondlyLeastUsedRequests;
 
         // allocate one pixmap for the list
-        resource->fetchPixmap(id.size);
+        Qt::HANDLE handle = resource->fetchPixmap(id.size);
+        MostUsedPixmaps packet;
+        packet.addedHandles.append(PixmapHandle(id, handle));
 
         // release the old one from the list
         if (!toLoadList.remove(*leastUsed)) {
-            // resource was loaded
-            resource = daemon->findImageResource(leastUsed->imageId);
-            resource->releasePixmap(leastUsed->size);
+            packet.removedIdentifiers.append(id);
+        }
+        if (toLoadList.isEmpty()) {
+            emit mostUsedPixmapsChanged(packet);
         }
 
         remove(*leastUsed);
@@ -252,6 +268,23 @@ void MCommonPixmaps::reload(const PixmapIdentifier &id, ImageResource *oldResour
 
     oldResource->releasePixmap(id.size);
     toLoadList.insert(id);
+}
+
+QList<M::MThemeDaemonProtocol::PixmapHandle> MCommonPixmaps::mostUsedPixmapHandles()
+{
+    if (!toLoadList.isEmpty()) {
+        // not all pixmaps loaded/valid - return empty list
+        return QList<M::MThemeDaemonProtocol::PixmapHandle>();
+    }
+
+    // we could also save the handles earlier but it is cheap to do the query
+    QList<PixmapHandle> pixmapHandles;
+    foreach(const M::MThemeDaemonProtocol::PixmapIdentifier& id, mostUsedPixmaps) {
+        Qt::HANDLE handle = daemon->findImageResource(id.imageId)->pixmapHandle(id.size);
+        pixmapHandles.append(M::MThemeDaemonProtocol::PixmapHandle(id, handle));
+    }
+
+    return pixmapHandles;
 }
 
 void MCommonPixmaps::remove(const M::MThemeDaemonProtocol::PixmapIdentifier &id)

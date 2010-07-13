@@ -54,11 +54,13 @@ public:
     QString currentTheme() const;
 
     ImageResource *findImageResource(const QString &imageId);
+
+    MCommonPixmaps mostUsedPixmaps;
+
 private:
 
     void reloadImagePaths(const QString &locale);
 private:
-    MCommonPixmaps mostUsedPixmaps;
     QString currentThemeName;
     QStringList themeInheritance;
     QStringList themeLibraries;

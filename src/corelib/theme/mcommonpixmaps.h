@@ -43,6 +43,11 @@ public:
 
     void reload(const M::MThemeDaemonProtocol::PixmapIdentifier &id, ImageResource *oldResource);
 
+    QList<M::MThemeDaemonProtocol::PixmapHandle> mostUsedPixmapHandles();
+
+Q_SIGNALS:
+    void mostUsedPixmapsChanged(const M::MThemeDaemonProtocol::MostUsedPixmaps& mostUsed);
+
 private slots:
     void loadOne();
 private:

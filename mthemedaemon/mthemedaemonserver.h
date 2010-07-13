@@ -52,15 +52,22 @@ private slots:
 
     void processOneQueueItem();
 
+    void handleUpdatedMostUsedPixmaps(const M::MThemeDaemonProtocol::MostUsedPixmaps& mostUsed);
+
 private:
+    void pixmapUsed(MThemeDaemonClient *client,
+                                const M::MThemeDaemonProtocol::PixmapIdentifier &id,
+                                quint64 sequenceNumber);
     void pixmapRequested(MThemeDaemonClient *client,
-                         const M::MThemeDaemonProtocol::PixmapIdentifier &id,
-                         quint64 sequenceNumber);
+                                const M::MThemeDaemonProtocol::PixmapIdentifier &id,
+                                quint64 sequenceNumber);
     void pixmapReleaseRequested(MThemeDaemonClient *client,
                                 const M::MThemeDaemonProtocol::PixmapIdentifier &id,
                                 quint64 sequenceNumber);
 
     void themeChangeApplied(MThemeDaemonClient *client, quint64 sequenceNumber);
+
+    void ackMostUsedPixmaps(MThemeDaemonClient *client, quint64 sequenceNumber);
 
     void themeDaemonStatus(MThemeDaemonClient *client, quint64 sequenceNumber) const;
 
@@ -97,6 +104,11 @@ private:
 
     QList<MThemeDaemonClient*> clientsThatHaveNotYetAppliedThemeChange;
     QList<QPixmap*> pixmapsToDeleteWhenThemeChangeHasCompleted;
+
+    QHash<quint64, QList<MThemeDaemonClient*> > clientsThatHaveNotYetUpdatedMostUsed;
+    QHash<quint64, QList<M::MThemeDaemonProtocol::PixmapIdentifier> > pixmapsToDeleteWhenUpdatedMostUsed;
+
+    quint64 sequenceCounter;
 };
 //! \internal_end
 #endif

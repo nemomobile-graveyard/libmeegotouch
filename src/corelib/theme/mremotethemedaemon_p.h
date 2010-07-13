@@ -31,6 +31,7 @@ class MRemoteThemeDaemonPrivate
 {
 public:
     QHash<M::MThemeDaemonProtocol::PixmapIdentifier, quint64> pixmapRequests;
+    QHash<M::MThemeDaemonProtocol::PixmapIdentifier, Qt::HANDLE> mostUsedPixmaps;
 
     M::MThemeDaemonProtocol::Packet readOnePacket();
     void processOnePacket(const M::MThemeDaemonProtocol::Packet &packet);
@@ -40,6 +41,8 @@ public:
     void themeChanged(const QStringList &themeInheritanceChain, const QStringList &themeLibraryNames);
     bool waitForServer(const QString &serverAddress, int timeout);
     M::MThemeDaemonProtocol::Packet waitForPacket(quint64 sequenceNumber);
+    void addMostUsedPixmaps(const QList<M::MThemeDaemonProtocol::PixmapHandle>& handles);
+    void removeMostUsedPixmaps(const QList<M::MThemeDaemonProtocol::PixmapIdentifier>& identifiers);
 
     Q_DECLARE_PUBLIC(MRemoteThemeDaemon)
     MRemoteThemeDaemon *q_ptr;

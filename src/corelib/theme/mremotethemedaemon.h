@@ -41,6 +41,7 @@ public:
 
     virtual void pixmapHandleSync(const QString &imageId, const QSize &size);
     virtual void pixmapHandle(const QString &imageId, const QSize &size);
+    Qt::HANDLE pixmapHandleFromMostUsed(const QString &imageId, const QSize &size);
     virtual void releasePixmap(const QString &imageId, const QSize &size);
 
     virtual QString currentTheme();

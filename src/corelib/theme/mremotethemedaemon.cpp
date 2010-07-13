@@ -177,6 +177,26 @@ quint64 MRemoteThemeDaemonPrivate::requestPixmap(const QString &imageId, const Q
     return sequenceNumber;
 }
 
+void MRemoteThemeDaemonPrivate::addMostUsedPixmaps(const QList<PixmapHandle>& handles)
+{
+    QList<PixmapHandle>::const_iterator it = handles.begin();
+    while (it != handles.end()) {
+        if (!mostUsedPixmaps.contains(it->identifier)) {
+            mostUsedPixmaps[it->identifier] = it->pixmapHandle;
+        }
+        ++it;
+    }
+}
+
+void MRemoteThemeDaemonPrivate::removeMostUsedPixmaps(const QList<PixmapIdentifier>& identifiers)
+{
+    QList<PixmapIdentifier>::const_iterator it2 = identifiers.begin();
+    while (it2 != identifiers.end()) {
+        mostUsedPixmaps.remove(*it2);
+        ++it2;
+    }
+}
+
 void MRemoteThemeDaemon::pixmapHandleSync(const QString &imageId, const QSize &size)
 {
     Q_D(MRemoteThemeDaemon);
@@ -191,7 +211,30 @@ void MRemoteThemeDaemon::pixmapHandle(const QString &imageId, const QSize &size)
 {
     Q_D(MRemoteThemeDaemon);
 
+    Qt::HANDLE handle = pixmapHandleFromMostUsed(imageId, size);
+    if (handle) {
+        emit pixmapCreated(imageId, size, handle);
+        return;
+    }
+
     d->requestPixmap(imageId, size);
+}
+
+Qt::HANDLE MRemoteThemeDaemon::pixmapHandleFromMostUsed(const QString &imageId, const QSize &size)
+{
+    Q_D(MRemoteThemeDaemon);
+
+    PixmapIdentifier identifier(imageId, size);
+    QHash<PixmapIdentifier, Qt::HANDLE>::iterator it = d->mostUsedPixmaps.find(identifier);
+    if (it != d->mostUsedPixmaps.end())
+    {
+        int sequenceNumber = ++d->sequenceCounter;
+        d->stream << Packet(Packet::PixmapUsedPacket, sequenceNumber, new PixmapIdentifier(imageId, size));
+
+        return it.value();
+    }
+
+    return 0;
 }
 
 void MRemoteThemeDaemon::releasePixmap(const QString &imageId, const QSize &size)
@@ -260,6 +303,15 @@ void MRemoteThemeDaemonPrivate::processOnePacket(const Packet &packet)
         emit q->themeChangeCompleted();
     } break;
 
+    case Packet::MostUsedPixmapsPacket: {
+        const MostUsedPixmaps *mostUsedPacket = static_cast<const MostUsedPixmaps*>(packet.data());
+        addMostUsedPixmaps(mostUsedPacket->addedHandles);
+        if (!mostUsedPacket->removedIdentifiers.empty()) {
+            removeMostUsedPixmaps(mostUsedPacket->removedIdentifiers);
+            stream << Packet(Packet::AckMostUsedPixmapsPacket, packet.sequenceNumber());
+        }
+    } break;
+
     default:
         mDebug("MRemoteThemeDaemon") << "Couldn't process packet of type" << packet.type();
         break;
@@ -293,6 +345,7 @@ void MRemoteThemeDaemonPrivate::pixmapUpdated(const PixmapHandle &handle)
 void MRemoteThemeDaemonPrivate::themeChanged(const QStringList &themeInheritanceChain, const QStringList &themeLibraryNames)
 {
     Q_Q(MRemoteThemeDaemon);
+    mostUsedPixmaps.clear();
     this->themeInheritanceChain = themeInheritanceChain;
     this->themeLibraryNames = themeLibraryNames;
     emit q->themeChanged(themeInheritanceChain, themeLibraryNames);
