@@ -12,7 +12,8 @@ SUBDIRS     =  \
     animatedlayout/translations \
     qtstyleexample \
     qtstyledialogs \
-    qtstylekinetic
+    qtstylekinetic \
+    qtstyleorientation
 }
 
 # we do not have compiled QtDBusd4

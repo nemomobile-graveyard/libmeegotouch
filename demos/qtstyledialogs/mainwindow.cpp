@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include "MainWindow.h"
+#include "mainwindow.h"
 
 #include <QPushButton>
 #include <QColorDialog>

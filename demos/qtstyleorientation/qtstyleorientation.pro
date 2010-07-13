@@ -1,7 +1,7 @@
 MROOT = ../..
 include($$MROOT/mkspecs/common.pri)
 TEMPLATE = app
-TARGET = qtstyleexample
+TARGET = qtstyleorientation
 target.path = $$M_INSTALL_BIN
 DEPENDPATH += .
 INCLUDEPATH += .
@@ -10,25 +10,12 @@ INCLUDEPATH += .
 SOURCES += main.cpp \
     mainwindow.cpp
 HEADERS += mainwindow.h
-FORMS += mainwindow.ui
-
-# UI style definition
-style_sheet.path = $$M_THEME_DIR/../qtstyleexample/themes/style
-style_sheet.files = style/qtstyleexample.css
-view_configuration.path = $$M_THEME_DIR/../qtstyleexample/themes
-view_configuration.files = style/qtstyleexample.conf
-style_images.path = $$M_THEME_DIR/../qtstyleexample/themes/images
-style_images.files = images/*.png \
-    images/*.jpg
-style_svg.path = $$M_THEME_DIR/../qtstyleexample/themes/svg
-style_svg.files = images/*.svg
 
 desktop_entry.path = $$M_INSTALL_DATA/applications
 desktop_entry.files = \
-  qtstyleexample.desktop \
-  qtstyleexample-windows-style.desktop
+  qtstyleorientation.desktop
 
-myname = com.nokia.qtstyleexample
+myname = com.nokia.qtstyleorientation
 
 services.CONFIG += no_check_exist
 services.target = $${myname}.service
@@ -43,9 +30,6 @@ DEFINES += IMAGES_DIR=\"\\\"$$style_images.path/\\\"\"
 
 # Install instructions
 INSTALLS += target \
-    style_sheet \
-    style_images \
-    style_svg \
     desktop_entry
 
 !win32:!macx {

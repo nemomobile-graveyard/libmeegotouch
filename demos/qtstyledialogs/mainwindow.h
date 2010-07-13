@@ -22,7 +22,7 @@
 
 #include <QMainWindow>
 
-#include "ui_MainWindow.h"
+#include "ui_mainwindow.h"
 
 class MainWindow : public QMainWindow, Ui::MainWindow
 {
@@ -30,12 +30,25 @@ class MainWindow : public QMainWindow, Ui::MainWindow
 public:
     MainWindow();
     ~MainWindow();
+public slots:
+    void showNormalNmDialog();
+    void showFullScreenNmDialog();
+    void showHugeNmDialog();
 
-protected slots:
-    void fileOpen();
-    void setStatusBarText();
-private:
-    QLabel* statusBarLabel;
+    void showNormalMDialog();
+    void showFullScreenMDialog();
+    void showHugeMDialog();
+
+    void showColorDialog();
+    void showErrorMessage();
+    void showFileDialog();
+    void showFontDialog();
+    void showInputDialog();
+    void showMessageBox();
+    void showPageSetupDialog();
+    void showPrintPreviewDialog();
+    void showProgressDialog();
+    void showWizard();
 };
 
 #endif

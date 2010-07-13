@@ -17,38 +17,33 @@
 **
 ****************************************************************************/
 
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#include "mainwindow.h"
 
-#include <QMainWindow>
+#include <QPushButton>
+#include <QTableWidgetItem>
+#include <QDebug>
 
-#include "ui_MainWindow.h"
-
-class MainWindow : public QMainWindow, Ui::MainWindow
+MainWindow::MainWindow() : QMainWindow(NULL)
 {
-    Q_OBJECT
-public:
-    MainWindow();
-    ~MainWindow();
-public slots:
-    void showNormalNmDialog();
-    void showFullScreenNmDialog();
-    void showHugeNmDialog();
+    setupUi(this);
 
-    void showNormalMDialog();
-    void showFullScreenMDialog();
-    void showHugeMDialog();
+    QWidget* w = new QWidget();
+    w->setLayout(new QVBoxLayout);
+    for(int i = 0; i < 100; ++i)
+        w->layout()->addWidget(new QPushButton(QString("Button %1").arg(i)));
+    scrollArea->setWidget(w);
 
-    void showColorDialog();
-    void showErrorMessage();
-    void showFileDialog();
-    void showFontDialog();
-    void showInputDialog();
-    void showMessageBox();
-    void showPageSetupDialog();
-    void showPrintPreviewDialog();
-    void showProgressDialog();
-    void showWizard();
-};
+    for(int i = 0; i < 100; ++i)
+        new QListWidgetItem(QString("Item %1").arg(i), listWidget);
 
-#endif
+    for(int row = 0; row < 100; ++row)
+        for(int col = 0; col < 100; ++col) {
+            QTableWidgetItem* item = new QTableWidgetItem(QString("%1").arg(row*col));
+            tableWidget->setItem(row, col, item);
+        }
+}
+
+MainWindow::~MainWindow()
+{
+
+}

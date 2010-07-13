@@ -17,28 +17,19 @@
 **
 ****************************************************************************/
 
-#include <QApplication>
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
+
 #include <QMainWindow>
-#include <QDebug>
-#include <QStyle>
 
-#include "mainwindow.h"
+#include "ui_mainwindow.h"
 
-int main(int argc, char **argv)
+class MainWindow : public QMainWindow, Ui::MainWindow
 {
-    QApplication app(argc, argv);
-//    app.setProperty( "NoMStyle", true );
-//    app.setProperty( "NoMNavigationBar", true );
-    qCritical() << app.arguments();
-    if(app.arguments().contains("-oc")) {
-        bool enabled = QMetaObject::invokeMethod(app.style(), "setOrientationChangeEnabled", Q_ARG(bool, true));
-        qCritical() << "Orientation change enabled:" << enabled;
-    }
+    Q_OBJECT
+public:
+    MainWindow();
+    ~MainWindow();
+};
 
-    MainWindow mw;
-    mw.show();
-
-    qCritical() << "Starting eventloop";
-    return app.exec();
-}
-
+#endif

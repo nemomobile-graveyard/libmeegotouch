@@ -17,28 +17,23 @@
 **
 ****************************************************************************/
 
-#include <QApplication>
-#include <QMainWindow>
-#include <QDebug>
-#include <QStyle>
+#ifndef MAINWINDOW_H
+#define MAINWINDOW_H
 
-#include "mainwindow.h"
+#include <QLabel>
+#include <QPixmap>
 
-int main(int argc, char **argv)
+class MainWindow : public QLabel
 {
-    QApplication app(argc, argv);
-//    app.setProperty( "NoMStyle", true );
-//    app.setProperty( "NoMNavigationBar", true );
-    qCritical() << app.arguments();
-    if(app.arguments().contains("-oc")) {
-        bool enabled = QMetaObject::invokeMethod(app.style(), "setOrientationChangeEnabled", Q_ARG(bool, true));
-        qCritical() << "Orientation change enabled:" << enabled;
-    }
+    Q_OBJECT
+public:
+    MainWindow();
+    ~MainWindow();
+protected slots:
+    void rotateImage(int);
+protected:
+    QPixmap m_landscapeImage;
+    QPixmap m_portraitImage;
+};
 
-    MainWindow mw;
-    mw.show();
-
-    qCritical() << "Starting eventloop";
-    return app.exec();
-}
-
+#endif

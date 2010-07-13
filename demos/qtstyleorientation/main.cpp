@@ -17,33 +17,24 @@
 **
 ****************************************************************************/
 
-#include "MainWindow.h"
-
-#include <QPushButton>
-#include <QTableWidgetItem>
+#include <QApplication>
+#include <QMainWindow>
 #include <QDebug>
+#include <QStyle>
 
-MainWindow::MainWindow() : QMainWindow(NULL)
+#include "mainwindow.h"
+
+int main(int argc, char **argv)
 {
-    setupUi(this);
+    QApplication app(argc, argv);
 
-    QWidget* w = new QWidget();
-    w->setLayout(new QVBoxLayout);
-    for(int i = 0; i < 100; ++i)
-        w->layout()->addWidget(new QPushButton(QString("Button %1").arg(i)));
-    scrollArea->setWidget(w);
+    qCritical() << app.arguments();
+    bool enabled = QMetaObject::invokeMethod(app.style(), "setOrientationChangeEnabled", Q_ARG(bool, true));
+    qCritical() << "Orientation change enabled:" << enabled;
 
-    for(int i = 0; i < 100; ++i)
-        new QListWidgetItem(QString("Item %1").arg(i), listWidget);
+    MainWindow mw;
+    mw.show();
 
-    for(int row = 0; row < 100; ++row)
-        for(int col = 0; col < 100; ++col) {
-            QTableWidgetItem* item = new QTableWidgetItem(QString("%1").arg(row*col));
-            tableWidget->setItem(row, col, item);
-        }
+    return app.exec();
 }
 
-MainWindow::~MainWindow()
-{
-
-}

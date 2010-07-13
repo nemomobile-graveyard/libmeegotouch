@@ -8,9 +8,9 @@ INCLUDEPATH += .
 
 # Input
 SOURCES += main.cpp \
-    MainWindow.cpp
-HEADERS += MainWindow.h
-FORMS += MainWindow.ui
+    mainwindow.cpp
+HEADERS += mainwindow.h
+FORMS += mainwindow.ui
 
 # UI style definition
 style_sheet.path = $$M_THEME_DIR/../qtstyledialogs/themes/style
