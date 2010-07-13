@@ -5,3 +5,9 @@ someinterfaceadaptor.h
 someinterfaceadaptor.cpp
 someinterface.h
 someinterface.cpp
+someinterface2.cpp
+someinterface2.h
+someinterface2adaptor.cpp
+someinterface2adaptor.h
+someinterface2proxy.cpp
+someinterface2proxy.h

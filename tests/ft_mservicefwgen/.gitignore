@@ -1,4 +1,6 @@
 ft_mservicefwgen
+qrc_correctFiles.cpp
+qrc_xmlFiles.cpp
 fakegalleryinterfaceproxy.h
 fakegalleryinterfaceproxy.cpp
 fakegalleryinterface.h
