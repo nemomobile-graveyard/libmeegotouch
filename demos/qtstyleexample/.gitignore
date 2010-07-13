@@ -1,4 +1,4 @@
 qtstyleexample
-ui_MainWindow.h
+ui_mainwindow.h
 qrc_res.cpp
 com.nokia.qtstyleexample.service

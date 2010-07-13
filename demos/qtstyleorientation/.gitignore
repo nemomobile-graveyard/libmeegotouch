@@ -1,4 +1,3 @@
-qtstyleexample
-ui_MainWindow.h
+qtstyleorientation
 qrc_res.cpp
-com.nokia.qtstyleexample.service
+com.nokia.qtstyleorientation.service
