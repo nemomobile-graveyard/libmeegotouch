@@ -21,6 +21,8 @@
 #include "mwidgetrecycler.h"
 #include "mwidgetrecycler_p.h"
 
+const char * MWidgetRecycler::RecycledObjectIdentifier = "_q_RecycleIdentifier";
+
 MWidgetRecyclerPrivate::MWidgetRecyclerPrivate()
     : widgetCount(0), maxWidgetCount(10)
 {
@@ -47,12 +49,17 @@ bool MWidgetRecyclerPrivate::hasEnoughSpaceFor(MWidget *widget)
 
 void MWidgetRecyclerPrivate::put(MWidget *widget)
 {
-    widgets.insert(widget->metaObject()->className(), widget);
+    QVariant recycleIdentifier = widget->property(MWidgetRecycler::RecycledObjectIdentifier);
+
+    if(!recycleIdentifier.isValid())
+        widgets.insert(widget->metaObject()->className(), widget);
+    else
+        widgets.insert(recycleIdentifier.toString(), widget);
 }
 
-MWidget *MWidgetRecyclerPrivate::take(const QString &className)
+MWidget *MWidgetRecyclerPrivate::take(const QString &recycleId)
 {
-    return widgets.take(className);
+    return widgets.take(recycleId);
 }
 
 MWidgetRecycler::MWidgetRecycler()
@@ -93,9 +100,9 @@ void MWidgetRecycler::recycle(MWidget *widget)
     }
 }
 
-MWidget *MWidgetRecycler::take(const QString &className)
+MWidget *MWidgetRecycler::take(const QString &recycleId)
 {
-    MWidget *widget = d_ptr->take(className);
+    MWidget *widget = d_ptr->take(recycleId);
 
     return widget;
 }

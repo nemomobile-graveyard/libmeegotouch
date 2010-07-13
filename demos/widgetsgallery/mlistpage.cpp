@@ -112,10 +112,10 @@ class MListContentItemCreator : public MAbstractCellCreator<PhoneBookCell>
 public:
     MListContentItemCreator() : amountOfColumns(1), highlightText("") {
     }
-    
+
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const
     {
-        // FIXME: It's a workaround against a bug, that if the layout is created and 
+        // FIXME: It's a workaround against a bug, that if the layout is created and
         // set in constructor then the pixmaps are properly loaded.
         PhoneBookCell *cell = dynamic_cast<PhoneBookCell *>(recycler.take(PhoneBookCell::staticMetaObject.className()));
         if (cell == NULL) {
@@ -124,12 +124,12 @@ public:
         updateCell(index, cell);
         return cell;
     }
-    
+
     void updateCell(const QModelIndex &index, MWidget *cell) const {
         PhoneBookCell *listCell = qobject_cast<PhoneBookCell*>(cell);
         if (listCell == NULL) // TODO This is shouldn't happen, list must know what it doing, but with multiple columns it happens sometimes
             return;
-        
+
         QVariant data = index.data(Qt::DisplayRole);
         PhoneBookEntry *entry = static_cast<PhoneBookEntry *>(data.value<void *>());
 
@@ -150,7 +150,7 @@ public:
 
         updateContentItemMode(index, listCell);
     }
-       
+
     void updateContentItemMode(const QModelIndex &index, MListItem *contentItem) const {
         int flatRow = index.row();
         int row = flatRow / amountOfColumns;
@@ -238,13 +238,13 @@ void MListPage::setPlainListModel()
     list->setCellCreator(cellCreator);
 
     model = new PhoneBookModel();
-    
+
     proxyModel = new MSortFilterProxyModel();
     proxyModel->setSortRole(PhoneBookModel::PhoneBookSortRole);
     proxyModel->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
     proxyModel->setSourceModel(model);
-    
-    
+
+
     list->setItemModel(proxyModel);
 
     imageLoader = new PhoneBookImageLoader;
@@ -393,7 +393,7 @@ void MListPage::changeListMode(int index)
 
     case Grouped:
         list->setShowGroups(true);
-        model->setGrouped(true);        
+        model->setGrouped(true);
         break;
     }
 
@@ -458,11 +458,11 @@ void MListPage::changeLiveFilteringMode(int index)
         list->filtering()->setEnabled(true);
         list->filtering()->setFilterRole(PhoneBookModel::PhoneBookFilterRole);
         list->filtering()->editor()->setVisible(false);
-        connect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB())); 
-        connect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged())); 
+        connect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB()));
+        connect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged()));
     } else {
-        disconnect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB())); 
-        disconnect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged())); 
+        disconnect(list->filtering(), SIGNAL(listPannedUpFromTop()), this, SLOT(filteringVKB()));
+        disconnect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged()));
         list->filtering()->setEnabled(false);
         showTextEdit(false);
     }

@@ -35,7 +35,7 @@ public:
     void resetWidgetState(MWidget *widget);
     bool hasEnoughSpaceFor(MWidget *widget);
     void put(MWidget *widget);
-    MWidget *take(const QString &className);
+    MWidget *take(const QString &recycleId);
 
     QMultiHash<QString, MWidget *> widgets;
     int widgetCount;

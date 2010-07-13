@@ -41,11 +41,27 @@ class MWidget;
   when object needs to be delete it should be added to recycler:
   \code
   ....
-  // Checking if recycler has any objects with classname "MWidget". It doesn't
-  // have to be class name, but it has to identify MWidget uniqely.
+  // Checking if recycler has any objects with classname "MWidget".
   MWidget * newItem = qobject_cast<MWidget*>(recycler->take(MWidget::metaObject()->className()));
-  if(newItem == NULL)
+  if(newItem == NULL) {
     newItem = new MWidget;
+  }
+  ....
+  recycler->recycle(someItem); // item is not needed anymore, saving for future use
+  ...
+
+  \endcode
+
+  To use non default identifier (or identifiers) for recycled widgets following syntax could be used:
+  \code
+
+  ....
+  // Checking if recycler has any objects with identifier "myItem"
+  MWidget * newItem = qobject_cast<MWidget*>(recycler->take("myItem"));
+  if(newItem == NULL) {
+    newItem = new MWidget;
+    newItem->setProperty(MWidgetRecycler::RecycledObjectIdentifier, "myItem");
+  }
   ....
   recycler->recycle(someItem); // item is not needed anymore, saving for future use
   ...
@@ -59,6 +75,7 @@ class MWidget;
 class M_EXPORT MWidgetRecycler
 {
 public:
+    static const char * RecycledObjectIdentifier;
 
     /*!
       \brief Returns the unique instance of MWidgetRecycler.
@@ -67,7 +84,7 @@ public:
 
     /*!
       \brief MWidgetRecycler constructor. To get system wide recycler please check
-      instance(), however it's perfectly fine to create recycler for special
+      instance(), however it's perfectly fine to create recycler for special cases.
       */
     MWidgetRecycler();
 
@@ -76,6 +93,9 @@ public:
 
       Widget ownership is transferred to recycler. If the widget recycler is full,
       widget will be deleted.
+
+      Recycler will check if widget has a property MWidgetRecycler::RecycledObjectIdentifier it will use it's
+      value as a identifier, otherwise recycler will use class name.
     */
     void recycle(MWidget *widget);
 
@@ -84,8 +104,10 @@ public:
 
       Ownership of returned widget is transferred to the user.
       Returns 0 if no widget of the specified class is available.
+
+      \sa recycle(MWidget *)
     */
-    MWidget *take(const QString &className);
+    MWidget *take(const QString &recycleId);
 
     /*!
       \brief Sets the maximum number of widgets the recycler holds at one time per class. Each class
