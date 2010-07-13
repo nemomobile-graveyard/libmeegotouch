@@ -29,6 +29,7 @@
 #include "applicationmenupage.h"
 #include "toolbarpage.h"
 #include "textentrypage.h"
+#include "textentrynavigationpage.h"
 #include "mlistpage.h"
 #include "mgridpage.h"
 #include "sliderpage.h"
@@ -152,6 +153,8 @@ public:
         addCategory(qtTrId("xx_wg_categories_user_input"), new MainCategoryPage(this, createIndex(5,0)));
         //% "Text Entries"
         addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_text_entries"), new TextEntryPage());
+        //% "Text Entries Navigation"
+        addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_text_entries_navigation"), new TextEntryNavigationPage());
         //% "Slider"
         addGalleryPage(index(5,0), qtTrId("xx_wg_user_input_slider"), new SliderPage());
         //% "Input Feedback"

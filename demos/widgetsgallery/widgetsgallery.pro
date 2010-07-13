@@ -9,8 +9,8 @@ INCLUDEPATH += . \
     $$MSRC/corelib
 
 QMAKE_LIBDIR += $$MLIB
-win32|macx { 
-    macx { 
+win32|macx {
+    macx {
         QMAKE_LFLAGS += -F../../lib
         LIBS += -framework meegotouchcore \
                 -framework meegotouchviews
@@ -49,6 +49,7 @@ SOURCES += main.cpp \
     applicationmenupage.cpp \
     toolbarpage.cpp \
     textentrypage.cpp \
+    textentrynavigationpage.cpp \
     mlistpage.cpp \
     mgridpage.cpp \
     gridmodel.cpp \
@@ -96,6 +97,7 @@ HEADERS += templatepage.h \
     applicationmenupage.h \
     toolbarpage.h \
     textentrypage.h \
+    textentrynavigationpage.h \
     mlistpage.h \
     mgridpage.h \
     gridmodel.h \
