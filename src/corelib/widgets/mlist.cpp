@@ -157,7 +157,7 @@ void MList::selectItem(const QModelIndex &index)
                 sModel->select(index, QItemSelectionModel::Select);
             }
         } else if (selectionMode() == MList::SingleSelection) {
-            sModel->select(index, QItemSelectionModel::SelectCurrent);
+            sModel->select(index, QItemSelectionModel::ClearAndSelect);
         }
     }
 
