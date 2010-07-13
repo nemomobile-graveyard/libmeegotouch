@@ -25,6 +25,8 @@
 class QGesture;
 class MPanRecognizerPrivate;
 
+//! \internal
+
 /*!
   This class provides Pan gesture recognition functionality.
   It provides event based handling of the gestures.
@@ -70,5 +72,7 @@ private:
     Q_DISABLE_COPY(MPanRecognizer)
 
 };
+
+//! \internal_end
 
 #endif // MPANRECOGNIZER_H

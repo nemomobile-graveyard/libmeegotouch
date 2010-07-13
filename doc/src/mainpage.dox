@@ -4,22 +4,21 @@
   <tr>
     <th>Getting Started</th>
     <th>API Reference</th>
-    <th>Developer Resources</th>
+    <th>Developer References</th>
   </tr>
   <tr>
     <td>
       <ul>
        <li><strong><a href="introduction.html">Introduction to MeeGo Touch</a></strong></li>
-      <li><a href="installation.html">Installation</a> and First Steps with MeeGo Touch</li>
-      <li>Examples and Demos</li>
-      <li><strong><a href="news.html">What's New in MeeGo Touch</a></strong></li>
+       <li><a href="installation.html">Installing MeeGo Touch</a></li>
        <li><strong><a href="tutorial.html">Your first MeeGo Touch application</a></strong></li>
+       <li><strong><a href="news.html">What's New in MeeGo Touch</a></strong></li>
       </ul>
     </td>
     <td>
       <ul>
+       <li><strong><a href="mainclasses.html">Main Classes</a></strong></li>
        <li><a href="classes.html">All Classes</a></li>
-       <li><a href="mainclasses.html">Main Classes</a></li>
        <li><a href="annotated.html">Annotated Classes</a></li>
        <li><a href="namespaces.html">All Namespaces</a></li>
        <li><a href="hierarchy.html">Inheritance Hierarchy</a></li>
@@ -28,46 +27,42 @@
     </td>
     <td>
       <ul>
-       <li><a href="http://qt.gitorious.com/maemo-6-ui-framework">Code repository</a></li>
-       <li><a href="http://qt.gitorious.com/maemo-6-ui-framework/pages/Home">MeeGo Touch Wiki</a></li>
+       <li><strong><a href="http://http://meego.gitorious.org/meegotouch/libmeegotouch">Code repository</a></strong></li>
+       <li><a href="http://meego.gitorious.org/meegotouch/pages/Home">MeeGo Touch Wiki</a></li>
+       <li><a href="bugreporting.html">How to Report a Bug</a></li>
+       <li><a href="credits.html">Credits</a></li>
+       <li><a href="license.html">License</a></li>
       </ul>
     </td>
   </tr>
 
   <tr>
-    <th>Fundamentals</th>
-    <th>User Interface Design</th>
-    <th>Contributing & Licenses</th>
+    <th colspan=3>MeeGo Touch Overviews</th>
   </tr>
   <tr>
     <td>
       <ul>
-       <li>The MeeGo Widget Model</li>
-       <li>MeeGo theme system</li>
        <li><a href="servicefw.html">MeeGo Touch Service Framework</a></li>
-        <li><a href="i18n.html">Internationalization</a></li>
-        <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
-        <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>
+       <li><a href="i18n.html">Internationalization</a></li>
+       <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
+       <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>
+       <li><a href="styling.html">Styling</a></li>
       </ul>
     </td>
     <td>
       <ul>
-      <li><a href="styling.html">Styling</a></li>
-      <li><a href="layouts.html">Layouts</a></li>
-      <li><a href="rotation.html">Rotation</a></li>
-      <li><a href="appletdevelopment.html">Applets</a></li>
-      <li><a href="applicationextensions.html">Application extensions</a></li>
-      <li><a href="appletinstallationsource.html">Applet installation sources</a></li>
-      <li><a href="faststart.html">Fast application startup</a></li>
-      <li><a href="notifications.html">Notifications</a></li>
-      <li><a href="settingslanguageschema.html">Settings language reference</a></li>
+       <li><a href="layouts.html">Layouts</a></li>
+       <li><a href="rotation.html">Rotation</a></li>
+       <li><a href="faststart.html">Fast application startup</a></li>
+       <li><a href="notifications.html">Notifications</a></li>
       </ul>
     </td>
     <td>
       <ul>
-       <li><a href="bugreporting.html">How to Report a Bug</a></li>
-       <li><a href="credits.html">Credits</a></li>
-       <li><a href="license.html">License</a></li>
+       <li><a href="appletdevelopment.html">Applets</a></li>
+       <li><a href="applicationextensions.html">Application extensions</a></li>
+       <li><a href="appletinstallationsource.html">Applet installation sources</a></li>
+       <li><a href="settingslanguageschema.html">Settings language reference</a></li>
       </ul>
     </td>
   </tr>

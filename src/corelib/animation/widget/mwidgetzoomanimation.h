@@ -25,6 +25,8 @@
 
 #include <QPointF>
 
+//! \internal
+
 class MWidgetZoomAnimationPrivate;
 
 class MWidgetZoomAnimation : public MAbstractWidgetAnimation
@@ -53,5 +55,7 @@ protected:
 private:
     Q_DECLARE_PRIVATE(MWidgetZoomAnimation)
 };
+
+//! \internal_end
 
 #endif // MWIDGETZOOMANIMATION_H

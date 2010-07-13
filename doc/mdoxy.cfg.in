@@ -1,4 +1,4 @@
-PROJECT_NAME          = MeeGo Touch
+PROJECT_NAME          = "MeeGo Touch"
 OUTPUT_DIRECTORY      = ./doc
 OUTPUT_LANGUAGE       = English
 DISABLE_INDEX         = YES

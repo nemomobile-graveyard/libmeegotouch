@@ -409,14 +409,12 @@ table.mainIndex {
 
 table.mainIndex TH {
    width: 33%;
-   border-width: 1px 0px 1px 0px;
+   border-width: 0px 0px 0px 0px;
    padding: 2px;
    border-style: solid;
    border-color: #666;
    color:white;
-   background-color:#555;
-   background-image:url('gradient.png')};
-   background-repeat: repeat-x;
+   background-color:#333333;
    font-size: 100%;
 }
 
