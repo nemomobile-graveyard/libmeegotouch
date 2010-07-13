@@ -740,8 +740,7 @@ bool MCalendar::operator>=(const MCalendar &other) const
     return after(other) || equals(other);
 }
 
-
-//! Returns the system time zone string
+//static
 QString MCalendar::systemTimeZone()
 {
     icu::TimeZone *defaultTz = icu::TimeZone::createDefault();
@@ -752,7 +751,6 @@ QString MCalendar::systemTimeZone()
 }
 
 //static
-//! Sets system time zone
 void MCalendar::setSystemTimeZone(const QString &timezone)
 {
     icu::UnicodeString tzString = MIcuConversions::qStringToUnicodeString(timezone);
@@ -776,7 +774,6 @@ void MCalendar::setSystemTimeZone(const QString &timezone)
 }
 
 //static
-//! Enumerates possible timezone IDs
 QStringList MCalendar::supportedTimeZones()
 {
     icu::StringEnumeration *strEnum = icu::TimeZone::createEnumeration();
@@ -795,9 +792,7 @@ QStringList MCalendar::supportedTimeZones()
     return result;
 }
 
-
 //static
-//! Enumerates possible timezone IDS for a specific country
 QStringList MCalendar::supportedTimeZones(const QString &country)
 {
     icu::StringEnumeration *strEnum = icu::TimeZone::createEnumeration(qPrintable(country));

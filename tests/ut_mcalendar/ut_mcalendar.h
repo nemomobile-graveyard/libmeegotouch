@@ -45,6 +45,11 @@ private slots:
     void init();
     void cleanup();
 
+    void testTimeZones();
+
+    void testTimeZonesInCountry_data();
+    void testTimeZonesInCountry();
+
     void testConversionFromAndToQDateTime_data();
     void testConversionFromAndToQDateTime();
 
@@ -62,6 +67,9 @@ private slots:
 
     void testMLocaleCalendarConversionsFromMCalendar_data();
     void testMLocaleCalendarConversionsFromMCalendar();
+
+    void testVariousSetDateTimeMethods_data();
+    void testVariousSetDateTimeMethods();
 
     void testMCalendarAdditions();
     void testWeekNumbers();

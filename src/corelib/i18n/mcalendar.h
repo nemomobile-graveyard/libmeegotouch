@@ -109,12 +109,67 @@ public:
     bool operator>(const MCalendar &other) const;
     bool operator>=(const MCalendar &other) const;
 
+    /*
+     * \brief sets the system time zone
+     *
+     * \param timezone a time zone id, for example “Europe/Helsinki”.
+     *
+     * \sa systemTimeZone()
+     * \sa supportedTimeZones()
+     * \sa supportedTimeZones(const QString &country)
+     */
     static void setSystemTimeZone(const QString &timezone);
+
+    /*
+     * \brief returns the id of the current system time zone
+     *
+     * Time zone ids are strings which look like “Europe/Helsinki”, for example.
+     */
     static QString systemTimeZone();
 
+    /*
+     * \brief returns a list of all time zone ids supported on the system
+     *
+     * Time zone ids are strings which look like “Europe/Helsinki”, for example.
+     *
+     * \sa supportedTimeZones(const QString &country)
+     * \sa systemTimeZone()
+     * \sa setSystemTimeZone(const QString &timezone)
+     */
     static QStringList supportedTimeZones();
-    static QStringList supportedTimeZones(const QString &country);
 
+    /*
+     * \brief returns a list of all time zone ids supported in a specific country
+     * \param country country code in ISO-3166 format
+     *
+     * Examples:
+     *
+     * \code
+     * MCalendar::supportedTimeZones("JP");
+     * \endcode
+     *
+     * might return the list “Asia/Tokyo”, “JST”, “Japan”, which
+     * are just different names for the identical time zone.
+     *
+     * \code
+     * MCalendar::supportedTimeZones("JP");
+     * \endcode
+     *
+     * might return a list like “America/Cancun”,
+     * “America/Chihuahua”, “America/Ensenada”,
+     * “America/Hermosillo”, “America/Matamoros”,
+     * “America/Mazatlan”, “America/Merida”,
+     * “America/Mexico_City”, “America/Monterrey”,
+     * “America/Ojinaga”, “America/Santa_Isabel”,
+     * “America/Tijuana”, “Mexico/BajaNorte”, “Mexico/BajaSur”,
+     * “Mexico/General”. Some of these are just different names
+     * for the same thing, some are really different.
+     *
+     * \sa supportedTimeZones()
+     * \sa systemTimeZone()
+     * \sa setSystemTimeZone(const QString &timezone)
+     */
+    static QStringList supportedTimeZones(const QString &country);
 
 private:
     MCalendarPrivate *const d_ptr;

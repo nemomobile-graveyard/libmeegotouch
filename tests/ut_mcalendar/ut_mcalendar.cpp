@@ -56,6 +56,36 @@ void Ut_MCalendar::cleanup()
 {
 }
 
+void Ut_MCalendar::testTimeZones()
+{
+    MCalendar::setSystemTimeZone("Europe/Helsinki");
+    QCOMPARE(MCalendar::systemTimeZone(), QString("Europe/Helsinki"));
+    foreach (QString timeZone, MCalendar::supportedTimeZones()) {
+        MCalendar::setSystemTimeZone(timeZone);
+        QCOMPARE(MCalendar::systemTimeZone(), timeZone);
+    }
+}
+
+void Ut_MCalendar::testTimeZonesInCountry_data()
+{
+    QTest::addColumn<QString>("countryCode");
+    QTest::addColumn<QStringList>("timeZoneList");
+
+    QTest::newRow("FI")
+        << "FI"
+        << (QStringList() << "Europe/Helsinki");
+    QTest::newRow("JP")
+        << "JP"
+        << (QStringList() << "Asia/Tokyo" << "JST" << "Japan");
+}
+
+void Ut_MCalendar::testTimeZonesInCountry()
+{
+    QFETCH(QString, countryCode);
+    QFETCH(QStringList, timeZoneList);
+    QCOMPARE(MCalendar::supportedTimeZones(countryCode), timeZoneList);
+}
+
 void Ut_MCalendar::testConversionFromAndToQDateTime_data()
 {
     QTest::addColumn<QDate>("qDate");
@@ -602,7 +632,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime_data()
 {
     QTest::addColumn<QDateTime>("datetime");
     QTest::addColumn<QString>("localeName");
-    QTest::addColumn<MLocale::CalendarType>("cal");
+    QTest::addColumn<MLocale::CalendarType>("calType");
     QTest::addColumn<QString>("short_result");
     QTest::addColumn<QString>("long_result");
     QTest::addColumn<QString>("full_result");
@@ -657,7 +687,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime()
 {
     QFETCH(QDateTime, datetime);
     QFETCH(QString, localeName);
-    QFETCH(MLocale::CalendarType, cal);
+    QFETCH(MLocale::CalendarType, calType);
     QFETCH(QString, short_result);
     QFETCH(QString, long_result);
     QFETCH(QString, full_result);
@@ -665,20 +695,20 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime()
     MLocale locale(localeName);
 
     QCOMPARE(locale.formatDateTime(datetime, MLocale::DateShort,
-                                   MLocale::TimeShort, cal),
+                                   MLocale::TimeShort, calType),
              short_result);
     QCOMPARE(locale.formatDateTime(datetime, MLocale::DateLong,
-                                   MLocale::TimeLong, cal),
+                                   MLocale::TimeLong, calType),
              long_result);
     QCOMPARE(locale.formatDateTime(datetime, MLocale::DateFull,
-                                   MLocale::TimeFull, cal),
+                                   MLocale::TimeFull, calType),
              full_result);
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
 {
     QTest::addColumn<QString>("localeName");
-    QTest::addColumn<MLocale::CalendarType>("cal");
+    QTest::addColumn<MLocale::CalendarType>("calType");
     QTest::addColumn<int>("year");
     QTest::addColumn<int>("month");
     QTest::addColumn<int>("day");
@@ -791,7 +821,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
 {
     QFETCH(QString, localeName);
-    QFETCH(MLocale::CalendarType, cal);
+    QFETCH(MLocale::CalendarType, calType);
     QFETCH(int, year);
     QFETCH(int, month);
     QFETCH(int, day);
@@ -805,9 +835,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
     QFETCH(QString, timeFullResult);
 
     MLocale locale(localeName);
-    MCalendar mcal(cal);
+    MCalendar mcal(calType);
     mcal.setDate(year, month, day);
     mcal.setTime(14, 31, 0);
+    QDateTime dateTime(QDate(year, month, day), QTime(14, 31, 0, 0));
 
     QList<QString> dateResults;
     dateResults << QString("")
@@ -840,8 +871,93 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
                                       static_cast<MLocale::DateType>(dateType),
                                       static_cast<MLocale::TimeType>(timeType)),
                 result);
+            QCOMPARE(
+                locale.formatDateTime(dateTime,
+                                      static_cast<MLocale::DateType>(dateType),
+                                      static_cast<MLocale::TimeType>(timeType),
+                                      calType),
+                result);
+            if (dateType == MLocale::DateLong
+                && timeType == MLocale::TimeLong) {
+                QCOMPARE(locale.formatDateTime(dateTime, calType), result);
+            }
         }
     }
+}
+
+void Ut_MCalendar::testVariousSetDateTimeMethods_data()
+{
+    QTest::addColumn<QDateTime>("qDateTime");
+    QTest::addColumn<QString>("timeZoneId");
+    QTest::addColumn<int>("qDateTimeOffsetToLocalInHours");
+
+    QTest::newRow("foo")
+        << QDateTime(QDate(2010, 7, 13), QTime(14, 51, 07, 0), Qt::LocalTime)
+        << "Europe/Helsinki"
+        << 0;
+    QTest::newRow("bar")
+        << QDateTime(QDate(2010, 7, 13), QTime(14, 51, 07, 0), Qt::UTC)
+        << "Europe/Helsinki"
+        << 3;
+}
+
+void Ut_MCalendar::testVariousSetDateTimeMethods()
+{
+    QFETCH(QDateTime, qDateTime);
+    QFETCH(QString, timeZoneId);
+    QFETCH(int, qDateTimeOffsetToLocalInHours);
+
+    MCalendar::setSystemTimeZone(timeZoneId);
+
+    MCalendar mCalendarYmdHms;
+    mCalendarYmdHms.setYear(qDateTime.date().year());
+    mCalendarYmdHms.setMonth(qDateTime.date().month());
+    mCalendarYmdHms.setDay(qDateTime.date().day());
+    mCalendarYmdHms.setHours(qDateTime.time().hour());
+    mCalendarYmdHms.setMinutes(qDateTime.time().minute());
+    mCalendarYmdHms.setSeconds(qDateTime.time().second());
+    MCalendar mCalendarQdHms;
+    mCalendarQdHms.setDate(qDateTime.date());
+    mCalendarQdHms.setTime(qDateTime.time().hour(),
+                           qDateTime.time().minute(),
+                           qDateTime.time().second());
+    MCalendar mCalendarQdt;
+    mCalendarQdt.setDateTime(qDateTime);
+
+    MLocale locale("en_US");
+    qDebug()
+        << "\nmCalendarYmdHms"
+        << locale.formatDateTime(
+            mCalendarYmdHms, MLocale::DateLong, MLocale::TimeLong)
+        << "\nmCalendarQdHms "
+        << locale.formatDateTime(
+            mCalendarQdHms, MLocale::DateLong, MLocale::TimeLong)
+        << "\nmCalendarQdt   "
+        << locale.formatDateTime(
+            mCalendarQdt, MLocale::DateLong, MLocale::TimeLong);
+
+    QCOMPARE(mCalendarYmdHms.year(), qDateTime.date().year());
+    QCOMPARE(mCalendarYmdHms.month(), qDateTime.date().month());
+    QCOMPARE(mCalendarYmdHms.dayOfMonth(), qDateTime.date().day());
+    QCOMPARE(mCalendarYmdHms.hour(), qDateTime.time().hour());
+    QCOMPARE(mCalendarYmdHms.minute(), qDateTime.time().minute());
+    QCOMPARE(mCalendarYmdHms.second(), qDateTime.time().second());
+
+    QCOMPARE(mCalendarQdHms.year(), qDateTime.date().year());
+    QCOMPARE(mCalendarQdHms.month(), qDateTime.date().month());
+    QCOMPARE(mCalendarQdHms.dayOfMonth(), qDateTime.date().day());
+    QCOMPARE(mCalendarQdHms.hour(), qDateTime.time().hour());
+    QCOMPARE(mCalendarQdHms.minute(), qDateTime.time().minute());
+    QCOMPARE(mCalendarQdHms.second(), qDateTime.time().second());
+
+    QCOMPARE(mCalendarQdt.year(), qDateTime.date().year());
+    QCOMPARE(mCalendarQdt.month(), qDateTime.date().month());
+    QCOMPARE(mCalendarQdt.dayOfMonth(), qDateTime.date().day());
+    QCOMPARE(mCalendarQdt.hour(),
+             qDateTime.time().hour()
+             + qDateTimeOffsetToLocalInHours);
+    QCOMPARE(mCalendarQdt.minute(), qDateTime.time().minute());
+    QCOMPARE(mCalendarQdt.second(), qDateTime.time().second());
 }
 
 void Ut_MCalendar::testMCalendarAdditions()
@@ -852,24 +968,24 @@ void Ut_MCalendar::testMCalendarAdditions()
     cal.setTime(19, 23, 0);
     cal.addMonths(1);
 
-    QVERIFY2(cal.year() == 2008, "year is incorrect");
-    QVERIFY2(cal.month() == 2, "month is incorrect");
-    QVERIFY2(cal.dayOfMonth() == 29, "day of month is incorrect");
-    QVERIFY2(cal.dayOfYear() == 60, "day of year is incorrect");
-    QVERIFY2(cal.firstDayOfMonth() == 1, "first day of month is incorrect");
-    QVERIFY2(cal.lastDayOfMonth() == 29, "last day of month is incorrect");
-    QVERIFY2(cal.firstDayOfWeek() == 1, "first day of week is incorrect");
-    QVERIFY2(cal.weekNumber() == 9, "week number is incorrect");
-    QVERIFY2(cal.maximumWeeksInMonth() == 6, "maximum weeks in month is incorrect");
-    QVERIFY2(cal.daysInWeek() == 7, "days is week is incorrect");
+    QCOMPARE(cal.year(), 2008);
+    QCOMPARE(cal.month(), 2);
+    QCOMPARE(cal.dayOfMonth(), 29);
+    QCOMPARE(cal.dayOfYear(), 60);
+    QCOMPARE(cal.firstDayOfMonth(), 1);
+    QCOMPARE(cal.lastDayOfMonth(), 29);
+    QCOMPARE(cal.firstDayOfWeek(), 1);
+    QCOMPARE(cal.weekNumber(), 9);
+    QCOMPARE(cal.maximumWeeksInMonth(), 6);
+    QCOMPARE(cal.daysInWeek(), 7);
 
     // add some hours so calendar changes to 1.3.2008
     cal.addHours(5);
-    QVERIFY2(cal.hour() == 0, "hour failed");
-    QVERIFY2(cal.minute() == 23, "minute failed");
-    QVERIFY2(cal.second() == 0, "second failed");
-    QVERIFY2(cal.month() == 3, "month failed");
-    QVERIFY2(cal.dayOfMonth() == 1, "day of month failed");
+    QCOMPARE(cal.hour(), 0);
+    QCOMPARE(cal.minute(), 23);
+    QCOMPARE(cal.second(), 0);
+    QCOMPARE(cal.month(), 3);
+    QCOMPARE(cal.dayOfMonth(), 1);
 }
 
 void Ut_MCalendar::testWeekNumbers()
