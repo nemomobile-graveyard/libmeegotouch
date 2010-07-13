@@ -22,6 +22,10 @@
 #include "mcity.h"
 #include "mcountry.h"
 
+class TestLocationDatabase : public MLocationDatabase
+{
+};
+
 class TestCity : public MCity
 {
 };
@@ -99,6 +103,11 @@ void Ut_MLocationDatabase::testConstructors()
     delete testCountryBar;
     delete countryBar;
     delete cityBar;
+
+    MLocationDatabase *locationDatabase = new MLocationDatabase();
+    TestLocationDatabase *testLocationDatabase = new TestLocationDatabase();
+    delete locationDatabase;
+    delete testLocationDatabase;
 }
 
 void Ut_MLocationDatabase::testNearestCity_data()
