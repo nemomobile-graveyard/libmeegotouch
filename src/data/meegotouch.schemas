@@ -5,7 +5,7 @@
       <applyto>/meegotouch/theme/name</applyto>
       <owner>libmeegotouch</owner>
       <type>string</type>
-      <default>devel</default>
+      <default>base</default>
       <locale name="C">
         <short></short>
         <long></long>
