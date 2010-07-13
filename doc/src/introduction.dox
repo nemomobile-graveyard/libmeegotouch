@@ -1,31 +1,31 @@
-/*! \page introduction Introduction to DirectUI
+/*! \page introduction Introduction to MeeGo Touch
 
-\section about About DirectUI
+\section about About MeeGo Touch
 
-DirectUI is a cross-platform application and UI framework library built on top of
+MeeGo Touch is a cross-platform application and UI framework library built on top of
 <a href="http://qt.nokia.com">Qt</a>. The framework library makes use of the very
 latest Qt features to implement a specific UI style primarily targeting touch screen
 devices.
 
-Using DirectUI makes it easy to implement good looking, fully finger optimized applications
+Using MeeGo Touch makes it easy to implement good looking, fully finger optimized applications
 that automatically take advantage of multitouch, device sensors, animations and transitions
 to create an iconic user experience on a range of platforms from handhelds to the desktop.
 
-\section style The DirectUI style
+\section style The MeeGo Touch style
 
-The core of the DirectUI style can be summarised as "direct manipulation of content". This places
+The core of the MeeGo Touch style can be summarised as "direct manipulation of content". This places
 the focus of the applications squarely on the users' content, be that created by himself such as
-photos taken with the device itself, or content that is coming from the network. In a typical DirectUI
+photos taken with the device itself, or content that is coming from the network. In a typical MeeGo Touch
 application the content therefore occupies the majority of the view, with the rest of the UI
 elements being de-emphasized.
 
-The DirectUI style discards many well known concepts from the desktop world such as file
+The MeeGo Touch style discards many well known concepts from the desktop world such as file
 selection dialogs, scrollbars, tabs and so on. Due to the focus on touch, the user experience is
 highly tacticle with panning, flicking, dragging and pinching being common operations on wide
 variety of content. Instead of applications consisting of multiple windows as on a desktop,
-a DirectUI application is typically divided into views and transitions between these.
+a MeeGo Touch application is typically divided into views and transitions between these.
 
-Core to the concept of the DirectUI style is the application canvas, a 2D pannable virtual area that
+Core to the concept of the MeeGo Touch style is the application canvas, a 2D pannable virtual area that
 extends beyond the physical borders of the screen. The use of a canvas as the foundation on which
 everything else is built breaks the limitations associated with traditional static UIs, be they
 Qt based or created with some other framework. For instance, any object on the canvas can be arbitrarily
@@ -35,11 +35,11 @@ on the scene are also free to overlap and can be grouped into layers. All of thi
 of highly fluid user interfaces where objects smoothly transition in and out of view, or where certain
 objects can detach from the rest of UI and stay pinned on the screen while all other content is replaced.
 
-DirectUI presents a programming interface that will will seem familiar to developers with other
+MeeGo Touch presents a programming interface that will will seem familiar to developers with other
 UI frameworks such as Qt, most of the time it is therefore not necessary to understand the workings
 of the underlying canvas itself. However, if the developer so chooses he has the possibility of
-going beyond the ready made components provided in the DirectUI style and taking direct advantage of
-the canvas in his application. In such cases DirectUI also offers a set of lower level enablers to
+going beyond the ready made components provided in the MeeGo Touch style and taking direct advantage of
+the canvas in his application. In such cases MeeGo Touch also offers a set of lower level enablers to
 make his application themable and stylable for the scene.
 
 \section qt Relationship with Qt
@@ -59,28 +59,28 @@ In addition to this, Qt has recently come out with a number of new subsystems:
 
 These new technologies serve as the basic enablers for next-generation user interfaces. However,
 as of Qt 4.6 these elements by themselves are still fairly low level and lacking the ties to any
-ready made UI components, including the existing Qt ones. DirectUI takes these cutting edge
+ready made UI components, including the existing Qt ones. MeeGo Touch takes these cutting edge
 components and implements a particular UI style optimized for touch devices and then, combined with
 a number of additional enablers that makes creating scene based applications easier, packages it
 together as a coherent UI framework library.
 
-DirectUI, like Qt, is also a cross-platform framework, capable of running wherever Qt does.
+MeeGo Touch, like Qt, is also a cross-platform framework, capable of running wherever Qt does.
 From the point of view of a developer that wants to create a touch optimized application in
-the DirectUI style, both Qt and DirectUI are typically directly used; Qt for the application
-logic and DirectUI for the scene based UI style.
+the MeeGo Touch style, both Qt and MeeGo Touch are typically directly used; Qt for the application
+logic and MeeGo Touch for the scene based UI style.
 
-\image html duiplatform.png Qt and DirectUI, two complementary frameworks
+\image html duiplatform.png Qt and MeeGo Touch, two complementary frameworks
 
-The DirectUI offering includes a set of ready made widgets implementing the DirectUI style that
+The MeeGo Touch offering includes a set of ready made widgets implementing the MeeGo Touch style that
 specifically targets the Graphics View Framework, a set of pre-defined transitions and
 animations that can be themed and styled, and a set of features that makes writing scene
 based applications easier in general, such as automatic management of in-scene dialogs and
 windows, implicitly animated scene layouts and device orientation tracking. In addition to this
-DirectUI exposes APIs necessary on mobile devices, such as power and memory management, that are
+MeeGo Touch exposes APIs necessary on mobile devices, such as power and memory management, that are
 not yet covered by either Qt or the Qt Mobility projects.
 
-In the future, some of the functionality now provided through DirectUI will migrate to Qt. In that
-sense, DirectUI can be seen as the bleeding edge of Qt development, pushing the boundaries of
+In the future, some of the functionality now provided through MeeGo Touch will migrate to Qt. In that
+sense, MeeGo Touch can be seen as the bleeding edge of Qt development, pushing the boundaries of
 next generation UI creation.
 
 */

@@ -1,40 +1,40 @@
-/*! \page installation Installing DirectUI
+/*! \page installation Installing MeeGo Touch
 
 \note You may be able to use one of the ready made packages for your platform.
 
-\section commonreqs DirectUI common requirements
+\section commonreqs MeeGo Touch common requirements
 
 \subsection Qt
 
-DirectUI requires <a href="http://qt.nokia.com">Qt version 4.6</a> or later. If your OS did not already come with
-Qt 4.6, you can <a href="http://qt.nokia.com/downloads">download the SDK for free</a> for a number of
+MeeGo Touch requires <a href="http://qt.nokia.com">Qt version 4.7</a> or later. If your OS did not already come with
+Qt 4.7, you can <a href="http://qt.nokia.com/downloads">download the SDK for free</a> for a number of
 systems.
 
 If you have installed the Qt SDK to your home directory in Linux, you must set the following
-environment variables before building the DirectUI modules by running the commands:
+environment variables before building the MeeGo Touch modules by running the commands:
 
 <pre>
 export QTDIR=/home/[your home directory]/qtsdk-2010.01/qt/
 export PATH=${QTDIR}/bin:${PATH}
 </pre>
 
-\subsection DirectUI Theme
+\subsection MeeGo Touch Theme
 
-A theme is required to be installed for DirectUI applications to function. The DirectUI
-development theme is freely available for download in the <a href="http://qt.gitorious.org">duitheme module</a>
+A theme is required to be installed for MeeGo Touch applications to function. The MeeGo Touch
+development theme is freely available for download in the <a href="http://meego.gitorious.org/meegotouch/meegotouch-theme">meegotouch-theme module</a>
 of the code repository. On Mac OS X and Windows, the theme is already by default embedded into the
-DirectUI distribution file .
+MeeGo Touch distribution file .
 
 On Linux, the following commands will build and install the default theme from the source module:
 <pre>
-cd duitheme
+cd meegotouch-theme
 qmake
 sudo make install
 </pre>
 
-\section linuxreqs DirectUI on Linux build requirements
+\section linuxreqs MeeGo Touch on Linux build requirements
 
-DirectUI will build on a Linux desktop machine using only the tools and development
+MeeGo Touch will build on a Linux desktop machine using only the tools and development
 packages provided by a typical Linux distribution:
 
  - Build essentials, such as libc, gcc, g++ and make
@@ -47,18 +47,18 @@ Taking any recent version of Ubuntu Linux as an example, all the necessary packa
 sudo apt-get install build-essential libgl1-mesa-dev libglu1-mesa-dev libxdamage-dev
 </pre>
 
-\section linux Building DirectUI on Linux
+\section linux Building MeeGo Touch on Linux
 
-1. Get the source code for libdui from a source package or straight from the
-<a href="http://qt.gitorious.org">code repository</a>.
+1. Get the source code for libmeegotouch from a source package or straight from the
+<a href="http://meego.gitorious.org/meegotouch/libmeegotouch>code repository</a>.
 
 2. To configure the library for your machine, run the ./configure script in the source directory.
-By default libdui will be installed under the /usr/local/ directory, but this can be
+By default libmeegotouch will be installed under the /usr/local/ directory, but this can be
 changed by giving the configure script the -prefix option.  Type ./configure -help to get a list
 of all available options.
 
 <pre>
-cd libdui
+cd libmeegotouch
 ./configure
 </pre>
 
@@ -79,15 +79,15 @@ library to the system. Simply append the build's <i>lib</i> directory to the LD_
 environment variable before running the program:
 
 <pre>
-export LD_LIBRARY_PATH=[your libdui build directory]/lib:$LD_LIBRARY_PATH
-[your libdui build directory]/demos/widgetsgallery/widgetsgallery
+export LD_LIBRARY_PATH=[your libmeegotouch build directory]/lib:$LD_LIBRARY_PATH
+[your libmeegotouch build directory]/demos/widgetsgallery/widgetsgallery
 </pre>
 
-\section mac Building DirectUI on Mac OS X
+\section mac Building MeeGo Touch on Mac OS X
 
 Coming soon.
 
-\section windows Building DirectUI on Windows
+\section windows Building MeeGo Touch on Windows
 
 Coming soon. Preliminary instructions available in the README.win32 file of the sources.
 
