@@ -19,6 +19,8 @@
 
 #ifndef MTHEMEDAEMON_H
 #define MTHEMEDAEMON_H
+//This is setuping base as the default theme for themedaemon if a wrong/emtpy value is at gconf key
+#define M_THEME_DEFAULT "base"
 
 #include <QObject>
 #include "mthemedaemonprotocol.h"

@@ -34,7 +34,7 @@ const int THEME_CHANGE_TIMEOUT = 3000;
 MThemeDaemonServer::MThemeDaemonServer() :
     currentTheme("/meegotouch/theme/name"),
     currentLocale("/meegotouch/i18n/language"),
-    defaultTheme("devel"),
+    defaultTheme(M_THEME_DEFAULT),
     delayedThemeChange(false)
 {
     // 1) make sure that gconf has some value for the current theme

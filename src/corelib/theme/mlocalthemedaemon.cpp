@@ -43,13 +43,13 @@ MLocalThemeDaemon::MLocalThemeDaemon(const QString &applicationName)
       locale("/meegotouch/i18n/language")
 #endif
 {
-    QString theme = "devel";
+    QString theme =  M_THEME_DEFAULT;
     QString language = "";
 #if HAVE_GCONF
-    theme = themeItem.value("devel").toString();
+    theme = themeItem.value(M_THEME_DEFAULT).toString();
     language = locale.value().toString();
 #else
-    M_themeName = "devel";
+    M_themeName =  M_THEME_DEFAULT;
     M_localDaemon = this;
 #endif
 
