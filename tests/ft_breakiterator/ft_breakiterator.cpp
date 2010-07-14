@@ -25,6 +25,12 @@
 
 #include "ft_breakiterator.h"
 
+class TestBreakIterator : public MBreakIterator
+{
+public:
+    TestBreakIterator (const QString &text, Type type = WordIterator) : MBreakIterator(text, type) {}
+    TestBreakIterator (const MLocale &locale, const QString &text, Type type = WordIterator) : MBreakIterator(locale, text, type) {}
+};
 
 void Ft_BreakIterator::initTestCase()
 {
@@ -109,6 +115,26 @@ void defaultData()
             << (QList<int> () << 0 << 16 << 17 << 22 << 23 << 27 << 28);
 }
 
+void Ft_BreakIterator::constructors_data()
+{
+    defaultData();
+}
+
+void Ft_BreakIterator::constructors()
+{
+    QFETCH(QString, locale_name);
+    QFETCH(QString, sourceString);
+    QFETCH(QList<int>, correctBoundaries);
+
+    MLocale locale(locale_name);
+    TestBreakIterator *testBreakIterator
+        = new TestBreakIterator(locale, sourceString, MBreakIterator::WordIterator);
+    TestBreakIterator *testBreakIteratorDefaultLocale
+       = new TestBreakIterator(sourceString, MBreakIterator::WordIterator);
+    delete testBreakIterator;
+    delete testBreakIteratorDefaultLocale;
+}
+
 void Ft_BreakIterator::forward_data()
 {
     defaultData();
@@ -120,18 +146,28 @@ void Ft_BreakIterator::forward()
     QFETCH(QString, sourceString);
     QFETCH(QList<int>, correctBoundaries);
 
-    MLocale loc(locale_name);
-    MBreakIterator it(loc, sourceString, MBreakIterator::WordIterator);
+    MLocale locale(locale_name);
+    MBreakIterator it(locale, sourceString, MBreakIterator::WordIterator);
+    MLocale::setDefault(locale);
+    MBreakIterator itDefault(sourceString, MBreakIterator::WordIterator);
     QListIterator<int> correctIt(correctBoundaries);
 
-    while (it.hasNext()) {
-        QVERIFY(correctIt.hasNext());
-        int result = it.next();
-        int nextCorrect = correctIt.next();
-        // qDebug() << __PRETTY_FUNCTION__ << result << nextCorrect;
-        QCOMPARE(result, nextCorrect);
+    for (int i = 0; i < 2; ++i) {
+        while (it.hasNext()) {
+            QVERIFY(correctIt.hasNext());
+            int next = it.next();
+            int nextDefault = itDefault.next();
+            QCOMPARE(next, nextDefault);
+            int nextCorrect = correctIt.next();
+            // qDebug() << next << nextCorrect;
+            QCOMPARE(next, nextCorrect);
+        }
+        QVERIFY(!correctIt.hasNext());
+        // to cover toFront(), try whether a second pass works as well:
+        it.toFront();
+        itDefault.toFront();
+        correctIt.toFront();
     }
-    QVERIFY(!correctIt.hasNext());
 }
 
 void Ft_BreakIterator::backward_data()
@@ -147,17 +183,32 @@ void Ft_BreakIterator::backward()
 
     MLocale locale(locale_name);
     MBreakIterator it(locale, sourceString, MBreakIterator::WordIterator);
+    MLocale::setDefault(locale);
+    MBreakIterator itDefault(sourceString, MBreakIterator::WordIterator);
     QListIterator<int> correctIt(correctBoundaries);
 
     it.toBack();
+    itDefault.toBack();
     correctIt.toBack();
 
     while (it.hasPrevious()) {
         QVERIFY(correctIt.hasPrevious());
-        int result = it.previous();
+        int previous = it.previous();
+        int previousDefault = itDefault.previous();
+        QCOMPARE(previous, previousDefault);
+        QVERIFY2(it.isBoundary(), "not a boundary although it should be");
+        int index = it.index();
+        int previousInclusive = it.previousInclusive();
+        QCOMPARE(it.index(), index - 1);
+        QCOMPARE(previous, previousInclusive);
+        it.setIndex(index);
+        QVERIFY2(it.isBoundary(), "not a boundary although it should be");
         int previousCorrect = correctIt.previous();
-        // qDebug() << __PRETTY_FUNCTION__ << result << previousCorrect;
-        QCOMPARE(result, previousCorrect);
+        //qDebug() << "index" << index
+        //         << "previousInclusive" << previousInclusive
+        //         << "previous" << previous
+        //         << "previousCorrect" << previousCorrect;
+        QCOMPARE(previous, previousCorrect);
     }
     QVERIFY(!correctIt.hasPrevious());
 }
@@ -179,12 +230,26 @@ void Ft_BreakIterator::aroundIndex()
 
     // look for boundaries around an explicit index "fromIndex":
     for (int fromIndex = 0; fromIndex <= sourceString.size(); ++fromIndex) {
-        correctIt.toFront();
-        bool fromIndexIsBoundary = correctIt.findNext(fromIndex);
+        bool fromIndexIsBoundary = it.isBoundary(fromIndex);
         int previous = it.previous(fromIndex);
+        int previousInclusive = it.previousInclusive(fromIndex);
         int next = it.next(fromIndex);
-        // qDebug() << __PRETTY_FUNCTION__
-        //          << "previous, fromIndex, next" << previous << fromIndex << next;
+        //qDebug() << "fromIndex" << fromIndex
+        //         << "previous" << previous
+        //         << "previousInclusive" << previousInclusive
+        //         << "next" << next;
+        if (fromIndexIsBoundary) {
+            QCOMPARE(previousInclusive, fromIndex);
+            QVERIFY2(previous != previousInclusive,
+                     "previous is equal to previousInclusive although fromIndex is a boundary");
+            QVERIFY2(correctBoundaries.contains(fromIndex),
+                     "fromIndex is boundary but not in list of correct boundaries");
+        }
+        else {
+            QCOMPARE(previous, previousInclusive);
+            QVERIFY2(previousInclusive != fromIndex,
+                    "previousInclusive is equal to fromIndex although fromIndex is not a boundary");
+        }
         if (previous != -1 && next != -1) {
             QVERIFY(previous < fromIndex);
             QVERIFY(next > fromIndex);

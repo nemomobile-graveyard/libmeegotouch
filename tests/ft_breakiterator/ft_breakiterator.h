@@ -46,6 +46,8 @@ private slots:
     void init();
     void cleanup();
 
+    void constructors_data();
+    void constructors();
     void forward_data();
     void forward();
     void backward_data();

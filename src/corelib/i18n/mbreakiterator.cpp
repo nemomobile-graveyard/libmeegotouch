@@ -36,6 +36,7 @@ public:
     virtual ~MBreakIteratorPrivate();
 
     void init(const MLocale &locale, const QString &text, MBreakIterator::Type type);
+    void init(const QString &text, MBreakIterator::Type type);
 
     MBreakIteratorIf *impl;
 };
@@ -53,12 +54,10 @@ MBreakIteratorPrivate::~MBreakIteratorPrivate()
 }
 
 void MBreakIteratorPrivate::init(const MLocale &locale, const QString &text,
-                                   MBreakIterator::Type type)
+                                 MBreakIterator::Type type)
 {
-    if (impl) {
+    if (impl)
         delete impl;
-    }
-
 #ifdef HAVE_ICU
     impl = new MIcuBreakIterator(locale, text, type);
 #else
@@ -66,6 +65,17 @@ void MBreakIteratorPrivate::init(const MLocale &locale, const QString &text,
 #endif
 }
 
+void MBreakIteratorPrivate::init(const QString &text,
+                                 MBreakIterator::Type type)
+{
+    if (impl)
+        delete impl;
+#ifdef HAVE_ICU
+    impl = new MIcuBreakIterator(text, type);
+#else
+    impl = new MNullBreakIterator(text, type);
+#endif
+}
 ///////////////////////////////////
 
 
@@ -111,13 +121,12 @@ MBreakIterator::MBreakIterator(const MLocale &locale, const QString &text, Type 
     d->init(locale, text, type);
 }
 
-///! Creates a MBreakIterator using default locale
+///! Creates a MBreakIterator using the default locale
 MBreakIterator::MBreakIterator(const QString &text, Type type)
     : d_ptr(new MBreakIteratorPrivate)
 {
     Q_D(MBreakIterator);
-    MLocale locale; // get default
-    d->init(locale, text, type);
+    d->init(text, type);
 }
 
 //! Destructor
