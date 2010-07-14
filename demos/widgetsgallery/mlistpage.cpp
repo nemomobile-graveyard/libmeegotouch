@@ -504,12 +504,14 @@ void MListPage::removeListItem()
     if(longTappedIndex.isValid()) {
         mDebug("MListPage::removeListItem") << "Row about to be removed: " << longTappedIndex.row();
         proxyModel->removeRow(longTappedIndex.row(), longTappedIndex.parent());
+        longTappedIndex = QModelIndex();
     }
 }
 
 void MListPage::editListItem()
 {
     mDebug("MListPage::editListItem") << "Not implemented yet.";
+    longTappedIndex = QModelIndex();
 }
 
 void MListPage::liveFilteringTextChanged()
