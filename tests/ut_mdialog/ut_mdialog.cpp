@@ -116,6 +116,18 @@ void Ut_MDialog::settersAndGetters()
         QCOMPARE(dialog->isTitleBarVisible(), val);
     }
 
+    for (int i = 0; i < 4; i++) {
+        bool val = i % 2 ? false : true;
+        dialog->setProgressIndicatorVisible(val);
+        QCOMPARE(dialog->isProgressIndicatorVisible(), val);
+    }
+
+    for (int i = 0; i < 4; i++) {
+        bool val = i % 2 ? false : true;
+        dialog->setCloseButtonVisible(val);
+        QCOMPARE(dialog->isCloseButtonVisible(), val);
+    }
+
     {
         QString val;
         val = QString("Test string 1");
@@ -151,6 +163,21 @@ void Ut_MDialog::addStandardButtons()
     QCOMPARE(dialog->button(M::NoButton), b4);
     QCOMPARE(dialog->button(M::NoButton)->role(), M::NoRole);
     QVERIFY(dialog->button(M::YesToAllButton) == 0);
+}
+
+void Ut_MDialog::addNonStandardButtonModel()
+{
+    MButtonModel *mbm1 = new MButtonModel();
+    MButtonModel *mbm2 = new MButtonModel();
+    dialog->addButton(mbm1);
+
+    QVERIFY(dialog->model()->buttons().contains(mbm1));
+    QVERIFY(!dialog->model()->buttons().contains(mbm2));
+
+    dialog->addButton(mbm2);
+
+    QVERIFY(dialog->model()->buttons().contains(mbm1));
+    QVERIFY(dialog->model()->buttons().contains(mbm2));
 }
 
 void Ut_MDialog::addNonStandardButtonsWithRole()
@@ -251,5 +278,19 @@ void Ut_MDialog::testRotation()
     MApplication::activeWindow()->setOrientationAngle(M::Angle90);
     QCOMPARE(dialog->preferredSize(), preferredSizePortrait);
 }
+/*
+Done:
+mdialog.cpp@"addButton(MButtonModel*)"
+mdialog.cpp@"isProgressIndicatorVisible()"
+mdialog.cpp@"setProgressIndicatorVisible(bool)"
+mdialog.cpp@"isCloseButtonVisible()"
+mdialog.cpp@"setCloseButtonVisible(bool)"
 
+TBD:
+mdialog.cpp@"exec(MWindow*)"
+mdialog.cpp@"layout()"
+mdialog.cpp@"reject()"
+mdialog.cpp@"setLayout(QGraphicsLayout*)"
+mdialog.cpp@"standardButton(MButtonModel*)"
+*/
 QTEST_APPLESS_MAIN(Ut_MDialog);

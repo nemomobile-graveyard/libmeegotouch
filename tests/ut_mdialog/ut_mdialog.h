@@ -46,6 +46,7 @@ private slots:
     void initVals();
     void settersAndGetters();
     void addStandardButtons();
+    void addNonStandardButtonModel();
     void addNonStandardButtonsWithRole();
     void addInvalidStandardButton();
     void addExistingStandardButton();
