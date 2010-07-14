@@ -290,57 +290,72 @@ All Labels can be aligned left, right or center and will be automatically trunca
         <translation>请选择打印机</translation>
     </message>
     <message id="xx_wg_single_selection_dialogs_page_stacked_dialogs">
-        <location filename="../singleselectiondialogspage.cpp" line="232"/>
+        <location filename="../singleselectiondialogspage.cpp" line="257"/>
         <source>Stacked Dialogs</source>
         <translation type="unfinished">对话记录框</translation>
     </message>
+    <message id="xx_wg_single_selection_dialogs_page_system_dialog">
+        <location filename="../singleselectiondialogspage.cpp" line="259"/>
+        <source>System Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_wg_single_selection_dialogs_page_system_modal_dialog">
-        <location filename="../singleselectiondialogspage.cpp" line="234"/>
+        <location filename="../singleselectiondialogspage.cpp" line="261"/>
         <source>System Modal Dialog</source>
         <translation type="unfinished">模式对话框</translation>
     </message>
     <message id="xx_wg_single_selection_dialogs_page_dialog_with_progress_indicator">
-        <location filename="../singleselectiondialogspage.cpp" line="236"/>
+        <location filename="../singleselectiondialogspage.cpp" line="263"/>
         <source>Dialog with Progress Indicator</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_wg_single_selection_dialogs_page_message_box">
-        <location filename="../singleselectiondialogspage.cpp" line="238"/>
+        <location filename="../singleselectiondialogspage.cpp" line="265"/>
         <source>Message Box</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_button">
-        <location filename="../singleselectiondialogspage.cpp" line="124"/>
+        <location filename="../singleselectiondialogspage.cpp" line="126"/>
         <source>Click to spawn a nested dialog</source>
         <translation>请点按打开下级对话</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_title">
-        <location filename="../singleselectiondialogspage.cpp" line="126"/>
+        <location filename="../singleselectiondialogspage.cpp" line="128"/>
         <source>Stacked dialogs</source>
         <translation>对话记录框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_open_nested_messagebox">
-        <location filename="../singleselectiondialogspage.cpp" line="140"/>
+        <location filename="../singleselectiondialogspage.cpp" line="142"/>
         <source>Click to open a nested message box</source>
         <translation>请点按打开下级消息框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_nested_dialog_title">
-        <location filename="../singleselectiondialogspage.cpp" line="142"/>
+        <location filename="../singleselectiondialogspage.cpp" line="144"/>
         <source>This is a nested dialog</source>
         <translation>这是多层对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_stacked_dialog_messagebox_text">
-        <location filename="../singleselectiondialogspage.cpp" line="155"/>
+        <location filename="../singleselectiondialogspage.cpp" line="157"/>
         <source>I&apos;m a nested message box</source>
         <translation>我是多层对话框</translation>
     </message>
+    <message id="xx_dialogs_and_notifications_system_dialog_title">
+        <location filename="../singleselectiondialogspage.cpp" line="168"/>
+        <source>System Dialog</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message id="xx_dialogs_and_notifications_system_dialog_label">
+        <location filename="../singleselectiondialogspage.cpp" line="176"/>
+        <source>I&apos;m a system dialog.&lt;br&gt;There actually is a way around me...&lt;br&gt;You can skip me with the home button, but I&apos;ll remain&lt;br&gt;alive until you make a selection.</source>
+        <translation type="unfinished"></translation>
+    </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog_title">
-        <location filename="../singleselectiondialogspage.cpp" line="166"/>
+        <location filename="../singleselectiondialogspage.cpp" line="191"/>
         <source>System Modal Dialog</source>
         <translation>模式对话框</translation>
     </message>
     <message id="xx_dialogs_and_notifications_system_modal_dialog_label">
-        <location filename="../singleselectiondialogspage.cpp" line="173"/>
+        <location filename="../singleselectiondialogspage.cpp" line="198"/>
         <source>I&apos;m a window modal dialog.
 There&apos;s no way around me!
 Muwhahaha... [evil laugh]</source>
@@ -349,17 +364,17 @@ Muwhahaha... [evil laugh]</source>
 哈哈哈...</translation>
     </message>
     <message id="xx_dialogs_and_notifications_progress_indicator">
-        <location filename="../singleselectiondialogspage.cpp" line="192"/>
+        <location filename="../singleselectiondialogspage.cpp" line="217"/>
         <source>Progress Indicator</source>
         <translation>进程指示</translation>
     </message>
     <message id="xx_dialogs_and_notifications_message_box_text">
-        <location filename="../singleselectiondialogspage.cpp" line="212"/>
+        <location filename="../singleselectiondialogspage.cpp" line="237"/>
         <source>Hello World!</source>
         <translation>你好世界！</translation>
     </message>
     <message id="xx_single_selection_dialog_title">
-        <location filename="../singleselectiondialogspage.cpp" line="226"/>
+        <location filename="../singleselectiondialogspage.cpp" line="251"/>
         <source>Single Selection Dialogs</source>
         <translation type="unfinished"></translation>
     </message>
@@ -509,17 +524,17 @@ Muwhahaha... [evil laugh]</source>
         <translation>裁剪</translation>
     </message>
     <message id="xx_listpage_list_remove">
-        <location filename="../mlistpage.cpp" line="579"/>
+        <location filename="../mlistpage.cpp" line="634"/>
         <source>Remove</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_listpage_list_edit">
-        <location filename="../mlistpage.cpp" line="585"/>
+        <location filename="../mlistpage.cpp" line="640"/>
         <source>Edit</source>
         <translation type="unfinished"></translation>
     </message>
     <message id="xx_listpage_title">
-        <location filename="../mlistpage.cpp" line="605"/>
+        <location filename="../mlistpage.cpp" line="658"/>
         <source>List</source>
         <translation>列表</translation>
     </message>
