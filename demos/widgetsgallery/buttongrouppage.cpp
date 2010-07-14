@@ -65,32 +65,41 @@ void ButtonGroupPage::createContent()
     // this causes the buttons to be rendered with different backgrounds for each position
     hPolicy1->setNotifyWidgetsOfLayoutPositionEnabled(true);
 
+    //make buttons evenly sized
+    QSizePolicy sizePolicy(QSizePolicy::Ignored, QSizePolicy::Fixed);
+    
     pushButton1 = new MButton();
     // The group type makes the button use the MButton[group] CSS block from the theme,
     // this allows for gapless groups by modifying the margins.
     pushButton1->setViewType(MButton::groupType);
+    pushButton1->setSizePolicy(sizePolicy);
     pushButton2 = new MButton();
     pushButton2->setViewType(MButton::groupType);
+    pushButton2->setSizePolicy(sizePolicy);
     pushButton3 = new MButton();
     pushButton3->setViewType(MButton::groupType);
+    pushButton3->setSizePolicy(sizePolicy);
     hPolicy1->addItem(pushButton1);
     hPolicy1->addItem(pushButton2);
     hPolicy1->addItem(pushButton3);
 
-  // Init horizontal button group, exclusive
+    // Init horizontal button group, exclusive
     MLayout* hLayout2 = new MLayout;
     MLinearLayoutPolicy* hPolicy2 = new MLinearLayoutPolicy(hLayout2, Qt::Horizontal);
     hPolicy2->setNotifyWidgetsOfLayoutPositionEnabled(true);
     pushButton4 = new MButton();
     pushButton4->setCheckable(true);
     pushButton4->setViewType(MButton::groupType);
+    pushButton4->setSizePolicy(sizePolicy);
     pushButton5 = new MButton();
     pushButton5->setCheckable(true);
     pushButton5->setChecked(true); // Let's make this our default
     pushButton5->setViewType(MButton::groupType);
+    pushButton5->setSizePolicy(sizePolicy);
     pushButton6 = new MButton();
     pushButton6->setCheckable(true);
     pushButton6->setViewType(MButton::groupType);
+    pushButton6->setSizePolicy(sizePolicy);
     hPolicy2->addItem(pushButton4);
     hPolicy2->addItem(pushButton5);
     hPolicy2->addItem(pushButton6);
@@ -100,7 +109,7 @@ void ButtonGroupPage::createContent()
     group->addButton(pushButton5);
     group->addButton(pushButton6);
 
-  // Init vertical button group, checkable
+    // Init vertical button group, checkable
     MLayout* vLayout = new MLayout;
     MLinearLayoutPolicy* vPolicy = new MLinearLayoutPolicy(vLayout, Qt::Vertical);
     vPolicy->setNotifyWidgetsOfLayoutPositionEnabled(true);
