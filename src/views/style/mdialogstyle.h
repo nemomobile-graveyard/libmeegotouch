@@ -132,6 +132,24 @@ class M_EXPORT MDialogStyle : public MSceneWindowStyle
     M_STYLE_ATTRIBUTE(Qt::Orientation, buttonBoxOrientation, ButtonBoxOrientation)
 
     /*!
+        \property MDialogStyle::buttonBoxCentered
+        \brief Centering buttons on dialog.
+    */
+    M_STYLE_ATTRIBUTE(bool, buttonBoxCentered, ButtonBoxCentered)
+
+    /*!
+        \property MDialogStyle::dialogButtonFixedWidth
+        \brief Fixed width of single dialog button. If set to -1 button will be sized automatically.
+    */
+    M_STYLE_ATTRIBUTE(qreal, dialogButtonFixedWidth, DialogButtonFixedWidth)
+
+    /*!
+        \property MDialogStyle::maximumHorizontalButtons
+        \brief Maximum number of buttons aligned horizontally
+    */
+    M_STYLE_ATTRIBUTE(int, maximumHorizontalButtons, MaximumHorizontalButtons)
+
+    /*!
         \property MDialogStyle::titleBarAlignment
         \brief Alignment of title bar text.
     */
