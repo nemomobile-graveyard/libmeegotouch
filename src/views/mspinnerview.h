@@ -80,27 +80,60 @@ public:
     virtual ~MSpinnerView();
 
 protected:
-    //! \reimp
+    /*!
+     * Draws the contents for this view.
+     */
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
-    void resizeEvent(QGraphicsSceneResizeEvent *event);
+
+    /*!
+        \brief Updates MSpinnerView class instance when current model is changed.
+     */
     virtual void setupModel();
+
+    /*!
+        \brief Updates MSpinnerView class instance when current style is changed.
+
+        Called when MSpinnerStyle class instance is changed (usually)
+        during initialization.
+     */
     virtual void applyStyle();
-    //! \reimp_end
+
     MSpinnerViewPrivate *const d_ptr;
 
-protected slots:
-    //! \reimp
+protected Q_SLOTS:
+    /*!
+        \brief Updates MSpinnerView class instance when some component
+                   of underlying model is modified.
+        \param List containing the names of modified model components.
+    */
     virtual void updateData(const QList<const char *>& modifications);
-    //! \reimp_end
 
 private:
+
+    /*!
+      \brief Creates or destroys animation depending on whether spinner
+             is of unknown or know duration
+     */
+   void setupAnimation();
+
     Q_DISABLE_COPY(MSpinnerView)
     Q_DECLARE_PRIVATE(MSpinnerView)
 
-    Q_PRIVATE_SLOT(d_func(), void visibilityChanged())
-    Q_PRIVATE_SLOT(d_func(), void animationTimeout())
-    Q_PRIVATE_SLOT(d_func(), void _q_resumeAnimation())
-    Q_PRIVATE_SLOT(d_func(), void _q_pauseAnimation())
+private Q_SLOTS:
+    /*!
+      \brief Called when underlying controller object visibility changed
+     */
+    void visibilityChangedSlot();
+
+    /*!
+      \brief Called when underlying controller object enters display
+     */
+    void displayEnteredSlot();
+
+    /*!
+      \brief Called when underlying controller object enters display
+     */
+    void displayExitedSlot();
 };
 
 #endif // MSPINNERVIEW_H

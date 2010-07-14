@@ -20,14 +20,13 @@
 #ifndef MSPINNERVIEW_P_H
 #define MSPINNERVIEW_P_H
 
-#include <QObject>
-#include <QPointF>
-#include <QSizeF>
-
 class MStyle;
 class MProgressIndicator;
-class QPixmap;
 class QTimer;
+class QPixmap;
+class QBrush;
+class QPen;
+class QPropertyAnimation;
 
 class MSpinnerViewPrivate
 {
@@ -41,22 +40,15 @@ public:
     MSpinnerViewPrivate();
     virtual ~MSpinnerViewPrivate();
 
-    void animationTimeout();
-    void _q_resumeAnimation();
-    void _q_pauseAnimation();
-
-    void visibilityChanged();
-    void calculateShape(QSizeF size);
+    void checkAnimationStatus();
 
     MProgressIndicator *controller;
 
-    const QPixmap *inactiveElement;
-    const QPixmap *activeElement;
-    int position;
-    qreal elapsed;
+    mutable QBrush pieBrush;
+    mutable QPen piePen;
 
-    QTimer *timer;
-    QVector<QPoint> elements;
+
+    QPropertyAnimation* positionAnimation;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;

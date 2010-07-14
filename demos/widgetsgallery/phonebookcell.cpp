@@ -93,7 +93,7 @@ MProgressIndicator *PhoneBookCell::spinnerWidget()
         // spinner
         spinner = new MProgressIndicator(NULL, MProgressIndicator::spinnerType);
         spinner->setUnknownDuration(true);
-        spinner->setObjectName("CommonMainIcon");
+        spinner->setObjectName("CommonSpinner");
 
     }
     return spinner;

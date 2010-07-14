@@ -35,41 +35,22 @@ class M_EXPORT MSpinnerStyle : public MWidgetStyle
     M_STYLE(MSpinnerStyle)
 
     /*!
-        \property MSpinnerStyle::activeImage
-        \brief Image of the active bar element.
+        \property MSpinnerStyle:bgImage
+        \brief  Image of background of spinner
     */
-    M_STYLE_PTR_ATTRIBUTE(QPixmap *, activeImage, ActiveImage)
+    M_STYLE_PTR_ATTRIBUTE(QPixmap *, bgPixmap, BgPixmap)
 
     /*!
-        \property MSpinnerStyle::inactiveImage
-        \brief  Image of the inactive bar element.
+        \property MSpinnerStyle::progressImage
+        \brief  Image of progress bar for spinner
     */
-    M_STYLE_PTR_ATTRIBUTE(QPixmap *, inactiveImage, InactiveImage)
+    M_STYLE_PTR_ATTRIBUTE(QPixmap *, progressPixmap, ProgressPixmap)
 
     /*!
         \property MSpinnerStyle::speed
-        \brief Speed of unknown duration progress animation (distance/sec).
+        \brief Period of unknown duration spinner (duration of one full spin in msec).
     */
-    M_STYLE_ATTRIBUTE(int, speed, Speed)
-
-    /*!
-        \property MSpinnerStyle::activeElementCount
-        \brief The number of active elements in circular progress indicator (unknown duration).
-    */
-    M_STYLE_ATTRIBUTE(int, activeElementCount, ActiveElementCount)
-
-    /*!
-        \property MSpinnerStyle::elementSize
-        \brief Size of an element in the circle.
-    */
-    M_STYLE_ATTRIBUTE(qreal, elementSize, ElementSize)
-
-
-    /*!
-        \property MSpinnerStyle::elementCount
-        \brief Count of elements in spinner.
-    */
-    M_STYLE_ATTRIBUTE(int, elementCount, ElementCount)
+    M_STYLE_ATTRIBUTE(int, period, Period)
 };
 
 /*!

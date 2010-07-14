@@ -17,48 +17,40 @@
 **
 ****************************************************************************/
 
+#include <QApplication>
 #include <QPainter>
-#include <QTimeLine>
-#include <QTimer>
-#include <QGraphicsSceneResizeEvent>
-#include <math.h>
+#include <QPropertyAnimation>
 
 #include "mspinnerview.h"
 #include "mspinnerview_p.h"
 
 #include "mprogressindicator.h"
-#include "mprogressindicator_p.h"
-#include "mviewcreator.h"
 
 #include "mtheme.h"
-#include "mscalableimage.h"
-
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#endif
-
-const int SpinnerRefreshRate = 30;
 
 MSpinnerViewPrivate::MSpinnerViewPrivate()
     :  q_ptr(0),
        controller(0),
-       inactiveElement(0),
-       activeElement(0),
-       position(0),
-       elapsed(0),
-       timer(0)
+       pieBrush(Qt::NoBrush),
+       piePen(Qt::NoPen),
+       positionAnimation(0)
 {
 }
-
 
 MSpinnerViewPrivate::~MSpinnerViewPrivate()
 {
-    MTheme::releasePixmap(activeElement);
-    MTheme::releasePixmap(inactiveElement);
-
-    delete timer;
+    delete positionAnimation;
 }
 
+void MSpinnerViewPrivate::checkAnimationStatus()
+{
+    if (positionAnimation) {
+        if (controller->isVisible() && controller->isOnDisplay())
+            positionAnimation->start();
+        else
+            positionAnimation->stop();
+    }
+}
 
 MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
     MWidgetView(controller),
@@ -67,7 +59,11 @@ MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
     Q_D(MSpinnerView);
     d->q_ptr = this;
     d->controller = controller;
-    connect(controller, SIGNAL(visibleChanged()), this, SLOT(visibilityChanged()));
+
+    connect(controller, SIGNAL(visibleChanged()), this, SLOT(visibilityChangedSlot()));
+
+    connect(controller, SIGNAL(displayEntered()), this, SLOT(displayEnteredSlot()));
+    connect(controller, SIGNAL(displayExited()), this, SLOT(displayExitedSlot()));
 }
 
 
@@ -76,187 +72,132 @@ MSpinnerView::~MSpinnerView()
     delete d_ptr;
 }
 
-void MSpinnerViewPrivate::animationTimeout()
+void MSpinnerView::setupAnimation()
 {
-    Q_Q(MSpinnerView);
+    Q_D(MSpinnerView);
 
-    if (q->model()->unknownDuration()) {
-        // calculate interval in secs and add it to elapsed time
-        qreal interval = (qreal) timer->interval() / 1000.0;
-        elapsed += interval;
-
-        // calculate how many steps we should take
-        int steps = (int)(elapsed * (qreal) q->style()->speed());
-        if (steps > 0) {
-            // subtract the amount we will step from the elapsed time
-            elapsed -= steps * (1.0 / (qreal) q->style()->speed());
-            // and perform the stepping
-            position = (position + steps) % elements.count();
-            // redraw
-            q->update();
+    if (model()->unknownDuration()) {
+        if (!d->positionAnimation) {
+            d->controller->setRange(0, 360);
+            d->positionAnimation = new QPropertyAnimation(d->controller, "value", 0);
+            d->positionAnimation->setStartValue(0);
+            d->positionAnimation->setEndValue(360);
+            d->positionAnimation->setStartValue(0);
+            d->positionAnimation->setLoopCount(-1);
+            d->positionAnimation->setDuration(style()->period());
+            d->positionAnimation->start();
+        }
+    } else {
+        if (d->positionAnimation) {
+            d->positionAnimation->stop();
+            delete d->positionAnimation;
+            d->positionAnimation = 0;
         }
     }
-}
-
-void MSpinnerViewPrivate::_q_resumeAnimation()
-{
-    if (controller->isVisible())
-        timer->start();
-}
-
-void MSpinnerViewPrivate::_q_pauseAnimation()
-{
-    timer->stop();
 }
 
 void MSpinnerView::updateData(const QList<const char *>& modifications)
 {
     MWidgetView::updateData(modifications);
 
-    Q_D(MSpinnerView);
-
     foreach(const char * member, modifications) {
-        if (member == MProgressIndicatorModel::UnknownDuration) {
-            if (model()->unknownDuration()) {
-                if (!d->timer) {
-                    d->timer = new QTimer(this);
-                    d->timer->setInterval(SpinnerRefreshRate);
-                    connect(d->timer, SIGNAL(timeout()), this, SLOT(animationTimeout()));
-                    connect(d->controller, SIGNAL(displayEntered()), this, SLOT(_q_resumeAnimation()));
-                    connect(d->controller, SIGNAL(displayExited()), this, SLOT(_q_pauseAnimation()));
-                }
-                if (d->controller->isVisible() && d->controller->isOnDisplay())
-                    d->timer->start();
-            } else {
-                delete d->timer;
-                d->timer = NULL;
-                disconnect(d->controller, SIGNAL(displayEntered()), this, SLOT(_q_resumeAnimation()));
-                disconnect(d->controller, SIGNAL(displayExited()), this, SLOT(_q_pauseAnimation()));
-            }
-        }
+        if (member == MProgressIndicatorModel::UnknownDuration)
+            setupAnimation();
     }
 
     update();
 }
 
+void MSpinnerView::applyStyle()
+{
+     MWidgetView::applyStyle();
+
+     Q_D(MSpinnerView);
+
+     if (d->positionAnimation) {
+         d->positionAnimation->setDuration(style()->period());
+         d->positionAnimation->start();
+     }
+
+     d->pieBrush.setStyle(Qt::NoBrush);
+
+     update();
+}
+
 void MSpinnerView::setupModel()
 {
     MWidgetView::setupModel();
+                    
+    setupAnimation();
 
-    QList<const char *> members;
-    if (model()->unknownDuration())
-        members << MProgressIndicatorModel::UnknownDuration;
-
-    updateData(members);
+    update();
 }
-
 
 void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
-
     Q_D(const MSpinnerView);
 
-    const int elementsCount = d->elements.count();
-    if (style()->inactiveImage() && style()->activeImage()) {
+    bool reverse = qApp->isRightToLeft();
 
-        // size of an element
-        QSize size(style()->elementSize(), style()->elementSize());
+    //drawing bg
+    if (style()->bgPixmap() && !style()->bgPixmap()->isNull())
+        painter->drawPixmap(0, 0, *style()->bgPixmap());
 
-        if (model()->unknownDuration()) {
-            // every n'th should be active
-            int span = (d->elements.count() / style()->activeElementCount());
-            // this tells the active index within the span
-            int activeIndexInSpan = d->position % span;
+    // calculated values input into rendering
+    qreal startAngle = 0.0;
+    qreal endAngle = 0.0;
 
-            // draw all elements with proper image
-            for (int i = 0; i < elementsCount; ++i) {
-                if ((i % span) == activeIndexInSpan) {
-                    painter->drawPixmap(QRect(d->elements[i], size), *style()->activeImage());
-                } else {
-                    painter->drawPixmap(QRect(d->elements[i], size), *style()->inactiveImage());
-                }
-            }
+    // calculate values depending on mode
+    // (from spinner ring is visible that part where is no pie)
+    if (model()->unknownDuration()) {
+        if (!reverse) {
+            startAngle = model()->value();
+            endAngle = startAngle +  90;
         } else {
-            // active element count
-            int active = (model()->value() - model()->minimum()) * d->elements.count() /
-                         qMax(model()->maximum() - model()->minimum(), 1);
-
-            // draw active elements
-            for (int i = 0; i < active; ++i) {
-                painter->drawPixmap(QRect(d->elements[i], size), *style()->activeImage());
-            }
-
-            // draw inactive elements
-            for (int i = active; i < elementsCount; ++i) {
-                painter->drawPixmap(QRect(d->elements[i], size), *style()->inactiveImage());
-            }
+            startAngle = -model()->value();
+            endAngle = startAngle - 90;
         }
+    } else {
+        if (!reverse) {
+            startAngle = 0.0;
+            endAngle = 360 * (model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
+        } else {
+            startAngle = 0.0;
+            endAngle =  -360 * (model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
+        }
+    }
+
+    if (style()->progressPixmap() && !style()->progressPixmap()->isNull()) {
+        if (d->pieBrush.style() == Qt::NoBrush)
+            d->pieBrush.setTexture(*style()->progressPixmap());
+    }
+
+    if (!d->pieBrush.texture().isNull()) {
+       painter->setBrush(d->pieBrush);
+       painter->setPen(d->piePen);
+       painter->drawPie(0, 0,
+                        d->pieBrush.texture().width(), d->pieBrush.texture().height(),
+                        (90 - endAngle)*16, (endAngle - startAngle)*16);
     }
 }
 
-void MSpinnerViewPrivate::calculateShape(QSizeF size)
-{
-    Q_Q(MSpinnerView);
-
-    QSizeF s = size - QSizeF(q->style()->elementSize(), q->style()->elementSize());
-
-    qreal diameter = qMin(s.width(), s.height());
-
-    // clear existing elements
-    elements.clear();
-
-    if (q->style()->elementCount() > 0) {
-        // center point
-        QPoint center(size.width() * 0.5, size.height() * 0.5);
-
-        // radius for the spinner
-        qreal radius = diameter * 0.5f;
-
-        // half element size
-        qreal halfElementSize = q->style()->elementSize() * 0.5;
-
-        qreal angle = 0;
-        qreal span = (M_PI * 2.0) / q->style()->elementCount();
-
-        // calculate spherical shape and store points where the item should be drawn
-        const int elementsCount = q->style()->elementCount();
-        for (int i = 0; i < elementsCount; ++i) {
-
-            QPoint position;
-            position.setX(center.x() + (sinf(angle) * radius) - halfElementSize);
-            position.setY(center.y() - (cosf(angle) * radius) - halfElementSize);
-
-            elements.append(position);
-
-            angle += span;
-        }
-    }
-}
-
-void MSpinnerView::resizeEvent(QGraphicsSceneResizeEvent *event)
+void MSpinnerView::visibilityChangedSlot()
 {
     Q_D(MSpinnerView);
-    d->calculateShape(event->newSize());
+    d->checkAnimationStatus();
 }
 
-void MSpinnerView::applyStyle()
+void MSpinnerView::displayEnteredSlot()
 {
     Q_D(MSpinnerView);
-    MWidgetView::applyStyle();
-    d->calculateShape(size());
+    d->checkAnimationStatus();
 }
 
-
-void MSpinnerViewPrivate::visibilityChanged()
+void MSpinnerView::displayExitedSlot()
 {
-    if (timer) {
-        if (controller->isVisible()) {
-            timer->start(SpinnerRefreshRate);
-        } else {
-            timer->stop();
-        }
-    }
+    Q_D(MSpinnerView);
+    d->checkAnimationStatus();
 }
 
 #include "moc_mspinnerview.cpp"
