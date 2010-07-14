@@ -32,12 +32,15 @@ public:
 
     virtual void insertItem(int index, QGraphicsLayoutItem *item);
     virtual void removeAt(int index);
+    void setButtonWidth(qreal width);
 
 protected:
     void updateButtonsViewTypes();
     void setButtonViewType(int index, const MTheme::ViewType &viewType);
 
 private:
+    qreal buttonWidth;
+
     Q_DISABLE_COPY(MButtonGroupLayoutPolicy)
 };
 

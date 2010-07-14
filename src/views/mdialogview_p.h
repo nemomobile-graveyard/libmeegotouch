@@ -32,40 +32,41 @@ class MPannableViewport;
 class MProgressIndicator;
 class MLayout;
 class MButtonGroupLayoutPolicy;
+class MGridLayoutPolicy;
 
 /*
 Widget hierarchy:
 ==================
 
-MDialog (MSceneWindow), rootLayout
+| MDialog (MSceneWindow), rootGrid \+-------------------+
+|             |   topSpacer         |                   |
++-------------+---------------------+-------------------+
+| leftSpacer  |   dialogBox    *)   |  rightSpacer      |
++-------------+---------------------+-------------------+
+|             |   bottomSpacer **)  |                   |
++-------------+---------------------+-------------------+
+
+*)
+dialogBox (the actual graphical dialog)
  |
- |- top spacer
+ |- title bar
+ |     |
+ |     |- spinner
+ |     |
+ |     |- title label
+ |     |
+ |     |- close button
  |
- |- horizontal widget
- |      |
- |      |- left spacer
- |      |
- |      |- dialogBox (the actual graphical dialog)
- |      |      |
- |      |      |- title bar
- |      |      |     |
- |      |      |     |- spinner
- |      |      |     |
- |      |      |     |- title label
- |      |      |     |
- |      |      |     |- close button
- |      |      |
- |      |      |- contents viewport (a pannable viewport)
- |      |            |
- |      |            |- contents (inside a pannable viewport)
- |      |                  |
- |      |                  |- central widget
- |      |                  |
- |      |                  |- button box
- |      |
- |      | - right spacer
+ |- contents viewport (a pannable viewport)
+ |     |
+ |     |- contents (inside a pannable viewport)
+ |           |
+ |           |- central widget
  |
- |- bottom spacer (only when dialog-vertical-alignment = center)
+ |- button box
+
+ **) bottom spacer (only when dialog-vertical-alignment = center)
+
 */
 
 class MDialogViewPrivate
@@ -98,21 +99,23 @@ public:
     void setCentralWidget(QGraphicsWidget *newCentralWidget);
     void addButton(MButtonModel *buttonModel);
     void updateButtonBox();
+    void updateButtonBoxLayoutOrientation();
     void setSpinnerVisibility(bool visibility);
     void _q_updatePanning();
 
     MDialog *controller;
 
     // Layout applied to the controller itself.
-    QGraphicsLinearLayout *rootLayout;
+    MLayout *rootGrid;
+    MGridLayoutPolicy *rootPolicy;
 
     QGraphicsWidget *topSpacer;
     QGraphicsWidget *bottomSpacer;
     QGraphicsWidget *leftSpacer;
     QGraphicsWidget *rightSpacer;
-
-    QGraphicsWidget *horizontalWidget;
-    QGraphicsLinearLayout *horizontalLayout;
+    QGraphicsWidget *leftButtonSpacer;
+    QGraphicsWidget *rightButtonSpacer;
+    MWidget *buttonContainer;
 
     // The dialog box itself.
     // Contains a title bar and a pannable viewport for the dialog's contents
@@ -131,12 +134,12 @@ public:
 
     QPointer<QGraphicsWidget> centralWidget;
 
-    MWidget *titleBar;
+    MWidgetController *titleBar;
     MLabel *titleLabel;
     MProgressIndicator *spinner;
     MButton *closeButton;
 
-    QGraphicsWidget *buttonBox;
+    MLabel *buttonBox;
     MLayout *buttonBoxLayout;
     MButtonGroupLayoutPolicy *buttonBoxLayoutPolicy;
 };

@@ -30,21 +30,34 @@
 #include <MProgressIndicator>
 #include <MStylableWidget>
 #include <MLayout>
+#include <MGridLayoutPolicy>
 #include "mbuttongrouplayoutpolicy_p.h"
 
 #include <QFont>
 #include <QGraphicsLinearLayout>
 
+class MTransparentWidget : public QGraphicsWidget {
+    public:
+    MTransparentWidget() : QGraphicsWidget() {
+        setFlag(QGraphicsItem::ItemHasNoContents, true);
+    }
+    QPainterPath shape() const {
+        QPainterPath path;
+        return path;
+    }
+};
+
 MDialogViewPrivate::MDialogViewPrivate()
     : q_ptr(0),
       controller(0),
-      rootLayout(0),
+      rootGrid(0),
       topSpacer(0),
       bottomSpacer(0),
       leftSpacer(0),
       rightSpacer(0),
-      horizontalWidget(0),
-      horizontalLayout(0),
+      leftButtonSpacer(0),
+      rightButtonSpacer(0),
+      buttonContainer(0),
       dialogBox(0),
       dialogBoxLayout(0),
       contents(0),
@@ -67,41 +80,32 @@ MDialogViewPrivate::~MDialogViewPrivate()
 
 void MDialogViewPrivate::createWidgetHierarchy()
 {
-    rootLayout = createLayout(Qt::Vertical);
-    static_cast<QGraphicsWidget *>(controller)->setLayout(rootLayout);
+    rootGrid = new MLayout();
+    rootGrid->setContentsMargins(0, 0, 0, 0);
+    rootPolicy = new MGridLayoutPolicy(rootGrid);
+    rootGrid->setPolicy(rootPolicy);
+    // Cast here is needed to invoke method from QGraphicsWidget, since
+    // overloaded method invokes dumbMode, preventing dialog from propper
+    // styling.
+    static_cast<QGraphicsWidget *>(controller)->setLayout(rootGrid);
 
     topSpacer = createSpacer();
-    rootLayout->addItem(topSpacer);
+    rootPolicy->addItem(topSpacer, 0, 1);
 
-    createHorizontalLayout();
-    // If I directly add horizontalLayout to rootLayout (instead
-    // of assigning it to a widget and then adding that widget)
-    // the sizes go nuts.
-    // Yet another bug in QGraphicsLayout...
-    // Widget with overloaded shape added to ensure that 
-    // horizontalWidget won't intercept mouse events
-    class MTransparentWidget : public QGraphicsWidget {
-	QGraphicsWidget *box;
-        public:
-	MTransparentWidget(QGraphicsWidget *widget){
-	    box = widget;
-	}
-	QPainterPath shape() const {
-	    QPainterPath path;
-	    path = box->shape();
-	    path.translate(box->pos());
-	    return path;
-	}
-    };
-    horizontalWidget = new MTransparentWidget(dialogBox);
-    horizontalWidget->setLayout(horizontalLayout);
-    rootLayout->addItem(horizontalWidget);
-    //rootLayout->addItem(horizontalLayout);
+    leftSpacer = createSpacer();
+    leftSpacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+    rootPolicy->addItem(leftSpacer, 1, 0);
+    createDialogBox();
+    rootPolicy->addItem(dialogBox, 1, 1);
+    rightSpacer = createSpacer();
+    rightSpacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
+    rootPolicy->addItem(rightSpacer, 1, 2);
+
 }
 
 QGraphicsWidget *MDialogViewPrivate::createSpacer()
 {
-    QGraphicsWidget *spacer = new QGraphicsWidget();
+    QGraphicsWidget *spacer = new MTransparentWidget();
 
     spacer->hide();
     spacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
@@ -117,22 +121,6 @@ QGraphicsLinearLayout *MDialogViewPrivate::createLayout(Qt::Orientation orientat
     layout->setContentsMargins(0, 0, 0, 0);
     layout->setSpacing(0);
     return layout;
-}
-
-void MDialogViewPrivate::createHorizontalLayout()
-{
-    horizontalLayout = createLayout(Qt::Horizontal);
-
-    leftSpacer = createSpacer();
-    leftSpacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-    horizontalLayout->addItem(leftSpacer);
-
-    createDialogBox();
-    horizontalLayout->addItem(dialogBox);
-
-    rightSpacer = createSpacer();
-    rightSpacer->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::Preferred);
-    horizontalLayout->addItem(rightSpacer);
 }
 
 void MDialogViewPrivate::createDialogBox()
@@ -156,22 +144,40 @@ void MDialogViewPrivate::createDialogBox()
     contentsLayout = createLayout(Qt::Vertical);
     contentsLayout->setContentsMargins(0, 0, 0, 0);
     contents->setLayout(contentsLayout);
-
     createButtonBox();
-    contentsLayout->addItem(buttonBox);
+    dialogBoxLayout->addItem(buttonBox);
     q->connect(contentsViewport, SIGNAL(heightChanged()), SLOT(_q_updatePanning()));
 }
 
 void MDialogViewPrivate::createButtonBox()
 {
-    buttonBox = new QGraphicsWidget;
+    buttonBox = new MLabel;
+    buttonBox->setObjectName("MDialogButtonBox");
+
     buttonBoxLayout = new MLayout();
     buttonBoxLayoutPolicy = new MButtonGroupLayoutPolicy(buttonBoxLayout, Qt::Horizontal);
     buttonBoxLayout->setPolicy(buttonBoxLayoutPolicy);
     buttonBoxLayout->setContentsMargins(0, 0, 0, 0);
-    buttonBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+    buttonBox->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
 
-    buttonBox->setLayout(buttonBoxLayout);
+
+    if (q_func()->style()->buttonBoxCentered()) {
+        QGraphicsLinearLayout *centerLayout = new QGraphicsLinearLayout(Qt::Horizontal);
+        buttonBox->setLayout(centerLayout);
+        centerLayout->setContentsMargins(0, 0, 0, 0);
+        centerLayout->setSpacing(0);
+        leftButtonSpacer = createSpacer();
+        centerLayout->addItem(leftButtonSpacer);
+        buttonContainer = new MWidget;
+        buttonContainer->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        buttonContainer->setLayout(buttonBoxLayout);
+        centerLayout->addItem(buttonContainer);
+        rightButtonSpacer = createSpacer();
+        centerLayout->addItem(rightButtonSpacer);
+    } else {
+        buttonBox->setLayout(buttonBoxLayout);
+    }
+
 }
 
 void MDialogViewPrivate::createTitleBar()
@@ -210,7 +216,6 @@ MDialogView::MDialogView(MDialog *controller) :
     Q_D(MDialogView);
     d->q_ptr = this;
     d->controller = controller;
-    d->createWidgetHierarchy();
 }
 
 MDialogView::MDialogView(MDialogViewPrivate &dd, MDialog *controller)
@@ -220,7 +225,6 @@ MDialogView::MDialogView(MDialogViewPrivate &dd, MDialog *controller)
     Q_D(MDialogView);
     d->q_ptr = this;
     d->controller = controller;
-    d->createWidgetHierarchy();
 }
 
 
@@ -237,6 +241,8 @@ MDialogView::~MDialogView()
 void MDialogView::applyStyle()
 {
     Q_D(MDialogView);
+    if (!d->rootGrid)
+        d->createWidgetHierarchy();
     MDialogPrivate *dialogPrivate = d->controller->d_func();
 
     if (dialogPrivate->dumbMode) {
@@ -266,14 +272,16 @@ void MDialogView::applyStyle()
     // and the other unset (-1).
     d->dialogBox->setPreferredWidth(style()->dialogPreferredSize().width());
     d->dialogBox->setPreferredHeight(style()->dialogPreferredSize().height());
+    d->buttonBox->setContentsMargins(0, 0, 0, 0);
 
-    d->buttonBox->setContentsMargins(
-        0, style()->verticalSpacing(), 0, 0);
+    d->buttonBox->setContentsMargins(0, style()->verticalSpacing(), 0, 0);
 
-    d->buttonBoxLayoutPolicy->setOrientation(style()->buttonBoxOrientation());
+    d->buttonBoxLayoutPolicy->setButtonWidth(style()->dialogButtonFixedWidth());
     d->buttonBoxLayoutPolicy->setSpacing(style()->buttonSpacing());
 
-    d->rootLayout->setContentsMargins(
+    d->updateButtonBoxLayoutOrientation();
+
+    d->rootPolicy->setContentsMargins(
         style()->dialogLeftMargin(), /* left */
         style()->dialogTopMargin(), /* top */
         style()->dialogRightMargin(), /* right */
@@ -290,16 +298,14 @@ void MDialogViewPrivate::setupDialogVerticalAlignment()
             && bottomSpacer == 0) {
 
         // switch to center alignment
-
         bottomSpacer = createSpacer();
-        rootLayout->addItem(bottomSpacer);
+        rootPolicy->addItem(bottomSpacer, 2, 1);
 
     } else if (!(q->style()->dialogVerticalAlignment() & Qt::AlignVCenter)
                && bottomSpacer != 0) {
 
         // switch to bottom alignment.
-
-        rootLayout->removeItem(bottomSpacer);
+        rootPolicy->removeItem(bottomSpacer);
         delete bottomSpacer;
         bottomSpacer = 0;
     }
@@ -361,6 +367,24 @@ void MDialogViewPrivate::updateButtonBox()
 {
     removeButtonsNotInDialogModel();
     addButtonsFromDialogModel();
+    updateButtonBoxLayoutOrientation();
+}
+
+void MDialogViewPrivate::updateButtonBoxLayoutOrientation()
+{
+    Q_Q(MDialogView);
+    buttonBoxLayoutPolicy->setOrientation(q->style()->buttonBoxOrientation());
+
+    if (q->style()->maximumHorizontalButtons() < buttonBoxLayoutPolicy->count())
+            buttonBoxLayoutPolicy->setOrientation(Qt::Vertical);
+
+    if (buttonBoxLayoutPolicy->orientation() == Qt::Horizontal) {
+        buttonBox->setPreferredHeight(buttonBox->minimumHeight());
+    } else {
+        buttonBox->setPreferredHeight(
+                (q->model()->buttons().count() * buttonBox->minimumHeight()) +
+                q->style()->verticalSpacing());
+    }
 }
 
 void MDialogViewPrivate::removeButtonsNotInDialogModel()
@@ -527,10 +551,12 @@ void MDialogView::setupModel()
     d->closeButton->setVisible(model()->closeButtonVisible());
     d->setSpinnerVisibility(model()->progressIndicatorVisible());
 
+    if (!d->buttonBox)
+        d->createButtonBox();
     d->updateWidgetVisibility(d->buttonBox,
                               model()->buttonBoxVisible(),
-                              d->contentsLayout->count(),
-                              d->contentsLayout);
+                              2,
+                              d->dialogBoxLayout);
 
     d->updateWidgetVisibility(d->titleBar,
                               model()->titleBarVisible(),
@@ -540,6 +566,7 @@ void MDialogView::setupModel()
     d->repopulateButtonBox();
 
     d->setCentralWidget(model()->centralWidget());
+    d->updateButtonBoxLayoutOrientation();
 }
 
 void MDialogView::updateData(const QList<const char *> &modifications)
@@ -565,8 +592,8 @@ void MDialogView::updateData(const QList<const char *> &modifications)
         } else if (member == MDialogModel::ButtonBoxVisible) {
             d->updateWidgetVisibility(d->buttonBox,
                                       model()->buttonBoxVisible(),
-                                      d->contentsLayout->count(),
-                                      d->contentsLayout);
+                                      2,
+                                      d->dialogBoxLayout);
         } else if (member == MDialogModel::TitleBarVisible) {
             d->updateWidgetVisibility(d->titleBar,
                                       model()->titleBarVisible(),
@@ -589,9 +616,6 @@ QPainterPath MDialogView::shape() const
     QPainterPath path;
 
     path = d->dialogBox->shape();
-
-    path.translate(d->horizontalWidget->pos());
-
     path.translate(d->dialogBox->geometry().x(),
                    d->dialogBox->geometry().y());
 
@@ -601,12 +625,16 @@ QPainterPath MDialogView::shape() const
 QGraphicsLinearLayout *MDialogView::contentsLayout()
 {
     Q_D(MDialogView);
+    if (!d->rootGrid)
+        d->createWidgetHierarchy();
     return d->contentsLayout;
 }
 
 MPannableViewport *MDialogView::contentsViewport()
 {
     Q_D(MDialogView);
+    if (!d->rootGrid)
+        d->createWidgetHierarchy();
     return d->contentsViewport;
 }
 
