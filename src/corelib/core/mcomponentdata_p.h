@@ -21,6 +21,7 @@
 #define MCOMPONENTDATA_P_H
 
 #include <QObject>
+#include <QStack>
 #include <MLocale>
 #ifdef Q_WS_X11
 #include <X11/Xlib.h>
@@ -78,6 +79,10 @@ public:
 #ifdef TESTABLE
     // member to hold reference to the testability plugin in order to destroy plugin when the application is destructed
     TestabilityInterface *testabilityInterface;
+#endif
+
+#ifdef Q_WS_X11
+    static QStack<WId> chainedWinIds;
 #endif
 
 protected:

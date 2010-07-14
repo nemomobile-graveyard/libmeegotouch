@@ -89,6 +89,8 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , menu(new MApplicationMenu)
     , isMenuOpen(false)
     , pageAreaMaximized(false)
+    , isChained(false)
+    , chainParentWinId(0)
 #ifdef HAVE_CONTEXTSUBSCRIBER
     , callStatusProperty("Phone.Call")
 #endif
@@ -135,6 +137,12 @@ void MApplicationWindowPrivate::init()
                q, SLOT(_q_placeToolBar(M::Orientation)));
 
 #ifdef Q_WS_X11
+    if ( !MComponentData::chainedWindowIdStackIsEmpty() ) {
+        chainParentWinId = MComponentData::popChainedWindowId();
+        isChained = true;
+
+        setWindowChainedProperty( chainParentWinId, q->winId() );
+    }
     addMStatusBarOverlayProperty();
     appendMApplicationWindowTypeProperty();
 #endif
@@ -184,6 +192,21 @@ void MApplicationWindowPrivate::init()
 
     q->connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
                q, SLOT(_q_inputPanelAreaChanged(const QRect &)));
+}
+
+void MApplicationWindowPrivate::setWindowChainedProperty( const Window &parentWinId, const Window &childWinId )
+{
+    Atom atomMInvokedBy = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_WM_INVOKED_BY", False);
+    Display *display = QX11Info::display();
+
+    // for compositor page transition
+    XChangeProperty(display, childWinId,
+            atomMInvokedBy, XA_WINDOW,
+            32, PropModeReplace,
+            (unsigned char *)&parentWinId, 1);
+
+    // for task switcher view stacking
+    XSetTransientForHint(display, childWinId, parentWinId);
 }
 
 #ifdef Q_WS_X11
@@ -652,6 +675,7 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
 
 void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
 {
+    Q_Q(MApplicationWindow);
     // Note that, when listening scene window state changed events, the actual state
     // of the scene window is not yet changed, and is needed to store separately
     // before call to _q_updatePageExposedContentRect().
@@ -661,6 +685,17 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
     switch (sceneWindow->windowType()) {
         case MSceneWindow::ApplicationPage:
             applicationPageAppearEvent(event);
+
+            if ( isChained && sceneManager ) {
+                bool pageWindowIsFirstOne = sceneManager->pageHistory().isEmpty();
+                if ( pageWindowIsFirstOne ) {
+                    MApplicationPage *page = static_cast<MApplicationPage *>(sceneWindow);
+                    if ( page ) {
+                        page->setEscapeMode( MApplicationPageModel::EscapeManualBack );
+                        QObject::connect( page, SIGNAL( backButtonClicked() ), q, SLOT( close() ) );
+                    }
+                }
+            }
             break;
 
         case MSceneWindow::StatusBar:

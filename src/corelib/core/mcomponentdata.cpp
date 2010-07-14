@@ -446,7 +446,7 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     q->setShowCursor(showCursor);
 }
 
-void MComponentDataPrivate::parseArguments(int &argc, char **argv, 
+void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                            MTheme::ThemeService &themeService)
 // argc and argv (in and out): command line arguments, used ones are removed
 // themeService (out): value changed if theme service is defined in arguments
@@ -683,7 +683,7 @@ void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier
     Q_D(MComponentData);
     MTheme::ThemeService themeService = MTheme::AnyTheme;
 
-    d->parseArguments(argc, argv, 
+    d->parseArguments(argc, argv,
                       themeService);
 
     if (d->service) {
@@ -696,7 +696,7 @@ void MComponentData::reinit(int &argc, char **argv, const QString &appIdentifier
         QFileInfo fileInfo(argv[0]);
         d->appName = fileInfo.fileName();
     }
-    
+
     MLocale systemLocale;
     systemLocale.installTrCatalog(d->appName);
     MLocale::setDefault(systemLocale);
@@ -1073,4 +1073,25 @@ bool MComponentData::isOrientationForced()
         qFatal("MComponentData::allowedOrientations() - MComponentData instance not yet created.");
     }
     return gMComponentDataPrivate->isOrientationForced;
+}
+
+QStack<WId> MComponentDataPrivate::chainedWinIds;
+
+void MComponentData::pushChainedWindowId(const WId &parentWinId)
+{
+    MComponentDataPrivate::chainedWinIds.push(parentWinId);
+}
+
+WId MComponentData::popChainedWindowId()
+{
+    WId retVal = MComponentDataPrivate::chainedWinIds.pop();
+
+    return retVal;
+}
+
+bool MComponentData::chainedWindowIdStackIsEmpty()
+{
+    bool retVal = MComponentDataPrivate::chainedWinIds.isEmpty();
+
+    return retVal;
 }

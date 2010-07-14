@@ -20,7 +20,6 @@ ImageViewer::~ImageViewer()
 
 bool ImageViewer::showImage(const QString &uri, const QStringList &uriList)
 {
-    qDebug() << "MAXMAXMAX" << __PRETTY_FUNCTION__;
     Q_UNUSED( uri );
 
     MApplicationWindow *mWin = new MApplicationWindow();

@@ -66,6 +66,10 @@ public:
     QList<MSceneWindow *> componentsOnAutoHide;
     bool isMenuOpen;
     bool pageAreaMaximized;
+#ifdef Q_WS_X11
+    bool isChained;
+    WId  chainParentWinId;
+#endif
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
     ContextProperty callStatusProperty;
@@ -145,6 +149,9 @@ private:
     void initAutoHideComponentsTimer();
     void removePageActions();
     QAction* findPageCheckedAction() const;
+#ifdef Q_WS_X11
+    void setWindowChainedProperty( const WId &parentWinId, const WId &childWinId );
+#endif
 public:
     void _q_pageTitleChanged(MApplicationPage *, const QString &);
     void _q_actionUpdated(QActionEvent *e);

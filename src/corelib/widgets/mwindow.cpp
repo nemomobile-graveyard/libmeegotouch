@@ -289,7 +289,7 @@ void MWindowPrivate::appendVisibilityChangeMask()
 void MWindowPrivate::_q_onPixmapRequestsFinished()
 {
     Q_Q(MWindow);
-    
+
     q->disconnect(MTheme::instance(), SIGNAL(pixmapRequestsFinished()),
                   q, SLOT(_q_onPixmapRequestsFinished()));
     q->setVisible(true);
@@ -1112,7 +1112,7 @@ void MWindow::setVisible(bool visible)
             // the performance.
             connect(MTheme::instance(), SIGNAL(pixmapRequestsFinished()),
                     this, SLOT(_q_onPixmapRequestsFinished()));
-            return;            
+            return;
         } else {
             if (windowState() != Qt::WindowMinimized && !MApplication::softwareRendering() && d->glWidget == 0) {
                 d->initGLViewport();

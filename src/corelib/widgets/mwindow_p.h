@@ -57,7 +57,7 @@ public:
     qreal getX11Property(const char *propertyName) const;
     void setX11PrestartProperty(bool set);
 #endif
-    
+
     void _q_onPixmapRequestsFinished();
 
     QGLWidget *glWidget;

@@ -174,6 +174,22 @@ public:
     static M::OrientationAngle forcedOrientationAngle();
 
     static bool isOrientationForced();
+
+    /**
+     * Pushes a window id to the stack of chained window ids
+     * \param X11 window id of parent window
+     */
+    static void pushChainedWindowId(const WId &parentWindowId);
+
+    /**
+     * Pops a window id off the stack of chained window ids
+     */
+    static WId popChainedWindowId();
+
+    /**
+     * Returns if the chained windiw id stack is empty
+     */
+    static bool chainedWindowIdStackIsEmpty();
     //! \internal_end
 
 Q_SIGNALS:
