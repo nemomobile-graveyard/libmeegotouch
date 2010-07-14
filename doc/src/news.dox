@@ -1,5 +1,12 @@
 /*! \page news What's New in MeeGo Touch
 
+\section v02028 0.20.28
+
+- Fixed NB#176700: Black text on black buttons, fixed in blanco theme
+
+\subsection New
+- Added a small demo application which demonstrates how to use the orientation change support in meegotouch Qt style
+
 \section v02027 0.20.27
 
 \subsection New
