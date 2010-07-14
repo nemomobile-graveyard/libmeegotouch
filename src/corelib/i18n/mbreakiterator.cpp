@@ -40,7 +40,6 @@ public:
     MBreakIteratorIf *impl;
 };
 
-
 MBreakIteratorPrivate::MBreakIteratorPrivate()
     : impl(0)
 {
@@ -52,7 +51,6 @@ MBreakIteratorPrivate::~MBreakIteratorPrivate()
 {
     delete impl;
 }
-
 
 void MBreakIteratorPrivate::init(const MLocale &locale, const QString &text,
                                    MBreakIterator::Type type)
@@ -67,7 +65,6 @@ void MBreakIteratorPrivate::init(const MLocale &locale, const QString &text,
     impl = new MNullBreakIterator(locale, text, type);
 #endif
 }
-
 
 ///////////////////////////////////
 
@@ -114,7 +111,6 @@ MBreakIterator::MBreakIterator(const MLocale &locale, const QString &text, Type 
     d->init(locale, text, type);
 }
 
-
 ///! Creates a MBreakIterator using default locale
 MBreakIterator::MBreakIterator(const QString &text, Type type)
     : d_ptr(new MBreakIteratorPrivate)
@@ -124,86 +120,69 @@ MBreakIterator::MBreakIterator(const QString &text, Type type)
     d->init(locale, text, type);
 }
 
-
 //! Destructor
 MBreakIterator::~MBreakIterator()
 {
     delete d_ptr;
 }
 
-
 //! returns true if a boundary exists after current index
 bool MBreakIterator::hasNext() const
 {
     Q_D(const MBreakIterator);
-
     return d->impl->hasNext();
 }
-
 
 //! returns true if boundary exists before current index
 bool MBreakIterator::hasPrevious() const
 {
     Q_D(const MBreakIterator);
-
     return d->impl->hasPrevious();
 }
-
 
 //! returns the next boundary index after the current index or -1 if none exists.
 //! current index is updated to the resulting value.
 int MBreakIterator::next()
 {
     Q_D(const MBreakIterator);
-
     return d->impl->next();
 }
-
 
 //! returns the next boundary after the given index. Returns the boundary or -1
 //! if none exists. Updates the current index to the resulting value.
 int MBreakIterator::next(int index)
 {
     Q_D(const MBreakIterator);
-
     return d->impl->next(index);
 }
-
 
 //! returns the next boundary index value. The current index is not updated.
 int MBreakIterator::peekNext()
 {
     Q_D(const MBreakIterator);
-
     return d->impl->peekNext();
 }
-
 
 //! returns the previous boundary index value. The current index is not updated.
 int MBreakIterator::peekPrevious()
 {
     Q_D(const MBreakIterator);
-
     return d->impl->peekPrevious();
 }
-
 
 //! returns the previous boundary index or -1 if none exists.
 //! The current index is updated to the resulting value.
 int MBreakIterator::previous()
 {
     Q_D(const MBreakIterator);
-
     return d->impl->previous();
 }
-
 
 //! returns the previous boundary from the given index value or -1 if none exists.
 //! The current index is updated to the resulting value.
 int MBreakIterator::previous(int index)
 {
     Q_D(const MBreakIterator);
-
     return d->impl->previous(index);
 }
 
@@ -214,7 +193,6 @@ int MBreakIterator::previous(int index)
 int MBreakIterator::previousInclusive()
 {
     Q_D(const MBreakIterator);
-
     return d->impl->previousInclusive();
 }
 
@@ -224,51 +202,47 @@ int MBreakIterator::previousInclusive()
 int MBreakIterator::previousInclusive(int index)
 {
     Q_D(const MBreakIterator);
-
     return d->impl->previousInclusive(index);
 }
 
+//! returns the current index
+int MBreakIterator::index() const
+{
+    Q_D(const MBreakIterator);
+    return d->impl->index();
+}
 
 //! Sets the current index to the given value
 void MBreakIterator::setIndex(int index)
 {
     Q_D(MBreakIterator);
-
     d->impl->setIndex(index);
 }
-
 
 //! Sets the current index to the end of the string
 void MBreakIterator::toBack()
 {
     Q_D(MBreakIterator);
-
     d->impl->toBack();
 }
-
 
 //! Sets the current index to the beginning of the string
 void MBreakIterator::toFront()
 {
     Q_D(MBreakIterator);
-
     d->impl->toFront();
 }
-
 
 //! Checks if current index is a boundary.
 bool MBreakIterator::isBoundary()
 {
     Q_D(MBreakIterator);
-
     return d->impl->isBoundary();
 }
-
 
 //! Checks if given index is a boundary.
 bool MBreakIterator::isBoundary(int index)
 {
     Q_D(MBreakIterator);
-
     return d->impl->isBoundary(index);
 }

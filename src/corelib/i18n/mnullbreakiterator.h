@@ -52,6 +52,7 @@ public:
     int previousInclusive(int index);
     void toBack();
     void toFront();
+    int index() const;
     void setIndex(int index);
     bool isBoundary();
     bool isBoundary(int index);

@@ -260,6 +260,13 @@ int MIcuBreakIterator::previousInclusive(int index)
     }
 }
 
+//! returns the current index
+int MIcuBreakIterator::index() const
+{
+    Q_D(const MIcuBreakIterator);
+    return d->current;
+}
+
 //! Sets the current index to the given value
 void MIcuBreakIterator::setIndex(int index)
 {

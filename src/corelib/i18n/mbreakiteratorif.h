@@ -49,6 +49,7 @@ public:
     virtual int previousInclusive(int index) = 0;
     virtual void toBack() = 0;
     virtual void toFront() = 0;
+    virtual int index() const = 0;
     virtual void setIndex(int index) = 0;
     virtual bool isBoundary() = 0;
     virtual bool isBoundary(int index) = 0;
