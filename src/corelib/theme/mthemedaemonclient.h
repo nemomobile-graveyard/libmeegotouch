@@ -42,7 +42,7 @@ public:
     MThemeDaemonClient(QIODevice *socket, const QString &clientName, const QStringList &themes);
     ~MThemeDaemonClient();
 
-    void reinit(const QString &newClientName, const QStringList &themes);
+    bool reinit(const QString &clientName, const QStringList &themes);
 
     QString name() const;
     QDataStream &stream();
@@ -59,6 +59,8 @@ public:
     void addCustomImageDirectory(const QString &path, M::RecursionMode recursionMode);
     void removeAddedImageDirectories();
 
+    void themeChangeApplied();
+
     QHash<M::MThemeDaemonProtocol::PixmapIdentifier, ImageResource *> pixmaps;
 
 private:
@@ -66,7 +68,10 @@ private:
     QDataStream dataStream;
 
     QList<MThemeImagesDirectory *> themeImageDirs;
+    QList<MThemeImagesDirectory *> toBeDeletedThemeImageDirs;
     QList<MImageDirectory *> customImageDirs;
+
+    QStringList themes;
 };
 //! \internal_end
 

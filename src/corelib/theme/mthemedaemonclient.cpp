@@ -45,10 +45,17 @@ QString MThemeDaemonClient::name() const
     return clientName;
 }
 
-void MThemeDaemonClient::reinit(const QString &newClientName, const QStringList &themes)
+bool MThemeDaemonClient::reinit(const QString &clientName, const QStringList &themes)
 {
-    clientName = newClientName;
+    if (this->clientName == clientName && this->themes == themes) {
+        return false;
+    }
+    this->clientName = clientName;
+    this->themes = themes;
+
     reloadImagePaths(themes);
+
+    return true;
 }
 
 QDataStream &MThemeDaemonClient::stream()
@@ -79,7 +86,7 @@ ImageResource *MThemeDaemonClient::findImageResource(const QString &imageId)
 
 void MThemeDaemonClient::reloadImagePaths(const QStringList &themes)
 {
-    qDeleteAll(themeImageDirs);
+    toBeDeletedThemeImageDirs.append(themeImageDirs);
     themeImageDirs.clear();
 
     foreach(const QString & theme, themes) {
@@ -96,4 +103,10 @@ void MThemeDaemonClient::removeAddedImageDirectories()
 {
     qDeleteAll(customImageDirs);
     customImageDirs.clear();
+}
+
+void MThemeDaemonClient::themeChangeApplied()
+{
+    qDeleteAll(toBeDeletedThemeImageDirs);
+    toBeDeletedThemeImageDirs.clear();
 }

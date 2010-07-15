@@ -168,7 +168,6 @@ void MThemeDaemonServer::clientDataAvailable()
     // has the client registered?
     MThemeDaemonClient *client = registeredClients.value(socket, NULL);
     if (!client) {
-
         // create a temporary data stream to read from the socket
         QDataStream stream(socket);
         stream.setVersion(QDataStream::Qt_4_6);
@@ -210,9 +209,10 @@ void MThemeDaemonServer::clientDataAvailable()
 
         case Packet::RequestRegistrationPacket: {
             // client re-registered: change the name of the client
-            client->reinit(static_cast<const String *>(packet.data())->string, daemon.themeInheritanceChain());
-            client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
-                                       new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
+            if (client->reinit(static_cast<const String *>(packet.data())->string, daemon.themeInheritanceChain())) {
+                client->stream() << Packet(Packet::ThemeChangedPacket, packet.sequenceNumber(),
+                    new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
+            }
         } break;
 
         case Packet::PixmapUsedPacket: {
@@ -501,6 +501,7 @@ void MThemeDaemonServer::themeChangeApplied(MThemeDaemonClient *client,
         Packet themeChangeFinishedPacket(Packet::ThemeChangeCompletedPacket, 0);
 
         foreach(MThemeDaemonClient * c, registeredClients.values()) {
+            client->themeChangeApplied();
             c->stream() << themeChangeFinishedPacket;
         }
     

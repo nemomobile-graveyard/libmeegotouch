@@ -38,7 +38,9 @@ uint qHash(const QSize &size);
 struct PixmapCacheEntry {
     PixmapCacheEntry() : pixmap(NULL), refCount(0) {}
     ~PixmapCacheEntry() {
-        Q_ASSERT(refCount == 0);
+        if (refCount != 0) {
+            qCritical("Freeing PixmapCacheEntry with a non-zero reference count. This very likely leads to a crash.");
+        }
     }
     QPixmap *pixmap;
     unsigned int refCount;
