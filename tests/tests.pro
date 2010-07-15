@@ -49,6 +49,8 @@ SUBDIRS     =  \
      ut_mpopuplist \
      ut_mrichtextedit \
      ut_mscenemanager \
+     ut_mseparator \
+     ut_mseparatorview \
      ut_mslider \
      ut_mseekbar \
      ut_msliderview \

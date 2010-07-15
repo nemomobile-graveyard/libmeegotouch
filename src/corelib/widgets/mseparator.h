@@ -45,7 +45,7 @@ public:
     /*!
         \brief Constructs the separator.
      */
-    MSeparator(QGraphicsItem *parent = 0, Qt::Orientation orientation = Qt::Horizontal);
+    explicit MSeparator(QGraphicsItem *parent = 0, Qt::Orientation orientation = Qt::Horizontal);
 
 
     /*!
