@@ -68,6 +68,8 @@ void Ut_MServiceFwBaseIf::init()
     m_subject->serviceNames("com.nokia.TextProcessorIf");
     m_subject->serviceName();
     m_subject->serviceFwProxy();
+    // purely for coverage stats - useless otherwise
+    m_subject->serviceFwProxy()->servicePath("com.nokia.TextProcessorIf");
 }
 
 void Ut_MServiceFwBaseIf::cleanup()
