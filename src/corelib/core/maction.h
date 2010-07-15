@@ -37,7 +37,6 @@ class M_EXPORT MAction : public QAction
     /**
        \brief properties handled by internal model
     */
-    Q_PROPERTY(QString text READ text WRITE setText)
     Q_PROPERTY(QString iconID READ iconID WRITE setIconID)
 
     Q_FLAGS(Locations)
