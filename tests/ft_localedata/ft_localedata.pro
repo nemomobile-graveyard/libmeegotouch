@@ -1,12 +1,6 @@
 include(../common_top.pri)
 
 TARGET = ft_localedata
-LIBS += -lgcov
-QMAKE_CXXFLAGS += -ftest-coverage -fprofile-arcs
-
-# For gcov testing, disabled currently. Add -lgcov to LIBS if
-# this is enabled
-# QMAKE_CXXFLAGS += -ftest-coverage -fprofile-arcs
 
 # unit
 TEST_SOURCES =  \

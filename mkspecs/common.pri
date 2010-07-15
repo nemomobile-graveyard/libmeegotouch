@@ -98,6 +98,16 @@ contains(USE_CCACHE, "true") {
     QMAKE_CXX = ccache g++
 }
 
+contains( M_BUILD_FEATURES, coverage ) {
+    QMAKE_CXXFLAGS += -ftest-coverage -fprofile-arcs
+    LIBS += -lgcov
+
+    QMAKE_CLEAN += \
+    *.gcda \
+    *.gcno
+}
+
+
 QMAKE_LIBDIR += $${M_BUILD_TREE}/lib
 
 include(shared.pri)

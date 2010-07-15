@@ -6,9 +6,6 @@ defineReplace(srcList) {
     return($${ITEMLIST})
 }
 
-QMAKE_CXXFLAGS += -ftest-coverage -fprofile-arcs
-LIBS += -lgcov
-
 # OBJECTS_DIR = .obj
 MOC_DIR = .moc
 
@@ -22,5 +19,8 @@ coverage-xml.depends = check-xml
 coverage-xml.commands = @../coverage.py $$srcList($$TEST_SOURCES) .obj 90
 
 
-QMAKE_CLEAN += *.gcda *.gcno *.gcov *.log *.xml
-QMAKE_DISTCLEAN += *.gcda *.gcno *.gcov *.log *.xml
+QMAKE_CLEAN += *.gcda *.gcno *.gcov *.log 
+#there are some xml files used in testing
+#*.xml
+QMAKE_DISTCLEAN += *.gcda *.gcno *.gcov *.log 
+#*.xml
