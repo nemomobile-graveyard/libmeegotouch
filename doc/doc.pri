@@ -8,7 +8,7 @@ isEmpty(DOXYGEN_BIN) {
 } else {
     system( mkdir -p $${OUT_PWD}/doc/html )
 
-    doc.commands = ( sed -e \"s:\@M_SRC_DIR\@:$${IN_PWD}:g\" \
+    doc.commands = ( sed -e \"s:@M_SRC_DIR@:$${IN_PWD}:g\" \
                          $${IN_PWD}/mdoxy.cfg.in > doc/mdoxy.cfg );
 
     doc.commands+= ( $${DOXYGEN_BIN} doc/mdoxy.cfg );
