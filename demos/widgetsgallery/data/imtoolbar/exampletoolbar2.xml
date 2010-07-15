@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE MEEGO_IM_TOOLBAR_WIDGET SYSTEM 'VirtualKeyboardToolbarDTD.dtd'>
-<toolbar>
-    <button name="buttonunderline" group="buttonunderline" priority="0" showon="always" alignment="left" text="&lt;U&gt;U&lt;&#x002F;U&gt;" text_id="" icon="" toggle="true" pressed="false">
-        <actions>
-            <sendkeysequence keysequence="Meta+u"> </sendkeysequence>
-        </actions>
-    </button>
-    <button name="buttoncool" group="buttoncool" priority="1" showon="always" alignment="left" icon="/usr/share/widgetsgallery/imtoolbar/icons/icon-m-messaging-smiley-cool.svg" size="80%" text="" text_id="" toggle="false" pressed="false">
-        <actions>
-            <sendstring string=":|"> </sendstring>
-        </actions>
-    </button>
-    <button name="buttonwink" group="buttonwink" priority="2" showon="always" alignment="left" icon="/usr/share/widgetsgallery/imtoolbar/icons/icon-m-messaging-smiley-wink.svg" size="%80" text="" text_id="">
-        <actions>
-            <sendstring string=":J"> </sendstring>
-        </actions>
-    </button>
-    <label name="labelcount" group="labelcount" priority="0" showon="always" alignment="right" text="0" text_id="">
-    </label>
+<toolbar version="1">
+    <layout orientation="landscape">
+        <row>
+            <button name="buttonunderline" group="buttonunderline" priority="0" showon="always" alignment="left" text="&lt;U&gt;U&lt;&#x002F;U&gt;" text_id="" icon="" toggle="true" pressed="false">
+                <actions>
+                    <sendkeysequence keysequence="Meta+u"> </sendkeysequence>
+                </actions>
+            </button>
+            <button name="buttoncool" group="buttoncool" priority="1" showon="always" alignment="left" icon="/usr/share/widgetsgallery/imtoolbar/icons/icon-m-messaging-smiley-cool.svg" size="80%" text="" text_id="" toggle="false" pressed="false">
+                <actions>
+                    <sendstring string=":|"> </sendstring>
+                </actions>
+            </button>
+            <button name="buttonwink" group="buttonwink" priority="2" showon="always" alignment="left" icon="/usr/share/widgetsgallery/imtoolbar/icons/icon-m-messaging-smiley-wink.svg" size="%80" text="" text_id="">
+                <actions>
+                    <sendstring string=":J"> </sendstring>
+                </actions>
+            </button>
+            <label name="labelcount" group="labelcount" priority="0" showon="always" alignment="right" text="0" text_id="">
+            </label>
+        </row>
+    </layout>
+    <layout orientation="portrait">
+        <row>
+            <button name="buttonunderline" />
+        </row>
+        <row>
+            <button name="buttoncool" />
+            <button name="buttonwink" />
+            <label name="labelcount" />
+        </row>
+    </layout>
 </toolbar>
