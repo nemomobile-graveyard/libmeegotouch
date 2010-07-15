@@ -45,12 +45,6 @@ void Ut_Translations::initTestCase()
     static int argc = 0;
     static char *argv[1] = { (char *) "ut_translations" };
     qap = new MApplication(argc, argv, "test");
-    // could also use: QCoreApplication::applicationDirPath()
-    // but it seems to have some problems under scratchbox
-    MLocale::setTranslationPaths(
-        (QStringList()
-         << qApp->applicationDirPath() + "/translations-tr"
-         << qApp->applicationDirPath() + "/translations-qttrid"));
     QTextCodec::setCodecForCStrings(QTextCodec::codecForName("UTF-8"));
 }
 
@@ -61,10 +55,38 @@ void Ut_Translations::cleanupTestCase()
 
 void Ut_Translations::init()
 {
+    // could also use: QCoreApplication::applicationDirPath()
+    // but it seems to have some problems under scratchbox
+    MLocale::setTranslationPaths(
+        (QStringList()
+         << qApp->applicationDirPath() + "/translations-tr"
+         << qApp->applicationDirPath() + "/translations-qttrid"));
 }
 
 void Ut_Translations::cleanup()
 {
+}
+
+void Ut_Translations::testTranslationPathModificationMethods()
+{
+    MLocale::setTranslationPaths(QStringList());
+    QCOMPARE(MLocale::translationPaths().size(), 0);
+    MLocale::setTranslationPaths((QStringList() << "/foo" << "/bar"));
+    QCOMPARE(MLocale::translationPaths().size(), 2);
+    QCOMPARE(MLocale::translationPaths(),
+             (QStringList() << "/foo" << "/bar"));
+    MLocale::addTranslationPath("/baz");
+    QCOMPARE(MLocale::translationPaths().size(), 3);
+    QCOMPARE(MLocale::translationPaths(),
+             (QStringList() << "/foo" << "/bar" << "/baz"));
+    MLocale::addTranslationPath("/baz");
+    QCOMPARE(MLocale::translationPaths().size(), 3);
+    QCOMPARE(MLocale::translationPaths(),
+             (QStringList() << "/foo" << "/bar" << "/baz"));
+    MLocale::removeTranslationPath("/baz");
+    QCOMPARE(MLocale::translationPaths().size(), 2);
+    QCOMPARE(MLocale::translationPaths(),
+             (QStringList() << "/foo" << "/bar"));
 }
 
 void Ut_Translations::testinstallTrCatalogThenUseQtTr_data()

@@ -43,6 +43,7 @@ private slots:
     void cleanupTestCase();
     void cleanup();
 
+    void testTranslationPathModificationMethods();
     void testinstallTrCatalogThenUseQtTr_data();
     void testinstallTrCatalogThenUseQtTr();
     void testOriginalQtTr_data();
