@@ -27,6 +27,7 @@
 #include <QApplication>
 #include <QWidget>
 #include <QEvent>
+#include <QKeyEvent>
 #include <QDebug>
 #include <QLayout>
 #include <QMainWindow>
@@ -37,6 +38,10 @@
 #include <QTreeView>
 #include <QComboBox>
 #include <QMenu>
+#include <QDir>
+#include <QDate>
+#include <QTime>
+#include <QDesktopWidget>
 
 #include <MComponentData>
 #include <mfeedbackplayer.h>
@@ -176,6 +181,27 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     case QEvent::Wheel: {
         if(qobject_cast<QComboBox*>(widget)) {
             return true;
+        }
+    }
+    break;
+    case QEvent::KeyPress: {
+        QKeyEvent* k = static_cast<QKeyEvent*>(event);
+        if(Qt::Key_T == k->key() && k->modifiers () & (Qt::ShiftModifier | Qt::ControlModifier)) {
+            qCritical() << "Taking screenshot";
+            QPixmap screenshot;
+            screenshot = QPixmap::grabWindow(QApplication::desktop()->winId());
+
+            QString path = QDir::homePath() + "/MyDocs/.images";
+            if (!QDir(path).exists())
+                path = QDir::homePath();
+
+            QString imageFile = QString("%1/%2-%3.png").arg(path)
+                .arg(QDate::currentDate().toString("yyyyMMdd"))
+                .arg(QTime::currentTime().toString("hhmmss"));
+            if (!screenshot.save(imageFile))
+                qDebug() << "Could not save screenshot to" << imageFile;
+            else
+                qDebug() << "Screenshot saved to" << imageFile;
         }
     }
     break;
