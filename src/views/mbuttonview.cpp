@@ -58,6 +58,8 @@ void MButtonViewPrivate::freeIcons()
         MTheme::releasePixmap(toggledIcon);
     }
 
+    iconFromQIcon = toggledIconFromQIcon = false;
+
     icon = 0;
     toggledIcon = 0;
 }
@@ -213,12 +215,14 @@ void MButtonViewPrivate::loadIcon(const QIcon &newQIcon, const QSize &newIconSiz
 {
     freeIcons();
 
-    icon = new QPixmap(newQIcon.pixmap(newIconSize));
-    iconFromQIcon = true;
+    if( !newQIcon.isNull() ) {
+        icon = new QPixmap(newQIcon.pixmap(newIconSize));
+        iconFromQIcon = true;
 
-    toggledIcon = new QPixmap(newQIcon.pixmap(newIconSize, QIcon::Selected));
-    if (toggledIcon && !toggledIcon->isNull()) {
-        toggledIconFromQIcon = true;
+        toggledIcon = new QPixmap(newQIcon.pixmap(newIconSize, QIcon::Selected));
+        if (toggledIcon && !toggledIcon->isNull()) {
+            toggledIconFromQIcon = true;
+        }
     }
 }
 
