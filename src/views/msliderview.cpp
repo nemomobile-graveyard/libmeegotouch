@@ -1175,7 +1175,7 @@ int MSliderViewPrivate::updateValue(QGraphicsSceneMouseEvent *event)
     //once it is called at mouse press and once at mouse release)
     if (newValue != q->model()->value()) {
         if (needAnimation) {
-            if (valueAnimation == 0) {
+            if (!valueAnimation) {
                 valueAnimation = new QPropertyAnimation(controller, "value", 0);
                 valueAnimation->setDuration(150);
                 valueAnimation->setEasingCurve(QEasingCurve::OutSine);
@@ -1381,7 +1381,9 @@ void MSliderView::cancelEvent(MCancelEvent *event)
         d->pressTimerId = 0;
     }
 
-    d->valueAnimation->stop();
+    if (d->valueAnimation)
+        d->valueAnimation->stop();
+
     model()->setValue(d->valueWhenPressed);
     d->sliderGroove->lowerHandleIndicator();
 }
