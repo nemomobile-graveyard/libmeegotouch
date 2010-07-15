@@ -118,7 +118,6 @@ MCollator::~MCollator()
     delete d_ptr;
 }
 
-
 //! operator () works as lessThan comparison.
 //! Returns true if first string is less than the second
 bool MCollator::operator()(const QString &s1, const QString &s2) const
@@ -146,7 +145,7 @@ MLocale::Comparison MCollator::compare(const QString &first,
 }
 
 
-//! Compares two string using given locale
+//! Compares two strings using the given locale
 MLocale::Comparison MCollator::compare(MLocale &locale, const QString &first,
         const QString &second)
 {

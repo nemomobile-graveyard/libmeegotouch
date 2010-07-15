@@ -24,6 +24,13 @@
 #include <QDebug>
 #include <QProcess>
 
+class TestCollator : public MCollator
+{
+public:
+    TestCollator () : MCollator() {}
+    TestCollator (const MLocale &locale) : MCollator(locale) {}
+};
+
 void Ft_Sorting::initTestCase()
 {
     static int argc = 0;
@@ -265,12 +272,14 @@ void Ft_Sorting::testMLocaleSorting()
     QFETCH(QString, target4);
     QFETCH(QString, target5);
 
-    MLocale loc(locale_name);
-    MCollator comp = loc.collator();
-    QStringList sl;
-    sl << source1 << source2 << source3 << source4 << source5;
+    MLocale locale(locale_name);
+    MLocale::setDefault(locale);
+    MCollator mCollator = locale.collator();
+    QStringList stringListOrig;
+    stringListOrig << source1 << source2 << source3 << source4 << source5;
+    QStringList sl = stringListOrig;
     // printf("%s %s %s %s %s\n", sl[0].toUtf8().data(), sl[1].toUtf8().data(), sl[2].toUtf8().data(), sl[3].toUtf8().data(), sl[4].toUtf8().data());
-    qSort(sl.begin(), sl.end(), comp);
+    qSort(sl.begin(), sl.end(), mCollator);
     // printf("%s %s %s %s %s\n", sl[0].toUtf8().data(), sl[1].toUtf8().data(), sl[2].toUtf8().data(), sl[3].toUtf8().data(), sl[4].toUtf8().data());
 
     QCOMPARE(sl[0], target1);
@@ -278,6 +287,23 @@ void Ft_Sorting::testMLocaleSorting()
     QCOMPARE(sl[2], target3);
     QCOMPARE(sl[3], target4);
     QCOMPARE(sl[4], target5);
+
+    MCollator mCollatorDefaultLocale;
+    QStringList sl2 = stringListOrig;
+    qSort(sl2.begin(), sl2.end(), mCollatorDefaultLocale);
+    QCOMPARE(sl2, sl);
+
+    TestCollator *testCollator = new TestCollator(locale);
+    sl2 = stringListOrig;
+    qSort(sl2.begin(), sl2.end(), *testCollator);
+    QCOMPARE(sl2, sl);
+    delete testCollator;
+
+    TestCollator *testCollatorDefaultLocale = new TestCollator();
+    sl2 = stringListOrig;
+    qSort(sl2.begin(), sl2.end(), *testCollatorDefaultLocale);
+    QCOMPARE(sl2, sl);
+    delete testCollatorDefaultLocale;
 }
 
 void Ft_Sorting::testDefaultCompare_data()
@@ -321,10 +347,14 @@ void Ft_Sorting::testDefaultCompare()
     QFETCH(QString, str2);
     QFETCH(MLocale::Comparison, result);
 
-    MLocale loc(locale_name);
-    MCollator mcomp = loc.collator();
-    MLocale::setDefault(loc);
-    QCOMPARE(mcomp.compare(str1, str2), result);
+    MLocale locale(locale_name);
+    MLocale::setDefault(locale);
+    MCollator mCollator(locale);
+    MCollator mCollator2 = locale.collator();
+    MCollator mCollatorDefaultLocale;
+    QCOMPARE(mCollator.compare(str1, str2), result);
+    QCOMPARE(mCollator2.compare(str1, str2), result);
+    QCOMPARE(mCollatorDefaultLocale.compare(str1, str2), result);
 }
 
 void Ft_Sorting::testCompareWithLocale_data()
