@@ -25,9 +25,10 @@
 #include "mimagewidget.h"
 #include "mlabel.h"
 #include "mprogressindicator.h"
+#include "mlayout.h"
+#include "mgridlayoutpolicy.h"
 
 #include <QFontMetricsF>
-#include <QGraphicsGridLayout>
 
 MApplicationMenuButtonViewPrivate::MApplicationMenuButtonViewPrivate()
     : iconImage(0),  arrowIconImage(0), spinner(0), layout(0)
@@ -47,8 +48,10 @@ void MApplicationMenuButtonViewPrivate::init()
     arrowIconImage->setObjectName("NavigationBarMenuButtonArrowImage");
     label->setObjectName("NavigationBarMenuButtonLabel");
 
-    layout = new QGraphicsGridLayout();
-    layout->setContentsMargins(0, 0, 0, 0);
+    layout = new MLayout();
+    policy = new MGridLayoutPolicy(layout);
+
+    policy->setContentsMargins(0, 0, 0, 0);
     controller->setLayout(layout);
 }
 
@@ -72,37 +75,37 @@ void MApplicationMenuButtonViewPrivate::refreshLayout()
 {
     Q_Q(MApplicationMenuButtonView);
 
-    while (layout->count()) {
-        layout->removeAt(0);
+    while (policy->count()) {
+        policy->removeAt(0);
     }
 
     int colIndex = 0;
     MApplicationMenuButton *buttonController = (MApplicationMenuButton *)controller;
     if (buttonController->isIconVisible() && !buttonController->iconID().isEmpty()) {
+        policy->addItem(iconImage, 0, colIndex++);
+        policy->setAlignment(iconImage, Qt::AlignCenter);
         iconImage->show();
-        layout->addItem(iconImage, 0, colIndex++);
-        layout->setAlignment(iconImage, Qt::AlignCenter);
     } else {
         iconImage->hide();
     }
-    layout->addItem(label, 0, colIndex++);
-    layout->setAlignment(label, Qt::AlignCenter);
+    policy->addItem(label, 0, colIndex++);
+    policy->setAlignment(label, Qt::AlignCenter);
 
     arrowIconImage->hide();
     if (q->model()->progressIndicatorVisible() && spinner) {
-        spinner->show();
         spinner->setUnknownDuration(true);
-        layout->addItem(spinner, 0, colIndex++);
-        layout->setAlignment(spinner, Qt::AlignCenter);
+        policy->addItem(spinner, 0, colIndex++);
+        policy->setAlignment(spinner, Qt::AlignCenter);
+        spinner->show();
     } else {
         if (spinner) {
             spinner->hide();
             spinner->setUnknownDuration(false);
         }
         if (buttonController->isArrowIconVisible()) {
+            policy->addItem(arrowIconImage, 0, colIndex++);
+            policy->setAlignment(arrowIconImage, Qt::AlignCenter);
             arrowIconImage->show();
-            layout->addItem(arrowIconImage, 0, colIndex++);
-            layout->setAlignment(arrowIconImage, Qt::AlignCenter);
         }
     }
     q->updateGeometry();

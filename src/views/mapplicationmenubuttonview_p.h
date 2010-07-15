@@ -25,7 +25,8 @@
 class MLabel;
 class MImageWidget;
 class MProgressIndicator;
-class QGraphicsGridLayout;
+class MLayout;
+class MGridLayoutPolicy;
 
 class MApplicationMenuButtonViewPrivate : public MButtonViewPrivate
 {
@@ -43,7 +44,8 @@ public:
     MImageWidget *iconImage;
     MImageWidget *arrowIconImage;
     MProgressIndicator *spinner;
-    QGraphicsGridLayout *layout;
+    MLayout *layout;
+    MGridLayoutPolicy *policy;
 
 };
 
