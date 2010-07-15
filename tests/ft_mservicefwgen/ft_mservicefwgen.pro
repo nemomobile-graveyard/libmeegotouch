@@ -1,5 +1,5 @@
 include(../common_top.pri)
-LIBS =
+LIBS -= -lmeegotouchcore -lmeegotouchviews
 QT -= gui
 
 RESOURCES = \
