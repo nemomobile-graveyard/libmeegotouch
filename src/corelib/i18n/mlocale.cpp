@@ -970,7 +970,6 @@ MLocale::createSystemMLocale()
 #endif
 }
 
-//! creates a "C" locale
 MLocale MLocale::createCLocale()
 {
     return MLocale(PosixStr);

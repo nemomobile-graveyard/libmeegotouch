@@ -63,6 +63,7 @@ private slots:
     void testBug169305();
     void testSettingsChanged();
     void testMLocaleConstructor();
+    void testCreateCLocale();
 
     void testLocaleNameParsingFunctions_data();
     void testLocaleNameParsingFunctions();

@@ -102,6 +102,14 @@ void Ft_Locales::testMLocaleConstructor()
     delete testLocale2;
 }
 
+void Ft_Locales::testCreateCLocale()
+{
+    MLocale cLocale = MLocale::createCLocale();
+    MLocale en_US_POSIX_locale("en_US_POSIX");
+    QCOMPARE(cLocale.name(), QString("en_US_POSIX"));
+    QCOMPARE(en_US_POSIX_locale.name(), QString("en_US_POSIX"));
+}
+
 void Ft_Locales::testLocaleNameParsingFunctions_data()
 {
     QTest::addColumn<QString>("localeName");

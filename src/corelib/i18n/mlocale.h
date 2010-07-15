@@ -195,6 +195,25 @@ public:
 
 
     static MLocale *createSystemMLocale();
+
+    /*!
+     * \brief returns a "C" locale
+     *
+     * using this
+     *
+     * \code
+     * MLocale locale = MLocale::createCLocale();
+     * \endcode
+     *
+     * achieves the same as:
+     *
+     * \code
+     * MLocale locale("en_US_POSIX");
+     * \endcode
+     *
+     * libicu handles the string “en_US_POSIX” as synonym for
+     * posix locale behaviour.
+     */
     static MLocale createCLocale();
 
     /*!
