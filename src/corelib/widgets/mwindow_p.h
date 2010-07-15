@@ -82,6 +82,8 @@ public:
     bool onDisplay;
     bool onDisplaySet;
 
+    bool blockPainting;
+
 protected:
     MWindow *q_ptr;
 private:

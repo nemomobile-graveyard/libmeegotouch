@@ -70,6 +70,7 @@ MWindowPrivate::MWindowPrivate() :
     closeOnLazyShutdown(false),
     onDisplay(false),
     onDisplaySet(false),
+    blockPainting(true),
     q_ptr(NULL)
 {
 #ifndef Q_WS_X11
@@ -849,9 +850,14 @@ void MWindow::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 
 void MWindow::paintEvent(QPaintEvent *event)
 {
-#ifdef M_USE_OPENGL
     Q_D(MWindow);
+    if (d->blockPainting) {
+        // Block painting, until the event QEvent::WindowActivate has been received. This prevents
+        // flickering on the startup of applications.
+        return;
+    }
 
+#ifdef M_USE_OPENGL
     if (!MApplication::softwareRendering()) {
         MGLES2Renderer::activate(d->glWidget);
     }
@@ -864,12 +870,18 @@ bool MWindow::event(QEvent *event)
 {
     Q_D(MWindow);
 
-    if (event->type() == QEvent::Show || event->type() == QEvent::WindowActivate) {
+    switch (event->type()) {
+    case QEvent::Show:
         MComponentData::setActiveWindow(this);
-    }
+        break;
+        
+    case QEvent::WindowActivate:
+        MComponentData::setActiveWindow(this);
+        d->blockPainting = false;
+        viewport()->update();
+        break;
 
-    if (event->type() == QEvent::Close) {
-
+    case QEvent::Close:
         // Call close event manually here, because we want to check if the
         // event got ignored before executing lazy shutdown routines.
         closeEvent(static_cast<QCloseEvent *>(event));
@@ -916,9 +928,9 @@ bool MWindow::event(QEvent *event)
 
         // closeEvent() already called.
         return true;
-    }
+        // break;
 
-    if (QEvent::KeyPress == event->type()) {
+    case QEvent::KeyPress: {
         bool updateNeeded = false;
 
         //SIMULATION OF ROTATION FOR DEVELOPMENT PURPOSES
@@ -1013,7 +1025,10 @@ bool MWindow::event(QEvent *event)
         if (updateNeeded) {
             this->viewport()->update();
         }
-    } else if (event->type() == QEvent::ApplicationLayoutDirectionChange) {
+        break;
+    }
+        
+    case QEvent::ApplicationLayoutDirectionChange:
         // tell the scene and its items about the layout change
         if (scene()) {
             QList<QGraphicsItem *> items = scene()->items();
@@ -1027,7 +1042,9 @@ bool MWindow::event(QEvent *event)
             }
         }
         return true;
-    } else if (event->type() == QEvent::LanguageChange) {
+        // break;
+        
+    case QEvent::LanguageChange:
         // Tell the scene and its top-level items about the language change
         if (scene()) {
             QList<QGraphicsItem *> items = scene()->items();
@@ -1042,12 +1059,18 @@ bool MWindow::event(QEvent *event)
             }
         }
         return true;
-    } else if (event->type() == QEvent::WindowStateChange) {
+        // break;
+
+    case QEvent::WindowStateChange:
         d->handleWindowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
         return true;
-    } else if (event->type() == MOnDisplayChangeEvent::eventNumber()) {
-        onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
-        return true;
+        // break;
+        
+    default:
+        if (event->type() == MOnDisplayChangeEvent::eventNumber()) {
+            onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
+            return true;
+        }
     }
 
     return QGraphicsView::event(event);
@@ -1063,14 +1086,14 @@ void MWindow::setVisible(bool visible)
         // prestarted state.
         if (MApplication::isPrestarted()) {
             return;
-        } else if (MTheme::hasPendingRequests()) {
+        }  else if (MTheme::hasPendingRequests()) {
             // The showing of the window gets delayed until the theme
             // has finished to load all pixmap requests. This prevents
             // a flickering of the application on startup and improves
             // the performance.
             connect(MTheme::instance(), SIGNAL(pixmapRequestsFinished()),
                     this, SLOT(_q_onPixmapRequestsFinished()));
-            return;            
+            return;
         } else {
             if (!MApplication::softwareRendering() && d->glWidget == 0) {
                 d->initGLViewport();
