@@ -45,14 +45,18 @@ private slots:
 
     void initVals();
     void settersAndGetters();
+    void checkStandardButtons();
     void addStandardButtons();
     void addNonStandardButtonModel();
     void addNonStandardButtonsWithRole();
     void addInvalidStandardButton();
     void addExistingStandardButton();
+    void checkLayouts();
     void acceptDialog();
+    void acceptDialogDirectly();
     void removeButton();
     void rejectDialog();
+    void rejectDialogDirectly();
     void dismissDialog();
     void testRotation();
 };

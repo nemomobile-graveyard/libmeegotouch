@@ -26,6 +26,7 @@
 #include <MButton>
 #include <MDialog>
 #include <MSceneWindow>
+#include <MLayout>
 
 #include "ut_mdialog.h"
 
@@ -150,6 +151,19 @@ void Ut_MDialog::settersAndGetters()
     }
 }
 
+void Ut_MDialog::checkStandardButtons()
+{
+    MButtonModel *b1 = dialog->addButton(M::OkButton);
+    MButtonModel *b2 = dialog->addButton(M::CancelButton);
+    MButtonModel *b3 = new MButtonModel;
+
+
+
+    QCOMPARE(dialog->standardButton(b1), M::OkButton);
+    QCOMPARE(dialog->standardButton(b2), M::CancelButton);
+    QCOMPARE(dialog->standardButton(b3), M::NoStandardButton);
+}
+
 void Ut_MDialog::addStandardButtons()
 {
     MButtonModel *b1 = dialog->addButton(M::AbortButton);
@@ -205,6 +219,19 @@ void Ut_MDialog::addExistingStandardButton()
     QVERIFY(b1 == b2);
 }
 
+void Ut_MDialog::checkLayouts()
+{
+    MLayout *l1 = new MLayout;
+    MLayout *l2 = new MLayout;
+    dialog->setLayout(l1);
+
+    QCOMPARE(dialog->layout(), l1);
+
+    dialog->setLayout(l2);
+
+    QCOMPARE(dialog->layout(), l2);
+}
+
 void Ut_MDialog::acceptDialog()
 {
     QSignalSpy spyChanged1(dialog, SIGNAL(accepted()));
@@ -214,6 +241,19 @@ void Ut_MDialog::acceptDialog()
     MButtonModel *b1 = dialog->addButton("test button 1");
     dialog->addButton("test button 2");
     b1->click();
+
+    QCOMPARE(spyChanged1.count(), 1);
+    QCOMPARE(spyChanged2.count(), 0);
+    QCOMPARE(spyChanged3.count(), 1);
+}
+
+void Ut_MDialog::acceptDialogDirectly()
+{
+    QSignalSpy spyChanged1(dialog, SIGNAL(accepted()));
+    QSignalSpy spyChanged2(dialog, SIGNAL(rejected()));
+    QSignalSpy spyChanged3(dialog, SIGNAL(finished(int)));
+
+    dialog->accept();
 
     QCOMPARE(spyChanged1.count(), 1);
     QCOMPARE(spyChanged2.count(), 0);
@@ -251,6 +291,19 @@ void Ut_MDialog::rejectDialog()
     QCOMPARE(spyChanged3.count(), 1);
 }
 
+void Ut_MDialog::rejectDialogDirectly()
+{
+    QSignalSpy spyChanged1(dialog, SIGNAL(accepted()));
+    QSignalSpy spyChanged2(dialog, SIGNAL(rejected()));
+    QSignalSpy spyChanged3(dialog, SIGNAL(finished(int)));
+
+    dialog->reject();
+
+    QCOMPARE(spyChanged1.count(), 0);
+    QCOMPARE(spyChanged2.count(), 1);
+    QCOMPARE(spyChanged3.count(), 1);
+}
+
 void Ut_MDialog::dismissDialog()
 {
     QSignalSpy spyChanged1(dialog, SIGNAL(accepted()));
@@ -278,19 +331,5 @@ void Ut_MDialog::testRotation()
     MApplication::activeWindow()->setOrientationAngle(M::Angle90);
     QCOMPARE(dialog->preferredSize(), preferredSizePortrait);
 }
-/*
-Done:
-mdialog.cpp@"addButton(MButtonModel*)"
-mdialog.cpp@"isProgressIndicatorVisible()"
-mdialog.cpp@"setProgressIndicatorVisible(bool)"
-mdialog.cpp@"isCloseButtonVisible()"
-mdialog.cpp@"setCloseButtonVisible(bool)"
 
-TBD:
-mdialog.cpp@"exec(MWindow*)"
-mdialog.cpp@"layout()"
-mdialog.cpp@"reject()"
-mdialog.cpp@"setLayout(QGraphicsLayout*)"
-mdialog.cpp@"standardButton(MButtonModel*)"
-*/
 QTEST_APPLESS_MAIN(Ut_MDialog);
