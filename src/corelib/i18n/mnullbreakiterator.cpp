@@ -169,7 +169,7 @@ int MNullBreakIterator::previousInclusive(int index)
 
 int MNullBreakIterator::index() const
 {
-    Q_D(MNullBreakIterator);
+    Q_D(const MNullBreakIterator);
     return d->current;
 }
 
