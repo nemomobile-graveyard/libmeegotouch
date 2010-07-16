@@ -41,6 +41,7 @@
 #include "mnavigationbar.h"
 #include "mdockwidget.h"
 #include "mobjectmenu.h"
+#include "mescapebuttonpanel.h"
 #include "mapplication.h"
 #include "mwindow.h"
 #include "mapplicationwindow.h"
@@ -63,6 +64,12 @@
 #include <mwidgetfadeanimation.h>
 #include <mwidgetzoomanimation.h>
 #include <mwidgetmoveanimation.h>
+
+#ifdef Q_WS_X11
+# include <QX11Info>
+# include <X11/Xatom.h>
+# include <X11/Xlib.h>
+#endif
 
 namespace
 {
@@ -266,6 +273,9 @@ void MSceneManagerPrivate::_q_emitOrientationChangeFinished()
     Q_Q(MSceneManager);
 
     emit q->orientationChangeFinished(q->orientation());
+#ifdef Q_WS_X11
+    _q_updateDecoratorButtonsProperty();
+#endif
 }
 
 void MSceneManagerPrivate::_q_unFreezeUI()
@@ -665,6 +675,58 @@ void MSceneManagerPrivate::setSceneWindowGeometry(MSceneWindow *window)
     window->setGeometry( QRectF(p, window->preferredSize()) );
 }
 
+#ifdef Q_WS_X11
+void MSceneManagerPrivate::_q_updateDecoratorButtonsProperty()
+{
+    if (scene->views().isEmpty())
+        return;
+
+    QRectF homeButtonGeometry;
+    QRectF closeButtonGeometry;
+
+    foreach(MSceneWindow *window, windows) {
+        if (window->sceneWindowState() != MSceneWindow::Disappeared) {
+            switch (window->windowType()) {
+            case MSceneWindow::EscapeButtonPanel:
+                {
+                    MEscapeButtonPanel *escapeButtonPanel = static_cast<MEscapeButtonPanel*>(window);
+                    if (escapeButtonPanel->escapeMode() == MEscapeButtonPanelModel::CloseMode) {
+                        closeButtonGeometry = window->mapRectToScene(
+                                QRectF(QPointF(),window->geometry().size()));
+                    }
+                    break;
+                }
+            case MSceneWindow::HomeButtonPanel:
+                homeButtonGeometry = window->mapRectToScene(QRectF(QPointF(),window->geometry().size()));
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    long data[8] = {0};
+
+    data[0] = homeButtonGeometry.x();
+    data[1] = homeButtonGeometry.y();
+    data[2] = homeButtonGeometry.width();
+    data[3] = homeButtonGeometry.height();
+    data[4] = closeButtonGeometry.x();
+    data[5] = closeButtonGeometry.y();
+    data[6] = closeButtonGeometry.width();
+    data[7] = closeButtonGeometry.height();
+
+    Display *dpy = QX11Info::display();
+
+    Atom a = XInternAtom(dpy, "_MEEGOTOUCH_DECORATOR_BUTTONS", False);
+    foreach(QGraphicsView *view, scene->views()) {
+        Window w = view->winId();
+        XChangeProperty(dpy, w, a, XA_CARDINAL, 32, PropModeReplace,
+                        (unsigned char*)data, 8);
+    }
+}
+#endif
+
 void MSceneManagerPrivate::notifyWidgetsAboutOrientationChange()
 {
     MOrientationChangeEvent event(orientation(angle));
@@ -746,6 +808,9 @@ void MSceneManagerPrivate::setOrientationAngleWithoutAnimation(M::OrientationAng
     }
 
     emit q->orientationChangeFinished(orientation(angle));
+#ifdef Q_WS_X11
+    _q_updateDecoratorButtonsProperty();
+#endif
 }
 
 bool MSceneManagerPrivate::onApplicationPage(QGraphicsItem *item)
@@ -1508,6 +1573,17 @@ void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
     }
 
     sceneWindow->d_func()->setSceneWindowState(newState);
+
+#ifdef Q_WS_X11
+    if ((sceneWindow->sceneWindowState() == MSceneWindow::Appeared ||
+         sceneWindow->sceneWindowState() == MSceneWindow::Disappeared ) &&
+        (sceneWindow->windowType() == MSceneWindow::HomeButtonPanel ||
+         sceneWindow->windowType() == MSceneWindow::EscapeButtonPanel ||
+         sceneWindow->windowType() == MSceneWindow::StatusBar) )
+    {
+        _q_updateDecoratorButtonsProperty();
+    }
+#endif
 }
 
 void MSceneManagerPrivate::onSceneWindowEnteringAppearingState(MSceneWindow *sceneWindow)
@@ -1518,6 +1594,8 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearingState(MSceneWindow *sce
 
 void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *sceneWindow)
 {
+    Q_Q(MSceneManager);
+
     switch (sceneWindow->sceneWindowState()) {
         case MSceneWindow::Appearing:
             // Page switching uses a separate animation.
@@ -1540,6 +1618,12 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
     if (isOnDisplay()) {
         produceMustBeResolvedDisplayEvent(sceneWindow);
     }
+
+    if (sceneWindow->windowType() == MSceneWindow::EscapeButtonPanel) {
+        MEscapeButtonPanel *escapeButtonPanel = static_cast<MEscapeButtonPanel*>(sceneWindow);
+        q->connect(escapeButtonPanel, SIGNAL(escapeModeChanged(MEscapeButtonPanelModel::EscapeMode)),
+                   SLOT(_q_updateDecoratorButtonsProperty()));
+    }
 }
 
 void MSceneManagerPrivate::onSceneWindowEnteringDisappearingState(MSceneWindow *sceneWindow)
@@ -1557,6 +1641,8 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearingState(MSceneWindow *
 
 void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *sceneWindow)
 {
+    Q_Q(MSceneManager);
+
     switch (sceneWindow->sceneWindowState()) {
         case MSceneWindow::Appearing:
             // Happens if removeSceneWindow() is called during an appearance animation
@@ -1611,6 +1697,13 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
 
     if (sceneWindow->windowType() == MSceneWindow::StatusBar)
         statusBar = 0;
+
+
+    if (sceneWindow->windowType() == MSceneWindow::EscapeButtonPanel) {
+        MEscapeButtonPanel *escapeButtonPanel = static_cast<MEscapeButtonPanel*>(sceneWindow);
+        q->disconnect(escapeButtonPanel, SIGNAL(escapeModeChanged(MEscapeButtonPanelModel::EscapeMode)),
+                      q, SLOT(_q_updateDecoratorButtonsProperty()));
+    }
 
     // If there is a layer effect it is deleted
     if (sceneWindow->d_func()->effect) {

@@ -322,6 +322,9 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_triggerAsyncPendingOrientationChange())
     Q_PRIVATE_SLOT(d_func(), void _q_applyPendingOrientationChange())
     Q_PRIVATE_SLOT(d_func(), void _q_onPageSwitchAnimationFinished())
+#ifdef Q_WS_X11
+    Q_PRIVATE_SLOT(d_func(), void _q_updateDecoratorButtonsProperty())
+#endif
 };
 
 #endif
