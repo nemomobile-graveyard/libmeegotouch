@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += ../../src/include ../../src/theme ../../src/painting
+INCLUDEPATH += $$MSRCDIR/include $$MSRCDIR/theme $$MSRCDIR/painting
 DEPENDPATH += $$INCLUDEPATH
 TARGET = pt_mscalableimage
 

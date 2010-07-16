@@ -1,6 +1,6 @@
 include(../common_top.pri)
-INCLUDEPATH += ../../src/include ../../src/widgets/views
-DEPENDPATH += ../../src/include
+INCLUDEPATH += $$MSRCDIR/include $$MSRCDIR/widgets/views
+DEPENDPATH += $$MSRCDIR/include
 TARGET = pt_mprogressindicator
 
 SOURCES += pt_mprogressindicator.cpp

@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += ../../src/include ../../src/theme
+INCLUDEPATH += $$MSRCDIR/include $$MSRCDIR/theme
 DEPENDPATH += $$INCLUDEPATH
 TARGET = pt_mtoolbar
 

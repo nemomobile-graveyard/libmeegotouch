@@ -5,12 +5,12 @@ TARGET = ut_mpanrecognizer
 # unit test and unit classes
 SOURCES += \
     ut_mpanrecognizer.cpp \
-    ../../src/corelib/events/mpanrecognizer.cpp \
-    ../../src/corelib/events/mpangesture.cpp \
+    $$MSRCDIR/corelib/events/mpanrecognizer.cpp \
+    $$MSRCDIR/corelib/events/mpangesture.cpp \
     
 # unit test and unit classes
 HEADERS += \
     ut_mpanrecognizer.h \
-    ../../src/corelib/events/mpangesture_p.h \
+    $$MSRCDIR/corelib/events/mpangesture_p.h \
 
 include(../common_bot.pri)

@@ -4,7 +4,7 @@ include(../common_mextensions.pri)
 INCLUDEPATH += \
     $$MSRCDIR/events \
     $$MSRCDIR/extensions \
-    $$MSRCDIR/corelib/.gen
+    ../../src/corelib/.gen
 
 QT += core network gui svg dbus
 
