@@ -237,24 +237,24 @@ void MCalendar::setDate(const QDate &date)
 #define MSECS_PER_DAY 86400000
 
 //! Sets the calendar according to given QDate
-void MCalendar::setDateTime(QDateTime date)
+void MCalendar::setDateTime(QDateTime dateTime)
 {
     Q_D(MCalendar);
 
     UErrorCode status = U_ZERO_ERROR;
 
     // we avoid time conversions made by qt
-    Qt::TimeSpec originalTimeSpec = date.timeSpec();
-    date.setTimeSpec(Qt::UTC);
+    Qt::TimeSpec originalTimeSpec = dateTime.timeSpec();
+    dateTime.setTimeSpec(Qt::UTC);
 
     // We cannot use QDateTime::toTime_t because this
     // works only for dates after 1970-01-01T00:00:00.000.
 #if QT_VERSION >= 0x040700
-    UDate icuDate = date.toMSecsSinceEpoch();
+    UDate icuDate = dateTime.toMSecsSinceEpoch();
 #else
     // Qt < 4.7 lacks QDateTime::toMSecsSinceEpoch(), we need to emulate it:
-    int days = QDate(1970, 1, 1).daysTo(date.date());
-    qint64 msecs = qint64(QTime().secsTo(date.time())) * 1000;
+    int days = QDate(1970, 1, 1).daysTo(dateTime.date());
+    qint64 msecs = qint64(QTime().secsTo(dateTime.time())) * 1000;
     UDate icuDate = (qint64(days) * MSECS_PER_DAY) + msecs;
 #endif
 
@@ -277,8 +277,6 @@ QDateTime MCalendar::qDateTime(Qt::TimeSpec spec) const
 {
     Q_D(const MCalendar);
 
-    QDateTime time;
-
     UErrorCode status = U_ZERO_ERROR;
     UDate icuDate = d->_calendar->getTime(status);
 
@@ -292,8 +290,11 @@ QDateTime MCalendar::qDateTime(Qt::TimeSpec spec) const
     }
     // We cannot use QDateTime::setTime_t because this
     // works only for dates after 1970-01-01T00:00:00.000.
+    QDateTime dateTime;
+    // avoid conversions by Qt
+    dateTime.setTimeSpec(Qt::UTC);
 #if QT_VERSION >= 0x040700
-    time.setMSecsSinceEpoch(qint64(icuDate));
+    dateTime.setMSecsSinceEpoch(qint64(icuDate));
 #else
     // Qt < 4.7 lacks QDateTime::setMSecsSinceEpoch(), we need to emulate it.
     qint64 msecs = qint64(icuDate);
@@ -304,13 +305,14 @@ QDateTime MCalendar::qDateTime(Qt::TimeSpec spec) const
         --ddays;
         msecs += MSECS_PER_DAY;
     }
-    time.setDate(QDate(1970, 1, 1).addDays(ddays));
-    time.setTime(QTime().addMSecs(msecs));
+    dateTime.setDate(QDate(1970, 1, 1).addDays(ddays));
+    dateTime.setTime(QTime().addMSecs(msecs));
 #endif
-    // note: we set time spec after time value so Qt will not any conversions
-    // of its own to UTC. We might let Qt handle it but this might be more robust
-    time.setTimeSpec(spec);
-    return time;
+    // note: we set time spec after time value so Qt will not any
+    // conversions of its own to UTC. We might let Qt handle it but
+    // this might be more robust
+    dateTime.setTimeSpec(spec);
+    return dateTime;
 }
 
 
