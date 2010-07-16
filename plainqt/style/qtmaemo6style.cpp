@@ -1165,6 +1165,20 @@ void QtMaemo6Style::polish(QWidget *widget)
         QtMaemo6SliderPopUp* sliderPopup = new QtMaemo6SliderPopUp();
         sliderPopup->enableOn(slider);
     }
+    if(QLineEdit* le = qobject_cast<QLineEdit*>(widget)) {
+        const MTextEditStyle *styleActive =
+                static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Active,
+                        "MTextEditStyle"));
+        const MTextEditStyle *styleInactive =
+                static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_None,
+                        "MTextEditStyle"));
+        if(styleActive && styleInactive) {
+            QPalette pal = le->palette();
+            pal.setColor(QPalette::Inactive, QPalette::Foreground, styleInactive->textColor());
+            pal.setColor(QPalette::Active, QPalette::Foreground, styleActive->textColor());
+            le->setPalette(pal);
+        }
+    }
     widget->installEventFilter(d->m_windowEventFilter);
 }
 
@@ -2222,6 +2236,33 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
     return QtMaemo6TestStyle::subControlRect(control, option, subControl, widget);
 }
 
+QRect QtMaemo6Style::subElementRect(SubElement element, 
+                                    const QStyleOption* option, 
+                                    const QWidget* widget) const 
+{
+    QRect retRect = QtMaemo6TestStyle::subElementRect(element, option, widget);
+    switch(element) {
+        case SE_LineEditContents: {
+            if(widget) {
+                const MTextEditStyle *style =
+                        static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Sunken,
+                                "MTextEditStyle"));
+                QFontMetrics fm(widget->font());
+                if(style) {
+                    retRect.translate(style->paddingLeft(), 0);
+                }
+                if(fm.height() > retRect.height())
+                    retRect.setHeight(fm.height());
+            }
+        }
+        break;
+        default:
+            retRect = QtMaemo6TestStyle::subElementRect(element, option, widget);
+    };
+    return retRect;
+}
+
+
 QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                                       const QStyleOption *option,
                                       const QSize &contentsSize,
@@ -2351,6 +2392,24 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
         // this is done by the windowdecoration
         if (widget == d->m_menuBar)
             retSize = QSize(0, 0);
+    }
+    break;
+    case CT_ComboBox:
+    case CT_LineEdit: {
+        retSize = QtMaemo6TestStyle::sizeFromContents(type, option, contentsSize, widget);
+        if(widget) {
+            QFontMetrics fm(widget->font());
+
+            const MTextEditStyle *style =
+                  static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(QStyle::State_Sunken,
+                          "MTextEditStyle"));
+            int requiredHeight = fm.height();
+            if(style) {
+                requiredHeight += style->paddingTop() + style->paddingBottom();
+            }
+            if(retSize.height() < requiredHeight)
+                retSize.setHeight(requiredHeight);
+        }
     }
     break;
     default:

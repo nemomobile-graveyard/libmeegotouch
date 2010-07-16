@@ -105,6 +105,10 @@ public:
                                  const QStyleOptionComplex *option,
                                  SubControl subControl,
                                  const QWidget *widget = 0) const;
+                                 
+    virtual QRect subElementRect(SubElement element, 
+                                 const QStyleOption* option, 
+                                 const QWidget* widget = 0 ) const; 
     /*! \reimp_end */
 
     /*!
