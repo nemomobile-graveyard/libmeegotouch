@@ -751,17 +751,29 @@ QString MCalendar::systemTimeZone()
     return MIcuConversions::unicodeStringToQString(id);
 }
 
-
 //static
 //! Sets system time zone
 void MCalendar::setSystemTimeZone(const QString &timezone)
 {
     icu::UnicodeString tzString = MIcuConversions::qStringToUnicodeString(timezone);
     icu::TimeZone *tz = icu::TimeZone::createTimeZone(tzString);
-    // FIXME: should we check the creation succeeds with the string?
-    icu::TimeZone::adoptDefault(tz);
+    // The documentation of says “Return result guaranteed to be non-null.”,
+    // see http://icu-project.org/apiref/icu4c/classTimeZone.html
+    // but I put in an assert anyway:
+    Q_ASSERT_X(tz != NULL,
+               "MCalendar::setSystemTimeZone",
+               "icu::TimeZone::createTimeZone() returned NULL.");
+    if (tz) {
+        icu::UnicodeString tzStringReal;
+        QString timezoneReal
+            = MIcuConversions::unicodeStringToQString(tz->getID(tzStringReal));
+        if (timezone != timezoneReal)
+            qCritical()
+                << __PRETTY_FUNCTION__
+                << "icu::TimeZone::createTimeZone() created a different timezone.";
+        icu::TimeZone::adoptDefault(tz);
+    }
 }
-
 
 //static
 //! Enumerates possible timezone IDs
