@@ -510,7 +510,21 @@ void Ut_MLabel::linefeedBeforeFirstTag()
     //This is true if label interprets <br> tags correctly 
     QVERIFY(prefSizeHint.height() > prefSizeHint.width());
 
-
+    
 }
+
+void Ut_MLabel::highlighterEmptyRegexp()
+{   
+    //This test verifies that label doesn't
+    //go to an infinite loop when a highlighter 
+    //matching an empty string is used.
+    
+    QRegExp regexp("^");
+    MCommonLabelHighlighter highlighter(regexp);
+    label->setText("test");
+    label->addHighlighter(&highlighter);
+    captureImage(label);
+}
+
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

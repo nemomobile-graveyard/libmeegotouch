@@ -450,6 +450,12 @@ void MLabelViewRich::updateHighlighting()
         QTextCursor cursor(&textDocument);
         while (!cursor.isNull() && !cursor.atEnd()) {
             cursor = textDocument.find(highlighter->highlightExpression(), cursor);
+           
+            //Regexp matching an empty string doesn’t advance cursor
+            if (cursor.selectedText().isNull()) {
+                break;
+            }
+
             if (!cursor.isNull()) {
                 QString item = cursor.selectedText();
                 if (highlighter->validate(item)) {
