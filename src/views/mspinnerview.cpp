@@ -33,7 +33,8 @@ MSpinnerViewPrivate::MSpinnerViewPrivate()
        controller(0),
        pieBrush(Qt::NoBrush),
        piePen(Qt::NoPen),
-       positionAnimation(0)
+       positionAnimation(0),
+       angle(0)
 {
 }
 
@@ -42,14 +43,18 @@ MSpinnerViewPrivate::~MSpinnerViewPrivate()
     delete positionAnimation;
 }
 
-void MSpinnerViewPrivate::checkAnimationStatus()
+void MSpinnerViewPrivate::resumeAnimation()
 {
-    if (positionAnimation) {
-        if (controller->isVisible() && controller->isOnDisplay())
-            positionAnimation->start();
-        else
-            positionAnimation->stop();
+    if (controller->unknownDuration()) {
+        if (positionAnimation->state() == QPropertyAnimation::Paused)
+            positionAnimation->resume();
     }
+}
+
+void MSpinnerViewPrivate::pauseAnimation()
+{
+    if (positionAnimation->state() == QPropertyAnimation::Running)
+        positionAnimation->pause();
 }
 
 MSpinnerView::MSpinnerView(MProgressIndicator *controller) :
@@ -76,24 +81,38 @@ void MSpinnerView::setupAnimation()
 {
     Q_D(MSpinnerView);
 
-    if (model()->unknownDuration()) {
-        if (!d->positionAnimation) {
-            d->controller->setRange(0, 360);
-            d->positionAnimation = new QPropertyAnimation(d->controller, "value", 0);
-            d->positionAnimation->setStartValue(0);
-            d->positionAnimation->setEndValue(360);
-            d->positionAnimation->setStartValue(0);
-            d->positionAnimation->setLoopCount(-1);
-            d->positionAnimation->setDuration(style()->period());
-            d->positionAnimation->start();
-        }
-    } else {
-        if (d->positionAnimation) {
-            d->positionAnimation->stop();
-            delete d->positionAnimation;
-            d->positionAnimation = 0;
-        }
+    if (!d->positionAnimation) {
+        d->positionAnimation = new QPropertyAnimation(this, "angle", 0);
+        d->positionAnimation->setDuration(style()->period());
+        d->positionAnimation->setStartValue(0);
+        d->positionAnimation->setEndValue(360);
+        d->positionAnimation->setLoopCount(-1);
     }
+
+    if (model()->unknownDuration()) {
+        if (d->positionAnimation->state() == QPropertyAnimation::Paused)
+            d->positionAnimation->resume();
+        else
+            d->positionAnimation->start();
+    } else {
+        if (d->positionAnimation->state() == QPropertyAnimation::Running)
+            d->positionAnimation->pause();
+    }
+}
+
+int MSpinnerView::angle() const
+{
+    Q_D(const MSpinnerView);
+
+    return d->angle;
+}
+
+void MSpinnerView::setAngle(int angle)
+{
+    Q_D(MSpinnerView);
+
+    d->angle = angle;
+    update();
 }
 
 void MSpinnerView::updateData(const QList<const char *>& modifications)
@@ -116,10 +135,10 @@ void MSpinnerView::applyStyle()
 
      if (d->positionAnimation) {
          d->positionAnimation->setDuration(style()->period());
-         d->positionAnimation->start();
      }
 
-     d->pieBrush.setStyle(Qt::NoBrush);
+     if (style()->progressPixmap() && !style()->progressPixmap()->isNull())
+         d->pieBrush.setTexture(*style()->progressPixmap());
 
      update();
 }
@@ -152,10 +171,10 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
     // (from spinner ring is visible that part where is no pie)
     if (model()->unknownDuration()) {
         if (!reverse) {
-            startAngle = model()->value();
-            endAngle = startAngle +  90;
+            startAngle = angle();
+            endAngle = startAngle + 90;
         } else {
-            startAngle = -model()->value();
+            startAngle = -angle();
             endAngle = startAngle - 90;
         }
     } else {
@@ -166,11 +185,6 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
             startAngle = 0.0;
             endAngle =  -360 * (model()->value() - model()->minimum()) / (model()->maximum() - model()->minimum());
         }
-    }
-
-    if (style()->progressPixmap() && !style()->progressPixmap()->isNull()) {
-        if (d->pieBrush.style() == Qt::NoBrush)
-            d->pieBrush.setTexture(*style()->progressPixmap());
     }
 
     if (!d->pieBrush.texture().isNull()) {
@@ -185,19 +199,24 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
 void MSpinnerView::visibilityChangedSlot()
 {
     Q_D(MSpinnerView);
-    d->checkAnimationStatus();
+    if (d->controller->isVisible() && d->controller->isOnDisplay())
+        d->resumeAnimation();
+    else
+        d->pauseAnimation();
 }
 
 void MSpinnerView::displayEnteredSlot()
 {
     Q_D(MSpinnerView);
-    d->checkAnimationStatus();
+
+    if (d->controller->isVisible())
+        d->resumeAnimation();
 }
 
 void MSpinnerView::displayExitedSlot()
 {
     Q_D(MSpinnerView);
-    d->checkAnimationStatus();
+    d->pauseAnimation();
 }
 
 #include "moc_mspinnerview.cpp"

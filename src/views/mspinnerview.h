@@ -66,6 +66,7 @@ class M_EXPORT MSpinnerView : public MWidgetView
     Q_OBJECT
     M_VIEW(MProgressIndicatorModel, MSpinnerStyle)
 
+    Q_PROPERTY(int angle READ angle WRITE setAngle)
 public:
     /*!
      * \brief Constructor
@@ -115,6 +116,9 @@ private:
              is of unknown or know duration
      */
    void setupAnimation();
+
+   int angle() const;
+   void setAngle(int angle);
 
     Q_DISABLE_COPY(MSpinnerView)
     Q_DECLARE_PRIVATE(MSpinnerView)

@@ -40,15 +40,16 @@ public:
     MSpinnerViewPrivate();
     virtual ~MSpinnerViewPrivate();
 
-    void checkAnimationStatus();
+    void resumeAnimation();
+    void pauseAnimation();
 
     MProgressIndicator *controller;
 
-    mutable QBrush pieBrush;
-    mutable QPen piePen;
-
+    QBrush pieBrush;
+    QPen piePen;
 
     QPropertyAnimation* positionAnimation;
+    int angle;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;

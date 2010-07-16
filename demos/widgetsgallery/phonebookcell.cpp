@@ -94,7 +94,6 @@ MProgressIndicator *PhoneBookCell::spinnerWidget()
         spinner = new MProgressIndicator(NULL, MProgressIndicator::spinnerType);
         spinner->setUnknownDuration(true);
         spinner->setObjectName("CommonSpinner");
-
     }
     return spinner;
 }
@@ -203,3 +202,4 @@ void PhoneBookCell::setImage(const QImage &iconImage)
         imageWidget()->setVisible(true);
     }
 }
+
