@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=Application
-Name=Chaining Example App1
+Name=1-Chaining Example App
 Icon=icon-l-video
 X-Maemo-Service=com.nokia.chainingexampleapp1
 Exec=chainingexampleapp1

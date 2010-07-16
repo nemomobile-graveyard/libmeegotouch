@@ -12,15 +12,6 @@ int main(int argc, char** argv)
 {
     MApplication app(argc, argv);
 
-    MApplicationWindow w;
-    w.show();
-
-    MApplicationPage p;
-    p.appear();
-
-    MButton b(p.centralWidget());
-    b.setText("NO");
-
     ImageViewer myImageViewer;
 
     new ChainingExampleInterfaceAdaptor( &myImageViewer );

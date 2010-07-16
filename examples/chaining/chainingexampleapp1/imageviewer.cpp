@@ -18,7 +18,7 @@ ImageViewer::~ImageViewer()
 
 void ImageViewer::showImage()
 {
-    QString imageFilename( "YES" );
+    QString imageFilename( "this is a chained view" );
     QStringList list;
     list << imageFilename;
 
