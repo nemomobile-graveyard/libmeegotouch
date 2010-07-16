@@ -64,6 +64,21 @@ class MApplicationMenuPrivate;
         menu->addAction(styleAction);
         \endcode
 
+        In some cases, an application may want to assign its own widget to an action. In principle, any widget can
+        be assigned to an action, but in the case when an action is added to the application menu (via a call to
+        setLocation(MAction::ApplicationMenuLocation) ), only MButtons and MComboBoxes are supported. When
+        an application-supplied Widget is set on an action, it MUST do this before adding the action to the page. The
+        following example shows this process:
+        \code
+        MWidgetAction * action = new MWidgetAction("Format", this);
+        action->setLocation(MAction::ApplicationMenuLocation);
+
+        MComboBox * formats = new MComboBox(this);
+        action->setWidget(formats);
+
+        menu->addAction(action);
+        \endcode
+
     \section MMenuUseGuidelines Usage guidelines
         - Application menu is for commands and actions that are not tied to any of the content items within
           the view, and/or are accessed rarely for the whole lifespan of the use of the application.
