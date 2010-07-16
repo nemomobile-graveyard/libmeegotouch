@@ -1,7 +1,7 @@
 # for defines
 include(../mkspecs/common.pri)
 
-MSRCDIR = ../../src/
+MSRCDIR = $${M_SOURCE_TREE}/src
 STUBSDIR = ../stubs
 INCLUDEPATH += \
     . \

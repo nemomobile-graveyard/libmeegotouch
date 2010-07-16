@@ -6,8 +6,8 @@ INCLUDEPATH += ../ut_mlistviewcommon
 HEADERS += ut_mlistviewplain.h
 
 SOURCES += ut_mlistviewplain.cpp  \
-        ../../src/corelib/widgets/views/mlistview_p.cpp \
-        ../../src/corelib/widgets/mcell.cpp \
-        ../../src/corelib/.moc/moc_mlistview_p.cpp
+        $$MSRCDIR/corelib/widgets/views/mlistview_p.cpp \
+        $$MSRCDIR/corelib/widgets/mcell.cpp \
+        $$MSRCDIR/corelib/.moc/moc_mlistview_p.cpp
 
 include(../common_bot.pri)
