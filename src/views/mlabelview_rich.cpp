@@ -319,6 +319,10 @@ void MLabelViewRich::mousePressEvent(QGraphicsSceneMouseEvent *event)
 
 void MLabelViewRich::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
+    mouseDownCursorPos = -1;
+    QPixmapCache::remove(viewPrivate->cacheKey);
+    viewPrivate->controller->update();
+    
     int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
@@ -338,9 +342,6 @@ void MLabelViewRich::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
             viewPrivate->model()->emitLinkActivated(format.anchorHref());
         }
     }
-    mouseDownCursorPos = -1;
-    QPixmapCache::remove(viewPrivate->cacheKey);
-    viewPrivate->controller->update();
 }
 
 void MLabelViewRich::cancelEvent(MCancelEvent *event)
