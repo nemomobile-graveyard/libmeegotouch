@@ -1,7 +1,7 @@
 
 include(../common_top.pri)
-INCLUDEPATH += $$MSRCDIR/include
-DEPENDPATH += $$MSRCDIR/include
+INCLUDEPATH += ../../src/include
+DEPENDPATH += ../../src/include
 TARGET = mt_mmenu
 
 SOURCES += mt_mmenu.cpp

@@ -1,6 +1,6 @@
 include(../common_top.pri)
-INCLUDEPATH += $$MSRCDIR/include
-DEPENDPATH += $$MSRCDIR/include
+INCLUDEPATH += ../../src/include
+DEPENDPATH += ../../src/include
 TARGET = pt_micontestcase
 
 SOURCES += pt_micontestcase.cpp

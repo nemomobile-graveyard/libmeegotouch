@@ -6,16 +6,16 @@ TARGET = ut_mpopuplist
 # unit test and unit
 SOURCES += \
     ut_mpopuplist.cpp \
-    $$MSRCDIR/views/mdialogview.cpp \
-    $$MSRCDIR/views/mbuttongrouplayoutpolicy_p.cpp \
+    ../../src/views/mdialogview.cpp \
+    ../../src/views/mbuttongrouplayoutpolicy_p.cpp \
 
 # unit test and unit
 HEADERS += \
     ut_mpopuplist.h
 
 INCLUDEPATH += \
-    $$MSRCDIR/corelib/widgets \
-    $$MSRCDIR/views/.moc \
-    $$MSRCDIR/views \
+    ../../src/corelib/widgets \
+    ../../src/views/.moc \
+    ../../src/views \
 
 include(../common_bot.pri)

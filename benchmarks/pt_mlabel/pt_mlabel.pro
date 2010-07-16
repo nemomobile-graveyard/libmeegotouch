@@ -1,6 +1,6 @@
 include(../common_top.pri)
-INCLUDEPATH += $$MSRCDIR/include
-DEPENDPATH += $$MSRCDIR/include
+INCLUDEPATH += ../../src/include
+DEPENDPATH += ../../src/include
 TARGET = pt_mlabel
 
 SOURCES += pt_mlabel.cpp

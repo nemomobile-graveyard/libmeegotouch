@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += $$MSRCDIR/include
+INCLUDEPATH += ../../src/include
 DEPENDPATH += $$INCLUDEPATH
 TARGET = pt_mcomponentdata
 

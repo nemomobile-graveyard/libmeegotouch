@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += $$MSRCDIR/include $$MSRCDIR/theme
+INCLUDEPATH += ../../src/include ../../src/theme
 DEPENDPATH += $$INCLUDEPATH
 TARGET = pt_mmenu
 

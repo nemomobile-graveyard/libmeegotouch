@@ -2,7 +2,7 @@ include(../common_top.pri)
 
 TARGET = ut_mabstractitemmodel
 
-INCLUDEPATH += $$MSRCDIR/corelib/widgets \
+INCLUDEPATH += ../../src/corelib/widgets \
 
 HEADERS += ut_mabstractitemmodel.h \
 

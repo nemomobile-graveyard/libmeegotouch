@@ -8,7 +8,7 @@ include(../src/predeps.pri)
 include(../mkspecs/features/meegotouch_mmoc.prf)
 include(../mkspecs/features/meegotouch_mgen.prf)
 
-MSRCDIR = $${M_SOURCE_TREE}/src
+MSRCDIR = ../../src
 STUBSDIR = ../stubs
 INCLUDEPATH += \
     . \

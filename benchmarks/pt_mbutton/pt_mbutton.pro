@@ -1,5 +1,5 @@
 include(../common_top.pri)
-INCLUDEPATH += $$MSRCDIR/include $$MSRCDIR/corelib/theme
+INCLUDEPATH += ../../src/include ../../src/corelib/theme
 DEPENDPATH += $$INCLUDEPATH
 TARGET = pt_mbutton
 

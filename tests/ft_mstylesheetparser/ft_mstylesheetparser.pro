@@ -5,14 +5,14 @@ LIBRARYPATH += $$MSRCDIR
 
 SOURCES += \
 	ft_mstylesheetparser.cpp \
-    $$MSRCDIR/corelib/theme/mlogicalvalues.cpp \
-    $$MSRCDIR/corelib/style/mstylesheetattribute.cpp
+    ../../src/corelib/theme/mlogicalvalues.cpp \
+    ../../src/corelib/style/mstylesheetattribute.cpp
 
 
 HEADERS += \
 	ft_mstylesheetparser.h \
-        $$MSRCDIR/corelib/theme/mlogicalvalues.h \
-        $$MSRCDIR/corelib/style/mstylesheetattribute.h
+	../../src/corelib/theme/mlogicalvalues.h \
+	../../src/corelib/style/mstylesheetattribute.h
 
 support_files.files += \
         *.css \
