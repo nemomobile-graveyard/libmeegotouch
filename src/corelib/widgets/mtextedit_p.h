@@ -112,6 +112,7 @@ private:
     bool ownValidator; // setting content type creates a validator that the widget owns
 
     MCompleter *completer;
+    int registeredToolbarId;
 
     bool editActive; // true if editing started after getting focus
 };

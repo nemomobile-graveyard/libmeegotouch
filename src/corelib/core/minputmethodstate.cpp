@@ -112,16 +112,20 @@ M::OrientationAngle MInputMethodState::activeWindowOrientationAngle() const
 
 int MInputMethodState::registerToolbar(const QString &fileName)
 {
+    Q_D(MInputMethodState);
     static int idCounter = 0;
     // generate an application local unique identifier for the toolbar.
     int newId = idCounter;
     idCounter++;
+    d->toolbars.insert(newId, fileName);
     emit toolbarRegistered(newId, fileName);
     return newId;
 }
 
 void MInputMethodState::unregisterToolbar(int id)
 {
+    Q_D(MInputMethodState);
+    d->toolbars.remove(id);
     emit toolbarUnregistered(id);
 }
 
@@ -129,6 +133,12 @@ void MInputMethodState::setToolbarItemAttribute(int id, const QString &item,
                                                 const QString &attribute, const QVariant &value)
 {
     emit toolbarItemAttributeChanged(id, item, attribute, value);
+}
+
+QString MInputMethodState::toolbar(int id) const
+{
+    Q_D(const MInputMethodState);
+    return d->toolbars.value(id);
 }
 
 #include "moc_minputmethodstate.cpp"

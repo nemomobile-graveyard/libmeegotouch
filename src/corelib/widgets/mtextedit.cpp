@@ -87,6 +87,7 @@ MTextEditPrivate::MTextEditPrivate()
       validator(0),
       ownValidator(false),
       completer(0),
+      registeredToolbarId(-1),
       editActive(false)
 {
 }
@@ -2017,8 +2018,11 @@ QVariant MTextEdit::inputMethodQuery(Qt::InputMethodQuery query) const
     case M::ImCorrectionEnabledQuery:
         return QVariant(inputMethodCorrectionEnabled());
 
-    case M::InputMethodToolbarQuery:
+    case M::InputMethodToolbarIdQuery:
         return QVariant(attachedToolbarId());
+
+    case M::InputMethodToolbarQuery:
+        return QVariant(attachedToolbar());
 
     case Qt::ImMicroFocus:
         // Only check whether this text edit *has* a completer, not whether the completer is
@@ -2320,12 +2324,14 @@ bool MTextEdit::isAutoSipEnabled() const
 
 void MTextEdit::attachToolbar(const QString &name)
 {
+    Q_D(MTextEdit);
     if (attachedToolbar() == name)
         return;
     detachToolbar();
-    int id = MInputMethodState::instance()->registerToolbar(name);
+    // record registered toolbar identifier which will be unregistered when detachToolbar().
+    d->registeredToolbarId = MInputMethodState::instance()->registerToolbar(name);
     model()->setToolbar(name);
-    model()->setToolbarId(id);
+    model()->setToolbarId(d->registeredToolbarId);
 }
 
 void MTextEdit::attachToolbar(int id)
@@ -2333,7 +2339,15 @@ void MTextEdit::attachToolbar(int id)
     if (attachedToolbarId() == id)
         return;
     detachToolbar();
-    model()->setToolbarId(id);
+    const QString toolbar = MInputMethodState::instance()->toolbar(id);
+    if (!toolbar.isEmpty()) {
+        // record attached toolbar identifier and file name.
+        // The toolbar identifier is an unique id in the space of the application.
+        // Two text entries may attach to the same toolbar file, but have two different
+        // toolbar instances (two ids).
+        model()->setToolbar(toolbar);
+        model()->setToolbarId(id);
+    }
 }
 
 QString MTextEdit::attachedToolbar() const
@@ -2348,9 +2362,11 @@ int MTextEdit::attachedToolbarId() const
 
 void MTextEdit::detachToolbar()
 {
-    // only unregister toolbars it has registered.
-    if (!attachedToolbar().isEmpty()) {
-        MInputMethodState::instance()->unregisterToolbar(model()->toolbarId());
+    Q_D(MTextEdit);
+    // only unregister toolbar it has registered.
+    if (d->registeredToolbarId >= 0) {
+        MInputMethodState::instance()->unregisterToolbar(d->registeredToolbarId);
+        d->registeredToolbarId = -1;
     }
     model()->setToolbar(QString());
     model()->setToolbarId(-1);

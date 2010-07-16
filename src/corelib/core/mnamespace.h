@@ -145,7 +145,8 @@ namespace M
         PreeditRectangleQuery,      //!< Retrieve bounding rectangle for current preedit text.
         ImCorrectionEnabledQuery,   //!< explicit correction enabling for text entries
         ImModeQuery,                //!< Retrieve mode: normal, direct or proxy
-        InputMethodToolbarQuery     //!< custom toolbar for text entry
+        InputMethodToolbarIdQuery,  //!< custom toolbar identifier for text entry
+        InputMethodToolbarQuery     //!< custom toolbar file name for text entry
     };
 
     enum PreeditFace {

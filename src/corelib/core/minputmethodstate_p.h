@@ -21,6 +21,7 @@
 #define MINPUTMETHODSTATE_P_H
 
 #include <QObject>
+#include <QMap>
 
 #include "minputmethodstate.h"
 #include "mnamespace.h"
@@ -45,6 +46,8 @@ public:
     M::OrientationAngle orientation;
 
     QTimer *emitInputMethodAreaTimer;
+
+    QMap<int, QString> toolbars;
 
 private:
     Q_DISABLE_COPY(MInputMethodStatePrivate)

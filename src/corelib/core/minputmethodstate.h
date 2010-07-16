@@ -68,17 +68,24 @@ public Q_SLOTS:
      *      /usr/share/meegotouch/imtoolbars/.
      *  \return the registered unique identifier of this toolbar.
      */
-     int registerToolbar(const QString &fileName);
+    int registerToolbar(const QString &fileName);
 
     /*!
      * \brief Unregister an input method toolbar which unique id \a id.
      *  \param \a id is the unique identifier of the registered toolbar.
      */
-     void unregisterToolbar(int id);
+    void unregisterToolbar(int id);
 
     //! \brief Set the \a attribute of the \a item in the input method toolbar which has the unique \a id to \a value.
     void setToolbarItemAttribute(int id, const QString &item,
                                  const QString &attribute, const QVariant &value);
+
+    /*!
+     * \brief Returns the input method toolbar file name which is registered with the unique identifier \id.
+     *  \param id the unique identifier of a registered toolbar.
+     *  \return the file name of toolbar, or empty QString if \a id is invalid.
+     */
+    QString toolbar(int id) const;
 
 Q_SIGNALS:
     //! Emitted when input method area is changed
