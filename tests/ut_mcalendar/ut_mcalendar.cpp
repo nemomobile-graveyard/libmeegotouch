@@ -58,6 +58,7 @@ void Ut_MCalendar::cleanup()
 
 void Ut_MCalendar::testTimeZones()
 {
+    qDebug() << "systemTimeZone() =" << MCalendar::systemTimeZone();
     MCalendar::setSystemTimeZone("Europe/Helsinki");
     QCOMPARE(MCalendar::systemTimeZone(), QString("Europe/Helsinki"));
     foreach (QString timeZone, MCalendar::supportedTimeZones()) {
@@ -964,6 +965,7 @@ void Ut_MCalendar::testMCalendarAdditions()
 {
     MLocale fi_FI("fi_FI");
     MCalendar cal(fi_FI);
+    QVERIFY(cal.isValid());
     cal.setDate(2008, 1, 31);
     cal.setTime(19, 23, 0);
     cal.addMonths(1);
@@ -972,20 +974,76 @@ void Ut_MCalendar::testMCalendarAdditions()
     QCOMPARE(cal.month(), 2);
     QCOMPARE(cal.dayOfMonth(), 29);
     QCOMPARE(cal.dayOfYear(), 60);
-    QCOMPARE(cal.firstDayOfMonth(), 1);
     QCOMPARE(cal.lastDayOfMonth(), 29);
-    QCOMPARE(cal.firstDayOfWeek(), 1);
     QCOMPARE(cal.weekNumber(), 9);
+    QCOMPARE(cal.hour(), 19);
+    QCOMPARE(cal.minute(), 23);
+    QCOMPARE(cal.second(), 0);
+
+    QCOMPARE(cal.firstDayOfMonth(), 1);
+    QCOMPARE(cal.firstDayOfWeek(), 1);
     QCOMPARE(cal.maximumWeeksInMonth(), 6);
     QCOMPARE(cal.daysInWeek(), 7);
 
     // add some hours so calendar changes to 1.3.2008
     cal.addHours(5);
+    QCOMPARE(cal.year(), 2008);
+    QCOMPARE(cal.month(), 3);
+    QCOMPARE(cal.dayOfMonth(), 1);
+    QCOMPARE(cal.dayOfYear(), 61);
+    QCOMPARE(cal.lastDayOfMonth(), 31);
+    QCOMPARE(cal.weekNumber(), 9);
     QCOMPARE(cal.hour(), 0);
     QCOMPARE(cal.minute(), 23);
     QCOMPARE(cal.second(), 0);
+
+    // add some minutes so calendar changes to 2.3.2008
+    cal.addMinutes(1445);
+    QCOMPARE(cal.year(), 2008);
     QCOMPARE(cal.month(), 3);
-    QCOMPARE(cal.dayOfMonth(), 1);
+    QCOMPARE(cal.dayOfMonth(), 2);
+    QCOMPARE(cal.dayOfYear(), 62);
+    QCOMPARE(cal.lastDayOfMonth(), 31);
+    QCOMPARE(cal.weekNumber(), 9);
+    QCOMPARE(cal.hour(), 0);
+    QCOMPARE(cal.minute(), 28);
+    QCOMPARE(cal.second(), 0);
+
+    // add some seconds so calendar changes to 3.3.2008
+    cal.addSeconds(86427);
+    QCOMPARE(cal.year(), 2008);
+    QCOMPARE(cal.month(), 3);
+    QCOMPARE(cal.dayOfMonth(), 3);
+    QCOMPARE(cal.dayOfYear(), 63);
+    QCOMPARE(cal.lastDayOfMonth(), 31);
+    QCOMPARE(cal.weekNumber(), 10);
+    QCOMPARE(cal.hour(), 0);
+    QCOMPARE(cal.minute(), 28);
+    QCOMPARE(cal.second(), 27);
+
+    // add 2 days so calendar changes to 5.3.2008
+    cal.addDays(2);
+    QCOMPARE(cal.year(), 2008);
+    QCOMPARE(cal.month(), 3);
+    QCOMPARE(cal.dayOfMonth(), 5);
+    QCOMPARE(cal.dayOfYear(), 65);
+    QCOMPARE(cal.lastDayOfMonth(), 31);
+    QCOMPARE(cal.weekNumber(), 10);
+    QCOMPARE(cal.hour(), 0);
+    QCOMPARE(cal.minute(), 28);
+    QCOMPARE(cal.second(), 27);
+
+    // add a year so calendar changes to 5.3.2009
+    cal.addYears(1);
+    QCOMPARE(cal.year(), 2009);
+    QCOMPARE(cal.month(), 3);
+    QCOMPARE(cal.dayOfMonth(), 5);
+    QCOMPARE(cal.dayOfYear(), 64);
+    QCOMPARE(cal.lastDayOfMonth(), 31);
+    QCOMPARE(cal.weekNumber(), 10);
+    QCOMPARE(cal.hour(), 0);
+    QCOMPARE(cal.minute(), 28);
+    QCOMPARE(cal.second(), 27);
 }
 
 void Ut_MCalendar::testWeekNumbers()
