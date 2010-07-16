@@ -547,6 +547,9 @@ void MSceneManagerPrivate::addSceneWindow(MSceneWindow *sceneWindow)
     if (!sceneWindow->d_func()->sceneManager) {
         // Just add it
         addUnmanagedSceneWindow(sceneWindow);
+        // This window was not receiving any events. Might not know about orientation change yet.
+        MOrientationChangeEvent event(orientation(angle));
+        scene->sendEvent(sceneWindow, &event);
     } else {
         if (sceneWindow->d_func()->sceneManager != q) {
             // scene window belongs to another scene manager, remove it from him.
