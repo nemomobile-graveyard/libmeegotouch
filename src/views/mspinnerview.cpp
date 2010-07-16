@@ -17,7 +17,6 @@
 **
 ****************************************************************************/
 
-#include <QApplication>
 #include <QPainter>
 #include <QPropertyAnimation>
 
@@ -29,11 +28,12 @@
 #include "mtheme.h"
 
 MSpinnerViewPrivate::MSpinnerViewPrivate()
-    :  q_ptr(0),
-       controller(0),
+    :  q_ptr(NULL),
+       controller(NULL),
        pieBrush(Qt::NoBrush),
        piePen(Qt::NoPen),
-       positionAnimation(0),
+       backgroundPixmap(NULL),
+       positionAnimation(NULL),
        angle(0)
 {
 }
@@ -133,12 +133,16 @@ void MSpinnerView::applyStyle()
 
      Q_D(MSpinnerView);
 
-     if (d->positionAnimation) {
+     if (d->positionAnimation)
          d->positionAnimation->setDuration(style()->period());
+
+     if (style()->progressPixmap() && !style()->progressPixmap()->isNull()) {
+         d->pieBrush.setTexture(*style()->progressPixmap());
+         d->pieRect = QRect(0, 0, d->pieBrush.texture().width(), d->pieBrush.texture().height());
      }
 
-     if (style()->progressPixmap() && !style()->progressPixmap()->isNull())
-         d->pieBrush.setTexture(*style()->progressPixmap());
+     if (style()->bgPixmap() && !style()->bgPixmap()->isNull())
+         d->backgroundPixmap = style()->bgPixmap();
 
      update();
 }
@@ -157,11 +161,11 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
     Q_UNUSED(option);
     Q_D(const MSpinnerView);
 
-    bool reverse = qApp->isRightToLeft();
+    bool reverse = (d->controller->layoutDirection() == Qt::RightToLeft);
 
     //drawing bg
-    if (style()->bgPixmap() && !style()->bgPixmap()->isNull())
-        painter->drawPixmap(0, 0, *style()->bgPixmap());
+    if (d->backgroundPixmap && !d->backgroundPixmap->isNull())
+        painter->drawPixmap(0, 0, *d->backgroundPixmap);
 
     // calculated values input into rendering
     qreal startAngle = 0.0;
@@ -190,9 +194,7 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
     if (!d->pieBrush.texture().isNull()) {
        painter->setBrush(d->pieBrush);
        painter->setPen(d->piePen);
-       painter->drawPie(0, 0,
-                        d->pieBrush.texture().width(), d->pieBrush.texture().height(),
-                        (90 - endAngle)*16, (endAngle - startAngle)*16);
+       painter->drawPie(d->pieRect, (90 - endAngle) * 16, (endAngle - startAngle) * 16);
     }
 }
 

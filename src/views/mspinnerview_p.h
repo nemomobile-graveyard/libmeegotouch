@@ -26,6 +26,7 @@ class QTimer;
 class QPixmap;
 class QBrush;
 class QPen;
+class QRect;
 class QPropertyAnimation;
 
 class MSpinnerViewPrivate
@@ -47,9 +48,12 @@ public:
 
     QBrush pieBrush;
     QPen piePen;
+    const QPixmap *backgroundPixmap;
 
     QPropertyAnimation* positionAnimation;
     int angle;
+
+    QRect pieRect;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;
