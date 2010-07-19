@@ -1282,8 +1282,7 @@ public:
      *
      * After calling this method, all changes in the locale related
      * gconf keys will change this locale according to the changes in the
-     * gconf keys, set this locale as the new system default locale
-     * and emit the settingsChanged() signal.
+     * gconf keys, and emit the settingsChanged() signal.
      */
     void connectSettings();
 
