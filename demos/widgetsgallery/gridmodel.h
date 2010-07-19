@@ -49,7 +49,7 @@ struct MediaType
     } rating;
 
     QString path;
-    QPixmap pixmap;
+    QImage image;
     Rating rate;
 };
 

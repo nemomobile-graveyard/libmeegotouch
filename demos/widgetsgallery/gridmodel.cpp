@@ -103,7 +103,7 @@ void GridModel::createItems()
         } else {
             m.type = MediaType::Image;
             m.path = path;
-            m.pixmap = QPixmap();
+            m.image = QImage();
             m_loader->pushImage(path,index);
         }
 
@@ -116,21 +116,11 @@ void GridModel::insertImage(QImage image, int index)
 {
     if( m_items[index].canConvert<MediaType>() ) {
         MediaType m = m_items[index].value<MediaType>();
-        m.pixmap = QPixmap::fromImage(image);
+        m.image = image;
         m.rating = MediaType::OneStar;
         m_items[index] = QVariant::fromValue(m);
 
         emit dataChanged(createIndex(index, 0), createIndex(index, 0));
-    }
-}
-
-static void badgeHelper(int amount, QPixmap& pixmap)
-{
-    for(int i = 0;i<amount;i++) {
-        QPainter painter(&pixmap);
-        painter.setCompositionMode(QPainter::CompositionMode_SourceOver);
-        painter.drawImage( QRectF(i*20,0,30,30),QImage( QDir(IMAGES_DIR).canonicalPath() + QDir::separator() + "star.png") );
-        painter.end();
     }
 }
 
@@ -165,9 +155,7 @@ void GridModel::rateImage(MediaType::Rating rating, const QString& id)
                     // get a fresh image without badge
                     QImage image(id);
                     m_loader->scaleImage( image );
-                    QPixmap p = QPixmap::fromImage( image );
-                    badgeHelper( amount, p );
-                    m.pixmap = p;
+                    m.image = image;
 
                     m_items[index] = QVariant::fromValue(m);
 

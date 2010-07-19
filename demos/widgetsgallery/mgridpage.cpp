@@ -117,7 +117,7 @@ void ContentItemCreator::updateCell(const QModelIndex &index, MWidget *cell) con
 
         imageWidget->setObjectName("gridItem");
 
-        imageWidget->setPixmap( m.pixmap );
+        imageWidget->setImage(m.image);
         imageWidget->setId(m.path);
 
         QObject::connect(imageWidget, SIGNAL(clicked()), m_gridPage, SLOT(itemClicked()));
