@@ -19,7 +19,7 @@ TestObject
 {
     attr-int: $cInt;
     attr-string1: "name";
-    attr-string2: "this is a string with constant $cName";
+    attr-string2: "this is a string with constant $cName" $cInt $cReal;
     attr-bool: $cBool;
     attr-pos1: $cWidth $cHeight; /* comment after the attribute */
     attr-pos2: $cPoint;

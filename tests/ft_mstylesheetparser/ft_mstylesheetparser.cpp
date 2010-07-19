@@ -399,7 +399,7 @@ void Ft_MStyleSheetParser::test_constants()
     QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string1"))->value, QString("\"name\""));
     QVERIFY(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2"), NULL));
     QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2"))->name, QString(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2")));
-    QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2"))->value, QString("\"this is a string with constant $cName\""));
+    QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2"))->value, QString("\"this is a string with constant \"name\"\" 10 1.0"));
     QVERIFY(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool"), NULL));
     QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool"))->name, QString(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool")));
     QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool"))->value, QString("true"));
@@ -482,7 +482,7 @@ void Ft_MStyleSheetParser::test_constants_binary()
     QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string1"))->value, QString("\"name\""));
     QVERIFY(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2"), NULL));
     QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2"))->name, QString(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2")));
-    QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2"))->value, QString("\"this is a string with constant $cName\""));
+    QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-string2"))->value, QString("\"this is a string with constant \"name\"\" 10 1.0"));
     QVERIFY(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool"), NULL));
     QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool"))->name, QString(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool")));
     QCOMPARE(info->selectors[0]->attributes()->value(MStyleSheetAttribute::attributeNameToPropertyName("attr-bool"))->value, QString("true"));

@@ -579,13 +579,7 @@ bool MStyleSheetParserPrivate::importFile(const QString &filename)
 
 bool MStyleSheetParserPrivate::hasConsts(const QString &value) const
 {
-    if (value.isEmpty())
-        return false;
-
-    //if value is not string and it contains at least one '$'
-    if (value[0] != '\"' &&  value.indexOf('$') != -1)
-        return true;
-    return false;
+    return value.contains('$');
 }
 
 void MStyleSheetParserPrivate::setupConsts(QString &value) const
@@ -593,15 +587,10 @@ void MStyleSheetParserPrivate::setupConsts(QString &value) const
     if (value.isEmpty())
         return;
 
-    //constants references inside string values are not allowed
-    if (value[0] == '\"') {
-        return;
-    }
-
     bool result = false;
     int idx1 = 0;
     while ((idx1 = value.indexOf('$')) != -1) {
-        static QRegExp regexp("[ ,()]");
+        static QRegExp regexp("[ ,()\"]");
         int idx2 = value.indexOf(regexp, idx1);
         if (idx2 == -1)
             idx2 = value.count();
