@@ -72,6 +72,9 @@ protected:
     //! \reimp
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
+    virtual void setGeometry(const QRectF &rect);
+    virtual void applyStyle();
+    virtual void updateData(const QList<const char *> &modifications);
     //! \reimp_end
 
     //! \internal

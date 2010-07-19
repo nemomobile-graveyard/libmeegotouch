@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include "mimagewidgetview.h"
+#include "mimagewidgetview_p.h"
 
 #include <QPixmap>
 
@@ -26,22 +27,181 @@
 #include "mviewcreator.h"
 #include "private/mwidgetview_p.h"
 
-class MImageWidgetViewPrivate : public MWidgetViewPrivate
-{
-public:
-    MImageWidgetViewPrivate();
-    ~MImageWidgetViewPrivate();
-
-    MImageWidget *controller;
-};
-
 MImageWidgetViewPrivate::MImageWidgetViewPrivate()
-    : controller(0)
+    : controller(NULL),
+    cachedPixmapSize(0, 0),
+    borderOpacity(1.0),
+    brush(Qt::transparent),
+    leftBorder(0.0),
+    topBorder(0.0),
+    rightBorder(0.0),
+    bottomBorder(0.0)
 {
 }
 
 MImageWidgetViewPrivate::~MImageWidgetViewPrivate()
 {
+}
+
+void MImageWidgetViewPrivate::calculateDrawRect(const QSizeF &imageSize)
+{
+    Q_Q(MImageWidgetView);
+
+    // no image, return
+    if (imageSize.isEmpty())
+        return;
+
+    // get target size, bounded by widget size
+    QSizeF widgetSize = q->size();
+    QSizeF targetSize = widgetSize;
+    QSizeF t;
+
+    // get the image display size
+    qreal fx, fy;
+    controller->zoomFactor(&fx, &fy);
+
+    t.setWidth(imageSize.width()*fx);
+    t.setHeight(imageSize.height()*fy);
+
+    // limited by target size
+    t = targetSize.boundedTo(t);
+
+    // calculate the rectangle of draw
+    qreal dx = (widgetSize.width() - t.width()) / 2.0;
+    qreal dy = (widgetSize.height() - t.height()) / 2.0;
+
+    // calculate draw rect
+    drawRect.setRect(dx, dy, t.width(), t.height());
+}
+
+QSizeF MImageWidgetViewPrivate::calculateSourceSize(const QSizeF &imageSize)
+{
+    QSizeF sourceSize = imageSize;
+    QSizeF targetSize = controller->size();
+
+    // protection codes
+    if (sourceSize.width() < 1.0)
+        sourceSize.setWidth(1.0);
+    if (sourceSize.height() < 1.0)
+        sourceSize.setHeight(1.0);
+
+    QSizeF t;
+
+    // get the image display size
+    qreal fx, fy;
+    controller->zoomFactor(&fx, &fy);
+
+    t.setWidth(imageSize.width()*fx);
+    t.setHeight(imageSize.height()*fy);
+
+    // update sourceSize for crop section by compare with targetSize, simulate zoom effect
+    qreal value;
+    if (t.width() > targetSize.width()) {
+        value = sourceSize.width();
+        sourceSize.setWidth(qRound(value * targetSize.width() / t.width()));
+    }
+    if (t.height() > targetSize.height()) {
+        value = sourceSize.height();
+        sourceSize.setHeight(qRound(value * targetSize.height() / t.height()));
+    }
+
+    return sourceSize;
+}
+
+void MImageWidgetViewPrivate::calculateSourceRect(const QSizeF &imageSize)
+{
+    QPointF topLeft = controller->crop().topLeft();
+    QSizeF originalSize = controller->imageSize();
+    QSizeF sourceSize = calculateSourceSize(imageSize);
+
+    if (topLeft == QPointF(-1.0, -1.0)) {
+        // calculate default crop section
+        qreal dx = (originalSize.width() - sourceSize.width()) / 2.0;
+        qreal dy = (originalSize.height() - sourceSize.height()) / 2.0;
+
+        sourceRect = QRectF(dx, dy, sourceSize.width(), sourceSize.height());
+    } else {
+        // calculate crop section by given topLeft corner
+        qreal dx = topLeft.x();
+        qreal dy = topLeft.y();
+
+        sourceRect = QRectF(dx, dy, qMin(dx + sourceSize.width(), originalSize.width()),
+                            qMin(dy + sourceSize.height(), originalSize.height()));
+    }
+}
+
+void MImageWidgetViewPrivate::checkPixmapSize()
+{
+    Q_Q(MImageWidgetView);
+
+    const QPixmap *pixmap = controller->pixmap();
+    if (pixmap->size() != cachedPixmapSize) {
+        cachedPixmapSize = pixmap->size();
+        q->updateGeometry();
+    }
+}
+
+void MImageWidgetViewPrivate::drawBorders(QPainter *painter, const QRectF &drawRect) const
+{
+    qreal w = leftBorder + rightBorder;
+    qreal h = topBorder + bottomBorder;
+
+    if (w > 0 || h > 0) {
+        QRectF border;
+
+        qreal oldOpacity = painter->opacity();
+        painter->setOpacity(borderOpacity);
+
+        qreal dx = drawRect.x() - leftBorder;
+        qreal dy = drawRect.y() - topBorder;
+
+        if (w > 0 && h == 0) {
+            // only have horizontal border
+            border = QRectF(dx, drawRect.y(), leftBorder, drawRect.height());
+            painter->fillRect(border, brush);
+
+            border = QRectF(drawRect.x() + drawRect.width(), drawRect.y(), rightBorder, drawRect.height());
+            painter->fillRect(border, brush);
+        } else if (w == 0 && h > 0) {
+            // only have vertical border
+            border = QRectF(drawRect.x(), dy, drawRect.width(), topBorder);
+            painter->fillRect(border, brush);
+
+            border = QRectF(drawRect.x(), drawRect.y() + drawRect.height(), drawRect.width(), bottomBorder);
+            painter->fillRect(border, brush);
+        } else {
+            // draw top border
+            border = QRectF(dx, dy, drawRect.width() + w, topBorder);
+            painter->fillRect(border, brush);
+
+            // draw left border
+            border = QRectF(dx, drawRect.y(), leftBorder, drawRect.height());
+            painter->fillRect(border, brush);
+
+            // draw right border
+            border = QRectF(drawRect.x() + drawRect.width(), drawRect.y(), rightBorder, drawRect.height());
+            painter->fillRect(border, brush);
+
+            // draw bottom border
+            border = QRectF(dx, drawRect.y() + drawRect.height(), drawRect.width() + w, bottomBorder);
+            painter->fillRect(border, brush);
+        }
+        painter->setOpacity(oldOpacity);
+    }
+
+}
+
+void MImageWidgetViewPrivate::applyStyle()
+{
+    Q_Q(MImageWidgetView);
+
+    borderOpacity = q->style()->borderOpacity();
+    brush.setColor(q->style()->borderColor());
+
+    leftBorder = q->style()->borderLeft();
+    topBorder = q->style()->borderTop();
+    rightBorder = q->style()->borderRight();
+    bottomBorder = q->style()->borderBottom();
 }
 
 MImageWidgetView::MImageWidgetView(MImageWidget *controller) :
@@ -68,150 +228,54 @@ void MImageWidgetView::drawContents(QPainter *painter, const QStyleOptionGraphic
 
     Q_D(const MImageWidgetView);
 
-    // no image, return
-    QSizeF imageSize = d->controller->d_func()->imageDataSize();
-    if (imageSize.isEmpty()) return;
+    const QPixmap *pixmap = d->controller->pixmap();  
 
-    // the source image section size will be used finally
-    QSizeF sourceSize = imageSize;
+    d->drawBorders(painter, d->drawRect);
 
-    // get target size, bounded by widget size
-    QSizeF widgetSize = size();
-    QSizeF targetSize = widgetSize;
-    QSizeF t;
-
-    // get the image display size
-    qreal fx, fy;
-    d->controller->zoomFactor(&fx, &fy);
-
-    t.setWidth(imageSize.width()*fx);
-    t.setHeight(imageSize.height()*fy);
-
-    // update sourceSize for crop section by compare with targetSize, simulate zoom effect
-    qreal value;
-    if (t.width() > targetSize.width()) {
-        value = sourceSize.width();
-        sourceSize.setWidth(qRound(value * targetSize.width() / t.width()));
-    }
-    if (t.height() > targetSize.height()) {
-        value = sourceSize.height();
-        sourceSize.setHeight(qRound(value * targetSize.height() / t.height()));
-    }
-
-    // limited by target size
-    t = targetSize.boundedTo(t);
-
-    // protection codes
-    if (sourceSize.width() < 1.0)
-        sourceSize.setWidth(1.0);
-    if (sourceSize.height() < 1.0)
-        sourceSize.setHeight(1.0);
-
-    // get values from controller
-    const QPixmap *pixmap = d->controller->pixmap();
-
-    qreal leftBorder = style()->borderLeft();
-    qreal topBorder = style()->borderTop();
-    qreal rightBorder = style()->borderRight();
-    qreal bottomBorder = style()->borderBottom();
-
-    qreal w = leftBorder + rightBorder;
-    qreal h = topBorder + bottomBorder;
-
-    // calculate if need draw border
-    // notice: no border on the cropped edge
-    QSizeF originSize = pixmap->size();
-
-    if (originSize.width() > sourceSize.width())
-        w = 0;
-
-    if (originSize.height() > sourceSize.height())
-        h = 0;
-
-    // calculate the rectangle of draw
-    qreal dx = (widgetSize.width() - t.width()) / 2.0;
-    qreal dy = (widgetSize.height() - t.height()) / 2.0;
-
-    // calculate draw rect
-    QRectF drawRect, sourceRect, border;
-    drawRect.setRect(dx, dy, t.width(), t.height());
-
-    // draw borders outside of target
-    // if both borders equals 0, do not draw border
-    if (w > 0 || h > 0) {
-
-        QColor borderColor = style()->borderColor();
-        qreal borderOpacity = style()->borderOpacity();
-        QBrush brush(borderColor);
-
-        qreal oldOpacity = painter->opacity();
-        painter->setOpacity(borderOpacity);
-
-        dx = drawRect.x() - leftBorder;
-        dy = drawRect.y() - topBorder;
-
-        if (w > 0 && h == 0) {
-            // only have horizontal border
-            border = QRectF(dx, drawRect.y(), leftBorder, drawRect.height());
-            painter->fillRect(border, brush);
-
-            border = QRectF(drawRect.x() + drawRect.width(), drawRect.y(), rightBorder, drawRect.height());
-            painter->fillRect(border, brush);
-        } else if (w == 0 && h > 0) {
-            // only have vertical border
-            border = QRectF(drawRect.x(), dy, drawRect.width(), topBorder);
-            painter->fillRect(border, brush);
-
-            border = QRectF(drawRect.x(), drawRect.y() + drawRect.height(), drawRect.width(), bottomBorder);
-            painter->fillRect(border, brush);
-        } else {
-
-            // draw top border
-            border = QRectF(dx, dy, drawRect.width() + w, topBorder);
-            painter->fillRect(border, brush);
-
-            // draw left border
-            border = QRectF(dx, drawRect.y(), leftBorder, drawRect.height());
-            painter->fillRect(border, brush);
-
-            // draw right border
-            border = QRectF(drawRect.x() + drawRect.width(), drawRect.y(), rightBorder, drawRect.height());
-            painter->fillRect(border, brush);
-
-            // draw bottom border
-            border = QRectF(dx, drawRect.y() + drawRect.height(), drawRect.width() + w, bottomBorder);
-            painter->fillRect(border, brush);
-        }
-        painter->setOpacity(oldOpacity);
-    }
-
-    // draw image
-    QPointF topLeft = d->controller->crop().topLeft();
-
-    if (topLeft == QPointF(-1.0, -1.0)) {
-
-        // calculate default crop section
-        dx = (originSize.width() - sourceSize.width()) / 2.0;
-        dy = (originSize.height() - sourceSize.height()) / 2.0;
-
-        sourceRect = QRectF(dx, dy, sourceSize.width(), sourceSize.height());
+    if (pixmap) {
+        const_cast<MImageWidgetViewPrivate*>(d)->checkPixmapSize();
+        painter->drawPixmap(d->drawRect, *pixmap, d->sourceRect);
     } else {
-
-        // calculate crop section by given topLeft corner
-        dx = topLeft.x();
-        dy = topLeft.y();
-
-        sourceRect = QRectF(dx, dy, qMin(dx + sourceSize.width(), originSize.width()),
-                            qMin(dy + sourceSize.height(), originSize.height()));
+        QImage image = d->controller->d_func()->image;
+        painter->drawImage(d->drawRect, image, d->sourceRect);
     }
-
-    painter->drawPixmap(drawRect, *pixmap, sourceRect);
 }
 
 void MImageWidgetView::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
     MWidgetView::resizeEvent(event);
     update();
+}
+
+void MImageWidgetView::setGeometry(const QRectF &rect)
+{
+    Q_D(MImageWidgetView);
+    MWidgetView::setGeometry(rect);
+
+    QSizeF imageSize = d->controller->d_func()->imageDataSize();
+    d->calculateDrawRect(imageSize);
+    d->calculateSourceRect(imageSize);
+}
+
+void MImageWidgetView::applyStyle()
+{
+    Q_D(MImageWidgetView);
+    MWidgetView::applyStyle();
+
+    d->applyStyle();
+}
+
+void MImageWidgetView::updateData(const QList<const char *> &modifications)
+{
+    MWidgetView::updateData(modifications);
+
+    const char *member;
+    for (int i = 0; i < modifications.count(); i++) {
+        member = modifications[i];
+        if (member == MImageWidgetModel::ZoomFactorX || member == MImageWidgetModel::ZoomFactorY || member == MImageWidgetModel::Crop) {
+            updateGeometry();
+        }
+    }
 }
 
 QSizeF MImageWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const

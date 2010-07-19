@@ -40,10 +40,11 @@ public:
 
     void deepCopy(const MImageWidget &);
 
-    const QPixmap        *pixmap;
-    QString               imageName;
+    const QPixmap *pixmap;
+    QString imageName;
+    QImage image;
 
-    bool                  deletePixmap;
+    bool deletePixmap;
 };
 
 #endif

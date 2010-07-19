@@ -50,6 +50,7 @@ void MImageWidgetPrivate::cleanUp()
             MTheme::releasePixmap(pixmap);
         pixmap = 0;
     }
+    image = QImage();
 }
 
 QSizeF MImageWidgetPrivate::imageDataSize() const
@@ -57,11 +58,15 @@ QSizeF MImageWidgetPrivate::imageDataSize() const
     Q_Q(const MImageWidget);
     QSizeF imageSize = QSizeF(0, 0);
 
-    if (pixmap != 0 && !pixmap->isNull()) {
-        if (q->model()->crop().isEmpty())
-            imageSize = pixmap->size();
-        else
+    if ((pixmap != 0 && !pixmap->isNull()) || (!image.isNull())) {
+        if (q->model()->crop().isEmpty()) {
+            if (image.isNull())
+                imageSize = pixmap->size();
+            else
+                imageSize = image.size();
+        } else {
             imageSize = q->model()->crop().size();
+        }
     }
 
     return imageSize;
@@ -72,8 +77,12 @@ MImageWidgetPrivate &MImageWidgetPrivate::operator=(const MImageWidgetPrivate &o
     cleanUp();
 
     if (other.pixmap != 0) {
-        if (other.deletePixmap)
-            pixmap = new QPixmap(*(other.pixmap));
+        if (other.deletePixmap) {
+            if (other.pixmap)
+                pixmap = new QPixmap(*(other.pixmap));
+            else
+                image = other.image;
+        }
         else
             setImageName(other.imageName, other.pixmap->size());
     }
@@ -130,7 +139,8 @@ MImageWidget::MImageWidget(const QImage *image, QGraphicsItem *parent) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), parent)
 {
     Q_D(MImageWidget);
-    d->pixmap = new QPixmap(QPixmap::fromImage(*image));
+    d->pixmap = NULL;
+    d->image = *image;
 }
 
 MImageWidget::MImageWidget(const QPixmap *pixmap, QGraphicsItem *parent) :
@@ -180,6 +190,8 @@ QSize MImageWidget::imageSize() const
     Q_D(const MImageWidget);
     if (d->pixmap != 0)
         return d->pixmap->size();
+    else
+        return d->image.size();
 
     return QSize();
 }
@@ -217,7 +229,8 @@ void MImageWidget::zoomFactor(qreal *fx, qreal *fy) const
     Q_D(const MImageWidget);
 
     QSizeF imageSize = d->imageDataSize();
-    if (imageSize.isEmpty()) return;
+    if (imageSize.isEmpty())
+        return;
 
     // if factor not equals 0, calculate it with imageSize, targetSize and widgetSize
     QSizeF buffer;
@@ -267,7 +280,8 @@ void MImageWidget::zoomOut()
 
 void MImageWidget::setAspectRatioMode(Qt::AspectRatioMode mode)
 {
-    if (model()->aspectRatioMode() == mode) return;
+    if (model()->aspectRatioMode() == mode)
+        return;
     model()->setAspectRatioMode(mode);
 }
 
@@ -279,10 +293,13 @@ Qt::AspectRatioMode MImageWidget::aspectRatioMode() const
 void MImageWidget::setCrop(const QRectF &rect)
 {
     Q_D(MImageWidget);
-    if (d->pixmap == 0) return;
-    if (rect.size().width() < 0 || rect.size().height() < 0) return;
+    if (d->pixmap == 0 && d->image.isNull())
+        return;
 
-    QSizeF imageSize = d->pixmap->size();
+    if (rect.size().width() < 0 || rect.size().height() < 0)
+        return;
+
+    QSizeF imageSize = this->imageSize();
 
     // protect the crop section size not beyond the image size
     QRectF r;
@@ -330,8 +347,8 @@ void MImageWidget::setImage(const QImage &image)
     Q_D(MImageWidget);
 
     d->cleanUp();
-    d->pixmap = new QPixmap(QPixmap::fromImage(image));
-    d->deletePixmap = true;
+    d->image = image;
+    d->deletePixmap = false;
 
     model()->setCrop(QRect());
 
