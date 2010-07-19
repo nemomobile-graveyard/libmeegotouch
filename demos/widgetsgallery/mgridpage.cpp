@@ -278,12 +278,14 @@ void MGridPage::configureGrid()
 
 void MGridPage::configureGrid(M::Orientation orientation)
 {
-    if (orientation == M::Portrait) {
-        m_itemSize.setHeight(list->geometry().width() / m_columnsPortrait);
-        list->setColumns(m_columnsPortrait);
-    } else {
-        m_itemSize.setHeight(list->geometry().width() / m_columnsLandscape);
-        list->setColumns(m_columnsLandscape);
+    if (list) {
+        if (orientation == M::Portrait) {
+            m_itemSize.setHeight(list->geometry().width() / m_columnsPortrait);
+            list->setColumns(m_columnsPortrait);
+        } else {
+            m_itemSize.setHeight(list->geometry().width() / m_columnsLandscape);
+            list->setColumns(m_columnsLandscape);
+        }
     }
     m_itemSize.setWidth(m_itemSize.height());
 
