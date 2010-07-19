@@ -69,6 +69,24 @@ class M_EXPORT MProgressIndicatorStyle : public MWidgetStyle
         \brief Distance between circle elements as a multiplier to element size.
     */
     M_STYLE_ATTRIBUTE(qreal, elementDistance, ElementDistance)
+
+    /*!
+        \property MProgressIndicatorCandybarStyle::fillImage
+        \brief  Mask for the progress image.
+    */
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, fillImage, FillImage)
+
+    /*!
+        \property MProgressIndicator::maskImage
+        \brief  mask of the progress image.
+    */
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, maskImage, MaskImage)
+
+    /*!
+        \property MProgressIndicator::fillImageTiled
+        \brief stretched or tiled.
+    */
+    M_STYLE_ATTRIBUTE(bool, fillImageTiled, FillImageTiled)
 };
 
 /*!

@@ -33,12 +33,29 @@ class MProgressIndicatorBarViewPrivate : public QObject
     Q_OBJECT
     Q_DECLARE_PUBLIC(MProgressIndicatorBarView)
 
+    QImage leftEndImage;
+    QImage rightEndImage;
+    QPixmap rightEndMask;
+    QPixmap leftEndMask;
+
+    QPixmap barMask;
+
+    int leftWidth, rightWidth, top, bottom;
+
 protected:
     MProgressIndicatorBarView *q_ptr;
 
 public:
     MProgressIndicatorBarViewPrivate();
     ~MProgressIndicatorBarViewPrivate();
+
+    void resetBarComposition();
+    void setupBarBody();
+    void updateBarPosition();
+    void createMaskOnGeometry();
+
+    void compositeBarForUnknownDuration();
+    void figureOutSizes();
 
     Q_PROPERTY(qreal position READ getPosition WRITE setPosition)
 
@@ -55,6 +72,20 @@ public:
     qreal position;
     QPropertyAnimation *animation;
     int width;
+
+    QPixmap barBody;
+
+    QPixmap rightEnd;
+    QPixmap leftEnd;
+
+    QRectF rightEndRect;
+    QRectF leftEndRect;
+
+    QPixmap barComposition;
+    QPainter* backgroundPainter;
+    int previousValue;
+
+    MScalableImage* scalableBarImage;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;

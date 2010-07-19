@@ -40,11 +40,15 @@ MProgressIndicatorBarViewPrivate::MProgressIndicatorBarViewPrivate()
        animation(0),
        width(0)
 {
+    backgroundPainter = new QPainter;
+    scalableBarImage = new MScalableImage;
 }
 
 
 MProgressIndicatorBarViewPrivate::~MProgressIndicatorBarViewPrivate()
 {
+    delete backgroundPainter;
+    delete scalableBarImage;
 }
 
 void MProgressIndicatorBarViewPrivate::setPosition(qreal pos)
@@ -71,6 +75,57 @@ void MProgressIndicatorBarViewPrivate::animate(bool animate)
     } else {
         animation->stop();
     }
+}
+
+void MProgressIndicatorBarViewPrivate::createMaskOnGeometry()
+{
+    Q_Q(MProgressIndicatorBarView);
+
+    const int height = q->rect().height();
+    const QPoint topLeft(0,0);
+    QPainter p;
+
+    /*
+       leftEnd      barMask      rightEnd
+       +-----+-------+---+--------+-----+
+       |     |       |///|        |     |
+       |     |       |///|        |     |
+       |     |       |///|        |     |
+       +-----+-------+---+--------+-----+
+     */
+
+    QPixmap canvas(q->rect().width(),height);
+    canvas.fill(Qt::transparent);
+
+    leftEndMask = QPixmap(leftWidth,height);
+    leftEndMask.fill(Qt::transparent);
+
+    rightEndMask = QPixmap(rightWidth,height);
+    rightEndMask.fill(Qt::transparent);
+
+    // first scale up and draw the entire mask image
+    p.begin( &canvas );
+    q->style()->maskImage()->draw(q->rect().toRect(), &p);
+    p.end();
+
+    // then cut out left end
+    p.begin(&leftEndMask);
+    p.drawPixmap( QRect(topLeft,leftEndMask.size()), canvas, QRect(topLeft,QSize(leftWidth,height)) );
+    p.end();
+
+    // and cut out right end
+    p.begin(&rightEndMask);
+    p.drawPixmap( QRect(topLeft,rightEndMask.size()), canvas, QRect(QPoint(q->rect().toRect().width()-rightWidth,0),QSize(rightWidth,height)) );
+    p.end();
+
+    barMask = QPixmap( QSize(q->style()->fillImage()->pixmap()->width(),height) );
+    barMask.fill(Qt::transparent);
+
+    // alpha blending is more correct in the middle
+    const QPoint centerTop( q->rect().center().x() - barMask.size().width()/2, q->rect().y() );
+    p.begin(&barMask);
+    p.drawPixmap( QRect(QPoint(0,0),barMask.size()), canvas, QRect(centerTop, barMask.size()) );
+    p.end();
 }
 
 MProgressIndicatorBarView::MProgressIndicatorBarView(MProgressIndicator *controller) :
@@ -102,11 +157,45 @@ MProgressIndicatorBarView::~MProgressIndicatorBarView()
     delete d_ptr;
 }
 
+void MProgressIndicatorBarViewPrivate::updateBarPosition()
+{
+    Q_Q(MProgressIndicatorBarView);
+
+    bool reverse = qApp->isRightToLeft();
+    QRect r(q->rect().toRect());
+    const qreal offset = (qreal)(q->model()->value() - q->model()->minimum()) / (qreal)(q->model()->maximum() - q->model()->minimum());
+
+    if (offset > 0) {
+        if (!reverse)
+            r.moveRight(offset * r.width());
+        else
+            r.moveLeft((1 - offset) * r.width());
+
+        if (q->style()->fillImage())
+            backgroundPainter->drawPixmap( r,barBody );
+    }
+}
+
 void MProgressIndicatorBarView::updateData(const QList<const char *>& modifications)
 {
     MWidgetView::updateData(modifications);
 
     Q_D(MProgressIndicatorBarView);
+
+    if(d->barBody.isNull()) {
+        d->figureOutSizes();
+        d->createMaskOnGeometry();
+        d->resetBarComposition();
+        d->setupBarBody();
+    }
+
+    if( d->previousValue > model()->value() ) {
+        d->resetBarComposition();
+    }
+
+    d->previousValue = model()->value();
+
+    d->updateBarPosition();
 
     foreach(const char * member, modifications) {
         if (member == MProgressIndicatorModel::UnknownDuration) {
@@ -132,6 +221,122 @@ void MProgressIndicatorBarView::setupModel()
     update();
 }
 
+void MProgressIndicatorBarViewPrivate::figureOutSizes()
+{
+    Q_Q(MProgressIndicatorBarView);
+
+    q->style()->maskImage()->borders(&leftWidth,&rightWidth,&top,&bottom);
+
+    rightEndRect = QRectF( QPointF(0.0,0.0), QSizeF(
+            rightWidth,
+            q->rect().height() ) );
+
+    leftEndRect = QRectF( QPointF(0.0,0.0), QSizeF(
+            leftWidth,
+            q->rect().height() ) );
+}
+
+void MProgressIndicatorBarViewPrivate::setupBarBody()
+{
+    Q_Q(MProgressIndicatorBarView);
+
+    barBody = QPixmap( q->rect().size().toSize() );
+    barBody.fill(Qt::transparent);
+
+    q->style()->maskImage()->borders(&leftWidth,&rightWidth,&top,&bottom);
+
+    // draw the mask
+    QPainter painter(&barBody);
+    painter.drawPixmap(q->rect().toRect(), barMask);
+    painter.end();
+
+    // paint the filling onto the mask, in slices
+    painter.begin(&barBody);
+    painter.setCompositionMode(QPainter::CompositionMode_SourceIn);
+    const QRect sourceRect( QPoint(0,0), q->style()->fillImage()->pixmap()->size() );
+    const int step = sourceRect.width();
+    for(int i=0;i<q->rect().width();i+=step) {
+        const QRectF nextRect(i,0,step,q->rect().height());
+        if(q->style()->fillImageTiled())
+            painter.drawTiledPixmap( nextRect, *q->style()->fillImage()->pixmap());
+        else // stretched
+            painter.drawPixmap( nextRect, *q->style()->fillImage()->pixmap(), sourceRect);
+    }
+    painter.end();
+
+    // draw the right end
+    rightEndImage = QImage( rightEndRect.size().toSize(), QImage::Format_ARGB32 );
+qCritical() << q->style()->fillImageTiled();
+    painter.begin(&rightEndImage);
+    if(q->style()->fillImageTiled())
+        painter.drawTiledPixmap( rightEndRect.toRect(), *q->style()->fillImage()->pixmap() );
+    else // stretched
+        q->style()->fillImage()->draw( rightEndRect.toRect(), &painter );
+    painter.end();
+
+    painter.begin(&rightEndImage);
+    painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+    painter.drawPixmap( rightEndRect.toRect(), rightEndMask );
+    painter.end();
+
+    rightEnd = QPixmap::fromImage( rightEndImage );
+
+    // draw the left end
+    leftEndImage = QImage( leftEndRect.size().toSize(), QImage::Format_ARGB32 );
+
+    painter.begin(&leftEndImage);
+    q->style()->fillImage()->draw( leftEndRect.toRect(), &painter );
+    painter.end();
+
+    painter.begin(&leftEndImage);
+    painter.setCompositionMode(QPainter::CompositionMode_DestinationIn);
+    painter.drawPixmap( leftEndRect.toRect(), leftEndMask );
+    painter.end();
+
+    leftEnd = QPixmap::fromImage(leftEndImage);
+}
+
+void MProgressIndicatorBarViewPrivate::compositeBarForUnknownDuration()
+{
+    Q_Q(MProgressIndicatorBarView);
+
+    QPainter painter;
+
+    const qreal bodyWidth = 100.0;
+    QRectF udLeftEndRect( QPointF(0,0), leftEndRect.size() );
+    QRectF udBodyRect( udLeftEndRect.topRight(), QSizeF(bodyWidth, q->rect().height()) );
+    QRectF udRightEndRect( udBodyRect.topRight(), rightEndRect.size() );
+
+    QRectF udBarRect( 0,0, leftWidth + bodyWidth + rightWidth, q->rect().height() );
+
+    QPixmap* activeImagePixmap = new QPixmap( udBarRect.size().toSize() );
+    activeImagePixmap->fill(Qt::transparent);
+
+    painter.begin(activeImagePixmap);
+    painter.drawImage( udLeftEndRect, leftEndImage );
+    painter.drawPixmap( udBodyRect.toRect(), barBody );
+    painter.drawImage( udRightEndRect, rightEndImage );
+    painter.end();
+
+    scalableBarImage = new MScalableImage( activeImagePixmap, leftWidth, rightWidth, top, bottom );
+}
+
+void MProgressIndicatorBarViewPrivate::resetBarComposition()
+{
+    Q_Q(MProgressIndicatorBarView);
+
+    if( backgroundPainter->isActive() )
+        backgroundPainter->end();
+
+    barComposition = QPixmap(q->rect().size().toSize());
+    barComposition.fill(Qt::transparent);
+
+    if(backgroundPainter->begin(&barComposition)) {
+        q->style()->inactiveImage()->draw( q->rect().toRect(), backgroundPainter );
+        backgroundPainter->setCompositionMode( QPainter::CompositionMode_SourceAtop );
+    }
+}
+
 void MProgressIndicatorBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
     Q_UNUSED(option);
@@ -152,15 +357,17 @@ void MProgressIndicatorBarView::drawContents(QPainter *painter, const QStyleOpti
             qreal offset = (qreal)(model()->value() - model()->minimum()) / (qreal)(model()->maximum() - model()->minimum());
             if (offset > 0) {
                 if (!reverse) {
-                    r.setRight(offset * r.width());
-                    if (r.width() < minimumScalableWidth)
-                        r.setRight(r.left() + minimumScalableWidth);
+                    r.moveRight(offset * r.width());
                 } else {
-                    r.setLeft((1.0 - offset) * r.width());
-                    if (r.width() < minimumScalableWidth)
-                        r.setLeft(r.right() - minimumScalableWidth);
+                    r.moveLeft((1 - offset) * r.width());
                 }
-                style()->activeImage()->draw(r, painter);
+
+                if (style()->fillImage()) {
+                    painter->drawPixmap( 0,0, d->barComposition );
+                    const int shift_left_to_avoid_flickering = 0;
+                    const QRect rightEndRect(QPoint(r.topRight().x()-shift_left_to_avoid_flickering,0),d->rightEndRect.size().toSize());
+                    painter->drawPixmap( rightEndRect, d->rightEnd );
+                }
             }
         } else {
             qreal distance = d->position * (qreal) r.width();
@@ -179,9 +386,9 @@ void MProgressIndicatorBarView::drawContents(QPainter *painter, const QStyleOpti
                 }
 
                 if (r.width() >= minimumScalableWidth)
-                    style()->activeImage()->draw(r, painter);
+                    d->scalableBarImage->draw( r, painter );
                 if (r2.width() >= minimumScalableWidth)
-                    style()->activeImage()->draw(r2, painter);
+                    d->scalableBarImage->draw( r2, painter );
             } else {
 
                 // one draw call
@@ -196,7 +403,7 @@ void MProgressIndicatorBarView::drawContents(QPainter *painter, const QStyleOpti
                     if (r.width() < minimumScalableWidth)
                         r.setLeft(r.right() - minimumScalableWidth);
                 }
-                style()->activeImage()->draw(r, painter);
+                d->scalableBarImage->draw( r, painter );
             }
         }
     }
@@ -234,6 +441,14 @@ void MProgressIndicatorBarView::resizeEvent(QGraphicsSceneResizeEvent *event)
     if (d->width != rect().width()) {
         d->width = rect().width();
         d->animation->setDuration(d->width * 1000 / style()->speed());
+    }
+
+    if(model()->unknownDuration()) {
+        d->figureOutSizes();
+        d->createMaskOnGeometry();
+        d->resetBarComposition();
+        d->setupBarBody();
+        d->compositeBarForUnknownDuration();
     }
 }
 

@@ -55,7 +55,7 @@ void ProgressBarPage::createContent()
 
     bar1 = new MProgressIndicator(centralWidget(), MProgressIndicator::barType);
     // Since range's type is int, we want a fairly large number here, to get a smooth animation
-    bar1->setRange(0, 99999);
+    bar1->setRange(0, 400);
     bar1->setValue(0);
     containerPolicy->addItem(bar1);
 
@@ -72,7 +72,7 @@ void ProgressBarPage::createContent()
     animation->setLoopCount(-1);
     // start and end value should match bar1's range
     animation->setStartValue(0);
-    animation->setEndValue(99999);
+    animation->setEndValue(400);
     // 10 ms to fill the bar
     animation->setDuration(10000);
     animation->start();
