@@ -736,36 +736,39 @@ QSizeF MSliderGroove::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
 {
     Q_UNUSED(constraint);
 
+    qreal preferredWidth;
+    qreal preferredHeight;
+
     switch (which) {
     case Qt::MinimumSize: {
         if (orientation == Qt::Horizontal) {
-            qreal preferredHeight = qMax(sliderHandle->sizeHint(Qt::PreferredSize).height(), grooveThickness);
+            preferredHeight = qMax(sliderHandle->sizeHint(Qt::PreferredSize).height(), grooveThickness);
             return QSizeF(minimumLength, preferredHeight);
         }
         if (orientation == Qt::Vertical) {
-            qreal preferredWidth = qMax(sliderHandle->sizeHint(Qt::PreferredSize).width(), grooveThickness);
+            preferredWidth = qMax(sliderHandle->sizeHint(Qt::PreferredSize).width(), grooveThickness);
             return QSizeF(preferredWidth, minimumLength);
         }
         break;
     }
     case Qt::PreferredSize: {
         if (orientation == Qt::Horizontal) {
-            qreal preferredHeight = qMax(sliderHandle->sizeHint(Qt::PreferredSize).height(), grooveThickness);
+            preferredHeight = qMax(sliderHandle->sizeHint(Qt::PreferredSize).height(), grooveThickness);
             return QSizeF(preferredLength, preferredHeight);
         }
         if (orientation == Qt::Vertical) {
-            qreal preferredWidth = qMax(sliderHandle->sizeHint(Qt::PreferredSize).width(), grooveThickness);
+            preferredWidth = qMax(sliderHandle->sizeHint(Qt::PreferredSize).width(), grooveThickness);
             return QSizeF(preferredWidth, preferredLength);
         }
         break;
     }
     case Qt::MaximumSize: {
         if (orientation == Qt::Horizontal) {
-            qreal preferredHeight = qMax(sliderHandle->sizeHint(Qt::PreferredSize).height(), grooveThickness);
+            preferredHeight = qMax(sliderHandle->sizeHint(Qt::PreferredSize).height(), grooveThickness);
             return QSizeF(maximumLength, preferredHeight);
         }
         if (orientation == Qt::Vertical) {
-            qreal preferredWidth = qMax(sliderHandle->sizeHint(Qt::PreferredSize).width(), grooveThickness);
+            preferredWidth = qMax(sliderHandle->sizeHint(Qt::PreferredSize).width(), grooveThickness);
             return QSizeF(preferredWidth, maximumLength);
         }
         break;
