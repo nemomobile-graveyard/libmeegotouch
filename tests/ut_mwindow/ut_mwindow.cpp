@@ -26,6 +26,14 @@
 
 #include "ut_mwindow.h"
 
+bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const
+{
+    Q_UNUSED(isKeyboardOpen);
+    if (angle == M::Angle270)
+        return true;
+    return false;
+}
+
 MWindow *win;
 
 // Variables for onDisplay -tests
