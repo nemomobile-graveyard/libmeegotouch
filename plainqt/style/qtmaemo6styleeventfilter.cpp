@@ -88,13 +88,21 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                            !widget->inherits("QTipLabel") &&  //don't create a new window for every tooltip!
                            !qobject_cast<MWindow*>(widget)) {
                     if(0 == qobject_cast<QtMaemo6WindowDecoration*>(widget->parent())) {
+                        //test the windowflags before embedding the widget into the decoration!
+                        //the dynamic property overrides all other settings
+                        bool hideNavigationBar = qApp->dynamicPropertyNames().contains(M::NoMNavigationBar);
+                        if(!hideNavigationBar)
+                            hideNavigationBar = widget->windowFlags().testFlag(Qt::FramelessWindowHint) || widget->windowState().testFlag(Qt::WindowFullScreen);
+                        bool hideStatusBar = qApp->dynamicPropertyNames().contains(M::NoMStatusBar);
+                        if(!hideStatusBar)
+                            hideStatusBar = widget->windowFlags().testFlag(Qt::FramelessWindowHint) || widget->windowState().testFlag(Qt::WindowFullScreen);
+
                         m_style->m_windowDecoration = new QtMaemo6WindowDecoration(widget);
-                        qCritical() << "Showing WindowDecoration";
+
+                        m_style->m_windowDecoration->showNavigationBar( !hideNavigationBar );
+                        m_style->m_windowDecoration->showDeviceStatusBar( !hideStatusBar );
+
                         m_style->m_windowDecoration->showFastMaximized();
-                        bool navigationBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMNavigationBar);
-                        m_style->m_windowDecoration->showNavigationBar( navigationBarVisible );
-                        bool statusBarVisible = !qApp->dynamicPropertyNames().contains(M::NoMStatusBar);
-                        m_style->m_windowDecoration->showDeviceStatusBar( statusBarVisible );
                         return true;
                     }
                 }
@@ -202,6 +210,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                 qDebug() << "Could not save screenshot to" << imageFile;
             else
                 qDebug() << "Screenshot saved to" << imageFile;
+            return true;
         }
     }
     break;
