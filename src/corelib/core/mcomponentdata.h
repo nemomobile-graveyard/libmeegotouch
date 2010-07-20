@@ -175,21 +175,25 @@ public:
 
     static bool isOrientationForced();
 
-    /**
-     * Pushes a window id to the stack of chained window ids
-     * \param X11 window id of parent window
-     */
-    static void pushChainedWindowId(const WId &parentWindowId);
+#ifdef Q_WS_X11
+    typedef QPair<WId,QString> ChainData;
 
     /**
-     * Pops a window id off the stack of chained window ids
+     * Pushes a ChainData onto the stack of chain data
+     * \param chain data
      */
-    static WId popChainedWindowId();
+    static void pushChainData(const ChainData &chainData);
 
     /**
-     * Returns if the chained windiw id stack is empty
+     * Pops a ChainData off the stack of chained window ids
      */
-    static bool chainedWindowIdStackIsEmpty();
+    static ChainData popChainData();
+
+    /**
+     * Returns if the chained ChainData stack is empty
+     */
+    static bool chainDataStackIsEmpty();
+#endif // Q_WS_X11
     //! \internal_end
 
 Q_SIGNALS:

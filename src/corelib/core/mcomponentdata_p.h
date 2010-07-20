@@ -21,9 +21,9 @@
 #define MCOMPONENTDATA_P_H
 
 #include <QObject>
-#include <QStack>
 #include <MLocale>
 #ifdef Q_WS_X11
+#include <QStack>
 #include <X11/Xlib.h>
 #endif
 
@@ -82,7 +82,7 @@ public:
 #endif
 
 #ifdef Q_WS_X11
-    static QStack<WId> chainedWinIds;
+    static QStack<MComponentData::ChainData> chainData;
 #endif
 
 protected:

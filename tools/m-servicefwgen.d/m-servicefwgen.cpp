@@ -782,8 +782,49 @@ void removeNewXmlFile()
     newXmlFile.remove();
 }
 
+QString stripOffDefaultValue(const QString &parameters)
+{
+    QString retVal;
 
-QStringList getParamNames(QString parameters)
+    QString myParameters = parameters;
+
+    bool startsWithSpace =  myParameters.startsWith(" ");
+    if ( startsWithSpace ) {
+        myParameters.replace( QRegExp( "^ " ), "" );
+    }
+
+    bool endsWithSpace = myParameters.endsWith(" ");
+    if ( endsWithSpace ) {
+        myParameters.replace( QRegExp( " $" ), "" );
+    }
+
+    QStringList typesAndNamesWithoutDefaults;
+    QStringList typesAndNames = myParameters.split(QRegExp("\\s*,\\s*"));
+
+    for (int typeAndNameIndex = 0; typeAndNameIndex < typesAndNames.size(); ++typeAndNameIndex) {
+        QString typeAndName(typesAndNames[ typeAndNameIndex ]);
+
+        // strip off default value for parameter, if there is one
+        if ( typeAndName.contains( "=" ) ) {
+            typeAndName = typeAndName.split("=").first();
+        }
+
+        typesAndNamesWithoutDefaults << typeAndName;
+    }
+
+    retVal = typesAndNamesWithoutDefaults.join(", ");
+
+    if (startsWithSpace) {
+        retVal = " "+retVal;
+    }
+    if (endsWithSpace) {
+        retVal = retVal+" ";
+    }
+
+    return retVal;
+}
+
+QStringList getParamNames(const QString &parameters)
 {
     QStringList retVal;
 
@@ -791,6 +832,9 @@ QStringList getParamNames(QString parameters)
 
     for (int typeAndNameIndex = 0; typeAndNameIndex < typesAndNames.size(); ++typeAndNameIndex) {
         QString typeAndName(typesAndNames[ typeAndNameIndex ]);
+
+        typeAndName = stripOffDefaultValue( typeAndName );
+
         QStringList bits = typeAndName.split(QRegExp("\\W+"));
         QString name = bits.last();
 
@@ -848,17 +892,13 @@ void processAdaptorCppFile()
                     "#include <MComponentData>\n" \
                     "#include <MDebug>\n"                    \
                     "\n"                                     \
-                    "#ifdef Q_WS_X11\n"                         \
-                    "#include <QX11Info>\n"                     \
-                    "#include <X11/Xlib.h>\n"                   \
-                    "#endif // Q_WS_X11\n"                      \
-                    "\n"
                     + line + "\n";
             } else if (inChainTask) {
                 line.remove(w.chainTag());
                 if (line == "{") {
                     outS << line << endl
-                         << "    MComponentData::pushChainedWindowId( windowId );" << endl
+                         << "    MComponentData::ChainData thisData( _windowId, _taskTitle );" << endl
+                         << "    MComponentData::pushChainData( thisData );" << endl
                          << endl;
                 } else if (line.contains("return") || line == "}") {
                     // match end of function - need to add the connect *before* the return, if there is one
@@ -869,7 +909,7 @@ void processAdaptorCppFile()
                 }
             } else if (line.contains(w.chainTag())) {
                 line.remove(w.chainTag());
-                QString parameterString = "(const uint windowId";
+                QString parameterString = "(const uint _windowId, const QString _taskTitle";
 
                 bool methodHasParameters = !line.contains( QRegExp( "\\(\\s*\\)" ));
                 if ( methodHasParameters ) {
@@ -986,7 +1026,8 @@ void processAdaptorHeaderFile()
                 // this has to be printed after the method tag, above
                 if (isChainTask) {
                     newAdaptorHeaderStream
-                        << "\"      <arg direction=\\\"in\\\" type=\\\"u\\\" name=\\\"windowId\\\"/>\\n\"" << endl;
+                        << "\"      <arg direction=\\\"in\\\" type=\\\"u\\\" name=\\\"_windowId\\\"/>\\n\"" << endl
+                        << "\"      <arg direction=\\\"in\\\" type=\\\"u\\\" name=\\\"_taskTitle\\\"/>\\n\"" << endl;
                     if ( chainTaskHasNoParameters ) {
                         newAdaptorHeaderStream
                             << "\"    </method>\\n\"" << endl;
@@ -1020,7 +1061,7 @@ void processAdaptorHeaderFile()
                     hasChains = true;
                     line.remove(w.chainTag());
 
-                    QString parameterString = "(const uint windowId";
+                    QString parameterString = "(const uint _windowId, const QString _taskTitle";
 
                     bool methodHasParameters = !line.contains( QRegExp( "\\(\\s*\\)" ));
                     if ( methodHasParameters ) {
@@ -1057,7 +1098,6 @@ void processAdaptorHeaderFile()
     removeNewXmlFile();
 }
 
-
 // this method generates the code that is needed for chaining of tasks
 void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxyHeaderStream )
 {
@@ -1080,19 +1120,27 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
         }\n\
 \n\
 " + line + "\n\
-        argumentList << qVariantFromValue((uint)windowId);\n";
+        argumentList << qVariantFromValue((uint)windowId);\n\
+        argumentList << qVariantFromValue(_taskTitle);\n";
         }
         else if (line.contains("return")) {
             line.remove(w.chainTag());
-            newProxyHeaderStream << line << "\n";
+            newProxyHeaderStream << line << endl;
             inChainTask = false;
         }
         else {
-            newProxyHeaderStream << line << "\n";
+            newProxyHeaderStream << line << endl;
         }
     }
     else if (line.contains(w.chainTag())) {
         line.remove(w.chainTag());
+        bool hasNoParams = line.endsWith( "()" );
+
+        if ( hasNoParams ) {
+            line.replace( ")", "const QString &_taskTitle)" );
+        } else {
+            line.replace( ")", ", const QString &_taskTitle)" );
+        }
         newProxyHeaderStream << line << "\n";
         inChainTask = true;
     }
@@ -1114,8 +1162,6 @@ void processProxyHeaderFile()
 
       if the line matches "class ...", we generate a doxygen
       documentation snippet, if needed.
-
-
      */
 
     QFile proxyHeaderFile(w.proxyHeaderFileName());
@@ -1233,15 +1279,55 @@ void processProxyHeaderFile()
             if (line.contains("Q_SIGNALS:")) {
                 inSignalSection = true;
             } else {
-                QRegExp matchThis("inline\\s+QDBusPendingReply<([^>]*)>\\s*(\\w+)\\(([^)]*)\\)");
+                QRegExp methodPrototype("inline\\s+QDBusPendingReply<([^>]*)>\\s*(\\w+)\\(([^)]*)\\)");
 
-                if (line.contains(matchThis)) {
-                    QString returnType = matchThis.cap(1);
-                    QString methodName = matchThis.cap(2);
-                    QString parameters = matchThis.cap(3);
+                if (line.contains(methodPrototype)) {
+                    QString returnType = methodPrototype.cap(1);
+                    QString methodName = methodPrototype.cap(2);
+                    QString parameters = methodPrototype.cap(3);
 
                     if (returnType.isEmpty()) {
                         returnType = "void";
+                    }
+
+                    if ( inChainTask ) {
+                        QStringList paramNames = getParamNames(parameters);
+
+                        QString paramString;
+                        if ( parameters.isEmpty() ) {
+                            paramString = "";
+                        } else {
+                            paramString = " "+parameters+" ";
+                        }
+
+                        wrapperHeaderStream <<
+                            "    " + returnType + " " + methodName + "(" + paramString + ");" << endl;
+
+                        wrapperCppStream <<
+                            returnType + " " + w.upperCamelServiceName() + "::" + methodName + "(" + paramString + ")" << endl;
+
+                        wrapperCppStream << "{" << endl;
+
+                        if ( parameters.isEmpty() ) {
+                            paramString = " QString() ";
+                        } else {
+                            paramString = " " + paramNames.join(", ") + ", QString() ";
+                        }
+
+                        if (returnType == "void") {
+                            wrapperCppStream <<
+    "    " + methodName + "(" + paramString + ");" << endl;
+                        } else {
+                            wrapperCppStream <<
+    "    return " + methodName + "(" + paramString + ");" << endl;
+                        }
+
+                        wrapperCppStream << "}\n" << endl;
+
+                        if ( !parameters.isEmpty() ) {
+                            parameters += ", ";
+                        }
+                        parameters += "const QString &_taskTitle";
                     }
 
                     QStringList paramNames = getParamNames(parameters);
@@ -1259,14 +1345,14 @@ void processProxyHeaderFile()
                     wrapperCppStream <<
                         returnType + " " + w.upperCamelServiceName() + "::" + methodName + "(" + paramString + ")" << endl;
 
-                    wrapperCppStream <<
-"{" << endl;
+                    wrapperCppStream << "{" << endl;
 
                     if ( parameters.isEmpty() ) {
                         paramString = "";
                     } else {
-                        paramString = " " + paramNames.join(", ")+" ";
+                        paramString = " " + paramNames.join(", ") + " ";
                     }
+
                     if (returnType == "void") {
                         wrapperCppStream <<
 "    static_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "(" + paramString + ");" << endl;
@@ -1274,6 +1360,7 @@ void processProxyHeaderFile()
                         wrapperCppStream <<
 "    return qobject_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "(" + paramString + ").value();" << endl;
                     }
+
                     wrapperCppStream << "}\n" << endl;
                 }
             }

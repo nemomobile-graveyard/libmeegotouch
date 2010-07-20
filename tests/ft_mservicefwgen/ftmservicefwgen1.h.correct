@@ -18,9 +18,11 @@ Q_OBJECT
 
 public:
     void bug172441();
+    void bug172441( const QString &_taskTitle );
     bool showGridWithCapturedContent( int limit );
     bool showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage );
     void showImage( const QString &uri, const QStringList &uriList );
+    void showImage( const QString &uri, const QStringList &uriList, const QString &_taskTitle );
     bool showPage( const QString &targetPage, const QString &previousPage );
     bool showSettings();
 

@@ -45,6 +45,7 @@
 #include "mscene.h"
 #include "mstatusbar.h"
 #include "mdeviceprofile.h"
+#include "mcomponentdata.h"
 
 #include <QList>
 #include <QEvent>
@@ -91,6 +92,7 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , pageAreaMaximized(false)
     , isChained(false)
     , chainParentWinId(0)
+    , chainTaskTitle()
 #ifdef HAVE_CONTEXTSUBSCRIBER
     , callStatusProperty("Phone.Call")
 #endif
@@ -137,10 +139,23 @@ void MApplicationWindowPrivate::init()
                q, SLOT(_q_placeToolBar(M::Orientation)));
 
 #ifdef Q_WS_X11
-    if ( !MComponentData::chainedWindowIdStackIsEmpty() ) {
-        chainParentWinId = MComponentData::popChainedWindowId();
+    if (!MComponentData::chainDataStackIsEmpty()) {
+        MComponentData::ChainData thisData = MComponentData::popChainData();
+
+        WId     thisDataWId       = thisData.first;
+        QString thisDataTaskTitle = thisData.second;
+
+        chainParentWinId = thisDataWId;
+        bool taskTitleSet = !thisDataTaskTitle.isEmpty();
+        if (taskTitleSet) {
+            chainTaskTitle = thisDataTaskTitle;
+        } else {
+            chainTaskTitle = MComponentData::appName();
+        }
+
         isChained = true;
 
+        // for compositor page animation
         setWindowChainedProperty( chainParentWinId, q->winId() );
     }
     addMStatusBarOverlayProperty();
@@ -162,7 +177,7 @@ void MApplicationWindowPrivate::init()
     q->connect(menu, SIGNAL(disappeared()),
                q, SLOT(_q_menuDisappeared()));
 
-    if (!MApplication::fullScreen() && statusBar ) {
+    if (!MApplication::fullScreen() && statusBar) {
         sceneManager->appearSceneWindowNow(statusBar);
     }
 
@@ -693,6 +708,9 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
                     if ( page ) {
                         page->setEscapeMode( MApplicationPageModel::EscapeManualBack );
                         QObject::connect( page, SIGNAL( backButtonClicked() ), q, SLOT( close() ) );
+
+                        // for title in task switcher
+                        page->setTitle( chainTaskTitle );
                     }
                 }
             }

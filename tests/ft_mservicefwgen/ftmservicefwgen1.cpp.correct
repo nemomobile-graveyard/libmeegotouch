@@ -10,7 +10,12 @@ namespace fakegalleryserviceinterface {
 
 void FtMServiceFwGen1::bug172441()
 {
-    static_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->bug172441();
+    bug172441( QString() );
+}
+
+void FtMServiceFwGen1::bug172441( const QString &_taskTitle )
+{
+    static_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->bug172441( _taskTitle );
 }
 
 bool FtMServiceFwGen1::showGridWithCapturedContent( int limit )
@@ -25,7 +30,12 @@ bool FtMServiceFwGen1::showImage( const QString &uri, const QString &playlistNam
 
 void FtMServiceFwGen1::showImage( const QString &uri, const QStringList &uriList )
 {
-    static_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showImage( uri, uriList );
+    showImage( uri, uriList, QString() );
+}
+
+void FtMServiceFwGen1::showImage( const QString &uri, const QStringList &uriList, const QString &_taskTitle )
+{
+    static_cast<FtMServiceFwGen1Proxy*>(interfaceProxy())->showImage( uri, uriList, _taskTitle );
 }
 
 bool FtMServiceFwGen1::showPage( const QString &targetPage, const QString &previousPage )

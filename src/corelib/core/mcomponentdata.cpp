@@ -1075,23 +1075,25 @@ bool MComponentData::isOrientationForced()
     return gMComponentDataPrivate->isOrientationForced;
 }
 
-QStack<WId> MComponentDataPrivate::chainedWinIds;
+#ifdef Q_WS_X11
+QStack<MComponentData::ChainData> MComponentDataPrivate::chainData;
 
-void MComponentData::pushChainedWindowId(const WId &parentWinId)
+void MComponentData::pushChainData(const ChainData &newChainData)
 {
-    MComponentDataPrivate::chainedWinIds.push(parentWinId);
+    MComponentDataPrivate::chainData.push( newChainData );
 }
 
-WId MComponentData::popChainedWindowId()
+MComponentData::ChainData MComponentData::popChainData()
 {
-    WId retVal = MComponentDataPrivate::chainedWinIds.pop();
+    ChainData retVal = MComponentDataPrivate::chainData.pop();
 
     return retVal;
 }
 
-bool MComponentData::chainedWindowIdStackIsEmpty()
+bool MComponentData::chainDataStackIsEmpty()
 {
-    bool retVal = MComponentDataPrivate::chainedWinIds.isEmpty();
+    bool retVal = MComponentDataPrivate::chainData.isEmpty();
 
     return retVal;
 }
+#endif // Q_WS_X11

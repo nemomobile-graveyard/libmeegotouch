@@ -13,7 +13,12 @@ bool FtMServiceFwGen2::showGridWithCapturedContent( int limit )
 
 void FtMServiceFwGen2::showImage( const QString &uri, const QStringList &uriList )
 {
-    static_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showImage( uri, uriList );
+    showImage( uri, uriList, QString() );
+}
+
+void FtMServiceFwGen2::showImage( const QString &uri, const QStringList &uriList, const QString &_taskTitle )
+{
+    static_cast<FtMServiceFwGen2Proxy*>(interfaceProxy())->showImage( uri, uriList, _taskTitle );
 }
 
 bool FtMServiceFwGen2::showImage( const QString &uri, const QString &playlistName, const QString &defaultBackPage )

@@ -49,7 +49,7 @@ public:
     ~FtMServiceFwGen1Proxy();
 
 public Q_SLOTS: // METHODS
-    inline QDBusPendingReply<> bug172441()
+    inline QDBusPendingReply<> bug172441(const QString &_taskTitle)
     {
         Qt::HANDLE windowId = 0;
 
@@ -60,6 +60,7 @@ public Q_SLOTS: // METHODS
 
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue((uint)windowId);
+        argumentList << qVariantFromValue(_taskTitle);
         return asyncCallWithArgumentList(QLatin1String("bug172441"), argumentList);
     }
 
@@ -77,7 +78,7 @@ public Q_SLOTS: // METHODS
         return asyncCallWithArgumentList(QLatin1String("showImage"), argumentList);
     }
 
-    inline QDBusPendingReply<> showImage(const QString &uri, const QStringList &uriList)
+    inline QDBusPendingReply<> showImage(const QString &uri, const QStringList &uriList, const QString &_taskTitle)
     {
         Qt::HANDLE windowId = 0;
 
@@ -88,6 +89,7 @@ public Q_SLOTS: // METHODS
 
         QList<QVariant> argumentList;
         argumentList << qVariantFromValue((uint)windowId);
+        argumentList << qVariantFromValue(_taskTitle);
         argumentList << qVariantFromValue(uri) << qVariantFromValue(uriList);
         return asyncCallWithArgumentList(QLatin1String("showImage"), argumentList);
     }

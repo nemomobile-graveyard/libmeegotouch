@@ -33,6 +33,7 @@ public:
      * @details documentation for showImage(1) method2
      */
     void showImage( const QString &uri, const QStringList &uriList );
+    void showImage( const QString &uri, const QStringList &uriList, const QString &_taskTitle );
 
     /**
      * @brief documentation for showImage() method

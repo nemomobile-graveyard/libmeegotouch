@@ -10,15 +10,8 @@
 
 #include "ftmservicefwgen1adaptor.h"
 
-#include <MApplication>
-#include <MApplicationPage>
-#include <MApplicationWindow>
+#include <MComponentData>
 #include <MDebug>
-
-#ifdef Q_WS_X11
-#include <QX11Info>
-#include <X11/Xlib.h>
-#endif // Q_WS_X11
 
 #include <QtCore/QMetaObject>
 #include <QtCore/QByteArray>
@@ -35,8 +28,7 @@ namespace fakegalleryserviceinterface {
  */
 
 FtMServiceFwGen1Adaptor::FtMServiceFwGen1Adaptor(QObject *parent)
-    : QDBusAbstractAdaptor(parent),
-    windowId(-1)
+    : QDBusAbstractAdaptor(parent)
 {
     // constructor
     setAutoRelaySignals(true);
@@ -47,36 +39,13 @@ FtMServiceFwGen1Adaptor::~FtMServiceFwGen1Adaptor()
     // destructor
 }
 
-void FtMServiceFwGen1Adaptor::bug172441(const uint windowId)
+void FtMServiceFwGen1Adaptor::bug172441(const uint _windowId, const QString _taskTitle)
 {
-    this->windowId = windowId;
+    MComponentData::ChainData thisData( _windowId, _taskTitle );
+    MComponentData::pushChainData( thisData );
 
     // handle method call com.nokia.fakegalleryserviceinterface.bug172441
     QMetaObject::invokeMethod(parent(), "bug172441");
-
-    MApplicationWindow *appWindow = MApplication::activeApplicationWindow();
-    if (appWindow != 0) {
-
-        MApplicationPage *currentPage = appWindow->currentPage();
-
-        if ( currentPage != 0 ) {
-            currentPage->setEscapeMode( MApplicationPageModel::EscapeManualBack );
-            // connect to the back button - assumes the above method opens a
-            // new window and so the window referred to below is already the top one
-            connect(currentPage, SIGNAL(backButtonClicked()),
-                this, SLOT(goBack()));
-        } else {
-            mDebug( __PRETTY_FUNCTION__ ) <<  "No currentPage! - broken chain";
-        }
-    } else {
-        mDebug( __PRETTY_FUNCTION__ ) << "No activeApplicationWindow! - broken chain";
-    }
-
-#ifdef Q_WS_X11
-    // update the X server
-    XSetTransientForHint(QX11Info::display(), appWindow->winId(), windowId);
-#endif // Q_WS_X11
-
 }
 
 bool FtMServiceFwGen1Adaptor::showGridWithCapturedContent(int limit)
@@ -95,36 +64,13 @@ bool FtMServiceFwGen1Adaptor::showImage(const QString &uri, const QString &playl
     return out0;
 }
 
-void FtMServiceFwGen1Adaptor::showImage(const uint windowId, const QString &uri, const QStringList &uriList)
+void FtMServiceFwGen1Adaptor::showImage(const uint _windowId, const QString _taskTitle, const QString &uri, const QStringList &uriList)
 {
-    this->windowId = windowId;
+    MComponentData::ChainData thisData( _windowId, _taskTitle );
+    MComponentData::pushChainData( thisData );
 
     // handle method call com.nokia.fakegalleryserviceinterface.showImage
     QMetaObject::invokeMethod(parent(), "showImage", Q_ARG(QString, uri), Q_ARG(QStringList, uriList));
-
-    MApplicationWindow *appWindow = MApplication::activeApplicationWindow();
-    if (appWindow != 0) {
-
-        MApplicationPage *currentPage = appWindow->currentPage();
-
-        if ( currentPage != 0 ) {
-            currentPage->setEscapeMode( MApplicationPageModel::EscapeManualBack );
-            // connect to the back button - assumes the above method opens a
-            // new window and so the window referred to below is already the top one
-            connect(currentPage, SIGNAL(backButtonClicked()),
-                this, SLOT(goBack()));
-        } else {
-            mDebug( __PRETTY_FUNCTION__ ) <<  "No currentPage! - broken chain";
-        }
-    } else {
-        mDebug( __PRETTY_FUNCTION__ ) << "No activeApplicationWindow! - broken chain";
-    }
-
-#ifdef Q_WS_X11
-    // update the X server
-    XSetTransientForHint(QX11Info::display(), appWindow->winId(), windowId);
-#endif // Q_WS_X11
-
 }
 
 bool FtMServiceFwGen1Adaptor::showPage(const QString &targetPage, const QString &previousPage)
@@ -143,19 +89,5 @@ bool FtMServiceFwGen1Adaptor::showSettings()
     return out0;
 }
 
-void FtMServiceFwGen1Adaptor::goBack()
-{
-    bool backServiceRegistered = ( windowId != -1 );
-    if ( backServiceRegistered ) {
-        // All we need to do is close the window as it has the WM_TRANSIENT_FOR set
-        // the compositor should bring out the parent window
-        MApplicationWindow *appWindow = MApplication::activeApplicationWindow();
-        if ( appWindow != 0 ) {
-            appWindow->close();
-        }
-    } else {
-        qWarning() << "backService is not registered: not going back";
-    }
-}
 
 }; // namespace

@@ -67,8 +67,9 @@ public:
     bool isMenuOpen;
     bool pageAreaMaximized;
 #ifdef Q_WS_X11
-    bool isChained;
-    WId  chainParentWinId;
+    bool    isChained;
+    WId     chainParentWinId;
+    QString chainTaskTitle;
 #endif
 
 #ifdef HAVE_CONTEXTSUBSCRIBER

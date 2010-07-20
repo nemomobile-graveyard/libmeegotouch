@@ -42,7 +42,8 @@ class FtMServiceFwGen2Adaptor: public QDBusAbstractAdaptor
 "      <arg direction=\"out\" type=\"b\" name=\"\"/>\n"
 "    </method>\n"
 "    <method name=\"showImage\">\n"
-"      <arg direction=\"in\" type=\"u\" name=\"windowId\"/>\n"
+"      <arg direction=\"in\" type=\"u\" name=\"_windowId\"/>\n"
+"      <arg direction=\"in\" type=\"u\" name=\"_taskTitle\"/>\n"
 "      <arg direction=\"in\" type=\"s\" name=\"uri\"/>\n"
 "      <arg direction=\"in\" type=\"as\" name=\"uriList\"/>\n"
 "    </method>\n"
@@ -62,15 +63,10 @@ public:
 public: // PROPERTIES
 public Q_SLOTS: // METHODS
     bool showGridWithCapturedContent(int limit);
-    Q_NOREPLY void showImage(const uint windowId, const QString &uri, const QStringList &uriList);
+    Q_NOREPLY void showImage(const uint _windowId, const QString _taskTitle, const QString &uri, const QStringList &uriList);
     bool showImage(const QString &uri, const QString &playlistName, const QString &defaultBackPage);
     bool showPage(const QString &targetPage, const QString &previousPage);
     bool showSettings();
-    void goBack();
-
-private:
-    int windowId;
-
 Q_SIGNALS: // SIGNALS
 };
 
