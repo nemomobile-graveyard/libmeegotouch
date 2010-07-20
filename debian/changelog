@@ -1,3 +1,9 @@
+libmeegotouch (0.20.29~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 20 Jul 2010 10:51:49 +0300
+
 libmeegotouch (0.20.28-1) unstable; urgency=low
 
   * Fixes: NB#178373 - Background of MSlider does not align properly behind the groove
