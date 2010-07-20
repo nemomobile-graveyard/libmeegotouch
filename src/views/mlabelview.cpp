@@ -177,6 +177,8 @@ void MLabelView::updateData(const QList<const char *>& modifications)
                 d->impl = new MLabelViewRich(d);
             else
                 d->impl = new MLabelViewSimple(d);
+
+            d->impl->setupModel();
         }
     }
 
