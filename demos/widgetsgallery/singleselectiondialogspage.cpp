@@ -170,9 +170,9 @@ void SingleSelectionDialogsPage::openSystemDialog()
 
     dialog->setCentralWidget(
         //% "I'm a system dialog.<br>"
-        //% "There actually is a way around me...<br>"
-        //% "You can skip me with the home button, but I'll remain<br>"
-        //% "alive until you make a selection."
+        //% "You can skip me with the home button.<br>
+        //% "I'll be minimised to the task switcher<br>
+        //% "but I'll remain alive until you make a selection."
         new MLabel(qtTrId("xx_dialogs_and_notifications_system_dialog_label")));
 
     dialog->setSystem(true);
@@ -192,9 +192,9 @@ void SingleSelectionDialogsPage::openSystemModalDialog()
         M::OkButton);
 
     dialog->setCentralWidget(
-        //% "I'm a window modal dialog.\n"
-        //% "There's no way around me!\n"
-        //% "Muwhahaha... [evil laugh]"
+        //% "I'm a system modal dialog.<br>"
+        //% "You can't skip me as I'm designed for<br>"
+        //% "use cases that require immediate user attention."
         new MLabel(qtTrId("xx_dialogs_and_notifications_system_modal_dialog_label")));
 
     dialog->setSystem(true);

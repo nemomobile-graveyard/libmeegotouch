@@ -24,6 +24,7 @@
 #include <MDebug>
 #include <MDismissEvent>
 #include <MHomeButtonPanel>
+#include <mstatusbar.h>
 #include <MLocale>
 #include <MScene>
 #include <MWindow>
@@ -48,6 +49,7 @@ MDialogPrivate::MDialogPrivate()
     dumbMode(false),
     standAloneWindow(0),
     homeButtonPanel(0),
+    statusBar(0),
     suicideAfterDestroyingStandAloneWindow(false)
 {
 }
@@ -121,28 +123,36 @@ void MDialogPrivate::_q_buttonClicked(QObject *obj)
     }
 }
 
+void MDialogPrivate::removeSceneWindowFromStandaloneScene(MSceneWindow *sceneWindow)
+{
+    if (sceneWindow) {
+        if (sceneWindow->scene() != 0) {
+            Q_ASSERT(sceneWindow->scene() == standAloneWindow->scene());
+            standAloneWindow->sceneManager()->disappearSceneWindowNow(sceneWindow);
+        }
+
+        delete sceneWindow;
+        sceneWindow = 0;
+    }
+}
+
 void MDialogPrivate::updateStandAloneHomeButtonVisibility()
 {
     Q_Q(MDialog);
 
     if (q->isSystem() && q->isModal()) {
         // Remove the home button if it's there.
-        if (homeButtonPanel) {
-            if (homeButtonPanel->scene() != 0) {
-                Q_ASSERT(homeButtonPanel->scene() == standAloneWindow->scene());
-                standAloneWindow->sceneManager()->disappearSceneWindowNow(homeButtonPanel);
-            }
-
-            delete homeButtonPanel;
-            homeButtonPanel = 0;
-        }
+        removeSceneWindowFromStandaloneScene(homeButtonPanel);
+        removeSceneWindowFromStandaloneScene(statusBar);
     } else {
         // Put a home button on the system modal window
-        homeButtonPanel = new MHomeButtonPanel();
-
+        homeButtonPanel = new MHomeButtonPanel;
         standAloneWindow->connect(homeButtonPanel,
                                   SIGNAL(buttonClicked()), SLOT(showMinimized()));
 
+        statusBar = new MStatusBar;
+
+        standAloneWindow->sceneManager()->appearSceneWindowNow(statusBar);
         standAloneWindow->sceneManager()->appearSceneWindowNow(homeButtonPanel);
     }
 }
@@ -154,6 +164,9 @@ void MDialogPrivate::_q_onStandAloneDialogDisappeared()
 
     q->disconnect(SIGNAL(disappeared()), q, SLOT(_q_onStandAloneDialogDisappeared()));
 
+    removeSceneWindowFromStandaloneScene(homeButtonPanel);
+    removeSceneWindowFromStandaloneScene(statusBar);
+
     standAloneWindow->setScene(0);
     standAloneWindow->deleteLater();
     standAloneWindow = 0;
@@ -164,12 +177,6 @@ void MDialogPrivate::_q_onStandAloneDialogDisappeared()
         q->scene()->removeItem(q);
     }
 
-    if (homeButtonPanel) {
-        if (homeButtonPanel->sceneManager())
-            homeButtonPanel->sceneManager()->disappearSceneWindowNow(homeButtonPanel);
-        delete homeButtonPanel;
-        homeButtonPanel = 0;
-    }
 
     if (suicideAfterDestroyingStandAloneWindow) {
         q->deleteLater();

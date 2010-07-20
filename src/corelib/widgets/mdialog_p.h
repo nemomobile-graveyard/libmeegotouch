@@ -26,6 +26,7 @@
 class QSignalMapper;
 class MHomeButtonPanel;
 class MWindow;
+class MStatusBar;
 
 class MDialogPrivate : public MSceneWindowPrivate
 {
@@ -44,6 +45,7 @@ public:
     bool prepareStandAloneAppearance(MSceneWindow::DeletionPolicy policy);
     void updateButtonClickedMappings();
     int  resultFromStandardButtonId(int buttonId);
+    void removeSceneWindowFromStandaloneScene(MSceneWindow *sceneWindow);
 
     MButtonModel *clickedButton;
 
@@ -58,6 +60,7 @@ public:
     // top-level MWindow)
     MWindow *standAloneWindow;
     MHomeButtonPanel *homeButtonPanel;
+    MStatusBar *statusBar;
     bool suicideAfterDestroyingStandAloneWindow;
 };
 
