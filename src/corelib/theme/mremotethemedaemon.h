@@ -51,6 +51,9 @@ public:
     virtual bool hasPendingRequests() const;
 
 private:
+#ifdef UNIT_TEST
+    friend class TestClient;
+#endif
     Q_DECLARE_PRIVATE(MRemoteThemeDaemon)
     MRemoteThemeDaemonPrivate *const d_ptr;
 

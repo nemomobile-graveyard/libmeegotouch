@@ -27,17 +27,14 @@
 
 int main(int argc, char **argv)
 {
+    srand(time(0));
     QApplication app(argc, argv);
 
-#ifdef HAVE_GCONF
     const QString themeName = "theme_one";
-    QDir themeDirectory(THEME_ROOT_DIRECTORY + '/' + themeName);
-    if (themeDirectory.exists()) {
-        MGConfItem theme("/meegotouch/theme/name");
-        theme.set(themeName);
-    }
-#endif
+    MGConfItem theme("/meegotouch/theme/name");
+    theme.set(themeName);
 
+    bool result = false;
     QProcess td;
     td.start("./testdaemon/testdaemon", QStringList());
     // start theme daemon
@@ -51,15 +48,17 @@ int main(int argc, char **argv)
         keyWaiter.start();
 
         // event loop
-        int result = app.exec();
+        result = app.exec();
 
         // stop theme daemon
         if (td.state() == QProcess::Running) {
             td.close();
         }
-        return result;
+    } else {
+        qWarning() << "Theme daemon failed to start";
     }
 
-    qDebug() << "Theme daemon failed to start";
-    return 0;
+    theme.unset();
+
+    return result;
 }

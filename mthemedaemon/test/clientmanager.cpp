@@ -163,9 +163,7 @@ void ClientManager::spawnClient()
     clients.insert(client);
 
     client->start();
-#ifdef PRINT_INFO_MESSAGES
-    qDebug() << "INFO: ClientManager - Client started, number of active clients:" << clients.count();
-#endif
+    qDebug() << "INFO: ClientManager - Client" << client->getId() << "started, number of active clients:" << clients.count();
 }
 
 void ClientManager::start()
@@ -192,8 +190,6 @@ void ClientManager::stop()
 
 void ClientManager::clientStarted()
 {
-    Client *client = static_cast<Client *>(sender());
-    Q_UNUSED(client);
 }
 
 
@@ -205,10 +201,8 @@ void ClientManager::clientFinished()
     clients.remove(client);
     client->exit();
     client->wait();
+    qDebug() << "INFO: ClientManager - Client" << client->getId() << "finished, number of active clients:" << clients.count();
     delete client;
-#ifdef PRINT_INFO_MESSAGES
-    qDebug() << "INFO: ClientManager - Client finished, number of active clients:" << clients.count();
-#endif
     if (shutdown) {
         if (clients.count() == 0) {
             qApp->quit();
@@ -220,7 +214,7 @@ void ClientManager::checkConsistency()
 {
     // check that themedaemon has not crashed
     if (themedaemon.state() != QProcess::Running) {
-        qDebug() << "ERROR: ClientManager (consistency check)- Themedaemon is not running";
+        qWarning() << "ERROR: ClientManager (consistency check)- Themedaemon is not running";
         qDebug() << themedaemon.readAllStandardError();
         qDebug() << themedaemon.readAllStandardOutput();
 
@@ -270,10 +264,10 @@ void ClientManager::changeThemeAndLocale()
 #endif
 }
 
-void ClientManager::pixmapReady(const QString& theme, Client* client, quint32 handle, const QString& imageId, const QSize& size)
+void ClientManager::pixmapReady(const QString& theme, TestClient* client, quint32 handle, const QString& imageId, const QSize& size)
 {
     if(!verifyPixmap(theme, client, handle, imageId, size)) {
-        qDebug() << "ERROR:" << client->getId() << "- incorrect color found when verifying returned pixmap (" << imageId << ')';
+        qWarning() << "ERROR:" << client->getId() << "- incorrect color found when verifying returned pixmap (" << imageId << ')';
     } else {
 #ifdef PRINT_INFO_MESSAGES
         qDebug() << "INFO:" << client->getId() << "- pixmap comparison OK (" << imageId << ')';
@@ -282,7 +276,7 @@ void ClientManager::pixmapReady(const QString& theme, Client* client, quint32 ha
     client->pixmapVerified(imageId, size);
 }
 
-bool ClientManager::verifyPixmap(const QString& theme, Client* client, quint32 handle, const QString& imageId, const QSize& size)
+bool ClientManager::verifyPixmap(const QString& theme, TestClient* client, quint32 handle, const QString& imageId, const QSize& size)
 {
     // this is what we got from daemon
     QPixmap daemon = QPixmap::fromX11Pixmap(handle, QPixmap::ImplicitlyShared);
@@ -318,7 +312,7 @@ bool ClientManager::verifyPixmap(const QString& theme, Client* client, quint32 h
         QSvgRenderer renderer(filename);
         if(!renderer.isValid())
         {
-            qDebug() << "ERROR: Failed to construct SVG renderer for:" << filename;
+            qWarning() << "ERROR: Failed to construct SVG renderer for:" << filename;
             return false;
         }
         // render pixmap
@@ -333,7 +327,7 @@ bool ClientManager::verifyPixmap(const QString& theme, Client* client, quint32 h
         QDir imageDirectory = theme + QDir::separator() + client->getImageDirectory();
         QString filename = imageDirectory.absolutePath() + QDir::separator() + imageId + ".png";
         if(!clientPixmap.load(filename, "PNG"))
-            qDebug() << "ERROR: Failed to construct PNG image:" << filename;
+            qWarning() << "ERROR: Failed to construct PNG image:" << filename;
     }
 
     // make sure that the pixel in the center of the pixmap is equal (these are always one-color images)
@@ -344,7 +338,7 @@ bool ClientManager::verifyPixmap(const QString& theme, Client* client, quint32 h
     QRgb color2 = c.pixel(size.width() / 2, size.height() / 2);
 
     if(color != color2) {
-        qDebug() << "ERROR: Colors don't match:" << theme << QColor(color) << QColor(color2);
+        qWarning() << "ERROR: Colors don't match:" << theme << QColor(color) << QColor(color2);
         return false;
     }
 

@@ -1,7 +1,8 @@
 [Desktop Entry]
 Type=X-MeeGoTouch-Metatheme
-Name=Base Theme
+Name=Devel Theme
 Encoding=UTF-8
 
 [X-MeeGoTouch-Metatheme]
+X-Inherits=base
 X-Visible=true

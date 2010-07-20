@@ -17,16 +17,23 @@
 **
 ****************************************************************************/
 
+#include "client.h"
+#include "clientmanager.h"
+
+#include "mtheme.h"
+#include "mtheme_p.h"
+#include "mthemedaemon.h"
+#include "mthemedaemonprotocol.h"
+#include "imthemedaemon.h"
+#include "mremotethemedaemon.h"
+#include "mremotethemedaemon_p.h"
+#include "mgconfitem.h"
+
 #include <stdlib.h>
 #include <QTimer>
 #include <QDebug>
 #include <QPainter>
 #include <QImage>
-#include <MGConfItem>
-#include "client.h"
-#include "clientmanager.h"
-#include "mthemedaemon.h"
-#include "mthemedaemonprotocol.h"
 
 using namespace M::MThemeDaemonProtocol;
 
@@ -36,11 +43,11 @@ ClientThread::ClientThread(ClientManager* manager) : manager(manager)
 
 void ClientThread::run()
 {
-    Client client(identifier);
-    connect(&client, 
-            SIGNAL(pixmapReady(const QString&, Client*, quint32, const QString&, const QSize&)), 
+    TestClient client(identifier);
+    connect(&client,
+            SIGNAL(pixmapReady(const QString&, TestClient*, quint32, const QString&, const QSize&)),
             manager, 
-            SLOT(pixmapReady(const QString&, Client*, quint32, const QString&, const QSize&)));
+            SLOT(pixmapReady(const QString&, TestClient*, quint32, const QString&, const QSize&)));
 
     exec();
 }
@@ -55,7 +62,7 @@ const QString &ClientThread::getId() const
     return identifier;
 }
 
-Client::Client(const QString &identifier) : identifier(identifier), registered(false), packetsSent(0)
+TestClient::TestClient(const QString &identifier) : identifier(identifier)
 {
     operationCount = rand() % MAX_OPERATION_COUNT;
 
@@ -83,79 +90,59 @@ Client::Client(const QString &identifier) : identifier(identifier), registered(f
         }
     }
 
-    stream.setDevice(&socket);
-
-    connect(&socket, SIGNAL(connected()), SLOT(connected()));
-    connect(&socket, SIGNAL(disconnected()), SLOT(disconnected()));
-    connect(&socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
-
-    // connect to server
-    socket.connectToServer(M::MThemeDaemonProtocol::ServerAddress);
-
-    if (!socket.waitForConnected(10000)) {
-        qDebug() << "ERROR:" << identifier << "- failed to connect server:" << socket.error();
-    } else {
-        // perform some task once we get into event loop
-        QTimer::singleShot(0, this, SLOT(sendPacket()));
+    daemon = new MRemoteThemeDaemon(identifier, 0);
+    if (!daemon->connected()) {
+        qCritical("Could not connect to remote themedaemon");
+        return;
     }
+
+    currentTheme = daemon->themeInheritanceChain().at(0);
+
+    connect(daemon, SIGNAL(pixmapChanged(QString, QSize, Qt::HANDLE)),
+            SLOT(pixmapChangedSlot(QString, QSize, Qt::HANDLE)));
+    connect(daemon, SIGNAL(themeChanged(QStringList, QStringList)),
+            SLOT(themeChangedSlot(QStringList, QStringList)));
+
+    connect(&daemon->d_ptr->socket, SIGNAL(connected()), SLOT(connected()));
+    connect(&daemon->d_ptr->socket, SIGNAL(disconnected()), SLOT(disconnected()));
+
+    QTimer::singleShot(0, this, SLOT(sendPacket()));
 }
 
-Client::~Client()
+TestClient::~TestClient()
 {
-    if (socket.state() == QLocalSocket::ConnectedState) {
-        socket.disconnectFromServer();
-    }
+
 }
 
-const QString &Client::getId() const
+const QString &TestClient::getId() const
 {
     return identifier;
 }
 
-void Client::connected()
+void TestClient::connected()
 {
 //    QLocalSocket* socket = qobject_cast<QLocalSocket*>(sender());
 }
 
-void Client::disconnected()
+void TestClient::disconnected()
 {
 //    QLocalSocket* socket = qobject_cast<QLocalSocket*>(sender());
 }
 
-M::MThemeDaemonProtocol::Packet Client::processOnePacket()
+void TestClient::pixmapChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle)
 {
-    Packet packet;
-    stream >> packet;
-
-    switch (packet.type()) {
-    case Packet::PixmapUpdatedPacket: {
-        const PixmapHandle *handle = static_cast<const PixmapHandle *>(packet.data());
-
-        if(handle->pixmapHandle) {
-            emit pixmapReady(currentTheme, this, handle->pixmapHandle, handle->identifier.imageId, handle->identifier.size);
-            waitVerify.acquire();
-        } else {
-            qDebug() << "ERROR: daemon returned null handle for" << handle->identifier.imageId;
-        }
-    } break;
-
-    case Packet::ThemeChangedPacket: {
-        const M::MThemeDaemonProtocol::ThemeChangeInfo *data = static_cast<const M::MThemeDaemonProtocol::ThemeChangeInfo *>(packet.data());
-        currentTheme = data->themeInheritance.at(0);
-    }break;
-
-    case Packet::ThemeDaemonStatusPacket:
-        break;
-
-    default:
-        break;
-    }
-
-    return packet;
+    emit pixmapReady(currentTheme, this, pixmapHandle, imageId, size);
+    waitVerify.acquire();
 }
 
-void Client::pixmapVerified(const QString& imageId, const QSize& size)
+void TestClient::themeChangedSlot(const QStringList &themeInheritance, const QStringList& libraryNames)
 {
+    currentTheme = themeInheritance.at(0);
+}
+
+void TestClient::pixmapVerified(const QString& imageId, const QSize& size)
+{
+
     PixmapIdentifier identifier(imageId, size);
 
     if (requestedPixmaps.contains(identifier)) {
@@ -165,27 +152,18 @@ void Client::pixmapVerified(const QString& imageId, const QSize& size)
     } else if(readyPixmaps.contains(identifier)) {
         // this pixmap was already ready, so it is just updated (probably due to theme change)
     } else {
-        qDebug() << "ERROR:" << imageId << "- pixmap reply to unknown request";
+        qWarning() << "ERROR:" << imageId << "- pixmap reply to unknown request";
     }
 
     waitVerify.release();
 }
 
-
-void Client::readyRead()
-{
-    while (socket.bytesAvailable() > 0) {
-        processOnePacket();
-    }
-}
-
-void Client::sendPacket()
+void TestClient::sendPacket()
 {
     if (operationCount > 0) {
 
         // randomize a task to us
         Task task = (Task)(rand() % NumberOfTasks);
-
         switch (task) {
         case RegisterToServer:
             registerToServer();
@@ -220,6 +198,8 @@ void Client::sendPacket()
                     // it was already requested, should we try to request some other pixmap instead?
                     // nah, go away and do something else next time..
                 }
+            } else {
+                qWarning() << "request empty";
             }
         } break;
 
@@ -261,109 +241,59 @@ void Client::sendPacket()
     }
 }
 
-void Client::registerToServer()
+void TestClient::registerToServer()
 {
-#ifdef PRINT_INFO_MESSAGES
-    qDebug() << "INFO:" << identifier << "- registering to server";
-#endif
-    Packet registration(Packet::RequestRegistrationPacket, packetsSent++);
+    Packet registration(Packet::RequestRegistrationPacket, ++daemon->d_ptr->sequenceCounter);
     registration.setData(new String(identifier));
-    stream << registration;
-
-    registered = true;
+    daemon->d_ptr->stream << registration;
 }
 
-void Client::requestPixmap(M::MThemeDaemonProtocol::PixmapIdentifier &pixmapIdentifier)
+void TestClient::requestPixmap(M::MThemeDaemonProtocol::PixmapIdentifier &pixmapIdentifier)
 {
 #ifdef PRINT_INFO_MESSAGES
     qDebug() << "INFO:" << identifier << "- requesting pixmap" << pixmapIdentifier.imageId << pixmapIdentifier.size;
 #endif
-    Packet packet(Packet::RequestPixmapPacket, packetsSent++);
-    packet.setData(new PixmapIdentifier(pixmapIdentifier));
-    stream << packet;
 
-    if (registered) {
-        requestedPixmaps.insert(pixmapIdentifier);
-    }
+    daemon->pixmapHandle(pixmapIdentifier.imageId, pixmapIdentifier.size);
+    requestedPixmaps.insert(pixmapIdentifier);
 }
 
-void Client::releasePixmap(M::MThemeDaemonProtocol::PixmapIdentifier &pixmapIdentifier)
+void TestClient::releasePixmap(M::MThemeDaemonProtocol::PixmapIdentifier &pixmapIdentifier)
 {
 #ifdef PRINT_INFO_MESSAGES
     qDebug() << "INFO:" << identifier << "- releasing pixmap" << pixmapIdentifier.imageId << pixmapIdentifier.size;
 #endif
-    Packet packet(Packet::ReleasePixmapPacket, packetsSent++);
-    packet.setData(new PixmapIdentifier(pixmapIdentifier));
-    stream << packet;
+    daemon->releasePixmap(pixmapIdentifier.imageId, pixmapIdentifier.size);
     readyPixmaps.remove(pixmapIdentifier);
     requestedPixmaps.remove(pixmapIdentifier);
 }
 
-void Client::checkConsistency()
+void TestClient::checkConsistency()
 {
-    if (!registered)
-        return;
-
     bool consistency = false;
 
-    // disconnect signal
-    disconnect(&socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
-
     // send status query packet
-    Packet packet(Packet::QueryThemeDaemonStatusPacket, packetsSent++);
-    stream << packet;
-    if (!socket.flush()) {
-        qDebug() << "ERROR:" << identifier << "- failed to write to socket" << socket.error();
+    int sequenceNr = ++daemon->d_ptr->sequenceCounter;
+    Packet packet(Packet::QueryThemeDaemonStatusPacket, sequenceNr);
+    daemon->d_ptr->stream << packet;
+    if (!daemon->d_ptr->socket.flush()) {
+        qWarning() << "ERROR:" << identifier << "- failed to write to socket" << daemon->d_ptr->socket.error();
     }
 
-    bool done = false;
-    while (!done) {
-        // wait for response
-        if (socket.waitForReadyRead(10000)) {
-            while (socket.bytesAvailable() > 0) {
-                // handle packet that was received
-                Packet packet = processOnePacket();
-
-                // check whether it's correct type
-                if (packet.type() == Packet::ThemeDaemonStatusPacket) {
-
-                    // extract reply and perform consistency check
-                    const ClientList *list = static_cast<const ClientList *>(packet.data());
-                    consistency = isDataConsistent(list);
-                    done = true;
-                    break;
-                }
-            }
-        } else {
-            // something bad happened, we did not get reply
-            qDebug() << "ERROR:" << identifier << "- failed to receive data from socket" << socket.error();
-            break;
-        }
-    }
-
-    // reconnect signal back
-    connect(&socket, SIGNAL(readyRead()), this, SLOT(readyRead()));
-
-    // process rest of the packets
-    readyRead();
+    Packet packet2 = daemon->d_ptr->waitForPacket(sequenceNr);
+    const ClientList *list = static_cast<const ClientList *>(packet2.data());
+    consistency = isDataConsistent(list);
 
     if (!consistency) {
-        qDebug() << "ERROR:" << identifier << "- Consistency check FAILED!";
+        qWarning() << "ERROR:" << identifier << "- Consistency check FAILED!";
     }
 }
 
-bool Client::isDataConsistent(const M::MThemeDaemonProtocol::ClientList *list)
+bool TestClient::isDataConsistent(const M::MThemeDaemonProtocol::ClientList *list)
 {
     foreach(ClientInfo info, list->clients) {
         // find correct info
         if (info.name == identifier) {
-
-            // check that we're really registered
-            if (!registered) {
-                // we're not registered but our name is still in the client list
-                return false;
-            }
-
             // theme change may cause pixmaps to move from loaded list to request list in daemon side,
             // so we'll compare both lists as one
 
@@ -379,7 +309,7 @@ bool Client::isDataConsistent(const M::MThemeDaemonProtocol::ClientList *list)
 
             // check that the daemon has correct amount of pixmaps in load queue
             if (daemon.count() != client.count()) {
-                qDebug() << "ERROR:" << identifier << "- incorrect pixmap count, Themedaemon says:" << daemon.count() << "and client says:" << client.count();
+                qWarning() << "ERROR:" << identifier << "- incorrect pixmap count, Themedaemon says:" << daemon.count() << "and client says:" << client.count();
                 break;
             }
 
@@ -387,7 +317,7 @@ bool Client::isDataConsistent(const M::MThemeDaemonProtocol::ClientList *list)
             foreach(const PixmapIdentifier & pixmapIdentifier, daemon) {
                 if (!client.contains(pixmapIdentifier)) {
                     // pixmap not found from client, but themedaemon reported it -> inconsistent state
-                    qDebug() << "ERROR:" << identifier << "- pixmap not found from client-side list:" << pixmapIdentifier.imageId << '(' << pixmapIdentifier.size << ')';
+                    qWarning() << "ERROR:" << identifier << "- pixmap not found from client-side list:" << pixmapIdentifier.imageId << '(' << pixmapIdentifier.size << ')';
                     break;
                 } else {
                     // found, we can remove this one from client list
@@ -399,7 +329,7 @@ bool Client::isDataConsistent(const M::MThemeDaemonProtocol::ClientList *list)
             foreach(const PixmapIdentifier & pixmapIdentifier, client) {
                 if (!daemon.contains(pixmapIdentifier)) {
                     // pixmap not found from daemon-side list, but exists in client-side list -> inconsistent state
-                    qDebug() << "ERROR:" << identifier << "- pixmap not found from daemon-side list:" << pixmapIdentifier.imageId << '(' << pixmapIdentifier.size << ')';
+                    qWarning() << "ERROR:" << identifier << "- pixmap not found from daemon-side list:" << pixmapIdentifier.imageId << '(' << pixmapIdentifier.size << ')';
                     break;
                 }
             }
@@ -408,11 +338,11 @@ bool Client::isDataConsistent(const M::MThemeDaemonProtocol::ClientList *list)
         }
     }
 
-    // if we're registered, we shouldn't end up being here and vice versa
-    return registered ? false : true;
+    // if we are registered, we shouldn't end up being here
+    return false;
 }
 
-QString Client::getImageDirectory() const
+QString TestClient::getImageDirectory() const
 {
     return QString("meegotouch") + QDir::separator() +
            QString(identifier) + QDir::separator() + 

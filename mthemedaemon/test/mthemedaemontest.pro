@@ -8,14 +8,11 @@ DEPENDPATH += .
 
 QT += svg network
 
-#DEFINES += PRINT_INFO_MESSAGES
-
-# Check for mixing of const and non-const iterators, 
-# which can cause problems when built with some compilers:
-DEFINES += QT_STRICT_ITERATORS
-
 # override theme directory
 DEFINES += IMAGESDIR=\\\"./images\\\"
+
+# we want to be able to access private classes
+DEFINES += UNIT_TEST
 
 !win32:CONFIG += link_pkgconfig
 PKGCONFIG += gconf-2.0
@@ -24,6 +21,7 @@ PKGCONFIG += gconf-2.0
 SOURCES += main.cpp \
            clientmanager.cpp \
            client.cpp \
+            ../../src/corelib/theme/mremotethemedaemon.cpp \
            ../../src/corelib/theme/mthemedaemon.cpp \
            ../../src/corelib/theme/mcommonpixmaps.cpp \
            ../../src/corelib/theme/mimagedirectory.cpp \
@@ -37,6 +35,7 @@ SOURCES += main.cpp \
 HEADERS += clientmanager.h \
            client.h \
            ../keypresswaiter.h \
+           ../../src/corelib/theme/mremotethemedaemon.h \
            ../../src/corelib/theme/imthemedaemon.h \
            ../../src/corelib/theme/mthemedaemon.h \
            ../../src/corelib/theme/mcommonpixmaps.h \

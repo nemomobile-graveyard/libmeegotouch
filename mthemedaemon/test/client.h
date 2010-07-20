@@ -29,8 +29,9 @@
 
 #include "mthemedaemonclient.h"
 
-class Client;
+class TestClient;
 class ClientManager;
+class MRemoteThemeDaemon;
 
 class ClientThread : public QThread
 {
@@ -46,11 +47,11 @@ private:
     QString identifier;
 };
 
-class Client : public QObject
+class TestClient : public QObject
 {
     Q_OBJECT
 
-    static const int MAX_OPERATION_COUNT = 100;
+    static const int MAX_OPERATION_COUNT = 250;
     static const int TASK_EXECUTION_INTERVAL = 50;
 
     enum Task {
@@ -63,8 +64,8 @@ class Client : public QObject
     };
 
 public:
-    Client(const QString &identifier);
-    ~Client();
+    TestClient(const QString &identifier);
+    ~TestClient();
 
     const QString& getId() const;
 
@@ -72,7 +73,7 @@ public:
     void pixmapVerified(const QString& imageId, const QSize& size);
 
 signals:
-    void pixmapReady(const QString& theme, Client* client, quint32 handle, const QString&, const QSize&);
+    void pixmapReady(const QString& theme, TestClient* client, quint32 handle, const QString&, const QSize&);
 
 
 protected:
@@ -81,27 +82,25 @@ protected:
     void requestPixmap(M::MThemeDaemonProtocol::PixmapIdentifier &);
     void releasePixmap(M::MThemeDaemonProtocol::PixmapIdentifier &);
     void checkConsistency();
-    M::MThemeDaemonProtocol::Packet processOnePacket();
 
 private slots:
+    void pixmapChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle);
+    void themeChangedSlot(const QStringList &themeInheritance, const QStringList& libraryNames);
     void connected();
     void disconnected();
     void sendPacket();
-    void readyRead();
 
 private:
 
     bool isDataConsistent(const M::MThemeDaemonProtocol::ClientList *reply);
     void quit();
 
-    QLocalSocket socket;
-    QDataStream stream;
+    MRemoteThemeDaemon *daemon;
+
     QSet<M::MThemeDaemonProtocol::PixmapIdentifier> requestedPixmaps;
     QSet<M::MThemeDaemonProtocol::PixmapIdentifier> readyPixmaps;
     QString identifier;
-    bool registered;
     int operationCount;
-    quint64 packetsSent;
     QString currentTheme;
     QSemaphore waitVerify;
 };

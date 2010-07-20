@@ -26,7 +26,7 @@
 #include <QSize>
 
 class ClientThread;
-class Client;
+class TestClient;
 
 static const QString THEME_ROOT_DIRECTORY = QString("themes");
 
@@ -53,11 +53,11 @@ private slots:
     void clientFinished();
     void changeThemeAndLocale();
 
-    void pixmapReady(const QString& theme, Client* client, quint32 handle, const QString& imageId, const QSize& size);
+    void pixmapReady(const QString& theme, TestClient* client, quint32 handle, const QString& imageId, const QSize& size);
 
 private:
     void cleanup();
-    bool verifyPixmap(const QString& theme, Client* client, quint32 handle, const QString& imageId, const QSize& size);
+    bool verifyPixmap(const QString& theme, TestClient* client, quint32 handle, const QString& imageId, const QSize& size);
 
     QStringList locales;
     QSet<ClientThread *> clients;
