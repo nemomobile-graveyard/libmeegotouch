@@ -790,6 +790,19 @@ EOF
 
 ######################################################################
 # generate output to show which ids from specs are used and which are not
+
+# mark some exceptions where engineering English is not expected
+# to exist and which are known to be used anyway as used:
+for my $idFromSpec (sort (keys %idsFromSpec)) {
+    if($idsFromSpec{$idFromSpec} eq "") {
+        if ($idFromSpec =~ /qtn_clk_city/
+            || $idFromSpec =~ /qtn_clk_country/
+            || $idFromSpec =~ /qtn_clk_region/) {
+            $idsFromSpec{$idFromSpec} = "meegotouch-cities-template";
+        }
+    }
+}
+
 my $htmlOutIdsFromSpecUsed = "";
 my $htmlOutIdsFromSpecNeverUsed = "";
 for my $idFromSpec (sort (keys %idsFromSpec)) {
