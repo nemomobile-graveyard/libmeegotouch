@@ -1,8 +1,12 @@
-libmeegotouch (0.20.28~1) UNRELEASED; urgency=low
+libmeegotouch (0.20.28-1) unstable; urgency=low
 
-  * Status indicator menu opens with a drag and mouse release is not required. Also haptics feedback when opening the status indicator menu 
+  * Fixes: NB#178373 - Background of MSlider does not align properly behind the groove
+  * Fixes: NB#172648 - Slow startup performance when using MGConfItem
+  * Fixes: NB#179128 - Configure doesn't check for Xdamage extension
+  * Fixes: NB#178961 - MComboBox selection fails to clear selection resulting from...
+  * Fixes: NB#173533 - Font setting does not support italic/bold
 
- -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 12 Jul 2010 16:49:19 +0300
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 20 Jul 2010 10:44:03 +0300
 
 libmeegotouch (0.20.27-1) unstable; urgency=low
 
