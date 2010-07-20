@@ -20,7 +20,7 @@ PKGCONFIG += gconf-2.0
 # Input
 SOURCES += main.cpp \
            clientmanager.cpp \
-           client.cpp \
+           testclient.cpp \
             ../../src/corelib/theme/mremotethemedaemon.cpp \
            ../../src/corelib/theme/mthemedaemon.cpp \
            ../../src/corelib/theme/mcommonpixmaps.cpp \
@@ -33,7 +33,7 @@ SOURCES += main.cpp \
 
 
 HEADERS += clientmanager.h \
-           client.h \
+           testclient.h \
            ../keypresswaiter.h \
            ../../src/corelib/theme/mremotethemedaemon.h \
            ../../src/corelib/theme/imthemedaemon.h \

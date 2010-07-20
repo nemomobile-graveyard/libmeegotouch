@@ -17,7 +17,7 @@
 **
 ****************************************************************************/
 
-#include "client.h"
+#include "testclient.h"
 #include "clientmanager.h"
 
 #include "mtheme.h"

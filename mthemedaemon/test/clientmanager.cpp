@@ -27,7 +27,7 @@
 #include <QSvgGenerator>
 #include <QSvgRenderer>
 #include "clientmanager.h"
-#include "client.h"
+#include "testclient.h"
 
 #define CLIENT_ID(client) "Client (0x" + QString::number((quint32) client, 16) + ')'
 
