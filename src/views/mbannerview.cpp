@@ -36,6 +36,7 @@
 MBannerViewPrivate::MBannerViewPrivate() :
     layout(0),
     landscapePolicy(0),
+    portraitPolicy(0),
     icon(0),
     title(0),
     subtitle(0)
@@ -60,8 +61,8 @@ void MBannerViewPrivate::initDynamicLayout()
 
     Q_Q(MBannerView);
 
-    if(!q->model()->iconID().isEmpty() && !q->model()->title().isEmpty()
-        && !q->model()->subtitle().isEmpty()){
+    if (!q->model()->iconID().isEmpty() && !q->model()->title().isEmpty()
+        && !q->model()->subtitle().isEmpty()) {
 
         icon = new MImageWidget();
         icon->setObjectName("CommonBannerMainIcon");
@@ -91,7 +92,7 @@ void MBannerViewPrivate::initDynamicLayout()
         landscapePolicy->addItem(subtitle);
         portraitPolicy->addItem(subtitle,0,0,Qt::AlignVCenter);
 
-    }else if(!q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()){
+    } else if (!q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
 
         icon = new MImageWidget();
         icon->setObjectName("CommonBannerMainIcon");
@@ -105,7 +106,7 @@ void MBannerViewPrivate::initDynamicLayout()
         landscapePolicy->addItem(subtitle);
         portraitPolicy->addItem(subtitle,1,1,Qt::AlignVCenter);
 
-    }else{
+    } else {
         /*These conditionals are necessary for cases not contemplated
         in the common layouts */
 
@@ -215,16 +216,14 @@ void MBannerView::updateData(const QList<const char *>& modifications)
     const char *member;
 
     foreach(member, modifications) {
-        if (member == MBannerModel::Title){
+        if (member == MBannerModel::Title) {
             d->title->setText(model()->title());
-        }else if (member == MBannerModel::Subtitle) {
+        } else if (member == MBannerModel::Subtitle) {
             d->subtitle->setText(model()->subtitle());
-        }else if (member == MBannerModel::IconID) {
+        } else if (member == MBannerModel::IconID) {
             d->icon->setImage(model()->iconID(), style()->iconSize());
         }
     }
-
-    d->initDynamicLayout();
 }
 
 M_REGISTER_VIEW_NEW(MBannerView, MBanner)
