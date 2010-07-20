@@ -28,8 +28,15 @@ chomp ($original_wd = `pwd`);
 my @handoffFiles = ();
 my %handoffXmlTrees = ();
 
-my $totalNumberOfIdsNotFoundInSpec = 0;
-my $totalNumberOfIdsLackingEngineeringEnglish = 0;
+my %idsFromSpec = ();
+my $totalNumberOfIdsFoundInSpec = 0;
+my $totalNumberOfIdsFoundInSpecUsed = 0;
+my $totalNumberOfIdsFoundInSpecButNeverUsed = 0;
+
+my %idsFoundInCode = ();
+my $totalNumberOfIdsFoundInCode = 0;
+my $totalNumberOfIdsFoundInCodeButNotInSpec = 0;
+my $totalNumberOfIdsFoundInCodeLackingEngineeringEnglish = 0;
 
 my $class;
 
@@ -464,6 +471,20 @@ sub checkMessageIdFromSourceAgainstHandoff {
                     ${$htmlOutRef} .= sprintf "%s found in spec “%s” (%s)",
                     $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
                     ${$htmlOutRef} .= "</li>\n";
+                    my $engineeringEnglishFileBasename =
+                        myBasename($engineeringEnglishFile);
+                    if(defined $idsFromSpec{$messageId}
+                       && $idsFromSpec{$messageId} ne "") {
+                        $idsFromSpec{$messageId} .=
+                            ",$engineeringEnglishFileBasename";
+                    }
+                    else {
+                        $idsFromSpec{$messageId}
+                        = $engineeringEnglishFileBasename;
+                    }
+                }
+                elsif (!defined $idsFromSpec{$messageId}) {
+                    $idsFromSpec{$messageId} = "";
                 }
             }
         }
@@ -613,8 +634,8 @@ for my $engineeringEnglishFile (findEngineeringEnglishFiles()) {
     close(EEFILE);
     if (! $tree->[1][4]) {
         if ($OPT_VERBOSITY >=1) {
-            printf (STDOUT "%s has no context tree, probably empty, skipping ...\n",
-                    $engineeringEnglishFile);
+            printf STDOUT "%s has no context tree, probably empty, skipping ...\n",
+                    $engineeringEnglishFile;
         }
         next;
     }
@@ -623,10 +644,11 @@ for my $engineeringEnglishFile (findEngineeringEnglishFiles()) {
     for (my $i = 0; $i < $#contextTree; ++$i) {
         if ($contextTree[$i] eq "message") {
             my $source = $contextTree[$i+1][4][2];
+            $idsFoundInCode{$source} = "";
             my $translation = $contextTree[$i+1][8][2];
             if (!$translation || $translation eq "!! " || $translation eq "") {
                 ++$missingEngineeringEnglishCount;
-                ++$totalNumberOfIdsLackingEngineeringEnglish;
+                ++$totalNumberOfIdsFoundInCodeLackingEngineeringEnglish;
                 my $htmlOutMissingEeMessage = "";
                 $htmlOutMissingEeMessage .= "<li>";
                 $htmlOutMissingEeMessage .= sprintf "%s", $source;
@@ -642,7 +664,7 @@ for my $engineeringEnglishFile (findEngineeringEnglishFiles()) {
             }
             else {
                 ++$errorCount;
-                ++$totalNumberOfIdsNotFoundInSpec;
+                ++$totalNumberOfIdsFoundInCodeButNotInSpec;
                 $htmlOutErrorList .= $htmlOutMessage;
                 $csvOut .= "$source,$engineeringEnglishFile,$debianPackage,$debianPackageVersion,$debianPackageMaintainerMail\n";
             }
@@ -766,34 +788,165 @@ $htmlOutToc .= <<"EOF";
     </center>
 EOF
 
+######################################################################
+# generate output to show which ids from specs are used and which are not
+my $htmlOutIdsFromSpecUsed = "";
+my $htmlOutIdsFromSpecNeverUsed = "";
+for my $idFromSpec (sort (keys %idsFromSpec)) {
+    if ($idsFromSpec{$idFromSpec} eq "") {
+        ++$totalNumberOfIdsFoundInSpecButNeverUsed;
+        $htmlOutIdsFromSpecNeverUsed .= <<"EOF"
+            <li>$idFromSpec</li>
+EOF
+    }
+    else {
+        ++$totalNumberOfIdsFoundInSpecUsed;
+        $htmlOutIdsFromSpecUsed .= <<"EOF"
+            <li>$idFromSpec (used in $idsFromSpec{$idFromSpec})</li>
+EOF
+    }
+}
+
+$totalNumberOfIdsFoundInSpec =
+    $totalNumberOfIdsFoundInSpecUsed
+    + $totalNumberOfIdsFoundInSpecButNeverUsed;
+
+my $htmlOutIdsFromSpecDetail = "";
+$htmlOutIdsFromSpecDetail .= <<"EOF";
+    <div class="eefile">
+    <div class="title">
+    Total number of IDs in specs:
+    <span class="okcolor">
+    $totalNumberOfIdsFoundInSpec
+    </span>
+    IDs used:
+    <span class="okcolor">
+    $totalNumberOfIdsFoundInSpecUsed
+    </span>
+    IDs never used:
+    <span class="errorcolor">
+    $totalNumberOfIdsFoundInSpecButNeverUsed
+    </span>
+    <a href="#summary" name="idsfromspecused">
+    Back to Summary
+    </a>
+    </div>
+    </div>
+EOF
+
+if ($totalNumberOfIdsFoundInSpecButNeverUsed > 0) {
+    $htmlOutIdsFromSpecDetail .= <<"EOF";
+        <div class="errorlist">
+        List of IDs from the specifications which are never used in the code:
+        <ul>
+        $htmlOutIdsFromSpecNeverUsed
+        </ul>
+        </div>
+EOF
+}
+if ($totalNumberOfIdsFoundInSpecUsed > 0) {
+    $htmlOutIdsFromSpecDetail .= <<"EOF";
+        <div class="oklist">
+        List of IDs from the specifications which are used somewhere in the code:
+        <ul>
+        $htmlOutIdsFromSpecUsed
+        </ul>
+        </div>
+EOF
+}
+######################################################################
+
 my $htmlOutTocHeader = "";
 $htmlOutTocHeader .= <<"EOF";
     <hr>
-    <h2>Summary of results:</h2>
+    <h2 id="summary">Summary of results:</h2>
 EOF
 
-$class = $totalNumberOfIdsNotFoundInSpec? "errorcolor" : "okcolor";
+my @idsFoundInCodeArray = (keys %idsFoundInCode);
+$totalNumberOfIdsFoundInCode = $#idsFoundInCodeArray;
+
 $htmlOutTocHeader .= <<"EOF";
-<span class="$class">
     <p>
     <b>
-    Total number of Ids not found in the specification:
-    $totalNumberOfIdsNotFoundInSpec
+    Total number of Ids found in the code:
+    $totalNumberOfIdsFoundInCode
     </b>
+    (may contain duplicates)
     </p>
-</span>
 EOF
 
-$class = $totalNumberOfIdsLackingEngineeringEnglish? "errorcolor" : "okcolor";
+$class = $totalNumberOfIdsFoundInCodeButNotInSpec? "errorcolor" : "okcolor";
 $htmlOutTocHeader .= <<"EOF";
-<span class="$class">
     <p>
     <b>
-    Total number of Ids where the engineering English is missing or empty:
-    $totalNumberOfIdsLackingEngineeringEnglish
+    Total number of Ids found in the code but not in the specifications:
+    <span class="$class">
+    $totalNumberOfIdsFoundInCodeButNotInSpec
+    </span>
     </b>
+    (may contain duplicates)
+    </p>
+EOF
+
+$class = $totalNumberOfIdsFoundInCodeLackingEngineeringEnglish? "errorcolor" : "okcolor";
+$htmlOutTocHeader .= <<"EOF";
+    <p>
+    <b>
+    Total number of Ids found in the code where the engineering English is missing or empty:
+    <span class="$class">
+    $totalNumberOfIdsFoundInCodeLackingEngineeringEnglish
+    </span>
+    </b>
+    (may contain duplicates)
+    </p>
+EOF
+
+$htmlOutTocHeader .= <<"EOF";
+    <p>
+    Note that the numbers of Ids listed above as “found in the code” may
+    count identical ids several times. If the same id
+    appears in in different engineering English files it is
+    counted once for each engineering Engineering file it appears in.
+    </p>
+EOF
+
+$htmlOutTocHeader .= <<"EOF";
+    <p>
+    <b>
+    Total number of Ids found in the specifications:
+    $totalNumberOfIdsFoundInSpec
+    </b>
+    (unique)
+    <a href="#idsfromspecused">View Details</a>
+    </p>
+EOF
+
+$class = $totalNumberOfIdsFoundInSpecButNeverUsed? "errorcolor" : "okcolor";
+$htmlOutTocHeader .= <<"EOF";
+    <p>
+    <b>
+    Total number of Ids found in the specifications which are never used in the code:
+    <span class="$class">
+    $totalNumberOfIdsFoundInSpecButNeverUsed
+    </span>
+    </b>
+    (unique)
+    <a href="#idsfromspecused">View Details</a>
     </p>  
-</span>
+EOF
+
+$class = $totalNumberOfIdsFoundInSpecUsed? "okcolor" : "errorcolor";
+$htmlOutTocHeader .= <<"EOF";
+    <p>
+    <b>
+    Total number of unique Ids found in the specifications which are used somewhere in the code:
+    <span class="$class">
+    $totalNumberOfIdsFoundInSpecUsed
+    </span>
+    </b>
+    (unique)
+    <a href="#idsfromspecused">View Details</a>
+    </p>  
 EOF
 
 $htmlOutTocHeader .= <<"EOF";
@@ -840,21 +993,30 @@ my $htmlOutIntroduction ="";
 $htmlOutIntroduction .= <<"EOF";
     <hr>
     <h2>Introduction</h2>
+    <p>
     This page lists IDs which are used in
     the code but which are missing in the specifications. For all IDs used
     in the code, but not defined in the UI specifications, please do the
     following:
+    </p>
     <ol>
     <li>Check your code if those IDs are really in use</li>
     <li>Check if there is a typo in the ID</li>
     </ol>
+    <p>
     If there is no typo and the ID is
     really used, open a bug against the relevant UI Spec
     requesting a new ID:
+    </p>
     <ul>
     <li>component: Specifications</li>
     <li>CC: <a href=\"mailto:heidi.hendrell\@nokia.com\">Heidi Hendrell</a></li>
     </ul>
+    <p>
+    The message ids which are in the specifications were collected
+    from the “handoff” .ts files which were downloaded here:
+    <a href="$OPT_HANDOFF_URL">$OPT_HANDOFF_URL</a>.
+    </p>
 EOF
 
 my $htmlOutBody =
@@ -862,8 +1024,8 @@ my $htmlOutBody =
     . $htmlOutTocHeader
     . $htmlOutToc
     . $htmlOutResultsDetailHeader
-    . $htmlOutResultsDetail;
-
+    . $htmlOutResultsDetail
+    . $htmlOutIdsFromSpecDetail;
 writeHtml($htmlOutBody);
 
 open (CSV, ">$OPT_OUTPUTDIR/messageid-check-result.csv") || die "can't open file $OPT_OUTPUTDIR/messageid-check-result.csv: $!";
