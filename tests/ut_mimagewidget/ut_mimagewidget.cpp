@@ -108,33 +108,34 @@ void Ut_MImageWidget::testImageDataSize()
     QFETCH(QString, fname);
 
     QImage img(fname);
-    MImageWidget *myImage = new MImageWidget(&img);
+    m_subject = new MImageWidget(&img);
 
     QSize imgSize;
     QPixmap pixmap(fname);
     imgSize = pixmap.size();
 
-    const QPixmap *p = myImage->pixmap();
+    const QPixmap *p = m_subject->pixmap();
     QCOMPARE(imgSize, p->size());
-    QCOMPARE(imgSize, myImage->imageSize());
+    QCOMPARE(imgSize, m_subject->imageSize());
 
     // test setPixmap
-    myImage->setPixmap(pixmap);
-    p = myImage->pixmap();
+    m_subject->setPixmap(pixmap);
+    p = m_subject->pixmap();
     QCOMPARE(pixmap.toImage(), p->toImage());
 
     // test setImage
     QImage image = pixmap.toImage();
-    myImage->setImage(image);
-    p = myImage->pixmap();
+    m_subject->setImage(image);
+    p = m_subject->pixmap();
     QCOMPARE(image, p->toImage());
 
 //     // test imageDataSize after set crop section
 //     QSizeF half = imgSize*0.5;
-//     myImage->setCropSize(half);
-//     QCOMPARE(half, myImage->imageDataSize());
+//     m_subject->setCropSize(half);
+//     QCOMPARE(half, m_subject->imageDataSize());
 
-    delete myImage;
+    delete m_subject;
+    m_subject = 0;
 }
 
 void Ut_MImageWidget::testSetZoomFactor_data()
@@ -157,43 +158,44 @@ void Ut_MImageWidget::testSetZoomFactor()
     Q_UNUSED(f2)
 
     QImage img(fname);
-    MImageWidget *myImage = new MImageWidget(&img);
-    myImage->setZoomFactor(factor);
+    m_subject = new MImageWidget(&img);
+    m_subject->setZoomFactor(factor);
 
     qreal fx, fy;
-    myImage->zoomFactor(&fx, &fy);
+    m_subject->zoomFactor(&fx, &fy);
 
-    QSize size = myImage->imageSize();
+    QSize size = m_subject->imageSize();
     if (size.width() * factor > 2.0) {
         QCOMPARE(fx, factor);
         QCOMPARE(fy, factor);
 
         // test zoom in & zoom out
-        myImage->zoomIn();
-        myImage->zoomFactor(&fx, &fy);
+        m_subject->zoomIn();
+        m_subject->zoomFactor(&fx, &fy);
 
         QCOMPARE(fx, factor * 2.0f);
         QCOMPARE(fy, factor * 2.0f);
 
-        myImage->zoomOut();
-        myImage->zoomFactor(&fx, &fy);
+        m_subject->zoomOut();
+        m_subject->zoomFactor(&fx, &fy);
 
         QCOMPARE(fx, factor);
         QCOMPARE(fy, factor);
 
         // test AspectRatioMode
-        myImage->setZoomFactor(factor, f2);
-        QCOMPARE(Qt::IgnoreAspectRatio, myImage->aspectRatioMode());
+        m_subject->setZoomFactor(factor, f2);
+        QCOMPARE(Qt::IgnoreAspectRatio, m_subject->aspectRatioMode());
 
     } else {
-        myImage->setZoomFactor(factor, factor);
-        myImage->zoomFactor(&fx, &fy);
+        m_subject->setZoomFactor(factor, factor);
+        m_subject->zoomFactor(&fx, &fy);
 
         QVERIFY(fx != factor);
         QVERIFY(fy != factor);
     }
 
-    delete myImage;
+    delete m_subject;
+    m_subject = 0;
 }
 
 void Ut_MImageWidget::testSetNegativeZoomFactor()
@@ -203,20 +205,21 @@ void Ut_MImageWidget::testSetNegativeZoomFactor()
     qreal zx, zy;
 
     QImage img(qApp->applicationDirPath() + "/ut_mimagewidget-test.png");
-    MImageWidget *myImage = new MImageWidget(&img);
-    myImage->setZoomFactor(posvalue, posvalue);
-    myImage->zoomFactor(&zx, &zy);
+    m_subject = new MImageWidget(&img);
+    m_subject->setZoomFactor(posvalue, posvalue);
+    m_subject->zoomFactor(&zx, &zy);
 
     QVERIFY(qAbs(zx - posvalue) < 1e-3);
     QVERIFY(qAbs(zy - posvalue) < 1e-3);
 
-    myImage->setZoomFactor(negvalue, negvalue);
-    myImage->zoomFactor(&zx, &zy);
+    m_subject->setZoomFactor(negvalue, negvalue);
+    m_subject->zoomFactor(&zx, &zy);
 
     QVERIFY(qAbs(zx - posvalue) < 1e-3);
     QVERIFY(qAbs(zy - posvalue) < 1e-3);
 
-    delete myImage;
+    delete m_subject;
+    m_subject = 0;
 }
 
 void Ut_MImageWidget::testSetCropSize_data()
@@ -235,13 +238,13 @@ void Ut_MImageWidget::testSetCropSize()
     QFETCH(QSizeF, crop);
 
     QImage img(fname);
-    MImageWidget *myImage = new MImageWidget(&img);
+    m_subject = new MImageWidget(&img);
 
     QRectF rect(QPointF(0.0, 0.0), crop);
-    myImage->setCrop(rect);
+    m_subject->setCrop(rect);
 
-    QSize imgSize = myImage->imageSize();
-    QSizeF t = myImage->crop().size();
+    QSize imgSize = m_subject->imageSize();
+    QSizeF t = m_subject->crop().size();
 
     if (crop.width() < 0.0)
         QCOMPARE(t, QSizeF(0.0, 0.0));
@@ -250,7 +253,8 @@ void Ut_MImageWidget::testSetCropSize()
     else
         QCOMPARE(t, crop);
 
-    delete myImage;
+    delete m_subject;
+    m_subject = 0;
 }
 
 void Ut_MImageWidget::testSetCropTopLeftPoint_data()
@@ -271,13 +275,13 @@ void Ut_MImageWidget::testSetCropTopLeftPoint()
     QFETCH(QPointF, topLeft);
 
     QImage img(fname);
-    MImageWidget *myImage = new MImageWidget(&img);
+    m_subject = new MImageWidget(&img);
 
     QRectF rect(topLeft, QSize(10.0, 10.0));
-    myImage->setCrop(rect);
+    m_subject->setCrop(rect);
 
-    QPointF point = myImage->crop().topLeft();
-    QSize imgSize = myImage->imageSize();
+    QPointF point = m_subject->crop().topLeft();
+    QSize imgSize = m_subject->imageSize();
 
     // This is default value in MImageWidget
     if (topLeft.x() < 0.0 || topLeft.x() < 0.0)
@@ -287,7 +291,8 @@ void Ut_MImageWidget::testSetCropTopLeftPoint()
     else
         QCOMPARE(point, topLeft);
 
-    delete myImage;
+    delete m_subject;
+    m_subject = 0;
 }
 
 void Ut_MImageWidget::testImageNotExist_data()
@@ -300,14 +305,69 @@ void Ut_MImageWidget::testImageNotExist()
 {
     QFETCH(QString, fname);
     QImage img(fname);
-    MImageWidget *myImage = new MImageWidget(&img);
+    m_subject = new MImageWidget(&img);
 
-    QSize imageSize = myImage->imageSize();
+    QSize imageSize = m_subject->imageSize();
     QVERIFY(imageSize.isEmpty());
 
-    delete myImage;
+    delete m_subject;
+    m_subject = 0;
 }
 
+void Ut_MImageWidget::testImageName()
+{
+    QString fname("imagename");
+    m_subject = new MImageWidget(fname);
+
+    QCOMPARE(fname, m_subject->image());
+    //whatever image name was set internal pixmap should be created
+    //(if imagename was not found by themedaemon, then it will be the
+    //red rectangle)
+    QVERIFY(m_subject->pixmap());
+
+    delete m_subject;
+    m_subject = 0;
+}
+
+void Ut_MImageWidget::testZoomIn()
+{
+    QString fname("imagename");
+    m_subject = new MImageWidget(fname);
+
+    qreal fx, fy;
+    m_subject->zoomFactor(&fx, &fy);
+
+    m_subject->zoomIn();
+
+    qreal nfx, nfy;
+    m_subject->zoomFactor(&nfx, &nfy);
+
+    QVERIFY(nfx >= fx);
+    QVERIFY(nfy >= fy);
+
+    delete m_subject;
+    m_subject = 0;
+}
+
+void Ut_MImageWidget::testZoomOut()
+{
+    QString fname("imagename");
+    m_subject = new MImageWidget(fname);
+
+    qreal fx, fy;
+    m_subject->zoomFactor(&fx, &fy);
+
+    m_subject->zoomOut();
+
+    qreal nfx, nfy;
+    m_subject->zoomFactor(&nfx, &nfy);
+
+    QVERIFY(nfx <= fx);
+    QVERIFY(nfy <= fy);
+
+    delete m_subject;
+    m_subject = 0;
+}
 
 QTEST_MAIN(Ut_MImageWidget);
 

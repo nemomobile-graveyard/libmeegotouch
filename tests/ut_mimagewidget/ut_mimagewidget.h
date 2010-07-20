@@ -55,6 +55,11 @@ private slots:
     void testImageNotExist_data();
     void testImageNotExist();
 
+    void testImageName();
+
+    void testZoomIn();
+    void testZoomOut();
+
 private:
     MImageWidget *m_subject;
 };
