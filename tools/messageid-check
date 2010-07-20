@@ -64,6 +64,19 @@ my @engineeringEnglishPackagesIgnore = (
     "duihomescreen-plugins-weatherapplet-l10n-engineering-english"
     );
 
+# engineering English packages which should be temporarily ignored
+# because they are broken, but should be enabled again as soon
+# as they are fixed:
+
+my @engineeringEnglishPackagesBroken = (
+    # this one is empty. Why?:
+    "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
+    # file conflict with accounts-ui-l10n-engineering-english
+    "keychain-ui-l10n-engineering-english",
+    # this one is empty. Why?:
+    "mfe-account-ui-plugins-l10n-engineering-english"
+   );
+
 my @engineeringEnglishPackages = (
     "account-plugin-att-l10n-engineering-english",
     "account-plugin-facebook-l10n-engineering-english",
@@ -92,8 +105,7 @@ my @engineeringEnglishPackages = (
     "duicontrolpanel-certificatesapplet-l10n-engineering-english",
     "duicontrolpanel-datetimeapplet-l10n-engineering-english",
     "duicontrolpanel-displaylanguageapplet-l10n-engineering-english",
-    # this one is empty. Why?:
-    # "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
+    "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
     "duicontrolpanel-l10n-engineering-english",
     "duicontrolpanel-networkapplet-l10n-engineering-english",
     "duicontrolpanel-regionformatapplet-l10n-engineering-english",
@@ -105,8 +117,7 @@ my @engineeringEnglishPackages = (
     "duistatusind-connectivity-l10n-engineering-english",
     "feedreader-l10n-engineering-english",
     "gallery-l10n-engineering-english",
-    # file conflict with accounts-ui-l10n-engineering-english
-    #"keychain-ui-l10n-engineering-english",
+    "keychain-ui-l10n-engineering-english",
     "libas-common-utils-l10n-engineering-english",
     "libdatacounterdialog-l10n-engineering-english",
     "libdialerui-l10n-engineering-english",
@@ -124,15 +135,13 @@ my @engineeringEnglishPackages = (
     "me-l10n-engineering-english",
     "meegotouch-demos-widgetsgallery-l10n-engineering-english",
     "messaging-ui-l10n-engineering-english",
-    # this one is empty. Why?:
-    # "mfe-account-ui-plugins-l10n-engineering-english",
+    "mfe-account-ui-plugins-l10n-engineering-english",
     "mms-ui-l10n-engineering-english",
     "mpsa-l10n-engineering-english",
     "mstartup-l10n-engineering-english",
     "office-tools-l10n-engineering-english",
     "package-manager-l10n-engineering-english",
     "package-manager-ui-l10n-engineering-english",
-    # file conflict with accounts-ui-l10n-engineering-english
     "signon-ui-l10n-engineering-english",
     "systemui-applets-l10n-engineering-english",
     "systemui-l10n-engineering-english",
@@ -298,19 +307,52 @@ EOF
 
 }
 
+sub checkEngineeringEnglishPackageList {
+    my @engineeringEnglishPackagesKnownToApt = ();
+    open (PKGLIST, "apt-cache search l10n-engineering-english |") || die "Can’t open apt-cache search l10n-engineering-english | : $!";
+    binmode PKGLIST, ":utf8";
+    while (<PKGLIST>) {
+        if ($ARG =~ /(^[^ ]+)/) {
+            push (@engineeringEnglishPackagesKnownToApt, $1);
+        }
+    }
+    close (PKGLIST);
+    for my $package (@engineeringEnglishPackagesKnownToApt) {
+        if (!grep(/^${package}$/, @engineeringEnglishPackages)
+            && !grep(/^${package}$/, @engineeringEnglishPackagesObsolete)
+            && !grep(/^${package}$/, @engineeringEnglishPackagesIgnore)
+            && !grep(/^${package}$/, @engineeringEnglishPackagesBroken)) {
+            printf STDERR "engineering English package “%s” seems to be available but is not known by this script. Fix this first! Exiting ...",
+            $package;
+            exit (1);
+        }
+    }
+}
+
 sub download {
     if (mySystem("fakeroot apt-get update")) {
         printf (STDERR "“fakeroot apt-get update” didn’t work.\n");
         exit (1);
     }
 
-    for my $engineeringEnglishPackage (@engineeringEnglishPackages) {
-        if (mySystem("fakeroot apt-get -y --force-yes install $engineeringEnglishPackage")) {
-            printf (STDERR "“fakeroot apt-get -y --force-yes install $engineeringEnglishPackage” didn’t work.\n");
-            exit (1);
+    checkEngineeringEnglishPackageList();
+
+    for my $package (@engineeringEnglishPackages) {
+        if (grep(/^${package}$/, @engineeringEnglishPackagesObsolete)
+            || grep(/^${package}$/, @engineeringEnglishPackagesIgnore)
+            || grep(/^${package}$/, @engineeringEnglishPackagesBroken)) {
+            if ($OPT_VERBOSITY >=1) {
+                printf (STDOUT "do not try to install ignored %s\n", $package);
+            }
         }
         else {
-            printf (STDOUT "“fakeroot apt-get -y --force-yes install $engineeringEnglishPackage” OK.\n");
+            if (mySystem("fakeroot apt-get -y --force-yes install $package")) {
+                printf (STDERR "“fakeroot apt-get -y --force-yes install $package” didn’t work.\n");
+                exit (1);
+            }
+            else {
+                printf (STDOUT "“fakeroot apt-get -y --force-yes install $package” OK.\n");
+            }
         }
     }
 
@@ -363,7 +405,8 @@ sub findEngineeringEnglishFiles {
     my %engineeringEnglishPackages = ();
     for my $package (@engineeringEnglishPackages) {
         if (grep(/^${package}$/, @engineeringEnglishPackagesObsolete)
-            || grep(/^${package}$/, @engineeringEnglishPackagesIgnore)) {
+            || grep(/^${package}$/, @engineeringEnglishPackagesIgnore)
+            || grep(/^${package}$/, @engineeringEnglishPackagesBroken)) {
             if ($OPT_VERBOSITY >=1) {
                 printf (STDOUT "ignoring %s\n", $package);
             }
@@ -1027,8 +1070,27 @@ $htmlOutIntroduction .= <<"EOF";
     </ul>
     <p>
     The message ids which are in the specifications were collected
-    from the “handoff” .ts files which were downloaded here:
+    from the “handoff” .ts files which were downloaded here:<br>
     <a href="$OPT_HANDOFF_URL">$OPT_HANDOFF_URL</a>.
+    </p>
+EOF
+
+my $etc_apt_sources_list_contents = "";
+open (SOURCES_LIST, "<:encoding(UTF-8)", "/etc/apt/sources.list") || die "Can’t open file /etc/apt/sources.list: $!";
+while (<SOURCES_LIST>) {
+    next if /^\s*#/; # skip comments
+    if ($ARG =~ /[^[:space:]]+/) {
+        $etc_apt_sources_list_contents .= "$ARG<br>";
+    }
+}
+close (SOURCES_LIST);
+
+$htmlOutIntroduction .= <<"EOF";
+    <p>
+    While this script was run, /etc/apt/sources.list contained:<br>
+    $etc_apt_sources_list_contents
+    i.e. the engineering English packages listed below were downloaded
+    from these repositories.
     </p>
 EOF
 
