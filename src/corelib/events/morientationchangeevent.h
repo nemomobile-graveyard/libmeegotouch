@@ -31,7 +31,8 @@ class MOrientationChangeEventPrivate;
  *
  * The orientation change event occurs whenever the viewport changes its
  * orientation between landscape and portrait (note that it doesn't occur
- * when changing angle e.g. from 0 directly to 180 degrees).
+ * when changing angle e.g. from 0 directly to 180 degrees). It is also sent to MApplicationPage
+ * when it is about to be shown for the first time - MApplicationPage::appear().
  *
  * It is used to notify widgets about the orientation change. It can be asked
  * about the new orientation of the viewport. You can handle this event
