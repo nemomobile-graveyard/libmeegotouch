@@ -20,15 +20,19 @@
 #include "mlistitemview.h"
 #include "mlistitemview_p.h"
 
+#include "mviewconstants.h"
+
 #include <MListItem>
 
 #include <QGraphicsSceneMouseEvent>
+#include <QTimer>
 
-#define RELEASE_MISS_DELTA 30.0
 
 MListItemViewPrivate::MListItemViewPrivate(MWidgetController *controller) 
     : MWidgetViewPrivate(),
-    down(false)
+    down(false),
+    queuedStyleModeChange(false),
+    styleModeChangeTimer(0)
 {
     this->controller = dynamic_cast<MListItem *>(controller);
 }
@@ -37,17 +41,35 @@ MListItemViewPrivate::~MListItemViewPrivate()
 {
 }
 
+void MListItemViewPrivate::_q_applyQueuedStyleModeChange()
+{
+    if (queuedStyleModeChange) {
+        queuedStyleModeChange = false;
+        updateStyleMode();
+    }
+}
+
 void MListItemViewPrivate::updateStyleMode()
 {
     Q_Q(MListItemView);
 
     if (down) {
+        if (styleModeChangeTimer->isActive()) {
+            styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
+            return;
+        }
+        styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
         q->style().setModePressed();
     } else {
-        if (controller->isSelected())
+        if (controller->isSelected()) {
             q->style().setModeSelected();
-        else
+        } else {
+            if (styleModeChangeTimer->isActive()) {
+                queuedStyleModeChange = true;
+                return;
+            }
             q->style().setModeDefault();
+        }
     }
 
     q->applyStyle();
@@ -62,6 +84,11 @@ void MListItemViewPrivate::click()
 MListItemView::MListItemView(MWidgetController *controller) 
     : MWidgetView(new MListItemViewPrivate(controller))
 {
+    Q_D(MListItemView);
+
+    d->styleModeChangeTimer = new QTimer(this);
+    d->styleModeChangeTimer->setSingleShot(true);
+    connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
 }
 
 void MListItemView::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -89,8 +116,8 @@ void MListItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
     bool pressed = rect.contains(touch);
 
     if (pressed)
@@ -104,8 +131,8 @@ void MListItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
     bool pressed = rect.contains(touch);
 
     if (pressed != d->down) {
@@ -127,3 +154,5 @@ void MListItemView::cancelEvent(MCancelEvent *event)
 }
 
 M_REGISTER_VIEW_NEW(MListItemView, MListItem)
+
+#include "moc_mlistitemview.cpp"

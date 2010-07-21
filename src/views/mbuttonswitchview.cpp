@@ -23,6 +23,7 @@
 #include "mbutton.h"
 #include "mbutton_p.h"
 #include "mscalableimage.h"
+#include "mviewconstants.h"
 
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
@@ -49,10 +50,6 @@ class HandleAnimation : public QVariantAnimation
         MButtonSwitchViewPrivate* m_viewPrivate;
 };
 //! \internal_end
-
-
-// Distance in pixels from the widget bounding box inside which a release is still accepted
-#define RELEASE_MISS_DELTA 30
 
 MButtonSwitchViewPrivate::MButtonSwitchViewPrivate() :
     mouseOffset(0),
@@ -287,8 +284,8 @@ void MButtonSwitchView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
         QPointF touch = event->scenePos();
         QRectF rect = d->controller->sceneBoundingRect();
-        rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-                    RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+        rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                    M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
         if (rect.contains(touch))
             model()->click();
 

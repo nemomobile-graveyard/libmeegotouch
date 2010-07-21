@@ -25,6 +25,7 @@
 
 class MScalableImage;
 class MLabel;
+class QTimer;
 
 class MButtonViewPrivate : public MWidgetViewPrivate
 {
@@ -40,9 +41,11 @@ public:
     const QPixmap *toggledIcon;
 
     MLabel *label;
+    QTimer *styleModeChangeTimer;
 
     bool iconFromQIcon;
     bool toggledIconFromQIcon;
+    bool queuedStyleModeChange;
 
     QRectF iconRect;
 
@@ -52,6 +55,8 @@ public:
 
     void loadIcon(const QIcon &qIcon, const QSize &newIconSize);
     void loadIcon(const QString &newIconId, const QSize &newIconSize, QIcon::Mode mode = QIcon::Normal);
+
+    void _q_applyQueuedStyleModeChange();
 };
 
 #endif

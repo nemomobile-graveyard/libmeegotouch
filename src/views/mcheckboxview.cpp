@@ -21,14 +21,13 @@
 #include "mcheckboxview_p.h"
 
 #include "mscalableimage.h"
+#include "mviewconstants.h"
 
 #include <QPainter>
 #include <QGraphicsSceneMouseEvent>
 
 #include "mdebug.h"
 
-// Distance in pixels from the widget bounding box inside which a release is still accepted
-#define RELEASE_MISS_DELTA 30
 
 MCheckboxViewPrivate::MCheckboxViewPrivate()
     : MButtonViewPrivate()
@@ -84,8 +83,8 @@ void MCheckboxView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
 
     if (rect.contains(touch)) {
         if (!model()->down()) {
@@ -129,8 +128,8 @@ void MCheckboxView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
     if (rect.contains(touch))
         model()->click();
 }

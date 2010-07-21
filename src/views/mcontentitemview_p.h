@@ -29,6 +29,7 @@ class MLabel;
 class MImageWidget;
 class MScalableImage;
 class QGraphicsGridLayout;
+class QTimer;
 
 class MContentItemViewPrivate : public MWidgetViewPrivate
 {
@@ -63,6 +64,8 @@ public:
 
     static void initBackgroundFunctions();
     static QVector<backgroundFunc> backgroundFunctions;
+
+    void _q_applyQueuedStyleModeChange();
 private:
     MContentItem *controller;
     MLabel *titleLabel;
@@ -72,6 +75,8 @@ private:
     int configuredStyle;
     bool down;
     MImageWidget * optionalImageWidget;
+    QTimer *styleModeChangeTimer;
+    bool queuedStyleModeChange;
 };
 
 #endif

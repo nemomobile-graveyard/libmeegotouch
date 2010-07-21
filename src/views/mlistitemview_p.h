@@ -23,6 +23,7 @@
 #include <private/mwidgetview_p.h>
 
 class MListItem;
+class QTimer;
 
 class MListItemViewPrivate : public MWidgetViewPrivate
 {
@@ -33,9 +34,12 @@ public:
     void updateStyleMode();
     void click();
 
+    void _q_applyQueuedStyleModeChange();
 private:
     bool down;
     MListItem *controller;
+    bool queuedStyleModeChange;
+    QTimer *styleModeChangeTimer;
     
 private:
     Q_DECLARE_PUBLIC(MListItemView)

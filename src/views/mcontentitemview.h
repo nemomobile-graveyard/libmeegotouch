@@ -77,6 +77,7 @@ protected:
 private:
     Q_DISABLE_COPY(MContentItemView)
     Q_DECLARE_PRIVATE(MContentItemView)
+    Q_PRIVATE_SLOT(d_func(), void _q_applyQueuedStyleModeChange())
 };
 
 #endif

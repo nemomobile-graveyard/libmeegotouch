@@ -25,6 +25,7 @@
 #include <QFontMetricsF>
 #include <QPixmap>
 #include <QIcon>
+#include <QTimer>
 
 #include "mbutton.h"
 #include "mfeedback.h"
@@ -35,12 +36,10 @@
 #include "mlabel.h"
 #include "mdebug.h"
 #include "mtimestamp.h"
-
-// Distance in pixels from the widget bounding box inside which a release is still accepted
-#define RELEASE_MISS_DELTA 30
+#include "mviewconstants.h"
 
 MButtonViewPrivate::MButtonViewPrivate()
-    : icon(0), toggledIcon(0), label(NULL), iconFromQIcon(false), toggledIconFromQIcon(false)
+    : icon(0), toggledIcon(0), label(NULL), styleModeChangeTimer(NULL), iconFromQIcon(false), toggledIconFromQIcon(false), queuedStyleModeChange(false)
 {
 }
 
@@ -81,16 +80,34 @@ bool MButtonViewPrivate::toggleState() const
         return q->model()->down();
 }
 
+void MButtonViewPrivate::_q_applyQueuedStyleModeChange()
+{
+    if (queuedStyleModeChange) {
+        queuedStyleModeChange = false;
+        refreshStyleMode();
+    }
+}
+
 void MButtonViewPrivate::refreshStyleMode()
 {
     Q_Q(MButtonView);
 
-    if (q->model()->down())
+    if (q->model()->down()) {
+        if (styleModeChangeTimer->isActive()) {
+            styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
+            return;
+        }
+        styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
         q->style().setModePressed();
-    else if (q->model()->checked())
+    } else if (q->model()->checked()) {
         q->style().setModeSelected();
-    else
+    } else {
+        if (styleModeChangeTimer->isActive()) {
+            queuedStyleModeChange = true;
+            return;
+        }
         q->style().setModeDefault();
+    }
 
     label->setAlignment(q->style()->horizontalTextAlign() | q->style()->verticalTextAlign());
     label->setFont(q->style()->font());
@@ -266,6 +283,10 @@ MButtonView::MButtonView(MButton *controller) :
     d->label->setTextElide(true);
     d->label->setObjectName("ButtonLabel");
     d->label->setMinimumSize(0,0);
+
+    d->styleModeChangeTimer = new QTimer(this);
+    d->styleModeChangeTimer->setSingleShot(true);
+    connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
 }
 
 MButtonView::MButtonView(MButtonViewPrivate &dd, MButton *controller) :
@@ -277,6 +298,10 @@ MButtonView::MButtonView(MButtonViewPrivate &dd, MButton *controller) :
     d->label->setTextElide(true);
     d->label->setObjectName("ButtonLabel");
     d->label->setMinimumSize(0,0);
+
+    d->styleModeChangeTimer = new QTimer(this);
+    d->styleModeChangeTimer->setSingleShot(true);
+    connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
 }
 
 MButtonView::~MButtonView()
@@ -360,8 +385,8 @@ void MButtonView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
 
     if (rect.contains(touch)) {
         if (!model()->down()) {
@@ -390,8 +415,8 @@ void MButtonView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
     if (rect.contains(touch))
         model()->click();
 }
@@ -499,3 +524,5 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 }
 
 M_REGISTER_VIEW_NEW(MButtonView, MButton)
+
+#include "moc_mbuttonview.cpp"

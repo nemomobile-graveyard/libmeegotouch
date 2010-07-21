@@ -25,19 +25,20 @@
 
 #include <QGraphicsGridLayout>
 #include <QGraphicsSceneEvent>
+#include <QTimer>
 
 #include "mcontentitem.h"
 #include "mcontentitemview.h"
 #include "mcontentitemview_p.h"
+#include "mviewconstants.h"
 
 static const int NOCONTENTITEMSTYLE = -1;
 QVector<MContentItemViewPrivate::backgroundFunc> MContentItemViewPrivate::backgroundFunctions;
 
 // Distance in pixels from the widget bounding box inside which a release is still accepted
-#define RELEASE_MISS_DELTA 30
 
 MContentItemViewPrivate::MContentItemViewPrivate()
-    : controller(NULL), titleLabel(NULL), subtitleLabel(NULL), imageWidget(NULL), configuredStyle(NOCONTENTITEMSTYLE), down(false), optionalImageWidget(0)
+    : controller(NULL), titleLabel(NULL), subtitleLabel(NULL), imageWidget(NULL), configuredStyle(NOCONTENTITEMSTYLE), down(false), optionalImageWidget(0), styleModeChangeTimer(0), queuedStyleModeChange(false)
 {
     layout = new QGraphicsGridLayout;
     layout->setContentsMargins(0, 0, 0, 0);
@@ -52,6 +53,14 @@ MContentItemViewPrivate::~MContentItemViewPrivate()
     delete titleLabel;
     delete subtitleLabel;
     delete imageWidget;
+}
+
+void MContentItemViewPrivate::_q_applyQueuedStyleModeChange()
+{
+    if (queuedStyleModeChange) {
+        queuedStyleModeChange = false;
+        refreshStyleMode();
+    }
 }
 
 void MContentItemViewPrivate::initBackgroundFunctions()
@@ -320,12 +329,22 @@ void MContentItemViewPrivate::refreshStyleMode()
     Q_Q(MContentItemView);
 
     if (down) {
+        if (styleModeChangeTimer->isActive()) {
+            styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
+            return;
+        }
+        styleModeChangeTimer->start(M_PRESS_STYLE_TIMEOUT);
         q->style().setModePressed();
     } else {
-        if(controller->isSelected())
+        if(controller->isSelected()) {
             q->style().setModeSelected();
-        else
+        } else {
+            if (styleModeChangeTimer->isActive()) {
+                queuedStyleModeChange = true;
+                return;
+            }
             q->style().setModeDefault();
+        }
     }
 
     q->applyStyle();
@@ -338,6 +357,9 @@ MContentItemView::MContentItemView(MContentItem *controller)
     Q_D(MContentItemView);
     d->controller = controller;
     controller->setLayout(d->layout);
+    d->styleModeChangeTimer = new QTimer(this);
+    d->styleModeChangeTimer->setSingleShot(true);
+    connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
 }
 
 MContentItemView::MContentItemView(MContentItemViewPrivate &dd, MContentItem *controller)
@@ -346,6 +368,9 @@ MContentItemView::MContentItemView(MContentItemViewPrivate &dd, MContentItem *co
     Q_D(MContentItemView);
     d->controller = controller;
     controller->setLayout(d->layout);
+    d->styleModeChangeTimer = new QTimer(this);
+    d->styleModeChangeTimer->setSingleShot(true);
+    connect(d->styleModeChangeTimer, SIGNAL(timeout()), SLOT(_q_applyQueuedStyleModeChange()));
 }
 
 MContentItemView::~MContentItemView()
@@ -456,8 +481,8 @@ void MContentItemView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
     bool pressed = rect.contains(touch);
 
     if (pressed != d->down) {
@@ -478,8 +503,8 @@ void MContentItemView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
     QPointF touch = event->scenePos();
     QRectF rect = d->controller->sceneBoundingRect();
-    rect.adjust(-RELEASE_MISS_DELTA, -RELEASE_MISS_DELTA,
-                RELEASE_MISS_DELTA, RELEASE_MISS_DELTA);
+    rect.adjust(-M_RELEASE_MISS_DELTA, -M_RELEASE_MISS_DELTA,
+                M_RELEASE_MISS_DELTA, M_RELEASE_MISS_DELTA);
     bool pressed = rect.contains(touch);
 
     if (pressed)
@@ -520,3 +545,5 @@ void MContentItemView::setSelected(bool selected)
 }
 
 M_REGISTER_VIEW_NEW(MContentItemView, MContentItem)
+
+#include "moc_mcontentitemview.cpp"
