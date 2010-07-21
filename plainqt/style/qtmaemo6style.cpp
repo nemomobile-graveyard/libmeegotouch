@@ -195,6 +195,9 @@ void QtMaemo6StylePrivate::initM()
         qCritical() << "Virtual keyboard notification connection failed";
 
     QObject::connect(MTheme::instance(), SIGNAL(pixmapRequestsFinished()), q, SLOT(updateDirtyWidgets()));
+
+    //Force VKB to landscape orientation
+    MInputMethodState::instance()->setActiveWindowOrientationAngle(M::Angle0);
 }
 
 const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
@@ -2669,9 +2672,11 @@ void QtMaemo6Style::doOrientationChange()
     Q_D(QtMaemo6Style);
     qCritical() << "orientation Change" << d->m_isOrientationChangeEnabled;
     if(d->m_isOrientationChangeEnabled) {
-        emit orientationChanged(orientation());
+        M::OrientationAngle currentOrientation = orientation();
+        MInputMethodState::instance()->setActiveWindowOrientationAngle(currentOrientation);
+        emit orientationChanged(currentOrientation);
         //also emit this with int as parameter for meegotouch independent use
-        emit orientationChanged(static_cast<int>(orientation()));
+        emit orientationChanged(static_cast<int>(currentOrientation));
     }
 }
 
