@@ -30,11 +30,11 @@ MWarpAnimation::MWarpAnimation(MWidget *widget, WarpDirection direction, QObject
     target = widget;
     warpDirection = direction;
 
-    QPropertyAnimation *opacityAnimation = new QPropertyAnimation();
+    QPropertyAnimation *opacityAnimation = new QPropertyAnimation(this);
     opacityAnimation->setPropertyName("opacity");
     opacityAnimation->setDuration(style()->warpDuration());
 
-    offsetAnimation = new QPropertyAnimation();
+    offsetAnimation = new QPropertyAnimation(this);
     offsetAnimation->setPropertyName("paintOffset");
     offsetAnimation->setDuration(style()->warpDuration());
 
@@ -57,7 +57,7 @@ MWarpAnimation::MWarpAnimation(MWidget *widget, WarpDirection direction, QObject
 
 
     if (direction == InFromLeft || direction == InFromRight) {
-        QPauseAnimation *pause = new QPauseAnimation(style()->warpInDelay());
+        QPauseAnimation *pause = new QPauseAnimation(style()->warpInDelay(), this);
         this->addAnimation(pause);
         connect(pause, SIGNAL(finished()), opacityAnimation, SLOT(start()));
         connect(pause, SIGNAL(finished()), offsetAnimation, SLOT(start()));

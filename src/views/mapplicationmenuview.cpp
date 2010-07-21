@@ -88,6 +88,7 @@ MApplicationMenuViewPrivate::~MApplicationMenuViewPrivate()
     clearWidgets(leasedWidgets);
     clearWidgets(buttons);
     removeEventFilter(controller);
+    delete styleButtonGroup;
 }
 
 void MApplicationMenuViewPrivate::init()
