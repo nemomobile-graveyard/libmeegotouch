@@ -233,6 +233,10 @@ void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *
 
 void MApplicationWindowPrivate::maximizePageArea()
 {
+    if (pageAreaMaximized) {
+        return;
+    }
+
     pageAreaMaximized = true;
 
     // When maximized, the window is in control of these components.
@@ -248,6 +252,10 @@ void MApplicationWindowPrivate::maximizePageArea()
 void MApplicationWindowPrivate::restorePageArea()
 {
     Q_Q(MApplicationWindow);
+
+    if (!pageAreaMaximized) {
+        return;
+    }
 
     pageAreaMaximized = false;
 
@@ -281,15 +289,13 @@ void MApplicationWindowPrivate::_q_inputPanelAreaChanged(const QRect &panelRect)
     // Also, if we have keyboard focus in navigation controls then no need to make page
     // area larger.
 
-    if (pageAreaMaximized
-        && (panelRect.isEmpty() || q->orientation() == M::Portrait)) {
+    if (panelRect.isEmpty()
+        || MKeyboardStateTracker::instance()->isOpen()
+        || q->orientation() == M::Portrait
+        || navigationBar->focusItem()
+        || dockWidget->focusItem()) {
         restorePageArea();
-    } else if (!pageAreaMaximized
-               && !panelRect.isEmpty()
-               && (q->orientation() == M::Landscape)
-               && !MKeyboardStateTracker::instance()->isOpen()
-               && !navigationBar->focusItem()
-               && !dockWidget->focusItem()) {
+    } else {
         maximizePageArea();
     }
 }
