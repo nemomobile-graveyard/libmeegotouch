@@ -47,10 +47,10 @@ public:
     };
 
     MWarpAnimation(MWidget *widget, WarpDirection direction = InFromLeft, QObject *parent=NULL);
-
+    
 public Q_SLOTS:
     void clearTarget();
-
+    void pauseFinished();
 protected:
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
@@ -58,6 +58,7 @@ private:
     MWidget *target;
     WarpDirection warpDirection;
     QPropertyAnimation *offsetAnimation;
+    QPropertyAnimation *opacityAnimation;
 };
 
 //! \internal_end

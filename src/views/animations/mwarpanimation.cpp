@@ -30,7 +30,7 @@ MWarpAnimation::MWarpAnimation(MWidget *widget, WarpDirection direction, QObject
     target = widget;
     warpDirection = direction;
 
-    QPropertyAnimation *opacityAnimation = new QPropertyAnimation();
+    opacityAnimation = new QPropertyAnimation();
     opacityAnimation->setPropertyName("opacity");
     opacityAnimation->setDuration(style()->warpDuration());
 
@@ -59,8 +59,7 @@ MWarpAnimation::MWarpAnimation(MWidget *widget, WarpDirection direction, QObject
     if (direction == InFromLeft || direction == InFromRight) {
         QPauseAnimation *pause = new QPauseAnimation(style()->warpInDelay());
         this->addAnimation(pause);
-        connect(pause, SIGNAL(finished()), opacityAnimation, SLOT(start()));
-        connect(pause, SIGNAL(finished()), offsetAnimation, SLOT(start()));
+        connect(pause, SIGNAL(finished()), this, SLOT(pauseFinished()));
     } else {
         this->addAnimation(opacityAnimation);
         this->addAnimation(offsetAnimation);
@@ -72,6 +71,12 @@ MWarpAnimation::MWarpAnimation(MWidget *widget, WarpDirection direction, QObject
 void MWarpAnimation::clearTarget()
 {
     target = 0;
+}
+
+void MWarpAnimation::pauseFinished()
+{
+    opacityAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+    offsetAnimation->start(QAbstractAnimation::DeleteWhenStopped);
 }
 
 void MWarpAnimation::updateState(QAbstractAnimation::State newState,
