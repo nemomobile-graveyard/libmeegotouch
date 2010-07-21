@@ -21,28 +21,53 @@
 #define UT_MTHEME_H
 
 #include <QObject>
-#include <QtTest/QtTest>
 
-
-#include "mtheme.h"
+class MApplication;
+class MTheme;
+class QSize;
 
 class Ut_MTheme : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void init();   // Executed before each test function
-    void cleanup();  // Executed after each test function
-    void initTestCase(); // Executed before all
-    void cleanupTestCase(); // Executed after all tests have been run
+    void initTestCase();
+    void cleanupTestCase();
 
-    // Actual test functions
-    void loadCSS();
-#if QT_VERSION < 0x040500
-    void testPixmapCreationWithAllBitDepths();
-#endif // QT_VERSION < 0x040500
+    void testStyle();
+    void testThemeChangeCompleted();
+
+    void testPixmap();
+    void testPixmapWithSize();
+    void testUnknownPixmap();
+
+    void testPixmapCopy();
+    void testPixmapCopyWithSize();
+    void testUnknownPixmapCopy();
+
+    void testPixmapCaching();
+
+    void testScalableImage();
+    void testView();
 
 private:
-    MTheme *m_subject;
+    /**
+     * @return True, if the given icon has been cached in the theme daemon.
+     *
+     * @param id   Identifier of the icon that has been requested with
+     *             MTheme::pixmap() or pixmapCopy()
+     * @param size Size that has been requested (not the actual size of the pixmap!).
+     */
+    bool isIconCached(const QString &id, const QSize &size) const;
+
+    int cachedIconCount() const;
+
+    /**
+     * Waits until the signal pixmapRequestsFinished() has been emitted.
+     */
+    void waitForPendingThemeRequests();
+
+    MTheme *m_theme;
+    MApplication *m_app;
 };
 #endif

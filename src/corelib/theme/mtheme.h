@@ -333,7 +333,7 @@ private:
     friend class MWidgetController;
     friend class MStyle;
 
-#ifdef QT_TESTLIB_LIB
+#ifdef UNIT_TEST
     //! Test unit is defined as a friend of production code to access private members
     friend class Ut_MTheme;
     friend class Ft_Theme;
