@@ -29,10 +29,12 @@
 #include <MSlider>
 #include <MButtonGroup>
 #include <MWidgetAction>
+#include "mtoolbar_p.h"
 
-MApplication *app;
+
+MApplication *app(NULL);
 // TODO: remove this when unneeded in MTextEdit's constructor
-MApplicationWindow *appWin;
+MApplicationWindow *appWin(NULL);
 
 void Ut_MToolBar::init()
 {
@@ -62,6 +64,21 @@ void Ut_MToolBar::cleanupTestCase()
 void Ut_MToolBar::testConstructor()
 {
     QVERIFY(m_subject);
+}
+
+void Ut_MToolBar::testConstructor2()
+{
+    class InheritedMToolBar : public MToolBar
+    {
+    public:
+        explicit InheritedMToolBar()
+            : MToolBar(new MToolBarPrivate(),new MWidgetModel(),NULL)
+        {};
+    };
+    //testing protected constructor: MToolBar(MToolBarPrivate *dd, MWidgetModel *model, QGraphicsItem *parent);
+    InheritedMToolBar* inheritedMToolBar = new InheritedMToolBar();
+    QVERIFY(inheritedMToolBar);
+    delete inheritedMToolBar;
 }
 
 void Ut_MToolBar::testDestructor()

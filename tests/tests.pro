@@ -40,7 +40,7 @@ SUBDIRS     =  \
      ut_mlinearlayoutpolicy \
      ut_mapplicationmenu \
      ut_mapplicationmenuview \
-#     ut_mobjectmenu \
+     ut_mobjectmenu \
      ut_moverlay \
      ut_mpannableviewport \
      ut_mpannablewidget \

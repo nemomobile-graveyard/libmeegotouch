@@ -41,6 +41,7 @@ private Q_SLOTS:
 
     // class testing
     void testConstructor();
+    void testConstructor2();
     void testDestructor();
     void testAddAction();
     void testAddTextEditAction();
