@@ -119,14 +119,21 @@ qint32 MCity::timeZoneRawOffset() const
 #endif
 
 #ifdef HAVE_ICU
+#define MSECS_PER_DAY 86400000
 qint32 MCity::timeZoneDstOffset(QDateTime dateTime) const
 {
     Q_D(const MCity);
     UBool local = dateTime.timeSpec() == Qt::LocalTime? true : false;
     // we avoid time conversions done by Qt:
     dateTime.setTimeSpec(Qt::UTC);
+#if QT_VERSION >= 0x040700
     UDate icuDate = dateTime.toMSecsSinceEpoch();
-
+#else
+    // Qt < 4.7 lacks QDateTime::toMSecsSinceEpoch(), we need to emulate it:
+    int days = QDate(1970, 1, 1).daysTo(dateTime.date());
+    qint64 msecs = qint64(QTime().secsTo(dateTime.time())) * 1000;
+    UDate icuDate = (qint64(days) * MSECS_PER_DAY) + msecs;
+#endif
     icu::TimeZone *tz =
         TimeZone::createTimeZone(MIcuConversions::qStringToUnicodeString(d->timeZone));
     qint32 rawOffset;
@@ -148,8 +155,14 @@ qint32 MCity::timeZoneTotalOffset(QDateTime dateTime) const
     UBool local = dateTime.timeSpec() == Qt::LocalTime? true : false;
     // we avoid time conversions done by Qt:
     dateTime.setTimeSpec(Qt::UTC);
+#if QT_VERSION >= 0x040700
     UDate icuDate = dateTime.toMSecsSinceEpoch();
-
+#else
+    // Qt < 4.7 lacks QDateTime::toMSecsSinceEpoch(), we need to emulate it:
+    int days = QDate(1970, 1, 1).daysTo(dateTime.date());
+    qint64 msecs = qint64(QTime().secsTo(dateTime.time())) * 1000;
+    UDate icuDate = (qint64(days) * MSECS_PER_DAY) + msecs;
+#endif
     icu::TimeZone *tz =
         TimeZone::createTimeZone(MIcuConversions::qStringToUnicodeString(d->timeZone));
     qint32 rawOffset;

@@ -391,8 +391,10 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
     // This test dumps lots of information from the database to detect
     // changes and serves as a simple benchmark whether all the
     // information can be gathered in reasonable time.
+#if QT_VERSION >= 0x040700
     QElapsedTimer timer;
     timer.start();
+#endif
     MLocationDatabase db;
     QList<MCity> cities = db.cities();
 
@@ -460,8 +462,9 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
         // what has changed:
         QProcess::execute("diff -u " + ut_mlocationdatabaseTestInputFileName + ' ' + ut_mlocationdatabaseTestOutputFileName);
     }
-
+#if QT_VERSION >= 0x040700
     qDebug() << __PRETTY_FUNCTION__ << "took" << timer.restart() << "milliseconds";
+#endif
 }
 
 QTEST_APPLESS_MAIN(Ut_MLocationDatabase);
