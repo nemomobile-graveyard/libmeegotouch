@@ -23,6 +23,8 @@
 #include <QMetaType>
 #include <QMessageBox>
 
+#include "mexport.h"
+
 namespace M
 {
     enum AssemblyType {
@@ -35,31 +37,19 @@ namespace M
      * setting a dynamic porperty to any QWidget or QApplication will cause the object
      * not to be styled like M does.
      */
-#ifdef __GNUC__
-    static const char* NoMStyle __attribute__((__unused__)) = "NoMStyle";
-#else
-    static const char* NoMStyle = "NoMStyle";
-#endif
+    M_EXPORT extern const char* NoMStyle;
 
     /*!
      * setting a dynamic property to QApplication named NoMNavigationBar will hide the
      * navigationbar from qt maemo 6 style
      */
-#ifdef __GNUC__
-    static const char* NoMNavigationBar __attribute__((__unused__)) = "NoMNavigationBar";
-#else
-    static const char* NoMNavigationBar = "NoMNavigationBar";
-#endif
+    M_EXPORT extern const char* NoMNavigationBar;
 
     /*!
      * setting a dynamic property to QApplication named NoMStatusBar will hide the
      * statusbar from qt maemo 6 style
      */
-#ifdef __GNUC__
-    static const char* NoMStatusBar __attribute__((__unused__)) = "NoMStatusBar";
-#else
-    static const char* NoMStatusBar = "NoMStatusBar";
-#endif
+    M_EXPORT extern const char* NoMStatusBar;
 
     /*!
      * This enum contains values of the orientation angle of windows in the application.

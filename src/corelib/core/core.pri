@@ -61,6 +61,7 @@ SOURCES += \
     $$CORE_SRC_DIR/mtimestamp.cpp \
     $$CORE_SRC_DIR/minputmethodstate.cpp \
     $$CORE_SRC_DIR/mfiledatastore.cpp \
+    $$CORE_SRC_DIR/mnamespace.cpp
 
 contains(DEFINES, HAVE_DBUS) {
   SOURCES += \
