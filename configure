@@ -667,7 +667,7 @@ fi
 
 # now check for qt version
 QT_MAJOR_VERSION_NEEDED=4
-QT_MINOR_VERSION_NEEDED=6
+QT_MINOR_VERSION_NEEDED=7
 
 QT_VERSION=`$QMAKE_BIN -version | tail -1`
 
