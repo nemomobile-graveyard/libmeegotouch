@@ -192,8 +192,6 @@ QSize MImageWidget::imageSize() const
         return d->pixmap->size();
     else
         return d->image.size();
-
-    return QSize();
 }
 
 const QPixmap *MImageWidget::pixmap() const

@@ -84,7 +84,8 @@ void MFeedback::play() const
 
 Ut_MStatusBarView::Ut_MStatusBarView():
         m_subject(0),
-        m_statusbar(0)
+        m_statusbar(0),
+        app(0)
 {
 }
 
