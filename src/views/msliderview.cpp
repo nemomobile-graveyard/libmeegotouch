@@ -1243,6 +1243,7 @@ MSliderView::MSliderView(MSlider *controller):
     d->q_ptr = this;
     d->init(controller);
 
+    connect(controller, SIGNAL(visibleChanged()), this, SLOT(visibilityChangedSlot()));
     connect(controller, SIGNAL(displayExited()), this, SLOT(lowerSliderHandleIndicator()));
 }
 
@@ -1471,6 +1472,14 @@ void MSliderView::lowerSliderHandleIndicator()
     }
 
     d->sliderGroove->lowerHandleIndicator();
+}
+
+void MSliderView::visibilityChangedSlot()
+{
+    Q_D(MSliderView);
+
+    if (!d->controller->isVisible())
+        lowerSliderHandleIndicator();
 }
 
 M_REGISTER_VIEW_NEW(MSliderView, MSlider)

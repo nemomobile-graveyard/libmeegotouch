@@ -161,6 +161,11 @@ private Q_SLOTS:
       */
     void lowerSliderHandleIndicator();
 
+    /*!
+      \brief Called when underlying controller object visibility changed
+     */
+    void visibilityChangedSlot();
+
 #ifdef UNIT_TEST
     //! Test unit is defined as a friend of production code to access private members
     friend class Ut_MSliderView;
