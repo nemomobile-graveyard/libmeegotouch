@@ -22,7 +22,7 @@ void TimedemoBenchmark::setType(const QString& type) {
 
 void TimedemoBenchmark::terminateIfNotAppeared() {
     verifyAppearanceTimer->stop();
-    if (applicationPage->isActiveWindow()) {
+    if (applicationPage->isOnDisplay()) {
         return;
     } else {
         qCritical("Could not activate application page. Is a window manager running?");

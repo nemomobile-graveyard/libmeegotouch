@@ -44,7 +44,7 @@ void PanningBenchmark::start()
 {
     MApplication::activeWindow()->setOrientationAngle(targetOrientationAngle);
     MApplication::activeWindow()->setOrientationAngleLocked(true);
-    if (!applicationPage->isActiveWindow()) {
+    if (!applicationPage->isOnDisplay()) {
         connect(applicationPage, SIGNAL(appeared()), this, SLOT(waitBeforePanning()));
         applicationPage->appear();
         verifyAppearanceTimer->start(5000);
