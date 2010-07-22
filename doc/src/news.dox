@@ -6,6 +6,9 @@
 
 \subsection New
 - Added a small demo application which demonstrates how to use the orientation change support in meegotouch Qt style
+- MInputMethodState::toolbar() can be used to query the filename of an already
+  registered IM toolbar. Text edits will use it to reload already registered
+  toolbars, should the meego-im-uisever be restarted after toolbar registration.
 
 \section v02027 0.20.27
 
