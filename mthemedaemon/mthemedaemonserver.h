@@ -77,6 +77,7 @@ private:
 
     void finalizeThemeChange();
 
+    bool createCacheDir(const QString& path);
 private:
     struct QueueItem
     {

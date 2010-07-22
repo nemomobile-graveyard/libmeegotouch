@@ -59,22 +59,12 @@ MThemeDaemonServer::MThemeDaemonServer() :
     connect(&currentLocale, SIGNAL(valueChanged()), SLOT(localeChanged()));
 
     // 4) make sure we have a themedaemon directory in /var/cache/m/
-    QDir cacheDir(MThemeDaemon::systemThemeCacheDirectory());
-    if(!cacheDir.exists()) {
-        if(!cacheDir.mkpath(MThemeDaemon::systemThemeCacheDirectory())) {
-            qFatal("MThemeDaemonServer - Could not create cache directory for themedaemon. No write permissions to %s",
-                qPrintable(cacheDir.absolutePath()));
-        }
-    }
+    if( !createCacheDir(MThemeDaemon::systemThemeCacheDirectory()) )
+        qFatal("MThemeDaemonServer - Failed to create mthemedaemon cache directory.");        
 
     // 5) make sure we have a cache directory for the current theme
-    if(!cacheDir.exists(daemon.currentTheme())) {
-        if(!cacheDir.mkdir(daemon.currentTheme())) {
-            qFatal("MThemeDaemonServer - Could not create cache directory for current theme. No write permissions to %s",
-                qPrintable(cacheDir.absolutePath()));
-        }
-    }
-
+    if( !createCacheDir(MThemeDaemon::systemThemeCacheDirectory() + QDir::separator() + daemon.currentTheme()) )
+        qFatal("MThemeDaemonServer - Failed to create theme specific cache directory.");        
 
     // start socket server for client registeration
     // first remove the old one, if there's such
@@ -323,13 +313,8 @@ void MThemeDaemonServer::themeChanged()
         }
 
         // make sure we have a cache directory for the current theme
-        QDir cacheDir(MThemeDaemon::systemThemeCacheDirectory());
-        if(!cacheDir.exists(daemon.currentTheme())) {
-            if(!cacheDir.mkdir(daemon.currentTheme())) {
-                qFatal("MThemeDaemonServer - Could not create cache directory for current theme. No write permissions to %s",
-                    qPrintable(cacheDir.absolutePath()));
-            }
-        }
+        if( !createCacheDir(MThemeDaemon::systemThemeCacheDirectory() + QDir::separator() + daemon.currentTheme()) )
+            qFatal("MThemeDaemonServer - Failed to create theme specific cache directory.");        
 
         if (!loadPixmapsQueue.isEmpty() && !processQueueTimer.isActive())
             processQueueTimer.start();
@@ -619,3 +604,28 @@ void MThemeDaemonServer::finalizeThemeChange()
     }
 }
 
+bool MThemeDaemonServer::createCacheDir(const QString& path)
+{
+    //make sure that directory exists and we have write access to it
+    QFileInfo fileInfo(path);
+    if( fileInfo.exists() ) {
+        if( fileInfo.isDir() ) {
+            if( !fileInfo.isWritable() || !fileInfo.isReadable() ) {
+                mWarning("MThemeDaemonServer")  << "Cannot access the cache directory" << fileInfo.absoluteFilePath() << ". Permission denied.";
+                return false;
+            }
+        } else {
+            //TODO We could destroy the file and create dir
+            mWarning("MThemeDaemonServer") << "Path " << fileInfo.absoluteFilePath() << "is not a directory.";
+            return false;
+        }
+    } 
+    //cache dir did not exist, try to create it
+    else {
+        QDir cacheDir(path);
+        mWarning("MThemeDaemonServer") << "Cache directory" << cacheDir.absolutePath() << "does not exist.";
+        if(!cacheDir.mkpath(path))
+            return false;
+    }
+    return true;
+}
