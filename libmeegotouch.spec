@@ -5,7 +5,7 @@
 #
 
 Name:           libmeegotouch
-Version:        0.20.2
+Version:        0.20.28
 Release:        1%{?dist}
 Summary:        Meego Touch Framework
 
@@ -40,7 +40,8 @@ BuildRequires: pkgconfig(x11)
 BuildRequires: pkgconfig(gconf-2.0)
 BuildRequires: pkgconfig(contextprovider-1.0)
 BuildRequires: pkgconfig(gl)
-BuildRequires: mesa-libEGL-devel
+#EGL packages conflict on arm builds
+#BuildRequires: mesa-libEGL-devel
 BuildRequires: qt-devel
 BuildRequires: doxygen
 BuildRequires: icu
@@ -211,6 +212,7 @@ Demo application for the Meego Touch application extensions
 
 %package -n libmeegotouch-tests
 Summary: Meego Touch unit tests
+Group: Development/Libraries
 %description -n libmeegotouch-tests
 Unit testing binaries and shell scripts for testing the libmeegotouch library
 
@@ -540,14 +542,14 @@ fi
 %{_libdir}/libmeegotouch*.so
 %{_libdir}/libmeegotouch*.prl
 %{_libdir}/pkgconfig/*
-%{qt_install_data_dir}/mkspecs/features/meegotouch.prf
-%{qt_install_data_dir}/mkspecs/features/meegotouch_defines.prf
-%{qt_install_data_dir}/mkspecs/features/meegotouch_translations.prf
-
+%{qt_install_data_dir}/mkspecs/features/*.prf
+%dir /usr/share/meegotouch/imtoolbars
+/usr/share/meegotouch/imtoolbars/*
 
 %files -n meegotouch-devel-tools
 %defattr(-,root,root)
 /usr/bin/mmoc
+/usr/bin/mmoc.pl
 /usr/bin/mgen
 /usr/bin/m-servicefwgen
 /usr/bin/mapplettester
