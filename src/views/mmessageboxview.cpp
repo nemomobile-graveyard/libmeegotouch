@@ -37,6 +37,11 @@ MMessageBoxViewPrivate::~MMessageBoxViewPrivate()
 MMessageBoxView::MMessageBoxView(MMessageBox *controller) :
     MDialogView(*new MMessageBoxViewPrivate, controller)
 {
+    Q_D(MMessageBoxView);
+    d->label = new MLabel;
+    d->label->setAlignment(Qt::AlignCenter);
+    d->label->setWordWrap(true);
+    contentsLayout()->insertItem(0, d->label);
 }
 
 MMessageBoxView::~MMessageBoxView()
@@ -55,7 +60,7 @@ void MMessageBoxView::updateData(const QList<const char *>& modifications)
             d->label->setText(model()->text());
         }
     }
-    if (model()->buttons().count() >= 3 && style()->maximumHorizontalButtons() >= 3)
+    if(model()->buttons().count() >= 3)
         d->dialogBox->setPreferredWidth(style()->maximumSize().width());
     else
         d->dialogBox->setPreferredWidth(style()->dialogPreferredSize().width());
@@ -72,24 +77,13 @@ void MMessageBoxView::setupModel()
 
     //update text
     d->label->setText(model()->text());
-    if (model()->buttons().count() >= 3 && style()->maximumHorizontalButtons() >= 3)
+    if(model()->buttons().count() >= 3)
         d->dialogBox->setPreferredWidth(style()->maximumSize().width());
     else
         d->dialogBox->setPreferredWidth(style()->dialogPreferredSize().width());
 
 
     updateGeometry();
-}
-
-void MMessageBoxView::applyStyle() {
-    MDialogView::applyStyle();
-    Q_D(MMessageBoxView);
-    if (!d->label) {
-        d->label = new MLabel;
-        d->label->setAlignment(Qt::AlignCenter);
-        d->label->setWordWrap(true);
-        contentsLayout()->insertItem(0, d->label);
-    }
 }
 
 M_REGISTER_VIEW_NEW(MMessageBoxView, MMessageBox)

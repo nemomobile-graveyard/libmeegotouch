@@ -69,7 +69,7 @@ class M_EXPORT MDialogStyle : public MSceneWindowStyle
 
     /*!
         \property MDialogStyle::buttonSpacing
-        \brief Space between buttons in the button box.
+        \brief Space between buttons.
     */
     M_STYLE_ATTRIBUTE(qreal, buttonSpacing, ButtonSpacing)
 
@@ -130,26 +130,6 @@ class M_EXPORT MDialogStyle : public MSceneWindowStyle
         \brief Orientation of dialog button box.
     */
     M_STYLE_ATTRIBUTE(Qt::Orientation, buttonBoxOrientation, ButtonBoxOrientation)
-
-    /*!
-        \property MDialogStyle::buttonBoxCentered
-        \brief Centering buttons on dialog.
-    */
-    M_STYLE_ATTRIBUTE(bool, buttonBoxCentered, ButtonBoxCentered)
-
-    /*!
-        \property MDialogStyle::dialogButtonFixedWidth
-        \brief Fixed width of single dialog button. If set to -1 button will be sized automatically.
-    */
-    M_STYLE_ATTRIBUTE(qreal, dialogButtonFixedWidth, DialogButtonFixedWidth)
-
-    /*!
-        \property MDialogStyle::maximumHorizontalButtons
-        \brief Maximum number of buttons laid out horizontally in the button box.
-        If the number of buttons exceed this limit, they will be laid out
-        in a vertical layout regardless of the buttonBoxOrientation value.
-    */
-    M_STYLE_ATTRIBUTE(int, maximumHorizontalButtons, MaximumHorizontalButtons)
 
     /*!
         \property MDialogStyle::titleBarAlignment

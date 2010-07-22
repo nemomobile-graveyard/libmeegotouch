@@ -43,7 +43,6 @@ protected:
 
 protected Q_SLOTS:
     virtual void updateData(const QList<const char *>& modifications);
-    virtual void applyStyle();
 
 private:
     Q_DECLARE_PRIVATE(MMessageBoxView)

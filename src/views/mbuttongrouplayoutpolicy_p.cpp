@@ -24,8 +24,7 @@
 #include <MApplication>
 
 MButtonGroupLayoutPolicy::MButtonGroupLayoutPolicy(MLayout *layout, Qt::Orientation orientation)
-    : MLinearLayoutPolicy(layout, orientation),
-    buttonWidth(0)
+    : MLinearLayoutPolicy(layout, orientation)
 {
 }
 
@@ -56,15 +55,15 @@ void MButtonGroupLayoutPolicy::updateButtonsViewTypes()
         setButtonViewType(0, "single");
     } else {
         int i = 0;
-        if (layout()->layoutDirection() == Qt::RightToLeft && MApplication::activeWindow()->orientation() == M::Landscape) {
+        if(layout()->layoutDirection() == Qt::RightToLeft && MApplication::activeWindow()->orientation() == M::Landscape){
             setButtonViewType(i, "last");
-        } else {
+        }else{
             setButtonViewType(i, "first");
         }
         while (++i < buttonBoxSize - 1) {
             setButtonViewType(i, "middle");
         }
-        if (layout()->layoutDirection() == Qt::RightToLeft && MApplication::activeWindow()->orientation() == M::Landscape) {
+        if(layout()->layoutDirection() == Qt::RightToLeft && MApplication::activeWindow()->orientation() == M::Landscape){
             setButtonViewType(i, "first");
         }else{
             setButtonViewType(i, "last");
@@ -77,18 +76,7 @@ void MButtonGroupLayoutPolicy::setButtonViewType(int index, const MTheme::ViewTy
     MButton *button = dynamic_cast<MButton *>(itemAt(index));
     if (button) {
         button->setViewType(viewType);
-        if (buttonWidth>0){
-            button->setPreferredWidth(buttonWidth);
-            button->setMaximumWidth(buttonWidth);
-            button->setMinimumWidth(buttonWidth);
-        } else {
-            button->setMaximumWidth(-1);
-        }
     } else {
         qWarning("Only MButton should be added to MButtonGroupLayoutPolicy.");
     }
-}
-
-void MButtonGroupLayoutPolicy::setButtonWidth(qreal width){
-    buttonWidth = width;
 }
