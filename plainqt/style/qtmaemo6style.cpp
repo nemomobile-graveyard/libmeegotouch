@@ -1207,7 +1207,7 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
     break;
 
     case PE_PanelLineEdit: {
-        if (qobject_cast<QAbstractSpinBox *>(widget->parent()))
+        if (widget && qobject_cast<QAbstractSpinBox *>(widget->parent()))
             break;
 
         if (const QStyleOptionFrame *panel = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
@@ -2236,9 +2236,9 @@ QRect QtMaemo6Style::subControlRect(ComplexControl control,
     return QtMaemo6TestStyle::subControlRect(control, option, subControl, widget);
 }
 
-QRect QtMaemo6Style::subElementRect(SubElement element, 
-                                    const QStyleOption* option, 
-                                    const QWidget* widget) const 
+QRect QtMaemo6Style::subElementRect(SubElement element,
+                                    const QStyleOption* option,
+                                    const QWidget* widget) const
 {
     QRect retRect = QtMaemo6TestStyle::subElementRect(element, option, widget);
     switch(element) {
