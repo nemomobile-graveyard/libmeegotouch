@@ -343,7 +343,6 @@ MList *ContentItemsPage::createList(const QString &title, MCellCreator *creator)
     QAbstractItemModel *model = new ContentItemsPageModel(title);
 
     MList *list = new MList(centralWidget());
-    list->setObjectName("wgList");
     list->setCellCreator(creator);
     list->setItemModel(model);
     list->setShowGroups(true);

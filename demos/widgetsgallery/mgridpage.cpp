@@ -168,7 +168,6 @@ void MGridPage::createContent()
     layout->setPortraitPolicy(portraitPolicy);
 
     list = new MList(panel);
-    list->setObjectName("wgList");
     landscapePolicy->addItem(list);
     portraitPolicy->addItem(list);
 

@@ -95,7 +95,6 @@ void SingleSelectionDialogsPage::createContent()
 void SingleSelectionDialogsPage::populateLayout()
 {
     list = new MList(centralWidget());
-    list->setObjectName("wgList");
     list->setCellCreator(new SingleSelectionDialogsPageCellCreator());
     list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);

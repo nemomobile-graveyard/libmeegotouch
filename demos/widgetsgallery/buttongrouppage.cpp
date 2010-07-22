@@ -104,7 +104,7 @@ void ButtonGroupPage::createContent()
     MLayout* vLayout = new MLayout;
     MLinearLayoutPolicy* vPolicy = new MLinearLayoutPolicy(vLayout, Qt::Vertical);
     vPolicy->setNotifyWidgetsOfLayoutPositionEnabled(true);
-    vPolicy->setObjectName("buttongroup");
+    vPolicy->setSpacing(0);
     pushButton7 = new MButton();
     pushButton7->setCheckable(true);
     pushButton7->setViewType(MButton::groupType);

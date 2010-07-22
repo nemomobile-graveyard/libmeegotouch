@@ -358,7 +358,6 @@ void MainPage::setInitialPageToShow(const QString& initialPageToShow)
 void MainPage::populateLayout()
 {
     list = new MList(centralWidget());
-    list->setObjectName("wgList");
     list->setCellCreator(new WidgetGalleryCategoryCellCreator());
     list->setItemModel(new WidgetsGalleryDataModel());
     policy->addItem(list, Qt::AlignCenter);

@@ -148,7 +148,6 @@ void ItemDetailPage::createContent()
         QFileInfo info(videoId);
         setTitle(info.fileName());
 
-        setObjectName("video-detail-page");
         video = new MyVideoWidget(panel);
         connect(video, SIGNAL(videoReady()), this, SLOT(videoReady()));
 

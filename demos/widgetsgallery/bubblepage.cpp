@@ -102,14 +102,13 @@ void BubblePage::createContent()
     expandedItem->addInformationWidget(pendingLabel);
     expandedItem->setCommentsString("+3");
 
-    QPixmap* p0 = new QPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_001.jpg");
+    QImage* p0 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_001.jpg");
     MImageWidget* i0 = new MImageWidget(p0);
-    QPixmap* p1 = new QPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_002.jpg");
+    QImage* p1 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_002.jpg");
     MImageWidget* i1 = new MImageWidget(p1);
-    QPixmap* p2 = new QPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_003.jpg");
+    QImage* p2 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_003.jpg");
     MImageWidget* i2 = new MImageWidget(p2);
     MWidget* widget = new MWidget;
-    widget->setObjectName("centralWidget");
     QGraphicsGridLayout* gl = new QGraphicsGridLayout(widget);
     gl->setSpacing(30);
     gl->addItem(i0, 0,0);
@@ -127,14 +126,13 @@ void BubblePage::createContent()
     secondExpandedItem->setSenderName("");
     secondExpandedItem->setTimeStamp("5 min ago");
 
-    QPixmap* p4 = new QPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_004.jpg");
+    QImage* p4 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_004.jpg");
     MImageWidget* i4 = new MImageWidget(p4);
-    QPixmap* p5 = new QPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_005.jpg");
+    QImage* p5 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_005.jpg");
     MImageWidget* i5 = new MImageWidget(p5);
-    QPixmap* p6 = new QPixmap(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_006.jpg");
+    QImage* p6 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_006.jpg");
     MImageWidget* i6 = new MImageWidget(p6);
     MWidget* widget2 = new MWidget;
-    widget2->setObjectName("secondCentralWidget");
     QGraphicsGridLayout* gl2 = new QGraphicsGridLayout(widget2);
     gl2->setSpacing(30);
     gl2->addItem(i4, 0,0);

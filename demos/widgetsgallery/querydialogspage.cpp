@@ -96,7 +96,6 @@ void QueryDialogsPage::createContent()
 void QueryDialogsPage::populateLayout()
 {
     list = new MList(centralWidget());
-    list->setObjectName("wgList");
     list->setCellCreator(new QueryDialogsPageCellCreator());
     list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);

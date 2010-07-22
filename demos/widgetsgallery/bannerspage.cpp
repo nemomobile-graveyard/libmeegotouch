@@ -91,7 +91,6 @@ void BannersPage::createContent()
 void BannersPage::populateLayout()
 {
     list = new MList(centralWidget());
-    list->setObjectName("wgList");
     list->setCellCreator(new BannersPageCellCreator());
     list->setItemModel(new QStringListModel(list));
     policy->addItem(list, Qt::AlignCenter);

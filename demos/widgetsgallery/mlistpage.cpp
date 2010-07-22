@@ -432,9 +432,9 @@ void MListPage::changeSeparatorsMode(int index)
     bool enableSeparators = (index == 1);
 
     if (enableSeparators)
-        list->setObjectName("wgListWithSeparators");
+        list->setObjectName("listWithSeparators");
     else
-        list->setObjectName("wgList");
+        list->setObjectName("");
 }
 
 void MListPage::changeListIndexVisibility(int index)
@@ -628,7 +628,6 @@ void MListPage::createContent()
     panel->setLayout(layout);
 
     list = new MList(panel);
-    list->setObjectName("wgList");
 
     //% "Remove"
     MAction *action = new MAction(qtTrId("xx_listpage_list_remove"), list);
