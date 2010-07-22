@@ -414,10 +414,11 @@ void MApplicationMenuViewPrivate::changeData(QAction *action)
     MWidget *widget = buttons.value(action);
     MButton *button = qobject_cast<MButton *>(widget);
 
+    if (widget)
+        widget->setEnabled(action->isEnabled());
     if (button) {
         // Update button data accordingly
         button->setText(action->text());
-        button->setEnabled(action->isEnabled());
         button->setCheckable(action->isCheckable());
         button->setChecked(action->isChecked());
         MAction *mAction = qobject_cast<MAction *>(action);
