@@ -527,4 +527,134 @@ void Ut_MLabel::highlighterEmptyRegexp()
 }
 
 
+void Ut_MLabel::removeAllHighlighters()
+{
+    label->setText("Label <b>rich</b>");
+
+    QImage nonhighlighted = captureImage(label);
+
+    MCommonLabelHighlighter highlighter(QRegExp("Label"));
+    label->addHighlighter(&highlighter);
+    QImage highlighted = captureImage(label);
+
+    QVERIFY(nonhighlighted != highlighted);
+
+    label->removeAllHighlighters();
+    QImage highlightingRemoved = captureImage(label);
+    QVERIFY(nonhighlighted == highlightingRemoved);
+    
+    
+}
+
+QRect Ut_MLabel::contentRect(const QImage& image)
+{
+    int minX, minY, maxX, maxY;
+
+    bool found = false;
+    for(minX = 0; !found && minX < image.width(); ++minX) {
+        for(int i = 0; !found && i < image.height(); ++i) {
+            if (image.pixel(minX, i) != 0) {
+                found = true;
+            }
+        }
+    }
+
+    found = false;
+    for(minY = 0; !found && minY < image.height(); ++minY) {
+        for(int i = 0; !found && i < image.width(); ++i) {
+            if (image.pixel(i, minY) != 0) {
+                found = true;
+            }
+        }
+    }
+
+    found = false;
+    for(maxX = image.width() - 1; !found && maxX >= 0; --maxX) {
+        for(int i = 0; !found && i < image.height(); ++i) {
+            if (image.pixel(maxX, i) != 0) {
+                found = true;
+            }
+        }
+    }
+
+    found = false;
+    for(maxY = image.height() - 1; !found && maxY >= 0; --maxY) {
+        for(int i = 0; !found && i < image.width(); ++i) {
+            if (image.pixel(i, maxY) != 0) {
+                found = true;
+            }
+        }
+    }
+
+    return QRect(QPoint(minX, minY), QPoint(maxX, maxY));
+
+}
+
+int Ut_MLabel::contentHeight(const QImage& image)
+{
+    QRect rect = contentRect(image);
+    return rect.bottom() - rect.top();
+}
+
+int Ut_MLabel::contentWidth(const QImage& image)
+{
+    QRect rect = contentRect(image);
+    return rect.right() - rect.left();
+}
+
+void Ut_MLabel::wrapModes_data()
+{
+    QTest::addColumn<QString>("text");
+
+    QTest::newRow("plain") << "aaa bbb ccc dddddddddddddddd eeeeeeeeeeeeeee fffffffffffffffff gggggggggggggggg hhhhhhhhhhhhhhhh iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj kkkkkkkkkkk";
+    
+    QTest::newRow("rich") << "<b>aaa bbb ccc dddddddddddddddd eeeeeeeeeeeeeee fffffffffffffffff gggggggggggggggg hhhhhhhhhhhhhhhh iiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj kkkkkkkkkkk</b>";
+}
+    
+void Ut_MLabel::wrapModes()
+{
+    QFETCH(QString, text);
+    label->setText(text);
+    label->resize(100, 800);
+
+    QImage defaultMode = captureImage(label);
+
+    label->setWordWrap(true);
+
+    label->setWrapMode(QTextOption::ManualWrap);
+    QCOMPARE(label->wrapMode(), QTextOption::ManualWrap);
+    QImage manualWrap = captureImage(label);
+
+    label->setWrapMode(QTextOption::WordWrap);
+    QCOMPARE(label->wrapMode(), QTextOption::WordWrap);
+    QImage wordWrap = captureImage(label);
+    
+    label->setWrapMode(QTextOption::WrapAnywhere);
+    QCOMPARE(label->wrapMode(), QTextOption::WrapAnywhere);
+    QImage wrapAnywhere = captureImage(label);
+
+    label->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    QCOMPARE(label->wrapMode(), QTextOption::WrapAtWordBoundaryOrAnywhere);
+    QImage wrapAtWordBoundaryOrAnywhere = captureImage(label);
+
+    label->setWrapMode(QTextOption::NoWrap);
+    QCOMPARE(label->wrapMode(), QTextOption::NoWrap);
+    QImage noWrap = captureImage(label);
+    
+    //No wrapping by default
+    QVERIFY(contentWidth(defaultMode) > contentHeight(defaultMode));
+
+    QVERIFY(contentWidth(manualWrap) > contentHeight(manualWrap));
+    QVERIFY(contentHeight(wordWrap) > contentWidth(wordWrap));
+    QVERIFY(contentHeight(wrapAnywhere) > contentWidth(wrapAnywhere));
+    QVERIFY(contentHeight(wrapAtWordBoundaryOrAnywhere) > contentWidth(wrapAtWordBoundaryOrAnywhere));
+    QVERIFY(contentWidth(noWrap) > contentHeight(noWrap));
+
+    //Words that don't fit one line are not displayed 
+    //completely in wordWrap mode. In wrapAtWordBoundaryOrAnywhere mode these long 
+    //words are displayed by using more than one line.
+    QVERIFY(contentHeight(wrapAtWordBoundaryOrAnywhere) > contentHeight(wordWrap));
+
+}
+
 QTEST_APPLESS_MAIN(Ut_MLabel);

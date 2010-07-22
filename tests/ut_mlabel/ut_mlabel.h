@@ -49,6 +49,17 @@ private:
     void anchorHitTest(const QPointF &point, int expectedHits);
     QImage captureImage(MLabel *label);
 
+    //Minumum-size rectangle that containts all non-transparent 
+    //pixels in the image
+    QRect contentRect(const QImage& image);
+
+    //Height of the painted area in the image
+    int contentHeight(const QImage& image);
+
+    //Width of the painted area in the image
+    int contentWidth(const QImage& image);
+    
+
 private slots:
     void initTestCase();
     void cleanupTestCase();
@@ -90,6 +101,10 @@ private slots:
     //regression test for bug 178905 regexp matching an empty string causes an infinite loop in MLabelHighlighter
     void highlighterEmptyRegexp();
 
+    void removeAllHighlighters();
+
+    void wrapModes_data();
+    void wrapModes();
 
 private:
     TestMLabel *label;
