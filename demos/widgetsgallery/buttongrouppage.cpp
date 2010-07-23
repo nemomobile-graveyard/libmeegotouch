@@ -38,6 +38,9 @@ ButtonGroupPage::ButtonGroupPage() :
     pushButton4(NULL),
     pushButton5(NULL),
     pushButton6(NULL),
+    pushButton7(NULL),
+    pushButton8(NULL),
+    pushButton9(NULL),
     hLabel1(NULL),
     hLabel2(NULL),
     vLabel(NULL)

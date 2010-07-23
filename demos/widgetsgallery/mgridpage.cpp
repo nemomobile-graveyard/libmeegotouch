@@ -49,6 +49,9 @@ class ContentItemCreator : public MAbstractCellCreator<MWidgetController>
 {
 public:
     ContentItemCreator(MGridPage* gridPage)
+        : MAbstractCellCreator<MWidgetController>(),
+          m_gridPage(0),
+          m_preferredSize()
     {
         m_gridPage = gridPage;
     }

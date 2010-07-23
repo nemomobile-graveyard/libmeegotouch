@@ -87,7 +87,8 @@ class Loader : public QThread
 {
     Q_OBJECT
 public:
-    explicit Loader (const QSize &s) : size(s), stopWork(false) { }
+    explicit Loader (const QSize &s)
+        : QThread(), mutex(), haveWork(), backlog(), size(s), stopWork(false) { }
     void pushImage(const QString &path, int index);
     void stop();
     void scaleImage(QImage& image) const;

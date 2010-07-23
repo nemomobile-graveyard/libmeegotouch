@@ -66,7 +66,8 @@ public:
 QueryDialogsPage::QueryDialogsPage()
     : TemplatePage(TemplatePage::DialogsAndBanners),
       policy(0),
-      list(0)
+      list(0),
+      dialog()
 {
 }
 

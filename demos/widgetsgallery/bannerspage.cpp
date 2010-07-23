@@ -61,7 +61,8 @@ public:
 BannersPage::BannersPage()
     : TemplatePage(TemplatePage::DialogsAndBanners),
       policy(0),
-      list(0)
+      list(0),
+      banner(0)
 {
 }
 

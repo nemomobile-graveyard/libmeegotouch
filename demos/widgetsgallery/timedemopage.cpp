@@ -5,7 +5,8 @@
 #include "panningbenchmark.h"
 
 TimedemoPage::TimedemoPage(QGraphicsItem *parent)
-    : MApplicationPage(parent)
+    : MApplicationPage(parent),
+    m_benchmarks()
 {
 }
 

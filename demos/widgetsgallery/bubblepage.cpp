@@ -32,13 +32,7 @@
 #include "bubblepage.h"
 #include "bubblelistmodel.h"
 
-class BubbleItemCreator 
-{
-public:
-    MBubbleItem *createBubbleItem(const QModelIndex& index) const;
-};
-
-MBubbleItem *BubbleItemCreator::createBubbleItem(const QModelIndex& index) const
+static MBubbleItem *createBubbleItem(const QModelIndex& index)
 {
     MBubbleItem* bi = new MBubbleItem;
     QVariant data = index.data(Qt::DisplayRole);
@@ -57,7 +51,8 @@ MBubbleItem *BubbleItemCreator::createBubbleItem(const QModelIndex& index) const
 }
 
 BubblePage::BubblePage()
-    : TemplatePage(TemplatePage::ListsGridsAndPopups)
+    : TemplatePage(TemplatePage::ListsGridsAndPopups),
+      messageBox()
 {
 }
 
@@ -73,12 +68,11 @@ void BubblePage::createContent()
     QGraphicsLinearLayout * layout = new QGraphicsLinearLayout(Qt::Vertical);
     panel->setLayout(layout);
 
-    BubbleItemCreator cellCreator;
     BubbleListModel * model = new BubbleListModel;
 
     for (int i = 0; i < model->rowCount(); ++i)
     {
-        MBubbleItem *item =  cellCreator.createBubbleItem(model->index(i,0));
+        MBubbleItem *item =  createBubbleItem(model->index(i,0));
         connect(item, SIGNAL(linkActivated(QString)), this, SLOT(bubbleLinkActivated(QString)));
         connect(item, SIGNAL(bubbleClicked()), this, SLOT(speechBubbleClicked()));
         layout->addItem(item);

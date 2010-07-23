@@ -258,6 +258,14 @@ bool CustomTextEdit::event(QEvent *event)
 
 TextEntryPage::TextEntryPage()
     : TemplatePage(TemplatePage::UserInput),
+      label0(), label1(), label2(), label3(), label4(), label5(),
+      label6(), label7(), label8(), label9(), label10(),
+      labelNoEcho(), labelEchoOnEdit(), labelDirectIM(),
+      labelCustomToolbar1(), labelCustomToolbar2(),
+      labelHeader1(),
+       button1(), button2(),
+       labels(),
+       Entries(),
       m_autoCapitalisation(true),
       m_errorCorrection(true),
       m_completer(new MCompleter)
@@ -267,7 +275,6 @@ TextEntryPage::TextEntryPage()
 
 TextEntryPage::~TextEntryPage()
 {
-    delete m_completer;
 }
 
 QString TextEntryPage::timedemoTitle()
@@ -480,7 +487,7 @@ void TextEntryPage::createContent()
     m_completer->setCharactersToTrim(QString("<>"));
     m_completer->setCharactersToTrimForCompletionPrefix(QString(" "));
     m_completer->setAcceptMultipleEntries(true);
-    Entries.at(row)->setCompleter(m_completer);
+    Entries.at(row)->setCompleter(m_completer.data());
 
     label8 = new MLabel(centralWidget());
     label8->setWordWrap(true);

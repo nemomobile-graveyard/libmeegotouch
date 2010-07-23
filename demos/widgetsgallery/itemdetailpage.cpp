@@ -64,7 +64,9 @@ void MyVideoWidget::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 }
 
 MyVideoOverlayToolbar::MyVideoOverlayToolbar(QGraphicsItem *parent)
-    : MWidgetController(parent)
+    : MWidgetController(parent),
+      landscapePolicy(0),
+      portraitPolicy(0)
 {
     MLayout *layout = new MLayout(this);
 
@@ -98,13 +100,30 @@ void MyVideoOverlayToolbar::addItem(QGraphicsLayoutItem* button)
 #endif
 
 ItemDetailPage::ItemDetailPage() :
+      TimedemoPage(),
+      layout(0),
+      policy(0),
+
       slider(0),
+      button(0),
       image(0),
+
 #ifdef HAVE_GSTREAMER
       video(0),
+      lContainer(0),
+      rContainer(0),
+      tContainer(0),
+      bContainer(0),
 #endif
+
       hideAnimation(0),
       showAnimation(0),
+
+      imageId(),
+      videoId(),
+
+      inactivityTimer(),
+
       scaleFactor(10.0),
       lastScaleFactor(1.0)
 {

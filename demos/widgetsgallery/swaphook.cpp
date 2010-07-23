@@ -68,11 +68,13 @@ timestamp Clock::time()
 }
 
 SwapHookPrivate::SwapHookPrivate() :
+        QObject(),
         func(0),
         lib(0),
         lurk(false),
         lurkBegin(0),
-        firstTimestamp(true)
+        firstTimestamp(true),
+        stamps()
 {
 #ifdef EGL
     QString preload = qgetenv("LD_PRELOAD");
@@ -146,15 +148,14 @@ void SwapHookPrivate::frameFinished() {
     }
 }
 
-SwapHook::SwapHook() : d(new SwapHookPrivate)
+SwapHook::SwapHook()
+    : QObject(),
+      d(new SwapHookPrivate)
 {
 }
 
 SwapHook::~SwapHook()
 {
-    if(d) {
-        delete d;
-    }
 }
 
 SwapHook* SwapHook::instance() {
@@ -172,7 +173,7 @@ void SwapHook::startLurking()
 
     if (!d->func) {
         // fallback to even filtering as swap buffer monitoring is not available
-        MApplication::activeWindow()->viewport()->installEventFilter(d);
+        MApplication::activeWindow()->viewport()->installEventFilter(d.data());
     }
 
     d->stamps.clear();
@@ -187,7 +188,7 @@ void SwapHook::stopLurking()
         return;
 
     if (!d->func) {
-        MApplication::activeWindow()->viewport()->removeEventFilter(d);
+        MApplication::activeWindow()->viewport()->removeEventFilter(d.data());
     }
 
     d->lurk = false;

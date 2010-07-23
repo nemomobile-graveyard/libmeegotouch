@@ -18,7 +18,10 @@ namespace {
 PanningBenchmark::PanningBenchmark(
   MApplicationPage * applicationPage, Timedemo * timedemo, M::OrientationAngle targetOrientationAngle) :
       TimedemoBenchmark(applicationPage, timedemo),
+      pannableViewport(0),
       timingStarted(false),
+      formerPosition(),
+      timer(),
       targetOrientationAngle(targetOrientationAngle)
 
 {

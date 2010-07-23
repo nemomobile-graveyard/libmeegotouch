@@ -24,7 +24,9 @@
 #include "gridmodel.h"
 
 GridModel::GridModel(const QSize &size, const QString &dir)
-        : m_loader(new Loader(size)), m_dir(dir)
+    : QAbstractTableModel(),
+      m_loader(new Loader(size)),
+      m_dir(dir)
 {
     qRegisterMetaType<MediaType>("MediaType");
 

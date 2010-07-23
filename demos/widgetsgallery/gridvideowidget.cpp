@@ -24,7 +24,8 @@
 #ifdef HAVE_GSTREAMER
 
 GridVideoWidget::GridVideoWidget(QGraphicsItem *parent)
-    : MVideoWidget(parent)
+    : MVideoWidget(parent),
+      m_id()
 {
 }
 

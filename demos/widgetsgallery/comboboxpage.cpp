@@ -34,7 +34,10 @@
 
 ComboBoxPage::ComboBoxPage()
     : TemplatePage(TemplatePage::ListsGridsAndPopups),
-    model1(0),
+      comboBox1(0),
+      comboBox2(0),
+      comboBox3(0),
+      model1(0),
       proxyModel(0)
 {
 }

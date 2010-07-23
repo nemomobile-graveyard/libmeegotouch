@@ -39,12 +39,20 @@ namespace
 }
 
 Timedemo::Timedemo(MainPage *mainPage, const QStringList& demoPageTitles)
-    : m_pFrontPage(mainPage)
-    , m_currentPageIndex(0)
-    , m_currentBenchmarkIndex(0)
-    , demoPageTitles(demoPageTitles)
-    , timingStarted(false)
-    , timingStopped(false)
+    : QObject(),
+    m_pFrontPage(mainPage),
+    benchmarkResults(),
+    allBenchmarks(),
+    m_currentPageIndex(0),
+    m_currentBenchmarkIndex(0),
+    demoPages(),
+    demoPageTitles(demoPageTitles),
+    m_beginFrameCount(0),
+    m_beginTime(),
+    m_csvFilename(),
+    framelogFilename(),
+    timingStarted(false),
+    timingStopped(false)
 {
     connect(m_pFrontPage, SIGNAL(appeared()), this, SLOT(showFirstPage()));
 }

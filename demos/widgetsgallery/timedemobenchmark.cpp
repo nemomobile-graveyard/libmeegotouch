@@ -4,9 +4,11 @@
 #include <MApplicationPage>
 
 TimedemoBenchmark::TimedemoBenchmark(MApplicationPage *applicationPage, Timedemo *timedemo)
-    : applicationPage(applicationPage)
-    , timedemo(timedemo)
-    , _type("common")
+    : QObject(),
+    verifyAppearanceTimer(0),
+    applicationPage(applicationPage),
+    timedemo(timedemo),
+    _type("common")
 {
     verifyAppearanceTimer = new QTimer(this);
     connect(verifyAppearanceTimer, SIGNAL(timeout()), this, SLOT(terminateIfNotAppeared()));

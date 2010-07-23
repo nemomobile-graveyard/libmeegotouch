@@ -58,7 +58,7 @@ public slots:
   void stopLurking();
 
 private:
-  SwapHookPrivate *d;
+  QScopedPointer<SwapHookPrivate> d;
 
 };
 

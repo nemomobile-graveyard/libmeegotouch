@@ -35,8 +35,11 @@
 #include <QDebug>
 
 TestModel::TestModel(QObject *parent)
-  : QAbstractListModel(parent), mode(InitiatedCall) {
-    maxRowCount = 4;
+  : QAbstractListModel(parent),
+  mode(InitiatedCall),
+  maxRowCount(4),
+  listNames()
+{
     listNames << "Lauri" << "Santeri" << "Kaarle" << "imran" << "Iqbal" << "Jakub" << "Mihaly" << "Ilias" << "Antti" <<"Jani" << "Tomas" << "Denis";
 }
 

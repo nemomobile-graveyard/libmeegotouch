@@ -29,6 +29,7 @@
 #include <MLocale>
 
 TemplatePage::TemplatePage(TemplatePage::Category category) :
+    TimedemoPage(),
     layout(0), landscapePolicy(0), portraitPolicy(0),
     container(0), separator(0), infoLabel(0),
     containerLayout(0), containerPolicy(0), pageCategory(category)

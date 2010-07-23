@@ -33,7 +33,16 @@
 #include <QStringList>
 #include <QTimer>
 
-DisplayModesPage::DisplayModesPage() : TemplatePage(TemplatePage::ApplicationView)
+DisplayModesPage::DisplayModesPage()
+    : TemplatePage(TemplatePage::ApplicationView),
+      comboNavigationBarDisplayMode(0),
+      comboEscapeButtonDisplayMode(0),
+      comboHomeButtonDisplayMode(0),
+      lblDisplayMode(0),
+      lblWindowState(0),
+      checkboxFullScreen(0),
+      lblFullScreen(0),
+      fullScreenCheckboxLayout(0)
 {
 }
 

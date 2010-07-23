@@ -29,7 +29,14 @@
 #include <MSortFilterProxyModel>
 
 PhoneBookModel::PhoneBookModel()
-    : MAbstractItemModel()
+    : MAbstractItemModel(),
+      phoneBookEntries(),
+      namesList(),
+      imageIdList(),
+      defaultThumbnail(),
+      groups(),
+      groupsSize(),
+      itemGroupCache()
 {
     namesList = loadFakeNames();
     imageIdList = loadFakeImageIds();
@@ -228,6 +235,8 @@ void PhoneBookModel::updateData(const QModelIndex &first, const QModelIndex &las
 }
 
 PhoneBookImageLoader::PhoneBookImageLoader()
+    : QObject(),
+      thumbnailLoadingJobs()
 {
 
 }

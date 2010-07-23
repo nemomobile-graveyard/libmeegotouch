@@ -81,7 +81,13 @@ public:
     typedef QList<TemplatePage*> TemplatePageList;
     typedef QList<QString> TemplatePageNameList;
 public:
-    WidgetsGalleryDataModel() : QAbstractItemModel() {
+    WidgetsGalleryDataModel()
+        : QAbstractItemModel(),
+          categoryPageNames(),
+          categoryPages(),
+          galleryPages(),
+          galleryPageNames()
+    {
         //% "Application View"
         addCategory(qtTrId("xx_wg_categories_application_view"), new MainCategoryPage(this, createIndex(0,0)));
         //% "Application Menu"
@@ -270,14 +276,17 @@ public:
 };
 
 MainPage::MainPage(const QString &title)
-    : list(0),
+    : TimedemoPage(),
+      list(0),
       actionThemes(0),
       actionOrientation(0),
       actionToggleFPS(0),
       actionLanguage(0),
       shownPage(0),
       policy(0),
-      languageSettingsPage(0)
+      languageSettingsPage(0),
+      buttons(),
+      initialPageToShow()
 {
     setTitle(title);
 

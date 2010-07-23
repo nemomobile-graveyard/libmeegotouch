@@ -64,6 +64,8 @@ MListPage::MListPage()
     actionAdvancedConfiguration(NULL),
     dialogAdvancedConfiguration(NULL),
     list(NULL),
+    cellCreator(NULL),
+    longTappedIndex(),
     currentSortingIndex(0),
     currentListModeIndex(0)
 {

@@ -10,7 +10,9 @@
 class WidgetsGalleryCategoryDataModel : public QAbstractListModel {
 public:
     WidgetsGalleryCategoryDataModel(QAbstractItemModel *parentModel, const QModelIndex &parentIndex)
-        : QAbstractListModel(), widgetsGalleryModel(parentModel), categoryIndex(parentIndex) {
+        : QAbstractListModel(),
+          widgetsGalleryModel(parentModel),
+          categoryIndex(parentIndex) {
 
     }
 
@@ -37,7 +39,9 @@ private:
 class WidgetGalleryCellCreator : public MAbstractCellCreator<MBasicListItem>
 {
 public:
-    WidgetGalleryCellCreator() : MAbstractCellCreator<MBasicListItem>() {
+    WidgetGalleryCellCreator()
+        : MAbstractCellCreator<MBasicListItem>()
+    {
     }
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
@@ -63,7 +67,10 @@ public:
 };
 
 MainCategoryPage::MainCategoryPage(QAbstractItemModel *demosDataModel, const QModelIndex &parentIndex) :
-        dataModel(new WidgetsGalleryCategoryDataModel(demosDataModel, parentIndex))
+        TimedemoPage(),
+        dataModel(new WidgetsGalleryCategoryDataModel(demosDataModel, parentIndex)),
+        list(0),
+        policy(0)
 {
 }
 

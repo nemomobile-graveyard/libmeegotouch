@@ -98,7 +98,7 @@ private:
     bool m_autoCapitalisation;
     bool m_errorCorrection;
 
-    QPointer<MCompleter> m_completer;
+    QScopedPointer<MCompleter> m_completer;
     QPointer<CustomDirectIMWidget> directIMWidget;
 };
 

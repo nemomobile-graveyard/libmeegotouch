@@ -277,7 +277,9 @@ private:
 };
 
 ContentItemsPage::ContentItemsPage()
-    : TemplatePage(TemplatePage::ListsGridsAndPopups)
+    : TemplatePage(TemplatePage::ListsGridsAndPopups),
+      contentItemLists(),
+      policy(0)
 {
 }
 

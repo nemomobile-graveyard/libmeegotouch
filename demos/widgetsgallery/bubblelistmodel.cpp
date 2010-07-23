@@ -24,7 +24,8 @@
 #include <QDir>
 
 BubbleListModel::BubbleListModel( QObject* parent )
-    : QAbstractListModel(parent)
+    : QAbstractListModel(parent),
+      chatMessages()
 {
 
     QString avatar_1(QDir(CONTACTS_DIR).canonicalPath() + QDir::separator() +"avatar-jets.png");
