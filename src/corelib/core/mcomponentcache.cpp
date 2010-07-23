@@ -71,14 +71,14 @@ bool MComponentCachePrivate::populating()
 
 void MComponentCachePrivate::populateForMApplication()
 {
-    static const char *const genericString = "generic";
+    static const char *const appName = "componentcache_pre_initialized_mapplication";
     static const char *const emptyString = "";
 
     cacheBeingPopulated = true;
 
     // We support at most ARGV_LIMIT arguments in QCoreApplication. These will be set when real
     // arguments are known (in MComponentCachePrivate::mApplication). 
-    initialArgv[0] = const_cast<char *>(genericString);
+    initialArgv[0] = const_cast<char *>(appName);
     for (int i = 1; i < initialArgc; i++) {
         initialArgv[i] = const_cast<char *>(emptyString);
     }

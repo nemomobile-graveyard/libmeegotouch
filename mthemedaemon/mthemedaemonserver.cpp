@@ -297,12 +297,14 @@ void MThemeDaemonServer::themeChanged()
         QHash<MThemeDaemonClient *, QList<PixmapIdentifier> >::iterator end = pixmapsToReload.end();
         for (; i != end; ++i) {
             MThemeDaemonClient *client = i.key();
-            clientsThatHaveNotYetAppliedThemeChange.append(client);
+
+	    // Do not send a theme change packet to the booster, as it will not reply
+	    if (client->name() != QString("componentcache_pre_initialized_mapplication")) {
+		clientsThatHaveNotYetAppliedThemeChange.append(client);
+		client->stream() << themeChangedPacket;
+            }
 
             const QList<PixmapIdentifier> &ids = i.value();
-
-            client->stream() << themeChangedPacket;
-
             const QList<PixmapIdentifier>::const_iterator idsEnd = ids.end();
             for (QList<PixmapIdentifier>::const_iterator iId = ids.begin(); iId != idsEnd; ++iId) {
 
@@ -310,7 +312,7 @@ void MThemeDaemonServer::themeChanged()
                 if (!releasePixmapsQueue.removeOne(item)) {
                     loadPixmapsQueue.enqueue(item);
                 }
-            }
+	    }
         }
 
         // make sure we have a cache directory for the current theme
