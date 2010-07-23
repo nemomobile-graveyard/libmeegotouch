@@ -220,6 +220,8 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
         if (member == MLabelModel::Text) {
             preferredSize = QSizeF(-1, -1);
             needUpdate = true;
+        } else if (member == MLabelModel::Color) {
+            needUpdate = true;
         } else if(member == MLabelModel::WrapMode) {
             if (model->wordWrap()) {
                 if (model->wrapMode() == QTextOption::NoWrap) {

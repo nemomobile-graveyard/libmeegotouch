@@ -242,6 +242,9 @@ bool MLabelViewRich::updateData(const QList<const char *>& modifications)
             textDocument.setTextWidth(viewPrivate->boundingRect().width());
             needUpdate = true;
             textDocumentDirty = true;
+        } else if (member == MLabelModel::Color) {
+            needUpdate = true;
+            textDocumentDirty = true;
         } else if(member == MLabelModel::WrapMode) {
             if (model->wordWrap()) {
                 if (model->wrapMode() == QTextOption::NoWrap) {
