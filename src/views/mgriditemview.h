@@ -35,6 +35,8 @@ class MGridItemViewPrivate;
 
     \section MGridItemViewOverview Overview
         MGridItemView implements a view for the MGridItem widget.
+
+    \deprecated
  */
 
 class M_EXPORT MGridItemView : public MWidgetView

@@ -1,5 +1,10 @@
 /*! \page news What's New in MeeGo Touch
 
+\section v02030 0.20.30
+
+\subsection New
+- MGridItem is deprecated, please use MContentItem, MBasicListItem, MAdvancedListItem, MDetailedListItem
+
 \section v02028 0.20.28
 
 - Fixed NB#176700: Black text on black buttons, fixed in blanco theme

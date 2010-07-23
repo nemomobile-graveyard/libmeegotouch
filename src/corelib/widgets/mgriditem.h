@@ -44,6 +44,8 @@ class MGridItemPrivate;
         MImage+2 MLabel,    set imageVisible = true,  titleVisible = true,  subtitleVisible = true
 
         You can change the image alignment to LeftAlign/RightAlign by modify CSS
+
+     \deprecated Please use MContentItem, MBasicListItem, MAdvancedListItem, MDetailedListItem
  */
 
 class M_EXPORT MGridItem: public MWidgetController
