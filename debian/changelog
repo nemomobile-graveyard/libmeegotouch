@@ -1,8 +1,15 @@
-libmeegotouch (0.20.29~1) unstable; urgency=low
+libmeegotouch (0.20.29-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#181303 - Navigation controls won't come back when hardware keyboard opened.
+  * Fixes: NB#178845 - Menu indicator drawn misplaced initially
+  * Fixes: NB#166004 - Unexpected input focus behaviour when focused widget is covered by app menues or app dialogs
+  * Fixes: NB#178905 - regexp matching an empty string causes an infinite loop in MLabelHighlighter
+  * Fixes: NB#179842 - (setIcon(QIcon())) MButton: Unable to "unset" the icon.
+  * Fixes: NB#180566 - TextEdit should reply the file name of registered input method custom toolbar for inputMethodQuery.
+  * Fixes: NB#180350 - MLabel: Text is initially wrapped even if wordWrap is set to false
+  * Fixes: NB#180331 - CSS constants do not work for pixmap types
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Tue, 20 Jul 2010 10:51:49 +0300
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Fri, 23 Jul 2010 10:26:55 +0300
 
 libmeegotouch (0.20.28-1) unstable; urgency=low
 
