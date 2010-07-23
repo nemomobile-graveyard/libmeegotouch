@@ -38,6 +38,7 @@ public:
 
     //! \reimp
     virtual QRectF boundingRect() const;
+    virtual QPainterPath shape() const;
     //! \reimp_end
 
 protected:

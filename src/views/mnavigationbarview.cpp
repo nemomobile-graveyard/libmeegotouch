@@ -130,6 +130,18 @@ QRectF MNavigationBarView::boundingRect() const
     return br;
 }
 
+QPainterPath MNavigationBarView::shape() const
+{
+    QPainterPath path;
+    // Get the base bounding rect, which excludes the shadow
+    QRectF br = MWidgetView::boundingRect();
+
+    // The shape is not expanded by the margins+reactiveMargins, as the bar is
+    // non-interactive by design
+    path.addRect(br);
+    return path;
+}
+
 void MNavigationBarView::updateData(const QList<const char *>& modifications)
 {
     Q_D(MNavigationBarView);
