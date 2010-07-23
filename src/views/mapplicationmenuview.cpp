@@ -514,38 +514,66 @@ void MApplicationMenuViewPrivate::updateItemMode()
         if (qobject_cast<MBasicListItem *>(w) || qobject_cast<MComboBox *>(w)) {
             //Only for MBasicListItem and MComboBox types (those styleaction buttons are ruled out like before)
             MWidgetController *widget = qobject_cast<MWidgetController *>(w);
-            updateItemLayout(widget, columnsCount, count, index);
+            widget->setLayoutPosition(calculateLayoutPosition(columnsCount, count, index));
         }
     }
 
 }
 
-void MApplicationMenuViewPrivate::updateItemLayout(MWidgetController *widget,
+M::Position MApplicationMenuViewPrivate::calculateLayoutPosition(
         int columnsCount,
         int itemCount,
         int index)
 {
-    if (!widget)
-        return;
+    M::Position pos = M::DefaultPosition;
 
-    if (columnsCount == 1) {
-        if (index == itemCount - 1) {
-            widget->setLayoutPosition(M::VerticalBottomPosition);
-        } else {
-            widget->setLayoutPosition(M::VerticalCenterPosition);
-        }
-    } else {
-        int rowCount = (itemCount + 1) / 2;
-        int row = index / 2;
-        int col = index % 2;
-        if ((itemCount == 1) || (col == 0 && index == (itemCount - 1))) { //only one item in last row
-            widget->setLayoutPosition(M::VerticalBottomPosition);
-        } else if (row >= 0 && row < (rowCount - 1)) {
-            (col == 0) ? widget->setLayoutPosition(M::CenterLeftPosition) : widget->setLayoutPosition(M::CenterRightPosition);
-        } else {
-            (col == 0) ? widget->setLayoutPosition(M::BottomLeftPosition) : widget->setLayoutPosition(M::BottomRightPosition);
-        }
+    // Single cell
+    if ( itemCount == 1) {
+        pos = M::DefaultPosition;
     }
+    // Single vertical column
+    else if (columnsCount == 1) {
+        pos = index == 0             ? M::VerticalTopPosition :
+              index == itemCount - 1 ? M::VerticalBottomPosition :
+                                       M::VerticalCenterPosition;
+    }
+    else {
+        int rowCount = (double)itemCount/columnsCount + 0.5;
+        // Single horizontal row
+        if ( rowCount == 1) {
+            pos = index == 0            ? M::HorizontalLeftPosition :
+                  index == itemCount -1 ? M::HorizontalRightPosition :
+                                          M::HorizontalCenterPosition;
+        }
+        // 2-D layout
+        else {
+            int row = index / columnsCount;
+            int col = index % columnsCount;
+            pos = row == 0 && col == 0                       ? M::TopLeftPosition :
+                  row == 0 && col == columnsCount-1          ? M::TopRightPosition :
+                  row == rowCount-1 && col == 0              ? M::BottomLeftPosition :
+                  row == rowCount-1 && col == columnsCount-1 ? M::BottomRightPosition :
+                  row == 0                                   ? M::TopCenterPosition :
+                  row == rowCount-1                          ? M::BottomCenterPosition :
+                  col == 0                                   ? M::CenterLeftPosition :
+                  col == columnsCount-1                      ? M::CenterRightPosition :
+                                                               M::CenterPosition;
+
+            // handle special case for when last row is incomplete
+            if (itemCount < rowCount*columnsCount) {
+                // last item in list
+                if (index == itemCount - 1) {
+                    pos = col == 0 ? M::VerticalBottomPosition : M::BottomRightPosition;
+                }
+                // last item in second to last row
+                else if ( (col == columnsCount-1) && (row == rowCount-2) ) {
+                    pos = row == 0 ? M::HorizontalRightPosition : M::BottomRightPosition;
+                }
+            } // last row special case
+        } // 2-D layout
+    }
+
+    return pos;
 }
 
 void MApplicationMenuViewPrivate::addStyleWidget(MWidget *widget, MWidget *before)

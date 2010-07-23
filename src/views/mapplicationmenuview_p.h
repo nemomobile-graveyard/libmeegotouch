@@ -60,6 +60,8 @@ public:
     virtual void remove(QAction *action);
     virtual void change(QAction *action);
 
+    static M::Position calculateLayoutPosition(int columnsCount, int itemCount, int index);
+
 protected:
     virtual bool eventFilter(QObject *obj, QEvent *event);
     virtual void addActions();
