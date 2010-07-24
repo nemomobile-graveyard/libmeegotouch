@@ -91,7 +91,7 @@ public:
     // the caller is responsible for deleting the dateformat object
     icu::DateFormat *createDateFormat(MLocale::DateType dateType,
                                       MLocale::TimeType timeType,
-                                      const MCalendar& mcalendar) const;
+                                      MLocale::CalendarType calendarType) const;
 #endif
 
     // these return the requested part of a locale string,

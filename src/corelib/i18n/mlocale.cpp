@@ -276,13 +276,13 @@ icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(const icu::Local
 
 #ifdef HAVE_ICU
 icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
-                                                    MLocale::TimeType timeType,
-                                                    const MCalendar& mcalendar) const
+                                                  MLocale::TimeType timeType,
+                                                  MLocale::CalendarType calendarType) const
 {
     // Create calLocale which has the time pattern we want to use
     icu::Locale calLocale = MIcuConversions::createLocale(
         categoryName(MLocale::MLcTime),
-        mcalendar.type());
+        calendarType);
 
     icu::DateFormat::EStyle dateStyle = MIcuConversions::toEStyle(dateType);
     icu::DateFormat::EStyle timeStyle = MIcuConversions::toEStyle(timeType);
@@ -292,7 +292,7 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
     // Symbols come from the time locale
     icu::Locale symbolLocale
     = MIcuConversions::createLocale(categoryName(MLocale::MLcTime),
-                                      mcalendar.type());
+                                      calendarType);
 
     DateFormatSymbols *dfs = MLocalePrivate::createDateFormatSymbols(symbolLocale);
 
@@ -1466,7 +1466,7 @@ QString MLocale::formatDateTime(const MCalendar &mcalendar,
     icu::UnicodeString resString;
     icu::Calendar *cal = mcalendar.d_ptr->_calendar;
 
-    icu::DateFormat *df = d->createDateFormat(datetype, timetype, mcalendar);
+    icu::DateFormat *df = d->createDateFormat(datetype, timetype, mcalendar.type());
     df->format(*cal, resString, pos);
     delete df;
 
@@ -1903,8 +1903,7 @@ QString MLocale::icuFormatString( DateType dateType,
                           CalendarType calendarType) const
 {
     Q_D(const MLocale);
-    MCalendar mcalendar(calendarType);
-    icu::DateFormat *df = d->createDateFormat(dateType, timeType, mcalendar);
+    icu::DateFormat *df = d->createDateFormat(dateType, timeType, calendarType);
 
     QString icuFormatQString;
 
@@ -1930,7 +1929,7 @@ QDateTime MLocale::parseDateTime(const QString &dateTime, DateType dateType,
     MCalendar mcalendar(calendarType);
 
     UnicodeString text = MIcuConversions::qStringToUnicodeString(dateTime);
-    icu::DateFormat *df = d->createDateFormat(dateType, timeType, mcalendar);
+    icu::DateFormat *df = d->createDateFormat(dateType, timeType, mcalendar.type());
     icu::ParsePosition pos(0);
     UDate parsedDate = df->parse(text, pos);
     delete df;
