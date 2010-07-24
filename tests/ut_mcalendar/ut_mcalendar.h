@@ -95,6 +95,7 @@ private slots:
     void benchmarkFormatDateTimePosixFormatString_r_MCalendar();
     void benchmarkFormatDateTimePosixFormatString_R_MCalendar();
     void benchmarkFormatDateTimePosixFormatString_t_MCalendar();
+    void benchmarkIcuFormatString();
 };
 
 

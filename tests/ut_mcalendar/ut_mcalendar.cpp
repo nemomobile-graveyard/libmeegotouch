@@ -2605,5 +2605,30 @@ void Ut_MCalendar::benchmarkFormatDateTimePosixFormatString_t_MCalendar()
     }
 }
 
+void Ut_MCalendar::benchmarkIcuFormatString()
+{
+    QString language("en_US");   // will be overridden
+    QString lcMessages("en_US"); // should not matter
+    QString lcTime("fi_FI");     // this overrides language
+    QString lcNumeric("en_US");  // should not matter
+    MLocale locale(language);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    locale.setCalendarType(MLocale::IslamicCalendar); // should not matter
+    QCOMPARE(locale.icuFormatString(
+                 MLocale::DateFull,
+                 MLocale::TimeFull,
+                 MLocale::GregorianCalendar),
+             QString("EEEE d. MMMM y H.mm.ss zzzz"));
+
+    QBENCHMARK {
+        locale.icuFormatString(
+                 MLocale::DateFull,
+                 MLocale::TimeFull,
+                 MLocale::GregorianCalendar);
+    }
+}
+
 QTEST_APPLESS_MAIN(Ut_MCalendar);
 
