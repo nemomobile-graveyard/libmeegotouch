@@ -288,7 +288,7 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
     icu::DateFormat::EStyle timeStyle = MIcuConversions::toEStyle(timeType);
     icu::DateFormat *df
     = icu::DateFormat::createDateTimeInstance(dateStyle, timeStyle, calLocale);
-
+#if 0
     // Symbols come from the time locale
     icu::Locale symbolLocale
     = MIcuConversions::createLocale(categoryName(MLocale::MLcTime),
@@ -299,7 +299,7 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
     // This is not nice but seems to be the only way to set the
     // symbols with the public API
     static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
-
+#endif
     return df;
 }
 #endif
