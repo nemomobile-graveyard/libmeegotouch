@@ -31,6 +31,8 @@
 PhoneBookCell::PhoneBookCell()
     : MListItem(),
     layout(NULL),
+    landscapePolicy(NULL),
+    portraitPolicy(NULL),
     spinner(NULL),
     landscapeTitleLabel(NULL),
     portraitTitleLabel(NULL),

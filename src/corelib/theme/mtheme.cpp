@@ -315,8 +315,7 @@ void MTheme::releaseScalableImage(const MScalableImage *image)
     for (; i != end; ++i) {
         // is this the image which we should release?
         if (i.value().image == image) {
-            i.value().refcount.deref();
-            if (i.value().refcount == 0) {
+            if (!i.value().refcount.deref()) {
                 releasePixmap(i.value().image->pixmap());
                 delete i.value().image;
                 instance()->d_ptr->scalableImageIdentifiers.erase(i);
@@ -344,8 +343,7 @@ void MTheme::releasePixmap(const QPixmap *pixmap)
     QHash<QString, CachedPixmap>::iterator end = instance()->d_ptr->pixmapIdentifiers.end();
     for (; i != end; ++i) {       // is this the pixmap which we should release?
         if (i.value().pixmap == pixmap) {
-            i.value().refcount.deref();
-            if (i.value().refcount == 0) {
+            if (!i.value().refcount.deref()) {
                 instance()->d_ptr->themeDaemon->releasePixmap(i.value().imageId, i.value().size);
                 delete i.value().pixmap;
                 instance()->d_ptr->pixmapIdentifiers.erase(i);

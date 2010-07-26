@@ -149,6 +149,7 @@ MComponentDataPrivate::MComponentDataPrivate()
     prestarted(false),
     emulateTwoFingerGestures(false),
     prestartMode(M::NoPrestart),
+    forcedOrientationAngle(M::Angle0),
     isOrientationForced(false),
     theme(0),
     deviceProfile(0),

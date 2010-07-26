@@ -25,7 +25,8 @@
 
 MInputMethodStatePrivate::MInputMethodStatePrivate()
     : orientation(M::Angle0),
-      emitInputMethodAreaTimer(new QTimer)
+      emitInputMethodAreaTimer(new QTimer),
+      q_ptr(NULL)
 {
 }
 

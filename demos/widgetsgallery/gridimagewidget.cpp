@@ -22,7 +22,9 @@
 #include <QGraphicsSceneMouseEvent>
 
 GridImageWidget::GridImageWidget(QGraphicsItem *parent)
-    : MImageWidget(parent)
+    : MImageWidget(parent),
+    m_id(),
+    m_page(NULL)
 {
 }
 

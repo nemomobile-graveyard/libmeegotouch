@@ -180,7 +180,7 @@ namespace M
         };
 
         struct PixmapHandle : PacketData {
-            PixmapHandle()
+            PixmapHandle() : pixmapHandle(0)
             {}
 
             PixmapHandle(const PixmapIdentifier &identifier, Qt::HANDLE pixmapHandle) :
