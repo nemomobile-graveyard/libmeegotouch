@@ -58,4 +58,3 @@ PUBLIC_HEADERS += \
     $$STYLE_HEADERS \
 
 HEADERS += \
-    style/mstatusbarstyle.h
