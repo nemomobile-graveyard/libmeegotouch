@@ -635,6 +635,29 @@ else
     mv -f "$MEEGOTOUCH_DEFINES_PRF.tmp" "$MEEGOTOUCH_DEFINES_PRF"
 fi
 
+# substitute prefix in .pc files
+MEEGOTOUCH_PC_DIR="$outpath/src/data"
+MEEGOTOUCH_PC_FILES="meegotouch
+meegotouchcore
+meegotouchsettings
+"
+
+for i in $MEEGOTOUCH_PC_FILES
+do
+   pc_file="$MEEGOTOUCH_PC_DIR/$i.pc"
+   cat "$pc_file.in" \
+   | sed -e "s,@@M_UNIX_INSTALL_PREFIX@@,$M_INSTALL_PREFIX,g" \
+   > "$pc_file.tmp"
+
+  # replace meegotouch_defines.prf if it differs from the newly created temp file
+  if cmp -s "$pc_file.tmp" "$pc_file"; then
+      rm -f "$pc_file.tmp"
+  else
+      mv -f "$pc_file.tmp" "$pc_file"
+  fi
+
+done
+
 #-------------------------------------------------------------------------------
 # build makefiles based on the configuration
 #-------------------------------------------------------------------------------

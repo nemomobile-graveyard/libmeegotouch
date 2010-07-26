@@ -93,7 +93,7 @@ include(doc/doc.pri)
 # note: proper way to clean up extradata would be running pkgdata --clean...
 # but listing *.a & *.o is easier with qmake
 QMAKE_CLEAN += lib/libmeegotouch* build-stamp configure-stamp tests/*/*.log.xml tests/*/*.log *.log.xml *.log **/*.gcda extradata/*.o extradata/*.a
-QMAKE_DISTCLEAN += lib/libmeegotouch* build-stamp configure-stamp tests/*/*.log.xml tests/*/*.log *.log.xml *.log **/*.gcda extradata/*.o extradata/*.a mkspecs/meegotouchconfig.pri
+QMAKE_DISTCLEAN += lib/libmeegotouch* build-stamp configure-stamp tests/*/*.log.xml tests/*/*.log *.log.xml *.log **/*.gcda extradata/*.o extradata/*.a mkspecs/meegotouchconfig.pri src/data/*.pc
 
 check.target = check
 check.CONFIG = recursive
