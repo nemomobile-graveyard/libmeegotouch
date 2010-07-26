@@ -189,6 +189,7 @@ namespace M
             {}
 
             PixmapHandle(const PixmapHandle &handle) :
+                PacketData(),
                 identifier(handle.identifier),
                 pixmapHandle(handle.pixmapHandle)
             {}
