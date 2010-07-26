@@ -11,6 +11,7 @@ SUBDIRS     = \
  \
  pt_mapplication \
  pt_mbutton \
+ pt_mcalendar \
  pt_mcomponentdata \
  pt_mimagewidget \
  pt_mmenu \
