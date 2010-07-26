@@ -2,7 +2,9 @@
 /*! \page plainqt How to develop Qt applications for Maemo 5 and MeeGo
 
 
-This page covers the case where the author of a Qt application can't make use of the MeeGoTouch classes in his source code ("libmeegotouch"). The recommendations which are made on this page are only made for this specific use case. For native MeeGoTouch applications please have a look at the documentation that covers native applications instead.
+\section  audience  Audience
+
+This document targets established Qt developers who would like to use Qt to develop an application for Maemo5 or MeeGo, without the need to use the native frameworks, Hildon and MeeGo Touch respectively. Native development is not covered in this document.
 
 
 \section  intro  Introduction
@@ -16,24 +18,24 @@ However there are several cases where the mobile form factor and the philosophy 
 
 \section  style  How Maemo 5 and MeeGo affect the look and feel of your application
 
-For both Maemo 5 and MeeGo your Qt application will get adjusted in terms of look and feel so that it will emulate the user interface of each plattform:
+For both Maemo 5 and MeeGo your Qt application will adjust in terms of look and feel so that it will emulate the user interface of each platform:
 
 - The "Maemo 5" style emulates the appearance of the Gtk-based Hildon framework. The Maemo 5 style is included with the special version of Qt that is shipped together with the N900 device series.
 - The "MeeGo" style mimics the widgets and interaction that is typical for the Qt-based MeeGoTouch framework. The MeeGoTouch style is part of the libmeegotouch framework and is shipped as one of its packages.
 
-Both styles take theme changes automatically into account. But the style is only an approximation of what a truely native application would look like. So there might be slight differences in terms of look and behaviour compared to a "real" Maemo 5 or MeeGo application. These differences can be reduced by taking certain typical requirements of these platforms into account.
+Both styles take theme changes automatically into account. But the style is only an approximation of what a truly native application would look like. So there might be slight differences in terms of look and behaviour compared to a "real" Maemo 5 or MeeGo application. These differences can be reduced by taking certain typical requirements of these platforms into account.
 
 While the target framework and the implementations are different both styles share several characteristics. So if your style looks fine on one of the two platforms then it's quite likely that it will have a comparable appearance on the other platform as well.
 
-The maemo styles not only modify the theming but they also ensure that your application becomes finger usable and makes use of the default services and resources provided through each framework.
+Maemo5 and MeeGo Touch styles not only modify the theming but they also ensure that your application becomes finger usable and makes use of the default services and resources provided through each framework.
 
-Compared to other Qt styles the Maemo 5 and MeeGo styles go way beyond simple widget styling. They have a significant impact on the way dialogs are shown:
+Compared to other Qt styles the Maemo 5 and MeeGoTouch styles go way beyond simple widget styling. They have a significant impact on the way dialogs are shown:
 
 - The style automatically follows theme changes on Maemo 5 or MeeGo.
 - Feedback and gesture support is automatically added.
 - The virtual keyboard is supported out of the box
 - Menubars are not shown on top of the window or the screen. Instead they are activated via the navigation bar and are provided as finger usable dialogs.
-- Dialogs are always displayed full screen.
+- Dialogs are always displayed full-width. They cover a significant portion of the screen.
 - Default dialogs (such as the file dialog) are automatically replaced by a Maemo conform replacement.
 - The style provides kinetic scrolling for lists and scroll areas.
 - Scroll bars are only provided as indicators and only appear during scrolling.
@@ -49,104 +51,40 @@ yourapp -style maemo5
 or
 
 \code
-yourapp -style maemo6
+yourapp -style meegotouch
 \endcode
 
-Again note that the Maemo 5 style is only available as a part of the special Qt version that comes with Maemo 5 support. While the MeeGo style is provided via the libmeegotouch framework.
+Again note that the Maemo 5 style is only available as a part of the special Qt version that comes with Maemo 5 support. While the MeeGoTouch style is provided via the libmeegotouch framework.
 On both Maemo 5 and MeeGoTouch platform the platform style is used by default for plain Qt applications.
 
 If you want to change this style to a different style then you can either do this via the \c -style command line parameter or in your source code via the \c QStyle API. However in general this is not recommended since the default styles provided with Qt are not finger usable.
 
-\section API MeeGoTouch Qt style API
-
-There is an API to influence the style on MeeGoTouch. This is done via setting dynamic propertys and using litteral strings because we don't wan't to need to include any headers from MeeGoTouch or even link against any Meegotouch library, to keep the plain Qt application independent from the target platform.
-
-If you want to disable styling for your own custom widget then you can do this via the dynamic property \c NoMStyle. For a custom widget instance "mywidget" it would look like this:
-
-\code
-    mywidget->setProperty("NoMStyle", true);
-\endcode
-
-Doing this should only be done if the style renders a certain custom widget unusable. In practice this should stay the rare exception.
-Note: This only disables styling for this particular widget. It does NOT affect children of "mywidget"!
-
-If you run into real problems with the style or if you want to completely disable the meegotouch qt style for your application then you can set the dynamic property also directly for QApplication:
-
-\code
-    qApp->setProperty("NoMStyle", true);
-\endcode
-
-With the MeeGoTouch Qt style you can also disable some elements, added by the style, e.g. the statusbar or the navigation bar.
-
-Disabling the statusbar:
-\code
-    qApp->setProperty("NoMStatusBar", true);
-\endcode
-
-Disabling the navigation bar:
-\code
-    qApp->setProperty("NoMNavigationBar", true);
-\endcode
-
-When disabling the navigation bar your application doesn't have close and minimize buttons anymore, so the developer has to care for closing and minimizing the application himself.
-
-If you want to run a fullscreen application on MeeGoTouch you currently need to disable statusbar and navigationbar this way. Setting any flags to your main window that should make it fullscreen are currently ignored by the style.
-
-The style also provides a basic API for supporting orientation changes on the device. For most QWidget based Qt applications it's difficult to implement an orientation change, but for some cases, e.g. QML oder QGraphicsView based applications it can be useful. Therefore the orientation change support of the style is opt-in which means the application needs to tell the style whether it would like to support the orientation change.
-Note: The orientation change support only adjusts the window decorations to the new orientation. You have to take care of rotating the application's content yourself!
-
-You can activate the orientation change for your application like this:
-\code
-    QMetaObject::invokeMethod(app.style(), "setOrientationChangeEnabled", Q_ARG(bool, true));
-\endcode
-
-Once the orientation change is enabled, the style sends you a signal, as soon as an orientation change happens. The signal tells you the new orientation in degrees. For reacting on the orientation change simply connect to this signal:
-\code
-    connect(style(), SIGNAL(orientationChanged(int)), this, SLOT(rotateGui(int));
-\endcode
-
-additionally you can always ask the style about its current orientation by calling:
-\code
-    int orientation = 0;
-    QMetaObject::invokeMethod(style(), "orientation", Q_RETURN_ARG(int, orientation));
-\endcode
-
-You can also look at qtstyleorientation demo application which shortly demonstrates how orientation change works.
-
-The orientation change support is not fully implemented yet. It rotates the statusbar and the navigation bar, but menus and dialogs are not getting rotated yet. The development is currently impeded due to thoughts about useing RandR for orientation change support in MeeGoTouch Qt style might be better.
-
-
-Here are a few screen shots comparing the very same view of the same application on both maemo plattforms:
-
-\image html qtstyleexample-pizza-freemantle.png "Example application on Maemo 5 (Freemantle)"
-
-\image html qtstyleexample-pizza-harmattan.png "Example application on MeeGo"
-
 
 \section  usability  Achieving a good user experience
 
-The user interface of the Maemo platform is optimized for the specific requirements of the device and for the needs of your target audience. This results in a user interface that is significantly different from the desktop paradigm.
+The user interface of the Maemo and MeeGo platform is optimized for the specific requirements of the device and for the needs of your target audience. This results in a user interface that is significantly different from the desktop paradigm.
 
 Taking a look at your plain Qt application there are in general two scenarios for deployment:
 
 - You're developing a true crossplatform plain Qt application. Your application uses the very same source code to cover all platforms.
-- Or you're working on a plain Qt application that is specifically optimized for use on the Maemo platform (or on mobile devices in general).
+- Or you're working on a plain Qt application that is specifically optimized for use on the Maemo or MeeGo platform (or on mobile devices in general).
 
 In either case the resulting user experience will most likely not match the quality of a true MeeGoTouch application. Nevertheless there's a set of recommendations we can provide. These recommendations can help you to come at least close and achieve a reasonable good user experience for your application:
 
 
 \subsection taskoriented Create a user interface that is tailored to the user's workflow
 
-First and foremost the user interface of Maemo applications is much more simplistic than a typical desktop application. This is due to the obvious limitations in terms of screen size. Due to these constrains the author of a mobile application needs to have a good understanding about the tasks that a user has got to perform. This will help to come up with a user interface that doesn't get in the way of the user and is easy to use.
+First and foremost the user interface of Maemo or MeeGo applications is much more simplistic than a typical desktop application. This is due to the obvious limitations in terms of screen size. Due to these constrains the author of a mobile application needs to have a good understanding about the tasks that a user has got to perform. This will help to come up with a user interface that doesn't get in the way of the user and is easy to use.
 
-So if your application has been originally developed for the desktop then you should reconsider the user interface: Often enough desktop applications are unnecessarily cluttered with lots of controls. Such a "heavy" UI does not only exceed the space that is available on the Maemo platform. It also typically overwhelms novice users on the desktop.
-So "streamlining" the UI will not only help you to create a good user experience on the Maemo platform. It also has the benefit that your application will be easier to use on the desktop as well.
+So if your application has been originally developed for the desktop then you should reconsider the user interface: Often enough desktop applications are unnecessarily cluttered with lots of controls. Such a "heavy" UI does not only exceed the space that is available on the mobile platform. It also typically overwhelms novice users on the desktop.
+So "streamlining" the UI will not only help you to create a good user experience on the mobile platform. It also has the benefit that your application will be easier to use on the desktop as well.
 "Streamlining" doesn't necessarily mean that you need to remove functionality. Often enough it means that you rearrange your UI so that it is more task driven and follows the actual workflow of the user.
 
 
 \subsection sizeindependent Make your application independent of resolution and available size
 
-The Maemo platform targets devices which are small but have a very high resolution compared to desktop computers. So it's important that inspite of the high resolution it's possible to easily recognize all visual parts of the UI from a reasonable distance.
+The N900 running Maemo is small device. MeeGoTouch will support a range of devices with different screen sizes.
+So it's important that despite the high resolution it's possible to easily recognize all visual parts of the UI from a reasonable distance.
 For normal ready-made QWidgets (like \c QPushButton, \c QMenu, etc.) the style will take care of this automatically.
 Note that for the styling of widgets we use the properties defined in the MeeGoTouch CSS. Therefore in some cases (like for fonts and geometries) we don't use the properties provided by Qt itself.
 
@@ -167,10 +105,10 @@ This means that you need to think carefully about the size of custom widgets. Bu
 In general there are a few common pitfalls which result from the faulty assumption that the user is using a mouse pointer:
 
 - Double click should be avoided.
-- Context menus (which usually get invoked via a right mouse button click) should either be avoided or at least not be mandatory for using the application.
-- For dragging operations you need to ensure that the dragging threshold is aware of the resolution and finger friendliness.
+- Context menus (which usually get invoked via a right mouse button click) are available via tap&hold interaction and should not be used for primary interactions.
+- Dragging operations are not supported typically as they conflict with panning.
 - Touch displays don't support "hovering". So mouse hovering should be avoided as the only way to accessing functionality provided by the application.
-- The Maemo framework usually switches off the cursor ("mouse pointer") of the application. So your application should be usable even if the cursor isn't visible on the screen.
+- Both frameworks switch off the cursor ("mouse pointer") of the application. So your application should be usable even if the cursor isn't visible on the screen.
 - There is no concept such as a visible widget focus rect. So you application needs to be intuitively usable without those.
 - Don't use your own styling on QWidgets. This means not setting a custom style to the widget, using CSS for the widget or even manipulating the widget's palette. This might be ignored by the Meegotouch Qt style or even break the styling up to making the widget unusable.
 
@@ -226,7 +164,71 @@ There are a few widgets which are specific for the Maemo 5 platform
 - \c QMaemo5TimePickSelector
 - \c QMaemo5ValueButton
 
-Use of these widgets is discouraged since they will most likely not be part of the MeeGo platform.
+Use of these widgets is discouraged since they will most likely not be part of the MeeGo Touch platform.
+
+
+\section API MeeGoTouch Qt style API
+
+There is an API to influence the style on MeeGoTouch. This is done via setting dynamic propertys and using litteral strings because we don't wan't to need to include any headers from MeeGoTouch or even link against any Meegotouch library, to keep the plain Qt application independent from the target platform.
+
+If you want to disable styling for your own custom widget then you can do this via the dynamic property \c NoMStyle. For a custom widget instance "mywidget" it would look like this:
+
+\code
+    mywidget->setProperty("NoMStyle", true);
+\endcode
+
+Doing this should only be done if the style renders a certain custom widget unusable. In practice this should stay the rare exception.
+Note: This only disables styling for this particular widget. It does NOT affect children of "mywidget"!
+
+If you run into real problems with the style or if you want to completely disable the meegotouch qt style for your application then you can set the dynamic property also directly for QApplication:
+
+\code
+    qApp->setProperty("NoMStyle", true);
+\endcode
+
+With the MeeGoTouch Qt style you can also disable some elements, added by the style, e.g. the statusbar or the navigation bar.
+
+Disabling the statusbar:
+\code
+    qApp->setProperty("NoMStatusBar", true);
+\endcode
+
+Disabling the navigation bar:
+\code
+    qApp->setProperty("NoMNavigationBar", true);
+\endcode
+
+When disabling the navigation bar your application doesn't have close and minimize buttons anymore, so the developer has to care for closing and minimizing the application himself.
+
+The style also provides a basic API for supporting orientation changes on the device. For most QWidget based Qt applications it's difficult to implement an orientation change, but for some cases, e.g. QML oder QGraphicsView based applications it can be useful. Therefore the orientation change support of the style is opt-in which means the application needs to tell the style whether it would like to support the orientation change.
+Note: The orientation change support only adjusts the window decorations to the new orientation. You have to take care of rotating the application's content yourself!
+
+You can activate the orientation change for your application like this:
+\code
+    QMetaObject::invokeMethod(app.style(), "setOrientationChangeEnabled", Q_ARG(bool, true));
+\endcode
+
+Once the orientation change is enabled, the style sends you a signal, as soon as an orientation change happens. The signal tells you the new orientation in degrees. For reacting on the orientation change simply connect to this signal:
+\code
+    connect(style(), SIGNAL(orientationChanged(int)), this, SLOT(rotateGui(int));
+\endcode
+
+additionally you can always ask the style about its current orientation by calling:
+\code
+    int orientation = 0;
+    QMetaObject::invokeMethod(style(), "orientation", Q_RETURN_ARG(int, orientation));
+\endcode
+
+You can also look at qtstyleorientation demo application which shortly demonstrates how orientation change works.
+
+The orientation change support is not fully implemented yet. It rotates the statusbar and the navigation bar, but menus and dialogs are not getting rotated yet.
+
+
+Here are a few screen shots comparing the very same view of the same application on both maemo plattforms:
+
+\image html qtstyleexample-pizza-freemantle.png "Example application on Maemo 5 (Freemantle)"
+
+\image html qtstyleexample-pizza-harmattan.png "Example application on MeeGo"
 
 
 \section  limitations Limitations of the Qt support compared to native MeeGoTouch applications
@@ -241,5 +243,5 @@ Since MeeGoTouch and its widgets are based on \c QGraphicsView there are a few t
 
 - Be careful with top level widgets: The style takes care of window management. To accomplish this all top-level windows get reparented into a new layout. This breaks part of Qt's API promise: Windows that are created by the application developer can't later on be indentified or accessed via methods such as \c QWidget::window() or \c QWidget::activeWindow(). 
 
-- "Stacked Windows": We don't have support for the concept of "stacked windows" yet. This will be added later.
+- "Stacked Windows": At this point the concept of "stacked windows" is not supported.
 */
