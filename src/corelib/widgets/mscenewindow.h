@@ -179,6 +179,13 @@ public Q_SLOTS:
     /*!
      * Makes the scene window appear on the currently active window and registers
      * it with the associated MSceneManager.
+     *
+     * \attention If your application has multiple MWindows, usage of this method
+     * is strongly discouraged since it can make a scene window appear in an MWindow
+     * different from the intended one. That's due to the fact that it depends on
+     * which MWindow happens to be active when this method is called. In such
+     * scenarios use either appear(MWindow*) or MSceneManager::appearSceneWindow().
+     *
      * \param policy    Deletion policy, defines the ownership for this window
      *
      * \sa MApplication::activeWindow(), MSceneManager::appearSceneWindow()
