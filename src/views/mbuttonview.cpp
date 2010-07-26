@@ -227,7 +227,10 @@ void MButtonViewPrivate::calcIconTextRects()
     }
 
     //adjust label with button margins
-    label->setGeometry(textRect.translated(q->marginLeft(), q->marginTop()));
+    if (controller->layoutDirection() == Qt::LeftToRight)
+        label->setGeometry(textRect.translated(q->marginLeft(), q->marginTop()));
+    else
+        label->setGeometry(textRect.translated(q->marginRight(), q->marginTop()));
 }
 
 void MButtonViewPrivate::loadIcon(const QIcon &newQIcon, const QSize &newIconSize)
