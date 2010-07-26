@@ -741,7 +741,7 @@ void MLocalePrivate::removeTrFromQCoreApp()
     }
 }
 
-QLocale::QLocale MLocalePrivate::createQLocale(MLocale::Category category) const
+QLocale MLocalePrivate::createQLocale(MLocale::Category category) const
 {
     Q_Q(const MLocale);
     QLocale qlocale(q->categoryLanguage(category)
