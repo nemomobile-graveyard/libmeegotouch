@@ -26,9 +26,8 @@ QStringList QtMaemo6StylePlugin::keys() const
     return QStringList()
            << "maemo6"
            << "MBasicQtStyle"
-           << "MIntegratedQtStyle"   //deprecated
-           << "bqs"
-           << "iqs";                   //deprecated
+           << "meegotouch"
+           << "bqs";
 }
 
 QStyle *QtMaemo6StylePlugin::create(const QString &key)
@@ -38,7 +37,7 @@ QStyle *QtMaemo6StylePlugin::create(const QString &key)
     if ((lkey == "mbasicqtstyle") || (lkey == "bqs"))
         return new QtMaemo6TestStyle;
 
-    if ((lkey == "maemo6") || (lkey == "mintegratedqtstyle") || (lkey == "iqs"))
+    if ((lkey == "maemo6") || (lkey == "meegotouch"))
         return new QtMaemo6Style;
 
     return 0;
