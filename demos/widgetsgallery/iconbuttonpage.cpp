@@ -61,13 +61,14 @@ void IconButtonPage::createContent()
     // Icon buttons
     iconButton1 = new MButton();
     iconButton1->setViewType(MButton::iconType);
-    iconButton1->setIconID("icon-l-common-video-playback");
+    iconButton1->setIconID("icon-m-toolbar-new-chat");
 
     containerPolicy->addItem(iconButton1, Qt::AlignCenter);
 
     iconButton2 = new MButton();
     iconButton2->setViewType(MButton::iconType);
-    iconButton2->setIconID("icon-m-toolbar-locked");
+    iconButton2->setObjectName("iconButton");
+    iconButton2->setIconID("icon-m-toolbar-send-email");
     iconButton2->setMaximumWidth(175);
 
     containerPolicy->addItem(iconButton2, Qt::AlignCenter);

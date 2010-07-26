@@ -111,3 +111,7 @@ MLabelStyle#video-title-label {
     background-image: ;
     background-color: black;
 }
+
+#iconButton {
+    text-color: black;
+}
