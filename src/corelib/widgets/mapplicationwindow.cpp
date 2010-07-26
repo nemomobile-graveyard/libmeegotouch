@@ -460,7 +460,8 @@ void MApplicationWindowPrivate::_q_updatePageExposedContentRect()
 void MApplicationWindowPrivate::openMenu()
 {
     Q_Q(MApplicationWindow);
-    if (navigationBar->isArrowIconVisible()) {
+    if (navigationBar->isArrowIconVisible() &&
+        (navigationBar->sceneWindowState() != MSceneWindow::Disappearing)) {
         menu->appear(q);
         escapeButtonPanel->setEnabled(false);
 

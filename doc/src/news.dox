@@ -3,6 +3,7 @@
 \section v02030 0.20.30
 
 - Fixed NB#175847: MPannableArea does not work inside an MApplicationPage
+- Fixed NB#181800: View menu can be invoked during the navigation bar's hiding animation
 
 \subsection New
 - MGridItem is deprecated, please use MContentItem, MBasicListItem, MAdvancedListItem, MDetailedListItem
