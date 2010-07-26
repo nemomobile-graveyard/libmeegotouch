@@ -1251,6 +1251,14 @@ MSliderView::~MSliderView()
     delete d_ptr;
 }
 
+void MSliderView::setGeometry(const QRectF &rect)
+{
+    MWidgetView::setGeometry(rect);
+
+    Q_D(MSliderView);
+    bool bigEnough  = rect.contains(d->controller->layout()->geometry());
+    d->controller->setFlag(QGraphicsItem::ItemClipsChildrenToShape, !bigEnough);
+}
 void MSliderView::updateData(const QList<const char *>& modifications)
 {
     MWidgetView::updateData(modifications);

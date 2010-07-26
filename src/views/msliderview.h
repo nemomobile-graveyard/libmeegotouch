@@ -72,6 +72,10 @@ public:
      */
     virtual ~MSliderView();
 
+    /* \internal */
+    virtual void setGeometry(const QRectF &rect);
+    /* \internal_end */
+
 protected:
     /*!
         \brief Updates MSliderView class instance when current style is changed.
