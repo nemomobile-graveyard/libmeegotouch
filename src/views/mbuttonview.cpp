@@ -82,9 +82,11 @@ bool MButtonViewPrivate::toggleState() const
 
 void MButtonViewPrivate::_q_applyQueuedStyleModeChange()
 {
+    Q_Q(MButtonView);
+
     if (queuedStyleModeChange) {
         queuedStyleModeChange = false;
-        refreshStyleMode();
+        q->applyStyle();
     }
 }
 
