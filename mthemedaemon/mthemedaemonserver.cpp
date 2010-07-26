@@ -145,11 +145,11 @@ void MThemeDaemonServer::clientDisconnected()
             bool removed = clientsThatHaveNotYetAppliedThemeChange.removeOne(client);
             delete client;
             
-            // check if the delayed theme change has been request and whether we can complete it now
-            if( removed && clientsThatHaveNotYetAppliedThemeChange.isEmpty() && delayedThemeChange ) {
-                mWarning("MThemeDaemonServer") << "Start delayed theme change due to disconnection of last pending application.";
-                delayedThemeChange = false;
-                themeChanged();
+            // finalize the theme change now if the disconnected client was 
+            //the last who had not replied to theme change request
+            if( removed && clientsThatHaveNotYetAppliedThemeChange.isEmpty() ) {
+                mWarning("MThemeDaemonServer") << "Finalize theme change due to disconnection of last pending application.";
+                finalizeThemeChange();
             }
         }
         socket->deleteLater();
@@ -345,12 +345,8 @@ void MThemeDaemonServer::themeChangeTimeout()
         clientsThatHaveNotYetAppliedThemeChange.clear();
     }
 
-    //if delayed theme change was requested, change it now
-    if( delayedThemeChange ) {
-        mWarning("MThemeDaemonServer") << "Start delayed theme change due to timeout.";
-        delayedThemeChange = false;
-        themeChanged();
-    }
+    mWarning("MThemeDaemonServer") << "Finalize theme change due to timeout.";
+    finalizeThemeChange();
 }
 
 void MThemeDaemonServer::localeChanged()
@@ -493,24 +489,7 @@ void MThemeDaemonServer::themeChangeApplied(MThemeDaemonClient *client,
     }
 
     if(clientsThatHaveNotYetAppliedThemeChange.isEmpty()) {
-        // all clients have applied the theme change, so we can now release the old pixmaps
-        // and inform everyone that theme change has been completed
-        qDeleteAll(pixmapsToDeleteWhenThemeChangeHasCompleted);
-        pixmapsToDeleteWhenThemeChangeHasCompleted.clear();
-
-        Packet themeChangeFinishedPacket(Packet::ThemeChangeCompletedPacket, 0);
-
-        foreach(MThemeDaemonClient * c, registeredClients.values()) {
-            client->themeChangeApplied();
-            c->stream() << themeChangeFinishedPacket;
-        }
-    
-        //if delayed theme change was requested, change it now
-        if( delayedThemeChange ) {
-            mWarning("MThemeDaemonServer") << "Start delayed theme change after receiving all the replies.";
-            delayedThemeChange = false;
-            themeChanged();
-        }
+        finalizeThemeChange();
     }
 }
 
@@ -553,5 +532,30 @@ void MThemeDaemonServer::themeDaemonStatus(MThemeDaemonClient *client,
 
     client->stream() << Packet(Packet::ThemeDaemonStatusPacket, sequenceNumber,
                                new ClientList(clientList));
+}
+
+void MThemeDaemonServer::finalizeThemeChange()
+{
+    //make sure all the clients have applied to the theme change request
+    if( clientsThatHaveNotYetAppliedThemeChange.isEmpty() ) {
+
+        //release the old pixmaps
+        qDeleteAll(pixmapsToDeleteWhenThemeChangeHasCompleted);
+        pixmapsToDeleteWhenThemeChangeHasCompleted.clear();
+
+        //inform everyone that theme change has been completed
+        Packet themeChangeFinishedPacket(Packet::ThemeChangeCompletedPacket, 0);
+        foreach(MThemeDaemonClient * c, registeredClients.values()) {
+            c->themeChangeApplied();
+            c->stream() << themeChangeFinishedPacket;
+        }
+
+        //if another theme change was already requested, start the change now
+        if( delayedThemeChange ) {
+            mWarning("MThemeDaemonServer") << "Starting delayed theme change.";
+            delayedThemeChange = false;
+            themeChanged();
+        }
+    }
 }
 

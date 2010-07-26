@@ -71,6 +71,8 @@ private:
 
     void themeDaemonStatus(MThemeDaemonClient *client, quint64 sequenceNumber) const;
 
+    void finalizeThemeChange();
+
 private:
     struct QueueItem
     {
