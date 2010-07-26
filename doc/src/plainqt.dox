@@ -11,9 +11,9 @@ This document targets established Qt developers who would like to use Qt to deve
 
 Qt is a cross platform development framework. So the same source code for a Qt application can be compiled on different operating systems without changes and without any custom code. As a result your application will visually integrate into the given environment no matter whether it's Linux, Windows or Mac OS X.
 
-Of course this is also true for Maemo 5 and MeeGo: So compiling your Qt desktop application on the Maemo plattform will result in an application that will come very close to the native look and feel: On Maemo 5 your application will mimic the theming and the habits of applications that are built on top of the Hildon framework. And on MeeGo it will emulate the appearance and the behavior of "native" MeeGoTouch applications.
+Of course this is also true for Maemo 5 and MeeGo: So compiling your Qt desktop application on the Maemo plattform will result in an application that will come very close to the native look and feel: On Maemo 5 your application will mimic the theming and the habits of applications that are built on top of the Hildon framework. And on MeeGo it will emulate the appearance and the behavior of "native" MeeGo Touch applications.
 
-However there are several cases where the mobile form factor and the philosophy behind MeeGoTouch should be kept in mind when developing a Qt application that is supposed to be used on the MeeGoTouch platform. To address these and to guarantee a good experience for your users here are a few recommendations:
+However there are several cases where the mobile form factor and the philosophy behind MeeGo Touch should be kept in mind when developing a Qt application that is supposed to be used on the MeeGo Touch platform. To address these and to guarantee a good experience for your users here are a few recommendations:
 
 
 \section  style  How Maemo 5 and MeeGo affect the look and feel of your application
@@ -21,7 +21,7 @@ However there are several cases where the mobile form factor and the philosophy 
 For both Maemo 5 and MeeGo your Qt application will adjust in terms of look and feel so that it will emulate the user interface of each platform:
 
 - The "Maemo 5" style emulates the appearance of the Gtk-based Hildon framework. The Maemo 5 style is included with the special version of Qt that is shipped together with the N900 device series.
-- The "MeeGo" style mimics the widgets and interaction that is typical for the Qt-based MeeGoTouch framework. The MeeGoTouch style is part of the libmeegotouch framework and is shipped as one of its packages.
+- The "MeeGo" style mimics the widgets and interaction that is typical for the Qt-based MeeGo Touch framework. The MeeGo Touch style is part of the libmeegotouch framework and is shipped as one of its packages.
 
 Both styles take theme changes automatically into account. But the style is only an approximation of what a truly native application would look like. So there might be slight differences in terms of look and behaviour compared to a "real" Maemo 5 or MeeGo application. These differences can be reduced by taking certain typical requirements of these platforms into account.
 
@@ -29,7 +29,7 @@ While the target framework and the implementations are different both styles sha
 
 Maemo5 and MeeGo Touch styles not only modify the theming but they also ensure that your application becomes finger usable and makes use of the default services and resources provided through each framework.
 
-Compared to other Qt styles the Maemo 5 and MeeGoTouch styles go way beyond simple widget styling. They have a significant impact on the way dialogs are shown:
+Compared to other Qt styles the Maemo 5 and MeeGo Touch styles go way beyond simple widget styling. They have a significant impact on the way dialogs are shown:
 
 - The style automatically follows theme changes on Maemo 5 or MeeGo.
 - Feedback and gesture support is automatically added.
@@ -54,8 +54,8 @@ or
 yourapp -style meegotouch
 \endcode
 
-Again note that the Maemo 5 style is only available as a part of the special Qt version that comes with Maemo 5 support. While the MeeGoTouch style is provided via the libmeegotouch framework.
-On both Maemo 5 and MeeGoTouch platform the platform style is used by default for plain Qt applications.
+Again note that the Maemo 5 style is only available as a part of the special Qt version that comes with Maemo 5 support. While the MeeGo Touch style is provided via the libmeegotouch framework.
+On both Maemo 5 and MeeGo Touch platform the platform style is used by default for plain Qt applications.
 
 If you want to change this style to a different style then you can either do this via the \c -style command line parameter or in your source code via the \c QStyle API. However in general this is not recommended since the default styles provided with Qt are not finger usable.
 
@@ -69,7 +69,7 @@ Taking a look at your plain Qt application there are in general two scenarios fo
 - You're developing a true crossplatform plain Qt application. Your application uses the very same source code to cover all platforms.
 - Or you're working on a plain Qt application that is specifically optimized for use on the Maemo or MeeGo platform (or on mobile devices in general).
 
-In either case the resulting user experience will most likely not match the quality of a true MeeGoTouch application. Nevertheless there's a set of recommendations we can provide. These recommendations can help you to come at least close and achieve a reasonable good user experience for your application:
+In either case the resulting user experience will most likely not match the quality of a true MeeGo Touch application. Nevertheless there's a set of recommendations we can provide. These recommendations can help you to come at least close and achieve a reasonable good user experience for your application:
 
 
 \subsection taskoriented Create a user interface that is tailored to the user's workflow
@@ -83,10 +83,10 @@ So "streamlining" the UI will not only help you to create a good user experience
 
 \subsection sizeindependent Make your application independent of resolution and available size
 
-The N900 running Maemo is small device. MeeGoTouch will support a range of devices with different screen sizes.
+The N900 running Maemo is small device. MeeGo Touch will support a range of devices with different screen sizes.
 So it's important that despite the high resolution it's possible to easily recognize all visual parts of the UI from a reasonable distance.
 For normal ready-made QWidgets (like \c QPushButton, \c QMenu, etc.) the style will take care of this automatically.
-Note that for the styling of widgets we use the properties defined in the MeeGoTouch CSS. Therefore in some cases (like for fonts and geometries) we don't use the properties provided by Qt itself.
+Note that for the styling of widgets we use the properties defined in the MeeGo Touch CSS. Therefore in some cases (like for fonts and geometries) we don't use the properties provided by Qt itself.
 
 For custom widgets and views you should avoid hardcoding sizes whenever possible. Instead it's better to
 
@@ -100,7 +100,7 @@ Toolbars should only contain the most important features that are necessary for 
 
 \subsection fingerusable Ensure that your application stays finger usable
 
-The MeeGoTouch framework allows navigation via the touch of your fingers.
+The MeeGo Touch framework allows navigation via the touch of your fingers.
 This means that you need to think carefully about the size of custom widgets. But it also means that all available functionality needs to be accessible via a "left mouse button click" or gestures.
 In general there are a few common pitfalls which result from the faulty assumption that the user is using a mouse pointer:
 
@@ -117,7 +117,7 @@ In general there are a few common pitfalls which result from the faulty assumpti
 
 \subsection avoidWidgets Avoid fancy widgets
 
-There are a few classes which don't get styled in the MeeGoTouch style or look out of place. Please try to avoid these:
+There are a few classes which don't get styled in the MeeGo Touch style or look out of place. Please try to avoid these:
 
 - \c QDial
 - \c QLCDNumber
@@ -167,9 +167,9 @@ There are a few widgets which are specific for the Maemo 5 platform
 Use of these widgets is discouraged since they will most likely not be part of the MeeGo Touch platform.
 
 
-\section API MeeGoTouch Qt style API
+\section API MeeGo Touch Qt style API
 
-There is an API to influence the style on MeeGoTouch. This is done via setting dynamic propertys and using litteral strings because we don't wan't to need to include any headers from MeeGoTouch or even link against any Meegotouch library, to keep the plain Qt application independent from the target platform.
+There is an API to influence the style on MeeGo Touch. This is done via setting dynamic propertys and using litteral strings because we don't wan't to need to include any headers from MeeGo Touch or even link against any Meegotouch library, to keep the plain Qt application independent from the target platform.
 
 If you want to disable styling for your own custom widget then you can do this via the dynamic property \c NoMStyle. For a custom widget instance "mywidget" it would look like this:
 
@@ -186,7 +186,7 @@ If you run into real problems with the style or if you want to completely disabl
     qApp->setProperty("NoMStyle", true);
 \endcode
 
-With the MeeGoTouch Qt style you can also disable some elements, added by the style, e.g. the statusbar or the navigation bar.
+With the MeeGo Touch Qt style you can also disable some elements, added by the style, e.g. the statusbar or the navigation bar.
 
 Disabling the statusbar:
 \code
@@ -231,12 +231,12 @@ Here are a few screen shots comparing the very same view of the same application
 \image html qtstyleexample-pizza-harmattan.png "Example application on MeeGo"
 
 
-\section  limitations Limitations of the Qt support compared to native MeeGoTouch applications
+\section  limitations Limitations of the Qt support compared to native MeeGo Touch applications
 
-Since MeeGoTouch and its widgets are based on \c QGraphicsView there are a few things that can't be emulated for plain \c QWidget based widgets. So these are features of MeeGoTouch which can not be supported by the maemo styles:
+Since MeeGo Touch and its widgets are based on \c QGraphicsView there are a few things that can't be emulated for plain \c QWidget based widgets. So these are features of MeeGo Touch which can not be supported by the maemo styles:
 
 - Orientation change for ready-made \c QWidgets (not possible on MeeGo). Orientation change notification for custom widgets can be accessed via the Qt Mobility framework.
-- Ready-made MeeGoTouch widget animations and effects (except for some common ones)
+- Ready-made MeeGo Touch widget animations and effects (except for some common ones)
 
 
 \section knownissues Known issues and pit falls
