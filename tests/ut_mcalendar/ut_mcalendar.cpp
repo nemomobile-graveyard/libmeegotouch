@@ -664,6 +664,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime()
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
 {
     QTest::addColumn<QString>("localeName");
+    QTest::addColumn<QString>("lcMessages");
+    QTest::addColumn<QString>("lcTime");
+    QTest::addColumn<QString>("lcNumeric");
+    QTest::addColumn<QString>("timeZone");
     QTest::addColumn<MLocale::CalendarType>("calType");
     QTest::addColumn<int>("year");
     QTest::addColumn<int>("month");
@@ -677,85 +681,213 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
     QTest::addColumn<QString>("timeLongResult");
     QTest::addColumn<QString>("timeFullResult");
 
+    QTest::newRow("21.7.2008_de_DE_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("de_DE") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.07.08"
+        << "21.07.2008"
+        << "21. Juli 2008"
+        << "Montag, 21. Juli 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "14:31:00 Osteuropäische Sommerzeit";
     QTest::newRow("21.7.2008_fi_FI_Gregorian")
-            << QString("fi_FI")
-            << MLocale::GregorianCalendar
-            << 2008
-            << 7
-            << 21
-            << "21.7.2008"
-            << "21.7.2008"
-            << "21. heinäkuuta 2008"
-            << "maanantaina 21. heinäkuuta 2008"
-            << "14.31"
-            << "14.31.00"
-            << "14.31.00 UTC+3.00"
-            << "14.31.00 Itä-Euroopan kesäaika";
-
+        << QString("de_DE")
+        << QString("de_DE")
+        << QString("fi_FI") // only this matters
+        << QString("de_DE")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.7.2008"
+        << "21.7.2008"
+        << "21. heinäkuuta 2008"
+        << "maanantaina 21. heinäkuuta 2008"
+        << "14.31"
+        << "14.31.00"
+        << "14.31.00 UTC+3.00"
+        << "14.31.00 Itä-Euroopan kesäaika";
     QTest::newRow("21.7.2008_en_GB_Gregorian")
-            << QString("en_GB")
-            << MLocale::GregorianCalendar
-            << 2008
-            << 7
-            << 21
-            << "21/07/2008"
-            << "21 Jul 2008"
-            << "21 July 2008"
-            << "Monday, 21 July 2008"
-            << "14:31"
-            << "14:31:00"
-            << "14:31:00 EEST"
-            << "14:31:00 Eastern European Summer Time";
-
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("en_GB") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21/07/2008"
+        << "21 Jul 2008"
+        << "21 July 2008"
+        << "Monday, 21 July 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 EEST"
+        << "14:31:00 Eastern European Summer Time";
     QTest::newRow("21.7.2008_nn_NO_Gregorian")
-            << QString("nn_NO")
-            << MLocale::GregorianCalendar
-            << 2008
-            << 7
-            << 21
-            << "21.07.08"
-            << "21. jul. 2008"
-            << "21. juli 2008"
-            << "måndag 21. juli 2008"
-            << "14:31"
-            << "14:31:00"
-            << "14:31:00 GMT+03:00"
-            << "kl. 14:31:00 austeuropeisk sommartid";
-
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("nn_NO") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.07.08"
+        << "21. jul. 2008"
+        << "21. juli 2008"
+        << "måndag 21. juli 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "kl. 14:31:00 austeuropeisk sommartid";
     QTest::newRow("21.7.2008_nb_NO_Gregorian")
-            << QString("nb_NO")
-            << MLocale::GregorianCalendar
-            << 2008
-            << 7
-            << 21
-            << "21.07.08"
-            << "21. juli 2008"
-            << "21. juli 2008"
-            << "mandag 21. juli 2008"
-            << "14:31"
-            << "14:31:00"
-            << "14:31:00 GMT+03:00"
-            << "kl. 14:31:00 østeuropeisk sommertid";
-
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("nb_NO") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.07.08"
+        << "21. juli 2008"
+        << "21. juli 2008"
+        << "mandag 21. juli 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "kl. 14:31:00 østeuropeisk sommertid";
     QTest::newRow("21.7.2008_no_NO_Gregorian")
-            << QString("no_NO")
-            << MLocale::GregorianCalendar
-            << 2008
-            << 7
-            << 21
-            << "21.07.08"
-            << "21. juli 2008"
-            << "21. juli 2008"
-            << "mandag 21. juli 2008"
-            << "14:31"
-            << "14:31:00"
-            << "14:31:00 GMT+03:00"
-            << "kl. 14:31:00 østeuropeisk sommertid";
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("no_NO") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21.07.08"
+        << "21. juli 2008"
+        << "21. juli 2008"
+        << "mandag 21. juli 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "kl. 14:31:00 østeuropeisk sommertid";
+    QTest::newRow("21.7.2008_ja_JP_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ja_JP") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "08/07/21"
+        << "2008/07/21"
+        << "2008年7月21日"
+        << "2008年7月21日月曜日"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "14時31分00秒 東欧夏時間";
+    QTest::newRow("21.7.2008_ja_JP_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ja_JP") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "08/07/21"
+        << "2008/07/21"
+        << "2008年7月21日"
+        << "2008年7月21日月曜日"
+        << "14:31"
+        << "14:31:00"
+        << "14:31:00 GMT+03:00"
+        << "14時31分00秒 東欧夏時間";
+    QTest::newRow("21.7.2008_zh_CN_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("zh_CN") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "08-7-21"
+        << "2008-7-21"
+        << "2008年7月21日"
+        << "2008年7月21日星期一"
+        << "下午2:31"
+        << "下午2:31:00"
+        << "格林尼治标准时间+0300下午2时31分00秒"
+        << "东欧夏令时间下午2时31分00秒";
+    QTest::newRow("21.7.2008_ar_EG_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("ar_EG") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "٢١‏/٧‏/٢٠٠٨"
+        << "٢١‏/٠٧‏/٢٠٠٨"
+        << "٢١ يوليو، ٢٠٠٨"
+        << "الإثنين، ٢١ يوليو، ٢٠٠٨"
+        << "٢:٣١ م"
+        << "٢:٣١:٠٠ م"
+        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م"
+        << "جرينتش+٠٣:٠٠ ٢:٣١:٠٠ م";
+    QTest::newRow("21.7.2008_th_TH_Gregorian")
+        << QString("fi_FI")
+        << QString("fi_FI")
+        << QString("th_TH") // only this matters
+        << QString("fi_FI")
+        << "Europe/Helsinki"
+        << MLocale::GregorianCalendar
+        << 2008
+        << 7
+        << 21
+        << "21/7/2008"
+        << "21 ก.ค. 2008"
+        << "21 กรกฎาคม 2008"
+        << "วันจันทร์ที่ 21 กรกฎาคม ค.ศ. 2008"
+        << "14:31"
+        << "14:31:00"
+        << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00"
+        << "14 นาฬิกา 31 นาที 00 วินาที GMT+03:00";
 }
 
 void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
 {
     QFETCH(QString, localeName);
+    QFETCH(QString, lcMessages);
+    QFETCH(QString, lcTime);
+    QFETCH(QString, lcNumeric);
+    QFETCH(QString, timeZone);
     QFETCH(MLocale::CalendarType, calType);
     QFETCH(int, year);
     QFETCH(int, month);
@@ -770,6 +902,10 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
     QFETCH(QString, timeFullResult);
 
     MLocale locale(localeName);
+    locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
+    locale.setCategoryLocale(MLocale::MLcTime, lcTime);
+    locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
+    MCalendar::setSystemTimeZone("Europe/Helsinki");
     MCalendar mcal(calType);
     mcal.setDate(year, month, day);
     mcal.setTime(14, 31, 0);
@@ -792,30 +928,59 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
             ++dateType) {
         for (unsigned timeType = MLocale::TimeNone; timeType <= MLocale::TimeFull;
                 ++timeType) {
-            QString result;
+            QString expectedResult;
             if (dateType == MLocale::DateNone)
-                result = timeResults[timeType];
+                expectedResult = timeResults[timeType];
             else if (timeType == MLocale::TimeNone)
-                result = dateResults[dateType];
+                expectedResult = dateResults[dateType];
+            else if (locale.categoryName(MLocale::MLcTime) == "ja_JP"
+                     && calType == MLocale::GregorianCalendar
+                     && (dateType == MLocale::DateLong
+                         || dateType == MLocale::DateFull))
+                expectedResult = dateResults[dateType] + timeResults[timeType];
+            else if (locale.categoryName(MLocale::MLcTime) == "zh_CN"
+                     && calType == MLocale::GregorianCalendar
+                     && (dateType == MLocale::DateLong
+                         || dateType == MLocale::DateFull))
+                expectedResult = dateResults[dateType] + timeResults[timeType];
+            else if(locale.categoryName(MLocale::MLcTime) == "th_TH")
+                expectedResult = dateResults[dateType] + ", " + timeResults[timeType];
             else
-                result = dateResults[dateType] + ' ' + timeResults[timeType];
-            qDebug() << "dateType" << dateType << "timeType" << timeType
-                     << "result" << result;
+                expectedResult = dateResults[dateType] + ' ' + timeResults[timeType];
+            QTextStream debugStream(stderr);
+            debugStream.setCodec("UTF-8");
+            debugStream
+                << "language " << localeName
+                << " lc_time " << lcTime
+                << " dateType " << dateType << " timeType " << timeType
+                << " format string |"
+                << locale.icuFormatString(
+                    static_cast<MLocale::DateType>(dateType),
+                    static_cast<MLocale::TimeType>(timeType),
+                    calType)
+                << "| actual result |"
+                << locale.formatDateTime(
+                    mcal,
+                    static_cast<MLocale::DateType>(dateType),
+                    static_cast<MLocale::TimeType>(timeType))
+                << "| expected result |" << expectedResult << "|\n";
+#if 1
             QCOMPARE(
                 locale.formatDateTime(mcal,
                                       static_cast<MLocale::DateType>(dateType),
                                       static_cast<MLocale::TimeType>(timeType)),
-                result);
+                expectedResult);
             QCOMPARE(
                 locale.formatDateTime(dateTime,
                                       static_cast<MLocale::DateType>(dateType),
                                       static_cast<MLocale::TimeType>(timeType),
                                       calType),
-                result);
+                expectedResult);
             if (dateType == MLocale::DateLong
                 && timeType == MLocale::TimeLong) {
-                QCOMPARE(locale.formatDateTime(dateTime, calType), result);
+                QCOMPARE(locale.formatDateTime(dateTime, calType), expectedResult);
             }
+#endif
         }
     }
 }
@@ -2195,7 +2360,7 @@ void Ut_MCalendar::testFormatDateTimeICU()
     QTextStream debugStream(stderr);
     debugStream.setCodec("UTF-8");
     debugStream << "format: " << format
-                << "actual result: " << locale.formatDateTimeICU(mcal, format)
+                << " actual result: " << locale.formatDateTimeICU(mcal, format)
                 << " expected result: " << result << "\n";
 
     QCOMPARE(locale.formatDateTimeICU(mcal, format), result);
