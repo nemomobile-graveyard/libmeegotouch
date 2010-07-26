@@ -237,8 +237,9 @@ Since MeeGoTouch and its widgets are based on \c QGraphicsView there are a few t
 - Ready-made MeeGoTouch widget animations and effects (except for some common ones)
 
 
-\section API Known issues and pit falls
+\section knownissues Known issues and pit falls
 
 - Be careful with top level widgets: The style takes care of window management. To accomplish this all top-level windows get reparented into a new layout. This breaks part of Qt's API promise: Windows that are created by the application developer can't later on be indentified or accessed via methods such as \c QWidget::window() or \c QWidget::activeWindow(). 
 
 - "Stacked Windows": We don't have support for the concept of "stacked windows" yet. This will be added later.
+*/
