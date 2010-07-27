@@ -87,6 +87,7 @@ public:
      * Creates a new uninitialized representation of a notification group.
      * This constructor should only be used for populating the notification group
      * list from D-Bus structures.
+     * \endcond
      */
     MNotificationGroup();
 
