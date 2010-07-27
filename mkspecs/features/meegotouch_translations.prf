@@ -69,7 +69,7 @@ isEmpty(LRELEASE_OPTIONS) {
     out = $$system($$targetPath($$[QT_INSTALL_BINS]/lrelease) -help)
     # the second parameter of contains can be a regexp!
     contains(out, .*markuntranslated.*) {
-    LRELEASE_OPTIONS += -markuntranslated '!!\ '
+    LRELEASE_OPTIONS += -markuntranslated '!!\\ '
     }
 }
 isEmpty(LUPDATE_OPTIONS) {
