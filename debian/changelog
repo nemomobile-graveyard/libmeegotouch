@@ -1,3 +1,12 @@
+libmeegotouch (0.20.31-1) unstable; urgency=low
+
+  * Fixes: NB#182098 - List with separators on renders incorrectly
+  * Fixes: NB#181747 - Defined margin of a MButton won't work in right-to-left mode
+  * Fixes: NB#181800 - View menu can be invoked during the navigation bar's hiding animation.
+  * Fixes: NB#175847 - MPannableArea does not work inside an MApplicationPage
+ 
+ -- Sergiy Dubovik <sergiy.dubovik@nokia.com>  Tue, 27 Jul 2010 15:28:41 +0300
+
 libmeegotouch (0.20.30~1) unstable; urgency=low
 
   * Fixes: NB#181556 - The spinner in theme applet does not disappear when the theme change finished
