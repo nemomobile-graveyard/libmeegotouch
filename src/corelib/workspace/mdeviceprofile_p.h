@@ -34,6 +34,9 @@ public:
 
     bool load(const QString& filename);
 
+    void autodetection();
+    bool hasStatusbarProvider();
+
     QSize resolution;
     QSize pixelsPerInch;
     bool showStatusBar;

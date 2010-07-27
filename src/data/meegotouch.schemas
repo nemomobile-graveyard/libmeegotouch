@@ -99,5 +99,16 @@
         <long></long>
       </locale>
     </schema>
+    <schema>
+      <key>/schemas/meegotouch/target/name</key>
+      <applyto>/meegotouch/target/name</applyto>
+      <owner>libmeegotouch</owner>
+      <type>string</type>
+      <default>Default</default>
+      <locale name="C">
+        <short>Is used to select target configuration file by Meego Touch applications</short>
+        <long></long>
+      </locale>
+    </schema>
   </schemalist>
 </gconfschemafile>

@@ -22,6 +22,12 @@
 #include <QSettings>
 #include <QFile>
 #include <QDir>
+#include <QDesktopWidget>
+
+#ifdef HAVE_DBUS
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#endif
 
 #include "mdebug.h"
 #include "mdeviceprofile.h"
@@ -30,22 +36,47 @@
 #include "mapplication.h"
 #include "mcomponentdata.h"
 #include "mcomponentdata_p.h"
+#include "mgconfitem.h"
+
+namespace{
+#ifdef HAVE_DBUS
+    const QString PIXMAP_PROVIDER_DBUS_SERVICE = "com.meego.core.MStatusBar";
+#endif
+}
+
 
 MDeviceProfilePrivate::MDeviceProfilePrivate()
     : q_ptr(0)
 {
-    QString filename = M_INSTALL_SYSCONFDIR "/meegotouch/devices.conf";
-
+    QString filename;
+    QString deviceName = MApplication::deviceName();
 #ifdef Q_OS_WIN
     QDir appDir(QCoreApplication::applicationDirPath());
     appDir.cdUp();
-    appDir.cd("etc");
+    appDir.cd("usr");
+    appDir.cd("share");
     appDir.cd("meegotouch");
-    filename = appDir.path().append("/devices.conf" );
-#endif
+    appDir.cd("targets");
+    if(deviceName.isEmpty())
+        filename = appDir.path().append("Default.conf");
+    else
+        filename = appDir.path().append(deviceName).append(".conf");
+#else //!Q_OS_WIN
+    if (!deviceName.isEmpty()){
+        filename = M_TARGETS_CONF_DIR + QString("/") + deviceName + ".conf";
 
-    if(!load(filename)) {
-        qFatal("Failed to load device profile '%s'", qPrintable(filename));
+    } else {
+#ifdef HAVE_GCONF
+        const QString defaultTarget("/meegotouch/target/name");
+        MGConfItem filenameItem(defaultTarget);
+        filename =  M_TARGETS_CONF_DIR + QString("/") + filenameItem.value().toString() + ".conf";
+#endif //HAVE_GCONF
+    }
+#endif //Q_OS_WIN
+
+    if (!load(filename)) {
+        qCritical("Failed to load device profile '%s'", qPrintable(filename));
+        autodetection();
     }
 }
 
@@ -55,44 +86,67 @@ MDeviceProfilePrivate::~MDeviceProfilePrivate()
 
 bool MDeviceProfilePrivate::load(const QString& filename)
 {
-    QString device = MApplication::deviceName();
-    if(device.isEmpty())
-        device = "Default";
-
-    if(!QFile::exists(filename))
+    if (!QFile::exists(filename))
         return false;
 
     QSettings settings(filename, QSettings::IniFormat);
-    if(settings.status() != QSettings::NoError)
+    if (settings.status() != QSettings::NoError)
         return false;
 
-    resolution.setWidth(settings.value(device + "/resolutionX", 0).toInt());
-    resolution.setHeight(settings.value(device + "/resolutionY", 0).toInt());
-    pixelsPerInch.setWidth(settings.value(device + "/ppiX", 0).toInt());
-    pixelsPerInch.setHeight(settings.value(device + "/ppiY", 0).toInt());
-    showStatusBar=settings.value(device+"/showStatusBar",false).toBool();
+    if (settings.value("/resolution/X").toString() == "autodetect")
+        resolution.setWidth(QApplication::desktop()->screenGeometry().size().width());
+    else
+        resolution.setWidth(settings.value("/resolution/X", 0).toInt());
 
-    QStringList orientationsForDevOpen = settings.value(device + "/allowedOrientationsOnKeyboardOpen",
-                                           QStringList()).toStringList();
-    if (orientationsForDevOpen.contains("0"))
-        supportedOrientationsForKeyboardOpen << M::Angle0;
-    if (orientationsForDevOpen.contains("90"))
-        supportedOrientationsForKeyboardOpen << M::Angle90;
-    if (orientationsForDevOpen.contains("180"))
-        supportedOrientationsForKeyboardOpen << M::Angle180;
-    if (orientationsForDevOpen.contains("270"))
-        supportedOrientationsForKeyboardOpen << M::Angle270;
+    if (settings.value("/resolution/Y").toString() == "autodetect")
+        resolution.setHeight(QApplication::desktop()->screenGeometry().size().height());
+    else
+        resolution.setHeight(settings.value("/resolution/Y", 0).toInt());
 
-    QStringList orientationsForDevClosed = settings.value(device + "/allowedOrientationsOnKeyboardClosed",
-                                           QStringList()).toStringList();
-    if (orientationsForDevClosed.contains("0"))
-        supportedOrientationsForKeyboardClosed << M::Angle0;
-    if (orientationsForDevClosed.contains("90"))
-        supportedOrientationsForKeyboardClosed << M::Angle90;
-    if (orientationsForDevClosed.contains("180"))
-        supportedOrientationsForKeyboardClosed << M::Angle180;
-    if (orientationsForDevClosed.contains("270"))
-        supportedOrientationsForKeyboardClosed << M::Angle270;
+    if (settings.value("/ppi/X").toString() == "autodetect")
+        pixelsPerInch.setWidth(QApplication::desktop()->physicalDpiX());
+    else
+        pixelsPerInch.setWidth(settings.value("/ppi/X", 0).toInt());
+
+    if (settings.value("/ppi/Y") == "autodetect")
+        pixelsPerInch.setHeight(QApplication::desktop()->physicalDpiY());
+    else
+        pixelsPerInch.setHeight(settings.value("/ppi/Y", 0).toInt());
+
+    if (settings.value("/other/showStatusBar").toString() == "autodetect")
+        showStatusBar = hasStatusbarProvider();
+    else
+        showStatusBar=settings.value("/other/showStatusBar",false).toBool();
+
+    if (settings.value("/allowedOrientations/keyboardOpen").toString() == "autodetect"){
+        supportedOrientationsForKeyboardClosed << M::Angle0 << M::Angle90 << M::Angle180 << M::Angle270;
+    } else {
+        QStringList orientationsForDevOpen = settings.value("/allowedOrientations/keyboardOpen",
+                                                            QStringList()).toStringList();
+        if (orientationsForDevOpen.contains("0"))
+            supportedOrientationsForKeyboardOpen << M::Angle0;
+        if (orientationsForDevOpen.contains("90"))
+            supportedOrientationsForKeyboardOpen << M::Angle90;
+        if (orientationsForDevOpen.contains("180"))
+            supportedOrientationsForKeyboardOpen << M::Angle180;
+        if (orientationsForDevOpen.contains("270"))
+            supportedOrientationsForKeyboardOpen << M::Angle270;
+    }
+
+    if (settings.value("/allowedOrientations/keyboardOpen", "").toString() == "autodetect"){
+        supportedOrientationsForKeyboardOpen << M::Angle0 << M::Angle90 << M::Angle180 << M::Angle270;
+    } else {
+        QStringList orientationsForDevClosed = settings.value("/allowedOrientations/keyboardClosed",
+                                                              QStringList()).toStringList();
+        if (orientationsForDevClosed.contains("0"))
+            supportedOrientationsForKeyboardClosed << M::Angle0;
+        if (orientationsForDevClosed.contains("90"))
+            supportedOrientationsForKeyboardClosed << M::Angle90;
+        if (orientationsForDevClosed.contains("180"))
+            supportedOrientationsForKeyboardClosed << M::Angle180;
+        if (orientationsForDevClosed.contains("270"))
+            supportedOrientationsForKeyboardClosed << M::Angle270;
+    }
 
     return true;
 }
@@ -157,4 +211,27 @@ bool MDeviceProfile::orientationAngleIsSupported(M::OrientationAngle angle, bool
         return d->supportedOrientationsForKeyboardOpen.contains(angle);
     else
         return d->supportedOrientationsForKeyboardClosed.contains(angle);
+}
+
+void MDeviceProfilePrivate::autodetection()
+{
+    QRect screenRect = QApplication::desktop()->screenGeometry();
+    resolution = screenRect.size();
+
+    pixelsPerInch.setHeight(QApplication::desktop()->physicalDpiY());
+    pixelsPerInch.setWidth(QApplication::desktop()->physicalDpiX());
+
+    showStatusBar = hasStatusbarProvider();
+
+    supportedOrientationsForKeyboardClosed << M::Angle0 << M::Angle90 << M::Angle180 << M::Angle270;
+    supportedOrientationsForKeyboardOpen << M::Angle0 << M::Angle90 << M::Angle180 << M::Angle270;
+}
+
+bool MDeviceProfilePrivate::hasStatusbarProvider()
+{
+#ifdef HAVE_DBUS
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(PIXMAP_PROVIDER_DBUS_SERVICE))
+        return true;
+#endif
+    return false;
 }

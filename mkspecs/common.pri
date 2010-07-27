@@ -77,6 +77,9 @@ include($${M_BUILD_TREE}/mkspecs/features/meegotouch_defines.prf)
     # M_BINARY_SHADERS_DIR defines the location of precompiled shader programs
     DEFINES += M_SHADER_SOURCE_DIR=\\\"\"$$M_SHADER_SOURCE_DIR\"\\\"
     DEFINES += M_SHADER_BINARY_DIR=\\\"\"$$M_SHADER_BINARY_DIR\"\\\"
+
+    # M_TARGETS_CONF_DIR defines the location of target device config files
+    DEFINES += M_TARGETS_CONF_DIR=\\\"\"$$M_TARGETS_CONF_DIR\"\\\"
 }
 
 unix {

@@ -58,6 +58,8 @@ unix|win32 {
 
     M_SHADER_SOURCE_DIR = $$M_INSTALL_DATA/meegotouch/shaders
     M_SHADER_BINARY_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch/shaders
+
+    M_TARGETS_CONF_DIR = $$M_INSTALL_DATA/meegotouch/targets
 }
 
 mac {
@@ -83,6 +85,8 @@ mac {
 
     M_SHADER_SOURCE_DIR = $$M_INSTALL_DATA/meegotouch/shaders
     M_SHADER_BINARY_DIR = $$M_INSTALL_LOCALSTATE/cache/meegotouch/shaders
+
+    M_TARGETS_CONF_DIR = $$M_INSTALL_DATA/meegotouch/targets
 }
 
 win32 {

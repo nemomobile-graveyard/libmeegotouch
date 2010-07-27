@@ -22,8 +22,8 @@ contains(DEFINES, HAVE_GCONF) {
 
 #install device configuration file
 devices.CONFIG += no_check_exist
-devices.files = $${IN_PWD}/data/devices.conf
-devices.path = $$M_INSTALL_SYSCONF/meegotouch
+devices.files = $${IN_PWD}/data/targets/*.conf
+devices.path = $${M_TARGETS_CONF_DIR}
 INSTALLS += devices
 
 # install MeeGo Touch feature files
