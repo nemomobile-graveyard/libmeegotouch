@@ -642,10 +642,17 @@ meegotouchcore
 meegotouchsettings
 "
 
+# make sure the directory exists
+if [ ! -d $MEEGOTOUCH_PC_DIR ]; then
+    mkdir -p $MEEGOTOUCH_PC_DIR
+fi
+
 for i in $MEEGOTOUCH_PC_FILES
 do
    pc_file="$MEEGOTOUCH_PC_DIR/$i.pc"
-   cat "$pc_file.in" \
+   pc_in="$relpath/src/data/$i.pc.in"
+
+   cat "$pc_in" \
    | sed -e "s,@@M_UNIX_INSTALL_PREFIX@@,$M_INSTALL_PREFIX,g" \
    > "$pc_file.tmp"
 
