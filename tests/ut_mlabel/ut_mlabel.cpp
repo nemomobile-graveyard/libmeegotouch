@@ -184,6 +184,8 @@ void Ut_MLabel::testLayoutDirection_data()
 
 void Ut_MLabel::testLayoutDirection()
 {
+    QSKIP("Wait for issue in bug 175685 to be resolved", SkipSingle);
+
     QFETCH(QString, text);
     label->setText(text);
     QVERIFY(text == label->text());
