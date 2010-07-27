@@ -4,6 +4,11 @@ This document explains, step-by-step, how to create a simple MeeGo Touch applica
 Knowledge of the basics of Qt framework, such as QObject and its signals and slots mechanism, is recommended.
 On the other hand, even though MeeGo Touch framework is built on top of Qt's Graphics Framework (QGraphicsView, QGraphicsScene, QGraphicsItem, etc) no prior knowledge of it is needed.
 
+The complete source code of the finished "Music Catalogue" example application can be found in the following location:
+\verbatim
+libmeegotouch/examples/tutorial_music_catalogue
+\endverbatim
+
 \section mapplication Application class
 
 Let's start by creating a new directory for our tutorial application and creating its <code>main.cpp</code> file. 
@@ -69,10 +74,285 @@ With the addition of the application page our <code>main.cpp</code> should now l
 
 Now you should be able to see the title of your page being displayed in the navigation bar and the "Hello World!" text below it. You can also try to pan the page to see what happens. Since the text fits within the screen boundaries the page bounces back to its original position after each panning gesture.
 
+\image html "hello_world_ready.jpg" "\"Hello World!\" application (placeholder image)"
+
 This is the minimal code to get a "Hello World!" MeeGo Touch application working.
 
-\section whereToGoFromHere Where to go from here
-
+\subsection mapplicationpage_furtherreading Further reading
 Understand the \subpage sceneandscenewindows "MeeGo Touch scene and its scene windows".
+
+\section pagenavigation Navigating between pages
+
+A MeeGo Touch application can have several pages. An action done in a page may programatically trigger the appearance of a new one, which will cause the current one to disappear as only one page can be displayed at any given time.
+
+Navigation between pages is most commonly done from a main page to child/sub pages, in a hierarchical fashion. This navigational pattern is known as "Drill Down".
+
+To showcase this navigational pattern we will modify our "Hello World!" application to emulate a simple Music Catalogue app.
+
+\image html "music_catalogue_navigation.jpg" "Navigational pattern of our \"Music Catalogue\" application (placeholder image)"
+
+From the figure above you can see that we have three different pages (from left to right): Main page, artist page and album page.
+
+Our application start by showing an application window with our main page appearing in it. That's how our <code>main.cpp</code> will look like:
+
+\include tutorial_music_main.cpp
+
+We don't have to worry about deleting <code>mainPage</code> later since the <code>appear()</code> call transfers the ownership of the page to the underlying scene.
+
+For an implementation of <code>fillOutData()</code> that adds some hardcoded content check \subpage tutorialMusicFillOutData "here".
+
+Our data classes in <code>data.h</code>:
+
+\include tutorial_music_data.h
+
+\subsection musicMainPage MainPage
+
+Our <code>MainPage</code> is a specialization of <code>MApplicationPage</code>. It takes as a parameter in its constructor the list of artists and it displays then as a list of buttons. When an artist's button gets clicked, a new page showing his information appears.
+
+\image html "music_mainpage.jpg" "Main page of our \"Music Catalogue\" application (placeholder image)"
+
+\include tutorial_music_mainpage.cpp
+\include tutorial_music_mainpage.h
+
+\subsection musicArtistPage ArtistPage
+
+The <code>ArtistPage</code> is very similar to MainPage. It takes an <code>Artist</code> object and displays his albums as buttons. When an album's button gets clicked a new page showing the album appears.
+
+\include tutorial_music_artistpage.cpp
+\include tutorial_music_artistpage.h
+
+\subsection musicAlbumPage AlbumPage
+
+<code>AlbumPage</code> is our last and innermost page, navigation-wise. It takes an <code>Album</code> object and displays its cover art, artist and song list.
+
+\image html "music_albumpage.jpg" "Album page of our \"Music Catalogue\" application (placeholder image)"
+
+\include tutorial_music_albumpage.cpp
+\include tutorial_music_albumpage.h
+
+\subsection musicCompiling Compiling
+
+Update your project file with all those new sources and headers:
+
+\code
+HEADERS += albumpage.h data.h mainpage.h artistpage.h
+SOURCES += main.cpp mainpage.cpp artistpage.cpp albumpage.cpp
+\endcode
+
+Regenerate the build script
+
+\code
+$ qmake
+\endcode
+
+And build it again.
+
+\code
+$ make
+\endcode
+
+\subsection pagenavigation_furtherreading Further reading
+
+For our lists we used MButtons in a vertical QGraphicsLayout. This approach is straightforward but if our lists had hundreds or even thousands of items we would suffer significant perfomance issues, to say the least. For those cases MList should be used. Its usage is not as simple as what we did but it gracefully handles lists of any size. Read MList documentation and refactor the "Music Catalogue" example to use MList.
+
+\section screenOrientation Dealing with different screen orientations (portrait vs. landscape)
+
+In MeeGo Touch, the GUI can be rotated to four different angles in the screen (0, 90, 180 and 270 degrees clockwise). Angles 0 and 180 are landscape (width larger than height), 90 and 270 are portrait (height larger than width).
+
+When changing from a landscape to a portrait orientation angle and vice-versa the available space for the GUI can change significantly (e.g., from being a broad page to be a very narrow one). Because of that, a page might need different layouts for portrait and landscape so that it looks nice and is usable in any orientation. To easily achieve that, MeeGo Touch provides the class MLayout.
+
+Unlike a regular QGraphicsLayout where you add items directly to it, in MLayout items are added to layout policies and then those policies are set to specific orientations of a MLayout (i.e. the landscape layout policy and the portrait layout policy of an MLayout).
+
+Now let's modify the AlbumPage of our Music Catalogue application to make it use a vertical layout when in portrait and a horizontal one when in landscape, like shown in the figure below:
+
+\image html "music_albumpage_layout_orientations.jpg" "Different layouts for the AlbumPage according to the screen orientation (placeholder image)"
+
+To achieve this we only have to modify the implementation of AlbumPage::createContent(). Instead of having all elements (cover art, artist name and song list) in a single layout we will have two separate sub-layouts: one holding the cover art and artist name, the other holding the song list. When in landscape orientation the two sub-layouts will be arranged side-by-side and in portrait orientation they will be on top of each other.
+
+\include tutorial_orientations_albumpage.cpp
+
+\subsection screenOrientation_furtherreading Further reading
+
+MeeGo Touch also provides methods to query and set the GUI orientation as well as signals that get emitted whenever the orientation changes. Check MWindow and MSceneManager documentation.
+
+\section animations Animations
+
+Properties of graphical items can be easily animated using QPropertyAnimation class. To exemplify this let's animate the cover art image of our album page by making it fade in after the AlbumPage gets displayed.
+
+When a page finishes appearing it emits the signal <code>appeared()</code>. What we will do is create a slot called <code>fadeInAlbumCover()</code> that we will connect to the <code>appeared()</code> signal of our <code>AlbumPage</code> class.
+
+That's the implementation of our <code>fadeInAlbumCover()</code> slot:
+\code
+#include <QPropertyAnimation>
+
+...
+
+void AlbumPage::fadeInAlbumCover()
+{
+    QPropertyAnimation *fadeInAnimation = new QPropertyAnimation;
+    fadeInAnimation->setTargetObject(albumCover);
+    fadeInAnimation->setPropertyName("opacity");
+    fadeInAnimation->setStartValue(0.0);
+    fadeInAnimation->setEndValue(1.0);
+    fadeInAnimation->setDuration(1000.0);
+    fadeInAnimation->start(QAbstractAnimation::DeleteWhenStopped);
+}
+\endcode
+It will animate the opacity property of <code>albumCover</code> from 0.0 (fully transparent) to 1.0 (fully opaque) in one second (1000 milliseconds).
+
+<code>fadeInAlbumCover()</code> slot is declared in <code>albumpage.h</code> in the following way:
+\code
+class AlbumPage : public MApplicationPage {
+   ...
+private slots:
+    void fadeInAlbumCover();
+   ...
+};
+\endcode
+
+Note that <code>albumCover</code> has to be made a class variable of AlbumPage instead of an internal variable of <code>AlbumPage::createContent()</code> so that <code>AlbumPage::fadeInAlbumCover()</code> can access it.
+
+Now the only thing left is connecting the <code>appeared()</code> signal to our new <code>fadeInAlbumCover()</code> slot:
+
+\code
+AlbumPage::AlbumPage(const Album *album, QGraphicsItem *parent)
+    : MApplicationPage(parent), album(album), albumCover(0)
+{
+    ...
+    connect(this, SIGNAL(appeared()), SLOT(fadeInAlbumCover()));
+}
+\endcode
+
+
+\subsection animations_furtherreading Further reading
+
+Multiple animations can be put together into paralallel or sequential animation groups. Animation groups can then be combined to form complex animation hierarchies. On top of that, MParallelAnimationGroup adds styling support for QParallelAnimationGroup, meaning that your animation classes can expose attributes through MeeGo Touch's theming system. Check put-tutorial-on-animations-here for details.
+
+\section gestures Multi-touch screens and Gestures
+
+MeeGo Touch supports multi-touch screens. Therefore interactions such as pinching gestures to zoom in and out graphical elements can be easily implemented in MeeGo Touch applications.
+
+As an example on how gestures programming work, we will make the album cover image in the AlbumPage of our Music Catalogue application support pinching gestures. By pinching the cover image you will be able to zoom it in and out.
+
+The first step is to tell the framework that AlbumPage is interested in getting touch events and to subscribe it to receive pinching gestures:
+
+\code
+AlbumPage::AlbumPage(const Album *album, QGraphicsItem *parent)
+    : MApplicationPage(parent), album(album), albumCover(0)
+{
+    ...
+    setAcceptTouchEvents(true);
+    grabGesture(Qt::PinchGesture);
+}
+\endcode
+
+Then we need to reimplement the virtual method <code>MWidget::pinchGestureEvent()</code> in order to handle the pinching gestures.
+
+Addition to <code>albumpage.h</code>:
+\code
+
+class QGestureEvent;
+class QPinchGesture;
+
+class AlbumPage : public MApplicationPage {
+   ...
+protected:
+    // From MWidget
+    virtual void pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture);
+   ...
+};
+\endcode
+
+Addition to <code>albumpage.cpp</code>:
+\code
+
+#include <QGestureEvent>
+#include <QPinchGesture>
+
+...
+
+void AlbumPage::pinchGestureEvent(QGestureEvent *event, QPinchGesture *gesture)
+{
+    static QPointF originalZoomFactor;
+
+    if (gesture->state() == Qt::GestureStarted) {
+        albumCover->zoomFactor(&originalZoomFactor.rx(), &originalZoomFactor.ry());
+
+        // Disable panning while we're pinching the image
+        setPannable(false);
+    } else if (gesture->state() == Qt::GestureFinished ||
+            gesture->state() == Qt::GestureCanceled) {
+        // Re-enable panning after the pinching gesture has ended.
+        setPannable(true);
+    }
+
+    albumCover->setZoomFactor(
+            originalZoomFactor.x() * gesture->scaleFactor(),
+            originalZoomFactor.y() * gesture->scaleFactor());
+
+    // Force a repaint of the album cover.
+    albumCover->update();
+
+    event->accept(gesture);
+}
+\endcode
+
+<code>QPinchGesture::scaleFactor()</code> varies around 1.0. Values above 1.0 means that the two fingers on the screen are further away from each other than in the moment the gesture started, thus we're stretching the image (zooming in). Values below 1.0 means the the two fingers are closer to each other than in the moment the gesture started, thus we're shrinking the image (zooming out). The scaleFactor() is always relative to the state when the gesture started.
+
+\subsection gestures_furtherreading Further reading
+
+There are other gestures besides pinching and it's also possible to define new types of gestures. Check Qt's gestures framework documentation.
+
+\section tutorial_styling Styling
+
+MeeGo Touch provides a powerful styling engine for applications to customize their look & feel. You can specify things such as widget sizes, alignments, background images and input feedback effects via CSS (Cascading Style Sheets) files.
+
+MeeGo Touch also has themes, thus the look & feel can change completely from theme to theme. Applications can customize their look & feel for specific themes and/or the base one (meaning that the custom styling will be applied to the application regardless of what's the current theme).
+
+Let's change the background image of our Music Catalogue application pages. Instead of using the background image provided by the current theme we will specify our own. To make things more interesting we will set one background to be used when our pages are in landscape orientation and another one for when they're in portrait.
+
+To achieve this wee need provide two files:
+   - A CSS file telling MeeGo Touch that our application pages will use different background images.
+   - The file (or files) with our custom background images.
+
+Create a css file with the same name as the binary file of the app. In our case it will be <code>tutorial_music_catalogue.css</code>. Its content will be the following:
+
+\code
+MApplicationPageStyle.Landscape {
+    background-image: "music-catalogue-background-landscape"
+}
+
+MApplicationPageStyle.Portrait {
+    background-image: "music-catalogue-background-portrait"
+}
+\endcode
+
+MeeGo Touch supports both vector (SVG files) and raster images (such as JPEG or PNG files). In this example we explain how to use an SVG image.
+
+Create an SVG file containing two rectangles: one whose id is "music-catalogue-background-landscape" and the other "music-catalogue-background-portrait". MeeGo Touch uses the SVG id attribute to identify SVG elements, not the name of the SVG file itself. Apply different colors or gradients to those two rectangles. Their proportions are not important as MeeGo Touch will resize them appropriately.
+
+\note If you don't have an SVG editor you can download Inkscape from http://www.inkscape.org/ or simply use the SVG file from the finished example mentioned in the beginning of this document.
+
+Now we have to put those two files in a location where MeeGo Touch can find them. To get them applied to a given application in all themes the locations are:
+
+\verbatim
+<system-theme-directory>/base/meegotouch/<application-binary-name>/style/<application-binary-name>.css
+<system-theme-directory>/base/meegotouch/<application-binary-name>/svg/*.svg
+\endverbatim
+
+Thus for our application, in a linux system, those locations will be:
+
+\verbatim
+/usr/share/themes/base/meegotouch/tutorial_music_catalogue/style/tutorial_music_catalogue.css
+/usr/share/themes/base/meegotouch/tutorial_music_catalogue/svg/tutorial_music_catalogue.svg
+\endverbatim
+
+After that the pages of your application should have the backgrounds depicted in the SVG file. If they happen to get bright red backgrounds instead it means that MeeGo Touch wasn't able to find the resources specified in your CSS. If nothing changes at all it might mean that your CSS file wans't even found in the first place.
+
+That completes the tutorial.
+
+\subsection tutorial_styling_furtherreading Further reading
+
+Read the \subpage styling "Styling" page for more information.
 
 */
