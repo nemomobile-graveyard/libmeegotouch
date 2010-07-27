@@ -19,6 +19,7 @@ SUBDIRS     = \
  pt_minimalqtapplication \
  pt_mprogressindicator \
  pt_qapplication \
+ pt_mlabel \
  pt_mslider \
  pt_mtheme \
  pt_mtoolbar \
