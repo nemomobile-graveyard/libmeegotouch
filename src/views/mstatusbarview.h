@@ -79,7 +79,7 @@ private:
     bool isPixmapProviderOnline;
     QDBusServiceWatcher *dbusWatcher;
     void querySharedPixmapFromProvider();
-#endif
+#endif // HAVE_DBUS
     void setupXDamageForSharedPixmap();
     void destroyXDamageForSharedPixmap();
 
@@ -96,13 +96,13 @@ private Q_SLOTS:
     void sharedPixmapHandleReceived(QDBusPendingCallWatcher * call);
     void handlePixmapProviderOnline();
     void handlePixmapProviderOffline();
-#endif
+#endif // HAVE_DBUS
 
-#endif
+#endif // Q_WS_X11
 
 #ifdef UNIT_TEST
     friend class Ut_MStatusBarView;
-#endif
+#endif // UNIT_TEST
 
 };
 

@@ -32,7 +32,7 @@
 #include <QDBusInterface>
 #include <QDBusServiceWatcher> 
 #include <QDBusConnectionInterface>
-#endif
+#endif // HAVE_DBUS
 
 #ifdef HAVE_XDAMAGE
 #include <X11/extensions/Xdamage.h>
@@ -45,7 +45,7 @@ namespace{
     const QString PIXMAP_PROVIDER_DBUS_INTERFACE = "com.meego.core.MStatusBar";
     const QString PIXMAP_PROVIDER_DBUS_SHAREDPIXMAP_CALL = "sharedPixmapHandle";
 }
-#endif
+#endif // HAVE_DBUS
 
 const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_SERVICE = "com.meego.core.MStatusIndicatorMenu";
 const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_PATH = "/statusindicatormenu";
@@ -83,16 +83,16 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
             this, SLOT(handlePixmapProviderOffline()));
 
     querySharedPixmapFromProvider();
-#endif
+#endif // HAVE_DBUS
 
-#endif
+#endif // Q_WS_X11
 }
 
 MStatusBarView::~MStatusBarView()
 {
 #ifdef Q_WS_X11
     destroyXDamageForSharedPixmap();
-#endif //Q_WS_X11
+#endif // Q_WS_X11
 }
 
 void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const
@@ -124,19 +124,36 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
     painter->drawPixmap(QPointF(0.0, 0.0), sharedPixmap, sourceRect);
 #else
     Q_UNUSED(painter);
-#endif
+#endif // Q_WS_X11
 }
+
+void MStatusBarView::mousePressEvent(QGraphicsSceneMouseEvent *event)
+{
+    firstPos = event->pos();
+    playHapticsFeedback();
+}
+
+void MStatusBarView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
+{
+    if(firstPos.y()+ style()->swipeThreshold() < event->pos().y()) {
+        showStatusIndicatorMenu();
+    }
+}
+
 
 #ifdef Q_WS_X11
 void MStatusBarView::updateSharedPixmap()
 {
     destroyXDamageForSharedPixmap();
-#ifndef HAVE_DBUS
-    if (!updatesEnabled)
-#else
-    if ((!updatesEnabled)||(!isPixmapProviderOnline))
-#endif
+#ifdef HAVE_DBUS
+    if ((!updatesEnabled)||(!isPixmapProviderOnline)) {
         return;
+    }
+#else
+    if (!updatesEnabled) {
+        return;
+    }
+#endif // HAVE_DBUS
 
     if (!sharedPixmap.isNull()) {
         setupXDamageForSharedPixmap();
@@ -218,27 +235,16 @@ void MStatusBarView::handlePixmapProviderOffline()
     isPixmapProviderOnline = false;
     destroyXDamageForSharedPixmap();
 }
-#endif
+#endif // HAVE_DBUS
 
-void MStatusBarView::mousePressEvent(QGraphicsSceneMouseEvent *event)
-{
-    firstPos = event->pos();
-    playHapticsFeedback();
-}
-
-void MStatusBarView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
-{
-    if(firstPos.y()+ style()->swipeThreshold() < event->pos().y()) {
-        showStatusIndicatorMenu();
-    }
-}
+#endif // Q_WS_X11
 
 void MStatusBarView::showStatusIndicatorMenu()
 {
 #ifdef HAVE_DBUS
     QDBusInterface interface(STATUS_INDICATOR_MENU_DBUS_SERVICE, STATUS_INDICATOR_MENU_DBUS_PATH, STATUS_INDICATOR_MENU_DBUS_INTERFACE, QDBusConnection::sessionBus());
     interface.call(QDBus::NoBlock, "open");
-#endif
+#endif // HAVE_DBUS
 }
 
 void MStatusBarView::playHapticsFeedback()
@@ -246,6 +252,5 @@ void MStatusBarView::playHapticsFeedback()
     style()->pressFeedback().play();
 }
 
-#endif
 
 M_REGISTER_VIEW_NEW(MStatusBarView, MStatusBar)
