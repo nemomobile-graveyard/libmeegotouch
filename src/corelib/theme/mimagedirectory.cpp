@@ -19,6 +19,7 @@
 
 #include "mimagedirectory.h"
 #include "mthemeresourcemanager.h"
+#include "mthemedaemon.h"
 
 #include "mdebug.h"
 #include <QDir>
@@ -29,6 +30,10 @@
 #include <X11/Xlib.h>
 #include <QX11Info>
 #endif
+
+namespace {
+    const unsigned int ID_CACHE_VERSION = 1;
+}
 
 uint qHash(const QSize &size)
 {
@@ -205,7 +210,6 @@ const QString MThemeImagesDirectory::pixmapsDir = "images";
 const QString MThemeImagesDirectory::iconsDir = "icons";
 const QString MThemeImagesDirectory::svgDir = "svg";
 
-
 MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString &locale) :
     m_path(path),
     m_locale(locale)
@@ -227,10 +231,10 @@ MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString 
             if (i->isDir()) {
                 directories.append(i->absoluteFilePath());
             } else if (i->suffix() == "png" || i->suffix() == "jpg") {
-                if (imageIds.contains(i->baseName())) {
-                    mDebug("MThemeDaemon") << "Path" << i->absolutePath() << "contains multiple images with id" << i->baseName();
+                if (imageResources.contains(i->baseName()) || idsInSvgImages.contains(i->baseName())) {
+                    mWarning("MThemeDaemon") << "Path" << i->absolutePath() << "contains multiple images with id" << i->baseName();
                 } else {
-                    imageIds.insert(i->baseName(), new PixmapImageResource(i->absoluteFilePath()));
+                    imageResources.insert(i->baseName(), new PixmapImageResource(i->absoluteFilePath()));
                 }
             }
         }
@@ -252,17 +256,20 @@ MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString 
             if (i->isDir()) {
                 directories.append(i->absoluteFilePath());
             } else if (i->suffix() == "svg") {
-                if (imageIds.contains(i->baseName())) {
+                if (imageResources.contains(i->baseName())) {
                     mDebug("MThemeDaemon") << "Path" << path + QDir::separator() + "meegotouch" << "contains multiple images with id" << i->baseName();
                 } else {
-                    imageIds.insert(i->baseName(), new IconImageResource(i->absoluteFilePath()));
+                    imageResources.insert(i->baseName(), new IconImageResource(i->absoluteFilePath()));
                 }
             }
         }
     }
 
-    // then go trough the svg dir
+    // then go through the svg dir
     directories.append(path + QDir::separator() + svgDir);
+    // matches and id specified in a svg file.
+    // the id may either appear in a g or image tag.
+    QRegExp idRegexp("<(g|image)\\s[^>]*id=\"([^\"]*)\"[^>]*>");
     while (!directories.isEmpty()) {
         QDir dir(directories.takeFirst());
         if (!dir.exists()) {
@@ -277,23 +284,22 @@ MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString 
             if (i->isDir()) {
                 directories.append(i->absoluteFilePath());
             } else if (i->suffix() == "svg") {
-                if(QFile::exists(i->absoluteFilePath() + ".ids")) {
-                    // read file ids and create svg resources
-                    QFile file(i->absoluteFilePath() + ".ids");
-                    if(file.open(QIODevice::ReadOnly)) {
-                        while(!file.atEnd()) {
-                            QString id = file.readLine().trimmed();
-                            if (imageIds.contains(id)) {
-                                mDebug("MThemeDaemon") << "Path" << path << "contains multiple images with id" << id;
-                            } else {
-                                imageIds.insert(id, new SvgImageResource(id, i->absoluteFilePath()));
-                            }
+                if (!loadIdsFromCache(*i)) {
+                    QFile svgFile(i->filePath());
+                    if (svgFile.open(QIODevice::ReadOnly)) {
+                        QByteArray content = svgFile.readAll();
+                        int pos = 0;
+                        QStringList ids;
+                        while ((pos = idRegexp.indexIn(content, pos)) != -1) {
+                            QString id = idRegexp.cap(2);
+                            idsInSvgImages.insert(id, i->absoluteFilePath());
+                            pos += idRegexp.matchedLength();
+                            ids << id;
                         }
+                        saveIdsInCache(ids, *i);
+                    } else {
+                        mWarning("MThemeImagesDirectory") << "Failed to load ids from" << i->absoluteFilePath();
                     }
-                } else {
-                    mWarning("MThemeDaemon") << "SLOW: SVG file" << i->absoluteFilePath() << "doesn't have .ids file!";
-                    // insert this to svg lookup list, this acts as a fallback to old implementation
-                    svgFiles.insert(i->absoluteFilePath(), QSharedPointer<QSvgRenderer>());
                 }
             }
         }
@@ -304,12 +310,11 @@ MThemeImagesDirectory::MThemeImagesDirectory(const QString &path, const QString 
 
 MThemeImagesDirectory::~MThemeImagesDirectory()
 {
-    qDeleteAll(imageIds);
-    imageIds.clear();
+    qDeleteAll(imageResources);
+    imageResources.clear();
     qDeleteAll(localeSpecificIcons);
     localeSpecificIcons.clear();
     svgFiles.clear();
-    notFoundIds.clear();
 }
 
 ImageResource *MThemeImagesDirectory::findImage(const QString &imageId)
@@ -322,37 +327,18 @@ ImageResource *MThemeImagesDirectory::findImage(const QString &imageId)
 
     if (!resource) {
         // Check if we have this id already resolved
-        resource = imageIds.value(imageId, NULL);
+        resource = imageResources.value(imageId, NULL);
     }
 
     if (!resource) {
-
-        // is this image already marked as not found?
-        if (notFoundIds.contains(imageId)) {
-            return NULL;
-        }
-
-        // it was not resolved, so we need to go trough all svg-files.
-        QHash< QString, QSharedPointer<QSvgRenderer> >::iterator i = svgFiles.begin();
-        QHash< QString, QSharedPointer<QSvgRenderer> >::iterator end = svgFiles.end();
-
-        for (; i != end; ++i) {
-            
-            QSvgRenderer* renderer = MThemeResourceManager::instance().svgRenderer(i.key());
-            Q_ASSERT_X(renderer, "SvgImageResource", "SVG renderer not found");
-
-            // does this svg contain the element we're looking for?
-            if (renderer->elementExists(imageId)) {
-                resource = new SvgImageResource(imageId, i.key());
-                imageIds.insert(imageId, resource);
-                break;
+        QList<QString> svgPaths = idsInSvgImages.values(imageId);
+        if (!svgPaths.empty()) {
+            if (svgPaths.count() > 1) {
+                mWarning("MThemeImagesDirectory") << "Found multiple svgs with candidates for id" << imageId << "Using first one: " << svgPaths;
             }
+            resource = new SvgImageResource(imageId, svgPaths.first());
+            imageResources.insert(imageId, resource);
         }
-    }
-
-    if (!resource) {
-        // mark the image id as not found, so next time someone is asking this, we don't need to go trough all svg-files
-        notFoundIds.insert(imageId);
     }
 
     return resource;
@@ -391,7 +377,7 @@ void MThemeImagesDirectory::reloadLocaleSpecificImages(const QString &locale)
             if (i->isDir()) {
                 directories.append(i->absoluteFilePath());
             } else if (i->suffix() == "svg") {
-                if (!imageIds.contains(i->baseName())) {
+                if (!imageResources.contains(i->baseName())) {
                     mWarning("MThemeDaemon") << "Path" << dir.absolutePath() << "contains imageId" << i->baseName() << "which was not found from the original theme!";
                 } else {
                     localeSpecificIcons.insert(i->baseName(), new IconImageResource(i->absoluteFilePath()));
@@ -409,6 +395,71 @@ QString MThemeImagesDirectory::path() const
 QString MThemeImagesDirectory::locale() const
 {
     return m_locale;
+}
+
+bool MThemeImagesDirectory::loadIdsFromCache(const QFileInfo& svgFileInfo)
+{
+    const QString idCacheFile = createIdCacheFilename(svgFileInfo.absoluteFilePath());
+    if (QFile::exists(idCacheFile)) {
+        QFile file(idCacheFile);
+        if (file.open(QFile::ReadOnly)) {
+            QDataStream stream(&file);
+            uint version;
+            stream >> version;
+            if (version != ID_CACHE_VERSION) {
+                file.close();
+                return false;
+            }
+            uint timestamp;
+            stream >> timestamp;
+            if (timestamp != svgFileInfo.lastModified().toTime_t()) {
+                file.close();
+                return false;
+            }
+
+            QStringList ids;
+            stream >> ids;
+            foreach(const QString& id, ids) {
+                idsInSvgImages.insert(id, svgFileInfo.absoluteFilePath());
+            }
+            file.close();
+            return true;
+        } else {
+            mWarning("MThemeImagesDirectory") << "Failed to load id cache file" << idCacheFile;
+        }
+        return false;
+    }
+    return false;
+}
+
+void MThemeImagesDirectory::saveIdsInCache(const QStringList& ids, const QFileInfo& svgFileInfo) const
+{
+    const QString idCacheFile = createIdCacheFilename(svgFileInfo.absoluteFilePath());
+
+    QFile file(idCacheFile);
+    if (!file.open(QFile::WriteOnly)) {
+        //Maybe it failed because the directory doesn't exist
+        QDir().mkpath(QFileInfo(idCacheFile).absolutePath());
+        if (!file.open(QFile::WriteOnly)) {
+            mDebug("MThemeImagesDirectory") << "Failed to save id cache file" << svgFileInfo.fileName() << "to" << idCacheFile;
+            return;
+        }
+    }
+
+    QDataStream stream(&file);
+    stream << ID_CACHE_VERSION;
+    stream << svgFileInfo.lastModified().toTime_t();
+    stream << ids;
+    file.close();
+}
+
+// TODO: inspired by MStyleSheetParserPrivate::createBinaryFilename(). consider merging both.
+QString MThemeImagesDirectory::createIdCacheFilename(const QString &filePath) const
+{
+    QString filePathEncoded(filePath);
+    filePathEncoded.replace('_', "__");
+    filePathEncoded.replace('/', "_.");
+    return MThemeDaemon::systemThemeCacheDirectory() + "ids/" + filePathEncoded;
 }
 
 MImageDirectory::MImageDirectory(const QString &path, M::RecursionMode recursionMode)
@@ -433,10 +484,10 @@ MImageDirectory::MImageDirectory(const QString &path, M::RecursionMode recursion
             if (i->isDir() && recursionMode == M::Recursive) {
                 directories.append(QDir(i->absoluteFilePath()));
             } else if (i->suffix() == "png" || i->suffix() == "jpg") {
-                if (imageIds.contains(i->baseName())) {
+                if (imageResources.contains(i->baseName())) {
                     mDebug("MThemeDaemon") << "Path" << path << "contains multiple images with id" << i->baseName();
                 } else {
-                    imageIds.insert(i->baseName(), new PixmapImageResource(i->absoluteFilePath()));
+                    imageResources.insert(i->baseName(), new PixmapImageResource(i->absoluteFilePath()));
                 }
             } else if (i->suffix() == "svg") {
                 svgFiles.insert(i->absoluteFilePath(), QSharedPointer<QSvgRenderer>());
@@ -447,15 +498,15 @@ MImageDirectory::MImageDirectory(const QString &path, M::RecursionMode recursion
 
 MImageDirectory::~MImageDirectory()
 {
-    qDeleteAll(imageIds);
-    imageIds.clear();
+    qDeleteAll(imageResources);
+    imageResources.clear();
     svgFiles.clear();
     notFoundIds.clear();
 }
 
 ImageResource *MImageDirectory::findImage(const QString &imageId)
 {
-    ImageResource *resource = imageIds.value(imageId, NULL);
+    ImageResource *resource = imageResources.value(imageId, NULL);
 
     if (!resource) {
 
@@ -475,7 +526,7 @@ ImageResource *MImageDirectory::findImage(const QString &imageId)
             // does this svg contain the element we're looking for?
             if (renderer->elementExists(imageId)) {
                 resource = new SvgImageResource(imageId, i.key());
-                imageIds.insert(imageId, resource);
+                imageResources.insert(imageId, resource);
                 break;
             }
         }

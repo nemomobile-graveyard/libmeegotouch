@@ -31,6 +31,7 @@
 #include <mnamespace.h>
 
 class QPixmap;
+class QFileInfo;
 
 uint qHash(const QSize &size);
 
@@ -131,16 +132,21 @@ public:
     QString locale() const;
     
 private:
+    bool loadIdsFromCache(const QFileInfo& svgFileInfo);
+    void saveIdsInCache(const QStringList& ids, const QFileInfo& svgFileInfo) const;
+    QString createIdCacheFilename(const QString &filePath) const;
+
     // image id => image resource
-    QHash<QString, ImageResource *> imageIds;
+    QHash<QString, ImageResource *> imageResources;
+    // image id => svg filename
+    QMultiHash<QString, QString> idsInSvgImages;
+
 
     // locale specific icon
     QHash<QString, ImageResource *> localeSpecificIcons;
 
     // svg renderer file path => shared svg renderer pointer
     QHash< QString, QSharedPointer<QSvgRenderer> > svgFiles;
-
-    QSet<QString> notFoundIds;
 
     QString m_path;
     QString m_locale;
@@ -159,7 +165,7 @@ public:
 private:
 
     // image id => image resource
-    QHash<QString, ImageResource *> imageIds;
+    QHash<QString, ImageResource *> imageResources;
 
     // svg renderer file path => shared svg renderer pointer
     QHash< QString, QSharedPointer<QSvgRenderer> > svgFiles;
