@@ -95,10 +95,8 @@ void MListViewPrivate::createSeparators()
 
 void MListViewPrivate::updateSeparators()
 {
-    if(hseparator) {
+    if (hseparator)
         hseparator->setObjectName(q_ptr->style()->horizontalSeparatorObjectName());
-        updateSeparatorSize();
-    }
 }
 
 void MListViewPrivate::updateHeaders()
@@ -400,7 +398,7 @@ QSizeF MListViewPrivate::cellSize(int row) const
 
 void MListViewPrivate::updateSeparatorSize()
 {
-    if(hseparator) {
+    if (hseparator) {
         hseparatorHeight = hseparator->preferredHeight();
         hseparator->setGeometry(QRectF(QPointF(0, 0), QSizeF(viewWidth, hseparatorHeight)));
     }
@@ -670,10 +668,8 @@ void MPlainMultiColumnListViewPrivate::createSeparators()
 void MPlainMultiColumnListViewPrivate::updateSeparators()
 {
     MListViewPrivate::updateSeparators();
-    if(vseparator) {
+    if (vseparator)
         vseparator->setObjectName(q_ptr->style()->verticalSeparatorObjectName());
-        updateSeparatorSize();
-    }
 }
 
 void MPlainMultiColumnListViewPrivate::setVerticalSeparator(MWidget *separator)
@@ -776,7 +772,7 @@ void MPlainMultiColumnListViewPrivate::updateSeparatorSize()
 {
     MListViewPrivate::updateSeparatorSize();
 
-    if(vseparator) {
+    if (vseparator) {
         vseparatorWidth = vseparator->preferredWidth();
         vseparator->setGeometry(QRectF(QPointF(0, 0), QSizeF(vseparatorWidth, itemHeight)));
     }
@@ -1246,10 +1242,8 @@ void MMultiColumnListViewPrivate::updateSeparators()
 {
     MListViewPrivate::updateSeparators();
 
-    if(vseparator) {
+    if (vseparator)
         vseparator->setObjectName(q_ptr->style()->verticalSeparatorObjectName());
-        updateSeparatorSize();
-    }
 }
 
 int MMultiColumnListViewPrivate::itemsToRows(int items) const
@@ -1302,8 +1296,7 @@ void MMultiColumnListViewPrivate::updateSeparatorSize()
 {
     MListViewPrivate::updateSeparatorSize();
 
-    //Update vertical separator
-    if(vseparator) {
+    if (vseparator) {
         vseparatorWidth = vseparator->preferredWidth();
         vseparator->setGeometry(QRectF(QPointF(0, 0), QSizeF(vseparatorWidth, itemHeight)));
     }
