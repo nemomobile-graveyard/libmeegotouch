@@ -43,6 +43,7 @@ private:
     MProgressIndicator *bar2;
     MLabel *label1;
     MLabel *label2;
+    int position;
 };
 
 #endif // PROGRESSBARPAGE_H

@@ -18,7 +18,7 @@
 ****************************************************************************/
 
 #include "progressbarpage.h"
-#include <QPropertyAnimation>
+
 #include <MButton>
 #include <MLabel>
 #include <MTheme>
@@ -27,13 +27,15 @@
 #include <MGridLayoutPolicy>
 #include <MProgressIndicator>
 #include <MSceneManager>
+#include <QPropertyAnimation>
 
 ProgressBarPage::ProgressBarPage() :
     TemplatePage(TemplatePage::SimpleWidgets),
     bar1(0),
     bar2(0),
     label1(0),
-    label2(0)
+    label2(0),
+    position(0)
 {
 }
 
@@ -53,16 +55,16 @@ void ProgressBarPage::createContent()
     label1 = new MLabel();
     containerPolicy->addItem(label1);
 
-    bar1 = new MProgressIndicator(centralWidget(), MProgressIndicator::barType);
+    bar1 = new MProgressIndicator(0, MProgressIndicator::barType);
     // Since range's type is int, we want a fairly large number here, to get a smooth animation
-    bar1->setRange(0, 400);
+    bar1->setRange(0, 1000);
     bar1->setValue(0);
     containerPolicy->addItem(bar1);
 
     label2 = new MLabel();
     containerPolicy->addItem(label2);
 
-    bar2 = new MProgressIndicator(centralWidget(), MProgressIndicator::barType);
+    bar2 = new MProgressIndicator(0, MProgressIndicator::barType);
     bar2->setRange(0, 9);
     bar2->setUnknownDuration(true);
     containerPolicy->addItem(bar2);
@@ -72,15 +74,12 @@ void ProgressBarPage::createContent()
     animation->setLoopCount(-1);
     // start and end value should match bar1's range
     animation->setStartValue(0);
-    animation->setEndValue(400);
-    // 10 ms to fill the bar
+    animation->setEndValue(1000);
+    // 10 seconds to fill the bar
     animation->setDuration(10000);
     animation->start();
 
     retranslateUi();
-
-    connect(this, SIGNAL(displayEntered()), animation, SLOT(start()));
-    connect(this, SIGNAL(displayExited()), animation, SLOT(stop()));
 }
 
 void ProgressBarPage::retranslateUi()

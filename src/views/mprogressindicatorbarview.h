@@ -93,6 +93,7 @@ protected:
     virtual void drawContents(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void setupModel();
     virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
+    virtual void changeEvent(QEvent *event);
     //! \reimp_end
     MProgressIndicatorBarViewPrivate *const d_ptr;
 

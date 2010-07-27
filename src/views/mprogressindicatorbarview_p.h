@@ -25,8 +25,8 @@
 
 class MStyle;
 class MProgressIndicator;
-class QPixmap;
 class QPropertyAnimation;
+class QTimer;
 
 class MProgressIndicatorBarViewPrivate : public QObject
 {
@@ -35,15 +35,21 @@ class MProgressIndicatorBarViewPrivate : public QObject
 
     QImage leftEndImage;
     QImage rightEndImage;
-    QPixmap rightEndMask;
-    QPixmap leftEndMask;
+    QImage rightEndMask;
+    QImage leftEndMask;
 
-    QPixmap barMask;
+    QImage barMask;
 
     int leftWidth, rightWidth, top, bottom;
 
+    bool textureTiled() const;
+    void setupAnimation();
+
 protected:
     MProgressIndicatorBarView *q_ptr;
+
+public Q_SLOTS:
+    void setPosition();
 
 public:
     MProgressIndicatorBarViewPrivate();
@@ -56,11 +62,10 @@ public:
 
     void compositeBarForUnknownDuration();
     void figureOutSizes();
-
-    Q_PROPERTY(qreal position READ getPosition WRITE setPosition)
+    void buildAnimationCache();
+    bool fullWidth() const;
 
     qreal getPosition();
-    void setPosition(qreal pos);
 
     void animate(bool);
     void updateAnimation();
@@ -69,14 +74,16 @@ public:
 
     float elementSize;
     int activeElementCount;
-    qreal position;
-    QPropertyAnimation *animation;
+    int position;
     int width;
+    bool paused;
 
-    QPixmap barBody;
+    QTimer* timer;
 
-    QPixmap rightEnd;
-    QPixmap leftEnd;
+    QImage barBody;
+
+    QImage rightEnd;
+    QImage leftEnd;
 
     QRectF rightEndRect;
     QRectF leftEndRect;
@@ -86,6 +93,9 @@ public:
     int previousValue;
 
     MScalableImage* scalableBarImage;
+
+    QList<QImage*> animationCache;
+    int animationCacheSize;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;

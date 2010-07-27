@@ -35,16 +35,10 @@ class M_EXPORT MProgressIndicatorStyle : public MWidgetStyle
     M_STYLE(MProgressIndicatorStyle)
 
     /*!
-        \property MProgressIndicatorStyle::activeImage
-        \brief Image of the active bar element.
+        \property MProgressIndicatorStyle::progressBarBackground
+        \brief  Background image of the progress bar.
     */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, activeImage, ActiveImage)
-
-    /*!
-        \property MProgressIndicatorStyle::inactiveImage
-        \brief  Image of the inactive bar element.
-    */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, inactiveImage, InactiveImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage *, progressBarBackground, ProgressBarBackground)
 
     /*!
         \property MProgressIndicatorStyle::speed
@@ -71,22 +65,40 @@ class M_EXPORT MProgressIndicatorStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(qreal, elementDistance, ElementDistance)
 
     /*!
-        \property MProgressIndicatorCandybarStyle::fillImage
-        \brief  Mask for the progress image.
+        \property MProgressIndicator::progressBarMask
+        \brief  mask of the progress bar.
     */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, fillImage, FillImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, progressBarMask, ProgressBarMask)
 
     /*!
-        \property MProgressIndicator::maskImage
-        \brief  mask of the progress image.
+        \property MProgressIndicator::unknownBarTexture
+        \brief  texture of unknown bar.
     */
-    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, maskImage, MaskImage)
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, unknownBarTexture, UnknownBarTexture)
 
     /*!
-        \property MProgressIndicator::fillImageTiled
-        \brief stretched or tiled.
+        \property MProgressIndicator::unknownBarTextureTiled
+        \brief tiled if true, horizontally stretched otherwise.
     */
-    M_STYLE_ATTRIBUTE(bool, fillImageTiled, FillImageTiled)
+    M_STYLE_ATTRIBUTE(bool, unknownBarTextureTiled, UnknownBarTextureTiled)
+
+    /*!
+        \property MProgressIndicator::unknownBarSize
+        \brief width of unknown bar: px or %
+    */
+    M_STYLE_ATTRIBUTE(QSize, unknownBarSize, UnknownBarSize)
+
+    /*!
+        \property MProgressIndicator::knownBarTexture
+        \brief  texture of known bar.
+    */
+    M_STYLE_PTR_ATTRIBUTE(MScalableImage*, knownBarTexture, KnownBarTexture)
+
+    /*!
+        \property MProgressIndicator::knownBarTextureTiled
+        \brief tiled if true, horizontally stretched otherwise.
+    */
+    M_STYLE_ATTRIBUTE(bool, knownBarTextureTiled, KnownBarTextureTiled)
 };
 
 /*!

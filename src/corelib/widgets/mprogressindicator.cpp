@@ -130,3 +130,4 @@ bool MProgressIndicator::unknownDuration() const
 {
     return model()->unknownDuration();
 }
+
