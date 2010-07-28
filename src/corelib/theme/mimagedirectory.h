@@ -72,32 +72,28 @@ class IconImageResource : public ImageResource
 {
 public:
     IconImageResource(const QString &absoluteFilePath) :
-        absoluteFilePath(absoluteFilePath), renderer(NULL) {}
+        absoluteFilePath(absoluteFilePath) {}
     virtual ~IconImageResource() {
-        delete renderer;
     }
 
 protected:
     virtual QPixmap *createPixmap(const QSize &size);
 private:
     QString absoluteFilePath;
-    QSvgRenderer *renderer;
 };
 
 class PixmapImageResource : public ImageResource
 {
 public:
     PixmapImageResource(const QString &absoluteFilePath) :
-        absoluteFilePath(absoluteFilePath), image(NULL) {}
+        absoluteFilePath(absoluteFilePath) {}
     virtual ~PixmapImageResource() {
-        delete image;
     }
 
 protected:
     virtual QPixmap *createPixmap(const QSize &size);
 private:
     QString absoluteFilePath;
-    QImage *image;
 };
 
 class SvgImageResource : public ImageResource

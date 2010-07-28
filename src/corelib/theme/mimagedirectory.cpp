@@ -147,25 +147,21 @@ bool ImageResource::load(QIODevice* device, const QSize& size)
 
 QPixmap *PixmapImageResource::createPixmap(const QSize &size)
 {
-    if (!image) {
-        image = new QImage(absoluteFilePath);
-    }
+    QImage image(absoluteFilePath);
 
-    if (size.isNull() || size == image->size()) {
+    if (size.isNull() || size == image.size()) {
         // the requested size is (0,0) or the original image is the same size as the requested one.
         // we can use the original image
-        return new QPixmap(QPixmap::fromImage(*image));
+        return new QPixmap(QPixmap::fromImage(image));
     }
 
     // we need to resize the image.
-    return new QPixmap(QPixmap::fromImage(image->scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));//Qt::FastTransformation)));
+    return new QPixmap(QPixmap::fromImage(image.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));//Qt::FastTransformation)));
 }
 
 QPixmap *IconImageResource::createPixmap(const QSize &size)
 {
-    if (!renderer) {
-        renderer = new QSvgRenderer(absoluteFilePath);
-    }
+    QSvgRenderer* renderer = MThemeResourceManager::instance().svgRenderer(absoluteFilePath);
 
     QSize svgImageSize = size;
     if (size.isNull()) {
