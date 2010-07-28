@@ -1267,7 +1267,8 @@ void QtMaemo6Style::polish(QWidget *widget)
 
     if(QComboBox* comboBox = qobject_cast<QComboBox*>(widget)) {
         if(comboBox->isEditable()) {
-            comboBox->lineEdit()->setReadOnly(false);
+            //comboBox->lineEdit()->setReadOnly(false);
+            comboBox->lineEdit()->setVisible(false);
         }
     }
     if(QHeaderView* hView = qobject_cast<QHeaderView*>(widget)) {
@@ -1320,8 +1321,11 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
     break;
 
     case PE_PanelLineEdit: {
-        if (widget && qobject_cast<QAbstractSpinBox *>(widget->parent()))
+        //don't draw the line edit, if it is part of a spinbox or a combobox
+        if (widget && (qobject_cast<QAbstractSpinBox *>(widget->parent()) || qobject_cast<QComboBox*>(widget->parent()))) {
+            qCritical() << "### skipping LineEdit";
             break;
+        }
 
         if (const QStyleOptionFrame *panel = qstyleoption_cast<const QStyleOptionFrame *>(option)) {
             const MTextEditStyle *style =
@@ -1452,7 +1456,10 @@ void QtMaemo6Style::drawControl(ControlElement element,
 
 
     switch (element) {
+
     case CE_ComboBoxLabel: {
+            qCritical() << "### Combobox line edit";
+        /*
         if (const QStyleOptionComboBox *cmb = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
 
             QStyleOptionComboBox subopt = *cmb;
@@ -1461,16 +1468,16 @@ void QtMaemo6Style::drawControl(ControlElement element,
             //const MComboBoxStyle * style =
             //    static_cast<const MComboBoxStyle *>( QtMaemo6StylePrivate::mStyle( cmb->state,
             //                                           "MComboBoxStyle", "MComboBoxTitle" ) );
-// Not implemented yet on the M side
-            /*
-                            p->setFont( style->font() );
-                            p->setPen( QPen( style->color() ) );
-             */
+            // Not implemented yet on the M side
+            //p->setFont( style->font() );
+            //p->setPen( QPen( style->color() ) );
 
             QtMaemo6TestStyle::drawControl(element, cmb, p, widget);
-        }
+        }*/
+        //Draw nothing, Combobox on MeeGo has no Lineedit.
     }
     break;
+
     case CE_PushButton: {
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(opt)) {
 
@@ -1792,6 +1799,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
     Q_D(const QtMaemo6Style);
     switch (control) {
     case CC_ComboBox: {
+    /*
         if (const QStyleOptionComboBox *cmb = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
 
             const MComboBoxStyle *style =
@@ -1801,7 +1809,22 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
         }
     }
     break;
+    */
+        if (const QStyleOptionComboBox *btn = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
+            qCritical() << "### drawing ComboBox";
+            QStyleOptionComboBox subopt = *btn;
+            subopt.rect = subControlRect(control, opt, SC_ToolButton, widget);
 
+            const MButtonStyle *style =
+                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle", ""));
+
+            qDebug("Button \"%s\" font-size: %d, icon-size: %d", subopt.currentText.toLocal8Bit().constData(),
+                   style->font().pixelSize(), style->iconSize().width());
+
+            d->drawBasicButton(p, subopt.currentText, subopt.currentIcon, subopt.rect, opt, style, style->font(), style->iconSize());
+        }
+    }
+    break;
     case CC_ToolButton: {
         QWidget *parentOfControl = widget->parentWidget();
 
@@ -2424,6 +2447,7 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
         }
     }
     break;
+    case CT_ComboBox:
     case CT_ToolButton:
         if (widget) {
             QWidget *parentOfControl = widget->parentWidget();
@@ -2525,7 +2549,6 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
             retSize = QSize(0, 0);
     }
     break;
-    case CT_ComboBox:
     case CT_LineEdit: {
         retSize = QtMaemo6TestStyle::sizeFromContents(type, option, contentsSize, widget);
         if(widget) {

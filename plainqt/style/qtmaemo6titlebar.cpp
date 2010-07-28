@@ -35,7 +35,6 @@
 #include <mhomebuttonpanelstyle.h>
 #include <mescapebuttonpanelstyle.h>
 #include <mlabelstyle.h>
-#include <MScalableImage>
 #include <MTheme>
 #include <mnavigationbarstyle.h>
 #include <mlabelstyle.h>

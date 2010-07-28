@@ -34,6 +34,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QToolButton>
+#include <QLineEdit>
 #include <QTreeView>
 #include <QComboBox>
 #include <QMenu>
@@ -47,7 +48,6 @@
 #include <mdeviceprofile.h>
 #include <MTheme>
 #include <mbuttonstyle.h>
-#include <MScalableImage>
 #include <MWindow>
 #include <MDebug>
 
@@ -127,6 +127,13 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                 QString cancelString = tr("Cancel");
                 if (button->text() == cancelString) {
                     button->hide();
+                }
+            }
+            if(QLineEdit* le = qobject_cast<QLineEdit*>(widget)) {
+                //poor way to hide the lineedit of a combobox if it is editable
+                if(qobject_cast<QComboBox*>(le->parentWidget())) {
+                    le->setVisible(false);
+                    return true;
                 }
             }
             if (QTreeView *treeWidget = qobject_cast<QTreeView *>(widget)) {
