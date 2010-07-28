@@ -188,6 +188,15 @@ void MPannableWidgetPrivate::deliverPressEvent()
         return;
     }
 
+    if (q->scene() == NULL) {
+        // We have been removed from the scene
+        // while waiting for timer to expire.
+        // Reset the states and wait for next events.
+        resetPhysics();
+        resetMouseGrabber();
+        return;
+    }
+
     glass->ungrabMouse();
     q->resendEvent(&pressEvent);
     mouseGrabber = q->scene()->mouseGrabberItem();
