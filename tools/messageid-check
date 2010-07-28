@@ -55,7 +55,8 @@ my $OPT_OUTPUTDIR;
 my @engineeringEnglishPackagesObsolete = (
     "libdui-l10n-engineering-english", # now "libmeegotouch-l10n-engineering-english"
     "duistartup-l10n-engineering-english", # now "mstartup-l10n-engineering-english"
-    "dui-demos-widgetsgallery-l10n-engineering-english" # now "meegotouch-demos-widgetsgallery-l10n-engineering-english"
+    "dui-demos-widgetsgallery-l10n-engineering-english", # now "meegotouch-demos-widgetsgallery-l10n-engineering-english"
+    "keychain-ui-l10n-engineering-english", # does not exist anymore
     );
 
 # engineering English packages which should be ignored because they are only demos:
@@ -71,8 +72,6 @@ my @engineeringEnglishPackagesIgnore = (
 my @engineeringEnglishPackagesBroken = (
     # this one is empty. Why?:
     "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
-    # file conflict with accounts-ui-l10n-engineering-english
-    "keychain-ui-l10n-engineering-english",
     # this one is empty. Why?:
     "mfe-account-ui-plugins-l10n-engineering-english"
    );
@@ -132,6 +131,7 @@ my @engineeringEnglishPackages = (
     "libwebupload-l10n-engineering-english",
     "location-ui-l10n-engineering-english",
     "locationsettings-l10n-engineering-english",
+    "mcontrolpanel-telecoilapplet-l10n-engineering-english",
     "me-l10n-engineering-english",
     "meegotouch-demos-widgetsgallery-l10n-engineering-english",
     "messaging-ui-l10n-engineering-english",
