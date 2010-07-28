@@ -4,4 +4,4 @@ Name=Widgets Gallery
 Icon=icon-l-widgetsgallery
 Exec=widgetsgallery
 X-Maemo-Service=com.nokia.widgetsgallery
-OnlyShowIn=X-MeeGo;GNOME;
+OnlyShowIn=X-MeeGo;GNOME;X-MEEGO-HS;
