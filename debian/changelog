@@ -1,3 +1,13 @@
+libmeegotouch (0.20.32-1) unstable; urgency=low
+
+  * Fixes: NB#182002 - Shift + 'T' makes screenshots instead of Shift + Ctrl + 'T'
+  * Fixes: NB#180708 - booster-m does not react to theme changes
+  * Fixes: NB#181416 - Slider handle will stay on screen if slider disappears while it's pressed
+  * Fixes: NB#178646 - mmoc.pl should be used in armel targets 
+  * Fixes: NB#182210 - VKB is not coming up through the HKB is slided in
+
+ -- Sergiy Dubovik <sergiy.dubovik@nokia.com>  Wed, 28 Jul 2010 15:08:44 +0300
+
 libmeegotouch (0.20.31-1) unstable; urgency=low
 
   * Fixes: NB#182098 - List with separators on renders incorrectly
