@@ -166,7 +166,7 @@ compiler and linker flags like this:
 
 \code
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -fvisibility=hidden -fvisibility-inlines-hidden")
-  set(CMAKE_EXE_LINKER_FLAGS " -pie -rdynamic")
+  set(CMAKE_EXE_LINKER_FLAGS "-pie -rdynamic")
 \endcode  
 
 Again, this requires you to update the flags if something changes.
@@ -225,7 +225,7 @@ application is:
 exec /usr/bin/invoker --type=m $0.launch "$@"
 \endcode
 
-Note that even if the binary is renamed to application_name.launch,
+Note that even if the binary is renamed to <application_name>.launch,
 application identifier does not change (optional parameter of
 MComponentCache::mApplication).
 
@@ -233,19 +233,21 @@ MComponentCache::mApplication).
 normal execution there is
 
 \code
-Exec=/usr/bin/invoker --type=m /usr/bin/application_binary
+Exec=/usr/bin/invoker --delay <seconds> --type=m /usr/bin/<application_name>.launch
 \endcode
+
+Note: when launching through D-Bus, it is important to add enough delay to invoker so that it won't exit
+before the launched application gets its D-Bus service registered. Otherwise D-Bus daemon may think that
+the application just died. Another option is to use --wait-term which forces invoker to wait until
+the launched application exits.
 
 Application packages that use the launcher depend on the applauncherd
 package.
 
-
 \section security Platform security
 
 Harmattan platform security works fine with launcher. Note, that you
-must specify the name of the application binary in the aegis file as
-renamed the application binary to <application_name>.launch, you must
-use the same binary name in the aegis file as well.
+must use <application_name>.launch as the name of the application binary in the Aegis file.
 
 
 \section limitations Limitations and known issues
@@ -285,7 +287,7 @@ docs for more information about command options usage):
 \li  \c -disable-m-input-context
 \li QCoreApplication::arguments() - does not work. Use argc and argv received by the main function directly.
 
-\subsection issue-watchdog Issues with scripts and process monitoring
+\subsection issue-watchdog Issues with scripts, D-Bus, and process monitoring
 
 By default, invoker processes terminate before or right after booster
 processes have called main(). This may confuse shell scripts and
