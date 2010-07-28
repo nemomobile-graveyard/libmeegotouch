@@ -1,8 +1,9 @@
 #include "maincategorypage.h"
 #include "mainpage.h"
 
+#include "drilldownlistitem.h"
+
 #include <MAbstractCellCreator>
-#include <MBasicListItem>
 #include <MLayout>
 #include <MLinearLayoutPolicy>
 #include <MList>
@@ -36,20 +37,20 @@ private:
     QModelIndex categoryIndex;
 };
 
-class WidgetGalleryCellCreator : public MAbstractCellCreator<MBasicListItem>
+class WidgetGalleryCellCreator : public MAbstractCellCreator<DrillDownListItem>
 {
 public:
     WidgetGalleryCellCreator()
-        : MAbstractCellCreator<MBasicListItem>()
+        : MAbstractCellCreator<DrillDownListItem>()
     {
     }
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
         Q_UNUSED(index);
 
-        MBasicListItem *cell = dynamic_cast<MBasicListItem *>(recycler.take(MBasicListItem::staticMetaObject.className()));
+        DrillDownListItem *cell = dynamic_cast<DrillDownListItem *>(recycler.take(DrillDownListItem::staticMetaObject.className()));
         if (cell == NULL) {
-            cell = new MBasicListItem(MBasicListItem::SingleTitle);
+            cell = new DrillDownListItem;
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
@@ -58,7 +59,7 @@ public:
     }
 
     void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MBasicListItem *item = qobject_cast<MBasicListItem*>(cell);
+        DrillDownListItem *item = qobject_cast<DrillDownListItem*>(cell);
         if(!item)
             return;
 

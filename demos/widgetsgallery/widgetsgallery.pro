@@ -84,6 +84,7 @@ SOURCES += main.cpp \
     bubblelistmodel.cpp \
     phonebookheader.cpp \
     phonebookmodel.cpp \
+    drilldownlistitem.cpp \
 
 HEADERS += templatepage.h \
     mainpage.h \
@@ -132,6 +133,7 @@ HEADERS += templatepage.h \
     bubblelistmodel.h \
     phonebookheader.h \
     phonebookmodel.h \
+    drilldownlistitem.h \
 
 # theme
 include(theme/theme.pri)

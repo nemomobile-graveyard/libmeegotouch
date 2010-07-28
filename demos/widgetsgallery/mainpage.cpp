@@ -47,6 +47,7 @@
 #include "querydialogspage.h"
 #include "bannerspage.h"
 #include "bubblepage.h"
+#include "drilldownlistitem.h"
 
 #include <QGraphicsLayoutItem>
 #include <QGraphicsLinearLayout>
@@ -60,7 +61,6 @@
 
 #include <MApplication>
 #include <MAbstractCellCreator>
-#include <MBasicListItem>
 #include <MLocale>
 #include <MLayout>
 #include <MButton>
@@ -250,18 +250,18 @@ private:
     QMap<int, TemplatePageNameList> galleryPageNames;
 };
 
-class WidgetGalleryCategoryCellCreator : public MAbstractCellCreator<MBasicListItem>
+class WidgetGalleryCategoryCellCreator : public MAbstractCellCreator<DrillDownListItem>
 {
 public:
-    WidgetGalleryCategoryCellCreator() : MAbstractCellCreator<MBasicListItem>() {
+    WidgetGalleryCategoryCellCreator() : MAbstractCellCreator<DrillDownListItem>() {
     }
 
     MWidget *createCell(const QModelIndex &index, MWidgetRecycler &recycler) const {
         Q_UNUSED(index);
 
-        MBasicListItem *cell = dynamic_cast<MBasicListItem *>(recycler.take(MBasicListItem::staticMetaObject.className()));
+        DrillDownListItem *cell = dynamic_cast<DrillDownListItem *>(recycler.take(DrillDownListItem::staticMetaObject.className()));
         if (cell == NULL) {
-            cell = new MBasicListItem(MBasicListItem::SingleTitle);
+            cell = new DrillDownListItem;
             cell->setLayoutPosition(M::CenterPosition);
         }
         updateCell(index, cell);
@@ -270,7 +270,7 @@ public:
     }
 
     void updateCell(const QModelIndex &index, MWidget *cell) const {
-        MBasicListItem *item = qobject_cast<MBasicListItem*>(cell);
+        DrillDownListItem *item = qobject_cast<DrillDownListItem*>(cell);
         if(!item)
             return;
 
