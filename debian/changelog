@@ -1,3 +1,9 @@
+libmeegotouch (0.20.33~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Sergiy Dubovik <sergiy.dubovik@nokia.com>  Wed, 28 Jul 2010 15:16:01 +0300
+
 libmeegotouch (0.20.32-1) unstable; urgency=low
 
   * Fixes: NB#182002 - Shift + 'T' makes screenshots instead of Shift + Ctrl + 'T'
