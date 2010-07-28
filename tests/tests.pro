@@ -56,8 +56,8 @@ SUBDIRS     =  \
      ut_msliderview \
     ut_mtextedit \
     ut_mtexteditview \
-#    ut_mtheme \
      ut_mthemedaemonprotocol \
+    ut_mtheme \
     ut_mtoolbar \
     ut_mtoolbarview \
     ut_mwidget \
@@ -164,6 +164,8 @@ SUBDIRS     =  \
     ut_mabstractitemmodel \
     ut_phonenumberformatting \
     ut_mlocationdatabase \
+    ut_mlocalthemedaemon \
+    ut_mremotethemedaemon \
 
 # enable only when we have icu available
 
