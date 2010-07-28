@@ -1,9 +1,9 @@
-this README describes how to set up libdui on a windows
+this README describes how to set up libmeegotouch on a windows
 computer.
 
 right now we support the MinGW GCC compiler and the
 Microsoft Visual Studio cl C++ compiler. this document
-describes how to compile libdui for both compilers.
+describes how to compile libmeegotouch for both compilers.
 
 general prerequisites:
 
@@ -17,7 +17,7 @@ general prerequisites:
 
 - install debugview. i got it from
   http://technet.microsoft.com/en-us/sysinternals/bb896647.aspx
-  it shows the qDebug statements that libdui will print when 
+  it shows the qDebug statements that libmeegotouch will print when 
   something goes wrong.
 
 
@@ -54,7 +54,7 @@ prerequisities for mingw:
   mingw version.
 
 
-now you should have all the tools you need to build and execute libdui
+now you should have all the tools you need to build and execute libmeegotouch
 and its programs.
 
 # now you should check that youe environment is setup in a way
@@ -81,18 +81,18 @@ nmake
 # like this:
 # set PATH=%PATH%;c:\KDE\bin
 
-now go to some directory, e.g. c:\dui. in the following i will
+now go to some directory, e.g. c:\meegotouch. in the following i will
 list the commands needed to get a working widgets gallery.
 
 # go to this empty directory...
 c:
-cd \dui
+cd \meegotouch
 
-# now do a git checkout of duitheme
-git co git+ssh://git@dvcs.projects.maemo.org:af/duitheme
+# now do a git clone of meegotouch-theme
+git clone http://git.gitorious.org/meegotouch/meegotouch-theme.git
 
 # now install the theme files
-cd duitheme
+cd meegotouch-theme
 qmake
 
 # for msvc
@@ -106,47 +106,40 @@ make install
 #for all
 cd ..
 
-# in this dir do a git checkout of libdui.
-# right now we still need the holger-msvc branch, but it
-# will be merged to master in short time.
-git co git+ssh://git@dvcs.projects.maemo.org:af/libdui
+# in this dir do a git clone of libmeegotouch.
+git clone http://git.gitorious.org/meegotouch/libmeegotouch.git
 
-# now switch to holger-msvc branch
-cd libdui
-git co -b holger-msvc origin/holger-msvc
-cd ..
-
-# sources are now in libdui.
+# sources are now in libmeegotouch.
 
 # now create build directory
-mkdir libduibuild
+mkdir libmeegotouchbuild
 
-cd libduibuild
+cd libmeegotouchbuild
 
 # run qmake
-qmake ..\libdui\projects.pro
+qmake ..\libmeegotouch\projects.pro
 
 # for msvc:
 
 # run nmake to build it.
 nmake
 # currently this will fail with an error about a missing
-# duigen executable
+# mgen executable
 
 # actually right now under windows i was not able to build
-# the duigen executable in the same location no matter if
+# the mgen executable in the same location no matter if
 # we build a debug or release build. for that the following
-# steps in between are needed. we build and "install" duigen
-# before we build the rest of libdui.
-cd duigen
+# steps in between are needed. we build and "install" mgen
+# before we build the rest of libmeegotouch.
+cd mgen
 nmake
 nmake install
 cd ..
 
-# and now we continue with the normal libdui build
+# and now we continue with the normal libmeegotouch build
 nmake
 
-# now install libdui
+# now install libmeegotouch
 nmake install
 
 
@@ -155,29 +148,29 @@ nmake install
 # run make to build it.
 make
 # currently this will fail with an error about a missing
-# duigen executable
+# mgen executable
 
 # actually right now under windows i was not able to build
-# the duigen executable in the same location no matter if
+# the mgen executable in the same location no matter if
 # we build a debug or release build. for that the following
-# steps in between are needed. we build and "install" duigen
-# before we build the rest of libdui.
-cd duigen
+# steps in between are needed. we build and "install" mgen
+# before we build the rest of libmeegotouch.
+cd mgen
 make
 make install
 cd ..
 
-# and now we continue with the normal libdui build
+# and now we continue with the normal libmeegotouch build
 make
 
-# now install libdui
+# now install libmeegotouch
 make install
 
 
 
 # for all
 
-# now we built libdui and installed it, but the theme files
+# now we built libmeegotouch and installed it, but the theme files
 # are not yet in the right places. let's see if widgetsgallery
 # tries to start anyway. it is expected that when you start
 # widgetsgallery, it only prints some output in the stderr channel
@@ -190,7 +183,7 @@ debugview
 # KDE-on-windows version.
 set PATH=c:\d\kde\bin;%PATH%
 
-# now we add the directories which contain dui.dll and the executables.
+# now we add the directories which contain libmeegotouch.dll and the executables.
 # qmake by default installs to /usr prefix. this is c:\usr\ under windows.
 set PATH=c:\usr\bin;c:\usr\lib;%PATH%
 

@@ -1,4 +1,4 @@
-This source tree contains the DirectUI library
+This source tree contains the MeeGo Touch library
 
 Building
 ========
@@ -16,12 +16,13 @@ Running
 =======
 The library ships with a demo application called "widgetsgallery"
 
-The duitheme package must be installed before running any DirectUI
+The duitheme package must be installed before running any MeeGo Touch
 applications.
 
-duitheme is available separately from http://qt.gitorious.org and can
+meegotouch-theme is available separately from
+http://meego.gitorious.org/meegotouch/meegotouch-theme/ and can
 be installed with the following commands:
-  cd duitheme
+  cd meegotouch-theme
   qmake
   sudo make install
 
@@ -29,7 +30,7 @@ be installed with the following commands:
 Build dependencies
 ==================
 - Development headers:
-  - Qt 4.6
+  - Qt 4.7
   - X11
   - Mesa or vendor specific OpenGL libraries
 - pkg-config
@@ -38,7 +39,7 @@ Optional dependencies
 =====================
 
 If found, the following libraries will enable additional
-features in the DirectUI library:
+features in the MeeGo Touch library:
 
 - ICU: I18N and L10N extensions
 - GConf2: C++ abstraction layer for gconf settings system
