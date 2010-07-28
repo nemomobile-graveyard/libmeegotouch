@@ -47,7 +47,7 @@ MListViewPrivate::MListViewPrivate() : recycler(new MWidgetRecycler)
     moving = false;
     hseparator = NULL;
     headersCreator = NULL;
-    hdrHeight = NULL;
+    hdrHeight = 0;
     forceRepaint = false;
     viewportTopLeft = QPointF();
     viewportVisibleHeight = 0;
@@ -571,7 +571,7 @@ int MPlainListViewPrivate::totalHeight()
 int MPlainListViewPrivate::itemsCount() const
 {
     if (model == 0)
-        return NULL;
+        return 0;
 
     return rowCount;
 }

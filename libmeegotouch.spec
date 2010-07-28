@@ -5,7 +5,7 @@
 #
 
 Name:           libmeegotouch
-Version:        0.20.28
+Version:        0.20.31
 Release:        1%{?dist}
 Summary:        Meego Touch Framework
 

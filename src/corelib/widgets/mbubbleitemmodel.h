@@ -73,7 +73,7 @@ public:
       \property MBubbleItemModel::type
       \brief centralWidget.
       */
-    M_MODEL_PTR_PROPERTY(int, messageType, MessageType, true, NULL)
+    M_MODEL_PTR_PROPERTY(int, messageType, MessageType, true, 0)
 
     /*!
       \property MBubbleItemModel::commentsString
