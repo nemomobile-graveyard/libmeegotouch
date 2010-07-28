@@ -194,7 +194,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     break;
     case QEvent::KeyPress: {
         QKeyEvent* k = static_cast<QKeyEvent*>(event);
-        if(Qt::Key_T == k->key() && k->modifiers () & (Qt::ShiftModifier | Qt::ControlModifier)) {
+        if(Qt::Key_T == k->key() && k->modifiers () & (Qt::ShiftModifier & Qt::ControlModifier)) {
             qCritical() << "Taking screenshot";
             QPixmap screenshot;
             screenshot = QPixmap::grabWindow(QApplication::desktop()->winId());
