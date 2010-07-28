@@ -1,0 +1,8 @@
+ <!DOCTYPE RCC><RCC version="1.0">
+ <qresource>
+     <file>image1.jpg</file>
+     <file>image2.jpg</file>
+     <file>image3.jpg</file>
+     <file>image4.jpg</file>
+ </qresource>
+ </RCC>
