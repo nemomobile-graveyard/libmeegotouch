@@ -32,13 +32,18 @@
 #include "mdebug.h"
 
 MProgressIndicatorBarViewPrivate::MProgressIndicatorBarViewPrivate()
-    :  q_ptr(0),
+    :  leftWidth(0),
+       rightWidth(0),
+       top(0),
+       bottom(0),
+       q_ptr(0),
        controller(0),
        elementSize(0),
        activeElementCount(0),
        position(0),
        animation(0),
-       width(0)
+       width(0),
+       previousValue(0)
 {
     backgroundPainter = new QPainter;
     scalableBarImage = new MScalableImage;
