@@ -178,6 +178,8 @@ public Q_SLOTS:
      * MWindow::isOnDisplay()), the appearance transition will be animated.
      * Otherwise, it will be immediate.
      *
+     * Ownership of \a sceneWindow is transfered to the scene().
+     *
      * \note Normally you don't have to call this method explicitly. MSceneWindow::appear()
      * calls this method for you.
      */

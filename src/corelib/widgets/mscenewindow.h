@@ -172,6 +172,8 @@ public Q_SLOTS:
      * \param window    The window on which the scene window is going to be shown.
      * \param policy    Deletion policy, defines the ownership for this window
      *
+     * Ownership is transfered to window->scene().
+     *
      * \sa MSceneManager::appearSceneWindow()
      */
     virtual void appear(MWindow *window, MSceneWindow::DeletionPolicy policy = KeepWhenDone);
@@ -187,6 +189,9 @@ public Q_SLOTS:
      * scenarios use either appear(MWindow*) or MSceneManager::appearSceneWindow().
      *
      * \param policy    Deletion policy, defines the ownership for this window
+     *
+     * Ownership is transfered to the MScene visualized by the active MWindow
+     * (MApplication::activeWindow()->scene()).
      *
      * \sa MApplication::activeWindow(), MSceneManager::appearSceneWindow()
      */
