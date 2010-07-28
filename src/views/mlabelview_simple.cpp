@@ -59,9 +59,13 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
     painter->setPen(model->color().isValid() ? model->color() : style->color());
     painter->setFont(viewPrivate->controller->font());
     painter->setRenderHint(QPainter::TextAntialiasing);
+    painter->setLayoutDirection(model->textDirection());
 
-    const bool clip =    paintingRect.width()  < staticText.size().width()
-                      || paintingRect.height() < staticText.size().height();
+    const bool clip =    textOffset.x() < paintingRect.x()
+                      || textOffset.y() < paintingRect.y()
+                      || textOffset.x() + staticText.size().width()  > paintingRect.right()
+                      || textOffset.y() + staticText.size().height() > paintingRect.bottom();
+
     if (clip) {
         painter->save();
         painter->setClipRect(paintingRect, Qt::IntersectClip);
@@ -238,21 +242,6 @@ void MLabelViewSimple::initializeStaticText()
 
     QString textToRender = model->text();
 
-    // QStaticText uses QTextLayout internally to render text. In opposite to
-    // QPainter::drawText(const QRect &rectangle, ...) no pre-preparation of the
-    // text is done (e. g. replace \n by QChar::LineSeparator or spaces dependent
-    // on the wrapping). This is done manually here:
-    qreal textWidth = -1.0;
-    const QTextOption::WrapMode wrapMode = model->wrapMode();
-    if ((wrapMode == QTextOption::NoWrap) || (wrapMode == QTextOption::ManualWrap)) {
-        textToRender.replace(QLatin1Char('\n'), QLatin1Char(' '));
-    } else {
-        textWidth = paintingRect.width();
-        textToRender.replace(QLatin1Char('\n'), QChar::LineSeparator);
-    }
-
-    staticText.setTextWidth(textWidth);
-
     const QChar multiLengthSeparator = QLatin1Char(0x9c);
     if (textToRender.contains(multiLengthSeparator)) {
         // The text consists of several strings. Find the first string that fits into the
@@ -272,6 +261,35 @@ void MLabelViewSimple::initializeStaticText()
         textToRender = metrics.elidedText(textToRender, Qt::ElideRight, paintingRect.width());
     }
 
+    // QStaticText uses QTextLayout internally to render text. In opposite to
+    // QPainter::drawText(const QRect &rectangle, ...) no pre-preparation of the
+    // text is done (e. g. replace \n by QChar::LineSeparator or spaces dependent
+    // on the wrapping). This is done manually here:
+    qreal textWidth = -1.0;
+    const QTextOption::WrapMode wrapMode = model->wrapMode();
+    const bool singleLine = !viewPrivate->controller->wordWrap()
+                            || (wrapMode == QTextOption::NoWrap)
+                            || (wrapMode == QTextOption::ManualWrap);
+    if (singleLine) {
+        // Replace all line breaks by a space
+        for (int i = 0; i < textToRender.length(); ++i) {
+            const QChar chr = textToRender.at(i);
+            if (chr == QLatin1Char('\n') || chr == QChar::LineSeparator) {
+                textToRender[i] = QLatin1Char(' ');
+            }
+        }
+    } else {
+        textToRender.replace(QLatin1Char('\n'), QChar::LineSeparator);
+
+        const QFontMetricsF metrics(viewPrivate->controller->font());
+        textWidth = metrics.width(textToRender);
+        if (textWidth > paintingRect.width()) {
+            textWidth = paintingRect.width();
+        }
+    }
+
+    staticText.setTextWidth(textWidth);
+
     staticText.setTextOption(viewPrivate->textOptions);
     staticText.setText(textToRender);
     staticText.prepare(QTransform(), viewPrivate->controller->font());
@@ -281,14 +299,20 @@ void MLabelViewSimple::initializeStaticText()
 
 void MLabelViewSimple::adjustTextOffset()
 {
-    const Qt::Alignment alignment = viewPrivate->textOptions.alignment();
+    const MLabelModel *model = viewPrivate->model();
+    Qt::Alignment alignment = viewPrivate->textOptions.alignment();
+    if (model->textDirection() == Qt::RightToLeft && !(alignment & Qt::AlignHCenter)) {
+        // Mirror the horizontal alignment
+        if (alignment & Qt::AlignRight) {
+            alignment = (alignment | Qt::AlignLeft) & ~Qt::AlignRight;
+        } else {
+            alignment = (alignment | Qt::AlignRight) & ~Qt::AlignLeft;
+        }
+    }
 
     // Adjust x-position dependent on the horizontal alignment
     if (alignment & Qt::AlignHCenter) {
-        const qreal inc = (paintingRect.width() - staticText.size().width()) / 2.0;
-        if (inc > 0.0) {
-            textOffset.rx() += inc;
-        }
+        textOffset.rx() += (paintingRect.width() - staticText.size().width()) / 2.0;
     } else if (alignment & Qt::AlignRight) {
         textOffset.setX(paintingRect.right() - staticText.size().width());
     }
