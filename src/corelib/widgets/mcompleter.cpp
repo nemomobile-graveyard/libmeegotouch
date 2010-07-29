@@ -128,6 +128,7 @@ void MCompleterPrivate::fetchPrefix()
     if (text.isEmpty() || cursorPosition == -1)
         return;
 
+    QString prefix;
     //if not acceptMultipleEntries(), then don't give suggestions by setting an empty prefix
     if (!q->model()->acceptMultipleEntries()) {
         bool multiEntries = false;
@@ -138,7 +139,7 @@ void MCompleterPrivate::fetchPrefix()
             }
         }
         if (!multiEntries)
-            q->model()->setCompletionPrefix(text);
+            prefix = text;
     } else {
         // prefix is the text contains the cursor, and betweens delimiters.
         QString left, right;
@@ -152,8 +153,23 @@ void MCompleterPrivate::fetchPrefix()
                 rightIndex = qMin(rightIndex, index);
         }
         leftIndex++;
-        q->model()->setCompletionPrefix(QString(left.mid(leftIndex) + right.left(rightIndex)));
+        prefix = QString(left.mid(leftIndex) + right.left(rightIndex));
     }
+
+    // trim for prefix
+    QString trimSet = q->model()->charactersToTrimForCompletionPrefix();
+    if (!prefix.isEmpty() && !trimSet.isEmpty()) {
+        // trim left
+        while (!prefix.isEmpty() && trimSet.contains(prefix.at(0))) {
+            prefix = prefix.right(prefix.length() - 1);
+        }
+        // trim right
+        while (!prefix.isEmpty() && trimSet.contains(prefix.at(prefix.length() - 1))) {
+            prefix = prefix.left(prefix.length() - 1);
+        }
+    }
+
+    q->model()->setCompletionPrefix(prefix);
 
     qDebug() << __PRETTY_FUNCTION__ << q->model()->completionPrefix();
 }
@@ -547,6 +563,16 @@ QString MCompleter::charactersToTrim() const
 void MCompleter::setCharactersToTrim(const QString &set)
 {
     return model()->setCharactersToTrim(set);
+}
+
+QString MCompleter::charactersToTrimForCompletionPrefix() const
+{
+    return model()->charactersToTrimForCompletionPrefix();
+}
+
+void MCompleter::setCharactersToTrimForCompletionPrefix(const QString &str)
+{
+    return model()->setCharactersToTrimForCompletionPrefix(str);
 }
 
 MCompletionModel::MCompletionModel(QObject *parent)

@@ -115,6 +115,7 @@ class M_EXPORT MCompleter : public MSceneWindow
     M_CONTROLLER(MCompleter)
 
     Q_PROPERTY(bool acceptMultipleEntries READ acceptMultipleEntries WRITE setAcceptMultipleEntries)
+    Q_PROPERTY(QString charactersToTrimForCompletionPrefix READ charactersToTrimForCompletionPrefix WRITE setCharactersToTrimForCompletionPrefix)
 public:
 
     /*!
@@ -212,18 +213,39 @@ public:
     bool isActive() const;
 
     /*!
-     *\brief Return the characters which will be trimmed when confirm(). \sa setCharactersToTrim()
+     *\brief Returns the characters which will be trimmed when confirm(). \sa setCharactersToTrim()
      */
     QString charactersToTrim() const;
 
     /*!
-     *\brief set the characters to be trimmed when confirm().
+     *\brief Sets the characters to be trimmed when confirm().
      * When confirming, the completion will remove the characters(belong to charactersToTrim()) from the start and the end. For example, to remove '<' and '>' from "<tom@example.com>", only insert "tom@example.com" to text entry.
      * \code
      *   completer->setCharactersToTrim(QString("<>"));
      * \endcode
      */
     void setCharactersToTrim(const QString &str);
+
+    /*!
+     *\brief Returns the characters which will be trimmed from the start and the end of completionPrefix().
+     * Default charactersToTrimForCompletionPrefix() is space.
+     * \sa setCharactersToTrimForCompletionPrefix().
+     */
+    QString charactersToTrimForCompletionPrefix() const;
+
+    /*!
+     *\brief Sets the characters to be trimmed from the start and the end of completionPrefix().
+     * All characters in \a str will be removed from the start and the end of completionPrefix().
+     * Example:
+     * \code
+     *   // if the text which contains cursor and betweens two delimiters is "  text to be trimmed\t\r ".
+     *   completer->setCharactersToTrimForCompletionPrefix(QString(" \t\r"));
+     *   // completionPrefix() == "to be trimmed";
+     * \endcode
+     *
+     * \sa charactersToTrimForCompletionPrefix().
+     */
+    void setCharactersToTrimForCompletionPrefix(const QString &str);
 
 Q_SIGNALS:
     /*!

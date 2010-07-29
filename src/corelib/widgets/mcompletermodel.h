@@ -39,7 +39,8 @@ private:
     M_MODEL_PROPERTY(bool, active, Active, true, false)
     M_MODEL_PROPERTY(bool, popupActive, PopupActive, true, false)
     M_MODEL_PROPERTY(bool, acceptMultipleEntries, AcceptMultipleEntries, true, true)
-    M_MODEL_PROPERTY(QString, charactersToTrim, CharactersToTrim, true, QString())
+    M_MODEL_PROPERTY(QString, charactersToTrim, CharactersToTrim, true, QString(" "))
+    M_MODEL_PROPERTY(QString, charactersToTrimForCompletionPrefix, CharactersToTrimForCompletionPrefix, true, QString())
 
 };
 

@@ -478,6 +478,7 @@ void TextEntryPage::createContent()
     CompleterTestModel *model = new CompleterTestModel(c1, c2, this);
     m_completer->setCandidateSourceModel(model);
     m_completer->setCharactersToTrim(QString("<>"));
+    m_completer->setCharactersToTrimForCompletionPrefix(QString(" "));
     m_completer->setAcceptMultipleEntries(true);
     Entries.at(row)->setCompleter(m_completer);
 
