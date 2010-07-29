@@ -2,6 +2,8 @@
 
 \section v02032 0.20.32
 
+- Fixed NB#178931 - System modal dialog cannot be invoked twice
+
 \subsection New
 - Added "Getting Started" documentation
 

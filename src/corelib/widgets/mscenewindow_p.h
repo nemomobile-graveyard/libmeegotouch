@@ -23,7 +23,7 @@
 #include "mscenewindow.h"
 #include "private/mwidgetcontroller_p.h"
 #include <mabstractwidgetanimation.h>
-
+#include <MSceneManager>
 #include <QPointer>
 
 class MWindow;
@@ -64,7 +64,7 @@ public:
     MSceneWindowTransition *queuedTransition;
 
     // Scene manager that owns this scene window.
-    MSceneManager *sceneManager;
+    QPointer<MSceneManager> sceneManager;
 };
 
 class MSceneWindowTestInterface : public QObject
