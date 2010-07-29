@@ -275,8 +275,11 @@ void MPhysics2DPanning::setPosition(const QPointF &position)
     Q_D(MPhysics2DPanning);
 
     if (QPointF(d->posX, d->posY) != position) {
-        d->posX = position.x();
-        d->posY = position.y();
+
+        if (d->panDirection.testFlag(Qt::Horizontal))
+            d->posX = position.x();
+        if (d->panDirection.testFlag(Qt::Vertical))
+            d->posY = position.y();
 
         emit positionChanged(position);
 
