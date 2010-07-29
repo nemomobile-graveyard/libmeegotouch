@@ -55,7 +55,9 @@ MLocalThemeDaemon::MLocalThemeDaemon(const QString &applicationName)
 
     QHash<MThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
     QList<QPixmap*> pixmapsToDelete;
-    daemon.activateTheme(theme, language, QList<MThemeDaemonClient *>(), pixmapsToReload, pixmapsToDelete);
+    if ( daemon.activateTheme(theme, language, QList<MThemeDaemonClient *>(), pixmapsToReload, pixmapsToDelete) == false ) {
+        mWarning("MThemeDaemon") << "Could not activate the theme:" << theme;
+    }
     Q_ASSERT(pixmapsToReload.isEmpty());
     Q_ASSERT(pixmapsToDelete.isEmpty());
 
