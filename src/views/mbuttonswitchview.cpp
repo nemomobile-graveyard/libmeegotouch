@@ -59,7 +59,9 @@ MButtonSwitchViewPrivate::MButtonSwitchViewPrivate() :
     m_thumbPos(),
     m_thumbPosValid(false),
     m_handleAnimation(new HandleAnimation(this)),
-    m_animationSpeed(500)
+    m_animationSpeed(500),
+    defaultStyle(NULL),
+    selectedStyle(NULL)
 {
 }
 
@@ -78,7 +80,8 @@ QSize MButtonSwitchViewPrivate::thumbSize() const
     //scale the thumb to fit inside the view, aspect ratio is kept the same
     if (thumb.height() != view.height()) {
         float f = view.height() / thumb.height();
-        return thumb * f;
+        thumb = thumb * f;
+        return QSize(thumb.width() - q->style()->thumbMargin() * 2, thumb.height() - q->style()->thumbMargin() * 2);
     } else
         return thumb;
 }
@@ -103,9 +106,9 @@ QPoint MButtonSwitchViewPrivate::thumbEndPos(bool checked) const
     QSize thumb = thumbSize();
     int h = (q->size().height() / 2) - (thumb.height() / 2);
     if( checked )
-        return QPoint(q->size().width() - thumb.width(), h);
+        return QPoint(q->size().width() - thumb.width() - q->style()->thumbMargin(), h);
     else
-        return QPoint(0, h);
+        return QPoint(q->style()->thumbMargin(), h);
 }
 
 
@@ -117,9 +120,7 @@ const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
         //create the new masked slider image only if the source images are valid
         Q_Q(const MButtonSwitchView);
         if( !(q->style()->sliderImage()->pixmap()->isNull() ||
-              q->style()->sliderMask()->pixmap()->isNull() ||
-              q->style()->sliderImage()->pixmap()->size() == QSize(1, 1) ||
-              q->style()->sliderMask()->pixmap()->size() == QSize(1, 1)) ) {
+              q->style()->sliderMask()->pixmap()->isNull()) ) {
 
             //create image and make it totally transparent
             m_maskedSliderPm = QPixmap(q->size().toSize());
@@ -127,8 +128,12 @@ const QPixmap& MButtonSwitchViewPrivate::maskedSliderImage() const
 
             //create the masked slider image using MScalableImage::draw() overload
             QPainter p(&m_maskedSliderPm);
-            int offset = (q->style()->sliderImage()->pixmap()->width() / 2) - thumbPos().x() - (thumbSize().width() / 2);
-            q->style()->sliderMask()->draw(QRect(QPoint(0,0), q->size().toSize()), QPoint(offset,0), q->style()->sliderImage()->pixmap(), &p);
+            qreal opacity = ((qreal)thumbPos().x() - q->style()->thumbMargin() * 2) / ((qreal)q->size().toSize().width() - thumbSize().width());
+            p.setOpacity(1.0 - opacity);
+            q->style()->sliderMask()->draw(QRect(QPoint(0,0), q->size().toSize()), QPoint(0,0), defaultStyle->sliderImage()->pixmap(), &p);
+            p.setOpacity(opacity);
+            q->style()->sliderMask()->draw(QRect(QPoint(0,0), q->size().toSize()), QPoint(0,0), selectedStyle->sliderImage()->pixmap(), &p);
+            //p.setOpacity(1.0);
         }
     }
 
@@ -178,6 +183,10 @@ void MButtonSwitchView::applyStyle()
     //invalidate masked slider image
     Q_D(MButtonSwitchView);
     d->m_maskedSliderPm = QPixmap();
+    style().setModeSelected();
+    d->selectedStyle = style().operator ->();
+    style().setModeDefault();
+    d->defaultStyle = style().operator ->();
 }
 
 void MButtonSwitchView::updateData(const QList<const char *>& modifications)
@@ -315,10 +324,10 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         int x = qRound(pos.x()) - d->mouseOffset;
 
         //keep the thumb totally inside the view
-        if (x < 0)
-            x = 0;
-        else if (x > (size().width() - d->thumbSize().width()))
-            x = size().width() - d->thumbSize().width();
+        if (x < style()->thumbMargin())
+            x = style()->thumbMargin();
+        else if (x > (size().width() - d->thumbSize().width() - style()->thumbMargin()))
+            x = size().width() - d->thumbSize().width() - style()->thumbMargin();
         d->m_thumbPos.setX(x);
         d->m_thumbDragged = true;
 

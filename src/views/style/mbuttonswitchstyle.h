@@ -89,6 +89,8 @@ class M_EXPORT MButtonSwitchStyle : public MButtonStyle
         \brief Feedback given when releasing a switch about to switch off
       */
     M_STYLE_ATTRIBUTE(MFeedback, releaseOffFeedback, ReleaseOffFeedback)
+
+    M_STYLE_ATTRIBUTE(int, thumbMargin, ThumbMargin)
 };
 
 /*!

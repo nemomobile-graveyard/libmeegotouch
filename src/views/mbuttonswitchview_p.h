@@ -23,6 +23,7 @@
 #include "mbuttonview_p.h"
 
 class QVariantAnimation;
+class MButtonSwitchStyle;
 
 class MButtonSwitchViewPrivate : public MButtonViewPrivate
 {
@@ -55,6 +56,9 @@ public:
 
     QVariantAnimation* m_handleAnimation;
     int m_animationSpeed; //pixels per sec
+
+    const MButtonSwitchStyle *defaultStyle;
+    const MButtonSwitchStyle *selectedStyle;
 };
 
 #endif
