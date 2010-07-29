@@ -52,11 +52,14 @@ class ImageResource
 public:
     ImageResource(const QString& absoluteFilePath)
         : filePath(absoluteFilePath) {}
+
     virtual ~ImageResource() {}
+
     // creates a cache entry if there's no such yet, otherwise just increase the refCount
     Qt::HANDLE fetchPixmap(const QSize &size);
     // decreases refCount and releases the pixmap if refCount dropped to zero
     void releasePixmap(const QSize &size);
+
     QPixmap* releaseWithoutDelete(const QSize &size);
 
     // returns a handle to pixmap, without increasing the refCount
@@ -66,13 +69,18 @@ public:
     bool load(QIODevice* device, const QSize& size);
     
     QString absoluteFilePath()
-    { return filePath;}
-    
+    { return filePath; }
+
 protected:
     virtual QPixmap *createPixmap(const QSize &size) = 0;
+    virtual QString uniqueKey() = 0;
+
 private:
+    QPixmap *loadFromFsCache(const QSize& size);
+    void saveToFsCache(const QPixmap* pixmap, const QSize& size);
+    QString createCacheFilename(const QSize& size);
+
     QString filePath;
-    
     // pixmaps created from this image resource
     QHash<QSize, PixmapCacheEntry> cachedPixmaps;
 };
@@ -87,7 +95,7 @@ public:
 
 protected:
     virtual QPixmap *createPixmap(const QSize &size);
-private:
+    virtual QString uniqueKey();
 };
 
 class PixmapImageResource : public ImageResource
@@ -100,7 +108,7 @@ public:
 
 protected:
     virtual QPixmap *createPixmap(const QSize &size);
-private:
+    virtual QString uniqueKey();
 };
 
 class SvgImageResource : public ImageResource
@@ -108,10 +116,12 @@ class SvgImageResource : public ImageResource
 public:
     SvgImageResource(const QString &imageId, const QString& absoluteFilePath) :
         ImageResource(absoluteFilePath), imageId(imageId) {}
+
     virtual ~SvgImageResource() {}
 
 protected:
     virtual QPixmap *createPixmap(const QSize &size);
+    virtual QString uniqueKey();
 private:
     QString imageId;
 };

@@ -112,26 +112,11 @@ bool MCommonPixmaps::save(const QString &filename) const
 
     QHash<PixmapIdentifier, quint32>::const_iterator i = requestCounts.begin();
 
-    QString path = cachePath();
-
     for (; i != requestCounts.end(); ++i) {
         const PixmapIdentifier& id = i.key();
 
         bool isMostUsed = mostUsedPixmaps.contains(id);
         stream << id.imageId << id.size << i.value() << isMostUsed;
-        if(isMostUsed) {
-            QFile pixmapFile(path + id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')');
-            if(!pixmapFile.exists()) {
-                if(pixmapFile.open(QIODevice::WriteOnly)) {
-                    ImageResource* resource = daemon->findImageResource(id.imageId);
-                    if(resource && resource->save(&pixmapFile, id.size)) {
-                        pixmapFile.close();
-                    } else {
-                        pixmapFile.remove();
-                    }
-                }
-            }
-        }
     }
 
     file.close();
@@ -151,18 +136,7 @@ void MCommonPixmaps::loadOne()
 
             ImageResource *resource = daemon->findImageResource(id.imageId);
             if (resource) {
-                bool resourceLoaded = false;
-                if (!resource->pixmapHandle(id.size)) {
-                    QFile pixmapFile(cachePath() + id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')');
-                    if(pixmapFile.open(QIODevice::ReadOnly)) {
-                        // try to load pre-rasterized pixmap from file
-                        resourceLoaded = resource->load(&pixmapFile, id.size);
-                        pixmapFile.close();
-                    }
-                }
-                if (!resourceLoaded) {
-                    resource->fetchPixmap(id.size);
-                }
+                resource->fetchPixmap(id.size);
             } else {
                 mWarning("MCommonPixmaps") << QString("Themedaemon could not find resource %1 while loading most used pixmaps. Removing from list.").arg(id.imageId);
                 requestCounts.remove(id);
@@ -254,7 +228,7 @@ void MCommonPixmaps::increaseRequestCount(const M::MThemeDaemonProtocol::PixmapI
             emit mostUsedPixmapsChanged(packet);
         }
 
-        remove(*leastUsed);
+        mostUsedPixmaps.remove(*leastUsed);
         mostUsedPixmaps.insert(id);
     }
 }
@@ -286,24 +260,3 @@ QList<M::MThemeDaemonProtocol::PixmapHandle> MCommonPixmaps::mostUsedPixmapHandl
 
     return pixmapHandles;
 }
-
-void MCommonPixmaps::remove(const M::MThemeDaemonProtocol::PixmapIdentifier &id)
-{
-    // path to theme-specific cache
-    QString path = cachePath() +
-                   id.imageId + '(' + QString::number(id.size.width()) + ',' + QString::number(id.size.height()) + ')';
-
-    // remove pixmap file from disk if there is one
-    if(QFile::exists(path)) {
-        QFile::remove(path);
-    }
-
-    mostUsedPixmaps.remove(id);
-}
-
-QString MCommonPixmaps::cachePath() const
-{
-    return MThemeDaemon::systemThemeCacheDirectory() + QDir::separator() +
-           daemon->currentTheme() + QDir::separator();
-}
-

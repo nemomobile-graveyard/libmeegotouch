@@ -33,6 +33,7 @@
 
 namespace {
     const unsigned int ID_CACHE_VERSION = 1;
+    const unsigned int IMAGE_CACHE_VERSION = 1;
 }
 
 uint qHash(const QSize &size)
@@ -45,8 +46,14 @@ Qt::HANDLE ImageResource::fetchPixmap(const QSize &size)
     PixmapCacheEntry &cacheEntry = cachedPixmaps[size];
 
     if (!cacheEntry.pixmap) {
-        // we didn't have the correctly sized pixmap in cache, so we need to create one.
-        cacheEntry.pixmap = createPixmap(size);
+        // try to load it from filesystem cache
+        cacheEntry.pixmap = loadFromFsCache(size);
+
+        if (!cacheEntry.pixmap) {
+            // we didn't have the correctly sized pixmap in cache, so we need to create one.
+            cacheEntry.pixmap = createPixmap(size);
+            saveToFsCache(cacheEntry.pixmap, size);
+        }
 
 #ifdef  Q_WS_X11
         // Sync X-Server, without this the pixmap handle is still invalid in client-side
@@ -62,8 +69,6 @@ Qt::HANDLE ImageResource::fetchPixmap(const QSize &size)
     return cacheEntry.pixmap;
 #endif
 }
-
-
 
 void ImageResource::releasePixmap(const QSize &size)
 {
@@ -121,33 +126,87 @@ Qt::HANDLE ImageResource::pixmapHandle(const QSize &size)
     }
 }
 
-bool ImageResource::save(QIODevice* device, const QSize& size) const
+QPixmap *ImageResource::loadFromFsCache(const QSize& size)
 {
-    QHash<QSize, PixmapCacheEntry>::const_iterator iterator = cachedPixmaps.find(size);
-    if(iterator == cachedPixmaps.constEnd())
-        return false;
-
-    return iterator.value().pixmap->save(device, "PNG");
-}
-
-bool ImageResource::load(QIODevice* device, const QSize& size)
-{
-    QPixmap* pixmap = new QPixmap();
-    if(!pixmap->loadFromData(device->readAll(), "PNG")) {
-        delete pixmap;
-        return false;
+    const QString cacheFileName = createCacheFilename(size);
+    if (cacheFileName.isEmpty()) {
+        return 0;
     }
 
-    PixmapCacheEntry &cacheEntry = cachedPixmaps[size];
-    Q_ASSERT_X(!cacheEntry.pixmap, "ImageResource", "Tried to load pixmap that already exists.");
-    cacheEntry.pixmap = pixmap;
-    ++cacheEntry.refCount;
+    if (QFile::exists(cacheFileName)) {
+        QFile file(cacheFileName);
+        if (file.open(QFile::ReadOnly)) {
+            QDataStream stream(&file);
+            uint version;
+            stream >> version;
+            if (version != IMAGE_CACHE_VERSION) {
+                // will be replaced with up to date version
+                file.close();
+                return 0;
+            }
+            uint timestamp;
+            stream >> timestamp;
+            QFileInfo fileInfo(absoluteFilePath());
+            if (timestamp != fileInfo.lastModified().toTime_t()) {
+                // will be replaced with up to date version
+                file.close();
+                return 0;
+            }
 
+            QPixmap *pixmap = new QPixmap();
+            stream >> *pixmap;
 #ifdef  Q_WS_X11
-    // Sync X-Server, without this the pixmap handle is still invalid in client-side
-    XSync(QX11Info::display(), false);
+            // Sync X-Server, without this the pixmap handle is still invalid in client-side
+            XSync(QX11Info::display(), false);
 #endif
-    return true;
+            file.close();
+            return pixmap;
+        } else {
+            mWarning("ImageResource") << "Failed to load pixmap from chache" << cacheFileName;
+        }
+        return 0;
+    }
+
+    return 0;
+}
+
+void ImageResource::saveToFsCache(const QPixmap* pixmap, const QSize& size)
+{
+    const QString cacheFileName = createCacheFilename(size);
+    if (cacheFileName.isEmpty()) {
+        return;
+    }
+
+    QFile file(cacheFileName);
+    if (!file.open(QFile::WriteOnly)) {
+        //Maybe it failed because the directory doesn't exist
+        QDir().mkpath(QFileInfo(cacheFileName).absolutePath());
+        if (!file.open(QFile::WriteOnly)) {
+            mWarning("ImageResource") << "Failed to save cache file for" << absoluteFilePath() << "to" << cacheFileName;
+        return;
+        }
+    }
+
+    QDataStream stream(&file);
+    stream << IMAGE_CACHE_VERSION;
+    QFileInfo fileInfo(absoluteFilePath());
+    stream << fileInfo.lastModified().toTime_t();
+    stream << *pixmap;
+
+    file.close();
+}
+
+QString ImageResource::createCacheFilename(const QSize& size)
+{
+    QString cacheKey = uniqueKey();
+    if (cacheKey.isEmpty()) {
+        return QString();
+    }
+    cacheKey.replace(QLatin1Char('_'), QLatin1String("__"));
+    cacheKey.replace(QLatin1Char('/'), QLatin1String("_."));
+    cacheKey += '(' + QString::number(size.width()) + QLatin1Char(',') + QString::number(size.height()) + QLatin1Char(')');
+
+    return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("images/") + cacheKey;
 }
 
 QPixmap *PixmapImageResource::createPixmap(const QSize &size)
@@ -162,6 +221,12 @@ QPixmap *PixmapImageResource::createPixmap(const QSize &size)
 
     // we need to resize the image.
     return new QPixmap(QPixmap::fromImage(image.scaled(size, Qt::IgnoreAspectRatio, Qt::SmoothTransformation)));//Qt::FastTransformation)));
+}
+
+QString PixmapImageResource::uniqueKey()
+{
+    // caching does not really make sense, return empty id
+    return QString();
 }
 
 QPixmap *IconImageResource::createPixmap(const QSize &size)
@@ -184,6 +249,11 @@ QPixmap *IconImageResource::createPixmap(const QSize &size)
     return pixmap;
 }
 
+QString IconImageResource::uniqueKey()
+{
+    return absoluteFilePath();
+}
+
 QPixmap *SvgImageResource::createPixmap(const QSize &size)
 {
     QSvgRenderer* renderer = MThemeResourceManager::instance().svgRenderer(absoluteFilePath());
@@ -204,6 +274,11 @@ QPixmap *SvgImageResource::createPixmap(const QSize &size)
     renderer->render(&painter, imageId);
 
     return pixmap;
+}
+
+QString SvgImageResource::uniqueKey()
+{
+    return absoluteFilePath() + QLatin1String("$$") + imageId;
 }
 
 const QString MThemeImagesDirectory::pixmapsDir = "images";
@@ -462,13 +537,12 @@ void MThemeImagesDirectory::saveIdsInCache(const QStringList& ids, const QFileIn
     file.close();
 }
 
-// TODO: inspired by MStyleSheetParserPrivate::createBinaryFilename(). consider merging both.
 QString MThemeImagesDirectory::createIdCacheFilename(const QString &filePath) const
 {
     QString filePathEncoded(filePath);
-    filePathEncoded.replace('_', "__");
-    filePathEncoded.replace('/', "_.");
-    return MThemeDaemon::systemThemeCacheDirectory() + "ids/" + filePathEncoded;
+    filePathEncoded.replace(QLatin1Char('_'), QLatin1String("__"));
+    filePathEncoded.replace(QLatin1Char('/'), QLatin1String("_."));
+    return MThemeDaemon::systemThemeCacheDirectory() + QLatin1String("ids/") + filePathEncoded;
 }
 
 MImageDirectory::MImageDirectory(const QString &path, M::RecursionMode recursionMode)

@@ -56,9 +56,6 @@ private:
      */
     static const qint32 CacheSize = 128;
 
-    void remove(const M::MThemeDaemonProtocol::PixmapIdentifier &id);
-    QString cachePath() const;
-
     /*!
         \brief Current minimum amount of requests for a pixmap to end up in cache
      */
