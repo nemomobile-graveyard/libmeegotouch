@@ -33,6 +33,14 @@ namespace
 {
     //! Toolbar file
     const QString ToolbarFile = QString("/usr/share/meegotouch/imtoolbars/RichTextEditorToolbar1.xml");
+
+    MTextEditModel *createRichTextModel(MTextEditModel::LineMode type, const QString &text)
+    {
+        MTextEditModel *model = new MTextEditModel;
+        model->setDocument(new QTextDocument(text, model));
+        model->setLine(type);
+        return model;
+    }
 }
 
 
@@ -132,14 +140,12 @@ void MRichTextEditPrivate::_q_updateStyle()
 
 
 MRichTextEdit::MRichTextEdit(MTextEditModel::LineMode type, const QString &text, QGraphicsItem *parent)
-    : MTextEdit(new MRichTextEditPrivate, new MTextEditModel, parent)
+    : MTextEdit(new MRichTextEditPrivate, createRichTextModel(type, text), parent)
 {
     connect(this,
             SIGNAL(cursorPositionChanged()),
             SLOT(_q_updateStyle()));
 
-    model()->setText(text);
-    model()->setLine(type);
     attachToolbar(ToolbarFile);
 }
 
