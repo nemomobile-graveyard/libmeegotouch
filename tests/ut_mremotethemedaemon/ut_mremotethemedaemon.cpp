@@ -126,9 +126,6 @@ void Ut_MRemoteThemeDaemon::testRegisterApplication()
 
     m_themeDaemon->registerApplicationName("foo");
     QCOMPARE(int(d_ptr->sequenceCounter), oldSequenceCounter + 1);
-
-    m_themeDaemon->registerApplicationName("foo");
-    QCOMPARE(int(d_ptr->sequenceCounter), oldSequenceCounter + 2);
 }
 
-QTEST_MAIN(Ut_MRemoteThemeDaemon)
+QTEST_APPLESS_MAIN(Ut_MRemoteThemeDaemon)

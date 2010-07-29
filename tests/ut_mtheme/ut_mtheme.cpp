@@ -69,11 +69,11 @@ void Ut_MTheme::testStyle()
     // Check overload behavior of MTheme::style()
     QCOMPARE(labelStyle1, labelStyle2);
 
-    const MStyle *labelStyle3 = m_theme->style("MLabelStyle", "MyButton", "active", "default", M::Landscape);
+    const MStyle *labelStyle3 = m_theme->style("MLabelStyle", "MyButton", "active", QString(), M::Landscape);
     QVERIFY(labelStyle3 != 0);
 
     // Loading of invalid styles is not supported, qFatal() is triggered in this case
-    // const MStyle *invalidStyle = m_theme->style("InvalidStyle", "MyButton", "active", "default", M::Landscape);
+    // const MStyle *invalidStyle = m_theme->style("InvalidStyle", "MyButton", "active", QString(), M::Landscape);
     // QVERIFY(invalidStyle == 0);
 
     m_theme->releaseStyle(labelStyle1);
@@ -96,7 +96,7 @@ void Ut_MTheme::testThemeChangeCompleted()
     // Wait until the signal themeChangeCompleted() has been received
     QEventLoop eventLoop;
     connect(m_theme, SIGNAL(themeChangeCompleted()), &eventLoop, SLOT(quit()));
-    QTimer::singleShot(20000, &eventLoop, SLOT(quit())); // fallback if themeChangeCompleted() is not send
+    QTimer::singleShot(30000, &eventLoop, SLOT(quit())); // fallback if themeChangeCompleted() is not send
     eventLoop.exec();
 
     QCOMPARE(spy.count(), 1);
@@ -183,8 +183,6 @@ void Ut_MTheme::testPixmapCopy()
     QVERIFY(!pixmap->size().isEmpty());
     QCOMPARE(spy.count(), 1);
     QCOMPARE(cachedIconCount(), 0);
-
-    m_theme->releasePixmap(pixmap);
 }
 
 void Ut_MTheme::testPixmapCopyWithSize()
@@ -196,8 +194,6 @@ void Ut_MTheme::testPixmapCopyWithSize()
     QCOMPARE(fixedSizePixmap->size(), QSize(100, 150));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(cachedIconCount(), 0);
-
-    m_theme->releasePixmap(fixedSizePixmap);
 }
 
 void Ut_MTheme::testUnknownPixmapCopy()
@@ -209,8 +205,6 @@ void Ut_MTheme::testUnknownPixmapCopy()
     QCOMPARE(unknownPixmap->size(), QSize(50, 50));
     QCOMPARE(spy.count(), 1);
     QCOMPARE(cachedIconCount(), 0);
-
-    m_theme->releasePixmap(unknownPixmap);
 }
 
 void Ut_MTheme::testPixmapCaching()
@@ -316,11 +310,11 @@ void Ut_MTheme::waitForPendingThemeRequests()
 
         QEventLoop eventLoop;
         connect(m_theme, SIGNAL(pixmapRequestsFinished()), &eventLoop, SLOT(quit()));
-        QTimer::singleShot(5000, &eventLoop, SLOT(quit())); // fallback if pixmapRequestsFinished() is not send
+        QTimer::singleShot(10000, &eventLoop, SLOT(quit())); // fallback if pixmapRequestsFinished() is not send
         eventLoop.exec();
 
         QCOMPARE(spy.count(), 1);
     }
 }
 
-QTEST_MAIN(Ut_MTheme)
+QTEST_APPLESS_MAIN(Ut_MTheme)

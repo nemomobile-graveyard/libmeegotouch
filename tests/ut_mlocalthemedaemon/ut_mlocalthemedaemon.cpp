@@ -104,4 +104,4 @@ void Ut_MLocalThemeDaemon::testRegisterApplication()
     m_themeDaemon->registerApplicationName("foo");
 }
 
-QTEST_MAIN(Ut_MLocalThemeDaemon)
+QTEST_APPLESS_MAIN(Ut_MLocalThemeDaemon)
