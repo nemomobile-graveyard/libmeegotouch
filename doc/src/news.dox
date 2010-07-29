@@ -7,6 +7,7 @@
 
 \subsection New
 - Added "Getting Started" documentation
+- MCompleter::setCharactersToTrimForCompletionPrefix() can be used to set the characters to be trimmed from the start and the end of completion prefix. MCompleter::charactersToTrimForCompletionPrefix() can be used to query the characters which will be trimmed for completion prefix.
 
 \section v02030 0.20.30
 
