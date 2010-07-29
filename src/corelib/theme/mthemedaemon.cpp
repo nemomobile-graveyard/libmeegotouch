@@ -396,25 +396,21 @@ void MThemeDaemon::changeLocale(const QString &newLocale, const QList<MThemeDaem
 
         // get all icons from this client
         for (; i != end; ++i) {
-            // is this image an icon?
-            if (dynamic_cast<IconImageResource *>(i.value())) {
-
-                bool reload = false;
-                foreach(MThemeImagesDirectory * imdir, themeImageDirs) {
-                    if (imdir->isLocaleSpecificImage(i.key().imageId)) {
-                        reload = true;
-                        break;
-                    }
+            bool reload = false;
+            foreach(MThemeImagesDirectory * imdir, themeImageDirs) {
+                if (imdir->isLocalizedResource(i.key().imageId)) {
+                    reload = true;
+                    break;
                 }
+            }
 
-                if (reload) {
-                    // this image was locale specific icon so mark it to be reloaded
-                    pixmapsToBeReloaded.append(i.key());
-                    mostUsedPixmaps.reload(i.key(), i.value());
-                } else {
-                    // this image was icon but not locale specific so mark it as potential
-                    potentialReloadlist.append(qMakePair(i.key(), i.value()));
-                }
+            if (reload) {
+                // this image was locale specific icon so mark it to be reloaded
+                pixmapsToBeReloaded.append(i.key());
+                mostUsedPixmaps.reload(i.key(), i.value());
+            } else {
+                // this image was icon but not locale specific so mark it as potential
+                potentialReloadlist.append(qMakePair(i.key(), i.value()));
             }
         }
 
@@ -429,17 +425,16 @@ void MThemeDaemon::changeLocale(const QString &newLocale, const QList<MThemeDaem
 
     // load the new locale specific images
     foreach(MThemeImagesDirectory * imdir, themeImageDirs) {
-        imdir->reloadLocaleSpecificImages(newLocale);
+        imdir->reloadLocalizedResources(newLocale);
     }
 
+    //if new locale contains some new locale specific resources, reload them as well
     typedef QPair<PixmapIdentifier, ImageResource *> pi_ir;
     typedef QPair<MThemeDaemonClient *, QList<pi_ir> > c_pi_ir;
-
     foreach(const c_pi_ir & potentialIconsFromClient, potentialIconsFromClients) {
         foreach(const pi_ir & potentialIcon, potentialIconsFromClient.second) {
-
             foreach(MThemeImagesDirectory * imdir, themeImageDirs) {
-                if (imdir->isLocaleSpecificImage(potentialIcon.first.imageId)) {
+                if (imdir->isLocalizedResource(potentialIcon.first.imageId)) {
                     releasePixmap(potentialIconsFromClient.first, potentialIcon.first);
                     mostUsedPixmaps.reload(potentialIcon.first, potentialIcon.second);
                     pixmapsToReload[potentialIconsFromClient.first].append(potentialIcon.first);

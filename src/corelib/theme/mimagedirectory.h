@@ -50,6 +50,8 @@ struct PixmapCacheEntry {
 class ImageResource
 {
 public:
+    ImageResource(const QString& absoluteFilePath)
+        : filePath(absoluteFilePath) {}
     virtual ~ImageResource() {}
     // creates a cache entry if there's no such yet, otherwise just increase the refCount
     Qt::HANDLE fetchPixmap(const QSize &size);
@@ -62,9 +64,15 @@ public:
 
     bool save(QIODevice* device, const QSize& size) const;
     bool load(QIODevice* device, const QSize& size);
+    
+    QString absoluteFilePath()
+    { return filePath;}
+    
 protected:
     virtual QPixmap *createPixmap(const QSize &size) = 0;
 private:
+    QString filePath;
+    
     // pixmaps created from this image resource
     QHash<QSize, PixmapCacheEntry> cachedPixmaps;
 };
@@ -73,42 +81,39 @@ class IconImageResource : public ImageResource
 {
 public:
     IconImageResource(const QString &absoluteFilePath) :
-        absoluteFilePath(absoluteFilePath) {}
+        ImageResource(absoluteFilePath) {}
     virtual ~IconImageResource() {
     }
 
 protected:
     virtual QPixmap *createPixmap(const QSize &size);
 private:
-    QString absoluteFilePath;
 };
 
 class PixmapImageResource : public ImageResource
 {
 public:
     PixmapImageResource(const QString &absoluteFilePath) :
-        absoluteFilePath(absoluteFilePath) {}
+        ImageResource(absoluteFilePath) {}
     virtual ~PixmapImageResource() {
     }
 
 protected:
     virtual QPixmap *createPixmap(const QSize &size);
 private:
-    QString absoluteFilePath;
 };
 
 class SvgImageResource : public ImageResource
 {
 public:
     SvgImageResource(const QString &imageId, const QString& absoluteFilePath) :
-        imageId(imageId), absoluteFilePath(absoluteFilePath) {}
+        ImageResource(absoluteFilePath), imageId(imageId) {}
     virtual ~SvgImageResource() {}
 
 protected:
     virtual QPixmap *createPixmap(const QSize &size);
 private:
     QString imageId;
-    QString absoluteFilePath;
 };
 
 
@@ -124,29 +129,30 @@ public:
 
     ImageResource *findImage(const QString &imageId);
 
-    bool isLocaleSpecificImage(const QString &imageId) const;
+    bool isLocalizedResource(const QString &imageId) const;
 
-    void reloadLocaleSpecificImages(const QString &locale);
+    void reloadLocalizedResources(const QString &locale);
     
     QString path() const;
     QString locale() const;
     
 private:
-    bool loadIdsFromCache(const QFileInfo& svgFileInfo);
+    bool loadIdsFromCache(const QFileInfo& svgFileInfo, bool localized = false);
     void saveIdsInCache(const QStringList& ids, const QFileInfo& svgFileInfo) const;
     QString createIdCacheFilename(const QString &filePath) const;
+
+    void readImageResources(const QString& path, bool localized = false);
+    void readSvgResources(const QString& path, bool localized = false);
+    void addImageResource(const QFileInfo& fileInfo, bool localized);
+    void addSvgResource(const QFileInfo& fileInfo, bool localized);
 
     // image id => image resource
     QHash<QString, ImageResource *> imageResources;
     // image id => svg filename
     QMultiHash<QString, QString> idsInSvgImages;
 
-
-    // locale specific icon
-    QHash<QString, ImageResource *> localeSpecificIcons;
-
-    // svg renderer file path => shared svg renderer pointer
-    QHash< QString, QSharedPointer<QSvgRenderer> > svgFiles;
+    QHash<QString, ImageResource *> localizedImageResources;
+    QMultiHash<QString, QString> idsInLocalizedSvgImages;
 
     QString m_path;
     QString m_locale;
