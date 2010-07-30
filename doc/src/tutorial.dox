@@ -81,7 +81,7 @@ This is the minimal code to get a "Hello World!" MeeGo Touch application working
 \subsection mapplicationpage_furtherreading Further reading
 Understand the \subpage sceneandscenewindows "MeeGo Touch scene and its scene windows".
 
-\section pagenavigation Navigating between pages
+\section tutorial_pagenavigation Navigating between pages
 
 A MeeGo Touch application can have several pages. An action done in a page may programatically trigger the appearance of a new one, which will cause the current one to disappear as only one page can be displayed at any given time.
 
@@ -154,6 +154,8 @@ $ make
 \subsection pagenavigation_furtherreading Further reading
 
 For our lists we used MButtons in a vertical QGraphicsLayout. This approach is straightforward but if our lists had hundreds or even thousands of items we would suffer significant perfomance issues, to say the least. For those cases MList should be used. Its usage is not as simple as what we did but it gracefully handles lists of any size. Read MList documentation and refactor the "Music Catalogue" example to use MList.
+
+Read about Drill Down and other navigational patterns in: \subpage pagenavigation
 
 \section screenOrientation Dealing with different screen orientations (portrait vs. landscape)
 

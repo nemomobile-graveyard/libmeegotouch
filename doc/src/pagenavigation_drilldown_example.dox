@@ -1,0 +1,21 @@
+/*! \page pagenavigation_drilldown_example Drill Down Navigational Pattern Code Example
+
+Of all navigational patterns (drill down, application menu and tab bar) this is the easiest to implement. Since a page's escapeMode() is by default set to MApplicationPageModel::EscapeAuto, MeeGo Touch will take care of showing either a back button or a close button when a new page appears according to the page navigation history (MSceneManager::pageHistory()). MeeGo Touch will also automatically dismiss the current page when the back button is clicked, which will cause the previous one (i.e., the most recent in the page navigation history) to come back.
+
+Thus all you need to do is to make your next page appear. MeeGo Touch will take care of the rest.
+
+All files can be found at:
+\verbatim
+libmeegotouch/examples/pagenavigation_drilldown
+\endverbatim
+
+main.cpp:
+\include pagenavigation_drilldown/main.cpp
+
+samplepage.cpp:
+\include pagenavigation_drilldown/samplepage.cpp
+
+samplepage.h:
+\include pagenavigation_drilldown/samplepage.h
+
+*/

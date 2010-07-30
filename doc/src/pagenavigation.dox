@@ -1,0 +1,30 @@
+/*! \page pagenavigation Navigation within your applications
+
+Applications may vary in navigational patterns. Three main templates have
+been created to help support the application's main functional goals.
+
+\section pagenavigation_drilldown Drill Down
+
+This is the most scalable template, used when access to all application navigation structure is needed on the top level. Layouts are not restricted to lists. The Close button gets replaced by a Back button, as the user drills down the structure.
+
+\image html "pagenavigation_drilldown.png"
+
+\subpage pagenavigation_drilldown_example
+
+\section pagenavigation_menu Navigation in Application Menu
+
+This template is for flat experiences, prioritizing content over navigation structure. Application Menu is used for hopping between navigational options. This allows for many navigational options, as opposed to the Tab Bar template (below). As all these navigation points work as the top level of the application, the close button remains even after a navigational change.
+
+\image html "pagenavigation_menu.png"
+
+\subpage pagenavigation_menu_example
+
+\section pagenavigation_tab Tab Bar
+
+This template is for quick access between distinct areas or modes. Be careful about mixing actions (like “Create New Message”) with navigational links in the Tab Bar. Use buttons within the content area for actions, if necessary, in this layout. This model is limited to maximum 4 navigation options. Navigational options in an application should not change over time.
+
+\image html "pagenavigation_tab.png"
+
+\subpage pagenavigation_tab_example
+
+*/
