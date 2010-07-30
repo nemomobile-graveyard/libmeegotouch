@@ -190,10 +190,6 @@ void SwapHook::stopLurking()
         MApplication::activeWindow()->viewport()->removeEventFilter(d);
     }
 
-    for(QLinkedList<timestamp>::iterator i = d->stamps.begin(); i != d->stamps.end(); i++) {
-        (*i) -= d->lurkBegin;
-    }
-
     d->lurk = false;
 }
 
