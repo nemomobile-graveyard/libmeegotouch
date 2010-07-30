@@ -3,6 +3,7 @@
 \section v02032 0.20.32
 
 - Fixed NB#178931 - System modal dialog cannot be invoked twice
+- Fixed: NB#182051 - Closing the various setting ui from the SUW is closing the SUW itself
 
 \subsection New
 - Added "Getting Started" documentation

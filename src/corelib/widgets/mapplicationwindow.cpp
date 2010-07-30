@@ -835,7 +835,12 @@ void MApplicationWindowPrivate::_q_updatePageEscapeAuto()
             (escapeButtonPanel->escapeMode() != MEscapeButtonPanelModel::CloseMode)) {
 
         QObject::disconnect(escapeButtonPanel, SIGNAL(buttonClicked()), 0, 0);
+        // we don't want MEscapeButtonPanel::escapeModeChanged() to be intercepted
+        // by the scene manager which would update close button geometry.
+        // The geometry will be updated later on in connectPage().
+        escapeButtonPanel->blockSignals(true);
         setupPageEscapeClose();
+        escapeButtonPanel->blockSignals(false);
 
     } else if (!pageHistory.isEmpty() &&
             (escapeButtonPanel->escapeMode() != MEscapeButtonPanelModel::BackMode)) {
@@ -1005,14 +1010,14 @@ void MApplicationWindowPrivate::connectPage(MApplicationPage *newPage)
     q->connect(page->model(), SIGNAL(modified(QList<const char *>)),
                SLOT(_q_handlePageModelModifications(QList<const char *>)));
 
-    setupPageEscape();
-
     navigationBar->setViewMenuDescription(page->title());
     q->setWindowTitle(longestLengthVariant(page->title()));
 
     setComponentDisplayMode(homeButtonPanel, page->model()->homeButtonDisplayMode());
     setComponentDisplayMode(escapeButtonPanel, page->model()->escapeButtonDisplayMode());
     setComponentDisplayMode(navigationBar, page->model()->navigationBarDisplayMode());
+
+    setupPageEscape();
 
     // Dock widget follows navigation bar display mode.
     setComponentDisplayMode(dockWidget, page->model()->navigationBarDisplayMode());
