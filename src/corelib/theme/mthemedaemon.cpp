@@ -53,9 +53,7 @@ MThemeDaemon::MThemeDaemon() :
 
 MThemeDaemon::~MThemeDaemon()
 {
-    if (!mostUsedPixmaps.save(systemThemeCacheDirectory() + QDir::separator() + currentThemeName + QDir::separator() + "preload.list")) {
-        // TODO: print out warning
-    }
+    mostUsedPixmaps.save();
     mostUsedPixmaps.clear();
 
     qDeleteAll(themeImageDirs);
@@ -332,9 +330,7 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
 
     // 2. save the most used list for the old theme
     if (!currentThemeName.isEmpty()) {
-        if (!mostUsedPixmaps.save(systemThemeCacheDirectory() + QDir::separator() + currentThemeName + QDir::separator() + "preload.list")) {
-            // TODO: print out warning
-        }
+        mostUsedPixmaps.save();
     }
 
     // 3. release all most used pixmaps
@@ -374,9 +370,7 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
     reloadImagePaths(locale);
 
     // 6. load the "preload" list
-    if (!mostUsedPixmaps.load(systemThemeCacheDirectory() + QDir::separator() + currentThemeName + QDir::separator() + "preload.list")) {
-        // TODO: print out warning
-    }
+    mostUsedPixmaps.load();
 
     return true;
 }

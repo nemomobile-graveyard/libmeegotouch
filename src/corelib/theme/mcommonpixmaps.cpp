@@ -34,6 +34,7 @@ MCommonPixmaps::MCommonPixmaps(MThemeDaemon *daemon) :
     daemon(daemon)
 {
     connect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), SLOT(loadOne()));
+    connect(this, SIGNAL(mostUsedPixmapsChanged(M::MThemeDaemonProtocol::MostUsedPixmaps)), SLOT(considerSaving()));
 }
 
 MCommonPixmaps::~MCommonPixmaps()
@@ -60,14 +61,18 @@ void MCommonPixmaps::clear()
     minRequestsForCache = 0;
 }
 
-bool MCommonPixmaps::load(const QString &filename)
+void MCommonPixmaps::load()
 {
     // clear the old ones.
     clear();
 
-    QFile file(filename);
+    if (!QFile::exists(cacheFilename())) {
+        return;
+    }
+    QFile file(cacheFilename());
     if (!file.open(QIODevice::ReadOnly)) {
-        return false;
+        mWarning("MCommonPixmaps") << "Could not load most used pixmaps from" << cacheFilename();
+        return;
     }
 
     QDataStream stream(&file);
@@ -75,7 +80,7 @@ bool MCommonPixmaps::load(const QString &filename)
     unsigned int version;
     stream >> version;
     if (version != PRELOAD_FILE_VERSION)
-        return false;
+        return;
 
     while (file.bytesAvailable()) {
         QString imageId;
@@ -97,14 +102,14 @@ bool MCommonPixmaps::load(const QString &filename)
     }
 
     file.close();
-    return true;
 }
 
-bool MCommonPixmaps::save(const QString &filename) const
+void MCommonPixmaps::save() const
 {
-    QFile file(filename);
+    QFile file(cacheFilename());
     if (!file.open(QIODevice::WriteOnly)) {
-        return false;
+        mWarning("MCommonPixmaps") << "Could not save most used pixmaps to" << cacheFilename();
+        return;
     }
 
     QDataStream stream(&file);
@@ -120,7 +125,6 @@ bool MCommonPixmaps::save(const QString &filename) const
     }
 
     file.close();
-    return true;
 }
 
 void MCommonPixmaps::loadOne()
@@ -259,4 +263,19 @@ QList<M::MThemeDaemonProtocol::PixmapHandle> MCommonPixmaps::mostUsedPixmapHandl
     }
 
     return pixmapHandles;
+}
+
+QString MCommonPixmaps::cacheFilename() const
+{
+    return daemon->systemThemeCacheDirectory() + QDir::separator() + daemon->currentTheme() + QDir::separator() + QLatin1String("preload.list");
+}
+
+void MCommonPixmaps::considerSaving()
+{
+    // we do not allow more than one update in 10 seconds
+    const int delay = 10000;
+    if (!timerSinceLastSave.isValid() || timerSinceLastSave.hasExpired(delay)) {
+        save();
+        timerSinceLastSave.start();
+    }
 }

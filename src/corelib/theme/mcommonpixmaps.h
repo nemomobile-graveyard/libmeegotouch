@@ -22,6 +22,8 @@
 
 #include <QObject>
 #include <QSet>
+#include <QElapsedTimer>
+
 #include "mcpumonitor.h"
 #include "mimagedirectory.h"
 #include "mthemedaemonprotocol.h"
@@ -36,8 +38,8 @@ public:
     MCommonPixmaps(MThemeDaemon *daemon);
     ~MCommonPixmaps();
     void clear();
-    bool load(const QString &filename);
-    bool save(const QString &filename) const;
+    void load();
+    void save() const;
 
     void increaseRequestCount(const M::MThemeDaemonProtocol::PixmapIdentifier &id, ImageResource *resource);
 
@@ -50,7 +52,10 @@ Q_SIGNALS:
 
 private slots:
     void loadOne();
+    void considerSaving();
 private:
+    QString cacheFilename() const;
+
     /*!
         \brief Number of pixmaps to keep in most used pixmaps cache
      */
@@ -85,6 +90,8 @@ private:
         \brief Monitors the cpu usage. Is used for loading pixmaps when the cpu has free time
      */
     MCpuMonitor cpuMonitor;
+
+    QElapsedTimer timerSinceLastSave;
 };
 //! \internal_end
 
