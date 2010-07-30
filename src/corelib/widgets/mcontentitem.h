@@ -184,8 +184,7 @@ public:
     QImage image() const;
 
     /*!
-        \brief Get the thumbnail image theme-id
-        \return id
+      Returns the \ref logicalid "logical ID" of the contentItem's image.
      */
     QString imageID() const;
 
@@ -212,7 +211,7 @@ public:
     MContentItem::ContentItemStyle itemStyle() const;
 
     /*!
-     \brief Returns a pointer to the additional item.
+      Returns the \ref logicalid "logical ID" of the contentItem's additional image.
      */
     MWidget* additionalItem() const;
 
@@ -232,8 +231,7 @@ public:
     QImage optionalImage() const;
 
     /*!
-        \brief Get the optional image theme-id
-        \return id
+      Returns the \ref logicalid "logical ID" of the contentItem's optional image.
      */
     QString optionalImageID() const;
 
@@ -250,10 +248,11 @@ public Q_SLOTS:
      */
     void setImage(const QImage &pixmap);
 
-    /**
-        \brief Sets thumbnail image.
-        \param id, image id in theme system.
-        \param size, requested size of the icon
+    /*!
+      Sets the \ref logicalid "logical ID" of the contentItem image to \a id.
+
+      If \a size is not specified, whatever size the graphics happens to be in
+      the theme will be used.
      */
     void setImageID(const QString &id, const QSize &size = QSize());
 
@@ -309,10 +308,11 @@ public Q_SLOTS:
      */
     void setOptionalImage(const QImage& image);
 
-    /**
-        \brief Sets optional image (Icon).
-        \param id, image id in theme system.
-        \param s, requested size of the icon
+    /*!
+      Sets the \ref logicalid "logical ID" of the contentItem's optional image to \a id.
+
+      If \a size is not specified, whatever size the graphics happens to be in
+      the theme will be used.
      */
     void setOptionalImageID(const QString &id, const QSize &s = QSize());
 

@@ -34,8 +34,8 @@ class M_EXPORT MAction : public QAction
 {
     Q_OBJECT
 
-    /**
-       \brief properties handled by internal model
+    /*!
+       \ref logicalid "Logical ID" of the action icon.
     */
     Q_PROPERTY(QString iconID READ iconID WRITE setIconID)
 
@@ -88,13 +88,13 @@ public:
      */
     virtual ~MAction();
 
-    /**
-       \brief Return the iconID associated with this action
+    /*!
+      Returns the \ref logicalid "logical ID" associated with this action's icon.
      */
     QString iconID() const;
 
-    /**
-       \brief set the iconID associated with this action
+    /*!
+      Sets the \ref logicalid "logical ID" associated with this action's icon to \a id.
      */
     void setIconID(const QString &id);
 

@@ -189,9 +189,8 @@ public:
     */
     QItemSelectionModel *selectionModel() const;
 
-    /**
-        \brief Get the icon ID.
-        \return icon ID in theme system
+    /*!
+       Returns the \ref logicalid "logical ID" associated with this comboBox's icon.
      */
     QString iconID() const;
 
@@ -326,9 +325,8 @@ public Q_SLOTS:
     */
     void clear();
 
-    /**
-        \brief Sets the icon ID
-        \param id The icon ID in theme system
+    /*!
+       Sets the \ref logicalid "logical ID" associated with this comboBox's icon to \a id.
      */
     void setIconID(const QString &id);
 

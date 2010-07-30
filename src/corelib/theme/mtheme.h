@@ -176,7 +176,7 @@ public:
     static MTheme *instance();
 
     /*!
-     Returns a QPixmap that contains the graphical asset specified by the logical identifier.
+     Returns a QPixmap that contains the graphical asset specified by the \ref logicalid "logical ID".
 
      The \a id is a logical identifier for a single graphical theme asset. The source format of the
      graphics is abstracted and determined by the theme service. The default MThemeDaemon theme
@@ -206,7 +206,7 @@ public:
     static const QPixmap *pixmap(const QString &id, const QSize &size = QSize(0, 0));
 
     /*!
-     Returns a copy of graphical asset with the given logical identifier.
+     Returns a copy of graphical asset with the given \ref logicalid "logical ID".
 
      Loads the pixmap specified by \a id of size \a size synchronously and returns a copy to the caller.
      This method can be very slow, use the asynchronous pixmap method instead if possible.
@@ -216,7 +216,7 @@ public:
     static QPixmap *pixmapCopy(const QString &id, const QSize &size = QSize(0, 0));
 
     /*!
-     Returns a MScalableImage that contains the graphical asset specified by the logical identifier.
+     Returns a MScalableImage that contains the graphical asset specified by the \ref logicalid "logical ID".
 
      The logic for acquiring a scalable image is the same as that for a regular pixmap.
      The \a left, \a right, \a top and \a bottom parameters specify the non-scaled border values of the

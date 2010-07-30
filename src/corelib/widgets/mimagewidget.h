@@ -151,12 +151,13 @@ public:
      */
     virtual ~MImageWidget();
 
-    /**
-       \brief Set image id and size
-       \param id, image id in theme system.
-       \param s,  image size which will be used to get pixmap from theme system.
+    /*!
+       Sets the \ref logicalid "logical ID" associated with this image to \a id.
+
+      The graphics specified by the ID will be exactly of the specified \a size, and will
+      stretch to fill the image widget.
      */
-    void setImage(const QString &id, const QSize &s);
+    void setImage(const QString &id, const QSize &size);
 
     /**
        \brief Get the image id
@@ -227,9 +228,13 @@ public:
 
 public Q_SLOTS:
 
-    /**
-       \brief Set image id in theme
-       \param id, image id in theme system.
+    /*!
+      Sets the \ref logicalid "logical ID" associated with this image to \a id.
+
+      Whatever size the graphics happens to be in the theme will be used. The
+      graphics is then scaled to fit the image widget. Unless you know that the
+      themed graphic is exactly of the right size, you must use the
+      setImage(const QString &id, const QSize &size) method instead.
      */
     void setImage(const QString &id);
 
