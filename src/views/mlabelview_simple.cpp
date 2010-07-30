@@ -242,7 +242,7 @@ void MLabelViewSimple::initializeStaticText()
 
     QString textToRender = model->text();
 
-    const QChar multiLengthSeparator = QLatin1Char(0x9c);
+    const QChar multiLengthSeparator(0x9c, 0);
     if (textToRender.contains(multiLengthSeparator)) {
         // The text consists of several strings. Find the first string that fits into the
         // available width. If no string has been found, the last string will be used.
