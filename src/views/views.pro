@@ -13,6 +13,7 @@ INCLUDEPATH += \
     ../corelib/video \
     ../corelib/.gen \
 
+include(effects/effects.pri)
 include(views.pri)
 include(widgets/widgets.pri)
 include(animations/animations.pri)

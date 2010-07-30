@@ -16,23 +16,17 @@
 ** of this file.
 **
 ****************************************************************************/
- 
-#ifndef MLISTITEMSTYLE_H
-#define MLISTITEMSTYLE_H
 
-#include <mwidgetstyle.h>
+#include "meffectcreator.h"
+#include "mclassfactory.h"
 
-class M_EXPORT MListItemStyle : public MWidgetStyle
+MEffectCreatorBase::MEffectCreatorBase(const char *effectClassName)
 {
-    Q_OBJECT
-    M_STYLE(MListItemStyle)
+    MClassFactory::instance()->registerEffectCreator(this, effectClassName);
+}
 
-    M_STYLE_ATTRIBUTE(QString, downStateEffect, DownStateEffect)
-};
-
-class M_EXPORT MListItemStyleContainer : public MWidgetStyleContainer
+MEffectCreatorBase::~MEffectCreatorBase()
 {
-    M_STYLE_CONTAINER(MListItemStyle)
-};
+    MClassFactory::instance()->unregisterEffectCreator(this);
+}
 
-#endif // MLISTITEMSTYLE_H

@@ -16,23 +16,5 @@
 ** of this file.
 **
 ****************************************************************************/
- 
-#ifndef MLISTITEMSTYLE_H
-#define MLISTITEMSTYLE_H
 
-#include <mwidgetstyle.h>
-
-class M_EXPORT MListItemStyle : public MWidgetStyle
-{
-    Q_OBJECT
-    M_STYLE(MListItemStyle)
-
-    M_STYLE_ATTRIBUTE(QString, downStateEffect, DownStateEffect)
-};
-
-class M_EXPORT MListItemStyleContainer : public MWidgetStyleContainer
-{
-    M_STYLE_CONTAINER(MListItemStyle)
-};
-
-#endif // MLISTITEMSTYLE_H
+#include "../corelib/effects/core/mgraphicseffect.h"

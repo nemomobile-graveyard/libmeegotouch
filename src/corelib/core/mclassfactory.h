@@ -28,6 +28,7 @@ class MViewCreatorBase;
 class MStyleCreatorBase;
 class MWidgetCreatorBase;
 class MAnimationCreatorBase;
+class MEffectCreatorBase;
 class MWidgetView;
 class MStyle;
 class QAbstractAnimation;
@@ -114,6 +115,15 @@ public:
      */
     QAbstractAnimation *createAnimation(const QString &animationClassName) const;
 
+    ///////////////////////
+    // effect classes //
+    ///////////////////////
+
+    /*!
+       Returns a new instance of an effect. Ownership is transferred to caller.
+     */
+    QGraphicsEffect *createEffect(const QString &effectClassName) const;
+
 private:
     /////////
     // widgets
@@ -170,6 +180,20 @@ private:
        from MAnimationCreatorBase destructor and should not be called from anywhere else.
      */
     void unregisterAnimationCreator(MAnimationCreatorBase *animationCreator);
+
+    //////////////
+    // effects
+    friend class MEffectCreatorBase;
+    /*!
+       Registers a new graphics effect creator for this factory. This method gets called automatically
+       from MEffectCreatorBase constructor and should not be called from anywhere else.
+     */
+    void registerEffectCreator(MEffectCreatorBase *effectCreator, const char *effectClassName);
+    /*!
+       Unregisters a new graphics effect creator from this factory. This method gets called automatically
+       from MEffectCreatorBase destructor and should not be called from anywhere else.
+     */
+    void unregisterEffectCreator(MEffectCreatorBase *effectCreator);
 
 private:
     MClassFactory();

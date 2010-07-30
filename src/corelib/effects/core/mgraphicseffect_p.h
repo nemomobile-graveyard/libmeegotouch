@@ -17,22 +17,25 @@
 **
 ****************************************************************************/
  
-#ifndef MLISTITEMSTYLE_H
-#define MLISTITEMSTYLE_H
+#ifndef MGRAPHICSEFFECT_P_H
+#define MGRAPHICSEFFECT_P_H
 
-#include <mwidgetstyle.h>
+#include <QObject>
 
-class M_EXPORT MListItemStyle : public MWidgetStyle
+class MGraphicsEffect;
+class MGraphicsEffectStyleContainer;
+
+class MGraphicsEffectPrivate
 {
-    Q_OBJECT
-    M_STYLE(MListItemStyle)
+public:
+    MGraphicsEffectPrivate();
+    ~MGraphicsEffectPrivate();
 
-    M_STYLE_ATTRIBUTE(QString, downStateEffect, DownStateEffect)
+private:
+    Q_DECLARE_PUBLIC(MGraphicsEffect)
+    MGraphicsEffect *q_ptr;
+
+    MGraphicsEffectStyleContainer *styleContainer;
 };
 
-class M_EXPORT MListItemStyleContainer : public MWidgetStyleContainer
-{
-    M_STYLE_CONTAINER(MListItemStyle)
-};
-
-#endif // MLISTITEMSTYLE_H
+#endif // MGRAPHICSEFFECT_P_H

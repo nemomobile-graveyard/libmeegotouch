@@ -271,6 +271,15 @@ public:
     static QAbstractAnimation *animation(const QString &animationTypeName);
 
     /*!
+     Returns an effect instance with the given type.
+
+    \param effectTypeName Name of the effect type.
+
+     The returned effect is theme specific.
+     */
+    static QGraphicsEffect *effect(const QString &effectTypeName);
+
+    /*!
      Returns a view instance for the given \a controller.
 
      The returned view is theme specific and can be changed in the theme configuration.

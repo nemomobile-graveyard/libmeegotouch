@@ -28,7 +28,6 @@
 #include <QTapAndHoldGesture>
 #include <QTimer>
 
-
 MListItemViewPrivate::MListItemViewPrivate(MWidgetController *controller) 
     : MWidgetViewPrivate(),
     down(false),
@@ -171,6 +170,16 @@ void MListItemView::cancelEvent(MCancelEvent *event)
 void MListItemView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture)
 {
     Q_D(MListItemView);
+
+    if (gesture->state() == Qt::GestureStarted) {
+        if (!style()->downStateEffect().isEmpty())
+            d->controller->setGraphicsEffect(MTheme::effect(style()->downStateEffect()));
+    }
+
+    if (gesture->state() == Qt::GestureCanceled ||
+        gesture->state() == Qt::GestureFinished) {
+        d->controller->setGraphicsEffect(NULL);
+    }
 
     if (gesture->state() == Qt::GestureFinished)
         d->longTap(gesture->position());

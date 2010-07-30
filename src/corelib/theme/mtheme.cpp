@@ -523,6 +523,17 @@ QAbstractAnimation *MTheme::animation(const QString &animationTypeName)
     return a;
 }
 
+QGraphicsEffect *MTheme::effect(const QString &effectTypeName)
+{
+    QGraphicsEffect *a = MClassFactory::instance()->createEffect(effectTypeName);
+    if (!a) {
+        qWarning() << "Failed to create implementation for: " << effectTypeName;
+        return NULL;
+    }
+
+    return a;
+}
+
 MWidgetView *MTheme::view(const MWidgetController *controller)
 {
     // Best matching view class name

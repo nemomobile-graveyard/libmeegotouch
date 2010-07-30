@@ -36,13 +36,14 @@ public:
     MListItemView(MWidgetController *controller);
 
 protected:
+    /*! \reimp */
     void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
     void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-
     void cancelEvent(MCancelEvent *event);
 
     virtual void tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture *gesture);
+    /*! \reimp_end */
 
 private:
     Q_DISABLE_COPY(MListItemView)

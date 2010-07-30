@@ -17,22 +17,33 @@
 **
 ****************************************************************************/
  
-#ifndef MLISTITEMSTYLE_H
-#define MLISTITEMSTYLE_H
+#ifndef MGRAPHICSHIGHLIGHTEFFECT_H
+#define MGRAPHICSHIGHLIGHTEFFECT_H
 
-#include <mwidgetstyle.h>
+#include <MGraphicsEffectStyle>
 
-class M_EXPORT MListItemStyle : public MWidgetStyle
+#include <QColor>
+
+//! \internal
+
+class MGraphicsHighlightEffectStyle : public MGraphicsEffectStyle
 {
     Q_OBJECT
-    M_STYLE(MListItemStyle)
+    M_STYLE(MGraphicsHighlightEffectStyle)
 
-    M_STYLE_ATTRIBUTE(QString, downStateEffect, DownStateEffect)
+    M_STYLE_ATTRIBUTE(QColor, color, Color)
+    M_STYLE_ATTRIBUTE(qreal, delay, Delay)
+    M_STYLE_ATTRIBUTE(qreal, duration, Duration)
+    M_STYLE_ATTRIBUTE(qreal, startStrength, StartStrength)
+    M_STYLE_ATTRIBUTE(qreal, endStrength, EndStrength)
+
 };
 
-class M_EXPORT MListItemStyleContainer : public MWidgetStyleContainer
+class MGraphicsHighlightEffectStyleContainer : public MGraphicsEffectStyleContainer
 {
-    M_STYLE_CONTAINER(MListItemStyle)
+    M_STYLE_CONTAINER(MGraphicsHighlightEffectStyle)
 };
 
-#endif // MLISTITEMSTYLE_H
+//! \internal_end
+
+#endif // MGRAPHICSHIGHLIGHTEFFECT_H
