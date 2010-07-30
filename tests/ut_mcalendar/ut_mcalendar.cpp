@@ -201,7 +201,7 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "d.M.yyyy"
         << "d.M.yyyy"
         << "d. MMMM y"
-        << "EEEE d. MMMM y"
+        << "cccc d. MMMM y"
         << "H.mm"
         << "H.mm.ss"
         << "H.mm.ss z"
@@ -215,7 +215,7 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "d.M.yyyy"
         << "d.M.yyyy"
         << "d. MMMM y"
-        << "EEEE d. MMMM y"
+        << "cccc d. MMMM y"
         << "H.mm"
         << "H.mm.ss"
         << "H.mm.ss z"
@@ -229,7 +229,7 @@ void Ut_MCalendar::testIcuFormatString_data()
         << "d.M.yyyy"
         << "d.M.yyyy"
         << "d. MMMM y"
-        << "EEEE d. MMMM y"
+        << "cccc d. MMMM y"
         << "H.mm"
         << "H.mm.ss"
         << "H.mm.ss z"
@@ -363,6 +363,8 @@ void Ut_MCalendar::testIcuFormatString()
     QFETCH(QString, timeLongResult);
     QFETCH(QString, timeFullResult);
 
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
+
     MLocale locale(language);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
@@ -477,7 +479,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromLocaltimeQDateTime_data()
             << QString("21.7.2008")
             << QString("21.7.2008")
             << QString("21. heinäkuuta 2008")
-            << QString("maanantaina 21. heinäkuuta 2008")
+            << QString("maanantai 21. heinäkuuta 2008")
             << QString("12.31")
             << QString("12.31.00")
             << QString("12.31.00 UTC+3.00")
@@ -615,7 +617,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromUTCQDateTime_data()
             << MLocale::GregorianCalendar
             << QString("21.7.2008 15.31")
             << QString("21. heinäkuuta 2008 15.31.00 UTC+3.00")
-            << QString("maanantaina 21. heinäkuuta 2008 15.31.00 Itä-Euroopan kesäaika");
+            << QString("maanantai 21. heinäkuuta 2008 15.31.00 Itä-Euroopan kesäaika");
     QTest::newRow("21.7.2008_en_GB_Gregorian")
             << datetime
             << QString("en_GB")
@@ -712,7 +714,7 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar_data()
         << "21.7.2008"
         << "21.7.2008"
         << "21. heinäkuuta 2008"
-        << "maanantaina 21. heinäkuuta 2008"
+        << "maanantai 21. heinäkuuta 2008"
         << "14.31"
         << "14.31.00"
         << "14.31.00 UTC+3.00"
@@ -900,6 +902,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
     QFETCH(QString, timeMediumResult);
     QFETCH(QString, timeLongResult);
     QFETCH(QString, timeFullResult);
+
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
 
     MLocale locale(localeName);
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);

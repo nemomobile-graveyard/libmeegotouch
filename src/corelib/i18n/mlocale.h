@@ -1172,7 +1172,7 @@ public:
      * \param dataPaths a list of paths
      *
      * This should be called at most once in a process before creating
-     * any MLocale instances. This function is not thread-safe.
+     * any MLocale instances. This function is <b>not</b> thread-safe.
      * Use it before doing anything with MLocale instances from multiple
      * threads.
      *
@@ -1213,19 +1213,30 @@ public:
      * etc.
      *
      * \sa void setDataPath(const QString &dataPath)
+     * \sa dataPaths()
      */
     static void setDataPaths(const QStringList &dataPaths);
 
     /*!
-     * \brief Sets the DatPaths to given path
+     * \brief Sets the data paths used by ICU to the given path
      *
      * \param dataPath the data path
      *
-     * convenience function to set the data path to a single directory
+     * convenience function to set the data path used by ICU
+     * to a single directory
      *
      * \sa setDataPaths(const QStringList &dataPaths)
+     * \sa dataPaths()
      */
     static void setDataPath(const QString &dataPath);
+
+    /*!
+     * \brief Returns the list of data paths used by ICU
+     *
+     * \sa setDataPaths(const QStringList &dataPaths)
+     * \sa setDataPath(const QString &dataPath)
+     */
+    static QStringList dataPaths();
 
     /*!
      * \brief Sets the paths that are used as base directories for using translations

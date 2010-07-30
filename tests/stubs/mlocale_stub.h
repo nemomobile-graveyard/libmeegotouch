@@ -83,6 +83,7 @@ public:
     virtual QString translate(const char *context, const char *sourceText, const char *comment, int n);
     virtual void setDataPaths(const QStringList &dataPaths);
     virtual void setDataPath(const QString &dataPath);
+    virtual QStringList dataPaths();
     virtual void setTranslationPaths(const QStringList &paths);
     virtual void addTranslationPath(const QString &path);
     virtual void removeTranslationPath(const QString &path);
@@ -499,6 +500,12 @@ void MLocaleStub::setDataPath(const QString &dataPath)
     QList<ParameterBase *> params;
     params.append(new Parameter<const QString & >(dataPath));
     stubMethodEntered("setDataPath", params);
+}
+
+QStringList MLocaleStub::dataPaths()
+{
+    stubMethodEntered("dataPaths");
+    return stubReturnValue<QStringList>("dataPaths");
 }
 
 void MLocaleStub::setTranslationPaths(const QStringList &paths)

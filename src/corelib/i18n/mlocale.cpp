@@ -255,6 +255,7 @@ bool MTranslationCatalog::loadWith(MLocale *mlocale, MLocale::Category category)
 //// Private stuff for MLocale
 
 QStringList MLocalePrivate::translationPaths;
+QStringList MLocalePrivate::dataPaths;
 
 #ifdef HAVE_ICU
 icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(const icu::Locale &locale)
@@ -328,6 +329,8 @@ MLocalePrivate::MLocalePrivate()
     loadCountryCodes();
     if (translationPaths.isEmpty())
         translationPaths = (QStringList() << QString(TRANSLATION_DIR));
+    if (dataPaths.isEmpty())
+        MLocale::setDataPath(M_ICUEXTRADATA_DIR);
 }
 
 // copy constructor
@@ -2248,6 +2251,7 @@ QString MLocale::translate(const char *context, const char *sourceText,
 
 void MLocale::setDataPaths(const QStringList &dataPaths)
 {
+    MLocalePrivate::dataPaths = dataPaths;
 #ifdef HAVE_ICU
     QString pathString;
 
@@ -2259,8 +2263,6 @@ void MLocale::setDataPaths(const QStringList &dataPaths)
     }
 
     u_setDataDirectory(qPrintable(pathString));
-#else
-    Q_UNUSED(dataPaths);
 #endif
 }
 
@@ -2268,6 +2270,11 @@ void MLocale::setDataPaths(const QStringList &dataPaths)
 void MLocale::setDataPath(const QString &dataPath)
 {
     setDataPaths(QStringList(dataPath));
+}
+
+QStringList MLocale::dataPaths()
+{
+    return MLocalePrivate::dataPaths;
 }
 
 ///////

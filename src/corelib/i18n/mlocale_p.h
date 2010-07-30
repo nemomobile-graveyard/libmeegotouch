@@ -145,6 +145,7 @@ public:
     // into QCoreApplication
     CatalogList _trTranslations;
 
+    static QStringList dataPaths;
     static QStringList translationPaths;
 
 #ifdef HAVE_GCONF
