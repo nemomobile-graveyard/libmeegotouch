@@ -226,13 +226,18 @@ void MCompleterViewPrivate::createContents()
         int index = exp.indexIn(text);
         if (index == -1) {
             exp.setPattern(QString("\\W%1").arg(prefix));
-            index = exp.indexIn(text) + 1;
+            index = exp.indexIn(text);
+            if (index != -1)
+                ++index;
         }
 
-        QString highlightColor = q->style()->highlightColor().name();
-        QString replacedString = text.mid(index, prefix.length());
-        text = text.replace(index, replacedString.length(),
-                            QString("<font color=%1>" + replacedString + "</font>").arg(highlightColor));
+        // only highlight if there is a match in text.
+        if (index != -1) {
+            QString highlightColor = q->style()->highlightColor().name();
+            QString replacedString = text.mid(index, prefix.length());
+            text = text.replace(index, replacedString.length(),
+                                QString("<font color=%1>" + replacedString + "</font>").arg(highlightColor));
+        }
         completionLabel->setText(text);
 
         //set button's visibility and label
