@@ -127,11 +127,8 @@ MTheme::MTheme(const QString &applicationName, const QString &, ThemeService the
     connect(d->themeDaemon, SIGNAL(themeChanged(QStringList, QStringList)),
             SLOT(themeChangedSlot(QStringList, QStringList)));
 
-    connect(d->themeDaemon, SIGNAL(pixmapChanged(QString, QSize, Qt::HANDLE)),
-            SLOT(pixmapChangedSlot(QString, QSize, Qt::HANDLE)));
-
-    connect(d->themeDaemon, SIGNAL(pixmapCreated(QString, QSize, Qt::HANDLE)),
-            SLOT(pixmapCreatedSlot(QString, QSize, Qt::HANDLE)));
+    connect(d->themeDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, Qt::HANDLE)),
+            SLOT(pixmapCreatedOrChangedSlot(QString, QSize, Qt::HANDLE)));
 
     connect(d->themeDaemon, SIGNAL(themeChangeCompleted()), SIGNAL(themeChangeCompleted()));
 
@@ -768,34 +765,7 @@ void MThemePrivate::pixmapRequestFinished()
     }
 }
 
-void MThemePrivate::pixmapCreatedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle)
-{
-    QString identifier = defaultPixmapCacheId(imageId, size.width(), size.height());
-    QHash<QString, CachedPixmap>::iterator iterator = pixmapIdentifiers.find(identifier);
-    Q_ASSERT_X(iterator != pixmapIdentifiers.end(), "MThemePrivate::pixmapCreatedSlot", "Unknown pixmap");
-
-    QPixmap *pixmap = (QPixmap *) iterator.value().pixmap;
-
-    if (pixmapHandle == 0) {
-        mWarning("MThemePrivate") << "pixmapCreatedSlot - pixmap creation failed (null handle):" << identifier;
-        *pixmap = *invalidPixmap;
-
-        pixmapRequestFinished();
-        return;
-    }
-
-#ifdef Q_WS_X11
-    // we can create the real pixmap right now
-    *pixmap = QPixmap::fromX11Pixmap(pixmapHandle, QPixmap::ImplicitlyShared);
-#else
-    QPixmap *pixmapPointer = (QPixmap *)(pixmapHandle);
-    *pixmap = *pixmapPointer;
-#endif
-
-    pixmapRequestFinished();
-}
-
-void MThemePrivate::pixmapChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle)
+void MThemePrivate::pixmapCreatedOrChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle)
 {
     QString identifier = defaultPixmapCacheId(imageId, size.width(), size.height());
     QHash<QString, CachedPixmap>::iterator iterator = pixmapIdentifiers.find(identifier);

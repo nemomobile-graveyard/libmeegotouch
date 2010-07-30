@@ -55,9 +55,7 @@ public:
     virtual bool hasPendingRequests() const = 0;
 
 signals:
-    void pixmapChanged(const QString &imageId, const QSize &size, Qt::HANDLE newHandle);
-
-    void pixmapCreated(const QString &imageId, const QSize &size, Qt::HANDLE handle);
+    void pixmapCreatedOrChanged(const QString &imageId, const QSize &size, Qt::HANDLE newHandle);
 
     // emitted when theme has been changed
     void themeChanged(const QStringList &themeInheritance, const QStringList& libraryNames);

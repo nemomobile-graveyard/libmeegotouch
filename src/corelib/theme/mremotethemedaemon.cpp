@@ -213,7 +213,7 @@ void MRemoteThemeDaemon::pixmapHandle(const QString &imageId, const QSize &size)
 
     Qt::HANDLE handle = pixmapHandleFromMostUsed(imageId, size);
     if (handle) {
-        emit pixmapCreated(imageId, size, handle);
+        emit pixmapCreatedOrChanged(imageId, size, handle);
         return;
     }
 
@@ -339,7 +339,7 @@ void MRemoteThemeDaemonPrivate::pixmapUpdated(const PixmapHandle &handle)
     // due to a theme change.  It may have gone already, if a release
     // request was processed by the server in the meantime.  The recipient
     // of the signal must be able to handle such a situation gracefully.
-    emit q->pixmapChanged(handle.identifier.imageId, handle.identifier.size, handle.pixmapHandle);
+    emit q->pixmapCreatedOrChanged(handle.identifier.imageId, handle.identifier.size, handle.pixmapHandle);
 }
 
 void MRemoteThemeDaemonPrivate::themeChanged(const QStringList &themeInheritanceChain, const QStringList &themeLibraryNames)

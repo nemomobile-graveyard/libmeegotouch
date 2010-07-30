@@ -323,8 +323,7 @@ private:
 
 #ifndef UNIT_TEST
     Q_PRIVATE_SLOT(d_func(), void themeChangedSlot(const QStringList &, const QStringList &))
-    Q_PRIVATE_SLOT(d_func(), void pixmapChangedSlot(const QString &, const QSize &, Qt::HANDLE))
-    Q_PRIVATE_SLOT(d_func(), void pixmapCreatedSlot(const QString &, const QSize &, Qt::HANDLE))
+    Q_PRIVATE_SLOT(d_func(), void pixmapCreatedOrChangedSlot(const QString &, const QSize &, Qt::HANDLE))
     Q_PRIVATE_SLOT(d_func(), void localeChangedSlot())
 #endif
 

@@ -150,8 +150,7 @@ public:
      * Theme daemon notifies pixmap updates to to this slot
      * In here MTheme will fetch the new pixmap data from X-Server and provide it to the widgets.
      */
-    void pixmapChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle);
-    void pixmapCreatedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle);
+    void pixmapCreatedOrChangedSlot(const QString &imageId, const QSize &size, Qt::HANDLE pixmapHandle);
 
     /*!
      * GConf item change signals that locale is changed. Logical values & icons are reloaded.

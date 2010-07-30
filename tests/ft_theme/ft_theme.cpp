@@ -166,11 +166,8 @@ void Ft_Theme::initTestCase()
     connect(testDaemon, SIGNAL(themeChanged(QStringList, QStringList)),
             MTheme::instance(), SLOT(themeChangedSlot(QStringList, QStringList)));
 
-    connect(testDaemon, SIGNAL(pixmapChanged(QString, QSize, Qt::HANDLE)),
-            MTheme::instance(), SLOT(pixmapChangedSlot(QString, QSize, Qt::HANDLE)));
-
-    connect(testDaemon, SIGNAL(pixmapCreated(QString, QSize, Qt::HANDLE)),
-            MTheme::instance(), SLOT(pixmapCreatedSlot(QString, QSize, Qt::HANDLE)));
+    connect(testDaemon, SIGNAL(pixmapCreatedOrChanged(QString, QSize, Qt::HANDLE)),
+            MTheme::instance(), SLOT(pixmapCreatedOrChangedSlot(QString, QSize, Qt::HANDLE)));
 }
 
 void Ft_Theme::cleanupTestCase()

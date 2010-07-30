@@ -97,7 +97,7 @@ void MLocalThemeDaemon::pixmapHandleSync(const QString &imageId, const QSize &si
     // request
     Qt::HANDLE handle;
     if (daemon.pixmap(client, PixmapIdentifier(imageId, size), handle)) {
-        emit pixmapCreated(imageId, size, handle);
+        emit pixmapCreatedOrChanged(imageId, size, handle);
     } else {
         qDebug() << "error";
     }
@@ -184,7 +184,7 @@ void MLocalThemeDaemon::localeChanged()
     foreach(const PixmapIdentifier & id, pixmapsToReload[client]) {
         Qt::HANDLE handle;
         if (daemon.pixmap(client, id, handle)) {
-            emit pixmapChanged(id.imageId, id.size, handle);
+            emit pixmapCreatedOrChanged(id.imageId, id.size, handle);
         } else {
             qDebug() << "error";
         }

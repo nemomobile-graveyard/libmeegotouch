@@ -55,7 +55,7 @@ void TestThemeDaemon::pixmapHandleSync(const QString &imageId, const QSize &size
     pixmaps.insert(identifier, pixmap);
 
     // emit signal
-    emit pixmapCreated(imageId, size, pixmap->handle());
+    emit pixmapCreatedOrChanged(imageId, size, pixmap->handle());
 }
 
 void TestThemeDaemon::pixmapHandle(const QString &imageId, const QSize &size)
