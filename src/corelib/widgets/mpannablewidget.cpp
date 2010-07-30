@@ -38,7 +38,7 @@ namespace
     //! Z-value of the glass
     const int ZValueGlass       =  2;
     //! Hardcoded timeout value for delivering initial press event;
-    const int InitialPressDeliveryTimeoutValue = 50;
+    const int InitialPressDeliveryTimeoutValue = 140;
 
 }
 
