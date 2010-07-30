@@ -197,6 +197,11 @@ void MPannableWidgetPrivate::deliverPressEvent()
         return;
     }
 
+    // FIXME: This is a work-around
+    // Now we want to propagate the focus.
+    // Allow focus to be set through pannable widget.
+    q->setFlag(QGraphicsItem::ItemIsPanel, false);
+
     glass->ungrabMouse();
     q->resendEvent(&pressEvent);
     mouseGrabber = q->scene()->mouseGrabberItem();
@@ -230,6 +235,13 @@ void MPannableWidgetPrivate::resetMouseGrabber()
     if (q->scene() && glass == q->scene()->mouseGrabberItem()) {
         glass->ungrabMouse();
     }
+
+    // FIXME: This is a work-around. We want to stop the focus propagation while
+    //        making the currently focused item keep its focus. I.e. press event
+    //        shouldn't make any focus change at all.
+    // Block focusing to any child widgets on next mouse press.
+    // OBS: A Panel is non-active by default
+    q->setFlag(QGraphicsItem::ItemIsPanel, true);
 }
 
 void MPannableWidgetPrivate::deliverMouseEvent(QGraphicsSceneMouseEvent *event)
@@ -291,6 +303,13 @@ void MPannableWidget::init()
 
     setPosition(QPointF());
     setRange(QRectF());
+
+    // FIXME: This is a work-around. We want to stop the focus propagation while
+    //        making the currently focused item keep its focus. I.e. press event
+    //        shouldn't make any focus change at all.
+    // Block focusing to any child widgets on first mouse press.
+    // OBS: A Panel is non-active by default
+    setFlag(ItemIsPanel, true);
 }
 
 MPannableWidget::~MPannableWidget()
