@@ -52,7 +52,7 @@ void QtMaemo6SliderPopUp::enableOn(QSlider* slider) {
     m_slider = slider;
     connect(slider, SIGNAL(sliderPressed()), this, SLOT(show()));
     connect(slider, SIGNAL(sliderReleased()), this, SLOT(hide()));
-    connect(slider, SIGNAL(sliderMoved(int)), this, SLOT(updatePosition()));
+    connect(slider, SIGNAL(valueChanged(int)), this, SLOT(updatePosition()));
 }
 
 void QtMaemo6SliderPopUp::showEvent(QShowEvent *e) {
