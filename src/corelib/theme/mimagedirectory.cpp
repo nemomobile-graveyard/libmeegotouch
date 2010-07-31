@@ -457,8 +457,8 @@ void MThemeImagesDirectory::addImageResource(const QFileInfo& fileInfo, bool loc
 void MThemeImagesDirectory::addSvgResource(const QFileInfo& fileInfo, bool localized)
 {
     // matches and id specified in a svg file.
-    // the id may either appear in a g or image tag.
-    static QRegExp idRegexp("<(g|image)\\s[^>]*id=\"([^\"]*)\"[^>]*>");
+    // the id may either appear in a g, image or path tag.
+    static QRegExp idRegexp("<(g|image|path)\\s[^>]*id=\"([^\"]*)\"[^>]*>");
     if (!loadIdsFromCache(fileInfo, localized)) {
         QFile svgFile(fileInfo.filePath());
         if (svgFile.open(QIODevice::ReadOnly)) {
