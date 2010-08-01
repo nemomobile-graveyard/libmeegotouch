@@ -37,7 +37,7 @@ class M_EXPORT MAbstractWidgetAnimation : public MParallelAnimationGroup
     M_ANIMATION_GROUP(MAbstractWidgetAnimationStyle)
 
 protected:
-    /*!
+   /*!
         \brief Constructs the widget animation.
 
         This constructor is meant to be used inside the libmeegotouch to share the
@@ -46,6 +46,10 @@ protected:
     MAbstractWidgetAnimation(MAbstractWidgetAnimationPrivate *dd, QObject *parent);
 
 public:
+    enum TransitionDirection {
+        In,
+        Out
+    };
 
     /*!
         \brief Constructs the widget animation.
@@ -64,6 +68,8 @@ public:
     virtual void restoreTargetWidgetState() = 0;
 
     virtual void setTargetWidget(MWidgetController *widget);
+
+    virtual void setTransitionDirection(MAbstractWidgetAnimation::TransitionDirection direction) = 0;
 
     MWidgetController *targetWidget();
     const MWidgetController *targetWidget() const;

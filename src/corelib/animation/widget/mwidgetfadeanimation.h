@@ -51,11 +51,6 @@ public:
      */
     virtual ~MWidgetFadeAnimation();
 
-    enum TransitionDirection {
-        In,
-        Out
-    };
-
     void setTransitionDirection(TransitionDirection direction);
 
     //! \reimp

@@ -4,6 +4,7 @@ TARGET = meegotouchcore
 
 include(animation/animation.pri)
 include(core/core.pri)
+include(effects/effects.pri)
 include(events/events.pri)
 include(feedback/feedback.pri)
 include(layout/layout.pri)

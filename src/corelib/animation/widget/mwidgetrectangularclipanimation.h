@@ -17,40 +17,38 @@
 **
 ****************************************************************************/
 
-#ifndef MWIDGETZOOMANIMATION_H
-#define MWIDGETZOOMANIMATION_H
+
+#ifndef MWIDGETRECTANGULARCLIPANIMATION_H
+#define MWIDGETRECTANGULARCLIPANIMATION_H
 
 #include "mabstractwidgetanimation.h"
-#include <mwidgetzoomanimationstyle.h>
+#include "mwidgetrectangularclipanimationstyle.h"
 
-#include <QPointF>
+class MWidgetRectangularClipAnimationPrivate;
 
 //! \internal
-
-class MWidgetZoomAnimationPrivate;
-
-class MWidgetZoomAnimation : public MAbstractWidgetAnimation
+class MWidgetRectangularClipAnimation : public MAbstractWidgetAnimation
 {
     Q_OBJECT
-    M_ANIMATION_GROUP(MWidgetZoomAnimationStyle)
+    M_ANIMATION_GROUP(MWidgetRectangularClipAnimationStyle)
 
 public:
-    MWidgetZoomAnimation(QObject *parent = NULL);
+    MWidgetRectangularClipAnimation(QObject *parent = NULL);
+    virtual ~MWidgetRectangularClipAnimation();
 
     virtual void setTargetWidget(MWidgetController *widget);
     virtual void restoreTargetWidgetState();
 
     void setTransitionDirection(TransitionDirection direction);
-    void setOrigin(const QPointF &pos);
 
 protected:
-    MWidgetZoomAnimation(MWidgetZoomAnimationPrivate *dd, QObject *parent = NULL);
-    virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
+    MWidgetRectangularClipAnimation(MWidgetRectangularClipAnimationPrivate *dd, QObject *parent = NULL);
+
+    void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
 
 private:
-    Q_DECLARE_PRIVATE(MWidgetZoomAnimation)
+    Q_DECLARE_PRIVATE(MWidgetRectangularClipAnimation)
 };
-
 //! \internal_end
 
-#endif // MWIDGETZOOMANIMATION_H
+#endif // MWIDGETRECTANGULARCLIPANIMATION_H
