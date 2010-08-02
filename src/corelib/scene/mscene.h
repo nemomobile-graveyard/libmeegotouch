@@ -73,9 +73,10 @@ public:
     /*!
      Returns the scene manager of the scene.
 
-     Note that the scene is not owned by the manager, instead the manager owns the scene.
+     Note that the scene manager is not owned by the scene,
+     instead it's the scene that is owned by the scene manager.
 
-     If no manager is assigned, 0 is returned.
+     If no manager has been assigned, 0 is returned.
      */
     MSceneManager *sceneManager();
 
