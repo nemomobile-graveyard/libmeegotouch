@@ -2,24 +2,16 @@
 
 \section v02032 0.20.32
 
-- Fixed NB#178931 - System modal dialog cannot be invoked twice
-- Fixed: NB#182051 - Closing the various setting ui from the SUW is closing the SUW itself
-
 \subsection New
 - Added "Getting Started" documentation
 - MCompleter::setCharactersToTrimForCompletionPrefix() can be used to set the characters to be trimmed from the start and the end of completion prefix. MCompleter::charactersToTrimForCompletionPrefix() can be used to query the characters which will be trimmed for completion prefix.
 
 \section v02030 0.20.30
 
-- Fixed NB#175847: MPannableArea does not work inside an MApplicationPage
-- Fixed NB#181800: View menu can be invoked during the navigation bar's hiding animation
-
 \subsection New
 - MGridItem is deprecated, please use MContentItem, MBasicListItem, MAdvancedListItem, MDetailedListItem
 
 \section v02028 0.20.28
-
-- Fixed NB#176700: Labels are not visible in QtStyle Dialog Test and QtStyle Example apps until button is tapped
 
 \subsection New
 - Added a small demo application which demonstrates how to use the orientation change support in meegotouch Qt style
