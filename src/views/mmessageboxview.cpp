@@ -41,6 +41,7 @@ MMessageBoxView::MMessageBoxView(MMessageBox *controller) :
     d->label = new MLabel;
     d->label->setAlignment(Qt::AlignCenter);
     d->label->setWordWrap(true);
+    d->label->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     contentsLayout()->insertItem(0, d->label);
 }
 
