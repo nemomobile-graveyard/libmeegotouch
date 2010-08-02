@@ -1263,12 +1263,12 @@ void processProxyHeaderFile()
                 QRegExp rx( w.docTag() + "(\\d+)" );
 
                 // do the match
-                rx.indexIn( line );
+                if ( rx.indexIn( line ) != -1) {
+                    int id = rx.cap( 1 ).toInt();
 
-                int id = rx.cap( 1 ).toInt();
-
-                if ( id > 0 ) {
-                    wrapperHeaderStream << w.mangledMethodDoc( id );
+                    if ( id > 0 ) {
+                        wrapperHeaderStream << w.mangledMethodDoc( id );
+                    }
                 }
             }
 
