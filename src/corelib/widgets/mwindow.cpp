@@ -337,22 +337,6 @@ void MWindowPrivate::handleLanguageChangeEvent(QGraphicsItem *item)
     }
 }
 
-void MWindowPrivate::handleWindowStateChangeEvent(QWindowStateChangeEvent *event)
-{
-    Q_Q(MWindow);
-
-    // Check if window has entered / left the switcher
-    if(q->windowState() == Qt::WindowMinimized) {
-        isInSwitcher = true;
-        emit q->switcherEntered();
-    }
-    else if (event->oldState() == Qt::WindowMinimized &&
-             q->windowState() != Qt::WindowMinimized) {
-        isInSwitcher = false;
-        emit q->switcherExited();
-    }
-}
-
 bool MWindow::isInSwitcher() const
 {
     Q_D(const MWindow);
@@ -446,9 +430,20 @@ void MWindowPrivate::_q_enablePaintUpdates()
 
 void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
 {
-#ifdef QT_OPENGL_LIB
     Q_Q(MWindow);
 
+    // Check if window has entered / left the switcher
+    if(q->windowState() == Qt::WindowMinimized) {
+        isInSwitcher = true;
+        emit q->switcherEntered();
+    }
+    else if (event->oldState() == Qt::WindowMinimized &&
+             q->windowState() != Qt::WindowMinimized) {
+        isInSwitcher = false;
+        emit q->switcherExited();
+    }
+
+#ifdef QT_OPENGL_LIB
     if (!minimizedSoftwareSwitch || MApplication::softwareRendering())
         return;
 
@@ -463,8 +458,6 @@ void MWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *event)
         initGLViewport();
         QTimer::singleShot(700, q, SLOT(_q_enablePaintUpdates()));
     }
-#else
-    Q_UNUSED(event);
 #endif
 }
 
@@ -1093,9 +1086,6 @@ bool MWindow::event(QEvent *event)
                 d->handleLanguageChangeEvent(item);
             }
         }
-        return true;
-    } else if (event->type() == QEvent::WindowStateChange) {
-        d->handleWindowStateChangeEvent(static_cast<QWindowStateChangeEvent *>(event));
         return true;
     } else if (event->type() == MOnDisplayChangeEvent::eventNumber()) {
         onDisplayChangeEvent(static_cast<MOnDisplayChangeEvent *>(event));
