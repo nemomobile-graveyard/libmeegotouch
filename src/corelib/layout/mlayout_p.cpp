@@ -39,9 +39,6 @@ MLayoutPrivate::MLayoutPrivate(MLayout *l) :
     m_orientation(M::Portrait)
 {
     Q_ASSERT(0 != q_ptr);
-    if (MApplication::activeWindow())
-        m_orientation = MApplication::activeWindow()->orientation();
-
 }
 
 void MLayoutPrivate::registerPolicy(MAbstractLayoutPolicy *policy)
