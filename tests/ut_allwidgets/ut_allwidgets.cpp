@@ -86,6 +86,11 @@ bool Ut_AllWidgets::paintAndTestWidget(QGraphicsWidget *widget, bool strict)
 {
     //Because of the async nature, make sure we've got the pixmaps
     app->processEvents();
+    while (MTheme::instance()->hasPendingRequests()) {
+        QTest::qWait(100);
+        app->processEvents();
+    }
+
     //Create a pixmap big enough for the widget plus room to check if it paints outside of its bounding box
     QRectF boundingRect = widget->mapToScene(widget->boundingRect()).boundingRect();
     if(!(widget->flags() & QGraphicsItem::ItemClipsChildrenToShape))
