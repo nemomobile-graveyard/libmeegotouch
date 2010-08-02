@@ -196,6 +196,8 @@ void MSceneWindow::appear(MWindow *window, MSceneWindow::DeletionPolicy policy)
 
 void MSceneWindow::appear(MSceneWindow::DeletionPolicy policy)
 {
+    mWarning("MSceneWindow") << Q_FUNC_INFO << "is deprecated."
+             "Use appear(QGraphicsScene*) or appear(MWindow*) instead.";
     appear((MWindow *)0, policy);
 }
 

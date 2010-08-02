@@ -222,6 +222,8 @@ public Q_SLOTS:
      * Makes the scene window appear on the currently active window and registers
      * it with the associated MSceneManager.
      *
+     * \deprecated Please use appear(QGraphicsScene) or appear(MWindow) instead.
+     *
      * \attention If your application has multiple MWindows, usage of this method
      * is strongly discouraged since it can make a scene window appear in an MWindow
      * different from the intended one. That's due to the fact that it depends on

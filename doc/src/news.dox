@@ -7,6 +7,10 @@
 - Updated \subpage rotation document.
 - MSceneWindow::appear(QGraphicsScene *scene, MSceneWindow::DeletionPolicy policy);
 
+\subsection Deprecated
+- MSceneWindow::appear(MSceneWindow::DeletionPolicy policy). Use appear(QGraphicsScene*) or
+  appear(MWindow*) instead.
+
 \section v02032 0.20.32
 
 \subsection New
