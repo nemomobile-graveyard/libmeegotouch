@@ -165,16 +165,56 @@ public:
     virtual ~MSceneWindow();
 
 public Q_SLOTS:
+
     /*!
-     * Makes the scene window appear on \a window and registers it with the associated
-     * MSceneManager.
+     * \brief Makes the scene window appear on the given \a scene.
      *
-     * \param window    The window on which the scene window is going to be shown.
-     * \param policy    Deletion policy, defines the ownership for this window
+     * \param scene    The scene on which the scene window is going to appear.
+     * \param policy   Deletion policy. Defines whether this scene window should be
+     *                 automatically deleted when no longer used.
+     *
+     * The scene window will be managed by the MSceneManager of the given \a scene.
+     * Since the appearance and disappearance of scene windows is handled by a scene manager,
+     * if \a scene has no scene manager this method won't have any effect.
+     *
+     * Ownership is transfered to \a scene.
+     *
+     * \note This is different from calling <code>scene->addItem(sceneWindow)</code>.
+     *
+     * Usage example:
+     * \code
+     * void AlbumPage::showSong(Song *song)
+     * {
+     *     MSceneWindow *songPage = new SongPage(song);
+     *     songPage->appear(scene(), MSceneWindow::DestroyWhenDismissed);
+     * }
+     * \endcode
+     *
+     * \sa MSceneManager::appearSceneWindow()
+     */
+    void appear(QGraphicsScene *scene, MSceneWindow::DeletionPolicy policy = KeepWhenDone);
+
+    /*!
+     * \brief Makes the scene window appear on \a window.
+     *
+     * \param window    The window whose scene will receive the appearing scene window.
+     * \param policy    Deletion policy. Defines whether this scene window should be
+     *                  automatically deleted when no longer used.
+     *
+     * If \a window doesn't have a scene manager, one will be automatically created
+     * (along with a scene) and assigned to it.
      *
      * Ownership is transfered to window->scene().
      *
-     * \sa MSceneManager::appearSceneWindow()
+     * Usage example:
+     * \code
+     * MWindow *window = new SomeWindow;
+     * MSceneWindow *sceneWindow = new SomeSceneWindow;
+     * sceneWindow->appear(window);
+     * window->show();
+     * \endcode
+     *
+     * \sa appear(QGraphicsScene *, DeletionPolicy), MSceneManager::appearSceneWindow()
      */
     virtual void appear(MWindow *window, MSceneWindow::DeletionPolicy policy = KeepWhenDone);
 
@@ -188,12 +228,14 @@ public Q_SLOTS:
      * which MWindow happens to be active when this method is called. In such
      * scenarios use either appear(MWindow*) or MSceneManager::appearSceneWindow().
      *
-     * \param policy    Deletion policy, defines the ownership for this window
+     * \param policy    Deletion policy. Defines whether this scene window should be
+     *                  automatically deleted when no longer used.
      *
      * Ownership is transfered to the MScene visualized by the active MWindow
      * (MApplication::activeWindow()->scene()).
      *
-     * \sa MApplication::activeWindow(), MSceneManager::appearSceneWindow()
+     * \sa appear(QGraphicsScene*, DeletionPolicy), appear(MWindow*, DeletionPolicy),
+     *     MApplication::activeWindow(), MSceneManager::appearSceneWindow()
      */
     virtual void appear(MSceneWindow::DeletionPolicy policy = KeepWhenDone);
 

@@ -84,9 +84,17 @@ void Ut_MSceneWindow::testAccessors()
     QCOMPARE(m_subject->isManagedManually(), true);
 }
 
-void Ut_MSceneWindow::testAppear()
+void Ut_MSceneWindow::testAppearOnWindow()
 {
     m_subject->appear(window);
+
+    QCOMPARE(m_subject->sceneManager(), window->sceneManager());
+    QVERIFY(m_subject->scene() == static_cast<QGraphicsScene *>(window->scene()));
+}
+
+void Ut_MSceneWindow::testAppearOnScene()
+{
+    m_subject->appear(window->scene());
 
     QCOMPARE(m_subject->sceneManager(), window->sceneManager());
     QVERIFY(m_subject->scene() == static_cast<QGraphicsScene *>(window->scene()));

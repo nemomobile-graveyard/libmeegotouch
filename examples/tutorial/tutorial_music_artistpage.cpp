@@ -45,5 +45,5 @@ void ArtistPage::displayAlbum(int albumIndex)
     Album *album = artist->albums[albumIndex];
 
     AlbumPage *albumPage = new AlbumPage(album);
-    sceneManager()->appearSceneWindow(albumPage, MSceneWindow::DestroyWhenDismissed);
+    albumPage->appear(scene(), MSceneWindow::DestroyWhenDismissed);
 }

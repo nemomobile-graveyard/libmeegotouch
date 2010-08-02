@@ -5,6 +5,7 @@
 \subsection New
 
 - Updated \subpage rotation document.
+- MSceneWindow::appear(QGraphicsScene *scene, MSceneWindow::DeletionPolicy policy);
 
 \section v02032 0.20.32
 

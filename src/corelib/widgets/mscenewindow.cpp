@@ -146,30 +146,57 @@ MSceneWindow::SceneWindowState MSceneWindow::sceneWindowState() const
     return d->sceneWindowState;
 }
 
-void MSceneWindow::appear(MWindow *window, MSceneWindow::DeletionPolicy policy)
+void MSceneWindow::appear(QGraphicsScene *scene, MSceneWindow::DeletionPolicy policy)
 {
+    if (!scene) {
+        mWarning("MSceneWindow") << Q_FUNC_INFO << "NULL scene.";
+        return;
+    }
+
+    MScene *mScene = qobject_cast<MScene *>(scene);
+    if (!mScene || !mScene->sceneManager()) {
+        mWarning("MSceneWindow") << Q_FUNC_INFO << "scene has no scene manager.";
+        return;
+    }
+
     if (view()) {
         if (model()->disappearTimeout() != 0) {
             QTimer::singleShot(model()->disappearTimeout(), this, SLOT(disappear()));
         }
     }
 
+    mScene->sceneManager()->appearSceneWindow(this, policy);
+}
+
+void MSceneWindow::appear(MWindow *window, MSceneWindow::DeletionPolicy policy)
+{
     if (!window) {
+        // Remove this behavior along with the deprecated
+        // MSceneWindow::appear(DeletionPolicy);
         window = MApplication::activeWindow();
         if (!window) {
-            // TODO: Create and show() a M[Application]Window on the fly?
             mWarning("MSceneWindow")
                     << "Construct and show MWindow before showing a scene window";
             return;
         }
     }
 
-    window->sceneManager()->appearSceneWindow(this, policy);
+    // Force the creation of a scene manager (and scene) if none was
+    // set to this window yet.
+    //
+    // Therefore:
+    //    sceneWindow->appear(window);
+    // Will yield a different result than:
+    //    sceneWindow->appear(window->scene());
+    // If window didn't have a scene and scene manager.
+    window->sceneManager();
+
+    appear(window->scene(), policy);
 }
 
 void MSceneWindow::appear(MSceneWindow::DeletionPolicy policy)
 {
-    appear(0, policy);
+    appear((MWindow *)0, policy);
 }
 
 void MSceneWindow::disappear()

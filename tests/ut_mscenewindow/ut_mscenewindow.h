@@ -39,7 +39,8 @@ private slots:
 
     void testAccessors();
 
-    void testAppear();
+    void testAppearOnWindow();
+    void testAppearOnScene();
     void testAppearWithoutSceneManager();
 
     void testDismiss();

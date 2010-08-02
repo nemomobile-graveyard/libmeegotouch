@@ -25,5 +25,5 @@ SamplePage::SamplePage(int level) : MApplicationPage(0), level(level)
 void SamplePage::openNextPage()
 {
     SamplePage *nextPage = new SamplePage(level + 1);
-    sceneManager()->appearSceneWindow(nextPage, MSceneWindow::DestroyWhenDismissed);
+    nextPage->appear(scene(), MSceneWindow::DestroyWhenDismissed);
 }

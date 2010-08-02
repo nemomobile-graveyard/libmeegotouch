@@ -71,5 +71,5 @@ void MainPage::displayArtist(int artistIndex)
     // By setting MSceneWindow::DestroyWhenDismissed we don't have to
     // keep tabs on this page since it will be automatically destroyed
     // after the dismissal.
-    sceneManager()->appearSceneWindow(artistPage, MSceneWindow::DestroyWhenDismissed);
+    artistPage->appear(scene(), MSceneWindow::DestroyWhenDismissed);
 }
