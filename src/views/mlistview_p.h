@@ -110,6 +110,7 @@ public:
     virtual void createSeparators();
     virtual void updateSeparators();
     virtual void updateHeaders();
+    virtual void updateHeaderHeight();
 
     virtual void createVisibleItems();
     virtual void clearVisibleItemsArray();
@@ -273,6 +274,8 @@ public:
     void updateHeadersIndexes();
 
 public:
+    virtual void updateHeaderHeight();
+
     virtual int indexToFlatRow(const QModelIndex &index) const;
     virtual int locatePosOfItem(int headerIndex, int itemIndex); // groups only
     virtual int groupSize(int headerIndex) const;

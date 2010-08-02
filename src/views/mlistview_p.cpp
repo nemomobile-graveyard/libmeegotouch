@@ -106,6 +106,10 @@ void MListViewPrivate::updateHeaders()
         defaultCreator->setHeaderObjectName(q_ptr->style()->groupHeaderObjectName());
 }
 
+void MListViewPrivate::updateHeaderHeight()
+{
+}
+
 void MListViewPrivate::setHeadersCreator(MCellCreator *creator)
 {
     delete headersCreator;
@@ -944,9 +948,7 @@ void MGroupHeaderListViewPrivate::resetModel(MListModel *mListModel)
     }
 
     headersPositions.resize(this->headersCount());
-    updateHeadersPositions();
-    updateHeadersRows();
-    updateHeadersIndexes();
+    updateHeaderHeight();
 }
 
 int MGroupHeaderListViewPrivate::locatePosOfItem(const QModelIndex &index)
@@ -1076,6 +1078,13 @@ void MGroupHeaderListViewPrivate::updateHeadersIndexes()
     }
 }
 
+void MGroupHeaderListViewPrivate::updateHeaderHeight()
+{
+    updateHeadersPositions();
+    updateHeadersRows();
+    updateHeadersIndexes();
+}
+
 int MGroupHeaderListViewPrivate::indexToFlatRow(const QModelIndex &index) const
 {
     if (!index.isValid())
@@ -1181,9 +1190,7 @@ void MGroupHeaderListViewPrivate::layoutChanged()
 {
     MListViewPrivate::layoutChanged();
 
-    updateHeadersPositions();
-    updateHeadersRows();
-    updateHeadersIndexes();
+    updateHeaderHeight();
 }
 
 void MGroupHeaderListViewPrivate::drawSeparator(int row, QPainter *painter, const QStyleOptionGraphicsItem *option)

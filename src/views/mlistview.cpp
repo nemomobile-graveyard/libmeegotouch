@@ -74,6 +74,7 @@ void MListView::init()
     d_ptr->controller = dynamic_cast<MList *>(controller);
     d_ptr->createSeparators();
     d_ptr->updateSeparators();
+    d_ptr->updateSeparatorSize();
 
     connectSelectionModel();
     d_ptr->connectPannableViewport();
@@ -138,6 +139,7 @@ void MListView::applyStyle()
         d_ptr->updateSeparators();
         d_ptr->updateSeparatorSize();
         d_ptr->updateHeaders();
+        d_ptr->updateHeaderHeight();
 
         relayoutItemsInViewportRect();
     }
