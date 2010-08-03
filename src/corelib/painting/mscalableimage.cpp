@@ -134,16 +134,27 @@ void MScalableImagePrivate::drawScalable9(int x, int y, int w, int h, QPainter *
             QPixmapCache::insert(key, scaled);
         } else {
             // caching isn't permitted for this case; scale and render direct to screen.
-            bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
-            painter->setRenderHint(QPainter::SmoothPixmapTransform);
-            qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
-            painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
+            #if defined(HAVE_N900)
+                // don't use smooth pixmap transformation on the N900, as this
+                // decreases the performance
+                qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
+            #else
+                bool enabled = painter->renderHints() & QPainter::SmoothPixmapTransform;
+                painter->setRenderHint(QPainter::SmoothPixmapTransform);
+                qDrawBorderPixmap(painter, QRect(x, y, w, h), margins, *m_image);
+                painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
+            #endif
         }
     }
 }
 
 void MScalableImagePrivate::drawScalable1(int x, int y, int w, int h, QPainter *painter) const
 {
+#if defined(HAVE_N900)
+    // don't use smooth pixmap transformation on the N900, as this
+    // decreases the performance
+    painter->drawPixmap(QRect(x, y, w, h), *m_image, m_image->rect());
+#else
     //the image is used in it's native size
     //no need to scale just draw it
     if( m_image->size() == QSize(w, h) ) {
@@ -156,6 +167,7 @@ void MScalableImagePrivate::drawScalable1(int x, int y, int w, int h, QPainter *
         painter->drawPixmap(QRect(x, y, w, h), *m_image, m_image->rect());
         painter->setRenderHint(QPainter::SmoothPixmapTransform, enabled);
     }
+#endif
 }
 
 MScalableImage::MScalableImage()
