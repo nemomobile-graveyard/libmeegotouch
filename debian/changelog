@@ -1,6 +1,15 @@
-libmeegotouch (0.20.33~1) unstable; urgency=low
+libmeegotouch (0.20.33-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#177434 - Long MMessageBox text is cropped from both ends.
+  * Fixes: NB#181963 - plainQt Checkbox with red quadrat (missing image) on test application
+  * Fixes: NB#181989 - plainQt - Slider don't go from 0 to 100 as expected on moving knob
+  * Fixes: NB#179282 - No anti-alias available for the clock symbol in lock window
+  * Fixes: NB#179142 - MLabel is not word wrapping correctly with the QTextOption::WrapAtWordBoundaryOrAnywhere option
+  * Fixes: NB#181745 - MCompleter highlighting does not work properly when white space predicts the keyword
+  * Fixes: NB#176789 - Loading a specific theme icons / styles when the language is switched (example: arabic) is not working
+  * Fixes: NB#182051 - Closing the various setting ui from the SUW is closing the SUW itself
+  * Fixes: NB#178931 - System modal dialog cannot be invoked twice
+  * Fixes: NB#182176 - COREWEB: /usr/bin/sysuid 'QGraphicsScene::mouseGrabberItem'
 
  -- Sergiy Dubovik <sergiy.dubovik@nokia.com>  Wed, 28 Jul 2010 15:16:01 +0300
 
