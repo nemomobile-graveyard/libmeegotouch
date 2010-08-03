@@ -80,6 +80,7 @@ void BubblePage::createContent()
     {
         MBubbleItem *item =  cellCreator.createBubbleItem(model->index(i,0));
         connect(item, SIGNAL(linkActivated(QString)), this, SLOT(bubbleLinkActivated(QString)));
+        connect(item, SIGNAL(bubbleClicked()), this, SLOT(speechBubbleClicked()));
         layout->addItem(item);
     }
 
@@ -108,6 +109,11 @@ void BubblePage::createContent()
     MImageWidget* i1 = new MImageWidget(p1);
     QImage* p2 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_003.jpg");
     MImageWidget* i2 = new MImageWidget(p2);
+
+    i0->setPreferredSize(250,250);
+    i1->setPreferredSize(250,250);
+    i2->setPreferredSize(250,250);
+
     MWidget* widget = new MWidget;
     QGraphicsGridLayout* gl = new QGraphicsGridLayout(widget);
     gl->setSpacing(30);
@@ -133,6 +139,10 @@ void BubblePage::createContent()
     QImage* p6 = new QImage(QString(MEDIA_DIR) + QDir::separator() + "photo_450x450_006.jpg");
     MImageWidget* i6 = new MImageWidget(p6);
     MWidget* widget2 = new MWidget;
+    i4->setPreferredSize(250,250);
+    i5->setPreferredSize(250,250);
+    i6->setPreferredSize(250,250);
+
     QGraphicsGridLayout* gl2 = new QGraphicsGridLayout(widget2);
     gl2->setSpacing(30);
     gl2->addItem(i4, 0,0);

@@ -17,39 +17,39 @@
 **
 ****************************************************************************/
 
-#ifndef MBUBBLEITEM_P_H__
-#define MBUBBLEITEM_P_H__
+#ifndef UT_MBUBBLEITEM_H
+#define UT_MBUBBLEITEM_H
 
-#include "private/mwidgetcontroller_p.h"
+#include <QtTest/QtTest>
+#include <QObject>
 
-class MBubbleItem;
-class MImageWidget;
-class MLabel;
+#include <mbubbleitem.h>
 
-class MBubbleItemPrivate : public MWidgetControllerPrivate
+Q_DECLARE_METATYPE(MBubbleItem *);
+
+class Ut_MBubbleItem : public QObject
 {
-    Q_DECLARE_PUBLIC(MBubbleItem)
-    
-public:
-    MBubbleItemPrivate();
-    virtual ~MBubbleItemPrivate();
-    
+    Q_OBJECT
+
+private slots:
     void init();
+    void cleanup();
+    void initTestCase();
+    void cleanupTestCase();
 
-    void createCommentsInfo();
-    void createThumbsUpInfo();
-    void destroyCommentsInfo();
-    void destroyThumbsUpInfo();
+    void testSenderName();
+    void testTimeStamp();
+    void testMessage();
+    void testCommentsString();
+    void testThumbsUpString();
+    void testMessageType();
+    void testAvatar();
+    void testCentralWidget();
+    void testInformationWidgets();
 
-
-    void refreshStyles();
-
+    void testForMemoryLeaks();
 private:
-    MLabel *commentsLabel;
-    MLabel *thumbsUpLabel;
-
-    MImageWidget *commentsIcon;
-    MImageWidget *thumbsUpIcon;
+    MBubbleItem *m_bubble;
 };
 
 #endif

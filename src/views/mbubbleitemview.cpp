@@ -102,9 +102,9 @@ void MBubbleItemViewPrivate::initLayout()
 
 void MBubbleItemViewPrivate::clearLayout()
 {
-    for (int i = 0; i < layout->count(); i++)
+    while (layout->count())
         layout->removeAt(0);
-    for (int i = 0; i < innerLayout->count(); i++)
+    while (innerLayout->count())
         innerLayout->removeAt(0);
 }
 
@@ -117,7 +117,6 @@ void MBubbleItemViewPrivate::replaceAvatar()
             if (layout->itemAt(i) == avatar)
                 layout->removeAt(i);
         }
-        delete avatar;
         avatar = 0;
     }
     
@@ -192,6 +191,9 @@ void MBubbleItemView::setGeometry(const QRectF &rect)
 
     Q_D(MBubbleItemView);
     d->updateMessageComposition();
+    d->layout->invalidate();
+    d->informationWidgetsLayout->invalidate();
+    d->innerLayout->invalidate();
 }
 
 void MBubbleItemViewPrivate::refreshStyleMode()

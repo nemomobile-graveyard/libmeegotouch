@@ -28,7 +28,7 @@
 
 M_REGISTER_WIDGET(MBubbleItem)
 
-MBubbleItemPrivate::MBubbleItemPrivate() 
+MBubbleItemPrivate::MBubbleItemPrivate()
     : MWidgetControllerPrivate(),
     commentsLabel(NULL),
     thumbsUpLabel(NULL),
@@ -49,9 +49,11 @@ void MBubbleItemPrivate::createCommentsInfo()
 {
     Q_Q(MBubbleItem);
 
-    commentsLabel = new MLabel(q);
+    commentsLabel = new MLabel;
+    commentsLabel->setParent(q);
 
-    commentsIcon = new MImageWidget(q);
+    commentsIcon = new MImageWidget;
+    commentsIcon->setParent(q);
     commentsIcon->setObjectName("InformationalIcon");
     commentsIcon->setImage("icon-s-common-comments", commentsIcon->minimumSize().toSize());
 
@@ -60,14 +62,29 @@ void MBubbleItemPrivate::createCommentsInfo()
 
     refreshStyles();
 }
+void MBubbleItemPrivate::destroyCommentsInfo()
+{
+    Q_Q(MBubbleItem);
+
+    q->removeInformationWidget(commentsLabel);
+    q->removeInformationWidget(commentsIcon);
+    if(commentsLabel->parent() == q)
+        delete commentsLabel;
+    if(commentsIcon->parent() == q)
+        delete commentsIcon;
+    commentsLabel = NULL;
+    commentsIcon = NULL;
+}
 
 void MBubbleItemPrivate::createThumbsUpInfo()
 {
     Q_Q(MBubbleItem);
 
-    thumbsUpLabel = new MLabel(q);
+    thumbsUpLabel = new MLabel;
+    thumbsUpLabel->setParent(q);
 
-    thumbsUpIcon = new MImageWidget(q);
+    thumbsUpIcon = new MImageWidget;
+    thumbsUpIcon->setParent(q);
     thumbsUpIcon->setObjectName("InformationalIcon");
     thumbsUpIcon->setImage("icon-s-common-like", thumbsUpIcon->minimumSize().toSize());
 
@@ -75,6 +92,20 @@ void MBubbleItemPrivate::createThumbsUpInfo()
     q->addInformationWidget(thumbsUpLabel);
 
     refreshStyles();
+}
+void MBubbleItemPrivate::destroyThumbsUpInfo()
+{
+    Q_Q(MBubbleItem);
+
+    q->removeInformationWidget(thumbsUpLabel);
+    q->removeInformationWidget(thumbsUpIcon);
+    if(thumbsUpLabel->parent() == q)
+        delete thumbsUpLabel;
+    if(thumbsUpIcon->parent() == q)
+        delete thumbsUpIcon;
+
+    thumbsUpLabel = NULL;
+    thumbsUpIcon = NULL;
 }
 
 void MBubbleItemPrivate::refreshStyles()
@@ -121,15 +152,23 @@ MImageWidget* MBubbleItem::avatar() const
 
 void MBubbleItem::setAvatar(MImageWidget* avatar)
 {
+    MImageWidget *oldAvatar = model()->avatar();
+    if(oldAvatar == avatar)
+        return;
+
     model()->setAvatar(avatar);
+    if(oldAvatar && oldAvatar->parent() == this)
+        delete oldAvatar;
 }
 
 void MBubbleItem::setAvatar(const QPixmap &avatar)
 {
     model()->beginTransaction();
-    
-    if (!model()->avatar())
+
+    if (!model()->avatar()) {
         model()->setAvatar(new MImageWidget);
+        model()->avatar()->setParent(this);
+    }
 
     model()->avatar()->setPixmap(avatar);
     model()->commitTransaction();
@@ -184,7 +223,13 @@ void MBubbleItem::setMessageType(MessageType messageType)
 
 void MBubbleItem::setCentralWidget(QGraphicsWidget* centralWidget)
 {
-    model()->setCentralWidget( centralWidget );
+    QGraphicsWidget *oldCentralWidget = model()->centralWidget();
+    if(oldCentralWidget == centralWidget)
+        return;
+
+    model()->setCentralWidget(centralWidget);
+    if(oldCentralWidget && oldCentralWidget->parent() == this)
+        delete oldCentralWidget;
 }
 
 QGraphicsWidget* MBubbleItem::centralWidget()
@@ -208,9 +253,10 @@ void MBubbleItem::removeInformationWidget(QGraphicsWidget *widget)
 {
     QStack<QGraphicsWidget*> stack = model()->informationWidgets();
     int index = stack.indexOf(widget);
-    if (index >= 0)
+    if (index >= 0) {
         stack.remove(index);
-    model()->setInformationWidgets(stack);
+        model()->setInformationWidgets(stack);
+    }
 }
 
 QString MBubbleItem::commentsString()
@@ -227,10 +273,13 @@ void MBubbleItem::setCommentsString(const QString &comments)
 {
     Q_D(MBubbleItem);
 
-    if (!d->commentsLabel || !d->commentsIcon)
-        d->createCommentsInfo();
+    if(!comments.isEmpty()) {
+        if (!d->commentsLabel || !d->commentsIcon)
+            d->createCommentsInfo();
+        d->commentsLabel->setText(comments);
+    } else if (d->commentsLabel || d->commentsIcon)
+        d->destroyCommentsInfo();
 
-    d->commentsLabel->setText(comments);
     model()->setCommentsString(comments);
 }
 
@@ -248,10 +297,13 @@ void MBubbleItem::setThumbsUpString(const QString &thumbsUp)
 {
     Q_D(MBubbleItem);
 
-    if (!d->thumbsUpLabel || !d->thumbsUpIcon)
-        d->createThumbsUpInfo();
+    if(!thumbsUp.isEmpty()) {
+        if (!d->thumbsUpLabel || !d->thumbsUpIcon)
+            d->createThumbsUpInfo();
+        d->thumbsUpLabel->setText(thumbsUp);
+    } else if (d->thumbsUpLabel || d->thumbsUpIcon)
+        d->destroyThumbsUpInfo();
 
-    d->thumbsUpLabel->setText(thumbsUp);
     model()->setThumbsUpString(thumbsUp);
 }
 

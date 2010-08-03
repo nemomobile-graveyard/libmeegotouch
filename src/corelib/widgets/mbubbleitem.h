@@ -181,35 +181,54 @@ Q_SIGNALS:
 public Q_SLOTS:
 
     /**
-      Replaces the current avatar image widget attached to the bubble with \a avatar
+      Replaces the current avatar image widget attached to the bubble with \a avatar.
+      
+      Any previous avatar is deleted if its QGraphicsItem::parent() is set to this bubble
+      widget, otherwise it is left untouched.
+      
+      The avatar will always be deleted when the bubble is deleted.
 
       \sa avatar()
      */
     void setAvatar(MImageWidget* avatar);
     
     /*!
-      Sets the avatar image to display the \a pixmap
+      Sets the avatar image to display the \a pixmap.
+      
+      If there is an existing avatar() widget, this will set the pixmap for that avatar.
+      Otherwise a new MImageWidget will be created and it's QGraphicsItem::parent() set
+      to this bubble widget.
 
       \sa avatar()
     */
     void setAvatar(const QPixmap &pixmap);
 
     /**
-      Sets the name of the message sender to \a name
+      Sets the name of the message sender to \a name.
+
+      This must be html escaped.  E.g.
+
+      \code
+          bubble->setSenderName(Qt::escape("I <3 everyone!"));
+      \endcode
 
       \sa senderName()
      */
     void setSenderName(const QString &name);
 
     /**
-      Sets the time stamp string of the message to \a timeStamp
+      Sets the time stamp string of the message to \a timeStamp.
+
+      This must be html escaped.
 
       \sa timeStamp()
      */
     void setTimeStamp(const QString &timeStamp);
 
     /**
-       Sets the body of the message to \a message
+       Sets the body of the message to \a message.
+
+       This must be html escaped.
 
        \sa message()
      */
@@ -224,7 +243,7 @@ public Q_SLOTS:
     void setMessageType(MessageType messageType);
 
     /**
-      Sets the \a centralWidget
+      Sets the \a centralWidget.
 
       The central widget is the attachment point for application specific content
       inside the bubble item.
@@ -251,6 +270,9 @@ public Q_SLOTS:
 
       Informational widgets are displayed as part of the message bubble main body.
       There are two pre-defined information widgets for the bubble: number of comments and thumbs up received.
+
+      Memory ownership of widget is not automatically transfered.  Set the QGraphicsObject::parentItem() to this bubble item
+      to have the widget automatically deleted when removed or when this bubble item is deleted.
 
       \sa informationWidgets()
       \sa setCommentsString();
@@ -299,6 +321,8 @@ private:
     MBubbleItem(MBubbleItemPrivate *dd, MBubbleItemModel *model, QGraphicsItem *parent);
     //! \internal_end
 
+    friend class MBubbleItemView;
+    friend class Ut_MBubbleItem;
     Q_DISABLE_COPY(MBubbleItem)
     Q_DECLARE_PRIVATE(MBubbleItem)
 };
