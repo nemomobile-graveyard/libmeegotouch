@@ -15,6 +15,7 @@ SUBDIRS     =  \
 #    ft_mbutton \
     ft_mslider \
     ft_mscalableimage \
+     ut_allwidgets \
 #     ut_mapplication \ // Depends on private class
      ut_mapplicationpage \
      ut_mapplicationwindow \
