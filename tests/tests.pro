@@ -166,6 +166,7 @@ SUBDIRS     =  \
     ut_mlocationdatabase \
     ut_mlocalthemedaemon \
     ut_mremotethemedaemon \
+    ut_mswiperecognizer \
 
 # enable only when we have icu available
 

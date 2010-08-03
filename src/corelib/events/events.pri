@@ -12,6 +12,7 @@ PUBLIC_HEADERS += \
         $$EVENTS_SRC_DIR/morientationchangeevent.h \
         $$EVENTS_SRC_DIR/morientationtracker.h \
         $$EVENTS_SRC_DIR/mtapandholdrecognizer.h \
+        $$EVENTS_SRC_DIR/mswiperecognizer.h \
         $$EVENTS_SRC_DIR/mkeyboardstatetracker.h \
 
 PRIVATE_HEADERS += \
@@ -24,6 +25,9 @@ PRIVATE_HEADERS += \
         $$EVENTS_SRC_DIR/mpangesture_p.h \
         $$EVENTS_SRC_DIR/mpanrecognizer_p.h \
         $$EVENTS_SRC_DIR/mpanrecognizer.h \
+        $$EVENTS_SRC_DIR/mswipegesture_p.h \
+        $$EVENTS_SRC_DIR/mswiperecognizer_p.h \
+        $$EVENTS_SRC_DIR/mswiperecognizer.h \
 
 SOURCES += \
         $$EVENTS_SRC_DIR/morientationtracker.cpp \
@@ -38,3 +42,5 @@ SOURCES += \
         $$EVENTS_SRC_DIR/mkeyboardstatetracker.cpp \
         $$EVENTS_SRC_DIR/mpanrecognizer.cpp \
         $$EVENTS_SRC_DIR/mpangesture.cpp \
+        $$EVENTS_SRC_DIR/mswiperecognizer.cpp \
+        $$EVENTS_SRC_DIR/mswipegesture.cpp \
