@@ -51,6 +51,7 @@
     </td>
     <td>
       <ul>
+       <li><a href="gestures.html">Gestures</a></li>
        <li><a href="layouts.html">Layouts</a></li>
        <li><a href="rotation.html">Rotation</a></li>
        <li><a href="faststart.html">Fast application startup</a></li>

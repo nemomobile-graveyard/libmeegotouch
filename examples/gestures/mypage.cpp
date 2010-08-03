@@ -99,6 +99,8 @@ void MyPage::hideImagesExceptCurrent()
     }
 }
 
+// The gesture handlers:
+
 // Pinch handler
 void MyPage::pinchGestureEvent(QGestureEvent *event,
                                QPinchGesture *gesture)
@@ -161,6 +163,8 @@ void MyPage::swipeGestureEvent(QGestureEvent *event,
         showPreviousImage();
     }
 }
+
+// End of the gesture handlers
 
 // Key handler
 void MyPage::keyReleaseEvent(QKeyEvent *event)

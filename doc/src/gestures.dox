@@ -1,0 +1,122 @@
+/*! \page gestures Gestures and Multitouch
+
+\section gesturesintro Gestures
+
+A \a gesture is a high-level event that represents a series of user input. Qt and MeeGo Touch support the following gestures:
+
+<table border=1 cellpadding=10 cellspacing=0>
+<tr>
+  <th>Gesture</th><th>User interaction</th><th>Class</th><th>Symbol</th>
+</tr>
+<tr>
+  <td>Pan</td>
+  <td>Press, drag, release</td>
+  <td>QPanGesture</td>
+  <td><img src="gesture-pan.png"></td>
+</tr>
+<tr>
+  <td>Pinch</td>
+  <td>Press (with two fingers), move fingers on surface,<br>optionally release one of the fingers and reposition, release</td>
+  <td>QPinchGesture</td>
+  <td><img src="gesture-pinch.png"></td>
+</tr>
+<tr>
+  <td>Swipe</td>
+  <td>Press, quick drag and release</td>
+  <td>QSwipeGesture</td>
+  <td><img src="gesture-swipe.png"></td>
+</tr>
+<tr>
+  <td>Tap and hold</td>
+  <td>Press, wait</td>
+  <td>QTapAndHoldGesture</td>
+  <td><img src="gesture-tapandhold.png"></td>
+</tr>
+<tr>
+  <td>Tap</td>
+  <td>Press, release</td>
+  <td>QTapGesture</td>
+  <td><img src="gesture-tap.png"></td>
+</tr>
+</table>
+
+As a gesture is merely an interpreted series of input, what the gesture actually means is up to the application.
+For example, a pinch gesture may be used to either rotate or zoom a picture, or both. If combined, gestures may
+have overlapping interactions, as is the case of swipe and pan. It is up to the application design to make sure
+there are no overlapping interactions in UI (the result of overlapping interactions is undefined). Typically a
+swipe gesture would be used in a UI where a flick should be interpreted as "next" or "previous", while a pan
+gesture implies an event with acceleration such as scrolling a web page.
+
+While all of the above gestures are touch activated, gestures can potentially use any type of input such
+as key events or sensor data. Using the QGestureRecognizer framework, it is possible to register new custom
+gesture types.
+
+\section usedgestures Gestures used by MeeGo Touch
+
+While gesture events are mainly meant for application consumption, the MeeGo Touch UI design guidelines
+does specify some default actions based on gestures. Unless you as an application developer override the behavior,
+gestures may be consumed by the framework itself in the following cases:
+- The MPannableViewport consumes QPanGesture events, most commonly in the case of a pannable MApplicationPage (pages are pannable by default).
+- Any MWidget with one or more QActions or MActions added (using QGraphicsWidget::addAction) will consume a QTapAndHoldGesture and open the contextual \a "Object Menu" for the widget when the gesture completes.
+
+\section multitouch Multitouch
+
+While some of the gestures mentioned above like pinch are implemented using multitouch events,
+by itself multitouch merely refers to the capability to detect several fingers on the screen at once.
+Multitouch events are also directly accessible by applications in a low-level form comparable to mouse and
+key presses and releases, where the actual interpretation of the events is left entirely up to you.
+
+Note that multitouch requires special hardware to function, many touch input devices do not support the
+capability to detect multiple touch points at once.
+
+In Qt, multitouch input is delivered through the QTouchEvent class, through which it is possible to determine
+all the currently touched screen points. Note that by default multitouch events are not delivered
+to widgets, delivery must explicitly be enabled using the QGraphicsItem::setAcceptTouchEvents method.
+
+\section gesturesinmtf Gestures related API in MeeGo Touch
+
+MeeGo Touch provides several event handlers for gestures:
+
+- MWidget::gestureEvent
+- MWidget::tapAndHoldGestureEvent
+- MWidget::panGestureEvent
+- MWidget::pinchGestureEvent
+- MWidget::tapGestureEvent
+- MWidget::swipeGestureEvent
+
+These event handlers can be re-implemented to act upon all or specific gestures, in the same way as the existing
+methods QGraphicsItem::mousePressEvent, QGraphicsItem::mouseReleaseEvent and so on.
+
+There are also corresponding methods in both the MWidgetController and the MWidgetView for use when extending or writing
+new MeeGo Touch common components.
+
+Gestures are not delivered to widgets by default, gesture delivery is enabled by the QGraphicsObject::grabGesture method.
+
+MeeGo Touch currently replaces some of the default Qt gesture recognizers with versions capable of
+intepreting regular mouse events in addition to the touch events used by Qt. Pan and swipe are also
+one-finger gestures in MeeGo Touch while they are 2 and 3 finger gestures respectively in Qt (as of version 4.7).
+
+\section gestureexample Gestures Example & Tips for Apps
+
+The examples/gestures directory of the MeeGo Touch source contains a sample application demonstrating proper use of
+gestures combined with MeeGo Touch widgets. The example is of a gallery type of application, where pinching the picture
+zooms and rotates simultanously, while swiping left or right changes the picture.
+
+Notable points of the example:
+- Enabling multitouch handling through setAcceptTouchEvents(true);
+- Enabling gesture delivery through grabGesture
+- Transforming the picture by calculating the rotation and scale factors using the pinch
+- The ease of detecing and acting on a swipe gesture
+- Best practices of detecing the gesture on the largest surface available
+
+Below is the example code relevant to the gestures:
+
+\dontinclude gestures/mypage.cpp
+
+\skip MyPage::MyPage
+\until grabGesture(Qt::SwipeGesture);
+
+\skip // The gesture handlers
+\until // End of the gesture handlers
+
+*/
