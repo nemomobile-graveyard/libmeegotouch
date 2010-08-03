@@ -121,6 +121,8 @@ void MImageWidgetPrivate::deepCopy(const MImageWidget &other)
 
     q->model()->setCrop(other.crop());
     q->model()->setAspectRatioMode(other.aspectRatioMode());
+
+    q->d_func()->image = other.d_func()->image;
 }
 
 MImageWidget::MImageWidget(QGraphicsItem *parent) :
@@ -188,7 +190,7 @@ QString MImageWidget::image() const
 QSize MImageWidget::imageSize() const
 {
     Q_D(const MImageWidget);
-    if (d->pixmap != 0)
+    if (d->pixmap)
         return d->pixmap->size();
     else
         return d->image.size();
@@ -197,7 +199,12 @@ QSize MImageWidget::imageSize() const
 const QPixmap *MImageWidget::pixmap() const
 {
     Q_D(const MImageWidget);
-    return d->pixmap;
+    if (d->pixmap)
+        return d->pixmap;
+    else {
+        d->imagePlaceHolder = QPixmap::fromImage(d->image);
+        return &d->imagePlaceHolder;
+    }
 }
 
 void MImageWidget::setZoomFactor(qreal factor)

@@ -41,6 +41,7 @@ public:
     void deepCopy(const MImageWidget &);
 
     const QPixmap *pixmap;
+    mutable QPixmap imagePlaceHolder;
     QString imageName;
     QImage image;
 
