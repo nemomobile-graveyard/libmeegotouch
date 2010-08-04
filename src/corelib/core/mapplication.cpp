@@ -482,6 +482,7 @@ bool MApplication::isPrestarted()
  */
 static int set_runfast()
 {
+#if defined(__VFP_FP__) && !defined(__SOFTFP__)
     int tmp;
     __asm__ volatile(
         "fmrx       %[tmp], fpscr\n\t"
@@ -491,6 +492,9 @@ static int set_runfast()
         "fmxr       fpscr, %[tmp]\n\t"
         : [tmp] "=r"(tmp));
     return tmp;
+#else
+    return 0;
+#endif
 }
 
 /*
@@ -498,6 +502,7 @@ static int set_runfast()
  */
 static int set_ieee()
 {
+#if defined(__VFP_FP__) && !defined(__SOFTFP__)
     int tmp;
     __asm__ volatile(
         "fmrx       %[tmp], fpscr\n\t"
@@ -506,6 +511,9 @@ static int set_ieee()
         "fmxr       fpscr, %[tmp]\n\t"
         : [tmp] "=r"(tmp));
     return tmp;
+#else
+    return 0;
+#endif
 }
 
 void MApplication::fastFloatMath(bool val)

@@ -408,9 +408,10 @@ if [ $? -eq 0 ]; then
         HAVE_XDAMAGE=yes
     fi
 
-    if [ "$SBOX_UNAME_MACHINE" = "arm" ]; then
-        IS_ARMEL=yes
-    fi
+    # For Scratchbox and  For OBS/MeeGo
+    if [ ! -z "`uname -m | grep arm`" ]; then   
+    	IS_ARMEL=yes  
+    fi      
 
 fi
 
