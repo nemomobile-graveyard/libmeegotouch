@@ -267,12 +267,21 @@ void MImageWidgetView::applyStyle()
 
 void MImageWidgetView::updateData(const QList<const char *> &modifications)
 {
+    Q_D(MImageWidgetView);
     MWidgetView::updateData(modifications);
 
     const char *member;
     for (int i = 0; i < modifications.count(); i++) {
         member = modifications[i];
-        if (member == MImageWidgetModel::ZoomFactorX || member == MImageWidgetModel::ZoomFactorY || member == MImageWidgetModel::Crop) {
+        if (member == MImageWidgetModel::ZoomFactorX ||
+            member == MImageWidgetModel::ZoomFactorY ||
+            member == MImageWidgetModel::Crop ||
+            member == MImageWidgetModel::AspectRatioMode) {
+            QSizeF imageSize = d->controller->d_func()->imageDataSize();
+
+            d->calculateDrawRect(imageSize);
+            d->calculateSourceRect(imageSize);
+
             updateGeometry();
         }
     }
