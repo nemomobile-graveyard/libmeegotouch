@@ -39,6 +39,7 @@ MLayout::MLayout(QGraphicsLayoutItem *parent) :
     QSizePolicy newSizePolicy(sizePolicy());
     newSizePolicy.setHeightForWidth(true);
     setSizePolicy(newSizePolicy);
+    d_ptr->recheckOrientation(false);
     // Disabling layout animations by default
     // new MBasicLayoutAnimation(this);
 }
@@ -309,6 +310,7 @@ void MLayout::setLandscapePolicy(MAbstractLayoutPolicy *policy)
         return;
     d->landscapePolicy = policy;
     Q_ASSERT(!policy || policy->layout() == this);
+    d->recheckOrientation();
     if (d->landscapePolicy && d->m_orientation == M::Landscape) {
         policy->activate();
     }
@@ -326,6 +328,7 @@ void MLayout::setPortraitPolicy(MAbstractLayoutPolicy *policy)
         return;
     d->portraitPolicy = policy;
     Q_ASSERT(!policy || policy->layout() == this);
+    d->recheckOrientation();
     if (d->portraitPolicy && d->m_orientation == M::Portrait) {
         policy->activate();
     }

@@ -168,9 +168,10 @@ QGraphicsItem *MLayoutPrivate::parentItem() const
 M::Orientation MLayoutPrivate::orientation() const {
     return m_orientation;
 }
-void MLayoutPrivate::recheckOrientation() {
+void MLayoutPrivate::recheckOrientation(bool fallbackToActiveWindow) {
     //We need to check if the orientation has changed.
     QGraphicsItem *parent = parentItem();
+    MWindow *window = NULL;
     if(parent) {
         QGraphicsWidget *w;
         if(parent->isWidget()) {
@@ -181,12 +182,14 @@ void MLayoutPrivate::recheckOrientation() {
                 return;
         }
         if(w->scene() && !w->scene()->views().isEmpty()) {
-            MWindow *window = qobject_cast<MWindow *>(w->scene()->views().at(0));
-            if(window) {
-                setOrientation(window->orientation());
-            }
+            window = qobject_cast<MWindow *>(w->scene()->views().at(0));
         }
     }
+
+    if(!window && fallbackToActiveWindow)
+        window = MApplication::activeWindow();
+    if(window)
+        setOrientation(window->orientation());
 }
 void MLayoutPrivate::showItemNow(QGraphicsItem *graphicsItem) const
 {

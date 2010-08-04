@@ -102,7 +102,7 @@ public:
     /** This is called when the widget's orientation has changed (probably because the device has been rotated) */
     void setOrientation(M::Orientation orientation);
     /** Check the closest parent widget's scene to find out what orientation we are in */
-    void recheckOrientation();
+    void recheckOrientation(bool fallbackToActiveWindow = true);
     /** Return the current orientation of the layout */
     M::Orientation orientation() const;
 
