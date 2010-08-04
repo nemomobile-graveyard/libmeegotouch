@@ -26,6 +26,7 @@
 #include "mpannableviewport.h"
 #include "mpannableviewport_p.h"
 #include "mpannableviewportlayout.h"
+#include "mresizelistener.h"
 
 #include <mscenemanager.h>
 #include <mondisplaychangeevent.h>
@@ -178,6 +179,19 @@ void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
     recalculatePhysRange();
 }
 
+void MPannableViewportPrivate::_q_pannedWidgetResized(QGraphicsWidget *widget)
+{
+    Q_Q(MPannableViewport);
+
+    // If resized panned widget had input focus we have to make sure cursor is visible.
+    if (widget != 0
+        && pannedWidget == widget
+        && q->sceneManager()
+        && widget->focusItem()) {
+        q->sceneManager()->ensureCursorVisible();
+    }
+}
+
 MPannableViewport::MPannableViewport(QGraphicsItem *parent)
     : MPannableWidget(new MPannableViewportPrivate(), new MPannableViewportModel, parent)
 {
@@ -205,6 +219,11 @@ MPannableViewport::MPannableViewport(QGraphicsItem *parent)
             SIGNAL(panningStopped()),
             SLOT(_q_resolvePannedWidgetIsOnDisplay()));
 
+    // Use QueuedConnection because this may cause relocations which require resizing
+    // to be finished, not just at beginning of it.
+    connect(&d->resizeListener, SIGNAL(widgetResized(QGraphicsWidget *)),
+            this, SLOT(_q_pannedWidgetResized(QGraphicsWidget *)),
+            Qt::QueuedConnection);
 }
 
 MPannableViewport::~MPannableViewport()
@@ -268,10 +287,16 @@ void MPannableViewport::setWidget(QGraphicsWidget *widget)
 {
     Q_D(MPannableViewport);
 
+    if (d->pannedWidget) {
+        d->pannedWidget->removeEventFilter(&d->resizeListener);
+    }
+
     d->pannedWidget = widget;
     d->viewportLayout->setWidget(widget);
 
     if (widget) {
+        widget->installEventFilter(&d->resizeListener);
+
         widget->setPos(-position());
         widget->setZValue(ZValuePannedWidget);
     }

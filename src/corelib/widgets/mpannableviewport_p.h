@@ -21,6 +21,7 @@
 #define MPANNABLEVIEWPORT_P_H
 
 #include "mpannablewidget_p.h"
+#include "../core/mresizelistener.h"
 
 class QGraphicsWidget;
 class MStyle;
@@ -40,6 +41,7 @@ public:
     MPannableViewportLayout *viewportLayout;
     MPositionIndicator *positionIndicator;
     int inputMethodAreaHeight;
+    MResizeListener resizeListener;
 
     /*!
      * \brief Sets new value of the range attribute with emitting
