@@ -8,7 +8,7 @@ the standard UI controls such as buttons, sliders, and lists, as well as the mor
 Components are also \a widgets (specifically QGraphicsWidgets) and can be used anywhere a widget can, but
 common components also have some unique features that means not every widget is a component:
 
-\section componentfeatures Common Components Features
+\section componentfeatures Common component features
 
 - Components provide a consistent experience that fits the MeeGo Handset design
 - All components are designed for finger use
@@ -23,6 +23,9 @@ While applications are seldom created out of only common components, by using th
 applicable instead of creating custom controls, your application will fit in with the rest of the MeeGo
 user experience. This will also help your users transfer what they have learned from other MeeGo applications
 to yours.
+
+\note For general MeeGo usage patterns and UI recommendations, please see:
+- <a href="http://meego.com/developers/ui-design-guidelines/handset/designing-your-application">Designing your Application</a>
 
 \section componentdetails The components
 
@@ -108,7 +111,7 @@ Class: MDialog
 Use dialogs when you want a response from the user while blocking access to the rest of the application.
 Unlike notifications, dialogs do not disappear from the UI without user interaction.
 
-\subsection objectmenu Object Menu
+\subsection objectmenu Object menu
 
 \image html objectmenu.png "Object menu"
 

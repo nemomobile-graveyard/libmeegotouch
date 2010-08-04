@@ -42,27 +42,27 @@
   <tr>
     <td>
       <ul>
-       <li><a href="commoncomponents.html">Common Components</a>
-       <li><a href="servicefw.html">MeeGo Touch Service Framework</a></li>
+       <li><a href="commoncomponents.html">Common components</a>
+       <li><a href="layouts.html">Layouts</a></li>
        <li><a href="i18n.html">Internationalization</a></li>
-       <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
-       <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>
        <li><a href="styling.html">Styling</a></li>
       </ul>
     </td>
     <td>
       <ul>
        <li><a href="gestures.html">Gestures</a></li>
-       <li><a href="layouts.html">Layouts</a></li>
        <li><a href="rotation.html">Rotation</a></li>
        <li><a href="faststart.html">Fast application startup</a></li>
        <li><a href="notifications.html">Notifications</a></li>
+       <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>
       </ul>
     </td>
     <td>
       <ul>
        <li><a href="applicationextensions.html">Application extensions</a></li>
        <li><a href="settingslanguageschema.html">Settings language reference</a></li>
+       <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
+       <li><a href="servicefw.html">MeeGo Touch Service Framework</a></li>
       </ul>
     </td>
   </tr>
