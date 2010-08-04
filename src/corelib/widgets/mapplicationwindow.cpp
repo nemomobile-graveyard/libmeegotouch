@@ -90,9 +90,11 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , menu(new MApplicationMenu)
     , isMenuOpen(false)
     , pageAreaMaximized(false)
+#ifdef Q_WS_X11
     , isChained(false)
     , chainParentWinId(0)
     , chainTaskTitle()
+#endif
 #ifdef HAVE_CONTEXTSUBSCRIBER
     , callStatusProperty("Phone.Call")
 #endif
@@ -209,6 +211,7 @@ void MApplicationWindowPrivate::init()
                q, SLOT(_q_inputPanelAreaChanged(const QRect &)));
 }
 
+#ifdef Q_WS_X11
 void MApplicationWindowPrivate::setWindowChainedProperty( const Window &parentWinId, const Window &childWinId )
 {
     Atom atomMInvokedBy = XInternAtom(QX11Info::display(), "_MEEGOTOUCH_WM_INVOKED_BY", False);
@@ -224,7 +227,6 @@ void MApplicationWindowPrivate::setWindowChainedProperty( const Window &parentWi
     XSetTransientForHint(display, childWinId, parentWinId);
 }
 
-#ifdef Q_WS_X11
 void MApplicationWindowPrivate::addMStatusBarOverlayProperty()
 {
     Q_Q(MWindow);
@@ -690,7 +692,6 @@ void MApplicationWindowPrivate::updateDockWidgetVisibility()
 
 void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
 {
-    Q_Q(MApplicationWindow);
     // Note that, when listening scene window state changed events, the actual state
     // of the scene window is not yet changed, and is needed to store separately
     // before call to _q_updatePageExposedContentRect().
@@ -701,6 +702,8 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
         case MSceneWindow::ApplicationPage:
             applicationPageAppearEvent(event);
 
+#ifdef Q_WS_X11
+            Q_Q(MApplicationWindow);
             if ( isChained && sceneManager ) {
                 bool pageWindowIsFirstOne = sceneManager->pageHistory().isEmpty();
                 if ( pageWindowIsFirstOne ) {
@@ -714,6 +717,7 @@ void MApplicationWindowPrivate::sceneWindowAppearEvent(MSceneWindowEvent *event)
                     }
                 }
             }
+#endif
             break;
 
         case MSceneWindow::StatusBar:
