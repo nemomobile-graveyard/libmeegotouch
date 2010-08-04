@@ -444,8 +444,8 @@ void Ut_MLayout::testDeletingLayoutDuringAnimation()
         //The items should be hidden, since there's no policy to show them
         QCOMPARE(proxy_item1->isVisible(), false);
 
-        layout1.animatedDeleteAt(1);
-        layout1.animatedDeleteAt(0);
+        layout1.animatedDeleteItem(layout1.itemAt(1));
+        layout1.animatedDeleteItem(layout1.itemAt(0));
 
         QVERIFY(!animation->isAnimating());
         QVERIFY(proxy_item1.isNull());
@@ -947,12 +947,20 @@ void Ut_MLayout::testLayoutInsideLayoutOrientation()
 
     innerLayout->setLandscapePolicy(landscapePolicy);
     innerLayout->setPortraitPolicy(portraitPolicy);
+    QCOMPARE(innerLayout->landscapePolicy(), landscapePolicy);
+    QCOMPARE(innerLayout->portraitPolicy(), portraitPolicy);
 
     policy->addItem(innerLayout);
 
+    QCOMPARE(innerLayout->parentLayoutItem(), layout);
+    QVERIFY(innerLayout->isLayout());
+    QVERIFY(layout->isLayout());
+    QCOMPARE(layout->parentLayoutItem(), m_form);
+    QVERIFY(!m_form->isLayout());
+    QVERIFY(m_form->graphicsItem());
+
     QCOMPARE(appWin->orientation(), M::Landscape); //Default
     QVERIFY(innerLayout->policy() == landscapePolicy);
-
 }
 /* We are testing a layout inside of a layout.  We test four combinations
  * to make sure that MLayout behaves exactly like QGraphicsLinearLayout
@@ -2661,6 +2669,12 @@ void Ut_MLayout::testLayoutGeometryOfItemsAddedToInactivePolicies()
         bool inFirstPolicy = i < widgetsMax;
         QVERIFY(policies[inFirstPolicy?0:1]->indexOf(layout->itemAt(i)) != -1);
         QVERIFY(policies[inFirstPolicy?1:0]->indexOf(layout->itemAt(i)) == -1);
+    }
+    for (int i = 0; i < policies[0]->count(); i++) {
+        QVERIFY(layout->indexOf(policies[0]->itemAt(i)) != -1);
+    }
+    for (int i = 0; i < policies[1]->count(); i++) {
+        QVERIFY(layout->indexOf(policies[1]->itemAt(i)) != -1);
     }
 
     qApp->processEvents();

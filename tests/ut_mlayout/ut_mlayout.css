@@ -64,7 +64,6 @@ MAbstractLayoutPolicyStyle#packed.Portrait {
 
 /* For testing, keep the easing curves simple and the duration very short */
 MBasicLayoutAnimationStyle {
-    geometry-easing-curve: linear;
     opacity-easing-curve: linear;
     duration: 40;
 }
