@@ -1492,8 +1492,8 @@ void QtMaemo6Style::drawControl(ControlElement element,
             const MProgressIndicatorStyle *style =
                 static_cast<const MProgressIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(bar->state,
                         "MProgressIndicatorStyle", QString(), "bar"));
-            if (style && style->inactiveImage())
-                d->drawScalableImage(p, opt, bar->rect, style->inactiveImage(), style, widget, "groove");
+            if (style && style->backgroundImage())
+                d->drawScalableImage(p, opt, bar->rect, style->backgroundImage(), style, widget, "groove");
         }
         break;
     }
@@ -1503,14 +1503,14 @@ void QtMaemo6Style::drawControl(ControlElement element,
             const MProgressIndicatorStyle *style =
                 static_cast<const MProgressIndicatorStyle *>(QtMaemo6StylePrivate::mStyle(bar->state,
                         "MProgressIndicatorStyle", QString(), "bar"));
-            if (style && style->activeImage()) {
+            if (style && style->knownBarTexture()) {
 
                 bool reverse = qApp->isRightToLeft();
 
                 QRect r(bar->rect);
 
                 int left, right;
-                style->activeImage()->borders(&left, &right, NULL, NULL);
+                style->knownBarTexture()->borders(&left, &right, NULL, NULL);
 
                 qreal position = (qreal)(bar->progress - bar->minimum) / (qreal)(bar->maximum - bar->minimum);
                 qreal distance = position * (qreal) r.width();
@@ -1524,7 +1524,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
                     r.setRight(r.width());
                     r.setLeft(r.width() - distance);
                 }
-                d->drawScalableImage(p, opt, r, style->activeImage(), style, widget, "contents", false);
+                d->drawScalableImage(p, opt, r, style->knownBarTexture(), style, widget, "contents", false);
             }
         }
         break;
