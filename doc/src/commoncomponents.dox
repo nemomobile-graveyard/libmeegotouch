@@ -1,0 +1,175 @@
+/*! \page commoncomponents Common Components
+
+\section components Components
+
+\em A "common component" is a reusable element of the MeeGo Handset user interface. Typical components include
+the standard UI controls such as buttons, sliders, and lists, as well as the more complex dialogs and menus.
+
+Components are also \a widgets (specifically QGraphicsWidgets) and can be used anywhere a widget can, but
+common components also have some unique features that means not every widget is a component:
+
+\section componentfeatures Common Components Features
+
+- Components provide a consistent experience that fits the MeeGo Handset design
+- All components are designed for finger use
+- Components scale to physical sizes (i.e. millimeters instead of pixels), regardless of the device resolution or pixel density
+- Components are fully stylable through CSS
+- The entire look and feel implementation of a component is exchangable through theming while keeping the existing API
+- Components may have alternative versions (look and feel) for different uses
+- Components always work in both landscape and portrait orientations
+- Components are performance and power consumption optimized
+
+While applications are seldom created out of only common components, by using the common components where
+applicable instead of creating custom controls, your application will fit in with the rest of the MeeGo
+user experience. This will also help your users transfer what they have learned from other MeeGo applications
+to yours.
+
+\section componentdetails The components
+
+\subsection button Button
+Class: MButton
+
+Buttons come in many form and sizes, but can fundamentally be divided into two main use cases: buttons that
+execute an action when pressed and buttons that maintain a toggle state (on/off).
+
+The following button types are available:
+
+\image html button.png Button
+- \b Push
+Use the push button to execute an action. The push button maintains no memory and typically exectues the same
+action each time when presssed.
+
+\image html iconbutton.png "Icon button"
+- \b Icon
+Icon buttons function like the push button, but are visually distinctive with an icon taking the usual
+place of the descriptive text. They are typically used in toolbars and other places where space is limited.
+
+\image html checkbox.png Checkbox
+- \b Checkbox
+A check box permits the user to make multiple selections from a number of options. A caption describing the meaning of the check box is shown adjacent to the check box. Inverting the state of a check box is done by tapping the box.
+
+\image html switch.png Switch
+- \b Switch
+Use switches for functions that the user can set on and off.
+
+\subsection list List
+Class: MList
+
+\image html list.png List
+
+A list is a container of objects displayed vertically. The list should be used when the number of items is very
+large or dynamic, otherwise consider using a <a href="layouts.html">layout</a> instead.
+
+The list can contain any type of QGraphicsWidget, but typically a MListItem is used.
+
+\subsection textedit Text edit
+Class: MTextEdit
+
+A text edit is used for user input of text. The edit can be a single or multiple lines, or it can expand as
+necessary. When a hardware keyboard is not available, the text edit interacts with the virtual on-screen input methods.
+
+\subsection label Label
+Class: MLabel
+
+A label displays a piece of text in the UI. The MeeGo Touch label supports both markup and links in labels.
+
+\subsection image Image
+Class: MImageWidget
+
+The image represents a single picture in the UI.
+
+\subsection videowidget Video
+Class: MVideoWidget
+
+The video widget supports flexible playback of video in the UI. The widget can for example be rotated along with the
+rest of the UI and have transparent controls overlaid.
+
+\subsection applicationpage Application page
+Class: MApplicationPage
+
+The application page is one view of an application, navigation inside the application typically happens by
+switching between multiple pages.
+
+\subsection applicationmenu Application menu
+Class: MApplicationMenu
+
+\image html applicationmenu.png "Application menu"
+
+The application menu is typically not directly accessed, instead actions are added to an MApplicationPage. This allows
+the menu to be reconfigured automatically as the user switches between pages in the application.
+
+The application menu consists of a list of commands related to the current application view, or application wide commands.
+
+\subsection dialog Dialog
+Class: MDialog
+
+\image html dialog.png Dialog
+
+Use dialogs when you want a response from the user while blocking access to the rest of the application.
+Unlike notifications, dialogs do not disappear from the UI without user interaction.
+
+\subsection objectmenu Object Menu
+
+\image html objectmenu.png "Object menu"
+
+An object menu is a list of contextual actions that can be performed on a certain object. The object menu
+is automatically constructed by the MeeGo Touch framework when the <a href="gestures.html">tap and hold gesture</a>
+is used on a widget. The contents of the menu are the QActions and MActions added to the widget.
+
+\subsection toolbar Tool bar / Tab bar
+
+\image html toolbar.png "Toolbar in landscape"
+\image html toolbar-portrait.png "Toolbar in portrait"
+
+The toolbar holds a list of the most important actions relevant to the current application page/view. The
+toolbar is reconfigured automatically based on the actions added to the currently active page.
+
+The tab bar is an alternative way of providing navigation inside an application, where the most commonly
+used UI views are directly accessible from where the toolbar would normally reside.
+
+\subsection slider Slider
+Class: MSlider
+
+\image html slider.png Slider
+
+Use a slider for a selecting a value from a range.
+
+\subsection seekbar Seekbar
+Class: MSeekbar
+
+\image html seekbar.png Seekbar
+
+The seekbar is a specialization of the slider. Unlike the slider, it supports visualizing the amount
+of currently loaded content in the set value range.
+
+\subsection combobox Combobox
+Class: MCombobox
+
+\image html combobox.png Combobox
+\image html combobox-open.png "Combobox opened"
+
+A combobox allows the user to select a value from a pop-up selection list.
+
+\subsection progressindicator Progress indicator
+
+The progress indicator is used to show that an action is taking place and the expected duration thereof. If the duration
+is not known, the indicator can show this as well.
+
+There are two types of progress indicators types:
+
+\image html progressbar.png "Progress indicator, bar"
+- Bar, a horizontal progress bar that fills up to completion, or indicates that the duration is unknown.
+
+\image html progressbar.png "Progress indicator, spinner"
+- Spinner, a circular progress indicator that fills up to completion, or indicates unknown duration.
+
+\subsection banner Banner
+Class: MBanner
+
+\image html banner.png Banner
+
+The banner provides a drop-in notification to the user on the screen that automatically disappears after a while.
+A banner created by an application is only visible in that single application. To create a system wide notification,
+use the MNotification API.
+
+*/

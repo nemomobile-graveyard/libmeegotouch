@@ -42,6 +42,7 @@
   <tr>
     <td>
       <ul>
+       <li><a href="commoncomponents.html">Common Components</a>
        <li><a href="servicefw.html">MeeGo Touch Service Framework</a></li>
        <li><a href="i18n.html">Internationalization</a></li>
        <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
