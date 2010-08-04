@@ -23,6 +23,7 @@
 #include <mapplication_p.h>
 #include <mapplicationservice.h>
 #include <mapplicationwindow.h>
+#include <mapplicationwindow_p.h>
 #include <mapplicationpage.h>
 #include <minputmethodstate.h>
 #include <MComponentData>
@@ -256,12 +257,12 @@ void Ut_MApplicationWindow::testStatusBarVisibility_data()
 
     QTest::newRow("Fullscreen OFF") << (OpList() << MakeNormal) << true;
     QTest::newRow("Fullscreen ON") << (OpList() << MakeFullScreen) << false;
-    QTest::newRow("Open SIP") << (OpList() << MakeNormal << OpenSip) << false;
-    QTest::newRow("Close SIP") << (OpList() << MakeNormal << CloseSip) << true;
-    QTest::newRow("Close SIP while fullscreen1") << (OpList() << MakeFullScreen << CloseSip) << false;
-    QTest::newRow("Close SIP while fullscreen2") << (OpList() << MakeFullScreen << CloseSip << MakeNormal) << true;
-    QTest::newRow("Open SIP while fullscreen1") << (OpList() << MakeFullScreen << OpenSip) << false;
-    QTest::newRow("Open SIP while fullscreen2") << (OpList() << MakeFullScreen << OpenSip << MakeNormal) << false;
+    QTest::newRow("Maximize page area") << (OpList() << MakeNormal << MaximizePageArea) << false;
+    QTest::newRow("Restore page area") << (OpList() << MakeNormal << RestorePageArea) << true;
+    QTest::newRow("Restore page area while fullscreen1") << (OpList() << MakeFullScreen << RestorePageArea) << false;
+    QTest::newRow("Restore page area while fullscreen2") << (OpList() << MakeFullScreen << RestorePageArea << MakeNormal) << true;
+    QTest::newRow("Maximize page area while fullscreen1") << (OpList() << MakeFullScreen << MaximizePageArea) << false;
+    QTest::newRow("Maximize page area while fullscreen2") << (OpList() << MakeFullScreen << MaximizePageArea << MakeNormal) << false;
 }
 
 void Ut_MApplicationWindow::testStatusBarVisibility()
@@ -271,15 +272,7 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
 
     const MSceneWindow *statusBar = 0;
 
-    // Find the status bar
-    QList<QGraphicsItem *> itemList = m_subject->scene()->items();
-    foreach (const QGraphicsItem *item, itemList) {
-        const MSceneWindow *window = dynamic_cast<const MSceneWindow *>(item);
-        if (window && window->windowType() == MSceneWindow::StatusBar) {
-            statusBar = window;
-            break;
-        }
-    }
+    statusBar = m_subject->d_func()->statusBar;
 
     if (!statusBar) {
         QSKIP("No status bar used so skipping test.", SkipSingle);
@@ -296,22 +289,15 @@ void Ut_MApplicationWindow::testStatusBarVisibility()
         case MakeNormal:
             m_subject->showNormal();
             break;
-        case OpenSip:
-            {
-                // Hide status bar, among with others, by telling the subject
-                // we have a large software input panel present.
-                const QRect largePanel(m_subject->sceneRect().toRect());
-                QMetaObject::invokeMethod(m_subject, "_q_inputPanelAreaChanged",
-                                          Qt::DirectConnection, Q_ARG(const QRect &, largePanel));
-                break;
-            }
-        case CloseSip:
-            {
-                const QRect emptyPanel(0, 0, 0, 0);
-                QMetaObject::invokeMethod(m_subject, "_q_inputPanelAreaChanged",
-                                          Qt::DirectConnection, Q_ARG(const QRect &, emptyPanel));
-                break;
-            }
+        case MaximizePageArea:
+            // Status bar hides because along with other decorations.
+            m_subject->d_func()->pageAreaMaximized = true;
+            QMetaObject::invokeMethod(m_subject, "_q_updateStatusBarVisibility", Qt::DirectConnection);
+            break;
+        case RestorePageArea:
+            m_subject->d_func()->pageAreaMaximized = false;
+            QMetaObject::invokeMethod(m_subject, "_q_updateStatusBarVisibility", Qt::DirectConnection);
+            break;
         }
     }
 

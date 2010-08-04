@@ -20,9 +20,9 @@
 #ifndef UT_MPANNABLEVIEWPORT_H
 #define UT_MPANNABLEVIEWPORT_H
 
-#include <mpannableviewport.h>
-
 #include <QtTest/QtTest>
+
+class MPannableViewport;
 
 class Ut_MPannableViewport : public QObject
 {

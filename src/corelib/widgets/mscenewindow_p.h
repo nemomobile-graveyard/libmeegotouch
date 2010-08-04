@@ -46,6 +46,9 @@ public:
     Qt::Alignment alignment;
     QPointF offset;
 
+    // This translates the scene window from its proper position.
+    QPointF displacement;
+
     MSceneWindow::SceneWindowState sceneWindowState;
 
     bool managedManually;

@@ -26,7 +26,6 @@
 #include "mpannableviewport.h"
 #include "mpannableviewport_p.h"
 #include "mpannableviewportlayout.h"
-#include "minputmethodstate.h"
 
 #include <mscenemanager.h>
 #include <mondisplaychangeevent.h>
@@ -48,7 +47,7 @@ MPannableViewportPrivate::MPannableViewportPrivate()
       pannedWidget(0),
       viewportLayout(0),
       positionIndicator(0),
-      lastInputMethodAreaHeight(0)
+      inputMethodAreaHeight(0)
 {
 }
 
@@ -63,9 +62,7 @@ void MPannableViewportPrivate::setNewRange(const QRectF &newRange)
     // Make the viewport artifically larger so that panning is possible even
     // if partially covered by the input method area.
     // See NB#175181
-    const QRectF actualRange = QRectF(newRange.topLeft(),
-                                      newRange.bottomRight() +
-                                      QPointF(0, MInputMethodState::instance()->inputMethodArea().height()));
+    const QRectF actualRange = newRange.adjusted(0, 0, 0, inputMethodAreaHeight);
 
     if (currentRange != actualRange) {
         currentRange = actualRange;
@@ -170,11 +167,13 @@ void MPannableViewportPrivate::_q_positionIndicatorEnabledChanged()
     }
 }
 
-void MPannableViewportPrivate::_q_inputMethodAreaChanged()
+void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
 {
-    setNewRange(QRectF(currentRange.topLeft(),
-                       currentRange.bottomRight() - QPointF(0, lastInputMethodAreaHeight)));
-    lastInputMethodAreaHeight = MInputMethodState::instance()->inputMethodArea().height();
+    const QRectF restoredRange(currentRange.adjusted(0, 0, 0, -inputMethodAreaHeight));
+
+    inputMethodAreaHeight = imArea.height();
+
+    setNewRange(restoredRange);
 
     recalculatePhysRange();
 }
@@ -206,9 +205,6 @@ MPannableViewport::MPannableViewport(QGraphicsItem *parent)
             SIGNAL(panningStopped()),
             SLOT(_q_resolvePannedWidgetIsOnDisplay()));
 
-    connect(MInputMethodState::instance(),
-            SIGNAL(inputMethodAreaChanged(QRect)),
-            SLOT(_q_inputMethodAreaChanged()));
 }
 
 MPannableViewport::~MPannableViewport()
@@ -233,7 +229,7 @@ void MPannableViewport::setAutoRange(bool enable)
     model()->setAutoRange(enable);
 
     if (enable) {
-        d->lastInputMethodAreaHeight = 0;
+        d->inputMethodAreaHeight = 0;
 
         if (d->pannedWidget) {
             d->setNewRange(QRectF(QPointF(), d->pannedWidget->size()));

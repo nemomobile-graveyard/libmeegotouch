@@ -20,14 +20,13 @@
 #include "ut_mpannableviewport.h"
 #include <mtheme.h>
 #include <mpositionindicator.h>
-#include <mpannableviewport.h>
-#include "../../src/corelib/widgets/mpannableviewport_p.h"
+#include "mpannableviewport.h"
+#include "mpannableviewport_p.h"
 #include <QGraphicsWidget>
 #include <QGraphicsLinearLayout>
 #include <QTest>
 #include <mapplication.h>
 #include <mwidgetview.h>
-#include <MInputMethodState>
 
 MApplication *app;
 
@@ -305,15 +304,7 @@ void Ut_MPannableViewport::rangeControlledByInputMethodArea()
     QCOMPARE(subject->autoRange(), true);
     QCOMPARE(subject->range().toRect().height(), 1000);
 
-    MInputMethodState *ims = MInputMethodState::instance();
-    QVERIFY(ims);
-    QVERIFY(ims->inputMethodArea().isEmpty());
-
-    QSignalSpy areaChanges(ims, SIGNAL(inputMethodAreaChanged(QRect)));
-
-    ims->setInputMethodArea(QRect(0, 0, 1, 500));
-    QTest::qWait(100);
-    QCOMPARE(areaChanges.count(), 1);
+    subject->d_func()->setInputMethodArea(QRect(0, 0, 1, 500));
     QCOMPARE(subject->range().toRect().height(), 1500);
     QCOMPARE(subject->autoRange(), true);
 
@@ -321,9 +312,7 @@ void Ut_MPannableViewport::rangeControlledByInputMethodArea()
     subject->setRange(QRectF(0, 0, 0, 2000));
     QCOMPARE(subject->range().toRect().height(), 2500);
 
-    ims->setInputMethodArea(QRect(0, 0, 1, 1500));
-    QTest::qWait(100);
-    QCOMPARE(areaChanges.count(), 2);
+    subject->d_func()->setInputMethodArea(QRect(0, 0, 1, 1500));
     QCOMPARE(subject->range().toRect().height(), 3500);
     QCOMPARE(subject->autoRange(), false);
 
@@ -337,9 +326,7 @@ void Ut_MPannableViewport::rangeControlledByInputMethodArea()
     delete widget;
     QCOMPARE(subject->range().toRect().height(), 5500);
 
-    ims->setInputMethodArea(QRect());
-    QTest::qWait(100);
-    QCOMPARE(areaChanges.count(), 3);
+    subject->d_func()->setInputMethodArea(QRect());
     QCOMPARE(subject->range().toRect().height(), 4000);
     QCOMPARE(subject->autoRange(), true);
 }

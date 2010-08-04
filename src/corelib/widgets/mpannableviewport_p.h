@@ -39,7 +39,7 @@ public:
     QGraphicsWidget *pannedWidget;
     MPannableViewportLayout *viewportLayout;
     MPositionIndicator *positionIndicator;
-    int lastInputMethodAreaHeight;
+    int inputMethodAreaHeight;
 
     /*!
      * \brief Sets new value of the range attribute with emitting
@@ -53,13 +53,13 @@ public:
      */
     void recalculatePhysRange();
 
+    void setInputMethodArea(const QRect &imArea);
+
     void sendOnDisplayChangeEventToMWidgets(QGraphicsItem *item,
             MOnDisplayChangeEvent *event);
     void _q_resolvePannedWidgetIsOnDisplay();
     void _q_positionIndicatorEnabledChanged();
-    void _q_inputMethodAreaChanged();
-
-    friend class Ut_MPannableViewport;
+    void _q_pannedWidgetResized(QGraphicsWidget *widget);
 };
 
 #endif

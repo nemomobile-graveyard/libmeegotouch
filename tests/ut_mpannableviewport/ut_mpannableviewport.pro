@@ -1,5 +1,5 @@
 include(../common_top.pri)
-
+INCLUDEPATH += $$MSRCDIR/corelib/widgets
 TARGET = ut_mpannableviewport
 
 

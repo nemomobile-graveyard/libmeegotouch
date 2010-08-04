@@ -154,17 +154,17 @@ public Q_SLOTS:
 
     /*!
      * Sends a request to the application's input context to open a software input
-     * panel (e.g. the virtual keyboard) for the given \a inputWidget. Depending on
-     * a placement of the \a inputWidget scene manager adjusts the scene by
-     * temporarily hiding the escape button and navigation bar.
-     * \param inputWidget A widget that requests the software input panel
+     * panel (e.g. the virtual keyboard)
+     * Scene manager makes sure the focused input widget is visible to user.
+     * Window decorations may be hidden to gain more screen space when input panel is up.
+     * \param inputWidget This parameter is ignored.
      * \sa closeSoftwareInputPanel
      */
     void requestSoftwareInputPanel(QGraphicsWidget *inputWidget);
 
     /*!
      * Sends a request to the application's input context to close a software input
-     * panel. Restores temporarily hidden escape button and navigation bar.
+     * panel.
      * \sa requestSoftwareInputPanel
      */
     void closeSoftwareInputPanel();
@@ -318,15 +318,18 @@ private:
     Q_PRIVATE_SLOT(d_func(), void _q_setSenderGeometry())
     Q_PRIVATE_SLOT(d_func(), void _q_changeGlobalOrientationAngle())
     Q_PRIVATE_SLOT(d_func(), void _q_emitOrientationChangeFinished())
-    Q_PRIVATE_SLOT(d_func(), void _q_inputPanelAreaChanged(const QRect &inputPanelRect))
     Q_PRIVATE_SLOT(d_func(), void _q_unFreezeUI())
     Q_PRIVATE_SLOT(d_func(), void _q_applySceneWindowTransitionsQueuedDueToOrientationAnimation())
     Q_PRIVATE_SLOT(d_func(), void _q_triggerAsyncPendingOrientationChange())
     Q_PRIVATE_SLOT(d_func(), void _q_applyPendingOrientationChange())
     Q_PRIVATE_SLOT(d_func(), void _q_onPageSwitchAnimationFinished())
+    Q_PRIVATE_SLOT(d_func(), void _q_dislocateSceneWindow(MSceneWindow *, QPointF))
+    Q_PRIVATE_SLOT(d_func(), void _q_undoSceneWindowDislocation(MSceneWindow *sceneWindow))
 #ifdef Q_WS_X11
     Q_PRIVATE_SLOT(d_func(), void _q_updateDecoratorButtonsProperty())
 #endif
+
+    friend class MInputWidgetRelocator;
 };
 
 #endif

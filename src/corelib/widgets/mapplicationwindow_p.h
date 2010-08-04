@@ -161,7 +161,6 @@ public:
     void _q_menuAppeared();
     void _q_menuDisappeared();
     void _q_updateStatusBarVisibility();
-    void _q_inputPanelAreaChanged(const QRect &);
 #ifdef HAVE_N900
     void _q_exitAppView();
 #endif

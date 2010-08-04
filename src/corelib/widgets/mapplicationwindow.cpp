@@ -26,7 +26,6 @@
 #include "mapplicationwindow.h"
 #include "mapplicationpage.h"
 #include "mapplicationpage_p.h"
-#include "minputmethodstate.h"
 #include "mkeyboardstatetracker.h"
 #include "morientationtracker.h"
 #include "mnavigationbar.h"
@@ -206,9 +205,6 @@ void MApplicationWindowPrivate::init()
 #endif
     q->connect(q, SIGNAL(orientationAngleChanged(M::OrientationAngle)),
             SLOT(_q_updatePageExposedContentRect()));
-
-    q->connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
-               q, SLOT(_q_inputPanelAreaChanged(const QRect &)));
 }
 
 #ifdef Q_WS_X11
@@ -273,17 +269,30 @@ void MApplicationWindowPrivate::windowStateChangeEvent(QWindowStateChangeEvent *
 
 void MApplicationWindowPrivate::maximizePageArea()
 {
-    if (pageAreaMaximized) {
-        return;
-    }
+    Q_Q(MApplicationWindow);
 
     pageAreaMaximized = true;
 
     // When maximized, the window is in control of these components.
     setComponentDisplayMode(homeButtonPanel, MApplicationPageModel::Hide);
     setComponentDisplayMode(escapeButtonPanel, MApplicationPageModel::Hide);
-    setComponentDisplayMode(navigationBar, MApplicationPageModel::Hide);
-    setComponentDisplayMode(dockWidget, MApplicationPageModel::Hide);
+
+    if (navigationBar->focusItem()) {
+        // Always show focused navigation bar.
+        setComponentDisplayMode(navigationBar, MApplicationPageModel::Show);
+    } else {
+        setComponentDisplayMode(navigationBar, MApplicationPageModel::Hide);
+    }
+
+    if (q->orientation() == M::Portrait) {
+        if (dockWidget->focusItem()) {
+            // Always show focused dock widget.
+            setComponentDisplayMode(dockWidget, MApplicationPageModel::Show);
+        } else {
+            setComponentDisplayMode(dockWidget, MApplicationPageModel::Hide);
+        }
+    }
+
 
     // Now that we've set pageAreaMaximized, this update tries to hide status bar.
     _q_updateStatusBarVisibility();
@@ -312,32 +321,6 @@ void MApplicationWindowPrivate::restorePageArea()
 
     // Show status bar
     _q_updateStatusBarVisibility();
-}
-
-void MApplicationWindowPrivate::_q_inputPanelAreaChanged(const QRect &panelRect)
-{
-    Q_Q(MApplicationWindow);
-
-    // If input panel rect is of nonzero size hide navigation controls.
-    // For portrait mode, the only change is to restore previously maximized page.
-
-    // Another exception is that with hardware keyboard open the controls are always visible
-    // even though symbol view or toolbars can be visible at the same time.
-    // We make the assumption that the state of MKeyboardStateTracker is updated before
-    // this slot is called again.
-
-    // Also, if we have keyboard focus in navigation controls then no need to make page
-    // area larger.
-
-    if (panelRect.isEmpty()
-        || MKeyboardStateTracker::instance()->isOpen()
-        || q->orientation() == M::Portrait
-        || navigationBar->focusItem()
-        || dockWidget->focusItem()) {
-        restorePageArea();
-    } else {
-        maximizePageArea();
-    }
 }
 
 void MApplicationWindowPrivate::_q_updateStatusBarVisibility()

@@ -29,6 +29,7 @@
 #include <mscenewindowevent_p.h>
 #include "mpageswitchanimation.h"
 
+class MInputWidgetRelocator;
 class MScene;
 class MSceneWindow;
 class MSceneLayerEffect;
@@ -114,11 +115,6 @@ public:
     void removeSceneWindow(MSceneWindow *sceneWindow);
     void addUnmanagedSceneWindow(MSceneWindow *sceneWindow);
 
-    bool onApplicationPage(QGraphicsItem *item);
-    MSceneWindow *parentSceneWindow(QGraphicsItem *item);
-    void moveSceneWindow(MSceneWindow *window, int adjustment, int visibleHeight);
-    int scrollPageContents(MSceneWindow *window, int adjustment) const;
-
     bool isOnDisplay();
     void produceMustBeResolvedDisplayEvent(MSceneWindow *sceneWindow);
     void produceFullyOffDisplayEvents(QGraphicsItem *item);
@@ -129,6 +125,7 @@ public:
 
     void pushPage(MSceneWindow *page, bool animatedTransition);
     void popPage(bool animatedTransition);
+    void setCurrentPage(QPointer<MSceneWindow> page);
 
     void prepareWindowShow(MSceneWindow *window);
 
@@ -174,8 +171,15 @@ public:
 
     void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
 
-    void relocateWindowByInputPanel(const QRect &inputPanelRect);
-    void restoreSceneWindow();
+    /*
+        Dislocates the scene window from its proper position
+     */
+    void _q_dislocateSceneWindow(MSceneWindow *sceneWindow, const QPointF &displacement);
+
+    /*
+        Returns the scene window back to its proper position
+     */
+    void _q_undoSceneWindowDislocation(MSceneWindow *sceneWindow);
 
     void _q_setSenderGeometry();
     void _q_changeGlobalOrientationAngle();
@@ -184,7 +188,6 @@ public:
     void _q_onSceneWindowAppearanceAnimationFinished();
     void _q_onSceneWindowDisappearanceAnimationFinished();
     void _q_onPageSwitchAnimationFinished();
-    void _q_inputPanelAreaChanged(const QRect &inputPanelRect);
 
     void _q_unFreezeUI();
 
@@ -217,7 +220,7 @@ public:
 
     QPointer<MSceneWindow> currentPage;
 
-    QPointer<QGraphicsWidget> focusedInputWidget;
+    QPointer<MInputWidgetRelocator> inputWidgetRelocator;
 
     QPointer<MSceneWindow> alteredSceneWindow;
     QPoint sceneWindowTranslation;

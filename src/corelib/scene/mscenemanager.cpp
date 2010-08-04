@@ -49,7 +49,7 @@
 #include "mpannableviewport.h"
 #include "mtextedit.h"
 
-#include "minputmethodstate.h"
+#include "minputwidgetrelocator.h"
 
 #include "mapplicationpage.h"
 #include "morientationtracker.h"
@@ -86,7 +86,6 @@ void MSceneManagerPrivate::init(MScene *scene)
 
     currentPage = 0;
 
-    focusedInputWidget = 0;
     alteredSceneWindow = 0;
     sceneWindowTranslation = QPoint();
 
@@ -109,18 +108,15 @@ void MSceneManagerPrivate::init(MScene *scene)
     eventEater->setGeometry(QRectF(QPointF(0.0, 0.0), q->visibleSceneSize(M::Landscape)));
     createOrientationAnimation();
 
-    // The scene manager should only listen to region updates from one instance, to prevent
-    // conflicting window relocation requests. Since MIMS is a singleton, enforcing
-    // Qt::UniqueConnection is sufficient.
-    // This also implies that the software input panel could come up without an explicit request
-    // from the application side.
-    q->connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)),
-               q, SLOT(_q_inputPanelAreaChanged(const QRect &)),
-               Qt::UniqueConnection);
+    inputWidgetRelocator = QPointer<MInputWidgetRelocator>(new MInputWidgetRelocator(scene, rootElement, orientation(newAngle)));
 
-    q->connect(q, SIGNAL(orientationChangeFinished(M::Orientation)),
-               q, SLOT(ensureCursorVisible()),
-               Qt::UniqueConnection);
+    // Connect signals for scene window displacement.
+    q->connect(inputWidgetRelocator, SIGNAL(sceneWindowDislocationRequest(MSceneWindow *, QPointF)),
+               q, SLOT(_q_dislocateSceneWindow(MSceneWindow *, QPointF)),
+               Qt::DirectConnection);
+    q->connect(inputWidgetRelocator, SIGNAL(sceneWindowUndoDislocationRequest(MSceneWindow *)),
+               q, SLOT(_q_undoSceneWindowDislocation(MSceneWindow *)),
+               Qt::DirectConnection);
 
     pageSwitchAnimation = new MPageSwitchAnimation;
     q->connect(pageSwitchAnimation, SIGNAL(finished()),
@@ -168,6 +164,7 @@ void MSceneManagerPrivate::createOrientationAnimation()
 
 MSceneManagerPrivate::~MSceneManagerPrivate()
 {
+    delete inputWidgetRelocator;
     delete orientationAnimation;
     delete pageSwitchAnimation;
     delete pendingRotation;
@@ -254,6 +251,9 @@ void MSceneManagerPrivate::_q_changeGlobalOrientationAngle()
     M::Orientation oldOrientation = orientation(angle);
     angle = newAngle;
 
+    // Needs to be called on every angle change and before scene window geometries are changed.
+    inputWidgetRelocator->handleRotationBegin();
+
     if (oldOrientation != orientation(angle)) {
         emit q->orientationAboutToChange(q->orientation());
 
@@ -276,6 +276,10 @@ void MSceneManagerPrivate::_q_emitOrientationChangeFinished()
 #ifdef Q_WS_X11
     _q_updateDecoratorButtonsProperty();
 #endif
+
+    // Needs to be called on every angle change and after animation and scene window
+    // geometries have been changed.
+    inputWidgetRelocator->handleRotationFinished(q->orientation());
 }
 
 void MSceneManagerPrivate::_q_unFreezeUI()
@@ -444,77 +448,27 @@ void MSceneManagerPrivate::_q_onPageSwitchAnimationFinished()
     applySceneWindowTransitionsFromPageSwitchQueue();
 }
 
-void MSceneManagerPrivate::_q_inputPanelAreaChanged(const QRect &panelRect)
+void MSceneManagerPrivate::_q_dislocateSceneWindow(MSceneWindow *sceneWindow,
+                                                   const QPointF &displacement)
 {
-    if (panelRect.isEmpty()) {
-        restoreSceneWindow();
-    } else {
-        relocateWindowByInputPanel(panelRect);
-    }
+    sceneWindow->moveBy(displacement.x(), displacement.y());
+    sceneWindow->d_func()->displacement += displacement;
 }
 
-void MSceneManagerPrivate::relocateWindowByInputPanel(const QRect &inputPanelRect)
+void MSceneManagerPrivate::_q_undoSceneWindowDislocation(MSceneWindow *sceneWindow)
 {
-    Q_Q(MSceneManager);
+    QPointF &displacement(sceneWindow->d_func()->displacement);
 
-    const QRectF microFocusRect = q->scene()->inputMethodQuery(Qt::ImMicroFocus).toRectF();
-    // If the microfocus is invalid then the focused widget does not want to be relocated.
-    if (!microFocusRect.isValid()) {
-        return;
-    }
-
-    // This method is not responsible for restoring visibility when the input panel is closed -
-    // restoreSceneWindow() does that. Therefore, it is OK to also ignore empty rectangles here.
-    if (!focusedInputWidget || inputPanelRect.isEmpty()) {
-        return;
-    }
-
-    // Find the first scene window parent of the focused input widget, since only those should
-    // be scrolled or moved in this context.
-    MSceneWindow *newParent = parentSceneWindow(focusedInputWidget);
-
-    // Don't move navigation bar. Focus can also be in dock widget but because it can get
-    // obfuscated by input panel we need to move it.
-    if (newParent->windowType() == MSceneWindow::NavigationBar) {
-        return;
-    }
-
-    // The visible scene size is already mapped to the rootElement's coordinate system.
-    const QRect screenSizeRect(QPoint(0, 0), q->visibleSceneSize());
-    const QRect mappedRect(rootElement->mapRectFromScene(inputPanelRect).toRect());
-
-    // Need to also handle the case where part of the input panel is outside of the visible scene
-    // size, hence the intersection. It is also assumed that the input panel always pops up from
-    // the bottom of the visible scene area.
-    const int obstructedHeight(mappedRect.intersect(screenSizeRect).height());
-    QRect visibleRect(screenSizeRect);
-    visibleRect.setHeight(visibleRect.height() - obstructedHeight);
-
-    // Always try to center the input focus into the remaining visible rectangle.
-    int adjustment = (rootElement->mapRectFromScene(microFocusRect).toRect().center() -
-                      visibleRect.center()).y();
-
-    // The altered scene window is moved back to its
-    // original location, although - if it has pannable contents - it is not scrolled back.
-    adjustment -= scrollPageContents(newParent, adjustment);
-    moveSceneWindow(newParent, adjustment, obstructedHeight);
-}
-
-void MSceneManagerPrivate::restoreSceneWindow()
-{
-    if (alteredSceneWindow) {
-        sceneWindowTranslation *= -1;
-        alteredSceneWindow->moveBy(sceneWindowTranslation.x(), sceneWindowTranslation.y());
-        sceneWindowTranslation = QPoint();
-        alteredSceneWindow = 0;
+    if (!displacement.isNull()) {
+        sceneWindow->moveBy(-displacement.x(), -displacement.y());
+        displacement = QPointF(0.0, 0.0);
     }
 }
 
 void MSceneManager::ensureCursorVisible()
 {
     Q_D(MSceneManager);
-
-    d->_q_inputPanelAreaChanged(MInputMethodState::instance()->inputMethodArea());
+    d->inputWidgetRelocator->update();
 }
 
 M::Orientation MSceneManagerPrivate::orientation(M::OrientationAngle angle) const
@@ -655,13 +609,13 @@ void MSceneManagerPrivate::setParentItemForSceneWindow(MSceneWindow *sceneWindow
 
 void MSceneManagerPrivate::setSceneWindowGeometries()
 {
-    restoreSceneWindow();
     const int size = windows.size();
     MSceneWindow *sceneWindow;
 
     for (int i = 0; i < size; ++i) {
         sceneWindow = windows.at(i);
         if (sceneWindow->sceneWindowState() != MSceneWindow::Disappeared)
+            _q_undoSceneWindowDislocation(sceneWindow);
             setSceneWindowGeometry(sceneWindow);
     }
 }
@@ -807,105 +761,7 @@ void MSceneManagerPrivate::setOrientationAngleWithoutAnimation(M::OrientationAng
                                              landscapeScreenSize.width() / 2);
     }
 
-    emit q->orientationChangeFinished(orientation(angle));
-#ifdef Q_WS_X11
-    _q_updateDecoratorButtonsProperty();
-#endif
-}
-
-bool MSceneManagerPrivate::onApplicationPage(QGraphicsItem *item)
-{
-    QGraphicsItem *parent = item->parentItem();
-    MApplicationPage *page = 0;
-
-    if (parent) {
-        do {
-            page = dynamic_cast<MApplicationPage *>(parent);
-            if (page)
-                return true;
-            parent = parent->parentItem();
-        } while (parent != 0);
-    }
-    return false;
-}
-
-MSceneWindow *MSceneManagerPrivate::parentSceneWindow(QGraphicsItem *item)
-{
-    QGraphicsItem *parent = item->parentItem();
-    MSceneWindow *parentSceneWindow = 0;
-
-    if (parent) {
-        do {
-            parentSceneWindow = dynamic_cast<MSceneWindow *>(parent);
-            if (parentSceneWindow)
-                break;
-            parent = parent->parentItem();
-        } while (parent != 0);
-    }
-
-    return parentSceneWindow;
-}
-
-int MSceneManagerPrivate::scrollPageContents(MSceneWindow *window, int adjustment) const
-{
-    Q_Q(const MSceneManager);
-    MApplicationPage *page = qobject_cast<MApplicationPage *>(window);
-
-    if (!page) {
-        // Nothing was scrolled.
-        return 0;
-    }
-
-    if (!page->isPannable()) {
-        // Scrolling was disabled explicitly.
-        return 0;
-    }
-
-    // newAdjustment stores by how much the page's contents were scrolled.
-    // It's > 0 when scrolling down, and < 0 when scrolling up.
-    int newAdjustment(0);
-    MPannableViewport *viewport(page->pannableViewport());
-
-    // Need to find out whether there is enough scrollable contents for the requested amount:
-    const int height = viewport->range().height() - viewport->position().y();
-
-    if (height <= q->visibleSceneSize().height()) {
-        // Nothing to do - page cannot be scrolled any further.
-    } else if (adjustment >= 0) {
-        newAdjustment = qMin(adjustment, height);
-    } else if (-adjustment >= viewport->position().y()) {
-        newAdjustment = -(viewport->position().y());
-    } else { // qAbs(amount) \in [0, viewport->position()]
-        newAdjustment = adjustment;
-    }
-
-    viewport->setPosition(QPoint(0, (newAdjustment + viewport->position().y())));
-    // Disables kinetic scrolling until next pointer event - see NB #162913.
-    viewport->physics()->stop();
-    return newAdjustment;
-}
-
-void MSceneManagerPrivate::moveSceneWindow(MSceneWindow *window, int adjustment,
-                                             int inputPanelHeight)
-{
-    if (!window) {
-        return;
-    }
-
-    int newAdjustment(0);
-
-    if (adjustment > 0) {
-        newAdjustment = qMin(inputPanelHeight + sceneWindowTranslation.y(), adjustment);
-    } else {
-        const QPoint topLeftCorner = QPoint(0, 0);
-        newAdjustment = qMax(static_cast<int>(window->mapToItem(rootElement, (topLeftCorner)).y()),
-                             adjustment);
-    }
-
-    window->moveBy(0, -newAdjustment);
-    sceneWindowTranslation.ry() -= newAdjustment;
-
-    alteredSceneWindow = window;
+    _q_emitOrientationChangeFinished();
 }
 
 bool MSceneManagerPrivate::isOnDisplay()
@@ -1048,7 +904,7 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
         emit q->pageHistoryChanged();
     }
 
-    currentPage = page;
+    setCurrentPage(page);
 
     if (animatedTransition) {
         if (previousPage)
@@ -1106,7 +962,16 @@ void MSceneManagerPrivate::popPage(bool animatedTransition)
         setSceneWindowState(currentPage, MSceneWindow::Disappeared);
     }
 
-    currentPage = previousPage;
+    setCurrentPage(previousPage);
+}
+
+void MSceneManagerPrivate::setCurrentPage(QPointer<MSceneWindow> page)
+{
+    currentPage = page;
+
+    if (!inputWidgetRelocator.isNull()) {
+        inputWidgetRelocator->setCurrentPage(page);
+    }
 }
 
 bool MSceneManagerPrivate::verifySceneWindowStateBeforeAppear(
@@ -1729,7 +1594,7 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
     }
 
     if (currentPage == sceneWindow)
-        currentPage = 0;
+        setCurrentPage(0);
 
     if (sceneWindow->windowType() == MSceneWindow::StatusBar)
         statusBar = 0;
@@ -1905,58 +1770,49 @@ bool MSceneManager::eventFilter(QObject *watched, QEvent *event)
     return false;
 }
 
-void MSceneManager::requestSoftwareInputPanel(QGraphicsWidget *inputWidget)
+void MSceneManager::requestSoftwareInputPanel(QGraphicsWidget *)
 {
-    Q_D(MSceneManager);
-
-    if (inputWidget) {
-        d->focusedInputWidget = inputWidget;
-        QInputContext *inputContext = qApp->inputContext();
-
-        if (!inputContext) {
-            return;
-        }
-
-        QWidget *focusWidget = QApplication::focusWidget();
-
-        if (focusWidget) {
-            // FIXME: this is a temporary workaround because of the
-            // QGraphicsView unable to correctly update the attribute.
-            // We're waiting for fixing this on Qt side.
-            focusWidget->setAttribute(Qt::WA_InputMethodEnabled, true);
-            //enforce update if focus is moved from one MTextEdit to other
-            //if attribute WA_InputMethodEnabled is not set then Qt will call
-            //setFocusWidget automatically
-            inputContext->setFocusWidget(focusWidget);
-        }
-
-        //FIXME: verify if application style allows SIP usage
-        QEvent request(QEvent::RequestSoftwareInputPanel);
-        inputContext->filterEvent(&request);
-
-        // This is normally called automatically except in cases where input panel area does not change and we
-        // move between two similar text edits, for example.
-        d->relocateWindowByInputPanel(MInputMethodState::instance()->inputMethodArea());
-    }
-}
-
-void MSceneManager::closeSoftwareInputPanel()
-{
-    Q_D(MSceneManager);
-
     QInputContext *inputContext = qApp->inputContext();
 
-    // Tell input context we want to close the SIP.
     if (!inputContext) {
         return;
     }
 
-    //FIXME: verify if application style allows SIP usage
-    QEvent close(QEvent::CloseSoftwareInputPanel);
-    inputContext->filterEvent(&close);
-    inputContext->reset();
+    QWidget *focusWidget = QApplication::focusWidget();
 
-    d->focusedInputWidget = 0;
+    if (focusWidget) {
+        // FIXME: this is a temporary workaround because of the
+        // QGraphicsView unable to correctly update the attribute.
+        // We're waiting for fixing this on Qt side.
+        focusWidget->setAttribute(Qt::WA_InputMethodEnabled, true);
+        //enforce update if focus is moved from one MTextEdit to other
+        //if attribute WA_InputMethodEnabled is not set then Qt will call
+        //setFocusWidget automatically
+        inputContext->setFocusWidget(focusWidget);
+    }
+
+    //FIXME: verify if application style allows SIP usage
+    QEvent request(QEvent::RequestSoftwareInputPanel);
+    inputContext->filterEvent(&request);
+
+    // This is normally called automatically except in cases where input panel area does not change and we
+    // move between two similar text edits, for example. This should be removed if we ever get a change to
+    // track focus item changes in the scene (see QTBUG-10570).
+    // Calling update immediately here may cause relocated widget not to be set to its optimal position.
+    // However, it is guaranteed to be visible on the screen, optimally or not.
+    ensureCursorVisible();
+}
+
+void MSceneManager::closeSoftwareInputPanel()
+{
+    // Tell input context we want to close the SIP.
+    QInputContext *inputContext = qApp->inputContext();
+    if (inputContext) {
+        //FIXME: verify if application style allows SIP usage
+        QEvent close(QEvent::CloseSoftwareInputPanel);
+        inputContext->filterEvent(&close);
+        inputContext->reset();
+    }
 }
 
 void MSceneManager::setOrientationAngle(M::OrientationAngle angle,

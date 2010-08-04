@@ -193,12 +193,11 @@ private:
     Q_DECLARE_PRIVATE(MPannableViewport)
     Q_PRIVATE_SLOT(d_func(), void _q_resolvePannedWidgetIsOnDisplay())
     Q_PRIVATE_SLOT(d_func(), void _q_positionIndicatorEnabledChanged())
-    Q_PRIVATE_SLOT(d_func(), void _q_inputMethodAreaChanged())
 #ifdef UNIT_TEST
     // Test unit is defined as a friend of production code to access private members
     friend class Ut_MPannableViewport;
 #endif
-
+    friend class MInputWidgetRelocator;
 };
 
 #endif

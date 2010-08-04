@@ -340,6 +340,11 @@ void MApplicationPagePrivate::updateAutoMarginsForComponents()
 
     setWidgetHeight(topSpacer, topMargin);
     setWidgetHeight(bottomSpacer, bottomMargin);
+
+    // FIXME: This activation is needed so input widget relocator can correctly calculate
+    // positions after decorations hide. Correct place for this would be after all
+    // decorations have been hidden. Only one activation is required.
+    pannableViewPort->widget()->layout()->activate();
 }
 
 MApplicationPageModel::ComponentDisplayMode MApplicationPage::componentDisplayMode(

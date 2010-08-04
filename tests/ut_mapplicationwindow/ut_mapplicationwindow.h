@@ -79,8 +79,8 @@ private:
 enum StatusBarTestOperation {
     MakeFullScreen,
     MakeNormal,
-    OpenSip,
-    CloseSip
+    MaximizePageArea,
+    RestorePageArea
 };
 
 

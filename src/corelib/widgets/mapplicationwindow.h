@@ -162,6 +162,8 @@ protected:
 
 private:
     friend class MSceneManagerPrivate;
+    friend class MInputWidgetRelocator;
+    friend class Ut_MApplicationWindow;
 
     Q_DISABLE_COPY(MApplicationWindow)
     Q_DECLARE_PRIVATE(MApplicationWindow)
@@ -173,7 +175,6 @@ private:
 #ifdef HAVE_CONTEXTSUBSCRIBER
     Q_PRIVATE_SLOT(d_func(), void _q_updateStatusBarVisibility())
 #endif
-    Q_PRIVATE_SLOT(d_func(), void _q_inputPanelAreaChanged(const QRect &))
 #ifdef HAVE_N900
     Q_PRIVATE_SLOT(d_func(), void _q_exitAppView())
 #endif
