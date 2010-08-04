@@ -53,12 +53,10 @@ MLocalThemeDaemon::MLocalThemeDaemon(const QString &applicationName)
     M_localDaemon = this;
 #endif
 
-    QHash<MThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
     QList<QPixmap*> pixmapsToDelete;
-    if ( daemon.activateTheme(theme, language, QList<MThemeDaemonClient *>(), pixmapsToReload, pixmapsToDelete) == false ) {
+    if ( daemon.activateTheme(theme, language, QList<MThemeDaemonClient *>(), pixmapsToDelete) == false ) {
         mWarning("MThemeDaemon") << "Could not activate the theme:" << theme;
     }
-    Q_ASSERT(pixmapsToReload.isEmpty());
     Q_ASSERT(pixmapsToDelete.isEmpty());
 
     client = new MThemeDaemonClient(NULL, applicationName, daemon.themeInheritanceChain());
@@ -143,19 +141,13 @@ void MLocalThemeDaemon::themeChangedSlot()
 
     QList<QPixmap*> pixmapsToDelete;
 #ifdef HAVE_GCONF
-    if (daemon.activateTheme(themeItem.value().toString(), locale.value().toString(), list, pixmapsToReload, pixmapsToDelete)) {
+    if (daemon.activateTheme(themeItem.value().toString(), locale.value().toString(), list, pixmapsToDelete)) {
 #else
-    if (daemon.activateTheme(M_themeName, "", list, pixmapsToReload, pixmapsToDelete)) {
+    if (daemon.activateTheme(M_themeName, "", list, pixmapsToDelete)) {
 #endif
-
-        QHash<MThemeDaemonClient *, QList<PixmapIdentifier> >::iterator i = pixmapsToReload.begin();
-        QHash<MThemeDaemonClient *, QList<PixmapIdentifier> >::iterator end = pixmapsToReload.end();
-        for (; i != end; ++i) {
-            const QList<PixmapIdentifier>& ids = i.value();
-
-            foreach(const PixmapIdentifier & id, ids) {
-                pixmapHandle(id.imageId, id.size);
-            }
+        while (!client->pixmapsToReload.isEmpty()) {
+            PixmapIdentifier id = client->pixmapsToReload.takeLast();
+            pixmapHandle(id.imageId, id.size);
         }
         // theme change succeeded, let's inform all clients + add the pixmaps to load-list
         emit themeChanged(themeInheritanceChain(), themeLibraryNames());

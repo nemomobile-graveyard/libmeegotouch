@@ -158,6 +158,14 @@ namespace M
         };
         uint qHash(const PixmapIdentifier &id);
 
+        struct Number : PacketData {
+            Number(qint32 value) :
+                value(value)
+            {}
+            virtual ~Number();
+
+            qint32 value;
+        };
 
         struct String : PacketData {
             String(const QString &string) :
@@ -240,6 +248,18 @@ namespace M
 
             QList<PixmapHandle> addedHandles;
             QList<PixmapIdentifier> removedIdentifiers;
+        };
+
+        struct RequestedPixmap : PacketData {
+            RequestedPixmap(const PixmapIdentifier& id, qint32 priority) :
+                id(id),
+                priority(priority)
+            {}
+
+            virtual ~RequestedPixmap();
+
+            PixmapIdentifier id;
+            qint32 priority;
         };
     }
 }

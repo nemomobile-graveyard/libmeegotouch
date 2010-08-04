@@ -63,6 +63,10 @@ public:
 
     QHash<M::MThemeDaemonProtocol::PixmapIdentifier, ImageResource *> pixmaps;
 
+    // a list off all requested pixmaps before a theme change. after a theme
+    // change this list will contain all pixmaps the client did not free.
+    // the themedaemon will then reload these pixmaps.
+    QList<M::MThemeDaemonProtocol::PixmapIdentifier> pixmapsToReload;
 private:
     QString clientName;
     QDataStream dataStream;

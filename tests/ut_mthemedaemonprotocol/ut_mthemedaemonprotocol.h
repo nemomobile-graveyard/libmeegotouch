@@ -52,12 +52,18 @@ private slots:
     void streamThemeChangedPacket_data();
     void streamThemeChangedPacket();
 
+    void streamThemeChangeApplied_data();
+    void streamThemeChangeApplied();
+
     void streamRequestNewPixmapDirectoryPacket_data();
     void streamRequestNewPixmapDirectoryPacket();
 
-    // same as PixmapUsedPacket and ReleasePixmapPacket packet
-    void streamRequestPixmapPacket_data();
+    void    streamRequestPixmapPacket_data();
     void streamRequestPixmapPacket();
+
+    // same as ReleasePixmapPacket packet
+    void streamPixmapUsedPacket_data();
+    void streamPixmapUsedPacket();
 
     void streamPixmapUpdatedPacket();
 

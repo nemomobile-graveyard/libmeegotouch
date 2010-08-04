@@ -43,6 +43,8 @@ public:
     M::MThemeDaemonProtocol::Packet waitForPacket(quint64 sequenceNumber);
     void addMostUsedPixmaps(const QList<M::MThemeDaemonProtocol::PixmapHandle>& handles);
     void removeMostUsedPixmaps(const QList<M::MThemeDaemonProtocol::PixmapIdentifier>& identifiers);
+    qint32 priority();
+    void loadThemeDaemonPriorities(const QString& filename);
 
     Q_DECLARE_PUBLIC(MRemoteThemeDaemon)
     MRemoteThemeDaemon *q_ptr;
@@ -51,6 +53,12 @@ public:
 
     QStringList themeInheritanceChain;
     QStringList themeLibraryNames;
+
+    QString applicationName;
+    QHash<QString, qint32> applicationSpecificPriorities;
+    qint32 priorityForegroundApplication;
+    qint32 priorityBackgroundApplication;
+    qint32 priorityPrestartedApplication;
 
     quint64 sequenceCounter;
 };

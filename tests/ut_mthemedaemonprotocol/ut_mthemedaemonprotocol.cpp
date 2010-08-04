@@ -208,6 +208,29 @@ void Ut_MThemedaemonProtocol::streamThemeChangedPacket()
     QCOMPARE(info->themeLibraryNames, themeLibraryNames);
 }
 
+void Ut_MThemedaemonProtocol::streamThemeChangeApplied_data()
+{
+    QTest::addColumn<qint32>("priority");
+    QTest::newRow("negative") << -10;
+    QTest::newRow("zero") << 0;
+    QTest::newRow("positive") << 100;
+}
+
+void Ut_MThemedaemonProtocol::streamThemeChangeApplied()
+{
+    QFETCH(qint32, priority);
+    quint64 sequenceNumber = 123;
+    Packet packet(Packet::ThemeChangeAppliedPacket, sequenceNumber, new Number(priority));
+
+    Packet packet2 = streamAndReturn(packet);
+    verifyStreamIsEmpty();
+    QCOMPARE(packet2.type(), Packet::ThemeChangeAppliedPacket);
+    QCOMPARE(packet2.sequenceNumber(), sequenceNumber);
+    const Number* number = static_cast<const Number*>(packet2.data());
+
+    QCOMPARE(number->value, priority);
+}
+
 void Ut_MThemedaemonProtocol::streamRequestNewPixmapDirectoryPacket_data()
 {
     QTest::addColumn<QString>("directory");
@@ -238,13 +261,38 @@ void Ut_MThemedaemonProtocol::streamRequestNewPixmapDirectoryPacket()
 
 void Ut_MThemedaemonProtocol::streamRequestPixmapPacket_data()
 {
+    QTest::addColumn<qint32>("priority");
+    QTest::newRow("negative") << -10;
+    QTest::newRow("zero") << 0;
+    QTest::newRow("positive") << 100;
+}
+
+void Ut_MThemedaemonProtocol::streamRequestPixmapPacket()
+{
+    QFETCH(qint32, priority);
+    Packet::PacketType packetType = Packet::RequestPixmapPacket;
+
+    quint64 sequenceNumber = 123;
+    PixmapIdentifier id("imageId", QSize(123, 456));
+    Packet packet(packetType, sequenceNumber, new RequestedPixmap(id, priority));
+
+    Packet packet2 = streamAndReturn(packet);
+    verifyStreamIsEmpty();
+    QCOMPARE(packet2.type(), packetType);
+    QCOMPARE(packet2.sequenceNumber(), sequenceNumber);
+    const RequestedPixmap* rp = static_cast<const RequestedPixmap *>(packet.data());
+    QCOMPARE(rp->id, id);
+    QCOMPARE(rp->priority, priority);
+}
+
+void Ut_MThemedaemonProtocol::streamPixmapUsedPacket_data()
+{
     QTest::addColumn<int>("type");
-    QTest::newRow("pixmap request") << int(Packet::RequestPixmapPacket);
     QTest::newRow("pixmap used") << int(Packet::PixmapUsedPacket);
     QTest::newRow("release pixmap") << int(Packet::ReleasePixmapPacket);
 }
 
-void Ut_MThemedaemonProtocol::streamRequestPixmapPacket()
+void Ut_MThemedaemonProtocol::streamPixmapUsedPacket()
 {
     QFETCH(int, type);
     Packet::PacketType packetType = Packet::PacketType(type);
@@ -340,9 +388,6 @@ void Ut_MThemedaemonProtocol::streamThemeDaemonStatusPacket()
     QCOMPARE(clientList->clients.count(), clients.count());
     QCOMPARE(clientList->clients, clients);
 }
-
-void streamThemeDaemonStatusPacket_data();
-void streamThemeDaemonStatusPacket();
 
 Q_DECLARE_METATYPE(QList<PixmapHandle>)
 Q_DECLARE_METATYPE(QList<PixmapIdentifier>)

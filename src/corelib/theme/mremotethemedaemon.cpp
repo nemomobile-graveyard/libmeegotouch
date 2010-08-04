@@ -22,8 +22,11 @@
 #include "mthemedaemon.h"
 #include "mdebug.h"
 #include "mthemedaemonprotocol.h"
+#include "mapplication.h"
+#include "mwindow.h"
 #include <QDir>
 #include <QTime>
+#include <QSettings>
 
 #ifndef Q_OS_WIN
 # include <unistd.h>
@@ -51,12 +54,15 @@ MRemoteThemeDaemon::MRemoteThemeDaemon(const QString &applicationName, int timeo
     } else {
         mWarning("MRemoteThemeDaemon") << "Failed to connect to theme daemon (IPC)";
     }
+
+    QString filename = M_INSTALL_SYSCONFDIR "/meegotouch/themedaemonpriorities.conf";
+    d->loadThemeDaemonPriorities(filename);
 }
 
 void MRemoteThemeDaemon::registerApplicationName(const QString &applicationName)
 {
     Q_D(MRemoteThemeDaemon);
-
+    d->applicationName = applicationName;
     const quint64 seq = ++d->sequenceCounter;
     d->stream << Packet(Packet::RequestRegistrationPacket, seq, new String(applicationName));
     Packet reply = d->waitForPacket(seq);
@@ -170,7 +176,8 @@ quint64 MRemoteThemeDaemonPrivate::requestPixmap(const QString &imageId, const Q
     }
     else {
         sequenceNumber = ++sequenceCounter;
-        stream << Packet(Packet::RequestPixmapPacket, sequenceNumber, new PixmapIdentifier(id));
+
+        stream << Packet(Packet::RequestPixmapPacket, sequenceNumber, new RequestedPixmap(id, priority()));
         // remember sequence number of ongoing request
         pixmapRequests.insert(id, sequenceNumber);
     }
@@ -296,7 +303,7 @@ void MRemoteThemeDaemonPrivate::processOnePacket(const Packet &packet)
     case Packet::ThemeChangedPacket: {
         const ThemeChangeInfo* info = static_cast<const ThemeChangeInfo*>(packet.data());
         themeChanged(info->themeInheritance, info->themeLibraryNames);
-        stream << Packet(Packet::ThemeChangeAppliedPacket, packet.sequenceNumber());
+        stream << Packet(Packet::ThemeChangeAppliedPacket, packet.sequenceNumber(), new Number(priority()));
     } break;
 
     case Packet::ThemeChangeCompletedPacket: {
@@ -349,6 +356,42 @@ void MRemoteThemeDaemonPrivate::themeChanged(const QStringList &themeInheritance
     this->themeInheritanceChain = themeInheritanceChain;
     this->themeLibraryNames = themeLibraryNames;
     emit q->themeChanged(themeInheritanceChain, themeLibraryNames);
+}
+
+qint32 MRemoteThemeDaemonPrivate::priority()
+{
+    if (MApplication::isPrestarted()) {
+        return priorityPrestartedApplication;
+    }
+
+    MWindow *window = MApplication::activeWindow();
+    if (window && window->isOnDisplay()) {
+        return priorityForegroundApplication;
+    } else {
+        return applicationSpecificPriorities.value(applicationName, priorityBackgroundApplication);
+    }
+}
+
+void MRemoteThemeDaemonPrivate::loadThemeDaemonPriorities(const QString& filename)
+{
+    priorityForegroundApplication = 100;
+    priorityBackgroundApplication = 0;
+    priorityPrestartedApplication = -10;
+
+    QSettings settings(filename, QSettings::IniFormat);
+    if(settings.status() != QSettings::NoError) {
+        return;
+    }
+
+    priorityForegroundApplication = settings.value("ForegroundApplication/priority", priorityForegroundApplication).toInt();
+    priorityBackgroundApplication = settings.value("BackgroundApplication/priority", priorityBackgroundApplication).toInt();
+    priorityPrestartedApplication = settings.value("PrestartedApplication/priority", priorityPrestartedApplication).toInt();
+
+    settings.beginGroup("SpefificApplicationPriorities");
+    QStringList apps = settings.childKeys();
+    foreach (const QString& app, apps) {
+        applicationSpecificPriorities[app] = settings.value(app).toInt();
+    }
 }
 
 #include "moc_mremotethemedaemon.cpp"

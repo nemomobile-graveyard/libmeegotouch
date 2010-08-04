@@ -38,6 +38,8 @@ private slots:
     void testPixmapSearchList();
     void testRegisterApplication();
     void testThemeInheritanceChain();
+    void testLoadThemeDaemonPriorities_data();
+    void testLoadThemeDaemonPriorities();
 
 private:
     MApplication *m_app;

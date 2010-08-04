@@ -32,6 +32,9 @@ PacketData::~PacketData()
 PixmapIdentifier::~PixmapIdentifier()
 {}
 
+Number::~Number()
+{}
+
 String::~String()
 {}
 
@@ -48,6 +51,9 @@ ThemeChangeInfo::~ThemeChangeInfo()
 {}
 
 MostUsedPixmaps::~MostUsedPixmaps()
+{}
+
+RequestedPixmap::~RequestedPixmap()
 {}
 
 Packet::Packet(PacketType type, quint64 seq, PacketData *data)
@@ -91,6 +97,10 @@ QDataStream &operator<<(QDataStream &stream, const Packet &packet)
         stream << info->themeInheritance << info->themeLibraryNames;
     } break;
 
+    case Packet::ThemeChangeAppliedPacket: {
+        stream << static_cast<const Number *>(packet.data())->value;
+    } break;
+
     // stringbool as data
     case Packet::RequestNewPixmapDirectoryPacket: {
         const StringBool *sb = static_cast<const StringBool *>(packet.data());
@@ -99,10 +109,15 @@ QDataStream &operator<<(QDataStream &stream, const Packet &packet)
 
     // pixmap identifier as data
     case Packet::PixmapUsedPacket:
-    case Packet::RequestPixmapPacket:
     case Packet::ReleasePixmapPacket: {
         const PixmapIdentifier *id = static_cast<const PixmapIdentifier *>(packet.data());
         stream << *id;
+    } break;
+
+    case Packet::RequestPixmapPacket: {
+        const RequestedPixmap *pixmap = static_cast<const RequestedPixmap *>(packet.data());
+        stream << pixmap->priority;
+        stream << pixmap->id;
     } break;
 
     // pixmap handle as data
@@ -241,6 +256,13 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
         packet.setData(new ThemeChangeInfo(themeInheritance, themeLibraryNames));
     } break;
 
+    case Packet::ThemeChangeAppliedPacket: {
+        qint32  priority;
+        waitForAvailableBytes(stream, sizeof(qint32));
+        stream >> priority;
+        packet.setData(new Number(priority));
+    } break;
+
     // stringbool as data
     case Packet::RequestNewPixmapDirectoryPacket: {
         QString string = readQString(stream);
@@ -252,11 +274,19 @@ QDataStream &operator>>(QDataStream &stream, Packet &packet)
 
     // pixmap identifier as data
     case Packet::PixmapUsedPacket:
-    case Packet::RequestPixmapPacket:
     case Packet::ReleasePixmapPacket: {
         PixmapIdentifier id;
         stream >> id;
         packet.setData(new PixmapIdentifier(id));
+    } break;
+
+    case Packet::RequestPixmapPacket: {
+        qint32 priority;
+        waitForAvailableBytes(stream, sizeof(qint32));
+        stream >> priority;
+        PixmapIdentifier id;
+        stream >> id;
+        packet.setData(new RequestedPixmap(id, priority));
     } break;
 
     // pixmap handle as data

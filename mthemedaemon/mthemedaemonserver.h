@@ -55,17 +55,21 @@ private slots:
     void handleUpdatedMostUsedPixmaps(const M::MThemeDaemonProtocol::MostUsedPixmaps& mostUsed);
 
 private:
+    void loadPriorities(const QString& filename);
+
     void pixmapUsed(MThemeDaemonClient *client,
                                 const M::MThemeDaemonProtocol::PixmapIdentifier &id,
                                 quint64 sequenceNumber);
     void pixmapRequested(MThemeDaemonClient *client,
                                 const M::MThemeDaemonProtocol::PixmapIdentifier &id,
+                                qint32 priority,
                                 quint64 sequenceNumber);
     void pixmapReleaseRequested(MThemeDaemonClient *client,
                                 const M::MThemeDaemonProtocol::PixmapIdentifier &id,
                                 quint64 sequenceNumber);
 
-    void themeChangeApplied(MThemeDaemonClient *client, quint64 sequenceNumber);
+    void themeChangeApplied(MThemeDaemonClient *client,
+                                qint32 priority, quint64 sequenceNumber);
 
     void ackMostUsedPixmaps(MThemeDaemonClient *client, quint64 sequenceNumber);
 
@@ -100,7 +104,7 @@ private:
     QString defaultTheme;
     bool delayedThemeChange;
 
-    QQueue<QueueItem> loadPixmapsQueue;
+    QMap<qint32, QQueue<QueueItem> > loadPixmapsQueue;
     QQueue<QueueItem> releasePixmapsQueue;
     QTimer processQueueTimer;
 
@@ -111,6 +115,7 @@ private:
     QHash<quint64, QList<M::MThemeDaemonProtocol::PixmapIdentifier> > pixmapsToDeleteWhenUpdatedMostUsed;
 
     quint64 sequenceCounter;
+    qint32 priorityForegroundApplication;
 };
 //! \internal_end
 #endif

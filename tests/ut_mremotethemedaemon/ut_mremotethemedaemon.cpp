@@ -128,4 +128,41 @@ void Ut_MRemoteThemeDaemon::testRegisterApplication()
     QCOMPARE(int(d_ptr->sequenceCounter), oldSequenceCounter + 1);
 }
 
+void Ut_MRemoteThemeDaemon::testLoadThemeDaemonPriorities_data()
+{
+    QTest::addColumn<QString>("filename");
+    QTest::addColumn<qint32>("priorityForegroundApplication");
+    QTest::addColumn<qint32>("priorityBackgroundApplication");
+    QTest::addColumn<qint32>("priorityPrestartedApplication");
+    QTest::addColumn<QHash<QString, qint32> >("applicationSpecificPriorities");
+
+    // test default values for not existing file
+    QTest::newRow("not existing") << QString() << 100 << 0 << -10 << QHash<QString, qint32>();
+
+    QHash<QString, qint32> priorities;
+    priorities.insert("sysuid", -90);
+    priorities.insert("duihome", 23);
+    priorities.insert("meego-im-uiserver", 55);
+    QTest::newRow("valid") <<  QString("priorities.conf") << 3 << 7 << -100 << priorities;
+}
+
+typedef QHash<QString, qint32> StringIntHash;
+void Ut_MRemoteThemeDaemon::testLoadThemeDaemonPriorities()
+{
+    QFETCH(QString, filename);
+    QFETCH(qint32, priorityForegroundApplication);
+    QFETCH(qint32, priorityBackgroundApplication);
+    QFETCH(qint32, priorityPrestartedApplication);
+    QFETCH(StringIntHash, applicationSpecificPriorities);
+
+    MRemoteThemeDaemonPrivate *d_ptr = m_themeDaemon->d_ptr;
+    d_ptr->loadThemeDaemonPriorities(filename);
+
+    QCOMPARE(d_ptr->priorityForegroundApplication, priorityForegroundApplication);
+    QCOMPARE(d_ptr->priorityBackgroundApplication, priorityBackgroundApplication);
+    QCOMPARE(d_ptr->priorityPrestartedApplication, priorityPrestartedApplication);
+    QCOMPARE(d_ptr->applicationSpecificPriorities, applicationSpecificPriorities);
+}
+
+Q_DECLARE_METATYPE(StringIntHash)
 QTEST_APPLESS_MAIN(Ut_MRemoteThemeDaemon)

@@ -16,4 +16,7 @@ HEADERS += \
     $$MSRCDIR/corelib/theme/mremotethemedaemon.h \
     $$MSRCDIR/corelib/theme/mthemedaemonprotocol.h \
 
+support_files.files += \
+    priorities.conf
+
 include(../common_bot.pri)

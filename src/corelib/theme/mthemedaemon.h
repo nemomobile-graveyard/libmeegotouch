@@ -44,7 +44,7 @@ public:
     bool pixmap(MThemeDaemonClient *client, const M::MThemeDaemonProtocol::PixmapIdentifier &id, Qt::HANDLE &handle);
     bool releasePixmap(MThemeDaemonClient *client, const M::MThemeDaemonProtocol::PixmapIdentifier &id);
 
-    bool activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QHash<MThemeDaemonClient *, QList<M::MThemeDaemonProtocol::PixmapIdentifier> >& pixmapsToReload, QList<QPixmap*>& pixmapsToDelete);
+    bool activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QList<QPixmap*>& pixmapsToDelete);
 
     void changeLocale(const QString &newLocale, const QList<MThemeDaemonClient *>& clientList, QHash<MThemeDaemonClient *, QList<M::MThemeDaemonProtocol::PixmapIdentifier> >& pixmapsToReload);
 

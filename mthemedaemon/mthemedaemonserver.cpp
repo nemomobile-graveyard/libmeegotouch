@@ -25,7 +25,7 @@
 #include <QLocalSocket>
 #include <QDir>
 #include <QTimer>
-
+#include <QSettings>
 
 using namespace M::MThemeDaemonProtocol;
 
@@ -38,19 +38,20 @@ MThemeDaemonServer::MThemeDaemonServer() :
     delayedThemeChange(false),
     sequenceCounter(0)
 {
+    QString filename = M_INSTALL_SYSCONFDIR "/meegotouch/themedaemonpriorities.conf";
+    loadPriorities(filename);
+
     // 1) make sure that gconf has some value for the current theme
     if (currentTheme.value().isNull() || currentTheme.value().toString().isEmpty() )
         currentTheme.set(defaultTheme);
 
     // 2) activate the current theme
-    QHash<MThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
-    if (!daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), QList<MThemeDaemonClient *>(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted)) {
-        // could not activate current theme, change to devel
-        if (!daemon.activateTheme(defaultTheme, currentLocale.value().toString(), QList<MThemeDaemonClient *>(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted)) {
+    if (!daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), QList<MThemeDaemonClient *>(), pixmapsToDeleteWhenThemeChangeHasCompleted)) {
+        // could not activate current theme, change to default theme
+        if (!daemon.activateTheme(defaultTheme, currentLocale.value().toString(), QList<MThemeDaemonClient *>(), pixmapsToDeleteWhenThemeChangeHasCompleted)) {
             qFatal("MThemeDaemonServer - Could not find themes, aborting!");
         }
     }
-    Q_ASSERT(pixmapsToReload.isEmpty());
     Q_ASSERT(pixmapsToDeleteWhenThemeChangeHasCompleted.isEmpty());
 
     // 3) make sure we're notified if locale or theme changes
@@ -104,8 +105,17 @@ MThemeDaemonServer::~MThemeDaemonServer()
         registeredClients.erase(registeredClients.begin());
     }
 
-    loadPixmapsQueue.clear();
-    releasePixmapsQueue.clear();
+}
+
+void MThemeDaemonServer::loadPriorities(const QString& filename)
+{
+    priorityForegroundApplication = 100;
+    QSettings settings(filename, QSettings::IniFormat);
+    if(settings.status() != QSettings::NoError) {
+        return;
+    }
+
+    priorityForegroundApplication = settings.value("ForegroundApplication/priority", priorityForegroundApplication).toInt();
 }
 
 // gets called when a new client(socket) connects to the daemon
@@ -129,13 +139,24 @@ void MThemeDaemonServer::clientDisconnected()
             registeredClients.remove(socket);
 
             // remove all queued pixmap requests
-            QMutableListIterator<QueueItem> pi = loadPixmapsQueue;
-            while (pi.hasNext()) {
-                if (pi.next().client == client)
-                    pi.remove();
+            QMap<qint32, QQueue<QueueItem> >::iterator prioIter = loadPixmapsQueue.begin();
+            while (prioIter != loadPixmapsQueue.end()) {
+                QQueue<QueueItem>::iterator queueIter = prioIter->begin();
+                while (queueIter != prioIter->end()) {
+                    if (queueIter->client == client) {
+                        queueIter = prioIter->erase(queueIter);
+                    } else {
+                        ++queueIter;
+                    }
+                }
+                if (prioIter->isEmpty()) {
+                    prioIter = loadPixmapsQueue.erase(prioIter);
+                } else {
+                    ++prioIter;
+                }
             }
             // remove all queued pixmap releases
-            pi = releasePixmapsQueue;
+            QMutableListIterator<QueueItem> pi = releasePixmapsQueue;
             while (pi.hasNext()) {
                 if (pi.next().client == client)
                     pi.remove();
@@ -223,8 +244,8 @@ void MThemeDaemonServer::clientDataAvailable()
 
         case Packet::RequestPixmapPacket: {
             // client requested a pixmap
-            const PixmapIdentifier *id = static_cast<const PixmapIdentifier *>(packet.data());
-            pixmapRequested(client, *id, packet.sequenceNumber());
+            const RequestedPixmap *pixmap = static_cast<const RequestedPixmap *>(packet.data());
+            pixmapRequested(client, pixmap->id, pixmap->priority, packet.sequenceNumber());
         } break;
 
         case Packet::ReleasePixmapPacket: {
@@ -243,7 +264,8 @@ void MThemeDaemonServer::clientDataAvailable()
         } break;
 
         case Packet::ThemeChangeAppliedPacket: {
-            themeChangeApplied(client, packet.sequenceNumber());
+            const Number *number = static_cast<const Number *>(packet.data());
+            themeChangeApplied(client, number->value, packet.sequenceNumber());
         } break;
 
         case Packet::AckMostUsedPixmapsPacket: {
@@ -279,40 +301,25 @@ void MThemeDaemonServer::themeChanged()
         return;
     }
 
-    QHash<MThemeDaemonClient *, QList<PixmapIdentifier> > pixmapsToReload;
-    
-    bool changeOk = daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted);
+    bool changeOk = daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToDeleteWhenThemeChangeHasCompleted);
     if(!changeOk) {
         mWarning("MThemeDaemonServer") << "Could not change theme to" << currentTheme.value().toString() << ". Falling back to default theme " << defaultTheme;
         if( daemon.currentTheme() == defaultTheme )
             return;
-        changeOk = daemon.activateTheme(defaultTheme, currentLocale.value().toString(), registeredClients.values(), pixmapsToReload, pixmapsToDeleteWhenThemeChangeHasCompleted);
+        changeOk = daemon.activateTheme(defaultTheme, currentLocale.value().toString(), registeredClients.values(), pixmapsToDeleteWhenThemeChangeHasCompleted);
     }
-    
+
     if (changeOk) {
         // theme change succeeded, let's inform all clients + add the pixmaps to load-list
         Packet themeChangedPacket(Packet::ThemeChangedPacket, 0, new ThemeChangeInfo(daemon.themeInheritanceChain(), daemon.themeLibraryNames()));
 
-        QHash<MThemeDaemonClient *, QList<PixmapIdentifier> >::iterator i = pixmapsToReload.begin();
-        QHash<MThemeDaemonClient *, QList<PixmapIdentifier> >::iterator end = pixmapsToReload.end();
-        for (; i != end; ++i) {
-            MThemeDaemonClient *client = i.key();
-
-	    // Do not send a theme change packet to the booster, as it will not reply
-	    if (client->name() != QString("componentcache_pre_initialized_mapplication")) {
-		clientsThatHaveNotYetAppliedThemeChange.append(client);
-		client->stream() << themeChangedPacket;
+        foreach(MThemeDaemonClient *client, registeredClients) {
+            // Do not send a theme change packet to the booster, as it will not reply
+            if (client->name() != QLatin1String("componentcache_pre_initialized_mapplication")) {
+                clientsThatHaveNotYetAppliedThemeChange.append(client);
+                client->stream() << themeChangedPacket;
+                client->pixmaps.clear();
             }
-
-            const QList<PixmapIdentifier> &ids = i.value();
-            const QList<PixmapIdentifier>::const_iterator idsEnd = ids.end();
-            for (QList<PixmapIdentifier>::const_iterator iId = ids.begin(); iId != idsEnd; ++iId) {
-
-                const QueueItem item (client, *iId);
-                if (!releasePixmapsQueue.removeOne(item)) {
-                    loadPixmapsQueue.enqueue(item);
-                }
-	    }
         }
 
         // make sure we have a cache directory for the current theme
@@ -367,7 +374,9 @@ void MThemeDaemonServer::localeChanged()
 
             const QueueItem item (client, *iId);
             if (!releasePixmapsQueue.removeOne(item)) {
-                loadPixmapsQueue.enqueue(item);
+                // we do not know the state of the individual clients -- using same priority
+                // for all of them
+                loadPixmapsQueue[50].enqueue(item);
             }
         }
     }
@@ -378,19 +387,34 @@ void MThemeDaemonServer::localeChanged()
 void MThemeDaemonServer::processOneQueueItem()
 {
     if (!loadPixmapsQueue.isEmpty()) {
-        const QueueItem item = loadPixmapsQueue.dequeue();
-        Qt::HANDLE handle = 0;
-        if (daemon.pixmap(item.client, item.pixmapId, handle)) {
-            item.client->stream() << Packet(Packet::PixmapUpdatedPacket, item.sequenceNumber,
-                                            new PixmapHandle(item.pixmapId, handle));
-        } else {
-            const QString message =
-                QString::fromLatin1("requested pixmap '%1' %2x%3 already acquired by client").arg(
-                                    item.pixmapId.imageId,
-                                    QString::number(item.pixmapId.size.width()),
-                                    QString::number(item.pixmapId.size.height()));
-            item.client->stream() << Packet(Packet::ErrorPacket, item.sequenceNumber,
-                                            new String(message));
+        // all items requested by a foreground application will be processed immediately,
+        // others one my one
+        while (true) {
+            QMap<qint32, QQueue<QueueItem> >::iterator iter = loadPixmapsQueue.end() - 1;
+            const QueueItem item = iter->dequeue();
+            if (iter->isEmpty()) {
+                loadPixmapsQueue.erase(iter);
+            }
+
+            Qt::HANDLE handle = 0;
+            if (daemon.pixmap(item.client, item.pixmapId, handle)) {
+                item.client->stream() << Packet(Packet::PixmapUpdatedPacket, item.sequenceNumber,
+                                                new PixmapHandle(item.pixmapId, handle));
+            } else {
+                const QString message =
+                        QString::fromLatin1("requested pixmap '%1' %2x%3 already acquired by client").arg(
+                                item.pixmapId.imageId,
+                                QString::number(item.pixmapId.size.width()),
+                                QString::number(item.pixmapId.size.height()));
+                item.client->stream() << Packet(Packet::ErrorPacket, item.sequenceNumber,
+                                                new String(message));
+            }
+
+            if (loadPixmapsQueue.isEmpty()) {
+                break;
+            } else if ((loadPixmapsQueue.end() - 1).key() < priorityForegroundApplication) {
+                break;
+            }
         }
     } else if (!releasePixmapsQueue.isEmpty()) {
         const QueueItem item = releasePixmapsQueue.dequeue();
@@ -439,7 +463,8 @@ void MThemeDaemonServer::pixmapUsed(MThemeDaemonClient *client,
 }
 
 void MThemeDaemonServer::pixmapRequested(MThemeDaemonClient *client,
-                                           const PixmapIdentifier &id, quint64 sequenceNumber)
+                                           const PixmapIdentifier &id, qint32 priority,
+                                           quint64 sequenceNumber)
 {
     // if the client has requested a release for this pixmap, we'll remove the
     // release request, and reply with the existing pixmap handle
@@ -459,8 +484,7 @@ void MThemeDaemonServer::pixmapRequested(MThemeDaemonClient *client,
 #endif
         }
     } else {
-        // the requested pixmap was not in release queue, so we'll queue the load
-        loadPixmapsQueue.enqueue(item);
+        loadPixmapsQueue[priority].enqueue(item);
         if (!processQueueTimer.isActive())
             processQueueTimer.start();
     }
@@ -472,15 +496,40 @@ void MThemeDaemonServer::pixmapReleaseRequested(MThemeDaemonClient *client,
 {
     // if the pixmap request is in queue, we can just remove it from there
     const QueueItem item (client, id, sequenceNumber);
-    if (!loadPixmapsQueue.removeOne(item)) {
-        // in case the removeOne fails, we need to queue the release request.
+
+    if (client->pixmapsToReload.contains(id)) {
+        // during a theme change clients will free all but the ones they
+        // continue to use. we need to keep these and update them manually
+        client->pixmapsToReload.removeOne(id);
+    }
+
+    bool removedFromLoadList = false;
+    QMap<qint32, QQueue<QueueItem> >::iterator iter = loadPixmapsQueue.begin();
+    while (iter != loadPixmapsQueue.end()) {
+        if (iter->removeOne(item)) {
+            removedFromLoadList = true;
+            if (iter->isEmpty()) {
+                loadPixmapsQueue.erase(iter);
+            }
+            break;
+        }
+        ++iter;
+    }
+
+    if (!removedFromLoadList) {
+        if (!client->pixmaps.contains(id)) {
+            // ignore request if client has no handle of this pixmap
+            // happens for example during theme change
+            return;
+        }
+        // we need to queue the release request.
         releasePixmapsQueue.enqueue(item);
         if (!processQueueTimer.isActive())
             processQueueTimer.start();
     }
 }
 
-void MThemeDaemonServer::themeChangeApplied(MThemeDaemonClient *client,
+void MThemeDaemonServer::themeChangeApplied(MThemeDaemonClient *client, qint32 priority,
                                              quint64 sequenceNumber)
 {
     Q_UNUSED(sequenceNumber);
@@ -488,6 +537,14 @@ void MThemeDaemonServer::themeChangeApplied(MThemeDaemonClient *client,
     if(!clientsThatHaveNotYetAppliedThemeChange.removeOne(client)) {
         mWarning("MThemeDaemonServer") << "Client" << client->name() << "has already sent theme change applied packet!";
         return;
+    }
+
+    // reload all pixmaps which have not been freed by the client during the theme change
+    // the client will continue to use the pixmap and we need to manually reload it
+    while (!client->pixmapsToReload.isEmpty()) {
+        PixmapIdentifier id = client->pixmapsToReload.takeLast();
+        const QueueItem item (client, id);
+        loadPixmapsQueue[priority].enqueue(item);
     }
 
     if(clientsThatHaveNotYetAppliedThemeChange.isEmpty()) {
@@ -519,10 +576,11 @@ void MThemeDaemonServer::themeDaemonStatus(MThemeDaemonClient *client,
         ClientInfo info;
         info.name = c->name();
         info.pixmaps = c->pixmaps.keys();
-
-        foreach(const QueueItem &item, loadPixmapsQueue) {
-            if (item.client == c)
-                info.requestedPixmaps.append(item.pixmapId);
+        foreach (const QQueue<QueueItem> &queue, loadPixmapsQueue) {
+            foreach(const QueueItem &item, queue) {
+                if (item.client == c)
+                    info.requestedPixmaps.append(item.pixmapId);
+            }
         }
         foreach(const QueueItem &item, releasePixmapsQueue) {
             if (item.client == c)
