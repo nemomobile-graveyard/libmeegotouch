@@ -25,35 +25,16 @@
 
 MInputMethodStatePrivate::MInputMethodStatePrivate()
     : orientation(M::Angle0),
-      emitInputMethodAreaTimer(new QTimer),
       q_ptr(NULL)
 {
 }
 
 MInputMethodStatePrivate::~MInputMethodStatePrivate()
 {
-    delete emitInputMethodAreaTimer;
 }
 
 void MInputMethodStatePrivate::init()
 {
-    Q_Q(MInputMethodState);
-
-    // Wait 75 milliseconds before sending updated area to allow glass
-    // widget to correct focus. The focus may be wrongly set on the initial
-    // mouse press.
-    const int waitForEmitTime = 75;
-    emitInputMethodAreaTimer->setSingleShot(true);
-    emitInputMethodAreaTimer->setInterval(waitForEmitTime);
-
-    q->connect(emitInputMethodAreaTimer, SIGNAL(timeout()),
-               q, SLOT(_q_emitInputMethodAreaChanged()));
-}
-
-void MInputMethodStatePrivate::_q_emitInputMethodAreaChanged()
-{
-    Q_Q(MInputMethodState);
-    emit q->inputMethodAreaChanged(region);
 }
 
 MInputMethodState::MInputMethodState()
@@ -83,7 +64,7 @@ void MInputMethodState::setInputMethodArea(const QRect &newRegion)
 
     if (d->region != newRegion) {
         d->region = newRegion;
-        d->emitInputMethodAreaTimer->start();
+        emit inputMethodAreaChanged(d->region);
     }
 }
 

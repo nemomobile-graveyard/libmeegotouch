@@ -114,8 +114,6 @@ private:
     MInputMethodStatePrivate *const d_ptr;
 
     Q_DECLARE_PRIVATE(MInputMethodState)
-
-    Q_PRIVATE_SLOT(d_func(), void _q_emitInputMethodAreaChanged())
 };
 
 #endif
