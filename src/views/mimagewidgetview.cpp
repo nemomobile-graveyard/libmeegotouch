@@ -228,7 +228,7 @@ void MImageWidgetView::drawContents(QPainter *painter, const QStyleOptionGraphic
 
     Q_D(const MImageWidgetView);
 
-    const QPixmap *pixmap = d->controller->pixmap();  
+    const QPixmap *pixmap = d->controller->d_func()->pixmap;  
 
     d->drawBorders(painter, d->drawRect);
 
