@@ -29,7 +29,6 @@ class MDeviceProfilePrivate;
 
 /*! \brief The MDeviceProfile class holds physical and simulated properties of the target device
 
-  Target device properties are specified in CSS as part of the DirectUI theme, through the attributes of the MDeviceStyle class.
  */
 class M_EXPORT MDeviceProfile : public QObject
 {
