@@ -102,6 +102,7 @@ MListFilter::MListFilter(MList *parent)
 
 MListFilter::~MListFilter()
 {
+    delete d_ptr;
 }
 
 void MListFilter::setEnabled(bool enabled)
