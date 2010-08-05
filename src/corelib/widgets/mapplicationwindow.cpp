@@ -639,6 +639,9 @@ void MApplicationWindowPrivate::setComponentDisplayMode(
 
     case MApplicationPageModel::Hide:
         removeComponentFromAutoHide(component);
+        MNavigationBar *navBar = qobject_cast<MNavigationBar*>(component);
+        if (navBar && isMenuOpen)
+            q->closeMenu();
         component->disappear();
         break;
     };
