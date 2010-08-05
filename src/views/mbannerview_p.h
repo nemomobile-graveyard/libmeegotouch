@@ -41,6 +41,14 @@ public:
 
     void initDynamicLayout();
 
+    MLabel * title();
+    MLabel * subtitle();
+    MImageWidget * icon();
+
+    void setTitle(const QString& string);
+    void setSubtitle(const QString& string);
+    void setIcon(const QString& id, const QSize &s);
+
 protected:
     //! The layout of the notification
     MLayout * layout;
@@ -48,10 +56,9 @@ protected:
     MGridLayoutPolicy *portraitPolicy;
 
 
-    MImageWidget *icon;
-    MLabel *title;
-    MLabel *subtitle;
-
+    MImageWidget *iconId;
+    MLabel *titleLabel;
+    MLabel *subtitleLabel;
 
     MBanner *controller;
 };

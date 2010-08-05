@@ -37,14 +37,61 @@ MBannerViewPrivate::MBannerViewPrivate() :
     layout(0),
     landscapePolicy(0),
     portraitPolicy(0),
-    icon(0),
-    title(0),
-    subtitle(0)
+    iconId(NULL),
+    titleLabel(NULL),
+    subtitleLabel(NULL)
 {
 }
 
 MBannerViewPrivate::~MBannerViewPrivate()
 {
+}
+
+
+MLabel *MBannerViewPrivate::title()
+{
+    if (!titleLabel) {
+        titleLabel = new MLabel(controller);
+        titleLabel->setObjectName("CommonBannerSingleTitle");
+        titleLabel->setAlignment(Qt::AlignVCenter);
+        titleLabel->setWordWrap(true);
+    }
+    return titleLabel;
+}
+
+MLabel *MBannerViewPrivate::subtitle()
+{
+    if (!subtitleLabel) {
+        subtitleLabel = new MLabel(controller);
+        subtitleLabel->setObjectName("CommonBannerSingleSubTitle");
+        subtitleLabel->setAlignment(Qt::AlignVCenter);
+        subtitleLabel->setWordWrap(true);
+    }
+    return subtitleLabel;
+}
+
+MImageWidget *MBannerViewPrivate::icon()
+{
+    if (!iconId) {
+        iconId = new MImageWidget(controller);
+        iconId->setObjectName("CommonBannerMainIcon");
+    }
+    return iconId;
+}
+
+void MBannerViewPrivate::setTitle(const QString &string)
+{
+    title()->setText(string);
+}
+
+void MBannerViewPrivate::setSubtitle(const QString &string)
+{
+    subtitle()->setText(string);
+}
+
+void MBannerViewPrivate::setIcon(const QString &i, const QSize &s)
+{
+    icon()->setImage(i,s);
 }
 
 void MBannerViewPrivate::initDynamicLayout()
@@ -61,78 +108,48 @@ void MBannerViewPrivate::initDynamicLayout()
 
     Q_Q(MBannerView);
 
-    if (!q->model()->iconID().isEmpty() && !q->model()->title().isEmpty()
+    if (!q->model()->iconID().isEmpty()&& !q->model()->title().isEmpty()
         && !q->model()->subtitle().isEmpty()) {
 
-        icon = new MImageWidget();
-        icon->setObjectName("CommonBannerMainIcon");
-        landscapePolicy->addItem(icon,Qt::AlignVCenter);
-        portraitPolicy->addItem(icon,0,0,2,1, Qt::AlignVCenter );
+        landscapePolicy->addItem(icon(),Qt::AlignVCenter);
+        portraitPolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
+
+        landscapePolicy->addItem(title());
+        portraitPolicy->addItem(title(), 0,1,Qt::AlignLeft);
         
-        title = new MLabel();
-        title->setObjectName("CommonBannerSingleTitle");
-        title->setAlignment(Qt::AlignVCenter);
-        title->setWordWrap(true);
-        landscapePolicy->addItem(title);
-        portraitPolicy->addItem(title, 0,1,Qt::AlignLeft);
-        
-        subtitle = new MLabel();
-        subtitle->setObjectName("CommonBannerSingleSubTitle");
-        subtitle->setAlignment(Qt::AlignVCenter);
-        subtitle->setWordWrap(true);
-        landscapePolicy->addItem(subtitle);
-        portraitPolicy->addItem(subtitle,1,1,Qt::AlignVCenter);
+        landscapePolicy->addItem(subtitle());
+        portraitPolicy->addItem(subtitle(),1,1,Qt::AlignVCenter);
         
     } else if (q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
 
-        subtitle = new MLabel();
-        subtitle->setObjectName("CommonBannerSingleSubTitle");
-        subtitle->setAlignment(Qt::AlignVCenter);
-        subtitle->setWordWrap(true);
-        landscapePolicy->addItem(subtitle);
-        portraitPolicy->addItem(subtitle,0,0,Qt::AlignVCenter);
+        landscapePolicy->addItem(subtitle());
+        portraitPolicy->addItem(subtitle(),0,0,Qt::AlignVCenter);
 
     } else if (!q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
 
-        icon = new MImageWidget();
-        icon->setObjectName("CommonBannerMainIcon");
-        landscapePolicy->addItem(icon,Qt::AlignVCenter);
-        portraitPolicy->addItem(icon,0,0,2,1, Qt::AlignVCenter );
+        landscapePolicy->addItem(icon(),Qt::AlignVCenter);
+        portraitPolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter );
 
-        subtitle = new MLabel();
-        subtitle->setObjectName("CommonBannerSingleSubTitle");
-        subtitle->setAlignment(Qt::AlignVCenter);
-        subtitle->setWordWrap(true);
-        landscapePolicy->addItem(subtitle);
-        portraitPolicy->addItem(subtitle,1,1,Qt::AlignVCenter);
+        landscapePolicy->addItem(subtitle());
+        portraitPolicy->addItem(subtitle(),1,1,Qt::AlignVCenter);
 
     } else {
         /*These conditionals are necessary for cases not contemplated
         in the common layouts */
 
         if (!q->model()->iconID().isEmpty()) {
-            icon = new MImageWidget();
-            icon->setObjectName("CommonBannerMainIcon");
-            landscapePolicy->addItem(icon, Qt::AlignVCenter);
-            portraitPolicy->addItem(icon, 0, 0, 2, 1, Qt::AlignVCenter);
+            landscapePolicy->addItem(icon(), Qt::AlignVCenter);
+            portraitPolicy->addItem(icon(), 0, 0, 2, 1, Qt::AlignVCenter);
         }
 
         if (!q->model()->title().isEmpty()) {
-            title = new MLabel();
-            title->setObjectName("CommonBannerSingleTitle");
-            title->setAlignment(Qt::AlignVCenter);
-            title->setWordWrap(true);
-            landscapePolicy->addItem(title);
-            portraitPolicy->addItem(title, 0, 1, Qt::AlignLeft);
+            landscapePolicy->addItem(title());
+            portraitPolicy->addItem(title(), 0, 1, Qt::AlignLeft);
         }
 
         if (!q->model()->subtitle().isEmpty()) {
-            subtitle = new MLabel();
-            subtitle->setObjectName("CommonBannerSingleSubTitle");
-            subtitle->setAlignment(Qt::AlignVCenter);
-            subtitle->setWordWrap(true);
-            landscapePolicy->addItem(subtitle);
-            portraitPolicy->addItem(subtitle, 0, 0, Qt::AlignVCenter);
+            landscapePolicy->addItem(subtitle());
+            portraitPolicy->addItem(subtitle(), 0, 0, Qt::AlignVCenter);
         }
     }
 
@@ -192,14 +209,15 @@ void MBannerView::setupModel()
 
     Q_D(MBannerView);
 
-    d->initDynamicLayout();
 
     if (!model()->title().isEmpty())
-        d->title->setText(model()->title());
+        d->setTitle(model()->title());
     if (!model()->subtitle().isEmpty())
-        d->subtitle->setText(model()->subtitle());
+        d->setSubtitle(model()->subtitle());
     if (!model()->iconID().isEmpty())
-        d->icon->setImage(model()->iconID(), style()->iconSize());
+        d->setIcon(model()->iconID(), style()->iconSize());
+
+    d->initDynamicLayout();
 }
 
 void MBannerView::applyStyle()
@@ -217,13 +235,14 @@ void MBannerView::updateData(const QList<const char *>& modifications)
 
     foreach(member, modifications) {
         if (member == MBannerModel::Title) {
-            d->title->setText(model()->title());
+            d->setTitle(model()->title());
         } else if (member == MBannerModel::Subtitle) {
-            d->subtitle->setText(model()->subtitle());
+            d->setSubtitle(model()->subtitle());
         } else if (member == MBannerModel::IconID) {
-            d->icon->setImage(model()->iconID(), style()->iconSize());
+            d->setIcon(model()->iconID(), style()->iconSize());
         }
     }
+    d->initDynamicLayout();
 }
 
 M_REGISTER_VIEW_NEW(MBannerView, MBanner)
