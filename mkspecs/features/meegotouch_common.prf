@@ -27,7 +27,10 @@ contains(TEMPLATE, app) {
     INCLUDEPATH += $${M_INC_DIR} $${GSTREAMER_INC}
     DEPENDPATH += $${M_INC_DIR}
 
-    unix: QMAKE_LFLAGS += $${QMAKE_LFLAGS_RPATH}$${M_LIB_DIR}
-
+    unix {
+        !isEmpty (QMAKE_LFLAGS_RPATH) {
+            QMAKE_LFLAGS += $${QMAKE_LFLAGS_RPATH}$${M_LIB_DIR}
+    	}
+    }
     LIBS += -L$${M_LIB_DIR}
 }
