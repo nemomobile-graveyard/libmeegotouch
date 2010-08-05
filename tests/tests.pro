@@ -30,8 +30,9 @@ SUBDIRS     =  \
      ut_mdialog \
      ut_mdialogview \
      ut_mnavigationbar \
-    ut_mlistviewgroupheader \
-    ut_mlistviewmulticolumn \
+     ut_mlist \
+     ut_mlistviewgroupheader \
+     ut_mlistviewmulticolumn \
 #    ut_mlistviewseparators \ // it currently gets stuck
      ut_mlistfilter \
      ut_mflowlayoutpolicy \
