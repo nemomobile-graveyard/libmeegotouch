@@ -1,3 +1,9 @@
+libmeegotouch (0.20.34~1) unstable; urgency=low
+
+  * [UNRELEASED]
+
+ -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Thu, 05 Aug 2010 14:23:36 +0300
+
 libmeegotouch (0.20.33-1) unstable; urgency=low
 
   * Fixes: NB#177434 - Long MMessageBox text is cropped from both ends.
