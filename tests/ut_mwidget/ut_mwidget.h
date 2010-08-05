@@ -22,6 +22,7 @@
 
 #include <QtTest/QtTest>
 #include <QObject>
+#include <QPointer>
 #include "mwidget.h"
 
 Q_DECLARE_METATYPE(QPointF);
@@ -32,7 +33,7 @@ class Ut_MWidget : public QObject
     Q_OBJECT
 
 private:
-    MWidget *widget;
+    QPointer<MWidget> widget;
     bool m_dummySlotCalled;
 
 private slots:
