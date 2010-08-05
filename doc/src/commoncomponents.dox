@@ -163,7 +163,7 @@ There are two types of progress indicators types:
 \image html progressbar.png "Progress indicator, bar"
 - Bar, a horizontal progress bar that fills up to completion, or indicates that the duration is unknown.
 
-\image html progressbar.png "Progress indicator, spinner"
+\image html spinner.png "Progress indicator, spinner"
 - Spinner, a circular progress indicator that fills up to completion, or indicates unknown duration.
 
 \subsection banner Banner
