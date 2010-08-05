@@ -377,6 +377,7 @@ void MRemoteThemeDaemonPrivate::loadThemeDaemonPriorities(const QString& filenam
     priorityForegroundApplication = 100;
     priorityBackgroundApplication = 0;
     priorityPrestartedApplication = -10;
+    applicationSpecificPriorities.clear();
 
     QSettings settings(filename, QSettings::IniFormat);
     if(settings.status() != QSettings::NoError) {

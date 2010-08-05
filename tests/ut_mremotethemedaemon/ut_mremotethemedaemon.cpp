@@ -143,7 +143,7 @@ void Ut_MRemoteThemeDaemon::testLoadThemeDaemonPriorities_data()
     priorities.insert("sysuid", -90);
     priorities.insert("duihome", 23);
     priorities.insert("meego-im-uiserver", 55);
-    QTest::newRow("valid") <<  QString("priorities.conf") << 3 << 7 << -100 << priorities;
+    QTest::newRow("valid") <<  QString(m_app->applicationDirPath() + QLatin1String("/priorities.conf")) << 3 << 7 << -100 << priorities;
 }
 
 typedef QHash<QString, qint32> StringIntHash;
