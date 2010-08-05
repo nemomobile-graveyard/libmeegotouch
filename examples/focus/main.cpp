@@ -48,7 +48,7 @@ int main(int argc, char **argv)
     w.show();
 
     MyPage p;
-    p.appear();
+    p.appear(&w);
 
     return app.exec();
 }

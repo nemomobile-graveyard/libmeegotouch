@@ -38,7 +38,7 @@ int main(int argc, char **argv)
     w.show();
 
     MyPage p;
-    p.appear();
+    p.appear(&w);
 
     p.grabKeyboard(); // Forcing all keyboard events to the page
 

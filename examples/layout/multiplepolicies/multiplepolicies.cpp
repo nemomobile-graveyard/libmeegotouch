@@ -58,7 +58,7 @@ int main(int argc, char **argv)
     layout->setLandscapePolicy(linearPolicy);
     layout->setPortraitPolicy(flowPolicy);
 
-    page.appear();
+    page.appear(&window);
     window.show();
     return app.exec();
 }

@@ -43,7 +43,7 @@ int main(int argc, char **argv)
     MApplicationPage page;
     /* Attach the layout to the page */
     page.centralWidget()->setLayout(layout);
-    page.appear();
+    page.appear(&window);
     window.show();
 
     int n = 20;

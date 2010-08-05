@@ -235,7 +235,7 @@ void Ut_MApplicationPage::testUpdatingWindowTitleWithChangingPageTitle()
     QString title3_longest("Multiple length variants title");
     QString title4;
 
-    m_subject->appear();
+    m_subject->appear(appWin);
 
     m_subject->setTitle(title);
     QCOMPARE(appWin->windowTitle(), title);
@@ -249,7 +249,7 @@ void Ut_MApplicationPage::testUpdatingWindowTitleWithChangingPageTitle()
 
 void Ut_MApplicationPage::testIfPositionIndicatorGeometryFollowsExposedRect()
 {
-    m_subject->appear();
+    m_subject->appear(appWin);
     QCOMPARE(m_subject->pannableViewport()->positionIndicator()->geometry(), m_subject->exposedContentRect());
 }
 

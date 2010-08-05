@@ -61,7 +61,7 @@ int main(int argc, char **argv)
        can add your application's contents. An application can have
        any number of pages with transitions between them */
     MApplicationPage p;
-    p.appear();
+    p.appear(&w);
 
     /* Let's add a simple push button to our page */
     MButton b(p.centralWidget()); /* The (optional) constructor parameter

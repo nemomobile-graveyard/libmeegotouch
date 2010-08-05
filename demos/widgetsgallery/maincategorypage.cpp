@@ -102,5 +102,5 @@ void MainCategoryPage::galleryPageItemClicked(const QModelIndex &index)
 {
     TemplatePage *page = static_cast<TemplatePage *>(index.data(MainPage::Page).value<void *>());
     page->setParent(this);
-    page->appear();
+    page->appear(scene());
 }

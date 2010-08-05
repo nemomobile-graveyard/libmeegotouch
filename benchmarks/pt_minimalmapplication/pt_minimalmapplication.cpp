@@ -95,7 +95,7 @@ void Pt_minimalmapplication::createMApplicationPage()
 void Pt_minimalmapplication::pageAppear()
 {
     if (appearType == "appear") {
-        MY_QBENCHMARK_ONCE(page->appear();)
+        MY_QBENCHMARK_ONCE(page->appear(window);)
     } else {
         MY_QBENCHMARK_ONCE(window->sceneManager()->appearSceneWindowNow(page);)
     }

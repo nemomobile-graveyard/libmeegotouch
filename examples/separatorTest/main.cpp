@@ -42,7 +42,7 @@ int main(int argc, char **argv)
        any number of pages with transitions between them */
     SeparatorTestPage p;
 
-    p.appear();
+    p.appear(&w);
     w.show();
 
     return app.exec();

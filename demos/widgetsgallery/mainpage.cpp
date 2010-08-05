@@ -381,7 +381,7 @@ void MainPage::handleListItemClick()
 void MainPage::showPage(MApplicationPage *page)
 {
     if (page) {
-        page->appear();
+        page->appear(scene());
         shownPage = page;
     }
 }
@@ -392,7 +392,7 @@ void MainPage::showLanguageSettingsPage()
         languageSettingsPage = new LanguagePage();
         languageSettingsPage->setParent(this);
     }
-    languageSettingsPage->appear();
+    languageSettingsPage->appear(scene());
 }
 
 TemplatePage *MainPage::findPageByTimedemoTitle(const QString& title) const

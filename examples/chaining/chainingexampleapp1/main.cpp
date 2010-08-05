@@ -13,7 +13,7 @@ int main(int argc, char** argv)
     w.show();
 
     MApplicationPage p;
-    p.appear();
+    p.appear(&w);
 
     MButton b(p.centralWidget());
     b.setText("IMAGE");

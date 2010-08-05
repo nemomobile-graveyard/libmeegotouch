@@ -28,7 +28,7 @@ int main(int argc, char **argv)
     window.show();
 
     APScannerPage page;
-    page.appear();
+    page.appear(&window);
 
     return app.exec();
 }

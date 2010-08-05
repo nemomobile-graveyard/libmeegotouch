@@ -73,7 +73,7 @@ int main(int argc, char **argv)
     MApplicationWindow w;
     w.show();
     MApplicationPage p;
-    p.appear();
+    p.appear(&w);
 
     // main layout
     QGraphicsLinearLayout *main = new QGraphicsLinearLayout(Qt::Vertical, NULL);

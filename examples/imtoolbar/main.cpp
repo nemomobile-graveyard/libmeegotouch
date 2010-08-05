@@ -38,7 +38,7 @@ int main(int argc, char **argv)
 
     // Create application page and make it visible.
     ImToolbarPage page;
-    page.appear();
+    page.appear(&window);
 
     return application.exec();
 }

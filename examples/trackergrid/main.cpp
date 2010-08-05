@@ -41,7 +41,7 @@ int main(int argc, char **argv)
        can add your application's contents. An application can have
        any number of pages with transitions between them */
     TrackerGridPage p;
-    p.appear();
+    p.appear(&w);
 
     w.show();
 

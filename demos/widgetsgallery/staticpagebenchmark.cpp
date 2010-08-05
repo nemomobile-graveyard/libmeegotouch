@@ -28,7 +28,7 @@ void StaticPageBenchmark::start()
     MApplication::activeWindow()->setOrientationAngleLocked(true);
     if (!applicationPage->isOnDisplay()) {
         connect(applicationPage, SIGNAL(appeared()), this, SLOT(stabilizeFps()));
-        applicationPage->appear();
+        applicationPage->appear(MApplication::activeWindow());
         verifyAppearanceTimer->start(5000);
     } else {
         QTimer::singleShot(0, this, SLOT(stabilizeFps()));

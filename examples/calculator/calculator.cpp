@@ -39,7 +39,7 @@ int main(int argc, char **argv)
     CalculatorWidget *calculatorWidget = new CalculatorWidget;
 
     page.setCentralWidget(calculatorWidget);
-    page.appear();
+    page.appear(&window);
     window.show();
     return app.exec();
 }

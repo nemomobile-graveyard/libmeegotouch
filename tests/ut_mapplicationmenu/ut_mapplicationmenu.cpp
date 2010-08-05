@@ -239,7 +239,7 @@ void Ut_MApplicationMenu::testClear()
 
 void Ut_MApplicationMenu::testEventsPassingThrough()
 {
-    m_subject->appear();
+    m_subject->appear(appWin);
     // The event should be swallowed if it is not triggering any action.
     QGraphicsSceneMouseEvent mousePressEvent(QEvent::GraphicsSceneMousePress);
     QVERIFY(mousePressEvent.isAccepted());
@@ -281,7 +281,7 @@ void Ut_MApplicationMenu::testRotation()
     /* Rotate the scene by 90 degrees and back again. We should find that the
      * preferred size hasn't changed overall.  We call processEvents to check that there
      * are no outstanding layouting etc */
-    m_subject->appear();
+    m_subject->appear(appWin);
     MApplication::activeWindow()->setOrientationAngle(M::Angle0);
     QSizeF preferredSizeLandscape = m_subject->preferredSize();
     app->processEvents();

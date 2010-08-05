@@ -11,7 +11,7 @@ int main(int argc, char **argv)
 
     page.setTitle("My First Page");
     page.setCentralWidget(new MLabel("Hello World!"));
-    page.appear();
+    page.appear(&window);
 
     window.show();
 

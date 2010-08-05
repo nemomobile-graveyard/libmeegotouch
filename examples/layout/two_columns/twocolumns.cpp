@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     nameLayout->setPreferredWidth(1);
     labelLayout->setPreferredWidth(1);
 
-    page.appear();
+    page.appear(&window);
     window.show();
 
     return app.exec();

@@ -87,7 +87,7 @@ int main(int argc, char **argv)
     MApplicationWindow window;
     ApplicationExtensionPage page(argv[optind]);
     window.show();
-    page.appear();
+    page.appear(&window);
 
     return m_app.exec();
 }

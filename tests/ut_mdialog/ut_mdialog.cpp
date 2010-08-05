@@ -321,14 +321,14 @@ void Ut_MDialog::dismissDialog()
 
 void Ut_MDialog::testRotation()
 {
-    dialog->appear();
-    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    dialog->appear(appWin);
+    appWin->setOrientationAngle(M::Angle0);
     QSizeF preferredSizeLandscape = dialog->preferredSize();
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    appWin->setOrientationAngle(M::Angle90);
     QSizeF preferredSizePortrait = dialog->preferredSize();
-    MApplication::activeWindow()->setOrientationAngle(M::Angle0);
+    appWin->setOrientationAngle(M::Angle0);
     QCOMPARE(dialog->preferredSize(), preferredSizeLandscape);
-    MApplication::activeWindow()->setOrientationAngle(M::Angle90);
+    appWin->setOrientationAngle(M::Angle90);
     QCOMPARE(dialog->preferredSize(), preferredSizePortrait);
 }
 

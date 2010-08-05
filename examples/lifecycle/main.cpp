@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     window.show();
 
     MainPage mainPage;
-    mainPage.appear();
+    mainPage.appear(&window);
 
     // Run activateWidgets() here to setup things if app is NOT prestarted now
     if (!app.isPrestarted()) {

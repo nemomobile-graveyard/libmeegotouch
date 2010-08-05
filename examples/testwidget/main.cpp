@@ -44,7 +44,7 @@ int main(int argc, char **argv)
 
     // Create application page and make it visible.
     MApplicationPage page;
-    page.appear();
+    page.appear(&window);
 
     // Load widget style from CSS file.
     MTheme::loadCSS("testwidgetstyle.css");
