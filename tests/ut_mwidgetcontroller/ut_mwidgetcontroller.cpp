@@ -28,6 +28,7 @@
 
 int qQGraphicsWidgetSizeHintCallCount;
 int modelSetupCount;
+int updateDataCount;
 bool Ut_MWidgetController::viewCreatesChildWidgets = false;
 bool Ut_MWidgetController::viewSetsItselfActive = false;
 
@@ -85,6 +86,8 @@ public:
     void useModel();
 protected:
     virtual void setupModel();
+    virtual void updateData(const QList<const char *>& modifications);
+        
 };
 
 void TestWidgetController::setView(MWidgetView *view)
@@ -103,6 +106,12 @@ void TestWidgetController::useModel()
 void TestWidgetController::setupModel()
 {
     modelSetupCount++;
+}
+
+void TestWidgetController::updateData(const QList<const char *>& modifications)
+{
+    Q_UNUSED(modifications);
+    updateDataCount++;
 }
 
 
@@ -130,6 +139,7 @@ void Ut_MWidgetController::cleanupTestCase()
 void Ut_MWidgetController::init()
 {
     modelSetupCount = 0;
+    updateDataCount = 0;
     qQGraphicsWidgetSizeHintCallCount = 0;
     controller = new TestWidgetController;
     viewCreatesChildWidgets = false;
@@ -191,6 +201,12 @@ void Ut_MWidgetController::testSizeHint()
     QCOMPARE(modelSetupCount, 1);
     controller->useModel();
     QCOMPARE(modelSetupCount, 1);
+}
+
+void Ut_MWidgetController::testUpdateData()
+{
+    controller->model()->setObjectName("Hello");
+    QCOMPARE(updateDataCount, 1);
 }
 
 void Ut_MWidgetController::testActiveStateWhenViewIsSet()

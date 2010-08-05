@@ -52,6 +52,7 @@ private slots:
     void testSizeHint();
     void testActiveStateWhenViewIsSet();
     void testActiveStateWhenViewIsUnset();
+    void testUpdateData();
 };
 
 #endif // UT_MWIDGETCONTROLLER_H

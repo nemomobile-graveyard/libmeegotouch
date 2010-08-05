@@ -217,9 +217,20 @@ protected Q_SLOTS:
     /*!
       Notification of model having changed.
 
-      This function is called when the model of the widget is replaced.
+      This function is called when the model of the widget is initially set or when later replaced.
+      You can reimplement this method to synchronize your widget's internal state with that of
+      the new model.
+
+      An example would be an widget that creates a child label widget; on setupModel() it
+      should synchronize the label text with the model data. Subsequent updates to the model data
+      and the resulting changes to the label are delivered through updateData().
+
+      \note The widget uses the base implementation of this function to set up notification
+      of changes in the model. Because of this, it is very important that subclasses
+      call the base implementation.
 
       \sa setModel()
+      \sa updateData()
      */
     virtual void setupModel();
 

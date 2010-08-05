@@ -71,7 +71,8 @@ MWidgetControllerPrivate::~MWidgetControllerPrivate()
 MWidgetController::MWidgetController(QGraphicsItem *parent) :
     MWidget(*new MWidgetControllerPrivate, parent)
 {
-    setModel(new MWidgetModel);
+    Q_D(MWidgetController);
+    d->setModel(new MWidgetModel);
 
     MWidgetControllerPrivate::allSystemWidgets.insert(this);
 }
@@ -79,7 +80,8 @@ MWidgetController::MWidgetController(QGraphicsItem *parent) :
 MWidgetController::MWidgetController(MWidgetModel *model, QGraphicsItem *parent) :
     MWidget(*new MWidgetControllerPrivate, parent)
 {
-    setModel(model == NULL ? new MWidgetModel : model);
+    Q_D(MWidgetController);
+    d->setModel(model == NULL ? new MWidgetModel : model);
 
     MWidgetControllerPrivate::allSystemWidgets.insert(this);
 }
@@ -90,7 +92,8 @@ MWidgetController::MWidgetController(MWidgetControllerPrivate *dd, MWidgetModel 
 {
     //The parent class must set a model
     Q_ASSERT(model);
-    setModel(model);
+    Q_D(MWidgetController);
+    d->setModel(model);
     MWidgetControllerPrivate::allSystemWidgets.insert(this);
 }
 
@@ -159,8 +162,7 @@ void MWidgetController::updateData(const QList<const char *>& modifications)
 void MWidgetController::setupModel()
 {
     Q_D(MWidgetController);
-    connect(d->model, SIGNAL(modified(QList<const char *>)),
-            this, SLOT(updateData(QList<const char *>)));
+    d->modelSetup = true;
 }
 
 void MWidgetController::updateMicroFocus()
@@ -176,26 +178,35 @@ void MWidgetController::updateMicroFocus()
 void MWidgetController::setModel(MWidgetModel *model)
 {
     Q_ASSERT_X(model, "MWidgetController", "MWidgetController::setModel() parameter model has to be valid!");
-
     Q_D(MWidgetController);
+    d->setModel(model);
+    //Call setupModel immediately since this is not called from the constructor
+    setupModel();
+}
 
-    if (model == d->model)
+void MWidgetControllerPrivate::setModel(MWidgetModel *newModel)
+{
+    Q_Q(MWidgetController);
+    if (newModel == model)
         return;
 
-    if (d->model) {
-        disconnect(d->model, 0, this, 0);
-        d->model->decreaseReferenceCount();
+    if (model) {
+        q->disconnect(model, 0, q, 0);
+        model->decreaseReferenceCount();
     }
 
-    d->model = model;
-    d->model->increaseReferenceCount();
+    model = newModel;
+    model->increaseReferenceCount();
+
+    q->connect(model, SIGNAL(modified(QList<const char *>)),
+            q, SLOT(updateData(QList<const char *>)));
 
     // setupModel() will be called on the first model access to finalize the model switch
-    d->modelSetup = false;
+    modelSetup = false;
 
     // set the model also to view if we already have one
-    if (d->view) {
-        d->view->setModel(d->model);
+    if (view) {
+        view->setModel(model);
     }
 }
 

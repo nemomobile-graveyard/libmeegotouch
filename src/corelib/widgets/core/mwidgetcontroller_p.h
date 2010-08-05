@@ -53,6 +53,9 @@ private: // only for MWidgetController
      */
     void createView();
 
+    /*! Set the model to the given model */
+    void setModel(MWidgetModel *model);
+
     MWidgetModel *model;
     MWidgetView *view;
     bool viewSetManually;
