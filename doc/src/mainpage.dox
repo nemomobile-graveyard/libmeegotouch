@@ -51,7 +51,7 @@
     <td>
       <ul>
        <li><a href="gestures.html">Gestures</a></li>
-       <li><a href="rotation.html">Rotation</a></li>
+       <li>\subpage rotation</li>
        <li><a href="faststart.html">Fast application startup</a></li>
        <li><a href="notifications.html">Notifications</a></li>
        <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>

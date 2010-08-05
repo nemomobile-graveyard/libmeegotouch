@@ -175,7 +175,7 @@ To achieve this we only have to modify the implementation of AlbumPage::createCo
 
 \subsection screenOrientation_furtherreading Further reading
 
-MeeGo Touch also provides methods to query and set the GUI orientation as well as signals that get emitted whenever the orientation changes. Check MWindow and MSceneManager documentation.
+MeeGo Touch also provides methods to query and set the GUI orientation as well as signals that get emitted whenever the orientation changes. Read \subpage rotation for more information.
 
 \section animations Animations
 
