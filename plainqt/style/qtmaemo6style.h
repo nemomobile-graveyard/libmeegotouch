@@ -31,7 +31,6 @@
 class MComponentData;
 class MStyle;
 class MButtonStyle;
-class MFeedback;
 class MWidgetStyle;
 class MScalableImage;
 class MSliderStyle;
@@ -106,13 +105,10 @@ public:
                                  const QStyleOptionComplex *option,
                                  SubControl subControl,
                                  const QWidget *widget = 0) const;
-
-    virtual QRect subElementRect(SubElement element,
-                                 const QStyleOption* option,
-                                 const QWidget* widget = 0 ) const;
-
-    const MFeedback * feedback(const QString &feedbackName, const QWidget *widget = 0);
-
+                                 
+    virtual QRect subElementRect(SubElement element, 
+                                 const QStyleOption* option, 
+                                 const QWidget* widget = 0 ) const; 
     /*! \reimp_end */
 
     /*!

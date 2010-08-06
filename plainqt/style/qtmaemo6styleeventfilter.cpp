@@ -160,11 +160,11 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     case QEvent::MouseButtonDblClick:
     case QEvent::MouseButtonPress: {
         // now send press feedback
-        if(QtMaemo6Style* style = qobject_cast<QtMaemo6Style*>(widget->style())) {
-            const MFeedback *  feedback = style->feedback(MFeedbackPlayer::Press, widget);
-            if ( feedback ) feedback->play();
-        }
+        MFeedbackPlayer *feedbackPlayer = MComponentData::feedbackPlayer();
 
+        if (feedbackPlayer) {
+            feedbackPlayer->play(MFeedbackPlayer::Press);
+        }
         if(QComboBox* comboBox = qobject_cast<QComboBox*>(widget)) {
             //done in mousePress, because in this way the original popup is completely suppressed
             QtMaemo6ComboBoxPopup *comboBoxPopup = new QtMaemo6ComboBoxPopup(comboBox, NULL);
@@ -179,9 +179,10 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
         //qCritical( "eventFilter got mouseRelease" );
 
         // now send release feedback
-        if(QtMaemo6Style* style = qobject_cast<QtMaemo6Style*>(widget->style())) {
-            const MFeedback *  feedback = style->feedback(MFeedbackPlayer::Release, widget);
-            if ( feedback ) feedback->play();
+        MFeedbackPlayer *feedbackPlayer = MComponentData::feedbackPlayer();
+
+        if (feedbackPlayer) {
+            feedbackPlayer->play(MFeedbackPlayer::Release);
         }
     }
     break;
