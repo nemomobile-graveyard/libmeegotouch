@@ -29,6 +29,7 @@
 
 
 Q_DECLARE_METATYPE(MPopupList *);
+Q_DECLARE_METATYPE(QModelIndex);
 
 class Ut_MPopupList : public QObject
 {
@@ -41,6 +42,7 @@ private slots:
     void setContent();
     void testCurrentIndex();
     void testSetItemIconID();
+    void testScrollTo();
 
 private:
     MPopupList *m_popuplist;

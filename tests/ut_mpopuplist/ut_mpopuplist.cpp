@@ -33,6 +33,7 @@
 
 #include "ut_mpopuplist.h"
 
+
 MApplication *app;
 
 void Ut_MPopupList::initTestCase()
@@ -41,6 +42,7 @@ void Ut_MPopupList::initTestCase()
     static char *argv[1] = { (char *) "./ut_mpopuplist" };
     app = new MApplication(argc, argv);
     m_popuplist = new MPopupList();
+    qRegisterMetaType<QModelIndex>("QModelIndex");
 }
 
 
@@ -147,6 +149,32 @@ void Ut_MPopupList::testSetItemIconID()
     itemModel->setData(itemModel->index(0, 0), "icon-l-music", Qt::DecorationRole);
     view->updateCell(itemModel->index(0,0), item);
     QCOMPARE(item->imageWidget()->image(), QString("icon-l-music"));
+
+    delete itemModel;
+    delete view;
+}
+
+void Ut_MPopupList::testScrollTo()
+{
+    MPopupListViewPrivate *view = new MPopupListViewPrivate;
+    QStandardItemModel *itemModel = new QStandardItemModel;
+
+    for (int i=0; i<10; i++) {
+        itemModel->appendRow(new QStandardItem(QString("Item" + QString::number(i+1))));
+    }
+
+    m_popuplist->setItemModel(itemModel);
+    m_popuplist->setSelectionModel(new QItemSelectionModel(itemModel));
+
+    QModelIndex index = itemModel->index(6, 0);
+    QSignalSpy spy(m_popuplist, SIGNAL(scrollToIndex(QModelIndex)));
+
+    m_popuplist->scrollTo(index);
+
+    QCOMPARE(spy.count(), 1); // make sure the signal was emitted exactly one time
+    QModelIndex result = qvariant_cast<QModelIndex>(spy.at(0).at(0));
+
+    QCOMPARE( result, index );
 
     delete itemModel;
     delete view;
