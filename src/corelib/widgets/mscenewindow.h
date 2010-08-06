@@ -228,7 +228,7 @@ public Q_SLOTS:
      * is strongly discouraged since it can make a scene window appear in an MWindow
      * different from the intended one. That's due to the fact that it depends on
      * which MWindow happens to be active when this method is called. In such
-     * scenarios use either appear(MWindow*) or MSceneManager::appearSceneWindow().
+     * scenarios use either appear(MWindow*) or appear(QGraphicsScene*).
      *
      * \param policy    Deletion policy. Defines whether this scene window should be
      *                  automatically deleted when no longer used.
