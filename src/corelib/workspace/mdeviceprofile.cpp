@@ -49,7 +49,8 @@ MDeviceProfilePrivate::MDeviceProfilePrivate()
     : q_ptr(0)
 {
     QString filename;
-    QString deviceName = MApplication::deviceName();
+    QString targetname = MApplication::deviceName();
+
 #ifdef Q_OS_WIN
     QDir appDir(QCoreApplication::applicationDirPath());
     appDir.cdUp();
@@ -57,21 +58,23 @@ MDeviceProfilePrivate::MDeviceProfilePrivate()
     appDir.cd("share");
     appDir.cd("meegotouch");
     appDir.cd("targets");
-    if(deviceName.isEmpty())
+    if(targetname.isEmpty())
         filename = appDir.path().append("Default.conf");
     else
-        filename = appDir.path().append(deviceName).append(".conf");
+        filename = appDir.path().append(targetname).append(".conf");
 #else //!Q_OS_WIN
-    if (!deviceName.isEmpty()){
-        filename = M_TARGETS_CONF_DIR + QString("/") + deviceName + ".conf";
 
-    } else {
-#ifdef HAVE_GCONF
-        const QString defaultTarget("/meegotouch/target/name");
-        MGConfItem filenameItem(defaultTarget);
-        filename =  M_TARGETS_CONF_DIR + QString("/") + filenameItem.value().toString() + ".conf";
-#endif //HAVE_GCONF
+    if (targetname.isEmpty()) {
+        #ifdef HAVE_GCONF
+        MGConfItem targetNameItem("/meegotouch/target/name");
+        targetname = targetNameItem.value().toString();
+        #else
+        targetname = "Default";
+        #endif //HAVE_GCONF
     }
+
+    filename = M_TARGETS_CONF_DIR + QString("/") + targetname + ".conf";
+
 #endif //Q_OS_WIN
 
     if (!load(filename)) {
