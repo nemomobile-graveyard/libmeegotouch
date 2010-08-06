@@ -19,8 +19,10 @@
 
 #include "pt_mcomponentdata.h"
 
+#include <mbenchmark.h>
 #include <MComponentData>
 #include <MApplication>
+
 
 void Pt_MComponentData::constructor()
 {
@@ -30,9 +32,9 @@ void Pt_MComponentData::constructor()
     argv[0] = appName;
 
     MComponentData *componentData = 0;
-    QBENCHMARK_ONCE {
+    MBENCHMARK_ONCE(
         componentData = new MComponentData(argc, argv, appName);
-    }
+    )
     delete componentData;
 }
 

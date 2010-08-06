@@ -21,8 +21,10 @@
 #include <QProcess>
 
 #include <qtest.h>
+#include <mbenchmark.h>
 
 #include "pt_mapplication.h"
+
 
 /*
   Test how long it takes to launch an application which is quitting immediately.
@@ -40,26 +42,26 @@ void Pt_MApplication::processCreationAndCtor()
 void Pt_MApplication::ctor()
 {
     MApplication *a = NULL;
-    QBENCHMARK_ONCE {
+    MBENCHMARK_ONCE(
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
         char appName[] = "./pt_mapplication";
         fakeArgv[0] = appName;
         a = new MApplication(fakeArgc, fakeArgv);
-    }
+    )
     delete a;
 }
 
 void Pt_MApplication::ctor2()
 {
     MApplication *a = NULL;
-    QBENCHMARK_ONCE {
+    MBENCHMARK_ONCE(
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
         char appName[] = "./pt_mapplication2";
         fakeArgv[0] = appName;
         a = new MApplication(fakeArgc, fakeArgv);
-    }
+    )
     delete a;
 }
 

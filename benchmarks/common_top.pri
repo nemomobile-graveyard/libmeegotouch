@@ -5,7 +5,7 @@ MSRCDIR = $${M_SOURCE_TREE}/src
 STUBSDIR = ../stubs
 INCLUDEPATH += \
     . \
-    $$STUBSDIR \
+    ../common \
     $$MSRCDIR/include \
     $$MSRCDIR/corelib/core \
     $$MSRCDIR/corelib/widgets \

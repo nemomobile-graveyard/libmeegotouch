@@ -19,6 +19,7 @@
 
 #include "pt_mtheme.h"
 
+#include <mbenchmark.h>
 #include <MComponentData>
 #include <MTheme>
 
@@ -27,9 +28,9 @@
 void Pt_MTheme::constructor()
 {
     MTheme *theme = NULL;
-    QBENCHMARK_ONCE {
+    MBENCHMARK_ONCE (
         theme = new MTheme("widgetsgallery");
-    }
+    )
     delete theme;
 }
 

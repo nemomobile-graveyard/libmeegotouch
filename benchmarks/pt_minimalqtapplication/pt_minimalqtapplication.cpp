@@ -30,9 +30,15 @@
 #include "pt_minimalqtapplication.h"
 
 #define MY_QBENCHMARK_ONCE(CODE) \
-    if (!noBenchmark) \
+    if (!noBenchmark) { \
         QBENCHMARK_ONCE { \
-        CODE \
+            static bool firstRun = true; \
+            if (!firstRun) { \
+                firstRun = false; \
+            } else { \
+                CODE \
+            } \
+        } \
     } else { \
         CODE \
     }

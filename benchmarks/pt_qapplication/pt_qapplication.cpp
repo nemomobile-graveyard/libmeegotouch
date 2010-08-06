@@ -19,10 +19,13 @@
 
 #include "pt_qapplication.h"
 
+#include <mbenchmark.h>
+
 #include <QApplication>
 #include <QProcess>
 
 #include <qtest.h>
+
 
 void Pt_QApplication::processCreation()
 {
@@ -37,26 +40,26 @@ void Pt_QApplication::processCreationAndCtor()
 void Pt_QApplication::ctor()
 {
     QApplication *a(NULL);
-    QBENCHMARK_ONCE {
+    MBENCHMARK_ONCE (
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
         char appName[] = "./pt_qapplication";
         fakeArgv[0] = appName;
         a = new QApplication(fakeArgc, fakeArgv);
-    }
+    )
     delete a;
 }
 
 void Pt_QApplication::ctor2()
 {
     QApplication *a(NULL);
-    QBENCHMARK_ONCE {
+    MBENCHMARK_ONCE (
         int fakeArgc = 1;
         char *fakeArgv[fakeArgc];
         char appName[] = "./pt_qapplication2";
         fakeArgv[0] = appName;
         a = new QApplication(fakeArgc, fakeArgv);
-    }
+    )
     delete a;
 }
 
