@@ -211,6 +211,29 @@ is attached to
 invoker --type=m /usr/bin/application_binary
 \endcode
 
+\subsection pie-binaries PIE binaries and debugging
+
+Using \c pkg-config when building your binaries makes them
+linked with the \c -pie flag. The \c -pie flag  makes your binaries
+\e position \e independent \e executables. This means that the executables
+can be either used as a normal shared library or run from e.g.
+the command line.
+
+This creates problems when debugging your application with gdb older than
+version 7.1 which introduced the support for PIE binaries.
+
+The solution when using gdb 7.0 or earlier is to link your binaries as
+libraries i.e. using \c -shared instead of \c -pie. After this, you can't
+execute your binaries directly, you have to use \c invoker.
+
+Setting correct linker flags with QMake:
+
+\code
+  QMAKE_CXXFLAGS += -fPIC -fvisibility=hidden -fvisibility-inlines-hidden
+  QMAKE_LFLAGS += -shared -rdynamic
+\endcode
+
+Remember to remove the CONFIG += meegotouch-boostable, if used.
 
 \section packaging Packaging and distributing
 
