@@ -120,8 +120,7 @@ void MButtonIconView::drawContents(QPainter *painter, const QStyleOptionGraphics
 
 void MButtonIconView::drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const
 {
-    Q_UNUSED(painter);
-    Q_UNUSED(option);
+    MButtonView::drawBackground(painter, option);
 }
 
 void MButtonIconView::applyStyle()
