@@ -149,7 +149,7 @@ private:
     void init();
     void initAutoHideComponentsTimer();
     void removePageActions();
-    QAction* findPageCheckedAction() const;
+    QAction* findCheckedAction(const QList<QAction *> &actions) const;
 #ifdef Q_WS_X11
     void setWindowChainedProperty( const WId &parentWinId, const WId &childWinId );
 #endif

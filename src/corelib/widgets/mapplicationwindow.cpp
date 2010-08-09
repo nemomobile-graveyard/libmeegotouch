@@ -551,7 +551,10 @@ void MApplicationWindowPrivate::manageActions()
 {
     Q_Q(MApplicationWindow);
 
-    QAction* pageCheckedAction = findPageCheckedAction();
+    QAction* checkedAction = findCheckedAction(page->actions());
+    if (!checkedAction) {
+        checkedAction = findCheckedAction(q->actions());
+    }
 
     toolBar->clearActions();
     menu->clearActions();
@@ -570,8 +573,8 @@ void MApplicationWindowPrivate::manageActions()
         distributeAction(actions[i], NULL);
     }
 
-    if (pageCheckedAction) {
-        pageCheckedAction->setChecked(true);
+    if (checkedAction) {
+        checkedAction->setChecked(true);
     }
 
     refreshArrowIconVisibility();
@@ -1112,7 +1115,7 @@ void MApplicationWindowPrivate::disconnectPage(MApplicationPage *pageToDisconnec
 
 void MApplicationWindowPrivate::removePageActions()
 {
-    QAction* checkedAction = findPageCheckedAction();
+    QAction* checkedAction = findCheckedAction(page->actions());
 
     // remove all the page actions
     QList<QAction *> actions = page->actions();
@@ -1136,10 +1139,9 @@ void MApplicationWindowPrivate::removePageActions()
     }
 }
 
-QAction* MApplicationWindowPrivate::findPageCheckedAction() const
+QAction* MApplicationWindowPrivate::findCheckedAction(const QList<QAction *> &actions) const
 {
     QAction* checkedAction = 0;
-    QList<QAction *> actions = page->actions();
     int actionsSize = actions.size();
     if (toolBar->viewType() == MToolBar::tabType) {
         for (int i = 0; i < actionsSize; ++i) {
