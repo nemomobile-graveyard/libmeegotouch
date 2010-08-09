@@ -48,9 +48,6 @@ const qreal     BoundingRectOpacity     = 0.1;
 const qreal     MarginBackgroundOpacity = 0.4;
 const QColor    MarginColor             = QColor(Qt::red);
 const int       MarginBorderWidth       = 2;
-const qreal     GesturePointOpacity     = 0.70;
-const QColor    GesturePointColor       = QColor(0x7b7b7b);
-const int       GesturePointSize        = 15;
 
 
 MScenePrivate::MScenePrivate() :
@@ -554,16 +551,10 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
     if (MApplication::emulateTwoFingerGestures() &&
         d->pinchEmulationEnabled)
     {
-        painter->setPen(Qt::NoPen);
-        painter->setBrush(Qt::black);
-        painter->setOpacity(0.2);
-        painter->drawEllipse(d->emuPoint1.screenPos() + QPointF(3, 2),GesturePointSize,GesturePointSize);
-        painter->drawEllipse(d->emuPoint2.screenPos() + QPointF(3, 2),GesturePointSize,GesturePointSize);
+        static const QPixmap *tapPixmap = MTheme::pixmap("meegotouch-tap");
+        QPointF pixmapCenterDelta(tapPixmap->width() / 2, tapPixmap->height() / 2);
 
-        painter->setPen(Qt::black);
-        painter->setBrush(GesturePointColor);
-        painter->setOpacity(GesturePointOpacity);
-        painter->drawEllipse(d->emuPoint1.screenPos(),GesturePointSize,GesturePointSize);
-        painter->drawEllipse(d->emuPoint2.screenPos(),GesturePointSize,GesturePointSize);
+        painter->drawPixmap(d->emuPoint1.screenPos() - pixmapCenterDelta, *tapPixmap);
+        painter->drawPixmap(d->emuPoint2.screenPos() - pixmapCenterDelta, *tapPixmap);
     }
 }
