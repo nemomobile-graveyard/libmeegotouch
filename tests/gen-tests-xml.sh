@@ -11,7 +11,7 @@ FT_TESTCASES=""
 for TEST in `ls -d ?t_*`; do
 	if [ -x $TEST/$TEST -o -x $TEST/$TEST_exec ]; then
 
-TESTCASE_TEMPLATE="<case name=\"$TEST\" description=\"$TEST\" requirement=\"\" timeout=\"200\">
+TESTCASE_TEMPLATE="<case name=\"$TEST\" description=\"$TEST\" requirement=\"\" timeout=\"300\">
         <step expected_result=\"0\">/usr/lib/libmeegotouch-tests/$TEST</step>
       </case>
       "
