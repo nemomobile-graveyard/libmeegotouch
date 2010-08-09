@@ -121,11 +121,7 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
     } else {
         //it seems that orientation does not match allowed for current kybrd state.
         //check if the previous one was ok:
-        if ((currentAngle == M::Angle0 && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen))) ||
-            (currentAngle == M::Angle90 && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle90, isKeyboardOpen))) ||
-            (currentAngle == M::Angle180 && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle180, isKeyboardOpen))) ||
-            (currentAngle == M::Angle270 && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle270, isKeyboardOpen)))
-            ){
+        if (MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen)) {
             //it was: let's just use an old angle
             angle = currentAngle;
         } else {            
@@ -139,7 +135,7 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
             else if (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle180, isKeyboardOpen))
                 angle = M::Angle180;
             else
-                qFatal("MOrientationTrackerPrivate::updateOrientationAngle() - current keyboard state seems not to be covered in device.conf file");
+                qFatal("MOrientationTrackerPrivate::updateOrientationAngle() - current keyboard state does not seem to be covered in target configuration file");
         }
     }
 
