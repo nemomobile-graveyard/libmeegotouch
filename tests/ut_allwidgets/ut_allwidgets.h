@@ -56,7 +56,6 @@ private:
     bool checkChildrenBoundingRect(const QGraphicsWidget *widget) const;
     QList< QPointer<QGraphicsObject> > getAllLayoutItemObjects(QGraphicsLayoutItem *item);
     QList< QPointer<QGraphicsObject> > getAllSubWidgets(QGraphicsItem *widget);
-    QGraphicsWidget *m_form;
     QGraphicsScene *m_scene;
 };
 

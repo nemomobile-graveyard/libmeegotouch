@@ -277,7 +277,7 @@ void MBubbleItem::setCommentsString(const QString &comments)
         if (!d->commentsLabel || !d->commentsIcon)
             d->createCommentsInfo();
         d->commentsLabel->setText(comments);
-    } else if (d->commentsLabel || d->commentsIcon)
+    } else if (d->commentsLabel != NULL || d->commentsIcon)
         d->destroyCommentsInfo();
 
     model()->setCommentsString(comments);
@@ -301,7 +301,7 @@ void MBubbleItem::setThumbsUpString(const QString &thumbsUp)
         if (!d->thumbsUpLabel || !d->thumbsUpIcon)
             d->createThumbsUpInfo();
         d->thumbsUpLabel->setText(thumbsUp);
-    } else if (d->thumbsUpLabel || d->thumbsUpIcon)
+    } else if (d->thumbsUpLabel != NULL || d->thumbsUpIcon)
         d->destroyThumbsUpInfo();
 
     model()->setThumbsUpString(thumbsUp);
