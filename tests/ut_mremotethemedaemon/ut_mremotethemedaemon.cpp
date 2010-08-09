@@ -41,13 +41,26 @@ void Ut_MRemoteThemeDaemon::initTestCase()
         QCoreApplication::processEvents();
     }
 
-    m_themeDaemon = new MRemoteThemeDaemon(appName, 5000);
+    const QString serverAddress = "m.mtestthemedaemon";
+
+    m_process = new QProcess();
+    QStringList arguments;
+    arguments.append("-address");
+    arguments.append(serverAddress);
+    m_process->start("mthemedaemon", arguments);
+    QVERIFY(m_process->waitForStarted());
+
+    m_themeDaemon = new MRemoteThemeDaemon(appName, 5000, serverAddress);
 }
 
 void Ut_MRemoteThemeDaemon::cleanupTestCase()
 {
     delete m_themeDaemon;
     m_themeDaemon = 0;
+
+    m_process->close();
+    delete m_process;
+    m_process = 0;
 
     delete m_app;
     m_app = 0;

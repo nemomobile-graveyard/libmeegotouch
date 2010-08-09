@@ -37,7 +37,7 @@
 
 using namespace M::MThemeDaemonProtocol;
 
-MRemoteThemeDaemon::MRemoteThemeDaemon(const QString &applicationName, int timeout) :
+MRemoteThemeDaemon::MRemoteThemeDaemon(const QString &applicationName, int timeout, const QString &serverAddress) :
     d_ptr(new MRemoteThemeDaemonPrivate)
 {
     Q_D(MRemoteThemeDaemon);
@@ -48,7 +48,8 @@ MRemoteThemeDaemon::MRemoteThemeDaemon(const QString &applicationName, int timeo
     QObject::connect(&d->socket, SIGNAL(readyRead()), this, SLOT(connectionDataAvailable()));
 
     // this blocking behavior could be removed
-    if (d->waitForServer(M::MThemeDaemonProtocol::ServerAddress, timeout)) {
+    const QString address = serverAddress.isEmpty() ? M::MThemeDaemonProtocol::ServerAddress : serverAddress;
+    if (d->waitForServer(address, timeout)) {
         d->stream.setDevice(&d->socket);
         registerApplicationName(applicationName);
     } else {

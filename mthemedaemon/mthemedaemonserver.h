@@ -37,7 +37,13 @@ class MThemeDaemonServer : public QObject
 {
     Q_OBJECT
 public:
-    MThemeDaemonServer();
+    /**
+     * @param serverAddress Address that is used for the local connection
+     *                      between the clients and the server. If an empty
+     *                      string is passed, M::MThemeDaemonProtocol::ServerAddress
+     *                      is used per default.
+     */
+    MThemeDaemonServer(const QString &serverAddress = QString());
     virtual ~MThemeDaemonServer();
 
 private slots:

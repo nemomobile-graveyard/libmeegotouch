@@ -41,7 +41,14 @@ int main(int argc, char **argv)
 
     QApplication app(argc, argv);
 
-    MThemeDaemonServer server;
+    // Apply custom server address, if the "-address" has been passed as argument
+    QString serverAddress;
+    const int index = app.arguments().indexOf("-address");
+    if ((index >= 0) && (index + 1 < app.arguments().count())) {
+        serverAddress = app.arguments().at(index + 1);
+    }
+
+    MThemeDaemonServer server(serverAddress);
 
 #ifdef CLOSE_ON_ENTER
     KeyPressWaiter keyWaiter;

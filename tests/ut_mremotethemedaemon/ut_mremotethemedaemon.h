@@ -24,6 +24,7 @@
 
 class MApplication;
 class MRemoteThemeDaemon;
+class QProcess;
 
 class Ut_MRemoteThemeDaemon : public QObject
 {
@@ -43,6 +44,7 @@ private slots:
 
 private:
     MApplication *m_app;
+    QProcess *m_process;
     MRemoteThemeDaemon *m_themeDaemon;
 };
 #endif

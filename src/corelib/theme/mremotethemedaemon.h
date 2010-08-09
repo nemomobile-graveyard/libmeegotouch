@@ -29,7 +29,16 @@ class MRemoteThemeDaemon : public IMThemeDaemon
 {
     Q_OBJECT
 public:
-    MRemoteThemeDaemon(const QString &applicationName, int timeout);
+    /**
+     * @param applicationName Name of the application that uses the daemon.
+     * @param timeout         Timeout in milliseconds, until connecting
+     *                        to the server will be canceled.
+     * @param serverAddress   Address that is used for the local connection
+     *                        between the client and the server. If an empty
+     *                        string is passed, M::MThemeDaemonProtocol::ServerAddress
+     *                        is used per default.
+     */
+    MRemoteThemeDaemon(const QString &applicationName, int timeout, const QString &serverAddress = QString());
     virtual ~MRemoteThemeDaemon();
     bool connected() const;
 

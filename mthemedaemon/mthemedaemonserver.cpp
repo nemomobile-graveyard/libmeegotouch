@@ -31,7 +31,7 @@ using namespace M::MThemeDaemonProtocol;
 
 const int THEME_CHANGE_TIMEOUT = 3000;
 
-MThemeDaemonServer::MThemeDaemonServer() :
+MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     currentTheme("/meegotouch/theme/name"),
     currentLocale("/meegotouch/i18n/language"),
     defaultTheme(M_THEME_DEFAULT),
@@ -68,9 +68,11 @@ MThemeDaemonServer::MThemeDaemonServer() :
 
     // start socket server for client registeration
     // first remove the old one, if there's such
-    QLocalServer::removeServer(M::MThemeDaemonProtocol::ServerAddress);
+    const QString address = serverAddress.isEmpty() ? M::MThemeDaemonProtocol::ServerAddress : serverAddress;
+
+    QLocalServer::removeServer(address);
     connect(&server, SIGNAL(newConnection()), SLOT(clientConnected()));
-    if (!server.listen(M::MThemeDaemonProtocol::ServerAddress)) {
+    if (!server.listen(address)) {
         mWarning("MThemeDaemonServer") << "Failed to start socket server.";
     }
 
