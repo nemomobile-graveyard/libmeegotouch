@@ -52,7 +52,6 @@ private:
     Q_DISABLE_COPY(MStatusBarView)
 
     MWidgetController *controller;
-    bool updatesEnabled;
     /*!
      * Displays the status indicator menu.
      */
@@ -74,6 +73,8 @@ private:
     QPointF firstPos, lastPos;
 
 #ifdef Q_WS_X11
+    bool updatesEnabled;
+    bool isInSwitcher;
     void updateSharedPixmap();
 #ifdef HAVE_DBUS
     bool isPixmapProviderOnline;
@@ -92,6 +93,8 @@ private Q_SLOTS:
 
     void enablePixmapUpdates();
     void disablePixmapUpdates();
+    void handleSwitcherEntered();
+    void handleSwitcherExited();
 #ifdef HAVE_DBUS
     void sharedPixmapHandleReceived(QDBusPendingCallWatcher * call);
     void handlePixmapProviderOnline();

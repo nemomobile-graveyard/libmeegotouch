@@ -21,6 +21,7 @@
 #include <mstatusbar.h>
 #include <mapplication.h>
 #include <mscenemanager.h>
+#include <mscene.h>
 #include <mdebug.h>
 
 #include <QFile>
@@ -53,8 +54,11 @@ const QString MStatusBarView::STATUS_INDICATOR_MENU_DBUS_INTERFACE = "com.meego.
 
 MStatusBarView::MStatusBarView(MStatusBar *controller) :
     MSceneWindowView(controller),
-    controller(controller),
-    updatesEnabled(false)
+    controller(controller)
+#ifdef Q_WS_X11
+    , updatesEnabled(true)
+    , isInSwitcher(false)
+#endif
 {
 #ifdef Q_WS_X11
     pixmapDamage = 0;
@@ -66,6 +70,15 @@ MStatusBarView::MStatusBarView(MStatusBar *controller) :
             this, SLOT(disablePixmapUpdates()));
     connect(controller, SIGNAL(displayEntered()),
             this, SLOT(enablePixmapUpdates()));
+
+
+    if (controller->scene()){
+        MWindow* win = qobject_cast<MWindow*>(controller->scene()->views().at(0));
+        if (win){
+            connect(win, SIGNAL(switcherEntered()), this, SLOT(handleSwitcherEntered()));
+            connect(win, SIGNAL(switcherExited()), this, SLOT(handleSwitcherExited()));
+        }
+    }
 
 #ifdef HAVE_DBUS
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(PIXMAP_PROVIDER_DBUS_SERVICE))
@@ -100,11 +113,12 @@ void MStatusBarView::drawContents(QPainter *painter, const QStyleOptionGraphicsI
     Q_UNUSED(option);
 
 #ifdef Q_WS_X11
+#ifdef HAVE_DBUS
     if (sharedPixmap.isNull()) {
         MStatusBarView *view = const_cast<MStatusBarView *>(this);
         view->querySharedPixmapFromProvider();
     }
-
+#endif
     if (sharedPixmap.isNull() || (controller->sceneManager() == 0))
         return;
 
@@ -146,7 +160,7 @@ void MStatusBarView::updateSharedPixmap()
 {
     destroyXDamageForSharedPixmap();
 #ifdef HAVE_DBUS
-    if ((!updatesEnabled)||(!isPixmapProviderOnline)) {
+    if ( (!updatesEnabled)||(!isPixmapProviderOnline)|| isInSwitcher ) {
         return;
     }
 #else
@@ -189,7 +203,9 @@ void MStatusBarView::handlePixmapDamageEvent(Qt::HANDLE &damage, short &x, short
 void MStatusBarView::enablePixmapUpdates()
 {
     updatesEnabled = true;
+#ifdef HAVE_DBUS
     querySharedPixmapFromProvider();
+#endif // HAVE_DBUS
 }
 
 void MStatusBarView::disablePixmapUpdates()
@@ -200,7 +216,7 @@ void MStatusBarView::disablePixmapUpdates()
 #ifdef HAVE_DBUS
 void MStatusBarView::querySharedPixmapFromProvider()
 {
-    if ((!updatesEnabled)||(!isPixmapProviderOnline))
+    if ((!updatesEnabled)||(!isPixmapProviderOnline) || isInSwitcher)
         return;
     QDBusInterface interface(PIXMAP_PROVIDER_DBUS_SERVICE, PIXMAP_PROVIDER_DBUS_PATH, PIXMAP_PROVIDER_DBUS_INTERFACE,
                              QDBusConnection::sessionBus());
@@ -237,6 +253,19 @@ void MStatusBarView::handlePixmapProviderOffline()
 }
 #endif // HAVE_DBUS
 
+void MStatusBarView::handleSwitcherEntered()
+{
+    isInSwitcher = true;
+    destroyXDamageForSharedPixmap();
+}
+
+void MStatusBarView::handleSwitcherExited()
+{
+    isInSwitcher = false;
+#ifdef HAVE_DBUS
+    querySharedPixmapFromProvider();
+#endif // HAVE_DBUS
+}
 #endif // Q_WS_X11
 
 void MStatusBarView::showStatusIndicatorMenu()
