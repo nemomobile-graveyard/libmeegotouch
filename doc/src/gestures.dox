@@ -73,6 +73,12 @@ In Qt, multitouch input is delivered through the QTouchEvent class, through whic
 all the currently touched screen points. Note that by default multitouch events are not delivered
 to widgets, delivery must explicitly be enabled using the QGraphicsItem::setAcceptTouchEvents method.
 
+\section simulatingmultitouch Simulating multitouch
+
+You can simulate the multitouch pinch gesture without needing real multitouch hardware,
+for example in a development environment on a standard PC. Simply hold down the
+<Ctrl> key on the keyboard, then press and drag with the left mouse button.
+
 \section gesturesinmtf Gestures related API in MeeGo Touch
 
 MeeGo Touch provides several event handlers for gestures:

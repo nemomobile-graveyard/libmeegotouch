@@ -33,6 +33,7 @@
 #include "mwidget.h"
 #include "mapplicationpage.h"
 #include "mscene_p.h"
+#include "mdeviceprofile.h"
 
 const QFont     TextFont                = QFont("Sans", 10);
 const QSize     FpsBoxSize              = QSize(100, 40);
@@ -47,8 +48,9 @@ const qreal     BoundingRectOpacity     = 0.1;
 const qreal     MarginBackgroundOpacity = 0.4;
 const QColor    MarginColor             = QColor(Qt::red);
 const int       MarginBorderWidth       = 2;
-const QColor    GesturePointColor       = QColor(0xEE7621);
-const int       GesturePointSize        = 4;
+const qreal     GesturePointOpacity     = 0.70;
+const QColor    GesturePointColor       = QColor(0x7b7b7b);
+const int       GesturePointSize        = 15;
 
 
 MScenePrivate::MScenePrivate() :
@@ -56,7 +58,6 @@ MScenePrivate::MScenePrivate() :
         manager(0),
         emuPoint1(1),
         emuPoint2(2),
-        panEmulationEnabled(false),
         pinchEmulationEnabled(false)
 {
 }
@@ -172,22 +173,44 @@ void MScenePrivate::touchPointCopyPosToLastPos(QTouchEvent::TouchPoint &point)
 
 void MScenePrivate::touchPointCopyMousePosToPointPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event)
 {
-    point.setPos(event->pos());
+    point.setPos(event->scenePos());
     point.setScenePos(event->scenePos());
-    point.setScreenPos(event->screenPos());
+    point.setScreenPos(event->scenePos());
 }
 
 void MScenePrivate::touchPointCopyMousePosToPointStartPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event)
 {
-    point.setStartPos(event->pos());
+    point.setStartPos(event->scenePos());
     point.setStartScenePos(event->scenePos());
-    point.setStartScreenPos(event->screenPos());
+    point.setStartScreenPos(event->scenePos());
+}
+
+void MScenePrivate::touchPointMirrorMousePosToPointPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event)
+{
+    QSize resolution = MDeviceProfile::instance()->resolution();
+    QPointF centerPoint(resolution.width() / 2, resolution.height() / 2);
+    QPointF mirrorPoint = centerPoint + (centerPoint - event->scenePos());
+
+    point.setPos(mirrorPoint);
+    point.setScenePos(mirrorPoint);
+    point.setScreenPos(mirrorPoint);
+}
+
+void MScenePrivate::touchPointMirrorMousePosToPointStartPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event)
+{
+    QSize resolution = MDeviceProfile::instance()->resolution();
+    QPointF centerPoint(resolution.width() / 2, resolution.height() / 2);
+    QPointF mirrorPoint = centerPoint + (centerPoint - event->scenePos());
+
+    point.setStartPos(mirrorPoint);
+    point.setStartScenePos(mirrorPoint);
+    point.setStartScreenPos(mirrorPoint);
 }
 
 bool MScenePrivate::eventEmulateTwoFingerGestures(QEvent *event)
 {
     if (MApplication::emulateTwoFingerGestures() &&
-        (eventEmulatePinch(event) || eventEmulatePan(event))) {
+        eventEmulatePinch(event)) {
         return true;
     }
 
@@ -205,11 +228,11 @@ bool MScenePrivate::eventEmulatePinch(QEvent *event)
     Qt::TouchPointState touchPointState;
 
     if (QEvent::GraphicsSceneMousePress == event->type()) {
-        if (Qt::MidButton == e->button() && Qt::AltModifier == e->modifiers()) {
+        if (Qt::LeftButton == e->button() && Qt::ControlModifier == e->modifiers()) {
             pinchEmulationEnabled = true;
 
-            touchPointCopyMousePosToPointPos(emuPoint1,e);
-            touchPointCopyMousePosToPointStartPos(emuPoint1,e);
+            touchPointMirrorMousePosToPointPos(emuPoint1,e);
+            touchPointMirrorMousePosToPointStartPos(emuPoint1,e);
             emuPoint1.setState(Qt::TouchPointPressed);
 
             touchPointCopyMousePosToPointPos(emuPoint2,e);
@@ -225,6 +248,7 @@ bool MScenePrivate::eventEmulatePinch(QEvent *event)
     if (pinchEmulationEnabled && QEvent::GraphicsSceneMouseMove == event->type()) {
 
         touchPointCopyPosToLastPos(emuPoint1);
+        touchPointMirrorMousePosToPointPos(emuPoint1,e);
         emuPoint1.setState(Qt::TouchPointMoved);
 
         touchPointCopyPosToLastPos(emuPoint2);
@@ -237,7 +261,7 @@ bool MScenePrivate::eventEmulatePinch(QEvent *event)
     }
 
     if (pinchEmulationEnabled && QEvent::GraphicsSceneMouseRelease == event->type()) {
-        if (Qt::MidButton == e->button()) {
+        if (Qt::LeftButton == e->button()) {
 
             touchPointCopyPosToLastPos(emuPoint1);
             emuPoint1.setState(Qt::TouchPointReleased);
@@ -267,82 +291,6 @@ bool MScenePrivate::eventEmulatePinch(QEvent *event)
     return false;
 }
 
-bool MScenePrivate::eventEmulatePan(QEvent *event)
-{
-    Q_Q(MScene);
-
-    bool sendTouchEvent = false;
-    QGraphicsSceneMouseEvent *e = static_cast<QGraphicsSceneMouseEvent*>(event);
-
-    QEvent::Type touchEventType;
-    Qt::TouchPointState touchPointState;
-
-    if (QEvent::GraphicsSceneMousePress == event->type()) {
-        if (Qt::MidButton == e->button() && Qt::ControlModifier == e->modifiers()) {
-
-            touchPointCopyMousePosToPointPos(emuPoint1,e);
-            touchPointCopyMousePosToPointStartPos(emuPoint1,e);
-            emuPoint1.setState(Qt::TouchPointPressed);
-
-            touchPointCopyMousePosToPointPos(emuPoint2,e);
-            touchPointCopyMousePosToPointStartPos(emuPoint2,e);
-            emuPoint2.setState(Qt::TouchPointPressed);
-
-            touchEventType = QEvent::TouchBegin;
-            touchPointState = Qt::TouchPointPressed;
-            sendTouchEvent = true;
-            panEmulationEnabled = true;
-        }
-    }
-
-    if (panEmulationEnabled && QEvent::GraphicsSceneMouseMove == event->type()) {
-
-        touchPointCopyPosToLastPos(emuPoint1);
-        touchPointCopyMousePosToPointPos(emuPoint1,e);
-        emuPoint1.setState(Qt::TouchPointMoved);
-
-        touchPointCopyPosToLastPos(emuPoint2);
-        touchPointCopyMousePosToPointPos(emuPoint2,e);
-        emuPoint2.setState(Qt::TouchPointMoved);
-
-        touchEventType = QEvent::TouchUpdate;
-        touchPointState = Qt::TouchPointPressed;
-        sendTouchEvent = true;
-    }
-
-    if (panEmulationEnabled && QEvent::GraphicsSceneMouseRelease == event->type()) {
-        if (Qt::MidButton == e->button()) {
-
-            touchPointCopyPosToLastPos(emuPoint1);
-            touchPointCopyMousePosToPointPos(emuPoint1,e);
-            emuPoint1.setState(Qt::TouchPointReleased);
-
-            touchPointCopyPosToLastPos(emuPoint2);
-            touchPointCopyMousePosToPointPos(emuPoint2,e);
-            emuPoint2.setState(Qt::TouchPointReleased);
-
-            touchEventType = QEvent::TouchEnd;
-            touchPointState = Qt::TouchPointReleased;
-
-            panEmulationEnabled = false;
-            sendTouchEvent = true;
-        }
-    }
-
-    if (sendTouchEvent) {
-        QList<QTouchEvent::TouchPoint> touchList;
-        touchList.append(emuPoint1);
-        touchList.append(emuPoint2);
-
-        QTouchEvent touchEvent(touchEventType, QTouchEvent::TouchPad, Qt::NoModifier, touchPointState, touchList);
-        QApplication::sendEvent(q, &touchEvent);
-        event->accept();
-        q->update();
-        return true;
-    }
-
-    return false;
-}
 
 void MScenePrivate::showFpsCounter(QPainter *painter, float fps)
 {
@@ -604,9 +552,17 @@ void MScene::drawForeground(QPainter *painter, const QRectF &rect)
     }
 
     if (MApplication::emulateTwoFingerGestures() &&
-        (d->panEmulationEnabled || d->pinchEmulationEnabled))
+        d->pinchEmulationEnabled)
     {
+        painter->setPen(Qt::NoPen);
+        painter->setBrush(Qt::black);
+        painter->setOpacity(0.2);
+        painter->drawEllipse(d->emuPoint1.screenPos() + QPointF(3, 2),GesturePointSize,GesturePointSize);
+        painter->drawEllipse(d->emuPoint2.screenPos() + QPointF(3, 2),GesturePointSize,GesturePointSize);
+
+        painter->setPen(Qt::black);
         painter->setBrush(GesturePointColor);
+        painter->setOpacity(GesturePointOpacity);
         painter->drawEllipse(d->emuPoint1.screenPos(),GesturePointSize,GesturePointSize);
         painter->drawEllipse(d->emuPoint2.screenPos(),GesturePointSize,GesturePointSize);
     }

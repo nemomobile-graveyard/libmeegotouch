@@ -148,7 +148,7 @@ MComponentDataPrivate::MComponentDataPrivate()
 #endif
     reverseLayout(false),
     prestarted(false),
-    emulateTwoFingerGestures(false),
+    emulateTwoFingerGestures(true),
     prestartMode(M::NoPrestart),
     forcedOrientationAngle(M::Angle0),
     isOrientationForced(false),
@@ -488,8 +488,6 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
             showCursor = true;
         else if (s == "-show-object-names")
             q->setShowObjectNames(true);
-        else if (s == "-emulate-two-finger-gestures")
-            q->setEmulateTwoFingerGestures(true);
         else if (s == "-dev") {
             showSize = true;
             showPosition = true;
@@ -626,8 +624,6 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "  [-no-output-prefix <prefix>] Only show debug messages that do not start with the given prefix\n"
                                          << "  [-target <name>] Use the target device profile\n"
                                          << "  [-prestart] Prestart the application (if supported)\n"
-                                         << "  [-emulate-two-finger-gestures] Emulate pinch gesture (alt + mid mouse button + mouse movement)\n"
-                                         << "                                 and two finger pan gesture (ctrl + mid mouse button + mouse movement)\n"
                                          << "  [-fixed-orientation 0|90|180|270] Start application in fixed orientation. \n "
                                          << "                                    This overrides keyboard state, as well as a device profile"
                                          << "\n";

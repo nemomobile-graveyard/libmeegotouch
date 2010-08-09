@@ -23,6 +23,9 @@
  * The application shows one image at a time, which can be pinched and
  * rotated. By swiping left or right (or using the arrow keys), the image
  * can be changed.
+ *
+ * You can simulate the pinch on your PC by holding down Ctrl on your keyboard
+ * while pressing and dragging with the left mouse button.
  */
 
 #include <MApplication>

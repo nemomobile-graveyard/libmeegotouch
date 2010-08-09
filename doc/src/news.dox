@@ -5,6 +5,7 @@
 \subsection New
 
 - Updated \subpage rotation document.
+- You can now simulate the multitouch pinch gesture by holding down the Ctrl key, then pressing and dragging with the left mouse button.
 - MSceneWindow::appear(QGraphicsScene *scene, MSceneWindow::DeletionPolicy policy);
 
 \subsection Deprecated

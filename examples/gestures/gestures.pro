@@ -11,3 +11,5 @@ HEADERS += \
   mypage.h
 
 RESOURCES = images.qrc
+
+include(../insrc.pri)

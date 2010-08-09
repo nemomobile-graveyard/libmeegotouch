@@ -63,9 +63,11 @@ public:
     void touchPointCopyPosToLastPos(QTouchEvent::TouchPoint &point);
     void touchPointCopyMousePosToPointPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event);
     void touchPointCopyMousePosToPointStartPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event);
+    void touchPointMirrorMousePosToPointPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event);
+    void touchPointMirrorMousePosToPointStartPos(QTouchEvent::TouchPoint &point, const QGraphicsSceneMouseEvent *event);
+
     bool eventEmulateTwoFingerGestures(QEvent *event);
     bool eventEmulatePinch(QEvent *event);
-    bool eventEmulatePan(QEvent *event);
     void fillMarginRectWithPattern(QPainter *painter, const QRectF& rect, int thickness);
 
 protected:
@@ -74,7 +76,6 @@ protected:
 
     //Two finger gestures emulation variables
     QTouchEvent::TouchPoint emuPoint1, emuPoint2;
-    bool panEmulationEnabled;
     bool pinchEmulationEnabled;
 
     Fps fps;
