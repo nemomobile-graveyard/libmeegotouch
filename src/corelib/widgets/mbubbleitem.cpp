@@ -298,11 +298,17 @@ void MBubbleItem::setThumbsUpString(const QString &thumbsUp)
     Q_D(MBubbleItem);
 
     if(!thumbsUp.isEmpty()) {
-        if (!d->thumbsUpLabel || !d->thumbsUpIcon)
+        if (!d->thumbsUpLabel) {
+            Q_ASSERT(!d->thumbsUpIcon);
             d->createThumbsUpInfo();
+            Q_ASSERT(d->thumbsUpLabel);
+            Q_ASSERT(d->thumbsUpIcon);
+        }
         d->thumbsUpLabel->setText(thumbsUp);
-    } else if (d->thumbsUpLabel != NULL || d->thumbsUpIcon)
+    } else if (d->thumbsUpLabel != NULL) {
+        Q_ASSERT(d->thumbsUpIcon);
         d->destroyThumbsUpInfo();
+    }
 
     model()->setThumbsUpString(thumbsUp);
 }
