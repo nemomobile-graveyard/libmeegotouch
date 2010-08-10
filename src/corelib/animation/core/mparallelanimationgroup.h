@@ -20,11 +20,18 @@
 #ifndef MPARALLELANIMATIONGROUP_H
 #define MPARALLELANIMATIONGROUP_H
 
-#define M_ANIMATION_GROUP(STYLE) \
+#define M_ANIMATION_GROUP_INTERNAL(STYLE) \
     protected: \
     inline virtual const char* styleType() const { return #STYLE; } \
     virtual MAnimationStyleContainer* createStyleContainer() const { return new STYLE##Container(); } \
     private: \
+    inline STYLE##Container& style() { return static_cast<STYLE##Container&>(MParallelAnimationGroup::style()); } \
+    inline const STYLE##Container& style() const { return static_cast<const STYLE##Container&>(MParallelAnimationGroup::style()); }
+
+#define M_ANIMATION_GROUP(STYLE) \
+    protected: \
+    inline virtual const char* styleType() const { return #STYLE; } \
+    virtual MAnimationStyleContainer* createStyleContainer() const { return new STYLE##Container(); } \
     inline STYLE##Container& style() { return static_cast<STYLE##Container&>(MParallelAnimationGroup::style()); } \
     inline const STYLE##Container& style() const { return static_cast<const STYLE##Container&>(MParallelAnimationGroup::style()); }
 

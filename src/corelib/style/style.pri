@@ -34,7 +34,7 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mwidgetzoomanimationstyle.h \
     $$STYLE_SRC_DIR/mpageswitchanimationstyle.h \
     $$STYLE_SRC_DIR/mbasicorientationanimationstyle.h \
-
+    $$STYLE_SRC_DIR/mscenemanagerstyle.h \
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS \

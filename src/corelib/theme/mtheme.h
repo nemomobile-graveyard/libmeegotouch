@@ -41,6 +41,7 @@ class MLibrary;
 class MPalette;
 class MDefaultFonts;
 class MComponentData;
+class QAbstractAnimation;
 
 /*!
  \class MTheme
@@ -239,6 +240,15 @@ public:
      releasePixmap performs cleanup and frees the pixmap if there are no other clients using it.
      */
     static void releasePixmap(const QPixmap *pixmap);
+
+    /*!
+     Returns an animation instance with the given type.
+
+    \param animationTypeName Name of the animation type.
+
+     The returned animation is theme specific.
+     */
+    static QAbstractAnimation *animation(const QString &animationTypeName);
 
     /*!
      Returns a view instance for the given \a controller.

@@ -30,7 +30,7 @@ class MWidgetCreatorBase;
 class MAnimationCreatorBase;
 class MWidgetView;
 class MStyle;
-class MAnimation;
+class QAbstractAnimation;
 class QMetaObject;
 
 class MWidgetController;
@@ -112,7 +112,7 @@ public:
     /*!
        Returns a new instance of an animation. Ownership is transferred to caller.
      */
-    MAnimation *createAnimation(const char *animationClassName) const;
+    QAbstractAnimation *createAnimation(const QString &animationClassName) const;
 
 private:
     /////////

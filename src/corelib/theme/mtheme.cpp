@@ -448,6 +448,17 @@ void MTheme::releaseStyle(const MStyle *style)
     MStyleSheet::releaseStyle(style);
 }
 
+QAbstractAnimation *MTheme::animation(const QString &animationTypeName)
+{
+    QAbstractAnimation *a = MClassFactory::instance()->createAnimation(animationTypeName);
+    if (!a) {
+        qWarning() << "Failed to create implementation for: " << animationTypeName;
+        return NULL;
+    }
+
+    return a;
+}
+
 MWidgetView *MTheme::view(const MWidgetController *controller)
 {
     // Best matching view class name

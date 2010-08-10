@@ -25,6 +25,7 @@
 
 #include "mnamespace.h"
 #include "mscenemanager.h"
+#include "mscenemanagerstyle.h"
 #include "mscenewindow.h"
 #include <mscenewindowevent_p.h>
 #include "mpageswitchanimation.h"
@@ -36,7 +37,7 @@ class MSceneLayerEffect;
 class MSceneManager;
 class MNavigationBar;
 class MOrientationAnimation;
-class MPageSwitchAnimation;
+class MPageSwitchSlideAnimation;
 class MWindow;
 class MSceneEventEater;
 
@@ -140,7 +141,7 @@ public:
 
     void startPageSwitchAnimation(MSceneWindow *newPage,
                                   MSceneWindow *oldPage,
-                                  MPageSwitchAnimation::PageTransitionDirection direction);
+                                  MPageSwitchAnimation::TransitionDirection direction);
 
     void createOrientationAnimation();
 
@@ -170,6 +171,10 @@ public:
     void onSceneWindowEnteringDisappearedState(MSceneWindow *sceneWindow);
 
     void fastForwardSceneWindowTransitionAnimation(MSceneWindow *sceneWindow);
+
+    MSceneManagerStyleContainer &style();
+    const MSceneManagerStyleContainer &style() const;
+    virtual MSceneManagerStyleContainer *createStyleContainer() const;
 
     /*
         Dislocates the scene window from its proper position
@@ -250,6 +255,8 @@ public:
     MSceneManager *q_ptr;
 
     MSceneEventEater *eventEater;
+
+    MSceneManagerStyleContainer *styleContainer;
 };
 
 class MSceneManagerTestInterface : public QObject

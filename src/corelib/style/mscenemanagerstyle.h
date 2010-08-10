@@ -17,26 +17,22 @@
 **
 ****************************************************************************/
 
-#ifndef MPAGESWITCHANIMATION_P_H
-#define MPAGESWITCHANIMATION_P_H
+#ifndef MSCENEMANAGERSTYLE_H
+#define MSCENEMANAGERSTYLE_H
 
-#include <mpageswitchanimation.h>
-#include <mparallelanimationgroup_p.h>
+#include "mstyle.h"
 
-class MPageSwitchAnimation;
-
-class MPageSwitchAnimationPrivate : public MParallelAnimationGroupPrivate
+class MSceneManagerStyle : public MStyle
 {
-public:
-    MPageSwitchAnimationPrivate();
-    virtual ~MPageSwitchAnimationPrivate();
+    Q_OBJECT
+    M_STYLE(MSceneManagerStyle)
 
-private:
-    Q_DECLARE_PUBLIC(MPageSwitchAnimation)
-
-    QPointer<MSceneWindow> newPage;
-    QPointer<MSceneWindow> oldPage;
-    MPageSwitchAnimation::TransitionDirection direction;
+    M_STYLE_ATTRIBUTE(QString, pageSwitchAnimation, PageSwitchAnimation)
 };
 
-#endif // MPAGESWITCHANIMATION_P_H
+class MSceneManagerStyleContainer : public MStyleContainer
+{
+    M_STYLE_CONTAINER(MSceneManagerStyle)
+};
+
+#endif // MSCENEMANAGERSTYLE_H

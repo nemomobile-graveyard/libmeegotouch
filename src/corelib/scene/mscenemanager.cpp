@@ -93,6 +93,8 @@ void MSceneManagerPrivate::init(MScene *scene)
 
     pendingRotation = 0;
 
+    styleContainer = 0;
+
     initOrientationAngles();
 
     rootElement = new QGraphicsWidget();
@@ -118,7 +120,7 @@ void MSceneManagerPrivate::init(MScene *scene)
                q, SLOT(_q_undoSceneWindowDislocation(MSceneWindow *)),
                Qt::DirectConnection);
 
-    pageSwitchAnimation = new MPageSwitchAnimation;
+    pageSwitchAnimation = qobject_cast<MPageSwitchAnimation*>(MTheme::animation(style()->pageSwitchAnimation()));
     q->connect(pageSwitchAnimation, SIGNAL(finished()),
             SLOT(_q_onPageSwitchAnimationFinished()));
 
@@ -883,13 +885,15 @@ void MSceneManagerPrivate::prepareWindowShow(MSceneWindow *window)
 
 void MSceneManagerPrivate::startPageSwitchAnimation(MSceneWindow *newPage,
         MSceneWindow *oldPage,
-        MPageSwitchAnimation::PageTransitionDirection direction)
+        MPageSwitchAnimation::TransitionDirection direction)
 {
+    Q_ASSERT(pageSwitchAnimation);
+
     pageSwitchAnimation->setNewPage(newPage);
     pageSwitchAnimation->setOldPage(oldPage);
-    pageSwitchAnimation->setPageTransitionDirection(direction);
-
+    pageSwitchAnimation->setTransitionDirection(direction);
     pageSwitchAnimation->start();
+
     freezeUIForAnimationDuration(pageSwitchAnimation);
 }
 
@@ -906,13 +910,13 @@ void MSceneManagerPrivate::pushPage(MSceneWindow *page, bool animatedTransition)
 
     setCurrentPage(page);
 
-    if (animatedTransition) {
+    if (animatedTransition && pageSwitchAnimation) {
         if (previousPage)
             setSceneWindowState(previousPage, MSceneWindow::Disappearing);
 
         setSceneWindowState(currentPage, MSceneWindow::Appearing);
 
-        startPageSwitchAnimation(currentPage, previousPage, MPageSwitchAnimation::RightToLeft);
+        startPageSwitchAnimation(currentPage, previousPage, MPageSwitchAnimation::ToParentPage);
     } else {
         if (previousPage)
             setSceneWindowState(previousPage, MSceneWindow::Disappeared);
@@ -948,13 +952,13 @@ void MSceneManagerPrivate::popPage(bool animatedTransition)
     if (pageHistoryChanged)
         emit q->pageHistoryChanged();
 
-    if (animatedTransition) {
+    if (animatedTransition && pageSwitchAnimation) {
         if (previousPage)
             setSceneWindowState(previousPage, MSceneWindow::Appearing);
 
         setSceneWindowState(currentPage, MSceneWindow::Disappearing);
 
-        startPageSwitchAnimation(previousPage, currentPage, MPageSwitchAnimation::LeftToRight);
+        startPageSwitchAnimation(previousPage, currentPage, MPageSwitchAnimation::ToChildPage);
     } else {
         if (previousPage)
             setSceneWindowState(previousPage, MSceneWindow::Appeared);
@@ -984,7 +988,7 @@ bool MSceneManagerPrivate::verifySceneWindowStateBeforeAppear(
     switch (sceneWindow->sceneWindowState()) {
         case MSceneWindow::Disappeared:
             if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
-                if (pageSwitchAnimation->state() == QAbstractAnimation::Running) {
+                if (pageSwitchAnimation && pageSwitchAnimation->state() == QAbstractAnimation::Running) {
                     // Apply it after the current page switch animation finishes.
                     MSceneWindowTransition transition;
                     transition.sceneWindow = sceneWindow;
@@ -1167,7 +1171,7 @@ bool MSceneManagerPrivate::verifySceneWindowStateBeforeDisappear(
             // Queue that transition.
             // Page transitions goes to a different queue than other scene windows.
             if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
-                Q_ASSERT(pageSwitchAnimation->state() == QAbstractAnimation::Running);
+                Q_ASSERT(pageSwitchAnimation && pageSwitchAnimation->state() == QAbstractAnimation::Running);
 
                 // Apply it after the current page switch animation finishes.
                 MSceneWindowTransition transition;
@@ -1194,7 +1198,7 @@ bool MSceneManagerPrivate::verifySceneWindowStateBeforeDisappear(
 
         case MSceneWindow::Appeared:
             if (sceneWindow->windowType() == MSceneWindow::ApplicationPage) {
-                if (pageSwitchAnimation->state() == QAbstractAnimation::Running) {
+                if (pageSwitchAnimation && pageSwitchAnimation->state() == QAbstractAnimation::Running) {
                     // Apply it after the current page switch animation finishes.
                     MSceneWindowTransition transition;
                     transition.sceneWindow = sceneWindow;
@@ -1640,6 +1644,37 @@ void MSceneManagerPrivate::fastForwardSceneWindowTransitionAnimation(MSceneWindo
                     sceneWindow->d_func()->disappearanceAnimation->duration());
         }
     }
+}
+
+
+MSceneManagerStyleContainer &MSceneManagerPrivate::style()
+{
+    Q_Q(MSceneManager);
+
+    if (!styleContainer) {
+        styleContainer = createStyleContainer();
+        styleContainer->initialize(q->objectName(), "", NULL);
+    }
+
+    return *styleContainer;
+}
+
+const MSceneManagerStyleContainer &MSceneManagerPrivate::style() const
+{
+    Q_Q(const MSceneManager);
+
+    if (!styleContainer) {
+        MSceneManagerPrivate *d_p = const_cast<MSceneManagerPrivate *>(this);
+        d_p->styleContainer = createStyleContainer();
+        d_p->styleContainer->initialize(q->objectName(), "", NULL);
+    }
+
+    return *styleContainer;
+}
+
+MSceneManagerStyleContainer *MSceneManagerPrivate::createStyleContainer() const
+{
+    return new MSceneManagerStyleContainer();
 }
 
 MSceneManager::MSceneManager(MScene *scene, QObject *parent) :

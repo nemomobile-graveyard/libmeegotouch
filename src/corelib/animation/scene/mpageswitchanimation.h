@@ -20,43 +20,44 @@
 #ifndef MPAGESWITCHANIMATION_H
 #define MPAGESWITCHANIMATION_H
 
-#include <QtGlobal>
-
 #include <mparallelanimationgroup.h>
 #include <mpageswitchanimationstyle.h>
 
-class MPageSwitchAnimationPrivate;
-class MSceneWindow;
+#include <QPointer>
 
-//! \internal
+class MSceneWindow;
+class MPageSwitchAnimationPrivate;
 
 class MPageSwitchAnimation : public MParallelAnimationGroup
 {
     Q_OBJECT
-    Q_DECLARE_PRIVATE(MPageSwitchAnimation)
     M_ANIMATION_GROUP(MPageSwitchAnimationStyle)
 
 public:
-    enum PageTransitionDirection {
-        LeftToRight,
-        RightToLeft
+    enum TransitionDirection {
+        ToChildPage,
+        ToParentPage,
+        ToSiblingPage
     };
 
+public:
     MPageSwitchAnimation(QObject *parent = NULL);
+    virtual ~MPageSwitchAnimation();
+
     void setNewPage(MSceneWindow *newPage);
     void setOldPage(MSceneWindow *oldPage);
-    void setPageTransitionDirection(PageTransitionDirection direction);
+    void setTransitionDirection(TransitionDirection direction);
 
-    MSceneWindow *oldPage() const;
     MSceneWindow *newPage() const;
+    MSceneWindow *oldPage() const;
+    TransitionDirection transitionDirection() const;
 
 protected:
-
     MPageSwitchAnimation(MPageSwitchAnimationPrivate *dd, QObject *parent = NULL);
 
-    virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
+private:
+    Q_DISABLE_COPY(MPageSwitchAnimation)
+    Q_DECLARE_PRIVATE(MPageSwitchAnimation)
 };
 
-//! \internal_end
-
-#endif
+#endif // MPAGESWITCHANIMATION_H

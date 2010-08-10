@@ -251,9 +251,9 @@ void MClassFactory::unregisterAnimationCreator(MAnimationCreatorBase *creator)
     }
 }
 
-MAnimation *MClassFactory::createAnimation(const char *animationClassName) const
+QAbstractAnimation *MClassFactory::createAnimation(const QString &animationClassName) const
 {
-    const MAnimationCreatorBase *animationCreator = d_ptr->animationCreators.value(QString(animationClassName), NULL);
+    const MAnimationCreatorBase *animationCreator = d_ptr->animationCreators.value(animationClassName, NULL);
     if (!animationCreator) {
         mWarning("MClassFactory") << "could not create" << animationClassName;
         return NULL;

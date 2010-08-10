@@ -17,26 +17,30 @@
 **
 ****************************************************************************/
 
-#ifndef MPAGESWITCHANIMATION_P_H
-#define MPAGESWITCHANIMATION_P_H
+#ifndef MPAGESWITCHSLIDEANIMATION_P_H
+#define MPAGESWITCHSLIDEANIMATION_P_H
 
-#include <mpageswitchanimation.h>
-#include <mparallelanimationgroup_p.h>
+#include "mpageswitchanimation_p.h"
+#include "mpageswitchslideanimation.h"
+#include <QPointer>
 
-class MPageSwitchAnimation;
+class MSceneWindow;
+class QPropertyAnimation;
 
-class MPageSwitchAnimationPrivate : public MParallelAnimationGroupPrivate
+class MPageSwitchSlideAnimationPrivate : public MPageSwitchAnimationPrivate
 {
 public:
-    MPageSwitchAnimationPrivate();
-    virtual ~MPageSwitchAnimationPrivate();
+    MPageSwitchSlideAnimationPrivate();
+    virtual ~MPageSwitchSlideAnimationPrivate();
+    void _q_animationFinished();
 
 private:
-    Q_DECLARE_PUBLIC(MPageSwitchAnimation)
+    Q_DECLARE_PUBLIC(MPageSwitchSlideAnimation)
 
-    QPointer<MSceneWindow> newPage;
-    QPointer<MSceneWindow> oldPage;
-    MPageSwitchAnimation::TransitionDirection direction;
+    MSceneWindow *sceneWindow;
+
+    QPropertyAnimation *positionNewPageAnimation;
+    QPropertyAnimation *positionOldPageAnimation;
 };
 
-#endif // MPAGESWITCHANIMATION_P_H
+#endif // MPAGESWITCHSLIDEANIMATION_P_H

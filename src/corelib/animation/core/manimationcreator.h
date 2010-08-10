@@ -26,7 +26,7 @@
     static const MAnimationCreator<ANIMATION> g_AnimationCreator(#ANIMATION);
 
 // forward declarations
-class MAnimation;
+class QAbstractAnimation;
 
 /*!
    Interface for MAnimationCreators
@@ -52,7 +52,7 @@ public:
        Returns a new animation instance.
        Ownership is transferred to caller.
      */
-    virtual MAnimation *create() const = 0;
+    virtual QAbstractAnimation *create() const = 0;
 };
 
 template<class ANIMATION>
@@ -65,7 +65,7 @@ public:
     virtual ~MAnimationCreator()
     {}
 
-    virtual MAnimation *create() const {
+    virtual QAbstractAnimation *create() const {
         return new ANIMATION();
     }
 };
