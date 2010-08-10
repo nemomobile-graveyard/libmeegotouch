@@ -155,11 +155,9 @@ void Ut_MTextEditView::testInputMethodQuery()
     m_appWindow->scene()->addItem(m_controller);
     QVariant result;
     QList<Qt::InputMethodQuery> queries;
-    QGraphicsSceneMouseEvent event;
 
     queries << Qt::ImMicroFocus << Qt::ImFont << Qt::ImCursorPosition
             << Qt::ImSurroundingText << Qt::ImCurrentSelection;
-    event.setPos(QPointF(10, 10));
 
     result = m_subject->inputMethodQuery(Qt::InputMethodQuery(M::VisualizationPriorityQuery));
     QVERIFY(result.isValid());
