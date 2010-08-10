@@ -6,12 +6,13 @@
 class QGraphicsScene;
 class QRectF;
 class QImage;
+class QPixmap;
 
 class MSnapshotItem : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    MSnapshotItem(QGraphicsScene *scene, const QRectF &targetRect,
+    MSnapshotItem(const QRectF &targetRect,
             QGraphicsItem *parent = 0);
 
     virtual ~MSnapshotItem();
@@ -23,7 +24,7 @@ public:
 
 private:
     QRectF m_boundingRect;
-    QImage *image;
+    QPixmap pixmap;
 };
 
 #endif

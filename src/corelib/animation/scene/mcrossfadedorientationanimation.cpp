@@ -74,7 +74,7 @@ void MCrossFadedOrientationAnimationPrivate::createRootElementSnapshot()
     // temporarily hide the scene background.
 
     // hide scene background
-    snapshot = new MSnapshotItem(scene, visibleSceneRect);
+    snapshot = new MSnapshotItem(visibleSceneRect);
     // show scene background
 
     scene->addItem(snapshot);
