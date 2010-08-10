@@ -24,20 +24,33 @@
 #include <QPointer>
 #include <QModelIndex>
 #include "mabstractcellcreator.h"
-#include "mbasiclistitem.h"
+#include "mlistitem.h"
 
 class MPopupList;
 class QAbstractItemModel;
 class QItemSelectionModel;
 class MList;
+class MLinearLayoutPolicy;
+class MImageWidget;
 
-class MPopupListItem : public MBasicListItem {
+class MPopupListItem : public MListItem {
 public:
-    explicit MPopupListItem(QGraphicsItem *parent = NULL)
-        : MBasicListItem(MBasicListItem::IconWithTitle, parent)
-    {
-        setObjectName("PopupListItem");
-    }
+    explicit MPopupListItem(QGraphicsItem *parent = NULL);
+    void setTitle(const QString &title);
+    void setIconID(const QString& id);
+
+private:
+    void updateLayout();
+
+    enum ItemStyle {
+        SingleTitle,
+        IconTitle
+    };
+
+    MLinearLayoutPolicy* policy[2];
+    MImageWidget* icon;
+    MLabel* title;
+    ItemStyle itemStyle;
 };
 
 class MPopupListViewPrivate : public MDialogViewPrivate, public MAbstractCellCreator<MPopupListItem>

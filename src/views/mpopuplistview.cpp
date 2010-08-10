@@ -22,11 +22,67 @@
 
 #include "mpopuplist.h"
 #include "mlist.h"
-#include "mgriditem.h"
 #include "mpannableviewport.h"
+#include "mlabel.h"
 #include "mimagewidget.h"
+#include "mlayout.h"
+#include "mlinearlayoutpolicy.h"
 
 #include <QGraphicsLinearLayout>
+
+MPopupListItem::MPopupListItem(QGraphicsItem* parent)
+    : MListItem(parent),
+      icon(0),
+      title(0),
+      itemStyle(SingleTitle)
+{
+    memset(policy, 0, sizeof(policy));
+    setObjectName("PopupListItem");
+    setLayout(new MLayout(this));
+    layout()->setContentsMargins(0, 0, 0, 0);
+}
+
+void MPopupListItem::updateLayout()
+{
+    MLayout* mlayout = static_cast<MLayout*>(layout());
+    if (!policy[itemStyle]) {
+        policy[itemStyle] = new MLinearLayoutPolicy(mlayout, Qt::Horizontal);
+        if (itemStyle == IconTitle) {
+            policy[itemStyle]->addItem(icon);
+            policy[itemStyle]->addItem(title);
+        } else {
+            policy[itemStyle]->addItem(title);
+        }
+    }
+    mlayout->setPolicy(policy[itemStyle]);
+}
+
+void MPopupListItem::setTitle(const QString &text)
+{
+    if (!title) {
+        title = new MLabel(this);
+        title->setTextElide(true);
+        title->setObjectName("CommonSingleTitle");
+    }
+    title->setText(text);
+    updateLayout();
+}
+
+void MPopupListItem::setIconID(const QString& id)
+{
+    if (id.isEmpty()) {
+        itemStyle = SingleTitle;
+    } else {
+        itemStyle = IconTitle;
+        if (!icon) {
+            icon = new MImageWidget(this);
+            icon->setObjectName("CommonMainIcon");
+        }
+        icon->setImage(id);
+    }
+    updateLayout();
+}
+
 
 MPopupListViewPrivate::MPopupListViewPrivate()
     : controller(0), list(0)
@@ -69,7 +125,7 @@ void MPopupListViewPrivate::updateCell(const QModelIndex& index, MWidget * cell)
         iconID = value.toString();
 
     item->setTitle(title);
-    item->imageWidget()->setImage(iconID);
+    item->setIconID(iconID);
 
     if (list->selectionModel()->isSelected(index))
         item->setSelected(true);
