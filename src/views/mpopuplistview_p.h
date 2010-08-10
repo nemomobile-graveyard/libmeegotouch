@@ -51,6 +51,9 @@ private:
     MImageWidget* icon;
     MLabel* title;
     ItemStyle itemStyle;
+#ifdef UNIT_TEST
+    friend class Ut_MPopupList;
+#endif
 };
 
 class MPopupListViewPrivate : public MDialogViewPrivate, public MAbstractCellCreator<MPopupListItem>

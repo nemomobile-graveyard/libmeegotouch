@@ -143,12 +143,12 @@ void Ut_MPopupList::testSetItemIconID()
     // First add item with text to model and build it
     itemModel->appendRow(new QStandardItem("Item"));
     item = (MPopupListItem *)(view->createCell(itemModel->index(0, 0),recycler));
-    QCOMPARE(item->imageWidget()->image(), QString());
+    QVERIFY(item->icon == 0);
 
     // Add icon to previously set item
     itemModel->setData(itemModel->index(0, 0), "icon-l-music", Qt::DecorationRole);
     view->updateCell(itemModel->index(0,0), item);
-    QCOMPARE(item->imageWidget()->image(), QString("icon-l-music"));
+    QCOMPARE(item->icon->image(), QString("icon-l-music"));
 
     delete itemModel;
     delete view;
