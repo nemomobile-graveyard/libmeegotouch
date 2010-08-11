@@ -101,8 +101,6 @@ public:
     static QString parseScript(const QString &localeString);
     static QString parseVariant(const QString &localeString);
 
-    void loadCountryCodes();
-
     QString formatPhoneNumber( const QString& phoneNumber,
                                MLocale::PhoneNumberGrouping grouping ) const;
 
