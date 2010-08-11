@@ -128,7 +128,25 @@ dui-servicefwgen -p com.nokia.TextProcessorInterface
 
 The above files should be made part of the maemo-interfaces package. The library should be in maemo-interfaces, and the header and xml files should be in maemo-interfaces-dev.
 
-Documentation for an interface and its methods can be added between '<doc>' and '</doc>' tags, and the dui-servicefwgen script will copy the lines into the wrapper header file. Note that the tags need to be on their own lines.
+Documentation for an interface and its methods can be added between '<doc>' and '</doc>' tags, as follows :
+
+\verbatim
+    <interface name="com.nokia.someserviceinterface">
+        <doc>
+            <arg tag="brief">brief documentation for the interface</arg>
+            <arg tag="details">detailed documentation for the interface</arg>
+        </doc>
+        <method name="showPage">
+            <doc>
+                <arg tag="brief">brief documentation for showPage() method</arg>
+                <arg tag="details">detailed documentation for showPage() method</arg>
+            </doc>
+            <arg name="targetPage" type="s" direction="in" />
+            <arg name="previousPage" type="s" direction="in" />
+            <arg name="" type="b" direction="out"/>    
+        </method>
+        ....etc
+\endverbatim
 
 \subsection usagesu As a Service User
 
