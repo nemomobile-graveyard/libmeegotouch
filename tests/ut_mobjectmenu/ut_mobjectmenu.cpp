@@ -127,4 +127,24 @@ void Ut_MObjectMenu::testActionsAddingAndRemoving()
     QCOMPARE(model->actions().at(1), action1);
 }
 
+void Ut_MObjectMenu::testCursorPosition()
+{
+    MWidget *widget = new MWidget();
+    MAction *action1 = new MAction("Test1", widget);
+    action1->setLocation(MAction::ObjectMenuLocation);
+    widget->addAction(action1);
+
+    MObjectMenu *menu = new MObjectMenu(widget);
+
+    QPointF point ( 1.0, 1.0 );
+    menu->setCursorPosition( point );
+
+    QCOMPARE( menu->cursorPosition(), point );
+
+    delete menu;
+    delete widget;
+}
+
+
+
 QTEST_APPLESS_MAIN(Ut_MObjectMenu)
