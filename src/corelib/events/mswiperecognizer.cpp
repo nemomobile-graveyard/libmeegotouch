@@ -25,6 +25,7 @@
 #include <QEvent>
 #include <QBasicTimer>
 #include <QGraphicsSceneMouseEvent>
+#include <QTouchEvent>
 #include <QLineF>
 
 /* Recognizer default settings */
@@ -64,9 +65,20 @@ QGestureRecognizer::Result MSwipeRecognizer::recognize(QGesture *state, QObject 
 
     MSwipeGesture *swipeGesture = static_cast<MSwipeGesture *>(state);
     const QGraphicsSceneMouseEvent *mouseEvent = static_cast<const QGraphicsSceneMouseEvent*>(event);
+    const QTouchEvent *touchEvent = static_cast<const QTouchEvent *>(event);
     QGestureRecognizer::Result result;
 
     switch (event->type()) {
+    case QEvent::TouchBegin:
+    case QEvent::TouchUpdate:
+    case QEvent::TouchEnd:
+
+        if (swipeGesture->state() != Qt::NoGesture && touchEvent->touchPoints().count() > 1) {
+            result = QGestureRecognizer::CancelGesture;
+        } else {
+            result = QGestureRecognizer::Ignore;
+        }
+        break;
 
     case QEvent::GraphicsSceneMousePress:
         swipeGesture->time = QTime::currentTime();

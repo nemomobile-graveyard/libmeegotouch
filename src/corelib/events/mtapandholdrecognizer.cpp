@@ -25,6 +25,7 @@
 #include <QEvent>
 #include <QBasicTimer>
 #include <QGraphicsSceneMouseEvent>
+#include <QTouchEvent>
 
 /* Recognizer default settings */
 static const int MTapAndHoldTimeout = 500; /* miliseconds */
@@ -75,10 +76,22 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
     }
 
     const QGraphicsSceneMouseEvent *ev = static_cast<const QGraphicsSceneMouseEvent *>(event);
+    const QTouchEvent *touchEvent = static_cast<const QTouchEvent *>(event);
 
     QGestureRecognizer::Result result = QGestureRecognizer::CancelGesture;
 
     switch (event->type()) {
+    case QEvent::TouchBegin:
+    case QEvent::TouchUpdate:
+    case QEvent::TouchEnd:
+
+        if (tapAndHoldState->state() != Qt::NoGesture && touchEvent->touchPoints().count() > 1) {
+            result = QGestureRecognizer::CancelGesture;
+        } else {
+            result = QGestureRecognizer::Ignore;
+        }
+        break;
+
     case QEvent::GraphicsSceneMousePress:
         tapAndHoldState->setPosition(ev->scenePos());
         tapAndHoldState->setHotSpot(ev->scenePos());

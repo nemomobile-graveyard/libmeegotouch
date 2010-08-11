@@ -23,6 +23,7 @@
 #include "mpangesture_p.h"
 
 #include <QGraphicsSceneMouseEvent>
+#include <QTouchEvent>
 
 //Hardcoded movement threshold used to recognize the panning gesture.
 static const int defaultPanThreshold = 10;
@@ -64,10 +65,22 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
 
     MPanGesture *panGesture = static_cast<MPanGesture*>(gesture);
     const QGraphicsSceneMouseEvent *ev = static_cast<const QGraphicsSceneMouseEvent *>(event);
+    const QTouchEvent *touchEvent = static_cast<const QTouchEvent *>(event);
     QGestureRecognizer::Result result = QGestureRecognizer::CancelGesture;
     qreal distX, distY;
 
     switch (event->type()) {
+    case QEvent::TouchBegin:
+    case QEvent::TouchUpdate:
+    case QEvent::TouchEnd:
+
+        if (panGesture->state() != Qt::NoGesture && touchEvent->touchPoints().count() > 1) {
+            result = QGestureRecognizer::CancelGesture;
+        } else {
+            result = QGestureRecognizer::Ignore;
+        }
+        break;
+
     case QEvent::GraphicsSceneMousePress:
 
         panGesture->startPos = ev->scenePos();
