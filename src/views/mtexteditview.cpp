@@ -183,6 +183,11 @@ void MTextEditViewPrivate::scrolling()
 {
     Q_Q(MTextEditView);
 
+    if (q->model()->textInteractionFlags() == Qt::NoTextInteraction) {
+        scrollTimer->stop();
+        return;
+    }
+
     int maxScroll = activeDocument()->size().width() + 2 * activeDocument()->documentMargin()
                     - q->geometry().width();
 
@@ -225,9 +230,10 @@ void MTextEditViewPrivate::scrollingTestAndStart(QGraphicsSceneMouseEvent *event
 
     // event inside scrolling margin creates constant speed scrolling.
     // this could be changed to determine some scrolling speed depending on the position.
-    if (event->pos().x() < (ScrollMargin + q->style()->paddingLeft()) && hscroll > 0) {
+    if (q->model()->textInteractionFlags() == Qt::NoTextInteraction) {
+        scrollSpeedVertical = 0;
+    } else if (event->pos().x() < (ScrollMargin + q->style()->paddingLeft()) && hscroll > 0) {
         scrollSpeedVertical = -ScrollStep;
-
     } else if (event->pos().x() > (rect.width() - (ScrollMargin + q->style()->paddingRight()))
                && hscroll < (activeDocument()->size().width() - rect.width())) {
         scrollSpeedVertical = ScrollStep;
@@ -875,7 +881,9 @@ void MTextEditView::updateCursorPosition(QGraphicsSceneMouseEvent *event, const 
             d->controller->handleMouseMove(cursor, event);
         }
     } else if (cursor >= 0) {
-        d->controller->setCursorPosition(cursor);
+        if (model()->textInteractionFlags() != Qt::NoTextInteraction) {
+            d->controller->setCursorPosition(cursor);
+        }
     }
 
     d->scrollingTestAndStart(event);
