@@ -369,5 +369,47 @@ void Ut_MImageWidget::testZoomOut()
     m_subject = 0;
 }
 
+
+void Ut_MImageWidget::testConstructors()
+{
+    QString fname("imagename");
+    const QPixmap pixmap ( fname );
+
+    m_subject = new MImageWidget( &pixmap );
+    QCOMPARE( m_subject->pixmap()->toImage(), pixmap.toImage());
+
+    delete m_subject;
+    m_subject = 0;
+
+    QImage *image = new QImage(fname);
+    m_subject = new MImageWidget ( image );
+
+    QCOMPARE( m_subject->pixmap()->toImage(), *image);
+
+    delete image;
+
+    delete m_subject;
+    m_subject = 0;
+
+    const MImageWidget myImageWidget ( &pixmap );
+    m_subject = new MImageWidget( myImageWidget );
+
+    QCOMPARE ( m_subject->image(), myImageWidget.image() );
+
+    delete m_subject;
+    m_subject = 0;
+
+    m_subject = new MImageWidget();
+    *m_subject = myImageWidget;
+
+    QCOMPARE(m_subject->image(), myImageWidget.image());
+
+    delete m_subject;
+    m_subject = 0;
+
+    m_subject = new MImageWidget ( fname );
+    QCOMPARE ( m_subject->image(), fname );
+}
+
 QTEST_MAIN(Ut_MImageWidget);
 

@@ -60,6 +60,8 @@ private slots:
     void testZoomIn();
     void testZoomOut();
 
+    void testConstructors();
+
 private:
     MImageWidget *m_subject;
 };
