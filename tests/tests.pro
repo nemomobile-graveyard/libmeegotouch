@@ -72,6 +72,7 @@ SUBDIRS     =  \
     ut_mdesktopentry \
     ut_mextensionwatcher \
     ut_mcontainer \
+    ut_mcontentitem \
     ut_minfobanner \
     ut_mbanner \
     ut_mwidgetcontroller \
