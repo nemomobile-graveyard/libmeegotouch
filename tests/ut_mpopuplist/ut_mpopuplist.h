@@ -43,6 +43,7 @@ private slots:
     void testCurrentIndex();
     void testSetItemIconID();
     void testScrollTo();
+    void testModelScrollTo();
 
 private:
     MPopupList *m_popuplist;

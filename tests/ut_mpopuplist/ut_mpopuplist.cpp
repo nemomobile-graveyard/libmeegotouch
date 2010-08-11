@@ -180,4 +180,25 @@ void Ut_MPopupList::testScrollTo()
     delete view;
 }
 
+void Ut_MPopupList::testModelScrollTo()
+{
+    MPopupListViewPrivate *view = new MPopupListViewPrivate;
+    QStandardItemModel *itemModel = new QStandardItemModel;
+
+    for (int i=0; i<10; i++) {
+        itemModel->appendRow(new QStandardItem(QString("Item" + QString::number(i+1))));
+    }
+
+    m_popuplist->setItemModel(itemModel);
+    m_popuplist->setSelectionModel(new QItemSelectionModel(itemModel));
+
+    QModelIndex index = itemModel->index(6, 0);
+    m_popuplist->model()->setScrollToIndex( index );
+
+    QCOMPARE(  m_popuplist->model()->scrollToIndex(), index );
+
+    delete itemModel;
+    delete view;
+}
+
 QTEST_APPLESS_MAIN(Ut_MPopupList)
