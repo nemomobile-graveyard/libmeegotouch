@@ -36,6 +36,8 @@ public:
 
 protected:
 
+    bool isAngleDeltaBelowThreshold(qreal angle, qreal threshold);
+
     MSwipeRecognizer* q_ptr;
 
 #ifdef UNIT_TEST

@@ -150,9 +150,19 @@ void MyPage::pinchGestureEvent(QGestureEvent *event,
 void MyPage::swipeGestureEvent(QGestureEvent *event,
                                QSwipeGesture *gesture)
 {
+
+    // If the vertical direction of swipe is other than NoDirection
+    // then the user did not swipe horizontally enough. We will ignore
+    // that event. It will be propagated to the widgets beneath us
+    // in case any of them is interested.
+    if (gesture->verticalDirection() != QSwipeGesture::NoDirection) {
+        event->ignore(gesture);
+        return;
+    }
+
     // By accepting the event we stop it from propagating to the
     // next widget.
-    event->accept();
+    event->accept(gesture);
 
     // Swiping towards left, brings in a new picure from the right
     if (gesture->horizontalDirection() == QSwipeGesture::Left) {
