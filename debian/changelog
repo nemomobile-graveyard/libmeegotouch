@@ -1,8 +1,30 @@
-libmeegotouch (0.20.34~1) unstable; urgency=low
+libmeegotouch (0.20.34-1) unstable; urgency=low
 
-  * [UNRELEASED]
+  * Fixes: NB#174944 - MList bounces in MLinearLayoutPolicy, when the list is updated
+  * Fixes: NB#182799 - "window-wide" toolbar buttons in tab view get wrong selection when current page changes
+  * Fixes: NB#183107 - qtorientation example can't get started in SB nor HW
+  * Fixes: NB#183249 - (image_not_updated) MImageWidget: the images are not updated after being modified.
+  * Fixes: NB#177436 - application menu background-tiles works wrong for first row of menuitems
+  * Fixes: NB#167386 - Many classes in WidgetGallery have uninitialized members
+  * Fixes: NB#180048 - COREWEB: /usr/bin/mthemedaemon '*__GI_raise *__GI_abort qt_message_output qt_message qFatal'
+  * Fixes: NB#177415 - Enabling/disabling an MAction after creating it is not possible
+  * Fixes: NB#176849 - MContentItem: subtitle cannot be set after a MProgressIndicator additional item set
+  * Fixes: NB#183858 - Compiler warnings: "Unterminated meta string"
+  * Fixes: NB#183280 - MButtonIconView doesn't honor background-* style attributes
+  * Fixes: NB#182677 - MApplicationPage's components can be removed while view menu is open.
+  * Fixes: NB#182750 - MBanner crash at MBannerView::updateData
+  * Fixes: NB#176079 - MWidgetController does not connect to MWidgetModel::modified by default
+  * Fixes: NB#179149 - Unable to disable rpath when building library that uses meegotouchcore qmake configuration
+  * Fixes: NB#176812 - MemLeak with MListFilter private class
+  * Fixes: MB#4984 - Spinner with incorrect image.
+  * Fixes: NB#175854 - Frequent fenix crashes observed when tapping Compose/Forward/Mailbox shortcut
+  * Fixes: NB#179389 - MLabel: Clicking a link having removed the highlighters makes the application crash
+  * Fixes: NB#178254 - Rendering performance drop on N900
+  * Fixes: NB#182006 - _NET_CLOSE_WINDOW not sent to the window manager when a window is closed
+  * Fixes: NB#172283 - There should be proper animation when launching a child application window via task chaining
+  * Fixes: MB#4876 - Broken link on http://apidocs.meego.com/mtf/
 
- -- Daniel d'Andrada <daniel.dandrada@nokia.com>  Thu, 05 Aug 2010 14:23:36 +0300
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 11 Aug 2010 14:17:30 +0300
 
 libmeegotouch (0.20.33-1) unstable; urgency=low
 
