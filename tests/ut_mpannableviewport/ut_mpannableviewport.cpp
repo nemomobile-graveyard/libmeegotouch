@@ -293,42 +293,4 @@ void Ut_MPannableViewport::disabledViewportShouldNotAllowWigetToBeBiggerThanView
     subject->setEnabled(true);
 }
 
-void Ut_MPannableViewport::rangeControlledByInputMethodArea()
-{
-    QGraphicsWidget *widget = new QGraphicsWidget();
-    widget->setPreferredSize(1000, 1000);
-    widget->adjustSize();
-
-    subject->setWidget(widget);
-    subject->adjustSize();
-    QCOMPARE(subject->autoRange(), true);
-    QCOMPARE(subject->range().toRect().height(), 1000);
-
-    subject->d_func()->setInputMethodArea(QRect(0, 0, 1, 500));
-    QCOMPARE(subject->range().toRect().height(), 1500);
-    QCOMPARE(subject->autoRange(), true);
-
-    subject->setAutoRange(false);
-    subject->setRange(QRectF(0, 0, 0, 2000));
-    QCOMPARE(subject->range().toRect().height(), 2500);
-
-    subject->d_func()->setInputMethodArea(QRect(0, 0, 1, 1500));
-    QCOMPARE(subject->range().toRect().height(), 3500);
-    QCOMPARE(subject->autoRange(), false);
-
-    subject->setAutoRange(true);
-    QGraphicsWidget *widget2 = new QGraphicsWidget();
-    widget2->setPreferredSize(1000, 4000);
-    widget2->adjustSize();
-
-    subject->setWidget(widget2);
-    subject->adjustSize();
-    delete widget;
-    QCOMPARE(subject->range().toRect().height(), 5500);
-
-    subject->d_func()->setInputMethodArea(QRect());
-    QCOMPARE(subject->range().toRect().height(), 4000);
-    QCOMPARE(subject->autoRange(), true);
-}
-
 QTEST_APPLESS_MAIN(Ut_MPannableViewport)
