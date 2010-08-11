@@ -38,7 +38,8 @@ class MPannableViewport;
     By default the page creates a pannable viewport where a user can place his component by using
     centralWidget() or setCentralWidget(MWidget *).
 
-    The page can be shown on the screen using appear() method. A call to appear() involves running
+    The page can be shown on the screen using appear(QGraphicsScene*, DeletionPolicy) or
+    appear(MWindow*, DeletionPolicy). A call to appear() involves running
     the assiciated show animation for the page. If you want to show a page instantly, refer to
     MSceneManager API.
 
@@ -66,7 +67,7 @@ class MPannableViewport;
           MApplicationPage page;
 
           new MButton("Hello", page.centralWidget());
-          page.appear();
+          page.appear(&window);
 
           window.show();
 
@@ -230,7 +231,8 @@ public:
      * hasn't been called yet. When you call appear() and the application window
      * specified as a parameter exists, this method will return it.
      *
-     * \sa appear(), createContent(), QGraphicsItem::scene(), QGraphicsScene::views()
+     * \sa appear(QGraphicsScene*, DeletionPolicy), appear(MWindow*, DeletionPolicy),
+     *     createContent(), QGraphicsItem::scene(), QGraphicsScene::views()
      */
     // FIXME: Do we really need (or want to have) this method? If so, at least
     //        make it MSceneWindow::window() instead.
