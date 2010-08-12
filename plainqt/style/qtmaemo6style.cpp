@@ -210,9 +210,13 @@ const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
     // Set mode
     QString mode = modeFromState(state);
 
-    return MTheme::style(styleClass.toLocal8Bit().constData(),
-                           styleObject.toLocal8Bit().constData(),
-                           mode, type, M::Landscape, parent);
+    const MStyle* style = MTheme::style(styleClass.toLocal8Bit().constData(),
+                                        styleObject.toLocal8Bit().constData(),
+                                        mode, type, M::Landscape, parent);
+    if(!style) {
+        qCritical() << "Can not load MStyle" << styleClass << styleObject << type;
+    }
+    return style;
 }
 
 QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
@@ -312,8 +316,12 @@ bool QtMaemo6Style::drawBackground(QPainter *p,
 {
     Q_D(const QtMaemo6Style);
     bool ret = false;
-    if (style && style->backgroundImage()) {
-        ret = d->drawScalableImage(p, option, rect, style->backgroundImage(), style, w);
+    if (style) {
+        if(style->backgroundImage()) {
+            ret = d->drawScalableImage(p, option, rect, style->backgroundImage(), style, w);
+        } else {
+            p->fillRect(rect, QBrush(style->backgroundColor()));
+        }
     }
     return ret;
 }
@@ -532,12 +540,16 @@ void QtMaemo6StylePrivate::drawCheckBox(QPainter *p,
     const MCheckboxStyle *style =
         static_cast<const MCheckboxStyle *>(QtMaemo6StylePrivate::mStyle(option->state,
                 "MCheckboxStyle"));
-    drawBasicButton(p, text, icon, rect, option, style, style->font(), style->iconSize());
-    if(option->state & QStyle::State_On
-       && option->state & QStyle::State_Enabled
-       && style->checkmarkImage()) {
-        QSizeF pos = (rect.size() / 2) - (style->checkmarkImage()->size() / 2);
-        p->drawPixmap(pos.width() + rect.x(), pos.height() + rect.y(), *style->checkmarkImage());
+    if(style) {
+        drawBasicButton(p, text, icon, rect, option, style, style->font(), style->iconSize());
+        if(option->state & QStyle::State_On
+          && option->state & QStyle::State_Enabled
+          && style->checkmarkImage()) {
+            QSizeF pos = (rect.size() / 2) - (style->checkmarkImage()->size() / 2);
+            p->drawPixmap(pos.width() + rect.x(), pos.height() + rect.y(), *style->checkmarkImage());
+        }
+    } else {
+        qCritical() << "Could not load MCheckboxStyle for QCheckBox";
     }
 }
 
@@ -609,7 +621,7 @@ void QtMaemo6StylePrivate::drawButtonText(const MButtonStyle *style,
         Qt::Alignment align,
         const QFont &font) const
 {
-    if (text.isEmpty())
+    if (text.isEmpty() || !style)
         return;
 
     // update text area by margin
@@ -646,23 +658,25 @@ void QtMaemo6StylePrivate::drawButtonIcon(const MButtonStyle *style,
         const QIcon &icon,
         const QSize &iconSize /*= QSize()*/) const
 {
-    Q_Q(const QtMaemo6Style);
-    QSize usedIconSize = iconSize.isValid() ? iconSize : style->iconSize();
+    if(style) {
+        Q_Q(const QtMaemo6Style);
+        QSize usedIconSize = iconSize.isValid() ? iconSize : style->iconSize();
 
-    //If alignment is only horizontal oder vertical, center in the other direction
-    Qt::Alignment usedAlign = style->iconAlign();
-    if (!hasHorizontalAlignment(usedAlign))
-        usedAlign |= Qt::AlignHCenter;
-    if (!hasVerticalAlignment(usedAlign))
-        usedAlign |= Qt::AlignVCenter;
+        //If alignment is only horizontal oder vertical, center in the other direction
+        Qt::Alignment usedAlign = style->iconAlign();
+        if (!hasHorizontalAlignment(usedAlign))
+            usedAlign |= Qt::AlignHCenter;
+        if (!hasVerticalAlignment(usedAlign))
+            usedAlign |= Qt::AlignVCenter;
 
-    int paddingLeft, paddingTop, paddingRight, paddingBottom;
-    paddingFromStyle(style, &paddingLeft, &paddingTop, &paddingRight, &paddingBottom);
+        int paddingLeft, paddingTop, paddingRight, paddingBottom;
+        paddingFromStyle(style, &paddingLeft, &paddingTop, &paddingRight, &paddingBottom);
 
-    QRect ctRect = contentsRect.translated(paddingLeft, paddingTop);
-    ctRect.setWidth(ctRect.width() - (paddingLeft + paddingRight));
-    ctRect.setHeight(ctRect.height() - (paddingTop + paddingBottom));
-    q->drawItemPixmap(painter, ctRect, usedAlign, icon.pixmap(usedIconSize));
+        QRect ctRect = contentsRect.translated(paddingLeft, paddingTop);
+        ctRect.setWidth(ctRect.width() - (paddingLeft + paddingRight));
+        ctRect.setHeight(ctRect.height() - (paddingTop + paddingBottom));
+        q->drawItemPixmap(painter, ctRect, usedAlign, icon.pixmap(usedIconSize));
+    }
 }
 
 QRect QtMaemo6StylePrivate::getTextAndIconRect(const MButtonStyle *style,
@@ -724,15 +738,17 @@ void QtMaemo6StylePrivate::paddingFromStyle(const MWidgetStyle *style,
         int *right,
         int *bottom) const
 {
-    style->backgroundImage()->borders(left, right, top, bottom);
-    if (left && style->paddingLeft() > *left)
-        *left = style->paddingLeft();
-    if (top && style->paddingTop() > *top)
-        *top = style->paddingTop();
-    if (right && style->paddingRight() > *right)
-        *right = style->paddingRight();
-    if (bottom && style->paddingBottom() > *bottom)
-        *bottom = style->paddingBottom();
+    if(style && style->backgroundImage()) {
+        style->backgroundImage()->borders(left, right, top, bottom);
+        if (left && style->paddingLeft() > *left)
+            *left = style->paddingLeft();
+        if (top && style->paddingTop() > *top)
+            *top = style->paddingTop();
+        if (right && style->paddingRight() > *right)
+            *right = style->paddingRight();
+        if (bottom && style->paddingBottom() > *bottom)
+            *bottom = style->paddingBottom();
+    }
 }
 
 QRect QtMaemo6StylePrivate::scrollBarSliderRect(const QStyleOptionComplex *option,
@@ -1218,7 +1234,11 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
             const MTextEditStyle *style =
                 static_cast<const MTextEditStyle *>(QtMaemo6StylePrivate::mStyle(panel->state,
                         "MTextEditStyle"));
-            drawBackground(painter, option, panel->rect, style, widget);
+            if(style) {
+                drawBackground(painter, option, panel->rect, style, widget);
+            } else {
+                qCritical() << "Could not load MTextEditStyle for QLineEdit";
+            }
         }
     }
     break;
@@ -1424,49 +1444,51 @@ void QtMaemo6Style::drawControl(ControlElement element,
             // FIXME: Solve for other tab bar orientations
             if (style) {
                 int left, right, top, bottom;
-                style->backgroundImage()->borders(&left, &right, &top, &bottom);
+                if(style->backgroundImage()) {
+                    style->backgroundImage()->borders(&left, &right, &top, &bottom);
 
-                qreal cutOff = 0;
-                qreal origSize = 0;
+                    qreal cutOff = 0;
+                    qreal origSize = 0;
 
-                const QPixmap *pixmap = style->backgroundImage()->pixmap();
-                if (pixmap) {
-                    int buttonHeight = btn.rect.height();
-                    int buttonWidth = btn.rect.width();
+                    const QPixmap *pixmap = style->backgroundImage()->pixmap();
+                    if (pixmap) {
+                        int buttonHeight = btn.rect.height();
+                        int buttonWidth = btn.rect.width();
 
-                    switch (tab->shape) {
-                    case QTabBar::RoundedNorth:
-                    case QTabBar::TriangularNorth:
-                        cutOff = bottom;
-                        origSize = pixmap->height();
-                        btn.rect.setHeight(buttonHeight * origSize / (origSize - cutOff));
-                        break;
+                        switch (tab->shape) {
+                        case QTabBar::RoundedNorth:
+                        case QTabBar::TriangularNorth:
+                            cutOff = bottom;
+                            origSize = pixmap->height();
+                            btn.rect.setHeight(buttonHeight * origSize / (origSize - cutOff));
+                            break;
 
-                    case QTabBar::RoundedSouth:
-                    case QTabBar::TriangularSouth:
-                        cutOff = top;
-                        origSize = pixmap->height();
-                        btn.rect.setTop(-buttonHeight * cutOff / origSize);
-                        btn.rect.setHeight(buttonHeight * origSize / (origSize - cutOff));
-                        break;
+                        case QTabBar::RoundedSouth:
+                        case QTabBar::TriangularSouth:
+                            cutOff = top;
+                            origSize = pixmap->height();
+                            btn.rect.setTop(-buttonHeight * cutOff / origSize);
+                            btn.rect.setHeight(buttonHeight * origSize / (origSize - cutOff));
+                            break;
 
-                    case QTabBar::RoundedWest:
-                    case QTabBar::TriangularWest:
-                        cutOff = right;
-                        origSize = pixmap->width();
-                        btn.rect.setWidth(buttonWidth * origSize / (origSize - cutOff));
-                        break;
+                        case QTabBar::RoundedWest:
+                        case QTabBar::TriangularWest:
+                            cutOff = right;
+                            origSize = pixmap->width();
+                            btn.rect.setWidth(buttonWidth * origSize / (origSize - cutOff));
+                            break;
 
-                    case QTabBar::RoundedEast:
-                    case QTabBar::TriangularEast:
-                        cutOff = left;
-                        origSize = pixmap->width();
-                        btn.rect.setLeft(-buttonWidth * cutOff / origSize);
-                        btn.rect.setWidth(buttonWidth * origSize / (origSize - cutOff));
-                        break;
+                        case QTabBar::RoundedEast:
+                        case QTabBar::TriangularEast:
+                            cutOff = left;
+                            origSize = pixmap->width();
+                            btn.rect.setLeft(-buttonWidth * cutOff / origSize);
+                            btn.rect.setWidth(buttonWidth * origSize / (origSize - cutOff));
+                            break;
 
-                    default:
-                        break;
+                        default:
+                            break;
+                        }
                     }
                 }
             }
@@ -1559,36 +1581,40 @@ void QtMaemo6Style::drawControl(ControlElement element,
             const MContentItemStyle *style =
                 static_cast<const MContentItemStyle *>(QtMaemo6StylePrivate::mStyle(item->state,
                         "MContentItemStyle"));
-            const MLabelStyle *labelTitle =
-                static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(item->state,
-                                                   "MLabelStyle", style->titleObjectName()));
-            //subtitles for list view items are currently not supported by qt.
-            //const MLabelStyle* labelSubTitle =
-            //        static_cast<const MLabelStyle*>( QtMaemo6StylePrivate::mStyle( item->state,
-            //                                                                           "MLabelStyle", style->subtitleObjectName() ) );
-            const MImageWidgetStyle *labelIcon =
-                static_cast<const MImageWidgetStyle *>(QtMaemo6StylePrivate::mStyle(item->state,
-                        "MImageWidgetStyle", style->imageObjectName()));
+            if(style) {
+                const MLabelStyle *labelTitle =
+                    static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(item->state,
+                                                      "MLabelStyle", style->titleObjectName()));
+                //subtitles for list view items are currently not supported by qt.
+                //const MLabelStyle* labelSubTitle =
+                //        static_cast<const MLabelStyle*>( QtMaemo6StylePrivate::mStyle( item->state,
+                //                                                                           "MLabelStyle", style->subtitleObjectName() ) );
+                const MImageWidgetStyle *labelIcon =
+                    static_cast<const MImageWidgetStyle *>(QtMaemo6StylePrivate::mStyle(item->state,
+                            "MImageWidgetStyle", style->imageObjectName()));
 
-            QString itemText = qvariant_cast<QString>(item->index.data(Qt::DisplayRole));
-            QIcon itemIcon = qvariant_cast<QIcon>(item->index.data(Qt::DecorationRole));
+                QString itemText = qvariant_cast<QString>(item->index.data(Qt::DisplayRole));
+                QIcon itemIcon = qvariant_cast<QIcon>(item->index.data(Qt::DecorationRole));
 
-            QRect rect = item->rect;
+                QRect rect = item->rect;
 
-            if (!itemIcon.isNull()) {
-                rect.setTop(rect.top() + labelIcon->marginTop());
-                rect.setLeft(rect.left() + labelIcon->marginLeft());
-                p->drawPixmap(rect.topLeft(), itemIcon.pixmap(labelIcon->preferredSize()));
-                rect.setLeft(rect.left() + labelIcon->preferredSize().width() + labelIcon->marginRight());
+                if (!itemIcon.isNull() && labelIcon) {
+                    rect.setTop(rect.top() + labelIcon->marginTop());
+                    rect.setLeft(rect.left() + labelIcon->marginLeft());
+                    p->drawPixmap(rect.topLeft(), itemIcon.pixmap(labelIcon->preferredSize()));
+                    rect.setLeft(rect.left() + labelIcon->preferredSize().width() + labelIcon->marginRight());
+                }
+
+                if(labelTitle) {
+                    rect.setLeft(rect.left() + labelTitle->marginLeft());
+                    QFont labelFont = labelTitle->font();
+
+                    p->setFont(labelFont);
+                    p->setPen(labelTitle->color());
+
+                    p->drawText(rect, itemText, QTextOption(Qt::AlignLeft | Qt::AlignTop));
+                }
             }
-
-            rect.setLeft(rect.left() + labelTitle->marginLeft());
-            QFont labelFont = labelTitle->font();
-
-            p->setFont(labelFont);
-            p->setPen(labelTitle->color());
-
-            p->drawText(rect, itemText, QTextOption(Qt::AlignLeft | Qt::AlignTop));
         }
     }
     break;
@@ -1879,63 +1905,64 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                 static_cast<const MSeparatorStyle *>(QtMaemo6StylePrivate::mStyle(groupBox->state,
                         "MSeparatorStyle"));
 
-            QRect headerTextRect = proxy()->subControlRect(CC_GroupBox, opt, SC_GroupBoxLabel, widget);
-            QRect checkBoxRect = proxy()->subControlRect(CC_GroupBox, opt, SC_GroupBoxCheckBox, widget);
+            if(groupBoxStyle && headerStyle && separatorStyle) {
+                QRect headerTextRect = proxy()->subControlRect(CC_GroupBox, opt, SC_GroupBoxLabel, widget);
+                QRect checkBoxRect = proxy()->subControlRect(CC_GroupBox, opt, SC_GroupBoxCheckBox, widget);
 
-            int headMarginLeft =      headerStyle->paddingLeft()
-                                      + headerStyle->marginLeft();
-            int headMarginRight =     headerStyle->paddingRight()
-                                      + headerStyle->marginRight();
-            int headMarginBottom =    headerStyle->paddingBottom()
-                                      + headerStyle->marginBottom()
-                                      + 4; // Make it look good fix (while the header text padding in mcontainer is broken)
+                int headMarginLeft =      headerStyle->paddingLeft()
+                                          + headerStyle->marginLeft();
+                int headMarginRight =     headerStyle->paddingRight()
+                                          + headerStyle->marginRight();
+                int headMarginBottom =    headerStyle->paddingBottom()
+                                          + headerStyle->marginBottom()
+                                          + 4; // Make it look good fix (while the header text padding in mcontainer is broken)
 
-            QRect unitedRect = headerTextRect.united(checkBoxRect);
-            int headerBottom = unitedRect.bottom() + headMarginBottom;
+                QRect unitedRect = headerTextRect.united(checkBoxRect);
+                int headerBottom = unitedRect.bottom() + headMarginBottom;
 
-            int sepMarginLeft   =  separatorStyle->marginLeft() + separatorStyle->paddingLeft();
-            int sepMarginRight  =  separatorStyle->marginRight() + separatorStyle->paddingRight();
-            int sepMarginTop    =  separatorStyle->marginTop() + separatorStyle->paddingTop();
+                int sepMarginLeft   =  separatorStyle->marginLeft() + separatorStyle->paddingLeft();
+                int sepMarginRight  =  separatorStyle->marginRight() + separatorStyle->paddingRight();
+                int sepMarginTop    =  separatorStyle->marginTop() + separatorStyle->paddingTop();
 
-            QRect separatorRect(groupBox->rect.left() + sepMarginLeft,
-                                headerBottom + sepMarginTop,
-                                groupBox->rect.width()
-                                - headMarginLeft - headMarginRight
-                                - sepMarginLeft - sepMarginRight,
-                                separatorStyle->span());
+                QRect separatorRect(groupBox->rect.left() + sepMarginLeft,
+                                    headerBottom + sepMarginTop,
+                                    groupBox->rect.width()
+                                    - headMarginLeft - headMarginRight
+                                    - sepMarginLeft - sepMarginRight,
+                                    separatorStyle->span());
 
-            // Draw frame
-            // Draw widget background
-            QRect headerRect = widget->rect();
-            headerRect.setBottom(headerBottom);
-            QRect containerRect = widget->rect();
-            containerRect.adjust(0, headerRect.height(), 0, 0);
+                // Draw frame
+                // Draw widget background
+                QRect headerRect = widget->rect();
+                headerRect.setBottom(headerBottom);
+                QRect containerRect = widget->rect();
+                containerRect.adjust(0, headerRect.height(), 0, 0);
 
-            drawBackground(p, groupBox, headerRect, headerStyle, widget);
-            drawBackground(p, groupBox, containerRect, groupBoxStyle, widget);
-//                drawWidgetBackground( p, groupBox, separatorRect, separatorStyle );
+                drawBackground(p, groupBox, headerRect, headerStyle, widget);
+                drawBackground(p, groupBox, containerRect, groupBoxStyle, widget);
+    //                drawWidgetBackground( p, groupBox, separatorRect, separatorStyle );
 
-            // Draw title
-            if ((groupBox->subControls & QStyle::SC_GroupBoxLabel) && !groupBox->text.isEmpty()) {
+                // Draw title
+                if ((groupBox->subControls & QStyle::SC_GroupBoxLabel) && !groupBox->text.isEmpty()) {
 
-                QColor headerColor = Qt::white; //FIXME: = headerLabelStyle->color();
-                if (headerColor.isValid()) {
-                    p->setPen(headerColor);
+                    QColor headerColor = Qt::white; //FIXME: = headerLabelStyle->color();
+                    if (headerColor.isValid()) {
+                        p->setPen(headerColor);
+                    }
+
+                    int alignment = int(groupBox->textAlignment);
+                    if (!proxy()->styleHint(QStyle::SH_UnderlineShortcut, opt, widget))
+                        alignment |= Qt::TextHideMnemonic;
+
+                    p->drawText(headerTextRect,  Qt::TextShowMnemonic | Qt::AlignHCenter | alignment,
+                                groupBox->text);
                 }
 
-                int alignment = int(groupBox->textAlignment);
-                if (!proxy()->styleHint(QStyle::SH_UnderlineShortcut, opt, widget))
-                    alignment |= Qt::TextHideMnemonic;
-
-                p->drawText(headerTextRect,  Qt::TextShowMnemonic | Qt::AlignHCenter | alignment,
-                            groupBox->text);
+                // Draw checkbox
+                if (groupBox->subControls & SC_GroupBoxCheckBox) {
+                    d->drawCheckBox(p, QString(), QIcon(), checkBoxRect, groupBox);
+                }
             }
-
-            // Draw checkbox
-            if (groupBox->subControls & SC_GroupBoxCheckBox) {
-                d->drawCheckBox(p, QString(), QIcon(), checkBoxRect, groupBox);
-            }
-
         }
     }
     break;
@@ -2326,13 +2353,18 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                         static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle",
                                                             "NavigationBarToolBarButton"));
 
-                    int borderTop, borderRight, borderBottom, borderLeft;
-                    d->paddingFromStyle(style, &borderLeft, &borderTop, &borderRight, &borderBottom);
+                    if(style && styleFont) {
+                        int borderTop, borderRight, borderBottom, borderLeft;
+                        d->paddingFromStyle(style, &borderLeft, &borderTop, &borderRight, &borderBottom);
+                        //borderTop = borderRight = borderBottom = borderLeft = 0;
 
-                    QRect textAndIconRect = d->getTextAndIconRect(style, subopt.text, subopt.icon, styleFont->font(), styleFont->iconSize());
-                    textAndIconRect.setWidth(textAndIconRect.width() + borderLeft + borderRight);
-                    textAndIconRect.setHeight(textAndIconRect.height() + borderTop + borderBottom);
-                    retSize = textAndIconRect.size();
+                        QRect textAndIconRect = d->getTextAndIconRect(style, subopt.text, subopt.icon, styleFont->font(), styleFont->iconSize());
+                        textAndIconRect.setWidth(textAndIconRect.width() + borderLeft + borderRight);
+                        textAndIconRect.setHeight(textAndIconRect.height() + borderTop + borderBottom);
+                        retSize = textAndIconRect.size();
+                    } else {
+                        qCritical() << "MButtonIconStyle for QToolButton could not be loaded";
+                    }
                 }
             }
         }
@@ -2343,13 +2375,17 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
             const MButtonStyle *style =
                 static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle", ""));
 
-            int borderTop, borderRight, borderBottom, borderLeft;
-            d->paddingFromStyle(style, &borderLeft, &borderTop, &borderRight, &borderBottom);
+            if(style) {
+                int borderTop, borderRight, borderBottom, borderLeft;
+                d->paddingFromStyle(style, &borderLeft, &borderTop, &borderRight, &borderBottom);
 
-            QRect textAndIconRect = d->getTextAndIconRect(style, subopt.text, subopt.icon);
-            textAndIconRect.setWidth(textAndIconRect.width() + borderLeft + borderRight);
-            textAndIconRect.setHeight(textAndIconRect.height() + borderTop + borderBottom);
-            retSize = textAndIconRect.size();
+                QRect textAndIconRect = d->getTextAndIconRect(style, subopt.text, subopt.icon);
+                textAndIconRect.setWidth(textAndIconRect.width() + borderLeft + borderRight);
+                textAndIconRect.setHeight(textAndIconRect.height() + borderTop + borderBottom);
+                retSize = textAndIconRect.size();
+            } else {
+                qCritical() << "MButtonIconStyle for QPushButton could not be loaded";
+            }
         }
     }
     break;
