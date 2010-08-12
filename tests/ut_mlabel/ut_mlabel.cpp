@@ -270,6 +270,45 @@ void Ut_MLabel::testTextElide()
     QVERIFY(elided != elidedRtl);
 }
 
+void Ut_MLabel::testRichTextElide_data()
+{
+    QTest::addColumn<QString>("text");
+    QTest::newRow("rich") << "<b>aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</b>";
+}
+
+void Ut_MLabel::testRichTextElide()
+{
+    QFETCH(QString, text);
+    label->setLayoutDirection(Qt::LeftToRight);
+    label->setWordWrap(false);
+    label->setText(text);
+    QVERIFY(text == label->text());
+
+    label->setTextElide(true);
+    QVERIFY(label->textElide() == true);
+    QImage elided = captureImage(label);
+
+    label->setTextElide(false);
+    QVERIFY(label->textElide() == false);
+    QImage unelided = captureImage(label);
+
+    QImage leftUnelided = unelided.copy(0, 0, unelided.width() / 2, unelided.height());
+    QImage rightUnelided = unelided.copy(unelided.width() / 2, 0, unelided.width() / 2, unelided.height());
+
+    QImage leftElided = elided.copy(0, 0, elided.width() / 2, elided.height());
+    QImage rightElided = elided.copy(elided.width() / 2, 0, elided.width() / 2, elided.height());
+
+    QCOMPARE(elided.isNull(), false);
+    QCOMPARE(unelided.isNull(), false);
+
+    QVERIFY(elided != unelided);
+
+    //'...' is added to the rightmost part of the label in LTR mode
+    QVERIFY(leftUnelided == leftElided);
+    QVERIFY(rightUnelided != rightElided);
+
+}
+
 void Ut_MLabel::testHighlighting()
 {
     label->setText("Label <b>rich</b>");
@@ -658,5 +697,35 @@ void Ut_MLabel::wrapModes()
     QVERIFY(contentHeight(wrapAtWordBoundaryOrAnywhere) > contentHeight(wordWrap));
 
 }
+
+void Ut_MLabel::multiLengthSeparator()
+{
+    label->resize(100, 100);
+
+    QChar separatorChar(0x9c, 0);
+    QString separator(separatorChar);
+
+    QString shortWord = "short";
+    QString longWord = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+
+    QString shortAndShort = shortWord + separator + shortWord;
+    QString longAndShort = longWord + separator + shortWord;
+
+    label->setText(shortAndShort);
+    QImage shortAndShortCapture = captureImage(label);
+    label->setText(shortWord);
+    QImage shortCapture = captureImage(label);
+
+    QCOMPARE(shortCapture.isNull(), false);
+    QCOMPARE(shortAndShortCapture.isNull(), false);
+    QCOMPARE(shortCapture, shortAndShortCapture);
+
+    label->setText(longAndShort);
+    QImage longAndShortCapture = captureImage(label);
+
+    QCOMPARE(shortCapture, longAndShortCapture);
+
+}
+
 
 QTEST_APPLESS_MAIN(Ut_MLabel);

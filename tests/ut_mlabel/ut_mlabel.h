@@ -70,6 +70,7 @@ private slots:
     void testLayoutDirection_data();
     void testTextWordWrap_data();
     void testTextElide_data();
+    
     void testClear_data();
     void testPlainTextColor_data();
 
@@ -78,6 +79,8 @@ private slots:
     void testLayoutDirection();
     void testTextWordWrap();
     void testTextElide();
+    void testRichTextElide_data();
+    void testRichTextElide();
 
     void testHighlighting();
 
@@ -105,6 +108,8 @@ private slots:
 
     void wrapModes_data();
     void wrapModes();
+
+    void multiLengthSeparator();
 
 private:
     TestMLabel *label;
