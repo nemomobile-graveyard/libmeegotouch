@@ -1233,19 +1233,31 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
     QTextDocumentFragment selectedFragment;
     int selectionStart = -1;
     QTextCharFormat format;
+    bool needRemoveFirst = true;
 
     if (wasSelecting == true) {
-        QTextCursor positionCursor = textCursor();
-        int position = positionCursor.selectionStart();
-        // setPosition() is required to get the style that would be applied when a text is
-        // inserted at the position + 1
-        positionCursor.setPosition(position + 1);
-        format = positionCursor.charFormat();
+        QString tmpText = event->text();
+        if (key != Qt::Key_Backspace && key != Qt::Key_Delete &&
+            key != Qt::Key_Tab && key != Qt::Key_Space &&
+            key != Qt::Key_Return && key != Qt::Key_plusminus &&
+            (tmpText.isEmpty() || !tmpText.at(0).isPrint())) {
+            needRemoveFirst = false;
+        }
+        if (key == Qt::Key_Return && model()->line() == MTextEditModel::SingleLine) {
+            needRemoveFirst = false;
+        }
 
-        selectionStart = d->cursor()->selectionStart();
-        selectedFragment = d->cursor()->selection();
-        d->cursor()->removeSelectedText();
-
+        if (needRemoveFirst) {
+            QTextCursor positionCursor = textCursor();
+            int position = positionCursor.selectionStart();
+            // setPosition() is required to get the style that would be applied when a text is
+            // inserted at the position + 1
+            positionCursor.setPosition(position + 1);
+            format = positionCursor.charFormat();
+            selectionStart = d->cursor()->selectionStart();
+            selectedFragment = d->cursor()->selection();
+            d->cursor()->removeSelectedText();
+        }
     } else {
         d->commitPreedit();
     }
@@ -1310,7 +1322,7 @@ void MTextEdit::keyPressEvent(QKeyEvent *event)
         emit cursorPositionChanged();
 
     } else {
-        if (wasSelecting == true) {
+        if (wasSelecting == true && needRemoveFirst == true) {
             // need to put the selection back
             d->cursor()->setPosition(selectionStart, QTextCursor::KeepAnchor);
             d->cursor()->removeSelectedText();

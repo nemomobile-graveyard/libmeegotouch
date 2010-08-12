@@ -505,7 +505,7 @@ void MTextEditViewPrivate::handleDocumentUpdate(int position, int charsRemoved, 
         if (q->model()->echo() == MTextEditModel::Password) {
             maskCursor.insertText(newText);
             unmaskPosition = position;
-            unmaskLength = charsAdded;
+            unmaskLength = newText.length();
             maskTimer->start();
 
         } else { // PasswordEchoOnEdit, do immediate masking
