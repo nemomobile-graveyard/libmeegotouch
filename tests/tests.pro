@@ -27,6 +27,7 @@ SUBDIRS     =  \
      ut_mbuttongroup \
      ut_mbubbleitem \
      ut_mcombobox \
+     ut_mdetailedlistitem \
      ut_mdialog \
      ut_mdialogview \
      ut_mnavigationbar \
