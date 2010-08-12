@@ -92,7 +92,7 @@ public:
             if (!viewType.isEmpty())
                 cell->setViewType(viewType);
 
-            if (!viewType.isEmpty())
+            if (!objectName.isEmpty())
                 cell->setObjectName(objectName);
         }
 

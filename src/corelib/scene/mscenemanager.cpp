@@ -559,13 +559,13 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
     MSceneLayerEffect *effect = 0;
 
     switch (window->windowType()) {
-    case MSceneWindow::PopupList:
     case MSceneWindow::Dialog:
     case MSceneWindow::MessageBox:
     case MSceneWindow::ModalSceneWindow:
     case MSceneWindow::ApplicationMenu:
         effect = new MSceneLayerEffect("messagebox");
         break;
+    case MSceneWindow::PopupList:
     case MSceneWindow::ObjectMenu:
         effect = new MSceneLayerEffect("objectmenu");
         break;
@@ -1329,13 +1329,13 @@ void MSceneManagerPrivate::createAppearanceAnimationForSceneWindow(MSceneWindow 
         case MSceneWindow::NotificationInformation:
         case MSceneWindow::NotificationEvent:
         case MSceneWindow::ApplicationMenu:
-        case MSceneWindow::NavigationBar:
-        case MSceneWindow::PopupList: {
+        case MSceneWindow::NavigationBar: {
             MWidgetSlideAnimation *slideInAnimation = new MWidgetSlideAnimation(sceneWindow);
             slideInAnimation->setTransitionDirection(MWidgetSlideAnimation::In);
             animation = slideInAnimation;
             break;
         }
+        case MSceneWindow::PopupList:
         case MSceneWindow::MessageBox: {
             MWidgetZoomAnimation *objectMenuAnimation =
                     new MWidgetZoomAnimation(sceneWindow);
@@ -1399,13 +1399,13 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
         case MSceneWindow::NotificationInformation:
         case MSceneWindow::NotificationEvent:
         case MSceneWindow::ApplicationMenu:
-        case MSceneWindow::NavigationBar:
-        case MSceneWindow::PopupList: {
+        case MSceneWindow::NavigationBar: {
             MWidgetSlideAnimation *slideOutAnimation = new MWidgetSlideAnimation(sceneWindow);
             slideOutAnimation->setTransitionDirection(MWidgetSlideAnimation::Out);
             animation = slideOutAnimation;
             break;
         }
+        case MSceneWindow::PopupList:
         case MSceneWindow::MessageBox: {
             MWidgetZoomAnimation *zoomAnimation =
                     new MWidgetZoomAnimation(sceneWindow);

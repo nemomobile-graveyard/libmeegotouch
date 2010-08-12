@@ -37,6 +37,8 @@ class M_EXPORT MPopupListStyle : public MDialogStyle
     Q_OBJECT
     M_STYLE_INTERNAL(MPopupListStyle)
 
+    M_STYLE_ATTRIBUTE(QString, itemStyleName, ItemStyleName)
+    M_STYLE_ATTRIBUTE(QString, contentsViewportStyleName, ContentsViewportStyleName)
 };
 
 /*!

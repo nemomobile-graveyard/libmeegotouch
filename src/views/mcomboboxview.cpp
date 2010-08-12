@@ -129,17 +129,20 @@ void MComboBoxViewPrivate::_q_showPopup()
 {
     Q_Q(MComboBoxView);
 
-    if (controller->count() == 0) return;
+    if (controller->count() == 0)
+        return;
 
     if (!popuplist) {
         popuplist = new MPopupList();
+        popuplist->setViewType(q->style()->popupListType());
+
+        popuplist->setObjectName("MComboBoxPopupList");
         popuplist->setItemModel(controller->itemModel());
         popuplist->setSelectionModel(controller->selectionModel());
         popuplist->setTitle(controller->title());
         QObject::connect(popuplist, SIGNAL(clicked(QModelIndex)), controller, SLOT(_q_itemClicked(QModelIndex)));
         QObject::connect(popuplist, SIGNAL(appeared()), q, SLOT(_q_popuplistAppeared()));
         QObject::connect(popuplist, SIGNAL(disappeared()), q, SLOT(_q_popuplistDisappeared()));
-
         QObject::connect(popuplist, SIGNAL(rejected()), controller, SIGNAL(dismissed()));
     }
 
@@ -201,6 +204,9 @@ void MComboBoxView::applyStyle()
 {
     Q_D(MComboBoxView);
     MWidgetView::applyStyle();
+
+    if (d->popuplist && d->popuplist->viewType() != style()->popupListType())
+        d->popuplist->setViewType(style()->popupListType());
 
     d->buttonWidget()->setTitleObjectName(style()->titleObjectName());
     d->buttonWidget()->setSubTitleObjectName(style()->subTitleObjectName());

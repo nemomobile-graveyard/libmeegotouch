@@ -85,6 +85,12 @@ class M_EXPORT MComboBoxStyle : public MWidgetStyle
       \brief If true, combobox's title will be above button.
     */
     M_STYLE_ATTRIBUTE(bool, separateTitle, SeparateTitle)
+
+    /*!
+      \property MComboBoxStyle::popupListType
+      \brief Specifies the view type of the popup list to use.
+    */
+    M_STYLE_ATTRIBUTE(QString, popupListType, PopupListType)
 };
 
 /*!

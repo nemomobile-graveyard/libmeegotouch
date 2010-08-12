@@ -81,7 +81,7 @@ public:
     enum WindowTypeZ {
         PlainSceneWindow = 0,
         ApplicationPage = PlainSceneWindow,          // MApplicationPage
-        ApplicationMenu = 500,                    // MApplicationMenu
+        ApplicationMenu = 500,                       // MApplicationMenu
         NavigationBar = 1000,                        // MNavigationBar
         DockWidget = NavigationBar,                  // MDockWidget
         EscapeButtonPanel = 2000,                    // MEscapeButtonPanel
@@ -92,7 +92,7 @@ public:
         Overlay = 6000,                              // MOverlay
         Completer = Overlay,                         // MCompleter
         HomeButtonPanel = 7000,                      // MHomeButtonPanel
-        ObjectMenu = 7500,
+        ObjectMenu = 7500,                           // MObjectMenu
         NotificationInformation = 8000,              // MNotification - Information
         NotificationEvent = NotificationInformation, // MNotification - Event
         StatusBar = 9000                             // MStatusBar

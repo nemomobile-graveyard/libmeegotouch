@@ -76,6 +76,7 @@ protected:
 
     //! \reimp
     virtual void setupModel();
+    virtual void applyStyle();
     //! \reimp_end
 
 private:

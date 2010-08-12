@@ -80,5 +80,6 @@ public:
     MPopupList*   controller;
 
     MList*    list;
+    MPopupListCellCreator *cellCreator;
 };
 #endif

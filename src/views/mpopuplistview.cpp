@@ -62,7 +62,7 @@ void MPopupListItem::setTitle(const QString &text)
     if (!title) {
         title = new MLabel(this);
         title->setTextElide(true);
-        title->setObjectName("CommonSingleTitle");
+        title->setStyleName("CommonSingleTitle");
     }
     title->setText(text);
     updateLayout();
@@ -76,7 +76,7 @@ void MPopupListItem::setIconID(const QString& id)
         itemStyle = IconTitle;
         if (!icon) {
             icon = new MImageWidget(this);
-            icon->setObjectName("CommonMainIcon");
+            icon->setStyleName("CommonMainIcon");
         }
         icon->setImage(id);
     }
@@ -85,7 +85,7 @@ void MPopupListItem::setIconID(const QString& id)
 
 
 MPopupListViewPrivate::MPopupListViewPrivate()
-    : controller(0), list(0)
+    : controller(0), list(0), cellCreator(0)
 {
 }
 
@@ -98,11 +98,10 @@ void MPopupListViewPrivate::init()
     Q_Q(MPopupListView);
 
     list = new MList();
-    list->setCellCreator(new MPopupListCellCreator(list));
+    cellCreator = new MPopupListCellCreator(list);
+    list->setCellCreator(cellCreator);
     list->setSelectionMode(MList::SingleSelection);
     q->contentsLayout()->insertItem(0, list);
-
-    contentsViewport->setObjectName("MPopupListContentsViewport");
 
     QObject::connect(list, SIGNAL(itemClicked(QModelIndex)), controller, SLOT(click(QModelIndex)));
     QObject::connect(list, SIGNAL(displayEntered()), q, SLOT(_q_scrollOnFirstAppearance()));
@@ -135,11 +134,11 @@ void MPopupListCellCreator::updateCell(const QModelIndex& index, MWidget * cell)
         item->setSelected(true);
 
     if (index.row() == 0)
-        item->setLayoutPosition(M::TopCenterPosition);
+        item->setLayoutPosition(M::VerticalTopPosition);
     else if (index.row() == index.model()->rowCount() - 1)
-        item->setLayoutPosition(M::BottomCenterPosition);
+        item->setLayoutPosition(M::VerticalBottomPosition);
     else
-        item->setLayoutPosition(M::CenterPosition);
+        item->setLayoutPosition(M::VerticalCenterPosition);
 }
 
 void MPopupListViewPrivate::_q_scrollOnFirstAppearance()
@@ -188,11 +187,22 @@ void MPopupListView::updateData(const QList<const char *>& modifications)
 
 void MPopupListView::setupModel()
 {
+    Q_D(MPopupListView);
+
     MDialogView::setupModel();
 
-    Q_D(MPopupListView);
     d->list->setItemModel(model()->itemModel());
     d->list->setSelectionModel(model()->selectionModel());
+}
+
+void MPopupListView::applyStyle()
+{
+    Q_D(MPopupListView);
+
+    MDialogView::applyStyle();
+
+    d->cellCreator->setCellObjectName(style()->itemStyleName());
+    contentsViewport()->setStyleName(style()->contentsViewportStyleName());
 }
 
 void MPopupListView::scrollTo(const QModelIndex &index) const
