@@ -86,8 +86,8 @@ void Ut_mdetailedlistitem::testSetItemStyle()
     //check if m_subject was created with proper style
     QCOMPARE( m_subject->itemStyle(), MDetailedListItem::IconTitleSubtitleAndTwoSideIcons );
     m_subject->setItemStyle(MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel);
-    //this is not working!! styles are not changed!!! bug!!
-    //QCOMPARE( m_subject->itemStyle(), MDetailedListItem::ThumbnailTitleAndTwoSideIcons );
+    //this is not working!! styles are not changed!!! bug reported:  #185045
+    QCOMPARE( m_subject->itemStyle(), MDetailedListItem::ThumbnailTitleAndTwoSideIcons );
 }
 
 void Ut_mdetailedlistitem::testSetIconStyle()
