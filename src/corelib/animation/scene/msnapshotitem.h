@@ -17,6 +17,8 @@ public:
 
     virtual ~MSnapshotItem();
 
+    void updateSnapshot();
+
     //! \reimp
     virtual QRectF boundingRect() const;
     virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);

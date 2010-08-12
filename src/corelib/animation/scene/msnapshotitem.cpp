@@ -4,12 +4,11 @@
 #include <QImage>
 #include <QPainter>
 #include <QApplication>
-#include <QDesktopWidget>
+#include <QGraphicsView>
 
 MSnapshotItem::MSnapshotItem(const QRectF &sceneTargetRect, QGraphicsItem *parent)
     : QGraphicsObject(parent), m_boundingRect(sceneTargetRect)
 {
-    pixmap = QPixmap::grabWindow(QApplication::desktop()->winId());
 }
 
 MSnapshotItem::~MSnapshotItem()
@@ -19,6 +18,12 @@ MSnapshotItem::~MSnapshotItem()
 QRectF MSnapshotItem::boundingRect() const
 {
     return m_boundingRect;
+}
+
+void MSnapshotItem::updateSnapshot()
+{
+    if (scene() && scene()->views().count() > 0)
+        pixmap = QPixmap::grabWindow(scene()->views().at(0)->winId());
 }
 
 void MSnapshotItem::paint(QPainter *painter, const QStyleOptionGraphicsItem *option,

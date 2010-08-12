@@ -78,6 +78,7 @@ void MCrossFadedOrientationAnimationPrivate::createRootElementSnapshot()
     // show scene background
 
     scene->addItem(snapshot);
+    snapshot->updateSnapshot();
     snapshot->setPos(0.0, 0.0);
     snapshot->setTransformOriginPoint(snapshotRotationPoint);
 
