@@ -25,7 +25,6 @@
 #include <QLabel>
 #include <QStyleOption>
 #include <QPainter>
-#include <QDebug>
 #include <mescapebuttonpanelstyle.h>
 #include <mlabelstyle.h>
 #include <MTheme>

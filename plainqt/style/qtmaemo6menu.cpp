@@ -24,7 +24,6 @@
 
 #include <QPainter>
 #include <QStyleOption>
-#include <QDebug>
 #include <QGridLayout>
 #include <QToolButton>
 

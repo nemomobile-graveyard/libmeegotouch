@@ -20,7 +20,6 @@
 #include "qtmaemo6sliderpopup.h"
 #include "qtmaemo6style_p.h"
 #include <QApplication>
-#include <QDebug>
 #include <QStyle>
 #include <QSizePolicy>
 #include <QPainter>

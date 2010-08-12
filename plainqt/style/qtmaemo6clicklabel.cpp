@@ -19,7 +19,6 @@
 
 #include <QPainter>
 #include <QPixmap>
-#include <QDebug>
 #include <qtmaemo6clicklabel.h>
 #include <qtmaemo6style.h>
 

@@ -26,7 +26,6 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QDialog>
-#include <QDebug>
 #include <QPainter>
 
 #include <mdeviceprofile.h>

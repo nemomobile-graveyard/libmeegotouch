@@ -23,7 +23,6 @@
 
 #include <QAbstractButton>
 #include <QPainter>
-#include <QDebug>
 #include <QStyleOptionButton>
 #include <QApplication>
 #include <QDialogButtonBox>
@@ -55,6 +54,7 @@
 #include <QHeaderView>
 
 #include <MComponentData>
+#include <MDebug>
 #include <MTheme>
 #include <MScalableImage>
 #include <MLabel>
@@ -156,7 +156,8 @@ QtMaemo6StylePrivate::~QtMaemo6StylePrivate()
 
 void QtMaemo6StylePrivate::initM()
 {
-    qCritical() << "Qt Maemo 6 Style init";    Q_Q(QtMaemo6Style);
+    mDebug("PlainQt Style") << "Qt Maemo 6 Style init";
+    Q_Q(QtMaemo6Style);
 
     m_isMInitialized = true;
 
@@ -179,7 +180,7 @@ void QtMaemo6StylePrivate::initM()
             //FIXME: using QString would be nicer
             argv[ 0 ] = strndup(args[ 0 ].toLocal8Bit().constData(), 42);
 
-            qDebug("appName: %s", argv[ 0 ]);
+            mDebug("PlainQt Style") << "appName:" << argv[ 0 ];
         }
         m_componentData = new MComponentData(argc, argv);
     }
@@ -192,7 +193,7 @@ void QtMaemo6StylePrivate::initM()
 
     bool inputConnect = QObject::connect(MInputMethodState::instance(), SIGNAL(inputMethodAreaChanged(QRect)), q, SLOT(ensureFocusedWidgetVisible(QRect)));
     if(!inputConnect)
-        qCritical() << "Virtual keyboard notification connection failed";
+        mDebug("PlainQt Style") << "Virtual keyboard notification connection failed";
 
     QObject::connect(MTheme::instance(), SIGNAL(pixmapRequestsFinished()), q, SLOT(updateDirtyWidgets()));
 
@@ -594,7 +595,7 @@ void QtMaemo6StylePrivate::drawBasicButton(QPainter *p,
                 drawButtonText(style, p, textAndIconRect, text,
                                invertAlignment(horizontalAlignment(style->iconAlign())) | style->verticalTextAlign(), font);
             } else {
-                qDebug("QtMaemo6Style: Button has no text align");
+                mDebug("PlainQt Style") << "Button has no text align";
             }
         } else { //Text only
             drawButtonText(style, p, textAndIconRect, text, style->horizontalTextAlign() | style->verticalTextAlign(), font);
@@ -942,11 +943,11 @@ void QtMaemo6Style::setOrientationChangeEnabled(bool b) {
     //only subscribe if it is really needed
 #ifdef HAVE_CONTEXTSUBSCRIBER
     if(b) {
-        qCritical() << "Subscribing for Screen.TopEdge";
+        mDebug("PlainQt Style") << "Subscribing for Screen.TopEdge";
         d->m_orientation.waitForSubscription();
         disconnect(&d->m_orientation);
         if(!connect(&d->m_orientation, SIGNAL(valueChanged()), this, SLOT(doOrientationChange())))
-            qCritical() << "Can't connect to orientation Change signal";
+            mDebug("PlainQt Style") << "Can't connect to orientation Change signal";
     }
 #endif //HAVE_CONTEXTSUBSCRIBER
 }
@@ -1033,7 +1034,7 @@ void QtMaemo6Style::polish(QWidget *widget)
         file.close();
     }
     else {
-        qCritical() << "unable to open" << filename;
+        mDebug("PlainQt Style") << "unable to open" << filename;
     }
 #endif
 
@@ -1706,8 +1707,8 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                     static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle",
                                                         "NavigationBarToolBarButton"));
 
-                qDebug("Button \"%s\" font-size: %d, icon-size: %d", subopt.text.toLocal8Bit().constData(),
-                       styleFont->font().pixelSize(), styleFont->iconSize().width());
+//                qDebug("PlainQt Style: Button \"%s\" font-size: %d, icon-size: %d", subopt.text.toLocal8Bit().constData(),
+//                       styleFont->font().pixelSize(), styleFont->iconSize().width());
 
                 d->drawBasicButton(p, subopt.text, subopt.icon, subopt.rect, opt, style, styleFont->font(), styleFont->iconSize());
             }
@@ -2663,7 +2664,7 @@ void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleAre
     if(window) {
         window->ensureWidgetVisible(widget, visibleArea);
     } else {
-        qCritical() << "Can't focus on" << widget << "because there is no top level window";
+        mDebug("PlainQt Style") << "Can't focus on" << widget << "because there is no top level window";
     }
 }
 
@@ -2671,7 +2672,7 @@ void QtMaemo6StylePrivate::ensureWidgetVisible(QWidget* widget, QRect visibleAre
 void QtMaemo6Style::doOrientationChange()
 {
     Q_D(QtMaemo6Style);
-    qCritical() << "orientation Change" << d->m_isOrientationChangeEnabled;
+    mDebug("PlainQt Style") << "orientation Change" << d->m_isOrientationChangeEnabled;
     if(d->m_isOrientationChangeEnabled) {
         M::OrientationAngle currentOrientation = orientation();
         MInputMethodState::instance()->setActiveWindowOrientationAngle(currentOrientation);

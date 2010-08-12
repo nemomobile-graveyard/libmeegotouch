@@ -35,7 +35,7 @@
 #include <QMenuBar>
 #include <QFile>
 #include <QDir>
-#include <QDebug>
+#include <MDebug>
 #include <mdeviceprofile.h>
 
 const int QtMaemo6WindowDecoration::layoutOffset = 2;
@@ -240,7 +240,7 @@ void QtMaemo6WindowDecoration::ensureWidgetVisible(QWidget* widget, QRect visibl
                 viewport->move(-moveBy);
             }
         } else {
-            qCritical() << "Can't focus on" << widget << "because scroll area contains no viewport";
+//             mDebug("PlainQt Style") << "Can't focus on" << widget << "because scroll area contains no viewport";
         }
     } else {
         if(m_originalWidgetPos.widget) {

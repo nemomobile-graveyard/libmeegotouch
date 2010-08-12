@@ -22,7 +22,6 @@
 #include "qtmaemo6windowdecoration.h"
 
 #include <QApplication>
-#include <QDebug>
 #include <QDesktopWidget>
 #include <QMainWindow>
 #include <QFont>

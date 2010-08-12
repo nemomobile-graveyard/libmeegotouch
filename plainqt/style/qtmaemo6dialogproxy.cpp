@@ -26,7 +26,6 @@
 #include <QApplication>
 #include <QCloseEvent>
 #include <QDialog>
-#include <QDebug>
 
 #include "qtmaemo6dialogtitle.h"
 #include "qtmaemo6style_p.h"

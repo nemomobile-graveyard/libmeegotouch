@@ -175,7 +175,6 @@ int MeegoFilePicker::exec(ProcessEventsFlags aFlags)
 
 void MeegoFilePicker::OpenFile()
 {
-    qCritical() << Q_FUNC_INFO;
     mSearchIf->selectSingleContentItem(mId, QString(), QStringList() <<
     "http://www.semanticdesktop.org/ontologies/2007/03/22/nfo#FileDataObject",
     QString());
@@ -204,7 +203,6 @@ void MeegoFilePicker::contentItemSelected(const QString &aCallerId,
     if ( mId != aCallerId )
         return;
 
-    qDebug() << "contentItemSelected " << aContentItem;
     mSelectedFileNames.clear();
 
     if (aContentItem.isEmpty())
@@ -220,7 +218,6 @@ void MeegoFilePicker::contentItemSelected(const QString &aCallerId,
         mSelectedFileNames << fileInfo.canonicalFilePath();
     }
 
-    qDebug() << "Selected File Names"<< mSelectedFileNames;
     exit(0);
 }
 
@@ -229,8 +226,6 @@ void MeegoFilePicker::contentItemsSelected(const QString &aCallerId,
 {
     if ( mId != aCallerId )
         return;
-
-    qDebug() << "contentItemsSelected " << aContentItems;
 
     mSelectedFileNames.clear();
 
@@ -243,7 +238,6 @@ void MeegoFilePicker::contentItemsSelected(const QString &aCallerId,
         if (fileInfo.isFile())
             mSelectedFileNames << fileInfo.canonicalFilePath();
     }
-    qDebug() << "Selected File Names"<< mSelectedFileNames;
     exit(0);
 }
 

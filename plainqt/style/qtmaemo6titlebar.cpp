@@ -29,8 +29,8 @@
 #include <QLabel>
 #include <QStyleOption>
 #include <QPainter>
-#include <QDebug>
 
+#include <MDebug>
 #include <mapplicationmenubuttonstyle.h>
 #include <mhomebuttonpanelstyle.h>
 #include <mescapebuttonpanelstyle.h>
@@ -87,7 +87,6 @@ QtMaemo6TitleBar::QtMaemo6TitleBar(QWidget *parent) : QWidget(parent)
         static_cast<const MLabelStyle *>(QtMaemo6StylePrivate::mStyle(option.state,
                 "MLabelStyle", "NavigationBarMenuButtonLabel"));
     if(menuButtonLabelStyle) {
-        qCritical() << menuButtonLabelStyle->color();
         QPalette pal = m_titleLabel->palette();
         pal.setBrush(m_titleLabel->foregroundRole(), menuButtonLabelStyle->color());
         m_titleLabel->setPalette(pal);
@@ -198,7 +197,6 @@ void QtMaemo6TitleBar::addButton(QToolButton *button)
     m_buttonsLayout->addWidget(button);
     m_buttonsLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Expanding, QSizePolicy::Minimum));
 
-    qDebug("Added ToolButton %s to TitleBar", button->text().toLocal8Bit().constData());
     */
 }
 

@@ -34,7 +34,7 @@
 
 #include <mapplicationmenustyle.h>
 #include <mwidgetfadeanimationstyle.h>
-#include <QDebug>
+#include <MDebug>
 
 /* unforunately this is required to force widgets drawing it's background, even
    if there are widget attributes are set, that suppress the drawing!
@@ -44,7 +44,7 @@ protected:
     bool eventFilter(QObject* obj, QEvent* e) {
         if(QPaintEvent* pe = dynamic_cast<QPaintEvent*>(e)) {
             if(QWidget* w = qobject_cast<QWidget*>(obj)) {
-                qCritical() << "EventFilter:" << w->objectName() << w->geometry() << pe->rect();
+                mDebug("PlainQt Style") << "EventFilter:" << w->objectName() << w->geometry() << pe->rect();
 
                 Q_UNUSED(pe);
                 QPainter p(w);
@@ -144,7 +144,7 @@ void QtMaemo6MenuProxy::showEvent(QShowEvent *event) {
 
     layout()->activate();
     QRect finalGeometry = QRect(m_menu->geometry().topLeft(), m_menu->sizeHint());
-    qCritical() << m_menu->geometry();
+    mDebug("PlainQt Style") << m_menu->geometry();
     QRect startGeometry = finalGeometry;
     startGeometry.moveTo(finalGeometry.x(), finalGeometry.y() - finalGeometry.height());
     m_menu->setGeometry(startGeometry);

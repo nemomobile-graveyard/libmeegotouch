@@ -26,7 +26,6 @@
 #include <QMouseEvent>
 #include <QEvent>
 #include <QScrollBar>
-#include <QDebug>
 
 void QtMaemo6KineticScrolling::KineticData::setState(State state) {
     m_state = state;

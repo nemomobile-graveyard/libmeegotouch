@@ -28,8 +28,8 @@
 #include <QSequentialAnimationGroup>
 #include <QPropertyAnimation>
 #include <QPaintEvent>
-#include <QDebug>
 
+#include <MDebug>
 #include <mapplicationpagestyle.h>
 #include <mpositionindicatorstyle.h>
 #include <mwidgetstyle.h>
@@ -225,7 +225,7 @@ void QtMaemo6ScrollBarEventFilter::generateScrollAreaThumb(QAbstractScrollArea *
                 scaleFactor = m_scrollAreaThumbnailMaxSize / longSide;
 
                 if (!scrollAreaThumbView->pixmap() || forceUpdate) {
-                    qDebug() << "generating Pixmap";
+                    mDebug("PlainQt Style") << "generating Pixmap";
 
                     QPixmap pixmap(vp->childrenRect().size() * scaleFactor + QSize(m_scrollAreaThumbnailBorder * 2, m_scrollAreaThumbnailBorder * 2));
                     pixmap.fill(Qt::white);

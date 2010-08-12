@@ -28,7 +28,6 @@
 #include <QWidget>
 #include <QEvent>
 #include <QKeyEvent>
-#include <QDebug>
 #include <QLayout>
 #include <QMainWindow>
 #include <QDialog>
@@ -50,6 +49,7 @@
 #include <mbuttonstyle.h>
 #include <MScalableImage>
 #include <MWindow>
+#include <MDebug>
 
 #include "qtmaemo6clicklabel.h"
 
@@ -176,8 +176,6 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
     }
     break;
     case QEvent::MouseButtonRelease: {
-        //qCritical( "eventFilter got mouseRelease" );
-
         // now send release feedback
         MFeedbackPlayer *feedbackPlayer = MComponentData::feedbackPlayer();
 
@@ -196,7 +194,7 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
         QKeyEvent* k = static_cast<QKeyEvent*>(event);
         if(Qt::Key_T == k->key() && k->modifiers () & (Qt::ControlModifier | Qt::AltModifier)
             && (k->modifiers () & Qt::ShiftModifier)) {
-            qCritical() << "Taking screenshot";
+            mDebug("PlainQt Style") << "Taking screenshot";
             QPixmap screenshot;
             screenshot = QPixmap::grabWindow(QApplication::desktop()->winId());
 
@@ -208,9 +206,9 @@ bool QtMaemo6StyleEventFilter::eventFilter(QObject *obj, QEvent *event)
                 .arg(QDate::currentDate().toString("yyyyMMdd"))
                 .arg(QTime::currentTime().toString("hhmmss"));
             if (!screenshot.save(imageFile))
-                qDebug() << "Could not save screenshot to" << imageFile;
+                mDebug("PlainQt Style") << "Could not save screenshot to" << imageFile;
             else
-                qDebug() << "Screenshot saved to" << imageFile;
+                mDebug("PlainQt Style") << "Screenshot saved to" << imageFile;
             return true;
         }
     }
