@@ -49,11 +49,6 @@ MApplicationPrivate::MApplicationPrivate():
 #ifdef HAVE_XDAMAGE
     XDamageQueryExtension(QX11Info::display(), &xDamageEventBase, &xDamageErrorBase);
 #endif //HAVE_XDAMAGE
-
-#ifdef Q_WS_X11
-    visibleAtom = XInternAtom(QX11Info::display(),
-                              "_MEEGOTOUCH_VISIBLE_IN_SWITCHER", False);
-#endif
 }
 
 MApplicationPrivate::~MApplicationPrivate()
@@ -61,10 +56,14 @@ MApplicationPrivate::~MApplicationPrivate()
     delete componentData;
 }
 #ifdef Q_WS_X11
-void MApplicationPrivate::setWindowVisibility(MWindow * window, bool visible)
+void MApplicationPrivate::setWindowVisibility(Window window, bool visible)
 {
-    MOnDisplayChangeEvent ev(visible, QRectF(QPointF(0, 0), window->visibleSceneSize()));
-    MApplication::instance()->sendEvent(window, &ev);
+    Q_FOREACH(MWindow * win, MApplication::windows()) {
+        if (win && win->winId() == window) {
+            MOnDisplayChangeEvent ev(visible, QRectF(QPointF(0, 0), win->visibleSceneSize()));
+            MApplication::instance()->sendEvent(win, &ev);
+        }
+    }
 }
 
 int MApplicationPrivate::handleXError(Display *, XErrorEvent *)
@@ -114,16 +113,6 @@ void MApplicationPrivate::removeWindowFromSwitcher(Window window, bool remove)
             XSync(dpy, False);
         }
     }
-}
-
-MWindow * MApplicationPrivate::windowForId(Window window)
-{
-    Q_FOREACH(MWindow * p, MComponentData::windows()) {
-        if (p && p->winId() == static_cast<unsigned int>(window)) {
-            return p;
-        }
-    }
-    return NULL;
 }
 #endif
 
@@ -373,11 +362,18 @@ bool MApplication::x11EventFilter(XEvent *event)
 
     if (event->type == VisibilityNotify) {
         XVisibilityEvent *xevent = (XVisibilityEvent *) event;
-        d->handleXVisibilityEvent(xevent);
 
-    } else if (event->type == PropertyNotify) {
-        XPropertyEvent *xevent = (XPropertyEvent *) event;
-        d->handleXPropertyEvent(xevent);
+        switch (xevent->state) {
+        case VisibilityFullyObscured:
+            MApplicationPrivate::setWindowVisibility(xevent->window, false);
+            break;
+        case VisibilityUnobscured:
+        case VisibilityPartiallyObscured:
+            MApplicationPrivate::setWindowVisibility(xevent->window, true);
+            break;
+        default:
+            break;
+        }
     }
 #ifdef HAVE_XDAMAGE
     else if (event->type == d->xDamageEventBase + XDamageNotify) {
@@ -413,81 +409,6 @@ bool MApplication::x11EventFilter(XEvent *event)
 
     return false;
 }
-
-void MApplicationPrivate::handleXVisibilityEvent(XVisibilityEvent *xevent)
-{
-    // Discard non-synthetic visibility events (those not sent by the compositor)
-    if (!xevent->send_event) {
-        return;
-    }
-
-    switch (xevent->state) {
-    case VisibilityFullyObscured:
-        {
-            MWindow * window = MApplicationPrivate::windowForId(xevent->window);
-            if (window) {
-                window->d_ptr->fullyObscured = true;
-                if (!window->d_ptr->visibleInSwitcher) {
-                    setWindowVisibility(window, false);
-                }
-            }
-        }
-        break;
-    case VisibilityUnobscured:
-    case VisibilityPartiallyObscured:
-        {
-            MWindow * window = MApplicationPrivate::windowForId(xevent->window);
-            if (window) {
-                window->d_ptr->fullyObscured = false;
-                setWindowVisibility(window, true);
-            }
-        }
-        break;
-    default:
-        break;
-    }
-}
-
-void MApplicationPrivate::handleXPropertyEvent(XPropertyEvent *xevent)
-{
-    // _MEEGOTOUCH_VISIBLE_IN_SWITCHER is set by Home Screen for
-    // windows that are in the switcher and visible. Set/unset the
-    // flag for corresponding window because we need to combine this
-    // information with VisibilityNotify's.
-
-    MWindow *window = windowForId(xevent->window);
-    if (window) {
-
-        const bool obscured = window->d_ptr->fullyObscured;
-        if (xevent->atom == visibleAtom && xevent->state == PropertyNewValue) {
-
-            // Property's value was changed, read the value
-            Atom           type;
-            int            format;
-            unsigned long  nItems;
-            unsigned long  bytesAfter;
-            unsigned char *data = NULL;
-
-            // Read value of the property. Should be 1 or 0.
-            if(XGetWindowProperty(QX11Info::display(), xevent->window, visibleAtom, 0, 1, False, XA_CARDINAL,
-                                  &type, &format, &nItems, &bytesAfter, &data) == Success) {
-                if(data) {
-                    bool visible = *data;
-                    window->d_ptr->visibleInSwitcher = visible;
-
-                    if (visible) {
-                        setWindowVisibility(window, true);
-                    } else if (obscured){
-                        setWindowVisibility(window, false);
-                    }
-
-                    XFree(data);
-                }
-            }
-        }
-    }
-}
-
 #endif
 
 QString MApplication::appName()

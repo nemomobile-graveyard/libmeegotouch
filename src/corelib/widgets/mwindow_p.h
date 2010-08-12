@@ -89,9 +89,6 @@ public:
     bool onDisplay;
     bool onDisplaySet;
 
-    bool visibleInSwitcher;
-    bool fullyObscured;
-
 #ifdef HAVE_GCONF
     void _q_updateMinimizedSoftwareSwitch();
     MGConfItem minimizedSoftwareSwitchItem;

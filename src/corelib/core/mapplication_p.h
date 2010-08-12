@@ -67,14 +67,10 @@ private:
     static bool prestartModeIsMultiWindowed();
 
 #ifdef Q_WS_X11
-    static void setWindowVisibility(MWindow *window, bool visible);
+    static void setWindowVisibility(Window window, bool visible);
     static void removeWindowsFromSwitcher(bool remove);
     static void removeWindowFromSwitcher(Window window, bool remove);
     static void setX11PrestartPropertyForWindows(bool set);
-    static MWindow * windowForId(Window window);
-    void handleXVisibilityEvent(XVisibilityEvent *xevent);
-    void handleXPropertyEvent(XPropertyEvent *xevent);
-    Atom visibleAtom;
 #endif
     friend class MApplicationServicePrivate;
     friend class MWindow;

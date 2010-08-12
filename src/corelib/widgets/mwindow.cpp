@@ -70,8 +70,6 @@ MWindowPrivate::MWindowPrivate() :
     closeOnLazyShutdown(false),
     onDisplay(false),
     onDisplaySet(false),
-    visibleInSwitcher(false),
-    fullyObscured(false),
 #ifdef HAVE_GCONF
     minimizedSoftwareSwitchItem("/meegotouch/debug/minimized_software_switch"),
 #endif
