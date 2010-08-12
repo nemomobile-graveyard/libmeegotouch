@@ -44,8 +44,9 @@ int MSliderPrivate::adjustValue(int minimum, int value, int maximum, int steps)
     if ((steps < 1) || (steps > maximum - minimum - 1))
         return value;
 
-    int numberOfSteps = qRound(((qreal(value) - qreal(minimum)) * qreal(steps)) / (qreal(maximum) - qreal(minimum)));
-    return minimum + (numberOfSteps * qRound((qreal(maximum) - qreal(minimum)) / qreal(steps)));
+    int numberOfStep = qRound(((qreal(value) - qreal(minimum)) * qreal(steps)) / (qreal(maximum) - qreal(minimum)));
+    qreal discreteValue = minimum + (qreal(numberOfStep) * (qreal(maximum) - qreal(minimum)) / qreal(steps));
+    return qRound(discreteValue);
 }
 
 MSlider::MSlider(QGraphicsItem *parent, const QString &viewType)
@@ -102,7 +103,8 @@ void MSlider::setValue(int value)
                                   value,
                                   model()->maximum(),
                                   model()->steps());
-    model()->setValue(tmpValue);
+    if (tmpValue != model()->value())
+        model()->setValue(tmpValue);
 }
 
 void MSlider::updateData(const QList<const char *>& modifications)
