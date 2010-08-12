@@ -41,17 +41,17 @@ private slots:
       * This test creates a new process and thus includes process creation overhead.
       * Callgrind results are meaningless since the child process is not traced.
       */
-    void processCreationAndCtor();
+    void processCreationAndConstructor();
 
     /**
       * Test the performance of the qapplication constructor.
       */
-    void ctor();
+    void uncachedConstructor();
 
     /**
       * Execute the constructor a second time to evaluate caching possibilities.
       */
-    void ctor2();
+    void cachedConstructor();
 
 private:
     /**

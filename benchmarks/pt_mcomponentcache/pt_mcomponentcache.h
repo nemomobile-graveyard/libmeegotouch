@@ -17,36 +17,24 @@
 **
 ****************************************************************************/
 
-#include "pt_mcomponentdata.h"
+#ifndef PT_MCOMPONENTCACHE_H
+#define PT_MCOMPONENTCACHE_H
 
-#include <mbenchmark.h>
-#include <MComponentData>
-#include <MApplication>
-#include <MApplicationService>
-#include <MComponentCache>
+#include <QtTest/QtTest>
+#include <QObject>
 
-namespace {
-    int argc = 1;
-    char appName[] = "./pt_mcomponentdata";
-    char *argv[] = { appName };
-}
-
-void Pt_MComponentData::uncachedConstructor()
+/**
+ * Benchmark for MComponentCache, which uses MComponentData::reinit()
+ * to reinitialize the component data. MComponentData::reinit() cannot
+ * be benchmarked within pt_mcomponentdata, as there is an internal
+ * dependency to MComponentCache.
+ */
+class Pt_MComponentCache : public QObject
 {
-    MComponentData *componentData = 0;
-    MBENCHMARK_ONCE(
-        componentData = new MComponentData(argc, argv, argv[0]);
-    )
-    delete componentData;
-}
+    Q_OBJECT
 
-void Pt_MComponentData::cachedConstructor()
-{
-    MComponentData *componentData = 0;
-    MBENCHMARK_ONCE(
-        componentData = new MComponentData(argc, argv, argv[0]);
-    )
-    delete componentData;
-}
+private slots:
+    void reinit();
+};
 
-QTEST_MAIN(Pt_MComponentData)
+#endif

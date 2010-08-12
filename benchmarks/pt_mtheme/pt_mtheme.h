@@ -26,14 +26,24 @@ class MComponentData;
 class MWidgetView;
 
 /**
-  * This test benchmarks the MTheme creation.
+  * This test benchmarks the MTheme creation. Most of the time when creating
+  * a MTheme instance is spend with loading stylesheets. Check pt_mstylesheet
+  * for getting more details.
   */
 class Pt_MTheme : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void constructor();
+    /**
+     * Test the performance of the MTheme constructor.
+     */
+    void uncachedConstructor();
+
+    /**
+     * Execute the constructor a second time to evaluate caching possibilities.
+     */
+    void cachedConstructor();
 };
 
 #endif

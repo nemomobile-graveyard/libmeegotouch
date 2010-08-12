@@ -25,6 +25,11 @@
 
 #include "pt_mapplication.h"
 
+namespace {
+    int argc = 1;
+    char appName[] = "./pt_mapplication";
+    char *argv[] = { appName };
+}
 
 /*
   Test how long it takes to launch an application which is quitting immediately.
@@ -34,35 +39,27 @@ void Pt_MApplication::processCreation()
     executeSelf(QLatin1String("--exit-immediately"));
 }
 
-void Pt_MApplication::processCreationAndCtor()
+void Pt_MApplication::processCreationAndConstructor()
 {
     executeSelf(QLatin1String("--exit-after-qapp"));
 }
 
-void Pt_MApplication::ctor()
+void Pt_MApplication::uncachedConstructor()
 {
-    MApplication *a = NULL;
-    MBENCHMARK_ONCE(
-        int fakeArgc = 1;
-        char *fakeArgv[fakeArgc];
-        char appName[] = "./pt_mapplication";
-        fakeArgv[0] = appName;
-        a = new MApplication(fakeArgc, fakeArgv);
+    MApplication *app = 0;
+    MBENCHMARK_ONCE (
+        app = new MApplication(argc, argv);
     )
-    delete a;
+    delete app;
 }
 
-void Pt_MApplication::ctor2()
+void Pt_MApplication::cachedConstructor()
 {
-    MApplication *a = NULL;
-    MBENCHMARK_ONCE(
-        int fakeArgc = 1;
-        char *fakeArgv[fakeArgc];
-        char appName[] = "./pt_mapplication2";
-        fakeArgv[0] = appName;
-        a = new MApplication(fakeArgc, fakeArgv);
+    MApplication *app = 0;
+    MBENCHMARK_ONCE (
+        app = new MApplication(argc, argv);
     )
-    delete a;
+    delete app;
 }
 
 void Pt_MApplication::executeSelf(const QLatin1String &parameter)
@@ -71,13 +68,13 @@ void Pt_MApplication::executeSelf(const QLatin1String &parameter)
     const QString program       = "./pt_mapplication";
     const QStringList arguments = QStringList() << QLatin1String(parameter);
 
-    QBENCHMARK {
+    MBENCHMARK_ONCE (
         proc.start(program, arguments);
         QVERIFY(proc.waitForStarted());
         QVERIFY(proc.waitForFinished());
         QCOMPARE(proc.exitStatus(), QProcess::NormalExit);
         QCOMPARE(proc.exitCode(), 0);
-    }
+    )
 }
 
 int main(int argc, char **argv)

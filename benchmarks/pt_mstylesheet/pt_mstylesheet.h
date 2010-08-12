@@ -17,28 +17,40 @@
 **
 ****************************************************************************/
 
-#ifndef PT_MCOMPONENTDATA_H
-#define PT_MCOMPONENTDATA_H
+#ifndef PT_MSTYLESHEET_H
+#define PT_MSTYLESHEET_H
 
-#include <QtTest/QtTest>
 #include <QObject>
 
+class MLogicalValues;
+
 /**
-  * MApplication constructor spends most of its runtime creating a
-  * MComponentData object. This test benchmarks the MComponentData
-  * creation.
-  *
-  * The MComponentData constructor spends most of its runtime by
-  * creating a MTheme instance. Check pt_mtheme for getting further
-  * details.
+  * This test benchmarks the MStyleSheet loading performance.
   */
-class Pt_MComponentData : public QObject
+class Pt_MStyleSheet : public QObject
 {
     Q_OBJECT
 
 private slots:
-    void uncachedConstructor();
-    void cachedConstructor();
+    void constructor();
+
+    /**
+     * Benchmark the loading of theme styles that are typically loaded
+     * when starting an application.
+     */
+    void loadThemeStyles();
+    void loadThemeStyles_data();
+
+    /**
+     * Some core styles are loaded multiple times during startup. Benchmark
+     * whether multiple loading results in a linear increasing of the
+     * startup time.
+     */
+    void loadCoreStyles();
+    void loadCoreStyles_data();
+
+private:
+    void initLogicalValues(MLogicalValues &values);
 };
 
 #endif

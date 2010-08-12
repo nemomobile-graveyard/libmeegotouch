@@ -12,6 +12,7 @@ SUBDIRS     = \
  pt_mapplication \
  pt_mbutton \
  pt_mcalendar \
+ pt_mcomponentcache \
  pt_mcomponentdata \
  pt_mimagewidget \
  pt_mmenu \
@@ -21,6 +22,7 @@ SUBDIRS     = \
  pt_qapplication \
  pt_mlabel \
  pt_mslider \
+ pt_mstylesheet \
  pt_mtheme \
  pt_mtoolbar \
  pt_widgetsgallery \

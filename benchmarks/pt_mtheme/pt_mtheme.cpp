@@ -20,14 +20,22 @@
 #include "pt_mtheme.h"
 
 #include <mbenchmark.h>
-#include <MComponentData>
 #include <MTheme>
 
 #include <QtTest/QtTest>
 
-void Pt_MTheme::constructor()
+void Pt_MTheme::uncachedConstructor()
 {
-    MTheme *theme = NULL;
+    MTheme *theme = 0;
+    MBENCHMARK_ONCE (
+        theme = new MTheme("widgetsgallery");
+    )
+    delete theme;
+}
+
+void Pt_MTheme::cachedConstructor()
+{
+    MTheme *theme = 0;
     MBENCHMARK_ONCE (
         theme = new MTheme("widgetsgallery");
     )

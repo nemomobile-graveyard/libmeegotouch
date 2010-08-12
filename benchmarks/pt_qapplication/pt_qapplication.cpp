@@ -32,12 +32,12 @@ void Pt_QApplication::processCreation()
     executeSelf(QLatin1String("--exit-immediately"));
 }
 
-void Pt_QApplication::processCreationAndCtor()
+void Pt_QApplication::processCreationAndConstructor()
 {
     executeSelf(QLatin1String("--exit-after-qapp"));
 }
 
-void Pt_QApplication::ctor()
+void Pt_QApplication::uncachedConstructor()
 {
     QApplication *a(NULL);
     MBENCHMARK_ONCE (
@@ -50,7 +50,7 @@ void Pt_QApplication::ctor()
     delete a;
 }
 
-void Pt_QApplication::ctor2()
+void Pt_QApplication::cachedConstructor()
 {
     QApplication *a(NULL);
     MBENCHMARK_ONCE (

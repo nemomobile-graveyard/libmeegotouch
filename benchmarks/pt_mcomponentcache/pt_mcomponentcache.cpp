@@ -17,36 +17,35 @@
 **
 ****************************************************************************/
 
-#include "pt_mcomponentdata.h"
+#include "pt_mcomponentcache.h"
 
 #include <mbenchmark.h>
-#include <MComponentData>
 #include <MApplication>
-#include <MApplicationService>
 #include <MComponentCache>
 
-namespace {
+void Pt_MComponentCache::reinit()
+{
     int argc = 1;
-    char appName[] = "./pt_mcomponentdata";
+    char appName[] = "./pt_mcomponentcache";
     char *argv[] = { appName };
-}
 
-void Pt_MComponentData::uncachedConstructor()
-{
-    MComponentData *componentData = 0;
+    // QBENCHMARK_ONCE invokes reinit() two times
+    // (see <http://bugreports.qt.nokia.com/browse/QTBUG-12689>),
+    // so firstRun is used to workaround this problem.
+    static bool firstRun = true;
+    if (firstRun) {
+        firstRun = false;
+    } else {
+        // Trigger creating an internal MApplication instance
+        MComponentCache::populateForMApplication();
+    }
+
+    MApplication *app = 0;
     MBENCHMARK_ONCE(
-        componentData = new MComponentData(argc, argv, argv[0]);
+        // Trigger a MComponentData::reinit()
+        app = MComponentCache::mApplication(argc, argv);
     )
-    delete componentData;
+    delete app;
 }
 
-void Pt_MComponentData::cachedConstructor()
-{
-    MComponentData *componentData = 0;
-    MBENCHMARK_ONCE(
-        componentData = new MComponentData(argc, argv, argv[0]);
-    )
-    delete componentData;
-}
-
-QTEST_MAIN(Pt_MComponentData)
+QTEST_APPLESS_MAIN(Pt_MComponentCache)

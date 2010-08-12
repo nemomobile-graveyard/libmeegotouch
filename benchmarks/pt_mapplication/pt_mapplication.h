@@ -23,8 +23,12 @@
 #include <QObject>
 
 /**
-  * Test performance oif the MApplication constructor.
+  * Test performance of the MApplication constructor.
   * The constructor is created in process and as part of a newly created process.
+  *
+  * The most timeconsuming parts of the constructor can be verified by the following tests:
+  * - pt_qapplication
+  * - pt_mcomponentdata
   */
 class Pt_MApplication : public QObject
 {
@@ -41,22 +45,19 @@ private slots:
       * This test creates a new process and thus includes process creation overhead.
       * Callgrind results are meaningless since the child process is not traced.
       */
-    void processCreationAndCtor();
+    void processCreationAndConstructor();
 
     /**
       * Test the performance of the mapplication constructor.
       */
-    void ctor();
-
-private:
+    void uncachedConstructor();
 
     /**
      * Execute the constructor a second time to evaluate caching possibilities.
-     * Disabled for now, because the MApplication cannot be created twice in 
-     * the same application. Will be reenabled when bug on Qt's side is fixed.
      */
-    void ctor2();
+    void cachedConstructor();
 
+private:
     /**
       * Executes the current programm with a given parameter.
       */
