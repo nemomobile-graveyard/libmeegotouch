@@ -46,6 +46,7 @@ MProgressIndicatorBarViewPrivate::MProgressIndicatorBarViewPrivate()
        width(0),
        paused(true),
        timer(0),
+       previousValue(0),
        animationCacheSize(0)
 {
     backgroundPainter = new QPainter;
