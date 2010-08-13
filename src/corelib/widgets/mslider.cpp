@@ -44,6 +44,13 @@ int MSliderPrivate::adjustValue(int minimum, int value, int maximum, int steps)
     if ((steps < 1) || (steps > maximum - minimum - 1))
         return value;
 
+    //minimum or maximum are always valid values regardless
+    //to the number of steps, values outside of slider range will
+    //not be adjusted because model forces them to minimum
+    //of maximum values
+    if ((value <= minimum) || (value >= maximum))
+        return value;
+
     int numberOfStep = qRound(((qreal(value) - qreal(minimum)) * qreal(steps)) / (qreal(maximum) - qreal(minimum)));
     qreal discreteValue = minimum + (qreal(numberOfStep) * (qreal(maximum) - qreal(minimum)) / qreal(steps));
     return qRound(discreteValue);
@@ -67,18 +74,48 @@ MSlider::~MSlider()
 
 void MSlider::setMinimum(int minimum)
 {
+    Q_D(MSlider);
+
     model()->setMinimum(minimum);
+
+    int tmpValue = d->adjustValue(model()->minimum(),
+                                  model()->value(),
+                                  model()->maximum(),
+                                  model()->steps());
+
+    if (tmpValue != model()->value())
+        model()->setValue(tmpValue);
 }
 
 void MSlider::setMaximum(int maximum)
 {
+    Q_D(MSlider);
+
     model()->setMaximum(maximum);
+
+    int tmpValue = d->adjustValue(model()->minimum(),
+                                  model()->value(),
+                                  model()->maximum(),
+                                  model()->steps());
+
+    if (tmpValue != model()->value())
+        model()->setValue(tmpValue);
 }
 
 void MSlider::setRange(int minimum, int maximum)
 {
+    Q_D(MSlider);
+
     setMaximum(maximum);
     setMinimum(minimum);
+
+    int tmpValue = d->adjustValue(model()->minimum(),
+                                  model()->value(),
+                                  model()->maximum(),
+                                  model()->steps());
+
+    if (tmpValue != model()->value())
+        model()->setValue(tmpValue);
 }
 
 void MSlider::setSteps(int steps)

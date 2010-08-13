@@ -202,6 +202,14 @@ void Ut_MSlider::sliderSetMinimum()
     QVERIFY(s->value() >= s->minimum());
     QVERIFY(s->value() <= s->maximum());
 
+    s->setRange(50, 100);
+    s->setSteps(10);
+    s->setValue(75);
+    QCOMPARE(s->value(), 75);
+
+    s->setMinimum(0);
+    QCOMPARE(s->value(), 80);
+
     delete s;
 }
 
@@ -223,6 +231,14 @@ void Ut_MSlider::sliderSetMaximum()
     QVERIFY(s->minimum() <= s->maximum());
     QVERIFY(s->value() >= s->minimum());
     QVERIFY(s->value() <= s->maximum());
+
+    s->setRange(0, 50);
+    s->setSteps(10);
+    s->setValue(25);
+    QCOMPARE(s->value(), 25);
+
+    s->setMaximum(100);
+    QCOMPARE(s->value(), 30);
 
     delete s;
 }
@@ -254,6 +270,14 @@ void Ut_MSlider::sliderSetRange()
     QCOMPARE(s->minimum(), 10);
     QCOMPARE(s->maximum(), 10);
     QCOMPARE(s->value(), 10);
+
+   s->setRange(0, 50);
+   s->setSteps(10);
+   s->setValue(25);
+   QCOMPARE(s->value(), 25);
+
+   s->setRange(0, 100);
+   QCOMPARE(s->value(), 30);
 
     delete s;
 }
@@ -348,6 +372,16 @@ void Ut_MSlider::sliderSetSteps()
 
     s->setValue(2);
     QCOMPARE(s->value(), 1);
+
+    s->setMinimum(0);
+    s->setMaximum(15);
+    s->setSteps(10);
+
+    s->setValue(1);
+    QCOMPARE(s->value(), 2);
+
+    s->setValue(3);
+    QCOMPARE(s->value(), 3);
 
     delete s;
 }
