@@ -68,6 +68,7 @@ MList::MList(QGraphicsItem *parent)
 
 MList::~MList()
 {
+    delete model()->cellCreator();
 }
 
 void MList::updateData(const QList<const char *>& modifications)
@@ -171,6 +172,8 @@ void MList::longTapItem(const QModelIndex &index)
 
 void MList::setCellCreator(MCellCreator *itemCreator)
 {
+    delete model()->cellCreator();
+
     model()->setCellCreator(itemCreator);
 }
 
