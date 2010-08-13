@@ -1389,9 +1389,9 @@ void QtMaemo6Style::drawControl(ControlElement element,
 
             const QAbstractButton *buttonWidget = qobject_cast<const QAbstractButton * >(widget);
             if (buttonWidget && buttonWidget->isCheckable())
-                d->drawToggleButton(p, subopt.text, subopt.icon, subopt.rect, opt, "MButtonIconStyle");
+                d->drawToggleButton(p, subopt.text, subopt.icon, subopt.rect, opt, "MButtonStyle");
             else
-                d->drawBasicButton(p, subopt.text, subopt.icon, subopt.rect, opt, "MButtonIconStyle");
+                d->drawBasicButton(p, subopt.text, subopt.icon, subopt.rect, opt, "MButtonStyle");
         }
     }
     break;
@@ -1441,7 +1441,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
 
             const MButtonStyle *style =
                 static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(opt->state,
-                                                    "MButtonIconStyle"));
+                                                    "MButtonStyle"));
             // Don't show the edge of the button that is closest to the
             // TabBarBase.
             // FIXME: Solve for other tab bar orientations
@@ -1728,9 +1728,9 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                 //a ToolButton anywhere else on the Screen should be drawn like a PushButton
             } else {
                 const MButtonStyle *style =
-                    static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle", ""));
+                    static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle", ""));
                 const MButtonStyle *styleFont =
-                    static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle",
+                    static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle",
                                                         "NavigationBarToolBarButton"));
 
                 qDebug("Button \"%s\" font-size: %d, icon-size: %d", subopt.text.toLocal8Bit().constData(),
@@ -2349,9 +2349,9 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                 } else {
                     QStyleOptionToolButton subopt = *btn;
                     const MButtonStyle *style =
-                        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle", ""));
+                        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle", ""));
                     const MButtonStyle *styleFont =
-                        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle",
+                        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle",
                                                             "NavigationBarToolBarButton"));
 
                     if(style && styleFont) {
@@ -2364,7 +2364,7 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                         textAndIconRect.setHeight(textAndIconRect.height() + borderTop + borderBottom);
                         retSize = textAndIconRect.size();
                     } else {
-                        qCritical() << "MButtonIconStyle for QToolButton could not be loaded";
+                        qCritical() << "MButtonStyle for QToolButton could not be loaded";
                     }
                 }
             }
@@ -2374,7 +2374,7 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
             QStyleOptionButton subopt = *btn;
             const MButtonStyle *style =
-                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle", ""));
+                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle", ""));
 
             if(style) {
                 int borderTop, borderRight, borderBottom, borderLeft;
@@ -2385,7 +2385,7 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                 textAndIconRect.setHeight(textAndIconRect.height() + borderTop + borderBottom);
                 retSize = textAndIconRect.size();
             } else {
-                qCritical() << "MButtonIconStyle for QPushButton could not be loaded";
+                qCritical() << "MButtonStyle for QPushButton could not be loaded";
             }
         }
     }
@@ -2549,7 +2549,7 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
             const MButtonStyle *style =
                 static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(btn->state,
-                                                    "MButtonIconStyle",
+                                                    "MButtonStyle",
                                                     QString(),
                                                     "checkbox"));
 
@@ -2577,7 +2577,7 @@ int QtMaemo6Style::pixelMetric(PixelMetric metric,
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
             const MButtonStyle *style =
                 static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(btn->state,
-                                                    "MButtonIconStyle",
+                                                    "MButtonStyle",
                                                     QString(),
                                                     "checkbox"));
 
