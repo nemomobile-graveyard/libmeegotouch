@@ -36,6 +36,7 @@ MOrientationTrackerPrivate::MOrientationTrackerPrivate(MOrientationTracker *cont
     currentAngle(M::Angle0),
     currentIsCovered(false)
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    , currentIsKeyboardOpen(MKeyboardStateTracker::instance()->isOpen())
     , topEdgeProperty("Screen.TopEdge")
     , isCoveredProperty("Screen.IsCovered")
 #endif
@@ -107,6 +108,14 @@ void MOrientationTrackerPrivate::updateOrientationAngle()
     M::Orientation orientation = M::Landscape;
     QString edge = topEdgeProperty.value().toString();
     bool isKeyboardOpen = MKeyboardStateTracker::instance()->isOpen();
+
+    //do not change orientation when closing keyboard and old orientation is allowed:
+    if (currentIsKeyboardOpen == true && isKeyboardOpen == false
+        && MDeviceProfile::instance()->orientationAngleIsSupported(currentAngle, isKeyboardOpen)){
+        currentIsKeyboardOpen = isKeyboardOpen;
+        return;
+    }
+    currentIsKeyboardOpen = isKeyboardOpen;
 
     if (edge == "top" && (MDeviceProfile::instance()->orientationAngleIsSupported(M::Angle0, isKeyboardOpen))) {
         angle = M::Angle0;

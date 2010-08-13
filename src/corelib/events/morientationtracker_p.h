@@ -39,6 +39,7 @@ public:
     bool currentIsCovered;
 
 #ifdef HAVE_CONTEXTSUBSCRIBER
+    bool currentIsKeyboardOpen;
     ContextProperty topEdgeProperty;
     ContextProperty isCoveredProperty;
 #endif
