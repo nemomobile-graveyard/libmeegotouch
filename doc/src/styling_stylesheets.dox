@@ -13,8 +13,8 @@
     for the styleheet definition from top to bottom. Most of the syntax follows the basic CSS rules but there 
     are also some DirectUI -specific additions.
 
-        \subsection import Import
-            Syntax: @import ""; or @import url("");
+        \subsection import_sheet Import
+            Syntax: \@import ""; or \@import url("");
 
             Description: Makes it possible to import other stylesheet files and in this way combine multiple 
             stylesheets as one.
@@ -35,7 +35,7 @@
         \subsection selectors Selectors
             Syntax: styleclassname { }
 
-            Full syntax: styleclassname[type]#name.orientation:mode (all the parameters are optional but their order 
+            Full syntax: styleclassname[type]\#name.orientation:mode (all the parameters are optional but their order
             needs to be correct)
 
             Description: Groups attributes for a defined style
@@ -54,7 +54,7 @@
             {
                 // my own font definition and text color
                 my-font: "sans" 15;
-                my-text-color: #FFFFFF;
+                my-text-color: \#FFFFFF;
             }
 
             // these attributes won't inherit to subclasses because of the dot in the front of the styleclassname
@@ -96,7 +96,7 @@
             <tr><th>Datatype</th> <th>Syntax</th> <th>Example</th></tr>
             <tr><td>bool</td> <td>true, false</td> <td>visible: false;</td></tr>
             <tr><td>int</td> <td>numeric value</td> <td>age: 42;</td></tr>
-            <tr><td>QColor</td> <td>Color name. See QColor::setNamedColor for possible parameters</td> <td>color: #ffffff;</td></tr>
+            <tr><td>QColor</td> <td>Color name. See QColor::setNamedColor for possible parameters</td> <td>color: \#ffffff;</td></tr>
             <tr><td>qreal</td> <td>decimal value</td> <td>distance: 31.5;</td></tr>
             <tr><td>const QPixmap*</td> <td>image-id [width height]</td> <td>background: image_id;<br>background: image_id 128 128;</td></tr>
             <tr><td>const DuiScalableImage*</td> <td>image-id [left right top bottom]</td> <td>background: image_id;<br>background: image_id 0 128 0 128;</td></tr>
@@ -127,7 +127,7 @@
             </table>
 
         \subsection constants Constants
-            Syntax: @const constant-name: constant-value;
+            Syntax: \@const constant-name: constant-value;
 
             Description: Makes it possible define constant values in stylesheet, avoiding need to maintain 
             duplicated data that is spread around the stylesheet.

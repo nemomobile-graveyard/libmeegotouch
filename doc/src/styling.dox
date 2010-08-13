@@ -29,10 +29,10 @@ DirectUI provides a powerful styling engine for applications to customize their 
           to the requirements.
 
 \section links Documentation links 
-    \li <a href="styling__concepts.html">Basic concepts of styling</a>
-    \li <a href="styling__features.html">Features</a>
-    \li <a href="styling__support.html">Styling support for applications & external libraries</a>
-    \li <a href="styling__stylesheets.html">Stylesheet syntax reference & examples</a>
-    \li <a href="styling__in__code.html">Architecture & code examples</a>
+    \li \subpage styling_concepts "Basic concepts of styling"
+    \li \subpage styling_features "Features"
+    \li \subpage styling_support "Styling support for applications & external libraries"
+    \li \subpage styling_stylesheets "Stylesheet syntax reference & examples"
+    \li \subpage styling_in_code "Architecture & code examples"
 
 */

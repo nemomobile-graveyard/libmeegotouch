@@ -72,14 +72,14 @@
     \endcode
 
 
-    \sa <a href="theme_structure.html">Where to install the library spesific theme files</a>
+    \sa \ref theme_structure "Where to install the library spesific theme files"
 
 \section application_theme_support Theming support for applications
     Theming support for application works in a similar way that it works for external libraries with one big exception. The library is only able to
     configure the widgets it declares, but the application can override pretty much anything when it comes to theming & styling. Application can provide 
     it's own stylesheet & view configuration files, it can also register it's own widgets, views & styles to the system and provide theming for them. 
     It has pretty much full control for it's own look & feel. 
-    \sa <a href="theme_structure.html">Where to install the application specific theme files</a>.
+    \sa \ref theme_structure "Where to install the application specific theme files."
 
     \note As a library or application developer, you should always provide basic theming for your widgets in fallback theme.
 */

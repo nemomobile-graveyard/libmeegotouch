@@ -60,7 +60,7 @@ This file contains constant definitions for this theme. The constant set is pred
 Constants are used in application code (DuiPalette, DuiDefaultFonts), and in stylesheets.
 
 When creating a new theme, this file is the one to start with. Just create an empty constants.ini and add a few lines from base:constants.ini
-with modified values. Now your theme contains <a href="#theme_description">index.theme</a>, and constants.ini; and is already a functional theme to be tried out!
+with modified values. Now your theme contains \ref theme_description "index.theme", and constants.ini; and is already a functional theme to be tried out!
 This is enough because DirectUI themes can inherit other themes. There is no need to copy some existing theme and
 start modifying it, instead it's recommended to inherit some theme and just change the parts you want.
 Here's a peek to one of the stylesheets in base-theme.
@@ -92,7 +92,7 @@ Rest of the values for constants.ini will come from the theme from which you inh
 \subsection theme_graphics Theme Graphics Directories
 
 There are three directories under each theme; images, svg and icons. These directories contains all common graphics for the theme.
-So if you're not pleased with your theme by just changing <a href="#theme_constants">constants.ini</a> you can always start doing some replacement
+So if you're not pleased with your theme by just changing \ref theme_constants "constants.ini" you can always start doing some replacement
 graphics.
 
 ImageId is a unique name for a piece of graphic. This imageId can be used from application code and from stylesheets and is also a reason, why
@@ -125,8 +125,8 @@ duibutton-background and create your graphics there.
 \subsection library Library Directory
 
 Every library which provides some new components(widgets) has to also provide default styling attributes for those. Developers of the library will place the default
-attribute values to <a href="#library_style">/usr/share/themes/base/dui/&lt;libraryname&gt;/style/</a>. Also if the library providing these components has made it possible to change
-the view part of the component, the developers of the library has placed the initial view configuration to <a href="#library_conf">/usr/share/themes/base/dui/&lt;libraryname&gt;/&lt;libraryname&gt;.conf</a>.
+attribute values to \ref library_style "/usr/share/themes/base/dui/&lt;libraryname&gt;/style/". Also if the library providing these components has made it possible to change
+the view part of the component, the developers of the library has placed the initial view configuration to \ref library_conf "/usr/share/themes/base/dui/&lt;libraryname&gt;/&lt;libraryname&gt;.conf".
 
 There is one directory for each library to be themed. Normally it's not necessary to create these library theming folders to your theme. In case you anyway need to
 change attibutes in stylesheets or you need to change the view part of a component, you must create a directory which has the same name as the library providing the
@@ -135,13 +135,13 @@ component (for example libnicewidgets-extras/).
 \subsection library_style Library Stylesheet Directory
 
 This directory can contain any number of stylesheet files. The recomendation is that every component(widget) in the library which can be styled would have it's own css-file.
-This directory must contain one css file which is the <a href="#library_css">entry point</a>. More of the stylesheets can be found from <a href="styling_stylesheets.html">Stylesheets</a>.
+This directory must contain one css file which is the \ref library_css "entry point". More of the stylesheets can be found from \ref styling_stylesheets "Stylesheets".
 
 \subsection library_css Library Main Stylesheet File
 
-This file is located to <a href="#library_style">style/</a> directory, and it's name must follow the name of the library (for example libnicewidgets-extras.css).
-This file will be the one which the system will read when reading style attributes for a class coming from this library. All other files in <a href="#library_style">style/</a>
-should be <a href="styling_stylesheets.html#import">@imported</a> from this file so they will also get read.
+This file is located to \ref library_style "style" directory, and it's name must follow the name of the library (for example libnicewidgets-extras.css).
+This file will be the one which the system will read when reading style attributes for a class coming from this library. All other files in \ref library_style "style"
+should be \ref import_sheet "@imported" from this file so they will also get read.
 
 \subsection library_conf Library View Configuration File
 
@@ -153,22 +153,22 @@ TODO: view libraries + link to view-config explanation
 
 All applications can provide additional styling for themselves, the application directory must have the same name as the application to be styled (for example widgetsgallery/).
 
-This directory can contain <a href="#application_graphics">graphics</a>, <a href="#application_style">stylesheets</a> and <a href="#application_conf">view configuration</a> for the application.
+This directory can contain \ref application_graphics "graphics", \ref application_style "stylesheets" and \ref application_conf "view configuration" for the application.
 
 \subsection application_graphcis Application Graphics Directories
 
 Usually when creating a theme you don't have to override the base-theme definitions for applications (most of the applications probably doesn't even have any special styling).
 Anyway if you want some specific application to look different than the theme specifies, you can do it by creating application-specific styling.
-Applications can override themes default graphics by inserting files to images/, svg/ or icons/ directories. The graphics overriding works the same way as it works with theme inheritance, so see <a href="#theme_graphics">Theme Graphics</a> for more info.
+Applications can override themes default graphics by inserting files to images/, svg/ or icons/ directories. The graphics overriding works the same way as it works with theme inheritance, so see \ref theme_graphics "Theme Graphics" for more info.
 
 \subsection application_style Application Stylesheet Directory
 
-Applications can override themes default stylesheet attribute values by creating a application stylesheet <a href="#application_css">entry point</a>.
+Applications can override themes default stylesheet attribute values by creating a application stylesheet \ref application_css "entry point".
 Applications can override any attributes from any component. Everything that is not overridden will still come from theme, so the recommendation is that applications override as few attributes as possible.
 
 \subsection application_css Application Main Stylesheet File
 
-This file is located to <a href="#application_style">style/</a> directory, and the name of the file has to be the same which the application has.
+This file is located to \ref application_style "style" directory, and the name of the file has to be the same which the application has.
 
 \subsection application_conf Application View Configuration File
 
@@ -198,7 +198,7 @@ This directory contains directories for different locales. All locales needing s
 
 \subsection locale_l Locale Specific Directory
 
-This directory is located to /usr/share/themes/<theme>/dui/locale/<locale>/ where the <locale> is fi, en, etc. Definitions in this directory will be applied for <theme> when the <locale> matches the system locale.
+This directory is located to /usr/share/themes/\<theme\>/dui/locale/\<locale\>/ where the \<locale\> is fi, en, etc. Definitions in this directory will be applied for \<theme\> when the \<locale\> matches the system locale.
 
 \subsection locale_constants Locale Specific Constants
 
@@ -206,6 +206,6 @@ This file can contain fonts and color definitions for the locale.
 
 \subsection locale_icons Locale Specific Icons Directory
 
-This directory can contain any number of icons which will override the themes icons when the locale matches the system locale setting. The icons in this folder must exist in the <a href="#theme_graphics">theme icons</a> directory.
+This directory can contain any number of icons which will override the themes icons when the locale matches the system locale setting. The icons in this folder must exist in the \ref theme_graphics "theme icons" directory.
 
 */

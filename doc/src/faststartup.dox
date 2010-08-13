@@ -3,7 +3,7 @@
 There are three features that enable improving MApplication startup
 times:
 
-\li The <a href="launcher.html">application launcher</a> is the
+\li The \subpage launcher "application launcher" is the
 primary alternative for shortening application startup times. It will
 preload large libraries and instantiate e.g. MApplication and
 MApplicationWindow objects to so called component cache before the
@@ -12,7 +12,7 @@ the already created instances from the component cache. However, there
 are some limitations to launcher usage. For instance it does not
 support some MeeGoTouch and Qt command line options.
 
-\li <a href="prestart.html">Application prestarting</a> is meant for
+\li \subpage prestart "Application prestarting" is meant for
 applications that cannot avoid slow initializations before they can be
 used. Prestarting enables starting up those applications to a state
 where they do not show UI. From that state they can show a window in
@@ -24,7 +24,7 @@ prestarting is limited to a small set of critical applications. This
 feature cannot be used without support from the system
 configuration.</strong>
 
-\li <a href="prestart.html">Lazy shutdown</a> allows applications to
+\li \ref prestart "Lazy shutdown" allows applications to
 be closed without terminating. This allows an application to show its
 window very quickly when it is needed next time. Lazy shutdown does
 not speed up the first startup at all, but it improves the performance
@@ -34,8 +34,8 @@ An application can use any combination of the above features.
 
 \section links Documentation links 
 
-    \li <a href="launcher.html">How to write launchable applications</a>
+    \li \ref launcher "How to write launchable applications"
 
-    \li <a href="prestart.html">How to write prestartable and lazy shutdownable applications</a>
+    \li \ref prestart "How to write prestartable and lazy shutdownable applications"
 
 */
