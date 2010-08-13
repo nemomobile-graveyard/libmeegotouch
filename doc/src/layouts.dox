@@ -38,19 +38,19 @@ For example the calculator example has the following code snippet:
 \section main Main Policies
 \li MLinearLayoutPolicy - For placing items horizontally or vertically:
 
-\image html mlinearlayoutpolicy_small.png
+\image html mlinearlayoutpolicy.jpg
 
 \li MGridLayoutPolicy - For placing items in a grid:
 
-\image html mgridlayoutpolicy_small.png
+\image html mgridlayoutpolicy.jpg
 
 \li MFlowLayoutPolicy - For placing items in a horizontal line, overflowing onto the next line:
 
-\image html mflowlayoutpolicy_small.png 
+\image html mflowlayoutpolicy.jpg
 
 \li MFreestyleLayoutPolicy - For placing items freely, but still preventing items from overlapping:
 
-\image html mfreestylelayoutpolicy_small.png
+\image html mfreestylelayoutpolicy.jpg
 
 \section multiple Multiple Policies
 

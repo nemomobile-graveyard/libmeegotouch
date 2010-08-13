@@ -39,7 +39,7 @@ class MFreestyleLayoutPolicyPrivate;
  * \until }
  *
  * The result, with appropriate CSS styling, looks like:
- * \image html mfreestylelayoutpolicy.png
+ * \image html mfreestylelayoutpolicy.jpg
  *
  * \sa \link layout-mfreestylelayoutpolicy MFreestyleLayoutPolicy Example \endlink
  */

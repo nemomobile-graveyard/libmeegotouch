@@ -41,7 +41,7 @@ class QWidget;
  * \until }
  *
  * The result, with appropriate CSS styling, looks like:
- * \image html mgridlayoutpolicy.png
+ * \image html mgridlayoutpolicy.jpg
  *
  * \sa \ref layout-mgridlayoutpolicy
  *

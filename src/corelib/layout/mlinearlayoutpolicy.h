@@ -41,7 +41,7 @@ class QGraphicsLayoutItem;
  * \until }
  *
  * The result, with appropriate CSS styling, looks like:
- * \image html mlinearlayoutpolicy.png
+ * \image html mlinearlayoutpolicy.jpg
  *
  * \sa \ref layout-mlinearlayoutpolicy
  *

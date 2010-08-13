@@ -3,7 +3,7 @@
 
 Source code for a simple example of QGraphicsGridLayout.
 
-\image html mgridlayoutpolicy.png
+\image html mgridlayoutpolicy.jpg
 
 Source code of qgraphicsgridlayout.cpp:
 \include examples/layout/qgraphicsgridlayout/qgraphicsgridlayout.cpp

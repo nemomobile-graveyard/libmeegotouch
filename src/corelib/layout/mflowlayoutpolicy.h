@@ -44,7 +44,7 @@ class MFlowLayoutPolicyPrivate;
  *  \until }
  *
  *  The result, with appropriate CSS styling, looks like:
- *  \image html mflowlayoutpolicy.png
+ *  \image html mflowlayoutpolicy.jpg
  *
  *  \sa \ref layout-mflowlayoutpolicy
  *
