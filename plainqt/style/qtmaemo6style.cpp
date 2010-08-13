@@ -320,9 +320,9 @@ bool QtMaemo6Style::drawBackground(QPainter *p,
     if (style) {
         if(style->backgroundImage()) {
             ret = d->drawScalableImage(p, option, rect, style->backgroundImage(), style, w);
-        } else {
-            p->fillRect(rect, QBrush(style->backgroundColor()));
-        }
+        } // else {
+        //    p->fillRect(rect, QBrush(style->backgroundColor()));
+        //}
     }
     return ret;
 }
