@@ -749,6 +749,9 @@ void QtMaemo6StylePrivate::paddingFromStyle(const MWidgetStyle *style,
             *right = style->paddingRight();
         if (bottom && style->paddingBottom() > *bottom)
             *bottom = style->paddingBottom();
+    } else {
+        //if style is invalid or has no backgroundimage, return default padding 0
+        *left = *top = *right = *bottom = 0;
     }
 }
 
@@ -1443,53 +1446,51 @@ void QtMaemo6Style::drawControl(ControlElement element,
             // Don't show the edge of the button that is closest to the
             // TabBarBase.
             // FIXME: Solve for other tab bar orientations
-            if (style) {
+            if (style && style->backgroundImage()) {
                 int left, right, top, bottom;
-                if(style->backgroundImage()) {
-                    style->backgroundImage()->borders(&left, &right, &top, &bottom);
+                style->backgroundImage()->borders(&left, &right, &top, &bottom);
 
-                    qreal cutOff = 0;
-                    qreal origSize = 0;
+                qreal cutOff = 0;
+                qreal origSize = 0;
 
-                    const QPixmap *pixmap = style->backgroundImage()->pixmap();
-                    if (pixmap) {
-                        int buttonHeight = btn.rect.height();
-                        int buttonWidth = btn.rect.width();
+                const QPixmap *pixmap = style->backgroundImage()->pixmap();
+                if (pixmap) {
+                    int buttonHeight = btn.rect.height();
+                    int buttonWidth = btn.rect.width();
 
-                        switch (tab->shape) {
-                        case QTabBar::RoundedNorth:
-                        case QTabBar::TriangularNorth:
-                            cutOff = bottom;
-                            origSize = pixmap->height();
-                            btn.rect.setHeight(buttonHeight * origSize / (origSize - cutOff));
-                            break;
+                    switch (tab->shape) {
+                    case QTabBar::RoundedNorth:
+                    case QTabBar::TriangularNorth:
+                        cutOff = bottom;
+                        origSize = pixmap->height();
+                        btn.rect.setHeight(buttonHeight * origSize / (origSize - cutOff));
+                        break;
 
-                        case QTabBar::RoundedSouth:
-                        case QTabBar::TriangularSouth:
-                            cutOff = top;
-                            origSize = pixmap->height();
-                            btn.rect.setTop(-buttonHeight * cutOff / origSize);
-                            btn.rect.setHeight(buttonHeight * origSize / (origSize - cutOff));
-                            break;
+                    case QTabBar::RoundedSouth:
+                    case QTabBar::TriangularSouth:
+                        cutOff = top;
+                        origSize = pixmap->height();
+                        btn.rect.setTop(-buttonHeight * cutOff / origSize);
+                        btn.rect.setHeight(buttonHeight * origSize / (origSize - cutOff));
+                        break;
 
-                        case QTabBar::RoundedWest:
-                        case QTabBar::TriangularWest:
-                            cutOff = right;
-                            origSize = pixmap->width();
-                            btn.rect.setWidth(buttonWidth * origSize / (origSize - cutOff));
-                            break;
+                    case QTabBar::RoundedWest:
+                    case QTabBar::TriangularWest:
+                        cutOff = right;
+                        origSize = pixmap->width();
+                        btn.rect.setWidth(buttonWidth * origSize / (origSize - cutOff));
+                        break;
 
-                        case QTabBar::RoundedEast:
-                        case QTabBar::TriangularEast:
-                            cutOff = left;
-                            origSize = pixmap->width();
-                            btn.rect.setLeft(-buttonWidth * cutOff / origSize);
-                            btn.rect.setWidth(buttonWidth * origSize / (origSize - cutOff));
-                            break;
+                    case QTabBar::RoundedEast:
+                    case QTabBar::TriangularEast:
+                        cutOff = left;
+                        origSize = pixmap->width();
+                        btn.rect.setLeft(-buttonWidth * cutOff / origSize);
+                        btn.rect.setWidth(buttonWidth * origSize / (origSize - cutOff));
+                        break;
 
-                        default:
-                            break;
-                        }
+                    default:
+                        break;
                     }
                 }
             }
