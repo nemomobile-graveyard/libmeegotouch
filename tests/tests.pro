@@ -30,6 +30,7 @@ SUBDIRS     =  \
      ut_mdetailedlistitem \
      ut_mdialog \
      ut_mdialogview \
+     ut_mmessagebox \
      ut_mnavigationbar \
      ut_mlist \
      ut_mlistviewgroupheader \
