@@ -61,7 +61,7 @@ void MLinearLayoutPolicy::insertItem(int index, QGraphicsLayoutItem *item)
     d->engine->insertItem(index, proxyItem);
     MAbstractLayoutPolicy::insertItem(index, item);
     
-    if( d->notifyWidgetsOfLayoutPositionEnabled )
+    if( isActive() && d->notifyWidgetsOfLayoutPositionEnabled )
         d->notifyAffectedWidgetsOfLayoutPosition(index, true);
 }
 
@@ -139,7 +139,8 @@ void MLinearLayoutPolicy::setOrientation(Qt::Orientation orientation)
         else
             d->engine->setSpacing(verticalSpacing());
         invalidatePolicyAndLayout();
-        d->notifyAllWidgetsOfLayoutPosition();
+        if( isActive() && d->notifyWidgetsOfLayoutPositionEnabled )
+            d->notifyAllWidgetsOfLayoutPosition();
     }
 }
 
@@ -157,7 +158,7 @@ void MLinearLayoutPolicy::removeAt(int index)
         return;
     }
 
-    if( d->notifyWidgetsOfLayoutPositionEnabled )
+    if( isActive() && d->notifyWidgetsOfLayoutPositionEnabled )
         d->notifyAffectedWidgetsOfLayoutPosition(index, false);
 
     QGraphicsLayoutItem *proxyItem = d->engine->itemAt(index);
@@ -182,7 +183,8 @@ void MLinearLayoutPolicy::setNotifyWidgetsOfLayoutPositionEnabled(bool enabled)
     Q_D(MLinearLayoutPolicy);
     if( enabled != d->notifyWidgetsOfLayoutPositionEnabled ) {
         d->notifyWidgetsOfLayoutPositionEnabled = enabled;
-        d->notifyAllWidgetsOfLayoutPosition();
+        if( isActive() )
+            d->notifyAllWidgetsOfLayoutPosition();
     }
 }
 
@@ -253,4 +255,8 @@ Qt::Alignment MLinearLayoutPolicy::alignment(QGraphicsLayoutItem *item) const
     QGraphicsLayoutItem *proxyItem = d->engine->itemAt(indexOf(item));
     return d->engine->alignment(proxyItem);
 }
-
+void MLinearLayoutPolicy::activated()
+{
+    Q_D(MLinearLayoutPolicy);
+    d->notifyAllWidgetsOfLayoutPosition();
+}
