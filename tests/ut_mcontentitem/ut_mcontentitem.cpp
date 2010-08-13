@@ -156,5 +156,20 @@ void Ut_MContentItem::testAdditionalItem()
     QCOMPARE( m_subject->additionalItem(), additionalItem );
 }
 
+void Ut_MContentItem::testModelSetItemPixmap_data()
+{
+    QTest::addColumn<QString>("fname");
+    QTest::newRow("png") << qApp->applicationDirPath() + "/ut_mcontentitem_test.png";
+}
+
+void Ut_MContentItem::testModelSetItemPixmap()
+{
+    QFETCH(QString, fname);
+
+    const QPixmap pixmap(fname);
+    m_subject->model()->setItemPixmap(pixmap);
+    QCOMPARE( m_subject->model()->itemPixmap().toImage(), pixmap.toImage());
+}
+
 
 QTEST_APPLESS_MAIN(Ut_MContentItem)

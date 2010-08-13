@@ -51,6 +51,8 @@ private slots:
     void testSetSmallItem();
     void testSetSmallText();
     void testAdditionalItem();
+    void testModelSetItemPixmap_data();
+    void testModelSetItemPixmap();
 
 private:
     MContentItem *m_subject;
