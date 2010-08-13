@@ -40,7 +40,7 @@ private:
     MDetailedListItem *q_ptr;
 
 private:
-    QGraphicsGridLayout *layoutGrid;        
+    QGraphicsGridLayout *layoutGrid;
 
     MImageWidget *image;
     MImageWidget *sideTopImage;
@@ -52,6 +52,7 @@ private:
 
     bool isLayoutInitialized;
     MDetailedListItem::ItemStyle listItemStyle;
+    MDetailedListItem::IconStyle iconStyle;
 };
 
 #endif // MDETAILEDLISTITEM_P_H

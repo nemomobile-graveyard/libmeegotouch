@@ -16,7 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
- 
+
 #include "mdetailedlistitem.h"
 #include "mdetailedlistitem_p.h"
 
@@ -37,7 +37,8 @@ MDetailedListItemPrivate::MDetailedListItemPrivate(MDetailedListItem::ItemStyle 
     subtitleLabel(NULL),
     sideBottomLabel(NULL),
     isLayoutInitialized(false),
-    listItemStyle(style)
+    listItemStyle(style),
+    iconStyle(MDetailedListItem::Icon)
 {
 
 }
@@ -73,7 +74,7 @@ void MDetailedListItemPrivate::createLayout()
         }
     case MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel: {
             q->titleLabelWidget()->setObjectName("CommonTitle");
-            q->setIconStyle(MDetailedListItem::Icon);            
+            q->setIconStyle(MDetailedListItem::Icon);
 
             layout()->addItem(q->imageWidget(), 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
 
@@ -209,7 +210,7 @@ void MDetailedListItem::setItemStyle(ItemStyle itemStyle)
 
     if (itemStyle == d->listItemStyle)
         return;
-    
+
     initLayout();
 }
 
@@ -221,10 +222,24 @@ MDetailedListItem::ItemStyle MDetailedListItem::itemStyle() const
 
 void MDetailedListItem::setIconStyle(IconStyle style)
 {
+    Q_D(MDetailedListItem);
+
+    if(style == d->iconStyle)
+        return;
+
+    d->iconStyle = style;
+
     if (style == Thumbnail)
         imageWidget()->setObjectName("CommonThumbnail");
     else if (style == Icon)
         imageWidget()->setObjectName("CommonMainIcon");
+}
+
+MDetailedListItem::IconStyle MDetailedListItem::iconStyle() const
+{
+    Q_D(const MDetailedListItem);
+
+    return d->iconStyle;
 }
 
 void MDetailedListItem::setImageWidget(MImageWidget *image)
