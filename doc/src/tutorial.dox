@@ -74,7 +74,7 @@ With the addition of the application page our <code>main.cpp</code> should now l
 
 Now you should be able to see the title of your page being displayed in the navigation bar and the "Hello World!" text below it. You can also try to pan the page to see what happens. Since the text fits within the screen boundaries the page bounces back to its original position after each panning gesture.
 
-\image html "hello_world_ready.jpg" "\"Hello World!\" application (placeholder image)"
+\image html "hello_world_ready.jpg" "\"Hello World!\" application"
 
 This is the minimal code to get a "Hello World!" MeeGo Touch application working.
 
@@ -89,7 +89,7 @@ Navigation between pages is most commonly done from a main page to child/sub pag
 
 To showcase this navigational pattern we will modify our "Hello World!" application to emulate a simple Music Catalogue app.
 
-\image html "music_catalogue_navigation.jpg" "Navigational pattern of our \"Music Catalogue\" application (placeholder image)"
+\image html "music_catalogue_navigation.jpg" "Navigational pattern of our \"Music Catalogue\" application"
 
 From the figure above you can see that we have three different pages (from left to right): Main page, artist page and album page.
 
@@ -109,7 +109,7 @@ Our data classes in <code>data.h</code>:
 
 Our <code>MainPage</code> is a specialization of <code>MApplicationPage</code>. It takes as a parameter in its constructor the list of artists and it displays then as a list of buttons. When an artist's button gets clicked, a new page showing his information appears.
 
-\image html "music_mainpage.jpg" "Main page of our \"Music Catalogue\" application (placeholder image)"
+\image html "music_mainpage.jpg" "Main page of our \"Music Catalogue\" application"
 
 \include tutorial_music_mainpage.cpp
 \include tutorial_music_mainpage.h
@@ -125,7 +125,7 @@ The <code>ArtistPage</code> is very similar to MainPage. It takes an <code>Artis
 
 <code>AlbumPage</code> is our last and innermost page, navigation-wise. It takes an <code>Album</code> object and displays its cover art, artist and song list.
 
-\image html "music_albumpage.jpg" "Album page of our \"Music Catalogue\" application (placeholder image)"
+\image html "music_albumpage.jpg" "Album page of our \"Music Catalogue\" application"
 
 \include tutorial_music_albumpage.cpp
 \include tutorial_music_albumpage.h
@@ -167,7 +167,7 @@ Unlike a regular QGraphicsLayout where you add items directly to it, in MLayout 
 
 Now let's modify the AlbumPage of our Music Catalogue application to make it use a vertical layout when in portrait and a horizontal one when in landscape, like shown in the figure below:
 
-\image html "music_albumpage_layout_orientations.jpg" "Different layouts for the AlbumPage according to the screen orientation (placeholder image)"
+\image html "music_albumpage_layout_orientations.jpg" "Different layouts for the AlbumPage according to the screen orientation"
 
 To achieve this we only have to modify the implementation of AlbumPage::createContent(). Instead of having all elements (cover art, artist name and song list) in a single layout we will have two separate sub-layouts: one holding the cover art and artist name, the other holding the song list. When in landscape orientation the two sub-layouts will be arranged side-by-side and in portrait orientation they will be on top of each other.
 
