@@ -28,6 +28,8 @@
 #include <MSceneWindow>
 #include <MLayout>
 
+#include <mbuttonmodel.h>
+
 #include "ut_mdialog.h"
 
 MWindow *appWin;
@@ -181,10 +183,13 @@ void Ut_MDialog::addStandardButtons()
 
 void Ut_MDialog::addNonStandardButtonModel()
 {
+    const QIcon icon("icon-m-home");
     MButtonModel *mbm1 = new MButtonModel();
     MButtonModel *mbm2 = new MButtonModel();
+    mbm1->setIcon( icon );
     dialog->addButton(mbm1);
 
+    QCOMPARE(dialog->model()->buttons().at(0)->icon(), icon);
     QVERIFY(dialog->model()->buttons().contains(mbm1));
     QVERIFY(!dialog->model()->buttons().contains(mbm2));
 
