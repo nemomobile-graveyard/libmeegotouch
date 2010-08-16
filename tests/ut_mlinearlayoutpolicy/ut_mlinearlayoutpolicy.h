@@ -45,6 +45,7 @@ private slots:
     void testSpacing();
     void testInsertingItems();
 
+    void testLayoutPositioning_data();
     void testLayoutPositioning();
 
     void init();

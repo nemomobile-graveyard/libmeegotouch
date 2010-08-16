@@ -278,6 +278,7 @@ protected:
     /*! \reimp */
     virtual void relayout();
     virtual void invalidate();
+    virtual void activated();
     /*! \reimp_end */
 
 private:
