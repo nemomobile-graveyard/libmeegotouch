@@ -211,6 +211,7 @@ void MDetailedListItem::setItemStyle(ItemStyle itemStyle)
     if (itemStyle == d->listItemStyle)
         return;
 
+    d->listItemStyle = itemStyle;
     initLayout();
 }
 
