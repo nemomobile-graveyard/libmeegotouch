@@ -207,7 +207,7 @@ MLabel * MComboBoxButton::subtitleWidget()
 MProgressIndicator* MComboBoxButton::progressWidget()
 {
     if (!progress) {
-        progress = new MProgressIndicator(this, MProgressIndicator::spinnerType);
+        progress = new MProgressIndicator(this, MProgressIndicator::barType);
         progress->setUnknownDuration(true);
         progress->setObjectName(progressIndicatorObjectName);
     }
