@@ -316,7 +316,7 @@ void Ut_MImageWidget::testImageNotExist()
 
 void Ut_MImageWidget::testImageName()
 {
-    QString fname("imagename");
+    QString fname(qApp->applicationDirPath() + "/ut_mimagewidget-test.png" );
     m_subject = new MImageWidget(fname);
 
     QCOMPARE(fname, m_subject->image());
@@ -331,16 +331,17 @@ void Ut_MImageWidget::testImageName()
 
 void Ut_MImageWidget::testZoomIn()
 {
-    QString fname("imagename");
+    QString fname(qApp->applicationDirPath() + "/ut_mimagewidget-test.png" );
     m_subject = new MImageWidget(fname);
 
-    qreal fx, fy;
+    qreal fx(0), fy(0);
     m_subject->zoomFactor(&fx, &fy);
-
+//qWarning() << "fx, fy: " <<fx << " ," << fy;
     m_subject->zoomIn();
 
-    qreal nfx, nfy;
+    qreal nfx(0), nfy(0);
     m_subject->zoomFactor(&nfx, &nfy);
+//qWarning() << "nfx, nfy: " <<nfx << " ," << nfy;
 
     QVERIFY(nfx >= fx);
     QVERIFY(nfy >= fy);
@@ -351,16 +352,19 @@ void Ut_MImageWidget::testZoomIn()
 
 void Ut_MImageWidget::testZoomOut()
 {
-    QString fname("imagename");
+    
+    QString fname(qApp->applicationDirPath() + "/ut_mimagewidget-test.png");
     m_subject = new MImageWidget(fname);
 
-    qreal fx, fy;
+    qreal fx(0), fy(0);
     m_subject->zoomFactor(&fx, &fy);
-
+//qWarning() << "fx, fy: " <<(fx) << " ," << (fy);
     m_subject->zoomOut();
 
-    qreal nfx, nfy;
+    qreal nfx(0), nfy(0);
     m_subject->zoomFactor(&nfx, &nfy);
+
+//qWarning() << "nfx, nfy: " <<(nfx) << " ," << (nfy);
 
     QVERIFY(nfx <= fx);
     QVERIFY(nfy <= fy);
@@ -372,7 +376,7 @@ void Ut_MImageWidget::testZoomOut()
 
 void Ut_MImageWidget::testConstructors()
 {
-    QString fname("imagename");
+    QString fname(qApp->applicationDirPath() + "/ut_mimagewidget-test.png" );
     const QPixmap pixmap ( fname );
 
     m_subject = new MImageWidget( &pixmap );
