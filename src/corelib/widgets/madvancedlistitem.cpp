@@ -181,7 +181,9 @@ void MAdvancedListItem::setImageWidget(MImageWidget * imageWidget)
 
     if (imageWidget) {
         d->image = imageWidget;
-        d->layout()->addItem(d->image, 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
+        d->image->setObjectName("CommonMainIcon");
+        if (d->layout())
+            d->layout()->addItem(d->image, 0, 0, 3, 1, Qt::AlignLeft | Qt::AlignVCenter);
     }
 }
 
