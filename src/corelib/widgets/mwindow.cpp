@@ -591,7 +591,8 @@ void MWindow::setTranslucentBackground(bool enable)
 #endif
     }
 
-    if (MApplication::softwareRendering() || MApplication::isPrestarted())
+    // when the gl widget is not initialized yet we will also not initialize it
+    if (MApplication::softwareRendering() || MApplication::isPrestarted() || d->glWidget == 0)
         d->initSoftwareViewport();
     else {
         d->initGLViewport();

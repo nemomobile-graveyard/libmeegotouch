@@ -143,7 +143,8 @@ public:
      show through the parts not otherwise filled by the application, for example
      by widgets.
 
-     Calling this method is costly since it involves recreating the window's viewport.
+     Calling this method is costly when invoking it after showing the window as it
+     involves recreating the window's viewport.
      This method usually should be called only once, before showing the window.
 
      Platform notes:
