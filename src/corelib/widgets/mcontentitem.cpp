@@ -232,6 +232,7 @@ void MContentItem::setSmallText(QString text)
     } else {
         d->smallText = new MLabel(text);
         d->smallText->setAlignment( Qt::AlignRight );
+        d->smallText->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
         model()->setSmallItem(d->smallText);
     }
 }
