@@ -98,7 +98,7 @@ void MPopupListViewPrivate::init()
     Q_Q(MPopupListView);
 
     list = new MList();
-    list->setCellCreator(this);
+    list->setCellCreator(new MPopupListCellCreator(list));
     list->setSelectionMode(MList::SingleSelection);
     q->contentsLayout()->insertItem(0, list);
 
@@ -108,7 +108,11 @@ void MPopupListViewPrivate::init()
     QObject::connect(list, SIGNAL(displayEntered()), q, SLOT(_q_scrollOnFirstAppearance()));
 }
 
-void MPopupListViewPrivate::updateCell(const QModelIndex& index, MWidget * cell) const
+MPopupListCellCreator::MPopupListCellCreator(MList *list)
+    : list(list)
+{}
+
+void MPopupListCellCreator::updateCell(const QModelIndex& index, MWidget * cell) const
 {
     MPopupListItem* item = static_cast<MPopupListItem*>(cell);
 

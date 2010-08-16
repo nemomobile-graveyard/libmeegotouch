@@ -131,27 +131,28 @@ void Ut_MPopupList::testCurrentIndex()
 
 void Ut_MPopupList::testSetItemIconID()
 {
-    MPopupListViewPrivate *view = new MPopupListViewPrivate;
     QStandardItemModel *itemModel = new QStandardItemModel;
-    view->list = new MList();
-    view->list->setItemModel(itemModel);
-    view->list->setSelectionModel(new QItemSelectionModel(itemModel));
+    MList* list = new MList();
+    MPopupListCellCreator *cellCreator = new MPopupListCellCreator(list);
+    list->setCellCreator(cellCreator);
+    list->setItemModel(itemModel);
+    list->setSelectionModel(new QItemSelectionModel(itemModel));
 
     MPopupListItem *item;
     MWidgetRecycler recycler;
 
     // First add item with text to model and build it
     itemModel->appendRow(new QStandardItem("Item"));
-    item = (MPopupListItem *)(view->createCell(itemModel->index(0, 0),recycler));
+    item = (MPopupListItem *)(cellCreator->createCell(itemModel->index(0, 0),recycler));
     QVERIFY(item->icon == 0);
 
     // Add icon to previously set item
     itemModel->setData(itemModel->index(0, 0), "icon-l-music", Qt::DecorationRole);
-    view->updateCell(itemModel->index(0,0), item);
+    cellCreator->updateCell(itemModel->index(0,0), item);
     QCOMPARE(item->icon->image(), QString("icon-l-music"));
 
     delete itemModel;
-    delete view;
+    delete list;
 }
 
 void Ut_MPopupList::testScrollTo()

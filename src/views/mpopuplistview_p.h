@@ -56,7 +56,16 @@ private:
 #endif
 };
 
-class MPopupListViewPrivate : public MDialogViewPrivate, public MAbstractCellCreator<MPopupListItem>
+class MPopupListCellCreator : public MAbstractCellCreator<MPopupListItem>
+{
+public:
+    MPopupListCellCreator(MList* list);
+    virtual void updateCell(const QModelIndex& index, MWidget * cell) const;
+private:
+    MList* list;
+};
+
+class MPopupListViewPrivate : public MDialogViewPrivate
 {
     Q_DECLARE_PUBLIC(MPopupListView)
 
@@ -66,7 +75,6 @@ public:
 
     virtual void init();
 
-    virtual void updateCell(const QModelIndex& index, MWidget * cell) const;
     virtual void _q_scrollOnFirstAppearance();
 
     MPopupList*   controller;
