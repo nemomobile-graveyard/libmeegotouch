@@ -86,16 +86,19 @@ void Ut_mdetailedlistitem::testSetItemStyle()
     //check if m_subject was created with proper style
     QCOMPARE( m_subject->itemStyle(), MDetailedListItem::IconTitleSubtitleAndTwoSideIcons );
     m_subject->setItemStyle(MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel);
-    //this is not working!! styles are not changed!!! bug reported:  #185045
-    QCOMPARE( m_subject->itemStyle(), MDetailedListItem::ThumbnailTitleAndTwoSideIcons );
+    //styles are reported and fixed in:  #185045
+    QCOMPARE( m_subject->itemStyle(), MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel );
 }
 
 void Ut_mdetailedlistitem::testSetIconStyle()
 {
     m_subject->setIconStyle(MDetailedListItem::Icon);
-    QCOMPARE( m_subject->imageWidget()->objectName(), QString("CommonMainIcon"));
+    QString sExpectedObjectName("CommonMainIcon");
+    QCOMPARE( m_subject->imageWidget()->objectName(), sExpectedObjectName);
+
     m_subject->setIconStyle(MDetailedListItem::Thumbnail);
-     QCOMPARE( m_subject->imageWidget()->objectName(), QString("CommonThumbnail"));
+    QString sExpectedObjectName2("CommonThumbnail");
+    QCOMPARE( m_subject->imageWidget()->objectName(), sExpectedObjectName2);
 }
 
 void Ut_mdetailedlistitem::testSetImageWidget()
