@@ -34,6 +34,8 @@ public:
 
     QGraphicsGridLayout *layout();
 
+    void applyIconStyle();
+
 private:
     Q_DECLARE_PUBLIC(MDetailedListItem)
 

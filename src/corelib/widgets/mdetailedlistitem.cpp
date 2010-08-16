@@ -161,6 +161,17 @@ QGraphicsGridLayout *MDetailedListItemPrivate::layout()
     return layoutGrid;
 }
 
+void MDetailedListItemPrivate::applyIconStyle()
+{
+    if (!image)
+        return;
+
+    if (iconStyle == MDetailedListItem::Thumbnail)
+        image->setObjectName("CommonThumbnail");
+    else if (iconStyle == MDetailedListItem::Icon)
+        image->setObjectName("CommonMainIcon");
+}
+
 MDetailedListItem::MDetailedListItem(MDetailedListItem::ItemStyle style, QGraphicsItem *parent)
     : MListItem(parent), d_ptr(new MDetailedListItemPrivate(style))
 {
@@ -230,11 +241,7 @@ void MDetailedListItem::setIconStyle(IconStyle style)
         return;
 
     d->iconStyle = style;
-
-    if (style == Thumbnail)
-        imageWidget()->setObjectName("CommonThumbnail");
-    else if (style == Icon)
-        imageWidget()->setObjectName("CommonMainIcon");
+    d->applyIconStyle();
 }
 
 MDetailedListItem::IconStyle MDetailedListItem::iconStyle() const
@@ -284,6 +291,7 @@ MImageWidget *MDetailedListItem::imageWidget()
 
     if (!d->image) {
         d->image = new MImageWidget(this);
+        d->applyIconStyle();
     }
     return d->image;
 }
@@ -365,6 +373,7 @@ MLabel *MDetailedListItem::sideBottomLabelWidget()
         d->sideBottomLabel->setTextElide(true);
         d->sideBottomLabel->setAlignment(Qt::AlignRight);
         d->sideBottomLabel->setObjectName("CommonItemInfo");
+        d->sideBottomLabel->setSizePolicy(QSizePolicy::MinimumExpanding, QSizePolicy::MinimumExpanding);
     }
 
     return d->sideBottomLabel;
