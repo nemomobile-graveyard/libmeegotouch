@@ -191,6 +191,8 @@ bool MDialogPrivate::prepareStandAloneAppearance(MSceneWindow::DeletionPolicy po
     if (standAloneWindow == 0) {
         standAloneWindow = new MWindow(new MSceneManager);
         standAloneWindow->setTranslucentBackground(true);
+        if(!q->model()->title().isEmpty())
+            standAloneWindow->setWindowTitle(q->model()->title());
 #ifdef Q_WS_X11
         // System Dialog (unlike System Modal Dialog) has to be treated as a separate
         // window, in order to be able to reside in task switcher
