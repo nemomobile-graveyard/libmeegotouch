@@ -17,6 +17,7 @@ SUBDIRS     =  \
     ft_mscalableimage \
     # ut_allwidgets \ // doesn't work
 #     ut_mapplication \ // Depends on private class
+     ut_madvancedlistitem \
      ut_mapplicationpage \
      ut_mapplicationwindow \
      ut_mapplicationservice \

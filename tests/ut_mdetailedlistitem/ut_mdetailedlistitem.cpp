@@ -93,12 +93,10 @@ void Ut_mdetailedlistitem::testSetItemStyle()
 void Ut_mdetailedlistitem::testSetIconStyle()
 {
     m_subject->setIconStyle(MDetailedListItem::Icon);
-    QString sExpectedObjectName("CommonMainIcon");
-    QCOMPARE( m_subject->imageWidget()->objectName(), sExpectedObjectName);
+    QCOMPARE( m_subject->iconStyle() , MDetailedListItem::Icon);
 
     m_subject->setIconStyle(MDetailedListItem::Thumbnail);
-    QString sExpectedObjectName2("CommonThumbnail");
-    QCOMPARE( m_subject->imageWidget()->objectName(), sExpectedObjectName2);
+    QCOMPARE( m_subject->iconStyle() , MDetailedListItem::Thumbnail);
 }
 
 void Ut_mdetailedlistitem::testSetImageWidget()
