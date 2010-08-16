@@ -1117,6 +1117,11 @@ static QMutex defaultLocaleMutex;
 // The static default locale
 MLocale *MLocale::s_systemDefault = 0;
 
+struct MStaticLocaleDestroyer {
+    ~MStaticLocaleDestroyer() { delete MLocale::s_systemDefault; MLocale::s_systemDefault = 0; }
+};
+static MStaticLocaleDestroyer staticLocaleDestroyer;
+
 void MLocale::setDefault(const MLocale &locale)
 {
     defaultLocaleMutex.lock();

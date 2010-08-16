@@ -49,18 +49,21 @@ struct MGConfItemPrivate {
 static GConfClient *
 get_gconf_client ()
 {
-  static bool initialized = false;
-  static GConfClient *client;
+    static GConfClient *s_gconf_client = 0;
+    struct GConfClientDestroyer {
+        ~GConfClientDestroyer() { g_object_unref(s_gconf_client); s_gconf_client = 0; }
+    };
 
-  if (initialized)
-    return client;
+    static GConfClientDestroyer gconfClientDestroyer;
+    if (s_gconf_client)
+        return s_gconf_client;
 
-  g_type_init ();
-  client = gconf_client_get_default();
-  initialized = true;
+    g_type_init();
+    s_gconf_client = gconf_client_get_default();
 
-  return client;
+    return s_gconf_client;
 }
+
 
 #define withClient(c) for (GConfClient *c = get_gconf_client (); c; c = NULL)
 
