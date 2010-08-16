@@ -1,6 +1,11 @@
-libmeegotouch (0.20.34-1) unstable; urgency=low
+libmeegotouch (0.20.34.1-1) unstable; urgency=low
 
   * Fixes: NB#185041 - QtStyle Dialog and Example apps crashing when opened
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 16 Aug 2010 14:33:13 +0300
+
+libmeegotouch (0.20.34-1) unstable; urgency=low
+
   * Fixes: NB#174944 - MList bounces in MLinearLayoutPolicy, when the list is updated
   * Fixes: NB#182799 - "window-wide" toolbar buttons in tab view get wrong selection when current page changes
   * Fixes: NB#183107 - qtorientation example can't get started in SB nor HW
