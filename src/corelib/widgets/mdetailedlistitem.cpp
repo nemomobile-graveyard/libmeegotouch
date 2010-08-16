@@ -212,6 +212,7 @@ void MDetailedListItem::setItemStyle(ItemStyle itemStyle)
         return;
 
     d->listItemStyle = itemStyle;
+    d->isLayoutInitialized = false;
     initLayout();
 }
 

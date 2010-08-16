@@ -16,7 +16,7 @@
 ** of this file.
 **
 ****************************************************************************/
- 
+
 #include "mbasiclistitem.h"
 #include "mbasiclistitem_p.h"
 
@@ -154,6 +154,7 @@ void MBasicListItem::setItemStyle(ItemStyle itemStyle)
         return;
 
     d->listItemStyle = itemStyle;
+    d->isLayoutInitialized = false;
     initLayout();
 }
 
