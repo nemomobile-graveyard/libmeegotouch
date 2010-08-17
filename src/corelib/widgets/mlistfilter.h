@@ -37,6 +37,29 @@ class QKeyEvent;
  * MListFilter creates a text editor and an item proxy model to be used to filter MList items.
  * Application is responsible of putting the text editor into layout.
  *
+ * By default MListFilter uses regular expression with case insensitivity and text editor 
+ * content as a pattern which works as substring search. If you want to use any other content 
+ * in the pattern you can set your own regular expression when text editor content changes.
+ *
+ * See http://doc.trolltech.com/4.6/qsortfilterproxymodel.html for how to change case 
+ * sensitivity and how to access regular expression.
+ *
+ * Example of using list filtering with a caret in the regular expression:
+ * \code
+ *
+ * list->filtering()->setEnabled(true);
+ * connect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged()));
+ * ...
+ *
+ * void MListPage::liveFilteringTextChanged()
+ * {
+ * QRegExp regExp(list->filtering()->proxy()->filterRegExp());
+ * regExp.setPattern('^' + list->filtering()->editor()->text()); // matches in the beginning of line
+ * list->filtering()->proxy()->setFilterRegExp(regExp);
+ * ...
+ *
+ * \endcode
+ *
  */
 class M_EXPORT MListFilter : public QObject
 {

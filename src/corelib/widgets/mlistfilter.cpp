@@ -90,12 +90,17 @@ MListFilter::MListFilter(MList *parent)
     d->q_ptr = this;
     d->init();
 
-    filterProxy = new MSortFilterProxyModel(parent);
     filterEditor = new MTextEdit(MTextEditModel::SingleLine, "", parent);
     filterEditor->setInputMethodAutoCapitalizationEnabled(false);
     filterEditor->setInputMethodCorrectionEnabled(false);
     filterEditor->setInputMethodPredictionEnabled(false);
     filterEditor->setVisible(false);
+
+    filterProxy = new MSortFilterProxyModel(parent);
+    QRegExp::PatternSyntax syntax = QRegExp::RegExp;
+    Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive;
+    QRegExp regExp(filterEditor->text(), caseSensitivity, syntax);
+    filterProxy->setFilterRegExp(regExp);
 
     connect(filterEditor, SIGNAL(textChanged()), this, SLOT(editorTextChanged()));
 }
@@ -168,8 +173,7 @@ void MListFilter::keyPressEvent(QKeyEvent *event)
 
 void MListFilter::editorTextChanged()
 {
-    QRegExp::PatternSyntax syntax = QRegExp::RegExp;
-    Qt::CaseSensitivity caseSensitivity = Qt::CaseInsensitive;
-    QRegExp regExp(filterEditor->text(), caseSensitivity, syntax);
+    QRegExp regExp(filterProxy->filterRegExp());
+    regExp.setPattern(filterEditor->text());
     filterProxy->setFilterRegExp(regExp);
 }
