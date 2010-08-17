@@ -389,7 +389,7 @@ void MRemoteThemeDaemonPrivate::loadThemeDaemonPriorities(const QString& filenam
     priorityBackgroundApplication = settings.value("BackgroundApplication/priority", priorityBackgroundApplication).toInt();
     priorityPrestartedApplication = settings.value("PrestartedApplication/priority", priorityPrestartedApplication).toInt();
 
-    settings.beginGroup("SpefificApplicationPriorities");
+    settings.beginGroup("SpecificApplicationPriorities");
     QStringList apps = settings.childKeys();
     foreach (const QString& app, apps) {
         applicationSpecificPriorities[app] = settings.value(app).toInt();
