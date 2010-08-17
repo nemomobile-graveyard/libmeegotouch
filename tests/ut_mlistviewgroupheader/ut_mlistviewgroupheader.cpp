@@ -18,6 +18,7 @@
 ****************************************************************************/
 
 #include <MWidget>
+#include <MSortFilterProxyModel>
 #include "../../src/views/mlistview_p.h"
 #include "mlistmodel.h"
 #include "myindexedmodel.h"
@@ -78,6 +79,7 @@ void Ut_MListViewGroupHeader::makePhoneBookModel()
 void Ut_MListViewGroupHeader::cleanupTestCase()
 {
     delete phoneBookModel;
+    delete proxyModel;
 }
 
 void Ut_MListViewGroupHeader::init()
@@ -96,7 +98,11 @@ void Ut_MListViewGroupHeader::init()
     listViewPrivate->hdrHeight = GroupHeaderHeight;
 
     MListModel *model = new MListModel;
-    model->setItemModel(phoneBookModel);
+    proxyModel = new MSortFilterProxyModel;
+    proxyModel->setFilterCaseSensitivity(Qt::CaseInsensitive);
+    proxyModel->setFilterRole(Qt::DisplayRole);
+    proxyModel->setSourceModel(phoneBookModel);
+    model->setItemModel(proxyModel);
     model->setShowGroups(true);
     listViewPrivate->controllerModel = model;
 
@@ -374,6 +380,24 @@ void Ut_MListViewGroupHeader::testFindLowerIndexIn3ItemsArray()
     QCOMPARE(dFindLowerIndex(vec, 5), 1);
     QCOMPARE(dFindLowerIndex(vec, 6), 1);
     QCOMPARE(dFindLowerIndex(vec, 9), 2);
+}
+
+void Ut_MListViewGroupHeader::testGroupFilteringWildcardC()
+{
+    proxyModel->setFilterWildcard("C*");
+    QCOMPARE(proxyModel->rowCount(), 1);
+}
+
+void Ut_MListViewGroupHeader::testGroupFilteringWildcardY()
+{
+    proxyModel->setFilterWildcard("*y*");
+    QCOMPARE(proxyModel->rowCount(), 3);
+}
+
+void Ut_MListViewGroupHeader::testGroupFilteringWildcardAsh()
+{
+    proxyModel->setFilterWildcard("ash*");
+    QCOMPARE(proxyModel->rowCount(), 1);
 }
 
 void Ut_MListViewGroupHeader::testPerformance()

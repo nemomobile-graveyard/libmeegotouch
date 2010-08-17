@@ -55,6 +55,7 @@ public:
 
 class MGroupHeaderListViewPrivate;
 class MyIndexedModel;
+class MSortFilterProxyModel;
 
 class Ut_MListViewGroupHeader : public QObject
 {
@@ -119,11 +120,16 @@ private slots:
     void testFindLowerIndexIn2ItemsArray();
     void testFindLowerIndexIn3ItemsArray();
 
+    void testGroupFilteringWildcardC();
+    void testGroupFilteringWildcardY();
+    void testGroupFilteringWildcardAsh();
+
     void testPerformance();
 
 private:
     QObject *phoneBook;
     MyIndexedModel *phoneBookModel;
+    MSortFilterProxyModel *proxyModel;
     MGroupHeaderListViewPrivate *listViewPrivate;
 };
 
@@ -177,4 +183,5 @@ private:
     MyIndexedModel *phoneBookModel;
     MGroupHeaderListViewPrivate *listViewPrivate;
 };
+
 #endif
