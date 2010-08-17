@@ -1,4 +1,4 @@
-libmeegotouch (0.20.35-1) unstable; urgency=low
+libmeegotouch (0.20.35~1) unstable; urgency=low
 
   * Fixes: NB#182160 - Activity in non-visible/background applications when there are notifications on screen
   * Fixes: NB#180677 - Delete MLocale etc when MApplication is deleted
