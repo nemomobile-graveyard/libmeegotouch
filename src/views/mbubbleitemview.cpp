@@ -63,6 +63,7 @@ MBubbleItemViewPrivate::MBubbleItemViewPrivate()
 
     messageComposition = new MLabel();
     messageComposition->setWordWrap(true);
+    messageComposition->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
     messageComposition->setAlignment(Qt::AlignLeft);
 }
 
@@ -119,7 +120,7 @@ void MBubbleItemViewPrivate::replaceAvatar()
         }
         avatar = 0;
     }
-    
+
     if (controller->avatar()) {
         if (controller->avatar()->objectName().isEmpty())
             controller->avatar()->setObjectName(q->style()->avatarObjectName());
