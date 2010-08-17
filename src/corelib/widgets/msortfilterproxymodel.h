@@ -48,6 +48,9 @@ public:
     //! \reimp
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
     //! \reimp_end
+
+protected:
+    virtual bool filterAcceptsGroup(const QModelIndex &source_index) const;
 };
 
 #endif // MSORTFILTERPROXYMODEL_H

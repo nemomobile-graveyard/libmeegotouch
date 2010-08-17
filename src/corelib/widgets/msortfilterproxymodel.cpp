@@ -30,9 +30,19 @@ MSortFilterProxyModel::~MSortFilterProxyModel()
 
 bool MSortFilterProxyModel::filterAcceptsRow(int source_row, const QModelIndex &source_parent) const
 {
-    if (!source_parent.isValid() && 
-        sourceModel()->rowCount(sourceModel()->index(source_row, 0, source_parent)) > 0)
-        return true;
+    if (!source_parent.isValid()) {
+        if (sourceModel()->hasChildren(sourceModel()->index(source_row, 0, QModelIndex())))
+            return filterAcceptsGroup(sourceModel()->index(source_row, 0));
+    }
    
     return QSortFilterProxyModel::filterAcceptsRow(source_row, source_parent);
+}
+
+bool MSortFilterProxyModel::filterAcceptsGroup(const QModelIndex &source_index) const
+{
+    for (int i = 0; i < sourceModel()->rowCount(source_index); i++)
+        if (filterAcceptsRow(i, source_index))
+            return true;
+
+    return false;
 }
