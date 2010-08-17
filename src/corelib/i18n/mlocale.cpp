@@ -1165,7 +1165,7 @@ void MLocale::setDefault(const MLocale &locale)
     // are handled *before* we finally set the correct layout direction
     // below.
     // (see also bug 169305)
-    QCoreApplication::sendPostedEvents();
+    QCoreApplication::sendPostedEvents(0, QEvent::LanguageChange);
     // sends QEvent::ApplicationLayoutDirectionChange to qApp:
     qApp->setLayoutDirection(s_systemDefault->textDirection());
 
@@ -2386,7 +2386,7 @@ void MLocale::refreshSettings()
             // are handled *before* we finally set the correct layout direction
             // below.
             // (see also bug 169305)
-            QCoreApplication::sendPostedEvents();
+            QCoreApplication::sendPostedEvents(0, QEvent::LanguageChange);
             // sends QEvent::ApplicationLayoutDirectionChange to qApp:
             qApp->setLayoutDirection(this->textDirection());
         }

@@ -51,6 +51,7 @@ void Ft_Locales::testBug169305()
     MLocale::setDefault(locale1);
     QCOMPARE(qApp->layoutDirection(), Qt::RightToLeft);
     MLocale locale;
+    QCOMPARE(locale.name(), QString("ar_SA"));
     locale.installTrCatalog("foo");
     MLocale::setDefault(locale);
     QCoreApplication::processEvents();
