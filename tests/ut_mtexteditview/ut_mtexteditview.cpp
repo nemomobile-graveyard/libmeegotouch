@@ -189,6 +189,9 @@ void Ut_MTextEditView::testMaskedCharacters()
 /*
  * Bug #150452, The position of text cursor is wrong after
  * deleting text with backspace key in the MTextEdit
+ *
+ * Bug #177305, Left over characters are not right shifting
+ * on erasing the characters of input text filed
  */
 void Ut_MTextEditView::testUpdateScrollWhenTextChanged()
 {
@@ -197,11 +200,14 @@ void Ut_MTextEditView::testUpdateScrollWhenTextChanged()
     m_subject = new MTextEditView(m_controller);
     m_controller->setView(m_subject);
 
+    m_controller->resize(200, 80); // set some fixed text size
+
     int count = 256;
     qreal hscroll = 0;
     QKeyEvent bsEvent(QEvent::KeyPress, Qt::Key_Backspace, Qt::NoModifier, "\b");
     QKeyEvent event(QEvent::KeyPress, Qt::Key_X, Qt::NoModifier, "x");
 
+    // test for bug #150452
     QCOMPARE(m_subject->d_ptr->hscroll, qreal(0));
     for (int n = 0; n < count; ++n) {
         m_controller->keyPressEvent(&event);
@@ -213,12 +219,34 @@ void Ut_MTextEditView::testUpdateScrollWhenTextChanged()
         m_controller->keyPressEvent(&bsEvent);
     }
     QVERIFY(hscroll > m_subject->d_ptr->hscroll);
-    QVERIFY(m_subject->d_ptr->hscroll > qreal(1.0));
+    QCOMPARE(m_subject->d_ptr->hscroll, qreal(0));
 
     while (!m_controller->text().isEmpty()) {
         m_controller->keyPressEvent(&bsEvent);
     }
     QCOMPARE(m_subject->d_ptr->hscroll, qreal(0));
+
+    // test for bug #177305
+    for (int n = 0; n < count; ++n) {
+        m_controller->keyPressEvent(&event);
+    }
+    m_controller->setCursorPosition(count - 2);
+    hscroll = m_subject->d_ptr->hscroll;
+    QVERIFY(hscroll > 0);
+
+    for (int n = 0; n < (count / 2); ++n) {
+        m_controller->keyPressEvent(&bsEvent);
+    }
+    QVERIFY(hscroll > m_subject->d_ptr->hscroll);
+    QVERIFY(m_subject->d_ptr->hscroll > qreal(1.0));
+
+    for (int n = 0;
+         (n < count) && (m_subject->d_ptr->hscroll > 0)
+             && !m_controller->text().isEmpty();
+         ++n) {
+        m_controller->keyPressEvent(&bsEvent);
+    }
+    QVERIFY(m_controller->cursorPosition() > 0);
 }
 
 void Ut_MTextEditView::testSizeHint()

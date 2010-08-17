@@ -279,14 +279,29 @@ void MTextEditViewPrivate::checkScroll()
     } else if (activeDocument()->textWidth() != -1) {
         // checking scrolling with respect to size only if the size is set
 
-        if (currentX > (activeDocument()->textWidth() - 2 * activeDocument()->documentMargin()
-                        + hscroll)) {
+        qreal rightBorder = activeDocument()->textWidth() - 2 * activeDocument()->documentMargin()
+                            + hscroll;
+
+        if (currentX > rightBorder) {
             // check cursor being after the widget (if the widget size is set)
             // FIXME: margins seem to be a bit funny. this avoids having cursor outside
             // visible area.
             hscroll = currentX - activeDocument()->textWidth()
                       + 2 * activeDocument()->documentMargin();
             scrolled = true;
+        } else if (hscroll > 0) {
+            // scroll text to the right if
+            // 1) there is text before widget and
+            // 2) there is free space between end of text and right widget's border
+            qreal endX = activeDocument()->idealWidth();
+
+            if (endX < rightBorder) {
+                hscroll -= rightBorder - endX;
+                if (hscroll < 0) {
+                    hscroll = 0;
+                }
+                scrolled = true;
+            }
         }
     }
 
