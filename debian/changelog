@@ -1,6 +1,30 @@
-libmeegotouch (0.20.34-1) unstable; urgency=low
+libmeegotouch (0.20.35~1) unstable; urgency=low
+
+  * Fixes: NB#183344 - System dialog has wrong label in switcher
+  * Fixes: NB#185045 - setItemStyle() is not working for MDetailedListItem
+  * Fixes: NB#185277 - MLinearLayoutPolicyPrivate::notifyAllWidgetsOfLayoutPosition() only takes in consideration one policy for a button group
+  * Fixes: NB#185041 - QtStyle Dialog and Example apps crashing when opened
+  * Fixes: NB#176987 - Text is not wrapped or scrollable in Notes and Calendar
+  * Fixes: NB#151917 - MTextEdit is not relocated correctly
+  * Fixes: NB#175181 - It is impossible to focus on [To:] field in Message Text Editor in specific case scenario
+  * Fixes: NB#182815 - Pannable widget is not transparent wrt. passing focus to child widgets
+  * Fixes: NB#184987 - (mslider_steps) MSlider: The value of the slider might stay
+  * Fixes: NB#185049 - iconStyle() is not implemented for MDetailedListItem
+  * Fixes: NB#185022 - (mslider_rounded_step) MSlider: The value of the steps is not calculated correctly.
+  * Fixes: NB#183433 - QtCriticalMsg "Qt Maemo 6 Style init" received in simple Qt application
+  * Fixes: NB#180607 - Mouse events and other gestures active during pinch gesture
+  * Fixes: NB#156327 - Still possible to interact with DuiTextEdit text even when Qt::NoTextInteraction specified
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Tue, 17 Aug 2010 10:57:53 +0300
+
+libmeegotouch (0.20.34.1-1) unstable; urgency=low
 
   * Fixes: NB#185041 - QtStyle Dialog and Example apps crashing when opened
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Mon, 16 Aug 2010 14:33:13 +0300
+
+libmeegotouch (0.20.34-1) unstable; urgency=low
+
   * Fixes: NB#174944 - MList bounces in MLinearLayoutPolicy, when the list is updated
   * Fixes: NB#182799 - "window-wide" toolbar buttons in tab view get wrong selection when current page changes
   * Fixes: NB#183107 - qtorientation example can't get started in SB nor HW
