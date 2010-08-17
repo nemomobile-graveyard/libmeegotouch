@@ -58,6 +58,7 @@ namespace
 
     const QString SettingsLanguage("/meegotouch/i18n/language");
     const QString SettingsLcTime("/meegotouch/i18n/lc_time");
+    const QString SettingsLcTimeFormat24h("/meegotouch/i18n/lc_timeformat24h");
     const QString SettingsLcCollate("/meegotouch/i18n/lc_collate");
     const QString SettingsLcNumeric("/meegotouch/i18n/lc_numeric");
     const QString SettingsLcMonetary("/meegotouch/i18n/lc_monetary");
@@ -275,10 +276,186 @@ icu::DateFormatSymbols *MLocalePrivate::createDateFormatSymbols(const icu::Local
 }
 #endif
 
+static bool isTwelveHours(const QString &icuFormatQString)
+{
+    if (icuFormatQString.contains('\'')) {
+        bool isQuoted = false;
+        for (int i = 0; i < icuFormatQString.size(); ++i) {
+            if (icuFormatQString[i] == '\'')
+                isQuoted = !isQuoted;
+            if (!isQuoted && icuFormatQString[i] == 'a')
+                return true;
+        }
+        return false;
+    }
+    else {
+        if(icuFormatQString.contains('a'))
+            return true;
+        else
+            return false;
+    }
+}
+
+#ifdef HAVE_ICU
+void MLocalePrivate::dateFormatTo24h(icu::DateFormat *df) const
+{
+    if (df) {
+        icu::UnicodeString icuFormatString;
+        QString icuFormatQString;
+        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
+        if (isTwelveHours(icuFormatQString)) {
+            // remove unquoted 'a' characters and remove space left of 'a'
+            // and change unquoted h -> H and K -> k
+            QString tmp;
+            bool isQuoted = false;
+            for (int i = 0; i < icuFormatQString.size(); ++i) {
+                QChar c = icuFormatQString[i];
+                if (c == '\'')
+                    isQuoted = !isQuoted;
+                if (!isQuoted) {
+                    if (c == 'h')
+                        tmp.append("H");
+                    else if (c == 'K')
+                        tmp.append("k");
+                    else if (c == 'a') {
+                        if (tmp.endsWith(' ')) {
+                            // remove space before 'a' if character
+                            // after 'a' is space as well:
+                            if (i < icuFormatQString.size() - 1
+                                && icuFormatQString[i+1] == ' ')
+                                tmp.remove(tmp.size()-1,1);
+                            // remove space before 'a' if 'a' is last
+                            // character in string:
+                            if (i == icuFormatQString.size() - 1)
+                                tmp.remove(tmp.size()-1,1);
+                        }
+                    }
+                    else
+                        tmp.append(c);
+                }
+                else {
+                    tmp.append(c);
+                }
+            }
+            icuFormatQString = tmp;
+        }
+        icuFormatString = MIcuConversions::qStringToUnicodeString(icuFormatQString);
+        static_cast<SimpleDateFormat *>(df)->applyPattern(icuFormatString);
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
+void MLocalePrivate::dateFormatTo12h(icu::DateFormat *df) const
+{
+    if (df) {
+        icu::UnicodeString icuFormatString;
+        QString icuFormatQString;
+        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
+        if (!isTwelveHours(icuFormatQString)) {
+            // change unquoted H -> h and k -> K
+            // add 'a' at the right position (maybe adding a space as well)
+            QString tmp;
+            bool isQuoted = false;
+            bool amPmMarkerWritten = false;
+            QString language = categoryName(MLocale::MLcTime);
+            bool writeAmPmMarkerBeforeHours = false;
+            if (language.startsWith("ja") || language.startsWith("zh"))
+                writeAmPmMarkerBeforeHours = true;
+            if (writeAmPmMarkerBeforeHours) {
+                for (int i = 0; i < icuFormatQString.size(); ++i) {
+                    QChar c = icuFormatQString[i];
+                    if (c == '\'')
+                        isQuoted = !isQuoted;
+                    if (!isQuoted) {
+                        if (c == 'H') {
+                            if (!amPmMarkerWritten) {
+                                tmp.append("a");
+                                amPmMarkerWritten = true;
+                            }
+                            tmp.append("h");
+                        }
+                        else if (c == 'k') {
+                            if (!amPmMarkerWritten) {
+                                tmp.append("a");
+                                amPmMarkerWritten = true;
+                            }
+                            tmp.append("K");
+                        }
+                        else
+                            tmp.append(c);
+                    }
+                    else {
+                        tmp.append(c);
+                    }
+                }
+                icuFormatQString = tmp;
+            }
+            else {
+                for (int i = 0; i < icuFormatQString.size(); ++i) {
+                    QChar c = icuFormatQString[i];
+                    if (c == '\'')
+                        isQuoted = !isQuoted;
+                    if (!isQuoted) {
+                        if (c == 'H')
+                            tmp.append("h");
+                        else if (c == 'k')
+                            tmp.append("K");
+                        else if (c == 'z') {
+                            if (!amPmMarkerWritten) {
+                                if (!tmp.endsWith(' '))
+                                    tmp.append(' ');
+                                tmp.append("a ");
+                                amPmMarkerWritten = true;
+                            }
+                            tmp.append(c);
+                        }
+                        else
+                            tmp.append(c);
+                    }
+                    else {
+                        tmp.append(c);
+                    }
+                }
+                if (!amPmMarkerWritten)
+                    tmp.append(" a");
+                icuFormatQString = tmp;
+            }
+        }
+        icuFormatString = MIcuConversions::qStringToUnicodeString(icuFormatQString);
+        static_cast<SimpleDateFormat *>(df)->applyPattern(icuFormatString);
+    }
+}
+#endif
+
+#ifdef HAVE_ICU
+QString MLocalePrivate::icuFormatString(MLocale::DateType dateType,
+                                        MLocale::TimeType timeType,
+                                        MLocale::CalendarType calendarType,
+                                        MLocale::TimeFormat24h timeFormat24h) const
+{
+    icu::DateFormat *df = createDateFormat(dateType, timeType, calendarType, timeFormat24h);
+
+    QString icuFormatQString;
+
+    if (df)
+    {
+        icu::UnicodeString icuFormatString;
+        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
+        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
+        delete df;
+    }
+    return icuFormatQString;
+}
+#endif
+
 #ifdef HAVE_ICU
 icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
                                                   MLocale::TimeType timeType,
-                                                  MLocale::CalendarType calendarType) const
+                                                  MLocale::CalendarType calendarType,
+                                                  MLocale::TimeFormat24h timeFormat24h) const
 {
     // Create calLocale which has the time pattern we want to use
     icu::Locale calLocale = MIcuConversions::createLocale(
@@ -301,6 +478,20 @@ icu::DateFormat *MLocalePrivate::createDateFormat(MLocale::DateType dateType,
     // symbols with the public API
     static_cast<SimpleDateFormat *>(df)->adoptDateFormatSymbols(dfs);
 #endif
+    if (timeType == MLocale::TimeNone)
+        return df;
+    switch (timeFormat24h) {
+    case(MLocale::TwelveHourTimeFormat24h):
+        MLocalePrivate::dateFormatTo12h(df);
+        break;
+    case(MLocale::TwentyFourHourTimeFormat24h):
+        MLocalePrivate::dateFormatTo24h(df);
+        break;
+    case(MLocale::LocaleDefaultTimeFormat24h):
+        break;
+    default:
+        break;
+    }
     return df;
 }
 #endif
@@ -311,6 +502,7 @@ MLocalePrivate::MLocalePrivate()
     : _valid(true),
       _calendarType(MLocale::DefaultCalendar),
       _collation(MLocale::DefaultCollation),
+      _timeFormat24h(MLocale::LocaleDefaultTimeFormat24h),
       _phoneNumberGrouping( MLocale::DefaultPhoneNumberGrouping ),
 #ifdef HAVE_ICU
       _numberFormat(0),
@@ -319,6 +511,7 @@ MLocalePrivate::MLocalePrivate()
 #ifdef HAVE_GCONF
       currentLanguageItem(SettingsLanguage),
       currentLcTimeItem(SettingsLcTime),
+      currentLcTimeFormat24hItem(SettingsLcTimeFormat24h),
       currentLcCollateItem(SettingsLcCollate),
       currentLcNumericItem(SettingsLcNumeric),
       currentLcMonetaryItem(SettingsLcMonetary),
@@ -346,6 +539,7 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
       _validCountryCodes( other._validCountryCodes ),
       _calendarType(other._calendarType),
       _collation(other._collation),
+      _timeFormat24h(other._timeFormat24h),
       _phoneNumberGrouping( other._phoneNumberGrouping ),
 #ifdef HAVE_ICU
       _numberFormat(0),
@@ -357,6 +551,7 @@ MLocalePrivate::MLocalePrivate(const MLocalePrivate &other)
 #ifdef HAVE_GCONF
       currentLanguageItem(SettingsLanguage),
       currentLcTimeItem(SettingsLcTime),
+      currentLcTimeFormat24hItem(SettingsLcTimeFormat24h),
       currentLcCollateItem(SettingsLcCollate),
       currentLcNumericItem(SettingsLcNumeric),
       currentLcMonetaryItem(SettingsLcMonetary),
@@ -396,6 +591,7 @@ MLocalePrivate &MLocalePrivate::operator=(const MLocalePrivate &other)
     _nameLocale = other._nameLocale;
     _calendarType = other._calendarType;
     _collation = other._collation;
+    _timeFormat24h = other._timeFormat24h;
     _messageTranslations = other._messageTranslations;
     _timeTranslations = other._timeTranslations;
     _trTranslations = other._trTranslations;
@@ -930,6 +1126,7 @@ MLocale::createSystemMLocale()
 #ifdef HAVE_GCONF
     MGConfItem languageItem(SettingsLanguage);
     MGConfItem lcTimeItem(SettingsLcTime);
+    MGConfItem lcTimeFormat24hItem(SettingsLcTimeFormat24h);
     MGConfItem lcCollateItem(SettingsLcCollate);
     MGConfItem lcNumericItem(SettingsLcNumeric);
     MGConfItem lcMonetaryItem(SettingsLcMonetary);
@@ -937,6 +1134,7 @@ MLocale::createSystemMLocale()
 
     QString language = languageItem.value().toString();
     QString lcTime = lcTimeItem.value().toString();
+    QString lcTimeFormat24h = lcTimeFormat24hItem.value().toString();
     QString lcCollate = lcCollateItem.value().toString();
     QString lcNumeric = lcNumericItem.value().toString();
     QString lcMonetary = lcMonetaryItem.value().toString();
@@ -959,6 +1157,12 @@ MLocale::createSystemMLocale()
 
     if (!lcTime.isEmpty())
         systemLocale->setCategoryLocale(MLocale::MLcTime, lcTime);
+    if (lcTimeFormat24h == "24")
+        systemLocale->setTimeFormat24h(MLocale::TwentyFourHourTimeFormat24h);
+    else if (lcTimeFormat24h == "12")
+        systemLocale->setTimeFormat24h(MLocale::TwelveHourTimeFormat24h);
+    else
+        systemLocale->setTimeFormat24h(MLocale::LocaleDefaultTimeFormat24h);
     if (!lcCollate.isEmpty())
         systemLocale->setCategoryLocale(MLocale::MLcCollate, lcCollate);
     if (!lcNumeric.isEmpty())
@@ -994,6 +1198,8 @@ MLocale::connectSettings()
                      this, SLOT(refreshSettings()));
     QObject::connect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
+    QObject::connect(&d->currentLcTimeFormat24hItem, SIGNAL(valueChanged()),
+                     this, SLOT(refreshSettings()));
     QObject::connect(&d->currentLcCollateItem, SIGNAL(valueChanged()),
                      this, SLOT(refreshSettings()));
     QObject::connect(&d->currentLcNumericItem, SIGNAL(valueChanged()),
@@ -1014,6 +1220,8 @@ MLocale::disconnectSettings()
     QObject::disconnect(&d->currentLanguageItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
     QObject::disconnect(&d->currentLcTimeItem, SIGNAL(valueChanged()),
+                        this, SLOT(refreshSettings()));
+    QObject::disconnect(&d->currentLcTimeFormat24hItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
     QObject::disconnect(&d->currentLcCollateItem, SIGNAL(valueChanged()),
                         this, SLOT(refreshSettings()));
@@ -1231,11 +1439,22 @@ void MLocale::setCalendarType(CalendarType calendarType)
     d->_calendarType = calendarType;
 }
 
-
 MLocale::CalendarType MLocale::calendarType() const
 {
     Q_D(const MLocale);
     return d->_calendarType;
+}
+
+void MLocale::setTimeFormat24h(TimeFormat24h timeFormat24h)
+{
+    Q_D(MLocale);
+    d->_timeFormat24h = timeFormat24h;
+}
+
+MLocale::TimeFormat24h MLocale::timeFormat24h() const
+{
+    Q_D(const MLocale);
+    return d->_timeFormat24h;
 }
 
 #ifdef HAVE_ICU
@@ -1480,10 +1699,11 @@ QString MLocale::formatDateTime(const MCalendar &mcalendar,
     icu::UnicodeString resString;
     icu::Calendar *cal = mcalendar.d_ptr->_calendar;
 
-    icu::DateFormat *df = d->createDateFormat(datetype, timetype, mcalendar.type());
+    icu::DateFormat *df = d->createDateFormat(datetype, timetype,
+                                              mcalendar.type(),
+                                              d->_timeFormat24h);
     df->format(*cal, resString, pos);
     delete df;
-
     return MIcuConversions::unicodeStringToQString(resString);
 }
 #endif
@@ -1724,12 +1944,9 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
             case 'r': {
                 // 12 hour clock with am/pm
                 QString timeShortFormat
-                    = icuFormatString(MLocale::DateNone, MLocale::TimeShort,
-                                      MLocale::GregorianCalendar);
-                timeShortFormat.replace(QChar('k'), QChar('K'), Qt::CaseSensitive);
-                timeShortFormat.replace(QChar('H'), QChar('h'), Qt::CaseSensitive);
-                if (!timeShortFormat.contains('a', Qt::CaseSensitive))
-                    timeShortFormat.append(QLatin1String(" a"));
+                    = d->icuFormatString(MLocale::DateNone, MLocale::TimeShort,
+                                         MLocale::GregorianCalendar,
+                                         MLocale::TwelveHourTimeFormat24h);
                 icuFormat.append(timeShortFormat);
                 break;
             }
@@ -1737,11 +1954,9 @@ QString MLocale::formatDateTime(const MCalendar &mCalendar,
             case 'R': {
                 // 24-hour clock time, in the format "%H:%M"
                 QString timeShortFormat
-                    = icuFormatString(MLocale::DateNone, MLocale::TimeShort,
-                                      MLocale::GregorianCalendar);
-                timeShortFormat.replace(QRegExp(" *a"), QLatin1String(""));
-                timeShortFormat.replace(QChar('K'), QChar('k'), Qt::CaseSensitive);
-                timeShortFormat.replace(QChar('h'), QChar('H'), Qt::CaseSensitive);
+                    = d->icuFormatString(MLocale::DateNone, MLocale::TimeShort,
+                                         MLocale::GregorianCalendar,
+                                         MLocale::TwentyFourHourTimeFormat24h);
                 icuFormat.append(timeShortFormat);
                 break;
             }
@@ -1917,18 +2132,8 @@ QString MLocale::icuFormatString( DateType dateType,
                           CalendarType calendarType) const
 {
     Q_D(const MLocale);
-    icu::DateFormat *df = d->createDateFormat(dateType, timeType, calendarType);
-
-    QString icuFormatQString;
-
-    if (df)
-    {
-        icu::UnicodeString icuFormatString;
-        static_cast<SimpleDateFormat *>(df)->toPattern(icuFormatString);
-        icuFormatQString = MIcuConversions::unicodeStringToQString(icuFormatString);
-        delete df;
-    }
-    return icuFormatQString;
+    return d->icuFormatString(dateType, timeType, calendarType,
+                              d->_timeFormat24h);
 }
 #endif
 
@@ -1943,7 +2148,9 @@ QDateTime MLocale::parseDateTime(const QString &dateTime, DateType dateType,
     MCalendar mcalendar(calendarType);
 
     UnicodeString text = MIcuConversions::qStringToUnicodeString(dateTime);
-    icu::DateFormat *df = d->createDateFormat(dateType, timeType, mcalendar.type());
+    icu::DateFormat *df = d->createDateFormat(dateType, timeType,
+                                              mcalendar.type(),
+                                              d->_timeFormat24h);
     icu::ParsePosition pos(0);
     UDate parsedDate = df->parse(text, pos);
     delete df;
@@ -2338,6 +2545,7 @@ void MLocale::refreshSettings()
     bool settingsHaveReallyChanged = false;
     QString localeName = d->currentLanguageItem.value().toString();
     QString lcTime = d->currentLcTimeItem.value().toString();
+    QString lcTimeFormat24h = d->currentLcTimeFormat24hItem.value().toString();
     QString lcCollate = d->currentLcCollateItem.value().toString();
     QString lcNumeric = d->currentLcNumericItem.value().toString();
     QString lcMonetary = d->currentLcMonetaryItem.value().toString();
@@ -2354,6 +2562,17 @@ void MLocale::refreshSettings()
     if (lcTime != d->_calendarLocale) {
         settingsHaveReallyChanged = true;
         setCategoryLocale(MLcTime, lcTime);
+    }
+    MLocale::TimeFormat24h timeFormat24h;
+    if (lcTimeFormat24h == "24")
+        timeFormat24h = MLocale::TwentyFourHourTimeFormat24h;
+    else if (lcTimeFormat24h == "12")
+        timeFormat24h = MLocale::TwelveHourTimeFormat24h;
+    else
+        timeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
+    if (timeFormat24h != d->_timeFormat24h) {
+        settingsHaveReallyChanged = true;
+        d->_timeFormat24h = timeFormat24h;
     }
     if (lcCollate != d->_collationLocale) {
         settingsHaveReallyChanged = true;

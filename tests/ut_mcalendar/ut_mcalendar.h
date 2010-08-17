@@ -26,6 +26,21 @@
 #include <MLocale>
 #include <MCalendar>
 
+#ifdef HAVE_ICU
+#include <unicode/unistr.h>
+#include <unicode/ucal.h>
+#include <unicode/coll.h>
+#include <unicode/fieldpos.h>
+#include <unicode/datefmt.h>
+#include <unicode/calendar.h>
+#include <unicode/smpdtfmt.h> // SimpleDateFormat
+#include <unicode/numfmt.h>
+#include <unicode/uloc.h>
+#include <unicode/dtfmtsym.h> // date format symbols
+#include <unicode/putil.h> // u_setDataDirectory
+#endif
+
+Q_DECLARE_METATYPE(MLocale::TimeFormat24h);
 Q_DECLARE_METATYPE(MLocale::CalendarType);
 Q_DECLARE_METATYPE(MLocale);
 

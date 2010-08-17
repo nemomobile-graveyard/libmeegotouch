@@ -87,11 +87,29 @@ public:
 
     static icu::DateFormatSymbols *createDateFormatSymbols(const icu::Locale &locale);
 
+    // converts an ICU date format to 24 hour clock
+    void dateFormatTo24h(icu::DateFormat *df) const;
+    // converts an ICU date format to 12 hour clock
+    void dateFormatTo12h(icu::DateFormat *df) const;
+
+    /*!
+     * \brief returns ICU date and time format string of the current locale
+     * \param dateType style of date formatting
+     * \param timeType style of time formatting
+     * \param calendarType calendar to use for formatting
+     * \param timeFormat24h enum to choose 12 hour or 24 hour or default time format
+     */
+    QString icuFormatString(MLocale::DateType dateType,
+                            MLocale::TimeType timeType,
+                            MLocale::CalendarType calendarType,
+                            MLocale::TimeFormat24h timeFormat24h) const;
+
     // creates a dateformat object for datetime formatting/parsing
     // the caller is responsible for deleting the dateformat object
     icu::DateFormat *createDateFormat(MLocale::DateType dateType,
                                       MLocale::TimeType timeType,
-                                      MLocale::CalendarType calendarType) const;
+                                      MLocale::CalendarType calendarType,
+                                      MLocale::TimeFormat24h timeFormat24h) const;
 #endif
 
     // these return the requested part of a locale string,
@@ -125,6 +143,7 @@ public:
     // the used calendar and collation may be overridden
     MLocale::CalendarType _calendarType;
     MLocale::Collation _collation;
+    MLocale::TimeFormat24h _timeFormat24h;
     // add currency?
 
     MLocale::PhoneNumberGrouping _phoneNumberGrouping;
@@ -149,6 +168,7 @@ public:
 #ifdef HAVE_GCONF
     MGConfItem currentLanguageItem;
     MGConfItem currentLcTimeItem;
+    MGConfItem currentLcTimeFormat24hItem;
     MGConfItem currentLcCollateItem;
     MGConfItem currentLcNumericItem;
     MGConfItem currentLcMonetaryItem;

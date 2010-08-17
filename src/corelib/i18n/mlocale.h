@@ -144,6 +144,25 @@ public:
                        CopticCalendar, EthiopicCalendar
                       };
 
+    /*!
+     * \brief Type to select 12 hour clock or 24 hour clock or default
+     *
+     * Chooses whether 12 hour clock or 24 hour clock should be forced
+     * or whether the default for the current locale should be used.
+     *
+     * For example, the “en_US” locale uses a 12 hour clock by
+     * default, i.e. in case of “en_US”, both
+     * “LocaleDefaultTimeFormat24h“ and “TwelveHourTimeFormat24h”
+     * will have the effect that a 12 hour clock is used.
+     *
+     * “TwentyFourHourTimeFormat24h” and “TwelveHourTimeFormat24h”
+     * will force the use of a 24 hour clock or 12 hour clock, respectively,
+     * no matter which one is used by default in this locale.
+     */
+    enum TimeFormat24h {LocaleDefaultTimeFormat24h,
+                        TwelveHourTimeFormat24h,
+                        TwentyFourHourTimeFormat24h};
+
     enum Weekday {Monday = 1, Tuesday, Wednesday, Thursday, Friday,
                   Saturday, Sunday
                  };
@@ -340,6 +359,16 @@ public:
      * \brief Returns calendar type
      */
     CalendarType calendarType() const;
+
+    /*!
+     * \brief Sets whether 24 hour clock, 12 hour clock or default is used
+     */
+    void setTimeFormat24h(TimeFormat24h timeFormat24h);
+
+    /*!
+     * \brief Returns whether 24 hour clock, 12 hour clock or default is used
+     */
+    TimeFormat24h timeFormat24h() const;
 
     /*!
      * \brief Returns a MCollator which compares QStrings based on language/country/collation rules

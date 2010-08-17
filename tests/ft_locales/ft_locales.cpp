@@ -886,6 +886,7 @@ void Ft_Locales::checkAvailableLocales()
     // sort the list for easier comparision in the output
     // (i.e. es_419 should be near es, not at the end of the list):
     qSort(supportedLocaleNames.begin(), supportedLocaleNames.end());
+    MCalendar::setSystemTimeZone("GMT+0");
     QDateTime dateTime(QDate(2008, 7, 21), QTime(14, 31, 0, 0), Qt::LocalTime);
     MCalendar gregorianCalendar(MLocale::GregorianCalendar);
     MCalendar islamicCalendar(MLocale::IslamicCalendar);
@@ -909,6 +910,7 @@ void Ft_Locales::checkAvailableLocales()
     QString ft_localesTestOutput = "";
     foreach(QString supportedLocaleName, supportedLocaleNames) {
         MLocale locale(supportedLocaleName);
+        locale.setTimeFormat24h(MLocale::LocaleDefaultTimeFormat24h);
         qSort(sortingTestList.begin(), sortingTestList.end(), locale.collator());
         QString newLinePlusSupportedLocaleName('\n' + supportedLocaleName);
         ft_localesTestOutput
@@ -924,34 +926,6 @@ void Ft_Locales::checkAvailableLocales()
             + locale.formatCurrency(1234.56, "EUR")
             + newLinePlusSupportedLocaleName + "\tNegative Currency value\t"
             + locale.formatCurrency(-1234.56, "EUR")
-            + newLinePlusSupportedLocaleName + "\t%r (locale specific 12 hour “TimeShort”)\t"
-            + locale.formatDateTime(gregorianCalendar, "%r")
-            + newLinePlusSupportedLocaleName + "\t%R (locale specific 24 hour “TimeShort”)\t"
-            + locale.formatDateTime(gregorianCalendar, "%R")
-            + newLinePlusSupportedLocaleName + "\tDate and time short (Gregorian Calendar)\t"
-            + locale.formatDateTime(gregorianCalendar,
-                                    MLocale::DateShort, MLocale::TimeShort)
-            + newLinePlusSupportedLocaleName + "\tDate and time medium (Gregorian Calendar)\t"
-            + locale.formatDateTime(gregorianCalendar,
-                                    MLocale::DateMedium, MLocale::TimeMedium)
-            + newLinePlusSupportedLocaleName + "\tDate and time long (Gregorian Calendar)\t"
-            + locale.formatDateTime(gregorianCalendar,
-                                    MLocale::DateLong, MLocale::TimeLong)
-            + newLinePlusSupportedLocaleName + "\tDate and time full (Gregorian Calendar)\t"
-            + locale.formatDateTime(gregorianCalendar,
-                                    MLocale::DateFull, MLocale::TimeFull)
-            + newLinePlusSupportedLocaleName + "\tDate and time short (Islamic Calendar)\t"
-            + locale.formatDateTime(islamicCalendar,
-                                    MLocale::DateShort, MLocale::TimeShort)
-            + newLinePlusSupportedLocaleName + "\tDate and time medium (Islamic Calendar)\t"
-            + locale.formatDateTime(islamicCalendar,
-                                    MLocale::DateMedium, MLocale::TimeMedium)
-            + newLinePlusSupportedLocaleName + "\tDate and time long (Islamic Calendar)\t"
-            + locale.formatDateTime(islamicCalendar,
-                                    MLocale::DateLong, MLocale::TimeLong)
-            + newLinePlusSupportedLocaleName + "\tDate and time full (Islamic Calendar)\t"
-            + locale.formatDateTime(islamicCalendar,
-                                    MLocale::DateFull, MLocale::TimeFull)
             + newLinePlusSupportedLocaleName + "\tName of month 01 (Gregorian Calendar)\t"
             + locale.monthName(gregorianCalendar, 1)
             + newLinePlusSupportedLocaleName + "\tName of month 02 (Gregorian Calendar)\t"
@@ -1102,6 +1076,58 @@ void Ft_Locales::checkAvailableLocales()
             + sortingTestList.join(" ")
             + newLinePlusSupportedLocaleName + "\tScripts used\t"
             + locale.localeScripts().join(" ")
+            + newLinePlusSupportedLocaleName + "\t%r (locale specific 12 hour “TimeShort”)\t"
+            + locale.formatDateTime(gregorianCalendar, "%r")
+            + newLinePlusSupportedLocaleName + "\t%R (locale specific 24 hour “TimeShort”)\t"
+            + locale.formatDateTime(gregorianCalendar, "%R")
+            + newLinePlusSupportedLocaleName + "\tDate and time short (Gregorian Calendar)\t"
+            + locale.icuFormatString(MLocale::DateShort, MLocale::TimeShort,
+                                     MLocale::GregorianCalendar)
+            + " -> "
+            + locale.formatDateTime(gregorianCalendar,
+                                    MLocale::DateShort, MLocale::TimeShort)
+            + newLinePlusSupportedLocaleName + "\tDate and time medium (Gregorian Calendar)\t"
+            + locale.icuFormatString(MLocale::DateMedium, MLocale::TimeMedium,
+                                     MLocale::GregorianCalendar)
+            + " -> "
+            + locale.formatDateTime(gregorianCalendar,
+                                    MLocale::DateMedium, MLocale::TimeMedium)
+            + newLinePlusSupportedLocaleName + "\tDate and time long (Gregorian Calendar)\t"
+            + locale.icuFormatString(MLocale::DateLong, MLocale::TimeLong,
+                                     MLocale::GregorianCalendar)
+            + " -> "
+            + locale.formatDateTime(gregorianCalendar,
+                                    MLocale::DateLong, MLocale::TimeLong)
+            + newLinePlusSupportedLocaleName + "\tDate and time full (Gregorian Calendar)\t"
+            + locale.icuFormatString(MLocale::DateFull, MLocale::TimeFull,
+                                     MLocale::GregorianCalendar)
+            + " -> "
+            + locale.formatDateTime(gregorianCalendar,
+                                    MLocale::DateFull, MLocale::TimeFull)
+            + newLinePlusSupportedLocaleName + "\tDate and time short (Islamic Calendar)\t"
+            + locale.icuFormatString(MLocale::DateShort, MLocale::TimeShort,
+                                     MLocale::IslamicCalendar)
+            + " -> "
+            + locale.formatDateTime(islamicCalendar,
+                                    MLocale::DateShort, MLocale::TimeShort)
+            + newLinePlusSupportedLocaleName + "\tDate and time medium (Islamic Calendar)\t"
+            + locale.icuFormatString(MLocale::DateMedium, MLocale::TimeMedium,
+                                     MLocale::IslamicCalendar)
+            + " -> "
+            + locale.formatDateTime(islamicCalendar,
+                                    MLocale::DateMedium, MLocale::TimeMedium)
+            + newLinePlusSupportedLocaleName + "\tDate and time long (Islamic Calendar)\t"
+            + locale.icuFormatString(MLocale::DateLong, MLocale::TimeLong,
+                                     MLocale::IslamicCalendar)
+            + " -> "
+            + locale.formatDateTime(islamicCalendar,
+                                    MLocale::DateLong, MLocale::TimeLong)
+            + newLinePlusSupportedLocaleName + "\tDate and time full (Islamic Calendar)\t"
+            + locale.icuFormatString(MLocale::DateFull, MLocale::TimeFull,
+                                     MLocale::IslamicCalendar)
+            + " -> "
+            + locale.formatDateTime(islamicCalendar,
+                                    MLocale::DateFull, MLocale::TimeFull)
             + '\n';
     }
     QString ft_localesTestOutputFileName =
