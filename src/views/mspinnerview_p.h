@@ -46,14 +46,13 @@ public:
 
     MProgressIndicator *controller;
 
-    QBrush pieBrush;
-    QPen piePen;
+    mutable QBrush pieBrush;
+    mutable QPen piePen;
     const QPixmap *backgroundPixmap;
+    const QPixmap *progressPixmap;
 
     QPropertyAnimation* positionAnimation;
     int angle;
-
-    QRect pieRect;
 
 #ifdef M_UNIT_TEST
     M_UNIT_TEST;

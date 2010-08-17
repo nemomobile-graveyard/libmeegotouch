@@ -33,6 +33,7 @@ MSpinnerViewPrivate::MSpinnerViewPrivate()
        pieBrush(Qt::NoBrush),
        piePen(Qt::NoPen),
        backgroundPixmap(NULL),
+       progressPixmap(NULL),
        positionAnimation(NULL),
        angle(0)
 {
@@ -136,10 +137,8 @@ void MSpinnerView::applyStyle()
      if (d->positionAnimation)
          d->positionAnimation->setDuration(style()->period());
 
-     if (style()->progressPixmap() && !style()->progressPixmap()->isNull()) {
-         d->pieBrush.setTexture(*style()->progressPixmap());
-         d->pieRect = QRect(0, 0, d->pieBrush.texture().width(), d->pieBrush.texture().height());
-     }
+     if (style()->progressPixmap() && !style()->progressPixmap()->isNull())
+         d->progressPixmap = style()->progressPixmap();
 
      if (style()->bgPixmap() && !style()->bgPixmap()->isNull())
          d->backgroundPixmap = style()->bgPixmap();
@@ -163,7 +162,7 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
 
     bool reverse = (d->controller->layoutDirection() == Qt::RightToLeft);
 
-    //drawing bg
+    //drawing background
     if (d->backgroundPixmap && !d->backgroundPixmap->isNull())
         painter->drawPixmap(0, 0, *d->backgroundPixmap);
 
@@ -191,10 +190,14 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
         }
     }
 
-    if (!d->pieBrush.texture().isNull()) {
-       painter->setBrush(d->pieBrush);
-       painter->setPen(d->piePen);
-       painter->drawPie(d->pieRect, (90 - endAngle) * 16, (endAngle - startAngle) * 16);
+    if (d->progressPixmap && !d->progressPixmap->isNull()) {
+        d->pieBrush.setTexture(*d->progressPixmap);
+
+        painter->setBrush(d->pieBrush);
+        painter->setPen(d->piePen);
+        painter->drawPie(QRect(0, 0, d->progressPixmap->width(), d->progressPixmap->height()),
+                        (90 - endAngle) * 16,
+                        (endAngle - startAngle) * 16);
     }
 }
 
