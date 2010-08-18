@@ -158,7 +158,9 @@ public:
 
     /*!
      * \brief This function will be called before page becomes visible. Override it in your page class
-     * and create content for a page. Framework calls this function only once.
+     * and create content for a page. Framework calls this function only once, in enterDisplayEvent().
+     *
+     * \sa enterDisplayEvent()
      */
     virtual void createContent();
 
@@ -395,8 +397,18 @@ public Q_SLOTS:
 protected:
     //! \reimp
     virtual void actionEvent(QActionEvent *);
-    virtual void enterDisplayEvent();
     //! \reimp_end
+
+    /*!
+     * Reimplemented to call createContent() if it hasn't been called yet.
+     *
+     * \note When reimplementing this event in your inherited classes, be sure to call
+     *       base class's event handler to set up your page content properly. Otherwise
+     *       createContent() will never be called.
+     *
+     * \sa createContent()
+     */
+    virtual void enterDisplayEvent();
 
 private:
 #ifdef UNIT_TEST
