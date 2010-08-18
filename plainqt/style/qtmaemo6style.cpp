@@ -225,7 +225,8 @@ QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
     QString mode;
     if (state & QStyle::State_Enabled) {
         if (state & QStyle::State_Active)
-            mode = "active";
+            //mode = "active";
+            mode = "pressed";
         else if(state & QStyle::State_On)
             mode = "selected";
         else if(state & QStyle::State_Sunken)
