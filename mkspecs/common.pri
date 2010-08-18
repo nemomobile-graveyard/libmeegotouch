@@ -5,15 +5,20 @@ QMAKE_TARGET_PRODUCT = DirectUI
 QMAKE_TARGET_DESCRIPTION = DirectUI Framework
 QMAKE_TARGET_COPYRIGHT = Copyright (C) 2010 Nokia
 
-contains( DEFINES, HAVE_N900 ) {
-    QMAKE_CFLAGS -= -Werror
-    QMAKE_CXXFLAGS -= -Werror
-}
 
 # Features
 # Parts to build. Options: libs tests benchmarks demos doc debian
 #M_BUILD_PARTS = libs tests benchmarks demos doc debian
 
+#disable werrors on windows and freemantle
+win32 {
+   } else {
+         contains( DEFINES, HAVE_N900 ) {
+         } else {
+             QMAKE_CFLAGS *= -Werror
+             QMAKE_CXXFLAGS *= -Werror
+         }
+    }
 
 contains(TEMPLATE, app) {
     DEFINES += M_APPLICATION_NAME=\\\"${QMAKE_TARGET}\\\"

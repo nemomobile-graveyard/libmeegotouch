@@ -38,8 +38,6 @@ win32|macx {
     LIBS += -lmeegotouchcore -lmeegotouchviews
 }
 
-QMAKE_CXXFLAGS += -Werror
-
 support_files.files =
 support_files.path = $$[QT_INSTALL_LIBS]/libmeegotouch-tests
 INSTALLS += support_files

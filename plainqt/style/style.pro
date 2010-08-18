@@ -1,5 +1,3 @@
-QMAKE_CXXFLAGS += -Werror
-
 MROOT = ../..
 
 include($$MROOT/mkspecs/common.pri)
