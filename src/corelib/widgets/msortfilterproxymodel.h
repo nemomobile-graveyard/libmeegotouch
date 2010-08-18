@@ -26,31 +26,31 @@
 /*!
     \class MSortFilterProxyModel
     \brief MSortFilterProxyModel reimplementation of a custom sort/filter proxy data model.
-           In case of filtering does not filter out the group headers (oposite to default 
+           In case of filtering does not filter out the group headers (oposite to default
            QSortFilterProxyModel behavior).
 */
 class M_EXPORT MSortFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
-    
+
 public:
     /*!
       \brief Constructor.
       \param parent Model owner.
     */
     MSortFilterProxyModel(QObject *parent = NULL);
-    
+
     /*!
       \brief Destructor.
     */
     virtual ~MSortFilterProxyModel();
-    
+
     //! \reimp
     virtual bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const;
     //! \reimp_end
 
-protected:
-    virtual bool filterAcceptsGroup(const QModelIndex &source_index) const;
+private:
+    bool filterAcceptsGroup(const QModelIndex &source_index) const;
 };
 
 #endif // MSORTFILTERPROXYMODEL_H
