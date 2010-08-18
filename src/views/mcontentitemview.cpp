@@ -298,7 +298,13 @@ void MContentItemViewPrivate::setImage(const QImage &i)
 
 void MContentItemViewPrivate::setImage(const QString &i, const QSize &s)
 {
-    image()->setImage(i, s);
+    QSize imageSize = s;
+    if (imageSize.isNull()) {
+        imageSize = preferredImageSize(image());
+        controller->model()->setItemImageSize(imageSize);
+    }
+
+    image()->setImage(i, imageSize);
 }
 
 void MContentItemViewPrivate::setOptionalImage(const QImage& i)
@@ -308,7 +314,27 @@ void MContentItemViewPrivate::setOptionalImage(const QImage& i)
 
 void MContentItemViewPrivate::setOptionalImage(const QString &i, const QSize &s)
 {
-    optionalImage()->setImage(i, s);
+    QSize imageSize = s;
+    if (imageSize.isNull()) {
+        imageSize = preferredImageSize(optionalImage());
+        controller->model()->setOptionalImageSize(imageSize);
+    }
+
+    optionalImage()->setImage(i, imageSize);
+}
+
+QSize MContentItemViewPrivate::preferredImageSize(MImageWidget *image)
+{
+    if (!image)
+        return QSize();
+
+    qreal marginLeft, marginTop, marginRight, marginBottom;
+    image->getContentsMargins(&marginLeft, &marginTop, &marginRight, &marginBottom);
+    QSize imageSize = image->preferredSize().toSize();
+    imageSize.setWidth(imageSize.width() - (marginLeft + marginRight));
+    imageSize.setHeight(imageSize.height() - (marginTop + marginBottom));
+
+    return imageSize;
 }
 
 void MContentItemViewPrivate::applyStyle()

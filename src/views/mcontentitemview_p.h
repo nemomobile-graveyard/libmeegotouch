@@ -53,6 +53,8 @@ public:
     inline void setOptionalImage(const QImage& image);
     inline void setOptionalImage(const QString& id, const QSize &s);
 
+    QSize preferredImageSize(MImageWidget *image);
+
     void initLayout(MContentItem::ContentItemStyle style);
     void clearLayout();
     void initTwoIconsTwoWidgetsLayout();
