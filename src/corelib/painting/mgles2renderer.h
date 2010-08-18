@@ -312,7 +312,6 @@ public:
     void setViewportSize(const QSize &size);
 
 private:
-
     /*!
         \brief Constructor.
     */
@@ -331,6 +330,10 @@ private:
 
     Q_DISABLE_COPY(MGLES2Renderer)
     Q_DECLARE_PRIVATE(MGLES2Renderer)
+
+#ifdef UNIT_TEST
+    friend class Pt_MGLES2Renderer;
+#endif
 };
 
 #endif
