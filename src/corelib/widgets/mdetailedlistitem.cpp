@@ -282,6 +282,7 @@ void MDetailedListItem::setImageWidget(MImageWidget *image)
             if (d->layout())
                 d->layout()->addItem(imageWidget(), 0, 0, 3, 1);
         }
+        d->applyIconStyle();
     }
 }
 
