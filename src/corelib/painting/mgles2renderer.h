@@ -320,8 +320,7 @@ private:
     /*!
         \brief Initialization method for the class.
 
-        Method initializes few default shaders and other GL specific data
-        needed for rendering.
+        Sets the used QGLWidget.
     */
     void init(QGLWidget *glWidget);
 

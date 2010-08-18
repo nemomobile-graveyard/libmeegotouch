@@ -79,6 +79,7 @@ public:
     MGLES2RendererPrivate();
     virtual ~MGLES2RendererPrivate();
 
+    void init();
     GLuint setupVertices(const QSizeF &texSize, const QList<QRect>& sourceRects, const QList<QRect>& targetRects);
     void resizeAttrArrays(int numQuads);
     QGLShaderProgram *requestBinaryProgram(const QString &frag, const QString &vert);
@@ -94,7 +95,6 @@ public:
     QGLWidget *m_glWidget;
 
     MGLProgramCache m_programCache;
-    QGLShaderProgram *m_defaultProgram;
 
     QSize m_viewportSize;
 
@@ -117,14 +117,24 @@ public:
     QGLShaderProgram *m_activeProgram;
     QSize m_boundTexSize;
     bool m_invertTexture;
+    bool m_initialized;
 };
 
 QMap<QGLWidget *, MGLES2Renderer *> MGLES2RendererPrivate::glRenderers;
 MGLES2Renderer *MGLES2RendererPrivate::activeRenderer = NULL;
 
 MGLES2RendererPrivate::MGLES2RendererPrivate()
-    : m_glWidget(NULL), m_viewportSize(-1, -1)
+    : m_glWidget(NULL),
+    m_viewportSize(-1, -1),
+    m_activePainter(NULL),
+    m_invertTexture(false),
+    m_initialized(false)
+{}
+
+void MGLES2RendererPrivate::init()
 {
+    m_initialized = true;
+
     //init world matrix for the known parts
     //parts that are changeable by the transformation
     //are set when rendering in the textures
@@ -164,10 +174,22 @@ MGLES2RendererPrivate::MGLES2RendererPrivate()
     }
 
     dpy = eglGetDisplay(EGLNativeDisplayType(QX11Info::display()));
+    m_glWidget->makeCurrent();
 
-    m_activePainter = NULL;
-    m_invertTexture = false;
+    //init the orthogonal projection matrix
+    //glOrtho(0, w, h, 0, -1, 1):
+    //2.0/w,  0.0,    0.0, -1.0
+    //0.0,   -2.0/h,  0.0,  1.0
+    //0.0,    0.0,   -1.0,  0.0
+    //0.0,    0.0,    0.0,  1.0
+    GLfloat w = m_glWidget->width();
+    GLfloat h = m_glWidget->height();
+    m_matProj[0][0] =  2.0f / w; m_matProj[1][0] =  0.0;   m_matProj[2][0] =  0.0; m_matProj[3][0] = -1.0;
+    m_matProj[0][1] =  0.0;   m_matProj[1][1] = -2.0f / h; m_matProj[2][1] =  0.0; m_matProj[3][1] =  1.0;
+    m_matProj[0][2] =  0.0;   m_matProj[1][2] =  0.0;   m_matProj[2][2] = -1.0; m_matProj[3][2] =  0.0;
+    m_matProj[0][3] =  0.0;   m_matProj[1][3] =  0.0;   m_matProj[2][3] =  0.0; m_matProj[3][3] =  1.0;
 }
+
 
 MGLES2RendererPrivate::~MGLES2RendererPrivate()
 {
@@ -322,24 +344,7 @@ void MGLES2Renderer::destroyAll()
 
 void MGLES2Renderer::init(QGLWidget *glWidget)
 {
-    d_ptr->dpy = eglGetDisplay(EGLNativeDisplayType(QX11Info::display()));
     d_ptr->m_glWidget = glWidget;
-    d_ptr->m_glWidget->makeCurrent();
-
-    //init the orthogonal projection matrix
-    //glOrtho(0, w, h, 0, -1, 1):
-    //2.0/w,  0.0,    0.0, -1.0
-    //0.0,   -2.0/h,  0.0,  1.0
-    //0.0,    0.0,   -1.0,  0.0
-    //0.0,    0.0,    0.0,  1.0
-    GLfloat w = glWidget->width();
-    GLfloat h = glWidget->height();
-    d_ptr->m_matProj[0][0] =  2.0f / w; d_ptr->m_matProj[1][0] =  0.0;   d_ptr->m_matProj[2][0] =  0.0; d_ptr->m_matProj[3][0] = -1.0;
-    d_ptr->m_matProj[0][1] =  0.0;   d_ptr->m_matProj[1][1] = -2.0f / h; d_ptr->m_matProj[2][1] =  0.0; d_ptr->m_matProj[3][1] =  1.0;
-    d_ptr->m_matProj[0][2] =  0.0;   d_ptr->m_matProj[1][2] =  0.0;   d_ptr->m_matProj[2][2] = -1.0; d_ptr->m_matProj[3][2] =  0.0;
-    d_ptr->m_matProj[0][3] =  0.0;   d_ptr->m_matProj[1][3] =  0.0;   d_ptr->m_matProj[2][3] =  0.0; d_ptr->m_matProj[3][3] =  1.0;
-
-    d_ptr->m_defaultProgram = getShaderProgram(QString(), QString());
 }
 
 QGLShaderProgram *MGLES2Renderer::getShaderProgram(const QString &frag, const QString &vert)
@@ -509,11 +514,15 @@ void MGLES2Renderer::updateX11Pixmap(Qt::HANDLE pixmap)
 
 void MGLES2Renderer::begin(QPainter *painter)
 {
-    begin(painter, d_ptr->m_defaultProgram);
+    begin(painter, getShaderProgram(QString(), QString()));
 }
 
 void MGLES2Renderer::begin(QPainter *painter, QGLShaderProgram *program)
 {
+    if (!d_ptr->m_initialized) {
+        d_ptr->init();
+    }
+
     if (d_ptr->m_activePainter)
         end();
 
@@ -629,7 +638,7 @@ void MGLES2Renderer::setInvertTexture(bool invert)
     /* Compensate for inverted textures
 
         Rendering done by the window system may be y-inverted compared
-        to the standard OpenGL texture representation.  More specifically:
+        to the standard OpenGL texture representation. More specifically:
         the X Window system uses a coordinate system where the origin is in
         the upper left; however, the GL uses a coordinate system where the
         origin is in the lower left.
