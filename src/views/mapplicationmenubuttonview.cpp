@@ -116,14 +116,18 @@ void MApplicationMenuButtonViewPrivate::refreshIconImage()
     Q_Q(MApplicationMenuButtonView);
 
     QSize size = q->style()->iconSize();
-    if (toggleState()) {
-        if (!q->model()->toggledIconID().isEmpty())
-            iconImage->setImage(q->model()->toggledIconID(), size);
-    }  else {
-        iconImage->setImage(q->model()->iconID(), size);
-    }
+    QString iconID = q->model()->iconID();
 
-    refreshLayout();
+    if (toggleState() && !q->model()->toggledIconID().isEmpty())
+        iconID = q->model()->toggledIconID();
+
+    if (iconID != iconImage->image() ||
+        (!iconID.isEmpty() && iconID == iconImage->image() && size != iconImage->imageSize())) {
+        //Apply image and refresh layout only if image itself or size of the existing image
+        //should be changed (avoid some flickering).
+        iconImage->setImage(iconID, size);
+        refreshLayout();
+    }
 }
 
 MApplicationMenuButtonView::MApplicationMenuButtonView(MApplicationMenuButton *controller) :
@@ -158,6 +162,7 @@ void MApplicationMenuButtonView::applyStyle()
 
     d->arrowIconImage->setImage(style()->arrowIcon(), style()->arrowIconSize());
     d->refreshStyleMode();
+    d->refreshLayout();
     d->iconImage->setZoomFactor(1.0);
     d->arrowIconImage->setZoomFactor(1.0);
 
