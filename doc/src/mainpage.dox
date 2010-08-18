@@ -46,23 +46,24 @@
        <li><a href="layouts.html">Layouts</a></li>
        <li><a href="i18n.html">Internationalization</a></li>
        <li><a href="styling.html">Styling</a></li>
+       <li><a href="gestures.html">Gestures</a></li>
       </ul>
     </td>
     <td>
       <ul>
-       <li><a href="gestures.html">Gestures</a></li>
        <li>\subpage rotation</li>
        <li><a href="faststart.html">Fast application startup</a></li>
        <li><a href="notifications.html">Notifications</a></li>
        <li>\subpage sceneandscenewindows "The scene and its scene windows"</li>
+       <li><a href="applicationextensions.html">Application extensions</a></li>
       </ul>
     </td>
     <td>
       <ul>
-       <li><a href="applicationextensions.html">Application extensions</a></li>
        <li><a href="settingslanguageschema.html">Settings language reference</a></li>
        <li><a href="plainqt.html">Developing Qt applications for Maemo 5 and MeeGo</a></li>
        <li><a href="servicefw.html">MeeGo Touch Service Framework</a></li>
+       <li><a href="debugginginfo.html">MeeGo Touch Debugging Information</a></li>
       </ul>
     </td>
   </tr>
