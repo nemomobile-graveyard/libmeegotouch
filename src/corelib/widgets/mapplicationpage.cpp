@@ -287,19 +287,16 @@ void MApplicationPage::actionEvent(QActionEvent *e)
     }
 }
 
-// FIXME: After API freeze move that code to enterDisplayEvent().
-// Didn't enterDisplayEvent() make createContent() obsolete/redundant altogether?
-// Note: Called by MApplicationWindow
-void MApplicationPagePrivate::prepareForAppearance()
+void MApplicationPage::enterDisplayEvent()
 {
-    Q_Q(MApplicationPage);
+    Q_D(MApplicationPage);
 
-    if (!contentCreated) {
-        contentCreated = true;
-        q->createContent();
+    if (!d->contentCreated) {
+        d->contentCreated = true;
+        createContent();
     }
 
-    updatePannableViewportPosition();
+    d->updatePannableViewportPosition();
 }
 
 void MApplicationPagePrivate::setExposedContentRect(const QRectF &exposedContentRect)
