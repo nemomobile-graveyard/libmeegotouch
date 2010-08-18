@@ -56,11 +56,6 @@ public:
     void setExposedContentRect(const QRectF &rect);
     void updateAutoMarginsForComponents();
 
-    // FIXME: After API freeze move that code to enterDisplayEvent().
-    // Didn't enterDisplayEvent() make createContent() obsolete/redundant altogether?
-    // Note: Called by MApplicationWindow
-    void prepareForAppearance();
-
 private:
     QGraphicsLinearLayout *createLayout();
     MWidget *createSpacer(QGraphicsItem *parent);

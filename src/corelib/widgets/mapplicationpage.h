@@ -395,6 +395,7 @@ public Q_SLOTS:
 protected:
     //! \reimp
     virtual void actionEvent(QActionEvent *);
+    virtual void enterDisplayEvent();
     //! \reimp_end
 
 private:
@@ -406,6 +407,11 @@ private:
 
     Q_DISABLE_COPY(MApplicationPage)
     Q_DECLARE_PRIVATE(MApplicationPage)
+
+    // We are using a hack which will allow reimplementing the enterDisplayEvent
+    // method in the application page without recompilation of all client applications.
+    // This needs to be deleted when API unfreeze will finally happen.
+    friend class MWidget;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MApplicationPage::Components)

@@ -786,7 +786,6 @@ void MApplicationWindowPrivate::applicationPageAppearEvent(MSceneWindowEvent *ev
 
     connectPage(pageFromEvent);
     _q_updatePageExposedContentRect();
-    pageFromEvent->d_func()->prepareForAppearance();
 }
 
 void MApplicationWindowPrivate::applicationPageDisappearEvent(MSceneWindowEvent *event)
