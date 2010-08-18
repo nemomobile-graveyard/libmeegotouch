@@ -366,6 +366,12 @@ public:
     // this image is supposed to be used as background for the widget.
     // if the image is NULL, the widget just needs an update.
     mutable QMap<QWidget*, const MScalableImage*> m_dirtyWidgets;
+
+    //prints style information
+    //useful for finding adequate style --> mode mappings
+    static void printStateFlags(QStyle::State state);
+
+
 };
 
 #endif

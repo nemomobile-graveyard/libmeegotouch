@@ -222,19 +222,111 @@ const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
 
 QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
 {
+
+    printStateFlags(state);
+
+    // At moment, libmeegotouch uses the following modes:
+    // "" (empty string)        -- used as default
+    // "pressed"                -- used whenever a widget is pressed
+    // "selected"               -- used by checkable elements (for example checkboxes)
+    // vertical", "horizontal"  -- used by MSeparatorStyle
     QString mode;
+
     if (state & QStyle::State_Enabled) {
+
         if (state & QStyle::State_Active)
             //mode = "active";
             mode = "pressed";
         else if(state & QStyle::State_On)
+           // mode = "active";
+           // mode = "pressed";
             mode = "selected";
         else if(state & QStyle::State_Sunken)
             mode = "pressed";
+        else if(state & QStyle::State_Raised)
+            mode = "";
+
     } else {
         mode = "disabled";
     }
+
     return mode;
+}
+
+void QtMaemo6StylePrivate::printStateFlags(QStyle::State state)
+{
+   if (state & QStyle::State_None)
+        mDebug("PlainQt Style") << "QStyle::State_None";
+
+    if (state & QStyle::State_Active)
+        mDebug("PlainQt Style") << "QStyle::State_Active";
+
+    if (state & QStyle::State_AutoRaise)
+        mDebug("PlainQt Style") << "QStyle::State_AutoRaise";
+
+    if (state & QStyle::State_Children)
+        mDebug("PlainQt Style") << "QStyle::State_Children";
+
+    if (state & QStyle::State_DownArrow)
+        mDebug("PlainQt Style") << "QStyle::State_DownArrow";
+
+    if (state & QStyle::State_Editing)
+        mDebug("PlainQt Style") << "QStyle::State_Editing";
+
+    if (state & QStyle::State_Enabled)
+        mDebug("PlainQt Style") << "QStyle::State_Enabled";
+
+//    if (state & QStyle::State_HasEditFocus)
+//      mDebug("PlainQt Style") << "QStyle::State_HasEditFocus";
+
+    if (state & QStyle::State_Horizontal)
+        mDebug("PlainQt Style") << "QStyle::State_Horizontal";
+
+    if (state & QStyle::State_KeyboardFocusChange)
+        mDebug("PlainQt Style") << "QStyle::State_KeyboardFocusChange";
+
+    if (state & QStyle::State_MouseOver)
+        mDebug("PlainQt Style") << "QStyle::State_MouseOver";
+
+    if (state & QStyle::State_NoChange)
+        mDebug("PlainQt Style") << "QStyle::State_NoChange";
+
+    if (state & QStyle::State_Off)
+        mDebug("PlainQt Style") << "QStyle::State_Off";
+
+    if (state & QStyle::State_On)
+        mDebug("PlainQt Style") << "QStyle::State_On";
+
+    if (state & QStyle::State_Raised)
+        mDebug("PlainQt Style") << "QStyle::State_Raised";
+
+    if (state & QStyle::State_ReadOnly)
+        mDebug("PlainQt Style") << "QStyle::State_ReadOnly";
+
+    if (state & QStyle::State_Selected)
+        mDebug("PlainQt Style") << "QStyle::State_Selected";
+
+    if (state & QStyle::State_Item)
+        mDebug("PlainQt Style") << "QStyle::State_Item";
+
+    if (state & QStyle::State_Open)
+        mDebug("PlainQt Style") << "QStyle::State_Open";
+
+    if (state & QStyle::State_Sibling)
+        mDebug("PlainQt Style") << "QStyle::State_Sibling";
+
+    if (state & QStyle::State_Sunken)
+        mDebug("PlainQt Style") << "QStyle::State_Sunken";
+
+    if (state & QStyle::State_UpArrow)
+        mDebug("PlainQt Style") << "QStyle::State_UpArrow";
+
+    if (state & QStyle::State_Mini)
+        mDebug("PlainQt Style") << "QStyle::State_Mini";
+
+    if (state & QStyle::State_Small)
+        mDebug("PlainQt Style") << "QStyle::State_Small";
+
 }
 
 bool QtMaemo6Style::setPaletteBackground(QWidget *widget,
