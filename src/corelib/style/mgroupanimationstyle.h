@@ -28,7 +28,7 @@ class M_EXPORT MGroupAnimationStyle : public MAnimationStyle
     M_STYLE_INTERNAL(MGroupAnimationStyle)
 };
 
-class MGroupAnimationStyleContainer : public MAnimationStyleContainer
+class M_EXPORT MGroupAnimationStyleContainer : public MAnimationStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MGroupAnimationStyle)
 };
