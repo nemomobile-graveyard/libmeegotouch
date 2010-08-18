@@ -29,7 +29,7 @@ class M_EXPORT MLayoutAnimationStyle : public MAnimationStyle
 };
 
 // TODO: get rid of this container
-class MLayoutAnimationStyleContainer : public MAnimationStyleContainer
+class M_EXPORT MLayoutAnimationStyleContainer : public MAnimationStyleContainer
 {
     M_STYLE_CONTAINER_INTERNAL(MLayoutAnimationStyle)
 };
