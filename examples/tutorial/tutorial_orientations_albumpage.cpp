@@ -1,3 +1,8 @@
+#include <MLayout>
+#include <MLinearLayoutPolicy>
+
+...
+
 void AlbumPage::createContent()
 {
     MLayout *layout = new MLayout;
