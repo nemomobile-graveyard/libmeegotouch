@@ -95,7 +95,7 @@ public:
     virtual ~MApplicationWindow();
 
     /*!
-     Returns a pointer to the currently displayed application page.
+     Returns a pointer to the application page that is currently being displayed.
      /sa pageChanged()
      */
     MApplicationPage *currentPage() const;
