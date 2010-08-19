@@ -17,33 +17,32 @@
 **
 ****************************************************************************/
 
-#ifndef UT_MSWIPERECOGNIZER_H
-#define UT_MSWIPERECOGNIZER_H
+#ifndef MPANRECOGNIZERSTYLE_H
+#define MPANRECOGNIZERSTYLE_H
 
-#include <QObject>
+#include <mstyle.h>
 
-class MSwipeRecognizer;
-class MSwipeGesture;
-
-class Ut_MSwipeRecognizer : public QObject
+/** \brief Defines a style for a MPanRecognizerStyle class.
+ *  This class defines the default threshold values that are
+ *  used by pan gesture recognizers.
+ */
+class MPanRecognizerStyle : public MStyle
 {
     Q_OBJECT
+    M_STYLE_INTERNAL(MPanRecognizerStyle)
 
-private:
-    MSwipeRecognizer*  recognizer;
-    MSwipeGesture*     swipeGesture;
-private slots:
-    void initTestCase();
-    void cleanupTestCase();
-    void init();
-    void cleanup();
+    /*!
+    \brief Distance threshold which is used to check if
+    the pointer was moved far enough to recognize pan gesture.
+     */
+    M_STYLE_ATTRIBUTE(qreal, distanceThreshold, DistanceThreshold)
 
-    void testCreateGesture();
-    void testRecognize();
-    void testFastTap();
-    void testTimedout();
-    void testZigzagged();
-    void testSnappingToRightAngles();
 };
 
-#endif // UT_MSWIPERECOGNIZER_H
+class MPanRecognizerStyleContainer : public MStyleContainer
+{
+    M_STYLE_CONTAINER_INTERNAL(MPanRecognizerStyle)
+};
+
+#endif
+

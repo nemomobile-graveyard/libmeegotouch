@@ -21,6 +21,7 @@
 #define MGESTURETAPANDHOLDRECOGNIZER_P_H
 
 #include "mtapandholdrecognizer.h"
+#include "mtapandholdrecognizerstyle.h"
 
 /*!
   Private class used by MTapAndHoldRecognizer objects to
@@ -36,8 +37,7 @@ public:
 
 private:
 
-    int     timeoutValue;
-    int     movementThreshold;
+    const MTapAndHoldRecognizerStyle *style;
 
     MTapAndHoldRecognizer* q_ptr;
 

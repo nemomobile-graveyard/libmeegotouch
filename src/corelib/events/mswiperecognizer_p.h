@@ -21,6 +21,7 @@
 #define MSWIPERECOGNIZER_P_H
 
 #include "mswiperecognizer.h"
+#include "mswiperecognizerstyle.h"
 
 /*!
   Private class used by MSwipeRecognizer objects to
@@ -35,6 +36,8 @@ public:
     virtual ~MSwipeRecognizerPrivate();
 
 protected:
+
+    const MSwipeRecognizerStyle *style;
 
     bool isAngleDeltaBelowThreshold(qreal angle, qreal threshold);
 

@@ -23,10 +23,50 @@
 
 #include "mswipegesture_p.h"
 
+#include <MApplication>
+
 #include <QGraphicsSceneMouseEvent>
 #include <QtTest/QtTest>
 
 
+//Mocking MThemePrivate, because the style object is private to library
+//and we need to compile some functionality into the unittest.
+#include "mtheme_p.h"
+void MThemePrivate::unregisterStyleContainer(MStyleContainer*)
+{
+}
+
+void MThemePrivate::registerStyleContainer(MStyleContainer *)
+{
+}
+
+void MThemePrivate::removeLeakedStyle(MStyle *)
+{
+}
+
+#include "mtheme.h"
+//Filling the values of the style object.
+static const int MSwipeTimeout = 300; /* miliseconds */
+static const int MSwipeMovementThreshold = 50; /* pixels */
+static const qreal MSwipeAngleThreshold = 15; /* degrees */
+static const qreal MSwipeAngleSnappingThreshold = 22.5; /* degrees */
+
+MSwipeRecognizerStyle recognizerStyle;
+const MStyle *MTheme::style(const char *,
+                            const QString &) {
+    recognizerStyle.setTimeout(MSwipeTimeout);
+    recognizerStyle.setDistanceThreshold(MSwipeMovementThreshold);
+    recognizerStyle.setangleThreshold(MSwipeAngleThreshold);
+    recognizerStyle.setangleSnappingThreshold(MSwipeAngleSnappingThreshold);
+    return &recognizerStyle;
+}
+
+void MTheme::releaseStyle(const MStyle *)
+{
+}
+
+// This methods mocks the behavior of QGesture class in order
+// to set state of QGesture according to the needs of the unittest.
 Qt::GestureState currentGestureState = Qt::NoGesture;
 Qt::GestureState QGesture::state() const
 {
@@ -36,6 +76,19 @@ Qt::GestureState QGesture::state() const
 void Ut_MSwipeRecognizer::init()
 {
     recognizer = new MSwipeRecognizer();
+}
+
+MApplication *app;
+void Ut_MSwipeRecognizer::initTestCase()
+{
+    static int argc = 1;
+    static char *app_name[1] = { (char *) "./ut_mswiperecognizer" };
+    app = new MApplication(argc, app_name);
+}
+
+void Ut_MSwipeRecognizer::cleanupTestCase()
+{
+    delete app;
 }
 
 void Ut_MSwipeRecognizer::cleanup()

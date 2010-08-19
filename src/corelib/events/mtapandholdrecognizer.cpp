@@ -22,18 +22,16 @@
 
 #include "mtapandholdgesture_p.h"
 
+#include "mnamespace.h"
+#include "mtheme.h"
+
 #include <QEvent>
 #include <QBasicTimer>
 #include <QGraphicsSceneMouseEvent>
 #include <QTouchEvent>
 
-/* Recognizer default settings */
-static const int MTapAndHoldTimeout = 500; /* miliseconds */
-static const int MTapAndHoldMovementThreshold = 20; /* pixels */
-
 MTapAndHoldRecognizerPrivate::MTapAndHoldRecognizerPrivate()
-  : timeoutValue( 0 ),
-    movementThreshold( 0 ),
+  : style( 0 ),
     q_ptr( 0 )
 {
 }
@@ -45,14 +43,18 @@ MTapAndHoldRecognizerPrivate::~MTapAndHoldRecognizerPrivate()
 MTapAndHoldRecognizer::MTapAndHoldRecognizer() :
         d_ptr(new MTapAndHoldRecognizerPrivate())
 {
+    d_ptr->q_ptr = this;
+
     Q_D(MTapAndHoldRecognizer);
 
-    d->timeoutValue = MTapAndHoldTimeout;
-    d->movementThreshold = MTapAndHoldMovementThreshold;
+    d->style = static_cast<const MTapAndHoldRecognizerStyle *>(MTheme::style("MTapAndHoldRecognizerStyle", ""));
 }
 
 MTapAndHoldRecognizer::~MTapAndHoldRecognizer()
 {
+    Q_D(MTapAndHoldRecognizer);
+
+    MTheme::releaseStyle(d->style);
     delete d_ptr;
 }
 
@@ -98,7 +100,7 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
 
         if (tapAndHoldState->timerId)
             tapAndHoldState->killTimer(tapAndHoldState->timerId);
-        tapAndHoldState->timerId = tapAndHoldState->startTimer(d->timeoutValue);
+        tapAndHoldState->timerId = tapAndHoldState->startTimer(d->style->timeout());
         result = QGestureRecognizer::TriggerGesture;
         break;
     case QEvent::GraphicsSceneMouseRelease:
@@ -115,7 +117,7 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
     case QEvent::GraphicsSceneMouseMove:
         if (tapAndHoldState->state() != Qt::NoGesture) {
             QPoint delta = ev->scenePos().toPoint() - tapAndHoldState->position().toPoint();
-            if (delta.manhattanLength() <= d->movementThreshold)
+            if (delta.manhattanLength() <= d->style->movementThreshold())
                 result = QGestureRecognizer::TriggerGesture;
         }
         break;

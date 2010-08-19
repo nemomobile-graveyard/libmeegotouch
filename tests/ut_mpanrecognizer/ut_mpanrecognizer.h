@@ -33,6 +33,8 @@ private:
     MPanRecognizer*  recognizer;
     MPanGesture*     panGesture;
 private slots:
+    void initTestCase();
+    void cleanupTestCase();
     void init();
     void cleanup();
 

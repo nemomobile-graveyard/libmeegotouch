@@ -35,6 +35,9 @@ STYLE_HEADERS += \
     $$STYLE_SRC_DIR/mpageswitchanimationstyle.h \
     $$STYLE_SRC_DIR/mbasicorientationanimationstyle.h \
     $$STYLE_SRC_DIR/mscenemanagerstyle.h \
+    $$STYLE_SRC_DIR/mpanrecognizerstyle.h \
+    $$STYLE_SRC_DIR/mswiperecognizerstyle.h \
+    $$STYLE_SRC_DIR/mtapandholdrecognizerstyle.h \
 
 PUBLIC_HEADERS += \
     $$STYLE_HEADERS \

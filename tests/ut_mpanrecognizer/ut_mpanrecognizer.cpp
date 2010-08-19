@@ -26,13 +26,58 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QtTest/QtTest>
 
-// QGesture stubs:
+#include <MApplication>
+
+//Mocking MThemePrivate, because the style object is private to library
+//and we need to compile some functionality into the unittest.
+#include "mtheme_p.h"
+void MThemePrivate::unregisterStyleContainer(MStyleContainer*)
+{
+}
+
+void MThemePrivate::registerStyleContainer(MStyleContainer *)
+{
+}
+
+void MThemePrivate::removeLeakedStyle(MStyle *)
+{
+}
+
+#include "mtheme.h"
+//Filling the values of the style object.
+static const int defaultPanThreshold = 10;
+
+MPanRecognizerStyle recognizerStyle;
+const MStyle *MTheme::style(const char *,
+                            const QString &) {
+    recognizerStyle.setDistanceThreshold(defaultPanThreshold);
+    return &recognizerStyle;
+}
+
+void MTheme::releaseStyle(const MStyle *)
+{
+}
+
+// This methods mocks the behavior of QGesture class in order
+// to set state of QGesture according to the needs of the unittest.
 Qt::GestureState currentGestureState = Qt::NoGesture;
 Qt::GestureState QGesture::state() const
 {
     return currentGestureState;
 }
 
+MApplication *app;
+void Ut_MPanRecognizer::initTestCase()
+{
+    static int argc = 1;
+    static char *app_name[1] = { (char *) "./ut_mpanrecognizer" };
+    app = new MApplication(argc, app_name);
+}
+
+void Ut_MPanRecognizer::cleanupTestCase()
+{
+    delete app;
+}
 
 void Ut_MPanRecognizer::init()
 {

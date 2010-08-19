@@ -21,6 +21,7 @@
 #define MPANRECOGNIZER_P_H
 
 #include "mpanrecognizer.h"
+#include "mpanrecognizerstyle.h"
 
 /*!
   Private class used by MPanRecognizer objects to
@@ -35,7 +36,7 @@ public:
     virtual ~MPanRecognizerPrivate();
 
 private:
-    int     movementThreshold;
+    const MPanRecognizerStyle* style;
 
     MPanRecognizer* q_ptr;
 };

@@ -22,20 +22,18 @@
 
 #include "mswipegesture_p.h"
 
+#include "mnamespace.h"
+#include "mtheme.h"
+
 #include <QEvent>
 #include <QBasicTimer>
 #include <QGraphicsSceneMouseEvent>
 #include <QTouchEvent>
 #include <QLineF>
 
-/* Recognizer default settings */
-static const int MSwipeTimeout = 300; /* miliseconds */
-static const int MSwipeMovementThreshold = 50; /* pixels */
-static const qreal MSwipeAngleThreshold = 15; /* degrees */
-static const qreal MSwipeAngleSnappingThreshold = 22.5; /* degrees */
-
 MSwipeRecognizerPrivate::MSwipeRecognizerPrivate()
-  : q_ptr( 0 )
+  : style( 0 ),
+    q_ptr( 0 )
 {
 }
 
@@ -58,10 +56,17 @@ MSwipeRecognizer::MSwipeRecognizer() :
         d_ptr(new MSwipeRecognizerPrivate())
 {
     d_ptr->q_ptr = this;
+
+    Q_D(MSwipeRecognizer);
+
+    d->style = static_cast<const MSwipeRecognizerStyle *>(MTheme::style("MSwipeRecognizerStyle", ""));
 }
 
 MSwipeRecognizer::~MSwipeRecognizer()
 {
+    Q_D(MSwipeRecognizer);
+
+    MTheme::releaseStyle(d->style);
     delete d_ptr;
 }
 
@@ -108,13 +113,13 @@ QGestureRecognizer::Result MSwipeRecognizer::recognize(QGesture *state, QObject 
         swipeGesture->setSwipeAngle(QLineF(swipeGesture->startPosition, mouseEvent->scenePos()).angle());
         int elapsedTime = swipeGesture->time.msecsTo(QTime::currentTime());
 
-        if (swipeGesture->state() == Qt::NoGesture && elapsedTime > MSwipeTimeout) {
+        if (swipeGesture->state() == Qt::NoGesture && elapsedTime > d->style->timeout()) {
 
             //Timeout! This movement is too slow to be a swipe;
             result = QGestureRecognizer::CancelGesture;
 
         } else if (swipeGesture->state() == Qt::NoGesture &&
-                   (xDistance > MSwipeMovementThreshold || yDistance > MSwipeMovementThreshold)) {
+                   (xDistance > d->style->distanceThreshold() || yDistance > d->style->distanceThreshold())) {
 
             //The gesture has just been recognized, store the current angle to validate with further events.
             swipeGesture->recognizedAngle = QLineF(swipeGesture->startPosition, mouseEvent->scenePos()).angle();
@@ -130,7 +135,7 @@ QGestureRecognizer::Result MSwipeRecognizer::recognize(QGesture *state, QObject 
             QPointF gestureVector = mouseEvent->scenePos() - swipeGesture->startPosition;
             qreal currentDistance = 0.7 *(gestureVector.x()*gestureVector.x() + gestureVector.y()*gestureVector.y());
 
-            if ( d->isAngleDeltaBelowThreshold(angleDelta, MSwipeAngleThreshold) && currentDistance > swipeGesture->prevDistance )
+            if ( d->isAngleDeltaBelowThreshold(angleDelta, d->style->angleThreshold()) && currentDistance > swipeGesture->prevDistance )
                 result = QGestureRecognizer::TriggerGesture;
             else
                 result = QGestureRecognizer::CancelGesture;
@@ -144,13 +149,13 @@ QGestureRecognizer::Result MSwipeRecognizer::recognize(QGesture *state, QObject 
         }
 
         //Snapping to 0,90,180,270 degrees:
-        if (d->isAngleDeltaBelowThreshold(0 - swipeGesture->swipeAngle(), MSwipeAngleSnappingThreshold))
+        if (d->isAngleDeltaBelowThreshold(0 - swipeGesture->swipeAngle(), d->style->angleSnappingThreshold()))
             swipeGesture->setSwipeAngle(0);
-        else if (d->isAngleDeltaBelowThreshold(90 - swipeGesture->swipeAngle(), MSwipeAngleSnappingThreshold))
+        else if (d->isAngleDeltaBelowThreshold(90 - swipeGesture->swipeAngle(), d->style->angleSnappingThreshold()))
             swipeGesture->setSwipeAngle(90);
-        else if (d->isAngleDeltaBelowThreshold(180 - swipeGesture->swipeAngle(), MSwipeAngleSnappingThreshold))
+        else if (d->isAngleDeltaBelowThreshold(180 - swipeGesture->swipeAngle(), d->style->angleSnappingThreshold()))
             swipeGesture->setSwipeAngle(180);
-        else if (d->isAngleDeltaBelowThreshold(270 - swipeGesture->swipeAngle(), MSwipeAngleSnappingThreshold))
+        else if (d->isAngleDeltaBelowThreshold(270 - swipeGesture->swipeAngle(), d->style->angleSnappingThreshold()))
             swipeGesture->setSwipeAngle(270);
 
         break;

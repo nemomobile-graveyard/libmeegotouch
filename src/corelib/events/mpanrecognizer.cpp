@@ -22,14 +22,14 @@
 
 #include "mpangesture_p.h"
 
+#include "mnamespace.h"
+#include "mtheme.h"
+
 #include <QGraphicsSceneMouseEvent>
 #include <QTouchEvent>
 
-//Hardcoded movement threshold used to recognize the panning gesture.
-static const int defaultPanThreshold = 10;
-
 MPanRecognizerPrivate::MPanRecognizerPrivate()
-  : movementThreshold( 0 ),
+  : style( 0 ),
     q_ptr( 0 )
 {
 }
@@ -41,12 +41,18 @@ MPanRecognizerPrivate::~MPanRecognizerPrivate()
 MPanRecognizer::MPanRecognizer() :
         d_ptr(new MPanRecognizerPrivate())
 {
+    d_ptr->q_ptr = this;
+
     Q_D(MPanRecognizer);
-    d->movementThreshold = defaultPanThreshold;
+
+    d->style = static_cast<const MPanRecognizerStyle *>(MTheme::style("MPanRecognizerStyle", ""));
 }
 
 MPanRecognizer::~MPanRecognizer()
 {
+    Q_D(MPanRecognizer);
+
+    MTheme::releaseStyle(d->style);
     delete d_ptr;
 }
 
@@ -113,7 +119,7 @@ QGestureRecognizer::Result MPanRecognizer::recognize(  QGesture* gesture,
 
         if (panGesture->state() == Qt::NoGesture) {
 
-            if (distX > d->movementThreshold || distY > d->movementThreshold) {
+            if (distX > d->style->distanceThreshold() || distY > d->style->distanceThreshold()) {
                 panGesture->panDirection = (distX > distY ? Qt::Horizontal : Qt::Vertical);
                 result = QGestureRecognizer::TriggerGesture;
             } else {

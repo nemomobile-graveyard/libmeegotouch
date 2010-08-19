@@ -23,6 +23,8 @@
 
 #include "mtapandholdgesture_p.h"
 
+#include <MApplication>
+
 #include <QGraphicsSceneMouseEvent>
 #include <QtTest/QtTest>
 
@@ -30,6 +32,51 @@ Qt::GestureState currentGestureState = Qt::NoGesture;
 Qt::GestureState QGesture::state() const
 {
     return currentGestureState;
+}
+
+//Mocking MThemePrivate, because the style object is private to library
+//and we need to compile some functionality into the unittest.
+#include "mtheme_p.h"
+void MThemePrivate::unregisterStyleContainer(MStyleContainer*)
+{
+}
+
+void MThemePrivate::registerStyleContainer(MStyleContainer *)
+{
+}
+
+void MThemePrivate::removeLeakedStyle(MStyle *)
+{
+}
+
+#include "mtheme.h"
+//Filling the values of the style object.
+static const int MTapAndHoldTimeout = 500; /* miliseconds */
+static const qreal MTapAndHoldMovementThreshold = 20; /* pixels */
+
+MTapAndHoldRecognizerStyle recognizerStyle;
+const MStyle *MTheme::style(const char *,
+                            const QString &) {
+    recognizerStyle.setTimeout(MTapAndHoldTimeout);
+    recognizerStyle.setMovementThreshold(MTapAndHoldMovementThreshold);
+    return &recognizerStyle;
+}
+
+void MTheme::releaseStyle(const MStyle *)
+{
+}
+
+MApplication *app;
+void Ut_MTapAndHoldRecognizer::initTestCase()
+{
+    static int argc = 1;
+    static char *app_name[1] = { (char *) "./ut_mtapandholdrecognizer" };
+    app = new MApplication(argc, app_name);
+}
+
+void Ut_MTapAndHoldRecognizer::cleanupTestCase()
+{
+    delete app;
 }
 
 void Ut_MTapAndHoldRecognizer::init()
