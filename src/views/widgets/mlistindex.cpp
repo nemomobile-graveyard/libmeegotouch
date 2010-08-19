@@ -19,8 +19,9 @@
 
 #include "mlistindex.h"
 #include "mlistindexview.h"
-
 #include "mlist.h"
+
+#include <QGraphicsSceneContextMenuEvent>
 
 #include "mwidgetcreator.h"
 M_REGISTER_WIDGET(MListIndex)
@@ -30,6 +31,8 @@ MListIndex::MListIndex(MList *parent) : MWidgetController(new MListIndexModel, p
     setView(new MListIndexView(this));
     setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
     model()->setList(parent);
+
+    grabGesture(Qt::TapAndHoldGesture);
 }
 
 MListIndex::~MListIndex()
@@ -47,4 +50,9 @@ void MListIndex::setShortcuts(const QMap<QModelIndex, QString> &shortcuts)
 void MListIndex::setList(MList *list)
 {
     model()->setList(list);
+}
+
+void MListIndex::contextMenuEvent(QGraphicsSceneContextMenuEvent *event)
+{
+    event->accept();
 }

@@ -70,6 +70,11 @@ public:
      */
     void setList(MList *list);
 
+protected:
+   /*! \reimp */
+   void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
+   /*! \reimp_end */
+
 private:
     Q_DECLARE_PRIVATE(MListIndex)
     Q_DISABLE_COPY(MListIndex)
