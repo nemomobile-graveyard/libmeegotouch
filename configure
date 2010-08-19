@@ -641,6 +641,7 @@ MEEGOTOUCH_PC_DIR="$outpath/src/data"
 MEEGOTOUCH_PC_FILES="meegotouch
 meegotouchcore
 meegotouchsettings
+meegotouch-boostable
 "
 
 # make sure the directory exists

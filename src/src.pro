@@ -42,6 +42,7 @@ install_prf.files = \
     $${M_SOURCE_TREE}/mkspecs/features/meegotouch.prf \
     $${M_SOURCE_TREE}/mkspecs/features/meegotouch_mgen.prf \
     $${M_SOURCE_TREE}/mkspecs/features/meegotouch_mmoc.prf \
+    $${M_SOURCE_TREE}/mkspecs/features/meegotouch-boostable.prf \
 
 
 # causes problems when installing on windows with INSTALL_ROOT
@@ -59,7 +60,8 @@ install_pkgconfig.path = $$M_INSTALL_LIBS/pkgconfig
 install_pkgconfig.files = \
     data/meegotouchcore.pc \
     data/meegotouchsettings.pc \
-    data/meegotouch.pc
+    data/meegotouch.pc \
+    data/meegotouch-boostable.pc
 
 INSTALLS += install_pkgconfig
 
