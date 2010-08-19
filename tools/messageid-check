@@ -20,7 +20,7 @@ binmode STDERR, ":utf8";
 #----------------------------------------------------------------------
 # global variables
 
-my $version = "0.20100514";
+my $version = "0.20100820";
 
 my $original_wd;
 chomp ($original_wd = `pwd`);
@@ -28,15 +28,30 @@ chomp ($original_wd = `pwd`);
 my @handoffFiles = ();
 my %handoffXmlTrees = ();
 
-my %idsFromSpec = ();
+my %idsFromHandoffFiles = ();
+
+my %idsFromSpecUsage = ();
 my $totalNumberOfIdsFoundInSpec = 0;
 my $totalNumberOfIdsFoundInSpecUsed = 0;
 my $totalNumberOfIdsFoundInSpecButNeverUsed = 0;
 
-my %idsFoundInCode = ();
-my $totalNumberOfIdsFoundInCode = 0;
-my $totalNumberOfIdsFoundInCodeButNotInSpec = 0;
-my $totalNumberOfIdsFoundInCodeLackingEngineeringEnglish = 0;
+my %idsFoundInEePackages = ();
+my $totalNumberOfIdsFoundInEePackages = 0;
+my $totalNumberOfIdsFoundInEePackagesButNotInSpec = 0;
+my $totalNumberOfIdsFoundInEePackagesLackingEngineeringEnglish = 0;
+
+my %idsFromSourcePackages = ();
+my $totalNumberOfIdsFromSourcePackages = 0;
+my $totalNumberOfIdsFoundInSourcePackagesButNotInSpec = 0;
+my $totalNumberOfIdsFoundInSourcePackagesLackingEngineeringEnglish = 0;
+
+my $htmlOutIdsFromEePackagesSummaryTable = "";
+my $htmlOutIdsFromEePackagesDetail = "";
+
+my $htmlOutIdsFromSourcePackagesSummaryTable = "";
+my $htmlOutIdsFromSourcePackagesDetail = "";
+
+my $csvOut = "Invalid Message ID, Engineering English .qm file, Package, Package version, Package maintainer\n";
 
 my $class;
 
@@ -46,6 +61,7 @@ my $OPT_HELP;
 my $OPT_EEDIR;
 my $OPT_HANDOFF_URL;
 my $OPT_HANDOFF_DIR;
+my $OPT_SOURCEPACKAGES_DIR;
 my $OPT_HTTP_USER;
 my $OPT_HTTP_PASSWD;
 my $OPT_SKIP_DOWNLOAD;
@@ -78,17 +94,26 @@ my @engineeringEnglishPackagesBroken = (
 
 my @engineeringEnglishPackages = ();
 
+my @sourcePackages = (
+    "calc",
+    "calendar",
+    "gallery",
+    );
+
+my @sourcePackagesScanned = ();
+
 #----------------------------------------------------------------------
 # subroutines:
 
 sub usage {
     printf STDERR "Usage: photo-gallery [option] ...\n";
-    printf STDERR "-v, --verbose           print some progress messages to standard output.\n";
+    printf STDERR "-v, --verbosity         print some progress messages to standard output.\n";
     printf STDERR "    --version           display version and exit.\n";
     printf STDERR "-h, --help              display this help and exit.\n";
     printf STDERR "    --eedir             directory where the ee .qm files are.\n";
     printf STDERR "    --handoffurl        URL of the “handoff” .ts files.\n";
     printf STDERR "    --handoffdir        directory to save the “handoff” .ts files.\n";
+    printf STDERR "    --sourcepackagesdir directory to save the source packages.\n";
     printf STDERR "    --http-user         user name to access the “handoff” .ts files.\n";
     printf STDERR "    --http-passwd       password to access the “handoff” .ts files.\n";
     printf STDERR "                        or use .netrc to store user name and password.\n";
@@ -251,8 +276,6 @@ sub download {
         exit (1);
     }
 
-    getEngineeringEnglishPackageList();
-
     for my $package (@engineeringEnglishPackages) {
         if (grep(/^${package}$/, @engineeringEnglishPackagesObsolete)
             || grep(/^${package}$/, @engineeringEnglishPackagesIgnore)
@@ -262,15 +285,35 @@ sub download {
             }
         }
         else {
-            if (mySystem("fakeroot apt-get -y --force-yes install $package")) {
-                printf (STDERR "“fakeroot apt-get -y --force-yes install $package” didn’t work.\n");
+            my $command = "fakeroot apt-get -y --force-yes install $package"; 
+            if (mySystem($command)) {
+                printf (STDERR "“%s” didn’t work.\n", $command);
                 exit (1);
             }
             else {
-                printf (STDOUT "“fakeroot apt-get -y --force-yes install $package” OK.\n");
+                printf (STDOUT "“%s” OK.\n", $command);
             }
         }
     }
+
+    if (-d "$OPT_SOURCEPACKAGES_DIR") {
+        rmtree ("$OPT_SOURCEPACKAGES_DIR", {verbose => 1});
+    }
+    mkdir ("$OPT_SOURCEPACKAGES_DIR") || die "Can’t mkdir $OPT_SOURCEPACKAGES_DIR: $!\n";
+    chdir ("$OPT_SOURCEPACKAGES_DIR") || die "Can’t cd to $OPT_SOURCEPACKAGES_DIR: $!\n";
+
+    for my $sourcePackage (@sourcePackages) {
+        my $command = "fakeroot apt-get source $sourcePackage";
+        if (mySystem($command)) {
+            printf (STDERR "“%s” didn’t work.\n", $command);
+            exit (1);
+        }
+        else {
+            printf (STDOUT "“%s” OK.\n", $command);
+        }
+    }
+
+    chdir $original_wd || die "Can’t cd to $original_wd: $!\n";
 
     if (-d "$OPT_HANDOFF_DIR") {
         rmtree ("$OPT_HANDOFF_DIR", {verbose => 1});
@@ -365,10 +408,60 @@ sub readHandoffXmlTrees {
     }
 }
 
-sub checkMessageIdFromSourceAgainstHandoff {
-    my ($engineeringEnglishFile, $eeMessageId, $htmlOutRef) = @_;
-    my $eeMessageIdIsInSpecCount = 0;
+sub getIdsFromOneContextTreeFromSourcePackages {
+    my (@contextTree) = @_;
+    #print Dumper(@contextTree);
+    if ($contextTree[3] ne "name") {
+        printf STDERR "context tree has no name tag. Should not happen, exiting...\n";
+        myExit(1);
+    }
+    my $name = $contextTree[3+1][2];
+    if ($name ne "") {
+        printf STDOUT "ignoring context tree with non-empty name “%s”\n", $name;
+    }
+    else {
+        for (my $i = 0; $i < $#contextTree; ++$i) {
+            if ($contextTree[$i] eq "message") {
+                my @messageTree = @{$contextTree[$i+1]};
+                my $messageId = $messageTree[0]{"id"};
+                my $source = "";
+                my $location = "";
+                for (my $j = 0; $j < $#messageTree; ++$j) {
+                  SWITCH: {
+                      if ($messageTree[$j] eq "source") {
+                          $source = $messageTree[$j+1][2];
+                          last SWITCH;
+                      }
+                      if ($messageTree[$j] eq "location") {
+                          my @locationTree = @{$messageTree[$j+1]};
+                          my $filename = $locationTree[0]{"filename"};
+                          my $line = $locationTree[0]{"line"};
+                          if (!defined $filename) {
+                              $filename = "unknown";
+                          }
+                          if (!defined $line) {
+                              $line = "unknown";
+                          }
+                          if ($location eq "") {
+                              $location = "filename=$filename line=$line";
+                          }
+                          else {
+                              $location .= ", filename=$filename line=$line";
+                          }
+                          last SWITCH;
+                      }
+                    }
+                }
+                if (defined $messageId) { # ignore messages which do not have ids
+                    $idsFromSourcePackages{$messageId} = $location;
+                }
+            }
+        }
+    }
+    $totalNumberOfIdsFromSourcePackages = scalar (keys %idsFromSourcePackages);
+}
 
+sub getIdsFromHandoffFiles {
     for my $handoffFile (@handoffFiles) {
         my $tree = $handoffXmlTrees{$handoffFile};
         my @tsTree = @{$tree->[1]};
@@ -420,43 +513,437 @@ sub checkMessageIdFromSourceAgainstHandoff {
                       }
                     }
                 }
-                if ($messageId eq $eeMessageId) {
-                    $eeMessageIdIsInSpecCount += 1;
-                    if ($OPT_VERBOSITY >= 1) {
-                        printf STDOUT "++++++OK: id “%s” spec “%s” (%s)\n",
-                        $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
-                    }
-                    ${$htmlOutRef} .= "<li>";
-                    ${$htmlOutRef} .= sprintf "%s found in spec “%s” (%s)",
-                    $eeMessageId, $extra_ui_spec_document,  myBasename($handoffFile);
-                    ${$htmlOutRef} .= "</li>\n";
-                    my $engineeringEnglishFileBasename =
-                        myBasename($engineeringEnglishFile);
-                    if(defined $idsFromSpec{$messageId}
-                       && $idsFromSpec{$messageId} ne "") {
-                        $idsFromSpec{$messageId} .=
-                            ",$engineeringEnglishFileBasename";
-                    }
-                    else {
-                        $idsFromSpec{$messageId}
-                        = $engineeringEnglishFileBasename;
-                    }
+                my $messageIdSpecDescription = "";
+                $messageIdSpecDescription .= "uispec-document=“$extra_ui_spec_document” ";
+                $messageIdSpecDescription .= "ts-file=“" . myBasename($handoffFile) . "” ";
+                $messageIdSpecDescription .= "ts-date=“$extra_ts_date” ";
+                $messageIdSpecDescription .= "source-english=“$source” ";
+                $messageIdSpecDescription .= "extracomment=“$extracomment” ";
+                    
+                if (defined $idsFromHandoffFiles{$messageId}
+                    && $idsFromHandoffFiles{$messageId} ne "") {
+                    $idsFromHandoffFiles{$messageId} .= " ☺ $messageIdSpecDescription";
                 }
-                elsif (!defined $idsFromSpec{$messageId}) {
-                    $idsFromSpec{$messageId} = "";
+                else {
+                    $idsFromHandoffFiles{$messageId} = "$messageIdSpecDescription";
                 }
+                # init this id in the hash used later to check
+                # whether this id is used:
+                $idsFromSpecUsage{$messageId} = "";
             }
         }
     }
-    if ($eeMessageIdIsInSpecCount == 0) {
-        if ($OPT_VERBOSITY >= 1) {
+}
+
+sub getIdsFromSourcePackages {
+    @sourcePackagesScanned = glob ("$OPT_SOURCEPACKAGES_DIR/*.tar.gz");
+    my $sourcePackagesTsFile = "$OPT_SOURCEPACKAGES_DIR/sourcepackages.ts";
+    unlink ($sourcePackagesTsFile);
+    my $command = "lupdate /usr/bin/lupdate -locations absolute -no-ui-lines -no-sort $OPT_SOURCEPACKAGES_DIR -ts $sourcePackagesTsFile";
+    if (mySystem($command)) {
+        printf (STDERR "“%s” didn’t work.\n", $command);
+        exit (1);
+    }
+    else {
+        printf (STDOUT "“%s” OK.\n", $command);
+    }
+    my $xmlParser = new XML::Parser(Style => 'Tree',  ProtocolEncoding => 'UTF-8');
+    if ($OPT_VERBOSITY >= 1) {
+        printf STDOUT "parsing %s\n", $sourcePackagesTsFile;
+    }
+    my $tree = $xmlParser->parsefile($sourcePackagesTsFile);
+    my @tsTree = @{$tree->[1]};
+    # print Dumper(@tsTree);
+    my @contextTree = ();
+    for (my $i = 0; $i < $#tsTree; ++$i) {
+      SWITCH: {
+          if ($tsTree[$i] eq "context") {
+              @contextTree = @{$tsTree[$i+1]};
+              # print Dumper(@contextTree);
+              getIdsFromOneContextTreeFromSourcePackages(@contextTree);
+              last SWITCH;
+          }
+        }
+    }
+}
+
+sub checkMessageIdFromEngineeringEnglishAgainstHandoff {
+    my ($engineeringEnglishFile, $eeMessageId, $htmlOutRef) = @_;
+    my $eeMessageIdIsInSpec = 0;
+
+    if (defined $idsFromHandoffFiles{$eeMessageId}) {
+        $eeMessageIdIsInSpec = 1;
+        if ($OPT_VERBOSITY >= 2) {
+            printf STDOUT "++++++OK: id “%s” spec: %s\n",
+            $eeMessageId, $idsFromHandoffFiles{$eeMessageId};
+        }
+        ${$htmlOutRef} .= "<li>";
+        ${$htmlOutRef} .= sprintf "%s<br>\nfound in spec: %s\n",
+        $eeMessageId,  $idsFromHandoffFiles{$eeMessageId};
+        ${$htmlOutRef} .= "</li>\n";
+        my $engineeringEnglishFileBasename =
+            myBasename($engineeringEnglishFile);
+        if(defined $idsFromSpecUsage{$eeMessageId}
+           && $idsFromSpecUsage{$eeMessageId} ne "") {
+            $idsFromSpecUsage{$eeMessageId} .=
+                ", $engineeringEnglishFileBasename";
+        }
+        else {
+            $idsFromSpecUsage{$eeMessageId}
+            = $engineeringEnglishFileBasename;
+        }
+    }
+    else {
+        $eeMessageIdIsInSpec = 0;
+        if ($OPT_VERBOSITY >= 2) {
             printf STDOUT "***ERROR: id “%s” not found in spec\n", $eeMessageId;
         }
         ${$htmlOutRef} .= "<li>";
         ${$htmlOutRef} .= sprintf "%s", $eeMessageId;
         ${$htmlOutRef} .= "</li>\n";
     }
-    return $eeMessageIdIsInSpecCount;
+    return $eeMessageIdIsInSpec;
+}
+
+sub compareIdsFromEngineeringEnglishPackagesWithSpec {
+    $htmlOutIdsFromEePackagesSummaryTable .= <<"EOF";
+        <center>
+        <table class="summary">
+        <caption style="caption-side:top">
+        Overview of the number of IDs found in Engineering English packages
+        and whether they are found or not found in the specifications.
+        Click on the file name of the .qm file for details.
+        </caption>
+        <tr>
+        <th>
+        Debian package name
+        </th>
+        <th>
+        version
+        </th>
+        <th>
+        Engineering English .qm file
+        </th>
+        <th>
+        IDs in spec
+        </th>
+        <th>
+        Invalid IDs
+        </th>
+        <th>
+        Missing EE
+        </th>
+        </tr>
+EOF
+
+    for my $engineeringEnglishFile (findEngineeringEnglishFiles()) {
+        my $errorCount = 0;
+        my $okCount = 0;
+        my $missingEngineeringEnglishCount = 0;
+        my $debianPackage = qx(dpkg -S $engineeringEnglishFile);
+        $debianPackage =~ s/:.*$//;
+        chomp($debianPackage);
+        my $debianPackageMaintainerFull = "Unknown &lt;unknown\@unknown.com%gt;";
+        my $debianPackageMaintainerMail = "unknown\@unknown.com";
+        my $debianPackageVersion = "";
+        my $debianPackageDescription = "";
+        open (STATUS, "dpkg -s $debianPackage |") || die "Can’t open dpkg -s $debianPackage | : $!";
+        binmode STATUS, ":utf8";
+        while (<STATUS>) {
+            if ($ARG =~ /Maintainer:\s+(.+)$/) {
+                $debianPackageMaintainerFull = $1;
+                $debianPackageMaintainerFull =~ /<(.+)>/;
+                $debianPackageMaintainerMail = $1;
+                $debianPackageMaintainerFull =~ s/</&lt;/;
+                $debianPackageMaintainerFull =~ s/>/&gt;/;
+            }
+            if ($ARG =~ /Version:\s+(.+)$/) {
+                $debianPackageVersion = $1;
+            }
+            if ($ARG =~ /Description:\s+(.+)$/) {
+                $debianPackageDescription = $1;
+            }
+        }
+        my $dpkgStatusDetails = qx(dpkg -s $debianPackage);
+        if ($OPT_VERBOSITY >= 1) {
+            printf STDOUT "------------------------------------------------------------\n";
+            printf STDOUT "checking “%s” from package “%s”\n", $engineeringEnglishFile, $debianPackage;
+        }
+
+        my $htmlOutOkList = "";
+        my $htmlOutErrorList = "";
+        my $htmlOutMissingEeList = "";
+
+        my $xmlParser = new XML::Parser(Style => 'Tree');
+        open (EEFILE, "lconvert -o - -i $engineeringEnglishFile |") || die "Can’t open file lconvert $engineeringEnglishFile | : $!";
+        my $tree = $xmlParser->parse(*EEFILE, ProtocolEncoding => 'UTF-8');
+        close(EEFILE);
+        if (! $tree->[1][4]) {
+            if ($OPT_VERBOSITY >=1) {
+                printf STDOUT "%s has no context tree, probably empty, skipping ...\n",
+                $engineeringEnglishFile;
+            }
+            next;
+        }
+        my @contextTree = @{$tree->[1][4]};
+        # print Dumper(@contextTree);
+        for (my $i = 0; $i < $#contextTree; ++$i) {
+            if ($contextTree[$i] eq "message") {
+                my $source = $contextTree[$i+1][4][2];
+                $idsFoundInEePackages{$source} = "";
+                my $translation = $contextTree[$i+1][8][2];
+                if (!$translation || $translation eq "!! " || $translation eq "") {
+                    ++$missingEngineeringEnglishCount;
+                    ++$totalNumberOfIdsFoundInEePackagesLackingEngineeringEnglish;
+                    my $htmlOutMissingEeMessage = "";
+                    $htmlOutMissingEeMessage .= "<li>";
+                    $htmlOutMissingEeMessage .= sprintf "%s", $source;
+                    $htmlOutMissingEeMessage .= "</li>\n";
+                    $htmlOutMissingEeList .= $htmlOutMissingEeMessage;
+                }
+                my $htmlOutMessage = "";
+                my $eeMessageIdIsInSpec =
+                    checkMessageIdFromEngineeringEnglishAgainstHandoff($engineeringEnglishFile, $source, \$htmlOutMessage);
+                if ($eeMessageIdIsInSpec == 1) {
+                    ++$okCount;
+                    $htmlOutOkList .= $htmlOutMessage;
+                }
+                else {
+                    ++$errorCount;
+                    ++$totalNumberOfIdsFoundInEePackagesButNotInSpec;
+                    $htmlOutErrorList .= $htmlOutMessage;
+                    $csvOut .= "$source,$engineeringEnglishFile,$debianPackage,$debianPackageVersion,$debianPackageMaintainerMail\n";
+                }
+            }
+        }
+        $htmlOutIdsFromEePackagesDetail .= <<"EOF";
+            <div class="eefile">
+            <div class="title">
+            <a href="#$engineeringEnglishFile-ref" name="$engineeringEnglishFile">
+            $engineeringEnglishFile
+            </a>
+            IDs in spec:
+            <span class="okcolor">
+            $okCount
+            </span>
+EOF
+
+        $class = $errorCount?  "errorcolor" : "okcolor";
+        $htmlOutIdsFromEePackagesDetail .= <<"EOF";
+            Invalid IDs:
+            <span class="$class">
+            $errorCount
+            </span>
+EOF
+
+        $class = $missingEngineeringEnglishCount?  "errorcolor" : "okcolor";
+        $htmlOutIdsFromEePackagesDetail .= <<"EOF";
+            IDs lacking EE:
+            <span class="$class">
+            $missingEngineeringEnglishCount
+            </span>
+            </div>
+EOF
+
+        $htmlOutIdsFromEePackagesDetail .= <<"EOF";
+            <div class="package">
+            $debianPackage $debianPackageVersion
+            </div>
+            <div class="maintainer">
+            <a href="mailto:$debianPackageMaintainerMail">$debianPackageMaintainerFull</a>
+            </div>
+EOF
+
+        if ($errorCount > 0) {
+            $htmlOutIdsFromEePackagesDetail .= <<"EOF";
+                <div class="errorlist">
+                List of invalid IDs not found in the UI specs:
+                <ul>
+                $htmlOutErrorList
+                </ul>
+                </div>
+EOF
+        }
+
+        if ($missingEngineeringEnglishCount > 0) {
+            $htmlOutIdsFromEePackagesDetail .= <<"EOF";
+                <div class="errorlist">
+                List of IDs where the engineering English is missing or empty:
+                <ul>
+                $htmlOutMissingEeList
+                </ul>
+                </div>
+EOF
+        }
+
+        if ($okCount > 0) {
+            $htmlOutIdsFromEePackagesDetail .= <<"EOF";
+                <div class="oklist">
+                List of IDs found in the UI specs:
+                <ul>
+                $htmlOutOkList
+                </ul>
+                </div>
+                </div>
+EOF
+        }
+
+        # Table of Contents:
+        $class = ($errorCount == 0 && $missingEngineeringEnglishCount == 0) ? "okbgcolor" : "errorbgcolor";
+        my $engineeringEnglishFileBasename = myBasename($engineeringEnglishFile);
+        $htmlOutIdsFromEePackagesSummaryTable .= <<"EOF";
+            <tr>
+            <td class="$class">
+            $debianPackage
+            </td>
+            <td class="$class">
+            $debianPackageVersion
+            </td>
+            <td class="$class">
+            <a href="#$engineeringEnglishFile" name="$engineeringEnglishFile-ref">
+            $engineeringEnglishFileBasename
+            </a>:
+            </td>
+EOF
+
+        $htmlOutIdsFromEePackagesSummaryTable .= <<"EOF";
+            <td class="okbgcolor">
+            $okCount
+            </td>
+EOF
+
+        $class = $errorCount? "errorbgcolor" : "okbgcolor";
+        $htmlOutIdsFromEePackagesSummaryTable .= <<"EOF";
+            <td class="$class">
+            $errorCount
+            </td>
+EOF
+
+        $class = $missingEngineeringEnglishCount? "errorbgcolor" : "okbgcolor";
+        $htmlOutIdsFromEePackagesSummaryTable .= <<"EOF";
+            <td class="$class">
+            $missingEngineeringEnglishCount
+            </td>
+            </tr>
+EOF
+
+    }
+
+    $htmlOutIdsFromEePackagesSummaryTable .= <<"EOF";
+        </table>
+        </center>
+EOF
+}
+
+sub checkMessageIdFromSourcePackagesAgainstHandoff {
+    my ($sourcePackagesMessageId, $htmlOutRef) = @_;
+    my $sourcePackagesMessageIdIsInSpec = 0;
+
+    if (defined $idsFromHandoffFiles{$sourcePackagesMessageId}) {
+        $sourcePackagesMessageIdIsInSpec = 1;
+        if ($OPT_VERBOSITY >= 1) {
+            printf STDOUT "++++++OK: id “%s” spec: %s\n",
+            $sourcePackagesMessageId, $idsFromHandoffFiles{$sourcePackagesMessageId};
+        }
+        ${$htmlOutRef} .= "<li>";
+        ${$htmlOutRef} .= sprintf "%s<br>\nfound in source: %s<br>\nfound in spec: %s\n",
+        $sourcePackagesMessageId,
+        $idsFromSourcePackages{$sourcePackagesMessageId},
+        $idsFromHandoffFiles{$sourcePackagesMessageId};
+        ${$htmlOutRef} .= "</li>\n";
+    }
+    else {
+        $sourcePackagesMessageIdIsInSpec = 0;
+        if ($OPT_VERBOSITY >= 1) {
+            printf STDOUT "***ERROR: id “%s” not found in spec\n", $sourcePackagesMessageId;
+        }
+        ${$htmlOutRef} .= "<li>";
+        ${$htmlOutRef} .= sprintf "%s<br>\nfound in source: %s\n",
+        $sourcePackagesMessageId,
+        $idsFromSourcePackages{$sourcePackagesMessageId};
+        ${$htmlOutRef} .= "</li>\n";
+    }
+    return $sourcePackagesMessageIdIsInSpec;
+}
+
+sub compareIdsFromSourcePackagesWithSpec {
+    my $errorCount = 0;
+    my $okCount = 0;
+    my $htmlOutOkList = "";
+    my $htmlOutErrorList = "";
+    for my $sourcePackagesMessageId (sort keys %idsFromSourcePackages) {
+        if ($OPT_VERBOSITY >= 1) {
+            printf STDOUT "checking: “%s” from source “%s”\n",
+            $sourcePackagesMessageId,
+            $idsFromSourcePackages{$sourcePackagesMessageId};
+        }
+        my $htmlOutMessage = "";
+        my $sourcePackagesMessageIdIsInSpec =
+            checkMessageIdFromSourcePackagesAgainstHandoff($sourcePackagesMessageId, \$htmlOutMessage);
+        if ($sourcePackagesMessageIdIsInSpec == 1) {
+            ++$okCount;
+            $htmlOutOkList .= $htmlOutMessage;
+        }
+        else {
+            ++$errorCount;
+            ++$totalNumberOfIdsFoundInSourcePackagesButNotInSpec;
+            $htmlOutErrorList .= $htmlOutMessage;
+        }
+    }
+
+    $htmlOutIdsFromSourcePackagesDetail .= <<"EOF";
+        <div class="eefile">
+        <div class="title">
+        Total number of IDs found in source packages:
+        ${totalNumberOfIdsFromSourcePackages}.
+        IDs in spec:
+        <span class="okcolor">
+        $okCount
+        </span>
+        Invalid IDs:
+        <span class="errorcolor">
+        $errorCount
+        </span>
+        <a href="#summary" name="idsfromsourcepackagesdetails">
+        Back to Summary
+        </a>
+        </div>
+        </div>
+EOF
+    my $sourcePackagesScannedList = "";
+    for my $package (@sourcePackagesScanned) {
+        $package =~ s/$OPT_SOURCEPACKAGES_DIR\///g;
+        $package =~ s/\.tar\.gz//g;
+        $sourcePackagesScannedList .= "<li>$package</li>\n";
+    }
+    $htmlOutIdsFromSourcePackagesDetail .= <<"EOF";
+        List of source packages scanned:
+        <ul>
+            $sourcePackagesScannedList
+        </ul>
+EOF
+ 
+    if ($errorCount > 0) {
+        $htmlOutIdsFromSourcePackagesDetail .= <<"EOF";
+                <div class="errorlist">
+                List of invalid IDs found in the source packages but <b>not</b> in the UI specs:
+                <ul>
+                $htmlOutErrorList
+                </ul>
+                </div>
+EOF
+    }
+
+    if ($okCount > 0) {
+        $htmlOutIdsFromSourcePackagesDetail .= <<"EOF";
+                <div class="oklist">
+                List of IDs found in the source packages which <b>are</b> in the UI specs:
+                <ul>
+                $htmlOutOkList
+                </ul>
+                </div>
+EOF
+    }
 }
 
 #----------------------------------------------------------------------
@@ -465,12 +952,13 @@ sub checkMessageIdFromSourceAgainstHandoff {
 # Process command line options
 my %opt;
 unless (GetOptions(\%opt,
-		   'verbosity=i',        \$OPT_VERBOSITY,
+		   'verbosity|v=i',      \$OPT_VERBOSITY,
 		   'version',            \$OPT_VERSION,
 		   'help|h',             \$OPT_HELP,
 		   'eedir=s',            \$OPT_EEDIR,
                    'handoffurl=s',       \$OPT_HANDOFF_URL,
                    'handoffdir=s',       \$OPT_HANDOFF_DIR,
+                   'sourcepackagesdir=s',\$OPT_SOURCEPACKAGES_DIR,
                    'http-user=s',        \$OPT_HTTP_USER,
                    'http-passwd=s',      \$OPT_HTTP_PASSWD,
                    'skip-download',      \$OPT_SKIP_DOWNLOAD,
@@ -497,6 +985,9 @@ if (!defined $OPT_HANDOFF_URL) {
 }
 if (!defined $OPT_HANDOFF_DIR) {
     $OPT_HANDOFF_DIR="/tmp/handoff";
+}
+if (!defined $OPT_SOURCEPACKAGES_DIR) {
+    $OPT_SOURCEPACKAGES_DIR="/tmp/sourcepackages";
 }
 if (!defined $OPT_HTTP_USER) {
     $OPT_HTTP_USER="";
@@ -543,229 +1034,53 @@ else {
     @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
 }
 
+getEngineeringEnglishPackageList();
+
 readHandoffXmlTrees();
 
-my $htmlOutToc = "";
-my $htmlOutResultsDetail = "";
-my $csvOut = "Invalid Message ID, Engineering English .qm file, Package, Package version, Package maintainer\n";
+getIdsFromHandoffFiles();
 
-for my $engineeringEnglishFile (findEngineeringEnglishFiles()) {
-    my $errorCount = 0;
-    my $okCount = 0;
-    my $missingEngineeringEnglishCount = 0;
-    my $debianPackage = qx(dpkg -S $engineeringEnglishFile);
-    $debianPackage =~ s/:.*$//;
-    chomp($debianPackage);
-    my $debianPackageMaintainerFull = "Unknown &lt;unknown\@unknown.com%gt;";
-    my $debianPackageMaintainerMail = "unknown\@unknown.com";
-    my $debianPackageVersion = "";
-    my $debianPackageDescription = "";
-    open (STATUS, "dpkg -s $debianPackage |") || die "Can’t open dpkg -s $debianPackage | : $!";
-    binmode STATUS, ":utf8";
-    while (<STATUS>) {
-        if ($ARG =~ /Maintainer:\s+(.+)$/) {
-            $debianPackageMaintainerFull = $1;
-            $debianPackageMaintainerFull =~ /<(.+)>/;
-            $debianPackageMaintainerMail = $1;
-            $debianPackageMaintainerFull =~ s/</&lt;/;
-            $debianPackageMaintainerFull =~ s/>/&gt;/;
-        }
-        if ($ARG =~ /Version:\s+(.+)$/) {
-            $debianPackageVersion = $1;
-        }
-        if ($ARG =~ /Description:\s+(.+)$/) {
-            $debianPackageDescription = $1;
-        }
-    }
-    my $dpkgStatusDetails = qx(dpkg -s $debianPackage);
-    if ($OPT_VERBOSITY >= 1) {
-        printf STDOUT "------------------------------------------------------------\n";
-        printf STDOUT "checking “%s” from package “%s”\n", $engineeringEnglishFile, $debianPackage;
-    }
+getIdsFromSourcePackages();
 
-    my $htmlOutOkList = "";
-    my $htmlOutErrorList = "";
-    my $htmlOutMissingEeList = "";
+compareIdsFromEngineeringEnglishPackagesWithSpec();
 
-    my $xmlParser = new XML::Parser(Style => 'Tree');
-    open (EEFILE, "lconvert -o - -i $engineeringEnglishFile |") || die "Can’t open file lconvert $engineeringEnglishFile | : $!";
-    my $tree = $xmlParser->parse(*EEFILE, ProtocolEncoding => 'UTF-8');
-    close(EEFILE);
-    if (! $tree->[1][4]) {
-        if ($OPT_VERBOSITY >=1) {
-            printf STDOUT "%s has no context tree, probably empty, skipping ...\n",
-                    $engineeringEnglishFile;
-        }
-        next;
-    }
-    my @contextTree = @{$tree->[1][4]};
-    # print Dumper(@contextTree);
-    for (my $i = 0; $i < $#contextTree; ++$i) {
-        if ($contextTree[$i] eq "message") {
-            my $source = $contextTree[$i+1][4][2];
-            $idsFoundInCode{$source} = "";
-            my $translation = $contextTree[$i+1][8][2];
-            if (!$translation || $translation eq "!! " || $translation eq "") {
-                ++$missingEngineeringEnglishCount;
-                ++$totalNumberOfIdsFoundInCodeLackingEngineeringEnglish;
-                my $htmlOutMissingEeMessage = "";
-                $htmlOutMissingEeMessage .= "<li>";
-                $htmlOutMissingEeMessage .= sprintf "%s", $source;
-                $htmlOutMissingEeMessage .= "</li>\n";
-                $htmlOutMissingEeList .= $htmlOutMissingEeMessage;
-            }
-            my $htmlOutMessage = "";
-            my $eeMessageIdIsInSpecCount =
-                checkMessageIdFromSourceAgainstHandoff($engineeringEnglishFile, $source, \$htmlOutMessage);
-            if ($eeMessageIdIsInSpecCount >= 1) {
-                ++$okCount;
-                $htmlOutOkList .= $htmlOutMessage;
-            }
-            else {
-                ++$errorCount;
-                ++$totalNumberOfIdsFoundInCodeButNotInSpec;
-                $htmlOutErrorList .= $htmlOutMessage;
-                $csvOut .= "$source,$engineeringEnglishFile,$debianPackage,$debianPackageVersion,$debianPackageMaintainerMail\n";
-            }
-        }
-    }
-    $htmlOutResultsDetail .= <<"EOF";
-        <div class="eefile">
-        <div class="title">
-        <a href="#$engineeringEnglishFile-ref" name="$engineeringEnglishFile">
-        $engineeringEnglishFile
-        </a>
-        IDs in spec:
-        <span class="okcolor">
-        $okCount
-        </span>
-EOF
-
-    $class = $errorCount?  "errorcolor" : "okcolor";
-    $htmlOutResultsDetail .= <<"EOF";
-        Invalid IDs:
-        <span class="$class">
-            $errorCount
-        </span>
-EOF
-
-    $class = $missingEngineeringEnglishCount?  "errorcolor" : "okcolor";
-    $htmlOutResultsDetail .= <<"EOF";
-        IDs lacking EE:
-        <span class="$class">
-        $missingEngineeringEnglishCount
-        </span>
-        </div>
-EOF
-
-    $htmlOutResultsDetail .= <<"EOF";
-        <div class="package">
-        $debianPackage $debianPackageVersion
-        </div>
-        <div class="maintainer">
-        <a href="mailto:$debianPackageMaintainerMail">$debianPackageMaintainerFull</a>
-        </div>
-EOF
-
-    if ($errorCount > 0) {
-        $htmlOutResultsDetail .= <<"EOF";
-            <div class="errorlist">
-            List of invalid IDs not found in the UI specs:
-            <ul>
-            $htmlOutErrorList
-            </ul>
-            </div>
-EOF
-    }
-
-    if ($missingEngineeringEnglishCount > 0) {
-        $htmlOutResultsDetail .= <<"EOF";
-            <div class="errorlist">
-            List of IDs where the engineering English is missing or empty:
-            <ul>
-            $htmlOutMissingEeList
-            </ul>
-            </div>
-EOF
-    }
-
-    if ($okCount > 0) {
-        $htmlOutResultsDetail .= <<"EOF";
-            <div class="oklist">
-            List of IDs found in the UI specs:
-            <ul>
-            $htmlOutOkList
-            </ul>
-            </div>
-            </div>
-EOF
-    }
-
-    # Table of Contents:
-    $class = ($errorCount == 0 && $missingEngineeringEnglishCount == 0) ? "okbgcolor" : "errorbgcolor";
-    my $engineeringEnglishFileBasename = myBasename($engineeringEnglishFile);
-    $htmlOutToc .= <<"EOF";
-        <tr>
-        <td class="$class">
-        $debianPackage
-        </td>
-        <td class="$class">
-        $debianPackageVersion
-        </td>
-        <td class="$class">
-        <a href="#$engineeringEnglishFile" name="$engineeringEnglishFile-ref">
-        $engineeringEnglishFileBasename
-        </a>:
-        </td>
-EOF
-
-    $htmlOutToc .= <<"EOF";
-        <td class="okbgcolor">
-        $okCount
-        </td>
-EOF
-
-    $class = $errorCount? "errorbgcolor" : "okbgcolor";
-    $htmlOutToc .= <<"EOF";
-        <td class="$class">
-        $errorCount
-        </td>
-EOF
-
-    $class = $missingEngineeringEnglishCount? "errorbgcolor" : "okbgcolor";
-    $htmlOutToc .= <<"EOF";
-        <td class="$class">
-        $missingEngineeringEnglishCount
-        </td>
-        </tr>
-EOF
-
-}
-
-$htmlOutToc .= <<"EOF";
-    </table>
-    </center>
-EOF
+compareIdsFromSourcePackagesWithSpec();
 
 ######################################################################
 # generate output to show which ids from specs are used and which are not
 
-# mark some exceptions where engineering English is not expected
-# to exist and which are known to be used anyway as used:
-for my $idFromSpec (sort (keys %idsFromSpec)) {
-    if($idsFromSpec{$idFromSpec} eq "") {
+# mark some exceptions for IDs where neither engineering English
+# nor sources are expected to exist and which are known to be used anyway:
+for my $idFromSpec (sort (keys %idsFromSpecUsage)) {
+    if($idsFromSpecUsage{$idFromSpec} eq "") {
         if ($idFromSpec =~ /qtn_clk_city/
             || $idFromSpec =~ /qtn_clk_country/
             || $idFromSpec =~ /qtn_clk_region/) {
-            $idsFromSpec{$idFromSpec} = "meegotouch-cities-template";
+            $idsFromSpecUsage{$idFromSpec} = "meegotouch-cities-template";
+        }
+    }
+}
+
+# mark the ids found by scanning the source debian packages
+# with lupdate as used:
+for my $idFromSpec (sort (keys %idsFromSpecUsage)) {
+    if(defined $idsFromSourcePackages{$idFromSpec}
+       && $idsFromSourcePackages{$idFromSpec} ne "") {
+        if ($idsFromSpecUsage{$idFromSpec} ne "") {
+            $idsFromSpecUsage{$idFromSpec} .=
+                ", $idsFromSourcePackages{$idFromSpec}";
+        }
+        else {
+            $idsFromSpecUsage{$idFromSpec} =
+                $idsFromSourcePackages{$idFromSpec};
         }
     }
 }
 
 my $htmlOutIdsFromSpecUsed = "";
 my $htmlOutIdsFromSpecNeverUsed = "";
-for my $idFromSpec (sort (keys %idsFromSpec)) {
-    if ($idsFromSpec{$idFromSpec} eq "") {
+for my $idFromSpec (sort (keys %idsFromSpecUsage)) {
+    if ($idsFromSpecUsage{$idFromSpec} eq "") {
         ++$totalNumberOfIdsFoundInSpecButNeverUsed;
         $htmlOutIdsFromSpecNeverUsed .= <<"EOF"
             <li>$idFromSpec</li>
@@ -774,17 +1089,27 @@ EOF
     else {
         ++$totalNumberOfIdsFoundInSpecUsed;
         $htmlOutIdsFromSpecUsed .= <<"EOF"
-            <li>$idFromSpec (used in $idsFromSpec{$idFromSpec})</li>
+            <li>$idFromSpec (used in $idsFromSpecUsage{$idFromSpec})</li>
 EOF
     }
 }
-
+######################################################################
 $totalNumberOfIdsFoundInSpec =
     $totalNumberOfIdsFoundInSpecUsed
     + $totalNumberOfIdsFoundInSpecButNeverUsed;
 
-my $htmlOutIdsFromSpecDetail = "";
-$htmlOutIdsFromSpecDetail .= <<"EOF";
+if (scalar(keys %idsFromSpecUsage) != $totalNumberOfIdsFoundInSpec) {
+    printf STDERR "There is something wrong with calculating the number of ids in the specs. Exit.\n";
+    myExit(1);
+}
+if (scalar(keys %idsFromHandoffFiles) != $totalNumberOfIdsFoundInSpec) {
+    printf STDERR "There is something wrong with calculating the number of ids in the specs. Exit.\n";
+    myExit(1);
+}
+
+
+my $htmlOutIdsFromSpecUsedDetail = "";
+$htmlOutIdsFromSpecUsedDetail .= <<"EOF";
     <div class="eefile">
     <div class="title">
     Total number of IDs in specs:
@@ -807,9 +1132,11 @@ $htmlOutIdsFromSpecDetail .= <<"EOF";
 EOF
 
 if ($totalNumberOfIdsFoundInSpecButNeverUsed > 0) {
-    $htmlOutIdsFromSpecDetail .= <<"EOF";
+    $htmlOutIdsFromSpecUsedDetail .= <<"EOF";
         <div class="errorlist">
-        List of IDs from the specifications which are never used in the code:
+        List of IDs from the specifications which are never used
+        in the code, they can be found neither in the engineering English
+        packages scanned nor in the source packages scanned:
         <ul>
         $htmlOutIdsFromSpecNeverUsed
         </ul>
@@ -817,9 +1144,11 @@ if ($totalNumberOfIdsFoundInSpecButNeverUsed > 0) {
 EOF
 }
 if ($totalNumberOfIdsFoundInSpecUsed > 0) {
-    $htmlOutIdsFromSpecDetail .= <<"EOF";
+    $htmlOutIdsFromSpecUsedDetail .= <<"EOF";
         <div class="oklist">
-        List of IDs from the specifications which are used somewhere in the code:
+        List of IDs from the specifications which are used somewhere in the code,
+        i.e. they were found in an engineering English package scanned or in a
+        source package scanned or they are known to be used and handled as exceptions:
         <ul>
         $htmlOutIdsFromSpecUsed
         </ul>
@@ -834,39 +1163,40 @@ $htmlOutTocHeader .= <<"EOF";
     <h2 id="summary">Summary of results:</h2>
 EOF
 
-my @idsFoundInCodeArray = (keys %idsFoundInCode);
-$totalNumberOfIdsFoundInCode = $#idsFoundInCodeArray;
+my @idsFoundInEePackagesArray = (keys %idsFoundInEePackages);
+$totalNumberOfIdsFoundInEePackages = $#idsFoundInEePackagesArray;
 
 $htmlOutTocHeader .= <<"EOF";
+    <h3>Ids found in engineering English packages:</h3>
     <p>
     <b>
-    Total number of Ids found in the code:
-    $totalNumberOfIdsFoundInCode
+    Total number of Ids found in the engineering English packages:
+    $totalNumberOfIdsFoundInEePackages
     </b>
     (may contain duplicates)
     </p>
 EOF
 
-$class = $totalNumberOfIdsFoundInCodeButNotInSpec? "errorcolor" : "okcolor";
+$class = $totalNumberOfIdsFoundInEePackagesButNotInSpec? "errorcolor" : "okcolor";
 $htmlOutTocHeader .= <<"EOF";
     <p>
     <b>
-    Total number of Ids found in the code but not in the specifications:
+    Total number of Ids found in the engineering English packages but not in the specifications:
     <span class="$class">
-    $totalNumberOfIdsFoundInCodeButNotInSpec
+    $totalNumberOfIdsFoundInEePackagesButNotInSpec
     </span>
     </b>
     (may contain duplicates)
     </p>
 EOF
 
-$class = $totalNumberOfIdsFoundInCodeLackingEngineeringEnglish? "errorcolor" : "okcolor";
+$class = $totalNumberOfIdsFoundInEePackagesLackingEngineeringEnglish? "errorcolor" : "okcolor";
 $htmlOutTocHeader .= <<"EOF";
     <p>
     <b>
-    Total number of Ids found in the code where the engineering English is missing or empty:
+    Total number of Ids found in the engineering English packages where the engineering English is missing or empty:
     <span class="$class">
-    $totalNumberOfIdsFoundInCodeLackingEngineeringEnglish
+    $totalNumberOfIdsFoundInEePackagesLackingEngineeringEnglish
     </span>
     </b>
     (may contain duplicates)
@@ -875,21 +1205,52 @@ EOF
 
 $htmlOutTocHeader .= <<"EOF";
     <p>
-    Note that the numbers of Ids listed above as “found in the code” may
+    Note that the numbers of Ids listed above as
+    “found in the engineering English packages” may
     count identical ids several times. If the same id
-    appears in in different engineering English files it is
-    counted once for each engineering Engineering file it appears in.
+    appears in different engineering English files it is
+    counted once for each engineering English file it appears in.
     </p>
 EOF
 
 $htmlOutTocHeader .= <<"EOF";
+    <h3>
+    Ids found by scanning source packages:
+    <a href="#idsfromsourcepackagesdetails">View source packages scan details</a>
+    </h3>
+    <p>
+    <b>
+    Total number of Ids found by scanning source packages with lupdate:
+    $totalNumberOfIdsFromSourcePackages
+    </b>
+    (unique)
+    </p>
+EOF
+
+$class = $totalNumberOfIdsFoundInSourcePackagesButNotInSpec? "errorcolor" : "okcolor";
+$htmlOutTocHeader .= <<"EOF";
+    <p>
+    <b>
+    Total number of Ids found in by scanning the source packages which are not in the specifications:
+    <span class="$class">
+    $totalNumberOfIdsFoundInSourcePackagesButNotInSpec
+    </span>
+    </b>
+    (unique)
+    </p>
+EOF
+
+$htmlOutTocHeader .= <<"EOF";
+    <h3>
+    Ids found by scanning handoff files (i.e. the specifications):
+    <a href="#idsfromspecused">View handoff files scan details</a>
+    </h3>
     <p>
     <b>
     Total number of Ids found in the specifications:
     $totalNumberOfIdsFoundInSpec
     </b>
     (unique)
-    <a href="#idsfromspecused">View Details</a>
     </p>
 EOF
 
@@ -903,7 +1264,6 @@ $htmlOutTocHeader .= <<"EOF";
     </span>
     </b>
     (unique)
-    <a href="#idsfromspecused">View Details</a>
     </p>  
 EOF
 
@@ -917,42 +1277,16 @@ $htmlOutTocHeader .= <<"EOF";
     </span>
     </b>
     (unique)
-    <a href="#idsfromspecused">View Details</a>
     </p>  
 EOF
 
 $htmlOutTocHeader .= <<"EOF";
     <p>
     <a href="messageid-check-result.csv">
-    CVS file with a list of all invalid message IDs.
+    CSV file with a list of invalid message IDs from engineering English Packages.
     </a>
+    (does not include the invalid message IDs found from scanning the sources directly).
     </p>
-    <center>
-    <table class="summary">
-    <caption style="caption-side:top">
-    Overview of the number of IDs found or not found in the specifications.
-    Click on the file name of the .qm file for details.
-    </caption>
-    <tr>
-    <th>
-    Debian package name
-    </th>
-    <th>
-    version
-    </th>
-    <th>
-    Engineering English .qm file
-    </th>
-    <th>
-    IDs in spec
-    </th>
-    <th>
-    Invalid IDs
-    </th>
-    <th>
-    Missing EE
-    </th>
-    </tr>
 EOF
 
 my $htmlOutResultsDetailHeader = "";
@@ -1005,18 +1339,20 @@ $htmlOutIntroduction .= <<"EOF";
     <p>
     While this script was run, /etc/apt/sources.list contained:<br>
     $etc_apt_sources_list_contents
-    i.e. the engineering English packages listed below were downloaded
-    from these repositories.
+    i.e. the engineering English packages and source packages
+    listed below were downloaded from these repositories.
     </p>
 EOF
 
 my $htmlOutBody =
     $htmlOutIntroduction
     . $htmlOutTocHeader
-    . $htmlOutToc
+    . $htmlOutIdsFromEePackagesSummaryTable
+    . $htmlOutIdsFromSourcePackagesSummaryTable
     . $htmlOutResultsDetailHeader
-    . $htmlOutResultsDetail
-    . $htmlOutIdsFromSpecDetail;
+    . $htmlOutIdsFromEePackagesDetail
+    . $htmlOutIdsFromSourcePackagesDetail
+    . $htmlOutIdsFromSpecUsedDetail;
 writeHtml($htmlOutBody);
 
 open (CSV, ">$OPT_OUTPUTDIR/messageid-check-result.csv") || die "can't open file $OPT_OUTPUTDIR/messageid-check-result.csv: $!";
