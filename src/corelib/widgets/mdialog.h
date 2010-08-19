@@ -133,20 +133,20 @@ class MDismissEvent;
         layout->addItem(textEdit);
 
         MDialog* dialog = new MDialog("Please enter your name",
-                               centralWidget,
                                M::OkButton | M::ResetButton);
+        dialog->setCentralWidget(centralWidget);
 
         connect(dialog, SIGNAL(disappeared()), SLOT(processDialogResult()));
-        dialog->appear();
+        dialog->appear(myScene);
     \endcode
 
     Constructing a question dialog, it is easier to use MMessageBox instead:
     \code
     MDialog* dialog = new MDialog("Question",
-        new MLabel("Lorem ipsum dolor sit amet?"),
         M::YesButton | M::NoButton);
+    dialog->setCentralWidget(new MLabel("Lorem ipsum dolor sit amet?"));
     connect(dialog, SIGNAL(disappeared()), SLOT(processDialogResult()));
-    dialog->appear();
+    dialog->appear(myScene);
     \endcode
 
     Adding standard and non standard buttons:
@@ -429,7 +429,7 @@ public:
      * \brief Returns the standard button enum value corresponding to the given button,
      *        or NoButton if the given button isn't a standard button.
      *
-     * \sa button(StandardButton)
+     * \sa MDialog::button(M::StandardButton)
      */
     M::StandardButton standardButton(MButtonModel *button) const;
 
