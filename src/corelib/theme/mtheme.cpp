@@ -219,13 +219,7 @@ const QPixmap *MTheme::pixmap(const QString &id, const QSize &size)
     if (p)
         return p;
 
-    QPixmap *result;
-    // we have to create temporary pixmap
-    if (realSize.isValid()) {
-        result = new QPixmap(realSize);
-    } else {
-        result = new QPixmap(1,1);
-    }
+    QPixmap *result = new QPixmap(realSize);
     if (instance()->d_ptr->showAsyncRequests) {
         result->fill(QColor(0, 255, 0, 255));
     } else {
