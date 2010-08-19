@@ -42,7 +42,7 @@ SUBDIRS     =  \
      ut_mflowlayoutpolicy \
      ut_mfreestylelayoutpolicy \
      ut_mgridlayoutpolicy \
-#     ut_mimagewidget \ // CITA problems
+     ut_mimagewidget \ 
      ut_mlayout \
      ut_mlinearlayoutpolicy \
      ut_mapplicationmenu \
