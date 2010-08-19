@@ -76,82 +76,7 @@ my @engineeringEnglishPackagesBroken = (
     "mfe-account-ui-plugins-l10n-engineering-english"
    );
 
-my @engineeringEnglishPackages = (
-    "account-plugin-att-l10n-engineering-english",
-    "account-plugin-facebook-l10n-engineering-english",
-    "account-plugin-google-l10n-engineering-english",
-    "account-plugin-ovi-l10n-engineering-english",
-    "account-plugin-skype-l10n-engineering-english",
-    "account-plugin-youtube-l10n-engineering-english",
-    "accounts-ui-l10n-engineering-english",
-    "activities-l10n-engineering-english",
-    "backup-framework-l10n-engineering-english",
-    "call-history-l10n-engineering-english",
-    "call-ui-l10n-engineering-english",
-    "camera-ui-l10n-engineering-english",
-    "cellular-adaptation-ui-l10n-engineering-english",
-    "commhistory-daemon-l10n-engineering-english",
-    "conn-dui-bluetooth-l10n-engineering-english",
-    "conn-dui-cellular-l10n-engineering-english",
-    "conn-dui-internet-l10n-engineering-english",
-    "conn-dui-wlan-l10n-engineering-english",
-    "contacts-l10n-engineering-english",
-    "crash-reporter-l10n-engineering-english",
-    "devicelock-l10n-engineering-english",
-    "dialer-l10n-engineering-english",
-    "dui-demos-widgetsgallery-l10n-engineering-english",
-    "duicontrolpanel-callandsimapplet-l10n-engineering-english",
-    "duicontrolpanel-certificatesapplet-l10n-engineering-english",
-    "duicontrolpanel-datetimeapplet-l10n-engineering-english",
-    "duicontrolpanel-displaylanguageapplet-l10n-engineering-english",
-    "duicontrolpanel-keyboardlanguageapplet-l10n-engineering-english",
-    "duicontrolpanel-l10n-engineering-english",
-    "duicontrolpanel-networkapplet-l10n-engineering-english",
-    "duicontrolpanel-regionformatapplet-l10n-engineering-english",
-    "duicontrolpanel-skeletonapplet-l10n-engineering-english",
-    "duihelp-l10n-engineering-english",
-    "duihomescreen-l10n-engineering-english",
-    "duihomescreen-plugins-weatherapplet-l10n-engineering-english",
-    "duistartup-l10n-engineering-english",
-    "duistatusind-connectivity-l10n-engineering-english",
-    "feedreader-l10n-engineering-english",
-    "gallery-l10n-engineering-english",
-    "keychain-ui-l10n-engineering-english",
-    "libas-common-utils-l10n-engineering-english",
-    "libdatacounterdialog-l10n-engineering-english",
-    "libdialerui-l10n-engineering-english",
-    "libfeedsettings-l10n-engineering-english",
-    "libfenix-l10n-engineering-english",
-    "liblocationpicker-l10n-engineering-english",
-    "libmcontentwidgets-l10n-engineering-english",
-    "libmeegotouch-l10n-engineering-english",
-    "libpresence0-l10n-engineering-english",
-    "libsaveas-l10n-engineering-english",
-    "libshare-ui-l10n-engineering-english",
-    "libwebupload-l10n-engineering-english",
-    "location-ui-l10n-engineering-english",
-    "locationsettings-l10n-engineering-english",
-    "mcontrolpanel-telecoilapplet-l10n-engineering-english",
-    "me-l10n-engineering-english",
-    "meegotouch-demos-widgetsgallery-l10n-engineering-english",
-    "messaging-ui-l10n-engineering-english",
-    "mfe-account-ui-plugins-l10n-engineering-english",
-    "mms-ui-l10n-engineering-english",
-    "mpsa-l10n-engineering-english",
-    "mstartup-l10n-engineering-english",
-    "office-tools-l10n-engineering-english",
-    "package-manager-l10n-engineering-english",
-    "package-manager-ui-l10n-engineering-english",
-    "signon-ui-l10n-engineering-english",
-    "systemui-applets-l10n-engineering-english",
-    "systemui-l10n-engineering-english",
-    "transfer-ui-l10n-engineering-english",
-    "webupload-engine-l10n-engineering-english",
-    "webupload-service-facebook-l10n-engineering-english",
-    "webupload-service-flickr-l10n-engineering-english",
-    "webupload-service-picasa-l10n-engineering-english",
-    "webupload-service-youtube-l10n-engineering-english"
-    );
+my @engineeringEnglishPackages = ();
 
 #----------------------------------------------------------------------
 # subroutines:
@@ -307,7 +232,7 @@ EOF
 
 }
 
-sub checkEngineeringEnglishPackageList {
+sub getEngineeringEnglishPackageList {
     my @engineeringEnglishPackagesKnownToApt = ();
     open (PKGLIST, "apt-cache search l10n-engineering-english |") || die "Can’t open apt-cache search l10n-engineering-english | : $!";
     binmode PKGLIST, ":utf8";
@@ -317,16 +242,7 @@ sub checkEngineeringEnglishPackageList {
         }
     }
     close (PKGLIST);
-    for my $package (@engineeringEnglishPackagesKnownToApt) {
-        if (!grep(/^${package}$/, @engineeringEnglishPackages)
-            && !grep(/^${package}$/, @engineeringEnglishPackagesObsolete)
-            && !grep(/^${package}$/, @engineeringEnglishPackagesIgnore)
-            && !grep(/^${package}$/, @engineeringEnglishPackagesBroken)) {
-            printf STDERR "engineering English package “%s” seems to be available but is not known by this script. Fix this first! Exiting ...",
-            $package;
-            exit (1);
-        }
-    }
+    @engineeringEnglishPackages = @engineeringEnglishPackagesKnownToApt;
 }
 
 sub download {
@@ -335,7 +251,7 @@ sub download {
         exit (1);
     }
 
-    checkEngineeringEnglishPackageList();
+    getEngineeringEnglishPackageList();
 
     for my $package (@engineeringEnglishPackages) {
         if (grep(/^${package}$/, @engineeringEnglishPackagesObsolete)
