@@ -338,16 +338,22 @@ void Ut_MImageWidget::testZoomIn()
     m_subject->setZoomFactor(1, 1);
     m_subject->zoomFactor(&fx, &fy);
 
-    QVERIFY(fx == 1.0);
-    QVERIFY(fy == 1.0);
+    QCOMPARE(fx, 1.0);
+    QCOMPARE(fy, 1.0);
+
+    fx = fy = 0;
+    m_subject->zoomFactor(&fx, NULL);
+    QCOMPARE(fx, 1.0);
+    m_subject->zoomFactor(NULL, &fy);
+    QCOMPARE(fy, 1.0);
 
     m_subject->zoomIn();
 
     qreal nfx(0), nfy(0);
     m_subject->zoomFactor(&nfx, &nfy);
 
-    QVERIFY(nfx == 2.0 * fx);
-    QVERIFY(nfy == 2.0 * fy);
+    QCOMPARE(nfx, 2.0 * fx);
+    QCOMPARE(nfy, 2.0 * fy);
 
     delete m_subject;
     m_subject = 0;

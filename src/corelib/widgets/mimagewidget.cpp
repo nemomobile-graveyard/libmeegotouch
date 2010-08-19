@@ -229,44 +229,35 @@ void MImageWidget::setZoomFactor(qreal fx, qreal fy)
 
 void MImageWidget::zoomFactor(qreal *fx, qreal *fy) const
 {
-    if (fx == 0 || fy == 0) return;
+    if (fx == 0 && fy == 0) return;
 
     Q_D(const MImageWidget);
 
-    QSizeF imageSize = d->imageDataSize();
-    if (imageSize.isEmpty())
-        return;
 
-    // if factor not equals 0, calculate it with imageSize, targetSize and widgetSize
-    QSizeF buffer;
+    if(fx)
+        *fx = model()->zoomFactorX();
+    if(fy)
+        *fy = model()->zoomFactorY();
 
-    qreal factorX = model()->zoomFactorX();
-    qreal factorY = model()->zoomFactorY();
-    if (factorX == 0 || factorY == 0) {
+    if ((fx && *fx == 0) || (fy && *fy == 0)) {
+        // If the zoom factor is 0, calculate it with imageSize, targetSize and widgetSize
+        QSizeF buffer;
+        QSizeF imageSize = d->imageDataSize();
+        if (imageSize.isEmpty())
+            return;
+
         buffer = imageSize;
 
-        qreal left, top, right, bottom;
-
-        left = style()->marginLeft();
-        top = style()->marginTop();
-        right = style()->marginRight();
-        bottom = style()->marginBottom();
-
-        QSizeF marginSize = QSizeF(left + right, top + bottom);
+        QSizeF marginSize = QSizeF(style()->marginLeft() + style()->marginRight(), style()->marginTop() + style()->marginTop());
         QSizeF widgetSize = size() - marginSize;
 
         buffer.scale(widgetSize, model()->aspectRatioMode());
+        if (fx && *fx == 0)
+            *fx = buffer.width() / imageSize.width();
+
+        if (fy && *fy == 0)
+            *fy = buffer.height() / imageSize.height();
     }
-
-    if (factorX == 0)
-        *fx = buffer.width() / imageSize.width();
-    else
-        *fx = factorX;
-
-    if (factorY == 0)
-        *fy = buffer.height() / imageSize.height();
-    else
-        *fy = factorY;
 }
 
 void MImageWidget::zoomIn()
