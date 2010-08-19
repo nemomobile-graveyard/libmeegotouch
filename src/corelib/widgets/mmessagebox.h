@@ -49,7 +49,7 @@ public:
      *
      * \param text Text to be displayed in the dialog's central area
      * \param standardButtons Standard buttons to be put in the button box.
-     * \sa MDialog::StandardButtons
+     * \sa M::StandardButtons
      */
     MMessageBox(const QString &text = QString(), M::StandardButtons standardButtons = M::OkButton);
 
@@ -60,7 +60,7 @@ public:
      * \param title Dialog's title, shown in the title bar.
      * \param text Text to be displayed in the dialog's central area
      * \param buttons Standard buttons to be put in the button box.
-     * \sa MDialog::StandardButtons
+     * \sa M::StandardButtons
      */
     MMessageBox(const QString &title, const QString &text,
                   M::StandardButtons buttons = M::OkButton);
