@@ -119,14 +119,115 @@ class M_EXPORT MApplicationPage : public MSceneWindow
     Q_OBJECT
     M_CONTROLLER(MApplicationPage)
 
+    /*!
+        \property MApplicationPage::autoMarginsForComponentsEnabled
+        \brief Whether extra margins will be automatically added around the central
+               widget to avoid occlusion by other components.
+
+        If enabled, extra margins will be automatically added around the central
+        widget according to the components that are currently being displayed in
+        order to avoid parts of the central widget from being inaccessible.
+
+        When a navigation bar appears on the upper edge of the application window, for
+        instance, an extra margin will be automatically added to the top of the
+        central widget of roughly the height of that navigation bar. Therefore
+        effectively avoiding the top part of the central widget from being
+        inaccessible.
+
+        This property enabled by default.
+
+        \note When the navigation bar is in AutoHide mode the top margin won't be added
+        to the central widget.
+
+        Use setAutoMarginsForComponentsEnabled() to set it and autoMarginsForComponentsEnabled()
+        to get its current value.
+
+        \sa setComponentsDisplayMode()
+    */
     Q_PROPERTY(bool autoMarginsForComponentsEnabled READ autoMarginsForComponentsEnabled WRITE setAutoMarginsForComponentsEnabled)
+
+    /*!
+        \property MApplicationPage::title
+        \brief Page title.
+        It will be shown on the navigation bar.
+        Set it with setTitle() and get its current value with title().
+     */
     Q_PROPERTY(QString title READ title WRITE setTitle)
+
+    /*!
+        \property MApplicationPage::contentCreated
+        \brief Whether createContent() has already been called.
+        \sa isContentCreated()
+     */
     Q_PROPERTY(bool contentCreated READ isContentCreated)
+
+    /*!
+        \property MApplicationPage::escapeMode
+        \brief The page escape mode
+        See MApplicationPageModel::PageEscapeMode.
+     */
     Q_PROPERTY(MApplicationPageModel::PageEscapeMode escapeMode READ escapeMode WRITE setEscapeMode)
+
+    /*!
+        \property MApplicationPage::pannable
+        \brief Whether the page can be panned.
+        Set it with setPannable() and get its current value with isPannable().
+     */
     Q_PROPERTY(bool pannable READ isPannable WRITE setPannable)
+
+    /*!
+        \property MApplicationPage::panningDirection
+        \brief Defines in which directions the page can be panned.
+        Set it with setPanningDirection() and get its current value with panningDirection().
+     */
     Q_PROPERTY(Qt::Orientations panningDirection READ panningDirection WRITE setPanningDirection)
+
+    /*!
+        \property MApplicationPage::rememberPosition
+        \brief Whether the page should remember the pannable viewport position it had
+               on its last appearance.
+
+        Default value is true. Set it to false to have the viewport scrolled to the
+        top with every new appearance. The scrolling is immediate, i.e. it's not animated
+        at all.
+
+        Set it with setRememberPosition() and get its current value with rememberPosition().
+     */
     Q_PROPERTY(bool rememberPosition READ rememberPosition WRITE setRememberPosition)
+
+    /*!
+        \property MApplicationPage::progressIndicatorVisible
+        \brief Defines whether progress indicator is visible
+
+        It true, a progress indicator with unknown duration (such as a spinner) will be
+        displayed in the navigation bar. Use it to hint the user that some process is
+        ongoing or that the page is waiting for something to complete.
+
+        By default, this property is false.
+
+        Set it with setProgressIndicatorVisible() and get its current value with isProgressIndicatorVisible().
+     */
     Q_PROPERTY(bool progressIndicatorVisible READ isProgressIndicatorVisible WRITE setProgressIndicatorVisible)
+
+    /*!
+        \property MApplicationPage::exposedContentRect
+        \brief Area of the page whose content is not covered by any bar
+
+        Area of the page whose content is not covered by any bar (status bar,
+        navigation bar, tool bar) and thus is accessible to the user.
+
+        Floating widgets can be implemented by making them children of the application
+        page instead of the central widget (thus they are not panned). They should be
+        positioned within this rectangle.
+
+        Note that this area can be covered by transient scene windows such as
+        dialogs and notifications as well as by overlays.
+
+        The rectangle is in local item coordinates.
+
+        You can get its current values with exposedContentRect() and be notified about changes
+        in it by connecting to the exposedContentRectChanged() signal.
+     */
     Q_PROPERTY(QRectF exposedContentRect READ exposedContentRect NOTIFY exposedContentRectChanged)
 
 public:
@@ -189,8 +290,6 @@ public:
 
     /* \brief Whether margins will be automatically added around the central widget to
      *        avoid occlusion by other components.
-     *
-     * \sa setAutoMarginsForComponentsEnabled()
      */
     bool autoMarginsForComponentsEnabled() const;
 
@@ -200,8 +299,7 @@ public:
     bool isContentCreated() const;
 
     /*!
-     * Returns true if the page is expected to rememeber its pannable viewport
-     * position when hidden and restore it when shown again using appear().
+     * \brief Returns value of MApplicationPage::rememberPosition property.
      * \sa setRememberPosition()
      */
     bool rememberPosition() const;
@@ -269,17 +367,7 @@ public:
     /*!
        \brief Area of the page whose content is not covered by any bar
 
-       Area of the page whose content is not covered by any bar (status bar,
-       navigation bar, tool bar) and thus is accessible to the user.
-
-       Floating widgets can be implemented by making them children of the application
-       page instead of the central widget (thus they are not panned). They should be
-       positioned within this rectangle.
-
-       Note that this area can be covered by transient scene windows such as
-       dialogs and notifications as well as by overlays.
-
-       The rectangle is in local item coordinates.
+        Returns the current value of MApplicationPage::exposedContentRect property
 
        \sa exposedContentRectChanged()
      */
@@ -323,25 +411,7 @@ Q_SIGNALS:
 
 public Q_SLOTS:
     /*!
-        \brief Whether extra margins will be automatically added around the central
-               widget to avoid occlusion by other components.
-
-        If enabled, extra margins will be automatically added around the central
-        widget according to the components that are currently being displayed in
-        order to avoid parts of the central widget from being inaccessible.
-
-        When a navigation bar appears on the upper edge of the application window, for
-        instance, an extra margin will be automatically added to the top of the
-        central widget of roughly the height of that navigation bar. Therefore
-        effectively avoiding the top part of the central widget from being
-        inaccessible.
-
-        It's enabled by default.
-
-        \note When the navigation bar is in AutoHide mode the top margin won't be added
-        to the central widget.
-
-        \sa autoMarginsForComponentsEnabled(), setComponentsDisplayMode()
+        \brief Sets the MApplicationPage::autoMarginsForComponentsEnabled property.
     */
     void setAutoMarginsForComponentsEnabled(bool enabled);
 
@@ -357,22 +427,19 @@ public Q_SLOTS:
 
     /**
      * \brief Set the title for this page.
-     * Title appearing on a command area.
+     * Sets the MApplicationPage::title property.
      * \param title New title for this page.
      */
     void setTitle(const QString &title);
 
     /*!
-     * Sets whether the page should remember its pannable viewport position when
-     * hidden. Default value is true. Set it to false to have the viewport
-     * scrolled to the top with every call to appear(). The scrolling
-     * is immediate, i.e. it's not animated at all.
+     * Sets MApplicationPage::rememberPosition property.
      * \sa rememberPosition()
      */
     void setRememberPosition(bool remember);
 
     /*!
-     * Sets if the page should pan
+     * Sets the MApplicationPage::pannable property.
      */
     void setPannable(bool pannable);
 
@@ -383,7 +450,7 @@ public Q_SLOTS:
     void setPanningDirection(Qt::Orientations directions);
 
     /*!
-     * Sets the visible of progress indicator
+     * Sets the visibility of progress indicator
      * \param bool visible
      */
     void setProgressIndicatorVisible(bool visible);
