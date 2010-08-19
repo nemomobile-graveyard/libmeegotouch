@@ -208,7 +208,6 @@ void MDialogModel::addButton(MButtonModel *button)
 
     if (list.indexOf(button) == -1) {
         list.append(button);
-        button->setParent(this);
         button->increaseReferenceCount();
         memberModified(Buttons);
     }
@@ -233,11 +232,11 @@ MButtonModel *MDialogModel::addButton(M::StandardButton buttonType)
 
 void MDialogModel::removeButton(MButtonModel *button)
 {
+    Q_ASSERT(button);
     MDialogButtonsList &list = _buttons();
 
     if (list.removeOne(button)) {
         memberModified(Buttons);
-        button->setParent(0);
         button->decreaseReferenceCount();
     }
 }

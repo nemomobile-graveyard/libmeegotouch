@@ -129,7 +129,12 @@ Q_SIGNALS:
 
 protected:
     void memberModified(const char *const member);
+
 private:
+    /* Do not call setParent on this QObject, but instead use
+     * increaseRefenceCount() and decreaseReferenceCount() */
+    void setParent ( QObject * parent ) {Q_UNUSED(parent);}
+
     friend M_EXPORT QDataStream &operator<<(QDataStream &stream, const MWidgetModel &model);
     friend M_EXPORT QDataStream &operator>>(QDataStream &stream, MWidgetModel &model);
 };
