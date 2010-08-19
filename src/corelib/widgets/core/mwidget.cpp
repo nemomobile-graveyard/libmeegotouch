@@ -37,7 +37,6 @@
 #include <QSwipeGesture>
 
 #include <mapplicationwindow.h>
-#include <mapplicationpage.h>
 #include <mpannableviewport.h>
 #include <maction.h>
 #include <mcancelevent.h>
@@ -226,11 +225,6 @@ void MWidget::onDisplayChangeEvent(MOnDisplayChangeEvent *event)
 
 void MWidget::enterDisplayEvent()
 {
-    // We are using here a hack which will allow reimplementing the enterDisplayEvent
-    // method in the application page without recompilation of all client applications.
-    // This needs to be deleted when API unfreeze will finally happen.
-    if(MApplicationPage* applicationPage = qobject_cast<MApplicationPage*>(this))
-        applicationPage->MApplicationPage::enterDisplayEvent();
 }
 
 void MWidget::exitDisplayEvent()

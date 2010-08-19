@@ -259,9 +259,7 @@ public:
 
     /*!
      * \brief This function will be called before page becomes visible. Override it in your page class
-     * and create content for a page. Framework calls this function only once, in enterDisplayEvent().
-     *
-     * \sa enterDisplayEvent()
+     * and create content for a page. Framework calls this function only once.
      */
     virtual void createContent();
 
@@ -464,18 +462,8 @@ public Q_SLOTS:
 protected:
     //! \reimp
     virtual void actionEvent(QActionEvent *);
-    //! \reimp_end
-
-    /*!
-     * Reimplemented to call createContent() if it hasn't been called yet.
-     *
-     * \note When reimplementing this event in your inherited classes, be sure to call
-     *       base class's event handler to set up your page content properly. Otherwise
-     *       createContent() will never be called.
-     *
-     * \sa createContent()
-     */
     virtual void enterDisplayEvent();
+    //! \reimp_end
 
 private:
 #ifdef UNIT_TEST
@@ -486,11 +474,6 @@ private:
 
     Q_DISABLE_COPY(MApplicationPage)
     Q_DECLARE_PRIVATE(MApplicationPage)
-
-    // We are using a hack which will allow reimplementing the enterDisplayEvent
-    // method in the application page without recompilation of all client applications.
-    // This needs to be deleted when API unfreeze will finally happen.
-    friend class MWidget;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(MApplicationPage::Components)

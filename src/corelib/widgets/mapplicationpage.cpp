@@ -289,14 +289,21 @@ void MApplicationPage::actionEvent(QActionEvent *e)
 
 void MApplicationPage::enterDisplayEvent()
 {
-    Q_D(MApplicationPage);
+    MSceneWindow::enterDisplayEvent();
+}
 
-    if (!d->contentCreated) {
-        d->contentCreated = true;
-        createContent();
+void MApplicationPagePrivate::doEnterDisplayEvent()
+{
+    Q_Q(MApplicationPage);
+
+    if (!contentCreated) {
+        contentCreated = true;
+        q->createContent();
     }
 
-    d->updatePannableViewportPosition();
+    updatePannableViewportPosition();
+
+    MWidgetPrivate::doEnterDisplayEvent();
 }
 
 void MApplicationPagePrivate::setExposedContentRect(const QRectF &exposedContentRect)

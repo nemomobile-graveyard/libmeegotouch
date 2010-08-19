@@ -29,8 +29,8 @@ public:
     MWidgetPrivate();
     virtual ~MWidgetPrivate();
 
-    void doEnterDisplayEvent();
-    void doExitDisplayEvent();
+    virtual void doEnterDisplayEvent();
+    virtual void doExitDisplayEvent();
 
     void sendOnDisplayChangeEvent(MWidget *widget, const QRectF *visibleSceneRect);
     void resolveIsOnDisplay(QGraphicsItem *item, const QRectF *visibleSceneRect,

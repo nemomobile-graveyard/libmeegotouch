@@ -45,6 +45,8 @@ public:
 
     void init();
 
+    virtual void doEnterDisplayEvent();
+
     void deleteCurrentCentralWidget();
     void placeCentralWidget(QGraphicsWidget *widget);
     void setWidgetHeight(MWidget *w, qreal height);
