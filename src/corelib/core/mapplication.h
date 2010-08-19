@@ -100,6 +100,10 @@ public:
     //! Cleans up any window system resources that were allocated by this application.
     virtual ~MApplication();
 
+    /*! \brief Returns a pointer to the application's MApplication instance.
+     * If no instance has been allocated, null is returned.
+     * \sa QCoreApplication::instance()
+     */
     static MApplication *instance();
 
     //! Target device name
