@@ -258,5 +258,6 @@ Qt::Alignment MLinearLayoutPolicy::alignment(QGraphicsLayoutItem *item) const
 void MLinearLayoutPolicy::activated()
 {
     Q_D(MLinearLayoutPolicy);
+    MAbstractLayoutPolicy::activated();
     d->notifyAllWidgetsOfLayoutPosition();
 }
