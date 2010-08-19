@@ -93,6 +93,10 @@ void Ut_MBasicListItem::testItemStyle()
     QCOMPARE( m_subject->itemStyle(), MBasicListItem::SingleTitle );
     m_subject->setItemStyle(MBasicListItem::IconWithTitleAndSubtitle);
     QCOMPARE( m_subject->itemStyle(), MBasicListItem::IconWithTitleAndSubtitle );
+    m_subject->setItemStyle(MBasicListItem::TitleWithSubtitle);
+    QCOMPARE( m_subject->itemStyle(), MBasicListItem::TitleWithSubtitle );
+    m_subject->setItemStyle(MBasicListItem::IconWithTitle);
+    QCOMPARE( m_subject->itemStyle(), MBasicListItem::IconWithTitle );
 }
 
 void Ut_MBasicListItem::testImageWidget()
