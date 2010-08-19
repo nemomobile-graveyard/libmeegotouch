@@ -416,7 +416,7 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
 
     if (connection.isConnected() == false) {
         qCritical("ERROR: No DBUS session bus found. Exiting now. Please make sure that a dbus session bus\n"
-               "is running. In Scratchbox you should execute m-sb-session start. On the target device\n"
+               "is running. In Scratchbox you should execute meego-sb-session start. On the target device\n"
                "it should already be running. You should also make sure that the DBUS_SESSION_BUS_ADDRESS\n"
                "environment variable is set correctly. For that you can execute the following command:\n"
                "source /tmp/session_bus_address.user\n");

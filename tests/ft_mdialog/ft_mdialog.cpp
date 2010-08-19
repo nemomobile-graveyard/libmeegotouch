@@ -85,7 +85,7 @@ void Ft_MDialog::test_eventloop()
     // pointing its DBUS_SESSION_BUS_ADDRESS to my Ubuntu host D-Bus.
     // When I started using the D-Bus from scratchbox itself the hanging issues
     // disappeared.
-    // $ m-sb-session start
+    // $ meego-sb-session start
     // $ source /tmp/session_bus_address.user
     // - Daniel d'Andrada
 
@@ -126,7 +126,7 @@ void Ft_MDialog::testDismissDialogInEventLoop()
     // pointing its DBUS_SESSION_BUS_ADDRESS to my Ubuntu host D-Bus.
     // When I started using the D-Bus from scratchbox itself the hanging issues
     // disappeared.
-    // $ m-sb-session start
+    // $ meego-sb-session start
     // $ source /tmp/session_bus_address.user
     // - Daniel d'Andrada
 
