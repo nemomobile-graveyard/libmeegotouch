@@ -31,7 +31,7 @@ class Ut_MPanRecognizer : public QObject
 
 private:
     MPanRecognizer*  recognizer;
-    MPanGesture*     PanGesture;
+    MPanGesture*     panGesture;
 private slots:
     void init();
     void cleanup();
@@ -39,6 +39,7 @@ private slots:
     void testCreateGesture();
     void testRecognize();
     void testTapIsNotRecognizedAsPan();
+    void testTheMovementInDirectionOtherThanRecognizedIsZeroed();
 };
 
 #endif // UT_MPANRECOGNIZER_H

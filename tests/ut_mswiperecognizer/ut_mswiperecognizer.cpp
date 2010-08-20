@@ -143,5 +143,74 @@ void Ut_MSwipeRecognizer::testZigzagged()
 
 }
 
+void Ut_MSwipeRecognizer::testSnappingToRightAngles()
+{
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setPos(QPointF(0,0));
+    pressEvent.setScenePos(QPointF(0,0));
+    pressEvent.setScreenPos(QPoint(0,0));
+
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setPos(QPointF(100,10));
+    moveEvent.setScenePos(QPointF(100,10));
+    moveEvent.setScreenPos(QPoint(100,10));
+
+    currentGestureState = Qt::NoGesture;
+
+    QGestureRecognizer::Result currentState;
+    currentState = recognizer->recognize(swipeGesture, 0, &pressEvent);
+    QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
+
+    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent);
+    QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
+    QCOMPARE( swipeGesture->swipeAngle(), 0.0);
+
+    recognizer->reset(swipeGesture);
+
+    currentGestureState = Qt::NoGesture;
+
+    moveEvent.setPos(QPointF(10,-100));
+    moveEvent.setScenePos(QPointF(10,-100));
+    moveEvent.setScreenPos(QPoint(10,-100));
+
+    currentState = recognizer->recognize(swipeGesture, 0, &pressEvent);
+    QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
+
+    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent);
+    QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
+    QCOMPARE( swipeGesture->swipeAngle(), 90.0);
+
+    recognizer->reset(swipeGesture);
+
+    currentGestureState = Qt::NoGesture;
+
+    moveEvent.setPos(QPointF(-100,-10));
+    moveEvent.setScenePos(QPointF(-100,-10));
+    moveEvent.setScreenPos(QPoint(-100,-10));
+
+    currentState = recognizer->recognize(swipeGesture, 0, &pressEvent);
+    QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
+
+    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent);
+    QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
+    QCOMPARE( swipeGesture->swipeAngle(), 180.0);
+
+    recognizer->reset(swipeGesture);
+
+    currentGestureState = Qt::NoGesture;
+
+    moveEvent.setPos(QPointF(10,100));
+    moveEvent.setScenePos(QPointF(10,100));
+    moveEvent.setScreenPos(QPoint(10,100));
+
+    currentState = recognizer->recognize(swipeGesture, 0, &pressEvent);
+    QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
+
+    currentState = recognizer->recognize(swipeGesture, 0, &moveEvent);
+    QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
+    QCOMPARE( swipeGesture->swipeAngle(), 270.0);
+}
+
 QTEST_APPLESS_MAIN(Ut_MSwipeRecognizer)
 

@@ -41,6 +41,7 @@ private slots:
     void testFastTap();
     void testTimedout();
     void testZigzagged();
+    void testSnappingToRightAngles();
 };
 
 #endif // UT_MSWIPERECOGNIZER_H

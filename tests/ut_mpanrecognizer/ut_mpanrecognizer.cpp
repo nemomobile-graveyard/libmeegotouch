@@ -47,7 +47,7 @@ void Ut_MPanRecognizer::cleanup()
 
 void Ut_MPanRecognizer::testCreateGesture()
 {
-    PanGesture = static_cast<MPanGesture*>(recognizer->create(this));
+    panGesture = static_cast<MPanGesture*>(recognizer->create(this));
 }
 
 void Ut_MPanRecognizer::testRecognize()
@@ -68,16 +68,16 @@ void Ut_MPanRecognizer::testRecognize()
     releaseEvent.setScreenPos(QPoint(0,100));
 
     QGestureRecognizer::Result currentState;
-    currentState = recognizer->recognize(PanGesture, 0, &pressEvent);
+    currentState = recognizer->recognize(panGesture, 0, &pressEvent);
     QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
 
-    currentState = recognizer->recognize(PanGesture, 0, &moveEvent);
+    currentState = recognizer->recognize(panGesture, 0, &moveEvent);
     QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
 
     //Artificially setting state of QGesture object.
     currentGestureState = Qt::GestureUpdated;
 
-    currentState = recognizer->recognize(PanGesture, 0, &releaseEvent);
+    currentState = recognizer->recognize(panGesture, 0, &releaseEvent);
     QCOMPARE( currentState, QGestureRecognizer::FinishGesture);
 }
 
@@ -94,12 +94,48 @@ void Ut_MPanRecognizer::testTapIsNotRecognizedAsPan()
     pressEvent.setScreenPos(QPoint(0,0));
 
     QGestureRecognizer::Result currentState;
-    currentState = recognizer->recognize(PanGesture, 0, &pressEvent);
+    currentState = recognizer->recognize(panGesture, 0, &pressEvent);
     QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
 
-    currentState = recognizer->recognize(PanGesture, 0, &releaseEvent);
+    currentState = recognizer->recognize(panGesture, 0, &releaseEvent);
     QCOMPARE( currentState, QGestureRecognizer::CancelGesture);
 }
+
+void Ut_MPanRecognizer::testTheMovementInDirectionOtherThanRecognizedIsZeroed()
+{
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setPos(QPointF(0,0));
+    pressEvent.setScenePos(QPointF(0,0));
+    pressEvent.setScreenPos(QPoint(0,0));
+
+    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setPos(QPointF(0,100));
+    moveEvent.setScenePos(QPointF(0,100));
+    moveEvent.setScreenPos(QPoint(0,100));
+
+    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setPos(QPointF(0,100));
+    releaseEvent.setScenePos(QPointF(0,100));
+    releaseEvent.setScreenPos(QPoint(0,100));
+
+    QGestureRecognizer::Result currentState;
+    currentState = recognizer->recognize(panGesture, 0, &pressEvent);
+    QCOMPARE( currentState, QGestureRecognizer::MayBeGesture);
+
+    currentState = recognizer->recognize(panGesture, 0, &moveEvent);
+    QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
+
+    //Artificially setting state of QGesture object.
+    currentGestureState = Qt::GestureUpdated;
+
+    moveEvent.setPos(QPointF(30,100));
+    moveEvent.setScenePos(QPointF(30,100));
+    moveEvent.setScreenPos(QPoint(30,100));
+
+    recognizer->recognize(panGesture, 0, &moveEvent);
+    QCOMPARE( panGesture->offset().x(), 0.0);
+}
+
 
 QTEST_APPLESS_MAIN(Ut_MPanRecognizer)
 

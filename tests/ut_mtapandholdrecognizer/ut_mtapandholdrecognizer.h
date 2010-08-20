@@ -39,6 +39,8 @@ private slots:
     void testCreateGesture();
     void testRecognize();
     void testFastTap();
+    void testMovePointerInsideThreshold();
+    void testMovePointerBeyondThreshold();
 };
 
 #endif // UT_MTAPANDHOLDRECOGNIZER_H
