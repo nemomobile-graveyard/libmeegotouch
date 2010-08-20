@@ -222,8 +222,8 @@ const MStyle *QtMaemo6StylePrivate::mStyle(QStyle::State state,
 
 QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
 {
-
-    printStateFlags(state);
+    // Used for debugging the QStyle::State vs. mode behavior:
+    // printStateFlags(state);
 
     // At moment, libmeegotouch uses the following modes:
     // "" (empty string)        -- used as default
