@@ -230,24 +230,19 @@ QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
     // "pressed"                -- used whenever a widget is pressed
     // "selected"               -- used by checkable elements (for example checkboxes)
     // vertical", "horizontal"  -- used by MSeparatorStyle
-    QString mode;
+    QString mode = "";
 
     if (state & QStyle::State_Enabled) {
 
-        if (state & QStyle::State_Active)
-            //mode = "active";
+        if(state & QStyle::State_Sunken)
             mode = "pressed";
         else if(state & QStyle::State_On)
            // mode = "active";
            // mode = "pressed";
             mode = "selected";
-        else if(state & QStyle::State_Sunken)
-            mode = "pressed";
         else if(state & QStyle::State_Raised)
             mode = "";
 
-    } else {
-        mode = "disabled";
     }
 
     return mode;
@@ -255,6 +250,7 @@ QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
 
 void QtMaemo6StylePrivate::printStateFlags(QStyle::State state)
 {
+
    if (state & QStyle::State_None)
         mDebug("PlainQt Style") << "QStyle::State_None";
 
