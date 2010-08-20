@@ -139,6 +139,7 @@ namespace M
         InputMethodToolbarQuery     //!< custom toolbar file name for text entry
     };
 
+    //! \deprecated do not use
     enum PreeditFace {
         PreeditDefault,
         PreeditNoCandidates
