@@ -358,8 +358,6 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
         while (p && !(parent = dynamic_cast<MWidgetController *>(p))) {
             p = p->parentItem();
         }
-
-        style().setParent(parent);
     }
 }
 void MWidgetView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
