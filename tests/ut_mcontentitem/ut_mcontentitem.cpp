@@ -83,6 +83,7 @@ void Ut_MContentItem::testSetImage()
     m_subject->setImage( image );
 
     QCOMPARE( m_subject->image(), image );
+    QCOMPARE( m_subject->model()->itemImage(), image );
 }
 
 void Ut_MContentItem::testSetImageID()
@@ -171,5 +172,49 @@ void Ut_MContentItem::testModelSetItemPixmap()
     QCOMPARE( m_subject->model()->itemPixmap().toImage(), pixmap.toImage());
 }
 
+void Ut_MContentItem::testModelSetOptionalPixmap_data()
+{
+    QTest::addColumn<QString>("fname");
+    QTest::newRow("png") << qApp->applicationDirPath() + "/ut_mcontentitem_test.png";
+}
+
+void Ut_MContentItem::testModelSetOptionalPixmap()
+{
+    QFETCH(QString, fname);
+
+    const QPixmap pixmap(fname);
+    m_subject->model()->setOptionalPixmap( pixmap );
+    QCOMPARE( m_subject->model()->optionalPixmap().toImage(), pixmap.toImage());
+}
+
+void Ut_MContentItem::testModelSetOptionalImage_data()
+{
+    QTest::addColumn<QString>("fname");
+    QTest::newRow("png") << qApp->applicationDirPath() + "/ut_mcontentitem_test.png";
+}
+
+void Ut_MContentItem::testModelSetOptionalImage()
+{
+    QFETCH(QString, fname);
+    const QImage image(fname);
+    m_subject->setOptionalImage( image );
+
+    QCOMPARE( m_subject->model()->optionalImage(), image );
+}
+
+void Ut_MContentItem::testModelSetItemQImage_data()
+{
+    QTest::addColumn<QString>("fname");
+    QTest::newRow("png") << qApp->applicationDirPath() + "/ut_mcontentitem_test.png";
+}
+
+void Ut_MContentItem::testModelSetItemQImage()
+{
+    QFETCH(QString, fname);
+    const QImage image(fname);
+    m_subject->model()->setItemQImage( image );
+
+   QCOMPARE( m_subject->model()->itemQImage(), image );
+}
 
 QTEST_APPLESS_MAIN(Ut_MContentItem)

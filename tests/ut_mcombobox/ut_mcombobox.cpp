@@ -509,5 +509,24 @@ void Ut_MComboBox::testProgressIndicator()
     QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->layoutPolicy(MComboBoxButton::TitleShown));
 }
 
+void Ut_MComboBox::testProgressIndicator2()
+{
+    MComboBoxView *view = (MComboBoxView *)m_combobox->view();
+    MComboBoxViewPrivate *viewPrivate = view->d_func();
+    MLayout* comboboxButtonLayout = static_cast<MLayout*>(viewPrivate->button->layout());
+
+    QCOMPARE(m_combobox->isProgressIndicatorVisible(), false);
+    QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->layoutPolicy(MComboBoxButton::TitleShown));
+
+    m_combobox->showProgressIndicator();
+    QCOMPARE(m_combobox->isProgressIndicatorVisible(), true);
+    QCOMPARE(comboboxButtonLayout->policy(),
+             viewPrivate->button->layoutPolicy(MComboBoxButton::TitleShown|MComboBoxButton::ProgressShown));
+
+    m_combobox->hideProgressIndicator();
+    QCOMPARE(m_combobox->isProgressIndicatorVisible(), false);
+    QCOMPARE(comboboxButtonLayout->policy(), viewPrivate->button->layoutPolicy(MComboBoxButton::TitleShown));
+}
+
 QTEST_APPLESS_MAIN(Ut_MComboBox)
 

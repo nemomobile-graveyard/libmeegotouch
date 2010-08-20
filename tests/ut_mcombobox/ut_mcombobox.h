@@ -55,6 +55,7 @@ private slots:
     void testActivatedSignal();
     void testSetCurrentIndex();
     void testProgressIndicator();
+    void testProgressIndicator2();
 
 private:
     MComboBox *m_combobox;

@@ -53,6 +53,12 @@ private slots:
     void testAdditionalItem();
     void testModelSetItemPixmap_data();
     void testModelSetItemPixmap();
+    void testModelSetOptionalPixmap_data();
+    void testModelSetOptionalPixmap();
+    void testModelSetOptionalImage_data();
+    void testModelSetOptionalImage();
+    void testModelSetItemQImage_data();
+    void testModelSetItemQImage();
 
 private:
     MContentItem *m_subject;
