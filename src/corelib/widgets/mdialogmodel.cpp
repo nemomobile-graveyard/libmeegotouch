@@ -196,6 +196,12 @@ MButtonModel *MDialogModelPrivate::createStandardButton(M::StandardButton button
     return button;
 }
 
+MDialogModel::~MDialogModel()
+{
+    foreach(MButtonModel *button, _buttons()) {
+        button->decreaseReferenceCount();
+    }
+}
 QGraphicsWidget *MDialogModel::centralWidget()
 {
     const MDialogModel *constThis = this;

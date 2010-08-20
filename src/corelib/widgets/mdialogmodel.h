@@ -32,6 +32,7 @@ class M_EXPORT MDialogModel : public MSceneWindowModel
 {
     Q_OBJECT
     M_MODEL_INTERNAL(MDialogModel)
+    M_MODEL_CUSTOM_DESTRUCTOR
 
 private:
 

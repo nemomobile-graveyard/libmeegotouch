@@ -141,11 +141,13 @@ public:
     ModelClass(const QString &name,
                const QString &superClassName,
                bool generatePrivate,
+               bool generateDestructor,
                bool internal,
                const QList<ModelProperty>& properties) :
         m_name(name),
         m_superClassName(superClassName),
         m_generatePrivate(generatePrivate),
+        m_generateDestructor(generateDestructor),
         m_internal(internal),
         m_properties(properties) {
     }
@@ -159,6 +161,9 @@ public:
     bool generatePrivate() const {
         return m_generatePrivate;
     }
+    bool generateDestructor() const {
+        return m_generateDestructor;
+    }
     bool internal() const {
         return m_internal;
     }
@@ -169,6 +174,7 @@ private:
     QString m_name;
     QString m_superClassName;
     bool m_generatePrivate;
+    bool m_generateDestructor;
     bool m_internal;
     QList<ModelProperty> m_properties;
 };
@@ -300,6 +306,7 @@ ModelClass *parseModelClassHeader(const QString &modelHeader)
     QString className;
     QString superClassName;
     bool generatePrivate = false;
+    bool generateDestructor = true;
     bool internal = false;
 
     const QString spaces("\\s*");
@@ -457,7 +464,12 @@ ModelClass *parseModelClassHeader(const QString &modelHeader)
         anyParam +
         spaces + parenC + spaces
     );
+    QRegExp destructorRegExp(
+        "M_MODEL_CUSTOM_DESTRUCTOR"
+    );
 
+    if(line.indexOf(destructorRegExp, index) != -1)
+        generateDestructor = false;
     while (true) {
         int result = line.indexOf(propertyRegExp, index);
         int result2 = line.indexOf(propertyPtrRegExp, index);
@@ -492,7 +504,7 @@ ModelClass *parseModelClassHeader(const QString &modelHeader)
         }
     }
 
-    return new ModelClass(className, superClassName, generatePrivate, internal, properties);
+    return new ModelClass(className, superClassName, generatePrivate, generateDestructor, internal, properties);
 }
 
 //////////////////////////
@@ -1059,6 +1071,7 @@ void generateModelDataCpp(const ModelClass *c, const QString &cppfilename)
     //     static_cast<MButtonModelData*>(data)->iconID = "DEFAULT_B";
     // }
     //
+    // ---- if(generateDestructor) ----
     // MButtonModel::~MButtonModel()
     // {
     // ---- if(!internal)                    ----
@@ -1067,6 +1080,7 @@ void generateModelDataCpp(const ModelClass *c, const QString &cppfilename)
     //     delete d_ptr;
     // ---- endif                            ----
     // }
+    // ---- endif        ----
     //
     // ---- if(generatePrivate) ----
     // MButtonModel::MButtonModel(MButtonModelData* data, MButtonModelPrivate* dd) :
@@ -1172,15 +1186,17 @@ void generateModelDataCpp(const ModelClass *c, const QString &cppfilename)
     cpp << "}\n\n";
 
     // destructor
-    cpp << c->name() << "::~" << c->name() << "()\n";
-    cpp << "{\n";
-    if (!c->internal()) {
-        cpp << "    delete data;\n";
-        if (c->generatePrivate()) {
-            cpp << "    delete d_ptr;\n";
+    if (c->generateDestructor()) {
+        cpp << c->name() << "::~" << c->name() << "()\n";
+        cpp << "{\n";
+        if (!c->internal()) {
+            cpp << "    delete data;\n";
+            if (c->generatePrivate()) {
+                cpp << "    delete d_ptr;\n";
+            }
         }
+        cpp << "}\n\n";
     }
-    cpp << "}\n\n";
 
     // protected constructor
     cpp << c->name() << "::" << c->name() << "(" << c->name() << "Data* data";

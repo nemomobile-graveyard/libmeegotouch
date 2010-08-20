@@ -29,6 +29,8 @@
 #include <mwidgetcontroller.h>
 #include <mtheme.h>
 
+// Use to prevent a destructor implementation being generated.  You must manually delete d_ptr or data if you use this
+#define M_MODEL_CUSTOM_DESTRUCTOR
 // model macro
 #define M_MODEL(CLASS) \
     public: \
