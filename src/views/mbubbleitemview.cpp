@@ -317,6 +317,7 @@ void MBubbleItemView::setupModel()
     d->speechBubble->setMessageType(static_cast<MBubbleItem::MessageType>(model()->messageType()));
     d->speechBubble->setObjectName(style()->bubbleObjectName());
     d->speechBubble->setLayout(d->innerLayout);
+    d->speechBubble->setMinimumSize(0,0); //The background must always be smaller than our current geometry
 
     d->initLayout();
     d->refreshStyleMode();

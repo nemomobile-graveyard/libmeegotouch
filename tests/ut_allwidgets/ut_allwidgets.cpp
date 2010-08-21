@@ -44,7 +44,6 @@ Ut_AllWidgets::Ut_AllWidgets()
     static int argc = 1;
     static char *argv[1] = { (char *) "./ut_allwidgets" };
     app = new MApplication(argc, argv);
-    m_scene = new QGraphicsScene;
     MTheme::loadCSS(qApp->applicationDirPath() + "/ut_allwidgets.css");
     qRegisterMetaType<MWidgetController *>("MWidgetController *");
 }
@@ -55,17 +54,18 @@ Ut_AllWidgets::~Ut_AllWidgets()
 
 void Ut_AllWidgets::cleanupTestCase()
 {
-    delete m_scene; // Deletes the items in the scene, too!
-    m_scene = 0;
     delete app;
 }
 
 void Ut_AllWidgets::init()
 {
+    m_scene = new QGraphicsScene;
 }
 
 void Ut_AllWidgets::cleanup()
 {
+    delete m_scene; // Deletes the items in the scene, too!
+    m_scene = 0;
 }
 
 void Ut_AllWidgets::debugDisplayImage(const QImage &image, int seconds)
@@ -119,16 +119,19 @@ bool Ut_AllWidgets::paintAndTestWidget(QGraphicsWidget *widget, bool strict)
     }
 
     //Now check that we haven't painted outside of the bounding box
+    bool givenWarning = false;
     for(int y = 0; y < image.height(); ++y)
         for(int x = 0; x < image.width(); ++x) {
             if(pixmapBoundingRect.contains(x,y)) {
                 if(!pixmapGeometry.contains(x,y) && image.pixel(x,y) != Qt::transparent) {
                     //It's not wrong to paint outside of your geometry but inside the bounding rect, but it is unusual
-                    qWarning() << "Pixel at" << x << y << "is not transparent but geometry is" << pixmapGeometry;
+                    if(!givenWarning)
+                        qWarning() << "Pixel at" << x << y << "is not transparent but geometry is" << pixmapGeometry;
                     if(strict) {
                         debugDisplayImage(image, 10);
                         return false;
                     }
+                    givenWarning = true;
                 }
             } else if(image.pixel(x,y) != Qt::transparent) {
                 qWarning() << "Pixel at" << x << y << "is not transparent (" << QColor(image.pixel(x,y)) << ") but bounding rect is" << pixmapBoundingRect;
