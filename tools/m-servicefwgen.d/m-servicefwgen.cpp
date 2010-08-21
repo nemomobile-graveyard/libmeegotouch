@@ -415,7 +415,7 @@ QString getDoxygenFromXml( const QString& xml, int indentCount )
     int errorLine;
     int errorColumn;
 
-    QHash<const QString, QString> xmlTokens;
+    QHash<const QString, QStringList> xmlTokens;
 
     doc.setContent(xml, true, &errorStr, &errorLine, &errorColumn);
 
@@ -424,7 +424,9 @@ QString getDoxygenFromXml( const QString& xml, int indentCount )
     el = el.firstChildElement( "arg" );
 
     while ( ! el.isNull() ) {
-        xmlTokens.insert( el.attribute( "tag" ), el.text() );
+        QString attribute = el.attribute( "tag" );
+        QString text          = el.text();
+        xmlTokens[ attribute ] << text;
         el = el.nextSiblingElement( "arg" );
     }
 
@@ -438,7 +440,7 @@ QString getDoxygenFromXml( const QString& xml, int indentCount )
     QTextStream s( &result );
 
     QStringList doxTokens;
-    doxTokens << "class" << "brief" << "details" << "state" << "ingroup";
+    doxTokens << "class" << "brief" << "param" << "return" << "details" << "state" << "ingroup";
 
     s << "\n" << indent << "/**\n";
 
@@ -449,18 +451,20 @@ QString getDoxygenFromXml( const QString& xml, int indentCount )
         if ( !xmlTokens.value( dT ).isEmpty() ) {
             hasDoc = true;
 
-            QString longLine = "@" + dT + " " + xmlTokens.value( dT );
+            foreach( const QString xT, xmlTokens[dT]) {
+                QString longLine = "@" + dT + " " + xT;
 
-            while ( !longLine.isEmpty() ) {
-                int pos = longLine.indexOf( ' ', 60 - indentCount );
+                while ( !longLine.isEmpty() ) {
+                    int pos = longLine.indexOf( ' ', 60 - indentCount );
 
-                if ( pos == -1 ) {
-                    pos = longLine.length();
+                    if ( pos == -1 ) {
+                        pos = longLine.length();
+                    }
+
+                    QString line = longLine.left( pos );
+                    longLine = longLine.mid( pos );
+                    s << indent << " * " << line << "\n";
                 }
-
-                QString line = longLine.left( pos );
-                longLine = longLine.mid( pos );
-                s << indent << " * " << line << "\n";
             }
         }
     }
@@ -516,7 +520,7 @@ QString Worker::botBitH()
 public:\n\
     /*!\n\
      * @brief Constructs a base interface\n\
-     * @param preferredService, define the preferred service provider. Leave\n\
+     * @param preferredService the preferred service provider. Leave\n\
      * empty if no preferred provider. In most cases, this should be left\n\
      * empty.\n\
      * @param parent Parent object\n\
@@ -664,6 +668,7 @@ void Worker::preprocessXML()
     }
 
     QDomElement el = node.toElement();
+
     el = el.firstChildElement( "interface" );
 
     // try to save and drop <doc> child of <interface>
@@ -688,38 +693,44 @@ void Worker::preprocessXML()
         }
     }
 
-    // walk over the methods
-    el = el.firstChildElement( "method" );
+    QDomElement start = el;
 
-    while ( ! el.isNull() ) {
-        // now handle chainTask and asyncTask for this method
-        if ( el.attribute( "chainTask" ) == "true" ) {
-            el.setAttribute( "name", el.attribute( "name" ) + chainTag() );
-            setNeedsMApplication( true );
+    // walk over the methods and signals
+    foreach( const QString methSig, QStringList() << "signal" << "method"  ) {
+        el = start.firstChildElement( methSig );
+
+        while ( ! el.isNull() ) {
+            // now handle chainTask and asyncTask for this method
+            if ( el.attribute( "chainTask" ) == "true" ) {
+                el.setAttribute( "name", el.attribute( "name" ) + chainTag() );
+                setNeedsMApplication( true );
+            }
+
+            if ( el.attribute( "asyncTask" ) == "true" ) {
+                el.setAttribute( "name", el.attribute( "name" ) + asyncTag() );
+                setNeedsMApplication( true );
+            }
+
+            // handle doc
+            if ( ! el.firstChildElement( "doc" ).isNull() ) {
+                QString name = el.attribute( "name" );
+                QString string;
+                QTextStream stream( &string );
+                el.firstChildElement( "doc" ).save( stream, 4 );
+
+                ++docTagNo;
+                setMethodDoc( docTagNo, string );
+
+                // mangle doc tag into class name
+                el.setAttribute( "name", name + docTag() + QString::number(docTagNo) );
+
+                el.removeChild( el.firstChildElement( "doc" ) );
+            }
+
+
+            el = el.nextSiblingElement( methSig );
         }
 
-        if ( el.attribute( "asyncTask" ) == "true" ) {
-            el.setAttribute( "name", el.attribute( "name" ) + asyncTag() );
-            setNeedsMApplication( true );
-        }
-
-        // handle doc
-        if ( ! el.firstChildElement( "doc" ).isNull() ) {
-            QString string;
-            QTextStream stream( &string );
-            el.firstChildElement( "doc" ).save( stream, 4 );
-
-            ++docTagNo;
-            setMethodDoc( docTagNo, string );
-
-            // mangle doc tag into class name
-            el.setAttribute( "name", el.attribute( "name" ) + docTag() + QString::number(docTagNo) );
-
-            el.removeChild( el.firstChildElement( "doc" ) );
-        }
-
-
-        el = el.nextSiblingElement( "method" );
     }
 
     outFile.write( qPrintable( doc.toString( 4 ) ) );
@@ -1235,7 +1246,7 @@ void processProxyHeaderFile()
             wrapperHeaderStream << w.middleBitH();
         } else if (line.contains( "Command line was:")) {
           // do nothing - the replacement for this line is output by the above
-        } else if ( line.contains( w.docTag() ) ) {
+        } else if ( line.contains( w.docTag() ) && !inSignalSection ) {
             // we have to handle doxygen doc here.
             // we have three cases:
             // - class documentation
@@ -1273,7 +1284,25 @@ void processProxyHeaderFile()
             if (atEndOfSignalSection) {
                 inSignalSection = false;
             } else {
-                ifSignals.append(line);
+                QString lineWithDoc = "";
+                // method docs
+                QRegExp rx( w.docTag() + "(\\d+)" );
+
+                // do the match
+                if ( rx.indexIn( line ) != -1) {
+                    int id = rx.cap( 1 ).toInt();
+
+                    if ( id > 0 ) {
+                        lineWithDoc = w.mangledMethodDoc( id );
+                    }
+                }
+
+                // remove docTag with possible number suffix
+                w.removeDocTag( line );
+
+                lineWithDoc += line;
+
+                ifSignals.append(lineWithDoc);
             }
         } else {
             if (line.contains("Q_SIGNALS:")) {
@@ -1370,7 +1399,7 @@ void processProxyHeaderFile()
     } // ! proxyHeaderStream.atEnd()
 
 
-    w.setAllSignals( ifSignals.join("") );
+    w.setAllSignals( ifSignals.join("\n") );
     w.createConnectSignalCommands( ifSignals );
 
     wrapperCppStream << w.botBitC() << endl;
