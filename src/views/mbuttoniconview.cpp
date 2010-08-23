@@ -57,10 +57,10 @@ void MButtonIconViewPrivate::drawGlowIcon(QPainter *painter, const QRectF &iconR
     QPointF offset(-q->style()->glowRadius(),
                    -q->style()->glowRadius());
     glowRect.translate(offset);
-    glowRect.setSize(QSizeF(icon->width() + 2 * q->style()->glowRadius(), icon->height() + 2 * q->style()->glowRadius()));
+    glowRect.setSize(QSizeF(icon->pixmap->width() + 2 * q->style()->glowRadius(), icon->pixmap->height() + 2 * q->style()->glowRadius()));
 
     painter->setOpacity(controller->effectiveOpacity() * timelineGlow->currentValue());
-    painter->drawImage(glowRect, const_cast<MButtonIconViewPrivate*>(this)->glowIcon(icon, q->style()->glowRadius(), q->style()->glowColor()));
+    painter->drawImage(glowRect, const_cast<MButtonIconViewPrivate*>(this)->glowIcon(icon->pixmap, q->style()->glowRadius(), q->style()->glowColor()));
 }
 
 MButtonIconView::MButtonIconView(MButton *controller) :

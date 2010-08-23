@@ -33,6 +33,8 @@
         MButtonStyle {
             font: arial 12;
 
+            icon-id: "my-icon";
+            toggled-icon-id: "my-toggled-icon"
             icon-size: 32 32;
             icon-align: left;
 
@@ -61,6 +63,28 @@ class M_EXPORT MButtonStyle : public MWidgetStyle
         \brief Font for the button text.
     */
     M_STYLE_ATTRIBUTE(QFont,                  font,                     Font)
+
+    /*!
+        \property MButtonStyle::iconId
+        \brief Icon identifier
+        Identifier of the graphical resource that contains the icon graphics.
+
+        Will be used if no QIcon or iconID is specified in the button's model.
+
+        \sa MButtonStyle::toggledIconId
+    */
+    M_STYLE_ATTRIBUTE(QString,               iconId,                      IconId)
+
+    /*!
+        \property MButtonStyle::toggledIconId
+        \brief Toggled icon identifier
+        Identifier of the graphical resource that contains the toggled icon graphics.
+
+        Will be used if no QIcon or toggledIconID is specified in the button's model.
+
+        \sa MButtonStyle::iconId
+    */
+    M_STYLE_ATTRIBUTE(QString,               toggledIconId,               ToggledIconId)
 
     /*!
         \property MButtonStyle::iconSize

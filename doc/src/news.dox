@@ -1,5 +1,11 @@
 /*! \page news What's New in MeeGo Touch
 
+\section v02038 0.20.38
+
+\subsection New
+- You can now specify the icon ids of an MButton also via its CSS style.
+  See MButtonStyle::toggledIconId and MButtonStyle::iconId.
+
 \section v02037 0.20.37
 
 \subsection New

@@ -32,19 +32,48 @@ class MButtonViewPrivate : public MWidgetViewPrivate
     Q_DECLARE_PUBLIC(MButtonView)
 
 public:
+    enum IconOrigin {
+        IconOriginUndefined,
+        IconOriginFromModelIconId,
+        IconOriginFromModelQIcon,
+        IconOriginFromStyleIconId
+    };
+
+    class Icon {
+        public:
+        Icon();
+        virtual ~Icon();
+
+        const QPixmap *pixmap;
+        IconOrigin origin; // from where the pixmap was taken from
+
+        // OBS: Those are not used when origin is QIcon
+        QString id; // id used to fetch the pixmap
+        QString theme; // current theme when time the pixmap was fetched
+    };
+
     MButtonViewPrivate();
     virtual ~MButtonViewPrivate();
 
     void freeIcons();
 
-    const QPixmap *icon;
-    const QPixmap *toggledIcon;
+    void updateIcon(Icon **icon,
+            QIcon::Mode mode, const QString &iconIdFromModel, const QString &iconIdFromStyle);
+
+    bool isCurrentIconObsolete(const QString &newIconId) const;
+
+    void updateIcon();
+    void updateToggledIcon();
+
+    // The icons come either from the style or from the model.
+    Icon *icon;
+    Icon *toggledIcon;
 
     MLabel *label;
     QTimer *styleModeChangeTimer;
 
-    bool iconFromQIcon;
-    bool toggledIconFromQIcon;
+    IconOrigin iconOrigin;
+    IconOrigin toggledIconOrigin;
     bool queuedStyleModeChange;
 
     QRectF iconRect;
