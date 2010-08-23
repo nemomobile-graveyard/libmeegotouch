@@ -58,13 +58,15 @@ MThemeDaemonServer::MThemeDaemonServer(const QString &serverAddress) :
     connect(&currentTheme, SIGNAL(valueChanged()), SLOT(themeChanged()));
     connect(&currentLocale, SIGNAL(valueChanged()), SLOT(localeChanged()));
 
-    // 4) make sure we have a themedaemon directory in /var/cache/m/
-    if( !createCacheDir(MThemeDaemon::systemThemeCacheDirectory()) )
-        qFatal("MThemeDaemonServer - Failed to create mthemedaemon cache directory.");        
+    // 4) make sure we have a themedaemon directory in /var/cache/meegotouch/
+    if( !createCacheDir(MThemeDaemon::systemThemeCacheDirectory()) ) {
+        qCritical("Will continue without cache.");
+    }
 
     // 5) make sure we have a cache directory for the current theme
-    if( !createCacheDir(MThemeDaemon::systemThemeCacheDirectory() + QDir::separator() + daemon.currentTheme()) )
-        qFatal("MThemeDaemonServer - Failed to create theme specific cache directory.");        
+    if (!createCacheDir(MThemeDaemon::systemThemeCacheDirectory() + QDir::separator() + daemon.currentTheme())) {
+        qCritical("Will continue without cache for the theme '%s'", qPrintable(daemon.currentTheme()));
+    }
 
     // start socket server for client registeration
     // first remove the old one, if there's such
@@ -613,21 +615,22 @@ bool MThemeDaemonServer::createCacheDir(const QString& path)
     if( fileInfo.exists() ) {
         if( fileInfo.isDir() ) {
             if( !fileInfo.isWritable() || !fileInfo.isReadable() ) {
-                mWarning("MThemeDaemonServer")  << "Cannot access the cache directory" << fileInfo.absoluteFilePath() << ". Permission denied.";
+                qCritical("Cannot access the cache directory %s. Permission denied.", qPrintable(fileInfo.absoluteFilePath()));
                 return false;
             }
         } else {
             //TODO We could destroy the file and create dir
-            mWarning("MThemeDaemonServer") << "Path " << fileInfo.absoluteFilePath() << "is not a directory.";
+            qCritical("Path %s is not a directory.", qPrintable(fileInfo.absoluteFilePath()));
             return false;
         }
     }
     //cache dir did not exist, try to create it
     else {
         QDir cacheDir(path);
-        mWarning("MThemeDaemonServer") << "Cache directory" << cacheDir.absolutePath() << "does not exist.";
-        if(!cacheDir.mkpath(path))
+        if(!cacheDir.mkpath(path)) {
+            qCritical("Could not create cache directory %s", qPrintable(cacheDir.absolutePath()));
             return false;
+        }
     }
     return true;
 }
