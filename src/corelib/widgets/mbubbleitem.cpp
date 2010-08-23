@@ -274,11 +274,17 @@ void MBubbleItem::setCommentsString(const QString &comments)
     Q_D(MBubbleItem);
 
     if(!comments.isEmpty()) {
-        if (!d->commentsLabel || !d->commentsIcon)
+        if (!d->commentsLabel)
             d->createCommentsInfo();
+        Q_ASSERT(d->commentsLabel);
+        Q_ASSERT(d->commentsIcon);
         d->commentsLabel->setText(comments);
-    } else if (d->commentsLabel != NULL || d->commentsIcon)
+    } else if (d->commentsLabel) {
+        Q_ASSERT(d->commentsIcon);
         d->destroyCommentsInfo();
+        Q_ASSERT(!d->commentsLabel);
+        Q_ASSERT(!d->commentsIcon);
+    }
 
     model()->setCommentsString(comments);
 }
