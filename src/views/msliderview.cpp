@@ -157,6 +157,88 @@ QSizeF MSliderHandle::sizeHint(Qt::SizeHint which, const QSizeF &constraint) con
     return QSizeF(width, height);
 }
 
+MSliderHandleIndicatorArrow::MSliderHandleIndicatorArrow(QGraphicsItem *parent) :
+    MWidget(parent),
+    orientation(Qt::Horizontal),
+    handleLabelArrowLeftPixmap(0),
+    handleLabelArrowRightPixmap(0),
+    handleLabelArrowUpPixmap(0),
+    handleLabelArrowDownPixmap(0)
+{
+}
+
+MSliderHandleIndicatorArrow::~MSliderHandleIndicatorArrow()
+{
+}
+
+void MSliderHandleIndicatorArrow::setOrientation(Qt::Orientation orientation)
+{
+    this->orientation = orientation;
+    updateGeometry();
+}
+
+void MSliderHandleIndicatorArrow::setPixmaps(const QPixmap *handleLabelArrowLeft,
+                                             const QPixmap *handleLabelArrowRight,
+                                             const QPixmap *handleLabelArrowUp,
+                                             const QPixmap *handleLabelArrowDown)
+{
+    handleLabelArrowLeftPixmap = handleLabelArrowLeft;
+    handleLabelArrowRightPixmap = handleLabelArrowRight;
+    handleLabelArrowUpPixmap = handleLabelArrowUp;
+    handleLabelArrowDownPixmap = handleLabelArrowDown;
+
+    updateGeometry();
+}
+
+void MSliderHandleIndicatorArrow::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
+{
+    Q_UNUSED(option);
+    Q_UNUSED(widget);
+
+    bool reverse = qApp->isRightToLeft();
+
+    QRect handleRect = rect().toRect();
+    if (orientation == Qt::Horizontal)
+        painter->drawPixmap((handleRect.width() - handleLabelArrowDownPixmap->width()) / 2,
+                            (handleRect.height() - handleLabelArrowDownPixmap->height()) / 2,
+                            *handleLabelArrowDownPixmap);
+     if (orientation == Qt::Vertical) {
+         if (!reverse)
+            painter->drawPixmap((handleRect.width() - handleLabelArrowLeftPixmap->width()) / 2,
+                                (handleRect.height() - handleLabelArrowLeftPixmap->height()) / 2,
+                                *handleLabelArrowLeftPixmap);
+         else
+             painter->drawPixmap((handleRect.width() - handleLabelArrowRightPixmap->width()) / 2,
+                                 (handleRect.height() - handleLabelArrowRightPixmap->height()) / 2,
+                                 *handleLabelArrowRightPixmap);
+    }
+}
+
+QSizeF MSliderHandleIndicatorArrow::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
+{
+    Q_UNUSED(which);
+    Q_UNUSED(constraint);
+
+    bool reverse = qApp->isRightToLeft();
+
+    if (orientation == Qt::Horizontal) {
+        if (handleLabelArrowDownPixmap)
+            return QSizeF(handleLabelArrowDownPixmap->width(), handleLabelArrowDownPixmap->height());
+    }
+
+    if (orientation == Qt::Vertical) {
+        if (!reverse) {
+            if (handleLabelArrowLeftPixmap)
+                return QSizeF(handleLabelArrowLeftPixmap->width(), handleLabelArrowLeftPixmap->height());
+        } else {
+            if (handleLabelArrowRightPixmap)
+                return QSizeF(handleLabelArrowRightPixmap->width(), handleLabelArrowRightPixmap->height());
+        }
+    }
+
+    return QSizeF(0, 0);
+}
+
 MSliderIndicator::MSliderIndicator(bool isMinMax, QGraphicsItem *parent) :
     MWidget(parent),
     label(0),
@@ -309,6 +391,124 @@ QSizeF MSliderIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
     return QSizeF(width, height);
 }
 
+MSliderHandleIndicator::MSliderHandleIndicator(QGraphicsItem* parent) :
+    MWidget(parent),
+    orientation(Qt::Horizontal),
+    horizontalPolicy(0),
+    verticalPolicy(0),
+    indicatorArrow(0),
+    indicator(0)
+{
+    indicator = new MSliderIndicator(false, this);
+    indicator->setObjectName("MSliderHandleIndicator");
+
+    indicatorArrow = new MSliderHandleIndicatorArrow(this);
+    indicatorArrow->setObjectName("MSliderHandleIndicatorArrow");
+}
+
+MSliderHandleIndicator::~MSliderHandleIndicator()
+{
+}
+
+void MSliderHandleIndicator::init()
+{
+    bool reverse = qApp->isRightToLeft();
+
+    MLayout *mainLayout = new MLayout;
+    setLayout(mainLayout);
+
+    horizontalPolicy = new MLinearLayoutPolicy(mainLayout, Qt::Horizontal);
+    horizontalPolicy->setSpacing(0);
+    horizontalPolicy->setContentsMargins(0, 0, 0, 0);
+
+    if (!reverse) {
+        horizontalPolicy->addItem(indicatorArrow, Qt::AlignCenter);
+        horizontalPolicy->addItem(indicator, Qt::AlignCenter);
+    } else {
+        horizontalPolicy->addItem(indicator, Qt::AlignCenter);
+        horizontalPolicy->addItem(indicatorArrow, Qt::AlignCenter);
+    }
+
+    verticalPolicy = new MLinearLayoutPolicy(mainLayout, Qt::Vertical);
+    verticalPolicy->setSpacing(0);
+    verticalPolicy->setContentsMargins(0, 0, 0, 0);
+
+    verticalPolicy->addItem(indicator, Qt::AlignCenter);
+    verticalPolicy->addItem(indicatorArrow, Qt::AlignCenter);
+}
+
+void MSliderHandleIndicator::setOrientation(Qt::Orientation orientation)
+{
+    this->orientation = orientation;
+    indicatorArrow->setOrientation(orientation);
+
+    MLayout *mainLayout = dynamic_cast<MLayout *>(layout());
+    if (!mainLayout || !horizontalPolicy || !verticalPolicy) {
+        mWarning("MSliderHandleIndicator") << "MSlider was not initialized properly";
+        return;
+    }
+
+    //verticalPolicy will be active for Qt::Horizontal orientation
+    //(arrow under the label) and horizontalPolicy will be active
+    //for Qt::Vertical orientation (arrow on left or right side of label)
+    if (orientation == Qt::Horizontal) {
+
+        if (mainLayout->policy() != verticalPolicy)
+            mainLayout->setPolicy(verticalPolicy);
+    }
+    if (orientation == Qt::Vertical) {
+        if (mainLayout->policy() != horizontalPolicy)
+            mainLayout->setPolicy(horizontalPolicy);
+    }
+
+    updateGeometry();
+}
+
+void MSliderHandleIndicator::setPixmaps(const QPixmap *handleLabelArrowLeft,
+                                        const QPixmap *handleLabelArrowRight,
+                                        const QPixmap *handleLabelArrowUp,
+                                        const QPixmap *handleLabelArrowDown)
+{
+    indicatorArrow->setPixmaps(handleLabelArrowLeft,
+                               handleLabelArrowRight,
+                               handleLabelArrowUp,
+                               handleLabelArrowDown);
+
+    updateGeometry();
+}
+
+void MSliderHandleIndicator::setText(const QString &text)
+{
+    indicator->setText(text);
+    updateGeometry();
+}
+
+void MSliderHandleIndicator::setImage(const QString &id)
+{
+    indicator->setImage(id);
+    updateGeometry();
+}
+
+QSizeF MSliderHandleIndicator::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
+{
+    Q_UNUSED(which);
+    Q_UNUSED(constraint);
+
+    QSizeF size = indicator->size();
+
+    if (orientation == Qt::Horizontal) {
+        size.setWidth(qMax(size.width(), indicatorArrow->size().width()));
+        size.setHeight(size.height() + indicatorArrow->size().height());
+    }
+
+    if (orientation == Qt::Vertical) {
+        size.setWidth(size.width() + indicatorArrow->size().width());
+        size.setHeight(qMax(size.height(), indicatorArrow->size().height()));
+    }
+
+    return size;
+}
+
 MSliderGroove::MSliderGroove(QGraphicsItem *parent) :
     MWidget(parent),
     controller(0),
@@ -335,9 +535,8 @@ MSliderGroove::MSliderGroove(QGraphicsItem *parent) :
     sliderHandle = new MSliderHandle(this);
     sliderHandle->setObjectName("MSliderHandle");
 
-    sliderHandleIndicator = new MSliderIndicator(false, this);
-    sliderHandleIndicator->setObjectName("MSliderHandleIndicator");
-
+    sliderHandleIndicator = new MSliderHandleIndicator(this);
+    sliderHandleIndicator->setObjectName("MSliderHandleLabel");
     sliderHandleIndicator->setVisible(false);
 }
 
@@ -349,12 +548,14 @@ MSliderGroove::~MSliderGroove()
 void MSliderGroove::init(MSlider *controller)
 {
     this->controller = controller;
+    sliderHandleIndicator->init();
 }
 
 void MSliderGroove::setOrientation(Qt::Orientation orientation)
 {
     this->orientation = orientation;
     sliderHandle->setOrientation(orientation);
+    sliderHandleIndicator->setOrientation(orientation);
 
     updateGeometry();
 }
@@ -368,6 +569,19 @@ void MSliderGroove::setHandlePixmaps(const QPixmap *handle,
                              handlePressed,
                              handleVertical,
                              handleVerticalPressed);
+
+    updateGeometry();
+}
+
+void MSliderGroove::setHandleIndicatorPixmaps(const QPixmap *handleLabelArrowLeft,
+                                                const QPixmap *handleLabelArrowRight,
+                                                const QPixmap *handleLabelArrowUp,
+                                                const QPixmap *handleLabelArrowDown)
+{
+    sliderHandleIndicator->setPixmaps(handleLabelArrowLeft,
+                                      handleLabelArrowRight,
+                                      handleLabelArrowUp,
+                                      handleLabelArrowDown);
 
     updateGeometry();
 }
@@ -851,7 +1065,7 @@ void MSliderGroove::updateHandleIndicatorPos()
         handleIndicatorPos.setY(handleIndicatorPos.y() - sliderHandleIndicator->rect().height());
     }
     if (orientation == Qt::Vertical) {
-        if (!reverse)
+       if (!reverse)
             handleIndicatorPos.setX(handleIndicatorPos.x() + sliderHandle->rect().width());
         else
             handleIndicatorPos.setX(handleIndicatorPos.x() - sliderHandleIndicator->rect().width());
@@ -1355,6 +1569,10 @@ void MSliderView::applyStyle()
                                       style()->handlePressedPixmap(),
                                       style()->handleVerticalPixmap(),
                                       style()->handleVerticalPressedPixmap());
+    d->sliderGroove->setHandleIndicatorPixmaps(style()->handleLabelArrowLeftPixmap(),
+                                               style()->handleLabelArrowRightPixmap(),
+                                               style()->handleLabelArrowUpPixmap(),
+                                               style()->handleLabelArrowDownPixmap());
     d->sliderGroove->setImages(style()->backgroundBaseImage(),
                                style()->backgroundElapsedImage(),
                                style()->backgroundReceivedImage(),

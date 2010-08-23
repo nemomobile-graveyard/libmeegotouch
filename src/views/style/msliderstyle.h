@@ -57,6 +57,26 @@ class M_EXPORT MSliderStyle : public MWidgetStyle
     */
     M_STYLE_PTR_ATTRIBUTE(QPixmap *, handleVerticalPixmap, HandleVerticalPixmap)
     /*!
+      \property MSliderStyle::handleLabelArrowLeftPixmap
+      \brief Handle label arrow left image
+      */
+    M_STYLE_PTR_ATTRIBUTE(QPixmap*, handleLabelArrowLeftPixmap, HandleLabelArrowLeftPixmap)
+    /*!
+      \property MSliderStyle::handleLabelArrowRightPixmap
+      \brief Handle label arrow right image
+      */
+    M_STYLE_PTR_ATTRIBUTE(QPixmap*, handleLabelArrowRightPixmap, HandleLabelArrowRightPixmap)
+    /*!
+      \property MSliderStyle::handleLabelArrowUpPixmap
+      \brief Handle label arrow up image
+      */
+    M_STYLE_PTR_ATTRIBUTE(QPixmap*, handleLabelArrowUpPixmap, HandleLabelArrowUpPixmap)
+    /*!
+      \property MSliderStyle::handleLabelArrowDownPixmap
+      \brief Handle label arrow down image
+      */
+    M_STYLE_PTR_ATTRIBUTE(QPixmap*, handleLabelArrowDownPixmap, HandleLabelArrowDownPixmap)
+    /*!
         \property MSliderStyle::handleVerticalPressedPixmap
         \brief Handle image for pressed status of vertical slider.
     */

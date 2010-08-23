@@ -69,6 +69,35 @@ private:
 #endif // UNIT_TEST
 };
 
+class MSliderHandleIndicatorArrow : public MWidget
+{
+public:
+    MSliderHandleIndicatorArrow(QGraphicsItem *parent = 0);
+    virtual ~MSliderHandleIndicatorArrow();
+
+    void setOrientation(Qt::Orientation);
+    void setPixmaps(const QPixmap *handleLabelArrowLeft,
+                    const QPixmap *handleLabelArrowRight,
+                    const QPixmap *handleLabelArrowUp,
+                    const QPixmap *handleLabelArrowDown);
+
+    virtual void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget = 0);
+
+    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
+
+private:
+    Qt::Orientation orientation;
+
+    const QPixmap *handleLabelArrowLeftPixmap;
+    const QPixmap *handleLabelArrowRightPixmap;
+    const QPixmap *handleLabelArrowUpPixmap;
+    const QPixmap *handleLabelArrowDownPixmap;
+
+#ifdef UNIT_TEST
+    friend class Ut_MSliderView;
+#endif // UNIT_TEST
+};
+
 class MSliderIndicator : public MWidget
 {
     Q_OBJECT
@@ -86,13 +115,44 @@ private:
     MLabel *label;
     MImageWidget *image;
     QString imageName;
-    //bool visibility;
 
     QGraphicsAnchorLayout *layout;
 
 #ifdef UNIT_TEST
     friend class Ut_MSliderView;
 #endif // UNIT_TEST
+};
+
+class MSliderHandleIndicator : public MWidget
+{
+    Q_OBJECT
+public:
+    MSliderHandleIndicator(QGraphicsItem *parent = 0);
+    virtual ~MSliderHandleIndicator();
+
+    void init();
+
+    void setOrientation(Qt::Orientation);
+    void setPixmaps(const QPixmap *handleLabelArrowLeft,
+                    const QPixmap *handleLabelArrowRight,
+                    const QPixmap *handleLabelArrowUp,
+                    const QPixmap *handleLabelArrowDown);
+
+    void setText(const QString &text);
+    void setImage(const QString &id);
+
+protected:
+    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
+
+private:
+    Qt::Orientation orientation;
+
+    MLinearLayoutPolicy *horizontalPolicy;
+    MLinearLayoutPolicy *verticalPolicy;
+
+    MSliderHandleIndicatorArrow* indicatorArrow;
+
+    MSliderIndicator* indicator;
 };
 
 class MSliderGroove : public MWidget
@@ -110,6 +170,10 @@ public:
                           const QPixmap *handlePressed,
                           const QPixmap *handleVertical,
                           const QPixmap *handleVerticalPressed);
+    void setHandleIndicatorPixmaps(const QPixmap *handleLabelArrowLeft,
+                                   const QPixmap *handleLabelArrowRight,
+                                   const QPixmap *handleLabelArrowUp,
+                                   const QPixmap *handleLabelArrowDown);
     void setImages(const MScalableImage *background,
                    const MScalableImage *backgroundElapsed,
                    const MScalableImage *backgroundReceived,
@@ -175,7 +239,7 @@ private:
 
 
     MSliderHandle *sliderHandle;
-    MSliderIndicator *sliderHandleIndicator;
+    MSliderHandleIndicator *sliderHandleIndicator;
 
     QRectF sliderBoundingRect;
 
