@@ -198,7 +198,7 @@ StyleClass *parseStyleClassHeader(const QString &styleHeader, QList<QString>& mo
     bool internal = false;
 
     // search "class XX : public YY"
-    QRegExp classRegExp("\\s*class\\s+(M_EXPORT\\s+)?(\\w+)\\s*:\\s*public\\s+(\\w+)\\s*");
+    QRegExp classRegExp("\\s*class\\s+(\\S+\\s+)?(\\w+)\\s*:\\s*public\\s+(\\w+)\\s*");
     int index = line.indexOf(classRegExp);
     if (index == -1) {
         return NULL;
@@ -331,7 +331,7 @@ ModelClass *parseModelClassHeader(const QString &modelHeader)
         spaces +
         "class" +
         spaces +
-        "(?:M_EXPORT)" + "{,1}" +
+        "(?:\\S+)" + "{,1}" +
         spaces +
         '(' +
         typeName +
