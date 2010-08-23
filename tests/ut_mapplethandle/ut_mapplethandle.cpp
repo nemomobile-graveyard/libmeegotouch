@@ -44,6 +44,14 @@ MWidgetPrivate::MWidgetPrivate() :
 MWidgetPrivate::~MWidgetPrivate()
 {
 }
+
+void MWidgetPrivate::doEnterDisplayEvent()
+{
+}
+
+void MWidgetPrivate::doExitDisplayEvent()
+{
+}
 // AppletCommunicator stubs to get rid of IPC
 bool MAppletServer::startServer(const QString &)
 {
