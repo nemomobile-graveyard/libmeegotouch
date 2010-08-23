@@ -52,7 +52,7 @@ public:
 protected:
     //! The layout of the notification
     MLayout * layout;
-    MLinearLayoutPolicy *landscapePolicy;
+    MGridLayoutPolicy *landscapePolicy;
     MGridLayoutPolicy *portraitPolicy;
 
 

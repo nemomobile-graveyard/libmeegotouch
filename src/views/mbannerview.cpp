@@ -52,7 +52,7 @@ MLabel *MBannerViewPrivate::title()
 {
     if (!titleLabel) {
         titleLabel = new MLabel(controller);
-        titleLabel->setObjectName("CommonBannerSingleTitle");
+        titleLabel->setObjectName("MBannerTitle");
         titleLabel->setAlignment(Qt::AlignVCenter);
         titleLabel->setWordWrap(true);
     }
@@ -63,7 +63,7 @@ MLabel *MBannerViewPrivate::subtitle()
 {
     if (!subtitleLabel) {
         subtitleLabel = new MLabel(controller);
-        subtitleLabel->setObjectName("CommonBannerSingleSubTitle");
+        subtitleLabel->setObjectName("MBannerSubtitle");
         subtitleLabel->setAlignment(Qt::AlignVCenter);
         subtitleLabel->setWordWrap(true);
     }
@@ -74,7 +74,7 @@ MImageWidget *MBannerViewPrivate::icon()
 {
     if (!iconId) {
         iconId = new MImageWidget(controller);
-        iconId->setObjectName("CommonBannerMainIcon");
+        iconId->setObjectName("MBannerIcon");
     }
     return iconId;
 }
@@ -98,7 +98,7 @@ void MBannerViewPrivate::initDynamicLayout()
 {
     layout = new MLayout();
 
-    landscapePolicy = new MLinearLayoutPolicy(layout, Qt::Horizontal);
+    landscapePolicy = new MGridLayoutPolicy(layout);
     landscapePolicy->setSpacing(0);
     landscapePolicy->setContentsMargins(0, 0, 0, 0);
 
@@ -111,49 +111,47 @@ void MBannerViewPrivate::initDynamicLayout()
     if (!q->model()->iconID().isEmpty()&& !q->model()->title().isEmpty()
         && !q->model()->subtitle().isEmpty()) {
 
-        landscapePolicy->addItem(icon(),Qt::AlignVCenter);
+        landscapePolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
         portraitPolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
 
-        landscapePolicy->addItem(title());
+        landscapePolicy->addItem(title(), 0,1,Qt::AlignLeft);
         portraitPolicy->addItem(title(), 0,1,Qt::AlignLeft);
         
-        landscapePolicy->addItem(subtitle());
-        portraitPolicy->addItem(subtitle(),1,1,Qt::AlignVCenter);
+        landscapePolicy->addItem(subtitle(),1,1,Qt::AlignLeft);
+        portraitPolicy->addItem(subtitle(),1,1,Qt::AlignLeft);
         
     } else if (q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
-
-        landscapePolicy->addItem(subtitle());
+        subtitle()->setObjectName("MBannerSubtitleSingle");
+        landscapePolicy->addItem(subtitle(),0,0,Qt::AlignVCenter);
         portraitPolicy->addItem(subtitle(),0,0,Qt::AlignVCenter);
 
     } else if (!q->model()->iconID().isEmpty() && !q->model()->subtitle().isEmpty()) {
+        subtitle()->setObjectName("MBannerSubtitleSingle");
+        subtitle()->setWordWrap(false);
+        landscapePolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
+        portraitPolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter);
 
-        landscapePolicy->addItem(icon(),Qt::AlignVCenter);
-        portraitPolicy->addItem(icon(),0,0,2,1, Qt::AlignVCenter );
-
-        landscapePolicy->addItem(subtitle());
+        landscapePolicy->addItem(subtitle(),1,1,Qt::AlignVCenter);
         portraitPolicy->addItem(subtitle(),1,1,Qt::AlignVCenter);
-
     } else {
         /*These conditionals are necessary for cases not contemplated
         in the common layouts */
 
         if (!q->model()->iconID().isEmpty()) {
-            landscapePolicy->addItem(icon(), Qt::AlignVCenter);
+            landscapePolicy->addItem(icon(), 0, 0, 2, 1, Qt::AlignVCenter);
             portraitPolicy->addItem(icon(), 0, 0, 2, 1, Qt::AlignVCenter);
         }
 
         if (!q->model()->title().isEmpty()) {
-            landscapePolicy->addItem(title());
+            landscapePolicy->addItem(title(), 0, 1, Qt::AlignLeft);
             portraitPolicy->addItem(title(), 0, 1, Qt::AlignLeft);
         }
 
         if (!q->model()->subtitle().isEmpty()) {
-            landscapePolicy->addItem(subtitle());
+            landscapePolicy->addItem(subtitle(), 0, 0, Qt::AlignVCenter);
             portraitPolicy->addItem(subtitle(), 0, 0, Qt::AlignVCenter);
         }
     }
-
-    landscapePolicy->addStretch();
 
     layout->setPortraitPolicy(portraitPolicy);
     layout->setLandscapePolicy(landscapePolicy);

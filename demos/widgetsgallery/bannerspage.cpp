@@ -112,25 +112,28 @@ void BannersPage::itemClicked(const QModelIndex &index)
 void BannersPage::showEventBanner()
 {
     MBanner *banner = new MBanner();
-    banner->setIconID("icon-l-settings");
+    banner->setObjectName("EventBanner");
+    banner->setIconID("icon-l-mail");
     banner->setTitle("New updates waiting to install");
     banner->setSubtitle("130 files");
-    banner->appear(MSceneWindow::DestroyWhenDone);
+    banner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void BannersPage::showInformationBanner()
 {
     MBanner *infoBanner = new MBanner();
+    infoBanner->setObjectName("InformationBanner");
     infoBanner->setSubtitle("Info banner with so much information that the text wraps in portrait");
-    infoBanner->appear(MSceneWindow::DestroyWhenDone);
+    infoBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void BannersPage::showSystemInformationBanner()
 {
     MBanner *systemBanner = new MBanner();
-    systemBanner->setIconID("icon-l-calendar-reminder");
+    systemBanner->setObjectName("SystemBanner");
+    systemBanner->setIconID("icon-l-settings");
     systemBanner->setSubtitle("System banner");
-    systemBanner->appear(MSceneWindow::DestroyWhenDone);
+    systemBanner->appear(scene(), MSceneWindow::DestroyWhenDone);
 }
 
 void BannersPage::retranslateUi()
