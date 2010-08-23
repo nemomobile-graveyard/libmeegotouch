@@ -1,12 +1,12 @@
 /**
-\page layout-multiplepolicies DuiLayout With Multiple Policies Example
+\page layout-multiplepolicies MLayout With Multiple Policies Example
 
-Source code for a simple example of a DuiLayout with both a flow and a linear layout.
+Source code for a simple example of a MLayout with both a flow and a linear layout.
 A vertical linear layout is used when the device is in landscape mode, and a flow layout
 when the device in portrait mode.  Some of the items are added to only one layout, and some
 are added to both. Note that the layout hides and shows the items as required.
 
-\image html multiplepolicies.gif "Animation of device changing from landscape to portrait mode"
+\image html mlayout_multiplepolicies.jpg
 
 \include examples/layout/multiplepolicies/multiplepolicies.cpp
 

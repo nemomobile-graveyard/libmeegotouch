@@ -56,7 +56,7 @@ For example the calculator example has the following code snippet:
 
 Multiple policies can be assigned to a layout.  This is particularly useful to have one policy when in portrait mode and another when in landscape mode. For \ref layout-multiplepolicies "example":
 
-\htmlonly <center><a href="layout-multiplepolicies.html"><img src="multiplepolicies.gif" width="432"></a></center> \endhtmlonly
+\image html mlayout_multiplepolicies.jpg
 
 A more concrete example is given with the \ref example-calculator "example calculator" program.
 
