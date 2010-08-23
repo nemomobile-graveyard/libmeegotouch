@@ -214,7 +214,21 @@ void Ut_MContentItem::testModelSetItemQImage()
     const QImage image(fname);
     m_subject->model()->setItemQImage( image );
 
-   QCOMPARE( m_subject->model()->itemQImage(), image );
+    QCOMPARE( m_subject->model()->itemQImage(), image );
 }
+
+void Ut_MContentItem::testTitle()
+{
+    QString title ("Title");
+    m_subject->setTitle( title );
+    QCOMPARE( m_subject->title(), title );
+}
+
+void Ut_MContentItem::testItemMode()
+{
+    m_subject->setItemMode(MContentItem::TopLeft);
+    QCOMPARE( m_subject->itemMode(), MContentItem::TopLeft );
+}
+
 
 QTEST_APPLESS_MAIN(Ut_MContentItem)

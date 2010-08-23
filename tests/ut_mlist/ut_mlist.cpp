@@ -237,6 +237,25 @@ void Ut_mlist::testLongTap()
 }
 
 
+void Ut_mlist::testModelScrollTo()
+{
+    indexedModel = new MyIndexedModel;
+    m_subject->setShowGroups(true);
+    m_subject->setItemModel(indexedModel);
+    m_subject->setSelectionMode(MList::SingleSelection);
+
+    QCOMPARE( m_subject->itemModel(), indexedModel );
+
+    QModelIndex index = indexedModel->index(2, 0);
+
+    m_subject->model()->setScrollToIndex( index );
+
+    QModelIndex result =  m_subject->model()->scrollToIndex();
+
+    QCOMPARE( index, result );
+
+}
+
 // MyIndexedModel - indexed model
 MyIndexedModel::MyIndexedModel(QObject * r) : root(r)
 {

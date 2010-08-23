@@ -102,6 +102,8 @@ void Ut_MAdvancedListItem::testItemStyle()
     QCOMPARE( m_subject->itemStyle(), MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons );
     m_subject->setItemStyle(MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon);
     QCOMPARE( m_subject->itemStyle(), MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon );
+    m_subject->setItemStyle(MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons);
+    QCOMPARE( m_subject->itemStyle(), MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons );
 }
 
 QTEST_APPLESS_MAIN(Ut_MAdvancedListItem)

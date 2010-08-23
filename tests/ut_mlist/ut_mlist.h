@@ -103,6 +103,7 @@ private slots:
     void testSelectItem();
     void testVisibleItem();
     void testLongTap();
+    void testModelScrollTo();
 
 
 private:
