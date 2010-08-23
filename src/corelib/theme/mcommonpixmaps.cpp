@@ -35,6 +35,7 @@ MCommonPixmaps::MCommonPixmaps(MThemeDaemon *daemon) :
 {
     connect(&cpuMonitor, SIGNAL(newCpuFrameAvailable()), SLOT(loadOne()));
     connect(this, SIGNAL(mostUsedPixmapsChanged(M::MThemeDaemonProtocol::MostUsedPixmaps)), SLOT(considerSaving()));
+    timerSinceLastSave.invalidate();
 }
 
 MCommonPixmaps::~MCommonPixmaps()
