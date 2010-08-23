@@ -178,25 +178,26 @@ ImageResource *MThemeDaemon::findImageResource(const QString &imageId)
     return resource;
 }
 
-void MThemeDaemon::reloadImagePaths(const QString &locale)
+void  MThemeDaemon::reloadImagePaths(const QString &locale, bool forceReload)
 {
     QList<MThemeImagesDirectory*> newThemeImageDirs;
     foreach(const QString & theme, themeInheritance) {
         const QString path = theme + "meegotouch";
-        
-        // Creating a MThemeImagesDirectory is an expensive operation.
-        // Check whether there is already a MThemeImagesDirectory instance
-        // that can be reused.
+
         bool foundDir = false;
-        for (int i = 0; i < themeImageDirs.size(); ++i) {
-            foundDir = (themeImageDirs[i]->path() == path) && (themeImageDirs[i]->locale() == locale);
-            if (foundDir) {
-                newThemeImageDirs.append(themeImageDirs[i]);
-                themeImageDirs[i] = 0;
-                break;
+        if (!forceReload) {
+            // Creating a MThemeImagesDirectory is an expensive operation.
+            // Check whether there is already a MThemeImagesDirectory instance
+            // that can be reused.
+            for (int i = 0; i < themeImageDirs.size(); ++i) {
+                foundDir = (themeImageDirs[i]->path() == path) && (themeImageDirs[i]->locale() == locale);
+                if (foundDir) {
+                    newThemeImageDirs.append(themeImageDirs[i]);
+                    themeImageDirs[i] = 0;
+                    break;
+                }
             }
         }
-       
         if (!foundDir) {
             // No existing MThemeImagesDirectory could be reused, create a new one
             newThemeImageDirs.append(new MThemeImagesDirectory(path, locale));
@@ -242,9 +243,9 @@ const QSettings *themeFile(const QString &theme)
 }
 
 
-bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QList<QPixmap*>& pixmapsToDelete)
+bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale, const QList<MThemeDaemonClient *>& clientList, QList<QPixmap*>& pixmapsToDelete, bool forceReload)
 {
-    if (newTheme == currentThemeName) {
+    if (!forceReload && newTheme == currentThemeName) {
         // TODO: check need for warning
         return false;
     }
@@ -363,7 +364,7 @@ bool MThemeDaemon::activateTheme(const QString &newTheme, const QString &locale,
     MThemeResourceManager::instance().themeChanged();
 
     // 5: release rest of the old theme resources and load the new ones
-    reloadImagePaths(locale);
+    reloadImagePaths(locale, forceReload);
 
     // 6. load the "preload" list
     mostUsedPixmaps.load();

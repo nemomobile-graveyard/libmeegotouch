@@ -46,14 +46,16 @@ public:
     MThemeDaemonServer(const QString &serverAddress = QString());
     virtual ~MThemeDaemonServer();
 
+public slots:
+    void themeChanged(bool forceReload = false);
+
 private slots:
     void clientConnected();
     void clientDisconnected();
     void clientDataAvailable();
 
-    void themeChanged();
     void themeChangeTimeout();
-    
+
     void localeChanged();
 
     void processOneQueueItem();

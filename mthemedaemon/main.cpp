@@ -32,10 +32,18 @@ void sigclose(int)
     qApp->quit();
 }
 
+MThemeDaemonServer *_server;
+
+void sighup(int)
+{
+    _server->themeChanged(true);
+}
+
 int main(int argc, char **argv)
 {
     signal(SIGTERM, sigclose);
     signal(SIGINT, sigclose);
+    signal(SIGHUP, sighup);
 
     QApplication::setGraphicsSystem(QLatin1String("native"));
 
@@ -49,6 +57,7 @@ int main(int argc, char **argv)
     }
 
     MThemeDaemonServer server(serverAddress);
+    _server = &server;
 
 #ifdef CLOSE_ON_ENTER
     KeyPressWaiter keyWaiter;

@@ -275,9 +275,9 @@ void MThemeDaemonServer::clientDataAvailable()
     }
 }
 
-void MThemeDaemonServer::themeChanged()
+void MThemeDaemonServer::themeChanged(bool forceReload)
 {
-    if (daemon.currentTheme() == currentTheme.value().toString())
+    if (!forceReload && daemon.currentTheme() == currentTheme.value().toString())
         return;
 
     //if previous theme change is not finished yet we need wait it to complete before changing to new one
@@ -293,7 +293,7 @@ void MThemeDaemonServer::themeChanged()
         return;
     }
 
-    bool changeOk = daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToDeleteWhenThemeChangeHasCompleted);
+    bool changeOk = daemon.activateTheme(currentTheme.value().toString(), currentLocale.value().toString(), registeredClients.values(), pixmapsToDeleteWhenThemeChangeHasCompleted, forceReload);
     if(!changeOk) {
         mWarning("MThemeDaemonServer") << "Could not change theme to" << currentTheme.value().toString() << ". Falling back to default theme " << defaultTheme;
         if( daemon.currentTheme() == defaultTheme )
@@ -621,7 +621,7 @@ bool MThemeDaemonServer::createCacheDir(const QString& path)
             mWarning("MThemeDaemonServer") << "Path " << fileInfo.absoluteFilePath() << "is not a directory.";
             return false;
         }
-    } 
+    }
     //cache dir did not exist, try to create it
     else {
         QDir cacheDir(path);
