@@ -235,16 +235,19 @@ QPixmap *IconImageResource::createPixmap(const QSize &size)
 
     QSize svgImageSize = size;
     if (size.isNull()) {
-        svgImageSize = renderer->defaultSize();
-        if (svgImageSize.isNull()) {
+        if (renderer) {
+            svgImageSize = renderer->defaultSize();
+        } else if (svgImageSize.isNull()) {
             mWarning("IconImageResource") << "    Invalid svg, size of the document is (0,0)";
         }
     }
 
     QPixmap *pixmap = new QPixmap(svgImageSize);
     pixmap->fill(QColor(Qt::transparent));
-    QPainter painter(pixmap);
-    renderer->render(&painter);
+    if (renderer) {
+        QPainter painter(pixmap);
+        renderer->render(&painter);
+    }
 
     return pixmap;
 }
@@ -257,21 +260,23 @@ QString IconImageResource::uniqueKey()
 QPixmap *SvgImageResource::createPixmap(const QSize &size)
 {
     QSvgRenderer* renderer = MThemeResourceManager::instance().svgRenderer(absoluteFilePath());
-    Q_ASSERT_X(renderer, "SvgImageResource", "SVG renderer not found");
 
     QSize svgImageSize = size;
     if (size.isNull()) {
         // the requested size is (0,0) so we need to fetch the default size from the svg.
-        svgImageSize = renderer->boundsOnElement(imageId).size().toSize();
-        if (svgImageSize.isNull()) {
+        if (renderer) {
+            svgImageSize = renderer->boundsOnElement(imageId).size().toSize();
+        } else if (svgImageSize.isNull()) {
             mWarning("SvgImageResource") << "    Invalid svg, size of id" << imageId << "is (0,0)";
         }
     }
 
     QPixmap *pixmap = new QPixmap(svgImageSize);
     pixmap->fill(QColor(Qt::transparent));
-    QPainter painter(pixmap);
-    renderer->render(&painter, imageId);
+    if (renderer) {
+        QPainter painter(pixmap);
+        renderer->render(&painter, imageId);
+    }
 
     return pixmap;
 }
@@ -604,8 +609,6 @@ ImageResource *MImageDirectory::findImage(const QString &imageId)
 
         for (; i != end; ++i) {
             QSvgRenderer* renderer = MThemeResourceManager::instance().svgRenderer(i.key());
-            Q_ASSERT_X(renderer, "SvgImageResource", "SVG renderer not found");
-
             // does this svg contain the element we're looking for?
             if (renderer->elementExists(imageId)) {
                 resource = new SvgImageResource(imageId, i.key());

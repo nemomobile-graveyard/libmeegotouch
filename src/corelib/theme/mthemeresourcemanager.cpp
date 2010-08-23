@@ -17,6 +17,8 @@
 **
 ****************************************************************************/
 #include "mthemeresourcemanager.h"
+#include "mdebug.h"
+
 #include <QSvgRenderer>
 
 MThemeResourceManager& MThemeResourceManager::instance()
@@ -48,6 +50,8 @@ QSvgRenderer* MThemeResourceManager::svgRenderer(const QString& absoluteFilePath
             info = new SvgRendererInfo(renderer, QTime::currentTime());
             svgRendererInfos.insert(absoluteFilePath, info);
         } else {
+            mWarning("MThemeResourceManager::svgRenderer") << "Could not create svg renderer for" <<
+                    absoluteFilePath << ". Has the file been deleted?";
             delete renderer;
             return NULL;
         }
