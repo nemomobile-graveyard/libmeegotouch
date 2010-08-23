@@ -20,7 +20,7 @@ binmode STDERR, ":utf8";
 #----------------------------------------------------------------------
 # global variables
 
-my $version = "0.20100823";
+my $version = "0.20100824";
 
 my $original_wd;
 chomp ($original_wd = `pwd`);
@@ -67,7 +67,7 @@ my $OPT_HTTP_PASSWD;
 my $OPT_SKIP_DOWNLOAD;
 my $OPT_OUTPUTDIR;
 
-# engineering English packages which should be ignored because they are obsolete:
+# Engineering English packages which should be ignored because they are obsolete:
 my @engineeringEnglishPackagesObsolete = (
     "libdui-l10n-engineering-english", # now "libmeegotouch-l10n-engineering-english"
     "duistartup-l10n-engineering-english", # now "mstartup-l10n-engineering-english"
@@ -75,13 +75,13 @@ my @engineeringEnglishPackagesObsolete = (
     "keychain-ui-l10n-engineering-english", # does not exist anymore
     );
 
-# engineering English packages which should be ignored because they are only demos:
+# Engineering English packages which should be ignored because they are only demos:
 my @engineeringEnglishPackagesIgnore = (
     "meegotouch-demos-widgetsgallery-l10n-engineering-english",
     "duihomescreen-plugins-weatherapplet-l10n-engineering-english"
     );
 
-# engineering English packages which should be temporarily ignored
+# Engineering English packages which should be temporarily ignored
 # because they are broken, but should be enabled again as soon
 # as they are fixed:
 
@@ -95,6 +95,13 @@ my @engineeringEnglishPackagesBroken = (
 my @engineeringEnglishPackages = ();
 
 my @sourcePackagesToDownloadAndScan = (
+    "account-plugin-sip",
+    "account-plugin-facebook",
+    "account-plugin-nokiamessaging",
+    "account-plugin-skype",
+    "account-plugin-youtube",
+    "activities",
+    "adobe-flashplayer",
     "aab-contacts-plugin",
     "accessiblemeego",
     "account-plugin-att",
@@ -102,10 +109,14 @@ my @sourcePackagesToDownloadAndScan = (
     "accounts-ui",
     "applauncherd",
     "applifed",
+    "backup-framework",
     "browserservicefw",
+    "bugreporter-daemon",
+    "bugreporterui",
     "calc",
     "caldav-plugin",
     "calendar",
+    "calendar-plugin-facebook",
     "call-history",
     "call-ui",
     "camera-ui",
@@ -123,37 +134,59 @@ my @sourcePackagesToDownloadAndScan = (
     "contacts-application",
     "contentmanager",
     "cp-ombservice",
+    "csd-trace-ui",
     "crash-reporter",
+    "cwrt-configurationservice",
     "devicelock",
+    "dialer",
     "duicontrolpanel",
+    "duicontrolpanel-certificatesapplet",
     "duicontrolpanel-datetimeapplet",
     "duicontrolpanel-languageapplet",
     "duicontrolpanel-regionformatapplet",
     "duicontrolpanel-soundsettingsapplet",
     "duicontrolpanel-ui-tests",
+    "duifennec-transferui-extension",
     "duifennec-virtualmouse-extension",
     "duihelp",
     "duihome",
+    "energy-profiler",
     "feedreader",
     "feedsettings",
     "fenix",
+    "fennec",
+    "fennec-taskswitcher-extension",
+    "fennec.e10s",
     "gallery",
+    "geo-engine-demo",
+    "groovem-account-ui-plugins",
     "libas-common-utils",
     "libcontentaction",
     "libdatepicker",
     "libdialerui",
+    "libextendedkcal",
     "libextendedkcal-tests",
     "liblocationpicker",
     "libmcontentwidgets",
+    "libmkcal",
+    "libmvideowidget",
+    "liborganiser",
     "libprofile-qt",
     "libresourceqt",
+    "libsaveas",
     "libshare-ui",
     "libtimepicker",
     "libvideosettings",
+    "libvsvideowidget",
+    "location-test-tool",
+    "location-ui",
     "locationsettings",
+    "maemo-meegotouch-interfaces",
     "mcompositor",
     "mcontrolpanel-telecoilapplet",
+    "mediaextension-interfaces",
     "media-suite-lib",
+    "meegocertman-extn",
     "meego-im-framework",
     "meego-keyboard",
     "meego-vkb-magnifier",
@@ -162,24 +195,40 @@ my @sourcePackagesToDownloadAndScan = (
     "meegotouch-visual-benchmark",
     "messaging-service",
     "messaging-ui",
+    "mfe-account-ui-plugins",
     "mms-ui",
+    "music-suite",
     "mwelcome",
     "mwts-security-tests",
     "nokia-maps",
     "nokiamessagingemail",
+    "nokiamessagingsn",
+    "nokiamessagingsupportinfo",
+    "notes",
     "notification-engine",
+    "office-tools",
+    "oviplugin",
+    "package-manager",
+    "package-manager-ui",
     "presence-ui",
+    "qmafw-gui",
     "qmsystem-demo",
     "recipients-editor",
     "signon-ui",
+    "sm-common-utils",
     "socialprovider-ovi",
+    "sync-app",
+    "syncshare-test-app",
     "sync-ui",
     "system-ui",
     "systemui-applets",
+    "systemui-applets-ui-tests",
     "transfer-ui",
     "userguide",
     "userguide-ui-tests",
     "video-suite",
+    "video-youtube-plugin",
+    "visualreminders",
     "webupload-engine",
     "webupload-services",
     "wrt",
@@ -193,7 +242,9 @@ my @sourcePackagesToDownloadAndScan = (
 #   - other ?
 my @sourcePackagesIgnore = (
     "libmeegotouch",
-    "nokia-maps", # fails to download
+    "nokia-maps", # fails to download, 403 error
+    "adobe-flashplayer", # fails to downloadm, 403 error
+    "syncshare-test-app", # fails to downloadm, 403 error
     "wrt",        # does this need to be scanned? I guess not.
     "xulrunner",  # does this need to be scanned? I guess not.
     );
@@ -493,10 +544,10 @@ sub checkListOfSourcePackagesDependingOnLibmeegotouch {
     close (PKGLIST);
     for my $binaryPackage (sort (keys %binaryPackagesDependingOnLibmeegotouch)) {
         my $sourcePackage = "";
-        open (APTSHOW, "apt-cache show $binaryPackage |")
+        open (APTSHOW, "apt-cache showsrc $binaryPackage |")
             || die "Can’t open apt-cache show $binaryPackage | : $!";
         while(<APTSHOW>) {
-            if ($ARG =~ /Source:\s+(.+)$/) {
+            if ($ARG =~ /Package:\s+(.+)$/) {
                 $sourcePackage = $1
             }
         }
@@ -930,7 +981,7 @@ EOF
         if ($missingEngineeringEnglishCount > 0) {
             $htmlOutIdsFromEePackagesDetail .= <<"EOF";
                 <div class="errorlist">
-                List of IDs where the engineering English is missing or empty:
+                List of IDs where the Engineering English is missing or empty:
                 <ul>
                 $htmlOutMissingEeList
                 </ul>
@@ -1190,6 +1241,7 @@ if (! -d $OPT_OUTPUTDIR) {
 }
 
 if (!$OPT_SKIP_DOWNLOAD) {
+    checkListOfSourcePackagesDependingOnLibmeegotouch();
     download();
 }
 else {
@@ -1213,7 +1265,7 @@ compareIdsFromSourcePackagesWithSpec();
 ######################################################################
 # generate output to show which ids from specs are used and which are not
 
-# mark some exceptions for IDs where neither engineering English
+# mark some exceptions for IDs where neither Engineering English
 # nor sources are expected to exist and which are known to be used anyway:
 for my $idFromSpec (sort (keys %idsFromSpecUsage)) {
     if($idsFromSpecUsage{$idFromSpec} eq "") {
@@ -1299,7 +1351,7 @@ if ($totalNumberOfIdsFoundInSpecButNeverUsed > 0) {
     $htmlOutIdsFromSpecUsedDetail .= <<"EOF";
         <div class="errorlist">
         List of IDs from the specifications which are never used
-        in the code, they can be found neither in the engineering English
+        in the code, they can be found neither in the Engineering English
         packages scanned nor in the source packages scanned:
         <ul>
         $htmlOutIdsFromSpecNeverUsed
@@ -1311,7 +1363,7 @@ if ($totalNumberOfIdsFoundInSpecUsed > 0) {
     $htmlOutIdsFromSpecUsedDetail .= <<"EOF";
         <div class="oklist">
         List of IDs from the specifications which are used somewhere in the code,
-        i.e. they were found in an engineering English package scanned or in a
+        i.e. they were found in an Engineering English package scanned or in a
         source package scanned or they are known to be used and handled as exceptions:
         <ul>
         $htmlOutIdsFromSpecUsed
@@ -1331,10 +1383,10 @@ my @idsFoundInEePackagesArray = (keys %idsFoundInEePackages);
 $totalNumberOfIdsFoundInEePackages = $#idsFoundInEePackagesArray;
 
 $htmlOutTocHeader .= <<"EOF";
-    <h3>Ids found in engineering English packages:</h3>
+    <h3>Ids found in Engineering English packages:</h3>
     <p>
     <b>
-    Total number of Ids found in the engineering English packages:
+    Total number of Ids found in the Engineering English packages:
     $totalNumberOfIdsFoundInEePackages
     </b>
     (may contain duplicates)
@@ -1345,7 +1397,7 @@ $class = $totalNumberOfIdsFoundInEePackagesButNotInSpec? "errorcolor" : "okcolor
 $htmlOutTocHeader .= <<"EOF";
     <p>
     <b>
-    Total number of Ids found in the engineering English packages but not in the specifications:
+    Total number of Ids found in the Engineering English packages but not in the specifications:
     <span class="$class">
     $totalNumberOfIdsFoundInEePackagesButNotInSpec
     </span>
@@ -1358,7 +1410,7 @@ $class = $totalNumberOfIdsFoundInEePackagesLackingEngineeringEnglish? "errorcolo
 $htmlOutTocHeader .= <<"EOF";
     <p>
     <b>
-    Total number of Ids found in the engineering English packages where the engineering English is missing or empty:
+    Total number of Ids found in the Engineering English packages where the Engineering English is missing or empty:
     <span class="$class">
     $totalNumberOfIdsFoundInEePackagesLackingEngineeringEnglish
     </span>
@@ -1370,10 +1422,10 @@ EOF
 $htmlOutTocHeader .= <<"EOF";
     <p>
     Note that the numbers of Ids listed above as
-    “found in the engineering English packages” may
+    “found in the Engineering English packages” may
     count identical ids several times. If the same id
-    appears in different engineering English files it is
-    counted once for each engineering English file it appears in.
+    appears in different Engineering English files it is
+    counted once for each Engineering English file it appears in.
     </p>
 EOF
 
@@ -1447,7 +1499,7 @@ EOF
 $htmlOutTocHeader .= <<"EOF";
     <p>
     <a href="messageid-check-result.csv">
-    CSV file with a list of invalid message IDs from engineering English Packages.
+    CSV file with a list of invalid message IDs from Engineering English Packages.
     </a>
     (does not include the invalid message IDs found from scanning the sources directly).
     </p>
@@ -1503,7 +1555,7 @@ $htmlOutIntroduction .= <<"EOF";
     <p>
     While this script was run, /etc/apt/sources.list contained:<br>
     $etc_apt_sources_list_contents
-    i.e. the engineering English packages and source packages
+    i.e. the Engineering English packages and source packages
     listed below were downloaded from these repositories.
     </p>
 EOF
