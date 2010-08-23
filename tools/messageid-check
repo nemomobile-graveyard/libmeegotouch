@@ -20,7 +20,7 @@ binmode STDERR, ":utf8";
 #----------------------------------------------------------------------
 # global variables
 
-my $version = "0.20100820";
+my $version = "0.20100823";
 
 my $original_wd;
 chomp ($original_wd = `pwd`);
@@ -94,10 +94,112 @@ my @engineeringEnglishPackagesBroken = (
 
 my @engineeringEnglishPackages = ();
 
-my @sourcePackages = (
+my @sourcePackagesToDownloadAndScan = (
+    "aab-contacts-plugin",
+    "accessiblemeego",
+    "account-plugin-att",
+    "account-plugin-google",
+    "accounts-ui",
+    "applauncherd",
+    "applifed",
+    "browserservicefw",
     "calc",
+    "caldav-plugin",
     "calendar",
+    "call-history",
+    "call-ui",
+    "camera-ui",
+    "cellular-adaptation-ui",
+    "clock",
+    "colorpicker",
+    "commhistory-daemon",
+    "conn-dui-bluetooth",
+    "conn-dui-cellular",
+    "conn-dui-common",
+    "conn-dui-internet",
+    "conn-dui-wlan",
+    "connectivity-bearer-mgmt-test",
+    "contacts",
+    "contacts-application",
+    "contentmanager",
+    "cp-ombservice",
+    "crash-reporter",
+    "devicelock",
+    "duicontrolpanel",
+    "duicontrolpanel-datetimeapplet",
+    "duicontrolpanel-languageapplet",
+    "duicontrolpanel-regionformatapplet",
+    "duicontrolpanel-soundsettingsapplet",
+    "duicontrolpanel-ui-tests",
+    "duifennec-virtualmouse-extension",
+    "duihelp",
+    "duihome",
+    "feedreader",
+    "feedsettings",
+    "fenix",
     "gallery",
+    "libas-common-utils",
+    "libcontentaction",
+    "libdatepicker",
+    "libdialerui",
+    "libextendedkcal-tests",
+    "liblocationpicker",
+    "libmcontentwidgets",
+    "libprofile-qt",
+    "libresourceqt",
+    "libshare-ui",
+    "libtimepicker",
+    "libvideosettings",
+    "locationsettings",
+    "mcompositor",
+    "mcontrolpanel-telecoilapplet",
+    "media-suite-lib",
+    "meego-im-framework",
+    "meego-keyboard",
+    "meego-vkb-magnifier",
+    "meegofeedback-reactionmaps",
+    "meegotouch-tests",
+    "meegotouch-visual-benchmark",
+    "messaging-service",
+    "messaging-ui",
+    "mms-ui",
+    "mwelcome",
+    "mwts-security-tests",
+    "nokia-maps",
+    "nokiamessagingemail",
+    "notification-engine",
+    "presence-ui",
+    "qmsystem-demo",
+    "recipients-editor",
+    "signon-ui",
+    "socialprovider-ovi",
+    "sync-ui",
+    "system-ui",
+    "systemui-applets",
+    "transfer-ui",
+    "userguide",
+    "userguide-ui-tests",
+    "video-suite",
+    "webupload-engine",
+    "webupload-services",
+    "wrt",
+    "xulrunner",
+    );
+
+# source packages which should be ignored. Possible reasons to ignore:
+#   - they have nothing to do with translations
+#   - they contain only demos
+#   - then cannot be downloaded for whatever reason
+#   - other ?
+my @sourcePackagesIgnore = (
+    "libmeegotouch",
+    "nokia-maps", # fails to download
+    "wrt",        # does this need to be scanned? I guess not.
+    "xulrunner",  # does this need to be scanned? I guess not.
+    );
+
+# source packages which should be ignored, e.g. because they are obsolete
+my @sourcePackagesObsolete = (
     );
 
 my @sourcePackagesScanned = ();
@@ -259,7 +361,8 @@ EOF
 
 sub getEngineeringEnglishPackageList {
     my @engineeringEnglishPackagesKnownToApt = ();
-    open (PKGLIST, "apt-cache search l10n-engineering-english |") || die "Can’t open apt-cache search l10n-engineering-english | : $!";
+    open (PKGLIST, "apt-cache search l10n-engineering-english |")
+        || die "Can’t open apt-cache search l10n-engineering-english | : $!";
     binmode PKGLIST, ":utf8";
     while (<PKGLIST>) {
         if ($ARG =~ /(^[^ ]+)/) {
@@ -302,14 +405,23 @@ sub download {
     mkdir ("$OPT_SOURCEPACKAGES_DIR") || die "Can’t mkdir $OPT_SOURCEPACKAGES_DIR: $!\n";
     chdir ("$OPT_SOURCEPACKAGES_DIR") || die "Can’t cd to $OPT_SOURCEPACKAGES_DIR: $!\n";
 
-    for my $sourcePackage (@sourcePackages) {
-        my $command = "fakeroot apt-get source $sourcePackage";
-        if (mySystem($command)) {
-            printf (STDERR "“%s” didn’t work.\n", $command);
-            exit (1);
+    for my $sourcePackage (@sourcePackagesToDownloadAndScan) {
+        if (grep (/^${sourcePackage}$/, @sourcePackagesIgnore)
+            || grep (/^${sourcePackage}$/, @sourcePackagesObsolete)) {
+            if ($OPT_VERBOSITY >=1) {
+                printf STDOUT "do not try to download ignored source package %s\n",
+                        $sourcePackage;
+            }
         }
         else {
-            printf (STDOUT "“%s” OK.\n", $command);
+            my $command = "fakeroot apt-get source $sourcePackage";
+            if (mySystem($command)) {
+                printf (STDERR "“%s” didn’t work.\n", $command);
+                exit (1);
+            }
+            else {
+                printf (STDOUT "“%s” OK.\n", $command);
+            }
         }
     }
 
@@ -357,6 +469,56 @@ sub download {
         open (TS, ">:encoding(UTF-8)", "$file") || die "Can’t open file $file: $!";
         printf(TS "%s", $fileContents);
         close (TS);
+    }
+}
+
+sub checkListOfSourcePackagesDependingOnLibmeegotouch {
+    my %binaryPackagesDependingOnLibmeegotouch = ();
+    my %sourcePackagesDependingOnLibmeegotouch = ();
+    open (PKGLIST, "apt-cache rdepends libmeegotouchcore0 |")
+        || die "Can’t open apt-cache rdepends libmeegotouchcore0 | : $!";
+    binmode PKGLIST, ":utf8";
+    while (<PKGLIST>) {
+        if ($ARG =~ /libmeegotouchcore0/ || $ARG =~ /Reverse Depends:/) {
+            next;
+        }
+        if ($ARG =~ /^[[:space:]]*([^[:space:]]+)[[:space:]]*$/) {
+            if ($OPT_VERBOSITY >=2) {
+                printf STDOUT "found binary package %s depending on libmeegotouchcore0\n",
+                $1;
+            }
+            $binaryPackagesDependingOnLibmeegotouch{$1} = "yes";
+        }
+    }
+    close (PKGLIST);
+    for my $binaryPackage (sort (keys %binaryPackagesDependingOnLibmeegotouch)) {
+        my $sourcePackage = "";
+        open (APTSHOW, "apt-cache show $binaryPackage |")
+            || die "Can’t open apt-cache show $binaryPackage | : $!";
+        while(<APTSHOW>) {
+            if ($ARG =~ /Source:\s+(.+)$/) {
+                $sourcePackage = $1
+            }
+        }
+        if ($sourcePackage ne "") {
+            $sourcePackagesDependingOnLibmeegotouch{$sourcePackage} = "yes";
+        }
+        close (APTSHOW);
+    }
+    my @missingSourcePackages = ();
+    for my $sourcePackage (sort (keys %sourcePackagesDependingOnLibmeegotouch)) {
+        if (!grep (/^${sourcePackage}$/, @sourcePackagesToDownloadAndScan)
+            && !grep (/^${sourcePackage}$/, @sourcePackagesIgnore)
+            && !grep (/^${sourcePackage}$/, @sourcePackagesObsolete)) {
+            push (@missingSourcePackages, $sourcePackage);
+        }
+    }
+    if ($#missingSourcePackages >= 0) {
+        printf STDERR "The following source packages have binary packages depending on libmeegotouch but are not included in the list of packages to download and scan and are not explicitely ignore either:\n";
+        for my $missingPackage (@missingSourcePackages) {
+            printf STDERR "missing source package: %s\n", $missingPackage;
+        }
+        myExit (1);
     }
 }
 
@@ -539,7 +701,7 @@ sub getIdsFromSourcePackages {
     @sourcePackagesScanned = glob ("$OPT_SOURCEPACKAGES_DIR/*.tar.gz");
     my $sourcePackagesTsFile = "$OPT_SOURCEPACKAGES_DIR/sourcepackages.ts";
     unlink ($sourcePackagesTsFile);
-    my $command = "lupdate /usr/bin/lupdate -locations absolute -no-ui-lines -no-sort $OPT_SOURCEPACKAGES_DIR -ts $sourcePackagesTsFile";
+    my $command = "lupdate /usr/bin/lupdate -no-obsolete -locations absolute -no-ui-lines -no-sort -extensions ui,c,c++,cc,cpp,cxx,ch,h,h++,hh,hpp,hxx $OPT_SOURCEPACKAGES_DIR -ts $sourcePackagesTsFile";
     if (mySystem($command)) {
         printf (STDERR "“%s” didn’t work.\n", $command);
         exit (1);
@@ -1033,6 +1195,8 @@ if (!$OPT_SKIP_DOWNLOAD) {
 else {
     @handoffFiles = glob ("$OPT_HANDOFF_DIR/*.ts");
 }
+
+checkListOfSourcePackagesDependingOnLibmeegotouch();
 
 getEngineeringEnglishPackageList();
 
