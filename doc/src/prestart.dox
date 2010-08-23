@@ -106,7 +106,7 @@ state. Make sure that the application registers exactly the same D-Bus service t
 The default launch from the application grid can be simulated, for example, like this:
 
 \code
-$ dbus-send --dest=com.nokia.example --type="method_call" /org/maemo/m com.nokia.MApplicationIf.launch
+$ dbus-send --dest=com.nokia.example --print-reply --type="method_call" /org/maemo/m com.nokia.MApplicationIf.launch
 \endcode
 
 The application can also be released from the prestarted state in the code by calling
