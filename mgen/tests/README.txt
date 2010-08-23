@@ -1,6 +1,6 @@
-These files are to test for regressions when regexes are changed in duigen.
+These files are to test for regressions when regexes are changed in mgen.
 
 For example:
 
-../duigen --model duigentest.h
-git diff gen_duigentestdata.{cpp,h}
+../mgen --model mgentest.h
+git diff gen_mgentestdata.{cpp,h}
