@@ -248,7 +248,7 @@ void MImageWidget::zoomFactor(qreal *fx, qreal *fy) const
 
         buffer = imageSize;
 
-        QSizeF marginSize = QSizeF(style()->marginLeft() + style()->marginRight(), style()->marginTop() + style()->marginTop());
+        QSizeF marginSize = QSizeF(style()->marginLeft() + style()->marginRight(), style()->marginTop() + style()->marginBottom());
         QSizeF widgetSize = size() - marginSize;
 
         buffer.scale(widgetSize, model()->aspectRatioMode());
