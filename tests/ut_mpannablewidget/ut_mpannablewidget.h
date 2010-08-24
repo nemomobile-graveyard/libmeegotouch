@@ -44,6 +44,10 @@ private slots:
 
     void mousePressAndReleaseAreDeliveredToGrabber();
     void mouseMoveIsDelieveredToGrabberIfNoPanningIsRecognized();
+    void mousePressWithNoLeftButtonIsIgnored();
+    void cancelEventStopPhysicsAndResetsStateOfWidget();
+    void pannableViewportInsidePannableViewportIgnoresMousePress();
+    void disabledWidgetShouldIgnoreMousePressAndPanEvents();
 
     void usingCustomPhysics();
     void settingNewPhysicsShouldEmitPhysicsChangeSignal();

@@ -95,29 +95,6 @@ void copyGraphicsSceneMouseEvent(QGraphicsSceneMouseEvent &target, const QGraphi
     target.setModifiers(source.modifiers());
 }
 
-
-//! \cond
-
-class MPannableWidgetGlass : public MWidget
-{
-public:
-    MPannableWidgetGlass(QGraphicsItem *parent = 0);
-    virtual ~MPannableWidgetGlass();
-
-    virtual QRectF boundingRect() const;
-
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
-    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
-    virtual void timerEvent(QTimerEvent* event);
-
-protected:
-
-    MPannableWidget *pannableWidget;
-};
-
-//! \endcond
-
 MPannableWidgetGlass::MPannableWidgetGlass(QGraphicsItem *parent) :
     MWidget(parent)
 {

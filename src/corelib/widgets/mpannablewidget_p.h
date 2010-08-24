@@ -24,6 +24,7 @@
 #include <QList>
 #include <QTimer>
 
+#include "mwidget.h"
 #include "private/mwidgetcontroller_p.h"
 
 class QPoint;
@@ -32,6 +33,24 @@ class QGraphicsItem;
 class QGraphicsSceneMouseEvent;
 class MPhysics2DPanning;
 class MPannableWidgetGlass;
+
+class MPannableWidgetGlass : public MWidget
+{
+public:
+    MPannableWidgetGlass(QGraphicsItem *parent = 0);
+    virtual ~MPannableWidgetGlass();
+
+    virtual QRectF boundingRect() const;
+
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
+    virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
+    virtual void timerEvent(QTimerEvent* event);
+
+protected:
+
+    MPannableWidget *pannableWidget;
+};
 
 class MPannableWidgetPrivate : public MWidgetControllerPrivate
 {

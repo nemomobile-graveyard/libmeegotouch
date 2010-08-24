@@ -50,13 +50,27 @@ struct PhysicsState {
         pointerPressed = false;
         pointerMoved = false;
         pointerReleased = false;
+        physicsStopped = false;
     }
 
     bool pointerPressed;
     bool pointerMoved;
     bool pointerReleased;
+    bool physicsStopped;
 };
 PhysicsState *physicsState = 0;
+
+struct MouseGrabberState {
+
+    MouseGrabberState() {
+        grabbedMouse = false;
+        ungrabbedMouse = false;
+    }
+
+    bool grabbedMouse;
+    bool ungrabbedMouse;
+};
+MouseGrabberState *mouseGrabberState = 0;
 
 //Stubs
 
@@ -67,6 +81,7 @@ void MPhysics2DPanning::start()
 
 void MPhysics2DPanning::stop()
 {
+    physicsState->physicsStopped = true;
 }
 
 void MPhysics2DPanning::pointerPress(const QPointF& /*pos*/)
@@ -92,10 +107,12 @@ void QGraphicsObject::grabGesture(Qt::GestureType, Qt::GestureFlags)
 //QGraphicsItem stubs:
 void QGraphicsItem::grabMouse()
 {
+    mouseGrabberState->grabbedMouse = true;
 }
 
 void QGraphicsItem::ungrabMouse()
 {
+    mouseGrabberState->ungrabbedMouse = true;
 }
 
 QGraphicsScene *QGraphicsItem::scene() const
@@ -192,34 +209,39 @@ void Ut_MPannableWidget::cleanupTestCase()
 void Ut_MPannableWidget::init()
 {
     dummyItem = new DummyGraphicsItem;
-    physicsState = new PhysicsState();
-    widget = new MPannableWidget();
+    physicsState = new PhysicsState;
+    mouseGrabberState = new MouseGrabberState;
+    widget = new MPannableWidget;
 }
 
 void Ut_MPannableWidget::cleanup()
 {
     delete widget;
     delete physicsState;
+    delete mouseGrabberState;
     delete dummyItem;
 }
 
 void Ut_MPannableWidget::mousePressAndReleaseAreDeliveredToGrabber()
 {
     QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
     QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setButton(Qt::LeftButton);
+
     QTimerEvent timerEvent(1);
 
-    widget->glassMousePressEvent(&pressEvent);
+    widget->d_func()->glass->mousePressEvent(&pressEvent);
 
     QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
 
     widget->d_func()->pressDeliveryTimerId = 1;    
-    widget->glassTimerEvent(&timerEvent);
+    widget->d_func()->glass->timerEvent(&timerEvent);
 
     QCOMPARE(widget->d_func()->mouseGrabber, dummyItem);
     QVERIFY2(widget->d_func()->resentList.at(0).type == QEvent::GraphicsSceneMousePress, "Mouse press was not sent");
 
-    widget->glassMouseReleaseEvent(&releaseEvent);
+    widget->d_func()->glass->mouseReleaseEvent(&releaseEvent);
 
     QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
     QCOMPARE(dummyItem->mouseReleaseReceived, true);
@@ -228,29 +250,139 @@ void Ut_MPannableWidget::mousePressAndReleaseAreDeliveredToGrabber()
 void Ut_MPannableWidget::mouseMoveIsDelieveredToGrabberIfNoPanningIsRecognized()
 {
     QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
     QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
+    moveEvent.setButton(Qt::LeftButton);
     QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
+    releaseEvent.setButton(Qt::LeftButton);
+
     QTimerEvent timerEvent(1);
 
-    widget->glassMousePressEvent(&pressEvent);
+    widget->d_func()->glass->mousePressEvent(&pressEvent);
 
     QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
 
     widget->d_func()->pressDeliveryTimerId = 1;
-    widget->glassTimerEvent(&timerEvent);
+    widget->d_func()->glass->timerEvent(&timerEvent);
 
     QCOMPARE(widget->d_func()->mouseGrabber, dummyItem);
     QVERIFY2(widget->d_func()->resentList.at(0).type == QEvent::GraphicsSceneMousePress, "Mouse press was not sent");
 
-    widget->glassMouseMoveEvent(&moveEvent);
+    widget->d_func()->glass->mouseMoveEvent(&moveEvent);
     QCOMPARE(widget->d_func()->mouseGrabber, dummyItem);
     QCOMPARE(dummyItem->mouseMoveReceived, true);
     QCOMPARE(dummyItem->mouseReleaseReceived, false);
 
-    widget->glassMouseReleaseEvent(&releaseEvent);
+    widget->d_func()->glass->mouseReleaseEvent(&releaseEvent);
 
     QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
     QCOMPARE(dummyItem->mouseReleaseReceived, true);
+}
+
+void Ut_MPannableWidget::mousePressWithNoLeftButtonIsIgnored()
+{
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::RightButton);
+
+    widget->d_func()->glass->mousePressEvent(&pressEvent);
+
+    QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
+    QCOMPARE(widget->d_func()->pressDeliveryTimerId, 0);
+    QVERIFY(pressEvent.isAccepted() == false);
+}
+
+void Ut_MPannableWidget::pannableViewportInsidePannableViewportIgnoresMousePress()
+{
+    MPannableWidget *innerWidget = new MPannableWidget(widget);
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+
+    innerWidget->d_func()->glass->mousePressEvent(&pressEvent);
+
+    QCOMPARE(innerWidget->d_func()->mouseGrabber, (QGraphicsItem*)0);
+    QCOMPARE(innerWidget->d_func()->pressDeliveryTimerId, 0);
+    QVERIFY(pressEvent.isAccepted() == false);
+}
+
+void Ut_MPannableWidget::cancelEventStopPhysicsAndResetsStateOfWidget()
+{
+    QPanGesture panGesture;
+
+    QList<QGesture*> gestureList;
+    gestureList.append(&panGesture);
+    QGestureEvent event(gestureList);
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+
+    QTimerEvent timerEvent(1);
+
+
+    widget->d_func()->glass->mousePressEvent(&pressEvent);      //mousePress delivered to glass,
+                                                                //delivery timer is started.
+    widget->d_func()->pressDeliveryTimerId = 1;
+    widget->d_func()->glass->timerEvent(&timerEvent);           //timer expired, mouse press should be delivered to
+                                                                //the widget inside pannable widget.
+
+    QCOMPARE(widget->d_func()->mouseGrabber, dummyItem);
+
+    currentPanState = Qt::GestureStarted;
+    widget->panGestureEvent(&event, &panGesture);
+    QCOMPARE(physicsState->pointerPressed, true);
+    QCOMPARE(physicsState->pointerMoved, true);
+    QCOMPARE(physicsState->pointerReleased, false);
+
+    QCOMPARE(mouseGrabberState->ungrabbedMouse, true);          //pannable widget ungrabbed mouse;
+    QCOMPARE(mouseGrabberState->grabbedMouse, true);            //and grabbed it again later.
+
+    MCancelEvent cancelEvent;                                   //Sending cancel event
+    widget->cancelEvent(&cancelEvent);
+
+    mouseGrabberState->grabbedMouse = false;
+    mouseGrabberState->ungrabbedMouse = false;
+
+    QCOMPARE(physicsState->pointerReleased, true);              //Pannable widget should reset it's state
+    QCOMPARE(physicsState->physicsStopped, true);               //after cancel event.
+    QCOMPARE(mouseGrabberState->grabbedMouse, false);
+}
+
+void Ut_MPannableWidget::disabledWidgetShouldIgnoreMousePressAndPanEvents()
+{
+    widget->setEnabled(false);
+
+    QCOMPARE(physicsState->pointerPressed, false);
+    QCOMPARE(physicsState->pointerMoved, false);
+    QCOMPARE(physicsState->pointerReleased, true);              //Disabling widget resets the state of physics.
+    physicsState->pointerReleased = false;                      //Cleaning up the state tracker.
+
+    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
+    pressEvent.setButton(Qt::LeftButton);
+
+    widget->d_func()->glass->mousePressEvent(&pressEvent);
+
+    QCOMPARE(physicsState->pointerPressed, false);
+    QCOMPARE(physicsState->pointerMoved, false);
+    QCOMPARE(physicsState->pointerReleased, false);
+
+    QCOMPARE(widget->d_func()->mouseGrabber, (QGraphicsItem*)0);
+    QCOMPARE(widget->d_func()->pressDeliveryTimerId, 0);
+    QVERIFY(pressEvent.isAccepted() == false);
+
+    QPanGesture panGesture;
+
+    QList<QGesture*> gestureList;
+    gestureList.append(&panGesture);
+    QGestureEvent event(gestureList);
+
+    currentPanState = Qt::GestureStarted;
+    panGesture.setOffset(QPointF(100,0));
+
+    widget->panGestureEvent(&event, &panGesture);
+    QCOMPARE(physicsState->pointerPressed, false);
+    QCOMPARE(physicsState->pointerMoved, false);
+    QCOMPARE(physicsState->pointerReleased, false);
+    QCOMPARE(event.isAccepted(&panGesture), false);
 }
 
 void Ut_MPannableWidget::panGestureMovesPhysicsPointer()
