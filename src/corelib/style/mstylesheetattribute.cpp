@@ -267,18 +267,6 @@ public:
 
 static QtDatatypeConverter DataTypeConverter;
 
-int MStyleSheetAttribute::mmToInt(qreal mm)
-{
-    static const int pixelsPerMm = MDeviceProfile::instance()->pixelsPerInch().width() / 25.4;
-    return mm * pixelsPerMm;
-}
-
-qreal MStyleSheetAttribute::mmToReal(qreal mm)
-{
-    static const qreal pixelsPerMm = MDeviceProfile::instance()->pixelsPerInch().width() / 25.4;
-    return mm * pixelsPerMm;
-}
-
 int MStyleSheetAttribute::attributeToInt(const QString &attribute, bool *conversionOk)
 {
     QString value = attribute.trimmed();
@@ -293,7 +281,7 @@ int MStyleSheetAttribute::attributeToInt(const QString &attribute, bool *convers
         // strip "mm" from the end
         value.truncate(value.length() - 2);
 
-        return mmToInt(value.toFloat(conversionOk));
+        return MDeviceProfile::instance()->mmToPixels(value.toFloat(conversionOk));
     }
 
     return value.toInt(conversionOk);
@@ -342,7 +330,7 @@ qreal MStyleSheetAttribute::attributeToFloat(const QString &attribute, bool *con
         // strip "mm" from the end
         value.truncate(value.length() - 2);
 
-        return mmToReal(value.toFloat(conversionOk));
+        return MDeviceProfile::instance()->mmToPixelsF(value.toFloat(conversionOk));
     }
 
     return value.toFloat(conversionOk);

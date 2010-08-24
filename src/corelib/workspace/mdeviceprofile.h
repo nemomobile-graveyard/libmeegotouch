@@ -54,8 +54,14 @@ public:
     //! Return whether the status bar should be shown on target device
     bool showStatusbar() const;
 
-	//! Returns true if orientation angle is supported for given keyboard state.
+    //! Returns true if orientation angle is supported for given keyboard state.
     bool orientationAngleIsSupported(M::OrientationAngle angle, bool isKeyboardOpen) const;
+
+    //! Returns the number of pixels required to display a length of \a mm millimeters on this device.
+    int mmToPixels(qreal mm);
+
+    //! Returns the number of pixels required to display a length of \a mm millimeters on this device using floating point precision.
+    qreal mmToPixelsF(qreal mm);
 
 protected:
     MDeviceProfilePrivate *const d_ptr;

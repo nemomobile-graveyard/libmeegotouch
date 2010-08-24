@@ -40,10 +40,10 @@
 
 namespace{
 #ifdef HAVE_DBUS
-    const QString PIXMAP_PROVIDER_DBUS_SERVICE = "com.meego.core.MStatusBar";
+    static const QString pixmapProviderDbusService = "com.meego.core.MStatusBar";
+    static const qreal mmPerInch = 25.4;
 #endif
 }
-
 
 MDeviceProfilePrivate::MDeviceProfilePrivate()
     : q_ptr(0)
@@ -115,6 +115,9 @@ bool MDeviceProfilePrivate::load(const QString& filename)
         pixelsPerInch.setHeight(QApplication::desktop()->physicalDpiY());
     else
         pixelsPerInch.setHeight(settings.value("/ppi/Y", 0).toInt());
+
+    pixelsPerMm = pixelsPerInch.width() / mmPerInch;
+    pixelsPerMmF = pixelsPerInch.width() / mmPerInch;
 
     if (settings.value("/other/showStatusBar").toString() == "autodetect")
         showStatusBar = hasStatusbarProvider();
@@ -198,6 +201,7 @@ QSize MDeviceProfile::resolution() const
 QSize MDeviceProfile::pixelsPerInch() const
 {
     Q_D(const MDeviceProfile);
+
     return d->pixelsPerInch;
 }
 
@@ -233,8 +237,22 @@ void MDeviceProfilePrivate::autodetection()
 bool MDeviceProfilePrivate::hasStatusbarProvider()
 {
 #ifdef HAVE_DBUS
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(PIXMAP_PROVIDER_DBUS_SERVICE))
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(pixmapProviderDbusService))
         return true;
 #endif
     return false;
+}
+
+int MDeviceProfile::mmToPixels(qreal mm)
+{
+    Q_D(const MDeviceProfile);
+
+    return mm * d->pixelsPerMm;
+}
+
+qreal MDeviceProfile::mmToPixelsF(qreal mm)
+{
+    Q_D(const MDeviceProfile);
+
+    return mm * d->pixelsPerMmF;
 }

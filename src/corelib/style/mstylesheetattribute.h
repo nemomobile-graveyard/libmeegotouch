@@ -51,8 +51,6 @@ public:
     QString constValue; //original parsed value containing the $CONSTANT definitions
     qint64 position;    //used for providing detailed css parse error output (linenumber)
 
-    static int mmToInt(qreal mm);
-    static qreal mmToReal(qreal mm);
     static int attributeToInt(const QString &attribute, bool *conversionOk);
     static int attributeToInt(const QString &attribute, bool *conversionOk, SizeAttributeType type, M::Orientation orientation);
     static qreal attributeToFloat(const QString &attribute, bool *conversionOk);

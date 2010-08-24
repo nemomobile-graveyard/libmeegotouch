@@ -45,6 +45,9 @@ public:
     QSet<M::OrientationAngle> supportedOrientationsForKeyboardClosed;
 protected:
     MDeviceProfile *q_ptr;
+private:
+    int pixelsPerMm;
+    qreal pixelsPerMmF;
 };
 
 #endif
