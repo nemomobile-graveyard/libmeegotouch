@@ -1596,14 +1596,17 @@ void MSliderView::applyStyle()
 void MSliderView::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MSliderView);
-    if (d->isCollision(event)) {
-        d->valueWhenPressed = model()->value();
-        d->controller->setState(MSliderModel::Pressed);
-        d->valueWhenFeedback = d->valueWhenPressed;
-        d->feedbackTimer.start();
-        style()->pressFeedback().play();
-        d->updateValue(event);
-        d->pressTimerId = startTimer(100);
+
+    if (d->controller->isVisible() && d->controller->isOnDisplay()) {
+        if (d->isCollision(event)) {
+            d->valueWhenPressed = model()->value();
+            d->controller->setState(MSliderModel::Pressed);
+            d->valueWhenFeedback = d->valueWhenPressed;
+            d->feedbackTimer.start();
+            style()->pressFeedback().play();
+            d->updateValue(event);
+            d->pressTimerId = startTimer(100);
+        }
     }
 }
 
@@ -1611,6 +1614,7 @@ void MSliderView::cancelEvent(MCancelEvent *event)
 {
     Q_UNUSED(event);
     Q_D(MSliderView);
+
     d->controller->setState(MSliderModel::Released);
 
     style()->cancelFeedback().play();
@@ -1649,6 +1653,7 @@ void MSliderView::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 void MSliderView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MSliderView);
+
     if (d->controller->state() == MSliderModel::Pressed) {
         d->playSliderMoveFeedback(d->updateValue(event));
 
