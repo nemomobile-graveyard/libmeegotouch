@@ -57,18 +57,16 @@ void CheckboxPage::createContent()
     checkboxLabel = new MLabel();
     checkboxLabel->setWordWrap(true);
     checkboxLabel->setTextElide(false);
-    
     checkboxLabel->setMinimumWidth(0);
     checkboxLabel->setPreferredWidth(0);
-    checkboxLabel->setAlignment( Qt::AlignCenter );
+    checkboxLabel->setAlignment(Qt::AlignVCenter);
     checkboxLabel->setSizePolicy( QSizePolicy::Expanding, QSizePolicy::Expanding );
-
     // Layout for checkbox and it's infolabel
     QGraphicsLinearLayout *l = new QGraphicsLinearLayout(Qt::Horizontal);
-    l->addItem(checkbox);
     l->addItem(checkboxLabel);
-    l->setAlignment(checkbox, Qt::AlignCenter);
-    l->setAlignment(checkboxLabel, Qt::AlignCenter);
+    l->addItem(checkbox);
+    l->setAlignment(checkbox, Qt::AlignVCenter);
+    l->setAlignment(checkboxLabel, Qt::AlignVCenter);
     containerPolicy->addItem(l);
     containerPolicy->addStretch();
     retranslateUi();
