@@ -93,15 +93,15 @@ protected:
     static MComponentCachePrivate* const d_ptr;
 
 private:
-    
+
     Q_DISABLE_COPY(MComponentCache)
-    
+
     MComponentCache();
 
     /* QGLWidget object returned by glWidget is owned by the caller */
     static QGLWidget* glWidget();
     static QGLWidget* glWidget(const QGLFormat& format);
-    friend class MApplicationWindow; 
+    friend class MApplicationWindow;
     friend class MWindowPrivate;
 
 #ifdef UNIT_TEST

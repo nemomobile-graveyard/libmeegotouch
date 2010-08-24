@@ -222,7 +222,7 @@ private:
     friend class MSceneWindow;
     friend class MTheme;
     friend class MDeviceProfile;
-    friend class MComponentCachePrivate; /* reinit()s the data */
+    friend class MComponentCachePrivate;
 };
 
 #endif

@@ -1000,8 +1000,10 @@ void MComponentData::registerWindow(MWindow *w)
     if (!gMComponentDataPrivate) {
         qFatal("MComponentData::registerWindow() - MComponentData instance not yet created.");
     }
-    if (!gMComponentDataPrivate->windows.contains(w))
+    if (!MComponentCache::populating() &&
+        !gMComponentDataPrivate->windows.contains(w)) {
         gMComponentDataPrivate->windows.append(w);
+    }
 }
 
 void MComponentData::unregisterWindow(MWindow *w)
