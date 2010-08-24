@@ -1042,7 +1042,7 @@ bool MWindow::event(QEvent *event)
             updateNeeded = true;
         } else if (Qt::Key_T == k->key() && d->debugShortcutModifiersPresent(k->modifiers())) {
             QPixmap screenshot;
-            screenshot = QPixmap::grabWindow(QApplication::desktop()->winId());
+            screenshot = QPixmap::grabWindow(winId());
 
             QString path;
             if (QDir(ImagesPath).exists())
