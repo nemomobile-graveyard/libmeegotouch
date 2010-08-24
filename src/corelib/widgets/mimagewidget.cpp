@@ -296,34 +296,10 @@ void MImageWidget::setCrop(const QRectF &rect)
     if (d->pixmap == 0 && d->image.isNull())
         return;
 
-    if (rect.size().width() < 0 || rect.size().height() < 0)
+    if (!rect.isValid())
         return;
 
-    QSizeF imageSize = this->imageSize();
-
-    // protect the crop section size not beyond the image size
-    QRectF r;
-
-    if (rect.isValid()) {
-        qreal dx = rect.x();
-        qreal dy = rect.y();
-
-        if (dx < 0 || dx > imageSize.width() - 2)
-            dx = -1;
-        if (dy < 0 || dy > imageSize.height() - 2)
-            dy = -1;
-
-        r.setX(dx);
-        r.setY(dy);
-    } else {
-        r.setX(rect.x());
-        r.setY(rect.y());
-    }
-
-    r.setWidth(qMin(imageSize.width(), rect.width()));
-    r.setHeight(qMin(imageSize.height(), rect.height()));
-
-    model()->setCrop(r);
+    model()->setCrop(rect);
 }
 
 QRectF MImageWidget::crop() const
