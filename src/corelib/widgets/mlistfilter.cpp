@@ -83,7 +83,12 @@ MPannableViewport* MListFilterPrivate::pannableViewport()
 }
 
 MListFilter::MListFilter(MList *parent)
-: list(parent), filterEditor(NULL), filterProxy(NULL), filteringEnabled(false), d_ptr(new MListFilterPrivate)
+    : list(parent),
+      filterEditor(NULL),
+      filterProxy(NULL),
+      filteringEnabled(false),
+      d_ptr(new MListFilterPrivate),
+      filteringMode(MListFilter::FilterAsSubstring)
 {
     Q_D(MListFilter);
 
@@ -173,7 +178,22 @@ void MListFilter::keyPressEvent(QKeyEvent *event)
 
 void MListFilter::editorTextChanged()
 {
-    QRegExp regExp(filterProxy->filterRegExp());
-    regExp.setPattern(filterEditor->text());
-    filterProxy->setFilterRegExp(regExp);
+    if(filteringMode != MListFilter::FilterByApplication) {
+        QRegExp regExp(filterProxy->filterRegExp());
+        if(filteringMode == MListFilter::FilterAsSubstring)
+            regExp.setPattern(filterEditor->text());
+        else if(filteringMode == MListFilter::FilterAsBeginningOfLine && filterEditor->text().length())
+            regExp.setPattern('^' + filterEditor->text());
+        filterProxy->setFilterRegExp(regExp);
+    }
+}
+
+void MListFilter::setFilterMode(MListFilter::FilterMode mode)
+{
+    filteringMode = mode;
+}
+
+MListFilter::FilterMode MListFilter::filterMode() const
+{
+    return filteringMode;
 }

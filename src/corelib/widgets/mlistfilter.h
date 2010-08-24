@@ -37,24 +37,21 @@ class QKeyEvent;
  * MListFilter creates a text editor and an item proxy model to be used to filter MList items.
  * Application is responsible of putting the text editor into layout.
  *
- * By default MListFilter uses regular expression with case insensitivity and text editor 
- * content as a pattern which works as substring search. If you want to use any other content 
- * in the pattern you can set your own regular expression when text editor content changes.
+ * MListFilter filters items to match text editor content as a substring by default. This behaviour
+ * can be changed with setFilterMode. See FilterMode description for details.
  *
- * See http://doc.trolltech.com/4.6/qsortfilterproxymodel.html for how to change case 
- * sensitivity and how to access regular expression.
- *
- * Example of using list filtering with a caret in the regular expression:
+ * Example of using list filtering with a custom regular expression by application:
  * \code
  *
  * list->filtering()->setEnabled(true);
+ * list->filtering()->setFilterMode(MListFilter::FilterByApplication);
  * connect(list->filtering()->editor(), SIGNAL(textChanged()), this, SLOT(liveFilteringTextChanged()));
  * ...
  *
  * void MListPage::liveFilteringTextChanged()
  * {
  * QRegExp regExp(list->filtering()->proxy()->filterRegExp());
- * regExp.setPattern('^' + list->filtering()->editor()->text()); // matches in the beginning of line
+ * regExp.setPattern('^' + list->filtering()->editor()->text());
  * list->filtering()->proxy()->setFilterRegExp(regExp);
  * ...
  *
@@ -66,6 +63,23 @@ class M_EXPORT MListFilter : public QObject
     Q_OBJECT
 
 public:
+    /*!
+      This enumerated type is used by MListFilter to indicate how it filters items.
+      */
+    enum FilterMode {
+        /*!
+          Items are filtered to match text edit content as a substring
+          */
+        FilterAsSubstring,
+        /*!
+          Items are filtered to match text edit content in the beginning of line
+          */
+        FilterAsBeginningOfLine,
+        /*!
+          Application sets a regular expression by itself whenever text edit content changes.
+          */
+        FilterByApplication
+    };
 
     /*!
      * \brief Default constructor. Constructs the list filter.
@@ -116,6 +130,17 @@ public:
      */
     void keyPressEvent(QKeyEvent *event);
 
+    /*!
+     * \brief Sets filter mode. By default FilterBySubstring is set.
+     * Check FilterMode enumeration for details.
+     */
+    void setFilterMode(MListFilter::FilterMode mode);
+
+    /*!
+     * \return filter mode of a list
+     */
+    MListFilter::FilterMode filterMode() const;
+
 public Q_SLOTS:
 
     /*!
@@ -145,6 +170,7 @@ private:
     MSortFilterProxyModel *filterProxy;
     bool filteringEnabled;
     MListFilterPrivate *d_ptr;
+    FilterMode filteringMode;
 };
 
 #endif
