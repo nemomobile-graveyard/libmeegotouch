@@ -23,11 +23,13 @@
 #include <QPixmap>
 #include <QSignalSpy>
 #include <QGraphicsSceneMouseEvent>
+#include <mapplication.h>
 
 #include <mimagewidget.h>
-#include "mcomponentdata.h"
 
 #include "ut_mimagewidget.h"
+
+MApplication *app(NULL);
 
 Ut_MImageWidget::Ut_MImageWidget() :
         m_subject(0)
@@ -38,12 +40,9 @@ void Ut_MImageWidget::initTestCase()
 {
     QImage img(qApp->applicationDirPath() + qApp->applicationDirPath() + "/ut_mimagewidget-test.png");
 
-    if (! MComponentData::instance()) {
-        static char *argv = 0;
-        static int argc = 0;
-        new MComponentData(argc, &argv, QString("ut_mimagewidget"), NULL);
-    }
-
+    static char *app_name[1] = { (char *) "./ut_mimagewidget" };
+    static int argc = 0;
+    app = new MApplication(argc, app_name);
     m_subject = new MImageWidget(&img);
     QVERIFY(m_subject != 0);
 }
@@ -52,8 +51,6 @@ void Ut_MImageWidget::cleanupTestCase()
 {
     delete m_subject;
     m_subject = 0;
-
-    delete MComponentData::instance();
 }
 
 void Ut_MImageWidget::testConstructor()
@@ -408,5 +405,5 @@ void Ut_MImageWidget::testConstructors()
     QCOMPARE ( m_subject->image(), fname );
 }
 
-QTEST_MAIN(Ut_MImageWidget);
+QTEST_APPLESS_MAIN(Ut_MImageWidget);
 
