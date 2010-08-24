@@ -115,7 +115,7 @@ void LabelPage::retranslateUi()
     //% "All Labels can be aligned left, right or center and will be "
     //% "automatically truncated if the text does not fit inside "
     //% "the given area."
-    infoLabel->setText("<a></a>" + qtTrId("xx_label_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_label_page_info_label").replace('\n', "<br>"));
     //% "Simple Label"
     simpleLabel->setText(qtTrId("xx_simple_label"));
     //% "Rich Label <b>bold</b>, <i>italic</i>, "

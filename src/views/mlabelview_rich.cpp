@@ -138,7 +138,6 @@ void MLabelViewRich::ensureDocumentIsReady()
 
         // To force it relayout text, it should be set again
         QString t = viewPrivate->model()->text();
-        t.replace(QChar('\n'), "<br>");
         textDocument.setHtml(wrapTextWithSpanTag(t));
         //textDocument.setHtml(wrapTextWithSpanTag(viewPrivate->model()->text()));
     }

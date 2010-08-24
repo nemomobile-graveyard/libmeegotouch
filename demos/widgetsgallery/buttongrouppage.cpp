@@ -177,7 +177,7 @@ void ButtonGroupPage::retranslateUi()
         "of the buttons can be selected at a time. If a group is not exclusive, "
         "multiple options from the group can be selected."
      */
-    infoLabel->setText("<a></a>" + qtTrId("xx_button_group_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_button_group_page_info_label").replace('\n', "<br>"));
 
     //% "Horizontal group"
     hLabel1->setText(qtTrId("xx_button_group_page_hlabel1"));

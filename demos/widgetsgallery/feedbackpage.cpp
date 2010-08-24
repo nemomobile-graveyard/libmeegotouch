@@ -96,7 +96,7 @@ void FeedbackPage::retranslateUi()
     //% "effect (piezo, vibra) depending on the product.\n\n"
     //% "Input feedbacks can be easily configured for "
     //% "different purposes using the theming system."
-    infoLabel->setText("<a></a>" + qtTrId("xx_input_feedback_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_input_feedback_page_info_label").replace('\n', "<br>"));
     //% "Default"
     feedbackButton1->setText(qtTrId("xx_input_feedback_page_button1"));
     //% "Different"

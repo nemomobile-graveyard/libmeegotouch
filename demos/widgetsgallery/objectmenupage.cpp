@@ -171,7 +171,7 @@ void ObjectMenuPage::retranslateUi()
     //% "The primary (single short tap) action of the "
     //% "element should not be duplicated in the Object "
     //% "Menu."
-    infoLabel->setText("<a></a>" + qtTrId("xx_objectmenu_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_objectmenu_page_info_label").replace('\n', "<br>"));
 
     //% "Friends"
     containerFriends->setTitle(qtTrId("xx_objectmenu_page_container_friends"));

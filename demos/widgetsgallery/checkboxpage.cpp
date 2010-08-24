@@ -84,7 +84,7 @@ void CheckboxPage::retranslateUi()
     //% "values, On and Off.\n\nCheckbox essentially does the "
     //% "same thing as the Switch button, so please consider "
     //% "using a Switch instead."
-    infoLabel->setText("<a></a>" + qtTrId("xx_checkbox_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_checkbox_page_info_label").replace('\n', "<br>"));
 
     //% "I have read and understood the instructions."
     checkboxLabel->setText("<a></a>" + qtTrId("xx_checkbox_page_checkbox_label"));

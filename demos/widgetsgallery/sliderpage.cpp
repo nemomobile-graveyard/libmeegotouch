@@ -176,7 +176,7 @@ void SliderPage::retranslateUi()
     //% "among which user can choose one value.\n\n"
     //% "Seekbar is a special type of Slider used for "
     //% "displaying playback status for multimedia content."
-    infoLabel->setText("<a></a>" + qtTrId("xx_slider_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_slider_page_info_label").replace('\n', "<br>"));
 
     //% "Personal data"
     ageContainer->setTitle(qtTrId("xx_slider_personal_data_label"));

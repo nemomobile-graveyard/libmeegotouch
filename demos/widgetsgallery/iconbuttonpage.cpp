@@ -87,7 +87,7 @@ void IconButtonPage::retranslateUi()
     //% "Icon button differs from push button by its visual presentation: "
     //% "it does not have button-style edges like a Push Button does.\n\n "
     //% "Icon Buttons are used in e.g. Toolbars."
-    infoLabel->setText("<a></a>" + qtTrId("xx_icon_button_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_icon_button_page_info_label").replace('\n', "<br>"));
     //% "Lorem ipsum"
     iconButton2->setText(qtTrId("xx_icon_button_page_icon_button2"));
 }

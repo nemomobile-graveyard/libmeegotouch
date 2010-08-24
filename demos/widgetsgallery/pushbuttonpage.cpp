@@ -77,7 +77,7 @@ void PushButtonPage::retranslateUi()
     //% "to invoke actions.\n\n"
     //% "A Push Button generally looks like a traditional button, "
     //% "with button-style edges."
-    infoLabel->setText("<a></a>" + qtTrId("xx_push_button_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_push_button_page_info_label").replace('\n', "<br>"));
     //% "Lorem"
     pushButton1->setText(qtTrId("xx_push_button_page_button1"));
     //% "Ipsum"

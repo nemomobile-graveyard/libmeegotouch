@@ -106,7 +106,7 @@ void SpinnerPage::retranslateUi()
     //% "Spinners can also be used in situations when duration is known, "
     //% "but available space on screen does not permit using a Progress bar.\n\n"
     //% "See the menu for examples of different use cases."
-    infoLabel->setText("<a></a>" + qtTrId("xx_spinner_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_spinner_page_info_label").replace('\n', "<br>"));
 
     //% "In application main area"
     actionInMainArea->setText(qtTrId("xx_spinner_page_application_main_area"));

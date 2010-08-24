@@ -134,7 +134,7 @@ void SwitchPage::retranslateUi()
     //% "another view or will not perform any other actions except "
     //% "to toggle the state of the button.\n\n"
     //% "Switches are used to indicate e.g. settings values"
-    infoLabel->setText("<a></a>" + qtTrId("xx_switch_page_info_label"));
+    infoLabel->setText("<a></a>" + qtTrId("xx_switch_page_info_label").replace('\n', "<br>"));
 
     //% "Headlights"
     label1->setText(qtTrId("xx_switch_page_switch1"));
