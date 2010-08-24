@@ -363,9 +363,8 @@ void Ut_MCalendar::testIcuFormatString()
     QFETCH(QString, timeLongResult);
     QFETCH(QString, timeFullResult);
 
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
-
     MLocale locale(language);
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
 
@@ -903,9 +902,8 @@ void Ut_MCalendar::testMLocaleCalendarConversionsFromMCalendar()
     QFETCH(QString, timeLongResult);
     QFETCH(QString, timeFullResult);
 
-    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
-
     MLocale locale(localeName);
+    QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
     locale.setCategoryLocale(MLocale::MLcMessages, lcMessages);
     locale.setCategoryLocale(MLocale::MLcTime, lcTime);
     locale.setCategoryLocale(MLocale::MLcNumeric, lcNumeric);
