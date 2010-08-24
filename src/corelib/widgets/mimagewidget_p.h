@@ -42,7 +42,6 @@ public:
 
     const QPixmap *pixmap;
     mutable QPixmap imagePlaceHolder;
-    QString imageName;
     QImage image;
 
     bool deletePixmap;

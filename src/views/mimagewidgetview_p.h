@@ -40,6 +40,10 @@ public:
 
     void applyStyle();
 
+    const QPixmap *createPixmapFromTheme();
+    QSize preferredImageSize();
+
+    void updateImageGeometry();
 
     QRectF drawRect;
     QRectF sourceRect;

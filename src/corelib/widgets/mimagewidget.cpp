@@ -84,11 +84,11 @@ MImageWidgetPrivate &MImageWidgetPrivate::operator=(const MImageWidgetPrivate &o
                 image = other.image;
         }
         else
-            setImageName(other.imageName, other.pixmap->size());
+            setImageName(other.q_func()->model()->imageId(), other.q_func()->model()->imageSize());
     }
 
     deletePixmap = other.deletePixmap;
-    imageName = other.imageName;
+    q_func()->setImage(other.q_func()->model()->imageId(), other.q_func()->model()->imageSize());
 
     return *this;
 }
@@ -96,16 +96,17 @@ MImageWidgetPrivate &MImageWidgetPrivate::operator=(const MImageWidgetPrivate &o
 // initialize from image name
 void MImageWidgetPrivate::setImageName(const QString &imageName, const QSize &s)
 {
-    this->imageName = imageName;
+    Q_Q(MImageWidget);
+
+    if (imageName == q->model()->imageId() && s == q->model()->imageSize())
+        return;
 
     cleanUp();
 
-    if (!imageName.isEmpty()) {
-        if (s.isValid())
-            pixmap = MTheme::pixmap(imageName, s);
-        else
-            pixmap = MTheme::pixmap(imageName);
-    }
+    q->model()->beginTransaction();
+    q->model()->setImageId(imageName);
+    q->model()->setImageSize(s);
+    q->model()->commitTransaction();
 
     deletePixmap = false;
 }
@@ -133,8 +134,7 @@ MImageWidget::MImageWidget(QGraphicsItem *parent) :
 MImageWidget::MImageWidget(const QString &imagename, QGraphicsItem *parent) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), parent)
 {
-    Q_D(MImageWidget);
-    d->setImageName(imagename);
+    setImage(imagename);
 }
 
 MImageWidget::MImageWidget(const QImage *image, QGraphicsItem *parent) :
@@ -174,17 +174,21 @@ void MImageWidget::setImage(const QString &id, const QSize &s)
 {
     Q_D(MImageWidget);
     d->setImageName(id, s);
- 
+
     model()->setCrop(QRect());
- 
+
     updateGeometry();
     update();
 }
 
 QString MImageWidget::image() const
 {
-    Q_D(const MImageWidget);
-    return d->imageName;
+    return model()->imageId();
+}
+
+QString MImageWidget::imageId() const
+{
+    return model()->imageId();
 }
 
 QSize MImageWidget::imageSize() const
@@ -329,18 +333,13 @@ QRectF MImageWidget::crop() const
 
 void MImageWidget::setImage(const QString &id)
 {
-    Q_D(MImageWidget);
-    d->setImageName(id);
-
-    model()->setCrop(QRect());
-
-    updateGeometry();
-    update();
+    setImage(id, QSize());
 }
 
 void MImageWidget::setImage(const QImage &image)
 {
     Q_D(MImageWidget);
+    d->setImageName(QString());
 
     d->cleanUp();
     d->image = image;
@@ -355,6 +354,7 @@ void MImageWidget::setImage(const QImage &image)
 void MImageWidget::setPixmap(const QPixmap &pixmap)
 {
     Q_D(MImageWidget);
+    d->setImageName(QString());
 
     d->cleanUp();
     d->pixmap = new QPixmap(pixmap);

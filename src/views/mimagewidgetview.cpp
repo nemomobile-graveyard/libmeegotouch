@@ -204,6 +204,40 @@ void MImageWidgetViewPrivate::applyStyle()
     bottomBorder = q->style()->borderBottom();
 }
 
+const QPixmap *MImageWidgetViewPrivate::createPixmapFromTheme()
+{
+    QSize imageSize = controller->model()->imageSize();
+    QString imageId = controller->imageId();
+
+    if (!imageSize.isValid() || imageSize.isNull())
+        imageSize = preferredImageSize();
+
+    if (!imageSize.isValid())
+        return MTheme::pixmap(imageId);
+
+    return MTheme::pixmap(imageId, imageSize);
+}
+
+QSize MImageWidgetViewPrivate::preferredImageSize()
+{
+    Q_Q(MImageWidgetView);
+
+    QSize imageSize = controller->preferredSize().toSize();
+    imageSize.setWidth(imageSize.width() - (q->marginLeft() + q->marginRight()));
+    imageSize.setHeight(imageSize.height() - (q->marginTop() + q->marginBottom()));
+
+    return imageSize;
+}
+
+void MImageWidgetViewPrivate::updateImageGeometry()
+{
+    Q_Q(MImageWidgetView);
+    QSizeF imageSize = q->imageDataSize();
+
+    calculateDrawRect(imageSize);
+    calculateSourceRect(imageSize);
+}
+
 MImageWidgetView::MImageWidgetView(MImageWidget *controller) :
     MWidgetView(* new MImageWidgetViewPrivate, controller)
 {
@@ -252,9 +286,7 @@ void MImageWidgetView::setGeometry(const QRectF &rect)
     Q_D(MImageWidgetView);
     MWidgetView::setGeometry(rect);
 
-    QSizeF imageSize = d->controller->d_func()->imageDataSize();
-    d->calculateDrawRect(imageSize);
-    d->calculateSourceRect(imageSize);
+    d->updateImageGeometry();
 }
 
 void MImageWidgetView::applyStyle()
@@ -263,6 +295,9 @@ void MImageWidgetView::applyStyle()
     MWidgetView::applyStyle();
 
     d->applyStyle();
+
+    if (!model()->imageId().isEmpty())
+        d->controller->d_func()->pixmap = d->createPixmapFromTheme();
 }
 
 void MImageWidgetView::updateData(const QList<const char *> &modifications)
@@ -270,6 +305,8 @@ void MImageWidgetView::updateData(const QList<const char *> &modifications)
     Q_D(MImageWidgetView);
     MWidgetView::updateData(modifications);
 
+    bool needsGeometryUpdate = false;
+    bool needsPixmap = false;
     const char *member;
     for (int i = 0; i < modifications.count(); i++) {
         member = modifications[i];
@@ -277,14 +314,18 @@ void MImageWidgetView::updateData(const QList<const char *> &modifications)
             member == MImageWidgetModel::ZoomFactorY ||
             member == MImageWidgetModel::Crop ||
             member == MImageWidgetModel::AspectRatioMode) {
-            QSizeF imageSize = d->controller->d_func()->imageDataSize();
-
-            d->calculateDrawRect(imageSize);
-            d->calculateSourceRect(imageSize);
-
-            updateGeometry();
+            needsGeometryUpdate = true;
+        } else if (member == MImageWidgetModel::ImageId ||
+                   member == MImageWidgetModel::ImageSize) {
+            needsPixmap = true;
         }
     }
+
+    if (needsPixmap && !model()->imageId().isEmpty())
+        d->controller->d_func()->pixmap = d->createPixmapFromTheme();
+
+    if (needsGeometryUpdate || needsPixmap)
+        updateGeometry();
 }
 
 QSizeF MImageWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -308,6 +349,13 @@ QSizeF MImageWidgetView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
     if(s.width() < 0)
         s.setWidth(s2.width());
     return s;
+}
+
+QSize MImageWidgetView::imageDataSize()
+{
+    Q_D(MImageWidgetView);
+
+    return d->controller->d_func()->imageDataSize().toSize();
 }
 
 M_REGISTER_VIEW_NEW(MImageWidgetView, MImageWidget)

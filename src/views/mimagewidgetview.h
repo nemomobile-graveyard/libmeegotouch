@@ -82,6 +82,8 @@ protected:
     //! \internal_end
 
 private:
+    QSize imageDataSize();
+
     Q_DECLARE_PRIVATE(MImageWidgetView)
 };
 

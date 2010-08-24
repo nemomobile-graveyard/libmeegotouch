@@ -58,6 +58,18 @@ class M_EXPORT MImageWidgetModel : public MWidgetModel
         \brief image zoom AspectRatioMode
     */
     M_MODEL_PROPERTY(Qt::AspectRatioMode, aspectRatioMode, AspectRatioMode, true, Qt::KeepAspectRatio)
+
+    /*!
+        \property MImageWidgetModel::imageId
+        \brief Image logical id.
+    */
+    M_MODEL_PROPERTY(QString, imageId, ImageId, true, QString())
+
+    /*!
+        \property MImageWidgetModel::imageSize
+        \brief Preferred image size.
+    */
+    M_MODEL_PROPERTY(QSize, imageSize, ImageSize, true, QSize())
 };
 
 #endif

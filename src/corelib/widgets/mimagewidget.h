@@ -160,9 +160,15 @@ public:
     void setImage(const QString &id, const QSize &size);
 
     /**
-       \brief Get the image id
+       \brief Get the image id.
+       \deprecated Use the MImageWidget::imageId();
      */
     QString image() const;
+
+    /**
+       \brief Get the image id
+    */
+    QString imageId() const;
 
     /**
        \brief Get the origin size of the image.
@@ -171,6 +177,7 @@ public:
 
     /**
        \brief Get the pointer of pixmap.
+       \deprecated
      */
     const QPixmap *pixmap() const;
 
@@ -191,16 +198,19 @@ public:
     /**
        \brief This function get image zoom factor
        The parameters point to values stored in float. If any of the pointers is 0, that value will not be updated.
+       \deprecated There is no replacing functionality
      */
     void zoomFactor(qreal *fx, qreal *fy) const;
 
     /**
        \brief Zoom in image.
+       \deprecated There is no replacing functionality
      */
     void zoomIn();
 
     /**
        \brief Zoom out image.
+       \deprecated There is no replacing functionality
      */
     void zoomOut();
 
@@ -218,11 +228,13 @@ public:
     /**
        \brief Set image cropped to this recangle.
        \param size crop section rectangle
+       \deprecated There is no replacing functionality
      */
     void setCrop(const QRectF &rect);
 
     /**
        \brief Get the crop rectangle.
+       \deprecated There is no replacing functionality
      */
     QRectF crop() const;
 
