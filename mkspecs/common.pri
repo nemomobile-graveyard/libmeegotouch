@@ -10,7 +10,12 @@ QMAKE_TARGET_COPYRIGHT = Copyright (C) 2010 Nokia
 # Parts to build. Options: libs tests benchmarks demos doc debian
 #M_BUILD_PARTS = libs tests benchmarks demos doc debian
 
-#disable werrors on windows and freemantle
+# Load configure script results
+!win32: {
+    include($${M_BUILD_TREE}/mkspecs/meegotouchconfig.pri)
+}
+
+#disable werrors on windows and freemantle (HAVE_N900 comes from meegotouchconfig.pri)
 win32 {
    } else {
          contains( DEFINES, HAVE_N900 ) {
@@ -32,11 +37,6 @@ contains(TEMPLATE, app) {
 
 mac {
     INCLUDEPATH += include
-}
-
-# Load configure script results
-!win32: {
-    include($${M_BUILD_TREE}/mkspecs/meegotouchconfig.pri)
 }
 
 # Load global definitions
@@ -97,7 +97,7 @@ unix {
 
 # Compiler configuration for all subprojects in libm
 
-!win32-msvc*:QMAKE_CXXFLAGS += -g
+!win32-msvc*:QMAKE_CXXFLAGS *= -g
 
 # To use compiler cache, "export USE_CCACHE=true"
 USE_CCACHE=$$(USE_CCACHE)
