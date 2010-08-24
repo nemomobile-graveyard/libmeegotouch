@@ -560,18 +560,6 @@ M::Position MApplicationMenuViewPrivate::calculateLayoutPosition(
                   col == 0                                   ? M::CenterLeftPosition :
                   col == columnsCount-1                      ? M::CenterRightPosition :
                                                                M::CenterPosition;
-
-            // handle special case for when last row is incomplete
-            if (itemCount < rowCount*columnsCount) {
-                // last item in list
-                if (index == itemCount - 1) {
-                    pos = col == 0 ? M::VerticalBottomPosition : M::BottomRightPosition;
-                }
-                // last item in second to last row
-                else if ( (col == columnsCount-1) && (row == rowCount-2) ) {
-                    pos = row == 0 ? M::HorizontalRightPosition : M::BottomRightPosition;
-                }
-            } // last row special case
         } // 2-D layout
     }
 
