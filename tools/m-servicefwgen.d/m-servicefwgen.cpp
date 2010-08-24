@@ -27,6 +27,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QRegExp>
+#include <QDir>
 
 #include <QDomDocument>
 
@@ -36,9 +37,12 @@ public:
     Worker();
 
     void setInterfaceName( const QString& val );
+    void setInterfaceVersion( const QString& version );
+    void setQtSfwDirectory( const QString& directory );
     void setAllSignals( const QString& val );
     void setAllConnectSignalCommands( const QString& val );
 
+    void setCreateQtSfw( bool val );
     void setCreateAdaptor( bool val );
     void setCreateProxy( bool val );
 
@@ -51,16 +55,37 @@ public:
 
     void setNameSpace( const QString &nameSpace );
 
+    void setServiceName( const QString &serviceName );
+
+    void setServiceDescription( const QString &serviceDescription );
+
     QString applicationName();
     QString generatedByComment();
-    QString upperCamelServiceName();
-    QString lowerServiceName();
+    QString upperCamelInterfaceName();
+    QString lowerInterfaceName();
+    QString upperInterfaceName();
     QString xmlFileName();
     QString newXmlFileName();
     QString chainTag();
     QString asyncTag();
     QString upperCamelProxyName();
     QString nameSpace();
+    QString interfaceName();
+    QString interfaceVersion();
+    QString qtSfwDirectory();
+    QString interfaceDescription();
+    QString serviceName();
+    QString serviceXmlFileName();
+    QString lowerServiceName();
+    QString upperServiceName();
+    QString upperCamelServiceName();
+    QString servicePluginHeaderFileName();
+    QString servicePluginCppFileName();
+    QString serviceProjectFileName();
+    //QString servicePluginProxyCppFileName();
+    //QString servicePluginProxyHFileName();
+    QString serviceDescription();
+    QString qtSfwPluginPath();
 
     QString proxyHeaderFileName();
     QString proxyCppFileName();
@@ -83,14 +108,20 @@ public:
     QRegExp qdbusxml2cppRegExp();
 
     QString topBitH();
+    QString topBitHforQtSfw();
     QString middleBitH();
+    QString middleBitHforQtSfw();
     QString botBitH();
+    QString botBitHforQtSfw();
 
     QString topBitC();
+    QString topBitCforQtSfw();
     QString botBitC();
+    QString botBitCforQtSfw();
 
     QString mHeaders();
 
+    bool createQtSfw();
     bool createAdaptor();
     bool createProxy();
 
@@ -104,15 +135,17 @@ public:
     bool hasNameSpace();
 
     void preprocessXML();
-    void createConnectSignalCommands( const QStringList& ifSignals );
+    void createConnectSignalCommands( const QStringList& ifSignals, bool forQtSfw=false );
 
     void removeDocTag( QString &line );
 
 private:
     QString m_interfaceName;
+    QString m_interfaceVersion;
+    QString m_qtSfwDirectory;
 
-    QString m_upperCamelServiceName;
-    QString m_lowerServiceName;
+    QString m_upperCamelInterfaceName;
+    QString m_lowerInterfaceName;
     QString m_xmlFileName;
     QString m_newXmlFileName;
     QString m_chainTag;
@@ -134,12 +167,15 @@ private:
     QString m_proxyBase;
     QString m_adaptorBase;
     QString m_nameSpace;
+    QString m_serviceName;
+    QString m_serviceDescription;
 
     QString m_allSignals;
     QString m_allConnectSignalCommands;
 
     QStringList m_arguments;
 
+    bool m_createQtSfw;
     bool m_createAdaptor;
     bool m_createProxy;
 
@@ -155,6 +191,7 @@ Worker::Worker()
     m_asyncTag = "ASYNCTASK";
     m_docTag   = "DOCTAG";
 
+    m_createQtSfw = false;
     m_createAdaptor = false;
     m_createProxy = false;
 
@@ -171,9 +208,77 @@ QString Worker::nameSpace()
     return m_nameSpace;
 }
 
-void Worker::setNameSpace( const QString &nameSpace)
+void Worker::setNameSpace( const QString &nameSpace )
 {
     m_nameSpace = nameSpace;
+}
+
+QString Worker::serviceName()
+{
+    return m_serviceName;
+}
+
+QString Worker::servicePluginCppFileName()
+{
+    QString retVal = m_serviceName+"plugin.cpp";
+    return retVal;
+}
+
+QString Worker::serviceProjectFileName()
+{
+    QString retVal = qtSfwDirectory()+".pro";
+
+    return retVal;
+}
+
+QString Worker::servicePluginHeaderFileName()
+{
+    QString retVal = m_serviceName+"plugin.h";
+    return retVal;
+}
+
+QString Worker::serviceXmlFileName()
+{
+    QString retVal = m_serviceName+".xml";
+    return retVal;
+}
+
+QString Worker::upperCamelServiceName()
+{
+    QString retVal = m_serviceName.split(".").last();
+    return retVal;
+}
+
+QString Worker::upperServiceName()
+{
+    QString retVal = m_serviceName.toUpper();
+    return retVal;
+}
+
+QString Worker::lowerServiceName()
+{
+    QString retVal = m_serviceName.toLower();
+    return retVal;
+}
+
+void Worker::setServiceName( const QString &serviceName )
+{
+    m_serviceName = serviceName;
+}
+
+QString Worker::serviceDescription()
+{
+    return m_serviceDescription;
+}
+
+QString Worker::qtSfwPluginPath()
+{
+    return QString( "/usr/lib/maemo-meegotouch-services" );
+}
+
+void Worker::setServiceDescription( const QString &serviceDescription )
+{
+    m_serviceDescription = serviceDescription;
 }
 
 void Worker::setArguments( const int argc, const char * const argv[] )
@@ -183,36 +288,90 @@ void Worker::setArguments( const int argc, const char * const argv[] )
   }
 }
 
+QString Worker::interfaceVersion()
+{
+    return m_interfaceVersion;
+}
+
+QString Worker::qtSfwDirectory()
+{
+    QString retVal = m_qtSfwDirectory;
+
+    if ( retVal.isEmpty() ) {
+        retVal = "qtsfw";
+    }
+
+    return retVal;
+}
+
+QString Worker::interfaceDescription()
+{
+    QString retVal = classDoc();
+
+    QStringList lines = retVal.split( "\n" );
+    lines = lines.filter( "\"brief\"" );
+
+    if ( lines.count() > 0 ) {
+        retVal = lines.at(0);
+
+        {
+            QRegExp xmlCode( "<[^>]*>" );
+            QRegExp beginSpaces( "^\\s*" );
+            QRegExp endSpaces( "'\\s*$" );
+            retVal = retVal.remove( xmlCode );
+            retVal = retVal.remove( beginSpaces );
+            retVal = retVal.remove( endSpaces );
+        }
+    }
+
+    return retVal;
+}
+
+QString Worker::interfaceName()
+{
+    return m_interfaceName;
+}
+
 void Worker::setInterfaceName( const QString& interfaceName )
 {
     QString pid = QString::number(QCoreApplication::applicationPid());
 
     m_interfaceName = interfaceName;
 
-    m_upperCamelServiceName = interfaceName.split(".").last();
-    m_lowerServiceName      = m_upperCamelServiceName.toLower();
+    m_upperCamelInterfaceName = interfaceName.split(".").last();
+    m_lowerInterfaceName      = m_upperCamelInterfaceName.toLower();
 
     m_xmlFileName           = interfaceName + ".xml";
     m_newXmlFileName        = interfaceName + "-" + pid + ".xml";
 
     // if -p
-    m_upperCamelProxyName      = m_upperCamelServiceName + "Proxy";
-    m_proxyBase                = m_lowerServiceName + "proxy";
+    m_upperCamelProxyName      = m_upperCamelInterfaceName + "Proxy";
+    m_proxyBase                = m_lowerInterfaceName + "proxy";
     m_proxyCppFileName         = m_proxyBase + ".cpp";
     m_proxyHeaderFileName      = m_proxyBase + ".h";
     m_newProxyHeaderFileName   = m_proxyBase + "-" + pid + ".h";
     m_newProxyCppFileName      = m_proxyBase + "-" + pid + ".cpp";
-    m_wrapperHeaderFileName    = m_lowerServiceName + ".h";
-    m_wrapperCppFileName       = m_lowerServiceName + ".cpp";
+    m_wrapperHeaderFileName    = m_lowerInterfaceName + ".h";
+    m_wrapperCppFileName       = m_lowerInterfaceName + ".cpp";
     m_wrapperHeaderGuard       = m_wrapperHeaderFileName.toUpper().replace(".", "_");
 
     // if -a
-    m_upperCamelAdaptorName     = m_upperCamelServiceName + "Adaptor";
-    m_adaptorBase               = m_lowerServiceName + "adaptor";
+    m_upperCamelAdaptorName     = m_upperCamelInterfaceName + "Adaptor";
+    m_adaptorBase               = m_lowerInterfaceName + "adaptor";
     m_adaptorCppFileName        = m_adaptorBase + ".cpp";
     m_adaptorHeaderFileName     = m_adaptorBase + ".h";
     m_newAdaptorCppFileName     = m_adaptorBase + "-" + pid + ".cpp";
     m_newAdaptorHeaderFileName  = m_adaptorBase + "-" + pid + ".h";
+}
+
+void Worker::setQtSfwDirectory( const QString& directory )
+{
+    m_qtSfwDirectory = directory;
+}
+
+void Worker::setInterfaceVersion( const QString& interfaceVersion )
+{
+    m_interfaceVersion = interfaceVersion;
 }
 
 void Worker::setAllSignals( const QString& val )
@@ -223,6 +382,11 @@ void Worker::setAllSignals( const QString& val )
 void Worker::setAllConnectSignalCommands( const QString& val )
 {
     m_allConnectSignalCommands = val;
+}
+
+void Worker::setCreateQtSfw( bool val )
+{
+    m_createQtSfw = val;
 }
 
 void Worker::setCreateAdaptor( bool val )
@@ -266,14 +430,20 @@ QString Worker::generatedByComment()
   return lines.join( "\n" );
 }
 
-QString Worker::upperCamelServiceName()
+QString Worker::upperCamelInterfaceName()
 {
-    return m_upperCamelServiceName;
+    return m_upperCamelInterfaceName;
 }
 
-QString Worker::lowerServiceName()
+QString Worker::lowerInterfaceName()
 {
-    return m_lowerServiceName;
+    return m_lowerInterfaceName;
+}
+
+QString Worker::upperInterfaceName()
+{
+    QString retVal = m_lowerInterfaceName.toUpper();
+    return retVal;
 }
 
 QString Worker::xmlFileName()
@@ -379,6 +549,11 @@ QString Worker::adaptorBase()
 QRegExp Worker::qdbusxml2cppRegExp()
 {
     return QRegExp( "qdbusxml2cpp(?: version \\d+\\.\\d+)*" );
+}
+
+bool Worker::createQtSfw()
+{
+    return m_createQtSfw;
 }
 
 bool Worker::createAdaptor()
@@ -488,6 +663,25 @@ QString Worker::mangledMethodDoc( int id )
     return getDoxygenFromXml( m_methodDocs[ id ], 4 );
 }
 
+QString Worker::topBitHforQtSfw()
+{
+    return
+"#ifndef " + wrapperHeaderGuard() + "\n\
+#define " + wrapperHeaderGuard() + "\n\
+\n\
+/*\n"
+  + generatedByComment() + "\n\
+ */\n\
+\n\
+#include <QObject>\n\
+#include <QVariantList>\n\
+#include <QString>\n\
+#include <QStringList>\n\
+\n\
+class " + upperCamelInterfaceName() + "Proxy;\n\
+";
+}
+
 QString Worker::topBitH()
 {
     return
@@ -503,14 +697,46 @@ QString Worker::topBitH()
 #include <mservicefwbaseif.h>\n";
 }
 
-QString Worker::middleBitH()
+QString Worker::middleBitHforQtSfw()
 {
     return
-"class " + upperCamelServiceName() + " : public MServiceFwBaseIf\n\
+"class " + upperCamelInterfaceName() + " : public QObject\n\
 {\n\
 Q_OBJECT\n\
 \n\
 public:\n";
+}
+
+QString Worker::middleBitH()
+{
+    return
+"class " + upperCamelInterfaceName() + " : public MServiceFwBaseIf\n\
+{\n\
+Q_OBJECT\n\
+\n\
+public:\n";
+}
+
+QString Worker::botBitHforQtSfw()
+{
+    QString retVal =
+"\n\
+public:\n\
+    " + upperCamelInterfaceName() + "( QObject* parent = 0 );\n\
+\n\
+Q_SIGNALS:\n\
+" + m_allSignals + "\n\
+private:\n\
+    " + upperCamelInterfaceName() + "Proxy *interfaceProxy;\n\
+};\n";
+
+    if (hasNameSpace()) {
+        retVal += "\n}; // namespace\n";
+    }
+
+    retVal += "#endif\n";
+
+  return retVal;
 }
 
 QString Worker::botBitH()
@@ -526,7 +752,7 @@ public:\n\
      * @param parent Parent object\n\
      */\n\
 \n\
-    " + upperCamelServiceName() + "( const QString& preferredService = \"\", QObject* parent = 0 );\n\
+    " + upperCamelInterfaceName() + "( const QString& preferredService = \"\", QObject* parent = 0 );\n\
 \n\
     /*!\n\
      * @brief Set the service name\n\
@@ -545,6 +771,11 @@ Q_SIGNALS:\n\
     retVal += "#endif\n";
 
   return retVal;
+}
+
+QString Worker::topBitCforQtSfw()
+{
+    return topBitC();
 }
 
 QString Worker::topBitC()
@@ -568,12 +799,31 @@ QString Worker::topBitC()
     return retVal;
 }
 
+QString Worker::botBitCforQtSfw()
+{
+    QString retVal;
+
+    retVal =
+"" + upperCamelInterfaceName() + "::" + upperCamelInterfaceName() + "( QObject* parent )\n\
+{\n\
+    interfaceProxy = new " + upperCamelInterfaceName() + "Proxy( \"" + serviceName() + "\", \"/\", QDBusConnection::sessionBus(), this );\n\
+\n\
+"+m_allConnectSignalCommands + "\n\
+}\n";
+
+    if (hasNameSpace()) {
+        retVal += "\n}; // namespace";
+    }
+
+    return retVal;
+}
+
 QString Worker::botBitC()
 {
     QString retVal;
 
     retVal =
-"" + upperCamelServiceName() + "::" + upperCamelServiceName() + "( const QString& preferredService, QObject* parent )\n\
+"" + upperCamelInterfaceName() + "::" + upperCamelInterfaceName() + "( const QString& preferredService, QObject* parent )\n\
     : MServiceFwBaseIf( " + upperCamelProxyName() + "::staticInterfaceName(), parent )\n\
 {\n\
     // Resolve the provider service name\n\
@@ -593,7 +843,7 @@ QString Worker::botBitC()
     }\n\
 }\n\
 \n\
-void " + upperCamelServiceName() + "::setService(const QString & service)\n\
+void " + upperCamelInterfaceName() + "::setService(const QString & service)\n\
 {\n\
     if (service.isEmpty()) return;\n\
 \n\
@@ -614,17 +864,10 @@ void " + upperCamelServiceName() + "::setService(const QString & service)\n\
 QString Worker::mHeaders()
 {
     return
-"#include <MApplication>\n\
-#include <MApplicationWindow>\n\
-#include <MComponentData>\n\
-\
-#ifdef Q_WS_X11\n\
-#include <QX11Info>\n\
-#include <X11/Xutil.h>\n\
-#include <X11/Xlib.h>\n\
-#include <X11/Xatom.h>\n\
-#include <X11/Xmd.h>\n\
-#endif // Q_WS_X11\n\
+"\
+#include <Qt> // for Qt::HANDLE\n\
+#include <MApplication>\n\
+#include <MWindow>\n\
 ";
 }
 
@@ -737,7 +980,7 @@ void Worker::preprocessXML()
 }
 
 
-void Worker::createConnectSignalCommands( const QStringList& ifSignals )
+void Worker::createConnectSignalCommands( const QStringList& ifSignals, bool forQtSfw )
 {
     // process signals, removing void and param names
     QStringList connectSignals;
@@ -764,9 +1007,20 @@ void Worker::createConnectSignalCommands( const QStringList& ifSignals )
         }
         QString joinedTypes(typesOnly.join(","));
 
-        connectSignals.append(
-"    connect( interfaceProxy(), SIGNAL( " + signalName + "( " + joinedTypes + " ) ),\n\
-             this, SIGNAL( " + signalName + "( " + joinedTypes + " ) ) );\n");
+        if ( forQtSfw ) {
+            connectSignals.append(
+"\
+    connect( interfaceProxy, SIGNAL( " + signalName + "( " + joinedTypes + " ) ),\n\
+             this, SIGNAL( " + signalName + "( " + joinedTypes + " ) ) );\n\
+");
+        } else {
+            connectSignals.append(
+"\
+    connect( interfaceProxy(), SIGNAL( " + signalName + "( " + joinedTypes + " ) ),\n\
+             this, SIGNAL( " + signalName + "( " + joinedTypes + " ) ) );\n\
+");
+        }
+
     }
 
     setAllConnectSignalCommands( connectSignals.join( "" ) );
@@ -954,8 +1208,6 @@ void processAdaptorCppFile()
     // to replace one produced by qdbusxml2cpp
     adaptorCppFile.remove();
     newAdaptorCppFile.rename(w.adaptorCppFileName());
-
-    removeNewXmlFile();
 }
 
 void processAdaptorHeaderFile()
@@ -1104,15 +1356,12 @@ void processAdaptorHeaderFile()
     // to replace one produced by qdbusxml2cpp
     adaptorHeaderFile.remove();
     newAdaptorHeaderFile.rename(w.adaptorHeaderFileName());
-
-    // remove temporary file
-    removeNewXmlFile();
 }
 
 // this method generates the code that is needed for chaining of tasks
-void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxyHeaderStream )
+void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxyHeaderStream, bool forQtSfw )
 {
-    if (w.needsMApplication() && line.contains(QRegExp("#include <QtDBus/QtDBus>"))) {
+    if (w.needsMApplication() && line.contains(QRegExp("#include <QtDBus/QtDBus>")) && !forQtSfw ) {
         newProxyHeaderStream << line << "\n\n" << w.mHeaders();
     }
     else if (w.needsMApplication() && line.contains(w.newXmlFileName())) {
@@ -1120,9 +1369,14 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
         newProxyHeaderStream << line << "\n";
     }
     else if (inChainTask) {
-        if (line.contains("QList<QVariant>"))
+        if (line.contains("QList<QVariant> argumentList;"))
         {
-            newProxyHeaderStream << "\
+            if ( forQtSfw ) {
+                newProxyHeaderStream << line + "\n\
+        argumentList << qVariantFromValue(_parentWindowId);\n\
+        argumentList << qVariantFromValue(_taskTitle);\n";
+            } else {
+                newProxyHeaderStream << "\
         Qt::HANDLE windowId = 0;\n\
 \n\
         MWindow *win = MApplication::instance()->activeWindow();\n\
@@ -1133,6 +1387,7 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
 " + line + "\n\
         argumentList << qVariantFromValue((uint)windowId);\n\
         argumentList << qVariantFromValue(_taskTitle);\n";
+            }
         }
         else if (line.contains("return")) {
             line.remove(w.chainTag());
@@ -1147,10 +1402,18 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
         line.remove(w.chainTag());
         bool hasNoParams = line.endsWith( "()" );
 
-        if ( hasNoParams ) {
-            line.replace( ")", "const QString &_taskTitle)" );
+        if ( forQtSfw ) {
+            if ( hasNoParams ) {
+                line.replace( ")", "const uint _parentWindowId, const QString &_taskTitle)" );
+            } else {
+                line.replace( ")", ", const uint _parentWindowId, const QString &_taskTitle)" );
+            }
         } else {
-            line.replace( ")", ", const QString &_taskTitle)" );
+            if ( hasNoParams ) {
+                line.replace( ")", "const QString &_taskTitle)" );
+            } else {
+                line.replace( ")", ", const QString &_taskTitle)" );
+            }
         }
         newProxyHeaderStream << line << "\n";
         inChainTask = true;
@@ -1161,7 +1424,7 @@ void doChainTaskHandling( QString line, bool& inChainTask, QTextStream& newProxy
 }
 
 
-void processProxyHeaderFile()
+void processProxyHeaderFile( bool forQtSfw=false )
 {
     // open proxy header file for reading,
     // open the other files for writing.
@@ -1204,8 +1467,13 @@ void processProxyHeaderFile()
     QTextStream wrapperCppStream(&wrapperCppFile);
     QString previousLine;
 
-    wrapperCppStream    << w.topBitC() << endl;
-    wrapperHeaderStream << w.topBitH() << endl;
+    if ( forQtSfw ) {
+        wrapperCppStream    << w.topBitCforQtSfw() << endl;
+        wrapperHeaderStream << w.topBitHforQtSfw() << endl;
+    } else {
+        wrapperCppStream    << w.topBitC() << endl;
+        wrapperHeaderStream << w.topBitH() << endl;
+    }
 
     if ( w.hasNameSpace() ) {
         wrapperHeaderStream << "namespace " << w.nameSpace() << " {" << endl;
@@ -1242,8 +1510,13 @@ void processProxyHeaderFile()
         // add documentation and remove doc tags here
         // note that middle bit is added here too, so it's not just about doc
         if (line.contains(QRegExp("^class"))) {
-            wrapperHeaderStream << w.mangledClassDoc();
-            wrapperHeaderStream << w.middleBitH();
+            if ( forQtSfw ) {
+                // don't bother with documentation in the qtsfw header file
+                wrapperHeaderStream << w.middleBitHforQtSfw();
+            } else {
+                wrapperHeaderStream << w.mangledClassDoc();
+                wrapperHeaderStream << w.middleBitH();
+            }
         } else if (line.contains( "Command line was:")) {
           // do nothing - the replacement for this line is output by the above
         } else if ( line.contains( w.docTag() ) && !inSignalSection ) {
@@ -1262,7 +1535,7 @@ void processProxyHeaderFile()
                 if ( rx.indexIn( line ) != -1) {
                     int id = rx.cap( 1 ).toInt();
 
-                    if ( id > 0 ) {
+                    if ( id > 0 && !forQtSfw ) {
                         wrapperHeaderStream << w.mangledMethodDoc( id );
                     }
                 }
@@ -1275,7 +1548,7 @@ void processProxyHeaderFile()
         line.remove(w.asyncTag());
 
         // add chaining code to NEWPROXY
-        doChainTaskHandling( line, inChainTask, newProxyHeaderStream );
+        doChainTaskHandling( line, inChainTask, newProxyHeaderStream, forQtSfw );
 
         line.remove( w.chainTag() );
 
@@ -1329,18 +1602,31 @@ void processProxyHeaderFile()
                             paramString = " "+parameters+" ";
                         }
 
-                        wrapperHeaderStream <<
-                            "    " + returnType + " " + methodName + "(" + paramString + ");" << endl;
+                        if ( forQtSfw ) {
+                            wrapperHeaderStream <<
+                                "    Q_INVOKABLE " + returnType + " " + methodName + "(" + paramString + ");" << endl;
+                        } else {
+                            wrapperHeaderStream <<
+                                "    " + returnType + " " + methodName + "(" + paramString + ");" << endl;
+                        }
 
                         wrapperCppStream <<
-                            returnType + " " + w.upperCamelServiceName() + "::" + methodName + "(" + paramString + ")" << endl;
+                            returnType + " " + w.upperCamelInterfaceName() + "::" + methodName + "(" + paramString + ")" << endl;
 
                         wrapperCppStream << "{" << endl;
 
-                        if ( parameters.isEmpty() ) {
-                            paramString = " QString() ";
+                        if ( forQtSfw ) {
+                            if ( parameters.isEmpty() ) {
+                                paramString = " 0, QString() ";
+                            } else {
+                                paramString = " " + paramNames.join(", ") + ", 0, QString() ";
+                            }
                         } else {
-                            paramString = " " + paramNames.join(", ") + ", QString() ";
+                            if ( parameters.isEmpty() ) {
+                                paramString = " QString() ";
+                            } else {
+                                paramString = " " + paramNames.join(", ") + ", QString() ";
+                            }
                         }
 
                         if (returnType == "void") {
@@ -1356,7 +1642,12 @@ void processProxyHeaderFile()
                         if ( !parameters.isEmpty() ) {
                             parameters += ", ";
                         }
-                        parameters += "const QString &_taskTitle";
+
+                        if ( forQtSfw ) {
+                            parameters += "const uint _parentWindowId, const QString &_taskTitle";
+                        } else {
+                            parameters += "const QString &_taskTitle";
+                        }
                     }
 
                     QStringList paramNames = getParamNames(parameters);
@@ -1368,11 +1659,16 @@ void processProxyHeaderFile()
                         paramString = " "+parameters+" ";
                     }
 
-                    wrapperHeaderStream <<
-                        "    " + returnType + " " + methodName + "(" + paramString + ");" << endl;
+                    if ( forQtSfw ) {
+                        wrapperHeaderStream <<
+                            "    Q_INVOKABLE " + returnType + " " + methodName + "(" + paramString + ");" << endl;
+                    } else {
+                        wrapperHeaderStream <<
+                            "    " + returnType + " " + methodName + "(" + paramString + ");" << endl;
+                    }
 
                     wrapperCppStream <<
-                        returnType + " " + w.upperCamelServiceName() + "::" + methodName + "(" + paramString + ")" << endl;
+                        returnType + " " + w.upperCamelInterfaceName() + "::" + methodName + "(" + paramString + ")" << endl;
 
                     wrapperCppStream << "{" << endl;
 
@@ -1383,11 +1679,21 @@ void processProxyHeaderFile()
                     }
 
                     if (returnType == "void") {
-                        wrapperCppStream <<
-"    static_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "(" + paramString + ");" << endl;
+                        if ( forQtSfw ) {
+                            wrapperCppStream <<
+                                "    interfaceProxy->" + methodName + "(" + paramString + ");" << endl;
+                        } else {
+                            wrapperCppStream <<
+                                "    static_cast<" + w.upperCamelInterfaceName() + "Proxy*>(interfaceProxy())->" + methodName + "(" + paramString + ");" << endl;
+                        }
                     } else {
-                        wrapperCppStream <<
-"    return qobject_cast<" + w.upperCamelServiceName() + "Proxy*>(interfaceProxy())->" + methodName + "(" + paramString + ").value();" << endl;
+                        if ( forQtSfw ) {
+                            wrapperCppStream <<
+                                "    return interfaceProxy->" + methodName + "(" + paramString + ").value();" << endl;
+                        } else {
+                            wrapperCppStream <<
+                                "    return qobject_cast<" + w.upperCamelInterfaceName() + "Proxy*>(interfaceProxy())->" + methodName + "(" + paramString + ").value();" << endl;
+                        }
                     }
 
                     wrapperCppStream << "}\n" << endl;
@@ -1400,22 +1706,25 @@ void processProxyHeaderFile()
 
 
     w.setAllSignals( ifSignals.join("\n") );
-    w.createConnectSignalCommands( ifSignals );
+    w.createConnectSignalCommands( ifSignals, forQtSfw );
 
-    wrapperCppStream << w.botBitC() << endl;
-    wrapperHeaderStream << w.botBitH() << endl;
+    if ( forQtSfw ) {
+        wrapperCppStream << w.botBitCforQtSfw() << endl;
+        wrapperHeaderStream << w.botBitHforQtSfw() << endl;
+    } else {
+        wrapperCppStream << w.botBitC() << endl;
+        wrapperHeaderStream << w.botBitH() << endl;
+    }
 
     // mv new proxy header file (with chain parameters added)
     // to replace one produced by qdbusxml2cpp
     proxyHeaderFile.remove();
     newProxyHeaderFile.rename(w.proxyHeaderFileName());
-
-    // remove temporary file
-    removeNewXmlFile();
 }
 
-void processProxyCppFile()
+void processProxyCppFile( bool forQtSfw=false )
 {
+    Q_UNUSED( forQtSfw );
     // here we only read the cpp file,
     // and remove the tags line by line,
     // and copy the new file over the old one.
@@ -1467,6 +1776,223 @@ void processProxyCppFile()
     outFile.rename(w.proxyCppFileName());
 }
 
+void generateQSFWXmlFile()
+{
+    QString contents( "\
+<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n\
+<service>\n\
+    <name>@@SERVICENAME@@</name>\n\
+    <filepath>@@QTSFWPLUGINPATH@@/lib@@SERVICENAME@@.so</filepath>\n\
+    <description>@@SERVICEDESCRIPTION@@</description>\n\
+    <interface>\n\
+        <name>@@INTERFACENAME@@</name>\n\
+        <version>@@INTERFACEVERSION@@</version>\n\
+        <description>@@INTERFACEDESCRIPTION@@</description>\n\
+        <capabilities></capabilities>\n\
+    </interface>\n\
+</service>\
+" );
+
+    contents.replace( "@@SERVICENAME@@", w.serviceName() );
+    contents.replace( "@@QTSFWPLUGINPATH@@", w.qtSfwPluginPath() );
+    contents.replace( "@@SERVICEDESCRIPTION@@", w.serviceDescription() );
+    contents.replace( "@@INTERFACENAME@@", w.interfaceName() );
+    contents.replace( "@@INTERFACEVERSION@@", w.interfaceVersion() );
+    contents.replace( "@@INTERFACEDESCRIPTION@@", w.interfaceDescription() );
+
+    QFile outFile(w.serviceXmlFileName());
+    if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qCritical("Could not open %s", qPrintable( outFile.fileName() ) );
+        exit(-1);
+    }
+    QTextStream outS(&outFile);
+
+    outS << contents;
+}
+
+void generateQSFWPluginCpp()
+{
+    QString contents( "\
+#include <qserviceinterfacedescriptor.h>\n\
+#include <qabstractsecuritysession.h>\n\
+#include <qservicecontext.h>\n\
+\n\
+#include \"@@SERVICEPLUGINHEADERFILENAME@@\"\n\
+#include \"@@WRAPPERHEADERFILENAME@@\"\n\
+\n\
+QObject* @@UPPERCAMELSERVICENAME@@Plugin::createInstance(const QServiceInterfaceDescriptor& descriptor, QServiceContext* context, QAbstractSecuritySession* session)\n\
+{\n\
+    Q_UNUSED(context);\n\
+    Q_UNUSED(session);\n\
+\n\
+    if (descriptor.interfaceName() == \"@@INTERFACENAME@@\")\n\
+        return new @@UPPERCAMELINTERFACENAME@@();\n\
+    else\n\
+        return 0;\n\
+}\n\
+\n\
+Q_EXPORT_PLUGIN2(@@SERVICENAME@@, @@UPPERCAMELSERVICENAME@@Plugin)\n\
+"
+            );
+
+    contents.replace( "@@INTERFACENAME@@", w.interfaceName() );
+    contents.replace( "@@SERVICENAME@@", w.serviceName() );
+    //contents.replace( "@@LOWERINTERFACENAME@@", w.lowerInterfaceName() );
+    //contents.replace( "@@LOWERSERVICENAME@@", w.lowerServiceName() );
+    contents.replace( "@@UPPERCAMELSERVICENAME@@", w.upperCamelServiceName() );
+    contents.replace( "@@UPPERCAMELINTERFACENAME@@", w.upperCamelInterfaceName() );
+    contents.replace( "@@SERVICEPLUGINHEADERFILENAME@@", w.servicePluginHeaderFileName() );
+    contents.replace( "@@WRAPPERHEADERFILENAME@@", w.wrapperHeaderFileName() );
+
+    QFile outFile( w.servicePluginCppFileName() );
+    if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qCritical("Could not open %s", qPrintable( outFile.fileName() ) );
+        exit(-1);
+    }
+    QTextStream outS(&outFile);
+
+    outS << contents;
+}
+
+void generateQSFWPluginH()
+{
+    QString contents( "\
+#ifndef @@UPPERSERVICENAME@@PLUGIN_H\n\
+#define @@UPPERSERVICENAME@@PLUGIN_H\n\
+\n\
+#include <QObject>\n\
+\n\
+#include <qserviceplugininterface.h>\n\
+\n\
+QTM_USE_NAMESPACE\n\
+\n\
+class @@UPPERCAMELSERVICENAME@@Plugin : public QObject,\n\
+    public QServicePluginInterface\n\
+{\n\
+Q_OBJECT\n\
+    Q_INTERFACES(QtMobility::QServicePluginInterface)\n\
+public:\n\
+    QObject* createInstance(const QServiceInterfaceDescriptor& descriptor,\n\
+            QServiceContext* context,\n\
+            QAbstractSecuritySession* session);\n\
+    };\n\
+\n\
+#endif\n\
+"
+            );
+
+    contents.replace( "@@UPPERSERVICENAME@@", w.upperServiceName().replace( ".", "_" ) );
+    contents.replace( "@@UPPERCAMELSERVICENAME@@", w.upperCamelServiceName() );
+
+    QFile outFile( w.servicePluginHeaderFileName() );
+    if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qCritical("Could not open %s", qPrintable( outFile.fileName() ));
+        exit(-1);
+    }
+    QTextStream outS(&outFile);
+
+    outS << contents;
+}
+
+#ifdef COMMENTEDOUT
+void generateQSFWProxyCpp()
+{
+    QString contents( "\
+#include \"@@LOWERINTERFACENAME@@proxy.h\"\n\
+\n\
+/*\n\
+ * Implementation of interface class @@UPPERCAMELINTERFACENAME@@Proxy\n\
+ */\n\
+\n\
+@@UPPERCAMELINTERFACENAME@@Proxy::@@UPPERCAMELINTERFACENAME@@Proxy(const QString &service, const QString &path, const QDBusConnection &connection, QObject *parent)\n\
+    : QDBusAbstractInterface(service, path, staticInterfaceName(), connection, parent)\n\
+{\n\
+}\n\
+\n\
+@@UPPERCAMELINTERFACENAME@@Proxy::~@@UPPERCAMELINTERFACENAME@@Proxy()\n\
+{\n\
+}\n\
+" );
+    contents.replace( "@@LOWERINTERFACENAME@@", w.lowerInterfaceName() );
+    contents.replace( "@@UPPERCAMELINTERFACENAME@@", w.upperCamelInterfaceName() );
+
+    QFile outFile( w.servicePluginProxyCppFileName() );
+    if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qCritical("Could not open %s", qPrintable( outFile.fileName() ));
+        exit(-1);
+    }
+    QTextStream outS(&outFile);
+
+    outS << contents;
+}
+#endif // 0
+
+void generateQSFWProjectFile()
+{
+    QString contents( "\
+TEMPLATE=lib\n\
+CONFIG *= \\\n\
+    plugin \\\n\
+    mobility \\\n\
+\n\
+QT *= dbus\n\
+\n\
+TARGET = @@TARGET@@\n\
+\n\
+MOBILITY = serviceframework\n\
+\n\
+SOURCES *= \\\n\
+    @@SOURCES@@ \\\n\
+\n\
+HEADERS *= \\\n\
+    @@HEADERS@@ \\\n\
+\n\
+target.path = @@QTSFWPLUGINPATH@@\n\
+\n\
+xml.path  = @@QTSFWPLUGINPATH@@\n\
+xml.files = @@SERVICEXMLFILENAME@@\n\
+\n\
+INSTALLS *= \\\n\
+    xml\\\n\
+    target\\\n\
+" );
+
+    QStringList sources;
+    sources
+        << w.servicePluginCppFileName()
+        << w.wrapperCppFileName()
+        << w.proxyCppFileName();
+
+    QStringList headers;
+    headers
+        << w.servicePluginHeaderFileName()
+        << w.wrapperHeaderFileName()
+        << w.proxyHeaderFileName();
+
+    contents.replace( "@@TARGET@@", w.serviceName() );
+    contents.replace( "@@SOURCES@@", sources.join( " \\\n    " ) );
+    contents.replace( "@@HEADERS@@", headers.join( " \\\n    " ) );
+    contents.replace( "@@QTSFWPLUGINPATH@@", w.qtSfwPluginPath() );
+    contents.replace( "@@SERVICEXMLFILENAME@@", w.serviceXmlFileName() );
+
+    QFile outFile( w.serviceProjectFileName() );
+    if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text)) {
+        qCritical("Could not open %s", qPrintable( outFile.fileName() ));
+        exit(-1);
+    }
+    QTextStream outS(&outFile);
+
+    outS << contents;
+}
+
+
+void generateQSFWProject()
+{
+    generateQSFWPluginCpp();
+    generateQSFWPluginH();
+    generateQSFWProjectFile();
+}
+
 void runQDBusXml2Cpp(const QStringList &params)
 {
     QProcess qdbusxml2cpp;
@@ -1484,9 +2010,14 @@ void runQDBusXml2Cpp(const QStringList &params)
 
 void usage()
 {
-    qDebug() << "usage: $0 [-a|-p] interfaceName";
+    qDebug() << "usage: $0 [-p interfaceName |-a interfaceName | -q interfaceName] -s serviceName -d serviceDescription -v serviceVersion";
     qDebug() << "       -a            generate adaptor files";
     qDebug() << "       -p            generate proxy files";
+    qDebug() << "       -q            generate Qt SFW proxy files";
+    qDebug() << "       -v            interface version for the Qt SFW service xml file";
+    qDebug() << "       -s            service name for the Qt SFW service xml file";
+    qDebug() << "       -d            service description for the Qt SFW service xml file";
+    qDebug() << "       -D            directory for Qt SFW code (default:qtsfw)";
     qDebug() << "       -h            this help";
     exit(1);
 }
@@ -1512,21 +2043,10 @@ int main(int argc, char *argv[])
         }
         else if (arg == "-a") {
             w.setCreateAdaptor( true );
-            if ( w.createProxy() ) {
-                qDebug() << "both -p and -a supplied";
-                qDebug() << "disabling proxy generation";
-                w.setCreateProxy( false );
-            }
-        }
-        else if (arg == "-p") {
-            w.setCreateProxy( true );
-            if ( w.createAdaptor() ) {
-                qDebug() << "both -p and -a supplied";
-                qDebug() << "disabling adaptor generation";
-                w.setCreateAdaptor( false );
-            }
-        }
-        else {
+
+            argIndex++;
+            arg = argv[ argIndex ];
+
             QStringList bits = arg.split("/");
 
             interfaceName = bits.takeLast();
@@ -1534,13 +2054,115 @@ int main(int argc, char *argv[])
             if (!interfacePath.isEmpty()) {
                 cwd = interfacePath;
             }
+
+            if ( w.createProxy() ) {
+                qDebug() << "both -p and -a supplied";
+                qDebug() << "disabling proxy generation";
+                w.setCreateProxy( false );
+            }
+            else if ( w.createQtSfw() ) {
+                qDebug() << "both -a and -q supplied - confused, exiting";
+                exit(-1);
+            }
         }
+        else if (arg == "-p") {
+            w.setCreateProxy( true );
+
+            argIndex++;
+            arg = argv[ argIndex ];
+
+            QStringList bits = arg.split("/");
+
+            interfaceName = bits.takeLast();
+            QString interfacePath = bits.join("/");
+            if (!interfacePath.isEmpty()) {
+                cwd = interfacePath;
+            }
+
+            if ( w.createAdaptor() ) {
+                qDebug() << "both -p and -a supplied";
+                qDebug() << "disabling adaptor generation";
+                w.setCreateAdaptor( false );
+            }
+            else if ( w.createQtSfw() ) {
+                qDebug() << "both -p and -q supplied - confused, exiting";
+                exit(-1);
+            }
+        }
+        else if (arg == "-q") {
+            w.setCreateQtSfw( true );
+
+            argIndex++;
+            arg = argv[ argIndex ];
+
+            QStringList bits = arg.split("/");
+
+            interfaceName = bits.takeLast();
+            QString interfacePath = bits.join("/");
+            if (!interfacePath.isEmpty()) {
+                cwd = interfacePath;
+            }
+
+            if ( w.createAdaptor() ) {
+                qDebug() << "both -q and -a supplied";
+                qDebug() << "disabling adaptor generation";
+                w.setCreateAdaptor( false );
+            }
+            else if ( w.createProxy() ) {
+                qDebug() << "both -p and -q supplied - confused, exiting";
+                exit(-1);
+            }
+        }
+        else if (arg == "-s") {
+            if ( !w.createQtSfw() ) {
+                qDebug() << "please specify \'-q\' before \'-s <servicefilename>\'";
+                QCoreApplication::quit();
+            }
+
+            argIndex++;
+            arg = argv[ argIndex ];
+
+            w.setServiceName( arg );
+        }
+        else if (arg == "-d") {
+            if ( !w.createQtSfw() ) {
+                qDebug() << "please specify \'-q\' before \'-d \"<Service description>\"\'";
+                usage();
+            }
+
+            argIndex++;
+            arg = argv[ argIndex ];
+
+            w.setServiceDescription( arg );
+        }
+        else if (arg == "-v") {
+            if ( !w.createQtSfw() ) {
+                qDebug() << "please specify \'-q\' before \'-v \"<interface version>\"\'";
+                usage();
+            }
+
+            argIndex++;
+            arg = argv[ argIndex ];
+
+            w.setInterfaceVersion( arg );
+        }
+        else if (arg == "-D") {
+            if ( !w.createQtSfw() ) {
+                qDebug() << "please specify \'-q\' before \'-D \"<Qt SFW directory>\"\'";
+                usage();
+            }
+
+            argIndex++;
+            arg = argv[ argIndex ];
+
+            w.setQtSfwDirectory( arg );
+        }
+
     }
 
-    if ( (! w.createAdaptor()) && (! w.createProxy()) ) {
-        qDebug() << "neither -p or -a specified";
-        qDebug() << "assuming -p";
-        w.setCreateProxy( true );
+    if ( (! w.createAdaptor()) && (! w.createProxy()) && !w.createQtSfw() ) {
+        qDebug() << "neither -p, -a or -q specified";
+        usage();
     }
 
     if (interfaceName.isEmpty()) {
@@ -1560,7 +2182,11 @@ int main(int argc, char *argv[])
 
         processProxyHeaderFile();
         processProxyCppFile();
-    } else {
+
+        // remove temporary file
+        removeNewXmlFile();
+    } else
+    if ( w.createAdaptor() ) {
         runQDBusXml2Cpp(QStringList()
                         << "-c"
                         << w.upperCamelAdaptorName()
@@ -1570,6 +2196,51 @@ int main(int argc, char *argv[])
 
         processAdaptorCppFile();
         processAdaptorHeaderFile();
+
+        // remove temporary file
+        removeNewXmlFile();
+    } else {
+        // create qtsfw
+
+        // make qtsfw project directory
+        QString qtSfwDirectory = w.qtSfwDirectory();
+        if ( !QFile::exists( qtSfwDirectory ) ) {
+            QDir workingDir;
+            bool succeeded = workingDir.mkdir( qtSfwDirectory );
+            if ( !succeeded ) {
+                qDebug() << "Could not create directory" << qtSfwDirectory;
+                exit(-1);
+            }
+        }
+
+        // move new xml file into qtsfw directory
+        {
+            bool success = QFile::rename( w.newXmlFileName(), qtSfwDirectory+"/"+w.newXmlFileName() );
+            if ( !success ) {
+                qDebug() << "Could not move newXmlFile" << w.newXmlFileName();
+                exit(-1);
+            }
+        }
+
+        // chdir into the project directory
+        QDir::setCurrent( qtSfwDirectory );
+
+        // make standard proxy files
+        runQDBusXml2Cpp(QStringList()
+                        << "-c"
+                        << w.upperCamelProxyName()
+                        << "-p"
+                        << w.proxyBase()
+                        << w.newXmlFileName());
+        bool forQtSfw = true;
+        processProxyHeaderFile( forQtSfw );
+        processProxyCppFile( forQtSfw );
+
+        generateQSFWXmlFile();
+        generateQSFWProject();
+
+        // remove temporary file
+        removeNewXmlFile();
     }
 
     return 0;

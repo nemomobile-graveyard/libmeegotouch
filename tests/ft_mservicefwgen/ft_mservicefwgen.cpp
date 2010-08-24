@@ -149,7 +149,7 @@ void Ft_MServiceFwGen::cleanupTestCase()
             qDebug() << "removing" << tempFilename;
         }
 
-        // remore temporary directory
+        // remove temporary directory
         if ( QDir( cwd ).exists() ) {
             qDebug() << "removing" << cwd;
             if ( !QDir( cwd ).rmdir( cwd ) ) {

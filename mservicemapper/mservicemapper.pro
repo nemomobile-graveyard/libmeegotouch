@@ -14,7 +14,8 @@ HEADERS += \
     mservicemapper_p.h \
 
 QT += dbus
-
+CONFIG += mobility
+MOBILITY += serviceframework
 
 myname = com.nokia.mservicefw
 

@@ -2,12 +2,12 @@ Source: libmeegotouch
 Section: libs
 Priority: extra
 Maintainer: Tomas Junnonen <tomas.junnonen@nokia.com>
-Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.7.0~git20100716-0maemo1+0m6), libicu-dev, libx11-dev, doxygen (>=1.5.9), libgconf2-dev, libcontextsubscriber-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgles2-sgx-img-dev [arm armel], opengles-sgx-img-common-dev [arm armel], libgl-dev [i386], libgl1 [i386], libqt4-opengl-dev, pkg-config (>= 0.22), libxdamage-dev, xsltproc
+Build-Depends: debhelper (>= 5), libqt4-dev (>= 4.7.0~git20100716-0maemo1+0m6), libicu-dev, libx11-dev, doxygen (>=1.5.9), libgconf2-dev, libcontextsubscriber-dev, libgstreamer0.10-dev, libgstreamer-plugins-base0.10-dev, libgles2-sgx-img-dev [arm armel], opengles-sgx-img-common-dev [arm armel], libgl-dev [i386], libgl1 [i386], libqt4-opengl-dev, pkg-config (>= 0.22), libxdamage-dev, xsltproc, libqtm-dev
 Standards-Version: 3.7.2
 
 Package: libmeegotouchcore0
 Architecture: any
-Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouch-bin (= ${Source-Version}), libmeegotouch-l10n-engineering-english (= ${Source-Version}), dbus-x11, meegotouchtheme (>= 0.20.42)
+Depends: ${misc:Depends}, ${launcher:Depends}, ${shlibs:Depends}, libmeegotouch-bin (= ${Source-Version}), libmeegotouch-l10n-engineering-english (= ${Source-Version}), dbus-x11, meegotouchtheme (>= 0.20.42), libqtm-serviceframework
 Suggests: libmeegotouch-l10n-ar, libmeegotouch-l10n-de, libmeegotouch-l10n-en, libmeegotouch-l10n-fi, libmeegotouch-l10n-hu, libmeegotouch-l10n-ur, libmeegotouch-l10n-zh-cn
 Description: MeeGo Touch core library
  MeeGo Touch core framework library

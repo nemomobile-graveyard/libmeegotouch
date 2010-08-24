@@ -38,9 +38,6 @@ void MServiceMapperPrivate::init()
     m_serviceFileList.append(QStringList());
     m_serviceFileList.append(QStringList());
 
-    m_serviceFileList[LastList] = fillServiceFileList();
-    fillServiceFileInfo();
-
     if ( !m_serviceFileDir.isEmpty() ) {
         m_watcher.addPath(m_serviceFileDir);
     }

@@ -21,8 +21,12 @@
 #include <QSettings>
 #include <QDebug>
 
+#include <QServiceManager>
+
 #include "mservicemapper.h"
 #include "mservicemapper_p.h"
+
+QTM_USE_NAMESPACE
 
 MServiceMapper::MServiceMapper(const QString &serviceFileDir) :
     d_ptr(new MServiceMapperPrivate( serviceFileDir ))
@@ -35,6 +39,8 @@ void MServiceMapper::init()
     d_ptr->init();
     connect(&d_ptr->m_watcher, SIGNAL(directoryChanged(QString)),
             this, SLOT(handleServiceChanged(QString)));
+
+    handleServiceChanged( QString() );
 }
 
 MServiceMapper::~MServiceMapper()
@@ -93,6 +99,10 @@ void MServiceMapper::handleServiceChanged(const QString &path)
         bool fileRemoved = !d_ptr->m_serviceFileList[CurrList].contains( thisFile );
         if ( fileRemoved ) {
             QString thisServiceName = d_ptr->m_serviceFileInfo.take(thisFile).service;
+            QServiceManager serviceManager;
+
+            qDebug() << "removing" << thisServiceName;
+            serviceManager.removeService( thisServiceName );
             emit serviceUnavailable( thisServiceName );
         }
     }
@@ -106,11 +116,17 @@ void MServiceMapper::handleServiceChanged(const QString &path)
         QString thisFile = d_ptr->m_serviceFileList[CurrList][index];
         bool fileAdded = !d_ptr->m_serviceFileList[LastList].contains( thisFile );
         if ( fileAdded ) {
+            QServiceManager serviceManager;
+
             MServiceMapperPrivate::ServiceInfo thisServiceInterfacePair =
                 d_ptr->serviceInterfacePair( thisFile );
-            emit serviceAvailable(
-                thisServiceInterfacePair.service,
-                thisServiceInterfacePair.interface);
+            QString thisService   = thisServiceInterfacePair.service;
+            QString thisInterface = thisServiceInterfacePair.interface;
+
+            QString xmlFileName( "/usr/lib/maemo-meegotouch-services/"+thisService+".xml" );
+            qDebug() << "adding" << xmlFileName;
+            serviceManager.addService( xmlFileName );
+            emit serviceAvailable( thisService, thisInterface );
         }
     }
 

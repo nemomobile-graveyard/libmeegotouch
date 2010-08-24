@@ -13,7 +13,7 @@
             </doc>
             <arg name="targetPage" type="s" direction="in" />
             <arg name="previousPage" type="s" direction="in" />
-            <arg name="" type="b" direction="out"/>    
+            <arg name="" type="b" direction="out"/>
         </method>
 
         <method name="showImage">
@@ -24,7 +24,7 @@
             <arg name="uri" type="s" direction="in" />
             <arg name="playlistName" type="s" direction="in" />
             <arg name="defaultBackPage" type="s" direction="in" />
-            <arg name="" type="b" direction="out"/>    
+            <arg name="" type="b" direction="out"/>
         </method>
 
         <method name="showImage" chainTask="true" asyncTask="true">
@@ -45,7 +45,7 @@
             <arg name="" type="b" direction="out" />
         </method>
 
-        <method name="showSettings">      
+        <method name="showSettings">
             <doc>
                 <arg tag="brief">documentation for showSettings() method</arg>
                 <arg tag="details">documentation for showSettings() method2</arg>
