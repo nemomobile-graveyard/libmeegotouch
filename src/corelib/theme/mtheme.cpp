@@ -659,6 +659,7 @@ void MThemePrivate::themeChangedSlot(const QStringList &themeInheritance, const 
     refreshLocalThemeConfiguration(themeInheritance);
     q_ptr->rebuildViewsForWidgets();
     reloadThemeLibraries(libraryNames);
+    emit q_ptr->themeIsChanging();
 }
 
 void MThemePrivate::refreshLocalThemeConfiguration(const QStringList &themeInheritance)

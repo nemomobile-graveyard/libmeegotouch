@@ -298,6 +298,17 @@ Q_SIGNALS:
     void pixmapRequestsFinished();
 
     /*!
+     This signal is emitted when the current theme was changed but before the old
+     resources are deleted. This allows for applications to stop using the old
+     pixmaps before they become invalid.
+
+     Note that for regular application, listening to this signal is not necessary.
+     This is mostly useful for custom applications that only use selected parts of
+     MeegoTouch Framework.
+     */
+    void themeIsChanging();
+
+    /*!
      This signal is emitted when the theme service and all applications have changed the theme.
 
      Note that for regular applications, listening for this signal is not necessary,

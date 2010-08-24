@@ -13,6 +13,7 @@
 - Updated \subpage rotation document.
 - You can now simulate the multitouch pinch gesture by holding down the Ctrl key, then pressing and dragging with the left mouse button.
 - MSceneWindow::appear(QGraphicsScene *scene, MSceneWindow::DeletionPolicy policy);
+- MTheme::themeIsChanging() signal is emitted to alert 3rd party libraries it's time to release theme resources before they are deleted.
 
 \subsection Deprecated
 - MSceneWindow::appear(MSceneWindow::DeletionPolicy policy). Use appear(QGraphicsScene*) or
