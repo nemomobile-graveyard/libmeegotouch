@@ -39,13 +39,13 @@ class M_EXPORT MImageWidgetModel : public MWidgetModel
         \property MImageWidgetModel::zoomFactorX
         \brief image zoom factor in width
     */
-    M_MODEL_PROPERTY(float, zoomFactorX, ZoomFactorX, true, 0.0)
+    M_MODEL_PROPERTY(qreal, zoomFactorX, ZoomFactorX, true, 0.0)
 
     /*!
         \property MImageWidgetModel::zoomFactorY
         \brief image zoom factor in height
     */
-    M_MODEL_PROPERTY(float, zoomFactorY, ZoomFactorY, true, 0.0)
+    M_MODEL_PROPERTY(qreal, zoomFactorY, ZoomFactorY, true, 0.0)
 
     /*!
         \property MImageWidgetModel::crop

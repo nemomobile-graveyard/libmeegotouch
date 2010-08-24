@@ -35,10 +35,7 @@ private slots:
     void initTestCase();
     void cleanupTestCase();
 
-    void testConstructor_data();
     void testConstructor();
-
-    void testImageDataSize_data();
     void testImageDataSize();
 
     void testSetZoomFactor_data();
@@ -52,11 +49,8 @@ private slots:
     void testSetCropTopLeftPoint_data();
     void testSetCropTopLeftPoint();
 
-    void testImageNotExist_data();
     void testImageNotExist();
-
     void testImageName();
-
     void testZoomIn();
     void testZoomOut();
 

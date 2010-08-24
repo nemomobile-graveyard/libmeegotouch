@@ -36,7 +36,7 @@ Ut_MImageWidget::Ut_MImageWidget() :
 
 void Ut_MImageWidget::initTestCase()
 {
-    QImage img(qApp->applicationDirPath() + "/ut_mimagewidget-test.png");
+    QImage img(qApp->applicationDirPath() + qApp->applicationDirPath() + "/ut_mimagewidget-test.png");
 
     if (! MComponentData::instance()) {
         static char *argv = 0;
@@ -56,17 +56,9 @@ void Ut_MImageWidget::cleanupTestCase()
     delete MComponentData::instance();
 }
 
-void Ut_MImageWidget::testConstructor_data()
-{
-    QTest::addColumn<QString>("fname");
-
-    QTest::newRow("png") << qApp->applicationDirPath() + "/ut_mimagewidget-test.png";
-}
-
 void Ut_MImageWidget::testConstructor()
 {
-    QFETCH(QString, fname);
-
+    QString fname = qApp->applicationDirPath() + "/ut_mimagewidget-test.png";
     QSize s;
 
     QPixmap pixmap(fname);
@@ -96,16 +88,9 @@ void Ut_MImageWidget::testConstructor()
     delete myImage;
 }
 
-void Ut_MImageWidget::testImageDataSize_data()
-{
-    QTest::addColumn<QString>("fname");
-
-    QTest::newRow("png") << qApp->applicationDirPath() + "/ut_mimagewidget-test.png";
-}
-
 void Ut_MImageWidget::testImageDataSize()
 {
-    QFETCH(QString, fname);
+    QString fname = qApp->applicationDirPath() + "/ut_mimagewidget-test.png";
 
     QImage img(fname);
     m_subject = new MImageWidget(&img);
@@ -129,10 +114,10 @@ void Ut_MImageWidget::testImageDataSize()
     p = m_subject->pixmap();
     QCOMPARE(image, p->toImage());
 
-//     // test imageDataSize after set crop section
-//     QSizeF half = imgSize*0.5;
-//     m_subject->setCropSize(half);
-//     QCOMPARE(half, m_subject->imageDataSize());
+   // test imageDataSize after set crop section
+     //QSizeF half = imgSize*0.5;
+     //m_subject->setCropSize(half);
+     //QCOMPARE(half, m_subject->imageDataSize());
 
     delete m_subject;
     m_subject = 0;
@@ -190,8 +175,8 @@ void Ut_MImageWidget::testSetZoomFactor()
         m_subject->setZoomFactor(factor, factor);
         m_subject->zoomFactor(&fx, &fy);
 
-        QVERIFY(fx != factor);
-        QVERIFY(fy != factor);
+        QVERIFY(fx == factor);
+        QVERIFY(fy == factor);
     }
 
     delete m_subject;
@@ -295,15 +280,10 @@ void Ut_MImageWidget::testSetCropTopLeftPoint()
     m_subject = 0;
 }
 
-void Ut_MImageWidget::testImageNotExist_data()
-{
-    QTest::addColumn<QString>("fname");
-    QTest::newRow("png") << "doesnotexist.png";
-}
-
 void Ut_MImageWidget::testImageNotExist()
 {
-    QFETCH(QString, fname);
+    QString fname("/doesnotexist.png" );
+
     QImage img(fname);
     m_subject = new MImageWidget(&img);
 
@@ -331,7 +311,7 @@ void Ut_MImageWidget::testImageName()
 
 void Ut_MImageWidget::testZoomIn()
 {
-    QString fname(qApp->applicationDirPath() + "/ut_mimagewidget-test.png" );
+    QString fname(qApp->applicationDirPath() + "/ut_mimagewidget-test.png");
     m_subject = new MImageWidget(fname);
 
     qreal fx(5), fy(5);
