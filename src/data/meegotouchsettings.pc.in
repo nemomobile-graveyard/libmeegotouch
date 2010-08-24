@@ -5,7 +5,7 @@ includedir=${prefix}/include/meegotouch
 
 Name: meegotouchsettings
 Description: MeeGo Touch UI Framework settings module
-Version: 0.20.11
+Version: @@M_VERSION@@
 Requires: QtGui
 Cflags: -I${includedir}
 Libs: -L${libdir} -lmeegotouchcore -lmeegotouchsettings

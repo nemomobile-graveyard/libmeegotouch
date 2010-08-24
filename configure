@@ -655,6 +655,7 @@ do
 
    cat "$pc_in" \
    | sed -e "s,@@M_UNIX_INSTALL_PREFIX@@,$M_INSTALL_PREFIX,g" \
+   | sed "s/@@M_VERSION@@/$M_VERSION/g" \
    > "$pc_file.tmp"
 
   # replace meegotouch_defines.prf if it differs from the newly created temp file
