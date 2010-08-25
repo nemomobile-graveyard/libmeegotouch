@@ -1,3 +1,9 @@
+libmeegotouch (0.20.36~1) unstable; urgency=low
+
+  * [unreleased]
+
+ -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 25 Aug 2010 11:51:23 +0300
+
 libmeegotouch (0.20.35-1) unstable; urgency=low
 
   * Fixes: NB#177305 Left over characters are not right shifting on erasing the characters of input text field
