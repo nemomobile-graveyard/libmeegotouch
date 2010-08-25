@@ -106,7 +106,6 @@ void Ut_mlist::testCreateListWithListModel()
     QVERIFY( m_subject->showGroups() == false );
     QCOMPARE (m_subject->cellCreator(), cellCreator);
 
-    delete cellCreator;
     delete listTesterModel;
 }
 
