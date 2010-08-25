@@ -69,6 +69,9 @@ QPixmap MLabelViewRich::generatePixmap()
     //when drawing the pixmap into the screen
     const MLabelStyle *style = viewPrivate->style();
     paintingRect.adjust(0, 0, style->paddingLeft(), 0);
+    if (paintingRect.isEmpty()) {
+        return QPixmap();
+    }
 
     //draw the textdocument into the pixmap
     QPixmap pixmap(paintingRect.size().toSize());

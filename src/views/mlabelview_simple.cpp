@@ -49,7 +49,7 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
     Q_UNUSED(size);
 
     initializeStaticText();
-    if (staticText.text().isEmpty()) {
+    if (staticText.text().isEmpty() || paintingRect.isEmpty()) {
         return;
     }
 
