@@ -67,7 +67,7 @@ protected:
     virtual void addActions();
     MWidget *createWidget(QAction *action);
     MWidget *createButton(QAction *action);
-    bool isStyleAction(QAction *action);
+    bool isStyleAction(QAction *action) const;
     bool isLocationValid(QAction *action, MAction::Location loc);
     bool isVisible(QAction *action);
     void clearWidgets(QHash<QAction *, MWidget *>& widgets);
@@ -79,11 +79,10 @@ protected:
     bool isWidgetUsable(QAction *action);
     bool isWidgetUsable(MWidgetAction *widgetAction);
     MWidget *getWidget(QAction *action);
-    bool canAddMoreActions(QAction *action);
-    void visibleActionsCount(int &commandActionsCount, int &styleActionsCount);
-    void visibleActionsCount(QHash<QAction *, MWidget *>& widgets,
-                             int &commandActionsCount,
-                             int &styleActionsCount);
+    bool canAddMoreActions(QAction *action) const;
+    bool actionCountAndExists(QAction *action, bool isStyle, int &count) const;
+    bool actionCountAndExists(QAction *action, QHash<QAction *, MWidget *> const &widgets,
+                              bool isStyle, int& count ) const;
     bool changeLocation(QAction *action);
     void changeData(QAction *action);
     void changeVisibility(QAction *action);
@@ -107,6 +106,7 @@ protected:
     MLinearLayoutPolicy *portraitPolicy;
     MLinearLayoutPolicy *stylePolicy;
     MButtonGroup *styleButtonGroup;
+
     QHash<QAction *, MWidget *> leasedWidgets;
     QHash<QAction *, MWidget *> buttons;
 

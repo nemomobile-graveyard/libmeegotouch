@@ -262,7 +262,7 @@ MWidget *MApplicationMenuViewPrivate::createButton(QAction *action)
     return w;
 }
 
-bool MApplicationMenuViewPrivate::isStyleAction(QAction *action)
+bool MApplicationMenuViewPrivate::isStyleAction(QAction *action) const
 {
     bool isStyleAction = false;
     MAction *mAction = qobject_cast<MAction *>(action);
@@ -357,43 +357,53 @@ MWidget *MApplicationMenuViewPrivate::getWidget(QAction *action)
     return (button != 0) ? button : leased;
 }
 
-bool MApplicationMenuViewPrivate::canAddMoreActions(QAction *action)
+bool MApplicationMenuViewPrivate::canAddMoreActions(QAction *action) const
 {
     bool canAdd = true;
-    int commandActionsCount, styleActionsCount;
-    visibleActionsCount(commandActionsCount, styleActionsCount);
-    if (!isStyleAction(action)) {
-        canAdd = (commandActionsCount < maxCommandActions);
-        if (styleActionsCount > 0)
-            canAdd = (commandActionsCount < maxCommandActionsWithStyle);
-    } else {
-        canAdd = (commandActionsCount <= maxCommandActionsWithStyle);
+
+    if (isStyleAction(action)) {
+        int count = 0;
+        if (!actionCountAndExists(action, true, count)) {
+            canAdd = count < maxCommandActionsWithStyle;
+        }
     }
+    else { // is Command Action
+        int count = 0;
+        if (!actionCountAndExists(action, false, count)) {
+            canAdd = count < maxCommandActions;
+        }
+    } // Command action
+
     return canAdd;
 }
 
-void MApplicationMenuViewPrivate::visibleActionsCount(int &commandActionsCount, int &styleActionsCount)
+bool MApplicationMenuViewPrivate::actionCountAndExists(QAction *action, bool isStyle, int& count) const
 {
-    commandActionsCount = 0;
-    styleActionsCount = 0;
-    visibleActionsCount(buttons, commandActionsCount, styleActionsCount);
-    visibleActionsCount(leasedWidgets, commandActionsCount, styleActionsCount);
+    count = 0;
+    bool exists = actionCountAndExists(action, buttons, isStyle, count);
+    exists |= actionCountAndExists(action, leasedWidgets, isStyle, count);
+    return exists;
 }
 
-void MApplicationMenuViewPrivate::visibleActionsCount(QHash<QAction *, MWidget *>& widgets,
-                                         int &commandActionsCount,
-                                         int &styleActionsCount)
+// Iterate through all of the specified widgets to count actions of specified type (style or command)
+// while simultaneously checking if incoming action is contained in the list.
+// These operations are combined here to avoid having to traverse the list twice.
+bool MApplicationMenuViewPrivate::actionCountAndExists(QAction *action,
+                                                       QHash<QAction *, MWidget *> const &widgets, bool isStyle, int& count ) const
 {
+    bool exists = false;
     QHashIterator<QAction *, MWidget *> iterator(widgets);
     while (iterator.hasNext()) {
         iterator.next();
-        QAction *action = iterator.key();
-        if (action->isVisible()) {
-            bool isStyle = isStyleAction(action);
-            styleActionsCount += isStyle;
-            commandActionsCount += (!isStyle);
+        QAction *widgetAction = iterator.key();
+        if (isStyle == isStyleAction(widgetAction)) {
+            ++count;
+        }
+        if (widgetAction == action) {
+            exists = true;
         }
     }
+    return exists;
 }
 
 bool MApplicationMenuViewPrivate::changeLocation(QAction *action)
