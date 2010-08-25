@@ -174,12 +174,15 @@ void MGridPage::createContent()
     landscapePolicy->addItem(list);
     portraitPolicy->addItem(list);
 
+    /* get initial page width from the application window */
+    int initialWidth = MApplication::activeWindow()->visibleSceneSize().width();
+
     if (MApplication::activeApplicationWindow()->orientation() == M::Landscape) {
         list->setColumns(m_columnsLandscape);
-        m_itemSize.setWidth(exposedContentRect().width() / m_columnsLandscape);
+        m_itemSize.setWidth(initialWidth / m_columnsLandscape);
     } else {
         list->setColumns(m_columnsPortrait);
-        m_itemSize.setWidth(exposedContentRect().width() / m_columnsPortrait);
+        m_itemSize.setWidth(initialWidth / m_columnsPortrait);
     }
     m_itemSize.setHeight(m_itemSize.width());
 
