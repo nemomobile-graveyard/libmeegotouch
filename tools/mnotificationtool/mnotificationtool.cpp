@@ -25,7 +25,7 @@
 #include <iomanip>
 #include <cstdlib>
 #include <getopt.h>
-#include <MApplication>
+#include <QCoreApplication>
 #include <MNotification>
 #include <MRemoteAction>
 #include <MNotificationGroup>
@@ -33,7 +33,6 @@
 #include <QStringList>
 #include <QRegExp>
 #include <QApplication>
-#include <mnotificationmanager.h>
 
 // Subclasses to gain access to the IDs
 class MNotificationToolNotification : public MNotification
@@ -107,9 +106,6 @@ bool groupMode = false;
 // Notifications list mode in use
 bool listMode = false;
 
-// Application name provided with list mode
-QString applicationName("mnotificationtool");
-
 // The notification/notification group ID to use
 uint id = 0;
 
@@ -132,7 +128,7 @@ int usage(const char *program)
     std::cerr << std::setw(7) << "  -g, --group                Whether to operate on notification groups instead of notifications." << std::endl;
     std::cerr << std::setw(7) << "  -i, --id=ID                The notification/notification group ID to use." << std::endl;
     std::cerr << std::setw(7) << "  -c, --count=NUMBER         The number of notifications. This parameter has no effect when the action is 'remove'" << std::endl;
-    std::cerr << std::setw(7) << "  -l, --list=APPLICATION     List all notifications that belong to an application name. Returns a count of notifications as an exit value." << std::endl;
+    std::cerr << std::setw(7) << "  -l, --list                 List all notifications that belong to this application. Returns a count of notifications as an exit value." << std::endl;
     std::cerr << std::setw(7) << "      --help     display this help and exit" << std::endl;
     return -1;
 }
@@ -143,16 +139,16 @@ int parseArguments(int argc, char *argv[])
     while (1) {
         int option_index = 0;
         static struct option long_options[] = {
-            { "action", 1, NULL, 'a' },
-            { "group", 0, NULL, 'g' },
-            { "id", 1, NULL, 'i' },
-            { "count", 1, NULL, 'c' },
-            { "help", 0, NULL, 'h' },
-            { "list", 1, NULL, 'l'},
+            { "action", required_argument, NULL, 'a' },
+            { "group", no_argument, NULL, 'g' },
+            { "id", required_argument, NULL, 'i' },
+            { "count", required_argument, NULL, 'c' },
+            { "help", no_argument, NULL, 'h' },
+            { "list", no_argument, NULL, 'l'},
             { 0, 0, 0, 0 }
         };
 
-        int c = getopt_long(argc, argv, "a:gi:c:pl:", long_options, &option_index);
+        int c = getopt_long(argc, argv, "a:gi:c:pl", long_options, &option_index);
         if (c == -1)
             break;
 
@@ -177,7 +173,6 @@ int parseArguments(int argc, char *argv[])
             break;
         case 'l':
             listMode = true;
-            applicationName = QString(optarg);
             break;
         case 'h':
             return usage(argv[0]);
@@ -206,9 +201,9 @@ int main(int argc, char *argv[])
     }
 
     // MApplication creates MNotificationManager for specified application
-    QScopedPointer<MApplication> mApplication(new MApplication(argc, argv, applicationName, 0));
-    if (mApplication.isNull()) {
-        std::cerr << "Couldn't initialize MApplication" << std::endl;
+    QScopedPointer<QCoreApplication> application(new QCoreApplication(argc, argv));
+    if (application.isNull()) {
+        std::cerr << "Couldn't initialize QCoreApplication" << std::endl;
         return -1;
     }
 
@@ -216,7 +211,7 @@ int main(int argc, char *argv[])
     if (listMode) {
         QList<MNotification *> list = MNotification::notifications();
         result = list.size();
-        std::cout << "\n" << applicationName.toUtf8().data() << " has " << list.size() << " notifications." << std::endl;
+        std::cout << "\n" << list.size() << " notifications." << std::endl;
         std::cout << "Notifications:" << std::endl;
         foreach(MNotification *notification, list) {
             MNotificationToolNotification *toolNotification = static_cast<MNotificationToolNotification *>(notification);
