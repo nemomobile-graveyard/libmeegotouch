@@ -75,8 +75,21 @@ namespace
 {
     //! This is a guess for the SIP close timeout since there is no general way of getting it.
     const int SoftwareInputPanelHideTimer = 500;
-}
 
+    void setParentItemWithoutIncorrectRefocusing(QGraphicsItem *item, QGraphicsItem *parent)
+    {
+        // FIXME: Workaround for bug NB#186278.
+        QGraphicsItem *focused = item->focusItem();
+        if (focused && !focused->hasFocus()) {
+            focused->setFlag(QGraphicsItem::ItemIsFocusable, false);
+            item->setParentItem(parent);
+            focused->setFlag(QGraphicsItem::ItemIsFocusable, true);
+        } else {
+            // This alone should suffice.
+            item->setParentItem(parent);
+        }
+    }
+}
 
 void MSceneManagerPrivate::init(MScene *scene)
 {
@@ -467,8 +480,9 @@ void MSceneManagerPrivate::_q_dislocateSceneWindow(MSceneWindow *sceneWindow,
 
         QGraphicsItem *childOfDisplacementItem = sceneWindow->d_func()->effect ?
                                                  sceneWindow->d_func()->effect : sceneWindow;
-        di->setParentItem(childOfDisplacementItem->parentItem());
-        childOfDisplacementItem->setParentItem(displacementItem);
+
+        setParentItemWithoutIncorrectRefocusing(displacementItem, childOfDisplacementItem->parentItem());
+        setParentItemWithoutIncorrectRefocusing(childOfDisplacementItem, displacementItem);
 
         // Don't change the z value.
         displacementItem->setZValue(childOfDisplacementItem->zValue());
@@ -488,7 +502,7 @@ void MSceneManagerPrivate::_q_undoSceneWindowDislocation(MSceneWindow *sceneWind
         QGraphicsItem *childOfDisplacementItem = sceneWindow->d_func()->effect ?
                                                  sceneWindow->d_func()->effect : sceneWindow;
 
-        childOfDisplacementItem->setParentItem(displacementItem->parentItem());
+        setParentItemWithoutIncorrectRefocusing(childOfDisplacementItem, displacementItem->parentItem());
 
         delete displacementItem;
         displacementItem = 0;
@@ -522,7 +536,8 @@ void MSceneManagerPrivate::addUnmanagedSceneWindow(MSceneWindow *sceneWindow)
     // add scene window to the scene
     // Now its sceneManager() method will return the correct result.
     // It will also transfer the ownership of the scene window to the scene.
-    sceneWindow->setParentItem(rootElementForSceneWindowType(sceneWindow->windowType()));
+
+    setParentItemWithoutIncorrectRefocusing(sceneWindow, rootElementForSceneWindowType(sceneWindow->windowType()));
 
     sceneWindow->setZValue(zForWindowType(sceneWindow->windowType()));
 
@@ -610,11 +625,11 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
     QGraphicsItem *effectParent = window->parentItem() ?
                                   window->parentItem() : rootElementForSceneWindowType(window->windowType());
 
-    effect->setParentItem(effectParent);
+    setParentItemWithoutIncorrectRefocusing(effect, effectParent);
     effect->setZValue(zForWindowType(window->windowType()));
 
     // Add window as child of the effect
-    window->setParentItem(effect);
+    setParentItemWithoutIncorrectRefocusing(window, effect);
     window->d_func()->effect = effect;
 
     return effect;
@@ -625,7 +640,7 @@ void MSceneManagerPrivate::destroyLayerEffectForWindow(MSceneWindow *sceneWindow
     MSceneLayerEffect *&effect = sceneWindow->d_func()->effect;
     if (effect) {
 
-        sceneWindow->setParentItem(effect->parentItem());
+        setParentItemWithoutIncorrectRefocusing(sceneWindow, effect->parentItem());
 
         delete effect;
         effect = 0;

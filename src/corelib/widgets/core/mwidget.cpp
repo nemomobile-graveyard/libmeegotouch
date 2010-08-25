@@ -485,7 +485,16 @@ void MWidget::setVisible(bool visible)
 
     // Only show if the layout is not hiding this
     if (!d->layoutHidden) {
-        QGraphicsWidget::setVisible(visible);
+
+        // FIXME: Workaround for bug NB#186278.
+        QGraphicsItem *focused = focusItem();
+        if (visible && focused && !focused->hasFocus()) {
+            focused->setFlag(QGraphicsItem::ItemIsFocusable, false);
+            QGraphicsWidget::setVisible(true);
+            focused->setFlag(QGraphicsItem::ItemIsFocusable, true);
+        } else {
+            QGraphicsWidget::setVisible(visible);
+        }
 
         // Propagate visibility events
         QGraphicsView *graphicsView = d->fetchGraphicsView();
