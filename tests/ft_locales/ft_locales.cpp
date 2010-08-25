@@ -883,6 +883,50 @@ void Ft_Locales::checkAvailableLocales()
     supportedLocaleNames << "de_DE@collation=phonebook";
     supportedLocaleNames << "zh_CN@collation=pinyin";
     supportedLocaleNames << "zh_CN@collation=stroke";
+    bool runFullTest = false;
+    if (!runFullTest) {
+        supportedLocaleNames.clear();
+        supportedLocaleNames << "ar_SA";       // "Arabic (Saudi Arabia)"
+        supportedLocaleNames << "ca_ES";       // "Catalan (Spain)"
+        supportedLocaleNames << "da_DK";       // "Danish (Denmark)"
+        supportedLocaleNames << "de_CH";       // "German (Switzerland)"
+        supportedLocaleNames << "de_DE";       // "German (Germany)"
+        supportedLocaleNames << "el_GR";       // "Greek (Greece)"
+        supportedLocaleNames << "en";          // "English"
+        supportedLocaleNames << "en_BE";       // "English (Belgium)"
+        supportedLocaleNames << "en_GB";       // "English (United Kingdom)"
+        supportedLocaleNames << "en_US";       // "English (United States)"
+        supportedLocaleNames << "en_US_POSIX"; // "English (United States, Computer)"
+        supportedLocaleNames << "eu_ES";       // "Basque (Spain)"
+        supportedLocaleNames << "fa_IR";       // "Persian (Iran)"
+        supportedLocaleNames << "fi_FI";       // "Finnish (Finland)"
+        supportedLocaleNames << "fr_FR";       // "French (France)"
+        supportedLocaleNames << "gl_ES";       // "Galician (Spain)"
+        supportedLocaleNames << "he_IL";       // "Hebrew (Israel)"
+        supportedLocaleNames << "hi_IN";       // "Hindi (India)"
+        supportedLocaleNames << "id_ID";       // "Indonesian (Indonesia)"
+        supportedLocaleNames << "it_IT";       // "Italian (Italy)"
+        supportedLocaleNames << "ja_JP";       // "Japanese (Japan)"
+        supportedLocaleNames << "ms_MY";       // "Malay (Malaysia)"
+        supportedLocaleNames << "nb_NO";       // "Norwegian Bokml (Norway)"
+        supportedLocaleNames << "nl_NL";       // "Dutch (Netherlands)"
+        supportedLocaleNames << "nn_NO";       // "Norwegian Nynorsk (Norway)"
+        supportedLocaleNames << "pt_BR";       // "Portuguese (Brazil)"
+        supportedLocaleNames << "pt_PT";       // "Portuguese (Portugal)"
+        supportedLocaleNames << "ru_RU";       // "Russian (Russia)"
+        supportedLocaleNames << "sv_SE";       // "Swedish (Sweden)"
+        supportedLocaleNames << "th_TH";       // "Thai (Thailand)"
+        supportedLocaleNames << "tr_TR";       // "Turkish (Turkey)"
+        supportedLocaleNames << "uk_UA";       // "Ukrainian (Ukraine)"
+        supportedLocaleNames << "ur_PK";       // "Urdu (Pakistan)"
+        supportedLocaleNames << "zh_Hans_CN";  // "Chinese (Simplified Han, China)"
+        supportedLocaleNames << "zh_Hant_TW";  // "Chinese (Traditional Han, Taiwan)"
+        supportedLocaleNames << "no_NO";
+        supportedLocaleNames << "es_419";
+        supportedLocaleNames << "de_DE@collation=phonebook";
+        supportedLocaleNames << "zh_CN@collation=pinyin";
+        supportedLocaleNames << "zh_CN@collation=stroke";
+    }
     // sort the list for easier comparision in the output
     // (i.e. es_419 should be near es, not at the end of the list):
     qSort(supportedLocaleNames.begin(), supportedLocaleNames.end());
@@ -910,6 +954,7 @@ void Ft_Locales::checkAvailableLocales()
     QString ft_localesTestOutput = "";
     foreach(QString supportedLocaleName, supportedLocaleNames) {
         MLocale locale(supportedLocaleName);
+        QCOMPARE(MLocale::dataPaths(), (QStringList() << "/usr/share/meegotouch/icu"));
         locale.setTimeFormat24h(MLocale::LocaleDefaultTimeFormat24h);
         qSort(sortingTestList.begin(), sortingTestList.end(), locale.collator());
         QString newLinePlusSupportedLocaleName('\n' + supportedLocaleName);
@@ -1079,56 +1124,103 @@ void Ft_Locales::checkAvailableLocales()
             + newLinePlusSupportedLocaleName + "\t%r (locale specific 12 hour “TimeShort”)\t"
             + locale.formatDateTime(gregorianCalendar, "%r")
             + newLinePlusSupportedLocaleName + "\t%R (locale specific 24 hour “TimeShort”)\t"
-            + locale.formatDateTime(gregorianCalendar, "%R")
-            + newLinePlusSupportedLocaleName + "\tDate and time short (Gregorian Calendar)\t"
-            + locale.icuFormatString(MLocale::DateShort, MLocale::TimeShort,
-                                     MLocale::GregorianCalendar)
-            + " -> "
-            + locale.formatDateTime(gregorianCalendar,
-                                    MLocale::DateShort, MLocale::TimeShort)
-            + newLinePlusSupportedLocaleName + "\tDate and time medium (Gregorian Calendar)\t"
-            + locale.icuFormatString(MLocale::DateMedium, MLocale::TimeMedium,
-                                     MLocale::GregorianCalendar)
-            + " -> "
-            + locale.formatDateTime(gregorianCalendar,
-                                    MLocale::DateMedium, MLocale::TimeMedium)
-            + newLinePlusSupportedLocaleName + "\tDate and time long (Gregorian Calendar)\t"
-            + locale.icuFormatString(MLocale::DateLong, MLocale::TimeLong,
-                                     MLocale::GregorianCalendar)
-            + " -> "
-            + locale.formatDateTime(gregorianCalendar,
-                                    MLocale::DateLong, MLocale::TimeLong)
-            + newLinePlusSupportedLocaleName + "\tDate and time full (Gregorian Calendar)\t"
-            + locale.icuFormatString(MLocale::DateFull, MLocale::TimeFull,
-                                     MLocale::GregorianCalendar)
-            + " -> "
-            + locale.formatDateTime(gregorianCalendar,
-                                    MLocale::DateFull, MLocale::TimeFull)
-            + newLinePlusSupportedLocaleName + "\tDate and time short (Islamic Calendar)\t"
-            + locale.icuFormatString(MLocale::DateShort, MLocale::TimeShort,
-                                     MLocale::IslamicCalendar)
-            + " -> "
-            + locale.formatDateTime(islamicCalendar,
-                                    MLocale::DateShort, MLocale::TimeShort)
-            + newLinePlusSupportedLocaleName + "\tDate and time medium (Islamic Calendar)\t"
-            + locale.icuFormatString(MLocale::DateMedium, MLocale::TimeMedium,
-                                     MLocale::IslamicCalendar)
-            + " -> "
-            + locale.formatDateTime(islamicCalendar,
-                                    MLocale::DateMedium, MLocale::TimeMedium)
-            + newLinePlusSupportedLocaleName + "\tDate and time long (Islamic Calendar)\t"
-            + locale.icuFormatString(MLocale::DateLong, MLocale::TimeLong,
-                                     MLocale::IslamicCalendar)
-            + " -> "
-            + locale.formatDateTime(islamicCalendar,
-                                    MLocale::DateLong, MLocale::TimeLong)
-            + newLinePlusSupportedLocaleName + "\tDate and time full (Islamic Calendar)\t"
-            + locale.icuFormatString(MLocale::DateFull, MLocale::TimeFull,
-                                     MLocale::IslamicCalendar)
-            + " -> "
-            + locale.formatDateTime(islamicCalendar,
-                                    MLocale::DateFull, MLocale::TimeFull)
-            + '\n';
+            + locale.formatDateTime(gregorianCalendar, "%R");
+        for (unsigned i = 0; i < 2; ++i) {
+            MLocale::CalendarType calendarType;
+            MCalendar calendar;
+            QString calendarTypeString;
+            switch (i) {
+            case 0:
+                calendarType = MLocale::GregorianCalendar;
+                calendarTypeString = "Gregorian calendar";
+                calendar = gregorianCalendar;
+                break;
+            case 1:
+                calendarType = MLocale::IslamicCalendar;
+                calendarTypeString = "Islamic calendar";
+                calendar = islamicCalendar;
+                break;
+            }
+            for (unsigned dateType = MLocale::DateNone;
+                 dateType <= MLocale::DateFull;
+                 ++dateType) {
+                QString dateTypeString;
+                switch (dateType) {
+                case 0:
+                    dateTypeString = "dateNone";
+                    break;
+                case 1:
+                    dateTypeString = "dateShort";
+                    break;
+                case 2:
+                    dateTypeString = "dateMedium";
+                    break;
+                case 3:
+                    dateTypeString = "dateLong";
+                    break;
+                case 4:
+                    dateTypeString = "dateFull";
+                    break;
+                }
+                for (unsigned timeType = MLocale::TimeNone;
+                     timeType <= MLocale::TimeFull;
+                     ++timeType) {
+                    QString timeTypeString;
+                    switch (timeType) {
+                    case 0:
+                        timeTypeString = "timeNone";
+                        break;
+                    case 1:
+                        timeTypeString = "timeShort";
+                        break;
+                    case 2:
+                        timeTypeString = "timeMedium";
+                        break;
+                    case 3:
+                        timeTypeString = "timeLong";
+                        break;
+                    case 4:
+                        timeTypeString = "timeFull";
+                        break;
+                    }
+                    if (dateType == MLocale::DateNone && timeType == MLocale::TimeNone)
+                        continue;
+                    for (int hourMode = 0; hourMode < 3; ++hourMode) {
+                        MLocale::TimeFormat24h timeFormat24h;
+                        QString timeFormat24hString;
+                        switch (hourMode) {
+                        case 0:
+                            timeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
+                            timeFormat24hString = "24/12 hour mode: default";
+                            break;
+                        case 1:
+                            timeFormat24h = MLocale::TwelveHourTimeFormat24h;
+                            timeFormat24hString = "24/12 hour mode: 12     ";
+                            break;
+                        case 2:
+                            timeFormat24h = MLocale::TwentyFourHourTimeFormat24h;
+                            timeFormat24hString = "24/12 hour mode: 24     ";
+                            break;
+                        }
+                        locale.setTimeFormat24h(timeFormat24h);
+                        ft_localesTestOutput +=
+                            newLinePlusSupportedLocaleName
+                            + "\t"
+                            + dateTypeString + ", " + timeTypeString + ", "
+                            + calendarTypeString + ", " + timeFormat24hString
+                            + "\t"
+                            + locale.icuFormatString(static_cast<MLocale::DateType>(dateType),
+                                                     static_cast<MLocale::TimeType>(timeType),
+                                                     calendarType)
+                            + " -> "
+                            + locale.formatDateTime(calendar,
+                                                    static_cast<MLocale::DateType>(dateType),
+                                                    static_cast<MLocale::TimeType>(timeType));
+                    }
+                }
+            }
+        }
+        ft_localesTestOutput += '\n';
     }
     QString ft_localesTestOutputFileName =
         "/tmp/ft_locales-test-output.txt";
