@@ -1323,9 +1323,9 @@ void QtMaemo6Style::drawPrimitive(PrimitiveElement element,
     break;
 
     case PE_PanelLineEdit: {
-        //don't draw the line edit, if it is part of a spinbox or a combobox
+        // don't draw the line edit, if it is part of a spinbox or a combobox
         if (widget && (qobject_cast<QAbstractSpinBox *>(widget->parent()) || qobject_cast<QComboBox*>(widget->parent()))) {
-            qCritical() << "### skipping LineEdit";
+            mDebug("PlainQt Style") << "### skipping LineEdit";
             break;
         }
 
@@ -1460,7 +1460,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
     switch (element) {
 
     case CE_ComboBoxLabel: {
-            qCritical() << "### Combobox line edit";
+            mDebug("PlainQt Style") << "### Combobox line edit";
         /*
         if (const QStyleOptionComboBox *cmb = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
 
@@ -1476,7 +1476,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
 
             QtMaemo6TestStyle::drawControl(element, cmb, p, widget);
         }*/
-        //Draw nothing, Combobox on MeeGo has no Lineedit.
+        // Draw nothing, Combobox on MeeGo has no Lineedit.
     }
     break;
 
@@ -1601,7 +1601,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
         break;
     }
     case CE_TabBarTabLabel:
-        //don't draw the label, it's already handled by CE_TabBarTabShape
+        // don't draw the label, it's already handled by CE_TabBarTabShape
         break;
     case CE_ToolBar: {
         //const QToolBar* toolBar = qobject_cast<const QToolBar*>(widget);
@@ -1779,7 +1779,7 @@ void QtMaemo6Style::drawControl(ControlElement element,
     }
     break;
     case CE_HeaderLabel:
-    //don't draw header labels, it's already done by CE_HeaderSection
+    // don't draw header labels, it's already done by CE_HeaderSection
     break;
     default: {
         QtMaemo6TestStyle::drawControl(element, opt, p, widget);
@@ -1813,12 +1813,12 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
     break;
     */
         if (const QStyleOptionComboBox *btn = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
-            qCritical() << "### drawing ComboBox";
+            mDebug("PlainQt Style") << "### drawing ComboBox";
             QStyleOptionComboBox subopt = *btn;
             subopt.rect = subControlRect(control, opt, SC_ToolButton, widget);
 
             const MButtonStyle *style =
-                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle", ""));
+                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonIconStyle"));
 
             qDebug("Button \"%s\" font-size: %d, icon-size: %d", subopt.currentText.toLocal8Bit().constData(),
                    style->font().pixelSize(), style->iconSize().width());
@@ -1843,7 +1843,7 @@ void QtMaemo6Style::drawComplexControl(ComplexControl control,
                 //a ToolButton anywhere else on the Screen should be drawn like a PushButton
             } else {
                 const MButtonStyle *style =
-                    static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle", ""));
+                    static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle"));
                 const MButtonStyle *styleFont =
                     static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle",
                                                         "NavigationBarToolBarButton"));
@@ -2465,7 +2465,7 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
                 } else {
                     QStyleOptionToolButton subopt = *btn;
                     const MButtonStyle *style =
-                        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle", ""));
+                        static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle"));
                     const MButtonStyle *styleFont =
                         static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle",
                                                             "NavigationBarToolBarButton"));
@@ -2490,7 +2490,7 @@ QSize QtMaemo6Style::sizeFromContents(ContentsType type,
         if (const QStyleOptionButton *btn = qstyleoption_cast<const QStyleOptionButton *>(option)) {
             QStyleOptionButton subopt = *btn;
             const MButtonStyle *style =
-                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle", ""));
+                static_cast<const MButtonStyle *>(QtMaemo6StylePrivate::mStyle(subopt.state, "MButtonStyle"));
 
             if(style) {
                 int borderTop, borderRight, borderBottom, borderLeft;

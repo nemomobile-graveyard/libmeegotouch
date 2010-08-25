@@ -43,6 +43,7 @@ QtMaemo6ComboBoxPopup::QtMaemo6ComboBoxPopup(QComboBox *comboBox, QWidget *paren
 
     if(comboBox) {
         m_listView->setModel(comboBox->model());
+        // show selected item in view
         if (comboBox->currentIndex() >= 0) {
             QModelIndex selected = m_listView->model()->index(comboBox->currentIndex(), 0, QModelIndex());
             if (selected.isValid())
@@ -109,10 +110,10 @@ void QtMaemo6ComboBoxPopup::selectItem(const QModelIndex & index)
 
 void QtMaemo6ComboBoxPopup::closePopup() {
     if(m_comboBox->completer()->completionCount() > 0)
-        //If there is a valid completion use this
+        // If there is a valid completion use this
         m_comboBox->lineEdit()->setText( m_comboBox->completer()->currentCompletion() );
     else
-        //if there's no completion
+        // if there's no completion
         m_comboBox->lineEdit()->setText(m_lineEdit->text());
     close();
 }
