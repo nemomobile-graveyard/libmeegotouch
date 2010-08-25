@@ -223,6 +223,7 @@ void MListViewPrivate::viewportPositionChanged(const QPointF &position)
 void MListViewPrivate::viewportSizeChanged(const QSizeF &size)
 {
     updateViewportRect(viewportTopLeft, QSizeF(viewWidth, size.height()));
+    updateScrollToTargetPosition();
 }
 
 void MListViewPrivate::viewportRangeChanged(const QRectF &range)
@@ -236,10 +237,8 @@ void MListViewPrivate::connectPannableViewport()
 {
     disconnect(controller, SIGNAL(parentChanged()), this, SLOT(controllerParentChanged()));
 
-    if(pannableViewport)
-    {
+    if (pannableViewport)
         pannableViewport->disconnect(this);
-    }
 
     connect(controller, SIGNAL(parentChanged()), SLOT(controllerParentChanged()));
 
