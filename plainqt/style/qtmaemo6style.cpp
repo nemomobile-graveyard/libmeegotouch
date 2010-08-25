@@ -240,6 +240,8 @@ QString QtMaemo6StylePrivate::modeFromState(QStyle::State state)
            // mode = "active";
            // mode = "pressed";
             mode = "selected";
+        else if(state & QStyle::State_Selected)
+            mode = "selected";
         else if(state & QStyle::State_Raised)
             mode = "";
 

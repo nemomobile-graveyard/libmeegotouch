@@ -40,8 +40,15 @@ QtMaemo6ComboBoxPopup::QtMaemo6ComboBoxPopup(QComboBox *comboBox, QWidget *paren
     setObjectName("Qt_Maemo6_ComboBox");
 
     m_listView = new QListView();
-    if(comboBox)
+
+    if(comboBox) {
         m_listView->setModel(comboBox->model());
+        if (comboBox->currentIndex() >= 0) {
+            QModelIndex selected = m_listView->model()->index(comboBox->currentIndex(), 0, QModelIndex());
+            if (selected.isValid())
+                m_listView->setCurrentIndex(selected);
+        }
+    }
 
     if(m_comboBox->isEditable()) {
         //m_lineEdit = m_comboBox->lineEdit();
