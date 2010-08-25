@@ -47,6 +47,7 @@ MSceneWindowPrivate::MSceneWindowPrivate()
         dismissed(false),
         waitingForContextMenuEvent(false),
         effect(0),
+        displacementItem(0),
         appearanceAnimation(0),
         disappearanceAnimation(0),
         queuedTransition(0),
@@ -87,7 +88,6 @@ void MSceneWindowPrivate::setSceneWindowState(MSceneWindow::SceneWindowState new
         default:
             break;
     }
-
 }
 
 MSceneWindow::MSceneWindow(QGraphicsItem *parent) :

@@ -328,8 +328,6 @@ private:
 #ifdef Q_WS_X11
     Q_PRIVATE_SLOT(d_func(), void _q_updateDecoratorButtonsProperty())
 #endif
-
-    friend class MInputWidgetRelocator;
 };
 
 #endif

@@ -453,17 +453,45 @@ void MSceneManagerPrivate::_q_onPageSwitchAnimationFinished()
 void MSceneManagerPrivate::_q_dislocateSceneWindow(MSceneWindow *sceneWindow,
                                                    const QPointF &displacement)
 {
-    sceneWindow->moveBy(displacement.x(), displacement.y());
-    sceneWindow->d_func()->displacement += displacement;
+    if (sceneWindow->windowType() == MSceneWindow::LayerEffect) {
+        // Not supported.
+        return;
+    }
+
+    // let's use an alias
+    QGraphicsItem *&displacementItem = sceneWindow->d_func()->displacementItem;
+
+    if (!displacementItem) {
+        displacementItem = new QGraphicsWidget;
+        displacementItem->setFlag(QGraphicsItem::ItemHasNoContents, true);
+
+        QGraphicsItem *childOfDisplacementItem = sceneWindow->d_func()->effect ?
+                                                 sceneWindow->d_func()->effect : sceneWindow;
+        di->setParentItem(childOfDisplacementItem->parentItem());
+        childOfDisplacementItem->setParentItem(displacementItem);
+
+        // Don't change the z value.
+        displacementItem->setZValue(childOfDisplacementItem->zValue());
+    }
+
+    displacementItem->setPos(displacementItem->pos() + displacement);
 }
 
 void MSceneManagerPrivate::_q_undoSceneWindowDislocation(MSceneWindow *sceneWindow)
 {
-    QPointF &displacement(sceneWindow->d_func()->displacement);
+    // let's use an alias
+    QGraphicsItem *&displacementItem = sceneWindow->d_func()->displacementItem;
 
-    if (!displacement.isNull()) {
-        sceneWindow->moveBy(-displacement.x(), -displacement.y());
-        displacement = QPointF(0.0, 0.0);
+    if (displacementItem) {
+        displacementItem->setPos(0.0, 0.0);
+
+        QGraphicsItem *childOfDisplacementItem = sceneWindow->d_func()->effect ?
+                                                 sceneWindow->d_func()->effect : sceneWindow;
+
+        childOfDisplacementItem->setParentItem(displacementItem->parentItem());
+
+        delete displacementItem;
+        displacementItem = 0;
     }
 }
 
@@ -494,7 +522,7 @@ void MSceneManagerPrivate::addUnmanagedSceneWindow(MSceneWindow *sceneWindow)
     // add scene window to the scene
     // Now its sceneManager() method will return the correct result.
     // It will also transfer the ownership of the scene window to the scene.
-    setParentItemForSceneWindow(sceneWindow, sceneWindow->windowType());
+    sceneWindow->setParentItem(rootElementForSceneWindowType(sceneWindow->windowType()));
 
     sceneWindow->setZValue(zForWindowType(sceneWindow->windowType()));
 
@@ -550,6 +578,8 @@ void MSceneManagerPrivate::removeSceneWindow(MSceneWindow *sceneWindow)
     windows.removeOne(sceneWindow);
     sceneWindow->d_func()->sceneManager = 0;
 
+    _q_undoSceneWindowDislocation(sceneWindow);
+
     // Give ownership of scene window to the caller.
     scene->removeItem(sceneWindow);
 }
@@ -577,36 +607,50 @@ MSceneLayerEffect *MSceneManagerPrivate::createLayerEffectForWindow(MSceneWindow
     setSceneWindowGeometry(effect);
 
     // Add effect to scene via rootElement
-    setParentItemForSceneWindow(effect, window->windowType());
+    QGraphicsItem *effectParent = window->parentItem() ?
+                                  window->parentItem() : rootElementForSceneWindowType(window->windowType());
 
+    effect->setParentItem(effectParent);
     effect->setZValue(zForWindowType(window->windowType()));
 
     // Add window as child of the effect
     window->setParentItem(effect);
-
     window->d_func()->effect = effect;
 
     return effect;
 }
 
-void MSceneManagerPrivate::setParentItemForSceneWindow(MSceneWindow *sceneWindow,
-                                                       MSceneWindow::WindowType type)
+void MSceneManagerPrivate::destroyLayerEffectForWindow(MSceneWindow *sceneWindow)
 {
+    MSceneLayerEffect *&effect = sceneWindow->d_func()->effect;
+    if (effect) {
+
+        sceneWindow->setParentItem(effect->parentItem());
+
+        delete effect;
+        effect = 0;
+    }
+}
+
+QGraphicsItem *MSceneManagerPrivate::rootElementForSceneWindowType(MSceneWindow::WindowType type) const
+{
+    QGraphicsItem *root = 0;
     switch (type) {
         case MSceneWindow::EscapeButtonPanel:
         case MSceneWindow::NavigationBar:
         case MSceneWindow::ApplicationMenu:
-            sceneWindow->setParentItem(navigationBarRootElement);
+            root = navigationBarRootElement;
             break;
         case MSceneWindow::HomeButtonPanel:
         case MSceneWindow::NotificationInformation:
         case MSceneWindow::NotificationEvent:
-            sceneWindow->setParentItem(homeButtonRootElement);
+            root = homeButtonRootElement;
             break;
         default:
-            sceneWindow->setParentItem(rootElement);
+            root = rootElement;
             break;
     }
+    return root;
 }
 
 void MSceneManagerPrivate::setSceneWindowGeometries()
@@ -1462,6 +1506,8 @@ void MSceneManagerPrivate::createDisappearanceAnimationForSceneWindow(MSceneWind
 void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
         MSceneWindow::SceneWindowState newState)
 {
+    const MSceneWindow::SceneWindowState oldState = sceneWindow->sceneWindowState();
+
     switch (newState) {
         case MSceneWindow::Appearing:
             onSceneWindowEnteringAppearingState(sceneWindow);
@@ -1490,6 +1536,10 @@ void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
         _q_updateDecoratorButtonsProperty();
     }
 #endif
+
+    if (newState != oldState) {
+        inputWidgetRelocator->sceneWindowStateHasChanged(sceneWindow, newState, oldState);
+    }
 }
 
 void MSceneManagerPrivate::onSceneWindowEnteringAppearingState(MSceneWindow *sceneWindow)
@@ -1512,12 +1562,12 @@ void MSceneManagerPrivate::onSceneWindowEnteringAppearedState(MSceneWindow *scen
         }
         break;
 
-        case MSceneWindow::Disappeared:
+    case MSceneWindow::Disappeared:
         prepareWindowShow(sceneWindow);
         produceSceneWindowEvent(MSceneWindowEvent::eventTypeAppear(), sceneWindow, false);
         break;
 
-        default:
+    default:
         break;
     }
 
@@ -1648,12 +1698,10 @@ void MSceneManagerPrivate::onSceneWindowEnteringDisappearedState(MSceneWindow *s
                 q, SLOT(_q_updateDecoratorButtonsProperty()));
     }
 
+    _q_undoSceneWindowDislocation(sceneWindow);
+
     // If there is a layer effect it is deleted
-    if (sceneWindow->d_func()->effect) {
-        sceneWindow->setParentItem(0);
-        delete sceneWindow->d_func()->effect;
-        sceneWindow->d_func()->effect = 0;
-    }
+    destroyLayerEffectForWindow(sceneWindow);
 
     sceneWindow->hide();
 

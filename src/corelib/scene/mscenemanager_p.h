@@ -101,6 +101,7 @@ public:
     void initOrientationAngles();
     int zForWindowType(MSceneWindow::WindowType windowType);
     MSceneLayerEffect *createLayerEffectForWindow(MSceneWindow *window);
+    void destroyLayerEffectForWindow(MSceneWindow *sceneWindow);
     bool windowIntersectsRect(const QRectF &rect, MSceneWindow *window);
 
     M::Orientation orientation(M::OrientationAngle angle) const;
@@ -108,7 +109,7 @@ public:
     QPointF calculateSceneWindowPosition(MSceneWindow *window);
     void setSceneWindowGeometry(MSceneWindow *window);
     void setSceneWindowGeometries();
-    void setParentItemForSceneWindow(MSceneWindow *window, MSceneWindow::WindowType type);
+    QGraphicsItem *rootElementForSceneWindowType(MSceneWindow::WindowType type) const;
     void notifyWidgetsAboutOrientationChange();
     void rotateToAngle(M::OrientationAngle newAngle);
     void setOrientationAngleWithoutAnimation(M::OrientationAngle newAngle);

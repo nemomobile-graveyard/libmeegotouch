@@ -46,9 +46,6 @@ public:
     Qt::Alignment alignment;
     QPointF offset;
 
-    // This translates the scene window from its proper position.
-    QPointF displacement;
-
     MSceneWindow::SceneWindowState sceneWindowState;
 
     bool managedManually;
@@ -56,6 +53,7 @@ public:
     bool waitingForContextMenuEvent;
 
     MSceneLayerEffect *effect;
+    QGraphicsItem *displacementItem;
 
     QPointer<MAbstractWidgetAnimation> appearanceAnimation;
     QPointer<MAbstractWidgetAnimation> disappearanceAnimation;

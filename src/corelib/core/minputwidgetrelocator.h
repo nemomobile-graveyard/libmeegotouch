@@ -21,16 +21,22 @@
 #define MINPUTWIDGETRELOCATOR_H
 
 #include "mnamespace.h"
+#include "mscenewindow.h"
 #include <QObject>
 #include <QPointer>
 #include <QRect>
 
 class MPannableViewport;
 class MSceneManager;
-class MSceneWindow;
 class QGraphicsItem;
 class QGraphicsScene;
 class QGraphicsWidget;
+
+enum PostponeRelocationFlag {
+    WaitForRotationFinished = 0x1,
+    WaitForAnimationsFinished = 0x2
+};
+Q_DECLARE_FLAGS(PostponeRelocationFlags, PostponeRelocationFlag)
 
 //! \internal
 
@@ -58,8 +64,35 @@ public slots:
      */
     void setCurrentPage(const QPointer<MSceneWindow> &page);
 
+    /*!
+     * \brief Must be called on beginning of device orientation angle change.
+     *
+     *  Should be called before scene windows' geometries are updated.
+     *  Together with \a handleRotationFinished blocks relocation requests
+     *  while rotation is in progress.
+     */
     void handleRotationBegin();
+
+    /*!
+     * \brief Must be called in the end of device orientation angle change.
+     *
+     * If needed and possible for the moment being, calling this method triggers relocation.
+     * \sa handleRotationBegin
+     */
     void handleRotationFinished(M::Orientation orientation);
+
+    /*!
+     * \brief This tells relocator whether the new state of scene window.
+     *
+     *  Relocation is blocked during the time any scene window is in potentially animated
+     *  state, i.e. appearing or disappearing. Fading animations do not cause trouble but
+     *  sliding animations etc will. There is no point in relocating while input widget
+     *  is being moved.
+     *  If needed and possible for the moment being, after animations have been finished
+     *  the relocation is triggered.
+     */
+    void sceneWindowStateHasChanged(MSceneWindow *, MSceneWindow::SceneWindowState newState,
+                                                    MSceneWindow::SceneWindowState oldState);
 
 signals:
     //! This signal requests immediate displacement of the given scene window. The signal should be
@@ -71,18 +104,43 @@ signals:
     void sceneWindowUndoDislocationRequest(MSceneWindow *sceneWindow);
 
 private:
+    //! Supported relocation operation types.
+    enum RelocationOpType {
+        RelocationByMovingWindow,
+        RelocationByPanning
+    };
+
+    //! Relocation operation describes relocation made by one delegate widget.
+    struct RelocationOp {
+        RelocationOp(RelocationOpType type, QGraphicsWidget *delegate);
+
+        RelocationOpType type;
+        QGraphicsWidget *delegate;
+
+        //! This and further operations should not be carried out if input widget is already visible.
+        bool stopIfVisible;
+    };
+
     //! \brief Gets area of the scene where the input widget can in theory be moved to.
     //! The rect is returned in rotated scene coordinates.
     const QRect &exposedContentRect();
 
-    //! \brief Widgets optimal position after relocating, in rotated scene coordinates.
-    QPoint targetWidgetPosition(const QGraphicsWidget &inputWidget, const QRect &exposedRect, const QRect &microFocusRect);
+    //! \brief Widgets optimal rectangle after relocating, in rotated scene coordinates.
+    void relocationRectangles(const QGraphicsWidget &inputWidget, const QRect &microFocusRect,
+                              QRect &targetRect, QRect &localRect);
 
-    void ensurePannableViewportIsPannable(const QGraphicsWidget &inputWidget);
+    void ensureTopmostViewportIsPannable();
     void ensureInputWidgetVisible(const QGraphicsWidget &inputWidget);
-    void relocate(QGraphicsWidget *delegate, const QPoint &contentsOffset, bool isAlreadyVisible);
-    void relocateByPannableViewport(MPannableViewport *viewport, const QPoint &contentsOffset);
-    void relocateBySceneWindow(MSceneWindow *sceneWindow, const QPoint &contentsOffset, bool isAlreadyVisible);
+
+    void buildRelocationOpList(const QGraphicsWidget &inputWidget, QList<RelocationOp> &ops,
+                               bool widgetInitiallyVisible);
+
+    void relocate(const QGraphicsWidget &inputWidget,
+                  const QRect &targetRect, const QRect &localRect);
+    void relocateByPannableViewport(MPannableViewport *viewport, const QRect &targetRect,
+                                    const QPoint &originPoint);
+    void relocateBySceneWindow(MSceneWindow *sceneWindow, const QRect &targetRect,
+                               const QPoint &originPoint);
 
     void restoreRelocations();
 
@@ -99,13 +157,21 @@ private:
     //! Scene rectangle in rotated scene coordinates.
     QRect visibleSceneRect() const;
 
+    void moveRectInsideArea(const QRect &area, QRect &rect) const;
+
+    bool isObscured(const QGraphicsWidget &widget, const QRect &localRect);
+
+    void clearPostponeRelocationFlag(PostponeRelocationFlag flag);
+
 private:
     const QGraphicsScene * const scene;
     const QGraphicsItem * const rootElement;
     M::Orientation orientation;
     QPointer<MSceneWindow> currentPage;
+
     QRect inputPanelRect;
     QRect cachedExposedRect;
+    MPannableViewport *cachedTopmostPannableViewport;
 
     // Utilizing QObject's QPointer-awareness because these items can be destroyed before
     // we try restoring them, i.e. relying on ~QObject() to set these to null.
@@ -113,7 +179,12 @@ private:
     QList< QPointer<MSceneWindow> > sceneWindowsToRestore;
 
     bool relocating;
-    bool blockRelocationRequests;
+    bool updatePending;
+
+    int numOfDisappearingSceneWindows;
+    int numOfAppearingSceneWindows;
+
+    PostponeRelocationFlags postponeFlags;
 };
 
 //! \internal_end
