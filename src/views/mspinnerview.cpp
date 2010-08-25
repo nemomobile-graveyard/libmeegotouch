@@ -32,8 +32,6 @@ MSpinnerViewPrivate::MSpinnerViewPrivate()
        controller(NULL),
        pieBrush(Qt::NoBrush),
        piePen(Qt::NoPen),
-       backgroundPixmap(NULL),
-       progressPixmap(NULL),
        positionAnimation(NULL),
        angle(0)
 {
@@ -137,12 +135,6 @@ void MSpinnerView::applyStyle()
      if (d->positionAnimation)
          d->positionAnimation->setDuration(style()->period());
 
-     if (style()->progressPixmap() && !style()->progressPixmap()->isNull())
-         d->progressPixmap = style()->progressPixmap();
-
-     if (style()->bgPixmap() && !style()->bgPixmap()->isNull())
-         d->backgroundPixmap = style()->bgPixmap();
-
      update();
 }
 
@@ -163,8 +155,8 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
     bool reverse = (d->controller->layoutDirection() == Qt::RightToLeft);
 
     //drawing background
-    if (d->backgroundPixmap && !d->backgroundPixmap->isNull())
-        painter->drawPixmap(0, 0, *d->backgroundPixmap);
+    if (style()->bgPixmap() && !style()->bgPixmap()->isNull())
+        painter->drawPixmap(0, 0, *style()->bgPixmap());
 
     // calculated values input into rendering
     qreal startAngle = 0.0;
@@ -190,14 +182,15 @@ void MSpinnerView::drawContents(QPainter *painter, const QStyleOptionGraphicsIte
         }
     }
 
-    if (d->progressPixmap && !d->progressPixmap->isNull()) {
-        d->pieBrush.setTexture(*d->progressPixmap);
+    //drawing foreground (pie)
+    if (style()->progressPixmap() && !style()->progressPixmap()->isNull()) {
+        d->pieBrush.setTexture(*style()->progressPixmap());
 
         painter->setBrush(d->pieBrush);
         painter->setPen(d->piePen);
-        painter->drawPie(QRect(0, 0, d->progressPixmap->width(), d->progressPixmap->height()),
-                        (90 - endAngle) * 16,
-                        (endAngle - startAngle) * 16);
+        painter->drawPie(QRect(0, 0, style()->progressPixmap()->width(), style()->progressPixmap()->height()),
+                          (90 - endAngle) * 16,
+                          (endAngle - startAngle) * 16);
     }
 }
 

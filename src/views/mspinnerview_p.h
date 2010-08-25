@@ -48,8 +48,6 @@ public:
 
     mutable QBrush pieBrush;
     mutable QPen piePen;
-    const QPixmap *backgroundPixmap;
-    const QPixmap *progressPixmap;
 
     QPropertyAnimation* positionAnimation;
     int angle;
