@@ -337,12 +337,12 @@ void MButtonSwitchView::mouseMoveEvent(QGraphicsSceneMouseEvent *event)
         //play switch feedback effect if center position is crossed
         if( d->m_thumbPos.x() + (d->thumbSize().width() / 2)  > (size().width() / 2) ) {
             if (d->m_feedbackOnPlayed == false) {
-                style()->pressOnFeedback().play();
+                style()->releaseOnFeedback().play();
                 d->m_feedbackOnPlayed = true;
             }
         } else {
             if (d->m_feedbackOnPlayed == true) {
-                style()->pressOffFeedback().play();
+                style()->releaseOffFeedback().play();
                 d->m_feedbackOnPlayed = false;
             }
         }
