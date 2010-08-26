@@ -31,7 +31,7 @@ class MNotificationGroupPrivate;
     \brief A class that represents a notification group.
 
     \ingroup widgets
-  
+
     \section MNotificationOverview Overview
         A class that represents a notification group. Notification groups can be
         used to bundle similar notifications into one so that the individual
@@ -40,9 +40,9 @@ class MNotificationGroupPrivate;
         A notification group is not created or updated until the publish() function
         is called. A notification group must be published before notifications are
         placed into it.
-  
+
         A list of notification groups already created can be requested.
-        An MApplication must be created before doing the request.
+        A QCoreApplication must be created before doing the request.
 
         \sa \ref MNotification
         \sa \ref notifications

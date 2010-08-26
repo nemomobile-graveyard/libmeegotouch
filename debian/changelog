@@ -1,6 +1,7 @@
 libmeegotouch (0.20.36~1) unstable; urgency=low
 
   * [unreleased]
+  * Implemented: SWP#DUI-3585 Notification system support for daemon processes
 
  -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 25 Aug 2010 11:51:23 +0300
 

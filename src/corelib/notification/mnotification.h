@@ -50,7 +50,7 @@ class QString;
 
         A notification is not created or updated until the publish() function is called.
 
-        A list of notifications already created can be requested. An MApplication must be created before
+        A list of notifications already created can be requested. A QCoreApplication must be created before
         doing the request.
 
         \sa \ref notifications
@@ -86,7 +86,7 @@ class QString;
         of such notifications need to be set before publishing changes to the notification. Otherwise the
         properties of the notification will be lost.
 
-        \note A MApplication instance must be created before creating any persistent notifications.
+        \note A QCoreApplication instance must be created before creating any persistent notifications.
 */
 
 class M_EXPORT MNotification : public QObject

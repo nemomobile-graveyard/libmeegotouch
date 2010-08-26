@@ -1,5 +1,11 @@
 /*! \page news What's New in MeeGo Touch
 
+\section v02036 0.20.36
+
+\subsection New
+
+- Only QCoreApplication is required for using MNotification. Previously MApplication was required but that's not actually needed.
+
 \section v02034 0.20.34
 
 \subsection New
