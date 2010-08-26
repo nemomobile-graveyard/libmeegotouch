@@ -38,10 +38,12 @@
 
 LanguagePage::LanguagePage()
     : TemplatePage(TemplatePage::ApplicationView),
-    comboBoxLanguage(0),
+      comboBoxLanguage(0),
       modelLanguage(0),
       comboBoxLcTime(0),
       modelLcTime(0),
+      comboBoxLcTimeFormat24h(0),
+      modelLcTimeFormat24h(0),
       comboBoxLcCollate(0),
       modelLcCollate(0),
       comboBoxLcNumeric(0),
@@ -79,6 +81,7 @@ void LanguagePage::createContent()
     comboBoxLanguage = new MComboBox;
     policy->addItem(comboBoxLanguage, 1, 1);
     comboBoxLcTime = new MComboBox;
+    comboBoxLcTimeFormat24h = new MComboBox;
     comboBoxLcCollate = new MComboBox;
     comboBoxLcNumeric = new MComboBox;
     comboBoxLcMonetary = new MComboBox;
@@ -95,19 +98,20 @@ void LanguagePage::createContent()
     labelFontTest->setWordWrap(true);
 
     policy->addItem(comboBoxLcTime, 2, 1);
-    policy->addItem(comboBoxLcCollate, 3, 1);
-    policy->addItem(comboBoxLcNumeric, 4, 1);
-    policy->addItem(comboBoxLcMonetary, 5, 1);
-    policy->addItem(labelHaveGconf, 6, 1);
-    policy->addItem(labelHaveIcu, 7, 1);
-    policy->addItem(labelExampleNumber, 8, 1);
-    policy->addItem(labelExampleDateTime, 9, 1);
-    policy->addItem(labelExampleWeekNumber, 10, 1);
-    policy->addItem(labelExampleCurrency, 11, 1);
-    policy->addItem(labelExampleTranslation1, 12, 1);
-    policy->addItem(labelExampleTranslation2, 13, 1);
-    policy->addItem(labelExampleTranslation3, 14, 1);
-    policy->addItem(labelFontTest, 15, 1);
+    policy->addItem(comboBoxLcTimeFormat24h, 3, 1);
+    policy->addItem(comboBoxLcCollate, 4, 1);
+    policy->addItem(comboBoxLcNumeric, 5, 1);
+    policy->addItem(comboBoxLcMonetary, 6, 1);
+    policy->addItem(labelHaveGconf, 7, 1);
+    policy->addItem(labelHaveIcu, 8, 1);
+    policy->addItem(labelExampleNumber, 9, 1);
+    policy->addItem(labelExampleDateTime, 10, 1);
+    policy->addItem(labelExampleWeekNumber, 11, 1);
+    policy->addItem(labelExampleCurrency, 12, 1);
+    policy->addItem(labelExampleTranslation1, 13, 1);
+    policy->addItem(labelExampleTranslation2, 14, 1);
+    policy->addItem(labelExampleTranslation3, 15, 1);
+    policy->addItem(labelFontTest, 16, 1);
 
     retranslateUi();
 }
@@ -123,6 +127,8 @@ void LanguagePage::retranslateUi()
                this, SLOT(changeLanguage(int)));
     disconnect(comboBoxLcTime, SIGNAL(currentIndexChanged(int)),
                this, SLOT(changeLcTime(int)));
+    disconnect(comboBoxLcTimeFormat24h, SIGNAL(currentIndexChanged(int)),
+               this, SLOT(changeLcTimeFormat24h(int)));
     disconnect(comboBoxLcCollate, SIGNAL(currentIndexChanged(int)),
                this, SLOT(changeLcCollate(int)));
     disconnect(comboBoxLcNumeric, SIGNAL(currentIndexChanged(int)),
@@ -210,6 +216,23 @@ void LanguagePage::retranslateUi()
 
     int rowsLocaleCount = rowsLocale.count();
 
+    QList<QStringList> rowsTimeFormat24h;
+    rowsTimeFormat24h
+        << (QStringList()
+            //% "Locale default"
+            << qtTrId("xx_timeformat24h_locale_default")
+            << "")
+        << (QStringList()
+            //% "24 hour mode"
+            << qtTrId("xx_timeformat24h_24_hour_mode")
+            << "24")
+        << (QStringList()
+            //% "12 hour mode"
+            << qtTrId("xx_timeformat24h_12_hour_mode")
+            << "12");
+
+    int rowsTimeFormat24hCount = rowsTimeFormat24h.count();
+
     MLocale currentLocale;
 
     QStandardItemModel *newModelLanguage
@@ -245,6 +268,38 @@ void LanguagePage::retranslateUi()
     for (int i = 0; i < rowsLocaleCount; ++i) {
         if (currentLcTime == modelLcTime->item(i, 1)->text())
             comboBoxLcTime->setCurrentIndex(i);
+    }
+
+    QStandardItemModel *newModelLcTimeFormat24h
+        = new QStandardItemModel(rowsTimeFormat24h.count(), 2, this);
+    Q_CHECK_PTR(newModelLcTimeFormat24h);
+    for (int i = 0; i < rowsTimeFormat24hCount; ++i)
+        for (int j = 0; j < 2; ++j)
+            newModelLcTimeFormat24h->setItem(i, j, new QStandardItem(rowsTimeFormat24h[i][j]));
+
+    comboBoxLcTimeFormat24h->setItemModel(newModelLcTimeFormat24h);
+    if (modelLcTimeFormat24h && modelLcTimeFormat24h->QObject::parent() == this)
+        delete modelLcTimeFormat24h;
+    modelLcTimeFormat24h = newModelLcTimeFormat24h;
+    MLocale::TimeFormat24h currentLcTimeFormat24h = currentLocale.timeFormat24h();
+    QString currentLcTimeFormat24hString;
+    switch(currentLcTimeFormat24h) {
+    case MLocale::TwentyFourHourTimeFormat24h:
+        currentLcTimeFormat24hString = "24";
+        break;
+    case MLocale::TwelveHourTimeFormat24h:
+        currentLcTimeFormat24hString = "12";
+        break;
+    case MLocale::LocaleDefaultTimeFormat24h:
+        currentLcTimeFormat24hString = "";
+        break;
+    default:
+        currentLcTimeFormat24hString = "";
+        break;
+    }
+    for (int i = 0; i < rowsTimeFormat24hCount; ++i) {
+        if (currentLcTimeFormat24hString == modelLcTimeFormat24h->item(i, 1)->text())
+            comboBoxLcTimeFormat24h->setCurrentIndex(i);
     }
 
     QStandardItemModel *newModelLcCollate
@@ -302,6 +357,8 @@ void LanguagePage::retranslateUi()
     comboBoxLanguage->setTitle(qtTrId("xx_language_combobox_title"));
     //% "Locale for time"
     comboBoxLcTime->setTitle(qtTrId("xx_language_combobox_lctime_title"));
+    //% "Choose 12/24 hour mode"
+    comboBoxLcTimeFormat24h->setTitle(qtTrId("xx_language_combobox_lctimeformat24h_title"));
     //% "Locale for collation"
     comboBoxLcCollate->setTitle(qtTrId("xx_language_combobox_lccollate_title"));
     //% "Locale for numbers"
@@ -388,6 +445,8 @@ void LanguagePage::retranslateUi()
             this, SLOT(changeLanguage(int)));
     connect(comboBoxLcTime, SIGNAL(currentIndexChanged(int)),
             this, SLOT(changeLcTime(int)));
+    connect(comboBoxLcTimeFormat24h, SIGNAL(currentIndexChanged(int)),
+            this, SLOT(changeLcTimeFormat24h(int)));
     connect(comboBoxLcCollate, SIGNAL(currentIndexChanged(int)),
             this, SLOT(changeLcCollate(int)));
     connect(comboBoxLcNumeric, SIGNAL(currentIndexChanged(int)),
@@ -429,6 +488,32 @@ void LanguagePage::changeLcTime(int index)
     MLocale currentLocale;
     if (newLcTime != currentLocale.categoryName(MLocale::MLcTime)) {
         currentLocale.setCategoryLocale(MLocale::MLcTime, newLcTime);
+        MLocale::setDefault(currentLocale);
+    }
+#endif
+}
+
+void LanguagePage::changeLcTimeFormat24h(int index)
+{
+    if (index < 0 || index >= modelLcTimeFormat24h->rowCount())
+        return;
+    QString newLcTimeFormat24hString = modelLcTimeFormat24h->item(index, 1)->text();
+    MLocale::TimeFormat24h newLcTimeFormat24h;
+    if (newLcTimeFormat24hString == "24")
+        newLcTimeFormat24h = MLocale::TwentyFourHourTimeFormat24h;
+    else if (newLcTimeFormat24hString == "12")
+        newLcTimeFormat24h = MLocale::TwelveHourTimeFormat24h;
+    else
+        newLcTimeFormat24h = MLocale::LocaleDefaultTimeFormat24h;
+#ifdef HAVE_GCONF
+    MGConfItem lcTimeFormat24hItem("/meegotouch/i18n/lc_timeformat24h");
+    if (newLcTimeFormat24hString != lcTimeFormat24hItem.value().toString()) {
+        lcTimeFormat24hItem.set(newLcTimeFormat24hString);
+    }
+#else
+    MLocale currentLocale;
+    if (newLcTimeFormat24h != currentLocale.timeFormat24h()) {
+        currentLocale.setTimeFormat24h(newTimeFormat24h);
         MLocale::setDefault(currentLocale);
     }
 #endif

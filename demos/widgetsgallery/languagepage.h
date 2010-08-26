@@ -41,6 +41,7 @@ public:
 public slots:
     void changeLanguage(int index);
     void changeLcTime(int index);
+    void changeLcTimeFormat24h(int index);
     void changeLcCollate(int index);
     void changeLcNumeric(int index);
     void changeLcMonetary(int index);
@@ -53,6 +54,8 @@ private:
     QStandardItemModel *modelLanguage;
     MComboBox *comboBoxLcTime;
     QStandardItemModel *modelLcTime;
+    MComboBox *comboBoxLcTimeFormat24h;
+    QStandardItemModel *modelLcTimeFormat24h;
     MComboBox *comboBoxLcCollate;
     QStandardItemModel *modelLcCollate;
     MComboBox *comboBoxLcNumeric;
