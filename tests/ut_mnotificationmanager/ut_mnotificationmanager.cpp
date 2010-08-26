@@ -23,7 +23,7 @@
 #include "mnotificationgroup.h"
 #include "mremoteaction.h"
 #include "mfiledatastore.h"
-#include <MApplication>
+#include <QCoreApplication>
 
 // Subclasses to gain access to the IDs
 class TestNotification : public MNotification
@@ -82,18 +82,6 @@ bool Ut_MNotificationManager::captureCalls = false;
 QList<QString> Ut_MNotificationManager::asyncCallMethods;
 QList< QList<QVariant> > Ut_MNotificationManager::asyncCallArguments;
 QHash<QString, QVariant> Ut_MNotificationManager::mockStore;
-
-MApplication *MApplication::instance()
-{
-    return reinterpret_cast<MApplication *>(1);
-}
-
-QString MApplication::appName()
-{
-    static QString name("ut_mnotificationmanager");
-    return name;
-}
-
 
 MFileDataStore::MFileDataStore(const QString &) :
     d_ptr(0)
@@ -490,4 +478,4 @@ void Ut_MNotificationManager::testNotificationGroupList()
     QCOMPARE(asyncCallArguments.at(0).at(0), QVariant(1));
 }
 
-QTEST_APPLESS_MAIN(Ut_MNotificationManager)
+QTEST_MAIN(Ut_MNotificationManager)

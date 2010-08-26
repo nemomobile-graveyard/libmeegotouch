@@ -19,7 +19,7 @@
 
 #include "mnotificationmanager.h"
 #include "mfiledatastore.h"
-#include <MApplication>
+#include <QCoreApplication>
 #include <QDir>
 
 static const QString DATA_PATH = QDir::homePath() + QString("/.config/libmeegotouch/notifications/");
@@ -28,28 +28,30 @@ MNotificationManager::MNotificationManager() :
     proxy("com.meego.core.MNotificationManager", "/notificationmanager", QDBusConnection::sessionBus()),
     userId(0)
 {
-    if (!MApplication::instance()) {
-        qWarning("MApplication instance should be created before creating persistent notifications");
+    if (!QCoreApplication::instance()) {
+        qWarning("QCoreApplication instance should be created before creating notifications");
         return;
     }
 
-
-    if (!QDir::root().exists(DATA_PATH) && !QDir::root().mkpath(DATA_PATH))
+    if (!QDir::root().exists(DATA_PATH) && !QDir::root().mkpath(DATA_PATH)) {
         return;
+    }
 
-    MFileDataStore userIdStore(DATA_PATH + MApplication::appName() + ".data");
-
-    if (!userIdStore.isReadable())
+    QFileInfo appFileInfo(QCoreApplication::applicationFilePath());
+    MFileDataStore userIdStore(DATA_PATH + appFileInfo.fileName() + ".data");
+    if (!userIdStore.isReadable()) {
         return;
+    }
 
-    QString appId = QString("id/") + MApplication::appName();
+    QString appId = QString("id/") + appFileInfo.fileName();
 
     // Check if a userId for an application with this name already exists
     if (userIdStore.contains(appId)) {
         userId = userIdStore.value(appId).toUInt();
     } else {
-        if (!userIdStore.isWritable())
+        if (!userIdStore.isWritable()) {
             return;
+        }
         // Fetch a new id from the notification manager over DBus
         userId = proxy.notificationUserId();
         userIdStore.createValue(appId, userId);
