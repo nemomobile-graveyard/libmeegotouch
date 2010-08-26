@@ -639,9 +639,16 @@ void MSceneManagerPrivate::_q_updateDecoratorButtonsProperty()
 
     QRectF homeButtonGeometry;
     QRectF closeButtonGeometry;
+    QList<MSceneWindow*> sceneWindowsAboveCloseButton;
+    QList<MSceneWindow*> sceneWindowsAboveHomeButton;
 
-    foreach(MSceneWindow *window, windows) {
+    foreach (MSceneWindow *window, windows) {
         if (window->sceneWindowState() != MSceneWindow::Disappeared) {
+            if (window->zValue() > MSceneManagerPrivate::HomeButtonPanel)
+                sceneWindowsAboveHomeButton << window;
+            else if (window->zValue() > MSceneManagerPrivate::EscapeButtonPanel)
+                sceneWindowsAboveCloseButton << window;
+
             switch (window->windowType()) {
             case MSceneWindow::EscapeButtonPanel:
                 {
@@ -661,16 +668,42 @@ void MSceneManagerPrivate::_q_updateDecoratorButtonsProperty()
         }
     }
 
-    long data[8] = {0};
 
-    data[0] = homeButtonGeometry.x();
-    data[1] = homeButtonGeometry.y();
-    data[2] = homeButtonGeometry.width();
-    data[3] = homeButtonGeometry.height();
-    data[4] = closeButtonGeometry.x();
-    data[5] = closeButtonGeometry.y();
-    data[6] = closeButtonGeometry.width();
-    data[7] = closeButtonGeometry.height();
+    bool homeButtonObscured = false;
+    bool closeButtonObscured = false;
+
+    if (homeButtonGeometry.isValid() || closeButtonGeometry.isValid()) {
+        foreach (MSceneWindow *window, sceneWindowsAboveHomeButton) {
+            closeButtonObscured = windowIntersectsRect(closeButtonGeometry,window);
+            if (windowIntersectsRect(homeButtonGeometry,window)) {
+                homeButtonObscured = true;
+                break;
+            }
+        }
+
+        if (!closeButtonObscured) {
+            foreach (MSceneWindow *window, sceneWindowsAboveCloseButton) {
+                if (windowIntersectsRect(closeButtonGeometry,window)) {
+                    closeButtonObscured = true;
+                    break;
+                }
+            }
+        }
+    }
+
+    long data[8] = {0};
+    if (!homeButtonObscured) {
+        data[0] = homeButtonGeometry.x();
+        data[1] = homeButtonGeometry.y();
+        data[2] = homeButtonGeometry.width();
+        data[3] = homeButtonGeometry.height();
+    }
+    if (!closeButtonObscured) {
+        data[4] = closeButtonGeometry.x();
+        data[5] = closeButtonGeometry.y();
+        data[6] = closeButtonGeometry.width();
+        data[7] = closeButtonGeometry.height();
+    }
 
     Display *dpy = QX11Info::display();
 
@@ -680,6 +713,12 @@ void MSceneManagerPrivate::_q_updateDecoratorButtonsProperty()
         XChangeProperty(dpy, w, a, XA_CARDINAL, 32, PropModeReplace,
                         (unsigned char*)data, 8);
     }
+}
+
+bool MSceneManagerPrivate::windowIntersectsRect(const QRectF &rect, MSceneWindow *window)
+{
+    return rect.intersects(window->geometry()) ||
+        (window->d_func()->effect && rect.intersects(window->d_func()->effect->geometry()));
 }
 #endif
 
@@ -1445,10 +1484,8 @@ void MSceneManagerPrivate::setSceneWindowState(MSceneWindow *sceneWindow,
 
 #ifdef Q_WS_X11
     if ((sceneWindow->sceneWindowState() == MSceneWindow::Appeared ||
-         sceneWindow->sceneWindowState() == MSceneWindow::Disappeared ) &&
-        (sceneWindow->windowType() == MSceneWindow::HomeButtonPanel ||
-         sceneWindow->windowType() == MSceneWindow::EscapeButtonPanel ||
-         sceneWindow->windowType() == MSceneWindow::StatusBar) )
+         sceneWindow->sceneWindowState() == MSceneWindow::Disappeared) &&
+        sceneWindow->zValue() > MSceneManagerPrivate::EscapeButtonPanel)
     {
         _q_updateDecoratorButtonsProperty();
     }
