@@ -45,6 +45,7 @@
 #include "mtapandholdrecognizer.h"
 #include "mpanrecognizer.h"
 #include "mswiperecognizer.h"
+#include "msyslogclient.h"
 #include <MDebug>
 
 #ifdef TESTABLE
@@ -73,8 +74,30 @@ namespace
 #endif
     bool g_loadMInputContext(true);
     FILE *debugingOutput;
+    MSyslogClientSocket * g_syslogSocket = 0;
 }
 
+bool mInitSyslogConnection(const QUrl &url)
+{
+    if (g_syslogSocket) {
+        g_syslogSocket->close();
+        delete g_syslogSocket;
+        g_syslogSocket = 0;
+    }
+
+    if(url.isEmpty())
+        return true;
+
+    MSyslogClientSocket *socket = new MSyslogClientSocket();
+
+    if (socket->connectToServer(url)) {
+        g_syslogSocket = socket;
+        return true;
+    } else {
+        delete socket;
+        return false;
+    }
+}
 
 bool mRedirectOutput(const QString &filename)
 {
@@ -119,6 +142,11 @@ void mMessageHandler(QtMsgType type, const char *msg)
         out = stderr;
     }
     fprintf(out, "%s\n", msg);
+
+    if (g_syslogSocket) {
+        g_syslogSocket->sendMsg(type, msg);
+    }
+
     if (type == QtFatalMsg)
         abort();
 }
@@ -160,6 +188,7 @@ MComponentDataPrivate::MComponentDataPrivate()
     appName(),
     binaryName(),
     deviceName(),
+    syslogServer(),
     service(0)
 #ifdef TESTABLE
     ,
@@ -293,6 +322,16 @@ MComponentData::MComponentData(MApplicationService *service) :
     d->init(argc, argv, QString(), service);
 }
 
+bool MComponentDataPrivate::initSyslogConnection(const QUrl &url)
+{
+    if (!mInitSyslogConnection(url)) {
+        mWarning("MComponentDataPrivate::initSyslogConnection") <<
+            "unable to establish connection to given syslog server url.";
+        return false;
+    }
+
+    return true;
+}
 
 void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdentifier, MApplicationService *newService)
 {
@@ -322,10 +361,14 @@ void MComponentDataPrivate::init(int &argc, char **argv, const QString &appIdent
     parseArguments(argc, argv, themeService);
 
     // If there was already a message handler, remove
-    // own message handler again.
+    // own message handler again. If our message handler
+    // was installed succesfully, initiate the connection to
+    // syslog, if syslogServer is not the empty string.
     QtMsgHandler handler(qInstallMsgHandler(mMessageHandler));
     if (handler != 0) {
         qInstallMsgHandler(handler);
+    } else if (!syslogServer.isEmpty()) {
+        initSyslogConnection(syslogServer);
     }
 
     QFileInfo fileInfo(argv[0]);
@@ -552,6 +595,27 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                           argv[0]);
                 exit(EXIT_FAILURE);
             }
+        } else if (s == "-syslog-server") {
+            if (i < (argc -1)) {
+                i++;
+
+                if (QString(argv[i]) == "local") {
+                    syslogServer = "file:///dev/log";
+                } else {
+                    syslogServer = argv[i];
+                }
+
+                if (!syslogServer.isValid()) {
+                    qCritical("%s: Error: Given syslog server URL is invalid",
+                        argv[0]);
+                    exit(EXIT_FAILURE);
+                }
+
+            } else {
+                qCritical("%s: Error: Please specify the syslog server",
+                          argv[0]);
+                exit(EXIT_FAILURE);
+            }
         } else if (s == "-disable-m-input-context") {
             g_loadMInputContext = false;
         } else if (s == "-target") {
@@ -616,10 +680,14 @@ void MComponentDataPrivate::parseArguments(int &argc, char **argv,
                                          << "  [-output-level debug|warning|critical] Only show messages of given output level or above\n"
                                          << "  [-output-prefix <prefix>] Only show debug messages that start with the given prefix\n"
                                          << "  [-no-output-prefix <prefix>] Only show debug messages that do not start with the given prefix\n"
+                                         << "  [-syslog-server <server>] Log debug output to a local or remote syslog server instance.\n"
+                                         << "      To send messages over the network, specify server as udp://hostname[:port].\n"
+                                         << "      To log locally, use the keyword 'local', which is an alias for file:///dev/log,\n"
+                                         << "      which is the domain socket on which the syslog daemon listens on Unix.\n"
                                          << "  [-target <name>] Use the target device profile\n"
                                          << "  [-prestart] Prestart the application (if supported)\n"
                                          << "  [-fixed-orientation 0|90|180|270] Start application in fixed orientation. \n "
-                                         << "                                    This overrides keyboard state, as well as a device profile"
+                                         << "      This overrides keyboard state, as well as a device profile"
                                          << "\n";
             exit(0);
 
@@ -930,6 +998,14 @@ void MComponentData::setEmulateTwoFingerGestures(bool flag)
         qFatal("MComponentData::setEmulateTwoFingerGestures() - MComponentData instance not yet created.");
     }
     gMComponentDataPrivate->emulateTwoFingerGestures = flag;
+}
+
+bool MComponentData::setSyslogServer(const QUrl &url)
+{
+    if (!gMComponentDataPrivate) {
+        qFatal("MComponentData::setSyslogServer() - MComponentData instance not yet created.");
+    }
+    return gMComponentDataPrivate->initSyslogConnection(url);
 }
 
 QList<MWindow *> MComponentData::windows()

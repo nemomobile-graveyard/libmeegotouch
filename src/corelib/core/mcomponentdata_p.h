@@ -21,6 +21,7 @@
 #define MCOMPONENTDATA_P_H
 
 #include <QObject>
+#include <QUrl>
 #include <MLocale>
 #ifdef Q_WS_X11
 #include <QStack>
@@ -74,6 +75,7 @@ public:
     QString appName;
     QString binaryName;
     QString deviceName;
+    QUrl syslogServer;
     MApplicationService *service;
 #ifdef TESTABLE
     // member to hold reference to the testability plugin in order to destroy plugin when the application is destructed
@@ -91,6 +93,7 @@ private:
     void registerDefaultService(const QString &appName);
     void registerNewService(MApplicationService *newService);
     void debugInit(bool levelSet);
+    bool initSyslogConnection(const QUrl &url);
 };
 
 

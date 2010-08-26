@@ -25,6 +25,7 @@
 #include "mexport.h"
 #include "mnamespace.h"
 
+class QUrl;
 class MComponentDataPrivate;
 class MWindow;
 class MApplicationWindow;
@@ -141,6 +142,15 @@ public:
     static void setPrestartMode(M::PrestartMode mode);
     //! Set if two finger gestures should be emulated or not.
     static void setEmulateTwoFingerGestures(bool flag);
+
+    /*!
+     * Set the syslog server to log to:
+     * \param url can point to either a local domain socket, for example
+     * 'file:///dev/log', or a remote server specified as 'udp://servername[:port]'.
+     * \note It is not safe to change the syslog server, while your process has
+     * more than one active threads.
+     */
+    static bool setSyslogServer(const QUrl &url);
 
     /*!
      * Returns the currently active application window.

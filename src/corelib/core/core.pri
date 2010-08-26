@@ -34,6 +34,7 @@ PRIVATE_HEADERS += \
     $$CORE_SRC_DIR/minputmethodstate_p.h \
     $$CORE_SRC_DIR/mcpumonitor.h \
     $$CORE_SRC_DIR/mfiledatastore_p.h \
+    $$CORE_SRC_DIR/msyslogclient.h \
 
 contains(DEFINES, HAVE_DBUS) {
     PUBLIC_HEADERS += \
@@ -65,7 +66,8 @@ SOURCES += \
     $$CORE_SRC_DIR/minputwidgetrelocator.cpp \
     $$CORE_SRC_DIR/mfiledatastore.cpp \
     $$CORE_SRC_DIR/mnamespace.cpp \
-    $$CORE_SRC_DIR/mresizelistener.cpp
+    $$CORE_SRC_DIR/mresizelistener.cpp \
+    $$CORE_SRC_DIR/msyslogclient.cpp \
 
 contains(DEFINES, HAVE_DBUS) {
   SOURCES += \
