@@ -28,6 +28,10 @@ class M_EXPORT MPannableWidgetModel : public MWidgetModel
     M_MODEL_INTERNAL(MPannableWidgetModel)
 
     M_MODEL_PROPERTY(bool, enabled, Enabled, true, true)
+    M_MODEL_PROPERTY(int, verticalPanningPolicy, VerticalPanningPolicy, true, 0)
+    M_MODEL_PROPERTY(int, horizontalPanningPolicy, HorizontalPanningPolicy, true, 1)
+
+    //Deprecated:
     M_MODEL_PROPERTY(qreal, panThreshold, PanThreshold, true, 10.0)
     M_MODEL_PROPERTY(qreal, panClickThreshold, PanClickThreshold, true, 0.2)
     M_MODEL_PROPERTY(Qt::Orientations, panDirection, PanDirection, true, Qt::Vertical)

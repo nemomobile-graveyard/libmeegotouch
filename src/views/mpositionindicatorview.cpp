@@ -121,7 +121,7 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
     }
 
     QSizeF  vpSize = model()->viewportSize();
-    QRectF  pRange = model()->range();
+    QRectF  pRange = model()->range().adjusted(0, 0, vpSize.width(), vpSize.height());
     QPointF pPos   = model()->position();
 
     const MScalableImage *indicator = style()->indicatorImage();

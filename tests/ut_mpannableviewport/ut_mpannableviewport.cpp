@@ -280,7 +280,9 @@ void Ut_MPannableViewport::settingNULLPositionIndicatorShouldNotBeAccepted()
 
 void Ut_MPannableViewport::disabledViewportShouldNotAllowWigetToBeBiggerThanViewport()
 {
-    subject->setEnabled(false);
+    subject->setVerticalPanningPolicy(MPannableWidget::PanningAlwaysOff);
+    subject->setHorizontalPanningPolicy(MPannableWidget::PanningAlwaysOff);
+
     QGraphicsWidget *widget = new QGraphicsWidget();
     widget->setPreferredSize(1000,1000);
     subject->setWidget(widget);
@@ -293,7 +295,24 @@ void Ut_MPannableViewport::disabledViewportShouldNotAllowWigetToBeBiggerThanView
     subject->adjustSize();
 
     QCOMPARE(widget->size(), QSizeF(500,300));
-    subject->setEnabled(true);
+    subject->setVerticalPanningPolicy(MPannableWidget::PanningAlwaysOn);
+    subject->setHorizontalPanningPolicy(MPannableWidget::PanningAlwaysOff);
+
+}
+
+void Ut_MPannableViewport::rangeOfViewportShouldBeSizeOfPannedWidgetMinusViewportSize()
+{
+    // Forcing the size of subject to some value
+    subject->setMinimumSize(QSizeF(500, 300));
+    subject->setMaximumSize(QSizeF(500, 300));
+
+    QGraphicsWidget *widget = new QGraphicsWidget();
+    widget->setMinimumSize(1000,1000);
+    subject->setWidget(widget);
+
+    subject->adjustSize();
+
+    QCOMPARE(subject->range(), QRectF(0,0,500,700));
 }
 
 QTEST_APPLESS_MAIN(Ut_MPannableViewport)

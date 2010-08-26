@@ -271,9 +271,8 @@ void MInputWidgetRelocator::relocateByPannableViewport(MPannableViewport *viewpo
     // in panned widget coordinates.
     QPointF panningPos(viewport->position() - contentsOffset);
 
-    // Calculate allowed range for panning position.
+    // Get allowed range for position to be used with MPannableWidget::setPosition().
     QRectF posRange = viewport->range();
-    posRange.adjust(0, 0, -viewport->size().width(), -viewport->size().height());
 
     // ...and limit our panning accordingly.
     panningPos.rx() = qBound(posRange.left(), panningPos.x(), posRange.right());

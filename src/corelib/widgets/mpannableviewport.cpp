@@ -57,17 +57,13 @@ MPannableViewportPrivate::~MPannableViewportPrivate()
 
 void MPannableViewportPrivate::setNewRange(const QRectF &newRange)
 {
-    Q_Q(MPannableViewport);
-
     // Make the viewport artifically larger so that panning is possible even
     // if partially covered by the input method area.
     // See NB#175181
-    const QRectF actualRange = newRange.adjusted(0, 0, 0, inputMethodAreaHeight);
+    QRectF actualRange = newRange.adjusted(0, 0, 0, inputMethodAreaHeight);
 
-    if (currentRange != actualRange) {
-        currentRange = actualRange;
-        emit q->rangeChanged(currentRange);
-    }
+    currentRange = actualRange;
+    recalculatePhysRange();
 }
 
 
@@ -88,7 +84,12 @@ void MPannableViewportPrivate::recalculatePhysRange()
         physicsRangeSize.setHeight(0.0);
     }
 
-    q->physics()->setRange(QRectF(currentRange.topLeft(), physicsRangeSize));
+    QRectF physRange(currentRange.topLeft(), physicsRangeSize);
+
+    if (physRange != q->physics()->range()) {
+        q->physics()->setRange(physRange);
+        emit q->rangeChanged(q->range());
+    }
 }
 
 void MPannableViewportPrivate::sendOnDisplayChangeEventToMWidgets(QGraphicsItem *item,
@@ -174,8 +175,6 @@ void MPannableViewportPrivate::setInputMethodArea(const QRect &imArea)
     inputMethodAreaHeight = imArea.height();
 
     setNewRange(restoredRange);
-
-    recalculatePhysRange();
 }
 
 void MPannableViewportPrivate::_q_pannedWidgetGeometryChanged()
@@ -263,10 +262,6 @@ void MPannableViewport::setAutoRange(bool enable)
         } else {
             d->setNewRange(QRectF());
         }
-
-        // Recalculates the physics range when automatic range is taken
-        // into use
-        d->recalculatePhysRange();
     }
 }
 
@@ -315,9 +310,6 @@ void MPannableViewport::setWidget(QGraphicsWidget *widget)
             d->setNewRange(QRectF());
         }
     }
-
-    // Recalculates the physics range for the new panned widget
-    d->recalculatePhysRange();
 }
 
 QGraphicsWidget *MPannableViewport::widget() const
@@ -330,19 +322,13 @@ void MPannableViewport::setRange(const QRectF &r)
 {
     Q_D(MPannableViewport);
 
-    if (!autoRange()) {
+    if (!autoRange())
         d->setNewRange(r);
-
-        // Recalculates the physics range for new manually set range
-        d->recalculatePhysRange();
-    }
 }
 
 QRectF MPannableViewport::range() const
 {
-    Q_D(const MPannableViewport);
-
-    return d->currentRange;
+    return MPannableWidget::range();
 }
 
 void MPannableViewport::resizeEvent(QGraphicsSceneResizeEvent *event)
@@ -357,9 +343,6 @@ void MPannableViewport::resizeEvent(QGraphicsSceneResizeEvent *event)
             d->setNewRange(QRectF());
         }
     }
-
-    // Recalculates the physics range because viewport size has changed
-    d->recalculatePhysRange();
 
     emit viewportSizeChanged(event->newSize());
 
@@ -410,8 +393,6 @@ void MPannableViewport::updateGeometry()
         }
     }
 
-    // Recalculates the physics range because panned widget size has changed
-    d->recalculatePhysRange();
     updatePosition(position());
 
     MPannableWidget::updateGeometry();
@@ -423,11 +404,20 @@ void MPannableViewport::updateData(const QList<const char *> &modifications)
     const char *member;
 
     foreach(member, modifications) {
-        if (member == MPannableWidgetModel::Enabled) {
-            if (isEnabled())
-                d->viewportLayout->setPanningDirections(panDirection());
-            else
-                d->viewportLayout->setPanningDirections(0);
+        if (member == MPannableWidgetModel::VerticalPanningPolicy) {
+            if (verticalPanningPolicy() == PanningAlwaysOff) {
+                d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() & !Qt::Vertical);
+            } else {
+                d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() | Qt::Vertical);
+            }
+        }
+
+        if (member == MPannableWidgetModel::HorizontalPanningPolicy) {
+            if (horizontalPanningPolicy() == PanningAlwaysOff) {
+                d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() & !Qt::Horizontal);
+            } else {
+                d->viewportLayout->setPanningDirections( d->viewportLayout->panningDirections() | Qt::Horizontal);
+            }
         }
     }
 }

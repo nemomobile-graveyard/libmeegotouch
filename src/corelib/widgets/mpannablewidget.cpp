@@ -239,7 +239,7 @@ MPannableWidget* MPannableWidgetPrivate::parentPannableWidget()
     // Looking for topmost enabled pannablewidget.
     while(parentWidget) {
         MPannableWidget* candidate = qobject_cast<MPannableWidget*>(parentWidget);
-        if (candidate && candidate->isEnabled())
+        if (candidate && candidate->panDirection() != 0)
             parentPannableWidget = candidate;
         parentWidget = parentWidget->parentWidget();
     }
@@ -319,21 +319,50 @@ void MPannableWidget::setPhysics(MPhysics2DPanning *newPhysics)
 
 void MPannableWidget::setEnabled(bool enabled)
 {
-    Q_D(MPannableWidget);
-
-    model()->setEnabled(enabled);
-
-    if (!enabled) {
-        d->resetPhysics();
-    }
+    MWidgetController::setEnabled(enabled);
 }
 
 
 bool MPannableWidget::isEnabled()
 {
-    return model()->enabled();
+    return MWidgetController::isEnabled();
 }
 
+void MPannableWidget::setVerticalPanningPolicy(PanningPolicy policy)
+{
+    Q_D(MPannableWidget);
+
+    model()->setVerticalPanningPolicy(policy);
+
+    d->physics->setPanDirection(panDirection());
+
+    if (policy == PanningAlwaysOff) {
+        d->resetPhysics();
+    }
+}
+
+MPannableWidget::PanningPolicy MPannableWidget::verticalPanningPolicy() const
+{
+    return (PanningPolicy) model()->verticalPanningPolicy();
+}
+
+void MPannableWidget::setHorizontalPanningPolicy(PanningPolicy policy)
+{
+    Q_D(MPannableWidget);
+
+    model()->setHorizontalPanningPolicy(policy);
+
+    d->physics->setPanDirection(panDirection());
+
+    if (policy == PanningAlwaysOff) {
+        d->resetPhysics();
+    }
+}
+
+MPannableWidget::PanningPolicy MPannableWidget::horizontalPanningPolicy() const
+{
+    return (PanningPolicy) model()->horizontalPanningPolicy();
+}
 
 void MPannableWidget::setRange(const QRectF &r)
 {
@@ -408,7 +437,7 @@ void MPannableWidget::glassMousePressEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    if (isEnabled() == false) {
+    if (panDirection() == 0) {
         // Glass: Ignoring, I'm disabled
         event->ignore();
         return;
@@ -454,20 +483,24 @@ void MPannableWidget::panGestureEvent(QGestureEvent *event, QPanGesture* panGest
 {
     Q_D(MPannableWidget);
 
-    if (!isEnabled()) {
-        event->ignore(panGesture);
-        return;
-    }
-
     QTransform itemTransform(sceneTransform().inverted());
     QPointF itemSpaceOffset = panGesture->offset() * itemTransform - QPointF(itemTransform.dx(),itemTransform.dy());
 
-    if (panDirection().testFlag(Qt::Vertical) == false || panDirection().testFlag(Qt::Horizontal) == false) {
-        //Ignoring gestures that aren't aligned to allowed pan direction.
-        if ((itemSpaceOffset.x() != 0 && panDirection().testFlag(Qt::Vertical)) ||
-            (itemSpaceOffset.y() != 0 && panDirection().testFlag(Qt::Horizontal)))
-        {
-            // Panning against the pannable direction, we aren't interested in it.
+    //Ignoring pan gestures with directions not aligned with enabled pannign directions
+    if (itemSpaceOffset.x() != 0) {
+        if ( horizontalPanningPolicy() == PanningAlwaysOff ||
+            (horizontalPanningPolicy() == PanningAsNeeded && range().height() == 0) ) {
+
+            event->ignore(panGesture);
+            d->panGestureCausedCancelEvent = true;
+            return;
+        }
+    }
+
+    if (itemSpaceOffset.y() != 0) {
+        if ( verticalPanningPolicy() == PanningAlwaysOff ||
+            (verticalPanningPolicy() == PanningAsNeeded && range().height() == 0) ) {
+
             event->ignore(panGesture);
             d->panGestureCausedCancelEvent = true;
             return;
@@ -644,14 +677,28 @@ void MPannableWidget::sendCancel()
 
 void MPannableWidget::setPanDirection(const Qt::Orientations &panDirection)
 {
-    Q_D(MPannableWidget);
-    model()->setPanDirection(panDirection);
-    d->physics->setPanDirection(panDirection);
+    if (panDirection.testFlag(Qt::Vertical))
+        setVerticalPanningPolicy(PanningAlwaysOn);
+    else
+        setVerticalPanningPolicy(PanningAlwaysOff);
+
+    if (panDirection.testFlag(Qt::Horizontal))
+        setHorizontalPanningPolicy(PanningAlwaysOn);
+    else
+        setHorizontalPanningPolicy(PanningAlwaysOff);
 }
 
 Qt::Orientations MPannableWidget::panDirection()
 {
-    return model()->panDirection();
+    Qt::Orientations directions(0);
+
+    if (verticalPanningPolicy() != PanningAlwaysOff)
+        directions |= Qt::Vertical;
+
+    if (horizontalPanningPolicy() != PanningAlwaysOff)
+        directions |= Qt::Horizontal;
+
+    return directions;
 }
 
 void MPannableWidget::setPanThreshold(qreal value)

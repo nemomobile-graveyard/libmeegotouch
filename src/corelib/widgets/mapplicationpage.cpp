@@ -33,6 +33,7 @@ M_REGISTER_WIDGET(MApplicationPage)
 
 MApplicationPagePrivate::MApplicationPagePrivate() :
     pannableViewport(0),
+    panDirection(0),
     contentCreated(false)
 {}
 
@@ -46,6 +47,7 @@ void MApplicationPagePrivate::init()
 
     pannableViewport = new MPannableViewport;
     pannableViewport->setClipping(false);
+    panDirection = pannableViewport->panDirection();
 
     layout->addItem(pannableViewport);
 
@@ -156,21 +158,25 @@ void MApplicationPage::setPannable(bool pannable)
 {
     Q_D(MApplicationPage);
 
-    d->pannableViewport->setEnabled(pannable);
+    if (pannable)
+        d->pannableViewport->setPanDirection(d->panDirection);
+    else
+        d->pannableViewport->setPanDirection(0);
 }
 
 bool MApplicationPage::isPannable() const
 {
     Q_D(const MApplicationPage);
 
-    return d->pannableViewport->isEnabled();
+    return d->pannableViewport->panDirection() != 0;
 }
 
-void MApplicationPage::setPanningDirection(Qt::Orientations directions)
+void MApplicationPage::setPanningDirection(Qt::Orientations direction)
 {
     Q_D(MApplicationPage);
 
-    d->pannableViewport->setPanDirection(directions);
+    d->panDirection = direction;
+    d->pannableViewport->setPanDirection(direction);
 }
 
 Qt::Orientations MApplicationPage::panningDirection() const

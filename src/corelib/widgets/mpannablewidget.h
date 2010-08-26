@@ -22,7 +22,7 @@
 
 #include "mwidgetcontroller.h"
 #include "mphysics2dpanning.h"
-#include <mpannablewidgetmodel.h>
+#include "mpannablewidgetmodel.h"
 
 class QTimerEvent;
 class QGraphicsSceneMouseEvent;
@@ -57,8 +57,10 @@ class M_EXPORT MPannableWidget : public MWidgetController
     Q_OBJECT
     M_CONTROLLER(MPannableWidget)
 
-    //! \brief Enabled status
-    Q_PROPERTY(bool enabled READ isEnabled WRITE setEnabled)
+    //! \brief Vertical panning policy status
+    Q_PROPERTY(PanningPolicy verticalPanningPolicy READ verticalPanningPolicy WRITE setVerticalPanningPolicy)
+    //! \brief Horizontal panning policy status
+    Q_PROPERTY(PanningPolicy horizontalPanningPolicy READ horizontalPanningPolicy WRITE setHorizontalPanningPolicy)
     //! \brief Enabled panning directions
     Q_PROPERTY(Qt::Orientations panDirection READ panDirection WRITE setPanDirection)
     //! \brief Panning range
@@ -69,6 +71,23 @@ class M_EXPORT MPannableWidget : public MWidgetController
     Q_PROPERTY(qreal panThreshold READ panThreshold WRITE setPanThreshold)
 
 public:
+
+    /*!
+     * This enum contains possible values of a panning policy.
+     *
+     * \li PanningAlwaysOn - the pannable widget will always react to pan gesture
+     * \li PanningAlwaysOff - the pannable widget will never react to pan gesture
+     * \li PanningAsNeeded - the pannable widget will only react to pan gesture if the panned
+     *     widget is bigger than the viewport.
+     *
+     * \sa setHorizontalPanningPolicy, setVerticalPanningPolicy.
+     */
+    enum PanningPolicy {
+        PanningAlwaysOn,
+        PanningAlwaysOff,
+        PanningAsNeeded
+    };
+
     /*!
      * \brief Constructs a pannable widget with a \a parent.
      */
@@ -98,29 +117,63 @@ public:
     void setPhysics(MPhysics2DPanning *physics);
 
     /*!
-     * \brief Sets the enabled status of the pannable widget.
+     * \brief Sets the vertical panning policy of the pannable widget.
+     *
+     * This method allows for finegrained control over the panning
+     * functionality in the MPannableWidget. The policy argument
+     * will define the result of a vertical pan gesture executed
+     * over pannable widget.
+     *
+     * This method does not reset horizontal panning policy.
+     *
+     * \sa verticalPanningPolicy and setPanDirection.
      */
-    void setEnabled(bool enabled);
+    void setVerticalPanningPolicy(PanningPolicy policy);
 
     /*!
-     * \brief Returns the enabled status of the pannable widget.
+     * \brief Sets the horizontal panning policy of the pannable widget.
+     *
+     * This method allows for finegrained control over the panning
+     * functionality in the MPannableWidget. The policy argument
+     * will define the result of a horizontal pan gesture executed
+     * over pannable widget.
+     *
+     * This method does not reset vertical panning policy.
+     *
+     * \sa horizontalPanningPolicy and setPanDirection.
      */
-    bool isEnabled();
+    void setHorizontalPanningPolicy(PanningPolicy policy);
 
     /*!
-     * \brief Sets the \a range of the panning.
+     * \brief Returns the vertical interactivity policy of the pannable widget.
+     */
+    PanningPolicy verticalPanningPolicy() const;
+
+    /*!
+     * \brief Returns the interactivity policy of the pannable widget.
+     */
+    PanningPolicy horizontalPanningPolicy() const;
+
+    /*!
+     * \brief Sets the \a range of panning.
      *
-     * When range is zero along some axis, user can still make a
-     * panning gesture on that direction but the position snaps back
-     * to 0.0. If the range is shrank so that the current position
-     * goes to border, the border springs are activated.
-     *
-     * By default, the range is QRectF(0,0).
+     * \sa range.
      */
     virtual void setRange(const QRectF &range);
 
     /*!
-     * \brief Returns the range of the panning.
+     * \brief Returns the range of panning.
+     *
+     * The range of panning defines the allowed positions of
+     * the viewport over the panned widget. The panning range
+     * is smaller than the panned widget size by the size of
+     * the viewport.
+     *
+     * \note When range is zero along some axis, user can still make a
+     * panning gesture on that direction but the position snaps back
+     * to 0.0. If the range is shrank so that the current position
+     * goes to border, the border springs are activated.
+     *
      */
     virtual QRectF range() const;
 
@@ -142,12 +195,24 @@ public:
     /*!
      * \brief Sets the enabled panning directions.
      *
+     * This method allows enabling or disabling panning directions
+     * of the pannable widget. It is an equivalent of methods
+     * for setting panning policies: enabling a panning direction
+     * has the same effect as setting PanningAlwaysOn policy for that
+     * direction.Disabling a panning direction is exactly the same
+     * as setting PanningAlwaysOff policy.
+     *
      * The accepted values are Qt::Horizontal and/or Qt::Vertical.
+     *
+     * \sa setVerticalPanningPolicy and setHorizontalPanningPolicy.
      */
     virtual void setPanDirection(const Qt::Orientations &panDirection);
 
     /*!
      * \brief Returns the enabled panning directions.
+     *
+     * A panning direction is enabled if the policy of panning for
+     * that direction is either PanningAlwaysOn or PanningAsNeeded.
      *
      * By default, the panning is enabled in Qt::Vertical direction.
      */
@@ -162,6 +227,11 @@ public:
      * \brief Deprecated since 0.20.
      */
     qreal panThreshold();
+
+    //! \reimp
+    void setEnabled(bool enabled);
+    bool isEnabled();
+    //! \reimp_end
 
 public Q_SLOTS:
     /*!

@@ -29,6 +29,7 @@ public:
     MPannableViewportLayout(QGraphicsLayoutItem *parent = 0);
 
     void setPanningDirections(const Qt::Orientations &panningDirections);
+    Qt::Orientations panningDirections() const;
 
     void setWidget(QGraphicsWidget *widget);
 
@@ -38,7 +39,7 @@ public:
 
 private:
     QGraphicsWidget *pannedWidget;
-    Qt::Orientations panningDirections;
+    Qt::Orientations directions;
 };
 //! \internal_end
 

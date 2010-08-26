@@ -50,6 +50,7 @@ private slots:
     void settingNULLPositionIndicatorShouldNotBeAccepted();
 
     void disabledViewportShouldNotAllowWigetToBeBiggerThanViewport();
+    void rangeOfViewportShouldBeSizeOfPannedWidgetMinusViewportSize();
 
 private:
     MPannableViewport *subject;

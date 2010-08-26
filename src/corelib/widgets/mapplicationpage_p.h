@@ -40,6 +40,8 @@ public:
     void setExposedContentRect(const QRectF &rect);
 
     MPannableViewport *pannableViewport;
+    Qt::Orientations panDirection;
+
     bool contentCreated;
 
     void _q_onSceneWindowStateChanged(MSceneWindow::SceneWindowState newState,

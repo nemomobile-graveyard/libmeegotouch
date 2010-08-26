@@ -24,15 +24,19 @@
 MPannableViewportLayout::MPannableViewportLayout(QGraphicsLayoutItem *parent)
     : QGraphicsLinearLayout(parent),
       pannedWidget(0),
-      panningDirections(0)
+      directions(0)
 {
 }
 
 void MPannableViewportLayout::setPanningDirections(const Qt::Orientations &newDirections)
 {
-    panningDirections = newDirections;
+    directions = newDirections;
 }
 
+Qt::Orientations MPannableViewportLayout::panningDirections() const
+{
+    return directions;
+}
 
 void MPannableViewportLayout::setWidget(QGraphicsWidget *widget)
 {
@@ -52,12 +56,12 @@ void MPannableViewportLayout::setGeometry(const QRectF &rect)
     QRectF unboundedRect = rect;
 
     if (pannedWidget) {
-        if (panningDirections.testFlag(Qt::Horizontal)) {
+        if (directions.testFlag(Qt::Horizontal)) {
             qreal width = qMax(rect.width(), pannedWidget->effectiveSizeHint(Qt::PreferredSize).width());
             unboundedRect.setWidth(width);
         }
 
-        if (panningDirections.testFlag(Qt::Vertical)) {
+        if (directions.testFlag(Qt::Vertical)) {
             qreal height = qMax(rect.height(), pannedWidget->effectiveSizeHint(Qt::PreferredSize).height());
             unboundedRect.setHeight(height);
         }

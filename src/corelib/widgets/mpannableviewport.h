@@ -135,23 +135,6 @@ public:
     QGraphicsWidget *widget() const;
 
     /*!
-     * \brief If autoRange is disabled, manually sets the range of the
-     * panning.
-     *
-     * This method overrides the method in MPannableWidget. Note
-     * that in MPannableViewport the meaning of the range is
-     * different from MPannableWidget (range is not the range of the
-     * physics (i.e. allowed movement) but it is the range of the area
-     * that can be panned over).
-     */
-    void setRange(const QRectF &range);
-
-    /*!
-     * \brief Returns the current panning range.
-     */
-    virtual QRectF range() const;
-
-    /*!
      * \brief Sets the \a positionIndicator which will be used instead
      * of the current one.
      *
@@ -169,6 +152,8 @@ public:
     void resizeEvent(QGraphicsSceneResizeEvent *event);
     void updateGeometry();
     void updateData(const QList<const char *> &modifications);
+    void setRange(const QRectF &range);
+    QRectF range() const;
     //! \reimp_end
 
 Q_SIGNALS:

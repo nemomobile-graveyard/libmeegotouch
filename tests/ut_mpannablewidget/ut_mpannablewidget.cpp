@@ -349,7 +349,8 @@ void Ut_MPannableWidget::cancelEventStopPhysicsAndResetsStateOfWidget()
 
 void Ut_MPannableWidget::disabledWidgetShouldIgnoreMousePressAndPanEvents()
 {
-    widget->setEnabled(false);
+    widget->setVerticalPanningPolicy(MPannableWidget::PanningAlwaysOff);
+    widget->setHorizontalPanningPolicy(MPannableWidget::PanningAlwaysOff);
 
     QCOMPARE(physicsState->pointerPressed, false);
     QCOMPARE(physicsState->pointerMoved, false);
