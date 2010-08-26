@@ -32,7 +32,8 @@ M_REGISTER_WIDGET(MImageWidget)
 
 MImageWidgetPrivate::MImageWidgetPrivate()
     : MWidgetControllerPrivate(),
-      pixmap(0), deletePixmap(true)
+      pixmap(0),
+      deletePixmap(true)
 {
 }
 
@@ -116,7 +117,8 @@ void MImageWidgetPrivate::deepCopy(const MImageWidget &other)
     Q_Q(MImageWidget);
     *q->d_func() = *(other.d_func());
 
-    qreal fx, fy;
+    qreal fx(0), fy(0);
+
     other.zoomFactor(&fx, &fy);
     q->setZoomFactor(fx, fy);
 
@@ -221,10 +223,11 @@ void MImageWidget::setZoomFactor(qreal factor)
 
 void MImageWidget::setZoomFactor(qreal fx, qreal fy)
 {
-    if (fx < 0.0 || fy < 0.0) return;
+    if (fx >= 0.0)
+        model()->setZoomFactorX(fx);
 
-    model()->setZoomFactorX(fx);
-    model()->setZoomFactorY(fy);
+    if (fy >= 0.0)
+        model()->setZoomFactorY(fy);
 
     // If zoomFactorX not equals zoomFactorY, set mode to Qt::IgnoreAspectRatio automatic
     if (fx != fy)
@@ -233,10 +236,7 @@ void MImageWidget::setZoomFactor(qreal fx, qreal fy)
 
 void MImageWidget::zoomFactor(qreal *fx, qreal *fy) const
 {
-    if (fx == 0 && fy == 0) return;
-
     Q_D(const MImageWidget);
-
 
     if(fx)
         *fx = model()->zoomFactorX();
@@ -256,6 +256,7 @@ void MImageWidget::zoomFactor(qreal *fx, qreal *fy) const
         QSizeF widgetSize = size() - marginSize;
 
         buffer.scale(widgetSize, model()->aspectRatioMode());
+
         if (fx && *fx == 0)
             *fx = buffer.width() / imageSize.width();
 
@@ -266,14 +267,16 @@ void MImageWidget::zoomFactor(qreal *fx, qreal *fy) const
 
 void MImageWidget::zoomIn()
 {
-    qreal fx, fy;
+    qreal fx(0), fy(0);
+
     zoomFactor(&fx, &fy);
     setZoomFactor(fx * 2.0, fy * 2.0);
 }
 
 void MImageWidget::zoomOut()
 {
-    qreal fx, fy;
+    qreal fx(0), fy(0);
+
     zoomFactor(&fx, &fy);
     setZoomFactor(fx / 2.0, fy / 2.0);
 }

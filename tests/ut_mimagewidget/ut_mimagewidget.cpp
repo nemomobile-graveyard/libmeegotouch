@@ -172,8 +172,8 @@ void Ut_MImageWidget::testSetZoomFactor()
         m_subject->setZoomFactor(factor, factor);
         m_subject->zoomFactor(&fx, &fy);
 
-        QVERIFY(fx == factor);
-        QVERIFY(fy == factor);
+        QCOMPARE(fx, factor);
+        QCOMPARE(fy, factor);
     }
 
     delete m_subject;
@@ -346,22 +346,20 @@ void Ut_MImageWidget::testZoomOut()
     m_subject->setZoomFactor(1, 1);
     m_subject->zoomFactor(&fx, &fy);
 
-    QVERIFY(fx == 1.0);
-    QVERIFY(fy == 1.0);
+    QCOMPARE(fx, 1.0);
+    QCOMPARE(fy, 1.0);
 
     m_subject->zoomOut();
 
     qreal nfx(0), nfy(0);
     m_subject->zoomFactor(&nfx, &nfy);
 
-
-    QVERIFY(nfx == 0.5 * fx);
-    QVERIFY(nfy == 0.5 * fy);
+    QCOMPARE(nfx, 0.5 * fx);
+    QCOMPARE(nfy, 0.5 * fy);
 
     delete m_subject;
     m_subject = 0;
 }
-
 
 void Ut_MImageWidget::testConstructors()
 {
