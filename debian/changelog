@@ -1,6 +1,11 @@
-libmeegotouch (0.20.36~1) unstable; urgency=low
+libmeegotouch (0.20.36-1) unstable; urgency=low
 
-  * [unreleased]
+  * Fixes: NB#179986 - MImageWidget does not take aspect ratio of images (logical IDs) into account when specifying image sizes.
+  * Fixes: NB#160042 -  DuiLocale does not respect 24h time format preference
+  * Fixes: NB#185150 -  Gallery crashes when tapped on tags drill down button in main view
+  * Fixes: NB#180950 - SSU Fails: mthemedaemon crashes during theme update
+  * Fixes: NB#182500 -  Slider can be adjusted in minimized window
+
   * Implemented: SWP#DUI-3585 Notification system support for daemon processes
 
  -- Jorgen Scheibengruber <jorgen.scheibengruber@nokia.com>  Wed, 25 Aug 2010 11:51:23 +0300
