@@ -34,7 +34,8 @@
 MPositionIndicatorViewPrivate::MPositionIndicatorViewPrivate()
     : controller(0),
       hideTimer(new QTimer()),
-      visible(false)
+      visible(false),
+      onDisplay(false)
 {
 }
 
@@ -43,16 +44,45 @@ MPositionIndicatorViewPrivate::~MPositionIndicatorViewPrivate()
     delete this->hideTimer;
 }
 
+void MPositionIndicatorViewPrivate::init(MPositionIndicator *controller)
+{
+    Q_Q(MPositionIndicatorView);
+
+    this->controller = controller;
+    hideTimer->setSingleShot(true);
+    fadeAnimation = new QPropertyAnimation(controller, "opacity", q);
+
+    q->connect(hideTimer, SIGNAL(timeout()), SLOT(hide()));
+    q->connect(controller, SIGNAL(displayEntered()), SLOT(_q_displayEntered()));
+    q->connect(controller, SIGNAL(displayExited()), SLOT(_q_displayExited()));
+}
+
+void MPositionIndicatorViewPrivate::_q_displayEntered()
+{
+    Q_Q(MPositionIndicatorView);
+
+    onDisplay = true;
+    hideTimer->start(q->style()->hideTimeout());
+}
+
+void MPositionIndicatorViewPrivate::_q_displayExited()
+{
+    Q_Q(MPositionIndicatorView);
+
+    /* stop everything and keep indicator visible for next use */
+    onDisplay = false;
+    hideTimer->stop();
+    fadeAnimation->stop();
+    controller->setProperty("opacity", 1.0f);
+    visible = true;
+    q->update();
+}
+
 MPositionIndicatorView::MPositionIndicatorView(MPositionIndicator *controller) :
     MWidgetView(* new MPositionIndicatorViewPrivate, controller)
 {
     Q_D(MPositionIndicatorView);
-    d->controller = controller;
-
-    connect(d->hideTimer, SIGNAL(timeout()), this, SLOT(hide()));
-    d->hideTimer->setSingleShot(true);
-
-    d->fadeAnimation = new QPropertyAnimation(controller, "opacity", this);
+    d->init(controller);
 }
 
 MPositionIndicatorView::~MPositionIndicatorView()
@@ -146,17 +176,25 @@ void MPositionIndicatorView::drawContents(QPainter *painter, const QStyleOptionG
 
 void MPositionIndicatorView::updateData(const QList<const char *>& modifications)
 {
+    Q_D(MPositionIndicatorView);
+
     MWidgetView::updateData(modifications);
 
-    resetHideTimer();
+    if (d->onDisplay) {
+        resetHideTimer();
+    }
     update();
 }
 
 void MPositionIndicatorView::setupModel()
 {
+    Q_D(MPositionIndicatorView);
+
     MWidgetView::setupModel();
 
-    resetHideTimer();
+    if (d->onDisplay) {
+        resetHideTimer();
+    }
     update();
 }
 
@@ -205,3 +243,5 @@ void MPositionIndicatorView::resetHideTimer()
 }
 
 M_REGISTER_VIEW_NEW(MPositionIndicatorView, MPositionIndicator)
+
+#include "moc_mpositionindicatorview.cpp"

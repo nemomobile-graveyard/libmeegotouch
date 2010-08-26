@@ -90,6 +90,9 @@ private:
     Q_DISABLE_COPY(MPositionIndicatorView)
     Q_DECLARE_PRIVATE(MPositionIndicatorView)
 
+    Q_PRIVATE_SLOT(d_func(), void _q_displayEntered())
+    Q_PRIVATE_SLOT(d_func(), void _q_displayExited())
+
     friend class  Ut_MPositionIndicatorView;
 };
 

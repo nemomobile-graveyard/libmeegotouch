@@ -29,15 +29,22 @@ class QPropertyAnimation;
 
 class MPositionIndicatorViewPrivate : public MWidgetViewPrivate
 {
+    Q_DECLARE_PUBLIC(MPositionIndicatorView)
+
 public:
     MPositionIndicatorViewPrivate();
+    void init(MPositionIndicator *controller);
     virtual ~MPositionIndicatorViewPrivate();
 
     MPositionIndicator *controller;
     QTimer *hideTimer;
     bool visible;
+    bool onDisplay;
 
     QPropertyAnimation *fadeAnimation;
+
+    void _q_displayEntered();
+    void _q_displayExited();
 };
 
 #endif
