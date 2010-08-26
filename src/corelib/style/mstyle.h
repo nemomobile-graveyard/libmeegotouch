@@ -99,10 +99,6 @@ protected:
     int references() const;
     int addReference();
     int removeReference();
-private:
-    /* Do not use QObject::setParent() and do not delete the style manually.
-     * Instead call MTheme::releaseStyle(style) */
-    void setParent(QObject *) {}
 
     friend class MStyleSheet;
     friend class MThemePrivate;

@@ -57,4 +57,6 @@ void MAbstractWidgetAnimation::setTargetWidget(MWidgetController *widget)
     Q_D(MAbstractWidgetAnimation);
 
     d->targetWidget = widget;
+
+    style().setParent(widget);
 }
