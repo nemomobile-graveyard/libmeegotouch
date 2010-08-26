@@ -64,7 +64,6 @@ public:
     QPointer<MSceneWindow> statusBar;
     QTimer autoHideComponentsTimer;
     QList<MSceneWindow *> componentsOnAutoHide;
-    bool isMenuOpen;
     bool pageAreaMaximized;
 #ifdef Q_WS_X11
     bool    isChained;
@@ -122,6 +121,8 @@ public:
      Opens menu and disables a toolbar and an escape button.
      */
     void openMenu();
+    void closeMenu();
+    bool isMenuOpen() const;
 #ifdef Q_WS_X11
     void addMStatusBarOverlayProperty();
     void appendMApplicationWindowTypeProperty();
@@ -161,6 +162,7 @@ public:
     void _q_menuAppeared();
     void _q_menuDisappeared();
     void _q_updateStatusBarVisibility();
+    void _q_navigationBarStateChanged(MSceneWindow::SceneWindowState newState, MSceneWindow::SceneWindowState oldState);
 #ifdef HAVE_N900
     void _q_exitAppView();
 #endif

@@ -87,7 +87,6 @@ MApplicationWindowPrivate::MApplicationWindowPrivate()
     , homeButtonPanel(new MHomeButtonPanel)
     , escapeButtonPanel(new MEscapeButtonPanel)
     , menu(new MApplicationMenu)
-    , isMenuOpen(false)
     , pageAreaMaximized(false)
 #ifdef Q_WS_X11
     , isChained(false)
@@ -172,6 +171,9 @@ void MApplicationWindowPrivate::init()
 
     q->connect(navigationBar, SIGNAL(viewmenuTriggered()),
                q, SLOT(openMenu()));
+
+    q->connect(navigationBar, SIGNAL(sceneWindowStateChanged(MSceneWindow::SceneWindowState, MSceneWindow::SceneWindowState)),
+               q, SLOT(_q_navigationBarStateChanged(MSceneWindow::SceneWindowState, MSceneWindow::SceneWindowState)));
 
     q->connect(menu, SIGNAL(appeared()),
                q, SLOT(_q_menuAppeared()));
@@ -494,6 +496,17 @@ void MApplicationWindowPrivate::openMenu()
     }
 }
 
+void MApplicationWindowPrivate::closeMenu()
+{
+    if (menu->sceneWindowState() == MSceneWindow::Appeared || menu->sceneWindowState() == MSceneWindow::Appearing)
+        menu->disappear();
+}
+
+bool MApplicationWindowPrivate::isMenuOpen() const
+{
+    return (menu->sceneWindowState() == MSceneWindow::Appeared);
+}
+
 void MApplicationWindowPrivate::_q_menuAppeared()
 {
     Q_Q(MApplicationWindow);
@@ -501,7 +514,6 @@ void MApplicationWindowPrivate::_q_menuAppeared()
                         q, SLOT(openMenu()));
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(closeMenu()));
-    isMenuOpen = true;
     autoHideComponentsTimer.stop();
 }
 
@@ -512,13 +524,22 @@ void MApplicationWindowPrivate::_q_menuDisappeared()
                         q, SLOT(closeMenu()));
     QObject::connect(navigationBar, SIGNAL(viewmenuTriggered()),
                      q, SLOT(openMenu()));
-    isMenuOpen = false;
 
     escapeButtonPanel->setEnabled(true);
     toolBar->setProperty(_M_IsEnabledPreservingSelection, QVariant(true));
 
     if (!componentsOnAutoHide.isEmpty() && !autoHideComponentsTimer.isActive())
         autoHideComponentsTimer.start();
+}
+
+void MApplicationWindowPrivate::_q_navigationBarStateChanged(
+        MSceneWindow::SceneWindowState newState, MSceneWindow::SceneWindowState oldState)
+{
+    // Check for an animated or immediate disappearance.
+    if (newState == MSceneWindow::Disappearing ||
+            (newState == MSceneWindow::Disappeared && oldState == MSceneWindow::Appeared)) {
+        closeMenu();
+    }
 }
 
 #ifdef HAVE_N900
@@ -625,9 +646,6 @@ void MApplicationWindowPrivate::setComponentDisplayMode(
 
     case MApplicationPageModel::Hide:
         removeComponentFromAutoHide(component);
-        MNavigationBar *navBar = qobject_cast<MNavigationBar*>(component);
-        if (navBar && isMenuOpen)
-            q->closeMenu();
         component->disappear();
         break;
     };
@@ -1028,7 +1046,7 @@ void MApplicationWindow::openMenu()
 void MApplicationWindow::closeMenu()
 {
     Q_D(MApplicationWindow);
-    if (d->isMenuOpen) d->menu->disappear();
+    d->closeMenu();
 }
 
 void MApplicationWindow::setWindowIconID(const QString &windowIconID)
@@ -1155,7 +1173,7 @@ MTheme::ViewType MApplicationWindow::toolbarViewType() const
 bool MApplicationWindow::isMenuOpen() const
 {
     Q_D(const MApplicationWindow);
-    return d->isMenuOpen;
+    return d->isMenuOpen();
 }
 
 void MApplicationWindow::mousePressEvent(QMouseEvent *event)
@@ -1174,7 +1192,7 @@ void MApplicationWindow::mouseReleaseEvent(QMouseEvent *event)
     Q_D(MApplicationWindow);
     MSceneWindow *component;
 
-    if (d->isMenuOpen) {
+    if (isMenuOpen()) {
         if (d->navigationBar->boundingRect().contains(d->navigationBar->mapFromScene(event->pos().x(), event->pos().y()))
             || d->toolBar->boundingRect().contains(d->toolBar->mapFromScene(event->pos().x(), event->pos().y()))) {
             closeMenu();
