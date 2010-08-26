@@ -40,6 +40,7 @@
 #include <mlabelstyle.h>
 
 
+
 //FIXME: this is not defined by any MStyle right now and also hardcoded in
 //       libmeegotouch. If this is finally defined anywhere else, remove this.
 const int QtMaemo6TitleBar::titleBarHeight = 70;

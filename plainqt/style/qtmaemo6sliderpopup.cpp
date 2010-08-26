@@ -26,6 +26,7 @@
 #include <QStyleOption>
 #include <QPaintEvent>
 
+
 #include <mlabelstyle.h>
 
 QtMaemo6SliderPopUp::QtMaemo6SliderPopUp()
