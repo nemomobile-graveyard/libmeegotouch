@@ -2,9 +2,7 @@ EXTENSION_DIR=./applicationextension
 
 PUBLIC_HEADERS += \
     $$EXTENSION_DIR/mextensionarea.h \
-    $$EXTENSION_DIR/mextensionareamodel.h \
     $$EXTENSION_DIR/mextensionareaview.h \
-    $$EXTENSION_DIR/mapplicationextensionareamodel.h \
     $$EXTENSION_DIR/mapplicationextensionareaview.h \
     $$EXTENSION_DIR/mapplicationextensionarea.h \
     $$EXTENSION_DIR/mapplicationextensionmanager.h \
@@ -12,7 +10,6 @@ PUBLIC_HEADERS += \
     $$EXTENSION_DIR/mapplicationextensionloader.h \
     $$EXTENSION_DIR/mapplicationextensionmetadata.h \
     $$EXTENSION_DIR/mextensionrunner.h \
-    $$EXTENSION_DIR/mextensionhandlemodel.h \
     $$EXTENSION_DIR/mextensionhandle.h \
     $$EXTENSION_DIR/mextensionhandleview.h \
     $$EXTENSION_DIR/mapplicationextensionhandleview.h \
@@ -42,9 +39,11 @@ SOURCES += $$EXTENSION_DIR/mextensionarea.cpp \
     $$EXTENSION_DIR/mapplicationextensionhandleview.cpp
 
 
-MODEL_HEADERS += $$EXTENSION_DIR/mextensionareamodel.h \
+EXTENSION_MODEL_HEADERS += \
+    $$EXTENSION_DIR/mextensionareamodel.h \
     $$EXTENSION_DIR/mapplicationextensionareamodel.h \
     $$EXTENSION_DIR/mextensionhandlemodel.h
 
+MODEL_HEADERS += $$EXTENSION_MODEL_HEADERS
 
-PUBLIC_HEADERS += $$MODEL_HEADERS
+PUBLIC_HEADERS += $$EXTENSION_MODEL_HEADERS

@@ -9,13 +9,10 @@ PUBLIC_HEADERS += $$MASHUP_MASHUP_SRC_DIR/mappletbutton.h \
     $$MASHUP_MASHUP_SRC_DIR/mappletinstancedata.h \
     $$MASHUP_MASHUP_SRC_DIR/mappletinventory.h \
     $$MASHUP_MASHUP_SRC_DIR/mappletinventoryview.h \
-    $$MASHUP_MASHUP_SRC_DIR/mappletinventorymodel.h \
     $$MASHUP_MASHUP_SRC_DIR/maggregatedataaccess.h \
     $$MASHUP_MASHUP_SRC_DIR/mmashupcanvas.h \
-    $$MASHUP_MASHUP_SRC_DIR/mmashupcanvasmodel.h \
     $$MASHUP_MASHUP_SRC_DIR/mmashupcanvasview.h \
     $$MASHUP_MASHUP_SRC_DIR/msubdatastore.h \
-    $$MASHUP_MASHUP_SRC_DIR/mapplethandlemodel.h \
     $$MASHUP_MASHUP_SRC_DIR/mappletloader.h \
     $$MASHUP_MASHUP_SRC_DIR/mappletid.h \
     $$MASHUP_MASHUP_SRC_DIR/mappletsettings.h \
@@ -54,8 +51,11 @@ SOURCES += $$MASHUP_MASHUP_SRC_DIR/mappletbutton.cpp \
     $$MASHUP_MASHUP_SRC_DIR/mgconfdatastore.cpp \
     $$MASHUP_MASHUP_SRC_DIR/mappletinstancemanagerdbusadaptor.cpp
 
-MODEL_HEADERS += $$MASHUP_MASHUP_SRC_DIR/mapplethandlemodel.h \
+MASHUP_MODEL_HEADERS += \
+    $$MASHUP_MASHUP_SRC_DIR/mapplethandlemodel.h \
     $$MASHUP_MASHUP_SRC_DIR/mmashupcanvasmodel.h \
     $$MASHUP_MASHUP_SRC_DIR/mappletinventorymodel.h
 
-PUBLIC_HEADERS += $$MODEL_HEADERS
+PUBLIC_HEADERS += $$MASHUP_MODEL_HEADERS
+
+MODEL_HEADERS += $$MASHUP_MODEL_HEADERS
