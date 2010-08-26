@@ -153,6 +153,7 @@ void Ut_MBubbleItem::testAvatar()
     QSizeF size = m_bubble->preferredSize();
     QPointer<MImageWidget> avatar1 = new MImageWidget;
     QPointer<MImageWidget> avatar2 = new MImageWidget;
+    QPixmap pixmap("icon-m-home");
     QVERIFY(!m_bubble->avatar());
     m_bubble->setAvatar(avatar1);
     QVERIFY(m_bubble->avatar() == avatar1);
@@ -173,6 +174,10 @@ void Ut_MBubbleItem::testAvatar()
     m_bubble->setAvatar(avatar2);
     QVERIFY(m_bubble->avatar() == avatar2);
     QVERIFY(avatar2->parent() == m_bubble);
+    m_bubble->setAvatar(NULL);
+    QVERIFY(!m_bubble->avatar());
+    m_bubble->setAvatar( pixmap );
+    QCOMPARE(m_bubble->avatar()->pixmap()->toImage(), pixmap.toImage());
     m_bubble->setAvatar(NULL);
     QVERIFY(!m_bubble->avatar());
     //Both should be deleted now

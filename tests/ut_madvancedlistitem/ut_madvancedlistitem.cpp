@@ -75,10 +75,10 @@ void Ut_MAdvancedListItem::testTitle()
 
 void Ut_MAdvancedListItem::testImageWidget()
 {
-    //this part is commented out because setImageWidget() is crashing - bug reported: #185535
-    /*MImageWidget *myImageWidget = new MImageWidget();
+    QSKIP("Wait for issue in bug #185535 to be resolved", SkipSingle);
+    MImageWidget *myImageWidget = new MImageWidget();
     m_subject->setImageWidget( myImageWidget );
-    QCOMPARE( m_subject->imageWidget(), myImageWidget );*/
+    QCOMPARE( m_subject->imageWidget(), myImageWidget );
 }
 
 void Ut_MAdvancedListItem::testSideTopImage()
@@ -99,6 +99,7 @@ void Ut_MAdvancedListItem::testProgressIndicator()
 
 void Ut_MAdvancedListItem::testItemStyle()
 {
+    QSKIP("Wait for issue in bug #187235  to be resolved", SkipSingle);
     QCOMPARE( m_subject->itemStyle(), MAdvancedListItem::IconWithTitleProgressIndicatorAndTwoSideIcons );
     m_subject->setItemStyle(MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon);
     QCOMPARE( m_subject->itemStyle(), MAdvancedListItem::IconWithTitleProgressIndicatorAndTopSideIcon );

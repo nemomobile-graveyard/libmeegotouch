@@ -35,6 +35,7 @@
 #include <QFile>
 #include <QGraphicsScene>
 #include <QGraphicsView>
+#include <QGesture>
 
 #define SAVE_IMAGE(fileName, image) \
     do{ \
@@ -311,6 +312,7 @@ void Ut_MLabel::testRichTextElide()
 
 void Ut_MLabel::testHighlighting()
 {
+    QSKIP("Wait for issue in bug #164207 to be resolved", SkipSingle);
     label->setText("Label <b>rich</b>");
 
     QImage nonhighlighted = captureImage(label);
@@ -321,10 +323,19 @@ void Ut_MLabel::testHighlighting()
 
     QVERIFY(nonhighlighted != highlighted);
 
-    QSignalSpy spy(h, SIGNAL(clicked(QString)));
-    //QSignalSpy spy(h, SIGNAL(longPress(QString)));
+    QSignalSpy spyClick(h, SIGNAL(clicked(QString)));
     label->simulateClick(QPoint(15, 5));
-    QCOMPARE(spy.count(), 1);
+    QCOMPARE(spyClick.count(), 1);
+
+    QSignalSpy spyLongPress(h, SIGNAL(longPressed(QString)));
+
+    QList<QGesture *> list;
+    QTapAndHoldGesture gesture;
+    list.append( &gesture );
+    QGestureEvent gestureEvent(list);
+    label->tapAndHoldGestureEvent (&gestureEvent, &gesture );
+
+    QCOMPARE(spyLongPress.count(), 1);
 
     label->removeHighlighter(NULL);
     label->removeHighlighter(h);
@@ -344,8 +355,6 @@ void Ut_MLabel::anchorHitTest(const QPointF &point, int expectedHits)
     label->simulateClick(point);
     QCOMPARE(spy.count(), expectedHits);
 }
-
-
 
 QImage Ut_MLabel::captureImage(MLabel *label)
 {

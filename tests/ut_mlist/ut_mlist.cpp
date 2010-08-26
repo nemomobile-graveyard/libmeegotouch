@@ -173,6 +173,7 @@ void Ut_mlist::testColums()
 
 void Ut_mlist::testSelectItem()
 {
+
     indexedModel = new MyIndexedModel;
     m_subject->setItemModel(indexedModel);
 
@@ -187,6 +188,22 @@ void Ut_mlist::testSelectItem()
 
     QVERIFY( m_subject->selectionModel()->hasSelection() == true );
     QVERIFY(m_subject->selectionModel()->isSelected(index) == true);
+
+    delete indexedModel;
+}
+
+void Ut_mlist::testAbstractModel()
+{
+
+    indexedModel = new MyIndexedModel;
+    m_subject->setItemModel(indexedModel);
+
+    QAbstractItemModel *model = (QAbstractItemModel*) m_subject->itemModel();
+    QModelIndex index = model->index(1, 0);
+    m_subject->selectItem(index);
+
+    QVERIFY( model->columnCount() == 1);
+    QCOMPARE( model, indexedModel );
 
     delete indexedModel;
 }
