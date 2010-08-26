@@ -1269,7 +1269,6 @@ void QtMaemo6Style::polish(QWidget *widget)
 
     if(QComboBox* comboBox = qobject_cast<QComboBox*>(widget)) {
         if(comboBox->isEditable()) {
-            //comboBox->lineEdit()->setReadOnly(false);
             comboBox->lineEdit()->setVisible(false);
         }
     }
@@ -1461,22 +1460,6 @@ void QtMaemo6Style::drawControl(ControlElement element,
 
     case CE_ComboBoxLabel: {
             mDebug("PlainQt Style") << "### Combobox line edit";
-        /*
-        if (const QStyleOptionComboBox *cmb = qstyleoption_cast<const QStyleOptionComboBox *>(opt)) {
-
-            QStyleOptionComboBox subopt = *cmb;
-            subopt.palette = QPalette(Qt::black);
-
-            //const MComboBoxStyle * style =
-            //    static_cast<const MComboBoxStyle *>( QtMaemo6StylePrivate::mStyle( cmb->state,
-            //                                           "MComboBoxStyle", "MComboBoxTitle" ) );
-            // Not implemented yet on the M side
-            //p->setFont( style->font() );
-            //p->setPen( QPen( style->color() ) );
-
-            QtMaemo6TestStyle::drawControl(element, cmb, p, widget);
-        }*/
-        // Draw nothing, Combobox on MeeGo has no Lineedit.
     }
     break;
 
