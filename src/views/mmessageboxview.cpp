@@ -21,28 +21,136 @@
 #include "mmessageboxview_p.h"
 
 #include "mmessagebox.h"
+#include "mimagewidget.h"
 #include "mlabel.h"
 
 #include <QGraphicsLinearLayout>
 
 MMessageBoxViewPrivate::MMessageBoxViewPrivate()
-  : label(0)
+  : iconImage(0),
+  titleLabel(0),
+  textLabel(0)
 {
 }
 
 MMessageBoxViewPrivate::~MMessageBoxViewPrivate()
 {
+    clearLayout();
+
+    delete iconImage;
+    delete titleLabel;
+    delete textLabel;
+}
+
+MImageWidget *MMessageBoxViewPrivate::iconImageWidget()
+{
+    if (!iconImage) {
+        iconImage = new MImageWidget(controller);
+        iconImage->setStyleName("CommonQueryIcon");
+    }
+    return iconImage;
+}
+
+MLabel *MMessageBoxViewPrivate::titleLabelWidget()
+{
+    if (!titleLabel) {
+        titleLabel = new MLabel(controller);
+        titleLabel->setStyleName("CommonQueryTitle");
+        titleLabel->setAlignment(Qt::AlignCenter);
+    }
+    return titleLabel;
+}
+
+MLabel *MMessageBoxViewPrivate::textLabelWidget()
+{
+    if (!textLabel) {
+        textLabel = new MLabel(controller);
+        textLabel->setStyleName("CommonQueryText");
+        textLabel->setWordWrap(true);
+        textLabel->setAlignment(Qt::AlignCenter);
+    }
+    return textLabel;
+}
+
+void MMessageBoxViewPrivate::prepareLayout()
+{
+    updateIconWidget();
+    updateTitleWidget();
+    updateTextWidget();
+}
+
+void MMessageBoxViewPrivate::updateLayout()
+{
+    clearLayout();
+    prepareLayout();
+
+    if (textLabel) {
+        contentsLayout->insertItem(0, textLabel);
+        contentsLayout->setAlignment(textLabel, Qt::AlignCenter);
+    }
+
+    if (titleLabel) {
+        contentsLayout->insertItem(0, titleLabel);
+        contentsLayout->setAlignment(titleLabel, Qt::AlignCenter);
+    }
+
+    if (iconImage) {
+        contentsLayout->insertItem(0, iconImage);
+        contentsLayout->setAlignment(iconImage, Qt::AlignCenter);
+    }
+}
+
+void MMessageBoxViewPrivate::clearLayout()
+{
+    contentsLayout->removeItem(iconImage);
+    contentsLayout->removeItem(titleLabel);
+    contentsLayout->removeItem(textLabel);
+}
+
+void MMessageBoxViewPrivate::updateIconWidget()
+{
+    Q_Q(MMessageBoxView);
+
+    if (q->model()->iconId().isEmpty()) {
+        if (iconImage)
+            delete iconImage;
+        iconImage = NULL;
+    } else {
+        iconImageWidget()->setImage(q->model()->iconId());
+    }
+}
+
+void MMessageBoxViewPrivate::updateTitleWidget()
+{
+    Q_Q(MMessageBoxView);
+
+    if (q->model()->title().isEmpty() || q->style()->hasTitleBar()) {
+        if (titleLabel)
+            delete titleLabel;
+        titleLabel = NULL;
+    } else {
+        titleLabelWidget()->setText(q->model()->title());
+    }
+}
+
+void MMessageBoxViewPrivate::updateTextWidget()
+{
+    Q_Q(MMessageBoxView);
+
+    if (q->model()->text().isEmpty()) {
+        if (textLabel)
+            delete textLabel;
+        textLabel = NULL;
+    } else {
+        textLabelWidget()->setText(q->model()->text());
+    }
 }
 
 MMessageBoxView::MMessageBoxView(MMessageBox *controller) :
     MDialogView(*new MMessageBoxViewPrivate, controller)
 {
     Q_D(MMessageBoxView);
-    d->label = new MLabel;
-    d->label->setAlignment(Qt::AlignCenter);
-    d->label->setWordWrap(true);
-    d->label->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
-    contentsLayout()->insertItem(0, d->label);
+    d->controller = qobject_cast<MMessageBox*>(controller);
 }
 
 MMessageBoxView::~MMessageBoxView()
@@ -56,11 +164,18 @@ void MMessageBoxView::updateData(const QList<const char *>& modifications)
     Q_D(MMessageBoxView);
     const char *member;
 
+    bool updateLayout = false;
     foreach(member, modifications) {
-        if (member == MMessageBoxModel::Text) {
-            d->label->setText(model()->text());
+        if (member == MMessageBoxModel::Text || member == MMessageBoxModel::Title ||
+            member == MMessageBoxModel::IconId) {
+            updateLayout = true;
+            break;
         }
     }
+
+    if (updateLayout)
+        d->updateLayout();
+
     if (model()->buttons().count() >= 3 && style()->maximumHorizontalButtons() >= 3)
         d->dialogBox->setPreferredWidth(style()->maximumSize().width());
     else
@@ -76,8 +191,6 @@ void MMessageBoxView::setupModel()
     Q_D(MMessageBoxView);
     model()->setAlwaysPannable(false);
 
-    //update text
-    d->label->setText(model()->text());
     if (model()->buttons().count() >= 3 && style()->maximumHorizontalButtons() >= 3)
         d->dialogBox->setPreferredWidth(style()->maximumSize().width());
     else
@@ -88,14 +201,11 @@ void MMessageBoxView::setupModel()
 }
 
 void MMessageBoxView::applyStyle() {
-    MDialogView::applyStyle();
     Q_D(MMessageBoxView);
-    if (!d->label) {
-        d->label = new MLabel;
-        d->label->setAlignment(Qt::AlignCenter);
-        d->label->setWordWrap(true);
-        contentsLayout()->insertItem(0, d->label);
-    }
+
+    MDialogView::applyStyle();
+
+    d->updateLayout();
 }
 
 M_REGISTER_VIEW_NEW(MMessageBoxView, MMessageBox)

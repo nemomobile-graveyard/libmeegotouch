@@ -33,6 +33,13 @@ class QueryDialogsPage : public TemplatePage
     Q_OBJECT
 
 public:
+    enum MessageBoxOption {
+        Default,
+        Icon,
+        LargeText
+    };
+    Q_DECLARE_FLAGS(MessageBoxOptions, MessageBoxOption)
+
     QueryDialogsPage();
 
     QString timedemoTitle();
@@ -43,6 +50,8 @@ public:
     void openQuestionDialog();
     void openEntryDialog();
     void openLongDialog();
+
+    void openMessageBox(MessageBoxOptions options = Default);
 
 protected:
     void retranslateUi();
@@ -56,5 +65,6 @@ private:
 
     QPointer<MDialog> dialog;
 };
+Q_DECLARE_OPERATORS_FOR_FLAGS(QueryDialogsPage::MessageBoxOptions)
 
 #endif // QUERYDIALOGSPAGE_H

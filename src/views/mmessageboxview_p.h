@@ -23,6 +23,7 @@
 #include "mdialogview_p.h"
 #include "mmessageboxview.h"
 
+class MImageWidget;
 class MLabel;
 
 class MMessageBoxViewPrivate : public MDialogViewPrivate
@@ -31,7 +32,26 @@ public:
     MMessageBoxViewPrivate();
     virtual ~MMessageBoxViewPrivate();
 
-    MLabel           *label;
+    void prepareLayout();
+    void updateLayout();
+    void clearLayout();
+
+    void updateIconWidget();
+    void updateTitleWidget();
+    void updateTextWidget();
+
+    MImageWidget *iconImageWidget();
+    MLabel *titleLabelWidget();
+    MLabel *textLabelWidget();
+
+    MImageWidget *iconImage;
+    MLabel *titleLabel;
+    MLabel *textLabel;
+
+    MMessageBox *controller;
+
+private:
+    Q_DECLARE_PUBLIC(MMessageBoxView)
 };
 
 #endif

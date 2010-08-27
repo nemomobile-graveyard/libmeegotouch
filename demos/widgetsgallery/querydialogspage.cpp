@@ -115,9 +115,47 @@ void QueryDialogsPage::itemClicked(const QModelIndex &index)
         break;
     case 2:
         openLongDialog();
+        break;
+    case 3:
+        openMessageBox();
+        break;
+    case 4:
+        openMessageBox(Icon);
+        break;
+    case 5:
+        openMessageBox(LargeText);
+        break;
+    case 6:
+        openMessageBox(LargeText | Icon);
+        break;
     default:
         break;
     }
+}
+
+void QueryDialogsPage::openMessageBox(MessageBoxOptions options)
+{
+    if (dialog)
+        return;
+
+    MMessageBox *messageBox = new MMessageBox("", M::YesButton|M::NoButton);
+
+    //% "ARE YOU SURE?"
+    messageBox->setTitle(qtTrId("xx_dialogs_and_notifications_are_you_sure_upcase"));
+
+    if (options & LargeText) {
+        //% "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus laoreet ornare elit ac tincidunt. Ut lectus enim, vestibulum congue aliquet vitae, sagittis nec enim."
+        messageBox->setText(qtTrId("xx_dialogs_and_notifications_big_lorem_impsum"));
+    } else {
+        //% "Lorem ipsum dolor sit amet."
+        messageBox->setText(qtTrId("xx_dialogs_and_notifications_short_lorem_impsum"));
+    }
+
+    if (options & Icon)
+        messageBox->setIconId("icon-l-default-application");
+
+    dialog = messageBox;
+    dialog->appear(MSceneWindow::DestroyWhenDone);
 }
 
 void QueryDialogsPage::openQuestionDialog()
@@ -229,6 +267,15 @@ void QueryDialogsPage::retranslateUi()
     queryDialogTypes << qtTrId("xx_wg_query_dialogs_page_entry_dialog");
     //% "Long Dialog"
     queryDialogTypes << qtTrId("xx_wg_query_dialogs_page_long_dialog");
+    //% "Small Query Dialog without Icon"
+    queryDialogTypes << qtTrId("xx_wg_query_dialogs_small_query_dialog_without_icon");
+    //% "Small Query Dialog with Icon"
+    queryDialogTypes << qtTrId("xx_wg_query_dialogs_small_query_dialog_with_icon");
+    //% "Big Query Dialog without Icon"
+    queryDialogTypes << qtTrId("xx_wg_query_dialogs_big_query_dialog_without_icon");
+    //% "Big Query Dialog with Icon"
+    queryDialogTypes << qtTrId("xx_wg_query_dialogs_big_query_dialog_with_icon");
+
 
     static_cast<QStringListModel *>(list->itemModel())->setStringList(queryDialogTypes);
 }

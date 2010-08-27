@@ -39,7 +39,9 @@ class M_EXPORT MMessageBox : public MDialog
 {
     Q_OBJECT
     M_CONTROLLER(MMessageBox)
+
     Q_PROPERTY(QString text READ text WRITE setText)
+    Q_PROPERTY(QString iconId READ iconId WRITE setIconId)
 
 public:
     /*!
@@ -47,7 +49,7 @@ public:
      *
      * By default, the title bar will be hidden.
      *
-     * \param text Text to be displayed in the dialog's central area
+     * \param text Text to be displayed in the message box.
      * \param standardButtons Standard buttons to be put in the button box.
      * \sa M::StandardButtons
      */
@@ -57,18 +59,16 @@ public:
      * \brief Constructs a message box with the given \a title, \a text and
      *        set of standard \a buttons.
      *
-     * \param title Dialog's title, shown in the title bar.
-     * \param text Text to be displayed in the dialog's central area
+     * \param title Dialog's title to be displayed by the message.
+     * \param text Text to be displayed in the message box.
      * \param buttons Standard buttons to be put in the button box.
      * \sa M::StandardButtons
      */
-    MMessageBox(const QString &title, const QString &text,
-                  M::StandardButtons buttons = M::OkButton);
-
+    MMessageBox(const QString &title, const QString &text, M::StandardButtons buttons = M::OkButton);
 
     /*!
      * \brief Returns the dialog's text.
-     * \return Text being displayed in the dialog's central area.
+     * \return Text being displayed in the message box.
      * \sa setText()
      */
     QString text() const;
@@ -76,10 +76,25 @@ public:
     /*!
      * \brief Sets the dialog's text.
      *
-     * \param text Text to be displayed in the dialog's central area.
+     * \param text Text to be displayed in the message box.
      * \sa text()
      */
     void setText(const QString &text);
+
+    /*!
+     * \brief Returns the dialog's icon id.
+     * \return Icon being displayed in the message box.
+     * \sa setIconId()
+     */
+    QString iconId() const;
+
+    /*!
+     * \brief Sets the dialog's icon.
+     *
+     * \param iconId Logical icon id to be displayed as message box icon.
+     * \sa iconId()
+     */
+    void setIconId(const QString &iconId);
 
     /*!
      * \brief Destructor

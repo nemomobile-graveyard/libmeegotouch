@@ -33,6 +33,7 @@ public:
 private:
 
     M_MODEL_PROPERTY(QString, text, Text, true, QString())
+    M_MODEL_PROPERTY(QString, iconId, IconId, true, QString())
 };
 
 #endif

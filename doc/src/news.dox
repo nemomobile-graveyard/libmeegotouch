@@ -1,5 +1,10 @@
 /*! \page news What's New in MeeGo Touch
 
+\section v02045 0.20.45
+
+\subsection New
+- MMessageBox::iconId property.
+
 \section v02043 0.20.43
 
 \subsection New

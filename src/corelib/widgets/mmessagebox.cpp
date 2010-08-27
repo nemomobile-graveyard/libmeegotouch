@@ -30,7 +30,7 @@ MMessageBoxPrivate::MMessageBoxPrivate()
 MMessageBox::MMessageBox(const QString &text, M::StandardButtons buttons)
     : MDialog(new MMessageBoxPrivate, buttons, new MMessageBoxModel, MSceneWindow::MessageBox)
 {
-    model()->setText(text);
+    setText(text);
 
     setCentralWidget(0);
 }
@@ -39,7 +39,7 @@ MMessageBox::MMessageBox(const QString &title, const QString &text, M::StandardB
     : MDialog(new MMessageBoxPrivate, buttons, new MMessageBoxModel, MSceneWindow::MessageBox)
 {
     setTitle(title);
-    model()->setText(text);
+    setText(text);
 
     setCentralWidget(0);
 }
@@ -56,4 +56,14 @@ QString MMessageBox::text() const
 void MMessageBox::setText(const QString &text)
 {
     model()->setText(text);
+}
+
+QString MMessageBox::iconId() const
+{
+    return model()->iconId();
+}
+
+void MMessageBox::setIconId(const QString &iconId)
+{
+    model()->setIconId(iconId);
 }
