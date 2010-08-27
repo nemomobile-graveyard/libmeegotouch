@@ -897,11 +897,17 @@ void MPlainMultiColumnListViewPrivate::drawVerticalSeparator(int row, int column
 MGroupHeaderListViewPrivate::MGroupHeaderListViewPrivate()
 {
     listIndexWidget = NULL;
+    gseparator = NULL;
+
+    gseparatorHeight = 0;
 }
 
 MGroupHeaderListViewPrivate::~MGroupHeaderListViewPrivate()
 {
     delete listIndexWidget;
+
+    if (gseparator)
+        delete gseparator;
 }
 
 void MGroupHeaderListViewPrivate::createVisibleItems(const QModelIndex &firstVisibleRow,
@@ -1045,8 +1051,8 @@ void MGroupHeaderListViewPrivate::updateHeadersPositions()
     int previousIndexPosition = 0;
     for (int i = 1; i < headersCount; i++) {
         int groupSize = this->groupSize(i - 1);
-        headersPositions << previousIndexPosition + headerHeight + groupSize;
-        previousIndexPosition += headerHeight + groupSize;
+        headersPositions << previousIndexPosition + headerHeight + groupSize + gseparatorHeight;
+        previousIndexPosition += headerHeight + groupSize + gseparatorHeight;
     }
 }
 
@@ -1075,6 +1081,43 @@ void MGroupHeaderListViewPrivate::updateHeadersIndexes()
             shortcuts[headerRowIndex] = model->data(headerRowIndex).toString();
         }
         listIndexWidget->setShortcuts(shortcuts);
+    }
+}
+
+void MGroupHeaderListViewPrivate::setGroupSeparator(MWidget *separator)
+{
+    if(gseparator)
+        delete gseparator;
+
+    gseparator = separator;
+    if(gseparator)
+        gseparatorHeight = gseparator->preferredHeight();
+    else
+        gseparatorHeight = 0;
+}
+
+void MGroupHeaderListViewPrivate::createSeparators()
+{
+    MListViewPrivate::createSeparators();
+
+    setGroupSeparator(new MSeparator);
+}
+
+void MGroupHeaderListViewPrivate::updateSeparators()
+{
+    MListViewPrivate::updateSeparators();
+
+    if (gseparator)
+        gseparator->setObjectName(q_ptr->style()->groupSeparatorObjectName());
+}
+
+void MGroupHeaderListViewPrivate::updateSeparatorSize()
+{
+    MListViewPrivate::updateSeparatorSize();
+
+    if (gseparator) {
+        gseparatorHeight = gseparator->preferredHeight();
+        gseparator->setGeometry(QRectF(QPointF(0, 0), QSizeF(viewWidth, gseparatorHeight)));
     }
 }
 
@@ -1195,10 +1238,25 @@ void MGroupHeaderListViewPrivate::layoutChanged()
 
 void MGroupHeaderListViewPrivate::drawSeparator(int row, QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
-    if(headersRows.contains(row) || headersRows.contains(row - 1))
+    if(headersRows.contains(row) || headersRows.contains(row - 1)) {
+        if (headersRows.contains(row))
+            drawGroupSeparator(row, painter, option);
         return;
+    }
 
     drawHorizontalSeparator(row, painter, option);
+}
+
+void MGroupHeaderListViewPrivate::drawGroupSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option)
+{
+    if(row == 0 || gseparatorHeight == 0)
+        return;
+
+    QPointF pos(-q_ptr->marginLeft(), locatePosOfItem(row) - gseparatorHeight - q_ptr->marginTop());
+
+    painter->translate(pos.x(), pos.y());
+    gseparator->paint(painter, option);
+    painter->translate(-pos.x(), -pos.y());
 }
 
 void MGroupHeaderListViewPrivate::updateListIndexVisibility()
@@ -1241,13 +1299,13 @@ void MMultiColumnListViewPrivate::setVerticalSeparator(MWidget *separator)
 
 void MMultiColumnListViewPrivate::createSeparators()
 {
-    MListViewPrivate::createSeparators();
+    MGroupHeaderListViewPrivate::createSeparators();
     setVerticalSeparator(new MSeparator(NULL, Qt::Vertical));
 }
 
 void MMultiColumnListViewPrivate::updateSeparators()
 {
-    MListViewPrivate::updateSeparators();
+    MGroupHeaderListViewPrivate::updateSeparators();
 
     if (vseparator)
         vseparator->setObjectName(q_ptr->style()->verticalSeparatorObjectName());
@@ -1301,7 +1359,7 @@ void MMultiColumnListViewPrivate::updateItemSize()
 
 void MMultiColumnListViewPrivate::updateSeparatorSize()
 {
-    MListViewPrivate::updateSeparatorSize();
+    MGroupHeaderListViewPrivate::updateSeparatorSize();
 
     if (vseparator) {
         vseparatorWidth = vseparator->preferredWidth();
@@ -1491,8 +1549,10 @@ int MMultiColumnListViewPrivate::totalHeight()
 
 void MMultiColumnListViewPrivate::drawSeparator(int row, QPainter *painter, const QStyleOptionGraphicsItem *option)
 {
-    if(headersRows.contains(row))
+    if(headersRows.contains(row)) {
+        drawGroupSeparator(row, painter, option);
         return;
+    }
 
     int columns = controllerModel->columns();
     int column = flatRowToColumn(row);

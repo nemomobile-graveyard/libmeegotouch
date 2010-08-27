@@ -73,6 +73,14 @@ class M_EXPORT MListStyle : public MWidgetStyle
         Sets object name for a vertical separator widget.
     */
     M_STYLE_ATTRIBUTE(QString, verticalSeparatorObjectName, VerticalSeparatorObjectName)
+
+    /*!
+        \property MListStyle::groupSeparatorObjectName
+        \brief Sets object name for a group separator widget
+
+        Sets object name for a group separator widget.
+    */
+    M_STYLE_ATTRIBUTE(QString, groupSeparatorObjectName, GroupSeparatorObjectName)
 };
 
 class M_EXPORT MListStyleContainer : public MWidgetStyleContainer

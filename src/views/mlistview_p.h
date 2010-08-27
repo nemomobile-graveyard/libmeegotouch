@@ -273,7 +273,13 @@ public:
     void updateHeadersRows();
     void updateHeadersIndexes();
 
+    void setGroupSeparator(MWidget *separator);
+
 public:
+    virtual void createSeparators();
+    virtual void updateSeparators();
+    virtual void updateSeparatorSize();
+
     virtual void updateHeaderHeight();
 
     virtual int indexToFlatRow(const QModelIndex &index) const;
@@ -300,6 +306,7 @@ public:
     virtual void layoutChanged();
 
     virtual void drawSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
+    virtual void drawGroupSeparator(const int row, QPainter *painter, const QStyleOptionGraphicsItem *option);
 
     virtual void updateListIndexVisibility();
 
@@ -308,6 +315,8 @@ public:
     QVector<int> headersRows;
 
     MListIndex *listIndexWidget;
+    MWidget *gseparator;
+    int gseparatorHeight;
 };
 
 class MMultiColumnListViewPrivate : public MGroupHeaderListViewPrivate
