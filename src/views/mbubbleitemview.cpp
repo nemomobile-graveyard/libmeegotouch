@@ -192,9 +192,6 @@ void MBubbleItemView::setGeometry(const QRectF &rect)
 
     Q_D(MBubbleItemView);
     d->updateMessageComposition();
-    d->layout->invalidate();
-    d->informationWidgetsLayout->invalidate();
-    d->innerLayout->invalidate();
 }
 
 void MBubbleItemViewPrivate::refreshStyleMode()
