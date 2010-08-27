@@ -172,7 +172,7 @@ Description: Demo application for MeeGo Touch
 Package: meegotouch-demos-widgetsgallery-tests
 Section: devel
 Architecture: any
-Depends: ${shlibs:Depends}, duitestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
+Depends: ${shlibs:Depends}, meegotestrunner, meegotouch-demos-widgetsgallery (= ${Source-Version})
 Description: Demo application for MeeGo Touch
 
 Package: meegotouch-demos-plainqt
