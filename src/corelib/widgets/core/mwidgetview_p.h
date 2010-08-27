@@ -37,6 +37,10 @@ public: // public to inherited classes
     MWidgetViewPrivate();
     virtual ~MWidgetViewPrivate();
 
+    void setActive(bool active);
+    void setEnabled(bool enabled);
+    void setSelected(bool selected);
+
 //private: // public only to MWidgetView
     MWidgetController     *controller;
 private:// public only to MWidgetView

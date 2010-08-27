@@ -52,6 +52,55 @@ MWidgetViewPrivate::~MWidgetViewPrivate()
 {
 }
 
+void MWidgetViewPrivate::setActive(bool active)
+{
+    if (active) {
+        styleContainer->setModeActive();
+    } else {
+        styleContainer->setModeDefault();
+    }
+}
+
+void MWidgetViewPrivate::setEnabled(bool enabled)
+{
+    if (enabled)
+        styleContainer->setModeDefault();
+    else
+        styleContainer->setModeDisabled();
+
+    // Apply style mode recursively to child items
+    foreach(QGraphicsItem *item, controller->childItems()) {
+        MWidgetController *widget = dynamic_cast<MWidgetController*>(item);
+        if (widget) {
+            MWidgetViewPrivate *viewPrivate = const_cast<MWidgetViewPrivate*>(widget->view()->d_func());
+            if (enabled && widget->isEnabled())
+                viewPrivate->setEnabled(true);
+            else
+                viewPrivate->setEnabled(false);
+        }
+    }
+}
+
+void MWidgetViewPrivate::setSelected(bool selected)
+{
+    if (selected)
+        styleContainer->setModeSelected();
+    else
+        styleContainer->setModeDefault();
+
+    // Apply style mode recursively to child items
+    foreach(QGraphicsItem *item, controller->childItems()) {
+        MWidgetController *widget = dynamic_cast<MWidgetController*>(item);
+        if (widget) {
+            MWidgetViewPrivate *viewPrivate = const_cast<MWidgetViewPrivate*>(widget->view()->d_func());
+            if (selected || widget->isSelected())
+                viewPrivate->setSelected(true);
+            else
+                viewPrivate->setSelected(false);
+        }
+    }
+}
+
 MWidgetView::MWidgetView() :
     d_ptr(new MWidgetViewPrivate)
 {
@@ -107,12 +156,9 @@ void MWidgetView::destroy()
 
 void MWidgetView::setActive(bool active)
 {
-    if (active) {
-        style().setModeActive();
-    } else {
-        style().setModeDefault();
-    }
-    applyStyle();
+    Q_D(MWidgetView);
+
+    d->setActive(active);
 }
 
 void MWidgetView::setModel(MWidgetModel *model)
@@ -350,18 +396,10 @@ void MWidgetView::notifyItemChange(QGraphicsItem::GraphicsItemChange change, con
     Q_D(MWidgetView);
     Q_UNUSED(value);
     if (change == QGraphicsItem::ItemEnabledHasChanged) {
-        if (d->controller->isEnabled()) { //Make it possible to style disabled widgets differently in CSS
-            style().setModeDefault();
-        } else {
-            style().setModeDisabled();
-        }
+        d->setEnabled(d->controller->isEnabled());
     } else if (change == QGraphicsItem::ItemSelectedHasChanged) {
         if (d->controller->isEnabled()) {
-            if (d->controller->isSelected()) {
-                style().setModeSelected();
-            } else {
-                style().setModeDefault();
-            }
+            d->setSelected(d->controller->isSelected());
         }
     } else if (change == QGraphicsItem::ItemParentHasChanged) {
         MWidgetController *parent = NULL;

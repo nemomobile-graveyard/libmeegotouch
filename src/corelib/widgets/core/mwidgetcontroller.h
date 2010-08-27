@@ -381,6 +381,7 @@ private:
 
     friend class MTheme;
     friend class MWidgetView;
+    friend class MWidgetViewPrivate;
 
 #ifdef UNIT_TEST
     friend class Ut_MWidgetController;
