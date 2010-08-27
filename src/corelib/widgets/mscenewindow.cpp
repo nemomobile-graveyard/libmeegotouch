@@ -289,9 +289,9 @@ void MSceneWindow::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGestu
     if (gesture->state() == Qt::GestureFinished) {
 
         QGraphicsSceneContextMenuEvent contextEvent(QEvent::GraphicsSceneContextMenu);
-        contextEvent.setPos(gesture->hotSpot());
-        contextEvent.setScenePos(gesture->hotSpot());
-        contextEvent.setScreenPos(gesture->hotSpot().toPoint());
+        contextEvent.setPos(gesture->position());
+        contextEvent.setScenePos(gesture->position());
+        contextEvent.setScreenPos(gesture->position().toPoint());
 
         d->waitingForContextMenuEvent = true;
         QApplication::sendEvent(scene(), &contextEvent);

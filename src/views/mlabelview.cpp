@@ -209,15 +209,13 @@ void MLabelView::cancelEvent(MCancelEvent *event)
 
 void MLabelView::longPressEvent(QGraphicsSceneContextMenuEvent *event)
 {
-    Q_D(MLabelView);
     event->ignore();
-    d->impl->longPressEvent(event);
 }
 
 void MLabelView::tapAndHoldGestureEvent(QGestureEvent *event, QTapAndHoldGesture* gesture)
 {
-    Q_UNUSED(event);
-    Q_UNUSED(gesture);
+    Q_D(MLabelView);
+    d->impl->longPressEvent(event,gesture);
 }
 
 

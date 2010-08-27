@@ -23,9 +23,9 @@
 
 #include "mtapandholdgesture_p.h"
 
-#include <MApplication>
-
-#include <QGraphicsSceneMouseEvent>
+#include "mapplication.h"
+#include <QGraphicsView>
+#include <QMouseEvent>
 #include <QtTest/QtTest>
 
 Qt::GestureState currentGestureState = Qt::NoGesture;
@@ -67,11 +67,15 @@ void MTheme::releaseStyle(const MStyle *)
 }
 
 MApplication *app;
+QGraphicsView *view;
 void Ut_MTapAndHoldRecognizer::initTestCase()
 {
     static int argc = 1;
     static char *app_name[1] = { (char *) "./ut_mtapandholdrecognizer" };
     app = new MApplication(argc, app_name);
+
+    view = new QGraphicsView();
+    view->show();
 }
 
 void Ut_MTapAndHoldRecognizer::cleanupTestCase()
@@ -91,99 +95,81 @@ void Ut_MTapAndHoldRecognizer::cleanup()
 
 void Ut_MTapAndHoldRecognizer::testCreateGesture()
 {
-    tapAndHoldGesture = static_cast<MTapAndHoldGesture*>(recognizer->create(this));
+    tapAndHoldGesture = static_cast<MTapAndHoldGesture*>(recognizer->create(view));
 }
 
 void Ut_MTapAndHoldRecognizer::testRecognize()
 {
-    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
-    pressEvent.setPos(QPointF(0,0));
-    pressEvent.setScenePos(QPointF(0,0));
-    pressEvent.setScreenPos(QPoint(0,0));
+    QMouseEvent *pressEvent = new QMouseEvent(QEvent::MouseButtonPress, QPoint(0,0), QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
 
     QGestureRecognizer::Result currentState;
-    currentState = recognizer->recognize(tapAndHoldGesture, 0, &pressEvent);
+    currentState = recognizer->recognize(tapAndHoldGesture, 0, pressEvent);
     QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
 
     QTimerEvent fakeTimerEvent(tapAndHoldGesture->timerId);
     currentState = recognizer->recognize(tapAndHoldGesture, tapAndHoldGesture, &fakeTimerEvent);
     QCOMPARE( currentState, QGestureRecognizer::FinishGesture | QGestureRecognizer::ConsumeEventHint );
+
+    delete pressEvent;
 }
 
 void Ut_MTapAndHoldRecognizer::testFastTap()
 {
-
-    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
-    pressEvent.setPos(QPointF(0,0));
-    pressEvent.setScenePos(QPointF(0,0));
-    pressEvent.setScreenPos(QPoint(0,0));
-
-    QGraphicsSceneMouseEvent releaseEvent(QEvent::GraphicsSceneMouseRelease);
-    pressEvent.setPos(QPointF(0,0));
-    pressEvent.setScenePos(QPointF(0,0));
-    pressEvent.setScreenPos(QPoint(0,0));
+    QMouseEvent *pressEvent = new QMouseEvent(QEvent::MouseButtonPress, QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
+    QMouseEvent *releaseEvent = new QMouseEvent(QEvent::MouseButtonRelease, QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
 
     QGestureRecognizer::Result currentState;
-    currentState = recognizer->recognize(tapAndHoldGesture, 0, &pressEvent);
+    currentState = recognizer->recognize(tapAndHoldGesture, 0, pressEvent);
     QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
 
     //Setting timerId as would happen in real life scenario
     tapAndHoldGesture->timerId = 1;
 
-    currentState = recognizer->recognize(tapAndHoldGesture, 0, &releaseEvent);
+    currentState = recognizer->recognize(tapAndHoldGesture, 0, releaseEvent);
     QCOMPARE( currentState, QGestureRecognizer::CancelGesture);
+
+    delete pressEvent;
+    delete releaseEvent;
 }
 
 void Ut_MTapAndHoldRecognizer::testMovePointerInsideThreshold()
 {
-    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
-    pressEvent.setPos(QPointF(0,0));
-    pressEvent.setScenePos(QPointF(0,0));
-    pressEvent.setScreenPos(QPoint(0,0));
-
-    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
-    pressEvent.setPos(QPointF(3,0));
-    pressEvent.setScenePos(QPointF(3,0));
-    pressEvent.setScreenPos(QPoint(3,0));
+    QMouseEvent *pressEvent = new QMouseEvent(QEvent::MouseButtonPress, QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
+    QMouseEvent *moveEvent = new QMouseEvent(QEvent::MouseMove, QPoint(3,0), Qt::LeftButton, Qt::LeftButton, 0);
 
     QGestureRecognizer::Result currentState;
-    currentState = recognizer->recognize(tapAndHoldGesture, 0, &pressEvent);
+    currentState = recognizer->recognize(tapAndHoldGesture, 0, pressEvent);
     QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
 
     currentGestureState = Qt::GestureStarted;
 
-    currentState = recognizer->recognize(tapAndHoldGesture, 0, &moveEvent);
+    currentState = recognizer->recognize(tapAndHoldGesture, 0, moveEvent);
     QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
 
     QTimerEvent fakeTimerEvent(tapAndHoldGesture->timerId);
     currentState = recognizer->recognize(tapAndHoldGesture, tapAndHoldGesture, &fakeTimerEvent);
     QCOMPARE( currentState, QGestureRecognizer::FinishGesture | QGestureRecognizer::ConsumeEventHint );
+
+    delete pressEvent;
+    delete moveEvent;
 }
 
 void Ut_MTapAndHoldRecognizer::testMovePointerBeyondThreshold()
 {
-    QGraphicsSceneMouseEvent pressEvent(QEvent::GraphicsSceneMousePress);
-    pressEvent.setPos(QPointF(0,0));
-    pressEvent.setScenePos(QPointF(0,0));
-    pressEvent.setScreenPos(QPoint(0,0));
-
-    QGraphicsSceneMouseEvent moveEvent(QEvent::GraphicsSceneMouseMove);
-    pressEvent.setPos(QPointF(50,0));
-    pressEvent.setScenePos(QPointF(50,0));
-    pressEvent.setScreenPos(QPoint(50,0));
+    QMouseEvent *pressEvent = new QMouseEvent(QEvent::MouseButtonPress, QPoint(0,0), Qt::LeftButton, Qt::LeftButton, 0);
+    QMouseEvent *moveEvent = new QMouseEvent(QEvent::MouseMove, QPoint(50,0), Qt::LeftButton, Qt::LeftButton, 0);
 
     QGestureRecognizer::Result currentState;
-    currentState = recognizer->recognize(tapAndHoldGesture, 0, &pressEvent);
+    currentState = recognizer->recognize(tapAndHoldGesture, 0, pressEvent);
     QCOMPARE( currentState, QGestureRecognizer::TriggerGesture);
 
     currentGestureState = Qt::GestureStarted;
 
-    currentState = recognizer->recognize(tapAndHoldGesture, 0, &moveEvent);
+    currentState = recognizer->recognize(tapAndHoldGesture, 0, moveEvent);
     QCOMPARE( currentState, QGestureRecognizer::CancelGesture);
 
-    QTimerEvent fakeTimerEvent(tapAndHoldGesture->timerId);
-    currentState = recognizer->recognize(tapAndHoldGesture, tapAndHoldGesture, &fakeTimerEvent);
-    QCOMPARE( currentState, QGestureRecognizer::FinishGesture | QGestureRecognizer::ConsumeEventHint );
+    delete pressEvent;
+    delete moveEvent;
 }
 
 QTEST_APPLESS_MAIN(Ut_MTapAndHoldRecognizer)

@@ -504,28 +504,7 @@ void MPannableWidget::resendEvent(QGraphicsSceneMouseEvent *event)
 {
     Q_D(MPannableWidget);
 
-    QEvent::Type type;
     struct MPannableWidgetPrivate::resentItem resentItem;
-
-    switch (event->type()) {
-    case QEvent::GraphicsSceneMousePress:
-        type = QEvent::MouseButtonPress;
-        break;
-
-    case QEvent::GraphicsSceneMouseRelease:
-        type = QEvent::MouseButtonRelease;
-        break;
-
-    case QEvent::GraphicsSceneMouseMove:
-        type = QEvent::MouseMove;
-        break;
-
-    default:
-        // Shouldn't end up here
-        return;
-
-        break;
-    }
 
     if ((scene() == NULL) || (scene()->views().size() == 0)) {
 
@@ -534,14 +513,7 @@ void MPannableWidget::resendEvent(QGraphicsSceneMouseEvent *event)
         return;
     }
 
-    QMouseEvent mouse_event(type,
-                            scene()->views().at(0)->mapFromScene(event->scenePos()),
-                            event->screenPos(),
-                            event->button(),
-                            event->buttons(),
-                            event->modifiers());
-
-    if (type == QEvent::MouseButtonPress) {
+    if (event->type() == QEvent::GraphicsSceneMousePress) {
         // Puts the event to exclude list
 
         resentItem.type      = event->type();
@@ -558,7 +530,7 @@ void MPannableWidget::resendEvent(QGraphicsSceneMouseEvent *event)
         d->resentList.append(resentItem);
     }
 
-    QApplication::sendEvent(scene()->views().at(0)->viewport(), &mouse_event);
+    QApplication::sendEvent(scene(), event);
 }
 
 void MPannableWidget::cancelEvent(MCancelEvent *event)

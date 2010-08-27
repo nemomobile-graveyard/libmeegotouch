@@ -27,7 +27,7 @@
 
 #include <QEvent>
 #include <QBasicTimer>
-#include <QGraphicsSceneMouseEvent>
+#include <QMouseEvent>
 #include <QTouchEvent>
 
 MTapAndHoldRecognizerPrivate::MTapAndHoldRecognizerPrivate()
@@ -61,6 +61,11 @@ MTapAndHoldRecognizer::~MTapAndHoldRecognizer()
 QGesture* MTapAndHoldRecognizer::create(QObject* target)
 {
     Q_UNUSED(target);
+    if (target && target->isWidgetType() == false) {
+        return 0; // this assumes the target is a QGraphicsObject, so we return
+                  // NULL to indicate that the recognizer doesn't support graphicsobject and
+                  // graphicsscene events.
+    }
 
     return new MTapAndHoldGesture();
 }
@@ -77,7 +82,7 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
         return QGestureRecognizer::FinishGesture | QGestureRecognizer::ConsumeEventHint;
     }
 
-    const QGraphicsSceneMouseEvent *ev = static_cast<const QGraphicsSceneMouseEvent *>(event);
+    const QMouseEvent *ev = static_cast<const QMouseEvent *>(event);
     const QTouchEvent *touchEvent = static_cast<const QTouchEvent *>(event);
 
     QGestureRecognizer::Result result = QGestureRecognizer::CancelGesture;
@@ -94,17 +99,17 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
         }
         break;
 
-    case QEvent::GraphicsSceneMousePress:
-        tapAndHoldState->setPosition(ev->scenePos());
-        tapAndHoldState->setHotSpot(ev->scenePos());
+    case QEvent::MouseButtonPress:
+        tapAndHoldState->setPosition(ev->pos());
+        tapAndHoldState->setHotSpot(ev->globalPos());
 
         if (tapAndHoldState->timerId)
             tapAndHoldState->killTimer(tapAndHoldState->timerId);
         tapAndHoldState->timerId = tapAndHoldState->startTimer(d->style->timeout());
         result = QGestureRecognizer::TriggerGesture;
         break;
-    case QEvent::GraphicsSceneMouseRelease:
 
+    case QEvent::MouseButtonRelease:
         if (tapAndHoldState->timerId) {
             tapAndHoldState->killTimer(tapAndHoldState->timerId);
             tapAndHoldState->timerId = 0;
@@ -114,9 +119,10 @@ QGestureRecognizer::Result MTapAndHoldRecognizer::recognize(QGesture *state, QOb
         }
 
         break;
-    case QEvent::GraphicsSceneMouseMove:
+
+    case QEvent::MouseMove:
         if (tapAndHoldState->state() != Qt::NoGesture) {
-            QPoint delta = ev->scenePos().toPoint() - tapAndHoldState->position().toPoint();
+            QPoint delta = ev->pos() - tapAndHoldState->position().toPoint();
             if (delta.manhattanLength() <= d->style->movementThreshold())
                 result = QGestureRecognizer::TriggerGesture;
         }

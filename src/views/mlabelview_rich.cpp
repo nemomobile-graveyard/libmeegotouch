@@ -30,6 +30,8 @@
 #include <QAbstractTextDocumentLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneResizeEvent>
+#include <QGestureEvent>
+#include <QTapAndHoldGesture>
 #include "mviewcreator.h"
 #include "mlabel.h"
 #include "mlabel_p.h"
@@ -357,17 +359,21 @@ void MLabelViewRich::cancelEvent(MCancelEvent *event)
     }
 }
 
-void MLabelViewRich::longPressEvent(QGraphicsSceneContextMenuEvent *event)
+void MLabelViewRich::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture)
 {
-    int cursorPos = textDocument.documentLayout()->hitTest(event->pos() - pixmapOffset, Qt::ExactHit);
+    // We ignore the gesture by default and only accept it later if the hot spot of
+    // the gesture was insid highlightable text.
+    event->ignore(gesture);
+
+    int cursorPos = textDocument.documentLayout()->hitTest(viewPrivate->controller->mapFromScene(gesture->position()) - pixmapOffset, Qt::ExactHit);
     if (cursorPos >= 0) {
         QTextCursor cursor(&textDocument);
         cursor.setPosition(cursorPos);
         QTextCharFormat format = cursor.charFormat();
         if (format.boolProperty(M_HIGHLIGHT_PROPERTY)) {
-            event->accept();
+            event->accept(gesture);
             int idx = cursor.charFormat().intProperty(M_HIGHLIGHTER_ID_PROPERTY);
-            if (idx < viewPrivate->model()->highlighters().size())
+            if (idx < viewPrivate->model()->highlighters().size() && gesture->state() == Qt::GestureFinished)
                 viewPrivate->model()->highlighters()[idx]->longPress(format.anchorHref());
 
             viewPrivate->style()->pressFeedback().play();

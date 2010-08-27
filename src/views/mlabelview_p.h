@@ -28,7 +28,8 @@
 class MLabel;
 class MLabelView;
 class QGraphicsSceneResizeEvent;
-
+class QGestureEvent;
+class QTapAndHoldGesture;
 
 class MLabelViewSimple
 {
@@ -45,7 +46,7 @@ public:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
-    virtual void longPressEvent(QGraphicsSceneContextMenuEvent *event);
+    virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
     virtual void applyStyle();
     Qt::TextFlag wrap() const;
     void initializeStaticText();
@@ -84,7 +85,7 @@ public:
     virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
     virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
     virtual void cancelEvent(MCancelEvent *event);
-    virtual void longPressEvent(QGraphicsSceneContextMenuEvent *event);
+    virtual void longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture);
 
     virtual void applyStyle();
 

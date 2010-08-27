@@ -32,6 +32,8 @@
 #include <QAbstractTextDocumentLayout>
 #include <QGraphicsSceneMouseEvent>
 #include <QGraphicsSceneResizeEvent>
+#include <QGestureEvent>
+#include <QTapAndHoldGesture>
 
 
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
@@ -215,9 +217,9 @@ void MLabelViewSimple::cancelEvent(MCancelEvent *event)
     Q_UNUSED(event);
 }
 
-void MLabelViewSimple::longPressEvent(QGraphicsSceneContextMenuEvent *event)
+void MLabelViewSimple::longPressEvent(QGestureEvent *event, QTapAndHoldGesture* gesture)
 {
-    Q_UNUSED(event);
+    event->ignore(gesture);
 }
 
 void MLabelViewSimple::applyStyle()
