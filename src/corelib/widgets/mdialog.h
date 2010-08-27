@@ -371,7 +371,11 @@ public:
     /*!
      * \brief Adds a given \a button to the button box.
      *
-     * \param button A button
+     * \param button Button model to be added.
+     *
+     * Causes the reference count of \a button to be increased by one.
+     *
+     * \sa removeButton(MButtonModel *button)
      */
     void addButton(MButtonModel *button);
 
@@ -412,9 +416,13 @@ public:
     MButtonModel *addButton(M::StandardButton button);
 
     /*!
-     * \brief Removes \a button from the dialog without deleting it.
+     * \brief Removes \a button from dialog's button box.
      *
-     * \sa addButton()
+     * \param button Button model to be removed.
+     *
+     * Causes the reference count of \a button to be decreased by one.
+     *
+     * \sa addButton(MButtonModel *button)
      */
     void removeButton(MButtonModel *button);
 
