@@ -115,6 +115,9 @@ private:
     int registeredToolbarId;
 
     bool editActive; // true if editing started after getting focus
+
+    // protection from input methods that send something on QInputContext::reset()
+    bool omitInputMethodEvents;
 };
 
 #endif

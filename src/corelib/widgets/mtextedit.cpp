@@ -88,7 +88,8 @@ MTextEditPrivate::MTextEditPrivate()
       ownValidator(false),
       completer(0),
       registeredToolbarId(-1),
-      editActive(false)
+      editActive(false),
+      omitInputMethodEvents(false)
 {
 }
 
@@ -579,7 +580,9 @@ void MTextEditPrivate::commitPreedit()
         // make sure the committed preedit doesn't get left on the input context
         QInputContext *ic = qApp->inputContext();
         if (ic) {
+            omitInputMethodEvents = true;
             ic->reset();
+            omitInputMethodEvents = false;
         }
     }
 
@@ -1781,6 +1784,10 @@ void MTextEdit::inputMethodEvent(QInputMethodEvent *event)
 {
     // FIXME: replacement info not honored.
     Q_D(MTextEdit);
+
+    if (d->omitInputMethodEvents) {
+        return;
+    }
 
     QString preedit = event->preeditString();
     QString commitString = event->commitString();
