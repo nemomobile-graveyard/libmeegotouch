@@ -97,6 +97,7 @@ MSceneWindow::MSceneWindow(QGraphicsItem *parent) :
 
     d->windowType = PlainSceneWindow;
     grabGesture(Qt::TapAndHoldGesture);
+    setFlag(QGraphicsItem::ItemStopsClickFocusPropagation);
 }
 
 
@@ -108,6 +109,7 @@ MSceneWindow::MSceneWindow(MSceneWindowPrivate *dd, MSceneWindowModel *model, MS
 
     d->windowType = windowType;
     grabGesture(Qt::TapAndHoldGesture);
+    setFlag(QGraphicsItem::ItemStopsClickFocusPropagation);
 }
 
 MSceneWindow::~MSceneWindow()
