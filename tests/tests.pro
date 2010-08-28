@@ -175,6 +175,7 @@ SUBDIRS     =  \
     ut_mlocalthemedaemon \
     ut_mremotethemedaemon \
     ut_mswiperecognizer \
+    ut_mstylablewidget \
 
 # enable only when we have icu available
 

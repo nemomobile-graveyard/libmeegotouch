@@ -190,6 +190,11 @@ protected:
 private:
     Q_DISABLE_COPY(MStylableWidget)
 
+#ifdef UNIT_TEST
+    // Test unit is defined as a friend of production code to access private members
+    friend class Ut_MStylableWidget;
+#endif
+
 };
 
 #endif // MSTYLABLEWIDGET_H
