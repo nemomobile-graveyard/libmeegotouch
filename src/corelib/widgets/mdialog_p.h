@@ -36,7 +36,7 @@ public:
 
     MDialogPrivate();
     ~MDialogPrivate();
-    void init();
+
     void appear(MSceneWindow::DeletionPolicy policy);
     void addStandardButtons(M::StandardButtons standardButtons);
     void updateStandAloneHomeButtonVisibility();

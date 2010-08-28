@@ -44,8 +44,6 @@ MButtonPrivate::~MButtonPrivate()
 
 void MButtonPrivate::init()
 {
-    Q_Q(MButton);
-    q->setFocusPolicy(Qt::ClickFocus);
 }
 
 void MButtonPrivate::init(const QString &newIconID, const QString &newText)

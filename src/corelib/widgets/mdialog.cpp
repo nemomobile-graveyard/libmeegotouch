@@ -69,14 +69,6 @@ MDialogPrivate::~MDialogPrivate()
     }
 }
 
-void MDialogPrivate::init()
-{
-    Q_Q(MDialog);
-
-    clickedButton = 0;
-
-    q->setFocusPolicy(Qt::ClickFocus);
-}
 
 void MDialogPrivate::appear(MSceneWindow::DeletionPolicy policy)
 {
@@ -278,10 +270,6 @@ int MDialogPrivate::resultFromStandardButtonId(int buttonId)
 MDialog::MDialog() :
     MSceneWindow(new MDialogPrivate(), new MDialogModel(), MSceneWindow::Dialog, QString())
 {
-    Q_D(MDialog);
-
-    d->init();
-
     model()->setResultCode(MDialog::Rejected);
 }
 
@@ -289,8 +277,6 @@ MDialog::MDialog(const QString &title, M::StandardButtons buttons) :
     MSceneWindow(new MDialogPrivate(), new MDialogModel(), MSceneWindow::Dialog, QString())
 {
     Q_D(MDialog);
-
-    d->init();
 
     model()->setResultCode(MDialog::Rejected);
 
@@ -302,10 +288,6 @@ MDialog::MDialog(const QString &title, M::StandardButtons buttons) :
 MDialog::MDialog(MDialogPrivate *dd, MDialogModel *model, MSceneWindow::WindowType windowType) :
     MSceneWindow(dd, model, windowType, QString())
 {
-    Q_D(MDialog);
-
-    d->init();
-
     model->setResultCode(MDialog::Rejected);
 }
 
@@ -314,8 +296,6 @@ MDialog::MDialog(MDialogPrivate *dd, M::StandardButtons buttons,
     MSceneWindow(dd, model, windowType, QString())
 {
     Q_D(MDialog);
-
-    d->init();
 
     model->setResultCode(MDialog::Rejected);
 
