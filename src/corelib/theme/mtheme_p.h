@@ -190,6 +190,9 @@ private:
     private:
         QHash<MStyle*, QString> styles;
     };
+    // this class must be static as it needs to be destroyed as late as possible
+    // to not ignore classes which free their styles after the destrutction of
+    // MTheme
     static LeakedStyles leakedStyles;
 };
 

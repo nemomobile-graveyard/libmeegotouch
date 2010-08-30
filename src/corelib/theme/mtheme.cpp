@@ -91,8 +91,14 @@ namespace
 
 MThemePrivate::LeakedStyles MThemePrivate::leakedStyles;
 
+void mMessageHandler(QtMsgType type, const char *msg);
+
 MThemePrivate::LeakedStyles::~LeakedStyles()
 {
+    // as LeakedStyles is a static class the method handler could not be valid
+    // anymore at this point. work around this problem by creating a new one
+    qInstallMsgHandler(mMessageHandler);
+
     QHash<MStyle*, QString>::iterator end = styles.end();
     for (QHash<MStyle*, QString>::iterator iterator = styles.begin();
             iterator != end;
