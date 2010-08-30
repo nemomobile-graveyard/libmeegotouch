@@ -122,15 +122,8 @@ QSizeF MLabelView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_D(const MLabelView);
 
-    QSizeF size = MWidgetView::sizeHint(which, constraint);
-    if (!size.isValid()) {
-        QSizeF implsize = d->impl->sizeHint(which, constraint);
-        if (size.width() == -1)
-            size.setWidth(implsize.width() + style()->paddingLeft() + style()->paddingRight());
-        if (size.height() == -1)
-            size.setHeight(implsize.height() + style()->paddingTop() + style()->paddingBottom());
-    }
-    return size;
+    QSizeF padding(style()->paddingLeft() + style()->paddingRight(), style()->paddingTop() + style()->paddingBottom());
+    return d->impl->sizeHint(which, constraint - padding) + padding;
 }
 
 void MLabelView::setupModel()

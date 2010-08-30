@@ -37,7 +37,7 @@
 
 
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
-    viewPrivate(viewPrivate), preferredSize(-1, -1), textOffset(), paintingRect(), dirty(true), staticText()
+    viewPrivate(viewPrivate), textOffset(), paintingRect(), dirty(true), staticText()
 {
     staticText.setTextFormat(Qt::PlainText);
 }
@@ -80,24 +80,8 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
 
 bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    // There is no way to specify sizeHint for a text without knowing possible width.
-    // 1st phase, when Qt calls sizeHint, view will return approximate values for
-    // minimum and preferred size. When resizeEvent comes, layout already knows
-    // sizes of components, and here comes
-    // 2nd phase, when we identify widget's height, based on width. Our height will
-    // change and we don't want to occupy more space then need, so we have to call
-    // updateGeometry, to tell layout to update sizeHint cache. This function
-    // return true if such update is needed.
-
-    QFontMetricsF fm(viewPrivate->controller->font());
-
-    QRectF bR = fm.boundingRect(QRectF(QPoint(0, 0), event->newSize()), 
-                                viewPrivate->textOptions.alignment() | wrap(), viewPrivate->model()->text());
-    if (bR.height() > fm.height()) {
-        preferredSize = QSizeF(bR.width(), bR.height());
-        return true;
-    } else
-        return false;
+    Q_UNUSED(event);
+    return false;
 }
 
 QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -114,30 +98,24 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
             r.setHeight(QWIDGETSIZE_MAX);
         }
 
-        QRectF bR(fm.boundingRect(r, viewPrivate->textOptions.alignment() | wrap(),
-                                  viewPrivate->model()->text()));
-
-        return QSizeF(fm.width("x"), bR.height());
+        QSizeF s = fm.boundingRect(r, viewPrivate->textOptions.alignment() | wrap(),
+                                  viewPrivate->model()->text()).size();
+        s.setWidth(fm.width("x"));
+        return s;
     }
     case Qt::PreferredSize: {
+        const_cast<MLabelViewSimple*>(this)->initializeStaticText();
         qreal w = constraint.width();
-        qreal h = constraint.height();
-        if (w < 0) {
-            w = QWIDGETSIZE_MAX;
-        }
-        if (h < 0) {
-            h = QWIDGETSIZE_MAX;
-        }
-        if (preferredSize.width() >= 0 && preferredSize.width() < w)
-            w = preferredSize.width();
-        if (preferredSize.height() >= 0 && preferredSize.height() < h)
-            h = preferredSize.height();
 
-        QFontMetricsF fm(viewPrivate->controller->font());
+        //A negative constraint of means unbounded for both constraint and staticText
+        if ((w < 0 && staticText.textWidth() < 0) && w == staticText.textWidth()) {
+            return staticText.size();
+        }
 
-        QRectF bR(fm.boundingRect(QRectF(0, 0, w, h), viewPrivate->textOptions.alignment() | wrap(),
-                                  viewPrivate->model()->text()));
-        return bR.size().boundedTo(QSizeF(w, h));
+        QStaticText staticText2(staticText);
+        staticText2.setTextOption(staticText.textOption());  // TODO: remove after Qt-bug #13368 has been fixed
+        staticText2.setTextWidth(w);
+        return staticText2.size();
     }
     case Qt::MaximumSize: {
         return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
@@ -169,7 +147,6 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
 
     foreach(member, modifications) {
         if (member == MLabelModel::Text) {
-            preferredSize = QSizeF(-1, -1);
             needUpdate = true;
         } else if (member == MLabelModel::Color) {
             needUpdate = true;

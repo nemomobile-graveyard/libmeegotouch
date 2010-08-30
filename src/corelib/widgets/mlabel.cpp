@@ -33,17 +33,29 @@ MLabel::MLabel(QGraphicsItem *parent, MLabelModel *model) :
     MWidgetController(new MLabelPrivate, model == NULL ? new MLabelModel : model, parent)
 {
     grabGesture(Qt::TapAndHoldGesture);
+    Q_D(MLabel);
+    d->init();
 }
 
 MLabel::MLabel(QString const &text, QGraphicsItem *parent) :
     MWidgetController(new MLabelPrivate, new MLabelModel, parent)
 {
-    grabGesture(Qt::TapAndHoldGesture);
+    Q_D(MLabel);
+    d->init();
     setText(text);
 }
 
 MLabel::~MLabel()
 {
+}
+
+void MLabelPrivate::init()
+{
+    Q_Q(MLabel);
+    QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    policy.setHeightForWidth(true);
+    q->setSizePolicy(policy);
+    q->grabGesture(Qt::TapAndHoldGesture);
 }
 
 void MLabel::setupModel()
