@@ -13,7 +13,7 @@ The second set of layout classes is provided by MeeGo Touch, and offer additiona
 The multiple policies in a single MLayout do not even need to contain the same items.  New items will be shown and hidden as necessary (Unless the item is itself a layout, since a layout cannot be directly hidden itself, but a layout inside of a widget inside of a layout will be hidden.  See \ref layout-inside-layout).
 
 \section tips Tips for Using Layouts
-\li When you use a layout or layout policy, you do not need to pass a parent when constructing the child widgets. The layout will automatically reparent the widgets so that they are children of the widget on which the layout is installed.
+\li When you use a layout or layout policy, you do not need to pass a parent when constructing the child widgets. The layout will automatically reparent the widgets so that they are children of the widget on which the layout is installed.  When the parent widget is deleted, its layout and all of its children are also deleted.
 
 \li Widgets in a layout are children of the widget on which the layout is installed, not of the layout itself. Widgets can only have other widgets as parent, not layouts.  You can nest layouts using addLayout() on a layout; the inner layout then becomes a child of the layout it is inserted into.
 
@@ -23,7 +23,7 @@ The multiple policies in a single MLayout do not even need to contain the same i
 
 \li For a complex set of nested layouts it is easier and more lightweight to use nested \link QGraphicsLayout QGraphicsLayouts\endlink than to try to nest \link MLayout MLayouts \endlink.
 
-\li See the QLayout and QGraphicsLayout documentation for more information and tips, and see the examples.  
+\li See the QLayout and QGraphicsLayout documentation for more information and tips, and see the examples.
 
 \section rtl Right-to-left
 
@@ -34,6 +34,28 @@ For example the calculator example has the following code snippet:
 \dontinclude calculator/calculatorwidget.cpp
 \skip CalculatorWidget::CalculatorWidget
 \until MLayout *layout
+
+\section pagelayout-widgetSize Widget Sizes
+
+To determine the size of a widget in a layout, the layout uses the widget's QGraphicsLayoutItem::preferredSize() and its QGraphicsLayoutItem::sizePolicy() functions.  The preferred size of a MWidgetController is determined from:
+
+-# The constraint passed to the MWidgetController::sizeHint() function - usually due to the layout.
+-# Developer set hints (using QGraphicsLayoutItem::setPreferredSize(), etc).
+-# Style set size (e.g. from the CSS files).
+-# View's MWidgetView::sizeHint() function.
+-# MWidgetController::layout()->QGraphicsLayoutItem::sizeHint() function.
+
+The sizes given from the first 3 steps are combined, in the order of preference as shown.
+If the height and/or width is not specified, then the MWidgetView::sizeHint() function is called, with
+\a constraint parameter set to the size determined so far.  The result from the view is then combined with
+the constraint.
+
+Finally, if this size is still not valid, the size is combined with QGraphicsWidget::sizeHint() which
+in turn uses the layout's QGraphicsLayoutItem::sizeHint() function.
+
+If you create your widget and its width depends on its height, then its size policy must have set QSizePolicy::hasHeightForWidth().
+
+\see MWidgetView::sizeHint()
 
 \section main Main Policies
 \li MLinearLayoutPolicy - For placing items horizontally or vertically:

@@ -5,6 +5,8 @@
 \subsection New
 - You can now specify the icon ids of an MButton also via its CSS style.
   See MButtonStyle::toggledIconId and MButtonStyle::iconId.
+- MWidgetView::sizeHint() now returns (-1,-1) instead of the style size.  The
+  MWidgetController now checks the size set in the CSS file.
 
 \section v02037 0.20.37
 
