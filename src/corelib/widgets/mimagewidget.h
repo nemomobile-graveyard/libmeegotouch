@@ -117,10 +117,10 @@ public:
 
     /**
        \overload A convenient constructor for creating MImageWidget object with image id.
-       \param image image id in theme system.
+       \param id image id in theme system.
        \param parent Parent object.
      */
-    explicit MImageWidget(const QString &imagename, QGraphicsItem *parent = 0);
+    explicit MImageWidget(const QString &id, QGraphicsItem *parent = 0);
 
     /**
        \overload A convenient constructor for creating MImageWidget object with QImage.

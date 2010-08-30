@@ -85,7 +85,7 @@ MImageWidgetPrivate &MImageWidgetPrivate::operator=(const MImageWidgetPrivate &o
                 image = other.image;
         }
         else
-            setImageName(other.q_func()->model()->imageId(), other.q_func()->model()->imageSize());
+            setImage(other.q_func()->model()->imageId(), other.q_func()->model()->imageSize());
     }
 
     deletePixmap = other.deletePixmap;
@@ -95,17 +95,17 @@ MImageWidgetPrivate &MImageWidgetPrivate::operator=(const MImageWidgetPrivate &o
 }
 
 // initialize from image name
-void MImageWidgetPrivate::setImageName(const QString &imageName, const QSize &s)
+void MImageWidgetPrivate::setImage(const QString &id, const QSize &s)
 {
     Q_Q(MImageWidget);
 
-    if (imageName == q->model()->imageId() && s == q->model()->imageSize())
+    if (id == q->model()->imageId() && s == q->model()->imageSize())
         return;
 
     cleanUp();
 
     q->model()->beginTransaction();
-    q->model()->setImageId(imageName);
+    q->model()->setImageId(id);
     q->model()->setImageSize(s);
     q->model()->commitTransaction();
 
@@ -133,10 +133,10 @@ MImageWidget::MImageWidget(QGraphicsItem *parent) :
 {
 }
 
-MImageWidget::MImageWidget(const QString &imagename, QGraphicsItem *parent) :
+MImageWidget::MImageWidget(const QString &id, QGraphicsItem *parent) :
     MWidgetController(new MImageWidgetPrivate(), new MImageWidgetModel(), parent)
 {
-    setImage(imagename);
+    setImage(id);
 }
 
 MImageWidget::MImageWidget(const QImage *image, QGraphicsItem *parent) :
@@ -175,7 +175,7 @@ MImageWidget::~MImageWidget()
 void MImageWidget::setImage(const QString &id, const QSize &s)
 {
     Q_D(MImageWidget);
-    d->setImageName(id, s);
+    d->setImage(id, s);
 
     model()->setCrop(QRect());
 
@@ -318,7 +318,7 @@ void MImageWidget::setImage(const QString &id)
 void MImageWidget::setImage(const QImage &image)
 {
     Q_D(MImageWidget);
-    d->setImageName(QString());
+    d->setImage(QString());
 
     d->cleanUp();
     d->image = image;
@@ -333,7 +333,7 @@ void MImageWidget::setImage(const QImage &image)
 void MImageWidget::setPixmap(const QPixmap &pixmap)
 {
     Q_D(MImageWidget);
-    d->setImageName(QString());
+    d->setImage(QString());
 
     d->cleanUp();
     d->pixmap = new QPixmap(pixmap);

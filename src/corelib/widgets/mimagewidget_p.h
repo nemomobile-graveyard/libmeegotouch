@@ -34,7 +34,7 @@ public:
 
     void cleanUp();
     MImageWidgetPrivate &operator=(const MImageWidgetPrivate &other);
-    void setImageName(const QString &imageName, const QSize &s = QSize());
+    void setImage(const QString &id, const QSize &s = QSize());
 
     QSizeF imageDataSize() const;
 
