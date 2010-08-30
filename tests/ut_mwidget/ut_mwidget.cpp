@@ -56,7 +56,7 @@ void Ut_MWidget::testShape()
     QFETCH(QSizeF, size);
     widget->resize(size);
     widget->setWindowFrameMargins(0, 0, 0, 0);
-    QVERIFY(widget->shape().boundingRect() == QRectF(QPointF(), size));
+    QCOMPARE(widget->shape().boundingRect(), QRectF(QPointF(), size));
 }
 
 void Ut_MWidget::testClearActions()
@@ -64,11 +64,11 @@ void Ut_MWidget::testClearActions()
     for (int i = 0; i < 5; ++i)
         widget->addAction(new MAction("maction", widget));
 
-    QVERIFY(widget->actions().count() == 5);
+    QCOMPARE(widget->actions().count(), 5);
 
     // empty action list, check
     widget->clearActions();
-    QVERIFY(widget->actions().count() == 0);
+    QCOMPARE(widget->actions().count(), 0);
 }
 
 void Ut_MWidget::testIsOnDisplay_onView()
@@ -84,7 +84,7 @@ void Ut_MWidget::testIsOnDisplay_onView()
     widget->show();
     widget->setGeometry(10, 10, 50, 50);
 
-    QCOMPARE(widget->isOnDisplay(), true);
+    QVERIFY(widget->isOnDisplay() == true);
 }
 
 void Ut_MWidget::testIsOnDisplay_offView()
@@ -105,7 +105,7 @@ void Ut_MWidget::testIsOnDisplay_offView()
         return;
     }
 
-    QCOMPARE(widget->isOnDisplay(), false);
+    QVERIFY(widget->isOnDisplay() == false);
 }
 
 void Ut_MWidget::testIsOnDisplay_widgetHidden()
@@ -121,7 +121,7 @@ void Ut_MWidget::testIsOnDisplay_widgetHidden()
     widget->hide();
     widget->setGeometry(10, 10, 50, 50);
 
-    QCOMPARE(widget->isOnDisplay(), false);
+    QVERIFY(widget->isOnDisplay() == false);
 }
 
 
@@ -210,15 +210,13 @@ void Ut_MWidget::testShowHidePropagation()
     view.resize(500, 500);
     view.show();
 
-    MWidget * topLevel = new MWidget;
-    topLevel->setGeometry(10, 10, 50, 50);
-
+    MWidget* topLevel = new MWidget;
     MLayout *layout = new MLayout(topLevel);
     MLinearLayoutPolicy *policy = new MLinearLayoutPolicy(layout, Qt::Vertical);
-
     policy->addItem(widget);
 
     scene.addItem(topLevel);
+    topLevel->setGeometry(10, 10, 50, 50);
 
     m_dummySlotCalled = false;
     connect(widget, SIGNAL(displayEntered()), this, SLOT(dummySlot()));
@@ -231,7 +229,6 @@ void Ut_MWidget::testShowHidePropagation()
     topLevel->hide();
     QVERIFY(m_dummySlotCalled == true);
     disconnect(widget, SIGNAL(displayExited()), this, SLOT(dummySlot()));
-    
 }
 
 void Ut_MWidget::dummySlot()
