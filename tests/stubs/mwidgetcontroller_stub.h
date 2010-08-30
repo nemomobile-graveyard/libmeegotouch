@@ -49,6 +49,8 @@ class MWidgetControllerStub : public StubBase {
   virtual void updateData(const QList<const char *> &modifications);
   virtual void setupModel();
   virtual void updateMicroFocus();
+  virtual void setStyleName(const QString &name);
+  virtual const QString& styleName()const;
   virtual void mousePressEvent(QGraphicsSceneMouseEvent *event);
   virtual void mouseReleaseEvent(QGraphicsSceneMouseEvent *event);
   virtual void mouseMoveEvent(QGraphicsSceneMouseEvent *event);
@@ -188,6 +190,17 @@ void MWidgetControllerStub::setupModel() {
 
 void MWidgetControllerStub::updateMicroFocus() {
   stubMethodEntered("updateMicroFocus");
+}
+
+void MWidgetControllerStub::setStyleName(const QString &name){
+    QList<ParameterBase*> params;
+    params.append(new Parameter<QString>(name));
+    stubMethodEntered("setStyleName",params);
+}
+
+const QString & MWidgetControllerStub::styleName() const{
+    stubMethodEntered("styleName");
+    return *stubReturnValue<QString *>("styleName");
 }
 
 void MWidgetControllerStub::mousePressEvent(QGraphicsSceneMouseEvent *event) {
@@ -384,6 +397,9 @@ void MWidgetController::setActive(bool active) {
   gMWidgetControllerStub->setActive(active);
 }
 
+void MWidgetController::setStyleName(const QString &name) {
+  gMWidgetControllerStub->setStyleName(name);
+}
 void MWidgetController::setObjectName(const QString &name) {
   gMWidgetControllerStub->setObjectName(name);
 }
@@ -459,6 +475,10 @@ QVariant MWidgetController::inputMethodQuery(Qt::InputMethodQuery query) const {
 
 MWidgetStyleContainer & MWidgetController::style() {
   return gMWidgetControllerStub->style();
+}
+
+const QString& MWidgetController::styleName() const{
+  return gMWidgetControllerStub->styleName();
 }
 
 const MWidgetStyleContainer & MWidgetController::style() const {
