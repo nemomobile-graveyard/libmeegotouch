@@ -66,7 +66,6 @@ protected:
     //! \reimp
     virtual void applyStyle();
     virtual void setupModel();
-    virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
     //! \reimp_end
 
     //! \internal

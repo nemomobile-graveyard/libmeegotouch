@@ -214,31 +214,4 @@ void MApplicationMenuButtonView::setupModel()
     MWidgetView::setupModel();
 }
 
-QSizeF MApplicationMenuButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
-{
-    if (which == Qt::MinimumSize || which == Qt::MaximumSize)
-        return MWidgetView::sizeHint(which, constraint);
-
-    if (style()->preferredSize().isValid())
-        return style()->preferredSize();
-
-    Q_D(const MApplicationMenuButtonView);
-
-    qreal width = 0, height = 0;
-    QSizeF iconSize(0, 0);
-    QSizeF labelSize(0, 0);
-
-    if (model()->iconVisible())
-        iconSize = style()->iconSize();
-
-    if (model()->textVisible() && model()->text().isEmpty() == false) {
-        labelSize = d->label->sizeHint(which, constraint);
-    }
-
-    width  = iconSize.width() * 2 + labelSize.width();
-    height = qMax(iconSize.height(), labelSize.height());
-
-    return QSizeF(width, height);
-}
-
 M_REGISTER_VIEW_NEW(MApplicationMenuButtonView, MApplicationMenuButton)
