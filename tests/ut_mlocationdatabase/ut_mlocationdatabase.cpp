@@ -409,7 +409,22 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
     QDateTime summerDateTime(QDate(2010, 6, 21), QTime(0, 0, 0, 0), Qt::LocalTime);
     QDateTime winterDateTime(QDate(2009, 12, 24), QTime(0, 0, 0, 0), Qt::LocalTime);
     QString ut_mlocationdatabaseTestOutput = "";
+    QStringList ut_mlocationdatabaseTestOutput2Lines; // for Rodrigo Abreu
     foreach(MCity city, cities) {
+        UErrorCode status = U_ZERO_ERROR;
+        icu::UnicodeString canonicalId;
+        icu::UnicodeString id = static_cast<const UChar *>(city.timeZone().utf16());
+        TimeZone::getCanonicalID (id, canonicalId, status);
+        QString cityCanonicalTimeZone =
+            QString(reinterpret_cast<const QChar *>(canonicalId.getBuffer()), canonicalId.length());
+        if (cityCanonicalTimeZone.isEmpty())
+            cityCanonicalTimeZone = "***error: invalid";
+
+        qint32 timeZoneRawOffsetHours = city.timeZoneRawOffset() / 1000 / 3600;
+        qint32 timeZoneDstOffsetHoursWinter = city.timeZoneDstOffset(winterDateTime) / 1000 / 3600;
+        qint32 timeZoneDstOffsetHoursSummer = city.timeZoneDstOffset(summerDateTime) / 1000 / 3600;
+        qint32 timeZoneTotalOffsetHoursWinter = city.timeZoneTotalOffset(winterDateTime) / 1000 / 3600;
+        qint32 timeZoneTotalOffsetHoursSummer = city.timeZoneTotalOffset(summerDateTime) / 1000 / 3600;
         ut_mlocationdatabaseTestOutput
             += city.key() + "\tEnglish Name\t" + city.englishName()
             + '\n' + city.key() + "\tCountry English Name\t"
@@ -420,20 +435,42 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
             + QString::number(city.longitude())
             + '\n' + city.key() + "\tTime zone id\t"
             + city.timeZone()
+            + '\n' + city.key() + "\tCanonical time zone id\t"
+            + cityCanonicalTimeZone
             + '\n' + city.key() + "\tTime zone raw offset in hours\t"
-            + QString::number(city.timeZoneRawOffset() / 1000 / 3600)
+            + QString::number(timeZoneRawOffsetHours)
             + '\n' + city.key() + "\tTime zone dst offset summer in hours\t"
-            + QString::number(city.timeZoneDstOffset(summerDateTime) / 1000 / 3600)
+            + QString::number(timeZoneDstOffsetHoursSummer)
             + '\n' + city.key() + "\tTime zone dst offset winter in hours\t"
-            + QString::number(city.timeZoneDstOffset(winterDateTime) / 1000 / 3600)
+            + QString::number(timeZoneDstOffsetHoursWinter)
             + '\n' + city.key() + "\tTime zone total offset summer in hours\t"
-            + QString::number(city.timeZoneTotalOffset(summerDateTime) / 1000 / 3600)
+            + QString::number(timeZoneTotalOffsetHoursSummer)
             + '\n' + city.key() + "\tTime zone total offset winter in hours\t"
-            + QString::number(city.timeZoneTotalOffset(winterDateTime) / 1000 / 3600)
+            + QString::number(timeZoneTotalOffsetHoursWinter)
             + '\n';
+        QString gmtTotalOffsetWinter = QString::number(timeZoneTotalOffsetHoursWinter);
+        if (!gmtTotalOffsetWinter.startsWith('-'))
+            gmtTotalOffsetWinter = '+' + gmtTotalOffsetWinter;
+        QString gmtTotalOffsetSummer = QString::number(timeZoneTotalOffsetHoursSummer);
+        if (!gmtTotalOffsetSummer.startsWith('-'))
+            gmtTotalOffsetSummer = '+' + gmtTotalOffsetSummer;
+        ut_mlocationdatabaseTestOutput2Lines <<
+            "\"" + city.timeZone() + "\", "
+            + "\"" + city.englishName()
+            + " (" + city.country().englishName() + ")\", "
+            + "\"GMT"
+            + gmtTotalOffsetWinter
+            + " (DST: GMT"
+            + gmtTotalOffsetSummer
+            + ")\"\n";
+    }
+    qSort(ut_mlocationdatabaseTestOutput2Lines.begin(), ut_mlocationdatabaseTestOutput2Lines.end());
+    QString ut_mlocationdatabaseTestOutput2 = "";
+    foreach (QString line, ut_mlocationdatabaseTestOutput2Lines) {
+        ut_mlocationdatabaseTestOutput2 += line;
     }
     QString ut_mlocationdatabaseTestOutputFileName =
-        "/tmp/ut_mlocationdatabase.txt";
+        "/tmp/ut_mlocationdatabase-test-output.txt";
     QFile ut_mlocationdatabaseTestOutputFile(ut_mlocationdatabaseTestOutputFileName);
     if (!ut_mlocationdatabaseTestOutputFile.open(QIODevice::WriteOnly | QIODevice::Truncate))
         QFAIL(qPrintable("could not open file " + ut_mlocationdatabaseTestOutputFileName));
@@ -443,6 +480,17 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
     QCOMPARE(uint(bytesWritten), qstrlen(ut_mlocationdatabaseTestOutput.toUtf8().constData()));
     ut_mlocationdatabaseTestOutputFile.close();
 
+    QString ut_mlocationdatabaseTestOutput2FileName =
+        "/tmp/ut_mlocationdatabase-test-output2.txt";
+    QFile ut_mlocationdatabaseTestOutput2File(ut_mlocationdatabaseTestOutput2FileName);
+    if (!ut_mlocationdatabaseTestOutput2File.open(QIODevice::WriteOnly | QIODevice::Truncate))
+        QFAIL(qPrintable("could not open file " + ut_mlocationdatabaseTestOutput2FileName));
+    bytesWritten = ut_mlocationdatabaseTestOutput2File.write(ut_mlocationdatabaseTestOutput2.toUtf8().constData());
+    if (bytesWritten == -1)
+        QFAIL(qPrintable("could not write to file" + ut_mlocationdatabaseTestOutput2FileName));
+    QCOMPARE(uint(bytesWritten), qstrlen(ut_mlocationdatabaseTestOutput2.toUtf8().constData()));
+    ut_mlocationdatabaseTestOutput2File.close();
+
     QString ut_mlocationdatabaseTestInputFileName =
         qApp->applicationDirPath() + QDir::separator() + "ut_mlocationdatabase-test-input.txt";
     QFile ut_mlocationdatabaseTestInputFile(ut_mlocationdatabaseTestInputFileName);
@@ -451,9 +499,25 @@ void Ut_MLocationDatabase::testCitiesDumpInfo()
     QString ut_mlocationdatabaseTestInput = QString::fromUtf8(ut_mlocationdatabaseTestInputFile.readAll().constData());
     ut_mlocationdatabaseTestInputFile.close();
 
+    QString ut_mlocationdatabaseTestInput2FileName =
+        qApp->applicationDirPath() + QDir::separator() + "ut_mlocationdatabase-test-input2.txt";
+    QFile ut_mlocationdatabaseTestInput2File(ut_mlocationdatabaseTestInput2FileName);
+    if (!ut_mlocationdatabaseTestInput2File.open(QIODevice::ReadOnly))
+        QFAIL(qPrintable("could not open file " + ut_mlocationdatabaseTestInput2FileName));
+    QString ut_mlocationdatabaseTestInput2 = QString::fromUtf8(ut_mlocationdatabaseTestInput2File.readAll().constData());
+    ut_mlocationdatabaseTestInput2File.close();
+
     // QTextStream debugStream(stderr);
     // debugStream.setCodec("UTF-8");
-    // debugStream << ut_mlocationdatabaseTestInput;
+    // debugStream << ut_mlocationdatabaseTestOutput2;
+
+    if (ut_mlocationdatabaseTestOutput2 != ut_mlocationdatabaseTestInput2) {
+        // don’t fail if there is a difference, there can easily
+        // be differences due to changes in the database.
+        // Just show the difference on standard output for easy checking
+        // what has changed:
+        QProcess::execute("diff -u " + ut_mlocationdatabaseTestInput2FileName + ' ' + ut_mlocationdatabaseTestOutput2FileName);
+    }
 
     if (ut_mlocationdatabaseTestOutput != ut_mlocationdatabaseTestInput) {
         // don’t fail if there is a difference, there can easily
