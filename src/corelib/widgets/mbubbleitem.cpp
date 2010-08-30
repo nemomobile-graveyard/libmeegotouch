@@ -43,6 +43,10 @@ MBubbleItemPrivate::~MBubbleItemPrivate()
 
 void MBubbleItemPrivate::init()
 {
+    Q_Q(MBubbleItem);
+    QSizePolicy policy(QSizePolicy::Preferred, QSizePolicy::Preferred);
+    policy.setHeightForWidth(true);
+    q->setSizePolicy(policy);
 }
 
 void MBubbleItemPrivate::createCommentsInfo()
