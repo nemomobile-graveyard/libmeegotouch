@@ -43,22 +43,29 @@ public:
     MListView(MWidgetController *controller);
     virtual ~MListView();
 
+    /*! \reimp */
     virtual void setGeometry(const QRectF &rect);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
+    /*! \reimp_end */
 
-public slots:
+public Q_SLOTS:
     void relayoutItemsInViewportRect();
 
 protected:
+    /*! \reimp */
     virtual void drawForeground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
     virtual void drawBackground(QPainter *painter, const QStyleOptionGraphicsItem *option) const;
+    /*! \reimp_end */
 
-protected slots:
+protected Q_SLOTS:
+    /*! \reimp */
     virtual void updateData(const QList<const char *>& modifications);
+    /*! \reimp_end */
+
     void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
-    void rowsInserted(const QModelIndex &parent, int start, int end, bool animated = false);    
+    void rowsInserted(const QModelIndex &parent, int start, int end, bool animated = false);
     void rowsRemoved(const QModelIndex &parent, int start, int end, bool animated = false);
-    
+
     void selectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
     void itemClick();
     void layoutChanged();
@@ -67,10 +74,11 @@ protected slots:
                    const QModelIndex &destinationParent, int destinationRow);
 
 protected:
+    /*! \reimp */
     virtual void setupModel();
     virtual void applyStyle();
-
     virtual void notifyItemChange(QGraphicsItem::GraphicsItemChange change, const QVariant &value);
+    /*! \reimp_end */
 
 private:
     void init();
