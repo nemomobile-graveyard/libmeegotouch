@@ -63,7 +63,7 @@ class M_EXPORT MSliderView : public MWidgetView
 public:
     /*!
         \brief Constructs toolbar view.
-        \param Pointer to the controller.
+        \param controller Pointer to the controller.
      */
     MSliderView(MSlider *controller);
 
@@ -128,7 +128,7 @@ protected:
     /*!
         \brief Updates MSliderView class instance when some component
                    of underlying model is modified.
-        \param List containing the names of modified model components.
+        \param modifications List containing the names of modified model components.
 
         Called when some field of underlying MSliderModel (MSeekBarModel)
         class instance is modified and view shuold reflect that modification.

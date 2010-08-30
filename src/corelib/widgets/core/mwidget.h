@@ -237,7 +237,6 @@ protected:
         be handled.
     */
     virtual void contextMenuEvent(QGraphicsSceneContextMenuEvent *event);
-    /*! \reimp_end */
 
     /*!
         This virtual function is called when this widget received a

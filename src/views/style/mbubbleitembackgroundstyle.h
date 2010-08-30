@@ -34,10 +34,6 @@ class M_EXPORT MBubbleItemBackgroundStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString,                mirroredObjectName,   MirroredObjectName)
 };
 
-/*!
- * \internal
- */
-
 class M_EXPORT MBubbleItemBackgroundStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MBubbleItemBackgroundStyle)
@@ -47,6 +43,8 @@ class M_EXPORT MBubbleItemBackgroundStyleContainer : public MWidgetStyleContaine
     M_STYLE_MODE(Incoming)
     M_STYLE_MODE(IncomingPressed)
 };
+
+/*! \internal_end */
 
 #endif
 

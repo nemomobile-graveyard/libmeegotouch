@@ -190,14 +190,9 @@ public:
      */
     virtual void invalidate();
 
-    /*!
-     * \deprecate Policies should use MAbstractLayoutPolicy::invalidate instead. Since 0.19
-     * \brief Invalidate the current layout information for the layout only - not the policy.
-     *
-     * This is used by policies to invalidate the layout without causing the layout to then invalidate the policy
-     * and causing an infinite recursion.
-     */
+    /*! \internal */
     void Q_DECL_DEPRECATED invalidateLayoutOnly();
+    /*! \internal_end */
 
     // QGraphicsLayoutItem:
     /*!

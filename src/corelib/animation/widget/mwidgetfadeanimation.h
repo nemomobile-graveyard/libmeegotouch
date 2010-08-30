@@ -68,6 +68,6 @@ protected:
     virtual void updateState(QAbstractAnimation::State newState, QAbstractAnimation::State oldState);
     //! \reimp_end
 };
-//! \internal
+//! \internal_end
 
 #endif

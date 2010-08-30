@@ -35,8 +35,6 @@ class QTimerEvent;
 
     \ingroup views
 
-    \tableofcontents
-
     \section SpinnerOverview Overview
         Spinner rotates clockwise indefinitely until the process is finished or interrupted. Spinner is
         used only for unknown durations. It can can be placed anywhere in UI and also on top of other UI
@@ -105,7 +103,7 @@ protected Q_SLOTS:
     /*!
         \brief Updates MSpinnerView class instance when some component
                    of underlying model is modified.
-        \param List containing the names of modified model components.
+        \param modifications List containing the names of modified model components.
     */
     virtual void updateData(const QList<const char *>& modifications);
 

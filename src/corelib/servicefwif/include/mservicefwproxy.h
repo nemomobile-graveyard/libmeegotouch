@@ -75,4 +75,3 @@ namespace com
     }
 }
 #endif
-//! \endcond

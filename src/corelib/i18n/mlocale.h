@@ -294,7 +294,7 @@ public:
      *   <td></td>
      *   <td>Finnish language in Finland, default sorting order</td>
      * <tr>
-     *   <td>fi_FI@collation=phonebook</td>
+     *   <td>fi_FI\@collation=phonebook</td>
      *   <td>fi</td>
      *   <td></td>
      *   <td>FI</td>
@@ -303,7 +303,7 @@ public:
      *   <td>Finnish language in Finland, phonebook sorting order</td>
      * </tr>
      * <tr>
-     *   <td>zh_CN@collation=stroke;calendar=chinese</td>
+     *   <td>zh_CN\@collation=stroke;calendar=chinese</td>
      *   <td>zh</td>
      *   <td></td>
      *   <td>CN</td>
@@ -535,8 +535,8 @@ public:
      * an empty string is returned.
      *
      * Example:
-     * If the locale name is “sr_Latn_RS_REVISED@currency=USD”
-     * this will return “REVISED”.
+     * If the locale name is <code>sr_Latn_RS_REVISED\@currency=USD</code>
+     * this will return <code>REVISED</code>.
      *
      * \sa name()
      * \sa language()

@@ -48,5 +48,5 @@ private:
     Q_DECLARE_PRIVATE(MSceneLayerEffect)
 };
 
-//! \internal
+//! \internal_end
 #endif

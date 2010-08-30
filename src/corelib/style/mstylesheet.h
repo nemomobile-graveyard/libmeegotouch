@@ -87,7 +87,7 @@ public:
 
     /*!
      * \brief Cleans up the cache
-     * \param output    If true, outputs warnings from remaining cached styles and deletes them
+     * \param outputAndDelete    If true, outputs warnings from remaining cached styles and deletes them
      */
     static void cleanup(bool outputAndDelete);
 };

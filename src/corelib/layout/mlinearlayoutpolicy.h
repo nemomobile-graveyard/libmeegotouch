@@ -163,7 +163,6 @@ public:
      * Note that the order of the items in the policy is independent of the order of the items
      * in the MLayout.
      *
-     * @param item The item to add.
      */
     void addItem(QGraphicsLayoutItem *item, Qt::Alignment alignment);
 
@@ -186,9 +185,6 @@ public:
      *
      * Note that the order of the items in the policy is independent of the order of the items
      * in the MLayout.
-     *
-     * @param item The item to insert.
-     * @param index The index to place the item
      */
     void insertItem(int index, QGraphicsLayoutItem *item, Qt::Alignment alignment);
 

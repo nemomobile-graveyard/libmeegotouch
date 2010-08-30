@@ -72,7 +72,7 @@ public:
     /*!
      Creates a new MWidgetController with the given \a model and \a parent.
 
-     If \model is 0, a MWidgetModel will be created.
+     If \a model is 0, a MWidgetModel will be created.
      */
     explicit MWidgetController(MWidgetModel *model, QGraphicsItem *parent = 0);
 

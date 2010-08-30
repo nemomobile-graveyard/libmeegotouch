@@ -157,7 +157,7 @@ public:
 private:
     MTranslationCatalog &operator=(const MTranslationCatalog &other);
 };
-//! \endinternal
+//! \internal_end
 
 // //////
 // MTranslationCatalog implementation

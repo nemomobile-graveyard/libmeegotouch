@@ -41,15 +41,13 @@ class M_EXPORT MBubbleItemStyle : public MWidgetStyle
     M_STYLE_ATTRIBUTE(QString,                bubbleObjectName,   BubbleObjectName)
 };
 
-/*!
- * \internal
- */
-
 class M_EXPORT MBubbleItemStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MBubbleItemStyle)
 
     M_STYLE_MODE(Outgoing)
 };
+
+/*! \internal_end */
 
 #endif // MBUBBLEITEMSTYLE_H

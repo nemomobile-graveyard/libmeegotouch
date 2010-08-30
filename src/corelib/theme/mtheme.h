@@ -275,7 +275,7 @@ public:
      Loads the requested CSS file to the current active theme.
 
      Either appends to or replaces the existing theme CSS using the style
-     sheet located by \a filename, depending on the \mode. The method
+     sheet located by \a filename, depending on the \a mode. The method
      returns true if the CSS file was successfully loaded.
 
      Note that CSS files should be loaded before constructing the style objects.

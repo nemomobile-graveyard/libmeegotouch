@@ -34,15 +34,12 @@ class M_EXPORT MContainerHeaderStyle : public MWidgetStyle
     M_STYLE(MContainerHeaderStyle)
 };
 
-/*!
- * \internal
- */
-
 class M_EXPORT MContainerHeaderStyleContainer : public MWidgetStyleContainer
 {
     M_STYLE_CONTAINER(MContainerHeaderStyle)
     M_STYLE_MODE(Pressed)
 };
 
+/*! \internal_end */
 
 #endif // MCONTAINERHEADERSTYLE_H
