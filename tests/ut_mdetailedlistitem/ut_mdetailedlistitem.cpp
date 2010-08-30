@@ -86,7 +86,6 @@ void Ut_mdetailedlistitem::testSetItemStyle()
     //check if m_subject was created with proper style
     QCOMPARE( m_subject->itemStyle(), MDetailedListItem::IconTitleSubtitleAndTwoSideIcons );
     m_subject->setItemStyle(MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel);
-    //styles are reported and fixed in:  #185045
     QCOMPARE( m_subject->itemStyle(), MDetailedListItem::IconTitleSubtitleAndSideIconWithLabel );
 }
 

@@ -75,7 +75,6 @@ void Ut_MAdvancedListItem::testTitle()
 
 void Ut_MAdvancedListItem::testImageWidget()
 {
-    QSKIP("Wait for issue in bug #185535 to be resolved", SkipSingle);
     MImageWidget *myImageWidget = new MImageWidget();
     m_subject->setImageWidget( myImageWidget );
     QCOMPARE( m_subject->imageWidget(), myImageWidget );
