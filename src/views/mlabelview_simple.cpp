@@ -37,7 +37,7 @@
 
 
 MLabelViewSimple::MLabelViewSimple(MLabelViewPrivate *viewPrivate) :
-    viewPrivate(viewPrivate), preferredSize(-1, -1), textOffset(), paintingRect(), dirty(true), staticText(), clip(false)
+    viewPrivate(viewPrivate), textOffset(), paintingRect(), dirty(true), staticText(), clip(false)
 {
     staticText.setTextFormat(Qt::PlainText);
 }
@@ -70,37 +70,9 @@ void MLabelViewSimple::drawContents(QPainter *painter, const QSizeF &size)
     }
 }
 
-bool MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
+void MLabelViewSimple::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    // There is no way to specify sizeHint for a text without knowing possible width.
-    // 1st phase, when Qt calls sizeHint, view will return approximate values for
-    // minimum and preferred size. When resizeEvent comes, layout already knows
-    // sizes of components, and here comes
-    // 2nd phase, when we identify widget's height, based on width. Our height will
-    // change and we don't want to occupy more space then need, so we have to call
-    // updateGeometry, to tell layout to update sizeHint cache. This function
-    // return true if such update is needed.
-
-    QFontMetricsF fm(viewPrivate->controller->font());
-
-    QString text = viewPrivate->model()->text();
-
-    // If the text represents a multilength-string, only respect the first
-    // (= longest) text for the bounding rectangle.
-    const QChar multiLengthSeparator(0x9c, 0);
-    const int index = text.indexOf(multiLengthSeparator);
-    if (index >= 0) {
-        text = text.left(index);
-    }
-
-    QRectF bR = fm.boundingRect(QRectF(QPoint(0, 0), event->newSize()), 
-                                viewPrivate->textOptions.alignment() | textFlagForWrapMode(),
-                                text);
-    if (bR.height() > fm.height()) {
-        preferredSize = QSizeF(bR.width(), bR.height());
-        return true;
-    } else
-        return false;
+    Q_UNUSED(event);
 }
 
 QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -111,15 +83,7 @@ QSizeF MLabelViewSimple::sizeHint(Qt::SizeHint which, const QSizeF &constraint) 
         return QSizeF(fm.width(QLatin1Char('x')), fm.height());
     }
     case Qt::PreferredSize: {
-        QSizeF maxSize = sizeForConstraint(constraint);
-        if (preferredSize.width() >= 0 && preferredSize.width() < maxSize.width()) {
-            maxSize.rwidth() = preferredSize.width();
-        }
-        if (preferredSize.height() >= 0 && preferredSize.height() < maxSize.height()) {
-            maxSize.rheight() = preferredSize.height();
-        }
-
-        return sizeForWidth(maxSize.width());
+        return sizeForWidth(constraint.width());
     }
     case Qt::MaximumSize: {
         return QSizeF(QWIDGETSIZE_MAX, QWIDGETSIZE_MAX);
@@ -152,9 +116,7 @@ bool MLabelViewSimple::updateData(const QList<const char *>& modifications)
 
     foreach(member, modifications) {
         if (member == MLabelModel::Text) {
-            preferredSize = QSizeF(-1, -1);
-            needUpdate = viewPrivate->previousStaticTextSize != staticText.size();
-            viewPrivate->previousStaticTextSize = staticText.size();
+            needUpdate = true;
         } else if (member == MLabelModel::Color) {
             needUpdate = true;
         } else if(member == MLabelModel::WrapMode) {
@@ -359,10 +321,6 @@ void MLabelViewSimple::adjustTextOffset()
 
 QSizeF MLabelViewSimple::sizeForWidth(qreal width) const
 {
-    if (width == QWIDGETSIZE_MAX) {
-        width = -1.0;
-    }
-
     const_cast<MLabelViewSimple*>(this)->initializeTextProperties();
 
     const bool equalWidth = (width < 0.0 && staticText.textWidth() < 0.0) || width == staticText.textWidth();
@@ -379,18 +337,6 @@ QSizeF MLabelViewSimple::sizeForWidth(qreal width) const
     staticText2.prepare(QTransform(), font);
 
     return staticText2.size();
-}
-
-QSizeF MLabelViewSimple::sizeForConstraint(const QSizeF &constraint) const
-{
-    QSizeF size = constraint;
-    if (size.width() < 0.0) {
-        size.setWidth(QWIDGETSIZE_MAX);
-    }
-    if (size.height() < 0.0) {
-        size.setHeight(QWIDGETSIZE_MAX);
-    }
-    return size;
 }
 
 void MLabelViewSimple::markDirty()

@@ -97,6 +97,9 @@ private slots:
     void testSizeHint_data();
     void testSizeHint();
 
+    void testWordWrappingSizeHint_data();
+    void testWordWrappingSizeHint();
+
     void testUnknownSizeHint();
 
     void testFont_data();

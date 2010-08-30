@@ -538,6 +538,7 @@ void Ut_MLabel::testSizeHint()
     TestMLabel *label = new TestMLabel();
     label->setText(text);
     label->setGeometry(QRectF(0, 0, 400, 20));
+    QVERIFY(label->sizePolicy().hasHeightForWidth());
 
     label->setWordWrap(true);
     label->setWrapMode(wrapMode);
@@ -585,8 +586,87 @@ void Ut_MLabel::testSizeHint()
         QVERIFY(prefSizeHint.height() <= constraint.height());
         targetSize.rheight() = constraint.height();
     }
-
     QCOMPARE(prefSizeHint, targetSize);
+
+    // Check that resizing does not change the sizehint
+    QSizeF prefSizeHintWithoutConstraint = label->preferredSize();
+    label->resize(prefSizeHint);
+    QCOMPARE(label->sizeHint(Qt::MinimumSize, constraint), minSizeHint);
+    QCOMPARE(label->sizeHint(Qt::PreferredSize, constraint), prefSizeHint);
+    QCOMPARE(label->preferredSize(), prefSizeHintWithoutConstraint);
+    QCOMPARE(label->sizeHint(Qt::MaximumSize, constraint), maxSizeHint);
+
+    {
+        //Check setting constraints via css
+        label->setObjectName("width40");
+        qreal width = 40.0;
+        QSizeF minSizeHint = label->minimumSize();
+        QSizeF prefSizeHint = label->preferredSize();
+        QSizeF maxSizeHint = label->maximumSize();
+
+        QCOMPARE(prefSizeHint.width(), width);
+
+        label->resize(prefSizeHint);
+        QCOMPARE(minSizeHint, label->minimumSize());
+        QCOMPARE(prefSizeHint, label->preferredSize());
+        QCOMPARE(maxSizeHint, label->maximumSize());
+        label->setObjectName("");
+    }
+}
+
+void Ut_MLabel::testWordWrappingSizeHint_data()
+{
+    QTest::addColumn<QTextOption::WrapMode>("wrapMode");
+    QTest::addColumn<qreal>("widthConstraint");
+
+    typedef QPair<QString, QTextOption::WrapMode> WrapInfo;
+    QList<WrapInfo> wrapModes;
+    wrapModes.append(WrapInfo("NoWrap", QTextOption::NoWrap));
+    wrapModes.append(WrapInfo("WordWrap", QTextOption::WordWrap));
+    wrapModes.append(WrapInfo("ManualWrap", QTextOption::ManualWrap));
+    wrapModes.append(WrapInfo("WrapAnywhere", QTextOption::WrapAnywhere));
+    wrapModes.append(WrapInfo("WrapAtWordBoundaryOrAnywhere", QTextOption::WrapAtWordBoundaryOrAnywhere));
+
+    foreach (const WrapInfo &wrapInfo, wrapModes) {
+        QTest::newRow(wrapInfo.first.toLatin1()) << wrapInfo.second;;
+    }
+
+}
+
+void Ut_MLabel::testWordWrappingSizeHint()
+{
+    QFETCH(QTextOption::WrapMode, wrapMode);
+    TestMLabel *label = new TestMLabel();
+    label->setText("This is a long string with lots of words, lots of words, lots of words.");
+
+    label->setWordWrap(true);
+    label->setWrapMode(wrapMode);
+    QSizeF prefSize = label->preferredSize();
+
+    //Check that setting the constraint to the preferred width doesn't change the preferred height
+    QCOMPARE(prefSize, label->sizeHint(Qt::PreferredSize, QSizeF(prefSize.width(), -1)));
+
+    //Now check that if we add a constraint to force word wrapping, the height increases.
+    QSizeF prefSizeWithConstraint = label->sizeHint(Qt::PreferredSize, QSizeF(prefSize.width() * 0.8, -1));
+
+    //Check that the preferred height has not changed if we word wrapping is disabled, and has increased if word wrap is enabled
+    if (wrapMode == QTextOption::NoWrap || wrapMode == QTextOption::ManualWrap)
+        QCOMPARE(prefSizeWithConstraint.height(), prefSize.height());
+    else
+        QVERIFY(prefSizeWithConstraint.height() > prefSize.height());
+
+    //Check preferred size a second time to make sure it's cached..
+    QCOMPARE(prefSize, label->sizeHint(Qt::PreferredSize, QSizeF(prefSize.width(), -1)));
+
+    //Add some text and make sure it now wraps to the next line
+    label->setText( label->text() + "Goodbye");
+    prefSizeWithConstraint = label->sizeHint(Qt::PreferredSize, QSizeF(prefSize.width(), -1));
+
+    //Check again that the preferred height has not changed if we word wrapping is disabled, and has increased if word wrap is enabled
+    if (wrapMode == QTextOption::NoWrap || wrapMode == QTextOption::ManualWrap)
+        QCOMPARE(prefSizeWithConstraint.height(), prefSize.height());
+    else
+        QVERIFY(prefSizeWithConstraint.height() > prefSize.height());
 }
 
 void Ut_MLabel::testUnknownSizeHint()

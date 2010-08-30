@@ -55,7 +55,7 @@ MLabelViewRich::MLabelViewRich(MLabelViewPrivate *viewPrivate) :
                       ? M::Landscape : M::Portrait;
     textDocument.setDocumentMargin(0);
     tileCacheKey.sprintf("%p", static_cast<void*>(this));
-}    
+}
 
 
 MLabelViewRich::~MLabelViewRich()
@@ -134,26 +134,9 @@ void MLabelViewRich::ensureDocumentIsReady()
     }
 }
 
-bool MLabelViewRich::resizeEvent(QGraphicsSceneResizeEvent *event)
+void MLabelViewRich::resizeEvent(QGraphicsSceneResizeEvent *event)
 {
-    // There is no way to specify sizeHint for a text without knowing possible width.
-
-    // 1st phase, when QT calls sizeHint, view will return approximate values for
-    // minimum and preffered size. When resizeEvent comes, layout already knows
-    // sizes of components, and here comes
-    // 2nd phase, when we identify widget's height, based on width. Our height will
-    // change and we don't want to occupy more space then need, so we have to call
-    // updateGeometry, to tell layout to update sizeHint cache. This function
-    // return true if such update is needed.
-    // forward resize event to text document
-    // if height is changed
-    QSizeF oldSize(textDocument.size());
     textDocument.setTextWidth(event->newSize().width());
-    QSizeF newSize(textDocument.size());
-    if (newSize.height() != oldSize.height())
-        return true;
-    else
-        return false;
 }
 
 QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
@@ -175,17 +158,13 @@ QSizeF MLabelViewRich::sizeHint(Qt::SizeHint which, const QSizeF &constraint) co
         textDocument.undo();
 
         // resize text document to constraint width,
-        // then return its size
+        // then return its size.  This works correctly
+        // even for a constraint width of -1 (unconstrained)
         QSizeF size;
-        if (constraint.width() > 0) {
-            qreal oldWidth = textDocument.textWidth();
-            textDocument.setTextWidth(constraint.width());
-            size = textDocument.size();
-            textDocument.setTextWidth(oldWidth);
-        } else {
-            size = textDocument.size();
-            size.setWidth(textDocument.idealWidth());
-        }
+        qreal oldWidth = textDocument.textWidth();
+        textDocument.setTextWidth(constraint.width());
+        size = textDocument.size();
+        textDocument.setTextWidth(oldWidth);
 
         return size;
     }

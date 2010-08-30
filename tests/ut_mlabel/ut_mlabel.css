@@ -28,3 +28,6 @@ MLabelStyle#size100 {
     font: "sans" 100px;
 }
 
+MLabelStyle#width40 {
+    preferred-size: 40 -1;
+}

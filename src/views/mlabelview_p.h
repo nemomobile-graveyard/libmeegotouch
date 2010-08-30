@@ -38,7 +38,7 @@ public:
     virtual ~MLabelViewSimple();
 
     virtual void drawContents(QPainter *painter, const QSizeF &size);
-    virtual bool resizeEvent(QGraphicsSceneResizeEvent *event);
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
     virtual void setupModel();
     virtual bool updateData(const QList<const char *>& modifications);
@@ -77,7 +77,7 @@ public:
      * \return Text flag for the current wrap-mode specified by the model.
      */
     Qt::TextFlag textFlagForWrapMode() const;
-    
+
     /**
      * Helper method for initializeStaticText(): Adjusts the member variable
      * 'textOffset' dependent on the used alignment, as QStaticText does not support
@@ -91,17 +91,10 @@ public:
      */
     QSizeF sizeForWidth(qreal width) const;
 
-    /**
-     * \return Size for the constraint \a constraint. If the width or height
-     *         of the constraint is < 0 it will be replaced by QWIDGETSIZE_MAX.
-     */
-    QSizeF sizeForConstraint(const QSizeF &constraint) const;
-
     void markDirty();
 
     MLabelViewPrivate *viewPrivate;
 
-    QSizeF preferredSize;
     QPointF textOffset;
     QRectF paintingRect;
     bool dirty;
@@ -133,7 +126,7 @@ public:
 
     virtual void drawContents(QPainter *painter, const QSizeF &size);
     virtual bool shouldElide() const;
-    virtual bool resizeEvent(QGraphicsSceneResizeEvent *event);
+    virtual void resizeEvent(QGraphicsSceneResizeEvent *event);
     virtual QSizeF sizeHint(Qt::SizeHint which, const QSizeF &constraint = QSizeF()) const;
     virtual void setupModel();
     virtual bool updateData(const QList<const char *>& modifications);
