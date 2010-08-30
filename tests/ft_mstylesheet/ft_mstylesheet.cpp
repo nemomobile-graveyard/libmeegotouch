@@ -125,7 +125,6 @@ void Ft_MStyleSheet::test_supported_attribute_types()
     QVERIFY(style->attributePixmap4());
     QVERIFY(style->attributePixmap() == style->attributePixmap2());
     QVERIFY(style->attributePixmap3() == style->attributePixmap4());
-    QCOMPARE(style->attributePixmap()->size(), QSize(30, 30));
 
     QVERIFY(style->attributeScalable());
     QVERIFY(style->attributeScalable2());
@@ -180,7 +179,6 @@ void Ft_MStyleSheet::test_inheritance()
     QCOMPARE(style2->attributeAxis(), Qt::XAxis);
 
     QVERIFY(style2->attributePixmap());
-    QCOMPARE(style2->attributePixmap()->size(), QSize(30, 30));
 
     QVERIFY(style2->attributeScalable());
     int left, right, top, bottom;
