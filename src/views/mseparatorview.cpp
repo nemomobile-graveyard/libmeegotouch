@@ -77,16 +77,13 @@ void MSeparatorView::applyStyle()
 
 QSizeF MSeparatorView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
-    QSizeF s = MWidgetView::sizeHint(which, constraint);
-
-    if (which == Qt::PreferredSize || which == Qt::MaximumSize) {
-        if (model()->orientation() == Qt::Horizontal)
-            s.setHeight(style()->span());
-        else
-            s.setWidth(style()->span());
-    }
-
-    return s;
+    Q_UNUSED(constraint);
+    if (which == Qt::MinimumSize)
+        return QSizeF(-1,-1);
+    else if (model()->orientation() == Qt::Horizontal)
+        return QSizeF(-1, style()->span());
+    else
+        return QSizeF(style()->span(), -1);
 }
 
 M_REGISTER_VIEW_NEW(MSeparatorView, MSeparator)

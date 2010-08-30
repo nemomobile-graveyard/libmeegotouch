@@ -573,10 +573,6 @@ QSizeF MButtonView::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
     if (which == Qt::MinimumSize || which == Qt::MaximumSize)
         return MWidgetView::sizeHint(which, constraint);
 
-    if (style()->preferredSize().isValid())
-        return style()->preferredSize();
-
-
     QSizeF iconSize(0, 0);
     if (model()->iconVisible() && d->icon)
         iconSize = d->icon->pixmap->size();
