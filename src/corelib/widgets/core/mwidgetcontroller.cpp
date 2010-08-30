@@ -511,6 +511,11 @@ void MWidgetController::setObjectName(const QString &name)
     model()->setObjectName(name);
 }
 
+void MWidgetController::setStyleName(const QString &name)
+{
+    model()->setStyleName(name);
+}
+
 QSizeF MWidgetController::sizeHint(Qt::SizeHint which, const QSizeF &constraint) const
 {
     Q_D(const MWidgetController);
@@ -588,6 +593,10 @@ void MWidgetController::changeEvent(QEvent *event)
     }
 }
 
+const QString &MWidgetController::styleName() const
+{
+    return model()->styleName();
+}
 
 bool MWidgetController::sceneEventFilter(QGraphicsItem *watched, QEvent *event)
 {

@@ -147,7 +147,12 @@ void MWidgetView::setModel(MWidgetModel *model)
     if (styleType == MWidgetController::defaultType)
         styleType.clear();
 
-    d->styleContainer->initialize(d->model->objectName(), styleType, parent);
+    QString styleName;
+    if (d->model->styleName().isNull())
+        styleName = d->model->objectName(); // fallback to old behavior
+    else
+        styleName = d->model->styleName();
+    d->styleContainer->initialize(styleName, styleType, parent);
 
     if (d->controller->isActive()) {
         setActive(true);
@@ -168,9 +173,15 @@ void MWidgetView::updateData(const QList<const char *>& modifications)
 {
     const char *member;
     foreach(member, modifications) {
-        if (member == MWidgetModel::ObjectName) {
-            // object name has changed, we need to update style
-            style().setObjectName(model()->objectName());
+        if (member == MWidgetModel::ObjectName ||
+            member == MWidgetModel::StyleName) {
+            // style name has changed, we need to update the style
+            QString styleName(QString::null);
+            if (model()->styleName().isNull())
+                styleName = model()->objectName(); // fallback to old behavior
+            else
+                styleName = model()->styleName();
+            style().setObjectName(styleName);
             // TODO: to be removed
             applyStyle();
         } else if (member == MWidgetModel::ViewType) {

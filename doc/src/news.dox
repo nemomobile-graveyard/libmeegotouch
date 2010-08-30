@@ -1,5 +1,13 @@
 /*! \page news What's New in MeeGo Touch
 
+\section v02037 0.20.37
+
+\subsection New
+- MWidgetController::setStyleName can now be used for associating a style with a widget (like setObjectName)
+
+\subsection Deprecated
+- MWindow::setObjectName and MWidgetController:setObjectname overloaded methods, use MWidgetController::setStyleName instead.
+
 \section v02036 0.20.36
 
 \subsection New

@@ -128,7 +128,6 @@ public:
     }
     /*! \reimp_end */
 
-
 public Q_SLOTS:
     /*! \reimp */
     /** Hide the non-virtual QObject::setObjectName()  with this virtual function to catch calls to
@@ -143,6 +142,8 @@ public Q_SLOTS:
      *   QGraphicsWidget *label = new MLabel("Hello"); label->setObjectName("hello");
      * \endcode
      * Would not update the CSS style correctly.
+     *
+     * \deprecated Use MWidgetController:setStyleName instead.
      */
     virtual void setObjectName(const QString &name);
 

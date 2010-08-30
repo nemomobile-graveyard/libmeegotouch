@@ -54,6 +54,7 @@ class M_EXPORT MWidgetController : public MWidget
 
     Q_PROPERTY(MTheme::ViewType viewType READ viewType WRITE setViewType)
     Q_PROPERTY(bool active READ isActive WRITE setActive)
+    Q_PROPERTY(QString styleName READ styleName WRITE setStyleName)
 
 public:
     /*!
@@ -146,6 +147,11 @@ public:
     virtual void changeEvent(QEvent *event);
     //! \reimp_end
 
+    /*!
+      Returns the style name of the widget.
+     */
+    const QString &styleName() const;
+
 public Q_SLOTS:
     /*!
      Set the view type of the widget.
@@ -181,15 +187,6 @@ public Q_SLOTS:
      style of the widget view. The object name is used by the theme system to select a style with
      a matching ID.
 
-     An example of setting the object name:
-     \code
-       mywidget->setObjectname("warning");
-     \endcode
-     In a CSS file you can then specify a style for this particular widget:
-     \code
-       #warning { background-color: #FF0000; }
-     \endcode
-
      Warning: Since QObject::setObjectName() is non-virtual, code like:
      \code
        MLabel *label = new MLabel("Hello");
@@ -203,8 +200,30 @@ public Q_SLOTS:
      Would not update the CSS style correctly.
 
      Note that multiple objects can have the same name, and consequently the same style.
+
+     \deprecated Use setStyleName() to set the style name of the widget.
     */
     virtual void setObjectName(const QString &name);
+
+    /*!
+      Set the style name to \a name.
+
+      This function sets the style name property of the widget to \a name and reloads the
+      style of the widget view. The style name is used to select a style with a matching
+      name from the theme.
+
+      An example of setting the object name:
+      \code
+        mywidget->setStyleName("warning");
+      \endcode
+      In a CSS file you can then specify a style for this particular widget:
+      \code
+        #warning { background-color: #FF0000; }
+      \endcode
+
+      \sa styleName()
+    */
+    void setStyleName(const QString &name);
 
 protected Q_SLOTS:
     /*!

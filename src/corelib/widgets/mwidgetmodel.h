@@ -112,6 +112,7 @@ class M_EXPORT MWidgetModel : public QObject
     Q_OBJECT
     M_MODEL_WITH_PRIVATE(MWidgetModel)
     M_MODEL_PROPERTY(QString, objectName, ObjectName, true, QString::null)
+    M_MODEL_PROPERTY(QString, styleName, StyleName, true, QString::null)
     M_MODEL_PROPERTY(MTheme::ViewType, viewType, ViewType, true, MWidgetController::defaultType)
     M_MODEL_PROPERTY(QPointF, position, Position, true, QPointF(0.0, 0.0))
     M_MODEL_PROPERTY(QSizeF, size, Size, true, QSizeF(0.0, 0.0))
